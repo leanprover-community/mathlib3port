@@ -550,17 +550,17 @@ theorem IsClosed.isComplete [CompleteSpace α] {s : Set α} (h : IsClosed s) : I
 /-- A set `s` is totally bounded if for every entourage `d` there is a finite
   set of points `t` such that every element of `s` is `d`-near to some element of `t`. -/
 def TotallyBounded (s : Set α) : Prop :=
-  ∀ d ∈ 𝓤 α, ∃ t : Set α, t.Finite ∧ s ⊆ ⋃ y ∈ t, { x | (x, y) ∈ d }
+  ∀ d ∈ 𝓤 α, ∃ t : Set α, t.Finite ∧ s ⊆ ⋃ y ∈ t, {x | (x, y) ∈ d}
 #align totally_bounded TotallyBounded
 -/
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 theorem TotallyBounded.exists_subset {s : Set α} (hs : TotallyBounded s) {U : Set (α × α)}
-    (hU : U ∈ 𝓤 α) : ∃ (t : _) (_ : t ⊆ s), Set.Finite t ∧ s ⊆ ⋃ y ∈ t, { x | (x, y) ∈ U } :=
+    (hU : U ∈ 𝓤 α) : ∃ (t : _) (_ : t ⊆ s), Set.Finite t ∧ s ⊆ ⋃ y ∈ t, {x | (x, y) ∈ U} :=
   by
   rcases comp_symm_of_uniformity hU with ⟨r, hr, rs, rU⟩
   rcases hs r hr with ⟨k, fk, ks⟩
-  let u := k ∩ { y | ∃ x ∈ s, (x, y) ∈ r }
+  let u := k ∩ {y | ∃ x ∈ s, (x, y) ∈ r}
   choose hk f hfs hfr using fun x : u => x.coe_prop
   refine' ⟨range f, _, _, _⟩
   · exact range_subset_iff.2 hfs
@@ -576,7 +576,7 @@ theorem TotallyBounded.exists_subset {s : Set α} (hs : TotallyBounded s) {U : S
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 theorem totallyBounded_iff_subset {s : Set α} :
     TotallyBounded s ↔
-      ∀ d ∈ 𝓤 α, ∃ (t : _) (_ : t ⊆ s), Set.Finite t ∧ s ⊆ ⋃ y ∈ t, { x | (x, y) ∈ d } :=
+      ∀ d ∈ 𝓤 α, ∃ (t : _) (_ : t ⊆ s), Set.Finite t ∧ s ⊆ ⋃ y ∈ t, {x | (x, y) ∈ d} :=
   ⟨fun H d hd => H.exists_subset hd, fun H d hd =>
     let ⟨t, _, ht⟩ := H d hd
     ⟨t, ht⟩⟩
@@ -584,7 +584,7 @@ theorem totallyBounded_iff_subset {s : Set α} :
 
 theorem Filter.HasBasis.totallyBounded_iff {ι} {p : ι → Prop} {U : ι → Set (α × α)}
     (H : (𝓤 α).HasBasis p U) {s : Set α} :
-    TotallyBounded s ↔ ∀ i, p i → ∃ t : Set α, Set.Finite t ∧ s ⊆ ⋃ y ∈ t, { x | (x, y) ∈ U i } :=
+    TotallyBounded s ↔ ∀ i, p i → ∃ t : Set α, Set.Finite t ∧ s ⊆ ⋃ y ∈ t, {x | (x, y) ∈ U i} :=
   H.forall_iff fun U V hUV h =>
     h.imp fun t ht => ⟨ht.1, ht.2.trans <| iUnion₂_mono fun x hx y hy => hUV hy⟩
 #align filter.has_basis.totally_bounded_iff Filter.HasBasis.totallyBounded_iff
@@ -627,7 +627,7 @@ theorem TotallyBounded.closure {s : Set α} (h : TotallyBounded s) : TotallyBoun
 /-- The image of a totally bounded set under a uniformly continuous map is totally bounded. -/
 theorem TotallyBounded.image [UniformSpace β] {f : α → β} {s : Set α} (hs : TotallyBounded s)
     (hf : UniformContinuous f) : TotallyBounded (f '' s) := fun t ht =>
-  have : { p : α × α | (f p.1, f p.2) ∈ t } ∈ 𝓤 α := hf ht
+  have : {p : α × α | (f p.1, f p.2) ∈ t} ∈ 𝓤 α := hf ht
   let ⟨c, hfc, hct⟩ := hs _ this
   ⟨f '' c, hfc.image f, by
     simp [image_subset_iff]
@@ -643,10 +643,10 @@ theorem Ultrafilter.cauchy_of_totallyBounded {s : Set α} (f : Ultrafilter α) (
   ⟨f.ne_bot', fun t ht =>
     let ⟨t', ht'₁, ht'_symm, ht'_t⟩ := comp_symm_of_uniformity ht
     let ⟨i, hi, hs_union⟩ := hs t' ht'₁
-    have : (⋃ y ∈ i, { x | (x, y) ∈ t' }) ∈ f := mem_of_superset (le_principal_iff.mp h) hs_union
-    have : ∃ y ∈ i, { x | (x, y) ∈ t' } ∈ f := (Ultrafilter.finite_biUnion_mem_iff hi).1 this
+    have : (⋃ y ∈ i, {x | (x, y) ∈ t'}) ∈ f := mem_of_superset (le_principal_iff.mp h) hs_union
+    have : ∃ y ∈ i, {x | (x, y) ∈ t'} ∈ f := (Ultrafilter.finite_biUnion_mem_iff hi).1 this
     let ⟨y, hy, hif⟩ := this
-    have : { x | (x, y) ∈ t' } ×ˢ { x | (x, y) ∈ t' } ⊆ compRel t' t' :=
+    have : {x | (x, y) ∈ t'} ×ˢ {x | (x, y) ∈ t'} ⊆ compRel t' t' :=
       fun ⟨x₁, x₂⟩ ⟨(h₁ : (x₁, y) ∈ t'), (h₂ : (x₂, y) ∈ t')⟩ => ⟨y, h₁, ht'_symm h₂⟩
     mem_of_superset (prod_mem_prod hif hif) (Subset.trans this ht'_t)⟩
 #align ultrafilter.cauchy_of_totally_bounded Ultrafilter.cauchy_of_totallyBounded
@@ -661,7 +661,7 @@ theorem totallyBounded_iff_filter {s : Set α} :
         (Ultrafilter.of f).cauchy_of_totallyBounded H ((Ultrafilter.of_le f).trans hfs)⟩
   · intro H d hd
     contrapose! H with hd_cover
-    set f := ⨅ t : Finset α, 𝓟 (s \ ⋃ y ∈ t, { x | (x, y) ∈ d })
+    set f := ⨅ t : Finset α, 𝓟 (s \ ⋃ y ∈ t, {x | (x, y) ∈ d})
     have : ne_bot f := by
       refine' infi_ne_bot_of_directed' (directed_of_sup _) _
       · intro t₁ t₂ h
@@ -673,7 +673,7 @@ theorem totallyBounded_iff_filter {s : Set α} :
     rcases mem_prod_same_iff.1 (hc.2 hd) with ⟨m, hm, hmd⟩
     have : m ∩ s ∈ c := inter_mem hm (le_principal_iff.mp (hcf.trans ‹_›))
     rcases hc.1.nonempty_of_mem this with ⟨y, hym, hys⟩
-    set ys := ⋃ y' ∈ ({y} : Finset α), { x | (x, y') ∈ d }
+    set ys := ⋃ y' ∈ ({y} : Finset α), {x | (x, y') ∈ d}
     have : m ⊆ ys := by simpa [ys] using fun x hx => hmd (mk_mem_prod hx hym)
     have : c ≤ 𝓟 (s \ ys) := hcf.trans (iInf_le_of_le {y} le_rfl)
     refine' hc.1.Ne (empty_mem_iff_bot.mp _)
@@ -739,7 +739,7 @@ theorem CauchySeq.totallyBounded_range {s : ℕ → α} (hs : CauchySeq s) : Tot
   by
   refine' totallyBounded_iff_subset.2 fun a ha => _
   cases' cauchySeq_iff.1 hs a ha with n hn
-  refine' ⟨s '' { k | k ≤ n }, image_subset_range _ _, (finite_le_nat _).image _, _⟩
+  refine' ⟨s '' {k | k ≤ n}, image_subset_range _ _, (finite_le_nat _).image _, _⟩
   rw [range_subset_iff, bUnion_image]
   intro m
   rw [mem_Union₂]

@@ -64,7 +64,7 @@ variable {α : Type _} {β : Type _}
 
 
 #print PolishSpace /-
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`second_countable] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`second_countable] [] -/
 /-- A Polish space is a topological space with second countable topology, that can be endowed
 with a metric for which it is complete.
 We register an instance from complete second countable metric space to polish space, and not the
@@ -246,7 +246,7 @@ theorem exists_polishSpace_forall_le {ι : Type _} [Countable ι] [t : Topologic
   refine' ⟨T.induced f, fun n => T_le_m n, (T_le_m default).trans (hm default), _⟩
   -- show that the new topology is Polish, as the pullback of a Polish topology under a closed
   -- embedding.
-  have A : range f = ⋂ n, { x | x n = x default } :=
+  have A : range f = ⋂ n, {x | x n = x default} :=
     by
     ext x
     constructor
@@ -404,7 +404,7 @@ theorem TopologicalSpace.Opens.CompleteCopy.instCompleteSpace [CompleteSpace α]
   · refine' ⟨⟨x, xs⟩, _⟩
     have L : tendsto (fun n => (id ⟨(u n).1, (u n).2⟩ : s)) at_top (𝓝 ⟨x, xs⟩) := by
       apply embedding_subtype_coe.tendsto_nhds_iff.2; exact xlim
-    convert((complete_copy_id_homeo hs h's).symm.Continuous.Tendsto _).comp L
+    convert ((complete_copy_id_homeo hs h's).symm.Continuous.Tendsto _).comp L
     ext1 n
     simp [complete_copy_id_homeo]
   obtain ⟨C, hC⟩ : ∃ C, ∀ n, 1 / inf_dist (u n).1 (sᶜ) < C :=

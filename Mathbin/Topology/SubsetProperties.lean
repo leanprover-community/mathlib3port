@@ -109,7 +109,7 @@ theorem IsCompact.induction_on {s : Set α} (hs : IsCompact s) {p : Set α → P
     (hnhds : ∀ x ∈ s, ∃ t ∈ 𝓝[s] x, p t) : p s :=
   by
   let f : Filter α :=
-    { sets := { t | p (tᶜ) }
+    { sets := {t | p (tᶜ)}
       univ_sets := by simpa
       sets_of_superset := fun t₁ t₂ ht₁ ht => hmono (compl_subset_compl.2 ht) ht₁
       inter_sets := fun t₁ t₂ ht₁ ht₂ => by simp [compl_inter, hunion ht₁ ht₂] }
@@ -157,7 +157,7 @@ theorem IsCompact.image_of_continuousOn {f : α → β} (hs : IsCompact s) (hf :
   use f a, mem_image_of_mem f has
   have : tendsto f (𝓝 a ⊓ (comap f l ⊓ 𝓟 s)) (𝓝 (f a) ⊓ l) :=
     by
-    convert(hf a has).inf (@tendsto_comap _ _ f l) using 1
+    convert (hf a has).inf (@tendsto_comap _ _ f l) using 1
     rw [nhdsWithin]
     ac_rfl
   exact @tendsto.ne_bot _ this ha
@@ -280,7 +280,7 @@ theorem IsCompact.elim_finite_subfamily_closed {s : Set α} {ι : Type v} (hs : 
 /-- If `s` is a compact set in a topological space `α` and `f : ι → set α` is a locally finite
 family of sets, then `f i ∩ s` is nonempty only for a finitely many `i`. -/
 theorem LocallyFinite.finite_nonempty_inter_compact {ι : Type _} {f : ι → Set α}
-    (hf : LocallyFinite f) {s : Set α} (hs : IsCompact s) : { i | (f i ∩ s).Nonempty }.Finite :=
+    (hf : LocallyFinite f) {s : Set α} (hs : IsCompact s) : {i | (f i ∩ s).Nonempty}.Finite :=
   by
   choose U hxU hUf using hf
   rcases hs.elim_nhds_subcover U fun x _ => hxU x with ⟨t, -, hsU⟩
@@ -446,7 +446,7 @@ theorem IsCompact.eventually_forall_of_forall_eventually {x₀ : α} {K : Set β
     specialize hP y hyK
     rw [nhds_prod_eq, eventually_prod_iff] at hP 
     rcases hP with ⟨p, hp, q, hq, hpq⟩
-    exact ⟨{ y | q y }, mem_nhdsWithin_of_mem_nhds hq, eventually_of_mem hp @hpq⟩
+    exact ⟨{y | q y}, mem_nhdsWithin_of_mem_nhds hq, eventually_of_mem hp @hpq⟩
 #align is_compact.eventually_forall_of_forall_eventually IsCompact.eventually_forall_of_forall_eventually
 
 #print isCompact_empty /-
@@ -573,28 +573,28 @@ theorem isCompact_open_iff_eq_finite_iUnion_of_isTopologicalBasis (b : ι → Se
     (hb : IsTopologicalBasis (Set.range b)) (hb' : ∀ i, IsCompact (b i)) (U : Set α) :
     IsCompact U ∧ IsOpen U ↔ ∃ s : Set ι, s.Finite ∧ U = ⋃ i ∈ s, b i := by
   classical
+  constructor
+  · rintro ⟨h₁, h₂⟩
+    obtain ⟨β, f, e, hf⟩ := hb.open_eq_Union h₂
+    choose f' hf' using hf
+    have : b ∘ f' = f := funext hf'; subst this
+    obtain ⟨t, ht⟩ :=
+      h₁.elim_finite_subcover (b ∘ f') (fun i => hb.is_open (Set.mem_range_self _)) (by rw [e])
+    refine' ⟨t.image f', Set.Finite.intro inferInstance, le_antisymm _ _⟩
+    · refine' Set.Subset.trans ht _
+      simp only [Set.iUnion_subset_iff, coe_coe]
+      intro i hi
+      erw [← Set.iUnion_subtype (fun x : ι => x ∈ t.image f') fun i => b i.1]
+      exact Set.subset_iUnion (fun i : t.image f' => b i) ⟨_, Finset.mem_image_of_mem _ hi⟩
+    · apply Set.iUnion₂_subset
+      rintro i hi
+      obtain ⟨j, hj, rfl⟩ := finset.mem_image.mp hi
+      rw [e]
+      exact Set.subset_iUnion (b ∘ f') j
+  · rintro ⟨s, hs, rfl⟩
     constructor
-    · rintro ⟨h₁, h₂⟩
-      obtain ⟨β, f, e, hf⟩ := hb.open_eq_Union h₂
-      choose f' hf' using hf
-      have : b ∘ f' = f := funext hf'; subst this
-      obtain ⟨t, ht⟩ :=
-        h₁.elim_finite_subcover (b ∘ f') (fun i => hb.is_open (Set.mem_range_self _)) (by rw [e])
-      refine' ⟨t.image f', Set.Finite.intro inferInstance, le_antisymm _ _⟩
-      · refine' Set.Subset.trans ht _
-        simp only [Set.iUnion_subset_iff, coe_coe]
-        intro i hi
-        erw [← Set.iUnion_subtype (fun x : ι => x ∈ t.image f') fun i => b i.1]
-        exact Set.subset_iUnion (fun i : t.image f' => b i) ⟨_, Finset.mem_image_of_mem _ hi⟩
-      · apply Set.iUnion₂_subset
-        rintro i hi
-        obtain ⟨j, hj, rfl⟩ := finset.mem_image.mp hi
-        rw [e]
-        exact Set.subset_iUnion (b ∘ f') j
-    · rintro ⟨s, hs, rfl⟩
-      constructor
-      · exact hs.is_compact_bUnion fun i _ => hb' i
-      · apply isOpen_biUnion; intro i hi; exact hb.is_open (Set.mem_range_self _)
+    · exact hs.is_compact_bUnion fun i _ => hb' i
+    · apply isOpen_biUnion; intro i hi; exact hb.is_open (Set.mem_range_self _)
 #align is_compact_open_iff_eq_finite_Union_of_is_topological_basis isCompact_open_iff_eq_finite_iUnion_of_isTopologicalBasis
 
 namespace Filter
@@ -656,7 +656,7 @@ theorem Tendsto.isCompact_insert_range_of_cocompact {f : α → β} {b}
   rcases mem_cocompact.1 (hf hsb) with ⟨K, hKc, hKs⟩
   have : f '' K ∈ l :=
     by
-    filter_upwards [htl, le_principal_iff.1 hle]with y hyt hyf
+    filter_upwards [htl, le_principal_iff.1 hle] with y hyt hyf
     rcases hyf with (rfl | ⟨x, rfl⟩)
     exacts [(hd.le_bot ⟨mem_of_mem_nhds hsb, hyt⟩).elim,
       mem_image_of_mem _ (Classical.not_not.1 fun hxK => hd.le_bot ⟨hKs hxK, hyt⟩)]
@@ -891,7 +891,7 @@ theorem IsClosed.isCompact [CompactSpace α] {s : Set α} (h : IsClosed s) : IsC
 -/
 
 #print NoncompactSpace /-
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`noncompact_univ] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`noncompact_univ] [] -/
 /-- `α` is a noncompact topological space if it not a compact space. -/
 class NoncompactSpace (α : Type _) [TopologicalSpace α] : Prop where
   noncompact_univ : ¬IsCompact (univ : Set α)
@@ -978,7 +978,7 @@ theorem finite_cover_nhds [CompactSpace α] {U : α → Set α} (hU : ∀ x, U x
 /-- If `α` is a compact space, then a locally finite family of sets of `α` can have only finitely
 many nonempty elements. -/
 theorem LocallyFinite.finite_nonempty_of_compact {ι : Type _} [CompactSpace α] {f : ι → Set α}
-    (hf : LocallyFinite f) : { i | (f i).Nonempty }.Finite := by
+    (hf : LocallyFinite f) : {i | (f i).Nonempty}.Finite := by
   simpa only [inter_univ] using hf.finite_nonempty_inter_compact isCompact_univ
 #align locally_finite.finite_nonempty_of_compact LocallyFinite.finite_nonempty_of_compact
 
@@ -1251,7 +1251,7 @@ variable [∀ i, TopologicalSpace (π i)]
 #print isCompact_pi_infinite /-
 /-- **Tychonoff's theorem**: product of compact sets is compact. -/
 theorem isCompact_pi_infinite {s : ∀ i, Set (π i)} :
-    (∀ i, IsCompact (s i)) → IsCompact { x : ∀ i, π i | ∀ i, x i ∈ s i } :=
+    (∀ i, IsCompact (s i)) → IsCompact {x : ∀ i, π i | ∀ i, x i ∈ s i} :=
   by
   simp only [isCompact_iff_ultrafilter_le_nhds, nhds_pi, Filter.pi, exists_prop, mem_set_of_eq,
     le_iInf_iff, le_principal_iff]
@@ -1482,7 +1482,7 @@ theorem IsClosed.exists_minimal_nonempty_closed_subset [CompactSpace α] {S : Se
     ∃ V : Set α,
       V ⊆ S ∧ V.Nonempty ∧ IsClosed V ∧ ∀ V' : Set α, V' ⊆ V → V'.Nonempty → IsClosed V' → V' = V :=
   by
-  let opens := { U : Set α | Sᶜ ⊆ U ∧ IsOpen U ∧ Uᶜ.Nonempty }
+  let opens := {U : Set α | Sᶜ ⊆ U ∧ IsOpen U ∧ Uᶜ.Nonempty}
   obtain ⟨U, ⟨Uc, Uo, Ucne⟩, h⟩ :=
     zorn_subset opens fun c hc hz => by
       by_cases hcne : c.nonempty
@@ -1493,7 +1493,7 @@ theorem IsClosed.exists_minimal_nonempty_closed_subset [CompactSpace α] {S : Se
         refine' ⟨⟨_, _, _⟩, fun U hU a ha => ⟨U, hU, ha⟩⟩
         · exact fun a ha => ⟨U₀, hU₀, U₀compl ha⟩
         · exact isOpen_sUnion fun _ h => (hc h).2.1
-        · convert_to(⋂ U : { U // U ∈ c }, U.1ᶜ).Nonempty
+        · convert_to (⋂ U : { U // U ∈ c }, U.1ᶜ).Nonempty
           · ext
             simp only [not_exists, exists_prop, not_and, Set.mem_iInter, Subtype.forall,
               mem_set_of_eq, mem_compl_iff, mem_sUnion]
@@ -2081,7 +2081,7 @@ alias isIrreducible_iff_closure ↔ _ IsIrreducible.closure
 theorem exists_preirreducible (s : Set α) (H : IsPreirreducible s) :
     ∃ t : Set α, IsPreirreducible t ∧ s ⊆ t ∧ ∀ u, IsPreirreducible u → t ⊆ u → u = t :=
   let ⟨m, hm, hsm, hmm⟩ :=
-    zorn_subset_nonempty { t : Set α | IsPreirreducible t }
+    zorn_subset_nonempty {t : Set α | IsPreirreducible t}
       (fun c hc hcc hcn =>
         let ⟨t, htc⟩ := hcn
         ⟨⋃₀ c, fun u v hu hv ⟨y, hy, hyu⟩ ⟨z, hz, hzv⟩ =>
@@ -2103,7 +2103,7 @@ theorem exists_preirreducible (s : Set α) (H : IsPreirreducible s) :
 #print irreducibleComponents /-
 /-- The set of irreducible components of a topological space. -/
 def irreducibleComponents (α : Type _) [TopologicalSpace α] : Set (Set α) :=
-  maximals (· ≤ ·) { s : Set α | IsIrreducible s }
+  maximals (· ≤ ·) {s : Set α | IsIrreducible s}
 #align irreducible_components irreducibleComponents
 -/
 
@@ -2118,7 +2118,7 @@ theorem isClosed_of_mem_irreducibleComponents (s) (_ : s ∈ irreducibleComponen
 
 #print irreducibleComponents_eq_maximals_closed /-
 theorem irreducibleComponents_eq_maximals_closed (α : Type _) [TopologicalSpace α] :
-    irreducibleComponents α = maximals (· ≤ ·) { s : Set α | IsClosed s ∧ IsIrreducible s } :=
+    irreducibleComponents α = maximals (· ≤ ·) {s : Set α | IsClosed s ∧ IsIrreducible s} :=
   by
   ext s
   constructor
@@ -2178,7 +2178,7 @@ theorem isClosed_irreducibleComponent {x : α} : IsClosed (irreducibleComponent 
 -/
 
 #print PreirreducibleSpace /-
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`isPreirreducible_univ] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`isPreirreducible_univ] [] -/
 /-- A preirreducible space is one where there is no non-trivial pair of disjoint opens. -/
 class PreirreducibleSpace (α : Type u) [TopologicalSpace α] : Prop where
   isPreirreducible_univ : IsPreirreducible (univ : Set α)
@@ -2186,7 +2186,7 @@ class PreirreducibleSpace (α : Type u) [TopologicalSpace α] : Prop where
 -/
 
 #print IrreducibleSpace /-
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`to_nonempty] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`to_nonempty] [] -/
 /-- An irreducible space is one that is nonempty
 and where there is no non-trivial pair of disjoint opens. -/
 class IrreducibleSpace (α : Type u) [TopologicalSpace α] extends PreirreducibleSpace α : Prop where
@@ -2397,17 +2397,17 @@ theorem subset_closure_inter_of_isPreirreducible_of_isOpen {S U : Set α} (hS : 
 theorem IsPreirreducible.subset_irreducible {S U Z : Set α} (hZ : IsPreirreducible Z)
     (hU : U.Nonempty) (hU' : IsOpen U) (h₁ : U ⊆ S) (h₂ : S ⊆ Z) : IsIrreducible S := by
   classical
-    obtain ⟨z, hz⟩ := hU
-    replace hZ : IsIrreducible Z := ⟨⟨z, h₂ (h₁ hz)⟩, hZ⟩
-    refine' ⟨⟨z, h₁ hz⟩, _⟩
-    rintro u v hu hv ⟨x, hx, hx'⟩ ⟨y, hy, hy'⟩
-    obtain ⟨a, -, ha'⟩ := is_irreducible_iff_sInter.mp hZ {U, u, v} (by tidy) _
-    replace ha' : a ∈ U ∧ a ∈ u ∧ a ∈ v := by simpa using ha'
-    exact ⟨a, h₁ ha'.1, ha'.2⟩
-    · intro U H
-      simp only [Finset.mem_insert, Finset.mem_singleton] at H 
-      rcases H with (rfl | rfl | rfl)
-      exacts [⟨z, h₂ (h₁ hz), hz⟩, ⟨x, h₂ hx, hx'⟩, ⟨y, h₂ hy, hy'⟩]
+  obtain ⟨z, hz⟩ := hU
+  replace hZ : IsIrreducible Z := ⟨⟨z, h₂ (h₁ hz)⟩, hZ⟩
+  refine' ⟨⟨z, h₁ hz⟩, _⟩
+  rintro u v hu hv ⟨x, hx, hx'⟩ ⟨y, hy, hy'⟩
+  obtain ⟨a, -, ha'⟩ := is_irreducible_iff_sInter.mp hZ {U, u, v} (by tidy) _
+  replace ha' : a ∈ U ∧ a ∈ u ∧ a ∈ v := by simpa using ha'
+  exact ⟨a, h₁ ha'.1, ha'.2⟩
+  · intro U H
+    simp only [Finset.mem_insert, Finset.mem_singleton] at H 
+    rcases H with (rfl | rfl | rfl)
+    exacts [⟨z, h₂ (h₁ hz), hz⟩, ⟨x, h₂ hx, hx'⟩, ⟨y, h₂ hy, hy'⟩]
 #align is_preirreducible.subset_irreducible IsPreirreducible.subset_irreducible
 -/
 

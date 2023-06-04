@@ -33,11 +33,11 @@ namespace CategoryTheory.NormalMonoCategory
 
 variable [HasFiniteProducts C] [HasKernels C] [NormalMonoCategory C]
 
-/- ./././Mathport/Syntax/Translate/Command.lean:322:38: unsupported irreducible non-definition -/
+/- ./././Mathport/Syntax/Translate/Command.lean:323:38: unsupported irreducible non-definition -/
 #print CategoryTheory.NormalMonoCategory.pullback_of_mono /-
 /-- The pullback of two monomorphisms exists. -/
 irreducible_def pullback_of_mono {X Y Z : C} (a : X ⟶ Z) (b : Y ⟶ Z) [Mono a] [Mono b] :
-  HasLimit (cospan a b) :=
+    HasLimit (cospan a b) :=
   let ⟨P, f, haf, i⟩ := normalMonoOfMono a
   let ⟨Q, g, hbg, i'⟩ := normalMonoOfMono b
   let ⟨a', ha'⟩ :=
@@ -105,7 +105,7 @@ private abbrev P {X Y : C} (f g : X ⟶ Y) [Mono (prod.lift (𝟙 X) f)] [Mono (
     C :=
   pullback (prod.lift (𝟙 X) f) (prod.lift (𝟙 X) g)
 
-/- ./././Mathport/Syntax/Translate/Command.lean:322:38: unsupported irreducible non-definition -/
+/- ./././Mathport/Syntax/Translate/Command.lean:323:38: unsupported irreducible non-definition -/
 #print CategoryTheory.NormalMonoCategory.hasLimit_parallelPair /-
 /-- The equalizer of `f` and `g` exists. -/
 irreducible_def hasLimit_parallelPair {X Y : C} (f g : X ⟶ Y) : HasLimit (parallelPair f g) :=
@@ -192,11 +192,11 @@ namespace CategoryTheory.NormalEpiCategory
 
 variable [HasFiniteCoproducts C] [HasCokernels C] [NormalEpiCategory C]
 
-/- ./././Mathport/Syntax/Translate/Command.lean:322:38: unsupported irreducible non-definition -/
+/- ./././Mathport/Syntax/Translate/Command.lean:323:38: unsupported irreducible non-definition -/
 #print CategoryTheory.NormalEpiCategory.pushout_of_epi /-
 /-- The pushout of two epimorphisms exists. -/
 irreducible_def pushout_of_epi {X Y Z : C} (a : X ⟶ Y) (b : X ⟶ Z) [Epi a] [Epi b] :
-  HasColimit (span a b) :=
+    HasColimit (span a b) :=
   let ⟨P, f, hfa, i⟩ := normalEpiOfEpi a
   let ⟨Q, g, hgb, i'⟩ := normalEpiOfEpi b
   let ⟨a', ha'⟩ :=
@@ -267,7 +267,7 @@ private abbrev Q {X Y : C} (f g : X ⟶ Y) [Epi (coprod.desc (𝟙 Y) f)] [Epi (
     C :=
   pushout (coprod.desc (𝟙 Y) f) (coprod.desc (𝟙 Y) g)
 
-/- ./././Mathport/Syntax/Translate/Command.lean:322:38: unsupported irreducible non-definition -/
+/- ./././Mathport/Syntax/Translate/Command.lean:323:38: unsupported irreducible non-definition -/
 #print CategoryTheory.NormalEpiCategory.hasColimit_parallelPair /-
 /-- The coequalizer of `f` and `g` exists. -/
 irreducible_def hasColimit_parallelPair {X Y : C} (f g : X ⟶ Y) : HasColimit (parallelPair f g) :=

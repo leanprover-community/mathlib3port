@@ -112,15 +112,15 @@ theorem toFunLinear_mul_tmul_mul (a₁ a₂ : A) (p₁ p₂ : R[X]) :
       (toFunLinear R A) (a₁ ⊗ₜ[R] p₁) * (toFunLinear R A) (a₂ ⊗ₜ[R] p₂) :=
   by
   classical
-    simp only [to_fun_linear_tmul_apply, to_fun_bilinear_apply_eq_sum]
-    ext k
-    simp_rw [coeff_sum, coeff_monomial, sum_def, Finset.sum_ite_eq', mem_support_iff, Ne.def]
-    conv_rhs => rw [coeff_mul]
-    simp_rw [finset_sum_coeff, coeff_monomial, Finset.sum_ite_eq', mem_support_iff, Ne.def, mul_ite,
-      MulZeroClass.mul_zero, ite_mul, MulZeroClass.zero_mul]
-    simp_rw [ite_mul_zero_left (¬coeff p₁ _ = 0) (a₁ * (algebraMap R A) (coeff p₁ _))]
-    simp_rw [ite_mul_zero_right (¬coeff p₂ _ = 0) _ (_ * _)]
-    simp_rw [to_fun_linear_mul_tmul_mul_aux_1, to_fun_linear_mul_tmul_mul_aux_2]
+  simp only [to_fun_linear_tmul_apply, to_fun_bilinear_apply_eq_sum]
+  ext k
+  simp_rw [coeff_sum, coeff_monomial, sum_def, Finset.sum_ite_eq', mem_support_iff, Ne.def]
+  conv_rhs => rw [coeff_mul]
+  simp_rw [finset_sum_coeff, coeff_monomial, Finset.sum_ite_eq', mem_support_iff, Ne.def, mul_ite,
+    MulZeroClass.mul_zero, ite_mul, MulZeroClass.zero_mul]
+  simp_rw [ite_mul_zero_left (¬coeff p₁ _ = 0) (a₁ * (algebraMap R A) (coeff p₁ _))]
+  simp_rw [ite_mul_zero_right (¬coeff p₂ _ = 0) _ (_ * _)]
+  simp_rw [to_fun_linear_mul_tmul_mul_aux_1, to_fun_linear_mul_tmul_mul_aux_2]
 #align poly_equiv_tensor.to_fun_linear_mul_tmul_mul PolyEquivTensor.toFunLinear_mul_tmul_mul
 
 theorem toFunLinear_algebraMap_tmul_one (r : R) :

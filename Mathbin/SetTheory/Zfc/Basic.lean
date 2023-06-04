@@ -405,7 +405,7 @@ theorem mem_irrefl (x : PSet) : x ∉ x :=
 #print PSet.toSet /-
 /-- Convert a pre-set to a `set` of pre-sets. -/
 def toSet (u : PSet.{u}) : Set PSet.{u} :=
-  { x | x ∈ u }
+  {x | x ∈ u}
 #align pSet.to_set PSet.toSet
 -/
 
@@ -565,7 +565,7 @@ def powerset (x : PSet) : PSet :=
 theorem mem_powerset : ∀ {x y : PSet}, y ∈ powerset x ↔ y ⊆ x
   | ⟨α, A⟩, ⟨β, B⟩ =>
     ⟨fun ⟨p, e⟩ => (Subset.congr_left e).2 fun ⟨a, pa⟩ => ⟨a, Equiv.refl (A a)⟩, fun βα =>
-      ⟨{ a | ∃ b, Equiv (B b) (A a) }, fun b =>
+      ⟨{a | ∃ b, Equiv (B b) (A a)}, fun b =>
         let ⟨a, ba⟩ := βα b
         ⟨⟨a, b, ba⟩, ba⟩,
         fun ⟨a, b, ba⟩ => ⟨b, ba⟩⟩⟩
@@ -895,7 +895,7 @@ theorem mk_mem_iff {x y : PSet} : mk x ∈ mk y ↔ x ∈ y :=
 #print ZFSet.toSet /-
 /-- Convert a ZFC set into a `set` of ZFC sets -/
 def toSet (u : ZFSet.{u}) : Set ZFSet.{u} :=
-  { x | x ∈ u }
+  {x | x ∈ u}
 #align Set.to_set ZFSet.toSet
 -/
 
@@ -1217,7 +1217,7 @@ instance : Sep ZFSet ZFSet :=
 
 #print ZFSet.mem_sep /-
 @[simp]
-theorem mem_sep {p : ZFSet.{u} → Prop} {x y : ZFSet.{u}} : y ∈ { y ∈ x | p y } ↔ y ∈ x ∧ p y :=
+theorem mem_sep {p : ZFSet.{u} → Prop} {x y : ZFSet.{u}} : y ∈ {y ∈ x | p y} ↔ y ∈ x ∧ p y :=
   Quotient.induction_on₂ x y fun ⟨α, A⟩ y =>
     ⟨fun ⟨⟨a, pa⟩, h⟩ => ⟨⟨a, h⟩, by rwa [@Quotient.sound PSet _ _ _ h]⟩, fun ⟨⟨a, h⟩, pa⟩ =>
       ⟨⟨a, by rw [mk_func] at h ; rwa [mk_func, ← ZFSet.sound h]⟩, h⟩⟩
@@ -1226,8 +1226,8 @@ theorem mem_sep {p : ZFSet.{u} → Prop} {x y : ZFSet.{u}} : y ∈ { y ∈ x | p
 
 #print ZFSet.toSet_sep /-
 @[simp]
-theorem toSet_sep (a : ZFSet) (p : ZFSet → Prop) : { x ∈ a | p x }.toSet = { x ∈ a.toSet | p x } :=
-  by ext; simp
+theorem toSet_sep (a : ZFSet) (p : ZFSet → Prop) : {x ∈ a | p x}.toSet = {x ∈ a.toSet | p x} := by
+  ext; simp
 #align Set.to_set_sep ZFSet.toSet_sep
 -/
 
@@ -1237,12 +1237,12 @@ def powerset : ZFSet → ZFSet :=
   Resp.eval 1
     ⟨powerset, fun ⟨α, A⟩ ⟨β, B⟩ ⟨αβ, βα⟩ =>
       ⟨fun p =>
-        ⟨{ b | ∃ a, p a ∧ Equiv (A a) (B b) }, fun ⟨a, pa⟩ =>
+        ⟨{b | ∃ a, p a ∧ Equiv (A a) (B b)}, fun ⟨a, pa⟩ =>
           let ⟨b, ab⟩ := αβ a
           ⟨⟨b, a, pa, ab⟩, ab⟩,
           fun ⟨b, a, pa, ab⟩ => ⟨⟨a, pa⟩, ab⟩⟩,
         fun q =>
-        ⟨{ a | ∃ b, q b ∧ Equiv (A a) (B b) }, fun ⟨a, b, qb, ab⟩ => ⟨⟨b, qb⟩, ab⟩, fun ⟨b, qb⟩ =>
+        ⟨{a | ∃ b, q b ∧ Equiv (A a) (B b)}, fun ⟨a, b, qb, ab⟩ => ⟨⟨b, qb⟩, ab⟩, fun ⟨b, qb⟩ =>
           let ⟨a, ab⟩ := βα b
           ⟨⟨a, b, qb, ab⟩, ab⟩⟩⟩⟩
 #align Set.powerset ZFSet.powerset
@@ -1294,7 +1294,7 @@ prefix:110 "⋃₀ " => ZFSet.sUnion
 /-- The intersection operator, the collection of elements in all of the elements of a ZFC set. We
 special-case `⋂₀ ∅ = ∅`. -/
 noncomputable def sInter (x : ZFSet) : ZFSet := by
-  classical exact dite x.nonempty (fun h => { y ∈ h.some | ∀ z ∈ x, y ∈ z }) fun _ => ∅
+  classical exact dite x.nonempty (fun h => {y ∈ h.some | ∀ z ∈ x, y ∈ z}) fun _ => ∅
 #align Set.sInter ZFSet.sInter
 -/
 
@@ -1416,14 +1416,14 @@ protected def union (x y : ZFSet.{u}) : ZFSet.{u} :=
 #print ZFSet.inter /-
 /-- The binary intersection operation -/
 protected def inter (x y : ZFSet.{u}) : ZFSet.{u} :=
-  { z ∈ x | z ∈ y }
+  {z ∈ x | z ∈ y}
 #align Set.inter ZFSet.inter
 -/
 
 #print ZFSet.diff /-
 /-- The set difference operation -/
 protected def diff (x y : ZFSet.{u}) : ZFSet.{u} :=
-  { z ∈ x | z ∉ y }
+  {z ∈ x | z ∉ y}
 #align Set.diff ZFSet.diff
 -/
 
@@ -1448,7 +1448,7 @@ theorem toSet_inter (x y : ZFSet.{u}) : (x ∩ y).toSet = x.toSet ∩ y.toSet :=
 
 @[simp]
 theorem toSet_sdiff (x y : ZFSet.{u}) : (x \ y).toSet = x.toSet \ y.toSet := by
-  change { z ∈ x | z ∉ y }.toSet = _; ext; simp
+  change {z ∈ x | z ∉ y}.toSet = _; ext; simp
 #align Set.to_set_sdiff ZFSet.toSet_sdiff
 
 #print ZFSet.mem_union /-
@@ -1617,7 +1617,7 @@ theorem toSet_pair (x y : ZFSet.{u}) : (pair x y).toSet = {{x}, {x, y}} := by si
 #print ZFSet.pairSep /-
 /-- A subset of pairs `{(a, b) ∈ x × y | p a b}` -/
 def pairSep (p : ZFSet.{u} → ZFSet.{u} → Prop) (x y : ZFSet.{u}) : ZFSet.{u} :=
-  { z ∈ powerset (powerset (x ∪ y)) | ∃ a ∈ x, ∃ b ∈ y, z = pair a b ∧ p a b }
+  {z ∈ powerset (powerset (x ∪ y)) | ∃ a ∈ x, ∃ b ∈ y, z = pair a b ∧ p a b}
 #align Set.pair_sep ZFSet.pairSep
 -/
 
@@ -1699,7 +1699,7 @@ def IsFunc (x y f : ZFSet.{u}) : Prop :=
 #print ZFSet.funs /-
 /-- `funs x y` is `y ^ x`, the set of all set functions `x → y` -/
 def funs (x y : ZFSet.{u}) : ZFSet.{u} :=
-  { f ∈ powerset (prod x y) | IsFunc x y f }
+  {f ∈ powerset (prod x y) | IsFunc x y f}
 #align Set.funs ZFSet.funs
 -/
 
@@ -1804,8 +1804,8 @@ end Hereditarily
 
 end ZFSet
 
-/- ./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler has_sep[has_sep] Set[Set] -/
-/- ./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler has_insert[has_insert] Set[Set] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:43:9: unsupported derive handler has_sep[has_sep] Set[Set] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:43:9: unsupported derive handler has_insert[has_insert] Set[Set] -/
 #print Class /-
 /-- The collection of all classes.
 
@@ -1815,9 +1815,9 @@ state that `x : Set` belongs to `A : Class` is to write `A x`. -/
 def Class :=
   Set ZFSet
 deriving HasSubset,
-  «./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler has_sep[has_sep] Set[Set]»,
+  «./././Mathport/Syntax/Translate/Command.lean:43:9: unsupported derive handler has_sep[has_sep] Set[Set]»,
   EmptyCollection, Inhabited,
-  «./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler has_insert[has_insert] Set[Set]»,
+  «./././Mathport/Syntax/Translate/Command.lean:43:9: unsupported derive handler has_insert[has_insert] Set[Set]»,
   Union, Inter, HasCompl, SDiff
 #align Class Class
 -/
@@ -1840,7 +1840,7 @@ theorem ext_iff {x y : Class.{u}} : x = y ↔ ∀ z, x z ↔ y z :=
 #print Class.ofSet /-
 /-- Coerce a ZFC set into a class -/
 def ofSet (x : ZFSet.{u}) : Class.{u} :=
-  { y | y ∈ x }
+  {y | y ∈ x}
 #align Class.of_Set Class.ofSet
 -/
 
@@ -1961,7 +1961,7 @@ theorem univ_not_mem_univ : univ ∉ univ :=
 #print Class.congToClass /-
 /-- Convert a conglomerate (a collection of classes) into a class -/
 def congToClass (x : Set Class.{u}) : Class.{u} :=
-  { y | ↑y ∈ x }
+  {y | ↑y ∈ x}
 #align Class.Cong_to_Class Class.congToClass
 -/
 
@@ -1974,7 +1974,7 @@ theorem congToClass_empty : congToClass ∅ = ∅ := by ext; simp [Cong_to_Class
 #print Class.classToCong /-
 /-- Convert a class into a conglomerate (a collection of classes) -/
 def classToCong (x : Class.{u}) : Set Class.{u} :=
-  { y | y ∈ x }
+  {y | y ∈ x}
 #align Class.Class_to_Cong Class.classToCong
 -/
 
@@ -2049,8 +2049,7 @@ theorem coe_subset (x y : ZFSet.{u}) : (x : Class.{u}) ⊆ y ↔ x ⊆ y :=
 
 #print Class.coe_sep /-
 @[simp, norm_cast]
-theorem coe_sep (p : Class.{u}) (x : ZFSet.{u}) :
-    (↑({ y ∈ x | p y }) : Class.{u}) = { y ∈ x | p y } :=
+theorem coe_sep (p : Class.{u}) (x : ZFSet.{u}) : (↑({y ∈ x | p y}) : Class.{u}) = {y ∈ x | p y} :=
   ext fun y => ZFSet.mem_sep
 #align Class.coe_sep Class.coe_sep
 -/
@@ -2208,7 +2207,7 @@ theorem eq_univ_of_powerset_subset {A : Class} (hA : powerset A ⊆ A) : A = uni
 #print Class.iota /-
 /-- The definite description operator, which is `{x}` if `{y | A y} = {x}` and `∅` otherwise. -/
 def iota (A : Class) : Class :=
-  ⋃₀ { x | ∀ y, A y ↔ y = x }
+  ⋃₀ {x | ∀ y, A y ↔ y = x}
 #align Class.iota Class.iota
 -/
 

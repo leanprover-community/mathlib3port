@@ -81,7 +81,7 @@ theorem continuous_infEdist_Hausdorff_edist :
 #print EMetric.isClosed_subsets_of_isClosed /-
 /-- Subsets of a given closed subset form a closed set -/
 theorem isClosed_subsets_of_isClosed (hs : IsClosed s) :
-    IsClosed { t : Closeds α | (t : Set α) ⊆ s } :=
+    IsClosed {t : Closeds α | (t : Set α) ⊆ s} :=
   by
   refine' isClosed_of_closure_subset fun t ht x hx => _
   -- t : closeds α,  ht : t ∈ closure {t : closeds α | t ⊆ s},
@@ -234,7 +234,7 @@ instance Closeds.compactSpace [CompactSpace α] : CompactSpace (Closeds α) :=
     have main : ∀ u : Set α, ∃ (v : _) (_ : v ⊆ s), Hausdorff_edist u v ≤ δ :=
       by
       intro u
-      let v := { x : α | x ∈ s ∧ ∃ y ∈ u, edist x y < δ }
+      let v := {x : α | x ∈ s ∧ ∃ y ∈ u, edist x y < δ}
       exists v, (fun x hx => hx.1 : v ⊆ s)
       refine' Hausdorff_edist_le_of_mem_edist _ _
       · intro x hx
@@ -245,7 +245,7 @@ instance Closeds.compactSpace [CompactSpace α] : CompactSpace (Closeds α) :=
       · rintro x ⟨hx1, ⟨y, yu, hy⟩⟩
         exact ⟨y, yu, le_of_lt hy⟩
     -- introduce the set F of all subsets of `s` (seen as members of `closeds α`).
-    let F := { f : closeds α | (f : Set α) ⊆ s }
+    let F := {f : closeds α | (f : Set α) ⊆ s}
     refine' ⟨F, _, fun u _ => _⟩
     -- `F` is finite
     · apply @finite.of_finite_image _ _ F coe
@@ -297,7 +297,7 @@ theorem NonemptyCompacts.isClosed_in_closeds [CompleteSpace α] :
   by
   have :
     range nonempty_compacts.to_closeds =
-      { s : closeds α | (s : Set α).Nonempty ∧ IsCompact (s : Set α) } :=
+      {s : closeds α | (s : Set α).Nonempty ∧ IsCompact (s : Set α)} :=
     by
     ext s
     refine' ⟨_, fun h => ⟨⟨⟨s, h.2⟩, h.1⟩, closeds.ext rfl⟩⟩
@@ -368,8 +368,8 @@ instance NonemptyCompacts.secondCountableTopology [SecondCountableTopology α] :
         approximations in `s` of the centers of these balls give the required finite approximation
         of `t`. -/
     rcases exists_countable_dense α with ⟨s, cs, s_dense⟩
-    let v0 := { t : Set α | t.Finite ∧ t ⊆ s }
-    let v : Set (nonempty_compacts α) := { t : nonempty_compacts α | (t : Set α) ∈ v0 }
+    let v0 := {t : Set α | t.Finite ∧ t ⊆ s}
+    let v : Set (nonempty_compacts α) := {t : nonempty_compacts α | (t : Set α) ∈ v0}
     refine' ⟨⟨v, _, _⟩⟩
     · have : v0.countable := countable_set_of_finite_subset cs
       exact this.preimage SetLike.coe_injective
@@ -403,7 +403,7 @@ instance NonemptyCompacts.secondCountableTopology [SecondCountableTopology α] :
           _ = δ := ENNReal.add_halves _
           
       -- keep only the points in `b` that are close to point in `t`, yielding a new set `c`
-      let c := { y ∈ b | ∃ x ∈ t, edist x y < δ }
+      let c := {y ∈ b | ∃ x ∈ t, edist x y < δ}
       have : c.finite := ‹b.finite›.Subset fun x hx => hx.1
       -- points in `t` are well approximated by points in `c`
       have tc : ∀ x ∈ t, ∃ y ∈ c, edist x y ≤ δ :=

@@ -148,7 +148,7 @@ Use `units.coe_embedding₀`, `units.coe_embedding`, or `to_units_homeomorph` in
 @[to_additive
       "An auxiliary lemma that can be used to prove that coercion `add_units M → M` is a\ntopological embedding. Use `add_units.coe_embedding` or `to_add_units_homeomorph` instead."]
 theorem embedding_val_mk {M : Type _} [DivisionMonoid M] [TopologicalSpace M]
-    (h : ContinuousOn Inv.inv { x : M | IsUnit x }) : Embedding (coe : Mˣ → M) :=
+    (h : ContinuousOn Inv.inv {x : M | IsUnit x}) : Embedding (coe : Mˣ → M) :=
   by
   refine' ⟨⟨_⟩, ext⟩
   rw [topology_eq_inf, inf_eq_left, ← continuous_iff_le_induced, continuous_iff_continuousAt]

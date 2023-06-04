@@ -40,6 +40,7 @@ variable (F G F' G' : C ⥤ D)
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print CategoryTheory.Monoidal.FunctorCategory.tensorObj /-
 /-- (An auxiliary definition for `functor_category_monoidal`.)
 Tensor product of functors `C ⥤ D`, when `D` is monoidal.
  -/
@@ -50,12 +51,14 @@ def tensorObj : C ⥤ D where
   map_id' X := by rw [F.map_id, G.map_id, tensor_id]
   map_comp' X Y Z f g := by rw [F.map_comp, G.map_comp, tensor_comp]
 #align category_theory.monoidal.functor_category.tensor_obj CategoryTheory.Monoidal.FunctorCategory.tensorObj
+-/
 
 variable {F G F' G'}
 
 variable (α : F ⟶ G) (β : F' ⟶ G')
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print CategoryTheory.Monoidal.FunctorCategory.tensorHom /-
 /-- (An auxiliary definition for `functor_category_monoidal`.)
 Tensor product of natural transformations into `D`, when `D` is monoidal.
 -/
@@ -65,11 +68,13 @@ def tensorHom : tensorObj F F' ⟶ tensorObj G G'
   app X := α.app X ⊗ β.app X
   naturality' X Y f := by dsimp; rw [← tensor_comp, α.naturality, β.naturality, tensor_comp]
 #align category_theory.monoidal.functor_category.tensor_hom CategoryTheory.Monoidal.FunctorCategory.tensorHom
+-/
 
 end FunctorCategory
 
 open CategoryTheory.Monoidal.FunctorCategory
 
+#print CategoryTheory.Monoidal.functorCategoryMonoidal /-
 /-- When `C` is any category, and `D` is a monoidal category,
 the functor category `C ⥤ D` has a natural pointwise monoidal structure,
 where `(F ⊗ G).obj X = F.obj X ⊗ G.obj X`.
@@ -94,6 +99,7 @@ instance functorCategoryMonoidal : MonoidalCategory (C ⥤ D)
   triangle' F G := by ext X; dsimp; rw [triangle]
   pentagon' F G H K := by ext X; dsimp; rw [pentagon]
 #align category_theory.monoidal.functor_category_monoidal CategoryTheory.Monoidal.functorCategoryMonoidal
+-/
 
 @[simp]
 theorem tensorUnit_obj {X} : (𝟙_ (C ⥤ D)).obj X = 𝟙_ D :=
@@ -181,6 +187,7 @@ open CategoryTheory.BraidedCategory
 
 variable [BraidedCategory.{v₂} D]
 
+#print CategoryTheory.Monoidal.functorCategoryBraided /-
 /-- When `C` is any category, and `D` is a braided monoidal category,
 the natural pointwise monoidal structure on the functor category `C ⥤ D`
 is also braided.
@@ -191,6 +198,7 @@ instance functorCategoryBraided : BraidedCategory (C ⥤ D)
   hexagon_forward' F G H := by ext X; apply hexagon_forward
   hexagon_reverse' F G H := by ext X; apply hexagon_reverse
 #align category_theory.monoidal.functor_category_braided CategoryTheory.Monoidal.functorCategoryBraided
+-/
 
 example : BraidedCategory (C ⥤ D) :=
   CategoryTheory.Monoidal.functorCategoryBraided
@@ -203,6 +211,7 @@ open CategoryTheory.SymmetricCategory
 
 variable [SymmetricCategory.{v₂} D]
 
+#print CategoryTheory.Monoidal.functorCategorySymmetric /-
 /-- When `C` is any category, and `D` is a symmetric monoidal category,
 the natural pointwise monoidal structure on the functor category `C ⥤ D`
 is also symmetric.
@@ -210,6 +219,7 @@ is also symmetric.
 instance functorCategorySymmetric : SymmetricCategory (C ⥤ D)
     where symmetry' F G := by ext X; apply symmetry
 #align category_theory.monoidal.functor_category_symmetric CategoryTheory.Monoidal.functorCategorySymmetric
+-/
 
 end SymmetricCategory
 

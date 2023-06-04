@@ -353,7 +353,7 @@ theorem natDegree_divByMonic {R : Type u} [CommRing R] (f : R[X]) {g : R[X]} (hg
   by_cases hfg : f /ₘ g = 0
   · rw [hfg, nat_degree_zero]; rw [div_by_monic_eq_zero_iff hg] at hfg 
     rw [tsub_eq_zero_iff_le.mpr (nat_degree_le_nat_degree <| le_of_lt hfg)]
-  have hgf := hfg; rw [div_by_monic_eq_zero_iff hg] at hgf ; push_neg  at hgf 
+  have hgf := hfg; rw [div_by_monic_eq_zero_iff hg] at hgf ; push_neg at hgf 
   have := degree_add_div_by_monic hg hgf
   have hf : f ≠ 0 := by intro hf; apply hfg; rw [hf, zero_div_by_monic]
   rw [degree_eq_nat_degree hf, degree_eq_nat_degree hg.ne_zero, degree_eq_nat_degree hfg, ←

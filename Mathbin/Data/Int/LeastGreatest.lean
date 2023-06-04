@@ -67,9 +67,9 @@ then this set has the least element. This lemma uses classical logic to avoid as
 theorem exists_least_of_bdd {P : ℤ → Prop} (Hbdd : ∃ b : ℤ, ∀ z : ℤ, P z → b ≤ z)
     (Hinh : ∃ z : ℤ, P z) : ∃ lb : ℤ, P lb ∧ ∀ z : ℤ, P z → lb ≤ z := by
   classical exact
-      let ⟨b, Hb⟩ := Hbdd
-      let ⟨lb, H⟩ := least_of_bdd b Hb Hinh
-      ⟨lb, H⟩
+    let ⟨b, Hb⟩ := Hbdd
+    let ⟨lb, H⟩ := least_of_bdd b Hb Hinh
+    ⟨lb, H⟩
 #align int.exists_least_of_bdd Int.exists_least_of_bdd
 
 #print Int.coe_leastOfBdd_eq /-
@@ -104,9 +104,9 @@ then this set has the greatest element. This lemma uses classical logic to avoid
 theorem exists_greatest_of_bdd {P : ℤ → Prop} (Hbdd : ∃ b : ℤ, ∀ z : ℤ, P z → z ≤ b)
     (Hinh : ∃ z : ℤ, P z) : ∃ ub : ℤ, P ub ∧ ∀ z : ℤ, P z → z ≤ ub := by
   classical exact
-      let ⟨b, Hb⟩ := Hbdd
-      let ⟨lb, H⟩ := greatest_of_bdd b Hb Hinh
-      ⟨lb, H⟩
+    let ⟨b, Hb⟩ := Hbdd
+    let ⟨lb, H⟩ := greatest_of_bdd b Hb Hinh
+    ⟨lb, H⟩
 #align int.exists_greatest_of_bdd Int.exists_greatest_of_bdd
 
 #print Int.coe_greatestOfBdd_eq /-

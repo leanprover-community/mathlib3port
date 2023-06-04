@@ -43,7 +43,7 @@ namespace WeakDual
 are also algebra homomorphisms. -/
 def characterSpace (𝕜 : Type _) (A : Type _) [CommSemiring 𝕜] [TopologicalSpace 𝕜] [ContinuousAdd 𝕜]
     [ContinuousConstSMul 𝕜 𝕜] [NonUnitalNonAssocSemiring A] [TopologicalSpace A] [Module 𝕜 A] :=
-  { φ : WeakDual 𝕜 A | φ ≠ 0 ∧ ∀ x y : A, φ (x * y) = φ x * φ y }
+  {φ : WeakDual 𝕜 A | φ ≠ 0 ∧ ∀ x y : A, φ (x * y) = φ x * φ y}
 #align weak_dual.character_space WeakDual.characterSpace
 
 variable {𝕜 : Type _} {A : Type _}
@@ -114,7 +114,7 @@ instance [Subsingleton A] : IsEmpty (characterSpace 𝕜 A) :=
 variable (𝕜 A)
 
 theorem union_zero :
-    characterSpace 𝕜 A ∪ {0} = { φ : WeakDual 𝕜 A | ∀ x y : A, φ (x * y) = φ x * φ y } :=
+    characterSpace 𝕜 A ∪ {0} = {φ : WeakDual 𝕜 A | ∀ x y : A, φ (x * y) = φ x * φ y} :=
   le_antisymm
     (by rintro φ (hφ | h₀); · exact hφ.2; · exact fun x y => by simp [Set.eq_of_mem_singleton h₀])
     fun φ hφ => Or.elim (em <| φ = 0) (fun h₀ => Or.inr h₀) fun h₀ => Or.inl ⟨h₀, hφ⟩
@@ -164,7 +164,7 @@ def toAlgHom (φ : characterSpace 𝕜 A) : A →ₐ[𝕜] 𝕜 :=
 #align weak_dual.character_space.to_alg_hom WeakDual.characterSpace.toAlgHom
 
 theorem eq_set_map_one_map_mul [Nontrivial 𝕜] :
-    characterSpace 𝕜 A = { φ : WeakDual 𝕜 A | φ 1 = 1 ∧ ∀ x y : A, φ (x * y) = φ x * φ y } :=
+    characterSpace 𝕜 A = {φ : WeakDual 𝕜 A | φ 1 = 1 ∧ ∀ x y : A, φ (x * y) = φ x * φ y} :=
   by
   ext x
   refine' ⟨fun h => ⟨map_one (⟨x, h⟩ : character_space 𝕜 A), h.2⟩, fun h => ⟨_, h.2⟩⟩

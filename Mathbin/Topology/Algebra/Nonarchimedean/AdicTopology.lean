@@ -155,7 +155,7 @@ def openAddSubgroup (n : ℕ) : @OpenAddSubgroup R _ I.adicTopology :=
   { (I ^ n).toAddSubgroup with
     is_open' := by
       letI := I.adic_topology
-      convert(I.adic_basis.to_ring_subgroups_basis.open_add_subgroup n).IsOpen
+      convert (I.adic_basis.to_ring_subgroups_basis.open_add_subgroup n).IsOpen
       simp }
 #align ideal.open_add_subgroup Ideal.openAddSubgroup
 

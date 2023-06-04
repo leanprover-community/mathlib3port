@@ -751,9 +751,9 @@ instance : CoeFun (M →ₗ⁅R,L⁆ N) fun _ => M → N :=
   ⟨fun f => f.toLinearMap.toFun⟩
 
 @[simp, norm_cast]
-theorem coe_to_linearMap (f : M →ₗ⁅R,L⁆ N) : ((f : M →ₗ[R] N) : M → N) = f :=
+theorem coe_toLinearMap (f : M →ₗ⁅R,L⁆ N) : ((f : M →ₗ[R] N) : M → N) = f :=
   rfl
-#align lie_module_hom.coe_to_linear_map LieModuleHom.coe_to_linearMap
+#align lie_module_hom.coe_to_linear_map LieModuleHom.coe_toLinearMap
 
 @[simp]
 theorem map_smul (f : M →ₗ⁅R,L⁆ N) (c : R) (x : M) : f (c • x) = c • f x :=

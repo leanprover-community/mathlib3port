@@ -212,11 +212,11 @@ theorem DirectSum.IsInternal.isometryL2OfOrthogonalFamily_symm_apply [DecidableE
     (hV' : OrthogonalFamily 𝕜 (fun i => V i) fun i => (V i).subtypeₗᵢ) (w : PiLp 2 fun i => V i) :
     (hV.isometryL2OfOrthogonalFamily hV').symm w = ∑ i, (w i : E) := by
   classical
-    let e₁ := DirectSum.linearEquivFunOnFintype 𝕜 ι fun i => V i
-    let e₂ := LinearEquiv.ofBijective (DirectSum.coeLinearMap V) hV
-    suffices ∀ v : ⨁ i, V i, e₂ v = ∑ i, e₁ v i by exact this (e₁.symm w)
-    intro v
-    simp [e₂, DirectSum.coeLinearMap, DirectSum.toModule, Dfinsupp.sumAddHom_apply]
+  let e₁ := DirectSum.linearEquivFunOnFintype 𝕜 ι fun i => V i
+  let e₂ := LinearEquiv.ofBijective (DirectSum.coeLinearMap V) hV
+  suffices ∀ v : ⨁ i, V i, e₂ v = ∑ i, e₁ v i by exact this (e₁.symm w)
+  intro v
+  simp [e₂, DirectSum.coeLinearMap, DirectSum.toModule, Dfinsupp.sumAddHom_apply]
 #align direct_sum.is_internal.isometry_L2_of_orthogonal_family_symm_apply DirectSum.IsInternal.isometryL2OfOrthogonalFamily_symm_apply
 
 end
@@ -372,8 +372,8 @@ theorem coe_ofRepr [DecidableEq ι] (e : E ≃ₗᵢ[𝕜] EuclideanSpace 𝕜 �
 protected theorem repr_symm_single [DecidableEq ι] (b : OrthonormalBasis ι 𝕜 E) (i : ι) :
     b.repr.symm (EuclideanSpace.single i (1 : 𝕜)) = b i := by
   classical
-    congr
-    simp
+  congr
+  simp
 #align orthonormal_basis.repr_symm_single OrthonormalBasis.repr_symm_single
 
 @[simp]
@@ -385,17 +385,17 @@ protected theorem repr_self [DecidableEq ι] (b : OrthonormalBasis ι 𝕜 E) (i
 protected theorem repr_apply_apply (b : OrthonormalBasis ι 𝕜 E) (v : E) (i : ι) :
     b.repr v i = ⟪b i, v⟫ := by
   classical
-    rw [← b.repr.inner_map_map (b i) v, b.repr_self i, EuclideanSpace.inner_single_left]
-    simp only [one_mul, eq_self_iff_true, map_one]
+  rw [← b.repr.inner_map_map (b i) v, b.repr_self i, EuclideanSpace.inner_single_left]
+  simp only [one_mul, eq_self_iff_true, map_one]
 #align orthonormal_basis.repr_apply_apply OrthonormalBasis.repr_apply_apply
 
 @[simp]
 protected theorem orthonormal (b : OrthonormalBasis ι 𝕜 E) : Orthonormal 𝕜 b := by
   classical
-    rw [orthonormal_iff_ite]
-    intro i j
-    rw [← b.repr.inner_map_map (b i) (b j), b.repr_self i, b.repr_self j,
-      EuclideanSpace.inner_single_left, EuclideanSpace.single_apply, map_one, one_mul]
+  rw [orthonormal_iff_ite]
+  intro i j
+  rw [← b.repr.inner_map_map (b i) (b j), b.repr_self i, b.repr_self j,
+    EuclideanSpace.inner_single_left, EuclideanSpace.single_apply, map_one, one_mul]
 #align orthonormal_basis.orthonormal OrthonormalBasis.orthonormal
 
 #print OrthonormalBasis.toBasis /-
@@ -411,8 +411,8 @@ protected theorem coe_toBasis (b : OrthonormalBasis ι 𝕜 E) : (⇑b.toBasis :
   change ⇑(Basis.ofEquivFun b.repr.to_linear_equiv) = b
   ext j
   classical
-    rw [Basis.coe_ofEquivFun]
-    congr
+  rw [Basis.coe_ofEquivFun]
+  congr
 #align orthonormal_basis.coe_to_basis OrthonormalBasis.coe_toBasis
 
 @[simp]
@@ -596,11 +596,11 @@ def reindex (b : OrthonormalBasis ι 𝕜 E) (e : ι ≃ ι') : OrthonormalBasis
 protected theorem reindex_apply (b : OrthonormalBasis ι 𝕜 E) (e : ι ≃ ι') (i' : ι') :
     (b.reindex e) i' = b (e.symm i') := by
   classical
-    dsimp [reindex, OrthonormalBasis.hasCoeToFun]
-    rw [coe_of_repr]
-    dsimp
-    rw [← b.repr_symm_single, LinearIsometryEquiv.piLpCongrLeft_symm,
-      EuclideanSpace.piLpCongrLeft_single]
+  dsimp [reindex, OrthonormalBasis.hasCoeToFun]
+  rw [coe_of_repr]
+  dsimp
+  rw [← b.repr_symm_single, LinearIsometryEquiv.piLpCongrLeft_symm,
+    EuclideanSpace.piLpCongrLeft_single]
 #align orthonormal_basis.reindex_apply OrthonormalBasis.reindex_apply
 
 @[simp]
@@ -702,7 +702,7 @@ theorem OrthonormalBasis.det_to_matrix_orthonormalBasis : ‖a.toBasis.det b‖ 
   have : (norm_sq (a.to_basis.det b) : 𝕜) = 1 := by
     simpa [IsROrC.mul_conj] using
       (Matrix.det_of_mem_unitary (a.to_matrix_orthonormal_basis_mem_unitary b)).2
-  norm_cast  at this 
+  norm_cast at this 
   rwa [← sqrt_norm_sq_eq_norm, sqrt_eq_one]
 #align orthonormal_basis.det_to_matrix_orthonormal_basis OrthonormalBasis.det_to_matrix_orthonormalBasis
 
@@ -847,8 +847,8 @@ variable {n : ℕ} (hn : finrank 𝕜 E = n) [DecidableEq ι] {V : ι → Submod
 /-- Exhibit a bijection between `fin n` and the index set of a certain basis of an `n`-dimensional
 inner product space `E`.  This should not be accessed directly, but only via the subsequent API. -/
 irreducible_def DirectSum.IsInternal.sigmaOrthonormalBasisIndexEquiv
-  (hV' : OrthogonalFamily 𝕜 (fun i => V i) fun i => (V i).subtypeₗᵢ) :
-  (Σ i, Fin (finrank 𝕜 (V i))) ≃ Fin n :=
+    (hV' : OrthogonalFamily 𝕜 (fun i => V i) fun i => (V i).subtypeₗᵢ) :
+    (Σ i, Fin (finrank 𝕜 (V i))) ≃ Fin n :=
   let b := hV.collectedOrthonormalBasis hV' fun i => stdOrthonormalBasis 𝕜 (V i)
   Fintype.equivFinOfCardEq <| (FiniteDimensional.finrank_eq_card_basis b.toBasis).symm.trans hn
 #align direct_sum.is_internal.sigma_orthonormal_basis_index_equiv DirectSum.IsInternal.sigmaOrthonormalBasisIndexEquiv
@@ -858,8 +858,8 @@ irreducible_def DirectSum.IsInternal.sigmaOrthonormalBasisIndexEquiv
 /-- An `n`-dimensional `inner_product_space` equipped with a decomposition as an internal direct
 sum has an orthonormal basis indexed by `fin n` and subordinate to that direct sum. -/
 irreducible_def DirectSum.IsInternal.subordinateOrthonormalBasis
-  (hV' : OrthogonalFamily 𝕜 (fun i => V i) fun i => (V i).subtypeₗᵢ) :
-  OrthonormalBasis (Fin n) 𝕜 E :=
+    (hV' : OrthogonalFamily 𝕜 (fun i => V i) fun i => (V i).subtypeₗᵢ) :
+    OrthonormalBasis (Fin n) 𝕜 E :=
   (hV.collectedOrthonormalBasis hV' fun i => stdOrthonormalBasis 𝕜 (V i)).reindex
     (hV.sigmaOrthonormalBasisIndexEquiv hn hV')
 #align direct_sum.is_internal.subordinate_orthonormal_basis DirectSum.IsInternal.subordinateOrthonormalBasis
@@ -870,7 +870,7 @@ irreducible_def DirectSum.IsInternal.subordinateOrthonormalBasis
 sum has an orthonormal basis indexed by `fin n` and subordinate to that direct sum. This function
 provides the mapping by which it is subordinate. -/
 irreducible_def DirectSum.IsInternal.subordinateOrthonormalBasisIndex (a : Fin n)
-  (hV' : OrthogonalFamily 𝕜 (fun i => V i) fun i => (V i).subtypeₗᵢ) : ι :=
+    (hV' : OrthogonalFamily 𝕜 (fun i => V i) fun i => (V i).subtypeₗᵢ) : ι :=
   ((hV.sigmaOrthonormalBasisIndexEquiv hn hV').symm a).1
 #align direct_sum.is_internal.subordinate_orthonormal_basis_index DirectSum.IsInternal.subordinateOrthonormalBasisIndex
 -/

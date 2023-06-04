@@ -39,13 +39,13 @@ Specifically, note that if you have `α = {1,2}`, and  `μ {1} = 2`, `μ {2} = 0
 `ν {2} = 2`, `ν {1} = 0`, then `(μ - ν) {1, 2} = 2`. However, if `μ ≤ ν`, and
 `ν univ ≠ ∞`, then `(μ - ν) + ν = μ`. -/
 noncomputable instance instSub {α : Type _} [MeasurableSpace α] : Sub (Measure α) :=
-  ⟨fun μ ν => sInf { τ | μ ≤ τ + ν }⟩
+  ⟨fun μ ν => sInf {τ | μ ≤ τ + ν}⟩
 #align measure_theory.measure.has_sub MeasureTheory.Measure.instSub
 -/
 
 variable {α : Type _} {m : MeasurableSpace α} {μ ν : Measure α} {s : Set α}
 
-theorem sub_def : μ - ν = sInf { d | μ ≤ d + ν } :=
+theorem sub_def : μ - ν = sInf {d | μ ≤ d + ν} :=
   rfl
 #align measure_theory.measure.sub_def MeasureTheory.Measure.sub_def
 
@@ -90,7 +90,7 @@ theorem sub_self : μ - μ = 0 :=
 
 /-- This application lemma only works in special circumstances. Given knowledge of
 when `μ ≤ ν` and `ν ≤ μ`, a more general application lemma can be written. -/
-theorem sub_apply [FiniteMeasure ν] (h₁ : MeasurableSet s) (h₂ : ν ≤ μ) : (μ - ν) s = μ s - ν s :=
+theorem sub_apply [IsFiniteMeasure ν] (h₁ : MeasurableSet s) (h₂ : ν ≤ μ) : (μ - ν) s = μ s - ν s :=
   by
   -- We begin by defining `measure_sub`, which will be equal to `(μ - ν)`.
   let measure_sub : Measure α :=
@@ -120,7 +120,7 @@ theorem sub_apply [FiniteMeasure ν] (h₁ : MeasurableSet s) (h₂ : ν ≤ μ)
 #align measure_theory.measure.sub_apply MeasureTheory.Measure.sub_apply
 
 #print MeasureTheory.Measure.sub_add_cancel_of_le /-
-theorem sub_add_cancel_of_le [FiniteMeasure ν] (h₁ : ν ≤ μ) : μ - ν + ν = μ :=
+theorem sub_add_cancel_of_le [IsFiniteMeasure ν] (h₁ : ν ≤ μ) : μ - ν + ν = μ :=
   by
   ext (s h_s_meas)
   rw [add_apply, sub_apply h_s_meas h₁, tsub_add_cancel_of_le (h₁ s h_s_meas)]
@@ -132,7 +132,7 @@ theorem restrict_sub_eq_restrict_sub_restrict (h_meas_s : MeasurableSet s) :
     (μ - ν).restrict s = μ.restrict s - ν.restrict s :=
   by
   repeat' rw [sub_def]
-  have h_nonempty : { d | μ ≤ d + ν }.Nonempty := ⟨μ, measure.le_add_right le_rfl⟩
+  have h_nonempty : {d | μ ≤ d + ν}.Nonempty := ⟨μ, measure.le_add_right le_rfl⟩
   rw [restrict_Inf_eq_Inf_restrict h_nonempty h_meas_s]
   apply le_antisymm
   · refine' sInf_le_sInf_of_forall_exists_le _
@@ -166,10 +166,10 @@ theorem sub_apply_eq_zero_of_restrict_le_restrict (h_le : μ.restrict s ≤ ν.r
   rw [← restrict_apply_self, restrict_sub_eq_restrict_sub_restrict, sub_eq_zero_of_le] <;> simp [*]
 #align measure_theory.measure.sub_apply_eq_zero_of_restrict_le_restrict MeasureTheory.Measure.sub_apply_eq_zero_of_restrict_le_restrict
 
-#print MeasureTheory.Measure.finiteMeasure_sub /-
-instance finiteMeasure_sub [FiniteMeasure μ] : FiniteMeasure (μ - ν) :=
-  finiteMeasureOfLe μ sub_le
-#align measure_theory.measure.is_finite_measure_sub MeasureTheory.Measure.finiteMeasure_sub
+#print MeasureTheory.Measure.isFiniteMeasure_sub /-
+instance isFiniteMeasure_sub [IsFiniteMeasure μ] : IsFiniteMeasure (μ - ν) :=
+  isFiniteMeasure_of_le μ sub_le
+#align measure_theory.measure.is_finite_measure_sub MeasureTheory.Measure.isFiniteMeasure_sub
 -/
 
 end Measure

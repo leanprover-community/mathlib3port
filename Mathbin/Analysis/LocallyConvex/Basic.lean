@@ -108,15 +108,15 @@ theorem absorbs_union : Absorbs 𝕜 s (u ∪ v) ↔ Absorbs 𝕜 s u ∧ Absorb
 theorem absorbs_iUnion_finset {ι : Type _} {t : Finset ι} {f : ι → Set E} :
     Absorbs 𝕜 s (⋃ i ∈ t, f i) ↔ ∀ i ∈ t, Absorbs 𝕜 s (f i) := by
   classical
-    induction' t using Finset.induction_on with i t ht hi
-    ·
-      simp only [Finset.not_mem_empty, Set.iUnion_false, Set.iUnion_empty, absorbs_empty,
-        IsEmpty.forall_iff, imp_true_iff]
-    rw [Finset.set_biUnion_insert, absorbs_union, hi]
-    constructor <;> intro h
-    · refine' fun _ hi' => (finset.mem_insert.mp hi').elim _ (h.2 _)
-      exact fun hi'' => by rw [hi'']; exact h.1
-    exact ⟨h i (Finset.mem_insert_self i t), fun i' hi' => h i' (Finset.mem_insert_of_mem hi')⟩
+  induction' t using Finset.induction_on with i t ht hi
+  ·
+    simp only [Finset.not_mem_empty, Set.iUnion_false, Set.iUnion_empty, absorbs_empty,
+      IsEmpty.forall_iff, imp_true_iff]
+  rw [Finset.set_biUnion_insert, absorbs_union, hi]
+  constructor <;> intro h
+  · refine' fun _ hi' => (finset.mem_insert.mp hi').elim _ (h.2 _)
+    exact fun hi'' => by rw [hi'']; exact h.1
+  exact ⟨h i (Finset.mem_insert_self i t), fun i' hi' => h i' (Finset.mem_insert_of_mem hi')⟩
 #align absorbs_Union_finset absorbs_iUnion_finset
 -/
 
@@ -434,7 +434,7 @@ variable [Module ℝ E] [SMulCommClass ℝ 𝕜 E]
 
 theorem balanced_convexHull_of_balanced (hs : Balanced 𝕜 s) : Balanced 𝕜 (convexHull ℝ s) :=
   by
-  suffices Convex ℝ { x | ∀ a : 𝕜, ‖a‖ ≤ 1 → a • x ∈ convexHull ℝ s }
+  suffices Convex ℝ {x | ∀ a : 𝕜, ‖a‖ ≤ 1 → a • x ∈ convexHull ℝ s}
     by
     rw [balanced_iff_smul_mem] at hs ⊢
     refine' fun a ha x hx => convexHull_min _ this hx a ha

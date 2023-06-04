@@ -104,10 +104,10 @@ theorem eq_div_of_mul_eq_right {a b c : R} (ha : a ≠ 0) (h : a * b = c) : b = 
 
 theorem mul_div_assoc (x : R) {y z : R} (h : z ∣ y) : x * y / z = x * (y / z) := by
   classical
-    by_cases hz : z = 0
-    · subst hz; rw [div_zero, div_zero, MulZeroClass.mul_zero]
-    rcases h with ⟨p, rfl⟩
-    rw [mul_div_cancel_left _ hz, mul_left_comm, mul_div_cancel_left _ hz]
+  by_cases hz : z = 0
+  · subst hz; rw [div_zero, div_zero, MulZeroClass.mul_zero]
+  rcases h with ⟨p, rfl⟩
+  rw [mul_div_cancel_left _ hz, mul_left_comm, mul_div_cancel_left _ hz]
 #align euclidean_domain.mul_div_assoc EuclideanDomain.mul_div_assoc
 
 -- This generalizes `int.div_one`, see note [simp-normal form]

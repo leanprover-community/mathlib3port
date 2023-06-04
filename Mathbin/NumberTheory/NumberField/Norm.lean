@@ -59,33 +59,34 @@ theorem norm_algebraMap [IsSeparable K L] (x : 𝓞 K) :
 
 theorem isUnit_norm_of_isGalois [IsGalois K L] {x : 𝓞 L} : IsUnit (norm K x) ↔ IsUnit x := by
   classical
-    refine' ⟨fun hx => _, IsUnit.map _⟩
-    replace hx : IsUnit (algebraMap (𝓞 K) (𝓞 L) <| norm K x) := hx.map (algebraMap (𝓞 K) <| 𝓞 L)
-    refine'
-      @isUnit_of_mul_isUnit_right (𝓞 L) _
-        ⟨(univ \ {AlgEquiv.refl}).Prod fun σ : L ≃ₐ[K] L => σ x,
-          prod_mem fun σ hσ => map_isIntegral (σ : L →+* L).toIntAlgHom x.2⟩
-        _ _
-    convert hx using 1
-    ext
-    push_cast
-    convert_to(((univ \ {AlgEquiv.refl}).Prod fun σ : L ≃ₐ[K] L => σ x) *
-          ∏ σ : L ≃ₐ[K] L in {AlgEquiv.refl}, σ (x : L)) =
-        _
-    · rw [prod_singleton, AlgEquiv.coe_refl, id]
-    · rw [prod_sdiff <| subset_univ _, ← norm_eq_prod_automorphisms, coe_algebra_map_norm]
+  refine' ⟨fun hx => _, IsUnit.map _⟩
+  replace hx : IsUnit (algebraMap (𝓞 K) (𝓞 L) <| norm K x) := hx.map (algebraMap (𝓞 K) <| 𝓞 L)
+  refine'
+    @isUnit_of_mul_isUnit_right (𝓞 L) _
+      ⟨(univ \ {AlgEquiv.refl}).Prod fun σ : L ≃ₐ[K] L => σ x,
+        prod_mem fun σ hσ => map_isIntegral (σ : L →+* L).toIntAlgHom x.2⟩
+      _ _
+  convert hx using 1
+  ext
+  push_cast
+  convert_to
+    (((univ \ {AlgEquiv.refl}).Prod fun σ : L ≃ₐ[K] L => σ x) *
+        ∏ σ : L ≃ₐ[K] L in {AlgEquiv.refl}, σ (x : L)) =
+      _
+  · rw [prod_singleton, AlgEquiv.coe_refl, id]
+  · rw [prod_sdiff <| subset_univ _, ← norm_eq_prod_automorphisms, coe_algebra_map_norm]
 #align ring_of_integers.is_unit_norm_of_is_galois RingOfIntegers.isUnit_norm_of_isGalois
 
 /-- If `L/K` is a finite Galois extension of fields, then, for all `(x : 𝓞 L)` we have that
 `x ∣ algebra_map (𝓞 K) (𝓞 L) (norm K x)`. -/
 theorem dvd_norm [IsGalois K L] (x : 𝓞 L) : x ∣ algebraMap (𝓞 K) (𝓞 L) (norm K x) := by
   classical
-    have hint : (∏ σ : L ≃ₐ[K] L in univ.erase AlgEquiv.refl, σ x) ∈ 𝓞 L :=
-      Subalgebra.prod_mem _ fun σ hσ =>
-        (mem_ring_of_integers _ _).2 (map_isIntegral σ (ring_of_integers.is_integral_coe x))
-    refine' ⟨⟨_, hint⟩, Subtype.ext _⟩
-    rw [coe_algebra_map_norm K x, norm_eq_prod_automorphisms]
-    simp [← Finset.mul_prod_erase _ _ (mem_univ AlgEquiv.refl)]
+  have hint : (∏ σ : L ≃ₐ[K] L in univ.erase AlgEquiv.refl, σ x) ∈ 𝓞 L :=
+    Subalgebra.prod_mem _ fun σ hσ =>
+      (mem_ring_of_integers _ _).2 (map_isIntegral σ (ring_of_integers.is_integral_coe x))
+  refine' ⟨⟨_, hint⟩, Subtype.ext _⟩
+  rw [coe_algebra_map_norm K x, norm_eq_prod_automorphisms]
+  simp [← Finset.mul_prod_erase _ _ (mem_univ AlgEquiv.refl)]
 #align ring_of_integers.dvd_norm RingOfIntegers.dvd_norm
 
 variable (F : Type _) [Field F] [Algebra K F] [IsSeparable K F] [FiniteDimensional K F]

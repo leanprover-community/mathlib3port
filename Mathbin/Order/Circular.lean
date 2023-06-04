@@ -393,14 +393,14 @@ variable {α : Type _} [CircularPreorder α]
 #print Set.cIcc /-
 /-- Closed-closed circular interval -/
 def cIcc (a b : α) : Set α :=
-  { x | Btw a x b }
+  {x | Btw a x b}
 #align set.cIcc Set.cIcc
 -/
 
 #print Set.cIoo /-
 /-- Open-open circular interval -/
 def cIoo (a b : α) : Set α :=
-  { x | Sbtw a x b }
+  {x | Sbtw a x b}
 #align set.cIoo Set.cIoo
 -/
 

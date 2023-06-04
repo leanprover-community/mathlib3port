@@ -147,11 +147,11 @@ theorem preimage_subset {f : α ↪ β} {s : Finset β} {t : Finset α} (hs : s 
 theorem subset_map_iff {f : α ↪ β} {s : Finset β} {t : Finset α} :
     s ⊆ t.map f ↔ ∃ (u : _) (_ : u ⊆ t), s = u.map f := by
   classical
-    refine' ⟨fun h => ⟨_, preimage_subset h, _⟩, _⟩
-    · rw [map_eq_image, image_preimage, filter_true_of_mem fun x hx => _]
-      exact coe_map_subset_range _ _ (h hx)
-    · rintro ⟨u, hut, rfl⟩
-      exact map_subset_map.2 hut
+  refine' ⟨fun h => ⟨_, preimage_subset h, _⟩, _⟩
+  · rw [map_eq_image, image_preimage, filter_true_of_mem fun x hx => _]
+    exact coe_map_subset_range _ _ (h hx)
+  · rintro ⟨u, hut, rfl⟩
+    exact map_subset_map.2 hut
 #align finset.subset_map_iff Finset.subset_map_iff
 -/
 
@@ -195,8 +195,8 @@ theorem prod_preimage [CommMonoid β] (f : α → γ) (s : Finset γ) (hf : Set.
     (g : γ → β) (hg : ∀ x ∈ s, x ∉ Set.range f → g x = 1) :
     (∏ x in s.Preimage f hf, g (f x)) = ∏ x in s, g x := by
   classical
-    rw [prod_preimage', prod_filter_of_ne]
-    exact fun x hx => Not.imp_symm (hg x hx)
+  rw [prod_preimage', prod_filter_of_ne]
+  exact fun x hx => Not.imp_symm (hg x hx)
 #align finset.prod_preimage Finset.prod_preimage
 #align finset.sum_preimage Finset.sum_preimage
 

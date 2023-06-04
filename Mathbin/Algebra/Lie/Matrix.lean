@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module algebra.lie.matrix
-! leanprover-community/mathlib commit 55e2dfde0cff928ce5c70926a3f2c7dee3e2dd99
+! leanprover-community/mathlib commit 5c1efce12ba86d4901463f61019832f6a4b1a0d0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.LinearAlgebra.Matrix.ToLinearEquiv
 
 /-!
 # Lie algebras of matrices
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 An important class of Lie algebras are those arising from the associative algebra structure on
 square matrices over a commutative ring. This file provides some very basic definitions whose

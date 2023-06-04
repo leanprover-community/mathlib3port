@@ -121,15 +121,15 @@ theorem disjoint_or_exists_inter_eq_convexHull (hs : s ∈ K.faces) (ht : t ∈ 
       ∃ u ∈ K.faces, convexHull 𝕜 (s : Set E) ∩ convexHull 𝕜 ↑t = convexHull 𝕜 ↑u :=
   by
   classical
-    by_contra' h
-    refine'
-      h.2 (s ∩ t)
-        (K.down_closed hs (inter_subset_left _ _) fun hst =>
-          h.1 <| disjoint_iff_inf_le.mpr <| (K.inter_subset_convex_hull hs ht).trans _)
-        _
-    · rw [← coe_inter, hst, coe_empty, convexHull_empty]
-      rfl
-    · rw [coe_inter, convex_hull_inter_convex_hull hs ht]
+  by_contra' h
+  refine'
+    h.2 (s ∩ t)
+      (K.down_closed hs (inter_subset_left _ _) fun hst =>
+        h.1 <| disjoint_iff_inf_le.mpr <| (K.inter_subset_convex_hull hs ht).trans _)
+      _
+  · rw [← coe_inter, hst, coe_empty, convexHull_empty]
+    rfl
+  · rw [coe_inter, convex_hull_inter_convex_hull hs ht]
 #align geometry.simplicial_complex.disjoint_or_exists_inter_eq_convex_hull Geometry.SimplicialComplex.disjoint_or_exists_inter_eq_convexHull
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (t «expr ⊆ » s) -/
@@ -169,7 +169,7 @@ def ofSubcomplex (K : SimplicialComplex 𝕜 E) (faces : Set (Finset E)) (subset
 #print Geometry.SimplicialComplex.vertices /-
 /-- The vertices of a simplicial complex are its zero dimensional faces. -/
 def vertices (K : SimplicialComplex 𝕜 E) : Set E :=
-  { x | {x} ∈ K.faces }
+  {x | {x} ∈ K.faces}
 #align geometry.simplicial_complex.vertices Geometry.SimplicialComplex.vertices
 -/
 
@@ -201,11 +201,10 @@ theorem vertex_mem_convexHull_iff (hx : x ∈ K.vertices) (hs : s ∈ K.faces) :
   by
   refine' ⟨fun h => _, fun h => subset_convexHull _ _ h⟩
   classical
-    have h := K.inter_subset_convex_hull hx hs ⟨by simp, h⟩
-    by_contra H
-    rwa [← coe_inter,
-      Finset.disjoint_iff_inter_eq_empty.1 (Finset.disjoint_singleton_right.2 H).symm, coe_empty,
-      convexHull_empty] at h 
+  have h := K.inter_subset_convex_hull hx hs ⟨by simp, h⟩
+  by_contra H
+  rwa [← coe_inter, Finset.disjoint_iff_inter_eq_empty.1 (Finset.disjoint_singleton_right.2 H).symm,
+    coe_empty, convexHull_empty] at h 
 #align geometry.simplicial_complex.vertex_mem_convex_hull_iff Geometry.SimplicialComplex.vertex_mem_convexHull_iff
 -/
 
@@ -227,7 +226,7 @@ theorem face_subset_face_iff (hs : s ∈ K.faces) (ht : t ∈ K.faces) :
 #print Geometry.SimplicialComplex.facets /-
 /-- A facet of a simplicial complex is a maximal face. -/
 def facets (K : SimplicialComplex 𝕜 E) : Set (Finset E) :=
-  { s ∈ K.faces | ∀ ⦃t⦄, t ∈ K.faces → s ⊆ t → s = t }
+  {s ∈ K.faces | ∀ ⦃t⦄, t ∈ K.faces → s ⊆ t → s = t}
 #align geometry.simplicial_complex.facets Geometry.SimplicialComplex.facets
 -/
 
@@ -246,7 +245,7 @@ theorem facets_subset : K.facets ⊆ K.faces := fun s hs => hs.1
 theorem not_facet_iff_subface (hs : s ∈ K.faces) : s ∉ K.facets ↔ ∃ t, t ∈ K.faces ∧ s ⊂ t :=
   by
   refine' ⟨fun hs' : ¬(_ ∧ _) => _, _⟩
-  · push_neg  at hs' 
+  · push_neg at hs' 
     obtain ⟨t, ht⟩ := hs' hs
     exact ⟨t, ht.1, ⟨ht.2.1, fun hts => ht.2.2 (subset.antisymm ht.2.1 hts)⟩⟩
   · rintro ⟨t, ht⟩ ⟨hs, hs'⟩

@@ -351,7 +351,7 @@ instance : SMul (Localization S) (LocalizedModule S M)
         use u
         have eq1' := congr_arg (· • t • m) eq1
         simp only [← mul_smul, smul_assoc, Submonoid.smul_def, Submonoid.coe_mul] at eq1' ⊢
-        ring_nf  at eq1' ⊢
+        ring_nf at eq1' ⊢
         rw [eq1'])
 
 theorem mk_smul_mk (r : R) (m : M) (s t : S) : Localization.mk r s • mk m t = mk (r • m) (s * t) :=
@@ -560,9 +560,9 @@ variable {M M' M'' : Type _} [AddCommMonoid M] [AddCommMonoid M'] [AddCommMonoid
 variable [Module R M] [Module R M'] [Module R M''] (f : M →ₗ[R] M') (g : M →ₗ[R] M'')
 
 #print IsLocalizedModule /-
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`map_units] [] -/
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`surj] [] -/
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`eq_iff_exists] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`map_units] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`surj] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`eq_iff_exists] [] -/
 /-- The characteristic predicate for localized module.
 `is_localized_module S f` describes that `f : M ⟶ M'` is the localization map identifying `M'` as
 `localized_module S M`.
@@ -781,7 +781,7 @@ theorem fromLocalizedModule.inj : Function.Injective <| fromLocalizedModule S f 
   induction' x using LocalizedModule.induction_on with a b
   induction' y using LocalizedModule.induction_on with a' b'
   simp only [from_localized_module_mk] at eq1 
-  generalize_proofs h1 h2  at eq1 
+  generalize_proofs h1 h2 at eq1 
   erw [Module.End_algebraMap_isUnit_inv_apply_eq_iff, ← LinearMap.map_smul,
     Module.End_algebraMap_isUnit_inv_apply_eq_iff'] at eq1 
   erw [LocalizedModule.mk_eq, ← IsLocalizedModule.eq_iff_exists S f, f.map_smul, f.map_smul, eq1]

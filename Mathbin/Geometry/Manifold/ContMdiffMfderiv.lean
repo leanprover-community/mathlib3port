@@ -242,7 +242,7 @@ theorem ContMdiffAt.mfderiv {x₀ : N} (f : N → M → M') (g : N → M)
         (extChartAt I (g x₂)).left_inv (mem_ext_chart_source I (g x₂))]
     · simp_rw [Function.comp_apply, (extChartAt I (g x₀)).left_inv hx₂]
   refine' this.congr_of_eventually_eq _
-  filter_upwards [h2g, h4f]with x hx h2x
+  filter_upwards [h2g, h4f] with x hx h2x
   rw [inTangentCoordinates_eq]
   · rfl
   · rwa [extChartAt_source] at hx 

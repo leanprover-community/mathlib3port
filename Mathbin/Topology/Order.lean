@@ -89,7 +89,7 @@ theorem isOpen_generateFrom_of_mem {g : Set (Set α)} {s : Set α} (hs : s ∈ g
 -/
 
 theorem nhds_generateFrom {g : Set (Set α)} {a : α} :
-    @nhds α (generateFrom g) a = ⨅ s ∈ { s | a ∈ s ∧ s ∈ g }, 𝓟 s :=
+    @nhds α (generateFrom g) a = ⨅ s ∈ {s | a ∈ s ∧ s ∈ g}, 𝓟 s :=
   by
   rw [nhds_def]
   refine' le_antisymm (biInf_mono fun s ⟨as, sg⟩ => ⟨as, generate_open.basic _ sg⟩) _
@@ -128,8 +128,8 @@ theorem nhds_mkOfNhds (n : α → Filter α) (a : α) (h₀ : pure ≤ n)
   by
   letI := TopologicalSpace.mkOfNhds n
   refine' le_antisymm (fun s hs => _) fun s hs => _
-  · have h₀ : { b | s ∈ n b } ⊆ s := fun b hb => mem_pure.1 <| h₀ b hb
-    have h₁ : { b | s ∈ n b } ∈ 𝓝 a :=
+  · have h₀ : {b | s ∈ n b} ⊆ s := fun b hb => mem_pure.1 <| h₀ b hb
+    have h₁ : {b | s ∈ n b} ∈ 𝓝 a :=
       by
       refine' IsOpen.mem_nhds (fun b (hb : s ∈ n b) => _) hs
       rcases h₁ _ _ hb with ⟨t, ht, hts, h⟩
@@ -181,7 +181,7 @@ protected theorem le_def {α} {t s : TopologicalSpace α} : t ≤ s ↔ is_open[
 #align topological_space.le_def TopologicalSpace.le_def
 
 theorem le_generateFrom_iff_subset_isOpen {g : Set (Set α)} {t : TopologicalSpace α} :
-    t ≤ TopologicalSpace.generateFrom g ↔ g ⊆ { s | is_open[t] s } :=
+    t ≤ TopologicalSpace.generateFrom g ↔ g ⊆ {s | is_open[t] s} :=
   ⟨fun ht s hs => ht _ <| GenerateOpen.basic s hs, fun hg s hs =>
     hs.recOn (fun v hv => hg hv) t.isOpen_univ (fun u v _ _ => t.isOpen_inter u v) fun k _ =>
       t.isOpen_sUnion k⟩
@@ -190,7 +190,7 @@ theorem le_generateFrom_iff_subset_isOpen {g : Set (Set α)} {t : TopologicalSpa
 #print TopologicalSpace.mkOfClosure /-
 /-- If `s` equals the collection of open sets in the topology it generates, then `s` defines a
 topology. -/
-protected def mkOfClosure (s : Set (Set α)) (hs : { u | GenerateOpen s u } = s) : TopologicalSpace α
+protected def mkOfClosure (s : Set (Set α)) (hs : {u | GenerateOpen s u} = s) : TopologicalSpace α
     where
   IsOpen u := u ∈ s
   isOpen_univ := hs ▸ TopologicalSpace.GenerateOpen.univ
@@ -200,7 +200,7 @@ protected def mkOfClosure (s : Set (Set α)) (hs : { u | GenerateOpen s u } = s)
 -/
 
 #print TopologicalSpace.mkOfClosure_sets /-
-theorem mkOfClosure_sets {s : Set (Set α)} {hs : { u | GenerateOpen s u } = s} :
+theorem mkOfClosure_sets {s : Set (Set α)} {hs : {u | GenerateOpen s u} = s} :
     TopologicalSpace.mkOfClosure s hs = TopologicalSpace.generateFrom s :=
   topologicalSpace_eq hs.symm
 #align topological_space.mk_of_closure_sets TopologicalSpace.mkOfClosure_sets
@@ -208,7 +208,7 @@ theorem mkOfClosure_sets {s : Set (Set α)} {hs : { u | GenerateOpen s u } = s} 
 
 #print TopologicalSpace.gc_generateFrom /-
 theorem gc_generateFrom (α) :
-    GaloisConnection (fun t : TopologicalSpace α => OrderDual.toDual { s | is_open[t] s })
+    GaloisConnection (fun t : TopologicalSpace α => OrderDual.toDual {s | is_open[t] s})
       (generateFrom ∘ OrderDual.ofDual) :=
   fun _ _ => le_generateFrom_iff_subset_isOpen.symm
 #align topological_space.gc_generate_from TopologicalSpace.gc_generateFrom
@@ -220,7 +220,7 @@ Case conversion may be inaccurate. Consider using '#align topological_space.gci_
   sends a topology to its collection of open subsets, and whose upper part sends a collection of
   subsets of α to the topology they generate. -/
 def gciGenerateFrom (α : Type _) :
-    GaloisCoinsertion (fun t : TopologicalSpace α => OrderDual.toDual { s | is_open[t] s })
+    GaloisCoinsertion (fun t : TopologicalSpace α => OrderDual.toDual {s | is_open[t] s})
       (generateFrom ∘ OrderDual.ofDual)
     where
   gc := gc_generateFrom α
@@ -245,15 +245,14 @@ theorem generateFrom_anti {α} {g₁ g₂ : Set (Set α)} (h : g₁ ⊆ g₂) :
 #align topological_space.generate_from_anti TopologicalSpace.generateFrom_anti
 
 #print TopologicalSpace.generateFrom_setOf_isOpen /-
-theorem generateFrom_setOf_isOpen (t : TopologicalSpace α) :
-    generateFrom { s | is_open[t] s } = t :=
+theorem generateFrom_setOf_isOpen (t : TopologicalSpace α) : generateFrom {s | is_open[t] s} = t :=
   (gciGenerateFrom α).u_l_eq t
 #align topological_space.generate_from_set_of_is_open TopologicalSpace.generateFrom_setOf_isOpen
 -/
 
 #print TopologicalSpace.leftInverse_generateFrom /-
 theorem leftInverse_generateFrom :
-    LeftInverse generateFrom fun t : TopologicalSpace α => { s | is_open[t] s } :=
+    LeftInverse generateFrom fun t : TopologicalSpace α => {s | is_open[t] s} :=
   (gciGenerateFrom α).u_l_leftInverse
 #align topological_space.left_inverse_generate_from TopologicalSpace.leftInverse_generateFrom
 -/
@@ -265,7 +264,7 @@ theorem generateFrom_surjective : Surjective (generateFrom : Set (Set α) → To
 -/
 
 #print TopologicalSpace.setOf_isOpen_injective /-
-theorem setOf_isOpen_injective : Injective fun t : TopologicalSpace α => { s | is_open[t] s } :=
+theorem setOf_isOpen_injective : Injective fun t : TopologicalSpace α => {s | is_open[t] s} :=
   (gciGenerateFrom α).l_injective
 #align topological_space.set_of_is_open_injective TopologicalSpace.setOf_isOpen_injective
 -/
@@ -300,14 +299,14 @@ theorem TopologicalSpace.isOpen_top_iff {α} (U : Set α) : is_open[⊤] U ↔ U
     · cases h; · exact Or.inr rfl
     · obtain ⟨rfl | rfl, rfl | rfl⟩ := ih₁, ih₂ <;> simp
     · rw [sUnion_eq_empty, or_iff_not_imp_left]
-      intro h; push_neg  at h ; obtain ⟨U, hU, hne⟩ := h
+      intro h; push_neg at h ; obtain ⟨U, hU, hne⟩ := h
       have := (ih U hU).resolve_left hne; subst this
       refine' sUnion_eq_univ_iff.2 fun a => ⟨_, hU, trivial⟩, by rintro (rfl | rfl);
     exacts [@isOpen_empty _ ⊤, @isOpen_univ _ ⊤]⟩
 #align topological_space.is_open_top_iff TopologicalSpace.isOpen_top_iff
 
 #print DiscreteTopology /-
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`eq_bot] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`eq_bot] [] -/
 /-- A topological space is discrete if every set is open, that is,
   its topology equals the discrete topology `⊥`. -/
 class DiscreteTopology (α : Type _) [t : TopologicalSpace α] : Prop where
@@ -1003,8 +1002,7 @@ variable {α : Type _} {β : Type _}
 
 variable [t : TopologicalSpace β] {f : α → β}
 
-theorem isOpen_induced_eq {s : Set α} :
-    is_open[induced f t] s ↔ s ∈ preimage f '' { s | IsOpen s } :=
+theorem isOpen_induced_eq {s : Set α} : is_open[induced f t] s ↔ s ∈ preimage f '' {s | IsOpen s} :=
   Iff.rfl
 #align is_open_induced_eq isOpen_induced_eq
 
@@ -1066,11 +1064,11 @@ theorem nhds_false : 𝓝 False = ⊤ :=
 #align nhds_false nhds_false
 
 #print continuous_Prop /-
-theorem continuous_Prop {p : α → Prop} : Continuous p ↔ IsOpen { x | p x } :=
+theorem continuous_Prop {p : α → Prop} : Continuous p ↔ IsOpen {x | p x} :=
   ⟨fun h : Continuous p =>
     by
     have : IsOpen (p ⁻¹' {True}) := isOpen_singleton_true.Preimage h
-    simpa [preimage, eq_true_iff] using this, fun h : IsOpen { x | p x } =>
+    simpa [preimage, eq_true_iff] using this, fun h : IsOpen {x | p x} =>
     continuous_generateFrom fun s (hs : s = {True}) => by simp [hs, preimage, eq_true_iff, h]⟩
 #align continuous_Prop continuous_Prop
 -/
@@ -1094,7 +1092,7 @@ theorem generateFrom_union (a₁ a₂ : Set (Set α)) :
 #align generate_from_union generateFrom_union
 
 theorem setOf_isOpen_sup (t₁ t₂ : TopologicalSpace α) :
-    { s | is_open[t₁ ⊔ t₂] s } = { s | is_open[t₁] s } ∩ { s | is_open[t₂] s } :=
+    {s | is_open[t₁ ⊔ t₂] s} = {s | is_open[t₁] s} ∩ {s | is_open[t₂] s} :=
   rfl
 #align set_of_is_open_sup setOf_isOpen_sup
 
@@ -1104,7 +1102,7 @@ theorem generateFrom_iUnion {f : ι → Set (Set α)} :
 #align generate_from_Union generateFrom_iUnion
 
 theorem setOf_isOpen_iSup {t : ι → TopologicalSpace α} :
-    { s | is_open[⨆ i, t i] s } = ⋂ i, { s | is_open[t i] s } :=
+    {s | is_open[⨆ i, t i] s} = ⋂ i, {s | is_open[t i] s} :=
   (TopologicalSpace.gc_generateFrom α).l_iSup
 #align set_of_is_open_supr setOf_isOpen_iSup
 
@@ -1114,32 +1112,32 @@ theorem generateFrom_sUnion {S : Set (Set (Set α))} :
 #align generate_from_sUnion generateFrom_sUnion
 
 theorem setOf_isOpen_sSup {T : Set (TopologicalSpace α)} :
-    { s | is_open[sSup T] s } = ⋂ t ∈ T, { s | is_open[t] s } :=
+    {s | is_open[sSup T] s} = ⋂ t ∈ T, {s | is_open[t] s} :=
   (TopologicalSpace.gc_generateFrom α).l_sSup
 #align set_of_is_open_Sup setOf_isOpen_sSup
 
 theorem generateFrom_union_isOpen (a b : TopologicalSpace α) :
-    TopologicalSpace.generateFrom ({ s | is_open[a] s } ∪ { s | is_open[b] s }) = a ⊓ b :=
+    TopologicalSpace.generateFrom ({s | is_open[a] s} ∪ {s | is_open[b] s}) = a ⊓ b :=
   (TopologicalSpace.gciGenerateFrom α).u_inf_l a b
 #align generate_from_union_is_open generateFrom_union_isOpen
 
 theorem generateFrom_iUnion_isOpen (f : ι → TopologicalSpace α) :
-    TopologicalSpace.generateFrom (⋃ i, { s | is_open[f i] s }) = ⨅ i, f i :=
+    TopologicalSpace.generateFrom (⋃ i, {s | is_open[f i] s}) = ⨅ i, f i :=
   (TopologicalSpace.gciGenerateFrom α).u_iInf_l f
 #align generate_from_Union_is_open generateFrom_iUnion_isOpen
 
 theorem generateFrom_inter (a b : TopologicalSpace α) :
-    TopologicalSpace.generateFrom ({ s | is_open[a] s } ∩ { s | is_open[b] s }) = a ⊔ b :=
+    TopologicalSpace.generateFrom ({s | is_open[a] s} ∩ {s | is_open[b] s}) = a ⊔ b :=
   (TopologicalSpace.gciGenerateFrom α).u_sup_l a b
 #align generate_from_inter generateFrom_inter
 
 theorem generateFrom_iInter (f : ι → TopologicalSpace α) :
-    TopologicalSpace.generateFrom (⋂ i, { s | is_open[f i] s }) = ⨆ i, f i :=
+    TopologicalSpace.generateFrom (⋂ i, {s | is_open[f i] s}) = ⨆ i, f i :=
   (TopologicalSpace.gciGenerateFrom α).u_iSup_l f
 #align generate_from_Inter generateFrom_iInter
 
 theorem generateFrom_iInter_of_generateFrom_eq_self (f : ι → Set (Set α))
-    (hf : ∀ i, { s | is_open[TopologicalSpace.generateFrom (f i)] s } = f i) :
+    (hf : ∀ i, {s | is_open[TopologicalSpace.generateFrom (f i)] s} = f i) :
     TopologicalSpace.generateFrom (⋂ i, f i) = ⨆ i, TopologicalSpace.generateFrom (f i) :=
   (TopologicalSpace.gciGenerateFrom α).u_iSup_of_lu_eq_self f hf
 #align generate_from_Inter_of_generate_from_eq_self generateFrom_iInter_of_generateFrom_eq_self
@@ -1147,7 +1145,7 @@ theorem generateFrom_iInter_of_generateFrom_eq_self (f : ι → Set (Set α))
 variable {t : ι → TopologicalSpace α}
 
 theorem isOpen_iSup_iff {s : Set α} : is_open[⨆ i, t i] s ↔ ∀ i, is_open[t i] s :=
-  show s ∈ setOf is_open[iSup t] ↔ s ∈ { x : Set α | ∀ i : ι, is_open[t i] x } by
+  show s ∈ setOf is_open[iSup t] ↔ s ∈ {x : Set α | ∀ i : ι, is_open[t i] x} by
     simp [setOf_isOpen_iSup]
 #align is_open_supr_iff isOpen_iSup_iff
 

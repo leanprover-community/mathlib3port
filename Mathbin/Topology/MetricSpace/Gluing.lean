@@ -587,7 +587,7 @@ theorem isometry_mk (i : ι) : Isometry (Sigma.mk i : E i → Σ k, E k) :=
 protected theorem completeSpace [∀ i, CompleteSpace (E i)] : CompleteSpace (Σ i, E i) :=
   by
   set s : ι → Set (Σ i, E i) := fun i => Sigma.fst ⁻¹' {i}
-  set U := { p : (Σ k, E k) × Σ k, E k | dist p.1 p.2 < 1 }
+  set U := {p : (Σ k, E k) × Σ k, E k | dist p.1 p.2 < 1}
   have hc : ∀ i, IsComplete (s i) := by
     intro i
     simp only [s, ← range_sigma_mk]

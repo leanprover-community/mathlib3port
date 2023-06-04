@@ -66,7 +66,7 @@ theorem RespectsIso.basicOpen_iff (hP : RespectsIso @P) {X Y : Scheme} [IsAffine
   congr
   delta IsLocalization.Away.map
   refine' IsLocalization.ringHom_ext (Submonoid.powers r) _
-  convert(IsLocalization.map_comp _).symm using 1
+  convert (IsLocalization.map_comp _).symm using 1
   change Y.presheaf.map _ ≫ _ = _ ≫ X.presheaf.map _
   rw [f.val.c.naturality_assoc]
   erw [← X.presheaf.map_comp]
@@ -90,7 +90,7 @@ theorem RespectsIso.ofRestrict_morphismRestrict_iff (hP : RingHom.RespectsIso @P
       P (Localization.awayMap (Scheme.Γ.map (X.of_restrict U.OpenEmbedding ≫ f).op) r) :=
   by
   subst e
-  convert(hP.is_localization_away_iff _ _ _ _).symm
+  convert (hP.is_localization_away_iff _ _ _ _).symm
   rotate_left
   · infer_instance
   · apply RingHom.toAlgebra
@@ -106,7 +106,7 @@ theorem RespectsIso.ofRestrict_morphismRestrict_iff (hP : RingHom.RespectsIso @P
     dsimp [Scheme.Γ_obj_op, Scheme.Γ_map_op, Scheme.restrict]
     apply AlgebraicGeometry.is_localization_of_eq_basicOpen _ hU
     rw [opens.open_embedding_obj_top, opens.functor_obj_map_obj]
-    convert(X.basic_open_res (Scheme.Γ.map f.op r) (hom_of_le le_top).op).symm using 1
+    convert (X.basic_open_res (Scheme.Γ.map f.op r) (hom_of_le le_top).op).symm using 1
     rw [opens.open_embedding_obj_top, opens.open_embedding_obj_top, inf_comm, Scheme.Γ_map_op, ←
       Scheme.preimage_basic_open]
   · apply IsLocalization.ringHom_ext (Submonoid.powers r) _
@@ -231,7 +231,7 @@ theorem scheme_restrict_basicOpen_of_localizationPreserves (h₁ : RingHom.Respe
             f ∣_ Y.basicOpen r).op) :=
   by
   specialize H ⟨_, U.2.imageIsOpenImmersion (X.of_restrict _)⟩
-  convert(h₁.of_restrict_morphism_restrict_iff _ _ _ _ _).mpr _ using 1
+  convert (h₁.of_restrict_morphism_restrict_iff _ _ _ _ _).mpr _ using 1
   pick_goal 5
   · exact h₂.away r H
   · infer_instance
@@ -274,7 +274,7 @@ theorem source_affine_locally_of_source_open_cover_aux (h₁ : RingHom.RespectsI
     (hs' : ∀ r : s, P (Scheme.Γ.map (X.of_restrict (X.basicOpen r.1).OpenEmbedding ≫ f).op)) :
     P (Scheme.Γ.map (X.of_restrict U.1.OpenEmbedding ≫ f).op) :=
   by
-  apply_fun Ideal.map (X.presheaf.map (eq_to_hom U.1.openEmbedding_obj_top).op)  at hs 
+  apply_fun Ideal.map (X.presheaf.map (eq_to_hom U.1.openEmbedding_obj_top).op) at hs 
   rw [Ideal.map_span, Ideal.map_top] at hs 
   apply h₃ _ _ hs
   rintro ⟨s, r, hr, hs⟩
@@ -357,8 +357,8 @@ theorem sourceAffineLocallyOfSourceOpenCover {X Y : Scheme} (f : X ⟶ Y) [IsAff
       refine' Eq.trans _ (X.presheaf.map_comp _ _)
       change X.presheaf.map _ = _
       congr
-    convert hP.holds_for_localization_away _
-        (X.presheaf.map (eq_to_hom U.1.openEmbedding_obj_top).op r)
+    convert
+      hP.holds_for_localization_away _ (X.presheaf.map (eq_to_hom U.1.openEmbedding_obj_top).op r)
     · exact (RingHom.algebraMap_toAlgebra _).symm
     · dsimp [Scheme.Γ]
       have := U.2

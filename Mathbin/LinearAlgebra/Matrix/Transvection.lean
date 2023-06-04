@@ -586,7 +586,7 @@ theorem exists_isTwoBlockDiagonal_list_transvec_mul_mul_list_transvec
   -- when the last coefficient is zero but there is a nonzero coefficient on the last row or the
   -- last column, we will first put this nonzero coefficient in last position, and then argue as
   -- above.
-  push_neg  at hM 
+  push_neg at hM 
   simp [not_and_or, is_two_block_diagonal, to_blocks₁₂, to_blocks₂₁, ← Matrix.ext_iff] at H 
   have : ∃ i : Fin r, M (inl i) (inr star) ≠ 0 ∨ M (inr star) (inl i) ≠ 0 :=
     by
@@ -694,7 +694,7 @@ theorem exists_list_transvec_mul_mul_list_transvec_eq_diagonal_aux (n : Type) [F
       by
       refine' Fintype.equivOfCardEq _
       rw [hn]
-      convert(@Fintype.card_sum (Fin r) Unit _ _).symm
+      convert (@Fintype.card_sum (Fin r) Unit _ _).symm
       simp
     apply reindex_exists_list_transvec_mul_mul_list_transvec_eq_diagonal M e
     apply

@@ -207,7 +207,7 @@ theorem progMeasurable_of_tendsto' {γ} [MeasurableSpace ι] [PseudoMetrizableSp
   intro x
   specialize h_tendsto x.fst
   rw [tendsto_nhds] at h_tendsto ⊢
-  exact fun s hs h_mem => h_tendsto { g | g x.snd ∈ s } (hs.Preimage (continuous_apply x.snd)) h_mem
+  exact fun s hs h_mem => h_tendsto {g | g x.snd ∈ s} (hs.Preimage (continuous_apply x.snd)) h_mem
 #align measure_theory.prog_measurable_of_tendsto' MeasureTheory.progMeasurable_of_tendsto'
 
 theorem progMeasurable_of_tendsto [MeasurableSpace ι] [PseudoMetrizableSpace β] {U : ℕ → ι → Ω → β}

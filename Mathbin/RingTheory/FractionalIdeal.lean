@@ -485,7 +485,7 @@ theorem IsFractional.nsmul {I : Submodule R P} :
     ∀ n : ℕ, IsFractional S I → IsFractional S (n • I : Submodule R P)
   | 0, _ => by
     rw [zero_smul]
-    convert((0 : Ideal R) : FractionalIdeal S P).IsFractional
+    convert ((0 : Ideal R) : FractionalIdeal S P).IsFractional
     simp
   | n + 1, h => by
     rw [succ_nsmul]
@@ -653,7 +653,7 @@ theorem le_one_iff_exists_coeIdeal {J : FractionalIdeal S P} :
   by
   constructor
   · intro hJ
-    refine' ⟨⟨{ x : R | algebraMap R P x ∈ J }, _, _, _⟩, _⟩
+    refine' ⟨⟨{x : R | algebraMap R P x ∈ J}, _, _, _⟩, _⟩
     · intro a b ha hb
       rw [mem_set_of_eq, RingHom.map_add]
       exact J.val.add_mem ha hb
@@ -959,7 +959,7 @@ omit loc'
 theorem canonicalEquiv_self : canonicalEquiv S P P = RingEquiv.refl _ :=
   by
   rw [← canonical_equiv_trans_canonical_equiv S P P]
-  convert(canonical_equiv S P P).symm_trans_self
+  convert (canonical_equiv S P P).symm_trans_self
   exact (canonical_equiv_symm S P P).symm
 #align fractional_ideal.canonical_equiv_self FractionalIdeal.canonicalEquiv_self
 

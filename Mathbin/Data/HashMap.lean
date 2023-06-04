@@ -76,7 +76,7 @@ namespace BucketArray
 
 section
 
-parameter {α : Type u}{β : α → Type v}(hash_fn : α → Nat)
+parameter {α : Type u} {β : α → Type v} (hash_fn : α → Nat)
 
 variable {n : ℕ+} (data : BucketArray α β n)
 
@@ -133,7 +133,7 @@ namespace HashMap
 
 section
 
-parameter {α : Type u}{β : α → Type v}(hash_fn : α → Nat)
+parameter {α : Type u} {β : α → Type v} (hash_fn : α → Nat)
 
 /-- Insert the pair `⟨a, b⟩` into the correct location in the bucket array
   (without checking for duplication) -/
@@ -258,11 +258,8 @@ theorem Valid.containsAux_iff {n} {bkts : BucketArray α β n} {sz : Nat} (v : v
 
 section
 
-parameter
-  {n :
-    ℕ+}{bkts :
-    BucketArray α β
-      n}{bidx : Fin n}{f : List (Σ a, β a) → List (Σ a, β a)}(u v1 v2 w : List (Σ a, β a))
+parameter {n : ℕ+} {bkts : BucketArray α β n} {bidx : Fin n} {f : List (Σ a, β a) → List (Σ a, β a)}
+  (u v1 v2 w : List (Σ a, β a))
 
 -- mathport name: exprL
 local notation "L" => Array'.read bkts bidx

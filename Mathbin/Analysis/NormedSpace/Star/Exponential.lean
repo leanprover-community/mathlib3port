@@ -4,13 +4,16 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
 
 ! This file was ported from Lean 3 source module analysis.normed_space.star.exponential
-! leanprover-community/mathlib commit 1e3201306d4d9eb1fd54c60d7c4510ad5126f6f9
+! leanprover-community/mathlib commit af471b9e3ce868f296626d33189b4ce730fa4c00
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.NormedSpace.Exponential
 
 /-! # The exponential map from selfadjoint to unitary
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 In this file, we establish various propreties related to the map `λ a, exp ℂ A (I • a)` between the
 subtypes `self_adjoint A` and `unitary A`.
 

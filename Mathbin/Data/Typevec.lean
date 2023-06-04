@@ -930,7 +930,7 @@ theorem prod_map_id {α β : TypeVec n} : (@TypeVec.id _ α ⊗' @TypeVec.id _ �
 #print TypeVec.subtypeVal_diagSub /-
 @[simp]
 theorem subtypeVal_diagSub {α : TypeVec n} : subtypeVal (repeatEq α) ⊚ diagSub = prod.diag := by
-  clear * - ; ext i; induction i <;> [rfl; apply i_ih]
+  clear * -; ext i; induction i <;> [rfl; apply i_ih]
 #align typevec.subtype_val_diag_sub TypeVec.subtypeVal_diagSub
 -/
 

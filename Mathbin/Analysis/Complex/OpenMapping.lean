@@ -66,7 +66,7 @@ theorem DiffContOnCl.ball_subset_image_closedBall (h : DiffContOnCl ℂ f (ball 
   refine' ⟨z, ball_subset_closed_ball hz1, sub_eq_zero.mp _⟩
   have h6 := h1.differentiable_on.eventually_differentiable_at (is_open_ball.mem_nhds hz1)
   refine' (eventually_eq_or_eq_zero_of_is_local_min_norm h6 hz2).resolve_left fun key => _
-  have h7 : ∀ᶠ w in 𝓝 z, f w = f z := by filter_upwards [key]with h <;> field_simp
+  have h7 : ∀ᶠ w in 𝓝 z, f w = f z := by filter_upwards [key] with h <;> field_simp
   replace h7 : ∃ᶠ w in 𝓝[≠] z, f w = f z := (h7.filter_mono nhdsWithin_le_nhds).Frequently
   have h8 : IsPreconnected (ball z₀ r) := (convex_ball z₀ r).IsPreconnected
   have h9 := h3.eq_on_of_preconnected_of_frequently_eq analyticOn_const h8 hz1 h7
@@ -159,7 +159,7 @@ theorem AnalyticAt.eventually_constant_or_nhds_le_map_nhds {z₀ : E} (hg : Anal
       Function.comp_apply, coe_smul] using h3 (↑‖z - z₀‖) h4
   · right
     -- Otherwise, it is open along at least one direction and that implies the result
-    push_neg  at h 
+    push_neg at h 
     obtain ⟨z, hz, hrz⟩ := h
     specialize h1 z hz 0 (mem_ball_self hr)
     have h7 := h1.eventually_constant_or_nhds_le_map_nhds_aux.resolve_left hrz
@@ -180,7 +180,7 @@ theorem AnalyticOn.is_constant_or_isOpen (hg : AnalyticOn ℂ g U) (hU : IsPreco
   by_cases ∃ z₀ ∈ U, ∀ᶠ z in 𝓝 z₀, g z = g z₀
   · obtain ⟨z₀, hz₀, h⟩ := h
     exact Or.inl ⟨g z₀, hg.eq_on_of_preconnected_of_eventually_eq analyticOn_const hU hz₀ h⟩
-  · push_neg  at h 
+  · push_neg at h 
     refine' Or.inr fun s hs1 hs2 => is_open_iff_mem_nhds.mpr _
     rintro z ⟨w, hw1, rfl⟩
     exact

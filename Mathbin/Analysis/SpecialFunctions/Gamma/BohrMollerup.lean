@@ -90,8 +90,9 @@ theorem gamma_mul_add_mul_le_rpow_gamma_mul_rpow_gamma {s t a b : ℝ} (hs : 0 <
       · exact continuous_at_rpow_const _ _ (Or.inl (ne_of_lt hx).symm)
   -- now apply Hölder:
   rw [Gamma_eq_integral hs, Gamma_eq_integral ht, Gamma_eq_integral hst]
-  convert MeasureTheory.integral_mul_le_Lp_mul_Lq_of_nonneg e (posf' a s) (posf' b t)
-      (f_mem_Lp ha hs) (f_mem_Lp hb ht) using
+  convert
+    MeasureTheory.integral_mul_le_Lp_mul_Lq_of_nonneg e (posf' a s) (posf' b t) (f_mem_Lp ha hs)
+      (f_mem_Lp hb ht) using
     1
   · refine' set_integral_congr measurableSet_Ioi fun x hx => _
     dsimp only [f]
@@ -383,7 +384,8 @@ theorem gamma_three_div_two_lt_one : gamma (3 / 2) < 1 :=
 
 theorem gamma_strictMonoOn_Ici : StrictMonoOn gamma (Ici 2) :=
   by
-  convert convex_on_Gamma.strict_mono_of_lt (by norm_num : (0 : ℝ) < 3 / 2)
+  convert
+    convex_on_Gamma.strict_mono_of_lt (by norm_num : (0 : ℝ) < 3 / 2)
       (by norm_num : (3 / 2 : ℝ) < 2) (Gamma_two.symm ▸ Gamma_three_div_two_lt_one)
   symm
   rw [inter_eq_right_iff_subset]

@@ -244,13 +244,13 @@ theorem concaveOn_const (c : β) (hs : Convex 𝕜 s) : ConcaveOn 𝕜 s fun x :
   @convexOn_const _ _ βᵒᵈ _ _ _ _ _ _ c hs
 #align concave_on_const concaveOn_const
 
-theorem convexOn_of_convex_epigraph (h : Convex 𝕜 { p : E × β | p.1 ∈ s ∧ f p.1 ≤ p.2 }) :
+theorem convexOn_of_convex_epigraph (h : Convex 𝕜 {p : E × β | p.1 ∈ s ∧ f p.1 ≤ p.2}) :
     ConvexOn 𝕜 s f :=
   ⟨fun x hx y hy a b ha hb hab => (@h (x, f x) ⟨hx, le_rfl⟩ (y, f y) ⟨hy, le_rfl⟩ a b ha hb hab).1,
     fun x hx y hy a b ha hb hab => (@h (x, f x) ⟨hx, le_rfl⟩ (y, f y) ⟨hy, le_rfl⟩ a b ha hb hab).2⟩
 #align convex_on_of_convex_epigraph convexOn_of_convex_epigraph
 
-theorem concaveOn_of_convex_hypograph (h : Convex 𝕜 { p : E × β | p.1 ∈ s ∧ p.2 ≤ f p.1 }) :
+theorem concaveOn_of_convex_hypograph (h : Convex 𝕜 {p : E × β | p.1 ∈ s ∧ p.2 ≤ f p.1}) :
     ConcaveOn 𝕜 s f :=
   @convexOn_of_convex_epigraph 𝕜 E βᵒᵈ _ _ _ _ _ _ _ h
 #align concave_on_of_convex_hypograph concaveOn_of_convex_hypograph
@@ -261,7 +261,7 @@ section OrderedSMul
 
 variable [SMul 𝕜 E] [Module 𝕜 β] [OrderedSMul 𝕜 β] {s : Set E} {f : E → β}
 
-theorem ConvexOn.convex_le (hf : ConvexOn 𝕜 s f) (r : β) : Convex 𝕜 ({ x ∈ s | f x ≤ r }) :=
+theorem ConvexOn.convex_le (hf : ConvexOn 𝕜 s f) (r : β) : Convex 𝕜 ({x ∈ s | f x ≤ r}) :=
   fun x hx y hy a b ha hb hab =>
   ⟨hf.1 hx.1 hy.1 ha hb hab,
     calc
@@ -272,12 +272,12 @@ theorem ConvexOn.convex_le (hf : ConvexOn 𝕜 s f) (r : β) : Convex 𝕜 ({ x 
       ⟩
 #align convex_on.convex_le ConvexOn.convex_le
 
-theorem ConcaveOn.convex_ge (hf : ConcaveOn 𝕜 s f) (r : β) : Convex 𝕜 ({ x ∈ s | r ≤ f x }) :=
+theorem ConcaveOn.convex_ge (hf : ConcaveOn 𝕜 s f) (r : β) : Convex 𝕜 ({x ∈ s | r ≤ f x}) :=
   hf.dual.convex_le r
 #align concave_on.convex_ge ConcaveOn.convex_ge
 
 theorem ConvexOn.convex_epigraph (hf : ConvexOn 𝕜 s f) :
-    Convex 𝕜 { p : E × β | p.1 ∈ s ∧ f p.1 ≤ p.2 } :=
+    Convex 𝕜 {p : E × β | p.1 ∈ s ∧ f p.1 ≤ p.2} :=
   by
   rintro ⟨x, r⟩ ⟨hx, hr⟩ ⟨y, t⟩ ⟨hy, ht⟩ a b ha hb hab
   refine' ⟨hf.1 hx hy ha hb hab, _⟩
@@ -288,17 +288,17 @@ theorem ConvexOn.convex_epigraph (hf : ConvexOn 𝕜 s f) :
 #align convex_on.convex_epigraph ConvexOn.convex_epigraph
 
 theorem ConcaveOn.convex_hypograph (hf : ConcaveOn 𝕜 s f) :
-    Convex 𝕜 { p : E × β | p.1 ∈ s ∧ p.2 ≤ f p.1 } :=
+    Convex 𝕜 {p : E × β | p.1 ∈ s ∧ p.2 ≤ f p.1} :=
   hf.dual.convex_epigraph
 #align concave_on.convex_hypograph ConcaveOn.convex_hypograph
 
 theorem convexOn_iff_convex_epigraph :
-    ConvexOn 𝕜 s f ↔ Convex 𝕜 { p : E × β | p.1 ∈ s ∧ f p.1 ≤ p.2 } :=
+    ConvexOn 𝕜 s f ↔ Convex 𝕜 {p : E × β | p.1 ∈ s ∧ f p.1 ≤ p.2} :=
   ⟨ConvexOn.convex_epigraph, convexOn_of_convex_epigraph⟩
 #align convex_on_iff_convex_epigraph convexOn_iff_convex_epigraph
 
 theorem concaveOn_iff_convex_hypograph :
-    ConcaveOn 𝕜 s f ↔ Convex 𝕜 { p : E × β | p.1 ∈ s ∧ p.2 ≤ f p.1 } :=
+    ConcaveOn 𝕜 s f ↔ Convex 𝕜 {p : E × β | p.1 ∈ s ∧ p.2 ≤ f p.1} :=
   @convexOn_iff_convex_epigraph 𝕜 E βᵒᵈ _ _ _ _ _ _ _ f
 #align concave_on_iff_convex_hypograph concaveOn_iff_convex_hypograph
 
@@ -422,7 +422,7 @@ section OrderedSMul
 variable [OrderedSMul 𝕜 β] {s : Set E} {f : E → β}
 
 theorem StrictConvexOn.convex_lt (hf : StrictConvexOn 𝕜 s f) (r : β) :
-    Convex 𝕜 ({ x ∈ s | f x < r }) :=
+    Convex 𝕜 ({x ∈ s | f x < r}) :=
   convex_iff_pairwise_pos.2 fun x hx y hy hxy a b ha hb hab =>
     ⟨hf.1 hx.1 hy.1 ha.le hb.le hab,
       calc
@@ -434,7 +434,7 @@ theorem StrictConvexOn.convex_lt (hf : StrictConvexOn 𝕜 s f) (r : β) :
 #align strict_convex_on.convex_lt StrictConvexOn.convex_lt
 
 theorem StrictConcaveOn.convex_gt (hf : StrictConcaveOn 𝕜 s f) (r : β) :
-    Convex 𝕜 ({ x ∈ s | r < f x }) :=
+    Convex 𝕜 ({x ∈ s | r < f x}) :=
   hf.dual.convex_lt r
 #align strict_concave_on.convex_gt StrictConcaveOn.convex_gt
 
@@ -601,7 +601,7 @@ section Module
 
 variable [Module 𝕜 E] [Module 𝕜 β] [OrderedSMul 𝕜 β] {s : Set E} {f : E → β}
 
-theorem ConvexOn.convex_lt (hf : ConvexOn 𝕜 s f) (r : β) : Convex 𝕜 ({ x ∈ s | f x < r }) :=
+theorem ConvexOn.convex_lt (hf : ConvexOn 𝕜 s f) (r : β) : Convex 𝕜 ({x ∈ s | f x < r}) :=
   convex_iff_forall_pos.2 fun x hx y hy a b ha hb hab =>
     ⟨hf.1 hx.1 hy.1 ha.le hb.le hab,
       calc
@@ -613,13 +613,13 @@ theorem ConvexOn.convex_lt (hf : ConvexOn 𝕜 s f) (r : β) : Convex 𝕜 ({ x 
         ⟩
 #align convex_on.convex_lt ConvexOn.convex_lt
 
-theorem ConcaveOn.convex_gt (hf : ConcaveOn 𝕜 s f) (r : β) : Convex 𝕜 ({ x ∈ s | r < f x }) :=
+theorem ConcaveOn.convex_gt (hf : ConcaveOn 𝕜 s f) (r : β) : Convex 𝕜 ({x ∈ s | r < f x}) :=
   hf.dual.convex_lt r
 #align concave_on.convex_gt ConcaveOn.convex_gt
 
 theorem ConvexOn.openSegment_subset_strict_epigraph (hf : ConvexOn 𝕜 s f) (p q : E × β)
     (hp : p.1 ∈ s ∧ f p.1 < p.2) (hq : q.1 ∈ s ∧ f q.1 ≤ q.2) :
-    openSegment 𝕜 p q ⊆ { p : E × β | p.1 ∈ s ∧ f p.1 < p.2 } :=
+    openSegment 𝕜 p q ⊆ {p : E × β | p.1 ∈ s ∧ f p.1 < p.2} :=
   by
   rintro _ ⟨a, b, ha, hb, hab, rfl⟩
   refine' ⟨hf.1 hp.1 hq.1 ha.le hb.le hab, _⟩
@@ -632,18 +632,18 @@ theorem ConvexOn.openSegment_subset_strict_epigraph (hf : ConvexOn 𝕜 s f) (p 
 
 theorem ConcaveOn.openSegment_subset_strict_hypograph (hf : ConcaveOn 𝕜 s f) (p q : E × β)
     (hp : p.1 ∈ s ∧ p.2 < f p.1) (hq : q.1 ∈ s ∧ q.2 ≤ f q.1) :
-    openSegment 𝕜 p q ⊆ { p : E × β | p.1 ∈ s ∧ p.2 < f p.1 } :=
+    openSegment 𝕜 p q ⊆ {p : E × β | p.1 ∈ s ∧ p.2 < f p.1} :=
   hf.dual.openSegment_subset_strict_epigraph p q hp hq
 #align concave_on.open_segment_subset_strict_hypograph ConcaveOn.openSegment_subset_strict_hypograph
 
 theorem ConvexOn.convex_strict_epigraph (hf : ConvexOn 𝕜 s f) :
-    Convex 𝕜 { p : E × β | p.1 ∈ s ∧ f p.1 < p.2 } :=
+    Convex 𝕜 {p : E × β | p.1 ∈ s ∧ f p.1 < p.2} :=
   convex_iff_openSegment_subset.mpr fun p hp q hq =>
     hf.openSegment_subset_strict_epigraph p q hp ⟨hq.1, hq.2.le⟩
 #align convex_on.convex_strict_epigraph ConvexOn.convex_strict_epigraph
 
 theorem ConcaveOn.convex_strict_hypograph (hf : ConcaveOn 𝕜 s f) :
-    Convex 𝕜 { p : E × β | p.1 ∈ s ∧ p.2 < f p.1 } :=
+    Convex 𝕜 {p : E × β | p.1 ∈ s ∧ p.2 < f p.1} :=
   hf.dual.convex_strict_epigraph
 #align concave_on.convex_strict_hypograph ConcaveOn.convex_strict_hypograph
 

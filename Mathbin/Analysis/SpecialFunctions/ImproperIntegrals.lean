@@ -70,7 +70,7 @@ theorem integrableOn_Ioi_rpow_of_lt {a : ℝ} (ha : a < -1) {c : ℝ} (hc : 0 < 
   have hd : ∀ (x : ℝ) (hx : x ∈ Ici c), HasDerivAt (fun t => t ^ (a + 1) / (a + 1)) (x ^ a) x :=
     by
     intro x hx
-    convert(has_deriv_at_rpow_const (Or.inl (hc.trans_le hx).ne')).div_const _
+    convert (has_deriv_at_rpow_const (Or.inl (hc.trans_le hx).ne')).div_const _
     field_simp [show a + 1 ≠ 0 from ne_of_lt (by linarith), mul_comm]
   have ht : tendsto (fun t => t ^ (a + 1) / (a + 1)) at_top (𝓝 (0 / (a + 1))) :=
     by
@@ -86,7 +86,7 @@ theorem integral_Ioi_rpow_of_lt {a : ℝ} (ha : a < -1) {c : ℝ} (hc : 0 < c) :
   have hd : ∀ (x : ℝ) (hx : x ∈ Ici c), HasDerivAt (fun t => t ^ (a + 1) / (a + 1)) (x ^ a) x :=
     by
     intro x hx
-    convert(has_deriv_at_rpow_const (Or.inl (hc.trans_le hx).ne')).div_const _
+    convert (has_deriv_at_rpow_const (Or.inl (hc.trans_le hx).ne')).div_const _
     field_simp [show a + 1 ≠ 0 from ne_of_lt (by linarith), mul_comm]
   have ht : tendsto (fun t => t ^ (a + 1) / (a + 1)) at_top (𝓝 (0 / (a + 1))) :=
     by

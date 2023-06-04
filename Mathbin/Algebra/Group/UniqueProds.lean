@@ -76,7 +76,7 @@ theorem subsingleton (A B : Finset G) (a0 b0 : G) (h : UniqueMul A B a0 b0) :
 #print UniqueMul.set_subsingleton /-
 @[to_additive]
 theorem set_subsingleton (A B : Finset G) (a0 b0 : G) (h : UniqueMul A B a0 b0) :
-    Set.Subsingleton { ab : G × G | ab.1 ∈ A ∧ ab.2 ∈ B ∧ ab.1 * ab.2 = a0 * b0 } :=
+    Set.Subsingleton {ab : G × G | ab.1 ∈ A ∧ ab.2 ∈ B ∧ ab.1 * ab.2 = a0 * b0} :=
   by
   rintro ⟨x1, y1⟩ (hx : x1 ∈ A ∧ y1 ∈ B ∧ x1 * y1 = a0 * b0) ⟨x2, y2⟩
     (hy : x2 ∈ A ∧ y2 ∈ B ∧ x2 * y2 = a0 * b0)
@@ -166,8 +166,8 @@ See `unique_mul.mul_hom_image_iff` for a version with swapped bundling. -/
 theorem mulHom_map_iff (f : G ↪ H) (mul : ∀ x y, f (x * y) = f x * f y) :
     UniqueMul (A.map f) (B.map f) (f a0) (f b0) ↔ UniqueMul A B a0 b0 := by
   classical convert mul_hom_image_iff ⟨f, mul⟩ f.2 <;>
-      · ext
-        simp only [Finset.mem_map, MulHom.coe_mk, Finset.mem_image]
+    · ext
+      simp only [Finset.mem_map, MulHom.coe_mk, Finset.mem_image]
 #align unique_mul.mul_hom_map_iff UniqueMul.mulHom_map_iff
 #align unique_add.add_hom_map_iff UniqueAdd.addHom_map_iff
 
@@ -229,7 +229,7 @@ theorem eq_and_eq_of_le_of_le_of_mul_le {A} [Mul A] [LinearOrder A]
   haveI := Mul.to_covariantClass_right A
   have ha' : ¬a0 * b0 < a * b → ¬a0 < a := mt fun h => mul_lt_mul_of_lt_of_le h hb
   have hb' : ¬a0 * b0 < a * b → ¬b0 < b := mt fun h => mul_lt_mul_of_le_of_lt ha h
-  push_neg  at ha' hb' 
+  push_neg at ha' hb' 
   exact ⟨ha.antisymm' (ha' ab), hb.antisymm' (hb' ab)⟩
 #align eq_and_eq_of_le_of_le_of_mul_le eq_and_eq_of_le_of_le_of_mul_le
 #align eq_and_eq_of_le_of_le_of_add_le eq_and_eq_of_le_of_le_of_add_le

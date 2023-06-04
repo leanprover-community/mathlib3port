@@ -69,13 +69,13 @@ theorem hammingDist_comm (x y : ∀ i, β i) : hammingDist x y = hammingDist y x
 theorem hammingDist_triangle (x y z : ∀ i, β i) :
     hammingDist x z ≤ hammingDist x y + hammingDist y z := by
   classical
-    simp_rw [hammingDist]
-    refine' le_trans (card_mono _) (card_union_le _ _)
-    rw [← filter_or]
-    refine' monotone_filter_right _ _
-    intro i h
-    by_contra' H
-    exact h (Eq.trans H.1 H.2)
+  simp_rw [hammingDist]
+  refine' le_trans (card_mono _) (card_union_le _ _)
+  rw [← filter_or]
+  refine' monotone_filter_right _ _
+  intro i h
+  by_contra' H
+  exact h (Eq.trans H.1 H.2)
 #align hamming_dist_triangle hammingDist_triangle
 
 /-- Corresponds to `dist_triangle_left`. -/
@@ -462,7 +462,7 @@ instance : PseudoMetricSpace (Hamming β) :=
         push_cast
         constructor
         · refine' fun hs => ⟨1, zero_lt_one, fun _ _ hab => _⟩
-          rw_mod_cast [hammingDist_lt_one]  at hab 
+          rw_mod_cast [hammingDist_lt_one] at hab 
           rw [of_hamming_inj, ← mem_idRel] at hab 
           exact hs hab
         · rintro ⟨_, hε, hs⟩ ⟨_, _⟩ hab

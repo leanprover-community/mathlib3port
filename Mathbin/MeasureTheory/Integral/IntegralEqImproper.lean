@@ -305,7 +305,8 @@ theorem AeCover.aEMeasurable {β : Type _} [MeasurableSpace β] [l.IsCountablyGe
   obtain ⟨u, hu⟩ := l.exists_seq_tendsto
   have := ae_measurable_Union_iff.mpr fun n : ℕ => hfm (u n)
   rwa [measure.restrict_eq_self_of_ae_mem] at this 
-  filter_upwards [hφ.ae_eventually_mem]with x hx using let ⟨i, hi⟩ := (hu.eventually hx).exists
+  filter_upwards [hφ.ae_eventually_mem] with x hx using
+    let ⟨i, hi⟩ := (hu.eventually hx).exists
     mem_Union.mpr ⟨i, hi⟩
 #align measure_theory.ae_cover.ae_measurable MeasureTheory.AeCover.aEMeasurable
 
@@ -316,7 +317,8 @@ theorem AeCover.aEStronglyMeasurable {β : Type _} [TopologicalSpace β] [Pseudo
   obtain ⟨u, hu⟩ := l.exists_seq_tendsto
   have := ae_strongly_measurable_Union_iff.mpr fun n : ℕ => hfm (u n)
   rwa [measure.restrict_eq_self_of_ae_mem] at this 
-  filter_upwards [hφ.ae_eventually_mem]with x hx using let ⟨i, hi⟩ := (hu.eventually hx).exists
+  filter_upwards [hφ.ae_eventually_mem] with x hx using
+    let ⟨i, hi⟩ := (hu.eventually hx).exists
     mem_Union.mpr ⟨i, hi⟩
 #align measure_theory.ae_cover.ae_strongly_measurable MeasureTheory.AeCover.aEStronglyMeasurable
 
@@ -540,7 +542,7 @@ theorem integrable_of_intervalIntegral_norm_bounded (I : ℝ)
   have hφ : ae_cover μ l _ := ae_cover_Ioc ha hb
   refine' hφ.integrable_of_integral_norm_bounded I hfi (h.mp _)
   filter_upwards [ha.eventually (eventually_le_at_bot 0),
-    hb.eventually (eventually_ge_at_top 0)]with i hai hbi ht
+    hb.eventually (eventually_ge_at_top 0)] with i hai hbi ht
   rwa [← intervalIntegral.integral_of_le (hai.trans hbi)]
 #align measure_theory.integrable_of_interval_integral_norm_bounded MeasureTheory.integrable_of_intervalIntegral_norm_bounded
 
@@ -567,7 +569,7 @@ theorem integrableOn_Iic_of_intervalIntegral_norm_bounded (I b : ℝ)
     rw [integrable_on, measure.restrict_restrict (hφ.measurable i)]
     exact hfi i
   refine' hφ.integrable_of_integral_norm_bounded I hfi (h.mp _)
-  filter_upwards [ha.eventually (eventually_le_at_bot b)]with i hai
+  filter_upwards [ha.eventually (eventually_le_at_bot b)] with i hai
   rw [intervalIntegral.integral_of_le hai, measure.restrict_restrict (hφ.measurable i)]
   exact id
 #align measure_theory.integrable_on_Iic_of_interval_integral_norm_bounded MeasureTheory.integrableOn_Iic_of_intervalIntegral_norm_bounded
@@ -594,7 +596,7 @@ theorem integrableOn_Ioi_of_intervalIntegral_norm_bounded (I a : ℝ)
     rw [integrable_on, measure.restrict_restrict (hφ.measurable i), inter_comm]
     exact hfi i
   refine' hφ.integrable_of_integral_norm_bounded I hfi (h.mp _)
-  filter_upwards [hb.eventually (eventually_ge_at_top a)]with i hbi
+  filter_upwards [hb.eventually (eventually_ge_at_top a)] with i hbi
   rw [intervalIntegral.integral_of_le hbi, measure.restrict_restrict (hφ.measurable i), inter_comm]
   exact id
 #align measure_theory.integrable_on_Ioi_of_interval_integral_norm_bounded MeasureTheory.integrableOn_Ioi_of_intervalIntegral_norm_bounded
@@ -650,7 +652,7 @@ theorem intervalIntegral_tendsto_integral (hfi : Integrable f μ) (ha : Tendsto 
   have hφ : ae_cover μ l φ := ae_cover_Ioc ha hb
   refine' (hφ.integral_tendsto_of_countably_generated hfi).congr' _
   filter_upwards [ha.eventually (eventually_le_at_bot 0),
-    hb.eventually (eventually_ge_at_top 0)]with i hai hbi
+    hb.eventually (eventually_ge_at_top 0)] with i hai hbi
   exact (intervalIntegral.integral_of_le (hai.trans hbi)).symm
 #align measure_theory.interval_integral_tendsto_integral MeasureTheory.intervalIntegral_tendsto_integral
 
@@ -661,7 +663,7 @@ theorem intervalIntegral_tendsto_integral_Iic (b : ℝ) (hfi : IntegrableOn f (I
   let φ i := Ioi (a i)
   have hφ : ae_cover (μ.restrict <| Iic b) l φ := ae_cover_Ioi ha
   refine' (hφ.integral_tendsto_of_countably_generated hfi).congr' _
-  filter_upwards [ha.eventually (eventually_le_at_bot <| b)]with i hai
+  filter_upwards [ha.eventually (eventually_le_at_bot <| b)] with i hai
   rw [intervalIntegral.integral_of_le hai, measure.restrict_restrict (hφ.measurable i)]
   rfl
 #align measure_theory.interval_integral_tendsto_integral_Iic MeasureTheory.intervalIntegral_tendsto_integral_Iic
@@ -673,7 +675,7 @@ theorem intervalIntegral_tendsto_integral_Ioi (a : ℝ) (hfi : IntegrableOn f (I
   let φ i := Iic (b i)
   have hφ : ae_cover (μ.restrict <| Ioi a) l φ := ae_cover_Iic hb
   refine' (hφ.integral_tendsto_of_countably_generated hfi).congr' _
-  filter_upwards [hb.eventually (eventually_ge_at_top <| a)]with i hbi
+  filter_upwards [hb.eventually (eventually_ge_at_top <| a)] with i hbi
   rw [intervalIntegral.integral_of_le hbi, measure.restrict_restrict (hφ.measurable i), inter_comm]
   rfl
 #align measure_theory.interval_integral_tendsto_integral_Ioi MeasureTheory.intervalIntegral_tendsto_integral_Ioi
@@ -699,7 +701,7 @@ theorem integral_Ioi_of_hasDerivAt_of_tendsto (hcont : ContinuousOn f (Ici a))
   by
   refine' tendsto_nhds_unique (interval_integral_tendsto_integral_Ioi a f'int tendsto_id) _
   apply tendsto.congr' _ (hf.sub_const _)
-  filter_upwards [Ioi_mem_at_top a]with x hx
+  filter_upwards [Ioi_mem_at_top a] with x hx
   have h'x : a ≤ id x := le_of_lt hx
   symm
   apply
@@ -736,7 +738,7 @@ theorem integrableOn_Ioi_deriv_of_nonneg (hcont : ContinuousOn g (Ici a))
       intervalIntegral.integrableOn_deriv_of_nonneg (hcont.mono Icc_subset_Ici_self)
         (fun y hy => hderiv y hy.1) fun y hy => g'pos y hy.1
   apply tendsto.congr' _ (hg.sub_const _)
-  filter_upwards [Ioi_mem_at_top a]with x hx
+  filter_upwards [Ioi_mem_at_top a] with x hx
   have h'x : a ≤ id x := le_of_lt hx
   calc
     g x - g a = ∫ y in a..id x, g' y := by

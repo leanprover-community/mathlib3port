@@ -429,7 +429,7 @@ theorem topLTTop {r : α → α → Prop} {s : β → β → Prop} {t : γ → �
 
 #print PrincipalSeg.ofElement /-
 /-- Any element of a well order yields a principal segment -/
-def ofElement {α : Type _} (r : α → α → Prop) (a : α) : Subrel r { b | r b a } ≺i r :=
+def ofElement {α : Type _} (r : α → α → Prop) (a : α) : Subrel r {b | r b a} ≺i r :=
   ⟨Subrel.relEmbedding _ _, a, fun b => ⟨fun h => ⟨⟨_, h⟩, rfl⟩, fun ⟨⟨_, h⟩, rfl⟩ => h⟩⟩
 #align principal_seg.of_element PrincipalSeg.ofElement
 -/
@@ -499,7 +499,7 @@ In this lemma we use `subrel` to indicate its principal segments because it's us
 convenient to use.
 -/
 theorem wellFounded_iff_wellFounded_subrel {β : Type _} {s : β → β → Prop} [IsTrans β s] :
-    WellFounded s ↔ ∀ b, WellFounded (Subrel s { b' | s b' b }) :=
+    WellFounded s ↔ ∀ b, WellFounded (Subrel s {b' | s b' b}) :=
   by
   refine'
     ⟨fun wf b => ⟨fun b' => ((PrincipalSeg.ofElement _ b).Acc b').mpr (wf.apply b')⟩, fun wf =>
@@ -570,7 +570,7 @@ but the proof of the fact that it is an initial segment will be given in `collap
 noncomputable def collapseF [IsWellOrder β s] (f : r ↪r s) : ∀ a, { b // ¬s (f a) b } :=
   (RelEmbedding.wellFounded f <| IsWellFounded.wf).fix fun a IH =>
     by
-    let S := { b | ∀ a h, s (IH a h).1 b }
+    let S := {b | ∀ a h, s (IH a h).1 b}
     have : f a ∈ S := fun a' h =>
       ((trichotomous _ _).resolve_left fun h' =>
             (IH a' h).2 <| trans (f.map_rel_iff.2 h) h').resolve_left
@@ -581,7 +581,7 @@ noncomputable def collapseF [IsWellOrder β s] (f : r ↪r s) : ∀ a, { b // ¬
 #print RelEmbedding.collapseF.lt /-
 theorem collapseF.lt [IsWellOrder β s] (f : r ↪r s) {a : α} :
     ∀ {a'}, r a' a → s (collapseF f a').1 (collapseF f a).1 :=
-  show (collapseF f a).1 ∈ { b | ∀ (a') (h : r a' a), s (collapseF f a').1 b }
+  show (collapseF f a).1 ∈ {b | ∀ (a') (h : r a' a), s (collapseF f a').1 b}
     by
     unfold collapse_F; rw [WellFounded.fix_eq]
     apply WellFounded.min_mem _ _
@@ -595,7 +595,7 @@ theorem collapseF.not_lt [IsWellOrder β s] (f : r ↪r s) (a : α) {b}
   unfold collapse_F; rw [WellFounded.fix_eq]
   exact
     WellFounded.not_lt_min _ _ _
-      (show b ∈ { b | ∀ (a') (h : r a' a), s (collapse_F f a').1 b } from h)
+      (show b ∈ {b | ∀ (a') (h : r a' a), s (collapse_F f a').1 b} from h)
 #align rel_embedding.collapse_F.not_lt RelEmbedding.collapseF.not_lt
 -/
 
@@ -607,7 +607,7 @@ noncomputable def collapse [IsWellOrder β s] (f : r ↪r s) : r ≼i s :=
   ⟨RelEmbedding.ofMonotone (fun a => (collapse_F f a).1) fun a b => collapse_F.lt f, fun a b =>
     Acc.recOn (is_well_founded.wf.apply b : Acc s b)
       (fun b H IH a h => by
-        let S := { a | ¬s (collapse_F f a).1 b }
+        let S := {a | ¬s (collapse_F f a).1 b}
         have : S.nonempty := ⟨_, asymm h⟩
         exists (IsWellFounded.wf : WellFounded r).min S this
         refine' ((@trichotomous _ s _ _ _).resolve_left _).resolve_right _

@@ -215,7 +215,8 @@ open AddOpposite
 
 instance [NonUnitalNonAssocSemiring α] [TopologicalSpace α] [ContinuousMul α] : ContinuousMul αᵃᵒᵖ
     where continuous_mul := by
-    convert continuous_op.comp <|
+    convert
+      continuous_op.comp <|
         (@continuous_mul α _ _ _).comp <| continuous_unop.prod_map continuous_unop
 
 instance [NonUnitalNonAssocSemiring α] [TopologicalSpace α] [TopologicalSemiring α] :
@@ -423,7 +424,7 @@ instance : CompleteLattice (RingTopology α) :=
 /-- Given `f : α → β` and a topology on `α`, the coinduced ring topology on `β` is the finest
 topology such that `f` is continuous and `β` is a topological ring. -/
 def coinduced {α β : Type _} [t : TopologicalSpace α] [Ring β] (f : α → β) : RingTopology β :=
-  sInf { b : RingTopology β | TopologicalSpace.coinduced f t ≤ b.toTopologicalSpace }
+  sInf {b : RingTopology β | TopologicalSpace.coinduced f t ≤ b.toTopologicalSpace}
 #align ring_topology.coinduced RingTopology.coinduced
 -/
 

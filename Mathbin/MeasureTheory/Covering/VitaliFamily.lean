@@ -221,7 +221,7 @@ contained in a `δ`-neighborhood on `x`. This does not change the local filter a
 can be convenient to get a nicer global behavior. -/
 def enlarge (v : VitaliFamily μ) (δ : ℝ) (δpos : 0 < δ) : VitaliFamily μ
     where
-  setsAt x := v.setsAt x ∪ { a | MeasurableSet a ∧ (interior a).Nonempty ∧ ¬a ⊆ closedBall x δ }
+  setsAt x := v.setsAt x ∪ {a | MeasurableSet a ∧ (interior a).Nonempty ∧ ¬a ⊆ closedBall x δ}
   MeasurableSet' x a ha := by cases ha; exacts [v.measurable_set' _ _ ha, ha.1]
   nonempty_interior x a ha := by cases ha; exacts [v.nonempty_interior _ _ ha, ha.2.1]
   Nontrivial := by
@@ -253,7 +253,7 @@ include v
 that contain all sets of `v.sets_at x` of a sufficiently small diameter. This filter makes it
 possible to express limiting behavior when sets in `v.sets_at x` shrink to `x`. -/
 def filterAt (x : α) : Filter (Set α) :=
-  ⨅ ε ∈ Ioi (0 : ℝ), 𝓟 ({ a ∈ v.setsAt x | a ⊆ closedBall x ε })
+  ⨅ ε ∈ Ioi (0 : ℝ), 𝓟 ({a ∈ v.setsAt x | a ⊆ closedBall x ε})
 #align vitali_family.filter_at VitaliFamily.filterAt
 -/
 
@@ -315,12 +315,12 @@ theorem tendsto_filterAt_iff {ι : Type _} {l : Filter ι} {f : ι → Set α} {
         H.Eventually <| v.eventually_filter_at_subset_closed_ball x hε⟩,
       fun H s hs => (_ : ∀ᶠ i in l, f i ∈ s)⟩
   obtain ⟨ε, εpos, hε⟩ := v.mem_filter_at_iff.mp hs
-  filter_upwards [H.1, H.2 ε εpos]with i hi hiε using hε _ hi hiε
+  filter_upwards [H.1, H.2 ε εpos] with i hi hiε using hε _ hi hiε
 #align vitali_family.tendsto_filter_at_iff VitaliFamily.tendsto_filterAt_iff
 
 #print VitaliFamily.eventually_filterAt_measurableSet /-
 theorem eventually_filterAt_measurableSet (x : α) : ∀ᶠ a in v.filterAt x, MeasurableSet a := by
-  filter_upwards [v.eventually_filter_at_mem_sets x]with _ ha using v.measurable_set' _ _ ha
+  filter_upwards [v.eventually_filter_at_mem_sets x] with _ ha using v.measurable_set' _ _ ha
 #align vitali_family.eventually_filter_at_measurable_set VitaliFamily.eventually_filterAt_measurableSet
 -/
 

@@ -208,13 +208,13 @@ noncomputable instance compHausToTop.createsLimits : CreatesLimits compHausToTop
 
 #print CompHaus.hasLimits /-
 instance CompHaus.hasLimits : Limits.HasLimits CompHaus :=
-  has_limits_of_has_limits_creates_limits compHausToTop
+  hasLimits_of_hasLimits_createsLimits compHausToTop
 #align CompHaus.has_limits CompHaus.hasLimits
 -/
 
 #print CompHaus.hasColimits /-
 instance CompHaus.hasColimits : Limits.HasColimits CompHaus :=
-  has_colimits_of_reflective compHausToTop
+  hasColimits_of_reflective compHausToTop
 #align CompHaus.has_colimits CompHaus.hasColimits
 -/
 
@@ -230,12 +230,12 @@ def limitCone {J : Type v} [SmallCategory J] (F : J ⥤ CompHaus.{max v u}) : Li
     { toTop := (TopCat.limitCone (F ⋙ compHausToTop)).pt
       IsCompact :=
         by
-        show CompactSpace ↥{ u : ∀ j, F.obj j | ∀ {i j : J} (f : i ⟶ j), (F.map f) (u i) = u j }
+        show CompactSpace ↥{u : ∀ j, F.obj j | ∀ {i j : J} (f : i ⟶ j), (F.map f) (u i) = u j}
         rw [← isCompact_iff_compactSpace]
         apply IsClosed.isCompact
         have :
-          { u : ∀ j, F.obj j | ∀ {i j : J} (f : i ⟶ j), F.map f (u i) = u j } =
-            ⋂ (i : J) (j : J) (f : i ⟶ j), { u | F.map f (u i) = u j } :=
+          {u : ∀ j, F.obj j | ∀ {i j : J} (f : i ⟶ j), F.map f (u i) = u j} =
+            ⋂ (i : J) (j : J) (f : i ⟶ j), {u | F.map f (u i) = u j} :=
           by ext1; simp only [Set.mem_iInter, Set.mem_setOf_eq]
         rw [this]
         apply isClosed_iInter; intro i
@@ -245,7 +245,7 @@ def limitCone {J : Type v} [SmallCategory J] (F : J ⥤ CompHaus.{max v u}) : Li
         · exact (ContinuousMap.continuous (F.map f)).comp (continuous_apply i)
         · exact continuous_apply j
       is_hausdorff :=
-        show T2Space ↥{ u : ∀ j, F.obj j | ∀ {i j : J} (f : i ⟶ j), (F.map f) (u i) = u j } from
+        show T2Space ↥{u : ∀ j, F.obj j | ∀ {i j : J} (f : i ⟶ j), (F.map f) (u i) = u j} from
           inferInstance }
   π :=
     { app := fun j => (TopCat.limitCone (F ⋙ compHausToTop)).π.app j
@@ -290,7 +290,7 @@ theorem epi_iff_surjective {X Y : CompHaus.{u}} (f : X ⟶ Y) : Epi f ↔ Functi
       ext x; dsimp
       simp only [comp_apply, ContinuousMap.coe_mk, Subtype.coe_mk, hφ0 (Set.mem_range_self x),
         Pi.zero_apply]
-    apply_fun fun e => (e y).down  at H 
+    apply_fun fun e => (e y).down at H 
     dsimp at H 
     simp only [Subtype.mk_eq_mk, hφ1 (Set.mem_singleton y), Pi.one_apply] at H 
     exact zero_ne_one H
@@ -306,7 +306,7 @@ theorem mono_iff_injective {X Y : CompHaus.{u}} (f : X ⟶ Y) : Mono f ↔ Funct
     let g₂ : of PUnit ⟶ X := ⟨fun _ => x₂, continuous_const⟩
     have : g₁ ≫ f = g₂ ≫ f := by ext; exact h
     rw [cancel_mono] at this 
-    apply_fun fun e => e PUnit.unit  at this 
+    apply_fun fun e => e PUnit.unit at this 
     exact this
   · rw [← CategoryTheory.mono_iff_injective]
     apply (forget CompHaus).mono_of_mono_map

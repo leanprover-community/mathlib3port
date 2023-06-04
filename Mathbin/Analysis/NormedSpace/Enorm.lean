@@ -200,9 +200,8 @@ def emetricSpace : EMetricSpace V where
 #align enorm.emetric_space Enorm.emetricSpace
 
 /-- The subspace of vectors with finite enorm. -/
-def finiteSubspace : Subspace 𝕜 V
-    where
-  carrier := { x | e x < ⊤ }
+def finiteSubspace : Subspace 𝕜 V where
+  carrier := {x | e x < ⊤}
   zero_mem' := by simp
   add_mem' x y hx hy := lt_of_le_of_lt (e.map_add_le x y) (ENNReal.add_lt_top.2 ⟨hx, hy⟩)
   smul_mem' c x (hx : _ < _) :=

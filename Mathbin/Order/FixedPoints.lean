@@ -51,7 +51,7 @@ variable [CompleteLattice α] (f : α →o α)
 #print OrderHom.lfp /-
 /-- Least fixed point of a monotone function -/
 def lfp : (α →o α) →o α where
-  toFun f := sInf { a | f a ≤ a }
+  toFun f := sInf {a | f a ≤ a}
   monotone' f g hle := sInf_le_sInf fun a ha => (hle a).trans ha
 #align order_hom.lfp OrderHom.lfp
 -/
@@ -59,7 +59,7 @@ def lfp : (α →o α) →o α where
 #print OrderHom.gfp /-
 /-- Greatest fixed point of a monotone function -/
 def gfp : (α →o α) →o α where
-  toFun f := sSup { a | a ≤ f a }
+  toFun f := sSup {a | a ≤ f a}
   monotone' f g hle := sSup_le_sSup fun a ha => le_trans ha (hle a)
 #align order_hom.gfp OrderHom.gfp
 -/
@@ -112,7 +112,7 @@ theorem lfp_le_map {a : α} (ha : lfp f ≤ a) : lfp f ≤ f a :=
 -/
 
 #print OrderHom.isLeast_lfp_le /-
-theorem isLeast_lfp_le : IsLeast { a | f a ≤ a } (lfp f) :=
+theorem isLeast_lfp_le : IsLeast {a | f a ≤ a} (lfp f) :=
   ⟨f.map_lfp.le, fun a => f.lfp_le⟩
 #align order_hom.is_least_lfp_le OrderHom.isLeast_lfp_le
 -/
@@ -126,7 +126,7 @@ theorem isLeast_lfp_le : IsLeast (fixedPoints f) (lfp f) :=
 theorem lfp_induction {p : α → Prop} (step : ∀ a, p a → a ≤ lfp f → p (f a))
     (hSup : ∀ s, (∀ a ∈ s, p a) → p (sSup s)) : p (lfp f) :=
   by
-  set s := { a | a ≤ lfp f ∧ p a }
+  set s := {a | a ≤ lfp f ∧ p a}
   specialize hSup s fun a => And.right
   suffices : Sup s = lfp f; exact this ▸ hSup
   have h : Sup s ≤ lfp f := sSup_le fun b => And.left
@@ -172,7 +172,7 @@ theorem gfp_le_map {a : α} (ha : gfp f ≤ a) : gfp f ≤ f a :=
 -/
 
 #print OrderHom.isGreatest_gfp_le /-
-theorem isGreatest_gfp_le : IsGreatest { a | a ≤ f a } (gfp f) :=
+theorem isGreatest_gfp_le : IsGreatest {a | a ≤ f a} (gfp f) :=
   f.dual.isLeast_lfp_le
 #align order_hom.is_greatest_gfp_le OrderHom.isGreatest_gfp_le
 -/

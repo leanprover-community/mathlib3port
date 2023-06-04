@@ -240,7 +240,7 @@ theorem abs_div_tendsto_atTop_of_degree_gt (hdeg : Q.degree < P.degree) (hQ : Q 
   by
   by_cases h : 0 ≤ P.leading_coeff / Q.leading_coeff
   · exact tendsto_abs_at_top_at_top.comp (P.div_tendsto_at_top_of_degree_gt Q hdeg hQ h)
-  · push_neg  at h 
+  · push_neg at h 
     exact tendsto_abs_at_bot_at_top.comp (P.div_tendsto_at_bot_of_degree_gt Q hdeg hQ h.le)
 #align polynomial.abs_div_tendsto_at_top_of_degree_gt Polynomial.abs_div_tendsto_atTop_of_degree_gt
 

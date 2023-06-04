@@ -75,8 +75,9 @@ theorem skyscraperPresheaf_eq_pushforward
     skyscraperPresheaf p₀ A =
       ContinuousMap.const (TopCat.of PUnit) p₀ _* skyscraperPresheaf PUnit.unit A :=
   by
-  convert_to@skyscraperPresheaf X p₀ (fun U => hd <| (opens.map <| ContinuousMap.const _ p₀).obj U)
-          C _ _ A =
+  convert_to
+      @skyscraperPresheaf X p₀ (fun U => hd <| (opens.map <| ContinuousMap.const _ p₀).obj U) C _ _
+          A =
         _ <;>
     first
     | congr
@@ -231,11 +232,10 @@ def skyscraperPresheafStalkOfNotSpecializesIsTerminal [HasColimits C] {y : X} (h
 
 theorem skyscraperPresheaf_isSheaf : (skyscraperPresheaf p₀ A).IsSheaf := by
   classical exact
-      (presheaf.is_sheaf_iso_iff (eq_to_iso <| skyscraperPresheaf_eq_pushforward p₀ A)).mpr
-        (sheaf.pushforward_sheaf_of_sheaf _
-          (presheaf.is_sheaf_on_punit_of_is_terminal _
-            (by dsimp; rw [if_neg]; exact terminal_is_terminal;
-              exact Set.not_mem_empty PUnit.unit)))
+    (presheaf.is_sheaf_iso_iff (eq_to_iso <| skyscraperPresheaf_eq_pushforward p₀ A)).mpr
+      (sheaf.pushforward_sheaf_of_sheaf _
+        (presheaf.is_sheaf_on_punit_of_is_terminal _
+          (by dsimp; rw [if_neg]; exact terminal_is_terminal; exact Set.not_mem_empty PUnit.unit)))
 #align skyscraper_presheaf_is_sheaf skyscraperPresheaf_isSheaf
 
 /--

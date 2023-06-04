@@ -113,7 +113,7 @@ theorem injective_toCircle (hT : T ≠ 0) : Function.Injective (@toCircle T) :=
   obtain ⟨m, hm⟩ := exp_map_circle_eq_exp_map_circle.mp h.symm
   simp_rw [QuotientAddGroup.eq, AddSubgroup.mem_zmultiples_iff, zsmul_eq_mul]
   use m
-  field_simp [real.two_pi_pos.ne']  at hm 
+  field_simp [real.two_pi_pos.ne'] at hm 
   rw [← mul_right_inj' real.two_pi_pos.ne']
   linarith
 #align add_circle.injective_to_circle AddCircle.injective_toCircle
@@ -131,11 +131,11 @@ include hT
 /-- Haar measure on the additive circle, normalised to have total measure 1. -/
 def haarAddCircle : Measure (AddCircle T) :=
   addHaarMeasure ⊤
-deriving AddHaarMeasure
+deriving IsAddHaarMeasure
 #align add_circle.haar_add_circle AddCircle.haarAddCircle
 
-instance : ProbabilityMeasure (@haarAddCircle T _) :=
-  ProbabilityMeasure.mk addHaarMeasure_self
+instance : IsProbabilityMeasure (@haarAddCircle T _) :=
+  IsProbabilityMeasure.mk addHaarMeasure_self
 
 theorem volume_eq_smul_haarAddCircle :
     (volume : Measure (AddCircle T)) = ENNReal.ofReal T • haarAddCircle :=
@@ -300,8 +300,8 @@ theorem coeFn_fourierLp (p : ℝ≥0∞) [Fact (1 ≤ p)] (n : ℤ) :
 theorem span_fourierLp_closure_eq_top {p : ℝ≥0∞} [Fact (1 ≤ p)] (hp : p ≠ ∞) :
     (span ℂ (range (@fourierLp T _ p _))).topologicalClosure = ⊤ :=
   by
-  convert(ContinuousMap.toLp_denseRange ℂ (@haar_add_circle T hT) hp
-          ℂ).topologicalClosure_map_submodule
+  convert
+    (ContinuousMap.toLp_denseRange ℂ (@haar_add_circle T hT) hp ℂ).topologicalClosure_map_submodule
       span_fourier_closure_eq_top
   rw [map_span, range_comp]
   simp only [ContinuousLinearMap.coe_coe]
@@ -323,7 +323,7 @@ theorem orthonormal_fourier : Orthonormal ℂ (@fourierLp T _ 2 _) :=
     rw [add_comm]
     exact sub_ne_zero.mpr (Ne.symm h)
   convert integral_eq_zero_of_add_right_eq_neg (fourier_add_half_inv_index hij hT.elim)
-  exact MeasureTheory.AddLeftInvariant.addRightInvariant
+  exact MeasureTheory.IsAddLeftInvariant.isAddRightInvariant
 #align orthonormal_fourier orthonormal_fourier
 
 end Monomials
@@ -451,7 +451,7 @@ theorem fourierBasis_repr (f : Lp ℂ 2 <| @haarAddCircle T hT) (i : ℤ) :
   trans ∫ t : AddCircle T, conj ((@fourierLp T hT 2 _ i : AddCircle T → ℂ) t) * f t ∂haar_add_circle
   · simp [fourier_basis.repr_apply_apply f i, MeasureTheory.L2.inner_def]
   · apply integral_congr_ae
-    filter_upwards [coeFn_fourierLp 2 i]with _ ht
+    filter_upwards [coeFn_fourierLp 2 i] with _ ht
     rw [ht, ← fourier_neg, smul_eq_mul]
 #align fourier_basis_repr fourierBasis_repr
 
@@ -548,7 +548,7 @@ theorem has_antideriv_at_fourier_neg (hT : Fact (0 < T)) {n : ℤ} (hn : n ≠ 0
     HasDerivAt (fun y : ℝ => (T : ℂ) / (-2 * π * I * n) * fourier (-n) (y : AddCircle T))
       (fourier (-n) (x : AddCircle T)) x :=
   by
-  convert(hasDerivAt_fourier_neg T n x).div_const (-2 * π * I * n / T) using 1
+  convert (hasDerivAt_fourier_neg T n x).div_const (-2 * π * I * n / T) using 1
   · ext1 y; rw [div_div_eq_mul_div]; ring
   · rw [mul_div_cancel_left]
     simp only [Ne.def, div_eq_zero_iff, neg_eq_zero, mul_eq_zero, bit0_eq_zero, one_ne_zero,

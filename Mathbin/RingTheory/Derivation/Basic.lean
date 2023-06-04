@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicolò Cavalleri, Andrew Yang
 
 ! This file was ported from Lean 3 source module ring_theory.derivation.basic
-! leanprover-community/mathlib commit b608348ffaeb7f557f2fd46876037abafd326ff3
+! leanprover-community/mathlib commit af471b9e3ce868f296626d33189b4ce730fa4c00
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.RingTheory.Adjoin.Basic
 
 /-!
 # Derivations
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file defines derivation. A derivation `D` from the `R`-algebra `A` to the `A`-module `M` is an
 `R`-linear map that satisfy the Leibniz rule `D (a * b) = a * D b + D a * b`.
@@ -40,6 +43,7 @@ open Algebra
 
 open scoped BigOperators
 
+#print Derivation /-
 /-- `D : derivation R A M` is an `R`-linear map from `A` to `M` that satisfies the `leibniz`
 equality. We also require that `D 1 = 0`. See `derivation.mk'` for a constructor that deduces this
 assumption from the Leibniz rule when `M` is cancellative.
@@ -51,6 +55,7 @@ structure Derivation (R : Type _) (A : Type _) [CommSemiring R] [CommSemiring A]
   map_one_eq_zero' : to_linear_map 1 = 0
   leibniz' (a b : A) : to_linear_map (a * b) = a • to_linear_map b + b • to_linear_map a
 #align derivation Derivation
+-/
 
 /-- The `linear_map` underlying a `derivation`. -/
 add_decl_doc Derivation.toLinearMap
@@ -84,9 +89,11 @@ theorem toFun_eq_coe : D.toFun = ⇑D :=
   rfl
 #align derivation.to_fun_eq_coe Derivation.toFun_eq_coe
 
+#print Derivation.hasCoeToLinearMap /-
 instance hasCoeToLinearMap : Coe (Derivation R A M) (A →ₗ[R] M) :=
   ⟨fun D => D.toLinearMap⟩
 #align derivation.has_coe_to_linear_map Derivation.hasCoeToLinearMap
+-/
 
 @[simp]
 theorem toLinearMap_eq_coe : D.toLinearMap = D :=
@@ -343,6 +350,7 @@ variable [Algebra S A] [Module S M] [LinearMap.CompatibleSMul A M R S]
 
 variable (R)
 
+#print Derivation.restrictScalars /-
 /-- If `A` is both an `R`-algebra and an `S`-algebra; `M` is both an `R`-module and an `S`-module,
 then an `S`-derivation `A → M` is also an `R`-derivation if it is also `R`-linear. -/
 protected def restrictScalars (d : Derivation S A M) : Derivation R A M
@@ -351,6 +359,7 @@ protected def restrictScalars (d : Derivation S A M) : Derivation R A M
   leibniz' := d.leibniz
   toLinearMap := d.toLinearMap.restrictScalars R
 #align derivation.restrict_scalars Derivation.restrictScalars
+-/
 
 end RestrictScalars
 

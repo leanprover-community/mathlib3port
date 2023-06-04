@@ -53,7 +53,7 @@ def cons (a : α) (v : Vector3 α n) : Vector3 α (succ n) := fun i => by refine
 /- We do not want to make the following notation global, because then these expressions will be
 overloaded, and only the expected type will be able to disambiguate the meaning. Worse: Lean will
 try to insert a coercion from `vector3 α _` to `list α`, if a list is expected. -/
-scoped notation3"["(l", "* => foldr (h t => Vector3.cons h t) Vector3.nil)"]" => l
+scoped notation3"["(l ", "* => foldr (h t => Vector3.cons h t) Vector3.nil)"]" => l
 
 -- mathport name: vector.cons
 notation a "::" b => cons a b

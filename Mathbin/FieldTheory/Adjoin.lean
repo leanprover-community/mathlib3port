@@ -454,7 +454,7 @@ instance (priority := 900) insertNonempty {α : Type _} (s : Set α) : Insert s
 #align intermediate_field.insert_nonempty IntermediateField.insertNonempty
 
 -- mathport name: «expr ⟮ ,⟯»
-notation3:max K"⟮"(l", "* => foldr (h t => Insert.insert t h) ∅)"⟯" => adjoin K l
+notation3:max K"⟮"(l ", "* => foldr (h t => Insert.insert t h) ∅)"⟯" => adjoin K l
 
 section AdjoinSimple
 

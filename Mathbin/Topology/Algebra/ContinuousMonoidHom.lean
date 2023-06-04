@@ -314,10 +314,10 @@ theorem closedEmbedding_toContinuousMap [ContinuousMul B] [T2Space B] :
     ⟨by
       suffices
         Set.range (to_continuous_map : ContinuousMonoidHom A B → C(A, B)) =
-          ({ f | f '' {1} ⊆ {1}ᶜ } ∪
+          ({f | f '' {1} ⊆ {1}ᶜ} ∪
               ⋃ (x) (y) (U) (V) (W) (hU : IsOpen U) (hV : IsOpen V) (hW : IsOpen W) (h :
                 Disjoint (U * V) W),
-                { f | f '' {x} ⊆ U } ∩ { f | f '' {y} ⊆ V } ∩ { f | f '' {x * y} ⊆ W })ᶜ
+                {f | f '' {x} ⊆ U} ∩ {f | f '' {y} ⊆ V} ∩ {f | f '' {x * y} ⊆ W})ᶜ
         by
         rw [this, compl_compl]
         refine' (ContinuousMap.isOpen_gen isCompact_singleton isOpen_compl_singleton).union _

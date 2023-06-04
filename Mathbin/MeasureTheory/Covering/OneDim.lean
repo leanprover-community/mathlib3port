@@ -38,10 +38,10 @@ theorem tendsto_Icc_vitaliFamily_right (x : ℝ) :
     Tendsto (fun y => Icc x y) (𝓝[>] x) ((VitaliFamily (volume : Measure ℝ) 1).filterAt x) :=
   by
   refine' (VitaliFamily.tendsto_filterAt_iff _).2 ⟨_, _⟩
-  · filter_upwards [self_mem_nhdsWithin]with y hy using Icc_mem_vitali_family_at_right hy
+  · filter_upwards [self_mem_nhdsWithin] with y hy using Icc_mem_vitali_family_at_right hy
   · intro ε εpos
     have : x ∈ Ico x (x + ε) := ⟨le_refl _, by linarith⟩
-    filter_upwards [Icc_mem_nhdsWithin_Ioi this]with y hy
+    filter_upwards [Icc_mem_nhdsWithin_Ioi this] with y hy
     rw [closed_ball_eq_Icc]
     exact Icc_subset_Icc (by linarith) hy.2
 #align real.tendsto_Icc_vitali_family_right Real.tendsto_Icc_vitaliFamily_right
@@ -58,10 +58,10 @@ theorem tendsto_Icc_vitaliFamily_left (x : ℝ) :
     Tendsto (fun y => Icc y x) (𝓝[<] x) ((VitaliFamily (volume : Measure ℝ) 1).filterAt x) :=
   by
   refine' (VitaliFamily.tendsto_filterAt_iff _).2 ⟨_, _⟩
-  · filter_upwards [self_mem_nhdsWithin]with y hy using Icc_mem_vitali_family_at_left hy
+  · filter_upwards [self_mem_nhdsWithin] with y hy using Icc_mem_vitali_family_at_left hy
   · intro ε εpos
     have : x ∈ Ioc (x - ε) x := ⟨by linarith, le_refl _⟩
-    filter_upwards [Icc_mem_nhdsWithin_Iio this]with y hy
+    filter_upwards [Icc_mem_nhdsWithin_Iio this] with y hy
     rw [closed_ball_eq_Icc]
     exact Icc_subset_Icc hy.1 (by linarith)
 #align real.tendsto_Icc_vitali_family_left Real.tendsto_Icc_vitaliFamily_left

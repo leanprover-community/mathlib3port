@@ -35,7 +35,7 @@ namespace MeasureTheory
 variable {G M α : Type _} {s : Set α}
 
 #print MeasureTheory.VAddInvariantMeasure /-
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`measure_preimage_vadd] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`measure_preimage_vadd] [] -/
 /-- A measure `μ : measure α` is invariant under an additive action of `M` on `α` if for any
 measurable set `s : set α` and `c : M`, the measure of its preimage under `λ x, c +ᵥ x` is equal to
 the measure of `s`. -/
@@ -46,7 +46,7 @@ class VAddInvariantMeasure (M α : Type _) [VAdd M α] {_ : MeasurableSpace α} 
 -/
 
 #print MeasureTheory.SMulInvariantMeasure /-
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`measure_preimage_smul] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`measure_preimage_smul] [] -/
 /-- A measure `μ : measure α` is invariant under a multiplicative action of `M` on `α` if for any
 measurable set `s : set α` and `c : M`, the measure of its preimage under `λ x, c • x` is equal to
 the measure of `s`. -/
@@ -233,14 +233,14 @@ instead of `μ K ≠ 0`, see `measure_theory.measure_is_open_pos_of_vadd_invaria
 add_decl_doc measure_is_open_pos_of_vadd_invariant_of_compact_ne_zero
 
 @[to_additive]
-theorem locallyFiniteMeasure_of_smulInvariant (hU : IsOpen U) (hne : U.Nonempty) (hμU : μ U ≠ ∞) :
-    LocallyFiniteMeasure μ :=
+theorem isLocallyFiniteMeasure_of_smulInvariant (hU : IsOpen U) (hne : U.Nonempty) (hμU : μ U ≠ ∞) :
+    IsLocallyFiniteMeasure μ :=
   ⟨fun x =>
     let ⟨g, hg⟩ := hU.exists_smul_mem G x hne
     ⟨(· • ·) g ⁻¹' U, (hU.Preimage (continuous_id.const_smul _)).mem_nhds hg,
       Ne.lt_top <| by rwa [measure_preimage_smul]⟩⟩
-#align measure_theory.is_locally_finite_measure_of_smul_invariant MeasureTheory.locallyFiniteMeasure_of_smulInvariant
-#align measure_theory.is_locally_finite_measure_of_vadd_invariant MeasureTheory.locallyFiniteMeasure_of_vaddInvariant
+#align measure_theory.is_locally_finite_measure_of_smul_invariant MeasureTheory.isLocallyFiniteMeasure_of_smulInvariant
+#align measure_theory.is_locally_finite_measure_of_vadd_invariant MeasureTheory.isLocallyFiniteMeasure_of_vaddInvariant
 
 variable [Measure.Regular μ]
 

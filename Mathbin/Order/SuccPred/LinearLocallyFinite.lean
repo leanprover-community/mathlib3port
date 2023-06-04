@@ -157,7 +157,7 @@ instance (priority := 100) LinearLocallyFiniteOrder.isSuccArchimedean [LocallyFi
     cases hij
     swap; · refine' ⟨0, _⟩; simpa only [Function.iterate_zero, id.def] using hij
     by_contra h
-    push_neg  at h 
+    push_neg at h 
     have h_lt : ∀ n, (succ^[n]) i < j := by
       intro n
       induction' n with n hn
@@ -363,7 +363,7 @@ theorem toZ_mono {i j : ι} (h_le : i ≤ j) : toZ i0 i ≤ toZ i0 j :=
       nth_rw 1 [← iterate_succ_toZ i hi]
       rw [Function.iterate_add]
     by_contra h
-    push_neg  at h 
+    push_neg at h 
     by_cases hm0 : m = 0
     · rw [hm0, Function.iterate_zero, id.def] at hm 
       rw [hm] at h 
@@ -387,7 +387,7 @@ theorem toZ_mono {i j : ι} (h_le : i ≤ j) : toZ i0 i ≤ toZ i0 j :=
       nth_rw 1 [← iterate_pred_toZ j hj]
       rw [Function.iterate_add]
     by_contra h
-    push_neg  at h 
+    push_neg at h 
     by_cases hm0 : m = 0
     · rw [hm0, Function.iterate_zero, id.def] at hm 
       rw [hm] at h 

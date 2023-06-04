@@ -145,7 +145,7 @@ theorem AnalyticOn.iteratedFDeriv [CompleteSpace F] (h : AnalyticOn 𝕜 f s) (n
 /-- An analytic function is infinitely differentiable. -/
 theorem AnalyticOn.contDiffOn [CompleteSpace F] (h : AnalyticOn 𝕜 f s) {n : ℕ∞} :
     ContDiffOn 𝕜 n f s := by
-  let t := { x | AnalyticAt 𝕜 f x }
+  let t := {x | AnalyticAt 𝕜 f x}
   suffices : ContDiffOn 𝕜 n f t; exact this.mono h
   have H : AnalyticOn 𝕜 f t := fun x hx => hx
   have t_open : IsOpen t := isOpen_analyticAt 𝕜 f

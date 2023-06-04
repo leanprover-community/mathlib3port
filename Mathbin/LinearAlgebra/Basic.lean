@@ -1363,7 +1363,7 @@ def eqLocus (f g : M →ₛₗ[τ₁₂] M₂) : Submodule R M :=
   {
     f.toAddMonoidHom.eqLocus
       g.toAddMonoidHom with
-    carrier := { x | f x = g x }
+    carrier := {x | f x = g x}
     smul_mem' := fun r x (hx : _ = _) =>
       show _ = _ by simpa only [LinearMap.map_smulₛₗ] using congr_arg ((· • ·) (τ₁₂ r)) hx }
 #align linear_map.eq_locus LinearMap.eqLocus
@@ -2773,7 +2773,7 @@ theorem inf_comap_le_comap_add (f₁ f₂ : M →ₛₗ[τ₁₂] M₂) :
 the set of maps $\{f ∈ Hom(M, M₂) | f(p) ⊆ q \}$ is a submodule of `Hom(M, M₂)`. -/
 def compatibleMaps : Submodule R (N →ₗ[R] N₂)
     where
-  carrier := { fₗ | pₗ ≤ comap fₗ qₗ }
+  carrier := {fₗ | pₗ ≤ comap fₗ qₗ}
   zero_mem' := by change pₗ ≤ comap (0 : N →ₗ[R] N₂) qₗ; rw [comap_zero]; refine' le_top
   add_mem' f₁ f₂ h₁ h₂ :=
     by
@@ -2835,14 +2835,14 @@ theorem funLeft_comp (f₁ : n → p) (f₂ : m → n) :
 theorem funLeft_surjective_of_injective (f : m → n) (hf : Injective f) :
     Surjective (funLeft R M f) := by
   classical
-    intro g
-    refine' ⟨fun x => if h : ∃ y, f y = x then g h.some else 0, _⟩
-    · ext
-      dsimp only [fun_left_apply]
-      split_ifs with w
-      · congr
-        exact hf w.some_spec
-      · simpa only [not_true, exists_apply_eq_apply] using w
+  intro g
+  refine' ⟨fun x => if h : ∃ y, f y = x then g h.some else 0, _⟩
+  · ext
+    dsimp only [fun_left_apply]
+    split_ifs with w
+    · congr
+      exact hf w.some_spec
+    · simpa only [not_true, exists_apply_eq_apply] using w
 #align linear_map.fun_left_surjective_of_injective LinearMap.funLeft_surjective_of_injective
 
 theorem funLeft_injective_of_surjective (f : m → n) (hf : Surjective f) :

@@ -102,8 +102,7 @@ algebra structure from `(A →L[𝕜] A) × (A →L[𝕜] A)ᵐᵒᵖ` to `𝓜(
 
 variable {𝕜 A}
 
-theorem range_toProd :
-    Set.range toProd = { lr : (A →L[𝕜] A) × _ | ∀ x y, lr.2 x * y = x * lr.1 y } :=
+theorem range_toProd : Set.range toProd = {lr : (A →L[𝕜] A) × _ | ∀ x y, lr.2 x * y = x * lr.1 y} :=
   Set.ext fun x => ⟨by rintro ⟨a, rfl⟩; exact a.central, fun hx => ⟨⟨x, hx⟩, rfl⟩⟩
 #align double_centralizer.range_to_prod DoubleCentralizer.range_toProd
 
@@ -331,7 +330,7 @@ theorem toProdMulOpposite_injective :
 #align double_centralizer.to_prod_mul_opposite_injective DoubleCentralizer.toProdMulOpposite_injective
 
 theorem range_toProdMulOpposite :
-    Set.range toProdMulOpposite = { lr : (A →L[𝕜] A) × _ | ∀ x y, unop lr.2 x * y = x * lr.1 y } :=
+    Set.range toProdMulOpposite = {lr : (A →L[𝕜] A) × _ | ∀ x y, unop lr.2 x * y = x * lr.1 y} :=
   Set.ext fun x =>
     ⟨by rintro ⟨a, rfl⟩; exact a.central, fun hx => ⟨⟨(x.1, unop x.2), hx⟩, Prod.ext rfl rfl⟩⟩
 #align double_centralizer.range_to_prod_mul_opposite DoubleCentralizer.range_toProdMulOpposite

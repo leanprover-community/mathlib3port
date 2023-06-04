@@ -364,7 +364,7 @@ theorem closure_eq_mrange (s : Set M) : closure s = (FreeMonoid.lift (coe : s �
 
 @[to_additive]
 theorem closure_eq_image_prod (s : Set M) :
-    (closure s : Set M) = List.prod '' { l : List M | ∀ x ∈ l, x ∈ s } :=
+    (closure s : Set M) = List.prod '' {l : List M | ∀ x ∈ l, x ∈ s} :=
   by
   rw [closure_eq_mrange, coe_mrange, ← Set.range_list_map_coe, ← Set.range_comp]
   exact congr_arg _ (funext <| FreeMonoid.lift_apply _)

@@ -84,7 +84,7 @@ theorem stdBasis_ne (i j : ι) (h : j ≠ i) (b : φ i) : stdBasis R φ i b j = 
 theorem stdBasis_eq_pi_diag (i : ι) : stdBasis R φ i = pi (diag i) :=
   by
   ext (x j)
-  convert(update_apply 0 x i j _).symm
+  convert (update_apply 0 x i j _).symm
   rfl
 #align linear_map.std_basis_eq_pi_diag LinearMap.stdBasis_eq_pi_diag
 
@@ -164,11 +164,11 @@ theorem disjoint_stdBasis_stdBasis (I J : Set ι) (h : Disjoint I J) :
     funext_iff]
   rintro b ⟨hI, hJ⟩ i
   classical
-    by_cases hiI : i ∈ I
-    · by_cases hiJ : i ∈ J
-      · exact (h.le_bot ⟨hiI, hiJ⟩).elim
-      · exact hJ i hiJ
-    · exact hI i hiI
+  by_cases hiI : i ∈ I
+  · by_cases hiJ : i ∈ J
+    · exact (h.le_bot ⟨hiI, hiJ⟩).elim
+    · exact hJ i hiJ
+  · exact hI i hiI
 #align linear_map.disjoint_std_basis_std_basis LinearMap.disjoint_stdBasis_stdBasis
 
 theorem stdBasis_eq_single {a : R} :

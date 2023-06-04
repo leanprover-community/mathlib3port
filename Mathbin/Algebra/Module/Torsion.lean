@@ -190,7 +190,7 @@ def torsionBySet (s : Set R) : Submodule R M :=
 @[simps]
 def torsion' (S : Type _) [CommMonoid S] [DistribMulAction S M] [SMulCommClass S R M] :
     Submodule R M where
-  carrier := { x | ∃ a : S, a • x = 0 }
+  carrier := {x | ∃ a : S, a • x = 0}
   zero_mem' := ⟨1, smul_zero _⟩
   add_mem' := fun x y ⟨a, hx⟩ ⟨b, hy⟩ =>
     ⟨b * a, by rw [smul_add, mul_smul, mul_comm, mul_smul, hx, hy, smul_zero, smul_zero, add_zero]⟩
@@ -469,7 +469,8 @@ theorem iSup_torsionBy_eq_torsionBy_prod :
 
 theorem supIndep_torsionBy : S.SupIndep fun i => torsionBy R M <| q i :=
   by
-  convert sup_indep_torsion_by_ideal fun i hi j hj ij =>
+  convert
+    sup_indep_torsion_by_ideal fun i hi j hj ij =>
       (Ideal.sup_eq_top_iff_isCoprime (q i) _).mpr <| hq hi hj ij
   ext : 1; exact (torsion_by_span_singleton_eq _).symm
 #align submodule.sup_indep_torsion_by Submodule.supIndep_torsionBy
@@ -511,7 +512,8 @@ theorem torsionBy_isInternal {q : ι → R} (hq : (S : Set ι).Pairwise <| (IsCo
   by
   rw [← Module.isTorsionBySet_span_singleton_iff, Ideal.submodule_span_eq, ←
     Ideal.finset_inf_span_singleton _ _ hq, Finset.inf_eq_iInf] at hM 
-  convert torsion_by_set_is_internal
+  convert
+    torsion_by_set_is_internal
       (fun i hi j hj ij => (Ideal.sup_eq_top_iff_isCoprime (q i) _).mpr <| hq hi hj ij) hM
   ext : 1; exact (torsion_by_span_singleton_eq _).symm
 #align submodule.torsion_by_is_internal Submodule.torsionBy_isInternal
@@ -691,7 +693,7 @@ theorem Submodule.annihilator_top_inter_nonZeroDivisors [Module.Finite R M]
 variable [NoZeroDivisors R] [Nontrivial R]
 
 theorem coe_torsion_eq_annihilator_ne_bot :
-    (torsion R M : Set M) = { x : M | (R ∙ x).annihilator ≠ ⊥ } :=
+    (torsion R M : Set M) = {x : M | (R ∙ x).annihilator ≠ ⊥} :=
   by
   ext x; simp_rw [Submodule.ne_bot_iff, mem_annihilator, mem_span_singleton]
   exact

@@ -38,7 +38,7 @@ section Ultrafilter
   it the Stone-Čech compactification of α (viewed as a discrete space). -/
 /-- Basis for the topology on `ultrafilter α`. -/
 def ultrafilterBasis (α : Type u) : Set (Set (Ultrafilter α)) :=
-  range fun s : Set α => { u | s ∈ u }
+  range fun s : Set α => {u | s ∈ u}
 #align ultrafilter_basis ultrafilterBasis
 -/
 
@@ -60,14 +60,14 @@ theorem ultrafilterBasis_is_basis : TopologicalSpace.IsTopologicalBasis (ultrafi
 
 #print ultrafilter_isOpen_basic /-
 /-- The basic open sets for the topology on ultrafilters are open. -/
-theorem ultrafilter_isOpen_basic (s : Set α) : IsOpen { u : Ultrafilter α | s ∈ u } :=
+theorem ultrafilter_isOpen_basic (s : Set α) : IsOpen {u : Ultrafilter α | s ∈ u} :=
   ultrafilterBasis_is_basis.IsOpen ⟨s, rfl⟩
 #align ultrafilter_is_open_basic ultrafilter_isOpen_basic
 -/
 
 #print ultrafilter_isClosed_basic /-
 /-- The basic open sets for the topology on ultrafilters are also closed. -/
-theorem ultrafilter_isClosed_basic (s : Set α) : IsClosed { u : Ultrafilter α | s ∈ u } :=
+theorem ultrafilter_isClosed_basic (s : Set α) : IsClosed {u : Ultrafilter α | s ∈ u} :=
   by
   rw [← isOpen_compl_iff]
   convert ultrafilter_isOpen_basic (sᶜ)
@@ -81,7 +81,7 @@ theorem ultrafilter_isClosed_basic (s : Set α) : IsClosed { u : Ultrafilter α 
 theorem ultrafilter_converges_iff {u : Ultrafilter (Ultrafilter α)} {x : Ultrafilter α} :
     ↑u ≤ 𝓝 x ↔ x = joinM u := by
   rw [eq_comm, ← Ultrafilter.coe_le_coe]
-  change ↑u ≤ 𝓝 x ↔ ∀ s ∈ x, { v : Ultrafilter α | s ∈ v } ∈ u
+  change ↑u ≤ 𝓝 x ↔ ∀ s ∈ x, {v : Ultrafilter α | s ∈ v} ∈ u
   simp only [TopologicalSpace.nhds_generateFrom, le_iInf_iff, ultrafilterBasis, le_principal_iff,
     mem_set_of_eq]
   constructor
@@ -114,7 +114,7 @@ instance : TotallyDisconnectedSpace (Ultrafilter α) :=
   rw [← Ultrafilter.coe_le_coe]
   intro s hs
   rw [connectedComponent_eq_iInter_clopen, Set.mem_iInter] at hB 
-  let Z := { F : Ultrafilter α | s ∈ F }
+  let Z := {F : Ultrafilter α | s ∈ F}
   have hZ : IsClopen Z := ⟨ultrafilter_isOpen_basic s, ultrafilter_isClosed_basic s⟩
   exact hB ⟨Z, hZ, hs⟩
 
@@ -124,7 +124,7 @@ theorem ultrafilter_comap_pure_nhds (b : Ultrafilter α) : comap pure (𝓝 b) �
   simp only [comap_infi, comap_principal]
   intro s hs
   rw [← le_principal_iff]
-  refine' iInf_le_of_le { u | s ∈ u } _
+  refine' iInf_le_of_le {u | s ∈ u} _
   refine' iInf_le_of_le ⟨hs, ⟨s, rfl⟩⟩ _
   exact principal_mono.2 fun a => id
 #align ultrafilter_comap_pure_nhds ultrafilter_comap_pure_nhds
@@ -153,7 +153,7 @@ theorem induced_topology_pure :
   by
   apply eq_bot_of_singletons_open
   intro x
-  use { u : Ultrafilter α | {x} ∈ u }, ultrafilter_isOpen_basic _
+  use {u : Ultrafilter α | {x} ∈ u}, ultrafilter_isOpen_basic _
   simp
 #align induced_topology_pure induced_topology_pure
 

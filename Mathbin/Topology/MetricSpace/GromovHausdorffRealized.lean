@@ -87,19 +87,19 @@ private theorem one_le_max_var : 1 ≤ maxVar X Y :=
 /-- The set of functions on `X ⊕ Y` that are candidates distances to realize the
 minimum of the Hausdorff distances between `X` and `Y` in a coupling -/
 def candidates : Set (ProdSpaceFun X Y) :=
-  { f |
+  {f |
     (((((∀ x y : X, f (Sum.inl x, Sum.inl y) = dist x y) ∧
               ∀ x y : Y, f (Sum.inr x, Sum.inr y) = dist x y) ∧
             ∀ x y, f (x, y) = f (y, x)) ∧
           ∀ x y z, f (x, z) ≤ f (x, y) + f (y, z)) ∧
         ∀ x, f (x, x) = 0) ∧
-      ∀ x y, f (x, y) ≤ maxVar X Y }
+      ∀ x y, f (x, y) ≤ maxVar X Y}
 #align Gromov_Hausdorff.candidates GromovHausdorff.candidates
 
 /-- Version of the set of candidates in bounded_continuous_functions, to apply
 Arzela-Ascoli -/
 private def candidates_b : Set (Cb X Y) :=
-  { f : Cb X Y | (f : _ → ℝ) ∈ candidates X Y }
+  {f : Cb X Y | (f : _ → ℝ) ∈ candidates X Y}
 
 end Definitions
 
@@ -275,26 +275,26 @@ private theorem candidates_b_nonempty : (candidatesB X Y).Nonempty :=
 equicontinuous. Equicontinuity follows from the Lipschitz control, we check closedness. -/
 private theorem closed_candidates_b : IsClosed (candidatesB X Y) :=
   by
-  have I1 : ∀ x y, IsClosed { f : Cb X Y | f (inl x, inl y) = dist x y } := fun x y =>
+  have I1 : ∀ x y, IsClosed {f : Cb X Y | f (inl x, inl y) = dist x y} := fun x y =>
     isClosed_eq continuous_eval_const continuous_const
-  have I2 : ∀ x y, IsClosed { f : Cb X Y | f (inr x, inr y) = dist x y } := fun x y =>
+  have I2 : ∀ x y, IsClosed {f : Cb X Y | f (inr x, inr y) = dist x y} := fun x y =>
     isClosed_eq continuous_eval_const continuous_const
-  have I3 : ∀ x y, IsClosed { f : Cb X Y | f (x, y) = f (y, x) } := fun x y =>
+  have I3 : ∀ x y, IsClosed {f : Cb X Y | f (x, y) = f (y, x)} := fun x y =>
     isClosed_eq continuous_eval_const continuous_eval_const
-  have I4 : ∀ x y z, IsClosed { f : Cb X Y | f (x, z) ≤ f (x, y) + f (y, z) } := fun x y z =>
+  have I4 : ∀ x y z, IsClosed {f : Cb X Y | f (x, z) ≤ f (x, y) + f (y, z)} := fun x y z =>
     isClosed_le continuous_eval_const (continuous_eval_const.add continuous_eval_const)
-  have I5 : ∀ x, IsClosed { f : Cb X Y | f (x, x) = 0 } := fun x =>
+  have I5 : ∀ x, IsClosed {f : Cb X Y | f (x, x) = 0} := fun x =>
     isClosed_eq continuous_eval_const continuous_const
-  have I6 : ∀ x y, IsClosed { f : Cb X Y | f (x, y) ≤ max_var X Y } := fun x y =>
+  have I6 : ∀ x y, IsClosed {f : Cb X Y | f (x, y) ≤ max_var X Y} := fun x y =>
     isClosed_le continuous_eval_const continuous_const
   have :
     candidates_b X Y =
-      (((((⋂ (x) (y), { f : Cb X Y | f (@inl X Y x, @inl X Y y) = dist x y }) ∩
-                ⋂ (x) (y), { f : Cb X Y | f (@inr X Y x, @inr X Y y) = dist x y }) ∩
-              ⋂ (x) (y), { f : Cb X Y | f (x, y) = f (y, x) }) ∩
-            ⋂ (x) (y) (z), { f : Cb X Y | f (x, z) ≤ f (x, y) + f (y, z) }) ∩
-          ⋂ x, { f : Cb X Y | f (x, x) = 0 }) ∩
-        ⋂ (x) (y), { f : Cb X Y | f (x, y) ≤ max_var X Y } :=
+      (((((⋂ (x) (y), {f : Cb X Y | f (@inl X Y x, @inl X Y y) = dist x y}) ∩
+                ⋂ (x) (y), {f : Cb X Y | f (@inr X Y x, @inr X Y y) = dist x y}) ∩
+              ⋂ (x) (y), {f : Cb X Y | f (x, y) = f (y, x)}) ∩
+            ⋂ (x) (y) (z), {f : Cb X Y | f (x, z) ≤ f (x, y) + f (y, z)}) ∩
+          ⋂ x, {f : Cb X Y | f (x, x) = 0}) ∩
+        ⋂ (x) (y), {f : Cb X Y | f (x, y) ≤ max_var X Y} :=
     by ext; simp only [candidates_b, candidates, mem_inter_iff, mem_Inter, mem_set_of_eq]
   rw [this]
   repeat'

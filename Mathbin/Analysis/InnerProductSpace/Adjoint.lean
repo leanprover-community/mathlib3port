@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Frédéric Dupuis, Heather Macbeth
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.adjoint
-! leanprover-community/mathlib commit 46b633fd842bef9469441c0209906f6dddd2b4f5
+! leanprover-community/mathlib commit 2ebc1d6c2fed9f54c95bbc3998eaa5570527129a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Analysis.InnerProductSpace.PiL2
 
 /-!
 # Adjoint of operators on Hilbert spaces
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 Given an operator `A : E →L[𝕜] F`, where `E` and `F` are Hilbert spaces, its adjoint
 `adjoint A : F →L[𝕜] E` is the unique operator such that `⟪x, A y⟫ = ⟪adjoint A x, y⟫` for all

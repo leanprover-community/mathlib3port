@@ -90,7 +90,7 @@ theorem Antitone.tendsto_indicator {ι} [Preorder ι] [Zero β] (s : ι → Set 
     rw [indicator_of_not_mem _ _, indicator_of_not_mem _ _]
     · simp only [mem_Inter, not_forall]; exact ⟨i, hi⟩
     · intro h; have := hs hn h; contradiction
-  · push_neg  at h 
+  · push_neg at h 
     simp only [indicator_of_mem, h, mem_Inter.2 h, tendsto_const_pure]
 #align antitone.tendsto_indicator Antitone.tendsto_indicator
 
@@ -109,7 +109,7 @@ theorem tendsto_indicator_biUnion_finset {ι} [Zero β] (s : ι → Set α) (f :
 theorem Filter.EventuallyEq.support [Zero β] {f g : α → β} {l : Filter α} (h : f =ᶠ[l] g) :
     Function.support f =ᶠ[l] Function.support g :=
   by
-  filter_upwards [h]with x hx
+  filter_upwards [h] with x hx
   rw [eq_iff_iff]
   change f x ≠ 0 ↔ g x ≠ 0
   rw [hx]
@@ -120,7 +120,7 @@ theorem Filter.EventuallyEq.support [Zero β] {f g : α → β} {l : Filter α} 
 theorem Filter.EventuallyEq.indicator [Zero β] {l : Filter α} {f g : α → β} {s : Set α}
     (hfg : f =ᶠ[l] g) : s.indicator f =ᶠ[l] s.indicator g :=
   by
-  filter_upwards [hfg]with x hx
+  filter_upwards [hfg] with x hx
   by_cases x ∈ s
   · rwa [indicator_of_mem h, indicator_of_mem h]
   · rw [indicator_of_not_mem h, indicator_of_not_mem h]

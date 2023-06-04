@@ -802,7 +802,7 @@ theorem sOppSide_lineMap_right {s : AffineSubspace R P} {x y : P} (hx : x ∈ s)
 #align affine_subspace.s_opp_side_line_map_right AffineSubspace.sOppSide_lineMap_right
 
 theorem setOf_wSameSide_eq_image2 {s : AffineSubspace R P} {x p : P} (hx : x ∉ s) (hp : p ∈ s) :
-    { y | s.WSameSide x y } = Set.image2 (fun (t : R) q => t • (x -ᵥ p) +ᵥ q) (Set.Ici 0) s :=
+    {y | s.WSameSide x y} = Set.image2 (fun (t : R) q => t • (x -ᵥ p) +ᵥ q) (Set.Ici 0) s :=
   by
   ext y
   simp_rw [Set.mem_setOf, Set.mem_image2, Set.mem_Ici, mem_coe]
@@ -822,7 +822,7 @@ theorem setOf_wSameSide_eq_image2 {s : AffineSubspace R P} {x p : P} (hx : x ∉
 #align affine_subspace.set_of_w_same_side_eq_image2 AffineSubspace.setOf_wSameSide_eq_image2
 
 theorem setOf_sSameSide_eq_image2 {s : AffineSubspace R P} {x p : P} (hx : x ∉ s) (hp : p ∈ s) :
-    { y | s.SSameSide x y } = Set.image2 (fun (t : R) q => t • (x -ᵥ p) +ᵥ q) (Set.Ioi 0) s :=
+    {y | s.SSameSide x y} = Set.image2 (fun (t : R) q => t • (x -ᵥ p) +ᵥ q) (Set.Ioi 0) s :=
   by
   ext y
   simp_rw [Set.mem_setOf, Set.mem_image2, Set.mem_Ioi, mem_coe]
@@ -841,7 +841,7 @@ theorem setOf_sSameSide_eq_image2 {s : AffineSubspace R P} {x p : P} (hx : x ∉
 #align affine_subspace.set_of_s_same_side_eq_image2 AffineSubspace.setOf_sSameSide_eq_image2
 
 theorem setOf_wOppSide_eq_image2 {s : AffineSubspace R P} {x p : P} (hx : x ∉ s) (hp : p ∈ s) :
-    { y | s.WOppSide x y } = Set.image2 (fun (t : R) q => t • (x -ᵥ p) +ᵥ q) (Set.Iic 0) s :=
+    {y | s.WOppSide x y} = Set.image2 (fun (t : R) q => t • (x -ᵥ p) +ᵥ q) (Set.Iic 0) s :=
   by
   ext y
   simp_rw [Set.mem_setOf, Set.mem_image2, Set.mem_Iic, mem_coe]
@@ -861,7 +861,7 @@ theorem setOf_wOppSide_eq_image2 {s : AffineSubspace R P} {x p : P} (hx : x ∉ 
 #align affine_subspace.set_of_w_opp_side_eq_image2 AffineSubspace.setOf_wOppSide_eq_image2
 
 theorem setOf_sOppSide_eq_image2 {s : AffineSubspace R P} {x p : P} (hx : x ∉ s) (hp : p ∈ s) :
-    { y | s.SOppSide x y } = Set.image2 (fun (t : R) q => t • (x -ᵥ p) +ᵥ q) (Set.Iio 0) s :=
+    {y | s.SOppSide x y} = Set.image2 (fun (t : R) q => t • (x -ᵥ p) +ᵥ q) (Set.Iio 0) s :=
   by
   ext y
   simp_rw [Set.mem_setOf, Set.mem_image2, Set.mem_Iio, mem_coe]
@@ -902,7 +902,7 @@ variable [NormedAddTorsor V P]
 include V
 
 theorem isConnected_setOf_wSameSide {s : AffineSubspace ℝ P} (x : P) (h : (s : Set P).Nonempty) :
-    IsConnected { y | s.WSameSide x y } :=
+    IsConnected {y | s.WSameSide x y} :=
   by
   obtain ⟨p, hp⟩ := h
   haveI : Nonempty s := ⟨⟨p, hp⟩⟩
@@ -918,7 +918,7 @@ theorem isConnected_setOf_wSameSide {s : AffineSubspace ℝ P} (x : P) (h : (s :
 #align affine_subspace.is_connected_set_of_w_same_side AffineSubspace.isConnected_setOf_wSameSide
 
 theorem isPreconnected_setOf_wSameSide (s : AffineSubspace ℝ P) (x : P) :
-    IsPreconnected { y | s.WSameSide x y } :=
+    IsPreconnected {y | s.WSameSide x y} :=
   by
   rcases Set.eq_empty_or_nonempty (s : Set P) with (h | h)
   · convert isPreconnected_empty
@@ -929,7 +929,7 @@ theorem isPreconnected_setOf_wSameSide (s : AffineSubspace ℝ P) (x : P) :
 #align affine_subspace.is_preconnected_set_of_w_same_side AffineSubspace.isPreconnected_setOf_wSameSide
 
 theorem isConnected_setOf_sSameSide {s : AffineSubspace ℝ P} {x : P} (hx : x ∉ s)
-    (h : (s : Set P).Nonempty) : IsConnected { y | s.SSameSide x y } :=
+    (h : (s : Set P).Nonempty) : IsConnected {y | s.SSameSide x y} :=
   by
   obtain ⟨p, hp⟩ := h
   haveI : Nonempty s := ⟨⟨p, hp⟩⟩
@@ -941,7 +941,7 @@ theorem isConnected_setOf_sSameSide {s : AffineSubspace ℝ P} {x : P} (hx : x �
 #align affine_subspace.is_connected_set_of_s_same_side AffineSubspace.isConnected_setOf_sSameSide
 
 theorem isPreconnected_setOf_sSameSide (s : AffineSubspace ℝ P) (x : P) :
-    IsPreconnected { y | s.SSameSide x y } :=
+    IsPreconnected {y | s.SSameSide x y} :=
   by
   rcases Set.eq_empty_or_nonempty (s : Set P) with (h | h)
   · convert isPreconnected_empty
@@ -956,8 +956,7 @@ theorem isPreconnected_setOf_sSameSide (s : AffineSubspace ℝ P) (x : P) :
 #align affine_subspace.is_preconnected_set_of_s_same_side AffineSubspace.isPreconnected_setOf_sSameSide
 
 theorem isConnected_setOf_wOppSide {s : AffineSubspace ℝ P} (x : P) (h : (s : Set P).Nonempty) :
-    IsConnected { y | s.WOppSide x y } :=
-  by
+    IsConnected {y | s.WOppSide x y} := by
   obtain ⟨p, hp⟩ := h
   haveI : Nonempty s := ⟨⟨p, hp⟩⟩
   by_cases hx : x ∈ s
@@ -972,7 +971,7 @@ theorem isConnected_setOf_wOppSide {s : AffineSubspace ℝ P} (x : P) (h : (s : 
 #align affine_subspace.is_connected_set_of_w_opp_side AffineSubspace.isConnected_setOf_wOppSide
 
 theorem isPreconnected_setOf_wOppSide (s : AffineSubspace ℝ P) (x : P) :
-    IsPreconnected { y | s.WOppSide x y } :=
+    IsPreconnected {y | s.WOppSide x y} :=
   by
   rcases Set.eq_empty_or_nonempty (s : Set P) with (h | h)
   · convert isPreconnected_empty
@@ -983,7 +982,7 @@ theorem isPreconnected_setOf_wOppSide (s : AffineSubspace ℝ P) (x : P) :
 #align affine_subspace.is_preconnected_set_of_w_opp_side AffineSubspace.isPreconnected_setOf_wOppSide
 
 theorem isConnected_setOf_sOppSide {s : AffineSubspace ℝ P} {x : P} (hx : x ∉ s)
-    (h : (s : Set P).Nonempty) : IsConnected { y | s.SOppSide x y } :=
+    (h : (s : Set P).Nonempty) : IsConnected {y | s.SOppSide x y} :=
   by
   obtain ⟨p, hp⟩ := h
   haveI : Nonempty s := ⟨⟨p, hp⟩⟩
@@ -995,7 +994,7 @@ theorem isConnected_setOf_sOppSide {s : AffineSubspace ℝ P} {x : P} (hx : x �
 #align affine_subspace.is_connected_set_of_s_opp_side AffineSubspace.isConnected_setOf_sOppSide
 
 theorem isPreconnected_setOf_sOppSide (s : AffineSubspace ℝ P) (x : P) :
-    IsPreconnected { y | s.SOppSide x y } :=
+    IsPreconnected {y | s.SOppSide x y} :=
   by
   rcases Set.eq_empty_or_nonempty (s : Set P) with (h | h)
   · convert isPreconnected_empty

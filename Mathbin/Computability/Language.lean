@@ -34,17 +34,17 @@ universe v
 
 variable {α β γ : Type _}
 
-/- ./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler has_mem[has_mem] (list[list] α) -/
-/- ./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler has_singleton[has_singleton] (list[list] α) -/
-/- ./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler has_insert[has_insert] (list[list] α) -/
+/- ./././Mathport/Syntax/Translate/Command.lean:43:9: unsupported derive handler has_mem[has_mem] (list[list] α) -/
+/- ./././Mathport/Syntax/Translate/Command.lean:43:9: unsupported derive handler has_singleton[has_singleton] (list[list] α) -/
+/- ./././Mathport/Syntax/Translate/Command.lean:43:9: unsupported derive handler has_insert[has_insert] (list[list] α) -/
 #print Language /-
 /-- A language is a set of strings over an alphabet. -/
 def Language (α) :=
   Set (List α)
 deriving
-  «./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler has_mem[has_mem] (list[list] α)»,
-  «./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler has_singleton[has_singleton] (list[list] α)»,
-  «./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler has_insert[has_insert] (list[list] α)»,
+  «./././Mathport/Syntax/Translate/Command.lean:43:9: unsupported derive handler has_mem[has_mem] (list[list] α)»,
+  «./././Mathport/Syntax/Translate/Command.lean:43:9: unsupported derive handler has_singleton[has_singleton] (list[list] α)»,
+  «./././Mathport/Syntax/Translate/Command.lean:43:9: unsupported derive handler has_insert[has_insert] (list[list] α)»,
   CompleteBooleanAlgebra
 #align language Language
 -/
@@ -100,11 +100,10 @@ theorem mul_def (l m : Language α) : l * m = image2 (· ++ ·) l m :=
 /-- The Kleene star of a language `L` is the set of all strings which can be written by
 concatenating strings from `L`. -/
 instance : KStar (Language α) :=
-  ⟨fun l => { x | ∃ L : List (List α), x = L.join ∧ ∀ y ∈ L, y ∈ l }⟩
+  ⟨fun l => {x | ∃ L : List (List α), x = L.join ∧ ∀ y ∈ L, y ∈ l}⟩
 
 #print Language.kstar_def /-
-theorem kstar_def (l : Language α) :
-    l∗ = { x | ∃ L : List (List α), x = L.join ∧ ∀ y ∈ L, y ∈ l } :=
+theorem kstar_def (l : Language α) : l∗ = {x | ∃ L : List (List α), x = L.join ∧ ∀ y ∈ L, y ∈ l} :=
   rfl
 #align language.kstar_def Language.kstar_def
 -/
@@ -208,7 +207,7 @@ theorem map_map (g : β → γ) (f : α → β) (l : Language α) : map g (map f
 
 #print Language.kstar_def_nonempty /-
 theorem kstar_def_nonempty (l : Language α) :
-    l∗ = { x | ∃ S : List (List α), x = S.join ∧ ∀ y ∈ S, y ∈ l ∧ y ≠ [] } :=
+    l∗ = {x | ∃ S : List (List α), x = S.join ∧ ∀ y ∈ S, y ∈ l ∧ y ≠ []} :=
   by
   ext x
   constructor

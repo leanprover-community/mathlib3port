@@ -66,7 +66,7 @@ points `e 0`, ..., `e N`. If more than one point are at the same distance from `
 noncomputable def nearestPtInd (e : ℕ → α) : ℕ → α →ₛ ℕ
   | 0 => const α 0
   | N + 1 =>
-    piecewise (⋂ k ≤ N, { x | edist (e (N + 1)) x < edist (e k) x })
+    piecewise (⋂ k ≤ N, {x | edist (e (N + 1)) x < edist (e k) x})
       (MeasurableSet.iInter fun k =>
         MeasurableSet.iInter fun hk =>
           measurableSet_lt measurable_edist_right measurable_edist_right)
@@ -122,7 +122,7 @@ theorem edist_nearestPt_le (e : ℕ → α) (x : α) {k N : ℕ} (hk : k ≤ N) 
     split_ifs
     · rcases hk.eq_or_lt with (rfl | hk)
       exacts [le_rfl, (h k (Nat.lt_succ_iff.1 hk)).le]
-    · push_neg  at h 
+    · push_neg at h 
       rcases h with ⟨l, hlN, hxl⟩
       rcases hk.eq_or_lt with (rfl | hk)
       exacts [(ihN hlN).trans hxl, ihN (Nat.lt_succ_iff.1 hk)]

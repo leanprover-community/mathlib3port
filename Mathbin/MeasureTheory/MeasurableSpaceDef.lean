@@ -260,7 +260,7 @@ theorem MeasurableSet.disjointed {f : ℕ → Set α} (h : ∀ i, MeasurableSet 
 
 #print MeasurableSet.const /-
 @[simp]
-theorem MeasurableSet.const (p : Prop) : MeasurableSet { a : α | p } := by
+theorem MeasurableSet.const (p : Prop) : MeasurableSet {a : α | p} := by
   by_cases p <;> simp [h, MeasurableSet.empty] <;> apply MeasurableSet.univ
 #align measurable_set.const MeasurableSet.const
 -/
@@ -312,7 +312,7 @@ section MeasurableSingletonClass
 variable [MeasurableSpace α] [MeasurableSingletonClass α]
 
 #print measurableSet_eq /-
-theorem measurableSet_eq {a : α} : MeasurableSet { x | x = a } :=
+theorem measurableSet_eq {a : α} : MeasurableSet {x | x = a} :=
   measurableSet_singleton a
 #align measurable_set_eq measurableSet_eq
 -/
@@ -426,7 +426,7 @@ theorem generateFrom_le {s : Set (Set α)} {m : MeasurableSpace α}
 
 #print MeasurableSpace.generateFrom_le_iff /-
 theorem generateFrom_le_iff {s : Set (Set α)} (m : MeasurableSpace α) :
-    generateFrom s ≤ m ↔ s ⊆ { t | measurable_set[m] t } :=
+    generateFrom s ≤ m ↔ s ⊆ {t | measurable_set[m] t} :=
   Iff.intro (fun h u hu => h _ <| measurableSet_generateFrom hu) fun h => generateFrom_le h
 #align measurable_space.generate_from_le_iff MeasurableSpace.generateFrom_le_iff
 -/
@@ -434,7 +434,7 @@ theorem generateFrom_le_iff {s : Set (Set α)} (m : MeasurableSpace α) :
 #print MeasurableSpace.generateFrom_measurableSet /-
 @[simp]
 theorem generateFrom_measurableSet [MeasurableSpace α] :
-    generateFrom { s : Set α | MeasurableSet s } = ‹_› :=
+    generateFrom {s : Set α | MeasurableSet s} = ‹_› :=
   le_antisymm (generateFrom_le fun _ => id) fun s => measurableSet_generateFrom
 #align measurable_space.generate_from_measurable_set MeasurableSpace.generateFrom_measurableSet
 -/
@@ -442,7 +442,7 @@ theorem generateFrom_measurableSet [MeasurableSpace α] :
 #print MeasurableSpace.mkOfClosure /-
 /-- If `g` is a collection of subsets of `α` such that the `σ`-algebra generated from `g` contains
 the same sets as `g`, then `g` was already a `σ`-algebra. -/
-protected def mkOfClosure (g : Set (Set α)) (hg : { t | measurable_set[generateFrom g] t } = g) :
+protected def mkOfClosure (g : Set (Set α)) (hg : {t | measurable_set[generateFrom g] t} = g) :
     MeasurableSpace α where
   MeasurableSet' s := s ∈ g
   measurable_set_empty := hg ▸ measurable_set_empty _
@@ -452,7 +452,7 @@ protected def mkOfClosure (g : Set (Set α)) (hg : { t | measurable_set[generate
 -/
 
 #print MeasurableSpace.mkOfClosure_sets /-
-theorem mkOfClosure_sets {s : Set (Set α)} {hs : { t | measurable_set[generateFrom s] t } = s} :
+theorem mkOfClosure_sets {s : Set (Set α)} {hs : {t | measurable_set[generateFrom s] t} = s} :
     MeasurableSpace.mkOfClosure s hs = generateFrom s :=
   MeasurableSpace.ext fun t => show t ∈ s ↔ _ by conv_lhs => rw [← hs]; rfl
 #align measurable_space.mk_of_closure_sets MeasurableSpace.mkOfClosure_sets
@@ -460,7 +460,7 @@ theorem mkOfClosure_sets {s : Set (Set α)} {hs : { t | measurable_set[generateF
 
 /-- We get a Galois insertion between `σ`-algebras on `α` and `set (set α)` by using `generate_from`
   on one side and the collection of measurable sets on the other side. -/
-def giGenerateFrom : GaloisInsertion (@generateFrom α) fun m => { t | @MeasurableSet α m t }
+def giGenerateFrom : GaloisInsertion (@generateFrom α) fun m => {t | @MeasurableSet α m t}
     where
   gc s := generateFrom_le_iff
   le_l_u m s := measurableSet_generateFrom
@@ -577,25 +577,24 @@ theorem measurableSet_sup {m₁ m₂ : MeasurableSpace α} {s : Set α} :
 #align measurable_space.measurable_set_sup MeasurableSpace.measurableSet_sup
 
 theorem measurableSet_sSup {ms : Set (MeasurableSpace α)} {s : Set α} :
-    measurable_set[sSup ms] s ↔
-      GenerateMeasurable { s : Set α | ∃ m ∈ ms, measurable_set[m] s } s :=
+    measurable_set[sSup ms] s ↔ GenerateMeasurable {s : Set α | ∃ m ∈ ms, measurable_set[m] s} s :=
   by
   change @measurable_set' _ (generate_from <| ⋃₀ _) _ ↔ _
   simp [generate_from, ← set_of_exists]
 #align measurable_space.measurable_set_Sup MeasurableSpace.measurableSet_sSup
 
 theorem measurableSet_iSup {ι} {m : ι → MeasurableSpace α} {s : Set α} :
-    @MeasurableSet _ (iSup m) s ↔ GenerateMeasurable { s : Set α | ∃ i, measurable_set[m i] s } s :=
+    @MeasurableSet _ (iSup m) s ↔ GenerateMeasurable {s : Set α | ∃ i, measurable_set[m i] s} s :=
   by simp only [iSup, measurable_set_Sup, exists_range_iff]
 #align measurable_space.measurable_set_supr MeasurableSpace.measurableSet_iSup
 
 theorem measurableSpace_iSup_eq (m : ι → MeasurableSpace α) :
-    (⨆ n, m n) = generateFrom { s | ∃ n, measurable_set[m n] s } := by ext s;
+    (⨆ n, m n) = generateFrom {s | ∃ n, measurable_set[m n] s} := by ext s;
   rw [measurable_set_supr]; rfl
 #align measurable_space.measurable_space_supr_eq MeasurableSpace.measurableSpace_iSup_eq
 
 theorem generateFrom_iUnion_measurableSet (m : ι → MeasurableSpace α) :
-    generateFrom (⋃ n, { t | measurable_set[m n] t }) = ⨆ n, m n :=
+    generateFrom (⋃ n, {t | measurable_set[m n] t}) = ⨆ n, m n :=
   (@giGenerateFrom α).l_iSup_u m
 #align measurable_space.generate_from_Union_measurable_set MeasurableSpace.generateFrom_iUnion_measurableSet
 

@@ -40,7 +40,7 @@ namespace Filter
 #print Filter.cofinite /-
 /-- The cofinite filter is the filter of subsets whose complements are finite. -/
 def cofinite : Filter α where
-  sets := { s | sᶜ.Finite }
+  sets := {s | sᶜ.Finite}
   univ_sets := by simp only [compl_univ, finite_empty, mem_set_of_eq]
   sets_of_superset s t (hs : sᶜ.Finite) (st : s ⊆ t) := hs.Subset <| compl_subset_compl.2 st
   inter_sets s t (hs : sᶜ.Finite) (ht : tᶜ.Finite) := by
@@ -55,7 +55,7 @@ theorem mem_cofinite {s : Set α} : s ∈ @cofinite α ↔ sᶜ.Finite :=
 
 #print Filter.eventually_cofinite /-
 @[simp]
-theorem eventually_cofinite {p : α → Prop} : (∀ᶠ x in cofinite, p x) ↔ { x | ¬p x }.Finite :=
+theorem eventually_cofinite {p : α → Prop} : (∀ᶠ x in cofinite, p x) ↔ {x | ¬p x}.Finite :=
   Iff.rfl
 #align filter.eventually_cofinite Filter.eventually_cofinite
 -/
@@ -74,7 +74,7 @@ instance cofinite_neBot [Infinite α] : NeBot (@cofinite α) :=
 
 #print Filter.frequently_cofinite_iff_infinite /-
 theorem frequently_cofinite_iff_infinite {p : α → Prop} :
-    (∃ᶠ x in cofinite, p x) ↔ Set.Infinite { x | p x } := by
+    (∃ᶠ x in cofinite, p x) ↔ Set.Infinite {x | p x} := by
   simp only [Filter.Frequently, Filter.Eventually, mem_cofinite, compl_set_of, Classical.not_not,
     Set.Infinite]
 #align filter.frequently_cofinite_iff_infinite Filter.frequently_cofinite_iff_infinite
@@ -175,7 +175,7 @@ theorem Nat.cofinite_eq_atTop : @cofinite ℕ = atTop :=
 
 #print Nat.frequently_atTop_iff_infinite /-
 theorem Nat.frequently_atTop_iff_infinite {p : ℕ → Prop} :
-    (∃ᶠ n in atTop, p n) ↔ Set.Infinite { n | p n } := by
+    (∃ᶠ n in atTop, p n) ↔ Set.Infinite {n | p n} := by
   rw [← Nat.cofinite_eq_atTop, frequently_cofinite_iff_infinite]
 #align nat.frequently_at_top_iff_infinite Nat.frequently_atTop_iff_infinite
 -/
@@ -186,14 +186,14 @@ theorem Filter.Tendsto.exists_within_forall_le {α β : Type _} [LinearOrder β]
   by
   rcases em (∃ y ∈ s, ∃ x, f y < x) with (⟨y, hys, x, hx⟩ | not_all_top)
   · -- the set of points `{y | f y < x}` is nonempty and finite, so we take `min` over this set
-    have : { y | ¬x ≤ f y }.Finite := filter.eventually_cofinite.mp (tendsto_at_top.1 hf x)
+    have : {y | ¬x ≤ f y}.Finite := filter.eventually_cofinite.mp (tendsto_at_top.1 hf x)
     simp only [not_le] at this 
     obtain ⟨a₀, ⟨ha₀ : f a₀ < x, ha₀s⟩, others_bigger⟩ :=
       exists_min_image _ f (this.inter_of_left s) ⟨y, hx, hys⟩
     refine' ⟨a₀, ha₀s, fun a has => (lt_or_le (f a) x).elim _ (le_trans ha₀.le)⟩
     exact fun h => others_bigger a ⟨h, has⟩
   · -- in this case, f is constant because all values are at top
-    push_neg  at not_all_top 
+    push_neg at not_all_top 
     obtain ⟨a₀, ha₀s⟩ := hs
     exact ⟨a₀, ha₀s, fun a ha => not_all_top a ha (f a₀)⟩
 #align filter.tendsto.exists_within_forall_le Filter.Tendsto.exists_within_forall_le

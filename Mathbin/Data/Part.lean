@@ -208,7 +208,7 @@ theorem get_eq_of_mem {o : Part α} {a} (h : a ∈ o) (h') : get o h' = a :=
 -/
 
 #print Part.subsingleton /-
-protected theorem subsingleton (o : Part α) : Set.Subsingleton { a | a ∈ o } := fun a ha b hb =>
+protected theorem subsingleton (o : Part α) : Set.Subsingleton {a | a ∈ o} := fun a ha b hb =>
   mem_unique ha hb
 #align part.subsingleton Part.subsingleton
 -/

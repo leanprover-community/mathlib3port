@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module measure_theory.measure.haar.of_basis
-! leanprover-community/mathlib commit fd5edc43dc4f10b85abfe544b88f82cf13c5f844
+! leanprover-community/mathlib commit 2ebc1d6c2fed9f54c95bbc3998eaa5570527129a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Analysis.InnerProductSpace.PiL2
 
 /-!
 # Additive Haar measure constructed from a basis
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 Given a basis of a finite-dimensional real vector space, we define the corresponding Lebesgue
 measure, which gives measure `1` to the parallelepiped spanned by the basis.
@@ -143,7 +146,7 @@ theorem convex_parallelepiped (v : ι → E) : Convex ℝ (parallelepiped v) :=
   rw [parallelepiped_eq_sum_segment]
   -- TODO: add `convex.sum` to match `convex.add`
   let this : AddSubmonoid (Set E) :=
-    { carrier := { s | Convex ℝ s }
+    { carrier := {s | Convex ℝ s}
       zero_mem' := convex_singleton _
       add_mem' := fun x y => Convex.add }
   exact this.sum_mem fun i hi => convex_segment _ _
@@ -260,10 +263,10 @@ irreducible_def Basis.addHaar (b : Basis ι ℝ E) : Measure E :=
 #align basis.add_haar Basis.addHaar
 -/
 
-#print AddHaarMeasure_basis_addHaar /-
-instance AddHaarMeasure_basis_addHaar (b : Basis ι ℝ E) : AddHaarMeasure b.addHaar := by
+#print IsAddHaarMeasure_basis_addHaar /-
+instance IsAddHaarMeasure_basis_addHaar (b : Basis ι ℝ E) : IsAddHaarMeasure b.addHaar := by
   rw [Basis.addHaar]; exact measure.is_add_haar_measure_add_haar_measure _
-#align is_add_haar_measure_basis_add_haar AddHaarMeasure_basis_addHaar
+#align is_add_haar_measure_basis_add_haar IsAddHaarMeasure_basis_addHaar
 -/
 
 theorem Basis.addHaar_self (b : Basis ι ℝ E) : b.addHaar (parallelepiped b) = 1 := by

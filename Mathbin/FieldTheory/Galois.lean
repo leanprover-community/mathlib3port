@@ -241,16 +241,16 @@ theorem fixingSubgroup_fixedField [FiniteDimensional F E] : fixingSubgroup (fixe
   by
   have H_le : H ≤ fixingSubgroup (fixed_field H) := (le_iff_le _ _).mp le_rfl
   classical
-    suffices Fintype.card H = Fintype.card (fixingSubgroup (fixed_field H)) by
-      exact
-        SetLike.coe_injective
-          (Set.eq_of_inclusion_surjective
-              ((Fintype.bijective_iff_injective_and_card (Set.inclusion H_le)).mpr
-                  ⟨Set.inclusion_injective H_le, this⟩).2).symm
-    apply Fintype.card_congr
-    refine' (FixedPoints.toAlgHomEquiv H E).trans _
-    refine' (algEquivEquivAlgHom (fixed_field H) E).toEquiv.symm.trans _
-    exact (fixing_subgroup_equiv (fixed_field H)).toEquiv.symm
+  suffices Fintype.card H = Fintype.card (fixingSubgroup (fixed_field H)) by
+    exact
+      SetLike.coe_injective
+        (Set.eq_of_inclusion_surjective
+            ((Fintype.bijective_iff_injective_and_card (Set.inclusion H_le)).mpr
+                ⟨Set.inclusion_injective H_le, this⟩).2).symm
+  apply Fintype.card_congr
+  refine' (FixedPoints.toAlgHomEquiv H E).trans _
+  refine' (algEquivEquivAlgHom (fixed_field H) E).toEquiv.symm.trans _
+  exact (fixing_subgroup_equiv (fixed_field H)).toEquiv.symm
 #align intermediate_field.fixing_subgroup_fixed_field IntermediateField.fixingSubgroup_fixedField
 
 instance fixedField.algebra : Algebra K (fixedField (fixingSubgroup K))
@@ -284,9 +284,9 @@ theorem fixedField_fixingSubgroup [FiniteDimensional F E] [h : IsGalois F E] :
     finrank K E = finrank (IntermediateField.fixedField (IntermediateField.fixingSubgroup K)) E by
     exact (IntermediateField.eq_of_le_of_finrank_eq' K_le this).symm
   classical
-    rw [IntermediateField.finrank_fixedField_eq_card,
-      Fintype.card_congr (IntermediateField.fixingSubgroupEquiv K).toEquiv]
-    exact (card_aut_eq_finrank K E).symm
+  rw [IntermediateField.finrank_fixedField_eq_card,
+    Fintype.card_congr (IntermediateField.fixingSubgroupEquiv K).toEquiv]
+  exact (card_aut_eq_finrank K E).symm
 #align is_galois.fixed_field_fixing_subgroup IsGalois.fixedField_fixingSubgroup
 
 theorem card_fixingSubgroup_eq_finrank [DecidablePred (· ∈ IntermediateField.fixingSubgroup K)]
@@ -377,14 +377,14 @@ theorem of_card_aut_eq_finrank [FiniteDimensional F E]
   apply of_fixed_field_eq_bot
   have p : 0 < finrank (IntermediateField.fixedField (⊤ : Subgroup (E ≃ₐ[F] E))) E := finrank_pos
   classical
-    rw [← IntermediateField.finrank_eq_one_iff, ← mul_left_inj' (ne_of_lt p).symm,
-      finrank_mul_finrank, ← h, one_mul, IntermediateField.finrank_fixedField_eq_card]
-    apply Fintype.card_congr
-    exact
-      { toFun := fun g => ⟨g, Subgroup.mem_top g⟩
-        invFun := coe
-        left_inv := fun g => rfl
-        right_inv := fun _ => by ext; rfl }
+  rw [← IntermediateField.finrank_eq_one_iff, ← mul_left_inj' (ne_of_lt p).symm,
+    finrank_mul_finrank, ← h, one_mul, IntermediateField.finrank_fixedField_eq_card]
+  apply Fintype.card_congr
+  exact
+    { toFun := fun g => ⟨g, Subgroup.mem_top g⟩
+      invFun := coe
+      left_inv := fun g => rfl
+      right_inv := fun _ => by ext; rfl }
 #align is_galois.of_card_aut_eq_finrank IsGalois.of_card_aut_eq_finrank
 
 variable {F} {E} {p : F[X]}

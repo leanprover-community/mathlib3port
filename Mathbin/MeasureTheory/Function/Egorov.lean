@@ -48,7 +48,7 @@ set of elements such that `f k x` and `g x` are separated by at least `1 / (n + 
 
 This definition is useful for Egorov's theorem. -/
 def notConvergentSeq [Preorder ι] (f : ι → α → β) (g : α → β) (n : ℕ) (j : ι) : Set α :=
-  ⋃ (k) (hk : j ≤ k), { x | 1 / (n + 1 : ℝ) < dist (f k x) (g x) }
+  ⋃ (k) (hk : j ≤ k), {x | 1 / (n + 1 : ℝ) < dist (f k x) (g x)}
 #align measure_theory.egorov.not_convergent_seq MeasureTheory.Egorov.notConvergentSeq
 -/
 
@@ -197,7 +197,7 @@ theorem tendstoUniformlyOn_diff_iUnionNotConvergentSeq (hε : 0 < ε)
   obtain ⟨hxs, hx⟩ := hx
   specialize hx hxs N
   rw [egorov.mem_not_convergent_seq_iff] at hx 
-  push_neg  at hx 
+  push_neg at hx 
   rw [dist_comm]
   exact lt_of_le_of_lt (hx n hn) hN
 #align measure_theory.egorov.tendsto_uniformly_on_diff_Union_not_convergent_seq MeasureTheory.Egorov.tendstoUniformlyOn_diff_iUnionNotConvergentSeq
@@ -228,7 +228,7 @@ theorem tendstoUniformlyOn_of_ae_tendsto (hf : ∀ n, StronglyMeasurable (f n))
 #align measure_theory.tendsto_uniformly_on_of_ae_tendsto MeasureTheory.tendstoUniformlyOn_of_ae_tendsto
 
 /-- Egorov's theorem for finite measure spaces. -/
-theorem tendstoUniformlyOn_of_ae_tendsto' [FiniteMeasure μ] (hf : ∀ n, StronglyMeasurable (f n))
+theorem tendstoUniformlyOn_of_ae_tendsto' [IsFiniteMeasure μ] (hf : ∀ n, StronglyMeasurable (f n))
     (hg : StronglyMeasurable g) (hfg : ∀ᵐ x ∂μ, Tendsto (fun n => f n x) atTop (𝓝 (g x))) {ε : ℝ}
     (hε : 0 < ε) :
     ∃ t, MeasurableSet t ∧ μ t ≤ ENNReal.ofReal ε ∧ TendstoUniformlyOn f g atTop (tᶜ) :=
@@ -237,7 +237,7 @@ theorem tendstoUniformlyOn_of_ae_tendsto' [FiniteMeasure μ] (hf : ∀ n, Strong
     tendsto_uniformly_on_of_ae_tendsto hf hg MeasurableSet.univ (measure_ne_top μ univ) _ hε
   · refine' ⟨_, ht, _⟩
     rwa [compl_eq_univ_diff]
-  · filter_upwards [hfg]with _ htendsto _ using htendsto
+  · filter_upwards [hfg] with _ htendsto _ using htendsto
 #align measure_theory.tendsto_uniformly_on_of_ae_tendsto' MeasureTheory.tendstoUniformlyOn_of_ae_tendsto'
 
 end MeasureTheory

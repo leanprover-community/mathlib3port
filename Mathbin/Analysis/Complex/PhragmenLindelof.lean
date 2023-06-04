@@ -180,7 +180,7 @@ theorem horizontal_strip (hfd : DiffContOnCl ℂ f (im ⁻¹' Ioo a b))
     refine' le_of_tendsto (tendsto.mono_left _ nhdsWithin_le_nhds) this
     apply ((continuous_of_real.mul continuous_const).cexp.smul continuous_const).norm.tendsto'
     simp; infer_instance
-  filter_upwards [self_mem_nhdsWithin]with ε ε₀; change ε < 0 at ε₀ 
+  filter_upwards [self_mem_nhdsWithin] with ε ε₀; change ε < 0 at ε₀ 
   -- An upper estimate on `‖g ε w‖` that will be used in two branches of the proof.
   obtain ⟨δ, δ₀, hδ⟩ :
     ∃ δ : ℝ,
@@ -215,7 +215,7 @@ theorem horizontal_strip (hfd : DiffContOnCl ℂ f (im ⁻¹' Ioo a b))
       mem_preimage, (· ∘ ·), Real.norm_eq_abs, abs_of_pos (Real.exp_pos _)] at hA 
     suffices tendsto (fun R => expR (δ * expR (d * R) + B * expR (c * R) + Real.log A)) at_top (𝓝 0)
       by
-      filter_upwards [this.eventually (ge_mem_nhds hC₀), hA]with R hR Hle w hre him
+      filter_upwards [this.eventually (ge_mem_nhds hC₀), hA] with R hR Hle w hre him
       calc
         ‖g ε w • f w‖ ≤ expR (δ * expR (d * R) + B * expR (c * R) + Real.log A) := _
         _ ≤ C := hR
@@ -246,7 +246,8 @@ theorem horizontal_strip (hfd : DiffContOnCl ℂ f (im ⁻¹' Ioo a b))
         _).cexp
   replace hd : DiffContOnCl ℂ (fun w => g ε w • f w) (Ioo (-R) R ×ℂ Ioo (a - b) (a + b))
   exact (hgd.diff_cont_on_cl.smul hfd).mono (inter_subset_right _ _)
-  convert norm_le_of_forall_mem_frontier_norm_le ((bounded_Ioo _ _).reProdIm (bounded_Ioo _ _)) hd
+  convert
+    norm_le_of_forall_mem_frontier_norm_le ((bounded_Ioo _ _).reProdIm (bounded_Ioo _ _)) hd
       (fun w hw => _) _
   · have hwc := frontier_subset_closure hw
     rw [frontier_re_prod_im, closure_Ioo (neg_lt_self hR₀).Ne, frontier_Ioo hab, closure_Ioo hab.ne,
@@ -502,7 +503,7 @@ theorem eq_zero_on_quadrant_i (hd : DiffContOnCl ℂ f (Ioi 0 ×ℂ Ioi 0))
       ∃ c < (2 : ℝ),
         ∃ B, f =O[comap Complex.abs atTop ⊓ 𝓟 (Ioi 0 ×ℂ Ioi 0)] fun z => expR (B * abs z ^ c))
     (hre : ∀ x : ℝ, 0 ≤ x → f x = 0) (him : ∀ x : ℝ, 0 ≤ x → f (x * I) = 0) :
-    EqOn f 0 { z | 0 ≤ z.re ∧ 0 ≤ z.im } := fun z hz =>
+    EqOn f 0 {z | 0 ≤ z.re ∧ 0 ≤ z.im} := fun z hz =>
   norm_le_zero_iff.1 <|
     quadrant_i hd hB (fun x hx => norm_le_zero_iff.2 <| hre x hx)
       (fun x hx => norm_le_zero_iff.2 <| him x hx) hz.1 hz.2
@@ -525,7 +526,7 @@ theorem eqOn_quadrant_i (hdf : DiffContOnCl ℂ f (Ioi 0 ×ℂ Ioi 0))
       ∃ c < (2 : ℝ),
         ∃ B, g =O[comap Complex.abs atTop ⊓ 𝓟 (Ioi 0 ×ℂ Ioi 0)] fun z => expR (B * abs z ^ c))
     (hre : ∀ x : ℝ, 0 ≤ x → f x = g x) (him : ∀ x : ℝ, 0 ≤ x → f (x * I) = g (x * I)) :
-    EqOn f g { z | 0 ≤ z.re ∧ 0 ≤ z.im } := fun z hz =>
+    EqOn f g {z | 0 ≤ z.re ∧ 0 ≤ z.im} := fun z hz =>
   sub_eq_zero.1 <|
     eq_zero_on_quadrant_i (hdf.sub hdg) (isBigO_sub_exp_rpow hBf hBg)
       (fun x hx => sub_eq_zero.2 <| hre x hx) (fun x hx => sub_eq_zero.2 <| him x hx) hz
@@ -576,7 +577,7 @@ theorem eq_zero_on_quadrant_II (hd : DiffContOnCl ℂ f (Iio 0 ×ℂ Ioi 0))
       ∃ c < (2 : ℝ),
         ∃ B, f =O[comap Complex.abs atTop ⊓ 𝓟 (Iio 0 ×ℂ Ioi 0)] fun z => expR (B * abs z ^ c))
     (hre : ∀ x : ℝ, x ≤ 0 → f x = 0) (him : ∀ x : ℝ, 0 ≤ x → f (x * I) = 0) :
-    EqOn f 0 { z | z.re ≤ 0 ∧ 0 ≤ z.im } := fun z hz =>
+    EqOn f 0 {z | z.re ≤ 0 ∧ 0 ≤ z.im} := fun z hz =>
   norm_le_zero_iff.1 <|
     quadrant_II hd hB (fun x hx => norm_le_zero_iff.2 <| hre x hx)
       (fun x hx => norm_le_zero_iff.2 <| him x hx) hz.1 hz.2
@@ -599,7 +600,7 @@ theorem eqOn_quadrant_II (hdf : DiffContOnCl ℂ f (Iio 0 ×ℂ Ioi 0))
       ∃ c < (2 : ℝ),
         ∃ B, g =O[comap Complex.abs atTop ⊓ 𝓟 (Iio 0 ×ℂ Ioi 0)] fun z => expR (B * abs z ^ c))
     (hre : ∀ x : ℝ, x ≤ 0 → f x = g x) (him : ∀ x : ℝ, 0 ≤ x → f (x * I) = g (x * I)) :
-    EqOn f g { z | z.re ≤ 0 ∧ 0 ≤ z.im } := fun z hz =>
+    EqOn f g {z | z.re ≤ 0 ∧ 0 ≤ z.im} := fun z hz =>
   sub_eq_zero.1 <|
     eq_zero_on_quadrant_II (hdf.sub hdg) (isBigO_sub_exp_rpow hBf hBg)
       (fun x hx => sub_eq_zero.2 <| hre x hx) (fun x hx => sub_eq_zero.2 <| him x hx) hz
@@ -652,7 +653,7 @@ theorem eq_zero_on_quadrant_III (hd : DiffContOnCl ℂ f (Iio 0 ×ℂ Iio 0))
       ∃ c < (2 : ℝ),
         ∃ B, f =O[comap Complex.abs atTop ⊓ 𝓟 (Iio 0 ×ℂ Iio 0)] fun z => expR (B * abs z ^ c))
     (hre : ∀ x : ℝ, x ≤ 0 → f x = 0) (him : ∀ x : ℝ, x ≤ 0 → f (x * I) = 0) :
-    EqOn f 0 { z | z.re ≤ 0 ∧ z.im ≤ 0 } := fun z hz =>
+    EqOn f 0 {z | z.re ≤ 0 ∧ z.im ≤ 0} := fun z hz =>
   norm_le_zero_iff.1 <|
     quadrant_III hd hB (fun x hx => norm_le_zero_iff.2 <| hre x hx)
       (fun x hx => norm_le_zero_iff.2 <| him x hx) hz.1 hz.2
@@ -675,7 +676,7 @@ theorem eqOn_quadrant_III (hdf : DiffContOnCl ℂ f (Iio 0 ×ℂ Iio 0))
       ∃ c < (2 : ℝ),
         ∃ B, g =O[comap Complex.abs atTop ⊓ 𝓟 (Iio 0 ×ℂ Iio 0)] fun z => expR (B * abs z ^ c))
     (hre : ∀ x : ℝ, x ≤ 0 → f x = g x) (him : ∀ x : ℝ, x ≤ 0 → f (x * I) = g (x * I)) :
-    EqOn f g { z | z.re ≤ 0 ∧ z.im ≤ 0 } := fun z hz =>
+    EqOn f g {z | z.re ≤ 0 ∧ z.im ≤ 0} := fun z hz =>
   sub_eq_zero.1 <|
     eq_zero_on_quadrant_III (hdf.sub hdg) (isBigO_sub_exp_rpow hBf hBg)
       (fun x hx => sub_eq_zero.2 <| hre x hx) (fun x hx => sub_eq_zero.2 <| him x hx) hz
@@ -728,7 +729,7 @@ theorem eq_zero_on_quadrant_IV (hd : DiffContOnCl ℂ f (Ioi 0 ×ℂ Iio 0))
       ∃ c < (2 : ℝ),
         ∃ B, f =O[comap Complex.abs atTop ⊓ 𝓟 (Ioi 0 ×ℂ Iio 0)] fun z => expR (B * abs z ^ c))
     (hre : ∀ x : ℝ, 0 ≤ x → f x = 0) (him : ∀ x : ℝ, x ≤ 0 → f (x * I) = 0) :
-    EqOn f 0 { z | 0 ≤ z.re ∧ z.im ≤ 0 } := fun z hz =>
+    EqOn f 0 {z | 0 ≤ z.re ∧ z.im ≤ 0} := fun z hz =>
   norm_le_zero_iff.1 <|
     quadrant_IV hd hB (fun x hx => norm_le_zero_iff.2 <| hre x hx)
       (fun x hx => norm_le_zero_iff.2 <| him x hx) hz.1 hz.2
@@ -751,7 +752,7 @@ theorem eqOn_quadrant_IV (hdf : DiffContOnCl ℂ f (Ioi 0 ×ℂ Iio 0))
       ∃ c < (2 : ℝ),
         ∃ B, g =O[comap Complex.abs atTop ⊓ 𝓟 (Ioi 0 ×ℂ Iio 0)] fun z => expR (B * abs z ^ c))
     (hre : ∀ x : ℝ, 0 ≤ x → f x = g x) (him : ∀ x : ℝ, x ≤ 0 → f (x * I) = g (x * I)) :
-    EqOn f g { z | 0 ≤ z.re ∧ z.im ≤ 0 } := fun z hz =>
+    EqOn f g {z | 0 ≤ z.re ∧ z.im ≤ 0} := fun z hz =>
   sub_eq_zero.1 <|
     eq_zero_on_quadrant_IV (hdf.sub hdg) (isBigO_sub_exp_rpow hBf hBg)
       (fun x hx => sub_eq_zero.2 <| hre x hx) (fun x hx => sub_eq_zero.2 <| him x hx) hz
@@ -772,10 +773,10 @@ theorem eqOn_quadrant_IV (hdf : DiffContOnCl ℂ f (Ioi 0 ×ℂ Iio 0))
 
 Then `‖f z‖` is bounded from above by the same constant on the closed right half-plane.
 See also `phragmen_lindelof.right_half_plane_of_bounded_on_real` for a stronger version. -/
-theorem right_half_plane_of_tendsto_zero_on_real (hd : DiffContOnCl ℂ f { z | 0 < z.re })
+theorem right_half_plane_of_tendsto_zero_on_real (hd : DiffContOnCl ℂ f {z | 0 < z.re})
     (hexp :
       ∃ c < (2 : ℝ),
-        ∃ B, f =O[comap Complex.abs atTop ⊓ 𝓟 { z | 0 < z.re }] fun z => expR (B * abs z ^ c))
+        ∃ B, f =O[comap Complex.abs atTop ⊓ 𝓟 {z | 0 < z.re}] fun z => expR (B * abs z ^ c))
     (hre : Tendsto (fun x : ℝ => f x) atTop (𝓝 0)) (him : ∀ x : ℝ, ‖f (x * I)‖ ≤ C)
     (hz : 0 ≤ z.re) : ‖f z‖ ≤ C :=
   by
@@ -807,7 +808,7 @@ theorem right_half_plane_of_tendsto_zero_on_real (hd : DiffContOnCl ℂ f { z | 
       rwa [closure_set_of_lt_re]
     by_cases h₀ : ∀ x : ℝ, 0 ≤ x → f x = 0
     · refine' ⟨0, le_rfl, fun y hy => _⟩; rw [h₀ y hy, h₀ 0 le_rfl]
-    push_neg  at h₀ 
+    push_neg at h₀ 
     rcases h₀ with ⟨x₀, hx₀, hne⟩
     have hlt : ‖(0 : E)‖ < ‖f x₀‖ := by rwa [norm_zero, norm_pos_iff]
     suffices ∀ᶠ x : ℝ in cocompact ℝ ⊓ 𝓟 (Ici 0), ‖f x‖ ≤ ‖f x₀‖ by
@@ -819,7 +820,7 @@ theorem right_half_plane_of_tendsto_zero_on_real (hd : DiffContOnCl ℂ f { z | 
   ·-- If `‖f x₀‖ ≤ C`, then `hle` implies the required estimate
     simpa only [max_eq_left h] using hle _ hmax
   · -- Otherwise, `‖f z‖ ≤ ‖f x₀‖` for all `z` in the right half-plane due to `hle`.
-    replace hmax : IsMaxOn (norm ∘ f) { z | 0 < z.re } x₀
+    replace hmax : IsMaxOn (norm ∘ f) {z | 0 < z.re} x₀
     · rintro z (hz : 0 < z.re)
       simpa [max_eq_right h.le] using hle _ hmax _ hz.le
     -- Due to the maximum modulus principle applied to the closed ball of radius `x₀.re`,
@@ -853,10 +854,10 @@ theorem right_half_plane_of_tendsto_zero_on_real (hd : DiffContOnCl ℂ f { z | 
 
 Then `‖f z‖` is bounded from above by `C` on the closed right half-plane.
 See also `phragmen_lindelof.right_half_plane_of_tendsto_zero_on_real` for a weaker version. -/
-theorem right_half_plane_of_bounded_on_real (hd : DiffContOnCl ℂ f { z | 0 < z.re })
+theorem right_half_plane_of_bounded_on_real (hd : DiffContOnCl ℂ f {z | 0 < z.re})
     (hexp :
       ∃ c < (2 : ℝ),
-        ∃ B, f =O[comap Complex.abs atTop ⊓ 𝓟 { z | 0 < z.re }] fun z => expR (B * abs z ^ c))
+        ∃ B, f =O[comap Complex.abs atTop ⊓ 𝓟 {z | 0 < z.re}] fun z => expR (B * abs z ^ c))
     (hre : IsBoundedUnder (· ≤ ·) atTop fun x : ℝ => ‖f x‖) (him : ∀ x : ℝ, ‖f (x * I)‖ ≤ C)
     (hz : 0 ≤ z.re) : ‖f z‖ ≤ C :=
   by
@@ -868,9 +869,9 @@ theorem right_half_plane_of_bounded_on_real (hd : DiffContOnCl ℂ f { z | 0 < z
     refine' le_of_tendsto (tendsto.mono_left _ nhdsWithin_le_nhds) this
     apply ((continuous_of_real.mul continuous_const).cexp.smul continuous_const).norm.tendsto'
     simp; infer_instance
-  filter_upwards [self_mem_nhdsWithin]with ε ε₀; change ε < 0 at ε₀ 
+  filter_upwards [self_mem_nhdsWithin] with ε ε₀; change ε < 0 at ε₀ 
   set g : ℂ → E := fun z => exp (ε * z) • f z; change ‖g z‖ ≤ C
-  replace hd : DiffContOnCl ℂ g { z : ℂ | 0 < z.re }
+  replace hd : DiffContOnCl ℂ g {z : ℂ | 0 < z.re}
   exact (differentiable_id.const_mul _).cexp.DiffContOnCl.smul hd
   have hgn : ∀ z, ‖g z‖ = expR (ε * z.re) * ‖f z‖ := by intro z;
     rw [norm_smul, norm_eq_abs, abs_exp, of_real_mul_re]
@@ -899,13 +900,12 @@ theorem right_half_plane_of_bounded_on_real (hd : DiffContOnCl ℂ f { z | 0 < z
   for any natural `n`, `exp (n * x) * ‖f x‖` tends to zero as `x → ∞`.
 
 Then `f` is equal to zero on the closed right half-plane. -/
-theorem eq_zero_on_right_half_plane_of_superexponential_decay
-    (hd : DiffContOnCl ℂ f { z | 0 < z.re })
+theorem eq_zero_on_right_half_plane_of_superexponential_decay (hd : DiffContOnCl ℂ f {z | 0 < z.re})
     (hexp :
       ∃ c < (2 : ℝ),
-        ∃ B, f =O[comap Complex.abs atTop ⊓ 𝓟 { z | 0 < z.re }] fun z => expR (B * abs z ^ c))
+        ∃ B, f =O[comap Complex.abs atTop ⊓ 𝓟 {z | 0 < z.re}] fun z => expR (B * abs z ^ c))
     (hre : SuperpolynomialDecay atTop expR fun x => ‖f x‖) (him : ∃ C, ∀ x : ℝ, ‖f (x * I)‖ ≤ C) :
-    EqOn f 0 { z : ℂ | 0 ≤ z.re } := by
+    EqOn f 0 {z : ℂ | 0 ≤ z.re} := by
   rcases him with ⟨C, hC⟩
   -- Due to continuity, it suffices to prove the equality on the open right half-plane.
   suffices ∀ z : ℂ, 0 < z.re → f z = 0 by
@@ -935,7 +935,7 @@ theorem eq_zero_on_right_half_plane_of_superexponential_decay
     refine' ((is_O_refl (fun z : ℂ => expR z.re ^ n) _).mul hO.norm_left).trans (is_O.of_bound 1 _)
     simp only [← Real.exp_nat_mul, ← Real.exp_add, Real.norm_of_nonneg (Real.exp_pos _).le,
       Real.exp_le_exp, add_mul, eventually_inf_principal, eventually_comap, one_mul]
-    filter_upwards [eventually_ge_at_top (1 : ℝ)]with r hr z hzr hre; subst r
+    filter_upwards [eventually_ge_at_top (1 : ℝ)] with r hr z hzr hre; subst r
     refine' add_le_add (mul_le_mul_of_nonneg_left _ n.cast_nonneg) _
     ·
       calc
@@ -965,21 +965,21 @@ that
 
 Then `f` is equal to `g` on the closed right half-plane. -/
 theorem eqOn_right_half_plane_of_superexponential_decay {g : ℂ → E}
-    (hfd : DiffContOnCl ℂ f { z | 0 < z.re }) (hgd : DiffContOnCl ℂ g { z | 0 < z.re })
+    (hfd : DiffContOnCl ℂ f {z | 0 < z.re}) (hgd : DiffContOnCl ℂ g {z | 0 < z.re})
     (hfexp :
       ∃ c < (2 : ℝ),
-        ∃ B, f =O[comap Complex.abs atTop ⊓ 𝓟 { z | 0 < z.re }] fun z => expR (B * abs z ^ c))
+        ∃ B, f =O[comap Complex.abs atTop ⊓ 𝓟 {z | 0 < z.re}] fun z => expR (B * abs z ^ c))
     (hgexp :
       ∃ c < (2 : ℝ),
-        ∃ B, g =O[comap Complex.abs atTop ⊓ 𝓟 { z | 0 < z.re }] fun z => expR (B * abs z ^ c))
+        ∃ B, g =O[comap Complex.abs atTop ⊓ 𝓟 {z | 0 < z.re}] fun z => expR (B * abs z ^ c))
     (hre : SuperpolynomialDecay atTop expR fun x => ‖f x - g x‖)
     (hfim : ∃ C, ∀ x : ℝ, ‖f (x * I)‖ ≤ C) (hgim : ∃ C, ∀ x : ℝ, ‖g (x * I)‖ ≤ C) :
-    EqOn f g { z : ℂ | 0 ≤ z.re } :=
+    EqOn f g {z : ℂ | 0 ≤ z.re} :=
   by
-  suffices eq_on (f - g) 0 { z : ℂ | 0 ≤ z.re } by
+  suffices eq_on (f - g) 0 {z : ℂ | 0 ≤ z.re} by
     simpa only [eq_on, Pi.sub_apply, Pi.zero_apply, sub_eq_zero] using this
   refine' eq_zero_on_right_half_plane_of_superexponential_decay (hfd.sub hgd) _ hre _
-  · set l : Filter ℂ := comap Complex.abs at_top ⊓ 𝓟 { z : ℂ | 0 < z.re }
+  · set l : Filter ℂ := comap Complex.abs at_top ⊓ 𝓟 {z : ℂ | 0 < z.re}
     suffices
       ∀ {c₁ c₂ B₁ B₂ : ℝ},
         c₁ ≤ c₂ →

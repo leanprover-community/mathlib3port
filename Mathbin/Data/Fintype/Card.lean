@@ -684,9 +684,9 @@ theorem card_le_one_iff_subsingleton : card α ≤ 1 ↔ Subsingleton α :=
 #print Fintype.one_lt_card_iff_nontrivial /-
 theorem one_lt_card_iff_nontrivial : 1 < card α ↔ Nontrivial α := by
   classical
-    rw [← not_iff_not]
-    push_neg
-    rw [not_nontrivial_iff_subsingleton, card_le_one_iff_subsingleton]
+  rw [← not_iff_not]
+  push_neg
+  rw [not_nontrivial_iff_subsingleton, card_le_one_iff_subsingleton]
 #align fintype.one_lt_card_iff_nontrivial Fintype.one_lt_card_iff_nontrivial
 -/
 
@@ -782,8 +782,8 @@ alias injective_iff_bijective ↔ _root_.function.injective.bijective_of_finite 
 alias surjective_iff_bijective ↔ _root_.function.surjective.bijective_of_finite _
 #align function.surjective.bijective_of_finite Function.Surjective.bijective_of_finite
 
-alias injective_iff_surjective_of_equiv ↔
-  _root_.function.injective.surjective_of_fintype _root_.function.surjective.injective_of_fintype
+alias injective_iff_surjective_of_equiv ↔ _root_.function.injective.surjective_of_fintype
+  _root_.function.surjective.injective_of_fintype
 #align function.injective.surjective_of_fintype Function.Injective.surjective_of_fintype
 #align function.surjective.injective_of_fintype Function.Surjective.injective_of_fintype
 
@@ -1013,10 +1013,10 @@ theorem Fintype.card_subtype_compl [Fintype α] (p : α → Prop) [Fintype { x /
     [Fintype { x // ¬p x }] :
     Fintype.card { x // ¬p x } = Fintype.card α - Fintype.card { x // p x } := by
   classical rw [Fintype.card_of_subtype (Set.toFinset (pᶜ)), Set.toFinset_compl p,
-            Finset.card_compl, Fintype.card_of_subtype (Set.toFinset p)] <;>
-          intro <;>
-        simp only [Set.mem_toFinset, Set.mem_compl_iff] <;>
-      rfl
+          Finset.card_compl, Fintype.card_of_subtype (Set.toFinset p)] <;>
+        intro <;>
+      simp only [Set.mem_toFinset, Set.mem_compl_iff] <;>
+    rfl
 #align fintype.card_subtype_compl Fintype.card_subtype_compl
 -/
 
@@ -1070,17 +1070,15 @@ variable [Finite α]
 theorem wellFounded_of_trans_of_irrefl (r : α → α → Prop) [IsTrans α r] [IsIrrefl α r] :
     WellFounded r := by
   classical cases nonempty_fintype α <;>
-      exact
-        have :
-          ∀ x y, r x y → (univ.filter fun z => r z x).card < (univ.filter fun z => r z y).card :=
-          fun x y hxy =>
-          Finset.card_lt_card <| by
-            simp only [finset.lt_iff_ssubset.symm, lt_iff_le_not_le, Finset.le_iff_subset,
-                Finset.subset_iff, mem_filter, true_and_iff, mem_univ, hxy] <;>
-              exact
-                ⟨fun z hzx => trans hzx hxy,
-                  not_forall_of_exists_not ⟨x, not_imp.2 ⟨hxy, irrefl x⟩⟩⟩
-        Subrelation.wf this (measure_wf _)
+    exact
+      have : ∀ x y, r x y → (univ.filter fun z => r z x).card < (univ.filter fun z => r z y).card :=
+        fun x y hxy =>
+        Finset.card_lt_card <| by
+          simp only [finset.lt_iff_ssubset.symm, lt_iff_le_not_le, Finset.le_iff_subset,
+              Finset.subset_iff, mem_filter, true_and_iff, mem_univ, hxy] <;>
+            exact
+              ⟨fun z hzx => trans hzx hxy, not_forall_of_exists_not ⟨x, not_imp.2 ⟨hxy, irrefl x⟩⟩⟩
+      Subrelation.wf this (measure_wf _)
 #align finite.well_founded_of_trans_of_irrefl Finite.wellFounded_of_trans_of_irrefl
 -/
 
@@ -1175,13 +1173,13 @@ theorem of_injective_to_set {s : Set α} (hs : s ≠ Set.univ) {f : α → s} (h
   of_not_fintype fun h => by
     skip
     classical
-      refine' lt_irrefl (Fintype.card α) _
-      calc
-        Fintype.card α ≤ Fintype.card s := Fintype.card_le_of_injective f hf
-        _ = s.to_finset.card := s.to_finset_card.symm
-        _ < Fintype.card α :=
-          Finset.card_lt_card <| by rwa [Set.toFinset_ssubset_univ, Set.ssubset_univ_iff]
-        
+    refine' lt_irrefl (Fintype.card α) _
+    calc
+      Fintype.card α ≤ Fintype.card s := Fintype.card_le_of_injective f hf
+      _ = s.to_finset.card := s.to_finset_card.symm
+      _ < Fintype.card α :=
+        Finset.card_lt_card <| by rwa [Set.toFinset_ssubset_univ, Set.ssubset_univ_iff]
+      
 #align infinite.of_injective_to_set Infinite.of_injective_to_set
 -/
 
@@ -1375,13 +1373,13 @@ See also: `finite.exists_ne_map_eq_of_infinite`
 theorem Finite.exists_infinite_fiber [Infinite α] [Finite β] (f : α → β) :
     ∃ y : β, Infinite (f ⁻¹' {y}) := by
   classical
-    by_contra' hf
-    cases nonempty_fintype β
-    haveI := fun y => fintypeOfNotInfinite <| hf y
-    let key : Fintype α :=
-      { elems := univ.bUnion fun y : β => (f ⁻¹' {y}).toFinset
-        complete := by simp }
-    exact key.false
+  by_contra' hf
+  cases nonempty_fintype β
+  haveI := fun y => fintypeOfNotInfinite <| hf y
+  let key : Fintype α :=
+    { elems := univ.bUnion fun y : β => (f ⁻¹' {y}).toFinset
+      complete := by simp }
+  exact key.false
 #align finite.exists_infinite_fiber Finite.exists_infinite_fiber
 
 theorem not_surjective_finite_infinite {α β} [Finite α] [Infinite β] (f : α → β) : ¬Surjective f :=

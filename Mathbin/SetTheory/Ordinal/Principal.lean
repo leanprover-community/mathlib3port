@@ -122,8 +122,8 @@ def blsub₂ (op : Ordinal → Ordinal → Ordinal) (o : Ordinal) : Ordinal :=
 theorem lt_blsub₂ (op : Ordinal → Ordinal → Ordinal) {o : Ordinal} {a b : Ordinal} (ha : a < o)
     (hb : b < o) : op a b < blsub₂ op o :=
   by
-  convert lt_lsub _
-      (Prod.mk (enum (· < ·) a (by rwa [type_lt])) (enum (· < ·) b (by rwa [type_lt])))
+  convert
+    lt_lsub _ (Prod.mk (enum (· < ·) a (by rwa [type_lt])) (enum (· < ·) b (by rwa [type_lt])))
   simp only [typein_enum]
 #align ordinal.lt_blsub₂ Ordinal.lt_blsub₂
 -/
@@ -147,7 +147,7 @@ theorem principal_nfp_blsub₂ (op : Ordinal → Ordinal → Ordinal) (o : Ordin
 
 #print Ordinal.unbounded_principal /-
 theorem unbounded_principal (op : Ordinal → Ordinal → Ordinal) :
-    Set.Unbounded (· < ·) { o | Principal op o } := fun o =>
+    Set.Unbounded (· < ·) {o | Principal op o} := fun o =>
   ⟨_, principal_nfp_blsub₂ op o, (le_nfp _ o).not_lt⟩
 #align ordinal.unbounded_principal Ordinal.unbounded_principal
 -/
@@ -199,7 +199,7 @@ theorem exists_lt_add_of_not_principal_add {a} (ha : ¬Principal (· + ·) a) :
     ∃ (b c : _) (hb : b < a) (hc : c < a), b + c = a :=
   by
   unfold principal at ha 
-  push_neg  at ha 
+  push_neg at ha 
   rcases ha with ⟨b, c, hb, hc, H⟩
   refine'
     ⟨b, _, hb, lt_of_le_of_ne (sub_le_self a b) fun hab => _, Ordinal.add_sub_cancel_of_le hb.le⟩

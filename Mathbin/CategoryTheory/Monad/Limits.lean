@@ -399,12 +399,12 @@ theorem hasLimitsOfShape_of_reflective [HasLimitsOfShape J C] (R : D ⥤ C) [Ref
 #align category_theory.has_limits_of_shape_of_reflective CategoryTheory.hasLimitsOfShape_of_reflective
 -/
 
-#print CategoryTheory.has_limits_of_reflective /-
+#print CategoryTheory.hasLimits_of_reflective /-
 /-- If `C` has limits then any reflective subcategory has limits. -/
-theorem has_limits_of_reflective (R : D ⥤ C) [HasLimitsOfSize.{v, u} C] [Reflective R] :
+theorem hasLimits_of_reflective (R : D ⥤ C) [HasLimitsOfSize.{v, u} C] [Reflective R] :
     HasLimitsOfSize.{v, u} D :=
   { HasLimitsOfShape := fun J 𝒥₁ => has_limits_of_shape_of_reflective R }
-#align category_theory.has_limits_of_reflective CategoryTheory.has_limits_of_reflective
+#align category_theory.has_limits_of_reflective CategoryTheory.hasLimits_of_reflective
 -/
 
 #print CategoryTheory.hasColimitsOfShape_of_reflective /-
@@ -424,12 +424,12 @@ theorem hasColimitsOfShape_of_reflective (R : D ⥤ C) [Reflective R] [HasColimi
 #align category_theory.has_colimits_of_shape_of_reflective CategoryTheory.hasColimitsOfShape_of_reflective
 -/
 
-#print CategoryTheory.has_colimits_of_reflective /-
+#print CategoryTheory.hasColimits_of_reflective /-
 /-- If `C` has colimits then any reflective subcategory has colimits. -/
-theorem has_colimits_of_reflective (R : D ⥤ C) [Reflective R] [HasColimitsOfSize.{v, u} C] :
+theorem hasColimits_of_reflective (R : D ⥤ C) [Reflective R] [HasColimitsOfSize.{v, u} C] :
     HasColimitsOfSize.{v, u} D :=
   { HasColimitsOfShape := fun J 𝒥 => has_colimits_of_shape_of_reflective R }
-#align category_theory.has_colimits_of_reflective CategoryTheory.has_colimits_of_reflective
+#align category_theory.has_colimits_of_reflective CategoryTheory.hasColimits_of_reflective
 -/
 
 #print CategoryTheory.leftAdjointPreservesTerminalOfReflective /-

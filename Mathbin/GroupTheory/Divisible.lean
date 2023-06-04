@@ -136,8 +136,8 @@ noncomputable def rootableByOfPowLeftSurj
   root_zero _ := by classical exact dif_pos rfl
   root_cancel n a hn := by
     classical
-      rw [dif_neg hn]
-      exact (H hn a).choose_spec
+    rw [dif_neg hn]
+    exact (H hn a).choose_spec
 #align rootable_by_of_pow_left_surj rootableByOfPowLeftSurj
 #align divisible_by_of_smul_right_surj divisibleByOfSMulRightSurj
 -/

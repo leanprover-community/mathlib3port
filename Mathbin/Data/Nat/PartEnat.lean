@@ -505,7 +505,7 @@ protected theorem add_lt_add_right {x y z : PartENat} (h : x < y) (hz : z ≠ �
   rcases ne_top_iff.mp hz with ⟨k, rfl⟩
   induction' y using PartENat.casesOn with n
   · rw [top_add]; apply_mod_cast coe_lt_top
-  norm_cast  at h ; apply_mod_cast add_lt_add_right h
+  norm_cast at h ; apply_mod_cast add_lt_add_right h
 #align part_enat.add_lt_add_right PartENat.add_lt_add_right
 -/
 
@@ -766,9 +766,9 @@ end WithTopEquiv
 #print PartENat.lt_wf /-
 theorem lt_wf : @WellFounded PartENat (· < ·) := by
   classical
-    change WellFounded fun a b : PartENat => a < b
-    simp_rw [← to_with_top_lt]
-    exact InvImage.wf _ (WithTop.wellFounded_lt Nat.lt_wfRel)
+  change WellFounded fun a b : PartENat => a < b
+  simp_rw [← to_with_top_lt]
+  exact InvImage.wf _ (WithTop.wellFounded_lt Nat.lt_wfRel)
 #align part_enat.lt_wf PartENat.lt_wf
 -/
 

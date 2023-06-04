@@ -120,13 +120,12 @@ theorem not_mem_iff (p : T.CompleteType α) (φ : L[[α]].Sentence) : φ.Not ∈
 
 @[simp]
 theorem compl_setOf_mem {φ : L[[α]].Sentence} :
-    { p : T.CompleteType α | φ ∈ p }ᶜ = { p : T.CompleteType α | φ.Not ∈ p } :=
+    {p : T.CompleteType α | φ ∈ p}ᶜ = {p : T.CompleteType α | φ.Not ∈ p} :=
   ext fun _ => (not_mem_iff _ _).symm
 #align first_order.language.Theory.complete_type.compl_set_of_mem FirstOrder.Language.Theory.CompleteType.compl_setOf_mem
 
 theorem setOf_subset_eq_empty_iff (S : L[[α]].Theory) :
-    { p : T.CompleteType α | S ⊆ ↑p } = ∅ ↔
-      ¬((L.lhomWithConstants α).onTheory T ∪ S).IsSatisfiable :=
+    {p : T.CompleteType α | S ⊆ ↑p} = ∅ ↔ ¬((L.lhomWithConstants α).onTheory T ∪ S).IsSatisfiable :=
   by
   rw [iff_not_comm, ← not_nonempty_iff_eq_empty, Classical.not_not, Set.Nonempty]
   refine'
@@ -142,7 +141,7 @@ theorem setOf_subset_eq_empty_iff (S : L[[α]].Theory) :
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print FirstOrder.Language.Theory.CompleteType.setOf_mem_eq_univ_iff /-
 theorem setOf_mem_eq_univ_iff (φ : L[[α]].Sentence) :
-    { p : T.CompleteType α | φ ∈ p } = univ ↔ (L.lhomWithConstants α).onTheory T ⊨ φ :=
+    {p : T.CompleteType α | φ ∈ p} = univ ↔ (L.lhomWithConstants α).onTheory T ⊨ φ :=
   by
   rw [models_iff_not_satisfiable, ← compl_empty_iff, compl_set_of_mem, ← set_of_subset_eq_empty_iff]
   simp
@@ -152,10 +151,9 @@ theorem setOf_mem_eq_univ_iff (φ : L[[α]].Sentence) :
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print FirstOrder.Language.Theory.CompleteType.setOf_subset_eq_univ_iff /-
 theorem setOf_subset_eq_univ_iff (S : L[[α]].Theory) :
-    { p : T.CompleteType α | S ⊆ ↑p } = univ ↔
-      ∀ φ, φ ∈ S → (L.lhomWithConstants α).onTheory T ⊨ φ :=
+    {p : T.CompleteType α | S ⊆ ↑p} = univ ↔ ∀ φ, φ ∈ S → (L.lhomWithConstants α).onTheory T ⊨ φ :=
   by
-  have h : { p : T.complete_type α | S ⊆ ↑p } = ⋂₀ ((fun φ => { p | φ ∈ p }) '' S) :=
+  have h : {p : T.complete_type α | S ⊆ ↑p} = ⋂₀ ((fun φ => {p | φ ∈ p}) '' S) :=
     by
     ext
     simp [subset_def]
@@ -180,7 +178,7 @@ instance : Nonempty (CompleteType ∅ α) :=
   nonempty_iff.2 (isSatisfiable_empty L)
 
 theorem iInter_setOf_subset {ι : Type _} (S : ι → L[[α]].Theory) :
-    (⋂ i : ι, { p : T.CompleteType α | S i ⊆ p }) = { p | (⋃ i : ι, S i) ⊆ p } :=
+    (⋂ i : ι, {p : T.CompleteType α | S i ⊆ p}) = {p | (⋃ i : ι, S i) ⊆ p} :=
   by
   ext
   simp only [mem_Inter, mem_set_of_eq, Union_subset_iff]

@@ -342,7 +342,7 @@ def Liftr {α : Type u} (r : α → α → Prop) (x y : F α) : Prop :=
 /-- If we consider `x : F α` to, in some sense, contain values of type `α`, then
 `supp x` is the set of values of type `α` that `x` contains. -/
 def supp {α : Type u} (x : F α) : Set α :=
-  { y : α | ∀ ⦃p⦄, Liftp p x → p y }
+  {y : α | ∀ ⦃p⦄, Liftp p x → p y}
 #align functor.supp Functor.supp
 -/
 

@@ -89,7 +89,7 @@ theorem genericPoint_eq_of_isOpenImmersion {X Y : Scheme} (f : X ⟶ Y) [H : IsO
   by
   apply ((genericPoint_spec _).Eq _).symm
   show T0Space Y.carrier; · infer_instance
-  convert(genericPoint_spec X.carrier).image (show Continuous f.1.base by continuity)
+  convert (genericPoint_spec X.carrier).image (show Continuous f.1.base by continuity)
   symm
   rw [eq_top_iff, Set.top_eq_univ, Set.top_eq_univ]
   convert subset_closure_inter_of_isPreirreducible_of_isOpen _ H.base_open.open_range _
@@ -156,7 +156,8 @@ theorem IsAffineOpen.primeIdealOf_genericPoint {X : Scheme} [IsIntegral X] {U : 
     exact set.image_univ.trans Subtype.range_coe
   delta is_affine_open.prime_ideal_of
   rw [← Scheme.comp_val_base_apply]
-  convert generic_point_eq_of_is_open_immersion
+  convert
+    generic_point_eq_of_is_open_immersion
       ((X.restrict U.open_embedding).isoSpec.Hom ≫
         Scheme.Spec.map (X.presheaf.map (eq_to_hom e).op).op)
   ext1

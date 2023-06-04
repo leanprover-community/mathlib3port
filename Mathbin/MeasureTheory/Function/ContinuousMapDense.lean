@@ -188,7 +188,8 @@ theorem Memℒp.exists_hasCompactSupport_snorm_sub_le [LocallyCompactSpace α] [
     ⟨f, f_cont, I2, f_bound, f_support, f_mem⟩
   have I3 : snorm (f - t.indicator fun y => c) p μ ≤ ε :=
     by
-    convert(hδ _ _
+    convert
+      (hδ _ _
           (f_mem.ae_strongly_measurable.sub
             (ae_strongly_measurable_const.indicator s_compact.measurable_set))
           ((ae_strongly_measurable_const.indicator s_compact.measurable_set).sub
@@ -289,7 +290,8 @@ theorem Memℒp.exists_bounded_continuous_snorm_sub_le [μ.WeaklyRegular] (hp : 
     ⟨f, f_cont, I2, f_bound, -, f_mem⟩
   have I3 : snorm (f - t.indicator fun y => c) p μ ≤ ε :=
     by
-    convert(hδ _ _
+    convert
+      (hδ _ _
           (f_mem.ae_strongly_measurable.sub
             (ae_strongly_measurable_const.indicator s_closed.measurable_set))
           ((ae_strongly_measurable_const.indicator s_closed.measurable_set).sub
@@ -361,7 +363,7 @@ theorem boundedContinuousFunction_dense [SecondCountableTopologyEither α E] [_i
   rw [Lp.norm_def]
   convert ENNReal.toReal_le_of_le_ofReal hε.le hg using 2
   apply snorm_congr_ae
-  filter_upwards [coe_fn_sub f (g_mem.to_Lp g), g_mem.coe_fn_to_Lp]with x hx h'x
+  filter_upwards [coe_fn_sub f (g_mem.to_Lp g), g_mem.coe_fn_to_Lp] with x hx h'x
   simp only [hx, Pi.sub_apply, sub_right_inj, h'x]
 #align measure_theory.Lp.bounded_continuous_function_dense MeasureTheory.Lp.boundedContinuousFunction_dense
 
@@ -379,7 +381,7 @@ variable (E) (μ)
 
 namespace BoundedContinuousFunction
 
-theorem toLp_denseRange [μ.WeaklyRegular] [FiniteMeasure μ] :
+theorem toLp_denseRange [μ.WeaklyRegular] [IsFiniteMeasure μ] :
     DenseRange ⇑(toLp p μ 𝕜 : (α →ᵇ E) →L[𝕜] Lp E p μ) :=
   by
   haveI : NormedSpace ℝ E := RestrictScalars.normedSpace ℝ 𝕜 E
@@ -393,7 +395,7 @@ end BoundedContinuousFunction
 
 namespace ContinuousMap
 
-theorem toLp_denseRange [CompactSpace α] [μ.WeaklyRegular] [FiniteMeasure μ] :
+theorem toLp_denseRange [CompactSpace α] [μ.WeaklyRegular] [IsFiniteMeasure μ] :
     DenseRange ⇑(toLp p μ 𝕜 : C(α, E) →L[𝕜] Lp E p μ) :=
   by
   haveI : NormedSpace ℝ E := RestrictScalars.normedSpace ℝ 𝕜 E

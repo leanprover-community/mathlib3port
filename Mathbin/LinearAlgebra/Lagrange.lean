@@ -95,11 +95,11 @@ variable {ι : Type _} {v : ι → R} (s : Finset ι)
 theorem eq_zero_of_degree_lt_of_eval_index_eq_zero (hvs : Set.InjOn v s)
     (degree_f_lt : f.degree < s.card) (eval_f : ∀ i ∈ s, f.eval (v i) = 0) : f = 0 := by
   classical
-    rw [← card_image_of_inj_on hvs] at degree_f_lt 
-    refine' eq_zero_of_degree_lt_of_eval_finset_eq_zero _ degree_f_lt _
-    intro x hx
-    rcases mem_image.mp hx with ⟨_, hj, rfl⟩
-    exact eval_f _ hj
+  rw [← card_image_of_inj_on hvs] at degree_f_lt 
+  refine' eq_zero_of_degree_lt_of_eval_finset_eq_zero _ degree_f_lt _
+  intro x hx
+  rcases mem_image.mp hx with ⟨_, hj, rfl⟩
+  exact eval_f _ hj
 #align polynomial.eq_zero_of_degree_lt_of_eval_index_eq_zero Polynomial.eq_zero_of_degree_lt_of_eval_index_eq_zero
 
 #print Polynomial.eq_of_degree_sub_lt_of_eval_index_eq /-
@@ -333,9 +333,9 @@ theorem sum_basis (hvs : Set.InjOn v s) (hs : s.Nonempty) : (∑ j in s, Lagrang
 theorem basisDivisor_add_symm {x y : F} (hxy : x ≠ y) : basisDivisor x y + basisDivisor y x = 1 :=
   by
   classical rw [←
-      sum_basis (Set.injOn_of_injective Function.injective_id _) ⟨x, mem_insert_self _ {y}⟩,
-      sum_insert (not_mem_singleton.mpr hxy), sum_singleton, basis_pair_left hxy,
-      basis_pair_right hxy, id, id]
+    sum_basis (Set.injOn_of_injective Function.injective_id _) ⟨x, mem_insert_self _ {y}⟩,
+    sum_insert (not_mem_singleton.mpr hxy), sum_singleton, basis_pair_left hxy,
+    basis_pair_right hxy, id, id]
 #align lagrange.basis_divisor_add_symm Lagrange.basisDivisor_add_symm
 -/
 
@@ -488,7 +488,8 @@ theorem interpolate_eq_sum_interpolate_insert_sdiff (hvt : Set.InjOn v t) (hs : 
         Nat.succ_add_sub_one, zero_add]
     rw [degree_basis (Set.InjOn.mono hst hvt) hi, H, WithBot.coe_add,
       WithBot.add_lt_add_iff_right (@WithBot.coe_ne_bot _ (s.card - 1))]
-    convert degree_interpolate_lt _
+    convert
+      degree_interpolate_lt _
         (hvt.mono (coe_subset.mpr (insert_subset.mpr ⟨hst hi, sdiff_subset _ _⟩)))
     rw [card_insert_of_not_mem (not_mem_sdiff_of_mem_right hi), card_sdiff hst, add_comm]
   · simp_rw [eval_finset_sum, eval_mul]

@@ -34,7 +34,7 @@ theorem ConvexOn.slope_mono_adjacent (hf : ConvexOn 𝕜 s f) {x y z : 𝕜} (hx
   by
   have hxz := hxy.trans hyz
   rw [← sub_pos] at hxy hxz hyz 
-  suffices f y / (y - x) + f y / (z - y) ≤ f x / (y - x) + f z / (z - y) by ring_nf  at this ⊢;
+  suffices f y / (y - x) + f y / (z - y) ≤ f x / (y - x) + f z / (z - y) by ring_nf at this ⊢;
     linarith
   set a := (z - y) / (z - x)
   set b := (y - x) / (z - x)
@@ -45,7 +45,7 @@ theorem ConvexOn.slope_mono_adjacent (hf : ConvexOn 𝕜 s f) {x y z : 𝕜} (hx
       (show a + b = 1 by field_simp; rw [div_eq_iff] <;> [ring; linarith])
   rw [hy] at key 
   replace key := mul_le_mul_of_nonneg_left key hxz.le
-  field_simp [hxy.ne', hyz.ne', hxz.ne', mul_comm (z - x) _]  at key ⊢
+  field_simp [hxy.ne', hyz.ne', hxz.ne', mul_comm (z - x) _] at key ⊢
   rw [div_le_div_right]
   · linarith
   · nlinarith
@@ -71,7 +71,7 @@ theorem StrictConvexOn.slope_strict_mono_adjacent (hf : StrictConvexOn 𝕜 s f)
   have hxz := hxy.trans hyz
   have hxz' := hxz.ne
   rw [← sub_pos] at hxy hxz hyz 
-  suffices f y / (y - x) + f y / (z - y) < f x / (y - x) + f z / (z - y) by ring_nf  at this ⊢;
+  suffices f y / (y - x) + f y / (z - y) < f x / (y - x) + f z / (z - y) by ring_nf at this ⊢;
     linarith
   set a := (z - y) / (z - x)
   set b := (y - x) / (z - x)
@@ -81,7 +81,7 @@ theorem StrictConvexOn.slope_strict_mono_adjacent (hf : StrictConvexOn 𝕜 s f)
       (show a + b = 1 by field_simp; rw [div_eq_iff] <;> [ring; linarith])
   rw [hy] at key 
   replace key := mul_lt_mul_of_pos_left key hxz
-  field_simp [hxy.ne', hyz.ne', hxz.ne', mul_comm (z - x) _]  at key ⊢
+  field_simp [hxy.ne', hyz.ne', hxz.ne', mul_comm (z - x) _] at key ⊢
   rw [div_lt_div_right]
   · linarith
   · nlinarith

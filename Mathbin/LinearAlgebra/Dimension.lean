@@ -447,7 +447,7 @@ theorem union_support_maximal_linearIndependent_eq_range_basis {ι : Type w} (b 
     have l₀ : l none = 0 := by
       rw [← eq_neg_iff_add_eq_zero] at z 
       replace z := neg_eq_iff_eq_neg.mpr z
-      apply_fun fun x => b.repr x b'  at z 
+      apply_fun fun x => b.repr x b' at z 
       simp only [repr_self, LinearEquiv.map_smul, mul_one, Finsupp.single_eq_same, Pi.neg_apply,
         Finsupp.smul_single', LinearEquiv.map_neg, Finsupp.coe_neg] at z 
       erw [Finsupp.congr_fun (Finsupp.apply_total R (b.repr : M →ₗ[R] ι →₀ R) v l.some) b'] at z 
@@ -733,7 +733,7 @@ theorem linearIndependent_le_span_aux' {ι : Type _} [Fintype ι] (v : ι → M)
   · apply Finsupp.total
     exact fun i => Span.repr R w ⟨v i, s (mem_range_self i)⟩
   · intro f g h
-    apply_fun Finsupp.total w M R coe  at h 
+    apply_fun Finsupp.total w M R coe at h 
     simp only [Finsupp.total_total, Submodule.coe_mk, Span.finsupp_total_repr] at h 
     rw [← sub_eq_zero, ← LinearMap.map_sub] at h 
     exact sub_eq_zero.mp (linear_independent_iff.mp i _ h)
@@ -1213,8 +1213,8 @@ theorem rank_span_of_finset (s : Finset V) : Module.rank K (span K (↑s : Set V
 theorem rank_quotient_add_rank (p : Submodule K V) :
     Module.rank K (V ⧸ p) + Module.rank K p = Module.rank K V := by
   classical exact
-      let ⟨f⟩ := quotient_prod_linearEquiv p
-      rank_prod'.symm.trans f.rank_eq
+    let ⟨f⟩ := quotient_prod_linearEquiv p
+    rank_prod'.symm.trans f.rank_eq
 #align rank_quotient_add_rank rank_quotient_add_rank
 
 /-- rank-nullity theorem -/
@@ -1413,7 +1413,7 @@ theorem rank_submodule_le_one_iff' (s : Submodule K V) : Module.rank K s ≤ 1 �
         rintro rfl
         simpa using hw0
       rwa [span_singleton_smul_eq (IsUnit.mk0 _ h0) _]
-    · push_neg  at hw 
+    · push_neg at hw 
       rw [← Submodule.eq_bot_iff] at hw 
       simp [hw]
 #align rank_submodule_le_one_iff' rank_submodule_le_one_iff'

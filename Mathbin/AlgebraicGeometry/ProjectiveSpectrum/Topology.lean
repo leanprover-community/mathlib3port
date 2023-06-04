@@ -76,7 +76,7 @@ At a point `x` (a homogeneous prime ideal) the function (i.e., element) `f` take
 quotient ring `A` modulo the prime ideal `x`. In this manner, `zero_locus s` is exactly the subset
 of `projective_spectrum 𝒜` where all "functions" in `s` vanish simultaneously. -/
 def zeroLocus (s : Set A) : Set (ProjectiveSpectrum 𝒜) :=
-  { x | s ⊆ x.asHomogeneousIdeal }
+  {x | s ⊆ x.asHomogeneousIdeal}
 #align projective_spectrum.zero_locus ProjectiveSpectrum.zeroLocus
 
 @[simp]
@@ -105,7 +105,7 @@ def vanishingIdeal (t : Set (ProjectiveSpectrum 𝒜)) : HomogeneousIdeal 𝒜 :
 
 theorem coe_vanishingIdeal (t : Set (ProjectiveSpectrum 𝒜)) :
     (vanishingIdeal t : Set A) =
-      { f | ∀ x : ProjectiveSpectrum 𝒜, x ∈ t → f ∈ x.asHomogeneousIdeal } :=
+      {f | ∀ x : ProjectiveSpectrum 𝒜, x ∈ t → f ∈ x.asHomogeneousIdeal} :=
   by
   ext f
   rw [vanishing_ideal, SetLike.mem_coe, ← HomogeneousIdeal.mem_iff, HomogeneousIdeal.toIdeal_iInf,
@@ -252,7 +252,7 @@ theorem zeroLocus_union (s s' : Set A) : zeroLocus 𝒜 (s ∪ s') = zeroLocus _
 
 theorem vanishingIdeal_union (t t' : Set (ProjectiveSpectrum 𝒜)) :
     vanishingIdeal (t ∪ t') = vanishingIdeal t ⊓ vanishingIdeal t' := by
-  ext1 <;> convert(gc_ideal 𝒜).u_inf
+  ext1 <;> convert (gc_ideal 𝒜).u_inf
 #align projective_spectrum.vanishing_ideal_union ProjectiveSpectrum.vanishingIdeal_union
 
 theorem zeroLocus_iSup_ideal {γ : Sort _} (I : γ → Ideal A) :
@@ -277,7 +277,7 @@ theorem zeroLocus_bUnion (s : Set (Set A)) :
 theorem vanishingIdeal_iUnion {γ : Sort _} (t : γ → Set (ProjectiveSpectrum 𝒜)) :
     vanishingIdeal (⋃ i, t i) = ⨅ i, vanishingIdeal (t i) :=
   HomogeneousIdeal.toIdeal_injective <| by
-    convert(gc_ideal 𝒜).u_iInf <;> exact HomogeneousIdeal.toIdeal_iInf _
+    convert (gc_ideal 𝒜).u_iInf <;> exact HomogeneousIdeal.toIdeal_iInf _
 #align projective_spectrum.vanishing_ideal_Union ProjectiveSpectrum.vanishingIdeal_iUnion
 
 theorem zeroLocus_inf (I J : Ideal A) :
@@ -385,7 +385,7 @@ section BasicOpen
 /-- `basic_open r` is the open subset containing all prime ideals not containing `r`. -/
 def basicOpen (r : A) : TopologicalSpace.Opens (ProjectiveSpectrum 𝒜)
     where
-  carrier := { x | r ∉ x.asHomogeneousIdeal }
+  carrier := {x | r ∉ x.asHomogeneousIdeal}
   is_open' := ⟨{r}, Set.ext fun x => Set.singleton_subset_iff.trans <| Classical.not_not.symm⟩
 #align projective_spectrum.basic_open ProjectiveSpectrum.basicOpen
 
@@ -447,8 +447,8 @@ theorem basicOpen_eq_union_of_projection (f : A) :
             by
             contrapose! hz with H
             classical
-              rw [← DirectSum.sum_support_decompose 𝒜 f]
-              apply Ideal.sum_mem _ fun i hi => H i with
+            rw [← DirectSum.sum_support_decompose 𝒜 f]
+            apply Ideal.sum_mem _ fun i hi => H i with
           ⟨i, hi⟩
         exact ⟨basic_open 𝒜 (GradedAlgebra.proj 𝒜 i f), ⟨i, rfl⟩, by rwa [mem_basic_open]⟩
       · obtain ⟨_, ⟨i, rfl⟩, hz⟩ := hz

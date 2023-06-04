@@ -65,7 +65,7 @@ along one of the variables (using either the Lebesgue or Bochner integral) is me
 
 
 theorem measurableSet_integrable [SigmaFinite ν] ⦃f : α → β → E⦄
-    (hf : StronglyMeasurable (uncurry f)) : MeasurableSet { x | Integrable (f x) ν } :=
+    (hf : StronglyMeasurable (uncurry f)) : MeasurableSet {x | Integrable (f x) ν} :=
   by
   simp_rw [integrable, hf.of_uncurry_left.ae_strongly_measurable, true_and_iff]
   exact measurableSet_lt (Measurable.lintegral_prod_right hf.ennnorm) measurable_const
@@ -87,7 +87,7 @@ theorem MeasureTheory.StronglyMeasurable.integral_prod_right [SigmaFinite ν] �
   let s : ℕ → simple_func (α × β) E :=
     simple_func.approx_on _ hf.measurable (range (uncurry f) ∪ {0}) 0 (by simp)
   let s' : ℕ → α → simple_func β E := fun n x => (s n).comp (Prod.mk x) measurable_prod_mk_left
-  let f' : ℕ → α → E := fun n => { x | integrable (f x) ν }.indicator fun x => (s' n x).integral ν
+  let f' : ℕ → α → E := fun n => {x | integrable (f x) ν}.indicator fun x => (s' n x).integral ν
   have hf' : ∀ n, strongly_measurable (f' n) :=
     by
     intro n; refine' strongly_measurable.indicator _ (measurableSet_integrable hf)
@@ -197,14 +197,14 @@ theorem MeasureTheory.AEStronglyMeasurable.integral_prod_right' [SigmaFinite ν]
     [CompleteSpace E] ⦃f : α × β → E⦄ (hf : AEStronglyMeasurable f (μ.Prod ν)) :
     AEStronglyMeasurable (fun x => ∫ y, f (x, y) ∂ν) μ :=
   ⟨fun x => ∫ y, hf.mk f (x, y) ∂ν, hf.stronglyMeasurable_mk.integral_prod_right', by
-    filter_upwards [ae_ae_of_ae_prod hf.ae_eq_mk]with _ hx using integral_congr_ae hx⟩
+    filter_upwards [ae_ae_of_ae_prod hf.ae_eq_mk] with _ hx using integral_congr_ae hx⟩
 #align measure_theory.ae_strongly_measurable.integral_prod_right' MeasureTheory.AEStronglyMeasurable.integral_prod_right'
 
 theorem MeasureTheory.AEStronglyMeasurable.prod_mk_left {γ : Type _} [SigmaFinite ν]
     [TopologicalSpace γ] {f : α × β → γ} (hf : AEStronglyMeasurable f (μ.Prod ν)) :
     ∀ᵐ x ∂μ, AEStronglyMeasurable (fun y => f (x, y)) ν :=
   by
-  filter_upwards [ae_ae_of_ae_prod hf.ae_eq_mk]with x hx
+  filter_upwards [ae_ae_of_ae_prod hf.ae_eq_mk] with x hx
   exact
     ⟨fun y => hf.mk f (x, y), hf.strongly_measurable_mk.comp_measurable measurable_prod_mk_left, hx⟩
 #align measure_theory.ae_strongly_measurable.prod_mk_left MeasureTheory.AEStronglyMeasurable.prod_mk_left
@@ -264,8 +264,8 @@ theorem hasFiniteIntegral_prod_iff' ⦃f : α × β → E⦄ (h1f : AEStronglyMe
     intro x hx
     exact has_finite_integral_congr hx
   · apply has_finite_integral_congr
-    filter_upwards [ae_ae_of_ae_prod
-        h1f.ae_eq_mk.symm]with _ hx using integral_congr_ae (eventually_eq.fun_comp hx _)
+    filter_upwards [ae_ae_of_ae_prod h1f.ae_eq_mk.symm] with _ hx using
+      integral_congr_ae (eventually_eq.fun_comp hx _)
   · infer_instance
 #align measure_theory.has_finite_integral_prod_iff' MeasureTheory.hasFiniteIntegral_prod_iff'
 
@@ -360,7 +360,7 @@ theorem integral_fn_integral_add ⦃f g : α × β → E⦄ (F : E → E') (hf :
     (∫ x, F (∫ y, f (x, y) + g (x, y) ∂ν) ∂μ) = ∫ x, F ((∫ y, f (x, y) ∂ν) + ∫ y, g (x, y) ∂ν) ∂μ :=
   by
   refine' integral_congr_ae _
-  filter_upwards [hf.prod_right_ae, hg.prod_right_ae]with _ h2f h2g
+  filter_upwards [hf.prod_right_ae, hg.prod_right_ae] with _ h2f h2g
   simp [integral_add h2f h2g]
 #align measure_theory.integral_fn_integral_add MeasureTheory.integral_fn_integral_add
 
@@ -371,7 +371,7 @@ theorem integral_fn_integral_sub ⦃f g : α × β → E⦄ (F : E → E') (hf :
     (∫ x, F (∫ y, f (x, y) - g (x, y) ∂ν) ∂μ) = ∫ x, F ((∫ y, f (x, y) ∂ν) - ∫ y, g (x, y) ∂ν) ∂μ :=
   by
   refine' integral_congr_ae _
-  filter_upwards [hf.prod_right_ae, hg.prod_right_ae]with _ h2f h2g
+  filter_upwards [hf.prod_right_ae, hg.prod_right_ae] with _ h2f h2g
   simp [integral_sub h2f h2g]
 #align measure_theory.integral_fn_integral_sub MeasureTheory.integral_fn_integral_sub
 
@@ -383,7 +383,7 @@ theorem lintegral_fn_integral_sub ⦃f g : α × β → E⦄ (F : E → ℝ≥0�
       ∫⁻ x, F ((∫ y, f (x, y) ∂ν) - ∫ y, g (x, y) ∂ν) ∂μ :=
   by
   refine' lintegral_congr_ae _
-  filter_upwards [hf.prod_right_ae, hg.prod_right_ae]with _ h2f h2g
+  filter_upwards [hf.prod_right_ae, hg.prod_right_ae] with _ h2f h2g
   simp [integral_sub h2f h2g]
 #align measure_theory.lintegral_fn_integral_sub MeasureTheory.lintegral_fn_integral_sub
 

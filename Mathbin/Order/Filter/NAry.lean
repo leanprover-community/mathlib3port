@@ -46,7 +46,7 @@ variable {α α' β β' γ γ' δ δ' ε ε' : Type _} {m : α → β → γ} {f
 Mathematically this should be thought of as the image of the corresponding function `α × β → γ`. -/
 def map₂ (m : α → β → γ) (f : Filter α) (g : Filter β) : Filter γ
     where
-  sets := { s | ∃ u v, u ∈ f ∧ v ∈ g ∧ image2 m u v ⊆ s }
+  sets := {s | ∃ u v, u ∈ f ∧ v ∈ g ∧ image2 m u v ⊆ s}
   univ_sets := ⟨univ, univ, univ_sets _, univ_sets _, subset_univ _⟩
   sets_of_superset s t hs hst :=
     Exists₂.imp (fun u v => And.imp_right <| And.imp_right fun h => Subset.trans h hst) hs
@@ -230,7 +230,7 @@ theorem map₂_right (h : f.ne_bot) : map₂ (fun x y => y) f g = g := by rw [ma
 of the corresponding function `α × β × γ → δ`. -/
 def map₃ (m : α → β → γ → δ) (f : Filter α) (g : Filter β) (h : Filter γ) : Filter δ
     where
-  sets := { s | ∃ u v w, u ∈ f ∧ v ∈ g ∧ w ∈ h ∧ image3 m u v w ⊆ s }
+  sets := {s | ∃ u v w, u ∈ f ∧ v ∈ g ∧ w ∈ h ∧ image3 m u v w ⊆ s}
   univ_sets := ⟨univ, univ, univ, univ_sets _, univ_sets _, univ_sets _, subset_univ _⟩
   sets_of_superset s t hs hst :=
     Exists₃.imp

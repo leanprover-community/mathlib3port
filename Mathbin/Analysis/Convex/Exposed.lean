@@ -65,7 +65,7 @@ variable (𝕜 : Type _) {E : Type _} [TopologicalSpace 𝕜] [Semiring 𝕜] [P
 /-- A set `B` is exposed with respect to `A` iff it maximizes some functional over `A` (and contains
 all points maximizing it). Written `is_exposed 𝕜 A B`. -/
 def IsExposed (A B : Set E) : Prop :=
-  B.Nonempty → ∃ l : E →L[𝕜] 𝕜, B = { x ∈ A | ∀ y ∈ A, l y ≤ l x }
+  B.Nonempty → ∃ l : E →L[𝕜] 𝕜, B = {x ∈ A | ∀ y ∈ A, l y ≤ l x}
 #align is_exposed IsExposed
 -/
 
@@ -80,7 +80,7 @@ variable {𝕜 : Type _} {E : Type _} [TopologicalSpace 𝕜] [OrderedRing 𝕜]
 /-- A useful way to build exposed sets from intersecting `A` with halfspaces (modelled by an
 inequality with a functional). -/
 def ContinuousLinearMap.toExposed (l : E →L[𝕜] 𝕜) (A : Set E) : Set E :=
-  { x ∈ A | ∀ y ∈ A, l y ≤ l x }
+  {x ∈ A | ∀ y ∈ A, l y ≤ l x}
 #align continuous_linear_map.to_exposed ContinuousLinearMap.toExposed
 -/
 
@@ -128,7 +128,7 @@ protected theorem mono (hC : IsExposed 𝕜 A C) (hBA : B ⊆ A) (hCB : C ⊆ B)
 halfspace. The converse is *not* true. It would require that the corresponding open halfspace
 doesn't intersect `A`. -/
 theorem eq_inter_halfspace' {A B : Set E} (hAB : IsExposed 𝕜 A B) (hB : B.Nonempty) :
-    ∃ l : E →L[𝕜] 𝕜, ∃ a, B = { x ∈ A | a ≤ l x } :=
+    ∃ l : E →L[𝕜] 𝕜, ∃ a, B = {x ∈ A | a ≤ l x} :=
   by
   obtain ⟨l, rfl⟩ := hAB hB
   obtain ⟨w, hw⟩ := hB
@@ -142,7 +142,7 @@ theorem eq_inter_halfspace' {A B : Set E} (hAB : IsExposed 𝕜 A B) (hB : B.Non
 some closed halfspace. The converse is *not* true. It would require that the corresponding open
 halfspace doesn't intersect `A`. -/
 theorem eq_inter_halfspace [Nontrivial 𝕜] {A B : Set E} (hAB : IsExposed 𝕜 A B) :
-    ∃ l : E →L[𝕜] 𝕜, ∃ a, B = { x ∈ A | a ≤ l x } :=
+    ∃ l : E →L[𝕜] 𝕜, ∃ a, B = {x ∈ A | a ≤ l x} :=
   by
   obtain rfl | hB := B.eq_empty_or_nonempty
   · refine' ⟨0, 1, _⟩
@@ -229,7 +229,7 @@ variable (𝕜)
 /-- A point is exposed with respect to `A` iff there exists an hyperplane whose intersection with
 `A` is exactly that point. -/
 def Set.exposedPoints (A : Set E) : Set E :=
-  { x ∈ A | ∃ l : E →L[𝕜] 𝕜, ∀ y ∈ A, l y ≤ l x ∧ (l x ≤ l y → y = x) }
+  {x ∈ A | ∃ l : E →L[𝕜] 𝕜, ∀ y ∈ A, l y ≤ l x ∧ (l x ≤ l y → y = x)}
 #align set.exposed_points Set.exposedPoints
 -/
 

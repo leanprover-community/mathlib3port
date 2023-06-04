@@ -228,21 +228,21 @@ end
 theorem exists_finset_rename (p : MvPolynomial σ R) :
     ∃ (s : Finset σ) (q : MvPolynomial { x // x ∈ s } R), p = rename coe q := by
   classical
-    apply induction_on p
-    · intro r; exact ⟨∅, C r, by rw [rename_C]⟩
-    · rintro p q ⟨s, p, rfl⟩ ⟨t, q, rfl⟩
-      refine' ⟨s ∪ t, ⟨_, _⟩⟩
-      ·
-        refine' rename (Subtype.map id _) p + rename (Subtype.map id _) q <;>
-          simp (config := { contextual := true }) only [id.def, true_or_iff, or_true_iff,
-            Finset.mem_union, forall_true_iff]
-      · simp only [rename_rename, AlgHom.map_add]; rfl
-    · rintro p n ⟨s, p, rfl⟩
-      refine' ⟨insert n s, ⟨_, _⟩⟩
-      · refine' rename (Subtype.map id _) p * X ⟨n, s.mem_insert_self n⟩
-        simp (config := { contextual := true }) only [id.def, or_true_iff, Finset.mem_insert,
-          forall_true_iff]
-      · simp only [rename_rename, rename_X, Subtype.coe_mk, AlgHom.map_mul]; rfl
+  apply induction_on p
+  · intro r; exact ⟨∅, C r, by rw [rename_C]⟩
+  · rintro p q ⟨s, p, rfl⟩ ⟨t, q, rfl⟩
+    refine' ⟨s ∪ t, ⟨_, _⟩⟩
+    ·
+      refine' rename (Subtype.map id _) p + rename (Subtype.map id _) q <;>
+        simp (config := { contextual := true }) only [id.def, true_or_iff, or_true_iff,
+          Finset.mem_union, forall_true_iff]
+    · simp only [rename_rename, AlgHom.map_add]; rfl
+  · rintro p n ⟨s, p, rfl⟩
+    refine' ⟨insert n s, ⟨_, _⟩⟩
+    · refine' rename (Subtype.map id _) p * X ⟨n, s.mem_insert_self n⟩
+      simp (config := { contextual := true }) only [id.def, or_true_iff, Finset.mem_insert,
+        forall_true_iff]
+    · simp only [rename_rename, rename_X, Subtype.coe_mk, AlgHom.map_mul]; rfl
 #align mv_polynomial.exists_finset_rename MvPolynomial.exists_finset_rename
 
 /-- `exists_finset_rename` for two polyonomials at once: for any two polynomials `p₁`, `p₂` in a
@@ -255,10 +255,10 @@ theorem exists_finset_rename₂ (p₁ p₂ : MvPolynomial σ R) :
   obtain ⟨s₁, q₁, rfl⟩ := exists_finset_rename p₁
   obtain ⟨s₂, q₂, rfl⟩ := exists_finset_rename p₂
   classical
-    use s₁ ∪ s₂
-    use rename (Set.inclusion <| s₁.subset_union_left s₂) q₁
-    use rename (Set.inclusion <| s₁.subset_union_right s₂) q₂
-    constructor <;> simpa
+  use s₁ ∪ s₂
+  use rename (Set.inclusion <| s₁.subset_union_left s₂) q₁
+  use rename (Set.inclusion <| s₁.subset_union_right s₂) q₂
+  constructor <;> simpa
 #align mv_polynomial.exists_finset_rename₂ MvPolynomial.exists_finset_rename₂
 
 /-- Every polynomial is a polynomial in finitely many variables. -/
@@ -288,24 +288,24 @@ section Coeff
 theorem coeff_rename_mapDomain (f : σ → τ) (hf : Injective f) (φ : MvPolynomial σ R) (d : σ →₀ ℕ) :
     (rename f φ).coeff (d.mapDomain f) = φ.coeff d := by
   classical
-    apply induction_on' φ
-    · intro u r
-      rw [rename_monomial, coeff_monomial, coeff_monomial]
-      simp only [(Finsupp.mapDomain_injective hf).eq_iff]
-    · intros; simp only [*, AlgHom.map_add, coeff_add]
+  apply induction_on' φ
+  · intro u r
+    rw [rename_monomial, coeff_monomial, coeff_monomial]
+    simp only [(Finsupp.mapDomain_injective hf).eq_iff]
+  · intros; simp only [*, AlgHom.map_add, coeff_add]
 #align mv_polynomial.coeff_rename_map_domain MvPolynomial.coeff_rename_mapDomain
 
 theorem coeff_rename_eq_zero (f : σ → τ) (φ : MvPolynomial σ R) (d : τ →₀ ℕ)
     (h : ∀ u : σ →₀ ℕ, u.mapDomain f = d → φ.coeff u = 0) : (rename f φ).coeff d = 0 := by
   classical
-    rw [rename_eq, ← not_mem_support_iff]
-    intro H
-    replace H := map_domain_support H
-    rw [Finset.mem_image] at H 
-    obtain ⟨u, hu, rfl⟩ := H
-    specialize h u rfl
-    simp at h hu 
-    contradiction
+  rw [rename_eq, ← not_mem_support_iff]
+  intro H
+  replace H := map_domain_support H
+  rw [Finset.mem_image] at H 
+  obtain ⟨u, hu, rfl⟩ := H
+  specialize h u rfl
+  simp at h hu 
+  contradiction
 #align mv_polynomial.coeff_rename_eq_zero MvPolynomial.coeff_rename_eq_zero
 
 theorem coeff_rename_ne_zero (f : σ → τ) (φ : MvPolynomial σ R) (d : τ →₀ ℕ)

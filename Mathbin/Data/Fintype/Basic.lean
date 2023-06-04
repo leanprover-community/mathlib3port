@@ -54,7 +54,7 @@ universe u v
 variable {α β γ : Type _}
 
 #print Fintype /-
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`elems] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`elems] [] -/
 /-- `fintype α` means that `α` is finite, i.e. there are only
   finitely many distinct elements of type `α`. The evidence of this
   is a finset `elems` (a list up to permutation without duplicates),
@@ -399,7 +399,7 @@ theorem univ_filter_mem_range (f : α → β) [Fintype β] [DecidablePred fun y 
 -/
 
 #print Finset.coe_filter_univ /-
-theorem coe_filter_univ (p : α → Prop) [DecidablePred p] : (univ.filterₓ p : Set α) = { x | p x } :=
+theorem coe_filter_univ (p : α → Prop) [DecidablePred p] : (univ.filterₓ p : Set α) = {x | p x} :=
   by rw [coe_filter, coe_univ, Set.sep_univ]
 #align finset.coe_filter_univ Finset.coe_filter_univ
 -/
@@ -928,8 +928,8 @@ theorem toFinset_eq_univ [Fintype α] [Fintype s] : s.toFinset = Finset.univ ↔
 
 #print Set.toFinset_setOf /-
 @[simp]
-theorem toFinset_setOf [Fintype α] (p : α → Prop) [DecidablePred p] [Fintype { x | p x }] :
-    { x | p x }.toFinset = Finset.univ.filterₓ p := by ext; simp
+theorem toFinset_setOf [Fintype α] (p : α → Prop) [DecidablePred p] [Fintype {x | p x}] :
+    {x | p x}.toFinset = Finset.univ.filterₓ p := by ext; simp
 #align set.to_finset_set_of Set.toFinset_setOf
 -/
 
@@ -1476,28 +1476,28 @@ theorem exists_seq_of_forall_finset_exists {α : Type _} (P : α → Prop) (r : 
     (h : ∀ s : Finset α, (∀ x ∈ s, P x) → ∃ y, P y ∧ ∀ x ∈ s, r x y) :
     ∃ f : ℕ → α, (∀ n, P (f n)) ∧ ∀ m n, m < n → r (f m) (f n) := by
   classical
-    have : Nonempty α := by
-      rcases h ∅ (by simp) with ⟨y, hy⟩
-      exact ⟨y⟩
-    choose! F hF using h
-    have h' : ∀ s : Finset α, ∃ y, (∀ x ∈ s, P x) → P y ∧ ∀ x ∈ s, r x y := fun s => ⟨F s, hF s⟩
-    set f := seqOfForallFinsetExistsAux P r h' with hf
-    have A : ∀ n : ℕ, P (f n) := by
-      intro n
-      induction' n using Nat.strong_induction_on with n IH
-      have IH' : ∀ x : Fin n, P (f x) := fun n => IH n.1 n.2
-      rw [hf, seqOfForallFinsetExistsAux]
-      exact
-        (Classical.choose_spec
-            (h' (Finset.image (fun i : Fin n => f i) (Finset.univ : Finset (Fin n))))
-            (by simp [IH'])).1
-    refine' ⟨f, A, fun m n hmn => _⟩
-    nth_rw 2 [hf]
-    rw [seqOfForallFinsetExistsAux]
-    apply
+  have : Nonempty α := by
+    rcases h ∅ (by simp) with ⟨y, hy⟩
+    exact ⟨y⟩
+  choose! F hF using h
+  have h' : ∀ s : Finset α, ∃ y, (∀ x ∈ s, P x) → P y ∧ ∀ x ∈ s, r x y := fun s => ⟨F s, hF s⟩
+  set f := seqOfForallFinsetExistsAux P r h' with hf
+  have A : ∀ n : ℕ, P (f n) := by
+    intro n
+    induction' n using Nat.strong_induction_on with n IH
+    have IH' : ∀ x : Fin n, P (f x) := fun n => IH n.1 n.2
+    rw [hf, seqOfForallFinsetExistsAux]
+    exact
       (Classical.choose_spec
-          (h' (Finset.image (fun i : Fin n => f i) (Finset.univ : Finset (Fin n)))) (by simp [A])).2
-    exact Finset.mem_image.2 ⟨⟨m, hmn⟩, Finset.mem_univ _, rfl⟩
+          (h' (Finset.image (fun i : Fin n => f i) (Finset.univ : Finset (Fin n))))
+          (by simp [IH'])).1
+  refine' ⟨f, A, fun m n hmn => _⟩
+  nth_rw 2 [hf]
+  rw [seqOfForallFinsetExistsAux]
+  apply
+    (Classical.choose_spec (h' (Finset.image (fun i : Fin n => f i) (Finset.univ : Finset (Fin n))))
+        (by simp [A])).2
+  exact Finset.mem_image.2 ⟨⟨m, hmn⟩, Finset.mem_univ _, rfl⟩
 #align exists_seq_of_forall_finset_exists exists_seq_of_forall_finset_exists
 -/
 

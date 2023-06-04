@@ -169,7 +169,7 @@ theorem isAlgebraic_algHom_of_isAlgebraic {B} [Ring B] [Algebra R B] (f : A →�
 /-- Transfer `algebra.is_algebraic` across an `alg_equiv`. -/
 theorem AlgEquiv.isAlgebraic {B} [Ring B] [Algebra R B] (e : A ≃ₐ[R] B)
     (h : Algebra.IsAlgebraic R A) : Algebra.IsAlgebraic R B := fun b => by
-  convert← isAlgebraic_algHom_of_isAlgebraic e.to_alg_hom (h _) <;> apply e.apply_symm_apply
+  convert ← isAlgebraic_algHom_of_isAlgebraic e.to_alg_hom (h _) <;> apply e.apply_symm_apply
 #align alg_equiv.is_algebraic AlgEquiv.isAlgebraic
 
 theorem AlgEquiv.isAlgebraic_iff {B} [Ring B] [Algebra R B] (e : A ≃ₐ[R] B) :

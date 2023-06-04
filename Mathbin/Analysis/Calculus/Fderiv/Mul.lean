@@ -68,20 +68,20 @@ variable {H : Type _} [NormedAddCommGroup H] [NormedSpace 𝕜 H] {c : E → G �
 theorem HasStrictFDerivAt.clm_comp (hc : HasStrictFDerivAt c c' x) (hd : HasStrictFDerivAt d d' x) :
     HasStrictFDerivAt (fun y => (c y).comp (d y))
       ((compL 𝕜 F G H (c x)).comp d' + ((compL 𝕜 F G H).flip (d x)).comp c') x :=
-  (isBoundedBilinearMapComp.HasStrictFDerivAt (c x, d x)).comp x <| hc.Prod hd
+  (isBoundedBilinearMap_comp.HasStrictFDerivAt (c x, d x)).comp x <| hc.Prod hd
 #align has_strict_fderiv_at.clm_comp HasStrictFDerivAt.clm_comp
 
 theorem HasFDerivWithinAt.clm_comp (hc : HasFDerivWithinAt c c' s x)
     (hd : HasFDerivWithinAt d d' s x) :
     HasFDerivWithinAt (fun y => (c y).comp (d y))
       ((compL 𝕜 F G H (c x)).comp d' + ((compL 𝕜 F G H).flip (d x)).comp c') s x :=
-  (isBoundedBilinearMapComp.HasFDerivAt (c x, d x)).comp_hasFDerivWithinAt x <| hc.Prod hd
+  (isBoundedBilinearMap_comp.HasFDerivAt (c x, d x)).comp_hasFDerivWithinAt x <| hc.Prod hd
 #align has_fderiv_within_at.clm_comp HasFDerivWithinAt.clm_comp
 
 theorem HasFDerivAt.clm_comp (hc : HasFDerivAt c c' x) (hd : HasFDerivAt d d' x) :
     HasFDerivAt (fun y => (c y).comp (d y))
       ((compL 𝕜 F G H (c x)).comp d' + ((compL 𝕜 F G H).flip (d x)).comp c') x :=
-  (isBoundedBilinearMapComp.HasFDerivAt (c x, d x)).comp x <| hc.Prod hd
+  (isBoundedBilinearMap_comp.HasFDerivAt (c x, d x)).comp x <| hc.Prod hd
 #align has_fderiv_at.clm_comp HasFDerivAt.clm_comp
 
 theorem DifferentiableWithinAt.clm_comp (hc : DifferentiableWithinAt 𝕜 c s x)
@@ -186,17 +186,17 @@ variable {c : E → 𝕜'} {c' : E →L[𝕜] 𝕜'}
 
 theorem HasStrictFDerivAt.smul (hc : HasStrictFDerivAt c c' x) (hf : HasStrictFDerivAt f f' x) :
     HasStrictFDerivAt (fun y => c y • f y) (c x • f' + c'.smul_right (f x)) x :=
-  (isBoundedBilinearMapSmul.HasStrictFDerivAt (c x, f x)).comp x <| hc.Prod hf
+  (isBoundedBilinearMap_smul.HasStrictFDerivAt (c x, f x)).comp x <| hc.Prod hf
 #align has_strict_fderiv_at.smul HasStrictFDerivAt.smul
 
 theorem HasFDerivWithinAt.smul (hc : HasFDerivWithinAt c c' s x) (hf : HasFDerivWithinAt f f' s x) :
     HasFDerivWithinAt (fun y => c y • f y) (c x • f' + c'.smul_right (f x)) s x :=
-  (isBoundedBilinearMapSmul.HasFDerivAt (c x, f x)).comp_hasFDerivWithinAt x <| hc.Prod hf
+  (isBoundedBilinearMap_smul.HasFDerivAt (c x, f x)).comp_hasFDerivWithinAt x <| hc.Prod hf
 #align has_fderiv_within_at.smul HasFDerivWithinAt.smul
 
 theorem HasFDerivAt.smul (hc : HasFDerivAt c c' x) (hf : HasFDerivAt f f' x) :
     HasFDerivAt (fun y => c y • f y) (c x • f' + c'.smul_right (f x)) x :=
-  (isBoundedBilinearMapSmul.HasFDerivAt (c x, f x)).comp x <| hc.Prod hf
+  (isBoundedBilinearMap_smul.HasFDerivAt (c x, f x)).comp x <| hc.Prod hf
 #align has_fderiv_at.smul HasFDerivAt.smul
 
 theorem DifferentiableWithinAt.smul (hc : DifferentiableWithinAt 𝕜 c s x)
@@ -514,7 +514,7 @@ theorem hasFDerivAt_ring_inverse (x : Rˣ) :
     refine' (inverse_add_norm_diff_second_order x).trans_isLittleO (is_o_norm_norm.mp _)
     simp only [norm_pow, norm_norm]
     have h12 : 1 < 2 := by norm_num
-    convert(Asymptotics.isLittleO_pow_pow h12).comp_tendsto tendsto_norm_zero
+    convert (Asymptotics.isLittleO_pow_pow h12).comp_tendsto tendsto_norm_zero
     ext; simp
   have h_lim : tendsto (fun y : R => y - x) (𝓝 x) (𝓝 0) :=
     by

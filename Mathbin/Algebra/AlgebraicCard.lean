@@ -34,7 +34,7 @@ open scoped Cardinal Polynomial
 namespace Algebraic
 
 theorem infinite_of_charZero (R A : Type _) [CommRing R] [IsDomain R] [Ring A] [Algebra R A]
-    [CharZero A] : { x : A | IsAlgebraic R x }.Infinite :=
+    [CharZero A] : {x : A | IsAlgebraic R x}.Infinite :=
   infinite_of_injective_forall_mem Nat.cast_injective isAlgebraic_nat
 #align algebraic.infinite_of_char_zero Algebraic.infinite_of_charZero
 
@@ -52,7 +52,7 @@ theorem cardinal_mk_lift_le_mul :
     Cardinal.lift.{u} (#{ x : A // IsAlgebraic R x }) ≤ Cardinal.lift.{v} (#R[X]) * ℵ₀ :=
   by
   rw [← mk_ulift, ← mk_ulift]
-  choose g hg₁ hg₂ using fun x : { x : A | IsAlgebraic R x } => x.coe_prop
+  choose g hg₁ hg₂ using fun x : {x : A | IsAlgebraic R x} => x.coe_prop
   refine' lift_mk_le_lift_mk_mul_of_lift_mk_preimage_le g fun f => _
   rw [lift_le_aleph_0, le_aleph_0_iff_set_countable]
   suffices : maps_to coe (g ⁻¹' {f}) (f.root_set A)
@@ -79,7 +79,7 @@ theorem cardinal_mk_lift_of_infinite [Infinite R] :
 variable [Countable R]
 
 @[simp]
-protected theorem countable : Set.Countable { x : A | IsAlgebraic R x } :=
+protected theorem countable : Set.Countable {x : A | IsAlgebraic R x} :=
   by
   rw [← le_aleph_0_iff_set_countable, ← lift_le]
   apply (cardinal_mk_lift_le_max R A).trans

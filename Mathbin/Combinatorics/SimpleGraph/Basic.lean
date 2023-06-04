@@ -541,7 +541,7 @@ allows proving `(G \ from_edge_set s).edge_set = G.edge_set \ s` by `simp`.
 -/
 @[simp]
 theorem edgeSet_sdiff_sdiff_isDiag (G : SimpleGraph V) (s : Set (Sym2 V)) :
-    G.edgeSetEmbedding \ (s \ { e | e.IsDiag }) = G.edgeSetEmbedding \ s :=
+    G.edgeSetEmbedding \ (s \ {e | e.IsDiag}) = G.edgeSetEmbedding \ s :=
   by
   ext e
   simp only [Set.mem_diff, Set.mem_setOf_eq, not_and, Classical.not_not, and_congr_right_iff]
@@ -629,7 +629,7 @@ theorem fromEdgeSet_adj : (fromEdgeSet s).Adj v w ↔ ⟦(v, w)⟧ ∈ s ∧ v �
 -- Note: we need to make sure `from_edge_set_adj` and this lemma are confluent.
 -- In particular, both yield `⟦(u, v)⟧ ∈ (from_edge_set s).edge_set` ==> `⟦(v, w)⟧ ∈ s ∧ v ≠ w`.
 @[simp]
-theorem edgeSet_fromEdgeSet : (fromEdgeSet s).edgeSetEmbedding = s \ { e | e.IsDiag } := by ext e;
+theorem edgeSet_fromEdgeSet : (fromEdgeSet s).edgeSetEmbedding = s \ {e | e.IsDiag} := by ext e;
   exact Sym2.ind (by simp) e
 #align simple_graph.edge_set_from_edge_set SimpleGraph.edgeSet_fromEdgeSet
 
@@ -852,7 +852,7 @@ end Darts
 #print SimpleGraph.incidenceSet /-
 /-- Set of edges incident to a given vertex, aka incidence set. -/
 def incidenceSet (v : V) : Set (Sym2 V) :=
-  { e ∈ G.edgeSetEmbedding | v ∈ e }
+  {e ∈ G.edgeSetEmbedding | v ∈ e}
 #align simple_graph.incidence_set SimpleGraph.incidenceSet
 -/
 
@@ -1052,7 +1052,7 @@ theorem card_neighborSet_union_compl_neighborSet [Fintype V] (G : SimpleGraph V)
     [h : Fintype (G.neighborSet v ∪ Gᶜ.neighborSet v : Set V)] :
     (@Set.toFinset _ (G.neighborSet v ∪ Gᶜ.neighborSet v) h).card = Fintype.card V - 1 := by
   classical simp_rw [neighbor_set_union_compl_neighbor_set_eq, Set.toFinset_compl,
-      Finset.card_compl, Set.toFinset_card, Set.card_singleton]
+    Finset.card_compl, Set.toFinset_card, Set.card_singleton]
 #align simple_graph.card_neighbor_set_union_compl_neighbor_set SimpleGraph.card_neighborSet_union_compl_neighborSet
 
 theorem neighborSet_compl (G : SimpleGraph V) (v : V) : Gᶜ.neighborSet v = G.neighborSet vᶜ \ {v} :=
@@ -1492,8 +1492,8 @@ theorem degree_pos_iff_exists_adj : 0 < G.degree v ↔ ∃ w, G.Adj v w := by
 theorem degree_compl [Fintype (Gᶜ.neighborSet v)] [Fintype V] :
     Gᶜ.degree v = Fintype.card V - 1 - G.degree v := by
   classical
-    rw [← card_neighbor_set_union_compl_neighbor_set G v, Set.toFinset_union]
-    simp [card_disjoint_union (set.disjoint_to_finset.mpr (compl_neighbor_set_disjoint G v))]
+  rw [← card_neighbor_set_union_compl_neighbor_set G v, Set.toFinset_union]
+  simp [card_disjoint_union (set.disjoint_to_finset.mpr (compl_neighbor_set_disjoint G v))]
 #align simple_graph.degree_compl SimpleGraph.degree_compl
 -/
 
@@ -1723,9 +1723,9 @@ theorem maxDegree_le_of_forall_degree_le [DecidableRel G.Adj] (k : ℕ) (h : ∀
 #print SimpleGraph.degree_lt_card_verts /-
 theorem degree_lt_card_verts [DecidableRel G.Adj] (v : V) : G.degree v < Fintype.card V := by
   classical
-    apply Finset.card_lt_card
-    rw [Finset.ssubset_iff]
-    exact ⟨v, by simp, Finset.subset_univ _⟩
+  apply Finset.card_lt_card
+  rw [Finset.ssubset_iff]
+  exact ⟨v, by simp, Finset.subset_univ _⟩
 #align simple_graph.degree_lt_card_verts SimpleGraph.degree_lt_card_verts
 -/
 
@@ -1773,18 +1773,18 @@ the best we can do in general.
 theorem Adj.card_commonNeighbors_lt_degree {G : SimpleGraph V} [DecidableRel G.Adj] {v w : V}
     (h : G.Adj v w) : Fintype.card (G.commonNeighbors v w) < G.degree v := by
   classical
-    erw [← Set.toFinset_card]
-    apply Finset.card_lt_card
-    rw [Finset.ssubset_iff]
-    use w
+  erw [← Set.toFinset_card]
+  apply Finset.card_lt_card
+  rw [Finset.ssubset_iff]
+  use w
+  constructor
+  · rw [Set.mem_toFinset]
+    apply not_mem_common_neighbors_right
+  · rw [Finset.insert_subset]
     constructor
-    · rw [Set.mem_toFinset]
-      apply not_mem_common_neighbors_right
-    · rw [Finset.insert_subset]
-      constructor
-      · simpa
-      · rw [neighbor_finset, Set.toFinset_subset_toFinset]
-        exact G.common_neighbors_subset_neighbor_set_left _ _
+    · simpa
+    · rw [neighbor_finset, Set.toFinset_subset_toFinset]
+      exact G.common_neighbors_subset_neighbor_set_left _ _
 #align simple_graph.adj.card_common_neighbors_lt_degree SimpleGraph.Adj.card_commonNeighbors_lt_degree
 -/
 
@@ -2177,7 +2177,7 @@ def mapNeighborSet (v : V) : G.neighborSet v ≃ G'.neighborSet (f v)
 
 #print SimpleGraph.Iso.card_eq_of_iso /-
 theorem card_eq_of_iso [Fintype V] [Fintype W] (f : G ≃g G') : Fintype.card V = Fintype.card W := by
-  convert(Fintype.ofEquiv_card f.to_equiv).symm
+  convert (Fintype.ofEquiv_card f.to_equiv).symm
 #align simple_graph.iso.card_eq_of_iso SimpleGraph.Iso.card_eq_of_iso
 -/
 

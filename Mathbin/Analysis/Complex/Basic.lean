@@ -406,7 +406,8 @@ theorem continuous_ofReal : Continuous (coe : ℝ → ℂ) :=
 /-- The only continuous ring homomorphism from `ℝ` to `ℂ` is the identity. -/
 theorem ringHom_eq_ofReal_of_continuous {f : ℝ →+* ℂ} (h : Continuous f) : f = Complex.ofReal :=
   by
-  convert congr_arg AlgHom.toRingHom
+  convert
+    congr_arg AlgHom.toRingHom
       (Subsingleton.elim (AlgHom.mk' f <| map_real_smul f h) <| Algebra.ofId ℝ ℂ)
   ext1; rfl
 #align complex.ring_hom_eq_of_real_of_continuous Complex.ringHom_eq_ofReal_of_continuous
@@ -586,7 +587,7 @@ theorem hasSum_iff (f : α → 𝕜) (c : 𝕜) :
   refine' ⟨fun h => ⟨has_sum_re _ h, has_sum_im _ h⟩, _⟩
   rintro ⟨h₁, h₂⟩
   rw [← IsROrC.re_add_im c]
-  convert((has_sum_of_real 𝕜).mpr h₁).add (((has_sum_of_real 𝕜).mpr h₂).mul_right I)
+  convert ((has_sum_of_real 𝕜).mpr h₁).add (((has_sum_of_real 𝕜).mpr h₂).mul_right I)
   simp_rw [IsROrC.re_add_im]
 #align is_R_or_C.has_sum_iff IsROrC.hasSum_iff
 

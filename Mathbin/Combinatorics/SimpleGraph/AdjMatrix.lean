@@ -286,7 +286,7 @@ theorem adjMatrix_mulVec_const_apply_of_regular [Semiring α] {d : ℕ} {a : α}
 #align simple_graph.adj_matrix_mul_vec_const_apply_of_regular SimpleGraph.adjMatrix_mulVec_const_apply_of_regular
 
 theorem adjMatrix_pow_apply_eq_card_walk [DecidableEq V] [Semiring α] (n : ℕ) (u v : V) :
-    (G.adjMatrix α ^ n) u v = Fintype.card { p : G.Walk u v | p.length = n } :=
+    (G.adjMatrix α ^ n) u v = Fintype.card {p : G.Walk u v | p.length = n} :=
   by
   rw [card_set_walk_length_eq]
   induction' n with n ih generalizing u v

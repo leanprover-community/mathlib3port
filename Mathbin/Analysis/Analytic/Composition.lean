@@ -541,7 +541,7 @@ theorem comp_summable_nNReal (q : FormalMultilinearSeries 𝕜 F G) (p : FormalM
     convert hasSum_fintype fun c : Composition n => (4 ^ n : ℝ≥0)⁻¹
     simp [Finset.card_univ, composition_card, div_eq_mul_inv]
   refine' NNReal.summable_sigma.2 ⟨fun n => (this n).Summable, (NNReal.summable_nat_add_iff 1).1 _⟩
-  convert(NNReal.summable_geometric (NNReal.div_lt_one_of_lt one_lt_two)).mul_left (1 / 4)
+  convert (NNReal.summable_geometric (NNReal.div_lt_one_of_lt one_lt_two)).mul_left (1 / 4)
   ext1 n
   rw [(this _).tsum_eq, add_tsub_cancel_right]
   field_simp [← mul_assoc, pow_succ', mul_pow, show (4 : ℝ≥0) = 2 * 2 from (two_mul 2).symm,
@@ -637,7 +637,7 @@ theorem compChangeOfVariables_blocksFun (m M N : ℕ) {i : Σ n, Fin n → ℕ}
 /-- Target set in the change of variables to compute the composition of partial sums of formal
 power series, here given a a set. -/
 def compPartialSumTargetSet (m M N : ℕ) : Set (Σ n, Composition n) :=
-  { i | m ≤ i.2.length ∧ i.2.length < M ∧ ∀ j : Fin i.2.length, i.2.blocksFun j < N }
+  {i | m ≤ i.2.length ∧ i.2.length < M ∧ ∀ j : Fin i.2.length, i.2.blocksFun j < N}
 #align formal_multilinear_series.comp_partial_sum_target_set FormalMultilinearSeries.compPartialSumTargetSet
 
 theorem comp_partial_sum_target_subset_image_compPartialSumSource (m M N : ℕ)

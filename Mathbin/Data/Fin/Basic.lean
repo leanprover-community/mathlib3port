@@ -1187,7 +1187,7 @@ theorem castLE_zero {n m : ℕ} (h : n.succ ≤ m.succ) : castLE h 0 = 0 := by s
 #align fin.cast_le_zero Fin.castLE_zero
 
 @[simp]
-theorem range_castLE {n k : ℕ} (h : n ≤ k) : Set.range (castLE h) = { i | (i : ℕ) < n } :=
+theorem range_castLE {n k : ℕ} (h : n ≤ k) : Set.range (castLE h) = {i | (i : ℕ) < n} :=
   Set.ext fun x => ⟨fun ⟨y, hy⟩ => hy ▸ y.2, fun hx => ⟨⟨x, hx⟩, Fin.ext rfl⟩⟩
 #align fin.range_cast_le Fin.range_castLE
 
@@ -1484,7 +1484,7 @@ theorem lt_succ : a.cast_succ < a.succ := by
 #align fin.lt_succ Fin.lt_succ
 
 @[simp]
-theorem range_castSucc {n : ℕ} : Set.range (castSucc : Fin n → Fin n.succ) = { i | (i : ℕ) < n } :=
+theorem range_castSucc {n : ℕ} : Set.range (castSucc : Fin n → Fin n.succ) = {i | (i : ℕ) < n} :=
   range_castLE _
 #align fin.range_cast_succ Fin.range_castSucc
 

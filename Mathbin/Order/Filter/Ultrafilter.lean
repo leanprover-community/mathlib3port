@@ -205,7 +205,7 @@ theorem mem_or_compl_mem (f : Ultrafilter α) (s : Set α) : s ∈ f ∨ sᶜ �
 
 #print Ultrafilter.em /-
 protected theorem em (f : Ultrafilter α) (p : α → Prop) : (∀ᶠ x in f, p x) ∨ ∀ᶠ x in f, ¬p x :=
-  f.mem_or_compl_mem { x | p x }
+  f.mem_or_compl_mem {x | p x}
 #align ultrafilter.em Ultrafilter.em
 -/
 

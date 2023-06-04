@@ -876,7 +876,7 @@ variable (L)
 #print FirstOrder.Language.completeTheory /-
 /-- The complete theory of a structure `M` is the set of all sentences `M` satisfies. -/
 def completeTheory : L.Theory :=
-  { φ | M ⊨ φ }
+  {φ | M ⊨ φ}
 #align first_order.language.complete_theory FirstOrder.Language.completeTheory
 -/
 

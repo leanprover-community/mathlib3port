@@ -136,7 +136,7 @@ theorem cont_diff_within_at_localInvariantProp (n : ℕ∞) :
       rw [this] at h 
       have : I (e x) ∈ I.symm ⁻¹' e.target ∩ range I := by simp only [hx, mfld_simps]
       have := ((mem_groupoid_of_pregroupoid.2 he).2.ContDiffWithinAt this).of_le le_top
-      convert(h.comp' _ this).mono_of_mem _ using 1
+      convert (h.comp' _ this).mono_of_mem _ using 1
       · ext y; simp only [mfld_simps]
       refine'
         mem_nhds_within.mpr
@@ -559,7 +559,7 @@ theorem contMdiffOn_iff :
     specialize h w this
     have w1 : w ∈ (chart_at H x).source := by simp only [w, hz, mfld_simps]
     have w2 : f w ∈ (chart_at H' y).source := by simp only [w, hz, mfld_simps]
-    convert((contMdiffWithinAt_iff_of_mem_source w1 w2).mp h).2.mono _
+    convert ((contMdiffWithinAt_iff_of_mem_source w1 w2).mp h).2.mono _
     · simp only [w, hz, mfld_simps]
     · mfld_set_tac
   · rintro ⟨hcont, hdiff⟩ x hx
@@ -586,7 +586,7 @@ theorem contMdiffOn_iff_target :
   constructor
   · refine' fun h' y => ⟨_, fun x _ => h' x y⟩
     have h'' : ContinuousOn _ univ := (ModelWithCorners.continuous I').ContinuousOn
-    convert(h''.comp' (chart_at H' y).continuous_toFun).comp' h
+    convert (h''.comp' (chart_at H' y).continuous_toFun).comp' h
     simp
   · exact fun h' x y => (h' y).2 x default
 #align cont_mdiff_on_iff_target contMdiffOn_iff_target
@@ -863,7 +863,7 @@ theorem contMdiffWithinAt_iff_contMdiffOn_nhds {n : ℕ} :
     · rw [nhdsWithin_restrict _ xo o_open]
       refine' Filter.inter_mem self_mem_nhdsWithin _
       suffices : u ∈ 𝓝[extChartAt I x '' (insert x s ∩ o)] extChartAt I x x
-      exact (continuousAt_extChartAt I x).ContinuousWithinAt.preimage_mem_nhds_within' this
+      exact (continuousAt_extChartAt I x).ContinuousWithinAt.preimage_mem_nhdsWithin' this
       apply nhdsWithin_mono _ _ u_nhds
       rw [image_subset_iff]
       intro y hy
@@ -1364,8 +1364,8 @@ theorem contMdiffWithinAt_iff_contDiffWithinAt {f : E → E'} {s : Set E} {x : E
   exact ContDiffWithinAt.continuousWithinAt
 #align cont_mdiff_within_at_iff_cont_diff_within_at contMdiffWithinAt_iff_contDiffWithinAt
 
-alias contMdiffWithinAt_iff_contDiffWithinAt ↔
-  ContMdiffWithinAt.contDiffWithinAt ContDiffWithinAt.contMdiffWithinAt
+alias contMdiffWithinAt_iff_contDiffWithinAt ↔ ContMdiffWithinAt.contDiffWithinAt
+  ContDiffWithinAt.contMdiffWithinAt
 #align cont_mdiff_within_at.cont_diff_within_at ContMdiffWithinAt.contDiffWithinAt
 #align cont_diff_within_at.cont_mdiff_within_at ContDiffWithinAt.contMdiffWithinAt
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicolò Cavalleri, Andrew Yang
 
 ! This file was ported from Lean 3 source module ring_theory.derivation.to_square_zero
-! leanprover-community/mathlib commit b608348ffaeb7f557f2fd46876037abafd326ff3
+! leanprover-community/mathlib commit 5c1efce12ba86d4901463f61019832f6a4b1a0d0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.RingTheory.Ideal.QuotientOperations
 
 /-!
 # Results
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 - `derivation_to_square_zero_equiv_lift`: The `R`-derivations from `A` into a square-zero ideal `I`
   of `B` corresponds to the lifts `A →ₐ[R] B` of the map `A →ₐ[R] B ⧸ I`.
@@ -28,6 +31,7 @@ variable {R : Type u} {A : Type v} {B : Type w} [CommSemiring R] [CommSemiring A
 
 variable [Algebra R A] [Algebra R B] (I : Ideal B) (hI : I ^ 2 = ⊥)
 
+#print diffToIdealOfQuotientCompEq /-
 /-- If `f₁ f₂ : A →ₐ[R] B` are two lifts of the same `A →ₐ[R] B ⧸ I`,
   we may define a map `f₁ - f₂ : A →ₗ[R] I`. -/
 def diffToIdealOfQuotientCompEq (f₁ f₂ : A →ₐ[R] B)
@@ -39,6 +43,7 @@ def diffToIdealOfQuotientCompEq (f₁ f₂ : A →ₐ[R] B)
       rw [← Ideal.Quotient.eq, ← Ideal.Quotient.mkₐ_eq_mk R, ← AlgHom.comp_apply, e]
       rfl)
 #align diff_to_ideal_of_quotient_comp_eq diffToIdealOfQuotientCompEq
+-/
 
 @[simp]
 theorem diffToIdealOfQuotientCompEq_apply (f₁ f₂ : A →ₐ[R] B)

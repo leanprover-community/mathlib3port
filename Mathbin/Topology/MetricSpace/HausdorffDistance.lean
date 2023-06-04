@@ -175,7 +175,7 @@ theorem mem_closure_iff_infEdist_zero : x ∈ closure s ↔ infEdist x s = 0 :=
 /-- Given a closed set `s`, a point belongs to `s` iff its infimum edistance to this set vanishes -/
 theorem mem_iff_infEdist_zero_of_closed (h : IsClosed s) : x ∈ s ↔ infEdist x s = 0 :=
   by
-  convert← mem_closure_iff_inf_edist_zero
+  convert ← mem_closure_iff_inf_edist_zero
   exact h.closure_eq
 #align emetric.mem_iff_inf_edist_zero_of_closed EMetric.mem_iff_infEdist_zero_of_closed
 
@@ -1057,7 +1057,7 @@ open Emetric
 /-- The (open) `δ`-thickening `thickening δ E` of a subset `E` in a pseudo emetric space consists
 of those points that are at distance less than `δ` from some point of `E`. -/
 def thickening (δ : ℝ) (E : Set α) : Set α :=
-  { x : α | infEdist x E < ENNReal.ofReal δ }
+  {x : α | infEdist x E < ENNReal.ofReal δ}
 #align metric.thickening Metric.thickening
 -/
 
@@ -1113,7 +1113,7 @@ theorem mem_thickening_iff_exists_edist_lt {δ : ℝ} (E : Set α) (x : α) :
 #print Metric.frontier_thickening_subset /-
 /-- The frontier of the (open) thickening of a set is contained in an `inf_edist` level set. -/
 theorem frontier_thickening_subset (E : Set α) {δ : ℝ} :
-    frontier (thickening δ E) ⊆ { x : α | infEdist x E = ENNReal.ofReal δ } :=
+    frontier (thickening δ E) ⊆ {x : α | infEdist x E = ENNReal.ofReal δ} :=
   frontier_lt_subset_eq continuous_infEdist continuous_const
 #align metric.frontier_thickening_subset Metric.frontier_thickening_subset
 -/
@@ -1127,7 +1127,7 @@ theorem frontier_thickening_disjoint (A : Set α) :
   refine'
     ((disjoint_singleton.2 fun h => hr.ne _).Preimage _).mono (frontier_thickening_subset _)
       (frontier_thickening_subset _)
-  apply_fun ENNReal.toReal  at h 
+  apply_fun ENNReal.toReal at h 
   rwa [ENNReal.toReal_ofReal h₁, ENNReal.toReal_ofReal (h₁.trans hr.le)] at h 
 #align metric.frontier_thickening_disjoint Metric.frontier_thickening_disjoint
 
@@ -1197,7 +1197,7 @@ open Emetric
 /-- The closed `δ`-thickening `cthickening δ E` of a subset `E` in a pseudo emetric space consists
 of those points that are at infimum distance at most `δ` from `E`. -/
 def cthickening (δ : ℝ) (E : Set α) : Set α :=
-  { x : α | infEdist x E ≤ ENNReal.ofReal δ }
+  {x : α | infEdist x E ≤ ENNReal.ofReal δ}
 #align metric.cthickening Metric.cthickening
 -/
 
@@ -1601,7 +1601,7 @@ theorem closure_eq_iInter_thickening (E : Set α) :
 #print Metric.frontier_cthickening_subset /-
 /-- The frontier of the closed thickening of a set is contained in an `inf_edist` level set. -/
 theorem frontier_cthickening_subset (E : Set α) {δ : ℝ} :
-    frontier (cthickening δ E) ⊆ { x : α | infEdist x E = ENNReal.ofReal δ } :=
+    frontier (cthickening δ E) ⊆ {x : α | infEdist x E = ENNReal.ofReal δ} :=
   frontier_le_subset_eq continuous_infEdist continuous_const
 #align metric.frontier_cthickening_subset Metric.frontier_cthickening_subset
 -/

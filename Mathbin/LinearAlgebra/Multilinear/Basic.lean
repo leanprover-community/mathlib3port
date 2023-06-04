@@ -187,8 +187,8 @@ protected theorem map_smul [DecidableEq ι] (m : ∀ i, M₁ i) (i : ι) (c : R)
 
 theorem map_coord_zero {m : ∀ i, M₁ i} (i : ι) (h : m i = 0) : f m = 0 := by
   classical
-    have : (0 : R) • (0 : M₁ i) = 0 := by simp
-    rw [← update_eq_self i m, h, ← this, f.map_smul, zero_smul]
+  have : (0 : R) • (0 : M₁ i) = 0 := by simp
+  rw [← update_eq_self i m, h, ← this, f.map_smul, zero_smul]
 #align multilinear_map.map_coord_zero MultilinearMap.map_coord_zero
 
 @[simp]
@@ -252,9 +252,9 @@ instance : AddCommMonoid (MultilinearMap R M₁ M₂) :=
 theorem sum_apply {α : Type _} (f : α → MultilinearMap R M₁ M₂) (m : ∀ i, M₁ i) :
     ∀ {s : Finset α}, (∑ a in s, f a) m = ∑ a in s, f a m := by
   classical
-    apply Finset.induction
-    · rw [Finset.sum_empty]; simp
-    · intro a s has H; rw [Finset.sum_insert has]; simp [H, has]
+  apply Finset.induction
+  · rw [Finset.sum_empty]; simp
+  · intro a s has H; rw [Finset.sum_insert has]; simp [H, has]
 #align multilinear_map.sum_apply MultilinearMap.sum_apply
 
 #print MultilinearMap.toLinearMap /-
@@ -524,7 +524,7 @@ theorem map_sum_finset_aux [DecidableEq ι] [Fintype ι] {n : ℕ} (h : (∑ i, 
       have : r i ∈ A i := mem_pi_finset.mp hr i
       rwa [hi] at this 
     rw [this, Finset.sum_empty]
-  push_neg  at Ai_empty 
+  push_neg at Ai_empty 
   -- Otherwise, if all sets are at most singletons, then they are exactly singletons and the result
   -- is again straightforward
   by_cases Ai_singleton : ∀ i, (A i).card ≤ 1
@@ -551,7 +551,7 @@ theorem map_sum_finset_aux [DecidableEq ι] [Fintype ι] {n : ℕ} (h : (∑ i, 
   -- We will split into two parts `B i₀` and `C i₀` of smaller cardinality, let `B i = C i = A i`
   -- for `i ≠ i₀`, apply the inductive assumption to `B` and `C`, and add up the corresponding
   -- parts to get the sum for `A`.
-  push_neg  at Ai_singleton 
+  push_neg at Ai_singleton 
   obtain ⟨i₀, hi₀⟩ : ∃ i, 1 < (A i).card := Ai_singleton
   obtain ⟨j₁, j₂, hj₁, hj₂, j₁_ne_j₂⟩ : ∃ j₁ j₂, j₁ ∈ A i₀ ∧ j₂ ∈ A i₀ ∧ j₁ ≠ j₂ :=
     Finset.one_lt_card_iff.1 hi₀
@@ -677,9 +677,9 @@ theorem map_sum [DecidableEq ι] [Fintype ι] [∀ i, Fintype (α i)] :
 theorem map_update_sum {α : Type _} [DecidableEq ι] (t : Finset α) (i : ι) (g : α → M₁ i)
     (m : ∀ i, M₁ i) : f (update m i (∑ a in t, g a)) = ∑ a in t, f (update m i (g a)) := by
   classical
-    induction' t using Finset.induction with a t has ih h
-    · simp
-    · simp [Finset.sum_insert has, ih]
+  induction' t using Finset.induction with a t has ih h
+  · simp
+  · simp [Finset.sum_insert has, ih]
 #align multilinear_map.map_update_sum MultilinearMap.map_update_sum
 
 end ApplySum
@@ -1631,7 +1631,7 @@ variable {R M M₂} [Ring R] [∀ i, AddCommMonoid (M₁ i)] [AddCommMonoid M'] 
 Note that this is not a submodule - it is not closed under addition. -/
 def map [Nonempty ι] (f : MultilinearMap R M₁ M₂) (p : ∀ i, Submodule R (M₁ i)) : SubMulAction R M₂
     where
-  carrier := f '' { v | ∀ i, v i ∈ p i }
+  carrier := f '' {v | ∀ i, v i ∈ p i}
   smul_mem' := fun c _ ⟨x, hx, hf⟩ => by
     let ⟨i⟩ := ‹Nonempty ι›
     letI := Classical.decEq ι

@@ -59,7 +59,7 @@ def atBot [Preorder α] : Filter α :=
 -/
 
 #print Filter.mem_atTop /-
-theorem mem_atTop [Preorder α] (a : α) : { b : α | a ≤ b } ∈ @atTop α _ :=
+theorem mem_atTop [Preorder α] (a : α) : {b : α | a ≤ b} ∈ @atTop α _ :=
   mem_iInf_of_mem a <| Subset.refl _
 #align filter.mem_at_top Filter.mem_atTop
 -/
@@ -78,7 +78,7 @@ theorem Ioi_mem_atTop [Preorder α] [NoMaxOrder α] (x : α) : Ioi x ∈ (atTop 
 -/
 
 #print Filter.mem_atBot /-
-theorem mem_atBot [Preorder α] (a : α) : { b : α | b ≤ a } ∈ @atBot α _ :=
+theorem mem_atBot [Preorder α] (a : α) : {b : α | b ≤ a} ∈ @atBot α _ :=
   mem_iInf_of_mem a <| Subset.refl _
 #align filter.mem_at_bot Filter.mem_atBot
 -/
@@ -417,12 +417,12 @@ theorem Frequently.forall_exists_of_atBot [SemilatticeInf α] [Nonempty α] {p :
 #align filter.frequently.forall_exists_of_at_bot Filter.Frequently.forall_exists_of_atBot
 
 theorem map_atTop_eq [Nonempty α] [SemilatticeSup α] {f : α → β} :
-    atTop.map f = ⨅ a, 𝓟 <| f '' { a' | a ≤ a' } :=
+    atTop.map f = ⨅ a, 𝓟 <| f '' {a' | a ≤ a'} :=
   (atTop_basis.map _).eq_iInf
 #align filter.map_at_top_eq Filter.map_atTop_eq
 
 theorem map_atBot_eq [Nonempty α] [SemilatticeInf α] {f : α → β} :
-    atBot.map f = ⨅ a, 𝓟 <| f '' { a' | a' ≤ a } :=
+    atBot.map f = ⨅ a, 𝓟 <| f '' {a' | a' ≤ a} :=
   @map_atTop_eq αᵒᵈ _ _ _ _
 #align filter.map_at_bot_eq Filter.map_atBot_eq
 
@@ -635,7 +635,7 @@ theorem high_scores [LinearOrder β] [NoMaxOrder β] {u : ℕ → β} (hu : Tend
     ∃ n ≥ N, u k < u n ∧ ∀ m, m < n → N ≤ m → u m ≤ u k :=
     by
     rcases Nat.findX ex with ⟨n, ⟨hnN, hnk⟩, hn_min⟩
-    push_neg  at hn_min 
+    push_neg at hn_min 
     exact ⟨n, hnN, hnk, hn_min⟩
   use n, hnN
   rintro (l : ℕ) (hl : l < n)
@@ -968,7 +968,7 @@ theorem Tendsto.atTop_mul_atTop (hf : Tendsto f l atTop) (hg : Tendsto g l atTop
   by
   refine' tendsto_at_top_mono' _ _ hg
   filter_upwards [hg.eventually (eventually_ge_at_top 0),
-    hf.eventually (eventually_ge_at_top 1)]with _ using le_mul_of_one_le_left
+    hf.eventually (eventually_ge_at_top 1)] with _ using le_mul_of_one_le_left
 #align filter.tendsto.at_top_mul_at_top Filter.Tendsto.atTop_mul_atTop
 
 theorem tendsto_mul_self_atTop : Tendsto (fun x : α => x * x) atTop atTop :=
@@ -1650,7 +1650,7 @@ theorem map_val_atTop_of_Ici_subset [SemilatticeSup α] {a : α} {s : Set α} (h
     rintro _ ⟨y, hy, rfl⟩
     exact le_trans le_sup_left (Subtype.coe_le_coe.2 hy)
   · intro x
-    filter_upwards [mem_at_top (↑x ⊔ a)]with b hb
+    filter_upwards [mem_at_top (↑x ⊔ a)] with b hb
     exact ⟨⟨b, h <| le_sup_right.trans hb⟩, Subtype.coe_le_coe.1 (le_sup_left.trans hb), rfl⟩
 #align filter.map_coe_at_top_of_Ici_subset Filter.map_val_atTop_of_Ici_subset
 -/
@@ -2015,8 +2015,8 @@ theorem frequently_iff_seq_frequently {ι : Type _} {l : Filter ι} {p : ι → 
     (∃ᶠ n in l, p n) ↔ ∃ x : ℕ → ι, Tendsto x atTop l ∧ ∃ᶠ n : ℕ in atTop, p (x n) :=
   by
   refine' ⟨fun h_freq => _, fun h_exists_freq => _⟩
-  · have : ne_bot (l ⊓ 𝓟 { x : ι | p x }) := by simpa [ne_bot_iff, inf_principal_eq_bot]
-    obtain ⟨x, hx⟩ := exists_seq_tendsto (l ⊓ 𝓟 { x : ι | p x })
+  · have : ne_bot (l ⊓ 𝓟 {x : ι | p x}) := by simpa [ne_bot_iff, inf_principal_eq_bot]
+    obtain ⟨x, hx⟩ := exists_seq_tendsto (l ⊓ 𝓟 {x : ι | p x})
     rw [tendsto_inf] at hx 
     cases' hx with hx_l hx_p
     refine' ⟨x, hx_l, _⟩
@@ -2024,7 +2024,7 @@ theorem frequently_iff_seq_frequently {ι : Type _} {l : Filter ι} {p : ι → 
     exact hx_p.frequently
   · obtain ⟨x, hx_tendsto, hx_freq⟩ := h_exists_freq
     simp_rw [Filter.Frequently, Filter.Eventually] at hx_freq ⊢
-    have : { n : ℕ | ¬p (x n) } = { n | x n ∈ { y | ¬p y } } := rfl
+    have : {n : ℕ | ¬p (x n)} = {n | x n ∈ {y | ¬p y}} := rfl
     rw [this, ← mem_map'] at hx_freq 
     contrapose! hx_freq
     exact hx_tendsto hx_freq

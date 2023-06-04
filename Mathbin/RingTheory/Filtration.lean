@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module ring_theory.filtration
-! leanprover-community/mathlib commit 70fd9563a21e7b963887c9360bd29b2393e6225a
+! leanprover-community/mathlib commit 2ebc1d6c2fed9f54c95bbc3998eaa5570527129a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -18,6 +18,9 @@ import Mathbin.Order.Hom.Lattice
 /-!
 
 # `I`-filtrations of modules
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file contains the definitions and basic results around (stable) `I`-filtrations of modules.
 
@@ -295,7 +298,7 @@ variable (F F')
 /-- The `R[IX]`-submodule of `M[X]` associated with an `I`-filtration. -/
 protected def submodule : Submodule (reesAlgebra I) (PolynomialModule R M)
     where
-  carrier := { f | ∀ i, f i ∈ F.n i }
+  carrier := {f | ∀ i, f i ∈ F.n i}
   add_mem' f g hf hg i := Submodule.add_mem _ (hf i) (hg i)
   zero_mem' i := Submodule.zero_mem _
   smul_mem' r f hf i := by
@@ -397,39 +400,39 @@ theorem submodule_eq_span_le_iff_stable_ge (n₀ : ℕ) :
 its associated submodule of is finitely generated.  -/
 theorem submodule_fg_iff_stable (hF' : ∀ i, (F.n i).FG) : F.Submodule.FG ↔ F.Stable := by
   classical
-    delta Ideal.Filtration.Stable
-    simp_rw [← F.submodule_eq_span_le_iff_stable_ge]
-    constructor
-    · rintro H
-      apply
-        H.stablizes_of_supr_eq
-          ⟨fun n₀ => Submodule.span _ (⋃ (i : ℕ) (H : i ≤ n₀), single R i '' ↑(F.N i)), _⟩
-      · dsimp
-        rw [← Submodule.span_iUnion, ← submodule_span_single]
-        congr 1
-        ext
-        simp only [Set.mem_iUnion, Set.mem_image, SetLike.mem_coe, exists_prop]
-        constructor
-        · rintro ⟨-, i, -, e⟩; exact ⟨i, e⟩
-        · rintro ⟨i, e⟩; exact ⟨i, i, le_refl i, e⟩
-      · intro n m e
-        rw [Submodule.span_le, Set.iUnion₂_subset_iff]
-        intro i hi
-        refine'
-          (Set.Subset.trans _ (Set.subset_iUnion₂ i (hi.trans e : _))).trans Submodule.subset_span
-        rfl
-    · rintro ⟨n, hn⟩
-      rw [hn]
-      simp_rw [Submodule.span_iUnion₂, ← Finset.mem_range_succ_iff, iSup_subtype']
-      apply Submodule.fg_iSup
-      rintro ⟨i, hi⟩
-      obtain ⟨s, hs⟩ := hF' i
-      have :
-        Submodule.span (reesAlgebra I) (s.image (lsingle R i) : Set (PolynomialModule R M)) =
-          Submodule.span _ (single R i '' (F.N i : Set M)) :=
-        by rw [Finset.coe_image, ← Submodule.span_span_of_tower R, ← Submodule.map_span, hs]; rfl
-      rw [Subtype.coe_mk, ← this]
-      exact ⟨_, rfl⟩
+  delta Ideal.Filtration.Stable
+  simp_rw [← F.submodule_eq_span_le_iff_stable_ge]
+  constructor
+  · rintro H
+    apply
+      H.stablizes_of_supr_eq
+        ⟨fun n₀ => Submodule.span _ (⋃ (i : ℕ) (H : i ≤ n₀), single R i '' ↑(F.N i)), _⟩
+    · dsimp
+      rw [← Submodule.span_iUnion, ← submodule_span_single]
+      congr 1
+      ext
+      simp only [Set.mem_iUnion, Set.mem_image, SetLike.mem_coe, exists_prop]
+      constructor
+      · rintro ⟨-, i, -, e⟩; exact ⟨i, e⟩
+      · rintro ⟨i, e⟩; exact ⟨i, i, le_refl i, e⟩
+    · intro n m e
+      rw [Submodule.span_le, Set.iUnion₂_subset_iff]
+      intro i hi
+      refine'
+        (Set.Subset.trans _ (Set.subset_iUnion₂ i (hi.trans e : _))).trans Submodule.subset_span
+      rfl
+  · rintro ⟨n, hn⟩
+    rw [hn]
+    simp_rw [Submodule.span_iUnion₂, ← Finset.mem_range_succ_iff, iSup_subtype']
+    apply Submodule.fg_iSup
+    rintro ⟨i, hi⟩
+    obtain ⟨s, hs⟩ := hF' i
+    have :
+      Submodule.span (reesAlgebra I) (s.image (lsingle R i) : Set (PolynomialModule R M)) =
+        Submodule.span _ (single R i '' (F.N i : Set M)) :=
+      by rw [Finset.coe_image, ← Submodule.span_span_of_tower R, ← Submodule.map_span, hs]; rfl
+    rw [Subtype.coe_mk, ← this]
+    exact ⟨_, rfl⟩
 #align ideal.filtration.submodule_fg_iff_stable Ideal.Filtration.submodule_fg_iff_stable
 
 variable {F}

@@ -239,8 +239,7 @@ theorem mem_treesOfNumNodesEq_numNodes (x : Tree Unit) : x ∈ treesOfNumNodesEq
 
 #print Tree.coe_treesOfNumNodesEq /-
 @[simp, norm_cast]
-theorem coe_treesOfNumNodesEq (n : ℕ) :
-    ↑(treesOfNumNodesEq n) = { x : Tree Unit | x.numNodes = n } :=
+theorem coe_treesOfNumNodesEq (n : ℕ) : ↑(treesOfNumNodesEq n) = {x : Tree Unit | x.numNodes = n} :=
   Set.ext (by simp)
 #align tree.coe_trees_of_nodes_eq Tree.coe_treesOfNumNodesEq
 -/

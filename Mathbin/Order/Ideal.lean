@@ -391,7 +391,7 @@ instance : Inf (Ideal P) :=
 supremum of `I` and `J`. -/
 instance : Sup (Ideal P) :=
   ⟨fun I J =>
-    { carrier := { x | ∃ i ∈ I, ∃ j ∈ J, x ≤ i ⊔ j }
+    { carrier := {x | ∃ i ∈ I, ∃ j ∈ J, x ≤ i ⊔ j}
       nonempty' := by cases inter_nonempty I J; exact ⟨w, w, h.1, w, h.2, le_sup_left⟩
       directed' := fun x ⟨xi, _, xj, _, _⟩ y ⟨yi, _, yj, _, _⟩ =>
         ⟨x ⊔ y,
@@ -424,7 +424,7 @@ instance : Lattice (Ideal P) :=
     le_inf := fun I J K => subset_inter }
 
 @[simp]
-theorem coe_sup : ↑(s ⊔ t) = { x | ∃ a ∈ s, ∃ b ∈ t, x ≤ a ⊔ b } :=
+theorem coe_sup : ↑(s ⊔ t) = {x | ∃ a ∈ s, ∃ b ∈ t, x ≤ a ⊔ b} :=
   rfl
 #align order.ideal.coe_sup Order.Ideal.coe_sup
 
@@ -504,7 +504,7 @@ theorem eq_sup_of_le_sup {x i j : P} (hi : i ∈ I) (hj : j ∈ J) (hx : x ≤ i
     
 #align order.ideal.eq_sup_of_le_sup Order.Ideal.eq_sup_of_le_sup
 
-theorem coe_sup_eq : ↑(I ⊔ J) = { x | ∃ i ∈ I, ∃ j ∈ J, x = i ⊔ j } :=
+theorem coe_sup_eq : ↑(I ⊔ J) = {x | ∃ i ∈ I, ∃ j ∈ J, x = i ⊔ j} :=
   Set.ext fun _ =>
     ⟨fun ⟨_, _, _, _, _⟩ => eq_sup_of_le_sup ‹_› ‹_› ‹_›, fun ⟨i, _, j, _, _⟩ =>
       ⟨i, ‹_›, j, ‹_›, le_of_eq ‹_›⟩⟩
@@ -618,7 +618,7 @@ theorem sequenceOfCofinals.encode_mem (i : ι) :
   This proves the Rasiowa–Sikorski lemma. -/
 def idealOfCofinals : Ideal P
     where
-  carrier := { x : P | ∃ n, x ≤ sequenceOfCofinals p 𝒟 n }
+  carrier := {x : P | ∃ n, x ≤ sequenceOfCofinals p 𝒟 n}
   lower' := fun x y hxy ⟨n, hn⟩ => ⟨n, le_trans hxy hn⟩
   nonempty' := ⟨p, 0, le_rfl⟩
   directed' := fun x ⟨n, hn⟩ y ⟨m, hm⟩ =>

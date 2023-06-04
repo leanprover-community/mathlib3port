@@ -125,7 +125,7 @@ instance (X : Type u₁) [Nonempty X] : Injective X
     where Factors Y Z g f mono :=
     ⟨fun z => by
       classical exact
-          if h : z ∈ Set.range f then g (Classical.choose h) else Nonempty.some inferInstance,
+        if h : z ∈ Set.range f then g (Classical.choose h) else Nonempty.some inferInstance,
       by
       ext y
       change dite _ _ _ = _

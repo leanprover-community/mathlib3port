@@ -296,7 +296,7 @@ instance [LocallyConnectedSpace X] : OrderBot (DiscreteQuotient X)
     { toSetoid := connectedComponentSetoid X
       isOpen_setOf_rel := fun x =>
         by
-        have : connectedComponent x = { y | (connectedComponentSetoid X).Rel x y } :=
+        have : connectedComponent x = {y | (connectedComponentSetoid X).Rel x y} :=
           by
           ext y
           simpa only [connectedComponentSetoid, ← connectedComponent_eq_iff_mem] using eq_comm

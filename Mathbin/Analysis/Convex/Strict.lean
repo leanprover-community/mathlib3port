@@ -330,14 +330,14 @@ variable [AddCommGroup E] [Module 𝕜 E] [NoZeroSMulDivisors 𝕜 E] [Continuou
 theorem StrictConvex.preimage_smul (hs : StrictConvex 𝕜 s) (c : 𝕜) :
     StrictConvex 𝕜 ((fun z => c • z) ⁻¹' s) := by
   classical
-    obtain rfl | hc := eq_or_ne c 0
-    · simp_rw [zero_smul, preimage_const]
-      split_ifs
-      · exact strictConvex_univ
-      · exact strictConvex_empty
-    refine' hs.linear_preimage (LinearMap.lsmul _ _ c) _ (smul_right_injective E hc)
-    unfold LinearMap.lsmul LinearMap.mk₂ LinearMap.mk₂' LinearMap.mk₂'ₛₗ
-    exact continuous_const_smul _
+  obtain rfl | hc := eq_or_ne c 0
+  · simp_rw [zero_smul, preimage_const]
+    split_ifs
+    · exact strictConvex_univ
+    · exact strictConvex_empty
+  refine' hs.linear_preimage (LinearMap.lsmul _ _ c) _ (smul_right_injective E hc)
+  unfold LinearMap.lsmul LinearMap.mk₂ LinearMap.mk₂' LinearMap.mk₂'ₛₗ
+  exact continuous_const_smul _
 #align strict_convex.preimage_smul StrictConvex.preimage_smul
 
 end AddCommGroup
@@ -357,10 +357,10 @@ theorem StrictConvex.eq_of_openSegment_subset_frontier [Nontrivial 𝕜] [Densel
     x = y := by
   obtain ⟨a, ha₀, ha₁⟩ := DenselyOrdered.dense (0 : 𝕜) 1 zero_lt_one
   classical
-    by_contra hxy
-    exact
-      (h ⟨a, 1 - a, ha₀, sub_pos_of_lt ha₁, add_sub_cancel'_right _ _, rfl⟩).2
-        (hs hx hy hxy ha₀ (sub_pos_of_lt ha₁) <| add_sub_cancel'_right _ _)
+  by_contra hxy
+  exact
+    (h ⟨a, 1 - a, ha₀, sub_pos_of_lt ha₁, add_sub_cancel'_right _ _, rfl⟩).2
+      (hs hx hy hxy ha₀ (sub_pos_of_lt ha₁) <| add_sub_cancel'_right _ _)
 #align strict_convex.eq_of_open_segment_subset_frontier StrictConvex.eq_of_openSegment_subset_frontier
 
 theorem StrictConvex.add_smul_mem (hs : StrictConvex 𝕜 s) (hx : x ∈ s) (hxy : x + y ∈ s)

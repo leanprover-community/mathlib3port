@@ -42,7 +42,7 @@ variable {s s' : Set α} {t t' : Set β} {u u' : Set γ} {v : Set δ} {a a' : α
 /-- The image of a binary function `f : α → β → γ` as a function `set α → set β → set γ`.
 Mathematically this should be thought of as the image of the corresponding function `α × β → γ`.-/
 def image2 (f : α → β → γ) (s : Set α) (t : Set β) : Set γ :=
-  { c | ∃ a b, a ∈ s ∧ b ∈ t ∧ f a b = c }
+  {c | ∃ a b, a ∈ s ∧ b ∈ t ∧ f a b = c}
 #align set.image2 Set.image2
 -/
 
@@ -236,7 +236,7 @@ theorem image2_congr' (h : ∀ a b, f a b = f' a b) : image2 f s t = image2 f' s
   corresponding function `α × β × γ → δ`.
 -/
 def image3 (g : α → β → γ → δ) (s : Set α) (t : Set β) (u : Set γ) : Set δ :=
-  { d | ∃ a b c, a ∈ s ∧ b ∈ t ∧ c ∈ u ∧ g a b c = d }
+  {d | ∃ a b c, a ∈ s ∧ b ∈ t ∧ c ∈ u ∧ g a b c = d}
 #align set.image3 Set.image3
 -/
 

@@ -741,7 +741,7 @@ theorem insertNth_zero (x : α 0) (p : ∀ j : Fin n, α (succAbove 0 j)) :
   by
   refine' insert_nth_eq_iff.2 ⟨by simp, _⟩
   ext j
-  convert(cons_succ _ _ _).symm
+  convert (cons_succ _ _ _).symm
 #align fin.insert_nth_zero Fin.insertNth_zero
 
 @[simp]
@@ -877,7 +877,7 @@ theorem find_spec :
     cases' h : find fun i : Fin n => p (i.castLT (Nat.lt_succ_of_lt i.2)) with j
     · rw [h] at hi 
       dsimp at hi 
-      split_ifs  at hi  with hl hl
+      split_ifs at hi  with hl hl
       · exact hi ▸ hl
       · exact hi.elim
     · rw [h] at hi 
@@ -932,7 +932,7 @@ theorem find_min :
     dsimp [find] at hi 
     cases' h : find fun i : Fin n => p (i.castLT (Nat.lt_succ_of_lt i.2)) with k
     · rw [h] at hi 
-      split_ifs  at hi  with hl hl
+      split_ifs at hi  with hl hl
       · subst hi
         rw [find_eq_none_iff] at h 
         exact h ⟨j, hj⟩ hpj

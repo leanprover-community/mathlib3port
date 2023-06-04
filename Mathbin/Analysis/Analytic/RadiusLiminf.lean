@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.analytic.radius_liminf
-! leanprover-community/mathlib commit 0b9eaaa7686280fad8cce467f5c3c57ee6ce77f8
+! leanprover-community/mathlib commit af471b9e3ce868f296626d33189b4ce730fa4c00
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Analysis.SpecialFunctions.Pow.Nnreal
 
 /-!
 # Representation of `formal_multilinear_series.radius` as a `liminf`
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 In this file we prove that the radius of convergence of a `formal_multilinear_series` is equal to
 $\liminf_{n\to\infty} \frac{1}{\sqrt[n]{‖p n‖}}$. This lemma can't go to `basic.lean` because this

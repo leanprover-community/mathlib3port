@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Scott Morrison
 
 ! This file was ported from Lean 3 source module algebraic_geometry.structure_sheaf
-! leanprover-community/mathlib commit d39590fc8728fbf6743249802486f8c91ffe07bc
+! leanprover-community/mathlib commit 2ebc1d6c2fed9f54c95bbc3998eaa5570527129a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -17,6 +17,9 @@ import Mathbin.RingTheory.Subring.Basic
 
 /-!
 # The structure sheaf on `prime_spectrum R`.
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 We define the structure sheaf on `Top.of (prime_spectrum R)`, for a commutative ring `R` and prove
 basic properties about it. We define this as a subsheaf of the sheaf of dependent functions into the
@@ -172,7 +175,7 @@ theorem isLocallyFraction_pred {U : Opens (PrimeSpectrum.Top R)} (f : ∀ x : U,
 def sectionsSubring (U : (Opens (PrimeSpectrum.Top R))ᵒᵖ) :
     Subring (∀ x : unop U, Localizations R x)
     where
-  carrier := { f | (isLocallyFraction R).pred f }
+  carrier := {f | (isLocallyFraction R).pred f}
   zero_mem' := by
     refine' fun x => ⟨unop U, x.2, 𝟙 _, 0, 1, fun y => ⟨_, _⟩⟩
     · rw [← Ideal.ne_top_iff_one]; exact y.1.IsPrime.1
@@ -677,7 +680,7 @@ theorem toBasicOpen_injective (f : R) : Function.Injective (toBasicOpen R f) :=
   -- This amounts showing that `r * (d * a) = r * (b * c)`, for some power `r = f ^ n` of `f`.
   -- We define `I` as the ideal of *all* elements `r` satisfying the above equation.
   let I : Ideal R :=
-    { carrier := { r : R | r * (d * a) = r * (b * c) }
+    { carrier := {r : R | r * (d * a) = r * (b * c)}
       zero_mem' := by simp only [Set.mem_setOf_eq, MulZeroClass.zero_mul]
       add_mem' := fun r₁ r₂ hr₁ hr₂ => by dsimp at hr₁ hr₂ ⊢; simp only [add_mul, hr₁, hr₂]
       smul_mem' := fun r₁ r₂ hr₂ => by dsimp at hr₂ ⊢; simp only [mul_assoc, hr₂] }
@@ -943,7 +946,8 @@ theorem stalkAlgebra_map (p : PrimeSpectrum R) (r : R) :
 instance IsLocalization.to_stalk (p : PrimeSpectrum R) :
     IsLocalization.AtPrime ((structureSheaf R).Presheaf.stalk p) p.asIdeal :=
   by
-  convert(IsLocalization.isLocalization_iff_of_ringEquiv _
+  convert
+    (IsLocalization.isLocalization_iff_of_ringEquiv _
           (stalk_iso R p).symm.commRingCatIsoToRingEquiv).mp
       Localization.isLocalization
   apply Algebra.algebra_ext
@@ -969,7 +973,8 @@ theorem openAlgebra_map (U : (Opens (PrimeSpectrum R))ᵒᵖ) (r : R) :
 instance IsLocalization.to_basicOpen (r : R) :
     IsLocalization.Away r ((structureSheaf R).val.obj (op <| basicOpen r)) :=
   by
-  convert(IsLocalization.isLocalization_iff_of_ringEquiv _
+  convert
+    (IsLocalization.isLocalization_iff_of_ringEquiv _
           (basic_open_iso R r).symm.commRingCatIsoToRingEquiv).mp
       Localization.isLocalization
   apply Algebra.algebra_ext

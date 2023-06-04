@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module analysis.normed_space.triv_sq_zero_ext
-! leanprover-community/mathlib commit 88a563b158f59f2983cfad685664da95502e8cdd
+! leanprover-community/mathlib commit 5c1efce12ba86d4901463f61019832f6a4b1a0d0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.Topology.Instances.TrivSqZeroExt
 
 /-!
 # Results on `triv_sq_zero_ext R M` related to the norm
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 For now, this file contains results about `exp` for this type.
 

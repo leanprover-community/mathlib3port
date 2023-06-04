@@ -250,7 +250,7 @@ theorem Dvd.dvd.even (hn : m ∣ n) (hm : Even m) : Even n :=
 #align has_dvd.dvd.even Dvd.dvd.even
 
 @[simp]
-theorem range_two_mul (α : Type _) [Semiring α] : (Set.range fun x : α => 2 * x) = { a | Even a } :=
+theorem range_two_mul (α : Type _) [Semiring α] : (Set.range fun x : α => 2 * x) = {a | Even a} :=
   by ext x; simp [eq_comm, two_mul, Even]
 #align range_two_mul range_two_mul
 
@@ -306,7 +306,7 @@ theorem odd_bit1 (a : α) : Odd (bit1 a) :=
 
 @[simp]
 theorem range_two_mul_add_one (α : Type _) [Semiring α] :
-    (Set.range fun x : α => 2 * x + 1) = { a | Odd a } := by ext x; simp [Odd, eq_comm]
+    (Set.range fun x : α => 2 * x + 1) = {a | Odd a} := by ext x; simp [Odd, eq_comm]
 #align range_two_mul_add_one range_two_mul_add_one
 
 theorem Even.add_odd : Even m → Odd n → Odd (m + n) := by rintro ⟨m, rfl⟩ ⟨n, rfl⟩;

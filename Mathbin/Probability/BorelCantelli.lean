@@ -34,68 +34,68 @@ open MeasureTheory ProbabilityTheory MeasurableSpace TopologicalSpace
 
 namespace ProbabilityTheory
 
-variable {Ω : Type _} {m0 : MeasurableSpace Ω} {μ : Measure Ω} [ProbabilityMeasure μ]
+variable {Ω : Type _} {m0 : MeasurableSpace Ω} {μ : Measure Ω} [IsProbabilityMeasure μ]
 
 section BorelCantelli
 
 variable {ι β : Type _} [LinearOrder ι] [mβ : MeasurableSpace β] [NormedAddCommGroup β]
   [BorelSpace β] {f : ι → Ω → β} {i j : ι} {s : ι → Set Ω}
 
-theorem IndepFun.indepCat_comap_natural_of_lt (hf : ∀ i, StronglyMeasurable (f i))
-    (hfi : IndepFun (fun i => mβ) f μ) (hij : i < j) :
-    IndepCat (MeasurableSpace.comap (f j) mβ) (Filtration.natural f hf i) μ :=
+theorem iIndepFun.indep_comap_natural_of_lt (hf : ∀ i, StronglyMeasurable (f i))
+    (hfi : iIndepFun (fun i => mβ) f μ) (hij : i < j) :
+    Indep (MeasurableSpace.comap (f j) mβ) (Filtration.natural f hf i) μ :=
   by
   suffices
     indep (⨆ k ∈ {j}, MeasurableSpace.comap (f k) mβ)
-      (⨆ k ∈ { k | k ≤ i }, MeasurableSpace.comap (f k) mβ) μ
+      (⨆ k ∈ {k | k ≤ i}, MeasurableSpace.comap (f k) mβ) μ
     by rwa [iSup_singleton] at this 
   exact indep_supr_of_disjoint (fun k => (hf k).Measurable.comap_le) hfi (by simpa)
-#align probability_theory.Indep_fun.indep_comap_natural_of_lt ProbabilityTheory.IndepFun.indepCat_comap_natural_of_lt
+#align probability_theory.Indep_fun.indep_comap_natural_of_lt ProbabilityTheory.iIndepFun.indep_comap_natural_of_lt
 
-theorem IndepFun.condexp_natural_ae_eq_of_lt [SecondCountableTopology β] [CompleteSpace β]
-    [NormedSpace ℝ β] (hf : ∀ i, StronglyMeasurable (f i)) (hfi : IndepFun (fun i => mβ) f μ)
+theorem iIndepFun.condexp_natural_ae_eq_of_lt [SecondCountableTopology β] [CompleteSpace β]
+    [NormedSpace ℝ β] (hf : ∀ i, StronglyMeasurable (f i)) (hfi : iIndepFun (fun i => mβ) f μ)
     (hij : i < j) : μ[f j|Filtration.natural f hf i] =ᵐ[μ] fun ω => μ[f j] :=
-  condexp_indepCat_eq (hf j).Measurable.comap_le (Filtration.le _ _)
-    (comap_measurable <| f j).StronglyMeasurable (hfi.indepCat_comap_natural_of_lt hf hij)
-#align probability_theory.Indep_fun.condexp_natural_ae_eq_of_lt ProbabilityTheory.IndepFun.condexp_natural_ae_eq_of_lt
+  condexp_indep_eq (hf j).Measurable.comap_le (Filtration.le _ _)
+    (comap_measurable <| f j).StronglyMeasurable (hfi.indep_comap_natural_of_lt hf hij)
+#align probability_theory.Indep_fun.condexp_natural_ae_eq_of_lt ProbabilityTheory.iIndepFun.condexp_natural_ae_eq_of_lt
 
-theorem IndepSet.condexp_indicator_filtrationOfSet_ae_eq (hsm : ∀ n, MeasurableSet (s n))
-    (hs : IndepSet s μ) (hij : i < j) :
+theorem iIndepSet.condexp_indicator_filtrationOfSet_ae_eq (hsm : ∀ n, MeasurableSet (s n))
+    (hs : iIndepSet s μ) (hij : i < j) :
     μ[(s j).indicator (fun ω => 1 : Ω → ℝ)|filtrationOfSet hsm i] =ᵐ[μ] fun ω => (μ (s j)).toReal :=
   by
   rw [filtration.filtration_of_set_eq_natural hsm]
   refine' (Indep_fun.condexp_natural_ae_eq_of_lt _ hs.Indep_fun_indicator hij).trans _
   · simp only [integral_indicator_const _ (hsm _), Algebra.id.smul_eq_mul, mul_one]
   · infer_instance
-#align probability_theory.Indep_set.condexp_indicator_filtration_of_set_ae_eq ProbabilityTheory.IndepSet.condexp_indicator_filtrationOfSet_ae_eq
+#align probability_theory.Indep_set.condexp_indicator_filtration_of_set_ae_eq ProbabilityTheory.iIndepSet.condexp_indicator_filtrationOfSet_ae_eq
 
 open Filter
 
 /-- **The second Borel-Cantelli lemma**: Given a sequence of independent sets `(sₙ)` such that
 `∑ n, μ sₙ = ∞`, `limsup sₙ` has measure 1. -/
-theorem measure_limsup_eq_one {s : ℕ → Set Ω} (hsm : ∀ n, MeasurableSet (s n)) (hs : IndepSet s μ)
+theorem measure_limsup_eq_one {s : ℕ → Set Ω} (hsm : ∀ n, MeasurableSet (s n)) (hs : iIndepSet s μ)
     (hs' : (∑' n, μ (s n)) = ∞) : μ (limsup s atTop) = 1 :=
   by
   rw [measure_congr
       (eventually_eq_set.2 (ae_mem_limsup_at_top_iff μ <| measurable_set_filtration_of_set' hsm) :
         (limsup s at_top : Set Ω) =ᵐ[μ]
-          { ω |
+          {ω |
             tendsto
               (fun n =>
                 ∑ k in Finset.range n,
                   (μ[(s (k + 1)).indicator (1 : Ω → ℝ)|filtration_of_set hsm k]) ω)
-              at_top at_top })]
+              at_top at_top})]
   suffices
-    { ω |
+    {ω |
         tendsto
           (fun n =>
             ∑ k in Finset.range n, (μ[(s (k + 1)).indicator (1 : Ω → ℝ)|filtration_of_set hsm k]) ω)
-          at_top at_top } =ᵐ[μ]
+          at_top at_top} =ᵐ[μ]
       Set.univ
     by rw [measure_congr this, measure_univ]
   have : ∀ᵐ ω ∂μ, ∀ n, (μ[(s (n + 1)).indicator (1 : Ω → ℝ)|filtration_of_set hsm n]) ω = _ :=
     ae_all_iff.2 fun n => hs.condexp_indicator_filtration_of_set_ae_eq hsm n.lt_succ_self
-  filter_upwards [this]with ω hω
+  filter_upwards [this] with ω hω
   refine' eq_true (_ : tendsto _ _ _)
   simp_rw [hω]
   have htends : tendsto (fun n => ∑ k in Finset.range n, μ (s (k + 1))) at_top (𝓝 ∞) :=

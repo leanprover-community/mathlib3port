@@ -115,7 +115,7 @@ def invertibleOfDetInvertible [Invertible A.det] : Invertible A
 #align matrix.invertible_of_det_invertible Matrix.invertibleOfDetInvertible
 
 theorem invOf_eq [Invertible A.det] [Invertible A] : ⅟ A = ⅟ A.det • A.adjugate := by
-  letI := invertible_of_det_invertible A; convert(rfl : ⅟ A = _)
+  letI := invertible_of_det_invertible A; convert (rfl : ⅟ A = _)
 #align matrix.inv_of_eq Matrix.invOf_eq
 
 /-- `A.det` is invertible if `A` has a left inverse. -/
@@ -140,7 +140,7 @@ def detInvertibleOfInvertible [Invertible A] : Invertible A.det :=
 #align matrix.det_invertible_of_invertible Matrix.detInvertibleOfInvertible
 
 theorem det_invOf [Invertible A] [Invertible A.det] : (⅟ A).det = ⅟ A.det := by
-  letI := det_invertible_of_invertible A; convert(rfl : _ = ⅟ A.det)
+  letI := det_invertible_of_invertible A; convert (rfl : _ = ⅟ A.det)
 #align matrix.det_inv_of Matrix.det_invOf
 
 /-- Together `matrix.det_invertible_of_invertible` and `matrix.invertible_of_det_invertible` form an
@@ -539,7 +539,7 @@ theorem invOf_diagonal_eq {α} [Semiring α] (v : n → α) [Invertible v] [Inve
   by
   letI := diagonal_invertible v
   haveI := Invertible.subsingleton (diagonal v)
-  convert(rfl : ⅟ (diagonal v) = _)
+  convert (rfl : ⅟ (diagonal v) = _)
 #align matrix.inv_of_diagonal_eq Matrix.invOf_diagonal_eq
 
 /-- `v` is invertible if `diagonal v` is -/
@@ -673,7 +673,7 @@ theorem invOf_submatrix_equiv_eq (A : Matrix m m α) (e₁ e₂ : n ≃ m) [Inve
   by
   letI := submatrix_equiv_invertible A e₁ e₂
   haveI := Invertible.subsingleton (A.submatrix e₁ e₂)
-  convert(rfl : ⅟ (A.submatrix e₁ e₂) = _)
+  convert (rfl : ⅟ (A.submatrix e₁ e₂) = _)
 #align matrix.inv_of_submatrix_equiv_eq Matrix.invOf_submatrix_equiv_eq
 
 /-- Together `matrix.submatrix_equiv_invertible` and

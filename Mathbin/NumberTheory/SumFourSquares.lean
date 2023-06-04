@@ -251,6 +251,7 @@ private theorem prime_sum_four_squares (p : ℕ) [hp : Fact p.Prime] :
             
       False.elim <| Nat.find_min hm hnm ⟨lt_trans hnm hmp, hn0, s, t, u, v, hstuv⟩
 
+#print Nat.sum_four_squares /-
 /-- **Four squares theorem** -/
 theorem sum_four_squares : ∀ n : ℕ, ∃ a b c d : ℕ, a ^ 2 + b ^ 2 + c ^ 2 + d ^ 2 = n
   | 0 => ⟨0, 0, 0, 0, rfl⟩
@@ -269,6 +270,7 @@ theorem sum_four_squares : ∀ n : ℕ, ∃ a b c d : ℕ, a ^ 2 + b ^ 2 + c ^ 2
         h₂]
       simp [sum_four_sq_mul_sum_four_sq]⟩
 #align nat.sum_four_squares Nat.sum_four_squares
+-/
 
 end Nat
 

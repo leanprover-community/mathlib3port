@@ -100,7 +100,7 @@ theorem injective_splitCenterBox (I : Box ι) : Injective I.splitCenterBox := fu
 @[simp]
 theorem exists_mem_splitCenterBox {I : Box ι} {x : ι → ℝ} : (∃ s, x ∈ I.splitCenterBox s) ↔ x ∈ I :=
   ⟨fun ⟨s, hs⟩ => I.splitCenterBox_le s hs, fun hx =>
-    ⟨{ i | (I.lower i + I.upper i) / 2 < x i }, mem_splitCenterBox.2 ⟨hx, fun i => Iff.rfl⟩⟩⟩
+    ⟨{i | (I.lower i + I.upper i) / 2 < x i}, mem_splitCenterBox.2 ⟨hx, fun i => Iff.rfl⟩⟩⟩
 #align box_integral.box.exists_mem_split_center_box BoxIntegral.Box.exists_mem_splitCenterBox
 -/
 

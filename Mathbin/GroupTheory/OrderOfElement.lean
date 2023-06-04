@@ -556,10 +556,10 @@ theorem injective_pow_iff_not_isOfFinOrder {x : G} :
 #print infinite_not_isOfFinOrder /-
 @[to_additive infinite_not_isOfFinAddOrder]
 theorem infinite_not_isOfFinOrder {x : G} (h : ¬IsOfFinOrder x) :
-    { y : G | ¬IsOfFinOrder y }.Infinite :=
+    {y : G | ¬IsOfFinOrder y}.Infinite :=
   by
-  let s := { n | 0 < n }.image fun n : ℕ => x ^ n
-  have hs : s ⊆ { y : G | ¬IsOfFinOrder y } :=
+  let s := {n | 0 < n}.image fun n : ℕ => x ^ n
+  have hs : s ⊆ {y : G | ¬IsOfFinOrder y} :=
     by
     rintro - ⟨n, hn : 0 < n, rfl⟩ (contra : IsOfFinOrder (x ^ n))
     apply h
@@ -636,7 +636,7 @@ theorem zpow_eq_mod_orderOf : x ^ i = x ^ (i % orderOf x) :=
 theorem pow_inj_iff_of_orderOf_eq_zero (h : orderOf x = 0) {n m : ℕ} : x ^ n = x ^ m ↔ n = m :=
   by
   rw [orderOf_eq_zero_iff, isOfFinOrder_iff_pow_eq_one] at h 
-  push_neg  at h 
+  push_neg at h 
   induction' n with n IH generalizing m
   · cases m
     · simp
@@ -978,26 +978,25 @@ open QuotientGroup
 @[to_additive addOrderOf_dvd_card_univ]
 theorem orderOf_dvd_card_univ : orderOf x ∣ Fintype.card G := by
   classical
-    have ft_prod : Fintype ((G ⧸ zpowers x) × zpowers x) :=
-      Fintype.ofEquiv G group_equiv_quotient_times_subgroup
-    have ft_s : Fintype (zpowers x) := @Fintype.prodRight _ _ _ ft_prod _
-    have ft_cosets : Fintype (G ⧸ zpowers x) :=
-      @Fintype.prodLeft _ _ _ ft_prod ⟨⟨1, (zpowers x).one_mem⟩⟩
-    have eq₁ : Fintype.card G = @Fintype.card _ ft_cosets * @Fintype.card _ ft_s :=
-      calc
-        Fintype.card G = @Fintype.card _ ft_prod :=
-          @Fintype.card_congr _ _ _ ft_prod group_equiv_quotient_times_subgroup
-        _ = @Fintype.card _ (@Prod.fintype _ _ ft_cosets ft_s) :=
-          (congr_arg (@Fintype.card _) <| Subsingleton.elim _ _)
-        _ = @Fintype.card _ ft_cosets * @Fintype.card _ ft_s :=
-          @Fintype.card_prod _ _ ft_cosets ft_s
-        
-    have eq₂ : orderOf x = @Fintype.card _ ft_s :=
-      calc
-        orderOf x = _ := orderOf_eq_card_zpowers
-        _ = _ := congr_arg (@Fintype.card _) <| Subsingleton.elim _ _
-        
-    exact Dvd.intro (@Fintype.card (G ⧸ Subgroup.zpowers x) ft_cosets) (by rw [eq₁, eq₂, mul_comm])
+  have ft_prod : Fintype ((G ⧸ zpowers x) × zpowers x) :=
+    Fintype.ofEquiv G group_equiv_quotient_times_subgroup
+  have ft_s : Fintype (zpowers x) := @Fintype.prodRight _ _ _ ft_prod _
+  have ft_cosets : Fintype (G ⧸ zpowers x) :=
+    @Fintype.prodLeft _ _ _ ft_prod ⟨⟨1, (zpowers x).one_mem⟩⟩
+  have eq₁ : Fintype.card G = @Fintype.card _ ft_cosets * @Fintype.card _ ft_s :=
+    calc
+      Fintype.card G = @Fintype.card _ ft_prod :=
+        @Fintype.card_congr _ _ _ ft_prod group_equiv_quotient_times_subgroup
+      _ = @Fintype.card _ (@Prod.fintype _ _ ft_cosets ft_s) :=
+        (congr_arg (@Fintype.card _) <| Subsingleton.elim _ _)
+      _ = @Fintype.card _ ft_cosets * @Fintype.card _ ft_s := @Fintype.card_prod _ _ ft_cosets ft_s
+      
+  have eq₂ : orderOf x = @Fintype.card _ ft_s :=
+    calc
+      orderOf x = _ := orderOf_eq_card_zpowers
+      _ = _ := congr_arg (@Fintype.card _) <| Subsingleton.elim _ _
+      
+  exact Dvd.intro (@Fintype.card (G ⧸ Subgroup.zpowers x) ft_cosets) (by rw [eq₁, eq₂, mul_comm])
 #align order_of_dvd_card_univ orderOf_dvd_card_univ
 #align add_order_of_dvd_card_univ addOrderOf_dvd_card_univ
 -/

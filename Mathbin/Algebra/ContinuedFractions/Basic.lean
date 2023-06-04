@@ -65,7 +65,7 @@ protected structure GeneralizedContinuedFraction.Pair where
 
 open GeneralizedContinuedFraction
 
-/- ./././Mathport/Syntax/Translate/Command.lean:229:11: unsupported: unusual advanced open style -/
+/- ./././Mathport/Syntax/Translate/Command.lean:230:11: unsupported: unusual advanced open style -/
 /-! Interlude: define some expected coercions and instances. -/
 
 

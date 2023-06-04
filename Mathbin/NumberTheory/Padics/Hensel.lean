@@ -63,14 +63,8 @@ private theorem comp_tendsto_lim {p : ℕ} [Fact p.Prime] {F : Polynomial ℤ_[p
 
 section
 
-parameter
-  {p :
-    ℕ}[Fact
-      p.Prime]{ncs :
-    CauSeq ℤ_[p]
-      norm}{F :
-    Polynomial
-      ℤ_[p]}{a : ℤ_[p]}(ncs_der_val : ∀ n, ‖F.derivative.eval (ncs n)‖ = ‖F.derivative.eval a‖)
+parameter {p : ℕ} [Fact p.Prime] {ncs : CauSeq ℤ_[p] norm} {F : Polynomial ℤ_[p]} {a : ℤ_[p]}
+  (ncs_der_val : ∀ n, ‖F.derivative.eval (ncs n)‖ = ‖F.derivative.eval a‖)
 
 include ncs_der_val
 
@@ -89,12 +83,8 @@ end
 
 section
 
-parameter
-  {p :
-    ℕ}[Fact
-      p.Prime]{ncs :
-    CauSeq ℤ_[p]
-      norm}{F : Polynomial ℤ_[p]}(hnorm : Tendsto (fun i => ‖F.eval (ncs i)‖) atTop (𝓝 0))
+parameter {p : ℕ} [Fact p.Prime] {ncs : CauSeq ℤ_[p] norm} {F : Polynomial ℤ_[p]}
+  (hnorm : Tendsto (fun i => ‖F.eval (ncs i)‖) atTop (𝓝 0))
 
 include hnorm
 
@@ -111,12 +101,8 @@ section Hensel
 
 open Nat
 
-parameter
-  {p :
-    ℕ}[Fact
-      p.Prime]{F :
-    Polynomial
-      ℤ_[p]}{a : ℤ_[p]}(hnorm : ‖F.eval a‖ < ‖F.derivative.eval a‖ ^ 2)(hnsol : F.eval a ≠ 0)
+parameter {p : ℕ} [Fact p.Prime] {F : Polynomial ℤ_[p]} {a : ℤ_[p]}
+  (hnorm : ‖F.eval a‖ < ‖F.derivative.eval a‖ ^ 2) (hnsol : F.eval a ≠ 0)
 
 include hnorm
 

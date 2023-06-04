@@ -207,7 +207,7 @@ instance : One Ordinal :=
 /-- The order type of an element inside a well order. For the embedding as a principal segment, see
 `typein.principal_seg`. -/
 def typein (r : α → α → Prop) [IsWellOrder α r] (a : α) : Ordinal :=
-  type (Subrel r { b | r b a })
+  type (Subrel r {b | r b a})
 #align ordinal.typein Ordinal.typein
 -/
 

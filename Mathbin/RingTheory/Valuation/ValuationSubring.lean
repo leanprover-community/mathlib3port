@@ -354,14 +354,14 @@ theorem idealOfLe_le_of_le (R S : ValuationSubring K) (hR : A ≤ R) (hS : A ≤
     idealOfLe A S hS ≤ idealOfLe A R hR := fun x hx =>
   (valuation_lt_one_iff R _).2
     (by
-      by_contra c; push_neg  at c ; replace c := monotone_map_of_le R S h c
+      by_contra c; push_neg at c ; replace c := monotone_map_of_le R S h c
       rw [(map_of_le _ _ _).map_one, map_of_le_valuation_apply] at c 
       apply not_le_of_lt ((valuation_lt_one_iff S _).1 hx) c)
 #align valuation_subring.ideal_of_le_le_of_le ValuationSubring.idealOfLe_le_of_le
 
 /-- The equivalence between coarsenings of a valuation ring and its prime ideals.-/
 @[simps]
-def primeSpectrumEquiv : PrimeSpectrum A ≃ { S | A ≤ S }
+def primeSpectrumEquiv : PrimeSpectrum A ≃ {S | A ≤ S}
     where
   toFun P := ⟨ofPrime A P.asIdeal, le_ofPrime _ _⟩
   invFun S := ⟨idealOfLe _ S S.2, inferInstance⟩
@@ -371,7 +371,7 @@ def primeSpectrumEquiv : PrimeSpectrum A ≃ { S | A ≤ S }
 
 /-- An ordered variant of `prime_spectrum_equiv`. -/
 @[simps]
-def primeSpectrumOrderEquiv : (PrimeSpectrum A)ᵒᵈ ≃o { S | A ≤ S } :=
+def primeSpectrumOrderEquiv : (PrimeSpectrum A)ᵒᵈ ≃o {S | A ≤ S} :=
   { primeSpectrumEquiv A with
     map_rel_iff' := fun P Q =>
       ⟨fun h => by
@@ -380,7 +380,7 @@ def primeSpectrumOrderEquiv : (PrimeSpectrum A)ᵒᵈ ≃o { S | A ≤ S } :=
         exact this, fun h => by apply of_prime_le_of_le; exact h⟩ }
 #align valuation_subring.prime_spectrum_order_equiv ValuationSubring.primeSpectrumOrderEquiv
 
-instance linearOrderOverring : LinearOrder { S | A ≤ S } :=
+instance linearOrderOverring : LinearOrder {S | A ≤ S} :=
   {
     (inferInstance :
       PartialOrder
@@ -501,7 +501,7 @@ theorem unitGroup_le_unitGroup {A B : ValuationSubring K} : A.unitGroup ≤ B.un
     · have := h (show Units.mk0 x h_1 ∈ A.unit_group from hx)
       refine' SetLike.coe_mem (B.unit_group_mul_equiv ⟨_, this⟩ : B)
   · rintro h x (hx : A.valuation x = 1)
-    apply_fun A.map_of_le B h  at hx 
+    apply_fun A.map_of_le B h at hx 
     simpa using hx
 #align valuation_subring.unit_group_le_unit_group ValuationSubring.unitGroup_le_unitGroup
 
@@ -532,7 +532,7 @@ section nonunits
 /-- The nonunits of a valuation subring of `K`, as a subsemigroup of `K`-/
 def nonunits : Subsemigroup K
     where
-  carrier := { x | A.Valuation x < 1 }
+  carrier := {x | A.Valuation x < 1}
   mul_mem' a b ha hb := (mul_lt_mul₀ ha hb).trans_eq <| mul_one _
 #align valuation_subring.nonunits ValuationSubring.nonunits
 
@@ -613,7 +613,7 @@ section PrincipalUnitGroup
 /-- The principal unit group of a valuation subring, as a subgroup of `Kˣ`. -/
 def principalUnitGroup : Subgroup Kˣ
     where
-  carrier := { x | A.Valuation (x - 1) < 1 }
+  carrier := {x | A.Valuation (x - 1) < 1}
   mul_mem' := by
     intro a b ha hb
     refine' lt_of_le_of_lt _ (max_lt hb ha)

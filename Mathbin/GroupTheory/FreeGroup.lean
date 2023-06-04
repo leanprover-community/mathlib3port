@@ -305,8 +305,8 @@ theorem cons_cons_iff (p) : Red (p :: L₁) (p :: L₂) ↔ Red L₁ L₂ :=
       generalize eq₁ : (p :: L₁ : List _) = LL₁
       generalize eq₂ : (p :: L₂ : List _) = LL₂
       intro h
-      induction' h using Relation.ReflTransGen.head_induction_on with L₁ L₂ h₁₂ h ih generalizing
-        L₁ L₂
+      induction' h using Relation.ReflTransGen.head_induction_on with L₁ L₂ h₁₂ h ih generalizing L₁
+        L₂
       · subst_vars; cases eq₂; constructor
       · subst_vars
         cases' p with a b

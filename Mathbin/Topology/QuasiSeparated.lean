@@ -79,8 +79,8 @@ theorem isQuasiSeparated_univ {α : Type _} [TopologicalSpace α] [QuasiSeparate
 theorem IsQuasiSeparated.image_of_embedding {s : Set α} (H : IsQuasiSeparated s) (h : Embedding f) :
     IsQuasiSeparated (f '' s) := by
   intro U V hU hU' hU'' hV hV' hV''
-  convert(H (f ⁻¹' U) (f ⁻¹' V) _ (h.continuous.1 _ hU') _ _ (h.continuous.1 _ hV') _).image
-      h.continuous
+  convert
+    (H (f ⁻¹' U) (f ⁻¹' V) _ (h.continuous.1 _ hU') _ _ (h.continuous.1 _ hV') _).image h.continuous
   · symm
     rw [← Set.preimage_inter, Set.image_preimage_eq_inter_range, Set.inter_eq_left_iff_subset]
     exact (Set.inter_subset_left _ _).trans (hU.trans (Set.image_subset_range _ _))

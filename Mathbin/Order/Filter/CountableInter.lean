@@ -73,7 +73,7 @@ theorem countable_bInter_mem {ι : Type _} {S : Set ι} (hS : S.Countable) {s : 
 theorem eventually_countable_forall [Countable ι] {p : α → ι → Prop} :
     (∀ᶠ x in l, ∀ i, p x i) ↔ ∀ i, ∀ᶠ x in l, p x i := by
   simpa only [Filter.Eventually, set_of_forall] using
-    @countable_iInter_mem _ _ l _ _ fun i => { x | p x i }
+    @countable_iInter_mem _ _ l _ _ fun i => {x | p x i}
 #align eventually_countable_forall eventually_countable_forall
 
 #print eventually_countable_ball /-
@@ -81,7 +81,7 @@ theorem eventually_countable_ball {ι : Type _} {S : Set ι} (hS : S.Countable)
     {p : ∀ (x : α), ∀ i ∈ S, Prop} :
     (∀ᶠ x in l, ∀ i ∈ S, p x i ‹_›) ↔ ∀ i ∈ S, ∀ᶠ x in l, p x i ‹_› := by
   simpa only [Filter.Eventually, set_of_forall] using
-    @countable_bInter_mem _ l _ _ _ hS fun i hi => { x | p x i hi }
+    @countable_bInter_mem _ l _ _ _ hS fun i hi => {x | p x i hi}
 #align eventually_countable_ball eventually_countable_ball
 -/
 
@@ -301,7 +301,7 @@ variable (g)
 
 /-- `countable_generate g` is the greatest `countable_Inter_filter` containing `g`.-/
 theorem countableGenerate_isGreatest :
-    IsGreatest { f : Filter α | CountableInterFilter f ∧ g ⊆ f.sets } (countableGenerate g) :=
+    IsGreatest {f : Filter α | CountableInterFilter f ∧ g ⊆ f.sets} (countableGenerate g) :=
   by
   refine' ⟨⟨inferInstance, fun s => countable_generate_sets.basic⟩, _⟩
   rintro f ⟨fct, hf⟩

@@ -27,7 +27,7 @@ open scoped Real
 
 theorem hasStrictDerivAt_tan {x : ℂ} (h : cos x ≠ 0) : HasStrictDerivAt tan (1 / cos x ^ 2) x :=
   by
-  convert(has_strict_deriv_at_sin x).div (has_strict_deriv_at_cos x) h
+  convert (has_strict_deriv_at_sin x).div (has_strict_deriv_at_cos x) h
   rw [← sin_sq_add_cos_sq x]
   ring
 #align complex.has_strict_deriv_at_tan Complex.hasStrictDerivAt_tan

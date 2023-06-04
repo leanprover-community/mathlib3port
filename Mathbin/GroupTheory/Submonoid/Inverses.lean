@@ -65,7 +65,7 @@ variable [Monoid M] (S : Submonoid M)
 @[to_additive
       "`S.left_neg` is the additive submonoid containing all the left additive inverses\nof `S`."]
 def leftInv : Submonoid M where
-  carrier := { x : M | ∃ y : S, x * y = 1 }
+  carrier := {x : M | ∃ y : S, x * y = 1}
   one_mem' := ⟨1, mul_one 1⟩
   mul_mem' := fun a b ⟨a', ha⟩ ⟨b', hb⟩ =>
     ⟨b' * a', by rw [coe_mul, ← mul_assoc, mul_assoc a, hb, mul_one, ha]⟩
@@ -174,7 +174,7 @@ noncomputable def leftInvEquiv : S.left_inv ≃* S :=
         dsimp; generalize_proofs h; rw [← h.some.mul_left_inj]
         exact h.some.inv_val.trans ((S.mul_from_left_inv x).symm.trans (by rw [h.some_spec]))
     right_inv := fun x => by
-      dsimp; ext; rw [from_left_inv_eq_iff]; convert(hS x.prop).some.inv_val
+      dsimp; ext; rw [from_left_inv_eq_iff]; convert (hS x.prop).some.inv_val
       exact (hS x.prop).choose_spec.symm }
 #align submonoid.left_inv_equiv Submonoid.leftInvEquiv
 #align add_submonoid.left_neg_equiv AddSubmonoid.leftNegEquiv

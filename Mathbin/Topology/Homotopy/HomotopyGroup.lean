@@ -70,7 +70,7 @@ theorem proj_continuous (i : Fin n) : Continuous fun f : I^ n => f i :=
 /-- The points of the `n`-dimensional cube with at least one projection equal to 0 or 1.
 -/
 def boundary (n : ℕ) : Set (I^ n) :=
-  { y | ∃ i, y i = 0 ∨ y i = 1 }
+  {y | ∃ i, y i = 0 ∨ y i = 1}
 #align cube.boundary Cube.boundary
 -/
 

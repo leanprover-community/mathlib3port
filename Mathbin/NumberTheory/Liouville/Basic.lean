@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Damiano Testa, Jujian Zhang
 
 ! This file was ported from Lean 3 source module number_theory.liouville.basic
-! leanprover-community/mathlib commit 04e80bb7e8510958cd9aacd32fe2dc147af0b9f1
+! leanprover-community/mathlib commit af471b9e3ce868f296626d33189b4ce730fa4c00
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -15,6 +15,9 @@ import Mathbin.Data.Real.Irrational
 /-!
 
 # Liouville's theorem
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file contains a proof of Liouville's theorem stating that all Liouville numbers are
 transcendental.
@@ -27,6 +30,7 @@ Liouville numbers.
 -/
 
 
+#print Liouville /-
 /-- A Liouville number is a real number `x` such that for every natural number `n`, there exist
 `a, b ∈ ℤ` with `1 < b` such that `0 < |x - a/b| < 1/bⁿ`.
 In the implementation, the condition `x ≠ a/b` replaces the traditional equivalent `0 < |x - a/b|`.
@@ -34,9 +38,11 @@ In the implementation, the condition `x ≠ a/b` replaces the traditional equiva
 def Liouville (x : ℝ) :=
   ∀ n : ℕ, ∃ a b : ℤ, 1 < b ∧ x ≠ a / b ∧ |x - a / b| < 1 / b ^ n
 #align liouville Liouville
+-/
 
 namespace Liouville
 
+#print Liouville.irrational /-
 protected theorem irrational {x : ℝ} (h : Liouville x) : Irrational x :=
   by
   -- By contradiction, `x = a / b`, with `a ∈ ℤ`, `0 < b ∈ ℕ` is a Liouville number,
@@ -79,6 +85,7 @@ protected theorem irrational {x : ℝ} (h : Liouville x) : Irrational x :=
   -- we are done.
   exact not_le.mpr a1 (Nat.mul_lt_mul_pow_succ (int.coe_nat_pos.mp ap) (int.coe_nat_lt.mp q1)).le
 #align liouville.irrational Liouville.irrational
+-/
 
 open Polynomial Metric Set Real RingHom
 

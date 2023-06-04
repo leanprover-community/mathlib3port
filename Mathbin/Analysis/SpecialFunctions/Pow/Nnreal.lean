@@ -549,7 +549,7 @@ theorem mul_rpow_eq_ite (x y : ℝ≥0∞) (z : ℝ) :
   induction x using WithTop.recTopCoe; · cases' hz with hz hz <;> simp [hz, top_unique hxy]
   induction y using WithTop.recTopCoe; · cases' hz with hz hz <;> simp [*]
   simp only [*, false_and_iff, and_false_iff, false_or_iff, if_false]
-  norm_cast  at *
+  norm_cast at *
   rw [coe_rpow_of_ne_zero (mul_ne_zero hx0 hy0), NNReal.mul_rpow]
 #align ennreal.mul_rpow_eq_ite ENNReal.mul_rpow_eq_ite
 

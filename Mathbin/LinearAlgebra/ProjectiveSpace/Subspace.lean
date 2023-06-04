@@ -224,13 +224,13 @@ theorem mem_span {S : Set (ℙ K V)} (u : ℙ K V) : u ∈ span S ↔ ∀ W : Su
 #print Projectivization.Subspace.span_eq_sInf /-
 /-- The span of a set of points in a projective space is equal to the infimum of the collection of
 subspaces which contain the set. -/
-theorem span_eq_sInf {S : Set (ℙ K V)} : span S = sInf { W | S ⊆ W } :=
+theorem span_eq_sInf {S : Set (ℙ K V)} : span S = sInf {W | S ⊆ W} :=
   by
   ext
   simp_rw [mem_carrier_iff, mem_span x]
   refine' ⟨fun hx => _, fun hx W hW => _⟩
   · rintro W ⟨T, ⟨hT, rfl⟩⟩; exact hx T hT
-  · exact (@sInf_le _ _ { W : Subspace K V | S ⊆ ↑W } W hW) x hx
+  · exact (@sInf_le _ _ {W : Subspace K V | S ⊆ ↑W} W hW) x hx
 #align projectivization.subspace.span_eq_Inf Projectivization.Subspace.span_eq_sInf
 -/
 

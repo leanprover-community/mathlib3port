@@ -66,7 +66,7 @@ end SameRay
 
 variable {x y : F}
 
-theorem norm_injOn_ray_left (hx : x ≠ 0) : { y | SameRay ℝ x y }.InjOn norm :=
+theorem norm_injOn_ray_left (hx : x ≠ 0) : {y | SameRay ℝ x y}.InjOn norm :=
   by
   rintro y hy z hz h
   rcases hy.exists_nonneg_left hx with ⟨r, hr, rfl⟩
@@ -76,7 +76,7 @@ theorem norm_injOn_ray_left (hx : x ≠ 0) : { y | SameRay ℝ x y }.InjOn norm 
   rw [h]
 #align norm_inj_on_ray_left norm_injOn_ray_left
 
-theorem norm_injOn_ray_right (hy : y ≠ 0) : { x | SameRay ℝ x y }.InjOn norm := by
+theorem norm_injOn_ray_right (hy : y ≠ 0) : {x | SameRay ℝ x y}.InjOn norm := by
   simpa only [SameRay.sameRay_comm] using norm_injOn_ray_left hy
 #align norm_inj_on_ray_right norm_injOn_ray_right
 

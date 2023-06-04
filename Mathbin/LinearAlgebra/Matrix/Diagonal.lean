@@ -67,20 +67,19 @@ variable {K : Type u} [Field K]
 
 -- maybe try to relax the universe constraint
 theorem ker_diagonal_toLin' [DecidableEq m] (w : m → K) :
-    ker (diagonal w).toLin' = ⨆ i ∈ { i | w i = 0 }, range (LinearMap.stdBasis K (fun i => K) i) :=
+    ker (diagonal w).toLin' = ⨆ i ∈ {i | w i = 0}, range (LinearMap.stdBasis K (fun i => K) i) :=
   by
   rw [← comap_bot, ← infi_ker_proj, comap_infi]
   have := fun i : m => ker_comp (to_lin' (diagonal w)) (proj i)
   simp only [comap_infi, ← this, proj_diagonal, ker_smul']
-  have : univ ⊆ { i : m | w i = 0 } ∪ { i : m | w i = 0 }ᶜ := by rw [Set.union_compl_self]
+  have : univ ⊆ {i : m | w i = 0} ∪ {i : m | w i = 0}ᶜ := by rw [Set.union_compl_self]
   exact
     (supr_range_std_basis_eq_infi_ker_proj K (fun i : m => K) disjoint_compl_right this
         (Set.toFinite _)).symm
 #align matrix.ker_diagonal_to_lin' Matrix.ker_diagonal_toLin'
 
 theorem range_diagonal [DecidableEq m] (w : m → K) :
-    (diagonal w).toLin'.range =
-      ⨆ i ∈ { i | w i ≠ 0 }, (LinearMap.stdBasis K (fun i => K) i).range :=
+    (diagonal w).toLin'.range = ⨆ i ∈ {i | w i ≠ 0}, (LinearMap.stdBasis K (fun i => K) i).range :=
   by
   dsimp only [mem_set_of_eq]
   rw [← Submodule.map_top, ← supr_range_std_basis, Submodule.map_iSup]
@@ -91,8 +90,8 @@ theorem range_diagonal [DecidableEq m] (w : m → K) :
 theorem rank_diagonal [DecidableEq m] [DecidableEq K] (w : m → K) :
     rank (diagonal w).toLin' = Fintype.card { i // w i ≠ 0 } :=
   by
-  have hu : univ ⊆ { i : m | w i = 0 }ᶜ ∪ { i : m | w i = 0 } := by rw [Set.compl_union_self]
-  have hd : Disjoint { i : m | w i ≠ 0 } { i : m | w i = 0 } := disjoint_compl_left
+  have hu : univ ⊆ {i : m | w i = 0}ᶜ ∪ {i : m | w i = 0} := by rw [Set.compl_union_self]
+  have hd : Disjoint {i : m | w i ≠ 0} {i : m | w i = 0} := disjoint_compl_left
   have B₁ := supr_range_std_basis_eq_infi_ker_proj K (fun i : m => K) hd hu (Set.toFinite _)
   have B₂ := @infi_ker_proj_equiv K _ _ (fun i : m => K) _ _ _ _ (by simp <;> infer_instance) hd hu
   rw [rank, range_diagonal, B₁, ← @rank_fun' K]

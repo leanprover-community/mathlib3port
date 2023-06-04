@@ -132,7 +132,7 @@ def toEssImageCompEssentialImageInclusion (F : C ⥤ D) : F.toEssImage ⋙ F.ess
 end Functor
 
 #print CategoryTheory.EssSurj /-
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`mem_essImage] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`mem_essImage] [] -/
 /-- A functor `F : C ⥤ D` is essentially surjective if every object of `D` is in the essential image
 of `F`. In other words, for every `Y : D`, there is some `X : C` with `F.obj X ≅ Y`.
 

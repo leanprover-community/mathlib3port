@@ -44,7 +44,7 @@ open scoped Polynomial BigOperators
 falls in `I ^ i`. -/
 def reesAlgebra : Subalgebra R R[X]
     where
-  carrier := { f | ∀ i, f.coeff i ∈ I ^ i }
+  carrier := {f | ∀ i, f.coeff i ∈ I ^ i}
   mul_mem' f g hf hg i := by
     rw [coeff_mul]
     apply Ideal.sum_mem
@@ -121,15 +121,14 @@ variable {I}
 #print reesAlgebra.fg /-
 theorem reesAlgebra.fg (hI : I.FG) : (reesAlgebra I).FG := by
   classical
-    obtain ⟨s, hs⟩ := hI
-    rw [← adjoin_monomial_eq_reesAlgebra, ← hs]
-    use s.image (monomial 1)
-    rw [Finset.coe_image]
-    change
-      _ =
-        Algebra.adjoin R
-          (Submodule.map (monomial 1 : R →ₗ[R] R[X]) (Submodule.span R ↑s) : Set R[X])
-    rw [Submodule.map_span, Algebra.adjoin_span]
+  obtain ⟨s, hs⟩ := hI
+  rw [← adjoin_monomial_eq_reesAlgebra, ← hs]
+  use s.image (monomial 1)
+  rw [Finset.coe_image]
+  change
+    _ =
+      Algebra.adjoin R (Submodule.map (monomial 1 : R →ₗ[R] R[X]) (Submodule.span R ↑s) : Set R[X])
+  rw [Submodule.map_span, Algebra.adjoin_span]
 #align rees_algebra.fg reesAlgebra.fg
 -/
 

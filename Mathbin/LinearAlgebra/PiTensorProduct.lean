@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Frédéric Dupuis, Eric Wieser
 
 ! This file was ported from Lean 3 source module linear_algebra.pi_tensor_product
-! leanprover-community/mathlib commit ce11c3c2a285bbe6937e26d9792fda4e51f3fe1a
+! leanprover-community/mathlib commit 5c1efce12ba86d4901463f61019832f6a4b1a0d0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.LinearAlgebra.Multilinear.TensorProduct
 
 /-!
 # Tensor product of an indexed family of modules over commutative semirings
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 We define the tensor product of an indexed family `s : ι → Type*` of modules over commutative
 semirings. We denote this space by `⨂[R] i, s i` and define it as `free_add_monoid (R × Π i, s i)`
@@ -89,6 +92,7 @@ include R
 
 variable (R) (s)
 
+#print PiTensorProduct.Eqv /-
 /-- The relation on `free_add_monoid (R × Π i, s i)` that generates a congruence whose quotient is
 the tensor product. -/
 inductive Eqv : FreeAddMonoid (R × ∀ i, s i) → FreeAddMonoid (R × ∀ i, s i) → Prop
@@ -109,16 +113,19 @@ inductive Eqv : FreeAddMonoid (R × ∀ i, s i) → FreeAddMonoid (R × ∀ i, s
       eqv (FreeAddMonoid.of (r, update f i (r' • f i))) (FreeAddMonoid.of (r' * r, f))
   | add_comm : ∀ x y, eqv (x + y) (y + x)
 #align pi_tensor_product.eqv PiTensorProduct.Eqv
+-/
 
 end PiTensorProduct
 
 variable (R) (s)
 
+#print PiTensorProduct /-
 /-- `pi_tensor_product R s` with `R` a commutative semiring and `s : ι → Type*` is the tensor
   product of all the `s i`'s. This is denoted by `⨂[R] i, s i`. -/
 def PiTensorProduct : Type _ :=
   (addConGen (PiTensorProduct.Eqv R s)).Quotient
 #align pi_tensor_product PiTensorProduct
+-/
 
 variable {R}
 
@@ -143,12 +150,14 @@ instance : Inhabited (⨂[R] i, s i) :=
 
 variable (R) {s}
 
+#print PiTensorProduct.tprodCoeff /-
 /-- `tprod_coeff R r f` with `r : R` and `f : Π i, s i` is the tensor product of the vectors `f i`
 over all `i : ι`, multiplied by the coefficient `r`. Note that this is meant as an auxiliary
 definition for this file alone, and that one should use `tprod` defined below for most purposes. -/
 def tprodCoeff (r : R) (f : ∀ i, s i) : ⨂[R] i, s i :=
   AddCon.mk' _ <| FreeAddMonoid.of (r, f)
 #align pi_tensor_product.tprod_coeff PiTensorProduct.tprodCoeff
+-/
 
 variable {R}
 
@@ -156,9 +165,9 @@ theorem zero_tprodCoeff (f : ∀ i, s i) : tprodCoeff R 0 f = 0 :=
   Quotient.sound' <| AddConGen.Rel.of _ _ <| Eqv.of_zero_scalar _
 #align pi_tensor_product.zero_tprod_coeff PiTensorProduct.zero_tprodCoeff
 
-theorem zero_tprod_coeff' (z : R) (f : ∀ i, s i) (i : ι) (hf : f i = 0) : tprodCoeff R z f = 0 :=
+theorem zero_tprodCoeff' (z : R) (f : ∀ i, s i) (i : ι) (hf : f i = 0) : tprodCoeff R z f = 0 :=
   Quotient.sound' <| AddConGen.Rel.of _ _ <| Eqv.of_zero _ _ i hf
-#align pi_tensor_product.zero_tprod_coeff' PiTensorProduct.zero_tprod_coeff'
+#align pi_tensor_product.zero_tprod_coeff' PiTensorProduct.zero_tprodCoeff'
 
 theorem add_tprodCoeff [DecidableEq ι] (z : R) (f : ∀ i, s i) (i : ι) (m₁ m₂ : s i) :
     tprodCoeff R z (update f i m₁) + tprodCoeff R z (update f i m₂) =
@@ -166,10 +175,10 @@ theorem add_tprodCoeff [DecidableEq ι] (z : R) (f : ∀ i, s i) (i : ι) (m₁ 
   Quotient.sound' <| AddConGen.Rel.of _ _ (Eqv.of_add _ z f i m₁ m₂)
 #align pi_tensor_product.add_tprod_coeff PiTensorProduct.add_tprodCoeff
 
-theorem add_tprod_coeff' (z₁ z₂ : R) (f : ∀ i, s i) :
+theorem add_tprodCoeff' (z₁ z₂ : R) (f : ∀ i, s i) :
     tprodCoeff R z₁ f + tprodCoeff R z₂ f = tprodCoeff R (z₁ + z₂) f :=
   Quotient.sound' <| AddConGen.Rel.of _ _ (Eqv.of_add_scalar z₁ z₂ f)
-#align pi_tensor_product.add_tprod_coeff' PiTensorProduct.add_tprod_coeff'
+#align pi_tensor_product.add_tprod_coeff' PiTensorProduct.add_tprodCoeff'
 
 theorem smul_tprodCoeff_aux [DecidableEq ι] (z : R) (f : ∀ i, s i) (i : ι) (r : R) :
     tprodCoeff R z (update f i (r • f i)) = tprodCoeff R (r * z) f :=
@@ -227,7 +236,7 @@ protected theorem induction_on' {C : (⨂[R] i, s i) → Prop} (z : ⨂[R] i, s 
   refine' AddCon.induction_on z fun x => FreeAddMonoid.recOn x C0 _
   simp_rw [AddCon.coe_add]
   refine' fun f y ih => Cp _ ih
-  convert@C1 f.1 f.2
+  convert @C1 f.1 f.2
   simp only [Prod.mk.eta]
 #align pi_tensor_product.induction_on' PiTensorProduct.induction_on'
 
@@ -251,10 +260,10 @@ instance hasSmul' : SMul R₁ (⨂[R] i, s i) :=
 instance : SMul R (⨂[R] i, s i) :=
   PiTensorProduct.hasSmul'
 
-theorem smul_tprod_coeff' (r : R₁) (z : R) (f : ∀ i, s i) :
+theorem smul_tprodCoeff' (r : R₁) (z : R) (f : ∀ i, s i) :
     r • tprodCoeff R z f = tprodCoeff R (r • z) f :=
   rfl
-#align pi_tensor_product.smul_tprod_coeff' PiTensorProduct.smul_tprod_coeff'
+#align pi_tensor_product.smul_tprod_coeff' PiTensorProduct.smul_tprodCoeff'
 
 protected theorem smul_add (r : R₁) (x y : ⨂[R] i, s i) : r • (x + y) = r • x + r • y :=
   AddMonoidHom.map_add _ _ _
@@ -273,18 +282,17 @@ instance distribMulAction' : DistribMulAction R₁ (⨂[R] i, s i)
   smul_zero r := AddMonoidHom.map_zero _
 #align pi_tensor_product.distrib_mul_action' PiTensorProduct.distribMulAction'
 
-instance smul_comm_class' [SMulCommClass R₁ R₂ R] : SMulCommClass R₁ R₂ (⨂[R] i, s i) :=
+instance smulCommClass' [SMulCommClass R₁ R₂ R] : SMulCommClass R₁ R₂ (⨂[R] i, s i) :=
   ⟨fun r' r'' x =>
     PiTensorProduct.induction_on' x (fun xr xf => by simp only [smul_tprod_coeff', smul_comm])
       fun z y ihz ihy => by simp_rw [PiTensorProduct.smul_add, ihz, ihy]⟩
-#align pi_tensor_product.smul_comm_class' PiTensorProduct.smul_comm_class'
+#align pi_tensor_product.smul_comm_class' PiTensorProduct.smulCommClass'
 
-instance is_scalar_tower' [SMul R₁ R₂] [IsScalarTower R₁ R₂ R] :
-    IsScalarTower R₁ R₂ (⨂[R] i, s i) :=
+instance isScalarTower' [SMul R₁ R₂] [IsScalarTower R₁ R₂ R] : IsScalarTower R₁ R₂ (⨂[R] i, s i) :=
   ⟨fun r' r'' x =>
     PiTensorProduct.induction_on' x (fun xr xf => by simp only [smul_tprod_coeff', smul_assoc])
       fun z y ihz ihy => by simp_rw [PiTensorProduct.smul_add, ihz, ihy]⟩
-#align pi_tensor_product.is_scalar_tower' PiTensorProduct.is_scalar_tower'
+#align pi_tensor_product.is_scalar_tower' PiTensorProduct.isScalarTower'
 
 end DistribMulAction
 
@@ -308,10 +316,10 @@ instance : Module R (⨂[R] i, s i) :=
   PiTensorProduct.module'
 
 instance : SMulCommClass R R (⨂[R] i, s i) :=
-  PiTensorProduct.smul_comm_class'
+  PiTensorProduct.smulCommClass'
 
 instance : IsScalarTower R R (⨂[R] i, s i) :=
-  PiTensorProduct.is_scalar_tower'
+  PiTensorProduct.isScalarTower'
 
 variable {R}
 

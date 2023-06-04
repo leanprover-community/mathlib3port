@@ -91,7 +91,7 @@ variable (R)
 which vanish on the complement of `s`. -/
 def idealOfSet (s : Set X) : Ideal C(X, R)
     where
-  carrier := { f : C(X, R) | ∀ x ∈ sᶜ, f x = 0 }
+  carrier := {f : C(X, R) | ∀ x ∈ sᶜ, f x = 0}
   add_mem' f g hf hg x hx := by simp only [hf x hx, hg x hx, coe_add, Pi.add_apply, add_zero]
   zero_mem' _ _ := rfl
   smul_mem' c f hf x hx := MulZeroClass.mul_zero (c x) ▸ congr_arg (fun y => c x * y) (hf x hx)
@@ -120,7 +120,7 @@ theorem not_mem_idealOfSet {s : Set X} {f : C(X, R)} : f ∉ idealOfSet R s ↔ 
 /-- Given an ideal `I` of `C(X, R)`, construct the set of points for which every function in the
 ideal vanishes on the complement. -/
 def setOfIdeal (I : Ideal C(X, R)) : Set X :=
-  { x : X | ∀ f ∈ I, (f : C(X, R)) x = 0 }ᶜ
+  {x : X | ∀ f ∈ I, (f : C(X, R)) x = 0}ᶜ
 #align continuous_map.set_of_ideal ContinuousMap.setOfIdeal
 
 theorem not_mem_setOfIdeal {I : Ideal C(X, R)} {x : X} :
@@ -189,7 +189,7 @@ variable {X 𝕜 : Type _} [IsROrC 𝕜] [TopologicalSpace X]
 /-- An auxiliary lemma used in the proof of `ideal_of_set_of_ideal_eq_closure` which may be useful
 on its own. -/
 theorem exists_mul_le_one_eqOn_ge (f : C(X, ℝ≥0)) {c : ℝ≥0} (hc : 0 < c) :
-    ∃ g : C(X, ℝ≥0), (∀ x : X, (g * f) x ≤ 1) ∧ { x : X | c ≤ f x }.EqOn (g * f) 1 :=
+    ∃ g : C(X, ℝ≥0), (∀ x : X, (g * f) x ≤ 1) ∧ {x : X | c ≤ f x}.EqOn (g * f) 1 :=
   ⟨{  toFun := (f ⊔ const X c)⁻¹
       continuous_toFun :=
         ((map_continuous f).sup <| map_continuous _).inv₀ fun _ => (hc.trans_le le_sup_right).ne' },
@@ -219,7 +219,7 @@ theorem idealOfSet_of_ideal_eq_closure (I : Ideal C(X, 𝕜)) :
   simp_rw [dist_nndist]
   norm_cast
   -- Let `t := {x : X | ε / 2 ≤ ‖f x‖₊}}` which is closed and disjoint from `set_of_ideal I`.
-  set t := { x : X | ε / 2 ≤ ‖f x‖₊ }
+  set t := {x : X | ε / 2 ≤ ‖f x‖₊}
   have ht : IsClosed t := isClosed_le continuous_const (map_continuous f).nnnorm
   have htI : Disjoint t (set_of_ideal Iᶜ) :=
     by
@@ -298,7 +298,7 @@ theorem idealOfSet_of_ideal_eq_closure (I : Ideal C(X, 𝕜)) :
       obtain ⟨g, hI, hgx⟩ := hx
       have := (map_continuous g).ContinuousAt.eventually_ne hgx
       refine'
-        ⟨{ y : X | g y ≠ 0 } ∩ t,
+        ⟨{y : X | g y ≠ 0} ∩ t,
           mem_nhds_within_iff_exists_mem_nhds_inter.mpr ⟨_, this, Set.Subset.rfl⟩,
           ⟨⟨fun x => ‖g x‖₊ ^ 2, (map_continuous g).nnnorm.pow 2⟩, _, fun x hx =>
             pow_pos (norm_pos_iff.mpr hx.1) 2⟩⟩

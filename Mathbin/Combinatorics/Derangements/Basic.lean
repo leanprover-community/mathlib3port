@@ -38,7 +38,7 @@ open Equiv Function
 #print derangements /-
 /-- A permutation is a derangement if it has no fixed points. -/
 def derangements (α : Type _) : Set (Perm α) :=
-  { f : Perm α | ∀ x : α, f x ≠ x }
+  {f : Perm α | ∀ x : α, f x ≠ x}
 #align derangements derangements
 -/
 
@@ -128,7 +128,7 @@ variable [DecidableEq α]
 /-- The set of permutations `f` such that the preimage of `(a, f)` under
     `equiv.perm.decompose_option` is a derangement. -/
 def RemoveNone.fiber (a : Option α) : Set (Perm α) :=
-  { f : Perm α | (a, f) ∈ Equiv.Perm.decomposeOption '' derangements (Option α) }
+  {f : Perm α | (a, f) ∈ Equiv.Perm.decomposeOption '' derangements (Option α)}
 #align derangements.equiv.remove_none.fiber derangements.Equiv.RemoveNone.fiber
 -/
 
@@ -155,14 +155,14 @@ theorem RemoveNone.fiber_none : RemoveNone.fiber (@none α) = ∅ :=
 /-- For any `a : α`, the fiber over `some a` is the set of permutations
     where `a` is the only possible fixed point. -/
 theorem RemoveNone.fiber_some (a : α) :
-    RemoveNone.fiber (some a) = { f : Perm α | fixedPoints f ⊆ {a} } :=
+    RemoveNone.fiber (some a) = {f : Perm α | fixedPoints f ⊆ {a}} :=
   by
   ext f
   constructor
   · rw [remove_none.mem_fiber]
     rintro ⟨F, F_derangement, F_none, rfl⟩ x x_fixed
     rw [mem_fixed_points_iff] at x_fixed 
-    apply_fun some  at x_fixed 
+    apply_fun some at x_fixed 
     cases' Fx : F (some x) with y
     · rwa [remove_none_none F Fx, F_none, Option.some_inj, eq_comm] at x_fixed 
     · exfalso; rw [remove_none_some F ⟨y, Fx⟩] at x_fixed ; exact F_derangement _ x_fixed
@@ -196,7 +196,7 @@ variable [DecidableEq α]
 /-- The set of derangements on `option α` is equivalent to the union over `a : α`
     of "permutations with `a` the only possible fixed point". -/
 def derangementsOptionEquivSigmaAtMostOneFixedPoint :
-    derangements (Option α) ≃ Σ a : α, { f : Perm α | fixedPoints f ⊆ {a} } :=
+    derangements (Option α) ≃ Σ a : α, {f : Perm α | fixedPoints f ⊆ {a}} :=
   by
   have fiber_none_is_false : equiv.remove_none.fiber (@none α) → False := by
     rw [equiv.remove_none.fiber_none]; exact IsEmpty.false
@@ -206,7 +206,7 @@ def derangementsOptionEquivSigmaAtMostOneFixedPoint :
     _ ≃ Σ a : Option α, ↥(equiv.remove_none.fiber a) := (set_prod_equiv_sigma _)
     _ ≃ Σ a : α, ↥(equiv.remove_none.fiber (some a)) :=
       (sigma_option_equiv_of_some _ fiber_none_is_false)
-    _ ≃ Σ a : α, { f : perm α | fixed_points f ⊆ {a} } := by simp_rw [equiv.remove_none.fiber_some]
+    _ ≃ Σ a : α, {f : perm α | fixed_points f ⊆ {a}} := by simp_rw [equiv.remove_none.fiber_some]
     
 #align derangements.derangements_option_equiv_sigma_at_most_one_fixed_point derangements.derangementsOptionEquivSigmaAtMostOneFixedPoint
 -/

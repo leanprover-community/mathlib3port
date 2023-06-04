@@ -65,9 +65,9 @@ theorem embedding_coe : Embedding (coe : ℝ≥0 → ℝ≥0∞) :=
       · rw [@OrderTopology.topology_eq_generate_intervals ℝ≥0∞ _, ← coinduced_le_iff_le_induced]
         refine' le_generateFrom fun s ha => _
         rcases ha with ⟨a, rfl | rfl⟩
-        show IsOpen { b : ℝ≥0 | a < ↑b }
+        show IsOpen {b : ℝ≥0 | a < ↑b}
         · cases a <;> simp [none_eq_top, some_eq_coe, isOpen_lt']
-        show IsOpen { b : ℝ≥0 | ↑b < a }
+        show IsOpen {b : ℝ≥0 | ↑b < a}
         · cases a <;> simp [none_eq_top, some_eq_coe, isOpen_gt', isOpen_const]
       · rw [@OrderTopology.topology_eq_generate_intervals ℝ≥0 _]
         refine' le_generateFrom fun s ha => _
@@ -76,7 +76,7 @@ theorem embedding_coe : Embedding (coe : ℝ≥0 → ℝ≥0∞) :=
         exact ⟨Iio a, isOpen_Iio, by simp [Iio]⟩⟩, fun a b => coe_eq_coe.1⟩
 #align ennreal.embedding_coe ENNReal.embedding_coe
 
-theorem isOpen_ne_top : IsOpen { a : ℝ≥0∞ | a ≠ ⊤ } :=
+theorem isOpen_ne_top : IsOpen {a : ℝ≥0∞ | a ≠ ⊤} :=
   isOpen_ne
 #align ennreal.is_open_ne_top ENNReal.isOpen_ne_top
 
@@ -145,11 +145,11 @@ theorem eventuallyEq_of_toReal_eventuallyEq {l : Filter α} {f g : α → ℝ≥
     (hfi : ∀ᶠ x in l, f x ≠ ∞) (hgi : ∀ᶠ x in l, g x ≠ ∞)
     (hfg : (fun x => (f x).toReal) =ᶠ[l] fun x => (g x).toReal) : f =ᶠ[l] g :=
   by
-  filter_upwards [hfi, hgi, hfg]with _ hfx hgx _
+  filter_upwards [hfi, hgi, hfg] with _ hfx hgx _
   rwa [← ENNReal.toReal_eq_toReal hfx hgx]
 #align ennreal.eventually_eq_of_to_real_eventually_eq ENNReal.eventuallyEq_of_toReal_eventuallyEq
 
-theorem continuousOn_toNNReal : ContinuousOn ENNReal.toNNReal { a | a ≠ ∞ } := fun a ha =>
+theorem continuousOn_toNNReal : ContinuousOn ENNReal.toNNReal {a | a ≠ ∞} := fun a ha =>
   ContinuousAt.continuousWithinAt (tendsto_toNNReal ha)
 #align ennreal.continuous_on_to_nnreal ENNReal.continuousOn_toNNReal
 
@@ -158,7 +158,7 @@ theorem tendsto_toReal {a : ℝ≥0∞} (ha : a ≠ ⊤) : Tendsto ENNReal.toRea
 #align ennreal.tendsto_to_real ENNReal.tendsto_toReal
 
 /-- The set of finite `ℝ≥0∞` numbers is homeomorphic to `ℝ≥0`. -/
-def neTopHomeomorphNNReal : { a | a ≠ ∞ } ≃ₜ ℝ≥0 :=
+def neTopHomeomorphNNReal : {a | a ≠ ∞} ≃ₜ ℝ≥0 :=
   {
     neTopEquivNNReal with
     continuous_toFun := continuousOn_iff_continuous_restrict.1 continuousOn_toNNReal
@@ -166,7 +166,7 @@ def neTopHomeomorphNNReal : { a | a ≠ ∞ } ≃ₜ ℝ≥0 :=
 #align ennreal.ne_top_homeomorph_nnreal ENNReal.neTopHomeomorphNNReal
 
 /-- The set of finite `ℝ≥0∞` numbers is homeomorphic to `ℝ≥0`. -/
-def ltTopHomeomorphNNReal : { a | a < ∞ } ≃ₜ ℝ≥0 := by
+def ltTopHomeomorphNNReal : {a | a < ∞} ≃ₜ ℝ≥0 := by
   refine' (Homeomorph.setCongr <| Set.ext fun x => _).trans ne_top_homeomorph_nnreal <;>
     simp only [mem_set_of_eq, lt_top_iff_ne_top]
 #align ennreal.lt_top_homeomorph_nnreal ENNReal.ltTopHomeomorphNNReal
@@ -479,7 +479,7 @@ theorem continuous_pow (n : ℕ) : Continuous fun a : ℝ≥0∞ => a ^ n :=
 #align ennreal.continuous_pow ENNReal.continuous_pow
 
 theorem continuousOn_sub :
-    ContinuousOn (fun p : ℝ≥0∞ × ℝ≥0∞ => p.fst - p.snd) { p : ℝ≥0∞ × ℝ≥0∞ | p ≠ ⟨∞, ∞⟩ } :=
+    ContinuousOn (fun p : ℝ≥0∞ × ℝ≥0∞ => p.fst - p.snd) {p : ℝ≥0∞ × ℝ≥0∞ | p ≠ ⟨∞, ∞⟩} :=
   by
   rw [ContinuousOn]
   rintro ⟨x, y⟩ hp
@@ -499,7 +499,7 @@ theorem continuous_nnreal_sub {a : ℝ≥0} : Continuous fun x : ℝ≥0∞ => (
   continuous_sub_left coe_ne_top
 #align ennreal.continuous_nnreal_sub ENNReal.continuous_nnreal_sub
 
-theorem continuousOn_sub_left (a : ℝ≥0∞) : ContinuousOn (fun x => a - x) { x : ℝ≥0∞ | x ≠ ∞ } :=
+theorem continuousOn_sub_left (a : ℝ≥0∞) : ContinuousOn (fun x => a - x) {x : ℝ≥0∞ | x ≠ ∞} :=
   by
   rw [show (fun x => a - x) = (fun p : ℝ≥0∞ × ℝ≥0∞ => p.fst - p.snd) ∘ fun x => ⟨a, x⟩ by rfl]
   apply ContinuousOn.comp continuous_on_sub (Continuous.continuousOn (Continuous.Prod.mk a))
@@ -788,7 +788,7 @@ theorem exists_frequently_lt_of_liminf_ne_top {ι : Type _} {l : Filter ι} {x :
               is_bounded_default)
           _)
   simp only [eventually_map, ENNReal.coe_le_coe]
-  filter_upwards [h r]with i hi using hi.trans (le_abs_self (x i))
+  filter_upwards [h r] with i hi using hi.trans (le_abs_self (x i))
 #align ennreal.exists_frequently_lt_of_liminf_ne_top ENNReal.exists_frequently_lt_of_liminf_ne_top
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic filter.is_bounded_default -/
@@ -806,7 +806,7 @@ theorem exists_frequently_lt_of_liminf_ne_top' {ι : Type _} {l : Filter ι} {x 
               is_bounded_default)
           _)
   simp only [eventually_map, ENNReal.coe_le_coe]
-  filter_upwards [h (-r)]with i hi using(le_neg.1 hi).trans (neg_le_abs_self _)
+  filter_upwards [h (-r)] with i hi using (le_neg.1 hi).trans (neg_le_abs_self _)
 #align ennreal.exists_frequently_lt_of_liminf_ne_top' ENNReal.exists_frequently_lt_of_liminf_ne_top'
 
 theorem exists_upcrossings_of_not_bounded_under {ι : Type _} {l : Filter ι} {x : ι → ℝ}
@@ -820,20 +820,20 @@ theorem exists_upcrossings_of_not_bounded_under {ι : Type _} {l : Filter ι} {x
     obtain ⟨q, hq⟩ := exists_rat_gt R
     refine' ⟨q, q + 1, (lt_add_iff_pos_right _).2 zero_lt_one, _, _⟩
     · refine' fun hcon => hR _
-      filter_upwards [hcon]with x hx using not_lt.2 (lt_of_lt_of_le hq (not_lt.1 hx)).le
+      filter_upwards [hcon] with x hx using not_lt.2 (lt_of_lt_of_le hq (not_lt.1 hx)).le
     · simp only [is_bounded_under, is_bounded, eventually_map, eventually_at_top, ge_iff_le,
         not_exists, not_forall, not_le, exists_prop] at hbdd 
       refine' fun hcon => hbdd ↑(q + 1) _
-      filter_upwards [hcon]with x hx using not_lt.1 hx
+      filter_upwards [hcon] with x hx using not_lt.1 hx
   · obtain ⟨R, hR⟩ := exists_frequently_lt_of_liminf_ne_top' hf
     obtain ⟨q, hq⟩ := exists_rat_lt R
     refine' ⟨q - 1, q, (sub_lt_self_iff _).2 zero_lt_one, _, _⟩
     · simp only [is_bounded_under, is_bounded, eventually_map, eventually_at_top, ge_iff_le,
         not_exists, not_forall, not_le, exists_prop] at hbdd 
       refine' fun hcon => hbdd ↑(q - 1) _
-      filter_upwards [hcon]with x hx using not_lt.1 hx
+      filter_upwards [hcon] with x hx using not_lt.1 hx
     · refine' fun hcon => hR _
-      filter_upwards [hcon]with x hx using not_lt.2 ((not_lt.1 hx).trans hq.le)
+      filter_upwards [hcon] with x hx using not_lt.2 ((not_lt.1 hx).trans hq.le)
 #align ennreal.exists_upcrossings_of_not_bounded_under ENNReal.exists_upcrossings_of_not_bounded_under
 
 end Liminf
@@ -1133,24 +1133,24 @@ theorem tsum_union_le (f : α → ℝ≥0∞) (s t : Set α) :
 theorem tsum_biUnion_le {ι : Type _} (f : α → ℝ≥0∞) (s : Finset ι) (t : ι → Set α) :
     (∑' x : ⋃ i ∈ s, t i, f x) ≤ ∑ i in s, ∑' x : t i, f x := by
   classical
-    induction' s using Finset.induction_on with i s hi ihs h
-    · simp
-    have : (⋃ j ∈ insert i s, t j) = t i ∪ ⋃ j ∈ s, t j := by simp
-    rw [tsum_congr_subtype f this]
-    calc
-      (∑' x : t i ∪ ⋃ j ∈ s, t j, f x) ≤ (∑' x : t i, f x) + ∑' x : ⋃ j ∈ s, t j, f x :=
-        tsum_union_le _ _ _
-      _ ≤ (∑' x : t i, f x) + ∑ i in s, ∑' x : t i, f x := (add_le_add le_rfl ihs)
-      _ = ∑ j in insert i s, ∑' x : t j, f x := (Finset.sum_insert hi).symm
-      
+  induction' s using Finset.induction_on with i s hi ihs h
+  · simp
+  have : (⋃ j ∈ insert i s, t j) = t i ∪ ⋃ j ∈ s, t j := by simp
+  rw [tsum_congr_subtype f this]
+  calc
+    (∑' x : t i ∪ ⋃ j ∈ s, t j, f x) ≤ (∑' x : t i, f x) + ∑' x : ⋃ j ∈ s, t j, f x :=
+      tsum_union_le _ _ _
+    _ ≤ (∑' x : t i, f x) + ∑ i in s, ∑' x : t i, f x := (add_le_add le_rfl ihs)
+    _ = ∑ j in insert i s, ∑' x : t j, f x := (Finset.sum_insert hi).symm
+    
 #align ennreal.tsum_bUnion_le ENNReal.tsum_biUnion_le
 
 theorem tsum_iUnion_le {ι : Type _} [Fintype ι] (f : α → ℝ≥0∞) (t : ι → Set α) :
     (∑' x : ⋃ i, t i, f x) ≤ ∑ i, ∑' x : t i, f x := by
   classical
-    have : (⋃ i, t i) = ⋃ i ∈ (Finset.univ : Finset ι), t i := by simp
-    rw [tsum_congr_subtype f this]
-    exact tsum_bUnion_le _ _ _
+  have : (⋃ i, t i) = ⋃ i ∈ (Finset.univ : Finset ι), t i := by simp
+  rw [tsum_congr_subtype f this]
+  exact tsum_bUnion_le _ _ _
 #align ennreal.tsum_Union_le ENNReal.tsum_iUnion_le
 
 theorem tsum_eq_add_tsum_ite {f : β → ℝ≥0∞} (b : β) :
@@ -1178,7 +1178,7 @@ theorem tsum_add_one_eq_top {f : ℕ → ℝ≥0∞} (hf : (∑' n, f n) = ∞) 
 /-- A sum of extended nonnegative reals which is finite can have only finitely many terms
 above any positive threshold.-/
 theorem finite_const_le_of_tsum_ne_top {ι : Type _} {a : ι → ℝ≥0∞} (tsum_ne_top : (∑' i, a i) ≠ ∞)
-    {ε : ℝ≥0∞} (ε_ne_zero : ε ≠ 0) : { i : ι | ε ≤ a i }.Finite :=
+    {ε : ℝ≥0∞} (ε_ne_zero : ε ≠ 0) : {i : ι | ε ≤ a i}.Finite :=
   by
   by_cases ε_infty : ε = ∞
   · rw [ε_infty]
@@ -1189,7 +1189,7 @@ theorem finite_const_le_of_tsum_ne_top {ι : Type _} {a : ι → ℝ≥0∞} (ts
     (nnreal.summable_coe.mpr (summable_to_nnreal_of_tsum_ne_top tsum_ne_top)).tendsto_cofinite_zero
       (Iio_mem_nhds (to_real_pos ε_ne_zero ε_infty))
   simp only [Filter.mem_map, Filter.mem_cofinite, preimage] at key 
-  have obs : { i : ι | ↑(a i).toNNReal ∈ Iio ε.to_real }ᶜ = { i : ι | ε ≤ a i } :=
+  have obs : {i : ι | ↑(a i).toNNReal ∈ Iio ε.to_real}ᶜ = {i : ι | ε ≤ a i} :=
     by
     ext i
     simpa only [mem_Iio, mem_compl_iff, mem_set_of_eq, not_lt] using
@@ -1200,10 +1200,10 @@ theorem finite_const_le_of_tsum_ne_top {ι : Type _} {a : ι → ℝ≥0∞} (ts
 /-- Markov's inequality for `finset.card` and `tsum` in `ℝ≥0∞`. -/
 theorem finset_card_const_le_le_of_tsum_le {ι : Type _} {a : ι → ℝ≥0∞} {c : ℝ≥0∞} (c_ne_top : c ≠ ∞)
     (tsum_le_c : (∑' i, a i) ≤ c) {ε : ℝ≥0∞} (ε_ne_zero : ε ≠ 0) :
-    ∃ hf : { i : ι | ε ≤ a i }.Finite, ↑hf.toFinset.card ≤ c / ε :=
+    ∃ hf : {i : ι | ε ≤ a i}.Finite, ↑hf.toFinset.card ≤ c / ε :=
   by
   by_cases ε = ∞
-  · have obs : { i : ι | ε ≤ a i } = ∅ :=
+  · have obs : {i : ι | ε ≤ a i} = ∅ :=
       by
       rw [eq_empty_iff_forall_not_mem]
       intro i hi
@@ -1212,7 +1212,7 @@ theorem finset_card_const_le_le_of_tsum_le {ι : Type _} {a : ι → ℝ≥0∞}
       exact c_ne_top (le_antisymm le_top oops)
     simp only [obs, finite_empty, finite.to_finset_empty, Finset.card_empty, algebraMap.coe_zero,
       zero_le', exists_true_left]
-  have hf : { i : ι | ε ≤ a i }.Finite :=
+  have hf : {i : ι | ε ≤ a i}.Finite :=
     ENNReal.finite_const_le_of_tsum_ne_top (lt_of_le_of_lt tsum_le_c c_ne_top.lt_top).Ne ε_ne_zero
   use hf
   have at_least : ∀ i ∈ hf.to_finset, ε ≤ a i :=
@@ -1612,7 +1612,7 @@ theorem EMetric.cauchySeq_iff_le_tendsto_0 [Nonempty β] [SemilatticeSup β] {s 
     rw [EMetric.cauchySeq_iff] at hs 
     /- `s` is Cauchy sequence. The sequence `b` will be constructed by taking
       the supremum of the distances between `s n` and `s m` for `n m ≥ N`-/
-    let b N := Sup ((fun p : β × β => edist (s p.1) (s p.2)) '' { p | p.1 ≥ N ∧ p.2 ≥ N })
+    let b N := Sup ((fun p : β × β => edist (s p.1) (s p.2)) '' {p | p.1 ≥ N ∧ p.2 ≥ N})
     --Prove that it bounds the distances of points in the Cauchy sequence
     have C : ∀ n m N, N ≤ n → N ≤ m → edist (s n) (s m) ≤ b N :=
       by
@@ -1741,7 +1741,7 @@ theorem Metric.diam_closure {α : Type _} [PseudoMetricSpace α] (s : Set α) :
 -/
 
 theorem isClosed_setOf_lipschitzOnWith {α β} [PseudoEMetricSpace α] [PseudoEMetricSpace β] (K : ℝ≥0)
-    (s : Set α) : IsClosed { f : α → β | LipschitzOnWith K f s } :=
+    (s : Set α) : IsClosed {f : α → β | LipschitzOnWith K f s} :=
   by
   simp only [LipschitzOnWith, set_of_forall]
   refine' isClosed_biInter fun x hx => isClosed_biInter fun y hy => isClosed_le _ _
@@ -1749,7 +1749,7 @@ theorem isClosed_setOf_lipschitzOnWith {α β} [PseudoEMetricSpace α] [PseudoEM
 #align is_closed_set_of_lipschitz_on_with isClosed_setOf_lipschitzOnWith
 
 theorem isClosed_setOf_lipschitzWith {α β} [PseudoEMetricSpace α] [PseudoEMetricSpace β] (K : ℝ≥0) :
-    IsClosed { f : α → β | LipschitzWith K f } := by
+    IsClosed {f : α → β | LipschitzWith K f} := by
   simp only [← lipschitz_on_univ, isClosed_setOf_lipschitzOnWith]
 #align is_closed_set_of_lipschitz_with isClosed_setOf_lipschitzWith
 

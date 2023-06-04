@@ -148,7 +148,7 @@ theorem norm_sub_modPart (h : ‖(r : ℚ_[p])‖ ≤ 1) : ‖(⟨r, h⟩ - modP
   rw [norm_lt_one_iff_dvd, ← (is_unit_denom r h).dvd_mul_right]
   suffices ↑p ∣ r.num - n * r.denom
     by
-    convert(Int.castRingHom ℤ_[p]).map_dvd this
+    convert (Int.castRingHom ℤ_[p]).map_dvd this
     simp only [sub_mul, Int.cast_ofNat, eq_intCast, Int.cast_mul, sub_left_inj, Int.cast_sub]
     apply Subtype.coe_injective
     simp only [coe_mul, Subtype.coe_mk, coe_nat_cast]
@@ -186,7 +186,7 @@ theorem zmod_congr_of_sub_mem_max_ideal (x : ℤ_[p]) (m n : ℕ) (hm : x - m �
   have := zmod_congr_of_sub_mem_span_aux 1 x m n
   simp only [pow_one] at this 
   specialize this hm hn
-  apply_fun ZMod.castHom (show p ∣ p ^ 1 by rw [pow_one]) (ZMod p)  at this 
+  apply_fun ZMod.castHom (show p ∣ p ^ 1 by rw [pow_one]) (ZMod p) at this 
   simp only [map_intCast] at this 
   simpa only [Int.cast_ofNat] using this
 #align padic_int.zmod_congr_of_sub_mem_max_ideal PadicInt.zmod_congr_of_sub_mem_max_ideal
@@ -618,7 +618,7 @@ theorem limNthHom_spec (r : R) :
   by
   intro ε hε
   obtain ⟨ε', hε'0, hε'⟩ : ∃ v : ℚ, (0 : ℝ) < v ∧ ↑v < ε := exists_rat_btwn hε
-  norm_cast  at hε'0 
+  norm_cast at hε'0 
   obtain ⟨N, hN⟩ := padicNormE.defn (nth_hom_seq f_compat r) hε'0
   use N
   intro n hn

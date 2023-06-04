@@ -57,7 +57,7 @@ variable [TopologicalSpace α] [TopologicalSpace β] [TopologicalSpace γ]
 #print ContinuousMap.CompactOpen.gen /-
 /-- A generating set for the compact-open topology (when `s` is compact and `u` is open). -/
 def CompactOpen.gen (s : Set α) (u : Set β) : Set C(α, β) :=
-  { f | f '' s ⊆ u }
+  {f | f '' s ⊆ u}
 #align continuous_map.compact_open.gen ContinuousMap.CompactOpen.gen
 -/
 
@@ -93,7 +93,7 @@ theorem gen_empty_right {s : Set α} (h : s.Nonempty) : CompactOpen.gen s (∅ :
 -- The compact-open topology on the space of continuous maps α → β.
 instance compactOpen : TopologicalSpace C(α, β) :=
   TopologicalSpace.generateFrom
-    { m | ∃ (s : Set α) (hs : IsCompact s) (u : Set β) (hu : IsOpen u), m = CompactOpen.gen s u }
+    {m | ∃ (s : Set α) (hs : IsCompact s) (u : Set β) (hu : IsOpen u), m = CompactOpen.gen s u}
 #align continuous_map.compact_open ContinuousMap.compactOpen
 -/
 
@@ -151,7 +151,7 @@ theorem continuous_comp' [LocallyCompactSpace β] :
       rw [isOpen_iff_forall_mem_open]
       rintro ⟨φ₀, ψ₀⟩ H
       obtain ⟨L, hL, hKL, hLU⟩ := exists_compact_between (hK.image φ₀.2) (hU.preimage ψ₀.2) H
-      use { φ : C(α, β) | φ '' K ⊆ interior L } ×ˢ { ψ : C(β, γ) | ψ '' L ⊆ U }
+      use {φ : C(α, β) | φ '' K ⊆ interior L} ×ˢ {ψ : C(β, γ) | ψ '' L ⊆ U}
       use fun ⟨φ, ψ⟩ ⟨hφ, hψ⟩ => subset_trans hφ (interior_subset.trans <| image_subset_iff.mp hψ)
       use (ContinuousMap.isOpen_gen hK isOpen_interior).Prod (ContinuousMap.isOpen_gen hL hU)
       exact mem_prod.mpr ⟨hKL, image_subset_iff.mpr hLU⟩)
@@ -514,7 +514,7 @@ theorem QuotientMap.continuous_lift_prod_right (hf : QuotientMap f) {g : Y × X 
   have : Continuous fun p : X₀ × Y => g ((Prod.swap p).1, f (Prod.swap p).2) :=
     hg.comp continuous_swap
   have : Continuous fun p : X₀ × Y => (g ∘ Prod.swap) (f p.1, p.2) := this
-  convert(hf.continuous_lift_prod_left this).comp continuous_swap
+  convert (hf.continuous_lift_prod_left this).comp continuous_swap
   ext x
   simp
 #align quotient_map.continuous_lift_prod_right QuotientMap.continuous_lift_prod_right

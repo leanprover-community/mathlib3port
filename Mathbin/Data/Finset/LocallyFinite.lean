@@ -824,10 +824,10 @@ theorem Ico_filter_le_left {a b : α} [DecidablePred (· ≤ a)] (hab : a < b) :
 #print Finset.card_Ico_eq_card_Icc_sub_one /-
 theorem card_Ico_eq_card_Icc_sub_one (a b : α) : (Ico a b).card = (Icc a b).card - 1 := by
   classical
-    by_cases h : a ≤ b
-    · rw [Icc_eq_cons_Ico h, card_cons]
-      exact (Nat.add_sub_cancel _ _).symm
-    · rw [Ico_eq_empty fun h' => h h'.le, Icc_eq_empty h, card_empty, zero_tsub]
+  by_cases h : a ≤ b
+  · rw [Icc_eq_cons_Ico h, card_cons]
+    exact (Nat.add_sub_cancel _ _).symm
+  · rw [Ico_eq_empty fun h' => h h'.le, Icc_eq_empty h, card_empty, zero_tsub]
 #align finset.card_Ico_eq_card_Icc_sub_one Finset.card_Ico_eq_card_Icc_sub_one
 -/
 
@@ -840,10 +840,10 @@ theorem card_Ioc_eq_card_Icc_sub_one (a b : α) : (Ioc a b).card = (Icc a b).car
 #print Finset.card_Ioo_eq_card_Ico_sub_one /-
 theorem card_Ioo_eq_card_Ico_sub_one (a b : α) : (Ioo a b).card = (Ico a b).card - 1 := by
   classical
-    by_cases h : a < b
-    · rw [Ico_eq_cons_Ioo h, card_cons]
-      exact (Nat.add_sub_cancel _ _).symm
-    · rw [Ioo_eq_empty h, Ico_eq_empty h, card_empty, zero_tsub]
+  by_cases h : a < b
+  · rw [Ico_eq_cons_Ioo h, card_cons]
+    exact (Nat.add_sub_cancel _ _).symm
+  · rw [Ioo_eq_empty h, Ico_eq_empty h, card_empty, zero_tsub]
 #align finset.card_Ioo_eq_card_Ico_sub_one Finset.card_Ioo_eq_card_Ico_sub_one
 -/
 

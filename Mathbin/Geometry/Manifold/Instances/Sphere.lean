@@ -96,7 +96,7 @@ theorem stereoToFun_apply [CompleteSpace E] (x : E) :
 #align stereo_to_fun_apply stereoToFun_apply
 
 theorem contDiffOn_stereoToFun [CompleteSpace E] :
-    ContDiffOn ℝ ⊤ (stereoToFun v) { x : E | innerSL _ v x ≠ (1 : ℝ) } :=
+    ContDiffOn ℝ ⊤ (stereoToFun v) {x : E | innerSL _ v x ≠ (1 : ℝ)} :=
   by
   refine' ContDiffOn.smul _ (orthogonalProjection (ℝ ∙ v)ᗮ).ContDiff.ContDiffOn
   refine' cont_diff_const.cont_diff_on.div _ _
@@ -106,7 +106,7 @@ theorem contDiffOn_stereoToFun [CompleteSpace E] :
 #align cont_diff_on_stereo_to_fun contDiffOn_stereoToFun
 
 theorem continuousOn_stereoToFun [CompleteSpace E] :
-    ContinuousOn (stereoToFun v) { x : E | innerSL _ v x ≠ (1 : ℝ) } :=
+    ContinuousOn (stereoToFun v) {x : E | innerSL _ v x ≠ (1 : ℝ)} :=
   (@contDiffOn_stereoToFun E _ _ v _).ContinuousOn
 #align continuous_on_stereo_to_fun continuousOn_stereoToFun
 
@@ -154,15 +154,16 @@ theorem hasFDerivAt_stereoInvFunAux (v : E) :
   by
   have h₀ : HasFDerivAt (fun w : E => ‖w‖ ^ 2) (0 : E →L[ℝ] ℝ) 0 :=
     by
-    convert(hasStrictFDerivAt_norm_sq _).HasFDerivAt
+    convert (hasStrictFDerivAt_norm_sq _).HasFDerivAt
     simp
   have h₁ : HasFDerivAt (fun w : E => (‖w‖ ^ 2 + 4)⁻¹) (0 : E →L[ℝ] ℝ) 0 := by
-    convert(hasFDerivAt_inv _).comp _ (h₀.add (hasFDerivAt_const 4 0)) <;> simp
+    convert (hasFDerivAt_inv _).comp _ (h₀.add (hasFDerivAt_const 4 0)) <;> simp
   have h₂ :
     HasFDerivAt (fun w => (4 : ℝ) • w + (‖w‖ ^ 2 - 4) • v) ((4 : ℝ) • ContinuousLinearMap.id ℝ E)
       0 :=
     by
-    convert((hasFDerivAt_const (4 : ℝ) 0).smul (hasFDerivAt_id 0)).add
+    convert
+      ((hasFDerivAt_const (4 : ℝ) 0).smul (hasFDerivAt_id 0)).add
         ((h₀.sub (hasFDerivAt_const (4 : ℝ) 0)).smul (hasFDerivAt_const v 0))
     ext w
     simp
@@ -273,9 +274,8 @@ theorem stereo_left_inv (hv : ‖v‖ = 1) {x : sphere (0 : E) 1} (hx : (x : E) 
       nlinarith
     ring
   -- deduce the result
-  convert congr_arg₂ Add.add (congr_arg (fun t => t • (y : E)) h₁)
-      (congr_arg (fun t => t • v) h₂) using
-    1
+  convert
+    congr_arg₂ Add.add (congr_arg (fun t => t • (y : E)) h₁) (congr_arg (fun t => t • v) h₂) using 1
   ·
     simp [inner_add_right, inner_smul_right, hvy, real_inner_self_eq_norm_mul_norm, hv, mul_smul,
       mul_pow, Real.norm_eq_abs, sq_abs, norm_smul]
@@ -399,7 +399,7 @@ modelled on the Euclidean space of dimension `n`. -/
 instance {n : ℕ} [Fact (finrank ℝ E = n + 1)] :
     ChartedSpace (EuclideanSpace ℝ (Fin n)) (sphere (0 : E) 1)
     where
-  atlas := { f | ∃ v : sphere (0 : E) 1, f = stereographic' n v }
+  atlas := {f | ∃ v : sphere (0 : E) 1, f = stereographic' n v}
   chartAt v := stereographic' n (-v)
   mem_chart_source v := by simpa using ne_neg_of_mem_unit_sphere ℝ v
   chart_mem_atlas v := ⟨-v, rfl⟩
@@ -501,7 +501,7 @@ theorem ContMdiff.codRestrict_sphere {n : ℕ} [Fact (finrank ℝ E = n + 1)] {m
   have h : ContDiffOn ℝ ⊤ _ Set.univ := U.cont_diff.cont_diff_on
   have H₁ := (h.comp' contDiffOn_stereoToFun).ContMdiffOn
   have H₂ : ContMdiffOn _ _ _ _ Set.univ := hf.cont_mdiff_on
-  convert(H₁.of_le le_top).comp' H₂ using 1
+  convert (H₁.of_le le_top).comp' H₂ using 1
   ext x
   have hfxv : f x = -↑v ↔ ⟪f x, -↑v⟫_ℝ = 1 :=
     by
@@ -546,7 +546,8 @@ theorem range_mfderiv_coe_sphere {n : ℕ} [Fact (finrank ℝ E = n + 1)] (v : s
     convert hasFDerivAt_stereoInvFunAux_comp_coe (-v : E)
     simp
   rw [(this.comp 0 U.symm.to_continuous_linear_equiv.has_fderiv_at).fderiv]
-  convert(U.symm : EuclideanSpace ℝ (Fin n) ≃ₗᵢ[ℝ] (ℝ ∙ (↑(-v) : E))ᗮ).range_comp
+  convert
+    (U.symm : EuclideanSpace ℝ (Fin n) ≃ₗᵢ[ℝ] (ℝ ∙ (↑(-v) : E))ᗮ).range_comp
       (ℝ ∙ (↑(-v) : E))ᗮ.Subtype using
     1
   simp only [Submodule.range_subtype, coe_neg_sphere]

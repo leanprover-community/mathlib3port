@@ -144,11 +144,11 @@ theorem SupIndep.attach (hs : s.SupIndep f) : s.attach.SupIndep (f ∘ Subtype.v
   by
   intro t ht i _ hi
   classical
-    rw [← Finset.sup_image]
-    refine' hs (image_subset_iff.2 fun (j : { x // x ∈ s }) _ => j.2) i.2 fun hi' => hi _
-    rw [mem_image] at hi' 
-    obtain ⟨j, hj, hji⟩ := hi'
-    rwa [Subtype.ext hji] at hj 
+  rw [← Finset.sup_image]
+  refine' hs (image_subset_iff.2 fun (j : { x // x ∈ s }) _ => j.2) i.2 fun hi' => hi _
+  rw [mem_image] at hi' 
+  obtain ⟨j, hj, hji⟩ := hi'
+  rwa [Subtype.ext hji] at hj 
 #align finset.sup_indep.attach Finset.SupIndep.attach
 
 end Lattice
@@ -162,8 +162,8 @@ theorem supIndep_iff_pairwiseDisjoint : s.SupIndep f ↔ (s : Set ι).PairwiseDi
     Finset.disjoint_sup_right.2 fun j hj => hs hi (ht hj) (ne_of_mem_of_not_mem hj hit).symm⟩
 #align finset.sup_indep_iff_pairwise_disjoint Finset.supIndep_iff_pairwiseDisjoint
 
-alias sup_indep_iff_pairwise_disjoint ↔
-  sup_indep.pairwise_disjoint _root_.set.pairwise_disjoint.sup_indep
+alias sup_indep_iff_pairwise_disjoint ↔ sup_indep.pairwise_disjoint
+  _root_.set.pairwise_disjoint.sup_indep
 #align finset.sup_indep.pairwise_disjoint Finset.SupIndep.pairwiseDisjoint
 #align set.pairwise_disjoint.sup_indep Set.PairwiseDisjoint.supIndep
 
@@ -290,13 +290,13 @@ theorem independent_def : Independent t ↔ ∀ i : ι, Disjoint (t i) (⨆ (j) 
   Iff.rfl
 #align complete_lattice.independent_def CompleteLattice.independent_def
 
-theorem independent_def' : Independent t ↔ ∀ i, Disjoint (t i) (sSup (t '' { j | j ≠ i })) := by
+theorem independent_def' : Independent t ↔ ∀ i, Disjoint (t i) (sSup (t '' {j | j ≠ i})) := by
   simp_rw [sSup_image]; rfl
 #align complete_lattice.independent_def' CompleteLattice.independent_def'
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (j «expr ≠ » i) -/
 theorem independent_def'' :
-    Independent t ↔ ∀ i, Disjoint (t i) (sSup { a | ∃ (j : _) (_ : j ≠ i), t j = a }) := by
+    Independent t ↔ ∀ i, Disjoint (t i) (sSup {a | ∃ (j : _) (_ : j ≠ i), t j = a}) := by
   rw [independent_def']; tidy
 #align complete_lattice.independent_def'' CompleteLattice.independent_def''
 
@@ -409,17 +409,17 @@ end CompleteLattice
 theorem CompleteLattice.independent_iff_supIndep [CompleteLattice α] {s : Finset ι} {f : ι → α} :
     CompleteLattice.Independent (f ∘ (coe : s → ι)) ↔ s.SupIndep f := by
   classical
-    rw [Finset.supIndep_iff_disjoint_erase]
-    refine' subtype.forall.trans (forall₂_congr fun a b => _)
-    rw [Finset.sup_eq_iSup]
-    congr 2
-    refine' supr_subtype.trans _
-    congr 1 with x
-    simp [iSup_and, @iSup_comm _ (x ∈ s)]
+  rw [Finset.supIndep_iff_disjoint_erase]
+  refine' subtype.forall.trans (forall₂_congr fun a b => _)
+  rw [Finset.sup_eq_iSup]
+  congr 2
+  refine' supr_subtype.trans _
+  congr 1 with x
+  simp [iSup_and, @iSup_comm _ (x ∈ s)]
 #align complete_lattice.independent_iff_sup_indep CompleteLattice.independent_iff_supIndep
 
-alias CompleteLattice.independent_iff_supIndep ↔
-  CompleteLattice.Independent.supIndep Finset.SupIndep.independent
+alias CompleteLattice.independent_iff_supIndep ↔ CompleteLattice.Independent.supIndep
+  Finset.SupIndep.independent
 #align complete_lattice.independent.sup_indep CompleteLattice.Independent.supIndep
 #align finset.sup_indep.independent Finset.SupIndep.independent
 
@@ -427,11 +427,11 @@ alias CompleteLattice.independent_iff_supIndep ↔
 theorem CompleteLattice.independent_iff_supIndep_univ [CompleteLattice α] [Fintype ι] {f : ι → α} :
     CompleteLattice.Independent f ↔ Finset.univ.SupIndep f := by
   classical simp [Finset.supIndep_iff_disjoint_erase, CompleteLattice.Independent,
-      Finset.sup_eq_iSup]
+    Finset.sup_eq_iSup]
 #align complete_lattice.independent_iff_sup_indep_univ CompleteLattice.independent_iff_supIndep_univ
 
-alias CompleteLattice.independent_iff_supIndep_univ ↔
-  CompleteLattice.Independent.sup_indep_univ Finset.SupIndep.independent_of_univ
+alias CompleteLattice.independent_iff_supIndep_univ ↔ CompleteLattice.Independent.sup_indep_univ
+  Finset.SupIndep.independent_of_univ
 #align complete_lattice.independent.sup_indep_univ CompleteLattice.Independent.sup_indep_univ
 #align finset.sup_indep.independent_of_univ Finset.SupIndep.independent_of_univ
 

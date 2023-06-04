@@ -52,12 +52,12 @@ def dist (x y : E) : ℝ :=
 
 /-- Closed ball w.r.t. the euclidean distance. -/
 def closedBall (x : E) (r : ℝ) : Set E :=
-  { y | dist y x ≤ r }
+  {y | dist y x ≤ r}
 #align euclidean.closed_ball Euclidean.closedBall
 
 /-- Open ball w.r.t. the euclidean distance. -/
 def ball (x : E) (r : ℝ) : Set E :=
-  { y | dist y x < r }
+  {y | dist y x < r}
 #align euclidean.ball Euclidean.ball
 
 theorem ball_eq_preimage (x : E) (r : ℝ) :

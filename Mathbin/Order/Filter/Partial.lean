@@ -64,7 +64,7 @@ open scoped Filter
 that `rel.core` generalizes `set.preimage`. -/
 def rmap (r : Rel α β) (l : Filter α) : Filter β
     where
-  sets := { s | r.core s ∈ l }
+  sets := {s | r.core s ∈ l}
   univ_sets := by simp
   sets_of_superset s t hs st := mem_of_superset hs <| Rel.core_mono _ st
   inter_sets s t hs ht := by simp [Rel.core_inter, inter_mem hs ht]

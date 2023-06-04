@@ -584,7 +584,7 @@ theorem mk_mul_of_mem (a : α) (hb : b ∈ s) : (mk (a * b) : α ⧸ s) = mk a :
 
 @[to_additive]
 theorem eq_class_eq_leftCoset (s : Subgroup α) (g : α) :
-    { x : α | (x : α ⧸ s) = g } = leftCoset g s :=
+    {x : α | (x : α ⧸ s) = g} = leftCoset g s :=
   Set.ext fun z => by
     rw [mem_leftCoset_iff, Set.mem_setOf_eq, eq_comm, QuotientGroup.eq, SetLike.mem_coe]
 #align quotient_group.eq_class_eq_left_coset QuotientGroup.eq_class_eq_leftCoset
@@ -839,9 +839,9 @@ variable {H : Type _} [Group H]
 theorem card_dvd_of_injective [Fintype α] [Fintype H] (f : α →* H) (hf : Function.Injective f) :
     card α ∣ card H := by
   classical calc
-      card α = card (f.range : Subgroup H) := card_congr (Equiv.ofInjective f hf)
-      _ ∣ card H := card_subgroup_dvd_card _
-      
+    card α = card (f.range : Subgroup H) := card_congr (Equiv.ofInjective f hf)
+    _ ∣ card H := card_subgroup_dvd_card _
+    
 #align subgroup.card_dvd_of_injective Subgroup.card_dvd_of_injective
 #align add_subgroup.card_dvd_of_injective AddSubgroup.card_dvd_of_injective
 

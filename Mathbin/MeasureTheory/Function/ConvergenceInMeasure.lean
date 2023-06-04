@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne, Kexing Ying
 
 ! This file was ported from Lean 3 source module measure_theory.function.convergence_in_measure
-! leanprover-community/mathlib commit 0b9eaaa7686280fad8cce467f5c3c57ee6ce77f8
+! leanprover-community/mathlib commit 2ebc1d6c2fed9f54c95bbc3998eaa5570527129a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.MeasureTheory.Function.LpSpace
 
 /-!
 # Convergence in measure
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 We define convergence in measure which is one of the many notions of convergence in probability.
 A sequence of functions `f` is said to converge in measure to some function `g`
@@ -56,14 +59,14 @@ variable {α ι E : Type _} {m : MeasurableSpace α} {μ : Measure α}
 some given filter `l`. -/
 def TendstoInMeasure [Dist E] {m : MeasurableSpace α} (μ : Measure α) (f : ι → α → E) (l : Filter ι)
     (g : α → E) : Prop :=
-  ∀ (ε) (hε : 0 < ε), Tendsto (fun i => μ { x | ε ≤ dist (f i x) (g x) }) l (𝓝 0)
+  ∀ (ε) (hε : 0 < ε), Tendsto (fun i => μ {x | ε ≤ dist (f i x) (g x)}) l (𝓝 0)
 #align measure_theory.tendsto_in_measure MeasureTheory.TendstoInMeasure
 -/
 
 theorem tendstoInMeasure_iff_norm [SeminormedAddCommGroup E] {l : Filter ι} {f : ι → α → E}
     {g : α → E} :
     TendstoInMeasure μ f l g ↔
-      ∀ (ε) (hε : 0 < ε), Tendsto (fun i => μ { x | ε ≤ ‖f i x - g x‖ }) l (𝓝 0) :=
+      ∀ (ε) (hε : 0 < ε), Tendsto (fun i => μ {x | ε ≤ ‖f i x - g x‖}) l (𝓝 0) :=
   by simp_rw [tendsto_in_measure, dist_eq_norm]
 #align measure_theory.tendsto_in_measure_iff_norm MeasureTheory.tendstoInMeasure_iff_norm
 
@@ -75,14 +78,13 @@ protected theorem congr' (h_left : ∀ᶠ i in l, f i =ᵐ[μ] f' i) (h_right : 
     (h_tendsto : TendstoInMeasure μ f l g) : TendstoInMeasure μ f' l g' :=
   by
   intro ε hε
-  suffices
-    (fun i => μ { x | ε ≤ dist (f' i x) (g' x) }) =ᶠ[l] fun i => μ { x | ε ≤ dist (f i x) (g x) }
+  suffices (fun i => μ {x | ε ≤ dist (f' i x) (g' x)}) =ᶠ[l] fun i => μ {x | ε ≤ dist (f i x) (g x)}
     by
     rw [tendsto_congr' this]
     exact h_tendsto ε hε
-  filter_upwards [h_left]with i h_ae_eq
+  filter_upwards [h_left] with i h_ae_eq
   refine' measure_congr _
-  filter_upwards [h_ae_eq, h_right]with x hxf hxg
+  filter_upwards [h_ae_eq, h_right] with x hxf hxg
   rw [eq_iff_iff]
   change ε ≤ dist (f' i x) (g' x) ↔ ε ≤ dist (f i x) (g x)
   rw [hxg, hxf]
@@ -112,7 +114,7 @@ variable [MetricSpace E]
 variable {f : ℕ → α → E} {g : α → E}
 
 /-- Auxiliary lemma for `tendsto_in_measure_of_tendsto_ae`. -/
-theorem tendstoInMeasure_of_tendsto_ae_of_stronglyMeasurable [FiniteMeasure μ]
+theorem tendstoInMeasure_of_tendsto_ae_of_stronglyMeasurable [IsFiniteMeasure μ]
     (hf : ∀ n, StronglyMeasurable (f n)) (hg : StronglyMeasurable g)
     (hfg : ∀ᵐ x ∂μ, Tendsto (fun n => f n x) atTop (𝓝 (g x))) : TendstoInMeasure μ f atTop g :=
   by
@@ -126,7 +128,7 @@ theorem tendstoInMeasure_of_tendsto_ae_of_stronglyMeasurable [FiniteMeasure μ]
   rw [Metric.tendstoUniformlyOn_iff] at hunif 
   obtain ⟨N, hN⟩ := eventually_at_top.1 (hunif ε hε)
   refine' ⟨N, fun n hn => _⟩
-  suffices : { x : α | ε ≤ dist (f n x) (g x) } ⊆ t; exact (measure_mono this).trans ht
+  suffices : {x : α | ε ≤ dist (f n x) (g x)} ⊆ t; exact (measure_mono this).trans ht
   rw [← Set.compl_subset_compl]
   intro x hx
   rw [Set.mem_compl_iff, Set.nmem_setOf_iff, dist_comm, not_le]
@@ -134,7 +136,7 @@ theorem tendstoInMeasure_of_tendsto_ae_of_stronglyMeasurable [FiniteMeasure μ]
 #align measure_theory.tendsto_in_measure_of_tendsto_ae_of_strongly_measurable MeasureTheory.tendstoInMeasure_of_tendsto_ae_of_stronglyMeasurable
 
 /-- Convergence a.e. implies convergence in measure in a finite measure space. -/
-theorem tendstoInMeasure_of_tendsto_ae [FiniteMeasure μ] (hf : ∀ n, AEStronglyMeasurable (f n) μ)
+theorem tendstoInMeasure_of_tendsto_ae [IsFiniteMeasure μ] (hf : ∀ n, AEStronglyMeasurable (f n) μ)
     (hfg : ∀ᵐ x ∂μ, Tendsto (fun n => f n x) atTop (𝓝 (g x))) : TendstoInMeasure μ f atTop g :=
   by
   have hg : ae_strongly_measurable g μ := aestronglyMeasurable_of_tendsto_ae _ hf hfg
@@ -144,7 +146,7 @@ theorem tendstoInMeasure_of_tendsto_ae [FiniteMeasure μ] (hf : ∀ n, AEStrongl
       hg.strongly_measurable_mk _
   have hf_eq_ae : ∀ᵐ x ∂μ, ∀ n, (hf n).mk (f n) x = f n x :=
     ae_all_iff.mpr fun n => (hf n).ae_eq_mk.symm
-  filter_upwards [hf_eq_ae, hg.ae_eq_mk, hfg]with x hxf hxg hxfg
+  filter_upwards [hf_eq_ae, hg.ae_eq_mk, hfg] with x hxf hxg hxfg
   rw [← hxg, funext fun n => hxf n]
   exact hxfg
 #align measure_theory.tendsto_in_measure_of_tendsto_ae MeasureTheory.tendstoInMeasure_of_tendsto_ae
@@ -152,7 +154,7 @@ theorem tendstoInMeasure_of_tendsto_ae [FiniteMeasure μ] (hf : ∀ n, AEStrongl
 namespace ExistsSeqTendstoAe
 
 theorem exists_nat_measure_lt_two_inv (hfg : TendstoInMeasure μ f atTop g) (n : ℕ) :
-    ∃ N, ∀ m ≥ N, μ { x | 2⁻¹ ^ n ≤ dist (f m x) (g x) } ≤ 2⁻¹ ^ n :=
+    ∃ N, ∀ m ≥ N, μ {x | 2⁻¹ ^ n ≤ dist (f m x) (g x)} ≤ 2⁻¹ ^ n :=
   by
   specialize hfg (2⁻¹ ^ n) (by simp only [zero_lt_bit0, pow_pos, zero_lt_one, inv_pos])
   rw [ENNReal.tendsto_atTop_zero] at hfg 
@@ -183,7 +185,7 @@ theorem seqTendstoAeSeq_succ (hfg : TendstoInMeasure μ f atTop g) {n : ℕ} :
 #align measure_theory.exists_seq_tendsto_ae.seq_tendsto_ae_seq_succ MeasureTheory.ExistsSeqTendstoAe.seqTendstoAeSeq_succ
 
 theorem seqTendstoAeSeq_spec (hfg : TendstoInMeasure μ f atTop g) (n k : ℕ)
-    (hn : seqTendstoAeSeq hfg n ≤ k) : μ { x | 2⁻¹ ^ n ≤ dist (f k x) (g x) } ≤ 2⁻¹ ^ n :=
+    (hn : seqTendstoAeSeq hfg n ≤ k) : μ {x | 2⁻¹ ^ n ≤ dist (f k x) (g x)} ≤ 2⁻¹ ^ n :=
   by
   cases n
   · exact Classical.choose_spec (exists_nat_measure_lt_two_inv hfg 0) k hn
@@ -222,7 +224,7 @@ theorem TendstoInMeasure.exists_seq_tendsto_ae (hfg : TendstoInMeasure μ f atTo
     rw [pow_add]; ring
   set ns := exists_seq_tendsto_ae.seq_tendsto_ae_seq hfg
   use ns
-  let S k := { x | 2⁻¹ ^ k ≤ dist (f (ns k) x) (g x) }
+  let S k := {x | 2⁻¹ ^ k ≤ dist (f (ns k) x) (g x)}
   have hμS_le : ∀ k, μ (S k) ≤ 2⁻¹ ^ k := fun k =>
     exists_seq_tendsto_ae.seq_tendsto_ae_seq_spec hfg k (ns k) le_rfl
   set s := filter.at_top.limsup S with hs
@@ -317,7 +319,8 @@ theorem tendstoInMeasure_of_tendsto_snorm_of_stronglyMeasurable (hp_ne_zero : p 
   refine' le_trans _ hn
   rw [ENNReal.ofReal_div_of_pos (Real.rpow_pos_of_pos hε _), ENNReal.ofReal_one, mul_comm,
     mul_one_div, ENNReal.le_div_iff_mul_le _ (Or.inl ENNReal.ofReal_ne_top), mul_comm]
-  · convert mul_meas_ge_le_pow_snorm' μ hp_ne_zero hp_ne_top ((hf n).sub hg).AEStronglyMeasurable
+  · convert
+      mul_meas_ge_le_pow_snorm' μ hp_ne_zero hp_ne_top ((hf n).sub hg).AEStronglyMeasurable
         (ENNReal.ofReal ε)
     · exact (ENNReal.ofReal_rpow_of_pos hε).symm
     · ext x

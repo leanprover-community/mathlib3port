@@ -211,7 +211,7 @@ example {R S : CommMonCat} (f : R ⟶ S) : (R : Type) → (S : Type) :=
 -- rather than `R.α` or (as we used to have) `↥(bundled.map comm_monoid.to_monoid R)`.
 example (R : CommMonCat.{u}) : R ⟶ R :=
   { toFun := fun x => by
-      match_target(R : Type u)
+      match_target (R : Type u)
       match_hyp x : (R : Type u)
       exact x * x
     map_one' := by simp

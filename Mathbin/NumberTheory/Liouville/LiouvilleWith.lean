@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module number_theory.liouville.liouville_with
-! leanprover-community/mathlib commit 0b9eaaa7686280fad8cce467f5c3c57ee6ce77f8
+! leanprover-community/mathlib commit af471b9e3ce868f296626d33189b4ce730fa4c00
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.Topology.Instances.Irrational
 
 /-!
 # Liouville numbers with a given exponent
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 We say that a real number `x` is a Liouville number with exponent `p : ℝ` if there exists a real
 number `C` such that for infinitely many denominators `n` there exists a numerator `m` such that
@@ -43,6 +46,7 @@ open Filter Metric Real Set
 
 open scoped Filter Topology
 
+#print LiouvilleWith /-
 /-- We say that a real number `x` is a Liouville number with exponent `p : ℝ` if there exists a real
 number `C` such that for infinitely many denominators `n` there exists a numerator `m` such that
 `x ≠ m / n` and `|x - m / n| < C / n ^ p`.
@@ -52,7 +56,9 @@ exponent. -/
 def LiouvilleWith (p x : ℝ) : Prop :=
   ∃ C, ∃ᶠ n : ℕ in atTop, ∃ m : ℤ, x ≠ m / n ∧ |x - m / n| < C / n ^ p
 #align liouville_with LiouvilleWith
+-/
 
+#print liouvilleWith_one /-
 /-- For `p = 1` (hence, for any `p ≤ 1`), the condition `liouville_with p x` is trivial. -/
 theorem liouvilleWith_one (x : ℝ) : LiouvilleWith 1 x :=
   by
@@ -66,6 +72,7 @@ theorem liouvilleWith_one (x : ℝ) : LiouvilleWith 1 x :=
     add_div_eq_mul_add_div _ _ hn'.ne', div_lt_div_right hn']
   simpa [bit0, ← add_assoc] using (Int.floor_le (x * n)).trans_lt (lt_add_one _)
 #align liouville_with_one liouvilleWith_one
+-/
 
 namespace LiouvilleWith
 
@@ -360,7 +367,7 @@ theorem frequently_exists_num (hx : Liouville x) (n : ℕ) :
     (finite_lt_nat N).eventually_all.2 fun b hb => eventually_imp_distrib_left.2 (this b)
   rcases(this.and (eventually_ge_at_top n)).exists with ⟨m, hm, hnm⟩
   rcases hx m with ⟨a, b, hb, hne, hlt⟩
-  lift b to ℕ using zero_le_one.trans hb.le; norm_cast  at hb ; push_cast at hne hlt 
+  lift b to ℕ using zero_le_one.trans hb.le; norm_cast at hb ; push_cast at hne hlt 
   cases le_or_lt N b
   · refine' (hN b h a hne).not_lt (hlt.trans_le _)
     replace hb : (1 : ℝ) < b := Nat.one_lt_cast.2 hb
@@ -369,6 +376,7 @@ theorem frequently_exists_num (hx : Liouville x) (n : ℕ) :
   · exact (hm b h hb _).not_lt hlt
 #align liouville.frequently_exists_num Liouville.frequently_exists_num
 
+#print Liouville.liouvilleWith /-
 /-- A Liouville number is a Liouville number with any real exponent. -/
 protected theorem liouvilleWith (hx : Liouville x) (p : ℝ) : LiouvilleWith p x :=
   by
@@ -378,9 +386,11 @@ protected theorem liouvilleWith (hx : Liouville x) (p : ℝ) : LiouvilleWith p x
   refine' ⟨a, hne, _⟩
   rwa [rpow_nat_cast]
 #align liouville.liouville_with Liouville.liouvilleWith
+-/
 
 end Liouville
 
+#print forall_liouvilleWith_iff /-
 /-- A number satisfies the Liouville condition with any exponent if and only if it is a Liouville
 number. -/
 theorem forall_liouvilleWith_iff {x : ℝ} : (∀ p, LiouvilleWith p x) ↔ Liouville x :=
@@ -391,4 +401,5 @@ theorem forall_liouvilleWith_iff {x : ℝ} : (∀ p, LiouvilleWith p x) ↔ Liou
     ⟨b, hb, a, hne, hlt⟩
   exact ⟨a, b, by exact_mod_cast hb, hne, by simpa [rpow_neg] using hlt⟩
 #align forall_liouville_with_iff forall_liouvilleWith_iff
+-/
 

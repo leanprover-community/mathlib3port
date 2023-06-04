@@ -184,7 +184,7 @@ theorem Filter.Tendsto.atTop_mul {C : α} (hC : 0 < C) (hf : Tendsto f l atTop)
   by
   refine' tendsto_at_top_mono' _ _ (hf.at_top_mul_const (half_pos hC))
   filter_upwards [hg.eventually (lt_mem_nhds (half_lt_self hC)),
-    hf.eventually (eventually_ge_at_top 0)]with x hg hf using mul_le_mul_of_nonneg_left hg.le hf
+    hf.eventually (eventually_ge_at_top 0)] with x hg hf using mul_le_mul_of_nonneg_left hg.le hf
 #align filter.tendsto.at_top_mul Filter.Tendsto.atTop_mul
 
 /-- In a linearly ordered field with the order topology, if `f` tends to a positive constant `C` and
@@ -244,8 +244,8 @@ theorem tendsto_inv_zero_atTop : Tendsto (fun x : α => x⁻¹) (𝓝[>] (0 : α
   by
   refine' (at_top_basis' 1).tendsto_right_iff.2 fun b hb => _
   have hb' : 0 < b := by positivity
-  filter_upwards [Ioc_mem_nhdsWithin_Ioi
-      ⟨le_rfl, inv_pos.2 hb'⟩]with x hx using(le_inv hx.1 hb').1 hx.2
+  filter_upwards [Ioc_mem_nhdsWithin_Ioi ⟨le_rfl, inv_pos.2 hb'⟩] with x hx using
+    (le_inv hx.1 hb').1 hx.2
 #align tendsto_inv_zero_at_top tendsto_inv_zero_atTop
 
 /-- The function `r ↦ r⁻¹` tends to `0` on the right as `r → +∞`. -/
@@ -343,7 +343,7 @@ instance (priority := 100) LinearOrderedField.toTopologicalDivisionRing : Topolo
       intro x hx
       cases hx.symm.lt_or_lt
       · exact this h
-      convert(this <| neg_pos.mpr h).neg.comp continuous_neg.continuous_at
+      convert (this <| neg_pos.mpr h).neg.comp continuous_neg.continuous_at
       ext
       simp [neg_inv]
     intro t ht

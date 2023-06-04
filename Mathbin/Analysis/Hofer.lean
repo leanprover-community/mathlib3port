@@ -55,7 +55,7 @@ theorem hofer {X : Type _} [MetricSpace X] [CompleteSpace X] (x : X) (ε : ℝ) 
   replace H :
     ∀ k : ℕ, ∀ x', d x' x ≤ 2 * ε ∧ 2 ^ k * ϕ x ≤ ϕ x' → ∃ y, d x' y ≤ ε / 2 ^ k ∧ 2 * ϕ x' < ϕ y
   · intro k x'
-    push_neg  at H 
+    push_neg at H 
     simpa [reformulation] using H (ε / 2 ^ k) (by simp [ε_pos]) x' (by simp [ε_pos.le, one_le_two])
   clear reformulation
   haveI : Nonempty X := ⟨x⟩

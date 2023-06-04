@@ -95,7 +95,7 @@ theorem isLimitEquivSections_apply {F : J ⥤ Type max v u} {c : Cone F} (t : Is
 theorem isLimitEquivSections_symm_apply {F : J ⥤ Type max v u} {c : Cone F} (t : IsLimit c)
     (x : F.sections) (j : J) : c.π.app j ((isLimitEquivSections t).symm x) = (x : ∀ j, F.obj j) j :=
   by
-  equiv_rw(is_limit_equiv_sections t).symm  at x 
+  equiv_rw (is_limit_equiv_sections t).symm at x 
   simp
 #align category_theory.limits.types.is_limit_equiv_sections_symm_apply CategoryTheory.Limits.Types.isLimitEquivSections_symm_apply
 

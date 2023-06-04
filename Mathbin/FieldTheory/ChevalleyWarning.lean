@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module field_theory.chevalley_warning
-! leanprover-community/mathlib commit e001509c11c4d0f549d91d89da95b4a0b43c714f
+! leanprover-community/mathlib commit 5c1efce12ba86d4901463f61019832f6a4b1a0d0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.FieldTheory.Finite.Basic
 
 /-!
 # The Chevalley–Warning theorem
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file contains a proof of the Chevalley–Warning theorem.
 Throughout most of this file, `K` denotes a finite field
@@ -124,7 +127,7 @@ theorem char_dvd_card_solutions_of_sum_lt {s : Finset ι} {f : ι → MvPolynomi
     p ∣ Fintype.card { x : σ → K // ∀ i ∈ s, eval x (f i) = 0 } :=
   by
   have hq : 0 < q - 1 := by rw [← Fintype.card_units, Fintype.card_pos_iff]; exact ⟨1⟩
-  let S : Finset (σ → K) := { x ∈ univ | ∀ i ∈ s, eval x (f i) = 0 }
+  let S : Finset (σ → K) := {x ∈ univ | ∀ i ∈ s, eval x (f i) = 0}
   have hS : ∀ x : σ → K, x ∈ S ↔ ∀ i : ι, i ∈ s → eval x (f i) = 0 := by intro x;
     simp only [S, true_and_iff, sep_def, mem_filter, mem_univ]
   /- The polynomial `F = ∏ i in s, (1 - (f i)^(q - 1))` has the nice property

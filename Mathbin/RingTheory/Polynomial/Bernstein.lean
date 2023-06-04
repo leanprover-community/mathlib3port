@@ -133,7 +133,7 @@ theorem derivative_succ_aux (n ν : ℕ) :
     rw [mul_comm, ← mul_assoc, ← mul_assoc]; congr 1
     norm_cast
     congr 1
-    convert(Nat.choose_mul_succ_eq n (ν + 1)).symm using 1
+    convert (Nat.choose_mul_succ_eq n (ν + 1)).symm using 1
     · convert mul_comm _ _ using 2
       simp
     · apply mul_comm
@@ -394,7 +394,7 @@ theorem sum_mul_smul (n : ℕ) :
     refine' Finset.sum_congr rfl fun k hk => (w k).trans _
     simp only [pderiv_tt_x, pderiv_tt_y, Algebra.id.smul_eq_mul, nsmul_eq_mul, e, Bool.cond_true,
       Bool.cond_false, add_zero, zero_add, MulZeroClass.mul_zero, smul_zero, mul_one,
-      MvPolynomial.aeval_X, MvPolynomial.pderiv_x_self, MvPolynomial.pderiv_x_of_ne,
+      MvPolynomial.aeval_X, MvPolynomial.pderiv_X_self, MvPolynomial.pderiv_X_of_ne,
       Derivation.leibniz_pow, Derivation.leibniz, Derivation.map_coe_nat, map_natCast, map_pow,
       map_mul, map_add]
   -- On the right hand side, we'll just simplify.

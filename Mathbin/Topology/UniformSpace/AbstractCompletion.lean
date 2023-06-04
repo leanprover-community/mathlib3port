@@ -120,7 +120,7 @@ theorem continuous_coe : Continuous ι :=
 
 #print AbstractCompletion.induction_on /-
 @[elab_as_elim]
-theorem induction_on {p : hatα → Prop} (a : hatα) (hp : IsClosed { a | p a }) (ih : ∀ a, p (ι a)) :
+theorem induction_on {p : hatα → Prop} (a : hatα) (hp : IsClosed {a | p a}) (ih : ∀ a, p (ι a)) :
     p a :=
   isClosed_property pkg.dense hp ih a
 #align abstract_completion.induction_on AbstractCompletion.induction_on

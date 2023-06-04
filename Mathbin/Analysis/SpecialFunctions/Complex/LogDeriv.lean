@@ -4,10 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Abhimanyu Pallavi Sudhir, Jean Lo, Calle Sönne, Benjamin Davidson
 
 ! This file was ported from Lean 3 source module analysis.special_functions.complex.log_deriv
-! leanprover-community/mathlib commit f2ce6086713c78a7f880485f7917ea547a215982
+! leanprover-community/mathlib commit 6a5c85000ab93fe5dcfdf620676f614ba8e18c26
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
+import Mathbin.Analysis.Calculus.Inverse
 import Mathbin.Analysis.SpecialFunctions.Complex.Log
 import Mathbin.Analysis.SpecialFunctions.ExpDeriv
 
@@ -25,6 +26,10 @@ open Set Filter
 
 open scoped Real Topology
 
+theorem isOpenMap_exp : IsOpenMap exp :=
+  open_map_of_strict_deriv hasStrictDerivAt_exp exp_ne_zero
+#align complex.is_open_map_exp Complex.isOpenMap_exp
+
 /-- `complex.exp` as a `local_homeomorph` with `source = {z | -π < im z < π}` and
 `target = {z | 0 < re z} ∪ {z | im z ≠ 0}`. This definition is used to prove that `complex.log`
 is complex differentiable at all points but the negative real semi-axis. -/
@@ -32,8 +37,8 @@ def expLocalHomeomorph : LocalHomeomorph ℂ ℂ :=
   LocalHomeomorph.ofContinuousOpen
     { toFun := exp
       invFun := log
-      source := { z : ℂ | z.im ∈ Ioo (-π) π }
-      target := { z : ℂ | 0 < z.re } ∪ { z : ℂ | z.im ≠ 0 }
+      source := {z : ℂ | z.im ∈ Ioo (-π) π}
+      target := {z : ℂ | 0 < z.re} ∪ {z : ℂ | z.im ≠ 0}
       map_source' := by
         rintro ⟨x, y⟩ ⟨h₁ : -π < y, h₂ : y < π⟩
         refine' (not_or_of_imp fun hz => _).symm

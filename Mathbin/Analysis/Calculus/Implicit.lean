@@ -346,7 +346,8 @@ theorem implicitFunctionOfComplemented_apply_image (hf : HasStrictFDerivAt f f' 
     (hf' : range f' = ⊤) (hker : (ker f').ClosedComplemented) :
     hf.implicitFunctionOfComplemented f f' hf' hker (f a) 0 = a :=
   by
-  convert(hf.implicit_to_local_homeomorph_of_complemented f f' hf' hker).left_inv
+  convert
+    (hf.implicit_to_local_homeomorph_of_complemented f f' hf' hker).left_inv
       (hf.mem_implicit_to_local_homeomorph_of_complemented_source hf' hker)
   exact congr_arg Prod.snd (hf.implicit_to_local_homeomorph_of_complemented_self hf' hker).symm
 #align has_strict_fderiv_at.implicit_function_of_complemented_apply_image HasStrictFDerivAt.implicitFunctionOfComplemented_apply_image
@@ -355,8 +356,8 @@ theorem to_implicitFunctionOfComplemented (hf : HasStrictFDerivAt f f' a) (hf' :
     (hker : (ker f').ClosedComplemented) :
     HasStrictFDerivAt (hf.implicitFunctionOfComplemented f f' hf' hker (f a)) (ker f').subtypeL 0 :=
   by
-  convert(implicit_function_data_of_complemented f f' hf hf'
-          hker).implicitFunction_hasStrictFDerivAt
+  convert
+    (implicit_function_data_of_complemented f f' hf hf' hker).implicitFunction_hasStrictFDerivAt
       (ker f').subtypeL _ _
   swap
   · ext;

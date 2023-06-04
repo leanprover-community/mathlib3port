@@ -86,7 +86,7 @@ theorem norm_neg_period (x : ℝ) : ‖(x : AddCircle (-p))‖ = ‖(x : AddCirc
 @[simp]
 theorem norm_eq_of_zero {x : ℝ} : ‖(x : AddCircle (0 : ℝ))‖ = |x| :=
   by
-  suffices { y : ℝ | (y : AddCircle (0 : ℝ)) = (x : AddCircle (0 : ℝ)) } = {x} by
+  suffices {y : ℝ | (y : AddCircle (0 : ℝ)) = (x : AddCircle (0 : ℝ))} = {x} by
     rw [quotient_norm_eq, this, image_singleton, Real.norm_eq_abs, csInf_singleton]
   ext y
   simp [QuotientAddGroup.eq_iff_sub_mem, mem_zmultiples_iff, sub_eq_zero]
@@ -104,9 +104,9 @@ theorem norm_eq {x : ℝ} : ‖(x : AddCircle p)‖ = |x - round (p⁻¹ * x) * 
   clear x p
   intros
   rw [quotient_norm_eq, abs_sub_round_eq_min]
-  have h₁ : BddBelow (abs '' { m : ℝ | (m : AddCircle (1 : ℝ)) = x }) :=
+  have h₁ : BddBelow (abs '' {m : ℝ | (m : AddCircle (1 : ℝ)) = x}) :=
     ⟨0, by simp [mem_lowerBounds]⟩
-  have h₂ : (abs '' { m : ℝ | (m : AddCircle (1 : ℝ)) = x }).Nonempty := ⟨|x|, ⟨x, rfl, rfl⟩⟩
+  have h₂ : (abs '' {m : ℝ | (m : AddCircle (1 : ℝ)) = x}).Nonempty := ⟨|x|, ⟨x, rfl, rfl⟩⟩
   apply le_antisymm
   · simp only [le_min_iff, Real.norm_eq_abs, csInf_le_iff h₁ h₂]
     intro b h

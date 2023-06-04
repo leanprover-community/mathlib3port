@@ -969,7 +969,7 @@ theorem not_sqLe_succ (c d y) (h : 0 < c) : ¬SqLe (y + 1) c 0 d :=
 -/
 
 #print Zsqrtd.Nonsquare /-
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`ns] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`ns] [] -/
 /-- A nonsquare is a natural number that is not equal to the square of an
   integer. This is implemented as a typeclass because it's a necessary condition
   for much of the Pell equation theory. -/
@@ -1125,7 +1125,7 @@ theorem norm_eq_zero {d : ℤ} (h_nonsquare : ∀ n : ℤ, d ≠ n * n) (a : ℤ
   · obtain ⟨d', rfl⟩ := Int.eq_ofNat_of_zero_le h
     haveI : nonsquare d' := ⟨fun n h => h_nonsquare n <| by exact_mod_cast h⟩
     exact divides_sq_eq_zero_z ha
-  · push_neg  at h 
+  · push_neg at h 
     suffices a.re * a.re = 0 by
       rw [eq_zero_of_mul_self_eq_zero this] at ha ⊢
       simpa only [true_and_iff, or_self_right, zero_re, zero_im, eq_self_iff_true, zero_eq_mul,

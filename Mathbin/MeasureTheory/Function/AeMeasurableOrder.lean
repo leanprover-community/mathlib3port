@@ -46,7 +46,7 @@ theorem MeasureTheory.aemeasurable_of_exist_almost_disjoint_supersets {α : Type
           p < q →
             ∃ u v,
               MeasurableSet u ∧
-                MeasurableSet v ∧ { x | f x < p } ⊆ u ∧ { x | q < f x } ⊆ v ∧ μ (u ∩ v) = 0) :
+                MeasurableSet v ∧ {x | f x < p} ⊆ u ∧ {x | q < f x} ⊆ v ∧ μ (u ∩ v) = 0) :
     AEMeasurable f μ := by
   haveI : Encodable s := s_count.to_encodable
   have h' :
@@ -54,7 +54,7 @@ theorem MeasureTheory.aemeasurable_of_exist_almost_disjoint_supersets {α : Type
       ∃ u v,
         MeasurableSet u ∧
           MeasurableSet v ∧
-            { x | f x < p } ⊆ u ∧ { x | q < f x } ⊆ v ∧ (p ∈ s → q ∈ s → p < q → μ (u ∩ v) = 0) :=
+            {x | f x < p} ⊆ u ∧ {x | q < f x} ⊆ v ∧ (p ∈ s → q ∈ s → p < q → μ (u ∩ v) = 0) :=
     by
     intro p q
     by_cases H : p ∈ s ∧ q ∈ s ∧ p < q
@@ -100,7 +100,7 @@ theorem MeasureTheory.aemeasurable_of_exist_almost_disjoint_supersets {α : Type
       convert this
       ext y
       simp only [not_exists, exists_prop, mem_set_of_eq, mem_compl_iff, not_not_mem]
-    filter_upwards [this]with x hx
+    filter_upwards [this] with x hx
     apply (iInf_eq_of_forall_ge_of_forall_gt_exists_lt _ _).symm
     · intro i
       by_cases H : x ∈ u' i
@@ -132,8 +132,7 @@ theorem ENNReal.aemeasurable_of_exist_almost_disjoint_supersets {α : Type _} {m
         p < q →
           ∃ u v,
             MeasurableSet u ∧
-              MeasurableSet v ∧
-                { x | f x < p } ⊆ u ∧ { x | (q : ℝ≥0∞) < f x } ⊆ v ∧ μ (u ∩ v) = 0) :
+              MeasurableSet v ∧ {x | f x < p} ⊆ u ∧ {x | (q : ℝ≥0∞) < f x} ⊆ v ∧ μ (u ∩ v) = 0) :
     AEMeasurable f μ :=
   by
   obtain ⟨s, s_count, s_dense, s_zero, s_top⟩ :

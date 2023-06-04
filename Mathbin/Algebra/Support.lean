@@ -42,7 +42,7 @@ variable [One M] [One N] [One P]
 #print Function.support /-
 /-- `support` of a function is the set of points `x` such that `f x ≠ 0`. -/
 def support [Zero A] (f : α → A) : Set α :=
-  { x | f x ≠ 0 }
+  {x | f x ≠ 0}
 #align function.support Function.support
 -/
 
@@ -50,7 +50,7 @@ def support [Zero A] (f : α → A) : Set α :=
 /-- `mul_support` of a function is the set of points `x` such that `f x ≠ 1`. -/
 @[to_additive]
 def mulSupport (f : α → M) : Set α :=
-  { x | f x ≠ 1 }
+  {x | f x ≠ 1}
 #align function.mul_support Function.mulSupport
 #align function.support Function.support
 -/
@@ -68,7 +68,7 @@ theorem nmem_mulSupport {f : α → M} {x : α} : x ∉ mulSupport f ↔ f x = 1
 #align function.nmem_support Function.nmem_support
 
 @[to_additive]
-theorem compl_mulSupport {f : α → M} : mulSupport fᶜ = { x | f x = 1 } :=
+theorem compl_mulSupport {f : α → M} : mulSupport fᶜ = {x | f x = 1} :=
   ext fun x => nmem_mulSupport
 #align function.compl_mul_support Function.compl_mulSupport
 #align function.compl_support Function.compl_support

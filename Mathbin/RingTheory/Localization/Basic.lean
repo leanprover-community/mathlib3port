@@ -101,9 +101,9 @@ variable {R : Type _} [CommSemiring R] (M : Submonoid R) (S : Type _) [CommSemir
 variable [Algebra R S] {P : Type _} [CommSemiring P]
 
 #print IsLocalization /-
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`map_units] [] -/
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`surj] [] -/
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`eq_iff_exists] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`map_units] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`surj] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`eq_iff_exists] [] -/
 /-- The typeclass `is_localization (M : submodule R) S` where `S` is an `R`-algebra
 expresses that `S` is isomorphic to the localization of `R` at `M`. -/
 class IsLocalization : Prop where
@@ -746,11 +746,11 @@ theorem isLocalization_of_algEquiv [Algebra R P] [IsLocalization M S] (h : S ≃
     IsLocalization M P := by
   constructor
   · intro y
-    convert(IsLocalization.map_units S y).map h.to_alg_hom.to_ring_hom.to_monoid_hom
+    convert (IsLocalization.map_units S y).map h.to_alg_hom.to_ring_hom.to_monoid_hom
     exact (h.commutes y).symm
   · intro y
     obtain ⟨⟨x, s⟩, e⟩ := IsLocalization.surj M (h.symm y)
-    apply_fun h  at e 
+    apply_fun h at e 
     simp only [h.map_mul, h.apply_symm_apply, h.commutes] at e 
     exact ⟨⟨x, s⟩, e⟩
   · intro x y
@@ -804,7 +804,7 @@ theorem isLocalization_iff_of_base_ringEquiv (h : R ≃+* P) :
   refine' ⟨fun _ => is_localization_of_base_ring_equiv _ _ h, _⟩
   letI := ((algebraMap R S).comp h.symm.to_ring_hom).toAlgebra
   intro H
-  convert@is_localization_of_base_ring_equiv _ _ _ _ _ _ H h.symm
+  convert @is_localization_of_base_ring_equiv _ _ _ _ _ _ H h.symm
   · erw [Submonoid.map_equiv_eq_comap_symm, Submonoid.comap_map_eq_of_injective]
     exact h.to_equiv.injective
   rw [RingHom.algebraMap_toAlgebra, RingHom.comp_assoc]

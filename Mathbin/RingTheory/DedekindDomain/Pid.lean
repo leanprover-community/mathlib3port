@@ -114,7 +114,7 @@ An invertible fractional ideal of a commutative ring with finitely many maximal 
 https://math.stackexchange.com/a/95857 -/
 theorem FractionalIdeal.isPrincipal.of_finite_maximals_of_inv {A : Type _} [CommRing A]
     [Algebra R A] {S : Submonoid R} [IsLocalization S A] (hS : S ≤ R⁰)
-    (hf : { I : Ideal R | I.IsMaximal }.Finite) (I I' : FractionalIdeal S A) (hinv : I * I' = 1) :
+    (hf : {I : Ideal R | I.IsMaximal}.Finite) (I I' : FractionalIdeal S A) (hinv : I * I' = 1) :
     Submodule.IsPrincipal (I : Submodule R A) :=
   by
   have hinv' := hinv
@@ -180,7 +180,7 @@ theorem FractionalIdeal.isPrincipal.of_finite_maximals_of_inv {A : Type _} [Comm
 /-- An invertible ideal in a commutative ring with finitely many maximal ideals is principal.
 
 https://math.stackexchange.com/a/95857 -/
-theorem Ideal.IsPrincipal.of_finite_maximals_of_isUnit (hf : { I : Ideal R | I.IsMaximal }.Finite)
+theorem Ideal.IsPrincipal.of_finite_maximals_of_isUnit (hf : {I : Ideal R | I.IsMaximal}.Finite)
     {I : Ideal R} (hI : IsUnit (I : FractionalIdeal R⁰ (FractionRing R))) : I.IsPrincipal :=
   (IsLocalization.coeSubmodule_isPrincipal _ le_rfl).mp
     (FractionalIdeal.isPrincipal.of_finite_maximals_of_inv le_rfl hf I
@@ -189,7 +189,7 @@ theorem Ideal.IsPrincipal.of_finite_maximals_of_isUnit (hf : { I : Ideal R | I.I
 
 /-- A Dedekind domain is a PID if its set of primes is finite. -/
 theorem IsPrincipalIdealRing.of_finite_primes [IsDomain R] [IsDedekindDomain R]
-    (h : { I : Ideal R | I.IsPrime }.Finite) : IsPrincipalIdealRing R :=
+    (h : {I : Ideal R | I.IsPrime}.Finite) : IsPrincipalIdealRing R :=
   ⟨fun I => by
     obtain rfl | hI := eq_or_ne I ⊥
     · exact bot_isPrincipal

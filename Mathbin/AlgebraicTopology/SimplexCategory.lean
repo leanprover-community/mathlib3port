@@ -43,7 +43,7 @@ universe v
 
 open CategoryTheory CategoryTheory.Limits
 
-/- ./././Mathport/Syntax/Translate/Command.lean:323:31: unsupported: @[derive, irreducible] def -/
+/- ./././Mathport/Syntax/Translate/Command.lean:324:31: unsupported: @[derive, irreducible] def -/
 #print SimplexCategory /-
 /-- The simplex category:
 * objects are natural numbers `n : ℕ`

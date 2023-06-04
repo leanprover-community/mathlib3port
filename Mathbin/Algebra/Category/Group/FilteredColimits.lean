@@ -50,7 +50,7 @@ open MonCat.FilteredColimits (colimit_one_eq colimit_mul_mk_eq)
 
 -- We use parameters here, mainly so we can have the abbreviations `G` and `G.mk` below, without
 -- passing around `F` all the time.
-parameter {J : Type v}[SmallCategory J][IsFiltered J](F : J ⥤ GroupCat.{max v u})
+parameter {J : Type v} [SmallCategory J] [IsFiltered J] (F : J ⥤ GroupCat.{max v u})
 
 #print GroupCat.FilteredColimits.G /-
 /-- The colimit of `F ⋙ forget₂ Group Mon` in the category `Mon`.
@@ -203,7 +203,7 @@ section
 
 -- We use parameters here, mainly so we can have the abbreviation `G` below, without
 -- passing around `F` all the time.
-parameter {J : Type v}[SmallCategory J][IsFiltered J](F : J ⥤ CommGroupCat.{max v u})
+parameter {J : Type v} [SmallCategory J] [IsFiltered J] (F : J ⥤ CommGroupCat.{max v u})
 
 #print CommGroupCat.FilteredColimits.G /-
 /-- The colimit of `F ⋙ forget₂ CommGroup Group` in the category `Group`.

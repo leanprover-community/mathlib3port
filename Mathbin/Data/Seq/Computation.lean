@@ -458,7 +458,7 @@ theorem not_terminates_empty : ¬Terminates (empty α) := fun ⟨⟨a, h⟩⟩ =
 theorem eq_empty_of_not_terminates {s} (H : ¬Terminates s) : s = empty α :=
   by
   apply Subtype.eq; funext n
-  induction' h : s.val n with ; · rfl
+  induction' h : s.val n with; · rfl
   refine' absurd _ H; exact ⟨⟨_, _, h.symm⟩⟩
 #align computation.eq_empty_of_not_terminates Computation.eq_empty_of_not_terminates
 -/

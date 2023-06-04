@@ -374,7 +374,7 @@ class HasBiproductsOfShape : Prop where
 attribute [instance 100] has_biproducts_of_shape.has_biproduct
 
 #print CategoryTheory.Limits.HasFiniteBiproducts /-
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`out] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`out] [] -/
 /-- `has_finite_biproducts C` represents a choice of biproduct for every family of objects in `C`
 indexed by a finite type. -/
 class HasFiniteBiproducts : Prop where
@@ -486,7 +486,7 @@ This means you may not be able to `simp` using this lemma unless you `open_local
 @[reassoc]
 theorem biproduct.ι_π [DecidableEq J] (f : J → C) [HasBiproduct f] (j j' : J) :
     biproduct.ι f j ≫ biproduct.π f j' = if h : j = j' then eqToHom (congr_arg f h) else 0 := by
-  convert(biproduct.bicone f).ι_π j j'
+  convert (biproduct.bicone f).ι_π j j'
 #align category_theory.limits.biproduct.ι_π CategoryTheory.Limits.biproduct.ι_π
 -/
 

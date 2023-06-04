@@ -170,9 +170,9 @@ def mkOfDiscrete [DiscreteTopology α] (f : α → β) (C : ℝ) (h : ∀ x y : 
 
 /-- The uniform distance between two bounded continuous functions -/
 instance : Dist (α →ᵇ β) :=
-  ⟨fun f g => sInf { C | 0 ≤ C ∧ ∀ x : α, dist (f x) (g x) ≤ C }⟩
+  ⟨fun f g => sInf {C | 0 ≤ C ∧ ∀ x : α, dist (f x) (g x) ≤ C}⟩
 
-theorem dist_eq : dist f g = sInf { C | 0 ≤ C ∧ ∀ x : α, dist (f x) (g x) ≤ C } :=
+theorem dist_eq : dist f g = sInf {C | 0 ≤ C ∧ ∀ x : α, dist (f x) (g x) ≤ C} :=
   rfl
 #align bounded_continuous_function.dist_eq BoundedContinuousFunction.dist_eq
 
@@ -249,7 +249,7 @@ instance {α β} [TopologicalSpace α] [MetricSpace β] : MetricSpace (α →ᵇ
     where eq_of_dist_eq_zero f g hfg := by
     ext x <;> exact eq_of_dist_eq_zero (le_antisymm (hfg ▸ dist_coe_le_dist _) dist_nonneg)
 
-theorem nndist_eq : nndist f g = sInf { C | ∀ x : α, nndist (f x) (g x) ≤ C } :=
+theorem nndist_eq : nndist f g = sInf {C | ∀ x : α, nndist (f x) (g x) ≤ C} :=
   Subtype.ext <|
     dist_eq.trans <| by
       rw [NNReal.coe_sInf, NNReal.coe_image]
@@ -869,13 +869,13 @@ theorem norm_def : ‖f‖ = dist f 0 :=
 
 /-- The norm of a bounded continuous function is the supremum of `‖f x‖`.
 We use `Inf` to ensure that the definition works if `α` has no elements. -/
-theorem norm_eq (f : α →ᵇ β) : ‖f‖ = sInf { C : ℝ | 0 ≤ C ∧ ∀ x : α, ‖f x‖ ≤ C } := by
+theorem norm_eq (f : α →ᵇ β) : ‖f‖ = sInf {C : ℝ | 0 ≤ C ∧ ∀ x : α, ‖f x‖ ≤ C} := by
   simp [norm_def, BoundedContinuousFunction.dist_eq]
 #align bounded_continuous_function.norm_eq BoundedContinuousFunction.norm_eq
 
 /-- When the domain is non-empty, we do not need the `0 ≤ C` condition in the formula for ‖f‖ as an
 `Inf`. -/
-theorem norm_eq_of_nonempty [h : Nonempty α] : ‖f‖ = sInf { C : ℝ | ∀ x : α, ‖f x‖ ≤ C } :=
+theorem norm_eq_of_nonempty [h : Nonempty α] : ‖f‖ = sInf {C : ℝ | ∀ x : α, ‖f x‖ ≤ C} :=
   by
   obtain ⟨a⟩ := h
   rw [norm_eq]

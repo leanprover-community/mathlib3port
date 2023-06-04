@@ -321,7 +321,7 @@ theorem range_image_pred_top_sub (n : ℕ) :
 theorem range_add_eq_union : range (a + b) = range a ∪ (range b).map (addLeftEmbedding a) :=
   by
   rw [Finset.range_eq_Ico, map_eq_image]
-  convert(Ico_union_Ico_eq_Ico a.zero_le le_self_add).symm
+  convert (Ico_union_Ico_eq_Ico a.zero_le le_self_add).symm
   exact image_add_left_Ico _ _ _
 #align finset.range_add_eq_union Finset.range_add_eq_union
 
@@ -334,14 +334,14 @@ variable {P : ℕ → Prop} (h : ∀ n, P (n + 1) → P n)
 include h
 
 #print Nat.decreasing_induction_of_not_bddAbove /-
-theorem Nat.decreasing_induction_of_not_bddAbove (hP : ¬BddAbove { x | P x }) (n : ℕ) : P n :=
+theorem Nat.decreasing_induction_of_not_bddAbove (hP : ¬BddAbove {x | P x}) (n : ℕ) : P n :=
   let ⟨m, hm, hl⟩ := not_bddAbove_iff.1 hP n
   decreasingInduction h hl.le hm
 #align nat.decreasing_induction_of_not_bdd_above Nat.decreasing_induction_of_not_bddAbove
 -/
 
 #print Nat.decreasing_induction_of_infinite /-
-theorem Nat.decreasing_induction_of_infinite (hP : { x | P x }.Infinite) (n : ℕ) : P n :=
+theorem Nat.decreasing_induction_of_infinite (hP : {x | P x}.Infinite) (n : ℕ) : P n :=
   Nat.decreasing_induction_of_not_bddAbove h (mt BddAbove.finite hP) n
 #align nat.decreasing_induction_of_infinite Nat.decreasing_induction_of_infinite
 -/
@@ -368,7 +368,7 @@ theorem Nat.cauchy_induction_mul (k seed : ℕ) (hk : 1 < k) (hs : P seed.succ)
     (hm : ∀ x, seed < x → P x → P (k * x)) (n : ℕ) : P n :=
   by
   apply Nat.cauchy_induction h _ hs ((· * ·) k) fun x hl hP => ⟨_, hm x hl hP⟩
-  convert(mul_lt_mul_right <| seed.succ_pos.trans_le hl).2 hk
+  convert (mul_lt_mul_right <| seed.succ_pos.trans_le hl).2 hk
   rw [one_mul]
 #align nat.cauchy_induction_mul Nat.cauchy_induction_mul
 -/

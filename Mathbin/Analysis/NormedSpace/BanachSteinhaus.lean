@@ -42,7 +42,7 @@ theorem banach_steinhaus {ι : Type _} [CompleteSpace E] {g : ι → E →SL[σ�
     (h : ∀ x, ∃ C, ∀ i, ‖g i x‖ ≤ C) : ∃ C', ∀ i, ‖g i‖ ≤ C' :=
   by
   -- sequence of subsets consisting of those `x : E` with norms `‖g i x‖` bounded by `n`
-  let e : ℕ → Set E := fun n => ⋂ i : ι, { x : E | ‖g i x‖ ≤ n }
+  let e : ℕ → Set E := fun n => ⋂ i : ι, {x : E | ‖g i x‖ ≤ n}
   -- each of these sets is closed
   have hc : ∀ n : ℕ, IsClosed (e n) := fun i =>
     isClosed_iInter fun i => isClosed_le (Continuous.norm (g i).cont) continuous_const

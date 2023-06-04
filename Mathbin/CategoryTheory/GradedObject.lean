@@ -234,11 +234,11 @@ which follows from the fact we have zero morphisms and decidable equality for th
 instance : Faithful (total β C)
     where map_injective' X Y f g w := by
     classical
-      ext i
-      replace w := sigma.ι (fun i : β => X i) i ≫= w
-      erw [colimit.ι_map, colimit.ι_map] at w 
-      simp at *
-      exact mono.right_cancellation _ _ w
+    ext i
+    replace w := sigma.ι (fun i : β => X i) i ≫= w
+    erw [colimit.ι_map, colimit.ι_map] at w 
+    simp at *
+    exact mono.right_cancellation _ _ w
 
 end GradedObject
 

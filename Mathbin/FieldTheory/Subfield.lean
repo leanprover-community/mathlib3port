@@ -912,7 +912,7 @@ def eqLocusField (f g : K →+* L) : Subfield K :=
     (f : K →+* L).eqLocus
       g with
     inv_mem' := fun x (hx : f x = g x) => show f x⁻¹ = g x⁻¹ by rw [map_inv₀ f, map_inv₀ g, hx]
-    carrier := { x | f x = g x } }
+    carrier := {x | f x = g x} }
 #align ring_hom.eq_locus_field RingHom.eqLocusField
 -/
 

@@ -813,7 +813,7 @@ theorem ext {p q : R[X]} : (∀ n, coeff p n = coeff q n) → p = q :=
 
 /-- Monomials generate the additive monoid of polynomials. -/
 theorem addSubmonoid_closure_setOf_eq_monomial :
-    AddSubmonoid.closure { p : R[X] | ∃ n a, p = monomial n a } = ⊤ :=
+    AddSubmonoid.closure {p : R[X] | ∃ n a, p = monomial n a} = ⊤ :=
   by
   apply top_unique
   rw [← AddSubmonoid.map_equiv_top (to_finsupp_iso R).symm.toAddEquiv, ←
@@ -1139,9 +1139,9 @@ theorem update_zero_eq_erase (p : R[X]) (n : ℕ) : p.update n 0 = p.eraseₓ n 
 theorem support_update (p : R[X]) (n : ℕ) (a : R) [Decidable (a = 0)] :
     support (p.update n a) = if a = 0 then p.support.eraseₓ n else insert n p.support := by
   classical
-    cases p
-    simp only [support, update, support_update]
-    congr
+  cases p
+  simp only [support, update, support_update]
+  congr
 #align polynomial.support_update Polynomial.support_update
 
 theorem support_update_zero (p : R[X]) (n : ℕ) : support (p.update n 0) = p.support.eraseₓ n := by

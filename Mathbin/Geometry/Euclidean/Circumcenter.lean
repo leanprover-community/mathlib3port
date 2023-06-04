@@ -236,14 +236,14 @@ theorem AffineIndependent.existsUnique_dist_eq {ι : Type _} [hne : Nonempty ι]
       replace hm := hm ha2 _ hc
       have hr : Set.range p = insert (p i) (Set.range fun i2 : ι2 => p i2) :=
         by
-        change _ = insert _ (Set.range fun i2 : { x | x ≠ i } => p i2)
+        change _ = insert _ (Set.range fun i2 : {x | x ≠ i} => p i2)
         rw [← Set.image_eq_range, ← Set.image_univ, ← Set.image_insert_eq]
         congr with j
         simp [Classical.em]
       rw [hr, ← affineSpan_insert_affineSpan]
       refine' exists_unique_dist_eq_of_insert (Set.range_nonempty _) (subset_spanPoints ℝ _) _ hm
       convert ha.not_mem_affine_span_diff i Set.univ
-      change (Set.range fun i2 : { x | x ≠ i } => p i2) = _
+      change (Set.range fun i2 : {x | x ≠ i} => p i2) = _
       rw [← Set.image_eq_range]
       congr with j; simp; rfl
 #align affine_independent.exists_unique_dist_eq AffineIndependent.existsUnique_dist_eq

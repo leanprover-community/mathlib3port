@@ -65,7 +65,7 @@ theorem mem_of_mem_of_eqv [IsStrictWeakOrder α lt] {t : Rbtree α lt} {a b : α
   cases' t with n p <;> simp [Membership.Mem, Rbtree.Mem] <;> clear p <;> induction n <;>
         simp only [Rbnode.Mem, StrictWeakOrder.Equiv, false_imp_iff] <;>
       intro h₁ h₂ <;>
-    cases_type*or.1
+    cases_type* or.1
   iterate 2 
     · have : Rbnode.Mem lt b n_lchild := n_ih_lchild h₁ h₂; simp [this]
     · simp [incomp_trans_of lt h₂.swap h₁]
@@ -227,10 +227,10 @@ theorem eq_leaf_of_max_eq_none {t : Rbtree α lt} : t.max = none → t = mkRbtre
 theorem min_is_minimal [IsStrictWeakOrder α lt] {a : α} {t : Rbtree α lt} :
     t.min = some a → ∀ {b}, b ∈ t → a ≈[lt]b ∨ lt a b := by
   classical
-    cases t
-    apply Rbnode.min_is_minimal
-    apply Rbnode.isSearchable_of_wellFormed
-    assumption
+  cases t
+  apply Rbnode.min_is_minimal
+  apply Rbnode.isSearchable_of_wellFormed
+  assumption
 #align rbtree.min_is_minimal Rbtree.min_is_minimal
 
 theorem max_is_maximal [IsStrictWeakOrder α lt] {a : α} {t : Rbtree α lt} :

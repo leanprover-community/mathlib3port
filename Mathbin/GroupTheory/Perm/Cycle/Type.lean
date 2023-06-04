@@ -407,28 +407,28 @@ theorem card_compl_support_modEq [DecidableEq α] {p n : ℕ} [hp : Fact p.Prime
 theorem exists_fixed_point_of_prime {p n : ℕ} [hp : Fact p.Prime] (hα : ¬p ∣ Fintype.card α)
     {σ : Perm α} (hσ : σ ^ p ^ n = 1) : ∃ a : α, σ a = a := by
   classical
-    contrapose! hα
-    simp_rw [← mem_support] at hα 
-    exact
-      nat.modeq_zero_iff_dvd.mp
-        ((congr_arg _
-              (finset.card_eq_zero.mpr (compl_eq_bot.mpr (finset.eq_univ_iff_forall.mpr hα)))).mp
-          (card_compl_support_modeq hσ).symm)
+  contrapose! hα
+  simp_rw [← mem_support] at hα 
+  exact
+    nat.modeq_zero_iff_dvd.mp
+      ((congr_arg _
+            (finset.card_eq_zero.mpr (compl_eq_bot.mpr (finset.eq_univ_iff_forall.mpr hα)))).mp
+        (card_compl_support_modeq hσ).symm)
 #align equiv.perm.exists_fixed_point_of_prime Equiv.Perm.exists_fixed_point_of_prime
 
 theorem exists_fixed_point_of_prime' {p n : ℕ} [hp : Fact p.Prime] (hα : p ∣ Fintype.card α)
     {σ : Perm α} (hσ : σ ^ p ^ n = 1) {a : α} (ha : σ a = a) : ∃ b : α, σ b = b ∧ b ≠ a := by
   classical
-    have h : ∀ b : α, b ∈ σ.supportᶜ ↔ σ b = b := fun b => by
-      rw [Finset.mem_compl, mem_support, Classical.not_not]
-    obtain ⟨b, hb1, hb2⟩ :=
-      Finset.exists_ne_of_one_lt_card
-        (lt_of_lt_of_le hp.out.one_lt
-          (Nat.le_of_dvd (finset.card_pos.mpr ⟨a, (h a).mpr ha⟩)
-            (nat.modeq_zero_iff_dvd.mp
-              ((card_compl_support_modeq hσ).trans (nat.modeq_zero_iff_dvd.mpr hα)))))
-        a
-    exact ⟨b, (h b).mp hb1, hb2⟩
+  have h : ∀ b : α, b ∈ σ.supportᶜ ↔ σ b = b := fun b => by
+    rw [Finset.mem_compl, mem_support, Classical.not_not]
+  obtain ⟨b, hb1, hb2⟩ :=
+    Finset.exists_ne_of_one_lt_card
+      (lt_of_lt_of_le hp.out.one_lt
+        (Nat.le_of_dvd (finset.card_pos.mpr ⟨a, (h a).mpr ha⟩)
+          (nat.modeq_zero_iff_dvd.mp
+            ((card_compl_support_modeq hσ).trans (nat.modeq_zero_iff_dvd.mpr hα)))))
+      a
+  exact ⟨b, (h b).mp hb1, hb2⟩
 #align equiv.perm.exists_fixed_point_of_prime' Equiv.Perm.exists_fixed_point_of_prime'
 
 #print Equiv.Perm.isCycle_of_prime_order' /-
@@ -444,8 +444,8 @@ theorem isCycle_of_prime_order'' {σ : Perm α} (h1 : (Fintype.card α).Prime)
   isCycle_of_prime_order' ((congr_arg Nat.Prime h2).mpr h1)
     (by
       classical
-        rw [← one_mul (Fintype.card α), ← h2, mul_lt_mul_right (orderOf_pos σ)]
-        exact one_lt_two)
+      rw [← one_mul (Fintype.card α), ← h2, mul_lt_mul_right (orderOf_pos σ)]
+      exact one_lt_two)
 #align equiv.perm.is_cycle_of_prime_order'' Equiv.Perm.isCycle_of_prime_order''
 -/
 
@@ -456,7 +456,7 @@ variable (G : Type _) [Group G] (n : ℕ)
 #print Equiv.Perm.vectorsProdEqOne /-
 /-- The type of vectors with terms from `G`, length `n`, and product equal to `1:G`. -/
 def vectorsProdEqOne : Set (Vector G n) :=
-  { v | v.toList.Prod = 1 }
+  {v | v.toList.Prod = 1}
 #align equiv.perm.vectors_prod_eq_one Equiv.Perm.vectorsProdEqOne
 -/
 
@@ -786,7 +786,7 @@ theorem isThreeCycle_swap_mul_swap_same {a b c : α} (ab : a ≠ b) (ac : a ≠ 
 open Subgroup
 
 theorem swap_mul_swap_same_mem_closure_three_cycles {a b c : α} (ab : a ≠ b) (ac : a ≠ c) :
-    swap a b * swap a c ∈ closure { σ : Perm α | IsThreeCycle σ } :=
+    swap a b * swap a c ∈ closure {σ : Perm α | IsThreeCycle σ} :=
   by
   by_cases bc : b = c
   · subst bc
@@ -795,7 +795,7 @@ theorem swap_mul_swap_same_mem_closure_three_cycles {a b c : α} (ab : a ≠ b) 
 #align equiv.perm.swap_mul_swap_same_mem_closure_three_cycles Equiv.Perm.swap_mul_swap_same_mem_closure_three_cycles
 
 theorem IsSwap.mul_mem_closure_three_cycles {σ τ : Perm α} (hσ : IsSwap σ) (hτ : IsSwap τ) :
-    σ * τ ∈ closure { σ : Perm α | IsThreeCycle σ } :=
+    σ * τ ∈ closure {σ : Perm α | IsThreeCycle σ} :=
   by
   obtain ⟨a, b, ab, rfl⟩ := hσ
   obtain ⟨c, d, cd, rfl⟩ := hτ

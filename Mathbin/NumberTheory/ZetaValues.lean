@@ -74,7 +74,7 @@ theorem bernoulliFun_eval_one (k : ℕ) : bernoulliFun k 1 = bernoulliFun k 0 + 
 theorem hasDerivAt_bernoulliFun (k : ℕ) (x : ℝ) :
     HasDerivAt (bernoulliFun k) (k * bernoulliFun (k - 1) x) x :=
   by
-  convert((Polynomial.bernoulli k).map <| algebraMap ℚ ℝ).HasDerivAt x using 1
+  convert ((Polynomial.bernoulli k).map <| algebraMap ℚ ℝ).HasDerivAt x using 1
   simp only [bernoulliFun, Polynomial.derivative_map, Polynomial.derivative_bernoulli k,
     Polynomial.map_mul, Polynomial.map_nat_cast, Polynomial.eval_mul, Polynomial.eval_nat_cast]
 #align has_deriv_at_bernoulli_fun hasDerivAt_bernoulliFun
@@ -82,7 +82,7 @@ theorem hasDerivAt_bernoulliFun (k : ℕ) (x : ℝ) :
 theorem antideriv_bernoulliFun (k : ℕ) (x : ℝ) :
     HasDerivAt (fun x => bernoulliFun (k + 1) x / (k + 1)) (bernoulliFun k x) x :=
   by
-  convert(hasDerivAt_bernoulliFun (k + 1) x).div_const _
+  convert (hasDerivAt_bernoulliFun (k + 1) x).div_const _
   field_simp [Nat.cast_add_one_ne_zero k]
   ring
 #align antideriv_bernoulli_fun antideriv_bernoulliFun
@@ -256,7 +256,7 @@ theorem hasSum_one_div_nat_pow_mul_fourier {k : ℕ} (hk : 2 ≤ k) {x : ℝ} (h
     HasSum (fun n : ℕ => 1 / (n : ℂ) ^ k * (fourier n (x : 𝕌) + (-1) ^ k * fourier (-n) (x : 𝕌)))
       (-(2 * π * I) ^ k / k ! * bernoulliFun k x) :=
   by
-  convert(hasSum_one_div_pow_mul_fourier_mul_bernoulliFun hk hx).sum_nat_of_sum_int
+  convert (hasSum_one_div_pow_mul_fourier_mul_bernoulliFun hk hx).sum_nat_of_sum_int
   · ext1 n
     rw [Int.cast_neg, mul_add, ← mul_assoc]
     conv_rhs => rw [neg_eq_neg_one_mul, mul_pow, ← div_div]
@@ -277,8 +277,9 @@ theorem hasSum_one_div_nat_pow_mul_cos {k : ℕ} (hk : k ≠ 0) {x : ℝ} (hx : 
     HasSum (fun n : ℕ => 1 / (n : ℂ) ^ (2 * k) * (fourier n (x : 𝕌) + fourier (-n) (x : 𝕌)))
       ((-1) ^ (k + 1) * (2 * π) ^ (2 * k) / (2 * k)! * bernoulliFun (2 * k) x) :=
     by
-    convert hasSum_one_div_nat_pow_mul_fourier
-        (by linarith [nat.one_le_iff_ne_zero.mpr hk] : 2 ≤ 2 * k) hx
+    convert
+      hasSum_one_div_nat_pow_mul_fourier (by linarith [nat.one_le_iff_ne_zero.mpr hk] : 2 ≤ 2 * k)
+        hx
     · ext1 n
       rw [pow_mul (-1 : ℂ), neg_one_sq, one_pow, one_mul]
     · rw [pow_add, pow_one]
@@ -289,9 +290,9 @@ theorem hasSum_one_div_nat_pow_mul_cos {k : ℕ} (hk : k ≠ 0) {x : ℝ} (hx : 
         skip
         rw [pow_mul, I_sq]
       ring
-  convert((has_sum_iff _ _).mp (this.div_const 2)).1
+  convert ((has_sum_iff _ _).mp (this.div_const 2)).1
   · ext1 n
-    convert(of_real_re _).symm
+    convert (of_real_re _).symm
     rw [of_real_mul]; rw [← mul_div]; congr
     · rw [of_real_div, of_real_one, of_real_pow]; rfl
     · rw [of_real_cos, of_real_mul, fourier_coe_apply, fourier_coe_apply, cos, of_real_one, div_one,
@@ -299,7 +300,7 @@ theorem hasSum_one_div_nat_pow_mul_cos {k : ℕ} (hk : k ≠ 0) {x : ℝ} (hx : 
         of_real_nat_cast]
       congr 3
       · ring; · ring
-  · convert(of_real_re _).symm
+  · convert (of_real_re _).symm
     rw [of_real_mul, of_real_div, of_real_div, of_real_mul, of_real_pow, of_real_pow, of_real_neg,
       of_real_nat_cast, of_real_mul, of_real_bit0, of_real_one]
     ring
@@ -314,7 +315,8 @@ theorem hasSum_one_div_nat_pow_mul_sin {k : ℕ} (hk : k ≠ 0) {x : ℝ} (hx : 
     HasSum (fun n : ℕ => 1 / (n : ℂ) ^ (2 * k + 1) * (fourier n (x : 𝕌) - fourier (-n) (x : 𝕌)))
       ((-1) ^ (k + 1) * I * (2 * π) ^ (2 * k + 1) / (2 * k + 1)! * bernoulliFun (2 * k + 1) x) :=
     by
-    convert hasSum_one_div_nat_pow_mul_fourier
+    convert
+      hasSum_one_div_nat_pow_mul_fourier
         (by linarith [nat.one_le_iff_ne_zero.mpr hk] : 2 ≤ 2 * k + 1) hx
     · ext1 n
       rw [pow_add (-1 : ℂ), pow_mul (-1 : ℂ), neg_one_sq, one_pow, one_mul, pow_one, ←
@@ -327,9 +329,9 @@ theorem hasSum_one_div_nat_pow_mul_sin {k : ℕ} (hk : k ≠ 0) {x : ℝ} (hx : 
         skip
         rw [pow_add, pow_one, pow_mul, I_sq]
       ring
-  convert((has_sum_iff _ _).mp (this.div_const (2 * I))).1
+  convert ((has_sum_iff _ _).mp (this.div_const (2 * I))).1
   · ext1 n
-    convert(of_real_re _).symm
+    convert (of_real_re _).symm
     rw [of_real_mul]; rw [← mul_div]; congr
     · rw [of_real_div, of_real_one, of_real_pow]; rfl
     · rw [of_real_sin, of_real_mul, fourier_coe_apply, fourier_coe_apply, sin, of_real_one, div_one,
@@ -337,7 +339,7 @@ theorem hasSum_one_div_nat_pow_mul_sin {k : ℕ} (hk : k ≠ 0) {x : ℝ} (hx : 
         of_real_nat_cast, ← div_div, div_I, div_mul_eq_mul_div₀, ← neg_div, ← neg_mul, neg_sub]
       congr 4
       · ring; · ring
-  · convert(of_real_re _).symm
+  · convert (of_real_re _).symm
     rw [of_real_mul, of_real_div, of_real_div, of_real_mul, of_real_pow, of_real_pow, of_real_neg,
       of_real_nat_cast, of_real_mul, of_real_bit0, of_real_one, ← div_div, div_I,
       div_mul_eq_mul_div₀]

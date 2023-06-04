@@ -396,7 +396,7 @@ theorem ωSup_eq_none {c : Chain (Part α)} (h : ¬∃ a, some a ∈ c) : Part.�
 
 theorem mem_chain_of_mem_ωSup {c : Chain (Part α)} {a : α} (h : a ∈ Part.ωSup c) : some a ∈ c :=
   by
-  simp [Part.ωSup] at h ; split_ifs  at h 
+  simp [Part.ωSup] at h ; split_ifs at h 
   · have h' := Classical.choose_spec h_1
     rw [← eq_some_iff] at h ; rw [← h]; exact h'
   · rcases h with ⟨⟨⟩⟩

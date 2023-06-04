@@ -59,14 +59,14 @@ theorem integrableOn_peak_smul_of_integrableOn_of_continuousWithinAt (hs : Measu
   by
   obtain ⟨u, u_open, x₀u, hu⟩ : ∃ u, IsOpen u ∧ x₀ ∈ u ∧ ∀ x ∈ u ∩ s, g x ∈ ball (g x₀) 1
   exact mem_nhdsWithin.1 (hcg (ball_mem_nhds _ zero_lt_one))
-  filter_upwards [tendsto_uniformly_on_iff.1 (hlφ u u_open x₀u) 1 zero_lt_one, hiφ]with i hi h'i
+  filter_upwards [tendsto_uniformly_on_iff.1 (hlφ u u_open x₀u) 1 zero_lt_one, hiφ] with i hi h'i
   have A : integrable_on (fun x => φ i x • g x) (s \ u) μ :=
     by
     refine' integrable.smul_of_top_right (hmg.mono (diff_subset _ _) le_rfl) _
     apply
       mem_ℒp_top_of_bound
         ((integrable_of_integral_eq_one h'i).AEStronglyMeasurable.mono_set (diff_subset _ _)) 1
-    filter_upwards [self_mem_ae_restrict (hs.diff u_open.measurable_set)]with x hx
+    filter_upwards [self_mem_ae_restrict (hs.diff u_open.measurable_set)] with x hx
     simpa only [Pi.zero_apply, dist_zero_left] using (hi x hx).le
   have B : integrable_on (fun x => φ i x • g x) (s ∩ u) μ :=
     by
@@ -74,7 +74,7 @@ theorem integrableOn_peak_smul_of_integrableOn_of_continuousWithinAt (hs : Measu
     · exact integrable_on.mono_set (integrable_of_integral_eq_one h'i) (inter_subset_left _ _)
     · apply
         mem_ℒp_top_of_bound (hmg.mono_set (inter_subset_left _ _)).AEStronglyMeasurable (‖g x₀‖ + 1)
-      filter_upwards [self_mem_ae_restrict (hs.inter u_open.measurable_set)]with x hx
+      filter_upwards [self_mem_ae_restrict (hs.inter u_open.measurable_set)] with x hx
       rw [inter_comm] at hx 
       exact (norm_lt_of_mem_ball (hu x hx)).le
   convert A.union B
@@ -104,14 +104,14 @@ theorem tendsto_set_integral_peak_smul_of_integrableOn_of_continuousWithinAt_aux
     exact (((tendsto_order.1 A).2 ε εpos).And self_mem_nhdsWithin).exists
   suffices ∀ᶠ i in l, ‖∫ x in s, φ i x • g x ∂μ‖ ≤ (δ * ∫ x in s, ‖g x‖ ∂μ) + δ
     by
-    filter_upwards [this]with i hi
+    filter_upwards [this] with i hi
     simp only [dist_zero_right]
     exact hi.trans_lt hδ
   obtain ⟨u, u_open, x₀u, hu⟩ : ∃ u, IsOpen u ∧ x₀ ∈ u ∧ ∀ x ∈ u ∩ s, g x ∈ ball (g x₀) δ
   exact mem_nhdsWithin.1 (hcg (ball_mem_nhds _ δpos))
   filter_upwards [tendsto_uniformly_on_iff.1 (hlφ u u_open x₀u) δ δpos, hiφ, hnφ,
-    integrableOn_peak_smul_of_integrableOn_of_continuousWithinAt hs hlφ hiφ hmg
-      hcg]with i hi h'i hφpos h''i
+    integrableOn_peak_smul_of_integrableOn_of_continuousWithinAt hs hlφ hiφ hmg hcg] with i hi h'i
+    hφpos h''i
   have B : ‖∫ x in s ∩ u, φ i x • g x ∂μ‖ ≤ δ :=
     calc
       ‖∫ x in s ∩ u, φ i x • g x ∂μ‖ ≤ ∫ x in s ∩ u, ‖φ i x • g x‖ ∂μ :=
@@ -192,7 +192,7 @@ theorem tendsto_set_integral_peak_smul_of_integrableOn_of_continuousWithinAt (hs
   simp only [one_smul, zero_add] at A 
   refine' tendsto.congr' _ A
   filter_upwards [integrableOn_peak_smul_of_integrableOn_of_continuousWithinAt hs hlφ hiφ hmg hcg,
-    hiφ]with i hi h'i
+    hiφ] with i hi h'i
   simp only [h, Pi.sub_apply, smul_sub]
   rw [integral_sub hi, integral_smul_const, sub_add_cancel]
   exact integrable.smul_const (integrable_of_integral_eq_one h'i) _
@@ -208,7 +208,7 @@ For a less precise but more usable version, see
 `tendsto_set_integral_pow_smul_of_unique_maximum_of_is_compact_of_continuous_on`.
  -/
 theorem tendsto_set_integral_pow_smul_of_unique_maximum_of_isCompact_of_measure_nhds_within_pos
-    [MetrizableSpace α] [LocallyFiniteMeasure μ] (hs : IsCompact s)
+    [MetrizableSpace α] [IsLocallyFiniteMeasure μ] (hs : IsCompact s)
     (hμ : ∀ u, IsOpen u → x₀ ∈ u → 0 < μ (u ∩ s)) {c : α → ℝ} (hc : ContinuousOn c s)
     (h'c : ∀ y ∈ s, y ≠ x₀ → c y < c x₀) (hnc : ∀ x ∈ s, 0 ≤ c x) (hnc₀ : 0 < c x₀) (h₀ : x₀ ∈ s)
     (hmg : IntegrableOn g s μ) (hcg : ContinuousWithinAt g s x₀) :
@@ -232,7 +232,7 @@ theorem tendsto_set_integral_pow_smul_of_unique_maximum_of_isCompact_of_measure_
   have J : ∀ n, 0 ≤ᵐ[μ.restrict s] fun x : α => c x ^ n :=
     by
     intro n
-    filter_upwards [ae_restrict_mem hs.measurable_set]with x hx
+    filter_upwards [ae_restrict_mem hs.measurable_set] with x hx
     exact pow_nonneg (hnc x hx) n
   have P : ∀ n, 0 < ∫ x in s, c x ^ n ∂μ := by
     intro n
@@ -295,7 +295,7 @@ theorem tendsto_set_integral_pow_smul_of_unique_maximum_of_isCompact_of_measure_
       exact (div_lt_one t'_pos).2 tt'
     rw [MulZeroClass.mul_zero] at N 
     refine' tendsto_uniformly_on_iff.2 fun ε εpos => _
-    filter_upwards [(tendsto_order.1 N).2 ε εpos]with n hn x hx
+    filter_upwards [(tendsto_order.1 N).2 ε εpos] with n hn x hx
     simp only [Pi.zero_apply, dist_zero_left, Real.norm_of_nonneg (hnφ n x hx.1)]
     exact (M n x hx).trans_lt hn
   have : tendsto (fun i : ℕ => ∫ x : α in s, φ i x • g x ∂μ) at_top (𝓝 (g x₀)) :=
@@ -315,10 +315,10 @@ For a less precise but more usable version, see
 `tendsto_set_integral_pow_smul_of_unique_maximum_of_is_compact_of_continuous_on`.
 -/
 theorem tendsto_set_integral_pow_smul_of_unique_maximum_of_isCompact_of_integrableOn
-    [MetrizableSpace α] [LocallyFiniteMeasure μ] [OpenPosMeasure μ] (hs : IsCompact s) {c : α → ℝ}
-    (hc : ContinuousOn c s) (h'c : ∀ y ∈ s, y ≠ x₀ → c y < c x₀) (hnc : ∀ x ∈ s, 0 ≤ c x)
-    (hnc₀ : 0 < c x₀) (h₀ : x₀ ∈ closure (interior s)) (hmg : IntegrableOn g s μ)
-    (hcg : ContinuousWithinAt g s x₀) :
+    [MetrizableSpace α] [IsLocallyFiniteMeasure μ] [IsOpenPosMeasure μ] (hs : IsCompact s)
+    {c : α → ℝ} (hc : ContinuousOn c s) (h'c : ∀ y ∈ s, y ≠ x₀ → c y < c x₀)
+    (hnc : ∀ x ∈ s, 0 ≤ c x) (hnc₀ : 0 < c x₀) (h₀ : x₀ ∈ closure (interior s))
+    (hmg : IntegrableOn g s μ) (hcg : ContinuousWithinAt g s x₀) :
     Tendsto (fun n : ℕ => (∫ x in s, c x ^ n ∂μ)⁻¹ • ∫ x in s, c x ^ n • g x ∂μ) atTop (𝓝 (g x₀)) :=
   by
   have : x₀ ∈ s := by rw [← hs.is_closed.closure_eq]; exact closure_mono interior_subset h₀
@@ -338,9 +338,10 @@ then the sequence of functions `(c x) ^ n / ∫ (c x) ^ n` is a sequence of peak
 concentrating around `x₀`. Therefore, `∫ (c x) ^ n * g / ∫ (c x) ^ n` converges to `g x₀` if `g` is
 continuous on `s`. -/
 theorem tendsto_set_integral_pow_smul_of_unique_maximum_of_isCompact_of_continuousOn
-    [MetrizableSpace α] [LocallyFiniteMeasure μ] [OpenPosMeasure μ] (hs : IsCompact s) {c : α → ℝ}
-    (hc : ContinuousOn c s) (h'c : ∀ y ∈ s, y ≠ x₀ → c y < c x₀) (hnc : ∀ x ∈ s, 0 ≤ c x)
-    (hnc₀ : 0 < c x₀) (h₀ : x₀ ∈ closure (interior s)) (hmg : ContinuousOn g s) :
+    [MetrizableSpace α] [IsLocallyFiniteMeasure μ] [IsOpenPosMeasure μ] (hs : IsCompact s)
+    {c : α → ℝ} (hc : ContinuousOn c s) (h'c : ∀ y ∈ s, y ≠ x₀ → c y < c x₀)
+    (hnc : ∀ x ∈ s, 0 ≤ c x) (hnc₀ : 0 < c x₀) (h₀ : x₀ ∈ closure (interior s))
+    (hmg : ContinuousOn g s) :
     Tendsto (fun n : ℕ => (∫ x in s, c x ^ n ∂μ)⁻¹ • ∫ x in s, c x ^ n • g x ∂μ) atTop (𝓝 (g x₀)) :=
   haveI : x₀ ∈ s := by rw [← hs.is_closed.closure_eq]; exact closure_mono interior_subset h₀
   tendsto_set_integral_pow_smul_of_unique_maximum_of_isCompact_of_integrableOn hs hc h'c hnc hnc₀ h₀

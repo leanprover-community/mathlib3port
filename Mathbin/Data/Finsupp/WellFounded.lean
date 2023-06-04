@@ -46,8 +46,8 @@ theorem Lex.acc (x : α →₀ N) (h : ∀ a ∈ x.support, Acc (rᶜ ⊓ (· �
     Acc (Finsupp.Lex r s) x := by
   rw [lex_eq_inv_image_dfinsupp_lex]
   classical
-    refine' InvImage.accessible to_dfinsupp (Dfinsupp.Lex.acc (fun a => hbot) (fun a => hs) _ _)
-    simpa only [toDfinsupp_support] using h
+  refine' InvImage.accessible to_dfinsupp (Dfinsupp.Lex.acc (fun a => hbot) (fun a => hs) _ _)
+  simpa only [toDfinsupp_support] using h
 #align finsupp.lex.acc Finsupp.Lex.acc
 
 theorem Lex.wellFounded (hr : WellFounded <| rᶜ ⊓ (· ≠ ·)) : WellFounded (Finsupp.Lex r s) :=

@@ -80,9 +80,9 @@ noncomputable def Ideal.quotientEquivPiSpan (I : Ideal S) (b : Basis ι R S) (hI
   refine' (Submodule.Quotient.equiv (I.restrict_scalars R) I' b'.equiv_fun this).trans _
   any_goals apply RingHom.id; any_goals infer_instance
   classical
-    let this :=
-      Submodule.quotientPi (show ∀ i, Submodule R R from fun i => Ideal.span ({a i} : Set R))
-    exact this
+  let this :=
+    Submodule.quotientPi (show ∀ i, Submodule R R from fun i => Ideal.span ({a i} : Set R))
+  exact this
 #align ideal.quotient_equiv_pi_span Ideal.quotientEquivPiSpan
 
 /-- Ideal quotients over a free finite extension of `ℤ` are isomorphic to a direct product of

@@ -40,7 +40,7 @@ We also provide the equivalence of the following notions for a domain `R` in `va
 
 universe u v w
 
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`cond] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`cond] [] -/
 /-- An integral domain is called a `valuation ring` provided that for any pair
 of elements `a b : A`, either `a` divides `b` or vice versa. -/
 class ValuationRing (A : Type u) [CommRing A] [IsDomain A] : Prop where
@@ -70,7 +70,7 @@ instance : LE (ValueGroup A K) :=
         rintro _ _ a b ⟨c, rfl⟩ ⟨d, rfl⟩; ext
         constructor
         · rintro ⟨e, he⟩; use (c⁻¹ : Aˣ) * e * d
-          apply_fun fun t => c⁻¹ • t  at he 
+          apply_fun fun t => c⁻¹ • t at he 
           simpa [mul_smul] using he
         · rintro ⟨e, he⟩; dsimp
           use (d⁻¹ : Aˣ) * c * e
@@ -164,7 +164,7 @@ noncomputable instance : LinearOrderedCommGroupWithZero (ValueGroup A K) :=
     exists_pair_ne := by
       use 0, 1
       intro c; obtain ⟨d, hd⟩ := Quotient.exact' c
-      apply_fun fun t => d⁻¹ • t  at hd 
+      apply_fun fun t => d⁻¹ • t at hd 
       simpa using hd
     inv_zero := by apply Quotient.sound'; rw [inv_zero]; apply Setoid.refl'
     mul_inv_cancel := by
@@ -228,7 +228,7 @@ noncomputable def equivInteger : A ≃+* (valuation A K).integer :=
     (by
       constructor
       · intro x y h
-        apply_fun (coe : _ → K)  at h 
+        apply_fun (coe : _ → K) at h 
         dsimp at h 
         exact IsFractionRing.injective _ _ h
       · rintro ⟨a, ha : a ∈ (Valuation A K).integer⟩
@@ -274,7 +274,7 @@ instance [DecidableRel ((· ≤ ·) : Ideal A → Ideal A → Prop)] : LinearOrd
       intro α β
       by_cases h : α ≤ β; · exact Or.inl h
       erw [not_forall] at h 
-      push_neg  at h 
+      push_neg at h 
       obtain ⟨a, h₁, h₂⟩ := h
       right
       intro b hb
@@ -295,17 +295,17 @@ variable [Field K] [Algebra R K] [IsFractionRing R K]
 
 theorem iff_dvd_total : ValuationRing R ↔ IsTotal R (· ∣ ·) := by
   classical
-    refine' ⟨fun H => ⟨fun a b => _⟩, fun H => ⟨fun a b => _⟩⟩ <;> skip
-    · obtain ⟨c, rfl | rfl⟩ := @ValuationRing.cond _ _ H a b <;> simp
-    · obtain ⟨c, rfl⟩ | ⟨c, rfl⟩ := @IsTotal.total _ _ H a b <;> use c <;> simp
+  refine' ⟨fun H => ⟨fun a b => _⟩, fun H => ⟨fun a b => _⟩⟩ <;> skip
+  · obtain ⟨c, rfl | rfl⟩ := @ValuationRing.cond _ _ H a b <;> simp
+  · obtain ⟨c, rfl⟩ | ⟨c, rfl⟩ := @IsTotal.total _ _ H a b <;> use c <;> simp
 #align valuation_ring.iff_dvd_total ValuationRing.iff_dvd_total
 
 theorem iff_ideal_total : ValuationRing R ↔ IsTotal (Ideal R) (· ≤ ·) := by
   classical
-    refine' ⟨fun _ => ⟨le_total⟩, fun H => iff_dvd_total.mpr ⟨fun a b => _⟩⟩
-    have := @IsTotal.total _ _ H (Ideal.span {a}) (Ideal.span {b})
-    simp_rw [Ideal.span_singleton_le_span_singleton] at this 
-    exact this.symm
+  refine' ⟨fun _ => ⟨le_total⟩, fun H => iff_dvd_total.mpr ⟨fun a b => _⟩⟩
+  have := @IsTotal.total _ _ H (Ideal.span {a}) (Ideal.span {b})
+  simp_rw [Ideal.span_singleton_le_span_singleton] at this 
+  exact this.symm
 #align valuation_ring.iff_ideal_total ValuationRing.iff_ideal_total
 
 variable {R} (K)
@@ -363,38 +363,37 @@ variable {R}
 -- This implies that valuation rings are integrally closed through typeclass search.
 instance (priority := 100) [ValuationRing R] : IsBezout R := by
   classical
-    rw [IsBezout.iff_span_pair_isPrincipal]
-    intro x y
-    rw [Ideal.span_insert]
-    cases le_total (Ideal.span {x} : Ideal R) (Ideal.span {y})
-    · erw [sup_eq_right.mpr h]; exact ⟨⟨_, rfl⟩⟩
-    · erw [sup_eq_left.mpr h]; exact ⟨⟨_, rfl⟩⟩
+  rw [IsBezout.iff_span_pair_isPrincipal]
+  intro x y
+  rw [Ideal.span_insert]
+  cases le_total (Ideal.span {x} : Ideal R) (Ideal.span {y})
+  · erw [sup_eq_right.mpr h]; exact ⟨⟨_, rfl⟩⟩
+  · erw [sup_eq_left.mpr h]; exact ⟨⟨_, rfl⟩⟩
 
 theorem iff_local_bezout_domain : ValuationRing R ↔ LocalRing R ∧ IsBezout R := by
   classical
-    refine' ⟨fun H => ⟨inferInstance, inferInstance⟩, _⟩
-    rintro ⟨h₁, h₂⟩
-    skip
-    refine' iff_dvd_total.mpr ⟨fun a b => _⟩
-    obtain ⟨g, e : _ = Ideal.span _⟩ := IsBezout.span_pair_isPrincipal a b
-    obtain ⟨a, rfl⟩ :=
-      ideal.mem_span_singleton'.mp
-        (show a ∈ Ideal.span {g} by rw [← e]; exact Ideal.subset_span (by simp))
-    obtain ⟨b, rfl⟩ :=
-      ideal.mem_span_singleton'.mp
-        (show b ∈ Ideal.span {g} by rw [← e]; exact Ideal.subset_span (by simp))
-    obtain ⟨x, y, e'⟩ :=
-      ideal.mem_span_pair.mp
-        (show g ∈ Ideal.span {a * g, b * g} by rw [e]; exact Ideal.subset_span (by simp))
-    cases' eq_or_ne g 0 with h h
-    · simp [h]
-    have : x * a + y * b = 1 := by apply mul_left_injective₀ h; convert e' <;> ring_nf
-    cases' LocalRing.isUnit_or_isUnit_of_add_one this with h' h'
-    left
-    swap
-    right
-    all_goals
-      exact mul_dvd_mul_right (is_unit_iff_forall_dvd.mp (isUnit_of_mul_isUnit_right h') _) _
+  refine' ⟨fun H => ⟨inferInstance, inferInstance⟩, _⟩
+  rintro ⟨h₁, h₂⟩
+  skip
+  refine' iff_dvd_total.mpr ⟨fun a b => _⟩
+  obtain ⟨g, e : _ = Ideal.span _⟩ := IsBezout.span_pair_isPrincipal a b
+  obtain ⟨a, rfl⟩ :=
+    ideal.mem_span_singleton'.mp
+      (show a ∈ Ideal.span {g} by rw [← e]; exact Ideal.subset_span (by simp))
+  obtain ⟨b, rfl⟩ :=
+    ideal.mem_span_singleton'.mp
+      (show b ∈ Ideal.span {g} by rw [← e]; exact Ideal.subset_span (by simp))
+  obtain ⟨x, y, e'⟩ :=
+    ideal.mem_span_pair.mp
+      (show g ∈ Ideal.span {a * g, b * g} by rw [e]; exact Ideal.subset_span (by simp))
+  cases' eq_or_ne g 0 with h h
+  · simp [h]
+  have : x * a + y * b = 1 := by apply mul_left_injective₀ h; convert e' <;> ring_nf
+  cases' LocalRing.isUnit_or_isUnit_of_add_one this with h' h'
+  left
+  swap
+  right
+  all_goals exact mul_dvd_mul_right (is_unit_iff_forall_dvd.mp (isUnit_of_mul_isUnit_right h') _) _
 #align valuation_ring.iff_local_bezout_domain ValuationRing.iff_local_bezout_domain
 
 protected theorem tFAE (R : Type u) [CommRing R] [IsDomain R] :

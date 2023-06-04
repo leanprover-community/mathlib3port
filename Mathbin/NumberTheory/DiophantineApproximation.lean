@@ -133,7 +133,7 @@ theorem exists_int_int_abs_mul_sub_le (ξ : ℝ) {n : ℕ} (n_pos : 0 < n) :
     refine'
       ⟨⌊ξ * y⌋ - ⌊ξ * x⌋, y - x, sub_pos_of_lt x_lt_y,
         sub_le_iff_le_add.mpr <| le_add_of_le_of_nonneg (mem_Icc.mp hy).2 (mem_Icc.mp hx).1, _⟩
-    convert_to|fract (ξ * y) * (n + 1) - fract (ξ * x) * (n + 1)| ≤ 1
+    convert_to |fract (ξ * y) * (n + 1) - fract (ξ * x) * (n + 1)| ≤ 1
     · congr; push_cast ; simp only [fract]; ring
     exact (abs_sub_lt_one_of_floor_eq_floor hxy.symm).le
 #align real.exists_int_int_abs_mul_sub_le Real.exists_int_int_abs_mul_sub_le
@@ -208,11 +208,11 @@ theorem exists_rat_abs_sub_lt_and_lt_of_irrational {ξ : ℝ} (hξ : Irrational 
 /-- If `ξ` is an irrational real number, then there are infinitely many good
 rational approximations to `ξ`. -/
 theorem infinite_rat_abs_sub_lt_one_div_den_sq_of_irrational {ξ : ℝ} (hξ : Irrational ξ) :
-    { q : ℚ | |ξ - q| < 1 / q.den ^ 2 }.Infinite :=
+    {q : ℚ | |ξ - q| < 1 / q.den ^ 2}.Infinite :=
   by
   refine' Or.resolve_left (Set.finite_or_infinite _) fun h => _
   obtain ⟨q, _, hq⟩ :=
-    exists_min_image { q : ℚ | |ξ - q| < 1 / q.den ^ 2 } (fun q => |ξ - q|) h
+    exists_min_image {q : ℚ | |ξ - q| < 1 / q.den ^ 2} (fun q => |ξ - q|) h
       ⟨⌊ξ⌋, by simp [abs_of_nonneg, Int.fract_lt_one]⟩
   obtain ⟨q', hmem, hbetter⟩ := exists_rat_abs_sub_lt_and_lt_of_irrational hξ q
   exact lt_irrefl _ (lt_of_le_of_lt (hq q' hmem) hbetter)
@@ -260,17 +260,17 @@ theorem den_le_and_le_num_le_of_sub_lt_one_div_den_sq {ξ q : ℚ} (h : |ξ - q|
           (one_div_le zero_lt_one hq₀).mp <| (@one_div_one ℚ _).symm ▸ nat.cast_le.mpr q.pos)
     rw [sub_lt_iff_lt_add, add_comm] at h₁ h₂ 
     rw [← sub_lt_iff_lt_add] at h₂ 
-    norm_cast  at h₁ h₂ 
+    norm_cast at h₁ h₂ 
     exact
       ⟨sub_le_iff_le_add.mpr (int.ceil_le.mpr h₁.le), sub_le_iff_le_add.mp (int.le_floor.mpr h₂.le)⟩
 #align rat.denom_le_and_le_num_le_of_sub_lt_one_div_denom_sq Rat.den_le_and_le_num_le_of_sub_lt_one_div_den_sq
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- A rational number has only finitely many good rational approximations. -/
-theorem finite_rat_abs_sub_lt_one_div_den_sq (ξ : ℚ) : { q : ℚ | |ξ - q| < 1 / q.den ^ 2 }.Finite :=
+theorem finite_rat_abs_sub_lt_one_div_den_sq (ξ : ℚ) : {q : ℚ | |ξ - q| < 1 / q.den ^ 2}.Finite :=
   by
   let f : ℚ → ℤ × ℕ := fun q => (q.num, q.den)
-  set s := { q : ℚ | |ξ - q| < 1 / q.den ^ 2 }
+  set s := {q : ℚ | |ξ - q| < 1 / q.den ^ 2}
   have hinj : Function.Injective f := by
     intro a b hab
     simp only [Prod.mk.inj_iff] at hab 
@@ -294,7 +294,7 @@ end Rat
 /-- The set of good rational approximations to a real number `ξ` is infinite if and only if
 `ξ` is irrational. -/
 theorem Real.infinite_rat_abs_sub_lt_one_div_den_sq_iff_irrational (ξ : ℝ) :
-    { q : ℚ | |ξ - q| < 1 / q.den ^ 2 }.Infinite ↔ Irrational ξ :=
+    {q : ℚ | |ξ - q| < 1 / q.den ^ 2}.Infinite ↔ Irrational ξ :=
   by
   refine'
     ⟨fun h => (irrational_iff_ne_rational ξ).mpr fun a b H => set.not_infinite.mpr _ h,
@@ -444,7 +444,7 @@ private theorem aux₁ : 0 < fract ξ :=
     rw [← zero_add (1 : ℤ), add_one_le_iff, abs_pos, sub_ne_zero]
     rintro rfl
     cases is_unit_iff.mp (is_coprime_self.mp (is_coprime.mul_left_iff.mp hcop).2) <;> linarith
-  norm_cast  at H 
+  norm_cast at H 
   linarith only [hv, H]
 
 -- An auxiliary lemma for the inductive step.

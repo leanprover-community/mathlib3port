@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson, Jalex Stark
 
 ! This file was ported from Lean 3 source module linear_algebra.matrix.charpoly.finite_field
-! leanprover-community/mathlib commit b95b8c7a484a298228805c72c142f6b062eb0d70
+! leanprover-community/mathlib commit af471b9e3ce868f296626d33189b4ce730fa4c00
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.Data.Matrix.CharP
 
 /-!
 # Results on characteristic polynomials and traces over finite fields.
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 -/
 
 

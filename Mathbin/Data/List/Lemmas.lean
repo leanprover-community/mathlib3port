@@ -28,7 +28,7 @@ namespace List
 
 #print List.injOn_insertNth_index_of_not_mem /-
 theorem injOn_insertNth_index_of_not_mem (l : List α) (x : α) (hx : x ∉ l) :
-    Set.InjOn (fun k => insertNth k x l) { n | n ≤ l.length } :=
+    Set.InjOn (fun k => insertNth k x l) {n | n ≤ l.length} :=
   by
   induction' l with hd tl IH
   · intro n hn m hm h

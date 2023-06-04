@@ -767,30 +767,30 @@ include hcard
 
 theorem lift_word_prod_nontrivial_of_not_empty {i j} (w : NeWord H i j) : lift f w.Prod ≠ 1 := by
   classical
-    cases hcard
-    · obtain ⟨i, h1, h2⟩ := Cardinal.three_le hcard i j
-      exact lift_word_prod_nontrivial_of_other_i f X hXnonempty hXdisj hpp w h1 h2
-    · cases' hcard with k hcard
-      by_cases hh : i = k <;> by_cases hl : j = k
-      · subst hh; subst hl
-        exact lift_word_prod_nontrivial_of_head_eq_last f X hXnonempty hXdisj hpp w
-      · subst hh
-        change j ≠ i at hl 
-        exact lift_word_prod_nontrivial_of_head_card f X hXnonempty hXdisj hpp w hcard hl.symm
-      · subst hl
-        change i ≠ j at hh 
-        have : lift f w.inv.prod ≠ 1 :=
-          lift_word_prod_nontrivial_of_head_card f X hXnonempty hXdisj hpp w.inv hcard hh.symm
-        intro heq; apply this; simpa using HEq
-      · change i ≠ k at hh 
-        change j ≠ k at hl 
-        obtain ⟨h, hn1, -⟩ := Cardinal.three_le hcard 1 1
-        let w' : neword H k k :=
-          neword.append (neword.append (neword.singleton h hn1) hh.symm w) hl
-            (neword.singleton h⁻¹ (inv_ne_one.mpr hn1))
-        have hw' : lift f w'.prod ≠ 1 :=
-          lift_word_prod_nontrivial_of_head_eq_last f X hXnonempty hXdisj hpp w'
-        intro heq1; apply hw'; simp [w', heq1]
+  cases hcard
+  · obtain ⟨i, h1, h2⟩ := Cardinal.three_le hcard i j
+    exact lift_word_prod_nontrivial_of_other_i f X hXnonempty hXdisj hpp w h1 h2
+  · cases' hcard with k hcard
+    by_cases hh : i = k <;> by_cases hl : j = k
+    · subst hh; subst hl
+      exact lift_word_prod_nontrivial_of_head_eq_last f X hXnonempty hXdisj hpp w
+    · subst hh
+      change j ≠ i at hl 
+      exact lift_word_prod_nontrivial_of_head_card f X hXnonempty hXdisj hpp w hcard hl.symm
+    · subst hl
+      change i ≠ j at hh 
+      have : lift f w.inv.prod ≠ 1 :=
+        lift_word_prod_nontrivial_of_head_card f X hXnonempty hXdisj hpp w.inv hcard hh.symm
+      intro heq; apply this; simpa using HEq
+    · change i ≠ k at hh 
+      change j ≠ k at hl 
+      obtain ⟨h, hn1, -⟩ := Cardinal.three_le hcard 1 1
+      let w' : neword H k k :=
+        neword.append (neword.append (neword.singleton h hn1) hh.symm w) hl
+          (neword.singleton h⁻¹ (inv_ne_one.mpr hn1))
+      have hw' : lift f w'.prod ≠ 1 :=
+        lift_word_prod_nontrivial_of_head_eq_last f X hXnonempty hXdisj hpp w'
+      intro heq1; apply hw'; simp [w', heq1]
 #align free_product.lift_word_prod_nontrivial_of_not_empty FreeProduct.lift_word_prod_nontrivial_of_not_empty
 
 theorem empty_of_word_prod_eq_one {w : Word H} (h : lift f w.Prod = 1) : w = Word.empty :=
@@ -815,12 +815,12 @@ condition is only needed if `# ι = 2`, and we accept `3 ≤ # ι` as an alterna
 -/
 theorem lift_injective_of_ping_pong : Function.Injective (lift f) := by
   classical
-    apply (injective_iff_map_eq_one (lift f)).mpr
-    rw [(FreeProduct.Word.equiv : _ ≃ word H).forall_congr_left']
-    · intro w Heq
-      dsimp [word.equiv] at *
-      · rw [empty_of_word_prod_eq_one f hcard X hXnonempty hXdisj hpp Heq]
-        rfl
+  apply (injective_iff_map_eq_one (lift f)).mpr
+  rw [(FreeProduct.Word.equiv : _ ≃ word H).forall_congr_left']
+  · intro w Heq
+    dsimp [word.equiv] at *
+    · rw [empty_of_word_prod_eq_one f hcard X hXnonempty hXdisj hpp Heq]
+      rfl
 #align free_product.lift_injective_of_ping_pong FreeProduct.lift_injective_of_ping_pong
 
 end PingPongLemma

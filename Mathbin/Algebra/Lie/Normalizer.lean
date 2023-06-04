@@ -53,7 +53,7 @@ variable (N : LieSubmodule R L M) {N₁ N₂ : LieSubmodule R L M}
 /-- The normalizer of a Lie submodule. -/
 def normalizer : LieSubmodule R L M
     where
-  carrier := { m | ∀ x : L, ⁅x, m⁆ ∈ N }
+  carrier := {m | ∀ x : L, ⁅x, m⁆ ∈ N}
   add_mem' m₁ m₂ hm₁ hm₂ x := by rw [lie_add]; exact N.add_mem' (hm₁ x) (hm₂ x)
   zero_mem' x := by simp
   smul_mem' t m hm x := by rw [lie_smul]; exact N.smul_mem' t (hm x)

@@ -600,13 +600,13 @@ theorem norm_le_mul_norm_add (u v : E) : ‖u‖ ≤ ‖u * v‖ + ‖v‖ :=
 #align norm_le_add_norm_add norm_le_add_norm_add
 
 @[to_additive ball_eq]
-theorem ball_eq' (y : E) (ε : ℝ) : ball y ε = { x | ‖x / y‖ < ε } :=
+theorem ball_eq' (y : E) (ε : ℝ) : ball y ε = {x | ‖x / y‖ < ε} :=
   Set.ext fun a => by simp [dist_eq_norm_div]
 #align ball_eq' ball_eq'
 #align ball_eq ball_eq
 
 @[to_additive]
-theorem ball_one_eq (r : ℝ) : ball (1 : E) r = { x | ‖x‖ < r } :=
+theorem ball_one_eq (r : ℝ) : ball (1 : E) r = {x | ‖x‖ < r} :=
   Set.ext fun a => by simp
 #align ball_one_eq ball_one_eq
 #align ball_zero_eq ball_zero_eq
@@ -761,21 +761,21 @@ theorem NormedCommGroup.cauchySeq_iff [Nonempty α] [SemilatticeSup α] {u : α 
 
 @[to_additive]
 theorem NormedCommGroup.nhds_basis_norm_lt (x : E) :
-    (𝓝 x).HasBasis (fun ε : ℝ => 0 < ε) fun ε => { y | ‖y / x‖ < ε } := by simp_rw [← ball_eq'];
+    (𝓝 x).HasBasis (fun ε : ℝ => 0 < ε) fun ε => {y | ‖y / x‖ < ε} := by simp_rw [← ball_eq'];
   exact Metric.nhds_basis_ball
 #align normed_comm_group.nhds_basis_norm_lt NormedCommGroup.nhds_basis_norm_lt
 #align normed_add_comm_group.nhds_basis_norm_lt NormedAddCommGroup.nhds_basis_norm_lt
 
 @[to_additive]
 theorem NormedCommGroup.nhds_one_basis_norm_lt :
-    (𝓝 (1 : E)).HasBasis (fun ε : ℝ => 0 < ε) fun ε => { y | ‖y‖ < ε } := by
+    (𝓝 (1 : E)).HasBasis (fun ε : ℝ => 0 < ε) fun ε => {y | ‖y‖ < ε} := by
   convert NormedCommGroup.nhds_basis_norm_lt (1 : E); simp
 #align normed_comm_group.nhds_one_basis_norm_lt NormedCommGroup.nhds_one_basis_norm_lt
 #align normed_add_comm_group.nhds_zero_basis_norm_lt NormedAddCommGroup.nhds_zero_basis_norm_lt
 
 @[to_additive]
 theorem NormedCommGroup.uniformity_basis_dist :
-    (𝓤 E).HasBasis (fun ε : ℝ => 0 < ε) fun ε => { p : E × E | ‖p.fst / p.snd‖ < ε } := by
+    (𝓤 E).HasBasis (fun ε : ℝ => 0 < ε) fun ε => {p : E × E | ‖p.fst / p.snd‖ < ε} := by
   convert Metric.uniformity_basis_dist; simp [dist_eq_norm_div]
 #align normed_comm_group.uniformity_basis_dist NormedCommGroup.uniformity_basis_dist
 #align normed_add_comm_group.uniformity_basis_dist NormedAddCommGroup.uniformity_basis_dist
@@ -1135,7 +1135,7 @@ theorem mem_closure_one_iff_norm {x : E} : x ∈ closure ({1} : Set E) ↔ ‖x�
 #align mem_closure_zero_iff_norm mem_closure_zero_iff_norm
 
 @[to_additive]
-theorem closure_one_eq : closure ({1} : Set E) = { x | ‖x‖ = 0 } :=
+theorem closure_one_eq : closure ({1} : Set E) = {x | ‖x‖ = 0} :=
   Set.ext fun x => mem_closure_one_iff_norm
 #align closure_one_eq closure_one_eq
 #align closure_zero_eq closure_zero_eq
@@ -1155,7 +1155,7 @@ theorem Filter.Tendsto.op_one_isBoundedUnder_le' {f : α → E} {g : α → F} {
   rw [NormedCommGroup.tendsto_nhds_one] at hf ⊢
   intro ε ε₀
   rcases exists_pos_mul_lt ε₀ (A * C) with ⟨δ, δ₀, hδ⟩
-  filter_upwards [hf δ δ₀, hC]with i hf hg
+  filter_upwards [hf δ δ₀, hC] with i hf hg
   refine' (h_op _ _).trans_lt _
   cases' le_total A 0 with hA hA
   ·
@@ -1311,12 +1311,12 @@ theorem SeminormedGroup.uniformCauchySeqOnFilter_iff_tendstoUniformlyOnFilter_on
   refine' ⟨fun hf u hu => _, fun hf u hu => _⟩
   · obtain ⟨ε, hε, H⟩ := uniformity_basis_dist.mem_uniformity_iff.mp hu
     refine'
-      (hf { p : G × G | dist p.fst p.snd < ε } <| dist_mem_uniformity hε).mono fun x hx =>
+      (hf {p : G × G | dist p.fst p.snd < ε} <| dist_mem_uniformity hε).mono fun x hx =>
         H 1 (f x.fst.fst x.snd / f x.fst.snd x.snd) _
     simpa [dist_eq_norm_div, norm_div_rev] using hx
   · obtain ⟨ε, hε, H⟩ := uniformity_basis_dist.mem_uniformity_iff.mp hu
     refine'
-      (hf { p : G × G | dist p.fst p.snd < ε } <| dist_mem_uniformity hε).mono fun x hx =>
+      (hf {p : G × G | dist p.fst p.snd < ε} <| dist_mem_uniformity hε).mono fun x hx =>
         H (f x.fst.fst x.snd) (f x.fst.snd x.snd) _
     simpa [dist_eq_norm_div, norm_div_rev] using hx
 #align seminormed_group.uniform_cauchy_seq_on_filter_iff_tendsto_uniformly_on_filter_one SeminormedGroup.uniformCauchySeqOnFilter_iff_tendstoUniformlyOnFilter_one
@@ -1631,14 +1631,14 @@ theorem controlled_prod_of_mem_closure {s : Subgroup E} (hg : a ∈ closure (s :
   obtain ⟨u : ℕ → E, u_in : ∀ n, u n ∈ s, lim_u : tendsto u at_top (𝓝 a)⟩ :=
     mem_closure_iff_seq_limit.mp hg
   obtain ⟨n₀, hn₀⟩ : ∃ n₀, ∀ n ≥ n₀, ‖u n / a‖ < b 0 :=
-    haveI : { x | ‖x / a‖ < b 0 } ∈ 𝓝 a :=
+    haveI : {x | ‖x / a‖ < b 0} ∈ 𝓝 a :=
       by
       simp_rw [← dist_eq_norm_div]
       exact Metric.ball_mem_nhds _ (b_pos _)
     filter.tendsto_at_top'.mp lim_u _ this
   set z : ℕ → E := fun n => u (n + n₀)
   have lim_z : tendsto z at_top (𝓝 a) := lim_u.comp (tendsto_add_at_top_nat n₀)
-  have mem_𝓤 : ∀ n, { p : E × E | ‖p.1 / p.2‖ < b (n + 1) } ∈ 𝓤 E := fun n => by
+  have mem_𝓤 : ∀ n, {p : E × E | ‖p.1 / p.2‖ < b (n + 1)} ∈ 𝓤 E := fun n => by
     simpa [← dist_eq_norm_div] using Metric.dist_mem_uniformity (b_pos <| n + 1)
   obtain ⟨φ : ℕ → ℕ, φ_extr : StrictMono φ, hφ : ∀ n, ‖z (φ <| n + 1) / z (φ n)‖ < b (n + 1)⟩ :=
     lim_z.cauchy_seq.subseq_mem mem_𝓤

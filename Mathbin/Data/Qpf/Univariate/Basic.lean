@@ -682,8 +682,8 @@ theorem mem_supp {α : Type u} (x : F α) (u : α) :
 -/
 
 #print Qpf.supp_eq /-
-theorem supp_eq {α : Type u} (x : F α) : supp x = { u | ∀ a f, abs ⟨a, f⟩ = x → u ∈ f '' univ } :=
-  by ext <;> apply mem_supp
+theorem supp_eq {α : Type u} (x : F α) : supp x = {u | ∀ a f, abs ⟨a, f⟩ = x → u ∈ f '' univ} := by
+  ext <;> apply mem_supp
 #align qpf.supp_eq Qpf.supp_eq
 -/
 

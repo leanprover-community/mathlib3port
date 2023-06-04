@@ -183,7 +183,7 @@ noncomputable def equivSubmodule : ℙ K V ≃ { H : Submodule K V // finrank K 
   Equiv.ofBijective (fun v => ⟨v.Submodule, v.finrank_submodule⟩)
     (by
       constructor
-      · intro u v h; apply_fun fun e => e.val  at h 
+      · intro u v h; apply_fun fun e => e.val at h 
         apply submodule_injective h
       · rintro ⟨H, h⟩
         rw [finrank_eq_one_iff'] at h 

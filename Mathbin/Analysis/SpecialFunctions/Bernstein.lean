@@ -107,7 +107,7 @@ local postfix:90 "/ₙ" => z
 theorem probability (n : ℕ) (x : I) : (∑ k : Fin (n + 1), bernstein n k x) = 1 :=
   by
   have := bernsteinPolynomial.sum ℝ n
-  apply_fun fun p => Polynomial.aeval (x : ℝ) p  at this 
+  apply_fun fun p => Polynomial.aeval (x : ℝ) p at this 
   simp [AlgHom.map_sum, Finset.sum_range] at this 
   exact this
 #align bernstein.probability bernstein.probability
@@ -122,7 +122,7 @@ theorem variance {n : ℕ} (h : 0 < (n : ℝ)) (x : I) :
   conv_lhs => simp only [Finset.sum_mul, z]
   conv_rhs => rw [div_mul_cancel _ h']
   have := bernsteinPolynomial.variance ℝ n
-  apply_fun fun p => Polynomial.aeval (x : ℝ) p  at this 
+  apply_fun fun p => Polynomial.aeval (x : ℝ) p at this 
   simp [AlgHom.map_sum, Finset.sum_range, ← Polynomial.nat_cast_mul] at this 
   convert this using 1
   · congr 1; funext k
@@ -183,7 +183,7 @@ theorem δ_pos {f : C(I, ℝ)} {ε : ℝ} {h : 0 < ε} : 0 < δ f ε h :=
 /-- The set of points `k` so `k/n` is within `δ` of `x`.
 -/
 def s (f : C(I, ℝ)) (ε : ℝ) (h : 0 < ε) (n : ℕ) (x : I) : Finset (Fin (n + 1)) :=
-  { k : Fin (n + 1) | dist k/ₙ x < δ f ε h }.toFinset
+  {k : Fin (n + 1) | dist k/ₙ x < δ f ε h}.toFinset
 #align bernstein_approximation.S bernsteinApproximation.s
 
 /-- If `k ∈ S`, then `f(k/n)` is close to `f x`.
@@ -233,8 +233,8 @@ theorem bernsteinApproximation_uniform (f : C(I, ℝ)) :
   intro ε h
   let δ := δ f ε h
   have nhds_zero := tendsto_const_div_atTop_nhds_0_nat (2 * ‖f‖ * δ ^ (-2 : ℤ))
-  filter_upwards [nhds_zero.eventually (gt_mem_nhds (half_pos h)),
-    eventually_gt_at_top 0]with n nh npos'
+  filter_upwards [nhds_zero.eventually (gt_mem_nhds (half_pos h)), eventually_gt_at_top 0] with n nh
+    npos'
   have npos : 0 < (n : ℝ) := by exact_mod_cast npos'
   -- Two easy inequalities we'll need later:
   have w₁ : 0 ≤ 2 * ‖f‖ := mul_nonneg (by norm_num) (norm_nonneg f)

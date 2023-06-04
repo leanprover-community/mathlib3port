@@ -180,7 +180,7 @@ private theorem Gamma_integrand_interval_integrable (s : ℂ) {X : ℝ} (hs : 0 
 private theorem Gamma_integrand_deriv_integrable_A {s : ℂ} (hs : 0 < s.re) {X : ℝ} (hX : 0 ≤ X) :
     IntervalIntegrable (fun x => -((-x).exp * x ^ s) : ℝ → ℂ) volume 0 X :=
   by
-  convert(Gamma_integrand_interval_integrable (s + 1) _ hX).neg
+  convert (Gamma_integrand_interval_integrable (s + 1) _ hX).neg
   · ext1; simp only [add_sub_cancel, Pi.neg_apply]
   · simp only [add_re, one_re]; linarith
 
@@ -237,7 +237,7 @@ theorem partialGamma_add_one {s : ℂ} (hs : 0 < s.re) {X : ℝ} (hX : 0 ≤ X) 
     (Gamma_integrand_deriv_integrable_A hs hX).add (Gamma_integrand_deriv_integrable_B hs hX)
   have int_eval := integral_eq_sub_of_has_deriv_at_of_le hX cont.continuous_on F_der_I der_ible
   -- We are basically done here but manipulating the output into the right form is fiddly.
-  apply_fun fun x : ℂ => -x  at int_eval 
+  apply_fun fun x : ℂ => -x at int_eval 
   rw [intervalIntegral.integral_add (Gamma_integrand_deriv_integrable_A hs hX)
       (Gamma_integrand_deriv_integrable_B hs hX),
     intervalIntegral.integral_neg, neg_add, neg_neg] at int_eval 
@@ -349,7 +349,7 @@ theorem gamma_eq_gammaAux (s : ℂ) (n : ℕ) (h1 : -s.re < ↑n) : gamma s = ga
       simp only [sub_sub_cancel_left] at i0 
       refine' lt_add_of_lt_of_nonneg i0 _
       rw [← Nat.cast_zero, Nat.cast_le]; exact Nat.zero_le k
-  convert(u <| n - ⌊1 - s.re⌋₊).symm; rw [Nat.add_sub_of_le]
+  convert (u <| n - ⌊1 - s.re⌋₊).symm; rw [Nat.add_sub_of_le]
   by_cases 0 ≤ 1 - s.re
   · apply Nat.le_of_lt_succ
     exact_mod_cast lt_of_le_of_lt (Nat.floor_le h) (by linarith : 1 - s.re < n + 1)
@@ -432,7 +432,7 @@ theorem hasDerivAt_gammaIntegral {s : ℂ} (hs : 0 < s.re) :
     HasDerivAt gammaIntegral (∫ t : ℝ in Ioi 0, t ^ (s - 1) * (Real.log t * Real.exp (-t))) s :=
   by
   rw [Gamma_integral_eq_mellin]
-  convert(mellin_has_deriv_of_isBigO_rpow _ _ (lt_add_one _) _ hs).2
+  convert (mellin_has_deriv_of_isBigO_rpow _ _ (lt_add_one _) _ hs).2
   · refine' (Continuous.continuousOn _).LocallyIntegrableOn measurableSet_Ioi
     exact continuous_of_real.comp (real.continuous_exp.comp continuous_neg)
   · rw [← is_O_norm_left]
@@ -468,7 +468,7 @@ theorem differentiableAt_gamma (s : ℂ) (hs : ∀ m : ℕ, s ≠ -m) : Differen
   let n := ⌊1 - s.re⌋₊ + 1
   have hn : 1 - s.re < n := by exact_mod_cast Nat.lt_floor_add_one (1 - s.re)
   apply (differentiable_at_Gamma_aux s n hn hs).congr_of_eventuallyEq
-  let S := { t : ℂ | 1 - t.re < n }
+  let S := {t : ℂ | 1 - t.re < n}
   have : S ∈ 𝓝 s := by
     rw [mem_nhds_iff]; use S
     refine' ⟨subset.rfl, _, hn⟩
@@ -487,7 +487,8 @@ end GammaHasDeriv
 theorem tendsto_self_mul_gamma_nhds_zero : Tendsto (fun z : ℂ => z * gamma z) (𝓝[≠] 0) (𝓝 1) :=
   by
   rw [show 𝓝 (1 : ℂ) = 𝓝 (Gamma (0 + 1)) by simp only [zero_add, Complex.gamma_one]]
-  convert(tendsto.mono_left _ nhdsWithin_le_nhds).congr'
+  convert
+    (tendsto.mono_left _ nhdsWithin_le_nhds).congr'
       (eventually_eq_of_mem self_mem_nhdsWithin Complex.gamma_add_one)
   refine' ContinuousAt.comp _ (continuous_id.add continuous_const).ContinuousAt
   refine' (Complex.differentiableAt_gamma _ fun m => _).ContinuousAt

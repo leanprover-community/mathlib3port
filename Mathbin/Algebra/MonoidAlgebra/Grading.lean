@@ -51,7 +51,7 @@ variable (R) [CommSemiring R]
 
 /-- The submodule corresponding to each grade given by the degree function `f`. -/
 abbrev gradeBy (f : M → ι) (i : ι) : Submodule R (AddMonoidAlgebra R M) :=
-  { carrier := { a | ∀ m, m ∈ a.support → f m = i }
+  { carrier := {a | ∀ m, m ∈ a.support → f m = i}
     zero_mem' := Set.empty_subset _
     add_mem' := fun a b ha hb m h =>
       Or.rec_on (Finset.mem_union.mp (Finsupp.support_add h)) (ha m) (hb m)

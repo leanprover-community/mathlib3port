@@ -109,17 +109,17 @@ variable {M N : Type _} [SeminormedAddCommGroup M] [SeminormedAddCommGroup N]
 #print normOnQuotient /-
 /-- The definition of the norm on the quotient by an additive subgroup. -/
 noncomputable instance normOnQuotient (S : AddSubgroup M) : Norm (M ⧸ S)
-    where norm x := sInf (norm '' { m | mk' S m = x })
+    where norm x := sInf (norm '' {m | mk' S m = x})
 #align norm_on_quotient normOnQuotient
 -/
 
 theorem AddSubgroup.quotient_norm_eq {S : AddSubgroup M} (x : M ⧸ S) :
-    ‖x‖ = sInf (norm '' { m : M | (m : M ⧸ S) = x }) :=
+    ‖x‖ = sInf (norm '' {m : M | (m : M ⧸ S) = x}) :=
   rfl
 #align add_subgroup.quotient_norm_eq AddSubgroup.quotient_norm_eq
 
 theorem image_norm_nonempty {S : AddSubgroup M} :
-    ∀ x : M ⧸ S, (norm '' { m | mk' S m = x }).Nonempty :=
+    ∀ x : M ⧸ S, (norm '' {m | mk' S m = x}).Nonempty :=
   by
   rintro ⟨m⟩
   rw [Set.nonempty_image_iff]
@@ -140,7 +140,7 @@ theorem bddBelow_image_norm (s : Set M) : BddBelow (norm '' s) :=
 /-- The norm on the quotient satisfies `‖-x‖ = ‖x‖`. -/
 theorem quotient_norm_neg {S : AddSubgroup M} (x : M ⧸ S) : ‖-x‖ = ‖x‖ :=
   by
-  suffices norm '' { m | mk' S m = x } = norm '' { m | mk' S m = -x } by simp only [this, norm]
+  suffices norm '' {m | mk' S m = x} = norm '' {m | mk' S m = -x} by simp only [this, norm]
   ext r
   constructor
   · rintro ⟨m, rfl : mk' S m = x, rfl⟩
@@ -280,7 +280,7 @@ theorem norm_mk_eq_zero (S : AddSubgroup M) (hS : IsClosed (S : Set M)) (m : M)
 #align norm_zero_eq_zero norm_mk_eq_zero
 
 theorem quotient_nhd_basis (S : AddSubgroup M) :
-    (𝓝 (0 : M ⧸ S)).HasBasis (fun ε : ℝ => 0 < ε) fun ε => { x | ‖x‖ < ε } :=
+    (𝓝 (0 : M ⧸ S)).HasBasis (fun ε : ℝ => 0 < ε) fun ε => {x | ‖x‖ < ε} :=
   ⟨by
     intro U
     constructor
@@ -297,7 +297,7 @@ theorem quotient_nhd_basis (S : AddSubgroup M) :
       dsimp
       linarith
     · rintro ⟨ε, ε_pos, h⟩
-      have : mk' S '' ball (0 : M) ε ⊆ { x | ‖x‖ < ε } :=
+      have : mk' S '' ball (0 : M) ε ⊆ {x | ‖x‖ < ε} :=
         by
         rintro _ ⟨x, x_in, rfl⟩
         rw [mem_ball_zero_iff] at x_in 
@@ -333,8 +333,8 @@ noncomputable instance AddSubgroup.seminormedAddCommGroupQuotient (S : AddSubgro
     apply this.eq_of_same_basis
     have :
       ∀ ε : ℝ,
-        (fun p : (M ⧸ S) × M ⧸ S => p.snd - p.fst) ⁻¹' { x | ‖x‖ < ε } =
-          { p : (M ⧸ S) × M ⧸ S | ‖p.fst - p.snd‖ < ε } :=
+        (fun p : (M ⧸ S) × M ⧸ S => p.snd - p.fst) ⁻¹' {x | ‖x‖ < ε} =
+          {p : (M ⧸ S) × M ⧸ S | ‖p.fst - p.snd‖ < ε} :=
       by
       intro ε
       ext x

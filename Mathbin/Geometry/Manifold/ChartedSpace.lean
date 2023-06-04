@@ -239,13 +239,13 @@ theorem StructureGroupoid.le_iff {G₁ G₂ : StructureGroupoid H} : G₁ ≤ G�
 necessary from the definition) -/
 def idGroupoid (H : Type u) [TopologicalSpace H] : StructureGroupoid H
     where
-  members := {LocalHomeomorph.refl H} ∪ { e : LocalHomeomorph H H | e.source = ∅ }
+  members := {LocalHomeomorph.refl H} ∪ {e : LocalHomeomorph H H | e.source = ∅}
   trans' e e' he he' := by
     cases he <;> simp at he he' 
     · simpa only [he, refl_trans]
     · have : (e ≫ₕ e').source ⊆ e.source := sep_subset _ _
       rw [he] at this 
-      have : e ≫ₕ e' ∈ { e : LocalHomeomorph H H | e.source = ∅ } := eq_bot_iff.2 this
+      have : e ≫ₕ e' ∈ {e : LocalHomeomorph H H | e.source = ∅} := eq_bot_iff.2 this
       exact (mem_union _ _ _).2 (Or.inr this)
   symm' e he := by
     cases' (mem_union _ _ _).1 he with E E
@@ -294,7 +294,7 @@ instance : OrderBot (StructureGroupoid H)
   bot := idGroupoid H
   bot_le := by
     intro u f hf
-    change f ∈ {LocalHomeomorph.refl H} ∪ { e : LocalHomeomorph H H | e.source = ∅ } at hf 
+    change f ∈ {LocalHomeomorph.refl H} ∪ {e : LocalHomeomorph H H | e.source = ∅} at hf 
     simp only [singleton_union, mem_set_of_eq, mem_insert_iff] at hf 
     cases hf
     · rw [hf]
@@ -330,7 +330,7 @@ structure Pregroupoid (H : Type _) [TopologicalSpace H] where
 from a pregroupoid asserting that this property is stable under composition. -/
 def Pregroupoid.groupoid (PG : Pregroupoid H) : StructureGroupoid H
     where
-  members := { e : LocalHomeomorph H H | PG.property e e.source ∧ PG.property e.symm e.target }
+  members := {e : LocalHomeomorph H H | PG.property e e.source ∧ PG.property e.symm e.target}
   trans' e e' he he' := by
     constructor
     · apply PG.comp he.1 he'.1 e.open_source e'.open_source
@@ -439,7 +439,7 @@ theorem closedUnderRestriction' {G : StructureGroupoid H} [ClosedUnderRestrictio
 restriction of the identity to the various open subsets. -/
 def idRestrGroupoid : StructureGroupoid H
     where
-  members := { e | ∃ (s : Set H) (h : IsOpen s), e ≈ LocalHomeomorph.ofSet s h }
+  members := {e | ∃ (s : Set H) (h : IsOpen s), e ≈ LocalHomeomorph.ofSet s h}
   trans' := by
     rintro e e' ⟨s, hs, hse⟩ ⟨s', hs', hse'⟩
     refine' ⟨s ∩ s', IsOpen.inter hs hs', _⟩
@@ -519,10 +519,10 @@ end Groupoid
 
 
 #print ChartedSpace /-
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`atlas] [] -/
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`chartAt] [] -/
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`mem_chart_source] [] -/
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`chart_mem_atlas] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`atlas] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`chartAt] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`mem_chart_source] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`chart_mem_atlas] [] -/
 /-- A charted space is a topological space endowed with an atlas, i.e., a set of local
 homeomorphisms taking value in a model space `H`, called charts, such that the domains of the charts
 cover the whole space. We express the covering property by chosing for each `x` a member
@@ -925,7 +925,7 @@ section HasGroupoid
 variable [TopologicalSpace H] [TopologicalSpace M] [ChartedSpace H M]
 
 #print HasGroupoid /-
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`compatible] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`compatible] [] -/
 /-- A charted space has an atlas in a groupoid `G` if the change of coordinates belong to the
 groupoid -/
 class HasGroupoid {H : Type _} [TopologicalSpace H] (M : Type _) [TopologicalSpace M]
@@ -988,7 +988,7 @@ variable (M) (G : StructureGroupoid H)
 structure groupoid is the set of all local charts that are compatible with the atlas, i.e., such
 that changing coordinates with an atlas member gives an element of the groupoid. -/
 def StructureGroupoid.maximalAtlas : Set (LocalHomeomorph M H) :=
-  { e | ∀ e' ∈ atlas H M, e.symm ≫ₕ e' ∈ G ∧ e'.symm ≫ₕ e ∈ G }
+  {e | ∀ e' ∈ atlas H M, e.symm ≫ₕ e' ∈ G ∧ e'.symm ≫ₕ e ∈ G}
 #align structure_groupoid.maximal_atlas StructureGroupoid.maximalAtlas
 -/
 
@@ -1164,8 +1164,8 @@ instance [ClosedUnderRestriction G] : HasGroupoid s G
     simp only [hc.symm, mem_singleton_iff, Subtype.val_eq_coe] at he 
     simp only [hc'.symm, mem_singleton_iff, Subtype.val_eq_coe] at he' 
     rw [he, he']
-    convert G.eq_on_source _
-        (subtype_restr_symm_trans_subtype_restr s (chart_at H x) (chart_at H x'))
+    convert
+      G.eq_on_source _ (subtype_restr_symm_trans_subtype_restr s (chart_at H x) (chart_at H x'))
     apply closedUnderRestriction'
     · exact G.compatible (chart_mem_atlas H x) (chart_mem_atlas H x')
     · exact preimage_open_of_open_symm (chart_at H x) s.2

@@ -78,7 +78,7 @@ theorem odd_iff_not_even : Odd n ↔ ¬Even n := by rw [not_even_iff, odd_iff]
 #align nat.odd_iff_not_even Nat.odd_iff_not_even
 -/
 
-theorem isCompl_even_odd : IsCompl { n : ℕ | Even n } { n | Odd n } := by
+theorem isCompl_even_odd : IsCompl {n : ℕ | Even n} {n | Odd n} := by
   simp only [← Set.compl_setOf, isCompl_compl, odd_iff_not_even]
 #align nat.is_compl_even_odd Nat.isCompl_even_odd
 

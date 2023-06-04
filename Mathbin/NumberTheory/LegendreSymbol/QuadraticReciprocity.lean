@@ -214,7 +214,7 @@ theorem eq_neg_one_iff' {a : ℕ} : legendreSym p a = -1 ↔ ¬IsSquare (a : ZMo
 
 /-- The number of square roots of `a` modulo `p` is determined by the Legendre symbol. -/
 theorem card_sqrts (hp : p ≠ 2) (a : ℤ) :
-    ↑{ x : ZMod p | x ^ 2 = a }.toFinset.card = legendreSym p a + 1 :=
+    ↑{x : ZMod p | x ^ 2 = a}.toFinset.card = legendreSym p a + 1 :=
   quadraticChar_card_sqrts ((ringChar_zmod_n p).substr hp) a
 #align legendre_sym.card_sqrts legendreSym.card_sqrts
 
@@ -236,7 +236,7 @@ of the equation `x^2 - a*y^2 = 0` with `y ≠ 0`. -/
 theorem eq_one_of_sq_sub_mul_sq_eq_zero {p : ℕ} [Fact p.Prime] {a : ℤ} (ha : (a : ZMod p) ≠ 0)
     {x y : ZMod p} (hy : y ≠ 0) (hxy : x ^ 2 - a * y ^ 2 = 0) : legendreSym p a = 1 :=
   by
-  apply_fun (· * y⁻¹ ^ 2)  at hxy 
+  apply_fun (· * y⁻¹ ^ 2) at hxy 
   simp only [MulZeroClass.zero_mul] at hxy 
   rw [(by ring : (x ^ 2 - ↑a * y ^ 2) * y⁻¹ ^ 2 = (x * y⁻¹) ^ 2 - a * (y * y⁻¹) ^ 2),
     mul_inv_cancel hy, one_pow, mul_one, sub_eq_zero, pow_two] at hxy 
@@ -322,7 +322,7 @@ theorem mod_four_ne_three_of_sq_eq_neg_sq' {x y : ZMod p} (hy : y ≠ 0) (hxy : 
     p % 4 ≠ 3 :=
   @mod_four_ne_three_of_sq_eq_neg_one p _ (x / y)
     (by
-      apply_fun fun z => z / y ^ 2  at hxy 
+      apply_fun fun z => z / y ^ 2 at hxy 
       rwa [neg_div, ← div_pow, ← div_pow, div_self hy, one_pow] at hxy )
 #align zmod.mod_four_ne_three_of_sq_eq_neg_sq' ZMod.mod_four_ne_three_of_sq_eq_neg_sq'
 

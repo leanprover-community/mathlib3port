@@ -136,7 +136,7 @@ structure Besicovitch.SatelliteConfig (α : Type _) [MetricSpace α] (N : ℕ) (
   inter : ∀ i < last N, dist (c i) (c (last N)) ≤ r i + r (last N)
 #align besicovitch.satellite_config Besicovitch.SatelliteConfig
 
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`no_satelliteConfig] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`no_satelliteConfig] [] -/
 /-- A metric space has the Besicovitch covering property if there exist `N` and `τ > 1` such that
 there are no satellite configuration of parameter `τ` with `N+1` points. This is the condition that
 guarantees that the measurable Besicovitch covering theorem holds. It is satified by
@@ -279,11 +279,10 @@ decreasing_by exact j.2
 /-- `p.last_step` is the first ordinal where the construction stops making sense, i.e., `f` returns
 garbage since there is no point left to be chosen. We will only use ordinals before this step. -/
 def lastStep : Ordinal.{u} :=
-  sInf { i | ¬∃ b : β, p.c b ∉ p.unionUpTo i ∧ p.r i ≤ p.τ * p.R b }
+  sInf {i | ¬∃ b : β, p.c b ∉ p.unionUpTo i ∧ p.r i ≤ p.τ * p.R b}
 #align besicovitch.tau_package.last_step Besicovitch.TauPackage.lastStep
 
-theorem last_step_nonempty :
-    { i | ¬∃ b : β, p.c b ∉ p.unionUpTo i ∧ p.r i ≤ p.τ * p.R b }.Nonempty :=
+theorem last_step_nonempty : {i | ¬∃ b : β, p.c b ∉ p.unionUpTo i ∧ p.r i ≤ p.τ * p.R b}.Nonempty :=
   by
   by_contra
   suffices H : Function.Injective p.index; exact not_injective_of_ordinal p.index H
@@ -313,7 +312,7 @@ theorem mem_unionUpTo_lastStep (x : β) : p.c x ∈ p.unionUpTo p.lastStep :=
   by
   have A : ∀ z : β, p.c z ∈ p.Union_up_to p.last_step ∨ p.τ * p.r z < p.R p.last_step :=
     by
-    have : p.last_step ∈ { i | ¬∃ b : β, p.c b ∉ p.Union_up_to i ∧ p.R i ≤ p.τ * p.r b } :=
+    have : p.last_step ∈ {i | ¬∃ b : β, p.c b ∉ p.Union_up_to i ∧ p.R i ≤ p.τ * p.r b} :=
       csInf_mem p.last_step_nonempty
     simpa only [not_exists, mem_set_of_eq, not_and_or, not_le, not_not_mem]
   by_contra
@@ -553,8 +552,8 @@ variable [SecondCountableTopology α] [MeasurableSpace α] [OpensMeasurableSpace
 many disjoint balls of the form `closed_ball x (r x)` covering a proportion `1/(N+1)` of `s`, if
 there are no satellite configurations with `N+1` points.
 -/
-theorem exist_finset_disjoint_balls_large_measure (μ : Measure α) [FiniteMeasure μ] {N : ℕ} {τ : ℝ}
-    (hτ : 1 < τ) (hN : IsEmpty (SatelliteConfig α N τ)) (s : Set α) (r : α → ℝ)
+theorem exist_finset_disjoint_balls_large_measure (μ : Measure α) [IsFiniteMeasure μ] {N : ℕ}
+    {τ : ℝ} (hτ : 1 < τ) (hN : IsEmpty (SatelliteConfig α N τ)) (s : Set α) (r : α → ℝ)
     (rpos : ∀ x ∈ s, 0 < r x) (rle : ∀ x ∈ s, r x ≤ 1) :
     ∃ t : Finset α,
       ↑t ⊆ s ∧
@@ -703,7 +702,7 @@ see `exists_disjoint_closed_ball_covering_ae_aux`.
 For a version giving the conclusion in a nicer form, see `exists_disjoint_closed_ball_covering_ae`.
 -/
 theorem exists_disjoint_closedBall_covering_ae_of_finite_measure_aux (μ : Measure α)
-    [FiniteMeasure μ] (f : α → Set ℝ) (s : Set α)
+    [IsFiniteMeasure μ] (f : α → Set ℝ) (s : Set α)
     (hf : ∀ x ∈ s, ∀ δ > 0, (f x ∩ Ioo 0 δ).Nonempty) :
     ∃ t : Set (α × ℝ),
       t.Countable ∧
@@ -1159,7 +1158,7 @@ protected def vitaliFamily (μ : Measure α) [SigmaFinite μ] : VitaliFamily μ
   Nontrivial x ε εpos := ⟨closedBall x ε, mem_image_of_mem _ εpos, Subset.refl _⟩
   covering := by
     intro s f fsubset ffine
-    let g : α → Set ℝ := fun x => { r | 0 < r ∧ closed_ball x r ∈ f x }
+    let g : α → Set ℝ := fun x => {r | 0 < r ∧ closed_ball x r ∈ f x}
     have A : ∀ x ∈ s, ∀ δ > 0, (g x ∩ Ioo 0 δ).Nonempty :=
       by
       intro x xs δ δpos
@@ -1203,7 +1202,7 @@ theorem tendsto_filterAt (μ : Measure α) [SigmaFinite μ] (x : α) :
       ∀ a : Set α, a ∈ (Besicovitch.vitaliFamily μ).setsAt x → a ⊆ closed_ball x ε → a ∈ s :=
     (VitaliFamily.mem_filterAt_iff _).1 hs
   have : Ioc (0 : ℝ) ε ∈ 𝓝[>] (0 : ℝ) := Ioc_mem_nhdsWithin_Ioi ⟨le_rfl, εpos⟩
-  filter_upwards [this]with _ hr
+  filter_upwards [this] with _ hr
   apply hε
   · exact mem_image_of_mem _ hr.1
   · exact closed_ball_subset_closed_ball hr.2
@@ -1214,11 +1213,11 @@ variable [MetricSpace β] [MeasurableSpace β] [BorelSpace β] [SecondCountableT
 
 /-- In a space with the Besicovitch covering property, the ratio of the measure of balls converges
 almost surely to to the Radon-Nikodym derivative. -/
-theorem ae_tendsto_rnDeriv (ρ μ : Measure β) [LocallyFiniteMeasure μ] [LocallyFiniteMeasure ρ] :
+theorem ae_tendsto_rnDeriv (ρ μ : Measure β) [IsLocallyFiniteMeasure μ] [IsLocallyFiniteMeasure ρ] :
     ∀ᵐ x ∂μ,
       Tendsto (fun r => ρ (closedBall x r) / μ (closedBall x r)) (𝓝[>] 0) (𝓝 (ρ.rnDeriv μ x)) :=
   by
-  filter_upwards [VitaliFamily.ae_tendsto_rnDeriv (Besicovitch.vitaliFamily μ) ρ]with x hx
+  filter_upwards [VitaliFamily.ae_tendsto_rnDeriv (Besicovitch.vitaliFamily μ) ρ] with x hx
   exact hx.comp (tendsto_filter_at μ x)
 #align besicovitch.ae_tendsto_rn_deriv Besicovitch.ae_tendsto_rnDeriv
 
@@ -1227,7 +1226,7 @@ theorem ae_tendsto_rnDeriv (ρ μ : Measure β) [LocallyFiniteMeasure μ] [Local
 This shows that almost every point of `s` is a Lebesgue density point for `s`.
 A version for non-measurable sets holds, but it only gives the first conclusion,
 see `ae_tendsto_measure_inter_div`. -/
-theorem ae_tendsto_measure_inter_div_of_measurableSet (μ : Measure β) [LocallyFiniteMeasure μ]
+theorem ae_tendsto_measure_inter_div_of_measurableSet (μ : Measure β) [IsLocallyFiniteMeasure μ]
     {s : Set β} (hs : MeasurableSet s) :
     ∀ᵐ x ∂μ,
       Tendsto (fun r => μ (s ∩ closedBall x r) / μ (closedBall x r)) (𝓝[>] 0)
@@ -1245,12 +1244,12 @@ This shows that almost every point of `s` is a Lebesgue density point for `s`.
 A stronger version holds for measurable sets, see `ae_tendsto_measure_inter_div_of_measurable_set`.
 
 See also `is_unif_loc_doubling_measure.ae_tendsto_measure_inter_div`. -/
-theorem ae_tendsto_measure_inter_div (μ : Measure β) [LocallyFiniteMeasure μ] (s : Set β) :
+theorem ae_tendsto_measure_inter_div (μ : Measure β) [IsLocallyFiniteMeasure μ] (s : Set β) :
     ∀ᵐ x ∂μ.restrict s,
       Tendsto (fun r => μ (s ∩ closedBall x r) / μ (closedBall x r)) (𝓝[>] 0) (𝓝 1) :=
   by
-  filter_upwards [VitaliFamily.ae_tendsto_measure_inter_div
-      (Besicovitch.vitaliFamily μ)]with x hx using hx.comp (tendsto_filter_at μ x)
+  filter_upwards [VitaliFamily.ae_tendsto_measure_inter_div (Besicovitch.vitaliFamily μ)] with x
+    hx using hx.comp (tendsto_filter_at μ x)
 #align besicovitch.ae_tendsto_measure_inter_div Besicovitch.ae_tendsto_measure_inter_div
 
 end Besicovitch

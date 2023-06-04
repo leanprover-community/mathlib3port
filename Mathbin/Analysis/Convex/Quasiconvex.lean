@@ -55,7 +55,7 @@ variable (𝕜) [OrderedAddCommMonoid β] [SMul 𝕜 E] (s : Set E) (f : E → �
 /-- A function is quasiconvex if all its sublevels are convex.
 This means that, for all `r`, `{x ∈ s | f x ≤ r}` is `𝕜`-convex. -/
 def QuasiconvexOn : Prop :=
-  ∀ r, Convex 𝕜 ({ x ∈ s | f x ≤ r })
+  ∀ r, Convex 𝕜 ({x ∈ s | f x ≤ r})
 #align quasiconvex_on QuasiconvexOn
 -/
 
@@ -63,7 +63,7 @@ def QuasiconvexOn : Prop :=
 /-- A function is quasiconcave if all its superlevels are convex.
 This means that, for all `r`, `{x ∈ s | r ≤ f x}` is `𝕜`-convex. -/
 def QuasiconcaveOn : Prop :=
-  ∀ r, Convex 𝕜 ({ x ∈ s | r ≤ f x })
+  ∀ r, Convex 𝕜 ({x ∈ s | r ≤ f x})
 #align quasiconcave_on QuasiconcaveOn
 -/
 
@@ -90,11 +90,11 @@ theorem QuasilinearOn.dual : QuasilinearOn 𝕜 s f → QuasilinearOn 𝕜 s (to
   And.symm
 #align quasilinear_on.dual QuasilinearOn.dual
 
-theorem Convex.quasiconvexOn_of_convex_le (hs : Convex 𝕜 s) (h : ∀ r, Convex 𝕜 { x | f x ≤ r }) :
+theorem Convex.quasiconvexOn_of_convex_le (hs : Convex 𝕜 s) (h : ∀ r, Convex 𝕜 {x | f x ≤ r}) :
     QuasiconvexOn 𝕜 s f := fun r => hs.inter (h r)
 #align convex.quasiconvex_on_of_convex_le Convex.quasiconvexOn_of_convex_le
 
-theorem Convex.quasiconcaveOn_of_convex_ge (hs : Convex 𝕜 s) (h : ∀ r, Convex 𝕜 { x | r ≤ f x }) :
+theorem Convex.quasiconcaveOn_of_convex_ge (hs : Convex 𝕜 s) (h : ∀ r, Convex 𝕜 {x | r ≤ f x}) :
     QuasiconcaveOn 𝕜 s f :=
   @Convex.quasiconvexOn_of_convex_le 𝕜 E βᵒᵈ _ _ _ _ _ _ hs h
 #align convex.quasiconcave_on_of_convex_ge Convex.quasiconcaveOn_of_convex_ge
@@ -172,8 +172,7 @@ theorem quasilinearOn_iff_mem_uIcc :
   simp_rw [← forall_and, ← Icc_min_max, mem_Icc, and_comm']
 #align quasilinear_on_iff_mem_uIcc quasilinearOn_iff_mem_uIcc
 
-theorem QuasiconvexOn.convex_lt (hf : QuasiconvexOn 𝕜 s f) (r : β) :
-    Convex 𝕜 ({ x ∈ s | f x < r }) :=
+theorem QuasiconvexOn.convex_lt (hf : QuasiconvexOn 𝕜 s f) (r : β) : Convex 𝕜 ({x ∈ s | f x < r}) :=
   by
   refine' fun x hx y hy a b ha hb hab => _
   have h := hf _ ⟨hx.1, le_max_left _ _⟩ ⟨hy.1, le_max_right _ _⟩ ha hb hab
@@ -181,7 +180,7 @@ theorem QuasiconvexOn.convex_lt (hf : QuasiconvexOn 𝕜 s f) (r : β) :
 #align quasiconvex_on.convex_lt QuasiconvexOn.convex_lt
 
 theorem QuasiconcaveOn.convex_gt (hf : QuasiconcaveOn 𝕜 s f) (r : β) :
-    Convex 𝕜 ({ x ∈ s | r < f x }) :=
+    Convex 𝕜 ({x ∈ s | r < f x}) :=
   hf.dual.convex_lt r
 #align quasiconcave_on.convex_gt QuasiconcaveOn.convex_gt
 

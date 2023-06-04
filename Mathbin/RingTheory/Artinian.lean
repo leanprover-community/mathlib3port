@@ -50,7 +50,7 @@ open Set
 open scoped BigOperators Pointwise
 
 #print IsArtinian /-
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`wellFounded_submodule_lt] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`wellFounded_submodule_lt] [] -/
 /-- `is_artinian R M` is the proposition that `M` is an Artinian `R`-module,
 implemented as the well-foundedness of submodule inclusion.
 -/
@@ -174,8 +174,8 @@ theorem IsArtinian.finite_of_linearIndependent [Nontrivial R] [IsArtinian R M] {
     by_contradiction fun hf =>
       (RelEmbedding.wellFounded_iff_no_descending_seq.1 (well_founded_submodule_lt R M)).elim' _
   have f : ℕ ↪ s := Set.Infinite.natEmbedding s hf
-  have : ∀ n, coe ∘ f '' { m | n ≤ m } ⊆ s := by rintro n x ⟨y, hy₁, rfl⟩; exact (f y).2
-  have : ∀ a b : ℕ, a ≤ b ↔ span R (coe ∘ f '' { m | b ≤ m }) ≤ span R (coe ∘ f '' { m | a ≤ m }) :=
+  have : ∀ n, coe ∘ f '' {m | n ≤ m} ⊆ s := by rintro n x ⟨y, hy₁, rfl⟩; exact (f y).2
+  have : ∀ a b : ℕ, a ≤ b ↔ span R (coe ∘ f '' {m | b ≤ m}) ≤ span R (coe ∘ f '' {m | a ≤ m}) :=
     by
     intro a b
     rw [span_le_span_iff hs (this b) (this a),
@@ -183,7 +183,7 @@ theorem IsArtinian.finite_of_linearIndependent [Nontrivial R] [IsArtinian R M] {
     simp only [Set.mem_setOf_eq]
     exact ⟨fun hab x => le_trans hab, fun h => h _ le_rfl⟩
   exact
-    ⟨⟨fun n => span R (coe ∘ f '' { m | n ≤ m }), fun x y => by
+    ⟨⟨fun n => span R (coe ∘ f '' {m | n ≤ m}), fun x y => by
         simp (config := { contextual := true }) [le_antisymm_iff, (this _ _).symm]⟩,
       by
       intro a b
@@ -443,7 +443,7 @@ theorem isNilpotent_jacobson_bot : IsNilpotent (Ideal.jacobson (⊥ : Ideal R)) 
     have hJ : J • Jac ^ n = ⊥ := annihilator_smul (Jac ^ n)
     simpa only [this, top_smul, Ideal.zero_eq_bot] using hJ
   by_contra hJ; change J ≠ ⊤ at hJ 
-  rcases IsArtinian.set_has_minimal { J' : Ideal R | J < J' } ⟨⊤, hJ.lt_top⟩ with
+  rcases IsArtinian.set_has_minimal {J' : Ideal R | J < J'} ⟨⊤, hJ.lt_top⟩ with
     ⟨J', hJJ' : J < J', hJ' : ∀ I, J < I → ¬I < J'⟩
   rcases SetLike.exists_of_lt hJJ' with ⟨x, hxJ', hxJ⟩
   obtain rfl : J ⊔ Ideal.span {x} = J' :=
@@ -456,13 +456,13 @@ theorem isNilpotent_jacobson_bot : IsNilpotent (Ideal.jacobson (⊥ : Ideal R)) 
     sup_le_sup_left (smul_le.2 fun _ _ _ => Submodule.smul_mem _ _) _
   have : Jac * Ideal.span {x} ≤ J := by
     classical
-      --Need version 4 of Nakayamas lemma on Stacks
-      by_contra H
-      refine'
-        H
-          (smul_sup_le_of_le_smul_of_le_jacobson_bot (fg_span_singleton _) le_rfl
-            (this.eq_of_not_lt (hJ' _ _)).ge)
-      exact lt_of_le_of_ne le_sup_left fun h => H <| h.symm ▸ le_sup_right
+    --Need version 4 of Nakayamas lemma on Stacks
+    by_contra H
+    refine'
+      H
+        (smul_sup_le_of_le_smul_of_le_jacobson_bot (fg_span_singleton _) le_rfl
+          (this.eq_of_not_lt (hJ' _ _)).ge)
+    exact lt_of_le_of_ne le_sup_left fun h => H <| h.symm ▸ le_sup_right
   have : Ideal.span {x} * Jac ^ (n + 1) ≤ ⊥
   calc
     Ideal.span {x} * Jac ^ (n + 1) = Ideal.span {x} * Jac * Jac ^ n := by rw [pow_succ, ← mul_assoc]
@@ -490,7 +490,7 @@ theorem localization_surjective : Function.Surjective (algebraMap R L) :=
   obtain ⟨n, r, hr⟩ := IsArtinian.exists_pow_succ_smul_dvd (s : R) (1 : R)
   use r
   rw [smul_eq_mul, smul_eq_mul, pow_succ', mul_assoc] at hr 
-  apply_fun algebraMap R L  at hr 
+  apply_fun algebraMap R L at hr 
   simp only [map_mul, ← Submonoid.coe_pow] at hr 
   rw [← IsLocalization.mk'_one L, IsLocalization.mk'_eq_iff_eq, mul_one, Submonoid.coe_one, ←
     (IsLocalization.map_units L (s ^ n)).mul_left_cancel hr, map_mul]

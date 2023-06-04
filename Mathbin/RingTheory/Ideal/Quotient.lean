@@ -423,10 +423,10 @@ noncomputable def piQuotEquiv : ((ι → R) ⧸ I.pi ι) ≃ₗ[R ⧸ I] ι → 
 theorem map_pi {ι : Type _} [Finite ι] {ι' : Type w} (x : ι → R) (hi : ∀ i, x i ∈ I)
     (f : (ι → R) →ₗ[R] ι' → R) (i : ι') : f x i ∈ I := by
   classical
-    cases nonempty_fintype ι
-    rw [pi_eq_sum_univ x]
-    simp only [Finset.sum_apply, smul_eq_mul, LinearMap.map_sum, Pi.smul_apply, LinearMap.map_smul]
-    exact I.sum_mem fun j hj => I.mul_mem_right _ (hi j)
+  cases nonempty_fintype ι
+  rw [pi_eq_sum_univ x]
+  simp only [Finset.sum_apply, smul_eq_mul, LinearMap.map_sum, Pi.smul_apply, LinearMap.map_smul]
+  exact I.sum_mem fun j hj => I.mul_mem_right _ (hi j)
 #align ideal.map_pi Ideal.map_pi
 
 end Pi
@@ -447,22 +447,22 @@ theorem exists_sub_one_mem_and_mem (s : Finset ι) {f : ι → Ideal R}
     · rw [sub_right_comm, sub_self, zero_sub]; exact (f i).neg_mem hri
     · rw [← hrs, add_sub_cancel']; exact hsj
   classical
-    have : ∃ g : ι → R, (∀ j, g j - 1 ∈ f i) ∧ ∀ j ∈ s, j ≠ i → g j ∈ f j :=
-      by
-      choose g hg1 hg2
-      refine' ⟨fun j => if H : j ∈ s ∧ j ≠ i then g j H.1 H.2 else 1, fun j => _, fun j => _⟩
-      · split_ifs with h; · apply hg1; rw [sub_self]; exact (f i).zero_mem
-      · intro hjs hji; rw [dif_pos]; · apply hg2; exact ⟨hjs, hji⟩
-    rcases this with ⟨g, hgi, hgj⟩
-    use ∏ x in s.erase i, g x
-    constructor
-    · rw [← Quotient.eq', RingHom.map_one, RingHom.map_prod]
-      apply Finset.prod_eq_one; intros; rw [← RingHom.map_one, Quotient.eq']; apply hgi
-    intro j hjs hji
-    rw [← quotient.eq_zero_iff_mem, RingHom.map_prod]
-    refine' Finset.prod_eq_zero (Finset.mem_erase_of_ne_of_mem hji hjs) _
-    rw [quotient.eq_zero_iff_mem]
-    exact hgj j hjs hji
+  have : ∃ g : ι → R, (∀ j, g j - 1 ∈ f i) ∧ ∀ j ∈ s, j ≠ i → g j ∈ f j :=
+    by
+    choose g hg1 hg2
+    refine' ⟨fun j => if H : j ∈ s ∧ j ≠ i then g j H.1 H.2 else 1, fun j => _, fun j => _⟩
+    · split_ifs with h; · apply hg1; rw [sub_self]; exact (f i).zero_mem
+    · intro hjs hji; rw [dif_pos]; · apply hg2; exact ⟨hjs, hji⟩
+  rcases this with ⟨g, hgi, hgj⟩
+  use ∏ x in s.erase i, g x
+  constructor
+  · rw [← Quotient.eq', RingHom.map_one, RingHom.map_prod]
+    apply Finset.prod_eq_one; intros; rw [← RingHom.map_one, Quotient.eq']; apply hgi
+  intro j hjs hji
+  rw [← quotient.eq_zero_iff_mem, RingHom.map_prod]
+  refine' Finset.prod_eq_zero (Finset.mem_erase_of_ne_of_mem hji hjs) _
+  rw [quotient.eq_zero_iff_mem]
+  exact hgj j hjs hji
 #align ideal.exists_sub_one_mem_and_mem Ideal.exists_sub_one_mem_and_mem
 
 theorem exists_sub_mem [Finite ι] {f : ι → Ideal R} (hf : ∀ i j, i ≠ j → f i ⊔ f j = ⊤)

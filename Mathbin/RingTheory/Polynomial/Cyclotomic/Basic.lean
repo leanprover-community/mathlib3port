@@ -4,20 +4,20 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca
 
 ! This file was ported from Lean 3 source module ring_theory.polynomial.cyclotomic.basic
-! leanprover-community/mathlib commit 5bfbcca0a7ffdd21cf1682e59106d6c942434a32
+! leanprover-community/mathlib commit 7fdeecc0d03cd40f7a165e6cf00a4d2286db599f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.NeZero
 import Mathbin.Algebra.Polynomial.BigOperators
-import Mathbin.Analysis.Complex.RootsOfUnity
+import Mathbin.RingTheory.RootsOfUnity.Complex
 import Mathbin.Data.Polynomial.Lifts
 import Mathbin.Data.Polynomial.Splits
 import Mathbin.Data.Zmod.Algebra
 import Mathbin.FieldTheory.Ratfunc
 import Mathbin.FieldTheory.Separable
 import Mathbin.NumberTheory.ArithmeticFunction
-import Mathbin.RingTheory.RootsOfUnity
+import Mathbin.RingTheory.RootsOfUnity.Basic
 
 /-!
 # Cyclotomic polynomials.

@@ -83,7 +83,7 @@ variable {V}
 /-- A wide subquiver `H` of `G.symmetrify` determines a wide subquiver of `G`, containing an
     an arrow `e` if either `e` or its reversal is in `H`. -/
 def wideSubquiverSymmetrify (H : WideSubquiver (Symmetrify V)) : WideSubquiver V := fun a b =>
-  { e | Sum.inl e ∈ H a b ∨ Sum.inr e ∈ H b a }
+  {e | Sum.inl e ∈ H a b ∨ Sum.inr e ∈ H b a}
 #align quiver.wide_subquiver_symmetrify Quiver.wideSubquiverSymmetrify
 -/
 

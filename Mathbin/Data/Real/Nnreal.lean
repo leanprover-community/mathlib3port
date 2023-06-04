@@ -453,7 +453,7 @@ theorem orderIsoIccZeroCoe_symm_apply_coe (a : ℝ≥0) (b : Set.Iic a) :
 
 -- note we need the `@` to make the `has_mem.mem` have a sensible type
 theorem coe_image {s : Set ℝ≥0} :
-    coe '' s = { x : ℝ | ∃ h : 0 ≤ x, @Membership.Mem ℝ≥0 _ _ ⟨x, h⟩ s } :=
+    coe '' s = {x : ℝ | ∃ h : 0 ≤ x, @Membership.Mem ℝ≥0 _ _ ⟨x, h⟩ s} :=
   Subtype.coe_image
 #align nnreal.coe_image NNReal.coe_image
 

@@ -284,9 +284,9 @@ theorem Finset.centroid_mem_convexHull (s : Finset E) (hs : s.Nonempty) :
 
 theorem convexHull_range_eq_exists_affineCombination (v : ι → E) :
     convexHull R (range v) =
-      { x |
+      {x |
         ∃ (s : Finset ι) (w : ι → R) (hw₀ : ∀ i ∈ s, 0 ≤ w i) (hw₁ : s.Sum w = 1),
-          s.affineCombination R v w = x } :=
+          s.affineCombination R v w = x} :=
   by
   refine' subset.antisymm (convexHull_min _ _) _
   · intro x hx
@@ -320,9 +320,9 @@ theorem convexHull_range_eq_exists_affineCombination (v : ι → E) :
 This version allows finsets in any type in any universe. -/
 theorem convexHull_eq (s : Set E) :
     convexHull R s =
-      { x : E |
+      {x : E |
         ∃ (ι : Type u') (t : Finset ι) (w : ι → R) (z : ι → E) (hw₀ : ∀ i ∈ t, 0 ≤ w i) (hw₁ :
-          (∑ i in t, w i) = 1) (hz : ∀ i ∈ t, z i ∈ s), t.centerMass w z = x } :=
+          (∑ i in t, w i) = 1) (hz : ∀ i ∈ t, z i ∈ s), t.centerMass w z = x} :=
   by
   refine' subset.antisymm (convexHull_min _ _) _
   · intro x hx
@@ -347,9 +347,9 @@ theorem convexHull_eq (s : Set E) :
 
 theorem Finset.convexHull_eq (s : Finset E) :
     convexHull R ↑s =
-      { x : E |
+      {x : E |
         ∃ (w : E → R) (hw₀ : ∀ y ∈ s, 0 ≤ w y) (hw₁ : (∑ y in s, w y) = 1),
-          s.centerMass w id = x } :=
+          s.centerMass w id = x} :=
   by
   refine' subset.antisymm (convexHull_min _ _) _
   · intro x hx
@@ -376,9 +376,9 @@ theorem Finset.mem_convexHull {s : Finset E} {x : E} :
 
 theorem Set.Finite.convexHull_eq {s : Set E} (hs : s.Finite) :
     convexHull R s =
-      { x : E |
+      {x : E |
         ∃ (w : E → R) (hw₀ : ∀ y ∈ s, 0 ≤ w y) (hw₁ : (∑ y in hs.toFinset, w y) = 1),
-          hs.toFinset.centerMass w id = x } :=
+          hs.toFinset.centerMass w id = x} :=
   by
   simpa only [Set.Finite.coe_toFinset, Set.Finite.mem_toFinset, exists_prop] using
     hs.to_finset.convex_hull_eq
@@ -512,7 +512,7 @@ theorem mem_Icc_of_mem_stdSimplex (hf : f ∈ stdSimplex R ι) (x) : f x ∈ Icc
 /-- The convex hull of an affine basis is the intersection of the half-spaces defined by the
 corresponding barycentric coordinates. -/
 theorem AffineBasis.convexHull_eq_nonneg_coord {ι : Type _} (b : AffineBasis ι R E) :
-    convexHull R (range b) = { x | ∀ i, 0 ≤ b.Coord i x } :=
+    convexHull R (range b) = {x | ∀ i, 0 ≤ b.Coord i x} :=
   by
   rw [convexHull_range_eq_exists_affineCombination]
   ext x

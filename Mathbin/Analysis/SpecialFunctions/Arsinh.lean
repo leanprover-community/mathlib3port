@@ -185,7 +185,8 @@ theorem arsinh_neg_iff : arsinh x < 0 ↔ x < 0 :=
 
 theorem hasStrictDerivAt_arsinh (x : ℝ) : HasStrictDerivAt arsinh (sqrt (1 + x ^ 2))⁻¹ x :=
   by
-  convert sinh_homeomorph.to_local_homeomorph.has_strict_deriv_at_symm (mem_univ x) (cosh_pos _).ne'
+  convert
+    sinh_homeomorph.to_local_homeomorph.has_strict_deriv_at_symm (mem_univ x) (cosh_pos _).ne'
       (has_strict_deriv_at_sinh _)
   exact (cosh_arsinh _).symm
 #align real.has_strict_deriv_at_arsinh Real.hasStrictDerivAt_arsinh

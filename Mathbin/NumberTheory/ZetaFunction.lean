@@ -154,7 +154,7 @@ theorem locally_integrable_zetaKernel₂ : LocallyIntegrableOn zetaKernel₂ (Io
     rw [integrable_on, measure.restrict_restrict, ← integrable_on]
     swap; · exact measurableSet_Ioc
     apply ContinuousOn.integrableOn_compact
-    · convert(is_compact_Icc : IsCompact <| Icc 0 1).inter hk' using 1
+    · convert (is_compact_Icc : IsCompact <| Icc 0 1).inter hk' using 1
       exact
         Set.ext fun t => ⟨fun h => ⟨Ioc_subset_Icc_self h.1, h.2⟩, fun h => ⟨⟨hk h.2, h.1.2⟩, h.2⟩⟩
     · refine' ContinuousOn.mono _ ((inter_subset_right _ _).trans hk)
@@ -214,7 +214,8 @@ theorem isBigO_atTop_zetaKernel₁ : IsBigO atTop zetaKernel₁ fun t => exp (-�
     convert tendsto_id
     ext1 t
     rw [Function.comp_apply, mul_I_im, of_real_re, id.def]
-  convert((h.norm_left.comp_tendsto h').congr' (eventually_of_mem (Ioi_mem_at_top 0) fun t ht => _)
+  convert
+    ((h.norm_left.comp_tendsto h').congr' (eventually_of_mem (Ioi_mem_at_top 0) fun t ht => _)
         (eventually_of_mem (Ioi_mem_at_top 0) fun t ht => _)).of_norm_left
   · rw [Function.comp_apply, ← zetaKernel₁_eq_jacobiTheta ht]
   · rw [Function.comp_apply, mul_I_im, of_real_re]
@@ -350,11 +351,11 @@ theorem differentiableAt_riemannZeta {s : ℂ} (hs' : s ≠ 1) : DifferentiableA
     by
     have h1 : tendsto (fun z : ℂ => (π : ℂ) ^ (z / 2)) (𝓝 0) (𝓝 1) :=
       by
-      convert(continuousAt_const_cpow (of_real_ne_zero.mpr pi_pos.ne')).comp _
+      convert (continuousAt_const_cpow (of_real_ne_zero.mpr pi_pos.ne')).comp _
       · simp_rw [Function.comp_apply, zero_div, cpow_zero]
       · exact continuous_at_id.div continuousAt_const two_ne_zero
     suffices h2 : tendsto (fun z => riemannCompletedZeta z / Gamma (z / 2)) (𝓝[≠] 0) (𝓝 <| -1 / 2)
-    · convert(h1.mono_left nhdsWithin_le_nhds).mul h2
+    · convert (h1.mono_left nhdsWithin_le_nhds).mul h2
       · ext1 x; rw [mul_div]; · simp only [one_mul]
     suffices h3 :
       tendsto (fun z => riemannCompletedZeta z * (z / 2) / (z / 2 * Gamma (z / 2))) (𝓝[≠] 0)

@@ -43,7 +43,7 @@ so that each of the new balls has strictly smaller radius than the old one. This
 that `λ x, ball (c i) (r i)` is a locally finite covering and provides a covering indexed by the
 same type. -/
 theorem exists_subset_iUnion_ball_radius_lt {r : ι → ℝ} (hs : IsClosed s)
-    (uf : ∀ x ∈ s, { i | x ∈ ball (c i) (r i) }.Finite) (us : s ⊆ ⋃ i, ball (c i) (r i)) :
+    (uf : ∀ x ∈ s, {i | x ∈ ball (c i) (r i)}.Finite) (us : s ⊆ ⋃ i, ball (c i) (r i)) :
     ∃ r' : ι → ℝ, (s ⊆ ⋃ i, ball (c i) (r' i)) ∧ ∀ i, r' i < r i :=
   by
   rcases exists_subset_iUnion_closed_subset hs (fun i => @is_open_ball _ _ (c i) (r i)) uf us with
@@ -56,7 +56,7 @@ theorem exists_subset_iUnion_ball_radius_lt {r : ι → ℝ} (hs : IsClosed s)
 /-- Shrinking lemma for coverings by open balls in a proper metric space. A point-finite open cover
 of a proper metric space by open balls can be shrunk to a new cover by open balls so that each of
 the new balls has strictly smaller radius than the old one. -/
-theorem exists_iUnion_ball_eq_radius_lt {r : ι → ℝ} (uf : ∀ x, { i | x ∈ ball (c i) (r i) }.Finite)
+theorem exists_iUnion_ball_eq_radius_lt {r : ι → ℝ} (uf : ∀ x, {i | x ∈ ball (c i) (r i)}.Finite)
     (uU : (⋃ i, ball (c i) (r i)) = univ) :
     ∃ r' : ι → ℝ, (⋃ i, ball (c i) (r' i)) = univ ∧ ∀ i, r' i < r i :=
   let ⟨r', hU, hv⟩ := exists_subset_iUnion_ball_radius_lt isClosed_univ (fun x _ => uf x) uU.ge
@@ -67,7 +67,7 @@ theorem exists_iUnion_ball_eq_radius_lt {r : ι → ℝ} (uf : ∀ x, { i | x �
 of a closed subset of a proper metric space by nonempty open balls can be shrunk to a new cover by
 nonempty open balls so that each of the new balls has strictly smaller radius than the old one. -/
 theorem exists_subset_iUnion_ball_radius_pos_lt {r : ι → ℝ} (hr : ∀ i, 0 < r i) (hs : IsClosed s)
-    (uf : ∀ x ∈ s, { i | x ∈ ball (c i) (r i) }.Finite) (us : s ⊆ ⋃ i, ball (c i) (r i)) :
+    (uf : ∀ x ∈ s, {i | x ∈ ball (c i) (r i)}.Finite) (us : s ⊆ ⋃ i, ball (c i) (r i)) :
     ∃ r' : ι → ℝ, (s ⊆ ⋃ i, ball (c i) (r' i)) ∧ ∀ i, r' i ∈ Ioo 0 (r i) :=
   by
   rcases exists_subset_iUnion_closed_subset hs (fun i => @is_open_ball _ _ (c i) (r i)) uf us with
@@ -81,7 +81,7 @@ theorem exists_subset_iUnion_ball_radius_pos_lt {r : ι → ℝ} (hr : ∀ i, 0 
 of a proper metric space by nonempty open balls can be shrunk to a new cover by nonempty open balls
 so that each of the new balls has strictly smaller radius than the old one. -/
 theorem exists_iUnion_ball_eq_radius_pos_lt {r : ι → ℝ} (hr : ∀ i, 0 < r i)
-    (uf : ∀ x, { i | x ∈ ball (c i) (r i) }.Finite) (uU : (⋃ i, ball (c i) (r i)) = univ) :
+    (uf : ∀ x, {i | x ∈ ball (c i) (r i)}.Finite) (uU : (⋃ i, ball (c i) (r i)) = univ) :
     ∃ r' : ι → ℝ, (⋃ i, ball (c i) (r' i)) = univ ∧ ∀ i, r' i ∈ Ioo 0 (r i) :=
   let ⟨r', hU, hv⟩ :=
     exists_subset_iUnion_ball_radius_pos_lt hr isClosed_univ (fun x _ => uf x) uU.ge

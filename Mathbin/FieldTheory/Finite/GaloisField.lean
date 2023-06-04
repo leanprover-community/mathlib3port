@@ -46,14 +46,14 @@ instance FiniteField.HasSub.Sub.Polynomial.isSplittingField (K F : Type _) [Fiel
   Splits :=
     by
     have h : (X ^ Fintype.card K - X : K[X]).natDegree = Fintype.card K :=
-      FiniteField.x_pow_card_sub_x_natDegree_eq K Fintype.one_lt_card
+      FiniteField.X_pow_card_sub_X_natDegree_eq K Fintype.one_lt_card
     rw [← splits_id_iff_splits, splits_iff_card_roots, Polynomial.map_sub, Polynomial.map_pow,
-      map_X, h, FiniteField.roots_x_pow_card_sub_x K, ← Finset.card_def, Finset.card_univ]
+      map_X, h, FiniteField.roots_X_pow_card_sub_X K, ← Finset.card_def, Finset.card_univ]
   adjoin_roots := by
     classical
-      trans Algebra.adjoin F ((roots (X ^ Fintype.card K - X : K[X])).toFinset : Set K)
-      · simp only [Polynomial.map_pow, map_X, Polynomial.map_sub]
-      · rw [FiniteField.roots_x_pow_card_sub_x, val_to_finset, coe_univ, Algebra.adjoin_univ]
+    trans Algebra.adjoin F ((roots (X ^ Fintype.card K - X : K[X])).toFinset : Set K)
+    · simp only [Polynomial.map_pow, map_X, Polynomial.map_sub]
+    · rw [FiniteField.roots_X_pow_card_sub_X, val_to_finset, coe_univ, Algebra.adjoin_univ]
 #align finite_field.has_sub.sub.polynomial.is_splitting_field FiniteField.HasSub.Sub.Polynomial.isSplittingField
 
 theorem galois_poly_separable {K : Type _} [Field K] (p q : ℕ) [CharP K p] (h : p ∣ q) :
@@ -97,12 +97,12 @@ theorem finrank {n} (h : n ≠ 0) : FiniteDimensional.finrank (ZMod p) (GaloisFi
   by
   set g_poly := (X ^ p ^ n - X : (ZMod p)[X])
   have hp : 1 < p := (Fact.out (Nat.Prime p)).one_lt
-  have aux : g_poly ≠ 0 := FiniteField.x_pow_card_pow_sub_x_ne_zero _ h hp
+  have aux : g_poly ≠ 0 := FiniteField.X_pow_card_pow_sub_X_ne_zero _ h hp
   have key : Fintype.card (g_poly.rootSet (GaloisField p n)) = g_poly.natDegree :=
     card_root_set_eq_nat_degree (galois_poly_separable p _ (dvd_pow (dvd_refl p) h))
       (splitting_field.splits g_poly)
   have nat_degree_eq : g_poly.natDegree = p ^ n :=
-    FiniteField.x_pow_card_pow_sub_x_natDegree_eq _ h hp
+    FiniteField.X_pow_card_pow_sub_X_natDegree_eq _ h hp
   rw [nat_degree_eq] at key 
   suffices g_poly.rootSet (GaloisField p n) = Set.univ
     by
@@ -156,9 +156,9 @@ theorem splits_zMod_x_pow_sub_x : Splits (RingHom.id (ZMod p)) (X ^ p - X) :=
   have hp : 1 < p := (Fact.out (Nat.Prime p)).one_lt
   have h1 : roots (X ^ p - X : (ZMod p)[X]) = finset.univ.val :=
     by
-    convert FiniteField.roots_x_pow_card_sub_x _
+    convert FiniteField.roots_X_pow_card_sub_X _
     exact (ZMod.card p).symm
-  have h2 := FiniteField.x_pow_card_sub_x_natDegree_eq (ZMod p) hp
+  have h2 := FiniteField.X_pow_card_sub_X_natDegree_eq (ZMod p) hp
   -- We discharge the `p = 0` separately, to avoid typeclass issues on `zmod p`.
   cases p;
   cases hp

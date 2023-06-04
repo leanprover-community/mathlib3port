@@ -747,7 +747,7 @@ theorem oangle_eq_of_angle_eq_of_sign_eq {w x y z : V}
       have h0' := o.eq_zero_or_angle_eq_zero_or_pi_of_sign_oangle_eq_zero hsyz
       simpa [hyz, real.pi_pos.ne.symm, hpi] using h0'
     rcases h0wx with (h0wx | h0wx) <;> rcases h0yz with (h0yz | h0yz) <;> simp [h0wx, h0yz]
-  · push_neg  at h0 
+  · push_neg at h0 
     rw [Real.Angle.eq_iff_abs_toReal_eq_of_sign_eq hs]
     rwa [o.angle_eq_abs_oangle_to_real h0.1.1 h0.1.2,
       o.angle_eq_abs_oangle_to_real h0.2.1 h0.2.2] at h 

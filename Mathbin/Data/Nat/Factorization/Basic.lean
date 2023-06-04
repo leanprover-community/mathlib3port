@@ -122,7 +122,7 @@ theorem eq_of_factorization_eq {a b : ℕ} (ha : a ≠ 0) (hb : b ≠ 0)
 
 #print Nat.factorization_inj /-
 /-- Every nonzero natural number has a unique prime factorization -/
-theorem factorization_inj : Set.InjOn factorization { x : ℕ | x ≠ 0 } := fun a ha b hb h =>
+theorem factorization_inj : Set.InjOn factorization {x : ℕ | x ≠ 0} := fun a ha b hb h =>
   eq_of_factorization_eq ha hb fun p => by simp [h]
 #align nat.factorization_inj Nat.factorization_inj
 -/
@@ -291,12 +291,12 @@ Generalises `factorization_mul`, which is the special case where `S.card = 2` an
 theorem factorization_prod {α : Type _} {S : Finset α} {g : α → ℕ} (hS : ∀ x ∈ S, g x ≠ 0) :
     (S.Prod g).factorization = S.Sum fun x => (g x).factorization := by
   classical
-    ext p
-    apply Finset.induction_on' S
-    · simp
-    · intro x T hxS hTS hxT IH
-      have hT : T.prod g ≠ 0 := prod_ne_zero_iff.mpr fun x hx => hS x (hTS hx)
-      simp [prod_insert hxT, sum_insert hxT, ← IH, factorization_mul (hS x hxS) hT]
+  ext p
+  apply Finset.induction_on' S
+  · simp
+  · intro x T hxS hTS hxT IH
+    have hT : T.prod g ≠ 0 := prod_ne_zero_iff.mpr fun x hx => hS x (hTS hx)
+    simp [prod_insert hxT, sum_insert hxT, ← IH, factorization_mul (hS x hxS) hT]
 #align nat.factorization_prod Nat.factorization_prod
 -/
 
@@ -381,7 +381,7 @@ theorem eq_factorization_iff {n : ℕ} {f : ℕ →₀ ℕ} (hn : n ≠ 0) (hf :
 
 #print Nat.factorizationEquiv /-
 /-- The equiv between `ℕ+` and `ℕ →₀ ℕ` with support in the primes. -/
-def factorizationEquiv : ℕ+ ≃ { f : ℕ →₀ ℕ | ∀ p ∈ f.support, Prime p }
+def factorizationEquiv : ℕ+ ≃ {f : ℕ →₀ ℕ | ∀ p ∈ f.support, Prime p}
     where
   toFun := fun ⟨n, hn⟩ => ⟨n.factorization, fun _ => prime_of_mem_factorization⟩
   invFun := fun ⟨f, hf⟩ =>
@@ -838,7 +838,7 @@ theorem prod_factors_gcd_mul_prod_factors_mul {β : Type _} [CommMonoid β] (m n
 
 #print Nat.setOf_pow_dvd_eq_Icc_factorization /-
 theorem setOf_pow_dvd_eq_Icc_factorization {n p : ℕ} (pp : p.Prime) (hn : n ≠ 0) :
-    { i : ℕ | i ≠ 0 ∧ p ^ i ∣ n } = Set.Icc 1 (n.factorization p) := by ext;
+    {i : ℕ | i ≠ 0 ∧ p ^ i ∣ n} = Set.Icc 1 (n.factorization p) := by ext;
   simp [lt_succ_iff, one_le_iff_ne_zero, pp.pow_dvd_iff_le_factorization hn]
 #align nat.set_of_pow_dvd_eq_Icc_factorization Nat.setOf_pow_dvd_eq_Icc_factorization
 -/

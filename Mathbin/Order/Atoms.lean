@@ -358,7 +358,7 @@ theorem isAtomic_of_orderBot_wellFounded_lt [OrderBot α]
     (h : WellFounded ((· < ·) : α → α → Prop)) : IsAtomic α :=
   ⟨fun a =>
     or_iff_not_imp_left.2 fun ha =>
-      let ⟨b, hb, hm⟩ := h.has_min { b | b ≠ ⊥ ∧ b ≤ a } ⟨a, ha, le_rfl⟩
+      let ⟨b, hb, hm⟩ := h.has_min {b | b ≠ ⊥ ∧ b ≤ a} ⟨a, ha, le_rfl⟩
       ⟨b, ⟨hb.1, fun c => not_imp_not.1 fun hc hl => hm c ⟨hc, hl.le.trans hb.2⟩ hl⟩, hb.2⟩⟩
 #align is_atomic_of_order_bot_well_founded_lt isAtomic_of_orderBot_wellFounded_lt
 -/
@@ -436,14 +436,14 @@ section IsAtomistic
 variable [IsAtomistic α]
 
 @[simp]
-theorem sSup_atoms_le_eq (b : α) : sSup { a : α | IsAtom a ∧ a ≤ b } = b :=
+theorem sSup_atoms_le_eq (b : α) : sSup {a : α | IsAtom a ∧ a ≤ b} = b :=
   by
   rcases eq_Sup_atoms b with ⟨s, rfl, hs⟩
   exact le_antisymm (sSup_le fun _ => And.right) (sSup_le_sSup fun a ha => ⟨hs a ha, le_sSup ha⟩)
 #align Sup_atoms_le_eq sSup_atoms_le_eq
 
 @[simp]
-theorem sSup_atoms_eq_top : sSup { a : α | IsAtom a } = ⊤ :=
+theorem sSup_atoms_eq_top : sSup {a : α | IsAtom a} = ⊤ :=
   by
   refine' Eq.trans (congr rfl (Set.ext fun x => _)) (sSup_atoms_le_eq ⊤)
   exact (and_iff_left le_top).symm

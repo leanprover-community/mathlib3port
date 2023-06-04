@@ -159,7 +159,7 @@ theorem find_apply_of_mem {c : Set (PartialRefinement u s)} (hc : IsChain (· �
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (i «expr ∉ » chain_Sup_carrier c) -/
 /-- Least upper bound of a nonempty chain of partial refinements. -/
 def chainSup (c : Set (PartialRefinement u s)) (hc : IsChain (· ≤ ·) c) (ne : c.Nonempty)
-    (hfin : ∀ x ∈ s, { i | x ∈ u i }.Finite) (hU : s ⊆ ⋃ i, u i) : PartialRefinement u s :=
+    (hfin : ∀ x ∈ s, {i | x ∈ u i}.Finite) (hU : s ⊆ ⋃ i, u i) : PartialRefinement u s :=
   by
   refine'
     ⟨fun i => find c Ne i i, chain_Sup_carrier c, fun i => (find _ _ _).IsOpen i, fun x hxs =>
@@ -182,7 +182,7 @@ def chainSup (c : Set (PartialRefinement u s)) (hc : IsChain (· ≤ ·) c) (ne 
 
 /-- `chain_Sup hu c hc ne hfin hU` is an upper bound of the chain `c`. -/
 theorem le_chainSup {c : Set (PartialRefinement u s)} (hc : IsChain (· ≤ ·) c) (ne : c.Nonempty)
-    (hfin : ∀ x ∈ s, { i | x ∈ u i }.Finite) (hU : s ⊆ ⋃ i, u i) {v} (hv : v ∈ c) :
+    (hfin : ∀ x ∈ s, {i | x ∈ u i}.Finite) (hU : s ⊆ ⋃ i, u i) {v} (hv : v ∈ c) :
     v ≤ chainSup c hc Ne hfin hU :=
   ⟨fun i hi => mem_biUnion hv hi, fun i hi => (find_apply_of_mem hc _ hv hi).symm⟩
 #align shrinking_lemma.partial_refinement.le_chain_Sup ShrinkingLemma.PartialRefinement.le_chainSup
@@ -209,7 +209,7 @@ theorem exists_gt (v : PartialRefinement u s) (hs : IsClosed s) (i : ι) (hi : i
   · refine' fun x hx => mem_Union.2 _
     rcases em (∃ (j : _) (_ : j ≠ i), x ∈ v j) with (⟨j, hji, hj⟩ | h)
     · use j; rwa [update_noteq hji]
-    · push_neg  at h ; use i; rw [update_same]; exact hvi ⟨hx, mem_bInter h⟩
+    · push_neg at h ; use i; rw [update_same]; exact hvi ⟨hx, mem_bInter h⟩
   · rintro j (rfl | hj)
     · rwa [update_same, ← v.apply_eq hi]
     · rw [update_noteq (ne_of_mem_of_not_mem hj hi)]; exact v.closure_subset hj
@@ -234,23 +234,22 @@ variable {u : ι → Set X} {s : Set X}
 to a new open cover so that the closure of each new open set is contained in the corresponding
 original open set. -/
 theorem exists_subset_iUnion_closure_subset (hs : IsClosed s) (uo : ∀ i, IsOpen (u i))
-    (uf : ∀ x ∈ s, { i | x ∈ u i }.Finite) (us : s ⊆ ⋃ i, u i) :
+    (uf : ∀ x ∈ s, {i | x ∈ u i}.Finite) (us : s ⊆ ⋃ i, u i) :
     ∃ v : ι → Set X, s ⊆ iUnion v ∧ (∀ i, IsOpen (v i)) ∧ ∀ i, closure (v i) ⊆ u i := by
   classical
-    haveI : Nonempty (partial_refinement u s) :=
-      ⟨⟨u, ∅, uo, us, fun _ => False.elim, fun _ _ => rfl⟩⟩
-    have :
-      ∀ c : Set (partial_refinement u s), IsChain (· ≤ ·) c → c.Nonempty → ∃ ub, ∀ v ∈ c, v ≤ ub :=
-      fun c hc ne =>
-      ⟨partial_refinement.chain_Sup c hc Ne uf us, fun v hv =>
-        partial_refinement.le_chain_Sup _ _ _ _ hv⟩
-    rcases zorn_nonempty_partialOrder this with ⟨v, hv⟩
-    suffices : ∀ i, i ∈ v.carrier
-    exact ⟨v, v.subset_Union, fun i => v.is_open _, fun i => v.closure_subset (this i)⟩
-    contrapose! hv
-    rcases hv with ⟨i, hi⟩
-    rcases v.exists_gt hs i hi with ⟨v', hlt⟩
-    exact ⟨v', hlt.le, hlt.ne'⟩
+  haveI : Nonempty (partial_refinement u s) := ⟨⟨u, ∅, uo, us, fun _ => False.elim, fun _ _ => rfl⟩⟩
+  have :
+    ∀ c : Set (partial_refinement u s), IsChain (· ≤ ·) c → c.Nonempty → ∃ ub, ∀ v ∈ c, v ≤ ub :=
+    fun c hc ne =>
+    ⟨partial_refinement.chain_Sup c hc Ne uf us, fun v hv =>
+      partial_refinement.le_chain_Sup _ _ _ _ hv⟩
+  rcases zorn_nonempty_partialOrder this with ⟨v, hv⟩
+  suffices : ∀ i, i ∈ v.carrier
+  exact ⟨v, v.subset_Union, fun i => v.is_open _, fun i => v.closure_subset (this i)⟩
+  contrapose! hv
+  rcases hv with ⟨i, hi⟩
+  rcases v.exists_gt hs i hi with ⟨v', hlt⟩
+  exact ⟨v', hlt.le, hlt.ne'⟩
 #align exists_subset_Union_closure_subset exists_subset_iUnion_closure_subset
 -/
 
@@ -259,7 +258,7 @@ theorem exists_subset_iUnion_closure_subset (hs : IsClosed s) (uo : ∀ i, IsOpe
 to a new closed cover so that each new closed set is contained in the corresponding original open
 set. See also `exists_subset_Union_closure_subset` for a stronger statement. -/
 theorem exists_subset_iUnion_closed_subset (hs : IsClosed s) (uo : ∀ i, IsOpen (u i))
-    (uf : ∀ x ∈ s, { i | x ∈ u i }.Finite) (us : s ⊆ ⋃ i, u i) :
+    (uf : ∀ x ∈ s, {i | x ∈ u i}.Finite) (us : s ⊆ ⋃ i, u i) :
     ∃ v : ι → Set X, s ⊆ iUnion v ∧ (∀ i, IsClosed (v i)) ∧ ∀ i, v i ⊆ u i :=
   let ⟨v, hsv, hvo, hv⟩ := exists_subset_iUnion_closure_subset hs uo uf us
   ⟨fun i => closure (v i), Subset.trans hsv (iUnion_mono fun i => subset_closure), fun i =>
@@ -271,7 +270,7 @@ theorem exists_subset_iUnion_closed_subset (hs : IsClosed s) (uo : ∀ i, IsOpen
 /-- Shrinking lemma. A point-finite open cover of a closed subset of a normal space can be "shrunk"
 to a new open cover so that the closure of each new open set is contained in the corresponding
 original open set. -/
-theorem exists_iUnion_eq_closure_subset (uo : ∀ i, IsOpen (u i)) (uf : ∀ x, { i | x ∈ u i }.Finite)
+theorem exists_iUnion_eq_closure_subset (uo : ∀ i, IsOpen (u i)) (uf : ∀ x, {i | x ∈ u i}.Finite)
     (uU : (⋃ i, u i) = univ) :
     ∃ v : ι → Set X, iUnion v = univ ∧ (∀ i, IsOpen (v i)) ∧ ∀ i, closure (v i) ⊆ u i :=
   let ⟨v, vU, hv⟩ := exists_subset_iUnion_closure_subset isClosed_univ uo (fun x _ => uf x) uU.ge
@@ -283,7 +282,7 @@ theorem exists_iUnion_eq_closure_subset (uo : ∀ i, IsOpen (u i)) (uf : ∀ x, 
 /-- Shrinking lemma. A point-finite open cover of a closed subset of a normal space can be "shrunk"
 to a new closed cover so that each of the new closed sets is contained in the corresponding
 original open set. See also `exists_Union_eq_closure_subset` for a stronger statement. -/
-theorem exists_iUnion_eq_closed_subset (uo : ∀ i, IsOpen (u i)) (uf : ∀ x, { i | x ∈ u i }.Finite)
+theorem exists_iUnion_eq_closed_subset (uo : ∀ i, IsOpen (u i)) (uf : ∀ x, {i | x ∈ u i}.Finite)
     (uU : (⋃ i, u i) = univ) :
     ∃ v : ι → Set X, iUnion v = univ ∧ (∀ i, IsClosed (v i)) ∧ ∀ i, v i ⊆ u i :=
   let ⟨v, vU, hv⟩ := exists_subset_iUnion_closed_subset isClosed_univ uo (fun x _ => uf x) uU.ge

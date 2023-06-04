@@ -217,7 +217,7 @@ theorem SurjectiveOnWith.surjOn {f : NormedAddGroupHom V₁ V₂} {K : AddSubgro
 #print NormedAddGroupHom.opNorm /-
 /-- The operator norm of a seminormed group homomorphism is the inf of all its bounds. -/
 def opNorm (f : NormedAddGroupHom V₁ V₂) :=
-  sInf { c | 0 ≤ c ∧ ∀ x, ‖f x‖ ≤ c * ‖x‖ }
+  sInf {c | 0 ≤ c ∧ ∀ x, ‖f x‖ ≤ c * ‖x‖}
 #align normed_add_group_hom.op_norm NormedAddGroupHom.opNorm
 -/
 
@@ -227,20 +227,20 @@ instance hasOpNorm : Norm (NormedAddGroupHom V₁ V₂) :=
 #align normed_add_group_hom.has_op_norm NormedAddGroupHom.hasOpNorm
 -/
 
-theorem norm_def : ‖f‖ = sInf { c | 0 ≤ c ∧ ∀ x, ‖f x‖ ≤ c * ‖x‖ } :=
+theorem norm_def : ‖f‖ = sInf {c | 0 ≤ c ∧ ∀ x, ‖f x‖ ≤ c * ‖x‖} :=
   rfl
 #align normed_add_group_hom.norm_def NormedAddGroupHom.norm_def
 
 -- So that invocations of `le_cInf` make sense: we show that the set of
 -- bounds is nonempty and bounded below.
 theorem bounds_nonempty {f : NormedAddGroupHom V₁ V₂} :
-    ∃ c, c ∈ { c | 0 ≤ c ∧ ∀ x, ‖f x‖ ≤ c * ‖x‖ } :=
+    ∃ c, c ∈ {c | 0 ≤ c ∧ ∀ x, ‖f x‖ ≤ c * ‖x‖} :=
   let ⟨M, hMp, hMb⟩ := f.bound
   ⟨M, le_of_lt hMp, hMb⟩
 #align normed_add_group_hom.bounds_nonempty NormedAddGroupHom.bounds_nonempty
 
 theorem bounds_bddBelow {f : NormedAddGroupHom V₁ V₂} :
-    BddBelow { c | 0 ≤ c ∧ ∀ x, ‖f x‖ ≤ c * ‖x‖ } :=
+    BddBelow {c | 0 ≤ c ∧ ∀ x, ‖f x‖ ≤ c * ‖x‖} :=
   ⟨0, fun _ ⟨hn, _⟩ => hn⟩
 #align normed_add_group_hom.bounds_bdd_below NormedAddGroupHom.bounds_bddBelow
 

@@ -205,7 +205,7 @@ theorem bernoulli'_odd_eq_zero {n : ℕ} (h_odd : Odd n) (hlt : 1 < n) : bernoul
       simp only [PowerSeries.ext_iff, eval_neg_hom, coeff_X] at h 
     · apply eq_zero_of_neg_eq
       specialize h n
-      split_ifs  at h  <;> simp_all [h_odd.neg_one_pow, factorial_ne_zero]
+      split_ifs at h  <;> simp_all [h_odd.neg_one_pow, factorial_ne_zero]
     · simpa using h 1
   have h : B * (exp ℚ - 1) = X * exp ℚ := by
     simpa [bernoulli'PowerSeries] using bernoulli'PowerSeries_mul_exp_sub_one ℚ

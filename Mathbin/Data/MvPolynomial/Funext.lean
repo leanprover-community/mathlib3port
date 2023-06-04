@@ -65,8 +65,8 @@ theorem funext {σ : Type _} {p q : MvPolynomial σ R} (h : ∀ x : σ → R, ev
   apply funext_fin
   intro x
   classical
-    convert h (Function.extend f x 0)
-    simp only [eval, eval₂_hom_rename, Function.extend_comp hf]
+  convert h (Function.extend f x 0)
+  simp only [eval, eval₂_hom_rename, Function.extend_comp hf]
 #align mv_polynomial.funext MvPolynomial.funext
 
 theorem funext_iff {σ : Type _} {p q : MvPolynomial σ R} :

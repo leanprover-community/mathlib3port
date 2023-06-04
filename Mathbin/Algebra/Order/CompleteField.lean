@@ -56,12 +56,12 @@ open Function Rat Real Set
 
 open scoped Classical Pointwise
 
-/- ./././Mathport/Syntax/Translate/Command.lean:422:11: unsupported: advanced extends in structure -/
+/- ./././Mathport/Syntax/Translate/Command.lean:423:11: unsupported: advanced extends in structure -/
 /-- A field which is both linearly ordered and conditionally complete with respect to the order.
 This axiomatizes the reals. -/
 @[protect_proj]
 class ConditionallyCompleteLinearOrderedField (α : Type _) extends
-    "./././Mathport/Syntax/Translate/Command.lean:422:11: unsupported: advanced extends in structure",
+    "./././Mathport/Syntax/Translate/Command.lean:423:11: unsupported: advanced extends in structure",
     ConditionallyCompleteLinearOrder α
 #align conditionally_complete_linear_ordered_field ConditionallyCompleteLinearOrderedField
 
@@ -106,7 +106,7 @@ variable (β) [DivisionRing β] {a a₁ a₂ : α} {b : β} {q : ℚ}
 /-- The lower cut of rationals inside a linear ordered field that are less than a given element of
 another linear ordered field. -/
 def cutMap (a : α) : Set β :=
-  (coe : ℚ → β) '' { t | ↑t < a }
+  (coe : ℚ → β) '' {t | ↑t < a}
 #align linear_ordered_field.cut_map LinearOrderedField.cutMap
 
 theorem cutMap_mono (h : a₁ ≤ a₂) : cutMap β a₁ ⊆ cutMap β a₂ :=
@@ -139,7 +139,7 @@ end DivisionRing
 
 variable (β) [LinearOrderedField β] {a a₁ a₂ : α} {b : β} {q : ℚ}
 
-theorem cutMap_coe (q : ℚ) : cutMap β (q : α) = coe '' { r : ℚ | (r : β) < q } := by
+theorem cutMap_coe (q : ℚ) : cutMap β (q : α) = coe '' {r : ℚ | (r : β) < q} := by
   simp_rw [cut_map, Rat.cast_lt]
 #align linear_ordered_field.cut_map_coe LinearOrderedField.cutMap_coe
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module topology.metric_space.kuratowski
-! leanprover-community/mathlib commit 95d4f6586d313c8c28e00f36621d2a6a66893aa6
+! leanprover-community/mathlib commit 2ebc1d6c2fed9f54c95bbc3998eaa5570527129a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Topology.Sets.Compacts
 
 /-!
 # The Kuratowski embedding
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 Any separable metric space can be embedded isometrically in `ℓ^∞(ℝ)`.
 -/
@@ -81,7 +84,7 @@ theorem embeddingOfSubset_isometry (H : DenseRange x) : Isometry (embeddingOfSub
       _ ≤ 2 * dist a (x n) + |dist b (x n) - dist a (x n)| := by
         apply_rules [add_le_add_left, le_abs_self]
       _ ≤ 2 * (e / 2) + |embedding_of_subset x b n - embedding_of_subset x a n| := by rw [C];
-        apply_rules [add_le_add, mul_le_mul_of_nonneg_left, hn.le, le_refl] ; norm_num
+        apply_rules [add_le_add, mul_le_mul_of_nonneg_left, hn.le, le_refl]; norm_num
       _ ≤ 2 * (e / 2) + dist (embedding_of_subset x b) (embedding_of_subset x a) :=
         by
         have :

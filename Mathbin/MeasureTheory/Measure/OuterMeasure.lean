@@ -724,11 +724,11 @@ theorem le_ofFunction {μ : OuterMeasure α} :
 #align measure_theory.outer_measure.le_of_function MeasureTheory.OuterMeasure.le_ofFunction
 
 theorem isGreatest_ofFunction :
-    IsGreatest { μ : OuterMeasure α | ∀ s, μ s ≤ m s } (OuterMeasure.ofFunction m m_empty) :=
+    IsGreatest {μ : OuterMeasure α | ∀ s, μ s ≤ m s} (OuterMeasure.ofFunction m m_empty) :=
   ⟨fun s => ofFunction_le _, fun μ => le_ofFunction.2⟩
 #align measure_theory.outer_measure.is_greatest_of_function MeasureTheory.OuterMeasure.isGreatest_ofFunction
 
-theorem ofFunction_eq_sSup : OuterMeasure.ofFunction m m_empty = sSup { μ | ∀ s, μ s ≤ m s } :=
+theorem ofFunction_eq_sSup : OuterMeasure.ofFunction m m_empty = sSup {μ | ∀ s, μ s ≤ m s} :=
   (@isGreatest_ofFunction α m m_empty).IsLUB.sSup_eq.symm
 #align measure_theory.outer_measure.of_function_eq_Sup MeasureTheory.OuterMeasure.ofFunction_eq_sSup
 
@@ -753,7 +753,7 @@ theorem ofFunction_union_of_top_of_nonempty_inter {s t : Set α}
       _ = m (f i) := (h (f i) hs ht).symm
       _ ≤ ∑' i, m (f i) := ENNReal.le_tsum i
       
-  set I := fun s => { i : ℕ | (s ∩ f i).Nonempty }
+  set I := fun s => {i : ℕ | (s ∩ f i).Nonempty}
   have hd : Disjoint (I s) (I t) := disjoint_iff_inf_le.mpr fun i hi => he ⟨i, hi⟩
   have hI : ∀ (u) (_ : u ⊆ s ∪ t), μ u ≤ ∑' i : I u, μ (f i) := fun u hu =>
     calc
@@ -944,7 +944,7 @@ section CaratheodoryMeasurable
 
 universe u
 
-parameter {α : Type u}(m : OuterMeasure α)
+parameter {α : Type u} (m : OuterMeasure α)
 
 include m
 

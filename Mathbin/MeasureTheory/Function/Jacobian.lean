@@ -144,7 +144,7 @@ theorem exists_closed_cover_approximatesLinearOn_of_hasFDerivWithinAt [SecondCou
   -- `M n z` is the set of points `x` such that `f y - f x` is close to `f' z (y - x)` for `y`
   -- in the ball of radius `u n` around `x`.
   let M : ℕ → T → Set E := fun n z =>
-    { x | x ∈ s ∧ ∀ y ∈ s ∩ ball x (u n), ‖f y - f x - f' z (y - x)‖ ≤ r (f' z) * ‖y - x‖ }
+    {x | x ∈ s ∧ ∀ y ∈ s ∩ ball x (u n), ‖f y - f x - f' z (y - x)‖ ≤ r (f' z) * ‖y - x‖}
   -- As `f` is differentiable everywhere on `s`, the sets `M n z` cover `s` by design.
   have s_subset : ∀ x ∈ s, ∃ (n : ℕ) (z : T), x ∈ M n z :=
     by
@@ -162,7 +162,7 @@ theorem exists_closed_cover_approximatesLinearOn_of_hasFDerivWithinAt [SecondCou
       refine' ⟨r (f' z) - ‖f' x - f' z‖, _, le_of_eq (by abel)⟩
       simpa only [sub_pos] using mem_ball_iff_norm.mp hz
     obtain ⟨δ, δpos, hδ⟩ :
-      ∃ (δ : ℝ) (H : 0 < δ), ball x δ ∩ s ⊆ { y | ‖f y - f x - (f' x) (y - x)‖ ≤ ε * ‖y - x‖ } :=
+      ∃ (δ : ℝ) (H : 0 < δ), ball x δ ∩ s ⊆ {y | ‖f y - f x - (f' x) (y - x)‖ ≤ ε * ‖y - x‖} :=
       Metric.mem_nhdsWithin_iff.1 (is_o.def (hf' x xs) εpos)
     obtain ⟨n, hn⟩ : ∃ n, u n < δ := ((tendsto_order.1 u_lim).2 _ δpos).exists
     refine' ⟨n, ⟨z, zT⟩, ⟨xs, _⟩⟩
@@ -264,7 +264,7 @@ theorem exists_closed_cover_approximatesLinearOn_of_hasFDerivWithinAt [SecondCou
   simp only [hq, subset_closure hnz, hp, mem_inter_iff, and_self_iff]
 #align exists_closed_cover_approximates_linear_on_of_has_fderiv_within_at exists_closed_cover_approximatesLinearOn_of_hasFDerivWithinAt
 
-variable [MeasurableSpace E] [BorelSpace E] (μ : Measure E) [AddHaarMeasure μ]
+variable [MeasurableSpace E] [BorelSpace E] (μ : Measure E) [IsAddHaarMeasure μ]
 
 /-- Assume that a function `f` has a derivative at every point of a set `s`. Then one may
 partition `s` into countably many disjoint relatively measurable sets (i.e., intersections
@@ -326,7 +326,7 @@ theorem add_haar_image_le_mul_of_det_lt (A : E →L[ℝ] E) {m : ℝ≥0}
         (𝓝 (μ (A '' closed_ball 0 1))) :=
       by
       apply L0.congr' _
-      filter_upwards [self_mem_nhdsWithin]with r hr
+      filter_upwards [self_mem_nhdsWithin] with r hr
       rw [← HC.add_closed_ball_zero (le_of_lt hr), add_comm]
     have L2 :
       tendsto (fun ε => μ (closed_ball 0 ε + A '' closed_ball 0 1)) (𝓝[>] 0)
@@ -386,7 +386,7 @@ theorem add_haar_image_le_mul_of_det_lt (A : E →L[ℝ] E) {m : ℝ≥0}
   -- measure of `f '' s` is at most `m * (μ s + a)` for any positive `a`.
   have J : ∀ᶠ a in 𝓝[>] (0 : ℝ≥0∞), μ (f '' s) ≤ m * (μ s + a) :=
     by
-    filter_upwards [self_mem_nhdsWithin]with a ha
+    filter_upwards [self_mem_nhdsWithin] with a ha
     change 0 < a at ha 
     obtain ⟨t, r, t_count, ts, rpos, st, μt⟩ :
       ∃ (t : Set E) (r : E → ℝ),
@@ -536,7 +536,7 @@ theorem ApproximatesLinearOn.norm_fderiv_sub_le {A : E →L[ℝ] E} {δ : ℝ≥
     eventually_nonempty_inter_smul_of_density_one μ s x hx _ measurableSet_closedBall
       (measure_closed_ball_pos μ z εpos).ne'
   obtain ⟨ρ, ρpos, hρ⟩ :
-    ∃ ρ > 0, ball x ρ ∩ s ⊆ { y : E | ‖f y - f x - (f' x) (y - x)‖ ≤ ε * ‖y - x‖ } :=
+    ∃ ρ > 0, ball x ρ ∩ s ⊆ {y : E | ‖f y - f x - (f' x) (y - x)‖ ≤ ε * ‖y - x‖} :=
     mem_nhds_within_iff.1 (is_o.def (hf' x xs) εpos)
   -- for small enough `r`, the rescaled ball `r • closed_ball z ε` is included in the set where
   -- `f y - f x` is well approximated by `f' x (y - x)`.
@@ -820,7 +820,7 @@ theorem aEMeasurable_fderiv_within (hs : MeasurableSet s)
     filter_upwards [ae_restrict_mem (t_meas n)]
     exact hg n
   -- putting these two properties together gives the conclusion.
-  filter_upwards [E₁, E₂]with x hx1 hx2
+  filter_upwards [E₁, E₂] with x hx1 hx2
   rw [← nndist_eq_nnnorm] at hx1 
   rw [hx2, dist_comm]
   exact hx1
@@ -1249,10 +1249,10 @@ theorem restrict_map_withDensity_abs_det_fderiv_eq_add_haar (hs : MeasurableSet 
   by
   obtain ⟨u, u_meas, uf⟩ : ∃ u, Measurable u ∧ eq_on u f s := by
     classical
-      refine' ⟨piecewise s f 0, _, piecewise_eq_on _ _ _⟩
-      refine' ContinuousOn.measurable_piecewise _ continuous_zero.continuous_on hs
-      have : DifferentiableOn ℝ f s := fun x hx => (hf' x hx).DifferentiableWithinAt
-      exact this.continuous_on
+    refine' ⟨piecewise s f 0, _, piecewise_eq_on _ _ _⟩
+    refine' ContinuousOn.measurable_piecewise _ continuous_zero.continuous_on hs
+    have : DifferentiableOn ℝ f s := fun x hx => (hf' x hx).DifferentiableWithinAt
+    exact this.continuous_on
   have u' : ∀ x ∈ s, HasFDerivWithinAt u (f' x) s x := fun x hx =>
     (hf' x hx).congr (fun y hy => uf hy) (uf hx)
   set F : s → E := u ∘ coe with hF

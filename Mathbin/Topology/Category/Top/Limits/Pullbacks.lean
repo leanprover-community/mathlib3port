@@ -146,7 +146,7 @@ theorem pullback_topology {X Y Z : TopCat.{u}} (f : X ⟶ Z) (g : Y ⟶ Z) :
 
 theorem range_pullback_to_prod {X Y Z : TopCat} (f : X ⟶ Z) (g : Y ⟶ Z) :
     Set.range (prod.lift pullback.fst pullback.snd : pullback f g ⟶ X ⨯ Y) =
-      { x | (Limits.prod.fst ≫ f) x = (Limits.prod.snd ≫ g) x } :=
+      {x | (Limits.prod.fst ≫ f) x = (Limits.prod.snd ≫ g) x} :=
   by
   ext x
   constructor
@@ -200,7 +200,7 @@ theorem range_pullback_map {W X Y Z S T : TopCat} (f₁ : W ⟶ S) (f₂ : X ⟶
 #align Top.range_pullback_map TopCat.range_pullback_map
 
 theorem pullback_fst_range {X Y S : TopCat} (f : X ⟶ S) (g : Y ⟶ S) :
-    Set.range (pullback.fst : pullback f g ⟶ _) = { x : X | ∃ y : Y, f x = g y } :=
+    Set.range (pullback.fst : pullback f g ⟶ _) = {x : X | ∃ y : Y, f x = g y} :=
   by
   ext x
   constructor
@@ -213,7 +213,7 @@ theorem pullback_fst_range {X Y S : TopCat} (f : X ⟶ S) (g : Y ⟶ S) :
 #align Top.pullback_fst_range TopCat.pullback_fst_range
 
 theorem pullback_snd_range {X Y S : TopCat} (f : X ⟶ S) (g : Y ⟶ S) :
-    Set.range (pullback.snd : pullback f g ⟶ _) = { y : Y | ∃ x : X, f x = g y } :=
+    Set.range (pullback.snd : pullback f g ⟶ _) = {y : Y | ∃ x : X, f x = g y} :=
   by
   ext y
   constructor
@@ -277,7 +277,8 @@ theorem pullback_map_openEmbedding_of_open_embeddings {W X Y Z S T : TopCat} (f�
 theorem snd_embedding_of_left_embedding {X Y S : TopCat} {f : X ⟶ S} (H : Embedding f) (g : Y ⟶ S) :
     Embedding ⇑(pullback.snd : pullback f g ⟶ Y) :=
   by
-  convert(homeo_of_iso (as_iso (pullback.snd : pullback (𝟙 S) g ⟶ _))).Embedding.comp
+  convert
+    (homeo_of_iso (as_iso (pullback.snd : pullback (𝟙 S) g ⟶ _))).Embedding.comp
       (pullback_map_embedding_of_embeddings f g (𝟙 _) g H (homeo_of_iso (iso.refl _)).Embedding
         (𝟙 _) rfl (by simp))
   erw [← coe_comp]
@@ -287,7 +288,8 @@ theorem snd_embedding_of_left_embedding {X Y S : TopCat} {f : X ⟶ S} (H : Embe
 theorem fst_embedding_of_right_embedding {X Y S : TopCat} (f : X ⟶ S) {g : Y ⟶ S}
     (H : Embedding g) : Embedding ⇑(pullback.fst : pullback f g ⟶ X) :=
   by
-  convert(homeo_of_iso (as_iso (pullback.fst : pullback f (𝟙 S) ⟶ _))).Embedding.comp
+  convert
+    (homeo_of_iso (as_iso (pullback.fst : pullback f (𝟙 S) ⟶ _))).Embedding.comp
       (pullback_map_embedding_of_embeddings f g f (𝟙 _) (homeo_of_iso (iso.refl _)).Embedding H
         (𝟙 _) rfl (by simp))
   erw [← coe_comp]
@@ -306,7 +308,8 @@ theorem embedding_of_pullback_embeddings {X Y S : TopCat} {f : X ⟶ S} {g : Y �
 theorem snd_openEmbedding_of_left_openEmbedding {X Y S : TopCat} {f : X ⟶ S} (H : OpenEmbedding f)
     (g : Y ⟶ S) : OpenEmbedding ⇑(pullback.snd : pullback f g ⟶ Y) :=
   by
-  convert(homeo_of_iso (as_iso (pullback.snd : pullback (𝟙 S) g ⟶ _))).OpenEmbedding.comp
+  convert
+    (homeo_of_iso (as_iso (pullback.snd : pullback (𝟙 S) g ⟶ _))).OpenEmbedding.comp
       (pullback_map_open_embedding_of_open_embeddings f g (𝟙 _) g H
         (homeo_of_iso (iso.refl _)).OpenEmbedding (𝟙 _) rfl (by simp))
   erw [← coe_comp]
@@ -316,7 +319,8 @@ theorem snd_openEmbedding_of_left_openEmbedding {X Y S : TopCat} {f : X ⟶ S} (
 theorem fst_openEmbedding_of_right_openEmbedding {X Y S : TopCat} (f : X ⟶ S) {g : Y ⟶ S}
     (H : OpenEmbedding g) : OpenEmbedding ⇑(pullback.fst : pullback f g ⟶ X) :=
   by
-  convert(homeo_of_iso (as_iso (pullback.fst : pullback f (𝟙 S) ⟶ _))).OpenEmbedding.comp
+  convert
+    (homeo_of_iso (as_iso (pullback.fst : pullback f (𝟙 S) ⟶ _))).OpenEmbedding.comp
       (pullback_map_open_embedding_of_open_embeddings f g f (𝟙 _)
         (homeo_of_iso (iso.refl _)).OpenEmbedding H (𝟙 _) rfl (by simp))
   erw [← coe_comp]

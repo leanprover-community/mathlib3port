@@ -226,7 +226,7 @@ instance decidableMem [h : DecidableEq α] (a : α) (s : Finset α) : Decidable 
 
 /-- Convert a finset to a set in the natural way. -/
 instance : CoeTC (Finset α) (Set α) :=
-  ⟨fun s => { x | x ∈ s }⟩
+  ⟨fun s => {x | x ∈ s}⟩
 
 #print Finset.mem_coe /-
 @[simp, norm_cast]
@@ -237,7 +237,7 @@ theorem mem_coe {a : α} {s : Finset α} : a ∈ (s : Set α) ↔ a ∈ s :=
 
 #print Finset.setOf_mem /-
 @[simp]
-theorem setOf_mem {α} {s : Finset α} : { a | a ∈ s } = s :=
+theorem setOf_mem {α} {s : Finset α} : {a | a ∈ s} = s :=
   rfl
 #align finset.set_of_mem Finset.setOf_mem
 -/
@@ -1903,17 +1903,17 @@ theorem Directed.exists_mem_subset_of_finset_subset_biUnion {α ι : Type _} [hn
     {f : ι → Set α} (h : Directed (· ⊆ ·) f) {s : Finset α} (hs : (s : Set α) ⊆ ⋃ i, f i) :
     ∃ i, (s : Set α) ⊆ f i := by
   classical
-    revert hs
-    apply s.induction_on
-    · refine' fun _ => ⟨hn.some, _⟩
-      simp only [coe_empty, Set.empty_subset]
-    · intro b t hbt htc hbtc
-      obtain ⟨i : ι, hti : (t : Set α) ⊆ f i⟩ := htc (Set.Subset.trans (t.subset_insert b) hbtc)
-      obtain ⟨j, hbj⟩ : ∃ j, b ∈ f j := by simpa [Set.mem_iUnion₂] using hbtc (t.mem_insert_self b)
-      rcases h j i with ⟨k, hk, hk'⟩
-      use k
-      rw [coe_insert, Set.insert_subset]
-      exact ⟨hk hbj, trans hti hk'⟩
+  revert hs
+  apply s.induction_on
+  · refine' fun _ => ⟨hn.some, _⟩
+    simp only [coe_empty, Set.empty_subset]
+  · intro b t hbt htc hbtc
+    obtain ⟨i : ι, hti : (t : Set α) ⊆ f i⟩ := htc (Set.Subset.trans (t.subset_insert b) hbtc)
+    obtain ⟨j, hbj⟩ : ∃ j, b ∈ f j := by simpa [Set.mem_iUnion₂] using hbtc (t.mem_insert_self b)
+    rcases h j i with ⟨k, hk, hk'⟩
+    use k
+    rw [coe_insert, Set.insert_subset]
+    exact ⟨hk hbj, trans hti hk'⟩
 #align directed.exists_mem_subset_of_finset_subset_bUnion Directed.exists_mem_subset_of_finset_subset_biUnion
 
 theorem DirectedOn.exists_mem_subset_of_finset_subset_biUnion {α ι : Type _} {f : ι → Set α}
@@ -2580,7 +2580,7 @@ theorem erase_injOn (s : Finset α) : Set.InjOn s.eraseₓ s := fun _ _ _ _ => (
 -/
 
 #print Finset.erase_injOn' /-
-theorem erase_injOn' (a : α) : { s : Finset α | a ∈ s }.InjOn fun s => erase s a :=
+theorem erase_injOn' (a : α) : {s : Finset α | a ∈ s}.InjOn fun s => erase s a :=
   fun s hs t ht (h : s.eraseₓ a = _) => by rw [← insert_erase hs, ← insert_erase ht, h]
 #align finset.erase_inj_on' Finset.erase_injOn'
 -/
@@ -3198,8 +3198,8 @@ theorem piecewise_cases {i} (p : δ i → Prop) (hf : p (f i)) (hg : p (g i)) :
 theorem piecewise_mem_set_pi {δ : α → Type _} {t : Set α} {t' : ∀ i, Set (δ i)} {f g}
     (hf : f ∈ Set.pi t t') (hg : g ∈ Set.pi t t') : s.piecewise f g ∈ Set.pi t t' := by
   classical
-    rw [← piecewise_coe]
-    exact Set.piecewise_mem_pi (↑s) hf hg
+  rw [← piecewise_coe]
+  exact Set.piecewise_mem_pi (↑s) hf hg
 #align finset.piecewise_mem_set_pi Finset.piecewise_mem_set_pi
 -/
 
@@ -3479,7 +3479,7 @@ theorem monotone_filter_right (s : Finset α) ⦃p q : α → Prop⦄ [Decidable
 
 #print Finset.coe_filter /-
 @[simp, norm_cast]
-theorem coe_filter (s : Finset α) : ↑(s.filterₓ p) = ({ x ∈ ↑s | p x } : Set α) :=
+theorem coe_filter (s : Finset α) : ↑(s.filterₓ p) = ({x ∈ ↑s | p x} : Set α) :=
   Set.ext fun _ => mem_filter
 #align finset.coe_filter Finset.coe_filter
 -/
@@ -3493,9 +3493,9 @@ theorem subset_coe_filter_of_subset_forall (s : Finset α) {t : Set α} (h₁ : 
 #print Finset.filter_singleton /-
 theorem filter_singleton (a : α) : filter p (singleton a) = if p a then singleton a else ∅ := by
   classical
-    ext x
-    simp
-    split_ifs with h <;> by_cases h' : x = a <;> simp [h, h']
+  ext x
+  simp
+  split_ifs with h <;> by_cases h' : x = a <;> simp [h, h']
 #align finset.filter_singleton Finset.filter_singleton
 -/
 
@@ -3651,10 +3651,10 @@ theorem sdiff_eq_self (s₁ s₂ : Finset α) : s₁ \ s₂ = s₁ ↔ s₁ ∩ 
 theorem subset_union_elim {s : Finset α} {t₁ t₂ : Set α} (h : ↑s ⊆ t₁ ∪ t₂) :
     ∃ s₁ s₂ : Finset α, s₁ ∪ s₂ = s ∧ ↑s₁ ⊆ t₁ ∧ ↑s₂ ⊆ t₂ \ t₁ := by
   classical
-    refine' ⟨s.filter (· ∈ t₁), s.filter (· ∉ t₁), _, _, _⟩
-    · simp [filter_union_right, em]
-    · intro x; simp
-    · intro x; simp; intro hx hx₂; refine' ⟨Or.resolve_left (h hx) hx₂, hx₂⟩
+  refine' ⟨s.filter (· ∈ t₁), s.filter (· ∉ t₁), _, _, _⟩
+  · simp [filter_union_right, em]
+  · intro x; simp
+  · intro x; simp; intro hx hx₂; refine' ⟨Or.resolve_left (h hx) hx₂, hx₂⟩
 #align finset.subset_union_elim Finset.subset_union_elim
 
 -- We can simplify an application of filter where the decidability is inferred in "the wrong way"
@@ -3680,7 +3680,7 @@ noncomputable instance {α : Type _} : Sep α (Finset α) :=
   ⟨fun p x => x.filterₓ p⟩
 
 @[simp]
-theorem sep_def {α : Type _} (s : Finset α) (p : α → Prop) : { x ∈ s | p x } = s.filterₓ p :=
+theorem sep_def {α : Type _} (s : Finset α) (p : α → Prop) : {x ∈ s | p x} = s.filterₓ p :=
   rfl
 #align finset.sep_def Finset.sep_def
 
@@ -4132,7 +4132,7 @@ theorem mem_toFinset : a ∈ l.toFinset ↔ a ∈ l :=
 
 #print List.coe_toFinset /-
 @[simp, norm_cast]
-theorem coe_toFinset (l : List α) : (l.toFinset : Set α) = { a | a ∈ l } :=
+theorem coe_toFinset (l : List α) : (l.toFinset : Set α) = {a | a ∈ l} :=
   Set.ext fun _ => List.mem_toFinset
 #align list.coe_to_finset List.coe_toFinset
 -/
@@ -4152,7 +4152,7 @@ theorem toFinset_cons : toFinset (a :: l) = insert a (toFinset l) :=
 -/
 
 #print List.toFinset_surj_on /-
-theorem toFinset_surj_on : Set.SurjOn toFinset { l : List α | l.Nodup } Set.univ := by
+theorem toFinset_surj_on : Set.SurjOn toFinset {l : List α | l.Nodup} Set.univ := by
   rintro ⟨⟨l⟩, hl⟩ _; exact ⟨l, hl, (to_finset_eq hl).symm⟩
 #align list.to_finset_surj_on List.toFinset_surj_on
 -/
@@ -4628,10 +4628,10 @@ theorem Nonempty.biUnion (hs : s.Nonempty) (ht : ∀ x ∈ s, (t x).Nonempty) :
 theorem disjoint_biUnion_left (s : Finset α) (f : α → Finset β) (t : Finset β) :
     Disjoint (s.biUnion f) t ↔ ∀ i ∈ s, Disjoint (f i) t := by
   classical
-    refine' s.induction _ _
-    · simp only [forall_mem_empty_iff, bUnion_empty, disjoint_empty_left]
-    · intro i s his ih
-      simp only [disjoint_union_left, bUnion_insert, his, forall_mem_insert, ih]
+  refine' s.induction _ _
+  · simp only [forall_mem_empty_iff, bUnion_empty, disjoint_empty_left]
+  · intro i s his ih
+    simp only [disjoint_union_left, bUnion_insert, his, forall_mem_insert, ih]
 #align finset.disjoint_bUnion_left Finset.disjoint_biUnion_left
 
 theorem disjoint_biUnion_right (s : Finset β) (t : Finset α) (f : α → Finset β) :

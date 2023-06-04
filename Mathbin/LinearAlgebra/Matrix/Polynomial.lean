@@ -96,7 +96,7 @@ theorem coeff_det_X_add_C_card (A B : Matrix n n α) :
   intro g
   convert coeff_smul (SignType.sign g) _ _
   rw [← mul_one (Fintype.card n)]
-  convert(coeff_prod_of_nat_degree_le _ _ _ _).symm
+  convert (coeff_prod_of_nat_degree_le _ _ _ _).symm
   · ext
     simp [coeff_C]
   · intro p hp

@@ -229,7 +229,8 @@ it loops for a group as a torsor over itself. -/
 protected theorem AddTorsor.connectedSpace : ConnectedSpace P :=
   { isPreconnected_univ :=
       by
-      convert is_preconnected_univ.image (Equiv.vaddConst (Classical.arbitrary P) : G → P)
+      convert
+        is_preconnected_univ.image (Equiv.vaddConst (Classical.arbitrary P) : G → P)
           (continuous_id.vadd continuous_const).ContinuousOn
       rw [Set.image_univ, Equiv.range_eq_univ]
     to_nonempty := inferInstance }

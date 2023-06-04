@@ -239,7 +239,7 @@ theorem norm_eventually_eq_of_isLocalMax {f : E → F} {c : E}
 #align complex.norm_eventually_eq_of_is_local_max Complex.norm_eventually_eq_of_isLocalMax
 
 theorem isOpen_setOf_mem_nhds_and_isMaxOn_norm {f : E → F} {s : Set E}
-    (hd : DifferentiableOn ℂ f s) : IsOpen { z | s ∈ 𝓝 z ∧ IsMaxOn (norm ∘ f) s z } :=
+    (hd : DifferentiableOn ℂ f s) : IsOpen {z | s ∈ 𝓝 z ∧ IsMaxOn (norm ∘ f) s z} :=
   by
   refine' isOpen_iff_mem_nhds.2 fun z hz => (eventually_eventually_nhds.2 hz.1).And _
   replace hd : ∀ᶠ w in 𝓝 z, DifferentiableAt ℂ f w; exact hd.eventually_differentiable_at hz.1
@@ -255,14 +255,14 @@ theorem norm_eqOn_of_isPreconnected_of_isMaxOn {f : E → F} {U : Set E} {c : E}
     (hc : IsPreconnected U) (ho : IsOpen U) (hd : DifferentiableOn ℂ f U) (hcU : c ∈ U)
     (hm : IsMaxOn (norm ∘ f) U c) : EqOn (norm ∘ f) (const E ‖f c‖) U :=
   by
-  set V := U ∩ { z | IsMaxOn (norm ∘ f) U z }
+  set V := U ∩ {z | IsMaxOn (norm ∘ f) U z}
   have hV : ∀ x ∈ V, ‖f x‖ = ‖f c‖ := fun x hx => le_antisymm (hm hx.1) (hx.2 hcU)
   suffices : U ⊆ V; exact fun x hx => hV x (this hx)
   have hVo : IsOpen V := by
     simpa only [ho.mem_nhds_iff, set_of_and, set_of_mem_eq] using
       is_open_set_of_mem_nhds_and_is_max_on_norm hd
   have hVne : (U ∩ V).Nonempty := ⟨c, hcU, hcU, hm⟩
-  set W := U ∩ { z | ‖f z‖ ≠ ‖f c‖ }
+  set W := U ∩ {z | ‖f z‖ ≠ ‖f c‖}
   have hWo : IsOpen W := hd.continuous_on.norm.preimage_open_of_open ho isOpen_ne
   have hdVW : Disjoint V W := disjoint_left.mpr fun x hxV hxW => hxW.2 (hV x hxV)
   have hUVW : U ⊆ V ∪ W := fun x hx =>
@@ -376,8 +376,8 @@ theorem eventually_eq_or_eq_zero_of_isLocalMin_norm {f : E → ℂ} {c : E}
   have h1 : ∀ᶠ z in 𝓝 c, f z ≠ 0 := hf.self_of_nhds.continuous_at.eventually_ne h
   have h2 : IsLocalMax (norm ∘ f)⁻¹ c := hc.inv (h1.mono fun z => norm_pos_iff.mpr)
   have h3 : IsLocalMax (norm ∘ f⁻¹) c := by refine' h2.congr (eventually_of_forall _) <;> simp
-  have h4 : ∀ᶠ z in 𝓝 c, DifferentiableAt ℂ f⁻¹ z := by filter_upwards [hf, h1]with z h using h.inv
-  filter_upwards [eventually_eq_of_is_local_max_norm h4 h3]with z using inv_inj.mp
+  have h4 : ∀ᶠ z in 𝓝 c, DifferentiableAt ℂ f⁻¹ z := by filter_upwards [hf, h1] with z h using h.inv
+  filter_upwards [eventually_eq_of_is_local_max_norm h4 h3] with z using inv_inj.mp
 #align complex.eventually_eq_or_eq_zero_of_is_local_min_norm Complex.eventually_eq_or_eq_zero_of_isLocalMin_norm
 
 end StrictConvex

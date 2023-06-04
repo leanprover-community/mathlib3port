@@ -95,7 +95,7 @@ theorem differentiableWithinAt_inv (x_ne_zero : x ≠ 0) :
   (differentiableAt_inv.2 x_ne_zero).DifferentiableWithinAt
 #align differentiable_within_at_inv differentiableWithinAt_inv
 
-theorem differentiableOn_inv : DifferentiableOn 𝕜 (fun x : 𝕜 => x⁻¹) { x | x ≠ 0 } := fun x hx =>
+theorem differentiableOn_inv : DifferentiableOn 𝕜 (fun x : 𝕜 => x⁻¹) {x | x ≠ 0} := fun x hx =>
   differentiableWithinAt_inv hx
 #align differentiable_on_inv differentiableOn_inv
 
@@ -144,7 +144,7 @@ variable {c : 𝕜 → 𝕜} {h : E → 𝕜} {c' : 𝕜} {z : E} {S : Set E}
 theorem HasDerivWithinAt.inv (hc : HasDerivWithinAt c c' s x) (hx : c x ≠ 0) :
     HasDerivWithinAt (fun y => (c y)⁻¹) (-c' / c x ^ 2) s x :=
   by
-  convert(hasDerivAt_inv hx).comp_hasDerivWithinAt x hc
+  convert (hasDerivAt_inv hx).comp_hasDerivWithinAt x hc
   field_simp
 #align has_deriv_within_at.inv HasDerivWithinAt.inv
 

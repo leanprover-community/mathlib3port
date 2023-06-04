@@ -331,7 +331,7 @@ In fact, such operations are in bijection with Grothendieck topologies.
 def topologyOfClosureOperator (c : ∀ X : C, ClosureOperator (Sieve X))
     (hc : ∀ ⦃X Y : C⦄ (f : Y ⟶ X) (S : Sieve X), c _ (S.pullback f) = (c _ S).pullback f) :
     GrothendieckTopology C where
-  sieves X := { S | c X S = ⊤ }
+  sieves X := {S | c X S = ⊤}
   top_mem' X := top_unique ((c X).le_closure _)
   pullback_stable' X Y S f hS := by
     rw [Set.mem_setOf_eq] at hS 

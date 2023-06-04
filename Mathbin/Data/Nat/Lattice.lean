@@ -169,18 +169,18 @@ theorem sSup_mem {s : Set ℕ} (h₁ : s.Nonempty) (h₂ : BddAbove s) : sSup s 
 -/
 
 #print Nat.sInf_add /-
-theorem sInf_add {n : ℕ} {p : ℕ → Prop} (hn : n ≤ sInf { m | p m }) :
-    sInf { m | p (m + n) } + n = sInf { m | p m } :=
+theorem sInf_add {n : ℕ} {p : ℕ → Prop} (hn : n ≤ sInf {m | p m}) :
+    sInf {m | p (m + n)} + n = sInf {m | p m} :=
   by
-  obtain h | ⟨m, hm⟩ := { m | p (m + n) }.eq_empty_or_nonempty
+  obtain h | ⟨m, hm⟩ := {m | p (m + n)}.eq_empty_or_nonempty
   · rw [h, Nat.sInf_empty, zero_add]
     obtain hnp | hnp := hn.eq_or_lt
     · exact hnp
-    suffices hp : p (Inf { m | p m } - n + n)
+    suffices hp : p (Inf {m | p m} - n + n)
     · exact (h.subset hp).elim
     rw [tsub_add_cancel_of_le hn]
     exact csInf_mem (nonempty_of_pos_Inf <| n.zero_le.trans_lt hnp)
-  · have hp : ∃ n, n ∈ { m | p m } := ⟨_, hm⟩
+  · have hp : ∃ n, n ∈ {m | p m} := ⟨_, hm⟩
     rw [Nat.sInf_def ⟨m, hm⟩, Nat.sInf_def hp]
     rw [Nat.sInf_def hp] at hn 
     exact find_add hn
@@ -188,8 +188,8 @@ theorem sInf_add {n : ℕ} {p : ℕ → Prop} (hn : n ≤ sInf { m | p m }) :
 -/
 
 #print Nat.sInf_add' /-
-theorem sInf_add' {n : ℕ} {p : ℕ → Prop} (h : 0 < sInf { m | p m }) :
-    sInf { m | p m } + n = sInf { m | p (m - n) } :=
+theorem sInf_add' {n : ℕ} {p : ℕ → Prop} (h : 0 < sInf {m | p m}) :
+    sInf {m | p m} + n = sInf {m | p (m - n)} :=
   by
   convert sInf_add _
   · simp_rw [add_tsub_cancel_right]

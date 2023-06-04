@@ -221,14 +221,14 @@ variable {C} [IsFiltered C]
 -/
 theorem sup_objs_exists (O : Finset C) : ∃ S : C, ∀ {X}, X ∈ O → Nonempty (X ⟶ S) := by
   classical
-    apply Finset.induction_on O
-    · exact ⟨is_filtered.nonempty.some, by rintro - ⟨⟩⟩
-    · rintro X O' nm ⟨S', w'⟩
-      use max X S'
-      rintro Y mY
-      obtain rfl | h := eq_or_ne Y X
-      · exact ⟨left_to_max _ _⟩
-      · exact ⟨(w' (Finset.mem_of_mem_insert_of_ne mY h)).some ≫ right_to_max _ _⟩
+  apply Finset.induction_on O
+  · exact ⟨is_filtered.nonempty.some, by rintro - ⟨⟩⟩
+  · rintro X O' nm ⟨S', w'⟩
+    use max X S'
+    rintro Y mY
+    obtain rfl | h := eq_or_ne Y X
+    · exact ⟨left_to_max _ _⟩
+    · exact ⟨(w' (Finset.mem_of_mem_insert_of_ne mY h)).some ≫ right_to_max _ _⟩
 #align category_theory.is_filtered.sup_objs_exists CategoryTheory.IsFiltered.sup_objs_exists
 -/
 
@@ -246,26 +246,26 @@ theorem sup_exists :
         (⟨X, Y, mX, mY, f⟩ : Σ' (X Y : C) (mX : X ∈ O) (mY : Y ∈ O), X ⟶ Y) ∈ H → f ≫ T mY = T mX :=
   by
   classical
-    apply Finset.induction_on H
-    · obtain ⟨S, f⟩ := sup_objs_exists O
-      refine' ⟨S, fun X mX => (f mX).some, _⟩
-      rintro - - - - - ⟨⟩
-    · rintro ⟨X, Y, mX, mY, f⟩ H' nmf ⟨S', T', w'⟩
-      refine' ⟨coeq (f ≫ T' mY) (T' mX), fun Z mZ => T' mZ ≫ coeq_hom (f ≫ T' mY) (T' mX), _⟩
-      intro X' Y' mX' mY' f' mf'
-      rw [← category.assoc]
-      by_cases h : X = X' ∧ Y = Y'
-      · rcases h with ⟨rfl, rfl⟩
-        by_cases hf : f = f'
-        · subst hf
-          apply coeq_condition
-        · rw [@w' _ _ mX mY f' (by simpa [hf ∘ Eq.symm] using mf')]
-      · rw [@w' _ _ mX' mY' f' _]
-        apply Finset.mem_of_mem_insert_of_ne mf'
-        contrapose! h
-        obtain ⟨rfl, h⟩ := h
-        rw [heq_iff_eq, PSigma.mk.inj_iff] at h 
-        exact ⟨rfl, h.1.symm⟩
+  apply Finset.induction_on H
+  · obtain ⟨S, f⟩ := sup_objs_exists O
+    refine' ⟨S, fun X mX => (f mX).some, _⟩
+    rintro - - - - - ⟨⟩
+  · rintro ⟨X, Y, mX, mY, f⟩ H' nmf ⟨S', T', w'⟩
+    refine' ⟨coeq (f ≫ T' mY) (T' mX), fun Z mZ => T' mZ ≫ coeq_hom (f ≫ T' mY) (T' mX), _⟩
+    intro X' Y' mX' mY' f' mf'
+    rw [← category.assoc]
+    by_cases h : X = X' ∧ Y = Y'
+    · rcases h with ⟨rfl, rfl⟩
+      by_cases hf : f = f'
+      · subst hf
+        apply coeq_condition
+      · rw [@w' _ _ mX mY f' (by simpa [hf ∘ Eq.symm] using mf')]
+    · rw [@w' _ _ mX' mY' f' _]
+      apply Finset.mem_of_mem_insert_of_ne mf'
+      contrapose! h
+      obtain ⟨rfl, h⟩ := h
+      rw [heq_iff_eq, PSigma.mk.inj_iff] at h 
+      exact ⟨rfl, h.1.symm⟩
 #align category_theory.is_filtered.sup_exists CategoryTheory.IsFiltered.sup_exists
 -/
 
@@ -305,20 +305,20 @@ there exists a cocone over `F`.
 -/
 theorem cocone_nonempty (F : J ⥤ C) : Nonempty (Cocone F) := by
   classical
-    let O := finset.univ.image F.obj
-    let H : Finset (Σ' (X Y : C) (mX : X ∈ O) (mY : Y ∈ O), X ⟶ Y) :=
-      finset.univ.bUnion fun X : J =>
-        finset.univ.bUnion fun Y : J =>
-          finset.univ.image fun f : X ⟶ Y => ⟨F.obj X, F.obj Y, by simp, by simp, F.map f⟩
-    obtain ⟨Z, f, w⟩ := sup_exists O H
-    refine' ⟨⟨Z, ⟨fun X => f (by simp), _⟩⟩⟩
-    intro j j' g
-    dsimp
-    simp only [category.comp_id]
-    apply w
-    simp only [Finset.mem_univ, Finset.mem_biUnion, exists_and_left, exists_prop_of_true,
-      Finset.mem_image]
-    exact ⟨j, rfl, j', g, by simp⟩
+  let O := finset.univ.image F.obj
+  let H : Finset (Σ' (X Y : C) (mX : X ∈ O) (mY : Y ∈ O), X ⟶ Y) :=
+    finset.univ.bUnion fun X : J =>
+      finset.univ.bUnion fun Y : J =>
+        finset.univ.image fun f : X ⟶ Y => ⟨F.obj X, F.obj Y, by simp, by simp, F.map f⟩
+  obtain ⟨Z, f, w⟩ := sup_exists O H
+  refine' ⟨⟨Z, ⟨fun X => f (by simp), _⟩⟩⟩
+  intro j j' g
+  dsimp
+  simp only [category.comp_id]
+  apply w
+  simp only [Finset.mem_univ, Finset.mem_biUnion, exists_and_left, exists_prop_of_true,
+    Finset.mem_image]
+  exact ⟨j, rfl, j', g, by simp⟩
 #align category_theory.is_filtered.cocone_nonempty CategoryTheory.IsFiltered.cocone_nonempty
 -/
 
@@ -689,14 +689,14 @@ variable {C} [IsCofiltered C]
 -/
 theorem inf_objs_exists (O : Finset C) : ∃ S : C, ∀ {X}, X ∈ O → Nonempty (S ⟶ X) := by
   classical
-    apply Finset.induction_on O
-    · exact ⟨is_cofiltered.nonempty.some, by rintro - ⟨⟩⟩
-    · rintro X O' nm ⟨S', w'⟩
-      use min X S'
-      rintro Y mY
-      obtain rfl | h := eq_or_ne Y X
-      · exact ⟨min_to_left _ _⟩
-      · exact ⟨min_to_right _ _ ≫ (w' (Finset.mem_of_mem_insert_of_ne mY h)).some⟩
+  apply Finset.induction_on O
+  · exact ⟨is_cofiltered.nonempty.some, by rintro - ⟨⟩⟩
+  · rintro X O' nm ⟨S', w'⟩
+    use min X S'
+    rintro Y mY
+    obtain rfl | h := eq_or_ne Y X
+    · exact ⟨min_to_left _ _⟩
+    · exact ⟨min_to_right _ _ ≫ (w' (Finset.mem_of_mem_insert_of_ne mY h)).some⟩
 #align category_theory.is_cofiltered.inf_objs_exists CategoryTheory.IsCofiltered.inf_objs_exists
 -/
 
@@ -714,26 +714,26 @@ theorem inf_exists :
         (⟨X, Y, mX, mY, f⟩ : Σ' (X Y : C) (mX : X ∈ O) (mY : Y ∈ O), X ⟶ Y) ∈ H → T mX ≫ f = T mY :=
   by
   classical
-    apply Finset.induction_on H
-    · obtain ⟨S, f⟩ := inf_objs_exists O
-      refine' ⟨S, fun X mX => (f mX).some, _⟩
-      rintro - - - - - ⟨⟩
-    · rintro ⟨X, Y, mX, mY, f⟩ H' nmf ⟨S', T', w'⟩
-      refine' ⟨Eq (T' mX ≫ f) (T' mY), fun Z mZ => eq_hom (T' mX ≫ f) (T' mY) ≫ T' mZ, _⟩
-      intro X' Y' mX' mY' f' mf'
-      rw [category.assoc]
-      by_cases h : X = X' ∧ Y = Y'
-      · rcases h with ⟨rfl, rfl⟩
-        by_cases hf : f = f'
-        · subst hf
-          apply eq_condition
-        · rw [@w' _ _ mX mY f' (by simpa [hf ∘ Eq.symm] using mf')]
-      · rw [@w' _ _ mX' mY' f' _]
-        apply Finset.mem_of_mem_insert_of_ne mf'
-        contrapose! h
-        obtain ⟨rfl, h⟩ := h
-        rw [heq_iff_eq, PSigma.mk.inj_iff] at h 
-        exact ⟨rfl, h.1.symm⟩
+  apply Finset.induction_on H
+  · obtain ⟨S, f⟩ := inf_objs_exists O
+    refine' ⟨S, fun X mX => (f mX).some, _⟩
+    rintro - - - - - ⟨⟩
+  · rintro ⟨X, Y, mX, mY, f⟩ H' nmf ⟨S', T', w'⟩
+    refine' ⟨Eq (T' mX ≫ f) (T' mY), fun Z mZ => eq_hom (T' mX ≫ f) (T' mY) ≫ T' mZ, _⟩
+    intro X' Y' mX' mY' f' mf'
+    rw [category.assoc]
+    by_cases h : X = X' ∧ Y = Y'
+    · rcases h with ⟨rfl, rfl⟩
+      by_cases hf : f = f'
+      · subst hf
+        apply eq_condition
+      · rw [@w' _ _ mX mY f' (by simpa [hf ∘ Eq.symm] using mf')]
+    · rw [@w' _ _ mX' mY' f' _]
+      apply Finset.mem_of_mem_insert_of_ne mf'
+      contrapose! h
+      obtain ⟨rfl, h⟩ := h
+      rw [heq_iff_eq, PSigma.mk.inj_iff] at h 
+      exact ⟨rfl, h.1.symm⟩
 #align category_theory.is_cofiltered.inf_exists CategoryTheory.IsCofiltered.inf_exists
 -/
 
@@ -773,21 +773,21 @@ there exists a cone over `F`.
 -/
 theorem cone_nonempty (F : J ⥤ C) : Nonempty (Cone F) := by
   classical
-    let O := finset.univ.image F.obj
-    let H : Finset (Σ' (X Y : C) (mX : X ∈ O) (mY : Y ∈ O), X ⟶ Y) :=
-      finset.univ.bUnion fun X : J =>
-        finset.univ.bUnion fun Y : J =>
-          finset.univ.image fun f : X ⟶ Y => ⟨F.obj X, F.obj Y, by simp, by simp, F.map f⟩
-    obtain ⟨Z, f, w⟩ := inf_exists O H
-    refine' ⟨⟨Z, ⟨fun X => f (by simp), _⟩⟩⟩
-    intro j j' g
-    dsimp
-    simp only [category.id_comp]
-    symm
-    apply w
-    simp only [Finset.mem_univ, Finset.mem_biUnion, exists_and_left, exists_prop_of_true,
-      Finset.mem_image]
-    exact ⟨j, rfl, j', g, by simp⟩
+  let O := finset.univ.image F.obj
+  let H : Finset (Σ' (X Y : C) (mX : X ∈ O) (mY : Y ∈ O), X ⟶ Y) :=
+    finset.univ.bUnion fun X : J =>
+      finset.univ.bUnion fun Y : J =>
+        finset.univ.image fun f : X ⟶ Y => ⟨F.obj X, F.obj Y, by simp, by simp, F.map f⟩
+  obtain ⟨Z, f, w⟩ := inf_exists O H
+  refine' ⟨⟨Z, ⟨fun X => f (by simp), _⟩⟩⟩
+  intro j j' g
+  dsimp
+  simp only [category.id_comp]
+  symm
+  apply w
+  simp only [Finset.mem_univ, Finset.mem_biUnion, exists_and_left, exists_prop_of_true,
+    Finset.mem_image]
+  exact ⟨j, rfl, j', g, by simp⟩
 #align category_theory.is_cofiltered.cone_nonempty CategoryTheory.IsCofiltered.cone_nonempty
 -/
 

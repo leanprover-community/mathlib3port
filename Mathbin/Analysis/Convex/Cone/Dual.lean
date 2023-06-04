@@ -49,7 +49,7 @@ open scoped RealInnerProductSpace
 all points `x` in a given set `0 ≤ ⟪ x, y ⟫`. -/
 def Set.innerDualCone (s : Set H) : ConvexCone ℝ H
     where
-  carrier := { y | ∀ x ∈ s, 0 ≤ ⟪x, y⟫ }
+  carrier := {y | ∀ x ∈ s, 0 ≤ ⟪x, y⟫}
   smul_mem' c hc y hy x hx := by
     rw [real_inner_smul_right]
     exact mul_nonneg hc.le (hy x hx)

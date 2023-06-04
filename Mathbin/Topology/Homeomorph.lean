@@ -430,7 +430,7 @@ def homeomorphOfContinuousOpen (e : α ≃ β) (h₁ : Continuous e) (h₂ : IsO
   continuous_invFun := by
     rw [continuous_def]
     intro s hs
-    convert← h₂ s hs using 1
+    convert ← h₂ s hs using 1
     apply e.image_eq_preimage
   toEquiv := e
 #align homeomorph.homeomorph_of_continuous_open Homeomorph.homeomorphOfContinuousOpen

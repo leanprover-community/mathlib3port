@@ -95,7 +95,7 @@ def subgraphOfAdj (G : SimpleGraph V) {v w : V} (hvw : G.Adj v w) : G.Subgraph
   verts := {v, w}
   Adj a b := ⟦(v, w)⟧ = ⟦(a, b)⟧
   adj_sub a b h := by rw [← G.mem_edge_set, ← h]; exact hvw
-  edge_vert a b h := by apply_fun fun e => a ∈ e  at h ; simpa using h
+  edge_vert a b h := by apply_fun fun e => a ∈ e at h ; simpa using h
 #align simple_graph.subgraph_of_adj SimpleGraph.subgraphOfAdj
 -/
 
@@ -329,7 +329,7 @@ theorem mem_verts_if_mem_edge {G' : Subgraph G} {e : Sym2 V} {v : V} (he : e ∈
 #print SimpleGraph.Subgraph.incidenceSet /-
 /-- The `incidence_set` is the set of edges incident to a given vertex. -/
 def incidenceSet (G' : Subgraph G) (v : V) : Set (Sym2 V) :=
-  { e ∈ G'.edgeSetEmbedding | v ∈ e }
+  {e ∈ G'.edgeSetEmbedding | v ∈ e}
 #align simple_graph.subgraph.incidence_set SimpleGraph.Subgraph.incidenceSet
 -/
 

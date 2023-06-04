@@ -97,13 +97,13 @@ theorem csInf_of_not_bdd_below {s : Set ℤ} (h : ¬BddBelow s) : sInf s = 0 :=
 
 theorem csSup_mem {s : Set ℤ} (h1 : s.Nonempty) (h2 : BddAbove s) : sSup s ∈ s :=
   by
-  convert(greatest_of_bdd _ (Classical.choose_spec h2) h1).2.1
+  convert (greatest_of_bdd _ (Classical.choose_spec h2) h1).2.1
   exact dif_pos ⟨h1, h2⟩
 #align int.cSup_mem Int.csSup_mem
 
 theorem csInf_mem {s : Set ℤ} (h1 : s.Nonempty) (h2 : BddBelow s) : sInf s ∈ s :=
   by
-  convert(least_of_bdd _ (Classical.choose_spec h2) h1).2.1
+  convert (least_of_bdd _ (Classical.choose_spec h2) h1).2.1
   exact dif_pos ⟨h1, h2⟩
 #align int.cInf_mem Int.csInf_mem
 

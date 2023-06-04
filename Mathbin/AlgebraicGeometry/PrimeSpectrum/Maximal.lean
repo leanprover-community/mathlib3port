@@ -76,7 +76,7 @@ open PrimeSpectrum Set
 
 #print MaximalSpectrum.toPrimeSpectrum_range /-
 theorem toPrimeSpectrum_range :
-    Set.range (@toPrimeSpectrum R _) = { x | IsClosed ({x} : Set <| PrimeSpectrum R) } :=
+    Set.range (@toPrimeSpectrum R _) = {x | IsClosed ({x} : Set <| PrimeSpectrum R)} :=
   by
   simp only [is_closed_singleton_iff_is_maximal]
   ext ⟨x, _⟩

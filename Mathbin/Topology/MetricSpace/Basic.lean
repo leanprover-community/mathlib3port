@@ -90,7 +90,7 @@ private theorem bounded_iff_aux {α : Type _} (dist : α → α → ℝ)
 def Bornology.ofDist {α : Type _} (dist : α → α → ℝ) (dist_self : ∀ x : α, dist x x = 0)
     (dist_comm : ∀ x y : α, dist x y = dist y x)
     (dist_triangle : ∀ x y z : α, dist x z ≤ dist x y + dist y z) : Bornology α :=
-  Bornology.ofBounded { s : Set α | ∃ C, ∀ ⦃x⦄, x ∈ s → ∀ ⦃y⦄, y ∈ s → dist x y ≤ C }
+  Bornology.ofBounded {s : Set α | ∃ C, ∀ ⦃x⦄, x ∈ s → ∀ ⦃y⦄, y ∈ s → dist x y ≤ C}
     ⟨0, fun x hx y => hx.elim⟩ (fun s ⟨c, hc⟩ t h => ⟨c, fun x hx y hy => hc (h hx) (h hy)⟩)
     (fun s hs t ht => by
       rcases s.eq_empty_or_nonempty with (rfl | ⟨z, hz⟩)
@@ -159,10 +159,10 @@ class PseudoMetricSpace (α : Type u) extends Dist α : Type u where
     run_tac
       pseudo_metric_space.edist_dist_tac
   toUniformSpace : UniformSpace α := UniformSpace.ofDist dist dist_self dist_comm dist_triangle
-  uniformity_dist : 𝓤 α = ⨅ ε > 0, 𝓟 { p : α × α | dist p.1 p.2 < ε } := by intros; rfl
+  uniformity_dist : 𝓤 α = ⨅ ε > 0, 𝓟 {p : α × α | dist p.1 p.2 < ε} := by intros; rfl
   toBornology : Bornology α := Bornology.ofDist dist dist_self dist_comm dist_triangle
   cobounded_sets :
-    (Bornology.cobounded α).sets = { s | ∃ C, ∀ ⦃x⦄, x ∈ sᶜ → ∀ ⦃y⦄, y ∈ sᶜ → dist x y ≤ C } := by
+    (Bornology.cobounded α).sets = {s | ∃ C, ∀ ⦃x⦄, x ∈ sᶜ → ∀ ⦃y⦄, y ∈ sᶜ → dist x y ≤ C} := by
     intros; rfl
 #align pseudo_metric_space PseudoMetricSpace
 -/
@@ -481,7 +481,7 @@ variable {x y z : α} {δ ε ε₁ ε₂ : ℝ} {s : Set α}
 #print Metric.ball /-
 /-- `ball x ε` is the set of all points `y` with `dist y x < ε` -/
 def ball (x : α) (ε : ℝ) : Set α :=
-  { y | dist y x < ε }
+  {y | dist y x < ε}
 #align metric.ball Metric.ball
 -/
 
@@ -526,12 +526,12 @@ theorem exists_lt_mem_ball_of_mem_ball (h : x ∈ ball y ε) : ∃ ε' < ε, x �
 #align metric.exists_lt_mem_ball_of_mem_ball Metric.exists_lt_mem_ball_of_mem_ball
 
 theorem ball_eq_ball (ε : ℝ) (x : α) :
-    UniformSpace.ball x { p | dist p.2 p.1 < ε } = Metric.ball x ε :=
+    UniformSpace.ball x {p | dist p.2 p.1 < ε} = Metric.ball x ε :=
   rfl
 #align metric.ball_eq_ball Metric.ball_eq_ball
 
 theorem ball_eq_ball' (ε : ℝ) (x : α) :
-    UniformSpace.ball x { p | dist p.1 p.2 < ε } = Metric.ball x ε := by ext;
+    UniformSpace.ball x {p | dist p.1 p.2 < ε} = Metric.ball x ε := by ext;
   simp [dist_comm, UniformSpace.ball]
 #align metric.ball_eq_ball' Metric.ball_eq_ball'
 
@@ -548,7 +548,7 @@ theorem iUnion_ball_nat_succ (x : α) : (⋃ n : ℕ, ball x (n + 1)) = univ :=
 #print Metric.closedBall /-
 /-- `closed_ball x ε` is the set of all points `y` with `dist y x ≤ ε` -/
 def closedBall (x : α) (ε : ℝ) :=
-  { y | dist y x ≤ ε }
+  {y | dist y x ≤ ε}
 #align metric.closed_ball Metric.closedBall
 -/
 
@@ -563,7 +563,7 @@ theorem mem_closedBall' : y ∈ closedBall x ε ↔ dist x y ≤ ε := by rw [di
 #print Metric.sphere /-
 /-- `sphere x ε` is the set of all points `y` with `dist y x = ε` -/
 def sphere (x : α) (ε : ℝ) :=
-  { y | dist y x = ε }
+  {y | dist y x = ε}
 #align metric.sphere Metric.sphere
 -/
 
@@ -829,7 +829,7 @@ theorem toUniformSpace_eq :
 -/
 
 theorem uniformity_basis_dist :
-    (𝓤 α).HasBasis (fun ε : ℝ => 0 < ε) fun ε => { p : α × α | dist p.1 p.2 < ε } :=
+    (𝓤 α).HasBasis (fun ε : ℝ => 0 < ε) fun ε => {p : α × α | dist p.1 p.2 < ε} :=
   by
   rw [to_uniform_space_eq]
   exact UniformSpace.hasBasis_ofFun (exists_gt _) _ _ _ _ _
@@ -842,7 +842,7 @@ For specific bases see `uniformity_basis_dist`, `uniformity_basis_dist_inv_nat_s
 and `uniformity_basis_dist_inv_nat_pos`. -/
 protected theorem mk_uniformity_basis {β : Type _} {p : β → Prop} {f : β → ℝ}
     (hf₀ : ∀ i, p i → 0 < f i) (hf : ∀ ⦃ε⦄, 0 < ε → ∃ (i : _) (hi : p i), f i ≤ ε) :
-    (𝓤 α).HasBasis p fun i => { p : α × α | dist p.1 p.2 < f i } :=
+    (𝓤 α).HasBasis p fun i => {p : α × α | dist p.1 p.2 < f i} :=
   by
   refine' ⟨fun s => uniformity_basis_dist.mem_iff.trans _⟩
   constructor
@@ -853,34 +853,34 @@ protected theorem mk_uniformity_basis {β : Type _} {p : β → Prop} {f : β �
 #align metric.mk_uniformity_basis Metric.mk_uniformity_basis
 
 theorem uniformity_basis_dist_rat :
-    (𝓤 α).HasBasis (fun r : ℚ => 0 < r) fun r => { p : α × α | dist p.1 p.2 < r } :=
+    (𝓤 α).HasBasis (fun r : ℚ => 0 < r) fun r => {p : α × α | dist p.1 p.2 < r} :=
   Metric.mk_uniformity_basis (fun _ => Rat.cast_pos.2) fun ε hε =>
     let ⟨r, hr0, hrε⟩ := exists_rat_btwn hε
     ⟨r, Rat.cast_pos.1 hr0, hrε.le⟩
 #align metric.uniformity_basis_dist_rat Metric.uniformity_basis_dist_rat
 
 theorem uniformity_basis_dist_inv_nat_succ :
-    (𝓤 α).HasBasis (fun _ => True) fun n : ℕ => { p : α × α | dist p.1 p.2 < 1 / (↑n + 1) } :=
+    (𝓤 α).HasBasis (fun _ => True) fun n : ℕ => {p : α × α | dist p.1 p.2 < 1 / (↑n + 1)} :=
   Metric.mk_uniformity_basis (fun n _ => div_pos zero_lt_one <| Nat.cast_add_one_pos n) fun ε ε0 =>
     (exists_nat_one_div_lt ε0).imp fun n hn => ⟨trivial, le_of_lt hn⟩
 #align metric.uniformity_basis_dist_inv_nat_succ Metric.uniformity_basis_dist_inv_nat_succ
 
 theorem uniformity_basis_dist_inv_nat_pos :
-    (𝓤 α).HasBasis (fun n : ℕ => 0 < n) fun n : ℕ => { p : α × α | dist p.1 p.2 < 1 / ↑n } :=
+    (𝓤 α).HasBasis (fun n : ℕ => 0 < n) fun n : ℕ => {p : α × α | dist p.1 p.2 < 1 / ↑n} :=
   Metric.mk_uniformity_basis (fun n hn => div_pos zero_lt_one <| Nat.cast_pos.2 hn) fun ε ε0 =>
     let ⟨n, hn⟩ := exists_nat_one_div_lt ε0
     ⟨n + 1, Nat.succ_pos n, by exact_mod_cast hn.le⟩
 #align metric.uniformity_basis_dist_inv_nat_pos Metric.uniformity_basis_dist_inv_nat_pos
 
 theorem uniformity_basis_dist_pow {r : ℝ} (h0 : 0 < r) (h1 : r < 1) :
-    (𝓤 α).HasBasis (fun n : ℕ => True) fun n : ℕ => { p : α × α | dist p.1 p.2 < r ^ n } :=
+    (𝓤 α).HasBasis (fun n : ℕ => True) fun n : ℕ => {p : α × α | dist p.1 p.2 < r ^ n} :=
   Metric.mk_uniformity_basis (fun n hn => pow_pos h0 _) fun ε ε0 =>
     let ⟨n, hn⟩ := exists_pow_lt_of_lt_one ε0 h1
     ⟨n, trivial, hn.le⟩
 #align metric.uniformity_basis_dist_pow Metric.uniformity_basis_dist_pow
 
 theorem uniformity_basis_dist_lt {R : ℝ} (hR : 0 < R) :
-    (𝓤 α).HasBasis (fun r : ℝ => 0 < r ∧ r < R) fun r => { p : α × α | dist p.1 p.2 < r } :=
+    (𝓤 α).HasBasis (fun r : ℝ => 0 < r ∧ r < R) fun r => {p : α × α | dist p.1 p.2 < r} :=
   Metric.mk_uniformity_basis (fun r => And.left) fun r hr =>
     ⟨min r (R / 2), ⟨lt_min hr (half_pos hR), min_lt_iff.2 <| Or.inr (half_lt_self hR)⟩,
       min_le_left _ _⟩
@@ -894,7 +894,7 @@ Currently we have only one specific basis `uniformity_basis_dist_le` based on th
 More can be easily added if needed in the future. -/
 protected theorem mk_uniformity_basis_le {β : Type _} {p : β → Prop} {f : β → ℝ}
     (hf₀ : ∀ x, p x → 0 < f x) (hf : ∀ ε, 0 < ε → ∃ (x : _) (hx : p x), f x ≤ ε) :
-    (𝓤 α).HasBasis p fun x => { p : α × α | dist p.1 p.2 ≤ f x } :=
+    (𝓤 α).HasBasis p fun x => {p : α × α | dist p.1 p.2 ≤ f x} :=
   by
   refine' ⟨fun s => uniformity_basis_dist.mem_iff.trans _⟩
   constructor
@@ -908,12 +908,12 @@ protected theorem mk_uniformity_basis_le {β : Type _} {p : β → Prop} {f : β
 /-- Contant size closed neighborhoods of the diagonal form a basis
 of the uniformity filter. -/
 theorem uniformity_basis_dist_le :
-    (𝓤 α).HasBasis (fun ε : ℝ => 0 < ε) fun ε => { p : α × α | dist p.1 p.2 ≤ ε } :=
+    (𝓤 α).HasBasis (fun ε : ℝ => 0 < ε) fun ε => {p : α × α | dist p.1 p.2 ≤ ε} :=
   Metric.mk_uniformity_basis_le (fun _ => id) fun ε ε₀ => ⟨ε, ε₀, le_refl ε⟩
 #align metric.uniformity_basis_dist_le Metric.uniformity_basis_dist_le
 
 theorem uniformity_basis_dist_le_pow {r : ℝ} (h0 : 0 < r) (h1 : r < 1) :
-    (𝓤 α).HasBasis (fun n : ℕ => True) fun n : ℕ => { p : α × α | dist p.1 p.2 ≤ r ^ n } :=
+    (𝓤 α).HasBasis (fun n : ℕ => True) fun n : ℕ => {p : α × α | dist p.1 p.2 ≤ r ^ n} :=
   Metric.mk_uniformity_basis_le (fun n hn => pow_pos h0 _) fun ε ε0 =>
     let ⟨n, hn⟩ := exists_pow_lt_of_lt_one ε0 h1
     ⟨n, trivial, hn.le⟩
@@ -925,7 +925,7 @@ theorem mem_uniformity_dist {s : Set (α × α)} :
 #align metric.mem_uniformity_dist Metric.mem_uniformity_dist
 
 /-- A constant size neighborhood of the diagonal is an entourage. -/
-theorem dist_mem_uniformity {ε : ℝ} (ε0 : 0 < ε) : { p : α × α | dist p.1 p.2 < ε } ∈ 𝓤 α :=
+theorem dist_mem_uniformity {ε : ℝ} (ε0 : 0 < ε) : {p : α × α | dist p.1 p.2 < ε} ∈ 𝓤 α :=
   mem_uniformity_dist.2 ⟨ε, ε0, fun a b => id⟩
 #align metric.dist_mem_uniformity Metric.dist_mem_uniformity
 
@@ -1283,7 +1283,7 @@ we need to show that the uniform structure coming from the edistance and the
 distance coincide. -/
 /-- Expressing the uniformity in terms of `edist` -/
 protected theorem Metric.uniformity_basis_edist :
-    (𝓤 α).HasBasis (fun ε : ℝ≥0∞ => 0 < ε) fun ε => { p | edist p.1 p.2 < ε } :=
+    (𝓤 α).HasBasis (fun ε : ℝ≥0∞ => 0 < ε) fun ε => {p | edist p.1 p.2 < ε} :=
   ⟨by
     intro t
     refine' mem_uniformity_dist.trans ⟨_, _⟩ <;> rintro ⟨ε, ε0, Hε⟩
@@ -1297,7 +1297,7 @@ protected theorem Metric.uniformity_basis_edist :
       rwa [edist_dist, ENNReal.ofReal_lt_ofReal_iff ε0']⟩
 #align pseudo_metric.uniformity_basis_edist Metric.uniformity_basis_edist
 
-theorem Metric.uniformity_edist : 𝓤 α = ⨅ ε > 0, 𝓟 { p : α × α | edist p.1 p.2 < ε } :=
+theorem Metric.uniformity_edist : 𝓤 α = ⨅ ε > 0, 𝓟 {p : α × α | edist p.1 p.2 < ε} :=
   Metric.uniformity_basis_edist.eq_biInf
 #align metric.uniformity_edist Metric.uniformity_edist
 
@@ -1472,7 +1472,7 @@ theorem Metric.complete_of_convergent_controlled_sequences (B : ℕ → Real) (h
         (∀ N n m : ℕ, N ≤ n → N ≤ m → dist (u n) (u m) < B N) → ∃ x, Tendsto u atTop (𝓝 x)) :
     CompleteSpace α :=
   UniformSpace.complete_of_convergent_controlled_sequences
-    (fun n => { p : α × α | dist p.1 p.2 < B n }) (fun n => dist_mem_uniformity <| hB n) H
+    (fun n => {p : α × α | dist p.1 p.2 < B n}) (fun n => dist_mem_uniformity <| hB n) H
 #align metric.complete_of_convergent_controlled_sequences Metric.complete_of_convergent_controlled_sequences
 
 #print Metric.complete_of_cauchySeq_tendsto /-
@@ -1642,7 +1642,7 @@ theorem eventually_closedBall_subset {x : α} {u : Set α} (hu : u ∈ 𝓝 x) :
   obtain ⟨ε, εpos, hε⟩ : ∃ (ε : _) (hε : 0 < ε), closed_ball x ε ⊆ u :=
     nhds_basis_closed_ball.mem_iff.1 hu
   have : Iic ε ∈ 𝓝 (0 : ℝ) := Iic_mem_nhds εpos
-  filter_upwards [this]with _ hr using subset.trans (closed_ball_subset_closed_ball hr) hε
+  filter_upwards [this] with _ hr using subset.trans (closed_ball_subset_closed_ball hr) hε
 #align eventually_closed_ball_subset eventually_closedBall_subset
 
 end Real
@@ -1679,7 +1679,7 @@ theorem Metric.uniformCauchySeqOn_iff {γ : Type _} {F : β → γ → α} {s : 
   by
   constructor
   · intro h ε hε
-    let u := { a : α × α | dist a.fst a.snd < ε }
+    let u := {a : α × α | dist a.fst a.snd < ε}
     have hu : u ∈ 𝓤 α := metric.mem_uniformity_dist.mpr ⟨ε, hε, fun a b => by simp⟩
     rw [←
       @Filter.eventually_atTop_prod_self' _ _ _ fun m =>
@@ -1748,7 +1748,7 @@ theorem cauchySeq_iff_le_tendsto_0 {s : ℕ → α} :
       the supremum of the distances between `s n` and `s m` for `n m ≥ N`.
       First, we prove that all these distances are bounded, as otherwise the Sup
       would not make sense. -/
-    let S N := (fun p : ℕ × ℕ => dist (s p.1) (s p.2)) '' { p | p.1 ≥ N ∧ p.2 ≥ N }
+    let S N := (fun p : ℕ × ℕ => dist (s p.1) (s p.2)) '' {p | p.1 ≥ N ∧ p.2 ≥ N}
     have hS : ∀ N, ∃ x, ∀ y ∈ S N, y ≤ x :=
       by
       rcases cauchySeq_bdd hs with ⟨R, R0, hR⟩
@@ -2172,36 +2172,36 @@ be contained in `s`. -/
 theorem TopologicalSpace.IsSeparable.separableSpace {s : Set α} (hs : IsSeparable s) :
     SeparableSpace s := by
   classical
-    rcases eq_empty_or_nonempty s with (rfl | ⟨⟨x₀, x₀s⟩⟩)
-    · infer_instance
-    rcases hs with ⟨c, hc, h'c⟩
-    haveI : Encodable c := hc.to_encodable
-    obtain ⟨u, -, u_pos, u_lim⟩ :
-      ∃ u : ℕ → ℝ, StrictAnti u ∧ (∀ n : ℕ, 0 < u n) ∧ tendsto u at_top (𝓝 0) :=
-      exists_seq_strictAnti_tendsto (0 : ℝ)
-    let f : c × ℕ → α := fun p =>
-      if h : (Metric.ball (p.1 : α) (u p.2) ∩ s).Nonempty then h.some else x₀
-    have fs : ∀ p, f p ∈ s := by
-      rintro ⟨y, n⟩
-      by_cases h : (ball (y : α) (u n) ∩ s).Nonempty
-      · simpa only [f, h, dif_pos] using h.some_spec.2
-      · simpa only [f, h, not_false_iff, dif_neg]
-    let g : c × ℕ → s := fun p => ⟨f p, fs p⟩
-    apply separable_space_of_dense_range g
-    apply Metric.denseRange_iff.2
-    rintro ⟨x, xs⟩ r (rpos : 0 < r)
-    obtain ⟨n, hn⟩ : ∃ n, u n < r / 2 := ((tendsto_order.1 u_lim).2 _ (half_pos rpos)).exists
-    obtain ⟨z, zc, hz⟩ : ∃ z ∈ c, dist x z < u n := Metric.mem_closure_iff.1 (h'c xs) _ (u_pos n)
-    refine' ⟨(⟨z, zc⟩, n), _⟩
-    change dist x (f (⟨z, zc⟩, n)) < r
-    have A : (Metric.ball z (u n) ∩ s).Nonempty := ⟨x, hz, xs⟩
-    dsimp [f]
-    simp only [A, dif_pos]
-    calc
-      dist x A.some ≤ dist x z + dist z A.some := dist_triangle _ _ _
-      _ < r / 2 + r / 2 := (add_lt_add (hz.trans hn) ((Metric.mem_ball'.1 A.some_spec.1).trans hn))
-      _ = r := add_halves _
-      
+  rcases eq_empty_or_nonempty s with (rfl | ⟨⟨x₀, x₀s⟩⟩)
+  · infer_instance
+  rcases hs with ⟨c, hc, h'c⟩
+  haveI : Encodable c := hc.to_encodable
+  obtain ⟨u, -, u_pos, u_lim⟩ :
+    ∃ u : ℕ → ℝ, StrictAnti u ∧ (∀ n : ℕ, 0 < u n) ∧ tendsto u at_top (𝓝 0) :=
+    exists_seq_strictAnti_tendsto (0 : ℝ)
+  let f : c × ℕ → α := fun p =>
+    if h : (Metric.ball (p.1 : α) (u p.2) ∩ s).Nonempty then h.some else x₀
+  have fs : ∀ p, f p ∈ s := by
+    rintro ⟨y, n⟩
+    by_cases h : (ball (y : α) (u n) ∩ s).Nonempty
+    · simpa only [f, h, dif_pos] using h.some_spec.2
+    · simpa only [f, h, not_false_iff, dif_neg]
+  let g : c × ℕ → s := fun p => ⟨f p, fs p⟩
+  apply separable_space_of_dense_range g
+  apply Metric.denseRange_iff.2
+  rintro ⟨x, xs⟩ r (rpos : 0 < r)
+  obtain ⟨n, hn⟩ : ∃ n, u n < r / 2 := ((tendsto_order.1 u_lim).2 _ (half_pos rpos)).exists
+  obtain ⟨z, zc, hz⟩ : ∃ z ∈ c, dist x z < u n := Metric.mem_closure_iff.1 (h'c xs) _ (u_pos n)
+  refine' ⟨(⟨z, zc⟩, n), _⟩
+  change dist x (f (⟨z, zc⟩, n)) < r
+  have A : (Metric.ball z (u n) ∩ s).Nonempty := ⟨x, hz, xs⟩
+  dsimp [f]
+  simp only [A, dif_pos]
+  calc
+    dist x A.some ≤ dist x z + dist z A.some := dist_triangle _ _ _
+    _ < r / 2 + r / 2 := (add_lt_add (hz.trans hn) ((Metric.mem_ball'.1 A.some_spec.1).trans hn))
+    _ = r := add_halves _
+    
 #align topological_space.is_separable.separable_space TopologicalSpace.IsSeparable.separableSpace
 
 #print Inducing.isSeparable_preimage /-
@@ -3212,7 +3212,7 @@ theorem IsComplete.nonempty_iInter_of_nonempty_biInter {s : ℕ → Set α} (h0 
     cauchySeq_tendsto_of_isComplete h0 (fun n => I 0 n (zero_le _)) this
   refine' ⟨x, mem_Inter.2 fun n => _⟩
   apply (hs n).mem_of_tendsto xlim
-  filter_upwards [Ici_mem_at_top n]with p hp
+  filter_upwards [Ici_mem_at_top n] with p hp
   exact I n p hp
 #align is_complete.nonempty_Inter_of_nonempty_bInter IsComplete.nonempty_iInter_of_nonempty_biInter
 
@@ -3587,7 +3587,7 @@ instance : MetricSpace PUnit.{u + 1} where
   toUniformSpace := PUnit.uniformSpace
   uniformity_dist := by
     simp only
-    have : ne_bot (⨅ ε > (0 : ℝ), 𝓟 { p : PUnit.{u + 1} × PUnit.{u + 1} | 0 < ε }) :=
+    have : ne_bot (⨅ ε > (0 : ℝ), 𝓟 {p : PUnit.{u + 1} × PUnit.{u + 1} | 0 < ε}) :=
       @uniformity.neBot _
         (UniformSpace.ofDist (fun _ _ => 0) (fun _ => rfl) (fun _ _ => rfl) fun _ _ _ => by
           rw [zero_add])

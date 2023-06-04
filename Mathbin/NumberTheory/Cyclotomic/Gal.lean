@@ -59,12 +59,12 @@ field extension. -/
 theorem autToPow_injective : Function.Injective <| hμ.autToPow K :=
   by
   intro f g hfg
-  apply_fun Units.val  at hfg 
+  apply_fun Units.val at hfg 
   simp only [IsPrimitiveRoot.coe_autToPow_apply, Units.val_eq_coe] at hfg 
-  generalize_proofs hf' hg'  at hfg 
+  generalize_proofs hf' hg' at hfg 
   have hf := hf'.some_spec
   have hg := hg'.some_spec
-  generalize_proofs hζ  at hf hg 
+  generalize_proofs hζ at hf hg 
   suffices f hμ.to_roots_of_unity = g hμ.to_roots_of_unity
     by
     apply AlgEquiv.coe_algHom_injective

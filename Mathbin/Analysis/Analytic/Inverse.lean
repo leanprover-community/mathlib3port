@@ -114,14 +114,14 @@ theorem leftInv_comp (p : FormalMultilinearSeries 𝕜 E F) (i : E ≃L[𝕜] F)
       ContinuousLinearEquiv.symm_apply_apply, continuousMultilinearCurryFin1_symm_apply]
   have A :
     (Finset.univ : Finset (Composition (n + 2))) =
-      { c | Composition.length c < n + 2 }.toFinset ∪ {Composition.ones (n + 2)} :=
+      {c | Composition.length c < n + 2}.toFinset ∪ {Composition.ones (n + 2)} :=
     by
     refine' subset.antisymm (fun c hc => _) (subset_univ _)
     by_cases h : c.length < n + 2
     · simp [h]
     · simp [Composition.eq_ones_iff_le_length.2 (not_lt.1 h)]
   have B :
-    Disjoint ({ c | Composition.length c < n + 2 } : Set (Composition (n + 2))).toFinset
+    Disjoint ({c | Composition.length c < n + 2} : Set (Composition (n + 2))).toFinset
       {Composition.ones (n + 2)} :=
     by simp
   have C :
@@ -134,12 +134,13 @@ theorem leftInv_comp (p : FormalMultilinearSeries 𝕜 E F) (i : E ≃L[𝕜] F)
     exact FormalMultilinearSeries.congr _ rfl fun k hk1 hk2 => by congr
   have D :
     (p.left_inv i (n + 2) fun j : Fin (n + 2) => p 1 fun k => v j) =
-      -∑ c : Composition (n + 2) in { c : Composition (n + 2) | c.length < n + 2 }.toFinset,
+      -∑ c : Composition (n + 2) in {c : Composition (n + 2) | c.length < n + 2}.toFinset,
           (p.left_inv i c.length) (p.apply_composition c v) :=
     by
     simp only [left_inv, ContinuousMultilinearMap.neg_apply, neg_inj,
       ContinuousMultilinearMap.sum_apply]
-    convert(sum_to_finset_eq_subtype (fun c : Composition (n + 2) => c.length < n + 2)
+    convert
+      (sum_to_finset_eq_subtype (fun c : Composition (n + 2) => c.length < n + 2)
               fun c : Composition (n + 2) =>
               (ContinuousMultilinearMap.compAlongComposition (p.comp_continuous_linear_map ↑i.symm)
                   c (p.left_inv i c.length))
@@ -210,13 +211,13 @@ theorem rightInv_removeZero (p : FormalMultilinearSeries 𝕜 E F) (i : E ≃L[�
 theorem comp_right_inv_aux1 {n : ℕ} (hn : 0 < n) (p : FormalMultilinearSeries 𝕜 E F)
     (q : FormalMultilinearSeries 𝕜 F E) (v : Fin n → F) :
     p.comp q n v =
-      (∑ c : Composition n in { c : Composition n | 1 < c.length }.toFinset,
+      (∑ c : Composition n in {c : Composition n | 1 < c.length}.toFinset,
           p c.length (q.applyComposition c v)) +
         p 1 fun i => q n v :=
   by
   have A :
     (Finset.univ : Finset (Composition n)) =
-      { c | 1 < Composition.length c }.toFinset ∪ {Composition.single n hn} :=
+      {c | 1 < Composition.length c}.toFinset ∪ {Composition.single n hn} :=
     by
     refine' subset.antisymm (fun c hc => _) (subset_univ _)
     by_cases h : 1 < c.length
@@ -226,7 +227,7 @@ theorem comp_right_inv_aux1 {n : ℕ} (hn : 0 < n) (p : FormalMultilinearSeries 
       rw [← Composition.eq_single_iff_length hn] at this 
       simp [this]
   have B :
-    Disjoint ({ c | 1 < Composition.length c } : Set (Composition n)).toFinset
+    Disjoint ({c | 1 < Composition.length c} : Set (Composition n)).toFinset
       {Composition.single n hn} :=
     by simp
   have C :
@@ -240,9 +241,9 @@ theorem comp_right_inv_aux1 {n : ℕ} (hn : 0 < n) (p : FormalMultilinearSeries 
 
 theorem comp_rightInv_aux2 (p : FormalMultilinearSeries 𝕜 E F) (i : E ≃L[𝕜] F) (n : ℕ)
     (v : Fin (n + 2) → F) :
-    (∑ c : Composition (n + 2) in { c : Composition (n + 2) | 1 < c.length }.toFinset,
+    (∑ c : Composition (n + 2) in {c : Composition (n + 2) | 1 < c.length}.toFinset,
         p c.length (applyComposition (fun k : ℕ => ite (k < n + 2) (p.right_inv i k) 0) c v)) =
-      ∑ c : Composition (n + 2) in { c : Composition (n + 2) | 1 < c.length }.toFinset,
+      ∑ c : Composition (n + 2) in {c : Composition (n + 2) | 1 < c.length}.toFinset,
         p c.length ((p.right_inv i).applyComposition c v) :=
   by
   have N : 0 < n + 2 := by decide
@@ -276,7 +277,7 @@ theorem comp_rightInv (p : FormalMultilinearSeries 𝕜 E F) (i : E ≃L[𝕜] F
 theorem rightInv_coeff (p : FormalMultilinearSeries 𝕜 E F) (i : E ≃L[𝕜] F) (n : ℕ) (hn : 2 ≤ n) :
     p.right_inv i n =
       -(i.symm : F →L[𝕜] E).compContinuousMultilinearMap
-          (∑ c in ({ c | 1 < Composition.length c }.toFinset : Finset (Composition n)),
+          (∑ c in ({c | 1 < Composition.length c}.toFinset : Finset (Composition n)),
             p.compAlongComposition (p.right_inv i) c) :=
   by
   cases n; · exact False.elim (zero_lt_two.not_le hn)
@@ -392,16 +393,16 @@ theorem radius_right_inv_pos_of_radius_pos_aux1 (n : ℕ) (p : ℕ → ℝ) (hp 
     (hr : 0 ≤ r) (ha : 0 ≤ a) :
     (∑ k in Ico 2 (n + 1),
         a ^ k *
-          ∑ c in ({ c | 1 < Composition.length c }.toFinset : Finset (Composition k)),
+          ∑ c in ({c | 1 < Composition.length c}.toFinset : Finset (Composition k)),
             r ^ c.length * ∏ j, p (c.blocksFun j)) ≤
       ∑ j in Ico 2 (n + 1), r ^ j * (∑ k in Ico 1 n, a ^ k * p k) ^ j :=
   calc
     (∑ k in Ico 2 (n + 1),
           a ^ k *
-            ∑ c in ({ c | 1 < Composition.length c }.toFinset : Finset (Composition k)),
+            ∑ c in ({c | 1 < Composition.length c}.toFinset : Finset (Composition k)),
               r ^ c.length * ∏ j, p (c.blocksFun j)) =
         ∑ k in Ico 2 (n + 1),
-          ∑ c in ({ c | 1 < Composition.length c }.toFinset : Finset (Composition k)),
+          ∑ c in ({c | 1 < Composition.length c}.toFinset : Finset (Composition k)),
             ∏ j, r * (a ^ c.blocksFun j * p (c.blocksFun j)) :=
       by
       simp_rw [mul_sum]
@@ -476,7 +477,7 @@ theorem radius_rightInv_pos_of_radius_pos_aux2 {n : ℕ} (hn : 2 ≤ n + 1)
           ∑ k in Ico 2 (n + 1),
             a ^ k *
               ‖(i.symm : F →L[𝕜] E).compContinuousMultilinearMap
-                  (∑ c in ({ c | 1 < Composition.length c }.toFinset : Finset (Composition k)),
+                  (∑ c in ({c | 1 < Composition.length c}.toFinset : Finset (Composition k)),
                     p.compAlongComposition (p.right_inv i) c)‖ :=
       by
       congr 1
@@ -487,7 +488,7 @@ theorem radius_rightInv_pos_of_radius_pos_aux2 {n : ℕ} (hn : 2 ≤ n + 1)
           ∑ k in Ico 2 (n + 1),
             a ^ k *
               (I *
-                ∑ c in ({ c | 1 < Composition.length c }.toFinset : Finset (Composition k)),
+                ∑ c in ({c | 1 < Composition.length c}.toFinset : Finset (Composition k)),
                   C * r ^ c.length * ∏ j, ‖p.right_inv i (c.blocksFun j)‖) :=
       by
       apply_rules [add_le_add, le_refl, sum_le_sum fun j hj => _, mul_le_mul_of_nonneg_left,
@@ -504,7 +505,7 @@ theorem radius_rightInv_pos_of_radius_pos_aux2 {n : ℕ} (hn : 2 ≤ n + 1)
           I * C *
             ∑ k in Ico 2 (n + 1),
               a ^ k *
-                ∑ c in ({ c | 1 < Composition.length c }.toFinset : Finset (Composition k)),
+                ∑ c in ({c | 1 < Composition.length c}.toFinset : Finset (Composition k)),
                   r ^ c.length * ∏ j, ‖p.right_inv i (c.blocksFun j)‖ :=
       by
       simp_rw [mul_assoc C, ← mul_sum, ← mul_assoc, mul_comm _ ‖↑i.symm‖, mul_assoc, ← mul_sum, ←
@@ -545,7 +546,7 @@ theorem radius_rightInv_pos_of_radius_pos (p : FormalMultilinearSeries 𝕜 E F)
     have B : ∀ᶠ a in 𝓝 0, r * (I + 1) * a < 1 / 2 := by apply (tendsto_order.1 this).2;
       simp [zero_lt_one]
     have C : ∀ᶠ a in 𝓝[>] (0 : ℝ), (0 : ℝ) < a := by
-      filter_upwards [self_mem_nhdsWithin]with _ ha using ha
+      filter_upwards [self_mem_nhdsWithin] with _ ha using ha
     rcases(C.and ((A.and B).filter_mono inf_le_left)).exists with ⟨a, ha⟩
     exact ⟨a, ha.1, ha.2.1.le, ha.2.2.le⟩
   -- check by induction that the partial sums are suitably bounded, using the choice of `a` and the

@@ -187,7 +187,7 @@ private irreducible_def neg {R : Type u₁} [Ring R] (r : R → R → Prop) : Ri
   | ⟨a⟩ => ⟨Quot.map (fun a => -a) Rel.neg a⟩
 
 private irreducible_def sub {R : Type u₁} [Ring R] (r : R → R → Prop) :
-  RingQuot r → RingQuot r → RingQuot r
+    RingQuot r → RingQuot r → RingQuot r
   | ⟨a⟩, ⟨b⟩ => ⟨Quot.map₂ Sub.sub Rel.sub_right Rel.sub_left a b⟩
 
 private irreducible_def npow (n : ℕ) : RingQuot r → RingQuot r
@@ -354,7 +354,7 @@ variable {T : Type u₄} [Semiring T]
 factors uniquely through a morphism `ring_quot r →+* T`.
 -/
 irreducible_def lift {r : R → R → Prop} :
-  { f : R →+* T // ∀ ⦃x y⦄, r x y → f x = f y } ≃ (RingQuot r →+* T) :=
+    { f : R →+* T // ∀ ⦃x y⦄, r x y → f x = f y } ≃ (RingQuot r →+* T) :=
   { toFun := fun f' =>
       let f := (f' : R →+* T)
       { toFun := fun x =>
@@ -534,7 +534,7 @@ theorem ringQuot_ext' {s : A → A → Prop} (f g : RingQuot s →ₐ[S] B)
 factors uniquely through a morphism `ring_quot s →ₐ[S]  B`.
 -/
 irreducible_def liftAlgHom {s : A → A → Prop} :
-  { f : A →ₐ[S] B // ∀ ⦃x y⦄, s x y → f x = f y } ≃ (RingQuot s →ₐ[S] B) :=
+    { f : A →ₐ[S] B // ∀ ⦃x y⦄, s x y → f x = f y } ≃ (RingQuot s →ₐ[S] B) :=
   { toFun := fun f' =>
       let f := (f' : A →ₐ[S] B)
       { toFun := fun x =>

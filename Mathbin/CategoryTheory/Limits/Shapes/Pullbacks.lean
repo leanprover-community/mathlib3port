@@ -1902,7 +1902,8 @@ instance hasPullback_of_right_factors_mono (f : X ⟶ Z) : HasPullback i (f ≫ 
 #print CategoryTheory.Limits.pullback_snd_iso_of_right_factors_mono /-
 instance pullback_snd_iso_of_right_factors_mono (f : X ⟶ Z) :
     IsIso (pullback.snd : pullback i (f ≫ i) ⟶ _) := by
-  convert(congr_arg is_iso
+  convert
+      (congr_arg is_iso
             (show _ ≫ pullback.snd = _ from
               limit.iso_limit_cone_hom_π ⟨_, pullback_is_pullback_of_comp_mono (𝟙 _) f i⟩
                 walking_cospan.right)).mp
@@ -2002,7 +2003,8 @@ instance hasPullback_of_left_factors_mono (f : X ⟶ Z) : HasPullback (f ≫ i) 
 #print CategoryTheory.Limits.pullback_snd_iso_of_left_factors_mono /-
 instance pullback_snd_iso_of_left_factors_mono (f : X ⟶ Z) :
     IsIso (pullback.fst : pullback (f ≫ i) i ⟶ _) := by
-  convert(congr_arg is_iso
+  convert
+      (congr_arg is_iso
             (show _ ≫ pullback.fst = _ from
               limit.iso_limit_cone_hom_π ⟨_, pullback_is_pullback_of_comp_mono f (𝟙 _) i⟩
                 walking_cospan.left)).mp
@@ -2116,7 +2118,8 @@ instance hasPushout_of_right_factors_epi (f : X ⟶ Y) : HasPushout h (h ≫ f) 
 #print CategoryTheory.Limits.pushout_inr_iso_of_right_factors_epi /-
 instance pushout_inr_iso_of_right_factors_epi (f : X ⟶ Y) :
     IsIso (pushout.inr : _ ⟶ pushout h (h ≫ f)) := by
-  convert(congr_arg is_iso
+  convert
+      (congr_arg is_iso
             (show pushout.inr ≫ _ = _ from
               colimit.iso_colimit_cocone_ι_inv ⟨_, pushout_is_pushout_of_epi_comp (𝟙 _) f h⟩
                 walking_span.right)).mp
@@ -2217,7 +2220,8 @@ instance hasPushout_of_left_factors_epi (f : X ⟶ Y) : HasPushout (h ≫ f) h :
 #print CategoryTheory.Limits.pushout_inl_iso_of_left_factors_epi /-
 instance pushout_inl_iso_of_left_factors_epi (f : X ⟶ Y) :
     IsIso (pushout.inl : _ ⟶ pushout (h ≫ f) h) := by
-  convert(congr_arg is_iso
+  convert
+      (congr_arg is_iso
             (show pushout.inl ≫ _ = _ from
               colimit.iso_colimit_cocone_ι_inv ⟨_, pushout_is_pushout_of_epi_comp f (𝟙 _) h⟩
                 walking_span.left)).mp

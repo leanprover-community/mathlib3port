@@ -149,7 +149,8 @@ theorem linearIndependent_iff'' :
   linearIndependent_iff'.trans
     ⟨fun H s g hg hv i => if his : i ∈ s then H s g hv i his else hg i his, fun H s g hg i hi =>
       by
-      convert H s (fun j => if j ∈ s then g j else 0) (fun j hj => if_neg hj)
+      convert
+        H s (fun j => if j ∈ s then g j else 0) (fun j hj => if_neg hj)
           (by simp_rw [ite_smul, zero_smul, Finset.sum_extend_by_zero, hg]) i
       exact (if_pos hi).symm⟩
 #align linear_independent_iff'' linearIndependent_iff''
@@ -954,34 +955,34 @@ theorem exists_maximal_independent (s : ι → M) :
         ∀ (i) (_ : i ∉ I), ∃ a : R, a ≠ 0 ∧ a • s i ∈ span R (s '' I) :=
   by
   classical
-    rcases exists_maximal_independent' R s with ⟨I, hIlinind, hImaximal⟩
-    use I, hIlinind
-    intro i hi
-    specialize hImaximal (I ∪ {i}) (by simp)
-    set J := I ∪ {i} with hJ
-    have memJ : ∀ {x}, x ∈ J ↔ x = i ∨ x ∈ I := by simp [hJ]
-    have hiJ : i ∈ J := by simp
-    have h := mt hImaximal _
-    swap
-    · intro h2
-      rw [h2] at hi 
-      exact absurd hiJ hi
-    obtain ⟨f, supp_f, sum_f, f_ne⟩ := linear_dependent_comp_subtype.mp h
-    have hfi : f i ≠ 0 := by
-      contrapose hIlinind
-      refine' linear_dependent_comp_subtype.mpr ⟨f, _, sum_f, f_ne⟩
-      simp only [Finsupp.mem_supported, hJ] at supp_f ⊢
-      rintro x hx
-      refine' (memJ.mp (supp_f hx)).resolve_left _
-      rintro rfl
-      exact hIlinind (finsupp.mem_support_iff.mp hx)
-    use f i, hfi
-    have hfi' : i ∈ f.support := finsupp.mem_support_iff.mpr hfi
-    rw [← Finset.insert_erase hfi', Finset.sum_insert (Finset.not_mem_erase _ _),
-      add_eq_zero_iff_eq_neg] at sum_f 
-    rw [sum_f]
-    refine' neg_mem (sum_mem fun c hc => smul_mem _ _ (subset_span ⟨c, _, rfl⟩))
-    exact (memJ.mp (supp_f (Finset.erase_subset _ _ hc))).resolve_left (Finset.ne_of_mem_erase hc)
+  rcases exists_maximal_independent' R s with ⟨I, hIlinind, hImaximal⟩
+  use I, hIlinind
+  intro i hi
+  specialize hImaximal (I ∪ {i}) (by simp)
+  set J := I ∪ {i} with hJ
+  have memJ : ∀ {x}, x ∈ J ↔ x = i ∨ x ∈ I := by simp [hJ]
+  have hiJ : i ∈ J := by simp
+  have h := mt hImaximal _
+  swap
+  · intro h2
+    rw [h2] at hi 
+    exact absurd hiJ hi
+  obtain ⟨f, supp_f, sum_f, f_ne⟩ := linear_dependent_comp_subtype.mp h
+  have hfi : f i ≠ 0 := by
+    contrapose hIlinind
+    refine' linear_dependent_comp_subtype.mpr ⟨f, _, sum_f, f_ne⟩
+    simp only [Finsupp.mem_supported, hJ] at supp_f ⊢
+    rintro x hx
+    refine' (memJ.mp (supp_f hx)).resolve_left _
+    rintro rfl
+    exact hIlinind (finsupp.mem_support_iff.mp hx)
+  use f i, hfi
+  have hfi' : i ∈ f.support := finsupp.mem_support_iff.mpr hfi
+  rw [← Finset.insert_erase hfi', Finset.sum_insert (Finset.not_mem_erase _ _),
+    add_eq_zero_iff_eq_neg] at sum_f 
+  rw [sum_f]
+  refine' neg_mem (sum_mem fun c hc => smul_mem _ _ (subset_span ⟨c, _, rfl⟩))
+  exact (memJ.mp (supp_f (Finset.erase_subset _ _ hc))).resolve_left (Finset.ne_of_mem_erase hc)
 #align exists_maximal_independent exists_maximal_independent
 
 end repr
@@ -1335,7 +1336,7 @@ theorem linearIndependent_fin2 {f : Fin 2 → V} :
 theorem exists_linearIndependent_extension (hs : LinearIndependent K (coe : s → V)) (hst : s ⊆ t) :
     ∃ (b : _) (_ : b ⊆ t), s ⊆ b ∧ t ⊆ span K b ∧ LinearIndependent K (coe : b → V) :=
   by
-  rcases zorn_subset_nonempty { b | b ⊆ t ∧ LinearIndependent K (coe : b → V) } _ _ ⟨hst, hs⟩ with
+  rcases zorn_subset_nonempty {b | b ⊆ t ∧ LinearIndependent K (coe : b → V)} _ _ ⟨hst, hs⟩ with
     ⟨b, ⟨bt, bi⟩, sb, h⟩
   · refine' ⟨b, bt, sb, fun x xt => _, bi⟩
     by_contra hn

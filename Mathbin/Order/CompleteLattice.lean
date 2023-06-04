@@ -244,7 +244,7 @@ theorem sInf_le_sInf_of_forall_exists_le (h : ∀ x ∈ s, ∃ y ∈ t, y ≤ x)
       simp only [le_sInf_iff]
       introv h₀ h₁
       rcases h _ h₁ with ⟨y, hy, hy'⟩
-      solve_by_elim [le_trans _ hy'] )
+      solve_by_elim [le_trans _ hy'])
 #align Inf_le_Inf_of_forall_exists_le sInf_le_sInf_of_forall_exists_le
 
 -- We will generalize this to conditionally complete lattices in `cInf_singleton`.
@@ -295,7 +295,7 @@ def completeLatticeOfInf (α : Type _) [H1 : PartialOrder α] [H2 : InfSet α]
     bot_le := fun x => (isGLB_sInf univ).1 trivial
     top := sInf ∅
     le_top := fun a => (isGLB_sInf ∅).2 <| by simp
-    sup := fun a b => sInf { x | a ≤ x ∧ b ≤ x }
+    sup := fun a b => sInf {x | a ≤ x ∧ b ≤ x}
     inf := fun a b => sInf {a, b}
     le_inf := fun a b c hab hac => by apply (isGLB_sInf _).2; simp [*]
     inf_le_right := fun a b => (isGLB_sInf _).1 <| mem_insert_of_mem _ <| mem_singleton _
@@ -350,7 +350,7 @@ def completeLatticeOfSup (α : Type _) [H1 : PartialOrder α] [H2 : SupSet α]
     sup_le := fun a b c hac hbc => (isLUB_sSup _).2 (by simp [*])
     le_sup_left := fun a b => (isLUB_sSup _).1 <| mem_insert _ _
     le_sup_right := fun a b => (isLUB_sSup _).1 <| mem_insert_of_mem _ <| mem_singleton _
-    inf := fun a b => sSup { x | x ≤ a ∧ x ≤ b }
+    inf := fun a b => sSup {x | x ≤ a ∧ x ≤ b}
     le_inf := fun a b c hab hac => (isLUB_sSup _).1 <| by simp [*]
     inf_le_left := fun a b => (isLUB_sSup _).2 fun x => And.left
     inf_le_right := fun a b => (isLUB_sSup _).2 fun x => And.right
@@ -375,10 +375,10 @@ def completeLatticeOfCompleteSemilatticeSup (α : Type _) [CompleteSemilatticeSu
 -/
 
 #print CompleteLinearOrder /-
-/- ./././Mathport/Syntax/Translate/Command.lean:422:11: unsupported: advanced extends in structure -/
+/- ./././Mathport/Syntax/Translate/Command.lean:423:11: unsupported: advanced extends in structure -/
 /-- A complete linear order is a linear order whose lattice structure is complete. -/
 class CompleteLinearOrder (α : Type _) extends CompleteLattice α,
-    "./././Mathport/Syntax/Translate/Command.lean:422:11: unsupported: advanced extends in structure"
+    "./././Mathport/Syntax/Translate/Command.lean:423:11: unsupported: advanced extends in structure"
 #align complete_linear_order CompleteLinearOrder
 -/
 
@@ -1453,7 +1453,7 @@ theorem iInf_union {f : β → α} {s t : Set β} : (⨅ x ∈ s ∪ t, f x) = (
 
 theorem iSup_split (f : β → α) (p : β → Prop) :
     (⨆ i, f i) = (⨆ (i) (h : p i), f i) ⊔ ⨆ (i) (h : ¬p i), f i := by
-  simpa [Classical.em] using @iSup_union _ _ _ f { i | p i } { i | ¬p i }
+  simpa [Classical.em] using @iSup_union _ _ _ f {i | p i} {i | ¬p i}
 #align supr_split iSup_split
 
 theorem iInf_split :

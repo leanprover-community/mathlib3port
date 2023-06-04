@@ -125,7 +125,7 @@ theorem BlankExtends.above_of_le {Γ} [Inhabited Γ] {l l₁ l₂ : List Γ} :
   rintro ⟨i, rfl⟩ ⟨j, e⟩ h; use i - j
   refine' List.append_right_cancel (e.symm.trans _)
   rw [List.append_assoc, ← List.replicate_add, tsub_add_cancel_of_le]
-  apply_fun List.length  at e 
+  apply_fun List.length at e 
   simp only [List.length_append, List.length_replicate] at e 
   rwa [← add_le_add_iff_left, e, add_le_add_iff_right]
 #align turing.blank_extends.above_of_le Turing.BlankExtends.above_of_le
@@ -1233,10 +1233,10 @@ namespace TM0
 
 section
 
-parameter (Γ : Type _)[Inhabited Γ]
+parameter (Γ : Type _) [Inhabited Γ]
 
 -- type of tape symbols
-parameter (Λ : Type _)[Inhabited Λ]
+parameter (Λ : Type _) [Inhabited Λ]
 
 -- type of "labels" or TM states
 /-- A Turing machine "statement" is just a command to either move
@@ -1448,7 +1448,7 @@ namespace TM1
 
 section
 
-parameter (Γ : Type _)[Inhabited Γ]
+parameter (Γ : Type _) [Inhabited Γ]
 
 -- Type of tape symbols
 parameter (Λ : Type _)
@@ -1668,11 +1668,11 @@ namespace TM1to0
 
 section
 
-parameter {Γ : Type _}[Inhabited Γ]
+parameter {Γ : Type _} [Inhabited Γ]
 
-parameter {Λ : Type _}[Inhabited Λ]
+parameter {Λ : Type _} [Inhabited Λ]
 
-parameter {σ : Type _}[Inhabited σ]
+parameter {σ : Type _} [Inhabited σ]
 
 -- mathport name: exprstmt₁
 local notation "stmt₁" => TM1.Stmt Γ Λ σ
@@ -1843,7 +1843,7 @@ open TM1
 
 section
 
-parameter {Γ : Type _}[Inhabited Γ]
+parameter {Γ : Type _} [Inhabited Γ]
 
 #print Turing.TM1to1.exists_enc_dec /-
 theorem exists_enc_dec [Fintype Γ] :
@@ -1858,14 +1858,14 @@ theorem exists_enc_dec [Fintype Γ] :
       Bool.of_decide_true <| (congr_fun h b).trans <| Bool.decide_true rfl⟩
   let H := (F.to_embedding.trans G).trans (Equiv.vectorEquivFin _ _).symm.toEmbedding
   classical
-    let enc := H.set_value default (Vector.replicate n ff)
-    exact ⟨_, enc, Function.invFun enc, H.set_value_eq _ _, Function.leftInverse_invFun enc.2⟩
+  let enc := H.set_value default (Vector.replicate n ff)
+  exact ⟨_, enc, Function.invFun enc, H.set_value_eq _ _, Function.leftInverse_invFun enc.2⟩
 #align turing.TM1to1.exists_enc_dec Turing.TM1to1.exists_enc_dec
 -/
 
-parameter {Λ : Type _}[Inhabited Λ]
+parameter {Λ : Type _} [Inhabited Λ]
 
-parameter {σ : Type _}[Inhabited σ]
+parameter {σ : Type _} [Inhabited σ]
 
 -- mathport name: exprstmt₁
 local notation "stmt₁" => Stmt Γ Λ σ
@@ -1896,7 +1896,7 @@ def readAux : ∀ n, (Vector Bool n → stmt') → stmt'
       (Stmt.move Dir.right <| read_aux i fun v => f (false ::ᵥ v))
 #align turing.TM1to1.read_aux Turing.TM1to1.readAux
 
-parameter {n : ℕ}(enc : Γ → Vector Bool n)(dec : Vector Bool n → Γ)
+parameter {n : ℕ} (enc : Γ → Vector Bool n) (dec : Vector Bool n → Γ)
 
 /-- A move left or right corresponds to `n` moves across the super-cell. -/
 def move (d : Dir) (q : stmt') : stmt' :=
@@ -2228,9 +2228,9 @@ namespace TM0to1
 
 section
 
-parameter {Γ : Type _}[Inhabited Γ]
+parameter {Γ : Type _} [Inhabited Γ]
 
-parameter {Λ : Type _}[Inhabited Λ]
+parameter {Λ : Type _} [Inhabited Λ]
 
 /-- The machine states for a TM1 emulating a TM0 machine. States of the TM0 machine are embedded
 as `normal q` states, but the actual operation is split into two parts, a jump to `act s q`
@@ -2336,7 +2336,7 @@ namespace TM2
 
 section
 
-parameter {K : Type _}[DecidableEq K]
+parameter {K : Type _} [DecidableEq K]
 
 -- Index type of stacks
 parameter (Γ : K → Type _)
@@ -2589,13 +2589,13 @@ theorem stk_nth_val {K : Type _} {Γ : K → Type _} {L : ListBlank (∀ k, Opti
 
 section
 
-parameter {K : Type _}[DecidableEq K]
+parameter {K : Type _} [DecidableEq K]
 
 parameter {Γ : K → Type _}
 
-parameter {Λ : Type _}[Inhabited Λ]
+parameter {Λ : Type _} [Inhabited Λ]
 
-parameter {σ : Type _}[Inhabited σ]
+parameter {σ : Type _} [Inhabited σ]
 
 -- mathport name: exprstmt₂
 local notation "stmt₂" => TM2.Stmt Γ Λ σ

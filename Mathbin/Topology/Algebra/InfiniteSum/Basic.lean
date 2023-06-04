@@ -499,16 +499,16 @@ theorem tsum_congr_subtype (f : β → α) {s t : Set β} (h : s = t) :
 
 theorem tsum_zero' (hz : IsClosed ({0} : Set α)) : (∑' b : β, (0 : α)) = 0 := by
   classical
-    rw [tsum, dif_pos summable_zero]
-    suffices ∀ x : α, HasSum (fun b : β => (0 : α)) x → x = 0 by
-      exact this _ (Classical.choose_spec _)
-    intro x hx
-    contrapose! hx
-    simp only [HasSum, tendsto_nhds, Finset.sum_const_zero, Filter.mem_atTop_sets, ge_iff_le,
-      Finset.le_eq_subset, Set.mem_preimage, not_forall, not_exists, exists_prop, exists_and_right]
-    refine' ⟨{0}ᶜ, ⟨is_open_compl_iff.mpr hz, _⟩, fun y => ⟨⟨y, subset_refl _⟩, _⟩⟩
-    · simpa using hx
-    · simp
+  rw [tsum, dif_pos summable_zero]
+  suffices ∀ x : α, HasSum (fun b : β => (0 : α)) x → x = 0 by
+    exact this _ (Classical.choose_spec _)
+  intro x hx
+  contrapose! hx
+  simp only [HasSum, tendsto_nhds, Finset.sum_const_zero, Filter.mem_atTop_sets, ge_iff_le,
+    Finset.le_eq_subset, Set.mem_preimage, not_forall, not_exists, exists_prop, exists_and_right]
+  refine' ⟨{0}ᶜ, ⟨is_open_compl_iff.mpr hz, _⟩, fun y => ⟨⟨y, subset_refl _⟩, _⟩⟩
+  · simpa using hx
+  · simp
 #align tsum_zero' tsum_zero'
 
 @[simp]
@@ -889,7 +889,7 @@ theorem summable_iff_of_summable_sub (hfg : Summable fun b => f b - g b) :
 theorem HasSum.update (hf : HasSum f a₁) (b : β) [DecidableEq β] (a : α) :
     HasSum (update f b a) (a - f b + a₁) :=
   by
-  convert(hasSum_ite_eq b _).add hf
+  convert (hasSum_ite_eq b _).add hf
   ext b'
   by_cases h : b' = b
   · rw [h, update_same]
@@ -1304,7 +1304,7 @@ end LocInstances
 
 theorem tsum_subtype_add_tsum_subtype_compl [T2Space α] {f : β → α} (hf : Summable f) (s : Set β) :
     ((∑' x : s, f x) + ∑' x : sᶜ, f x) = ∑' x, f x :=
-  ((hf.Subtype s).HasSum.add_compl (hf.Subtype { x | x ∉ s }).HasSum).unique hf.HasSum
+  ((hf.Subtype s).HasSum.add_compl (hf.Subtype {x | x ∉ s}).HasSum).unique hf.HasSum
 #align tsum_subtype_add_tsum_subtype_compl tsum_subtype_add_tsum_subtype_compl
 
 theorem sum_add_tsum_subtype_compl [T2Space α] {f : β → α} (hf : Summable f) (s : Finset β) :

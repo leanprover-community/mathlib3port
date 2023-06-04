@@ -36,13 +36,13 @@ open scoped Filter BigOperators ENNReal Topology NNReal
 open Filter Set Metric MeasureTheory Real
 
 theorem setOf_liouvilleWith_subset_aux :
-    { x : ℝ | ∃ p > 2, LiouvilleWith p x } ⊆
+    {x : ℝ | ∃ p > 2, LiouvilleWith p x} ⊆
       ⋃ m : ℤ,
         (fun x : ℝ => x + m) ⁻¹'
           ⋃ n > (0 : ℕ),
-            { x : ℝ |
+            {x : ℝ |
               ∃ᶠ b : ℕ in atTop,
-                ∃ a ∈ Finset.Icc (0 : ℤ) b, |x - (a : ℤ) / b| < 1 / b ^ (2 + 1 / n : ℝ) } :=
+                ∃ a ∈ Finset.Icc (0 : ℤ) b, |x - (a : ℤ) / b| < 1 / b ^ (2 + 1 / n : ℝ)} :=
   by
   rintro x ⟨p, hp, hxp⟩
   rcases exists_nat_one_div_lt (sub_pos.2 hp) with ⟨n, hn⟩
@@ -91,7 +91,7 @@ theorem setOf_liouvilleWith_subset_aux :
 measure zero. -/
 @[simp]
 theorem volume_iUnion_setOf_liouvilleWith :
-    volume (⋃ (p : ℝ) (hp : 2 < p), { x : ℝ | LiouvilleWith p x }) = 0 :=
+    volume (⋃ (p : ℝ) (hp : 2 < p), {x : ℝ | LiouvilleWith p x}) = 0 :=
   by
   simp only [← set_of_exists]
   refine' measure_mono_null setOf_liouvilleWith_subset_aux _
@@ -137,7 +137,7 @@ theorem ae_not_liouville : ∀ᵐ x, ¬Liouville x :=
 
 /-- The set of Liouville numbers has Lebesgue measure zero. -/
 @[simp]
-theorem volume_setOf_liouville : volume { x : ℝ | Liouville x } = 0 := by
+theorem volume_setOf_liouville : volume {x : ℝ | Liouville x} = 0 := by
   simpa only [ae_iff, Classical.not_not] using ae_not_liouville
 #align volume_set_of_liouville volume_setOf_liouville
 

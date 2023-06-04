@@ -33,14 +33,14 @@ local notation "conj'" => starRingEnd ℂ
 
 namespace Complex
 
-/- ./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler λ α,
+/- ./././Mathport/Syntax/Translate/Command.lean:43:9: unsupported derive handler λ α,
 has_coe[has_coe] α exprℂ() -/
 #print Complex.UnitDisc /-
 /-- Complex unit disc. -/
 def UnitDisc : Type :=
   ball (0 : ℂ) 1
 deriving CommSemigroup, HasDistribNeg,
-  «./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler λ α,
+  «./././Mathport/Syntax/Translate/Command.lean:43:9: unsupported derive handler λ α,
   has_coe[has_coe] α exprℂ()», TopologicalSpace
 #align complex.unit_disc Complex.UnitDisc
 -/

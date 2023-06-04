@@ -113,7 +113,7 @@ theorem coe_map_subset_range (f : α ↪ β) (s : Finset α) : (s.map f : Set β
 #print Finset.map_perm /-
 /-- If the only elements outside `s` are those left fixed by `σ`, then mapping by `σ` has no effect.
 -/
-theorem map_perm {σ : Equiv.Perm α} (hs : { a | σ a ≠ a } ⊆ s) : s.map (σ : α ↪ α) = s :=
+theorem map_perm {σ : Equiv.Perm α} (hs : {a | σ a ≠ a} ⊆ s) : s.map (σ : α ↪ α) = s :=
   coe_injective <| (coe_map _ _).trans <| Set.image_perm hs
 #align finset.map_perm Finset.map_perm
 -/

@@ -164,7 +164,7 @@ theorem strongTopology.hasBasis_nhds_zero_of_basis [TopologicalSpace F] [Topolog
     {ι : Type _} (𝔖 : Set (Set E)) (h𝔖₁ : 𝔖.Nonempty) (h𝔖₂ : DirectedOn (· ⊆ ·) 𝔖) {p : ι → Prop}
     {b : ι → Set F} (h : (𝓝 0 : Filter F).HasBasis p b) :
     (@nhds (E →SL[σ] F) (strongTopology σ F 𝔖) 0).HasBasis (fun Si : Set E × ι => Si.1 ∈ 𝔖 ∧ p Si.2)
-      fun Si => { f : E →SL[σ] F | ∀ x ∈ Si.1, f x ∈ b Si.2 } :=
+      fun Si => {f : E →SL[σ] F | ∀ x ∈ Si.1, f x ∈ b Si.2} :=
   by
   letI : UniformSpace F := TopologicalAddGroup.toUniformSpace F
   haveI : UniformAddGroup F := comm_topologicalAddGroup_is_uniform
@@ -176,7 +176,7 @@ theorem strongTopology.hasBasis_nhds_zero [TopologicalSpace F] [TopologicalAddGr
     (𝔖 : Set (Set E)) (h𝔖₁ : 𝔖.Nonempty) (h𝔖₂ : DirectedOn (· ⊆ ·) 𝔖) :
     (@nhds (E →SL[σ] F) (strongTopology σ F 𝔖) 0).HasBasis
       (fun SV : Set E × Set F => SV.1 ∈ 𝔖 ∧ SV.2 ∈ (𝓝 0 : Filter F)) fun SV =>
-      { f : E →SL[σ] F | ∀ x ∈ SV.1, f x ∈ SV.2 } :=
+      {f : E →SL[σ] F | ∀ x ∈ SV.1, f x ∈ SV.2} :=
   strongTopology.hasBasis_nhds_zero_of_basis σ F 𝔖 h𝔖₁ h𝔖₂ (𝓝 0).basis_sets
 #align continuous_linear_map.strong_topology.has_basis_nhds_zero ContinuousLinearMap.strongTopology.hasBasis_nhds_zero
 
@@ -191,19 +191,19 @@ variable {𝕜₁ 𝕜₂ : Type _} [NormedField 𝕜₁] [NormedField 𝕜₂] 
 /-- The topology of bounded convergence on `E →L[𝕜] F`. This coincides with the topology induced by
 the operator norm when `E` and `F` are normed spaces. -/
 instance [TopologicalSpace F] [TopologicalAddGroup F] : TopologicalSpace (E →SL[σ] F) :=
-  strongTopology σ F { S | Bornology.IsVonNBounded 𝕜₁ S }
+  strongTopology σ F {S | Bornology.IsVonNBounded 𝕜₁ S}
 
 instance [TopologicalSpace F] [TopologicalAddGroup F] : TopologicalAddGroup (E →SL[σ] F) :=
   strongTopology.topologicalAddGroup σ F _
 
 instance [RingHomSurjective σ] [RingHomIsometric σ] [TopologicalSpace F] [TopologicalAddGroup F]
     [ContinuousSMul 𝕜₂ F] : ContinuousSMul 𝕜₂ (E →SL[σ] F) :=
-  strongTopology.continuousSMul σ F { S | Bornology.IsVonNBounded 𝕜₁ S }
+  strongTopology.continuousSMul σ F {S | Bornology.IsVonNBounded 𝕜₁ S}
     ⟨∅, Bornology.isVonNBounded_empty 𝕜₁ E⟩
     (directedOn_of_sup_mem fun _ _ => Bornology.IsVonNBounded.union) fun s hs => hs
 
 instance [UniformSpace F] [UniformAddGroup F] : UniformSpace (E →SL[σ] F) :=
-  strongUniformity σ F { S | Bornology.IsVonNBounded 𝕜₁ S }
+  strongUniformity σ F {S | Bornology.IsVonNBounded 𝕜₁ S}
 
 instance [UniformSpace F] [UniformAddGroup F] : UniformAddGroup (E →SL[σ] F) :=
   strongUniformity.uniformAddGroup σ F _
@@ -217,8 +217,8 @@ instance [TopologicalSpace F] [TopologicalAddGroup F] [ContinuousSMul 𝕜₁ E]
 protected theorem hasBasis_nhds_zero_of_basis [TopologicalSpace F] [TopologicalAddGroup F]
     {ι : Type _} {p : ι → Prop} {b : ι → Set F} (h : (𝓝 0 : Filter F).HasBasis p b) :
     (𝓝 (0 : E →SL[σ] F)).HasBasis (fun Si : Set E × ι => Bornology.IsVonNBounded 𝕜₁ Si.1 ∧ p Si.2)
-      fun Si => { f : E →SL[σ] F | ∀ x ∈ Si.1, f x ∈ b Si.2 } :=
-  strongTopology.hasBasis_nhds_zero_of_basis σ F { S | Bornology.IsVonNBounded 𝕜₁ S }
+      fun Si => {f : E →SL[σ] F | ∀ x ∈ Si.1, f x ∈ b Si.2} :=
+  strongTopology.hasBasis_nhds_zero_of_basis σ F {S | Bornology.IsVonNBounded 𝕜₁ S}
     ⟨∅, Bornology.isVonNBounded_empty 𝕜₁ E⟩
     (directedOn_of_sup_mem fun _ _ => Bornology.IsVonNBounded.union) h
 #align continuous_linear_map.has_basis_nhds_zero_of_basis ContinuousLinearMap.hasBasis_nhds_zero_of_basis
@@ -226,7 +226,7 @@ protected theorem hasBasis_nhds_zero_of_basis [TopologicalSpace F] [TopologicalA
 protected theorem hasBasis_nhds_zero [TopologicalSpace F] [TopologicalAddGroup F] :
     (𝓝 (0 : E →SL[σ] F)).HasBasis
       (fun SV : Set E × Set F => Bornology.IsVonNBounded 𝕜₁ SV.1 ∧ SV.2 ∈ (𝓝 0 : Filter F))
-      fun SV => { f : E →SL[σ] F | ∀ x ∈ SV.1, f x ∈ SV.2 } :=
+      fun SV => {f : E →SL[σ] F | ∀ x ∈ SV.1, f x ∈ SV.2} :=
   ContinuousLinearMap.hasBasis_nhds_zero_of_basis (𝓝 0).basis_sets
 #align continuous_linear_map.has_basis_nhds_zero ContinuousLinearMap.hasBasis_nhds_zero
 

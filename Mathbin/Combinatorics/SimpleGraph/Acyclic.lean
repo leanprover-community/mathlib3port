@@ -146,24 +146,24 @@ theorem isAcyclic_iff_path_unique : G.IsAcyclic ↔ ∀ ⦃v w : V⦄ (p q : G.P
 theorem isTree_iff_existsUnique_path :
     G.IsTree ↔ Nonempty V ∧ ∀ v w : V, ∃! p : G.Walk v w, p.IsPath := by
   classical
-    rw [is_tree_iff, is_acyclic_iff_path_unique]
-    constructor
-    · rintro ⟨hc, hu⟩
-      refine' ⟨hc.nonempty, _⟩
-      intro v w
-      let q := (hc v w).some.toPath
-      use q
-      simp only [true_and_iff, path.is_path]
-      intro p hp
-      specialize hu ⟨p, hp⟩ q
-      exact subtype.ext_iff.mp hu
-    · rintro ⟨hV, h⟩
-      refine' ⟨connected.mk _, _⟩
-      · intro v w
-        obtain ⟨p, hp⟩ := h v w
-        exact p.reachable
-      · rintro v w ⟨p, hp⟩ ⟨q, hq⟩
-        simp only [ExistsUnique.unique (h v w) hp hq]
+  rw [is_tree_iff, is_acyclic_iff_path_unique]
+  constructor
+  · rintro ⟨hc, hu⟩
+    refine' ⟨hc.nonempty, _⟩
+    intro v w
+    let q := (hc v w).some.toPath
+    use q
+    simp only [true_and_iff, path.is_path]
+    intro p hp
+    specialize hu ⟨p, hp⟩ q
+    exact subtype.ext_iff.mp hu
+  · rintro ⟨hV, h⟩
+    refine' ⟨connected.mk _, _⟩
+    · intro v w
+      obtain ⟨p, hp⟩ := h v w
+      exact p.reachable
+    · rintro v w ⟨p, hp⟩ ⟨q, hq⟩
+      simp only [ExistsUnique.unique (h v w) hp hq]
 #align simple_graph.is_tree_iff_exists_unique_path SimpleGraph.isTree_iff_existsUnique_path
 -/
 

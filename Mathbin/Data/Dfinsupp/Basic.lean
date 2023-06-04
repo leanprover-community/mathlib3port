@@ -593,11 +593,11 @@ variable [∀ i, Zero (β i)]
 omit dec
 
 #print Dfinsupp.finite_support /-
-theorem finite_support (f : Π₀ i, β i) : Set.Finite { i | f i ≠ 0 } := by
+theorem finite_support (f : Π₀ i, β i) : Set.Finite {i | f i ≠ 0} := by
   classical exact
-      Trunc.induction_on f.support' fun xs =>
-        (Multiset.toFinset ↑xs).finite_toSet.Subset fun i H =>
-          Multiset.mem_toFinset.2 ((xs.Prop i).resolve_right H)
+    Trunc.induction_on f.support' fun xs =>
+      (Multiset.toFinset ↑xs).finite_toSet.Subset fun i H =>
+        Multiset.mem_toFinset.2 ((xs.Prop i).resolve_right H)
 #align dfinsupp.finite_support Dfinsupp.finite_support
 -/
 
@@ -1614,8 +1614,8 @@ instance distribMulAction₂ [Monoid γ] [∀ i j, AddMonoid (δ i j)]
 noncomputable def sigmaCurry [∀ i j, Zero (δ i j)] (f : Π₀ i : Σ i, _, δ i.1 i.2) :
     Π₀ (i) (j), δ i j := by
   classical exact
-      mk (f.support.image fun i => i.1) fun i =>
-        mk (f.support.preimage (Sigma.mk i) <| sigma_mk_injective.inj_on _) fun j => f ⟨i, j⟩
+    mk (f.support.image fun i => i.1) fun i =>
+      mk (f.support.preimage (Sigma.mk i) <| sigma_mk_injective.inj_on _) fun j => f ⟨i, j⟩
 #align dfinsupp.sigma_curry Dfinsupp.sigmaCurry
 -/
 
@@ -2094,10 +2094,10 @@ theorem dfinsupp_sumAddHom_mem [∀ i, AddZeroClass (β i)] [AddCommMonoid γ] {
     [SetLike S γ] [AddSubmonoidClass S γ] (s : S) (f : Π₀ i, β i) (g : ∀ i, β i →+ γ)
     (h : ∀ c, f c ≠ 0 → g c (f c) ∈ s) : Dfinsupp.sumAddHom g f ∈ s := by
   classical
-    rw [Dfinsupp.sumAddHom_apply]
-    convert dfinsupp_sum_mem _ _ _ _
-    · infer_instance
-    exact h
+  rw [Dfinsupp.sumAddHom_apply]
+  convert dfinsupp_sum_mem _ _ _ _
+  · infer_instance
+  exact h
 #align dfinsupp_sum_add_hom_mem dfinsupp_sumAddHom_mem
 
 /-- The supremum of a family of commutative additive submonoids is equal to the range of
@@ -2248,8 +2248,8 @@ theorem prod_finset_sum_index {γ : Type w} {α : Type x} [∀ i, AddCommMonoid 
     (h_add : ∀ i b₁ b₂, h i (b₁ + b₂) = h i b₁ * h i b₂) :
     (∏ i in s, (g i).Prod h) = (∑ i in s, g i).Prod h := by
   classical exact
-      Finset.induction_on s (by simp [prod_zero_index])
-        (by simp (config := { contextual := true }) [prod_add_index, h_zero, h_add])
+    Finset.induction_on s (by simp [prod_zero_index])
+      (by simp (config := { contextual := true }) [prod_add_index, h_zero, h_add])
 #align dfinsupp.prod_finset_sum_index Dfinsupp.prod_finset_sum_index
 #align dfinsupp.sum_finset_sum_index Dfinsupp.sum_finset_sum_index
 

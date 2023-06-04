@@ -148,17 +148,17 @@ theorem ortho_smul_right {B : V₁ →ₛₗ[I₁] V₂ →ₛₗ[I₂] K} {x y}
 theorem linearIndependent_of_isOrthoᵢ {B : V₁ →ₛₗ[I₁] V₁ →ₛₗ[I₁'] K} {v : n → V₁}
     (hv₁ : B.IsOrthoᵢ v) (hv₂ : ∀ i, ¬B.IsOrtho (v i) (v i)) : LinearIndependent K₁ v := by
   classical
-    rw [linearIndependent_iff']
-    intro s w hs i hi
-    have : B (s.sum fun i : n => w i • v i) (v i) = 0 := by rw [hs, map_zero, zero_apply]
-    have hsum : (s.sum fun j : n => I₁ (w j) * B (v j) (v i)) = I₁ (w i) * B (v i) (v i) :=
-      by
-      apply Finset.sum_eq_single_of_mem i hi
-      intro j hj hij
-      rw [is_Ortho_def.1 hv₁ _ _ hij, MulZeroClass.mul_zero]
-    simp_rw [B.map_sum₂, map_smulₛₗ₂, smul_eq_mul, hsum] at this 
-    apply (map_eq_zero I₁).mp
-    exact eq_zero_of_ne_zero_of_mul_right_eq_zero (hv₂ i) this
+  rw [linearIndependent_iff']
+  intro s w hs i hi
+  have : B (s.sum fun i : n => w i • v i) (v i) = 0 := by rw [hs, map_zero, zero_apply]
+  have hsum : (s.sum fun j : n => I₁ (w j) * B (v j) (v i)) = I₁ (w i) * B (v i) (v i) :=
+    by
+    apply Finset.sum_eq_single_of_mem i hi
+    intro j hj hij
+    rw [is_Ortho_def.1 hv₁ _ _ hij, MulZeroClass.mul_zero]
+  simp_rw [B.map_sum₂, map_smulₛₗ₂, smul_eq_mul, hsum] at this 
+  apply (map_eq_zero I₁).mp
+  exact eq_zero_of_ne_zero_of_mul_right_eq_zero (hv₂ i) this
 #align linear_map.linear_independent_of_is_Ortho LinearMap.linearIndependent_of_isOrthoᵢ
 
 end Field
@@ -338,7 +338,7 @@ complement for which, for all `y` in `N`, `B y x = 0`.  This variant definition 
 provided in mathlib. -/
 def orthogonalBilin (N : Submodule R₁ M₁) (B : M₁ →ₛₗ[I₁] M₁ →ₛₗ[I₂] R) : Submodule R₁ M₁
     where
-  carrier := { m | ∀ n ∈ N, B.IsOrtho n m }
+  carrier := {m | ∀ n ∈ N, B.IsOrtho n m}
   zero_mem' x _ := B.isOrtho_zero_right x
   add_mem' x y hx hy n hn := by
     rw [LinearMap.IsOrtho, map_add, show B n x = 0 from hx n hn, show B n y = 0 from hy n hn,
@@ -563,7 +563,7 @@ variable [AddCommGroup M₁] [Module R M₁] (B F : M →ₗ[R] M →ₗ[R] R)
 /-- The set of pair-self-adjoint endomorphisms are a submodule of the type of all endomorphisms. -/
 def isPairSelfAdjointSubmodule : Submodule R (Module.End R M)
     where
-  carrier := { f | IsPairSelfAdjoint B F f }
+  carrier := {f | IsPairSelfAdjoint B F f}
   zero_mem' := isAdjointPair_zero
   add_mem' f g hf hg := hf.add hg
   smul_mem' c f h := h.smul c

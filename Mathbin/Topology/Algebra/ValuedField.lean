@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot
 
 ! This file was ported from Lean 3 source module topology.algebra.valued_field
-! leanprover-community/mathlib commit 3e0c4d76b6ebe9dfafb67d16f7286d2731ed6064
+! leanprover-community/mathlib commit 2ebc1d6c2fed9f54c95bbc3998eaa5570527129a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.Topology.Algebra.UniformField
 
 /-!
 # Valued fields and their completions
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 In this file we study the topology of a field `K` endowed with a valuation (in our application
 to adic spaces, `K` will be the valuation field associated to some valuation on a ring, defined in
@@ -91,7 +94,7 @@ instance (priority := 100) Valued.topologicalDivisionRing [Valued K Γ₀] :
       intro x x_ne s s_in
       cases' valued.mem_nhds.mp s_in with γ hs; clear s_in
       rw [mem_map, Valued.mem_nhds]
-      change ∃ γ : Γ₀ˣ, { y : K | (v (y - x) : Γ₀) < γ } ⊆ { x : K | x⁻¹ ∈ s }
+      change ∃ γ : Γ₀ˣ, {y : K | (v (y - x) : Γ₀) < γ} ⊆ {x : K | x⁻¹ ∈ s}
       have vx_ne := (Valuation.ne_zero_iff <| v).mpr x_ne
       let γ' := Units.mk0 _ vx_ne
       use min (γ * (γ' * γ')) γ'
@@ -110,7 +113,7 @@ instance (priority := 100) ValuedRing.separated [Valued K Γ₀] : SeparatedSpac
   rw [separated_iff_t2]
   apply TopologicalAddGroup.t2Space_of_zero_sep
   intro x x_ne
-  refine' ⟨{ k | v k < v x }, _, fun h => lt_irrefl _ h⟩
+  refine' ⟨{k | v k < v x}, _, fun h => lt_irrefl _ h⟩
   rw [Valued.mem_nhds]
   have vx_ne := (Valuation.ne_zero_iff <| v).mpr x_ne
   let γ' := Units.mk0 _ vx_ne
@@ -280,7 +283,7 @@ theorem continuous_extension : Continuous (Valued.extension : hat K → Γ₀) :
     have vz₀_ne : (v z₀ : Γ₀) ≠ 0 := by rwa [Valuation.ne_zero_iff]
     refine' ⟨v z₀, _⟩
     rw [WithZeroTopology.tendsto_of_ne_zero vz₀_ne, eventually_comap]
-    filter_upwards [nhds_right]with x x_in a ha
+    filter_upwards [nhds_right] with x x_in a ha
     rcases x_in with ⟨y, y_in, rfl⟩
     have : (v (a * z₀⁻¹) : Γ₀) = 1 := by
       apply hV
@@ -340,11 +343,11 @@ noncomputable def extensionValuation : Valuation (hat K) Γ₀
 
 -- Bourbaki CA VI §5 no.3 Proposition 5 (d)
 theorem closure_coe_completion_v_lt {γ : Γ₀ˣ} :
-    closure (coe '' { x : K | v x < (γ : Γ₀) }) = { x : hat K | extensionValuation x < (γ : Γ₀) } :=
+    closure (coe '' {x : K | v x < (γ : Γ₀)}) = {x : hat K | extensionValuation x < (γ : Γ₀)} :=
   by
   ext x
   let γ₀ := extension_valuation x
-  suffices γ₀ ≠ 0 → (x ∈ closure (coe '' { x : K | v x < (γ : Γ₀) }) ↔ γ₀ < (γ : Γ₀))
+  suffices γ₀ ≠ 0 → (x ∈ closure (coe '' {x : K | v x < (γ : Γ₀)}) ↔ γ₀ < (γ : Γ₀))
     by
     cases eq_or_ne γ₀ 0
     · simp only [h, (Valuation.zero_iff _).mp h, mem_set_of_eq, Valuation.map_zero, Units.zero_lt,
@@ -374,7 +377,7 @@ noncomputable instance valuedCompletion : Valued (hat K) Γ₀
   is_topological_valuation s :=
     by
     suffices
-      has_basis (𝓝 (0 : hat K)) (fun _ => True) fun γ : Γ₀ˣ => { x | extension_valuation x < γ }
+      has_basis (𝓝 (0 : hat K)) (fun _ => True) fun γ : Γ₀ˣ => {x | extension_valuation x < γ}
       by
       rw [this.mem_iff]
       exact exists_congr fun γ => by simp

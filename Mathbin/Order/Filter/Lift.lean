@@ -84,8 +84,7 @@ theorem mem_lift_sets (hg : Monotone g) {s : Set β} : s ∈ f.lift g ↔ ∃ t 
     simp only [id, exists_mem_subset_iff]
 #align filter.mem_lift_sets Filter.mem_lift_sets
 
-theorem sInter_lift_sets (hg : Monotone g) :
-    ⋂₀ { s | s ∈ f.lift g } = ⋂ s ∈ f, ⋂₀ { t | t ∈ g s } := by
+theorem sInter_lift_sets (hg : Monotone g) : ⋂₀ {s | s ∈ f.lift g} = ⋂ s ∈ f, ⋂₀ {t | t ∈ g s} := by
   simp only [sInter_eq_bInter, mem_set_of_eq, Filter.mem_sets, mem_lift_sets hg, Inter_exists,
     @Inter_comm _ (Set β)]
 #align filter.sInter_lift_sets Filter.sInter_lift_sets
@@ -306,7 +305,7 @@ theorem eventually_lift'_iff (hh : Monotone h) {p : β → Prop} :
   mem_lift'_sets hh
 #align filter.eventually_lift'_iff Filter.eventually_lift'_iff
 
-theorem sInter_lift'_sets (hh : Monotone h) : ⋂₀ { s | s ∈ f.lift' h } = ⋂ s ∈ f, h s :=
+theorem sInter_lift'_sets (hh : Monotone h) : ⋂₀ {s | s ∈ f.lift' h} = ⋂ s ∈ f, h s :=
   (sInter_lift_sets (monotone_principal.comp hh)).trans <| iInter₂_congr fun s hs => csInf_Ici
 #align filter.sInter_lift'_sets Filter.sInter_lift'_sets
 

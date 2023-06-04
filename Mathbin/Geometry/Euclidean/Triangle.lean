@@ -249,12 +249,12 @@ theorem angle_add_angle_sub_add_angle_sub_eq_pi {x y : V} (hx : x ≠ 0) (hy : y
   have hn0 : 0 ≤ n :=
     by
     rw [hn, mul_nonneg_iff_left_nonneg_of_pos Real.pi_pos] at h0 
-    norm_cast  at h0 
+    norm_cast at h0 
     exact h0
   have hn3 : n < 3 := by
     rw [hn, show π + π + π = 3 * π by ring] at h3lt 
     replace h3lt := lt_of_mul_lt_mul_right h3lt (le_of_lt Real.pi_pos)
-    norm_cast  at h3lt 
+    norm_cast at h3lt 
     exact h3lt
   interval_cases
   · rw [hn] at hcos 
@@ -296,7 +296,8 @@ theorem dist_sq_eq_dist_sq_add_dist_sq_sub_two_mul_dist_mul_dist_mul_cos_angle (
   by
   rw [dist_eq_norm_vsub V p1 p3, dist_eq_norm_vsub V p1 p2, dist_eq_norm_vsub V p3 p2]
   unfold angle
-  convert norm_sub_sq_eq_norm_sq_add_norm_sq_sub_two_mul_norm_mul_norm_mul_cos_angle (p1 -ᵥ p2 : V)
+  convert
+    norm_sub_sq_eq_norm_sq_add_norm_sq_sub_two_mul_norm_mul_norm_mul_cos_angle (p1 -ᵥ p2 : V)
       (p3 -ᵥ p2 : V)
   · exact (vsub_sub_vsub_cancel_right p1 p3 p2).symm
   · exact (vsub_sub_vsub_cancel_right p1 p3 p2).symm

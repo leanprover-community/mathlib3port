@@ -155,12 +155,11 @@ protected def tprod : ∀ (l : List ι) (t : ∀ i, Set (α i)), Set (TProd α l
 #align set.tprod Set.tprod
 
 theorem mk_preimage_tprod :
-    ∀ (l : List ι) (t : ∀ i, Set (α i)), TProd.mk l ⁻¹' Set.tprod l t = { i | i ∈ l }.pi t
+    ∀ (l : List ι) (t : ∀ i, Set (α i)), TProd.mk l ⁻¹' Set.tprod l t = {i | i ∈ l}.pi t
   | [], t => by simp [Set.tprod]
   | i :: l, t => by
     ext f
-    have : f ∈ tprod.mk l ⁻¹' Set.tprod l t ↔ f ∈ { x | x ∈ l }.pi t := by
-      rw [mk_preimage_tprod l t]
+    have : f ∈ tprod.mk l ⁻¹' Set.tprod l t ↔ f ∈ {x | x ∈ l}.pi t := by rw [mk_preimage_tprod l t]
     change tprod.mk l f ∈ Set.tprod l t ↔ ∀ i : ι, i ∈ l → f i ∈ t i at this 
     -- `simp [set.tprod, tprod.mk, this]` can close this goal but is slow.
     rw [Set.tprod, tprod.mk, mem_preimage, mem_pi, prod_mk_mem_set_prod_eq]
@@ -172,7 +171,7 @@ theorem mk_preimage_tprod :
 theorem elim_preimage_pi [DecidableEq ι] {l : List ι} (hnd : l.Nodup) (h : ∀ i, i ∈ l)
     (t : ∀ i, Set (α i)) : TProd.elim' h ⁻¹' pi univ t = Set.tprod l t :=
   by
-  have : { i | i ∈ l } = univ := by ext i; simp [h]
+  have : {i | i ∈ l} = univ := by ext i; simp [h]
   rw [← this, ← mk_preimage_tprod, preimage_preimage]
   convert preimage_id; simp [tprod.mk_elim hnd h, id_def]
 #align set.elim_preimage_pi Set.elim_preimage_pi

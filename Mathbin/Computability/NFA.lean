@@ -139,7 +139,7 @@ def accepts : Language α := fun x => ∃ S ∈ M.accept, S ∈ M.eval x
 def toDFA : DFA α (Set σ) where
   step := M.stepSet
   start := M.start
-  accept := { S | ∃ s ∈ S, s ∈ M.accept }
+  accept := {S | ∃ s ∈ S, s ∈ M.accept}
 #align NFA.to_DFA NFA.toDFA
 -/
 
@@ -149,7 +149,7 @@ theorem toDFA_correct : M.toDFA.accepts = M.accepts :=
   by
   ext x
   rw [accepts, DFA.accepts, eval, DFA.eval]
-  change List.foldl _ _ _ ∈ { S | _ } ↔ _
+  change List.foldl _ _ _ ∈ {S | _} ↔ _
   constructor <;> · exact fun ⟨w, h2, h3⟩ => ⟨w, h3, h2⟩
 #align NFA.to_DFA_correct NFA.toDFA_correct
 -/

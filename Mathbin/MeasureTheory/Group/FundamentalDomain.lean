@@ -114,7 +114,7 @@ to check that its translates `g • s` are (almost) disjoint and that the sum `�
 sufficiently large. -/
 @[to_additive MeasureTheory.IsAddFundamentalDomain.mk_of_measure_univ_le
       "\nIf a measurable space has a finite measure `μ` and a countable additive group `G` acts\nquasi-measure-preservingly, then to show that a set `s` is a fundamental domain, it is sufficient\nto check that its translates `g +ᵥ s` are (almost) disjoint and that the sum `∑' g, μ (g +ᵥ s)` is\nsufficiently large."]
-theorem mk_of_measure_univ_le [FiniteMeasure μ] [Countable G] (h_meas : NullMeasurableSet s μ)
+theorem mk_of_measure_univ_le [IsFiniteMeasure μ] [Countable G] (h_meas : NullMeasurableSet s μ)
     (h_ae_disjoint : ∀ (g) (_ : g ≠ (1 : G)), AEDisjoint μ (g • s) s)
     (h_qmp : ∀ g : G, QuasiMeasurePreserving ((· • ·) g : α → α) μ μ)
     (h_measure_univ_le : μ (univ : Set α) ≤ ∑' g : G, μ (g • s)) : IsFundamentalDomain G s μ :=
@@ -126,7 +126,7 @@ theorem mk_of_measure_univ_le [FiniteMeasure μ] [Countable G] (h_meas : NullMea
       by
       replace h_meas : ∀ g : G, null_measurable_set (g • s) μ := fun g => by
         rw [← inv_inv g, ← preimage_smul]; exact h_meas.preimage (h_qmp g⁻¹)
-      have h_meas' : null_measurable_set { a | ∃ g : G, g • a ∈ s } μ := by
+      have h_meas' : null_measurable_set {a | ∃ g : G, g • a ∈ s} μ := by
         rw [← Union_smul_eq_set_of_exists]; exact null_measurable_set.Union h_meas
       rw [ae_iff_measure_eq h_meas', ← Union_smul_eq_set_of_exists]
       refine' le_antisymm (measure_mono <| subset_univ _) _
@@ -158,7 +158,7 @@ theorem preimage_of_equiv {ν : Measure β} (h : IsFundamentalDomain G s μ) {f 
     AEDisjoint := fun a b hab => by
       lift e to G ≃ H using he
       have : (e.symm a⁻¹)⁻¹ ≠ (e.symm b⁻¹)⁻¹ := by simp [hab]
-      convert(h.ae_disjoint this).Preimage hf using 1
+      convert (h.ae_disjoint this).Preimage hf using 1
       simp only [← preimage_smul_inv, preimage_preimage, ← hef _ _, e.apply_symm_apply, inv_inv] }
 #align measure_theory.is_fundamental_domain.preimage_of_equiv MeasureTheory.IsFundamentalDomain.preimage_of_equiv
 #align measure_theory.is_add_fundamental_domain.preimage_of_equiv MeasureTheory.IsAddFundamentalDomain.preimage_of_equiv
@@ -357,7 +357,7 @@ theorem measure_set_eq (hs : IsFundamentalDomain G s μ) (ht : IsFundamentalDoma
     by
     refine' hs.set_lintegral_eq ht (Set.indicator A fun _ => 1) _
     intro g x
-    convert(Set.indicator_comp_right fun x : α => g • x).symm
+    convert (Set.indicator_comp_right fun x : α => g • x).symm
     rw [hA g]
   simpa [measure.restrict_apply hA₀, lintegral_indicator _ hA₀] using this
 #align measure_theory.is_fundamental_domain.measure_set_eq MeasureTheory.IsFundamentalDomain.measure_set_eq
@@ -545,7 +545,7 @@ theorem essSup_measure_restrict (hs : IsFundamentalDomain G s μ) {f : α → �
   refine' le_antisymm (essSup_mono_measure' measure.restrict_le_self) _
   rw [essSup_eq_sInf (μ.restrict s) f, essSup_eq_sInf μ f]
   refine' sInf_le_sInf _
-  rintro a (ha : (μ.restrict s) { x : α | a < f x } = 0)
+  rintro a (ha : (μ.restrict s) {x : α | a < f x} = 0)
   rw [measure.restrict_apply₀' hs.null_measurable_set] at ha 
   refine' measure_zero_of_invariant hs _ _ ha
   intro γ

@@ -201,7 +201,7 @@ theorem uniformInducing_toContinuousMap : UniformInducing (@toContinuousMap _ _ 
 #align picard_lindelof.fun_space.uniform_inducing_to_continuous_map PicardLindelof.FunSpace.uniformInducing_toContinuousMap
 
 theorem range_toContinuousMap :
-    range toContinuousMap = { f : C(Icc v.tMin v.tMax, E) | f v.t₀ = v.x₀ ∧ LipschitzWith v.C f } :=
+    range toContinuousMap = {f : C(Icc v.tMin v.tMax, E) | f v.t₀ = v.x₀ ∧ LipschitzWith v.C f} :=
   by
   ext f; constructor
   · rintro ⟨⟨f, hf₀, hf_lip⟩, rfl⟩; exact ⟨hf₀, hf_lip⟩
@@ -262,7 +262,7 @@ instance [CompleteSpace E] : CompleteSpace v.FunSpace :=
       (IsClosed.isComplete _)
   rw [range_to_continuous_map, set_of_and]
   refine' (isClosed_eq (ContinuousMap.continuous_eval_const _) continuous_const).inter _
-  have : IsClosed { f : Icc v.t_min v.t_max → E | LipschitzWith v.C f } :=
+  have : IsClosed {f : Icc v.t_min v.t_max → E | LipschitzWith v.C f} :=
     isClosed_setOf_lipschitzWith v.C
   exact this.preimage ContinuousMap.continuous_coe
 
@@ -307,7 +307,7 @@ theorem hasDerivWithinAt_next (t : Icc v.tMin v.tMax) :
       f.continuous_v_comp.continuous_within_at
   rw [v_comp_apply_coe] at this 
   refine' this.congr_of_eventually_eq_of_mem _ t.coe_prop
-  filter_upwards [self_mem_nhdsWithin]with _ ht'
+  filter_upwards [self_mem_nhdsWithin] with _ ht'
   rw [v.proj_of_mem ht']
 #align picard_lindelof.fun_space.has_deriv_within_at_next PicardLindelof.FunSpace.hasDerivWithinAt_next
 

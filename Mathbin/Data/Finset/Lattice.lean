@@ -277,21 +277,21 @@ theorem sup_le_of_le_directed {α : Type _} [SemilatticeSup α] [OrderBot α] (s
     (hs : s.Nonempty) (hdir : DirectedOn (· ≤ ·) s) (t : Finset α) :
     (∀ x ∈ t, ∃ y ∈ s, x ≤ y) → ∃ x, x ∈ s ∧ t.sup id ≤ x := by
   classical
-    apply Finset.induction_on t
-    ·
-      simpa only [forall_prop_of_true, and_true_iff, forall_prop_of_false, bot_le, not_false_iff,
-        sup_empty, forall_true_iff, not_mem_empty]
-    · intro a r har ih h
-      have incs : ↑r ⊆ ↑(insert a r) := by rw [Finset.coe_subset]; apply Finset.subset_insert
-      -- x ∈ s is above the sup of r
-      obtain ⟨x, ⟨hxs, hsx_sup⟩⟩ := ih fun x hx => h x <| incs hx
-      -- y ∈ s is above a
-      obtain ⟨y, hys, hay⟩ := h a (Finset.mem_insert_self a r)
-      -- z ∈ s is above x and y
-      obtain ⟨z, hzs, ⟨hxz, hyz⟩⟩ := hdir x hxs y hys
-      use z, hzs
-      rw [sup_insert, id.def, sup_le_iff]
-      exact ⟨le_trans hay hyz, le_trans hsx_sup hxz⟩
+  apply Finset.induction_on t
+  ·
+    simpa only [forall_prop_of_true, and_true_iff, forall_prop_of_false, bot_le, not_false_iff,
+      sup_empty, forall_true_iff, not_mem_empty]
+  · intro a r har ih h
+    have incs : ↑r ⊆ ↑(insert a r) := by rw [Finset.coe_subset]; apply Finset.subset_insert
+    -- x ∈ s is above the sup of r
+    obtain ⟨x, ⟨hxs, hsx_sup⟩⟩ := ih fun x hx => h x <| incs hx
+    -- y ∈ s is above a
+    obtain ⟨y, hys, hay⟩ := h a (Finset.mem_insert_self a r)
+    -- z ∈ s is above x and y
+    obtain ⟨z, hzs, ⟨hxz, hyz⟩⟩ := hdir x hxs y hys
+    use z, hzs
+    rw [sup_insert, id.def, sup_le_iff]
+    exact ⟨le_trans hay hyz, le_trans hsx_sup hxz⟩
 #align finset.sup_le_of_le_directed Finset.sup_le_of_le_directed
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x y «expr ∈ » s) -/
@@ -1722,7 +1722,7 @@ theorem max'_image [LinearOrder β] {f : α → β} (hf : Monotone f) (s : Finse
 theorem min'_image [LinearOrder β] {f : α → β} (hf : Monotone f) (s : Finset α)
     (h : (s.image f).Nonempty) : (s.image f).min' h = f (s.min' ((Nonempty.image_iff f).mp h)) :=
   by
-  convert@max'_image αᵒᵈ βᵒᵈ _ _ (fun a : αᵒᵈ => to_dual (f (of_dual a))) (by simpa) _ _ <;>
+  convert @max'_image αᵒᵈ βᵒᵈ _ _ (fun a : αᵒᵈ => to_dual (f (of_dual a))) (by simpa) _ _ <;>
     convert h
   rw [nonempty.image_iff]
 #align finset.min'_image Finset.min'_image
@@ -1785,7 +1785,7 @@ theorem max_erase_ne_self {s : Finset α} : (s.eraseₓ x).max ≠ x :=
 
 #print Finset.min_erase_ne_self /-
 theorem min_erase_ne_self {s : Finset α} : (s.eraseₓ x).min ≠ x := by
-  convert@max_erase_ne_self αᵒᵈ _ _ _
+  convert @max_erase_ne_self αᵒᵈ _ _ _
 #align finset.min_erase_ne_self Finset.min_erase_ne_self
 -/
 
@@ -2002,23 +2002,23 @@ theorem count_finset_sup [DecidableEq β] (s : Finset α) (f : α → Multiset �
 theorem mem_sup {α β} [DecidableEq β] {s : Finset α} {f : α → Multiset β} {x : β} :
     x ∈ s.sup f ↔ ∃ v ∈ s, x ∈ f v := by
   classical
-    apply s.induction_on
-    · simp
-    · intro a s has hxs
-      rw [Finset.sup_insert, Multiset.sup_eq_union, Multiset.mem_union]
-      constructor
-      · intro hxi
-        cases' hxi with hf hf
-        · refine' ⟨a, _, hf⟩
-          simp only [true_or_iff, eq_self_iff_true, Finset.mem_insert]
-        · rcases hxs.mp hf with ⟨v, hv, hfv⟩
-          refine' ⟨v, _, hfv⟩
-          simp only [hv, or_true_iff, Finset.mem_insert]
-      · rintro ⟨v, hv, hfv⟩
-        rw [Finset.mem_insert] at hv 
-        rcases hv with (rfl | hv)
-        · exact Or.inl hfv
-        · refine' Or.inr (hxs.mpr ⟨v, hv, hfv⟩)
+  apply s.induction_on
+  · simp
+  · intro a s has hxs
+    rw [Finset.sup_insert, Multiset.sup_eq_union, Multiset.mem_union]
+    constructor
+    · intro hxi
+      cases' hxi with hf hf
+      · refine' ⟨a, _, hf⟩
+        simp only [true_or_iff, eq_self_iff_true, Finset.mem_insert]
+      · rcases hxs.mp hf with ⟨v, hv, hfv⟩
+        refine' ⟨v, _, hfv⟩
+        simp only [hv, or_true_iff, Finset.mem_insert]
+    · rintro ⟨v, hv, hfv⟩
+      rw [Finset.mem_insert] at hv 
+      rcases hv with (rfl | hv)
+      · exact Or.inl hfv
+      · refine' Or.inr (hxs.mpr ⟨v, hv, hfv⟩)
 #align multiset.mem_sup Multiset.mem_sup
 
 end Multiset
@@ -2059,9 +2059,9 @@ variable {ι' : Sort _} [CompleteLattice α]
 that works for `ι : Sort*`. -/
 theorem iSup_eq_iSup_finset (s : ι → α) : (⨆ i, s i) = ⨆ t : Finset ι, ⨆ i ∈ t, s i := by
   classical exact
-      le_antisymm
-        (iSup_le fun b => le_iSup_of_le {b} <| le_iSup_of_le b <| le_iSup_of_le (by simp) <| le_rfl)
-        (iSup_le fun t => iSup_le fun b => iSup_le fun hb => le_iSup _ _)
+    le_antisymm
+      (iSup_le fun b => le_iSup_of_le {b} <| le_iSup_of_le b <| le_iSup_of_le (by simp) <| le_rfl)
+      (iSup_le fun t => iSup_le fun b => iSup_le fun hb => le_iSup _ _)
 #align supr_eq_supr_finset iSup_eq_iSup_finset
 
 /-- Supremum of `s i`, `i : ι`, is equal to the supremum over `t : finset ι` of suprema

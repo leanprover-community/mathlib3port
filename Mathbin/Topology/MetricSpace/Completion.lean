@@ -110,15 +110,15 @@ protected theorem mem_uniformity_dist (s : Set (Completion α × Completion α))
         closed properties pass to the completion. -/
     intro hs
     rcases mem_uniformity_isClosed hs with ⟨t, ht, ⟨tclosed, ts⟩⟩
-    have A : { x : α × α | (coe x.1, coe x.2) ∈ t } ∈ uniformity α :=
+    have A : {x : α × α | (coe x.1, coe x.2) ∈ t} ∈ uniformity α :=
       uniformContinuous_def.1 (uniform_continuous_coe α) t ht
     rcases mem_uniformity_dist.1 A with ⟨ε, εpos, hε⟩
     refine' ⟨ε, εpos, fun x y hxy => _⟩
     have : ε ≤ dist x y ∨ (x, y) ∈ t := by
       apply induction_on₂ x y
       · have :
-          { x : completion α × completion α | ε ≤ dist x.fst x.snd ∨ (x.fst, x.snd) ∈ t } =
-            { p : completion α × completion α | ε ≤ dist p.1 p.2 } ∪ t :=
+          {x : completion α × completion α | ε ≤ dist x.fst x.snd ∨ (x.fst, x.snd) ∈ t} =
+            {p : completion α × completion α | ε ≤ dist p.1 p.2} ∪ t :=
           by ext <;> simp
         rw [this]
         apply IsClosed.union _ tclosed
@@ -140,7 +140,7 @@ protected theorem mem_uniformity_dist (s : Set (Completion α × Completion α))
         the ε-neighborhood of the diagonal is an entourage in `completion α`, and therefore this is
         also the case of `s`. -/
     rintro ⟨ε, εpos, hε⟩
-    let r : Set (ℝ × ℝ) := { p | dist p.1 p.2 < ε }
+    let r : Set (ℝ × ℝ) := {p | dist p.1 p.2 < ε}
     have : r ∈ uniformity ℝ := Metric.dist_mem_uniformity εpos
     have T := uniformContinuous_def.1 (@completion.uniform_continuous_dist α _) r this
     simp only [uniformity_prod_eq_prod, mem_prod_iff, exists_prop, Filter.mem_map,
@@ -175,7 +175,7 @@ protected theorem eq_of_dist_eq_zero (x y : Completion α) (h : dist x y = 0) : 
 /-- Reformulate `completion.mem_uniformity_dist` in terms that are suitable for the definition
 of the metric space structure. -/
 protected theorem uniformity_dist' :
-    𝓤 (Completion α) = ⨅ ε : { ε : ℝ // 0 < ε }, 𝓟 { p | dist p.1 p.2 < ε.val } :=
+    𝓤 (Completion α) = ⨅ ε : { ε : ℝ // 0 < ε }, 𝓟 {p | dist p.1 p.2 < ε.val} :=
   by
   ext s; rw [mem_infi_of_directed]
   · simp [completion.mem_uniformity_dist, subset_def]
@@ -183,7 +183,7 @@ protected theorem uniformity_dist' :
     simp (config := { contextual := true }) [lt_min_iff, (· ≥ ·)]
 #align uniform_space.completion.uniformity_dist' UniformSpace.Completion.uniformity_dist'
 
-protected theorem uniformity_dist : 𝓤 (Completion α) = ⨅ ε > 0, 𝓟 { p | dist p.1 p.2 < ε } := by
+protected theorem uniformity_dist : 𝓤 (Completion α) = ⨅ ε > 0, 𝓟 {p | dist p.1 p.2 < ε} := by
   simpa [iInf_subtype] using @completion.uniformity_dist' α _
 #align uniform_space.completion.uniformity_dist UniformSpace.Completion.uniformity_dist
 

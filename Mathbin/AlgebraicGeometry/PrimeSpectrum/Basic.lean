@@ -140,7 +140,7 @@ At a point `x` (a prime ideal) the function (i.e., element) `f` takes values in 
 `prime_spectrum R` where all "functions" in `s` vanish simultaneously.
 -/
 def zeroLocus (s : Set R) : Set (PrimeSpectrum R) :=
-  { x | s ⊆ x.asIdeal }
+  {x | s ⊆ x.asIdeal}
 #align prime_spectrum.zero_locus PrimeSpectrum.zeroLocus
 -/
 
@@ -174,7 +174,7 @@ def vanishingIdeal (t : Set (PrimeSpectrum R)) : Ideal R :=
 
 #print PrimeSpectrum.coe_vanishingIdeal /-
 theorem coe_vanishingIdeal (t : Set (PrimeSpectrum R)) :
-    (vanishingIdeal t : Set R) = { f : R | ∀ x : PrimeSpectrum R, x ∈ t → f ∈ x.asIdeal } :=
+    (vanishingIdeal t : Set R) = {f : R | ∀ x : PrimeSpectrum R, x ∈ t → f ∈ x.asIdeal} :=
   by
   ext f
   rw [vanishing_ideal, SetLike.mem_coe, Submodule.mem_iInf]
@@ -555,7 +555,7 @@ theorem vanishingIdeal_anti_mono_iff {s t : Set (PrimeSpectrum R)} (ht : IsClose
   ⟨vanishingIdeal_anti_mono, fun h =>
     by
     rw [← ht.closure_subset_iff, ← ht.closure_eq]
-    convert← zero_locus_anti_mono_ideal h <;> apply zero_locus_vanishing_ideal_eq_closure⟩
+    convert ← zero_locus_anti_mono_ideal h <;> apply zero_locus_vanishing_ideal_eq_closure⟩
 #align prime_spectrum.vanishing_ideal_anti_mono_iff PrimeSpectrum.vanishingIdeal_anti_mono_iff
 
 theorem vanishingIdeal_strict_anti_mono_iff {s t : Set (PrimeSpectrum R)} (hs : IsClosed s)
@@ -758,7 +758,7 @@ theorem localization_comap_embedding [Algebra R S] (M : Submonoid R) [IsLocaliza
 #align prime_spectrum.localization_comap_embedding PrimeSpectrum.localization_comap_embedding
 
 theorem localization_comap_range [Algebra R S] (M : Submonoid R) [IsLocalization M S] :
-    Set.range (comap (algebraMap R S)) = { p | Disjoint (M : Set R) p.asIdeal } :=
+    Set.range (comap (algebraMap R S)) = {p | Disjoint (M : Set R) p.asIdeal} :=
   by
   ext x
   constructor
@@ -843,7 +843,7 @@ section BasicOpen
 /-- `basic_open r` is the open subset containing all prime ideals not containing `r`. -/
 def basicOpen (r : R) : TopologicalSpace.Opens (PrimeSpectrum R)
     where
-  carrier := { x | r ∉ x.asIdeal }
+  carrier := {x | r ∉ x.asIdeal}
   is_open' := ⟨{r}, Set.ext fun x => Set.singleton_subset_iff.trans <| Classical.not_not.symm⟩
 #align prime_spectrum.basic_open PrimeSpectrum.basicOpen
 -/

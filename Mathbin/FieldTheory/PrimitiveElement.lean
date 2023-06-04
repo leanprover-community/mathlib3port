@@ -96,7 +96,7 @@ theorem primitive_element_inf_aux_exists_c (f g : F[X]) :
   let s' := s.preimage ϕ fun x hx y hy h => ϕ.injective h
   obtain ⟨c, hc⟩ := Infinite.exists_not_mem_finset s'
   simp_rw [Finset.mem_preimage, Multiset.mem_toFinset, Multiset.mem_bind, Multiset.mem_map] at hc 
-  push_neg  at hc 
+  push_neg at hc 
   exact ⟨c, hc⟩
 #align field.primitive_element_inf_aux_exists_c Field.primitive_element_inf_aux_exists_c
 
@@ -187,7 +187,7 @@ theorem primitive_element_inf_aux [IsSeparable F E] : ∃ γ : E, F⟮⟯ = F⟮
   rw [← eq_X_sub_C_of_separable_of_root_eq h_sep h_root h_splits h_roots]
   trans EuclideanDomain.gcd (_ : E[X]) (_ : E[X])
   · dsimp only [p]
-    convert(gcd_map (algebraMap F⟮⟯ E)).symm
+    convert (gcd_map (algebraMap F⟮⟯ E)).symm
   · simpa [map_comp, Polynomial.map_map, ← IsScalarTower.algebraMap_eq, h]
 #align field.primitive_element_inf_aux Field.primitive_element_inf_aux
 
@@ -244,8 +244,9 @@ theorem AlgHom.card (F E K : Type _) [Field F] [Field E] [Field K] [IsAlgClosed 
     [FiniteDimensional F E] [IsSeparable F E] [Algebra F K] :
     Fintype.card (E →ₐ[F] K) = finrank F E :=
   by
-  convert(AlgHom.card_of_powerBasis (Field.powerBasisOfFiniteOfSeparable F E)
-          (IsSeparable.separable _ _) (IsAlgClosed.splits_codomain _)).trans
+  convert
+    (AlgHom.card_of_powerBasis (Field.powerBasisOfFiniteOfSeparable F E) (IsSeparable.separable _ _)
+          (IsAlgClosed.splits_codomain _)).trans
       (PowerBasis.finrank _).symm
   infer_instance
 #align alg_hom.card AlgHom.card

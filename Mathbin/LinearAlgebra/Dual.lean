@@ -499,9 +499,9 @@ theorem eval_ker {ι : Type _} (b : Basis ι R M) : (Dual.eval R M).ker = ⊥ :=
 
 theorem eval_range {ι : Type _} [Finite ι] (b : Basis ι R M) : (eval R M).range = ⊤ := by
   classical
-    cases nonempty_fintype ι
-    rw [← b.to_dual_to_dual, range_comp, b.to_dual_range, Submodule.map_top, to_dual_range _]
-    infer_instance
+  cases nonempty_fintype ι
+  rw [← b.to_dual_to_dual, range_comp, b.to_dual_range, Submodule.map_top, to_dual_range _]
+  infer_instance
 #align basis.eval_range Basis.eval_range
 
 #print Basis.evalEquiv /-
@@ -549,11 +549,11 @@ theorem total_coord [CommRing R] [AddCommGroup M] [Module R M] [Finite ι] (b : 
 theorem dual_rank_eq [CommRing K] [AddCommGroup V] [Module K V] [Finite ι] (b : Basis ι K V) :
     Cardinal.lift (Module.rank K V) = Module.rank K (Dual K V) := by
   classical
-    cases nonempty_fintype ι
-    have := LinearEquiv.lift_rank_eq b.to_dual_equiv
-    simp only [Cardinal.lift_umax] at this 
-    rw [this, ← Cardinal.lift_umax]
-    apply Cardinal.lift_id
+  cases nonempty_fintype ι
+  have := LinearEquiv.lift_rank_eq b.to_dual_equiv
+  simp only [Cardinal.lift_umax] at this 
+  rw [this, ← Cardinal.lift_umax]
+  apply Cardinal.lift_id
 #align basis.dual_rank_eq Basis.dual_rank_eq
 
 end Basis
@@ -703,7 +703,7 @@ unsafe def use_finite_instance : tactic Unit :=
 structure Module.DualBases (e : ι → M) (ε : ι → Dual R M) : Prop where
   eval : ∀ i j : ι, ε i (e j) = if i = j then 1 else 0
   Total : ∀ {m : M}, (∀ i, ε i m = 0) → m = 0
-  Finite : ∀ m : M, { i | ε i m ≠ 0 }.Finite := by
+  Finite : ∀ m : M, {i | ε i m ≠ 0}.Finite := by
     run_tac
       use_finite_instance
 #align module.dual_bases Module.DualBases
@@ -1053,7 +1053,7 @@ theorem dualAnnihilator_dualCoannihilator_eq {W : Subspace K V} :
   have hw'n : (w' : V) ∉ W := by contrapose! hv; exact Submodule.add_mem W w.2 hv
   have hw'nz : w' ≠ 0 := by rintro rfl; exact hw'n (Submodule.zero_mem W)
   rw [Ne.def, ← Module.forall_dual_apply_eq_zero_iff K w'] at hw'nz 
-  push_neg  at hw'nz 
+  push_neg at hw'nz 
   obtain ⟨φ, hφ⟩ := hw'nz
   exists ((LinearMap.ofIsComplProd hW).comp (LinearMap.inr _ _ _)) φ
   simp only [coe_comp, coe_inr, Function.comp_apply, of_is_compl_prod_apply, map_add,

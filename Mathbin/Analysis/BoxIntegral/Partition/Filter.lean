@@ -329,7 +329,7 @@ a function `r : ℝⁿ → (0, ∞)` (or a constant `r` if `l.bRiemann = tt`) su
 prepartition `π` such that `l.mem_base_set I c r π`. -/
 def toFilterDistortion (l : IntegrationParams) (I : Box ι) (c : ℝ≥0) :
     Filter (TaggedPrepartition I) :=
-  ⨅ (r : (ι → ℝ) → Ioi (0 : ℝ)) (hr : l.RCond r), 𝓟 { π | l.MemBaseSet I c r π }
+  ⨅ (r : (ι → ℝ) → Ioi (0 : ℝ)) (hr : l.RCond r), 𝓟 {π | l.MemBaseSet I c r π}
 #align box_integral.integration_params.to_filter_distortion BoxIntegral.IntegrationParams.toFilterDistortion
 -/
 
@@ -347,7 +347,7 @@ def toFilter (l : IntegrationParams) (I : Box ι) : Filter (TaggedPrepartition I
 there exists a function `r : ℝⁿ → (0, ∞)` (or a constant `r` if `l.bRiemann = tt`) such that `s`
 contains each prepartition `π` such that `l.mem_base_set I c r π` and `π.Union = π₀.Union`. -/
 def toFilterDistortioniUnion (l : IntegrationParams) (I : Box ι) (c : ℝ≥0) (π₀ : Prepartition I) :=
-  l.toFilterDistortion I c ⊓ 𝓟 { π | π.iUnion = π₀.iUnion }
+  l.toFilterDistortion I c ⊓ 𝓟 {π | π.iUnion = π₀.iUnion}
 #align box_integral.integration_params.to_filter_distortion_Union BoxIntegral.IntegrationParams.toFilterDistortioniUnion
 -/
 
@@ -365,7 +365,7 @@ theorem rCond_of_bRiemann_eq_false {ι} (l : IntegrationParams) (hl : l.bRiemann
 #align box_integral.integration_params.r_cond_of_bRiemann_eq_ff BoxIntegral.IntegrationParams.rCond_of_bRiemann_eq_false
 
 theorem toFilter_inf_iUnion_eq (l : IntegrationParams) (I : Box ι) (π₀ : Prepartition I) :
-    l.toFilter I ⊓ 𝓟 { π | π.iUnion = π₀.iUnion } = l.toFilteriUnion I π₀ :=
+    l.toFilter I ⊓ 𝓟 {π | π.iUnion = π₀.iUnion} = l.toFilteriUnion I π₀ :=
   (iSup_inf_principal _ _).symm
 #align box_integral.integration_params.to_filter_inf_Union_eq BoxIntegral.IntegrationParams.toFilter_inf_iUnion_eq
 
@@ -483,7 +483,7 @@ theorem toFilteriUnion_congr (I : Box ι) (l : IntegrationParams) {π₁ π₂ :
 -/
 
 theorem hasBasis_toFilterDistortion (l : IntegrationParams) (I : Box ι) (c : ℝ≥0) :
-    (l.toFilterDistortion I c).HasBasis l.RCond fun r => { π | l.MemBaseSet I c r π } :=
+    (l.toFilterDistortion I c).HasBasis l.RCond fun r => {π | l.MemBaseSet I c r π} :=
   hasBasis_biInf_principal'
     (fun r₁ hr₁ r₂ hr₂ =>
       ⟨_, hr₁.min hr₂, fun _ => MemBaseSet.mono _ le_rfl le_rfl fun x hx => min_le_left _ _,
@@ -494,13 +494,13 @@ theorem hasBasis_toFilterDistortion (l : IntegrationParams) (I : Box ι) (c : �
 theorem hasBasis_toFilterDistortioniUnion (l : IntegrationParams) (I : Box ι) (c : ℝ≥0)
     (π₀ : Prepartition I) :
     (l.toFilterDistortioniUnion I c π₀).HasBasis l.RCond fun r =>
-      { π | l.MemBaseSet I c r π ∧ π.iUnion = π₀.iUnion } :=
+      {π | l.MemBaseSet I c r π ∧ π.iUnion = π₀.iUnion} :=
   (l.hasBasis_toFilterDistortion I c).inf_principal _
 #align box_integral.integration_params.has_basis_to_filter_distortion_Union BoxIntegral.IntegrationParams.hasBasis_toFilterDistortioniUnion
 
 theorem hasBasis_toFilteriUnion (l : IntegrationParams) (I : Box ι) (π₀ : Prepartition I) :
     (l.toFilteriUnion I π₀).HasBasis (fun r : ℝ≥0 → (ι → ℝ) → Ioi (0 : ℝ) => ∀ c, l.RCond (r c))
-      fun r => { π | ∃ c, l.MemBaseSet I c (r c) π ∧ π.iUnion = π₀.iUnion } :=
+      fun r => {π | ∃ c, l.MemBaseSet I c (r c) π ∧ π.iUnion = π₀.iUnion} :=
   by
   have := fun c => l.hasBasis_toFilterDistortioniUnion I c π₀
   simpa only [set_of_and, set_of_exists] using has_basis_supr this
@@ -508,7 +508,7 @@ theorem hasBasis_toFilteriUnion (l : IntegrationParams) (I : Box ι) (π₀ : Pr
 
 theorem hasBasis_toFilteriUnion_top (l : IntegrationParams) (I : Box ι) :
     (l.toFilteriUnion I ⊤).HasBasis (fun r : ℝ≥0 → (ι → ℝ) → Ioi (0 : ℝ) => ∀ c, l.RCond (r c))
-      fun r => { π | ∃ c, l.MemBaseSet I c (r c) π ∧ π.IsPartition } :=
+      fun r => {π | ∃ c, l.MemBaseSet I c (r c) π ∧ π.IsPartition} :=
   by
   simpa only [tagged_prepartition.is_partition_iff_Union_eq, prepartition.Union_top] using
     l.has_basis_to_filter_Union I ⊤
@@ -516,7 +516,7 @@ theorem hasBasis_toFilteriUnion_top (l : IntegrationParams) (I : Box ι) :
 
 theorem hasBasis_toFilter (l : IntegrationParams) (I : Box ι) :
     (l.toFilter I).HasBasis (fun r : ℝ≥0 → (ι → ℝ) → Ioi (0 : ℝ) => ∀ c, l.RCond (r c)) fun r =>
-      { π | ∃ c, l.MemBaseSet I c (r c) π } :=
+      {π | ∃ c, l.MemBaseSet I c (r c) π} :=
   by simpa only [set_of_exists] using has_basis_supr (l.has_basis_to_filter_distortion I)
 #align box_integral.integration_params.has_basis_to_filter BoxIntegral.IntegrationParams.hasBasis_toFilter
 

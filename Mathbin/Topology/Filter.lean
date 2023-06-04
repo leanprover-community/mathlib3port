@@ -58,7 +58,7 @@ theorem isOpen_Iic_principal {s : Set α} : IsOpen (Iic (𝓟 s)) :=
   GenerateOpen.basic _ (mem_range_self _)
 #align filter.is_open_Iic_principal Filter.isOpen_Iic_principal
 
-theorem isOpen_setOf_mem {s : Set α} : IsOpen { l : Filter α | s ∈ l } := by
+theorem isOpen_setOf_mem {s : Set α} : IsOpen {l : Filter α | s ∈ l} := by
   simpa only [Iic_principal] using is_open_Iic_principal
 #align filter.is_open_set_of_mem Filter.isOpen_setOf_mem
 
@@ -82,7 +82,7 @@ theorem nhds_eq (l : Filter α) : 𝓝 l = l.lift' (Iic ∘ 𝓟) :=
       (· ∘ ·), mem_Iic, le_principal_iff]
 #align filter.nhds_eq Filter.nhds_eq
 
-theorem nhds_eq' (l : Filter α) : 𝓝 l = l.lift' fun s => { l' | s ∈ l' } := by
+theorem nhds_eq' (l : Filter α) : 𝓝 l = l.lift' fun s => {l' | s ∈ l'} := by
   simpa only [(· ∘ ·), Iic_principal] using nhds_eq l
 #align filter.nhds_eq' Filter.nhds_eq'
 
@@ -101,7 +101,7 @@ instance {l : Filter α} [IsCountablyGenerated l] : IsCountablyGenerated (𝓝 l
   HasCountableBasis.isCountablyGenerated <| ⟨hb.nhds, Set.to_countable _⟩
 
 theorem HasBasis.nhds' {l : Filter α} {p : ι → Prop} {s : ι → Set α} (h : HasBasis l p s) :
-    HasBasis (𝓝 l) p fun i => { l' | s i ∈ l' } := by simpa only [Iic_principal] using h.nhds
+    HasBasis (𝓝 l) p fun i => {l' | s i ∈ l'} := by simpa only [Iic_principal] using h.nhds
 #align filter.has_basis.nhds' Filter.HasBasis.nhds'
 
 theorem mem_nhds_iff {l : Filter α} {S : Set (Filter α)} : S ∈ 𝓝 l ↔ ∃ t ∈ l, Iic (𝓟 t) ⊆ S :=
@@ -145,7 +145,7 @@ theorem monotone_nhds : Monotone (𝓝 : Filter α → Filter (Filter α)) :=
   Monotone.of_map_inf nhds_inf
 #align filter.monotone_nhds Filter.monotone_nhds
 
-theorem sInter_nhds (l : Filter α) : ⋂₀ { s | s ∈ 𝓝 l } = Iic l := by
+theorem sInter_nhds (l : Filter α) : ⋂₀ {s | s ∈ 𝓝 l} = Iic l := by
   simp only [nhds_eq, sInter_lift'_sets monotone_principal.Iic, Iic, le_principal_iff, ←
     set_of_forall, ← Filter.le_def]
 #align filter.Inter_nhds Filter.sInter_nhds

@@ -29,7 +29,7 @@ variable {α β : Type _} (l : List α)
 namespace Set
 
 #print Set.range_list_map /-
-theorem range_list_map (f : α → β) : range (map f) = { l | ∀ x ∈ l, x ∈ range f } :=
+theorem range_list_map (f : α → β) : range (map f) = {l | ∀ x ∈ l, x ∈ range f} :=
   by
   refine'
     subset.antisymm (range_subset_iff.2 fun l => forall_mem_map_iff.2 fun y _ => mem_range_self _)
@@ -42,14 +42,14 @@ theorem range_list_map (f : α → β) : range (map f) = { l | ∀ x ∈ l, x �
 -/
 
 #print Set.range_list_map_coe /-
-theorem range_list_map_coe (s : Set α) : range (map (coe : s → α)) = { l | ∀ x ∈ l, x ∈ s } := by
+theorem range_list_map_coe (s : Set α) : range (map (coe : s → α)) = {l | ∀ x ∈ l, x ∈ s} := by
   rw [range_list_map, Subtype.range_coe]
 #align set.range_list_map_coe Set.range_list_map_coe
 -/
 
 #print Set.range_list_nthLe /-
 @[simp]
-theorem range_list_nthLe : (range fun k : Fin l.length => l.nthLe k k.2) = { x | x ∈ l } :=
+theorem range_list_nthLe : (range fun k : Fin l.length => l.nthLe k k.2) = {x | x ∈ l} :=
   by
   ext x
   rw [mem_set_of_eq, mem_iff_nth_le]
@@ -58,7 +58,7 @@ theorem range_list_nthLe : (range fun k : Fin l.length => l.nthLe k k.2) = { x |
 -/
 
 #print Set.range_list_get? /-
-theorem range_list_get? : range l.get? = insert none (some '' { x | x ∈ l }) :=
+theorem range_list_get? : range l.get? = insert none (some '' {x | x ∈ l}) :=
   by
   rw [← range_list_nth_le, ← range_comp]
   refine' (range_subset_iff.2 fun n => _).antisymm (insert_subset.2 ⟨_, _⟩)
@@ -69,11 +69,11 @@ theorem range_list_get? : range l.get? = insert none (some '' { x | x ∈ l }) :
 
 #print Set.range_list_getD /-
 @[simp]
-theorem range_list_getD (d : α) : (range fun n => l.getD n d) = insert d { x | x ∈ l } :=
+theorem range_list_getD (d : α) : (range fun n => l.getD n d) = insert d {x | x ∈ l} :=
   calc
     (range fun n => l.getD n d) = (fun o : Option α => o.getD d) '' range l.get? := by
       simp only [← range_comp, (· ∘ ·), nthd_eq_get_or_else_nth]
-    _ = insert d { x | x ∈ l } := by
+    _ = insert d {x | x ∈ l} := by
       simp only [range_list_nth, image_insert_eq, Option.getD, image_image, image_id']
     
 #align set.range_list_nthd Set.range_list_getD
@@ -81,7 +81,7 @@ theorem range_list_getD (d : α) : (range fun n => l.getD n d) = insert d { x | 
 
 #print Set.range_list_getI /-
 @[simp]
-theorem range_list_getI [Inhabited α] (l : List α) : range l.getI = insert default { x | x ∈ l } :=
+theorem range_list_getI [Inhabited α] (l : List α) : range l.getI = insert default {x | x ∈ l} :=
   range_list_getD l default
 #align set.range_list_inth Set.range_list_getI
 -/

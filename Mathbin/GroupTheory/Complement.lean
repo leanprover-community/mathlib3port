@@ -64,7 +64,7 @@ abbrev IsComplement' :=
 /-- The set of left-complements of `T : set G` -/
 @[to_additive "The set of left-complements of `T : set G`"]
 def leftTransversals : Set (Set G) :=
-  { S : Set G | IsComplement S T }
+  {S : Set G | IsComplement S T}
 #align subgroup.left_transversals Subgroup.leftTransversals
 #align add_subgroup.left_transversals AddSubgroup.leftTransversals
 -/
@@ -73,7 +73,7 @@ def leftTransversals : Set (Set G) :=
 /-- The set of right-complements of `S : set G` -/
 @[to_additive "The set of right-complements of `S : set G`"]
 def rightTransversals : Set (Set G) :=
-  { T : Set G | IsComplement S T }
+  {T : Set G | IsComplement S T}
 #align subgroup.right_transversals Subgroup.rightTransversals
 #align add_subgroup.right_transversals AddSubgroup.rightTransversals
 -/
@@ -338,24 +338,24 @@ theorem range_mem_rightTransversals {f : Quotient (QuotientGroup.rightRel H) →
 @[to_additive]
 theorem exists_left_transversal (g : G) : ∃ S ∈ leftTransversals (H : Set G), g ∈ S := by
   classical
-    refine'
-      ⟨Set.range (Function.update Quotient.out' (↑g) g), range_mem_left_transversals fun q => _, g,
-        Function.update_same g g Quotient.out'⟩
-    by_cases hq : q = g
-    · exact hq.symm ▸ congr_arg _ (Function.update_same g g Quotient.out')
-    · exact Eq.trans (congr_arg _ (Function.update_noteq hq g Quotient.out')) q.out_eq'
+  refine'
+    ⟨Set.range (Function.update Quotient.out' (↑g) g), range_mem_left_transversals fun q => _, g,
+      Function.update_same g g Quotient.out'⟩
+  by_cases hq : q = g
+  · exact hq.symm ▸ congr_arg _ (Function.update_same g g Quotient.out')
+  · exact Eq.trans (congr_arg _ (Function.update_noteq hq g Quotient.out')) q.out_eq'
 #align subgroup.exists_left_transversal Subgroup.exists_left_transversal
 #align add_subgroup.exists_left_transversal AddSubgroup.exists_left_transversal
 
 @[to_additive]
 theorem exists_right_transversal (g : G) : ∃ S ∈ rightTransversals (H : Set G), g ∈ S := by
   classical
-    refine'
-      ⟨Set.range (Function.update Quotient.out' _ g), range_mem_right_transversals fun q => _,
-        Quotient.mk'' g, Function.update_same (Quotient.mk'' g) g Quotient.out'⟩
-    by_cases hq : q = Quotient.mk'' g
-    · exact hq.symm ▸ congr_arg _ (Function.update_same (Quotient.mk'' g) g Quotient.out')
-    · exact Eq.trans (congr_arg _ (Function.update_noteq hq g Quotient.out')) q.out_eq'
+  refine'
+    ⟨Set.range (Function.update Quotient.out' _ g), range_mem_right_transversals fun q => _,
+      Quotient.mk'' g, Function.update_same (Quotient.mk'' g) g Quotient.out'⟩
+  by_cases hq : q = Quotient.mk'' g
+  · exact hq.symm ▸ congr_arg _ (Function.update_same (Quotient.mk'' g) g Quotient.out')
+  · exact Eq.trans (congr_arg _ (Function.update_noteq hq g Quotient.out')) q.out_eq'
 #align subgroup.exists_right_transversal Subgroup.exists_right_transversal
 #align add_subgroup.exists_right_transversal AddSubgroup.exists_right_transversal
 

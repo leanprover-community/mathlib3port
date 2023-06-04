@@ -119,7 +119,7 @@ open FreeAbelianGroup
 @[simp]
 protected theorem of (x : α) : lift f (of x) = f x :=
   by
-  convert@Abelianization.lift.of (FreeGroup α) _ (Multiplicative β) _ _ _
+  convert @Abelianization.lift.of (FreeGroup α) _ (Multiplicative β) _ _ _
   convert free_group.lift.of.symm
 #align free_abelian_group.lift.of FreeAbelianGroup.lift.of
 

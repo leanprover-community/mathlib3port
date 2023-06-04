@@ -267,7 +267,7 @@ theorem ne_and_ne_of_swap_mul_apply_ne_self {f : Perm α} {x y : α} (hy : (swap
   simp only [swap_apply_def, mul_apply, f.injective.eq_iff] at *
   by_cases h : f y = x
   · constructor <;> intro <;> simp_all only [if_true, eq_self_iff_true, not_true, Ne.def]
-  · split_ifs  at hy  <;> cc
+  · split_ifs at hy  <;> cc
 #align equiv.perm.ne_and_ne_of_swap_mul_apply_ne_self Equiv.Perm.ne_and_ne_of_swap_mul_apply_ne_self
 -/
 
@@ -280,7 +280,7 @@ section Set
 variable (p q : Perm α)
 
 #print Equiv.Perm.set_support_inv_eq /-
-theorem set_support_inv_eq : { x | p⁻¹ x ≠ x } = { x | p x ≠ x } :=
+theorem set_support_inv_eq : {x | p⁻¹ x ≠ x} = {x | p x ≠ x} :=
   by
   ext x
   simp only [Set.mem_setOf_eq, Ne.def]
@@ -289,13 +289,13 @@ theorem set_support_inv_eq : { x | p⁻¹ x ≠ x } = { x | p x ≠ x } :=
 -/
 
 #print Equiv.Perm.set_support_apply_mem /-
-theorem set_support_apply_mem {p : Perm α} {a : α} : p a ∈ { x | p x ≠ x } ↔ a ∈ { x | p x ≠ x } :=
-  by simp
+theorem set_support_apply_mem {p : Perm α} {a : α} : p a ∈ {x | p x ≠ x} ↔ a ∈ {x | p x ≠ x} := by
+  simp
 #align equiv.perm.set_support_apply_mem Equiv.Perm.set_support_apply_mem
 -/
 
 #print Equiv.Perm.set_support_zpow_subset /-
-theorem set_support_zpow_subset (n : ℤ) : { x | (p ^ n) x ≠ x } ⊆ { x | p x ≠ x } :=
+theorem set_support_zpow_subset (n : ℤ) : {x | (p ^ n) x ≠ x} ⊆ {x | p x ≠ x} :=
   by
   intro x
   simp only [Set.mem_setOf_eq, Ne.def]
@@ -305,7 +305,7 @@ theorem set_support_zpow_subset (n : ℤ) : { x | (p ^ n) x ≠ x } ⊆ { x | p 
 -/
 
 #print Equiv.Perm.set_support_mul_subset /-
-theorem set_support_mul_subset : { x | (p * q) x ≠ x } ⊆ { x | p x ≠ x } ∪ { x | q x ≠ x } :=
+theorem set_support_mul_subset : {x | (p * q) x ≠ x} ⊆ {x | p x ≠ x} ∪ {x | q x ≠ x} :=
   by
   intro x
   simp only [perm.coe_mul, Function.comp_apply, Ne.def, Set.mem_union, Set.mem_setOf_eq]
@@ -337,7 +337,7 @@ theorem not_mem_support {x : α} : x ∉ f.support ↔ f x = x := by simp
 -/
 
 #print Equiv.Perm.coe_support_eq_set_support /-
-theorem coe_support_eq_set_support (f : Perm α) : (f.support : Set α) = { x | f x ≠ x } := by ext;
+theorem coe_support_eq_set_support (f : Perm α) : (f.support : Set α) = {x | f x ≠ x} := by ext;
   simp
 #align equiv.perm.coe_support_eq_set_support Equiv.Perm.coe_support_eq_set_support
 -/
@@ -510,7 +510,7 @@ theorem support_swap_mul_swap {x y z : α} (h : List.Nodup [x, y, z]) :
   by
   simp only [List.not_mem_nil, and_true_iff, List.mem_cons, not_false_iff, List.nodup_cons,
     List.mem_singleton, and_self_iff, List.nodup_nil] at h 
-  push_neg  at h 
+  push_neg at h 
   apply le_antisymm
   · convert support_mul_le _ _
     rw [support_swap h.left.left, support_swap h.right]
@@ -558,7 +558,7 @@ theorem mem_support_swap_mul_imp_mem_support_ne {x y : α} (hy : y ∈ support (
   simp only [mem_support, swap_apply_def, mul_apply, f.injective.eq_iff] at *
   by_cases h : f y = x
   · constructor <;> intro <;> simp_all only [if_true, eq_self_iff_true, not_true, Ne.def]
-  · split_ifs  at hy  <;> cc
+  · split_ifs at hy  <;> cc
 #align equiv.perm.mem_support_swap_mul_imp_mem_support_ne Equiv.Perm.mem_support_swap_mul_imp_mem_support_ne
 
 #print Equiv.Perm.Disjoint.mem_imp /-

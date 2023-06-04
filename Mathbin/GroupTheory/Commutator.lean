@@ -78,12 +78,12 @@ namespace Subgroup
 #print Subgroup.commutator /-
 /-- The commutator of two subgroups `H₁` and `H₂`. -/
 instance commutator : Bracket (Subgroup G) (Subgroup G) :=
-  ⟨fun H₁ H₂ => closure { g | ∃ g₁ ∈ H₁, ∃ g₂ ∈ H₂, ⁅g₁, g₂⁆ = g }⟩
+  ⟨fun H₁ H₂ => closure {g | ∃ g₁ ∈ H₁, ∃ g₂ ∈ H₂, ⁅g₁, g₂⁆ = g}⟩
 #align subgroup.commutator Subgroup.commutator
 -/
 
 theorem commutator_def (H₁ H₂ : Subgroup G) :
-    ⁅H₁, H₂⁆ = closure { g | ∃ g₁ ∈ H₁, ∃ g₂ ∈ H₂, ⁅g₁, g₂⁆ = g } :=
+    ⁅H₁, H₂⁆ = closure {g | ∃ g₁ ∈ H₁, ∃ g₂ ∈ H₂, ⁅g₁, g₂⁆ = g} :=
   rfl
 #align subgroup.commutator_def Subgroup.commutator_def
 
@@ -141,7 +141,7 @@ section Normal
 #print Subgroup.commutator_normal /-
 instance commutator_normal [h₁ : H₁.Normal] [h₂ : H₂.Normal] : Normal ⁅H₁, H₂⁆ :=
   by
-  let base : Set G := { x | ∃ g₁ ∈ H₁, ∃ g₂ ∈ H₂, ⁅g₁, g₂⁆ = x }
+  let base : Set G := {x | ∃ g₁ ∈ H₁, ∃ g₂ ∈ H₂, ⁅g₁, g₂⁆ = x}
   change (closure base).Normal
   suffices h_base : base = Group.conjugatesOfSet base
   · rw [h_base]
@@ -155,7 +155,7 @@ instance commutator_normal [h₁ : H₁.Normal] [h₂ : H₂.Normal] : Normal �
 
 #print Subgroup.commutator_def' /-
 theorem commutator_def' [H₁.Normal] [H₂.Normal] :
-    ⁅H₁, H₂⁆ = normalClosure { g | ∃ g₁ ∈ H₁, ∃ g₂ ∈ H₂, ⁅g₁, g₂⁆ = g } :=
+    ⁅H₁, H₂⁆ = normalClosure {g | ∃ g₁ ∈ H₁, ∃ g₂ ∈ H₂, ⁅g₁, g₂⁆ = g} :=
   le_antisymm closure_le_normalClosure (normalClosure_le_normal subset_closure)
 #align subgroup.commutator_def' Subgroup.commutator_def'
 -/
@@ -245,16 +245,16 @@ theorem commutator_pi_pi_of_finite {η : Type _} [Finite η] {Gs : η → Type _
     ⁅Subgroup.pi Set.univ H, Subgroup.pi Set.univ K⁆ = Subgroup.pi Set.univ fun i => ⁅H i, K i⁆ :=
   by
   classical
-    apply le_antisymm (commutator_pi_pi_le H K)
-    · rw [pi_le_iff]; intro i hi
-      rw [map_commutator]
-      apply commutator_mono <;>
-        · rw [le_pi_iff]
-          intro j hj
-          rintro _ ⟨_, ⟨x, hx, rfl⟩, rfl⟩
-          by_cases h : j = i
-          · subst h; simpa using hx
-          · simp [h, one_mem]
+  apply le_antisymm (commutator_pi_pi_le H K)
+  · rw [pi_le_iff]; intro i hi
+    rw [map_commutator]
+    apply commutator_mono <;>
+      · rw [le_pi_iff]
+        intro j hj
+        rintro _ ⟨_, ⟨x, hx, rfl⟩, rfl⟩
+        by_cases h : j = i
+        · subst h; simpa using hx
+        · simp [h, one_mem]
 #align subgroup.commutator_pi_pi_of_finite Subgroup.commutator_pi_pi_of_finite
 
 end Subgroup
@@ -264,12 +264,12 @@ variable (G)
 #print commutatorSet /-
 /-- The set of commutator elements `⁅g₁, g₂⁆` in `G`. -/
 def commutatorSet : Set G :=
-  { g | ∃ g₁ g₂ : G, ⁅g₁, g₂⁆ = g }
+  {g | ∃ g₁ g₂ : G, ⁅g₁, g₂⁆ = g}
 #align commutator_set commutatorSet
 -/
 
 #print commutatorSet_def /-
-theorem commutatorSet_def : commutatorSet G = { g | ∃ g₁ g₂ : G, ⁅g₁, g₂⁆ = g } :=
+theorem commutatorSet_def : commutatorSet G = {g | ∃ g₁ g₂ : G, ⁅g₁, g₂⁆ = g} :=
   rfl
 #align commutator_set_def commutatorSet_def
 -/

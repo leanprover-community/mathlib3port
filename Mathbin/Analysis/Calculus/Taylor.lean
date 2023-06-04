@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Moritz Doll
 
 ! This file was ported from Lean 3 source module analysis.calculus.taylor
-! leanprover-community/mathlib commit 3a69562db5a458db8322b190ec8d9a8bbd8a5b14
+! leanprover-community/mathlib commit af471b9e3ce868f296626d33189b4ce730fa4c00
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.Data.Polynomial.Module
 
 /-!
 # Taylor's theorem
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file defines the Taylor polynomial of a real function `f : ℝ → E`,
 where `E` is a normed vector space over `ℝ` and proves Taylor's theorem,
@@ -53,11 +56,14 @@ variable {𝕜 E F : Type _}
 
 variable [NormedAddCommGroup E] [NormedSpace ℝ E]
 
+#print taylorCoeffWithin /-
 /-- The `k`th coefficient of the Taylor polynomial. -/
 noncomputable def taylorCoeffWithin (f : ℝ → E) (k : ℕ) (s : Set ℝ) (x₀ : ℝ) : E :=
   (k ! : ℝ)⁻¹ • iteratedDerivWithin k f s x₀
 #align taylor_coeff_within taylorCoeffWithin
+-/
 
+#print taylorWithin /-
 /-- The Taylor polynomial with derivatives inside of a set `s`.
 
 The Taylor polynomial is given by
@@ -68,11 +74,14 @@ noncomputable def taylorWithin (f : ℝ → E) (n : ℕ) (s : Set ℝ) (x₀ : �
     PolynomialModule.comp (Polynomial.X - Polynomial.C x₀)
       (PolynomialModule.single ℝ k (taylorCoeffWithin f k s x₀))
 #align taylor_within taylorWithin
+-/
 
+#print taylorWithinEval /-
 /-- The Taylor polynomial with derivatives inside of a set `s` considered as a function `ℝ → E`-/
 noncomputable def taylorWithinEval (f : ℝ → E) (n : ℕ) (s : Set ℝ) (x₀ x : ℝ) : E :=
   PolynomialModule.eval x (taylorWithin f n s x₀)
 #align taylor_within_eval taylorWithinEval
+-/
 
 theorem taylorWithin_succ (f : ℝ → E) (n : ℕ) (s : Set ℝ) (x₀ : ℝ) :
     taylorWithin f (n + 1) s x₀ =
@@ -99,6 +108,7 @@ theorem taylorWithinEval_succ (f : ℝ → E) (n : ℕ) (s : Set ℝ) (x₀ x : 
     mul_inv_rev]
 #align taylor_within_eval_succ taylorWithinEval_succ
 
+#print taylor_within_zero_eval /-
 /-- The Taylor polynomial of order zero evaluates to `f x`. -/
 @[simp]
 theorem taylor_within_zero_eval (f : ℝ → E) (s : Set ℝ) (x₀ x : ℝ) :
@@ -109,7 +119,9 @@ theorem taylor_within_zero_eval (f : ℝ → E) (s : Set ℝ) (x₀ x : ℝ) :
   dsimp only [taylorCoeffWithin]
   simp
 #align taylor_within_zero_eval taylor_within_zero_eval
+-/
 
+#print taylorWithinEval_self /-
 /-- Evaluating the Taylor polynomial at `x = x₀` yields `f x`. -/
 @[simp]
 theorem taylorWithinEval_self (f : ℝ → E) (n : ℕ) (s : Set ℝ) (x₀ : ℝ) :
@@ -119,6 +131,7 @@ theorem taylorWithinEval_self (f : ℝ → E) (n : ℕ) (s : Set ℝ) (x₀ : �
   · exact taylor_within_zero_eval _ _ _ _
   simp [hk]
 #align taylor_within_eval_self taylorWithinEval_self
+-/
 
 theorem taylor_within_apply (f : ℝ → E) (n : ℕ) (s : Set ℝ) (x₀ x : ℝ) :
     taylorWithinEval f n s x₀ x =
@@ -130,6 +143,7 @@ theorem taylor_within_apply (f : ℝ → E) (n : ℕ) (s : Set ℝ) (x₀ x : �
   simp
 #align taylor_within_apply taylor_within_apply
 
+#print continuousOn_taylorWithinEval /-
 /-- If `f` is `n` times continuous differentiable on a set `s`, then the Taylor polynomial
   `taylor_within_eval f n s x₀ x` is continuous in `x₀`. -/
 theorem continuousOn_taylorWithinEval {f : ℝ → E} {x : ℝ} {n : ℕ} {s : Set ℝ}
@@ -147,6 +161,7 @@ theorem continuousOn_taylorWithinEval {f : ℝ → E} {x : ℝ} {n : ℕ} {s : S
   simp only [WithTop.coe_le_coe]
   exact nat.lt_succ_iff.mp hi
 #align continuous_on_taylor_within_eval continuousOn_taylorWithinEval
+-/
 
 /-- Helper lemma for calculating the derivative of the monomial that appears in Taylor expansions.-/
 theorem monomial_has_deriv_aux (t x : ℝ) (n : ℕ) :
@@ -154,7 +169,7 @@ theorem monomial_has_deriv_aux (t x : ℝ) (n : ℕ) :
   by
   simp_rw [sub_eq_neg_add]
   rw [← neg_one_mul, mul_comm (-1 : ℝ), mul_assoc, mul_comm (-1 : ℝ), ← mul_assoc]
-  convert@HasDerivAt.pow _ _ _ _ _ (n + 1) ((hasDerivAt_id t).neg.AddConst x)
+  convert @HasDerivAt.pow _ _ _ _ _ (n + 1) ((hasDerivAt_id t).neg.AddConst x)
   simp only [Nat.cast_add, Nat.cast_one]
 #align monomial_has_deriv_aux monomial_has_deriv_aux
 
@@ -170,7 +185,7 @@ theorem hasDerivWithinAt_taylor_coeff_within {f : ℝ → E} {x y : ℝ} {k : �
   replace hf :
     HasDerivWithinAt (iteratedDerivWithin (k + 1) f s) (iteratedDerivWithin (k + 2) f s y) t y :=
     by
-    convert(hf.mono_of_mem hs).HasDerivWithinAt
+    convert (hf.mono_of_mem hs).HasDerivWithinAt
     rw [iteratedDerivWithin_succ (ht.mono_nhds (nhds_within_le_iff.mpr hs))]
     exact (derivWithin_of_mem hs ht hf).symm
   have :
@@ -211,7 +226,8 @@ theorem hasDerivWithinAt_taylorWithinEval {f : ℝ → E} {x y : ℝ} {n : ℕ} 
     refine' DifferentiableOn.mono _ h
     exact hf.differentiable_on_iterated_deriv_within coe_lt_succ hs_unique
   specialize hk hf.of_succ ((hdiff y hy).mono_of_mem hs')
-  convert hk.add
+  convert
+    hk.add
       (hasDerivWithinAt_taylor_coeff_within hs'_unique (nhdsWithin_mono _ h self_mem_nhdsWithin)
         hf')
   exact (add_sub_cancel'_right _ _).symm

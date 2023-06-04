@@ -70,8 +70,8 @@ protected theorem withDensity_apply (κ : kernel α β) [IsSFiniteKernel κ]
     (hf : Measurable (Function.uncurry f)) (a : α) : withDensity κ f a = (κ a).withDensity (f a) :=
   by
   classical
-    rw [with_density, dif_pos hf]
-    rfl
+  rw [with_density, dif_pos hf]
+  rfl
 #align probability_theory.kernel.with_density_apply ProbabilityTheory.kernel.withDensity_apply
 
 theorem withDensity_apply' (κ : kernel α β) [IsSFiniteKernel κ]

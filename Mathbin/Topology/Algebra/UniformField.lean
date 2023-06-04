@@ -182,8 +182,8 @@ instance : TopologicalDivisionRing (hat K) :=
   { Completion.topologicalRing with
     continuousAt_inv₀ := by
       intro x x_ne
-      have : { y | hat_inv y = y⁻¹ } ∈ 𝓝 x :=
-        haveI : {(0 : hat K)}ᶜ ⊆ { y : hat K | hat_inv y = y⁻¹ } :=
+      have : {y | hat_inv y = y⁻¹} ∈ 𝓝 x :=
+        haveI : {(0 : hat K)}ᶜ ⊆ {y : hat K | hat_inv y = y⁻¹} :=
           by
           intro y y_ne
           rw [mem_compl_singleton_iff] at y_ne 

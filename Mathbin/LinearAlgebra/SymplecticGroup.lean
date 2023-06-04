@@ -93,7 +93,7 @@ variable [Fintype l]
 /-- The group of symplectic matrices over a ring `R`. -/
 def symplecticGroup : Submonoid (Matrix (Sum l l) (Sum l l) R)
     where
-  carrier := { A | A ⬝ J l R ⬝ Aᵀ = J l R }
+  carrier := {A | A ⬝ J l R ⬝ Aᵀ = J l R}
   mul_mem' := by
     intro a b ha hb
     simp only [mul_eq_mul, Set.mem_setOf_eq, transpose_mul] at *
@@ -156,7 +156,7 @@ theorem symplectic_det (hA : A ∈ symplecticGroup l R) : IsUnit <| det A :=
   refine' (is_unit_det_J l R).mul_left_cancel _
   rw [mul_one]
   rw [mem_iff] at hA 
-  apply_fun det  at hA 
+  apply_fun det at hA 
   simp only [det_mul, det_transpose] at hA 
   rw [mul_comm A.det, mul_assoc] at hA 
   exact hA

@@ -744,7 +744,8 @@ theorem minpoly_eq [IsDomain R] [IsDomain S] [NoZeroSMulDivisors R S] [IsIntegra
   let ⟨q, hq⟩ := minpoly.isIntegrallyClosed_dvd h.isIntegral_root h.aeval_root
   symm <|
     eq_of_monic_of_associated h.Monic (minpoly.monic h.isIntegral_root) <| by
-      convert Associated.mul_left (minpoly R h.root) <|
+      convert
+          Associated.mul_left (minpoly R h.root) <|
             associated_one_iff_isUnit.2 <|
               (hirr.is_unit_or_is_unit hq).resolve_left <| minpoly.not_isUnit R h.root <;>
         rw [mul_one]

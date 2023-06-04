@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module analysis.von_neumann_algebra.basic
-! leanprover-community/mathlib commit 46b633fd842bef9469441c0209906f6dddd2b4f5
+! leanprover-community/mathlib commit af471b9e3ce868f296626d33189b4ce730fa4c00
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -16,6 +16,9 @@ import Mathbin.Algebra.Star.Subalgebra
 
 /-!
 # Von Neumann algebras
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 We give the "abstract" and "concrete" definitions of a von Neumann algebra.
 We still have a major project ahead of us to show the equivalence between these definitions!
@@ -46,12 +49,12 @@ One the other hand, not picking one means that the weak-* topology
 (which depends on a choice of predual) must be defined using the choice,
 and we may be unhappy with the resulting opaqueness of the definition.
 -/
-class WstarAlgebra (M : Type u) [NormedRing M] [StarRing M] [CstarRing M] [Module ℂ M]
+class WStarAlgebra (M : Type u) [NormedRing M] [StarRing M] [CstarRing M] [Module ℂ M]
     [NormedAlgebra ℂ M] [StarModule ℂ M] where
   exists_predual :
     ∃ (X : Type u) (_ : NormedAddCommGroup X) (_ : NormedSpace ℂ X) (_ : CompleteSpace X),
       Nonempty (NormedSpace.Dual ℂ X ≃ₗᵢ⋆[ℂ] M)
-#align wstar_algebra WstarAlgebra
+#align wstar_algebra WStarAlgebra
 
 -- TODO: Without this, `von_neumann_algebra` times out. Why?
 /-- The double commutant definition of a von Neumann algebra,
@@ -101,7 +104,7 @@ instance : SubringClass (VonNeumannAlgebra H) (H →L[ℂ] H)
 theorem mem_carrier {S : VonNeumannAlgebra H} {x : H →L[ℂ] H} :
     x ∈ S.carrier ↔ x ∈ (S : Set (H →L[ℂ] H)) :=
   Iff.rfl
-#align von_neumann_algebra.mem_carrier VonNeumannAlgebra.mem_carrier
+#align von_neumann_algebra.mem_carrier VonNeumannAlgebra.mem_carrierₓ
 
 @[ext]
 theorem ext {S T : VonNeumannAlgebra H} (h : ∀ x, x ∈ S ↔ x ∈ T) : S = T :=

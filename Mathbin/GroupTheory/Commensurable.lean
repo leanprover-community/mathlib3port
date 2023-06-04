@@ -108,7 +108,7 @@ theorem commensurable_inv (H : Subgroup G) (g : ConjAct G) :
 such that `commensurable (g • H) H` -/
 def commensurator' (H : Subgroup G) : Subgroup (ConjAct G)
     where
-  carrier := { g : ConjAct G | Commensurable (g • H) H }
+  carrier := {g : ConjAct G | Commensurable (g • H) H}
   one_mem' := by rw [Set.mem_setOf_eq, one_smul]
   mul_mem' a b ha hb := by
     rw [Set.mem_setOf_eq, mul_smul]

@@ -85,7 +85,7 @@ instance im_finiteDimensional {K L : Type _} [Field K] [Field L] [Algebra K L]
 intermediate field extensions `L/E/K` such that `E/K` is finite -/
 def finiteExts (K : Type _) [Field K] (L : Type _) [Field L] [Algebra K L] :
     Set (IntermediateField K L) :=
-  { E | FiniteDimensional K E }
+  {E | FiniteDimensional K E}
 #align finite_exts finiteExts
 
 /-- Given a field extension `L/K`, `fixed_by_finite K L` is the set of

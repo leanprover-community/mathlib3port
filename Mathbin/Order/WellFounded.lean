@@ -103,14 +103,14 @@ open Set
 /-- The supremum of a bounded, well-founded order -/
 protected noncomputable def sup {r : α → α → Prop} (wf : WellFounded r) (s : Set α)
     (h : Bounded r s) : α :=
-  wf.min { x | ∀ a ∈ s, r a x } h
+  wf.min {x | ∀ a ∈ s, r a x} h
 #align well_founded.sup WellFounded.sup
 -/
 
 #print WellFounded.lt_sup /-
 protected theorem lt_sup {r : α → α → Prop} (wf : WellFounded r) {s : Set α} (h : Bounded r s) {x}
     (hx : x ∈ s) : r x (wf.sup s h) :=
-  min_mem wf { x | ∀ a ∈ s, r a x } h x hx
+  min_mem wf {x | ∀ a ∈ s, r a x} h x hx
 #align well_founded.lt_sup WellFounded.lt_sup
 -/
 
@@ -122,7 +122,7 @@ open scoped Classical
 /-- A successor of an element `x` in a well-founded order is a minimal element `y` such that
 `x < y` if one exists. Otherwise it is `x` itself. -/
 protected noncomputable def succ {r : α → α → Prop} (wf : WellFounded r) (x : α) : α :=
-  if h : ∃ y, r x y then wf.min { y | r x y } h else x
+  if h : ∃ y, r x y then wf.min {y | r x y} h else x
 #align well_founded.succ WellFounded.succ
 -/
 

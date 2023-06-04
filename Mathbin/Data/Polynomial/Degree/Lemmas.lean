@@ -218,7 +218,7 @@ theorem coeff_add_eq_right_of_lt (pn : p.natDegree < n) : (p + q).coeff n = q.co
 
 #print Polynomial.degree_sum_eq_of_disjoint /-
 theorem degree_sum_eq_of_disjoint (f : S → R[X]) (s : Finset S)
-    (h : Set.Pairwise { i | i ∈ s ∧ f i ≠ 0 } (Ne on degree ∘ f)) :
+    (h : Set.Pairwise {i | i ∈ s ∧ f i ≠ 0} (Ne on degree ∘ f)) :
     degree (s.Sum f) = s.sup fun i => degree (f i) :=
   by
   induction' s using Finset.induction_on with x s hx IH
@@ -246,7 +246,7 @@ theorem degree_sum_eq_of_disjoint (f : S → R[X]) (s : Finset S)
 
 #print Polynomial.natDegree_sum_eq_of_disjoint /-
 theorem natDegree_sum_eq_of_disjoint (f : S → R[X]) (s : Finset S)
-    (h : Set.Pairwise { i | i ∈ s ∧ f i ≠ 0 } (Ne on natDegree ∘ f)) :
+    (h : Set.Pairwise {i | i ∈ s ∧ f i ≠ 0} (Ne on natDegree ∘ f)) :
     natDegree (s.Sum f) = s.sup fun i => natDegree (f i) :=
   by
   by_cases H : ∃ x ∈ s, f x ≠ 0
@@ -272,7 +272,7 @@ theorem natDegree_sum_eq_of_disjoint (f : S → R[X]) (s : Finset S)
           simpa [hb', degree_eq_bot] using hx'
         exact ⟨b, hb, (degree_eq_nat_degree hb').ge⟩
     · exact h.imp fun x y hxy hxy' => hxy (nat_degree_eq_of_degree_eq hxy')
-  · push_neg  at H 
+  · push_neg at H 
     rw [Finset.sum_eq_zero H, nat_degree_zero, eq_comm, show 0 = ⊥ from rfl, Finset.sup_eq_bot_iff]
     intro x hx
     simp [H x hx]

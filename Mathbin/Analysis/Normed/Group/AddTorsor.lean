@@ -93,9 +93,11 @@ theorem dist_eq_norm_vsub (x y : P) : dist x y = ‖x -ᵥ y‖ :=
 #align dist_eq_norm_vsub dist_eq_norm_vsub
 -/
 
+#print nndist_eq_nnnorm_vsub /-
 theorem nndist_eq_nnnorm_vsub (x y : P) : nndist x y = ‖x -ᵥ y‖₊ :=
   NNReal.eq <| dist_eq_norm_vsub V x y
 #align nndist_eq_nnnorm_vsub nndist_eq_nnnorm_vsub
+-/
 
 #print dist_eq_norm_vsub' /-
 /-- The distance equals the norm of subtracting two points. In this
@@ -106,9 +108,11 @@ theorem dist_eq_norm_vsub' (x y : P) : dist x y = ‖y -ᵥ x‖ :=
 #align dist_eq_norm_vsub' dist_eq_norm_vsub'
 -/
 
+#print nndist_eq_nnnorm_vsub' /-
 theorem nndist_eq_nnnorm_vsub' (x y : P) : nndist x y = ‖y -ᵥ x‖₊ :=
   NNReal.eq <| dist_eq_norm_vsub' V x y
 #align nndist_eq_nnnorm_vsub' nndist_eq_nnnorm_vsub'
+-/
 
 end
 
@@ -125,10 +129,12 @@ theorem dist_vadd_cancel_right (v₁ v₂ : V) (x : P) : dist (v₁ +ᵥ x) (v�
 #align dist_vadd_cancel_right dist_vadd_cancel_right
 -/
 
+#print nndist_vadd_cancel_right /-
 @[simp]
 theorem nndist_vadd_cancel_right (v₁ v₂ : V) (x : P) : nndist (v₁ +ᵥ x) (v₂ +ᵥ x) = nndist v₁ v₂ :=
   NNReal.eq <| dist_vadd_cancel_right _ _ _
 #align nndist_vadd_cancel_right nndist_vadd_cancel_right
+-/
 
 #print dist_vadd_left /-
 @[simp]
@@ -136,10 +142,12 @@ theorem dist_vadd_left (v : V) (x : P) : dist (v +ᵥ x) x = ‖v‖ := by simp 
 #align dist_vadd_left dist_vadd_left
 -/
 
+#print nndist_vadd_left /-
 @[simp]
 theorem nndist_vadd_left (v : V) (x : P) : nndist (v +ᵥ x) x = ‖v‖₊ :=
   NNReal.eq <| dist_vadd_left _ _
 #align nndist_vadd_left nndist_vadd_left
+-/
 
 #print dist_vadd_right /-
 @[simp]
@@ -147,10 +155,12 @@ theorem dist_vadd_right (v : V) (x : P) : dist x (v +ᵥ x) = ‖v‖ := by rw [
 #align dist_vadd_right dist_vadd_right
 -/
 
+#print nndist_vadd_right /-
 @[simp]
 theorem nndist_vadd_right (v : V) (x : P) : nndist x (v +ᵥ x) = ‖v‖₊ :=
   NNReal.eq <| dist_vadd_right _ _
 #align nndist_vadd_right nndist_vadd_right
+-/
 
 #print IsometryEquiv.vaddConst /-
 /-- Isometry between the tangent space `V` of a (semi)normed add torsor `P` and `P` given by

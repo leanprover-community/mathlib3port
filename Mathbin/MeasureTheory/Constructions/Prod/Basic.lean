@@ -151,7 +151,7 @@ theorem generateFrom_eq_prod {C : Set (Set α)} {D : Set (Set β)} (hC : generat
 /-- The product σ-algebra is generated from boxes, i.e. `s ×ˢ t` for sets `s : set α` and
   `t : set β`. -/
 theorem generateFrom_prod :
-    generateFrom (image2 (· ×ˢ ·) { s : Set α | MeasurableSet s } { t : Set β | MeasurableSet t }) =
+    generateFrom (image2 (· ×ˢ ·) {s : Set α | MeasurableSet s} {t : Set β | MeasurableSet t}) =
       Prod.instMeasurableSpace :=
   generateFrom_eq_prod generateFrom_measurableSet generateFrom_measurableSet
     isCountablySpanning_measurableSet isCountablySpanning_measurableSet
@@ -160,14 +160,14 @@ theorem generateFrom_prod :
 /- ./././Mathport/Syntax/Translate/Expr.lean:228:8: unsupported: ambiguous notation -/
 /-- Rectangles form a π-system. -/
 theorem isPiSystem_prod :
-    IsPiSystem (image2 (· ×ˢ ·) { s : Set α | MeasurableSet s } { t : Set β | MeasurableSet t }) :=
+    IsPiSystem (image2 (· ×ˢ ·) {s : Set α | MeasurableSet s} {t : Set β | MeasurableSet t}) :=
   isPiSystem_measurableSet.Prod isPiSystem_measurableSet
 #align is_pi_system_prod isPiSystem_prod
 
 #print measurable_measure_prod_mk_left_finite /-
 /-- If `ν` is a finite measure, and `s ⊆ α × β` is measurable, then `x ↦ ν { y | (x, y) ∈ s }` is
   a measurable function. `measurable_measure_prod_mk_left` is strictly more general. -/
-theorem measurable_measure_prod_mk_left_finite [FiniteMeasure ν] {s : Set (α × β)}
+theorem measurable_measure_prod_mk_left_finite [IsFiniteMeasure ν] {s : Set (α × β)}
     (hs : MeasurableSet s) : Measurable fun x => ν (Prod.mk x ⁻¹' s) :=
   by
   refine' induction_on_inter generate_from_prod.symm isPiSystem_prod _ _ _ _ hs
@@ -365,7 +365,7 @@ theorem prod_prod (s : Set α) (t : Set β) : μ.Prod ν (s ×ˢ t) = μ s * ν 
     have hST : s ×ˢ t ⊆ ST := subset_to_measurable _ _
     set f : α → ℝ≥0∞ := fun x => ν (Prod.mk x ⁻¹' ST)
     have hfm : Measurable f := measurable_measure_prod_mk_left hSTm
-    set s' : Set α := { x | ν t ≤ f x }
+    set s' : Set α := {x | ν t ≤ f x}
     have hss' : s ⊆ s' := fun x hx => measure_mono fun y hy => hST <| mk_mem_prod hx hy
     calc
       μ s * ν t ≤ μ s' * ν t := mul_le_mul_right' (measure_mono hss') _
@@ -378,8 +378,8 @@ theorem prod_prod (s : Set α) (t : Set β) : μ.Prod ν (s ×ˢ t) = μ s * ν 
 #align measure_theory.measure.prod_prod MeasureTheory.Measure.prod_prod
 
 instance {X Y : Type _} [TopologicalSpace X] [TopologicalSpace Y] {m : MeasurableSpace X}
-    {μ : Measure X} [OpenPosMeasure μ] {m' : MeasurableSpace Y} {ν : Measure Y} [OpenPosMeasure ν]
-    [SigmaFinite ν] : OpenPosMeasure (μ.Prod ν) :=
+    {μ : Measure X} [IsOpenPosMeasure μ] {m' : MeasurableSpace Y} {ν : Measure Y}
+    [IsOpenPosMeasure ν] [SigmaFinite ν] : IsOpenPosMeasure (μ.Prod ν) :=
   by
   constructor
   rintro U U_open ⟨⟨x, y⟩, hxy⟩
@@ -391,20 +391,21 @@ instance {X Y : Type _} [TopologicalSpace X] [TopologicalSpace Y] {m : Measurabl
   · exact v_open.measure_pos ν ⟨y, yv⟩
 
 instance {α β : Type _} {mα : MeasurableSpace α} {mβ : MeasurableSpace β} (μ : Measure α)
-    (ν : Measure β) [FiniteMeasure μ] [FiniteMeasure ν] : FiniteMeasure (μ.Prod ν) :=
+    (ν : Measure β) [IsFiniteMeasure μ] [IsFiniteMeasure ν] : IsFiniteMeasure (μ.Prod ν) :=
   by
   constructor
   rw [← univ_prod_univ, prod_prod]
   exact mul_lt_top (measure_lt_top _ _).Ne (measure_lt_top _ _).Ne
 
 instance {α β : Type _} {mα : MeasurableSpace α} {mβ : MeasurableSpace β} (μ : Measure α)
-    (ν : Measure β) [ProbabilityMeasure μ] [ProbabilityMeasure ν] : ProbabilityMeasure (μ.Prod ν) :=
+    (ν : Measure β) [IsProbabilityMeasure μ] [IsProbabilityMeasure ν] :
+    IsProbabilityMeasure (μ.Prod ν) :=
   ⟨by rw [← univ_prod_univ, prod_prod, measure_univ, measure_univ, mul_one]⟩
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 instance {α β : Type _} [TopologicalSpace α] [TopologicalSpace β] {mα : MeasurableSpace α}
-    {mβ : MeasurableSpace β} (μ : Measure α) (ν : Measure β) [FiniteMeasureOnCompacts μ]
-    [FiniteMeasureOnCompacts ν] [SigmaFinite ν] : FiniteMeasureOnCompacts (μ.Prod ν) :=
+    {mβ : MeasurableSpace β} (μ : Measure α) (ν : Measure β) [IsFiniteMeasureOnCompacts μ]
+    [IsFiniteMeasureOnCompacts ν] [SigmaFinite ν] : IsFiniteMeasureOnCompacts (μ.Prod ν) :=
   by
   refine' ⟨fun K hK => _⟩
   set L := (Prod.fst '' K) ×ˢ (Prod.snd '' K) with hL
@@ -663,30 +664,30 @@ theorem skew_product [SigmaFinite μb] [SigmaFinite μd] {f : α → β} (hf : M
     {g : α → γ → δ} (hgm : Measurable (uncurry g)) (hg : ∀ᵐ x ∂μa, map (g x) μc = μd) :
     MeasurePreserving (fun p : α × γ => (f p.1, g p.1 p.2)) (μa.Prod μc) (μb.Prod μd) := by
   classical
-    have : Measurable fun p : α × γ => (f p.1, g p.1 p.2) := (hf.1.comp measurable_fst).prod_mk hgm
-    /- if `μa = 0`, then the lemma is trivial, otherwise we can use `hg`
-      to deduce `sigma_finite μc`. -/
-    rcases eq_or_ne μa 0 with (rfl | ha)
-    · rw [← hf.map_eq, zero_prod, measure.map_zero, zero_prod]
-      exact ⟨this, by simp only [measure.map_zero]⟩
-    have : sigma_finite μc :=
-      by
-      rcases(ae_ne_bot.2 ha).nonempty_of_mem hg with ⟨x, hx : map (g x) μc = μd⟩
-      exact sigma_finite.of_map _ hgm.of_uncurry_left.ae_measurable (by rwa [hx])
-    -- Thus we can apply `measure.prod_eq` to prove equality of measures.
-    refine' ⟨this, (prod_eq fun s t hs ht => _).symm⟩
-    rw [map_apply this (hs.prod ht)]
-    refine' (prod_apply (this <| hs.prod ht)).trans _
-    have :
-      ∀ᵐ x ∂μa, μc ((fun y => (f x, g x y)) ⁻¹' s ×ˢ t) = indicator (f ⁻¹' s) (fun y => μd t) x :=
-      by
-      refine' hg.mono fun x hx => _; subst hx
-      simp only [mk_preimage_prod_right_fn_eq_if, indicator_apply, mem_preimage]
-      split_ifs
-      exacts [(map_apply hgm.of_uncurry_left ht).symm, measure_empty]
-    simp only [preimage_preimage]
-    rw [lintegral_congr_ae this, lintegral_indicator _ (hf.1 hs), set_lintegral_const,
-      hf.measure_preimage hs, mul_comm]
+  have : Measurable fun p : α × γ => (f p.1, g p.1 p.2) := (hf.1.comp measurable_fst).prod_mk hgm
+  /- if `μa = 0`, then the lemma is trivial, otherwise we can use `hg`
+    to deduce `sigma_finite μc`. -/
+  rcases eq_or_ne μa 0 with (rfl | ha)
+  · rw [← hf.map_eq, zero_prod, measure.map_zero, zero_prod]
+    exact ⟨this, by simp only [measure.map_zero]⟩
+  have : sigma_finite μc :=
+    by
+    rcases(ae_ne_bot.2 ha).nonempty_of_mem hg with ⟨x, hx : map (g x) μc = μd⟩
+    exact sigma_finite.of_map _ hgm.of_uncurry_left.ae_measurable (by rwa [hx])
+  -- Thus we can apply `measure.prod_eq` to prove equality of measures.
+  refine' ⟨this, (prod_eq fun s t hs ht => _).symm⟩
+  rw [map_apply this (hs.prod ht)]
+  refine' (prod_apply (this <| hs.prod ht)).trans _
+  have :
+    ∀ᵐ x ∂μa, μc ((fun y => (f x, g x y)) ⁻¹' s ×ˢ t) = indicator (f ⁻¹' s) (fun y => μd t) x :=
+    by
+    refine' hg.mono fun x hx => _; subst hx
+    simp only [mk_preimage_prod_right_fn_eq_if, indicator_apply, mem_preimage]
+    split_ifs
+    exacts [(map_apply hgm.of_uncurry_left ht).symm, measure_empty]
+  simp only [preimage_preimage]
+  rw [lintegral_congr_ae this, lintegral_indicator _ (hf.1 hs), set_lintegral_const,
+    hf.measure_preimage hs, mul_comm]
 #align measure_theory.measure_preserving.skew_product MeasureTheory.MeasurePreserving.skew_product
 
 /-- If `f : α → β` sends the measure `μa` to `μb` and `g : γ → δ` sends the measure `μc` to `μd`,
@@ -720,7 +721,8 @@ theorem prod_of_left {α β γ} [MeasurableSpace α] [MeasurableSpace β] [Measu
     QuasiMeasurePreserving f (μ.Prod ν) τ :=
   by
   rw [← prod_swap]
-  convert(quasi_measure_preserving.prod_of_right (hf.comp measurable_swap) h2f).comp
+  convert
+    (quasi_measure_preserving.prod_of_right (hf.comp measurable_swap) h2f).comp
       ((measurable_swap.measure_preserving (ν.prod μ)).symm
           MeasurableEquiv.prodComm).QuasiMeasurePreserving
   ext ⟨x, y⟩; rfl
@@ -793,7 +795,7 @@ theorem lintegral_prod (f : α × β → ℝ≥0∞) (hf : AEMeasurable f (μ.Pr
   have B : (∫⁻ x, ∫⁻ y, f (x, y) ∂ν ∂μ) = ∫⁻ x, ∫⁻ y, hf.mk f (x, y) ∂ν ∂μ :=
     by
     apply lintegral_congr_ae
-    filter_upwards [ae_ae_of_ae_prod hf.ae_eq_mk]with _ ha using lintegral_congr_ae ha
+    filter_upwards [ae_ae_of_ae_prod hf.ae_eq_mk] with _ ha using lintegral_congr_ae ha
   rw [A, B, lintegral_prod_of_measurable _ hf.measurable_mk]
   infer_instance
 #align measure_theory.lintegral_prod MeasureTheory.lintegral_prod
@@ -862,9 +864,9 @@ theorem fst_apply {s : Set α} (hs : MeasurableSet s) : ρ.fst s = ρ (Prod.fst 
 theorem fst_univ : ρ.fst univ = ρ univ := by rw [fst_apply MeasurableSet.univ, preimage_univ]
 #align measure_theory.measure.fst_univ MeasureTheory.Measure.fst_univ
 
-instance [FiniteMeasure ρ] : FiniteMeasure ρ.fst := by rw [fst]; infer_instance
+instance [IsFiniteMeasure ρ] : IsFiniteMeasure ρ.fst := by rw [fst]; infer_instance
 
-instance [ProbabilityMeasure ρ] : ProbabilityMeasure ρ.fst
+instance [IsProbabilityMeasure ρ] : IsProbabilityMeasure ρ.fst
     where measure_univ := by rw [fst_univ]; exact measure_univ
 
 theorem fst_map_prod_mk₀ {X : α → β} {Y : α → γ} {μ : Measure α} (hX : AEMeasurable X μ)
@@ -899,9 +901,9 @@ theorem snd_univ : ρ.snd univ = ρ univ := by rw [snd_apply MeasurableSet.univ,
 #align measure_theory.measure.snd_univ MeasureTheory.Measure.snd_univ
 -/
 
-instance [FiniteMeasure ρ] : FiniteMeasure ρ.snd := by rw [snd]; infer_instance
+instance [IsFiniteMeasure ρ] : IsFiniteMeasure ρ.snd := by rw [snd]; infer_instance
 
-instance [ProbabilityMeasure ρ] : ProbabilityMeasure ρ.snd
+instance [IsProbabilityMeasure ρ] : IsProbabilityMeasure ρ.snd
     where measure_univ := by rw [snd_univ]; exact measure_univ
 
 theorem snd_map_prod_mk₀ {X : α → β} {Y : α → γ} {μ : Measure α} (hX : AEMeasurable X μ)

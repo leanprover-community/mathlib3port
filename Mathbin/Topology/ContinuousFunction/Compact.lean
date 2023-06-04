@@ -66,10 +66,10 @@ theorem uniformInducing_equivBoundedOfCompact : UniformInducing (equivBoundedOfC
       simp only [has_basis_compact_convergence_uniformity.mem_iff, uniformity_basis_dist_le.mem_iff]
       exact fun s =>
         ⟨fun ⟨⟨a, b⟩, ⟨ha, ⟨ε, hε, hb⟩⟩, hs⟩ =>
-          ⟨{ p | ∀ x, (p.1 x, p.2 x) ∈ b }, ⟨ε, hε, fun _ h x => hb ((dist_le hε.le).mp h x)⟩,
+          ⟨{p | ∀ x, (p.1 x, p.2 x) ∈ b}, ⟨ε, hε, fun _ h x => hb ((dist_le hε.le).mp h x)⟩,
             fun f g h => hs fun x hx => h x⟩,
           fun ⟨t, ⟨ε, hε, ht⟩, hs⟩ =>
-          ⟨⟨Set.univ, { p | dist p.1 p.2 ≤ ε }⟩, ⟨isCompact_univ, ⟨ε, hε, fun _ h => h⟩⟩,
+          ⟨⟨Set.univ, {p | dist p.1 p.2 ≤ ε}⟩, ⟨isCompact_univ, ⟨ε, hε, fun _ h => h⟩⟩,
             fun ⟨f, g⟩ h => hs _ _ (ht ((dist_le hε.le).mpr fun x => h x (mem_univ x)))⟩⟩)
 #align continuous_map.uniform_inducing_equiv_bounded_of_compact ContinuousMap.uniformInducing_equivBoundedOfCompact
 

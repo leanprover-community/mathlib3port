@@ -656,12 +656,12 @@ theorem removeNth_insertNth' {v : Vector α (n + 1)} :
     dsimp [insert_nth, remove_nth, Fin.succAbove, Fin.predAbove]
     simp only [Subtype.mk_eq_mk]
     split_ifs
-    · convert(List.insertNth_removeNth_of_ge i (j - 1) _ _ _).symm
-      · convert(Nat.succ_pred_eq_of_pos _).symm; exact lt_of_le_of_lt (zero_le _) h
+    · convert (List.insertNth_removeNth_of_ge i (j - 1) _ _ _).symm
+      · convert (Nat.succ_pred_eq_of_pos _).symm; exact lt_of_le_of_lt (zero_le _) h
       · apply remove_nth_val
       · convert hi; exact v.2
       · exact Nat.le_pred_of_lt h
-    · convert(List.insertNth_removeNth_of_le i j _ _ _).symm
+    · convert (List.insertNth_removeNth_of_le i j _ _ _).symm
       · apply remove_nth_val
       · convert hi; exact v.2
       · simpa using h

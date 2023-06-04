@@ -97,18 +97,21 @@ theorem nnnorm_eq [NumberField K] (x : K) :
   rw [Prod.nnnorm_def', Pi.nnnorm_def, Pi.nnnorm_def]
   rw [(_ :
       Finset.univ =
-        { w : infinite_place K | is_real w }.toFinset ∪
-          { w : infinite_place K | is_complex w }.toFinset)]
+        {w : infinite_place K | is_real w}.toFinset ∪
+          {w : infinite_place K | is_complex w}.toFinset)]
   · rw [Finset.sup_union, sup_eq_max]
     refine' congr_arg₂ _ _ _
-    · convert(finset.univ.sup_map (Function.Embedding.subtype fun w : infinite_place K => is_real w)
-            fun w => (⟨w x, map_nonneg w x⟩ : NNReal)).symm using 2
+    · convert
+        (finset.univ.sup_map (Function.Embedding.subtype fun w : infinite_place K => is_real w)
+            fun w => (⟨w x, map_nonneg w x⟩ : NNReal)).symm using
+        2
       ext w
       simp only [apply_at_real_infinite_place, coe_nnnorm, Real.norm_eq_abs,
         Function.Embedding.coe_subtype, Subtype.coe_mk, is_real.abs_embedding_apply]
-    · convert(finset.univ.sup_map
-            (Function.Embedding.subtype fun w : infinite_place K => is_complex w) fun w =>
-            (⟨w x, map_nonneg w x⟩ : NNReal)).symm using 2
+    · convert
+        (finset.univ.sup_map (Function.Embedding.subtype fun w : infinite_place K => is_complex w)
+            fun w => (⟨w x, map_nonneg w x⟩ : NNReal)).symm using
+        2
       ext w
       simp only [apply_at_complex_infinite_place, Subtype.val_eq_coe, coe_nnnorm,
         Complex.norm_eq_abs, Function.Embedding.coe_subtype, Subtype.coe_mk, abs_embedding]
@@ -160,7 +163,7 @@ theorem integerLattice.inter_ball_finite [NumberField K] (r : ℝ) :
     by
     simp only [← place_apply, ← infinite_place.coe_mk, mem_closedBall_zero_iff, norm_le_iff]
     exact fun x => le_iff_le x r
-  convert(embeddings.finite_of_norm_le K ℂ r).image (canonical_embedding K)
+  convert (embeddings.finite_of_norm_le K ℂ r).image (canonical_embedding K)
   ext; constructor
   · rintro ⟨⟨_, ⟨x, rfl⟩, rfl⟩, hx2⟩
     exact ⟨x, ⟨SetLike.coe_mem x, (HEq x).mp hx2⟩, rfl⟩

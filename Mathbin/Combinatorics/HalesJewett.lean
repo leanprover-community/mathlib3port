@@ -353,7 +353,7 @@ theorem exists_mono_homothetic_copy {M κ : Type _} [AddCommMonoid M] (S : Finse
   skip
   specialize hι fun v => C <| ∑ i, v i
   obtain ⟨l, c, hl⟩ := hι
-  set s : Finset ι := { i ∈ Finset.univ | l.idx_fun i = none } with hs
+  set s : Finset ι := {i ∈ Finset.univ | l.idx_fun i = none} with hs
   refine'
     ⟨s.card, finset.card_pos.mpr ⟨l.proper.some, _⟩, ∑ i in sᶜ, ((l.idx_fun i).map coe).getD 0, c,
       _⟩

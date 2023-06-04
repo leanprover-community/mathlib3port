@@ -427,9 +427,9 @@ instance Pi.measurableDiv₂ {ι : Type _} {α : ι → Type _} [∀ i, Div (α 
 @[measurability]
 theorem measurableSet_eq_fun {m : MeasurableSpace α} {E} [MeasurableSpace E] [AddGroup E]
     [MeasurableSingletonClass E] [MeasurableSub₂ E] {f g : α → E} (hf : Measurable f)
-    (hg : Measurable g) : MeasurableSet { x | f x = g x } :=
+    (hg : Measurable g) : MeasurableSet {x | f x = g x} :=
   by
-  suffices h_set_eq : { x : α | f x = g x } = { x | (f - g) x = (0 : E) }
+  suffices h_set_eq : {x : α | f x = g x} = {x | (f - g) x = (0 : E)}
   · rw [h_set_eq]
     exact (hf.sub hg) measurableSet_eq
   ext
@@ -438,19 +438,19 @@ theorem measurableSet_eq_fun {m : MeasurableSpace α} {E} [MeasurableSpace E] [A
 
 theorem nullMeasurableSet_eq_fun {E} [MeasurableSpace E] [AddGroup E] [MeasurableSingletonClass E]
     [MeasurableSub₂ E] {f g : α → E} (hf : AEMeasurable f μ) (hg : AEMeasurable g μ) :
-    NullMeasurableSet { x | f x = g x } μ :=
+    NullMeasurableSet {x | f x = g x} μ :=
   by
   apply (measurableSet_eq_fun hf.measurable_mk hg.measurable_mk).NullMeasurableSet.congr
-  filter_upwards [hf.ae_eq_mk, hg.ae_eq_mk]with x hfx hgx
+  filter_upwards [hf.ae_eq_mk, hg.ae_eq_mk] with x hfx hgx
   change (hf.mk f x = hg.mk g x) = (f x = g x)
   simp only [hfx, hgx]
 #align null_measurable_set_eq_fun nullMeasurableSet_eq_fun
 
 theorem measurableSet_eq_fun_of_countable {m : MeasurableSpace α} {E} [MeasurableSpace E]
     [MeasurableSingletonClass E] [Countable E] {f g : α → E} (hf : Measurable f)
-    (hg : Measurable g) : MeasurableSet { x | f x = g x } :=
+    (hg : Measurable g) : MeasurableSet {x | f x = g x} :=
   by
-  have : { x | f x = g x } = ⋃ j, { x | f x = j } ∩ { x | g x = j } := by ext1 x;
+  have : {x | f x = g x} = ⋃ j, {x | f x = j} ∩ {x | g x = j} := by ext1 x;
     simp only [Set.mem_setOf_eq, Set.mem_iUnion, Set.mem_inter_iff, exists_eq_right']
   rw [this]
   refine' MeasurableSet.iUnion fun j => MeasurableSet.inter _ _

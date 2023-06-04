@@ -112,8 +112,9 @@ theorem finite_integral_rpow_sub_one_pow_aux {r : ℝ} (n : ℕ) (hnr : (n : ℝ
   rwa [neg_lt_neg_iff, inv_mul_lt_iff' hr, one_mul]
 #align finite_integral_rpow_sub_one_pow_aux finite_integral_rpow_sub_one_pow_aux
 
-theorem finite_integral_one_add_norm [MeasureSpace E] [BorelSpace E] [(@volume E _).AddHaarMeasure]
-    {r : ℝ} (hnr : (finrank ℝ E : ℝ) < r) : (∫⁻ x : E, ENNReal.ofReal ((1 + ‖x‖) ^ (-r))) < ∞ :=
+theorem finite_integral_one_add_norm [MeasureSpace E] [BorelSpace E]
+    [(@volume E _).IsAddHaarMeasure] {r : ℝ} (hnr : (finrank ℝ E : ℝ) < r) :
+    (∫⁻ x : E, ENNReal.ofReal ((1 + ‖x‖) ^ (-r))) < ∞ :=
   by
   have hr : 0 < r := lt_of_le_of_lt (finrank ℝ E).cast_nonneg hnr
   -- We start by applying the layer cake formula
@@ -124,7 +125,7 @@ theorem finite_integral_one_add_norm [MeasureSpace E] [BorelSpace E] [(@volume E
   -- 0 to 1 and from 1 to ∞
   have h_int :
     ∀ (t : ℝ) (ht : t ∈ Ioi (0 : ℝ)),
-      (volume { a : E | t ≤ (1 + ‖a‖) ^ (-r) } : ENNReal) =
+      (volume {a : E | t ≤ (1 + ‖a‖) ^ (-r)} : ENNReal) =
         volume (Metric.closedBall (0 : E) (t ^ (-r⁻¹) - 1)) :=
     by
     intro t ht
@@ -166,7 +167,7 @@ theorem finite_integral_one_add_norm [MeasureSpace E] [BorelSpace E] [(@volume E
   exact WithTop.zero_lt_top
 #align finite_integral_one_add_norm finite_integral_one_add_norm
 
-theorem integrable_one_add_norm [MeasureSpace E] [BorelSpace E] [(@volume E _).AddHaarMeasure]
+theorem integrable_one_add_norm [MeasureSpace E] [BorelSpace E] [(@volume E _).IsAddHaarMeasure]
     {r : ℝ} (hnr : (finrank ℝ E : ℝ) < r) : Integrable fun x : E => (1 + ‖x‖) ^ (-r) :=
   by
   refine' ⟨by measurability, _⟩
@@ -178,7 +179,7 @@ theorem integrable_one_add_norm [MeasureSpace E] [BorelSpace E] [(@volume E _).A
 #align integrable_one_add_norm integrable_one_add_norm
 
 theorem integrable_rpow_neg_one_add_norm_sq [MeasureSpace E] [BorelSpace E]
-    [(@volume E _).AddHaarMeasure] {r : ℝ} (hnr : (finrank ℝ E : ℝ) < r) :
+    [(@volume E _).IsAddHaarMeasure] {r : ℝ} (hnr : (finrank ℝ E : ℝ) < r) :
     Integrable fun x : E => (1 + ‖x‖ ^ 2) ^ (-r / 2) :=
   by
   have hr : 0 < r := lt_of_le_of_lt (finrank ℝ E).cast_nonneg hnr

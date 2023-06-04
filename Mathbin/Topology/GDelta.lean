@@ -217,7 +217,7 @@ variable [TopologicalSpace α]
 #print isGδ_setOf_continuousAt /-
 /-- The set of points where a function is continuous is a Gδ set. -/
 theorem isGδ_setOf_continuousAt [UniformSpace β] [IsCountablyGenerated (𝓤 β)] (f : α → β) :
-    IsGδ { x | ContinuousAt f x } :=
+    IsGδ {x | ContinuousAt f x} :=
   by
   obtain ⟨U, hUo, hU⟩ := (@uniformity_hasBasis_open_symmetric β _).exists_antitone_subbasis
   simp only [Uniform.continuousAt_iff_prod, nhds_prod_eq]
@@ -225,7 +225,7 @@ theorem isGδ_setOf_continuousAt [UniformSpace β] [IsCountablyGenerated (𝓤 �
     set_of_forall, id]
   refine' isGδ_iInter fun k => IsOpen.isGδ <| isOpen_iff_mem_nhds.2 fun x => _
   rintro ⟨s, ⟨hsx, hso⟩, hsU⟩
-  filter_upwards [IsOpen.mem_nhds hso hsx]with _ hy using⟨s, ⟨hy, hso⟩, hsU⟩
+  filter_upwards [IsOpen.mem_nhds hso hsx] with _ hy using ⟨s, ⟨hy, hso⟩, hsU⟩
 #align is_Gδ_set_of_continuous_at isGδ_setOf_continuousAt
 -/
 
@@ -238,7 +238,7 @@ variable [TopologicalSpace α]
 #print residual /-
 /-- A set `s` is called *residual* if it includes a countable intersection of dense open sets. -/
 def residual (α : Type _) [TopologicalSpace α] : Filter α :=
-  Filter.countableGenerate { t | IsOpen t ∧ Dense t }
+  Filter.countableGenerate {t | IsOpen t ∧ Dense t}
 deriving CountableInterFilter
 #align residual residual
 -/

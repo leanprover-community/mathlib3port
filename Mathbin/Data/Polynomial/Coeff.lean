@@ -351,15 +351,15 @@ theorem C_dvd_iff_dvd_coeff (r : R) (φ : R[X]) : C r ∣ φ ↔ ∀ i, r ∣ φ
   · intro h
     choose c hc using h
     classical
-      let c' : ℕ → R := fun i => if i ∈ φ.support then c i else 0
-      let ψ : R[X] := ∑ i in φ.support, monomial i (c' i)
-      use ψ
-      ext i
-      simp only [ψ, c', coeff_C_mul, mem_support_iff, coeff_monomial, finset_sum_coeff,
-        Finset.sum_ite_eq']
-      split_ifs with hi hi
-      · rw [hc]
-      · rw [Classical.not_not] at hi ; rwa [MulZeroClass.mul_zero]
+    let c' : ℕ → R := fun i => if i ∈ φ.support then c i else 0
+    let ψ : R[X] := ∑ i in φ.support, monomial i (c' i)
+    use ψ
+    ext i
+    simp only [ψ, c', coeff_C_mul, mem_support_iff, coeff_monomial, finset_sum_coeff,
+      Finset.sum_ite_eq']
+    split_ifs with hi hi
+    · rw [hc]
+    · rw [Classical.not_not] at hi ; rwa [MulZeroClass.mul_zero]
 #align polynomial.C_dvd_iff_dvd_coeff Polynomial.C_dvd_iff_dvd_coeff
 
 theorem coeff_bit0_mul (P Q : R[X]) (n : ℕ) : coeff (bit0 P * Q) n = 2 * coeff (P * Q) n := by
@@ -402,7 +402,7 @@ theorem nat_cast_inj {m n : ℕ} {R : Type _} [Semiring R] [CharZero R] : (↑m 
   by
   fconstructor
   · intro h
-    apply_fun fun p => p.coeff 0  at h 
+    apply_fun fun p => p.coeff 0 at h 
     simpa using h
   · rintro rfl; rfl
 #align polynomial.nat_cast_inj Polynomial.nat_cast_inj
@@ -418,7 +418,7 @@ theorem int_cast_inj {m n : ℤ} {R : Type _} [Ring R] [CharZero R] : (↑m : R[
   by
   fconstructor
   · intro h
-    apply_fun fun p => p.coeff 0  at h 
+    apply_fun fun p => p.coeff 0 at h 
     simpa using h
   · rintro rfl; rfl
 #align polynomial.int_cast_inj Polynomial.int_cast_inj

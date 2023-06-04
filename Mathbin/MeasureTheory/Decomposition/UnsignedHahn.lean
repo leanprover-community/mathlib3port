@@ -39,13 +39,13 @@ namespace MeasureTheory
 variable {α : Type _} [MeasurableSpace α] {μ ν : Measure α}
 
 /-- **Hahn decomposition theorem** -/
-theorem hahn_decomposition [FiniteMeasure μ] [FiniteMeasure ν] :
+theorem hahn_decomposition [IsFiniteMeasure μ] [IsFiniteMeasure ν] :
     ∃ s,
       MeasurableSet s ∧
         (∀ t, MeasurableSet t → t ⊆ s → ν t ≤ μ t) ∧ ∀ t, MeasurableSet t → t ⊆ sᶜ → μ t ≤ ν t :=
   by
   let d : Set α → ℝ := fun s => ((μ s).toNNReal : ℝ) - (ν s).toNNReal
-  let c : Set ℝ := d '' { s | MeasurableSet s }
+  let c : Set ℝ := d '' {s | MeasurableSet s}
   let γ : ℝ := Sup c
   have hμ : ∀ s, μ s ≠ ∞ := measure_ne_top μ
   have hν : ∀ s, ν s ≠ ∞ := measure_ne_top ν

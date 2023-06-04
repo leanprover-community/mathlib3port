@@ -164,24 +164,25 @@ theorem withDensity_rnDeriv_le (μ ν : Measure α) : ν.withDensity (μ.rnDeriv
     exact measure.zero_le μ
 #align measure_theory.measure.with_density_rn_deriv_le MeasureTheory.Measure.withDensity_rnDeriv_le
 
-instance [FiniteMeasure μ] : FiniteMeasure (μ.singularPart ν) :=
-  finiteMeasureOfLe μ <| singularPart_le μ ν
+instance [IsFiniteMeasure μ] : IsFiniteMeasure (μ.singularPart ν) :=
+  isFiniteMeasure_of_le μ <| singularPart_le μ ν
 
 instance [SigmaFinite μ] : SigmaFinite (μ.singularPart ν) :=
   sigmaFinite_of_le μ <| singularPart_le μ ν
 
-instance [TopologicalSpace α] [LocallyFiniteMeasure μ] : LocallyFiniteMeasure (μ.singularPart ν) :=
-  locallyFiniteMeasure_of_le <| singularPart_le μ ν
+instance [TopologicalSpace α] [IsLocallyFiniteMeasure μ] :
+    IsLocallyFiniteMeasure (μ.singularPart ν) :=
+  isLocallyFiniteMeasure_of_le <| singularPart_le μ ν
 
-instance [FiniteMeasure μ] : FiniteMeasure (ν.withDensity <| μ.rnDeriv ν) :=
-  finiteMeasureOfLe μ <| withDensity_rnDeriv_le μ ν
+instance [IsFiniteMeasure μ] : IsFiniteMeasure (ν.withDensity <| μ.rnDeriv ν) :=
+  isFiniteMeasure_of_le μ <| withDensity_rnDeriv_le μ ν
 
 instance [SigmaFinite μ] : SigmaFinite (ν.withDensity <| μ.rnDeriv ν) :=
   sigmaFinite_of_le μ <| withDensity_rnDeriv_le μ ν
 
-instance [TopologicalSpace α] [LocallyFiniteMeasure μ] :
-    LocallyFiniteMeasure (ν.withDensity <| μ.rnDeriv ν) :=
-  locallyFiniteMeasure_of_le <| withDensity_rnDeriv_le μ ν
+instance [TopologicalSpace α] [IsLocallyFiniteMeasure μ] :
+    IsLocallyFiniteMeasure (ν.withDensity <| μ.rnDeriv ν) :=
+  isLocallyFiniteMeasure_of_le <| withDensity_rnDeriv_le μ ν
 
 theorem lintegral_rnDeriv_lt_top_of_measure_ne_top {μ : Measure α} (ν : Measure α) {s : Set α}
     (hs : μ s ≠ ∞) : (∫⁻ x in s, μ.rnDeriv ν x ∂ν) < ∞ :=
@@ -205,7 +206,7 @@ theorem lintegral_rnDeriv_lt_top_of_measure_ne_top {μ : Measure α} (ν : Measu
     exact WithTop.zero_lt_top
 #align measure_theory.measure.lintegral_rn_deriv_lt_top_of_measure_ne_top MeasureTheory.Measure.lintegral_rnDeriv_lt_top_of_measure_ne_top
 
-theorem lintegral_rnDeriv_lt_top (μ ν : Measure α) [FiniteMeasure μ] :
+theorem lintegral_rnDeriv_lt_top (μ ν : Measure α) [IsFiniteMeasure μ] :
     (∫⁻ x, μ.rnDeriv ν x ∂ν) < ∞ := by
   rw [← set_lintegral_univ]
   exact lintegral_rn_deriv_lt_top_of_measure_ne_top _ (measure_lt_top _ _).Ne
@@ -216,7 +217,7 @@ measure `ν` is `ν`-almost everywhere finite. -/
 theorem rnDeriv_lt_top (μ ν : Measure α) [SigmaFinite μ] : ∀ᵐ x ∂ν, μ.rnDeriv ν x < ∞ :=
   by
   suffices ∀ n, ∀ᵐ x ∂ν, x ∈ spanning_sets μ n → μ.rn_deriv ν x < ∞ by
-    filter_upwards [ae_all_iff.2 this]with _ hx using hx _ (mem_spanning_sets_index _ _)
+    filter_upwards [ae_all_iff.2 this] with _ hx using hx _ (mem_spanning_sets_index _ _)
   intro n
   rw [← ae_restrict_iff' (measurable_spanning_sets _ _)]
   apply ae_lt_top (measurable_rn_deriv _ _)
@@ -412,8 +413,8 @@ open VectorMeasure SignedMeasure
 a measurable set `E`, such that `ν(E) > 0` and `E` is positive with respect to `μ - εν`.
 
 This lemma is useful for the Lebesgue decomposition theorem. -/
-theorem exists_positive_of_not_mutuallySingular (μ ν : Measure α) [FiniteMeasure μ]
-    [FiniteMeasure ν] (h : ¬μ ⟂ₘ ν) :
+theorem exists_positive_of_not_mutuallySingular (μ ν : Measure α) [IsFiniteMeasure μ]
+    [IsFiniteMeasure ν] (h : ¬μ ⟂ₘ ν) :
     ∃ ε : ℝ≥0,
       0 < ε ∧
         ∃ E : Set α,
@@ -473,7 +474,7 @@ theorem exists_positive_of_not_mutuallySingular (μ ν : Measure α) [FiniteMeas
       assumption
   -- since `μ` and `ν` are not mutually singular, `μ A = 0` implies `ν Aᶜ > 0`
   rw [mutually_singular] at h ;
-  push_neg  at h 
+  push_neg at h 
   have := h _ hAmeas hμ
   simp_rw [hA₁, compl_Inter, compl_compl] at this 
   -- as `Aᶜ = ⋃ n, f n`, `ν Aᶜ > 0` implies there exists some `n` such that `ν (f n) > 0`
@@ -489,7 +490,7 @@ functions `f`, such that, for all measurable sets `A`, `∫⁻ x in A, f x ∂μ
 
 This is useful for the Lebesgue decomposition theorem. -/
 def measurableLe (μ ν : Measure α) : Set (α → ℝ≥0∞) :=
-  { f | Measurable f ∧ ∀ (A : Set α) (hA : MeasurableSet A), (∫⁻ x in A, f x ∂μ) ≤ ν A }
+  {f | Measurable f ∧ ∀ (A : Set α) (hA : MeasurableSet A), (∫⁻ x in A, f x ∂μ) ≤ ν A}
 #align measure_theory.measure.lebesgue_decomposition.measurable_le MeasureTheory.Measure.LebesgueDecomposition.measurableLe
 
 theorem zero_mem_measurableLe : (0 : α → ℝ≥0∞) ∈ measurableLe μ ν :=
@@ -526,7 +527,7 @@ theorem iSup_succ_eq_sup {α} (f : ℕ → α → ℝ≥0∞) (m : ℕ) (a : α)
       · exact le_sup_of_le_right (le_iSup₂ n h)
       · exact h ▸ le_sup_left
     · refine' sup_le _ (biSup_mono fun n hn => hn.trans m.le_succ)
-      convert@le_iSup₂ _ _ (fun i => i ≤ m + 1) _ _ m.succ le_rfl
+      convert @le_iSup₂ _ _ (fun i => i ≤ m + 1) _ _ m.succ le_rfl
       rfl
 #align measure_theory.measure.lebesgue_decomposition.supr_succ_eq_sup MeasureTheory.Measure.LebesgueDecomposition.iSup_succ_eq_sup
 
@@ -589,7 +590,7 @@ with respect to `ν` and `μ = ξ + ν.with_density f`.
 
 This is not an instance since this is also shown for the more general σ-finite measures with
 `measure_theory.measure.have_lebesgue_decomposition_of_sigma_finite`. -/
-theorem haveLebesgueDecomposition_of_finite_measure [FiniteMeasure μ] [FiniteMeasure ν] :
+theorem haveLebesgueDecomposition_of_finite_measure [IsFiniteMeasure μ] [IsFiniteMeasure ν] :
     HaveLebesgueDecomposition μ ν :=
   ⟨by
     have h :=
@@ -613,7 +614,7 @@ theorem haveLebesgueDecomposition_of_finite_measure [FiniteMeasure μ] [FiniteMe
           exact le_sSup ⟨⨆ (k : ℕ) (hk : k ≤ n), f k, supr_mem_measurable_le' _ hf₁ _, rfl⟩
       · intro n
         refine' Measurable.aemeasurable _
-        convert(supr_mem_measurable_le _ hf₁ n).1
+        convert (supr_mem_measurable_le _ hf₁ n).1
         ext; simp
       · refine' Filter.eventually_of_forall fun a => _
         simp [supr_monotone' f _]
@@ -701,8 +702,8 @@ theorem haveLebesgueDecomposition_of_finite_measure [FiniteMeasure μ] [FiniteMe
 
 attribute [local instance] have_lebesgue_decomposition_of_finite_measure
 
-instance {S : μ.FiniteSpanningSetsIn { s : Set α | MeasurableSet s }} (n : ℕ) :
-    FiniteMeasure (μ.restrict <| S.Set n) :=
+instance {S : μ.FiniteSpanningSetsIn {s : Set α | MeasurableSet s}} (n : ℕ) :
+    IsFiniteMeasure (μ.restrict <| S.Set n) :=
   ⟨by rw [restrict_apply MeasurableSet.univ, univ_inter]; exact S.finite _⟩
 
 -- see Note [lower instance priority]
@@ -780,7 +781,7 @@ instance (priority := 100) haveLebesgueDecomposition_of_sigmaFinite (μ ν : Mea
             intro x hx
             simp only [mem_Union, sup_eq_union, mem_inter_iff, mem_union, mem_compl_iff,
               or_iff_not_imp_left]
-            intro h; push_neg  at h 
+            intro h; push_neg at h 
             rw [top_eq_univ, ← S.spanning, mem_Union] at hx 
             obtain ⟨i, hi⟩ := hx
             exact ⟨i, hi, h i hi⟩

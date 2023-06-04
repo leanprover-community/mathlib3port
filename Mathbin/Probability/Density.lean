@@ -142,7 +142,7 @@ theorem lintegral_eq_measure_univ {X : Ω → E} [HasPdf X ℙ μ] :
     measure.map_apply (has_pdf.measurable X ℙ μ) MeasurableSet.univ, Set.preimage_univ]
 #align measure_theory.pdf.lintegral_eq_measure_univ MeasureTheory.pdf.lintegral_eq_measure_univ
 
-theorem ae_lt_top [FiniteMeasure ℙ] {μ : Measure E} {X : Ω → E} : ∀ᵐ x ∂μ, pdf X ℙ μ x < ∞ :=
+theorem ae_lt_top [IsFiniteMeasure ℙ] {μ : Measure E} {X : Ω → E} : ∀ᵐ x ∂μ, pdf X ℙ μ x < ∞ :=
   by
   by_cases hpdf : has_pdf X ℙ μ
   · haveI := hpdf
@@ -153,12 +153,12 @@ theorem ae_lt_top [FiniteMeasure ℙ] {μ : Measure E} {X : Ω → E} : ∀ᵐ x
     exact Filter.eventually_of_forall fun x => WithTop.zero_lt_top
 #align measure_theory.pdf.ae_lt_top MeasureTheory.pdf.ae_lt_top
 
-theorem ofReal_toReal_ae_eq [FiniteMeasure ℙ] {X : Ω → E} :
+theorem ofReal_toReal_ae_eq [IsFiniteMeasure ℙ] {X : Ω → E} :
     (fun x => ENNReal.ofReal (pdf X ℙ μ x).toReal) =ᵐ[μ] pdf X ℙ μ :=
   ofReal_toReal_ae_eq ae_lt_top
 #align measure_theory.pdf.of_real_to_real_ae_eq MeasureTheory.pdf.ofReal_toReal_ae_eq
 
-theorem integrable_iff_integrable_mul_pdf [FiniteMeasure ℙ] {X : Ω → E} [HasPdf X ℙ μ] {f : E → ℝ}
+theorem integrable_iff_integrable_mul_pdf [IsFiniteMeasure ℙ] {X : Ω → E} [HasPdf X ℙ μ] {f : E → ℝ}
     (hf : Measurable f) :
     Integrable (fun x => f (X x)) ℙ ↔ Integrable (fun x => f x * (pdf X ℙ μ x).toReal) μ :=
   by
@@ -170,7 +170,7 @@ theorem integrable_iff_integrable_mul_pdf [FiniteMeasure ℙ] {X : Ω → E} [Ha
 /-- **The Law of the Unconscious Statistician**: Given a random variable `X` and a measurable
 function `f`, `f ∘ X` is a random variable with expectation `∫ x, f x * pdf X ∂μ`
 where `μ` is a measure on the codomain of `X`. -/
-theorem integral_fun_mul_eq_integral [FiniteMeasure ℙ] {X : Ω → E} [HasPdf X ℙ μ] {f : E → ℝ}
+theorem integral_fun_mul_eq_integral [IsFiniteMeasure ℙ] {X : Ω → E} [HasPdf X ℙ μ] {f : E → ℝ}
     (hf : Measurable f) : (∫ x, f x * (pdf X ℙ μ x).toReal ∂μ) = ∫ x, f (X x) ∂ℙ :=
   by
   by_cases hpdf : integrable (fun x => f x * (pdf X ℙ μ x).toReal) μ
@@ -275,8 +275,8 @@ theorem quasiMeasurePreserving_hasPdf {X : Ω → E} [HasPdf X ℙ μ] {g : E �
   exact set_lintegral_measure_zero _ _ this
 #align measure_theory.pdf.quasi_measure_preserving_has_pdf MeasureTheory.pdf.quasiMeasurePreserving_hasPdf
 
-theorem quasiMeasurePreserving_has_pdf' [FiniteMeasure ℙ] [SigmaFinite ν] {X : Ω → E} [HasPdf X ℙ μ]
-    {g : E → F} (hg : QuasiMeasurePreserving g μ ν) : HasPdf (g ∘ X) ℙ ν :=
+theorem quasiMeasurePreserving_has_pdf' [IsFiniteMeasure ℙ] [SigmaFinite ν] {X : Ω → E}
+    [HasPdf X ℙ μ] {g : E → F} (hg : QuasiMeasurePreserving g μ ν) : HasPdf (g ∘ X) ℙ ν :=
   quasiMeasurePreserving_hasPdf hg inferInstance
 #align measure_theory.pdf.quasi_measure_preserving_has_pdf' MeasureTheory.pdf.quasiMeasurePreserving_has_pdf'
 
@@ -284,7 +284,7 @@ end
 
 section Real
 
-variable [FiniteMeasure ℙ] {X : Ω → ℝ}
+variable [IsFiniteMeasure ℙ] {X : Ω → ℝ}
 
 /-- A real-valued random variable `X` `has_pdf X ℙ λ` (where `λ` is the Lebesgue measure) if and
 only if the push-forward measure of `ℙ` along `X` is absolutely continuous with respect to `λ`. -/
@@ -382,20 +382,20 @@ theorem measure_preimage {m : MeasurableSpace Ω} {X : Ω → E} {ℙ : Measure 
   rw [ENNReal.div_eq_inv_mul]
 #align measure_theory.pdf.is_uniform.measure_preimage MeasureTheory.pdf.IsUniform.measure_preimage
 
-theorem probabilityMeasure {m : MeasurableSpace Ω} {X : Ω → E} {ℙ : Measure Ω} {μ : Measure E}
+theorem isProbabilityMeasure {m : MeasurableSpace Ω} {X : Ω → E} {ℙ : Measure Ω} {μ : Measure E}
     {s : Set E} (hns : μ s ≠ 0) (hnt : μ s ≠ ∞) (hms : MeasurableSet s) (hu : IsUniform X s ℙ μ) :
-    ProbabilityMeasure ℙ :=
+    IsProbabilityMeasure ℙ :=
   ⟨by
     have : X ⁻¹' Set.univ = Set.univ := by simp only [Set.preimage_univ]
     rw [← this, hu.measure_preimage hns hnt hms MeasurableSet.univ, Set.inter_univ,
       ENNReal.div_self hns hnt]⟩
-#align measure_theory.pdf.is_uniform.is_probability_measure MeasureTheory.pdf.IsUniform.probabilityMeasure
+#align measure_theory.pdf.is_uniform.is_probability_measure MeasureTheory.pdf.IsUniform.isProbabilityMeasure
 
 variable {X : Ω → ℝ} {s : Set ℝ} (hms : MeasurableSet s) (hns : volume s ≠ 0)
 
 include hms hns
 
-theorem mul_pdf_integrable [FiniteMeasure ℙ] (hcs : IsCompact s) (huX : IsUniform X s ℙ) :
+theorem mul_pdf_integrable [IsFiniteMeasure ℙ] (hcs : IsCompact s) (huX : IsUniform X s ℙ) :
     Integrable fun x : ℝ => x * (pdf X ℙ volume x).toReal :=
   by
   by_cases hsupp : volume s = ∞

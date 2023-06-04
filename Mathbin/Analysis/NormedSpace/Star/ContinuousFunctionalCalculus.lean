@@ -205,7 +205,7 @@ theorem StarSubalgebra.isUnit_coe_inv_mem {S : StarSubalgebra ℂ A} (hS : IsClo
   refine' le_of_is_closed_of_mem ℂ hS (mul_mem (star_mem hxS) hxS) _
   haveI := (IsSelfAdjoint.star_mul_self x).IsStarNormal
   have hx' := elementalStarAlgebra.isUnit_of_isUnit_of_isStarNormal hx
-  convert(↑hx'.unit⁻¹ : elementalStarAlgebra ℂ (star x * x)).Prop using 1
+  convert (↑hx'.unit⁻¹ : elementalStarAlgebra ℂ (star x * x)).Prop using 1
   exact left_inv_eq_right_inv hx.unit.inv_mul (congr_arg coe hx'.unit.mul_inv)
 #align star_subalgebra.is_unit_coe_inv_mem StarSubalgebra.isUnit_coe_inv_mem
 

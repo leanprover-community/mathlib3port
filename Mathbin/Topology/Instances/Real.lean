@@ -113,7 +113,7 @@ theorem Real.tendsto_inv {r : ℝ} (r0 : r ≠ 0) : Tendsto (fun q => q⁻¹) (�
   rw [← abs_pos] at r0  <;>
     exact
       tendsto_of_uniformContinuous_subtype
-        (Real.uniformContinuous_inv { x | |r| / 2 < |x| } (half_pos r0) fun x h => le_of_lt h)
+        (Real.uniformContinuous_inv {x | |r| / 2 < |x|} (half_pos r0) fun x h => le_of_lt h)
         (IsOpen.mem_nhds ((isOpen_lt' (|r| / 2)).Preimage continuous_abs) (half_lt_self r0))
 #align real.tendsto_inv Real.tendsto_inv
 
@@ -146,7 +146,7 @@ theorem Real.uniformContinuous_mul (s : Set (ℝ × ℝ)) {r₁ r₂ : ℝ}
 protected theorem Real.continuous_mul : Continuous fun p : ℝ × ℝ => p.1 * p.2 :=
   continuous_iff_continuousAt.2 fun ⟨a₁, a₂⟩ =>
     tendsto_of_uniformContinuous_subtype
-      (Real.uniformContinuous_mul ({ x | |x| < |a₁| + 1 } ×ˢ { x | |x| < |a₂| + 1 }) fun x => id)
+      (Real.uniformContinuous_mul ({x | |x| < |a₁| + 1} ×ˢ {x | |x| < |a₂| + 1}) fun x => id)
       (IsOpen.mem_nhds
         (((isOpen_gt' (|a₁| + 1)).Preimage continuous_abs).Prod
           ((isOpen_gt' (|a₂| + 1)).Preimage continuous_abs))
@@ -174,8 +174,7 @@ theorem Real.totallyBounded_ball (x ε : ℝ) : TotallyBounded (ball x ε) := by
 
 section
 
-theorem closure_of_rat_image_lt {q : ℚ} :
-    closure ((coe : ℚ → ℝ) '' { x | q < x }) = { r | ↑q ≤ r } :=
+theorem closure_of_rat_image_lt {q : ℚ} : closure ((coe : ℚ → ℝ) '' {x | q < x}) = {r | ↑q ≤ r} :=
   Subset.antisymm
     ((isClosed_ge' _).closure_subset_iff.2
       (image_subset_iff.2 fun p h => le_of_lt <| (@Rat.cast_lt ℝ _ _ _).2 h))
@@ -268,7 +267,7 @@ inverse images of compact sets are finite. -/
 theorem tendsto_zmultiplesHom_cofinite {a : ℝ} (ha : a ≠ 0) :
     Tendsto (zmultiplesHom ℝ a) cofinite (cocompact ℝ) :=
   by
-  convert(tendsto_cocompact_mul_right₀ ha).comp Int.tendsto_coe_cofinite
+  convert (tendsto_cocompact_mul_right₀ ha).comp Int.tendsto_coe_cofinite
   ext n
   simp
 #align int.tendsto_zmultiples_hom_cofinite Int.tendsto_zmultiplesHom_cofinite
@@ -299,10 +298,10 @@ end AddSubgroup
 
 /-- Given a nontrivial subgroup `G ⊆ ℝ`, if `G ∩ ℝ_{>0}` has no minimum then `G` is dense. -/
 theorem AddSubgroup.dense_of_no_min {G : AddSubgroup ℝ} {g₀ : ℝ} (g₀_in : g₀ ∈ G) (g₀_ne : g₀ ≠ 0)
-    (H' : ¬∃ a : ℝ, IsLeast { g : ℝ | g ∈ G ∧ 0 < g } a) : Dense (G : Set ℝ) :=
+    (H' : ¬∃ a : ℝ, IsLeast {g : ℝ | g ∈ G ∧ 0 < g} a) : Dense (G : Set ℝ) :=
   by
-  let G_pos := { g : ℝ | g ∈ G ∧ 0 < g }
-  push_neg  at H' 
+  let G_pos := {g : ℝ | g ∈ G ∧ 0 < g}
+  push_neg at H' 
   intro x
   suffices ∀ ε > (0 : ℝ), ∃ g ∈ G, |x - g| < ε by simpa only [Real.mem_closure_iff, abs_sub_comm]
   intro ε ε_pos
@@ -336,7 +335,7 @@ theorem AddSubgroup.dense_or_cyclic (G : AddSubgroup ℝ) :
   · right
     use 0
     rw [H, AddSubgroup.closure_singleton_zero]
-  · let G_pos := { g : ℝ | g ∈ G ∧ 0 < g }
+  · let G_pos := {g : ℝ | g ∈ G ∧ 0 < g}
     by_cases H' : ∃ a, IsLeast G_pos a
     · right
       rcases H' with ⟨a, ha⟩

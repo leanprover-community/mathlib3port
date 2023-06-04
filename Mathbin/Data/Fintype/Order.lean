@@ -126,14 +126,14 @@ noncomputable def toCompleteDistribLattice [DistribLattice α] [BoundedOrder α]
       α with
     iInf_sup_le_sup_inf := fun a s =>
       by
-      convert(Finset.inf_sup_distrib_left _ _ _).ge
-      convert(Finset.inf_eq_iInf _ _).symm
+      convert (Finset.inf_sup_distrib_left _ _ _).ge
+      convert (Finset.inf_eq_iInf _ _).symm
       simp_rw [Set.mem_toFinset]
       rfl
     inf_sup_le_iSup_inf := fun a s =>
       by
-      convert(Finset.sup_inf_distrib_left _ _ _).le
-      convert(Finset.sup_eq_iSup _ _).symm
+      convert (Finset.sup_inf_distrib_left _ _ _).le
+      convert (Finset.sup_eq_iSup _ _).symm
       simp_rw [Set.mem_toFinset]
       rfl }
 #align fintype.to_complete_distrib_lattice Fintype.toCompleteDistribLattice
@@ -208,8 +208,8 @@ variable {α : Type _}
 theorem Directed.fintype_le {r : α → α → Prop} [IsTrans α r] {β γ : Type _} [Nonempty γ] {f : γ → α}
     [Fintype β] (D : Directed r f) (g : β → γ) : ∃ z, ∀ i, r (f (g i)) (f z) := by
   classical
-    obtain ⟨z, hz⟩ := D.finset_le (Finset.image g Finset.univ)
-    exact ⟨z, fun i => hz (g i) (Finset.mem_image_of_mem g (Finset.mem_univ i))⟩
+  obtain ⟨z, hz⟩ := D.finset_le (Finset.image g Finset.univ)
+  exact ⟨z, fun i => hz (g i) (Finset.mem_image_of_mem g (Finset.mem_univ i))⟩
 #align directed.fintype_le Directed.fintype_le
 
 theorem Fintype.exists_le [Nonempty α] [Preorder α] [IsDirected α (· ≤ ·)] {β : Type _} [Fintype β]

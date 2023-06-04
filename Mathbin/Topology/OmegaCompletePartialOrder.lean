@@ -111,7 +111,7 @@ variable {α : Type _} [OmegaCompletePartialOrder α] (y : Scott α)
 /-- `not_below` is an open set in `Scott α` used
 to prove the monotonicity of continuous functions -/
 def notBelow :=
-  { x | ¬x ≤ y }
+  {x | ¬x ≤ y}
 #align not_below notBelow
 -/
 
@@ -153,7 +153,7 @@ theorem scottContinuous_of_continuous {α β} [OmegaCompletePartialOrder α]
   simp only [continuous_def, (· ⁻¹' ·)] at hf 
   have h : Monotone f := by
     intro x y h
-    cases' hf { x | ¬x ≤ f y } (notBelow_isOpen _) with hf hf'; clear hf'
+    cases' hf {x | ¬x ≤ f y} (notBelow_isOpen _) with hf hf'; clear hf'
     specialize hf h; simp only [preimage, mem_set_of_eq, le_Prop_eq] at hf 
     by_contra H; apply hf H le_rfl
   exists h; intro c

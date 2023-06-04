@@ -233,7 +233,8 @@ theorem homEquiv_symm_rightAdjointUniq_hom_app {F : C ⥤ D} {G G' : D ⥤ C} (a
     (adj2.homEquiv _ _).symm ((rightAdjointUniq adj1 adj2).Hom.app x) = adj1.counit.app x :=
   by
   apply Quiver.Hom.op_inj
-  convert hom_equiv_left_adjoint_uniq_hom_app (op_adjoint_op_of_adjoint _ F adj2)
+  convert
+    hom_equiv_left_adjoint_uniq_hom_app (op_adjoint_op_of_adjoint _ F adj2)
       (op_adjoint_op_of_adjoint _ _ adj1) (Opposite.op x)
   simpa
 #align category_theory.adjunction.hom_equiv_symm_right_adjoint_uniq_hom_app CategoryTheory.Adjunction.homEquiv_symm_rightAdjointUniq_hom_app
@@ -243,7 +244,8 @@ theorem unit_rightAdjointUniq_hom_app {F : C ⥤ D} {G G' : D ⥤ C} (adj1 : F �
     (x : C) : adj1.Unit.app x ≫ (rightAdjointUniq adj1 adj2).Hom.app (F.obj x) = adj2.Unit.app x :=
   by
   apply Quiver.Hom.op_inj
-  convert left_adjoint_uniq_hom_app_counit (op_adjoint_op_of_adjoint _ _ adj2)
+  convert
+    left_adjoint_uniq_hom_app_counit (op_adjoint_op_of_adjoint _ _ adj2)
       (op_adjoint_op_of_adjoint _ _ adj1) (Opposite.op x)
   all_goals simpa
 #align category_theory.adjunction.unit_right_adjoint_uniq_hom_app CategoryTheory.Adjunction.unit_rightAdjointUniq_hom_app
@@ -261,7 +263,8 @@ theorem rightAdjointUniq_hom_app_counit {F : C ⥤ D} {G G' : D ⥤ C} (adj1 : F
     F.map ((rightAdjointUniq adj1 adj2).Hom.app x) ≫ adj2.counit.app x = adj1.counit.app x :=
   by
   apply Quiver.Hom.op_inj
-  convert unit_left_adjoint_uniq_hom_app (op_adjoint_op_of_adjoint _ _ adj2)
+  convert
+    unit_left_adjoint_uniq_hom_app (op_adjoint_op_of_adjoint _ _ adj2)
       (op_adjoint_op_of_adjoint _ _ adj1) (Opposite.op x)
   all_goals simpa
 #align category_theory.adjunction.right_adjoint_uniq_hom_app_counit CategoryTheory.Adjunction.rightAdjointUniq_hom_app_counit

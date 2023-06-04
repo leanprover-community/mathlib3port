@@ -357,7 +357,7 @@ theorem sum_divisors_filter_squarefree {n : ℕ} (h0 : n ≠ 0) {α : Type _} [A
 theorem sq_mul_squarefree_of_pos {n : ℕ} (hn : 0 < n) :
     ∃ a b : ℕ, 0 < a ∧ 0 < b ∧ b ^ 2 * a = n ∧ Squarefree a :=
   by
-  let S := { s ∈ Finset.range (n + 1) | s ∣ n ∧ ∃ x, s = x ^ 2 }
+  let S := {s ∈ Finset.range (n + 1) | s ∣ n ∧ ∃ x, s = x ^ 2}
   have hSne : S.nonempty := by
     use 1
     have h1 : 0 < n ∧ ∃ x : ℕ, 1 = x ^ 2 := ⟨hn, ⟨1, (one_pow 2).symm⟩⟩
@@ -376,7 +376,8 @@ theorem sq_mul_squarefree_of_pos {n : ℕ} (hn : 0 < n) :
   refine' lt_le_antisymm _ (Finset.le_max' S ((b * x) ^ 2) _)
   · simp_rw [S, hsa, Finset.sep_def, Finset.mem_filter, Finset.mem_range]
     refine' ⟨lt_succ_iff.mpr (le_of_dvd hn _), _, ⟨b * x, rfl⟩⟩ <;> use y <;> rw [hy] <;> ring
-  · convert lt_mul_of_one_lt_right hlts
+  · convert
+      lt_mul_of_one_lt_right hlts
         (one_lt_pow 2 x zero_lt_two (one_lt_iff_ne_zero_and_ne_one.mpr ⟨fun h => by simp_all, hx⟩))
     rw [mul_pow]
 #align nat.sq_mul_squarefree_of_pos Nat.sq_mul_squarefree_of_pos

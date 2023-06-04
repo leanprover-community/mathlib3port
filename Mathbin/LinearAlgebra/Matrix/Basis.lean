@@ -227,10 +227,10 @@ theorem mul_basis_toMatrix [DecidableEq ι] [DecidableEq ι'] (b₁ : Basis ι R
 theorem basis_toMatrix_basisFun_mul (b : Basis ι R (ι → R)) (A : Matrix ι ι R) :
     b.toMatrix (Pi.basisFun R ι) ⬝ A = of fun i j => b.repr (Aᵀ j) i := by
   classical
-    simp only [basis_toMatrix_mul _ _ (Pi.basisFun R ι), Matrix.toLin_eq_toLin']
-    ext (i j)
-    rw [LinearMap.toMatrix_apply, Matrix.toLin'_apply, Pi.basisFun_apply,
-      Matrix.mulVec_stdBasis_apply, Matrix.of_apply]
+  simp only [basis_toMatrix_mul _ _ (Pi.basisFun R ι), Matrix.toLin_eq_toLin']
+  ext (i j)
+  rw [LinearMap.toMatrix_apply, Matrix.toLin'_apply, Pi.basisFun_apply,
+    Matrix.mulVec_stdBasis_apply, Matrix.of_apply]
 #align basis_to_matrix_basis_fun_mul basis_toMatrix_basisFun_mul
 
 /-- A generalization of `linear_map.to_matrix_id`. -/

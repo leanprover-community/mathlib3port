@@ -126,10 +126,9 @@ theorem faithfulSMul_at {α : Type _} [∀ i, SMul α <| f i] [∀ i, Nonempty (
   ⟨fun x y h =>
     eq_of_smul_eq_smul fun a : f i => by
       classical
-        have :=
-          congr_fun (h <| Function.update (fun j => Classical.choice (‹∀ i, Nonempty (f i)› j)) i a)
-            i
-        simpa using this⟩
+      have :=
+        congr_fun (h <| Function.update (fun j => Classical.choice (‹∀ i, Nonempty (f i)› j)) i a) i
+      simpa using this⟩
 #align pi.has_faithful_smul_at Pi.faithfulSMul_at
 #align pi.has_faithful_vadd_at Pi.faithfulVAdd_at
 
@@ -299,7 +298,7 @@ section Extend
 @[to_additive]
 theorem Function.extend_smul {R α β γ : Type _} [SMul R γ] (r : R) (f : α → β) (g : α → γ)
     (e : β → γ) : Function.extend f (r • g) (r • e) = r • Function.extend f g e :=
-  funext fun _ => by convert(apply_dite ((· • ·) r) _ _ _).symm
+  funext fun _ => by convert (apply_dite ((· • ·) r) _ _ _).symm
 #align function.extend_smul Function.extend_smul
 #align function.extend_vadd Function.extend_vadd
 

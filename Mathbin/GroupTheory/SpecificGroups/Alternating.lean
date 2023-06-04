@@ -157,12 +157,12 @@ open alternatingGroup
 #print Equiv.Perm.closure_three_cycles_eq_alternating /-
 @[simp]
 theorem closure_three_cycles_eq_alternating :
-    closure { σ : Perm α | IsThreeCycle σ } = alternatingGroup α :=
+    closure {σ : Perm α | IsThreeCycle σ} = alternatingGroup α :=
   closure_eq_of_le _ (fun σ hσ => mem_alternatingGroup.2 hσ.sign) fun σ hσ =>
     by
     suffices hind :
       ∀ (n : ℕ) (l : List (perm α)) (hl : ∀ g, g ∈ l → is_swap g) (hn : l.length = 2 * n),
-        l.Prod ∈ closure { σ : perm α | is_three_cycle σ }
+        l.Prod ∈ closure {σ : perm α | is_three_cycle σ}
     · obtain ⟨l, rfl, hl⟩ := trunc_swap_factors σ
       obtain ⟨n, hn⟩ := (prod_list_swap_mem_alternating_group_iff_even_length hl).1 hσ
       rw [← two_mul] at hn 
@@ -330,7 +330,7 @@ instance isSimpleGroup_five : IsSimpleGroup (alternatingGroup (Fin 5)) :=
     intro Hn
     refine' or_not.imp id fun Hb => _
     rw [eq_bot_iff_forall] at Hb 
-    push_neg  at Hb 
+    push_neg at Hb 
     obtain ⟨⟨g, gA⟩, gH, g1⟩ : ∃ x : ↥(alternatingGroup (Fin 5)), x ∈ H ∧ x ≠ 1 := Hb
     -- `g` is a non-identity alternating permutation in a normal subgroup `H` of $A_5$.
     rw [← SetLike.mem_coe, ← Set.singleton_subset_iff] at gH 
@@ -343,7 +343,7 @@ instance isSimpleGroup_five : IsSimpleGroup (alternatingGroup (Fin 5)) :=
       exact
         (is_conj_swap_mul_swap_of_cycle_type_two gA g1 h2).normalClosure_eq_top_of
           normal_closure_swap_mul_swap_five
-    push_neg  at h2 
+    push_neg at h2 
     obtain ⟨n, ng, n2⟩ : ∃ n : ℕ, n ∈ g.cycle_type ∧ n ≠ 2 := h2
     -- `n` is the size of a non-swap cycle in the decomposition of `g`.
     have n2' : 2 < n := lt_of_le_of_ne (two_le_of_mem_cycle_type ng) n2.symm

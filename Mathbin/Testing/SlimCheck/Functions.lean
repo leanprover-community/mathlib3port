@@ -344,7 +344,7 @@ theorem applyId_mem_iff [DecidableEq α] {xs ys : List α} (h₀ : List.Nodup xs
     case cons x' xs xs_ih ys h₃ h₂ h₁ =>
       cases' ys with y ys
       · cases h₃
-      dsimp [lookup] at h₃ ; split_ifs  at h₃ 
+      dsimp [lookup] at h₃ ; split_ifs at h₃ 
       · subst x'; subst val
         simp only [mem_cons_iff, true_or_iff, eq_self_iff_true]
       · cases' h₀ with _ _ h₀ h₅

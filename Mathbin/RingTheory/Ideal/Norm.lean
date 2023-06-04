@@ -197,43 +197,41 @@ theorem cardQuot_pow_of_prime [IsDedekindDomain S] [Module.Finite ℤ S] [Module
   by
   let b := Module.Free.chooseBasis ℤ S
   classical
-    induction' i with i ih
-    · simp
-    letI := Ideal.fintypeQuotientOfFreeOfNeBot (P ^ i.succ) (pow_ne_zero _ hP)
-    letI := Ideal.fintypeQuotientOfFreeOfNeBot (P ^ i) (pow_ne_zero _ hP)
-    letI := Ideal.fintypeQuotientOfFreeOfNeBot P hP
-    have : P ^ (i + 1) < P ^ i := Ideal.pow_succ_lt_pow hP i
-    suffices hquot : map (P ^ i.succ).mkQ (P ^ i) ≃ S ⧸ P
-    · rw [pow_succ (card_quot P), ← ih, card_quot_apply (P ^ i.succ), ←
-        card_quotient_mul_card_quotient (P ^ i) (P ^ i.succ) this.le, card_quot_apply (P ^ i),
-        card_quot_apply P]
-      congr 1
-      rw [Fintype.card_eq]
-      exact ⟨hquot⟩
-    choose a a_mem a_not_mem using SetLike.exists_of_lt this
-    choose f g hg hf using fun c (hc : c ∈ P ^ i) =>
-      Ideal.exists_mul_add_mem_pow_succ hP a c a_mem a_not_mem hc
-    choose k hk_mem hk_eq using fun c' (hc' : c' ∈ map (mkq (P ^ i.succ)) (P ^ i)) =>
-      submodule.mem_map.mp hc'
+  induction' i with i ih
+  · simp
+  letI := Ideal.fintypeQuotientOfFreeOfNeBot (P ^ i.succ) (pow_ne_zero _ hP)
+  letI := Ideal.fintypeQuotientOfFreeOfNeBot (P ^ i) (pow_ne_zero _ hP)
+  letI := Ideal.fintypeQuotientOfFreeOfNeBot P hP
+  have : P ^ (i + 1) < P ^ i := Ideal.pow_succ_lt_pow hP i
+  suffices hquot : map (P ^ i.succ).mkQ (P ^ i) ≃ S ⧸ P
+  · rw [pow_succ (card_quot P), ← ih, card_quot_apply (P ^ i.succ), ←
+      card_quotient_mul_card_quotient (P ^ i) (P ^ i.succ) this.le, card_quot_apply (P ^ i),
+      card_quot_apply P]
+    congr 1
+    rw [Fintype.card_eq]
+    exact ⟨hquot⟩
+  choose a a_mem a_not_mem using SetLike.exists_of_lt this
+  choose f g hg hf using fun c (hc : c ∈ P ^ i) =>
+    Ideal.exists_mul_add_mem_pow_succ hP a c a_mem a_not_mem hc
+  choose k hk_mem hk_eq using fun c' (hc' : c' ∈ map (mkq (P ^ i.succ)) (P ^ i)) =>
+    submodule.mem_map.mp hc'
+  refine' Equiv.ofBijective (fun c' => Quotient.mk'' (f (k c' c'.Prop) (hk_mem c' c'.Prop))) ⟨_, _⟩
+  · rintro ⟨c₁', hc₁'⟩ ⟨c₂', hc₂'⟩ h
+    rw [Subtype.mk_eq_mk, ← hk_eq _ hc₁', ← hk_eq _ hc₂', mkq_apply, mkq_apply,
+      Submodule.Quotient.eq, ← hf _ (hk_mem _ hc₁'), ← hf _ (hk_mem _ hc₂')]
+    refine' Ideal.mul_add_mem_pow_succ_inj _ _ _ _ _ _ a_mem (hg _ _) (hg _ _) _
+    simpa only [Submodule.Quotient.mk''_eq_mk, Submodule.Quotient.mk''_eq_mk,
+      Submodule.Quotient.eq] using h
+  · intro d'
+    refine' Quotient.inductionOn' d' fun d => _
+    have hd' := mem_map.mpr ⟨a * d, Ideal.mul_mem_right d _ a_mem, rfl⟩
+    refine' ⟨⟨_, hd'⟩, _⟩
+    simp only [Submodule.Quotient.mk''_eq_mk, Ideal.Quotient.mk_eq_mk, Ideal.Quotient.eq,
+      Subtype.coe_mk]
     refine'
-      Equiv.ofBijective (fun c' => Quotient.mk'' (f (k c' c'.Prop) (hk_mem c' c'.Prop))) ⟨_, _⟩
-    · rintro ⟨c₁', hc₁'⟩ ⟨c₂', hc₂'⟩ h
-      rw [Subtype.mk_eq_mk, ← hk_eq _ hc₁', ← hk_eq _ hc₂', mkq_apply, mkq_apply,
-        Submodule.Quotient.eq, ← hf _ (hk_mem _ hc₁'), ← hf _ (hk_mem _ hc₂')]
-      refine' Ideal.mul_add_mem_pow_succ_inj _ _ _ _ _ _ a_mem (hg _ _) (hg _ _) _
-      simpa only [Submodule.Quotient.mk''_eq_mk, Submodule.Quotient.mk''_eq_mk,
-        Submodule.Quotient.eq] using h
-    · intro d'
-      refine' Quotient.inductionOn' d' fun d => _
-      have hd' := mem_map.mpr ⟨a * d, Ideal.mul_mem_right d _ a_mem, rfl⟩
-      refine' ⟨⟨_, hd'⟩, _⟩
-      simp only [Submodule.Quotient.mk''_eq_mk, Ideal.Quotient.mk_eq_mk, Ideal.Quotient.eq,
-        Subtype.coe_mk]
-      refine'
-        Ideal.mul_add_mem_pow_succ_unique hP a _ _ _ _ a_not_mem (hg _ (hk_mem _ hd')) (zero_mem _)
-          _
-      rw [hf, add_zero]
-      exact (Submodule.Quotient.eq _).mp (hk_eq _ hd')
+      Ideal.mul_add_mem_pow_succ_unique hP a _ _ _ _ a_not_mem (hg _ (hk_mem _ hd')) (zero_mem _) _
+    rw [hf, add_zero]
+    exact (Submodule.Quotient.eq _).mp (hk_eq _ hd')
 #align card_quot_pow_of_prime cardQuot_pow_of_prime
 
 end PPrime
@@ -464,7 +462,7 @@ theorem span_singleton_absNorm_le (I : Ideal S) : Ideal.span {(Ideal.absNorm I :
 #align ideal.span_singleton_abs_norm_le Ideal.span_singleton_absNorm_le
 
 theorem finite_setOf_absNorm_eq [CharZero S] {n : ℕ} (hn : 0 < n) :
-    { I : Ideal S | Ideal.absNorm I = n }.Finite :=
+    {I : Ideal S | Ideal.absNorm I = n}.Finite :=
   by
   let f := fun I : Ideal S => Ideal.map (Ideal.Quotient.mk (@Ideal.span S _ {n})) I
   refine' @Set.Finite.of_finite_image _ _ _ f _ _
@@ -576,7 +574,7 @@ theorem spanNorm_localization (I : Ideal S) [Module.Finite R S] [Module.Free R S
         ⟨s ^ Fintype.card (Module.Free.ChooseBasisIndex R S), pow_mem hs _⟩, _⟩
     swap
     simp only [Submodule.coe_mk, Subtype.coe_mk, map_pow] at has ⊢
-    apply_fun Algebra.norm Rₘ  at has 
+    apply_fun Algebra.norm Rₘ at has 
     rwa [_root_.map_mul, ← IsScalarTower.algebraMap_apply, IsScalarTower.algebraMap_apply R Rₘ,
       Algebra.norm_algebraMap_of_basis (b.localization_localization Rₘ M Sₘ),
       Algebra.norm_localization R M a] at has 

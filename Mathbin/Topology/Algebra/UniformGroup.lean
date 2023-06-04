@@ -345,29 +345,29 @@ end
 
 @[to_additive]
 theorem Filter.HasBasis.uniformity_of_nhds_one {ι} {p : ι → Prop} {U : ι → Set α}
-    (h : (𝓝 (1 : α)).HasBasis p U) : (𝓤 α).HasBasis p fun i => { x : α × α | x.2 / x.1 ∈ U i } := by
+    (h : (𝓝 (1 : α)).HasBasis p U) : (𝓤 α).HasBasis p fun i => {x : α × α | x.2 / x.1 ∈ U i} := by
   rw [uniformity_eq_comap_nhds_one]; exact h.comap _
 #align filter.has_basis.uniformity_of_nhds_one Filter.HasBasis.uniformity_of_nhds_one
 #align filter.has_basis.uniformity_of_nhds_zero Filter.HasBasis.uniformity_of_nhds_zero
 
 @[to_additive]
 theorem Filter.HasBasis.uniformity_of_nhds_one_inv_mul {ι} {p : ι → Prop} {U : ι → Set α}
-    (h : (𝓝 (1 : α)).HasBasis p U) : (𝓤 α).HasBasis p fun i => { x : α × α | x.1⁻¹ * x.2 ∈ U i } :=
-  by rw [uniformity_eq_comap_inv_mul_nhds_one]; exact h.comap _
+    (h : (𝓝 (1 : α)).HasBasis p U) : (𝓤 α).HasBasis p fun i => {x : α × α | x.1⁻¹ * x.2 ∈ U i} := by
+  rw [uniformity_eq_comap_inv_mul_nhds_one]; exact h.comap _
 #align filter.has_basis.uniformity_of_nhds_one_inv_mul Filter.HasBasis.uniformity_of_nhds_one_inv_mul
 #align filter.has_basis.uniformity_of_nhds_zero_neg_add Filter.HasBasis.uniformity_of_nhds_zero_neg_add
 
 @[to_additive]
 theorem Filter.HasBasis.uniformity_of_nhds_one_swapped {ι} {p : ι → Prop} {U : ι → Set α}
-    (h : (𝓝 (1 : α)).HasBasis p U) : (𝓤 α).HasBasis p fun i => { x : α × α | x.1 / x.2 ∈ U i } := by
+    (h : (𝓝 (1 : α)).HasBasis p U) : (𝓤 α).HasBasis p fun i => {x : α × α | x.1 / x.2 ∈ U i} := by
   rw [uniformity_eq_comap_nhds_one_swapped]; exact h.comap _
 #align filter.has_basis.uniformity_of_nhds_one_swapped Filter.HasBasis.uniformity_of_nhds_one_swapped
 #align filter.has_basis.uniformity_of_nhds_zero_swapped Filter.HasBasis.uniformity_of_nhds_zero_swapped
 
 @[to_additive]
 theorem Filter.HasBasis.uniformity_of_nhds_one_inv_mul_swapped {ι} {p : ι → Prop} {U : ι → Set α}
-    (h : (𝓝 (1 : α)).HasBasis p U) : (𝓤 α).HasBasis p fun i => { x : α × α | x.2⁻¹ * x.1 ∈ U i } :=
-  by rw [uniformity_eq_comap_inv_mul_nhds_one_swapped]; exact h.comap _
+    (h : (𝓝 (1 : α)).HasBasis p U) : (𝓤 α).HasBasis p fun i => {x : α × α | x.2⁻¹ * x.1 ∈ U i} := by
+  rw [uniformity_eq_comap_inv_mul_nhds_one_swapped]; exact h.comap _
 #align filter.has_basis.uniformity_of_nhds_one_inv_mul_swapped Filter.HasBasis.uniformity_of_nhds_one_inv_mul_swapped
 #align filter.has_basis.uniformity_of_nhds_zero_neg_add_swapped Filter.HasBasis.uniformity_of_nhds_zero_neg_add_swapped
 
@@ -591,7 +591,7 @@ def TopologicalGroup.toUniformSpace : UniformSpace G
     · exact monotone_id.comp_rel monotone_id
   isOpen_uniformity := by
     intro S
-    let S' x := { p : G × G | p.1 = x → p.2 ∈ S }
+    let S' x := {p : G × G | p.1 = x → p.2 ∈ S}
     show IsOpen S ↔ ∀ x : G, x ∈ S → S' x ∈ comap (fun p : G × G => p.2 / p.1) (𝓝 (1 : G))
     rw [isOpen_iff_mem_nhds]
     refine' forall₂_congr fun a ha => _
@@ -1018,8 +1018,8 @@ instance QuotientGroup.completeSpace' (G : Type u) [Group G] [TopologicalSpace G
       ∃ M : ℕ,
         j < M ∧ ∀ a b : ℕ, M ≤ a → M ≤ b → ∀ g : G, x b = g → ∃ g' : G, g / g' ∈ u i ∧ x a = g' :=
     by
-    have h𝓤GN : (𝓤 (G ⧸ N)).HasBasis (fun _ => True) fun i => { x | x.snd / x.fst ∈ coe '' u i } :=
-      by simpa [uniformity_eq_comap_nhds_one'] using hv.comap _
+    have h𝓤GN : (𝓤 (G ⧸ N)).HasBasis (fun _ => True) fun i => {x | x.snd / x.fst ∈ coe '' u i} := by
+      simpa [uniformity_eq_comap_nhds_one'] using hv.comap _
     simp only [h𝓤GN.cauchy_seq_iff, ge_iff_le, mem_set_of_eq, forall_true_left, mem_image] at hx 
     intro i j
     rcases hx i with ⟨M, hM⟩
@@ -1057,7 +1057,7 @@ instance QuotientGroup.completeSpace' (G : Type u) [Group G] [TopologicalSpace G
     is to show by decreasing induction that `x' m / x' n ∈ u m` if `m ≤ n`. -/
   have x'_cauchy : CauchySeq fun n => (x' n).fst :=
     by
-    have h𝓤G : (𝓤 G).HasBasis (fun _ => True) fun i => { x | x.snd / x.fst ∈ u i } := by
+    have h𝓤G : (𝓤 G).HasBasis (fun _ => True) fun i => {x | x.snd / x.fst ∈ u i} := by
       simpa [uniformity_eq_comap_nhds_one'] using hu.to_has_basis.comap _
     simp only [h𝓤G.cauchy_seq_iff', ge_iff_le, mem_set_of_eq, forall_true_left]
     exact fun m =>
@@ -1073,7 +1073,7 @@ instance QuotientGroup.completeSpace' (G : Type u) [Group G] [TopologicalSpace G
     ⟨↑x₀,
       tendsto_nhds_of_cauchySeq_of_subseq hx
         (strictMono_nat_of_lt_succ fun n => (hφ (n + 1)).1).tendsto_atTop _⟩
-  convert((continuous_coinduced_rng : Continuous (coe : G → G ⧸ N)).Tendsto x₀).comp hx₀
+  convert ((continuous_coinduced_rng : Continuous (coe : G → G ⧸ N)).Tendsto x₀).comp hx₀
   exact funext fun n => (x' n).snd
 #align quotient_group.complete_space' QuotientGroup.completeSpace'
 #align quotient_add_group.complete_space' QuotientAddGroup.completeSpace'

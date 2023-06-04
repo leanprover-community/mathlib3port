@@ -367,14 +367,14 @@ theorem log_nat_eq_sum_factorization (n : ℕ) : log n = n.factorization.Sum fun
 theorem tendsto_pow_log_div_mul_add_atTop (a b : ℝ) (n : ℕ) (ha : a ≠ 0) :
     Tendsto (fun x => log x ^ n / (a * x + b)) atTop (𝓝 0) :=
   ((tendsto_div_pow_mul_exp_add_atTop a b n ha.symm).comp tendsto_log_atTop).congr'
-    (by filter_upwards [eventually_gt_at_top (0 : ℝ)]with x hx using by simp [exp_log hx])
+    (by filter_upwards [eventually_gt_at_top (0 : ℝ)] with x hx using by simp [exp_log hx])
 #align real.tendsto_pow_log_div_mul_add_at_top Real.tendsto_pow_log_div_mul_add_atTop
 
 theorem isLittleO_pow_log_id_atTop {n : ℕ} : (fun x => log x ^ n) =o[atTop] id :=
   by
   rw [Asymptotics.isLittleO_iff_tendsto']
   · simpa using tendsto_pow_log_div_mul_add_at_top 1 0 n one_ne_zero
-  filter_upwards [eventually_ne_at_top (0 : ℝ)]with x h₁ h₂ using(h₁ h₂).elim
+  filter_upwards [eventually_ne_at_top (0 : ℝ)] with x h₁ h₂ using (h₁ h₂).elim
 #align real.is_o_pow_log_id_at_top Real.isLittleO_pow_log_id_atTop
 
 theorem isLittleO_log_id_atTop : log =o[atTop] id :=

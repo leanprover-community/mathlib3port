@@ -309,7 +309,7 @@ theorem isNoetherianRing : IsNoetherianRing A :=
   exact I.fg_of_is_unit (IsFractionRing.injective A (FractionRing A)) (h.is_unit hI)
 #align is_dedekind_domain_inv.is_noetherian_ring IsDedekindDomainInv.isNoetherianRing
 
-theorem integrallyClosed : IsIntegrallyClosed A :=
+theorem integrally_closed : IsIntegrallyClosed A :=
   by
   -- It suffices to show that for integral `x`,
   -- `A[x]` (which is a fractional ideal) is in fact equal to `A`.
@@ -319,11 +319,11 @@ theorem integrallyClosed : IsIntegrallyClosed A :=
     FractionalIdeal.adjoinIntegral_eq_one_of_isUnit x hx (h.is_unit _)]
   · exact mem_adjoin_integral_self A⁰ x hx
   · exact fun h => one_ne_zero (eq_zero_iff.mp h 1 (Subalgebra.one_mem _))
-#align is_dedekind_domain_inv.integrally_closed IsDedekindDomainInv.integrallyClosed
+#align is_dedekind_domain_inv.integrally_closed IsDedekindDomainInv.integrally_closed
 
 open Ring
 
-theorem dimensionLeOne : DimensionLeOne A :=
+theorem dimensionLEOne : DimensionLEOne A :=
   by
   -- We're going to show that `P` is maximal because any (maximal) ideal `M`
   -- that is strictly larger would be `⊤`.
@@ -361,12 +361,12 @@ theorem dimensionLeOne : DimensionLeOne A :=
   rw [IsFractionRing.injective A (FractionRing A) zy_eq] at hzy 
   -- But `P` is a prime ideal, so `z ∉ P` implies `y ∈ P`, as desired.
   exact mem_coe_ideal_of_mem A⁰ (Or.resolve_left (hP.mem_or_mem hzy) hzp)
-#align is_dedekind_domain_inv.dimension_le_one IsDedekindDomainInv.dimensionLeOne
+#align is_dedekind_domain_inv.dimension_le_one IsDedekindDomainInv.dimensionLEOne
 
 /-- Showing one side of the equivalence between the definitions
 `is_dedekind_domain_inv` and `is_dedekind_domain` of Dedekind domains. -/
 theorem isDedekindDomain : IsDedekindDomain A :=
-  ⟨h.IsNoetherianRing, h.DimensionLeOne, h.integrallyClosed⟩
+  ⟨h.IsNoetherianRing, h.DimensionLEOne, h.integrally_closed⟩
 #align is_dedekind_domain_inv.is_dedekind_domain IsDedekindDomainInv.isDedekindDomain
 
 end IsDedekindDomainInv
@@ -397,19 +397,19 @@ theorem exists_multiset_prod_cons_le_and_prod_not_le [IsDedekindDomain A] (hNF :
   -- Then in fact there is a `P ∈ Z` with `P ≤ M`.
   obtain ⟨P, hPZ, rfl⟩ := multiset.mem_map.mp hPZ'
   classical
-    have := Multiset.map_erase PrimeSpectrum.asIdeal PrimeSpectrum.ext P Z
-    obtain ⟨hP0, hZP0⟩ : P.as_ideal ≠ ⊥ ∧ ((Z.erase P).map PrimeSpectrum.asIdeal).Prod ≠ ⊥ := by
-      rwa [Ne.def, ← Multiset.cons_erase hPZ', Multiset.prod_cons, Ideal.mul_eq_bot, not_or, ←
-        this] at hprodZ 
-    -- By maximality of `P` and `M`, we have that `P ≤ M` implies `P = M`.
-    have hPM' := (IsDedekindDomain.dimensionLeOne _ hP0 P.is_prime).eq_of_le hM.ne_top hPM
-    subst hPM'
-    -- By minimality of `Z`, erasing `P` from `Z` is exactly what we need.
-    refine' ⟨Z.erase P, _, _⟩
-    · convert hZI
-      rw [this, Multiset.cons_erase hPZ']
-    · refine' fun h => h_eraseZ (Z.erase P) ⟨h, _⟩ (multiset.erase_lt.mpr hPZ)
-      exact hZP0
+  have := Multiset.map_erase PrimeSpectrum.asIdeal PrimeSpectrum.ext P Z
+  obtain ⟨hP0, hZP0⟩ : P.as_ideal ≠ ⊥ ∧ ((Z.erase P).map PrimeSpectrum.asIdeal).Prod ≠ ⊥ := by
+    rwa [Ne.def, ← Multiset.cons_erase hPZ', Multiset.prod_cons, Ideal.mul_eq_bot, not_or, ←
+      this] at hprodZ 
+  -- By maximality of `P` and `M`, we have that `P ≤ M` implies `P = M`.
+  have hPM' := (IsDedekindDomain.dimensionLEOne _ hP0 P.is_prime).eq_of_le hM.ne_top hPM
+  subst hPM'
+  -- By minimality of `Z`, erasing `P` from `Z` is exactly what we need.
+  refine' ⟨Z.erase P, _, _⟩
+  · convert hZI
+    rw [this, Multiset.cons_erase hPZ']
+  · refine' fun h => h_eraseZ (Z.erase P) ⟨h, _⟩ (multiset.erase_lt.mpr hPZ)
+    exact hZP0
 #align exists_multiset_prod_cons_le_and_prod_not_le exists_multiset_prod_cons_le_and_prod_not_le
 
 namespace FractionalIdeal
@@ -1036,7 +1036,7 @@ variable (v : HeightOneSpectrum R) {R}
 namespace HeightOneSpectrum
 
 instance isMaximal : v.asIdeal.IsMaximal :=
-  dimensionLeOne v.asIdeal v.ne_bot v.IsPrime
+  dimensionLEOne v.asIdeal v.ne_bot v.IsPrime
 #align is_dedekind_domain.height_one_spectrum.is_maximal IsDedekindDomain.HeightOneSpectrum.isMaximal
 
 theorem prime : Prime v.asIdeal :=
@@ -1054,7 +1054,7 @@ theorem associates_irreducible : Irreducible <| Associates.mk v.asIdeal :=
 /-- An equivalence between the height one and maximal spectra for rings of Krull dimension 1. -/
 def equivMaximalSpectrum (hR : ¬IsField R) : HeightOneSpectrum R ≃ MaximalSpectrum R
     where
-  toFun v := ⟨v.asIdeal, dimensionLeOne v.asIdeal v.ne_bot v.IsPrime⟩
+  toFun v := ⟨v.asIdeal, dimensionLEOne v.asIdeal v.ne_bot v.IsPrime⟩
   invFun v :=
     ⟨v.asIdeal, v.IsMaximal.IsPrime, Ring.ne_bot_of_isMaximal_of_not_isField v.IsMaximal hR⟩
   left_inv := fun ⟨_, _, _⟩ => rfl
@@ -1098,7 +1098,7 @@ variable {R} {A} [IsDedekindDomain A] {I : Ideal R} {J : Ideal A}
   a homomorphism `f : R/I →+* A/J` -/
 @[simps]
 def idealFactorsFunOfQuotHom {f : R ⧸ I →+* A ⧸ J} (hf : Function.Surjective f) :
-    { p : Ideal R | p ∣ I } →o { p : Ideal A | p ∣ J }
+    {p : Ideal R | p ∣ I} →o {p : Ideal A | p ∣ J}
     where
   toFun X :=
     ⟨comap J.Quotient.mk (map f (map I.Quotient.mk X)),
@@ -1147,7 +1147,7 @@ variable [IsDomain R] [IsDedekindDomain R] (f : R ⧸ I ≃+* A ⧸ J)
 /-- The bijection between ideals of `R` dividing `I` and the ideals of `A` dividing `J` induced by
   an isomorphism `f : R/I ≅ A/J`. -/
 @[simps]
-def idealFactorsEquivOfQuotEquiv : { p : Ideal R | p ∣ I } ≃o { p : Ideal A | p ∣ J } :=
+def idealFactorsEquivOfQuotEquiv : {p : Ideal R | p ∣ I} ≃o {p : Ideal A | p ∣ J} :=
   OrderIso.ofHomInv
     (idealFactorsFunOfQuotHom (show Function.Surjective (f : R ⧸ I →+* A ⧸ J) from f.Surjective))
     (idealFactorsFunOfQuotHom
@@ -1173,7 +1173,7 @@ theorem idealFactorsEquivOfQuotEquiv_is_dvd_iso {L M : Ideal R} (hL : L ∣ I) (
   by
   suffices
     idealFactorsEquivOfQuotEquiv f ⟨M, hM⟩ ≤ idealFactorsEquivOfQuotEquiv f ⟨L, hL⟩ ↔
-      (⟨M, hM⟩ : { p : Ideal R | p ∣ I }) ≤ ⟨L, hL⟩
+      (⟨M, hM⟩ : {p : Ideal R | p ∣ I}) ≤ ⟨L, hL⟩
     by rw [dvd_iff_le, dvd_iff_le, Subtype.coe_le_coe, this, Subtype.mk_le_mk]
   exact (idealFactorsEquivOfQuotEquiv f).le_iff_le
 #align ideal_factors_equiv_of_quot_equiv_is_dvd_iso idealFactorsEquivOfQuotEquiv_is_dvd_iso
@@ -1200,7 +1200,7 @@ theorem idealFactorsEquivOfQuotEquiv_mem_normalizedFactors_of_mem_normalizedFact
     isomorphism `f : R/I ≅ A/J`. -/
 @[simps apply]
 def normalizedFactorsEquivOfQuotEquiv (hI : I ≠ ⊥) (hJ : J ≠ ⊥) :
-    { L : Ideal R | L ∈ normalizedFactors I } ≃ { M : Ideal A | M ∈ normalizedFactors J }
+    {L : Ideal R | L ∈ normalizedFactors I} ≃ {M : Ideal A | M ∈ normalizedFactors J}
     where
   toFun j :=
     ⟨idealFactorsEquivOfQuotEquiv f ⟨↑j, dvd_of_mem_normalizedFactors j.Prop⟩,
@@ -1248,10 +1248,10 @@ open scoped BigOperators
 
 variable {R}
 
-theorem Ring.DimensionLeOne.prime_le_prime_iff_eq (h : Ring.DimensionLeOne R) {P Q : Ideal R}
+theorem Ring.DimensionLEOne.prime_le_prime_iff_eq (h : Ring.DimensionLEOne R) {P Q : Ideal R}
     [hP : P.IsPrime] [hQ : Q.IsPrime] (hP0 : P ≠ ⊥) : P ≤ Q ↔ P = Q :=
   ⟨(h P hP0 hP).eq_of_le hQ.ne_top, Eq.le⟩
-#align ring.dimension_le_one.prime_le_prime_iff_eq Ring.DimensionLeOne.prime_le_prime_iff_eq
+#align ring.dimension_le_one.prime_le_prime_iff_eq Ring.DimensionLEOne.prime_le_prime_iff_eq
 
 theorem Ideal.coprime_of_no_prime_ge {I J : Ideal R} (h : ∀ P, I ≤ P → J ≤ P → ¬IsPrime P) :
     I ⊔ J = ⊤ := by
@@ -1537,8 +1537,8 @@ variable [DecidableEq R] [DecidableEq (Ideal R)] [NormalizationMonoid R]
     of `span {r}` -/
 @[simps]
 noncomputable def normalizedFactorsEquivSpanNormalizedFactors {r : R} (hr : r ≠ 0) :
-    { d : R | d ∈ normalizedFactors r } ≃
-      { I : Ideal R | I ∈ normalizedFactors (Ideal.span ({r} : Set R)) } :=
+    {d : R | d ∈ normalizedFactors r} ≃
+      {I : Ideal R | I ∈ normalizedFactors (Ideal.span ({r} : Set R))} :=
   Equiv.ofBijective
     (fun d =>
       ⟨Ideal.span {↑d}, singleton_span_mem_normalizedFactors_of_mem_normalizedFactors d.Prop⟩)
@@ -1583,7 +1583,7 @@ theorem multiplicity_normalizedFactorsEquivSpanNormalizedFactors_eq_multiplicity
 /-- The bijection `normalized_factors_equiv_span_normalized_factors.symm` between the set of prime
     factors of the ideal `⟨r⟩` and the set of prime factors of `r` preserves multiplicities. -/
 theorem multiplicity_normalizedFactorsEquivSpanNormalizedFactors_symm_eq_multiplicity {r : R}
-    (hr : r ≠ 0) (I : { I : Ideal R | I ∈ normalizedFactors (Ideal.span ({r} : Set R)) }) :
+    (hr : r ≠ 0) (I : {I : Ideal R | I ∈ normalizedFactors (Ideal.span ({r} : Set R))}) :
     multiplicity ((normalizedFactorsEquivSpanNormalizedFactors hr).symm I : R) r =
       multiplicity (I : Ideal R) (Ideal.span {r}) :=
   by

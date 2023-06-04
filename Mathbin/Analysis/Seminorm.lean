@@ -405,10 +405,10 @@ theorem finset_sup_apply (p : ι → Seminorm 𝕜 E) (s : Finset ι) (x : E) :
 
 theorem finset_sup_le_sum (p : ι → Seminorm 𝕜 E) (s : Finset ι) : s.sup p ≤ ∑ i in s, p i := by
   classical
-    refine' finset.sup_le_iff.mpr _
-    intro i hi
-    rw [Finset.sum_eq_sum_diff_singleton_add hi, le_add_iff_nonneg_left]
-    exact bot_le
+  refine' finset.sup_le_iff.mpr _
+  intro i hi
+  rw [Finset.sum_eq_sum_diff_singleton_add hi, le_add_iff_nonneg_left]
+  exact bot_le
 #align seminorm.finset_sup_le_sum Seminorm.finset_sup_le_sum
 
 theorem finset_sup_apply_le {p : ι → Seminorm 𝕜 E} {s : Finset ι} {x : E} {a : ℝ} (ha : 0 ≤ a)
@@ -634,7 +634,7 @@ variable [SMul 𝕜 E] (p : Seminorm 𝕜 E)
 /-- The ball of radius `r` at `x` with respect to seminorm `p` is the set of elements `y` with
 `p (y - x) < r`. -/
 def ball (x : E) (r : ℝ) :=
-  { y : E | p (y - x) < r }
+  {y : E | p (y - x) < r}
 #align seminorm.ball Seminorm.ball
 -/
 
@@ -642,7 +642,7 @@ def ball (x : E) (r : ℝ) :=
 /-- The closed ball of radius `r` at `x` with respect to seminorm `p` is the set of elements `y`
 with `p (y - x) ≤ r`. -/
 def closedBall (x : E) (r : ℝ) :=
-  { y : E | p (y - x) ≤ r }
+  {y : E | p (y - x) ≤ r}
 #align seminorm.closed_ball Seminorm.closedBall
 -/
 
@@ -670,11 +670,11 @@ theorem mem_ball_zero : y ∈ ball p 0 r ↔ p y < r := by rw [mem_ball, sub_zer
 theorem mem_closedBall_zero : y ∈ closedBall p 0 r ↔ p y ≤ r := by rw [mem_closed_ball, sub_zero]
 #align seminorm.mem_closed_ball_zero Seminorm.mem_closedBall_zero
 
-theorem ball_zero_eq : ball p 0 r = { y : E | p y < r } :=
+theorem ball_zero_eq : ball p 0 r = {y : E | p y < r} :=
   Set.ext fun x => p.mem_ball_zero
 #align seminorm.ball_zero_eq Seminorm.ball_zero_eq
 
-theorem closedBall_zero_eq : closedBall p 0 r = { y : E | p y ≤ r } :=
+theorem closedBall_zero_eq : closedBall p 0 r = {y : E | p y ≤ r} :=
   Set.ext fun x => p.mem_closedBall_zero
 #align seminorm.closed_ball_zero_eq Seminorm.closedBall_zero_eq
 
@@ -811,13 +811,13 @@ theorem closedBall_comp (p : Seminorm 𝕜₂ E₂) (f : E →ₛₗ[σ₁₂] E
 
 variable (p : Seminorm 𝕜 E)
 
-theorem preimage_metric_ball {r : ℝ} : p ⁻¹' Metric.ball 0 r = { x | p x < r } :=
+theorem preimage_metric_ball {r : ℝ} : p ⁻¹' Metric.ball 0 r = {x | p x < r} :=
   by
   ext x
   simp only [mem_set_of, mem_preimage, mem_ball_zero_iff, Real.norm_of_nonneg (map_nonneg p _)]
 #align seminorm.preimage_metric_ball Seminorm.preimage_metric_ball
 
-theorem preimage_metric_closedBall {r : ℝ} : p ⁻¹' Metric.closedBall 0 r = { x | p x ≤ r } :=
+theorem preimage_metric_closedBall {r : ℝ} : p ⁻¹' Metric.closedBall 0 r = {x | p x ≤ r} :=
   by
   ext x
   simp only [mem_set_of, mem_preimage, mem_closedBall_zero_iff,
@@ -1081,7 +1081,7 @@ variable [Module ℝ E] [IsScalarTower ℝ 𝕜 E] (p : Seminorm 𝕜 E) (x : E)
 /-- Seminorm-balls are convex. -/
 theorem convex_ball : Convex ℝ (ball p x r) :=
   by
-  convert(p.convex_on.translate_left (-x)).convex_lt r
+  convert (p.convex_on.translate_left (-x)).convex_lt r
   ext y
   rw [preimage_univ, sep_univ, p.mem_ball, sub_eq_add_neg]
   rfl

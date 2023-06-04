@@ -312,8 +312,8 @@ theorem rpow_add_le_mul_rpow_add_rpow (z₁ z₂ : ℝ≥0∞) {p : ℝ} (hp : 1
   by
   rcases eq_or_lt_of_le hp with (rfl | h'p)
   · simp only [rpow_one, sub_self, rpow_zero, one_mul, le_refl]
-  convert rpow_arith_mean_le_arith_mean2_rpow (1 / 2) (1 / 2) (2 * z₁) (2 * z₂)
-      (ENNReal.add_halves 1) hp
+  convert
+    rpow_arith_mean_le_arith_mean2_rpow (1 / 2) (1 / 2) (2 * z₁) (2 * z₂) (ENNReal.add_halves 1) hp
   · simp [← mul_assoc, ENNReal.inv_mul_cancel two_ne_zero two_ne_top]
   · simp [← mul_assoc, ENNReal.inv_mul_cancel two_ne_zero two_ne_top]
   · have A : p - 1 ≠ 0 := ne_of_gt (sub_pos.2 h'p)

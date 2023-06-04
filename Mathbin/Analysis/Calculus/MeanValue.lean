@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.calculus.mean_value
-! leanprover-community/mathlib commit 3bce8d800a6f2b8f63fe1e588fd76a9ff4adcebe
+! leanprover-community/mathlib commit 2ebc1d6c2fed9f54c95bbc3998eaa5570527129a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -17,6 +17,9 @@ import Mathbin.Topology.Instances.RealVectorSpace
 
 /-!
 # The mean value inequality and equalities
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 In this file we prove the following facts:
 
@@ -99,8 +102,8 @@ theorem image_le_of_liminf_slope_right_lt_deriv_boundary' {f f' : ℝ → ℝ} {
     (hB' : ∀ x ∈ Ico a b, HasDerivWithinAt B (B' x) (Ici x) x)
     (bound : ∀ x ∈ Ico a b, f x = B x → f' x < B' x) : ∀ ⦃x⦄, x ∈ Icc a b → f x ≤ B x :=
   by
-  change Icc a b ⊆ { x | f x ≤ B x }
-  set s := { x | f x ≤ B x } ∩ Icc a b
+  change Icc a b ⊆ {x | f x ≤ B x}
+  set s := {x | f x ≤ B x} ∩ Icc a b
   have A : ContinuousOn (fun x => (f x, B x)) (Icc a b) := hf.prod hB
   have : IsClosed s := by
     simp only [s, inter_comm]
@@ -527,7 +530,7 @@ theorem exists_nhdsWithin_lipschitzOnWith_of_hasFDerivWithinAt_of_nnnorm_lt (hs 
     (hcont : ContinuousWithinAt f' s x) (K : ℝ≥0) (hK : ‖f' x‖₊ < K) :
     ∃ t ∈ 𝓝[s] x, LipschitzOnWith K f t :=
   by
-  obtain ⟨ε, ε0, hε⟩ : ∃ ε > 0, ball x ε ∩ s ⊆ { y | HasFDerivWithinAt f (f' y) s y ∧ ‖f' y‖₊ < K }
+  obtain ⟨ε, ε0, hε⟩ : ∃ ε > 0, ball x ε ∩ s ⊆ {y | HasFDerivWithinAt f (f' y) s y ∧ ‖f' y‖₊ < K}
   exact mem_nhds_within_iff.1 (hder.and <| hcont.nnnorm.eventually (gt_mem_nhds hK))
   rw [inter_comm] at hε 
   refine' ⟨s ∩ ball x ε, inter_mem_nhdsWithin _ (ball_mem_nhds _ ε0), _⟩
@@ -1101,7 +1104,7 @@ theorem StrictMonoOn.exists_slope_lt_deriv {x y : ℝ} {f : ℝ → ℝ} (hf : C
   by
   by_cases h : ∀ w ∈ Ioo x y, deriv f w ≠ 0
   · apply StrictMonoOn.exists_slope_lt_deriv_aux hf hxy hf'_mono h
-  · push_neg  at h 
+  · push_neg at h 
     rcases h with ⟨w, ⟨hxw, hwy⟩, hw⟩
     obtain ⟨a, ⟨hxa, haw⟩, ha⟩ : ∃ (a : ℝ) (H : a ∈ Ioo x w), (f w - f x) / (w - x) < deriv f a :=
       by
@@ -1152,7 +1155,7 @@ theorem StrictMonoOn.exists_deriv_lt_slope {x y : ℝ} {f : ℝ → ℝ} (hf : C
   by
   by_cases h : ∀ w ∈ Ioo x y, deriv f w ≠ 0
   · apply StrictMonoOn.exists_deriv_lt_slope_aux hf hxy hf'_mono h
-  · push_neg  at h 
+  · push_neg at h 
     rcases h with ⟨w, ⟨hxw, hwy⟩, hw⟩
     obtain ⟨a, ⟨hxa, haw⟩, ha⟩ : ∃ (a : ℝ) (H : a ∈ Ioo x w), deriv f a < (f w - f x) / (w - x) :=
       by

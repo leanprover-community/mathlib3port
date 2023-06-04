@@ -131,7 +131,7 @@ theorem tendsto_limUnder_of_differentiable_on_punctured_nhds_of_isLittleO {f : �
     Tendsto f (𝓝[≠] c) (𝓝 <| limUnder (𝓝[≠] c) f) :=
   by
   rw [eventually_nhdsWithin_iff] at hd 
-  have : DifferentiableOn ℂ f ({ z | z ≠ c → DifferentiableAt ℂ f z } \ {c}) := fun z hz =>
+  have : DifferentiableOn ℂ f ({z | z ≠ c → DifferentiableAt ℂ f z} \ {c}) := fun z hz =>
     (hz.1 hz.2).DifferentiableWithinAt
   have H := differentiable_on_update_lim_of_is_o hd this ho
   exact continuousAt_update_same.1 (H.differentiable_at hd).ContinuousAt

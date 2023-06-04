@@ -334,14 +334,14 @@ section PointwiseLimits
 variable (M₁ M₂ : Type _) [TopologicalSpace M₂] [T2Space M₂]
 
 @[to_additive]
-theorem isClosed_setOf_map_one [One M₁] [One M₂] : IsClosed { f : M₁ → M₂ | f 1 = 1 } :=
+theorem isClosed_setOf_map_one [One M₁] [One M₂] : IsClosed {f : M₁ → M₂ | f 1 = 1} :=
   isClosed_eq (continuous_apply 1) continuous_const
 #align is_closed_set_of_map_one isClosed_setOf_map_one
 #align is_closed_set_of_map_zero isClosed_setOf_map_zero
 
 @[to_additive]
 theorem isClosed_setOf_map_mul [Mul M₁] [Mul M₂] [ContinuousMul M₂] :
-    IsClosed { f : M₁ → M₂ | ∀ x y, f (x * y) = f x * f y } :=
+    IsClosed {f : M₁ → M₂ | ∀ x y, f (x * y) = f x * f y} :=
   by
   simp only [set_of_forall]
   exact
@@ -786,7 +786,7 @@ theorem eventuallyEq_prod {X M : Type _} [CommMonoid M] {s : Finset ι} {l : Fil
   by
   replace hs : ∀ᶠ x in l, ∀ i ∈ s, f i x = g i x
   · rwa [eventually_all_finset]
-  filter_upwards [hs]with x hx
+  filter_upwards [hs] with x hx
   simp only [Finset.prod_apply, Finset.prod_congr rfl hx]
 #align eventually_eq_prod eventuallyEq_prod
 #align eventually_eq_sum eventuallyEq_sum

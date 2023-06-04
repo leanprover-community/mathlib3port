@@ -717,7 +717,7 @@ theorem transnumAuxSeq_dist_lt (n : ℕ) :
   have : 0 < (2 ^ (n + 1) : ℝ) := pow_pos zero_lt_two _
   rw [div_div, ← pow_succ, ← abs_of_pos this]
   replace := abs_pos.2 (ne_of_gt this)
-  convert(div_lt_div_right this).2 ((f ^ 2 ^ n).dist_map_map_zero_lt (f ^ 2 ^ n))
+  convert (div_lt_div_right this).2 ((f ^ 2 ^ n).dist_map_map_zero_lt (f ^ 2 ^ n))
   simp_rw [transnum_aux_seq, Real.dist_eq]
   rw [← abs_div, sub_div, pow_succ', pow_succ, ← two_mul, mul_div_mul_left _ _ (two_ne_zero' ℝ),
     pow_mul, sq, mul_apply]
@@ -743,7 +743,7 @@ theorem tendsto_translationNumber_of_dist_bounded_aux (x : ℕ → ℝ) (C : ℝ
   · exact fun n => C / 2 ^ n
   · intro n
     have : 0 < (2 ^ n : ℝ) := pow_pos zero_lt_two _
-    convert(div_le_div_right this).2 (H (2 ^ n))
+    convert (div_le_div_right this).2 (H (2 ^ n))
     rw [transnum_aux_seq, Real.dist_eq, ← sub_div, abs_div, abs_of_pos this, Real.dist_eq]
   ·
     exact

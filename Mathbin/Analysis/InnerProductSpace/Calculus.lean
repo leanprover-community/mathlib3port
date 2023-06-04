@@ -226,7 +226,7 @@ theorem hasStrictFDerivAt_norm_sq (x : F) :
     HasStrictFDerivAt (fun x => ‖x‖ ^ 2) (bit0 (innerSL ℝ x)) x :=
   by
   simp only [sq, ← @inner_self_eq_norm_mul_norm ℝ]
-  convert(hasStrictFDerivAt_id x).inner ℝ (hasStrictFDerivAt_id x)
+  convert (hasStrictFDerivAt_id x).inner ℝ (hasStrictFDerivAt_id x)
   ext y
   simp [bit0, real_inner_comm]
 #align has_strict_fderiv_at_norm_sq hasStrictFDerivAt_norm_sq

@@ -42,7 +42,7 @@ variable {σ : Type _}
 
 /-- Set of points that are zeroes of all polynomials in an ideal -/
 def zeroLocus (I : Ideal (MvPolynomial σ k)) : Set (σ → k) :=
-  { x : σ → k | ∀ p ∈ I, eval x p = 0 }
+  {x : σ → k | ∀ p ∈ I, eval x p = 0}
 #align mv_polynomial.zero_locus MvPolynomial.zeroLocus
 
 @[simp]
@@ -66,7 +66,7 @@ theorem zeroLocus_top : zeroLocus (⊤ : Ideal (MvPolynomial σ k)) = ⊥ :=
 /-- Ideal of polynomials with common zeroes at all elements of a set -/
 def vanishingIdeal (V : Set (σ → k)) : Ideal (MvPolynomial σ k)
     where
-  carrier := { p | ∀ x ∈ V, eval x p = 0 }
+  carrier := {p | ∀ x ∈ V, eval x p = 0}
   zero_mem' x hx := RingHom.map_zero _
   add_mem' p q hp hq x hx := by simp only [hq x hx, hp x hx, add_zero, RingHom.map_add]
   smul_mem' p q hq x hx := by

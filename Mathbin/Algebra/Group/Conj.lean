@@ -332,7 +332,7 @@ variable [Monoid α]
 #print conjugatesOf /-
 /-- Given an element `a`, `conjugates a` is the set of conjugates. -/
 def conjugatesOf (a : α) : Set α :=
-  { b | IsConj a b }
+  {b | IsConj a b}
 #align conjugates_of conjugatesOf
 -/
 

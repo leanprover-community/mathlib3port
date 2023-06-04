@@ -627,11 +627,11 @@ instance [NonUnitalNonAssocSemiring R] : Mul (HahnSeries Γ R)
         ∑ ij in addAntidiagonal x.isPwo_support y.isPwo_support a, x.coeff ij.fst * y.coeff ij.snd
       isPwo_support' :=
         haveI h :
-          { a : Γ |
+          {a : Γ |
               (∑ ij : Γ × Γ in add_antidiagonal x.is_pwo_support y.is_pwo_support a,
                   x.coeff ij.fst * y.coeff ij.snd) ≠
-                0 } ⊆
-            { a : Γ | (add_antidiagonal x.is_pwo_support y.is_pwo_support a).Nonempty } :=
+                0} ⊆
+            {a : Γ | (add_antidiagonal x.is_pwo_support y.is_pwo_support a).Nonempty} :=
           by
           intro a ha
           contrapose! ha
@@ -1131,12 +1131,12 @@ def toPowerSeries : HahnSeries ℕ R ≃+* PowerSeries R
     ext n
     simp only [PowerSeries.coeff_mul, PowerSeries.coeff_mk, mul_coeff, is_pwo_support]
     classical
-      refine' sum_filter_ne_zero.symm.trans ((sum_congr _ fun _ _ => rfl).trans sum_filter_ne_zero)
-      ext m
-      simp only [nat.mem_antidiagonal, mem_add_antidiagonal, and_congr_left_iff, mem_filter,
-        mem_support]
-      rintro h
-      rw [and_iff_right (left_ne_zero_of_mul h), and_iff_right (right_ne_zero_of_mul h)]
+    refine' sum_filter_ne_zero.symm.trans ((sum_congr _ fun _ _ => rfl).trans sum_filter_ne_zero)
+    ext m
+    simp only [nat.mem_antidiagonal, mem_add_antidiagonal, and_congr_left_iff, mem_filter,
+      mem_support]
+    rintro h
+    rw [and_iff_right (left_ne_zero_of_mul h), and_iff_right (right_ne_zero_of_mul h)]
 #align hahn_series.to_power_series HahnSeries.toPowerSeries
 
 theorem coeff_toPowerSeries {f : HahnSeries ℕ R} {n : ℕ} :
@@ -1187,7 +1187,7 @@ theorem ofPowerSeries_C (r : R) : ofPowerSeries Γ R (PowerSeries.C R r) = HahnS
   simp only [C, single_coeff, of_power_series_apply, RingHom.coe_mk]
   split_ifs with hn hn
   · subst hn
-    convert@emb_domain_coeff _ _ _ _ _ _ _ _ 0 <;> simp
+    convert @emb_domain_coeff _ _ _ _ _ _ _ _ 0 <;> simp
   · rw [emb_domain_notin_image_support]
     simp only [not_exists, Set.mem_image, to_power_series_symm_apply_coeff, mem_support,
       PowerSeries.coeff_C]
@@ -1202,7 +1202,7 @@ theorem ofPowerSeries_X : ofPowerSeries Γ R PowerSeries.X = single 1 1 :=
   simp only [single_coeff, of_power_series_apply, RingHom.coe_mk]
   split_ifs with hn hn
   · rw [hn]
-    convert@emb_domain_coeff _ _ _ _ _ _ _ _ 1 <;> simp
+    convert @emb_domain_coeff _ _ _ _ _ _ _ _ 1 <;> simp
   · rw [emb_domain_notin_image_support]
     simp only [not_exists, Set.mem_image, to_power_series_symm_apply_coeff, mem_support,
       PowerSeries.coeff_X]
@@ -1238,14 +1238,14 @@ def toMvPowerSeries {σ : Type _} [Fintype σ] : HahnSeries (σ →₀ ℕ) R �
     ext n
     simp only [MvPowerSeries.coeff_mul]
     classical
-      change (f * g).coeff n = _
-      simp_rw [mul_coeff]
-      refine' sum_filter_ne_zero.symm.trans ((sum_congr _ fun _ _ => rfl).trans sum_filter_ne_zero)
-      ext m
-      simp only [and_congr_left_iff, mem_add_antidiagonal, mem_filter, mem_support,
-        Finsupp.mem_antidiagonal]
-      rintro h
-      rw [and_iff_right (left_ne_zero_of_mul h), and_iff_right (right_ne_zero_of_mul h)]
+    change (f * g).coeff n = _
+    simp_rw [mul_coeff]
+    refine' sum_filter_ne_zero.symm.trans ((sum_congr _ fun _ _ => rfl).trans sum_filter_ne_zero)
+    ext m
+    simp only [and_congr_left_iff, mem_add_antidiagonal, mem_filter, mem_support,
+      Finsupp.mem_antidiagonal]
+    rintro h
+    rw [and_iff_right (left_ne_zero_of_mul h), and_iff_right (right_ne_zero_of_mul h)]
 #align hahn_series.to_mv_power_series HahnSeries.toMvPowerSeries
 
 variable {σ : Type _} [Fintype σ]
@@ -1393,7 +1393,7 @@ variable (Γ) (R) [PartialOrder Γ] [AddCommMonoid R]
 structure SummableFamily (α : Type _) where
   toFun : α → HahnSeries Γ R
   isPwo_iUnion_support' : Set.IsPwo (⋃ a : α, (to_fun a).support)
-  finite_co_support' : ∀ g : Γ, { a | (to_fun a).coeff g ≠ 0 }.Finite
+  finite_co_support' : ∀ g : Γ, {a | (to_fun a).coeff g ≠ 0}.Finite
 #align hahn_series.summable_family HahnSeries.SummableFamily
 -/
 
@@ -1760,7 +1760,7 @@ def powers (x : HahnSeries Γ R) (hx : 0 < addVal Γ R x) : SummableFamily Γ R 
   isPwo_iUnion_support' := isPwo_iUnion_support_powers hx
   finite_co_support' g := by
     have hpwo := is_pwo_Union_support_powers hx
-    by_cases hg : g ∈ ⋃ n : ℕ, { g | (x ^ n).coeff g ≠ 0 }
+    by_cases hg : g ∈ ⋃ n : ℕ, {g | (x ^ n).coeff g ≠ 0}
     swap; · exact set.finite_empty.subset fun n hn => hg (Set.mem_iUnion.2 ⟨n, hn⟩)
     apply hpwo.is_wf.induction hg
     intro y ys hy

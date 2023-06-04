@@ -307,7 +307,7 @@ noncomputable def Monotone.stieltjesFunction {f : ℝ → ℝ} (hf : Monotone f)
     obtain ⟨y, xy, h'y⟩ : ∃ (y : ℝ) (H : x < y), Ioc x y ⊆ f ⁻¹' Ioo l u :=
       mem_nhdsWithin_Ioi_iff_exists_Ioc_subset.1 (hf.tendsto_right_lim x (Ioo_mem_nhds hlu.1 hlu.2))
     change ∀ᶠ y in 𝓝[≥] x, right_lim f y ∈ s
-    filter_upwards [Ico_mem_nhdsWithin_Ici ⟨le_refl x, xy⟩]with z hz
+    filter_upwards [Ico_mem_nhdsWithin_Ici ⟨le_refl x, xy⟩] with z hz
     apply lus
     refine' ⟨hlu.1.trans_le (hf.right_lim hz.1), _⟩
     obtain ⟨a, za, ay⟩ : ∃ a : ℝ, z < a ∧ a < y := exists_between hz.2
@@ -326,7 +326,7 @@ theorem Monotone.stieltjesFunction_eq {f : ℝ → ℝ} (hf : Monotone f) (x : �
 -/
 
 #print StieltjesFunction.countable_leftLim_ne /-
-theorem countable_leftLim_ne (f : StieltjesFunction) : Set.Countable { x | leftLim f x ≠ f x } :=
+theorem countable_leftLim_ne (f : StieltjesFunction) : Set.Countable {x | leftLim f x ≠ f x} :=
   by
   apply countable.mono _ f.mono.countable_not_continuous_at
   intro x hx h'x
@@ -673,7 +673,7 @@ theorem measure_univ {l u : ℝ} (hfl : Tendsto f atBot (𝓝 l)) (hfu : Tendsto
   exact ENNReal.tendsto_ofReal (tendsto.sub_const hfu _)
 #align stieltjes_function.measure_univ StieltjesFunction.measure_univ
 
-instance : LocallyFiniteMeasure f.Measure :=
+instance : IsLocallyFiniteMeasure f.Measure :=
   ⟨fun x => ⟨Ioo (x - 1) (x + 1), Ioo_mem_nhds (by linarith) (by linarith), by simp⟩⟩
 
 end StieltjesFunction

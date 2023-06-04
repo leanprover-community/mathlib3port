@@ -65,7 +65,7 @@ theorem AntitoneOn.integral_le_sum (hf : AntitoneOn f (Icc x₀ (x₀ + a))) :
   calc
     (∫ x in x₀..x₀ + a, f x) = ∑ i in Finset.range a, ∫ x in x₀ + i..x₀ + (i + 1 : ℕ), f x :=
       by
-      convert(intervalIntegral.sum_integral_adjacent_intervals hint).symm
+      convert (intervalIntegral.sum_integral_adjacent_intervals hint).symm
       simp only [Nat.cast_zero, add_zero]
     _ ≤ ∑ i in Finset.range a, ∫ x in x₀ + i..x₀ + (i + 1 : ℕ), f (x₀ + i) :=
       by

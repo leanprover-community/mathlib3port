@@ -150,15 +150,15 @@ variable {ι : Type _}
 theorem trace_eq_contract_of_basis [Finite ι] (b : Basis ι R M) :
     LinearMap.trace R M ∘ₗ dualTensorHom R M M = contractLeft R M := by
   classical
-    cases nonempty_fintype ι
-    apply Basis.ext (Basis.tensorProduct (Basis.dualBasis b) b)
-    rintro ⟨i, j⟩
-    simp only [Function.comp_apply, Basis.tensorProduct_apply, Basis.coe_dualBasis, coe_comp]
-    rw [trace_eq_matrix_trace R b, toMatrix_dualTensorHom]
-    by_cases hij : i = j
-    · rw [hij]; simp
-    rw [Matrix.StdBasisMatrix.trace_zero j i (1 : R) hij]
-    simp [Finsupp.single_eq_pi_single, hij]
+  cases nonempty_fintype ι
+  apply Basis.ext (Basis.tensorProduct (Basis.dualBasis b) b)
+  rintro ⟨i, j⟩
+  simp only [Function.comp_apply, Basis.tensorProduct_apply, Basis.coe_dualBasis, coe_comp]
+  rw [trace_eq_matrix_trace R b, toMatrix_dualTensorHom]
+  by_cases hij : i = j
+  · rw [hij]; simp
+  rw [Matrix.StdBasisMatrix.trace_zero j i (1 : R) hij]
+  simp [Finsupp.single_eq_pi_single, hij]
 #align linear_map.trace_eq_contract_of_basis LinearMap.trace_eq_contract_of_basis
 
 /-- The trace of a linear map correspond to the contraction pairing under the isomorphism

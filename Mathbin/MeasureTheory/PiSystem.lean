@@ -80,7 +80,7 @@ namespace MeasurableSpace
 
 #print MeasurableSpace.isPiSystem_measurableSet /-
 theorem isPiSystem_measurableSet {α : Type _} [MeasurableSpace α] :
-    IsPiSystem { s : Set α | MeasurableSet s } := fun s hs t ht _ => hs.inter ht
+    IsPiSystem {s : Set α | MeasurableSet s} := fun s hs t ht _ => hs.inter ht
 #align measurable_space.is_pi_system_measurable_set MeasurableSpace.isPiSystem_measurableSet
 -/
 
@@ -120,7 +120,7 @@ theorem IsPiSystem.insert_univ {α} {S : Set (Set α)} (h_pi : IsPiSystem S) :
 -/
 
 theorem IsPiSystem.comap {α β} {S : Set (Set β)} (h_pi : IsPiSystem S) (f : α → β) :
-    IsPiSystem { s : Set α | ∃ t ∈ S, f ⁻¹' t = s } :=
+    IsPiSystem {s : Set α | ∃ t ∈ S, f ⁻¹' t = s} :=
   by
   rintro _ ⟨s, hs_mem, rfl⟩ _ ⟨t, ht_mem, rfl⟩ hst
   rw [← Set.preimage_inter] at hst ⊢
@@ -180,7 +180,7 @@ theorem isPiSystem_Ioi : IsPiSystem (range Ioi : Set (Set α)) :=
 theorem isPiSystem_Ixx_mem {Ixx : α → α → Set α} {p : α → α → Prop}
     (Hne : ∀ {a b}, (Ixx a b).Nonempty → p a b)
     (Hi : ∀ {a₁ b₁ a₂ b₂}, Ixx a₁ b₁ ∩ Ixx a₂ b₂ = Ixx (max a₁ a₂) (min b₁ b₂)) (s t : Set α) :
-    IsPiSystem { S | ∃ l ∈ s, ∃ u ∈ t, ∃ hlu : p l u, Ixx l u = S } :=
+    IsPiSystem {S | ∃ l ∈ s, ∃ u ∈ t, ∃ hlu : p l u, Ixx l u = S} :=
   by
   rintro _ ⟨l₁, hls₁, u₁, hut₁, hlu₁, rfl⟩ _ ⟨l₂, hls₂, u₂, hut₂, hlu₂, rfl⟩
   simp only [Hi, ← sup_eq_max, ← inf_eq_min]
@@ -190,47 +190,47 @@ theorem isPiSystem_Ixx_mem {Ixx : α → α → Set α} {p : α → α → Prop}
 theorem isPiSystem_Ixx {Ixx : α → α → Set α} {p : α → α → Prop}
     (Hne : ∀ {a b}, (Ixx a b).Nonempty → p a b)
     (Hi : ∀ {a₁ b₁ a₂ b₂}, Ixx a₁ b₁ ∩ Ixx a₂ b₂ = Ixx (max a₁ a₂) (min b₁ b₂)) (f : ι → α)
-    (g : ι' → α) : @IsPiSystem α { S | ∃ (i j : _) (h : p (f i) (g j)), Ixx (f i) (g j) = S } := by
+    (g : ι' → α) : @IsPiSystem α {S | ∃ (i j : _) (h : p (f i) (g j)), Ixx (f i) (g j) = S} := by
   simpa only [exists_range_iff] using isPiSystem_Ixx_mem (@Hne) (@Hi) (range f) (range g)
 #align is_pi_system_Ixx isPiSystem_Ixx
 
 theorem isPiSystem_Ioo_mem (s t : Set α) :
-    IsPiSystem { S | ∃ l ∈ s, ∃ u ∈ t, ∃ h : l < u, Ioo l u = S } :=
+    IsPiSystem {S | ∃ l ∈ s, ∃ u ∈ t, ∃ h : l < u, Ioo l u = S} :=
   isPiSystem_Ixx_mem (fun a b ⟨x, hax, hxb⟩ => hax.trans hxb) (fun _ _ _ _ => Ioo_inter_Ioo) s t
 #align is_pi_system_Ioo_mem isPiSystem_Ioo_mem
 
 theorem isPiSystem_Ioo (f : ι → α) (g : ι' → α) :
-    @IsPiSystem α { S | ∃ (l u : _) (h : f l < g u), Ioo (f l) (g u) = S } :=
+    @IsPiSystem α {S | ∃ (l u : _) (h : f l < g u), Ioo (f l) (g u) = S} :=
   isPiSystem_Ixx (fun a b ⟨x, hax, hxb⟩ => hax.trans hxb) (fun _ _ _ _ => Ioo_inter_Ioo) f g
 #align is_pi_system_Ioo isPiSystem_Ioo
 
 theorem isPiSystem_Ioc_mem (s t : Set α) :
-    IsPiSystem { S | ∃ l ∈ s, ∃ u ∈ t, ∃ h : l < u, Ioc l u = S } :=
+    IsPiSystem {S | ∃ l ∈ s, ∃ u ∈ t, ∃ h : l < u, Ioc l u = S} :=
   isPiSystem_Ixx_mem (fun a b ⟨x, hax, hxb⟩ => hax.trans_le hxb) (fun _ _ _ _ => Ioc_inter_Ioc) s t
 #align is_pi_system_Ioc_mem isPiSystem_Ioc_mem
 
 theorem isPiSystem_Ioc (f : ι → α) (g : ι' → α) :
-    @IsPiSystem α { S | ∃ (i j : _) (h : f i < g j), Ioc (f i) (g j) = S } :=
+    @IsPiSystem α {S | ∃ (i j : _) (h : f i < g j), Ioc (f i) (g j) = S} :=
   isPiSystem_Ixx (fun a b ⟨x, hax, hxb⟩ => hax.trans_le hxb) (fun _ _ _ _ => Ioc_inter_Ioc) f g
 #align is_pi_system_Ioc isPiSystem_Ioc
 
 theorem isPiSystem_Ico_mem (s t : Set α) :
-    IsPiSystem { S | ∃ l ∈ s, ∃ u ∈ t, ∃ h : l < u, Ico l u = S } :=
+    IsPiSystem {S | ∃ l ∈ s, ∃ u ∈ t, ∃ h : l < u, Ico l u = S} :=
   isPiSystem_Ixx_mem (fun a b ⟨x, hax, hxb⟩ => hax.trans_lt hxb) (fun _ _ _ _ => Ico_inter_Ico) s t
 #align is_pi_system_Ico_mem isPiSystem_Ico_mem
 
 theorem isPiSystem_Ico (f : ι → α) (g : ι' → α) :
-    @IsPiSystem α { S | ∃ (i j : _) (h : f i < g j), Ico (f i) (g j) = S } :=
+    @IsPiSystem α {S | ∃ (i j : _) (h : f i < g j), Ico (f i) (g j) = S} :=
   isPiSystem_Ixx (fun a b ⟨x, hax, hxb⟩ => hax.trans_lt hxb) (fun _ _ _ _ => Ico_inter_Ico) f g
 #align is_pi_system_Ico isPiSystem_Ico
 
 theorem isPiSystem_Icc_mem (s t : Set α) :
-    IsPiSystem { S | ∃ l ∈ s, ∃ u ∈ t, ∃ h : l ≤ u, Icc l u = S } :=
+    IsPiSystem {S | ∃ l ∈ s, ∃ u ∈ t, ∃ h : l ≤ u, Icc l u = S} :=
   isPiSystem_Ixx_mem (fun a b => nonempty_Icc.1) (fun _ _ _ _ => Icc_inter_Icc) s t
 #align is_pi_system_Icc_mem isPiSystem_Icc_mem
 
 theorem isPiSystem_Icc (f : ι → α) (g : ι' → α) :
-    @IsPiSystem α { S | ∃ (i j : _) (h : f i ≤ g j), Icc (f i) (g j) = S } :=
+    @IsPiSystem α {S | ∃ (i j : _) (h : f i ≤ g j), Icc (f i) (g j) = S} :=
   isPiSystem_Ixx (fun a b => nonempty_Icc.1) (fun _ _ _ _ => Icc_inter_Icc) f g
 #align is_pi_system_Icc isPiSystem_Icc
 
@@ -398,9 +398,8 @@ variable {α ι : Type _}
 define the set of sets that can be written as `⋂ x ∈ t, f x` for some finset `t ⊆ S` and sets
 `f x ∈ π x`. If `π` is a family of π-systems, then it is a π-system. -/
 def piiUnionInter (π : ι → Set (Set α)) (S : Set ι) : Set (Set α) :=
-  { s : Set α |
-    ∃ (t : Finset ι) (htS : ↑t ⊆ S) (f : ι → Set α) (hf : ∀ x, x ∈ t → f x ∈ π x),
-      s = ⋂ x ∈ t, f x }
+  {s : Set α |
+    ∃ (t : Finset ι) (htS : ↑t ⊆ S) (f : ι → Set α) (hf : ∀ x, x ∈ t → f x ∈ π x), s = ⋂ x ∈ t, f x}
 #align pi_Union_Inter piiUnionInter
 -/
 
@@ -435,7 +434,7 @@ theorem piiUnionInter_singleton (π : ι → Set (Set α)) (i : ι) :
 
 theorem piiUnionInter_singleton_left (s : ι → Set α) (S : Set ι) :
     piiUnionInter (fun i => ({s i} : Set (Set α))) S =
-      { s' : Set α | ∃ (t : Finset ι) (htS : ↑t ⊆ S), s' = ⋂ i ∈ t, s i } :=
+      {s' : Set α | ∃ (t : Finset ι) (htS : ↑t ⊆ S), s' = ⋂ i ∈ t, s i} :=
   by
   ext1 s'
   simp_rw [piiUnionInter, Set.mem_singleton_iff, exists_prop, Set.mem_setOf_eq]
@@ -450,7 +449,7 @@ theorem piiUnionInter_singleton_left (s : ι → Set α) (S : Set ι) :
 #align pi_Union_Inter_singleton_left piiUnionInter_singleton_left
 
 theorem generateFrom_piiUnionInter_singleton_left (s : ι → Set α) (S : Set ι) :
-    generateFrom (piiUnionInter (fun k => {s k}) S) = generateFrom { t | ∃ k ∈ S, s k = t } :=
+    generateFrom (piiUnionInter (fun k => {s k}) S) = generateFrom {t | ∃ k ∈ S, s k = t} :=
   by
   refine' le_antisymm (generate_from_le _) (generate_from_mono _)
   · rintro _ ⟨I, hI, f, hf, rfl⟩
@@ -536,7 +535,7 @@ theorem subset_piiUnionInter {π : ι → Set (Set α)} {S : Set ι} {i : ι} (h
 
 theorem mem_piiUnionInter_of_measurableSet (m : ι → MeasurableSpace α) {S : Set ι} {i : ι}
     (hiS : i ∈ S) (s : Set α) (hs : measurable_set[m i] s) :
-    s ∈ piiUnionInter (fun n => { s | measurable_set[m n] s }) S :=
+    s ∈ piiUnionInter (fun n => {s | measurable_set[m n] s}) S :=
   subset_piiUnionInter hiS hs
 #align mem_pi_Union_Inter_of_measurable_set mem_piiUnionInter_of_measurableSet
 
@@ -546,7 +545,7 @@ theorem le_generateFrom_piiUnionInter {π : ι → Set (Set α)} (S : Set ι) {x
 #align le_generate_from_pi_Union_Inter le_generateFrom_piiUnionInter
 
 theorem measurableSet_iSup_of_mem_piiUnionInter (m : ι → MeasurableSpace α) (S : Set ι) (t : Set α)
-    (ht : t ∈ piiUnionInter (fun n => { s | measurable_set[m n] s }) S) :
+    (ht : t ∈ piiUnionInter (fun n => {s | measurable_set[m n] s}) S) :
     measurable_set[⨆ i ∈ S, m i] t :=
   by
   rcases ht with ⟨pt, hpt, ft, ht_m, rfl⟩
@@ -557,7 +556,7 @@ theorem measurableSet_iSup_of_mem_piiUnionInter (m : ι → MeasurableSpace α) 
 #align measurable_set_supr_of_mem_pi_Union_Inter measurableSet_iSup_of_mem_piiUnionInter
 
 theorem generateFrom_piiUnionInter_measurableSet (m : ι → MeasurableSpace α) (S : Set ι) :
-    generateFrom (piiUnionInter (fun n => { s | measurable_set[m n] s }) S) = ⨆ i ∈ S, m i :=
+    generateFrom (piiUnionInter (fun n => {s | measurable_set[m n] s}) S) = ⨆ i ∈ S, m i :=
   by
   refine' le_antisymm _ _
   · rw [← @generate_from_measurable_set α (⨆ i ∈ S, m i)]

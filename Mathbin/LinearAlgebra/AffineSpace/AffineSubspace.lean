@@ -129,7 +129,7 @@ theorem vsub_mem_vectorSpan {s : Set P} {p1 p2 : P} (hp1 : p1 ∈ s) (hp2 : p2 �
 /-- The points in the affine span of a (possibly empty) set of
 points. Use `affine_span` instead to get an `affine_subspace k P`. -/
 def spanPoints (s : Set P) : Set P :=
-  { p | ∃ p1 ∈ s, ∃ v ∈ vectorSpan k s, p = v +ᵥ p1 }
+  {p | ∃ p1 ∈ s, ∃ v ∈ vectorSpan k s, p = v +ᵥ p1}
 #align span_points spanPoints
 -/
 
@@ -511,7 +511,7 @@ theorem eq_iff_direction_eq_of_mem {s₁ s₂ : AffineSubspace k P} {p : P} (h�
 /-- Construct an affine subspace from a point and a direction. -/
 def mk' (p : P) (direction : Submodule k V) : AffineSubspace k P
     where
-  carrier := { q | ∃ v ∈ direction, q = v +ᵥ p }
+  carrier := {q | ∃ v ∈ direction, q = v +ᵥ p}
   smul_vsub_vadd_mem c p1 p2 p3 hp1 hp2 hp3 :=
     by
     rcases hp1 with ⟨v1, hv1, hp1⟩
@@ -745,7 +745,7 @@ variable (k V)
 
 /-- The affine span is the `Inf` of subspaces containing the given
 points. -/
-theorem affineSpan_eq_sInf (s : Set P) : affineSpan k s = sInf { s' | s ⊆ s' } :=
+theorem affineSpan_eq_sInf (s : Set P) : affineSpan k s = sInf {s' | s ⊆ s'} :=
   le_antisymm (spanPoints_subset_coe_of_subset_coe <| Set.subset_iInter₂ fun _ => id)
     (sInf_le (subset_spanPoints k _))
 #align affine_subspace.affine_span_eq_Inf AffineSubspace.affineSpan_eq_sInf
@@ -1355,7 +1355,8 @@ theorem affineSpan_singleton_union_vadd_eq_top_of_span_eq_top {s : Set V} (p : P
     (h : Submodule.span k (Set.range (coe : s → V)) = ⊤) :
     affineSpan k ({p} ∪ (fun v => v +ᵥ p) '' s) = ⊤ :=
   by
-  convert ext_of_direction_eq _
+  convert
+    ext_of_direction_eq _
       ⟨p, mem_affineSpan k (Set.mem_union_left _ (Set.mem_singleton _)), mem_top k V p⟩
   rw [direction_affineSpan, direction_top,
     vectorSpan_eq_span_vsub_set_right k (Set.mem_union_left _ (Set.mem_singleton _) : p ∈ _),

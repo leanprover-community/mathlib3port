@@ -48,7 +48,7 @@ variable {α : Type u} {β : Type v} {X : Type _}
 in terms of the elements of the uniformity. -/
 theorem uniformity_dist_of_mem_uniformity [LinearOrder β] {U : Filter (α × α)} (z : β)
     (D : α → α → β) (H : ∀ s, s ∈ U ↔ ∃ ε > z, ∀ {a b : α}, D a b < ε → (a, b) ∈ s) :
-    U = ⨅ ε > z, 𝓟 { p : α × α | D p.1 p.2 < ε } :=
+    U = ⨅ ε > z, 𝓟 {p : α × α | D p.1 p.2 < ε} :=
   HasBasis.eq_biInf ⟨fun s => by simp only [H, subset_def, Prod.forall, mem_set_of]⟩
 #align uniformity_dist_of_mem_uniformity uniformity_dist_of_mem_uniformity
 
@@ -91,7 +91,7 @@ class PseudoEMetricSpace (α : Type u) extends EDist α : Type u where
   edist_comm : ∀ x y : α, edist x y = edist y x
   edist_triangle : ∀ x y z : α, edist x z ≤ edist x y + edist y z
   toUniformSpace : UniformSpace α := uniformSpaceOfEDist edist edist_self edist_comm edist_triangle
-  uniformity_edist : 𝓤 α = ⨅ ε > 0, 𝓟 { p : α × α | edist p.1 p.2 < ε } := by intros; rfl
+  uniformity_edist : 𝓤 α = ⨅ ε > 0, 𝓟 {p : α × α | edist p.1 p.2 < ε} := by intros; rfl
 #align pseudo_emetric_space PseudoEMetricSpace
 -/
 
@@ -177,7 +177,7 @@ theorem edist_le_range_sum_of_edist_le {f : ℕ → α} (n : ℕ) {d : ℕ → �
 #align edist_le_range_sum_of_edist_le edist_le_range_sum_of_edist_le
 
 /-- Reformulation of the uniform structure in terms of the extended distance -/
-theorem uniformity_pseudoedist : 𝓤 α = ⨅ ε > 0, 𝓟 { p : α × α | edist p.1 p.2 < ε } :=
+theorem uniformity_pseudoedist : 𝓤 α = ⨅ ε > 0, 𝓟 {p : α × α | edist p.1 p.2 < ε} :=
   PseudoEMetricSpace.uniformity_edist
 #align uniformity_pseudoedist uniformity_pseudoedist
 
@@ -190,7 +190,7 @@ theorem uniformSpace_edist :
 -/
 
 theorem uniformity_basis_edist :
-    (𝓤 α).HasBasis (fun ε : ℝ≥0∞ => 0 < ε) fun ε => { p : α × α | edist p.1 p.2 < ε } :=
+    (𝓤 α).HasBasis (fun ε : ℝ≥0∞ => 0 < ε) fun ε => {p : α × α | edist p.1 p.2 < ε} :=
   (@uniformSpace_edist α _).symm ▸ UniformSpace.hasBasis_ofFun ⟨1, one_pos⟩ _ _ _ _ _
 #align uniformity_basis_edist uniformity_basis_edist
 
@@ -207,7 +207,7 @@ For specific bases see `uniformity_basis_edist`, `uniformity_basis_edist'`,
 `uniformity_basis_edist_nnreal`, and `uniformity_basis_edist_inv_nat`. -/
 protected theorem EMetric.mk_uniformity_basis {β : Type _} {p : β → Prop} {f : β → ℝ≥0∞}
     (hf₀ : ∀ x, p x → 0 < f x) (hf : ∀ ε, 0 < ε → ∃ (x : _) (hx : p x), f x ≤ ε) :
-    (𝓤 α).HasBasis p fun x => { p : α × α | edist p.1 p.2 < f x } :=
+    (𝓤 α).HasBasis p fun x => {p : α × α | edist p.1 p.2 < f x} :=
   by
   refine' ⟨fun s => uniformity_basis_edist.mem_iff.trans _⟩
   constructor
@@ -223,7 +223,7 @@ accumulating to zero, then closed `f i`-neighborhoods of the diagonal form a bas
 For specific bases see `uniformity_basis_edist_le` and `uniformity_basis_edist_le'`. -/
 protected theorem EMetric.mk_uniformity_basis_le {β : Type _} {p : β → Prop} {f : β → ℝ≥0∞}
     (hf₀ : ∀ x, p x → 0 < f x) (hf : ∀ ε, 0 < ε → ∃ (x : _) (hx : p x), f x ≤ ε) :
-    (𝓤 α).HasBasis p fun x => { p : α × α | edist p.1 p.2 ≤ f x } :=
+    (𝓤 α).HasBasis p fun x => {p : α × α | edist p.1 p.2 ≤ f x} :=
   by
   refine' ⟨fun s => uniformity_basis_edist.mem_iff.trans _⟩
   constructor
@@ -235,47 +235,47 @@ protected theorem EMetric.mk_uniformity_basis_le {β : Type _} {p : β → Prop}
 #align emetric.mk_uniformity_basis_le EMetric.mk_uniformity_basis_le
 
 theorem uniformity_basis_edist_le :
-    (𝓤 α).HasBasis (fun ε : ℝ≥0∞ => 0 < ε) fun ε => { p : α × α | edist p.1 p.2 ≤ ε } :=
+    (𝓤 α).HasBasis (fun ε : ℝ≥0∞ => 0 < ε) fun ε => {p : α × α | edist p.1 p.2 ≤ ε} :=
   EMetric.mk_uniformity_basis_le (fun _ => id) fun ε ε₀ => ⟨ε, ε₀, le_refl ε⟩
 #align uniformity_basis_edist_le uniformity_basis_edist_le
 
 theorem uniformity_basis_edist' (ε' : ℝ≥0∞) (hε' : 0 < ε') :
-    (𝓤 α).HasBasis (fun ε : ℝ≥0∞ => ε ∈ Ioo 0 ε') fun ε => { p : α × α | edist p.1 p.2 < ε } :=
+    (𝓤 α).HasBasis (fun ε : ℝ≥0∞ => ε ∈ Ioo 0 ε') fun ε => {p : α × α | edist p.1 p.2 < ε} :=
   EMetric.mk_uniformity_basis (fun _ => And.left) fun ε ε₀ =>
     let ⟨δ, hδ⟩ := exists_between hε'
     ⟨min ε δ, ⟨lt_min ε₀ hδ.1, lt_of_le_of_lt (min_le_right _ _) hδ.2⟩, min_le_left _ _⟩
 #align uniformity_basis_edist' uniformity_basis_edist'
 
 theorem uniformity_basis_edist_le' (ε' : ℝ≥0∞) (hε' : 0 < ε') :
-    (𝓤 α).HasBasis (fun ε : ℝ≥0∞ => ε ∈ Ioo 0 ε') fun ε => { p : α × α | edist p.1 p.2 ≤ ε } :=
+    (𝓤 α).HasBasis (fun ε : ℝ≥0∞ => ε ∈ Ioo 0 ε') fun ε => {p : α × α | edist p.1 p.2 ≤ ε} :=
   EMetric.mk_uniformity_basis_le (fun _ => And.left) fun ε ε₀ =>
     let ⟨δ, hδ⟩ := exists_between hε'
     ⟨min ε δ, ⟨lt_min ε₀ hδ.1, lt_of_le_of_lt (min_le_right _ _) hδ.2⟩, min_le_left _ _⟩
 #align uniformity_basis_edist_le' uniformity_basis_edist_le'
 
 theorem uniformity_basis_edist_nnreal :
-    (𝓤 α).HasBasis (fun ε : ℝ≥0 => 0 < ε) fun ε => { p : α × α | edist p.1 p.2 < ε } :=
+    (𝓤 α).HasBasis (fun ε : ℝ≥0 => 0 < ε) fun ε => {p : α × α | edist p.1 p.2 < ε} :=
   EMetric.mk_uniformity_basis (fun _ => ENNReal.coe_pos.2) fun ε ε₀ =>
     let ⟨δ, hδ⟩ := ENNReal.lt_iff_exists_nnreal_btwn.1 ε₀
     ⟨δ, ENNReal.coe_pos.1 hδ.1, le_of_lt hδ.2⟩
 #align uniformity_basis_edist_nnreal uniformity_basis_edist_nnreal
 
 theorem uniformity_basis_edist_nnreal_le :
-    (𝓤 α).HasBasis (fun ε : ℝ≥0 => 0 < ε) fun ε => { p : α × α | edist p.1 p.2 ≤ ε } :=
+    (𝓤 α).HasBasis (fun ε : ℝ≥0 => 0 < ε) fun ε => {p : α × α | edist p.1 p.2 ≤ ε} :=
   EMetric.mk_uniformity_basis_le (fun _ => ENNReal.coe_pos.2) fun ε ε₀ =>
     let ⟨δ, hδ⟩ := ENNReal.lt_iff_exists_nnreal_btwn.1 ε₀
     ⟨δ, ENNReal.coe_pos.1 hδ.1, le_of_lt hδ.2⟩
 #align uniformity_basis_edist_nnreal_le uniformity_basis_edist_nnreal_le
 
 theorem uniformity_basis_edist_inv_nat :
-    (𝓤 α).HasBasis (fun _ => True) fun n : ℕ => { p : α × α | edist p.1 p.2 < (↑n)⁻¹ } :=
+    (𝓤 α).HasBasis (fun _ => True) fun n : ℕ => {p : α × α | edist p.1 p.2 < (↑n)⁻¹} :=
   EMetric.mk_uniformity_basis (fun n _ => ENNReal.inv_pos.2 <| ENNReal.nat_ne_top n) fun ε ε₀ =>
     let ⟨n, hn⟩ := ENNReal.exists_inv_nat_lt (ne_of_gt ε₀)
     ⟨n, trivial, le_of_lt hn⟩
 #align uniformity_basis_edist_inv_nat uniformity_basis_edist_inv_nat
 
 theorem uniformity_basis_edist_inv_two_pow :
-    (𝓤 α).HasBasis (fun _ => True) fun n : ℕ => { p : α × α | edist p.1 p.2 < 2⁻¹ ^ n } :=
+    (𝓤 α).HasBasis (fun _ => True) fun n : ℕ => {p : α × α | edist p.1 p.2 < 2⁻¹ ^ n} :=
   EMetric.mk_uniformity_basis (fun n _ => ENNReal.pow_pos (ENNReal.inv_pos.2 ENNReal.two_ne_top) _)
     fun ε ε₀ =>
     let ⟨n, hn⟩ := ENNReal.exists_inv_two_pow_lt (ne_of_gt ε₀)
@@ -283,7 +283,7 @@ theorem uniformity_basis_edist_inv_two_pow :
 #align uniformity_basis_edist_inv_two_pow uniformity_basis_edist_inv_two_pow
 
 /-- Fixed size neighborhoods of the diagonal belong to the uniform structure -/
-theorem edist_mem_uniformity {ε : ℝ≥0∞} (ε0 : 0 < ε) : { p : α × α | edist p.1 p.2 < ε } ∈ 𝓤 α :=
+theorem edist_mem_uniformity {ε : ℝ≥0∞} (ε0 : 0 < ε) : {p : α × α | edist p.1 p.2 < ε} ∈ 𝓤 α :=
   mem_uniformity_edist.2 ⟨ε, ε0, fun a b => id⟩
 #align edist_mem_uniformity edist_mem_uniformity
 
@@ -344,7 +344,7 @@ theorem complete_of_convergent_controlled_sequences (B : ℕ → ℝ≥0∞) (hB
         (∀ N n m : ℕ, N ≤ n → N ≤ m → edist (u n) (u m) < B N) → ∃ x, Tendsto u atTop (𝓝 x)) :
     CompleteSpace α :=
   UniformSpace.complete_of_convergent_controlled_sequences
-    (fun n => { p : α × α | edist p.1 p.2 < B n }) (fun n => edist_mem_uniformity <| hB n) H
+    (fun n => {p : α × α | edist p.1 p.2 < B n}) (fun n => edist_mem_uniformity <| hB n) H
 #align emetric.complete_of_convergent_controlled_sequences EMetric.complete_of_convergent_controlled_sequences
 
 #print EMetric.complete_of_cauchySeq_tendsto /-
@@ -576,7 +576,7 @@ variable {x y z : α} {ε ε₁ ε₂ : ℝ≥0∞} {s t : Set α}
 #print EMetric.ball /-
 /-- `emetric.ball x ε` is the set of all points `y` with `edist y x < ε` -/
 def ball (x : α) (ε : ℝ≥0∞) : Set α :=
-  { y | edist y x < ε }
+  {y | edist y x < ε}
 #align emetric.ball EMetric.ball
 -/
 
@@ -591,7 +591,7 @@ theorem mem_ball' : y ∈ ball x ε ↔ edist x y < ε := by rw [edist_comm, mem
 #print EMetric.closedBall /-
 /-- `emetric.closed_ball x ε` is the set of all points `y` with `edist y x ≤ ε` -/
 def closedBall (x : α) (ε : ℝ≥0∞) :=
-  { y | edist y x ≤ ε }
+  {y | edist y x ≤ ε}
 #align emetric.closed_ball EMetric.closedBall
 -/
 
@@ -675,11 +675,11 @@ theorem ball_eq_empty_iff : ball x ε = ∅ ↔ ε = 0 :=
 #align emetric.ball_eq_empty_iff EMetric.ball_eq_empty_iff
 
 theorem ordConnected_setOf_closedBall_subset (x : α) (s : Set α) :
-    OrdConnected { r | closedBall x r ⊆ s } :=
+    OrdConnected {r | closedBall x r ⊆ s} :=
   ⟨fun r₁ hr₁ r₂ hr₂ r hr => (closedBall_subset_closedBall hr.2).trans hr₂⟩
 #align emetric.ord_connected_set_of_closed_ball_subset EMetric.ordConnected_setOf_closedBall_subset
 
-theorem ordConnected_setOf_ball_subset (x : α) (s : Set α) : OrdConnected { r | ball x r ⊆ s } :=
+theorem ordConnected_setOf_ball_subset (x : α) (s : Set α) : OrdConnected {r | ball x r ⊆ s} :=
   ⟨fun r₁ hr₁ r₂ hr₂ r hr => (ball_subset_ball hr.2).trans hr₂⟩
 #align emetric.ord_connected_set_of_ball_subset EMetric.ordConnected_setOf_ball_subset
 
@@ -1200,7 +1200,7 @@ instance Prod.emetricSpaceMax [EMetricSpace β] : EMetricSpace (γ × β) :=
 -/
 
 /-- Reformulation of the uniform structure in terms of the extended distance -/
-theorem uniformity_edist : 𝓤 γ = ⨅ ε > 0, 𝓟 { p : γ × γ | edist p.1 p.2 < ε } :=
+theorem uniformity_edist : 𝓤 γ = ⨅ ε > 0, 𝓟 {p : γ × γ | edist p.1 p.2 < ε} :=
   PseudoEMetricSpace.uniformity_edist
 #align uniformity_edist uniformity_edist
 

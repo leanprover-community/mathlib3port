@@ -72,7 +72,7 @@ instance (priority := 100) ConditionallyCompleteLinearOrder.toCompactIccSpace (�
   rw [le_principal_iff]
   have hpt : ∀ x ∈ Icc a b, {x} ∉ f := fun x hx hxf =>
     hf x hx ((le_pure_iff.2 hxf).trans (pure_le_nhds x))
-  set s := { x ∈ Icc a b | Icc a x ∉ f }
+  set s := {x ∈ Icc a b | Icc a x ∉ f}
   have hsb : b ∈ upperBounds s := fun x hx => hx.1.2
   have sbd : BddAbove s := ⟨b, hsb⟩
   have ha : a ∈ s := by simp [hpt, hab]

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 
 ! This file was ported from Lean 3 source module measure_theory.function.strongly_measurable.lp
-! leanprover-community/mathlib commit f2ce6086713c78a7f880485f7917ea547a215982
+! leanprover-community/mathlib commit af471b9e3ce868f296626d33189b4ce730fa4c00
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.MeasureTheory.Function.StronglyMeasurable.Basic
 
 /-!
 # Finitely strongly measurable functions in `Lp`
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 Functions in `Lp` for `0 < p < ∞` are finitely strongly measurable.
 
@@ -58,18 +61,18 @@ theorem Memℒp.finStronglyMeasurable_of_stronglyMeasurable (hf : Memℒp f p μ
     simp
 #align measure_theory.mem_ℒp.fin_strongly_measurable_of_strongly_measurable MeasureTheory.Memℒp.finStronglyMeasurable_of_stronglyMeasurable
 
-theorem Memℒp.aEFinStronglyMeasurable (hf : Memℒp f p μ) (hp_ne_zero : p ≠ 0) (hp_ne_top : p ≠ ∞) :
+theorem Memℒp.aefinStronglyMeasurable (hf : Memℒp f p μ) (hp_ne_zero : p ≠ 0) (hp_ne_top : p ≠ ∞) :
     AEFinStronglyMeasurable f μ :=
   ⟨hf.AEStronglyMeasurable.mk f,
     ((memℒp_congr_ae hf.AEStronglyMeasurable.ae_eq_mk).mp
           hf).finStronglyMeasurable_of_stronglyMeasurable
       hf.AEStronglyMeasurable.stronglyMeasurable_mk hp_ne_zero hp_ne_top,
     hf.AEStronglyMeasurable.ae_eq_mk⟩
-#align measure_theory.mem_ℒp.ae_fin_strongly_measurable MeasureTheory.Memℒp.aEFinStronglyMeasurable
+#align measure_theory.mem_ℒp.ae_fin_strongly_measurable MeasureTheory.Memℒp.aefinStronglyMeasurable
 
-theorem Integrable.aEFinStronglyMeasurable (hf : Integrable f μ) : AEFinStronglyMeasurable f μ :=
+theorem Integrable.aefinStronglyMeasurable (hf : Integrable f μ) : AEFinStronglyMeasurable f μ :=
   (memℒp_one_iff_integrable.mpr hf).AEFinStronglyMeasurable one_ne_zero ENNReal.coe_ne_top
-#align measure_theory.integrable.ae_fin_strongly_measurable MeasureTheory.Integrable.aEFinStronglyMeasurable
+#align measure_theory.integrable.ae_fin_strongly_measurable MeasureTheory.Integrable.aefinStronglyMeasurable
 
 theorem Lp.finStronglyMeasurable (f : Lp G p μ) (hp_ne_zero : p ≠ 0) (hp_ne_top : p ≠ ∞) :
     FinStronglyMeasurable f μ :=

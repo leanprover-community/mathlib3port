@@ -275,8 +275,8 @@ theorem bitwise_bit (f : Bool → Bool → Bool) (a m b n) :
           | rw [bit_coe_nat]
           | rw [bit_neg_succ] <;>
       unfold bitwise nat_bitwise not <;>
-    [induction' h : f ff ff with ; induction' h : f ff tt with ; induction' h : f tt ff with ;
-    induction' h : f tt tt with ]
+    [induction' h : f ff ff with; induction' h : f ff tt with; induction' h : f tt ff with;
+    induction' h : f tt tt with]
   all_goals
     unfold cond; rw [Nat.bitwise'_bit]
     repeat'

@@ -176,7 +176,7 @@ section SignedMeasure
 
 theorem withDensityᵥ_toReal {f : α → ℝ≥0∞} (hfm : AEMeasurable f μ) (hf : (∫⁻ x, f x ∂μ) ≠ ∞) :
     (μ.withDensityᵥ fun x => (f x).toReal) =
-      @toSignedMeasure α _ (μ.withDensity f) (finiteMeasure_withDensity hf) :=
+      @toSignedMeasure α _ (μ.withDensity f) (isFiniteMeasure_withDensity hf) :=
   by
   have hfi := integrable_to_real_of_lintegral_ne_top hfm hf
   ext (i hi)
@@ -191,9 +191,9 @@ theorem withDensityᵥ_eq_withDensity_pos_part_sub_withDensity_neg_part {f : α 
     (hfi : Integrable f μ) :
     μ.withDensityᵥ f =
       @toSignedMeasure α _ (μ.withDensity fun x => ENNReal.ofReal <| f x)
-          (finiteMeasure_withDensity_ofReal hfi.2) -
+          (isFiniteMeasure_withDensity_ofReal hfi.2) -
         @toSignedMeasure α _ (μ.withDensity fun x => ENNReal.ofReal <| -f x)
-          (finiteMeasure_withDensity_ofReal hfi.neg.2) :=
+          (isFiniteMeasure_withDensity_ofReal hfi.neg.2) :=
   by
   ext (i hi)
   rw [with_densityᵥ_apply hfi hi,

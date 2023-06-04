@@ -832,16 +832,16 @@ theorem isOrtho_smul_right {x y : M₄} {a : R₄} (ha : a ≠ 0) : IsOrtho G x 
 theorem linearIndependent_of_iIsOrtho {n : Type w} {B : BilinForm K V} {v : n → V}
     (hv₁ : B.IsOrthoᵢ v) (hv₂ : ∀ i, ¬B.IsOrtho (v i) (v i)) : LinearIndependent K v := by
   classical
-    rw [linearIndependent_iff']
-    intro s w hs i hi
-    have : B (s.sum fun i : n => w i • v i) (v i) = 0 := by rw [hs, zero_left]
-    have hsum : (s.sum fun j : n => w j * B (v j) (v i)) = w i * B (v i) (v i) :=
-      by
-      apply Finset.sum_eq_single_of_mem i hi
-      intro j hj hij
-      rw [is_Ortho_def.1 hv₁ _ _ hij, MulZeroClass.mul_zero]
-    simp_rw [sum_left, smul_left, hsum] at this 
-    exact eq_zero_of_ne_zero_of_mul_right_eq_zero (hv₂ i) this
+  rw [linearIndependent_iff']
+  intro s w hs i hi
+  have : B (s.sum fun i : n => w i • v i) (v i) = 0 := by rw [hs, zero_left]
+  have hsum : (s.sum fun j : n => w j * B (v j) (v i)) = w i * B (v i) (v i) :=
+    by
+    apply Finset.sum_eq_single_of_mem i hi
+    intro j hj hij
+    rw [is_Ortho_def.1 hv₁ _ _ hij, MulZeroClass.mul_zero]
+  simp_rw [sum_left, smul_left, hsum] at this 
+  exact eq_zero_of_ne_zero_of_mul_right_eq_zero (hv₂ i) this
 #align bilin_form.linear_independent_of_is_Ortho BilinForm.linearIndependent_of_iIsOrtho
 
 end
@@ -1126,7 +1126,7 @@ def IsPairSelfAdjoint (f : Module.End R M) :=
 /-- The set of pair-self-adjoint endomorphisms are a submodule of the type of all endomorphisms. -/
 def isPairSelfAdjointSubmodule : Submodule R₂ (Module.End R₂ M₂)
     where
-  carrier := { f | IsPairSelfAdjoint B₂ F₂ f }
+  carrier := {f | IsPairSelfAdjoint B₂ F₂ f}
   zero_mem' := isAdjointPair_zero
   add_mem' f g hf hg := hf.add hg
   smul_mem' c f h := h.smul c
@@ -1221,7 +1221,7 @@ complement for which, for all `y` in `N`, `B y x = 0`.  This variant definition 
 provided in mathlib. -/
 def orthogonal (B : BilinForm R M) (N : Submodule R M) : Submodule R M
     where
-  carrier := { m | ∀ n ∈ N, IsOrtho B n m }
+  carrier := {m | ∀ n ∈ N, IsOrtho B n m}
   zero_mem' x _ := isOrtho_zero_right x
   add_mem' x y hx hy n hn := by
     rw [is_ortho, add_right, show B n x = 0 from hx n hn, show B n y = 0 from hy n hn, zero_add]

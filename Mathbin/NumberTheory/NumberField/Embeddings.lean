@@ -71,7 +71,7 @@ The images of `x` by the embeddings of `K` in `A` are exactly the roots in `A` o
 the minimal polynomial of `x` over `ℚ`. -/
 theorem range_eval_eq_rootSet_minpoly : (range fun φ : K →+* A => φ x) = (minpoly ℚ x).rootSet A :=
   by
-  convert(NumberField.isAlgebraic K).range_eval_eq_rootSet_minpoly A x using 1
+  convert (NumberField.isAlgebraic K).range_eval_eq_rootSet_minpoly A x using 1
   ext a
   exact ⟨fun ⟨φ, hφ⟩ => ⟨φ.toRatAlgHom, hφ⟩, fun ⟨φ, hφ⟩ => ⟨φ.toRingHom, hφ⟩⟩
 #align number_field.embeddings.range_eval_eq_root_set_minpoly NumberField.Embeddings.range_eval_eq_rootSet_minpoly
@@ -95,16 +95,16 @@ theorem coeff_bdd_of_norm_le {B : ℝ} {x : K} (h : ∀ φ : K →+* A, ‖φ x�
     coeff_bdd_of_roots_le _ (minpoly.monic hx) (IsAlgClosed.splits_codomain _)
       (minpoly.natDegree_le hx) (fun z hz => _) i
   classical
-    rw [← Multiset.mem_toFinset] at hz 
-    obtain ⟨φ, rfl⟩ := (range_eval_eq_root_set_minpoly K A x).symm.Subset hz
-    exact h φ
+  rw [← Multiset.mem_toFinset] at hz 
+  obtain ⟨φ, rfl⟩ := (range_eval_eq_root_set_minpoly K A x).symm.Subset hz
+  exact h φ
 #align number_field.embeddings.coeff_bdd_of_norm_le NumberField.Embeddings.coeff_bdd_of_norm_le
 
 variable (K A)
 
 /-- Let `B` be a real number. The set of algebraic integers in `K` whose conjugates are all
 smaller in norm than `B` is finite. -/
-theorem finite_of_norm_le (B : ℝ) : { x : K | IsIntegral ℤ x ∧ ∀ φ : K →+* A, ‖φ x‖ ≤ B }.Finite :=
+theorem finite_of_norm_le (B : ℝ) : {x : K | IsIntegral ℤ x ∧ ∀ φ : K →+* A, ‖φ x‖ ≤ B}.Finite :=
   by
   let C := Nat.ceil (max B 1 ^ finrank ℚ K * (finrank ℚ K).choose (finrank ℚ K / 2))
   have := bUnion_roots_finite (algebraMap ℤ K) (finrank ℚ K) (finite_Icc (-C : ℤ) C)
@@ -326,10 +326,10 @@ theorem mk_eq_iff {φ ψ : K →+* ℂ} : mk φ = mk ψ ↔ φ = ψ ∨ ComplexE
       exact congr_fun (congr_arg coeFn h₀) _
     cases Complex.uniformContinuous_ringHom_eq_id_or_conj φ.field_range hlip.uniform_continuous
     · left; ext1 x
-      convert(congr_fun h (ι x)).symm
+      convert (congr_fun h (ι x)).symm
       exact (RingEquiv.apply_symm_apply ι.symm x).symm
     · right; ext1 x
-      convert(congr_fun h (ι x)).symm
+      convert (congr_fun h (ι x)).symm
       exact (RingEquiv.apply_symm_apply ι.symm x).symm
   · rintro (⟨h⟩ | ⟨h⟩)
     · exact congr_arg mk h
@@ -493,7 +493,7 @@ theorem prod_eq_abs_norm (x : K) :
     (Finset.univ.Prod fun w : InfinitePlace K => ite w.IsReal (w x) (w x ^ 2)) =
       abs (Algebra.norm ℚ x) :=
   by
-  convert(congr_arg Complex.abs (@Algebra.norm_eq_prod_embeddings ℚ _ _ _ _ ℂ _ _ _ _ _ x)).symm
+  convert (congr_arg Complex.abs (@Algebra.norm_eq_prod_embeddings ℚ _ _ _ _ ℂ _ _ _ _ _ x)).symm
   · rw [map_prod, ←
       Equiv.prod_comp' RingHom.equivRatAlgHom (fun f => Complex.abs (f x))
         (fun φ => Complex.abs (φ x)) fun _ => by simpa only [RingHom.equivRatAlgHom_apply]]
@@ -509,7 +509,7 @@ theorem prod_eq_abs_norm (x : K) :
     rw [Finset.prod_ite, Finset.prod_ite]
     refine' congr (congr_arg Mul.mul _) _
     · rw [← Finset.prod_subtype_eq_prod_filter, ← Finset.prod_subtype_eq_prod_filter]
-      convert(Equiv.prod_comp' (mk_real K) (fun φ => Complex.abs (φ x)) (fun w => w x) _).symm
+      convert (Equiv.prod_comp' (mk_real K) (fun φ => Complex.abs (φ x)) (fun w => w x) _).symm
       any_goals ext; simp only [Finset.mem_subtype, Finset.mem_univ]
       exact fun φ => mk_real.apply K φ x
     · rw [Finset.filter_congr fun (w : infinite_place K) _ => @not_is_real_iff_is_complex K _ w, ←
@@ -529,7 +529,7 @@ open Fintype
 
 theorem card_real_embeddings :
     card { φ : K →+* ℂ // ComplexEmbedding.IsReal φ } = card { w : InfinitePlace K // IsReal w } :=
-  by convert(Fintype.ofEquiv_card (mk_real K)).symm
+  by convert (Fintype.ofEquiv_card (mk_real K)).symm
 #align number_field.infinite_place.card_real_embeddings NumberField.InfinitePlace.card_real_embeddings
 
 theorem card_complex_embeddings :

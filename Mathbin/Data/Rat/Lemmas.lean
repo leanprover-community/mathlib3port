@@ -240,7 +240,7 @@ theorem den_div_cast_eq_one_iff (m n : ℤ) (hn : n ≠ 0) : ((m : ℚ) / n).den
 theorem num_div_eq_of_coprime {a b : ℤ} (hb0 : 0 < b) (h : Nat.coprime a.natAbs b.natAbs) :
     (a / b : ℚ).num = a := by
   lift b to ℕ using le_of_lt hb0
-  norm_cast  at hb0 h 
+  norm_cast at hb0 h 
   rw [← Rat.divInt_eq_div, ← Rat.mkPnat_eq a b hb0, Rat.mkPnat_num, PNat.mk_coe, h.gcd_eq_one,
     Int.ofNat_one, Int.div_one]
 #align rat.num_div_eq_of_coprime Rat.num_div_eq_of_coprime
@@ -250,7 +250,7 @@ theorem num_div_eq_of_coprime {a b : ℤ} (hb0 : 0 < b) (h : Nat.coprime a.natAb
 theorem den_div_eq_of_coprime {a b : ℤ} (hb0 : 0 < b) (h : Nat.coprime a.natAbs b.natAbs) :
     ((a / b : ℚ).den : ℤ) = b := by
   lift b to ℕ using le_of_lt hb0
-  norm_cast  at hb0 h 
+  norm_cast at hb0 h 
   rw [← Rat.divInt_eq_div, ← Rat.mkPnat_eq a b hb0, Rat.mkPnat_den, PNat.mk_coe, h.gcd_eq_one,
     Nat.div_one]
 #align rat.denom_div_eq_of_coprime Rat.den_div_eq_of_coprime

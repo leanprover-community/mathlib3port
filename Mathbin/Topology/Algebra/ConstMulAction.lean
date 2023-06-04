@@ -476,7 +476,7 @@ is properly discontinuous, that is, for any pair of compact sets `K, L` in `T`, 
 class ProperlyDiscontinuousSMul (Γ : Type _) (T : Type _) [TopologicalSpace T] [SMul Γ T] :
     Prop where
   finite_disjoint_inter_image :
-    ∀ {K L : Set T}, IsCompact K → IsCompact L → Set.Finite { γ : Γ | (· • ·) γ '' K ∩ L ≠ ∅ }
+    ∀ {K L : Set T}, IsCompact K → IsCompact L → Set.Finite {γ : Γ | (· • ·) γ '' K ∩ L ≠ ∅}
 #align properly_discontinuous_smul ProperlyDiscontinuousSMul
 -/
 
@@ -488,7 +488,7 @@ is properly discontinuous, that is, for any pair of compact sets `K, L` in `T`, 
 class ProperlyDiscontinuousVAdd (Γ : Type _) (T : Type _) [TopologicalSpace T] [VAdd Γ T] :
     Prop where
   finite_disjoint_inter_image :
-    ∀ {K L : Set T}, IsCompact K → IsCompact L → Set.Finite { γ : Γ | (· +ᵥ ·) γ '' K ∩ L ≠ ∅ }
+    ∀ {K L : Set T}, IsCompact K → IsCompact L → Set.Finite {γ : Γ | (· +ᵥ ·) γ '' K ∩ L ≠ ∅}
 #align properly_discontinuous_vadd ProperlyDiscontinuousVAdd
 -/
 
@@ -538,7 +538,7 @@ instance (priority := 100) t2Space_of_properlyDiscontinuousSMul_of_t2Space [T2Sp
   have hx₀y₀ : x₀ ≠ y₀ := ne_of_apply_ne _ hxy
   have hγx₀y₀ : ∀ γ : Γ, γ • x₀ ≠ y₀ := not_exists.mp (mt Quotient.sound hxy.symm : _)
   obtain ⟨K₀, L₀, K₀_in, L₀_in, hK₀, hL₀, hK₀L₀⟩ := t2_separation_compact_nhds hx₀y₀
-  let bad_Γ_set := { γ : Γ | (· • ·) γ '' K₀ ∩ L₀ ≠ ∅ }
+  let bad_Γ_set := {γ : Γ | (· • ·) γ '' K₀ ∩ L₀ ≠ ∅}
   have bad_Γ_finite : bad_Γ_set.finite := finite_disjoint_inter_image hK₀ hL₀
   choose u v hu hv u_v_disjoint using fun γ => t2_separation_nhds (hγx₀y₀ γ)
   let U₀₀ := ⋂ γ ∈ bad_Γ_set, (· • ·) γ ⁻¹' u γ

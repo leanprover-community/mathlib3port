@@ -207,13 +207,13 @@ theorem filter_product_card (s : Finset α) (t : Finset β) (p : α → Prop) (q
         (s.filterₓ (Not ∘ p)).card * (t.filterₓ (Not ∘ q)).card :=
   by
   classical
-    rw [← card_product, ← card_product, ← filter_product, ← filter_product, ← card_union_eq]
-    · apply congr_arg; ext ⟨a, b⟩; simp only [filter_union_right, mem_filter, mem_product]
-      constructor <;> intro h <;> use h.1
-      simp only [Function.comp_apply, and_self_iff, h.2, em (q b)]
-      cases h.2 <;> · try simp at h_1 ; simp [h_1]
-    · apply Finset.disjoint_filter_filter'
-      exact (disjoint_compl_right.inf_left _).inf_right _
+  rw [← card_product, ← card_product, ← filter_product, ← filter_product, ← card_union_eq]
+  · apply congr_arg; ext ⟨a, b⟩; simp only [filter_union_right, mem_filter, mem_product]
+    constructor <;> intro h <;> use h.1
+    simp only [Function.comp_apply, and_self_iff, h.2, em (q b)]
+    cases h.2 <;> · try simp at h_1 ; simp [h_1]
+  · apply Finset.disjoint_filter_filter'
+    exact (disjoint_compl_right.inf_left _).inf_right _
 #align finset.filter_product_card Finset.filter_product_card
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/

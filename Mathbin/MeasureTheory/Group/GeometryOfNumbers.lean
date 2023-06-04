@@ -69,9 +69,10 @@ theorem exists_pair_mem_lattice_not_disjoint_vadd [AddCommGroup L] [Countable L]
 is large enough compared to the covolume of a lattice `L` of `E`, then it contains a non-zero
 lattice point of `L`.  -/
 theorem exists_ne_zero_mem_lattice_of_measure_mul_two_pow_lt_measure [NormedAddCommGroup E]
-    [NormedSpace ℝ E] [BorelSpace E] [FiniteDimensional ℝ E] [AddHaarMeasure μ] {L : AddSubgroup E}
-    [Countable L] (fund : IsAddFundamentalDomain L F μ) (h : μ F * 2 ^ finrank ℝ E < μ s)
-    (h_symm : ∀ x ∈ s, -x ∈ s) (h_conv : Convex ℝ s) : ∃ (x : _) (_ : x ≠ 0), ((x : L) : E) ∈ s :=
+    [NormedSpace ℝ E] [BorelSpace E] [FiniteDimensional ℝ E] [IsAddHaarMeasure μ]
+    {L : AddSubgroup E} [Countable L] (fund : IsAddFundamentalDomain L F μ)
+    (h : μ F * 2 ^ finrank ℝ E < μ s) (h_symm : ∀ x ∈ s, -x ∈ s) (h_conv : Convex ℝ s) :
+    ∃ (x : _) (_ : x ≠ 0), ((x : L) : E) ∈ s :=
   by
   have h_vol : μ F < μ ((2⁻¹ : ℝ) • s) := by
     rwa [add_haar_smul_of_nonneg μ (by norm_num : 0 ≤ (2 : ℝ)⁻¹) s, ←

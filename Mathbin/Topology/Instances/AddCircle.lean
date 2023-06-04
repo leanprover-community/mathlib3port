@@ -121,14 +121,14 @@ theorem continuousAt_toIocMod : ContinuousAt (toIocMod hp a) x :=
 
 end Continuity
 
-/- ./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler has_coe_t[has_coe_t] 𝕜 -/
+/- ./././Mathport/Syntax/Translate/Command.lean:43:9: unsupported derive handler has_coe_t[has_coe_t] 𝕜 -/
 #print AddCircle /-
 /-- The "additive circle": `𝕜 ⧸ (ℤ ∙ p)`. See also `circle` and `real.angle`. -/
 @[nolint unused_arguments]
 def AddCircle [LinearOrderedAddCommGroup 𝕜] [TopologicalSpace 𝕜] [OrderTopology 𝕜] (p : 𝕜) :=
   𝕜 ⧸ zmultiples p
 deriving AddCommGroup, TopologicalSpace, TopologicalAddGroup, Inhabited,
-  «./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler has_coe_t[has_coe_t] 𝕜»
+  «./././Mathport/Syntax/Translate/Command.lean:43:9: unsupported derive handler has_coe_t[has_coe_t] 𝕜»
 #align add_circle AddCircle
 -/
 
@@ -229,7 +229,7 @@ theorem coe_eq_coe_iff_of_mem_Ico {x y : 𝕜} (hx : x ∈ Ico a (a + p)) (hy : 
   by
   refine' ⟨fun h => _, by tauto⟩
   suffices (⟨x, hx⟩ : Ico a (a + p)) = ⟨y, hy⟩ by exact Subtype.mk.inj this
-  apply_fun equiv_Ico p a  at h 
+  apply_fun equiv_Ico p a at h 
   rw [← (equiv_Ico p a).right_inv ⟨x, hx⟩, ← (equiv_Ico p a).right_inv ⟨y, hy⟩]
   exact h
 #align add_circle.coe_eq_coe_iff_of_mem_Ico AddCircle.coe_eq_coe_iff_of_mem_Ico
@@ -448,7 +448,7 @@ variable (p)
 `n`. The inverse of the map sends `m ↦ (m/n * p : add_circle p)` where `m` is coprime to `n` and
 satisfies `0 ≤ m < n`. -/
 def setAddOrderOfEquiv {n : ℕ} (hn : 0 < n) :
-    { u : AddCircle p | addOrderOf u = n } ≃ { m | m < n ∧ m.gcd n = 1 } :=
+    {u : AddCircle p | addOrderOf u = n} ≃ {m | m < n ∧ m.gcd n = 1} :=
   Equiv.symm <|
     Equiv.ofBijective (fun m => ⟨↑((m : 𝕜) / n * p), addOrderOf_div_of_gcd_eq_one hn m.Prop.2⟩)
       (by
@@ -489,7 +489,7 @@ theorem card_addOrderOf_eq_totient {n : ℕ} :
 #align add_circle.card_add_order_of_eq_totient AddCircle.card_addOrderOf_eq_totient
 
 theorem finite_setOf_add_order_eq {n : ℕ} (hn : 0 < n) :
-    { u : AddCircle p | addOrderOf u = n }.Finite :=
+    {u : AddCircle p | addOrderOf u = n}.Finite :=
   finite_coe_iff.mp <|
     Nat.finite_of_card_ne_zero <| by
       simpa only [coe_set_of, card_add_order_of_eq_totient p] using (Nat.totient_pos hn).ne'
@@ -530,7 +530,7 @@ end AddCircle
 
 attribute [local instance] Real.fact_zero_lt_one
 
-/- ./././Mathport/Syntax/Translate/Command.lean:328:31: unsupported: @[derive] abbrev -/
+/- ./././Mathport/Syntax/Translate/Command.lean:329:31: unsupported: @[derive] abbrev -/
 #print UnitAddCircle /-
 /-- The unit circle `ℝ ⧸ ℤ`. -/
 abbrev UnitAddCircle :=

@@ -46,7 +46,7 @@ namespace intervalIntegral
 
 open MeasureTheory
 
-variable {f : ℝ → ℝ} {μ ν : Measure ℝ} [LocallyFiniteMeasure μ] (c d : ℝ)
+variable {f : ℝ → ℝ} {μ ν : Measure ℝ} [IsLocallyFiniteMeasure μ] (c d : ℝ)
 
 /-! ### Interval integrability -/
 
@@ -82,7 +82,7 @@ theorem intervalIntegrable_rpow' {r : ℝ} (h : -1 < r) :
     rw [intervalIntegrable_iff, uIoc_of_le hc]
     have hderiv : ∀ x ∈ Ioo 0 c, HasDerivAt (fun x : ℝ => x ^ (r + 1) / (r + 1)) (x ^ r) x :=
       by
-      intro x hx; convert(Real.hasDerivAt_rpow_const (Or.inl hx.1.ne')).div_const (r + 1)
+      intro x hx; convert (Real.hasDerivAt_rpow_const (Or.inl hx.1.ne')).div_const (r + 1)
       field_simp [(by linarith : r + 1 ≠ 0)]; ring
     apply integrable_on_deriv_of_nonneg _ hderiv
     · intro x hx; apply rpow_nonneg_of_nonneg hx.1.le
@@ -367,7 +367,7 @@ theorem integral_rpow {r : ℝ} (h : -1 < r ∨ r ≠ -1 ∧ (0 : ℝ) ∉ [a, b
   have :
     (∫ x in a..b, (x : ℂ) ^ (r : ℂ)) = ((b : ℂ) ^ (r + 1 : ℂ) - (a : ℂ) ^ (r + 1 : ℂ)) / (r + 1) :=
     integral_cpow h'
-  apply_fun Complex.re  at this ; convert this
+  apply_fun Complex.re at this ; convert this
   · simp_rw [interval_integral_eq_integral_uIoc, Complex.real_smul, Complex.ofReal_mul_re]
     · change Complex.re with IsROrC.re
       rw [← integral_re]; rfl
@@ -468,7 +468,7 @@ theorem integral_one_div_of_neg (ha : a < 0) (hb : b < 0) :
 
 @[simp]
 theorem integral_exp : (∫ x in a..b, exp x) = exp b - exp a := by
-  rw [integral_deriv_eq_sub'] <;> norm_num [continuous_on_exp]
+  rw [integral_deriv_eq_sub'] <;> norm_num [continuousOn_exp]
 #align integral_exp integral_exp
 
 theorem integral_exp_mul_complex {c : ℂ} (hc : c ≠ 0) :
@@ -481,7 +481,7 @@ theorem integral_exp_mul_complex {c : ℂ} (hc : c ≠ 0) :
       congr
       skip
       rw [← mul_div_cancel (Complex.exp (c * x)) hc]
-    convert((Complex.hasDerivAt_exp _).comp x _).div_const c using 1
+    convert ((Complex.hasDerivAt_exp _).comp x _).div_const c using 1
     simpa only [mul_one] using ((hasDerivAt_id (x : ℂ)).const_mul _).comp_of_real
   rw [integral_deriv_eq_sub' _ (funext fun x => (D x).deriv) fun x hx => (D x).DifferentiableAt]
   · ring_nf
@@ -493,7 +493,8 @@ theorem integral_log (h : (0 : ℝ) ∉ [a, b]) :
     (∫ x in a..b, log x) = b * log b - a * log a - b + a :=
   by
   obtain ⟨h', heq⟩ := fun x hx => ne_of_mem_of_not_mem hx h, fun x hx => mul_inv_cancel (h' x hx)
-  convert integral_mul_deriv_eq_deriv_mul (fun x hx => has_deriv_at_log (h' x hx))
+  convert
+      integral_mul_deriv_eq_deriv_mul (fun x hx => has_deriv_at_log (h' x hx))
         (fun x hx => hasDerivAt_id x)
         (continuous_on_inv₀.mono <| subset_compl_singleton_iff.mpr h).IntervalIntegrable
         continuous_on_const.interval_integrable using
@@ -573,16 +574,16 @@ theorem integral_mul_cpow_one_add_sq {t : ℂ} (ht : t ≠ -1) :
   apply integral_eq_sub_of_has_deriv_at
   · intro x hx
     have f : HasDerivAt (fun y : ℂ => 1 + y ^ 2) (2 * x) x := by
-      convert(hasDerivAt_pow 2 (x : ℂ)).const_add 1; · norm_cast; · simp
+      convert (hasDerivAt_pow 2 (x : ℂ)).const_add 1; · norm_cast; · simp
     have g :
       ∀ {z : ℂ}, 0 < z.re → HasDerivAt (fun z => z ^ (t + 1) / (2 * (t + 1))) (z ^ t / 2) z :=
       by
       intro z hz
       have : z ≠ 0 := by contrapose! hz; rw [hz, zero_re]
-      convert(HasDerivAt.cpow_const (hasDerivAt_id _) (Or.inl hz)).div_const (2 * (t + 1)) using 1
+      convert (HasDerivAt.cpow_const (hasDerivAt_id _) (Or.inl hz)).div_const (2 * (t + 1)) using 1
       field_simp
       ring
-    convert(HasDerivAt.comp (↑x) (g _) f).comp_of_real using 1
+    convert (HasDerivAt.comp (↑x) (g _) f).comp_of_real using 1
     · field_simp; ring
     · rw [add_re, one_re, ← of_real_pow, of_real_re]
       exact add_pos_of_pos_of_nonneg zero_lt_one (sq_nonneg x)

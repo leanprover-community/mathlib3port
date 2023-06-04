@@ -986,7 +986,7 @@ variable [Semiring R] [AddCommMonoid M] [AddCommMonoid M₂] [AddCommGroup M₃]
 /-- Graph of a linear map. -/
 def graph : Submodule R (M × M₂)
     where
-  carrier := { p | p.2 = f p.1 }
+  carrier := {p | p.2 = f p.1}
   add_mem' a b (ha : _ = _) (hb : _ = _) :=
     by
     change _ + _ = f (_ + _)

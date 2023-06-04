@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker
 
 ! This file was ported from Lean 3 source module analysis.calculus.lhopital
-! leanprover-community/mathlib commit 3bce8d800a6f2b8f63fe1e588fd76a9ff4adcebe
+! leanprover-community/mathlib commit af471b9e3ce868f296626d33189b4ce730fa4c00
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Analysis.Calculus.Deriv.Inv
 
 /-!
 # L'Hôpital's rule for 0/0 indeterminate forms
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 In this file, we prove several forms of "L'Hopital's rule" for computing 0/0
 indeterminate forms. The proof of `has_deriv_at.lhopital_zero_right_on_Ioo`

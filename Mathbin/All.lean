@@ -578,7 +578,6 @@ import Mathbin.Analysis.Complex.Polynomial
 import Mathbin.Analysis.Complex.ReImTopology
 import Mathbin.Analysis.Complex.RealDeriv
 import Mathbin.Analysis.Complex.RemovableSingularity
-import Mathbin.Analysis.Complex.RootsOfUnity
 import Mathbin.Analysis.Complex.Schwarz
 import Mathbin.Analysis.Complex.UnitDisc.Basic
 import Mathbin.Analysis.Complex.UpperHalfPlane.Basic
@@ -2681,7 +2680,9 @@ import Mathbin.RingTheory.RingHom.Finite
 import Mathbin.RingTheory.RingHom.Integral
 import Mathbin.RingTheory.RingHom.Surjective
 import Mathbin.RingTheory.RingInvo
-import Mathbin.RingTheory.RootsOfUnity
+import Mathbin.RingTheory.RootsOfUnity.Basic
+import Mathbin.RingTheory.RootsOfUnity.Complex
+import Mathbin.RingTheory.RootsOfUnity.Minpoly
 import Mathbin.RingTheory.SimpleModule
 import Mathbin.RingTheory.Subring.Basic
 import Mathbin.RingTheory.Subring.Pointwise

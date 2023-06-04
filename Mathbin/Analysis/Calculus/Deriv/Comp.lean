@@ -129,7 +129,7 @@ theorem deriv.scomp (hg : DifferentiableAt 𝕜' g₁ (h x)) (hh : Differentiabl
 theorem HasDerivAtFilter.comp_hasFDerivAtFilter {f : E → 𝕜'} {f' : E →L[𝕜] 𝕜'} (x) {L'' : Filter E}
     (hh₂ : HasDerivAtFilter h₂ h₂' (f x) L') (hf : HasFDerivAtFilter f f' x L'')
     (hL : Tendsto f L'' L') : HasFDerivAtFilter (h₂ ∘ f) (h₂' • f') x L'' := by
-  convert(hh₂.restrict_scalars 𝕜).comp x hf hL; ext x; simp [mul_comm]
+  convert (hh₂.restrict_scalars 𝕜).comp x hf hL; ext x; simp [mul_comm]
 #align has_deriv_at_filter.comp_has_fderiv_at_filter HasDerivAtFilter.comp_hasFDerivAtFilter
 
 theorem HasStrictDerivAt.comp_hasStrictFDerivAt {f : E → 𝕜'} {f' : E →L[𝕜] 𝕜'} (x)
@@ -137,7 +137,7 @@ theorem HasStrictDerivAt.comp_hasStrictFDerivAt {f : E → 𝕜'} {f' : E →L[�
     HasStrictFDerivAt (h₂ ∘ f) (h₂' • f') x :=
   by
   rw [HasStrictDerivAt] at hh 
-  convert(hh.restrict_scalars 𝕜).comp x hf
+  convert (hh.restrict_scalars 𝕜).comp x hf
   ext x
   simp [mul_comm]
 #align has_strict_deriv_at.comp_has_strict_fderiv_at HasStrictDerivAt.comp_hasStrictFDerivAt

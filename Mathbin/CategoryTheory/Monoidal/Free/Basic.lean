@@ -288,8 +288,8 @@ def projectMap (X Y : F C) : (X ⟶ Y) → (projectObj f X ⟶ projectObj f Y) :
   Quotient.lift (projectMapAux f)
     (by
       intro f g h
-      induction' h with
-        X Y f X Y f g hfg hfg' X Y f g h _ _ hfg hgh X Y Z f f' g g' _ _ hf hg W X Y Z f g f' g' _ _ hfg hfg'
+      induction' h with X Y f X Y f g hfg hfg' X Y f g h _ _ hfg hgh X Y Z f f' g g' _ _ hf hg W X Y
+        Z f g f' g' _ _ hfg hfg'
       · rfl
       · exact hfg'.symm
       · exact hfg.trans hgh

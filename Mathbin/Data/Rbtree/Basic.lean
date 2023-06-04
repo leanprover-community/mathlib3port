@@ -77,11 +77,11 @@ theorem isSearchable_of_isSearchable_of_incomp [IsStrictWeakOrder α lt] {t} :
       IsSearchable lt t lo (some hi') :=
   by
   classical
-    induction t <;> intros <;>
-      run_tac
-        is_searchable_tactic
-    · cases lo <;> simp_all [lift]; apply lt_of_lt_of_incomp; assumption; exact ⟨hc.2, hc.1⟩
-    all_goals apply t_ih_rchild hc hs_hs₂
+  induction t <;> intros <;>
+    run_tac
+      is_searchable_tactic
+  · cases lo <;> simp_all [lift]; apply lt_of_lt_of_incomp; assumption; exact ⟨hc.2, hc.1⟩
+  all_goals apply t_ih_rchild hc hs_hs₂
 #align rbnode.is_searchable_of_is_searchable_of_incomp Rbnode.isSearchable_of_isSearchable_of_incomp
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic rbnode.is_searchable_tactic -/
@@ -90,11 +90,11 @@ theorem isSearchable_of_incomp_of_isSearchable [IsStrictWeakOrder α lt] {t} :
       IsSearchable lt t (some lo') hi :=
   by
   classical
-    induction t <;> intros <;>
-      run_tac
-        is_searchable_tactic
-    · cases hi <;> simp_all [lift]; apply lt_of_incomp_of_lt; assumption; assumption
-    all_goals apply t_ih_lchild hc hs_hs₁
+  induction t <;> intros <;>
+    run_tac
+      is_searchable_tactic
+  · cases hi <;> simp_all [lift]; apply lt_of_incomp_of_lt; assumption; assumption
+  all_goals apply t_ih_lchild hc hs_hs₁
 #align rbnode.is_searchable_of_incomp_of_is_searchable Rbnode.isSearchable_of_incomp_of_isSearchable
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic rbnode.is_searchable_tactic -/
@@ -147,40 +147,40 @@ theorem range [IsStrictWeakOrder α lt] {t : Rbnode α} {x} :
     ∀ {lo hi}, IsSearchable lt t lo hi → Mem lt x t → Lift lt lo (some x) ∧ Lift lt (some x) hi :=
   by
   classical
-    induction t
-    case leaf => simp [mem]
-    all_goals
-      -- red_node and black_node are identical
-      intro lo hi h₁ h₂;
-      cases h₁
-      simp only [mem] at h₂ 
-      have val_hi : lift lt (some t_val) hi := by apply lo_lt_hi; assumption
-      have lo_val : lift lt lo (some t_val) := by apply lo_lt_hi; assumption
-      cases_type*or.1
-      · have h₃ : lift lt lo (some x) ∧ lift lt (some x) (some t_val) := by apply t_ih_lchild;
-          assumption; assumption
-        cases' h₃ with lo_x x_val
-        constructor
-        show lift lt lo (some x); · assumption
-        show lift lt (some x) hi
-        · cases' hi with hi <;> simp [lift] at *
-          apply trans_of lt x_val val_hi
-      · cases h₂
-        cases' lo with lo <;> cases' hi with hi <;> simp [lift] at *
-        · apply lt_of_incomp_of_lt _ val_hi; simp [*]
-        · apply lt_of_lt_of_incomp lo_val; simp [*]
-        constructor
-        · apply lt_of_lt_of_incomp lo_val; simp [*]
-        · apply lt_of_incomp_of_lt _ val_hi; simp [*]
-      · have h₃ : lift lt (some t_val) (some x) ∧ lift lt (some x) hi := by apply t_ih_rchild;
-          assumption; assumption
-        cases' h₃ with val_x x_hi
-        cases' lo with lo <;> cases' hi with hi <;> simp [lift] at *
-        · assumption
-        · apply trans_of lt lo_val val_x
-        constructor
-        · apply trans_of lt lo_val val_x
-        · assumption
+  induction t
+  case leaf => simp [mem]
+  all_goals
+    -- red_node and black_node are identical
+    intro lo hi h₁ h₂;
+    cases h₁
+    simp only [mem] at h₂ 
+    have val_hi : lift lt (some t_val) hi := by apply lo_lt_hi; assumption
+    have lo_val : lift lt lo (some t_val) := by apply lo_lt_hi; assumption
+    cases_type* or.1
+    · have h₃ : lift lt lo (some x) ∧ lift lt (some x) (some t_val) := by apply t_ih_lchild;
+        assumption; assumption
+      cases' h₃ with lo_x x_val
+      constructor
+      show lift lt lo (some x); · assumption
+      show lift lt (some x) hi
+      · cases' hi with hi <;> simp [lift] at *
+        apply trans_of lt x_val val_hi
+    · cases h₂
+      cases' lo with lo <;> cases' hi with hi <;> simp [lift] at *
+      · apply lt_of_incomp_of_lt _ val_hi; simp [*]
+      · apply lt_of_lt_of_incomp lo_val; simp [*]
+      constructor
+      · apply lt_of_lt_of_incomp lo_val; simp [*]
+      · apply lt_of_incomp_of_lt _ val_hi; simp [*]
+    · have h₃ : lift lt (some t_val) (some x) ∧ lift lt (some x) hi := by apply t_ih_rchild;
+        assumption; assumption
+      cases' h₃ with val_x x_hi
+      cases' lo with lo <;> cases' hi with hi <;> simp [lift] at *
+      · assumption
+      · apply trans_of lt lo_val val_x
+      constructor
+      · apply trans_of lt lo_val val_x
+      · assumption
 #align rbnode.range Rbnode.range
 
 theorem lt_of_mem_left [IsStrictWeakOrder α lt] {y : α} {t l r : Rbnode α} :

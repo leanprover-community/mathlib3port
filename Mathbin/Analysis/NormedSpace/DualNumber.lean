@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module analysis.normed_space.dual_number
-! leanprover-community/mathlib commit 806c0bb86f6128cfa2f702285727518eb5244390
+! leanprover-community/mathlib commit 5c1efce12ba86d4901463f61019832f6a4b1a0d0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Analysis.NormedSpace.TrivSqZeroExt
 
 /-!
 # Results on `dual_number R` related to the norm
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 These are just restatements of similar statements about `triv_sq_zero_ext R M`.
 

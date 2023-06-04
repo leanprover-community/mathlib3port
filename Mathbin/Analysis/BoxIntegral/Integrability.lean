@@ -41,7 +41,7 @@ namespace BoxIntegral
 locally-finite measure. -/
 theorem hasIntegralIndicatorConst (l : IntegrationParams) (hl : l.bRiemann = false)
     {s : Set (ι → ℝ)} (hs : MeasurableSet s) (I : Box ι) (y : E) (μ : Measure (ι → ℝ))
-    [LocallyFiniteMeasure μ] :
+    [IsLocallyFiniteMeasure μ] :
     HasIntegral.{u, v, v} I l (s.indicator fun _ => y) μ.toBoxAdditive.toSMul
       ((μ (s ∩ I)).toReal • y) :=
   by
@@ -105,7 +105,7 @@ theorem hasIntegralIndicatorConst (l : IntegrationParams) (hl : l.bRiemann = fal
 /-- If `f` is a.e. equal to zero on a rectangular box, then it has McShane integral zero on this
 box. -/
 theorem hasIntegralZeroOfAeEqZero {l : IntegrationParams} {I : Box ι} {f : (ι → ℝ) → E}
-    {μ : Measure (ι → ℝ)} [LocallyFiniteMeasure μ] (hf : f =ᵐ[μ.restrict I] 0)
+    {μ : Measure (ι → ℝ)} [IsLocallyFiniteMeasure μ] (hf : f =ᵐ[μ.restrict I] 0)
     (hl : l.bRiemann = false) : HasIntegral.{u, v, v} I l f μ.toBoxAdditive.toSMul 0 :=
   by
   /- Each set `{x | n < ‖f x‖ ≤ n + 1}`, `n : ℕ`, has measure zero. We cover it by an open set of
@@ -114,7 +114,7 @@ theorem hasIntegralZeroOfAeEqZero {l : IntegrationParams} {I : Box ι} {f : (ι 
   lift ε to ℝ≥0 using ε0.lt.le; rw [gt_iff_lt, NNReal.coe_pos] at ε0 
   rcases NNReal.exists_pos_sum_of_countable ε0.ne' ℕ with ⟨δ, δ0, c, hδc, hcε⟩
   haveI := Fact.mk (I.measure_coe_lt_top μ)
-  change μ.restrict I { x | f x ≠ 0 } = 0 at hf 
+  change μ.restrict I {x | f x ≠ 0} = 0 at hf 
   set N : (ι → ℝ) → ℕ := fun x => ⌈‖f x‖⌉₊
   have N0 : ∀ {x}, N x = 0 ↔ f x = 0 := by intro x; simp [N]
   have : ∀ n, ∃ (U : _) (_ : U ⊇ N ⁻¹' {n}), IsOpen U ∧ μ.restrict I U < δ n / n :=
@@ -162,7 +162,7 @@ theorem hasIntegralZeroOfAeEqZero {l : IntegrationParams} {I : Box ι} {f : (ι 
 /-- If `f` has integral `y` on a box `I` with respect to a locally finite measure `μ` and `g` is
 a.e. equal to `f` on `I`, then `g` has the same integral on `I`.  -/
 theorem HasIntegral.congrAe {l : IntegrationParams} {I : Box ι} {y : E} {f g : (ι → ℝ) → E}
-    {μ : Measure (ι → ℝ)} [LocallyFiniteMeasure μ]
+    {μ : Measure (ι → ℝ)} [IsLocallyFiniteMeasure μ]
     (hf : HasIntegral.{u, v, v} I l f μ.toBoxAdditive.toSMul y) (hfg : f =ᵐ[μ.restrict I] g)
     (hl : l.bRiemann = false) : HasIntegral.{u, v, v} I l g μ.toBoxAdditive.toSMul y :=
   by
@@ -177,7 +177,7 @@ namespace MeasureTheory
 namespace SimpleFunc
 
 /-- A simple function is McShane integrable w.r.t. any locally finite measure. -/
-theorem hasBoxIntegral (f : SimpleFunc (ι → ℝ) E) (μ : Measure (ι → ℝ)) [LocallyFiniteMeasure μ]
+theorem hasBoxIntegral (f : SimpleFunc (ι → ℝ) E) (μ : Measure (ι → ℝ)) [IsLocallyFiniteMeasure μ]
     (I : Box ι) (l : IntegrationParams) (hl : l.bRiemann = false) :
     HasIntegral.{u, v, v} I l f μ.toBoxAdditive.toSMul (f.integral (μ.restrict I)) :=
   by
@@ -195,7 +195,7 @@ theorem hasBoxIntegral (f : SimpleFunc (ι → ℝ) E) (μ : Measure (ι → ℝ
 /-- For a simple function, its McShane (or Henstock, or `⊥`) box integral is equal to its
 integral in the sense of `measure_theory.simple_func.integral`. -/
 theorem box_integral_eq_integral (f : SimpleFunc (ι → ℝ) E) (μ : Measure (ι → ℝ))
-    [LocallyFiniteMeasure μ] (I : Box ι) (l : IntegrationParams) (hl : l.bRiemann = false) :
+    [IsLocallyFiniteMeasure μ] (I : Box ι) (l : IntegrationParams) (hl : l.bRiemann = false) :
     BoxIntegral.integral.{u, v, v} I l f μ.toBoxAdditive.toSMul = f.integral (μ.restrict I) :=
   (f.hasBoxIntegral μ I l hl).integral_eq
 #align measure_theory.simple_func.box_integral_eq_integral MeasureTheory.SimpleFunc.box_integral_eq_integral
@@ -207,7 +207,7 @@ open TopologicalSpace
 /-- If `f : ℝⁿ → E` is Bochner integrable w.r.t. a locally finite measure `μ` on a rectangular box
 `I`, then it is McShane integrable on `I` with the same integral.  -/
 theorem IntegrableOn.hasBoxIntegral [CompleteSpace E] {f : (ι → ℝ) → E} {μ : Measure (ι → ℝ)}
-    [LocallyFiniteMeasure μ] {I : Box ι} (hf : IntegrableOn f I μ) (l : IntegrationParams)
+    [IsLocallyFiniteMeasure μ] {I : Box ι} (hf : IntegrableOn f I μ) (l : IntegrationParams)
     (hl : l.bRiemann = false) :
     HasIntegral.{u, v, v} I l f μ.toBoxAdditive.toSMul (∫ x in I, f x ∂μ) :=
   by
@@ -300,7 +300,7 @@ theorem IntegrableOn.hasBoxIntegral [CompleteSpace E] {f : (ι → ℝ) → E} {
     have :
       l.mem_base_set I c ((hfi' n).convergenceR (δ n) c) (π.filter fun J => Nx (π.tag J) = n) :=
       (hπ.filter _).mono' _ le_rfl le_rfl fun J hJ => (hrn J hJ).le
-    convert(hfi' n).dist_integralSum_sum_integral_le_of_memBaseSet (δ0 _) this using 2
+    convert (hfi' n).dist_integralSum_sum_integral_le_of_memBaseSet (δ0 _) this using 2
     · refine' sum_congr rfl fun J hJ => _
       simp [hNxn J hJ]
     · refine' sum_congr rfl fun J hJ => _

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicolò Cavalleri, Andrew Yang
 
 ! This file was ported from Lean 3 source module ring_theory.derivation.lie
-! leanprover-community/mathlib commit b608348ffaeb7f557f2fd46876037abafd326ff3
+! leanprover-community/mathlib commit 5c1efce12ba86d4901463f61019832f6a4b1a0d0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.RingTheory.Derivation.Basic
 
 /-!
 # Results
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 - `derivation.lie_algebra`: The `R`-derivations from `A` to `A` form an lie algebra over `R`.
 

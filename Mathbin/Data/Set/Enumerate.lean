@@ -33,7 +33,7 @@ namespace Set
 
 section Enumerate
 
-parameter {α : Type _}(sel : Set α → Option α)
+parameter {α : Type _} (sel : Set α → Option α)
 
 #print Set.enumerate /-
 /-- Given a choice function `sel`, enumerates the elements of a set in the order

@@ -175,12 +175,12 @@ variable [LE α] [LE β] [OrderIsoClass F α β]
 
 @[simp]
 theorem map_inv_le_iff (f : F) {a : α} {b : β} : EquivLike.inv f b ≤ a ↔ b ≤ f a := by
-  convert(map_le_map_iff _).symm; exact (EquivLike.right_inv _ _).symm
+  convert (map_le_map_iff _).symm; exact (EquivLike.right_inv _ _).symm
 #align map_inv_le_iff map_inv_le_iff
 
 @[simp]
 theorem le_map_inv_iff (f : F) {a : α} {b : β} : a ≤ EquivLike.inv f b ↔ f a ≤ b := by
-  convert(map_le_map_iff _).symm; exact (EquivLike.right_inv _ _).symm
+  convert (map_le_map_iff _).symm; exact (EquivLike.right_inv _ _).symm
 #align le_map_inv_iff le_map_inv_iff
 
 end LE
@@ -195,12 +195,12 @@ theorem map_lt_map_iff (f : F) {a b : α} : f a < f b ↔ a < b :=
 
 @[simp]
 theorem map_inv_lt_iff (f : F) {a : α} {b : β} : EquivLike.inv f b < a ↔ b < f a := by
-  convert(map_lt_map_iff _).symm; exact (EquivLike.right_inv _ _).symm
+  convert (map_lt_map_iff _).symm; exact (EquivLike.right_inv _ _).symm
 #align map_inv_lt_iff map_inv_lt_iff
 
 @[simp]
 theorem lt_map_inv_iff (f : F) {a : α} {b : β} : a < EquivLike.inv f b ↔ f a < b := by
-  convert(map_lt_map_iff _).symm; exact (EquivLike.right_inv _ _).symm
+  convert (map_lt_map_iff _).symm; exact (EquivLike.right_inv _ _).symm
 #align lt_map_inv_iff lt_map_inv_iff
 
 end OrderIsoClass
@@ -1076,7 +1076,7 @@ def ofCmpEqCmp {α β} [LinearOrder α] [LinearOrder β] (f : α → β) (g : β
     invFun := g
     left_inv := fun a => (gf a).symm
     right_inv := by intro; rw [← cmp_eq_eq_iff, ← h, cmp_self_eq_eq]
-    map_rel_iff' := by intros; apply le_iff_le_of_cmp_eq_cmp; convert(h _ _).symm; apply gf }
+    map_rel_iff' := by intros; apply le_iff_le_of_cmp_eq_cmp; convert (h _ _).symm; apply gf }
 #align order_iso.of_cmp_eq_cmp OrderIso.ofCmpEqCmp
 -/
 

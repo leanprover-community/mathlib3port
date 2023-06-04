@@ -208,8 +208,8 @@ instance : CompleteLattice (ConvexCone 𝕜 E) :=
     le_top := fun S x hx => mem_top 𝕜 x
     inf := (· ⊓ ·)
     sInf := InfSet.sInf
-    sup := fun a b => sInf { x | a ≤ x ∧ b ≤ x }
-    sSup := fun s => sInf { T | ∀ S ∈ s, S ≤ T }
+    sup := fun a b => sInf {x | a ≤ x ∧ b ≤ x}
+    sSup := fun s => sInf {T | ∀ S ∈ s, S ≤ T}
     le_sup_left := fun a b => fun x hx => mem_sInf.2 fun s hs => hs.1 hx
     le_sup_right := fun a b => fun x hx => mem_sInf.2 fun s hs => hs.2 hx
     sup_le := fun a b c ha hb x hx => mem_sInf.1 hx c ⟨ha, hb⟩
@@ -408,7 +408,7 @@ theorem salient_iff_not_flat (S : ConvexCone 𝕜 E) : S.Salient ↔ ¬S.Flat :=
     exact h₁ x xs H₁ H₂
   · intro h
     unfold flat at h 
-    push_neg  at h 
+    push_neg at h 
     exact h
 #align convex_cone.salient_iff_not_flat ConvexCone.salient_iff_not_flat
 
@@ -497,7 +497,7 @@ theorem pointed_zero : (0 : ConvexCone 𝕜 E).Pointed := by rw [pointed, mem_ze
 
 instance : Add (ConvexCone 𝕜 E) :=
   ⟨fun K₁ K₂ =>
-    { carrier := { z | ∃ x y : E, x ∈ K₁ ∧ y ∈ K₂ ∧ x + y = z }
+    { carrier := {z | ∃ x y : E, x ∈ K₁ ∧ y ∈ K₂ ∧ x + y = z}
       smul_mem' := by
         rintro c hc _ ⟨x, y, hx, hy, rfl⟩
         rw [smul_add]
@@ -719,7 +719,7 @@ theorem subset_toCone : s ⊆ hs.toCone s := fun x hx =>
 -/
 
 /-- `hs.to_cone s` is the least cone that includes `s`. -/
-theorem toCone_isLeast : IsLeast { t : ConvexCone 𝕜 E | s ⊆ t } (hs.toCone s) :=
+theorem toCone_isLeast : IsLeast {t : ConvexCone 𝕜 E | s ⊆ t} (hs.toCone s) :=
   by
   refine' ⟨hs.subset_to_cone, fun t ht x hx => _⟩
   rcases hs.mem_to_cone.1 hx with ⟨c, hc, y, hy, rfl⟩
@@ -727,7 +727,7 @@ theorem toCone_isLeast : IsLeast { t : ConvexCone 𝕜 E | s ⊆ t } (hs.toCone 
 #align convex.to_cone_is_least Convex.toCone_isLeast
 
 #print Convex.toCone_eq_sInf /-
-theorem toCone_eq_sInf : hs.toCone s = sInf { t : ConvexCone 𝕜 E | s ⊆ t } :=
+theorem toCone_eq_sInf : hs.toCone s = sInf {t : ConvexCone 𝕜 E | s ⊆ t} :=
   hs.toCone_isLeast.IsGLB.sInf_eq.symm
 #align convex.to_cone_eq_Inf Convex.toCone_eq_sInf
 -/
@@ -735,16 +735,16 @@ theorem toCone_eq_sInf : hs.toCone s = sInf { t : ConvexCone 𝕜 E | s ⊆ t } 
 end Convex
 
 theorem convexHull_toCone_isLeast (s : Set E) :
-    IsLeast { t : ConvexCone 𝕜 E | s ⊆ t } ((convex_convexHull 𝕜 s).toCone _) :=
+    IsLeast {t : ConvexCone 𝕜 E | s ⊆ t} ((convex_convexHull 𝕜 s).toCone _) :=
   by
-  convert(convex_convexHull 𝕜 s).toCone_isLeast
+  convert (convex_convexHull 𝕜 s).toCone_isLeast
   ext t
   exact ⟨fun h => convexHull_min h t.convex, (subset_convexHull 𝕜 s).trans⟩
 #align convex_hull_to_cone_is_least convexHull_toCone_isLeast
 
 #print convexHull_toCone_eq_sInf /-
 theorem convexHull_toCone_eq_sInf (s : Set E) :
-    (convex_convexHull 𝕜 s).toCone _ = sInf { t : ConvexCone 𝕜 E | s ⊆ t } :=
+    (convex_convexHull 𝕜 s).toCone _ = sInf {t : ConvexCone 𝕜 E | s ⊆ t} :=
   Eq.symm <| IsGLB.sInf_eq <| IsLeast.isGLB <| convexHull_toCone_isLeast s
 #align convex_hull_to_cone_eq_Inf convexHull_toCone_eq_sInf
 -/
@@ -790,8 +790,8 @@ theorem step (nonneg : ∀ x : f.domain, (x : E) ∈ s → 0 ≤ f x)
   obtain ⟨c, le_c, c_le⟩ :
     ∃ c, (∀ x : f.domain, -(x : E) - y ∈ s → f x ≤ c) ∧ ∀ x : f.domain, (x : E) + y ∈ s → c ≤ f x :=
     by
-    set Sp := f '' { x : f.domain | (x : E) + y ∈ s }
-    set Sn := f '' { x : f.domain | -(x : E) - y ∈ s }
+    set Sp := f '' {x : f.domain | (x : E) + y ∈ s}
+    set Sn := f '' {x : f.domain | -(x : E) - y ∈ s}
     suffices (upperBounds Sn ∩ lowerBounds Sp).Nonempty by
       simpa only [Set.Nonempty, upperBounds, lowerBounds, ball_image_iff] using this
     refine' exists_between_of_forall_le (nonempty.image f _) (nonempty.image f (Dense y)) _
@@ -836,7 +836,7 @@ theorem exists_top (p : E →ₗ.[ℝ] ℝ) (hp_nonneg : ∀ x : p.domain, (x : 
     (hp_dense : ∀ y, ∃ x : p.domain, (x : E) + y ∈ s) :
     ∃ q ≥ p, q.domain = ⊤ ∧ ∀ x : q.domain, (x : E) ∈ s → 0 ≤ q x :=
   by
-  replace hp_nonneg : p ∈ { p | _ }; · rw [mem_set_of_eq]; exact hp_nonneg
+  replace hp_nonneg : p ∈ {p | _}; · rw [mem_set_of_eq]; exact hp_nonneg
   obtain ⟨q, hqs, hpq, hq⟩ := zorn_nonempty_partialOrder₀ _ _ _ hp_nonneg
   · refine' ⟨q, hpq, _, hqs⟩
     contrapose! hq
@@ -856,7 +856,7 @@ theorem exists_top (p : E →ₗ.[ℝ] ℝ) (hp_nonneg : ∀ x : p.domain, (x : 
       directedOn_image.2 (c_chain.directed_on.mono linear_pmap.domain_mono.monotone)
     rcases(mem_Sup_of_directed (cne.image _) hdir).1 hx with ⟨_, ⟨f, hfc, rfl⟩, hfx⟩
     have : f ≤ LinearPMap.sSup c c_chain.directed_on := LinearPMap.le_sSup _ hfc
-    convert← hcs hfc ⟨x, hfx⟩ hxs
+    convert ← hcs hfc ⟨x, hfx⟩ hxs
     apply this.2; rfl
 #align riesz_extension.exists_top RieszExtension.exists_top
 
@@ -889,7 +889,7 @@ theorem exists_extension_of_le_sublinear (f : E →ₗ.[ℝ] ℝ) (N : E → ℝ
     ∃ g : E →ₗ[ℝ] ℝ, (∀ x : f.domain, g x = f x) ∧ ∀ x, g x ≤ N x :=
   by
   let s : ConvexCone ℝ (E × ℝ) :=
-    { carrier := { p : E × ℝ | N p.1 ≤ p.2 }
+    { carrier := {p : E × ℝ | N p.1 ≤ p.2}
       smul_mem' := fun c hc p hp =>
         calc
           N (c • p.1) = c * N p.1 := N_hom c hc p.1

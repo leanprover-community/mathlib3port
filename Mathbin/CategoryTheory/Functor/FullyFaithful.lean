@@ -60,7 +60,7 @@ restate_axiom full.witness'
 attribute [simp] full.witness
 
 #print CategoryTheory.Faithful /-
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`map_injective'] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`map_injective'] [] -/
 /-- A functor `F : C ⥤ D` is faithful if for each `X Y : C`, `F.map` is injective.
 
 See <https://stacks.math.columbia.edu/tag/001C>.
@@ -358,7 +358,7 @@ theorem Faithful.div_comp (F : C ⥤ E) [Faithful F] (G : D ⥤ E) [Faithful G] 
   by
   cases' F with F_obj _ _ _; cases' G with G_obj _ _ _
   unfold faithful.div Functor.Comp
-  unfold_projs  at h_obj 
+  unfold_projs at h_obj 
   have : F_obj = G_obj ∘ obj := (funext h_obj).symm
   subst this
   congr

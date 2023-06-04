@@ -118,7 +118,7 @@ theorem isJacobson_of_surjective [H : IsJacobson R] :
   rintro ⟨f, hf⟩
   rw [is_jacobson_iff_Inf_maximal]
   intro p hp
-  use map f '' { J : Ideal R | comap f p ≤ J ∧ J.IsMaximal }
+  use map f '' {J : Ideal R | comap f p ≤ J ∧ J.IsMaximal}
   use fun j ⟨J, hJ, hmap⟩ => hmap ▸ (map_eq_top_or_is_maximal_of_surjective f hf hJ.right).symm
   have : p = map f (comap f p).jacobson :=
     (is_jacobson.out' _ <| hp.is_radical.comap f).symm ▸ (map_comap_of_surjective f hf p).symm
@@ -196,7 +196,7 @@ theorem isMaximal_iff_isMaximal_disjoint [H : IsJacobson R] (J : Ideal S) :
     rw [is_prime_iff_is_prime_disjoint (Submonoid.powers y)] at hJ 
     have : y ∉ (comap (algebraMap R S) J).1 := Set.disjoint_left.1 hJ.right (Submonoid.mem_powers _)
     erw [← H.out hJ.left.is_radical, mem_Inf] at this 
-    push_neg  at this 
+    push_neg at this 
     rcases this with ⟨I, hI, hI'⟩
     convert hI.right
     by_cases hJ : J = map (algebraMap R S) I
@@ -265,7 +265,7 @@ theorem isJacobson_localization [H : IsJacobson R] : IsJacobson S :=
     (IsLocalization.map_comap (powers y) S P'.jacobson).ge.trans
       ((map_mono _).trans (IsLocalization.map_comap (powers y) S P').le)
   have :
-    Inf { I : Ideal R | comap (algebraMap R S) P' ≤ I ∧ I.IsMaximal ∧ y ∉ I } ≤
+    Inf {I : Ideal R | comap (algebraMap R S) P' ≤ I ∧ I.IsMaximal ∧ y ∉ I} ≤
       comap (algebraMap R S) P' :=
     by
     intro x hx
@@ -343,7 +343,7 @@ theorem isIntegral_isLocalization_polynomial_quotient (P : Ideal R[X]) (pX : R[X
     rw [← φ'.comp_apply, IsLocalization.map_comp, RingHom.comp_apply, Subtype.coe_mk]
   refine'
     is_integral_of_mem_closure''
-      ((algebraMap _ Sₘ).comp (Quotient.mk' P) '' insert X { p | p.degree ≤ 0 }) _ _ _
+      ((algebraMap _ Sₘ).comp (Quotient.mk' P) '' insert X {p | p.degree ≤ 0}) _ _ _
   · rintro x ⟨p, hp, rfl⟩
     refine' hp.rec_on (fun hy => _) fun hy => _
     · refine'

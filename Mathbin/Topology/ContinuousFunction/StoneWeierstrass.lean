@@ -206,7 +206,7 @@ theorem sublattice_closure_eq_top (L : Set C(X, ℝ)) (nA : L.Nonempty)
   choose g hg w₁ w₂ using sep f
   -- For each `x y`, we define `U x y` to be `{z | f z - ε < g x y z}`,
   -- and observe this is a neighbourhood of `y`.
-  let U : X → X → Set X := fun x y => { z | f z - ε < g x y z }
+  let U : X → X → Set X := fun x y => {z | f z - ε < g x y z}
   have U_nhd_y : ∀ x y, U x y ∈ 𝓝 y := by
     intro x y
     refine' IsOpen.mem_nhds _ _
@@ -239,7 +239,7 @@ theorem sublattice_closure_eq_top (L : Set C(X, ℝ)) (nA : L.Nonempty)
     exact ⟨y, ym, zm⟩
   have h_eq : ∀ x, h x x = f x := by intro x; simp [coeFn_coe_base', w₁]
   -- For each `x`, we define `W x` to be `{z | h x z < f z + ε}`,
-  let W : ∀ x, Set X := fun x => { z | h x z < f z + ε }
+  let W : ∀ x, Set X := fun x => {z | h x z < f z + ε}
   -- This is still a neighbourhood of `x`.
   have W_nhd : ∀ x, W x ∈ 𝓝 x := by
     intro x
@@ -289,7 +289,8 @@ theorem subalgebra_topologicalClosure_eq_top_of_separatesPoints (A : Subalgebra 
   apply SetLike.ext'
   let L := A.topological_closure
   have n : Set.Nonempty (L : Set C(X, ℝ)) := ⟨(1 : C(X, ℝ)), A.le_topological_closure A.one_mem⟩
-  convert sublattice_closure_eq_top (L : Set C(X, ℝ)) n
+  convert
+    sublattice_closure_eq_top (L : Set C(X, ℝ)) n
       (fun f fm g gm => inf_mem_closed_subalgebra L A.is_closed_topological_closure ⟨f, fm⟩ ⟨g, gm⟩)
       (fun f fm g gm => sup_mem_closed_subalgebra L A.is_closed_topological_closure ⟨f, fm⟩ ⟨g, gm⟩)
       (Subalgebra.SeparatesPoints.strongly
@@ -409,7 +410,7 @@ theorem Subalgebra.SeparatesPoints.isROrC_to_real {A : Subalgebra 𝕜 C(X, 𝕜
   refine' ⟨_, ⟨(⟨IsROrC.normSq, continuous_norm_sq⟩ : C(𝕜, ℝ)).comp F, _, rfl⟩, _⟩
   · -- This is also an element of the subalgebra, and takes only real values
     rw [SetLike.mem_coe, Subalgebra.mem_comap]
-    convert(A.restrict_scalars ℝ).mul_mem (mem_conj_invariant_subalgebra hA' hFA) hFA
+    convert (A.restrict_scalars ℝ).mul_mem (mem_conj_invariant_subalgebra hA' hFA) hFA
     ext1
     rw [mul_comm]
     exact (IsROrC.mul_conj _).symm

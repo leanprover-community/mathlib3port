@@ -135,8 +135,8 @@ theorem ClassGroup.mk_eq_mk_of_coe_ideal {I J : (FractionalIdeal R⁰ <| Fractio
     exact ⟨_, _, sec_fst_ne_zero le_rfl x.ne_zero, sec_snd_ne_zero le_rfl ↑x, hJ⟩
   · rintro ⟨x, y, hx, hy, h⟩
     constructor; rw [mul_comm, ← Units.eq_iff, Units.val_mul, coe_toPrincipalIdeal]
-    convert(mk'_mul_coe_ideal_eq_coe_ideal (FractionRing R) <| mem_nonZeroDivisors_of_ne_zero hy).2
-        h
+    convert
+      (mk'_mul_coe_ideal_eq_coe_ideal (FractionRing R) <| mem_nonZeroDivisors_of_ne_zero hy).2 h
     apply (Ne.isUnit _).unit_spec
     rwa [Ne, mk'_eq_zero_iff_eq_zero]
 #align class_group.mk_eq_mk_of_coe_ideal ClassGroup.mk_eq_mk_of_coe_ideal
@@ -320,7 +320,7 @@ theorem ClassGroup.mk0_surjective [IsDedekindDomain R] :
   have a_ne_zero := mem_non_zero_divisors_iff_ne_zero.mp a_ne_zero'
   have fa_ne_zero : (algebraMap R (FractionRing R)) a ≠ 0 :=
     IsFractionRing.to_map_ne_zero_of_mem_nonZeroDivisors a_ne_zero'
-  refine' ⟨⟨{ carrier := { x | (algebraMap R _ a)⁻¹ * algebraMap R _ x ∈ I.1 } .. }, _⟩, _⟩
+  refine' ⟨⟨{ carrier := {x | (algebraMap R _ a)⁻¹ * algebraMap R _ x ∈ I.1} .. }, _⟩, _⟩
   · simp only [RingHom.map_add, Set.mem_setOf_eq, MulZeroClass.mul_zero, RingHom.map_mul, mul_add]
     exact fun _ _ ha hb => Submodule.add_mem I ha hb
   · simp only [RingHom.map_zero, Set.mem_setOf_eq, MulZeroClass.mul_zero, RingHom.map_mul]

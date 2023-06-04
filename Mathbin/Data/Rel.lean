@@ -69,7 +69,7 @@ theorem inv_inv : inv (inv r) = r := by ext (x y); rfl
 #print Rel.dom /-
 /-- Domain of a relation -/
 def dom :=
-  { x | ∃ y, r x y }
+  {x | ∃ y, r x y}
 #align rel.dom Rel.dom
 -/
 
@@ -79,7 +79,7 @@ theorem dom_mono {r s : Rel α β} (h : r ≤ s) : dom r ⊆ dom s := fun a ⟨b
 #print Rel.codom /-
 /-- Codomain aka range of a relation -/
 def codom :=
-  { y | ∃ x, r x y }
+  {y | ∃ x, r x y}
 #align rel.codom Rel.codom
 -/
 
@@ -127,7 +127,7 @@ theorem inv_comp (r : Rel α β) (s : Rel β γ) : inv (r ∘ s) = (inv s ∘ in
 #print Rel.image /-
 /-- Image of a set under a relation -/
 def image (s : Set α) : Set β :=
-  { y | ∃ x ∈ s, r x y }
+  {y | ∃ x ∈ s, r x y}
 #align rel.image Rel.image
 -/
 
@@ -183,7 +183,7 @@ theorem mem_preimage (x : α) (s : Set β) : x ∈ r.Preimage s ↔ ∃ y ∈ s,
   Iff.rfl
 #align rel.mem_preimage Rel.mem_preimage
 
-theorem preimage_def (s : Set β) : preimage r s = { x | ∃ y ∈ s, r x y } :=
+theorem preimage_def (s : Set β) : preimage r s = {x | ∃ y ∈ s, r x y} :=
   Set.ext fun x => mem_preimage _ _ _
 #align rel.preimage_def Rel.preimage_def
 
@@ -218,7 +218,7 @@ theorem preimage_univ : r.Preimage Set.univ = r.dom := by rw [preimage, image_un
 /-- Core of a set `s : set β` w.r.t `r : rel α β` is the set of `x : α` that are related *only*
 to elements of `s`. Other generalization of `function.preimage`. -/
 def core (s : Set β) :=
-  { x | ∀ y, r x y → y ∈ s }
+  {x | ∀ y, r x y → y ∈ s}
 #align rel.core Rel.core
 -/
 

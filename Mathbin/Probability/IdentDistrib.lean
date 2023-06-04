@@ -133,7 +133,7 @@ theorem measure_mem_eq (h : IdentDistrib f g μ ν) {s : Set γ} (hs : Measurabl
 alias measure_mem_eq ← measure_preimage_eq
 #align probability_theory.ident_distrib.measure_preimage_eq ProbabilityTheory.IdentDistrib.measure_preimage_eq
 
-theorem ae_snd (h : IdentDistrib f g μ ν) {p : γ → Prop} (pmeas : MeasurableSet { x | p x })
+theorem ae_snd (h : IdentDistrib f g μ ν) {p : γ → Prop} (pmeas : MeasurableSet {x | p x})
     (hp : ∀ᵐ x ∂μ, p (f x)) : ∀ᵐ x ∂ν, p (g x) :=
   by
   apply (ae_map_iff h.ae_measurable_snd pmeas).1
@@ -162,7 +162,7 @@ theorem aEStronglyMeasurable_snd [TopologicalSpace γ] [MetrizableSpace γ] [Bor
   rcases(aestronglyMeasurable_iff_aemeasurable_separable.1 hf).2 with ⟨t, t_sep, ht⟩
   refine' ⟨closure t, t_sep.closure, _⟩
   apply h.ae_mem_snd is_closed_closure.measurable_set
-  filter_upwards [ht]with x hx using subset_closure hx
+  filter_upwards [ht] with x hx using subset_closure hx
 #align probability_theory.ident_distrib.ae_strongly_measurable_snd ProbabilityTheory.IdentDistrib.aEStronglyMeasurable_snd
 
 theorem aEStronglyMeasurable_iff [TopologicalSpace γ] [MetrizableSpace γ] [BorelSpace γ]
@@ -173,7 +173,7 @@ theorem aEStronglyMeasurable_iff [TopologicalSpace γ] [MetrizableSpace γ] [Bor
 theorem essSup_eq [ConditionallyCompleteLinearOrder γ] [TopologicalSpace γ] [OpensMeasurableSpace γ]
     [OrderClosedTopology γ] (h : IdentDistrib f g μ ν) : essSup f μ = essSup g ν :=
   by
-  have I : ∀ a, μ { x : α | a < f x } = ν { x : β | a < g x } := fun a =>
+  have I : ∀ a, μ {x : α | a < f x} = ν {x : β | a < g x} := fun a =>
     h.measure_mem_eq measurableSet_Ioi
   simp_rw [essSup_eq_sInf, I]
 #align probability_theory.ident_distrib.ess_sup_eq ProbabilityTheory.IdentDistrib.essSup_eq
@@ -196,7 +196,7 @@ theorem integral_eq [NormedAddCommGroup γ] [NormedSpace ℝ γ] [CompleteSpace 
       rcases(aestronglyMeasurable_iff_aemeasurable_separable.1 hf).2 with ⟨t, t_sep, ht⟩
       refine' ⟨aemeasurable_id, ⟨closure t, t_sep.closure, _⟩⟩
       rw [ae_map_iff h.ae_measurable_fst]
-      · filter_upwards [ht]with x hx using subset_closure hx
+      · filter_upwards [ht] with x hx using subset_closure hx
       · exact is_closed_closure.measurable_set
     change (∫ x, id (f x) ∂μ) = ∫ x, id (g x) ∂ν
     rw [← integral_map h.ae_measurable_fst A]
@@ -305,7 +305,7 @@ theorem const_div [Div γ] [MeasurableDiv γ] (h : IdentDistrib f g μ ν) (c : 
 theorem evariance_eq {f : α → ℝ} {g : β → ℝ} (h : IdentDistrib f g μ ν) :
     evariance f μ = evariance g ν :=
   by
-  convert(h.sub_const (∫ x, f x ∂μ)).nnnorm.coe_nnreal_ennreal.sq.lintegral_eq
+  convert (h.sub_const (∫ x, f x ∂μ)).nnnorm.coe_nnreal_ennreal.sq.lintegral_eq
   rw [h.integral_eq]
   rfl
 #align probability_theory.ident_distrib.evariance_eq ProbabilityTheory.IdentDistrib.evariance_eq
@@ -321,7 +321,7 @@ section UniformIntegrable
 open TopologicalSpace
 
 variable {E : Type _} [MeasurableSpace E] [NormedAddCommGroup E] [BorelSpace E]
-  [SecondCountableTopology E] {μ : Measure α} [FiniteMeasure μ]
+  [SecondCountableTopology E] {μ : Measure α} [IsFiniteMeasure μ]
 
 /-- This lemma is superceded by `mem_ℒp.uniform_integrable_of_ident_distrib` which only require
 `ae_strongly_measurable`. -/
@@ -333,11 +333,11 @@ theorem Memℒp.uniformIntegrable_of_identDistrib_aux {ι : Type _} {f : ι → 
   by_cases hι : Nonempty ι
   swap; · exact ⟨0, fun i => False.elim (hι <| Nonempty.intro i)⟩
   obtain ⟨C, hC₁, hC₂⟩ := hℒp.snorm_indicator_norm_ge_pos_le μ (hfmeas _) hε
-  have hmeas : ∀ i, MeasurableSet { x | (⟨C, hC₁.le⟩ : ℝ≥0) ≤ ‖f i x‖₊ } := fun i =>
+  have hmeas : ∀ i, MeasurableSet {x | (⟨C, hC₁.le⟩ : ℝ≥0) ≤ ‖f i x‖₊} := fun i =>
     measurableSet_le measurable_const (hfmeas _).Measurable.nnnorm
   refine' ⟨⟨C, hC₁.le⟩, fun i => le_trans (le_of_eq _) hC₂⟩
   have :
-    { x : α | (⟨C, hC₁.le⟩ : ℝ≥0) ≤ ‖f i x‖₊ }.indicator (f i) =
+    {x : α | (⟨C, hC₁.le⟩ : ℝ≥0) ≤ ‖f i x‖₊}.indicator (f i) =
       (fun x : E => if (⟨C, hC₁.le⟩ : ℝ≥0) ≤ ‖x‖₊ then x else 0) ∘ f i :=
     by
     ext x

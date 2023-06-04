@@ -290,7 +290,7 @@ def AffineMap.ofMapMidpoint (f : P → Q) (h : ∀ x y, f (midpoint ℝ x y) = m
               f ∘ AffineEquiv.vaddConst ℝ (Classical.arbitrary P))
             (by simp) fun x y => by simp [h]).toRealLinearMap <|
         by
-        apply_rules [Continuous.vadd, Continuous.vsub, continuous_const, hfc.comp, continuous_id] ))
+        apply_rules [Continuous.vadd, Continuous.vsub, continuous_const, hfc.comp, continuous_id]))
     (Classical.arbitrary P) fun p => by simp
 #align affine_map.of_map_midpoint AffineMap.ofMapMidpoint
 -/

@@ -37,7 +37,7 @@ def polarCoord : LocalHomeomorph (ℝ × ℝ) (ℝ × ℝ)
     where
   toFun q := (Real.sqrt (q.1 ^ 2 + q.2 ^ 2), Complex.arg (Complex.equivRealProd.symm q))
   invFun p := (p.1 * cos p.2, p.1 * sin p.2)
-  source := { q | 0 < q.1 } ∪ { q | q.2 ≠ 0 }
+  source := {q | 0 < q.1} ∪ {q | q.2 ≠ 0}
   target := Ioi (0 : ℝ) ×ˢ Ioo (-π) π
   map_target' := by
     rintro ⟨r, θ⟩ ⟨hr, hθ⟩
@@ -91,8 +91,8 @@ def polarCoord : LocalHomeomorph (ℝ × ℝ) (ℝ × ℝ)
     by
     apply ((continuous_fst.pow 2).add (continuous_snd.pow 2)).sqrt.ContinuousOn.Prod
     have A :
-      maps_to complex.equiv_real_prod.symm ({ q : ℝ × ℝ | 0 < q.1 } ∪ { q : ℝ × ℝ | q.2 ≠ 0 })
-        { z | 0 < z.re ∨ z.im ≠ 0 } :=
+      maps_to complex.equiv_real_prod.symm ({q : ℝ × ℝ | 0 < q.1} ∪ {q : ℝ × ℝ | q.2 ≠ 0})
+        {z | 0 < z.re ∨ z.im ≠ 0} :=
       by rintro ⟨x, y⟩ hxy; simpa only using hxy
     apply ContinuousOn.comp (fun z hz => _) _ A
     · exact (Complex.continuousAt_arg hz).ContinuousWithinAt
@@ -106,7 +106,8 @@ theorem hasFDerivAt_polarCoord_symm (p : ℝ × ℝ) :
       p :=
   by
   rw [Matrix.toLin_finTwoProd_toContinuousLinearMap]
-  convert HasFDerivAt.prod
+  convert
+      HasFDerivAt.prod
         (has_fderiv_at_fst.mul ((has_deriv_at_cos p.2).comp_hasFDerivAt p hasFDerivAt_snd))
         (has_fderiv_at_fst.mul ((has_deriv_at_sin p.2).comp_hasFDerivAt p hasFDerivAt_snd)) using
       2 <;>

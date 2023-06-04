@@ -36,7 +36,7 @@ variable {α : Type _} [LinearOrder α] {s t : Set α} {x y z : α}
 /-- Order-connected component of a point `x` in a set `s`. It is defined as the set of `y` such that
 `set.uIcc x y ⊆ s`. Note that it is empty if and only if `x ∉ s`. -/
 def ordConnectedComponent (s : Set α) (x : α) : Set α :=
-  { y | [x, y] ⊆ s }
+  {y | [x, y] ⊆ s}
 #align set.ord_connected_component Set.ordConnectedComponent
 -/
 

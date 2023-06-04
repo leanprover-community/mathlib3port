@@ -200,7 +200,7 @@ theorem isSheafUniqueGluing_of_isSheaf_types (Fsh : F.IsSheaf) : F.IsSheafUnique
   use s
   dsimp
   constructor
-  · convert(is_gluing_iff_eq_res F U sf' _).mpr s_spec
+  · convert (is_gluing_iff_eq_res F U sf' _).mpr s_spec
     rw [inv_hom_id_apply]
   · intro y hy
     apply s_uniq
@@ -321,12 +321,12 @@ theorem eq_of_locally_eq₂ {U₁ U₂ V : Opens X} (i₁ : U₁ ⟶ V) (i₂ : 
     (s t : F.1.obj (op V)) (h₁ : F.1.map i₁.op s = F.1.map i₁.op t)
     (h₂ : F.1.map i₂.op s = F.1.map i₂.op t) : s = t := by
   classical
-    fapply F.eq_of_locally_eq' fun t : ULift Bool => if t.1 then U₁ else U₂
-    · exact fun i => if h : i.1 then eq_to_hom (if_pos h) ≫ i₁ else eq_to_hom (if_neg h) ≫ i₂
-    · refine' le_trans hcover _; rw [sup_le_iff]; constructor
-      · convert le_iSup (fun t : ULift Bool => if t.1 then U₁ else U₂) (ULift.up True)
-      · convert le_iSup (fun t : ULift Bool => if t.1 then U₁ else U₂) (ULift.up False)
-    · rintro ⟨_ | _⟩ <;> simp [h₁, h₂]
+  fapply F.eq_of_locally_eq' fun t : ULift Bool => if t.1 then U₁ else U₂
+  · exact fun i => if h : i.1 then eq_to_hom (if_pos h) ≫ i₁ else eq_to_hom (if_neg h) ≫ i₂
+  · refine' le_trans hcover _; rw [sup_le_iff]; constructor
+    · convert le_iSup (fun t : ULift Bool => if t.1 then U₁ else U₂) (ULift.up True)
+    · convert le_iSup (fun t : ULift Bool => if t.1 then U₁ else U₂) (ULift.up False)
+  · rintro ⟨_ | _⟩ <;> simp [h₁, h₂]
 #align Top.sheaf.eq_of_locally_eq₂ TopCat.Sheaf.eq_of_locally_eq₂
 
 end

@@ -38,7 +38,8 @@ namespace Complex
 theorem hasStrictDerivAt_sin (x : ℂ) : HasStrictDerivAt sin (cos x) x :=
   by
   simp only [cos, div_eq_mul_inv]
-  convert((((hasStrictDerivAt_id x).neg.mul_const I).cexp.sub
+  convert
+    ((((hasStrictDerivAt_id x).neg.mul_const I).cexp.sub
               ((hasStrictDerivAt_id x).mul_const I).cexp).mul_const
           I).mul_const
       (2 : ℂ)⁻¹
@@ -75,7 +76,8 @@ theorem deriv_sin : deriv sin = cos :=
 theorem hasStrictDerivAt_cos (x : ℂ) : HasStrictDerivAt cos (-sin x) x :=
   by
   simp only [sin, div_eq_mul_inv, neg_mul_eq_neg_mul]
-  convert(((hasStrictDerivAt_id x).mul_const I).cexp.add
+  convert
+    (((hasStrictDerivAt_id x).mul_const I).cexp.add
           ((hasStrictDerivAt_id x).neg.mul_const I).cexp).mul_const
       (2 : ℂ)⁻¹
   simp only [Function.comp, id]
@@ -112,7 +114,7 @@ theorem deriv_cos' : deriv cos = fun x => -sin x :=
 theorem hasStrictDerivAt_sinh (x : ℂ) : HasStrictDerivAt sinh (cosh x) x :=
   by
   simp only [cosh, div_eq_mul_inv]
-  convert((has_strict_deriv_at_exp x).sub (hasStrictDerivAt_id x).neg.cexp).mul_const (2 : ℂ)⁻¹
+  convert ((has_strict_deriv_at_exp x).sub (hasStrictDerivAt_id x).neg.cexp).mul_const (2 : ℂ)⁻¹
   rw [id, mul_neg_one, sub_eq_add_neg, neg_neg]
 #align complex.has_strict_deriv_at_sinh Complex.hasStrictDerivAt_sinh
 
@@ -143,7 +145,7 @@ derivative `sinh x`. -/
 theorem hasStrictDerivAt_cosh (x : ℂ) : HasStrictDerivAt cosh (sinh x) x :=
   by
   simp only [sinh, div_eq_mul_inv]
-  convert((has_strict_deriv_at_exp x).add (hasStrictDerivAt_id x).neg.cexp).mul_const (2 : ℂ)⁻¹
+  convert ((has_strict_deriv_at_exp x).add (hasStrictDerivAt_id x).neg.cexp).mul_const (2 : ℂ)⁻¹
   rw [id, mul_neg_one, sub_eq_add_neg]
 #align complex.has_strict_deriv_at_cosh Complex.hasStrictDerivAt_cosh
 

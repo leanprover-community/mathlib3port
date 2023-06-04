@@ -58,7 +58,7 @@ theorem sq_add_sq_mul {R} [CommRing R] {a b x y u v : R} (ha : a = x ^ 2 + y ^ 2
 /-- The set of natural numbers that are sums of two squares is closed under multiplication. -/
 theorem Nat.sq_add_sq_mul {a b x y u v : ℕ} (ha : a = x ^ 2 + y ^ 2) (hb : b = u ^ 2 + v ^ 2) :
     ∃ r s : ℕ, a * b = r ^ 2 + s ^ 2 := by
-  zify  at ha hb ⊢
+  zify at ha hb ⊢
   obtain ⟨r, s, h⟩ := sq_add_sq_mul ha hb
   refine' ⟨r.nat_abs, s.nat_abs, _⟩
   simpa only [Int.coe_natAbs, sq_abs]
@@ -188,7 +188,7 @@ theorem ZMod.isSquare_neg_one_of_eq_sq_add_sq_of_isCoprime {n x y : ℤ} (h : n 
 theorem ZMod.isSquare_neg_one_of_eq_sq_add_sq_of_coprime {n x y : ℕ} (h : n = x ^ 2 + y ^ 2)
     (hc : x.coprime y) : IsSquare (-1 : ZMod n) :=
   by
-  zify  at *
+  zify at *
   exact ZMod.isSquare_neg_one_of_eq_sq_add_sq_of_isCoprime h hc.is_coprime
 #align zmod.is_square_neg_one_of_eq_sq_add_sq_of_coprime ZMod.isSquare_neg_one_of_eq_sq_add_sq_of_coprime
 

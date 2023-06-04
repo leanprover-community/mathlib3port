@@ -140,7 +140,7 @@ theorem eventually_singleton_add_smul_subset {x : E} {s : Set E} (hs : Bounded s
     nhds_basis_closed_ball.mem_iff.1 hu
   obtain ⟨R, Rpos, hR⟩ : ∃ R : ℝ, 0 < R ∧ s ⊆ closed_ball 0 R := hs.subset_ball_lt 0 0
   have : Metric.closedBall (0 : 𝕜) (ε / R) ∈ 𝓝 (0 : 𝕜) := closed_ball_mem_nhds _ (div_pos εpos Rpos)
-  filter_upwards [this]with r hr
+  filter_upwards [this] with r hr
   simp only [image_add_left, singleton_add]
   intro y hy
   obtain ⟨z, zs, hz⟩ : ∃ z : E, z ∈ s ∧ r • z = -x + y := by simpa [mem_smul_set] using hy

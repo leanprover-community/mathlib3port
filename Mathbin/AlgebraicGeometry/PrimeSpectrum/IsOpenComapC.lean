@@ -39,7 +39,7 @@ of the coefficients of `f` does not vanish.  Lemma `image_of_Df_eq_comap_C_compl
 proves that `image_of_Df` is the image of `(zero_locus {f})ᶜ` under the morphism
 `comap C : Spec R[x] → Spec R`. -/
 def imageOfDf (f) : Set (PrimeSpectrum R) :=
-  { p : PrimeSpectrum R | ∃ i : ℕ, coeff f i ∉ p.asIdeal }
+  {p : PrimeSpectrum R | ∃ i : ℕ, coeff f i ∉ p.asIdeal}
 #align algebraic_geometry.polynomial.image_of_Df AlgebraicGeometry.Polynomial.imageOfDf
 -/
 

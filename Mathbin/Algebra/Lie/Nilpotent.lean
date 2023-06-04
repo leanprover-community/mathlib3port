@@ -265,13 +265,13 @@ the natural number `k` (the number of inclusions).
 
 For a non-nilpotent module, we use the junk value 0. -/
 noncomputable def nilpotencyLength : ℕ :=
-  sInf { k | lowerCentralSeries R L M k = ⊥ }
+  sInf {k | lowerCentralSeries R L M k = ⊥}
 #align lie_module.nilpotency_length LieModule.nilpotencyLength
 
 theorem nilpotencyLength_eq_zero_iff [IsNilpotent R L M] :
     nilpotencyLength R L M = 0 ↔ Subsingleton M :=
   by
-  let s := { k | lowerCentralSeries R L M k = ⊥ }
+  let s := {k | lowerCentralSeries R L M k = ⊥}
   have hs : s.nonempty :=
     by
     obtain ⟨k, hk⟩ := (by infer_instance : IsNilpotent R L M)
@@ -288,7 +288,7 @@ theorem nilpotencyLength_eq_succ_iff (k : ℕ) :
     nilpotencyLength R L M = k + 1 ↔
       lowerCentralSeries R L M (k + 1) = ⊥ ∧ lowerCentralSeries R L M k ≠ ⊥ :=
   by
-  let s := { k | lowerCentralSeries R L M k = ⊥ }
+  let s := {k | lowerCentralSeries R L M k = ⊥}
   change Inf s = k + 1 ↔ k + 1 ∈ s ∧ k ∉ s
   have hs : ∀ k₁ k₂, k₁ ≤ k₂ → k₁ ∈ s → k₂ ∈ s :=
     by
@@ -359,7 +359,7 @@ theorem coe_lcs_range_toEndomorphism_eq (k : ℕ) :
 theorem isNilpotent_range_toEndomorphism_iff :
     IsNilpotent R (toEndomorphism R L M).range M ↔ IsNilpotent R L M := by
   constructor <;> rintro ⟨k, hk⟩ <;> use k <;>
-      rw [← LieSubmodule.coe_to_submodule_eq_iff] at hk ⊢ <;>
+      rw [← LieSubmodule.coe_toSubmodule_eq_iff] at hk ⊢ <;>
     simpa using hk
 #align lie_module.is_nilpotent_range_to_endomorphism_iff LieModule.isNilpotent_range_toEndomorphism_iff
 
@@ -471,8 +471,8 @@ theorem Function.Surjective.lieModule_lcs_map_eq (k : ℕ) :
   induction' k with k ih
   · simp [LinearMap.range_eq_top, hg]
   · suffices
-      g '' { m | ∃ (x : L) (n : _), n ∈ lowerCentralSeries R L M k ∧ ⁅x, n⁆ = m } =
-        { m | ∃ (x : L₂) (n : _), n ∈ lowerCentralSeries R L M k ∧ ⁅x, g n⁆ = m }
+      g '' {m | ∃ (x : L) (n : _), n ∈ lowerCentralSeries R L M k ∧ ⁅x, n⁆ = m} =
+        {m | ∃ (x : L₂) (n : _), n ∈ lowerCentralSeries R L M k ∧ ⁅x, g n⁆ = m}
       by
       simp only [← LieSubmodule.mem_coeSubmodule] at this 
       simp [← LieSubmodule.mem_coeSubmodule, ← ih, LieSubmodule.lieIdeal_oper_eq_linear_span',
@@ -490,7 +490,7 @@ theorem Function.Surjective.lieModuleIsNilpotent [IsNilpotent R L M] : IsNilpote
   by
   obtain ⟨k, hk⟩ := id (by infer_instance : IsNilpotent R L M)
   use k
-  rw [← LieSubmodule.coe_to_submodule_eq_iff] at hk ⊢
+  rw [← LieSubmodule.coe_toSubmodule_eq_iff] at hk ⊢
   simp [← hf.lie_module_lcs_map_eq hg hfg k, hk]
 #align function.surjective.lie_module_is_nilpotent Function.Surjective.lieModuleIsNilpotent
 
@@ -602,7 +602,7 @@ theorem LieAlgebra.nilpotent_of_nilpotent_quotient {I : LieIdeal R L} (h₁ : I 
     exact LieModule.nilpotentOfNilpotentQuotient R L L h₁ this
   obtain ⟨k, hk⟩ := h₂
   use k
-  simp [← LieSubmodule.coe_to_submodule_eq_iff, coe_lowerCentralSeries_ideal_quot_eq, hk]
+  simp [← LieSubmodule.coe_toSubmodule_eq_iff, coe_lowerCentralSeries_ideal_quot_eq, hk]
 #align lie_algebra.nilpotent_of_nilpotent_quotient LieAlgebra.nilpotent_of_nilpotent_quotient
 
 theorem LieAlgebra.non_trivial_center_of_isNilpotent [Nontrivial L] [IsNilpotent R L] :

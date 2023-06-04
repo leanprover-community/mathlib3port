@@ -36,7 +36,7 @@ theorem exists_idempotent_of_compact_t2_of_continuous_mul_left {M} [Nonempty M] 
   /- We apply Zorn's lemma to the poset of nonempty closed subsemigroups of `M`. It will turn out that
   any minimal element is `{m}` for an idempotent `m : M`. -/
   let S : Set (Set M) :=
-    { N | IsClosed N ∧ N.Nonempty ∧ ∀ (m) (_ : m ∈ N) (m') (_ : m' ∈ N), m * m' ∈ N }
+    {N | IsClosed N ∧ N.Nonempty ∧ ∀ (m) (_ : m ∈ N) (m') (_ : m' ∈ N), m * m' ∈ N}
   rsuffices ⟨N, ⟨N_closed, ⟨m, hm⟩, N_mul⟩, N_minimal⟩ : ∃ N ∈ S, ∀ N' ∈ S, N' ⊆ N → N' = N
   · use m
     /- We now have an element `m : M` of a minimal subsemigroup `N`, and want to show `m + m = m`.
@@ -51,7 +51,7 @@ theorem exists_idempotent_of_compact_t2_of_continuous_mul_left {M} [Nonempty M] 
         exact N_mul _ hm' _ hm
     /- In particular, this means that `m' * m = m` for some `m'`. We now use minimality again to show
     that this holds for all `m' ∈ N`. -/
-    have absorbing_eq_self : N ∩ { m' | m' * m = m } = N :=
+    have absorbing_eq_self : N ∩ {m' | m' * m = m} = N :=
       by
       apply N_minimal
       · refine' ⟨N_closed.inter ((T1Space.t1 m).Preimage (continuous_mul_left m)), _, _⟩
@@ -69,7 +69,8 @@ theorem exists_idempotent_of_compact_t2_of_continuous_mul_left {M} [Nonempty M] 
       Set.sInter_subset_of_mem hs⟩
   · obtain rfl | hcnemp := c.eq_empty_or_nonempty
     · rw [Set.sInter_empty]; apply Set.univ_nonempty
-    convert@IsCompact.nonempty_iInter_of_directed_nonempty_compact_closed _ _ _ hcnemp.coe_sort
+    convert
+      @IsCompact.nonempty_iInter_of_directed_nonempty_compact_closed _ _ _ hcnemp.coe_sort
         (coe : c → Set M) _ _ _ _
     · simp only [Subtype.range_coe_subtype, Set.setOf_mem_eq]
     · refine' DirectedOn.directed_val (IsChain.directedOn hc.symm)

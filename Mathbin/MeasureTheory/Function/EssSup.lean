@@ -94,12 +94,12 @@ section ConditionallyCompleteLinearOrder
 variable [ConditionallyCompleteLinearOrder β] {x : β} {f : α → β}
 
 theorem essSup_eq_sInf {m : MeasurableSpace α} (μ : Measure α) (f : α → β) :
-    essSup f μ = sInf { a | μ { x | a < f x } = 0 } := by dsimp [essSup, limsup, Limsup];
+    essSup f μ = sInf {a | μ {x | a < f x} = 0} := by dsimp [essSup, limsup, Limsup];
   simp only [ae_iff, not_le]
 #align ess_sup_eq_Inf essSup_eq_sInf
 
 theorem essInf_eq_sSup {m : MeasurableSpace α} (μ : Measure α) (f : α → β) :
-    essInf f μ = sSup { a | μ { x | f x < a } = 0 } := by dsimp [essInf, liminf, Liminf];
+    essInf f μ = sSup {a | μ {x | f x < a} = 0} := by dsimp [essInf, liminf, Liminf];
   simp only [ae_iff, not_le]
 #align ess_inf_eq_Sup essInf_eq_sSup
 
@@ -154,7 +154,7 @@ theorem meas_essSup_lt
     (hf : IsBoundedUnder (· ≤ ·) μ.ae f := by
       run_tac
         is_bounded_default) :
-    μ { y | essSup f μ < f y } = 0 := by simp_rw [← not_le]; exact ae_le_essSup hf
+    μ {y | essSup f μ < f y} = 0 := by simp_rw [← not_le]; exact ae_le_essSup hf
 #align meas_ess_sup_lt meas_essSup_lt
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic is_bounded_default -/
@@ -162,7 +162,7 @@ theorem meas_lt_essInf
     (hf : IsBoundedUnder (· ≥ ·) μ.ae f := by
       run_tac
         is_bounded_default) :
-    μ { y | f y < essInf f μ } = 0 := by simp_rw [← not_le]; exact ae_essInf_le hf
+    μ {y | f y < essInf f μ} = 0 := by simp_rw [← not_le]; exact ae_essInf_le hf
 #align meas_lt_ess_inf meas_lt_essInf
 
 end ConditionallyCompleteLinearOrder
@@ -384,7 +384,7 @@ theorem essSup_indicator_eq_essSup_restrict [Zero β] {s : Set α} {f : α → �
     have hs' : ∃ᵐ x ∂μ, x ∈ s := by
       contrapose! hs_not_null
       rw [not_frequently, ae_iff] at hs_not_null 
-      suffices { a : α | ¬a ∉ s } = s by rwa [← this]
+      suffices {a : α | ¬a ∉ s} = s by rwa [← this]
       simp
     refine' hs'.mp (hf.mp (h_restrict_le.mono fun x hxs_imp_c hxf_nonneg hxs => _))
     rw [Pi.zero_apply] at hxf_nonneg 

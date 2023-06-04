@@ -397,13 +397,13 @@ theorem trans_range {X : Type _} [TopologicalSpace X] {a b c : X} (γ₁ : Path 
     · left
       use 2 * t, ⟨by linarith, by linarith⟩
       rw [← γ₁.extend_extends]
-      unfold_coes  at hxt 
+      unfold_coes at hxt 
       simp only [h, comp_app, if_true] at hxt 
       exact hxt
     · right
       use 2 * t - 1, ⟨by linarith, by linarith⟩
       rw [← γ₂.extend_extends]
-      unfold_coes  at hxt 
+      unfold_coes at hxt 
       simp only [h, comp_app, if_false] at hxt 
       exact hxt
   · rintro x (⟨⟨t, ht0, ht1⟩, hxt⟩ | ⟨⟨t, ht0, ht1⟩, hxt⟩)
@@ -1000,7 +1000,7 @@ theorem JoinedIn.trans (hxy : JoinedIn F x y) (hyz : JoinedIn F y z) : JoinedIn 
 #print pathComponent /-
 /-- The path component of `x` is the set of points that can be joined to `x`. -/
 def pathComponent (x : X) :=
-  { y | Joined x y }
+  {y | Joined x y}
 #align path_component pathComponent
 -/
 
@@ -1054,7 +1054,7 @@ theorem pathComponent_subset_component (x : X) : pathComponent x ⊆ connectedCo
 #print pathComponentIn /-
 /-- The path component of `x` in `F` is the set of points that can be joined to `x` in `F`. -/
 def pathComponentIn (x : X) (F : Set X) :=
-  { y | JoinedIn F x y }
+  {y | JoinedIn F x y}
 #align path_component_in pathComponentIn
 -/
 

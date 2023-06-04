@@ -84,10 +84,10 @@ variable {E : Type u} [NormedAddCommGroup E] [NormedSpace ℝ E] {f : E → ℝ}
 is that we require `c n → ∞` instead of `‖c n‖ → ∞`. One can think about `pos_tangent_cone_at`
 as `tangent_cone_at nnreal` but we have no theory of normed semifields yet. -/
 def posTangentConeAt (s : Set E) (x : E) : Set E :=
-  { y : E |
+  {y : E |
     ∃ (c : ℕ → ℝ) (d : ℕ → E),
       (∀ᶠ n in atTop, x + d n ∈ s) ∧
-        Tendsto c atTop atTop ∧ Tendsto (fun n => c n • d n) atTop (𝓝 y) }
+        Tendsto c atTop atTop ∧ Tendsto (fun n => c n • d n) atTop (𝓝 y)}
 #align pos_tangent_cone_at posTangentConeAt
 -/
 
@@ -381,7 +381,7 @@ theorem exists_deriv_eq_zero' (hab : a < b) (hfa : Tendsto f (𝓝[>] a) (𝓝 l
       show ∃ c ∈ Ioo a b, deriv f c = 0 from
         exists_hasDerivAt_eq_zero' hab hfa hfb fun x hx => (h x hx).HasDerivAt)
     fun h : ¬∀ x ∈ Ioo a b, DifferentiableAt ℝ f x =>
-    have h : ∃ x, x ∈ Ioo a b ∧ ¬DifferentiableAt ℝ f x := by push_neg  at h ; exact h
+    have h : ∃ x, x ∈ Ioo a b ∧ ¬DifferentiableAt ℝ f x := by push_neg at h ; exact h
     let ⟨c, hc, hcdiff⟩ := h
     ⟨c, hc, deriv_zero_of_not_differentiableAt hcdiff⟩
 #align exists_deriv_eq_zero' exists_deriv_eq_zero'

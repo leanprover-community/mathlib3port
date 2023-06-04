@@ -179,7 +179,7 @@ theorem IsConnected.of_induct [Nonempty J] {j₀ : J}
     IsConnected J :=
   IsConnected.of_constant_of_preserves_morphisms fun α F a =>
     by
-    have w := h { j | F j = F j₀ } rfl fun _ _ f => by simp [a f]
+    have w := h {j | F j = F j₀} rfl fun _ _ f => by simp [a f]
     dsimp at w 
     intro j j'
     rw [w j, w j']
@@ -206,7 +206,7 @@ we can transport an `x : Z j₀` to a point in `Z j` for any `j`.
 theorem isPreconnected_induction [IsPreconnected J] (Z : J → Sort _)
     (h₁ : ∀ {j₁ j₂ : J} (f : j₁ ⟶ j₂), Z j₁ → Z j₂) (h₂ : ∀ {j₁ j₂ : J} (f : j₁ ⟶ j₂), Z j₂ → Z j₁)
     {j₀ : J} (x : Z j₀) (j : J) : Nonempty (Z j) :=
-  (induct_on_objects { j | Nonempty (Z j) } ⟨x⟩
+  (induct_on_objects {j | Nonempty (Z j)} ⟨x⟩
       (fun j₁ j₂ f => ⟨by rintro ⟨y⟩; exact ⟨h₁ f y⟩, by rintro ⟨y⟩; exact ⟨h₂ f y⟩⟩) j :
     _)
 #align category_theory.is_preconnected_induction CategoryTheory.isPreconnected_induction

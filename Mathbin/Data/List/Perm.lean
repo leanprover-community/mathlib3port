@@ -1047,7 +1047,7 @@ theorem subperm_ext_iff {l₁ l₂ : List α} : l₁ <+~ l₂ ↔ ∀ x ∈ l₁
     by
     refine' this.trans (perm.subperm _)
     exact perm_append_comm.trans (subperm_append_diff_self_of_count_le h)
-  convert(subperm_append_right _).mpr nil_subperm using 1
+  convert (subperm_append_right _).mpr nil_subperm using 1
 #align list.subperm_ext_iff List.subperm_ext_iff
 -/
 

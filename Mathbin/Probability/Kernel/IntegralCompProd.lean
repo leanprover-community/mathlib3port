@@ -57,7 +57,7 @@ theorem hasFiniteIntegral_prod_mk_left (a : α) {s : Set (β × γ)} (h2s : (κ 
         ∫⁻ b, η (a, b) (Prod.mk b ⁻¹' t) ∂κ a :=
       by
       refine' lintegral_mono_ae _
-      filter_upwards [ae_kernel_lt_top a h2s]with b hb
+      filter_upwards [ae_kernel_lt_top a h2s] with b hb
       rw [of_real_to_real hb.ne]
       exact measure_mono (preimage_mono (subset_to_measurable _ _))
     _ ≤ (κ ⊗ₖ η) a t := (le_comp_prod_apply _ _ _ _)
@@ -78,15 +78,14 @@ theorem MeasureTheory.AEStronglyMeasurable.integral_kernel_compProd [NormedSpace
     [CompleteSpace E] ⦃f : β × γ → E⦄ (hf : AEStronglyMeasurable f ((κ ⊗ₖ η) a)) :
     AEStronglyMeasurable (fun x => ∫ y, f (x, y) ∂η (a, x)) (κ a) :=
   ⟨fun x => ∫ y, hf.mk f (x, y) ∂η (a, x), hf.stronglyMeasurable_mk.integral_kernel_prod_right'', by
-    filter_upwards [ae_ae_of_ae_comp_prod hf.ae_eq_mk]with _ hx using integral_congr_ae hx⟩
+    filter_upwards [ae_ae_of_ae_comp_prod hf.ae_eq_mk] with _ hx using integral_congr_ae hx⟩
 #align measure_theory.ae_strongly_measurable.integral_kernel_comp_prod MeasureTheory.AEStronglyMeasurable.integral_kernel_compProd
 
 theorem MeasureTheory.AEStronglyMeasurable.compProd_mk_left {δ : Type _} [TopologicalSpace δ]
     {f : β × γ → δ} (hf : AEStronglyMeasurable f ((κ ⊗ₖ η) a)) :
     ∀ᵐ x ∂κ a, AEStronglyMeasurable (fun y => f (x, y)) (η (a, x)) := by
-  filter_upwards [ae_ae_of_ae_comp_prod
-      hf.ae_eq_mk]with x hx using⟨fun y => hf.mk f (x, y),
-      hf.strongly_measurable_mk.comp_measurable measurable_prod_mk_left, hx⟩
+  filter_upwards [ae_ae_of_ae_comp_prod hf.ae_eq_mk] with x hx using
+    ⟨fun y => hf.mk f (x, y), hf.strongly_measurable_mk.comp_measurable measurable_prod_mk_left, hx⟩
 #align measure_theory.ae_strongly_measurable.comp_prod_mk_left MeasureTheory.AEStronglyMeasurable.compProd_mk_left
 
 /-! ### Integrability -/
@@ -126,8 +125,8 @@ theorem hasFiniteIntegral_compProd_iff' ⦃f : β × γ → E⦄
     intro x hx
     exact has_finite_integral_congr hx
   · apply has_finite_integral_congr
-    filter_upwards [ae_ae_of_ae_comp_prod
-        h1f.ae_eq_mk.symm]with _ hx using integral_congr_ae (eventually_eq.fun_comp hx _)
+    filter_upwards [ae_ae_of_ae_comp_prod h1f.ae_eq_mk.symm] with _ hx using
+      integral_congr_ae (eventually_eq.fun_comp hx _)
 #align probability_theory.has_finite_integral_comp_prod_iff' ProbabilityTheory.hasFiniteIntegral_compProd_iff'
 
 theorem integrable_compProd_iff ⦃f : β × γ → E⦄ (hf : AEStronglyMeasurable f ((κ ⊗ₖ η) a)) :
@@ -172,7 +171,7 @@ theorem kernel.integral_fn_integral_add ⦃f g : β × γ → E⦄ (F : E → E'
       ∫ x, F ((∫ y, f (x, y) ∂η (a, x)) + ∫ y, g (x, y) ∂η (a, x)) ∂κ a :=
   by
   refine' integral_congr_ae _
-  filter_upwards [hf.comp_prod_mk_left_ae, hg.comp_prod_mk_left_ae]with _ h2f h2g
+  filter_upwards [hf.comp_prod_mk_left_ae, hg.comp_prod_mk_left_ae] with _ h2f h2g
   simp [integral_add h2f h2g]
 #align probability_theory.kernel.integral_fn_integral_add ProbabilityTheory.kernel.integral_fn_integral_add
 
@@ -182,7 +181,7 @@ theorem kernel.integral_fn_integral_sub ⦃f g : β × γ → E⦄ (F : E → E'
       ∫ x, F ((∫ y, f (x, y) ∂η (a, x)) - ∫ y, g (x, y) ∂η (a, x)) ∂κ a :=
   by
   refine' integral_congr_ae _
-  filter_upwards [hf.comp_prod_mk_left_ae, hg.comp_prod_mk_left_ae]with _ h2f h2g
+  filter_upwards [hf.comp_prod_mk_left_ae, hg.comp_prod_mk_left_ae] with _ h2f h2g
   simp [integral_sub h2f h2g]
 #align probability_theory.kernel.integral_fn_integral_sub ProbabilityTheory.kernel.integral_fn_integral_sub
 
@@ -192,7 +191,7 @@ theorem kernel.lintegral_fn_integral_sub ⦃f g : β × γ → E⦄ (F : E → �
       ∫⁻ x, F ((∫ y, f (x, y) ∂η (a, x)) - ∫ y, g (x, y) ∂η (a, x)) ∂κ a :=
   by
   refine' lintegral_congr_ae _
-  filter_upwards [hf.comp_prod_mk_left_ae, hg.comp_prod_mk_left_ae]with _ h2f h2g
+  filter_upwards [hf.comp_prod_mk_left_ae, hg.comp_prod_mk_left_ae] with _ h2f h2g
   simp [integral_sub h2f h2g]
 #align probability_theory.kernel.lintegral_fn_integral_sub ProbabilityTheory.kernel.lintegral_fn_integral_sub
 

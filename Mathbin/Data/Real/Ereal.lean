@@ -729,7 +729,7 @@ theorem add_lt_add_right_coe {x y : EReal} (h : x < y) (z : ℝ) : x + z < y + z
   · simp only [← coe_add, bot_add, bot_lt_coe]
   · simp
   · exact (lt_irrefl _ (h.trans (bot_lt_coe x))).elim
-  · norm_cast  at h ⊢; exact add_lt_add_right h _
+  · norm_cast at h ⊢; exact add_lt_add_right h _
   · simp only [← coe_add, top_add_coe, coe_lt_top]
   · exact (lt_irrefl _ (h.trans_le le_top)).elim
   · exact (lt_irrefl _ (h.trans_le le_top)).elim
@@ -873,7 +873,7 @@ protected theorem neg_le_of_neg_le {a b : EReal} (h : -a ≤ b) : -b ≤ a :=
   · simpa only [coe_ne_top, neg_bot, top_le_iff] using h
   · exact bot_le
   · simpa only [coe_ne_top, le_bot_iff] using h
-  · norm_cast  at h ⊢; exact neg_le.1 h
+  · norm_cast at h ⊢; exact neg_le.1 h
   · exact bot_le
   · exact le_top
   · exact le_top

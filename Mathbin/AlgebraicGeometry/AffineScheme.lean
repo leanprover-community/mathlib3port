@@ -160,7 +160,7 @@ def IsAffineOpen {X : Scheme} (U : Opens X.carrier) : Prop :=
 
 /-- The set of affine opens as a subset of `opens X.carrier`. -/
 def Scheme.affineOpens (X : Scheme) : Set (Opens X.carrier) :=
-  { U : Opens X.carrier | IsAffineOpen U }
+  {U : Opens X.carrier | IsAffineOpen U}
 #align algebraic_geometry.Scheme.affine_opens AlgebraicGeometry.Scheme.affineOpens
 
 theorem rangeIsAffineOpenOfOpenImmersion {X Y : Scheme} [IsAffine X] (f : X ⟶ Y)
@@ -234,7 +234,8 @@ theorem IsAffineOpen.fromSpec_image_top {X : Scheme} {U : Opens X.carrier} (hU :
 theorem IsAffineOpen.isCompact {X : Scheme} {U : Opens X.carrier} (hU : IsAffineOpen U) :
     IsCompact (U : Set X.carrier) :=
   by
-  convert@IsCompact.image _ _ _ _ Set.univ hU.from_Spec.1.base PrimeSpectrum.compactSpace.1
+  convert
+    @IsCompact.image _ _ _ _ Set.univ hU.from_Spec.1.base PrimeSpectrum.compactSpace.1
       (by continuity)
   convert hU.from_Spec_range.symm
   exact Set.image_univ
@@ -327,7 +328,8 @@ theorem IsAffineOpen.fromSpec_app_eq {X : Scheme} {U : Opens X.carrier} (hU : Is
 theorem IsAffineOpen.basicOpenIsAffine {X : Scheme} {U : Opens X.carrier} (hU : IsAffineOpen U)
     (f : X.Presheaf.obj (op U)) : IsAffineOpen (X.basicOpen f) :=
   by
-  convert range_is_affine_open_of_open_immersion
+  convert
+    range_is_affine_open_of_open_immersion
       (Scheme.Spec.map
           (CommRingCat.ofHom (algebraMap (X.presheaf.obj (op U)) (Localization.Away f))).op ≫
         hU.from_Spec)
@@ -398,7 +400,8 @@ theorem isBasis_basicOpen (X : Scheme) [IsAffine X] :
     Opens.IsBasis (Set.range (X.basicOpen : X.Presheaf.obj (op ⊤) → Opens X.carrier)) :=
   by
   delta opens.is_basis
-  convert prime_spectrum.is_basis_basic_opens.inducing
+  convert
+    prime_spectrum.is_basis_basic_opens.inducing
       (TopCat.homeoOfIso (Scheme.forget_to_Top.map_iso X.iso_Spec)).Inducing using
     1
   ext
@@ -629,9 +632,8 @@ theorem IsAffineOpen.is_localization_stalk {X : Scheme} {U : Opens X.carrier} (h
   simp only [← category.assoc]
   trans _ ≫ (structure_sheaf (X.presheaf.obj <| op U)).Presheaf.germ ⟨_, _⟩
   · rfl
-  convert(structure_sheaf (X.presheaf.obj <| op U)).Presheaf.germ_res (hom_of_le le_top)
-      ⟨_, _⟩ using
-    2
+  convert
+    (structure_sheaf (X.presheaf.obj <| op U)).Presheaf.germ_res (hom_of_le le_top) ⟨_, _⟩ using 2
   rw [category.assoc]
   erw [nat_trans.naturality]
   rw [← LocallyRingedSpace.Γ_map_op, ← LocallyRingedSpace.Γ.map_comp_assoc, ← op_comp]
@@ -684,7 +686,7 @@ theorem IsAffineOpen.basicOpen_union_eq_self_iff {X : Scheme} {U : Opens X.carri
       hU.from_Spec.1.base ⁻¹' U.1
   · refine' ⟨fun h => by rw [h], _⟩
     intro h
-    apply_fun Set.image hU.from_Spec.1.base  at h 
+    apply_fun Set.image hU.from_Spec.1.base at h 
     rw [Set.image_preimage_eq_inter_range, Set.image_preimage_eq_inter_range, hU.from_Spec_range] at
       h 
     simp only [Set.inter_self, opens.carrier_eq_coe, Set.inter_eq_right_iff_subset] at h 
@@ -733,30 +735,29 @@ theorem of_affine_open_cover {X : Scheme} (V : X.affineOpens) (S : Set X.affineO
         (∀ f : s, P (X.affineBasicOpen f.1)) → P U)
     (hS : (⋃ i : S, i : Set X.carrier) = Set.univ) (hS' : ∀ U : S, P U) : P V := by
   classical
-    have :
-      ∀ x : V, ∃ f : X.presheaf.obj <| op V.1, ↑x ∈ X.basic_open f ∧ P (X.affine_basic_open f) :=
-      by
-      intro x
-      have : ↑x ∈ (Set.univ : Set X.carrier) := trivial
-      rw [← hS] at this 
-      obtain ⟨W, hW⟩ := set.mem_Union.mp this
-      obtain ⟨f, g, e, hf⟩ := exists_basic_open_le_affine_inter V.prop W.1.Prop x ⟨x.prop, hW⟩
-      refine' ⟨f, hf, _⟩
-      convert hP₁ _ g (hS' W) using 1
-      ext1
-      exact e
-    choose f hf₁ hf₂ using this
-    suffices Ideal.span (Set.range f) = ⊤
-      by
-      obtain ⟨t, ht₁, ht₂⟩ := (Ideal.span_eq_top_iff_finite _).mp this
-      apply hP₂ V t ht₂
-      rintro ⟨i, hi⟩
-      obtain ⟨x, rfl⟩ := ht₁ hi
-      exact hf₂ x
-    rw [← V.prop.self_le_basic_open_union_iff]
-    intro x hx
-    rw [iSup_range', opens.mem_supr]
-    exact ⟨_, hf₁ ⟨x, hx⟩⟩
+  have : ∀ x : V, ∃ f : X.presheaf.obj <| op V.1, ↑x ∈ X.basic_open f ∧ P (X.affine_basic_open f) :=
+    by
+    intro x
+    have : ↑x ∈ (Set.univ : Set X.carrier) := trivial
+    rw [← hS] at this 
+    obtain ⟨W, hW⟩ := set.mem_Union.mp this
+    obtain ⟨f, g, e, hf⟩ := exists_basic_open_le_affine_inter V.prop W.1.Prop x ⟨x.prop, hW⟩
+    refine' ⟨f, hf, _⟩
+    convert hP₁ _ g (hS' W) using 1
+    ext1
+    exact e
+  choose f hf₁ hf₂ using this
+  suffices Ideal.span (Set.range f) = ⊤
+    by
+    obtain ⟨t, ht₁, ht₂⟩ := (Ideal.span_eq_top_iff_finite _).mp this
+    apply hP₂ V t ht₂
+    rintro ⟨i, hi⟩
+    obtain ⟨x, rfl⟩ := ht₁ hi
+    exact hf₂ x
+  rw [← V.prop.self_le_basic_open_union_iff]
+  intro x hx
+  rw [iSup_range', opens.mem_supr]
+  exact ⟨_, hf₁ ⟨x, hx⟩⟩
 #align algebraic_geometry.of_affine_open_cover AlgebraicGeometry.of_affine_open_cover
 
 end AlgebraicGeometry

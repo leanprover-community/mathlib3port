@@ -51,12 +51,12 @@ local notation:1024 "↑ₘ[" R "]" => @coe _ (Matrix (Fin 2) (Fin 2) R) _
 -- mathport name: «exprGL( , )⁺»
 local notation "GL(" n ", " R ")" "⁺" => Matrix.GLPos (Fin n) R
 
-/- ./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler λ α,
+/- ./././Mathport/Syntax/Translate/Command.lean:43:9: unsupported derive handler λ α,
 has_coe[has_coe] α exprℂ() -/
 /-- The open upper half plane -/
 def UpperHalfPlane :=
   { point : ℂ // 0 < point.im }
-deriving «./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler λ α,
+deriving «./././Mathport/Syntax/Translate/Command.lean:43:9: unsupported derive handler λ α,
   has_coe[has_coe] α exprℂ()»
 #align upper_half_plane UpperHalfPlane
 
@@ -164,7 +164,7 @@ theorem linear_ne_zero (cd : Fin 2 → ℝ) (z : ℍ) (h : cd ≠ 0) : (cd 0 : �
   have : cd 0 = 0 :=
     by
     -- we will need this twice
-    apply_fun Complex.im  at h 
+    apply_fun Complex.im at h 
     simpa only [z.im_ne_zero, Complex.add_im, add_zero, coe_im, MulZeroClass.zero_mul, or_false_iff,
       Complex.ofReal_im, Complex.zero_im, Complex.mul_im, mul_eq_zero] using h
   simp only [this, MulZeroClass.zero_mul, Complex.ofReal_zero, zero_add, Complex.ofReal_eq_zero] at
@@ -218,7 +218,8 @@ theorem smulAux'_im (g : GL(2, ℝ)⁺) (z : ℍ) :
 def smulAux (g : GL(2, ℝ)⁺) (z : ℍ) : ℍ :=
   ⟨smulAux' g z, by
     rw [smul_aux'_im]
-    convert mul_pos ((mem_GL_pos _).1 g.prop)
+    convert
+      mul_pos ((mem_GL_pos _).1 g.prop)
         (div_pos z.im_pos (complex.norm_sq_pos.mpr (denom_ne_zero g z)))
     simp only [general_linear_group.coe_det_apply, coe_coe]
     ring⟩

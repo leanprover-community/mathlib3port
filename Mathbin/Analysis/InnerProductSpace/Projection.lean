@@ -181,11 +181,11 @@ theorem exists_norm_eq_iInf_of_complete_convex {K : Set F} (ne : K.Nonempty) (h�
     · convert continuous_sqrt.continuous_at; exact sqrt_zero.symm
     have eq₁ : tendsto (fun n : ℕ => 8 * δ * (1 / (n + 1))) at_top (nhds (0 : ℝ)) :=
       by
-      convert(@tendsto_const_nhds _ _ _ (8 * δ) _).mul tendsto_one_div_add_atTop_nhds_0_nat
+      convert (@tendsto_const_nhds _ _ _ (8 * δ) _).mul tendsto_one_div_add_atTop_nhds_0_nat
       simp only [MulZeroClass.mul_zero]
     have : tendsto (fun n : ℕ => (4 : ℝ) * (1 / (n + 1))) at_top (nhds (0 : ℝ)) :=
       by
-      convert(@tendsto_const_nhds _ _ _ (4 : ℝ) _).mul tendsto_one_div_add_atTop_nhds_0_nat
+      convert (@tendsto_const_nhds _ _ _ (4 : ℝ) _).mul tendsto_one_div_add_atTop_nhds_0_nat
       simp only [MulZeroClass.mul_zero]
     have eq₂ :
       tendsto (fun n : ℕ => (4 : ℝ) * (1 / (n + 1)) * (1 / (n + 1))) at_top (nhds (0 : ℝ)) :=

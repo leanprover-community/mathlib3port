@@ -455,7 +455,7 @@ theorem isOpen_compl_singleton [T1Space α] {x : α} : IsOpen ({x}ᶜ : Set α) 
 #align is_open_compl_singleton isOpen_compl_singleton
 
 #print isOpen_ne /-
-theorem isOpen_ne [T1Space α] {x : α} : IsOpen { y | y ≠ x } :=
+theorem isOpen_ne [T1Space α] {x : α} : IsOpen {y | y ≠ x} :=
   isOpen_compl_singleton
 #align is_open_ne isOpen_ne
 -/
@@ -481,10 +481,10 @@ theorem Ne.nhdsWithin_diff_singleton [T1Space α] {x y : α} (h : x ≠ y) (s : 
 #align ne.nhds_within_diff_singleton Ne.nhdsWithin_diff_singleton
 
 theorem isOpen_setOf_eventually_nhdsWithin [T1Space α] {p : α → Prop} :
-    IsOpen { x | ∀ᶠ y in 𝓝[≠] x, p y } :=
+    IsOpen {x | ∀ᶠ y in 𝓝[≠] x, p y} :=
   by
   refine' is_open_iff_mem_nhds.mpr fun a ha => _
-  filter_upwards [eventually_nhds_nhds_within.mpr ha]with b hb
+  filter_upwards [eventually_nhds_nhds_within.mpr ha] with b hb
   by_cases a = b
   · subst h; exact hb
   · rw [(Ne.symm h).nhdsWithin_compl_singleton] at hb 
@@ -1066,7 +1066,7 @@ theorem Set.Finite.t2_separation [T2Space α] {s : Set α} (hs : s.Finite) :
   s.pairwise_disjoint_nhds.exists_mem_filter_basisₓ hs nhds_basis_opens
 #align set.finite.t2_separation Set.Finite.t2_separation
 
-theorem isOpen_setOf_disjoint_nhds_nhds : IsOpen { p : α × α | Disjoint (𝓝 p.1) (𝓝 p.2) } :=
+theorem isOpen_setOf_disjoint_nhds_nhds : IsOpen {p : α × α | Disjoint (𝓝 p.1) (𝓝 p.2)} :=
   by
   simp only [isOpen_iff_mem_nhds, Prod.forall, mem_set_of_eq]
   intro x y h
@@ -1408,14 +1408,14 @@ variable {γ : Type _} [TopologicalSpace β] [TopologicalSpace γ]
 
 #print isClosed_eq /-
 theorem isClosed_eq [T2Space α] {f g : β → α} (hf : Continuous f) (hg : Continuous g) :
-    IsClosed { x : β | f x = g x } :=
+    IsClosed {x : β | f x = g x} :=
   continuous_iff_isClosed.mp (hf.prod_mk hg) _ isClosed_diagonal
 #align is_closed_eq isClosed_eq
 -/
 
 #print isOpen_ne_fun /-
 theorem isOpen_ne_fun [T2Space α] {f g : β → α} (hf : Continuous f) (hg : Continuous g) :
-    IsOpen { x : β | f x ≠ g x } :=
+    IsOpen {x : β | f x ≠ g x} :=
   isOpen_compl_iff.mpr <| isClosed_eq hf hg
 #align is_open_ne_fun isOpen_ne_fun
 -/
@@ -1441,7 +1441,7 @@ theorem eqOn_closure₂' [T2Space α] {s : Set β} {t : Set γ} {f g : β → γ
     (h : ∀ x ∈ s, ∀ y ∈ t, f x y = g x y) (hf₁ : ∀ x, Continuous (f x))
     (hf₂ : ∀ y, Continuous fun x => f x y) (hg₁ : ∀ x, Continuous (g x))
     (hg₂ : ∀ y, Continuous fun x => g x y) : ∀ x ∈ closure s, ∀ y ∈ closure t, f x y = g x y :=
-  suffices closure s ⊆ ⋂ y ∈ closure t, { x | f x y = g x y } by simpa only [subset_def, mem_Inter]
+  suffices closure s ⊆ ⋂ y ∈ closure t, {x | f x y = g x y} by simpa only [subset_def, mem_Inter]
   (closure_minimal fun x hx => mem_iInter₂.2 <| Set.EqOn.closure (h x hx) (hf₁ _) (hg₁ _)) <|
     isClosed_biInter fun y hy => isClosed_eq (hf₂ _) (hg₂ _)
 #align eq_on_closure₂' eqOn_closure₂'
@@ -1609,23 +1609,23 @@ theorem IsCompact.finite_compact_cover [T2Space α] {s : Set α} (hs : IsCompact
     (U : ι → Set α) (hU : ∀ i ∈ t, IsOpen (U i)) (hsC : s ⊆ ⋃ i ∈ t, U i) :
     ∃ K : ι → Set α, (∀ i, IsCompact (K i)) ∧ (∀ i, K i ⊆ U i) ∧ s = ⋃ i ∈ t, K i := by
   classical
-    induction' t using Finset.induction with x t hx ih generalizing U hU s hs hsC
-    · refine' ⟨fun _ => ∅, fun i => isCompact_empty, fun i => empty_subset _, _⟩
-      simpa only [subset_empty_iff, Union_false, Union_empty] using hsC
-    simp only [Finset.set_biUnion_insert] at hsC 
-    simp only [Finset.mem_insert] at hU 
-    have hU' : ∀ i ∈ t, IsOpen (U i) := fun i hi => hU i (Or.inr hi)
-    rcases hs.binary_compact_cover (hU x (Or.inl rfl)) (isOpen_biUnion hU') hsC with
-      ⟨K₁, K₂, h1K₁, h1K₂, h2K₁, h2K₂, hK⟩
-    rcases ih U hU' h1K₂ h2K₂ with ⟨K, h1K, h2K, h3K⟩
-    refine' ⟨update K x K₁, _, _, _⟩
-    · intro i; by_cases hi : i = x
-      · simp only [update_same, hi, h1K₁]
-      · rw [← Ne.def] at hi ; simp only [update_noteq hi, h1K]
-    · intro i; by_cases hi : i = x
-      · simp only [update_same, hi, h2K₁]
-      · rw [← Ne.def] at hi ; simp only [update_noteq hi, h2K]
-    · simp only [set_bUnion_insert_update _ hx, hK, h3K]
+  induction' t using Finset.induction with x t hx ih generalizing U hU s hs hsC
+  · refine' ⟨fun _ => ∅, fun i => isCompact_empty, fun i => empty_subset _, _⟩
+    simpa only [subset_empty_iff, Union_false, Union_empty] using hsC
+  simp only [Finset.set_biUnion_insert] at hsC 
+  simp only [Finset.mem_insert] at hU 
+  have hU' : ∀ i ∈ t, IsOpen (U i) := fun i hi => hU i (Or.inr hi)
+  rcases hs.binary_compact_cover (hU x (Or.inl rfl)) (isOpen_biUnion hU') hsC with
+    ⟨K₁, K₂, h1K₁, h1K₂, h2K₁, h2K₂, hK⟩
+  rcases ih U hU' h1K₂ h2K₂ with ⟨K, h1K, h2K, h3K⟩
+  refine' ⟨update K x K₁, _, _, _⟩
+  · intro i; by_cases hi : i = x
+    · simp only [update_same, hi, h1K₁]
+    · rw [← Ne.def] at hi ; simp only [update_noteq hi, h1K]
+  · intro i; by_cases hi : i = x
+    · simp only [update_same, hi, h2K₁]
+    · rw [← Ne.def] at hi ; simp only [update_noteq hi, h2K]
+  · simp only [set_bUnion_insert_update _ hx, hK, h3K]
 #align is_compact.finite_compact_cover IsCompact.finite_compact_cover
 
 end
@@ -1867,12 +1867,12 @@ theorem specializes_iff_inseparable {a b : α} : a ⤳ b ↔ Inseparable a b :=
 #align specializes_iff_inseparable specializes_iff_inseparable
 -/
 
-theorem isClosed_setOf_specializes : IsClosed { p : α × α | p.1 ⤳ p.2 } := by
+theorem isClosed_setOf_specializes : IsClosed {p : α × α | p.1 ⤳ p.2} := by
   simp only [← isOpen_compl_iff, compl_set_of, ← disjoint_nhds_nhds_iff_not_specializes,
     isOpen_setOf_disjoint_nhds_nhds]
 #align is_closed_set_of_specializes isClosed_setOf_specializes
 
-theorem isClosed_setOf_inseparable : IsClosed { p : α × α | Inseparable p.1 p.2 } := by
+theorem isClosed_setOf_inseparable : IsClosed {p : α × α | Inseparable p.1 p.2} := by
   simp only [← specializes_iff_inseparable, isClosed_setOf_specializes]
 #align is_closed_set_of_inseparable isClosed_setOf_inseparable
 
@@ -2290,7 +2290,7 @@ section Profinite
 #print totallySeparatedSpace_of_t1_of_basis_clopen /-
 /-- A T1 space with a clopen basis is totally separated. -/
 theorem totallySeparatedSpace_of_t1_of_basis_clopen [T1Space α]
-    (h : IsTopologicalBasis { s : Set α | IsClopen s }) : TotallySeparatedSpace α :=
+    (h : IsTopologicalBasis {s : Set α | IsClopen s}) : TotallySeparatedSpace α :=
   by
   constructor
   rintro x - y - hxy
@@ -2357,7 +2357,7 @@ theorem nhds_basis_clopen (x : α) : (𝓝 x).HasBasis (fun s : Set α => x ∈ 
 -/
 
 #print isTopologicalBasis_clopen /-
-theorem isTopologicalBasis_clopen : IsTopologicalBasis { s : Set α | IsClopen s } :=
+theorem isTopologicalBasis_clopen : IsTopologicalBasis {s : Set α | IsClopen s} :=
   by
   apply is_topological_basis_of_open_of_nhds fun U (hU : IsClopen U) => hU.1
   intro x U hxU U_op
@@ -2384,7 +2384,7 @@ variable {H : Type _} [TopologicalSpace H] [LocallyCompactSpace H] [T2Space H]
 #print loc_compact_Haus_tot_disc_of_zero_dim /-
 /-- A locally compact Hausdorff totally disconnected space has a basis with clopen elements. -/
 theorem loc_compact_Haus_tot_disc_of_zero_dim [TotallyDisconnectedSpace H] :
-    IsTopologicalBasis { s : Set H | IsClopen s } :=
+    IsTopologicalBasis {s : Set H | IsClopen s} :=
   by
   refine' is_topological_basis_of_open_of_nhds (fun u hu => hu.1) _
   rintro x U memU hU

@@ -223,7 +223,7 @@ theorem mem_nilradical : x ∈ nilradical R ↔ IsNilpotent x :=
 #align mem_nilradical mem_nilradical
 
 theorem nilradical_eq_sInf (R : Type _) [CommSemiring R] :
-    nilradical R = sInf { J : Ideal R | J.IsPrime } :=
+    nilradical R = sInf {J : Ideal R | J.IsPrime} :=
   (Ideal.radical_eq_sInf ⊥).trans <| by simp_rw [and_iff_right bot_le]
 #align nilradical_eq_Inf nilradical_eq_sInf
 

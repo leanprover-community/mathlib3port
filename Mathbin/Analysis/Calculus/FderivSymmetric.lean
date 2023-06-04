@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.calculus.fderiv_symmetric
-! leanprover-community/mathlib commit 2c1d8ca2812b64f88992a5294ea3dba144755cd1
+! leanprover-community/mathlib commit 5c1efce12ba86d4901463f61019832f6a4b1a0d0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.Analysis.Calculus.MeanValue
 
 /-!
 # Symmetry of the second derivative
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 We show that, over the reals, the second derivative is symmetric.
 
@@ -93,7 +96,7 @@ theorem Convex.taylor_approx_two_segment {v w : E} (hv : x + v ∈ interior s)
   have E2 : ∀ᶠ h in 𝓝[>] (0 : ℝ), (h : ℝ) < 1 :=
     mem_nhdsWithin_Ioi_iff_exists_Ioo_subset.2
       ⟨(1 : ℝ), by simp only [mem_Ioi, zero_lt_one], fun x hx => hx.2⟩
-  filter_upwards [E1, E2, self_mem_nhdsWithin]with h hδ h_lt_1 hpos
+  filter_upwards [E1, E2, self_mem_nhdsWithin] with h hδ h_lt_1 hpos
   -- we consider `h` small enough that all points under consideration belong to this ball,
   -- and also with `0 < h < 1`.
   replace hpos : 0 < h := hpos
@@ -271,7 +274,8 @@ theorem Convex.second_derivative_within_at_symmetric_of_mem_interior {v w : E}
   by
   have A : (fun h : ℝ => h ^ 2 • (f'' w v - f'' v w)) =o[𝓝[>] 0] fun h => h ^ 2 :=
     by
-    convert(s_conv.is_o_alternate_sum_square hf xs hx h4v h4w).sub
+    convert
+      (s_conv.is_o_alternate_sum_square hf xs hx h4v h4w).sub
         (s_conv.is_o_alternate_sum_square hf xs hx h4w h4v)
     ext h
     simp only [add_comm, smul_add, smul_sub]
@@ -286,7 +290,7 @@ theorem Convex.second_derivative_within_at_symmetric_of_mem_interior {v w : E}
       rw [← one_smul ℝ (f'' w v - f'' v w), smul_smul, smul_smul]
       congr 1
       field_simp [LT.lt.ne' hpos]
-    · filter_upwards [self_mem_nhdsWithin]with _ hpos
+    · filter_upwards [self_mem_nhdsWithin] with _ hpos
       field_simp [LT.lt.ne' hpos, SMul.smul]
   simpa only [sub_eq_zero] using is_o_const_const_iff.1 B
 #align convex.second_derivative_within_at_symmetric_of_mem_interior Convex.second_derivative_within_at_symmetric_of_mem_interior
@@ -343,7 +347,7 @@ theorem Convex.second_derivative_within_at_symmetric {s : Set E} (s_conv : Conve
   simp only [ContinuousLinearMap.map_add, ContinuousLinearMap.map_smul, smul_add, smul_smul,
     ContinuousLinearMap.add_apply, Pi.smul_apply, ContinuousLinearMap.coe_smul', C] at this 
   rw [← sub_eq_zero] at this 
-  abel  at this 
+  abel at this 
   simp only [one_zsmul, neg_smul, sub_eq_zero, mul_comm, ← sub_eq_add_neg] at this 
   apply smul_right_injective F _ this
   simp [(tpos v).ne', (tpos w).ne']

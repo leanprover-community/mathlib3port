@@ -63,9 +63,9 @@ theorem totient_eq_card_coprime (n : ℕ) : φ n = ((range n).filterₓ n.coprim
 
 #print Nat.totient_eq_card_lt_and_coprime /-
 /-- A characterisation of `nat.totient` that avoids `finset`. -/
-theorem totient_eq_card_lt_and_coprime (n : ℕ) : φ n = Nat.card { m | m < n ∧ n.coprime m } :=
+theorem totient_eq_card_lt_and_coprime (n : ℕ) : φ n = Nat.card {m | m < n ∧ n.coprime m} :=
   by
-  let e : { m | m < n ∧ n.coprime m } ≃ Finset.filter n.coprime (Finset.range n) :=
+  let e : {m | m < n ∧ n.coprime m} ≃ Finset.filter n.coprime (Finset.range n) :=
     { toFun := fun m => ⟨m, by simpa only [Finset.mem_filter, Finset.mem_range] using m.property⟩
       invFun := fun m => ⟨m, by simpa only [Finset.mem_filter, Finset.mem_range] using m.property⟩
       left_inv := fun m => by simp only [Subtype.coe_mk, Subtype.coe_eta]

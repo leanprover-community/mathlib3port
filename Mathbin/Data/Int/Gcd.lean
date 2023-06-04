@@ -521,7 +521,7 @@ theorem dvd_of_dvd_mul_right_of_gcd_one {a b c : ℤ} (habc : a ∣ b * c) (hab 
 /-- For nonzero integers `a` and `b`, `gcd a b` is the smallest positive natural number that can be
 written in the form `a * x + b * y` for some pair of integers `x` and `y` -/
 theorem gcd_least_linear {a b : ℤ} (ha : a ≠ 0) :
-    IsLeast { n : ℕ | 0 < n ∧ ∃ x y : ℤ, ↑n = a * x + b * y } (a.gcd b) :=
+    IsLeast {n : ℕ | 0 < n ∧ ∃ x y : ℤ, ↑n = a * x + b * y} (a.gcd b) :=
   by
   simp_rw [← gcd_dvd_iff]
   constructor

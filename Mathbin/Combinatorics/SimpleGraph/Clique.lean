@@ -221,7 +221,7 @@ noncomputable def topEmbeddingOfNotCliqueFree {n : ℕ} (h : ¬G.CliqueFree n) :
     apply iso.complete_graph
     simpa using (Fintype.equivFin h.some).symm
   rw [← ha] at this 
-  convert(embedding.induce ↑h.some).comp this.to_embedding <;> exact hb.symm
+  convert (embedding.induce ↑h.some).comp this.to_embedding <;> exact hb.symm
 #align simple_graph.top_embedding_of_not_clique_free SimpleGraph.topEmbeddingOfNotCliqueFree
 
 theorem not_cliqueFree_iff (n : ℕ) : ¬G.CliqueFree n ↔ Nonempty ((⊤ : SimpleGraph (Fin n)) ↪g G) :=
@@ -287,7 +287,7 @@ variable (G) {n : ℕ} {a b c : α} {s : Finset α}
 #print SimpleGraph.cliqueSet /-
 /-- The `n`-cliques in a graph as a set. -/
 def cliqueSet (n : ℕ) : Set (Finset α) :=
-  { s | G.IsNClique n s }
+  {s | G.IsNClique n s}
 #align simple_graph.clique_set SimpleGraph.cliqueSet
 -/
 

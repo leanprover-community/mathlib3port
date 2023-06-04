@@ -226,7 +226,7 @@ variable {s s' : Set α} {x : α} {p : Filter ι} {g : ι → α}
 /-- Basis sets for the uniformity of uniform convergence: `gen α β V` is the set of pairs `(f, g)`
 of functions `α →ᵤ β` such that `∀ x, (f x, g x) ∈ V`. -/
 protected def gen (V : Set (β × β)) : Set ((α →ᵤ β) × (α →ᵤ β)) :=
-  { uv : (α →ᵤ β) × (α →ᵤ β) | ∀ x, (uv.1 x, uv.2 x) ∈ V }
+  {uv : (α →ᵤ β) × (α →ᵤ β) | ∀ x, (uv.1 x, uv.2 x) ∈ V}
 #align uniform_fun.gen UniformFun.gen
 -/
 
@@ -290,12 +290,11 @@ protected theorem gc : GaloisConnection lower_adjoint fun 𝓕 => UniformFun.fil
     _ ↔ ∀ U ∈ 𝓕, UniformFun.gen α β U ∈ 𝓐 := image_subset_iff
     _ ↔
         ∀ U ∈ 𝓕,
-          { uv | ∀ x, (uv, x) ∈ { t : ((α →ᵤ β) × (α →ᵤ β)) × α | (t.1.1 t.2, t.1.2 t.2) ∈ U } } ∈
-            𝓐 :=
+          {uv | ∀ x, (uv, x) ∈ {t : ((α →ᵤ β) × (α →ᵤ β)) × α | (t.1.1 t.2, t.1.2 t.2) ∈ U}} ∈ 𝓐 :=
       Iff.rfl
     _ ↔
         ∀ U ∈ 𝓕,
-          { uvx : ((α →ᵤ β) × (α →ᵤ β)) × α | (uvx.1.1 uvx.2, uvx.1.2 uvx.2) ∈ U } ∈
+          {uvx : ((α →ᵤ β) × (α →ᵤ β)) × α | (uvx.1.1 uvx.2, uvx.1.2 uvx.2) ∈ U} ∈
             𝓐 ×ᶠ (⊤ : Filter α) :=
       (forall₂_congr fun U hU => mem_prod_top.symm)
     _ ↔ lower_adjoint 𝓐 ≤ 𝓕 := Iff.rfl
@@ -356,15 +355,14 @@ protected theorem hasBasis_uniformity_of_basis {ι : Sort _} {p : ι → Prop} {
 /-- For `f : α →ᵤ β`, `𝓝 f` admits the family `{g | ∀ x, (f x, g x) ∈ V}` for `V ∈ 𝓑` as a filter
 basis, for any basis `𝓑` of `𝓤 β`. -/
 protected theorem hasBasis_nhds_of_basis (f) {p : ι → Prop} {s : ι → Set (β × β)}
-    (h : HasBasis (𝓤 β) p s) :
-    (𝓝 f).HasBasis p fun i => { g | (f, g) ∈ UniformFun.gen α β (s i) } :=
+    (h : HasBasis (𝓤 β) p s) : (𝓝 f).HasBasis p fun i => {g | (f, g) ∈ UniformFun.gen α β (s i)} :=
   nhds_basis_uniformity' (UniformFun.hasBasis_uniformity_of_basis α β h)
 #align uniform_fun.has_basis_nhds_of_basis UniformFun.hasBasis_nhds_of_basis
 
 /-- For `f : α →ᵤ β`, `𝓝 f` admits the family `{g | ∀ x, (f x, g x) ∈ V}` for `V ∈ 𝓤 β` as a
 filter basis. -/
 protected theorem hasBasis_nhds (f) :
-    (𝓝 f).HasBasis (fun V => V ∈ 𝓤 β) fun V => { g | (f, g) ∈ UniformFun.gen α β V } :=
+    (𝓝 f).HasBasis (fun V => V ∈ 𝓤 β) fun V => {g | (f, g) ∈ UniformFun.gen α β V} :=
   UniformFun.hasBasis_nhds_of_basis α β f (Filter.basis_sets _)
 #align uniform_fun.has_basis_nhds UniformFun.hasBasis_nhds
 
@@ -611,7 +609,7 @@ local notation "𝒰(" α ", " β ", " u ")" => @UniformFun.uniformSpace α β u
 `∀ x ∈ S, (f x, g x) ∈ V`. Note that the family `𝔖 : set (set α)` is only used to specify which
 type alias of `α → β` to use here. -/
 protected def gen (𝔖) (S : Set α) (V : Set (β × β)) : Set ((α →ᵤ[𝔖] β) × (α →ᵤ[𝔖] β)) :=
-  { uv : (α →ᵤ[𝔖] β) × (α →ᵤ[𝔖] β) | ∀ x ∈ S, (uv.1 x, uv.2 x) ∈ V }
+  {uv : (α →ᵤ[𝔖] β) × (α →ᵤ[𝔖] β) | ∀ x ∈ S, (uv.1 x, uv.2 x) ∈ V}
 #align uniform_on_fun.gen UniformOnFun.gen
 -/
 
@@ -729,7 +727,7 @@ family `{g | ∀ x ∈ S, (f x, g x) ∈ V}` for `S ∈ 𝔖` and `V ∈ 𝓑` a
 protected theorem hasBasis_nhds_of_basis (f : α →ᵤ[𝔖] β) (h : 𝔖.Nonempty)
     (h' : DirectedOn (· ⊆ ·) 𝔖) {p : ι → Prop} {s : ι → Set (β × β)} (hb : HasBasis (𝓤 β) p s) :
     (𝓝 f).HasBasis (fun Si : Set α × ι => Si.1 ∈ 𝔖 ∧ p Si.2) fun Si =>
-      { g | (g, f) ∈ UniformOnFun.gen 𝔖 Si.1 (s Si.2) } :=
+      {g | (g, f) ∈ UniformOnFun.gen 𝔖 Si.1 (s Si.2)} :=
   letI : UniformSpace (α → β) := UniformOnFun.uniformSpace α β 𝔖
   nhds_basis_uniformity (UniformOnFun.hasBasis_uniformity_of_basis α β 𝔖 h h' hb)
 #align uniform_on_fun.has_basis_nhds_of_basis UniformOnFun.hasBasis_nhds_of_basis
@@ -738,7 +736,7 @@ protected theorem hasBasis_nhds_of_basis (f : α →ᵤ[𝔖] β) (h : 𝔖.None
 family `{g | ∀ x ∈ S, (f x, g x) ∈ V}` for `S ∈ 𝔖` and `V ∈ 𝓤 β` as a filter basis. -/
 protected theorem hasBasis_nhds (f : α →ᵤ[𝔖] β) (h : 𝔖.Nonempty) (h' : DirectedOn (· ⊆ ·) 𝔖) :
     (𝓝 f).HasBasis (fun SV : Set α × Set (β × β) => SV.1 ∈ 𝔖 ∧ SV.2 ∈ 𝓤 β) fun SV =>
-      { g | (g, f) ∈ UniformOnFun.gen 𝔖 SV.1 SV.2 } :=
+      {g | (g, f) ∈ UniformOnFun.gen 𝔖 SV.1 SV.2} :=
   UniformOnFun.hasBasis_nhds_of_basis α β 𝔖 f h h' (Filter.basis_sets _)
 #align uniform_on_fun.has_basis_nhds UniformOnFun.hasBasis_nhds
 

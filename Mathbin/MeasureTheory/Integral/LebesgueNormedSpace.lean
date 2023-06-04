@@ -31,9 +31,9 @@ theorem aemeasurable_withDensity_iff {E : Type _} [NormedAddCommGroup E] [Normed
   by
   constructor
   · rintro ⟨g', g'meas, hg'⟩
-    have A : MeasurableSet { x : α | f x ≠ 0 } := (hf (measurable_set_singleton 0)).compl
+    have A : MeasurableSet {x : α | f x ≠ 0} := (hf (measurable_set_singleton 0)).compl
     refine' ⟨fun x => (f x : ℝ) • g' x, hf.coe_nnreal_real.smul g'meas, _⟩
-    apply @ae_of_ae_restrict_of_ae_restrict_compl _ _ _ { x | f x ≠ 0 }
+    apply @ae_of_ae_restrict_of_ae_restrict_compl _ _ _ {x | f x ≠ 0}
     · rw [eventually_eq, ae_with_density_iff hf.coe_nnreal_ennreal] at hg' 
       rw [ae_restrict_iff' A]
       filter_upwards [hg']

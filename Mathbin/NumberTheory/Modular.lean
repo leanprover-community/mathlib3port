@@ -106,7 +106,7 @@ theorem bottom_row_coprime {R : Type _} [CommRing R] (g : SL(2, R)) :
 of `SL(2,ℤ)`. -/
 theorem bottom_row_surj {R : Type _} [CommRing R] :
     Set.SurjOn (fun g : SL(2, R) => @coe _ (Matrix (Fin 2) (Fin 2) R) _ g 1) Set.univ
-      { cd | IsCoprime (cd 0) (cd 1) } :=
+      {cd | IsCoprime (cd 0) (cd 1)} :=
   by
   rintro cd ⟨b₀, a, gcd_eqn⟩
   let A := of ![![a, -b₀], cd]
@@ -289,7 +289,7 @@ theorem tendsto_abs_re_smul {p : Fin 2 → ℤ} (hp : IsCoprime (p 0) (p 1)) :
     exact_mod_cast hp.sq_add_sq_ne_zero
   let f := Homeomorph.mulRight₀ _ this
   let ff := Homeomorph.addRight (((p 1 : ℂ) * z - p 0) / ((p 0 ^ 2 + p 1 ^ 2) * (p 0 * z + p 1))).re
-  convert(f.trans ff).ClosedEmbedding.tendsto_cocompact.comp (tendsto_lc_row0 hp)
+  convert (f.trans ff).ClosedEmbedding.tendsto_cocompact.comp (tendsto_lc_row0 hp)
   ext g
   change
     ((g : SL(2, ℤ)) • z).re =
@@ -307,18 +307,18 @@ attribute [local simp] coe_smul re_smul
 /-- For `z : ℍ`, there is a `g : SL(2,ℤ)` maximizing `(g•z).im` -/
 theorem exists_max_im : ∃ g : SL(2, ℤ), ∀ g' : SL(2, ℤ), (g' • z).im ≤ (g • z).im := by
   classical
-    let s : Set (Fin 2 → ℤ) := { cd | IsCoprime (cd 0) (cd 1) }
-    have hs : s.nonempty := ⟨![1, 1], isCoprime_one_left⟩
-    obtain ⟨p, hp_coprime, hp⟩ :=
-      Filter.Tendsto.exists_within_forall_le hs (tendsto_norm_sq_coprime_pair z)
-    obtain ⟨g, -, hg⟩ := bottom_row_surj hp_coprime
-    refine' ⟨g, fun g' => _⟩
-    rw [special_linear_group.im_smul_eq_div_norm_sq, special_linear_group.im_smul_eq_div_norm_sq,
-      div_le_div_left]
-    · simpa [← hg] using hp (↑ₘg' 1) (bottom_row_coprime g')
-    · exact z.im_pos
-    · exact norm_sq_denom_pos g' z
-    · exact norm_sq_denom_pos g z
+  let s : Set (Fin 2 → ℤ) := {cd | IsCoprime (cd 0) (cd 1)}
+  have hs : s.nonempty := ⟨![1, 1], isCoprime_one_left⟩
+  obtain ⟨p, hp_coprime, hp⟩ :=
+    Filter.Tendsto.exists_within_forall_le hs (tendsto_norm_sq_coprime_pair z)
+  obtain ⟨g, -, hg⟩ := bottom_row_surj hp_coprime
+  refine' ⟨g, fun g' => _⟩
+  rw [special_linear_group.im_smul_eq_div_norm_sq, special_linear_group.im_smul_eq_div_norm_sq,
+    div_le_div_left]
+  · simpa [← hg] using hp (↑ₘg' 1) (bottom_row_coprime g')
+  · exact z.im_pos
+  · exact norm_sq_denom_pos g' z
+  · exact norm_sq_denom_pos g z
 #align modular_group.exists_max_im ModularGroup.exists_max_im
 
 /-- Given `z : ℍ` and a bottom row `(c,d)`, among the `g : SL(2,ℤ)` with this bottom row, minimize
@@ -413,12 +413,12 @@ theorem im_lt_im_s_smul (h : normSq z < 1) : z.im < (S • z).im :=
 
 /-- The standard (closed) fundamental domain of the action of `SL(2,ℤ)` on `ℍ`. -/
 def fd : Set ℍ :=
-  { z | 1 ≤ (z : ℂ).normSq ∧ |z.re| ≤ (1 : ℝ) / 2 }
+  {z | 1 ≤ (z : ℂ).normSq ∧ |z.re| ≤ (1 : ℝ) / 2}
 #align modular_group.fd ModularGroup.fd
 
 /-- The standard open fundamental domain of the action of `SL(2,ℤ)` on `ℍ`. -/
 def fdo : Set ℍ :=
-  { z | 1 < (z : ℂ).normSq ∧ |z.re| < (1 : ℝ) / 2 }
+  {z | 1 < (z : ℂ).normSq ∧ |z.re| < (1 : ℝ) / 2}
 #align modular_group.fdo ModularGroup.fdo
 
 -- mathport name: modular_group.fd

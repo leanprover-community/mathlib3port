@@ -75,7 +75,7 @@ theorem hasDerivWithinAt_arcsin_Ici {x : ℝ} (h : x ≠ -1) :
   by
   rcases em (x = 1) with (rfl | h')
   ·
-    convert(hasDerivWithinAt_const _ _ (π / 2)).congr _ _ <;>
+    convert (hasDerivWithinAt_const _ _ (π / 2)).congr _ _ <;>
       simp (config := { contextual := true }) [arcsin_of_one_le]
   · exact (has_deriv_at_arcsin h h').HasDerivWithinAt
 #align real.has_deriv_within_at_arcsin_Ici Real.hasDerivWithinAt_arcsin_Ici
@@ -85,7 +85,7 @@ theorem hasDerivWithinAt_arcsin_Iic {x : ℝ} (h : x ≠ 1) :
   by
   rcases em (x = -1) with (rfl | h')
   ·
-    convert(hasDerivWithinAt_const _ _ (-(π / 2))).congr _ _ <;>
+    convert (hasDerivWithinAt_const _ _ (-(π / 2))).congr _ _ <;>
       simp (config := { contextual := true }) [arcsin_of_le_neg_one]
   · exact (has_deriv_at_arcsin h' h).HasDerivWithinAt
 #align real.has_deriv_within_at_arcsin_Iic Real.hasDerivWithinAt_arcsin_Iic
@@ -96,8 +96,8 @@ theorem differentiableWithinAt_arcsin_Ici {x : ℝ} :
   refine' ⟨_, fun h => (has_deriv_within_at_arcsin_Ici h).DifferentiableWithinAt⟩
   rintro h rfl
   have : sin ∘ arcsin =ᶠ[𝓝[≥] (-1 : ℝ)] id := by
-    filter_upwards [Icc_mem_nhdsWithin_Ici
-        ⟨le_rfl, neg_lt_self (zero_lt_one' ℝ)⟩]with x using sin_arcsin'
+    filter_upwards [Icc_mem_nhdsWithin_Ici ⟨le_rfl, neg_lt_self (zero_lt_one' ℝ)⟩] with x using
+      sin_arcsin'
   have := h.has_deriv_within_at.sin.congr_of_eventually_eq this.symm (by simp)
   simpa using (uniqueDiffOn_Ici _ _ left_mem_Ici).eq_deriv _ this (hasDerivWithinAt_id _ _)
 #align real.differentiable_within_at_arcsin_Ici Real.differentiableWithinAt_arcsin_Ici

@@ -99,7 +99,7 @@ theorem tendsto_floor_right [OrderClosedTopology α] (n : ℤ) :
       refine' eventually_nhdsWithin_of_forall fun x (hx : (n : α) ≤ x) => _
       change _ ≤ _
       norm_cast
-      convert← floor_mono hx
+      convert ← floor_mono hx
       rw [floor_eq_iff]
       exact ⟨le_rfl, lt_add_one _⟩)
 #align tendsto_floor_right tendsto_floor_right
@@ -111,7 +111,7 @@ theorem tendsto_ceil_left [OrderClosedTopology α] (n : ℤ) :
       refine' eventually_nhdsWithin_of_forall fun x (hx : x ≤ (n : α)) => _
       change _ ≤ _
       norm_cast
-      convert← ceil_mono hx
+      convert ← ceil_mono hx
       rw [ceil_eq_iff]
       exact ⟨sub_one_lt _, le_rfl⟩)
 #align tendsto_ceil_left tendsto_ceil_left
@@ -120,7 +120,8 @@ theorem tendsto_floor_left [OrderClosedTopology α] (n : ℤ) :
     Tendsto (fun x => floor x : α → α) (𝓝[<] n) (𝓝[≤] (n - 1)) :=
   by
   rw [← nhdsWithin_Ico_eq_nhdsWithin_Iio (sub_one_lt (n : α))]
-  convert(tendsto_nhdsWithin_congr fun x hx => (floor_eq_on_Ico' (n - 1) x hx).symm)
+  convert
+      (tendsto_nhdsWithin_congr fun x hx => (floor_eq_on_Ico' (n - 1) x hx).symm)
         (tendsto_nhdsWithin_of_tendsto_nhds_of_eventually_within _ tendsto_const_nhds
           (eventually_of_forall fun _ => mem_Iic.mpr <| le_rfl)) <;>
     first
@@ -133,7 +134,8 @@ theorem tendsto_ceil_right [OrderClosedTopology α] (n : ℤ) :
     Tendsto (fun x => ceil x : α → α) (𝓝[>] n) (𝓝[≥] (n + 1)) :=
   by
   rw [← nhdsWithin_Ioc_eq_nhdsWithin_Ioi (lt_add_one (n : α))]
-  convert(tendsto_nhdsWithin_congr fun x hx => (ceil_eq_on_Ioc' (n + 1) x hx).symm)
+  convert
+      (tendsto_nhdsWithin_congr fun x hx => (ceil_eq_on_Ioc' (n + 1) x hx).symm)
         (tendsto_nhdsWithin_of_tendsto_nhds_of_eventually_within _ tendsto_const_nhds
           (eventually_of_forall fun _ => mem_Ici.mpr <| le_rfl)) <;>
     first
@@ -163,7 +165,7 @@ theorem continuousOn_fract [TopologicalAddGroup α] (n : ℤ) :
 
 theorem tendsto_fract_left' [OrderClosedTopology α] [TopologicalAddGroup α] (n : ℤ) :
     Tendsto (fract : α → α) (𝓝[<] n) (𝓝 1) := by
-  convert(tendsto_nhdsWithin_of_tendsto_nhds tendsto_id).sub (tendsto_floor_left' n) <;>
+  convert (tendsto_nhdsWithin_of_tendsto_nhds tendsto_id).sub (tendsto_floor_left' n) <;>
     [· norm_cast; ring; infer_instance; infer_instance]
 #align tendsto_fract_left' tendsto_fract_left'
 
@@ -175,7 +177,7 @@ theorem tendsto_fract_left [OrderClosedTopology α] [TopologicalAddGroup α] (n 
 
 theorem tendsto_fract_right' [OrderClosedTopology α] [TopologicalAddGroup α] (n : ℤ) :
     Tendsto (fract : α → α) (𝓝[≥] n) (𝓝 0) := by
-  convert(tendsto_nhdsWithin_of_tendsto_nhds tendsto_id).sub (tendsto_floor_right' n) <;>
+  convert (tendsto_nhdsWithin_of_tendsto_nhds tendsto_id).sub (tendsto_floor_right' n) <;>
     [exact (sub_self _).symm; infer_instance; infer_instance]
 #align tendsto_fract_right' tendsto_fract_right'
 

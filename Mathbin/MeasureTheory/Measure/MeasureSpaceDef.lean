@@ -285,7 +285,7 @@ theorem measure_iUnion_fintype_le [Fintype β] (f : β → Set α) : μ (⋃ b, 
 theorem measure_biUnion_lt_top {s : Set β} {f : β → Set α} (hs : s.Finite)
     (hfin : ∀ i ∈ s, μ (f i) ≠ ∞) : μ (⋃ i ∈ s, f i) < ∞ :=
   by
-  convert(measure_bUnion_finset_le hs.to_finset f).trans_lt _
+  convert (measure_bUnion_finset_le hs.to_finset f).trans_lt _
   · ext; rw [finite.mem_to_finset]
   apply ENNReal.sum_lt_top; simpa only [finite.mem_to_finset]
 #align measure_theory.measure_bUnion_lt_top MeasureTheory.measure_biUnion_lt_top
@@ -384,7 +384,7 @@ theorem measure_inter_null_of_null_left {S : Set α} (T : Set α) (h : μ S = 0)
 /-- The “almost everywhere” filter of co-null sets. -/
 def Measure.ae {α} {m : MeasurableSpace α} (μ : Measure α) : Filter α
     where
-  sets := { s | μ (sᶜ) = 0 }
+  sets := {s | μ (sᶜ) = 0}
   univ_sets := by simp
   inter_sets s t hs ht := by
     simp only [compl_inter, mem_set_of_eq] <;> exact measure_union_null hs ht
@@ -408,14 +408,14 @@ theorem mem_ae_iff {s : Set α} : s ∈ μ.ae ↔ μ (sᶜ) = 0 :=
   Iff.rfl
 #align measure_theory.mem_ae_iff MeasureTheory.mem_ae_iff
 
-theorem ae_iff {p : α → Prop} : (∀ᵐ a ∂μ, p a) ↔ μ { a | ¬p a } = 0 :=
+theorem ae_iff {p : α → Prop} : (∀ᵐ a ∂μ, p a) ↔ μ {a | ¬p a} = 0 :=
   Iff.rfl
 #align measure_theory.ae_iff MeasureTheory.ae_iff
 
 theorem compl_mem_ae_iff {s : Set α} : sᶜ ∈ μ.ae ↔ μ s = 0 := by simp only [mem_ae_iff, compl_compl]
 #align measure_theory.compl_mem_ae_iff MeasureTheory.compl_mem_ae_iff
 
-theorem frequently_ae_iff {p : α → Prop} : (∃ᵐ a ∂μ, p a) ↔ μ { a | p a } ≠ 0 :=
+theorem frequently_ae_iff {p : α → Prop} : (∃ᵐ a ∂μ, p a) ↔ μ {a | p a} ≠ 0 :=
   not_congr compl_mem_ae_iff
 #align measure_theory.frequently_ae_iff MeasureTheory.frequently_ae_iff
 

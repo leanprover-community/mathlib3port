@@ -51,7 +51,7 @@ namespace IsLocallyConstant
 
 protected theorem tfae (f : X → Y) :
     TFAE
-      [IsLocallyConstant f, ∀ x, ∀ᶠ x' in 𝓝 x, f x' = f x, ∀ x, IsOpen { x' | f x' = f x },
+      [IsLocallyConstant f, ∀ x, ∀ᶠ x' in 𝓝 x, f x' = f x, ∀ x, IsOpen {x' | f x' = f x},
         ∀ y, IsOpen (f ⁻¹' {y}),
         ∀ x, ∃ (U : Set X) (hU : IsOpen U) (hx : x ∈ U), ∀ x' ∈ U, f x' = f x] :=
   by
@@ -75,15 +75,15 @@ theorem of_discrete [DiscreteTopology X] (f : X → Y) : IsLocallyConstant f := 
   isOpen_discrete _
 #align is_locally_constant.of_discrete IsLocallyConstant.of_discrete
 
-theorem isOpen_fiber {f : X → Y} (hf : IsLocallyConstant f) (y : Y) : IsOpen { x | f x = y } :=
+theorem isOpen_fiber {f : X → Y} (hf : IsLocallyConstant f) (y : Y) : IsOpen {x | f x = y} :=
   hf {y}
 #align is_locally_constant.is_open_fiber IsLocallyConstant.isOpen_fiber
 
-theorem isClosed_fiber {f : X → Y} (hf : IsLocallyConstant f) (y : Y) : IsClosed { x | f x = y } :=
+theorem isClosed_fiber {f : X → Y} (hf : IsLocallyConstant f) (y : Y) : IsClosed {x | f x = y} :=
   ⟨hf ({y}ᶜ)⟩
 #align is_locally_constant.is_closed_fiber IsLocallyConstant.isClosed_fiber
 
-theorem isClopen_fiber {f : X → Y} (hf : IsLocallyConstant f) (y : Y) : IsClopen { x | f x = y } :=
+theorem isClopen_fiber {f : X → Y} (hf : IsLocallyConstant f) (y : Y) : IsClopen {x | f x = y} :=
   ⟨isOpen_fiber hf _, isClosed_fiber hf _⟩
 #align is_locally_constant.is_clopen_fiber IsLocallyConstant.isClopen_fiber
 

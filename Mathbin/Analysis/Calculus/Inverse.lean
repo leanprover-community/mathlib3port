@@ -153,8 +153,8 @@ theorem approximatesLinearOn_iff_lipschitzOnWith {f : E → F} {f' : E →L[𝕜
   simp only [this, lipschitzOnWith_iff_norm_sub_le, ApproximatesLinearOn]
 #align approximates_linear_on.approximates_linear_on_iff_lipschitz_on_with ApproximatesLinearOn.approximatesLinearOn_iff_lipschitzOnWith
 
-alias approximates_linear_on_iff_lipschitz_on_with ↔
-  LipschitzOnWith _root_.lipschitz_on_with.approximates_linear_on
+alias approximates_linear_on_iff_lipschitz_on_with ↔ LipschitzOnWith
+  _root_.lipschitz_on_with.approximates_linear_on
 #align approximates_linear_on.lipschitz_on_with ApproximatesLinearOn.lipschitzOnWith
 #align lipschitz_on_with.approximates_linear_on LipschitzOnWith.approximatesLinearOn
 
@@ -413,7 +413,7 @@ protected theorem antilipschitz (hf : ApproximatesLinearOn f (f' : E →L[𝕜] 
   cases' hc with hE hc
   · haveI : Subsingleton s := ⟨fun x y => Subtype.eq <| @Subsingleton.elim _ hE _ _⟩
     exact AntilipschitzWith.of_subsingleton
-  convert(f'.antilipschitz.restrict s).add_lipschitzWith hf.lipschitz_sub hc
+  convert (f'.antilipschitz.restrict s).add_lipschitzWith hf.lipschitz_sub hc
   simp [restrict]
 #align approximates_linear_on.antilipschitz ApproximatesLinearOn.antilipschitz
 
@@ -815,7 +815,7 @@ variable [CompleteSpace E'] (f : E' → F') {f' : E' ≃L[𝕂] F'} {a : E'}
 derivative at `a`, returns a `local_homeomorph` with `to_fun = f` and `a ∈ source`. -/
 def toLocalHomeomorph {n : ℕ∞} (hf : ContDiffAt 𝕂 n f a) (hf' : HasFDerivAt f (f' : E' →L[𝕂] F') a)
     (hn : 1 ≤ n) : LocalHomeomorph E' F' :=
-  (hf.has_strict_fderiv_at' hf' hn).toLocalHomeomorph f
+  (hf.hasStrictFDerivAt' hf' hn).toLocalHomeomorph f
 #align cont_diff_at.to_local_homeomorph ContDiffAt.toLocalHomeomorph
 
 variable {f}
@@ -830,25 +830,25 @@ theorem toLocalHomeomorph_coe {n : ℕ∞} (hf : ContDiffAt 𝕂 n f a)
 theorem mem_toLocalHomeomorph_source {n : ℕ∞} (hf : ContDiffAt 𝕂 n f a)
     (hf' : HasFDerivAt f (f' : E' →L[𝕂] F') a) (hn : 1 ≤ n) :
     a ∈ (hf.toLocalHomeomorph f hf' hn).source :=
-  (hf.has_strict_fderiv_at' hf' hn).mem_toLocalHomeomorph_source
+  (hf.hasStrictFDerivAt' hf' hn).mem_toLocalHomeomorph_source
 #align cont_diff_at.mem_to_local_homeomorph_source ContDiffAt.mem_toLocalHomeomorph_source
 
 theorem image_mem_toLocalHomeomorph_target {n : ℕ∞} (hf : ContDiffAt 𝕂 n f a)
     (hf' : HasFDerivAt f (f' : E' →L[𝕂] F') a) (hn : 1 ≤ n) :
     f a ∈ (hf.toLocalHomeomorph f hf' hn).target :=
-  (hf.has_strict_fderiv_at' hf' hn).image_mem_toLocalHomeomorph_target
+  (hf.hasStrictFDerivAt' hf' hn).image_mem_toLocalHomeomorph_target
 #align cont_diff_at.image_mem_to_local_homeomorph_target ContDiffAt.image_mem_toLocalHomeomorph_target
 
 /-- Given a `cont_diff` function over `𝕂` (which is `ℝ` or `ℂ`) with an invertible derivative
 at `a`, returns a function that is locally inverse to `f`. -/
 def localInverse {n : ℕ∞} (hf : ContDiffAt 𝕂 n f a) (hf' : HasFDerivAt f (f' : E' →L[𝕂] F') a)
     (hn : 1 ≤ n) : F' → E' :=
-  (hf.has_strict_fderiv_at' hf' hn).localInverse f f' a
+  (hf.hasStrictFDerivAt' hf' hn).localInverse f f' a
 #align cont_diff_at.local_inverse ContDiffAt.localInverse
 
 theorem localInverse_apply_image {n : ℕ∞} (hf : ContDiffAt 𝕂 n f a)
     (hf' : HasFDerivAt f (f' : E' →L[𝕂] F') a) (hn : 1 ≤ n) : hf.localInverse hf' hn (f a) = a :=
-  (hf.has_strict_fderiv_at' hf' hn).localInverse_apply_image
+  (hf.hasStrictFDerivAt' hf' hn).localInverse_apply_image
 #align cont_diff_at.local_inverse_apply_image ContDiffAt.localInverse_apply_image
 
 /-- Given a `cont_diff` function over `𝕂` (which is `ℝ` or `ℂ`) with an invertible derivative

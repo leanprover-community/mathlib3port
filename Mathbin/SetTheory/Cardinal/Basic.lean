@@ -866,10 +866,10 @@ theorem sInf_empty : sInf (∅ : Set Cardinal.{u}) = 0 :=
 
 /-- Note that the successor of `c` is not the same as `c + 1` except in the case of finite `c`. -/
 instance : SuccOrder Cardinal :=
-  SuccOrder.ofSuccLeIff (fun c => sInf { c' | c < c' }) fun a b =>
+  SuccOrder.ofSuccLeIff (fun c => sInf {c' | c < c'}) fun a b =>
     ⟨lt_of_lt_of_le <| csInf_mem <| exists_gt a, csInf_le'⟩
 
-theorem succ_def (c : Cardinal) : succ c = sInf { c' | c < c' } :=
+theorem succ_def (c : Cardinal) : succ c = sInf {c' | c < c'} :=
   rfl
 #align cardinal.succ_def Cardinal.succ_def
 
@@ -1607,7 +1607,7 @@ alias lt_aleph_0_iff_set_finite ↔ _ _root_.set.finite.lt_aleph_0
 
 #print Cardinal.lt_aleph0_iff_subtype_finite /-
 @[simp]
-theorem lt_aleph0_iff_subtype_finite {p : α → Prop} : (#{ x // p x }) < ℵ₀ ↔ { x | p x }.Finite :=
+theorem lt_aleph0_iff_subtype_finite {p : α → Prop} : (#{ x // p x }) < ℵ₀ ↔ {x | p x}.Finite :=
   lt_aleph0_iff_set_finite
 #align cardinal.lt_aleph_0_iff_subtype_finite Cardinal.lt_aleph0_iff_subtype_finite
 -/
@@ -1638,7 +1638,7 @@ alias le_aleph_0_iff_set_countable ↔ _ _root_.set.countable.le_aleph_0
 #print Cardinal.le_aleph0_iff_subtype_countable /-
 @[simp]
 theorem le_aleph0_iff_subtype_countable {p : α → Prop} :
-    (#{ x // p x }) ≤ ℵ₀ ↔ { x | p x }.Countable :=
+    (#{ x // p x }) ≤ ℵ₀ ↔ {x | p x}.Countable :=
   le_aleph0_iff_set_countable
 #align cardinal.le_aleph_0_iff_subtype_countable Cardinal.le_aleph0_iff_subtype_countable
 -/
@@ -2387,7 +2387,7 @@ theorem mk_subtype_of_equiv {α β : Type u} (p : β → Prop) (e : α ≃ β) :
 -/
 
 #print Cardinal.mk_sep /-
-theorem mk_sep (s : Set α) (t : α → Prop) : (#({ x ∈ s | t x } : Set α)) = (#{ x : s | t x.1 }) :=
+theorem mk_sep (s : Set α) (t : α → Prop) : (#({x ∈ s | t x} : Set α)) = (#{x : s | t x.1}) :=
   mk_congr (Equiv.Set.sep s t)
 #align cardinal.mk_sep Cardinal.mk_sep
 -/
@@ -2443,7 +2443,7 @@ theorem mk_preimage_of_injective_of_subset_range (f : α → β) (s : Set β) (h
 
 #print Cardinal.mk_subset_ge_of_subset_image_lift /-
 theorem mk_subset_ge_of_subset_image_lift {α : Type u} {β : Type v} (f : α → β) {s : Set α}
-    {t : Set β} (h : t ⊆ f '' s) : lift.{u} (#t) ≤ lift.{v} (#({ x ∈ s | f x ∈ t } : Set α)) :=
+    {t : Set β} (h : t ⊆ f '' s) : lift.{u} (#t) ≤ lift.{v} (#({x ∈ s | f x ∈ t} : Set α)) :=
   by
   rw [image_eq_range] at h ; convert mk_preimage_of_subset_range_lift _ _ h using 1
   rw [mk_sep]; rfl
@@ -2452,7 +2452,7 @@ theorem mk_subset_ge_of_subset_image_lift {α : Type u} {β : Type v} (f : α �
 
 #print Cardinal.mk_subset_ge_of_subset_image /-
 theorem mk_subset_ge_of_subset_image (f : α → β) {s : Set α} {t : Set β} (h : t ⊆ f '' s) :
-    (#t) ≤ (#({ x ∈ s | f x ∈ t } : Set α)) :=
+    (#t) ≤ (#({x ∈ s | f x ∈ t} : Set α)) :=
   by
   rw [image_eq_range] at h ; convert mk_preimage_of_subset_range _ _ h using 1
   rw [mk_sep]; rfl

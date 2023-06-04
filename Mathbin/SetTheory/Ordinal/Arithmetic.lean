@@ -424,7 +424,7 @@ theorem has_succ_of_type_succ_lt {α} {r : α → α → Prop} [wo : IsWellOrder
     (h : ∀ a < type r, succ a < type r) (x : α) : ∃ y, r x y :=
   by
   use enum r (succ (typein r x)) (h _ (typein_lt_type r x))
-  convert(enum_lt_enum (typein_lt_type r x) _).mpr (lt_succ _); rw [enum_typein]
+  convert (enum_lt_enum (typein_lt_type r x) _).mpr (lt_succ _); rw [enum_typein]
 #align ordinal.has_succ_of_type_succ_lt Ordinal.has_succ_of_type_succ_lt
 -/
 
@@ -449,7 +449,7 @@ theorem bounded_singleton {r : α → α → Prop} [IsWellOrder α r] (hr : (typ
 
 #print Ordinal.type_subrel_lt /-
 theorem type_subrel_lt (o : Ordinal.{u}) :
-    type (Subrel (· < ·) { o' : Ordinal | o' < o }) = Ordinal.lift.{u + 1} o :=
+    type (Subrel (· < ·) {o' : Ordinal | o' < o}) = Ordinal.lift.{u + 1} o :=
   by
   refine' Quotient.inductionOn o _
   rintro ⟨α, r, wo⟩; skip; apply Quotient.sound
@@ -459,7 +459,7 @@ theorem type_subrel_lt (o : Ordinal.{u}) :
 
 #print Ordinal.mk_initialSeg /-
 theorem mk_initialSeg (o : Ordinal.{u}) :
-    (#{ o' : Ordinal | o' < o }) = Cardinal.lift.{u + 1} o.card := by
+    (#{o' : Ordinal | o' < o}) = Cardinal.lift.{u + 1} o.card := by
   rw [lift_card, ← type_subrel_lt, card_type]
 #align ordinal.mk_initial_seg Ordinal.mk_initialSeg
 -/
@@ -617,14 +617,14 @@ alias add_is_limit ← is_limit.add
 
 #print Ordinal.sub_nonempty /-
 /-- The set in the definition of subtraction is nonempty. -/
-theorem sub_nonempty {a b : Ordinal} : { o | a ≤ b + o }.Nonempty :=
+theorem sub_nonempty {a b : Ordinal} : {o | a ≤ b + o}.Nonempty :=
   ⟨a, le_add_left _ _⟩
 #align ordinal.sub_nonempty Ordinal.sub_nonempty
 -/
 
 /-- `a - b` is the unique ordinal satisfying `b + (a - b) = a` when `b ≤ a`. -/
 instance : Sub Ordinal :=
-  ⟨fun a b => sInf { o | a ≤ b + o }⟩
+  ⟨fun a b => sInf {o | a ≤ b + o}⟩
 
 theorem le_add_sub (a b : Ordinal) : a ≤ b + (a - b) :=
   csInf_mem sub_nonempty
@@ -939,7 +939,7 @@ theorem smul_eq_mul : ∀ (n : ℕ) (a : Ordinal), n • a = a * n
 
 
 /-- The set in the definition of division is nonempty. -/
-theorem div_nonempty {a b : Ordinal} (h : b ≠ 0) : { o | a < b * succ o }.Nonempty :=
+theorem div_nonempty {a b : Ordinal} (h : b ≠ 0) : {o | a < b * succ o}.Nonempty :=
   ⟨a,
     succ_le_iff.1 <| by
       simpa only [succ_zero, one_mul] using
@@ -948,14 +948,14 @@ theorem div_nonempty {a b : Ordinal} (h : b ≠ 0) : { o | a < b * succ o }.None
 
 /-- `a / b` is the unique ordinal `o` satisfying `a = b * o + o'` with `o' < b`. -/
 instance : Div Ordinal :=
-  ⟨fun a b => if h : b = 0 then 0 else sInf { o | a < b * succ o }⟩
+  ⟨fun a b => if h : b = 0 then 0 else sInf {o | a < b * succ o}⟩
 
 @[simp]
 theorem div_zero (a : Ordinal) : a / 0 = 0 :=
   dif_pos rfl
 #align ordinal.div_zero Ordinal.div_zero
 
-theorem div_def (a) {b : Ordinal} (h : b ≠ 0) : a / b = sInf { o | a < b * succ o } :=
+theorem div_def (a) {b : Ordinal} (h : b ≠ 0) : a / b = sInf {o | a < b * succ o} :=
   dif_neg h
 #align ordinal.div_def Ordinal.div_def
 
@@ -1257,7 +1257,7 @@ theorem familyOfBFamily_enum (o : Ordinal) (f : ∀ a < o, α) (i hi) :
 #print Ordinal.brange /-
 /-- The range of a family indexed by ordinals. -/
 def brange (o : Ordinal) (f : ∀ a < o, α) : Set α :=
-  { a | ∃ i hi, f i hi = a }
+  {a | ∃ i hi, f i hi = a}
 #align ordinal.brange Ordinal.brange
 -/
 
@@ -2133,7 +2133,7 @@ theorem blsub_le_of_brange_subset {o o'} {f : ∀ a < o, Ordinal} {g : ∀ a < o
 
 #print Ordinal.blsub_eq_of_brange_eq /-
 theorem blsub_eq_of_brange_eq {o o'} {f : ∀ a < o, Ordinal} {g : ∀ a < o', Ordinal}
-    (h : { o | ∃ i hi, f i hi = o } = { o | ∃ i hi, g i hi = o }) :
+    (h : {o | ∃ i hi, f i hi = o} = {o | ∃ i hi, g i hi = o}) :
     blsub.{u, max v w} o f = blsub.{v, max u w} o' g :=
   (blsub_le_of_brange_subset h.le).antisymm (blsub_le_of_brange_subset.{v, u, w} h.ge)
 #align ordinal.blsub_eq_of_brange_eq Ordinal.blsub_eq_of_brange_eq
@@ -2270,7 +2270,7 @@ theorem mex_lt_ord_succ_mk {ι} (f : ι → Ordinal) : mex f < (succ (#ι)).ord 
   have hg : injective g := fun a b h' =>
     by
     have Hf : ∀ x, f (g x) = typein (· < ·) x := fun a => Classical.choose_spec (H a)
-    apply_fun f  at h' 
+    apply_fun f at h' 
     rwa [Hf, Hf, typein_inj] at h' 
   convert Cardinal.mk_le_of_injective hg
   rw [Cardinal.mk_ord_out]
@@ -2422,7 +2422,7 @@ theorem enumOrd_strictMono (hS : Unbounded (· < ·) S) : StrictMono (enumOrd S)
 -/
 
 /-- A more workable definition for `enum_ord`. -/
-theorem enumOrd_def (o) : enumOrd S o = sInf (S ∩ { b | ∀ c, c < o → enumOrd S c < b }) :=
+theorem enumOrd_def (o) : enumOrd S o = sInf (S ∩ {b | ∀ c, c < o → enumOrd S c < b}) :=
   by
   rw [enum_ord_def']
   congr; ext
@@ -2432,7 +2432,7 @@ theorem enumOrd_def (o) : enumOrd S o = sInf (S ∩ { b | ∀ c, c < o → enumO
 #print Ordinal.enumOrd_def_nonempty /-
 /-- The set in `enum_ord_def` is nonempty. -/
 theorem enumOrd_def_nonempty (hS : Unbounded (· < ·) S) {o} :
-    { x | x ∈ S ∧ ∀ c, c < o → enumOrd S c < x }.Nonempty :=
+    {x | x ∈ S ∧ ∀ c, c < o → enumOrd S c < x}.Nonempty :=
   ⟨_, enumOrd_mem hS o, fun _ b => enumOrd_strictMono hS b⟩
 #align ordinal.enum_ord_def_nonempty Ordinal.enumOrd_def_nonempty
 -/
@@ -2444,7 +2444,7 @@ theorem enumOrd_range {f : Ordinal → Ordinal} (hf : StrictMono f) : enumOrd (r
     apply Ordinal.induction o
     intro a H
     rw [enum_ord_def a]
-    have Hfa : f a ∈ range f ∩ { b | ∀ c, c < a → enum_ord (range f) c < b } :=
+    have Hfa : f a ∈ range f ∩ {b | ∀ c, c < a → enum_ord (range f) c < b} :=
       ⟨mem_range_self a, fun b hb => by rw [H b hb]; exact hf hb⟩
     refine' (csInf_le' Hfa).antisymm ((le_csInf_iff'' ⟨_, Hfa⟩).2 _)
     rintro _ ⟨⟨c, rfl⟩, hc : ∀ b < a, enum_ord (range f) b < f c⟩
@@ -2486,7 +2486,7 @@ theorem enumOrd_le_of_subset {S T : Set Ordinal} (hS : Unbounded (· < ·) S) (h
 
 #print Ordinal.enumOrd_surjective /-
 theorem enumOrd_surjective (hS : Unbounded (· < ·) S) : ∀ s ∈ S, ∃ a, enumOrd S a = s := fun s hs =>
-  ⟨sSup { a | enumOrd S a ≤ s }, by
+  ⟨sSup {a | enumOrd S a ≤ s}, by
     apply le_antisymm
     · rw [enum_ord_def]
       refine' csInf_le' ⟨hs, fun a ha => _⟩

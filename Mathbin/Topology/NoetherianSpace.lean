@@ -210,49 +210,49 @@ instance (priority := 100) Finite.to_noetherianSpace [Finite α] : NoetherianSpa
 theorem NoetherianSpace.exists_finset_irreducible [NoetherianSpace α] (s : Closeds α) :
     ∃ S : Finset (Closeds α), (∀ k : S, IsIrreducible (k : Set α)) ∧ s = S.sup id := by
   classical
-    have := ((noetherian_space_tfae α).out 0 1).mp inferInstance
-    apply WellFounded.induction this s
-    clear s
-    intro s H
-    by_cases h₁ : IsPreirreducible s.1
-    cases h₂ : s.1.eq_empty_or_nonempty
-    · use ∅; refine' ⟨fun k => k.2.elim, _⟩; rw [Finset.sup_empty]; ext1; exact h
-    · use {s}
-      simp only [coe_coe, Finset.sup_singleton, id.def, eq_self_iff_true, and_true_iff]
-      rintro ⟨k, hk⟩
-      cases finset.mem_singleton.mp hk
-      exact ⟨h, h₁⟩
-    · rw [isPreirreducible_iff_closed_union_closed] at h₁ 
-      push_neg  at h₁ 
-      obtain ⟨z₁, z₂, hz₁, hz₂, h, hz₁', hz₂'⟩ := h₁
-      obtain ⟨S₁, hS₁, hS₁'⟩ := H (s ⊓ ⟨z₁, hz₁⟩) (inf_lt_left.2 hz₁')
-      obtain ⟨S₂, hS₂, hS₂'⟩ := H (s ⊓ ⟨z₂, hz₂⟩) (inf_lt_left.2 hz₂')
-      refine' ⟨S₁ ∪ S₂, fun k => _, _⟩
-      · cases' finset.mem_union.mp k.2 with h' h'; exacts [hS₁ ⟨k, h'⟩, hS₂ ⟨k, h'⟩]
-      · rwa [Finset.sup_union, ← hS₁', ← hS₂', ← inf_sup_left, left_eq_inf]
+  have := ((noetherian_space_tfae α).out 0 1).mp inferInstance
+  apply WellFounded.induction this s
+  clear s
+  intro s H
+  by_cases h₁ : IsPreirreducible s.1
+  cases h₂ : s.1.eq_empty_or_nonempty
+  · use ∅; refine' ⟨fun k => k.2.elim, _⟩; rw [Finset.sup_empty]; ext1; exact h
+  · use {s}
+    simp only [coe_coe, Finset.sup_singleton, id.def, eq_self_iff_true, and_true_iff]
+    rintro ⟨k, hk⟩
+    cases finset.mem_singleton.mp hk
+    exact ⟨h, h₁⟩
+  · rw [isPreirreducible_iff_closed_union_closed] at h₁ 
+    push_neg at h₁ 
+    obtain ⟨z₁, z₂, hz₁, hz₂, h, hz₁', hz₂'⟩ := h₁
+    obtain ⟨S₁, hS₁, hS₁'⟩ := H (s ⊓ ⟨z₁, hz₁⟩) (inf_lt_left.2 hz₁')
+    obtain ⟨S₂, hS₂, hS₂'⟩ := H (s ⊓ ⟨z₂, hz₂⟩) (inf_lt_left.2 hz₂')
+    refine' ⟨S₁ ∪ S₂, fun k => _, _⟩
+    · cases' finset.mem_union.mp k.2 with h' h'; exacts [hS₁ ⟨k, h'⟩, hS₂ ⟨k, h'⟩]
+    · rwa [Finset.sup_union, ← hS₁', ← hS₂', ← inf_sup_left, left_eq_inf]
 #align topological_space.noetherian_space.exists_finset_irreducible TopologicalSpace.NoetherianSpace.exists_finset_irreducible
 
 #print TopologicalSpace.NoetherianSpace.finite_irreducibleComponents /-
 theorem NoetherianSpace.finite_irreducibleComponents [NoetherianSpace α] :
     (irreducibleComponents α).Finite := by
   classical
-    obtain ⟨S, hS₁, hS₂⟩ := noetherian_space.exists_finset_irreducible (⊤ : closeds α)
-    suffices irreducibleComponents α ⊆ coe '' (S : Set <| closeds α) by
-      exact Set.Finite.subset ((Set.Finite.intro inferInstance).image _) this
-    intro K hK
-    obtain ⟨z, hz, hz'⟩ : ∃ (z : Set α) (H : z ∈ Finset.image coe S), K ⊆ z :=
-      by
-      convert is_irreducible_iff_sUnion_closed.mp hK.1 (S.image coe) _ _
-      · simp only [Finset.mem_image, exists_prop, forall_exists_index, and_imp]
-        rintro _ z hz rfl
-        exact z.2
-      · exact (Set.subset_univ _).trans ((congr_arg coe hS₂).trans <| by simp).Subset
-    obtain ⟨s, hs, e⟩ := finset.mem_image.mp hz
-    rw [← e] at hz' 
-    refine' ⟨s, hs, _⟩
-    symm
-    suffices K ≤ s by exact this.antisymm (hK.2 (hS₁ ⟨s, hs⟩) this)
-    simpa
+  obtain ⟨S, hS₁, hS₂⟩ := noetherian_space.exists_finset_irreducible (⊤ : closeds α)
+  suffices irreducibleComponents α ⊆ coe '' (S : Set <| closeds α) by
+    exact Set.Finite.subset ((Set.Finite.intro inferInstance).image _) this
+  intro K hK
+  obtain ⟨z, hz, hz'⟩ : ∃ (z : Set α) (H : z ∈ Finset.image coe S), K ⊆ z :=
+    by
+    convert is_irreducible_iff_sUnion_closed.mp hK.1 (S.image coe) _ _
+    · simp only [Finset.mem_image, exists_prop, forall_exists_index, and_imp]
+      rintro _ z hz rfl
+      exact z.2
+    · exact (Set.subset_univ _).trans ((congr_arg coe hS₂).trans <| by simp).Subset
+  obtain ⟨s, hs, e⟩ := finset.mem_image.mp hz
+  rw [← e] at hz' 
+  refine' ⟨s, hs, _⟩
+  symm
+  suffices K ≤ s by exact this.antisymm (hK.2 (hS₁ ⟨s, hs⟩) this)
+  simpa
 #align topological_space.noetherian_space.finite_irreducible_components TopologicalSpace.NoetherianSpace.finite_irreducibleComponents
 -/
 

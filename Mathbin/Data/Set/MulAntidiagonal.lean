@@ -30,7 +30,7 @@ that multiply to `a`. -/
 @[to_additive
       "`set.add_antidiagonal s t a` is the set of all pairs of an element in `s` and an\nelement in `t` that add to `a`."]
 def mulAntidiagonal (s t : Set α) (a : α) : Set (α × α) :=
-  { x | x.1 ∈ s ∧ x.2 ∈ t ∧ x.1 * x.2 = a }
+  {x | x.1 ∈ s ∧ x.2 ∈ t ∧ x.1 * x.2 = a}
 #align set.mul_antidiagonal Set.mulAntidiagonal
 #align set.add_antidiagonal Set.addAntidiagonal
 -/

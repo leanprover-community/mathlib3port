@@ -52,7 +52,7 @@ section
 
 -- We use parameters here, mainly so we can have the abbreviations `R` and `R.mk` below, without
 -- passing around `F` all the time.
-parameter {J : Type v}[SmallCategory J](F : J ⥤ SemiRingCat.{max v u})
+parameter {J : Type v} [SmallCategory J] (F : J ⥤ SemiRingCat.{max v u})
 
 -- This instance is needed below in `colimit_semiring`, during the verification of the
 -- semiring axioms.
@@ -195,7 +195,7 @@ section
 
 -- We use parameters here, mainly so we can have the abbreviation `R` below, without
 -- passing around `F` all the time.
-parameter {J : Type v}[SmallCategory J][IsFiltered J](F : J ⥤ CommSemiRingCat.{max v u})
+parameter {J : Type v} [SmallCategory J] [IsFiltered J] (F : J ⥤ CommSemiRingCat.{max v u})
 
 #print CommSemiRingCat.FilteredColimits.R /-
 /-- The colimit of `F ⋙ forget₂ CommSemiRing SemiRing` in the category `SemiRing`.
@@ -280,7 +280,7 @@ section
 
 -- We use parameters here, mainly so we can have the abbreviation `R` below, without
 -- passing around `F` all the time.
-parameter {J : Type v}[SmallCategory J][IsFiltered J](F : J ⥤ RingCat.{max v u})
+parameter {J : Type v} [SmallCategory J] [IsFiltered J] (F : J ⥤ RingCat.{max v u})
 
 #print RingCat.FilteredColimits.R /-
 /-- The colimit of `F ⋙ forget₂ Ring SemiRing` in the category `SemiRing`.
@@ -363,7 +363,7 @@ section
 
 -- We use parameters here, mainly so we can have the abbreviation `R` below, without
 -- passing around `F` all the time.
-parameter {J : Type v}[SmallCategory J][IsFiltered J](F : J ⥤ CommRingCat.{max v u})
+parameter {J : Type v} [SmallCategory J] [IsFiltered J] (F : J ⥤ CommRingCat.{max v u})
 
 #print CommRingCat.FilteredColimits.R /-
 /-- The colimit of `F ⋙ forget₂ CommRing Ring` in the category `Ring`.

@@ -428,7 +428,7 @@ variable [BraidedCategory C]
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem Mon_tensor_one_mul (M N : Mon_ C) :
     ((λ_ (𝟙_ C)).inv ≫ (M.one ⊗ N.one) ⊗ 𝟙 (M.pt ⊗ N.pt)) ≫
-        tensorμ C (M.pt, N.pt) (M.pt, N.pt) ≫ (M.mul ⊗ N.mul) =
+        tensor_μ C (M.pt, N.pt) (M.pt, N.pt) ≫ (M.mul ⊗ N.mul) =
       (λ_ (M.pt ⊗ N.pt)).Hom :=
   by
   rw [← category.id_comp (𝟙 (M.X ⊗ N.X)), tensor_comp]
@@ -446,7 +446,7 @@ theorem Mon_tensor_one_mul (M N : Mon_ C) :
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem Mon_tensor_mul_one (M N : Mon_ C) :
     (𝟙 (M.pt ⊗ N.pt) ⊗ (λ_ (𝟙_ C)).inv ≫ (M.one ⊗ N.one)) ≫
-        tensorμ C (M.pt, N.pt) (M.pt, N.pt) ≫ (M.mul ⊗ N.mul) =
+        tensor_μ C (M.pt, N.pt) (M.pt, N.pt) ≫ (M.mul ⊗ N.mul) =
       (ρ_ (M.pt ⊗ N.pt)).Hom :=
   by
   rw [← category.id_comp (𝟙 (M.X ⊗ N.X)), tensor_comp]
@@ -469,11 +469,11 @@ theorem Mon_tensor_mul_one (M N : Mon_ C) :
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem Mon_tensor_mul_assoc (M N : Mon_ C) :
-    (tensorμ C (M.pt, N.pt) (M.pt, N.pt) ≫ (M.mul ⊗ N.mul) ⊗ 𝟙 (M.pt ⊗ N.pt)) ≫
-        tensorμ C (M.pt, N.pt) (M.pt, N.pt) ≫ (M.mul ⊗ N.mul) =
+    (tensor_μ C (M.pt, N.pt) (M.pt, N.pt) ≫ (M.mul ⊗ N.mul) ⊗ 𝟙 (M.pt ⊗ N.pt)) ≫
+        tensor_μ C (M.pt, N.pt) (M.pt, N.pt) ≫ (M.mul ⊗ N.mul) =
       (α_ (M.pt ⊗ N.pt) (M.pt ⊗ N.pt) (M.pt ⊗ N.pt)).Hom ≫
-        (𝟙 (M.pt ⊗ N.pt) ⊗ tensorμ C (M.pt, N.pt) (M.pt, N.pt) ≫ (M.mul ⊗ N.mul)) ≫
-          tensorμ C (M.pt, N.pt) (M.pt, N.pt) ≫ (M.mul ⊗ N.mul) :=
+        (𝟙 (M.pt ⊗ N.pt) ⊗ tensor_μ C (M.pt, N.pt) (M.pt, N.pt) ≫ (M.mul ⊗ N.mul)) ≫
+          tensor_μ C (M.pt, N.pt) (M.pt, N.pt) ≫ (M.mul ⊗ N.mul) :=
   by
   rw [← category.id_comp (𝟙 (M.X ⊗ N.X)), tensor_comp]
   slice_lhs 2 3 => rw [← tensor_id, tensor_μ_natural]
@@ -494,12 +494,12 @@ theorem Mon_tensor_mul_assoc (M N : Mon_ C) :
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem mul_associator {M N P : Mon_ C} :
-    (tensorμ C (M.pt ⊗ N.pt, P.pt) (M.pt ⊗ N.pt, P.pt) ≫
-          (tensorμ C (M.pt, N.pt) (M.pt, N.pt) ≫ (M.mul ⊗ N.mul) ⊗ P.mul)) ≫
+    (tensor_μ C (M.pt ⊗ N.pt, P.pt) (M.pt ⊗ N.pt, P.pt) ≫
+          (tensor_μ C (M.pt, N.pt) (M.pt, N.pt) ≫ (M.mul ⊗ N.mul) ⊗ P.mul)) ≫
         (α_ M.pt N.pt P.pt).Hom =
       ((α_ M.pt N.pt P.pt).Hom ⊗ (α_ M.pt N.pt P.pt).Hom) ≫
-        tensorμ C (M.pt, N.pt ⊗ P.pt) (M.pt, N.pt ⊗ P.pt) ≫
-          (M.mul ⊗ tensorμ C (N.pt, P.pt) (N.pt, P.pt) ≫ (N.mul ⊗ P.mul)) :=
+        tensor_μ C (M.pt, N.pt ⊗ P.pt) (M.pt, N.pt ⊗ P.pt) ≫
+          (M.mul ⊗ tensor_μ C (N.pt, P.pt) (N.pt, P.pt) ≫ (N.mul ⊗ P.mul)) :=
   by
   simp
   slice_lhs 2 3 => rw [← category.id_comp P.mul, tensor_comp]
@@ -512,7 +512,7 @@ theorem mul_associator {M N P : Mon_ C} :
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem mul_leftUnitor {M : Mon_ C} :
-    (tensorμ C (𝟙_ C, M.pt) (𝟙_ C, M.pt) ≫ ((λ_ (𝟙_ C)).Hom ⊗ M.mul)) ≫ (λ_ M.pt).Hom =
+    (tensor_μ C (𝟙_ C, M.pt) (𝟙_ C, M.pt) ≫ ((λ_ (𝟙_ C)).Hom ⊗ M.mul)) ≫ (λ_ M.pt).Hom =
       ((λ_ M.pt).Hom ⊗ (λ_ M.pt).Hom) ≫ M.mul :=
   by
   rw [← category.comp_id (λ_ (𝟙_ C)).Hom, ← category.id_comp M.mul, tensor_comp]
@@ -524,7 +524,7 @@ theorem mul_leftUnitor {M : Mon_ C} :
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem mul_rightUnitor {M : Mon_ C} :
-    (tensorμ C (M.pt, 𝟙_ C) (M.pt, 𝟙_ C) ≫ (M.mul ⊗ (λ_ (𝟙_ C)).Hom)) ≫ (ρ_ M.pt).Hom =
+    (tensor_μ C (M.pt, 𝟙_ C) (M.pt, 𝟙_ C) ≫ (M.mul ⊗ (λ_ (𝟙_ C)).Hom)) ≫ (ρ_ M.pt).Hom =
       ((ρ_ M.pt).Hom ⊗ (ρ_ M.pt).Hom) ≫ M.mul :=
   by
   rw [← category.id_comp M.mul, ← category.comp_id (λ_ (𝟙_ C)).Hom, tensor_comp]
@@ -542,7 +542,7 @@ instance monMonoidal : MonoidalCategory (Mon_ C)
   tensorObj M N :=
     { pt := M.pt ⊗ N.pt
       one := (λ_ (𝟙_ C)).inv ≫ (M.one ⊗ N.one)
-      mul := tensorμ C (M.pt, N.pt) (M.pt, N.pt) ≫ (M.mul ⊗ N.mul)
+      mul := tensor_μ C (M.pt, N.pt) (M.pt, N.pt) ≫ (M.mul ⊗ N.mul)
       one_mul' := Mon_tensor_one_mul M N
       mul_one' := Mon_tensor_mul_one M N
       mul_assoc' := Mon_tensor_mul_assoc M N }

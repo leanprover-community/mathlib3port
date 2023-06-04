@@ -277,14 +277,14 @@ def sheafIsoOfIso (H : X ≅ Y) : Y.2 ≅ H.Hom.base _* X.2
     ext U
     have := congr_app H.inv_hom_id U
     simp only [comp_c_app, id_c_app, eq_to_hom_map, eq_to_hom_trans] at this 
-    generalize_proofs h  at this 
+    generalize_proofs h at this 
     simpa using congr_arg (fun f => f ≫ eq_to_hom h.symm) this
   inv_hom_id' := by
     ext U
     simp only [presheaf.pushforward_to_of_iso_app, nat_trans.comp_app, category.assoc,
       nat_trans.id_app, H.hom.c.naturality]
     have := congr_app H.hom_inv_id ((opens.map H.hom.base).op.obj U)
-    generalize_proofs h  at this 
+    generalize_proofs h at this 
     simpa using congr_arg (fun f => f ≫ X.presheaf.map (eq_to_hom h.symm)) this
 #align algebraic_geometry.PresheafedSpace.sheaf_iso_of_iso AlgebraicGeometry.PresheafedSpace.sheafIsoOfIso
 

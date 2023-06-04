@@ -309,7 +309,7 @@ theorem young_inequality (a b : ℝ≥0∞) {p q : ℝ} (hpq : p.IsConjugateExpo
   · refine' le_trans le_top (le_of_eq _)
     repeat' rw [div_eq_mul_inv]
     cases h <;> rw [h] <;> simp [h, hpq.pos, hpq.symm.pos]
-  push_neg  at h 
+  push_neg at h 
   -- if a ≠ ⊤ and b ≠ ⊤, use the nnreal version: nnreal.young_inequality_real
   rw [← coe_to_nnreal h.left, ← coe_to_nnreal h.right, ← coe_mul, coe_rpow_of_nonneg _ hpq.nonneg,
     coe_rpow_of_nonneg _ hpq.symm.nonneg, ENNReal.ofReal, ENNReal.ofReal, ←
@@ -472,7 +472,7 @@ theorem rpow_sum_le_const_mul_sum_rpow (f : ι → ℝ≥0) {p : ℝ} (hp : 1 �
 /-- The `L_p` seminorm of a vector `f` is the greatest value of the inner product
 `∑ i in s, f i * g i` over functions `g` of `L_q` seminorm less than or equal to one. -/
 theorem isGreatest_Lp (f : ι → ℝ≥0) {p q : ℝ} (hpq : p.IsConjugateExponent q) :
-    IsGreatest ((fun g : ι → ℝ≥0 => ∑ i in s, f i * g i) '' { g | (∑ i in s, g i ^ q) ≤ 1 })
+    IsGreatest ((fun g : ι → ℝ≥0 => ∑ i in s, f i * g i) '' {g | (∑ i in s, g i ^ q) ≤ 1})
       ((∑ i in s, f i ^ p) ^ (1 / p)) :=
   by
   constructor
@@ -645,7 +645,7 @@ theorem inner_le_Lp_mul_Lq_tsum_of_nonneg (hpq : p.IsConjugateExponent q) (hf : 
   by
   lift f to ι → ℝ≥0 using hf
   lift g to ι → ℝ≥0 using hg
-  norm_cast  at *
+  norm_cast at *
   exact NNReal.inner_le_Lp_mul_Lq_tsum hpq hf_sum hg_sum
 #align real.inner_le_Lp_mul_Lq_tsum_of_nonneg Real.inner_le_Lp_mul_Lq_tsum_of_nonneg
 
@@ -674,7 +674,7 @@ theorem inner_le_Lp_mul_Lq_hasSum_of_nonneg (hpq : p.IsConjugateExponent q) {A B
   lift g to ι → ℝ≥0 using hg
   lift A to ℝ≥0 using hA
   lift B to ℝ≥0 using hB
-  norm_cast  at hf_sum hg_sum 
+  norm_cast at hf_sum hg_sum 
   obtain ⟨C, hC, H⟩ := NNReal.inner_le_Lp_mul_Lq_hasSum hpq hf_sum hg_sum
   refine' ⟨C, C.prop, hC, _⟩
   norm_cast
@@ -713,7 +713,7 @@ theorem Lp_add_le_tsum_of_nonneg (hp : 1 ≤ p) (hf : ∀ i, 0 ≤ f i) (hg : �
   by
   lift f to ι → ℝ≥0 using hf
   lift g to ι → ℝ≥0 using hg
-  norm_cast  at *
+  norm_cast at *
   exact NNReal.Lp_add_le_tsum hp hf_sum hg_sum
 #align real.Lp_add_le_tsum_of_nonneg Real.Lp_add_le_tsum_of_nonneg
 
@@ -742,7 +742,7 @@ theorem Lp_add_le_hasSum_of_nonneg (hp : 1 ≤ p) (hf : ∀ i, 0 ≤ f i) (hg : 
   lift g to ι → ℝ≥0 using hg
   lift A to ℝ≥0 using hA
   lift B to ℝ≥0 using hB
-  norm_cast  at hfA hgB 
+  norm_cast at hfA hgB 
   obtain ⟨C, hC₁, hC₂⟩ := NNReal.Lp_add_le_hasSum hp hfA hgB
   use C
   norm_cast
@@ -769,7 +769,7 @@ theorem inner_le_Lp_mul_Lq (hpq : p.IsConjugateExponent q) :
     have : ∀ i ∈ s, f i * g i = 0 := fun i hi => by cases H <;> simp [H i hi]
     have : (∑ i in s, f i * g i) = ∑ i in s, 0 := sum_congr rfl this
     simp [this]
-  push_neg  at H 
+  push_neg at H 
   by_cases H' : (∑ i in s, f i ^ p) ^ (1 / p) = ⊤ ∨ (∑ i in s, g i ^ q) ^ (1 / q) = ⊤
   · cases H' <;> simp [H', -one_div, H]
   replace H' : (∀ i ∈ s, f i ≠ ⊤) ∧ ∀ i ∈ s, g i ≠ ⊤

@@ -187,7 +187,7 @@ end Relations
 
 end CartanMatrix
 
-/- ./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler lie_algebra[lie_algebra] R -/
+/- ./././Mathport/Syntax/Translate/Command.lean:43:9: unsupported derive handler lie_algebra[lie_algebra] R -/
 /-- The Lie algebra corresponding to a Cartan matrix.
 
 Note that it is defined for any matrix of integers. Its value for non-Cartan matrices should be
@@ -195,7 +195,7 @@ regarded as junk. -/
 def Matrix.ToLieAlgebra :=
   FreeLieAlgebra R _ ⧸ CartanMatrix.Relations.toIdeal R A
 deriving Inhabited, LieRing,
-  «./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler lie_algebra[lie_algebra] R»
+  «./././Mathport/Syntax/Translate/Command.lean:43:9: unsupported derive handler lie_algebra[lie_algebra] R»
 #align matrix.to_lie_algebra Matrix.ToLieAlgebra
 
 namespace CartanMatrix

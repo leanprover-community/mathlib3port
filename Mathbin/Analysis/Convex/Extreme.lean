@@ -71,7 +71,7 @@ def IsExtreme (A B : Set E) : Prop :=
 /-- A point `x` is an extreme point of a set `A` if `x` belongs to no open segment with ends in
 `A`, except for the obvious `open_segment x x`. -/
 def Set.extremePoints (A : Set E) : Set E :=
-  { x ∈ A | ∀ ⦃x₁⦄, x₁ ∈ A → ∀ ⦃x₂⦄, x₂ ∈ A → x ∈ openSegment 𝕜 x₁ x₂ → x₁ = x ∧ x₂ = x }
+  {x ∈ A | ∀ ⦃x₁⦄, x₁ ∈ A → ∀ ⦃x₂⦄, x₂ ∈ A → x ∈ openSegment 𝕜 x₁ x₂ → x₁ = x ∧ x₂ = x}
 #align set.extreme_points Set.extremePoints
 -/
 

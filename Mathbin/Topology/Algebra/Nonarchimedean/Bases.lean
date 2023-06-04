@@ -70,7 +70,7 @@ theorem of_comm {A ι : Type _} [CommRing A] (B : ι → AddSubgroup A)
 /-- Every subgroups basis on a ring leads to a ring filter basis. -/
 def toRingFilterBasis [Nonempty ι] {B : ι → AddSubgroup A} (hB : RingSubgroupsBasis B) :
     RingFilterBasis A where
-  sets := { U | ∃ i, U = B i }
+  sets := {U | ∃ i, U = B i}
   Nonempty := by inhabit ι; exact ⟨B default, default, rfl⟩
   inter_sets := by
     rintro _ _ ⟨i, rfl⟩ ⟨j, rfl⟩
@@ -134,7 +134,7 @@ theorem hasBasis_nhds_zero : HasBasis (@nhds A hB.topology 0) (fun _ => True) fu
 #align ring_subgroups_basis.has_basis_nhds_zero RingSubgroupsBasis.hasBasis_nhds_zero
 
 theorem hasBasis_nhds (a : A) :
-    HasBasis (@nhds A hB.topology a) (fun _ => True) fun i => { b | b - a ∈ B i } :=
+    HasBasis (@nhds A hB.topology a) (fun _ => True) fun i => {b | b - a ∈ B i} :=
   ⟨by
     intro s
     rw [(hB.to_ring_filter_basis.to_add_group_filter_basis.nhds_has_basis a).mem_iff]
@@ -243,7 +243,7 @@ include hB
 /-- The image of a submodules basis is a module filter basis. -/
 def toModuleFilterBasis : ModuleFilterBasis R M
     where
-  sets := { U | ∃ i, U = B i }
+  sets := {U | ∃ i, U = B i}
   Nonempty := by inhabit ι; exact ⟨B default, default, rfl⟩
   inter_sets := by
     rintro _ _ ⟨i, rfl⟩ ⟨j, rfl⟩

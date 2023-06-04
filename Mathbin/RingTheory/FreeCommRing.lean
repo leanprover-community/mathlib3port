@@ -258,7 +258,7 @@ theorem isSupported_of {p} {s : Set α} : IsSupported (of p) s ↔ p ∈ s :=
       rw [RingHom.map_mul, lift_of, if_pos hzs, MulZeroClass.zero_mul]
       norm_cast
     · rintro x y ⟨q, hq⟩ ⟨r, hr⟩; refine' ⟨q + r, _⟩; rw [RingHom.map_add, hq, hr]; norm_cast
-  specialize this (of p) hps; rw [lift_of] at this ; split_ifs  at this ; · exact h
+  specialize this (of p) hps; rw [lift_of] at this ; split_ifs at this ; · exact h
   exfalso; apply Ne.symm Int.zero_ne_one
   rcases this with ⟨w, H⟩; rw [← Polynomial.C_eq_int_cast] at H 
   have : polynomial.X.coeff 1 = (Polynomial.C ↑w).coeff 1 := by rw [H]

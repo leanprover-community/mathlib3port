@@ -318,7 +318,7 @@ theorem to_iso (f : X ⟶ Y) [h : is_open_immersion f] [h' : Epi f.base] : IsIso
       dsimp only [functor.op, opens.map]
       congr
       exact (Set.image_preimage_eq _ ((TopCat.epi_iff_surjective _).mp h')).symm
-    convert@is_open_immersion.c_iso _ h ((opens.map f.base).obj (unop U))
+    convert @is_open_immersion.c_iso _ h ((opens.map f.base).obj (unop U))
 #align algebraic_geometry.PresheafedSpace.is_open_immersion.to_iso AlgebraicGeometry.PresheafedSpace.IsOpenImmersion.to_iso
 
 instance stalk_iso [HasColimits C] [H : is_open_immersion f] (x : X) : IsIso (stalkMap f x) :=
@@ -936,7 +936,7 @@ instance sigma_ι_isOpenImmersion [HasStrictTerminalObjects C] :
     intro j hj
     induction j using Opposite.rec'
     dsimp
-    convert(F.obj j).Sheaf.isTerminalOfEmpty
+    convert (F.obj j).Sheaf.isTerminalOfEmpty
     convert image_preimage_is_empty F i j (fun h => hj (congr_arg op h.symm)) U
     exact (congr_arg PresheafedSpace.hom.base e).symm
 #align algebraic_geometry.SheafedSpace.is_open_immersion.sigma_ι_is_open_immersion AlgebraicGeometry.SheafedSpace.IsOpenImmersion.sigma_ι_isOpenImmersion
@@ -1421,8 +1421,8 @@ theorem affineBasisCover_map_range (X : Scheme) (x : X.carrier)
 
 theorem affineBasisCover_is_basis (X : Scheme) :
     TopologicalSpace.IsTopologicalBasis
-      { x : Set X.carrier |
-        ∃ a : X.affineBasisCover.J, x = Set.range (X.affineBasisCover.map a).1.base } :=
+      {x : Set X.carrier |
+        ∃ a : X.affineBasisCover.J, x = Set.range (X.affineBasisCover.map a).1.base} :=
   by
   apply TopologicalSpace.isTopologicalBasis_of_open_of_nhds
   · rintro _ ⟨a, rfl⟩
@@ -1595,7 +1595,8 @@ theorem AlgebraicGeometry.isIso_iff_stalk_iso {X Y : Scheme} (f : X ⟶ Y) :
   rw [is_iso_iff_is_open_immersion, is_open_immersion.iff_stalk_iso, and_comm', ← and_assoc']
   refine' and_congr ⟨_, _⟩ Iff.rfl
   · rintro ⟨h₁, h₂⟩
-    convert_to is_iso
+    convert_to
+      is_iso
         (TopCat.isoOfHomeo
             (Homeomorph.homeomorphOfContinuousOpen
               (Equiv.ofBijective _ ⟨h₂.inj, (TopCat.epi_iff_surjective _).mp h₁⟩) h₂.continuous
@@ -1826,7 +1827,7 @@ theorem app_eq_invApp_app_of_comp_eq {X Y U : Scheme} (f : Y ⟶ U) (g : U ⟶ X
   rw [Scheme.comp_val_c_app, category.assoc, Scheme.hom.inv_app,
     PresheafedSpace.is_open_immersion.inv_app_app_assoc, f.val.c.naturality_assoc,
     TopCat.Presheaf.pushforwardObj_map, ← functor.map_comp]
-  convert(category.comp_id _).symm
+  convert (category.comp_id _).symm
   convert Y.presheaf.map_id _
 #align algebraic_geometry.is_open_immersion.app_eq_inv_app_app_of_comp_eq AlgebraicGeometry.IsOpenImmersion.app_eq_invApp_app_of_comp_eq
 

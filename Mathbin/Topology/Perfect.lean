@@ -185,7 +185,7 @@ theorem exists_countable_union_perfect_of_isClosed [SecondCountableTopology α]
     (hclosed : IsClosed C) : ∃ V D : Set α, V.Countable ∧ Perfect D ∧ C = V ∪ D :=
   by
   obtain ⟨b, bct, bnontrivial, bbasis⟩ := TopologicalSpace.exists_countable_basis α
-  let v := { U ∈ b | (U ∩ C).Countable }
+  let v := {U ∈ b | (U ∩ C).Countable}
   let V := ⋃ U ∈ v, U
   let D := C \ V
   have Vct : (V ∩ C).Countable :=
@@ -215,7 +215,7 @@ theorem exists_countable_union_perfect_of_isClosed [SecondCountableTopology α]
       apply xD.2
       exact mem_bUnion this xU
     by_contra h
-    push_neg  at h 
+    push_neg at h 
     exact absurd (countable.mono h (Set.countable_singleton _)) this
   · rw [inter_comm, inter_union_diff]
 #align exists_countable_union_perfect_of_is_closed exists_countable_union_perfect_of_isClosed
@@ -330,9 +330,9 @@ theorem Perfect.exists_nat_bool_injection [CompleteSpace α] :
     rcases Nat.exists_eq_succ_of_ne_zero hm with ⟨n, rfl⟩
     dsimp
     cases x n
-    · convert(h0 _ _ _).2.2.2
+    · convert (h0 _ _ _).2.2.2
       rw [PiNat.res_length]
-    convert(h1 _ _ _).2.2.2
+    convert (h1 _ _ _).2.2.2
     rw [PiNat.res_length]
   have hdisj' : CantorScheme.Disjoint D :=
     by

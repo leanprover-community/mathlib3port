@@ -92,7 +92,8 @@ theorem f_aux_deriv (n : ℕ) (x : ℝ) (hx : x ≠ 0) :
       ((pAux (n + 1)).eval x * exp (-x⁻¹) / x ^ (2 * (n + 1))) x :=
   by
   simp only [P_aux, eval_add, eval_sub, eval_mul, eval_pow, eval_X, eval_C, eval_one]
-  convert(((P_aux n).HasDerivAt x).mul ((has_deriv_at_exp _).comp x (hasDerivAt_inv hx).neg)).div
+  convert
+    (((P_aux n).HasDerivAt x).mul ((has_deriv_at_exp _).comp x (hasDerivAt_inv hx).neg)).div
       (hasDerivAt_pow (2 * n) x) (pow_ne_zero _ hx) using
     1
   rw [div_eq_div_iff]
@@ -109,7 +110,7 @@ theorem fAux_deriv_pos (n : ℕ) (x : ℝ) (hx : 0 < x) :
     HasDerivAt (fAux n) ((pAux (n + 1)).eval x * exp (-x⁻¹) / x ^ (2 * (n + 1))) x :=
   by
   apply (f_aux_deriv n x (ne_of_gt hx)).congr_of_eventuallyEq
-  filter_upwards [lt_mem_nhds hx]with _ hy
+  filter_upwards [lt_mem_nhds hx] with _ hy
   simp [f_aux, hy.not_le]
 #align exp_neg_inv_glue.f_aux_deriv_pos expNegInvGlue.fAux_deriv_pos
 
@@ -123,7 +124,7 @@ theorem f_aux_limit (n : ℕ) :
     (P_aux n).ContinuousWithinAt
   have B : tendsto (fun x => exp (-x⁻¹) / x ^ (2 * n)) (𝓝[>] 0) (𝓝 0) :=
     by
-    convert(tendsto_pow_mul_exp_neg_at_top_nhds_0 (2 * n)).comp tendsto_inv_zero_atTop
+    convert (tendsto_pow_mul_exp_neg_at_top_nhds_0 (2 * n)).comp tendsto_inv_zero_atTop
     ext x
     field_simp
   convert A.mul B <;> simp [mul_div_assoc]
@@ -172,7 +173,7 @@ theorem fAux_hasDerivAt (n : ℕ) (x : ℝ) : HasDerivAt (fAux n) (fAux (n + 1) 
   · have : f_aux (n + 1) x = 0 := by simp [f_aux, le_of_lt hx]
     rw [this]
     apply (hasDerivAt_const x (0 : ℝ)).congr_of_eventuallyEq
-    filter_upwards [gt_mem_nhds hx]with _ hy
+    filter_upwards [gt_mem_nhds hx] with _ hy
     simp [f_aux, hy.le]
   · have : f_aux (n + 1) 0 = 0 := by simp [f_aux, le_refl]
     rw [hx, this]
@@ -382,7 +383,7 @@ instance (priority := 100) hasContDiffBump_of_innerProductSpace (E : Type _) [No
               apply (tendsto_order.1 A).1
               apply (one_lt_div (sub_pos.2 hR)).2
               simp only [norm_zero, tsub_zero, sub_lt_self_iff, zero_lt_one]
-            filter_upwards [this]with q hq
+            filter_upwards [this] with q hq
             exact Real.smoothTransition.one_of_one_le hq.le
           exact cont_diff_at_const.congr_of_eventually_eq this
         · refine' real.smooth_transition.cont_diff_at.comp _ _
@@ -601,7 +602,7 @@ theorem normed_neg (f : ContDiffBump (0 : E)) (x : E) : f.normed μ (-x) = f.nor
   simp_rw [f.normed_def, f.neg]
 #align cont_diff_bump.normed_neg ContDiffBump.normed_neg
 
-variable [BorelSpace E] [FiniteDimensional ℝ E] [LocallyFiniteMeasure μ]
+variable [BorelSpace E] [FiniteDimensional ℝ E] [IsLocallyFiniteMeasure μ]
 
 protected theorem integrable : Integrable f μ :=
   f.Continuous.integrable_of_hasCompactSupport f.HasCompactSupport
@@ -611,7 +612,7 @@ protected theorem integrable_normed : Integrable (f.normed μ) μ :=
   f.Integrable.div_const _
 #align cont_diff_bump.integrable_normed ContDiffBump.integrable_normed
 
-variable [μ.OpenPosMeasure]
+variable [μ.IsOpenPosMeasure]
 
 theorem integral_pos : 0 < ∫ x, f x ∂μ :=
   by

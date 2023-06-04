@@ -271,7 +271,7 @@ theorem eq_iff_eq_cancel_right {α : Sort _} {a b : α} : (∀ {c}, a = c ↔ b 
 -/
 
 #print Fact /-
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`out] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`out] [] -/
 /-- Wrapper for adding elementary propositions to the type class systems.
 Warning: this can easily be abused. See the rest of this docstring for details.
 

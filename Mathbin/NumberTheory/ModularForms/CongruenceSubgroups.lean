@@ -103,7 +103,7 @@ theorem Gamma_zero_bot : Gamma 0 = ⊥ := by
 modulo `N`. -/
 def Gamma0 (N : ℕ) : Subgroup SL(2, ℤ)
     where
-  carrier := { g : SL(2, ℤ) | ((↑ₘg 1 0 : ℤ) : ZMod N) = 0 }
+  carrier := {g : SL(2, ℤ) | ((↑ₘg 1 0 : ℤ) : ZMod N) = 0}
   one_mem' := by simp
   mul_mem' := by
     intro a b ha hb

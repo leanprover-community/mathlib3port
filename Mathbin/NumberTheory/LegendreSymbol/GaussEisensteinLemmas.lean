@@ -56,7 +56,7 @@ theorem wilsons_lemma : ((p - 1)! : ZMod p) = -1 :=
   · intro b hb
     rw [mem_Ico, Nat.succ_le_iff, ← succ_sub hp, succ_sub_one, pos_iff_ne_zero] at hb 
     refine' ⟨Units.mk0 b _, Finset.mem_univ _, _⟩
-    · intro h; apply hb.1; apply_fun val  at h 
+    · intro h; apply hb.1; apply_fun val at h 
       simpa only [val_cast_of_lt hb.right, val_zero] using h
     · simp only [val_cast_of_lt hb.right, Units.val_mk0]
 #align zmod.wilsons_lemma ZMod.wilsons_lemma
@@ -149,7 +149,7 @@ private theorem gauss_lemma_aux₁ (p : ℕ) [Fact p.Prime] [Fact (p % 2 = 1)] {
         prod_bij_ne_one (fun x _ _ => x)
           (fun x => by split_ifs <;> simp_all (config := { contextual := true }))
           (fun _ _ _ _ _ _ => id) (fun b h _ => ⟨b, by simp_all [-not_le]⟩)
-          (by intros <;> split_ifs  at * <;> simp_all)
+          (by intros <;> split_ifs at * <;> simp_all)
       rw [prod_mul_distrib, this] <;> simp
     _ =
         (-1) ^ ((Ico 1 (p / 2).succ).filterₓ fun x : ℕ => ¬(a * x : ZMod p).val ≤ p / 2).card *
@@ -330,7 +330,7 @@ theorem sum_mul_div_add_sum_mul_div_eq_mul (p q : ℕ) [hp : Fact p.Prime] (hq0 
         (Nat.div_lt_self hp.1.Pos (by decide))
     have : (x.1 : ZMod p) = 0 := by
       simpa [hq0] using congr_arg (coe : ℕ → ZMod p) (le_antisymm hpq hqp)
-    apply_fun ZMod.val  at this 
+    apply_fun ZMod.val at this 
     rw [val_cast_of_lt hxp, val_zero] at this 
     simpa only [this, nonpos_iff_eq_zero, mem_Ico, one_ne_zero, false_and_iff, mem_product] using hx
   have hunion :

@@ -290,7 +290,7 @@ def normalizeIso : tensorFunc C ≅ normalize' C :=
           right_unitor_naturality]
         simp only [iso.cancel_iso_inv_left, category.assoc]
         congr 1
-        convert(category.comp_id _).symm
+        convert (category.comp_id _).symm
         convert discrete_functor_map_eq_id inclusion_obj _ _
         ext
         rfl
@@ -299,7 +299,7 @@ def normalizeIso : tensorFunc C ≅ normalize' C :=
           category.assoc, iso.hom_inv_id, iso.hom_inv_id_assoc, iso.inv_hom_id,
           iso.inv_hom_id_assoc]
         congr
-        convert(discrete_functor_map_eq_id inclusion_obj _ _).symm
+        convert (discrete_functor_map_eq_id inclusion_obj _ _).symm
         ext; rfl
       · dsimp at *
         rw [id_tensor_comp, category.assoc, f_ih_g ⟦f_g⟧, ← category.assoc, f_ih_f ⟦f_f⟧,
@@ -319,7 +319,7 @@ def normalizeIso : tensorFunc C ≅ normalize' C :=
         dsimp
         simp only [category.assoc, category.comp_id]
         congr 1
-        convert(normalize_iso_aux C f_Z).Hom.naturality ((normalize_map_aux f_f).app n)
+        convert (normalize_iso_aux C f_Z).Hom.naturality ((normalize_map_aux f_f).app n)
         exact (tensor_func_obj_map _ _ _).symm)
 #align category_theory.free_monoidal_category.normalize_iso CategoryTheory.FreeMonoidalCategory.normalizeIso
 -/

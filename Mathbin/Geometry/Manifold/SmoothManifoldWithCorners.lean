@@ -413,7 +413,7 @@ def ModelWithCorners.prod {𝕜 : Type u} [NontriviallyNormedField 𝕜] {E : Ty
       I'.toLocalEquiv with
     toFun := fun x => (I x.1, I' x.2)
     invFun := fun x => (I.symm x.1, I'.symm x.2)
-    source := { x | x.1 ∈ I.source ∧ x.2 ∈ I'.source }
+    source := {x | x.1 ∈ I.source ∧ x.2 ∈ I'.source}
     source_eq := by simp only [set_of_true, mfld_simps]
     unique_diff' := I.unique_diff'.Prod I'.unique_diff'
     continuous_toFun := I.continuous_toFun.Prod_map I'.continuous_toFun

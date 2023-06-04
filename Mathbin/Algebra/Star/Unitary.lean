@@ -35,7 +35,7 @@ unitary
 -/
 def unitary (R : Type _) [Monoid R] [StarSemigroup R] : Submonoid R
     where
-  carrier := { U | star U * U = 1 ∧ U * star U = 1 }
+  carrier := {U | star U * U = 1 ∧ U * star U = 1}
   one_mem' := by simp only [mul_one, and_self_iff, Set.mem_setOf_eq, star_one]
   mul_mem' := fun U B ⟨hA₁, hA₂⟩ ⟨hB₁, hB₂⟩ =>
     by

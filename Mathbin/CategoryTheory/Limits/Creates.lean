@@ -196,12 +196,12 @@ theorem hasLimitsOfShape_of_hasLimitsOfShape_createsLimitsOfShape (F : C ⥤ D) 
 #align category_theory.has_limits_of_shape_of_has_limits_of_shape_creates_limits_of_shape CategoryTheory.hasLimitsOfShape_of_hasLimitsOfShape_createsLimitsOfShape
 -/
 
-#print CategoryTheory.has_limits_of_has_limits_creates_limits /-
+#print CategoryTheory.hasLimits_of_hasLimits_createsLimits /-
 /-- If `F` creates limits, and `D` has all limits, then `C` has all limits. -/
-theorem has_limits_of_has_limits_creates_limits (F : C ⥤ D) [HasLimitsOfSize.{w, w'} D]
+theorem hasLimits_of_hasLimits_createsLimits (F : C ⥤ D) [HasLimitsOfSize.{w, w'} D]
     [CreatesLimitsOfSize.{w, w'} F] : HasLimitsOfSize.{w, w'} C :=
   ⟨fun J I => has_limits_of_shape_of_has_limits_of_shape_creates_limits_of_shape F⟩
-#align category_theory.has_limits_of_has_limits_creates_limits CategoryTheory.has_limits_of_has_limits_creates_limits
+#align category_theory.has_limits_of_has_limits_creates_limits CategoryTheory.hasLimits_of_hasLimits_createsLimits
 -/
 
 #print CategoryTheory.liftColimit /-
@@ -247,12 +247,12 @@ theorem hasColimitsOfShape_of_hasColimitsOfShape_createsColimitsOfShape (F : C �
 #align category_theory.has_colimits_of_shape_of_has_colimits_of_shape_creates_colimits_of_shape CategoryTheory.hasColimitsOfShape_of_hasColimitsOfShape_createsColimitsOfShape
 -/
 
-#print CategoryTheory.has_colimits_of_has_colimits_creates_colimits /-
+#print CategoryTheory.hasColimits_of_hasColimits_createsColimits /-
 /-- If `F` creates colimits, and `D` has all colimits, then `C` has all colimits. -/
-theorem has_colimits_of_has_colimits_creates_colimits (F : C ⥤ D) [HasColimitsOfSize.{w, w'} D]
+theorem hasColimits_of_hasColimits_createsColimits (F : C ⥤ D) [HasColimitsOfSize.{w, w'} D]
     [CreatesColimitsOfSize.{w, w'} F] : HasColimitsOfSize.{w, w'} C :=
   ⟨fun J I => has_colimits_of_shape_of_has_colimits_of_shape_creates_colimits_of_shape F⟩
-#align category_theory.has_colimits_of_has_colimits_creates_colimits CategoryTheory.has_colimits_of_has_colimits_creates_colimits
+#align category_theory.has_colimits_of_has_colimits_creates_colimits CategoryTheory.hasColimits_of_hasColimits_createsColimits
 -/
 
 #print CategoryTheory.reflectsLimitsOfShapeOfCreatesLimitsOfShape /-

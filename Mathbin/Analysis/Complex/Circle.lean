@@ -58,7 +58,7 @@ theorem mem_circle_iff_abs {z : ℂ} : z ∈ circle ↔ abs z = 1 :=
   mem_sphere_zero_iff_norm
 #align mem_circle_iff_abs mem_circle_iff_abs
 
-theorem circle_def : ↑circle = { z : ℂ | abs z = 1 } :=
+theorem circle_def : ↑circle = {z : ℂ | abs z = 1} :=
   Set.ext fun z => mem_circle_iff_abs
 #align circle_def circle_def
 

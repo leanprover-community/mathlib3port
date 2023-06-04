@@ -618,13 +618,13 @@ theorem card_le_degree_of_subset_roots {p : R[X]} {Z : Finset R} (h : Z.val ⊆ 
 -/
 
 #print Polynomial.finite_setOf_isRoot /-
-theorem finite_setOf_isRoot {p : R[X]} (hp : p ≠ 0) : Set.Finite { x | IsRoot p x } := by
+theorem finite_setOf_isRoot {p : R[X]} (hp : p ≠ 0) : Set.Finite {x | IsRoot p x} := by
   simpa only [← Finset.setOf_mem, mem_to_finset, mem_roots hp] using p.roots.to_finset.finite_to_set
 #align polynomial.finite_set_of_is_root Polynomial.finite_setOf_isRoot
 -/
 
 #print Polynomial.eq_zero_of_infinite_isRoot /-
-theorem eq_zero_of_infinite_isRoot (p : R[X]) (h : Set.Infinite { x | IsRoot p x }) : p = 0 :=
+theorem eq_zero_of_infinite_isRoot (p : R[X]) (h : Set.Infinite {x | IsRoot p x}) : p = 0 :=
   not_imp_comm.mp finite_setOf_isRoot h
 #align polynomial.eq_zero_of_infinite_is_root Polynomial.eq_zero_of_infinite_isRoot
 -/
@@ -642,8 +642,8 @@ theorem exists_min_root [LinearOrder R] (p : R[X]) (hp : p ≠ 0) : ∃ x₀, �
 -/
 
 #print Polynomial.eq_of_infinite_eval_eq /-
-theorem eq_of_infinite_eval_eq (p q : R[X]) (h : Set.Infinite { x | eval x p = eval x q }) :
-    p = q := by
+theorem eq_of_infinite_eval_eq (p q : R[X]) (h : Set.Infinite {x | eval x p = eval x q}) : p = q :=
+  by
   rw [← sub_eq_zero]
   apply eq_zero_of_infinite_is_root
   simpa only [is_root, eval_sub, sub_eq_zero]
@@ -900,9 +900,9 @@ theorem comp_eq_zero_iff : p.comp q = 0 ↔ p = 0 ∨ p.eval (q.coeff 0) = 0 ∧
 
 theorem zero_of_eval_zero [Infinite R] (p : R[X]) (h : ∀ x, p.eval x = 0) : p = 0 := by
   classical by_contra hp <;>
-      exact
-        Fintype.false
-          ⟨p.roots.to_finset, fun x => multiset.mem_to_finset.mpr ((mem_roots hp).mpr (h _))⟩
+    exact
+      Fintype.false
+        ⟨p.roots.to_finset, fun x => multiset.mem_to_finset.mpr ((mem_roots hp).mpr (h _))⟩
 #align polynomial.zero_of_eval_zero Polynomial.zero_of_eval_zero
 
 #print Polynomial.funext /-

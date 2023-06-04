@@ -36,7 +36,7 @@ rational, continued fraction, termination
 
 namespace GeneralizedContinuedFraction
 
-/- ./././Mathport/Syntax/Translate/Command.lean:229:11: unsupported: unusual advanced open style -/
+/- ./././Mathport/Syntax/Translate/Command.lean:230:11: unsupported: unusual advanced open style -/
 open GeneralizedContinuedFraction (of)
 
 variable {K : Type _} [LinearOrderedField K] [FloorRing K]
@@ -90,8 +90,8 @@ theorem exists_gcf_pair_rat_eq_of_nth_conts_aux :
           simp only [this, pred_conts_eq]
         -- option.some
         · -- invoke the IH a second time
-          cases' IH n <| lt_of_le_of_lt n.le_succ <| lt_add_one <| n + 1 with
-            ppred_conts ppred_conts_eq
+          cases' IH n <| lt_of_le_of_lt n.le_succ <| lt_add_one <| n + 1 with ppred_conts
+            ppred_conts_eq
           obtain ⟨a_eq_one, z, b_eq_z⟩ : gp_n.a = 1 ∧ ∃ z : ℤ, gp_n.b = (z : K);
           exact of_part_num_eq_one_and_exists_int_part_denom_eq s_ppred_nth_eq
           -- finally, unfold the recurrence to obtain the required rational value.

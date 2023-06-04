@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.analytic.basic
-! leanprover-community/mathlib commit 32253a1a1071173b33dc7d6a218cf722c6feb514
+! leanprover-community/mathlib commit 2ebc1d6c2fed9f54c95bbc3998eaa5570527129a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -15,6 +15,9 @@ import Mathbin.Topology.Algebra.InfiniteSum.Module
 
 /-!
 # Analytic functions
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 A function is analytic in one dimension around `0` if it can be written as a converging power series
 `Σ pₙ zⁿ`. This definition can be extended to any dimension (even in infinite dimension) by
@@ -235,7 +238,7 @@ theorem lt_radius_of_isBigO (h₀ : r ≠ 0) {a : ℝ} (ha : a ∈ Ioo (-1 : ℝ
   lift a to ℝ≥0 using ha.1.le
   have : (r : ℝ) < r / a := by
     simpa only [div_one] using (div_lt_div_left h₀ zero_lt_one ha.1).2 ha.2
-  norm_cast  at this 
+  norm_cast at this 
   rw [← ENNReal.coe_lt_coe] at this 
   refine' this.trans_le (p.le_radius_of_bound C fun n => _)
   rw [NNReal.coe_div, div_pow, ← mul_div_assoc, div_le_iff (pow_pos ha.1 n)]
@@ -494,7 +497,7 @@ protected theorem HasFPowerSeriesAt.eventually (hf : HasFPowerSeriesAt f p x) :
 
 theorem HasFPowerSeriesOnBall.eventually_hasSum (hf : HasFPowerSeriesOnBall f p x r) :
     ∀ᶠ y in 𝓝 0, HasSum (fun n : ℕ => p n fun i : Fin n => y) (f (x + y)) := by
-  filter_upwards [EMetric.ball_mem_nhds (0 : E) hf.r_pos]using fun _ => hf.has_sum
+  filter_upwards [EMetric.ball_mem_nhds (0 : E) hf.r_pos] using fun _ => hf.has_sum
 #align has_fpower_series_on_ball.eventually_has_sum HasFPowerSeriesOnBall.eventually_hasSum
 
 theorem HasFPowerSeriesAt.eventually_hasSum (hf : HasFPowerSeriesAt f p x) :
@@ -505,7 +508,7 @@ theorem HasFPowerSeriesAt.eventually_hasSum (hf : HasFPowerSeriesAt f p x) :
 
 theorem HasFPowerSeriesOnBall.eventually_hasSum_sub (hf : HasFPowerSeriesOnBall f p x r) :
     ∀ᶠ y in 𝓝 x, HasSum (fun n : ℕ => p n fun i : Fin n => y - x) (f y) := by
-  filter_upwards [EMetric.ball_mem_nhds x hf.r_pos]with y using hf.has_sum_sub
+  filter_upwards [EMetric.ball_mem_nhds x hf.r_pos] with y using hf.has_sum_sub
 #align has_fpower_series_on_ball.eventually_has_sum_sub HasFPowerSeriesOnBall.eventually_hasSum_sub
 
 theorem HasFPowerSeriesAt.eventually_hasSum_sub (hf : HasFPowerSeriesAt f p x) :
@@ -516,7 +519,7 @@ theorem HasFPowerSeriesAt.eventually_hasSum_sub (hf : HasFPowerSeriesAt f p x) :
 
 theorem HasFPowerSeriesOnBall.eventually_eq_zero
     (hf : HasFPowerSeriesOnBall f (0 : FormalMultilinearSeries 𝕜 E F) x r) : ∀ᶠ z in 𝓝 x, f z = 0 :=
-  by filter_upwards [hf.eventually_has_sum_sub]with z hz using hz.unique hasSum_zero
+  by filter_upwards [hf.eventually_has_sum_sub] with z hz using hz.unique hasSum_zero
 #align has_fpower_series_on_ball.eventually_eq_zero HasFPowerSeriesOnBall.eventually_eq_zero
 
 theorem HasFPowerSeriesAt.eventually_eq_zero
@@ -724,7 +727,7 @@ theorem HasFPowerSeriesAt.isBigO_sub_partialSum_pow (hf : HasFPowerSeriesAt f p 
   exact hf.uniform_geometric_approx' h
   refine' is_O_iff.2 ⟨C * (a / r') ^ n, _⟩
   replace r'0 : 0 < (r' : ℝ); · exact_mod_cast r'0
-  filter_upwards [Metric.ball_mem_nhds (0 : E) r'0]with y hy
+  filter_upwards [Metric.ball_mem_nhds (0 : E) r'0] with y hy
   simpa [mul_pow, mul_div_assoc, mul_assoc, div_mul_eq_mul_div] using hp y hy n
 #align has_fpower_series_at.is_O_sub_partial_sum_pow HasFPowerSeriesAt.isBigO_sub_partialSum_pow
 
@@ -755,7 +758,7 @@ theorem HasFPowerSeriesOnBall.isBigO_image_sub_image_sub_deriv_principal
     set A : ℕ → F := fun n => (p n fun _ => y.1 - x) - p n fun _ => y.2 - x
     have hA : HasSum (fun n => A (n + 2)) (f y.1 - f y.2 - p 1 fun _ => y.1 - y.2) :=
       by
-      convert(hasSum_nat_add_iff' 2).2 ((hf.has_sum_sub hy.1).sub (hf.has_sum_sub hy.2)) using 1
+      convert (hasSum_nat_add_iff' 2).2 ((hf.has_sum_sub hy.1).sub (hf.has_sum_sub hy.2)) using 1
       rw [Finset.sum_range_succ, Finset.sum_range_one, hf.coeff_zero, hf.coeff_zero, sub_self,
         zero_add, ← Subsingleton.pi_single_eq (0 : Fin 1) (y.1 - x), Pi.single, ←
         Subsingleton.pi_single_eq (0 : Fin 1) (y.2 - x), Pi.single, ← (p 1).map_sub, ← Pi.single,
@@ -781,7 +784,8 @@ theorem HasFPowerSeriesOnBall.isBigO_image_sub_image_sub_deriv_principal
       apply HasSum.mul_left
       simp only [add_mul]
       have : ‖a‖ < 1 := by simp only [Real.norm_eq_abs, abs_of_pos ha.1, ha.2]
-      convert(hasSum_coe_mul_geometric_of_norm_lt_1 this).add
+      convert
+        (hasSum_coe_mul_geometric_of_norm_lt_1 this).add
           ((hasSum_geometric_of_norm_lt_1 this).mul_left 2)
     exact hA.norm_le_of_bounded hBL hAB
   suffices L =O[𝓟 (EMetric.ball (x, x) r')] fun y => ‖y - (x, x)‖ * ‖y.1 - y.2‖
@@ -863,7 +867,7 @@ theorem HasFPowerSeriesOnBall.tendstoUniformlyOn' {r' : ℝ≥0} (hf : HasFPower
     (h : (r' : ℝ≥0∞) < r) :
     TendstoUniformlyOn (fun n y => p.partialSum n (y - x)) f atTop (Metric.ball (x : E) r') :=
   by
-  convert(hf.tendsto_uniformly_on h).comp fun y => y - x
+  convert (hf.tendsto_uniformly_on h).comp fun y => y - x
   · simp [(· ∘ ·)]
   · ext z; simp [dist_eq_norm]
 #align has_fpower_series_on_ball.tendsto_uniformly_on' HasFPowerSeriesOnBall.tendstoUniformlyOn'
@@ -1381,7 +1385,7 @@ theorem HasFPowerSeriesOnBall.changeOrigin (hf : HasFPowerSeriesOnBall f p x r)
       exact tsub_le_tsub hf.r_le le_rfl
     r_pos := by simp [h]
     HasSum := fun z hz => by
-      convert(p.change_origin y).HasSum _
+      convert (p.change_origin y).HasSum _
       · rw [mem_emetric_ball_zero_iff, lt_tsub_iff_right, add_comm] at hz 
         rw [p.change_origin_eval (hz.trans_le hf.r_le), add_assoc, hf.sum]
         refine' mem_emetric_ball_zero_iff.2 (lt_of_le_of_lt _ hz)
@@ -1409,7 +1413,7 @@ variable (𝕜 f)
 
 /-- For any function `f` from a normed vector space to a Banach space, the set of points `x` such
 that `f` is analytic at `x` is open. -/
-theorem isOpen_analyticAt : IsOpen { x | AnalyticAt 𝕜 f x } :=
+theorem isOpen_analyticAt : IsOpen {x | AnalyticAt 𝕜 f x} :=
   by
   rw [isOpen_iff_mem_nhds]
   rintro x ⟨p, r, hr⟩

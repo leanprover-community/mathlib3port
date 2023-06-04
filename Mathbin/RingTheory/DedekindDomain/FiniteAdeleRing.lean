@@ -155,9 +155,9 @@ theorem add {x y : K_hat R K} (hx : x.IsFiniteAdele) (hy : y.IsFiniteAdele) :
   by
   rw [is_finite_adele, Filter.eventually_cofinite] at hx hy ⊢
   have h_subset :
-    { v : height_one_spectrum R | ¬(x + y) v ∈ v.adicCompletionIntegers K } ⊆
-      { v : height_one_spectrum R | ¬x v ∈ v.adicCompletionIntegers K } ∪
-        { v : height_one_spectrum R | ¬y v ∈ v.adicCompletionIntegers K } :=
+    {v : height_one_spectrum R | ¬(x + y) v ∈ v.adicCompletionIntegers K} ⊆
+      {v : height_one_spectrum R | ¬x v ∈ v.adicCompletionIntegers K} ∪
+        {v : height_one_spectrum R | ¬y v ∈ v.adicCompletionIntegers K} :=
     by
     intro v hv
     rw [mem_union, mem_set_of_eq, mem_set_of_eq]
@@ -174,7 +174,7 @@ theorem zero : (0 : K_hat R K).IsFiniteAdele :=
   by
   rw [is_finite_adele, Filter.eventually_cofinite]
   have h_empty :
-    { v : height_one_spectrum R | ¬(0 : v.adicCompletion K) ∈ v.adicCompletionIntegers K } = ∅ :=
+    {v : height_one_spectrum R | ¬(0 : v.adicCompletion K) ∈ v.adicCompletionIntegers K} = ∅ :=
     by
     ext v; rw [mem_empty_iff_false, iff_false_iff]; intro hv
     rw [mem_set_of_eq] at hv ; apply hv; rw [mem_adic_completion_integers]
@@ -204,9 +204,9 @@ theorem mul {x y : K_hat R K} (hx : x.IsFiniteAdele) (hy : y.IsFiniteAdele) :
   by
   rw [is_finite_adele, Filter.eventually_cofinite] at hx hy ⊢
   have h_subset :
-    { v : height_one_spectrum R | ¬(x * y) v ∈ v.adicCompletionIntegers K } ⊆
-      { v : height_one_spectrum R | ¬x v ∈ v.adicCompletionIntegers K } ∪
-        { v : height_one_spectrum R | ¬y v ∈ v.adicCompletionIntegers K } :=
+    {v : height_one_spectrum R | ¬(x * y) v ∈ v.adicCompletionIntegers K} ⊆
+      {v : height_one_spectrum R | ¬x v ∈ v.adicCompletionIntegers K} ∪
+        {v : height_one_spectrum R | ¬y v ∈ v.adicCompletionIntegers K} :=
     by
     intro v hv
     rw [mem_union, mem_set_of_eq, mem_set_of_eq]
@@ -227,7 +227,7 @@ theorem one : (1 : K_hat R K).IsFiniteAdele :=
   by
   rw [is_finite_adele, Filter.eventually_cofinite]
   have h_empty :
-    { v : height_one_spectrum R | ¬(1 : v.adicCompletion K) ∈ v.adicCompletionIntegers K } = ∅ :=
+    {v : height_one_spectrum R | ¬(1 : v.adicCompletion K) ∈ v.adicCompletionIntegers K} = ∅ :=
     by
     ext v; rw [mem_empty_iff_false, iff_false_iff]; intro hv
     rw [mem_set_of_eq] at hv ; apply hv; rw [mem_adic_completion_integers]
@@ -248,7 +248,7 @@ variable (R K)
 of `adic_completion` with respect to `adic_completion_integers`. -/
 noncomputable def finiteAdeleRing : Subring (K_hat R K)
     where
-  carrier := { x : K_hat R K | x.IsFiniteAdele }
+  carrier := {x : K_hat R K | x.IsFiniteAdele}
   mul_mem' _ _ hx hy := mul hx hy
   one_mem' := one
   add_mem' _ _ hx hy := add hx hy

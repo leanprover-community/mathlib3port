@@ -24,7 +24,7 @@ We show that the continuants and convergents of a gcf stabilise once the gcf ter
 
 namespace GeneralizedContinuedFraction
 
-/- ./././Mathport/Syntax/Translate/Command.lean:229:11: unsupported: unusual advanced open style -/
+/- ./././Mathport/Syntax/Translate/Command.lean:230:11: unsupported: unusual advanced open style -/
 variable {K : Type _} {g : GeneralizedContinuedFraction K} {n m : ℕ}
 
 #print GeneralizedContinuedFraction.terminated_stable /-

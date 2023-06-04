@@ -160,7 +160,7 @@ theorem map_eq_iff {x₁ x₂ : Fin n.succ → ℕ} (hx₁ : ∀ i, x₁ i < d) 
   exact ⟨this, h.resolve_right (pos_of_gt (hx₁ 0)).ne'⟩
 #align behrend.map_eq_iff Behrend.map_eq_iff
 
-theorem map_injOn : { x : Fin n → ℕ | ∀ i, x i < d }.InjOn (map d) :=
+theorem map_injOn : {x : Fin n → ℕ | ∀ i, x i < d}.InjOn (map d) :=
   by
   intro x₁ hx₁ x₂ hx₂ h
   induction' n with n ih

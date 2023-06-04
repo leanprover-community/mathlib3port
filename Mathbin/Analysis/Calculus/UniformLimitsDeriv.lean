@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin H. Wilson
 
 ! This file was ported from Lean 3 source module analysis.calculus.uniform_limits_deriv
-! leanprover-community/mathlib commit 3f655f5297b030a87d641ad4e825af8d9679eb0b
+! leanprover-community/mathlib commit af471b9e3ce868f296626d33189b4ce730fa4c00
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.Order.Filter.Curry
 
 /-!
 # Swapping limits and derivatives via uniform convergence
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 The purpose of this file is to prove that the derivative of the pointwise limit of a sequence of
 functions is the pointwise limit of the functions' derivatives when the derivatives converge
@@ -239,7 +242,7 @@ theorem cauchy_map_of_uniformCauchySeqOn_fderiv {s : Set E} (hs : IsOpen s) (h's
     Cauchy (map (fun n => f n x) l) :=
   by
   have : ne_bot l := (cauchy_map_iff.1 hfg).1
-  let t := { y | y ∈ s ∧ Cauchy (map (fun n => f n y) l) }
+  let t := {y | y ∈ s ∧ Cauchy (map (fun n => f n y) l)}
   suffices H : s ⊆ t; exact (H hx).2
   have A : ∀ x ε, x ∈ t → Metric.ball x ε ⊆ s → Metric.ball x ε ⊆ t := fun x ε xt hx y hy =>
     ⟨hx hy,
@@ -569,7 +572,7 @@ theorem hasDerivAt_of_tendsto_locally_uniformly_on' [NeBot l] {s : Set 𝕜} (hs
     (hfg : ∀ x ∈ s, Tendsto (fun n => f n x) l (𝓝 (g x))) (hx : x ∈ s) : HasDerivAt g (g' x) x :=
   by
   refine' hasDerivAt_of_tendstoLocallyUniformlyOn hs hf' _ hfg hx
-  filter_upwards [hf]with n h z hz using((h z hz).DifferentiableAt (hs.mem_nhds hz)).HasDerivAt
+  filter_upwards [hf] with n h z hz using ((h z hz).DifferentiableAt (hs.mem_nhds hz)).HasDerivAt
 #align has_deriv_at_of_tendsto_locally_uniformly_on' hasDerivAt_of_tendsto_locally_uniformly_on'
 
 theorem hasDerivAt_of_tendstoUniformlyOn [NeBot l] {s : Set 𝕜} (hs : IsOpen s)
@@ -586,7 +589,7 @@ theorem hasDerivAt_of_tendstoUniformly [NeBot l] (hf' : TendstoUniformly f' g' l
   by
   intro x
   have hf : ∀ᶠ n in l, ∀ x : 𝕜, x ∈ Set.univ → HasDerivAt (f n) (f' n x) x := by
-    filter_upwards [hf]with n h x hx using h x
+    filter_upwards [hf] with n h x hx using h x
   have hfg : ∀ x : 𝕜, x ∈ Set.univ → tendsto (fun n => f n x) l (𝓝 (g x)) := by simp [hfg]
   have hf' : TendstoUniformlyOn f' g' l Set.univ := by rwa [tendstoUniformlyOn_univ]
   exact hasDerivAt_of_tendstoUniformlyOn isOpen_univ hf' hf hfg x (Set.mem_univ x)

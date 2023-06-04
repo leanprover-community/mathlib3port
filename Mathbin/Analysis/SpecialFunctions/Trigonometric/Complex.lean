@@ -161,12 +161,12 @@ theorem tan_eq {z : ℂ}
 
 open scoped Topology
 
-theorem continuousOn_tan : ContinuousOn tan { x | cos x ≠ 0 } :=
+theorem continuousOn_tan : ContinuousOn tan {x | cos x ≠ 0} :=
   continuousOn_sin.div continuousOn_cos fun x => id
 #align complex.continuous_on_tan Complex.continuousOn_tan
 
 @[continuity]
-theorem continuous_tan : Continuous fun x : { x | cos x ≠ 0 } => tan x :=
+theorem continuous_tan : Continuous fun x : {x | cos x ≠ 0} => tan x :=
   continuousOn_iff_continuous_restrict.1 continuousOn_tan
 #align complex.continuous_tan Complex.continuous_tan
 

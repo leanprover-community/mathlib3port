@@ -58,8 +58,7 @@ protected def uniformSpace : UniformSpace R :=
 -/
 
 theorem hasBasis_uniformity :
-    𝓤[abv.UniformSpace].HasBasis (fun ε : 𝕜 => 0 < ε) fun ε =>
-      { p : R × R | abv (p.2 - p.1) < ε } :=
+    𝓤[abv.UniformSpace].HasBasis (fun ε : 𝕜 => 0 < ε) fun ε => {p : R × R | abv (p.2 - p.1) < ε} :=
   UniformSpace.hasBasis_ofFun (exists_gt _) _ _ _ _ _
 #align absolute_value.has_basis_uniformity AbsoluteValue.hasBasis_uniformity
 

@@ -242,7 +242,8 @@ theorem isClassified_of_isPrimitiveClassified (hp : h.IsPrimitiveClassified) : h
 theorem isClassified_of_normalize_isPrimitiveClassified (hc : h.normalize.IsPrimitiveClassified) :
     h.IsClassified :=
   by
-  convert h.normalize.mul_is_classified (Int.gcd x y)
+  convert
+      h.normalize.mul_is_classified (Int.gcd x y)
         (is_classified_of_is_primitive_classified h.normalize hc) <;>
     rw [Int.mul_ediv_cancel']
   · exact Int.gcd_dvd_left x y
@@ -477,7 +478,7 @@ theorem isPrimitiveClassified_of_coprime_of_odd_of_pos (hc : Int.gcd x y = 1) (h
     exact pow_eq_zero hq
   have hQ : ∀ x : ℚ, 1 + x ^ 2 ≠ 0 := by intro q; apply ne_of_gt;
     exact lt_add_of_pos_of_le zero_lt_one (sq_nonneg q)
-  have hp : (⟨v, w⟩ : ℚ × ℚ) ∈ { p : ℚ × ℚ | p.1 ^ 2 + p.2 ^ 2 = 1 ∧ p.2 ≠ -1 } := ⟨hq, hw1⟩
+  have hp : (⟨v, w⟩ : ℚ × ℚ) ∈ {p : ℚ × ℚ | p.1 ^ 2 + p.2 ^ 2 = 1 ∧ p.2 ≠ -1} := ⟨hq, hw1⟩
   let q := (circleEquivGen hQ).symm ⟨⟨v, w⟩, hp⟩
   have ht4 : v = 2 * q / (1 + q ^ 2) ∧ w = (1 - q ^ 2) / (1 + q ^ 2) :=
     by

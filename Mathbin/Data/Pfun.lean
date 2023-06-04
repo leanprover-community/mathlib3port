@@ -81,7 +81,7 @@ instance : Inhabited (α →. β) :=
 #print PFun.Dom /-
 /-- The domain of a partial function -/
 def Dom (f : α →. β) : Set α :=
-  { a | (f a).Dom }
+  {a | (f a).Dom}
 #align pfun.dom PFun.Dom
 -/
 
@@ -90,11 +90,11 @@ theorem mem_dom (f : α →. β) (x : α) : x ∈ Dom f ↔ ∃ y, y ∈ f x := 
 #align pfun.mem_dom PFun.mem_dom
 
 @[simp]
-theorem dom_mk (p : α → Prop) (f : ∀ a, p a → β) : (PFun.Dom fun x => ⟨p x, f x⟩) = { x | p x } :=
+theorem dom_mk (p : α → Prop) (f : ∀ a, p a → β) : (PFun.Dom fun x => ⟨p x, f x⟩) = {x | p x} :=
   rfl
 #align pfun.dom_mk PFun.dom_mk
 
-theorem dom_eq (f : α →. β) : Dom f = { x | ∃ y, y ∈ f x } :=
+theorem dom_eq (f : α →. β) : Dom f = {x | ∃ y, y ∈ f x} :=
   Set.ext (mem_dom f)
 #align pfun.dom_eq PFun.dom_eq
 
@@ -182,7 +182,7 @@ theorem lift_injective : Injective (coe : (α → β) → α →. β) := fun f g
 /-- Graph of a partial function `f` as the set of pairs `(x, f x)` where `x` is in the domain of
 `f`. -/
 def graph (f : α →. β) : Set (α × β) :=
-  { p | p.2 ∈ f p.1 }
+  {p | p.2 ∈ f p.1}
 #align pfun.graph PFun.graph
 -/
 
@@ -197,7 +197,7 @@ def graph' (f : α →. β) : Rel α β := fun x y => y ∈ f x
 /-- The range of a partial function is the set of values
   `f x` where `x` is in the domain of `f`. -/
 def ran (f : α →. β) : Set β :=
-  { b | ∃ a, b ∈ f a }
+  {b | ∃ a, b ∈ f a}
 #align pfun.ran PFun.ran
 -/
 
@@ -352,7 +352,7 @@ theorem fix_fwd {f : α →. Sum β α} {b : β} {a a' : α} (hb : b ∈ f.fix a
 def fixInduction {C : α → Sort _} {f : α →. Sum β α} {b : β} {a : α} (h : b ∈ f.fix a)
     (H : ∀ a', b ∈ f.fix a' → (∀ a'', Sum.inr a'' ∈ f a' → C a'') → C a') : C a :=
   by
-  have h₂ := (Part.mem_assert_iff.1 h).snd; generalize_proofs h₁  at h₂ ; clear h
+  have h₂ := (Part.mem_assert_iff.1 h).snd; generalize_proofs h₁ at h₂ ; clear h
   induction' h₁ with a ha IH
   have h : b ∈ f.fix a := Part.mem_assert_iff.2 ⟨⟨a, ha⟩, h₂⟩
   exact H a h fun a' fa' => IH a' fa' (Part.mem_assert_iff.1 (fix_fwd h fa')).snd
@@ -405,7 +405,7 @@ def image (s : Set α) : Set β :=
 #align pfun.image PFun.image
 -/
 
-theorem image_def (s : Set α) : f.image s = { y | ∃ x ∈ s, y ∈ f x } :=
+theorem image_def (s : Set α) : f.image s = {y | ∃ x ∈ s, y ∈ f x} :=
   rfl
 #align pfun.image_def PFun.image_def
 
@@ -432,7 +432,7 @@ def preimage (s : Set β) : Set α :=
 #align pfun.preimage PFun.preimage
 -/
 
-theorem Preimage_def (s : Set β) : f.Preimage s = { x | ∃ y ∈ s, y ∈ f x } :=
+theorem Preimage_def (s : Set β) : f.Preimage s = {x | ∃ y ∈ s, y ∈ f x} :=
   rfl
 #align pfun.preimage_def PFun.Preimage_def
 
@@ -478,7 +478,7 @@ def core (s : Set β) : Set α :=
 -/
 
 #print PFun.core_def /-
-theorem core_def (s : Set β) : f.core s = { x | ∀ y, y ∈ f x → y ∈ s } :=
+theorem core_def (s : Set β) : f.core s = {x | ∀ y, y ∈ f x → y ∈ s} :=
   rfl
 #align pfun.core_def PFun.core_def
 -/
@@ -562,7 +562,7 @@ def toSubtype (p : β → Prop) (f : α → β) : α →. Subtype p := fun a => 
 -/
 
 @[simp]
-theorem dom_toSubtype (p : β → Prop) (f : α → β) : (toSubtype p f).Dom = { a | p (f a) } :=
+theorem dom_toSubtype (p : β → Prop) (f : α → β) : (toSubtype p f).Dom = {a | p (f a)} :=
   rfl
 #align pfun.dom_to_subtype PFun.dom_toSubtype
 
@@ -678,8 +678,7 @@ def prodLift (f : α →. β) (g : α →. γ) : α →. β × γ := fun x =>
 -/
 
 @[simp]
-theorem dom_prodLift (f : α →. β) (g : α →. γ) :
-    (f.prodLift g).Dom = { x | (f x).Dom ∧ (g x).Dom } :=
+theorem dom_prodLift (f : α →. β) (g : α →. γ) : (f.prodLift g).Dom = {x | (f x).Dom ∧ (g x).Dom} :=
   rfl
 #align pfun.dom_prod_lift PFun.dom_prodLift
 
@@ -711,7 +710,7 @@ def prodMap (f : α →. γ) (g : β →. δ) : α × β →. γ × δ := fun x 
 
 @[simp]
 theorem dom_prodMap (f : α →. γ) (g : β →. δ) :
-    (f.Prod_map g).Dom = { x | (f x.1).Dom ∧ (g x.2).Dom } :=
+    (f.Prod_map g).Dom = {x | (f x.1).Dom ∧ (g x.2).Dom} :=
   rfl
 #align pfun.dom_prod_map PFun.dom_prodMap
 

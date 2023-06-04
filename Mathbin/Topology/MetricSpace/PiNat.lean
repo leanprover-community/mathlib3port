@@ -93,7 +93,7 @@ theorem apply_firstDiff_ne {x y : ∀ n, E n} (h : x ≠ y) : x (firstDiff x y) 
 theorem apply_eq_of_lt_firstDiff {x y : ∀ n, E n} {n : ℕ} (hn : n < firstDiff x y) : x n = y n :=
   by
   rw [first_diff] at hn 
-  split_ifs  at hn 
+  split_ifs at hn 
   · convert Nat.find_min (ne_iff.1 h) hn
     simp
   · exact (not_lt_zero' hn).elim
@@ -133,7 +133,7 @@ theorem min_firstDiff_le (x y z : ∀ n, E n) (h : x ≠ z) :
 such that `y i = x i` for all `i < n`.
 -/
 def cylinder (x : ∀ n, E n) (n : ℕ) : Set (∀ n, E n) :=
-  { y | ∀ i, i < n → y i = x i }
+  {y | ∀ i, i < n → y i = x i}
 #align pi_nat.cylinder PiNat.cylinder
 -/
 
@@ -308,7 +308,7 @@ theorem res_injective : Injective (@res α) :=
 
 #print PiNat.cylinder_eq_res /-
 /-- `cylinder x n` is equal to the set of sequences `y` with the same restriction to `n` as `x`.-/
-theorem cylinder_eq_res (x : ℕ → α) (n : ℕ) : cylinder x n = { y | res y n = res x n } :=
+theorem cylinder_eq_res (x : ℕ → α) (n : ℕ) : cylinder x n = {y | res y n = res x n} :=
   by
   ext y
   dsimp [cylinder]
@@ -441,7 +441,7 @@ theorem isOpen_cylinder (x : ∀ n, E n) (n : ℕ) : IsOpen (cylinder x n) :=
 
 #print PiNat.isTopologicalBasis_cylinders /-
 theorem isTopologicalBasis_cylinders :
-    IsTopologicalBasis { s : Set (∀ n, E n) | ∃ (x : ∀ n, E n) (n : ℕ), s = cylinder x n } :=
+    IsTopologicalBasis {s : Set (∀ n, E n) | ∃ (x : ∀ n, E n) (n : ℕ), s = cylinder x n} :=
   by
   apply is_topological_basis_of_open_of_nhds
   · rintro u ⟨x, n, rfl⟩
@@ -450,9 +450,9 @@ theorem isTopologicalBasis_cylinders :
     obtain ⟨v, ⟨U, F, hUF, rfl⟩, xU, Uu⟩ :
       ∃ (v : Set (∀ i : ℕ, E i)) (H :
         v ∈
-          { S : Set (∀ i : ℕ, E i) |
+          {S : Set (∀ i : ℕ, E i) |
             ∃ (U : ∀ i : ℕ, Set (E i)) (F : Finset ℕ),
-              (∀ i : ℕ, i ∈ F → U i ∈ { s : Set (E i) | IsOpen s }) ∧ S = (F : Set ℕ).pi U }),
+              (∀ i : ℕ, i ∈ F → U i ∈ {s : Set (E i) | IsOpen s}) ∧ S = (F : Set ℕ).pi U}),
         x ∈ v ∧ v ⊆ u :=
       (isTopologicalBasis_pi fun n : ℕ => is_topological_basis_opens).exists_subset_of_mem_open hx
         u_open
@@ -476,7 +476,7 @@ theorem isOpen_iff_dist (s : Set (∀ n, E n)) :
   constructor
   · intro hs x hx
     obtain ⟨v, ⟨y, n, rfl⟩, h'x, h's⟩ :
-      ∃ (v : Set (∀ n : ℕ, E n)) (H : v ∈ { s | ∃ (x : ∀ n : ℕ, E n) (n : ℕ), s = cylinder x n }),
+      ∃ (v : Set (∀ n : ℕ, E n)) (H : v ∈ {s | ∃ (x : ∀ n : ℕ, E n) (n : ℕ), s = cylinder x n}),
         x ∈ v ∧ v ⊆ s :=
       (is_topological_basis_cylinders E).exists_subset_of_mem_open hx hs
     rw [← mem_cylinder_iff_eq.1 h'x] at h's 
@@ -527,7 +527,7 @@ protected def metricSpaceOfDiscreteUniformity {E : ℕ → Type _} [∀ n, Unifo
         obtain ⟨n, hn⟩ : ∃ n, (1 / 2 : ℝ) ^ n < ε := exists_pow_lt_of_lt_one εpos (by norm_num)
         apply
           @mem_infi_of_Inter _ _ _ _ _ (Finset.range n).finite_toSet fun i =>
-            { p : (∀ n : ℕ, E n) × ∀ n : ℕ, E n | p.fst i = p.snd i }
+            {p : (∀ n : ℕ, E n) × ∀ n : ℕ, E n | p.fst i = p.snd i}
         · simp only [mem_principal, set_of_subset_set_of, imp_self, imp_true_iff]
         · rintro ⟨x, y⟩ hxy
           simp only [Finset.mem_coe, Finset.mem_range, Inter_coe_set, mem_Inter, mem_set_of_eq] at
@@ -563,7 +563,7 @@ protected theorem completeSpace : CompleteSpace (∀ n, E n) :=
   intro u hu
   refine' ⟨fun n => u n n, tendsto_pi_nhds.2 fun i => _⟩
   refine' tendsto_const_nhds.congr' _
-  filter_upwards [Filter.Ici_mem_atTop i]with n hn
+  filter_upwards [Filter.Ici_mem_atTop i] with n hn
   exact apply_eq_of_dist_lt (hu i i n le_rfl hn) le_rfl
 #align pi_nat.complete_space PiNat.completeSpace
 -/
@@ -659,7 +659,7 @@ theorem inter_cylinder_longestPrefix_nonempty {s : Set (∀ n, E n)} (hs : IsClo
   obtain ⟨y, ys, hy⟩ : ∃ y : ∀ n : ℕ, E n, y ∈ s ∧ x ∈ cylinder y (Nat.find A - 1) :=
     by
     have := Nat.find_min A B
-    push_neg  at this 
+    push_neg at this 
     simp_rw [not_disjoint_iff, mem_cylinder_comm] at this 
     exact this
   refine' ⟨y, ys, _⟩
@@ -805,7 +805,7 @@ theorem exists_lipschitz_retraction_of_isClosed {s : Set (∀ n, E n)} (hs : IsC
           congr
         -- case where the common prefix to `x` and `s` is long, as well as the common prefix to
         -- `y` and `s`. Then all points remain in the same cylinders.
-        · push_neg  at H 
+        · push_neg at H 
           have I1 : cylinder Ax.some (first_diff x y) = cylinder x (first_diff x y) :=
             by
             rw [← mem_cylinder_iff_eq]
@@ -870,7 +870,7 @@ theorem exists_nat_nat_continuous_surjective_of_completeSpace (α : Type _) [Met
   have I0 : (0 : ℝ) < 1 / 2 := by norm_num
   have I1 : (1 / 2 : ℝ) < 1 := by norm_num
   rcases exists_dense_seq α with ⟨u, hu⟩
-  let s : Set (ℕ → ℕ) := { x | (⋂ n : ℕ, closed_ball (u (x n)) ((1 / 2) ^ n)).Nonempty }
+  let s : Set (ℕ → ℕ) := {x | (⋂ n : ℕ, closed_ball (u (x n)) ((1 / 2) ^ n)).Nonempty}
   let g : s → α := fun x => x.2.some
   have A : ∀ (x : s) (n : ℕ), dist (g x) (u ((x : ℕ → ℕ) n)) ≤ (1 / 2) ^ n := fun x n =>
     (mem_Inter.1 x.2.some_mem n : _)
@@ -1037,7 +1037,8 @@ protected def metricSpace : MetricSpace (∀ i, F i)
               (min ((1 / 2) ^ encode i) (dist (x i) (y i)) +
                 min ((1 / 2) ^ encode i) (dist (y i) (z i))) :=
           by
-          convert congr_arg (coe : ℝ≥0 → ℝ)
+          convert
+              congr_arg (coe : ℝ≥0 → ℝ)
                 (min_add_distrib ((1 / 2 : ℝ≥0) ^ encode i) (nndist (x i) (y i))
                   (nndist (y i) (z i))) <;>
             simp
@@ -1087,7 +1088,7 @@ protected def metricSpace : MetricSpace (∀ i, F i)
           ring
       apply
         @mem_infi_of_Inter _ _ _ _ _ K.finite_to_set fun i =>
-          { p : (∀ i : ι, F i) × ∀ i : ι, F i | dist (p.fst i) (p.snd i) < δ }
+          {p : (∀ i : ι, F i) × ∀ i : ι, F i | dist (p.fst i) (p.snd i) < δ}
       · rintro ⟨i, hi⟩
         refine' mem_infi_of_mem δ (mem_infi_of_mem δpos _)
         simp only [Prod.forall, imp_self, mem_principal]

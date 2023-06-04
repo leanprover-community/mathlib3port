@@ -184,7 +184,7 @@ instance : Dist GHSpace
     sInf <|
       (fun p : NonemptyCompacts ℓ_infty_ℝ × NonemptyCompacts ℓ_infty_ℝ =>
           hausdorffDist (p.1 : Set ℓ_infty_ℝ) p.2) ''
-        { a | ⟦a⟧ = x } ×ˢ { b | ⟦b⟧ = y }
+        {a | ⟦a⟧ = x} ×ˢ {b | ⟦b⟧ = y}
 
 /-- The Gromov-Hausdorff distance between two nonempty compact metric spaces, equal by definition to
 the distance of the equivalence classes of these spaces in the Gromov-Hausdorff space. -/
@@ -457,11 +457,11 @@ instance : MetricSpace GHSpace where
     have A :
       (fun p : nonempty_compacts ℓ_infty_ℝ × nonempty_compacts ℓ_infty_ℝ =>
             Hausdorff_dist (p.1 : Set ℓ_infty_ℝ) p.2) ''
-          { a | ⟦a⟧ = x } ×ˢ { b | ⟦b⟧ = y } =
+          {a | ⟦a⟧ = x} ×ˢ {b | ⟦b⟧ = y} =
         (fun p : nonempty_compacts ℓ_infty_ℝ × nonempty_compacts ℓ_infty_ℝ =>
               Hausdorff_dist (p.1 : Set ℓ_infty_ℝ) p.2) ∘
             Prod.swap ''
-          { a | ⟦a⟧ = x } ×ˢ { b | ⟦b⟧ = y } :=
+          {a | ⟦a⟧ = x} ×ˢ {b | ⟦b⟧ = y} :=
       by congr; funext; simp only [comp_app, Prod.fst_swap, Prod.snd_swap]; rw [Hausdorff_dist_comm]
     simp only [dist, A, image_comp, image_swap_prod]
   eq_of_dist_eq_zero x y hxy :=
@@ -1145,7 +1145,7 @@ instance : CompleteSpace GHSpace :=
     rw [nonempty_compacts.to_GH_space, ← (u n).toGHSpace_rep,
       to_GH_space_eq_to_GH_space_iff_isometry_equiv]
     constructor
-    convert(isom n).isometryEquivOnRange.symm
+    convert (isom n).isometryEquivOnRange.symm
   -- Finally, we have proved the convergence of `u n`
   exact ⟨L.to_GH_space, by simpa only [this] using M⟩
 

@@ -69,7 +69,7 @@ def splitLower (I : Box ι) (i : ι) (x : ℝ) : WithBot (Box ι) :=
 -/
 
 @[simp]
-theorem coe_splitLower : (splitLower I i x : Set (ι → ℝ)) = I ∩ { y | y i ≤ x } :=
+theorem coe_splitLower : (splitLower I i x : Set (ι → ℝ)) = I ∩ {y | y i ≤ x} :=
   by
   rw [split_lower, coe_mk']
   ext y
@@ -113,7 +113,7 @@ def splitUpper (I : Box ι) (i : ι) (x : ℝ) : WithBot (Box ι) :=
 -/
 
 @[simp]
-theorem coe_splitUpper : (splitUpper I i x : Set (ι → ℝ)) = I ∩ { y | x < y i } :=
+theorem coe_splitUpper : (splitUpper I i x : Set (ι → ℝ)) = I ∩ {y | x < y i} :=
   by
   rw [split_upper, coe_mk']
   ext y
@@ -199,7 +199,7 @@ theorem mem_split_iff : J ∈ split I i x ↔ ↑J = I.splitLower i x ∨ ↑J =
 
 theorem mem_split_iff' :
     J ∈ split I i x ↔
-      (J : Set (ι → ℝ)) = I ∩ { y | y i ≤ x } ∨ (J : Set (ι → ℝ)) = I ∩ { y | x < y i } :=
+      (J : Set (ι → ℝ)) = I ∩ {y | y i ≤ x} ∨ (J : Set (ι → ℝ)) = I ∩ {y | x < y i} :=
   by simp [mem_split_iff, ← box.with_bot_coe_inj]
 #align box_integral.prepartition.mem_split_iff' BoxIntegral.Prepartition.mem_split_iff'
 
@@ -234,12 +234,12 @@ theorem split_of_not_mem_Ioo (h : x ∉ Ioo (I.lower i) (I.upper i)) : split I i
 #align box_integral.prepartition.split_of_not_mem_Ioo BoxIntegral.Prepartition.split_of_not_mem_Ioo
 
 theorem coe_eq_of_mem_split_of_mem_le {y : ι → ℝ} (h₁ : J ∈ split I i x) (h₂ : y ∈ J)
-    (h₃ : y i ≤ x) : (J : Set (ι → ℝ)) = I ∩ { y | y i ≤ x } :=
+    (h₃ : y i ≤ x) : (J : Set (ι → ℝ)) = I ∩ {y | y i ≤ x} :=
   (mem_split_iff'.1 h₁).resolve_right fun H => by rw [← box.mem_coe, H] at h₂ ; exact h₃.not_lt h₂.2
 #align box_integral.prepartition.coe_eq_of_mem_split_of_mem_le BoxIntegral.Prepartition.coe_eq_of_mem_split_of_mem_le
 
 theorem coe_eq_of_mem_split_of_lt_mem {y : ι → ℝ} (h₁ : J ∈ split I i x) (h₂ : y ∈ J)
-    (h₃ : x < y i) : (J : Set (ι → ℝ)) = I ∩ { y | x < y i } :=
+    (h₃ : x < y i) : (J : Set (ι → ℝ)) = I ∩ {y | x < y i} :=
   (mem_split_iff'.1 h₁).resolve_left fun H => by rw [← box.mem_coe, H] at h₂ ; exact h₃.not_le h₂.2
 #align box_integral.prepartition.coe_eq_of_mem_split_of_lt_mem BoxIntegral.Prepartition.coe_eq_of_mem_split_of_lt_mem
 

@@ -53,14 +53,14 @@ variable [Preorder α] [Preorder β] {s t : Set α} {a b : α}
 #print upperBounds /-
 /-- The set of upper bounds of a set. -/
 def upperBounds (s : Set α) : Set α :=
-  { x | ∀ ⦃a⦄, a ∈ s → a ≤ x }
+  {x | ∀ ⦃a⦄, a ∈ s → a ≤ x}
 #align upper_bounds upperBounds
 -/
 
 #print lowerBounds /-
 /-- The set of lower bounds of a set. -/
 def lowerBounds (s : Set α) : Set α :=
-  { x | ∀ ⦃a⦄, a ∈ s → x ≤ a }
+  {x | ∀ ⦃a⦄, a ∈ s → x ≤ a}
 #align lower_bounds lowerBounds
 -/
 
@@ -723,7 +723,7 @@ theorem exists_lub_Iio (i : γ) : ∃ j, IsLUB (Set.Iio i) j :=
     rw [mem_lowerBounds]
     by_contra
     refine' h_exists_lt _
-    push_neg  at h 
+    push_neg at h 
     exact h
 #align exists_lub_Iio exists_lub_Iio
 -/
@@ -2000,14 +2000,14 @@ theorem IsLUB.of_image [Preorder α] [Preorder β] {f : α → β} (hf : ∀ {x 
 theorem isLUB_pi {π : α → Type _} [∀ a, Preorder (π a)] {s : Set (∀ a, π a)} {f : ∀ a, π a} :
     IsLUB s f ↔ ∀ a, IsLUB (Function.eval a '' s) (f a) := by
   classical
-    refine'
-      ⟨fun H a => ⟨(Function.monotone_eval a).mem_upperBounds_image H.1, fun b hb => _⟩, fun H =>
-        ⟨_, _⟩⟩
-    · suffices : Function.update f a b ∈ upperBounds s
-      exact Function.update_same a b f ▸ H.2 this a
-      refine' fun g hg => le_update_iff.2 ⟨hb <| mem_image_of_mem _ hg, fun i hi => H.1 hg i⟩
-    · exact fun g hg a => (H a).1 (mem_image_of_mem _ hg)
-    · exact fun g hg a => (H a).2 ((Function.monotone_eval a).mem_upperBounds_image hg)
+  refine'
+    ⟨fun H a => ⟨(Function.monotone_eval a).mem_upperBounds_image H.1, fun b hb => _⟩, fun H =>
+      ⟨_, _⟩⟩
+  · suffices : Function.update f a b ∈ upperBounds s
+    exact Function.update_same a b f ▸ H.2 this a
+    refine' fun g hg => le_update_iff.2 ⟨hb <| mem_image_of_mem _ hg, fun i hi => H.1 hg i⟩
+  · exact fun g hg a => (H a).1 (mem_image_of_mem _ hg)
+  · exact fun g hg a => (H a).2 ((Function.monotone_eval a).mem_upperBounds_image hg)
 #align is_lub_pi isLUB_pi
 
 theorem isGLB_pi {π : α → Type _} [∀ a, Preorder (π a)] {s : Set (∀ a, π a)} {f : ∀ a, π a} :

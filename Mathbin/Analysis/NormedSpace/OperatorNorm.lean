@@ -142,7 +142,7 @@ open Set Real
 #print ContinuousLinearMap.opNorm /-
 /-- The operator norm of a continuous linear map is the inf of all its bounds. -/
 def opNorm (f : E →SL[σ₁₂] F) :=
-  sInf { c | 0 ≤ c ∧ ∀ x, ‖f x‖ ≤ c * ‖x‖ }
+  sInf {c | 0 ≤ c ∧ ∀ x, ‖f x‖ ≤ c * ‖x‖}
 #align continuous_linear_map.op_norm ContinuousLinearMap.opNorm
 -/
 
@@ -152,19 +152,19 @@ instance hasOpNorm : Norm (E →SL[σ₁₂] F) :=
 #align continuous_linear_map.has_op_norm ContinuousLinearMap.hasOpNorm
 -/
 
-theorem norm_def (f : E →SL[σ₁₂] F) : ‖f‖ = sInf { c | 0 ≤ c ∧ ∀ x, ‖f x‖ ≤ c * ‖x‖ } :=
+theorem norm_def (f : E →SL[σ₁₂] F) : ‖f‖ = sInf {c | 0 ≤ c ∧ ∀ x, ‖f x‖ ≤ c * ‖x‖} :=
   rfl
 #align continuous_linear_map.norm_def ContinuousLinearMap.norm_def
 
 -- So that invocations of `le_cInf` make sense: we show that the set of
 -- bounds is nonempty and bounded below.
 theorem bounds_nonempty [RingHomIsometric σ₁₂] {f : E →SL[σ₁₂] F} :
-    ∃ c, c ∈ { c | 0 ≤ c ∧ ∀ x, ‖f x‖ ≤ c * ‖x‖ } :=
+    ∃ c, c ∈ {c | 0 ≤ c ∧ ∀ x, ‖f x‖ ≤ c * ‖x‖} :=
   let ⟨M, hMp, hMb⟩ := f.bound
   ⟨M, le_of_lt hMp, hMb⟩
 #align continuous_linear_map.bounds_nonempty ContinuousLinearMap.bounds_nonempty
 
-theorem bounds_bddBelow {f : E →SL[σ₁₂] F} : BddBelow { c | 0 ≤ c ∧ ∀ x, ‖f x‖ ≤ c * ‖x‖ } :=
+theorem bounds_bddBelow {f : E →SL[σ₁₂] F} : BddBelow {c | 0 ≤ c ∧ ∀ x, ‖f x‖ ≤ c * ‖x‖} :=
   ⟨0, fun _ ⟨hn, _⟩ => hn⟩
 #align continuous_linear_map.bounds_bdd_below ContinuousLinearMap.bounds_bddBelow
 
@@ -376,7 +376,7 @@ protected theorem tmpTopologicalAddGroup : TopologicalAddGroup (E →SL[σ₁₂
 
 protected theorem tmp_closedBall_div_subset {a b : ℝ} (ha : 0 < a) (hb : 0 < b) :
     closedBall (0 : E →SL[σ₁₂] F) (a / b) ⊆
-      { f | ∀ x ∈ closedBall (0 : E) b, f x ∈ closedBall (0 : F) a } :=
+      {f | ∀ x ∈ closedBall (0 : E) b, f x ∈ closedBall (0 : F) a} :=
   by
   intro f hf x hx
   rw [mem_closedBall_zero_iff] at hf hx ⊢
@@ -440,7 +440,7 @@ instance toSeminormedAddCommGroup : SeminormedAddCommGroup (E →SL[σ₁₂] F)
 #align continuous_linear_map.to_seminormed_add_comm_group ContinuousLinearMap.toSeminormedAddCommGroup
 -/
 
-theorem nnnorm_def (f : E →SL[σ₁₂] F) : ‖f‖₊ = sInf { c | ∀ x, ‖f x‖₊ ≤ c * ‖x‖₊ } :=
+theorem nnnorm_def (f : E →SL[σ₁₂] F) : ‖f‖₊ = sInf {c | ∀ x, ‖f x‖₊ ≤ c * ‖x‖₊} :=
   by
   ext
   rw [NNReal.coe_sInf, coe_nnnorm, norm_def, NNReal.coe_image]
@@ -541,7 +541,7 @@ variable [RingHomIsometric σ₁₂]
 theorem exists_mul_lt_apply_of_lt_op_nnnorm (f : E →SL[σ₁₂] F) {r : ℝ≥0} (hr : r < ‖f‖₊) :
     ∃ x, r * ‖x‖₊ < ‖f x‖₊ := by
   simpa only [not_forall, not_le, Set.mem_setOf] using
-    not_mem_of_lt_csInf (nnnorm_def f ▸ hr : r < Inf { c : ℝ≥0 | ∀ x, ‖f x‖₊ ≤ c * ‖x‖₊ })
+    not_mem_of_lt_csInf (nnnorm_def f ▸ hr : r < Inf {c : ℝ≥0 | ∀ x, ‖f x‖₊ ≤ c * ‖x‖₊})
       (OrderBot.bddBelow _)
 #align continuous_linear_map.exists_mul_lt_apply_of_lt_op_nnnorm ContinuousLinearMap.exists_mul_lt_apply_of_lt_op_nnnorm
 
@@ -1556,7 +1556,7 @@ def ofMemClosureImageCoeBounded (f : E' → F) {s : Set (E' →SL[σ₁₂] F)} 
   · -- We need to show that `f` has bounded norm. Choose `C` such that `‖g‖ ≤ C` for all `g ∈ s`.
     rcases bounded_iff_forall_norm_le.1 hs with ⟨C, hC⟩
     -- Then `‖g x‖ ≤ C * ‖x‖` for all `g ∈ s`, `x : E`, hence `‖f x‖ ≤ C * ‖x‖` for all `x`.
-    have : ∀ x, IsClosed { g : E' → F | ‖g x‖ ≤ C * ‖x‖ } := fun x =>
+    have : ∀ x, IsClosed {g : E' → F | ‖g x‖ ≤ C * ‖x‖} := fun x =>
       is_closed_Iic.preimage (@continuous_apply E' (fun _ => F) _ x).norm
     refine' ⟨C, fun x => (this x).closure_subset_iff.2 (image_subset_iff.2 fun g hg => _) hf⟩
     exact g.le_of_op_norm_le (hC _ hg) _
@@ -1672,7 +1672,7 @@ theorem is_weak_closed_closedBall (f₀ : E' →SL[σ₁₂] F) (r : ℝ) ⦃f :
   by
   have hr : 0 ≤ r := nonempty_closed_ball.1 (nonempty_image_iff.1 (closure_nonempty_iff.1 ⟨_, hf⟩))
   refine' mem_closedBall_iff_norm.2 (op_norm_le_bound _ hr fun x => _)
-  have : IsClosed { g : E' → F | ‖g x - f₀ x‖ ≤ r * ‖x‖ } :=
+  have : IsClosed {g : E' → F | ‖g x - f₀ x‖ ≤ r * ‖x‖} :=
     is_closed_Iic.preimage ((@continuous_apply E' (fun _ => F) _ x).sub continuous_const).norm
   refine' this.closure_subset_iff.2 (image_subset_iff.2 fun g hg => _) hf
   exact (g - f₀).le_of_op_norm_le (mem_closedBall_iff_norm.1 hg) _
@@ -1841,7 +1841,8 @@ theorem op_norm_comp_linearIsometryEquiv (f : F →SL[σ₂₃] G) (g : F' ≃�
   refine' le_antisymm _ _
   · convert f.op_norm_comp_le g.to_linear_isometry.to_continuous_linear_map
     simp [g.to_linear_isometry.norm_to_continuous_linear_map]
-  · convert(f.comp g.to_linear_isometry.to_continuous_linear_map).op_norm_comp_le
+  · convert
+      (f.comp g.to_linear_isometry.to_continuous_linear_map).op_norm_comp_le
         g.symm.to_linear_isometry.to_continuous_linear_map
     · ext
       simp
@@ -1975,7 +1976,7 @@ theorem one_le_norm_mul_norm_symm [RingHomIsometric σ₁₂] [Nontrivial E] (e 
     1 ≤ ‖(e : E →SL[σ₁₂] F)‖ * ‖(e.symm : F →SL[σ₂₁] E)‖ :=
   by
   rw [mul_comm]
-  convert(e.symm : F →SL[σ₂₁] E).op_norm_comp_le (e : E →SL[σ₁₂] F)
+  convert (e.symm : F →SL[σ₂₁] E).op_norm_comp_le (e : E →SL[σ₁₂] F)
   rw [e.coe_symm_comp_coe, ContinuousLinearMap.norm_id]
 #align continuous_linear_equiv.one_le_norm_mul_norm_symm ContinuousLinearEquiv.one_le_norm_mul_norm_symm
 

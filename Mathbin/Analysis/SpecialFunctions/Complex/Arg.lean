@@ -481,7 +481,8 @@ theorem arg_cos_add_sin_mul_I_coe_angle (θ : Real.Angle) :
 theorem arg_mul_coe_angle {x y : ℂ} (hx : x ≠ 0) (hy : y ≠ 0) :
     (arg (x * y) : Real.Angle) = arg x + arg y :=
   by
-  convert arg_mul_cos_add_sin_mul_I_coe_angle (mul_pos (abs.pos hx) (abs.pos hy))
+  convert
+    arg_mul_cos_add_sin_mul_I_coe_angle (mul_pos (abs.pos hx) (abs.pos hy))
       (arg x + arg y : Real.Angle) using
     3
   simp_rw [← Real.Angle.coe_add, Real.Angle.sin_coe, Real.Angle.cos_coe, of_real_cos, of_real_sin,
@@ -566,15 +567,16 @@ theorem continuousAt_arg (h : 0 < x.re ∨ x.im ≠ 0) : ContinuousAt arg x :=
 #align complex.continuous_at_arg Complex.continuousAt_arg
 
 theorem tendsto_arg_nhdsWithin_im_neg_of_re_neg_of_im_zero {z : ℂ} (hre : z.re < 0)
-    (him : z.im = 0) : Tendsto arg (𝓝[{ z : ℂ | z.im < 0 }] z) (𝓝 (-π)) :=
+    (him : z.im = 0) : Tendsto arg (𝓝[{z : ℂ | z.im < 0}] z) (𝓝 (-π)) :=
   by
   suffices H :
-    tendsto (fun x : ℂ => Real.arcsin ((-x).im / x.abs) - π) (𝓝[{ z : ℂ | z.im < 0 }] z) (𝓝 (-π))
+    tendsto (fun x : ℂ => Real.arcsin ((-x).im / x.abs) - π) (𝓝[{z : ℂ | z.im < 0}] z) (𝓝 (-π))
   · refine' H.congr' _
     have : ∀ᶠ x : ℂ in 𝓝 z, x.re < 0 := continuous_re.tendsto z (gt_mem_nhds hre)
-    filter_upwards [self_mem_nhdsWithin, mem_nhdsWithin_of_mem_nhds this]with _ him hre
+    filter_upwards [self_mem_nhdsWithin, mem_nhdsWithin_of_mem_nhds this] with _ him hre
     rw [arg, if_neg hre.not_le, if_neg him.not_le]
-  convert(real.continuous_at_arcsin.comp_continuous_within_at
+  convert
+    (real.continuous_at_arcsin.comp_continuous_within_at
           ((continuous_im.continuous_at.comp_continuous_within_at continuousWithinAt_neg).div
             continuous_abs.continuous_within_at _)).sub
       tendsto_const_nhds
@@ -583,12 +585,12 @@ theorem tendsto_arg_nhdsWithin_im_neg_of_re_neg_of_im_zero {z : ℂ} (hre : z.re
 #align complex.tendsto_arg_nhds_within_im_neg_of_re_neg_of_im_zero Complex.tendsto_arg_nhdsWithin_im_neg_of_re_neg_of_im_zero
 
 theorem continuousWithinAt_arg_of_re_neg_of_im_zero {z : ℂ} (hre : z.re < 0) (him : z.im = 0) :
-    ContinuousWithinAt arg { z : ℂ | 0 ≤ z.im } z :=
+    ContinuousWithinAt arg {z : ℂ | 0 ≤ z.im} z :=
   by
-  have : arg =ᶠ[𝓝[{ z : ℂ | 0 ≤ z.im }] z] fun x => Real.arcsin ((-x).im / x.abs) + π :=
+  have : arg =ᶠ[𝓝[{z : ℂ | 0 ≤ z.im}] z] fun x => Real.arcsin ((-x).im / x.abs) + π :=
     by
     have : ∀ᶠ x : ℂ in 𝓝 z, x.re < 0 := continuous_re.tendsto z (gt_mem_nhds hre)
-    filter_upwards [self_mem_nhdsWithin, mem_nhdsWithin_of_mem_nhds this]with _ him hre
+    filter_upwards [self_mem_nhdsWithin, mem_nhdsWithin_of_mem_nhds this] with _ him hre
     rw [arg, if_neg hre.not_le, if_pos him]
   refine' ContinuousWithinAt.congr_of_eventuallyEq _ this _
   · refine'
@@ -601,7 +603,7 @@ theorem continuousWithinAt_arg_of_re_neg_of_im_zero {z : ℂ} (hre : z.re < 0) (
 #align complex.continuous_within_at_arg_of_re_neg_of_im_zero Complex.continuousWithinAt_arg_of_re_neg_of_im_zero
 
 theorem tendsto_arg_nhdsWithin_im_nonneg_of_re_neg_of_im_zero {z : ℂ} (hre : z.re < 0)
-    (him : z.im = 0) : Tendsto arg (𝓝[{ z : ℂ | 0 ≤ z.im }] z) (𝓝 π) := by
+    (him : z.im = 0) : Tendsto arg (𝓝[{z : ℂ | 0 ≤ z.im}] z) (𝓝 π) := by
   simpa only [arg_eq_pi_iff.2 ⟨hre, him⟩] using
     (continuous_within_at_arg_of_re_neg_of_im_zero hre him).Tendsto
 #align complex.tendsto_arg_nhds_within_im_nonneg_of_re_neg_of_im_zero Complex.tendsto_arg_nhdsWithin_im_nonneg_of_re_neg_of_im_zero
@@ -623,7 +625,7 @@ theorem continuousAt_arg_coe_angle (h : x ≠ 0) : ContinuousAt (coe ∘ arg : �
       rw [Function.update_eq_iff]
       exact ⟨by simp, fun z hz => arg_neg_coe_angle hz⟩
     rw [ha]
-    push_neg  at hs 
+    push_neg at hs 
     refine'
       (real.angle.continuous_coe.continuous_at.comp (continuous_at_arg (Or.inl _))).add
         continuousAt_const

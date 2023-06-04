@@ -77,28 +77,28 @@ theorem lex_fibration [∀ (i) (s : Set ι), Decidable (i ∈ s)] :
   by
   rintro ⟨p, x₁, x₂⟩ x ⟨i, hr, hs⟩
   simp_rw [piecewise_apply] at hs hr 
-  split_ifs  at hs 
+  split_ifs at hs 
   classical
-    on_goal 1 =>
-      refine' ⟨⟨{ j | r j i → j ∈ p }, piecewise x₁ x { j | r j i }, x₂⟩, game_add.fst ⟨i, _⟩, _⟩
-    on_goal 3 =>
-      refine' ⟨⟨{ j | r j i ∧ j ∈ p }, x₁, piecewise x₂ x { j | r j i }⟩, game_add.snd ⟨i, _⟩, _⟩
-    pick_goal 3
-    iterate 2 
-      simp_rw [piecewise_apply]
-      refine' ⟨fun j h => if_pos h, _⟩
-      convert hs
-      refine' ite_eq_right_iff.2 fun h' => (hr i h').symm ▸ _
-      first
-      | rw [if_neg h]
-      | rw [if_pos h]
-    all_goals ext j; simp_rw [piecewise_apply]; split_ifs with h₁ h₂
-    · rw [hr j h₂, if_pos (h₁ h₂)]
-    · rfl
-    · rw [Set.mem_setOf, not_imp] at h₁ ; rw [hr j h₁.1, if_neg h₁.2]
-    · rw [hr j h₁.1, if_pos h₁.2]
-    · rw [hr j h₂, if_neg fun h' => h₁ ⟨h₂, h'⟩]
-    · rfl
+  on_goal 1 =>
+    refine' ⟨⟨{j | r j i → j ∈ p}, piecewise x₁ x {j | r j i}, x₂⟩, game_add.fst ⟨i, _⟩, _⟩
+  on_goal 3 =>
+    refine' ⟨⟨{j | r j i ∧ j ∈ p}, x₁, piecewise x₂ x {j | r j i}⟩, game_add.snd ⟨i, _⟩, _⟩
+  pick_goal 3
+  iterate 2 
+    simp_rw [piecewise_apply]
+    refine' ⟨fun j h => if_pos h, _⟩
+    convert hs
+    refine' ite_eq_right_iff.2 fun h' => (hr i h').symm ▸ _
+    first
+    | rw [if_neg h]
+    | rw [if_pos h]
+  all_goals ext j; simp_rw [piecewise_apply]; split_ifs with h₁ h₂
+  · rw [hr j h₂, if_pos (h₁ h₂)]
+  · rfl
+  · rw [Set.mem_setOf, not_imp] at h₁ ; rw [hr j h₁.1, if_neg h₁.2]
+  · rw [hr j h₁.1, if_pos h₁.2]
+  · rw [hr j h₂, if_neg fun h' => h₁ ⟨h₂, h'⟩]
+  · rfl
 #align dfinsupp.lex_fibration Dfinsupp.lex_fibration
 
 variable {r s}
@@ -107,10 +107,10 @@ theorem Lex.acc_of_single_erase [DecidableEq ι] {x : Π₀ i, α i} (i : ι)
     (hs : Acc (Dfinsupp.Lex r s) <| single i (x i)) (hu : Acc (Dfinsupp.Lex r s) <| x.eraseₓ i) :
     Acc (Dfinsupp.Lex r s) x := by
   classical
-    convert←
-      @Acc.of_fibration _ _ _ _ _ (lex_fibration r s) ⟨{i}, _⟩
-        (InvImage.accessible snd <| hs.prod_game_add hu)
-    convert piecewise_single_erase x i
+  convert ←
+    @Acc.of_fibration _ _ _ _ _ (lex_fibration r s) ⟨{i}, _⟩
+      (InvImage.accessible snd <| hs.prod_game_add hu)
+  convert piecewise_single_erase x i
 #align dfinsupp.lex.acc_of_single_erase Dfinsupp.Lex.acc_of_single_erase
 
 variable (hbot : ∀ ⦃i a⦄, ¬s i a 0)
@@ -128,12 +128,12 @@ theorem Lex.acc_of_single [DecidableEq ι] [∀ (i) (x : α i), Decidable (x ≠
   by
   generalize ht : x.support = t; revert x
   classical
-    induction' t using Finset.induction with b t hb ih
-    · intro x ht; rw [support_eq_empty.1 ht]; exact fun _ => lex.acc_zero hbot
-    refine' fun x ht h => lex.acc_of_single_erase b (h b <| t.mem_insert_self b) _
-    refine' ih _ (by rw [support_erase, ht, Finset.erase_insert hb]) fun a ha => _
-    rw [erase_ne (ha.ne_of_not_mem hb)]
-    exact h a (Finset.mem_insert_of_mem ha)
+  induction' t using Finset.induction with b t hb ih
+  · intro x ht; rw [support_eq_empty.1 ht]; exact fun _ => lex.acc_zero hbot
+  refine' fun x ht h => lex.acc_of_single_erase b (h b <| t.mem_insert_self b) _
+  refine' ih _ (by rw [support_erase, ht, Finset.erase_insert hb]) fun a ha => _
+  rw [erase_ne (ha.ne_of_not_mem hb)]
+  exact h a (Finset.mem_insert_of_mem ha)
 #align dfinsupp.lex.acc_of_single Dfinsupp.Lex.acc_of_single
 
 variable (hs : ∀ i, WellFounded (s i))
@@ -148,17 +148,17 @@ theorem Lex.acc_single [DecidableEq ι] {i : ι} (hi : Acc (rᶜ ⊓ (· ≠ ·)
   refine' Acc.intro _ fun x => _
   rintro ⟨k, hr, hs⟩
   classical
-    rw [single_apply] at hs 
-    split_ifs  at hs  with hik
-    swap
-    · exact (hbot hs).elim
-    subst hik
-    refine' lex.acc_of_single hbot x fun j hj => _
-    obtain rfl | hij := eq_or_ne i j
-    · exact ha _ hs
-    by_cases r j i
-    · rw [hr j h, single_eq_of_ne hij, single_zero]; exact lex.acc_zero hbot
-    · exact ih _ ⟨h, hij.symm⟩ _
+  rw [single_apply] at hs 
+  split_ifs at hs  with hik
+  swap
+  · exact (hbot hs).elim
+  subst hik
+  refine' lex.acc_of_single hbot x fun j hj => _
+  obtain rfl | hij := eq_or_ne i j
+  · exact ha _ hs
+  by_cases r j i
+  · rw [hr j h, single_eq_of_ne hij, single_zero]; exact lex.acc_zero hbot
+  · exact ih _ ⟨h, hij.symm⟩ _
 #align dfinsupp.lex.acc_single Dfinsupp.Lex.acc_single
 
 theorem Lex.acc [DecidableEq ι] [∀ (i) (x : α i), Decidable (x ≠ 0)] (x : Π₀ i, α i)

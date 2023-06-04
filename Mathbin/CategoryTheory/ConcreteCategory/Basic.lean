@@ -51,7 +51,7 @@ namespace CategoryTheory
 open CategoryTheory.Limits
 
 #print CategoryTheory.ConcreteCategory /-
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`forget] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`forget] [] -/
 /-- A concrete category is a category `C` with a fixed faithful functor `forget : C ⥤ Type`.
 
 Note that `concrete_category` potentially depends on three independent universe levels,

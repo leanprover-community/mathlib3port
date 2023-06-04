@@ -828,7 +828,7 @@ theorem Basis.eq_bot_of_rank_eq_zero [NoZeroDivisors R] (b : Basis ι R M) (N : 
   cases i
   simp only [Function.const_apply, Fin.default_eq_zero, Submodule.coe_mk, Finset.univ_unique,
     Function.comp_const, Finset.sum_singleton] at sum_eq 
-  convert(b.smul_eq_zero.mp sum_eq).resolve_right x_ne
+  convert (b.smul_eq_zero.mp sum_eq).resolve_right x_ne
 #align eq_bot_of_rank_eq_zero Basis.eq_bot_of_rank_eq_zero
 
 end NoZeroSMulDivisors
@@ -943,10 +943,10 @@ def Module.fintypeOfFintype (b : Basis ι R M) [Fintype R] : Fintype M :=
 theorem Module.card_fintype (b : Basis ι R M) [Fintype R] [Fintype M] : card M = card R ^ card ι :=
   by
   classical exact
-      calc
-        card M = card (ι → R) := card_congr b.equiv_fun.to_equiv
-        _ = card R ^ card ι := card_fun
-        
+    calc
+      card M = card (ι → R) := card_congr b.equiv_fun.to_equiv
+      _ = card R ^ card ι := card_fun
+      
 #align module.card_fintype Module.card_fintype
 
 /-- Given a basis `v` indexed by `ι`, the canonical linear equivalence between `ι → R` and `M` maps
@@ -1017,10 +1017,10 @@ theorem Basis.coe_ofEquivFun [DecidableEq ι] (e : M ≃ₗ[R] ι → R) :
 @[simp]
 theorem Basis.ofEquivFun_equivFun (v : Basis ι R M) : Basis.ofEquivFun v.equivFun = v := by
   classical
-    ext j
-    simp only [Basis.equivFun_symm_apply, Basis.coe_ofEquivFun]
-    simp_rw [Function.update_apply, ite_smul]
-    simp only [Finset.mem_univ, if_true, Pi.zero_apply, one_smul, Finset.sum_ite_eq', zero_smul]
+  ext j
+  simp only [Basis.equivFun_symm_apply, Basis.coe_ofEquivFun]
+  simp_rw [Function.update_apply, ite_smul]
+  simp only [Finset.mem_univ, if_true, Pi.zero_apply, one_smul, Finset.sum_ite_eq', zero_smul]
 #align basis.of_equiv_fun_equiv_fun Basis.ofEquivFun_equivFun
 
 @[simp]
@@ -1306,16 +1306,16 @@ theorem unitsSMul_apply {v : Basis ι R M} {w : ι → Rˣ} (i : ι) : v.units_s
 theorem coord_unitsSMul (e : Basis ι R₂ M) (w : ι → R₂ˣ) (i : ι) :
     (e.units_smul w).Coord i = (w i)⁻¹ • e.Coord i := by
   classical
-    apply e.ext
-    intro j
-    trans ((e.units_smul w).Coord i) ((w j)⁻¹ • (e.units_smul w) j)
-    · congr
-      simp [Basis.unitsSMul, ← mul_smul]
-    simp only [Basis.coord_apply, LinearMap.smul_apply, Basis.repr_self, Units.smul_def,
-      SMulHomClass.map_smul, Finsupp.single_apply]
-    split_ifs with h h
-    · simp [h]
-    · simp
+  apply e.ext
+  intro j
+  trans ((e.units_smul w).Coord i) ((w j)⁻¹ • (e.units_smul w) j)
+  · congr
+    simp [Basis.unitsSMul, ← mul_smul]
+  simp only [Basis.coord_apply, LinearMap.smul_apply, Basis.repr_self, Units.smul_def,
+    SMulHomClass.map_smul, Finsupp.single_apply]
+  split_ifs with h h
+  · simp [h]
+  · simp
 #align basis.coord_units_smul Basis.coord_unitsSMul
 
 @[simp]
@@ -1529,7 +1529,7 @@ theorem coe_ofVectorSpace : ⇑(ofVectorSpace K V) = coe :=
 
 theorem ofVectorSpaceIndex.linearIndependent :
     LinearIndependent K (coe : ofVectorSpaceIndex K V → V) := by
-  convert(of_vector_space K V).LinearIndependent; ext x; rw [of_vector_space_apply_self]
+  convert (of_vector_space K V).LinearIndependent; ext x; rw [of_vector_space_apply_self]
 #align basis.of_vector_space_index.linear_independent Basis.ofVectorSpaceIndex.linearIndependent
 
 theorem range_ofVectorSpace : range (ofVectorSpace K V) = ofVectorSpaceIndex K V :=
@@ -1552,7 +1552,7 @@ variable (K V)
 
 theorem VectorSpace.card_fintype [Fintype K] [Fintype V] : ∃ n : ℕ, card V = card K ^ n := by
   classical exact
-      ⟨card (Basis.ofVectorSpaceIndex K V), Module.card_fintype (Basis.ofVectorSpace K V)⟩
+    ⟨card (Basis.ofVectorSpaceIndex K V), Module.card_fintype (Basis.ofVectorSpace K V)⟩
 #align vector_space.card_fintype VectorSpace.card_fintype
 
 section AtomsOfSubmoduleLattice
@@ -1571,7 +1571,7 @@ theorem nonzero_span_atom (v : V) (hv : v ≠ 0) : IsAtom (span K {v} : Submodul
     rcases h with ⟨s, ⟨hs, hz⟩⟩
     cases' mem_span_singleton.1 (hT.1 hs) with a ha
     have h : a ≠ 0 := by intro h; rw [h, zero_smul] at ha ; exact hz ha.symm
-    apply_fun fun x => a⁻¹ • x  at ha 
+    apply_fun fun x => a⁻¹ • x at ha 
     simp_rw [← mul_smul, inv_mul_cancel h, one_smul, ha] at *; exact smul_mem T _ hs
 #align nonzero_span_atom nonzero_span_atom
 
@@ -1595,7 +1595,7 @@ theorem atom_iff_nonzero_span (W : Submodule K V) :
 instance : IsAtomistic (Submodule K V)
     where eq_sSup_atoms := by
     intro W
-    use { T : Submodule K V | ∃ (v : V) (hv : v ∈ W) (hz : v ≠ 0), T = span K {v} }
+    use {T : Submodule K V | ∃ (v : V) (hv : v ∈ W) (hz : v ≠ 0), T = span K {v}}
     refine' ⟨submodule_eq_Sup_le_nonzero_spans W, _⟩
     rintro _ ⟨w, ⟨_, ⟨hw, rfl⟩⟩⟩; exact nonzero_span_atom w hw
 

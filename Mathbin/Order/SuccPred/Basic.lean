@@ -1275,7 +1275,7 @@ instance : SuccOrder (WithTop α)
     cases a
     · exact isMax_top
     change ite _ _ _ ≤ _ at ha 
-    split_ifs  at ha  with ha'
+    split_ifs at ha  with ha'
     · exact (not_top_le_coe _ ha).elim
     · rw [some_le_some, succ_le_iff_eq_top] at ha 
       exact (ha' ha).elim
@@ -1297,7 +1297,7 @@ instance : SuccOrder (WithTop α)
     · exact le_top
     change _ < ite _ _ _ at h 
     rw [some_le_some]
-    split_ifs  at h  with hb
+    split_ifs at h  with hb
     · rw [hb]
       exact le_top
     · exact le_of_lt_succ (some_lt_some.1 h)
@@ -1508,7 +1508,7 @@ instance : PredOrder (WithBot α)
     cases a
     · exact isMin_bot
     change _ ≤ ite _ _ _ at ha 
-    split_ifs  at ha  with ha'
+    split_ifs at ha  with ha'
     · exact (not_coe_le_bot _ ha).elim
     · rw [some_le_some, le_pred_iff_eq_bot] at ha 
       exact (ha' ha).elim
@@ -1530,7 +1530,7 @@ instance : PredOrder (WithBot α)
     · exact bot_le
     change ite _ _ _ < _ at h 
     rw [some_le_some]
-    split_ifs  at h  with ha
+    split_ifs at h  with ha
     · rw [ha]
       exact bot_le
     · exact le_of_pred_lt (some_lt_some.1 h)
@@ -1783,7 +1783,7 @@ instance (priority := 100) IsWellOrder.toIsPredArchimedean [h : IsWellOrder α (
 
 #print IsWellOrder.toIsSuccArchimedean /-
 instance (priority := 100) IsWellOrder.toIsSuccArchimedean [h : IsWellOrder α (· > ·)]
-    [SuccOrder α] : IsSuccArchimedean α := by convert@OrderDual.isSuccArchimedean αᵒᵈ _ _ _
+    [SuccOrder α] : IsSuccArchimedean α := by convert @OrderDual.isSuccArchimedean αᵒᵈ _ _ _
 #align is_well_order.to_is_succ_archimedean IsWellOrder.toIsSuccArchimedean
 -/
 

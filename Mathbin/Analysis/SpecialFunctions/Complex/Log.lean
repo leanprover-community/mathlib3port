@@ -176,7 +176,7 @@ theorem countable_preimage_exp {s : Set ℂ} : (exp ⁻¹' s).Countable ↔ s.Co
     rcases em (∃ w, exp w = z) with (⟨w, rfl⟩ | hne)
     · simp only [preimage, mem_singleton_iff, exp_eq_exp_iff_exists_int, set_of_exists]
       exact countable_Union fun m => countable_singleton _
-    · push_neg  at hne ; simp [preimage, hne]
+    · push_neg at hne ; simp [preimage, hne]
 #align complex.countable_preimage_exp Complex.countable_preimage_exp
 -/
 
@@ -184,7 +184,7 @@ alias countable_preimage_exp ↔ _ _root_.set.countable.preimage_cexp
 #align set.countable.preimage_cexp Set.Countable.preimage_cexp
 
 theorem tendsto_log_nhdsWithin_im_neg_of_re_neg_of_im_zero {z : ℂ} (hre : z.re < 0)
-    (him : z.im = 0) : Tendsto log (𝓝[{ z : ℂ | z.im < 0 }] z) (𝓝 <| Real.log (abs z) - π * I) :=
+    (him : z.im = 0) : Tendsto log (𝓝[{z : ℂ | z.im < 0}] z) (𝓝 <| Real.log (abs z) - π * I) :=
   by
   have :=
     (continuous_of_real.continuous_at.comp_continuous_within_at
@@ -198,7 +198,7 @@ theorem tendsto_log_nhdsWithin_im_neg_of_re_neg_of_im_zero {z : ℂ} (hre : z.re
 #align complex.tendsto_log_nhds_within_im_neg_of_re_neg_of_im_zero Complex.tendsto_log_nhdsWithin_im_neg_of_re_neg_of_im_zero
 
 theorem continuousWithinAt_log_of_re_neg_of_im_zero {z : ℂ} (hre : z.re < 0) (him : z.im = 0) :
-    ContinuousWithinAt log { z : ℂ | 0 ≤ z.im } z :=
+    ContinuousWithinAt log {z : ℂ | 0 ≤ z.im} z :=
   by
   have :=
     (continuous_of_real.continuous_at.comp_continuous_within_at
@@ -211,7 +211,7 @@ theorem continuousWithinAt_log_of_re_neg_of_im_zero {z : ℂ} (hre : z.re < 0) (
 #align complex.continuous_within_at_log_of_re_neg_of_im_zero Complex.continuousWithinAt_log_of_re_neg_of_im_zero
 
 theorem tendsto_log_nhdsWithin_im_nonneg_of_re_neg_of_im_zero {z : ℂ} (hre : z.re < 0)
-    (him : z.im = 0) : Tendsto log (𝓝[{ z : ℂ | 0 ≤ z.im }] z) (𝓝 <| Real.log (abs z) + π * I) := by
+    (him : z.im = 0) : Tendsto log (𝓝[{z : ℂ | 0 ≤ z.im}] z) (𝓝 <| Real.log (abs z) + π * I) := by
   simpa only [log, arg_eq_pi_iff.2 ⟨hre, him⟩] using
     (continuous_within_at_log_of_re_neg_of_im_zero hre him).Tendsto
 #align complex.tendsto_log_nhds_within_im_nonneg_of_re_neg_of_im_zero Complex.tendsto_log_nhdsWithin_im_nonneg_of_re_neg_of_im_zero

@@ -87,7 +87,7 @@ theorem log_stirlingSeq_diff_hasSum (m : ℕ) :
   by
   change HasSum ((fun b : ℕ => 1 / (2 * (b : ℝ) + 1) * ((1 / (2 * m.succ + 1)) ^ 2) ^ b) ∘ succ) _
   refine' (hasSum_nat_add_iff 1).mpr _
-  convert(has_sum_log_one_add_inv <| cast_pos.mpr (succ_pos m)).mul_left ((m.succ : ℝ) + 1 / 2)
+  convert (has_sum_log_one_add_inv <| cast_pos.mpr (succ_pos m)).mul_left ((m.succ : ℝ) + 1 / 2)
   · ext k
     rw [← pow_mul, pow_add]
     push_cast
@@ -98,8 +98,8 @@ theorem log_stirlingSeq_diff_hasSum (m : ℕ) :
   · have h : ∀ (x : ℝ) (hx : x ≠ 0), 1 + x⁻¹ = (x + 1) / x := by intros;
       rw [_root_.add_div, div_self hx, inv_eq_one_div]
     simp (disch := norm_cast;
-      apply_rules [mul_ne_zero, succ_ne_zero, factorial_ne_zero, exp_ne_zero]
-        ) only [log_stirling_seq_formula,
+      apply_rules [mul_ne_zero, succ_ne_zero, factorial_ne_zero,
+        exp_ne_zero]) only [log_stirling_seq_formula,
       log_div, log_mul, log_exp, factorial_succ, cast_mul, cast_succ, cast_zero, range_one,
       sum_singleton, h]
     ring

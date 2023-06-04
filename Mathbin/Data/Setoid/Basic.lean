@@ -248,7 +248,7 @@ theorem eq_top_iff {s : Setoid α} : s = (⊤ : Setoid α) ↔ ∀ x y : α, s.R
 /-- The inductively defined equivalence closure of a binary relation r is the infimum
     of the set of all equivalence relations containing r. -/
 theorem eqvGen_eq (r : α → α → Prop) :
-    EqvGen.Setoid r = sInf { s : Setoid α | ∀ ⦃x y⦄, r x y → s.Rel x y } :=
+    EqvGen.Setoid r = sInf {s : Setoid α | ∀ ⦃x y⦄, r x y → s.Rel x y} :=
   le_antisymm
     (fun _ _ H =>
       EqvGen.ndrec (fun _ _ h _ hs => hs h) (refl' _) (fun _ _ _ => symm' _)

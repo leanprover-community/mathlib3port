@@ -217,14 +217,14 @@ theorem isOpen_biInter_finset {s : Finset β} {f : β → Set α} (h : ∀ i ∈
 -/
 
 #print isOpen_const /-
-theorem isOpen_const {p : Prop} : IsOpen { a : α | p } :=
+theorem isOpen_const {p : Prop} : IsOpen {a : α | p} :=
   by_cases (fun this : p => by simp only [this] <;> exact isOpen_univ) fun this : ¬p => by
     simp only [this] <;> exact isOpen_empty
 #align is_open_const isOpen_const
 -/
 
 #print IsOpen.and /-
-theorem IsOpen.and : IsOpen { a | p₁ a } → IsOpen { a | p₂ a } → IsOpen { a | p₁ a ∧ p₂ a } :=
+theorem IsOpen.and : IsOpen {a | p₁ a} → IsOpen {a | p₂ a} → IsOpen {a | p₁ a ∧ p₂ a} :=
   IsOpen.inter
 #align is_open.and IsOpen.and
 -/
@@ -320,16 +320,16 @@ theorem isClosed_iUnion [Finite ι] {s : ι → Set α} (h : ∀ i, IsClosed (s 
 -/
 
 #print isClosed_imp /-
-theorem isClosed_imp {p q : α → Prop} (hp : IsOpen { x | p x }) (hq : IsClosed { x | q x }) :
-    IsClosed { x | p x → q x } :=
+theorem isClosed_imp {p q : α → Prop} (hp : IsOpen {x | p x}) (hq : IsClosed {x | q x}) :
+    IsClosed {x | p x → q x} :=
   by
-  have : { x | p x → q x } = { x | p x }ᶜ ∪ { x | q x } := Set.ext fun x => imp_iff_not_or
+  have : {x | p x → q x} = {x | p x}ᶜ ∪ {x | q x} := Set.ext fun x => imp_iff_not_or
   rw [this] <;> exact IsClosed.union (is_closed_compl_iff.mpr hp) hq
 #align is_closed_imp isClosed_imp
 -/
 
 #print IsClosed.not /-
-theorem IsClosed.not : IsClosed { a | p a } → IsOpen { a | ¬p a } :=
+theorem IsClosed.not : IsClosed {a | p a} → IsOpen {a | ¬p a} :=
   isOpen_compl_iff.mpr
 #align is_closed.not IsClosed.not
 -/
@@ -342,7 +342,7 @@ theorem IsClosed.not : IsClosed { a | p a } → IsOpen { a | ¬p a } :=
 #print interior /-
 /-- The interior of a set `s` is the largest open subset of `s`. -/
 def interior (s : Set α) : Set α :=
-  ⋃₀ { t | IsOpen t ∧ t ⊆ s }
+  ⋃₀ {t | IsOpen t ∧ t ⊆ s}
 #align interior interior
 -/
 
@@ -450,9 +450,9 @@ theorem interior_inter {s t : Set α} : interior (s ∩ t) = interior s ∩ inte
 theorem Finset.interior_iInter {ι : Type _} (s : Finset ι) (f : ι → Set α) :
     interior (⋂ i ∈ s, f i) = ⋂ i ∈ s, interior (f i) := by
   classical
-    refine' s.induction_on (by simp) _
-    intro i s h₁ h₂
-    simp [h₂]
+  refine' s.induction_on (by simp) _
+  intro i s h₁ h₂
+  simp [h₂]
 #align finset.interior_Inter Finset.interior_iInter
 
 @[simp]
@@ -507,7 +507,7 @@ theorem interior_sInter_subset (S : Set (Set α)) : interior (⋂₀ S) ⊆ ⋂ 
 #print closure /-
 /-- The closure of `s` is the smallest closed set containing `s`. -/
 def closure (s : Set α) : Set α :=
-  ⋂₀ { t | IsClosed t ∧ s ⊆ t }
+  ⋂₀ {t | IsClosed t ∧ s ⊆ t}
 #align closure closure
 -/
 
@@ -660,9 +660,9 @@ theorem closure_union {s t : Set α} : closure (s ∪ t) = closure s ∪ closure
 theorem Finset.closure_biUnion {ι : Type _} (s : Finset ι) (f : ι → Set α) :
     closure (⋃ i ∈ s, f i) = ⋃ i ∈ s, closure (f i) := by
   classical
-    refine' s.induction_on (by simp) _
-    intro i s h₁ h₂
-    simp [h₂]
+  refine' s.induction_on (by simp) _
+  intro i s h₁ h₂
+  simp [h₂]
 #align finset.closure_bUnion Finset.closure_biUnion
 
 @[simp]
@@ -993,7 +993,7 @@ theorem compl_frontier_eq_union_interior {s : Set α} : frontier sᶜ = interior
 neighborhoods of `a` forms a filter, the neighborhood filter at `a`, is here defined as the
 infimum over the principal filters of all open sets containing `a`. -/
 irreducible_def nhds (a : α) : Filter α :=
-  ⨅ s ∈ { s : Set α | a ∈ s ∧ IsOpen s }, 𝓟 s
+  ⨅ s ∈ {s : Set α | a ∈ s ∧ IsOpen s}, 𝓟 s
 #align nhds nhds
 -/
 
@@ -1026,7 +1026,7 @@ scoped[Topology] notation "𝓝[>] " x:100 => nhdsWithin x (Set.Ioi x)
 -- mathport name: nhds_within.lt
 scoped[Topology] notation "𝓝[<] " x:100 => nhdsWithin x (Set.Iio x)
 
-theorem nhds_def (a : α) : 𝓝 a = ⨅ s ∈ { s : Set α | a ∈ s ∧ IsOpen s }, 𝓟 s := by rw [nhds]
+theorem nhds_def (a : α) : 𝓝 a = ⨅ s ∈ {s : Set α | a ∈ s ∧ IsOpen s}, 𝓟 s := by rw [nhds]
 #align nhds_def nhds_def
 
 theorem nhds_def' (a : α) : 𝓝 a = ⨅ (s : Set α) (hs : IsOpen s) (ha : a ∈ s), 𝓟 s := by
@@ -1079,7 +1079,7 @@ theorem eventually_nhds_iff {a : α} {p : α → Prop} :
 -/
 
 theorem map_nhds {a : α} {f : α → β} :
-    map f (𝓝 a) = ⨅ s ∈ { s : Set α | a ∈ s ∧ IsOpen s }, 𝓟 (image f s) :=
+    map f (𝓝 a) = ⨅ s ∈ {s : Set α | a ∈ s ∧ IsOpen s}, 𝓟 (image f s) :=
   ((nhds_basis_opens a).map f).eq_biInf
 #align map_nhds map_nhds
 
@@ -1443,12 +1443,12 @@ theorem AccPt.mono {x : α} {F G : Filter α} (h : AccPt x F) (hFG : F ≤ G) : 
 
 
 #print interior_eq_nhds' /-
-theorem interior_eq_nhds' {s : Set α} : interior s = { a | s ∈ 𝓝 a } :=
+theorem interior_eq_nhds' {s : Set α} : interior s = {a | s ∈ 𝓝 a} :=
   Set.ext fun x => by simp only [mem_interior, mem_nhds_iff, mem_set_of_eq]
 #align interior_eq_nhds' interior_eq_nhds'
 -/
 
-theorem interior_eq_nhds {s : Set α} : interior s = { a | 𝓝 a ≤ 𝓟 s } :=
+theorem interior_eq_nhds {s : Set α} : interior s = {a | 𝓝 a ≤ 𝓟 s} :=
   interior_eq_nhds'.trans <| by simp only [le_principal_iff]
 #align interior_eq_nhds interior_eq_nhds
 
@@ -1467,13 +1467,13 @@ theorem interior_mem_nhds {s : Set α} {a : α} : interior s ∈ 𝓝 a ↔ s �
 -/
 
 #print interior_setOf_eq /-
-theorem interior_setOf_eq {p : α → Prop} : interior { x | p x } = { x | ∀ᶠ y in 𝓝 x, p y } :=
+theorem interior_setOf_eq {p : α → Prop} : interior {x | p x} = {x | ∀ᶠ y in 𝓝 x, p y} :=
   interior_eq_nhds'
 #align interior_set_of_eq interior_setOf_eq
 -/
 
 #print isOpen_setOf_eventually_nhds /-
-theorem isOpen_setOf_eventually_nhds {p : α → Prop} : IsOpen { x | ∀ᶠ y in 𝓝 x, p y } := by
+theorem isOpen_setOf_eventually_nhds {p : α → Prop} : IsOpen {x | ∀ᶠ y in 𝓝 x, p y} := by
   simp only [← interior_setOf_eq, isOpen_interior]
 #align is_open_set_of_eventually_nhds isOpen_setOf_eventually_nhds
 -/
@@ -1553,7 +1553,7 @@ theorem isClosed_iff_frequently {s : Set α} : IsClosed s ↔ ∀ x, (∃ᶠ y i
 #print isClosed_setOf_clusterPt /-
 /-- The set of cluster points of a filter is closed. In particular, the set of limit points
 of a sequence is closed. -/
-theorem isClosed_setOf_clusterPt {f : Filter α} : IsClosed { x | ClusterPt x f } :=
+theorem isClosed_setOf_clusterPt {f : Filter α} : IsClosed {x | ClusterPt x f} :=
   by
   simp only [ClusterPt, inf_ne_bot_iff_frequently_left, set_of_forall, imp_iff_not_or]
   refine' isClosed_iInter fun p => IsClosed.union _ _ <;> apply isClosed_compl_iff.2
@@ -1605,7 +1605,7 @@ theorem not_isOpen_singleton (x : α) [NeBot (𝓝[≠] x)] : ¬IsOpen ({x} : Se
 #align not_is_open_singleton not_isOpen_singleton
 
 #print closure_eq_cluster_pts /-
-theorem closure_eq_cluster_pts {s : Set α} : closure s = { a | ClusterPt a (𝓟 s) } :=
+theorem closure_eq_cluster_pts {s : Set α} : closure s = {a | ClusterPt a (𝓟 s)} :=
   Set.ext fun x => mem_closure_iff_clusterPt
 #align closure_eq_cluster_pts closure_eq_cluster_pts
 -/

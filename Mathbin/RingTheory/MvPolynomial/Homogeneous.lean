@@ -57,7 +57,7 @@ variable (σ R)
 /-- The submodule of homogeneous `mv_polynomial`s of degree `n`. -/
 def homogeneousSubmodule [CommSemiring R] (n : ℕ) : Submodule R (MvPolynomial σ R)
     where
-  carrier := { x | x.Homogeneous n }
+  carrier := {x | x.Homogeneous n}
   smul_mem' r a ha c hc := by
     rw [coeff_smul] at hc 
     apply ha
@@ -89,7 +89,7 @@ variable (σ R)
 #print MvPolynomial.homogeneousSubmodule_eq_finsupp_supported /-
 /-- While equal, the former has a convenient definitional reduction. -/
 theorem homogeneousSubmodule_eq_finsupp_supported [CommSemiring R] (n : ℕ) :
-    homogeneousSubmodule σ R n = Finsupp.supported _ R { d | (∑ i in d.support, d i) = n } :=
+    homogeneousSubmodule σ R n = Finsupp.supported _ R {d | (∑ i in d.support, d i) = n} :=
   by
   ext
   rw [Finsupp.mem_supported, Set.subset_def]
@@ -116,12 +116,12 @@ theorem homogeneousSubmodule_mul [CommSemiring R] (m n : ℕ) :
   specialize hφ aux.1; specialize hψ aux.2
   rw [Finsupp.mem_antidiagonal] at hde 
   classical
-    have hd' : d.support ⊆ d.support ∪ e.support := Finset.subset_union_left _ _
-    have he' : e.support ⊆ d.support ∪ e.support := Finset.subset_union_right _ _
-    rw [← hde, ← hφ, ← hψ, Finset.sum_subset Finsupp.support_add, Finset.sum_subset hd',
-      Finset.sum_subset he', ← Finset.sum_add_distrib]
-    · congr
-    all_goals intro i hi; apply finsupp.not_mem_support_iff.mp
+  have hd' : d.support ⊆ d.support ∪ e.support := Finset.subset_union_left _ _
+  have he' : e.support ⊆ d.support ∪ e.support := Finset.subset_union_right _ _
+  rw [← hde, ← hφ, ← hψ, Finset.sum_subset Finsupp.support_add, Finset.sum_subset hd',
+    Finset.sum_subset he', ← Finset.sum_add_distrib]
+  · congr
+  all_goals intro i hi; apply finsupp.not_mem_support_iff.mp
 #align mv_polynomial.homogeneous_submodule_mul MvPolynomial.homogeneousSubmodule_mul
 -/
 
@@ -135,10 +135,10 @@ theorem isHomogeneous_monomial (d : σ →₀ ℕ) (r : R) (n : ℕ) (hn : (∑ 
     IsHomogeneous (monomial d r) n := by
   intro c hc
   classical
-    rw [coeff_monomial] at hc 
-    split_ifs  at hc  with h
-    · subst c; exact hn
-    · contradiction
+  rw [coeff_monomial] at hc 
+  split_ifs at hc  with h
+  · subst c; exact hn
+  · contradiction
 #align mv_polynomial.is_homogeneous_monomial MvPolynomial.isHomogeneous_monomial
 
 variable (σ) {R}
@@ -210,14 +210,14 @@ theorem mul (hφ : IsHomogeneous φ m) (hψ : IsHomogeneous ψ n) : IsHomogeneou
 theorem prod {ι : Type _} (s : Finset ι) (φ : ι → MvPolynomial σ R) (n : ι → ℕ)
     (h : ∀ i ∈ s, IsHomogeneous (φ i) (n i)) : IsHomogeneous (∏ i in s, φ i) (∑ i in s, n i) := by
   classical
-    revert h
-    apply Finset.induction_on s
-    · intro; simp only [is_homogeneous_one, Finset.sum_empty, Finset.prod_empty]
-    · intro i s his IH h
-      simp only [his, Finset.prod_insert, Finset.sum_insert, not_false_iff]
-      apply (h i (Finset.mem_insert_self _ _)).mul (IH _)
-      intro j hjs
-      exact h j (Finset.mem_insert_of_mem hjs)
+  revert h
+  apply Finset.induction_on s
+  · intro; simp only [is_homogeneous_one, Finset.sum_empty, Finset.prod_empty]
+  · intro i s his IH h
+    simp only [his, Finset.prod_insert, Finset.sum_insert, not_false_iff]
+    apply (h i (Finset.mem_insert_self _ _)).mul (IH _)
+    intro j hjs
+    exact h j (Finset.mem_insert_of_mem hjs)
 #align mv_polynomial.is_homogeneous.prod MvPolynomial.IsHomogeneous.prod
 
 theorem totalDegree (hφ : IsHomogeneous φ n) (h : φ ≠ 0) : totalDegree φ = n :=
@@ -266,7 +266,7 @@ open Finset
 See `sum_homogeneous_component` for the statement that `φ` is equal to the sum
 of all its homogeneous components. -/
 def homogeneousComponent [CommSemiring R] (n : ℕ) : MvPolynomial σ R →ₗ[R] MvPolynomial σ R :=
-  (Submodule.subtype _).comp <| Finsupp.restrictDom _ _ { d | (∑ i in d.support, d i) = n }
+  (Submodule.subtype _).comp <| Finsupp.restrictDom _ _ {d | (∑ i in d.support, d i) = n}
 #align mv_polynomial.homogeneous_component MvPolynomial.homogeneousComponent
 -/
 
@@ -301,7 +301,7 @@ theorem homogeneousComponent_zero : homogeneousComponent 0 φ = C (coeff 0 φ) :
   rcases em (d = 0) with (rfl | hd)
   ·
     classical simp only [coeff_homogeneous_component, sum_eq_zero_iff, Finsupp.zero_apply, if_true,
-        coeff_C, eq_self_iff_true, forall_true_iff]
+      coeff_C, eq_self_iff_true, forall_true_iff]
   · rw [coeff_homogeneous_component, if_neg, coeff_C, if_neg (Ne.symm hd)]
     simp only [Finsupp.ext_iff, Finsupp.zero_apply] at hd 
     simp [hd]

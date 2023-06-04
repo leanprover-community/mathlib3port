@@ -110,7 +110,7 @@ theorem TendstoUniformlyOn.cderiv (hF : TendstoUniformlyOn F f φ (cthickening �
   have e1 : ContinuousOn f (cthickening δ K) := TendstoUniformlyOn.continuousOn hF hFn
   rw [tendsto_uniformly_on_iff] at hF ⊢
   rintro ε hε
-  filter_upwards [hF (ε * δ) (mul_pos hε hδ), hFn]with n h h' z hz
+  filter_upwards [hF (ε * δ) (mul_pos hε hδ), hFn] with n h h' z hz
   simp_rw [dist_eq_norm] at h ⊢
   have e2 : ∀ w ∈ sphere z δ, ‖f w - F n w‖ < ε * δ := fun w hw1 =>
     h w (closed_ball_subset_cthickening hz δ (sphere_subset_closed_ball hw1))
@@ -129,13 +129,13 @@ theorem tendstoUniformlyOn_deriv_of_cthickening_subset (hf : TendstoLocallyUnifo
     (hU : IsOpen U) (hKU : cthickening δ K ⊆ U) : TendstoUniformlyOn (deriv ∘ F) (cderiv δ f) φ K :=
   by
   have h1 : ∀ᶠ n in φ, ContinuousOn (F n) (cthickening δ K) := by
-    filter_upwards [hF]with n h using h.continuous_on.mono hKU
+    filter_upwards [hF] with n h using h.continuous_on.mono hKU
   have h2 : IsCompact (cthickening δ K) :=
     is_compact_of_is_closed_bounded is_closed_cthickening hK.bounded.cthickening
   have h3 : TendstoUniformlyOn F f φ (cthickening δ K) :=
     (tendstoLocallyUniformlyOn_iff_forall_isCompact hU).mp hf (cthickening δ K) hKU h2
   apply (h3.cderiv hδ h1).congr
-  filter_upwards [hF]with n h z hz
+  filter_upwards [hF] with n h z hz
   exact cderiv_eq_deriv hU h hδ ((closed_ball_subset_cthickening hz δ).trans hKU)
 #align complex.tendsto_uniformly_on_deriv_of_cthickening_subset Complex.tendstoUniformlyOn_deriv_of_cthickening_subset
 
@@ -159,7 +159,7 @@ theorem TendstoLocallyUniformlyOn.differentiableOn [φ.ne_bot]
   obtain ⟨δ, hδ, -, h1⟩ := exists_cthickening_tendsto_uniformly_on hf hF hK hU hKU
   have h2 : interior K ⊆ U := interior_subset.trans hKU
   have h3 : ∀ᶠ n in φ, DifferentiableOn ℂ (F n) (interior K)
-  filter_upwards [hF]with n h using h.mono h2
+  filter_upwards [hF] with n h using h.mono h2
   have h4 : TendstoLocallyUniformlyOn F f φ (interior K) := hf.mono h2
   have h5 : TendstoLocallyUniformlyOn (deriv ∘ F) (cderiv δ f) φ (interior K) :=
     h1.tendsto_locally_uniformly_on.mono interior_subset
@@ -195,9 +195,9 @@ theorem differentiableOn_tsum_of_summable_norm {u : ι → ℝ} (hu : Summable u
     (hF_le : ∀ (i : ι) (w : ℂ), w ∈ U → ‖F i w‖ ≤ u i) :
     DifferentiableOn ℂ (fun w : ℂ => ∑' i : ι, F i w) U := by
   classical
-    have hc := (tendstoUniformlyOn_tsum hu hF_le).TendstoLocallyUniformlyOn
-    refine' hc.differentiable_on (eventually_of_forall fun s => _) hU
-    exact DifferentiableOn.sum fun i hi => hf i
+  have hc := (tendstoUniformlyOn_tsum hu hF_le).TendstoLocallyUniformlyOn
+  refine' hc.differentiable_on (eventually_of_forall fun s => _) hU
+  exact DifferentiableOn.sum fun i hi => hf i
 #align complex.differentiable_on_tsum_of_summable_norm Complex.differentiableOn_tsum_of_summable_norm
 
 /-- If the terms in the sum `∑' (i : ι), F i` are uniformly bounded on `U` by a
@@ -210,8 +210,8 @@ theorem hasSum_deriv_of_summable_norm {u : ι → ℝ} (hu : Summable u)
   by
   rw [HasSum]
   have hc := (tendstoUniformlyOn_tsum hu hF_le).TendstoLocallyUniformlyOn
-  convert(hc.deriv (eventually_of_forall fun s => DifferentiableOn.sum fun i hi => hf i)
-          hU).tendsto_at
+  convert
+    (hc.deriv (eventually_of_forall fun s => DifferentiableOn.sum fun i hi => hf i) hU).tendsto_at
       hz using
     1
   ext1 s

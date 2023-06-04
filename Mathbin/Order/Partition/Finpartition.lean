@@ -262,7 +262,7 @@ theorem parts_top_subset (a : α) [Decidable (a = ⊥)] : (⊤ : Finpartition a)
   by
   intro b hb
   change b ∈ Finpartition.parts (dite _ _ _) at hb 
-  split_ifs  at hb 
+  split_ifs at hb 
   · simp only [copy_parts, empty_parts, not_mem_empty] at hb 
     exact hb.elim
   · exact hb
@@ -353,14 +353,14 @@ theorem exists_le_of_le {a b : α} {P Q : Finpartition a} (h : P ≤ Q) (hb : b 
 
 theorem card_mono {a : α} {P Q : Finpartition a} (h : P ≤ Q) : Q.parts.card ≤ P.parts.card := by
   classical
-    have : ∀ b ∈ Q.parts, ∃ c ∈ P.parts, c ≤ b := fun b => exists_le_of_le h
-    choose f hP hf using this
-    rw [← card_attach]
-    refine' card_le_card_of_inj_on (fun b => f _ b.2) (fun b _ => hP _ b.2) fun b hb c hc h => _
-    exact
-      Subtype.coe_injective
-        (Q.disjoint.elim b.2 c.2 fun H =>
-          P.ne_bot (hP _ b.2) <| disjoint_self.1 <| H.mono (hf _ b.2) <| h.le.trans <| hf _ c.2)
+  have : ∀ b ∈ Q.parts, ∃ c ∈ P.parts, c ≤ b := fun b => exists_le_of_le h
+  choose f hP hf using this
+  rw [← card_attach]
+  refine' card_le_card_of_inj_on (fun b => f _ b.2) (fun b _ => hP _ b.2) fun b hb c hc h => _
+  exact
+    Subtype.coe_injective
+      (Q.disjoint.elim b.2 c.2 fun H =>
+        P.ne_bot (hP _ b.2) <| disjoint_self.1 <| H.mono (hf _ b.2) <| h.le.trans <| hf _ c.2)
 #align finpartition.card_mono Finpartition.card_mono
 
 variable [DecidableEq α] {a b c : α}

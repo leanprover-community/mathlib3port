@@ -611,7 +611,7 @@ def IsSolid (s : Set β) : Prop :=
 #print LatticeOrderedAddCommGroup.solidClosure /-
 /-- The solid closure of a subset `s` is the smallest superset of `s` that is solid. -/
 def solidClosure (s : Set β) : Set β :=
-  { y | ∃ x ∈ s, |y| ≤ |x| }
+  {y | ∃ x ∈ s, |y| ≤ |x|}
 #align lattice_ordered_add_comm_group.solid_closure LatticeOrderedAddCommGroup.solidClosure
 -/
 

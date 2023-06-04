@@ -54,7 +54,7 @@ variable (R)
 #print associatedPrimes /-
 /-- The set of associated primes of a module. -/
 def associatedPrimes : Set (Ideal R) :=
-  { I | IsAssociatedPrime I M }
+  {I | IsAssociatedPrime I M}
 #align associated_primes associatedPrimes
 -/
 
@@ -103,7 +103,7 @@ theorem exists_le_isAssociatedPrime_of_isNoetherianRing [H : IsNoetherianRing R]
     rwa [Ne.def, Ideal.eq_top_iff_one, Submodule.mem_annihilator_span_singleton, one_smul]
   obtain ⟨P, ⟨l, h₁, y, rfl⟩, h₃⟩ :=
     set_has_maximal_iff_noetherian.mpr H
-      { P | (R ∙ x).annihilator ≤ P ∧ P ≠ ⊤ ∧ ∃ y : M, P = (R ∙ y).annihilator }
+      {P | (R ∙ x).annihilator ≤ P ∧ P ≠ ⊤ ∧ ∃ y : M, P = (R ∙ y).annihilator}
       ⟨(R ∙ x).annihilator, rfl.le, this, x, rfl⟩
   refine' ⟨_, ⟨⟨h₁, _⟩, y, rfl⟩, l⟩
   intro a b hab

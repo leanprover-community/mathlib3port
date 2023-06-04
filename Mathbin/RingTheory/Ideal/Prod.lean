@@ -31,7 +31,7 @@ namespace Ideal
 
 /-- `I × J` as an ideal of `R × S`. -/
 def prod : Ideal (R × S) where
-  carrier := { x | x.fst ∈ I ∧ x.snd ∈ J }
+  carrier := {x | x.fst ∈ I ∧ x.snd ∈ J}
   zero_mem' := by simp
   add_mem' := by
     rintro ⟨a₁, a₂⟩ ⟨b₁, b₂⟩ ⟨ha₁, ha₂⟩ ⟨hb₁, hb₂⟩

@@ -308,13 +308,13 @@ theorem Subsingleton.countable {s : Set α} (hs : s.Subsingleton) : s.Countable 
 -/
 
 #print Set.countable_isTop /-
-theorem countable_isTop (α : Type _) [PartialOrder α] : { x : α | IsTop x }.Countable :=
+theorem countable_isTop (α : Type _) [PartialOrder α] : {x : α | IsTop x}.Countable :=
   (finite_isTop α).Countable
 #align set.countable_is_top Set.countable_isTop
 -/
 
 #print Set.countable_isBot /-
-theorem countable_isBot (α : Type _) [PartialOrder α] : { x : α | IsBot x }.Countable :=
+theorem countable_isBot (α : Type _) [PartialOrder α] : {x : α | IsBot x}.Countable :=
   (finite_isBot α).Countable
 #align set.countable_is_bot Set.countable_isBot
 -/
@@ -322,11 +322,11 @@ theorem countable_isBot (α : Type _) [PartialOrder α] : { x : α | IsBot x }.C
 #print Set.countable_setOf_finite_subset /-
 /-- The set of finite subsets of a countable set is countable. -/
 theorem countable_setOf_finite_subset {s : Set α} :
-    s.Countable → { t | Set.Finite t ∧ t ⊆ s }.Countable
+    s.Countable → {t | Set.Finite t ∧ t ⊆ s}.Countable
   | ⟨h⟩ => by
     skip
     refine'
-      countable.mono _ (countable_range fun t : Finset s => { a | ∃ h : a ∈ s, Subtype.mk a h ∈ t })
+      countable.mono _ (countable_range fun t : Finset s => {a | ∃ h : a ∈ s, Subtype.mk a h ∈ t})
     rintro t ⟨⟨ht⟩, ts⟩; skip
     refine' ⟨finset.univ.map (embedding_of_subset _ _ ts), Set.ext fun a => _⟩
     simpa using @ts a
@@ -340,7 +340,7 @@ theorem countable_univ_pi {π : α → Type _} [Finite α] {s : ∀ a, Set (π a
 #align set.countable_univ_pi Set.countable_univ_pi
 
 theorem countable_pi {π : α → Type _} [Finite α] {s : ∀ a, Set (π a)} (hs : ∀ a, (s a).Countable) :
-    { f : ∀ a, π a | ∀ a, f a ∈ s a }.Countable := by
+    {f : ∀ a, π a | ∀ a, f a ∈ s a}.Countable := by
   simpa only [← mem_univ_pi] using countable_univ_pi hs
 #align set.countable_pi Set.countable_pi
 

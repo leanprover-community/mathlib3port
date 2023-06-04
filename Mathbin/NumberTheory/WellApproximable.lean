@@ -66,7 +66,7 @@ elements within a distance `δ` of a point of order `n`. -/
 @[to_additive approxAddOrderOf
       "In a seminormed additive group `A`, given `n : ℕ` and `δ : ℝ`,\n`approx_add_order_of A n δ` is the set of elements within a distance `δ` of a point of order `n`."]
 def approxOrderOf (A : Type _) [SeminormedGroup A] (n : ℕ) (δ : ℝ) : Set A :=
-  thickening δ { y | orderOf y = n }
+  thickening δ {y | orderOf y = n}
 #align approx_order_of approxOrderOf
 #align approx_add_order_of approxAddOrderOf
 
@@ -105,8 +105,7 @@ theorem image_pow_subset_of_coprime (hm : 0 < m) (hmn : n.coprime m) :
   by
   rintro - ⟨a, ha, rfl⟩
   obtain ⟨b, hb, hab⟩ := mem_approx_order_of_iff.mp ha
-  replace hb : b ^ m ∈ { u : A | orderOf u = n };
-  · rw [← hb] at hmn ⊢; exact orderOf_pow_coprime hmn
+  replace hb : b ^ m ∈ {u : A | orderOf u = n}; · rw [← hb] at hmn ⊢; exact orderOf_pow_coprime hmn
   apply ball_subset_thickening hb ((m : ℝ) • δ)
   convert pow_mem_ball hm hab using 1
   simp only [nsmul_eq_mul, Algebra.id.smul_eq_mul]
@@ -119,7 +118,7 @@ theorem image_pow_subset (n : ℕ) (hm : 0 < m) :
   by
   rintro - ⟨a, ha, rfl⟩
   obtain ⟨b, hb : orderOf b = n * m, hab : a ∈ ball b δ⟩ := mem_approx_order_of_iff.mp ha
-  replace hb : b ^ m ∈ { y : A | orderOf y = n }
+  replace hb : b ^ m ∈ {y : A | orderOf y = n}
   · rw [mem_set_of_eq, orderOf_pow' b hm.ne', hb, Nat.gcd_mul_left_left, n.mul_div_cancel hm]
   apply ball_subset_thickening hb (m * δ)
   convert pow_mem_ball hm hab
@@ -153,7 +152,7 @@ theorem smul_eq_of_mul_dvd (hn : 0 < n) (han : orderOf a ^ 2 ∣ n) :
     rw [sq] at han 
     rwa [(Commute.all a b).orderOf_mul_eq_right_of_forall_prime_mul_dvd (order_of_pos_iff.mp hn)
         fun p hp hp' => dvd_trans (mul_dvd_mul_right hp' <| orderOf a) han]
-  let f : { b : A | orderOf b = n } → { b : A | orderOf b = n } := fun b => ⟨a * b, han b.property⟩
+  let f : {b : A | orderOf b = n} → {b : A | orderOf b = n} := fun b => ⟨a * b, han b.property⟩
   have hf : surjective f := by
     rintro ⟨b, hb⟩
     refine' ⟨⟨a⁻¹ * b, _⟩, _⟩
@@ -183,7 +182,7 @@ theorem mem_approxAddOrderOf_iff {δ : ℝ} {x : UnitAddCircle} {n : ℕ} (hn : 
 
 theorem mem_addWellApproximable_iff (δ : ℕ → ℝ) (x : UnitAddCircle) :
     x ∈ addWellApproximable UnitAddCircle δ ↔
-      { n : ℕ | ∃ m < n, gcd m n = 1 ∧ ‖x - ↑((m : ℝ) / n)‖ < δ n }.Infinite :=
+      {n : ℕ | ∃ m < n, gcd m n = 1 ∧ ‖x - ↑((m : ℝ) / n)‖ < δ n}.Infinite :=
   by
   simp only [mem_add_wellApproximable_iff, ← Nat.cofinite_eq_atTop, cofinite.blimsup_set_eq,
     mem_set_of_eq]
@@ -285,7 +284,7 @@ theorem addWellApproximable_ae_empty_or_univ (δ : ℕ → ℝ) (hδ : Tendsto �
       apply (ergodic_nsmul hp.one_lt).ae_empty_or_univ_of_image_ae_le (hA₀ p)
       apply (HasSubset.Subset.eventuallyLE this).congr eventually_eq.rfl
       exact
-        blimsup_thickening_mul_ae_eq μ (fun n => 0 < n ∧ p∤n) (fun n => { y | addOrderOf y = n })
+        blimsup_thickening_mul_ae_eq μ (fun n => 0 < n ∧ p∤n) (fun n => {y | addOrderOf y = n})
           (nat.cast_pos.mpr hp.pos) _ hδ
     refine' (sSupHom.setImage f).apply_blimsup_le.trans (mono_blimsup fun n hn => _)
     replace hn := nat.coprime_comm.mp (hp.coprime_iff_not_dvd.2 hn.2)
@@ -301,7 +300,7 @@ theorem addWellApproximable_ae_empty_or_univ (δ : ℕ → ℝ) (hδ : Tendsto �
       apply (ergodic_nsmul_add x hp.one_lt).ae_empty_or_univ_of_image_ae_le (hB₀ p)
       apply (HasSubset.Subset.eventuallyLE this).congr eventually_eq.rfl
       exact
-        blimsup_thickening_mul_ae_eq μ (fun n => 0 < n ∧ p∣∣n) (fun n => { y | addOrderOf y = n })
+        blimsup_thickening_mul_ae_eq μ (fun n => 0 < n ∧ p∣∣n) (fun n => {y | addOrderOf y = n})
           (nat.cast_pos.mpr hp.pos) _ hδ
     refine' (sSupHom.setImage f).apply_blimsup_le.trans (mono_blimsup _)
     rintro n ⟨hn, h_div, h_ndiv⟩

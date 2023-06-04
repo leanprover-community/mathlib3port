@@ -254,16 +254,16 @@ theorem opow_mul (a b c : Ordinal) : (a^b * c) = ((a^b)^c) :=
     `w < b ^ u`. -/
 @[pp_nodot]
 def log (b : Ordinal) (x : Ordinal) : Ordinal :=
-  if h : 1 < b then pred (sInf { o | x < (b^o) }) else 0
+  if h : 1 < b then pred (sInf {o | x < (b^o)}) else 0
 #align ordinal.log Ordinal.log
 -/
 
 /-- The set in the definition of `log` is nonempty. -/
-theorem log_nonempty {b x : Ordinal} (h : 1 < b) : { o | x < (b^o) }.Nonempty :=
+theorem log_nonempty {b x : Ordinal} (h : 1 < b) : {o | x < (b^o)}.Nonempty :=
   ⟨_, succ_le_iff.1 (right_le_opow _ h)⟩
 #align ordinal.log_nonempty Ordinal.log_nonempty
 
-theorem log_def {b : Ordinal} (h : 1 < b) (x : Ordinal) : log b x = pred (sInf { o | x < (b^o) }) :=
+theorem log_def {b : Ordinal} (h : 1 < b) (x : Ordinal) : log b x = pred (sInf {o | x < (b^o)}) :=
   by simp only [log, dif_pos h]
 #align ordinal.log_def Ordinal.log_def
 
@@ -301,9 +301,9 @@ theorem log_one_left : ∀ b, log 1 b = 0 :=
 #align ordinal.log_one_left Ordinal.log_one_left
 
 theorem succ_log_def {b x : Ordinal} (hb : 1 < b) (hx : x ≠ 0) :
-    succ (log b x) = sInf { o | x < (b^o) } :=
+    succ (log b x) = sInf {o | x < (b^o)} :=
   by
-  let t := Inf { o | x < (b^o) }
+  let t := Inf {o | x < (b^o)}
   have : x < (b^t) := csInf_mem (log_nonempty hb)
   rcases zero_or_succ_or_limit t with (h | h | h)
   · refine' ((one_le_iff_ne_zero.2 hx).not_lt _).elim
@@ -328,7 +328,7 @@ theorem opow_log_le_self (b) {x : Ordinal} (hx : x ≠ 0) : (b^log b x) ≤ x :=
     refine' (sub_le_self _ _).trans (one_le_iff_ne_zero.2 hx)
   rcases lt_or_eq_of_le (one_le_iff_ne_zero.2 b0) with (hb | rfl)
   · refine' le_of_not_lt fun h => (lt_succ (log b x)).not_le _
-    have := @csInf_le' _ _ { o | x < (b^o) } _ h
+    have := @csInf_le' _ _ {o | x < (b^o)} _ h
     rwa [← succ_log_def hb hx] at this 
   · rwa [one_opow, one_le_iff_ne_zero]
 #align ordinal.opow_log_le_self Ordinal.opow_log_le_self
@@ -421,7 +421,7 @@ theorem opow_mul_add_lt_opow_mul_succ {b u w : Ordinal} (v : Ordinal) (hw : w < 
 theorem opow_mul_add_lt_opow_succ {b u v w : Ordinal} (hvb : v < b) (hw : w < (b^u)) :
     (b^u) * v + w < (b^succ u) :=
   by
-  convert(opow_mul_add_lt_opow_mul_succ v hw).trans_le (mul_le_mul_left' (succ_le_of_lt hvb) _)
+  convert (opow_mul_add_lt_opow_mul_succ v hw).trans_le (mul_le_mul_left' (succ_le_of_lt hvb) _)
   exact opow_succ b u
 #align ordinal.opow_mul_add_lt_opow_succ Ordinal.opow_mul_add_lt_opow_succ
 

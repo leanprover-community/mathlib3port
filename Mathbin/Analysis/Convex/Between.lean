@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers
 
 ! This file was ported from Lean 3 source module analysis.convex.between
-! leanprover-community/mathlib commit 38df578a6450a8c5142b3727e3ae894c2300cae0
+! leanprover-community/mathlib commit 571e13cacbed7bf042fd3058ce27157101433842
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -78,6 +78,12 @@ theorem left_mem_affineSegment (x y : P) : x ∈ affineSegment R x y :=
 theorem right_mem_affineSegment (x y : P) : y ∈ affineSegment R x y :=
   ⟨1, Set.right_mem_Icc.2 zero_le_one, lineMap_apply_one _ _⟩
 #align right_mem_affine_segment right_mem_affineSegment
+
+@[simp]
+theorem affineSegment_same (x : P) : affineSegment R x x = {x} := by
+  simp_rw [affineSegment, line_map_same, AffineMap.coe_const,
+    (set.nonempty_Icc.mpr zero_le_one).image_const]
+#align affine_segment_same affineSegment_same
 
 include V'
 
@@ -821,7 +827,8 @@ theorem wbtw_or_wbtw_smul_vadd_of_nonneg (x : P) (v : V) {r₁ r₂ : R} (hr₁ 
 
 theorem wbtw_smul_vadd_smul_vadd_of_nonpos_of_le (x : P) (v : V) {r₁ r₂ : R} (hr₁ : r₁ ≤ 0)
     (hr₂ : r₂ ≤ r₁) : Wbtw R x (r₁ • v +ᵥ x) (r₂ • v +ᵥ x) := by
-  convert wbtw_smul_vadd_smul_vadd_of_nonneg_of_le x (-v) (Left.nonneg_neg_iff.2 hr₁)
+  convert
+      wbtw_smul_vadd_smul_vadd_of_nonneg_of_le x (-v) (Left.nonneg_neg_iff.2 hr₁)
         (neg_le_neg_iff.2 hr₂) using
       1 <;>
     rw [neg_smul_neg]
@@ -837,7 +844,8 @@ theorem wbtw_or_wbtw_smul_vadd_of_nonpos (x : P) (v : V) {r₁ r₂ : R} (hr₁ 
 
 theorem wbtw_smul_vadd_smul_vadd_of_nonpos_of_nonneg (x : P) (v : V) {r₁ r₂ : R} (hr₁ : r₁ ≤ 0)
     (hr₂ : 0 ≤ r₂) : Wbtw R (r₁ • v +ᵥ x) x (r₂ • v +ᵥ x) := by
-  convert wbtw_smul_vadd_smul_vadd_of_nonneg_of_le (r₁ • v +ᵥ x) v (Left.nonneg_neg_iff.2 hr₁)
+  convert
+      wbtw_smul_vadd_smul_vadd_of_nonneg_of_le (r₁ • v +ᵥ x) v (Left.nonneg_neg_iff.2 hr₁)
         (neg_le_sub_iff_le_add.2 ((le_add_iff_nonneg_left r₁).2 hr₂)) using
       1 <;>
     simp [sub_smul, ← add_vadd]
@@ -945,7 +953,7 @@ theorem wbtw_iff_sameRay_vsub {x y z : P} : Wbtw R x y z ↔ SameRay R (y -ᵥ x
     rw [eq_comm]
     simp only [line_map_apply, h', vadd_vsub_assoc, smul_smul, ← add_smul, eq_vadd_iff_vsub_eq,
       smul_add]
-    convert(one_smul _ _).symm
+    convert (one_smul _ _).symm
     field_simp [(add_pos hr₁ hr₂).ne', hr₂.ne']
     ring
 #align wbtw_iff_same_ray_vsub wbtw_iff_sameRay_vsub

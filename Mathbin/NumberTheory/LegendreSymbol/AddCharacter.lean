@@ -230,7 +230,7 @@ is injective when `ψ` is primitive. -/
 theorem to_mulShift_inj_of_isPrimitive {ψ : AddChar R R'} (hψ : IsPrimitive ψ) :
     Function.Injective ψ.mulShift := by
   intro a b h
-  apply_fun fun x => x * mul_shift ψ (-b)  at h 
+  apply_fun fun x => x * mul_shift ψ (-b) at h 
   simp only [mul_shift_mul, mul_shift_zero, add_right_neg] at h 
   have h₂ := hψ (a + -b)
   rw [h, is_nontrivial_iff_ne_trivial, ← sub_eq_add_neg, sub_ne_zero] at h₂ 
@@ -407,7 +407,7 @@ theorem sum_eq_card_of_is_trivial {ψ : AddChar R R'} (hψ : ¬IsNontrivial ψ) 
     (∑ a, ψ a) = Fintype.card R :=
   by
   simp only [is_nontrivial] at hψ 
-  push_neg  at hψ 
+  push_neg at hψ 
   simp only [hψ, Finset.sum_const, Nat.smul_one_eq_coe]
   rfl
 #align add_char.sum_eq_card_of_is_trivial AddChar.sum_eq_card_of_is_trivial

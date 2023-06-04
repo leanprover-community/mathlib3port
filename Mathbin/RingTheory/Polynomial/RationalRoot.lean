@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module ring_theory.polynomial.rational_root
-! leanprover-community/mathlib commit 62c0a4ef1441edb463095ea02a06e87f3dfe135c
+! leanprover-community/mathlib commit af471b9e3ce868f296626d33189b4ce730fa4c00
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.RingTheory.Polynomial.ScaleRoots
 
 /-!
 # Rational root theorem and integral root theorem
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file contains the rational root theorem and integral root theorem.
 The rational root theorem for a unique factorization domain `A`

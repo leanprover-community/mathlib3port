@@ -70,13 +70,13 @@ namespace Order
 /-- Cofinality of a reflexive order `≼`. This is the smallest cardinality
   of a subset `S : set α` such that `∀ a, ∃ b ∈ S, a ≼ b`. -/
 def cof (r : α → α → Prop) : Cardinal :=
-  sInf { c | ∃ S : Set α, (∀ a, ∃ b ∈ S, r a b) ∧ (#S) = c }
+  sInf {c | ∃ S : Set α, (∀ a, ∃ b ∈ S, r a b) ∧ (#S) = c}
 #align order.cof Order.cof
 -/
 
 /-- The set in the definition of `order.cof` is nonempty. -/
 theorem cof_nonempty (r : α → α → Prop) [IsRefl α r] :
-    { c | ∃ S : Set α, (∀ a, ∃ b ∈ S, r a b) ∧ (#S) = c }.Nonempty :=
+    {c | ∃ S : Set α, (∀ a, ∃ b ∈ S, r a b) ∧ (#S) = c}.Nonempty :=
   ⟨_, Set.univ, fun a => ⟨a, ⟨⟩, refl _⟩, rfl⟩
 #align order.cof_nonempty Order.cof_nonempty
 
@@ -144,7 +144,7 @@ def StrictOrder.cof (r : α → α → Prop) : Cardinal :=
 #print StrictOrder.cof_nonempty /-
 /-- The set in the definition of `order.strict_order.cof` is nonempty. -/
 theorem StrictOrder.cof_nonempty (r : α → α → Prop) [IsIrrefl α r] :
-    { c | ∃ S : Set α, Unbounded r S ∧ (#S) = c }.Nonempty :=
+    {c | ∃ S : Set α, Unbounded r S ∧ (#S) = c}.Nonempty :=
   @Order.cof_nonempty α _ (IsRefl.swap (rᶜ))
 #align strict_order.cof_nonempty StrictOrder.cof_nonempty
 -/
@@ -209,7 +209,7 @@ theorem ord_cof_eq (r : α → α → Prop) [IsWellOrder α r] :
   by
   let ⟨S, hS, e⟩ := cof_eq r
   let ⟨s, _, e'⟩ := Cardinal.ord_eq S
-  let T : Set α := { a | ∃ aS : a ∈ S, ∀ b : S, s b ⟨_, aS⟩ → r b a }
+  let T : Set α := {a | ∃ aS : a ∈ S, ∀ b : S, s b ⟨_, aS⟩ → r b a}
   skip; suffices
   · refine' ⟨T, this, le_antisymm _ (Cardinal.ord_le.2 <| cof_type_le this)⟩
     rw [← e, e']
@@ -228,7 +228,7 @@ theorem ord_cof_eq (r : α → α → Prop) [IsWellOrder α r] :
     · intro e; injection e with e; subst b
       exact irrefl _ h
   · intro a
-    have : { b : S | ¬r b a }.Nonempty :=
+    have : {b : S | ¬r b a}.Nonempty :=
       let ⟨b, bS, ba⟩ := hS a
       ⟨⟨b, bS⟩, ba⟩
     let b := IsWellFounded.wf.min _ this
@@ -248,14 +248,13 @@ private theorem card_mem_cof {o} : ∃ (ι : _) (f : ι → Ordinal), lsub.{u, u
 #print Ordinal.cof_lsub_def_nonempty /-
 /-- The set in the `lsub` characterization of `cof` is nonempty. -/
 theorem cof_lsub_def_nonempty (o) :
-    { a : Cardinal | ∃ (ι : _) (f : ι → Ordinal), lsub.{u, u} f = o ∧ (#ι) = a }.Nonempty :=
+    {a : Cardinal | ∃ (ι : _) (f : ι → Ordinal), lsub.{u, u} f = o ∧ (#ι) = a}.Nonempty :=
   ⟨_, card_mem_cof⟩
 #align ordinal.cof_lsub_def_nonempty Ordinal.cof_lsub_def_nonempty
 -/
 
 theorem cof_eq_sInf_lsub (o : Ordinal.{u}) :
-    cof o =
-      sInf { a : Cardinal | ∃ (ι : Type u) (f : ι → Ordinal), lsub.{u, u} f = o ∧ (#ι) = a } :=
+    cof o = sInf {a : Cardinal | ∃ (ι : Type u) (f : ι → Ordinal), lsub.{u, u} f = o ∧ (#ι) = a} :=
   by
   refine' le_antisymm (le_csInf (cof_lsub_def_nonempty o) _) (csInf_le' _)
   · rintro a ⟨ι, f, hf, rfl⟩
@@ -710,7 +709,7 @@ theorem exists_fundamental_sequence (a : Ordinal.{u}) : ∃ f, IsFundamentalSequ
   rcases exists_lsub_cof a with ⟨ι, f, hf, hι⟩
   rcases ord_eq ι with ⟨r, wo, hr⟩
   haveI := wo
-  let r' := Subrel r { i | ∀ j, r j i → f j < f i }
+  let r' := Subrel r {i | ∀ j, r j i → f j < f i}
   let hrr' : r' ↪r r := Subrel.relEmbedding _ _
   haveI := hrr'.is_well_order
   refine'
@@ -727,7 +726,7 @@ theorem exists_fundamental_sequence (a : Ordinal.{u}) : ∃ f, IsFundamentalSequ
     · refine' ⟨typein r' ⟨i, h⟩, typein_lt_type _ _, _⟩
       rw [bfamily_of_family'_typein]
       rfl
-    · push_neg  at h 
+    · push_neg at h 
       cases' wo.wf.min_mem _ h with hji hij
       refine' ⟨typein r' ⟨_, fun k hkj => lt_of_lt_of_le _ hij⟩, typein_lt_type _ _, _⟩
       · by_contra' H
@@ -754,7 +753,7 @@ protected theorem IsNormal.isFundamentalSequence {f : Ordinal.{u} → Ordinal.{u
   refine' ⟨_, fun i j _ _ h => hf.strict_mono (hg.2.1 _ _ h), _⟩
   · rcases exists_lsub_cof (f a) with ⟨ι, f', hf', hι⟩
     rw [← hg.cof_eq, ord_le_ord, ← hι]
-    suffices (lsub.{u, u} fun i => Inf { b : Ordinal | f' i ≤ f b }) = a
+    suffices (lsub.{u, u} fun i => Inf {b : Ordinal | f' i ≤ f b}) = a
       by
       rw [← this]
       apply cof_lsub_le
@@ -949,7 +948,7 @@ theorem infinite_pigeonhole_set {β α : Type u} {s : Set β} (f : s → α) (θ
     ∃ (a : α) (t : Set β) (h : t ⊆ s), θ ≤ (#t) ∧ ∀ ⦃x⦄ (hx : x ∈ t), f ⟨x, h hx⟩ = a :=
   by
   cases' infinite_pigeonhole_card f θ hθ h₁ h₂ with a ha
-  refine' ⟨a, { x | ∃ h, f ⟨x, h⟩ = a }, _, _, _⟩
+  refine' ⟨a, {x | ∃ h, f ⟨x, h⟩ = a}, _, _, _⟩
   · rintro x ⟨hx, hx'⟩; exact hx
   · refine'
       ha.trans
@@ -1038,7 +1037,7 @@ theorem mk_bounded_subset {α : Type _} (h : ∀ x < #α, (2^x) < (#α)) {r : α
   have h' : is_strong_limit (#α) := ⟨ha, h⟩
   have ha := h'.is_limit.aleph_0_le
   apply le_antisymm
-  · have : { s : Set α | bounded r s } = ⋃ i, 𝒫{ j | r j i } := set_of_exists _
+  · have : {s : Set α | bounded r s} = ⋃ i, 𝒫{j | r j i} := set_of_exists _
     rw [← coe_set_of, this]
     convert mk_Union_le_sum_mk.trans ((sum_le_supr _).trans (mul_le_max_of_aleph_0_le_left ha))
     apply (max_eq_left _).symm; apply ciSup_le' fun i => _

@@ -4,11 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca
 
 ! This file was ported from Lean 3 source module ring_theory.polynomial.cyclotomic.roots
-! leanprover-community/mathlib commit 5bfbcca0a7ffdd21cf1682e59106d6c942434a32
+! leanprover-community/mathlib commit 7fdeecc0d03cd40f7a165e6cf00a4d2286db599f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.RingTheory.Polynomial.Cyclotomic.Basic
+import Mathbin.RingTheory.RootsOfUnity.Minpoly
 
 /-!
 # Roots of cyclotomic polynomials.
@@ -49,7 +50,7 @@ theorem isRoot_of_unity_of_root_cyclotomic {ζ : R} {i : ℕ} (hi : i ∈ n.divi
   have := congr_arg (eval ζ) (prod_cyclotomic_eq_X_pow_sub_one hn R).symm
   rw [eval_sub, eval_pow, eval_X, eval_one] at this 
   convert eq_add_of_sub_eq' this
-  convert(add_zero _).symm
+  convert (add_zero _).symm
   apply eval_eq_zero_of_dvd_of_eval_eq_zero _ h
   exact Finset.dvd_prod_of_mem _ hi
 #align polynomial.is_root_of_unity_of_root_cyclotomic Polynomial.isRoot_of_unity_of_root_cyclotomic

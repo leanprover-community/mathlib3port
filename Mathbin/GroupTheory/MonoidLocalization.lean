@@ -145,7 +145,7 @@ quotient is the localization of `M` at `S`, defined as the unique congruence rel
 @[to_additive
       "The congruence relation on `M × S`, `M` an `add_comm_monoid` and `S`\nan `add_submonoid` of `M`, whose quotient is the localization of `M` at `S`, defined as the unique\ncongruence relation on `M × S` such that for any other congruence relation `s` on `M × S` where\nfor all `y ∈ S`, `(0, 0) ∼ (y, y)` under `s`, we have that `(x₁, y₁) ∼ (x₂, y₂)` by `r` implies\n`(x₁, y₁) ∼ (x₂, y₂)` by `s`."]
 def r (S : Submonoid M) : Con (M × S) :=
-  sInf { c | ∀ y : S, c 1 (y, y) }
+  sInf {c | ∀ y : S, c 1 (y, y)}
 #align localization.r Localization.r
 #align add_localization.r AddLocalization.r
 
@@ -442,7 +442,7 @@ variable {R R₁ R₂ : Type _}
 
 /-- Scalar multiplication in a monoid localization is defined as `c • ⟨a, b⟩ = ⟨c • a, b⟩`. -/
 protected irreducible_def smul [SMul R M] [IsScalarTower R M M] (c : R) (z : Localization S) :
-  Localization S :=
+    Localization S :=
   Localization.liftOn z (fun a b => mk (c • a) b) fun a a' b b' h =>
     mk_eq_mk_iff.2
       (by

@@ -200,7 +200,7 @@ theorem integrableOn_singleton_iff {x : α} [MeasurableSingletonClass α] :
   by
   have : f =ᵐ[μ.restrict {x}] fun y => f x :=
     by
-    filter_upwards [ae_restrict_mem (measurable_set_singleton x)]with _ ha
+    filter_upwards [ae_restrict_mem (measurable_set_singleton x)] with _ ha
     simp only [mem_singleton_iff.1 ha]
   rw [integrable_on, integrable_congr this, integrable_const_iff]
   simp
@@ -302,7 +302,7 @@ theorem IntegrableOn.restrict_toMeasurable (hf : IntegrableOn f s μ) (h's : ∀
     μ.restrict (toMeasurable μ s) = μ.restrict s :=
   by
   rcases exists_seq_strictAnti_tendsto (0 : ℝ) with ⟨u, u_anti, u_pos, u_lim⟩
-  let v n := to_measurable (μ.restrict s) { x | u n ≤ ‖f x‖ }
+  let v n := to_measurable (μ.restrict s) {x | u n ≤ ‖f x‖}
   have A : ∀ n, μ (s ∩ v n) ≠ ∞ := by
     intro n
     rw [inter_comm, ← measure.restrict_apply (measurable_set_to_measurable _ _),
@@ -321,7 +321,7 @@ if `t` is null-measurable. -/
 theorem IntegrableOn.of_ae_diff_eq_zero (hf : IntegrableOn f s μ) (ht : NullMeasurableSet t μ)
     (h't : ∀ᵐ x ∂μ, x ∈ t \ s → f x = 0) : IntegrableOn f t μ :=
   by
-  let u := { x ∈ s | f x ≠ 0 }
+  let u := {x ∈ s | f x ≠ 0}
   have hu : integrable_on f u μ := hf.mono_set fun x hx => hx.1
   let v := to_measurable μ u
   have A : integrable_on f v μ :=
@@ -333,7 +333,7 @@ theorem IntegrableOn.of_ae_diff_eq_zero (hf : IntegrableOn f s μ) (ht : NullMea
     by
     apply integrable_on_zero.congr
     filter_upwards [ae_restrict_of_ae h't,
-      ae_restrict_mem₀ (ht.diff (measurable_set_to_measurable μ u).NullMeasurableSet)]with x hxt hx
+      ae_restrict_mem₀ (ht.diff (measurable_set_to_measurable μ u).NullMeasurableSet)] with x hxt hx
     by_cases h'x : x ∈ s
     · by_contra H
       exact hx.2 (subset_to_measurable μ u ⟨h'x, Ne.symm H⟩)
@@ -357,7 +357,7 @@ theorem IntegrableOn.integrable_of_ae_not_mem_eq_zero (hf : IntegrableOn f s μ)
   by
   rw [← integrable_on_univ]
   apply hf.of_ae_diff_eq_zero null_measurable_set_univ
-  filter_upwards [h't]with x hx h'x using hx h'x.2
+  filter_upwards [h't] with x hx h'x using hx h'x.2
 #align measure_theory.integrable_on.integrable_of_ae_not_mem_eq_zero MeasureTheory.IntegrableOn.integrable_of_ae_not_mem_eq_zero
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x «expr ∉ » s) -/
@@ -579,7 +579,7 @@ theorem ContinuousOn.aestronglyMeasurable_of_isCompact [TopologicalSpace α] [Op
 #align continuous_on.ae_strongly_measurable_of_is_compact ContinuousOn.aestronglyMeasurable_of_isCompact
 
 theorem ContinuousOn.integrableAt_nhdsWithin_of_isSeparable [TopologicalSpace α]
-    [PseudoMetrizableSpace α] [OpensMeasurableSpace α] {μ : Measure α} [LocallyFiniteMeasure μ]
+    [PseudoMetrizableSpace α] [OpensMeasurableSpace α] {μ : Measure α} [IsLocallyFiniteMeasure μ]
     {a : α} {t : Set α} {f : α → E} (hft : ContinuousOn f t) (ht : MeasurableSet t)
     (h't : TopologicalSpace.IsSeparable t) (ha : a ∈ t) : IntegrableAtFilter f (𝓝[t] a) μ :=
   haveI : (𝓝[t] a).IsMeasurablyGenerated := ht.nhds_within_is_measurably_generated _
@@ -590,7 +590,7 @@ theorem ContinuousOn.integrableAt_nhdsWithin_of_isSeparable [TopologicalSpace α
 
 theorem ContinuousOn.integrableAt_nhdsWithin [TopologicalSpace α]
     [SecondCountableTopologyEither α E] [OpensMeasurableSpace α] {μ : Measure α}
-    [LocallyFiniteMeasure μ] {a : α} {t : Set α} {f : α → E} (hft : ContinuousOn f t)
+    [IsLocallyFiniteMeasure μ] {a : α} {t : Set α} {f : α → E} (hft : ContinuousOn f t)
     (ht : MeasurableSet t) (ha : a ∈ t) : IntegrableAtFilter f (𝓝[t] a) μ :=
   haveI : (𝓝[t] a).IsMeasurablyGenerated := ht.nhds_within_is_measurably_generated _
   (hft a ha).IntegrableAtFilter ⟨_, self_mem_nhdsWithin, hft.ae_strongly_measurable ht⟩
@@ -598,7 +598,7 @@ theorem ContinuousOn.integrableAt_nhdsWithin [TopologicalSpace α]
 #align continuous_on.integrable_at_nhds_within ContinuousOn.integrableAt_nhdsWithin
 
 theorem Continuous.integrableAt_nhds [TopologicalSpace α] [SecondCountableTopologyEither α E]
-    [OpensMeasurableSpace α] {μ : Measure α} [LocallyFiniteMeasure μ] {f : α → E}
+    [OpensMeasurableSpace α] {μ : Measure α} [IsLocallyFiniteMeasure μ] {f : α → E}
     (hf : Continuous f) (a : α) : IntegrableAtFilter f (𝓝 a) μ :=
   by
   rw [← nhdsWithin_univ]

@@ -2998,7 +2998,7 @@ theorem count_map {α β : Type _} (f : α → β) (s : Multiset α) [DecidableE
 /-- `multiset.map f` preserves `count` if `f` is injective on the set of elements contained in
 the multiset -/
 theorem count_map_eq_count [DecidableEq β] (f : α → β) (s : Multiset α)
-    (hf : Set.InjOn f { x : α | x ∈ s }) (x) (_ : x ∈ s) : (s.map f).count (f x) = s.count x :=
+    (hf : Set.InjOn f {x : α | x ∈ s}) (x) (_ : x ∈ s) : (s.map f).count (f x) = s.count x :=
   by
   suffices (Filter (fun a : α => f x = f a) s).count x = card (Filter (fun a : α => f x = f a) s)
     by
@@ -3079,8 +3079,8 @@ section Embedding
 theorem map_le_map_iff {f : α → β} (hf : Function.Injective f) {s t : Multiset α} :
     s.map f ≤ t.map f ↔ s ≤ t := by
   classical
-    refine' ⟨fun h => le_iff_count.mpr fun a => _, map_le_map⟩
-    simpa [count_map_eq_count' f _ hf] using le_iff_count.mp h (f a)
+  refine' ⟨fun h => le_iff_count.mpr fun a => _, map_le_map⟩
+  simpa [count_map_eq_count' f _ hf] using le_iff_count.mp h (f a)
 #align multiset.map_le_map_iff Multiset.map_le_map_iff
 
 /-- Associate to an embedding `f` from `α` to `β` the order embedding that maps a multiset to its
@@ -3555,7 +3555,7 @@ theorem pairwise_coe_iff_pairwise {r : α → α → Prop} (hr : Symmetric r) {l
 -/
 
 theorem map_set_pairwise {f : α → β} {r : β → β → Prop} {m : Multiset α}
-    (h : { a | a ∈ m }.Pairwise fun a₁ a₂ => r (f a₁) (f a₂)) : { b | b ∈ m.map f }.Pairwise r :=
+    (h : {a | a ∈ m}.Pairwise fun a₁ a₂ => r (f a₁) (f a₂)) : {b | b ∈ m.map f}.Pairwise r :=
   fun b₁ h₁ b₂ h₂ hn =>
   by
   obtain ⟨⟨a₁, H₁, rfl⟩, a₂, H₂, rfl⟩ := Multiset.mem_map.1 h₁, Multiset.mem_map.1 h₂

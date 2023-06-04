@@ -848,8 +848,8 @@ theorem nfp_mul_opow_omega_add {a c : Ordinal} (b) (ha : 0 < a) (hc : 0 < c) (hc
     · rw [mul_succ]
       apply add_le_add_left hca
     · rw [← mul_assoc, ← opow_one_add, one_add_omega]
-  · cases' mul_eq_right_iff_opow_omega_dvd.1 ((mul_is_normal ha).nfp_fp ((a^omega) * b + c)) with
-      d hd
+  · cases' mul_eq_right_iff_opow_omega_dvd.1 ((mul_is_normal ha).nfp_fp ((a^omega) * b + c)) with d
+      hd
     rw [hd]
     apply mul_le_mul_left'
     have := le_nfp (Mul.mul a) ((a^omega) * b + c)

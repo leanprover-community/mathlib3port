@@ -39,7 +39,7 @@ variable (S)
 /-- The centralizer of a subset of a magma. -/
 @[to_additive add_centralizer " The centralizer of a subset of an additive magma. "]
 def centralizer [Mul M] : Set M :=
-  { c | ∀ m ∈ S, m * c = c * m }
+  {c | ∀ m ∈ S, m * c = c * m}
 #align set.centralizer Set.centralizer
 #align set.add_centralizer Set.addCentralizer
 -/

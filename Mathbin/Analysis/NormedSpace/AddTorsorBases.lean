@@ -68,7 +68,7 @@ TODO Restate this result for affine spaces (instead of vector spaces) once the d
 convexity is generalised to this setting. -/
 theorem AffineBasis.interior_convexHull {ι E : Type _} [Finite ι] [NormedAddCommGroup E]
     [NormedSpace ℝ E] (b : AffineBasis ι ℝ E) :
-    interior (convexHull ℝ (range b)) = { x | ∀ i, 0 < b.Coord i x } :=
+    interior (convexHull ℝ (range b)) = {x | ∀ i, 0 < b.Coord i x} :=
   by
   cases subsingleton_or_nontrivial ι
   · -- The zero-dimensional case.
@@ -113,16 +113,16 @@ theorem IsOpen.exists_between_affineIndependent_span_eq_top {s u : Set P} (hu : 
   have hεyq : ∀ (y) (_ : y ∉ s), ε / dist y q ≠ 0 := fun y hy =>
     div_ne_zero ε0.ne' (dist_ne_zero.2 (ne_of_mem_of_not_mem hq hy).symm)
   classical
-    let w : t → ℝˣ := fun p => if hp : (p : P) ∈ s then 1 else Units.mk0 _ (hεyq (↑p) hp)
-    refine' ⟨Set.range fun p : t => line_map q p (w p : ℝ), _, _, _, _⟩
-    · intro p hp; use ⟨p, ht₁ hp⟩; simp [w, hp]
-    · rintro y ⟨⟨p, hp⟩, rfl⟩
-      by_cases hps : p ∈ s <;>
-          simp only [w, hps, line_map_apply_one, Units.val_mk0, dif_neg, dif_pos, not_false_iff,
-            Units.val_one, Subtype.coe_mk] <;>
-        [exact hsu hps; exact hf p]
-    · exact (ht₂.units_line_map ⟨q, ht₁ hq⟩ w).range
-    · rw [affineSpan_eq_affineSpan_lineMap_units (ht₁ hq) w, ht₃]
+  let w : t → ℝˣ := fun p => if hp : (p : P) ∈ s then 1 else Units.mk0 _ (hεyq (↑p) hp)
+  refine' ⟨Set.range fun p : t => line_map q p (w p : ℝ), _, _, _, _⟩
+  · intro p hp; use ⟨p, ht₁ hp⟩; simp [w, hp]
+  · rintro y ⟨⟨p, hp⟩, rfl⟩
+    by_cases hps : p ∈ s <;>
+        simp only [w, hps, line_map_apply_one, Units.val_mk0, dif_neg, dif_pos, not_false_iff,
+          Units.val_one, Subtype.coe_mk] <;>
+      [exact hsu hps; exact hf p]
+  · exact (ht₂.units_line_map ⟨q, ht₁ hq⟩ w).range
+  · rw [affineSpan_eq_affineSpan_lineMap_units (ht₁ hq) w, ht₃]
 #align is_open.exists_between_affine_independent_span_eq_top IsOpen.exists_between_affineIndependent_span_eq_top
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (s «expr ⊆ » u) -/

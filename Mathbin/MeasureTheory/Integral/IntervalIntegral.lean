@@ -125,7 +125,7 @@ theorem intervalIntegrable_const_iff {c : E} :
 #align interval_integrable_const_iff intervalIntegrable_const_iff
 
 @[simp]
-theorem intervalIntegrable_const [LocallyFiniteMeasure μ] {c : E} :
+theorem intervalIntegrable_const [IsLocallyFiniteMeasure μ] {c : E} :
     IntervalIntegrable (fun _ => c) μ a b :=
   intervalIntegrable_const_iff.2 <| Or.inr measure_Ioc_lt_top
 #align interval_integrable_const intervalIntegrable_const
@@ -324,7 +324,7 @@ theorem comp_add_right (hf : IntervalIntegrable f volume a b) (c : ℝ) :
   have Am : measure.map (fun x => x + c) volume = volume :=
     is_add_left_invariant.is_add_right_invariant.map_add_right_eq_self _
   rw [← Am] at hf 
-  convert(MeasurableEmbedding.integrableOn_map_iff A).mp hf
+  convert (MeasurableEmbedding.integrableOn_map_iff A).mp hf
   rw [preimage_add_const_uIcc]
 #align interval_integrable.comp_add_right IntervalIntegrable.comp_add_right
 
@@ -352,7 +352,7 @@ end IntervalIntegrable
 
 section
 
-variable {μ : Measure ℝ} [LocallyFiniteMeasure μ]
+variable {μ : Measure ℝ} [IsLocallyFiniteMeasure μ]
 
 theorem ContinuousOn.intervalIntegrable {u : ℝ → E} {a b : ℝ} (hu : ContinuousOn u (uIcc a b)) :
     IntervalIntegrable u μ a b :=
@@ -375,7 +375,7 @@ end
 
 section
 
-variable {μ : Measure ℝ} [LocallyFiniteMeasure μ] [ConditionallyCompleteLinearOrder E]
+variable {μ : Measure ℝ} [IsLocallyFiniteMeasure μ] [ConditionallyCompleteLinearOrder E]
   [OrderTopology E] [SecondCountableTopology E]
 
 theorem MonotoneOn.intervalIntegrable {u : ℝ → E} {a b : ℝ} (hu : MonotoneOn u (uIcc a b)) :
@@ -973,7 +973,7 @@ theorem integral_Iic_sub_Iic (ha : IntegrableOn f (Iic a) μ) (hb : IntegrableOn
 #align interval_integral.integral_Iic_sub_Iic intervalIntegral.integral_Iic_sub_Iic
 
 /-- If `μ` is a finite measure then `∫ x in a..b, c ∂μ = (μ (Iic b) - μ (Iic a)) • c`. -/
-theorem integral_const_of_cdf [FiniteMeasure μ] (c : E) :
+theorem integral_const_of_cdf [IsFiniteMeasure μ] (c : E) :
     (∫ x in a..b, c ∂μ) = ((μ (Iic b)).toReal - (μ (Iic a)).toReal) • c :=
   by
   simp only [sub_smul, ← set_integral_const]
@@ -1011,9 +1011,9 @@ theorem integral_zero_ae (h : ∀ᵐ x ∂μ, x ∈ Ι a b → f x = 0) : (∫ x
 #align interval_integral.integral_zero_ae intervalIntegral.integral_zero_ae
 
 theorem integral_indicator {a₁ a₂ a₃ : ℝ} (h : a₂ ∈ Icc a₁ a₃) :
-    (∫ x in a₁..a₃, indicator { x | x ≤ a₂ } f x ∂μ) = ∫ x in a₁..a₂, f x ∂μ :=
+    (∫ x in a₁..a₃, indicator {x | x ≤ a₂} f x ∂μ) = ∫ x in a₁..a₂, f x ∂μ :=
   by
-  have : { x | x ≤ a₂ } ∩ Ioc a₁ a₃ = Ioc a₁ a₂ := Iic_inter_Ioc_of_le h.2
+  have : {x | x ≤ a₂} ∩ Ioc a₁ a₃ = Ioc a₁ a₂ := Iic_inter_Ioc_of_le h.2
   rw [integral_of_le h.1, integral_of_le (h.1.trans h.2), integral_indicator,
     measure.restrict_restrict, this]
   exact measurableSet_Iic
@@ -1174,7 +1174,7 @@ theorem continuousWithinAt_primitive (hb₀ : μ {b₀} = 0)
     refine' continuous_within_at_const.add _
     have :
       (fun b => ∫ x in b₁..b, f x ∂μ) =ᶠ[𝓝[Icc b₁ b₂] b₀] fun b =>
-        ∫ x in b₁..b₂, indicator { x | x ≤ b } f x ∂μ :=
+        ∫ x in b₁..b₂, indicator {x | x ≤ b} f x ∂μ :=
       by
       apply eventually_eq_of_mem self_mem_nhdsWithin
       exact fun b b_in => (integral_indicator b_in).symm
@@ -1199,7 +1199,7 @@ theorem continuousWithinAt_primitive (hb₀ : μ {b₀} = 0)
         exact Ne.lt_or_lt hx
       apply this.mono
       rintro x₀ (hx₀ | hx₀) -
-      · have : ∀ᶠ x in 𝓝[Icc b₁ b₂] b₀, { t : ℝ | t ≤ x }.indicator f x₀ = f x₀ :=
+      · have : ∀ᶠ x in 𝓝[Icc b₁ b₂] b₀, {t : ℝ | t ≤ x}.indicator f x₀ = f x₀ :=
           by
           apply mem_nhdsWithin_of_mem_nhds
           apply eventually.mono (Ioi_mem_nhds hx₀)
@@ -1207,7 +1207,7 @@ theorem continuousWithinAt_primitive (hb₀ : μ {b₀} = 0)
           simp [hx.le]
         apply continuous_within_at_const.congr_of_eventually_eq this
         simp [hx₀.le]
-      · have : ∀ᶠ x in 𝓝[Icc b₁ b₂] b₀, { t : ℝ | t ≤ x }.indicator f x₀ = 0 :=
+      · have : ∀ᶠ x in 𝓝[Icc b₁ b₂] b₀, {t : ℝ | t ≤ x}.indicator f x₀ = 0 :=
           by
           apply mem_nhdsWithin_of_mem_nhds
           apply eventually.mono (Iio_mem_nhds hx₀)
@@ -1361,7 +1361,7 @@ theorem intervalIntegral_pos_of_pos {f : ℝ → ℝ} {a b : ℝ}
 of nonzero measure, then `∫ x in a..b, f x ∂μ < ∫ x in a..b, g x ∂μ`. -/
 theorem integral_lt_integral_of_ae_le_of_measure_setOf_lt_ne_zero (hab : a ≤ b)
     (hfi : IntervalIntegrable f μ a b) (hgi : IntervalIntegrable g μ a b)
-    (hle : f ≤ᵐ[μ.restrict (Ioc a b)] g) (hlt : μ.restrict (Ioc a b) { x | f x < g x } ≠ 0) :
+    (hle : f ≤ᵐ[μ.restrict (Ioc a b)] g) (hlt : μ.restrict (Ioc a b) {x | f x < g x} ≠ 0) :
     (∫ x in a..b, f x ∂μ) < ∫ x in a..b, g x ∂μ :=
   by
   rw [← sub_pos, ← integral_sub hgi hfi, integral_of_le hab,

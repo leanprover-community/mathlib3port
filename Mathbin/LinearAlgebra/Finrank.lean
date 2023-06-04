@@ -69,7 +69,7 @@ noncomputable def finrank (R V : Type _) [Semiring R] [AddCommGroup V] [Module R
 
 theorem finrank_eq_of_rank_eq {n : ℕ} (h : Module.rank K V = ↑n) : finrank K V = n :=
   by
-  apply_fun toNat  at h 
+  apply_fun toNat at h 
   rw [to_nat_cast] at h 
   exact_mod_cast h
 #align finite_dimensional.finrank_eq_of_rank_eq FiniteDimensional.finrank_eq_of_rank_eq
@@ -490,7 +490,7 @@ theorem linearIndependent_iff_card_eq_finrank_span {ι : Type _} [Fintype ι] {b
         rw [h]
       simpa [mem_map] using hx
     have hi : f.ker = ⊥ := ker_subtype _
-    convert(linearIndependent_of_top_le_span_of_card_eq_finrank hs hc).map' _ hi
+    convert (linearIndependent_of_top_le_span_of_card_eq_finrank hs hc).map' _ hi
 #align linear_independent_iff_card_eq_finrank_span linearIndependent_iff_card_eq_finrank_span
 
 theorem linearIndependent_iff_card_le_finrank_span {ι : Type _} [Fintype ι] {b : ι → V} :

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Johan Commelin
 
 ! This file was ported from Lean 3 source module ring_theory.tensor_product
-! leanprover-community/mathlib commit 50251fd6309cca5ca2e747882ffecd2729f38c5d
+! leanprover-community/mathlib commit 69b2e97a276619372b19cf80fc1e91b05ae2baa4
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -485,9 +485,9 @@ def includeLeftRingHom : A →+* A ⊗[R] B
   map_mul' := by simp
 #align algebra.tensor_product.include_left_ring_hom Algebra.TensorProduct.includeLeftRingHom
 
-variable {S : Type _} [CommSemiring S] [Algebra R S] [Algebra S A] [IsScalarTower R S A]
+variable {S : Type _} [CommSemiring S] [Algebra S A]
 
-instance leftAlgebra : Algebra S (A ⊗[R] B) :=
+instance leftAlgebra [SMulCommClass R S A] : Algebra S (A ⊗[R] B) :=
   { TensorProduct.includeLeftRingHom.comp (algebraMap S A),
     (by infer_instance :
       Module S
@@ -511,12 +511,10 @@ instance : Algebra R (A ⊗[R] B) :=
   inferInstance
 
 @[simp]
-theorem algebraMap_apply (r : S) : (algebraMap S (A ⊗[R] B)) r = (algebraMap S A) r ⊗ₜ 1 :=
+theorem algebraMap_apply [SMulCommClass R S A] (r : S) :
+    (algebraMap S (A ⊗[R] B)) r = (algebraMap S A) r ⊗ₜ 1 :=
   rfl
 #align algebra.tensor_product.algebra_map_apply Algebra.TensorProduct.algebraMap_apply
-
-instance : IsScalarTower R S (A ⊗[R] B) :=
-  ⟨fun a b c => by simp⟩
 
 variable {C : Type v₃} [Semiring C] [Algebra R C]
 
@@ -528,6 +526,7 @@ theorem ext {g h : A ⊗[R] B →ₐ[R] C} (H : ∀ a b, g (a ⊗ₜ b) = h (a �
   simp [H]
 #align algebra.tensor_product.ext Algebra.TensorProduct.ext
 
+-- TODO: with `smul_comm_class R S A` we can have this as an `S`-algebra morphism
 /-- The `R`-algebra morphism `A →ₐ[R] A ⊗[R] B` sending `a` to `a ⊗ₜ 1`. -/
 def includeLeft : A →ₐ[R] A ⊗[R] B :=
   { includeLeftRingHom with commutes' := by simp }
@@ -801,7 +800,7 @@ theorem comm_tmul (a : A) (b : B) :
   simp [TensorProduct.comm]
 #align algebra.tensor_product.comm_tmul Algebra.TensorProduct.comm_tmul
 
-theorem adjoin_tmul_eq_top : adjoin R { t : A ⊗[R] B | ∃ a b, a ⊗ₜ[R] b = t } = ⊤ :=
+theorem adjoin_tmul_eq_top : adjoin R {t : A ⊗[R] B | ∃ a b, a ⊗ₜ[R] b = t} = ⊤ :=
   top_le_iff.mp <| (top_le_iff.mpr <| span_tmul_eq_top R A B).trans (span_le_adjoin R _)
 #align algebra.tensor_product.adjoin_tmul_eq_top Algebra.TensorProduct.adjoin_tmul_eq_top
 

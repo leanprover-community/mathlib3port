@@ -722,7 +722,7 @@ theorem SetLike.homogeneous_mul [Add ι] [Mul R] {A : ι → S} [SetLike.GradedM
 /-- When `A` is a `set_like.graded_monoid A`, then the homogeneous elements forms a submonoid. -/
 def SetLike.homogeneousSubmonoid [AddMonoid ι] [Monoid R] (A : ι → S) [SetLike.GradedMonoid A] :
     Submonoid R where
-  carrier := { a | SetLike.Homogeneous A a }
+  carrier := {a | SetLike.Homogeneous A a}
   one_mem' := SetLike.homogeneous_one A
   mul_mem' a b := SetLike.homogeneous_mul
 #align set_like.homogeneous_submonoid SetLike.homogeneousSubmonoid

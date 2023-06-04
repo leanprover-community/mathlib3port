@@ -223,14 +223,14 @@ theorem multinomial_update (a : α) (f : α →₀ ℕ) :
   by
   simp only [multinomial_eq]
   classical
-    by_cases a ∈ f.support
-    · rw [← Finset.insert_erase h, Nat.multinomial_insert _ f (Finset.not_mem_erase a _),
-        Finset.add_sum_erase _ f h, support_update_zero]
-      congr 1
-      exact
-        Nat.multinomial_congr _ fun _ h => (Function.update_noteq (Finset.mem_erase.1 h).1 0 f).symm
-    rw [not_mem_support_iff] at h 
-    rw [h, Nat.choose_zero_right, one_mul, ← h, update_self]
+  by_cases a ∈ f.support
+  · rw [← Finset.insert_erase h, Nat.multinomial_insert _ f (Finset.not_mem_erase a _),
+      Finset.add_sum_erase _ f h, support_update_zero]
+    congr 1
+    exact
+      Nat.multinomial_congr _ fun _ h => (Function.update_noteq (Finset.mem_erase.1 h).1 0 f).symm
+  rw [not_mem_support_iff] at h 
+  rw [h, Nat.choose_zero_right, one_mul, ← h, update_self]
 #align finsupp.multinomial_update Finsupp.multinomial_update
 -/
 
@@ -288,7 +288,7 @@ theorem sum_pow_of_commute [Semiring R] (x : α → R)
     rintro (_ | n)
     · rw [pow_zero, Fintype.sum_subsingleton]
       swap; · exact ⟨0, Or.inl rfl⟩
-      convert(one_mul _).symm; apply Nat.cast_one
+      convert (one_mul _).symm; apply Nat.cast_one
     · rw [pow_succ, MulZeroClass.zero_mul]
       apply (Fintype.sum_empty _).symm
       rw [sym_empty]; infer_instance

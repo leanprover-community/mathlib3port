@@ -55,7 +55,7 @@ variable (𝕜) [SMul 𝕜 E] {s : Set E} {x y : E}
 #print segment /-
 /-- Segments in a vector space. -/
 def segment (x y : E) : Set E :=
-  { z : E | ∃ (a b : 𝕜) (ha : 0 ≤ a) (hb : 0 ≤ b) (hab : a + b = 1), a • x + b • y = z }
+  {z : E | ∃ (a b : 𝕜) (ha : 0 ≤ a) (hb : 0 ≤ b) (hab : a + b = 1), a • x + b • y = z}
 #align segment segment
 -/
 
@@ -63,7 +63,7 @@ def segment (x y : E) : Set E :=
 /-- Open segment in a vector space. Note that `open_segment 𝕜 x x = {x}` instead of being `∅` when
 the base semiring has some element between `0` and `1`. -/
 def openSegment (x y : E) : Set E :=
-  { z : E | ∃ (a b : 𝕜) (ha : 0 < a) (hb : 0 < b) (hab : a + b = 1), a • x + b • y = z }
+  {z : E | ∃ (a b : 𝕜) (ha : 0 < a) (hb : 0 < b) (hab : a + b = 1), a • x + b • y = z}
 #align open_segment openSegment
 -/
 
@@ -71,14 +71,13 @@ def openSegment (x y : E) : Set E :=
 scoped[Convex] notation "[" x " -[" 𝕜 "] " y "]" => segment 𝕜 x y
 
 theorem segment_eq_image₂ (x y : E) :
-    [x -[𝕜] y] =
-      (fun p : 𝕜 × 𝕜 => p.1 • x + p.2 • y) '' { p | 0 ≤ p.1 ∧ 0 ≤ p.2 ∧ p.1 + p.2 = 1 } :=
+    [x -[𝕜] y] = (fun p : 𝕜 × 𝕜 => p.1 • x + p.2 • y) '' {p | 0 ≤ p.1 ∧ 0 ≤ p.2 ∧ p.1 + p.2 = 1} :=
   by simp only [segment, image, Prod.exists, mem_set_of_eq, exists_prop, and_assoc']
 #align segment_eq_image₂ segment_eq_image₂
 
 theorem openSegment_eq_image₂ (x y : E) :
     openSegment 𝕜 x y =
-      (fun p : 𝕜 × 𝕜 => p.1 • x + p.2 • y) '' { p | 0 < p.1 ∧ 0 < p.2 ∧ p.1 + p.2 = 1 } :=
+      (fun p : 𝕜 × 𝕜 => p.1 • x + p.2 • y) '' {p | 0 < p.1 ∧ 0 < p.2 ∧ p.1 + p.2 = 1} :=
   by simp only [openSegment, image, Prod.exists, mem_set_of_eq, exists_prop, and_assoc']
 #align open_segment_eq_image₂ openSegment_eq_image₂
 
@@ -327,11 +326,11 @@ theorem midpoint_mem_segment [Invertible (2 : 𝕜)] (x y : E) : midpoint 𝕜 x
 #align midpoint_mem_segment midpoint_mem_segment
 
 theorem mem_segment_sub_add [Invertible (2 : 𝕜)] (x y : E) : x ∈ [x - y -[𝕜] x + y] := by
-  convert@midpoint_mem_segment 𝕜 _ _ _ _ _ _ _; rw [midpoint_sub_add]
+  convert @midpoint_mem_segment 𝕜 _ _ _ _ _ _ _; rw [midpoint_sub_add]
 #align mem_segment_sub_add mem_segment_sub_add
 
 theorem mem_segment_add_sub [Invertible (2 : 𝕜)] (x y : E) : x ∈ [x + y -[𝕜] x - y] := by
-  convert@midpoint_mem_segment 𝕜 _ _ _ _ _ _ _; rw [midpoint_add_sub]
+  convert @midpoint_mem_segment 𝕜 _ _ _ _ _ _ _; rw [midpoint_add_sub]
 #align mem_segment_add_sub mem_segment_add_sub
 
 @[simp]

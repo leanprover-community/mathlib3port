@@ -317,7 +317,7 @@ theorem Bijective.of_comp_iff' {f : α → β} (hf : Bijective f) (g : γ → α
 to `set α`. -/
 theorem cantor_surjective {α} (f : α → Set α) : ¬Function.Surjective f
   | h =>
-    let ⟨D, e⟩ := h { a | ¬a ∈ f a }
+    let ⟨D, e⟩ := h {a | ¬a ∈ f a}
     (iff_not_self (D ∈ f D)).1 <| iff_of_eq (congr_arg ((· ∈ ·) D) e)
 #align function.cantor_surjective Function.cantor_surjective
 -/
@@ -327,7 +327,7 @@ theorem cantor_surjective {α} (f : α → Set α) : ¬Function.Surjective f
 to `α`. -/
 theorem cantor_injective {α : Type _} (f : Set α → α) : ¬Function.Injective f
   | i =>
-    (cantor_surjective fun a => { b | ∀ U, a = f U → b ∈ U }) <|
+    (cantor_surjective fun a => {b | ∀ U, a = f U → b ∈ U}) <|
       RightInverse.surjective fun U =>
         funext fun a => propext ⟨fun h => h U rfl, fun h' U' e => i e ▸ h'⟩
 #align function.cantor_injective Function.cantor_injective

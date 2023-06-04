@@ -223,7 +223,7 @@ instance : Inf (Submodule R M) :=
 instance : CompleteLattice (Submodule R M) :=
   { Submodule.orderTop, Submodule.orderBot,
     SetLike.partialOrder with
-    sup := fun a b => sInf { x | a ≤ x ∧ b ≤ x }
+    sup := fun a b => sInf {x | a ≤ x ∧ b ≤ x}
     le_sup_left := fun a b => le_Inf' fun x ⟨ha, hb⟩ => ha
     le_sup_right := fun a b => le_Inf' fun x ⟨ha, hb⟩ => hb
     sup_le := fun a b c h₁ h₂ => sInf_le' ⟨h₁, h₂⟩
@@ -231,7 +231,7 @@ instance : CompleteLattice (Submodule R M) :=
     le_inf := fun a b c => Set.subset_inter
     inf_le_left := fun a b => Set.inter_subset_left _ _
     inf_le_right := fun a b => Set.inter_subset_right _ _
-    sSup := fun tt => sInf { t | ∀ t' ∈ tt, t' ≤ t }
+    sSup := fun tt => sInf {t | ∀ t' ∈ tt, t' ≤ t}
     le_sup := fun s p hs => le_Inf' fun q hq => hq _ hs
     sup_le := fun s p hs => sInf_le' hs
     sInf := sInf

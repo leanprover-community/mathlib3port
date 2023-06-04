@@ -100,7 +100,7 @@ See Note [forgetful inheritance] for why we extend `uniform_space`, `uniform_add
 class Valued (R : Type u) [Ring R] (Γ₀ : outParam (Type v))
     [LinearOrderedCommGroupWithZero Γ₀] extends UniformSpace R, UniformAddGroup R where
   V : Valuation R Γ₀
-  is_topological_valuation : ∀ s, s ∈ 𝓝 (0 : R) ↔ ∃ γ : Γ₀ˣ, { x : R | v x < γ } ⊆ s
+  is_topological_valuation : ∀ s, s ∈ 𝓝 (0 : R) ↔ ∃ γ : Γ₀ˣ, {x : R | v x < γ} ⊆ s
 #align valued Valued
 -/
 
@@ -129,12 +129,12 @@ variable (R Γ₀) [_i : Valued R Γ₀]
 include _i
 
 theorem hasBasis_nhds_zero :
-    (𝓝 (0 : R)).HasBasis (fun _ => True) fun γ : Γ₀ˣ => { x | v x < (γ : Γ₀) } := by
+    (𝓝 (0 : R)).HasBasis (fun _ => True) fun γ : Γ₀ˣ => {x | v x < (γ : Γ₀)} := by
   simp [Filter.hasBasis_iff, is_topological_valuation]
 #align valued.has_basis_nhds_zero Valued.hasBasis_nhds_zero
 
 theorem hasBasis_uniformity :
-    (𝓤 R).HasBasis (fun _ => True) fun γ : Γ₀ˣ => { p : R × R | v (p.2 - p.1) < (γ : Γ₀) } :=
+    (𝓤 R).HasBasis (fun _ => True) fun γ : Γ₀ˣ => {p : R × R | v (p.2 - p.1) < (γ : Γ₀)} :=
   by
   rw [uniformity_eq_comap_nhds_zero]
   exact (has_basis_nhds_zero R Γ₀).comap _
@@ -148,16 +148,16 @@ theorem toUniformSpace_eq :
 
 variable {R Γ₀}
 
-theorem mem_nhds {s : Set R} {x : R} : s ∈ 𝓝 x ↔ ∃ γ : Γ₀ˣ, { y | (v (y - x) : Γ₀) < γ } ⊆ s := by
+theorem mem_nhds {s : Set R} {x : R} : s ∈ 𝓝 x ↔ ∃ γ : Γ₀ˣ, {y | (v (y - x) : Γ₀) < γ} ⊆ s := by
   simp only [← nhds_translation_add_neg x, ← sub_eq_add_neg, preimage_set_of_eq, exists_true_left,
     ((has_basis_nhds_zero R Γ₀).comap fun y => y - x).mem_iff]
 #align valued.mem_nhds Valued.mem_nhds
 
-theorem mem_nhds_zero {s : Set R} : s ∈ 𝓝 (0 : R) ↔ ∃ γ : Γ₀ˣ, { x | v x < (γ : Γ₀) } ⊆ s := by
+theorem mem_nhds_zero {s : Set R} : s ∈ 𝓝 (0 : R) ↔ ∃ γ : Γ₀ˣ, {x | v x < (γ : Γ₀)} ⊆ s := by
   simp only [mem_nhds, sub_zero]
 #align valued.mem_nhds_zero Valued.mem_nhds_zero
 
-theorem loc_const {x : R} (h : (v x : Γ₀) ≠ 0) : { y : R | v y = v x } ∈ 𝓝 x :=
+theorem loc_const {x : R} (h : (v x : Γ₀) ≠ 0) : {y : R | v y = v x} ∈ 𝓝 x :=
   by
   rw [mem_nhds]
   rcases units.exists_iff_ne_zero.mpr h with ⟨γ, hx⟩

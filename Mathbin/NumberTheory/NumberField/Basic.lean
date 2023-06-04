@@ -198,7 +198,7 @@ instance numberField : NumberField ℚ
   -- all fields are vector spaces over themselves (used in `rat.finite_dimensional`)
   -- all char 0 fields have a canonical embedding of `ℚ` (used in `number_field`).
   -- Show that these coincide:
-  by convert(inferInstance : FiniteDimensional ℚ ℚ)
+  by convert (inferInstance : FiniteDimensional ℚ ℚ)
 #align rat.number_field Rat.numberField
 
 /-- The ring of integers of `ℚ` as a number field is just `ℤ`. -/
@@ -221,7 +221,7 @@ is a number field. -/
 instance {f : ℚ[X]} [hf : Fact (Irreducible f)] : NumberField (AdjoinRoot f)
     where
   to_charZero := charZero_of_injective_algebraMap (algebraMap ℚ _).Injective
-  to_finiteDimensional := by convert(AdjoinRoot.powerBasis hf.out.ne_zero).FiniteDimensional
+  to_finiteDimensional := by convert (AdjoinRoot.powerBasis hf.out.ne_zero).FiniteDimensional
 
 end
 

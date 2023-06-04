@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.calculus.cont_diff_def
-! leanprover-community/mathlib commit 3a69562db5a458db8322b190ec8d9a8bbd8a5b14
+! leanprover-community/mathlib commit 2ebc1d6c2fed9f54c95bbc3998eaa5570527129a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -16,6 +16,9 @@ import Mathbin.Analysis.Calculus.FormalMultilinearSeries
 
 /-!
 # Higher differentiability
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 A function is `C^1` on a domain if it is differentiable there, and its derivative is continuous.
 By induction, it is `C^n` if it is `C^{n-1}` and its (n-1)-th derivative is `C^1` there or,
@@ -489,7 +492,7 @@ theorem ContDiffWithinAt.continuousWithinAt (h : ContDiffWithinAt 𝕜 n f s x) 
 theorem ContDiffWithinAt.congr_of_eventuallyEq (h : ContDiffWithinAt 𝕜 n f s x)
     (h₁ : f₁ =ᶠ[𝓝[s] x] f) (hx : f₁ x = f x) : ContDiffWithinAt 𝕜 n f₁ s x := fun m hm =>
   let ⟨u, hu, p, H⟩ := h m hm
-  ⟨{ x ∈ u | f₁ x = f x }, Filter.inter_mem hu (mem_nhdsWithin_insert.2 ⟨hx, h₁⟩), p,
+  ⟨{x ∈ u | f₁ x = f x}, Filter.inter_mem hu (mem_nhdsWithin_insert.2 ⟨hx, h₁⟩), p,
     (H.mono (sep_subset _ _)).congr fun _ => And.right⟩
 #align cont_diff_within_at.congr_of_eventually_eq ContDiffWithinAt.congr_of_eventuallyEq
 -/
@@ -644,7 +647,7 @@ theorem contDiffWithinAt_succ_iff_hasFDerivWithinAt {n : ℕ} :
           HasFDerivWithinAt (fun z => (continuousMultilinearCurryFin0 𝕜 E F).symm (f z))
             (FormalMultilinearSeries.unshift (p' y) (f y) 1).curryLeft (v ∩ u) y
         rw [LinearIsometryEquiv.comp_hasFDerivWithinAt_iff']
-        convert(f'_eq_deriv y hy.2).mono (inter_subset_right v u)
+        convert (f'_eq_deriv y hy.2).mono (inter_subset_right v u)
         rw [← Hp'.zero_eq y hy.1]
         ext z
         change
@@ -653,7 +656,7 @@ theorem contDiffWithinAt_succ_iff_hasFDerivWithinAt {n : ℕ} :
         unfold_coes
         congr
         decide
-      · convert(Hp'.mono (inter_subset_left v u)).congr fun x hx => Hp'.zero_eq x hx.1
+      · convert (Hp'.mono (inter_subset_left v u)).congr fun x hx => Hp'.zero_eq x hx.1
         · ext (x y)
           change p' x 0 (init (@snoc 0 (fun i : Fin 1 => E) 0 y)) y = p' x 0 0 y
           rw [init_snoc]
@@ -1207,7 +1210,7 @@ theorem contDiffOn_of_continuousOn_differentiableOn
     simp only [ftaylorSeriesWithin, ContinuousMultilinearMap.uncurry0_apply,
       iteratedFDerivWithin_zero_apply]
   · intro k hk y hy
-    convert(Hdiff k (lt_of_lt_of_le hk hm) y hy).HasFDerivWithinAt
+    convert (Hdiff k (lt_of_lt_of_le hk hm) y hy).HasFDerivWithinAt
     simp only [ftaylorSeriesWithin, iteratedFDerivWithin_succ_eq_comp_left,
       ContinuousLinearEquiv.coe_apply, Function.comp_apply, coeFn_coeBase]
     exact ContinuousLinearMap.curry_uncurryLeft _

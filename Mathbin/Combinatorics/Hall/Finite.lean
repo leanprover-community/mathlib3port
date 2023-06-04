@@ -56,7 +56,7 @@ variable [Fintype ι]
 #print HallMarriageTheorem.hall_cond_of_erase /-
 theorem hall_cond_of_erase {x : ι} (a : α)
     (ha : ∀ s : Finset ι, s.Nonempty → s ≠ univ → s.card < (s.biUnion t).card)
-    (s' : Finset { x' : ι | x' ≠ x }) : s'.card ≤ (s'.biUnion fun x' => (t x').eraseₓ a).card :=
+    (s' : Finset {x' : ι | x' ≠ x}) : s'.card ≤ (s'.biUnion fun x' => (t x').eraseₓ a).card :=
   by
   haveI := Classical.decEq ι
   specialize ha (s'.image coe)
@@ -109,7 +109,7 @@ theorem hall_hard_inductive_step_A {n : ℕ} (hn : Fintype.card ι = n + 1)
       
   choose y hy using tx_ne
   -- Restrict to everything except `x` and `y`.
-  let ι' := { x' : ι | x' ≠ x }
+  let ι' := {x' : ι | x' ≠ x}
   let t' : ι' → Finset α := fun x' => (t x').eraseₓ y
   have card_ι' : Fintype.card ι' = n :=
     calc
@@ -138,11 +138,11 @@ theorem hall_cond_of_restrict {ι : Type u} {t : ι → Finset α} {s : Finset �
     (ht : ∀ s : Finset ι, s.card ≤ (s.biUnion t).card) (s' : Finset (s : Set ι)) :
     s'.card ≤ (s'.biUnion fun a' => t a').card := by
   classical
-    rw [← card_image_of_injective s' Subtype.coe_injective]
-    convert ht (s'.image coe) using 1
-    apply congr_arg
-    ext y
-    simp
+  rw [← card_image_of_injective s' Subtype.coe_injective]
+  convert ht (s'.image coe) using 1
+  apply congr_arg
+  ext y
+  simp
 #align hall_marriage_theorem.hall_cond_of_restrict HallMarriageTheorem.hall_cond_of_restrict
 -/
 
@@ -263,7 +263,7 @@ theorem hall_hard_inductive (ht : ∀ s : Finset ι, s.card ≤ (s.biUnion t).ca
       exact ih _ (Nat.lt_succ_of_le hι') ht' _ rfl
     by_cases h : ∀ s : Finset ι, s.Nonempty → s ≠ univ → s.card < (s.biUnion t).card
     · exact hall_hard_inductive_step_A hn ht ih' h
-    · push_neg  at h 
+    · push_neg at h 
       rcases h with ⟨s, sne, snu, sle⟩
       exact hall_hard_inductive_step_B hn ht ih' s sne snu (Nat.le_antisymm (ht _) sle)
 #align hall_marriage_theorem.hall_hard_inductive HallMarriageTheorem.hall_hard_inductive

@@ -608,7 +608,7 @@ theorem Sigma.isConnected_iff [∀ i, TopologicalSpace (π i)] {s : Set (Σ i, �
       rw [h]
       exact
         IsPreconnected.subset_left_of_subset_union (isOpen_sigma_fst_preimage _)
-          (isOpen_sigma_fst_preimage { x | x ≠ i }) (Set.disjoint_iff.2 fun x hx => hx.2 hx.1)
+          (isOpen_sigma_fst_preimage {x | x ≠ i}) (Set.disjoint_iff.2 fun x hx => hx.2 hx.1)
           (fun y hy => by simp [Classical.em]) ⟨⟨i, x⟩, hx, rfl⟩ hs.2
     exact
       ⟨i, Sigma.mk i ⁻¹' s, hs.preimage_of_open_map sigma_mk_injective isOpenMap_sigmaMk this,
@@ -674,7 +674,7 @@ theorem Sum.isPreconnected_iff [TopologicalSpace β] {s : Set (Sum α β)} :
 /-- The connected component of a point is the maximal connected set
 that contains this point. -/
 def connectedComponent (x : α) : Set α :=
-  ⋃₀ { s : Set α | IsPreconnected s ∧ x ∈ s }
+  ⋃₀ {s : Set α | IsPreconnected s ∧ x ∈ s}
 #align connected_component connectedComponent
 -/
 
@@ -1278,8 +1278,8 @@ theorem preimage_connectedComponent_connected [TopologicalSpace β] {f : α → 
   -- To do this we decompose connected_component t into T₁ and T₂
   -- we will show that connected_component t is a subset of either and hence
   -- (f ⁻¹' connected_component t) is a subset of u or v
-  let T₁ := { t' ∈ connectedComponent t | f ⁻¹' {t'} ⊆ u }
-  let T₂ := { t' ∈ connectedComponent t | f ⁻¹' {t'} ⊆ v }
+  let T₁ := {t' ∈ connectedComponent t | f ⁻¹' {t'} ⊆ u}
+  let T₂ := {t' ∈ connectedComponent t | f ⁻¹' {t'} ⊆ v}
   have fiber_decomp : ∀ t' ∈ connectedComponent t, f ⁻¹' {t'} ⊆ u ∨ f ⁻¹' {t'} ⊆ v :=
     by
     intro t' ht'
@@ -1730,7 +1730,7 @@ alias isTotallyDisconnected_of_isTotallySeparated ← IsTotallySeparated.isTotal
 #align is_totally_separated.is_totally_disconnected IsTotallySeparated.isTotallyDisconnected
 
 #print TotallySeparatedSpace /-
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`isTotallySeparated_univ] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`isTotallySeparated_univ] [] -/
 /-- A space is totally separated if any two points can be separated by two disjoint open sets
 covering the whole space. -/
 class TotallySeparatedSpace (α : Type u) [TopologicalSpace α] : Prop where

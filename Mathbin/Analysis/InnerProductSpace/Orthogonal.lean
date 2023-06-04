@@ -49,7 +49,7 @@ variable (K : Submodule 𝕜 E)
 /-- The subspace of vectors orthogonal to a given subspace. -/
 def orthogonal : Submodule 𝕜 E
     where
-  carrier := { v | ∀ u ∈ K, ⟪u, v⟫ = 0 }
+  carrier := {v | ∀ u ∈ K, ⟪u, v⟫ = 0}
   zero_mem' _ _ := inner_zero_right _
   add_mem' x y hx hy u hu := by rw [inner_add_right, hx u hu, hy u hu, add_zero]
   smul_mem' c x hx u hu := by rw [inner_smul_right, hx u hu, MulZeroClass.mul_zero]

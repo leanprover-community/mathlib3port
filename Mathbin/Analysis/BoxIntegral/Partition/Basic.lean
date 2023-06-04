@@ -210,9 +210,9 @@ theorem bot_boxes : (⊥ : Prepartition I).boxes = ∅ :=
 /-- An auxiliary lemma used to prove that the same point can't belong to more than
 `2 ^ fintype.card ι` closed boxes of a prepartition. -/
 theorem injOn_setOf_mem_Icc_setOf_lower_eq (x : ι → ℝ) :
-    InjOn (fun J : Box ι => { i | J.lower i = x i }) { J | J ∈ π ∧ x ∈ J.Icc } :=
+    InjOn (fun J : Box ι => {i | J.lower i = x i}) {J | J ∈ π ∧ x ∈ J.Icc} :=
   by
-  rintro J₁ ⟨h₁, hx₁⟩ J₂ ⟨h₂, hx₂⟩ (H : { i | J₁.lower i = x i } = { i | J₂.lower i = x i })
+  rintro J₁ ⟨h₁, hx₁⟩ J₂ ⟨h₂, hx₂⟩ (H : {i | J₁.lower i = x i} = {i | J₂.lower i = x i})
   suffices ∀ i, (Ioc (J₁.lower i) (J₁.upper i) ∩ Ioc (J₂.lower i) (J₂.upper i)).Nonempty
     by
     choose y hy₁ hy₂
@@ -236,7 +236,7 @@ theorem card_filter_mem_Icc_le [Fintype ι] (x : ι → ℝ) :
   by
   rw [← Fintype.card_set]
   refine'
-    Finset.card_le_card_of_inj_on (fun J : box ι => { i | J.lower i = x i })
+    Finset.card_le_card_of_inj_on (fun J : box ι => {i | J.lower i = x i})
       (fun _ _ => Finset.mem_univ _) _
   simpa only [Finset.mem_filter] using π.inj_on_set_of_mem_Icc_set_of_lower_eq x
 #align box_integral.prepartition.card_filter_mem_Icc_le BoxIntegral.Prepartition.card_filter_mem_Icc_le
@@ -435,7 +435,7 @@ theorem biUnionIndex_le (πi : ∀ J, Prepartition J) (J : Box ι) : π.biUnionI
 
 #print BoxIntegral.Prepartition.mem_biUnionIndex /-
 theorem mem_biUnionIndex (hJ : J ∈ π.biUnion πi) : J ∈ πi (π.biUnionIndex πi J) := by
-  convert(π.mem_bUnion.1 hJ).choose_spec.snd <;> exact dif_pos hJ
+  convert (π.mem_bUnion.1 hJ).choose_spec.snd <;> exact dif_pos hJ
 #align box_integral.prepartition.mem_bUnion_index BoxIntegral.Prepartition.mem_biUnionIndex
 -/
 
@@ -715,7 +715,7 @@ theorem iUnion_filter_not (π : Prepartition I) (p : Box ι → Prop) :
     (π.filterₓ fun J => ¬p J).iUnion = π.iUnion \ (π.filterₓ p).iUnion :=
   by
   simp only [prepartition.Union]
-  convert(@Set.biUnion_diff_biUnion_eq _ (box ι) π.boxes (π.filter p).boxes coe _).symm
+  convert (@Set.biUnion_diff_biUnion_eq _ (box ι) π.boxes (π.filter p).boxes coe _).symm
   · ext (J x); simp (config := { contextual := true })
   · convert π.pairwise_disjoint; simp
 #align box_integral.prepartition.Union_filter_not BoxIntegral.Prepartition.iUnion_filter_not

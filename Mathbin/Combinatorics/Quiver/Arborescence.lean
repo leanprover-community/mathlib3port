@@ -127,7 +127,7 @@ theorem shortest_path_spec {a : V} (p : Path r a) : (shortestPath r a).length �
 #print Quiver.geodesicSubtree /-
 /-- A subquiver which by construction is an arborescence. -/
 def geodesicSubtree : WideSubquiver V := fun a b =>
-  { e | ∃ p : Path r a, shortestPath r b = p.cons e }
+  {e | ∃ p : Path r a, shortestPath r b = p.cons e}
 #align quiver.geodesic_subtree Quiver.geodesicSubtree
 -/
 

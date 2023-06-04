@@ -323,7 +323,7 @@ variable (G₁ G₂ : Type _) [TopologicalSpace G₂] [T2Space G₂]
 
 @[to_additive]
 theorem isClosed_setOf_map_inv [Inv G₁] [Inv G₂] [ContinuousInv G₂] :
-    IsClosed { f : G₁ → G₂ | ∀ x, f x⁻¹ = (f x)⁻¹ } :=
+    IsClosed {f : G₁ → G₂ | ∀ x, f x⁻¹ = (f x)⁻¹} :=
   by
   simp only [set_of_forall]
   refine' isClosed_iInter fun i => isClosed_eq (continuous_apply _) (continuous_apply _).inv
@@ -896,7 +896,7 @@ theorem map_mul_right_nhds_one (x : G) : map (fun y => y * x) (𝓝 1) = 𝓝 x 
 
 @[to_additive]
 theorem Filter.HasBasis.nhds_of_one {ι : Sort _} {p : ι → Prop} {s : ι → Set G}
-    (hb : HasBasis (𝓝 1 : Filter G) p s) (x : G) : HasBasis (𝓝 x) p fun i => { y | y / x ∈ s i } :=
+    (hb : HasBasis (𝓝 1 : Filter G) p s) (x : G) : HasBasis (𝓝 x) p fun i => {y | y / x ∈ s i} :=
   by
   rw [← nhds_translation_mul_inv]
   simp_rw [div_eq_mul_inv]
@@ -1043,7 +1043,7 @@ instance topologicalGroup_quotient [N.Normal] : TopologicalGroup (G ⧸ N)
       · exact continuous_quot_mk.prod_map continuous_quot_mk
       · exact (surjective_quot_mk _).Prod_map (surjective_quot_mk _)
     exact (QuotientMap.continuous_iff Quot).2 cont
-  continuous_inv := by convert(@continuous_inv G _ _ _).quotient_map' _
+  continuous_inv := by convert (@continuous_inv G _ _ _).quotient_map' _
 #align topological_group_quotient topologicalGroup_quotient
 #align topological_add_group_quotient topologicalAddGroup_quotient
 -/
@@ -1476,7 +1476,7 @@ theorem IsOpen.closure_div (ht : IsOpen t) (s : Set α) : closure s / t = s / t 
 end TopologicalGroup
 
 #print AddGroupWithZeroNhd /-
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`z] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`z] [] -/
 /-- additive group with a neighbourhood around 0.
 Only used to construct a topology and uniform space.
 
@@ -1795,7 +1795,7 @@ variable [Group G] [TopologicalSpace G] [ContinuousMul G] {Γ : Subgroup G}
 @[to_additive]
 instance QuotientGroup.continuousConstSMul : ContinuousConstSMul G (G ⧸ Γ)
     where continuous_const_smul g := by
-    convert((@continuous_const _ _ _ _ g).mul continuous_id).quotient_map' _
+    convert ((@continuous_const _ _ _ _ g).mul continuous_id).quotient_map' _
 #align quotient_group.has_continuous_const_smul QuotientGroup.continuousConstSMul
 #align quotient_add_group.has_continuous_const_vadd QuotientAddGroup.continuousConstVAdd
 
@@ -2088,7 +2088,7 @@ topology such that `f` is continuous and `β` is a topological group. -/
 @[to_additive
       "Given `f : α → β` and a topology on `α`, the coinduced additive group topology on `β`\nis the finest topology such that `f` is continuous and `β` is a topological additive group."]
 def coinduced {α β : Type _} [t : TopologicalSpace α] [Group β] (f : α → β) : GroupTopology β :=
-  sInf { b : GroupTopology β | TopologicalSpace.coinduced f t ≤ b.toTopologicalSpace }
+  sInf {b : GroupTopology β | TopologicalSpace.coinduced f t ≤ b.toTopologicalSpace}
 #align group_topology.coinduced GroupTopology.coinduced
 #align add_group_topology.coinduced AddGroupTopology.coinduced
 -/

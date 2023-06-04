@@ -54,7 +54,8 @@ theorem tendsto_sum_pi_div_four :
   let u := fun k : ℕ => (k : NNReal) ^ (-1 / (2 * (k : ℝ) + 1))
   have H : tendsto (fun k : ℕ => (1 : ℝ) - u k + u k ^ (2 * (k : ℝ) + 1)) at_top (𝓝 0) :=
     by
-    convert(((tendsto_rpow_div_mul_add (-1) 2 1 two_ne_zero.symm).neg.const_add 1).add
+    convert
+      (((tendsto_rpow_div_mul_add (-1) 2 1 two_ne_zero.symm).neg.const_add 1).add
             tendsto_inv_atTop_zero).comp
         tendsto_nat_cast_atTop_atTop
     · ext k
@@ -96,7 +97,8 @@ theorem tendsto_sum_pi_div_four :
     have has_deriv_at_b : ∀ i ∈ Finset.range k, HasDerivAt (b i) ((-x ^ 2) ^ i) x :=
       by
       intro i hi
-      convert HasDerivAt.const_mul ((-1 : ℝ) ^ i / (2 * i + 1))
+      convert
+        HasDerivAt.const_mul ((-1 : ℝ) ^ i / (2 * i + 1))
           (@HasDerivAt.pow _ _ _ _ _ (2 * i + 1) (hasDerivAt_id x))
       · ext y
         simp only [b, id.def]
@@ -106,7 +108,7 @@ theorem tendsto_sum_pi_div_four :
         rw [← mul_assoc, @div_mul_cancel _ _ (2 * (i : ℝ) + 1) _ (by norm_cast; linarith),
           pow_mul x 2 i, ← mul_pow (-1) (x ^ 2) i]
         ring_nf
-    convert(has_deriv_at_arctan x).sub (HasDerivAt.sum has_deriv_at_b)
+    convert (has_deriv_at_arctan x).sub (HasDerivAt.sum has_deriv_at_b)
     have g_sum :=
       @geom_sum_eq _ _ (-x ^ 2) ((neg_nonpos.mpr (sq_nonneg x)).trans_lt zero_lt_one).Ne k
     simp only [f'] at g_sum ⊢

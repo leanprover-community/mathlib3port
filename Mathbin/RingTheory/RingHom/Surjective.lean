@@ -42,13 +42,13 @@ theorem surjective_stableUnderBaseChange : StableUnderBaseChange surjective :=
   by
   refine' stable_under_base_change.mk _ surjective_respects_iso _
   classical
-    introv h x
-    skip
-    induction' x using TensorProduct.induction_on with x y x y ex ey
-    · exact ⟨0, map_zero _⟩
-    · obtain ⟨y, rfl⟩ := h y; use y • x; dsimp
-      rw [TensorProduct.smul_tmul, Algebra.algebraMap_eq_smul_one]
-    · obtain ⟨⟨x, rfl⟩, ⟨y, rfl⟩⟩ := ex, ey; exact ⟨x + y, map_add _ x y⟩
+  introv h x
+  skip
+  induction' x using TensorProduct.induction_on with x y x y ex ey
+  · exact ⟨0, map_zero _⟩
+  · obtain ⟨y, rfl⟩ := h y; use y • x; dsimp
+    rw [TensorProduct.smul_tmul, Algebra.algebraMap_eq_smul_one]
+  · obtain ⟨⟨x, rfl⟩, ⟨y, rfl⟩⟩ := ex, ey; exact ⟨x + y, map_add _ x y⟩
 #align ring_hom.surjective_stable_under_base_change RingHom.surjective_stableUnderBaseChange
 
 open scoped BigOperators

@@ -40,8 +40,8 @@ variable {Ω E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpa
 
 /-- If `m₁, m₂` are independent σ-algebras and `f` is `m₁`-measurable, then `𝔼[f | m₂] = 𝔼[f]`
 almost everywhere. -/
-theorem condexp_indepCat_eq (hle₁ : m₁ ≤ m) (hle₂ : m₂ ≤ m) [SigmaFinite (μ.trim hle₂)]
-    (hf : strongly_measurable[m₁] f) (hindp : IndepCat m₁ m₂ μ) : μ[f|m₂] =ᵐ[μ] fun x => μ[f] :=
+theorem condexp_indep_eq (hle₁ : m₁ ≤ m) (hle₂ : m₂ ≤ m) [SigmaFinite (μ.trim hle₂)]
+    (hf : strongly_measurable[m₁] f) (hindp : Indep m₁ m₂ μ) : μ[f|m₂] =ᵐ[μ] fun x => μ[f] :=
   by
   by_cases hfint : integrable f μ
   swap; · rw [condexp_undef hfint, integral_undef hfint]; rfl
@@ -82,9 +82,9 @@ theorem condexp_indepCat_eq (hle₁ : m₁ ≤ m) (hle₂ : m₂ ≤ m) [SigmaFi
   · intro u v huv huint hueq
     rwa [← integral_congr_ae huv, ←
       (set_integral_congr_ae (hle₂ _ hms) _ : (∫ x in s, u x ∂μ) = ∫ x in s, v x ∂μ)]
-    filter_upwards [huv]with x hx _ using hx
+    filter_upwards [huv] with x hx _ using hx
   · exact ⟨f, hf, eventually_eq.rfl⟩
-#align measure_theory.condexp_indep_eq MeasureTheory.condexp_indepCat_eq
+#align measure_theory.condexp_indep_eq MeasureTheory.condexp_indep_eq
 
 end MeasureTheory
 

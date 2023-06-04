@@ -679,7 +679,7 @@ theorem continuousOn_prod_of_continuousOn_lipschitz_on [PseudoEMetricSpace α] [
   have εK : 0 < ε / 2 / K := ENNReal.div_pos_iff.2 ⟨ε0.ne', ENNReal.coe_ne_top⟩
   have A : s ∩ EMetric.ball x (ε / 2 / K) ∈ 𝓝[s] x :=
     inter_mem_nhdsWithin _ (EMetric.ball_mem_nhds _ εK)
-  have B : { b : β | b ∈ t ∧ edist (f (x, b)) (f (x, y)) < ε / 2 } ∈ 𝓝[t] y :=
+  have B : {b : β | b ∈ t ∧ edist (f (x, b)) (f (x, y)) < ε / 2} ∈ 𝓝[t] y :=
     inter_mem self_mem_nhdsWithin (ha x hx y hy (EMetric.ball_mem_nhds _ ε0))
   filter_upwards [nhdsWithin_prod A B]
   rintro ⟨a, b⟩

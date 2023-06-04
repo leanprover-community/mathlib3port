@@ -4,11 +4,10 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Abhimanyu Pallavi Sudhir, Jean Lo, Calle Sönne
 
 ! This file was ported from Lean 3 source module analysis.special_functions.exp_deriv
-! leanprover-community/mathlib commit 2c1d8ca2812b64f88992a5294ea3dba144755cd1
+! leanprover-community/mathlib commit 6a5c85000ab93fe5dcfdf620676f614ba8e18c26
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
-import Mathbin.Analysis.Calculus.Inverse
 import Mathbin.Analysis.Complex.RealDeriv
 
 /-!
@@ -75,16 +74,12 @@ theorem contDiff_exp : ∀ {n}, ContDiff 𝕜 n exp :=
 #align complex.cont_diff_exp Complex.contDiff_exp
 
 theorem hasStrictDerivAt_exp (x : ℂ) : HasStrictDerivAt exp (exp x) x :=
-  contDiff_exp.ContDiffAt.has_strict_deriv_at' (hasDerivAt_exp x) le_rfl
+  contDiff_exp.ContDiffAt.hasStrictDerivAt' (hasDerivAt_exp x) le_rfl
 #align complex.has_strict_deriv_at_exp Complex.hasStrictDerivAt_exp
 
 theorem hasStrictFDerivAt_exp_real (x : ℂ) : HasStrictFDerivAt exp (exp x • (1 : ℂ →L[ℝ] ℂ)) x :=
   (hasStrictDerivAt_exp x).complexToReal_fderiv
 #align complex.has_strict_fderiv_at_exp_real Complex.hasStrictFDerivAt_exp_real
-
-theorem isOpenMap_exp : IsOpenMap exp :=
-  open_map_of_strict_deriv hasStrictDerivAt_exp exp_ne_zero
-#align complex.is_open_map_exp Complex.isOpenMap_exp
 
 end Complex
 

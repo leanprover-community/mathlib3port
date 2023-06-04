@@ -72,10 +72,10 @@ namespace Set
 
 
 instance : InfSet (Set α) :=
-  ⟨fun s => { a | ∀ t ∈ s, a ∈ t }⟩
+  ⟨fun s => {a | ∀ t ∈ s, a ∈ t}⟩
 
 instance : SupSet (Set α) :=
-  ⟨fun s => { a | ∃ t ∈ s, a ∈ t }⟩
+  ⟨fun s => {a | ∃ t ∈ s, a ∈ t}⟩
 
 #print Set.sInter /-
 /-- Intersection of a set of sets. -/
@@ -156,7 +156,7 @@ theorem mem_iUnion {x : α} {s : ι → Set α} : (x ∈ ⋃ i, s i) ↔ ∃ i, 
 
 @[simp]
 theorem mem_iInter {x : α} {s : ι → Set α} : (x ∈ ⋂ i, s i) ↔ ∀ i, x ∈ s i :=
-  ⟨fun (h : ∀ a ∈ { a : Set α | ∃ i, s i = a }, x ∈ a) a => h (s a) ⟨a, rfl⟩,
+  ⟨fun (h : ∀ a ∈ {a : Set α | ∃ i, s i = a}, x ∈ a) a => h (s a) ⟨a, rfl⟩,
     fun h t ⟨a, (Eq : s a = t)⟩ => Eq ▸ h a⟩
 #align set.mem_Inter Set.mem_iInter
 
@@ -212,7 +212,7 @@ protected theorem image_preimage : GaloisConnection (image f) (preimage f) := fu
 #print Set.kernImage /-
 /-- `kern_image f s` is the set of `y` such that `f ⁻¹ y ⊆ s`. -/
 def kernImage (f : α → β) (s : Set α) : Set β :=
-  { y | ∀ ⦃x⦄, f x = y → x ∈ s }
+  {y | ∀ ⦃x⦄, f x = y → x ∈ s}
 #align set.kern_image Set.kernImage
 -/
 
@@ -308,11 +308,11 @@ theorem nonempty_of_union_eq_top_of_nonempty {ι : Type _} (t : Set ι) (s : ι 
   exact ⟨x, m⟩
 #align set.nonempty_of_union_eq_top_of_nonempty Set.nonempty_of_union_eq_top_of_nonempty
 
-theorem setOf_exists (p : ι → β → Prop) : { x | ∃ i, p i x } = ⋃ i, { x | p i x } :=
+theorem setOf_exists (p : ι → β → Prop) : {x | ∃ i, p i x} = ⋃ i, {x | p i x} :=
   ext fun i => mem_iUnion.symm
 #align set.set_of_exists Set.setOf_exists
 
-theorem setOf_forall (p : ι → β → Prop) : { x | ∀ i, p i x } = ⋂ i, { x | p i x } :=
+theorem setOf_forall (p : ι → β → Prop) : {x | ∀ i, p i x} = ⋂ i, {x | p i x} :=
   ext fun i => mem_iInter.symm
 #align set.set_of_forall Set.setOf_forall
 
@@ -464,12 +464,12 @@ theorem iInter_subset_iInter₂ (κ : ι → Sort _) (s : ι → Set α) :
   iInter_mono fun i => subset_iInter fun h => Subset.rfl
 #align set.Inter_subset_Inter₂ Set.iInter_subset_iInter₂
 
-theorem iUnion_setOf (P : ι → α → Prop) : (⋃ i, { x : α | P i x }) = { x : α | ∃ i, P i x } := by
-  ext; exact mem_Union
+theorem iUnion_setOf (P : ι → α → Prop) : (⋃ i, {x : α | P i x}) = {x : α | ∃ i, P i x} := by ext;
+  exact mem_Union
 #align set.Union_set_of Set.iUnion_setOf
 
-theorem iInter_setOf (P : ι → α → Prop) : (⋂ i, { x : α | P i x }) = { x : α | ∀ i, P i x } := by
-  ext; exact mem_Inter
+theorem iInter_setOf (P : ι → α → Prop) : (⋂ i, {x : α | P i x}) = {x : α | ∀ i, P i x} := by ext;
+  exact mem_Inter
 #align set.Inter_set_of Set.iInter_setOf
 
 theorem iUnion_congr_of_surjective {f : ι → Set α} {g : ι₂ → Set α} (h : ι → ι₂) (h1 : Surjective h)
@@ -689,14 +689,14 @@ theorem image_projection_prod {ι : Type _} {α : ι → Type _} {v : ∀ i : ι
     (hv : (pi univ v).Nonempty) (i : ι) :
     ((fun x : ∀ i : ι, α i => x i) '' ⋂ k, (fun x : ∀ j : ι, α j => x k) ⁻¹' v k) = v i := by
   classical
-    apply subset.antisymm
-    · simp [Inter_subset]
-    · intro y y_in
-      simp only [mem_image, mem_Inter, mem_preimage]
-      rcases hv with ⟨z, hz⟩
-      refine' ⟨Function.update z i y, _, update_same i y z⟩
-      rw [@forall_update_iff ι α _ z i y fun i t => t ∈ v i]
-      exact ⟨y_in, fun j hj => by simpa using hz j⟩
+  apply subset.antisymm
+  · simp [Inter_subset]
+  · intro y y_in
+    simp only [mem_image, mem_Inter, mem_preimage]
+    rcases hv with ⟨z, hz⟩
+    refine' ⟨Function.update z i y, _, update_same i y z⟩
+    rw [@forall_update_iff ι α _ z i y fun i t => t ∈ v i]
+    exact ⟨y_in, fun j hj => by simpa using hz j⟩
 #align set.image_projection_prod Set.image_projection_prod
 
 /-! ### Unions and intersections indexed by `Prop` -/
@@ -2083,7 +2083,7 @@ section Seq
 /-- Given a set `s` of functions `α → β` and `t : set α`, `seq s t` is the union of `f '' t` over
 all `f ∈ s`. -/
 def seq (s : Set (α → β)) (t : Set α) : Set β :=
-  { b | ∃ f ∈ s, ∃ a ∈ t, (f : α → β) a = b }
+  {b | ∃ f ∈ s, ∃ a ∈ t, (f : α → β) a = b}
 #align set.seq Set.seq
 -/
 

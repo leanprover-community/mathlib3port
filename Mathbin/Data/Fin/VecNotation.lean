@@ -73,7 +73,7 @@ def vecCons {n : ℕ} (h : α) (t : Fin n → α) : Fin n.succ → α :=
 -/
 
 -- mathport name: «expr![ ,]»
-notation3"!["(l", "* => foldr (h t => vecCons h t) vecEmpty)"]" => l
+notation3"!["(l ", "* => foldr (h t => vecCons h t) vecEmpty)"]" => l
 
 #print Matrix.vecHead /-
 /-- `vec_head v` gives the first entry of the vector `v` -/

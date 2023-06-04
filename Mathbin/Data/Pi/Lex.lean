@@ -138,12 +138,12 @@ open Function
 
 theorem toLex_monotone : Monotone (@toLex (∀ i, β i)) := fun a b h =>
   or_iff_not_imp_left.2 fun hne =>
-    let ⟨i, hi, hl⟩ := IsWellFounded.wf.has_min { i | a i ≠ b i } (Function.ne_iff.1 hne)
+    let ⟨i, hi, hl⟩ := IsWellFounded.wf.has_min {i | a i ≠ b i} (Function.ne_iff.1 hne)
     ⟨i, fun j hj => by contrapose! hl; exact ⟨j, hl, hj⟩, (h i).lt_of_ne hi⟩
 #align pi.to_lex_monotone Pi.toLex_monotone
 
 theorem toLex_strictMono : StrictMono (@toLex (∀ i, β i)) := fun a b h =>
-  let ⟨i, hi, hl⟩ := IsWellFounded.wf.has_min { i | a i ≠ b i } (Function.ne_iff.1 h.Ne)
+  let ⟨i, hi, hl⟩ := IsWellFounded.wf.has_min {i | a i ≠ b i} (Function.ne_iff.1 h.Ne)
   ⟨i, fun j hj => by contrapose! hl; exact ⟨j, hl, hj⟩, (h.le i).lt_of_ne hi⟩
 #align pi.to_lex_strict_mono Pi.toLex_strictMono
 
@@ -205,17 +205,16 @@ instance [Preorder ι] [∀ i, LT (β i)] [∀ i, DenselyOrdered (β i)] :
     rintro _ _ ⟨i, h, hi⟩
     obtain ⟨a, ha₁, ha₂⟩ := exists_between hi
     classical
-      refine' ⟨a₂.update _ a, ⟨i, fun j hj => _, _⟩, i, fun j hj => _, _⟩
-      rw [h j hj]
-      iterate 2 · rw [a₂.update_noteq hj.ne a]; · rwa [a₂.update_same i a]⟩
+    refine' ⟨a₂.update _ a, ⟨i, fun j hj => _, _⟩, i, fun j hj => _, _⟩
+    rw [h j hj]
+    iterate 2 · rw [a₂.update_noteq hj.ne a]; · rwa [a₂.update_same i a]⟩
 
 theorem Lex.noMaxOrder' [Preorder ι] [∀ i, LT (β i)] (i : ι) [NoMaxOrder (β i)] :
     NoMaxOrder (Lex (∀ i, β i)) :=
   ⟨fun a => by
     classical
-      obtain ⟨b, hb⟩ := exists_gt (a i)
-      exact
-        ⟨a.update i b, i, fun j hj => (a.update_noteq hj.Ne b).symm, by rwa [a.update_same i b]⟩⟩
+    obtain ⟨b, hb⟩ := exists_gt (a i)
+    exact ⟨a.update i b, i, fun j hj => (a.update_noteq hj.Ne b).symm, by rwa [a.update_same i b]⟩⟩
 #align pi.lex.no_max_order' Pi.Lex.noMaxOrder'
 
 instance [LinearOrder ι] [IsWellOrder ι (· < ·)] [Nonempty ι] [∀ i, PartialOrder (β i)]

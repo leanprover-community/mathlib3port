@@ -305,10 +305,10 @@ the integral closure of `A` in `L` is a Dedekind domain.
 See also the lemma `integral_closure.is_dedekind_domain` where you can choose
 the field of fractions yourself.
 -/
-instance integralClosure.isDedekindDomainFractionRing [IsDedekindDomain A] :
+instance integralClosure.isDedekindDomain_fractionRing [IsDedekindDomain A] :
     IsDedekindDomain (integralClosure A L) :=
   integralClosure.isDedekindDomain A (FractionRing A) L
-#align integral_closure.is_dedekind_domain_fraction_ring integralClosure.isDedekindDomainFractionRing
+#align integral_closure.is_dedekind_domain_fraction_ring integralClosure.isDedekindDomain_fractionRing
 
 end IsIntegralClosure
 

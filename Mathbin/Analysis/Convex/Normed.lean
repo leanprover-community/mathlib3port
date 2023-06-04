@@ -167,7 +167,7 @@ theorem dist_add_dist_of_mem_segment {x y z : E} (h : y ∈ [x -[ℝ] z]) :
 
 #print isConnected_setOf_sameRay /-
 /-- The set of vectors in the same ray as `x` is connected. -/
-theorem isConnected_setOf_sameRay (x : E) : IsConnected { y | SameRay ℝ x y } :=
+theorem isConnected_setOf_sameRay (x : E) : IsConnected {y | SameRay ℝ x y} :=
   by
   by_cases hx : x = 0; · simpa [hx] using isConnected_univ
   simp_rw [← exists_nonneg_left_iff_sameRay hx]
@@ -177,7 +177,7 @@ theorem isConnected_setOf_sameRay (x : E) : IsConnected { y | SameRay ℝ x y } 
 
 /-- The set of nonzero vectors in the same ray as the nonzero vector `x` is connected. -/
 theorem isConnected_setOf_sameRay_and_ne_zero {x : E} (hx : x ≠ 0) :
-    IsConnected { y | SameRay ℝ x y ∧ y ≠ 0 } :=
+    IsConnected {y | SameRay ℝ x y ∧ y ≠ 0} :=
   by
   simp_rw [← exists_pos_left_iff_sameRay_and_ne_zero hx]
   exact is_connected_Ioi.image _ (continuous_id.smul continuous_const).ContinuousOn

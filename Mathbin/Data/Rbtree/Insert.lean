@@ -212,10 +212,10 @@ theorem isSearchable_ins [DecidableRel lt] {t x} [IsStrictWeakOrder α lt] :
 theorem isSearchable_mkInsertResult {c t} :
     IsSearchable lt t none none → IsSearchable lt (mkInsertResult c t) none none := by
   classical
-    cases c <;> cases t <;> simp [mk_insert_result]
-    · intro h;
-      run_tac
-        is_searchable_tactic
+  cases c <;> cases t <;> simp [mk_insert_result]
+  · intro h;
+    run_tac
+      is_searchable_tactic
 #align rbnode.is_searchable_mk_insert_result Rbnode.isSearchable_mkInsertResult
 
 theorem isSearchable_insert [DecidableRel lt] {t x} [IsStrictWeakOrder α lt] :
@@ -234,7 +234,7 @@ namespace Rbnode
 
 section MembershipLemmas
 
-parameter {α : Type u}(lt : α → α → Prop)
+parameter {α : Type u} (lt : α → α → Prop)
 
 attribute [local simp] mem balance1_node balance2_node
 
@@ -246,7 +246,7 @@ theorem mem_balance1Node_of_mem_left {x s} (v) (t : Rbnode α) :
   by
   cases s <;> simp [false_imp_iff]
   all_goals
-    apply balance.cases s_lchild s_val s_rchild <;> intros <;> simp at * <;> cases_type*or.1 <;>
+    apply balance.cases s_lchild s_val s_rchild <;> intros <;> simp at * <;> cases_type* or.1 <;>
       simp [*]
 #align rbnode.mem_balance1_node_of_mem_left Rbnode.mem_balance1Node_of_mem_left
 
@@ -255,7 +255,7 @@ theorem mem_balance2Node_of_mem_left {x s} (v) (t : Rbnode α) :
   by
   cases s <;> simp [false_imp_iff]
   all_goals
-    apply balance.cases s_lchild s_val s_rchild <;> intros <;> simp at * <;> cases_type*or.1 <;>
+    apply balance.cases s_lchild s_val s_rchild <;> intros <;> simp at * <;> cases_type* or.1 <;>
       simp [*]
 #align rbnode.mem_balance2_node_of_mem_left Rbnode.mem_balance2Node_of_mem_left
 
@@ -314,7 +314,8 @@ theorem mem_ins_of_incomp [DecidableRel lt] (t : Rbnode α) {x y : α} :
 theorem mem_ins_of_mem [DecidableRel lt] [IsStrictWeakOrder α lt] {t : Rbnode α} (z : α) :
     ∀ {x} (h : x ∈ t), x ∈ t.ins lt z :=
   by
-  apply ins.induction lt t z <;> intros <;> simp_all [ins] <;> try contradiction <;> cases_type*or.1
+  apply ins.induction lt t z <;> intros <;> simp_all [ins] <;> try contradiction <;>
+    cases_type* or.1
   any_goals intros; simp [h]; done
   any_goals intros; simp [ih h]; done
   · have := incomp_trans_of lt h ⟨hc.2, hc.1⟩; simp [this]
@@ -352,7 +353,7 @@ theorem of_mem_balance1Node {x s v t} :
   cases s <;> simp
   · intros; simp [*]
   all_goals
-    apply balance.cases s_lchild s_val s_rchild <;> intros <;> simp_all <;> cases_type*or.1 <;>
+    apply balance.cases s_lchild s_val s_rchild <;> intros <;> simp_all <;> cases_type* or.1 <;>
       simp [*]
 #align rbnode.of_mem_balance1_node Rbnode.of_mem_balance1Node
 
@@ -362,7 +363,7 @@ theorem of_mem_balance2Node {x s v t} :
   cases s <;> simp
   · intros; simp [*]
   all_goals
-    apply balance.cases s_lchild s_val s_rchild <;> intros <;> simp_all <;> cases_type*or.1 <;>
+    apply balance.cases s_lchild s_val s_rchild <;> intros <;> simp_all <;> cases_type* or.1 <;>
       simp [*]
 #align rbnode.of_mem_balance2_node Rbnode.of_mem_balance2Node
 
@@ -370,14 +371,14 @@ theorem equiv_or_mem_of_mem_ins [DecidableRel lt] {t : Rbnode α} {x z} :
     ∀ h : x ∈ t.ins lt z, x ≈[lt]z ∨ (x ∈ t) :=
   by
   apply ins.induction lt t z <;> intros <;> simp_all [ins, StrictWeakOrder.Equiv] <;>
-    cases_type*or.1
+    cases_type* or.1
   any_goals intros; simp [h]
   any_goals intros; have ih := ih h; cases ih <;> simp [*]; done
-  · have h' := of_mem_balance1_node lt h; cases_type*or.1
-    have := ih h'; cases_type*or.1
+  · have h' := of_mem_balance1_node lt h; cases_type* or.1
+    have := ih h'; cases_type* or.1
     all_goals simp [h, *]
-  · have h' := of_mem_balance2_node lt h; cases_type*or.1
-    have := ih h'; cases_type*or.1
+  · have h' := of_mem_balance2_node lt h; cases_type* or.1
+    have := ih h'; cases_type* or.1
     all_goals simp [h, *]
 #align rbnode.equiv_or_mem_of_mem_ins Rbnode.equiv_or_mem_of_mem_ins
 
@@ -393,7 +394,7 @@ theorem memExact_balance1Node_of_memExact {x s} (v) (t : Rbnode α) :
   by
   cases s <;> simp [false_imp_iff]
   all_goals
-    apply balance.cases s_lchild s_val s_rchild <;> intros <;> simp_all <;> cases_type*or.1 <;>
+    apply balance.cases s_lchild s_val s_rchild <;> intros <;> simp_all <;> cases_type* or.1 <;>
       simp [*]
 #align rbnode.mem_exact_balance1_node_of_mem_exact Rbnode.memExact_balance1Node_of_memExact
 
@@ -402,7 +403,7 @@ theorem memExact_balance2Node_of_memExact {x s} (v) (t : Rbnode α) :
   by
   cases s <;> simp [false_imp_iff]
   all_goals
-    apply balance.cases s_lchild s_val s_rchild <;> intros <;> simp_all <;> cases_type*or.1 <;>
+    apply balance.cases s_lchild s_val s_rchild <;> intros <;> simp_all <;> cases_type* or.1 <;>
       simp [*]
 #align rbnode.mem_exact_balance2_node_of_mem_exact Rbnode.memExact_balance2Node_of_memExact
 

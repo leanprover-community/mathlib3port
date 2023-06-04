@@ -234,7 +234,7 @@ protected theorem disjointed {f : ℕ → Set α} (h : ∀ i, NullMeasurableSet 
 
 #print MeasureTheory.NullMeasurableSet.const /-
 @[simp]
-protected theorem const (p : Prop) : NullMeasurableSet { a : α | p } μ :=
+protected theorem const (p : Prop) : NullMeasurableSet {a : α | p} μ :=
   MeasurableSet.const p
 #align measure_theory.null_measurable_set.const MeasureTheory.NullMeasurableSet.const
 -/
@@ -397,7 +397,7 @@ theorem nullMeasurableSet_insert {a : α} {s : Set α} :
 -/
 
 #print MeasureTheory.nullMeasurableSet_eq /-
-theorem nullMeasurableSet_eq {a : α} : NullMeasurableSet { x | x = a } μ :=
+theorem nullMeasurableSet_eq {a : α} : NullMeasurableSet {x | x = a} μ :=
   nullMeasurableSet_singleton a
 #align measure_theory.null_measurable_set_eq MeasureTheory.nullMeasurableSet_eq
 -/

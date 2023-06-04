@@ -132,7 +132,7 @@ theorem tendsto_integral_exp_inner_smul_cocompact_of_continuous_compact_support 
       ⟨T, fun b hb v hv => hT v (hv.symm ▸ hb)⟩
   obtain ⟨R, hR_pos, hR_bd⟩ : ∃ R : ℝ, 0 < R ∧ ∀ x : V, R ≤ ‖x‖ → f x = 0
   exact hf2.exists_pos_le_norm
-  let A := { v : V | ‖v‖ ≤ R + 1 }
+  let A := {v : V | ‖v‖ ≤ R + 1}
   have mA : MeasurableSet A :=
     by
     suffices A = Metric.closedBall (0 : V) (R + 1) by rw [this];
@@ -265,7 +265,7 @@ theorem Real.zero_at_infty_fourierIntegral (f : ℝ → E) : Tendsto (𝓕 f) (c
 /-- Riemann-Lebesgue lemma for functions on a finite-dimensional inner-product space, formulated
 via dual space. **Do not use** -- it is only a stepping stone to
 `tendsto_integral_exp_smul_cocompact` where the inner-product-space structure isn't required. -/
-theorem tendsto_integral_exp_smul_cocompact_of_inner_product (μ : Measure V) [μ.AddHaarMeasure] :
+theorem tendsto_integral_exp_smul_cocompact_of_inner_product (μ : Measure V) [μ.IsAddHaarMeasure] :
     Tendsto (fun w : V →L[ℝ] ℝ => ∫ v, e[-w v] • f v ∂μ) (cocompact (V →L[ℝ] ℝ)) (𝓝 0) :=
   by
   obtain ⟨C, C_ne_zero, C_ne_top, hC⟩ := μ.is_add_haar_measure_eq_smul_is_add_haar_measure volume
@@ -296,7 +296,7 @@ variable (f) [AddCommGroup V] [TopologicalSpace V] [TopologicalAddGroup V] [T2Sp
 
 /-- Riemann-Lebesgue lemma for functions on a finite-dimensional real vector space, formulated via
 dual space. -/
-theorem tendsto_integral_exp_smul_cocompact (μ : Measure V) [μ.AddHaarMeasure] :
+theorem tendsto_integral_exp_smul_cocompact (μ : Measure V) [μ.IsAddHaarMeasure] :
     Tendsto (fun w : V →L[ℝ] ℝ => ∫ v, e[-w v] • f v ∂μ) (cocompact (V →L[ℝ] ℝ)) (𝓝 0) :=
   by
   -- We have already proved the result for inner-product spaces, formulated in a way which doesn't
@@ -330,8 +330,9 @@ theorem tendsto_integral_exp_smul_cocompact (μ : Measure V) [μ.AddHaarMeasure]
     { Adualₗ with
       continuous_toFun := Adualₗ.to_linear_map.continuous_of_finite_dimensional
       continuous_invFun := Adualₗ.symm.to_linear_map.continuous_of_finite_dimensional }
-  have : (μ.map Aₘ).AddHaarMeasure := measure.map_continuous_linear_equiv.is_add_haar_measure _ A
-  convert(tendsto_integral_exp_smul_cocompact_of_inner_product (f ∘ A.symm) (μ.map Aₘ)).comp
+  have : (μ.map Aₘ).IsAddHaarMeasure := measure.map_continuous_linear_equiv.is_add_haar_measure _ A
+  convert
+    (tendsto_integral_exp_smul_cocompact_of_inner_product (f ∘ A.symm) (μ.map Aₘ)).comp
       Adual.to_homeomorph.to_cocompact_map.cocompact_tendsto'
   ext1 w
   rw [Function.comp_apply, integral_map_equiv]
@@ -342,7 +343,7 @@ theorem tendsto_integral_exp_smul_cocompact (μ : Measure V) [μ.AddHaarMeasure]
 /-- The Riemann-Lebesgue lemma, formulated in terms of `vector_fourier.fourier_integral` (with the
 pairing in the definition of `fourier_integral` taken to be the canonical pairing between `V` and
 its dual space). -/
-theorem Real.zero_at_infty_vector_fourierIntegral (μ : Measure V) [μ.AddHaarMeasure] :
+theorem Real.zero_at_infty_vector_fourierIntegral (μ : Measure V) [μ.IsAddHaarMeasure] :
     Tendsto (VectorFourier.fourierIntegral e μ (topDualPairing ℝ V).flip f) (cocompact (V →L[ℝ] ℝ))
       (𝓝 0) :=
   tendsto_integral_exp_smul_cocompact f μ

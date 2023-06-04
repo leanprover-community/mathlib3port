@@ -43,7 +43,7 @@ variable {α β γ δ : Type _} {s s₁ s₂ : Set α} {t t₁ t₂ : Set β} {a
 #print Set.prod /-
 /-- The cartesian product `prod s t` is the set of `(a, b)` such that `a ∈ s` and `b ∈ t`. -/
 def prod (s : Set α) (t : Set β) : Set (α × β) :=
-  { p | p.1 ∈ s ∧ p.2 ∈ t }
+  {p | p.1 ∈ s ∧ p.2 ∈ t}
 #align set.prod Set.prod
 -/
 
@@ -577,7 +577,7 @@ variable {α : Type _} {s t : Set α}
 #print Set.diagonal /-
 /-- `diagonal α` is the set of `α × α` consisting of all pairs of the form `(a, a)`. -/
 def diagonal (α : Type _) : Set (α × α) :=
-  { p | p.1 = p.2 }
+  {p | p.1 = p.2}
 #align set.diagonal Set.diagonal
 -/
 
@@ -661,7 +661,7 @@ variable {α : Type _} {s t : Set α} {x : α × α} {a : α}
 #print Set.offDiag /-
 /-- The off-diagonal of a set `s` is the set of pairs `(a, b)` with `a, b ∈ s` and `a ≠ b`. -/
 def offDiag (s : Set α) : Set (α × α) :=
-  { x | x.1 ∈ s ∧ x.2 ∈ s ∧ x.1 ≠ x.2 }
+  {x | x.1 ∈ s ∧ x.2 ∈ s ∧ x.1 ≠ x.2}
 #align set.off_diag Set.offDiag
 -/
 
@@ -706,7 +706,7 @@ theorem offDiag_subset_prod : s.offDiag ⊆ s ×ˢ s := fun x hx => ⟨hx.1, hx.
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Set.offDiag_eq_sep_prod /-
-theorem offDiag_eq_sep_prod : s.offDiag = { x ∈ s ×ˢ s | x.1 ≠ x.2 } :=
+theorem offDiag_eq_sep_prod : s.offDiag = {x ∈ s ×ˢ s | x.1 ≠ x.2} :=
   ext fun _ => and_assoc.symm
 #align set.off_diag_eq_sep_prod Set.offDiag_eq_sep_prod
 -/
@@ -783,7 +783,7 @@ variable {ι : Type _} {α β : ι → Type _} {s s₁ s₂ : Set ι} {t t₁ t�
 is the set of dependent functions `f : Πa, π a` such that `f a` belongs to `t a`
 whenever `a ∈ s`. -/
 def pi (s : Set ι) (t : ∀ i, Set (α i)) : Set (∀ i, α i) :=
-  { f | ∀ i ∈ s, f i ∈ t i }
+  {f | ∀ i ∈ s, f i ∈ t i}
 #align set.pi Set.pi
 -/
 
@@ -884,7 +884,7 @@ theorem singleton_pi (i : ι) (t : ∀ i, Set (α i)) : pi {i} t = eval i ⁻¹'
 -/
 
 #print Set.singleton_pi' /-
-theorem singleton_pi' (i : ι) (t : ∀ i, Set (α i)) : pi {i} t = { x | x i ∈ t i } :=
+theorem singleton_pi' (i : ι) (t : ∀ i, Set (α i)) : pi {i} t = {x | x i ∈ t i} :=
   singleton_pi i t
 #align set.singleton_pi' Set.singleton_pi'
 -/
@@ -899,8 +899,7 @@ theorem preimage_pi (s : Set ι) (t : ∀ i, Set (β i)) (f : ∀ i, α i → β
 #align set.preimage_pi Set.preimage_pi
 
 theorem pi_if {p : ι → Prop} [h : DecidablePred p] (s : Set ι) (t₁ t₂ : ∀ i, Set (α i)) :
-    (pi s fun i => if p i then t₁ i else t₂ i) =
-      pi ({ i ∈ s | p i }) t₁ ∩ pi ({ i ∈ s | ¬p i }) t₂ :=
+    (pi s fun i => if p i then t₁ i else t₂ i) = pi ({i ∈ s | p i}) t₁ ∩ pi ({i ∈ s | ¬p i}) t₂ :=
   by
   ext f
   refine' ⟨fun h => _, _⟩
@@ -925,19 +924,19 @@ theorem pi_update_of_not_mem [DecidableEq ι] (hi : i ∉ s) (f : ∀ j, α j) (
 
 theorem pi_update_of_mem [DecidableEq ι] (hi : i ∈ s) (f : ∀ j, α j) (a : α i)
     (t : ∀ j, α j → Set (β j)) :
-    (s.pi fun j => t j (update f i a j)) = { x | x i ∈ t i a } ∩ (s \ {i}).pi fun j => t j (f j) :=
+    (s.pi fun j => t j (update f i a j)) = {x | x i ∈ t i a} ∩ (s \ {i}).pi fun j => t j (f j) :=
   calc
     (s.pi fun j => t j (update f i a j)) = ({i} ∪ s \ {i}).pi fun j => t j (update f i a j) := by
       rw [union_diff_self, union_eq_self_of_subset_left (singleton_subset_iff.2 hi)]
-    _ = { x | x i ∈ t i a } ∩ (s \ {i}).pi fun j => t j (f j) := by
+    _ = {x | x i ∈ t i a} ∩ (s \ {i}).pi fun j => t j (f j) := by
       rw [union_pi, singleton_pi', update_same, pi_update_of_not_mem]; simp
     
 #align set.pi_update_of_mem Set.pi_update_of_mem
 
 theorem univ_pi_update [DecidableEq ι] {β : ∀ i, Type _} (i : ι) (f : ∀ j, α j) (a : α i)
     (t : ∀ j, α j → Set (β j)) :
-    (pi univ fun j => t j (update f i a j)) = { x | x i ∈ t i a } ∩ pi ({i}ᶜ) fun j => t j (f j) :=
-  by rw [compl_eq_univ_diff, ← pi_update_of_mem (mem_univ _)]
+    (pi univ fun j => t j (update f i a j)) = {x | x i ∈ t i a} ∩ pi ({i}ᶜ) fun j => t j (f j) := by
+  rw [compl_eq_univ_diff, ← pi_update_of_mem (mem_univ _)]
 #align set.univ_pi_update Set.univ_pi_update
 
 theorem univ_pi_update_univ [DecidableEq ι] (i : ι) (s : Set (α i)) :
@@ -957,9 +956,9 @@ theorem eval_image_univ_pi_subset : eval i '' pi univ t ⊆ t i :=
 
 theorem subset_eval_image_pi (ht : (s.pi t).Nonempty) (i : ι) : t i ⊆ eval i '' s.pi t := by
   classical
-    obtain ⟨f, hf⟩ := ht
-    refine' fun y hy => ⟨update f i y, fun j hj => _, update_same _ _ _⟩
-    obtain rfl | hji := eq_or_ne j i <;> simp [*, hf _ hj]
+  obtain ⟨f, hf⟩ := ht
+  refine' fun y hy => ⟨update f i y, fun j hj => _, update_same _ _ _⟩
+  obtain rfl | hji := eq_or_ne j i <;> simp [*, hf _ hj]
 #align set.subset_eval_image_pi Set.subset_eval_image_pi
 
 theorem eval_image_pi (hs : i ∈ s) (ht : (s.pi t).Nonempty) : eval i '' s.pi t = t i :=

@@ -125,7 +125,8 @@ abbrev toToΓSpecMapBasicOpen :
 /-- `r` is a unit as a section on the basic open defined by `r`. -/
 theorem isUnit_res_toΓSpecMapBasicOpen : IsUnit (X.toToΓSpecMapBasicOpen r r) :=
   by
-  convert(X.presheaf.map <| (eq_to_hom <| X.to_Γ_Spec_map_basic_open_eq r).op).isUnit_map
+  convert
+    (X.presheaf.map <| (eq_to_hom <| X.to_Γ_Spec_map_basic_open_eq r).op).isUnit_map
       (X.to_RingedSpace.is_unit_res_basic_open r)
   rw [← comp_apply]
   erw [← functor.map_comp]

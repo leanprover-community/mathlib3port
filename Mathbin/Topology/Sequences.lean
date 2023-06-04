@@ -84,7 +84,7 @@ variable [TopologicalSpace X] [TopologicalSpace Y]
 which arise as limit of sequences in `s`. Note that the sequential closure of a set is not
 guaranteed to be sequentially closed. -/
 def seqClosure (s : Set X) : Set X :=
-  { a | ∃ x : ℕ → X, (∀ n : ℕ, x n ∈ s) ∧ Tendsto x atTop (𝓝 a) }
+  {a | ∃ x : ℕ → X, (∀ n : ℕ, x n ∈ s) ∧ Tendsto x atTop (𝓝 a)}
 #align seq_closure seqClosure
 -/
 

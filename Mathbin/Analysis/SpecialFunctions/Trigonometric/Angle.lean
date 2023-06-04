@@ -30,13 +30,13 @@ noncomputable section
 
 namespace Real
 
-/- ./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler has_coe_t[has_coe_t] exprℝ() -/
+/- ./././Mathport/Syntax/Translate/Command.lean:43:9: unsupported derive handler has_coe_t[has_coe_t] exprℝ() -/
 #print Real.Angle /-
 /-- The type of angles -/
 def Angle : Type :=
   AddCircle (2 * π)
 deriving NormedAddCommGroup, Inhabited,
-  «./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler has_coe_t[has_coe_t] exprℝ()»
+  «./././Mathport/Syntax/Translate/Command.lean:43:9: unsupported derive handler has_coe_t[has_coe_t] exprℝ()»
 #align real.angle Real.Angle
 -/
 
@@ -714,12 +714,12 @@ theorem toReal_coe_eq_self_sub_two_mul_int_mul_pi_iff {θ : ℝ} {k : ℤ} :
 
 theorem toReal_coe_eq_self_sub_two_pi_iff {θ : ℝ} :
     (θ : Angle).toReal = θ - 2 * π ↔ θ ∈ Set.Ioc π (3 * π) := by
-  convert@to_real_coe_eq_self_sub_two_mul_int_mul_pi_iff θ 1 <;> norm_num
+  convert @to_real_coe_eq_self_sub_two_mul_int_mul_pi_iff θ 1 <;> norm_num
 #align real.angle.to_real_coe_eq_self_sub_two_pi_iff Real.Angle.toReal_coe_eq_self_sub_two_pi_iff
 
 theorem toReal_coe_eq_self_add_two_pi_iff {θ : ℝ} :
     (θ : Angle).toReal = θ + 2 * π ↔ θ ∈ Set.Ioc (-3 * π) (-π) := by
-  convert@to_real_coe_eq_self_sub_two_mul_int_mul_pi_iff θ (-1) <;> norm_num
+  convert @to_real_coe_eq_self_sub_two_mul_int_mul_pi_iff θ (-1) <;> norm_num
 #align real.angle.to_real_coe_eq_self_add_two_pi_iff Real.Angle.toReal_coe_eq_self_add_two_pi_iff
 
 theorem two_nsmul_toReal_eq_two_mul_sub_two_pi {θ : Angle} :

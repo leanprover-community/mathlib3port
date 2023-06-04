@@ -84,7 +84,7 @@ theorem lintegral_comp_eq_lintegral_meas_le_mul_of_measurable (μ : Measure α) 
     (f_nn : 0 ≤ f) (f_mble : Measurable f) (g_intble : ∀ t > 0, IntervalIntegrable g volume 0 t)
     (g_mble : Measurable g) (g_nn : ∀ t > 0, 0 ≤ g t) :
     (∫⁻ ω, ENNReal.ofReal (∫ t in 0 ..f ω, g t) ∂μ) =
-      ∫⁻ t in Ioi 0, μ { a : α | t ≤ f a } * ENNReal.ofReal (g t) :=
+      ∫⁻ t in Ioi 0, μ {a : α | t ≤ f a} * ENNReal.ofReal (g t) :=
   by
   have g_intble' : ∀ t : ℝ, 0 ≤ t → IntervalIntegrable g volume 0 t :=
     by
@@ -97,8 +97,8 @@ theorem lintegral_comp_eq_lintegral_meas_le_mul_of_measurable (μ : Measure α) 
     by
     intro ω
     have g_ae_nn : 0 ≤ᵐ[volume.restrict (Ioc 0 (f ω))] g := by
-      filter_upwards [self_mem_ae_restrict
-          (measurableSet_Ioc : MeasurableSet (Ioc 0 (f ω)))]with x hx using g_nn x hx.1
+      filter_upwards [self_mem_ae_restrict (measurableSet_Ioc : MeasurableSet (Ioc 0 (f ω)))] with x
+        hx using g_nn x hx.1
     rw [← of_real_integral_eq_lintegral_of_real (g_intble' (f ω) (f_nn ω)).1 g_ae_nn]
     congr
     exact intervalIntegral.integral_of_le (f_nn ω)
@@ -133,30 +133,30 @@ theorem lintegral_comp_eq_lintegral_meas_le_mul_of_measurable (μ : Measure α) 
       by_cases s ∈ Ioi (0 : ℝ) <;> · simp [h]
     simp_rw [show
         (fun a => (Ici s).indicator (fun t : ℝ => (1 : ℝ≥0∞)) (f a)) = fun a =>
-          { a : α | s ≤ f a }.indicator (fun _ => 1) a
+          {a : α | s ≤ f a}.indicator (fun _ => 1) a
         by funext a; by_cases s ≤ f a <;> simp [h]]
     rw [lintegral_indicator]
     swap; · exact f_mble measurableSet_Ici
     rw [lintegral_one, measure.restrict_apply MeasurableSet.univ, univ_inter, indicator_mul_left,
       mul_assoc,
       show
-        (Ioi 0).indicator (fun _x : ℝ => (1 : ℝ≥0∞)) s * μ { a : α | s ≤ f a } =
-          (Ioi 0).indicator (fun _x : ℝ => 1 * μ { a : α | s ≤ f a }) s
+        (Ioi 0).indicator (fun _x : ℝ => (1 : ℝ≥0∞)) s * μ {a : α | s ≤ f a} =
+          (Ioi 0).indicator (fun _x : ℝ => 1 * μ {a : α | s ≤ f a}) s
         by by_cases 0 < s <;> simp [h]]
     simp_rw [mul_comm _ (ENNReal.ofReal _), one_mul]
     rfl
   have aux₂ :
     (Function.uncurry fun (x : α) (y : ℝ) =>
         (Ioc 0 (f x)).indicator (fun t : ℝ => ENNReal.ofReal (g t)) y) =
-      { p : α × ℝ | p.2 ∈ Ioc 0 (f p.1) }.indicator fun p => ENNReal.ofReal (g p.2) :=
+      {p : α × ℝ | p.2 ∈ Ioc 0 (f p.1)}.indicator fun p => ENNReal.ofReal (g p.2) :=
     by
     funext p
     cases p
     rw [Function.uncurry_apply_pair]
     by_cases p_snd ∈ Ioc 0 (f p_fst)
-    · have h' : (p_fst, p_snd) ∈ { p : α × ℝ | p.snd ∈ Ioc 0 (f p.fst) } := h
+    · have h' : (p_fst, p_snd) ∈ {p : α × ℝ | p.snd ∈ Ioc 0 (f p.fst)} := h
       rw [Set.indicator_of_mem h', Set.indicator_of_mem h]
-    · have h' : (p_fst, p_snd) ∉ { p : α × ℝ | p.snd ∈ Ioc 0 (f p.fst) } := h
+    · have h' : (p_fst, p_snd) ∉ {p : α × ℝ | p.snd ∈ Ioc 0 (f p.fst)} := h
       rw [Set.indicator_of_not_mem h', Set.indicator_of_not_mem h]
   rw [aux₂]
   have mble := measurableSet_region_between_oc measurable_zero f_mble MeasurableSet.univ
@@ -180,7 +180,7 @@ theorem lintegral_comp_eq_lintegral_meas_le_mul (μ : Measure α) [SigmaFinite �
     (f_mble : Measurable f) (g_intble : ∀ t > 0, IntervalIntegrable g volume 0 t)
     (g_nn : ∀ᵐ t ∂volume.restrict (Ioi 0), 0 ≤ g t) :
     (∫⁻ ω, ENNReal.ofReal (∫ t in 0 ..f ω, g t) ∂μ) =
-      ∫⁻ t in Ioi 0, μ { a : α | t ≤ f a } * ENNReal.ofReal (g t) :=
+      ∫⁻ t in Ioi 0, μ {a : α | t ≤ f a} * ENNReal.ofReal (g t) :=
   by
   have ex_G : ∃ G : ℝ → ℝ, Measurable G ∧ 0 ≤ G ∧ g =ᵐ[volume.restrict (Ioi 0)] G :=
     by
@@ -195,11 +195,11 @@ theorem lintegral_comp_eq_lintegral_meas_le_mul (μ : Measure α) [SigmaFinite �
     rw [Ioc_eq_empty_of_le t_pos.lt.le]
     exact integrable_on_empty
   have eq₁ :
-    (∫⁻ t in Ioi 0, μ { a : α | t ≤ f a } * ENNReal.ofReal (g t)) =
-      ∫⁻ t in Ioi 0, μ { a : α | t ≤ f a } * ENNReal.ofReal (G t) :=
+    (∫⁻ t in Ioi 0, μ {a : α | t ≤ f a} * ENNReal.ofReal (g t)) =
+      ∫⁻ t in Ioi 0, μ {a : α | t ≤ f a} * ENNReal.ofReal (G t) :=
     by
     apply lintegral_congr_ae
-    filter_upwards [g_eq_G]with a ha
+    filter_upwards [g_eq_G] with a ha
     rw [ha]
   have eq₂ : ∀ ω, (∫ t in 0 ..f ω, g t) = ∫ t in 0 ..f ω, G t :=
     by
@@ -223,7 +223,7 @@ See `lintegral_eq_lintegral_meas_lt` for a version with sets of the form `{ω | 
 instead. -/
 theorem lintegral_eq_lintegral_meas_le (μ : Measure α) [SigmaFinite μ] (f_nn : 0 ≤ f)
     (f_mble : Measurable f) :
-    (∫⁻ ω, ENNReal.ofReal (f ω) ∂μ) = ∫⁻ t in Ioi 0, μ { a : α | t ≤ f a } :=
+    (∫⁻ ω, ENNReal.ofReal (f ω) ∂μ) = ∫⁻ t in Ioi 0, μ {a : α | t ≤ f a} :=
   by
   set cst := fun t : ℝ => (1 : ℝ) with def_cst
   have cst_intble : ∀ t > 0, IntervalIntegrable cst volume 0 t := fun _ _ =>
@@ -247,7 +247,7 @@ instead. -/
 theorem lintegral_rpow_eq_lintegral_meas_le_mul (μ : Measure α) [SigmaFinite μ] (f_nn : 0 ≤ f)
     (f_mble : Measurable f) {p : ℝ} (p_pos : 0 < p) :
     (∫⁻ ω, ENNReal.ofReal (f ω ^ p) ∂μ) =
-      ENNReal.ofReal p * ∫⁻ t in Ioi 0, μ { a : α | t ≤ f a } * ENNReal.ofReal (t ^ (p - 1)) :=
+      ENNReal.ofReal p * ∫⁻ t in Ioi 0, μ {a : α | t ≤ f a} * ENNReal.ofReal (t ^ (p - 1)) :=
   by
   have one_lt_p : -1 < p - 1 := by linarith
   have obs : ∀ x : ℝ, (∫ t : ℝ in 0 ..x, t ^ (p - 1)) = x ^ p / p :=
@@ -288,20 +288,20 @@ namespace Measure
 
 theorem meas_le_ne_meas_lt_subset_meas_pos {R : Type _} [LinearOrder R] [MeasurableSpace R]
     [MeasurableSingletonClass R] {g : α → R} (g_mble : Measurable g) {t : R}
-    (ht : μ { a : α | t ≤ g a } ≠ μ { a : α | t < g a }) : 0 < μ { a : α | g a = t } :=
+    (ht : μ {a : α | t ≤ g a} ≠ μ {a : α | t < g a}) : 0 < μ {a : α | g a = t} :=
   by
-  have uni : { a : α | t ≤ g a } = { a : α | t < g a } ∪ { a : α | t = g a } :=
+  have uni : {a : α | t ≤ g a} = {a : α | t < g a} ∪ {a : α | t = g a} :=
     by
     ext a
     simp only [mem_set_of_eq, mem_union]
     apply le_iff_lt_or_eq
-  rw [show { a : α | t = g a } = { a : α | g a = t } by simp_rw [eq_comm]] at uni 
-  have disj : { a : α | t < g a } ∩ { a : α | g a = t } = ∅ :=
+  rw [show {a : α | t = g a} = {a : α | g a = t} by simp_rw [eq_comm]] at uni 
+  have disj : {a : α | t < g a} ∩ {a : α | g a = t} = ∅ :=
     by
     ext a
     simp only [mem_inter_iff, mem_set_of_eq, mem_empty_iff_false, iff_false_iff, not_and]
     exact ne_of_gt
-  have μ_add : μ { a : α | t ≤ g a } = μ { a : α | t < g a } + μ { a : α | g a = t } := by
+  have μ_add : μ {a : α | t ≤ g a} = μ {a : α | t < g a} + μ {a : α | g a = t} := by
     rw [uni,
       measure_union (disjoint_iff_inter_eq_empty.mpr disj)
         (g_mble (finite.measurable_set (finite_singleton t)))]
@@ -313,14 +313,14 @@ theorem meas_le_ne_meas_lt_subset_meas_pos {R : Type _} [LinearOrder R] [Measura
 
 theorem countable_meas_le_ne_meas_lt [SigmaFinite μ] {R : Type _} [LinearOrder R]
     [MeasurableSpace R] [MeasurableSingletonClass R] {g : α → R} (g_mble : Measurable g) :
-    { t : R | μ { a : α | t ≤ g a } ≠ μ { a : α | t < g a } }.Countable :=
+    {t : R | μ {a : α | t ≤ g a} ≠ μ {a : α | t < g a}}.Countable :=
   Countable.mono (show _ from fun t ht => meas_le_ne_meas_lt_subset_meas_pos μ g_mble ht)
     (Measure.countable_meas_level_set_pos g_mble)
 #align measure.countable_meas_le_ne_meas_lt Measure.countable_meas_le_ne_meas_lt
 
 theorem meas_le_ae_eq_meas_lt [SigmaFinite μ] {R : Type _} [LinearOrder R] [MeasurableSpace R]
     [MeasurableSingletonClass R] (ν : Measure R) [NoAtoms ν] {g : α → R} (g_mble : Measurable g) :
-    (fun t => μ { a : α | t ≤ g a }) =ᵐ[ν] fun t => μ { a : α | t < g a } :=
+    (fun t => μ {a : α | t ≤ g a}) =ᵐ[ν] fun t => μ {a : α | t < g a} :=
   Set.Countable.measure_zero (Measure.countable_meas_le_ne_meas_lt μ g_mble) _
 #align measure.meas_le_ae_eq_meas_lt Measure.meas_le_ae_eq_meas_lt
 
@@ -344,11 +344,11 @@ theorem lintegral_comp_eq_lintegral_meas_lt_mul (μ : Measure α) [SigmaFinite �
     (f_mble : Measurable f) (g_intble : ∀ t > 0, IntervalIntegrable g volume 0 t)
     (g_nn : ∀ᵐ t ∂volume.restrict (Ioi 0), 0 ≤ g t) :
     (∫⁻ ω, ENNReal.ofReal (∫ t in 0 ..f ω, g t) ∂μ) =
-      ∫⁻ t in Ioi 0, μ { a : α | t < f a } * ENNReal.ofReal (g t) :=
+      ∫⁻ t in Ioi 0, μ {a : α | t < f a} * ENNReal.ofReal (g t) :=
   by
   rw [lintegral_comp_eq_lintegral_meas_le_mul μ f_nn f_mble g_intble g_nn]
   apply lintegral_congr_ae
-  filter_upwards [Measure.meas_le_ae_eq_meas_lt μ (volume.restrict (Ioi 0)) f_mble]with t ht
+  filter_upwards [Measure.meas_le_ae_eq_meas_lt μ (volume.restrict (Ioi 0)) f_mble] with t ht
   rw [ht]
 #align lintegral_comp_eq_lintegral_meas_lt_mul lintegral_comp_eq_lintegral_meas_lt_mul
 
@@ -361,11 +361,11 @@ See `lintegral_eq_lintegral_meas_le` for a version with sets of the form `{ω | 
 instead. -/
 theorem lintegral_eq_lintegral_meas_lt (μ : Measure α) [SigmaFinite μ] (f_nn : 0 ≤ f)
     (f_mble : Measurable f) :
-    (∫⁻ ω, ENNReal.ofReal (f ω) ∂μ) = ∫⁻ t in Ioi 0, μ { a : α | t < f a } :=
+    (∫⁻ ω, ENNReal.ofReal (f ω) ∂μ) = ∫⁻ t in Ioi 0, μ {a : α | t < f a} :=
   by
   rw [lintegral_eq_lintegral_meas_le μ f_nn f_mble]
   apply lintegral_congr_ae
-  filter_upwards [Measure.meas_le_ae_eq_meas_lt μ (volume.restrict (Ioi 0)) f_mble]with t ht
+  filter_upwards [Measure.meas_le_ae_eq_meas_lt μ (volume.restrict (Ioi 0)) f_mble] with t ht
   rw [ht]
 #align lintegral_eq_lintegral_meas_lt lintegral_eq_lintegral_meas_lt
 
@@ -379,12 +379,12 @@ instead. -/
 theorem lintegral_rpow_eq_lintegral_meas_lt_mul (μ : Measure α) [SigmaFinite μ] (f_nn : 0 ≤ f)
     (f_mble : Measurable f) {p : ℝ} (p_pos : 0 < p) :
     (∫⁻ ω, ENNReal.ofReal (f ω ^ p) ∂μ) =
-      ENNReal.ofReal p * ∫⁻ t in Ioi 0, μ { a : α | t < f a } * ENNReal.ofReal (t ^ (p - 1)) :=
+      ENNReal.ofReal p * ∫⁻ t in Ioi 0, μ {a : α | t < f a} * ENNReal.ofReal (t ^ (p - 1)) :=
   by
   rw [lintegral_rpow_eq_lintegral_meas_le_mul μ f_nn f_mble p_pos]
   apply congr_arg fun z => ENNReal.ofReal p * z
   apply lintegral_congr_ae
-  filter_upwards [Measure.meas_le_ae_eq_meas_lt μ (volume.restrict (Ioi 0)) f_mble]with t ht
+  filter_upwards [Measure.meas_le_ae_eq_meas_lt μ (volume.restrict (Ioi 0)) f_mble] with t ht
   rw [ht]
 #align lintegral_rpow_eq_lintegral_meas_lt_mul lintegral_rpow_eq_lintegral_meas_lt_mul
 

@@ -266,7 +266,7 @@ choice of open sets from the basis of `F` such that they intersect only finitely
 of `f`.  -/
 structure LocallyFinite.Realizer [TopologicalSpace α] (F : Realizer α) (f : β → Set α) where
   bas : ∀ a, { s // a ∈ F.f s }
-  sets : ∀ x : α, Fintype { i | (f i ∩ F.f (bas x)).Nonempty }
+  sets : ∀ x : α, Fintype {i | (f i ∩ F.f (bas x)).Nonempty}
 #align locally_finite.realizer LocallyFinite.Realizer
 -/
 

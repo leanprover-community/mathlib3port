@@ -561,7 +561,7 @@ theorem eq_num_div_den (f : HomogeneousLocalization 𝒜 x) :
     f.val = Localization.mk f.num ⟨f.den, f.denom_mem⟩ :=
   by
   have := Quotient.out_eq' f
-  apply_fun HomogeneousLocalization.val  at this 
+  apply_fun HomogeneousLocalization.val at this 
   rw [← this]
   unfold HomogeneousLocalization.val
   simp only [Quotient.liftOn'_mk'']

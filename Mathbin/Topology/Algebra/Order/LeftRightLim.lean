@@ -54,9 +54,9 @@ by using the order topology on `α`. If `a` is isolated to its left or the funct
 limit, we use `f a` instead to guarantee a good behavior in most cases. -/
 noncomputable irreducible_def Function.leftLim (f : α → β) (a : α) : β := by
   classical
-    haveI : Nonempty β := ⟨f a⟩
-    letI : TopologicalSpace α := Preorder.topology α
-    exact if 𝓝[<] a = ⊥ ∨ ¬∃ y, tendsto f (𝓝[<] a) (𝓝 y) then f a else limUnder (𝓝[<] a) f
+  haveI : Nonempty β := ⟨f a⟩
+  letI : TopologicalSpace α := Preorder.topology α
+  exact if 𝓝[<] a = ⊥ ∨ ¬∃ y, tendsto f (𝓝[<] a) (𝓝 y) then f a else limUnder (𝓝[<] a) f
 #align function.left_lim Function.leftLim
 -/
 
@@ -189,7 +189,7 @@ theorem tendsto_leftLim (x : α) : Tendsto f (𝓝[<] x) (𝓝 (leftLim f x)) :=
 theorem tendsto_leftLim_within (x : α) : Tendsto f (𝓝[<] x) (𝓝[≤] leftLim f x) :=
   by
   apply tendsto_nhdsWithin_of_tendsto_nhds_of_eventually_within f (hf.tendsto_left_lim x)
-  filter_upwards [self_mem_nhdsWithin]with y hy using hf.le_left_lim hy
+  filter_upwards [self_mem_nhdsWithin] with y hy using hf.le_left_lim hy
 #align monotone.tendsto_left_lim_within Monotone.tendsto_leftLim_within
 
 theorem tendsto_rightLim (x : α) : Tendsto f (𝓝[>] x) (𝓝 (rightLim f x)) :=
@@ -246,22 +246,22 @@ theorem continuousAt_iff_leftLim_eq_rightLim : ContinuousAt f x ↔ leftLim f x 
 is at most countable. Superseded by `countable_not_continuous_at` which gives the two-sided
 version. -/
 theorem countable_not_continuousWithinAt_Ioi [TopologicalSpace.SecondCountableTopology β] :
-    Set.Countable { x | ¬ContinuousWithinAt f (Ioi x) x } :=
+    Set.Countable {x | ¬ContinuousWithinAt f (Ioi x) x} :=
   by
   /- If `f` is not continuous on the right at `x`, there is an interval `(f x, z x)` which is not
     reached by `f`. This gives a family of disjoint open intervals in `β`. Such a family can only
     be countable as `β` is second-countable. -/
   nontriviality α
-  let s := { x | ¬ContinuousWithinAt f (Ioi x) x }
+  let s := {x | ¬ContinuousWithinAt f (Ioi x) x}
   have : ∀ x, x ∈ s → ∃ z, f x < z ∧ ∀ y, x < y → z ≤ f y :=
     by
     rintro x (hx : ¬ContinuousWithinAt f (Ioi x) x)
     contrapose! hx
     refine' tendsto_order.2 ⟨fun m hm => _, fun u hu => _⟩
-    · filter_upwards [self_mem_nhdsWithin]with y hy using hm.trans_le (hf (le_of_lt hy))
+    · filter_upwards [self_mem_nhdsWithin] with y hy using hm.trans_le (hf (le_of_lt hy))
     rcases hx u hu with ⟨v, xv, fvu⟩
     have : Ioo x v ∈ 𝓝[>] x := Ioo_mem_nhdsWithin_Ioi ⟨le_refl _, xv⟩
-    filter_upwards [this]with y hy
+    filter_upwards [this] with y hy
     apply (hf hy.2.le).trans_lt fvu
   -- choose `z x` such that `f` does not take the values in `(f x, z x)`.
   choose! z hz using this
@@ -298,7 +298,7 @@ theorem countable_not_continuousWithinAt_Ioi [TopologicalSpace.SecondCountableTo
 is at most countable. Superseded by `countable_not_continuous_at` which gives the two-sided
 version. -/
 theorem countable_not_continuousWithinAt_Iio [TopologicalSpace.SecondCountableTopology β] :
-    Set.Countable { x | ¬ContinuousWithinAt f (Iio x) x } :=
+    Set.Countable {x | ¬ContinuousWithinAt f (Iio x) x} :=
   hf.dual.countable_not_continuousWithinAt_Ioi
 #align monotone.countable_not_continuous_within_at_Iio Monotone.countable_not_continuousWithinAt_Iio
 -/
@@ -307,7 +307,7 @@ theorem countable_not_continuousWithinAt_Iio [TopologicalSpace.SecondCountableTo
 /-- In a second countable space, the set of points where a monotone function is not continuous
 is at most countable. -/
 theorem countable_not_continuousAt [TopologicalSpace.SecondCountableTopology β] :
-    Set.Countable { x | ¬ContinuousAt f x } :=
+    Set.Countable {x | ¬ContinuousAt f x} :=
   by
   apply
     (hf.countable_not_continuous_within_at_Ioi.union hf.countable_not_continuous_within_at_Iio).mono
@@ -405,7 +405,7 @@ theorem continuousAt_iff_leftLim_eq_rightLim : ContinuousAt f x ↔ leftLim f x 
 /-- In a second countable space, the set of points where an antitone function is not continuous
 is at most countable. -/
 theorem countable_not_continuousAt [TopologicalSpace.SecondCountableTopology β] :
-    Set.Countable { x | ¬ContinuousAt f x } :=
+    Set.Countable {x | ¬ContinuousAt f x} :=
   hf.dual_right.countable_not_continuousAt
 #align antitone.countable_not_continuous_at Antitone.countable_not_continuousAt
 -/

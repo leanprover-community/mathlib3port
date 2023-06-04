@@ -427,7 +427,7 @@ theorem countable_iff_lt_aleph_one {α : Type _} (s : Set α) : s.Countable ↔ 
 
 #print Cardinal.ord_card_unbounded /-
 /-- Ordinals that are cardinals are unbounded. -/
-theorem ord_card_unbounded : Unbounded (· < ·) { b : Ordinal | b.card.ord = b } :=
+theorem ord_card_unbounded : Unbounded (· < ·) {b : Ordinal | b.card.ord = b} :=
   unbounded_lt_iff.2 fun a => ⟨_, ⟨by dsimp; rw [card_ord], (lt_ord_succ_card a).le⟩⟩
 #align cardinal.ord_card_unbounded Cardinal.ord_card_unbounded
 -/
@@ -440,7 +440,7 @@ theorem eq_aleph'_of_eq_card_ord {o : Ordinal} (ho : o.card.ord = o) : ∃ a, (a
 
 #print Cardinal.ord_aleph'_eq_enum_card /-
 /-- `ord ∘ aleph'` enumerates the ordinals that are cardinals. -/
-theorem ord_aleph'_eq_enum_card : ord ∘ aleph' = enumOrd { b : Ordinal | b.card.ord = b } :=
+theorem ord_aleph'_eq_enum_card : ord ∘ aleph' = enumOrd {b : Ordinal | b.card.ord = b} :=
   by
   rw [← eq_enum_ord _ ord_card_unbounded, range_eq_iff]
   exact
@@ -451,7 +451,7 @@ theorem ord_aleph'_eq_enum_card : ord ∘ aleph' = enumOrd { b : Ordinal | b.car
 
 #print Cardinal.ord_card_unbounded' /-
 /-- Infinite ordinals that are cardinals are unbounded. -/
-theorem ord_card_unbounded' : Unbounded (· < ·) { b : Ordinal | b.card.ord = b ∧ ω ≤ b } :=
+theorem ord_card_unbounded' : Unbounded (· < ·) {b : Ordinal | b.card.ord = b ∧ ω ≤ b} :=
   (unbounded_lt_inter_le ω).2 ord_card_unbounded
 #align cardinal.ord_card_unbounded' Cardinal.ord_card_unbounded'
 -/
@@ -470,7 +470,7 @@ theorem eq_aleph_of_eq_card_ord {o : Ordinal} (ho : o.card.ord = o) (ho' : ω �
 
 #print Cardinal.ord_aleph_eq_enum_card /-
 /-- `ord ∘ aleph` enumerates the infinite ordinals that are cardinals. -/
-theorem ord_aleph_eq_enum_card : ord ∘ aleph = enumOrd { b : Ordinal | b.card.ord = b ∧ ω ≤ b } :=
+theorem ord_aleph_eq_enum_card : ord ∘ aleph = enumOrd {b : Ordinal | b.card.ord = b ∧ ω ≤ b} :=
   by
   rw [← eq_enum_ord _ ord_card_unbounded']
   use aleph_is_normal.strict_mono
@@ -625,13 +625,13 @@ theorem mul_eq_self {c : Cardinal} (h : ℵ₀ ≤ c) : c * c = c :=
   refine'
     lt_of_le_of_lt (_ : _ ≤ card (succ (typein (· < ·) (g p))) * card (succ (typein (· < ·) (g p))))
       _
-  · have : { q | s q p } ⊆ insert (g p) { x | x < g p } ×ˢ insert (g p) { x | x < g p } :=
+  · have : {q | s q p} ⊆ insert (g p) {x | x < g p} ×ˢ insert (g p) {x | x < g p} :=
       by
       intro q h
       simp only [s, embedding.coe_fn_mk, Order.Preimage, typein_lt_typein, Prod.lex_def,
         typein_inj] at h 
       exact max_le_iff.1 (le_iff_lt_or_eq.2 <| h.imp_right And.left)
-    suffices H : (insert (g p) { x | r x (g p) } : Set α) ≃ Sum { x | r x (g p) } PUnit
+    suffices H : (insert (g p) {x | r x (g p)} : Set α) ≃ Sum {x | r x (g p)} PUnit
     ·
       exact
         ⟨(Set.embeddingOfSubset _ _ this).trans
@@ -780,7 +780,7 @@ theorem mul_eq_left_iff {a b : Cardinal} : a * b = a ↔ max ℵ₀ b ≤ a ∧ 
     have hb : b ≠ 0 := by rintro rfl; apply h2a; rw [MulZeroClass.mul_zero] at h ; exact h.symm
     left; rw [← h, mul_lt_aleph_0_iff, lt_aleph_0, lt_aleph_0] at ha 
     rcases ha with (rfl | rfl | ⟨⟨n, rfl⟩, ⟨m, rfl⟩⟩); contradiction; contradiction
-    rw [← Ne] at h2a ; rw [← one_le_iff_ne_zero] at h2a hb ; norm_cast  at h2a hb h ⊢
+    rw [← Ne] at h2a ; rw [← one_le_iff_ne_zero] at h2a hb ; norm_cast at h2a hb h ⊢
     apply le_antisymm _ hb; rw [← not_lt]
     apply fun h2b => ne_of_gt _ h; conv_lhs => rw [← mul_one n]
     rwa [mul_lt_mul_left]; apply Nat.lt_of_succ_le h2a
@@ -870,7 +870,7 @@ theorem add_eq_left_iff {a b : Cardinal} : a + b = a ↔ max ℵ₀ b ≤ a ∨ 
     · left; use ha; rw [← not_lt]; apply fun hb => ne_of_gt _ h
       exact hb.trans_le (self_le_add_left b a)
     right; rw [← h, add_lt_aleph_0_iff, lt_aleph_0, lt_aleph_0] at ha 
-    rcases ha with ⟨⟨n, rfl⟩, ⟨m, rfl⟩⟩; norm_cast  at h ⊢
+    rcases ha with ⟨⟨n, rfl⟩, ⟨m, rfl⟩⟩; norm_cast at h ⊢
     rw [← add_right_inj, h, add_zero]
   · rintro (⟨h1, h2⟩ | h3)
     · rw [add_eq_max h1, max_eq_left h2]
@@ -906,7 +906,7 @@ protected theorem eq_of_add_eq_add_left {a b c : Cardinal} (h : a + b = a + c) (
       rw [← h]; apply add_lt_aleph_0 ha hb
     rw [lt_aleph_0] at *
     rcases ha with ⟨n, rfl⟩; rcases hb with ⟨m, rfl⟩; rcases hc with ⟨k, rfl⟩
-    norm_cast  at h ⊢; apply add_left_cancel h
+    norm_cast at h ⊢; apply add_left_cancel h
 #align cardinal.eq_of_add_eq_add_left Cardinal.eq_of_add_eq_add_left
 
 protected theorem eq_of_add_eq_add_right {a b c : Cardinal} (h : a + b = c + b) (hb : b < ℵ₀) :
@@ -1242,11 +1242,11 @@ theorem mk_compl_eq_mk_compl_finite_lift {α : Type u} {β : Type v} [Finite α]
   rcases lift_mk_eq.1 h1 with ⟨e⟩; letI : Fintype β := Fintype.ofEquiv α e
   replace h1 : Fintype.card α = Fintype.card β := (Fintype.ofEquiv_card _).symm
   classical
-    lift s to Finset α using s.to_finite
-    lift t to Finset β using t.to_finite
-    simp only [Finset.coe_sort_coe, mk_coe_finset, lift_nat_cast, Nat.cast_inj] at h2 
-    simp only [← Finset.coe_compl, Finset.coe_sort_coe, mk_coe_finset, Finset.card_compl,
-      lift_nat_cast, Nat.cast_inj, h1, h2]
+  lift s to Finset α using s.to_finite
+  lift t to Finset β using t.to_finite
+  simp only [Finset.coe_sort_coe, mk_coe_finset, lift_nat_cast, Nat.cast_inj] at h2 
+  simp only [← Finset.coe_compl, Finset.coe_sort_coe, mk_coe_finset, Finset.card_compl,
+    lift_nat_cast, Nat.cast_inj, h1, h2]
 #align cardinal.mk_compl_eq_mk_compl_finite_lift Cardinal.mk_compl_eq_mk_compl_finite_lift
 
 theorem mk_compl_eq_mk_compl_finite {α β : Type u} [Finite α] {s : Set α} {t : Set β}

@@ -61,7 +61,7 @@ variable (B : E →ₗ[𝕜] F →ₗ[𝕜] 𝕜)
 /-- The (absolute) polar of `s : set E` is given by the set of all `y : F` such that `‖B x y‖ ≤ 1`
 for all `x ∈ s`.-/
 def polar (s : Set E) : Set F :=
-  { y : F | ∀ x ∈ s, ‖B x y‖ ≤ 1 }
+  {y : F | ∀ x ∈ s, ‖B x y‖ ≤ 1}
 #align linear_map.polar LinearMap.polar
 -/
 
@@ -78,7 +78,7 @@ theorem zero_mem_polar (s : Set E) : (0 : F) ∈ B.polar s := fun _ _ => by
   simp only [map_zero, norm_zero, zero_le_one]
 #align linear_map.zero_mem_polar LinearMap.zero_mem_polar
 
-theorem polar_eq_iInter {s : Set E} : B.polar s = ⋂ x ∈ s, { y : F | ‖B x y‖ ≤ 1 } := by ext;
+theorem polar_eq_iInter {s : Set E} : B.polar s = ⋂ x ∈ s, {y : F | ‖B x y‖ ≤ 1} := by ext;
   simp only [polar_mem_iff, Set.mem_iInter, Set.mem_setOf_eq]
 #align linear_map.polar_eq_Inter LinearMap.polar_eq_iInter
 

@@ -49,17 +49,17 @@ open Set
 to a least upper bound for `{x | f x ≤ y}`. If `α` is a partial order, and `f : α → β` has
 a right adjoint, then this right adjoint is unique. -/
 def IsOrderRightAdjoint [Preorder α] [Preorder β] (f : α → β) (g : β → α) :=
-  ∀ y, IsLUB { x | f x ≤ y } (g y)
+  ∀ y, IsLUB {x | f x ≤ y} (g y)
 #align is_order_right_adjoint IsOrderRightAdjoint
 -/
 
 theorem isOrderRightAdjoint_sSup [CompleteLattice α] [Preorder β] (f : α → β) :
-    IsOrderRightAdjoint f fun y => sSup { x | f x ≤ y } := fun y => isLUB_sSup _
+    IsOrderRightAdjoint f fun y => sSup {x | f x ≤ y} := fun y => isLUB_sSup _
 #align is_order_right_adjoint_Sup isOrderRightAdjoint_sSup
 
 theorem isOrderRightAdjoint_csSup [ConditionallyCompleteLattice α] [Preorder β] (f : α → β)
-    (hne : ∀ y, ∃ x, f x ≤ y) (hbdd : ∀ y, BddAbove { x | f x ≤ y }) :
-    IsOrderRightAdjoint f fun y => sSup { x | f x ≤ y } := fun y => isLUB_csSup (hne y) (hbdd y)
+    (hne : ∀ y, ∃ x, f x ≤ y) (hbdd : ∀ y, BddAbove {x | f x ≤ y}) :
+    IsOrderRightAdjoint f fun y => sSup {x | f x ≤ y} := fun y => isLUB_csSup (hne y) (hbdd y)
 #align is_order_right_adjoint_cSup isOrderRightAdjoint_csSup
 
 namespace IsOrderRightAdjoint
@@ -82,7 +82,7 @@ theorem comp_orderIso [Preorder α] [Preorder β] [Preorder γ] {f : α → β} 
     (h : IsOrderRightAdjoint f g) (e : γ ≃o α) : IsOrderRightAdjoint (f ∘ e) (e.symm ∘ g) :=
   by
   intro y
-  change IsLUB (e ⁻¹' { x | f x ≤ y }) (e.symm (g y))
+  change IsLUB (e ⁻¹' {x | f x ≤ y}) (e.symm (g y))
   rw [e.is_lub_preimage, e.apply_symm_apply]
   exact h y
 #align is_order_right_adjoint.comp_order_iso IsOrderRightAdjoint.comp_orderIso
@@ -102,7 +102,7 @@ theorem Semiconj.symm_adjoint [PartialOrder α] [Preorder β] {fa : α ≃o α} 
     Function.Semiconj g' fb fa :=
   by
   refine' fun y => (hg' _).unique _
-  rw [← fa.surjective.image_preimage { x | g x ≤ fb y }, preimage_set_of_eq]
+  rw [← fa.surjective.image_preimage {x | g x ≤ fb y}, preimage_set_of_eq]
   simp only [h.eq, fb.le_iff_le, fa.left_ord_continuous (hg' _)]
 #align function.semiconj.symm_adjoint Function.Semiconj.symm_adjoint
 

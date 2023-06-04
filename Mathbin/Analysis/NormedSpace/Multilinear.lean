@@ -114,7 +114,7 @@ theorem bound_of_shell {ε : ι → ℝ} {C : ℝ} (hε : ∀ i, 0 < ε i) {c : 
     (hf : ∀ m : ∀ i, E i, (∀ i, ε i / ‖c i‖ ≤ ‖m i‖) → (∀ i, ‖m i‖ < ε i) → ‖f m‖ ≤ C * ∏ i, ‖m i‖)
     (m : ∀ i, E i) : ‖f m‖ ≤ C * ∏ i, ‖m i‖ :=
   by
-  rcases em (∃ i, m i = 0) with (⟨i, hi⟩ | hm) <;> [skip; push_neg  at hm ]
+  rcases em (∃ i, m i = 0) with (⟨i, hi⟩ | hm) <;> [skip; push_neg at hm ]
   · simp [f.map_coord_zero i hi, prod_eq_zero (mem_univ i), hi]
   choose δ hδ0 hδm_lt hle_δm hδinv using fun i => rescale_to_shell (hc i) (hε i) (hm i)
   have hδ0 : 0 < ∏ i, ‖δ i‖ := prod_pos fun i _ => norm_pos_iff.2 (hδ0 i)
@@ -310,7 +310,7 @@ open Real
 #print ContinuousMultilinearMap.opNorm /-
 /-- The operator norm of a continuous multilinear map is the inf of all its bounds. -/
 def opNorm :=
-  sInf { c | 0 ≤ (c : ℝ) ∧ ∀ m, ‖f m‖ ≤ c * ∏ i, ‖m i‖ }
+  sInf {c | 0 ≤ (c : ℝ) ∧ ∀ m, ‖f m‖ ≤ c * ∏ i, ‖m i‖}
 #align continuous_multilinear_map.op_norm ContinuousMultilinearMap.opNorm
 -/
 
@@ -328,20 +328,20 @@ instance hasOpNorm' : Norm (ContinuousMultilinearMap 𝕜 (fun i : ι => G) G') 
 #align continuous_multilinear_map.has_op_norm' ContinuousMultilinearMap.hasOpNorm'
 -/
 
-theorem norm_def : ‖f‖ = sInf { c | 0 ≤ (c : ℝ) ∧ ∀ m, ‖f m‖ ≤ c * ∏ i, ‖m i‖ } :=
+theorem norm_def : ‖f‖ = sInf {c | 0 ≤ (c : ℝ) ∧ ∀ m, ‖f m‖ ≤ c * ∏ i, ‖m i‖} :=
   rfl
 #align continuous_multilinear_map.norm_def ContinuousMultilinearMap.norm_def
 
 -- So that invocations of `le_cInf` make sense: we show that the set of
 -- bounds is nonempty and bounded below.
 theorem bounds_nonempty {f : ContinuousMultilinearMap 𝕜 E G} :
-    ∃ c, c ∈ { c | 0 ≤ c ∧ ∀ m, ‖f m‖ ≤ c * ∏ i, ‖m i‖ } :=
+    ∃ c, c ∈ {c | 0 ≤ c ∧ ∀ m, ‖f m‖ ≤ c * ∏ i, ‖m i‖} :=
   let ⟨M, hMp, hMb⟩ := f.bound
   ⟨M, le_of_lt hMp, hMb⟩
 #align continuous_multilinear_map.bounds_nonempty ContinuousMultilinearMap.bounds_nonempty
 
 theorem bounds_bddBelow {f : ContinuousMultilinearMap 𝕜 E G} :
-    BddBelow { c | 0 ≤ c ∧ ∀ m, ‖f m‖ ≤ c * ∏ i, ‖m i‖ } :=
+    BddBelow {c | 0 ≤ c ∧ ∀ m, ‖f m‖ ≤ c * ∏ i, ‖m i‖} :=
   ⟨0, fun _ ⟨hn, _⟩ => hn⟩
 #align continuous_multilinear_map.bounds_bdd_below ContinuousMultilinearMap.bounds_bddBelow
 
@@ -705,7 +705,7 @@ theorem hasSum_eval {α : Type _} {p : α → ContinuousMultilinearMap 𝕜 E G}
     {q : ContinuousMultilinearMap 𝕜 E G} (h : HasSum p q) (m : ∀ i, E i) :
     HasSum (fun a => p a m) (q m) := by
   dsimp [HasSum] at h ⊢
-  convert((continuous_eval_left m).Tendsto _).comp h
+  convert ((continuous_eval_left m).Tendsto _).comp h
   ext s
   simp
 #align continuous_multilinear_map.has_sum_eval ContinuousMultilinearMap.hasSum_eval

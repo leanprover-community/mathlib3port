@@ -496,7 +496,7 @@ def kernel.isLimitConeZeroCone [Mono f] : IsLimit (kernel.zeroKernelFork f) :=
   Fork.IsLimit.mk _ (fun s => 0)
     (fun s => by
       erw [zero_comp]
-      convert(zero_of_comp_mono f _).symm
+      convert (zero_of_comp_mono f _).symm
       exact kernel_fork.condition _)
     fun _ _ _ => zero_of_to_zero _
 #align category_theory.limits.kernel.is_limit_cone_zero_cone CategoryTheory.Limits.kernel.isLimitConeZeroCone
@@ -990,7 +990,7 @@ def cokernel.isColimitCoconeZeroCocone [Epi f] : IsColimit (cokernel.zeroCokerne
   Cofork.IsColimit.mk _ (fun s => 0)
     (fun s => by
       erw [zero_comp]
-      convert(zero_of_epi_comp f _).symm
+      convert (zero_of_epi_comp f _).symm
       exact cokernel_cofork.condition _)
     fun _ _ _ => zero_of_from_zero _
 #align category_theory.limits.cokernel.is_colimit_cocone_zero_cocone CategoryTheory.Limits.cokernel.isColimitCoconeZeroCocone

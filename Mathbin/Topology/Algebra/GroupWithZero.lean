@@ -211,7 +211,7 @@ theorem Continuous.div (hf : Continuous f) (hg : Continuous g) (h₀ : ∀ x, g 
     Continuous (f / g) := by simpa only [div_eq_mul_inv] using hf.mul (hg.inv₀ h₀)
 #align continuous.div Continuous.div
 
-theorem continuousOn_div : ContinuousOn (fun p : G₀ × G₀ => p.1 / p.2) { p | p.2 ≠ 0 } :=
+theorem continuousOn_div : ContinuousOn (fun p : G₀ × G₀ => p.1 / p.2) {p | p.2 ≠ 0} :=
   continuousOn_fst.div continuousOn_snd fun _ => id
 #align continuous_on_div continuousOn_div
 

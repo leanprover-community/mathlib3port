@@ -54,7 +54,7 @@ theorem nhds_bind_nhdsWithin {a : α} {s : Set α} : ((𝓝 a).bind fun x => �
 @[simp]
 theorem eventually_nhds_nhdsWithin {a : α} {s : Set α} {p : α → Prop} :
     (∀ᶠ y in 𝓝 a, ∀ᶠ x in 𝓝[s] y, p x) ↔ ∀ᶠ x in 𝓝[s] a, p x :=
-  Filter.ext_iff.1 nhds_bind_nhdsWithin { x | p x }
+  Filter.ext_iff.1 nhds_bind_nhdsWithin {x | p x}
 #align eventually_nhds_nhds_within eventually_nhds_nhdsWithin
 -/
 
@@ -89,7 +89,7 @@ theorem eventually_nhdsWithin_nhdsWithin {a : α} {s : Set α} {p : α → Prop}
 -/
 
 theorem nhdsWithin_eq (a : α) (s : Set α) :
-    𝓝[s] a = ⨅ t ∈ { t : Set α | a ∈ t ∧ IsOpen t }, 𝓟 (t ∩ s) :=
+    𝓝[s] a = ⨅ t ∈ {t : Set α | a ∈ t ∧ IsOpen t}, 𝓟 (t ∩ s) :=
   ((nhds_basis_opens a).inf_principal s).eq_biInf
 #align nhds_within_eq nhdsWithin_eq
 
@@ -253,9 +253,9 @@ theorem nhdsWithin_le_nhds {a : α} {s : Set α} : 𝓝[s] a ≤ 𝓝 a := by rw
   apply nhdsWithin_le_of_mem; exact univ_mem
 #align nhds_within_le_nhds nhdsWithin_le_nhds
 
-theorem nhdsWithin_eq_nhds_within' {a : α} {s t u : Set α} (hs : s ∈ 𝓝 a) (h₂ : t ∩ s = u ∩ s) :
+theorem nhdsWithin_eq_nhdsWithin' {a : α} {s t u : Set α} (hs : s ∈ 𝓝 a) (h₂ : t ∩ s = u ∩ s) :
     𝓝[t] a = 𝓝[u] a := by rw [nhdsWithin_restrict' t hs, nhdsWithin_restrict' u hs, h₂]
-#align nhds_within_eq_nhds_within' nhdsWithin_eq_nhds_within'
+#align nhds_within_eq_nhds_within' nhdsWithin_eq_nhdsWithin'
 
 theorem nhdsWithin_eq_nhdsWithin {a : α} {s t u : Set α} (h₀ : a ∈ s) (h₁ : IsOpen s)
     (h₂ : t ∩ s = u ∩ s) : 𝓝[t] a = 𝓝[u] a := by
@@ -411,14 +411,14 @@ theorem Filter.Tendsto.piecewise_nhdsWithin {f g : α → β} {t : Set α} [∀ 
 #align filter.tendsto.piecewise_nhds_within Filter.Tendsto.piecewise_nhdsWithin
 
 theorem Filter.Tendsto.if_nhdsWithin {f g : α → β} {p : α → Prop} [DecidablePred p] {a : α}
-    {s : Set α} {l : Filter β} (h₀ : Tendsto f (𝓝[s ∩ { x | p x }] a) l)
-    (h₁ : Tendsto g (𝓝[s ∩ { x | ¬p x }] a) l) :
+    {s : Set α} {l : Filter β} (h₀ : Tendsto f (𝓝[s ∩ {x | p x}] a) l)
+    (h₁ : Tendsto g (𝓝[s ∩ {x | ¬p x}] a) l) :
     Tendsto (fun x => if p x then f x else g x) (𝓝[s] a) l :=
   h₀.piecewise_nhdsWithin h₁
 #align filter.tendsto.if_nhds_within Filter.Tendsto.if_nhdsWithin
 
 theorem map_nhdsWithin (f : α → β) (a : α) (s : Set α) :
-    map f (𝓝[s] a) = ⨅ t ∈ { t : Set α | a ∈ t ∧ IsOpen t }, 𝓟 (f '' (t ∩ s)) :=
+    map f (𝓝[s] a) = ⨅ t ∈ {t : Set α | a ∈ t ∧ IsOpen t}, 𝓟 (f '' (t ∩ s)) :=
   ((nhdsWithin_basis_open a s).map f).eq_biInf
 #align map_nhds_within map_nhdsWithin
 
@@ -1061,10 +1061,10 @@ theorem Function.LeftInverse.map_nhds_eq {f : α → β} {g : β → α} {x : β
 #align function.left_inverse.map_nhds_eq Function.LeftInverse.map_nhds_eq
 -/
 
-theorem ContinuousWithinAt.preimage_mem_nhds_within' {f : α → β} {x : α} {s : Set α} {t : Set β}
+theorem ContinuousWithinAt.preimage_mem_nhdsWithin' {f : α → β} {x : α} {s : Set α} {t : Set β}
     (h : ContinuousWithinAt f s x) (ht : t ∈ 𝓝[f '' s] f x) : f ⁻¹' t ∈ 𝓝[s] x :=
   h.tendsto_nhdsWithin (mapsTo_image _ _) ht
-#align continuous_within_at.preimage_mem_nhds_within' ContinuousWithinAt.preimage_mem_nhds_within'
+#align continuous_within_at.preimage_mem_nhds_within' ContinuousWithinAt.preimage_mem_nhdsWithin'
 
 theorem Filter.EventuallyEq.congr_continuousWithinAt {f g : α → β} {s : Set α} {x : α}
     (h : f =ᶠ[𝓝[s] x] g) (hx : f x = g x) : ContinuousWithinAt f s x ↔ ContinuousWithinAt g s x :=
@@ -1131,7 +1131,7 @@ theorem ContinuousOn.preimage_open_of_open {f : α → β} {s : Set α} {t : Set
 theorem ContinuousOn.isOpen_preimage {f : α → β} {s : Set α} {t : Set β} (h : ContinuousOn f s)
     (hs : IsOpen s) (hp : f ⁻¹' t ⊆ s) (ht : IsOpen t) : IsOpen (f ⁻¹' t) :=
   by
-  convert(continuousOn_open_iff hs).mp h t ht
+  convert (continuousOn_open_iff hs).mp h t ht
   rw [inter_comm, inter_eq_self_of_subset_left hp]
 #align continuous_on.is_open_preimage ContinuousOn.isOpen_preimage
 
@@ -1262,21 +1262,17 @@ theorem ContinuousOn.piecewise' {s t : Set α} {f g : α → β} [∀ a, Decidab
 
 theorem ContinuousOn.if' {s : Set α} {p : α → Prop} {f g : α → β} [∀ a, Decidable (p a)]
     (hpf :
-      ∀ a ∈ s ∩ frontier { a | p a },
-        Tendsto f (𝓝[s ∩ { a | p a }] a) (𝓝 <| if p a then f a else g a))
+      ∀ a ∈ s ∩ frontier {a | p a}, Tendsto f (𝓝[s ∩ {a | p a}] a) (𝓝 <| if p a then f a else g a))
     (hpg :
-      ∀ a ∈ s ∩ frontier { a | p a },
-        Tendsto g (𝓝[s ∩ { a | ¬p a }] a) (𝓝 <| if p a then f a else g a))
-    (hf : ContinuousOn f <| s ∩ { a | p a }) (hg : ContinuousOn g <| s ∩ { a | ¬p a }) :
+      ∀ a ∈ s ∩ frontier {a | p a}, Tendsto g (𝓝[s ∩ {a | ¬p a}] a) (𝓝 <| if p a then f a else g a))
+    (hf : ContinuousOn f <| s ∩ {a | p a}) (hg : ContinuousOn g <| s ∩ {a | ¬p a}) :
     ContinuousOn (fun a => if p a then f a else g a) s :=
   hf.piecewise' hpf hpg hg
 #align continuous_on.if' ContinuousOn.if'
 
 theorem ContinuousOn.if {α β : Type _} [TopologicalSpace α] [TopologicalSpace β] {p : α → Prop}
-    [∀ a, Decidable (p a)] {s : Set α} {f g : α → β}
-    (hp : ∀ a ∈ s ∩ frontier { a | p a }, f a = g a)
-    (hf : ContinuousOn f <| s ∩ closure { a | p a })
-    (hg : ContinuousOn g <| s ∩ closure { a | ¬p a }) :
+    [∀ a, Decidable (p a)] {s : Set α} {f g : α → β} (hp : ∀ a ∈ s ∩ frontier {a | p a}, f a = g a)
+    (hf : ContinuousOn f <| s ∩ closure {a | p a}) (hg : ContinuousOn g <| s ∩ closure {a | ¬p a}) :
     ContinuousOn (fun a => if p a then f a else g a) s :=
   by
   apply ContinuousOn.if'
@@ -1301,9 +1297,9 @@ theorem ContinuousOn.piecewise {s t : Set α} {f g : α → β} [∀ a, Decidabl
 #align continuous_on.piecewise ContinuousOn.piecewise
 
 theorem continuous_if' {p : α → Prop} {f g : α → β} [∀ a, Decidable (p a)]
-    (hpf : ∀ a ∈ frontier { x | p x }, Tendsto f (𝓝[{ x | p x }] a) (𝓝 <| ite (p a) (f a) (g a)))
-    (hpg : ∀ a ∈ frontier { x | p x }, Tendsto g (𝓝[{ x | ¬p x }] a) (𝓝 <| ite (p a) (f a) (g a)))
-    (hf : ContinuousOn f { x | p x }) (hg : ContinuousOn g { x | ¬p x }) :
+    (hpf : ∀ a ∈ frontier {x | p x}, Tendsto f (𝓝[{x | p x}] a) (𝓝 <| ite (p a) (f a) (g a)))
+    (hpg : ∀ a ∈ frontier {x | p x}, Tendsto g (𝓝[{x | ¬p x}] a) (𝓝 <| ite (p a) (f a) (g a)))
+    (hf : ContinuousOn f {x | p x}) (hg : ContinuousOn g {x | ¬p x}) :
     Continuous fun a => ite (p a) (f a) (g a) :=
   by
   rw [continuous_iff_continuousOn_univ]
@@ -1311,15 +1307,15 @@ theorem continuous_if' {p : α → Prop} {f g : α → β} [∀ a, Decidable (p 
 #align continuous_if' continuous_if'
 
 theorem continuous_if {p : α → Prop} {f g : α → β} [∀ a, Decidable (p a)]
-    (hp : ∀ a ∈ frontier { x | p x }, f a = g a) (hf : ContinuousOn f (closure { x | p x }))
-    (hg : ContinuousOn g (closure { x | ¬p x })) : Continuous fun a => if p a then f a else g a :=
+    (hp : ∀ a ∈ frontier {x | p x}, f a = g a) (hf : ContinuousOn f (closure {x | p x}))
+    (hg : ContinuousOn g (closure {x | ¬p x})) : Continuous fun a => if p a then f a else g a :=
   by
   rw [continuous_iff_continuousOn_univ]
   apply ContinuousOn.if <;> simp <;> assumption
 #align continuous_if continuous_if
 
 theorem Continuous.if {p : α → Prop} {f g : α → β} [∀ a, Decidable (p a)]
-    (hp : ∀ a ∈ frontier { x | p x }, f a = g a) (hf : Continuous f) (hg : Continuous g) :
+    (hp : ∀ a ∈ frontier {x | p x}, f a = g a) (hf : Continuous f) (hg : Continuous g) :
     Continuous fun a => if p a then f a else g a :=
   continuous_if hp hf.ContinuousOn hg.ContinuousOn
 #align continuous.if Continuous.if
@@ -1350,10 +1346,10 @@ theorem Continuous.piecewise {s : Set α} {f g : α → β} [∀ a, Decidable (a
 theorem IsOpen.ite' {s s' t : Set α} (hs : IsOpen s) (hs' : IsOpen s')
     (ht : ∀ x ∈ frontier t, x ∈ s ↔ x ∈ s') : IsOpen (t.ite s s') := by
   classical
-    simp only [isOpen_iff_continuous_mem, Set.ite] at *
-    convert continuous_piecewise (fun x hx => propext (ht x hx)) hs.continuous_on hs'.continuous_on
-    ext x
-    by_cases hx : x ∈ t <;> simp [hx]
+  simp only [isOpen_iff_continuous_mem, Set.ite] at *
+  convert continuous_piecewise (fun x hx => propext (ht x hx)) hs.continuous_on hs'.continuous_on
+  ext x
+  by_cases hx : x ∈ t <;> simp [hx]
 #align is_open.ite' IsOpen.ite'
 -/
 

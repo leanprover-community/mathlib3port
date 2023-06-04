@@ -304,7 +304,7 @@ exponents have positive `y`. -/
 theorem y_zpow_pos {a : Solution₁ d} (hax : 0 < a.x) (hay : 0 < a.y) {n : ℤ} (hn : 0 < n) :
     0 < (a ^ n).y := by
   lift n to ℕ using hn.le
-  norm_cast  at hn ⊢
+  norm_cast at hn ⊢
   rw [← Nat.succ_pred_eq_of_pos hn]
   exact y_pow_succ_pos hax hay _
 #align pell.solution₁.y_zpow_pos Pell.Solution₁.y_zpow_pos
@@ -371,7 +371,7 @@ theorem exists_of_not_isSquare (h₀ : 0 < d) (hd : ¬IsSquare d) :
     refine' hd ⟨x, @Int.cast_injective ℝ _ _ d (x * x) _⟩
     rw [← sq_sqrt <| int.cast_nonneg.mpr h₀.le, Int.cast_mul, ← hx, sq]
   obtain ⟨M, hM₁⟩ := exists_int_gt (2 * |ξ| + 1)
-  have hM : { q : ℚ | |q.1 ^ 2 - d * q.2 ^ 2| < M }.Infinite :=
+  have hM : {q : ℚ | |q.1 ^ 2 - d * q.2 ^ 2| < M}.Infinite :=
     by
     refine' infinite.mono (fun q h => _) (infinite_rat_abs_sub_lt_one_div_denom_sq_of_irrational hξ)
     have h0 : 0 < (q.2 : ℝ) ^ 2 := pow_pos (nat.cast_pos.mpr q.pos) 2
@@ -386,7 +386,7 @@ theorem exists_of_not_isSquare (h₀ : 0 < d) (hd : ¬IsSquare d) :
     refine' (abs_sub_abs_le_abs_sub (q : ℝ) ξ).trans (h.le.trans _)
     rw [div_le_one h0, one_le_sq_iff_one_le_abs, Nat.abs_cast, Nat.one_le_cast]
     exact q.pos
-  obtain ⟨m, hm⟩ : ∃ m : ℤ, { q : ℚ | q.1 ^ 2 - d * q.2 ^ 2 = m }.Infinite :=
+  obtain ⟨m, hm⟩ : ∃ m : ℤ, {q : ℚ | q.1 ^ 2 - d * q.2 ^ 2 = m}.Infinite :=
     by
     contrapose! hM
     simp only [not_infinite] at hM ⊢
@@ -455,7 +455,7 @@ theorem exists_nontrivial_of_not_isSquare (h₀ : 0 < d) (hd : ¬IsSquare d) :
     ∃ a : Solution₁ d, a ≠ 1 ∧ a ≠ -1 :=
   by
   obtain ⟨x, y, prop, hy⟩ := exists_of_not_is_square h₀ hd
-  refine' ⟨mk x y prop, fun H => _, fun H => _⟩ <;> apply_fun solution₁.y  at H  <;>
+  refine' ⟨mk x y prop, fun H => _, fun H => _⟩ <;> apply_fun solution₁.y at H  <;>
     simpa only [hy] using H
 #align pell.solution₁.exists_nontrivial_of_not_is_square Pell.Solution₁.exists_nontrivial_of_not_isSquare
 
@@ -528,21 +528,21 @@ theorem exists_of_not_isSquare (h₀ : 0 < d) (hd : ¬IsSquare d) :
     by
     have hax := a.prop
     lift a.x to ℕ using by positivity with ax
-    norm_cast  at ha₁ 
+    norm_cast at ha₁ 
     exact ⟨ax, ha₁, a.y, ha₂, hax⟩
   classical
-    -- to avoid having to show that the predicate is decidable
-    let x₁ := Nat.find P
-    obtain ⟨hx, y₁, hy₀, hy₁⟩ := Nat.find_spec P
-    refine' ⟨mk x₁ y₁ hy₁, by rw [x_mk]; exact_mod_cast hx, hy₀, fun b hb => _⟩
-    rw [x_mk]
-    have hb' := (Int.toNat_of_nonneg <| zero_le_one.trans hb.le).symm
-    have hb'' := hb
-    rw [hb'] at hb ⊢
-    norm_cast  at hb ⊢
-    refine' Nat.find_min' P ⟨hb, |b.y|, abs_pos.mpr <| y_ne_zero_of_one_lt_x hb'', _⟩
-    rw [← hb', sq_abs]
-    exact b.prop
+  -- to avoid having to show that the predicate is decidable
+  let x₁ := Nat.find P
+  obtain ⟨hx, y₁, hy₀, hy₁⟩ := Nat.find_spec P
+  refine' ⟨mk x₁ y₁ hy₁, by rw [x_mk]; exact_mod_cast hx, hy₀, fun b hb => _⟩
+  rw [x_mk]
+  have hb' := (Int.toNat_of_nonneg <| zero_le_one.trans hb.le).symm
+  have hb'' := hb
+  rw [hb'] at hb ⊢
+  norm_cast at hb ⊢
+  refine' Nat.find_min' P ⟨hb, |b.y|, abs_pos.mpr <| y_ne_zero_of_one_lt_x hb'', _⟩
+  rw [← hb', sq_abs]
+  exact b.prop
 #align pell.is_fundamental.exists_of_not_is_square Pell.IsFundamental.exists_of_not_isSquare
 
 /-- The map sending an integer `n` to the `y`-coordinate of `a^n` for a fundamental
@@ -590,7 +590,7 @@ fundamental solution. -/
 theorem zpow_ne_neg_zpow {a : Solution₁ d} (h : IsFundamental a) {n n' : ℤ} : a ^ n ≠ -a ^ n' :=
   by
   intro hf
-  apply_fun solution₁.x  at hf 
+  apply_fun solution₁.x at hf 
   have H := x_zpow_pos h.x_pos n
   rw [hf, x_neg, lt_neg, neg_zero] at H 
   exact lt_irrefl _ ((x_zpow_pos h.x_pos n').trans H)

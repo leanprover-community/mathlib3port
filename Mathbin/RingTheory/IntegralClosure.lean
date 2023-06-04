@@ -372,7 +372,7 @@ theorem isIntegral_of_smul_mem_submodule {M : Type _} [AddCommGroup M] [Module R
     (x : A) (hx : ∀ n ∈ N, x • n ∈ N) : IsIntegral R x :=
   by
   let A' : Subalgebra R A :=
-    { carrier := { x | ∀ n ∈ N, x • n ∈ N }
+    { carrier := {x | ∀ n ∈ N, x • n ∈ N}
       mul_mem' := fun a b ha hb n hn => smul_smul a b n ▸ ha _ (hb _ hn)
       one_mem' := fun n hn => (one_smul A n).symm ▸ hn
       add_mem' := fun a b ha hb n hn => (add_smul a b n).symm ▸ N.add_mem (ha _ hn) (hb _ hn)
@@ -385,7 +385,7 @@ theorem isIntegral_of_smul_mem_submodule {M : Type _} [AddCommGroup M] [Module R
         map_smul' := fun r s => LinearMap.ext fun n => Subtype.ext <| smul_assoc r s n }
       (LinearMap.ext fun n => Subtype.ext <| one_smul _ _) fun x y =>
       LinearMap.ext fun n => Subtype.ext <| mul_smul x y n
-  obtain ⟨a, ha₁, ha₂⟩ : ∃ a ∈ N, a ≠ (0 : M) := by by_contra h'; push_neg  at h' ; apply hN;
+  obtain ⟨a, ha₁, ha₂⟩ : ∃ a ∈ N, a ≠ (0 : M) := by by_contra h'; push_neg at h' ; apply hN;
     rwa [eq_bot_iff]
   have : Function.Injective f :=
     by
@@ -545,7 +545,7 @@ variable (R A)
 /-- The integral closure of R in an R-algebra A. -/
 def integralClosure : Subalgebra R A
     where
-  carrier := { r | IsIntegral R r }
+  carrier := {r | IsIntegral R r}
   zero_mem' := isIntegral_zero
   one_mem' := isIntegral_one
   add_mem' _ _ := isIntegral_add
@@ -688,13 +688,14 @@ theorem IsIntegral.tmul (x : A) {y : B} (h : IsIntegral R y) : IsIntegral A (x �
   obtain ⟨p, hp, hp'⟩ := h
   refine' ⟨(p.map (algebraMap R A)).scaleRoots x, _, _⟩
   · rw [Polynomial.monic_scaleRoots_iff]; exact hp.map _
-  convert@Polynomial.scaleRoots_eval₂_mul (A ⊗[R] B) A _ _ _
+  convert
+    @Polynomial.scaleRoots_eval₂_mul (A ⊗[R] B) A _ _ _
       algebra.tensor_product.include_left.to_ring_hom (1 ⊗ₜ y) x using
     2
   ·
     simp only [AlgHom.toRingHom_eq_coe, AlgHom.coe_toRingHom, mul_one, one_mul,
       Algebra.TensorProduct.includeLeft_apply, Algebra.TensorProduct.tmul_mul_tmul]
-  convert(MulZeroClass.mul_zero _).symm
+  convert (MulZeroClass.mul_zero _).symm
   rw [Polynomial.eval₂_map, Algebra.TensorProduct.includeLeft_comp_algebraMap, ←
     Polynomial.eval₂_map]
   convert Polynomial.eval₂_at_apply algebra.tensor_product.include_right.to_ring_hom y
@@ -801,7 +802,7 @@ theorem RingHom.isIntegralElem_leadingCoeff_mul (h : p.eval₂ f x = 0) :
     use normalizeScaleRoots_monic p this
     rw [normalizeScaleRoots_eval₂_leadingCoeff_mul p h' f x, h, MulZeroClass.mul_zero]
   · by_cases hp : p.map f = 0
-    · apply_fun fun q => coeff q p.nat_degree  at hp 
+    · apply_fun fun q => coeff q p.nat_degree at hp 
       rw [coeff_map, coeff_zero, coeff_nat_degree] at hp 
       rw [hp, MulZeroClass.zero_mul]
       exact f.is_integral_zero
@@ -828,7 +829,7 @@ end
 section IsIntegralClosure
 
 #print IsIntegralClosure /-
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`algebraMap_injective] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`algebraMap_injective] [] -/
 /-- `is_integral_closure A R B` is the characteristic predicate stating `A` is
 the integral closure of `R` in `B`,
 i.e. that an element of `B` is integral over `R` iff it is an element of (the image of) `A`.

@@ -176,25 +176,25 @@ theorem isGLB_u_image {s : Set β} {b : β} (h : IsGLB s b) : IsGLB (u '' s) (u 
 -/
 
 #print GaloisConnection.isLeast_l /-
-theorem isLeast_l {a : α} : IsLeast { b | a ≤ u b } (l a) :=
+theorem isLeast_l {a : α} : IsLeast {b | a ≤ u b} (l a) :=
   ⟨gc.le_u_l _, fun b hb => gc.l_le hb⟩
 #align galois_connection.is_least_l GaloisConnection.isLeast_l
 -/
 
 #print GaloisConnection.isGreatest_u /-
-theorem isGreatest_u {b : β} : IsGreatest { a | l a ≤ b } (u b) :=
+theorem isGreatest_u {b : β} : IsGreatest {a | l a ≤ b} (u b) :=
   gc.dual.isLeast_l
 #align galois_connection.is_greatest_u GaloisConnection.isGreatest_u
 -/
 
 #print GaloisConnection.isGLB_l /-
-theorem isGLB_l {a : α} : IsGLB { b | a ≤ u b } (l a) :=
+theorem isGLB_l {a : α} : IsGLB {b | a ≤ u b} (l a) :=
   gc.isLeast_l.IsGLB
 #align galois_connection.is_glb_l GaloisConnection.isGLB_l
 -/
 
 #print GaloisConnection.isLUB_u /-
-theorem isLUB_u {b : β} : IsLUB { a | l a ≤ b } (u b) :=
+theorem isLUB_u {b : β} : IsLUB {a | l a ≤ b} (u b) :=
   gc.isGreatest_u.IsLUB
 #align galois_connection.is_lub_u GaloisConnection.isLUB_u
 -/

@@ -83,7 +83,7 @@ def ofNearby (x : Rˣ) (y : R) (h : ‖y - x‖ < ‖(↑x⁻¹ : R)‖⁻¹) : 
 #align units.unit_of_nearby Units.ofNearby
 
 /-- The group of units of a complete normed ring is an open subset of the ring. -/
-protected theorem isOpen : IsOpen { x : R | IsUnit x } :=
+protected theorem isOpen : IsOpen {x : R | IsUnit x} :=
   by
   nontriviality R
   apply metric.is_open_iff.mpr
@@ -94,7 +94,7 @@ protected theorem isOpen : IsOpen { x : R | IsUnit x } :=
   exact (x.unit_of_nearby y hy).IsUnit
 #align units.is_open Units.isOpen
 
-protected theorem nhds (x : Rˣ) : { x : R | IsUnit x } ∈ 𝓝 (x : R) :=
+protected theorem nhds (x : Rˣ) : {x : R | IsUnit x} ∈ 𝓝 (x : R) :=
   IsOpen.mem_nhds Units.isOpen x.IsUnit
 #align units.nhds Units.nhds
 
@@ -182,7 +182,7 @@ theorem inverse_add_nth_order (x : Rˣ) (n : ℕ) :
   refine' (inverse_add x).mp _
   have hzero : tendsto (fun t : R => -↑x⁻¹ * t) (𝓝 0) (𝓝 0) :=
     by
-    convert((mulLeft_continuous (-(↑x⁻¹ : R))).Tendsto 0).comp tendsto_id
+    convert ((mulLeft_continuous (-(↑x⁻¹ : R))).Tendsto 0).comp tendsto_id
     simp
   refine' (hzero.eventually (inverse_one_sub_nth_order n)).mp (eventually_of_forall _)
   simp only [neg_mul, sub_neg_eq_add]
@@ -222,7 +222,7 @@ theorem inverse_add_norm (x : Rˣ) : (fun t : R => inverse (↑x + t)) =O[𝓝 0
   use C * ‖((x⁻¹ : Rˣ) : R)‖
   have hzero : tendsto (fun t => -(↑x⁻¹ : R) * t) (𝓝 0) (𝓝 0) :=
     by
-    convert((mulLeft_continuous (-↑x⁻¹ : R)).Tendsto 0).comp tendsto_id
+    convert ((mulLeft_continuous (-↑x⁻¹ : R)).Tendsto 0).comp tendsto_id
     simp
   refine' (inverse_add x).mp ((hzero.eventually hC).mp (eventually_of_forall _))
   intro t bound iden

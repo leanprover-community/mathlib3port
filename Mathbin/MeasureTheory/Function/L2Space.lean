@@ -48,7 +48,7 @@ theorem memℒp_two_iff_integrable_sq_norm {f : α → F} (hf : AEStronglyMeasur
     Memℒp f 2 μ ↔ Integrable (fun x => ‖f x‖ ^ 2) μ :=
   by
   rw [← mem_ℒp_one_iff_integrable]
-  convert(mem_ℒp_norm_rpow_iff hf two_ne_zero ENNReal.two_ne_top).symm
+  convert (mem_ℒp_norm_rpow_iff hf two_ne_zero ENNReal.two_ne_top).symm
   · simp
   · rw [div_eq_mul_inv, ENNReal.mul_inv_cancel two_ne_zero ENNReal.two_ne_top]
 #align measure_theory.mem_ℒp_two_iff_integrable_sq_norm MeasureTheory.memℒp_two_iff_integrable_sq_norm
@@ -291,7 +291,7 @@ section InnerContinuous
 
 variable {α : Type _} [TopologicalSpace α] [MeasureSpace α] [BorelSpace α] {𝕜 : Type _} [IsROrC 𝕜]
 
-variable (μ : Measure α) [FiniteMeasure μ]
+variable (μ : Measure α) [IsFiniteMeasure μ]
 
 open scoped BoundedContinuousFunction ComplexConjugate
 
@@ -307,7 +307,7 @@ theorem BoundedContinuousFunction.inner_toLp (f g : α →ᵇ 𝕜) :
   apply integral_congr_ae
   have hf_ae := f.coe_fn_to_Lp 2 μ 𝕜
   have hg_ae := g.coe_fn_to_Lp 2 μ 𝕜
-  filter_upwards [hf_ae, hg_ae]with _ hf hg
+  filter_upwards [hf_ae, hg_ae] with _ hf hg
   rw [hf, hg]
   simp
 #align measure_theory.bounded_continuous_function.inner_to_Lp MeasureTheory.BoundedContinuousFunction.inner_toLp
@@ -322,7 +322,7 @@ theorem ContinuousMap.inner_toLp (f g : C(α, 𝕜)) :
   apply integral_congr_ae
   have hf_ae := f.coe_fn_to_Lp μ
   have hg_ae := g.coe_fn_to_Lp μ
-  filter_upwards [hf_ae, hg_ae]with _ hf hg
+  filter_upwards [hf_ae, hg_ae] with _ hf hg
   rw [hf, hg]
   simp
 #align measure_theory.continuous_map.inner_to_Lp MeasureTheory.ContinuousMap.inner_toLp

@@ -769,7 +769,7 @@ include hF
 /-- The equalizer of two star `R`-algebra homomorphisms. -/
 def equalizer : StarSubalgebra R A
     where
-  carrier := { a | f a = g a }
+  carrier := {a | f a = g a}
   mul_mem' a b (ha : f a = g a) (hb : f b = g b) := by
     rw [Set.mem_setOf_eq, map_mul f, map_mul g, ha, hb]
   add_mem' a b (ha : f a = g a) (hb : f b = g b) := by

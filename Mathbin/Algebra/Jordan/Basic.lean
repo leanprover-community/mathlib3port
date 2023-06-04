@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Christopher Hoskin
 
 ! This file was ported from Lean 3 source module algebra.jordan.basic
-! leanprover-community/mathlib commit 70fd9563a21e7b963887c9360bd29b2393e6225a
+! leanprover-community/mathlib commit 5c1efce12ba86d4901463f61019832f6a4b1a0d0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.Algebra.Lie.OfAssociative
 
 /-!
 # Jordan rings
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 Let `A` be a non-unital, non-associative ring. Then `A` is said to be a (commutative, linear) Jordan
 ring if the multiplication is commutative and satisfies a weak associativity law known as the
@@ -79,6 +82,7 @@ Non-commutative Jordan algebras have connections to the Vidav-Palmer theorem
 
 variable (A : Type _)
 
+#print IsJordan /-
 /-- A (non-commutative) Jordan multiplication. -/
 class IsJordan [Mul A] where
   lmul_comm_rmul : ∀ a b : A, a * b * a = a * (b * a)
@@ -87,13 +91,17 @@ class IsJordan [Mul A] where
   lmul_comm_rmul_rmul : ∀ a b : A, a * b * (a * a) = a * (b * (a * a))
   rmul_comm_rmul_rmul : ∀ a b : A, b * a * (a * a) = b * (a * a) * a
 #align is_jordan IsJordan
+-/
 
+#print IsCommJordan /-
 /-- A commutative Jordan multipication -/
 class IsCommJordan [Mul A] where
   mul_comm : ∀ a b : A, a * b = b * a
   lmul_comm_rmul_rmul : ∀ a b : A, a * b * (a * a) = a * (b * (a * a))
 #align is_comm_jordan IsCommJordan
+-/
 
+#print IsCommJordan.toIsJordan /-
 -- see Note [lower instance priority]
 /-- A (commutative) Jordan multiplication is also a Jordan multipication -/
 instance (priority := 100) IsCommJordan.toIsJordan [Mul A] [IsCommJordan A] : IsJordan A
@@ -109,6 +117,7 @@ instance (priority := 100) IsCommJordan.toIsJordan [Mul A] [IsCommJordan A] : Is
   rmul_comm_rmul_rmul a b := by
     rw [IsCommJordan.mul_comm b a, IsCommJordan.lmul_comm_rmul_rmul, IsCommJordan.mul_comm]
 #align is_comm_jordan.to_is_jordan IsCommJordan.toIsJordan
+-/
 
 -- see Note [lower instance priority]
 /-- Semigroup multiplication satisfies the (non-commutative) Jordan axioms-/
@@ -183,7 +192,7 @@ theorem two_nsmul_lie_lmul_lmul_add_eq_lie_lmul_lmul_add (a b : A) :
   by
   suffices 2 • ⁅L a, L (a * b)⁆ + 2 • ⁅L b, L (b * a)⁆ + ⁅L b, L (a * a)⁆ + ⁅L a, L (b * b)⁆ = 0 by
     rwa [← sub_eq_zero, ← sub_sub, sub_eq_add_neg, sub_eq_add_neg, lie_skew, lie_skew, nsmul_add]
-  convert(commute_lmul_lmul_sq (a + b)).lie_eq
+  convert (commute_lmul_lmul_sq (a + b)).lie_eq
   simp only [add_mul, mul_add, map_add, lie_add, add_lie, IsCommJordan.mul_comm b a,
     (commute_lmul_lmul_sq a).lie_eq, (commute_lmul_lmul_sq b).lie_eq]
   abel

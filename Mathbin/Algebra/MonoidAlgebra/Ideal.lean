@@ -31,7 +31,7 @@ theorem MonoidAlgebra.mem_ideal_span_of_image [Monoid G] [Semiring k] {s : Set G
     x ∈ Ideal.span (MonoidAlgebra.of k G '' s) ↔ ∀ m ∈ x.support, ∃ m' ∈ s, ∃ d, m = d * m' :=
   by
   let RHS : Ideal (MonoidAlgebra k G) :=
-    { carrier := { p | ∀ m : G, m ∈ p.support → ∃ m' ∈ s, ∃ d, m = d * m' }
+    { carrier := {p | ∀ m : G, m ∈ p.support → ∃ m' ∈ s, ∃ d, m = d * m'}
       add_mem' := fun x y hx hy m hm => by
         classical exact (Finset.mem_union.1 <| Finsupp.support_add hm).elim (hx m) (hy m)
       zero_mem' := fun m hm => by cases hm

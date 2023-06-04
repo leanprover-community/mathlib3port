@@ -150,7 +150,7 @@ variable (f : ι →₀ α)
 
 theorem card_Iic : (Iic f).card = ∏ i in f.support, (Iic (f i)).card := by
   classical simp_rw [Iic_eq_Icc, card_Icc, Finsupp.bot_eq_zero, support_zero, empty_union,
-      zero_apply, bot_eq_zero]
+    zero_apply, bot_eq_zero]
 #align finsupp.card_Iic Finsupp.card_Iic
 
 theorem card_Iio : (Iio f).card = (∏ i in f.support, (Iic (f i)).card) - 1 := by

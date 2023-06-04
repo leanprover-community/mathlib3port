@@ -287,7 +287,7 @@ open Lattice
 /-- The supremum of a collection of sieves: the union of them all. -/
 protected def sup (𝒮 : Set (Sieve X)) : Sieve X
     where
-  arrows Y := { f | ∃ S ∈ 𝒮, Sieve.arrows S f }
+  arrows Y := {f | ∃ S ∈ 𝒮, Sieve.arrows S f}
   downward_closed' Y Z f := by rintro ⟨S, hS, hf⟩ g; exact ⟨S, hS, S.downward_closed hf _⟩
 #align category_theory.sieve.Sup CategoryTheory.Sieve.sup
 -/
@@ -296,7 +296,7 @@ protected def sup (𝒮 : Set (Sieve X)) : Sieve X
 /-- The infimum of a collection of sieves: the intersection of them all. -/
 protected def inf (𝒮 : Set (Sieve X)) : Sieve X
     where
-  arrows Y := { f | ∀ S ∈ 𝒮, Sieve.arrows S f }
+  arrows Y := {f | ∀ S ∈ 𝒮, Sieve.arrows S f}
   downward_closed' Y Z f hf g S H := S.downward_closed (hf S H) g
 #align category_theory.sieve.Inf CategoryTheory.Sieve.inf
 -/

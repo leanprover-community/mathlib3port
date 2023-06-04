@@ -53,11 +53,11 @@ theorem exists_clopen_of_cofiltered {U : Set C.pt} (hU : IsClopen U) :
   -- clopen sets from the factors in the limit. By continuity, all such sets are again clopen.
   have hB :=
     TopCat.isTopologicalBasis_cofiltered_limit.{u} (F ⋙ Profinite.toTopCat)
-      (Profinite.to_Top.map_cone C) (is_limit_of_preserves _ hC) (fun j => { W | IsClopen W }) _
+      (Profinite.to_Top.map_cone C) (is_limit_of_preserves _ hC) (fun j => {W | IsClopen W}) _
       (fun i => isClopen_univ) (fun i U1 U2 hU1 hU2 => hU1.inter hU2) _
   rotate_left
   · intro i
-    change TopologicalSpace.IsTopologicalBasis { W : Set (F.obj i) | IsClopen W }
+    change TopologicalSpace.IsTopologicalBasis {W : Set (F.obj i) | IsClopen W}
     apply isTopologicalBasis_clopen
   · rintro i j f V (hV : IsClopen _)
     refine' ⟨hV.1.preimage _, hV.2.preimage _⟩ <;> continuity
@@ -192,10 +192,10 @@ theorem exists_locallyConstant_finite_nonempty {α : Type _} [Finite α] [Nonemp
   · rw [h2.some_spec]
     exact h1
   · intro a b hh
-    apply_fun fun e => e a  at hh 
+    apply_fun fun e => e a at hh 
     dsimp [ι] at hh 
     rw [if_pos rfl] at hh 
-    split_ifs  at hh  with hh1 hh1
+    split_ifs at hh  with hh1 hh1
     · exact hh1.symm
     · exact False.elim (bot_ne_top hh)
 #align Profinite.exists_locally_constant_finite_nonempty Profinite.exists_locallyConstant_finite_nonempty
@@ -232,7 +232,7 @@ theorem exists_locallyConstant {α : Type _} (f : LocallyConstant C.pt α) :
     obtain ⟨j, g', hj⟩ := exists_locally_constant_finite_nonempty _ hC f'
     refine' ⟨j, ⟨ff ∘ g', g'.is_locally_constant.comp _⟩, _⟩
     ext1 t
-    apply_fun fun e => e t  at hj 
+    apply_fun fun e => e t at hj 
     rw [LocallyConstant.coe_comap _ _ (C.π.app j).Continuous] at hj ⊢
     dsimp at hj ⊢
     rw [← hj]

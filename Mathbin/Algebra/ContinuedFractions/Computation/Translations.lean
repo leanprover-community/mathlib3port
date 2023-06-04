@@ -50,7 +50,7 @@ namespace GeneralizedContinuedFraction
 
 open GeneralizedContinuedFraction (of)
 
-/- ./././Mathport/Syntax/Translate/Command.lean:229:11: unsupported: unusual advanced open style -/
+/- ./././Mathport/Syntax/Translate/Command.lean:230:11: unsupported: unusual advanced open style -/
 -- Fix a discrete linear ordered floor field and a value `v`.
 variable {K : Type _} [LinearOrderedField K] [FloorRing K] {v : K}
 

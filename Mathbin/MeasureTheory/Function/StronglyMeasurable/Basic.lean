@@ -274,7 +274,7 @@ theorem tendsto_approxBounded_ae {β} {f : α → β} [NormedAddCommGroup β] [N
     {m m0 : MeasurableSpace α} {μ : Measure α} (hf : strongly_measurable[m] f) {c : ℝ}
     (hf_bound : ∀ᵐ x ∂μ, ‖f x‖ ≤ c) :
     ∀ᵐ x ∂μ, Tendsto (fun n => hf.approxBounded c n x) atTop (𝓝 (f x)) := by
-  filter_upwards [hf_bound]with x hfx using tendsto_approx_bounded_of_norm_le hf hfx
+  filter_upwards [hf_bound] with x hfx using tendsto_approx_bounded_of_norm_le hf hfx
 #align measure_theory.strongly_measurable.tendsto_approx_bounded_ae MeasureTheory.StronglyMeasurable.tendsto_approxBounded_ae
 
 theorem norm_approxBounded_le {β} {f : α → β} [SeminormedAddCommGroup β] [NormedSpace ℝ β]
@@ -812,7 +812,7 @@ protected theorem piecewise {m : MeasurableSpace α} [TopologicalSpace β] {s : 
 strongly_measurable_const`, but replacing `strongly_measurable.ite` by
 `strongly_measurable.piecewise` in that example proof does not work. -/
 protected theorem ite {m : MeasurableSpace α} [TopologicalSpace β] {p : α → Prop}
-    {_ : DecidablePred p} (hp : MeasurableSet { a : α | p a }) (hf : StronglyMeasurable f)
+    {_ : DecidablePred p} (hp : MeasurableSet {a : α | p a}) (hf : StronglyMeasurable f)
     (hg : StronglyMeasurable g) : StronglyMeasurable fun x => ite (p x) (f x) (g x) :=
   StronglyMeasurable.piecewise hp hf hg
 #align measure_theory.strongly_measurable.ite MeasureTheory.StronglyMeasurable.ite
@@ -822,45 +822,46 @@ theorem stronglyMeasurable_of_stronglyMeasurable_union_cover {m : MeasurableSpac
     (h : univ ⊆ s ∪ t) (hc : StronglyMeasurable fun a : s => f a)
     (hd : StronglyMeasurable fun a : t => f a) : StronglyMeasurable f := by
   classical
-    let f : ℕ → α →ₛ β := fun n =>
-      { toFun := fun x =>
-          if hx : x ∈ s then hc.approx n ⟨x, hx⟩
-          else hd.approx n ⟨x, by simpa [hx] using h (mem_univ x)⟩
-        measurableSet_fiber' := by
-          intro x
-          convert(hs.subtype_image ((hc.approx n).measurableSet_fiber x)).union
-              ((ht.subtype_image ((hd.approx n).measurableSet_fiber x)).diffₓ hs)
-          ext1 y
-          simp only [mem_union, mem_preimage, mem_singleton_iff, mem_image, SetCoe.exists,
-            Subtype.coe_mk, exists_and_right, exists_eq_right, mem_diff]
-          by_cases hy : y ∈ s
-          · rw [dif_pos hy]
-            simp only [hy, exists_true_left, not_true, and_false_iff, or_false_iff]
-          · rw [dif_neg hy]
-            have A : y ∈ t := by simpa [hy] using h (mem_univ y)
-            simp only [A, hy, false_or_iff, IsEmpty.exists_iff, not_false_iff, and_true_iff,
-              exists_true_left]
-        finite_range' :=
-          by
-          apply ((hc.approx n).finite_range.union (hd.approx n).finite_range).Subset
-          rintro - ⟨y, rfl⟩
-          dsimp
-          by_cases hy : y ∈ s
-          · left
-            rw [dif_pos hy]
-            exact mem_range_self _
-          · right
-            rw [dif_neg hy]
-            exact mem_range_self _ }
-    refine' ⟨f, fun y => _⟩
-    by_cases hy : y ∈ s
-    · convert hc.tendsto_approx ⟨y, hy⟩ using 1
-      ext1 n
-      simp only [dif_pos hy, simple_func.apply_mk]
-    · have A : y ∈ t := by simpa [hy] using h (mem_univ y)
-      convert hd.tendsto_approx ⟨y, A⟩ using 1
-      ext1 n
-      simp only [dif_neg hy, simple_func.apply_mk]
+  let f : ℕ → α →ₛ β := fun n =>
+    { toFun := fun x =>
+        if hx : x ∈ s then hc.approx n ⟨x, hx⟩
+        else hd.approx n ⟨x, by simpa [hx] using h (mem_univ x)⟩
+      measurableSet_fiber' := by
+        intro x
+        convert
+          (hs.subtype_image ((hc.approx n).measurableSet_fiber x)).union
+            ((ht.subtype_image ((hd.approx n).measurableSet_fiber x)).diffₓ hs)
+        ext1 y
+        simp only [mem_union, mem_preimage, mem_singleton_iff, mem_image, SetCoe.exists,
+          Subtype.coe_mk, exists_and_right, exists_eq_right, mem_diff]
+        by_cases hy : y ∈ s
+        · rw [dif_pos hy]
+          simp only [hy, exists_true_left, not_true, and_false_iff, or_false_iff]
+        · rw [dif_neg hy]
+          have A : y ∈ t := by simpa [hy] using h (mem_univ y)
+          simp only [A, hy, false_or_iff, IsEmpty.exists_iff, not_false_iff, and_true_iff,
+            exists_true_left]
+      finite_range' :=
+        by
+        apply ((hc.approx n).finite_range.union (hd.approx n).finite_range).Subset
+        rintro - ⟨y, rfl⟩
+        dsimp
+        by_cases hy : y ∈ s
+        · left
+          rw [dif_pos hy]
+          exact mem_range_self _
+        · right
+          rw [dif_neg hy]
+          exact mem_range_self _ }
+  refine' ⟨f, fun y => _⟩
+  by_cases hy : y ∈ s
+  · convert hc.tendsto_approx ⟨y, hy⟩ using 1
+    ext1 n
+    simp only [dif_pos hy, simple_func.apply_mk]
+  · have A : y ∈ t := by simpa [hy] using h (mem_univ y)
+    convert hd.tendsto_approx ⟨y, A⟩ using 1
+    ext1 n
+    simp only [dif_neg hy, simple_func.apply_mk]
 #align strongly_measurable_of_strongly_measurable_union_cover stronglyMeasurable_of_stronglyMeasurable_union_cover
 
 theorem stronglyMeasurable_of_restrict_of_restrict_compl {m : MeasurableSpace α}
@@ -930,14 +931,14 @@ theorem MeasurableEmbedding.exists_stronglyMeasurable_extend {f : α → β} {g 
 
 theorem measurableSet_eq_fun {m : MeasurableSpace α} {E} [TopologicalSpace E] [MetrizableSpace E]
     {f g : α → E} (hf : StronglyMeasurable f) (hg : StronglyMeasurable g) :
-    MeasurableSet { x | f x = g x } := by
+    MeasurableSet {x | f x = g x} := by
   borelize (E × E)
   exact (hf.prod_mk hg).Measurable is_closed_diagonal.measurable_set
 #align measure_theory.strongly_measurable.measurable_set_eq_fun MeasureTheory.StronglyMeasurable.measurableSet_eq_fun
 
 theorem measurableSet_lt {m : MeasurableSpace α} [TopologicalSpace β] [LinearOrder β]
     [OrderClosedTopology β] [PseudoMetrizableSpace β] {f g : α → β} (hf : StronglyMeasurable f)
-    (hg : StronglyMeasurable g) : MeasurableSet { a | f a < g a } :=
+    (hg : StronglyMeasurable g) : MeasurableSet {a | f a < g a} :=
   by
   borelize (β × β)
   exact (hf.prod_mk hg).Measurable is_open_lt_prod.measurable_set
@@ -945,7 +946,7 @@ theorem measurableSet_lt {m : MeasurableSpace α} [TopologicalSpace β] [LinearO
 
 theorem measurableSet_le {m : MeasurableSpace α} [TopologicalSpace β] [Preorder β]
     [OrderClosedTopology β] [PseudoMetrizableSpace β] {f g : α → β} (hf : StronglyMeasurable f)
-    (hg : StronglyMeasurable g) : MeasurableSet { a | f a ≤ g a } :=
+    (hg : StronglyMeasurable g) : MeasurableSet {a | f a ≤ g a} :=
   by
   borelize (β × β)
   exact (hf.prod_mk hg).Measurable is_closed_le_prod.measurable_set
@@ -1028,7 +1029,7 @@ theorem exists_spanning_measurableSet_norm_le [SeminormedAddCommGroup β] {m m0 
       (∀ n, measurable_set[m] (s n) ∧ μ (s n) < ∞ ∧ ∀ x ∈ s n, ‖f x‖ ≤ n) ∧ (⋃ i, s i) = Set.univ :=
   by
   let sigma_finite_sets := spanning_sets (μ.trim hm)
-  let norm_sets := fun n : ℕ => { x | ‖f x‖ ≤ n }
+  let norm_sets := fun n : ℕ => {x | ‖f x‖ ≤ n}
   have norm_sets_spanning : (⋃ n, norm_sets n) = Set.univ :=
     by
     ext1 x; simp only [Set.mem_iUnion, Set.mem_setOf_eq, Set.mem_univ, iff_true_iff]
@@ -1642,12 +1643,12 @@ protected theorem indicator [Zero β] (hfm : AEStronglyMeasurable f μ) {s : Set
 #print MeasureTheory.AEStronglyMeasurable.nullMeasurableSet_eq_fun /-
 theorem nullMeasurableSet_eq_fun {E} [TopologicalSpace E] [MetrizableSpace E] {f g : α → E}
     (hf : AEStronglyMeasurable f μ) (hg : AEStronglyMeasurable g μ) :
-    NullMeasurableSet { x | f x = g x } μ :=
+    NullMeasurableSet {x | f x = g x} μ :=
   by
   apply
     (hf.strongly_measurable_mk.measurable_set_eq_fun
           hg.strongly_measurable_mk).NullMeasurableSet.congr
-  filter_upwards [hf.ae_eq_mk, hg.ae_eq_mk]with x hfx hgx
+  filter_upwards [hf.ae_eq_mk, hg.ae_eq_mk] with x hfx hgx
   change (hf.mk f x = hg.mk g x) = (f x = g x)
   simp only [hfx, hgx]
 #align measure_theory.ae_strongly_measurable.null_measurable_set_eq_fun MeasureTheory.AEStronglyMeasurable.nullMeasurableSet_eq_fun
@@ -1656,11 +1657,11 @@ theorem nullMeasurableSet_eq_fun {E} [TopologicalSpace E] [MetrizableSpace E] {f
 #print MeasureTheory.AEStronglyMeasurable.nullMeasurableSet_lt /-
 theorem nullMeasurableSet_lt [LinearOrder β] [OrderClosedTopology β] [PseudoMetrizableSpace β]
     {f g : α → β} (hf : AEStronglyMeasurable f μ) (hg : AEStronglyMeasurable g μ) :
-    NullMeasurableSet { a | f a < g a } μ :=
+    NullMeasurableSet {a | f a < g a} μ :=
   by
   apply
     (hf.strongly_measurable_mk.measurable_set_lt hg.strongly_measurable_mk).NullMeasurableSet.congr
-  filter_upwards [hf.ae_eq_mk, hg.ae_eq_mk]with x hfx hgx
+  filter_upwards [hf.ae_eq_mk, hg.ae_eq_mk] with x hfx hgx
   change (hf.mk f x < hg.mk g x) = (f x < g x)
   simp only [hfx, hgx]
 #align measure_theory.ae_strongly_measurable.null_measurable_set_lt MeasureTheory.AEStronglyMeasurable.nullMeasurableSet_lt
@@ -1669,11 +1670,11 @@ theorem nullMeasurableSet_lt [LinearOrder β] [OrderClosedTopology β] [PseudoMe
 #print MeasureTheory.AEStronglyMeasurable.nullMeasurableSet_le /-
 theorem nullMeasurableSet_le [Preorder β] [OrderClosedTopology β] [PseudoMetrizableSpace β]
     {f g : α → β} (hf : AEStronglyMeasurable f μ) (hg : AEStronglyMeasurable g μ) :
-    NullMeasurableSet { a | f a ≤ g a } μ :=
+    NullMeasurableSet {a | f a ≤ g a} μ :=
   by
   apply
     (hf.strongly_measurable_mk.measurable_set_le hg.strongly_measurable_mk).NullMeasurableSet.congr
-  filter_upwards [hf.ae_eq_mk, hg.ae_eq_mk]with x hfx hgx
+  filter_upwards [hf.ae_eq_mk, hg.ae_eq_mk] with x hfx hgx
   change (hf.mk f x ≤ hg.mk g x) = (f x ≤ g x)
   simp only [hfx, hgx]
 #align measure_theory.ae_strongly_measurable.null_measurable_set_le MeasureTheory.AEStronglyMeasurable.nullMeasurableSet_le
@@ -1710,7 +1711,7 @@ theorem isSeparable_ae_range (hf : AEStronglyMeasurable f μ) :
     ∃ t : Set β, IsSeparable t ∧ ∀ᵐ x ∂μ, f x ∈ t :=
   by
   refine' ⟨range (hf.mk f), hf.strongly_measurable_mk.is_separable_range, _⟩
-  filter_upwards [hf.ae_eq_mk]with x hx
+  filter_upwards [hf.ae_eq_mk] with x hx
   simp [hx]
 #align measure_theory.ae_strongly_measurable.is_separable_ae_range MeasureTheory.AEStronglyMeasurable.isSeparable_ae_range
 
@@ -1789,7 +1790,7 @@ theorem aestronglyMeasurable_of_tendsto_ae {ι : Type _} [PseudoMetrizableSpace 
       (aestronglyMeasurable_iff_aemeasurable_separable.1 (hf (v n))).2
     choose t t_sep ht using this
     refine' ⟨closure (⋃ i, t i), (is_separable_Union fun i => t_sep i).closure, _⟩
-    filter_upwards [ae_all_iff.2 ht, limUnder]with x hx h'x
+    filter_upwards [ae_all_iff.2 ht, limUnder] with x hx h'x
     apply mem_closure_of_tendsto (h'x.comp hv)
     apply eventually_of_forall fun n => _
     apply mem_Union_of_mem n
@@ -1812,7 +1813,7 @@ theorem exists_stronglyMeasurable_limit_of_tendsto_ae [PseudoMetrizableSpace β]
     measurable_limit_of_tendsto_metrizable_ae (fun n => (hf n).AEMeasurable) h_ae_tendsto
   have Hg : ae_strongly_measurable g μ := aestronglyMeasurable_of_tendsto_ae _ hf hg
   refine' ⟨Hg.mk g, Hg.strongly_measurable_mk, _⟩
-  filter_upwards [hg, Hg.ae_eq_mk]with x hx h'x
+  filter_upwards [hg, Hg.ae_eq_mk] with x hx h'x
   rwa [h'x] at hx 
 #align exists_strongly_measurable_limit_of_tendsto_ae exists_stronglyMeasurable_limit_of_tendsto_ae
 -/
@@ -1830,7 +1831,7 @@ theorem sum_measure [PseudoMetrizableSpace β] {m : MeasurableSpace α} {μ : ι
   refine' ⟨⋃ i, t i, is_separable_Union t_sep, _⟩
   simp only [measure.ae_sum_eq, mem_Union, eventually_supr]
   intro i
-  filter_upwards [ht i]with x hx
+  filter_upwards [ht i] with x hx
   exact ⟨i, hx⟩
 #align measure_theory.ae_strongly_measurable.sum_measure MeasureTheory.AEStronglyMeasurable.sum_measure
 
@@ -1968,21 +1969,21 @@ theorem aestronglyMeasurable_withDensity_iff {E : Type _} [NormedAddCommGroup E]
   by
   constructor
   · rintro ⟨g', g'meas, hg'⟩
-    have A : MeasurableSet { x : α | f x ≠ 0 } := (hf (measurable_set_singleton 0)).compl
+    have A : MeasurableSet {x : α | f x ≠ 0} := (hf (measurable_set_singleton 0)).compl
     refine' ⟨fun x => (f x : ℝ) • g' x, hf.coe_nnreal_real.strongly_measurable.smul g'meas, _⟩
-    apply @ae_of_ae_restrict_of_ae_restrict_compl _ _ _ { x | f x ≠ 0 }
+    apply @ae_of_ae_restrict_of_ae_restrict_compl _ _ _ {x | f x ≠ 0}
     · rw [eventually_eq, ae_with_density_iff hf.coe_nnreal_ennreal] at hg' 
       rw [ae_restrict_iff' A]
-      filter_upwards [hg']with a ha h'a
+      filter_upwards [hg'] with a ha h'a
       have : (f a : ℝ≥0∞) ≠ 0 := by simpa only [Ne.def, ENNReal.coe_eq_zero] using h'a
       rw [ha this]
-    · filter_upwards [ae_restrict_mem A.compl]with x hx
+    · filter_upwards [ae_restrict_mem A.compl] with x hx
       simp only [Classical.not_not, mem_set_of_eq, mem_compl_iff] at hx 
       simp [hx]
   · rintro ⟨g', g'meas, hg'⟩
     refine' ⟨fun x => (f x : ℝ)⁻¹ • g' x, hf.coe_nnreal_real.inv.strongly_measurable.smul g'meas, _⟩
     rw [eventually_eq, ae_with_density_iff hf.coe_nnreal_ennreal]
-    filter_upwards [hg']with x hx h'x
+    filter_upwards [hg'] with x hx h'x
     rw [← hx, smul_smul, _root_.inv_mul_cancel, one_smul]
     simp only [Ne.def, ENNReal.coe_eq_zero] at h'x 
     simpa only [NNReal.coe_eq_zero, Ne.def] using h'x

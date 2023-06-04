@@ -124,16 +124,16 @@ theorem Finset.support_sum_eq [AddCommMonoid M] (s : Finset (ι →₀ M))
     (hs : (s : Set (ι →₀ M)).PairwiseDisjoint Finsupp.support) :
     (s.Sum id).support = Finset.sup s Finsupp.support := by
   classical
-    convert Multiset.support_sum_eq s.1 _
-    · exact (Finset.sum_val _).symm
-    · obtain ⟨l, hl, hn⟩ : ∃ l : List (ι →₀ M), l.toFinset = s ∧ l.Nodup :=
-        by
-        refine' ⟨s.to_list, _, Finset.nodup_toList _⟩
-        simp
-      subst hl
-      rwa [List.toFinset_val, list.dedup_eq_self.mpr hn, Multiset.pairwise_coe_iff_pairwise, ←
-        List.pairwiseDisjoint_iff_coe_toFinset_pairwise_disjoint hn]
-      intro x y hxy
-      exact symmetric_disjoint hxy
+  convert Multiset.support_sum_eq s.1 _
+  · exact (Finset.sum_val _).symm
+  · obtain ⟨l, hl, hn⟩ : ∃ l : List (ι →₀ M), l.toFinset = s ∧ l.Nodup :=
+      by
+      refine' ⟨s.to_list, _, Finset.nodup_toList _⟩
+      simp
+    subst hl
+    rwa [List.toFinset_val, list.dedup_eq_self.mpr hn, Multiset.pairwise_coe_iff_pairwise, ←
+      List.pairwiseDisjoint_iff_coe_toFinset_pairwise_disjoint hn]
+    intro x y hxy
+    exact symmetric_disjoint hxy
 #align finset.support_sum_eq Finset.support_sum_eq
 

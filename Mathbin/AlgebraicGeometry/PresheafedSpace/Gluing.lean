@@ -170,7 +170,7 @@ theorem f_invApp_f_app (i j k : D.J) (U : Opens (D.V (i, j)).carrier) :
   erw [(π₁ i, j, k).c.naturality_assoc, reassoc_of this, ← functor.map_comp_assoc,
     is_open_immersion.inv_naturality_assoc, is_open_immersion.app_inv_app_assoc, ←
     (D.V (i, k)).Presheaf.map_comp, ← (D.V (i, k)).Presheaf.map_comp]
-  convert(category.comp_id _).symm
+  convert (category.comp_id _).symm
   erw [(D.V (i, k)).Presheaf.map_id]
   rfl
 #align algebraic_geometry.PresheafedSpace.glue_data.f_inv_app_f_app AlgebraicGeometry.PresheafedSpace.GlueData.f_invApp_f_app
@@ -424,7 +424,8 @@ theorem π_ιInvApp_π (i j : D.J) (U : Opens (D.U i).carrier) :
   iterate 3 rw [← functor.map_comp_assoc]
   rw [nat_trans.naturality_assoc]
   erw [← (D.V (i, j)).Presheaf.map_comp]
-  convert limit.w (componentwise_diagram 𝖣.diagram.multispan _)
+  convert
+    limit.w (componentwise_diagram 𝖣.diagram.multispan _)
       (Quiver.Hom.op (walking_multispan.hom.fst (i, j)))
   · rw [category.comp_id]
     apply (config := { instances := false }) mono_comp

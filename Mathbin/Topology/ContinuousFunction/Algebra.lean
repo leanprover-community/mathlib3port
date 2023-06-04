@@ -46,9 +46,9 @@ namespace ContinuousFunctions
 
 variable {α : Type _} {β : Type _} [TopologicalSpace α] [TopologicalSpace β]
 
-variable {f g : { f : α → β | Continuous f }}
+variable {f g : {f : α → β | Continuous f}}
 
-instance : CoeFun { f : α → β | Continuous f } fun _ => α → β :=
+instance : CoeFun {f : α → β | Continuous f} fun _ => α → β :=
   ⟨Subtype.val⟩
 
 end ContinuousFunctions
@@ -288,7 +288,7 @@ section Subtype
 def continuousSubmonoid (α : Type _) (β : Type _) [TopologicalSpace α] [TopologicalSpace β]
     [MulOneClass β] [ContinuousMul β] : Submonoid (α → β)
     where
-  carrier := { f : α → β | Continuous f }
+  carrier := {f : α → β | Continuous f}
   one_mem' := @continuous_const _ _ _ _ 1
   mul_mem' f g fc gc := fc.mul gc
 #align continuous_submonoid continuousSubmonoid
@@ -599,10 +599,8 @@ variable [Module R M] [ContinuousConstSMul R M] [TopologicalAddGroup M]
 #print continuousSubmodule /-
 /-- The `R`-submodule of continuous maps `α → M`. -/
 def continuousSubmodule : Submodule R (α → M) :=
-  {
-    continuousAddSubgroup α
-      M with
-    carrier := { f : α → M | Continuous f }
+  { continuousAddSubgroup α M with
+    carrier := {f : α → M | Continuous f}
     smul_mem' := fun c f hf => hf.const_smul c }
 #align continuous_submodule continuousSubmodule
 -/
@@ -722,10 +720,8 @@ variable {α : Type _} [TopologicalSpace α] {R : Type _} [CommSemiring R] {A : 
 #print continuousSubalgebra /-
 /-- The `R`-subalgebra of continuous maps `α → A`. -/
 def continuousSubalgebra : Subalgebra R (α → A) :=
-  {
-    continuousSubsemiring α
-      A with
-    carrier := { f : α → A | Continuous f }
+  { continuousSubsemiring α A with
+    carrier := {f : α → A | Continuous f}
     algebraMap_mem' := fun r => (continuous_const : Continuous fun x : α => algebraMap R A r) }
 #align continuous_subalgebra continuousSubalgebra
 -/

@@ -406,7 +406,7 @@ theorem irreducible_polynomial [IsDomain R] : Irreducible W.Polynomial :=
       h with
     ⟨f, g, h0, h1⟩
   simp only [polynomial_eq, Cubic.coeff_eq_c, Cubic.coeff_eq_d] at h0 h1 
-  apply_fun degree  at h0 h1 
+  apply_fun degree at h0 h1 
   rw [Cubic.degree_of_a_ne_zero' <| neg_ne_zero.mpr <| one_ne_zero' R, degree_mul] at h0 
   apply (h1.symm.le.trans Cubic.degree_of_b_eq_zero').not_lt
   rcases nat.with_bot.add_eq_three_iff.mp h0.symm with (h | h | h | h)
@@ -703,9 +703,9 @@ protected noncomputable def basis : Basis (Fin 2) R[X] W.CoordinateRing :=
 theorem basis_apply (n : Fin 2) :
     W.CoordinateRing.Basis n = (AdjoinRoot.powerBasis' W.monic_polynomial).gen ^ (n : ℕ) := by
   classical
-    nontriviality R
-    simpa only [coordinate_ring.basis, Or.by_cases, dif_neg (not_subsingleton R),
-      Basis.reindex_apply, PowerBasis.basis_eq_pow]
+  nontriviality R
+  simpa only [coordinate_ring.basis, Or.by_cases, dif_neg (not_subsingleton R), Basis.reindex_apply,
+    PowerBasis.basis_eq_pow]
 #align weierstrass_curve.coordinate_ring.basis_apply WeierstrassCurve.CoordinateRing.basis_apply
 
 theorem basis_zero : W.CoordinateRing.Basis 0 = 1 := by simpa only [basis_apply] using pow_zero _
@@ -814,14 +814,16 @@ theorem degree_norm_smul_basis [IsDomain R] (p q : R[X]) :
   cases' q.degree with dq; · exact (hq rfl).elim
   cases' le_or_lt dp (dq + 1) with hpq hpq
   ·
-    convert(degree_sub_eq_right_of_degree_lt <|
+    convert
+          (degree_sub_eq_right_of_degree_lt <|
                 (degree_sub_le _ _).trans_lt <|
                   max_lt_iff.mpr ⟨hdp.trans_lt _, hdpq.trans_lt _⟩).trans
             (max_eq_right_of_lt _).symm <;>
         rw [hdq] <;>
       exact with_bot.coe_lt_coe.mpr (by linarith only [hpq])
   · rw [sub_sub]
-    convert(degree_sub_eq_left_of_degree_lt <|
+    convert
+          (degree_sub_eq_left_of_degree_lt <|
                 (degree_add_le _ _).trans_lt <|
                   max_lt_iff.mpr ⟨hdpq.trans_lt _, hdq.trans_lt _⟩).trans
             (max_eq_left_of_lt _).symm <;>

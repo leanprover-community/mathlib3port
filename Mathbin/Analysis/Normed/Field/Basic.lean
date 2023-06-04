@@ -536,7 +536,8 @@ instance (priority := 100) semi_normed_ring_top_monoid [NonUnitalSeminormedRing 
               norm_add_le_of_le (norm_mul_le _ _) (norm_mul_le _ _)
             
         refine' squeeze_zero (fun e => norm_nonneg _) this _
-        convert((continuous_fst.tendsto x).norm.mul
+        convert
+          ((continuous_fst.tendsto x).norm.mul
                 ((continuous_snd.tendsto x).sub tendsto_const_nhds).norm).add
             (((continuous_fst.tendsto x).sub tendsto_const_nhds).norm.mul _)
         show tendsto _ _ _; exact tendsto_const_nhds
@@ -680,7 +681,7 @@ instance (priority := 100) NormedDivisionRing.to_hasContinuousInv₀ : HasContin
   rcases exists_between r0' with ⟨ε, ε0, εr⟩
   have : ∀ᶠ e in 𝓝 r, ‖e⁻¹ - r⁻¹‖ ≤ ‖r - e‖ / ‖r‖ / ε :=
     by
-    filter_upwards [(isOpen_lt continuous_const continuous_norm).eventually_mem εr]with e he
+    filter_upwards [(isOpen_lt continuous_const continuous_norm).eventually_mem εr] with e he
     have e0 : e ≠ 0 := norm_pos_iff.1 (ε0.trans he)
     calc
       ‖e⁻¹ - r⁻¹‖ = ‖r‖⁻¹ * ‖r - e‖ * ‖e‖⁻¹ := by
@@ -823,7 +824,7 @@ theorem punctured_nhds_neBot (x : α) : NeBot (𝓝[≠] x) :=
 #align normed_field.punctured_nhds_ne_bot NormedField.punctured_nhds_neBot
 
 @[instance]
-theorem nhdsWithin_isUnit_neBot : NeBot (𝓝[{ x : α | IsUnit x }] 0) := by
+theorem nhdsWithin_isUnit_neBot : NeBot (𝓝[{x : α | IsUnit x}] 0) := by
   simpa only [isUnit_iff_ne_zero] using punctured_nhds_ne_bot (0 : α)
 #align normed_field.nhds_within_is_unit_ne_bot NormedField.nhdsWithin_isUnit_neBot
 

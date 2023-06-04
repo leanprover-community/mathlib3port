@@ -124,13 +124,12 @@ be computable because `= option.none` is decidable while the domain of a general
 @[simps map]
 noncomputable def partialFunToPointed : PartialFun ⥤ Pointed := by
   classical exact
-      { obj := fun X => ⟨Option X, none⟩
-        map := fun X Y f => ⟨Option.elim' none fun a => (f a).toOption, rfl⟩
-        map_id' := fun X =>
-          Pointed.Hom.ext _ _ <| funext fun o => Option.recOn o rfl fun a => Part.some_toOption _
-        map_comp' := fun X Y Z f g =>
-          Pointed.Hom.ext _ _ <|
-            funext fun o => Option.recOn o rfl fun a => Part.bind_toOption _ _ }
+    { obj := fun X => ⟨Option X, none⟩
+      map := fun X Y f => ⟨Option.elim' none fun a => (f a).toOption, rfl⟩
+      map_id' := fun X =>
+        Pointed.Hom.ext _ _ <| funext fun o => Option.recOn o rfl fun a => Part.some_toOption _
+      map_comp' := fun X Y Z f g =>
+        Pointed.Hom.ext _ _ <| funext fun o => Option.recOn o rfl fun a => Part.bind_toOption _ _ }
 #align PartialFun_to_Pointed partialFunToPointed
 
 /-- The equivalence induced by `PartialFun_to_Pointed` and `Pointed_to_PartialFun`.
@@ -138,55 +137,53 @@ noncomputable def partialFunToPointed : PartialFun ⥤ Pointed := by
 @[simps]
 noncomputable def partialFunEquivPointed : PartialFun.{u} ≌ Pointed := by
   classical exact
-      equivalence.mk partialFunToPointed pointedToPartialFun
-        (nat_iso.of_components
-          (fun X =>
-            PartialFun.Iso.mk
-              { toFun := fun a => ⟨some a, some_ne_none a⟩
-                invFun := fun a => get <| ne_none_iff_is_some.1 a.2
-                left_inv := fun a => get_some _ _
-                right_inv := fun a => by
-                  simp only [Subtype.val_eq_coe, some_get, Subtype.coe_eta] })
-          fun X Y f =>
-          PFun.ext fun a b => by
-            unfold_projs
-            dsimp
-            rw [Part.bind_some]
-            refine' (part.mem_bind_iff.trans _).trans pfun.mem_to_subtype_iff.symm
-            obtain ⟨b | b, hb⟩ := b
-            · exact (hb rfl).elim
-            dsimp
-            simp_rw [Part.mem_some_iff, Subtype.mk_eq_mk, exists_prop, some_inj, exists_eq_right']
-            refine' part.mem_to_option.symm.trans _
-            exact eq_comm)
-        (nat_iso.of_components
-          (fun X =>
-            Pointed.Iso.mk
-              { toFun := Option.elim' X.point Subtype.val
-                invFun := fun a => if h : a = X.point then none else some ⟨_, h⟩
-                left_inv := fun a =>
-                  Option.recOn a (dif_pos rfl) fun a =>
-                    (dif_neg a.2).trans <| by
-                      simp only [Option.elim', Subtype.val_eq_coe, Subtype.coe_eta]
-                right_inv := fun a =>
-                  by
-                  change Option.elim' _ _ (dite _ _ _) = _
-                  split_ifs
-                  · rw [h]; rfl
-                  · rfl }
-              rfl)
-          fun X Y f =>
-          Pointed.Hom.ext _ _ <|
-            funext fun a =>
-              Option.recOn a f.map_point.symm fun a =>
-                by
-                unfold_projs
-                dsimp
-                change Option.elim' _ _ _ = _
-                rw [Part.elim_toOption]
+    equivalence.mk partialFunToPointed pointedToPartialFun
+      (nat_iso.of_components
+        (fun X =>
+          PartialFun.Iso.mk
+            { toFun := fun a => ⟨some a, some_ne_none a⟩
+              invFun := fun a => get <| ne_none_iff_is_some.1 a.2
+              left_inv := fun a => get_some _ _
+              right_inv := fun a => by simp only [Subtype.val_eq_coe, some_get, Subtype.coe_eta] })
+        fun X Y f =>
+        PFun.ext fun a b => by
+          unfold_projs
+          dsimp
+          rw [Part.bind_some]
+          refine' (part.mem_bind_iff.trans _).trans pfun.mem_to_subtype_iff.symm
+          obtain ⟨b | b, hb⟩ := b
+          · exact (hb rfl).elim
+          dsimp
+          simp_rw [Part.mem_some_iff, Subtype.mk_eq_mk, exists_prop, some_inj, exists_eq_right']
+          refine' part.mem_to_option.symm.trans _
+          exact eq_comm)
+      (nat_iso.of_components
+        (fun X =>
+          Pointed.Iso.mk
+            { toFun := Option.elim' X.point Subtype.val
+              invFun := fun a => if h : a = X.point then none else some ⟨_, h⟩
+              left_inv := fun a =>
+                Option.recOn a (dif_pos rfl) fun a =>
+                  (dif_neg a.2).trans <| by
+                    simp only [Option.elim', Subtype.val_eq_coe, Subtype.coe_eta]
+              right_inv := fun a => by
+                change Option.elim' _ _ (dite _ _ _) = _
                 split_ifs
-                · rfl
-                · exact Eq.symm (of_not_not h))
+                · rw [h]; rfl
+                · rfl }
+            rfl)
+        fun X Y f =>
+        Pointed.Hom.ext _ _ <|
+          funext fun a =>
+            Option.recOn a f.map_point.symm fun a =>
+              by
+              unfold_projs
+              dsimp
+              change Option.elim' _ _ _ = _
+              rw [Part.elim_toOption]
+              split_ifs
+              · rfl
+              · exact Eq.symm (of_not_not h))
 #align PartialFun_equiv_Pointed partialFunEquivPointed
 
 /-- Forgetting that maps are total and making them total again by adding a point is the same as just

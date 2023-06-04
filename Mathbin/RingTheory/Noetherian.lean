@@ -307,7 +307,7 @@ theorem isNoetherian_iff_fg_wellFounded :
     constructor
     intro N
     obtain ⟨⟨N₀, h₁⟩, e : N₀ ≤ N, h₂⟩ :=
-      WellFounded.has_min H { N' : α | N'.1 ≤ N } ⟨⟨⊥, Submodule.fg_bot⟩, bot_le⟩
+      WellFounded.has_min H {N' : α | N'.1 ≤ N} ⟨⟨⊥, Submodule.fg_bot⟩, bot_le⟩
     convert h₁
     refine' (e.antisymm _).symm
     by_contra h₃
@@ -368,15 +368,15 @@ theorem finite_of_linearIndependent [Nontrivial R] [IsNoetherian R M] {s : Set M
     by_contradiction fun hf =>
       (RelEmbedding.wellFounded_iff_no_descending_seq.1 (wellFounded_submodule_gt R M)).elim' _
   have f : ℕ ↪ s := Set.Infinite.natEmbedding s hf
-  have : ∀ n, coe ∘ f '' { m | m ≤ n } ⊆ s := by rintro n x ⟨y, hy₁, rfl⟩; exact (f y).2
-  have : ∀ a b : ℕ, a ≤ b ↔ span R (coe ∘ f '' { m | m ≤ a }) ≤ span R (coe ∘ f '' { m | m ≤ b }) :=
+  have : ∀ n, coe ∘ f '' {m | m ≤ n} ⊆ s := by rintro n x ⟨y, hy₁, rfl⟩; exact (f y).2
+  have : ∀ a b : ℕ, a ≤ b ↔ span R (coe ∘ f '' {m | m ≤ a}) ≤ span R (coe ∘ f '' {m | m ≤ b}) :=
     by
     intro a b
     rw [span_le_span_iff hs (this a) (this b),
       Set.image_subset_image_iff (subtype.coe_injective.comp f.injective), Set.subset_def]
     exact ⟨fun hab x (hxa : x ≤ a) => le_trans hxa hab, fun hx => hx a (le_refl a)⟩
   exact
-    ⟨⟨fun n => span R (coe ∘ f '' { m | m ≤ n }), fun x y => by
+    ⟨⟨fun n => span R (coe ∘ f '' {m | m ≤ n}), fun x y => by
         simp (config := { contextual := true }) [le_antisymm_iff, (this _ _).symm]⟩,
       by dsimp [GT.gt] <;> simp only [lt_iff_le_not_le, (this _ _).symm] <;> tauto⟩
 #align finite_of_linear_independent finite_of_linearIndependent

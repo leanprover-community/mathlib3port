@@ -178,7 +178,7 @@ theorem prod_hom [CommMonoid β] (s : Multiset α) {F : Type _} [MonoidHomClass 
 @[to_additive]
 theorem prod_hom' [CommMonoid β] (s : Multiset ι) {F : Type _} [MonoidHomClass F α β] (f : F)
     (g : ι → α) : (s.map fun i => f <| g i).Prod = f (s.map g).Prod := by
-  convert(s.map g).prod_hom f; exact (map_map _ _ _).symm
+  convert (s.map g).prod_hom f; exact (map_map _ _ _).symm
 #align multiset.prod_hom' Multiset.prod_hom'
 #align multiset.sum_hom' Multiset.sum_hom'
 
@@ -328,7 +328,7 @@ theorem prod_map_inv' (m : Multiset α) : (m.map Inv.inv).Prod = m.Prod⁻¹ :=
 
 @[simp, to_additive]
 theorem prod_map_inv : (m.map fun i => (f i)⁻¹).Prod = (m.map f).Prod⁻¹ := by
-  convert(m.map f).prod_map_inv'; rw [map_map]
+  convert (m.map f).prod_map_inv'; rw [map_map]
 #align multiset.prod_map_inv Multiset.prod_map_inv
 #align multiset.sum_map_neg Multiset.sum_map_neg
 
@@ -341,7 +341,7 @@ theorem prod_map_div : (m.map fun i => f i / g i).Prod = (m.map f).Prod / (m.map
 #print Multiset.prod_map_zpow /-
 @[to_additive]
 theorem prod_map_zpow {n : ℤ} : (m.map fun i => f i ^ n).Prod = (m.map f).Prod ^ n := by
-  convert(m.map f).prod_hom (zpowGroupHom _ : α →* α); rw [map_map]; rfl
+  convert (m.map f).prod_hom (zpowGroupHom _ : α →* α); rw [map_map]; rfl
 #align multiset.prod_map_zpow Multiset.prod_map_zpow
 #align multiset.sum_map_zsmul Multiset.sum_map_zsmul
 -/

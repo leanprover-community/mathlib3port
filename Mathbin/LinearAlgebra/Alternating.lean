@@ -233,7 +233,7 @@ theorem map_zero [Nonempty ι] : f 0 = 0 :=
 theorem map_eq_zero_of_not_injective (v : ι → M) (hv : ¬Function.Injective v) : f v = 0 :=
   by
   rw [Function.Injective] at hv 
-  push_neg  at hv 
+  push_neg at hv 
   rcases hv with ⟨i₁, i₂, heq, hne⟩
   exact f.map_eq_zero_of_eq v HEq hne
 #align alternating_map.map_eq_zero_of_not_injective AlternatingMap.map_eq_zero_of_not_injective
@@ -1213,12 +1213,12 @@ theorem Basis.ext_alternating {f g : AlternatingMap R' N₁ N₂ ι} (e : Basis 
     (h : ∀ v : ι → ι₁, Function.Injective v → (f fun i => e (v i)) = g fun i => e (v i)) : f = g :=
   by
   classical
-    refine' AlternatingMap.coe_multilinearMap_injective (Basis.ext_multilinear e fun v => _)
-    by_cases hi : Function.Injective v
-    · exact h v hi
-    · have : ¬Function.Injective fun i => e (v i) := hi.imp Function.Injective.of_comp
-      rw [coe_multilinear_map, coe_multilinear_map, f.map_eq_zero_of_not_injective _ this,
-        g.map_eq_zero_of_not_injective _ this]
+  refine' AlternatingMap.coe_multilinearMap_injective (Basis.ext_multilinear e fun v => _)
+  by_cases hi : Function.Injective v
+  · exact h v hi
+  · have : ¬Function.Injective fun i => e (v i) := hi.imp Function.Injective.of_comp
+    rw [coe_multilinear_map, coe_multilinear_map, f.map_eq_zero_of_not_injective _ this,
+      g.map_eq_zero_of_not_injective _ this]
 #align basis.ext_alternating Basis.ext_alternating
 
 end Basis

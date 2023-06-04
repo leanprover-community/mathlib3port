@@ -71,7 +71,7 @@ structure Conservative (f : α → α)
 
 #print MeasureTheory.MeasurePreserving.conservative /-
 /-- A self-map preserving a finite measure is conservative. -/
-protected theorem MeasurePreserving.conservative [FiniteMeasure μ] (h : MeasurePreserving f μ μ) :
+protected theorem MeasurePreserving.conservative [IsFiniteMeasure μ] (h : MeasurePreserving f μ μ) :
     Conservative f μ :=
   ⟨h.QuasiMeasurePreserving, fun s hsm h0 => h.exists_mem_image_mem hsm h0⟩
 #align measure_theory.measure_preserving.conservative MeasureTheory.MeasurePreserving.conservative
@@ -99,14 +99,14 @@ theorem frequently_measure_inter_ne_zero (hf : Conservative f μ) (hs : Measurab
   rcases H with ⟨N, hN⟩
   induction' N with N ihN
   · apply h0; simpa using hN 0 le_rfl
-  rw [imp_false] at ihN ; push_neg  at ihN 
+  rw [imp_false] at ihN ; push_neg at ihN 
   rcases ihN with ⟨n, hn, hμn⟩
   set T := s ∩ ⋃ n ≥ N + 1, f^[n] ⁻¹' s
   have hT : MeasurableSet T :=
     hs.inter (MeasurableSet.biUnion (to_countable _) fun _ _ => hf.measurable.iterate _ hs)
   have hμT : μ T = 0 :=
     by
-    convert(measure_bUnion_null_iff <| to_countable _).2 hN
+    convert (measure_bUnion_null_iff <| to_countable _).2 hN
     rw [← inter_Union₂]; rfl
   have : μ ((s ∩ f^[n] ⁻¹' s) \ T) ≠ 0 := by rwa [measure_diff_null hμT]
   rcases hf.exists_mem_image_mem ((hs.inter (hf.measurable.iterate n hs)).diffₓ hT) this with
@@ -129,10 +129,10 @@ theorem exists_gt_measure_inter_ne_zero (hf : Conservative f μ) (hs : Measurabl
 /-- Poincaré recurrence theorem: given a conservative map `f` and a measurable set `s`, the set
 of points `x ∈ s` such that `x` does not return to `s` after `≥ n` iterations has measure zero. -/
 theorem measure_mem_forall_ge_image_not_mem_eq_zero (hf : Conservative f μ) (hs : MeasurableSet s)
-    (n : ℕ) : μ ({ x ∈ s | ∀ m ≥ n, (f^[m]) x ∉ s }) = 0 :=
+    (n : ℕ) : μ ({x ∈ s | ∀ m ≥ n, (f^[m]) x ∉ s}) = 0 :=
   by
   by_contra H
-  have : MeasurableSet (s ∩ { x | ∀ m ≥ n, (f^[m]) x ∉ s }) :=
+  have : MeasurableSet (s ∩ {x | ∀ m ≥ n, (f^[m]) x ∉ s}) :=
     by
     simp only [set_of_forall, ← compl_set_of]
     exact
@@ -156,12 +156,12 @@ theorem ae_mem_imp_frequently_image_mem (hf : Conservative f μ) (hs : Measurabl
 -/
 
 theorem inter_frequently_image_mem_ae_eq (hf : Conservative f μ) (hs : MeasurableSet s) :
-    (s ∩ { x | ∃ᶠ n in atTop, (f^[n]) x ∈ s } : Set α) =ᵐ[μ] s :=
+    (s ∩ {x | ∃ᶠ n in atTop, (f^[n]) x ∈ s} : Set α) =ᵐ[μ] s :=
   inter_eventuallyEq_left.2 <| hf.ae_mem_imp_frequently_image_mem hs
 #align measure_theory.conservative.inter_frequently_image_mem_ae_eq MeasureTheory.Conservative.inter_frequently_image_mem_ae_eq
 
 theorem measure_inter_frequently_image_mem_eq (hf : Conservative f μ) (hs : MeasurableSet s) :
-    μ (s ∩ { x | ∃ᶠ n in atTop, (f^[n]) x ∈ s }) = μ s :=
+    μ (s ∩ {x | ∃ᶠ n in atTop, (f^[n]) x ∈ s}) = μ s :=
   measure_congr (hf.inter_frequently_image_mem_ae_eq hs)
 #align measure_theory.conservative.measure_inter_frequently_image_mem_eq MeasureTheory.Conservative.measure_inter_frequently_image_mem_eq
 

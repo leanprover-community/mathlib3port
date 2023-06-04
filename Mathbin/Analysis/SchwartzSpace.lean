@@ -184,13 +184,13 @@ end IsO
 section Aux
 
 theorem bounds_nonempty (k n : ℕ) (f : 𝓢(E, F)) :
-    ∃ c : ℝ, c ∈ { c : ℝ | 0 ≤ c ∧ ∀ x : E, ‖x‖ ^ k * ‖iteratedFDeriv ℝ n f x‖ ≤ c } :=
+    ∃ c : ℝ, c ∈ {c : ℝ | 0 ≤ c ∧ ∀ x : E, ‖x‖ ^ k * ‖iteratedFDeriv ℝ n f x‖ ≤ c} :=
   let ⟨M, hMp, hMb⟩ := f.decay k n
   ⟨M, le_of_lt hMp, hMb⟩
 #align schwartz_map.bounds_nonempty SchwartzMap.bounds_nonempty
 
 theorem bounds_bddBelow (k n : ℕ) (f : 𝓢(E, F)) :
-    BddBelow { c | 0 ≤ c ∧ ∀ x, ‖x‖ ^ k * ‖iteratedFDeriv ℝ n f x‖ ≤ c } :=
+    BddBelow {c | 0 ≤ c ∧ ∀ x, ‖x‖ ^ k * ‖iteratedFDeriv ℝ n f x‖ ≤ c} :=
   ⟨0, fun _ ⟨hn, _⟩ => hn⟩
 #align schwartz_map.bounds_bdd_below SchwartzMap.bounds_bddBelow
 
@@ -226,7 +226,7 @@ section SeminormAux
 /-- Helper definition for the seminorms of the Schwartz space. -/
 @[protected]
 def seminormAux (k n : ℕ) (f : 𝓢(E, F)) : ℝ :=
-  sInf { c | 0 ≤ c ∧ ∀ x, ‖x‖ ^ k * ‖iteratedFDeriv ℝ n f x‖ ≤ c }
+  sInf {c | 0 ≤ c ∧ ∀ x, ‖x‖ ^ k * ‖iteratedFDeriv ℝ n f x‖ ≤ c}
 #align schwartz_map.seminorm_aux SchwartzMap.seminormAux
 
 theorem seminormAux_nonneg (k n : ℕ) (f : 𝓢(E, F)) : 0 ≤ f.seminormAux k n :=

@@ -489,7 +489,7 @@ theorem linearIndependent_pow [Algebra K S] (x : S) :
   apply (fun hn0 => (minpoly.degree_le_of_ne_zero K x (mt (fun h0 => _) hn0) hg).not_lt).mtr
   · simp_rw [← C_mul_X_pow_eq_monomial]
     exact (degree_eq_nat_degree <| minpoly.ne_zero h).symm ▸ degree_sum_fin_lt _
-  · apply_fun lcoeff K i  at h0 
+  · apply_fun lcoeff K i at h0 
     simp_rw [map_sum, lcoeff_apply, coeff_monomial, Fin.val_eq_val, Finset.sum_ite_eq'] at h0 
     exact (if_pos <| Finset.mem_univ _).symm.trans h0
 #align linear_independent_pow linearIndependent_pow

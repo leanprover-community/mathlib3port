@@ -35,6 +35,7 @@ tensor powers. Elsewhere, using `1` and `*` on `graded_monoid` should be preferr
 
 open scoped TensorProduct
 
+#print TensorPower /-
 /-- Homogenous tensor powers $M^{\otimes n}$. `⨂[R]^n M` is a shorthand for
 `⨂[R] (i : fin n), M`. -/
 @[reducible]
@@ -42,6 +43,7 @@ protected def TensorPower (R : Type _) (n : ℕ) (M : Type _) [CommSemiring R] [
     [Module R M] : Type _ :=
   ⨂[R] i : Fin n, M
 #align tensor_power TensorPower
+-/
 
 variable {R : Type _} {M : Type _} [CommSemiring R] [AddCommMonoid M] [Module R M]
 
@@ -70,42 +72,46 @@ open scoped TensorProduct DirectSum
 
 open PiTensorProduct
 
+#print TensorPower.gOne /-
 /-- As a graded monoid, `⨂[R]^i M` has a `1 : ⨂[R]^0 M`. -/
-instance ghasOne : GradedMonoid.GOne fun i => (⨂[R]^i) M where one := tprod R <| @Fin.elim0' M
-#align tensor_power.ghas_one TensorPower.ghasOne
+instance gOne : GradedMonoid.GOne fun i => (⨂[R]^i) M where one := tprod R <| @Fin.elim0' M
+#align tensor_power.ghas_one TensorPower.gOne
+-/
 
 -- mathport name: exprₜ1
 local notation "ₜ1" => @GradedMonoid.GOne.one ℕ (fun i => (⨂[R]^i) M) _ _
 
-theorem ghasOne_def : ₜ1 = tprod R (@Fin.elim0' M) :=
+theorem gOne_def : ₜ1 = tprod R (@Fin.elim0' M) :=
   rfl
-#align tensor_power.ghas_one_def TensorPower.ghasOne_def
+#align tensor_power.ghas_one_def TensorPower.gOne_def
 
 /-- A variant of `pi_tensor_prod.tmul_equiv` with the result indexed by `fin (n + m)`. -/
 def mulEquiv {n m : ℕ} : (⨂[R]^n) M ⊗[R] (⨂[R]^m) M ≃ₗ[R] (⨂[R]^(n + m)) M :=
   (tmulEquiv R M).trans (reindex R M finSumFinEquiv)
 #align tensor_power.mul_equiv TensorPower.mulEquiv
 
+#print TensorPower.gMul /-
 /-- As a graded monoid, `⨂[R]^i M` has a `(*) : ⨂[R]^i M → ⨂[R]^j M → ⨂[R]^(i + j) M`. -/
-instance ghasMul : GradedMonoid.GMul fun i => (⨂[R]^i) M
+instance gMul : GradedMonoid.GMul fun i => (⨂[R]^i) M
     where mul i j a b :=
     (TensorProduct.mk R _ _).compr₂ (↑(mulEquiv : _ ≃ₗ[R] (⨂[R]^(i + j)) M)) a b
-#align tensor_power.ghas_mul TensorPower.ghasMul
+#align tensor_power.ghas_mul TensorPower.gMul
+-/
 
 -- mathport name: «expr ₜ* »
 local infixl:70 " ₜ* " => @GradedMonoid.GMul.mul ℕ (fun i => (⨂[R]^i) M) _ _ _ _
 
-theorem ghasMul_def {i j} (a : (⨂[R]^i) M) (b : (⨂[R]^j) M) : a ₜ* b = mulEquiv (a ⊗ₜ b) :=
+theorem gMul_def {i j} (a : (⨂[R]^i) M) (b : (⨂[R]^j) M) : a ₜ* b = mulEquiv (a ⊗ₜ b) :=
   rfl
-#align tensor_power.ghas_mul_def TensorPower.ghasMul_def
+#align tensor_power.ghas_mul_def TensorPower.gMul_def
 
-theorem ghasMul_eq_coe_linearMap {i j} (a : (⨂[R]^i) M) (b : (⨂[R]^j) M) :
+theorem gMul_eq_coe_linearMap {i j} (a : (⨂[R]^i) M) (b : (⨂[R]^j) M) :
     a ₜ* b =
       ((TensorProduct.mk R _ _).compr₂ ↑(mulEquiv : _ ≃ₗ[R] (⨂[R]^(i + j)) M) :
           (⨂[R]^i) M →ₗ[R] (⨂[R]^j) M →ₗ[R] (⨂[R]^(i + j)) M)
         a b :=
   rfl
-#align tensor_power.ghas_mul_eq_coe_linear_map TensorPower.ghasMul_eq_coe_linearMap
+#align tensor_power.ghas_mul_eq_coe_linear_map TensorPower.gMul_eq_coe_linearMap
 
 variable (R M)
 
@@ -233,14 +239,16 @@ theorem mul_assoc {na nb nc} (a : (⨂[R]^na) M) (b : (⨂[R]^nb) M) (c : (⨂[R
   rw [Fin.coe_cast, Fin.coe_cast]
 #align tensor_power.mul_assoc TensorPower.mul_assoc
 
+#print TensorPower.gmonoid /-
 -- for now we just use the default for the `gnpow` field as it's easier.
 instance gmonoid : GradedMonoid.GMonoid fun i => (⨂[R]^i) M :=
-  { TensorPower.ghasMul,
-    TensorPower.ghasOne with
+  { TensorPower.gMul,
+    TensorPower.gOne with
     one_mul := fun a => gradedMonoid_eq_of_cast (zero_add _) (one_mul _)
     mul_one := fun a => gradedMonoid_eq_of_cast (add_zero _) (mul_one _)
     mul_assoc := fun a b c => gradedMonoid_eq_of_cast (add_assoc _ _ _) (mul_assoc _ _ _) }
 #align tensor_power.gmonoid TensorPower.gmonoid
+-/
 
 /-- The canonical map from `R` to `⨂[R]^0 M` corresponding to the algebra_map of the tensor
 algebra. -/
@@ -275,6 +283,7 @@ theorem algebraMap₀_mul_algebraMap₀ (r s : R) :
   exact algebra_map₀_mul r (@algebra_map₀ R M _ _ _ s)
 #align tensor_power.algebra_map₀_mul_algebra_map₀ TensorPower.algebraMap₀_mul_algebraMap₀
 
+#print TensorPower.gsemiring /-
 instance gsemiring : DirectSum.GSemiring fun i => (⨂[R]^i) M :=
   { TensorPower.gmonoid with
     mul_zero := fun i j a => LinearMap.map_zero _
@@ -285,6 +294,7 @@ instance gsemiring : DirectSum.GSemiring fun i => (⨂[R]^i) M :=
     natCast_zero := by rw [Nat.cast_zero, map_zero]
     natCast_succ := fun n => by rw [Nat.cast_succ, map_add, algebra_map₀_one] }
 #align tensor_power.gsemiring TensorPower.gsemiring
+-/
 
 example : Semiring (⨁ n : ℕ, (⨂[R]^n) M) := by infer_instance
 

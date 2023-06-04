@@ -678,7 +678,7 @@ instance Invertible.star {R : Type _} [Monoid R] [StarSemigroup R] (r : R) [Inve
 
 theorem star_invOf {R : Type _} [Monoid R] [StarSemigroup R] (r : R) [Invertible r]
     [Invertible (star r)] : star (⅟ r) = ⅟ (star r) := by letI := Invertible.star r;
-  convert(rfl : star (⅟ r) = _)
+  convert (rfl : star (⅟ r) = _)
 #align star_inv_of star_invOf
 
 namespace MulOpposite

@@ -223,15 +223,15 @@ instance sigmaFinite_of_sigmaFiniteFiltration [Preorder ι] (μ : Measure Ω) (f
 #align measure_theory.sigma_finite_of_sigma_finite_filtration MeasureTheory.sigmaFinite_of_sigmaFiniteFiltration
 
 -- can't exact here
-instance (priority := 100) FiniteMeasure.sigmaFiniteFiltration [Preorder ι] (μ : Measure Ω)
-    (f : Filtration ι m) [FiniteMeasure μ] : SigmaFiniteFiltration μ f :=
+instance (priority := 100) IsFiniteMeasure.sigmaFiniteFiltration [Preorder ι] (μ : Measure Ω)
+    (f : Filtration ι m) [IsFiniteMeasure μ] : SigmaFiniteFiltration μ f :=
   ⟨fun n => by infer_instance⟩
-#align measure_theory.is_finite_measure.sigma_finite_filtration MeasureTheory.FiniteMeasure.sigmaFiniteFiltration
+#align measure_theory.is_finite_measure.sigma_finite_filtration MeasureTheory.IsFiniteMeasure.sigmaFiniteFiltration
 
 /-- Given a integrable function `g`, the conditional expectations of `g` with respect to a
 filtration is uniformly integrable. -/
 theorem Integrable.uniformIntegrable_condexp_filtration [Preorder ι] {μ : Measure Ω}
-    [FiniteMeasure μ] {f : Filtration ι m} {g : Ω → ℝ} (hg : Integrable g μ) :
+    [IsFiniteMeasure μ] {f : Filtration ι m} {g : Ω → ℝ} (hg : Integrable g μ) :
     UniformIntegrable (fun i => μ[g|f i]) 1 μ :=
   hg.uniformIntegrable_condexp f.le
 #align measure_theory.integrable.uniform_integrable_condexp_filtration MeasureTheory.Integrable.uniformIntegrable_condexp_filtration
@@ -244,7 +244,7 @@ variable [Preorder ι]
 such that `sₙ` is measurable with respect to the `n`-the sub-σ-algebra in `filtration_of_set`. -/
 def filtrationOfSet {s : ι → Set Ω} (hsm : ∀ i, MeasurableSet (s i)) : Filtration ι m
     where
-  seq i := MeasurableSpace.generateFrom { t | ∃ j ≤ i, s j = t }
+  seq i := MeasurableSpace.generateFrom {t | ∃ j ≤ i, s j = t}
   mono' n m hnm := MeasurableSpace.generateFrom_mono fun t ⟨k, hk₁, hk₂⟩ => ⟨k, hk₁.trans hnm, hk₂⟩
   le' n := MeasurableSpace.generateFrom_le fun t ⟨k, hk₁, hk₂⟩ => hk₂ ▸ hsm k
 #align measure_theory.filtration_of_set MeasureTheory.filtrationOfSet
@@ -303,10 +303,10 @@ theorem filtrationOfSet_eq_natural [MulZeroOneClass β] [Nontrivial β] {s : ι 
   · rintro t ⟨n, ht⟩
     suffices
       MeasurableSpace.generateFrom
-          { t |
+          {t |
             ∃ H : n ≤ i,
-              measurable_set[MeasurableSpace.comap ((s n).indicator (fun ω => 1 : Ω → β)) mβ] t } ≤
-        generate_from { t | ∃ (j : ι) (H : j ≤ i), s j = t }
+              measurable_set[MeasurableSpace.comap ((s n).indicator (fun ω => 1 : Ω → β)) mβ] t} ≤
+        generate_from {t | ∃ (j : ι) (H : j ≤ i), s j = t}
       by exact this _ ht
     refine' generate_from_le _
     rintro t ⟨hn, u, hu, hu'⟩

@@ -119,7 +119,7 @@ end Kernel
 
 /-- A kernel is a Markov kernel if every measure in its image is a probability measure. -/
 class IsMarkovKernel (κ : kernel α β) : Prop where
-  ProbabilityMeasure : ∀ a, ProbabilityMeasure (κ a)
+  IsProbabilityMeasure : ∀ a, IsProbabilityMeasure (κ a)
 #align probability_theory.is_markov_kernel ProbabilityTheory.IsMarkovKernel
 
 /-- A kernel is finite if every measure in its image is finite, with a uniform bound. -/
@@ -168,13 +168,13 @@ instance IsFiniteKernel.add (κ η : kernel α β) [IsFiniteKernel κ] [IsFinite
 variable {κ : kernel α β}
 
 instance IsMarkovKernel.is_probability_measure' [h : IsMarkovKernel κ] (a : α) :
-    ProbabilityMeasure (κ a) :=
-  IsMarkovKernel.probabilityMeasure a
+    IsProbabilityMeasure (κ a) :=
+  IsMarkovKernel.isProbabilityMeasure a
 #align probability_theory.is_markov_kernel.is_probability_measure' ProbabilityTheory.IsMarkovKernel.is_probability_measure'
 
-instance IsFiniteKernel.finiteMeasure [h : IsFiniteKernel κ] (a : α) : FiniteMeasure (κ a) :=
+instance IsFiniteKernel.isFiniteMeasure [h : IsFiniteKernel κ] (a : α) : IsFiniteMeasure (κ a) :=
   ⟨(kernel.measure_le_bound κ a Set.univ).trans_lt (IsFiniteKernel.bound_lt_top κ)⟩
-#align probability_theory.is_finite_kernel.is_finite_measure ProbabilityTheory.IsFiniteKernel.finiteMeasure
+#align probability_theory.is_finite_kernel.is_finite_measure ProbabilityTheory.IsFiniteKernel.isFiniteMeasure
 
 instance (priority := 100) IsMarkovKernel.isFiniteKernel [h : IsMarkovKernel κ] :
     IsFiniteKernel κ :=
@@ -314,13 +314,13 @@ instance IsSFiniteKernel.add (κ η : kernel α β) [IsSFiniteKernel κ] [IsSFin
 theorem IsSFiniteKernel.finset_sum {κs : ι → kernel α β} (I : Finset ι)
     (h : ∀ i ∈ I, IsSFiniteKernel (κs i)) : IsSFiniteKernel (∑ i in I, κs i) := by
   classical
-    induction' I using Finset.induction with i I hi_nmem_I h_ind h
-    · rw [Finset.sum_empty]; infer_instance
-    · rw [Finset.sum_insert hi_nmem_I]
-      haveI : is_s_finite_kernel (κs i) := h i (Finset.mem_insert_self _ _)
-      have : is_s_finite_kernel (∑ x : ι in I, κs x) :=
-        h_ind fun i hiI => h i (Finset.mem_insert_of_mem hiI)
-      exact is_s_finite_kernel.add _ _
+  induction' I using Finset.induction with i I hi_nmem_I h_ind h
+  · rw [Finset.sum_empty]; infer_instance
+  · rw [Finset.sum_insert hi_nmem_I]
+    haveI : is_s_finite_kernel (κs i) := h i (Finset.mem_insert_self _ _)
+    have : is_s_finite_kernel (∑ x : ι in I, κs x) :=
+      h_ind fun i hiI => h i (Finset.mem_insert_of_mem hiI)
+    exact is_s_finite_kernel.add _ _
 #align probability_theory.kernel.is_s_finite_kernel.finset_sum ProbabilityTheory.kernel.IsSFiniteKernel.finset_sum
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i m) -/
@@ -454,12 +454,12 @@ theorem const_apply (μβ : Measure β) (a : α) : const α μβ a = μβ :=
   rfl
 #align probability_theory.kernel.const_apply ProbabilityTheory.kernel.const_apply
 
-instance isFiniteKernel_const {μβ : Measure β} [hμβ : FiniteMeasure μβ] :
+instance isFiniteKernel_const {μβ : Measure β} [hμβ : IsFiniteMeasure μβ] :
     IsFiniteKernel (const α μβ) :=
   ⟨⟨μβ Set.univ, measure_lt_top _ _, fun a => le_rfl⟩⟩
 #align probability_theory.kernel.is_finite_kernel_const ProbabilityTheory.kernel.isFiniteKernel_const
 
-instance isMarkovKernel_const {μβ : Measure β} [hμβ : ProbabilityMeasure μβ] :
+instance isMarkovKernel_const {μβ : Measure β} [hμβ : IsProbabilityMeasure μβ] :
     IsMarkovKernel (const α μβ) :=
   ⟨fun a => hμβ⟩
 #align probability_theory.kernel.is_markov_kernel_const ProbabilityTheory.kernel.isMarkovKernel_const

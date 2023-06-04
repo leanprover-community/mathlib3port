@@ -121,7 +121,7 @@ theorem NormalizeFinLt.cast {n m} {nm} {a : Fin m} {a' : ℕ} (h : NormalizeFinL
 #align tactic.norm_fin.normalize_fin_lt.cast Tactic.NormFin.NormalizeFinLt.cast
 
 theorem NormalizeFin.cast {n m} {nm} {a : Fin m} {a' : ℕ} (h : NormalizeFin m a a') :
-    NormalizeFin n (Fin.cast nm a) a' := by convert← normalize_fin_lt.cast h
+    NormalizeFin n (Fin.cast nm a) a' := by convert ← normalize_fin_lt.cast h
 #align tactic.norm_fin.normalize_fin.cast Tactic.NormFin.NormalizeFin.cast
 
 theorem NormalizeFinLt.castAdd {n m} {a : Fin n} {a' : ℕ} (h : NormalizeFinLt n a a') :

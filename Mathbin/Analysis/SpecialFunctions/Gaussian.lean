@@ -110,7 +110,7 @@ theorem integrable_rpow_mul_exp_neg_mul_sq {b : ℝ} (hb : 0 < b) {s : ℝ} (hs 
       (measurable_id'.neg.pow measurable_const).mul
         ((measurable_id'.pow measurable_const).const_mul (-b)).exp
   · have : MeasurableSet (Ioi (0 : ℝ)) := measurableSet_Ioi
-    filter_upwards [ae_restrict_mem this]with x hx
+    filter_upwards [ae_restrict_mem this] with x hx
     have h'x : 0 ≤ x := le_of_lt hx
     rw [Real.norm_eq_abs, abs_mul, abs_of_nonneg (exp_pos _).le]
     apply mul_le_mul_of_nonneg_right _ (exp_pos _).le
@@ -184,7 +184,7 @@ theorem integral_mul_cexp_neg_mul_sq {b : ℂ} (hb : 0 < b.re) :
     ∀ x : ℂ, HasDerivAt (fun x => -(2 * b)⁻¹ * cexp (-b * x ^ 2)) (x * cexp (-b * x ^ 2)) x :=
     by
     intro x
-    convert((hasDerivAt_pow 2 x).const_mul (-b)).cexp.const_mul (-(2 * b)⁻¹) using 1
+    convert ((hasDerivAt_pow 2 x).const_mul (-b)).cexp.const_mul (-(2 * b)⁻¹) using 1
     field_simp [hb']
     ring
   have B : tendsto (fun y : ℝ => -(2 * b)⁻¹ * cexp (-b * ↑y ^ 2)) at_top (𝓝 (-(2 * b)⁻¹ * 0)) :=
@@ -194,7 +194,8 @@ theorem integral_mul_cexp_neg_mul_sq {b : ℂ} (hb : 0 < b.re) :
     exact
       tendsto_exp_at_bot.comp
         (tendsto.neg_const_mul_at_top (neg_lt_zero.2 hb) (tendsto_pow_at_top two_ne_zero))
-  convert integral_Ioi_of_has_deriv_at_of_tendsto' (fun x hx => (A ↑x).comp_of_real)
+  convert
+    integral_Ioi_of_has_deriv_at_of_tendsto' (fun x hx => (A ↑x).comp_of_real)
       (integrable_mul_cexp_neg_mul_sq hb).IntegrableOn B
   simp only [MulZeroClass.mul_zero, of_real_zero, zero_pow', Ne.def, bit0_eq_zero, Nat.one_ne_zero,
     not_false_iff, Complex.exp_zero, mul_one, sub_neg_eq_add, zero_add]
@@ -652,7 +653,7 @@ theorem Complex.tsum_exp_neg_mul_int_sq {a : ℂ} (ha : 0 < a.re) :
     rw [ha, zero_re]
   have f_bd : f =O[cocompact ℝ] fun x => |x| ^ (-2 : ℝ) :=
     by
-    convert(isLittleO_exp_neg_mul_sq_cocompact h1 _).IsBigO
+    convert (isLittleO_exp_neg_mul_sq_cocompact h1 _).IsBigO
     ext1 x
     dsimp only [f]
     congr 1
@@ -660,7 +661,7 @@ theorem Complex.tsum_exp_neg_mul_int_sq {a : ℂ} (ha : 0 < a.re) :
   have Ff_bd : 𝓕 f =O[cocompact ℝ] fun x => |x| ^ (-2 : ℝ) :=
     by
     rw [fourier_transform_gaussian_pi ha]
-    convert(isLittleO_exp_neg_mul_sq_cocompact h2 _).IsBigO.const_mul_left _
+    convert (isLittleO_exp_neg_mul_sq_cocompact h2 _).IsBigO.const_mul_left _
     ext1 x
     congr 1
     ring_nf

@@ -93,7 +93,7 @@ attribute [local instance] Ultrafilter.semigroup Ultrafilter.addSemigroup
 theorem Ultrafilter.continuous_mul_left {M} [Semigroup M] (V : Ultrafilter M) :
     Continuous (· * V) :=
   TopologicalSpace.IsTopologicalBasis.continuous ultrafilterBasis_is_basis _ <|
-    Set.forall_range_iff.mpr fun s => ultrafilter_isOpen_basic { m : M | ∀ᶠ m' in V, m * m' ∈ s }
+    Set.forall_range_iff.mpr fun s => ultrafilter_isOpen_basic {m : M | ∀ᶠ m' in V, m * m' ∈ s}
 #align ultrafilter.continuous_mul_left Ultrafilter.continuous_mul_left
 #align ultrafilter.continuous_add_left Ultrafilter.continuous_add_left
 
@@ -139,7 +139,7 @@ theorem FP.mul {M} [Semigroup M] {a : Stream' M} {m : M} (hm : m ∈ FP a) :
 theorem exists_idempotent_ultrafilter_le_FP {M} [Semigroup M] (a : Stream' M) :
     ∃ U : Ultrafilter M, U * U = U ∧ ∀ᶠ m in U, m ∈ FP a :=
   by
-  let S : Set (Ultrafilter M) := ⋂ n, { U | ∀ᶠ m in U, m ∈ FP (a.drop n) }
+  let S : Set (Ultrafilter M) := ⋂ n, {U | ∀ᶠ m in U, m ∈ FP (a.drop n)}
   obtain ⟨U, hU, U_idem⟩ := exists_idempotent_in_compact_subsemigroup _ S _ _ _
   · refine' ⟨U, U_idem, _⟩; convert set.mem_Inter.mp hU 0
   · exact Ultrafilter.continuous_mul_left
@@ -175,11 +175,11 @@ theorem exists_FP_of_large {M} [Semigroup M] (U : Ultrafilter M) (U_idem : U * U
   let `s₁` be the intersection `s₀ ∩ { m | a₀ * m ∈ s₀ }`. By choice of `a₀`, this is again `U`-large,
   so we can repeat the argument starting from `s₁`, obtaining `a₁`, `s₂`, etc. This gives the desired
   infinite sequence. -/
-  have exists_elem : ∀ {s : Set M} (hs : s ∈ U), (s ∩ { m | ∀ᶠ m' in U, m * m' ∈ s }).Nonempty :=
+  have exists_elem : ∀ {s : Set M} (hs : s ∈ U), (s ∩ {m | ∀ᶠ m' in U, m * m' ∈ s}).Nonempty :=
     fun s hs => Ultrafilter.nonempty_of_mem (inter_mem hs <| by rw [← U_idem] at hs ; exact hs)
   let elem : { s // s ∈ U } → M := fun p => (exists_elem p.property).some
   let succ : { s // s ∈ U } → { s // s ∈ U } := fun p =>
-    ⟨p.val ∩ { m | elem p * m ∈ p.val },
+    ⟨p.val ∩ {m | elem p * m ∈ p.val},
       inter_mem p.2 <| show _ from Set.inter_subset_right _ _ (exists_elem p.2).some_mem⟩
   use Stream'.corec elem succ (Subtype.mk s₀ sU)
   suffices ∀ (a : Stream' M), ∀ m ∈ FP a, ∀ p, a = Stream'.corec elem succ p → m ∈ p.val by

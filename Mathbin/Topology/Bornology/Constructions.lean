@@ -187,9 +187,8 @@ theorem boundedSpace_induced_iff {α β : Type _} [Bornology β] {f : α → β}
 #align bounded_space_induced_iff boundedSpace_induced_iff
 
 #print boundedSpace_subtype_iff /-
-theorem boundedSpace_subtype_iff {p : α → Prop} :
-    BoundedSpace (Subtype p) ↔ IsBounded { x | p x } := by
-  rw [boundedSpace_induced_iff, Subtype.range_coe_subtype]
+theorem boundedSpace_subtype_iff {p : α → Prop} : BoundedSpace (Subtype p) ↔ IsBounded {x | p x} :=
+  by rw [boundedSpace_induced_iff, Subtype.range_coe_subtype]
 #align bounded_space_subtype_iff boundedSpace_subtype_iff
 -/
 
@@ -206,7 +205,7 @@ alias boundedSpace_val_set_iff ↔ _ Bornology.IsBounded.boundedSpace_val
 #align bornology.is_bounded.bounded_space_coe Bornology.IsBounded.boundedSpace_val
 
 instance [BoundedSpace α] {p : α → Prop} : BoundedSpace (Subtype p) :=
-  (IsBounded.all { x | p x }).boundedSpace_subtype
+  (IsBounded.all {x | p x}).boundedSpace_subtype
 
 /-!
 ### `additive`, `multiplicative`

@@ -118,7 +118,7 @@ instance {X Y : Compactum} : CoeFun (X ⟶ Y) fun f => X → Y :=
   ⟨fun f => f.f⟩
 
 instance : HasLimits Compactum :=
-  has_limits_of_has_limits_creates_limits forget
+  hasLimits_of_hasLimits_createsLimits forget
 
 /-- The structure map for a compactum, essentially sending an ultrafilter to its limit. -/
 def str (X : Compactum) : Ultrafilter X → X :=
@@ -196,7 +196,7 @@ instance {X : Compactum} : CompactSpace X :=
 
 /-- A local definition used only in the proofs. -/
 private def basic {X : Compactum} (A : Set X) : Set (Ultrafilter X) :=
-  { F | A ∈ F }
+  {F | A ∈ F}
 
 /-- A local definition used only in the proofs. -/
 private def cl {X : Compactum} (A : Set X) : Set X :=
@@ -207,7 +207,7 @@ private theorem basic_inter {X : Compactum} (A B : Set X) : basic (A ∩ B) = ba
   ext G
   constructor
   · intro hG
-    constructor <;> filter_upwards [hG]with _
+    constructor <;> filter_upwards [hG] with _
     exacts [And.left, And.right]
   · rintro ⟨h1, h2⟩
     exact inter_mem h1 h2
@@ -223,8 +223,8 @@ private theorem cl_cl {X : Compactum} (A : Set X) : cl (cl A) ⊆ cl A :=
   let fsu := Finset (Set (Ultrafilter X))
   let ssu := Set (Set (Ultrafilter X))
   let ι : fsu → ssu := coe
-  let C0 : ssu := { Z | ∃ B ∈ F, X.str ⁻¹' B = Z }
-  let AA := { G : Ultrafilter X | A ∈ G }
+  let C0 : ssu := {Z | ∃ B ∈ F, X.str ⁻¹' B = Z}
+  let AA := {G : Ultrafilter X | A ∈ G}
   let C1 := insert AA C0
   let C2 := finite_inter_closure C1
   -- C0 is closed under intersections.
@@ -296,7 +296,7 @@ theorem str_eq_of_le_nhds {X : Compactum} (F : Ultrafilter X) (x : X) : ↑F ≤
   let fsu := Finset (Set (Ultrafilter X))
   let ssu := Set (Set (Ultrafilter X))
   let ι : fsu → ssu := coe
-  let T0 : ssu := { S | ∃ A ∈ F, S = basic A }
+  let T0 : ssu := {S | ∃ A ∈ F, S = basic A}
   let AA := X.str ⁻¹' {x}
   let T1 := insert AA T0
   let T2 := finite_inter_closure T1
@@ -429,7 +429,7 @@ noncomputable def ofTopologicalSpace (X : Type _) [TopologicalSpace X] [CompactS
       rw [le_nhds_iff]
       intro U hx hU
       exact mem_coe.2 (c2 _ _ (by rwa [← c1]) hU)
-    have c4 : ∀ U : Set X, x ∈ U → IsOpen U → { G : Ultrafilter X | U ∈ G } ∈ FF :=
+    have c4 : ∀ U : Set X, x ∈ U → IsOpen U → {G : Ultrafilter X | U ∈ G} ∈ FF :=
       by
       intro U hx hU
       suffices Ultrafilter.lim ⁻¹' U ∈ FF

@@ -87,7 +87,7 @@ abbrev exp : C ⥤ C :=
   ihom A
 #align category_theory.exp CategoryTheory.exp
 
-namespace Exp
+namespace exp
 
 /-- The adjunction between A ⨯ - and (-)^A. -/
 abbrev adjunction : prod.functor.obj A ⊣ exp A :=
@@ -120,7 +120,7 @@ theorem coev_ev : (coev A).app (A ⟹ B) ≫ (exp A).map ((ev A).app B) = 𝟙 (
   ihom.coev_ev A B
 #align category_theory.exp.coev_ev CategoryTheory.exp.coev_ev
 
-end Exp
+end exp
 
 instance : PreservesColimits (prod.functor.obj A) :=
   (ihom.adjunction A).leftAdjointPreservesColimits

@@ -154,7 +154,7 @@ theorem differentiable_within_at_localInvariantProp :
       rw [this] at h 
       have : I (e x) ∈ I.symm ⁻¹' e.target ∩ Set.range I := by simp only [hx, mfld_simps]
       have := (mem_groupoid_of_pregroupoid.2 he).2.ContDiffWithinAt this
-      convert(h.comp' _ (this.differentiable_within_at le_top)).mono_of_mem _ using 1
+      convert (h.comp' _ (this.differentiable_within_at le_top)).mono_of_mem _ using 1
       · ext y; simp only [mfld_simps]
       refine'
         mem_nhds_within.mpr
@@ -174,7 +174,7 @@ theorem differentiable_within_at_localInvariantProp :
       have A : (I' ∘ f ∘ I.symm) (I x) ∈ I'.symm ⁻¹' e'.source ∩ Set.range I' := by
         simp only [hx, mfld_simps]
       have := (mem_groupoid_of_pregroupoid.2 he').1.ContDiffWithinAt A
-      convert(this.differentiable_within_at le_top).comp _ h _
+      convert (this.differentiable_within_at le_top).comp _ h _
       · ext y; simp only [mfld_simps]
       · intro y hy; simp only [mfld_simps] at hy ; simpa only [hy, mfld_simps] using hs hy.1 }
 #align differentiable_within_at_local_invariant_prop differentiable_within_at_localInvariantProp
@@ -740,7 +740,7 @@ theorem HasMfderivWithinAt.congr_of_eventuallyEq (h : HasMfderivWithinAt I I' f 
   refine' ⟨ContinuousWithinAt.congr_of_eventuallyEq h.1 h₁ hx, _⟩
   apply HasFDerivWithinAt.congr_of_eventuallyEq h.2
   · have :
-      (extChartAt I x).symm ⁻¹' { y | f₁ y = f y } ∈
+      (extChartAt I x).symm ⁻¹' {y | f₁ y = f y} ∈
         𝓝[(extChartAt I x).symm ⁻¹' s ∩ range I] (extChartAt I x) x :=
       extChartAt_preimage_mem_nhdsWithin I x h₁
     apply Filter.mem_of_superset this fun y => _
@@ -852,9 +852,9 @@ theorem Filter.EventuallyEq.mfderiv_eq (hL : f₁ =ᶠ[𝓝 x] f) :
 omit Is I's
 
 theorem written_in_ext_chart_comp (h : ContinuousWithinAt f s x) :
-    { y |
+    {y |
         writtenInExtChartAt I I'' x (g ∘ f) y =
-          (writtenInExtChartAt I' I'' (f x) g ∘ writtenInExtChartAt I I' x f) y } ∈
+          (writtenInExtChartAt I' I'' (f x) g ∘ writtenInExtChartAt I I' x f) y} ∈
       𝓝[(extChartAt I x).symm ⁻¹' s ∩ range I] (extChartAt I x) x :=
   by
   apply
@@ -1000,8 +1000,8 @@ theorem uniqueMdiffWithinAt_iff_uniqueDiffWithinAt :
   simp only [UniqueMdiffWithinAt, mfld_simps]
 #align unique_mdiff_within_at_iff_unique_diff_within_at uniqueMdiffWithinAt_iff_uniqueDiffWithinAt
 
-alias uniqueMdiffWithinAt_iff_uniqueDiffWithinAt ↔
-  UniqueMdiffWithinAt.uniqueDiffWithinAt UniqueDiffWithinAt.uniqueMdiffWithinAt
+alias uniqueMdiffWithinAt_iff_uniqueDiffWithinAt ↔ UniqueMdiffWithinAt.uniqueDiffWithinAt
+  UniqueDiffWithinAt.uniqueMdiffWithinAt
 #align unique_mdiff_within_at.unique_diff_within_at UniqueMdiffWithinAt.uniqueDiffWithinAt
 #align unique_diff_within_at.unique_mdiff_within_at UniqueDiffWithinAt.uniqueMdiffWithinAt
 
@@ -1024,8 +1024,8 @@ theorem hasMfderivWithinAt_iff_hasFDerivWithinAt {f'} :
     HasFDerivWithinAt.continuousWithinAt
 #align has_mfderiv_within_at_iff_has_fderiv_within_at hasMfderivWithinAt_iff_hasFDerivWithinAt
 
-alias hasMfderivWithinAt_iff_hasFDerivWithinAt ↔
-  HasMfderivWithinAt.hasFDerivWithinAt HasFDerivWithinAt.hasMfderivWithinAt
+alias hasMfderivWithinAt_iff_hasFDerivWithinAt ↔ HasMfderivWithinAt.hasFDerivWithinAt
+  HasFDerivWithinAt.hasMfderivWithinAt
 #align has_mfderiv_within_at.has_fderiv_within_at HasMfderivWithinAt.hasFDerivWithinAt
 #align has_fderiv_within_at.has_mfderiv_within_at HasFDerivWithinAt.hasMfderivWithinAt
 
@@ -1060,8 +1060,8 @@ theorem mdifferentiableAt_iff_differentiableAt :
   exact ⟨fun H => H.2, fun H => ⟨H.ContinuousAt, H⟩⟩
 #align mdifferentiable_at_iff_differentiable_at mdifferentiableAt_iff_differentiableAt
 
-alias mdifferentiableAt_iff_differentiableAt ↔
-  MdifferentiableAt.differentiableAt DifferentiableAt.mdifferentiableAt
+alias mdifferentiableAt_iff_differentiableAt ↔ MdifferentiableAt.differentiableAt
+  DifferentiableAt.mdifferentiableAt
 #align mdifferentiable_at.differentiable_at MdifferentiableAt.differentiableAt
 #align differentiable_at.mdifferentiable_at DifferentiableAt.mdifferentiableAt
 
@@ -1072,8 +1072,8 @@ theorem mdifferentiableOn_iff_differentiableOn :
     mdifferentiableWithinAt_iff_differentiableWithinAt]
 #align mdifferentiable_on_iff_differentiable_on mdifferentiableOn_iff_differentiableOn
 
-alias mdifferentiableOn_iff_differentiableOn ↔
-  MdifferentiableOn.differentiableOn DifferentiableOn.mdifferentiableOn
+alias mdifferentiableOn_iff_differentiableOn ↔ MdifferentiableOn.differentiableOn
+  DifferentiableOn.mdifferentiableOn
 #align mdifferentiable_on.differentiable_on MdifferentiableOn.differentiableOn
 #align differentiable_on.mdifferentiable_on DifferentiableOn.mdifferentiableOn
 
@@ -1083,8 +1083,8 @@ theorem mdifferentiable_iff_differentiable :
   simp only [Mdifferentiable, Differentiable, mdifferentiableAt_iff_differentiableAt]
 #align mdifferentiable_iff_differentiable mdifferentiable_iff_differentiable
 
-alias mdifferentiable_iff_differentiable ↔
-  Mdifferentiable.differentiable Differentiable.mdifferentiable
+alias mdifferentiable_iff_differentiable ↔ Mdifferentiable.differentiable
+  Differentiable.mdifferentiable
 #align mdifferentiable.differentiable Mdifferentiable.differentiable
 #align differentiable.mdifferentiable Differentiable.mdifferentiable
 

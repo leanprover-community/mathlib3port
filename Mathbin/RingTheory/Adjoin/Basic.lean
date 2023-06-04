@@ -53,7 +53,7 @@ theorem adjoin_le {S : Subalgebra R A} (H : s ⊆ S) : adjoin R s ≤ S :=
   Algebra.gc.l_le H
 #align algebra.adjoin_le Algebra.adjoin_le
 
-theorem adjoin_eq_sInf : adjoin R s = sInf { p | s ⊆ p } :=
+theorem adjoin_eq_sInf : adjoin R s = sInf {p | s ⊆ p} :=
   le_antisymm (le_sInf fun _ h => adjoin_le h) (sInf_le subset_adjoin)
 #align algebra.adjoin_eq_Inf Algebra.adjoin_eq_sInf
 

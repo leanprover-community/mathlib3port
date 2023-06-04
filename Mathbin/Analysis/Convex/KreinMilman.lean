@@ -70,7 +70,7 @@ variable {E : Type _} [AddCommGroup E] [Module ℝ E] [TopologicalSpace E] [T2Sp
 theorem IsCompact.has_extreme_point (hscomp : IsCompact s) (hsnemp : s.Nonempty) :
     (s.extremePoints ℝ).Nonempty :=
   by
-  let S : Set (Set E) := { t | t.Nonempty ∧ IsClosed t ∧ IsExtreme ℝ s t }
+  let S : Set (Set E) := {t | t.Nonempty ∧ IsClosed t ∧ IsExtreme ℝ s t}
   rsuffices ⟨t, ⟨⟨x, hxt⟩, htclos, hst⟩, hBmin⟩ : ∃ t ∈ S, ∀ u ∈ S, u ⊆ t → u = t
   · refine' ⟨x, mem_extremePoints_iff_extreme_singleton.2 _⟩
     rwa [← eq_singleton_iff_unique_mem.2 ⟨hxt, fun y hyB => _⟩]
@@ -79,9 +79,9 @@ theorem IsCompact.has_extreme_point (hscomp : IsCompact s) (hsnemp : s.Nonempty)
     obtain ⟨z, hzt, hz⟩ :=
       (isCompact_of_isClosed_subset hscomp htclos hst.1).exists_forall_ge ⟨x, hxt⟩
         l.continuous.continuous_on
-    have h : IsExposed ℝ t ({ z ∈ t | ∀ w ∈ t, l w ≤ l z }) := fun h => ⟨l, rfl⟩
+    have h : IsExposed ℝ t ({z ∈ t | ∀ w ∈ t, l w ≤ l z}) := fun h => ⟨l, rfl⟩
     rw [←
-      hBmin ({ z ∈ t | ∀ w ∈ t, l w ≤ l z })
+      hBmin ({z ∈ t | ∀ w ∈ t, l w ≤ l z})
         ⟨⟨z, hzt, hz⟩, h.is_closed htclos, hst.trans h.is_extreme⟩ (t.sep_subset _)] at
       hyB 
     exact hl.not_le (hyB.2 x hxt)
@@ -116,7 +116,7 @@ theorem closure_convexHull_extremePoints (hscomp : IsCompact s) (hAconv : Convex
   obtain ⟨x, hxA, hxt⟩ := not_subset.1 hs
   obtain ⟨l, r, hlr, hrx⟩ :=
     geometric_hahn_banach_closed_point (convex_convexHull _ _).closure isClosed_closure hxt
-  have h : IsExposed ℝ s ({ y ∈ s | ∀ z ∈ s, l z ≤ l y }) := fun _ => ⟨l, rfl⟩
+  have h : IsExposed ℝ s ({y ∈ s | ∀ z ∈ s, l z ≤ l y}) := fun _ => ⟨l, rfl⟩
   obtain ⟨z, hzA, hz⟩ := hscomp.exists_forall_ge ⟨x, hxA⟩ l.continuous.continuous_on
   obtain ⟨y, hy⟩ := (h.is_compact hscomp).has_extreme_point ⟨z, hzA, hz⟩
   linarith [hlr _

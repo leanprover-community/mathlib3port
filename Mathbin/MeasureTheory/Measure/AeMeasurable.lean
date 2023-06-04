@@ -80,7 +80,7 @@ theorem ae_inf_principal_eq_mk {s} (h : AEMeasurable f (μ.restrict s)) : f =ᶠ
 theorem sum_measure [Countable ι] {μ : ι → Measure α} (h : ∀ i, AEMeasurable f (μ i)) :
     AEMeasurable f (Sum μ) := by
   nontriviality β; inhabit β
-  set s : ι → Set α := fun i => to_measurable (μ i) { x | f x ≠ (h i).mk f x }
+  set s : ι → Set α := fun i => to_measurable (μ i) {x | f x ≠ (h i).mk f x}
   have hsμ : ∀ i, μ i (s i) = 0 := by intro i; rw [measure_to_measurable]; exact (h i).ae_eq_mk
   have hsm : MeasurableSet (⋂ i, s i) :=
     MeasurableSet.iInter fun i => measurable_set_to_measurable _ _
@@ -200,7 +200,7 @@ theorem prod_mk {f : α → β} {g : α → γ} (hf : AEMeasurable f μ) (hg : A
 theorem exists_ae_eq_range_subset (H : AEMeasurable f μ) {t : Set β} (ht : ∀ᵐ x ∂μ, f x ∈ t)
     (h₀ : t.Nonempty) : ∃ g, Measurable g ∧ range g ⊆ t ∧ f =ᵐ[μ] g :=
   by
-  let s : Set α := to_measurable μ ({ x | f x = H.mk f x ∧ f x ∈ t }ᶜ)
+  let s : Set α := to_measurable μ ({x | f x = H.mk f x ∧ f x ∈ t}ᶜ)
   let g : α → β := piecewise s (fun x => h₀.some) (H.mk f)
   refine' ⟨g, _, _, _⟩
   · exact Measurable.piecewise (measurable_set_to_measurable _ _) measurable_const H.measurable_mk
@@ -212,11 +212,11 @@ theorem exists_ae_eq_range_subset (H : AEMeasurable f μ) {t : Set β} (ht : ∀
       apply subset_to_measurable
       simp (config := { contextual := true }) only [hx, mem_compl_iff, mem_set_of_eq, not_and,
         not_false_iff, imp_true_iff]
-  · have A : μ (to_measurable μ ({ x | f x = H.mk f x ∧ f x ∈ t }ᶜ)) = 0 :=
+  · have A : μ (to_measurable μ ({x | f x = H.mk f x ∧ f x ∈ t}ᶜ)) = 0 :=
       by
       rw [measure_to_measurable, ← compl_mem_ae_iff, compl_compl]
       exact H.ae_eq_mk.and ht
-    filter_upwards [compl_mem_ae_iff.2 A]with x hx
+    filter_upwards [compl_mem_ae_iff.2 A] with x hx
     rw [mem_compl_iff] at hx 
     simp only [g, hx, piecewise_eq_of_not_mem, not_false_iff]
     contrapose! hx
@@ -240,7 +240,7 @@ theorem subtype_mk (h : AEMeasurable f μ) {s : Set β} {hfs : ∀ x, f x ∈ s}
   obtain ⟨g, g_meas, hg, fg⟩ : ∃ g : α → β, Measurable g ∧ range g ⊆ s ∧ f =ᵐ[μ] g :=
     h.exists_ae_eq_range_subset (eventually_of_forall hfs) ⟨_, hfs default⟩
   refine' ⟨cod_restrict g s fun x => hg (mem_range_self _), Measurable.subtype_mk g_meas, _⟩
-  filter_upwards [fg]with x hx
+  filter_upwards [fg] with x hx
   simpa [Subtype.ext_iff]
 #align ae_measurable.subtype_mk AEMeasurable.subtype_mk
 

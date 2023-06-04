@@ -43,7 +43,7 @@ variable {R S : Type _} [CommRing R] [CommRing S] (I J : Ideal R)
 #print Ideal.minimalPrimes /-
 /-- `I.minimal_primes` is the set of ideals that are minimal primes over `I`. -/
 def Ideal.minimalPrimes : Set (Ideal R) :=
-  minimals (· ≤ ·) { p | p.IsPrime ∧ I ≤ p }
+  minimals (· ≤ ·) {p | p.IsPrime ∧ I ≤ p}
 #align ideal.minimal_primes Ideal.minimalPrimes
 -/
 
@@ -60,8 +60,8 @@ variable {I J}
 theorem Ideal.exists_minimalPrimes_le [J.IsPrime] (e : I ≤ J) : ∃ p ∈ I.minimalPrimes, p ≤ J :=
   by
   suffices
-    ∃ m ∈ { p : (Ideal R)ᵒᵈ | Ideal.IsPrime p ∧ I ≤ OrderDual.ofDual p },
-      OrderDual.toDual J ≤ m ∧ ∀ z ∈ { p : (Ideal R)ᵒᵈ | Ideal.IsPrime p ∧ I ≤ p }, m ≤ z → z = m
+    ∃ m ∈ {p : (Ideal R)ᵒᵈ | Ideal.IsPrime p ∧ I ≤ OrderDual.ofDual p},
+      OrderDual.toDual J ≤ m ∧ ∀ z ∈ {p : (Ideal R)ᵒᵈ | Ideal.IsPrime p ∧ I ≤ p}, m ≤ z → z = m
     by
     obtain ⟨p, h₁, h₂, h₃⟩ := this
     simp_rw [← @eq_comm _ p] at h₃ 
@@ -114,7 +114,8 @@ theorem Ideal.exists_comap_eq_of_mem_minimalPrimes_of_injective {f : R →+* S}
   have : Nontrivial (Localization (Submonoid.map f p.prime_compl)) :=
     by
     refine' ⟨⟨1, 0, _⟩⟩
-    convert(IsLocalization.map_injective_of_injective p.prime_compl (Localization.AtPrime p)
+    convert
+      (IsLocalization.map_injective_of_injective p.prime_compl (Localization.AtPrime p)
             (Localization <| p.prime_compl.map f) hf).Ne
         one_ne_zero
     · rw [map_one]; · rw [map_zero]

@@ -4,15 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.convex.specific_functions.deriv
-! leanprover-community/mathlib commit 3bce8d800a6f2b8f63fe1e588fd76a9ff4adcebe
+! leanprover-community/mathlib commit a16665637b378379689c566204817ae792ac8b39
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
-import Mathbin.Analysis.Convex.SpecificFunctions.Basic
 import Mathbin.Analysis.Calculus.Deriv.Zpow
 import Mathbin.Analysis.SpecialFunctions.Pow.Deriv
 import Mathbin.Analysis.SpecialFunctions.Sqrt
-import Mathbin.Tactic.LinearCombination
 
 /-!
 # Collection of convex functions
@@ -109,7 +107,7 @@ theorem strictConvexOn_zpow {m : ℤ} (hm₀ : m ≠ 0) (hm₁ : m ≠ 1) :
   rw [iter_deriv_zpow]
   refine' mul_pos _ (zpow_pos_of_pos hx _)
   exact_mod_cast int_prod_range_pos (even_bit0 1) fun hm => _
-  norm_cast  at hm 
+  norm_cast at hm 
   rw [← Finset.coe_Ico] at hm 
   fin_cases hm <;> cc
 #align strict_convex_on_zpow strictConvexOn_zpow
@@ -119,7 +117,7 @@ section SqrtMulLog
 theorem hasDerivAt_sqrt_mul_log {x : ℝ} (hx : x ≠ 0) :
     HasDerivAt (fun x => sqrt x * log x) ((2 + log x) / (2 * sqrt x)) x :=
   by
-  convert(has_deriv_at_sqrt hx).mul (has_deriv_at_log hx)
+  convert (has_deriv_at_sqrt hx).mul (has_deriv_at_log hx)
   rw [add_div, div_mul_right (sqrt x) two_ne_zero, ← div_eq_mul_inv, sqrt_div_self', add_comm,
     div_eq_mul_one_div, mul_comm]
 #align has_deriv_at_sqrt_mul_log hasDerivAt_sqrt_mul_log
@@ -150,7 +148,8 @@ theorem deriv2_sqrt_mul_log (x : ℝ) :
     refine' (hasDerivWithinAt_const _ _ 0).congr_of_mem (fun x hx => _) hx
     rw [sqrt_eq_zero_of_nonpos hx, MulZeroClass.mul_zero, div_zero]
   · have h₀ : sqrt x ≠ 0 := sqrt_ne_zero'.2 hx
-    convert(((has_deriv_at_log hx.ne').const_add 2).div ((has_deriv_at_sqrt hx.ne').const_mul 2) <|
+    convert
+      (((has_deriv_at_log hx.ne').const_add 2).div ((has_deriv_at_sqrt hx.ne').const_mul 2) <|
           mul_ne_zero two_ne_zero h₀).deriv using
       1
     nth_rw 3 [← mul_self_sqrt hx.le]

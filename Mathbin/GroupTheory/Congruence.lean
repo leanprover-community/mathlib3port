@@ -555,7 +555,7 @@ theorem inf_iff_and {c d : Con M} {x y} : (c ⊓ d) x y ↔ c x y ∧ d x y :=
     the infimum of the set of congruence relations containing `r`. -/
 @[to_additive add_con_gen_eq
       "The inductively defined smallest additive congruence relation\ncontaining a binary relation `r` equals the infimum of the set of additive congruence relations\ncontaining `r`."]
-theorem conGen_eq (r : M → M → Prop) : conGen r = sInf { s : Con M | ∀ x y, r x y → s x y } :=
+theorem conGen_eq (r : M → M → Prop) : conGen r = sInf {s : Con M | ∀ x y, r x y → s x y} :=
   le_antisymm
     (fun x y H =>
       ConGen.Rel.rec_on H (fun _ _ h _ hs => hs _ _ h) (Con.refl _) (fun _ _ _ => Con.symm _)
@@ -816,7 +816,7 @@ variable (M c)
       "The `add_submonoid` of `M × M` defined by an additive congruence\nrelation on an `add_monoid` `M`."]
 protected def submonoid : Submonoid (M × M)
     where
-  carrier := { x | c x.1 x.2 }
+  carrier := {x | c x.1 x.2}
   one_mem' := c.iseqv.1 1
   mul_mem' _ _ := c.mul
 #align con.submonoid Con.submonoid

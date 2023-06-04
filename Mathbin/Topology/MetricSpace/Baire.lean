@@ -275,7 +275,7 @@ theorem eventually_residual {p : α → Prop} :
     (∀ᶠ x in residual α, p x) ↔ ∃ t : Set α, IsGδ t ∧ Dense t ∧ ∀ x : α, x ∈ t → p x :=
   by
   -- this can probably be improved...
-  convert@mem_residual _ _ _ p
+  convert @mem_residual _ _ _ p
   simp_rw [exists_prop, and_comm' ((_ : Set α) ⊆ p), and_assoc']
   rfl
 #align eventually_residual eventually_residual

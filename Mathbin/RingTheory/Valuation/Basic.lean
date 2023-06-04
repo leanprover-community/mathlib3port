@@ -371,7 +371,7 @@ theorem one_lt_val_iff (v : Valuation K Γ₀) {x : K} (h : x ≠ 0) : 1 < v x �
 /-- The subgroup of elements whose valuation is less than a certain unit.-/
 def ltAddSubgroup (v : Valuation R Γ₀) (γ : Γ₀ˣ) : AddSubgroup R
     where
-  carrier := { x | v x < γ }
+  carrier := {x | v x < γ}
   zero_mem' := by have h := Units.ne_zero γ; contrapose! h; simpa using h
   add_mem' x y x_in y_in := lt_of_le_of_lt (v.map_add x y) (max_lt x_in y_in)
   neg_mem' x x_in := by rwa [Set.mem_setOf_eq, map_neg]
@@ -558,7 +558,7 @@ variable (v : Valuation R Γ₀)
 #print Valuation.supp /-
 /-- The support of a valuation `v : R → Γ₀` is the ideal of `R` where `v` vanishes. -/
 def supp : Ideal R where
-  carrier := { x | v x = 0 }
+  carrier := {x | v x = 0}
   zero_mem' := map_zero v
   add_mem' x y hx hy :=
     le_zero_iff.mp <|

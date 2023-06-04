@@ -37,17 +37,17 @@ section Basic
 variable {X Y : Type _} [TopologicalSpace X] {m : MeasurableSpace X} [TopologicalSpace Y]
   [T2Space Y] (μ ν : Measure X)
 
-#print MeasureTheory.Measure.OpenPosMeasure /-
+#print MeasureTheory.Measure.IsOpenPosMeasure /-
 /-- A measure is said to be `is_open_pos_measure` if it is positive on nonempty open sets. -/
-class OpenPosMeasure : Prop where
+class IsOpenPosMeasure : Prop where
   open_pos : ∀ U : Set X, IsOpen U → U.Nonempty → μ U ≠ 0
-#align measure_theory.measure.is_open_pos_measure MeasureTheory.Measure.OpenPosMeasure
+#align measure_theory.measure.is_open_pos_measure MeasureTheory.Measure.IsOpenPosMeasure
 -/
 
-variable [OpenPosMeasure μ] {s U : Set X} {x : X}
+variable [IsOpenPosMeasure μ] {s U : Set X} {x : X}
 
 theorem IsOpen.measure_ne_zero (hU : IsOpen U) (hne : U.Nonempty) : μ U ≠ 0 :=
-  OpenPosMeasure.open_pos U hU hne
+  IsOpenPosMeasure.open_pos U hU hne
 #align is_open.measure_ne_zero IsOpen.measure_ne_zero
 
 theorem IsOpen.measure_pos (hU : IsOpen U) (hne : U.Nonempty) : 0 < μ U :=
@@ -71,21 +71,21 @@ theorem measure_pos_of_mem_nhds (h : s ∈ 𝓝 x) : 0 < μ s :=
   measure_pos_of_nonempty_interior _ ⟨x, mem_interior_iff_mem_nhds.2 h⟩
 #align measure_theory.measure.measure_pos_of_mem_nhds MeasureTheory.Measure.measure_pos_of_mem_nhds
 
-theorem openPosMeasure_smul {c : ℝ≥0∞} (h : c ≠ 0) : OpenPosMeasure (c • μ) :=
+theorem isOpenPosMeasure_smul {c : ℝ≥0∞} (h : c ≠ 0) : IsOpenPosMeasure (c • μ) :=
   ⟨fun U Uo Une => mul_ne_zero h (Uo.measure_ne_zero μ Une)⟩
-#align measure_theory.measure.is_open_pos_measure_smul MeasureTheory.Measure.openPosMeasure_smul
+#align measure_theory.measure.is_open_pos_measure_smul MeasureTheory.Measure.isOpenPosMeasure_smul
 
 variable {μ ν}
 
-#print MeasureTheory.Measure.AbsolutelyContinuous.openPosMeasure /-
-protected theorem AbsolutelyContinuous.openPosMeasure (h : μ ≪ ν) : OpenPosMeasure ν :=
+#print MeasureTheory.Measure.AbsolutelyContinuous.isOpenPosMeasure /-
+protected theorem AbsolutelyContinuous.isOpenPosMeasure (h : μ ≪ ν) : IsOpenPosMeasure ν :=
   ⟨fun U ho hne h₀ => ho.measure_ne_zero μ hne (h h₀)⟩
-#align measure_theory.measure.absolutely_continuous.is_open_pos_measure MeasureTheory.Measure.AbsolutelyContinuous.openPosMeasure
+#align measure_theory.measure.absolutely_continuous.is_open_pos_measure MeasureTheory.Measure.AbsolutelyContinuous.isOpenPosMeasure
 -/
 
 #print LE.le.isOpenPosMeasure /-
-theorem LE.le.isOpenPosMeasure (h : μ ≤ ν) : OpenPosMeasure ν :=
-  h.AbsolutelyContinuous.OpenPosMeasure
+theorem LE.le.isOpenPosMeasure (h : μ ≤ ν) : IsOpenPosMeasure ν :=
+  h.AbsolutelyContinuous.IsOpenPosMeasure
 #align has_le.le.is_open_pos_measure LE.le.isOpenPosMeasure
 -/
 
@@ -104,7 +104,7 @@ theorem eqOn_open_of_ae_eq {f g : X → Y} (h : f =ᵐ[μ.restrict U] g) (hU : I
   by
   replace h := ae_imp_of_ae_restrict h
   simp only [eventually_eq, ae_iff, not_imp] at h 
-  have : IsOpen (U ∩ { a | f a ≠ g a }) :=
+  have : IsOpen (U ∩ {a | f a ≠ g a}) :=
     by
     refine' is_open_iff_mem_nhds.mpr fun a ha => inter_mem (hU.mem_nhds ha.1) _
     rcases ha with ⟨ha : a ∈ U, ha' : (f a, g a) ∈ diagonal Yᶜ⟩
@@ -141,7 +141,7 @@ end Basic
 section LinearOrder
 
 variable {X Y : Type _} [TopologicalSpace X] [LinearOrder X] [OrderTopology X]
-  {m : MeasurableSpace X} [TopologicalSpace Y] [T2Space Y] (μ : Measure X) [OpenPosMeasure μ]
+  {m : MeasurableSpace X} [TopologicalSpace Y] [T2Space Y] (μ : Measure X) [IsOpenPosMeasure μ]
 
 theorem measure_Ioi_pos [NoMaxOrder X] (a : X) : 0 < μ (Ioi a) :=
   isOpen_Ioi.measure_pos μ nonempty_Ioi
@@ -193,7 +193,7 @@ open MeasureTheory MeasureTheory.Measure
 namespace Metric
 
 variable {X : Type _} [PseudoMetricSpace X] {m : MeasurableSpace X} (μ : Measure X)
-  [OpenPosMeasure μ]
+  [IsOpenPosMeasure μ]
 
 theorem measure_ball_pos (x : X) {r : ℝ} (hr : 0 < r) : 0 < μ (ball x r) :=
   isOpen_ball.measure_pos μ (nonempty_ball.2 hr)
@@ -208,7 +208,7 @@ end Metric
 namespace Emetric
 
 variable {X : Type _} [PseudoEMetricSpace X] {m : MeasurableSpace X} (μ : Measure X)
-  [OpenPosMeasure μ]
+  [IsOpenPosMeasure μ]
 
 theorem measure_ball_pos (x : X) {r : ℝ≥0∞} (hr : r ≠ 0) : 0 < μ (ball x r) :=
   isOpen_ball.measure_pos μ ⟨x, mem_ball_self hr.bot_lt⟩

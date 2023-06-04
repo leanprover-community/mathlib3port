@@ -120,8 +120,8 @@ theorem prod_ite_eq [DecidableEq α] (f : α →₀ M) (a : α) (b : α → M �
 theorem sum_ite_self_eq [DecidableEq α] {N : Type _} [AddCommMonoid N] (f : α →₀ N) (a : α) :
     (f.Sum fun x v => ite (a = x) v 0) = f a := by
   classical
-    convert f.sum_ite_eq a fun x => id
-    simp [ite_eq_right_iff.2 Eq.symm]
+  convert f.sum_ite_eq a fun x => id
+  simp [ite_eq_right_iff.2 Eq.symm]
 #align finsupp.sum_ite_self_eq Finsupp.sum_ite_self_eq
 
 /-- A restatement of `prod_ite_eq` with the equality test reversed. -/
@@ -136,8 +136,8 @@ theorem prod_ite_eq' [DecidableEq α] (f : α →₀ M) (a : α) (b : α → M �
 theorem sum_ite_self_eq' [DecidableEq α] {N : Type _} [AddCommMonoid N] (f : α →₀ N) (a : α) :
     (f.Sum fun x v => ite (x = a) v 0) = f a := by
   classical
-    convert f.sum_ite_eq' a fun x => id
-    simp [ite_eq_right_iff.2 Eq.symm]
+  convert f.sum_ite_eq' a fun x => id
+  simp [ite_eq_right_iff.2 Eq.symm]
 #align finsupp.sum_ite_self_eq' Finsupp.sum_ite_self_eq'
 
 @[simp]
@@ -164,10 +164,10 @@ theorem onFinset_prod {s : Finset α} {f : α → M} {g : α → M → N} (hf : 
 theorem mul_prod_erase (f : α →₀ M) (y : α) (g : α → M → N) (hyf : y ∈ f.support) :
     g y (f y) * (erase y f).Prod g = f.Prod g := by
   classical
-    rw [Finsupp.prod, Finsupp.prod, ← Finset.mul_prod_erase _ _ hyf, Finsupp.support_erase,
-      Finset.prod_congr rfl]
-    intro h hx
-    rw [Finsupp.erase_ne (ne_of_mem_erase hx)]
+  rw [Finsupp.prod, Finsupp.prod, ← Finset.mul_prod_erase _ _ hyf, Finsupp.support_erase,
+    Finset.prod_congr rfl]
+  intro h hx
+  rw [Finsupp.erase_ne (ne_of_mem_erase hx)]
 #align finsupp.mul_prod_erase Finsupp.mul_prod_erase
 #align finsupp.add_sum_erase Finsupp.add_sum_erase
 
@@ -179,9 +179,9 @@ then its product over `f : α →₀ M` is the same as multiplying the value on 
 theorem mul_prod_erase' (f : α →₀ M) (y : α) (g : α → M → N) (hg : ∀ i : α, g i 0 = 1) :
     g y (f y) * (erase y f).Prod g = f.Prod g := by
   classical
-    by_cases hyf : y ∈ f.support
-    · exact Finsupp.mul_prod_erase f y g hyf
-    · rw [not_mem_support_iff.mp hyf, hg y, erase_of_not_mem_support hyf, one_mul]
+  by_cases hyf : y ∈ f.support
+  · exact Finsupp.mul_prod_erase f y g hyf
+  · rw [not_mem_support_iff.mp hyf, hg y, erase_of_not_mem_support hyf, one_mul]
 #align finsupp.mul_prod_erase' Finsupp.mul_prod_erase'
 #align finsupp.add_sum_erase' Finsupp.add_sum_erase'
 
@@ -510,15 +510,15 @@ theorem support_sum_eq_biUnion {α : Type _} {ι : Type _} {M : Type _} [Decidab
     (h : ∀ i₁ i₂, i₁ ≠ i₂ → Disjoint (g i₁).support (g i₂).support) :
     (∑ i in s, g i).support = s.biUnion fun i => (g i).support := by
   classical
-    apply Finset.induction_on s
-    · simp
-    · intro i s hi
-      simp only [hi, sum_insert, not_false_iff, bUnion_insert]
-      intro hs
-      rw [Finsupp.support_add_eq, hs]
-      rw [hs, Finset.disjoint_biUnion_right]
-      intro j hj
-      refine' h _ _ (ne_of_mem_of_not_mem hj hi).symm
+  apply Finset.induction_on s
+  · simp
+  · intro i s hi
+    simp only [hi, sum_insert, not_false_iff, bUnion_insert]
+    intro hs
+    rw [Finsupp.support_add_eq, hs]
+    rw [hs, Finset.disjoint_biUnion_right]
+    intro j hj
+    refine' h _ _ (ne_of_mem_of_not_mem hj hi).symm
 #align finsupp.support_sum_eq_bUnion Finsupp.support_sum_eq_biUnion
 
 theorem multiset_map_sum [Zero M] {f : α →₀ M} {m : β → γ} {h : α → M → Multiset β} :
@@ -546,7 +546,7 @@ theorem prod_add_index_of_disjoint [AddCommMonoid M] {f1 f2 : α →₀ M}
     Finset.prod_congr rfl fun x hx => by
       simp only [not_mem_support_iff.mp (disjoint_left.mp hd hx), add_zero]
   classical simp_rw [← this hd, ← this hd.symm, add_comm (f2 _), Finsupp.prod, support_add_eq hd,
-      prod_union hd, add_apply]
+    prod_union hd, add_apply]
 #align finsupp.prod_add_index_of_disjoint Finsupp.prod_add_index_of_disjoint
 #align finsupp.sum_add_index_of_disjoint Finsupp.sum_add_index_of_disjoint
 
@@ -554,11 +554,11 @@ theorem prod_dvd_prod_of_subset_of_dvd [AddCommMonoid M] [CommMonoid N] {f1 f2 :
     {g1 g2 : α → M → N} (h1 : f1.support ⊆ f2.support)
     (h2 : ∀ a : α, a ∈ f1.support → g1 a (f1 a) ∣ g2 a (f2 a)) : f1.Prod g1 ∣ f2.Prod g2 := by
   classical
-    simp only [Finsupp.prod, Finsupp.prod_mul]
-    rw [← sdiff_union_of_subset h1, prod_union sdiff_disjoint]
-    apply dvd_mul_of_dvd_right
-    apply prod_dvd_prod_of_dvd
-    exact h2
+  simp only [Finsupp.prod, Finsupp.prod_mul]
+  rw [← sdiff_union_of_subset h1, prod_union sdiff_disjoint]
+  apply dvd_mul_of_dvd_right
+  apply prod_dvd_prod_of_dvd
+  exact h2
 #align finsupp.prod_dvd_prod_of_subset_of_dvd Finsupp.prod_dvd_prod_of_subset_of_dvd
 
 theorem indicator_eq_sum_single [AddCommMonoid M] (s : Finset α) (f : ∀ a ∈ s, M) :

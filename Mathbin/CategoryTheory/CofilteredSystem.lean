@@ -269,7 +269,7 @@ theorem isMittagLeffler_of_exists_finite_range
   obtain ⟨i, hi, hf⟩ := h j
   obtain ⟨m, ⟨i, f, hm⟩, hmin⟩ :=
     finset.is_well_founded_lt.wf.has_min
-      { s : Finset (F.obj j) | ∃ (i : _) (f : i ⟶ j), ↑s = range (F.map f) }
+      {s : Finset (F.obj j) | ∃ (i : _) (f : i ⟶ j), ↑s = range (F.map f)}
       ⟨_, i, hi, hf.coe_to_finset⟩
   refine'
     ⟨i, f, fun k g =>

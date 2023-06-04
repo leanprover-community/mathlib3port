@@ -306,8 +306,8 @@ theorem integral_divergence_of_has_fderiv_within_at_off_countable (hle : a ≤ b
       rw [this, integral_empty, integral_empty, sub_self]
   · -- In the non-trivial case `∀ i, a i < b i`, we apply a lemma we proved above.
     have hlt : ∀ i, a i < b i := fun i => (hle i).lt_of_ne fun hi => hne ⟨i, hi⟩
-    convert integral_divergence_of_has_fderiv_within_at_off_countable_aux₂ ⟨a, b, hlt⟩ f f' s hs Hc
-        Hd Hi
+    convert
+      integral_divergence_of_has_fderiv_within_at_off_countable_aux₂ ⟨a, b, hlt⟩ f f' s hs Hc Hd Hi
 #align measure_theory.integral_divergence_of_has_fderiv_within_at_off_countable MeasureTheory.integral_divergence_of_has_fderiv_within_at_off_countable
 
 /-- **Divergence theorem** for a family of functions `f : fin (n + 1) → ℝⁿ⁺¹ → E`. See also
@@ -361,7 +361,8 @@ theorem integral_divergence_of_has_fderiv_within_at_off_countable_of_equiv {F : 
             ∫ x in Icc (eL a ∘ i.succAbove) (eL b ∘ i.succAbove),
               f i (eL.symm <| i.insertNth (eL a i) x) :=
       by
-      convert integral_divergence_of_has_fderiv_within_at_off_countable' (eL a) (eL b)
+      convert
+        integral_divergence_of_has_fderiv_within_at_off_countable' (eL a) (eL b)
           ((he_ord _ _).2 hle) (fun i x => f i (eL.symm x))
           (fun i x => f' i (eL.symm x) ∘L (eL.symm : ℝⁿ⁺¹ →L[ℝ] F)) (eL.symm ⁻¹' s)
           (hs.preimage eL.symm.injective) _ _ _
@@ -506,7 +507,8 @@ theorem integral_divergence_prod_Icc_of_has_fderiv_within_at_off_countable_of_le
         ∀ (a b : ℝ¹) (f : ℝ¹ → E), (∫ x in Icc a b, f x) = ∫ x in Icc (a 0) (b 0), f fun _ => x :=
         by
         intro a b f
-        convert(((volume_preserving_fun_unique (Fin 1) ℝ).symm _).set_integral_preimage_emb
+        convert
+          (((volume_preserving_fun_unique (Fin 1) ℝ).symm _).set_integral_preimage_emb
               (MeasurableEquiv.measurableEmbedding _) _ _).symm
         exact ((OrderIso.funUnique (Fin 1) ℝ).symm.preimage_Icc a b).symm
       simp only [Fin.sum_univ_two, this]

@@ -132,7 +132,7 @@ theorem valuation_of_unit_eq (x : Rˣ) :
   · exact v.valuation_le_one x
   · cases' x with x _ hx _
     change ¬v.valuation (algebraMap R K x) < 1
-    apply_fun v.int_valuation  at hx 
+    apply_fun v.int_valuation at hx 
     rw [map_one, map_mul] at hx 
     rw [not_lt, ← hx, ← mul_one <| v.valuation _, valuation_of_algebra_map,
       mul_le_mul_left₀ <| left_ne_zero_of_mul_eq_one hx]
@@ -170,7 +170,7 @@ variable {S S' : Set <| HeightOneSpectrum R} {n : ℕ}
 /-- The Selmer group `K⟮S, n⟯`. -/
 def selmerGroup : Subgroup <| K/n
     where
-  carrier := { x : K/n | ∀ (v) (_ : v ∉ S), (v : HeightOneSpectrum R).valuationOfNeZeroMod n x = 1 }
+  carrier := {x : K/n | ∀ (v) (_ : v ∉ S), (v : HeightOneSpectrum R).valuationOfNeZeroMod n x = 1}
   one_mem' _ _ := by rw [map_one]
   mul_mem' _ _ hx hy v hv := by rw [map_mul, hx v hv, hy v hv, one_mul]
   inv_mem' _ hx v hv := by rw [map_inv, hx v hv, inv_one]

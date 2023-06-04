@@ -664,7 +664,7 @@ theorem exists_floor (x : ℝ) : ∃ ub : ℤ, (ub : ℝ) ≤ x ∧ ∀ z : ℤ,
 theorem exists_isLUB (S : Set ℝ) (hne : S.Nonempty) (hbdd : BddAbove S) : ∃ x, IsLUB S x :=
   by
   rcases hne, hbdd with ⟨⟨L, hL⟩, ⟨U, hU⟩⟩
-  have : ∀ d : ℕ, BddAbove { m : ℤ | ∃ y ∈ S, (m : ℝ) ≤ y * d } :=
+  have : ∀ d : ℕ, BddAbove {m : ℤ | ∃ y ∈ S, (m : ℝ) ≤ y * d} :=
     by
     cases' exists_int_gt U with k hk
     refine' fun d => ⟨k * d, fun z h => _⟩
@@ -912,7 +912,7 @@ theorem sInf_le_sSup (s : Set ℝ) (h₁ : BddBelow s) (h₂ : BddAbove s) : sIn
 
 theorem cauSeq_converges (f : CauSeq ℝ abs) : ∃ x, f ≈ const abs x :=
   by
-  let S := { x : ℝ | const abs x < f }
+  let S := {x : ℝ | const abs x < f}
   have lb : ∃ x, x ∈ S := exists_lt f
   have ub' : ∀ x, f < const abs x → ∀ y ∈ S, y ≤ x := fun x h y yS =>
     le_of_lt <| const_lt.1 <| CauSeq.lt_trans yS h

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module algebra.gcd_monoid.integrally_closed
-! leanprover-community/mathlib commit 2032a878972d5672e7c27c957e7a6e297b044973
+! leanprover-community/mathlib commit af471b9e3ce868f296626d33189b4ce730fa4c00
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -15,6 +15,9 @@ import Mathbin.RingTheory.Polynomial.Eisenstein.Basic
 /-!
 
 # GCD domains are integrally closed
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 -/
 
@@ -35,6 +38,7 @@ theorem IsLocalization.surj_of_gcd_domain (M : Submonoid R) [IsLocalization M A]
   · infer_instance
 #align is_localization.surj_of_gcd_domain IsLocalization.surj_of_gcd_domain
 
+#print GCDMonoid.toIsIntegrallyClosed /-
 instance (priority := 100) GCDMonoid.toIsIntegrallyClosed : IsIntegrallyClosed R :=
   ⟨fun X ⟨p, hp₁, hp₂⟩ =>
     by
@@ -51,4 +55,5 @@ instance (priority := 100) GCDMonoid.toIsIntegrallyClosed : IsIntegrallyClosed R
     erw [map_mul, ← Units.coe_map_inv, eq_comm, Units.eq_mul_inv_iff_mul_eq]
     exact he⟩
 #align gcd_monoid.to_is_integrally_closed GCDMonoid.toIsIntegrallyClosed
+-/
 

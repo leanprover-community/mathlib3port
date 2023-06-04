@@ -143,13 +143,13 @@ satisfying a relaxed triangle inequality. The terminology for this varies throug
 literature, but it is sometimes called a *quasi-metric* or *semi-metric*. -/
 instance : EDist (PiLp p β)
     where edist f g :=
-    if hp : p = 0 then { i | f i ≠ g i }.toFinite.toFinset.card
+    if hp : p = 0 then {i | f i ≠ g i}.toFinite.toFinset.card
     else
       if p = ∞ then ⨆ i, edist (f i) (g i) else (∑ i, edist (f i) (g i) ^ p.toReal) ^ (1 / p.toReal)
 
 variable {β}
 
-theorem edist_eq_card (f g : PiLp 0 β) : edist f g = { i | f i ≠ g i }.toFinite.toFinset.card :=
+theorem edist_eq_card (f g : PiLp 0 β) : edist f g = {i | f i ≠ g i}.toFinite.toFinset.card :=
   if_pos rfl
 #align pi_Lp.edist_eq_card PiLp.edist_eq_card
 
@@ -204,13 +204,13 @@ satisfying a relaxed triangle inequality. The terminology for this varies throug
 literature, but it is sometimes called a *quasi-metric* or *semi-metric*. -/
 instance : Dist (PiLp p α)
     where dist f g :=
-    if hp : p = 0 then { i | f i ≠ g i }.toFinite.toFinset.card
+    if hp : p = 0 then {i | f i ≠ g i}.toFinite.toFinset.card
     else
       if p = ∞ then ⨆ i, dist (f i) (g i) else (∑ i, dist (f i) (g i) ^ p.toReal) ^ (1 / p.toReal)
 
 variable {α}
 
-theorem dist_eq_card (f g : PiLp 0 α) : dist f g = { i | f i ≠ g i }.toFinite.toFinset.card :=
+theorem dist_eq_card (f g : PiLp 0 α) : dist f g = {i | f i ≠ g i}.toFinite.toFinset.card :=
   if_pos rfl
 #align pi_Lp.dist_eq_card PiLp.dist_eq_card
 
@@ -239,14 +239,14 @@ Registering this separately allows for a future norm-like structure on `pi_Lp p 
 satisfying a relaxed triangle inequality. These are called *quasi-norms*. -/
 instance hasNorm : Norm (PiLp p β)
     where norm f :=
-    if hp : p = 0 then { i | f i ≠ 0 }.toFinite.toFinset.card
+    if hp : p = 0 then {i | f i ≠ 0}.toFinite.toFinset.card
     else if p = ∞ then ⨆ i, ‖f i‖ else (∑ i, ‖f i‖ ^ p.toReal) ^ (1 / p.toReal)
 #align pi_Lp.has_norm PiLp.hasNorm
 -/
 
 variable {p β}
 
-theorem norm_eq_card (f : PiLp 0 β) : ‖f‖ = { i | f i ≠ 0 }.toFinite.toFinset.card :=
+theorem norm_eq_card (f : PiLp 0 β) : ‖f‖ = {i | f i ≠ 0}.toFinite.toFinset.card :=
   if_pos rfl
 #align pi_Lp.norm_eq_card PiLp.norm_eq_card
 

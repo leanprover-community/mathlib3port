@@ -63,7 +63,7 @@ variable [LinearOrderedAddCommGroup α] [Archimedean α]
 theorem existsUnique_zsmul_near_of_pos {a : α} (ha : 0 < a) (g : α) :
     ∃! k : ℤ, k • a ≤ g ∧ g < (k + 1) • a :=
   by
-  let s : Set ℤ := { n : ℤ | n • a ≤ g }
+  let s : Set ℤ := {n : ℤ | n • a ≤ g}
   obtain ⟨k, hk : -g ≤ k • a⟩ := Archimedean.arch (-g) ha
   have h_ne : s.nonempty := ⟨-k, by simpa using neg_le_neg hk⟩
   obtain ⟨k, hk⟩ := Archimedean.arch g ha
@@ -191,13 +191,13 @@ theorem exists_nat_pow_near {x : α} {y : α} (hx : 1 ≤ x) (hy : 1 < y) :
   by
   have h : ∃ n : ℕ, x < y ^ n := pow_unbounded_of_one_lt _ hy
   classical exact
-      let n := Nat.find h
-      have hn : x < y ^ n := Nat.find_spec h
-      have hnp : 0 < n :=
-        pos_iff_ne_zero.2 fun hn0 => by rw [hn0, pow_zero] at hn  <;> exact not_le_of_gt hn hx
-      have hnsp : Nat.pred n + 1 = n := Nat.succ_pred_eq_of_pos hnp
-      have hltn : Nat.pred n < n := Nat.pred_lt (ne_of_gt hnp)
-      ⟨Nat.pred n, le_of_not_lt (Nat.find_min h hltn), by rwa [hnsp]⟩
+    let n := Nat.find h
+    have hn : x < y ^ n := Nat.find_spec h
+    have hnp : 0 < n :=
+      pos_iff_ne_zero.2 fun hn0 => by rw [hn0, pow_zero] at hn  <;> exact not_le_of_gt hn hx
+    have hnsp : Nat.pred n + 1 = n := Nat.succ_pred_eq_of_pos hnp
+    have hltn : Nat.pred n < n := Nat.pred_lt (ne_of_gt hnp)
+    ⟨Nat.pred n, le_of_not_lt (Nat.find_min h hltn), by rwa [hnsp]⟩
 #align exists_nat_pow_near exists_nat_pow_near
 
 end LinearOrderedRing
@@ -211,21 +211,21 @@ another `y` greater than one. This is the same as `exists_mem_Ioc_zpow`,
 but with ≤ and < the other way around. -/
 theorem exists_mem_Ico_zpow (hx : 0 < x) (hy : 1 < y) : ∃ n : ℤ, x ∈ Ico (y ^ n) (y ^ (n + 1)) := by
   classical exact
-      let ⟨N, hN⟩ := pow_unbounded_of_one_lt x⁻¹ hy
-      have he : ∃ m : ℤ, y ^ m ≤ x :=
-        ⟨-N,
-          le_of_lt
-            (by
-              rw [zpow_neg y ↑N, zpow_ofNat]
-              exact (inv_lt hx (lt_trans (inv_pos.2 hx) hN)).1 hN)⟩
-      let ⟨M, hM⟩ := pow_unbounded_of_one_lt x hy
-      have hb : ∃ b : ℤ, ∀ m, y ^ m ≤ x → m ≤ b :=
-        ⟨M, fun m hm =>
-          le_of_not_lt fun hlt =>
-            not_lt_of_ge (zpow_le_of_le hy.le hlt.le)
-              (lt_of_le_of_lt hm (by rwa [← zpow_ofNat] at hM ))⟩
-      let ⟨n, hn₁, hn₂⟩ := Int.exists_greatest_of_bdd hb he
-      ⟨n, hn₁, lt_of_not_ge fun hge => not_le_of_gt (Int.lt_succ _) (hn₂ _ hge)⟩
+    let ⟨N, hN⟩ := pow_unbounded_of_one_lt x⁻¹ hy
+    have he : ∃ m : ℤ, y ^ m ≤ x :=
+      ⟨-N,
+        le_of_lt
+          (by
+            rw [zpow_neg y ↑N, zpow_ofNat]
+            exact (inv_lt hx (lt_trans (inv_pos.2 hx) hN)).1 hN)⟩
+    let ⟨M, hM⟩ := pow_unbounded_of_one_lt x hy
+    have hb : ∃ b : ℤ, ∀ m, y ^ m ≤ x → m ≤ b :=
+      ⟨M, fun m hm =>
+        le_of_not_lt fun hlt =>
+          not_lt_of_ge (zpow_le_of_le hy.le hlt.le)
+            (lt_of_le_of_lt hm (by rwa [← zpow_ofNat] at hM ))⟩
+    let ⟨n, hn₁, hn₂⟩ := Int.exists_greatest_of_bdd hb he
+    ⟨n, hn₁, lt_of_not_ge fun hge => not_le_of_gt (Int.lt_succ _) (hn₂ _ hge)⟩
 #align exists_mem_Ico_zpow exists_mem_Ico_zpow
 
 /-- Every positive `x` is between two successive integer powers of

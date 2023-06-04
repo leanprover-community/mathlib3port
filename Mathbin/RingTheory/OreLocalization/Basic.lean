@@ -237,7 +237,7 @@ protected def mul : R[S⁻¹] → R[S⁻¹] → R[S⁻¹] :=
     rw [this]; clear this
     rcases ore_left_cancel (p * p') (r₁' * ↑s_star) s₂ (by simp [← mul_assoc, h₂]) with ⟨s₂'', h₂''⟩
     rw [← mul_assoc, mul_assoc r₂, OreLocalization.eq_of_num_factor_eq h₂'']
-    norm_cast  at hsssp ⊢; rw [← OreLocalization.expand _ _ _ hsssp, ← mul_assoc]
+    norm_cast at hsssp ⊢; rw [← OreLocalization.expand _ _ _ hsssp, ← mul_assoc]
     apply OreLocalization.expand
 #align ore_localization.mul OreLocalization.mul
 -/
@@ -707,8 +707,7 @@ theorem right_distrib (x y z : R[S⁻¹]) : (x + y) * z = x * z + y * z :=
   induction' x using OreLocalization.ind with r₁ s₁
   induction' y using OreLocalization.ind with r₂ s₂
   induction' z using OreLocalization.ind with r₃ s₃
-  rcases ore_div_add_char' r₁ r₂ s₁ s₂ with ⟨ra, sa, ha, ha'⟩; rw [ha']; clear ha';
-  norm_cast  at ha 
+  rcases ore_div_add_char' r₁ r₂ s₁ s₂ with ⟨ra, sa, ha, ha'⟩; rw [ha']; clear ha'; norm_cast at ha 
   rw [OreLocalization.expand' r₁ s₁ sa]
   rw [OreLocalization.expand r₂ s₂ ra (by rw [← ha] <;> apply SetLike.coe_mem)]
   rw [← Subtype.coe_eq_of_eq_mk ha]
@@ -754,7 +753,7 @@ def universalHom : R[S⁻¹] →+* T :=
       rw [add_mul, ← mul_assoc, mul_assoc (f r₁), hf, ← Units.val_mul]
       simp only [mul_one, mul_right_inv, Units.val_one]
       congr 1; rw [mul_assoc]; congr 1
-      norm_cast  at h₃ ; have h₃' := Subtype.coe_eq_of_eq_mk h₃
+      norm_cast at h₃ ; have h₃' := Subtype.coe_eq_of_eq_mk h₃
       rw [← Units.val_mul, ← mul_inv_rev, ← fS.map_mul, h₃']
       have hs₂r₃ : ↑s₂ * r₃ ∈ S := by rw [← h₃]; exact SetLike.coe_mem (s₁ * s₃)
       apply (Units.inv_mul_cancel_left (fS s₂) _).symm.trans

@@ -55,7 +55,7 @@ instance : T2Space EReal := by infer_instance
 instance : SecondCountableTopology EReal :=
   ⟨by
     refine'
-      ⟨⋃ q : ℚ, {{ a : EReal | a < (q : ℝ) }, { a : EReal | ((q : ℝ) : EReal) < a }},
+      ⟨⋃ q : ℚ, {{a : EReal | a < (q : ℝ)}, {a : EReal | ((q : ℝ) : EReal) < a}},
         countable_Union fun a => (countable_singleton _).insert _, _⟩
     refine'
       le_antisymm
@@ -64,10 +64,9 @@ instance : SecondCountableTopology EReal :=
         _
     apply le_generateFrom fun s h => _
     rcases h with ⟨a, hs | hs⟩ <;>
-        [rw [show s = ⋃ q ∈ { q : ℚ | a < (q : ℝ) }, { b | ((q : ℝ) : EReal) < b } by ext x;
+        [rw [show s = ⋃ q ∈ {q : ℚ | a < (q : ℝ)}, {b | ((q : ℝ) : EReal) < b} by ext x;
             simpa only [hs, exists_prop, mem_Union] using lt_iff_exists_rat_btwn];
-        rw [show s = ⋃ q ∈ { q : ℚ | ((q : ℝ) : EReal) < a }, { b | b < ((q : ℝ) : EReal) } by
-            ext x;
+        rw [show s = ⋃ q ∈ {q : ℚ | ((q : ℝ) : EReal) < a}, {b | b < ((q : ℝ) : EReal)} by ext x;
             simpa only [hs, and_comm', exists_prop, mem_Union] using lt_iff_exists_rat_btwn]] <;>
       · apply isOpen_iUnion; intro q
         apply isOpen_iUnion; intro hq
@@ -83,12 +82,12 @@ theorem embedding_coe : Embedding (coe : ℝ → EReal) :=
       · rw [@OrderTopology.topology_eq_generate_intervals EReal _, ← coinduced_le_iff_le_induced]
         refine' le_generateFrom fun s ha => _
         rcases ha with ⟨a, rfl | rfl⟩
-        show IsOpen { b : ℝ | a < ↑b }
+        show IsOpen {b : ℝ | a < ↑b}
         · induction a using EReal.rec
           · simp only [isOpen_univ, bot_lt_coe, set_of_true]
           · simp only [EReal.coe_lt_coe_iff]; exact isOpen_Ioi
           · simp only [set_of_false, isOpen_empty, not_top_lt]
-        show IsOpen { b : ℝ | ↑b < a }
+        show IsOpen {b : ℝ | ↑b < a}
         · induction a using EReal.rec
           · simp only [not_lt_bot, set_of_false, isOpen_empty]
           · simp only [EReal.coe_lt_coe_iff]; exact isOpen_Iio
@@ -103,7 +102,7 @@ theorem embedding_coe : Embedding (coe : ℝ → EReal) :=
 
 theorem openEmbedding_coe : OpenEmbedding (coe : ℝ → EReal) :=
   ⟨embedding_coe, by
-    convert@isOpen_Ioo EReal _ _ _ ⊥ ⊤
+    convert @isOpen_Ioo EReal _ _ _ ⊥ ⊤
     ext x
     induction x using EReal.rec
     · simp only [left_mem_Ioo, mem_range, coe_ne_bot, exists_false, not_false_iff]
@@ -164,7 +163,7 @@ theorem embedding_coe_ennreal : Embedding (coe : ℝ≥0∞ → EReal) :=
       · rw [@OrderTopology.topology_eq_generate_intervals EReal _, ← coinduced_le_iff_le_induced]
         refine' le_generateFrom fun s ha => _
         rcases ha with ⟨a, rfl | rfl⟩
-        show IsOpen { b : ℝ≥0∞ | a < ↑b }
+        show IsOpen {b : ℝ≥0∞ | a < ↑b}
         · induction' a using EReal.rec with x
           · simp only [isOpen_univ, bot_lt_coe_ennreal, set_of_true]
           · rcases le_or_lt 0 x with (h | h)
@@ -176,7 +175,7 @@ theorem embedding_coe_ennreal : Embedding (coe : ℝ≥0∞ → EReal) :=
                 (EReal.coe_lt_coe_iff.2 h).trans_le (coe_ennreal_nonneg _)
               simp only [this, isOpen_univ, set_of_true]
           · simp only [set_of_false, isOpen_empty, not_top_lt]
-        show IsOpen { b : ℝ≥0∞ | ↑b < a }
+        show IsOpen {b : ℝ≥0∞ | ↑b < a}
         · induction' a using EReal.rec with x
           · simp only [not_lt_bot, set_of_false, isOpen_empty]
           · rcases le_or_lt 0 x with (h | h)

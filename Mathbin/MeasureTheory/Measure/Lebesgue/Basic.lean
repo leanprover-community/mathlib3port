@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Sébastien Gouëzel, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module measure_theory.measure.lebesgue.basic
-! leanprover-community/mathlib commit fd5edc43dc4f10b85abfe544b88f82cf13c5f844
+! leanprover-community/mathlib commit af471b9e3ce868f296626d33189b4ce730fa4c00
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -18,6 +18,9 @@ import Mathbin.MeasureTheory.Measure.Haar.OfBasis
 
 /-!
 # Lebesgue measure on the real line and on `ℝⁿ`
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 We show that the Lebesgue measure on the real line (constructed as a particular case of additive
 Haar measure on inner product spaces) coincides with the Stieltjes measure associated
@@ -51,6 +54,7 @@ namespace Real
 
 variable {ι : Type _} [Fintype ι]
 
+#print Real.volume_eq_stieltjes_id /-
 /-- The volume on the real line (as a particular case of the volume on a finite-dimensional
 inner product space) coincides with the Stieltjes measure coming from the identity function. -/
 theorem volume_eq_stieltjes_id : (volume : Measure ℝ) = StieltjesFunction.id.Measure :=
@@ -74,10 +78,13 @@ theorem volume_eq_stieltjes_id : (volume : Measure ℝ) = StieltjesFunction.id.M
       A]
   simp only [volume, Basis.addHaar, one_smul]
 #align real.volume_eq_stieltjes_id Real.volume_eq_stieltjes_id
+-/
 
+#print Real.volume_val /-
 theorem volume_val (s) : volume s = StieltjesFunction.id.Measure s := by
   simp [volume_eq_stieltjes_id]
 #align real.volume_val Real.volume_val
+-/
 
 @[simp]
 theorem volume_Ico {a b : ℝ} : volume (Ico a b) = ofReal (b - a) := by simp [volume_val]
@@ -138,9 +145,11 @@ theorem volume_emetric_closedBall (a : ℝ) (r : ℝ≥0∞) : volume (EMetric.c
       ENNReal.ofReal_coe_nnreal, ENNReal.coe_add, two_mul]
 #align real.volume_emetric_closed_ball Real.volume_emetric_closedBall
 
+#print Real.noAtoms_volume /-
 instance noAtoms_volume : NoAtoms (volume : Measure ℝ) :=
   ⟨fun x => volume_singleton⟩
 #align real.has_no_atoms_volume Real.noAtoms_volume
+-/
 
 @[simp]
 theorem volume_interval {a b : ℝ} : volume (uIcc a b) = ofReal (|b - a|) := by
@@ -175,28 +184,38 @@ theorem volume_Iio {a : ℝ} : volume (Iio a) = ∞ :=
 theorem volume_Iic {a : ℝ} : volume (Iic a) = ∞ := by simp [← measure_congr Iio_ae_eq_Iic]
 #align real.volume_Iic Real.volume_Iic
 
-instance locally_finite_volume : LocallyFiniteMeasure (volume : Measure ℝ) :=
+#print Real.locallyFinite_volume /-
+instance locallyFinite_volume : IsLocallyFiniteMeasure (volume : Measure ℝ) :=
   ⟨fun x =>
     ⟨Ioo (x - 1) (x + 1),
       IsOpen.mem_nhds isOpen_Ioo ⟨sub_lt_self _ zero_lt_one, lt_add_of_pos_right _ zero_lt_one⟩, by
       simp only [Real.volume_Ioo, ENNReal.ofReal_lt_top]⟩⟩
-#align real.locally_finite_volume Real.locally_finite_volume
+#align real.locally_finite_volume Real.locallyFinite_volume
+-/
 
-instance finiteMeasure_restrict_Icc (x y : ℝ) : FiniteMeasure (volume.restrict (Icc x y)) :=
+#print Real.isFiniteMeasure_restrict_Icc /-
+instance isFiniteMeasure_restrict_Icc (x y : ℝ) : IsFiniteMeasure (volume.restrict (Icc x y)) :=
   ⟨by simp⟩
-#align real.is_finite_measure_restrict_Icc Real.finiteMeasure_restrict_Icc
+#align real.is_finite_measure_restrict_Icc Real.isFiniteMeasure_restrict_Icc
+-/
 
-instance finiteMeasure_restrict_Ico (x y : ℝ) : FiniteMeasure (volume.restrict (Ico x y)) :=
+#print Real.isFiniteMeasure_restrict_Ico /-
+instance isFiniteMeasure_restrict_Ico (x y : ℝ) : IsFiniteMeasure (volume.restrict (Ico x y)) :=
   ⟨by simp⟩
-#align real.is_finite_measure_restrict_Ico Real.finiteMeasure_restrict_Ico
+#align real.is_finite_measure_restrict_Ico Real.isFiniteMeasure_restrict_Ico
+-/
 
-instance finiteMeasure_restrict_Ioc (x y : ℝ) : FiniteMeasure (volume.restrict (Ioc x y)) :=
+#print Real.isFiniteMeasure_restrict_Ioc /-
+instance isFiniteMeasure_restrict_Ioc (x y : ℝ) : IsFiniteMeasure (volume.restrict (Ioc x y)) :=
   ⟨by simp⟩
-#align real.is_finite_measure_restrict_Ioc Real.finiteMeasure_restrict_Ioc
+#align real.is_finite_measure_restrict_Ioc Real.isFiniteMeasure_restrict_Ioc
+-/
 
-instance finiteMeasure_restrict_Ioo (x y : ℝ) : FiniteMeasure (volume.restrict (Ioo x y)) :=
+#print Real.isFiniteMeasure_restrict_Ioo /-
+instance isFiniteMeasure_restrict_Ioo (x y : ℝ) : IsFiniteMeasure (volume.restrict (Ioo x y)) :=
   ⟨by simp⟩
-#align real.is_finite_measure_restrict_Ioo Real.finiteMeasure_restrict_Ioo
+#align real.is_finite_measure_restrict_Ioo Real.isFiniteMeasure_restrict_Ioo
+-/
 
 theorem volume_le_diam (s : Set ℝ) : volume s ≤ EMetric.diam s :=
   by
@@ -207,7 +226,7 @@ theorem volume_le_diam (s : Set ℝ) : volume s ≤ EMetric.diam s :=
 #align real.volume_le_diam Real.volume_le_diam
 
 theorem Filter.Eventually.volume_pos_of_nhds_real {p : ℝ → Prop} {a : ℝ} (h : ∀ᶠ x in 𝓝 a, p x) :
-    (0 : ℝ≥0∞) < volume { x | p x } :=
+    (0 : ℝ≥0∞) < volume {x | p x} :=
   by
   rcases h.exists_Ioo_subset with ⟨l, u, hx, hs⟩
   refine' lt_of_lt_of_le _ (measure_mono hs)
@@ -397,6 +416,7 @@ theorem smul_map_diagonal_volume_pi [DecidableEq ι] {D : ι → ℝ} (h : det (
   simp only [B]
 #align real.smul_map_diagonal_volume_pi Real.smul_map_diagonal_volume_pi
 
+#print Real.volume_preserving_transvectionStruct /-
 /-- A transvection preserves Lebesgue measure. -/
 theorem volume_preserving_transvectionStruct [DecidableEq ι] (t : TransvectionStruct ι ℝ) :
     MeasurePreserving t.toMatrix.toLin' :=
@@ -442,6 +462,7 @@ theorem volume_preserving_transvectionStruct [DecidableEq ι] (t : TransvectionS
       (eventually_of_forall fun a => map_add_left_eq_self _ _)
   exact ((A.symm e).comp B).comp A
 #align real.volume_preserving_transvection_struct Real.volume_preserving_transvectionStruct
+-/
 
 /-- Any invertible matrix rescales Lebesgue measure through the absolute value of its
 determinant. -/
@@ -472,13 +493,13 @@ determinant. -/
 theorem map_linearMap_volume_pi_eq_smul_volume_pi {f : (ι → ℝ) →ₗ[ℝ] ι → ℝ} (hf : f.det ≠ 0) :
     Measure.map f volume = ENNReal.ofReal (abs f.det⁻¹) • volume := by
   classical
-    -- this is deduced from the matrix case
-    let M := f.to_matrix'
-    have A : f.det = det M := by simp only [LinearMap.det_toMatrix']
-    have B : f = M.to_lin' := by simp only [to_lin'_to_matrix']
-    rw [A, B]
-    apply map_matrix_volume_pi_eq_smul_volume_pi
-    rwa [A] at hf 
+  -- this is deduced from the matrix case
+  let M := f.to_matrix'
+  have A : f.det = det M := by simp only [LinearMap.det_toMatrix']
+  have B : f = M.to_lin' := by simp only [to_lin'_to_matrix']
+  rw [A, B]
+  apply map_matrix_volume_pi_eq_smul_volume_pi
+  rwa [A] at hf 
 #align real.map_linear_map_volume_pi_eq_smul_volume_pi Real.map_linearMap_volume_pi_eq_smul_volume_pi
 
 end Real
@@ -487,18 +508,23 @@ section regionBetween
 
 variable {α : Type _}
 
+#print regionBetween /-
 /-- The region between two real-valued functions on an arbitrary set. -/
 def regionBetween (f g : α → ℝ) (s : Set α) : Set (α × ℝ) :=
-  { p : α × ℝ | p.1 ∈ s ∧ p.2 ∈ Ioo (f p.1) (g p.1) }
+  {p : α × ℝ | p.1 ∈ s ∧ p.2 ∈ Ioo (f p.1) (g p.1)}
 #align region_between regionBetween
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print regionBetween_subset /-
 theorem regionBetween_subset (f g : α → ℝ) (s : Set α) : regionBetween f g s ⊆ s ×ˢ univ := by
   simpa only [prod_univ, regionBetween, Set.preimage, set_of_subset_set_of] using fun a => And.left
 #align region_between_subset regionBetween_subset
+-/
 
 variable [MeasurableSpace α] {μ : Measure α} {f g : α → ℝ} {s : Set α}
 
+#print measurableSet_regionBetween /-
 /-- The region between two measurable functions on a measurable set is measurable. -/
 theorem measurableSet_regionBetween (hf : Measurable f) (hg : Measurable g) (hs : MeasurableSet s) :
     MeasurableSet (regionBetween f g s) :=
@@ -510,12 +536,14 @@ theorem measurableSet_regionBetween (hf : Measurable f) (hg : Measurable g) (hs 
         (measurableSet_lt measurable_snd (hg.comp measurable_fst)))
   exact measurable_fst hs
 #align measurable_set_region_between measurableSet_regionBetween
+-/
 
+#print measurableSet_region_between_oc /-
 /-- The region between two measurable functions on a measurable set is measurable;
 a version for the region together with the graph of the upper function. -/
 theorem measurableSet_region_between_oc (hf : Measurable f) (hg : Measurable g)
     (hs : MeasurableSet s) :
-    MeasurableSet { p : α × ℝ | p.fst ∈ s ∧ p.snd ∈ Ioc (f p.fst) (g p.fst) } :=
+    MeasurableSet {p : α × ℝ | p.fst ∈ s ∧ p.snd ∈ Ioc (f p.fst) (g p.fst)} :=
   by
   dsimp only [regionBetween, Ioc, mem_set_of_eq, set_of_and]
   refine'
@@ -524,12 +552,14 @@ theorem measurableSet_region_between_oc (hf : Measurable f) (hg : Measurable g)
         (measurableSet_le measurable_snd (hg.comp measurable_fst)))
   exact measurable_fst hs
 #align measurable_set_region_between_oc measurableSet_region_between_oc
+-/
 
+#print measurableSet_region_between_co /-
 /-- The region between two measurable functions on a measurable set is measurable;
 a version for the region together with the graph of the lower function. -/
 theorem measurableSet_region_between_co (hf : Measurable f) (hg : Measurable g)
     (hs : MeasurableSet s) :
-    MeasurableSet { p : α × ℝ | p.fst ∈ s ∧ p.snd ∈ Ico (f p.fst) (g p.fst) } :=
+    MeasurableSet {p : α × ℝ | p.fst ∈ s ∧ p.snd ∈ Ico (f p.fst) (g p.fst)} :=
   by
   dsimp only [regionBetween, Ico, mem_set_of_eq, set_of_and]
   refine'
@@ -538,12 +568,14 @@ theorem measurableSet_region_between_co (hf : Measurable f) (hg : Measurable g)
         (measurableSet_lt measurable_snd (hg.comp measurable_fst)))
   exact measurable_fst hs
 #align measurable_set_region_between_co measurableSet_region_between_co
+-/
 
+#print measurableSet_region_between_cc /-
 /-- The region between two measurable functions on a measurable set is measurable;
 a version for the region together with the graphs of both functions. -/
 theorem measurableSet_region_between_cc (hf : Measurable f) (hg : Measurable g)
     (hs : MeasurableSet s) :
-    MeasurableSet { p : α × ℝ | p.fst ∈ s ∧ p.snd ∈ Icc (f p.fst) (g p.fst) } :=
+    MeasurableSet {p : α × ℝ | p.fst ∈ s ∧ p.snd ∈ Icc (f p.fst) (g p.fst)} :=
   by
   dsimp only [regionBetween, Icc, mem_set_of_eq, set_of_and]
   refine'
@@ -552,31 +584,34 @@ theorem measurableSet_region_between_cc (hf : Measurable f) (hg : Measurable g)
         (measurableSet_le measurable_snd (hg.comp measurable_fst)))
   exact measurable_fst hs
 #align measurable_set_region_between_cc measurableSet_region_between_cc
+-/
 
+#print measurableSet_graph /-
 /-- The graph of a measurable function is a measurable set. -/
-theorem measurableSet_graph (hf : Measurable f) : MeasurableSet { p : α × ℝ | p.snd = f p.fst } :=
-  by simpa using measurableSet_region_between_cc hf hf MeasurableSet.univ
+theorem measurableSet_graph (hf : Measurable f) : MeasurableSet {p : α × ℝ | p.snd = f p.fst} := by
+  simpa using measurableSet_region_between_cc hf hf MeasurableSet.univ
 #align measurable_set_graph measurableSet_graph
+-/
 
 theorem volume_regionBetween_eq_lintegral' (hf : Measurable f) (hg : Measurable g)
     (hs : MeasurableSet s) :
     μ.Prod volume (regionBetween f g s) = ∫⁻ y in s, ENNReal.ofReal ((g - f) y) ∂μ := by
   classical
-    rw [measure.prod_apply]
-    · have h :
-        (fun x => volume { a | x ∈ s ∧ a ∈ Ioo (f x) (g x) }) =
-          s.indicator fun x => ENNReal.ofReal (g x - f x) :=
-        by
-        funext x
-        rw [indicator_apply]
-        split_ifs
-        · have hx : { a | x ∈ s ∧ a ∈ Ioo (f x) (g x) } = Ioo (f x) (g x) := by simp [h, Ioo]
-          simp only [hx, Real.volume_Ioo, sub_zero]
-        · have hx : { a | x ∈ s ∧ a ∈ Ioo (f x) (g x) } = ∅ := by simp [h]
-          simp only [hx, measure_empty]
-      dsimp only [regionBetween, preimage_set_of_eq]
-      rw [h, lintegral_indicator] <;> simp only [hs, Pi.sub_apply]
-    · exact measurableSet_regionBetween hf hg hs
+  rw [measure.prod_apply]
+  · have h :
+      (fun x => volume {a | x ∈ s ∧ a ∈ Ioo (f x) (g x)}) =
+        s.indicator fun x => ENNReal.ofReal (g x - f x) :=
+      by
+      funext x
+      rw [indicator_apply]
+      split_ifs
+      · have hx : {a | x ∈ s ∧ a ∈ Ioo (f x) (g x)} = Ioo (f x) (g x) := by simp [h, Ioo]
+        simp only [hx, Real.volume_Ioo, sub_zero]
+      · have hx : {a | x ∈ s ∧ a ∈ Ioo (f x) (g x)} = ∅ := by simp [h]
+        simp only [hx, measure_empty]
+    dsimp only [regionBetween, preimage_set_of_eq]
+    rw [h, lintegral_indicator] <;> simp only [hs, Pi.sub_apply]
+  · exact measurableSet_regionBetween hf hg hs
 #align volume_region_between_eq_lintegral' volume_regionBetween_eq_lintegral'
 
 /-- The volume of the region between two almost everywhere measurable functions on a measurable set
@@ -672,7 +707,7 @@ theorem ae_of_mem_of_ae_of_mem_inter_Ioo {μ : Measure ℝ} [NoAtoms μ] {s : Se
       simp only [Ioo_eq_empty_of_le hba, inter_empty, IsEmpty.forall_iff, eventually_true,
         mem_empty_iff_false]
     · exact h a b as bs hab
-  filter_upwards [M, M']with x hx h'x
+  filter_upwards [M, M'] with x hx h'x
   intro xs
   by_cases Hx : x ∈ ⋃ i : ↥s × ↥s, T i
   · rw [← hA] at Hx 

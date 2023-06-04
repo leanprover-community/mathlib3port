@@ -464,7 +464,7 @@ def homIso' (h : IsLimit t) (W : C) :
       { p : ∀ j, W ⟶ F.obj j // ∀ {j j'} (f : j ⟶ j'), p j ≫ F.map f = p j' } :=
   h.homIso W ≪≫
     { Hom := fun π =>
-        ⟨fun j => π.app j, fun j j' f => by convert← (π.naturality f).symm <;> apply id_comp⟩
+        ⟨fun j => π.app j, fun j j' f => by convert ← (π.naturality f).symm <;> apply id_comp⟩
       inv := fun p =>
         { app := fun j => p.1 j
           naturality' := fun j j' f => by dsimp; rw [id_comp]; exact (p.2 f).symm } }
@@ -481,7 +481,7 @@ def ofFaithful {t : Cone F} {D : Type u₄} [Category.{v₄} D] (G : C ⥤ D) [F
     uniq := fun s m w => by
       apply G.map_injective; rw [h]
       refine' ht.uniq (G.map_cone s) _ fun j => _
-      convert← congr_arg (fun f => G.map f) (w j)
+      convert ← congr_arg (fun f => G.map f) (w j)
       apply G.map_comp }
 #align category_theory.limits.is_limit.of_faithful CategoryTheory.Limits.IsLimit.ofFaithful
 
@@ -1017,7 +1017,8 @@ def homIso' (h : IsColimit t) (W : C) :
     ULift.{u₁} (t.pt ⟶ W : Type v₃) ≅
       { p : ∀ j, F.obj j ⟶ W // ∀ {j j' : J} (f : j ⟶ j'), F.map f ≫ p j' = p j } :=
   h.homIso W ≪≫
-    { Hom := fun ι => ⟨fun j => ι.app j, fun j j' f => by convert← ι.naturality f <;> apply comp_id⟩
+    { Hom := fun ι =>
+        ⟨fun j => ι.app j, fun j j' f => by convert ← ι.naturality f <;> apply comp_id⟩
       inv := fun p =>
         { app := fun j => p.1 j
           naturality' := fun j j' f => by dsimp; rw [comp_id]; exact p.2 f } }
@@ -1034,7 +1035,7 @@ def ofFaithful {t : Cocone F} {D : Type u₄} [Category.{v₄} D] (G : C ⥤ D) 
     uniq := fun s m w => by
       apply G.map_injective; rw [h]
       refine' ht.uniq (G.map_cocone s) _ fun j => _
-      convert← congr_arg (fun f => G.map f) (w j)
+      convert ← congr_arg (fun f => G.map f) (w j)
       apply G.map_comp }
 #align category_theory.limits.is_colimit.of_faithful CategoryTheory.Limits.IsColimit.ofFaithful
 

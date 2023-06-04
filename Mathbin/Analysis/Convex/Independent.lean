@@ -161,7 +161,7 @@ theorem convexIndependent_set_iff_inter_convexHull_subset {s : Set E} :
   by
   constructor
   · rintro hc t h x ⟨hxs, hxt⟩
-    refine' hc { x | ↑x ∈ t } ⟨x, hxs⟩ _
+    refine' hc {x | ↑x ∈ t} ⟨x, hxs⟩ _
     rw [Subtype.coe_image_of_subset h]
     exact hxt
   · intro hc t x h

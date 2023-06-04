@@ -178,7 +178,7 @@ theorem IsEulerian.card_filter_odd_degree [Fintype V] [DecidableRel G.Adj] {u v 
 
 theorem IsEulerian.card_odd_degree [Fintype V] [DecidableRel G.Adj] {u v : V} {p : G.Walk u v}
     (ht : p.IsEulerian) :
-    Fintype.card { v : V | Odd (G.degree v) } = 0 ∨ Fintype.card { v : V | Odd (G.degree v) } = 2 :=
+    Fintype.card {v : V | Odd (G.degree v)} = 0 ∨ Fintype.card {v : V | Odd (G.degree v)} = 2 :=
   by
   rw [← Set.toFinset_card]
   apply is_eulerian.card_filter_odd_degree ht

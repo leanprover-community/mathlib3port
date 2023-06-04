@@ -161,7 +161,7 @@ theorem Tendsto.const_mul_atTop' (hr : 0 < r) (hf : Tendsto f l atTop) :
   apply tendsto_at_top.2 fun b => _
   obtain ⟨n : ℕ, hn : 1 ≤ n • r⟩ := Archimedean.arch 1 hr
   rw [nsmul_eq_mul'] at hn 
-  filter_upwards [tendsto_at_top.1 hf (n * max b 0)]with x hx
+  filter_upwards [tendsto_at_top.1 hf (n * max b 0)] with x hx
   calc
     b ≤ 1 * max b 0 := by rw [one_mul]; exact le_max_left _ _
     _ ≤ r * n * max b 0 := (mul_le_mul_of_nonneg_right hn (le_max_right _ _))
@@ -180,7 +180,7 @@ theorem Tendsto.atTop_mul_const' (hr : 0 < r) (hf : Tendsto f l atTop) :
   apply tendsto_at_top.2 fun b => _
   obtain ⟨n : ℕ, hn : 1 ≤ n • r⟩ := Archimedean.arch 1 hr
   have hn' : 1 ≤ (n : R) * r := by rwa [nsmul_eq_mul] at hn 
-  filter_upwards [tendsto_at_top.1 hf (max b 0 * n)]with x hx
+  filter_upwards [tendsto_at_top.1 hf (max b 0 * n)] with x hx
   calc
     b ≤ max b 0 * 1 := by rw [mul_one]; exact le_max_left _ _
     _ ≤ max b 0 * (n * r) := (mul_le_mul_of_nonneg_left hn' (le_max_right _ _))

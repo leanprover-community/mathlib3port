@@ -259,7 +259,7 @@ protected theorem le_of_transpose_le {μ ν : YoungDiagram} (h_le : μ.transpose
 @[simp]
 theorem transpose_le_iff {μ ν : YoungDiagram} : μ.transpose ≤ ν.transpose ↔ μ ≤ ν :=
   ⟨fun h => by convert YoungDiagram.le_of_transpose_le h; simp, fun h => by
-    convert@YoungDiagram.le_of_transpose_le _ _ _; simpa⟩
+    convert @YoungDiagram.le_of_transpose_le _ _ _; simpa⟩
 #align young_diagram.transpose_le_iff YoungDiagram.transpose_le_iff
 
 @[mono]

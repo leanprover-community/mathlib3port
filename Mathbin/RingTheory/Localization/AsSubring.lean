@@ -91,7 +91,7 @@ The carrier of this subalgebra is defined as the set of all `x : K` of the form
 -/
 noncomputable def subalgebra (hS : S ≤ A⁰) : Subalgebra A K :=
   (mapToFractionRing K S (Localization S) hS).range.copy
-      { x | ∃ (a s : A) (hs : s ∈ S), x = IsLocalization.mk' K a ⟨s, hS hs⟩ } <|
+      {x | ∃ (a s : A) (hs : s ∈ S), x = IsLocalization.mk' K a ⟨s, hS hs⟩} <|
     by ext; symm; apply mem_range_map_to_fraction_ring_iff
 #align localization.subalgebra Localization.subalgebra
 
@@ -133,7 +133,7 @@ The carrier of this subalgebra is defined as the set of all `x : K` of the form
 -/
 noncomputable def ofField : Subalgebra A K :=
   (mapToFractionRing K S (Localization S) hS).range.copy
-      { x | ∃ (a s : A) (hs : s ∈ S), x = algebraMap A K a * (algebraMap A K s)⁻¹ } <|
+      {x | ∃ (a s : A) (hs : s ∈ S), x = algebraMap A K a * (algebraMap A K s)⁻¹} <|
     by ext; symm; apply mem_range_map_to_fraction_ring_iff_of_field
 #align localization.subalgebra.of_field Localization.subalgebra.ofField
 

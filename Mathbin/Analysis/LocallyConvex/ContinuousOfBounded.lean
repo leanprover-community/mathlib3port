@@ -144,7 +144,7 @@ theorem LinearMap.continuousAt_zero_of_locally_bounded (f : E →ₛₗ[σ] F)
     refine' ⟨i, trivial, fun x hx => ⟨(n : 𝕜) • x, hi hx, _⟩⟩
     simp [← mul_smul, hn]
   rw [ContinuousAt, map_zero, bE'.tendsto_iff (nhds_basis_balanced 𝕜' F)] at h 
-  push_neg  at h 
+  push_neg at h 
   rcases h with ⟨V, ⟨hV, hV'⟩, h⟩
   simp only [id.def, forall_true_left] at h 
   -- There exists `u : ℕ → E` such that for all `n : ℕ` we have `u n ∈ n⁻¹ • b n` and `f (u n) ∉ V`
@@ -176,7 +176,7 @@ theorem LinearMap.continuousAt_zero_of_locally_bounded (f : E →ₛₗ[σ] F)
     specialize h' (n : 𝕜') h1 (Set.mem_range_self n)
     simp only [Set.mem_preimage, LinearMap.map_smulₛₗ, map_natCast] at h' 
     rcases h' with ⟨y, hy, h'⟩
-    apply_fun fun y : F => (n : 𝕜')⁻¹ • y  at h' 
+    apply_fun fun y : F => (n : 𝕜')⁻¹ • y at h' 
     simp only [hn', inv_smul_smul₀, Ne.def, Nat.cast_eq_zero, not_false_iff] at h' 
     rwa [← h']
   exact hu' n hn' h''

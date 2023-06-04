@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 
 ! This file was ported from Lean 3 source module measure_theory.function.locally_integrable
-! leanprover-community/mathlib commit 08a4542bec7242a5c60f179e4e49de8c0d677b1b
+! leanprover-community/mathlib commit 2ebc1d6c2fed9f54c95bbc3998eaa5570527129a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.MeasureTheory.Integral.IntegrableOn
 
 /-!
 # Locally integrable functions
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 A function is called *locally integrable* (`measure_theory.locally_integrable`) if it is integrable
 on a neighborhood of every point. More generally, it is *locally integrable on `s`* if it is
@@ -216,7 +219,7 @@ theorem LocallyIntegrable.aestronglyMeasurable [SecondCountableTopology X]
   simpa only [restrict_univ] using (locally_integrable_on_univ.mpr hf).AEStronglyMeasurable
 #align measure_theory.locally_integrable.ae_strongly_measurable MeasureTheory.LocallyIntegrable.aestronglyMeasurable
 
-theorem locallyIntegrable_const [LocallyFiniteMeasure μ] (c : E) :
+theorem locallyIntegrable_const [IsLocallyFiniteMeasure μ] (c : E) :
     LocallyIntegrable (fun x => c) μ := by
   intro x
   rcases μ.finite_at_nhds x with ⟨U, hU, h'U⟩
@@ -224,7 +227,7 @@ theorem locallyIntegrable_const [LocallyFiniteMeasure μ] (c : E) :
   simp only [h'U, integrable_on_const, or_true_iff]
 #align measure_theory.locally_integrable_const MeasureTheory.locallyIntegrable_const
 
-theorem locallyIntegrableOn_const [LocallyFiniteMeasure μ] (c : E) :
+theorem locallyIntegrableOn_const [IsLocallyFiniteMeasure μ] (c : E) :
     LocallyIntegrableOn (fun x => c) s μ :=
   (locallyIntegrable_const c).LocallyIntegrableOn s
 #align measure_theory.locally_integrable_on_const MeasureTheory.locallyIntegrableOn_const
@@ -259,7 +262,7 @@ open MeasureTheory
 
 section borel
 
-variable [OpensMeasurableSpace X] [LocallyFiniteMeasure μ]
+variable [OpensMeasurableSpace X] [IsLocallyFiniteMeasure μ]
 
 variable {K : Set X} {a b : X}
 
@@ -350,7 +353,7 @@ theorem MonotoneOn.integrableOn_of_measure_ne_top (hmono : MonotoneOn f s) {a b 
       ((ae_restrict_iff' h's).mpr <| ae_of_all _ fun y hy => hC (f y) (mem_image_of_mem f hy))
 #align monotone_on.integrable_on_of_measure_ne_top MonotoneOn.integrableOn_of_measure_ne_top
 
-theorem MonotoneOn.integrableOn_isCompact [FiniteMeasureOnCompacts μ] (hs : IsCompact s)
+theorem MonotoneOn.integrableOn_isCompact [IsFiniteMeasureOnCompacts μ] (hs : IsCompact s)
     (hmono : MonotoneOn f s) : IntegrableOn f s μ :=
   by
   obtain rfl | h := s.eq_empty_or_nonempty
@@ -367,12 +370,12 @@ theorem AntitoneOn.integrableOn_of_measure_ne_top (hanti : AntitoneOn f s) {a b 
   hanti.dual_right.integrableOn_of_measure_ne_top ha hb hs h's
 #align antitone_on.integrable_on_of_measure_ne_top AntitoneOn.integrableOn_of_measure_ne_top
 
-theorem AntioneOn.integrableOn_isCompact [FiniteMeasureOnCompacts μ] (hs : IsCompact s)
+theorem AntioneOn.integrableOn_isCompact [IsFiniteMeasureOnCompacts μ] (hs : IsCompact s)
     (hanti : AntitoneOn f s) : IntegrableOn f s μ :=
   hanti.dual_right.integrableOn_isCompact hs
 #align antione_on.integrable_on_is_compact AntioneOn.integrableOn_isCompact
 
-theorem Monotone.locallyIntegrable [LocallyFiniteMeasure μ] (hmono : Monotone f) :
+theorem Monotone.locallyIntegrable [IsLocallyFiniteMeasure μ] (hmono : Monotone f) :
     LocallyIntegrable f μ := by
   intro x
   rcases μ.finite_at_nhds x with ⟨U, hU, h'U⟩
@@ -385,7 +388,7 @@ theorem Monotone.locallyIntegrable [LocallyFiniteMeasure μ] (hmono : Monotone f
       ((measure_mono abU).trans_lt h'U).Ne measurableSet_Icc
 #align monotone.locally_integrable Monotone.locallyIntegrable
 
-theorem Antitone.locallyIntegrable [LocallyFiniteMeasure μ] (hanti : Antitone f) :
+theorem Antitone.locallyIntegrable [IsLocallyFiniteMeasure μ] (hanti : Antitone f) :
     LocallyIntegrable f μ :=
   hanti.dual_right.LocallyIntegrable
 #align antitone.locally_integrable Antitone.locallyIntegrable
@@ -408,7 +411,7 @@ theorem IntegrableOn.mul_continuousOn_of_subset (hg : IntegrableOn g A μ) (hg' 
   rw [integrable_on, ← mem_ℒp_one_iff_integrable] at hg ⊢
   have : ∀ᵐ x ∂μ.restrict A, ‖g x * g' x‖ ≤ C * ‖g x‖ :=
     by
-    filter_upwards [ae_restrict_mem hA]with x hx
+    filter_upwards [ae_restrict_mem hA] with x hx
     refine' (norm_mul_le _ _).trans _
     rw [mul_comm]
     apply mul_le_mul_of_nonneg_right (hC x (hAK hx)) (norm_nonneg _)
@@ -430,7 +433,7 @@ theorem IntegrableOn.continuousOn_mul_of_subset (hg : ContinuousOn g K) (hg' : I
   rw [integrable_on, ← mem_ℒp_one_iff_integrable] at hg' ⊢
   have : ∀ᵐ x ∂μ.restrict A, ‖g x * g' x‖ ≤ C * ‖g' x‖ :=
     by
-    filter_upwards [ae_restrict_mem hA]with x hx
+    filter_upwards [ae_restrict_mem hA] with x hx
     refine' (norm_mul_le _ _).trans _
     apply mul_le_mul_of_nonneg_right (hC x (hAK hx)) (norm_nonneg _)
   exact

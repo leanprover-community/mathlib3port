@@ -850,7 +850,7 @@ theorem finrank_sup_add_finrank_inf_eq (s t : Submodule K V) [FiniteDimensional 
   have key : Module.rank K ↥(s ⊔ t) + Module.rank K ↥(s ⊓ t) = Module.rank K s + Module.rank K t :=
     rank_sup_add_rank_inf_eq s t
   repeat' rw [← finrank_eq_rank] at key 
-  norm_cast  at key 
+  norm_cast at key 
   exact key
 #align submodule.finrank_sup_add_finrank_inf_eq Submodule.finrank_sup_add_finrank_inf_eq
 -/
@@ -1405,7 +1405,7 @@ theorem finrank_eq_one_iff' :
   by
   convert finrank_eq_one_iff PUnit
   simp only [exists_prop, eq_iff_iff, Ne.def]
-  convert(Basis.basis_singleton_iff PUnit).symm
+  convert (Basis.basis_singleton_iff PUnit).symm
   funext v
   simp
   infer_instance; infer_instance
@@ -1486,8 +1486,8 @@ theorem Subalgebra.finiteDimensional_toSubmodule {S : Subalgebra F E} :
   Iff.rfl
 #align subalgebra.finite_dimensional_to_submodule Subalgebra.finiteDimensional_toSubmodule
 
-alias Subalgebra.finiteDimensional_toSubmodule ↔
-  FiniteDimensional.of_subalgebra_toSubmodule FiniteDimensional.subalgebra_toSubmodule
+alias Subalgebra.finiteDimensional_toSubmodule ↔ FiniteDimensional.of_subalgebra_toSubmodule
+  FiniteDimensional.subalgebra_toSubmodule
 #align finite_dimensional.of_subalgebra_to_submodule FiniteDimensional.of_subalgebra_toSubmodule
 #align finite_dimensional.subalgebra_to_submodule FiniteDimensional.subalgebra_toSubmodule
 
@@ -1586,31 +1586,30 @@ variable [DivisionRing K] [AddCommGroup V] [Module K V]
 theorem exists_ker_pow_eq_ker_pow_succ [FiniteDimensional K V] (f : End K V) :
     ∃ k : ℕ, k ≤ finrank K V ∧ (f ^ k).ker = (f ^ k.succ).ker := by
   classical
-    by_contra h_contra
-    simp_rw [not_exists, not_and] at h_contra 
-    have h_le_ker_pow : ∀ n : ℕ, n ≤ (finrank K V).succ → n ≤ finrank K (f ^ n).ker :=
-      by
-      intro n hn
-      induction' n with n ih
-      · exact zero_le (finrank _ _)
-      · have h_ker_lt_ker : (f ^ n).ker < (f ^ n.succ).ker :=
-          by
-          refine' lt_of_le_of_ne _ (h_contra n (Nat.le_of_succ_le_succ hn))
-          rw [pow_succ]
-          apply LinearMap.ker_le_ker_comp
-        have h_finrank_lt_finrank : finrank K (f ^ n).ker < finrank K (f ^ n.succ).ker := by
-          apply Submodule.finrank_lt_finrank_of_lt h_ker_lt_ker
-        calc
-          n.succ ≤ (finrank K ↥(LinearMap.ker (f ^ n))).succ :=
-            Nat.succ_le_succ (ih (Nat.le_of_succ_le hn))
-          _ ≤ finrank K ↥(LinearMap.ker (f ^ n.succ)) := Nat.succ_le_of_lt h_finrank_lt_finrank
-          
-    have h_le_finrank_V : ∀ n, finrank K (f ^ n).ker ≤ finrank K V := fun n =>
-      Submodule.finrank_le _
-    have h_any_n_lt : ∀ n, n ≤ (finrank K V).succ → n ≤ finrank K V := fun n hn =>
-      (h_le_ker_pow n hn).trans (h_le_finrank_V n)
-    show False
-    exact Nat.not_succ_le_self _ (h_any_n_lt (finrank K V).succ (finrank K V).succ.le_refl)
+  by_contra h_contra
+  simp_rw [not_exists, not_and] at h_contra 
+  have h_le_ker_pow : ∀ n : ℕ, n ≤ (finrank K V).succ → n ≤ finrank K (f ^ n).ker :=
+    by
+    intro n hn
+    induction' n with n ih
+    · exact zero_le (finrank _ _)
+    · have h_ker_lt_ker : (f ^ n).ker < (f ^ n.succ).ker :=
+        by
+        refine' lt_of_le_of_ne _ (h_contra n (Nat.le_of_succ_le_succ hn))
+        rw [pow_succ]
+        apply LinearMap.ker_le_ker_comp
+      have h_finrank_lt_finrank : finrank K (f ^ n).ker < finrank K (f ^ n.succ).ker := by
+        apply Submodule.finrank_lt_finrank_of_lt h_ker_lt_ker
+      calc
+        n.succ ≤ (finrank K ↥(LinearMap.ker (f ^ n))).succ :=
+          Nat.succ_le_succ (ih (Nat.le_of_succ_le hn))
+        _ ≤ finrank K ↥(LinearMap.ker (f ^ n.succ)) := Nat.succ_le_of_lt h_finrank_lt_finrank
+        
+  have h_le_finrank_V : ∀ n, finrank K (f ^ n).ker ≤ finrank K V := fun n => Submodule.finrank_le _
+  have h_any_n_lt : ∀ n, n ≤ (finrank K V).succ → n ≤ finrank K V := fun n hn =>
+    (h_le_ker_pow n hn).trans (h_le_finrank_V n)
+  show False
+  exact Nat.not_succ_le_self _ (h_any_n_lt (finrank K V).succ (finrank K V).succ.le_refl)
 #align module.End.exists_ker_pow_eq_ker_pow_succ Module.End.exists_ker_pow_eq_ker_pow_succ
 -/
 

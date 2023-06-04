@@ -952,7 +952,7 @@ class HasCompl (α : Type _) where
 
 export HasCompl (compl)
 
-/- ./././Mathport/Syntax/Translate/Command.lean:476:9: unsupported: advanced prec syntax «expr + »(max[std.prec.max], 1) -/
+/- ./././Mathport/Syntax/Translate/Command.lean:477:9: unsupported: advanced prec syntax «expr + »(max[std.prec.max], 1) -/
 -- mathport name: «expr ᶜ»
 postfix:999 "ᶜ" => compl
 
@@ -1478,7 +1478,7 @@ instance OrderDual.denselyOrdered (α : Type u) [LT α] [DenselyOrdered α] : De
 #print denselyOrdered_orderDual /-
 @[simp]
 theorem denselyOrdered_orderDual [LT α] : DenselyOrdered αᵒᵈ ↔ DenselyOrdered α :=
-  ⟨by convert@OrderDual.denselyOrdered αᵒᵈ _; cases ‹LT α›; rfl, @OrderDual.denselyOrdered α _⟩
+  ⟨by convert @OrderDual.denselyOrdered αᵒᵈ _; cases ‹LT α›; rfl, @OrderDual.denselyOrdered α _⟩
 #align densely_ordered_order_dual denselyOrdered_orderDual
 -/
 
@@ -1495,12 +1495,12 @@ instance {α : ι → Type _} [∀ i, Preorder (α i)] [∀ i, DenselyOrdered (�
     DenselyOrdered (∀ i, α i) :=
   ⟨fun a b => by
     classical
-      simp_rw [Pi.lt_def]
-      rintro ⟨hab, i, hi⟩
-      obtain ⟨c, ha, hb⟩ := exists_between hi
-      exact
-        ⟨a.update i c, ⟨le_update_iff.2 ⟨ha.le, fun _ _ => le_rfl⟩, i, by rwa [update_same]⟩,
-          update_le_iff.2 ⟨hb.le, fun _ _ => hab _⟩, i, by rwa [update_same]⟩⟩
+    simp_rw [Pi.lt_def]
+    rintro ⟨hab, i, hi⟩
+    obtain ⟨c, ha, hb⟩ := exists_between hi
+    exact
+      ⟨a.update i c, ⟨le_update_iff.2 ⟨ha.le, fun _ _ => le_rfl⟩, i, by rwa [update_same]⟩,
+        update_le_iff.2 ⟨hb.le, fun _ _ => hab _⟩, i, by rwa [update_same]⟩⟩
 
 #print le_of_forall_le_of_dense /-
 theorem le_of_forall_le_of_dense [LinearOrder α] [DenselyOrdered α] {a₁ a₂ : α}
@@ -1548,7 +1548,7 @@ theorem dense_or_discrete [LinearOrder α] (a₁ a₂ : α) :
 theorem eq_or_eq_or_eq_of_forall_not_lt_lt {α : Type _} [LinearOrder α]
     (h : ∀ ⦃x y z : α⦄, x < y → y < z → False) (x y z : α) : x = y ∨ y = z ∨ x = z :=
   by
-  by_contra hne; push_neg  at hne 
+  by_contra hne; push_neg at hne 
   cases' hne.1.lt_or_lt with h₁ h₁ <;> cases' hne.2.1.lt_or_lt with h₂ h₂ <;>
     cases' hne.2.2.lt_or_lt with h₃ h₃
   exacts [h h₁ h₂, h h₂ h₃, h h₃ h₂, h h₃ h₁, h h₁ h₃, h h₂ h₃, h h₁ h₃, h h₂ h₁]

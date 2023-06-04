@@ -129,7 +129,7 @@ theorem id_φ : (id X n).φ = 𝟙 _ :=
   simp only [← P_add_Q_f (n + 1) (n + 1), φ]
   congr 1
   · simp only [id, P_infty_f, P_f_idem]
-  · convert(decomposition_Q n (n + 1)).symm
+  · convert (decomposition_Q n (n + 1)).symm
     ext i
     simpa only [Finset.mem_univ, Finset.mem_filter, true_and_iff, true_iff_iff] using Fin.is_lt i
 #align algebraic_topology.dold_kan.morph_components.id_φ AlgebraicTopology.DoldKan.MorphComponents.id_φ

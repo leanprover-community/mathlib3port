@@ -51,8 +51,8 @@ variable [dec_ι : DecidableEq ι] [Preorder ι]
 variable (G : ι → Type w)
 
 #print DirectedSystem /-
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`map_self] [] -/
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`map_map] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`map_self] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`map_map] [] -/
 /-- A directed system is a functor from a category (directed poset) to another category. -/
 class DirectedSystem (f : ∀ i j, i ≤ j → G i → G j) : Prop where
   map_self : ∀ i x h, f i i h x = x
@@ -88,9 +88,9 @@ include dec_ι
 def DirectLimit : Type max v w :=
   DirectSum ι G ⧸
     (span R <|
-      { a |
+      {a |
         ∃ (i j : _) (H : i ≤ j) (x : _),
-          DirectSum.lof R ι G i x - DirectSum.lof R ι G j (f i j H x) = a })
+          DirectSum.lof R ι G i x - DirectSum.lof R ι G j (f i j H x) = a})
 #align module.direct_limit Module.DirectLimit
 -/
 
@@ -237,7 +237,7 @@ theorem of.zero_exact_aux [Nonempty ι] [IsDirected ι (· ≤ ·)] {x : DirectS
           · intro i0 hi0
             rw [Dfinsupp.mem_support_iff, DirectSum.sub_apply, ← DirectSum.single_eq_lof, ←
               DirectSum.single_eq_lof, Dfinsupp.single_apply, Dfinsupp.single_apply] at hi0 
-            split_ifs  at hi0  with hi hj hj; · rwa [hi] at hik ; · rwa [hi] at hik ;
+            split_ifs at hi0  with hi hj hj; · rwa [hi] at hik ; · rwa [hi] at hik ;
             · rwa [hj] at hjk 
             exfalso; apply hi0; rw [sub_zero]
           simp [LinearMap.map_sub, totalize_of_le, hik, hjk, DirectedSystem.map_map,
@@ -377,11 +377,11 @@ open FreeCommRing
 def DirectLimit : Type max v w :=
   FreeCommRing (Σ i, G i) ⧸
     Ideal.span
-      { a |
+      {a |
         (∃ i j H x, of (⟨j, f i j H x⟩ : Σ i, G i) - of ⟨i, x⟩ = a) ∨
           (∃ i, of (⟨i, 1⟩ : Σ i, G i) - 1 = a) ∨
             (∃ i x y, of (⟨i, x + y⟩ : Σ i, G i) - (of ⟨i, x⟩ + of ⟨i, y⟩) = a) ∨
-              ∃ i x y, of (⟨i, x * y⟩ : Σ i, G i) - of ⟨i, x⟩ * of ⟨i, y⟩ = a }
+              ∃ i x y, of (⟨i, x * y⟩ : Σ i, G i) - of ⟨i, x⟩ * of ⟨i, y⟩ = a}
 #align ring.direct_limit Ring.DirectLimit
 -/
 

@@ -75,7 +75,7 @@ theorem absolutelyContinuous_iff_withDensity_rnDeriv_eq {μ ν : Measure α}
   ⟨withDensity_rnDeriv_eq μ ν, fun h => h ▸ withDensity_absolutelyContinuous _ _⟩
 #align measure_theory.measure.absolutely_continuous_iff_with_density_rn_deriv_eq MeasureTheory.Measure.absolutelyContinuous_iff_withDensity_rnDeriv_eq
 
-theorem with_density_rnDeriv_toReal_eq {μ ν : Measure α} [FiniteMeasure μ]
+theorem with_density_rnDeriv_toReal_eq {μ ν : Measure α} [IsFiniteMeasure μ]
     [HaveLebesgueDecomposition μ ν] (h : μ ≪ ν) {i : Set α} (hi : MeasurableSet i) :
     (∫ x in i, (μ.rnDeriv ν x).toReal ∂ν) = (μ i).toReal :=
   by

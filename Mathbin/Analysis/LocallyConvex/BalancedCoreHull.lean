@@ -64,7 +64,7 @@ variable (𝕜) [SMul 𝕜 E] {s t : Set E} {x : E}
 #print balancedCore /-
 /-- The largest balanced subset of `s`.-/
 def balancedCore (s : Set E) :=
-  ⋃₀ { t : Set E | Balanced 𝕜 t ∧ t ⊆ s }
+  ⋃₀ {t : Set E | Balanced 𝕜 t ∧ t ⊆ s}
 #align balanced_core balancedCore
 -/
 

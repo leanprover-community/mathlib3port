@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.analytic.linear
-! leanprover-community/mathlib commit f2ce6086713c78a7f880485f7917ea547a215982
+! leanprover-community/mathlib commit af471b9e3ce868f296626d33189b4ce730fa4c00
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.Analysis.Analytic.Basic
 
 /-!
 # Linear functions are analytic
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 In this file we prove that a `continuous_linear_map` defines an analytic function with
 the formal power series `f x = f a + f (x - a)`.
@@ -30,6 +33,7 @@ noncomputable section
 
 namespace ContinuousLinearMap
 
+#print ContinuousLinearMap.fpowerSeries /-
 /-- Formal power series of a continuous linear map `f : E →L[𝕜] F` at `x : E`:
 `f y = f x + f (y - x)`. -/
 @[simp]
@@ -38,6 +42,7 @@ def fpowerSeries (f : E →L[𝕜] F) (x : E) : FormalMultilinearSeries 𝕜 E F
   | 1 => (continuousMultilinearCurryFin1 𝕜 E F).symm f
   | _ => 0
 #align continuous_linear_map.fpower_series ContinuousLinearMap.fpowerSeries
+-/
 
 @[simp]
 theorem fpowerSeries_apply_add_two (f : E →L[𝕜] F) (x : E) (n : ℕ) : f.fpowerSeries x (n + 2) = 0 :=
@@ -66,6 +71,7 @@ protected theorem analyticAt (f : E →L[𝕜] F) (x : E) : AnalyticAt 𝕜 f x 
   (f.HasFPowerSeriesAt x).AnalyticAt
 #align continuous_linear_map.analytic_at ContinuousLinearMap.analyticAt
 
+#print ContinuousLinearMap.uncurryBilinear /-
 /-- Reinterpret a bilinear map `f : E →L[𝕜] F →L[𝕜] G` as a multilinear map
 `(E × F) [×2]→L[𝕜] G`. This multilinear map is the second term in the formal
 multilinear series expansion of `uncurry f`. It is given by
@@ -75,6 +81,7 @@ def uncurryBilinear (f : E →L[𝕜] F →L[𝕜] G) : E × F[×2]→L[𝕜] G 
     (↑(continuousMultilinearCurryFin1 𝕜 (E × F) G).symm : (E × F →L[𝕜] G) →L[𝕜] _).comp <|
       f.bilinearComp (fst _ _ _) (snd _ _ _)
 #align continuous_linear_map.uncurry_bilinear ContinuousLinearMap.uncurryBilinear
+-/
 
 @[simp]
 theorem uncurryBilinear_apply (f : E →L[𝕜] F →L[𝕜] G) (m : Fin 2 → E × F) :
@@ -82,6 +89,7 @@ theorem uncurryBilinear_apply (f : E →L[𝕜] F →L[𝕜] G) (m : Fin 2 → E
   rfl
 #align continuous_linear_map.uncurry_bilinear_apply ContinuousLinearMap.uncurryBilinear_apply
 
+#print ContinuousLinearMap.fpowerSeriesBilinear /-
 /-- Formal multilinear series expansion of a bilinear function `f : E →L[𝕜] F →L[𝕜] G`. -/
 @[simp]
 def fpowerSeriesBilinear (f : E →L[𝕜] F →L[𝕜] G) (x : E × F) : FormalMultilinearSeries 𝕜 (E × F) G
@@ -90,6 +98,7 @@ def fpowerSeriesBilinear (f : E →L[𝕜] F →L[𝕜] G) (x : E × F) : Formal
   | 2 => f.uncurryBilinear
   | _ => 0
 #align continuous_linear_map.fpower_series_bilinear ContinuousLinearMap.fpowerSeriesBilinear
+-/
 
 @[simp]
 theorem fpowerSeriesBilinear_radius (f : E →L[𝕜] F →L[𝕜] G) (x : E × F) :

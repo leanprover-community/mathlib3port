@@ -216,7 +216,7 @@ close to `x` (even if `y` is not itself in `s`, so this is a stronger assertion 
 `uniform_continuous_on s`). -/
 theorem IsCompact.uniformContinuousAt_of_continuousAt {r : Set (β × β)} {s : Set α}
     (hs : IsCompact s) (f : α → β) (hf : ∀ a ∈ s, ContinuousAt f a) (hr : r ∈ 𝓤 β) :
-    { x : α × α | x.1 ∈ s → (f x.1, f x.2) ∈ r } ∈ 𝓤 α :=
+    {x : α × α | x.1 ∈ s → (f x.1, f x.2) ∈ r} ∈ 𝓤 α :=
   by
   obtain ⟨t, ht, htsymm, htr⟩ := comp_symm_mem_uniformity_sets hr
   choose U hU T hT hb using fun a ha =>

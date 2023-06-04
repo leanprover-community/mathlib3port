@@ -42,13 +42,13 @@ open Set Filter Metric
 open scoped Filter Topology
 
 #print isGδ_irrational /-
-theorem isGδ_irrational : IsGδ { x | Irrational x } :=
+theorem isGδ_irrational : IsGδ {x | Irrational x} :=
   (countable_range _).isGδ_compl
 #align is_Gδ_irrational isGδ_irrational
 -/
 
 #print dense_irrational /-
-theorem dense_irrational : Dense { x : ℝ | Irrational x } :=
+theorem dense_irrational : Dense {x : ℝ | Irrational x} :=
   by
   refine' real.is_topological_basis_Ioo_rat.dense_iff.2 _
   simp only [mem_Union, mem_singleton_iff]

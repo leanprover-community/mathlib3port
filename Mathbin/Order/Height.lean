@@ -64,7 +64,7 @@ variable [LT α] [LT β] (s t : Set α)
 #print Set.subchain /-
 /-- The set of strictly ascending lists of `α` contained in a `set α`. -/
 def subchain : Set (List α) :=
-  { l | l.Chain' (· < ·) ∧ ∀ i ∈ l, i ∈ s }
+  {l | l.Chain' (· < ·) ∧ ∀ i ∈ l, i ∈ s}
 #align set.subchain Set.subchain
 -/
 
@@ -225,7 +225,7 @@ theorem chainHeight_le_chainHeight_TFAE (s : Set α) (t : Set β) :
       [s.chainHeight ≤ t.chainHeight, ∀ l ∈ s.subchain, ∃ l' ∈ t.subchain, length l = length l',
         ∀ l ∈ s.subchain, ∃ l' ∈ t.subchain, length l ≤ length l'] :=
   by
-  tfae_have 1 ↔ 3; · convert← chain_height_add_le_chain_height_add s t 0 0 <;> apply add_zero
+  tfae_have 1 ↔ 3; · convert ← chain_height_add_le_chain_height_add s t 0 0 <;> apply add_zero
   tfae_have 2 ↔ 3;
   · refine' forall₂_congr fun l hl => _
     simp_rw [← (le_chain_height_tfae t l.length).out 1 2, eq_comm]
@@ -339,22 +339,22 @@ theorem chainHeight_insert_of_forall_lt (a : α) (ha : ∀ b ∈ s, b < a) :
 
 theorem chainHeight_union_le : (s ∪ t).chainHeight ≤ s.chainHeight + t.chainHeight := by
   classical
-    refine' iSup₂_le fun l hl => _
-    let l₁ := l.filter (· ∈ s)
-    let l₂ := l.filter (· ∈ t)
-    have hl₁ : ↑l₁.length ≤ s.chain_height :=
-      by
-      apply Set.length_le_chainHeight_of_mem_subchain
-      exact ⟨hl.1.Sublist (filter_sublist _), fun i h => (of_mem_filter h : _)⟩
-    have hl₂ : ↑l₂.length ≤ t.chain_height :=
-      by
-      apply Set.length_le_chainHeight_of_mem_subchain
-      exact ⟨hl.1.Sublist (filter_sublist _), fun i h => (of_mem_filter h : _)⟩
-    refine' le_trans _ (add_le_add hl₁ hl₂)
-    simp_rw [← WithTop.coe_add, WithTop.coe_le_coe, ← Multiset.coe_card, ← Multiset.card_add, ←
-      Multiset.coe_filter]
-    rw [Multiset.filter_add_filter, multiset.filter_eq_self.mpr, Multiset.card_add]
-    exacts [le_add_right rfl.le, hl.2]
+  refine' iSup₂_le fun l hl => _
+  let l₁ := l.filter (· ∈ s)
+  let l₂ := l.filter (· ∈ t)
+  have hl₁ : ↑l₁.length ≤ s.chain_height :=
+    by
+    apply Set.length_le_chainHeight_of_mem_subchain
+    exact ⟨hl.1.Sublist (filter_sublist _), fun i h => (of_mem_filter h : _)⟩
+  have hl₂ : ↑l₂.length ≤ t.chain_height :=
+    by
+    apply Set.length_le_chainHeight_of_mem_subchain
+    exact ⟨hl.1.Sublist (filter_sublist _), fun i h => (of_mem_filter h : _)⟩
+  refine' le_trans _ (add_le_add hl₁ hl₂)
+  simp_rw [← WithTop.coe_add, WithTop.coe_le_coe, ← Multiset.coe_card, ← Multiset.card_add, ←
+    Multiset.coe_filter]
+  rw [Multiset.filter_add_filter, multiset.filter_eq_self.mpr, Multiset.card_add]
+  exacts [le_add_right rfl.le, hl.2]
 #align set.chain_height_union_le Set.chainHeight_union_le
 
 theorem chainHeight_union_eq (s t : Set α) (H : ∀ a ∈ s, ∀ b ∈ t, a < b) :

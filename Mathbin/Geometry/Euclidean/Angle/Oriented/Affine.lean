@@ -724,7 +724,7 @@ theorem Collinear.oangle_sign_of_sameRay_vsub {p₁ p₂ p₃ p₄ : P} (p₅ : 
     rw [hs₁₅₂, hs₃₅₄]
   · let s : Set (P × P × P) :=
       (fun x : line[ℝ, p₁, p₂] × V => (x.1, p₅, x.2 +ᵥ x.1)) ''
-        Set.univ ×ˢ { v | SameRay ℝ (p₂ -ᵥ p₁) v ∧ v ≠ 0 }
+        Set.univ ×ˢ {v | SameRay ℝ (p₂ -ᵥ p₁) v ∧ v ≠ 0}
     have hco : IsConnected s :=
       haveI : ConnectedSpace line[ℝ, p₁, p₂] := AddTorsor.connectedSpace _ _
       (is_connected_univ.prod
@@ -842,7 +842,7 @@ theorem AffineSubspace.SSameSide.oangle_sign_eq {s : AffineSubspace ℝ P} {p₁
     (∡ p₁ p₄ p₂).sign = (∡ p₁ p₃ p₂).sign :=
   by
   by_cases h : p₁ = p₂; · simp [h]
-  let sp : Set (P × P × P) := (fun p : P => (p₁, p, p₂)) '' { p | s.s_same_side p₃ p }
+  let sp : Set (P × P × P) := (fun p : P => (p₁, p, p₂)) '' {p | s.s_same_side p₃ p}
   have hc : IsConnected sp :=
     (is_connected_set_of_s_same_side hp₃p₄.2.1 hp₃p₄.nonempty).image _
       (continuous_const.prod_mk (Continuous.Prod.mk_left _)).ContinuousOn

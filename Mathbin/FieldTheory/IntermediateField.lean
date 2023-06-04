@@ -342,17 +342,17 @@ instance toField : Field S :=
 @[simp, norm_cast]
 theorem coe_sum {ι : Type _} [Fintype ι] (f : ι → S) : (↑(∑ i, f i) : L) = ∑ i, (f i : L) := by
   classical
-    induction' Finset.univ using Finset.induction_on with i s hi H
-    · simp
-    · rw [Finset.sum_insert hi, AddMemClass.coe_add, H, Finset.sum_insert hi]
+  induction' Finset.univ using Finset.induction_on with i s hi H
+  · simp
+  · rw [Finset.sum_insert hi, AddMemClass.coe_add, H, Finset.sum_insert hi]
 #align intermediate_field.coe_sum IntermediateField.coe_sum
 
 @[simp, norm_cast]
 theorem coe_prod {ι : Type _} [Fintype ι] (f : ι → S) : (↑(∏ i, f i) : L) = ∏ i, (f i : L) := by
   classical
-    induction' Finset.univ using Finset.induction_on with i s hi H
-    · simp
-    · rw [Finset.prod_insert hi, MulMemClass.coe_mul, H, Finset.prod_insert hi]
+  induction' Finset.univ using Finset.induction_on with i s hi H
+  · simp
+  · rw [Finset.prod_insert hi, MulMemClass.coe_mul, H, Finset.prod_insert hi]
 #align intermediate_field.coe_prod IntermediateField.coe_prod
 
 /-! `intermediate_field`s inherit structure from their `subalgebra` coercions. -/

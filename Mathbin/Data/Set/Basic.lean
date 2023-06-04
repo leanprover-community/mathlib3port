@@ -89,16 +89,15 @@ instance : HasSubset (Set α) :=
 instance {α : Type _} : BooleanAlgebra (Set α) :=
   {
     (inferInstance :
-      BooleanAlgebra (α →
-          Prop)) with
-    sup := fun s t => { x | x ∈ s ∨ x ∈ t }
+      BooleanAlgebra (α → Prop)) with
+    sup := fun s t => {x | x ∈ s ∨ x ∈ t}
     le := (· ≤ ·)
     lt := fun s t => s ⊆ t ∧ ¬t ⊆ s
-    inf := fun s t => { x | x ∈ s ∧ x ∈ t }
+    inf := fun s t => {x | x ∈ s ∧ x ∈ t}
     bot := ∅
-    compl := fun s => { x | x ∉ s }
+    compl := fun s => {x | x ∉ s}
     top := univ
-    sdiff := fun s t => { x | x ∈ s ∧ x ∉ t } }
+    sdiff := fun s t => {x | x ∈ s ∧ x ∉ t} }
 
 instance : HasSSubset (Set α) :=
   ⟨(· < ·)⟩
@@ -191,7 +190,7 @@ theorem Set.coe_eq_subtype (s : Set α) : ↥s = { x // x ∈ s } :=
 
 #print Set.coe_setOf /-
 @[simp]
-theorem Set.coe_setOf (p : α → Prop) : ↥{ x | p x } = { x // p x } :=
+theorem Set.coe_setOf (p : α → Prop) : ↥{x | p x} = { x // p x } :=
   rfl
 #align set.coe_set_of Set.coe_setOf
 -/
@@ -298,7 +297,7 @@ theorem forall_in_swap {p : α → β → Prop} : (∀ a ∈ s, ∀ (b), p a b) 
 
 
 #print Set.mem_setOf /-
-theorem mem_setOf {a : α} {p : α → Prop} : a ∈ { x | p x } ↔ p a :=
+theorem mem_setOf {a : α} {p : α → Prop} : a ∈ {x | p x} ↔ p a :=
   Iff.rfl
 #align set.mem_set_of Set.mem_setOf
 -/
@@ -307,20 +306,20 @@ theorem mem_setOf {a : α} {p : α → Prop} : a ∈ { x | p x } ↔ p a :=
 /-- If `h : a ∈ {x | p x}` then `h.out : p x`. These are definitionally equal, but this can
 nevertheless be useful for various reasons, e.g. to apply further projection notation or in an
 argument to `simp`. -/
-theorem Membership.mem.out {p : α → Prop} {a : α} (h : a ∈ { x | p x }) : p a :=
+theorem Membership.mem.out {p : α → Prop} {a : α} (h : a ∈ {x | p x}) : p a :=
   h
 #align has_mem.mem.out Membership.mem.out
 -/
 
 #print Set.nmem_setOf_iff /-
-theorem nmem_setOf_iff {a : α} {p : α → Prop} : a ∉ { x | p x } ↔ ¬p a :=
+theorem nmem_setOf_iff {a : α} {p : α → Prop} : a ∉ {x | p x} ↔ ¬p a :=
   Iff.rfl
 #align set.nmem_set_of_iff Set.nmem_setOf_iff
 -/
 
 #print Set.setOf_mem_eq /-
 @[simp]
-theorem setOf_mem_eq {s : Set α} : { x | x ∈ s } = s :=
+theorem setOf_mem_eq {s : Set α} : {x | x ∈ s} = s :=
   rfl
 #align set.set_of_mem_eq Set.setOf_mem_eq
 -/
@@ -332,7 +331,7 @@ theorem setOf_set {s : Set α} : setOf s = s :=
 -/
 
 #print Set.setOf_app_iff /-
-theorem setOf_app_iff {p : α → Prop} {x : α} : { x | p x } x ↔ p x :=
+theorem setOf_app_iff {p : α → Prop} {x : α} : {x | p x} x ↔ p x :=
   Iff.rfl
 #align set.set_of_app_iff Set.setOf_app_iff
 -/
@@ -351,16 +350,16 @@ theorem setOf_bijective : Bijective (setOf : (α → Prop) → Set α) :=
 
 #print Set.setOf_subset_setOf /-
 @[simp]
-theorem setOf_subset_setOf {p q : α → Prop} : { a | p a } ⊆ { a | q a } ↔ ∀ a, p a → q a :=
+theorem setOf_subset_setOf {p q : α → Prop} : {a | p a} ⊆ {a | q a} ↔ ∀ a, p a → q a :=
   Iff.rfl
 #align set.set_of_subset_set_of Set.setOf_subset_setOf
 -/
 
-theorem setOf_and {p q : α → Prop} : { a | p a ∧ q a } = { a | p a } ∩ { a | q a } :=
+theorem setOf_and {p q : α → Prop} : {a | p a ∧ q a} = {a | p a} ∩ {a | q a} :=
   rfl
 #align set.set_of_and Set.setOf_and
 
-theorem setOf_or {p q : α → Prop} : { a | p a ∨ q a } = { a | p a } ∪ { a | q a } :=
+theorem setOf_or {p q : α → Prop} : {a | p a ∨ q a} = {a | p a} ∪ {a | q a} :=
   rfl
 #align set.set_of_or Set.setOf_or
 
@@ -646,7 +645,7 @@ theorem nonempty_of_nonempty_subtype [Nonempty s] : s.Nonempty :=
 /-! ### Lemmas about the empty set -/
 
 
-theorem empty_def : (∅ : Set α) = { x | False } :=
+theorem empty_def : (∅ : Set α) = {x | False} :=
   rfl
 #align set.empty_def Set.empty_def
 
@@ -659,7 +658,7 @@ theorem mem_empty_iff_false (x : α) : x ∈ (∅ : Set α) ↔ False :=
 
 #print Set.setOf_false /-
 @[simp]
-theorem setOf_false : { a : α | False } = ∅ :=
+theorem setOf_false : {a : α | False} = ∅ :=
   rfl
 #align set.set_of_false Set.setOf_false
 -/
@@ -781,7 +780,7 @@ Mathematically it is the same as `α` but it has a different type.
 
 #print Set.setOf_true /-
 @[simp]
-theorem setOf_true : { x : α | True } = univ :=
+theorem setOf_true : {x : α | True} = univ :=
   rfl
 #align set.set_of_true Set.setOf_true
 -/
@@ -883,7 +882,7 @@ instance nontrivial_of_nonempty [Nonempty α] : Nontrivial (Set α) :=
 /-! ### Lemmas about union -/
 
 
-theorem union_def {s₁ s₂ : Set α} : s₁ ∪ s₂ = { a | a ∈ s₁ ∨ a ∈ s₂ } :=
+theorem union_def {s₁ s₂ : Set α} : s₁ ∪ s₂ = {a | a ∈ s₁ ∨ a ∈ s₂} :=
   rfl
 #align set.union_def Set.union_def
 
@@ -1037,7 +1036,7 @@ theorem univ_union {s : Set α} : univ ∪ s = univ :=
 /-! ### Lemmas about intersection -/
 
 
-theorem inter_def {s₁ s₂ : Set α} : s₁ ∩ s₂ = { a | a ∈ s₁ ∧ a ∈ s₂ } :=
+theorem inter_def {s₁ s₂ : Set α} : s₁ ∩ s₂ = {a | a ∈ s₁ ∧ a ∈ s₂} :=
   rfl
 #align set.inter_def Set.inter_def
 
@@ -1178,11 +1177,11 @@ theorem union_inter_cancel_right {s t : Set α} : (s ∪ t) ∩ t = t :=
   inter_eq_self_of_subset_right <| subset_union_right _ _
 #align set.union_inter_cancel_right Set.union_inter_cancel_right
 
-theorem inter_setOf_eq_sep (s : Set α) (p : α → Prop) : s ∩ { a | p a } = { a ∈ s | p a } :=
+theorem inter_setOf_eq_sep (s : Set α) (p : α → Prop) : s ∩ {a | p a} = {a ∈ s | p a} :=
   rfl
 #align set.inter_set_of_eq_sep Set.inter_setOf_eq_sep
 
-theorem setOf_inter_eq_sep (p : α → Prop) (s : Set α) : { a | p a } ∩ s = { a ∈ s | p a } :=
+theorem setOf_inter_eq_sep (p : α → Prop) (s : Set α) : {a | p a} ∩ s = {a ∈ s | p a} :=
   inter_comm _ _
 #align set.set_of_inter_eq_sep Set.setOf_inter_eq_sep
 
@@ -1253,7 +1252,7 @@ theorem inter_inter_inter_comm (s t u v : Set α) : s ∩ t ∩ (u ∩ v) = s �
 
 
 #print Set.insert_def /-
-theorem insert_def (x : α) (s : Set α) : insert x s = { y | y = x ∨ y ∈ s } :=
+theorem insert_def (x : α) (s : Set α) : insert x s = {y | y = x ∨ y ∈ s} :=
   rfl
 #align set.insert_def Set.insert_def
 -/
@@ -1455,14 +1454,14 @@ theorem mem_singleton_iff {a b : α} : a ∈ ({b} : Set α) ↔ a = b :=
 
 #print Set.setOf_eq_eq_singleton /-
 @[simp]
-theorem setOf_eq_eq_singleton {a : α} : { n | n = a } = {a} :=
+theorem setOf_eq_eq_singleton {a : α} : {n | n = a} = {a} :=
   rfl
 #align set.set_of_eq_eq_singleton Set.setOf_eq_eq_singleton
 -/
 
 #print Set.setOf_eq_eq_singleton' /-
 @[simp]
-theorem setOf_eq_eq_singleton' {a : α} : { x | a = x } = {a} :=
+theorem setOf_eq_eq_singleton' {a : α} : {x | a = x} = {a} :=
   ext fun x => eq_comm
 #align set.set_of_eq_eq_singleton' Set.setOf_eq_eq_singleton'
 -/
@@ -1536,7 +1535,7 @@ theorem singleton_subset_singleton : ({a} : Set α) ⊆ {b} ↔ a = b := by simp
 -/
 
 #print Set.set_compr_eq_eq_singleton /-
-theorem set_compr_eq_eq_singleton {a : α} : { b | b = a } = {a} :=
+theorem set_compr_eq_eq_singleton {a : α} : {b | b = a} = {a} :=
   rfl
 #align set.set_compr_eq_eq_singleton Set.set_compr_eq_eq_singleton
 -/
@@ -1640,106 +1639,106 @@ section Sep
 variable {p q : α → Prop} {x : α}
 
 #print Set.mem_sep /-
-theorem mem_sep (xs : x ∈ s) (px : p x) : x ∈ { x ∈ s | p x } :=
+theorem mem_sep (xs : x ∈ s) (px : p x) : x ∈ {x ∈ s | p x} :=
   ⟨xs, px⟩
 #align set.mem_sep Set.mem_sep
 -/
 
 @[simp]
-theorem sep_mem_eq : { x ∈ s | x ∈ t } = s ∩ t :=
+theorem sep_mem_eq : {x ∈ s | x ∈ t} = s ∩ t :=
   rfl
 #align set.sep_mem_eq Set.sep_mem_eq
 
 #print Set.mem_sep_iff /-
 @[simp]
-theorem mem_sep_iff : x ∈ { x ∈ s | p x } ↔ x ∈ s ∧ p x :=
+theorem mem_sep_iff : x ∈ {x ∈ s | p x} ↔ x ∈ s ∧ p x :=
   Iff.rfl
 #align set.mem_sep_iff Set.mem_sep_iff
 -/
 
 #print Set.sep_ext_iff /-
-theorem sep_ext_iff : { x ∈ s | p x } = { x ∈ s | q x } ↔ ∀ x ∈ s, p x ↔ q x := by
+theorem sep_ext_iff : {x ∈ s | p x} = {x ∈ s | q x} ↔ ∀ x ∈ s, p x ↔ q x := by
   simp_rw [ext_iff, mem_sep_iff, and_congr_right_iff]
 #align set.sep_ext_iff Set.sep_ext_iff
 -/
 
 #print Set.sep_eq_of_subset /-
-theorem sep_eq_of_subset (h : s ⊆ t) : { x ∈ t | x ∈ s } = s :=
+theorem sep_eq_of_subset (h : s ⊆ t) : {x ∈ t | x ∈ s} = s :=
   inter_eq_self_of_subset_right h
 #align set.sep_eq_of_subset Set.sep_eq_of_subset
 -/
 
 #print Set.sep_subset /-
 @[simp]
-theorem sep_subset (s : Set α) (p : α → Prop) : { x ∈ s | p x } ⊆ s := fun x => And.left
+theorem sep_subset (s : Set α) (p : α → Prop) : {x ∈ s | p x} ⊆ s := fun x => And.left
 #align set.sep_subset Set.sep_subset
 -/
 
 #print Set.sep_eq_self_iff_mem_true /-
 @[simp]
-theorem sep_eq_self_iff_mem_true : { x ∈ s | p x } = s ↔ ∀ x ∈ s, p x := by
+theorem sep_eq_self_iff_mem_true : {x ∈ s | p x} = s ↔ ∀ x ∈ s, p x := by
   simp_rw [ext_iff, mem_sep_iff, and_iff_left_iff_imp]
 #align set.sep_eq_self_iff_mem_true Set.sep_eq_self_iff_mem_true
 -/
 
 #print Set.sep_eq_empty_iff_mem_false /-
 @[simp]
-theorem sep_eq_empty_iff_mem_false : { x ∈ s | p x } = ∅ ↔ ∀ x ∈ s, ¬p x := by
+theorem sep_eq_empty_iff_mem_false : {x ∈ s | p x} = ∅ ↔ ∀ x ∈ s, ¬p x := by
   simp_rw [ext_iff, mem_sep_iff, mem_empty_iff_false, iff_false_iff, not_and]
 #align set.sep_eq_empty_iff_mem_false Set.sep_eq_empty_iff_mem_false
 -/
 
 #print Set.sep_true /-
 @[simp]
-theorem sep_true : { x ∈ s | True } = s :=
+theorem sep_true : {x ∈ s | True} = s :=
   inter_univ s
 #align set.sep_true Set.sep_true
 -/
 
 #print Set.sep_false /-
 @[simp]
-theorem sep_false : { x ∈ s | False } = ∅ :=
+theorem sep_false : {x ∈ s | False} = ∅ :=
   inter_empty s
 #align set.sep_false Set.sep_false
 -/
 
 #print Set.sep_empty /-
 @[simp]
-theorem sep_empty (p : α → Prop) : { x ∈ (∅ : Set α) | p x } = ∅ :=
+theorem sep_empty (p : α → Prop) : {x ∈ (∅ : Set α) | p x} = ∅ :=
   empty_inter p
 #align set.sep_empty Set.sep_empty
 -/
 
 #print Set.sep_univ /-
 @[simp]
-theorem sep_univ : { x ∈ (univ : Set α) | p x } = { x | p x } :=
+theorem sep_univ : {x ∈ (univ : Set α) | p x} = {x | p x} :=
   univ_inter p
 #align set.sep_univ Set.sep_univ
 -/
 
 @[simp]
-theorem sep_union : { x ∈ s ∪ t | p x } = { x ∈ s | p x } ∪ { x ∈ t | p x } :=
+theorem sep_union : {x ∈ s ∪ t | p x} = {x ∈ s | p x} ∪ {x ∈ t | p x} :=
   union_inter_distrib_right
 #align set.sep_union Set.sep_union
 
 @[simp]
-theorem sep_inter : { x ∈ s ∩ t | p x } = { x ∈ s | p x } ∩ { x ∈ t | p x } :=
+theorem sep_inter : {x ∈ s ∩ t | p x} = {x ∈ s | p x} ∩ {x ∈ t | p x} :=
   inter_inter_distrib_right s t p
 #align set.sep_inter Set.sep_inter
 
 @[simp]
-theorem sep_and : { x ∈ s | p x ∧ q x } = { x ∈ s | p x } ∩ { x ∈ s | q x } :=
+theorem sep_and : {x ∈ s | p x ∧ q x} = {x ∈ s | p x} ∩ {x ∈ s | q x} :=
   inter_inter_distrib_left s p q
 #align set.sep_and Set.sep_and
 
 @[simp]
-theorem sep_or : { x ∈ s | p x ∨ q x } = { x ∈ s | p x } ∪ { x ∈ s | q x } :=
+theorem sep_or : {x ∈ s | p x ∨ q x} = {x ∈ s | p x} ∪ {x ∈ s | q x} :=
   inter_union_distrib_left
 #align set.sep_or Set.sep_or
 
 #print Set.sep_setOf /-
 @[simp]
-theorem sep_setOf : { x ∈ { y | p y } | q x } = { x | p x ∧ q x } :=
+theorem sep_setOf : {x ∈ {y | p y} | q x} = {x | p x ∧ q x} :=
   rfl
 #align set.sep_set_of Set.sep_setOf
 -/
@@ -1912,7 +1911,7 @@ theorem inter_diff_distrib_right (s t u : Set α) : s \ t ∩ u = (s ∩ u) \ (t
 /-! ### Lemmas about complement -/
 
 
-theorem compl_def (s : Set α) : sᶜ = { x | x ∉ s } :=
+theorem compl_def (s : Set α) : sᶜ = {x | x ∉ s} :=
   rfl
 #align set.compl_def Set.compl_def
 
@@ -1920,7 +1919,7 @@ theorem mem_compl {s : Set α} {x : α} (h : x ∉ s) : x ∈ sᶜ :=
   h
 #align set.mem_compl Set.mem_compl
 
-theorem compl_setOf {α} (p : α → Prop) : { a | p a }ᶜ = { a | ¬p a } :=
+theorem compl_setOf {α} (p : α → Prop) : {a | p a}ᶜ = {a | ¬p a} :=
   rfl
 #align set.compl_set_of Set.compl_setOf
 
@@ -1988,12 +1987,12 @@ theorem mem_compl_singleton_iff {a x : α} : x ∈ ({a} : Set α)ᶜ ↔ x ≠ a
   Iff.rfl
 #align set.mem_compl_singleton_iff Set.mem_compl_singleton_iff
 
-theorem compl_singleton_eq (a : α) : ({a} : Set α)ᶜ = { x | x ≠ a } :=
+theorem compl_singleton_eq (a : α) : ({a} : Set α)ᶜ = {x | x ≠ a} :=
   rfl
 #align set.compl_singleton_eq Set.compl_singleton_eq
 
 @[simp]
-theorem compl_ne_eq_singleton (a : α) : ({ x | x ≠ a } : Set α)ᶜ = {a} :=
+theorem compl_ne_eq_singleton (a : α) : ({x | x ≠ a} : Set α)ᶜ = {a} :=
   compl_compl _
 #align set.compl_ne_eq_singleton Set.compl_ne_eq_singleton
 
@@ -2264,14 +2263,14 @@ theorem insert_diff_of_mem (s) (h : a ∈ t) : insert a s \ t = s \ t := by ext;
 
 theorem insert_diff_of_not_mem (s) (h : a ∉ t) : insert a s \ t = insert a (s \ t) := by
   classical
-    ext x
-    by_cases h' : x ∈ t
-    · have : x ≠ a := by
-        intro H
-        rw [H] at h' 
-        exact h h'
-      simp [h, h', this]
-    · simp [h, h']
+  ext x
+  by_cases h' : x ∈ t
+  · have : x ≠ a := by
+      intro H
+      rw [H] at h' 
+      exact h h'
+    simp [h, h', this]
+  · simp [h, h']
 #align set.insert_diff_of_not_mem Set.insert_diff_of_not_mem
 
 theorem insert_diff_self_of_not_mem {a : α} {s : Set α} (h : a ∉ s) : insert a s \ {a} = s := by
@@ -2422,7 +2421,7 @@ theorem subset_symmDiff_union_symmDiff_right (h : Disjoint t u) : s ⊆ s ∆ t 
 #print Set.powerset /-
 /-- `𝒫 s = set.powerset s` is the set of all subsets of `s`. -/
 def powerset (s : Set α) : Set (Set α) :=
-  { t | t ⊆ s }
+  {t | t ⊆ s}
 #align set.powerset Set.powerset
 -/
 
@@ -2737,13 +2736,13 @@ theorem subsingleton_of_subsingleton [Subsingleton α] {s : Set α} : Set.Subsin
 -/
 
 #print Set.subsingleton_isTop /-
-theorem subsingleton_isTop (α : Type _) [PartialOrder α] : Set.Subsingleton { x : α | IsTop x } :=
+theorem subsingleton_isTop (α : Type _) [PartialOrder α] : Set.Subsingleton {x : α | IsTop x} :=
   fun x hx y hy => hx.IsMax.eq_of_le (hy x)
 #align set.subsingleton_is_top Set.subsingleton_isTop
 -/
 
 #print Set.subsingleton_isBot /-
-theorem subsingleton_isBot (α : Type _) [PartialOrder α] : Set.Subsingleton { x : α | IsBot x } :=
+theorem subsingleton_isBot (α : Type _) [PartialOrder α] : Set.Subsingleton {x : α | IsBot x} :=
   fun x hx y hy => hx.IsMin.eq_of_ge (hy x)
 #align set.subsingleton_is_bot Set.subsingleton_isBot
 -/
@@ -2870,7 +2869,7 @@ theorem nontrivial_of_exists_ne {x} (hx : x ∈ s) (h : ∃ y ∈ s, y ≠ x) : 
 
 theorem Nontrivial.exists_ne (hs : s.Nontrivial) (z) : ∃ x ∈ s, x ≠ z :=
   by
-  by_contra H; push_neg  at H 
+  by_contra H; push_neg at H 
   rcases hs with ⟨x, hx, y, hy, hxy⟩
   rw [H x hx, H y hy] at hxy 
   exact hxy rfl
@@ -3346,7 +3345,7 @@ instance decidableUniv : DecidablePred (· ∈ (Set.univ : Set α)) := fun _ =>
 -/
 
 #print Set.decidableSetOf /-
-instance decidableSetOf (p : α → Prop) [Decidable (p a)] : Decidable (a ∈ { a | p a }) := by
+instance decidableSetOf (p : α → Prop) [Decidable (p a)] : Decidable (a ∈ {a | p a}) := by
   assumption
 #align set.decidable_set_of Set.decidableSetOf
 -/
@@ -3403,11 +3402,11 @@ theorem AntitoneOn.union [Preorder β] {f g : β → Set α} {s : Set β} (hf : 
 namespace Set
 
 theorem monotone_setOf [Preorder α] {p : α → β → Prop} (hp : ∀ b, Monotone fun a => p a b) :
-    Monotone fun a => { b | p a b } := fun a a' h b => hp b h
+    Monotone fun a => {b | p a b} := fun a a' h b => hp b h
 #align set.monotone_set_of Set.monotone_setOf
 
 theorem antitone_setOf [Preorder α] {p : α → β → Prop} (hp : ∀ b, Antitone fun a => p a b) :
-    Antitone fun a => { b | p a b } := fun a a' h b => hp b h
+    Antitone fun a => {b | p a b} := fun a a' h b => hp b h
 #align set.antitone_set_of Set.antitone_setOf
 
 /-- Quantifying over a set is antitone in the set -/

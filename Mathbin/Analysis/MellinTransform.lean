@@ -445,7 +445,7 @@ theorem mellin_has_deriv_of_isBigO_rpow [CompleteSpace E] [NormedSpace ℂ E] {a
     have ht' : (t : ℂ) ≠ 0 := of_real_ne_zero.mpr (ne_of_gt ht)
     have u1 : HasDerivAt (fun z : ℂ => (t : ℂ) ^ (z - 1)) (t ^ (y - 1) * log t) y :=
       by
-      convert((hasDerivAt_id' y).sub_const 1).const_cpow (Or.inl ht') using 1
+      convert ((hasDerivAt_id' y).sub_const 1).const_cpow (Or.inl ht') using 1
       rw [of_real_log (le_of_lt ht)]
       ring
     exact u1.smul_const (f t)

@@ -148,7 +148,7 @@ alias count_succ_eq_succ_count_iff ↔ _ count_succ_eq_succ_count
 alias count_succ_eq_count_iff ↔ _ count_succ_eq_count
 #align nat.count_succ_eq_count Nat.count_succ_eq_count
 
-theorem count_le_cardinal (n : ℕ) : (count p n : Cardinal) ≤ Cardinal.mk { k | p k } :=
+theorem count_le_cardinal (n : ℕ) : (count p n : Cardinal) ≤ Cardinal.mk {k | p k} :=
   by
   rw [count_eq_card_fintype, ← Cardinal.mk_fintype]
   exact Cardinal.mk_subtype_mono fun x hx => hx.2

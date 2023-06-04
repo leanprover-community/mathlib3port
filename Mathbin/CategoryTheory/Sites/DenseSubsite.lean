@@ -504,7 +504,7 @@ instance Sites.Pullback.faithful [Faithful G] (Hp : CoverPreserving J K G) :
     where map_injective' := by
     intro ℱ ℱ' α β e
     ext1
-    apply_fun fun e => e.val  at e 
+    apply_fun fun e => e.val at e 
     dsimp at e 
     rw [← H.sheaf_hom_eq α.val, ← H.sheaf_hom_eq β.val, e]
 #align category_theory.cover_dense.sites.pullback.faithful CategoryTheory.CoverDense.Sites.Pullback.faithful

@@ -291,7 +291,7 @@ theorem FormallySmooth.comp [FormallySmooth R A] [FormallySmooth A B] : Formally
   letI := f'.to_ring_hom.to_algebra
   obtain ⟨f'', e'⟩ :=
     formally_smooth.comp_surjective I hI { f.to_ring_hom with commutes' := AlgHom.congr_fun e.symm }
-  apply_fun AlgHom.restrictScalars R  at e' 
+  apply_fun AlgHom.restrictScalars R at e' 
   exact ⟨f''.restrict_scalars _, e'.trans (AlgHom.ext fun _ => rfl)⟩
 #align algebra.formally_smooth.comp Algebra.FormallySmooth.comp
 
@@ -515,7 +515,7 @@ theorem FormallySmooth.of_isLocalization : FormallySmooth R Rₘ :=
   have : ∀ x : M, IsUnit (algebraMap R Q x) := by
     intro x
     apply (IsNilpotent.isUnit_quotient_mk_iff ⟨2, e⟩).mp
-    convert(IsLocalization.map_units Rₘ x).map f
+    convert (IsLocalization.map_units Rₘ x).map f
     simp only [Ideal.Quotient.mk_algebraMap, AlgHom.commutes]
   let this : Rₘ →ₐ[R] Q :=
     { IsLocalization.lift this with commutes' := IsLocalization.lift_eq this }

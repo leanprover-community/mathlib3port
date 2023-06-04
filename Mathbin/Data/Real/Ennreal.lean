@@ -497,7 +497,7 @@ instance fact_one_le_top_ennreal : Fact ((1 : ℝ≥0∞) ≤ ∞) :=
 #align fact_one_le_top_ennreal fact_one_le_top_ennreal
 
 /-- The set of numbers in `ℝ≥0∞` that are not equal to `∞` is equivalent to `ℝ≥0`. -/
-def neTopEquivNNReal : { a | a ≠ ∞ } ≃ ℝ≥0
+def neTopEquivNNReal : {a | a ≠ ∞} ≃ ℝ≥0
     where
   toFun x := ENNReal.toNNReal x
   invFun x := ⟨x, coe_ne_top⟩
@@ -1090,7 +1090,7 @@ theorem mul_lt_mul (ac : a < c) (bd : b < d) : a * b < c * d :=
   lift a to ℝ≥0 using ne_top_of_lt aa'
   rcases lt_iff_exists_nnreal_btwn.1 bd with ⟨b', bb', b'd⟩
   lift b to ℝ≥0 using ne_top_of_lt bb'
-  norm_cast  at *
+  norm_cast at *
   calc
     ↑(a * b) < ↑(a' * b') :=
       coe_lt_coe.2 (mul_lt_mul' aa'.le bb' (zero_le _) ((zero_le a).trans_lt aa'))
@@ -1205,7 +1205,7 @@ end Cancel
 
 section Sub
 
-theorem sub_eq_sInf {a b : ℝ≥0∞} : a - b = sInf { d | a ≤ d + b } :=
+theorem sub_eq_sInf {a b : ℝ≥0∞} : a - b = sInf {d | a ≤ d + b} :=
   le_antisymm (le_sInf fun c => tsub_le_iff_right.mpr) <| sInf_le le_tsub_add
 #align ennreal.sub_eq_Inf ENNReal.sub_eq_sInf
 
@@ -1504,7 +1504,7 @@ section Inv
 noncomputable section
 
 instance : Inv ℝ≥0∞ :=
-  ⟨fun a => sInf { b | 1 ≤ a * b }⟩
+  ⟨fun a => sInf {b | 1 ≤ a * b}⟩
 
 instance : DivInvMonoid ℝ≥0∞ :=
   { (inferInstance : Monoid ℝ≥0∞) with inv := Inv.inv }
@@ -1514,7 +1514,7 @@ theorem div_eq_inv_mul : a / b = b⁻¹ * a := by rw [div_eq_mul_inv, mul_comm]
 
 @[simp]
 theorem inv_zero : (0 : ℝ≥0∞)⁻¹ = ∞ :=
-  show sInf { b : ℝ≥0∞ | 1 ≤ 0 * b } = ∞ by simp <;> rfl
+  show sInf {b : ℝ≥0∞ | 1 ≤ 0 * b} = ∞ by simp <;> rfl
 #align ennreal.inv_zero ENNReal.inv_zero
 
 @[simp]
@@ -1561,7 +1561,7 @@ protected theorem inv_pow {n : ℕ} : (a ^ n)⁻¹ = a⁻¹ ^ n :=
 protected theorem mul_inv_cancel (h0 : a ≠ 0) (ht : a ≠ ∞) : a * a⁻¹ = 1 :=
   by
   lift a to ℝ≥0 using ht
-  norm_cast  at *
+  norm_cast at *
   exact mul_inv_cancel h0
 #align ennreal.mul_inv_cancel ENNReal.mul_inv_cancel
 

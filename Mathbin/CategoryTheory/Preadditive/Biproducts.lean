@@ -722,10 +722,10 @@ instance subsingleton_preadditive_of_hasBinaryBiproducts {C : Type u} [Category.
     ext (X Y f g)
     have h₁ :=
       @biprod.add_eq_lift_id_desc _ _ a _ _ f g
-        (by convert(inferInstance : has_binary_biproduct X X))
+        (by convert (inferInstance : has_binary_biproduct X X))
     have h₂ :=
       @biprod.add_eq_lift_id_desc _ _ b _ _ f g
-        (by convert(inferInstance : has_binary_biproduct X X))
+        (by convert (inferInstance : has_binary_biproduct X X))
     refine' h₁.trans (Eq.trans _ h₂.symm)
     congr 2 <;> exact Subsingleton.elim _ _
 #align category_theory.subsingleton_preadditive_of_has_binary_biproducts CategoryTheory.subsingleton_preadditive_of_hasBinaryBiproducts
@@ -960,11 +960,11 @@ def Biproduct.columnNonzeroOfIso {σ τ : Type} [Fintype τ] {S : σ → C} [Has
     [HasBiproduct T] (s : σ) (nz : 𝟙 (S s) ≠ 0) (f : ⨁ S ⟶ ⨁ T) [IsIso f] :
     Trunc (Σ' t : τ, biproduct.ι S s ≫ f ≫ biproduct.π T t ≠ 0) := by
   classical
-    apply truncSigmaOfExists
-    have t := Biproduct.column_nonzero_of_iso'.{v} s f
-    by_contra h
-    simp only [not_exists_not] at h 
-    exact nz (t h)
+  apply truncSigmaOfExists
+  have t := Biproduct.column_nonzero_of_iso'.{v} s f
+  by_contra h
+  simp only [not_exists_not] at h 
+  exact nz (t h)
 #align category_theory.biproduct.column_nonzero_of_iso CategoryTheory.Biproduct.columnNonzeroOfIso
 -/
 

@@ -71,7 +71,7 @@ ordered map, ordered set, data structure
 
 universe u
 
-/- ./././Mathport/Syntax/Translate/Command.lean:369:30: infer kinds are unsupported in Lean 4: nil {} -/
+/- ./././Mathport/Syntax/Translate/Command.lean:370:30: infer kinds are unsupported in Lean 4: nil {} -/
 #print Ordnode /-
 /-- An `ordnode α` is a finite set of values, represented as a tree.
   The operations on this type maintain that the tree is balanced

@@ -71,13 +71,13 @@ inductive Rel : TensorAlgebra R M → TensorAlgebra R M → Prop
 
 end CliffordAlgebra
 
-/- ./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler algebra[algebra] R -/
+/- ./././Mathport/Syntax/Translate/Command.lean:43:9: unsupported derive handler algebra[algebra] R -/
 /-- The Clifford algebra of an `R`-module `M` equipped with a quadratic_form `Q`.
 -/
 def CliffordAlgebra :=
   RingQuot (CliffordAlgebra.Rel Q)
 deriving Inhabited, Ring,
-  «./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler algebra[algebra] R»
+  «./././Mathport/Syntax/Translate/Command.lean:43:9: unsupported derive handler algebra[algebra] R»
 #align clifford_algebra CliffordAlgebra
 
 namespace CliffordAlgebra
@@ -151,7 +151,7 @@ theorem lift_ι_apply (f : M →ₗ[R] A) (cond : ∀ m, f m * f m = algebraMap 
 theorem lift_unique (f : M →ₗ[R] A) (cond : ∀ m : M, f m * f m = algebraMap _ _ (Q m))
     (g : CliffordAlgebra Q →ₐ[R] A) : g.toLinearMap.comp (ι Q) = f ↔ g = lift Q ⟨f, cond⟩ :=
   by
-  convert(lift Q).symm_apply_eq
+  convert (lift Q).symm_apply_eq
   rw [lift_symm_apply]
   simp only
 #align clifford_algebra.lift_unique CliffordAlgebra.lift_unique
@@ -160,7 +160,7 @@ theorem lift_unique (f : M →ₗ[R] A) (cond : ∀ m : M, f m * f m = algebraMa
 theorem lift_comp_ι (g : CliffordAlgebra Q →ₐ[R] A) :
     lift Q ⟨g.toLinearMap.comp (ι Q), comp_ι_sq_scalar _⟩ = g :=
   by
-  convert(lift Q).apply_symm_apply g
+  convert (lift Q).apply_symm_apply g
   rw [lift_symm_apply]
   rfl
 #align clifford_algebra.lift_comp_ι CliffordAlgebra.lift_comp_ι
@@ -343,7 +343,7 @@ def invertibleιOfInvertible (m : M) [Invertible (Q m)] : Invertible (ι Q m)
 theorem invOf_ι (m : M) [Invertible (Q m)] [Invertible (ι Q m)] : ⅟ (ι Q m) = ι Q (⅟ (Q m) • m) :=
   by
   letI := invertible_ι_of_invertible Q m
-  convert(rfl : ⅟ (ι Q m) = _)
+  convert (rfl : ⅟ (ι Q m) = _)
 #align clifford_algebra.inv_of_ι CliffordAlgebra.invOf_ι
 
 theorem isUnit_ι_of_isUnit {m : M} (h : IsUnit (Q m)) : IsUnit (ι Q m) :=

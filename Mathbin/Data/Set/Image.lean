@@ -51,7 +51,7 @@ namespace Set
 /-- The preimage of `s : set β` by `f : α → β`, written `f ⁻¹' s`,
   is the set of `x : α` such that `f x ∈ s`. -/
 def preimage {α : Type u} {β : Type v} (f : α → β) (s : Set β) : Set α :=
-  { x | f x ∈ s }
+  {x | f x ∈ s}
 #align set.preimage Set.preimage
 -/
 
@@ -124,7 +124,7 @@ theorem preimage_ite (f : α → β) (s t₁ t₂ : Set β) :
 
 #print Set.preimage_setOf_eq /-
 @[simp]
-theorem preimage_setOf_eq {p : α → Prop} {f : β → α} : f ⁻¹' { a | p a } = { a | p (f a) } :=
+theorem preimage_setOf_eq {p : α → Prop} {f : β → α} : f ⁻¹' {a | p a} = {a | p (f a)} :=
   rfl
 #align set.preimage_set_of_eq Set.preimage_setOf_eq
 -/
@@ -231,7 +231,7 @@ variable {f : α → β} {s t : Set α}
 /-- The image of `s : set α` by `f : α → β`, written `f '' s`,
   is the set of `y : β` such that `f x = y` for some `x ∈ s`. -/
 def image (f : α → β) (s : Set α) : Set β :=
-  { y | ∃ x, x ∈ s ∧ f x = y }
+  {y | ∃ x, x ∈ s ∧ f x = y}
 #align set.image Set.image
 -/
 
@@ -572,7 +572,7 @@ theorem compl_image : image (compl : Set α → Set α) = preimage compl :=
   image_eq_preimage_of_inverse compl_compl compl_compl
 #align set.compl_image Set.compl_image
 
-theorem compl_image_set_of {p : Set α → Prop} : compl '' { s | p s } = { s | p (sᶜ) } :=
+theorem compl_image_set_of {p : Set α → Prop} : compl '' {s | p s} = {s | p (sᶜ)} :=
   congr_fun compl_image p
 #align set.compl_image_set_of Set.compl_image_set_of
 
@@ -609,7 +609,7 @@ theorem image_subset_image_iff {f : α → β} (hf : Injective f) : f '' s ⊆ f
 
 theorem prod_quotient_preimage_eq_image [s : Setoid α] (g : Quotient s → β) {h : α → β}
     (Hh : h = g ∘ Quotient.mk') (r : Set (β × β)) :
-    { x : Quotient s × Quotient s | (g x.1, g x.2) ∈ r } =
+    {x : Quotient s × Quotient s | (g x.1, g x.2) ∈ r} =
       (fun a : α × α => (⟦a.1⟧, ⟦a.2⟧)) '' ((fun a : α × α => (h a.1, h a.2)) ⁻¹' r) :=
   Hh.symm ▸
     Set.ext fun ⟨a₁, a₂⟩ =>
@@ -644,7 +644,7 @@ theorem surjective_onto_image {f : α → β} {s : Set α} : Surjective (imageFa
 #print Set.image_perm /-
 /-- If the only elements outside `s` are those left fixed by `σ`, then mapping by `σ` has no effect.
 -/
-theorem image_perm {s : Set α} {σ : Equiv.Perm α} (hs : { a : α | σ a ≠ a } ⊆ s) : σ '' s = s :=
+theorem image_perm {s : Set α} {σ : Equiv.Perm α} (hs : {a : α | σ a ≠ a} ⊆ s) : σ '' s = s :=
   by
   ext i
   obtain hi | hi := eq_or_ne (σ i) i
@@ -694,7 +694,7 @@ variable {f : ι → α} {s t : Set α}
 This function is more flexible than `f '' univ`, as the image requires that the domain is in Type
 and not an arbitrary Sort. -/
 def range (f : ι → α) : Set α :=
-  { x | ∃ y, f y = x }
+  {x | ∃ y, f y = x}
 #align set.range Set.range
 -/
 
@@ -936,10 +936,10 @@ theorem range_eval {ι : Type _} {α : ι → Sort _} [∀ i, Nonempty (α i)] (
   (surjective_eval i).range_eq
 #align set.range_eval Set.range_eval
 
-theorem range_inl : range (@Sum.inl α β) = { x | x.isLeft } := by ext (_ | _) <;> simp
+theorem range_inl : range (@Sum.inl α β) = {x | x.isLeft} := by ext (_ | _) <;> simp
 #align set.range_inl Set.range_inl
 
-theorem range_inr : range (@Sum.inr α β) = { x | x.isRight } := by ext (_ | _) <;> simp
+theorem range_inr : range (@Sum.inr α β) = {x | x.isRight} := by ext (_ | _) <;> simp
 #align set.range_inr Set.range_inr
 
 theorem isCompl_range_inl_range_inr : IsCompl (range <| @Sum.inl α β) (range Sum.inr) :=
@@ -1069,7 +1069,7 @@ theorem range_const : ∀ [Nonempty ι] {c : α}, (range fun x : ι => c) = {c}
 
 #print Set.range_subtype_map /-
 theorem range_subtype_map {p : α → Prop} {q : β → Prop} (f : α → β) (h : ∀ x, p x → q (f x)) :
-    range (Subtype.map f h) = coe ⁻¹' (f '' { x | p x }) :=
+    range (Subtype.map f h) = coe ⁻¹' (f '' {x | p x}) :=
   by
   ext ⟨x, hx⟩
   simp_rw [mem_preimage, mem_range, mem_image, Subtype.exists, Subtype.map, Subtype.coe_mk,
@@ -1181,8 +1181,8 @@ theorem range_diff_image {f : α → β} (H : Injective f) (s : Set α) : range 
 
 #print Set.range_inclusion /-
 @[simp]
-theorem range_inclusion (h : s ⊆ t) : range (inclusion h) = { x : t | (x : α) ∈ s } := by
-  ext ⟨x, hx⟩; simp [inclusion]
+theorem range_inclusion (h : s ⊆ t) : range (inclusion h) = {x : t | (x : α) ∈ s} := by ext ⟨x, hx⟩;
+  simp [inclusion]
 #align set.range_inclusion Set.range_inclusion
 -/
 
@@ -1431,7 +1431,7 @@ open Set
 
 #print Subtype.coe_image /-
 theorem coe_image {p : α → Prop} {s : Set (Subtype p)} :
-    coe '' s = { x | ∃ h : p x, (⟨x, h⟩ : Subtype p) ∈ s } :=
+    coe '' s = {x | ∃ h : p x, (⟨x, h⟩ : Subtype p) ∈ s} :=
   Set.ext fun a =>
     ⟨fun ⟨⟨a', ha'⟩, in_s, h_eq⟩ => h_eq ▸ ⟨ha', in_s⟩, fun ⟨ha, in_s⟩ => ⟨⟨a, ha⟩, in_s, rfl⟩⟩
 #align subtype.coe_image Subtype.coe_image
@@ -1439,7 +1439,7 @@ theorem coe_image {p : α → Prop} {s : Set (Subtype p)} :
 
 #print Subtype.coe_image_of_subset /-
 @[simp]
-theorem coe_image_of_subset {s t : Set α} (h : t ⊆ s) : coe '' { x : ↥s | ↑x ∈ t } = t :=
+theorem coe_image_of_subset {s t : Set α} (h : t ⊆ s) : coe '' {x : ↥s | ↑x ∈ t} = t :=
   by
   ext x
   rw [Set.mem_image]
@@ -1467,7 +1467,7 @@ theorem range_val {s : Set α} : range (Subtype.val : s → α) = s :=
   for `s : set α` the function `coe : s → α`, then the inferred implicit arguments of `coe` are
   `coe α (λ x, x ∈ s)`. -/
 @[simp]
-theorem range_coe_subtype {p : α → Prop} : range (coe : Subtype p → α) = { x | p x } :=
+theorem range_coe_subtype {p : α → Prop} : range (coe : Subtype p → α) = {x | p x} :=
   range_coe
 #align subtype.range_coe_subtype Subtype.range_coe_subtype
 -/
@@ -1480,7 +1480,7 @@ theorem coe_preimage_self (s : Set α) : (coe : s → α) ⁻¹' s = univ := by
 -/
 
 #print Subtype.range_val_subtype /-
-theorem range_val_subtype {p : α → Prop} : range (Subtype.val : Subtype p → α) = { x | p x } :=
+theorem range_val_subtype {p : α → Prop} : range (Subtype.val : Subtype p → α) = {x | p x} :=
   range_coe
 #align subtype.range_val_subtype Subtype.range_val_subtype
 -/

@@ -71,7 +71,7 @@ If there is no largest such `n` (e.g. because `p = ⊥`), then `ramification_idx
 defined to be 0.
 -/
 noncomputable def ramificationIdx : ℕ :=
-  sSup { n | map f p ≤ P ^ n }
+  sSup {n | map f p ≤ P ^ n}
 #align ideal.ramification_idx Ideal.ramificationIdx
 
 variable {f p P}
@@ -471,7 +471,8 @@ theorem finrank_quotient_map [IsDomain R] [IsDomain S] [IsDedekindDomain R] [Alg
       Submodule.Quotient.eq] at y_eq 
     exact add_mem (Submodule.mem_sup_left y_mem) (neg_mem <| Submodule.mem_sup_right y_eq)
   · have := b.linear_independent; rw [b_eq_b'] at this 
-    convert finrank_quotient_map.linear_independent_of_nontrivial K _
+    convert
+      finrank_quotient_map.linear_independent_of_nontrivial K _
         ((Algebra.linearMap S L).restrictScalars R) _ ((Submodule.mkQ _).restrictScalars R) this
     · rw [quotient.algebra_map_eq, Ideal.mk_ker]
       exact hp.ne_top

@@ -314,7 +314,7 @@ theorem mem_iff' {a b c : α} : Sym2.Mem a ⟦(b, c)⟧ ↔ a = b ∨ a = c :=
 -/
 
 instance : SetLike (Sym2 α) α where
-  coe z := { x | z.Mem x }
+  coe z := {x | z.Mem x}
   coe_injective' z z' h := by
     simp only [Set.ext_iff, Set.mem_setOf_eq] at h 
     induction' z using Sym2.ind with x y
@@ -759,8 +759,7 @@ def Mem.other' [DecidableEq α] {a : α} {z : Sym2 α} (h : a ∈ z) : α :=
         apply h'
       have h' := (rel_bool_spec x y).mpr h
       cases' x with x₁ x₂; cases' y with y₁ y₂
-      cases' mem_iff.mp hy with hy' <;> subst a <;> dsimp [rel_bool] at h'  <;>
-            split_ifs  at h'  <;>
+      cases' mem_iff.mp hy with hy' <;> subst a <;> dsimp [rel_bool] at h'  <;> split_ifs at h'  <;>
           try rw [Bool.of_decide_iff] at h' ; subst x₁; subst x₂ <;>
         dsimp [pair_other]
       simp only [Ne.symm h_1, if_true, eq_self_iff_true, if_false]
@@ -803,7 +802,7 @@ theorem other_invol' [DecidableEq α] {a : α} {z : Sym2 α} (ha : a ∈ z) (hb 
     hb.other' = a := by
   induction z; cases' z with x y
   dsimp [mem.other', Quot.rec, pair_other] at hb 
-  split_ifs  at hb  <;> dsimp [mem.other', Quot.rec, pair_other]
+  split_ifs at hb  <;> dsimp [mem.other', Quot.rec, pair_other]
   simp only [h, if_true, eq_self_iff_true]
   split_ifs; assumption; rfl
   simp only [h, if_false, eq_self_iff_true]
@@ -815,9 +814,9 @@ theorem other_invol' [DecidableEq α] {a : α} {z : Sym2 α} (ha : a ∈ z) (hb 
 #print Sym2.other_invol /-
 theorem other_invol {a : α} {z : Sym2 α} (ha : a ∈ z) (hb : ha.other ∈ z) : hb.other = a := by
   classical
-    rw [other_eq_other'] at hb ⊢
-    convert other_invol' ha hb
-    rw [other_eq_other']
+  rw [other_eq_other'] at hb ⊢
+  convert other_invol' ha hb
+  rw [other_eq_other']
 #align sym2.other_invol Sym2.other_invol
 -/
 

@@ -99,9 +99,10 @@ theorem Complex.uniformContinuous_ringHom_eq_id_or_conj (K : Subfield ℂ) {ψ :
       · right; ext1 z
         convert RingHom.congr_fun h z using 1
         exact (DenseInducing.extend_eq di hc.continuous z).symm
-  · let j : { x // x ∈ closure (id '' { x | (K : Set ℂ) x }) } → (K.topological_closure : Set ℂ) :=
+  · let j : { x // x ∈ closure (id '' {x | (K : Set ℂ) x}) } → (K.topological_closure : Set ℂ) :=
       fun x => ⟨x, by convert x.prop; simpa only [id.def, Set.image_id']⟩
-    convert DenseRange.comp (Function.Surjective.denseRange _)
+    convert
+      DenseRange.comp (Function.Surjective.denseRange _)
         (DenseEmbedding.subtype denseEmbedding_id (K : Set ℂ)).dense (by continuity : Continuous j)
     rintro ⟨y, hy⟩
     use ⟨y, by convert hy; simpa only [id.def, Set.image_id']⟩

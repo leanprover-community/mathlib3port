@@ -37,18 +37,18 @@ theorem toTensorAlgebra_tprod {n} (x : Fin n → M) :
 #align tensor_power.to_tensor_algebra_tprod TensorPower.toTensorAlgebra_tprod
 
 @[simp]
-theorem toTensorAlgebra_ghasOne :
+theorem toTensorAlgebra_gOne :
     (@GradedMonoid.GOne.one _ (fun n => (⨂[R]^n) M) _ _).toTensorAlgebra = 1 :=
   TensorPower.toTensorAlgebra_tprod _
-#align tensor_power.to_tensor_algebra_ghas_one TensorPower.toTensorAlgebra_ghasOne
+#align tensor_power.to_tensor_algebra_ghas_one TensorPower.toTensorAlgebra_gOne
 
 @[simp]
-theorem toTensorAlgebra_ghasMul {i j} (a : (⨂[R]^i) M) (b : (⨂[R]^j) M) :
+theorem toTensorAlgebra_gMul {i j} (a : (⨂[R]^i) M) (b : (⨂[R]^j) M) :
     (@GradedMonoid.GMul.mul _ (fun n => (⨂[R]^n) M) _ _ _ _ a b).toTensorAlgebra =
       a.toTensorAlgebra * b.toTensorAlgebra :=
   by
   -- change `a` and `b` to `tprod R a` and `tprod R b`
-  rw [TensorPower.ghasMul_eq_coe_linearMap, ← LinearMap.compr₂_apply, ← @LinearMap.mul_apply' R, ←
+  rw [TensorPower.gMul_eq_coe_linearMap, ← LinearMap.compr₂_apply, ← @LinearMap.mul_apply' R, ←
     LinearMap.compl₂_apply, ← LinearMap.comp_apply]
   refine' LinearMap.congr_fun (LinearMap.congr_fun _ a) b
   clear a b
@@ -61,7 +61,7 @@ theorem toTensorAlgebra_ghasMul {i j} (a : (⨂[R]^i) M) (b : (⨂[R]^j) M) :
   congr
   rw [← List.map_ofFn _ (TensorAlgebra.ι R), ← List.map_ofFn _ (TensorAlgebra.ι R), ←
     List.map_ofFn _ (TensorAlgebra.ι R), ← List.map_append, List.ofFn_fin_append]
-#align tensor_power.to_tensor_algebra_ghas_mul TensorPower.toTensorAlgebra_ghasMul
+#align tensor_power.to_tensor_algebra_ghas_mul TensorPower.toTensorAlgebra_gMul
 
 @[simp]
 theorem toTensorAlgebra_galgebra_toFun (r : R) :
@@ -69,7 +69,7 @@ theorem toTensorAlgebra_galgebra_toFun (r : R) :
       algebraMap _ _ r :=
   by
   rw [TensorPower.galgebra_toFun_def, TensorPower.algebraMap₀_eq_smul_one, LinearMap.map_smul,
-    TensorPower.toTensorAlgebra_ghasOne, Algebra.algebraMap_eq_smul_one]
+    TensorPower.toTensorAlgebra_gOne, Algebra.algebraMap_eq_smul_one]
 #align tensor_power.to_tensor_algebra_galgebra_to_fun TensorPower.toTensorAlgebra_galgebra_toFun
 
 end TensorPower
@@ -78,8 +78,8 @@ namespace TensorAlgebra
 
 /-- The canonical map from a direct sum of tensor powers to the tensor algebra. -/
 def ofDirectSum : (⨁ n, (⨂[R]^n) M) →ₐ[R] TensorAlgebra R M :=
-  DirectSum.toAlgebra _ _ (fun n => TensorPower.toTensorAlgebra) TensorPower.toTensorAlgebra_ghasOne
-    (fun i j => TensorPower.toTensorAlgebra_ghasMul) TensorPower.toTensorAlgebra_galgebra_toFun
+  DirectSum.toAlgebra _ _ (fun n => TensorPower.toTensorAlgebra) TensorPower.toTensorAlgebra_gOne
+    (fun i j => TensorPower.toTensorAlgebra_gMul) TensorPower.toTensorAlgebra_galgebra_toFun
 #align tensor_algebra.of_direct_sum TensorAlgebra.ofDirectSum
 
 @[simp]

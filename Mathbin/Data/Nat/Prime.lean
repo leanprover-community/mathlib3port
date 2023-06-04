@@ -595,7 +595,7 @@ theorem exists_infinite_primes (n : ℕ) : ∃ p, n ≤ p ∧ Prime p :=
 
 #print Nat.not_bddAbove_setOf_prime /-
 /-- A version of `nat.exists_infinite_primes` using the `bdd_above` predicate. -/
-theorem not_bddAbove_setOf_prime : ¬BddAbove { p | Prime p } :=
+theorem not_bddAbove_setOf_prime : ¬BddAbove {p | Prime p} :=
   by
   rw [not_bddAbove_iff]
   intro n

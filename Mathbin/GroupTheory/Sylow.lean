@@ -156,7 +156,7 @@ end Sylow
   Every `p`-subgroup is contained in a Sylow `p`-subgroup. -/
 theorem IsPGroup.exists_le_sylow {P : Subgroup G} (hP : IsPGroup p P) : ∃ Q : Sylow p G, P ≤ Q :=
   Exists.elim
-    (zorn_nonempty_partialOrder₀ { Q : Subgroup G | IsPGroup p Q }
+    (zorn_nonempty_partialOrder₀ {Q : Subgroup G | IsPGroup p Q}
       (fun c hc1 hc2 Q hQ =>
         ⟨{  carrier := ⋃ R : c, R
             one_mem' := ⟨Q, ⟨⟨Q, hQ⟩, rfl⟩, Q.one_mem⟩
@@ -320,27 +320,27 @@ theorem IsPGroup.sylow_mem_fixedPoints_iff {P : Subgroup G} (hP : IsPGroup p P) 
 instance [hp : Fact p.Prime] [Finite (Sylow p G)] : IsPretransitive G (Sylow p G) :=
   ⟨fun P Q => by
     classical
-      cases nonempty_fintype (Sylow p G)
-      have H := fun {R : Sylow p G} {S : orbit G P} =>
-        calc
-          S ∈ fixed_points R (orbit G P) ↔ S.1 ∈ fixed_points R (Sylow p G) :=
-            forall_congr' fun a => Subtype.ext_iff
-          _ ↔ R.1 ≤ S := R.2.sylow_mem_fixedPoints_iff
-          _ ↔ S.1.1 = R := ⟨fun h => R.3 S.1.2 h, ge_of_eq⟩
-          
-      suffices Set.Nonempty (fixed_points Q (orbit G P)) by
-        exact Exists.elim this fun R hR => (congr_arg _ (Sylow.ext (H.mp hR))).mp R.2
-      apply Q.2.nonempty_fixed_point_of_prime_not_dvd_card
-      refine' fun h => hp.out.not_dvd_one (nat.modeq_zero_iff_dvd.mp _)
+    cases nonempty_fintype (Sylow p G)
+    have H := fun {R : Sylow p G} {S : orbit G P} =>
       calc
-        1 = card (fixed_points P (orbit G P)) := _
-        _ ≡ card (orbit G P) [MOD p] := (P.2.card_modEq_card_fixedPoints (orbit G P)).symm
-        _ ≡ 0 [MOD p] := nat.modeq_zero_iff_dvd.mpr h
+        S ∈ fixed_points R (orbit G P) ↔ S.1 ∈ fixed_points R (Sylow p G) :=
+          forall_congr' fun a => Subtype.ext_iff
+        _ ↔ R.1 ≤ S := R.2.sylow_mem_fixedPoints_iff
+        _ ↔ S.1.1 = R := ⟨fun h => R.3 S.1.2 h, ge_of_eq⟩
         
-      rw [← Set.card_singleton (⟨P, mem_orbit_self P⟩ : orbit G P)]
-      refine' card_congr' (congr_arg _ (Eq.symm _))
-      rw [Set.eq_singleton_iff_unique_mem]
-      exact ⟨H.mpr rfl, fun R h => Subtype.ext (Sylow.ext (H.mp h))⟩⟩
+    suffices Set.Nonempty (fixed_points Q (orbit G P)) by
+      exact Exists.elim this fun R hR => (congr_arg _ (Sylow.ext (H.mp hR))).mp R.2
+    apply Q.2.nonempty_fixed_point_of_prime_not_dvd_card
+    refine' fun h => hp.out.not_dvd_one (nat.modeq_zero_iff_dvd.mp _)
+    calc
+      1 = card (fixed_points P (orbit G P)) := _
+      _ ≡ card (orbit G P) [MOD p] := (P.2.card_modEq_card_fixedPoints (orbit G P)).symm
+      _ ≡ 0 [MOD p] := nat.modeq_zero_iff_dvd.mpr h
+      
+    rw [← Set.card_singleton (⟨P, mem_orbit_self P⟩ : orbit G P)]
+    refine' card_congr' (congr_arg _ (Eq.symm _))
+    rw [Set.eq_singleton_iff_unique_mem]
+    exact ⟨H.mpr rfl, fun R h => Subtype.ext (Sylow.ext (H.mp h))⟩⟩
 
 variable (p) (G)
 

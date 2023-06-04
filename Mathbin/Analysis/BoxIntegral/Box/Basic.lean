@@ -104,7 +104,7 @@ instance : Membership (ι → ℝ) (Box ι) :=
   ⟨fun x I => ∀ i, x i ∈ Ioc (I.lower i) (I.upper i)⟩
 
 instance : CoeTC (Box ι) (Set <| ι → ℝ) :=
-  ⟨fun I => { x | x ∈ I }⟩
+  ⟨fun I => {x | x ∈ I}⟩
 
 @[simp]
 theorem mem_mk {l u x : ι → ℝ} {H} : x ∈ mk l u H ↔ ∀ i, x i ∈ Ioc (l i) (u i) :=

@@ -282,7 +282,7 @@ instance (priority := 100) ofAbelianIsSolvable [IsLieAbelian L] : IsSolvable R L
 
 /-- The (solvable) radical of Lie algebra is the `Sup` of all solvable ideals. -/
 def radical :=
-  sSup { I : LieIdeal R L | IsSolvable R I }
+  sSup {I : LieIdeal R L | IsSolvable R I}
 #align lie_algebra.radical LieAlgebra.radical
 
 /-- The radical of a Noetherian Lie algebra is solvable. -/
@@ -290,7 +290,7 @@ instance radicalIsSolvable [IsNoetherian R L] : IsSolvable R (radical R L) :=
   by
   have hwf := LieSubmodule.wellFounded_of_noetherian R L L
   rw [← CompleteLattice.isSupClosedCompact_iff_wellFounded] at hwf 
-  refine' hwf { I : LieIdeal R L | IsSolvable R I } ⟨⊥, _⟩ fun I hI J hJ => _
+  refine' hwf {I : LieIdeal R L | IsSolvable R I} ⟨⊥, _⟩ fun I hI J hJ => _
   · exact LieAlgebra.isSolvableBot R L
   · apply LieAlgebra.isSolvableAdd R L; exacts [hI, hJ]
 #align lie_algebra.radical_is_solvable LieAlgebra.radicalIsSolvable
@@ -311,7 +311,7 @@ natural number `k` (the number of inclusions).
 
 For a non-solvable ideal, the value is 0. -/
 noncomputable def derivedLengthOfIdeal (I : LieIdeal R L) : ℕ :=
-  sInf { k | derivedSeriesOfIdeal R L k I = ⊥ }
+  sInf {k | derivedSeriesOfIdeal R L k I = ⊥}
 #align lie_algebra.derived_length_of_ideal LieAlgebra.derivedLengthOfIdeal
 
 /-- The derived length of a Lie algebra is the derived length of its 'top' Lie ideal.
@@ -326,7 +326,7 @@ theorem derived_series_of_derived_length_succ (I : LieIdeal R L) (k : ℕ) :
       IsLieAbelian (derivedSeriesOfIdeal R L k I) ∧ derivedSeriesOfIdeal R L k I ≠ ⊥ :=
   by
   rw [abelian_iff_derived_succ_eq_bot]
-  let s := { k | derived_series_of_ideal R L k I = ⊥ }; change Inf s = k + 1 ↔ k + 1 ∈ s ∧ k ∉ s
+  let s := {k | derived_series_of_ideal R L k I = ⊥}; change Inf s = k + 1 ↔ k + 1 ∈ s ∧ k ∉ s
   have hs : ∀ k₁ k₂ : ℕ, k₁ ≤ k₂ → k₁ ∈ s → k₂ ∈ s :=
     by
     intro k₁ k₂ h₁₂ h₁
@@ -339,8 +339,8 @@ theorem derived_series_of_derived_length_succ (I : LieIdeal R L) (k : ℕ) :
 theorem derivedLength_eq_derivedLengthOfIdeal (I : LieIdeal R L) :
     derivedLength R I = derivedLengthOfIdeal R L I :=
   by
-  let s₁ := { k | derivedSeries R I k = ⊥ }
-  let s₂ := { k | derived_series_of_ideal R L k I = ⊥ }
+  let s₁ := {k | derivedSeries R I k = ⊥}
+  let s₂ := {k | derived_series_of_ideal R L k I = ⊥}
   change Inf s₁ = Inf s₂
   congr; ext k; exact I.derived_series_eq_bot_iff k
 #align lie_algebra.derived_length_eq_derived_length_of_ideal LieAlgebra.derivedLength_eq_derivedLengthOfIdeal
@@ -368,7 +368,7 @@ theorem abelian_derivedAbelianOfIdeal (I : LieIdeal R L) : IsLieAbelian (derived
 theorem derived_length_zero (I : LieIdeal R L) [hI : IsSolvable R I] :
     derivedLengthOfIdeal R L I = 0 ↔ I = ⊥ :=
   by
-  let s := { k | derived_series_of_ideal R L k I = ⊥ }; change Inf s = 0 ↔ _
+  let s := {k | derived_series_of_ideal R L k I = ⊥}; change Inf s = 0 ↔ _
   have hne : s ≠ ∅ := by
     obtain ⟨k, hk⟩ := id hI
     refine' Set.Nonempty.ne_empty ⟨k, _⟩

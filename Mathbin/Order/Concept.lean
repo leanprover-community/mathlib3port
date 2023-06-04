@@ -55,7 +55,7 @@ variable {ι : Sort _} {α β γ : Type _} {κ : ι → Sort _} (r : α → β �
 /-- The intent closure of `s : set α` along a relation `r : α → β → Prop` is the set of all elements
 which `r` relates to all elements of `s`. -/
 def intentClosure (s : Set α) : Set β :=
-  { b | ∀ ⦃a⦄, a ∈ s → r a b }
+  {b | ∀ ⦃a⦄, a ∈ s → r a b}
 #align intent_closure intentClosure
 -/
 
@@ -63,7 +63,7 @@ def intentClosure (s : Set α) : Set β :=
 /-- The extent closure of `t : set β` along a relation `r : α → β → Prop` is the set of all elements
 which `r` relates to all elements of `t`. -/
 def extentClosure (t : Set β) : Set α :=
-  { a | ∀ ⦃b⦄, b ∈ t → r a b }
+  {a | ∀ ⦃b⦄, b ∈ t → r a b}
 #align extent_closure extentClosure
 -/
 

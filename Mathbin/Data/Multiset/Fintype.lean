@@ -121,7 +121,7 @@ protected theorem Multiset.exists_coe (p : m → Prop) :
 #align multiset.exists_coe Multiset.exists_coe
 -/
 
-instance : Fintype { p : α × ℕ | p.2 < m.count p.1 } :=
+instance : Fintype {p : α × ℕ | p.2 < m.count p.1} :=
   Fintype.ofFinset
     (m.toFinset.biUnion fun x => (Finset.range (m.count x)).map ⟨Prod.mk x, Prod.mk.inj_left x⟩)
     (by
@@ -136,7 +136,7 @@ instance : Fintype { p : α × ℕ | p.2 < m.count p.1 } :=
 The `ℕ` component is used to differentiate between equal elements: if `x` appears `n` times
 then `(x, 0)`, ..., and `(x, n-1)` appear in the `finset`. -/
 def Multiset.toEnumFinset (m : Multiset α) : Finset (α × ℕ) :=
-  { p : α × ℕ | p.2 < m.count p.1 }.toFinset
+  {p : α × ℕ | p.2 < m.count p.1}.toFinset
 #align multiset.to_enum_finset Multiset.toEnumFinset
 -/
 
@@ -286,7 +286,7 @@ theorem Multiset.map_univ {β : Type _} (m : Multiset α) (f : α → β) :
 theorem Multiset.card_toEnumFinset (m : Multiset α) : m.toEnumFinset.card = m.card :=
   by
   change Multiset.card _ = _
-  convert_to(m.to_enum_finset.val.map Prod.fst).card = _
+  convert_to (m.to_enum_finset.val.map Prod.fst).card = _
   · rw [Multiset.card_map]
   · rw [m.map_to_enum_finset_fst]
 #align multiset.card_to_enum_finset Multiset.card_toEnumFinset

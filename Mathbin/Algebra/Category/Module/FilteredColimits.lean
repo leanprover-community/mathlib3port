@@ -47,7 +47,7 @@ section
 
 -- We use parameters here, mainly so we can have the abbreviations `M` and `M.mk` below, without
 -- passing around `F` all the time.
-parameter {R : Type u}[Ring R]{J : Type v}[SmallCategory J][IsFiltered J]
+parameter {R : Type u} [Ring R] {J : Type v} [SmallCategory J] [IsFiltered J]
 
 parameter (F : J ⥤ ModuleCat.{max v u} R)
 

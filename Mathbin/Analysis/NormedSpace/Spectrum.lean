@@ -533,7 +533,7 @@ theorem exp_mem_exp [IsROrC 𝕜] [NormedRing A] [NormedAlgebra 𝕜 A] [Complet
   have hb : Summable fun n : ℕ => ((n + 1).factorial⁻¹ : 𝕜) • (a - ↑ₐ z) ^ n :=
     by
     refine' summable_of_norm_bounded_eventually _ (Real.summable_pow_div_factorial ‖a - ↑ₐ z‖) _
-    filter_upwards [Filter.eventually_cofinite_ne 0]with n hn
+    filter_upwards [Filter.eventually_cofinite_ne 0] with n hn
     rw [norm_smul, mul_comm, norm_inv, IsROrC.norm_natCast, ← div_eq_mul_inv]
     exact
       div_le_div (pow_nonneg (norm_nonneg _) n) (norm_pow_le' (a - ↑ₐ z) (zero_lt_iff.mpr hn))
@@ -546,7 +546,7 @@ theorem exp_mem_exp [IsROrC 𝕜] [NormedRing A] [NormedAlgebra 𝕜 A] [Complet
   have h₃ : exp 𝕜 (a - ↑ₐ z) = 1 + (a - ↑ₐ z) * b :=
     by
     rw [exp_eq_tsum]
-    convert tsum_eq_zero_add (exp_series_summable' (a - ↑ₐ z))
+    convert tsum_eq_zero_add (expSeries_summable' (a - ↑ₐ z))
     simp only [Nat.factorial_zero, Nat.cast_one, inv_one, pow_zero, one_smul]
     exact h₀.symm
   rw [spectrum.mem_iff, IsUnit.sub_iff, ← one_mul (↑ₐ (exp 𝕜 z)), hexpmul, ← _root_.sub_mul,

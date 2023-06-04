@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.positive
-! leanprover-community/mathlib commit caa58cbf5bfb7f81ccbaca4e8b8ac4bc2b39cc1c
+! leanprover-community/mathlib commit 2ebc1d6c2fed9f54c95bbc3998eaa5570527129a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.Analysis.InnerProductSpace.Adjoint
 
 /-!
 # Positive operators
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 In this file we define positive operators in a Hilbert space. We follow Bourbaki's choice
 of requiring self adjointness in the definition.

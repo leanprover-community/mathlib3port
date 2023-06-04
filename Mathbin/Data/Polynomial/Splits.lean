@@ -103,7 +103,7 @@ theorem splits_of_map_degree_eq_one {f : K[X]} (hf : degree (f.map i) = 1) : Spl
 theorem splits_of_degree_le_one {f : K[X]} (hf : degree f ≤ 1) : Splits i f :=
   if hif : degree (f.map i) ≤ 0 then splits_of_map_eq_C i (degree_le_zero_iff.mp hif)
   else by
-    push_neg  at hif 
+    push_neg at hif 
     rw [← Order.succ_le_iff, ← WithBot.coe_zero, WithBot.succ_coe, Nat.succ_eq_succ] at hif 
     exact splits_of_map_degree_eq_one i (le_antisymm ((degree_map_le i _).trans hf) hif)
 #align polynomial.splits_of_degree_le_one Polynomial.splits_of_degree_le_one
@@ -371,14 +371,14 @@ theorem degree_eq_card_roots {p : K[X]} {i : K →+* L} (p_ne_zero : p ≠ 0) (h
 
 theorem roots_map {f : K[X]} (hf : f.Splits <| RingHom.id K) : (f.map i).roots = f.roots.map i :=
   (roots_map_of_injective_of_card_eq_natDegree i.Injective <| by
-      convert(nat_degree_eq_card_roots hf).symm; rw [map_id]).symm
+      convert (nat_degree_eq_card_roots hf).symm; rw [map_id]).symm
 #align polynomial.roots_map Polynomial.roots_map
 
 theorem image_rootSet [Algebra F K] [Algebra F L] {p : F[X]} (h : p.Splits (algebraMap F K))
     (f : K →ₐ[F] L) : f '' p.rootSet K = p.rootSet L := by
   classical rw [root_set, ← Finset.coe_image, ← Multiset.toFinset_map, ← f.coe_to_ring_hom, ←
-      roots_map (↑f) ((splits_id_iff_splits (algebraMap F K)).mpr h), map_map, f.comp_algebra_map, ←
-      root_set]
+    roots_map (↑f) ((splits_id_iff_splits (algebraMap F K)).mpr h), map_map, f.comp_algebra_map, ←
+    root_set]
 #align polynomial.image_root_set Polynomial.image_rootSet
 
 theorem adjoin_rootSet_eq_range [Algebra F K] [Algebra F L] {p : F[X]}

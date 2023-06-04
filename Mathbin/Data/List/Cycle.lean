@@ -370,7 +370,7 @@ theorem prev_nthLe (l : List α) (h : Nodup l) (n : ℕ) (hn : n < l.length) :
   · rcases n with (_ | _ | n)
     · simpa [last_eq_nth_le, Nat.mod_eq_of_lt (Nat.succ_lt_succ l.length.lt_succ_self)]
     · simp only [mem_cons_iff, nodup_cons] at h 
-      push_neg  at h 
+      push_neg at h 
       simp [add_comm, prev_cons_cons_of_ne, h.left.left.symm]
     · rw [prev_ne_cons_cons]
       · convert hl _ _ h.of_cons _ using 1
@@ -472,7 +472,7 @@ theorem prev_reverse_eq_next (l : List α) (h : Nodup l) (x : α) (hx : x ∈ l)
 theorem next_reverse_eq_prev (l : List α) (h : Nodup l) (x : α) (hx : x ∈ l) :
     next l.reverse x (mem_reverse'.mpr hx) = prev l x hx :=
   by
-  convert(prev_reverse_eq_next l.reverse (nodup_reverse.mpr h) x (mem_reverse.mpr hx)).symm
+  convert (prev_reverse_eq_next l.reverse (nodup_reverse.mpr h) x (mem_reverse.mpr hx)).symm
   exact (reverse_reverse l).symm
 #align list.next_reverse_eq_prev List.next_reverse_eq_prev
 -/

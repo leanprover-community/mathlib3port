@@ -438,7 +438,7 @@ theorem extend_one [One γ] (f : α → β) : Function.extend f (1 : α → γ) 
 @[to_additive]
 theorem extend_mul [Mul γ] (f : α → β) (g₁ g₂ : α → γ) (e₁ e₂ : β → γ) :
     Function.extend f (g₁ * g₂) (e₁ * e₂) = Function.extend f g₁ e₁ * Function.extend f g₂ e₂ :=
-  funext fun _ => by convert(apply_dite₂ (· * ·) _ _ _ _ _).symm
+  funext fun _ => by convert (apply_dite₂ (· * ·) _ _ _ _ _).symm
 #align function.extend_mul Function.extend_mul
 #align function.extend_add Function.extend_add
 -/
@@ -447,7 +447,7 @@ theorem extend_mul [Mul γ] (f : α → β) (g₁ g₂ : α → γ) (e₁ e₂ :
 @[to_additive]
 theorem extend_inv [Inv γ] (f : α → β) (g : α → γ) (e : β → γ) :
     Function.extend f g⁻¹ e⁻¹ = (Function.extend f g e)⁻¹ :=
-  funext fun _ => by convert(apply_dite Inv.inv _ _ _).symm
+  funext fun _ => by convert (apply_dite Inv.inv _ _ _).symm
 #align function.extend_inv Function.extend_inv
 #align function.extend_neg Function.extend_neg
 -/
@@ -456,7 +456,7 @@ theorem extend_inv [Inv γ] (f : α → β) (g : α → γ) (e : β → γ) :
 @[to_additive]
 theorem extend_div [Div γ] (f : α → β) (g₁ g₂ : α → γ) (e₁ e₂ : β → γ) :
     Function.extend f (g₁ / g₂) (e₁ / e₂) = Function.extend f g₁ e₁ / Function.extend f g₂ e₂ :=
-  funext fun _ => by convert(apply_dite₂ (· / ·) _ _ _ _ _).symm
+  funext fun _ => by convert (apply_dite₂ (· / ·) _ _ _ _ _).symm
 #align function.extend_div Function.extend_div
 #align function.extend_sub Function.extend_sub
 -/

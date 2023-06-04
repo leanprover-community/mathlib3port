@@ -212,12 +212,12 @@ theorem Finset.coe_einfsep [DecidableEq α] {s : Finset α} :
 theorem Nontrivial.einfsep_exists_of_finite [Finite s] (hs : s.Nontrivial) :
     ∃ (x : _) (_ : x ∈ s) (y : _) (_ : y ∈ s) (hxy : x ≠ y), s.einfsep = edist x y := by
   classical
-    cases nonempty_fintype s
-    simp_rw [einfsep_of_fintype]
-    rcases@Finset.exists_mem_eq_inf _ _ _ _ s.off_diag.to_finset (by simpa) (uncurry edist) with
-      ⟨_, hxy, hed⟩
-    simp_rw [mem_to_finset] at hxy 
-    refine' ⟨w.fst, hxy.1, w.snd, hxy.2.1, hxy.2.2, hed⟩
+  cases nonempty_fintype s
+  simp_rw [einfsep_of_fintype]
+  rcases@Finset.exists_mem_eq_inf _ _ _ _ s.off_diag.to_finset (by simpa) (uncurry edist) with
+    ⟨_, hxy, hed⟩
+  simp_rw [mem_to_finset] at hxy 
+  refine' ⟨w.fst, hxy.1, w.snd, hxy.2.1, hxy.2.2, hed⟩
 #align set.nontrivial.einfsep_exists_of_finite Set.Nontrivial.einfsep_exists_of_finite
 -/
 
@@ -558,12 +558,12 @@ theorem Finset.coe_infsep_of_offDiag_empty [DecidableEq α] {s : Finset α} (hs 
 theorem Nontrivial.infsep_exists_of_finite [Finite s] (hs : s.Nontrivial) :
     ∃ (x : _) (_ : x ∈ s) (y : _) (_ : y ∈ s) (hxy : x ≠ y), s.infsep = dist x y := by
   classical
-    cases nonempty_fintype s
-    simp_rw [hs.infsep_of_fintype]
-    rcases@Finset.exists_mem_eq_inf' _ _ _ s.off_diag.to_finset (by simpa) (uncurry dist) with
-      ⟨_, hxy, hed⟩
-    simp_rw [mem_to_finset] at hxy 
-    exact ⟨w.fst, hxy.1, w.snd, hxy.2.1, hxy.2.2, hed⟩
+  cases nonempty_fintype s
+  simp_rw [hs.infsep_of_fintype]
+  rcases@Finset.exists_mem_eq_inf' _ _ _ s.off_diag.to_finset (by simpa) (uncurry dist) with
+    ⟨_, hxy, hed⟩
+  simp_rw [mem_to_finset] at hxy 
+  exact ⟨w.fst, hxy.1, w.snd, hxy.2.1, hxy.2.2, hed⟩
 #align set.nontrivial.infsep_exists_of_finite Set.Nontrivial.infsep_exists_of_finite
 -/
 

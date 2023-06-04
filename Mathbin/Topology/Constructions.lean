@@ -723,8 +723,8 @@ theorem ContinuousAt.prod_map' {f : α → γ} {g : β → δ} {x : α} {y : β}
 theorem prod_generateFrom_generateFrom_eq {α β : Type _} {s : Set (Set α)} {t : Set (Set β)}
     (hs : ⋃₀ s = univ) (ht : ⋃₀ t = univ) :
     @Prod.topologicalSpace α β (generateFrom s) (generateFrom t) =
-      generateFrom { g | ∃ u ∈ s, ∃ v ∈ t, g = u ×ˢ v } :=
-  let G := generateFrom { g | ∃ u ∈ s, ∃ v ∈ t, g = u ×ˢ v }
+      generateFrom {g | ∃ u ∈ s, ∃ v ∈ t, g = u ×ˢ v} :=
+  let G := generateFrom {g | ∃ u ∈ s, ∃ v ∈ t, g = u ×ˢ v}
   le_antisymm
     (le_generateFrom fun g ⟨u, hu, v, hv, g_eq⟩ =>
       g_eq.symm ▸
@@ -752,7 +752,7 @@ theorem prod_generateFrom_generateFrom_eq {α β : Type _} {s : Set (Set α)} {t
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem prod_eq_generateFrom :
     Prod.topologicalSpace =
-      generateFrom { g | ∃ (s : Set α) (t : Set β), IsOpen s ∧ IsOpen t ∧ g = s ×ˢ t } :=
+      generateFrom {g | ∃ (s : Set α) (t : Set β), IsOpen s ∧ IsOpen t ∧ g = s ×ˢ t} :=
   le_antisymm (le_generateFrom fun g ⟨s, t, hs, ht, g_eq⟩ => g_eq.symm ▸ hs.Prod ht)
     (le_inf
       (ball_image_of_ball fun t ht =>
@@ -1123,7 +1123,7 @@ theorem embedding_subtype_val : Embedding (coe : Subtype p → α) :=
 -/
 
 #print closedEmbedding_subtype_val /-
-theorem closedEmbedding_subtype_val (h : IsClosed { a | p a }) :
+theorem closedEmbedding_subtype_val (h : IsClosed {a | p a}) :
     ClosedEmbedding (coe : Subtype p → α) :=
   ⟨embedding_subtype_val, by rwa [Subtype.range_coe_subtype]⟩
 #align closed_embedding_subtype_coe closedEmbedding_subtype_val
@@ -1217,7 +1217,7 @@ theorem Subtype.dense_iff {s : Set α} {t : Set s} : Dense t ↔ s ⊆ closure (
 -/
 
 #print map_nhds_subtype_coe_eq_nhds /-
-theorem map_nhds_subtype_coe_eq_nhds {a : α} (ha : p a) (h : { a | p a } ∈ 𝓝 a) :
+theorem map_nhds_subtype_coe_eq_nhds {a : α} (ha : p a) (h : {a | p a} ∈ 𝓝 a) :
     map (coe : Subtype p → α) (𝓝 ⟨a, ha⟩) = 𝓝 a :=
   map_nhds_induced_of_mem <| by simpa only [Subtype.coe_mk, Subtype.range_coe] using h
 #align map_nhds_subtype_coe_eq map_nhds_subtype_coe_eq_nhds
@@ -1563,7 +1563,7 @@ theorem exists_finset_piecewise_mem_of_mem_nhds [DecidableEq ι] {s : Set (∀ a
 theorem pi_eq_generateFrom :
     Pi.topologicalSpace =
       generateFrom
-        { g | ∃ (s : ∀ a, Set (π a)) (i : Finset ι), (∀ a ∈ i, IsOpen (s a)) ∧ g = pi (↑i) s } :=
+        {g | ∃ (s : ∀ a, Set (π a)) (i : Finset ι), (∀ a ∈ i, IsOpen (s a)) ∧ g = pi (↑i) s} :=
   le_antisymm
     (le_generateFrom fun g ⟨s, i, hi, Eq⟩ => Eq.symm ▸ isOpen_set_pi (Finset.finite_toSet _) hi)
     (le_iInf fun a s ⟨t, ht, s_eq⟩ =>
@@ -1576,9 +1576,9 @@ theorem pi_eq_generateFrom :
 theorem pi_generateFrom_eq {π : ι → Type _} {g : ∀ a, Set (Set (π a))} :
     (@Pi.topologicalSpace ι π fun a => generateFrom (g a)) =
       generateFrom
-        { t | ∃ (s : ∀ a, Set (π a)) (i : Finset ι), (∀ a ∈ i, s a ∈ g a) ∧ t = pi (↑i) s } :=
+        {t | ∃ (s : ∀ a, Set (π a)) (i : Finset ι), (∀ a ∈ i, s a ∈ g a) ∧ t = pi (↑i) s} :=
   by
-  let G := { t | ∃ (s : ∀ a, Set (π a)) (i : Finset ι), (∀ a ∈ i, s a ∈ g a) ∧ t = pi (↑i) s }
+  let G := {t | ∃ (s : ∀ a, Set (π a)) (i : Finset ι), (∀ a ∈ i, s a ∈ g a) ∧ t = pi (↑i) s}
   rw [pi_eq_generateFrom]
   refine' le_antisymm (generate_from_anti _) (le_generateFrom _)
   exact fun s ⟨t, i, ht, Eq⟩ => ⟨t, i, fun a ha => generate_open.basic _ (ht a ha), Eq⟩
@@ -1595,7 +1595,7 @@ theorem pi_generateFrom_eq {π : ι → Type _} {g : ∀ a, Set (Set (π a))} :
 theorem pi_generateFrom_eq_finite {π : ι → Type _} {g : ∀ a, Set (Set (π a))} [Finite ι]
     (hg : ∀ a, ⋃₀ g a = univ) :
     (@Pi.topologicalSpace ι π fun a => generateFrom (g a)) =
-      generateFrom { t | ∃ s : ∀ a, Set (π a), (∀ a, s a ∈ g a) ∧ t = pi univ s } :=
+      generateFrom {t | ∃ s : ∀ a, Set (π a), (∀ a, s a ∈ g a) ∧ t = pi univ s} :=
   by
   cases nonempty_fintype ι
   rw [pi_generateFrom_eq]
@@ -1611,7 +1611,7 @@ theorem pi_generateFrom_eq_finite {π : ι → Type _} {g : ∀ a, Set (Set (π 
     · simp [pi_if]
     · refine' generate_open.basic _ ⟨_, fun a => _, rfl⟩
       by_cases a ∈ i <;> simp_all [Set.pi]
-    · have : f ∈ pi { a | a ∉ i } c := by simp_all [Set.pi]
+    · have : f ∈ pi {a | a ∉ i} c := by simp_all [Set.pi]
       simpa [pi_if, hf]
 #align pi_generate_from_eq_finite pi_generateFrom_eq_finite
 -/
@@ -1638,7 +1638,7 @@ variable [Finite ι] [∀ i, DiscreteTopology (π i)]
 instance Pi.discreteTopology : DiscreteTopology (∀ i, π i) :=
   singletons_open_iff_discrete.mp fun x =>
     by
-    rw [show {x} = ⋂ i, { y : ∀ i, π i | y i = x i } by ext;
+    rw [show {x} = ⋂ i, {y : ∀ i, π i | y i = x i} by ext;
         simp only [funext_iff, Set.mem_singleton_iff, Set.mem_iInter, Set.mem_setOf_eq]]
     exact isOpen_iInter fun i => (continuous_apply i).isOpen_preimage {x i} (isOpen_discrete {x i})
 #align Pi.discrete_topology Pi.discreteTopology

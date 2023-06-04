@@ -103,12 +103,12 @@ theorem average_eq (f : α → E) : (⨍ x, f x ∂μ) = (μ univ).toReal⁻¹ �
   rw [average_eq', integral_smul_measure, ENNReal.toReal_inv]
 #align measure_theory.average_eq MeasureTheory.average_eq
 
-theorem average_eq_integral [ProbabilityMeasure μ] (f : α → E) : (⨍ x, f x ∂μ) = ∫ x, f x ∂μ := by
+theorem average_eq_integral [IsProbabilityMeasure μ] (f : α → E) : (⨍ x, f x ∂μ) = ∫ x, f x ∂μ := by
   rw [average, measure_univ, inv_one, one_smul]
 #align measure_theory.average_eq_integral MeasureTheory.average_eq_integral
 
 @[simp]
-theorem measure_smul_average [FiniteMeasure μ] (f : α → E) :
+theorem measure_smul_average [IsFiniteMeasure μ] (f : α → E) :
     ((μ univ).toReal • ⨍ x, f x ∂μ) = ∫ x, f x ∂μ :=
   by
   cases' eq_or_ne μ 0 with hμ hμ
@@ -134,7 +134,7 @@ theorem average_congr {f g : α → E} (h : f =ᵐ[μ] g) : (⨍ x, f x ∂μ) =
   simp only [average_eq, integral_congr_ae h]
 #align measure_theory.average_congr MeasureTheory.average_congr
 
-theorem average_add_measure [FiniteMeasure μ] {ν : Measure α} [FiniteMeasure ν] {f : α → E}
+theorem average_add_measure [IsFiniteMeasure μ] {ν : Measure α} [IsFiniteMeasure ν] {f : α → E}
     (hμ : Integrable f μ) (hν : Integrable f ν) :
     (⨍ x, f x ∂μ + ν) =
       (((μ univ).toReal / ((μ univ).toReal + (ν univ).toReal)) • ⨍ x, f x ∂μ) +
@@ -196,7 +196,7 @@ theorem average_union_mem_segment {f : α → E} {s t : Set α} (hd : AEDisjoint
       
 #align measure_theory.average_union_mem_segment MeasureTheory.average_union_mem_segment
 
-theorem average_mem_openSegment_compl_self [FiniteMeasure μ] {f : α → E} {s : Set α}
+theorem average_mem_openSegment_compl_self [IsFiniteMeasure μ] {f : α → E} {s : Set α}
     (hs : NullMeasurableSet s μ) (hs₀ : μ s ≠ 0) (hsc₀ : μ (sᶜ) ≠ 0) (hfi : Integrable f μ) :
     (⨍ x, f x ∂μ) ∈ openSegment ℝ (⨍ x in s, f x ∂μ) (⨍ x in sᶜ, f x ∂μ) := by
   simpa only [union_compl_self, restrict_univ] using
@@ -205,7 +205,7 @@ theorem average_mem_openSegment_compl_self [FiniteMeasure μ] {f : α → E} {s 
 #align measure_theory.average_mem_open_segment_compl_self MeasureTheory.average_mem_openSegment_compl_self
 
 @[simp]
-theorem average_const [FiniteMeasure μ] [h : μ.ae.ne_bot] (c : E) : (⨍ x, c ∂μ) = c := by
+theorem average_const [IsFiniteMeasure μ] [h : μ.ae.ne_bot] (c : E) : (⨍ x, c ∂μ) = c := by
   simp only [average_eq, integral_const, measure.restrict_apply, MeasurableSet.univ, one_smul,
     univ_inter, smul_smul, ← ENNReal.toReal_inv, ← ENNReal.toReal_mul, ENNReal.inv_mul_cancel,
     measure_ne_top μ univ, Ne.def, measure_univ_eq_zero, ae_ne_bot.1 h, not_false_iff,

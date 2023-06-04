@@ -133,7 +133,7 @@ variable (α) (β)
 /-- The set of elements fixed under the whole action. -/
 @[to_additive "The set of elements fixed under the whole action."]
 def fixedPoints : Set β :=
-  { b : β | ∀ x : α, x • b = b }
+  {b : β | ∀ x : α, x • b = b}
 #align mul_action.fixed_points MulAction.fixedPoints
 #align add_action.fixed_points AddAction.fixedPoints
 -/
@@ -142,7 +142,7 @@ def fixedPoints : Set β :=
 /-- `fixed_by g` is the subfield of elements fixed by `g`. -/
 @[to_additive "`fixed_by g` is the subfield of elements fixed by `g`."]
 def fixedBy (g : α) : Set β :=
-  { x | g • x = x }
+  {x | g • x = x}
 #align mul_action.fixed_by MulAction.fixedBy
 #align add_action.fixed_by AddAction.fixedBy
 -/
@@ -192,7 +192,7 @@ variable (α) {β}
 @[to_additive "The stabilizer of a point `b` as an additive submonoid of `α`."]
 def Stabilizer.submonoid (b : β) : Submonoid α
     where
-  carrier := { a | a • b = b }
+  carrier := {a | a • b = b}
   one_mem' := one_smul _ b
   mul_mem' a a' (ha : a • b = b) (hb : a' • b = b) :=
     show (a * a') • b = b by rw [← smul_smul, hb, ha]

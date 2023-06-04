@@ -250,7 +250,7 @@ theorem LieAlgebra.isEngelian_of_isNoetherian : LieAlgebra.IsEngelian R L :=
   · rintro ⟨-, ⟨y, rfl⟩⟩
     simp [h]
   change LieModule.IsNilpotent R L' M
-  let s := { K : LieSubalgebra R L' | LieAlgebra.IsEngelian R K }
+  let s := {K : LieSubalgebra R L' | LieAlgebra.IsEngelian R K}
   have hs : s.nonempty := ⟨⊥, LieAlgebra.isEngelian_of_subsingleton⟩
   suffices ⊤ ∈ s by
     rw [← is_nilpotent_of_top_iff]
@@ -266,7 +266,7 @@ theorem LieAlgebra.isEngelian_of_isNoetherian : LieAlgebra.IsEngelian R L :=
     have : Nontrivial (L' ⧸ K.to_lie_submodule) :=
       by
       replace hK₂ : K.to_lie_submodule ≠ ⊤ := by
-        rwa [Ne.def, ← LieSubmodule.coe_to_submodule_eq_iff, K.coe_to_lie_submodule,
+        rwa [Ne.def, ← LieSubmodule.coe_toSubmodule_eq_iff, K.coe_to_lie_submodule,
           LieSubmodule.top_coeSubmodule, ← LieSubalgebra.top_coe_submodule,
           K.coe_to_submodule_eq_iff]
       exact Submodule.Quotient.nontrivial_of_lt_top _ hK₂.lt_top

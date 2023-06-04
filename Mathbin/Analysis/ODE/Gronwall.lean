@@ -63,10 +63,11 @@ theorem hasDerivAt_gronwallBound (δ K ε x : ℝ) :
   by_cases hK : K = 0
   · subst K
     simp only [gronwallBound_K0, MulZeroClass.zero_mul, zero_add]
-    convert((hasDerivAt_id x).const_mul ε).const_add δ
+    convert ((hasDerivAt_id x).const_mul ε).const_add δ
     rw [mul_one]
   · simp only [gronwallBound_of_K_ne_0 hK]
-    convert(((hasDerivAt_id x).const_mul K).exp.const_mul δ).add
+    convert
+      (((hasDerivAt_id x).const_mul K).exp.const_mul δ).add
         ((((hasDerivAt_id x).const_mul K).exp.sub_const 1).const_mul (ε / K)) using
       1
     simp only [id, mul_add, (mul_assoc _ _ _).symm, mul_comm _ K, mul_div_cancel' _ hK]
@@ -76,7 +77,7 @@ theorem hasDerivAt_gronwallBound (δ K ε x : ℝ) :
 theorem hasDerivAt_gronwallBound_shift (δ K ε x a : ℝ) :
     HasDerivAt (fun y => gronwallBound δ K ε (y - a)) (K * gronwallBound δ K ε (x - a) + ε) x :=
   by
-  convert(hasDerivAt_gronwallBound δ K ε _).comp x ((hasDerivAt_id x).sub_const a)
+  convert (hasDerivAt_gronwallBound δ K ε _).comp x ((hasDerivAt_id x).sub_const a)
   rw [id, mul_one]
 #align has_deriv_at_gronwall_bound_shift hasDerivAt_gronwallBound_shift
 

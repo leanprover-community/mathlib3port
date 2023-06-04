@@ -145,7 +145,7 @@ theorem pi_inf_principal_univ_pi_eq_bot : pi f ⊓ 𝓟 (Set.pi univ s) = ⊥ �
     exact hts (fun i hi => hxt i) (mem_univ_pi.2 hxs)
   · simp only [inf_principal_eq_bot]
     rintro ⟨i, hi⟩
-    filter_upwards [mem_pi_of_mem i hi]with x using mt fun h => h i trivial
+    filter_upwards [mem_pi_of_mem i hi] with x using mt fun h => h i trivial
 #align filter.pi_inf_principal_univ_pi_eq_bot Filter.pi_inf_principal_univ_pi_eq_bot
 
 @[simp]
@@ -299,7 +299,7 @@ theorem map_pi_map_coprodᵢ_le :
   simp only [le_def, mem_map, mem_Coprod_iff]
   intro s h i
   obtain ⟨t, H, hH⟩ := h i
-  exact ⟨{ x : α i | m i x ∈ t }, H, fun x hx => hH hx⟩
+  exact ⟨{x : α i | m i x ∈ t}, H, fun x hx => hH hx⟩
 #align filter.map_pi_map_Coprod_le Filter.map_pi_map_coprodᵢ_le
 
 #print Filter.Tendsto.pi_map_coprodᵢ /-

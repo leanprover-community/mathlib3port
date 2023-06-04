@@ -140,7 +140,7 @@ theorem tendsto_real_toNNReal_atTop : Tendsto Real.toNNReal atTop atTop :=
   by
   rw [← tendsto_coe_at_top]
   apply tendsto_id.congr' _
-  filter_upwards [Ici_mem_at_top (0 : ℝ)]with x hx
+  filter_upwards [Ici_mem_at_top (0 : ℝ)] with x hx
   simp only [max_eq_left (Set.mem_Ici.1 hx), id.def, Real.coe_toNNReal']
 #align tendsto_real_to_nnreal_at_top tendsto_real_toNNReal_atTop
 -/

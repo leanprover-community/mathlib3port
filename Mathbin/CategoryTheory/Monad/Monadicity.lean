@@ -59,11 +59,11 @@ section
 
 -- We use these parameters and notations to simplify the statements of internal constructions
 -- here.
-parameter {C : Type u₁}{D : Type u₂}
+parameter {C : Type u₁} {D : Type u₂}
 
-parameter [Category.{v₁} C][Category.{v₁} D]
+parameter [Category.{v₁} C] [Category.{v₁} D]
 
-parameter {G : D ⥤ C}[IsRightAdjoint G]
+parameter {G : D ⥤ C} [IsRightAdjoint G]
 
 -- mathport name: exprF
 -- An unfortunate consequence of the local notation is that it is only recognised if there is an

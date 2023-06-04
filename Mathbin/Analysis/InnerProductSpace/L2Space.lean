@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.l2_space
-! leanprover-community/mathlib commit 46b633fd842bef9469441c0209906f6dddd2b4f5
+! leanprover-community/mathlib commit af471b9e3ce868f296626d33189b4ce730fa4c00
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.Analysis.InnerProductSpace.PiL2
 
 /-!
 # Hilbert sum of a family of inner product spaces
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 Given a family `(G : ι → Type*) [Π i, inner_product_space 𝕜 (G i)]` of inner product spaces, this
 file equips `lp G 2` with an inner product space structure, where `lp G 2` consists of those
@@ -202,7 +205,7 @@ include cplt hV
 protected theorem summable_of_lp (f : lp G 2) : Summable fun i => V i (f i) :=
   by
   rw [hV.summable_iff_norm_sq_summable]
-  convert(lp.memℓp f).Summable _
+  convert (lp.memℓp f).Summable _
   · norm_cast
   · norm_num
 #align orthogonal_family.summable_of_lp OrthogonalFamily.summable_of_lp
@@ -220,14 +223,14 @@ protected def linearIsometry : lp G 2 →ₗᵢ[𝕜] E
       tsum_const_smul c (hV.summable_of_lp f)
   norm_map' f := by
     classical
-      -- needed for lattice instance on `finset ι`, for `filter.at_top_ne_bot`
-      have H : 0 < (2 : ℝ≥0∞).toReal := by norm_num
-      suffices ‖∑' i : ι, V i (f i)‖ ^ (2 : ℝ≥0∞).toReal = ‖f‖ ^ (2 : ℝ≥0∞).toReal by
-        exact Real.rpow_left_injOn H.ne' (norm_nonneg _) (norm_nonneg _) this
-      refine' tendsto_nhds_unique _ (lp.hasSum_norm H f)
-      convert(hV.summable_of_lp f).HasSum.norm.rpow_const (Or.inr H.le)
-      ext s
-      exact_mod_cast (hV.norm_sum f s).symm
+    -- needed for lattice instance on `finset ι`, for `filter.at_top_ne_bot`
+    have H : 0 < (2 : ℝ≥0∞).toReal := by norm_num
+    suffices ‖∑' i : ι, V i (f i)‖ ^ (2 : ℝ≥0∞).toReal = ‖f‖ ^ (2 : ℝ≥0∞).toReal by
+      exact Real.rpow_left_injOn H.ne' (norm_nonneg _) (norm_nonneg _) this
+    refine' tendsto_nhds_unique _ (lp.hasSum_norm H f)
+    convert (hV.summable_of_lp f).HasSum.norm.rpow_const (Or.inr H.le)
+    ext s
+    exact_mod_cast (hV.norm_sum f s).symm
 #align orthogonal_family.linear_isometry OrthogonalFamily.linearIsometry
 
 protected theorem linearIsometry_apply (f : lp G 2) : hV.LinearIsometry f = ∑' i, V i (f i) :=
@@ -499,21 +502,21 @@ protected theorem hasSum_repr (b : HilbertBasis ι 𝕜 E) (x : E) :
 protected theorem dense_span (b : HilbertBasis ι 𝕜 E) :
     (span 𝕜 (Set.range b)).topologicalClosure = ⊤ := by
   classical
-    rw [eq_top_iff]
-    rintro x -
-    refine' mem_closure_of_tendsto (b.has_sum_repr x) (eventually_of_forall _)
-    intro s
-    simp only [SetLike.mem_coe]
-    refine' sum_mem _
-    rintro i -
-    refine' smul_mem _ _ _
-    exact subset_span ⟨i, rfl⟩
+  rw [eq_top_iff]
+  rintro x -
+  refine' mem_closure_of_tendsto (b.has_sum_repr x) (eventually_of_forall _)
+  intro s
+  simp only [SetLike.mem_coe]
+  refine' sum_mem _
+  rintro i -
+  refine' smul_mem _ _ _
+  exact subset_span ⟨i, rfl⟩
 #align hilbert_basis.dense_span HilbertBasis.dense_span
 
 protected theorem hasSum_inner_mul_inner (b : HilbertBasis ι 𝕜 E) (x y : E) :
     HasSum (fun i => ⟪x, b i⟫ * ⟪b i, y⟫) ⟪x, y⟫ :=
   by
-  convert(b.has_sum_repr y).mapL (innerSL _ x)
+  convert (b.has_sum_repr y).mapL (innerSL _ x)
   ext i
   rw [innerSL_apply, b.repr_apply_apply, inner_smul_right, mul_comm]
 #align hilbert_basis.has_sum_inner_mul_inner HilbertBasis.hasSum_inner_mul_inner

@@ -311,7 +311,7 @@ theorem h_apply_fromCoset_nin_range (x : B) (hx : x ∈ f.range) (b : B) (hb : b
   rw [← mul_assoc, mul_left_inv, one_mul]
 #align Group.surjective_of_epi_auxs.h_apply_from_coset_nin_range GroupCat.SurjectiveOfEpiAuxs.h_apply_fromCoset_nin_range
 
-theorem agree : f.range.carrier = { x | h x = g x } :=
+theorem agree : f.range.carrier = {x | h x = g x} :=
   by
   refine' Set.ext fun b => ⟨_, fun hb : h b = g b => by_contradiction fun r => _⟩
   · rintro ⟨a, rfl⟩
@@ -339,7 +339,7 @@ theorem agree : f.range.carrier = { x | h x = g x } :=
 #print GroupCat.SurjectiveOfEpiAuxs.comp_eq /-
 theorem comp_eq : (f ≫ show B ⟶ GroupCat.of SX' from g) = f ≫ h :=
   FunLike.ext _ _ fun a => by
-    simp only [comp_apply, show h (f a) = _ from (by simp [← agree] : f a ∈ { b | h b = g b })]
+    simp only [comp_apply, show h (f a) = _ from (by simp [← agree] : f a ∈ {b | h b = g b})]
 #align Group.surjective_of_epi_auxs.comp_eq GroupCat.SurjectiveOfEpiAuxs.comp_eq
 -/
 
@@ -360,7 +360,7 @@ end SurjectiveOfEpiAuxs
 theorem surjective_of_epi [Epi f] : Function.Surjective f :=
   by
   by_contra r
-  push_neg  at r 
+  push_neg at r 
   rcases r with ⟨b, hb⟩
   exact
     surjective_of_epi_auxs.g_ne_h f b (fun ⟨c, hc⟩ => hb _ hc)

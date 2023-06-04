@@ -49,103 +49,103 @@ variable [Preorder α] {a a₁ a₂ b b₁ b₂ c x : α}
 #print Set.Ioo /-
 /-- Left-open right-open interval -/
 def Ioo (a b : α) :=
-  { x | a < x ∧ x < b }
+  {x | a < x ∧ x < b}
 #align set.Ioo Set.Ioo
 -/
 
 #print Set.Ico /-
 /-- Left-closed right-open interval -/
 def Ico (a b : α) :=
-  { x | a ≤ x ∧ x < b }
+  {x | a ≤ x ∧ x < b}
 #align set.Ico Set.Ico
 -/
 
 #print Set.Iio /-
 /-- Left-infinite right-open interval -/
 def Iio (a : α) :=
-  { x | x < a }
+  {x | x < a}
 #align set.Iio Set.Iio
 -/
 
 #print Set.Icc /-
 /-- Left-closed right-closed interval -/
 def Icc (a b : α) :=
-  { x | a ≤ x ∧ x ≤ b }
+  {x | a ≤ x ∧ x ≤ b}
 #align set.Icc Set.Icc
 -/
 
 #print Set.Iic /-
 /-- Left-infinite right-closed interval -/
 def Iic (b : α) :=
-  { x | x ≤ b }
+  {x | x ≤ b}
 #align set.Iic Set.Iic
 -/
 
 #print Set.Ioc /-
 /-- Left-open right-closed interval -/
 def Ioc (a b : α) :=
-  { x | a < x ∧ x ≤ b }
+  {x | a < x ∧ x ≤ b}
 #align set.Ioc Set.Ioc
 -/
 
 #print Set.Ici /-
 /-- Left-closed right-infinite interval -/
 def Ici (a : α) :=
-  { x | a ≤ x }
+  {x | a ≤ x}
 #align set.Ici Set.Ici
 -/
 
 #print Set.Ioi /-
 /-- Left-open right-infinite interval -/
 def Ioi (a : α) :=
-  { x | a < x }
+  {x | a < x}
 #align set.Ioi Set.Ioi
 -/
 
 #print Set.Ioo_def /-
-theorem Ioo_def (a b : α) : { x | a < x ∧ x < b } = Ioo a b :=
+theorem Ioo_def (a b : α) : {x | a < x ∧ x < b} = Ioo a b :=
   rfl
 #align set.Ioo_def Set.Ioo_def
 -/
 
 #print Set.Ico_def /-
-theorem Ico_def (a b : α) : { x | a ≤ x ∧ x < b } = Ico a b :=
+theorem Ico_def (a b : α) : {x | a ≤ x ∧ x < b} = Ico a b :=
   rfl
 #align set.Ico_def Set.Ico_def
 -/
 
 #print Set.Iio_def /-
-theorem Iio_def (a : α) : { x | x < a } = Iio a :=
+theorem Iio_def (a : α) : {x | x < a} = Iio a :=
   rfl
 #align set.Iio_def Set.Iio_def
 -/
 
 #print Set.Icc_def /-
-theorem Icc_def (a b : α) : { x | a ≤ x ∧ x ≤ b } = Icc a b :=
+theorem Icc_def (a b : α) : {x | a ≤ x ∧ x ≤ b} = Icc a b :=
   rfl
 #align set.Icc_def Set.Icc_def
 -/
 
 #print Set.Iic_def /-
-theorem Iic_def (b : α) : { x | x ≤ b } = Iic b :=
+theorem Iic_def (b : α) : {x | x ≤ b} = Iic b :=
   rfl
 #align set.Iic_def Set.Iic_def
 -/
 
 #print Set.Ioc_def /-
-theorem Ioc_def (a b : α) : { x | a < x ∧ x ≤ b } = Ioc a b :=
+theorem Ioc_def (a b : α) : {x | a < x ∧ x ≤ b} = Ioc a b :=
   rfl
 #align set.Ioc_def Set.Ioc_def
 -/
 
 #print Set.Ici_def /-
-theorem Ici_def (a : α) : { x | a ≤ x } = Ici a :=
+theorem Ici_def (a : α) : {x | a ≤ x} = Ici a :=
   rfl
 #align set.Ici_def Set.Ici_def
 -/
 
 #print Set.Ioi_def /-
-theorem Ioi_def (a : α) : { x | a < x } = Ioi a :=
+theorem Ioi_def (a : α) : {x | a < x} = Ioi a :=
   rfl
 #align set.Ioi_def Set.Ioi_def
 -/
@@ -1227,21 +1227,21 @@ theorem mem_Iic_Iio_of_subset_of_subset {s : Set α} (ho : Iio a ⊆ s) (hc : s 
 theorem mem_Icc_Ico_Ioc_Ioo_of_subset_of_subset {s : Set α} (ho : Ioo a b ⊆ s) (hc : s ⊆ Icc a b) :
     s ∈ ({Icc a b, Ico a b, Ioc a b, Ioo a b} : Set (Set α)) := by
   classical
-    by_cases ha : a ∈ s <;> by_cases hb : b ∈ s
-    · refine' Or.inl (subset.antisymm hc _)
-      rwa [← Ico_diff_left, diff_singleton_subset_iff, insert_eq_of_mem ha, ← Icc_diff_right,
-        diff_singleton_subset_iff, insert_eq_of_mem hb] at ho 
-    · refine' Or.inr <| Or.inl <| subset.antisymm _ _
-      · rw [← Icc_diff_right]
-        exact subset_diff_singleton hc hb
-      · rwa [← Ico_diff_left, diff_singleton_subset_iff, insert_eq_of_mem ha] at ho 
-    · refine' Or.inr <| Or.inr <| Or.inl <| subset.antisymm _ _
-      · rw [← Icc_diff_left]
-        exact subset_diff_singleton hc ha
-      · rwa [← Ioc_diff_right, diff_singleton_subset_iff, insert_eq_of_mem hb] at ho 
-    · refine' Or.inr <| Or.inr <| Or.inr <| subset.antisymm _ ho
-      rw [← Ico_diff_left, ← Icc_diff_right]
-      apply_rules [subset_diff_singleton]
+  by_cases ha : a ∈ s <;> by_cases hb : b ∈ s
+  · refine' Or.inl (subset.antisymm hc _)
+    rwa [← Ico_diff_left, diff_singleton_subset_iff, insert_eq_of_mem ha, ← Icc_diff_right,
+      diff_singleton_subset_iff, insert_eq_of_mem hb] at ho 
+  · refine' Or.inr <| Or.inl <| subset.antisymm _ _
+    · rw [← Icc_diff_right]
+      exact subset_diff_singleton hc hb
+    · rwa [← Ico_diff_left, diff_singleton_subset_iff, insert_eq_of_mem ha] at ho 
+  · refine' Or.inr <| Or.inr <| Or.inl <| subset.antisymm _ _
+    · rw [← Icc_diff_left]
+      exact subset_diff_singleton hc ha
+    · rwa [← Ioc_diff_right, diff_singleton_subset_iff, insert_eq_of_mem hb] at ho 
+  · refine' Or.inr <| Or.inr <| Or.inr <| subset.antisymm _ ho
+    rw [← Ico_diff_left, ← Icc_diff_right]
+    apply_rules [subset_diff_singleton]
 #align set.mem_Icc_Ico_Ioc_Ioo_of_subset_of_subset Set.mem_Icc_Ico_Ioc_Ioo_of_subset_of_subset
 -/
 
@@ -1482,7 +1482,7 @@ theorem Ico_subset_Ico_iff (h₁ : a₁ < b₁) : Ico a₁ b₁ ⊆ Ico a₂ b�
 
 #print Set.Ioc_subset_Ioc_iff /-
 theorem Ioc_subset_Ioc_iff (h₁ : a₁ < b₁) : Ioc a₁ b₁ ⊆ Ioc a₂ b₂ ↔ b₁ ≤ b₂ ∧ a₂ ≤ a₁ := by
-  convert@Ico_subset_Ico_iff αᵒᵈ _ b₁ b₂ a₁ a₂ h₁ <;> exact (@dual_Ico α _ _ _).symm
+  convert @Ico_subset_Ico_iff αᵒᵈ _ b₁ b₂ a₁ a₂ h₁ <;> exact (@dual_Ico α _ _ _).symm
 #align set.Ioc_subset_Ioc_iff Set.Ioc_subset_Ioc_iff
 -/
 

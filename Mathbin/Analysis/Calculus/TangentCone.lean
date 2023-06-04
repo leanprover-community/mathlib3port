@@ -52,10 +52,10 @@ variable {E : Type _} [AddCommMonoid E] [Module 𝕜 E] [TopologicalSpace E]
 #print tangentConeAt /-
 /-- The set of all tangent directions to the set `s` at the point `x`. -/
 def tangentConeAt (s : Set E) (x : E) : Set E :=
-  { y : E |
+  {y : E |
     ∃ (c : ℕ → 𝕜) (d : ℕ → E),
       (∀ᶠ n in atTop, x + d n ∈ s) ∧
-        Tendsto (fun n => ‖c n‖) atTop atTop ∧ Tendsto (fun n => c n • d n) atTop (𝓝 y) }
+        Tendsto (fun n => ‖c n‖) atTop atTop ∧ Tendsto (fun n => c n • d n) atTop (𝓝 y)}
 #align tangent_cone_at tangentConeAt
 -/
 
@@ -183,7 +183,7 @@ theorem subset_tangentCone_prod_left {t : Set F} {y : F} (ht : y ∈ closure t) 
   choose d' hd' using this
   refine' ⟨c, fun n => (d n, d' n), _, hc, _⟩
   show ∀ᶠ n in at_top, (x, y) + (d n, d' n) ∈ s ×ˢ t
-  · filter_upwards [hd]with n hn
+  · filter_upwards [hd] with n hn
     simp [hn, (hd' n).1]
   · apply tendsto.prod_mk_nhds hy _
     refine' squeeze_zero_norm (fun n => (hd' n).2.le) _
@@ -207,7 +207,7 @@ theorem subset_tangentCone_prod_right {t : Set F} {y : F} (hs : x ∈ closure s)
   choose d' hd' using this
   refine' ⟨c, fun n => (d' n, d n), _, hc, _⟩
   show ∀ᶠ n in at_top, (x, y) + (d' n, d n) ∈ s ×ˢ t
-  · filter_upwards [hd]with n hn
+  · filter_upwards [hd] with n hn
     simp [hn, (hd' n).1]
   · apply tendsto.prod_mk_nhds _ hy
     refine' squeeze_zero_norm (fun n => (hd' n).2.le) _
@@ -390,12 +390,12 @@ theorem UniqueDiffWithinAt.univ_pi (ι : Type _) [Finite ι] (E : ι → Type _)
     [∀ i, NormedAddCommGroup (E i)] [∀ i, NormedSpace 𝕜 (E i)] (s : ∀ i, Set (E i)) (x : ∀ i, E i)
     (h : ∀ i, UniqueDiffWithinAt 𝕜 (s i) (x i)) : UniqueDiffWithinAt 𝕜 (Set.pi univ s) x := by
   classical
-    simp only [uniqueDiffWithinAt_iff, closure_pi_set] at h ⊢
-    refine' ⟨(dense_pi univ fun i _ => (h i).1).mono _, fun i _ => (h i).2⟩
-    norm_cast
-    simp only [← Submodule.iSup_map_single, iSup_le_iff, LinearMap.map_span, Submodule.span_le, ←
-      maps_to']
-    exact fun i => (mapsTo_tangentCone_pi fun j hj => (h j).2).mono subset.rfl Submodule.subset_span
+  simp only [uniqueDiffWithinAt_iff, closure_pi_set] at h ⊢
+  refine' ⟨(dense_pi univ fun i _ => (h i).1).mono _, fun i _ => (h i).2⟩
+  norm_cast
+  simp only [← Submodule.iSup_map_single, iSup_le_iff, LinearMap.map_span, Submodule.span_le, ←
+    maps_to']
+  exact fun i => (mapsTo_tangentCone_pi fun j hj => (h j).2).mono subset.rfl Submodule.subset_span
 #align unique_diff_within_at.univ_pi UniqueDiffWithinAt.univ_pi
 
 theorem UniqueDiffWithinAt.pi (ι : Type _) [Finite ι] (E : ι → Type _)
@@ -403,9 +403,9 @@ theorem UniqueDiffWithinAt.pi (ι : Type _) [Finite ι] (E : ι → Type _)
     (I : Set ι) (h : ∀ i ∈ I, UniqueDiffWithinAt 𝕜 (s i) (x i)) :
     UniqueDiffWithinAt 𝕜 (Set.pi I s) x := by
   classical
-    rw [← Set.univ_pi_piecewise_univ]
-    refine' UniqueDiffWithinAt.univ_pi _ _ _ _ fun i => _
-    by_cases hi : i ∈ I <;> simp [*, uniqueDiffWithinAt_univ]
+  rw [← Set.univ_pi_piecewise_univ]
+  refine' UniqueDiffWithinAt.univ_pi _ _ _ _ fun i => _
+  by_cases hi : i ∈ I <;> simp [*, uniqueDiffWithinAt_univ]
 #align unique_diff_within_at.pi UniqueDiffWithinAt.pi
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/

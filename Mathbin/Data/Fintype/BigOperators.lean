@@ -260,7 +260,7 @@ theorem Finset.prod_fin_eq_prod_range [CommMonoid β] {n : ℕ} (c : Fin n → �
 #print Finset.prod_toFinset_eq_subtype /-
 @[to_additive]
 theorem Finset.prod_toFinset_eq_subtype {M : Type _} [CommMonoid M] [Fintype α] (p : α → Prop)
-    [DecidablePred p] (f : α → M) : (∏ a in { x | p x }.toFinset, f a) = ∏ a : Subtype p, f a := by
+    [DecidablePred p] (f : α → M) : (∏ a in {x | p x}.toFinset, f a) = ∏ a : Subtype p, f a := by
   rw [← Finset.prod_subtype]; simp
 #align finset.prod_to_finset_eq_subtype Finset.prod_toFinset_eq_subtype
 #align finset.sum_to_finset_eq_subtype Finset.sum_toFinset_eq_subtype
@@ -288,9 +288,9 @@ theorem Fintype.prod_dite [Fintype α] {p : α → Prop} [DecidablePred p] [Comm
   by
   simp only [prod_dite, attach_eq_univ]
   congr 1
-  · convert(Equiv.subtypeEquivRight _).prod_comp fun x : { x // p x } => f x x.2
+  · convert (Equiv.subtypeEquivRight _).prod_comp fun x : { x // p x } => f x x.2
     simp
-  · convert(Equiv.subtypeEquivRight _).prod_comp fun x : { x // ¬p x } => g x x.2
+  · convert (Equiv.subtypeEquivRight _).prod_comp fun x : { x // ¬p x } => g x x.2
     simp
 #align fintype.prod_dite Fintype.prod_dite
 

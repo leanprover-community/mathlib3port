@@ -101,7 +101,7 @@ def Coloring.mk (color : V → α) (valid : ∀ {v w : V}, G.Adj v w → color v
 /-- The color class of a given color.
 -/
 def Coloring.colorClass (c : α) : Set V :=
-  { v : V | C v = c }
+  {v : V | C v = c}
 #align simple_graph.coloring.color_class SimpleGraph.Coloring.colorClass
 -/
 
@@ -158,9 +158,9 @@ theorem Coloring.color_classes_independent (c : α) : IsAntichain G.Adj (C.color
 -- TODO make this computable
 noncomputable instance [Fintype V] [Fintype α] : Fintype (Coloring G α) := by
   classical
-    change Fintype (RelHom G.adj (⊤ : SimpleGraph α).Adj)
-    apply Fintype.ofInjective _ RelHom.coe_fn_injective
-    infer_instance
+  change Fintype (RelHom G.adj (⊤ : SimpleGraph α).Adj)
+  apply Fintype.ofInjective _ RelHom.coe_fn_injective
+  infer_instance
 
 variable (G)
 
@@ -205,7 +205,7 @@ def selfColoring : G.Coloring V :=
 /-- The chromatic number of a graph is the minimal number of colors needed to color it.
 If `G` isn't colorable with finitely many colors, this will be 0. -/
 noncomputable def chromaticNumber : ℕ :=
-  sInf { n : ℕ | G.Colorable n }
+  sInf {n : ℕ | G.Colorable n}
 #align simple_graph.chromatic_number SimpleGraph.chromaticNumber
 -/
 
@@ -305,13 +305,13 @@ theorem colorable_iff_exists_bdd_nat_coloring (n : ℕ) :
 
 #print SimpleGraph.colorable_set_nonempty_of_colorable /-
 theorem colorable_set_nonempty_of_colorable {n : ℕ} (hc : G.Colorable n) :
-    { n : ℕ | G.Colorable n }.Nonempty :=
+    {n : ℕ | G.Colorable n}.Nonempty :=
   ⟨n, hc⟩
 #align simple_graph.colorable_set_nonempty_of_colorable SimpleGraph.colorable_set_nonempty_of_colorable
 -/
 
 #print SimpleGraph.chromaticNumber_bddBelow /-
-theorem chromaticNumber_bddBelow : BddBelow { n : ℕ | G.Colorable n } :=
+theorem chromaticNumber_bddBelow : BddBelow {n : ℕ | G.Colorable n} :=
   ⟨0, fun _ _ => zero_le _⟩
 #align simple_graph.chromatic_number_bdd_below SimpleGraph.chromaticNumber_bddBelow
 -/
@@ -480,7 +480,7 @@ theorem chromaticNumber_top_eq_zero_of_infinite (V : Type _) [Infinite V] :
   by_contra hc
   replace hc := pos_iff_ne_zero.mpr hc
   apply Nat.not_succ_le_self n
-  convert_to(⊤ : SimpleGraph { m | m < n + 1 }).chromaticNumber ≤ _
+  convert_to (⊤ : SimpleGraph {m | m < n + 1}).chromaticNumber ≤ _
   · simp
   refine' (colorable_of_chromatic_number_pos hc).chromaticNumber_mono_of_embedding _
   apply embedding.complete_graph

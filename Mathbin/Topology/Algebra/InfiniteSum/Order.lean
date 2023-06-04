@@ -309,13 +309,13 @@ theorem hasSum_of_isLUB [CanonicallyLinearOrderedAddMonoid α] [TopologicalSpace
 
 theorem summable_abs_iff [LinearOrderedAddCommGroup α] [UniformSpace α] [UniformAddGroup α]
     [CompleteSpace α] {f : ι → α} : (Summable fun x => |f x|) ↔ Summable f :=
-  have h1 : ∀ x : { x | 0 ≤ f x }, |f x| = f x := fun x => abs_of_nonneg x.2
-  have h2 : ∀ x : { x | 0 ≤ f x }ᶜ, |f x| = -f x := fun x => abs_of_neg (not_le.1 x.2)
+  have h1 : ∀ x : {x | 0 ≤ f x}, |f x| = f x := fun x => abs_of_nonneg x.2
+  have h2 : ∀ x : {x | 0 ≤ f x}ᶜ, |f x| = -f x := fun x => abs_of_neg (not_le.1 x.2)
   calc
     (Summable fun x => |f x|) ↔
-        (Summable fun x : { x | 0 ≤ f x } => |f x|) ∧ Summable fun x : { x | 0 ≤ f x }ᶜ => |f x| :=
+        (Summable fun x : {x | 0 ≤ f x} => |f x|) ∧ Summable fun x : {x | 0 ≤ f x}ᶜ => |f x| :=
       summable_subtype_and_compl.symm
-    _ ↔ (Summable fun x : { x | 0 ≤ f x } => f x) ∧ Summable fun x : { x | 0 ≤ f x }ᶜ => -f x := by
+    _ ↔ (Summable fun x : {x | 0 ≤ f x} => f x) ∧ Summable fun x : {x | 0 ≤ f x}ᶜ => -f x := by
       simp only [h1, h2]
     _ ↔ _ := by simp only [summable_neg_iff, summable_subtype_and_compl]
     

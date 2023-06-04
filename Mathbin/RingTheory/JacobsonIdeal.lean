@@ -64,7 +64,7 @@ variable [Ring R] [Ring S] {I : Ideal R}
 #print Ideal.jacobson /-
 /-- The Jacobson radical of `I` is the infimum of all maximal (left) ideals containing `I`. -/
 def jacobson (I : Ideal R) : Ideal R :=
-  sInf { J : Ideal R | I ≤ J ∧ IsMaximal J }
+  sInf {J : Ideal R | I ≤ J ∧ IsMaximal J}
 #align ideal.jacobson Ideal.jacobson
 -/
 
@@ -156,7 +156,7 @@ Allowing the set to include ⊤ is equivalent, and is included only to simplify 
 theorem eq_jacobson_iff_sInf_maximal :
     I.jacobson = I ↔ ∃ M : Set (Ideal R), (∀ J ∈ M, IsMaximal J ∨ J = ⊤) ∧ I = sInf M :=
   by
-  use fun hI => ⟨{ J : Ideal R | I ≤ J ∧ J.IsMaximal }, ⟨fun _ hJ => Or.inl hJ.right, hI.symm⟩⟩
+  use fun hI => ⟨{J : Ideal R | I ≤ J ∧ J.IsMaximal}, ⟨fun _ hJ => Or.inl hJ.right, hI.symm⟩⟩
   rintro ⟨M, hM, hInf⟩
   refine' le_antisymm (fun x hx => _) le_jacobson
   rw [hInf, mem_Inf]
@@ -192,7 +192,7 @@ theorem eq_jacobson_iff_not_mem :
   constructor
   · intro h x hx
     erw [← h, mem_Inf] at hx 
-    push_neg  at hx 
+    push_neg at hx 
     exact hx
   · refine' fun h => le_antisymm (fun x hx => _) le_jacobson
     contrapose hx
@@ -206,7 +206,7 @@ theorem map_jacobson_of_surjective {f : R →+* S} (hf : Function.Surjective f) 
   by
   intro h
   unfold Ideal.jacobson
-  have : ∀ J ∈ { J : Ideal R | I ≤ J ∧ J.IsMaximal }, f.ker ≤ J := fun J hJ => le_trans h hJ.left
+  have : ∀ J ∈ {J : Ideal R | I ≤ J ∧ J.IsMaximal}, f.ker ≤ J := fun J hJ => le_trans h hJ.left
   refine' trans (map_Inf hf this) (le_antisymm _ _)
   · refine'
       sInf_le_sInf fun J hJ =>
@@ -227,7 +227,7 @@ theorem map_jacobson_of_bijective {f : R →+* S} (hf : Function.Bijective f) :
 #align ideal.map_jacobson_of_bijective Ideal.map_jacobson_of_bijective
 
 theorem comap_jacobson {f : R →+* S} {K : Ideal S} :
-    comap f K.jacobson = sInf (comap f '' { J : Ideal S | K ≤ J ∧ J.IsMaximal }) :=
+    comap f K.jacobson = sInf (comap f '' {J : Ideal S | K ≤ J ∧ J.IsMaximal}) :=
   trans (comap_sInf' f _) sInf_eq_iInf.symm
 #align ideal.comap_jacobson Ideal.comap_jacobson
 
@@ -352,7 +352,7 @@ open Polynomial
 variable [CommRing R]
 
 theorem jacobson_bot_polynomial_le_sInf_map_maximal :
-    jacobson (⊥ : Ideal R[X]) ≤ sInf (map (C : R →+* R[X]) '' { J : Ideal R | J.IsMaximal }) :=
+    jacobson (⊥ : Ideal R[X]) ≤ sInf (map (C : R →+* R[X]) '' {J : Ideal R | J.IsMaximal}) :=
   by
   refine' le_sInf fun J => exists_imp.2 fun j hj => _
   haveI : j.is_maximal := hj.1

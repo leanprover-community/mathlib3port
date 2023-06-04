@@ -235,7 +235,7 @@ theorem exists_partition_polynomial_aux (n : ℕ) {ε : ℝ} (hε : 0 < ε) {b :
       ∀ i : Fin n,
         t' i = j → (card_pow_degree (A 0 % b - A i.succ % b) : ℝ) < card_pow_degree b • ε :=
     by
-    by_contra this; push_neg  at this 
+    by_contra this; push_neg at this 
     obtain ⟨j₀, j₁, j_ne, approx⟩ :=
       exists_approx_polynomial hb hε
         (Fin.cons (A 0) fun j => A (Fin.succ (Classical.choose (this j))))

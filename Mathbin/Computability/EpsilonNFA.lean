@@ -173,7 +173,7 @@ theorem eval_append_singleton (x : List α) (a : α) : M.eval (x ++ [a]) = M.ste
 #print εNFA.accepts /-
 /-- `M.accepts` is the language of `x` such that there is an accept state in `M.eval x`. -/
 def accepts : Language α :=
-  { x | ∃ S ∈ M.accept, S ∈ M.eval x }
+  {x | ∃ S ∈ M.accept, S ∈ M.eval x}
 #align ε_NFA.accepts εNFA.accepts
 -/
 

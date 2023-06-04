@@ -45,7 +45,7 @@ variable {α : Type _} [MetricSpace α] [MeasurableSpace α] (μ : Measure α)
 
 section
 
-variable [SecondCountableTopology α] [BorelSpace α] [LocallyFiniteMeasure μ]
+variable [SecondCountableTopology α] [BorelSpace α] [IsLocallyFiniteMeasure μ]
 
 open scoped Topology
 
@@ -128,7 +128,7 @@ theorem tendsto_closedBall_filterAt {K : ℝ} {x : α} {ι : Type _} {l : Filter
     Tendsto (fun j => closedBall (w j) (δ j)) l ((vitaliFamily μ K).filterAt x) :=
   by
   refine' (VitaliFamily μ K).tendsto_filterAt_iff.mpr ⟨_, fun ε hε => _⟩
-  · filter_upwards [xmem, δlim self_mem_nhdsWithin]with j hj h'j
+  · filter_upwards [xmem, δlim self_mem_nhdsWithin] with j hj h'j
     exact closed_ball_mem_vitali_family_of_dist_le_mul μ hj h'j
   · by_cases l.ne_bot
     swap; · simp [not_ne_bot.1 h]
@@ -152,7 +152,7 @@ end
 
 section Applications
 
-variable [SecondCountableTopology α] [BorelSpace α] [LocallyFiniteMeasure μ] {E : Type _}
+variable [SecondCountableTopology α] [BorelSpace α] [IsLocallyFiniteMeasure μ] {E : Type _}
   [NormedAddCommGroup E]
 
 /-- A version of *Lebesgue's density theorem* for a sequence of closed balls whose centers are
@@ -165,8 +165,8 @@ theorem ae_tendsto_measure_inter_div (S : Set α) (K : ℝ) :
         (xmem : ∀ᶠ j in l, x ∈ closedBall (w j) (K * δ j)),
         Tendsto (fun j => μ (S ∩ closedBall (w j) (δ j)) / μ (closedBall (w j) (δ j))) l (𝓝 1) :=
   by
-  filter_upwards [(VitaliFamily μ K).ae_tendsto_measure_inter_div
-      S]with x hx ι l w δ δlim xmem using hx.comp (tendsto_closed_ball_filter_at μ _ _ δlim xmem)
+  filter_upwards [(VitaliFamily μ K).ae_tendsto_measure_inter_div S] with x hx ι l w δ δlim
+    xmem using hx.comp (tendsto_closed_ball_filter_at μ _ _ δlim xmem)
 #align is_unif_loc_doubling_measure.ae_tendsto_measure_inter_div IsUnifLocDoublingMeasure.ae_tendsto_measure_inter_div
 
 /-- A version of *Lebesgue differentiation theorem* for a sequence of closed balls whose
@@ -177,8 +177,8 @@ theorem ae_tendsto_average_norm_sub {f : α → E} (hf : Integrable f μ) (K : �
         (xmem : ∀ᶠ j in l, x ∈ closedBall (w j) (K * δ j)),
         Tendsto (fun j => ⨍ y in closedBall (w j) (δ j), ‖f y - f x‖ ∂μ) l (𝓝 0) :=
   by
-  filter_upwards [(VitaliFamily μ K).ae_tendsto_average_norm_sub
-      hf]with x hx ι l w δ δlim xmem using hx.comp (tendsto_closed_ball_filter_at μ _ _ δlim xmem)
+  filter_upwards [(VitaliFamily μ K).ae_tendsto_average_norm_sub hf] with x hx ι l w δ δlim
+    xmem using hx.comp (tendsto_closed_ball_filter_at μ _ _ δlim xmem)
 #align is_unif_loc_doubling_measure.ae_tendsto_average_norm_sub IsUnifLocDoublingMeasure.ae_tendsto_average_norm_sub
 
 /-- A version of *Lebesgue differentiation theorem* for a sequence of closed balls whose
@@ -190,8 +190,8 @@ theorem ae_tendsto_average [NormedSpace ℝ E] [CompleteSpace E] {f : α → E} 
         (xmem : ∀ᶠ j in l, x ∈ closedBall (w j) (K * δ j)),
         Tendsto (fun j => ⨍ y in closedBall (w j) (δ j), f y ∂μ) l (𝓝 (f x)) :=
   by
-  filter_upwards [(VitaliFamily μ K).ae_tendsto_average
-      hf]with x hx ι l w δ δlim xmem using hx.comp (tendsto_closed_ball_filter_at μ _ _ δlim xmem)
+  filter_upwards [(VitaliFamily μ K).ae_tendsto_average hf] with x hx ι l w δ δlim xmem using
+    hx.comp (tendsto_closed_ball_filter_at μ _ _ δlim xmem)
 #align is_unif_loc_doubling_measure.ae_tendsto_average IsUnifLocDoublingMeasure.ae_tendsto_average
 
 end Applications

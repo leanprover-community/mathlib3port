@@ -62,7 +62,7 @@ variable {α : Type _}
 
 /-- UV-compression is injective on the elements it moves. See `uv.compress`. -/
 theorem sup_sdiff_injOn [GeneralizedBooleanAlgebra α] (u v : α) :
-    { x | Disjoint u x ∧ v ≤ x }.InjOn fun x => (x ⊔ u) \ v :=
+    {x | Disjoint u x ∧ v ≤ x}.InjOn fun x => (x ⊔ u) \ v :=
   by
   rintro a ha b hb hab
   have h : ((a ⊔ u) \ v) \ u ⊔ v = ((b ⊔ u) \ v) \ u ⊔ v :=
@@ -245,9 +245,9 @@ theorem card_compression (u v : α) (s : Finset α) : (𝓒 u v s).card = s.card
   dsimp at hab 
   rw [mem_coe, mem_filter, Function.comp_apply] at ha hb 
   rw [compress] at ha hab 
-  split_ifs  at ha hab  with has
+  split_ifs at ha hab  with has
   · rw [compress] at hb hab 
-    split_ifs  at hb hab  with hbs
+    split_ifs at hb hab  with hbs
     · exact sup_sdiff_injOn u v has hbs hab
     · exact (hb.2 hb.1).elim
   · exact (ha.2 ha.1).elim
@@ -260,7 +260,7 @@ theorem le_of_mem_compression_of_not_mem (h : a ∈ 𝓒 u v s) (ha : a ∉ s) :
   obtain _ | ⟨-, b, hb, hba⟩ := h
   · cases ha h.1
   unfold compress at hba 
-  split_ifs  at hba 
+  split_ifs at hba 
   · rw [← hba, le_sdiff]
     exact ⟨le_sup_right, h.1.mono_right h.2⟩
   · cases ne_of_mem_of_not_mem hb ha hba
@@ -272,7 +272,7 @@ theorem disjoint_of_mem_compression_of_not_mem (h : a ∈ 𝓒 u v s) (ha : a �
   obtain _ | ⟨-, b, hb, hba⟩ := h
   · cases ha h.1
   unfold compress at hba 
-  split_ifs  at hba 
+  split_ifs at hba 
   · rw [← hba]
     exact disjoint_sdiff_self_right
   · cases ne_of_mem_of_not_mem hb ha hba
@@ -284,7 +284,7 @@ theorem sup_sdiff_mem_of_mem_compression_of_not_mem (h : a ∈ 𝓒 u v s) (ha :
   obtain _ | ⟨-, b, hb, hba⟩ := h
   · cases ha h.1
   unfold compress at hba 
-  split_ifs  at hba 
+  split_ifs at hba 
   ·
     rwa [← hba, sdiff_sup_cancel (le_sup_of_le_left h.2), sup_sdiff_right_self,
       h.1.symm.sdiff_eq_left]
@@ -321,7 +321,7 @@ theorem mem_of_mem_compression (ha : a ∈ 𝓒 u v s) (hva : v ≤ a) (hvu : v 
   obtain ha | ⟨_, b, hb, h⟩ := ha
   · exact ha.1
   unfold compress at h 
-  split_ifs  at h 
+  split_ifs at h 
   · rw [← h, le_sdiff_iff] at hva 
     rwa [← h, hvu hva, hva, sup_bot_eq, sdiff_bot]
   · rwa [← h]

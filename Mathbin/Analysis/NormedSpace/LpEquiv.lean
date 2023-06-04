@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
 
 ! This file was ported from Lean 3 source module analysis.normed_space.lp_equiv
-! leanprover-community/mathlib commit 6afc9b06856ad973f6a2619e3e8a0a8d537a58f2
+! leanprover-community/mathlib commit 2ebc1d6c2fed9f54c95bbc3998eaa5570527129a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.Topology.ContinuousFunction.Bounded
 
 /-!
 # Equivalences among $L^p$ spaces
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 In this file we collect a variety of equivalences among various $L^p$ spaces.  In particular,
 when `α` is a `fintype`, given `E : α → Type u` and `p : ℝ≥0∞`, there is a natural linear isometric
@@ -51,7 +54,7 @@ variable {α : Type _} {E : α → Type _} [∀ i, NormedAddCommGroup (E i)] {p 
 theorem Memℓp.all [Finite α] (f : ∀ i, E i) : Memℓp f p :=
   by
   rcases p.trichotomy with (rfl | rfl | h)
-  · exact mem_ℓp_zero_iff.mpr { i : α | f i ≠ 0 }.toFinite
+  · exact mem_ℓp_zero_iff.mpr {i : α | f i ≠ 0}.toFinite
   · exact mem_ℓp_infty_iff.mpr (Set.Finite.bddAbove (Set.range fun i : α => ‖f i‖).toFinite)
   · cases nonempty_fintype α; exact memℓp_gen ⟨finset.univ.sum _, hasSum_fintype _⟩
 #align mem_ℓp.all Memℓp.all

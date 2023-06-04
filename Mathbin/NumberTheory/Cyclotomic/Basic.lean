@@ -83,7 +83,7 @@ over `A` by the roots of `X ^ n - 1`. -/
 @[mk_iff]
 class IsCyclotomicExtension : Prop where
   exists_prim_root {n : ℕ+} (ha : n ∈ S) : ∃ r : B, IsPrimitiveRoot r n
-  adjoin_roots : ∀ x : B, x ∈ adjoin A { b : B | ∃ n : ℕ+, n ∈ S ∧ b ^ (n : ℕ) = 1 }
+  adjoin_roots : ∀ x : B, x ∈ adjoin A {b : B | ∃ n : ℕ+, n ∈ S ∧ b ^ (n : ℕ) = 1}
 #align is_cyclotomic_extension IsCyclotomicExtension
 
 namespace IsCyclotomicExtension
@@ -94,7 +94,7 @@ section Basic
 theorem iff_adjoin_eq_top :
     IsCyclotomicExtension S A B ↔
       (∀ n : ℕ+, n ∈ S → ∃ r : B, IsPrimitiveRoot r n) ∧
-        adjoin A { b : B | ∃ n : ℕ+, n ∈ S ∧ b ^ (n : ℕ) = 1 } = ⊤ :=
+        adjoin A {b : B | ∃ n : ℕ+, n ∈ S ∧ b ^ (n : ℕ) = 1} = ⊤ :=
   ⟨fun h => ⟨fun _ => h.exists_prim_root, Algebra.eq_top_iff.2 h.adjoin_roots⟩, fun h =>
     ⟨h.1, Algebra.eq_top_iff.1 h.2⟩⟩
 #align is_cyclotomic_extension.iff_adjoin_eq_top IsCyclotomicExtension.iff_adjoin_eq_top
@@ -102,7 +102,7 @@ theorem iff_adjoin_eq_top :
 /-- A reformulation of `is_cyclotomic_extension` in the case `S` is a singleton. -/
 theorem iff_singleton :
     IsCyclotomicExtension {n} A B ↔
-      (∃ r : B, IsPrimitiveRoot r n) ∧ ∀ x, x ∈ adjoin A { b : B | b ^ (n : ℕ) = 1 } :=
+      (∃ r : B, IsPrimitiveRoot r n) ∧ ∀ x, x ∈ adjoin A {b : B | b ^ (n : ℕ) = 1} :=
   by simp [isCyclotomicExtension_iff]
 #align is_cyclotomic_extension.iff_singleton IsCyclotomicExtension.iff_singleton
 
@@ -146,7 +146,7 @@ theorem trans (C : Type w) [CommRing C] [Algebra A C] [Algebra B C] [IsScalarTow
         (fun c ⟨n, hn⟩ => subset_adjoin ⟨n, Or.inr hn.1, hn.2⟩) (fun b => _)
         (fun x y hx hy => Subalgebra.add_mem _ hx hy) fun x y hx hy => Subalgebra.mul_mem _ hx hy
     · let f := IsScalarTower.toAlgHom A B C
-      have hb : f b ∈ (adjoin A { b : B | ∃ a : ℕ+, a ∈ S ∧ b ^ (a : ℕ) = 1 }).map f :=
+      have hb : f b ∈ (adjoin A {b : B | ∃ a : ℕ+, a ∈ S ∧ b ^ (a : ℕ) = 1}).map f :=
         ⟨b, ((isCyclotomicExtension_iff _ _ _).1 hS).2 b, rfl⟩
       rw [IsScalarTower.toAlgHom_apply, ← adjoin_image] at hb 
       refine' adjoin_mono (fun y hy => _) hb
@@ -165,21 +165,20 @@ theorem subsingleton_iff [Subsingleton B] : IsCyclotomicExtension S A B ↔ S = 
     rw [mem_singleton_iff, ← PNat.coe_eq_one_iff]
     exact_mod_cast hζ.unique (IsPrimitiveRoot.of_subsingleton ζ)
   · rintro (rfl | rfl)
-    · refine' ⟨fun _ h => h.elim, fun x => by convert(mem_top : x ∈ ⊤)⟩
+    · refine' ⟨fun _ h => h.elim, fun x => by convert (mem_top : x ∈ ⊤)⟩
     · rw [iff_singleton]
-      refine' ⟨⟨0, IsPrimitiveRoot.of_subsingleton 0⟩, fun x => by convert(mem_top : x ∈ ⊤)⟩
+      refine' ⟨⟨0, IsPrimitiveRoot.of_subsingleton 0⟩, fun x => by convert (mem_top : x ∈ ⊤)⟩
 #align is_cyclotomic_extension.subsingleton_iff IsCyclotomicExtension.subsingleton_iff
 
 /-- If `B` is a cyclotomic extension of `A` given by roots of unity of order in `S ∪ T`, then `B`
 is a cyclotomic extension of `adjoin A { b : B | ∃ a : ℕ+, a ∈ S ∧ b ^ (a : ℕ) = 1 } ` given by
 roots of unity of order in `T`. -/
 theorem union_right [h : IsCyclotomicExtension (S ∪ T) A B] :
-    IsCyclotomicExtension T (adjoin A { b : B | ∃ a : ℕ+, a ∈ S ∧ b ^ (a : ℕ) = 1 }) B :=
+    IsCyclotomicExtension T (adjoin A {b : B | ∃ a : ℕ+, a ∈ S ∧ b ^ (a : ℕ) = 1}) B :=
   by
   have :
-    { b : B | ∃ n : ℕ+, n ∈ S ∪ T ∧ b ^ (n : ℕ) = 1 } =
-      { b : B | ∃ n : ℕ+, n ∈ S ∧ b ^ (n : ℕ) = 1 } ∪
-        { b : B | ∃ n : ℕ+, n ∈ T ∧ b ^ (n : ℕ) = 1 } :=
+    {b : B | ∃ n : ℕ+, n ∈ S ∪ T ∧ b ^ (n : ℕ) = 1} =
+      {b : B | ∃ n : ℕ+, n ∈ S ∧ b ^ (n : ℕ) = 1} ∪ {b : B | ∃ n : ℕ+, n ∈ T ∧ b ^ (n : ℕ) = 1} :=
     by
     refine' le_antisymm (fun x hx => _) fun x hx => _
     · rcases hx with ⟨n, hn₁ | hn₂, hnpow⟩
@@ -197,7 +196,7 @@ theorem union_right [h : IsCyclotomicExtension (S ∪ T) A B] :
 then `adjoin A { b : B | ∃ a : ℕ+, a ∈ S ∧ b ^ (a : ℕ) = 1 }` is a cyclotomic extension of `B`
 given by roots of unity of order in `S`. -/
 theorem union_left [h : IsCyclotomicExtension T A B] (hS : S ⊆ T) :
-    IsCyclotomicExtension S A (adjoin A { b : B | ∃ a : ℕ+, a ∈ S ∧ b ^ (a : ℕ) = 1 }) :=
+    IsCyclotomicExtension S A (adjoin A {b : B | ∃ a : ℕ+, a ∈ S ∧ b ^ (a : ℕ) = 1}) :=
   by
   refine' ⟨fun n hn => _, fun b => _⟩
   · obtain ⟨b, hb⟩ := ((isCyclotomicExtension_iff _ _ _).1 h).1 (hS hn)
@@ -274,7 +273,7 @@ variable {A B}
 theorem singleton_one_of_bot_eq_top (h : (⊥ : Subalgebra A B) = ⊤) :
     IsCyclotomicExtension {1} A B :=
   by
-  convert(iff_union_singleton_one _ _ _).1 (singleton_zero_of_bot_eq_top h)
+  convert (iff_union_singleton_one _ _ _).1 (singleton_zero_of_bot_eq_top h)
   simp
 #align is_cyclotomic_extension.singleton_one_of_bot_eq_top IsCyclotomicExtension.singleton_one_of_bot_eq_top
 
@@ -319,15 +318,15 @@ section Fintype
 theorem finite_of_singleton [IsDomain B] [h : IsCyclotomicExtension {n} A B] : Module.Finite A B :=
   by
   classical
-    rw [Module.finite_def, ← top_to_submodule, ← ((iff_adjoin_eq_top _ _ _).1 h).2]
-    refine' FG_adjoin_of_finite _ fun b hb => _
-    · simp only [mem_singleton_iff, exists_eq_left]
-      have : { b : B | b ^ (n : ℕ) = 1 } = (nth_roots n (1 : B)).toFinset :=
-        Set.ext fun x => ⟨fun h => by simpa using h, fun h => by simpa using h⟩
-      rw [this]
-      exact (nth_roots (↑n) 1).toFinset.finite_toSet
-    · simp only [mem_singleton_iff, exists_eq_left, mem_set_of_eq] at hb 
-      refine' ⟨X ^ (n : ℕ) - 1, ⟨monic_X_pow_sub_C _ n.pos.ne.symm, by simp [hb]⟩⟩
+  rw [Module.finite_def, ← top_to_submodule, ← ((iff_adjoin_eq_top _ _ _).1 h).2]
+  refine' FG_adjoin_of_finite _ fun b hb => _
+  · simp only [mem_singleton_iff, exists_eq_left]
+    have : {b : B | b ^ (n : ℕ) = 1} = (nth_roots n (1 : B)).toFinset :=
+      Set.ext fun x => ⟨fun h => by simpa using h, fun h => by simpa using h⟩
+    rw [this]
+    exact (nth_roots (↑n) 1).toFinset.finite_toSet
+  · simp only [mem_singleton_iff, exists_eq_left, mem_set_of_eq] at hb 
+    refine' ⟨X ^ (n : ℕ) - 1, ⟨monic_X_pow_sub_C _ n.pos.ne.symm, by simp [hb]⟩⟩
 #align is_cyclotomic_extension.finite_of_singleton IsCyclotomicExtension.finite_of_singleton
 
 /-- If `S` is finite and `is_cyclotomic_extension S A B`, then `B` is a finite `A`-algebra. -/
@@ -341,15 +340,15 @@ theorem finite [IsDomain B] [h₁ : Finite S] [h₂ : IsCyclotomicExtension S A 
     refine' Module.finite_def.2 ⟨({1} : Finset B), _⟩
     simp [← top_to_submodule, ← Empty, to_submodule_bot]
   · intro _ _ _ _ h
-    haveI : IsCyclotomicExtension S A (adjoin A { b : B | ∃ n : ℕ+, n ∈ S ∧ b ^ (n : ℕ) = 1 }) :=
+    haveI : IsCyclotomicExtension S A (adjoin A {b : B | ∃ n : ℕ+, n ∈ S ∧ b ^ (n : ℕ) = 1}) :=
       union_left _ (insert n S) _ _ (subset_insert n S)
-    haveI := H A (adjoin A { b : B | ∃ n : ℕ+, n ∈ S ∧ b ^ (n : ℕ) = 1 })
-    have : Module.Finite (adjoin A { b : B | ∃ n : ℕ+, n ∈ S ∧ b ^ (n : ℕ) = 1 }) B :=
+    haveI := H A (adjoin A {b : B | ∃ n : ℕ+, n ∈ S ∧ b ^ (n : ℕ) = 1})
+    have : Module.Finite (adjoin A {b : B | ∃ n : ℕ+, n ∈ S ∧ b ^ (n : ℕ) = 1}) B :=
       by
       rw [← union_singleton] at h 
       letI := @union_right S {n} A B _ _ _ h
       exact finite_of_singleton n _ _
-    exact Module.Finite.trans (adjoin A { b : B | ∃ n : ℕ+, n ∈ S ∧ b ^ (n : ℕ) = 1 }) _
+    exact Module.Finite.trans (adjoin A {b : B | ∃ n : ℕ+, n ∈ S ∧ b ^ (n : ℕ) = 1}) _
 #align is_cyclotomic_extension.finite IsCyclotomicExtension.finite
 
 /-- A cyclotomic finite extension of a number field is a number field. -/
@@ -387,7 +386,7 @@ variable {A B}
 theorem adjoin_roots_cyclotomic_eq_adjoin_nth_roots [DecidableEq B] [IsDomain B] {ζ : B} {n : ℕ+}
     (hζ : IsPrimitiveRoot ζ n) :
     adjoin A ↑(map (algebraMap A B) (cyclotomic n A)).roots.toFinset =
-      adjoin A { b : B | ∃ a : ℕ+, a ∈ ({n} : Set ℕ+) ∧ b ^ (a : ℕ) = 1 } :=
+      adjoin A {b : B | ∃ a : ℕ+, a ∈ ({n} : Set ℕ+) ∧ b ^ (a : ℕ) = 1} :=
   by
   simp only [mem_singleton_iff, exists_eq_left, map_cyclotomic]
   refine' le_antisymm (adjoin_mono fun x hx => _) (adjoin_le fun x hx => _)
@@ -425,9 +424,9 @@ theorem adjoin_roots_cyclotomic_eq_adjoin_root_cyclotomic {n : ℕ+} [DecidableE
 theorem adjoin_primitive_root_eq_top {n : ℕ+} [IsDomain B] [h : IsCyclotomicExtension {n} A B]
     {ζ : B} (hζ : IsPrimitiveRoot ζ n) : adjoin A ({ζ} : Set B) = ⊤ := by
   classical
-    rw [← adjoin_roots_cyclotomic_eq_adjoin_root_cyclotomic hζ]
-    rw [adjoin_roots_cyclotomic_eq_adjoin_nth_roots hζ]
-    exact ((iff_adjoin_eq_top {n} A B).mp h).2
+  rw [← adjoin_roots_cyclotomic_eq_adjoin_root_cyclotomic hζ]
+  rw [adjoin_roots_cyclotomic_eq_adjoin_nth_roots hζ]
+  exact ((iff_adjoin_eq_top {n} A B).mp h).2
 #align is_cyclotomic_extension.adjoin_primitive_root_eq_top IsCyclotomicExtension.adjoin_primitive_root_eq_top
 
 variable (A)
@@ -538,14 +537,14 @@ end IsCyclotomicExtension
 
 section CyclotomicField
 
-/- ./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler algebra[algebra] K -/
+/- ./././Mathport/Syntax/Translate/Command.lean:43:9: unsupported derive handler algebra[algebra] K -/
 /-- Given `n : ℕ+` and a field `K`, we define `cyclotomic_field n K` as the
 splitting field of `cyclotomic n K`. If `n` is nonzero in `K`, it has
 the instance `is_cyclotomic_extension {n} K (cyclotomic_field n K)`. -/
 def CyclotomicField : Type w :=
   (cyclotomic n K).SplittingField
 deriving Field,
-  «./././Mathport/Syntax/Translate/Command.lean:42:9: unsupported derive handler algebra[algebra] K»,
+  «./././Mathport/Syntax/Translate/Command.lean:43:9: unsupported derive handler algebra[algebra] K»,
   Inhabited
 #align cyclotomic_field CyclotomicField
 
@@ -600,7 +599,7 @@ instance CyclotomicField.noZeroSMulDivisors : NoZeroSMulDivisors A (CyclotomicFi
 the `A`-subalgebra of `cyclotomic_field n K` generated by the roots of `X ^ n - 1`. If `n`
 is nonzero in `A`, it has the instance `is_cyclotomic_extension {n} A (cyclotomic_ring n A K)`. -/
 def CyclotomicRing : Type w :=
-  adjoin A { b : CyclotomicField n K | b ^ (n : ℕ) = 1 }
+  adjoin A {b : CyclotomicField n K | b ^ (n : ℕ) = 1}
 deriving CommRing, IsDomain, Inhabited
 #align cyclotomic_ring CyclotomicRing
 

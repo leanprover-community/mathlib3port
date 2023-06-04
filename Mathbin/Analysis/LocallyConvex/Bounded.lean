@@ -162,7 +162,7 @@ theorem IsVonNBounded.smul_tendsto_zero {S : Set E} {ε : ι → 𝕜} {x : ι �
   rw [tendsto_def] at *
   intro V hV
   rcases hS hV with ⟨r, r_pos, hrS⟩
-  filter_upwards [hxS, hε _ (Metric.ball_mem_nhds 0 <| inv_pos.mpr r_pos)]with n hnS hnr
+  filter_upwards [hxS, hε _ (Metric.ball_mem_nhds 0 <| inv_pos.mpr r_pos)] with n hnS hnr
   by_cases this : ε n = 0
   · simp [this, mem_of_mem_nhds hV]
   · rw [mem_preimage, mem_ball_zero_iff, lt_inv (norm_pos_iff.mpr this) r_pos, ← norm_inv] at hnr 
@@ -179,9 +179,9 @@ theorem isVonNBounded_of_smul_tendsto_zero {ε : ι → 𝕝} {l : Filter ι} [l
   rcases H' with ⟨V, ⟨hV, hVb⟩, hVS⟩
   have : ∀ᶠ n in l, ∃ x : S, ε n • (x : E) ∉ V :=
     by
-    filter_upwards [hε]with n hn
+    filter_upwards [hε] with n hn
     rw [Absorbs] at hVS 
-    push_neg  at hVS 
+    push_neg at hVS 
     rcases hVS _ (norm_pos_iff.mpr <| inv_ne_zero hn) with ⟨a, haε, haS⟩
     rcases set.not_subset.mp haS with ⟨x, hxS, hx⟩
     refine' ⟨⟨x, hxS⟩, fun hnx => _⟩
@@ -189,8 +189,8 @@ theorem isVonNBounded_of_smul_tendsto_zero {ε : ι → 𝕝} {l : Filter ι} [l
     exact hx (hVb.smul_mono haε hnx)
   rcases this.choice with ⟨x, hx⟩
   refine' Filter.frequently_false l (Filter.Eventually.frequently _)
-  filter_upwards [hx,
-    (H (coe ∘ x) fun n => (x n).2).Eventually (eventually_mem_set.mpr hV)]using fun n => id
+  filter_upwards [hx, (H (coe ∘ x) fun n => (x n).2).Eventually (eventually_mem_set.mpr hV)] using
+    fun n => id
 #align bornology.is_vonN_bounded_of_smul_tendsto_zero Bornology.isVonNBounded_of_smul_tendsto_zero
 
 /-- Given any sequence `ε` of scalars which tends to `𝓝[≠] 0`, we have that a set `S` is bounded

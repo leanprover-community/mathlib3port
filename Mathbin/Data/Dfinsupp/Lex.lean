@@ -58,14 +58,14 @@ theorem lex_lt_of_lt_of_preorder [∀ i, Preorder (α i)] (r) [IsStrictOrder ι 
   by
   obtain ⟨hle, j, hlt⟩ := Pi.lt_def.1 hlt
   classical
-    have : (x.ne_locus y : Set ι).WellFoundedOn r := (x.ne_locus y).finite_toSet.WellFoundedOn
-    obtain ⟨i, hi, hl⟩ := this.has_min { i | x i < y i } ⟨⟨j, mem_ne_locus.2 hlt.ne⟩, hlt⟩
-    exact
-      ⟨i, fun k hk =>
-        ⟨hle k,
-          of_not_not fun h =>
-            hl ⟨k, mem_ne_locus.2 (ne_of_not_le h).symm⟩ ((hle k).lt_of_not_le h) hk⟩,
-        hi⟩
+  have : (x.ne_locus y : Set ι).WellFoundedOn r := (x.ne_locus y).finite_toSet.WellFoundedOn
+  obtain ⟨i, hi, hl⟩ := this.has_min {i | x i < y i} ⟨⟨j, mem_ne_locus.2 hlt.ne⟩, hlt⟩
+  exact
+    ⟨i, fun k hk =>
+      ⟨hle k,
+        of_not_not fun h =>
+          hl ⟨k, mem_ne_locus.2 (ne_of_not_le h).symm⟩ ((hle k).lt_of_not_le h) hk⟩,
+      hi⟩
 #align dfinsupp.lex_lt_of_lt_of_preorder Dfinsupp.lex_lt_of_lt_of_preorder
 
 theorem lex_lt_of_lt [∀ i, PartialOrder (α i)] (r) [IsStrictOrder ι r] {x y : Π₀ i, α i}
@@ -113,7 +113,7 @@ private def lt_trichotomy_rec {P : Lex (Π₀ i, α i) → Lex (Π₀ i, α i) �
             ⟨wit, fun j hj =>
               not_mem_neLocus.mp (Finset.not_mem_of_lt_min hj <| by rwa [ne_locus_comm]), hwit⟩
 
-/- ./././Mathport/Syntax/Translate/Command.lean:322:38: unsupported irreducible non-definition -/
+/- ./././Mathport/Syntax/Translate/Command.lean:323:38: unsupported irreducible non-definition -/
 #print Dfinsupp.Lex.decidableLE /-
 irreducible_def Lex.decidableLE : @DecidableRel (Lex (Π₀ i, α i)) (· ≤ ·) :=
   ltTrichotomyRec (fun f g h => isTrue <| Or.inr h) (fun f g h => isTrue <| Or.inl <| congr_arg _ h)
@@ -121,7 +121,7 @@ irreducible_def Lex.decidableLE : @DecidableRel (Lex (Π₀ i, α i)) (· ≤ ·
 #align dfinsupp.lex.decidable_le Dfinsupp.Lex.decidableLE
 -/
 
-/- ./././Mathport/Syntax/Translate/Command.lean:322:38: unsupported irreducible non-definition -/
+/- ./././Mathport/Syntax/Translate/Command.lean:323:38: unsupported irreducible non-definition -/
 irreducible_def Lex.decidableLT : @DecidableRel (Lex (Π₀ i, α i)) (· < ·) :=
   ltTrichotomyRec (fun f g h => isTrue h) (fun f g h => isFalse h.not_lt) fun f g h =>
     isFalse h.asymm
@@ -148,9 +148,9 @@ theorem toLex_monotone : Monotone (@toLex (Π₀ i, α i)) := fun a b h =>
   le_of_lt_or_eq <|
     or_iff_not_imp_right.2 fun hne => by
       classical exact
-          ⟨Finset.min' _ (nonempty_ne_locus_iff.2 hne), fun j hj =>
-            not_mem_ne_locus.1 fun h => (Finset.min'_le _ _ h).not_lt hj,
-            (h _).lt_of_ne (mem_ne_locus.1 <| Finset.min'_mem _ _)⟩
+        ⟨Finset.min' _ (nonempty_ne_locus_iff.2 hne), fun j hj =>
+          not_mem_ne_locus.1 fun h => (Finset.min'_le _ _ h).not_lt hj,
+          (h _).lt_of_ne (mem_ne_locus.1 <| Finset.min'_mem _ _)⟩
 #align dfinsupp.to_lex_monotone Dfinsupp.toLex_monotone
 
 #print Dfinsupp.lt_of_forall_lt_of_lt /-

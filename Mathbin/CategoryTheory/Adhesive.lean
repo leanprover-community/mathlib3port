@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module category_theory.adhesive
-! leanprover-community/mathlib commit afff1f24a6b68d0077c9d63782a1d093e337758c
+! leanprover-community/mathlib commit 5c1efce12ba86d4901463f61019832f6a4b1a0d0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.CategoryTheory.Limits.Shapes.KernelPair
 /-!
 
 # Adhesive categories
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 ## Main definitions
 - `category_theory.is_pushout.is_van_kampen`: A convenience formulation for a pushout being
@@ -53,6 +56,7 @@ variable {J : Type v'} [Category.{u'} J] {C : Type u} [Category.{v} C]
 
 variable {W X Y Z : C} {f : W ⟶ X} {g : W ⟶ Y} {h : X ⟶ Z} {i : Y ⟶ Z}
 
+#print CategoryTheory.IsPushout.IsVanKampen /-
 -- This only makes sense when the original diagram is a pushout.
 /-- A convenience formulation for a pushout being a van Kampen colimit.
 See `is_pushout.is_van_kampen_iff` below. -/
@@ -63,14 +67,18 @@ def IsPushout.IsVanKampen (H : IsPushout f g h i) : Prop :=
     (hg : IsPullback g' αW αY g) (hh : CommSq h' αX αZ h) (hi : CommSq i' αY αZ i)
     (w : CommSq f' g' h' i'), IsPushout f' g' h' i' ↔ IsPullback h' αX αZ h ∧ IsPullback i' αY αZ i
 #align category_theory.is_pushout.is_van_kampen CategoryTheory.IsPushout.IsVanKampen
+-/
 
+#print CategoryTheory.IsPushout.IsVanKampen.flip /-
 theorem IsPushout.IsVanKampen.flip {H : IsPushout f g h i} (H' : H.IsVanKampen) :
     H.flip.IsVanKampen := by
   introv W' hf hg hh hi w
   simpa only [is_pushout.flip_iff, is_pullback.flip_iff, and_comm'] using
     H' g' f' i' h' αW αY αX αZ hg hf hi hh w.flip
 #align category_theory.is_pushout.is_van_kampen.flip CategoryTheory.IsPushout.IsVanKampen.flip
+-/
 
+#print CategoryTheory.IsPushout.isVanKampen_iff /-
 theorem IsPushout.isVanKampen_iff (H : IsPushout f g h i) :
     H.IsVanKampen ↔ IsVanKampenColimit (PushoutCocone.mk h i H.w) :=
   by
@@ -121,6 +129,7 @@ theorem IsPushout.isVanKampen_iff (H : IsPushout f g h i) :
         exacts [h₁, h₂]
     · exact ⟨fun h => h.2, fun h => ⟨_, h⟩⟩
 #align category_theory.is_pushout.is_van_kampen_iff CategoryTheory.IsPushout.isVanKampen_iff
+-/
 
 theorem is_coprod_iff_isPushout {X E Y YE : C} (c : BinaryCofan X E) (hc : IsColimit c) {f : X ⟶ Y}
     {iY : Y ⟶ YE} {fE : c.pt ⟶ YE} (H : CommSq f c.inl iY fE) :
@@ -204,20 +213,25 @@ theorem IsPushout.isVanKampen_inl {W E X Z : C} (c : BinaryCofan W E) [FinitaryE
     exact ⟨(is_pullback.of_has_pullback αY c.inr).paste_horiz hc₄, hc₃⟩
 #align category_theory.is_pushout.is_van_kampen_inl CategoryTheory.IsPushout.isVanKampen_inl
 
+#print CategoryTheory.IsPushout.IsVanKampen.isPullback_of_mono_left /-
 theorem IsPushout.IsVanKampen.isPullback_of_mono_left [Mono f] {H : IsPushout f g h i}
     (H' : H.IsVanKampen) : IsPullback f g h i :=
   ((H' (𝟙 _) g g (𝟙 Y) (𝟙 _) f (𝟙 _) i (IsKernelPair.id_of_mono f)
             (IsPullback.of_vert_isIso ⟨by simp⟩) H.1.flip ⟨rfl⟩ ⟨by simp⟩).mp
         (IsPushout.of_horiz_isIso ⟨by simp⟩)).1.flip
 #align category_theory.is_pushout.is_van_kampen.is_pullback_of_mono_left CategoryTheory.IsPushout.IsVanKampen.isPullback_of_mono_left
+-/
 
+#print CategoryTheory.IsPushout.IsVanKampen.isPullback_of_mono_right /-
 theorem IsPushout.IsVanKampen.isPullback_of_mono_right [Mono g] {H : IsPushout f g h i}
     (H' : H.IsVanKampen) : IsPullback f g h i :=
   ((H' f (𝟙 _) (𝟙 _) f (𝟙 _) (𝟙 _) g h (IsPullback.of_vert_isIso ⟨by simp⟩)
           (IsKernelPair.id_of_mono g) ⟨rfl⟩ H.1 ⟨by simp⟩).mp
       (IsPushout.of_vert_isIso ⟨by simp⟩)).2
 #align category_theory.is_pushout.is_van_kampen.is_pullback_of_mono_right CategoryTheory.IsPushout.IsVanKampen.isPullback_of_mono_right
+-/
 
+#print CategoryTheory.IsPushout.IsVanKampen.mono_of_mono_left /-
 theorem IsPushout.IsVanKampen.mono_of_mono_left [Mono f] {H : IsPushout f g h i}
     (H' : H.IsVanKampen) : Mono i :=
   IsKernelPair.mono_of_isIso_fst
@@ -225,7 +239,9 @@ theorem IsPushout.IsVanKampen.mono_of_mono_left [Mono f] {H : IsPushout f g h i}
             (IsPullback.of_vert_isIso ⟨by simp⟩) H.1.flip ⟨rfl⟩ ⟨by simp⟩).mp
         (IsPushout.of_horiz_isIso ⟨by simp⟩)).2
 #align category_theory.is_pushout.is_van_kampen.mono_of_mono_left CategoryTheory.IsPushout.IsVanKampen.mono_of_mono_left
+-/
 
+#print CategoryTheory.IsPushout.IsVanKampen.mono_of_mono_right /-
 theorem IsPushout.IsVanKampen.mono_of_mono_right [Mono g] {H : IsPushout f g h i}
     (H' : H.IsVanKampen) : Mono h :=
   IsKernelPair.mono_of_isIso_fst
@@ -233,50 +249,66 @@ theorem IsPushout.IsVanKampen.mono_of_mono_right [Mono g] {H : IsPushout f g h i
             (IsKernelPair.id_of_mono g) ⟨rfl⟩ H.1 ⟨by simp⟩).mp
         (IsPushout.of_vert_isIso ⟨by simp⟩)).1
 #align category_theory.is_pushout.is_van_kampen.mono_of_mono_right CategoryTheory.IsPushout.IsVanKampen.mono_of_mono_right
+-/
 
+#print CategoryTheory.Adhesive /-
 /-- A category is adhesive if it has pushouts and pullbacks along monomorphisms,
 and such pushouts are van Kampen. -/
 class Adhesive (C : Type u) [Category.{v} C] : Prop where
   [hasPullback_of_mono_left : ∀ {X Y S : C} (f : X ⟶ S) (g : Y ⟶ S) [Mono f], HasPullback f g]
   [hasPushout_of_mono_left : ∀ {X Y S : C} (f : S ⟶ X) (g : S ⟶ Y) [Mono f], HasPushout f g]
-  van_kampen :
+  vanKampen :
     ∀ {W X Y Z : C} {f : W ⟶ X} {g : W ⟶ Y} {h : X ⟶ Z} {i : Y ⟶ Z} [Mono f]
       (H : IsPushout f g h i), H.IsVanKampen
 #align category_theory.adhesive CategoryTheory.Adhesive
+-/
 
 attribute [instance] adhesive.has_pullback_of_mono_left adhesive.has_pushout_of_mono_left
 
+#print CategoryTheory.Adhesive.van_kampen' /-
 theorem Adhesive.van_kampen' [Adhesive C] [Mono g] (H : IsPushout f g h i) : H.IsVanKampen :=
   (Adhesive.van_kampen H.flip).flip
 #align category_theory.adhesive.van_kampen' CategoryTheory.Adhesive.van_kampen'
+-/
 
+#print CategoryTheory.Adhesive.isPullback_of_isPushout_of_mono_left /-
 theorem Adhesive.isPullback_of_isPushout_of_mono_left [Adhesive C] (H : IsPushout f g h i)
     [Mono f] : IsPullback f g h i :=
   (Adhesive.van_kampen H).isPullback_of_mono_left
 #align category_theory.adhesive.is_pullback_of_is_pushout_of_mono_left CategoryTheory.Adhesive.isPullback_of_isPushout_of_mono_left
+-/
 
+#print CategoryTheory.Adhesive.isPullback_of_isPushout_of_mono_right /-
 theorem Adhesive.isPullback_of_isPushout_of_mono_right [Adhesive C] (H : IsPushout f g h i)
     [Mono g] : IsPullback f g h i :=
   (Adhesive.van_kampen' H).isPullback_of_mono_right
 #align category_theory.adhesive.is_pullback_of_is_pushout_of_mono_right CategoryTheory.Adhesive.isPullback_of_isPushout_of_mono_right
+-/
 
+#print CategoryTheory.Adhesive.mono_of_isPushout_of_mono_left /-
 theorem Adhesive.mono_of_isPushout_of_mono_left [Adhesive C] (H : IsPushout f g h i) [Mono f] :
     Mono i :=
   (Adhesive.van_kampen H).mono_of_mono_left
 #align category_theory.adhesive.mono_of_is_pushout_of_mono_left CategoryTheory.Adhesive.mono_of_isPushout_of_mono_left
+-/
 
+#print CategoryTheory.Adhesive.mono_of_isPushout_of_mono_right /-
 theorem Adhesive.mono_of_isPushout_of_mono_right [Adhesive C] (H : IsPushout f g h i) [Mono g] :
     Mono h :=
   (Adhesive.van_kampen' H).mono_of_mono_right
 #align category_theory.adhesive.mono_of_is_pushout_of_mono_right CategoryTheory.Adhesive.mono_of_isPushout_of_mono_right
+-/
 
+#print CategoryTheory.Type.adhesive /-
 instance Type.adhesive : Adhesive (Type u) :=
   by
   constructor
   intros
   exact (is_pushout.is_van_kampen_inl _ (types.is_coprod_of_mono f) _ _ _ H.flip).flip
 #align category_theory.type.adhesive CategoryTheory.Type.adhesive
+-/
 
+#print CategoryTheory.Adhesive.toRegularMonoCategory /-
 noncomputable instance (priority := 100) Adhesive.toRegularMonoCategory [Adhesive C] :
     RegularMonoCategory C :=
   ⟨fun X Y f hf =>
@@ -288,6 +320,7 @@ noncomputable instance (priority := 100) Adhesive.toRegularMonoCategory [Adhesiv
         (adhesive.is_pullback_of_is_pushout_of_mono_left
             (is_pushout.of_has_pushout f f)).isLimitFork }⟩
 #align category_theory.adhesive.to_regular_mono_category CategoryTheory.Adhesive.toRegularMonoCategory
+-/
 
 -- This then implies that adhesive categories are balanced
 example [Adhesive C] : Balanced C :=

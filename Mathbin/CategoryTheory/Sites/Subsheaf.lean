@@ -175,7 +175,7 @@ include J
 Note that this is a sheaf only when the whole presheaf is a sheaf. -/
 def Subpresheaf.sheafify : Subpresheaf F
     where
-  obj U := { s | G.sieveOfSection s ∈ J (unop U) }
+  obj U := {s | G.sieveOfSection s ∈ J (unop U)}
   map := by
     rintro U V i s hs
     refine' J.superset_covering _ (J.pullback_stable i.unop hs)
@@ -331,7 +331,7 @@ theorem Subpresheaf.sheafify_le (h : G ≤ G') (hF : Presieve.IsSheaf J F)
     (hG' : Presieve.IsSheaf J G'.toPresheaf) : G.sheafify J ≤ G' :=
   by
   intro U x hx
-  convert((G.sheafify_lift (subpresheaf.hom_of_le h) hG').app U ⟨x, hx⟩).2
+  convert ((G.sheafify_lift (subpresheaf.hom_of_le h) hG').app U ⟨x, hx⟩).2
   apply (hF _ hx).IsSeparatedFor.ext
   intro V i hi
   have :=

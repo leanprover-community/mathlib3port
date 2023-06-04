@@ -25,7 +25,7 @@ namespace Nat
 
 #print Nat.infinite_setOf_prime /-
 /-- A version of `nat.exists_infinite_primes` using the `set.infinite` predicate. -/
-theorem infinite_setOf_prime : { p | Prime p }.Infinite :=
+theorem infinite_setOf_prime : {p | Prime p}.Infinite :=
   Set.infinite_of_not_bddAbove not_bddAbove_setOf_prime
 #align nat.infinite_set_of_prime Nat.infinite_setOf_prime
 -/

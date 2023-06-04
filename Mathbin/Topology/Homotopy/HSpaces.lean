@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Filippo A. E. Nuccio, Junyan Xu
 
 ! This file was ported from Lean 3 source module topology.homotopy.H_spaces
-! leanprover-community/mathlib commit 729d23f9e1640e1687141be89b106d3c8f9d10c0
+! leanprover-community/mathlib commit af471b9e3ce868f296626d33189b4ce730fa4c00
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Topology.Homotopy.Path
 
 /-!
 # H-spaces
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file defines H-spaces mainly following the approach proposed by Serre in his paper
 *Homologie singulière des espaces fibrés*. The idea beaneath `H-spaces` is that they are topological
@@ -59,6 +62,7 @@ open scoped unitInterval
 
 open Path ContinuousMap Set.Icc TopologicalSpace
 
+#print HSpace /-
 /-- A topological space `X` is an H-space if it behaves like a (potentially non-associative)
 topological group, but where the axioms for a group only hold up to homotopy.
 -/
@@ -71,6 +75,7 @@ class HSpace (X : Type u) [TopologicalSpace X] where
   hmulE :
     (Hmul.comp <| (ContinuousMap.id X).prod_mk <| const X e).HomotopyRel (ContinuousMap.id X) {e}
 #align H_space HSpace
+-/
 
 -- mathport name: H_space.Hmul
 -- We use the notation `⋀`, typeset as \And, to denote the binary operation `Hmul` on a H-space
@@ -142,14 +147,16 @@ def toHSpace (M : Type u) [MulOneClass M] [TopologicalSpace M] [ContinuousMul M]
   eHmul := (HomotopyRel.refl _ _).cast rfl (by ext1; apply one_mul)
   hmulE := (HomotopyRel.refl _ _).cast rfl (by ext1; apply mul_one)
 #align topological_group.to_H_space TopologicalGroup.toHSpace
-#align topological_add_group.to_H_space TopologicalAddGroup.to_H_space
+#align topological_add_group.to_H_space TopologicalAddGroup.toHSpace
 
+#print TopologicalGroup.hSpace /-
 @[to_additive]
 instance (priority := 600) hSpace (G : Type u) [TopologicalSpace G] [Group G] [TopologicalGroup G] :
     HSpace G :=
   toHSpace G
 #align topological_group.H_space TopologicalGroup.hSpace
-#align topological_add_group.H_space TopologicalAddGroup.H_space
+#align topological_add_group.H_space TopologicalAddGroup.hSpace
+-/
 
 theorem one_eq_hSpace_e {G : Type u} [TopologicalSpace G] [Group G] [TopologicalGroup G] :
     (1 : G) = HSpace.e :=
@@ -166,26 +173,32 @@ end TopologicalGroup
 
 namespace unitInterval
 
+#print unitInterval.qRight /-
 /-- `Q_right` is analogous to the function `Q` defined on p. 475 of [serre1951] that helps proving
 continuity of `delay_refl_right`.-/
 def qRight (p : I × I) : I :=
   Set.projIcc 0 1 zero_le_one (2 * p.1 / (1 + p.2))
 #align unit_interval.Q_right unitInterval.qRight
+-/
 
 theorem continuous_qRight : Continuous qRight :=
   continuous_projIcc.comp <|
     Continuous.div (by continuity) (by continuity) fun x => (add_pos zero_lt_one).ne'
 #align unit_interval.continuous_Q_right unitInterval.continuous_qRight
 
+#print unitInterval.qRight_zero_left /-
 theorem qRight_zero_left (θ : I) : qRight (0, θ) = 0 :=
   Set.projIcc_of_le_left _ <| by simp only [coe_zero, MulZeroClass.mul_zero, zero_div]
 #align unit_interval.Q_right_zero_left unitInterval.qRight_zero_left
+-/
 
+#print unitInterval.qRight_one_left /-
 theorem qRight_one_left (θ : I) : qRight (1, θ) = 1 :=
   Set.projIcc_of_right_le _ <|
     (le_div_iff <| add_pos zero_lt_one).2 <| by dsimp only; rw [coe_one, one_mul, mul_one];
       apply add_le_add_left (le_one _)
 #align unit_interval.Q_right_one_left unitInterval.qRight_one_left
+-/
 
 theorem qRight_zero_right (t : I) : (qRight (t, 0) : ℝ) = if (t : ℝ) ≤ 1 / 2 then 2 * t else 1 :=
   by
@@ -195,10 +208,12 @@ theorem qRight_zero_right (t : I) : (qRight (t, 0) : ℝ) = if (t : ℝ) ≤ 1 /
   · rw [(Set.projIcc_eq_right _).2]; · rfl; · linarith; · exact zero_lt_one
 #align unit_interval.Q_right_zero_right unitInterval.qRight_zero_right
 
+#print unitInterval.qRight_one_right /-
 theorem qRight_one_right (t : I) : qRight (t, 1) = t :=
   Eq.trans (by rw [Q_right]; congr; apply mul_div_cancel_left; exact two_ne_zero) <|
     Set.projIcc_val zero_le_one _
 #align unit_interval.Q_right_one_right unitInterval.qRight_one_right
+-/
 
 end unitInterval
 
@@ -208,6 +223,7 @@ open unitInterval
 
 variable {X : Type u} [TopologicalSpace X] {x y : X}
 
+#print Path.delayReflRight /-
 /-- This is the function analogous to the one on p. 475 of [serre1951], defining a homotopy from
 the product path `γ ∧ e` to `γ`.-/
 def delayReflRight (θ : I) (γ : Path x y) : Path x y
@@ -217,6 +233,7 @@ def delayReflRight (θ : I) (γ : Path x y) : Path x y
   source' := by dsimp only; rw [Q_right_zero_left, γ.source]
   target' := by dsimp only; rw [Q_right_one_left, γ.target]
 #align path.delay_refl_right Path.delayReflRight
+-/
 
 theorem continuous_delayReflRight : Continuous fun p : I × Path x y => delayReflRight p.1 p.2 :=
   continuous_uncurry_iff.mp <|
@@ -224,6 +241,7 @@ theorem continuous_delayReflRight : Continuous fun p : I × Path x y => delayRef
       continuous_qRight.comp <| continuous_snd.prod_mk <| continuous_fst.comp continuous_fst
 #align path.continuous_delay_refl_right Path.continuous_delayReflRight
 
+#print Path.delayReflRight_zero /-
 theorem delayReflRight_zero (γ : Path x y) : delayReflRight 0 γ = γ.trans (Path.refl y) :=
   by
   ext t
@@ -233,16 +251,21 @@ theorem delayReflRight_zero (γ : Path x y) : delayReflRight 0 γ = γ.trans (Pa
   all_goals apply congr_arg γ; ext1; rw [Q_right_zero_right]
   exacts [if_neg h, if_pos h]
 #align path.delay_refl_right_zero Path.delayReflRight_zero
+-/
 
+#print Path.delayReflRight_one /-
 theorem delayReflRight_one (γ : Path x y) : delayReflRight 1 γ = γ := by ext t;
   exact congr_arg γ (Q_right_one_right t)
 #align path.delay_refl_right_one Path.delayReflRight_one
+-/
 
+#print Path.delayReflLeft /-
 /-- This is the function on p. 475 of [serre1951], defining a homotopy from a path `γ` to the
 product path `e ∧ γ`.-/
 def delayReflLeft (θ : I) (γ : Path x y) : Path x y :=
   (delayReflRight θ γ.symm).symm
 #align path.delay_refl_left Path.delayReflLeft
+-/
 
 theorem continuous_delayReflLeft : Continuous fun p : I × Path x y => delayReflLeft p.1 p.2 :=
   Path.continuous_symm.comp <|
@@ -250,13 +273,17 @@ theorem continuous_delayReflLeft : Continuous fun p : I × Path x y => delayRefl
       continuous_fst.prod_mk <| Path.continuous_symm.comp continuous_snd
 #align path.continuous_delay_refl_left Path.continuous_delayReflLeft
 
+#print Path.delayReflLeft_zero /-
 theorem delayReflLeft_zero (γ : Path x y) : delayReflLeft 0 γ = (Path.refl x).trans γ := by
   simp only [delay_refl_left, delay_refl_right_zero, trans_symm, refl_symm, Path.symm_symm]
 #align path.delay_refl_left_zero Path.delayReflLeft_zero
+-/
 
+#print Path.delayReflLeft_one /-
 theorem delayReflLeft_one (γ : Path x y) : delayReflLeft 1 γ = γ := by
   simp only [delay_refl_left, delay_refl_right_one, Path.symm_symm]
 #align path.delay_refl_left_one Path.delayReflLeft_one
+-/
 
 /-- The loop space at x carries a structure of a `H-space`. Note that the field `e_Hmul`
 (resp. `Hmul_e`) neither implies nor is implied by `path.homotopy.refl_trans`

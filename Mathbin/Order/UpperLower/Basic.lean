@@ -325,14 +325,14 @@ theorem Set.antitone_mem : Antitone (· ∈ s) ↔ IsLowerSet s :=
 
 #print isUpperSet_setOf /-
 @[simp]
-theorem isUpperSet_setOf : IsUpperSet { a | p a } ↔ Monotone p :=
+theorem isUpperSet_setOf : IsUpperSet {a | p a} ↔ Monotone p :=
   Iff.rfl
 #align is_upper_set_set_of isUpperSet_setOf
 -/
 
 #print isLowerSet_setOf /-
 @[simp]
-theorem isLowerSet_setOf : IsLowerSet { a | p a } ↔ Antitone p :=
+theorem isLowerSet_setOf : IsLowerSet {a | p a} ↔ Antitone p :=
   forall_swap
 #align is_lower_set_set_of isLowerSet_setOf
 -/
@@ -1420,14 +1420,14 @@ variable [Preorder α] [Preorder β] {s t : Set α} {x : α}
 #print upperClosure /-
 /-- The greatest upper set containing a given set. -/
 def upperClosure (s : Set α) : UpperSet α :=
-  ⟨{ x | ∃ a ∈ s, a ≤ x }, fun x y h => Exists₂.imp fun a _ => h.trans'⟩
+  ⟨{x | ∃ a ∈ s, a ≤ x}, fun x y h => Exists₂.imp fun a _ => h.trans'⟩
 #align upper_closure upperClosure
 -/
 
 #print lowerClosure /-
 /-- The least lower set containing a given set. -/
 def lowerClosure (s : Set α) : LowerSet α :=
-  ⟨{ x | ∃ a ∈ s, x ≤ a }, fun x y h => Exists₂.imp fun a _ => h.trans⟩
+  ⟨{x | ∃ a ∈ s, x ≤ a}, fun x y h => Exists₂.imp fun a _ => h.trans⟩
 #align lower_closure lowerClosure
 -/
 

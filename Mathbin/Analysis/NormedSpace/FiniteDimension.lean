@@ -199,7 +199,7 @@ vector space `E'` can be extended to a Lipschitz map on the whole space `α`, wi
 constant `C * K` where `C` only depends on `E'`. We record a working value for this constant `C`
 as `lipschitz_extension_constant E'`. -/
 irreducible_def lipschitzExtensionConstant (E' : Type _) [NormedAddCommGroup E'] [NormedSpace ℝ E']
-  [FiniteDimensional ℝ E'] : ℝ≥0 :=
+    [FiniteDimensional ℝ E'] : ℝ≥0 :=
   let A := (Basis.ofVectorSpace ℝ E').equivFun.toContinuousLinearEquiv
   max (‖A.symm.toContinuousLinearMap‖₊ * ‖A.toContinuousLinearMap‖₊) 1
 #align lipschitz_extension_constant lipschitzExtensionConstant
@@ -272,11 +272,11 @@ protected theorem LinearIndependent.eventually {ι} [Finite ι] {f : ι → E}
 #align linear_independent.eventually LinearIndependent.eventually
 
 theorem isOpen_setOf_linearIndependent {ι : Type _} [Finite ι] :
-    IsOpen { f : ι → E | LinearIndependent 𝕜 f } :=
+    IsOpen {f : ι → E | LinearIndependent 𝕜 f} :=
   isOpen_iff_mem_nhds.2 fun f => LinearIndependent.eventually
 #align is_open_set_of_linear_independent isOpen_setOf_linearIndependent
 
-theorem isOpen_setOf_nat_le_rank (n : ℕ) : IsOpen { f : E →L[𝕜] F | ↑n ≤ (f : E →ₗ[𝕜] F).rank } :=
+theorem isOpen_setOf_nat_le_rank (n : ℕ) : IsOpen {f : E →L[𝕜] F | ↑n ≤ (f : E →ₗ[𝕜] F).rank} :=
   by
   simp only [LinearMap.le_rank_iff_exists_linearIndependent_finset, set_of_exists, ← exists_prop]
   refine' isOpen_biUnion fun t ht => _
@@ -528,7 +528,7 @@ theorem HasCompactMulSupport.eq_one_or_finiteDimensional {X : Type _} [Topologic
   by
   by_cases h : ∀ x, f x = 1; · apply Or.inl; ext x; exact h x
   apply Or.inr
-  push_neg  at h 
+  push_neg at h 
   obtain ⟨x, hx⟩ : ∃ x, f x ≠ 1; exact h
   have : Function.mulSupport f ∈ 𝓝 x := h'f.is_open_mul_support.mem_nhds hx
   obtain ⟨r, rpos, hr⟩ : ∃ (r : ℝ) (hi : 0 < r), Metric.closedBall x r ⊆ Function.mulSupport f

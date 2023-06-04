@@ -100,13 +100,13 @@ variable {R : Type _} {M : Type _} [Ring R] [TopologicalSpace R] [TopologicalSpa
 /-- If `M` is a topological module over `R` and `0` is a limit of invertible elements of `R`, then
 `⊤` is the only submodule of `M` with a nonempty interior.
 This is the case, e.g., if `R` is a nontrivially normed field. -/
-theorem Submodule.eq_top_of_nonempty_interior' [NeBot (𝓝[{ x : R | IsUnit x }] 0)]
-    (s : Submodule R M) (hs : (interior (s : Set M)).Nonempty) : s = ⊤ :=
+theorem Submodule.eq_top_of_nonempty_interior' [NeBot (𝓝[{x : R | IsUnit x}] 0)] (s : Submodule R M)
+    (hs : (interior (s : Set M)).Nonempty) : s = ⊤ :=
   by
   rcases hs with ⟨y, hy⟩
   refine' Submodule.eq_top_iff'.2 fun x => _
   rw [mem_interior_iff_mem_nhds] at hy 
-  have : tendsto (fun c : R => y + c • x) (𝓝[{ x : R | IsUnit x }] 0) (𝓝 (y + (0 : R) • x)) :=
+  have : tendsto (fun c : R => y + c • x) (𝓝[{x : R | IsUnit x}] 0) (𝓝 (y + (0 : R) • x)) :=
     tendsto_const_nhds.add ((tendsto_nhdsWithin_of_tendsto_nhds tendsto_id).smul tendsto_const_nhds)
   rw [zero_smul, add_zero] at this 
   obtain ⟨_, hu : y + _ • _ ∈ s, u, rfl⟩ :=
@@ -276,13 +276,13 @@ theorem LinearMap.continuous_on_pi {ι : Type _} {R : Type _} {M : Type _} [Fini
   by
   cases nonempty_fintype ι
   classical
-    -- for the proof, write `f` in the standard basis, and use that each coordinate is a continuous
-    -- function.
-    have : (f : (ι → R) → M) = fun x => ∑ i : ι, x i • f fun j => if i = j then 1 else 0 := by
-      ext x; exact f.pi_apply_eq_sum_univ x
-    rw [this]
-    refine' continuous_finset_sum _ fun i hi => _
-    exact (continuous_apply i).smul continuous_const
+  -- for the proof, write `f` in the standard basis, and use that each coordinate is a continuous
+  -- function.
+  have : (f : (ι → R) → M) = fun x => ∑ i : ι, x i • f fun j => if i = j then 1 else 0 := by ext x;
+    exact f.pi_apply_eq_sum_univ x
+  rw [this]
+  refine' continuous_finset_sum _ fun i hi => _
+  exact (continuous_apply i).smul continuous_const
 #align linear_map.continuous_on_pi LinearMap.continuous_on_pi
 
 end Pi
@@ -414,7 +414,7 @@ section
 
 variable (M₁ M₂) (σ : R →+* S)
 
-theorem isClosed_setOf_map_smul : IsClosed { f : M₁ → M₂ | ∀ c x, f (c • x) = σ c • f x } :=
+theorem isClosed_setOf_map_smul : IsClosed {f : M₁ → M₂ | ∀ c x, f (c • x) = σ c • f x} :=
   by
   simp only [Set.setOf_forall]
   exact

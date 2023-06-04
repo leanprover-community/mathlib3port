@@ -250,7 +250,7 @@ theorem strictConvexOn_rpow {p : ℝ} (hp : 1 < p) : StrictConvexOn ℝ (Ici 0) 
   have hy : 0 < y := by linarith
   have hy' : 0 < y ^ p := rpow_pos_of_pos hy _
   have H1 : y ^ (p - 1 + 1) = y ^ (p - 1) * y := rpow_add_one hy.ne' _
-  ring_nf  at H1 
+  ring_nf at H1 
   trans p * y ^ (p - 1)
   · have hyx' : x - y < 0 := by linarith only [hxy]
     have h3 : 0 < y - x := by linarith only [hxy]
@@ -263,8 +263,8 @@ theorem strictConvexOn_rpow {p : ℝ} (hp : 1 < p) : StrictConvexOn ℝ (Ici 0) 
     rw [div_lt_iff h3, ← div_lt_div_right hy']
     convert this using 1
     · have H : (x / y) ^ p = x ^ p / y ^ p := div_rpow hx hy.le _
-      ring_nf  at H ⊢
-      field_simp [hy.ne', hy'.ne']  at H ⊢
+      ring_nf at H ⊢
+      field_simp [hy.ne', hy'.ne'] at H ⊢
       linear_combination H
     · field_simp [hy.ne', hy'.ne']
       linear_combination p * (-y + x) * H1
@@ -279,8 +279,8 @@ theorem strictConvexOn_rpow {p : ℝ} (hp : 1 < p) : StrictConvexOn ℝ (Ici 0) 
     · field_simp [hy.ne', hy'.ne']
       linear_combination -p * (z - y) * H1
     · have H : (z / y) ^ p = z ^ p / y ^ p := div_rpow hz hy.le _
-      ring_nf  at H ⊢
-      field_simp [hy.ne', hy'.ne']  at H ⊢
+      ring_nf at H ⊢
+      field_simp [hy.ne', hy'.ne'] at H ⊢
       linear_combination -H
 #align strict_convex_on_rpow strictConvexOn_rpow
 

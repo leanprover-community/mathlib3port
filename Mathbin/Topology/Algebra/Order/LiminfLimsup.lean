@@ -198,9 +198,9 @@ theorem le_nhds_of_limsSup_eq_limsInf {f : Filter α} {a : α} (hl : f.IsBounded
 #print limsSup_nhds /-
 theorem limsSup_nhds (a : α) : limsSup (𝓝 a) = a :=
   csInf_eq_of_forall_ge_of_forall_gt_exists_lt (isBounded_le_nhds a)
-    (fun a' (h : { n : α | n ≤ a' } ∈ 𝓝 a) => show a ≤ a' from @mem_of_mem_nhds α _ a _ h)
+    (fun a' (h : {n : α | n ≤ a'} ∈ 𝓝 a) => show a ≤ a' from @mem_of_mem_nhds α _ a _ h)
     fun b (hba : a < b) =>
-    show ∃ (c : _) (h : { n : α | n ≤ c } ∈ 𝓝 a), c < b from
+    show ∃ (c : _) (h : {n : α | n ≤ c} ∈ 𝓝 a), c < b from
       match dense_or_discrete a b with
       | Or.inl ⟨c, hac, hcb⟩ => ⟨c, ge_mem_nhds hac, hcb⟩
       | Or.inr ⟨_, h⟩ => ⟨a, (𝓝 a).sets_of_superset (gt_mem_nhds hba) h, hba⟩
@@ -345,7 +345,7 @@ theorem eventually_le_limsup
       simp only [IsGLB, IsGreatest, lowerBounds, upperBounds, Set.mem_Ioi, Set.mem_setOf_eq,
         not_and, not_forall, not_le, exists_prop] at H 
       exact H fun x hx => le_of_lt hx
-    filter_upwards [eventually_lt_of_limsup_lt xa hf]with y hy
+    filter_upwards [eventually_lt_of_limsup_lt xa hf] with y hy
     contrapose! hy
     exact hx hy
 #align eventually_le_limsup eventually_le_limsup
@@ -399,7 +399,7 @@ theorem Antitone.map_limsSup_of_continuousAt {F : Filter R} [NeBot F] {f : R →
     (f_decr : Antitone f) (f_cont : ContinuousAt f F.limsSup) : f F.limsSup = F.liminf f :=
   by
   apply le_antisymm
-  · have A : { a : R | ∀ᶠ n : R in F, n ≤ a }.Nonempty := ⟨⊤, by simp⟩
+  · have A : {a : R | ∀ᶠ n : R in F, n ≤ a}.Nonempty := ⟨⊤, by simp⟩
     rw [Limsup, f_decr.map_Inf_of_continuous_at' f_cont A]
     apply le_of_forall_lt
     intro c hc
@@ -407,7 +407,7 @@ theorem Antitone.map_limsSup_of_continuousAt {F : Filter R} [NeBot F] {f : R →
       Set.mem_image, exists_exists_and_eq_and] at hc ⊢
     rcases hc with ⟨d, hd, h'd⟩
     refine' ⟨f d, _, h'd⟩
-    filter_upwards [hd]with x hx using f_decr hx
+    filter_upwards [hd] with x hx using f_decr hx
   · rcases eq_or_lt_of_le (bot_le : ⊥ ≤ F.Limsup) with (h | Limsup_ne_bot)
     · rw [← h]
       apply liminf_le_of_frequently_le
@@ -431,7 +431,7 @@ theorem Antitone.map_limsSup_of_continuousAt {F : Filter R} [NeBot F] {f : R →
       apply liminf_le_of_frequently_le
       exact B.mono fun x hx => f_decr hx
     by_contra' H
-    obtain ⟨l, l_lt, h'l⟩ : ∃ l < F.Limsup, Set.Ioc l F.Limsup ⊆ { x : R | f x < F.liminf f }
+    obtain ⟨l, l_lt, h'l⟩ : ∃ l < F.Limsup, Set.Ioc l F.Limsup ⊆ {x : R | f x < F.liminf f}
     exact exists_Ioc_subset_of_mem_nhds ((tendsto_order.1 f_cont.tendsto).2 _ H) ⟨⊥, Limsup_ne_bot⟩
     obtain ⟨m, l_m, m_lt⟩ : (Set.Ioo l F.Limsup).Nonempty :=
       by
@@ -553,9 +553,9 @@ open scoped BigOperators
 
 theorem limsup_eq_tendsto_sum_indicator_nat_atTop (s : ℕ → Set α) :
     limsup s atTop =
-      { ω |
+      {ω |
         Tendsto (fun n => ∑ k in Finset.range n, (s (k + 1)).indicator (1 : α → ℕ) ω) atTop
-          atTop } :=
+          atTop} :=
   by
   ext ω
   simp only [limsup_eq_infi_supr_of_nat, ge_iff_le, Set.iSup_eq_iUnion, Set.iInf_eq_iInter,
@@ -581,7 +581,7 @@ theorem limsup_eq_tendsto_sum_indicator_nat_atTop (s : ℕ → Set α) :
       rw [Nat.sub_add_cancel hj₁, Set.indicator_of_mem hj₂]
       exact zero_lt_one
     · rw [imp_false] at hk 
-      push_neg  at hk 
+      push_neg at hk 
       obtain ⟨i, hi⟩ := hk
       obtain ⟨j, hj₁, hj₂⟩ := hω (i + 1)
       replace hi : (∑ k in Finset.range i, (s (k + 1)).indicator 1 ω) = k + 1 :=
@@ -603,7 +603,7 @@ theorem limsup_eq_tendsto_sum_indicator_nat_atTop (s : ℕ → Set α) :
   · rintro hω i
     rw [Set.mem_setOf_eq, tendsto_at_top_at_top] at hω 
     by_contra hcon
-    push_neg  at hcon 
+    push_neg at hcon 
     obtain ⟨j, h⟩ := hω (i + 1)
     have : (∑ k in Finset.range j, (s (k + 1)).indicator 1 ω) ≤ i :=
       by
@@ -628,9 +628,9 @@ theorem limsup_eq_tendsto_sum_indicator_nat_atTop (s : ℕ → Set α) :
 theorem limsup_eq_tendsto_sum_indicator_atTop (R : Type _) [StrictOrderedSemiring R] [Archimedean R]
     (s : ℕ → Set α) :
     limsup s atTop =
-      { ω |
+      {ω |
         Tendsto (fun n => ∑ k in Finset.range n, (s (k + 1)).indicator (1 : α → R) ω) atTop
-          atTop } :=
+          atTop} :=
   by
   rw [limsup_eq_tendsto_sum_indicator_nat_atTop s]
   ext ω

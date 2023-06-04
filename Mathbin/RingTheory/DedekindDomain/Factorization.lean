@@ -45,7 +45,7 @@ def IsDedekindDomain.HeightOneSpectrum.maxPowDividing (I : Ideal R) : Ideal R :=
 
 /-- Only finitely many maximal ideals of `R` divide a given nonzero ideal. -/
 theorem Ideal.finite_factors {I : Ideal R} (hI : I ≠ 0) :
-    { v : HeightOneSpectrum R | v.asIdeal ∣ I }.Finite :=
+    {v : HeightOneSpectrum R | v.asIdeal ∣ I}.Finite :=
   by
   rw [← Set.finite_coe_iff, Set.coe_setOf]
   haveI h_fin := fintype_subtype_dvd I hI
@@ -63,9 +63,9 @@ theorem Associates.finite_factors {I : Ideal R} (hI : I ≠ 0) :
       ((Associates.mk v.asIdeal).count (Associates.mk I).factors : ℤ) = 0 :=
   by
   have h_supp :
-    { v : height_one_spectrum R |
-        ¬((Associates.mk v.asIdeal).count (Associates.mk I).factors : ℤ) = 0 } =
-      { v : height_one_spectrum R | v.asIdeal ∣ I } :=
+    {v : height_one_spectrum R |
+        ¬((Associates.mk v.asIdeal).count (Associates.mk I).factors : ℤ) = 0} =
+      {v : height_one_spectrum R | v.asIdeal ∣ I} :=
     by
     ext v
     simp_rw [Int.coe_nat_eq_zero]
@@ -81,9 +81,9 @@ namespace Ideal
 theorem finite_mulSupport {I : Ideal R} (hI : I ≠ 0) :
     (mulSupport fun v : HeightOneSpectrum R => v.maxPowDividing I).Finite :=
   haveI h_subset :
-    { v : height_one_spectrum R | v.maxPowDividing I ≠ 1 } ⊆
-      { v : height_one_spectrum R |
-        ((Associates.mk v.asIdeal).count (Associates.mk I).factors : ℤ) ≠ 0 } :=
+    {v : height_one_spectrum R | v.maxPowDividing I ≠ 1} ⊆
+      {v : height_one_spectrum R |
+        ((Associates.mk v.asIdeal).count (Associates.mk I).factors : ℤ) ≠ 0} :=
     by
     intro v hv h_zero
     have hv' : v.max_pow_dividing I = 1 := by

@@ -512,7 +512,7 @@ theorem X_inj [Nontrivial R] {s t : σ} : (X s : MvPowerSeries σ R) = X t ↔ s
   ⟨by
     intro h; replace h := congr_arg (coeff R (single s 1)) h;
     rw [coeff_X, if_pos rfl, coeff_X] at h 
-    split_ifs  at h  with H
+    split_ifs at h  with H
     · rw [Finsupp.single_eq_single_iff] at H 
       cases H; · exact H.1; · exfalso; exact one_ne_zero H.1
     · exfalso; exact one_ne_zero h, congr_arg X⟩
@@ -710,11 +710,11 @@ theorem X_pow_dvd_iff {s : σ} {n : ℕ} {φ : MvPowerSeries σ R} :
         · exact MulZeroClass.zero_mul _
       ·
         classical
-          contrapose! H
-          ext t
-          by_cases hst : s = t
-          · subst t; simpa using tsub_add_cancel_of_le H
-          · simp [Finsupp.single_apply, hst]
+        contrapose! H
+        ext t
+        by_cases hst : s = t
+        · subst t; simpa using tsub_add_cancel_of_le H
+        · simp [Finsupp.single_apply, hst]
 #align mv_power_series.X_pow_dvd_iff MvPowerSeries.X_pow_dvd_iff
 
 theorem X_dvd_iff {s : σ} {φ : MvPowerSeries σ R} :
@@ -1557,11 +1557,11 @@ end Map
 theorem X_pow_dvd_iff {n : ℕ} {φ : PowerSeries R} :
     (X : PowerSeries R) ^ n ∣ φ ↔ ∀ m, m < n → coeff R m φ = 0 :=
   by
-  convert@MvPowerSeries.X_pow_dvd_iff Unit R _ () n φ; apply propext
+  convert @MvPowerSeries.X_pow_dvd_iff Unit R _ () n φ; apply propext
   classical
-    constructor <;> intro h m hm
-    · rw [Finsupp.unique_single m]; convert h _ hm
-    · apply h; simpa only [Finsupp.single_eq_same] using hm
+  constructor <;> intro h m hm
+  · rw [Finsupp.unique_single m]; convert h _ hm
+  · apply h; simpa only [Finsupp.single_eq_same] using hm
 #align power_series.X_pow_dvd_iff PowerSeries.X_pow_dvd_iff
 
 theorem X_dvd_iff {φ : PowerSeries R} : (X : PowerSeries R) ∣ φ ↔ constantCoeff R φ = 0 :=
@@ -1827,9 +1827,9 @@ theorem eq_zero_or_eq_zero_of_mul_eq_zero [NoZeroDivisors R] (φ ψ : PowerSerie
   · rintro ⟨i, j⟩ hij hne
     by_cases hj : j < n; · rw [ih j hj, MulZeroClass.mul_zero]
     by_cases hi : i < m
-    · specialize hm₂ _ hi; push_neg  at hm₂ ; rw [hm₂, MulZeroClass.zero_mul]
+    · specialize hm₂ _ hi; push_neg at hm₂ ; rw [hm₂, MulZeroClass.zero_mul]
     rw [Finset.Nat.mem_antidiagonal] at hij 
-    push_neg  at hi hj 
+    push_neg at hi hj 
     suffices m < i by
       have : m + n < i + j := add_lt_add_of_lt_of_le this hj
       exfalso; exact ne_of_lt this hij.symm

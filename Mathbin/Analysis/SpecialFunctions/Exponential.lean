@@ -70,7 +70,7 @@ variable {𝕂 𝔸 : Type _} [NontriviallyNormedField 𝕂] [NormedRing 𝔸] [
 theorem hasStrictFDerivAt_exp_zero_of_radius_pos (h : 0 < (expSeries 𝕂 𝔸).radius) :
     HasStrictFDerivAt (exp 𝕂) (1 : 𝔸 →L[𝕂] 𝔸) 0 :=
   by
-  convert(hasFPowerSeriesAt_exp_zero_of_radius_pos h).HasStrictFDerivAt
+  convert (hasFPowerSeriesAt_exp_zero_of_radius_pos h).HasStrictFDerivAt
   ext x
   change x = expSeries 𝕂 𝔸 1 fun _ => x
   simp [expSeries_apply_eq]
@@ -108,7 +108,7 @@ theorem hasFDerivAt_exp_of_mem_ball [CharZero 𝕂] {x : 𝔸}
     exact hasFDerivAt_exp_zero_of_radius_pos hpos
   have : ∀ᶠ h in 𝓝 (0 : 𝔸), h ∈ EMetric.ball (0 : 𝔸) (expSeries 𝕂 𝔸).radius :=
     EMetric.ball_mem_nhds _ hpos
-  filter_upwards [this]with _ hh
+  filter_upwards [this] with _ hh
   rw [exp_add_of_mem_ball hx hh, exp_zero, zero_add, ContinuousLinearMap.id_apply, smul_eq_mul]
   ring
 #align has_fderiv_at_exp_of_mem_ball hasFDerivAt_exp_of_mem_ball
@@ -226,8 +226,7 @@ theorem Complex.exp_eq_exp_ℂ : Complex.exp = exp ℂ :=
   by
   refine' funext fun x => _
   rw [Complex.exp, exp_eq_tsum_div]
-  exact
-    tendsto_nhds_unique x.exp'.tendsto_limit (exp_series_div_summable ℝ x).HasSum.tendsto_sum_nat
+  exact tendsto_nhds_unique x.exp'.tendsto_limit (expSeries_div_summable ℝ x).HasSum.tendsto_sum_nat
 #align complex.exp_eq_exp_ℂ Complex.exp_eq_exp_ℂ
 
 theorem Real.exp_eq_exp_ℝ : Real.exp = exp ℝ := by ext x;

@@ -245,7 +245,7 @@ theorem locallyFinite_tsupport : LocallyFinite fun i => tsupport (f i) :=
   f.LocallyFinite.closure
 #align bump_covering.locally_finite_tsupport BumpCovering.locallyFinite_tsupport
 
-protected theorem point_finite (x : X) : { i | f i x ≠ 0 }.Finite :=
+protected theorem point_finite (x : X) : {i | f i x ≠ 0}.Finite :=
   f.LocallyFinite.point_finite x
 #align bump_covering.point_finite BumpCovering.point_finite
 
@@ -429,7 +429,7 @@ theorem toPouFun_eq_mul_prod (i : ι) (x : X) (t : Finset ι)
 theorem sum_toPouFun_eq (x : X) : (∑ᶠ i, f.toPouFun i x) = 1 - ∏ᶠ i, 1 - f i x :=
   by
   set s := (f.point_finite x).toFinset
-  have hs : (s : Set ι) = { i | f i x ≠ 0 } := finite.coe_to_finset _
+  have hs : (s : Set ι) = {i | f i x ≠ 0} := finite.coe_to_finset _
   have A : (support fun i => to_pou_fun f i x) ⊆ s :=
     by
     rw [hs]
@@ -450,7 +450,7 @@ theorem exists_finset_toPouFun_eventuallyEq (i : ι) (x : X) :
   by
   rcases f.locally_finite x with ⟨U, hU, hf⟩
   use hf.to_finset
-  filter_upwards [hU]with y hyU
+  filter_upwards [hU] with y hyU
   simp only [Pi.mul_apply, Finset.prod_apply]
   apply to_pou_fun_eq_mul_prod
   intro j hji hj

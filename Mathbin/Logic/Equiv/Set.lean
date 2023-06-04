@@ -177,7 +177,7 @@ theorem prod_assoc_symm_image {α β γ} {s : Set α} {t : Set β} {u : Set γ} 
 
 #print Equiv.setProdEquivSigma /-
 /-- A set `s` in `α × β` is equivalent to the sigma-type `Σ x, {y | (x, y) ∈ s}`. -/
-def setProdEquivSigma {α β : Type _} (s : Set (α × β)) : s ≃ Σ x : α, { y | (x, y) ∈ s }
+def setProdEquivSigma {α β : Type _} (s : Set (α × β)) : s ≃ Σ x : α, {y | (x, y) ∈ s}
     where
   toFun x := ⟨x.1.1, x.1.2, by simp⟩
   invFun x := ⟨(x.1, x.2.1), x.2.2⟩
@@ -562,7 +562,7 @@ protected def congr {α β : Type _} (e : α ≃ β) : Set α ≃ Set β :=
 #print Equiv.Set.sep /-
 /-- The set `{x ∈ s | t x}` is equivalent to the set of `x : s` such that `t x`. -/
 protected def sep {α : Type u} (s : Set α) (t : α → Prop) :
-    ({ x ∈ s | t x } : Set α) ≃ { x : s | t x } :=
+    ({x ∈ s | t x} : Set α) ≃ {x : s | t x} :=
   (Equiv.subtypeSubtypeEquivSubtypeInter s t).symm
 #align equiv.set.sep Equiv.Set.sep
 -/

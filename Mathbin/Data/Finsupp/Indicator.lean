@@ -86,8 +86,8 @@ theorem support_indicator_subset : ((indicator s f).support : Set ι) ⊆ s :=
 
 theorem single_eq_indicator (i : ι) (b : α) : single i b = indicator {i} fun _ _ => b := by
   classical
-    ext
-    simp [single_apply, indicator_apply, @eq_comm _ a]
+  ext
+  simp [single_apply, indicator_apply, @eq_comm _ a]
 #align finsupp.single_eq_indicator Finsupp.single_eq_indicator
 
 end Finsupp

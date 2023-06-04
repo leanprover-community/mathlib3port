@@ -48,7 +48,7 @@ variable (Λ : (X →ᵇ ℝ≥0) →ₗ[ℝ≥0] ℝ≥0)
 `λ(K) = inf {Λf | 1≤f on K}`. When X is a compact Hausdorff space, this will be shown to be a
 content, and will be shown to agree with the Riesz measure on the compact subsets `K ⊆ X`. -/
 def rieszContentAux : Compacts X → ℝ≥0 := fun K =>
-  sInf (Λ '' { f : X →ᵇ ℝ≥0 | ∀ x ∈ K, (1 : ℝ≥0) ≤ f x })
+  sInf (Λ '' {f : X →ᵇ ℝ≥0 | ∀ x ∈ K, (1 : ℝ≥0) ≤ f x})
 #align riesz_content_aux rieszContentAux
 
 section RieszMonotone
@@ -56,7 +56,7 @@ section RieszMonotone
 /-- For any compact subset `K ⊆ X`, there exist some bounded continuous nonnegative
 functions f on X such that `f ≥ 1` on K. -/
 theorem riesz_content_aux_image_nonempty (K : Compacts X) :
-    (Λ '' { f : X →ᵇ ℝ≥0 | ∀ x ∈ K, (1 : ℝ≥0) ≤ f x }).Nonempty :=
+    (Λ '' {f : X →ᵇ ℝ≥0 | ∀ x ∈ K, (1 : ℝ≥0) ≤ f x}).Nonempty :=
   by
   rw [nonempty_image_iff]
   use (1 : X →ᵇ ℝ≥0)

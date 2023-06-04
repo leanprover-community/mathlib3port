@@ -144,7 +144,7 @@ namespace IsBasis
 /-- Constructs a filter basis from an indexed family of sets satisfying `is_basis`. -/
 protected def filterBasis {p : ι → Prop} {s : ι → Set α} (h : IsBasis p s) : FilterBasis α
     where
-  sets := { t | ∃ i, p i ∧ s i = t }
+  sets := {t | ∃ i, p i ∧ s i = t}
   Nonempty :=
     let ⟨i, hi⟩ := h.Nonempty
     ⟨s i, ⟨i, hi, rfl⟩⟩
@@ -171,7 +171,7 @@ namespace FilterBasis
 /-- The filter associated to a filter basis. -/
 protected def filter (B : FilterBasis α) : Filter α
     where
-  sets := { s | ∃ t ∈ B, t ⊆ s }
+  sets := {s | ∃ t ∈ B, t ⊆ s}
   univ_sets :=
     let ⟨s, s_in⟩ := B.Nonempty
     ⟨s, s_in, s.subset_univ⟩
@@ -243,7 +243,7 @@ protected theorem mem_filter_iff (h : IsBasis p s) {U : Set α} :
   · tauto
 #align filter.is_basis.mem_filter_iff Filter.IsBasis.mem_filter_iff
 
-theorem filter_eq_generate (h : IsBasis p s) : h.filterₓ = generate { U | ∃ i, p i ∧ s i = U } := by
+theorem filter_eq_generate (h : IsBasis p s) : h.filterₓ = generate {U | ∃ i, p i ∧ s i = U} := by
   erw [h.filter_basis.generate] <;> rfl
 #align filter.is_basis.filter_eq_generate Filter.IsBasis.filter_eq_generate
 
@@ -273,7 +273,7 @@ theorem hasBasis_generate (s : Set (Set α)) :
 /-- The smallest filter basis containing a given collection of sets. -/
 def FilterBasis.ofSets (s : Set (Set α)) : FilterBasis α
     where
-  sets := sInter '' { t | Set.Finite t ∧ t ⊆ s }
+  sets := sInter '' {t | Set.Finite t ∧ t ⊆ s}
   Nonempty := ⟨univ, ∅, ⟨⟨finite_empty, empty_subset s⟩, sInter_empty⟩⟩
   inter_sets := by
     rintro _ _ ⟨a, ⟨fina, suba⟩, rfl⟩ ⟨b, ⟨finb, subb⟩, rfl⟩
@@ -350,13 +350,13 @@ theorem HasBasis.filter_eq (h : l.HasBasis p s) : h.IsBasis.filterₓ = l := by 
   simp [h.mem_iff, is_basis.mem_filter_iff]
 #align filter.has_basis.filter_eq Filter.HasBasis.filter_eq
 
-theorem HasBasis.eq_generate (h : l.HasBasis p s) : l = generate { U | ∃ i, p i ∧ s i = U } := by
+theorem HasBasis.eq_generate (h : l.HasBasis p s) : l = generate {U | ∃ i, p i ∧ s i = U} := by
   rw [← h.is_basis.filter_eq_generate, h.filter_eq]
 #align filter.has_basis.eq_generate Filter.HasBasis.eq_generate
 
 #print Filter.generate_eq_generate_inter /-
 theorem generate_eq_generate_inter (s : Set (Set α)) :
-    generate s = generate (sInter '' { t | Set.Finite t ∧ t ⊆ s }) := by
+    generate s = generate (sInter '' {t | Set.Finite t ∧ t ⊆ s}) := by
   erw [(filter_basis.of_sets s).generate, ← (has_basis_generate s).filter_eq] <;> rfl
 #align filter.generate_eq_generate_inter Filter.generate_eq_generate_inter
 -/
@@ -985,7 +985,7 @@ theorem HasBasis.prod_same_index {p : ι → Prop} {sb : ι → Set β} (hla : l
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem HasBasis.prod_same_index_mono {ι : Type _} [LinearOrder ι] {p : ι → Prop} {sa : ι → Set α}
     {sb : ι → Set β} (hla : la.HasBasis p sa) (hlb : lb.HasBasis p sb)
-    (hsa : MonotoneOn sa { i | p i }) (hsb : MonotoneOn sb { i | p i }) :
+    (hsa : MonotoneOn sa {i | p i}) (hsb : MonotoneOn sb {i | p i}) :
     (la ×ᶠ lb).HasBasis p fun i => sa i ×ˢ sb i :=
   hla.prod_same_index hlb fun i j hi hj =>
     have : p (min i j) := min_rec' _ hi hj
@@ -995,7 +995,7 @@ theorem HasBasis.prod_same_index_mono {ι : Type _} [LinearOrder ι] {p : ι →
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem HasBasis.prod_same_index_anti {ι : Type _} [LinearOrder ι] {p : ι → Prop} {sa : ι → Set α}
     {sb : ι → Set β} (hla : la.HasBasis p sa) (hlb : lb.HasBasis p sb)
-    (hsa : AntitoneOn sa { i | p i }) (hsb : AntitoneOn sb { i | p i }) :
+    (hsa : AntitoneOn sa {i | p i}) (hsb : AntitoneOn sb {i | p i}) :
     (la ×ᶠ lb).HasBasis p fun i => sa i ×ˢ sb i :=
   @HasBasis.prod_same_index_mono _ _ _ _ ιᵒᵈ _ _ _ _ hla hlb hsa.dual_left hsb.dual_left
 #align filter.has_basis.prod_same_index_anti Filter.HasBasis.prod_same_index_anti
@@ -1034,7 +1034,7 @@ theorem map_sigma_mk_comap {π : α → Type _} {π' : β → Type _} {f : α �
     map (Sigma.mk a) (comap (g a) l) = comap (Sigma.map f g) (map (Sigma.mk (f a)) l) :=
   by
   refine' (((basis_sets _).comap _).map _).eq_of_same_basis _
-  convert((basis_sets _).map _).comap _
+  convert ((basis_sets _).map _).comap _
   ext1 s
   apply image_sigma_mk_preimage_sigma_map hf
 #align filter.map_sigma_mk_comap Filter.map_sigma_mk_comap
@@ -1048,7 +1048,7 @@ namespace Filter
 variable {α β γ ι : Type _} {ι' : Sort _}
 
 #print Filter.IsCountablyGenerated /-
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`out] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`out] [] -/
 /-- `is_countably_generated f` means `f = generate s` for some countable `s`. -/
 class IsCountablyGenerated (f : Filter α) : Prop where
   out : ∃ s : Set (Set α), s.Countable ∧ f = generate s
@@ -1090,7 +1090,7 @@ instance Nat.inhabitedCountableFilterBasis : Inhabited (CountableFilterBasis ℕ
 
 theorem HasCountableBasis.isCountablyGenerated {f : Filter α} {p : ι → Prop} {s : ι → Set α}
     (h : f.HasCountableBasis p s) : f.IsCountablyGenerated :=
-  ⟨⟨{ t | ∃ i, p i ∧ s i = t }, h.Countable.image s, h.to_hasBasis.eq_generate⟩⟩
+  ⟨⟨{t | ∃ i, p i ∧ s i = t}, h.Countable.image s, h.to_hasBasis.eq_generate⟩⟩
 #align filter.has_countable_basis.is_countably_generated Filter.HasCountableBasis.isCountablyGenerated
 
 theorem antitone_seq_of_seq (s : ℕ → Set α) :

@@ -444,7 +444,8 @@ See `category_theory.abelian.of_coimage_image_comparison_is_iso` for the convers
 -/
 instance : IsIso (coimageImageComparison f) :=
   by
-  convert is_iso.of_iso
+  convert
+    is_iso.of_iso
       (is_image.iso_ext (coimage_strong_epi_mono_factorisation f).toMonoIsImage
         (image_strong_epi_mono_factorisation f).toMonoIsImage)
   ext
@@ -878,8 +879,8 @@ instance mono_pushout_of_mono_g [Mono g] : Mono (pushout.inl : Y ⟶ pushout f g
 #print CategoryTheory.Abelian.mono_inr_of_isColimit /-
 theorem mono_inr_of_isColimit [Mono f] {s : PushoutCocone f g} (hs : IsColimit s) : Mono s.inr :=
   by
-  convert mono_of_mono_fac
-      (is_colimit.comp_cocone_point_unique_up_to_iso_hom hs (colimit.is_colimit _) _)
+  convert
+    mono_of_mono_fac (is_colimit.comp_cocone_point_unique_up_to_iso_hom hs (colimit.is_colimit _) _)
   · rfl
   · exact abelian.mono_pushout_of_mono_f _ _
 #align category_theory.abelian.mono_inr_of_is_colimit CategoryTheory.Abelian.mono_inr_of_isColimit
@@ -888,8 +889,8 @@ theorem mono_inr_of_isColimit [Mono f] {s : PushoutCocone f g} (hs : IsColimit s
 #print CategoryTheory.Abelian.mono_inl_of_isColimit /-
 theorem mono_inl_of_isColimit [Mono g] {s : PushoutCocone f g} (hs : IsColimit s) : Mono s.inl :=
   by
-  convert mono_of_mono_fac
-      (is_colimit.comp_cocone_point_unique_up_to_iso_hom hs (colimit.is_colimit _) _)
+  convert
+    mono_of_mono_fac (is_colimit.comp_cocone_point_unique_up_to_iso_hom hs (colimit.is_colimit _) _)
   · rfl
   · exact abelian.mono_pushout_of_mono_g _ _
 #align category_theory.abelian.mono_inl_of_is_colimit CategoryTheory.Abelian.mono_inl_of_isColimit
@@ -927,8 +928,8 @@ def abelian : Abelian C :=
        the goal it creates for the two instances of `has_zero_morphisms`, and the proof is complete. -/
     NonPreadditiveAbelian.preadditive with
     HasFiniteProducts := by infer_instance
-    HasKernels := by convert(by infer_instance : limits.has_kernels C)
-    HasCokernels := by convert(by infer_instance : limits.has_cokernels C)
+    HasKernels := by convert (by infer_instance : limits.has_kernels C)
+    HasCokernels := by convert (by infer_instance : limits.has_cokernels C)
     normalMonoOfMono := by intros; convert normal_mono_of_mono f
     normalEpiOfEpi := by intros; convert normal_epi_of_epi f }
 #align category_theory.non_preadditive_abelian.abelian CategoryTheory.NonPreadditiveAbelian.abelian

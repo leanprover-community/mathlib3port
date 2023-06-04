@@ -72,7 +72,7 @@ on a preconnected space and `f a ≤ g a` and `g b ≤ f b`, then for some `x` w
 theorem intermediate_value_univ₂ [PreconnectedSpace X] {a b : X} {f g : X → α} (hf : Continuous f)
     (hg : Continuous g) (ha : f a ≤ g a) (hb : g b ≤ f b) : ∃ x, f x = g x :=
   by
-  obtain ⟨x, h, hfg, hgf⟩ : (univ ∩ { x | f x ≤ g x ∧ g x ≤ f x }).Nonempty
+  obtain ⟨x, h, hfg, hgf⟩ : (univ ∩ {x | f x ≤ g x ∧ g x ≤ f x}).Nonempty
   exact
     isPreconnected_closed_iff.1 PreconnectedSpace.isPreconnected_univ _ _ (isClosed_le hf hg)
       (isClosed_le hg hf) (fun x hx => le_total _ _) ⟨a, trivial, ha⟩ ⟨b, trivial, hb⟩
@@ -335,14 +335,14 @@ theorem IsPreconnected.mem_intervals {s : Set α} (hs : IsPreconnected s) :
     · exact Or.inr <| Or.inr <| Or.inr <| Or.inl hs
   · refine' Or.inr <| Or.inr <| Or.inr <| Or.inr _
     cases'
-      mem_Ici_Ioi_of_subset_of_subset (hs.Ioi_cInf_subset hb ha) fun x hx => csInf_le hb hx with
-      hs hs
+      mem_Ici_Ioi_of_subset_of_subset (hs.Ioi_cInf_subset hb ha) fun x hx => csInf_le hb hx with hs
+      hs
     · exact Or.inl hs
     · exact Or.inr (Or.inl hs)
   · iterate 6 apply Or.inr
     cases'
-      mem_Iic_Iio_of_subset_of_subset (hs.Iio_cSup_subset hb ha) fun x hx => le_csSup ha hx with
-      hs hs
+      mem_Iic_Iio_of_subset_of_subset (hs.Iio_cSup_subset hb ha) fun x hx => le_csSup ha hx with hs
+      hs
     · exact Or.inl hs
     · exact Or.inr (Or.inl hs)
   · iterate 8 apply Or.inr
@@ -354,7 +354,7 @@ theorem IsPreconnected.mem_intervals {s : Set α} (hs : IsPreconnected s) :
 one can represent `∅` as `(Inf s, Inf s)`, we include it into the list of possible cases to improve
 readability. -/
 theorem setOf_isPreconnected_subset_of_ordered :
-    { s : Set α | IsPreconnected s } ⊆-- bounded intervals
+    {s : Set α | IsPreconnected s} ⊆-- bounded intervals
                 range
                 (uncurry Icc) ∪
               range (uncurry Ico) ∪
@@ -595,7 +595,7 @@ the set of the intervals `Icc`, `Ico`, `Ioc`, `Ioo`, `Ici`, `Ioi`, `Iic`, `Iio`,
 or `∅`. Though one can represent `∅` as `(Inf s, Inf s)`, we include it into the list of
 possible cases to improve readability. -/
 theorem setOf_isPreconnected_eq_of_ordered :
-    { s : Set α | IsPreconnected s } =-- bounded intervals
+    {s : Set α | IsPreconnected s} =-- bounded intervals
                 range
                 (uncurry Icc) ∪
               range (uncurry Ico) ∪

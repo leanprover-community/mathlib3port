@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Devon Tuma
 
 ! This file was ported from Lean 3 source module probability.probability_mass_function.uniform
-! leanprover-community/mathlib commit e50b8c261b0a000b806ec0e1356b41945eda61f7
+! leanprover-community/mathlib commit 2ebc1d6c2fed9f54c95bbc3998eaa5570527129a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.Probability.ProbabilityMassFunction.Constructions
 
 /-!
 # Uniform Probability Mass Functions
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file defines a number of uniform `pmf` distributions from various inputs,
   uniformly drawing from the corresponding object.

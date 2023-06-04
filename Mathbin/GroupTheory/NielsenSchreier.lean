@@ -62,7 +62,7 @@ open scoped Classical
 
 universe v u
 
-/- ./././Mathport/Syntax/Translate/Command.lean:229:11: unsupported: unusual advanced open style -/
+/- ./././Mathport/Syntax/Translate/Command.lean:230:11: unsupported: unusual advanced open style -/
 open CategoryTheory CategoryTheory.ActionCategory CategoryTheory.SingleObj Quiver
 
 #print IsFreeGroupoid.Generators /-

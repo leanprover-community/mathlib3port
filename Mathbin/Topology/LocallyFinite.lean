@@ -38,7 +38,7 @@ variable {ι : Type u} {ι' α X Y : Type _} [TopologicalSpace X] [TopologicalSp
 /-- A family of sets in `set X` is locally finite if at every point `x : X`,
 there is a neighborhood of `x` which meets only finitely many sets in the family. -/
 def LocallyFinite (f : ι → Set X) :=
-  ∀ x : X, ∃ t ∈ 𝓝 x, { i | (f i ∩ t).Nonempty }.Finite
+  ∀ x : X, ∃ t ∈ 𝓝 x, {i | (f i ∩ t).Nonempty}.Finite
 #align locally_finite LocallyFinite
 -/
 
@@ -48,7 +48,7 @@ theorem locallyFinite_of_finite [Finite ι] (f : ι → Set X) : LocallyFinite f
 
 namespace LocallyFinite
 
-theorem point_finite (hf : LocallyFinite f) (x : X) : { b | x ∈ f b }.Finite :=
+theorem point_finite (hf : LocallyFinite f) (x : X) : {b | x ∈ f b}.Finite :=
   let ⟨t, hxt, ht⟩ := hf x
   ht.Subset fun b hb => ⟨x, hb, mem_of_mem_nhds hxt⟩
 #align locally_finite.point_finite LocallyFinite.point_finite
@@ -58,7 +58,7 @@ protected theorem subset (hf : LocallyFinite f) (hg : ∀ i, g i ⊆ f i) : Loca
   ⟨t, ht₁, ht₂.Subset fun i hi => hi.mono <| inter_subset_inter (hg i) Subset.rfl⟩
 #align locally_finite.subset LocallyFinite.subset
 
-theorem comp_injOn {g : ι' → ι} (hf : LocallyFinite f) (hg : InjOn g { i | (f (g i)).Nonempty }) :
+theorem comp_injOn {g : ι' → ι} (hf : LocallyFinite f) (hg : InjOn g {i | (f (g i)).Nonempty}) :
     LocallyFinite (f ∘ g) := fun x =>
   let ⟨t, htx, htf⟩ := hf x
   ⟨t, htx, htf.Preimage <| hg.mono fun i hi => hi.out.mono <| inter_subset_left _ _⟩
@@ -70,7 +70,7 @@ theorem comp_injective {g : ι' → ι} (hf : LocallyFinite f) (hg : Injective g
 #align locally_finite.comp_injective LocallyFinite.comp_injective
 
 theorem locallyFinite_iff_smallSets :
-    LocallyFinite f ↔ ∀ x, ∀ᶠ s in (𝓝 x).smallSets, { i | (f i ∩ s).Nonempty }.Finite :=
+    LocallyFinite f ↔ ∀ x, ∀ᶠ s in (𝓝 x).smallSets, {i | (f i ∩ s).Nonempty}.Finite :=
   forall_congr' fun x =>
     Iff.symm <|
       eventually_small_sets' fun s t hst ht =>
@@ -78,12 +78,12 @@ theorem locallyFinite_iff_smallSets :
 #align locally_finite_iff_small_sets locallyFinite_iff_smallSets
 
 protected theorem eventually_smallSets (hf : LocallyFinite f) (x : X) :
-    ∀ᶠ s in (𝓝 x).smallSets, { i | (f i ∩ s).Nonempty }.Finite :=
+    ∀ᶠ s in (𝓝 x).smallSets, {i | (f i ∩ s).Nonempty}.Finite :=
   locallyFinite_iff_smallSets.mp hf x
 #align locally_finite.eventually_small_sets LocallyFinite.eventually_smallSets
 
 theorem exists_mem_basis {ι' : Sort _} (hf : LocallyFinite f) {p : ι' → Prop} {s : ι' → Set X}
-    {x : X} (hb : (𝓝 x).HasBasis p s) : ∃ (i : _) (hi : p i), { j | (f j ∩ s i).Nonempty }.Finite :=
+    {x : X} (hb : (𝓝 x).HasBasis p s) : ∃ (i : _) (hi : p i), {j | (f j ∩ s i).Nonempty}.Finite :=
   let ⟨i, hpi, hi⟩ := hb.smallSets.eventually_iff.mp (hf.eventually_smallSets x)
   ⟨i, hpi, hi Subset.rfl⟩
 #align locally_finite.exists_mem_basis LocallyFinite.exists_mem_basis
@@ -96,9 +96,9 @@ protected theorem nhdsWithin_iUnion (hf : LocallyFinite f) (a : X) :
   calc
     𝓝[⋃ i, f i] a = 𝓝[⋃ i, f i ∩ U] a := by
       rw [← Union_inter, ← nhdsWithin_inter_of_mem' (nhdsWithin_le_nhds haU)]
-    _ = 𝓝[⋃ i ∈ { j | (f j ∩ U).Nonempty }, f i ∩ U] a := by
+    _ = 𝓝[⋃ i ∈ {j | (f j ∩ U).Nonempty}, f i ∩ U] a := by
       simp only [mem_set_of_eq, Union_nonempty_self]
-    _ = ⨆ i ∈ { j | (f j ∩ U).Nonempty }, 𝓝[f i ∩ U] a := (nhdsWithin_biUnion hfin _ _)
+    _ = ⨆ i ∈ {j | (f j ∩ U).Nonempty}, 𝓝[f i ∩ U] a := (nhdsWithin_biUnion hfin _ _)
     _ ≤ ⨆ i, 𝓝[f i ∩ U] a := (iSup₂_le_iSup _ _)
     _ ≤ ⨆ i, 𝓝[f i] a := iSup_mono fun i => nhdsWithin_mono _ <| inter_subset_left _ _
     
@@ -171,7 +171,7 @@ interval `[N, +∞)` and a neighbourhood of `x`.
 
 We formulate the conclusion in terms of the product of filter `filter.at_top` and `𝓝 x`. -/
 theorem exists_forall_eventually_eq_prod {π : X → Sort _} {f : ℕ → ∀ x : X, π x}
-    (hf : LocallyFinite fun n => { x | f (n + 1) x ≠ f n x }) :
+    (hf : LocallyFinite fun n => {x | f (n + 1) x ≠ f n x}) :
     ∃ F : ∀ x : X, π x, ∀ x, ∀ᶠ p : ℕ × X in atTop ×ᶠ 𝓝 x, f p.1 p.2 = F p.2 :=
   by
   choose U hUx hU using hf
@@ -197,7 +197,7 @@ that the family of sets `s n = {x | f (n + 1) x ≠ f n x}` is locally finite. T
 function `F : Π a, β a` such that for any `x`, for sufficiently large values of `n`, we have
 `f n y = F y` in a neighbourhood of `x`. -/
 theorem exists_forall_eventually_atTop_eventually_eq' {π : X → Sort _} {f : ℕ → ∀ x : X, π x}
-    (hf : LocallyFinite fun n => { x | f (n + 1) x ≠ f n x }) :
+    (hf : LocallyFinite fun n => {x | f (n + 1) x ≠ f n x}) :
     ∃ F : ∀ x : X, π x, ∀ x, ∀ᶠ n : ℕ in atTop, ∀ᶠ y : X in 𝓝 x, f n y = F y :=
   hf.exists_forall_eventually_eq_prod.imp fun F hF x => (hF x).curry
 #align locally_finite.exists_forall_eventually_at_top_eventually_eq' LocallyFinite.exists_forall_eventually_atTop_eventually_eq'
@@ -209,7 +209,7 @@ that the family of sets `s n = {x | f (n + 1) x ≠ f n x}` is locally finite. T
 function `F :  α → β` such that for any `x`, for sufficiently large values of `n`, we have
 `f n =ᶠ[𝓝 x] F`. -/
 theorem exists_forall_eventually_atTop_eventuallyEq {f : ℕ → X → α}
-    (hf : LocallyFinite fun n => { x | f (n + 1) x ≠ f n x }) :
+    (hf : LocallyFinite fun n => {x | f (n + 1) x ≠ f n x}) :
     ∃ F : X → α, ∀ x, ∀ᶠ n : ℕ in atTop, f n =ᶠ[𝓝 x] F :=
   hf.exists_forall_eventually_atTop_eventually_eq'
 #align locally_finite.exists_forall_eventually_at_top_eventually_eq LocallyFinite.exists_forall_eventually_atTop_eventuallyEq

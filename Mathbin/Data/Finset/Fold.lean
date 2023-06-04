@@ -98,12 +98,12 @@ theorem fold_op_distrib {f g : α → β} {b₁ b₂ : β} :
 theorem fold_const [Decidable (s = ∅)] (c : β) (h : op c (op b c) = op b c) :
     Finset.fold op b (fun _ => c) s = if s = ∅ then b else op b c := by
   classical
-    induction' s using Finset.induction_on with x s hx IH
-    · simp
-    · simp only [Finset.fold_insert hx, IH, if_false, Finset.insert_ne_empty]
-      split_ifs
-      · rw [hc.comm]
-      · exact h
+  induction' s using Finset.induction_on with x s hx IH
+  · simp
+  · simp only [Finset.fold_insert hx, IH, if_false, Finset.insert_ne_empty]
+    split_ifs
+    · rw [hc.comm]
+    · exact h
 #align finset.fold_const Finset.fold_const
 
 theorem fold_hom {op' : γ → γ → γ} [IsCommutative γ op'] [IsAssociative γ op'] {m : β → γ}
@@ -156,14 +156,14 @@ theorem fold_ite' {g : α → β} (hb : op b b = b) (p : α → Prop) [Decidable
       op (Finset.fold op b f (s.filterₓ p)) (Finset.fold op b g (s.filterₓ fun i => ¬p i)) :=
   by
   classical
-    induction' s using Finset.induction_on with x s hx IH
-    · simp [hb]
-    · simp only [Finset.filter_congr_decidable, Finset.fold_insert hx]
-      split_ifs with h h
-      · have : x ∉ Finset.filter p s := by simp [hx]
-        simp [Finset.filter_insert, h, Finset.fold_insert this, ha.assoc, IH]
-      · have : x ∉ Finset.filter (fun i => ¬p i) s := by simp [hx]
-        simp [Finset.filter_insert, h, Finset.fold_insert this, IH, ← ha.assoc, hc.comm]
+  induction' s using Finset.induction_on with x s hx IH
+  · simp [hb]
+  · simp only [Finset.filter_congr_decidable, Finset.fold_insert hx]
+    split_ifs with h h
+    · have : x ∉ Finset.filter p s := by simp [hx]
+      simp [Finset.filter_insert, h, Finset.fold_insert this, ha.assoc, IH]
+    · have : x ∉ Finset.filter (fun i => ¬p i) s := by simp [hx]
+      simp [Finset.filter_insert, h, Finset.fold_insert this, IH, ← ha.assoc, hc.comm]
 #align finset.fold_ite' Finset.fold_ite'
 -/
 
@@ -182,37 +182,37 @@ theorem fold_ite [IsIdempotent β op] {g : α → β} (p : α → Prop) [Decidab
 theorem fold_op_rel_iff_and {r : β → β → Prop} (hr : ∀ {x y z}, r x (op y z) ↔ r x y ∧ r x z)
     {c : β} : r c (s.fold op b f) ↔ r c b ∧ ∀ x ∈ s, r c (f x) := by
   classical
-    apply Finset.induction_on s
-    · simp
-    clear s
-    intro a s ha IH
-    rw [Finset.fold_insert ha, hr, IH, ← and_assoc', and_comm' (r c (f a)), and_assoc']
-    apply and_congr Iff.rfl
-    constructor
-    · rintro ⟨h₁, h₂⟩; intro b hb; rw [Finset.mem_insert] at hb 
-      rcases hb with (rfl | hb) <;> solve_by_elim
-    · intro h; constructor
-      · exact h a (Finset.mem_insert_self _ _)
-      · intro b hb; apply h b; rw [Finset.mem_insert]; right; exact hb
+  apply Finset.induction_on s
+  · simp
+  clear s
+  intro a s ha IH
+  rw [Finset.fold_insert ha, hr, IH, ← and_assoc', and_comm' (r c (f a)), and_assoc']
+  apply and_congr Iff.rfl
+  constructor
+  · rintro ⟨h₁, h₂⟩; intro b hb; rw [Finset.mem_insert] at hb 
+    rcases hb with (rfl | hb) <;> solve_by_elim
+  · intro h; constructor
+    · exact h a (Finset.mem_insert_self _ _)
+    · intro b hb; apply h b; rw [Finset.mem_insert]; right; exact hb
 #align finset.fold_op_rel_iff_and Finset.fold_op_rel_iff_and
 
 theorem fold_op_rel_iff_or {r : β → β → Prop} (hr : ∀ {x y z}, r x (op y z) ↔ r x y ∨ r x z)
     {c : β} : r c (s.fold op b f) ↔ r c b ∨ ∃ x ∈ s, r c (f x) := by
   classical
-    apply Finset.induction_on s
-    · simp
-    clear s
-    intro a s ha IH
-    rw [Finset.fold_insert ha, hr, IH, ← or_assoc', or_comm' (r c (f a)), or_assoc']
-    apply or_congr Iff.rfl
-    constructor
-    · rintro (h₁ | ⟨x, hx, h₂⟩)
-      · use a; simp [h₁]
-      · refine' ⟨x, by simp [hx], h₂⟩
-    · rintro ⟨x, hx, h⟩
-      rw [mem_insert] at hx ; cases hx
-      · left; rwa [hx] at h 
-      · right; exact ⟨x, hx, h⟩
+  apply Finset.induction_on s
+  · simp
+  clear s
+  intro a s ha IH
+  rw [Finset.fold_insert ha, hr, IH, ← or_assoc', or_comm' (r c (f a)), or_assoc']
+  apply or_congr Iff.rfl
+  constructor
+  · rintro (h₁ | ⟨x, hx, h₂⟩)
+    · use a; simp [h₁]
+    · refine' ⟨x, by simp [hx], h₂⟩
+  · rintro ⟨x, hx, h⟩
+    rw [mem_insert] at hx ; cases hx
+    · left; rwa [hx] at h 
+    · right; exact ⟨x, hx, h⟩
 #align finset.fold_op_rel_iff_or Finset.fold_op_rel_iff_or
 
 omit hc ha

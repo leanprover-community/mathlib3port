@@ -434,7 +434,7 @@ end Subobject
 theorem wellPowered_of_isDetecting [HasPullbacks C] {𝒢 : Set C} [Small.{v₁} 𝒢]
     (h𝒢 : IsDetecting 𝒢) : WellPowered C :=
   ⟨fun X =>
-    @small_of_injective _ _ _ (fun P : Subobject X => { f : Σ G : 𝒢, G.1 ⟶ X | P.Factors f.2 })
+    @small_of_injective _ _ _ (fun P : Subobject X => {f : Σ G : 𝒢, G.1 ⟶ X | P.Factors f.2})
       fun P Q h => Subobject.eq_of_isDetecting h𝒢 _ _ (by simpa [Set.ext_iff] using h)⟩
 #align category_theory.well_powered_of_is_detecting CategoryTheory.wellPowered_of_isDetecting
 -/

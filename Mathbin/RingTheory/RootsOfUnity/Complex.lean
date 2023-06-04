@@ -3,13 +3,13 @@ Copyright (c) 2020 Johan Commelin. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
-! This file was ported from Lean 3 source module analysis.complex.roots_of_unity
-! leanprover-community/mathlib commit 17ef379e997badd73e5eabb4d38f11919ab3c4b3
+! This file was ported from Lean 3 source module ring_theory.roots_of_unity.complex
+! leanprover-community/mathlib commit 7fdeecc0d03cd40f7a165e6cf00a4d2286db599f
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.SpecialFunctions.Complex.Log
-import Mathbin.RingTheory.RootsOfUnity
+import Mathbin.RingTheory.RootsOfUnity.Basic
 
 /-!
 # Complex roots of unity

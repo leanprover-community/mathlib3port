@@ -72,9 +72,9 @@ structure IsDedekindDomainDvr : Prop where
 Note that the same proof can/should be generalized to preserving any Krull dimension,
 once we have a suitable definition.
 -/
-theorem Ring.DimensionLeOne.localization {R : Type _} (Rₘ : Type _) [CommRing R] [IsDomain R]
+theorem Ring.DimensionLEOne.localization {R : Type _} (Rₘ : Type _) [CommRing R] [IsDomain R]
     [CommRing Rₘ] [Algebra R Rₘ] {M : Submonoid R} [IsLocalization M Rₘ] (hM : M ≤ R⁰)
-    (h : Ring.DimensionLeOne R) : Ring.DimensionLeOne Rₘ :=
+    (h : Ring.DimensionLEOne R) : Ring.DimensionLEOne Rₘ :=
   by
   intro p hp0 hpp
   refine' ideal.is_maximal_def.mpr ⟨hpp.ne_top, Ideal.maximal_of_no_maximal fun P hpP hPm => _⟩
@@ -87,7 +87,7 @@ theorem Ring.DimensionLeOne.localization {R : Type _} (Rₘ : Type _) [CommRing 
   have hlt : Ideal.comap (algebraMap R Rₘ) p < Ideal.comap (algebraMap R Rₘ) P := hpP'
   refine' h.not_lt_lt ⊥ (Ideal.comap _ _) (Ideal.comap _ _) ⟨_, hpP'⟩
   exact IsLocalization.bot_lt_comap_prime _ _ hM _ hp0
-#align ring.dimension_le_one.localization Ring.DimensionLeOne.localization
+#align ring.dimension_le_one.localization Ring.DimensionLEOne.localization
 
 /-- The localization of a Dedekind domain is a Dedekind domain. -/
 theorem IsLocalization.isDedekindDomain [IsDedekindDomain A] {M : Submonoid A} (hM : M ≤ A⁰)
@@ -142,13 +142,13 @@ theorem IsLocalization.AtPrime.discreteValuationRing_of_dedekind_domain [IsDedek
     {P : Ideal A} (hP : P ≠ ⊥) [pP : P.IsPrime] (Aₘ : Type _) [CommRing Aₘ] [IsDomain Aₘ]
     [Algebra A Aₘ] [IsLocalization.AtPrime Aₘ P] : DiscreteValuationRing Aₘ := by
   classical
-    letI : IsNoetherianRing Aₘ :=
-      IsLocalization.isNoetherianRing P.prime_compl _ IsDedekindDomain.isNoetherianRing
-    letI : LocalRing Aₘ := IsLocalization.AtPrime.localRing Aₘ P
-    have hnf := IsLocalization.AtPrime.not_isField A hP Aₘ
-    exact
-      ((DiscreteValuationRing.tFAE Aₘ hnf).out 0 2).mpr
-        (IsLocalization.AtPrime.isDedekindDomain A P _)
+  letI : IsNoetherianRing Aₘ :=
+    IsLocalization.isNoetherianRing P.prime_compl _ IsDedekindDomain.isNoetherianRing
+  letI : LocalRing Aₘ := IsLocalization.AtPrime.localRing Aₘ P
+  have hnf := IsLocalization.AtPrime.not_isField A hP Aₘ
+  exact
+    ((DiscreteValuationRing.tFAE Aₘ hnf).out 0 2).mpr
+      (IsLocalization.AtPrime.isDedekindDomain A P _)
 #align is_localization.at_prime.discrete_valuation_ring_of_dedekind_domain IsLocalization.AtPrime.discreteValuationRing_of_dedekind_domain
 
 /-- Dedekind domains, in the sense of Noetherian integrally closed domains of Krull dimension ≤ 1,

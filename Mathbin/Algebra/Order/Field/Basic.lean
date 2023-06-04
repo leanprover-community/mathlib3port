@@ -964,8 +964,8 @@ alias mul_sub_mul_div_mul_neg_iff ↔ div_lt_div_of_mul_sub_mul_div_neg mul_sub_
 #align div_lt_div_of_mul_sub_mul_div_neg div_lt_div_of_mul_sub_mul_div_neg
 #align mul_sub_mul_div_mul_neg mul_sub_mul_div_mul_neg
 
-alias mul_sub_mul_div_mul_nonpos_iff ↔
-  div_le_div_of_mul_sub_mul_div_nonpos mul_sub_mul_div_mul_nonpos
+alias mul_sub_mul_div_mul_nonpos_iff ↔ div_le_div_of_mul_sub_mul_div_nonpos
+  mul_sub_mul_div_mul_nonpos
 #align div_le_div_of_mul_sub_mul_div_nonpos div_le_div_of_mul_sub_mul_div_nonpos
 #align mul_sub_mul_div_mul_nonpos mul_sub_mul_div_mul_nonpos
 

@@ -131,8 +131,8 @@ open Relation
 /-- `a` is accessible under the relation `r` iff `r` is well-founded on the downward transitive
   closure of `a` under `r` (including `a` or not). -/
 theorem acc_iff_wellFoundedOn {α} {r : α → α → Prop} {a : α} :
-    [Acc r a, { b | ReflTransGen r b a }.WellFoundedOn r,
-        { b | TransGen r b a }.WellFoundedOn r].TFAE :=
+    [Acc r a, {b | ReflTransGen r b a}.WellFoundedOn r,
+        {b | TransGen r b a}.WellFoundedOn r].TFAE :=
   by
   tfae_have 1 → 2
   · refine' fun h => ⟨fun b => _⟩; apply InvImage.accessible
@@ -425,10 +425,10 @@ theorem partiallyWellOrderedOn_iff_exists_monotone_subseq :
       ∀ f : ℕ → α, (∀ n, f n ∈ s) → ∃ g : ℕ ↪o ℕ, ∀ m n : ℕ, m ≤ n → r (f (g m)) (f (g n)) :=
   by
   classical
-    constructor <;> intro h f hf
-    · exact h.exists_monotone_subseq f hf
-    · obtain ⟨g, gmon⟩ := h f hf
-      exact ⟨g 0, g 1, g.lt_iff_lt.2 zero_lt_one, gmon _ _ zero_le_one⟩
+  constructor <;> intro h f hf
+  · exact h.exists_monotone_subseq f hf
+  · obtain ⟨g, gmon⟩ := h f hf
+    exact ⟨g 0, g 1, g.lt_iff_lt.2 zero_lt_one, gmon _ _ zero_le_one⟩
 #align set.partially_well_ordered_on_iff_exists_monotone_subseq Set.partiallyWellOrderedOn_iff_exists_monotone_subseq
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -868,12 +868,12 @@ noncomputable def minBadSeqOfBadSeq (r : α → α → Prop) (rk : α → ℕ) (
     (hf : IsBadSeq r s f) :
     { g : ℕ → α // (∀ m : ℕ, m < n → f m = g m) ∧ IsBadSeq r s g ∧ IsMinBadSeq r rk s n g } := by
   classical
-    have h : ∃ (k : ℕ) (g : ℕ → α), (∀ m, m < n → f m = g m) ∧ is_bad_seq r s g ∧ rk (g n) = k :=
-      ⟨_, f, fun _ _ => rfl, hf, rfl⟩
-    obtain ⟨h1, h2, h3⟩ := Classical.choose_spec (Nat.find_spec h)
-    refine' ⟨Classical.choose (Nat.find_spec h), h1, by convert h2, fun g hg1 hg2 con => _⟩
-    refine' Nat.find_min h _ ⟨g, fun m mn => (h1 m mn).trans (hg1 m mn), by convert Con, rfl⟩
-    rwa [← h3]
+  have h : ∃ (k : ℕ) (g : ℕ → α), (∀ m, m < n → f m = g m) ∧ is_bad_seq r s g ∧ rk (g n) = k :=
+    ⟨_, f, fun _ _ => rfl, hf, rfl⟩
+  obtain ⟨h1, h2, h3⟩ := Classical.choose_spec (Nat.find_spec h)
+  refine' ⟨Classical.choose (Nat.find_spec h), h1, by convert h2, fun g hg1 hg2 con => _⟩
+  refine' Nat.find_min h _ ⟨g, fun m mn => (h1 m mn).trans (hg1 m mn), by convert Con, rfl⟩
+  rwa [← h3]
 #align set.partially_well_ordered_on.min_bad_seq_of_bad_seq Set.PartiallyWellOrderedOn.minBadSeqOfBadSeq
 -/
 
@@ -906,8 +906,8 @@ theorem exists_min_bad_of_exists_bad (r : α → α → Prop) (rk : α → ℕ) 
   refine' ⟨fun n => (fs n).1 n, ⟨fun n => (fs n).2.1.1 n, fun m n mn => _⟩, fun n g hg1 hg2 => _⟩
   · dsimp
     rw [← Subtype.val_eq_coe, h m n (le_of_lt mn)]
-    convert(fs n).2.1.2 m n mn
-  · convert(fs n).2.2 g (fun m mn => Eq.trans _ (hg1 m mn)) (lt_of_lt_of_le hg2 le_rfl)
+    convert (fs n).2.1.2 m n mn
+  · convert (fs n).2.2 g (fun m mn => Eq.trans _ (hg1 m mn)) (lt_of_lt_of_le hg2 le_rfl)
     rw [← h m n (le_of_lt mn)]
 #align set.partially_well_ordered_on.exists_min_bad_of_exists_bad Set.PartiallyWellOrderedOn.exists_min_bad_of_exists_bad
 -/
@@ -931,7 +931,7 @@ theorem iff_not_exists_isMinBadSeq (rk : α → ℕ) {s : Set α} :
   `list.sublist_forall₂ r l₁ l₂` whenever `l₁` related pointwise by `r` to a sublist of `l₂`.  -/
 theorem partiallyWellOrderedOn_sublistForall₂ (r : α → α → Prop) [IsRefl α r] [IsTrans α r]
     {s : Set α} (h : s.PartiallyWellOrderedOn r) :
-    { l : List α | ∀ x, x ∈ l → x ∈ s }.PartiallyWellOrderedOn (List.SublistForall₂ r) :=
+    {l : List α | ∀ x, x ∈ l → x ∈ s}.PartiallyWellOrderedOn (List.SublistForall₂ r) :=
   by
   rcases s.eq_empty_or_nonempty with (rfl | ⟨as, has⟩)
   · apply partially_well_ordered_on.mono (Finset.partiallyWellOrderedOn {List.nil})
@@ -956,11 +956,11 @@ theorem partiallyWellOrderedOn_sublistForall₂ (r : α → α → Prop) [IsRefl
     rw [List.length_tail, ← Nat.pred_eq_sub_one]
     exact Nat.pred_lt fun con => hnil _ (List.length_eq_zero.1 Con)
   rw [is_bad_seq] at hf' 
-  push_neg  at hf' 
+  push_neg at hf' 
   obtain ⟨m, n, mn, hmn⟩ := hf' _
   swap
   · rintro n x hx
-    split_ifs  at hx  with hn hn
+    split_ifs at hx  with hn hn
     · exact hf1.1 _ _ hx
     · refine' hf1.1 _ _ (List.tail_subset _ hx)
   by_cases hn : n < g 0
@@ -968,7 +968,7 @@ theorem partiallyWellOrderedOn_sublistForall₂ (r : α → α → Prop) [IsRefl
     rwa [if_pos hn, if_pos (mn.trans hn)] at hmn 
   · obtain ⟨n', rfl⟩ := exists_add_of_le (not_lt.1 hn)
     rw [if_neg hn, add_comm (g 0) n', add_tsub_cancel_right] at hmn 
-    split_ifs  at hmn  with hm hm
+    split_ifs at hmn  with hm hm
     · apply hf1.2 m (g n') (lt_of_lt_of_le hm (g.monotone n'.zero_le))
       exact trans hmn (List.tail_sublistForall₂_self _)
     · rw [← tsub_lt_iff_left (le_of_not_lt hm)] at mn 

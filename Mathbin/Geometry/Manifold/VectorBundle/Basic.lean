@@ -337,14 +337,14 @@ namespace VectorBundleCore
 
 variable {ι : Type _} {F} (Z : VectorBundleCore 𝕜 B F ι)
 
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`smoothOn_coord_change] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`smoothOn_coord_change] [] -/
 /-- Mixin for a `vector_bundle_core` stating smoothness (of transition functions). -/
 class IsSmooth (IB : ModelWithCorners 𝕜 EB HB) : Prop where
   smoothOn_coord_change :
     ∀ i j, SmoothOn IB 𝓘(𝕜, F →L[𝕜] F) (Z.coordChange i j) (Z.baseSet i ∩ Z.baseSet j)
 #align vector_bundle_core.is_smooth VectorBundleCore.IsSmooth
 
-/- ./././Mathport/Syntax/Translate/Command.lean:239:13: unsupported: advanced export style -/
+/- ./././Mathport/Syntax/Translate/Command.lean:240:13: unsupported: advanced export style -/
 export IsSmooth ()
 
 variable [Z.IsSmooth IB]

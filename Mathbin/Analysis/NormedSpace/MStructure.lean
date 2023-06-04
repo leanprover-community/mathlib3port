@@ -139,7 +139,7 @@ theorem commute [FaithfulSMul M X] {P Q : M} (h₁ : IsLprojection X P) (h₂ : 
           simpa only [mul_smul, sub_smul, one_smul] using this
         
     rw [GE.ge] at e1 
-    nth_rw_rhs 1 [← add_zero ‖R • x‖]  at e1 
+    nth_rw_rhs 1 [← add_zero ‖R • x‖] at e1 
     rw [add_le_add_iff_left, two_smul, ← two_mul] at e1 
     rw [le_antisymm_iff]
     refine' ⟨_, norm_nonneg _⟩
@@ -181,7 +181,7 @@ theorem mul [FaithfulSMul M X] {P Q : M} (h₁ : IsLprojection X P) (h₂ : IsLp
 theorem join [FaithfulSMul M X] {P Q : M} (h₁ : IsLprojection X P) (h₂ : IsLprojection X Q) :
     IsLprojection X (P + Q - P * Q) :=
   by
-  convert(Lcomplement_iff _).mp (h₁.Lcomplement.mul h₂.Lcomplement) using 1
+  convert (Lcomplement_iff _).mp (h₁.Lcomplement.mul h₂.Lcomplement) using 1
   noncomm_ring
 #align is_Lprojection.join IsLprojection.join
 
@@ -225,7 +225,7 @@ instance [FaithfulSMul M X] : PartialOrder { P : M // IsLprojection X P }
   le P Q := (↑P : M) = ↑(P ⊓ Q)
   le_refl P := by simpa only [coe_inf, ← sq] using P.prop.proj.eq.symm
   le_trans P Q R h₁ h₂ := by simp only [coe_inf] at h₁ h₂ ⊢; rw [h₁, mul_assoc, ← h₂]
-  le_antisymm P Q h₁ h₂ := Subtype.eq (by convert(P.prop.commute Q.prop).Eq)
+  le_antisymm P Q h₁ h₂ := Subtype.eq (by convert (P.prop.commute Q.prop).Eq)
 
 theorem le_def [FaithfulSMul M X] (P Q : { P : M // IsLprojection X P }) :
     P ≤ Q ↔ (P : M) = ↑(P ⊓ Q) :=

@@ -132,8 +132,8 @@ noncomputable def trivial : MulChar R R'
   map_mul' := by
     intro x y
     classical
-      simp only [IsUnit.mul_iff, boole_mul]
-      split_ifs <;> tauto
+    simp only [IsUnit.mul_iff, boole_mul]
+    split_ifs <;> tauto
 #align mul_char.trivial MulChar.trivial
 -/
 
@@ -223,16 +223,16 @@ noncomputable def ofUnitHom (f : Rˣ →* R'ˣ) : MulChar R R'
     simp only [h1, dif_pos, Units.val_eq_one, map_one, isUnit_one]
   map_mul' := by
     classical
-      intro x y
-      by_cases hx : IsUnit x
-      · simp only [hx, IsUnit.mul_iff, true_and_iff, dif_pos]
-        by_cases hy : IsUnit y
-        · simp only [hy, dif_pos]
-          have hm : (is_unit.mul_iff.mpr ⟨hx, hy⟩).Unit = hx.unit * hy.unit := units.eq_iff.mp rfl
-          rw [hm, map_mul]
-          norm_cast
-        · simp only [hy, not_false_iff, dif_neg, MulZeroClass.mul_zero]
-      · simp only [hx, IsUnit.mul_iff, false_and_iff, not_false_iff, dif_neg, MulZeroClass.zero_mul]
+    intro x y
+    by_cases hx : IsUnit x
+    · simp only [hx, IsUnit.mul_iff, true_and_iff, dif_pos]
+      by_cases hy : IsUnit y
+      · simp only [hy, dif_pos]
+        have hm : (is_unit.mul_iff.mpr ⟨hx, hy⟩).Unit = hx.unit * hy.unit := units.eq_iff.mp rfl
+        rw [hm, map_mul]
+        norm_cast
+      · simp only [hy, not_false_iff, dif_neg, MulZeroClass.mul_zero]
+    · simp only [hx, IsUnit.mul_iff, false_and_iff, not_false_iff, dif_neg, MulZeroClass.zero_mul]
   map_nonunit' := by intro a ha; simp only [ha, not_false_iff, dif_neg]
 #align mul_char.of_unit_hom MulChar.ofUnitHom
 

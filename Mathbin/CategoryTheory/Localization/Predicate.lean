@@ -288,7 +288,7 @@ theorem natTrans_ext {F₁ F₂ : D ⥤ E} (τ τ' : F₁ ⟶ F₂)
   rw [← cancel_epi (F₁.map (L.obj_obj_preimage_iso Y).Hom), τ.naturality, τ'.naturality, h]
 #align category_theory.localization.nat_trans_ext CategoryTheory.Localization.natTrans_ext
 
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`Iso] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`Iso] [] -/
 /-- When `L : C ⥤ D` is a localization functor for `W : morphism_property C` and
 `F : C ⥤ E` is a functor, we shall say that `F' : D ⥤ E` lifts `F` if the obvious diagram
 is commutative up to an isomorphism. -/

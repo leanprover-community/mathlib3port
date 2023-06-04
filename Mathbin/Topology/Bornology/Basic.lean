@@ -50,8 +50,8 @@ open Set Filter
 variable {ι α β : Type _}
 
 #print Bornology /-
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`cobounded] [] -/
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`le_cofinite] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`cobounded] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`le_cofinite] [] -/
 /-- A **bornology** on a type `α` is a filter of cobounded sets which contains the cofinite filter.
 Such spaces are equivalently specified by their bounded sets, see `bornology.of_bounded`
 and `bornology.ext_iff_is_bounded`-/
@@ -72,7 +72,7 @@ def Bornology.ofBounded {α : Type _} (B : Set (Set α)) (empty_mem : ∅ ∈ B)
     (singleton_mem : ∀ x, {x} ∈ B) : Bornology α
     where
   cobounded :=
-    { sets := { s : Set α | sᶜ ∈ B }
+    { sets := {s : Set α | sᶜ ∈ B}
       univ_sets := by rwa [← compl_univ] at empty_mem 
       sets_of_superset := fun x y hx hy => subset_mem (xᶜ) hx (yᶜ) (compl_subset_compl.mpr hy)
       inter_sets := fun x y hx hy => by simpa [compl_inter] using union_mem (xᶜ) hx (yᶜ) hy }
@@ -201,7 +201,7 @@ theorem IsBounded.subset (ht : IsBounded t) (hs : s ⊆ t) : IsBounded s :=
 
 #print Bornology.sUnion_bounded_univ /-
 @[simp]
-theorem sUnion_bounded_univ : ⋃₀ { s : Set α | IsBounded s } = univ :=
+theorem sUnion_bounded_univ : ⋃₀ {s : Set α | IsBounded s} = univ :=
   sUnion_eq_univ_iff.2 fun a => ⟨{a}, isBounded_singleton, mem_singleton a⟩
 #align bornology.sUnion_bounded_univ Bornology.sUnion_bounded_univ
 -/

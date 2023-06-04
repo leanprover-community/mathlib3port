@@ -60,7 +60,7 @@ in adding quantifiers to the middle of `tendsto`s. See
 `has_fderiv_at_of_tendsto_uniformly_on_filter`. -/
 def curry (f : Filter α) (g : Filter β) : Filter (α × β)
     where
-  sets := { s | ∀ᶠ a : α in f, ∀ᶠ b : β in g, (a, b) ∈ s }
+  sets := {s | ∀ᶠ a : α in f, ∀ᶠ b : β in g, (a, b) ∈ s}
   univ_sets := by simp only [Set.mem_setOf_eq, Set.mem_univ, eventually_true]
   sets_of_superset := by
     intro x y hx hxy

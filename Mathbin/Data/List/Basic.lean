@@ -108,7 +108,7 @@ theorem exists_cons_of_ne_nil {l : List α} (h : l ≠ nil) : ∃ b L, l = b :: 
 -/
 
 #print List.set_of_mem_cons /-
-theorem set_of_mem_cons (l : List α) (a : α) : { x | x ∈ a :: l } = insert a { x | x ∈ l } :=
+theorem set_of_mem_cons (l : List α) (a : α) : {x | x ∈ a :: l} = insert a {x | x ∈ l} :=
   rfl
 #align list.set_of_mem_cons List.set_of_mem_cons
 -/
@@ -3118,7 +3118,7 @@ theorem take_add (l : List α) (m n : ℕ) : l.take (m + n) = l.take m ++ (l.dro
   simp only [take_eq_take, length_take, length_drop]
   generalize l.length = k; by_cases h : m ≤ k
   · simp [min_eq_left_iff.mpr h]
-  · push_neg  at h ; simp [Nat.sub_eq_zero_of_le (le_of_lt h)]
+  · push_neg at h ; simp [Nat.sub_eq_zero_of_le (le_of_lt h)]
 #align list.take_add List.take_add
 -/
 
@@ -4996,7 +4996,7 @@ theorem mem_takeWhile_imp {x : α} (hx : x ∈ takeWhile p l) : p x :=
   induction' l with hd tl IH
   · simpa [take_while] using hx
   · simp only [take_while] at hx 
-    split_ifs  at hx 
+    split_ifs at hx 
     · rw [mem_cons_iff] at hx 
       rcases hx with (rfl | hx)
       · exact h

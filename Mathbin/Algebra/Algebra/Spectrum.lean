@@ -65,7 +65,7 @@ local notation "↑ₐ" => algebraMap R A
 is the `set R` consisting of those `r : R` for which `r•1 - a` is a unit of the
 algebra `A`.  -/
 def resolventSet (a : A) : Set R :=
-  { r : R | IsUnit (↑ₐ r - a) }
+  {r : R | IsUnit (↑ₐ r - a)}
 #align resolvent_set resolventSet
 
 /-- Given a commutative ring `R` and an `R`-algebra `A`, the *spectrum* of `a : A`

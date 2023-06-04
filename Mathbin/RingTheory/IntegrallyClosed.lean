@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module ring_theory.integrally_closed
-! leanprover-community/mathlib commit d35b4ff446f1421bd551fafa4b8efd98ac3ac408
+! leanprover-community/mathlib commit af471b9e3ce868f296626d33189b4ce730fa4c00
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.RingTheory.Localization.Integral
 
 /-!
 # Integrally closed rings
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 An integrally closed domain `R` contains all the elements of `Frac(R)` that are
 integral over `R`. A special case of integrally closed domains are the Dedekind domains.
@@ -32,6 +35,7 @@ open scoped nonZeroDivisors Polynomial
 
 open Polynomial
 
+#print IsIntegrallyClosed /-
 /-- `R` is integrally closed if all integral elements of `Frac(R)` are also elements of `R`.
 
 This definition uses `fraction_ring R` to denote `Frac(R)`. See `is_integrally_closed_iff`
@@ -41,6 +45,7 @@ class IsIntegrallyClosed (R : Type _) [CommRing R] [IsDomain R] : Prop where
   algebraMap_eq_of_integral :
     ∀ {x : FractionRing R}, IsIntegral R x → ∃ y, algebraMap R (FractionRing R) y = x
 #align is_integrally_closed IsIntegrallyClosed
+-/
 
 section Iff
 

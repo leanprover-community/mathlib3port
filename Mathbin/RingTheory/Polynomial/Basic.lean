@@ -664,18 +664,18 @@ theorem Polynomial.coeff_prod_mem_ideal_pow_tsub {ι : Type _} (s : Finset ι) (
     (I : Ideal R) (n : ι → ℕ) (h : ∀ i ∈ s, ∀ (k), (f i).coeff k ∈ I ^ (n i - k)) (k : ℕ) :
     (s.Prod f).coeff k ∈ I ^ (s.Sum n - k) := by
   classical
-    induction' s using Finset.induction with a s ha hs generalizing k
-    · rw [sum_empty, prod_empty, coeff_one, zero_tsub, pow_zero, Ideal.one_eq_top]
-      exact Submodule.mem_top
-    · rw [sum_insert ha, prod_insert ha, coeff_mul]
-      apply sum_mem
-      rintro ⟨i, j⟩ e
-      obtain rfl : i + j = k := nat.mem_antidiagonal.mp e
-      apply Ideal.pow_le_pow add_tsub_add_le_tsub_add_tsub
-      rw [pow_add]
-      exact
-        Ideal.mul_mem_mul (h _ (finset.mem_insert.mpr <| Or.inl rfl) _)
-          (hs (fun i hi k => h _ (finset.mem_insert.mpr <| Or.inr hi) _) j)
+  induction' s using Finset.induction with a s ha hs generalizing k
+  · rw [sum_empty, prod_empty, coeff_one, zero_tsub, pow_zero, Ideal.one_eq_top]
+    exact Submodule.mem_top
+  · rw [sum_insert ha, prod_insert ha, coeff_mul]
+    apply sum_mem
+    rintro ⟨i, j⟩ e
+    obtain rfl : i + j = k := nat.mem_antidiagonal.mp e
+    apply Ideal.pow_le_pow add_tsub_add_le_tsub_add_tsub
+    rw [pow_add]
+    exact
+      Ideal.mul_mem_mul (h _ (finset.mem_insert.mpr <| Or.inl rfl) _)
+        (hs (fun i hi k => h _ (finset.mem_insert.mpr <| Or.inr hi) _) j)
 #align polynomial.coeff_prod_mem_ideal_pow_tsub Polynomial.coeff_prod_mem_ideal_pow_tsub
 
 end CommSemiring
@@ -743,26 +743,26 @@ theorem isPrime_map_C_iff_isPrime (P : Ideal R) :
     · intro f g; simp only [mem_map_C_iff]; contrapose!
       rintro ⟨hf, hg⟩
       classical
-        let m := Nat.find hf
-        let n := Nat.find hg
-        refine' ⟨m + n, _⟩
-        rw [coeff_mul, ← Finset.insert_erase ((@Finset.Nat.mem_antidiagonal _ (m, n)).mpr rfl),
-          Finset.sum_insert (Finset.not_mem_erase _ _), (P.add_mem_iff_left _).Not]
-        · apply mt h.2; rw [not_or]; exact ⟨Nat.find_spec hf, Nat.find_spec hg⟩
-        apply P.sum_mem
-        rintro ⟨i, j⟩ hij
-        rw [Finset.mem_erase, Finset.Nat.mem_antidiagonal] at hij 
-        simp only [Ne.def, Prod.mk.inj_iff, not_and_or] at hij 
-        obtain hi | hj : i < m ∨ j < n :=
-          by
-          rw [or_iff_not_imp_left, not_lt, le_iff_lt_or_eq]
-          rintro (hmi | rfl)
-          · rw [← not_le]; intro hnj; exact (add_lt_add_of_lt_of_le hmi hnj).Ne hij.2.symm
-          ·
-            simpa only [eq_self_iff_true, not_true, false_or_iff, add_right_inj,
-              not_and_self_iff] using hij
-        · rw [mul_comm]; apply P.mul_mem_left; exact Classical.not_not.1 (Nat.find_min hf hi)
-        · apply P.mul_mem_left; exact Classical.not_not.1 (Nat.find_min hg hj)
+      let m := Nat.find hf
+      let n := Nat.find hg
+      refine' ⟨m + n, _⟩
+      rw [coeff_mul, ← Finset.insert_erase ((@Finset.Nat.mem_antidiagonal _ (m, n)).mpr rfl),
+        Finset.sum_insert (Finset.not_mem_erase _ _), (P.add_mem_iff_left _).Not]
+      · apply mt h.2; rw [not_or]; exact ⟨Nat.find_spec hf, Nat.find_spec hg⟩
+      apply P.sum_mem
+      rintro ⟨i, j⟩ hij
+      rw [Finset.mem_erase, Finset.Nat.mem_antidiagonal] at hij 
+      simp only [Ne.def, Prod.mk.inj_iff, not_and_or] at hij 
+      obtain hi | hj : i < m ∨ j < n :=
+        by
+        rw [or_iff_not_imp_left, not_lt, le_iff_lt_or_eq]
+        rintro (hmi | rfl)
+        · rw [← not_le]; intro hnj; exact (add_lt_add_of_lt_of_le hmi hnj).Ne hij.2.symm
+        ·
+          simpa only [eq_self_iff_true, not_true, false_or_iff, add_right_inj,
+            not_and_self_iff] using hij
+      · rw [mul_comm]; apply P.mul_mem_left; exact Classical.not_not.1 (Nat.find_min hf hi)
+      · apply P.mul_mem_left; exact Classical.not_not.1 (Nat.find_min hg hj)
 #align ideal.is_prime_map_C_iff_is_prime Ideal.isPrime_map_C_iff_isPrime
 
 /-- If `P` is a prime ideal of `R`, then `P.R[x]` is a prime ideal of `R[x]`. -/
@@ -814,7 +814,7 @@ private theorem prime_C_iff_of_fintype [Fintype σ] : Prime (C r : MvPolynomial 
   · symm; induction' Fintype.card σ with d hd
     · exact (is_empty_alg_equiv R (Fin 0)).toMulEquiv.symm.prime_iff
     · rw [hd, ← Polynomial.prime_C_iff]
-      convert(finSuccEquiv R d).toMulEquiv.symm.prime_iff
+      convert (finSuccEquiv R d).toMulEquiv.symm.prime_iff
       rw [← fin_succ_equiv_comp_C_eq_C]; rfl
 
 theorem prime_C_iff : Prime (C r : MvPolynomial σ R) ↔ Prime r :=
@@ -825,7 +825,7 @@ theorem prime_C_iff : Prime (C r : MvPolynomial σ R) ↔ Prime r :=
       obtain ⟨s, a', b', rfl, rfl⟩ := exists_finset_rename₂ a b
       rw [← algebra_map_eq] at hd ;
       have : algebraMap R _ r ∣ a' * b' := by
-        convert(kill_compl Subtype.coe_injective).toRingHom.map_dvd hd; simpa; simp
+        convert (kill_compl Subtype.coe_injective).toRingHom.map_dvd hd; simpa; simp
       rw [← rename_C (coe : s → σ)]; let f := (rename (coe : s → σ)).toRingHom
       exact (((prime_C_iff_of_fintype s).2 hr).2.2 a' b' this).imp f.map_dvd f.map_dvd⟩⟩
 #align mv_polynomial.prime_C_iff MvPolynomial.prime_C_iff
@@ -835,17 +835,17 @@ variable {σ}
 theorem prime_rename_iff (s : Set σ) {p : MvPolynomial s R} :
     Prime (rename (coe : s → σ) p) ↔ Prime p := by
   classical
-    symm
-    let eqv :=
-      (sum_alg_equiv R _ _).symm.trans
-        (rename_equiv R <| (Equiv.sumComm (↥(sᶜ)) s).trans <| Equiv.Set.sumCompl s)
-    rw [← prime_C_iff ↥(sᶜ), eqv.to_mul_equiv.prime_iff]
-    convert Iff.rfl
-    suffices (rename coe).toRingHom = eqv.to_alg_hom.to_ring_hom.comp C by
-      apply RingHom.congr_fun this
-    · apply ring_hom_ext
-      · intro; dsimp [eqv]; erw [iter_to_sum_C_C, rename_C, rename_C]
-      · intro; dsimp [eqv]; erw [iter_to_sum_C_X, rename_X, rename_X]; rfl
+  symm
+  let eqv :=
+    (sum_alg_equiv R _ _).symm.trans
+      (rename_equiv R <| (Equiv.sumComm (↥(sᶜ)) s).trans <| Equiv.Set.sumCompl s)
+  rw [← prime_C_iff ↥(sᶜ), eqv.to_mul_equiv.prime_iff]
+  convert Iff.rfl
+  suffices (rename coe).toRingHom = eqv.to_alg_hom.to_ring_hom.comp C by
+    apply RingHom.congr_fun this
+  · apply ring_hom_ext
+    · intro; dsimp [eqv]; erw [iter_to_sum_C_C, rename_C, rename_C]
+    · intro; dsimp [eqv]; erw [iter_to_sum_C_X, rename_X, rename_X]; rfl
 #align mv_polynomial.prime_rename_iff MvPolynomial.prime_rename_iff
 
 end MvPolynomial
@@ -857,33 +857,33 @@ namespace Polynomial
 instance (priority := 100) {R : Type _} [CommRing R] [IsDomain R] [WfDvdMonoid R] : WfDvdMonoid R[X]
     where wellFounded_dvdNotUnit := by
     classical
-      refine'
-        RelHomClass.wellFounded
-          (⟨fun p : R[X] =>
-              ((if p = 0 then ⊤ else ↑p.degree : WithTop (WithBot ℕ)), p.leadingCoeff), _⟩ :
-            DvdNotUnit →r Prod.Lex (· < ·) DvdNotUnit)
-          (WellFounded.prod_lex (WithTop.wellFounded_lt <| WithBot.wellFounded_lt Nat.lt_wfRel)
-            ‹WfDvdMonoid R›.wellFounded_dvdNotUnit)
-      rintro a b ⟨ane0, ⟨c, ⟨not_unit_c, rfl⟩⟩⟩
-      rw [Polynomial.degree_mul, if_neg ane0]
-      split_ifs with hac
-      · rw [hac, Polynomial.leadingCoeff_zero]
-        apply Prod.Lex.left
-        exact lt_of_le_of_ne le_top WithTop.coe_ne_top
-      have cne0 : c ≠ 0 := right_ne_zero_of_mul hac
-      simp only [cne0, ane0, Polynomial.leadingCoeff_mul]
-      by_cases hdeg : c.degree = 0
-      · simp only [hdeg, add_zero]
-        refine' Prod.Lex.right _ ⟨_, ⟨c.leading_coeff, fun unit_c => not_unit_c _, rfl⟩⟩
-        · rwa [Ne, Polynomial.leadingCoeff_eq_zero]
-        rw [Polynomial.isUnit_iff, Polynomial.eq_C_of_degree_eq_zero hdeg]
-        use c.leading_coeff, unit_c
-        rw [Polynomial.leadingCoeff, Polynomial.natDegree_eq_of_degree_eq_some hdeg]
-      · apply Prod.Lex.left
-        rw [Polynomial.degree_eq_natDegree cne0] at *
-        rw [WithTop.coe_lt_coe, Polynomial.degree_eq_natDegree ane0, ← WithBot.coe_add,
-          WithBot.coe_lt_coe]
-        exact lt_add_of_pos_right _ (Nat.pos_of_ne_zero fun h => hdeg (h.symm ▸ WithBot.coe_zero))
+    refine'
+      RelHomClass.wellFounded
+        (⟨fun p : R[X] => ((if p = 0 then ⊤ else ↑p.degree : WithTop (WithBot ℕ)), p.leadingCoeff),
+            _⟩ :
+          DvdNotUnit →r Prod.Lex (· < ·) DvdNotUnit)
+        (WellFounded.prod_lex (WithTop.wellFounded_lt <| WithBot.wellFounded_lt Nat.lt_wfRel)
+          ‹WfDvdMonoid R›.wellFounded_dvdNotUnit)
+    rintro a b ⟨ane0, ⟨c, ⟨not_unit_c, rfl⟩⟩⟩
+    rw [Polynomial.degree_mul, if_neg ane0]
+    split_ifs with hac
+    · rw [hac, Polynomial.leadingCoeff_zero]
+      apply Prod.Lex.left
+      exact lt_of_le_of_ne le_top WithTop.coe_ne_top
+    have cne0 : c ≠ 0 := right_ne_zero_of_mul hac
+    simp only [cne0, ane0, Polynomial.leadingCoeff_mul]
+    by_cases hdeg : c.degree = 0
+    · simp only [hdeg, add_zero]
+      refine' Prod.Lex.right _ ⟨_, ⟨c.leading_coeff, fun unit_c => not_unit_c _, rfl⟩⟩
+      · rwa [Ne, Polynomial.leadingCoeff_eq_zero]
+      rw [Polynomial.isUnit_iff, Polynomial.eq_C_of_degree_eq_zero hdeg]
+      use c.leading_coeff, unit_c
+      rw [Polynomial.leadingCoeff, Polynomial.natDegree_eq_of_degree_eq_some hdeg]
+    · apply Prod.Lex.left
+      rw [Polynomial.degree_eq_natDegree cne0] at *
+      rw [WithTop.coe_lt_coe, Polynomial.degree_eq_natDegree ane0, ← WithBot.coe_add,
+        WithBot.coe_lt_coe]
+      exact lt_add_of_pos_right _ (Nat.pos_of_ne_zero fun h => hdeg (h.symm ▸ WithBot.coe_zero))
 
 end Polynomial
 

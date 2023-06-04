@@ -356,7 +356,7 @@ protected theorem locallyFinite : LocallyFinite fun i => support (fs i) :=
   fs.locally_finite'
 #align smooth_bump_covering.locally_finite SmoothBumpCovering.locallyFinite
 
-protected theorem point_finite (x : M) : { i | fs i x ≠ 0 }.Finite :=
+protected theorem point_finite (x : M) : {i | fs i x ≠ 0}.Finite :=
   fs.LocallyFinite.point_finite x
 #align smooth_bump_covering.point_finite SmoothBumpCovering.point_finite
 

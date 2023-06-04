@@ -570,7 +570,7 @@ theorem mul_self_lt_mul_self (h1 : 0 ≤ a) (h2 : a < b) : a * a < b * b :=
 -- As this lemma is not used outside this file,
 -- and the import for `set.Ici` is not otherwise needed until later,
 -- we choose not to use it here.
-theorem strictMonoOn_mul_self : StrictMonoOn (fun x : α => x * x) { x | 0 ≤ x } :=
+theorem strictMonoOn_mul_self : StrictMonoOn (fun x : α => x * x) {x | 0 ≤ x} :=
   fun x hx y hy hxy => mul_self_lt_mul_self hx hxy
 #align strict_mono_on_mul_self strictMonoOn_mul_self
 

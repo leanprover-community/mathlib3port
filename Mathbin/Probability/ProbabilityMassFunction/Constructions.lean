@@ -349,7 +349,7 @@ theorem bernoulli_apply : bernoulli p h b = cond b p (1 - p) :=
 #align pmf.bernoulli_apply Pmf.bernoulli_apply
 
 @[simp]
-theorem support_bernoulli : (bernoulli p h).support = { b | cond b (p ≠ 0) (p ≠ 1) } :=
+theorem support_bernoulli : (bernoulli p h).support = {b | cond b (p ≠ 0) (p ≠ 1)} :=
   by
   refine' Set.ext fun b => _
   induction b

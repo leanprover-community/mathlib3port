@@ -181,7 +181,7 @@ variable {𝒜}
 `Π x : U, homogeneous_localization 𝒜 x`.-/
 def sectionsSubring (U : (Opens (ProjectiveSpectrum.top 𝒜))ᵒᵖ) : Subring (∀ x : unop U, at x.1)
     where
-  carrier := { f | (isLocallyFraction 𝒜).pred f }
+  carrier := {f | (isLocallyFraction 𝒜).pred f}
   zero_mem' := zero_mem' U
   one_mem' := one_mem' U
   add_mem' := add_mem' U

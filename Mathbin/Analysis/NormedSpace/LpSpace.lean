@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth
 
 ! This file was ported from Lean 3 source module analysis.normed_space.lp_space
-! leanprover-community/mathlib commit de83b43717abe353f425855fcf0cedf9ea0fe8a4
+! leanprover-community/mathlib commit 2ebc1d6c2fed9f54c95bbc3998eaa5570527129a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -15,6 +15,9 @@ import Mathbin.Topology.Algebra.Order.LiminfLimsup
 
 /-!
 # ℓp space
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file describes properties of elements `f` of a pi-type `Π i, E i` with finite "norm",
 defined for `p:ℝ≥0∞` as the size of the support of `f` if `p=0`, `(∑' a, ‖f a‖^p) ^ (1/p)` for
@@ -78,16 +81,16 @@ variable {α : Type _} {E : α → Type _} {p q : ℝ≥0∞} [∀ i, NormedAddC
 * admits an upper bound for `set.range (λ i, ‖f i‖)`, if `p = ∞`, or
 * has the series `∑' i, ‖f i‖ ^ p` be summable, if `0 < p < ∞`. -/
 def Memℓp (f : ∀ i, E i) (p : ℝ≥0∞) : Prop :=
-  if p = 0 then Set.Finite { i | f i ≠ 0 }
+  if p = 0 then Set.Finite {i | f i ≠ 0}
   else if p = ∞ then BddAbove (Set.range fun i => ‖f i‖) else Summable fun i => ‖f i‖ ^ p.toReal
 #align mem_ℓp Memℓp
 -/
 
-theorem memℓp_zero_iff {f : ∀ i, E i} : Memℓp f 0 ↔ Set.Finite { i | f i ≠ 0 } := by
+theorem memℓp_zero_iff {f : ∀ i, E i} : Memℓp f 0 ↔ Set.Finite {i | f i ≠ 0} := by
   dsimp [Memℓp] <;> rw [if_pos rfl]
 #align mem_ℓp_zero_iff memℓp_zero_iff
 
-theorem memℓp_zero {f : ∀ i, E i} (hf : Set.Finite { i | f i ≠ 0 }) : Memℓp f 0 :=
+theorem memℓp_zero {f : ∀ i, E i} (hf : Set.Finite {i | f i ≠ 0}) : Memℓp f 0 :=
   memℓp_zero_iff.2 hf
 #align mem_ℓp_zero memℓp_zero
 
@@ -150,7 +153,7 @@ theorem zero_mem_ℓp' : Memℓp (fun i : α => (0 : E i)) p :=
 
 namespace Memℓp
 
-theorem finite_dsupport {f : ∀ i, E i} (hf : Memℓp f 0) : Set.Finite { i | f i ≠ 0 } :=
+theorem finite_dsupport {f : ∀ i, E i} (hf : Memℓp f 0) : Set.Finite {i | f i ≠ 0} :=
   memℓp_zero_iff.1 hf
 #align mem_ℓp.finite_dsupport Memℓp.finite_dsupport
 
@@ -209,8 +212,8 @@ theorem of_exponent_ge {p q : ℝ≥0∞} {f : ∀ i, E i} (hfq : Memℓp f q) (
       Real.rpow_le_rpow this (hA ⟨i, rfl⟩) (inv_nonneg.mpr hq.le)
   · apply memℓp_gen
     have hf' := hfq.summable hq
-    refine' summable_of_norm_bounded_eventually _ hf' (@Set.Finite.subset _ { i | 1 ≤ ‖f i‖ } _ _ _)
-    · have H : { x : α | 1 ≤ ‖f x‖ ^ q.to_real }.Finite := by
+    refine' summable_of_norm_bounded_eventually _ hf' (@Set.Finite.subset _ {i | 1 ≤ ‖f i‖} _ _ _)
+    · have H : {x : α | 1 ≤ ‖f x‖ ^ q.to_real}.Finite := by
         simpa using
           eventually_lt_of_tendsto_lt (by norm_num : (0 : ℝ) < 1) hf'.tendsto_cofinite_zero
       exact H.subset fun i hi => Real.one_le_rpow hi hq.le
@@ -334,7 +337,7 @@ instance PreLp.unique [IsEmpty α] : Unique (PreLp E) :=
 /-- lp space -/
 def lp (E : α → Type _) [∀ i, NormedAddCommGroup (E i)] (p : ℝ≥0∞) : AddSubgroup (PreLp E)
     where
-  carrier := { f | Memℓp f p }
+  carrier := {f | Memℓp f p}
   zero_mem' := zero_memℓp
   add_mem' f g := Memℓp.add
   neg_mem' f := Memℓp.neg
@@ -393,10 +396,10 @@ theorem coeFn_add (f g : lp E p) : ⇑(f + g) = f + g :=
 theorem coeFn_sum {ι : Type _} (f : ι → lp E p) (s : Finset ι) :
     ⇑(∑ i in s, f i) = ∑ i in s, ⇑(f i) := by
   classical
-    refine' Finset.induction _ _ s
-    · simp
-    intro i s his
-    simp [Finset.sum_insert his]
+  refine' Finset.induction _ _ s
+  · simp
+  intro i s his
+  simp [Finset.sum_insert his]
 #align lp.coe_fn_sum lp.coeFn_sum
 
 @[simp]
@@ -480,28 +483,28 @@ theorem norm_zero : ‖(0 : lp E p)‖ = 0 :=
 
 theorem norm_eq_zero_iff {f : lp E p} : ‖f‖ = 0 ↔ f = 0 := by
   classical
-    refine' ⟨fun h => _, by rintro rfl; exact norm_zero⟩
-    rcases p.trichotomy with (rfl | rfl | hp)
-    · ext i
-      have : { i : α | ¬f i = 0 } = ∅ := by simpa [lp.norm_eq_card_dsupport f] using h
-      have : (¬f i = 0) = False := congr_fun this i
-      tauto
-    · cases' isEmpty_or_nonempty α with _i _i <;> skip
-      · simp
-      have H : IsLUB (Set.range fun i => ‖f i‖) 0 := by simpa [h] using lp.isLUB_norm f
-      ext i
-      have : ‖f i‖ = 0 := le_antisymm (H.1 ⟨i, rfl⟩) (norm_nonneg _)
-      simpa using this
-    · have hf : HasSum (fun i : α => ‖f i‖ ^ p.to_real) 0 :=
-        by
-        have := lp.hasSum_norm hp f
-        rwa [h, Real.zero_rpow hp.ne'] at this 
-      have : ∀ i, 0 ≤ ‖f i‖ ^ p.to_real := fun i => Real.rpow_nonneg_of_nonneg (norm_nonneg _) _
-      rw [hasSum_zero_iff_of_nonneg this] at hf 
-      ext i
-      have : f i = 0 ∧ p.to_real ≠ 0 := by
-        simpa [Real.rpow_eq_zero_iff_of_nonneg (norm_nonneg (f i))] using congr_fun hf i
-      exact this.1
+  refine' ⟨fun h => _, by rintro rfl; exact norm_zero⟩
+  rcases p.trichotomy with (rfl | rfl | hp)
+  · ext i
+    have : {i : α | ¬f i = 0} = ∅ := by simpa [lp.norm_eq_card_dsupport f] using h
+    have : (¬f i = 0) = False := congr_fun this i
+    tauto
+  · cases' isEmpty_or_nonempty α with _i _i <;> skip
+    · simp
+    have H : IsLUB (Set.range fun i => ‖f i‖) 0 := by simpa [h] using lp.isLUB_norm f
+    ext i
+    have : ‖f i‖ = 0 := le_antisymm (H.1 ⟨i, rfl⟩) (norm_nonneg _)
+    simpa using this
+  · have hf : HasSum (fun i : α => ‖f i‖ ^ p.to_real) 0 :=
+      by
+      have := lp.hasSum_norm hp f
+      rwa [h, Real.zero_rpow hp.ne'] at this 
+    have : ∀ i, 0 ≤ ‖f i‖ ^ p.to_real := fun i => Real.rpow_nonneg_of_nonneg (norm_nonneg _) _
+    rw [hasSum_zero_iff_of_nonneg this] at hf 
+    ext i
+    have : f i = 0 ∧ p.to_real ≠ 0 := by
+      simpa [Real.rpow_eq_zero_iff_of_nonneg (norm_nonneg (f i))] using congr_fun hf i
+    exact this.1
 #align lp.norm_eq_zero_iff lp.norm_eq_zero_iff
 
 theorem eq_zero_iff_coeFn_eq_zero {f : lp E p} : f = 0 ↔ ⇑f = 0 := by rw [lp.ext_iff, coe_fn_zero]
@@ -904,7 +907,7 @@ variable (B)
 with extra structure. -/
 def lpInftySubring : Subring (PreLp B) :=
   { lp B ∞ with
-    carrier := { f | Memℓp f ∞ }
+    carrier := {f | Memℓp f ∞}
     one_mem' := one_memℓp_infty
     mul_mem' := fun f g hf hg => hf.infty_mul hg }
 #align lp_infty_subring lpInftySubring
@@ -1005,7 +1008,7 @@ variable (𝕜 B)
 with extra structure. -/
 def lpInftySubalgebra : Subalgebra 𝕜 (PreLp B) :=
   { lpInftySubring B with
-    carrier := { f | Memℓp f ∞ }
+    carrier := {f | Memℓp f ∞}
     algebraMap_mem' := algebraMap_memℓp_infty }
 #align lp_infty_subalgebra lpInftySubalgebra
 
@@ -1248,7 +1251,7 @@ theorem tendsto_lp_of_tendsto_pi {F : ℕ → lp E p} (hF : CauchySeq F) {f : lp
   by
   rw [metric.nhds_basis_closed_ball.tendsto_right_iff]
   intro ε hε
-  have hε' : { p : lp E p × lp E p | ‖p.1 - p.2‖ < ε } ∈ 𝓤 (lp E p) :=
+  have hε' : {p : lp E p × lp E p | ‖p.1 - p.2‖ < ε} ∈ 𝓤 (lp E p) :=
     normed_add_comm_group.uniformity_basis_dist.mem_of_mem hε
   refine' (hF.eventually_eventually hε').mono _
   rintro n (hn : ∀ᶠ l in at_top, ‖(fun f => F n - f) (F l)‖ < ε)

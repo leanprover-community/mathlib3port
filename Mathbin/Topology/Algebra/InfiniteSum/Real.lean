@@ -43,7 +43,7 @@ theorem cauchySeq_of_edist_le_of_summable [PseudoEMetricSpace α] {f : ℕ → �
   have hsum := hN n hn
   -- We simplify the known inequality
   rw [dist_nndist, NNReal.nndist_eq, ← sum_range_add_sum_Ico _ hn, add_tsub_cancel_left] at hsum 
-  norm_cast  at hsum 
+  norm_cast at hsum 
   replace hsum := lt_of_le_of_lt (le_max_left _ _) hsum
   rw [edist_comm]
   -- Then use `hf` to simplify the goal to the same form

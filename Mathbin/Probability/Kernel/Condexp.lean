@@ -77,15 +77,15 @@ theorem MeasureTheory.Integrable.comp_snd_map_prod_id [NormedAddCommGroup F] (hm
 end AuxLemmas
 
 variable {Ω F : Type _} [TopologicalSpace Ω] {m : MeasurableSpace Ω} [mΩ : MeasurableSpace Ω]
-  [PolishSpace Ω] [BorelSpace Ω] [Nonempty Ω] {μ : Measure Ω} [FiniteMeasure μ]
+  [PolishSpace Ω] [BorelSpace Ω] [Nonempty Ω] {μ : Measure Ω} [IsFiniteMeasure μ]
   [NormedAddCommGroup F] {f : Ω → F}
 
 /-- Kernel associated with the conditional expectation with respect to a σ-algebra. It satisfies
 `μ[f | m] =ᵐ[μ] λ ω, ∫ y, f y ∂(condexp_kernel μ m ω)`.
 It is defined as the conditional distribution of the identity given the identity, where the second
 identity is understood as a map from `Ω` with the σ-algebra `mΩ` to `Ω` with σ-algebra `m`. -/
-noncomputable irreducible_def condexpKernel (μ : Measure Ω) [FiniteMeasure μ]
-  (m : MeasurableSpace Ω) : @kernel Ω Ω m mΩ :=
+noncomputable irreducible_def condexpKernel (μ : Measure Ω) [IsFiniteMeasure μ]
+    (m : MeasurableSpace Ω) : @kernel Ω Ω m mΩ :=
   @condDistrib Ω Ω Ω _ mΩ _ _ _ mΩ m id id μ _
 #align probability_theory.condexp_kernel ProbabilityTheory.condexpKernel
 

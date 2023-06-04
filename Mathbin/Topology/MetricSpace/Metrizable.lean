@@ -186,7 +186,7 @@ theorem exists_embedding_l_infty : ∃ f : X → ℕ →ᵇ ℝ, Embedding f :=
   -- Choose a countable basis, and consider the set `s` of pairs of set `(U, V)` such that `U ∈ B`,
   -- `V ∈ B`, and `closure U ⊆ V`.
   rcases exists_countable_basis X with ⟨B, hBc, -, hB⟩
-  set s : Set (Set X × Set X) := { UV ∈ B ×ˢ B | closure UV.1 ⊆ UV.2 }
+  set s : Set (Set X × Set X) := {UV ∈ B ×ˢ B | closure UV.1 ⊆ UV.2}
   -- `s` is a countable set.
   haveI : Encodable s := ((hBc.prod hBc).mono (inter_subset_left _ _)).toEncodable
   -- We don't have the space of bounded (possibly discontinuous) functions, so we equip `s`
@@ -266,7 +266,7 @@ theorem exists_embedding_l_infty : ∃ f : X → ℕ →ᵇ ℝ, Embedding f :=
         `(U, V) ∈ T`. For `(U, V) ∉ T`, the same inequality is true because both `F y (U, V)` and
         `F x (U, V)` belong to the interval `[0, ε (U, V)]`. -/
     refine' (nhds_basis_closed_ball.comap _).ge_iff.2 fun δ δ0 => _
-    have h_fin : { UV : s | δ ≤ ε UV }.Finite := by simpa only [← not_lt] using hε (gt_mem_nhds δ0)
+    have h_fin : {UV : s | δ ≤ ε UV}.Finite := by simpa only [← not_lt] using hε (gt_mem_nhds δ0)
     have : ∀ᶠ y in 𝓝 x, ∀ UV, δ ≤ ε UV → dist (F y UV) (F x UV) ≤ δ :=
       by
       refine' (eventually_all_finite h_fin).2 fun UV hUV => _

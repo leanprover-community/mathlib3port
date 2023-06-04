@@ -511,7 +511,7 @@ theorem geom_sum_alternating_of_le_neg_one [StrictOrderedRing α] (hx : x + 1 �
   induction' n with n ih
   · simp only [even_zero, geom_sum_zero, le_refl]
   simp only [Nat.even_add_one, geom_sum_succ]
-  split_ifs  at ih 
+  split_ifs at ih 
   · rw [if_neg (not_not_intro h), le_add_iff_nonneg_left]
     exact mul_nonneg_of_nonpos_of_nonpos hx0 ih
   · rw [if_pos h]
@@ -581,7 +581,7 @@ theorem geom_sum_ne_zero [LinearOrderedRing α] (hx : x ≠ -1) (hn : n ≠ 0) :
   rw [Ne.def, eq_neg_iff_add_eq_zero, ← Ne.def] at hx 
   obtain h | h := hx.lt_or_lt
   · have := geom_sum_alternating_of_lt_neg_one h n.one_lt_succ_succ
-    split_ifs  at this 
+    split_ifs at this 
     · exact this.ne
     · exact (zero_lt_one.trans this).ne'
   · exact (geom_sum_pos' h n.succ.succ_ne_zero).ne'

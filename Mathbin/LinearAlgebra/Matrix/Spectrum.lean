@@ -106,8 +106,9 @@ theorem spectral_theorem :
   rw [eigenvector_matrix_inv, PiLp.basis_toMatrix_basisFun_mul]
   ext (i j)
   have := is_hermitian_iff_is_symmetric.1 hA
-  convert this.diagonalization_basis_apply_self_apply finrank_euclideanSpace
-      (EuclideanSpace.single j 1) ((Fintype.equivOfCardEq (Fintype.card_fin _)).symm i) using
+  convert
+    this.diagonalization_basis_apply_self_apply finrank_euclideanSpace (EuclideanSpace.single j 1)
+      ((Fintype.equivOfCardEq (Fintype.card_fin _)).symm i) using
     1
   · dsimp only [EuclideanSpace.single, to_euclidean_lin_pi_Lp_equiv_symm, to_lin'_apply,
       Matrix.of_apply, is_hermitian.eigenvector_basis]

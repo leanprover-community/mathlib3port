@@ -112,7 +112,7 @@ theorem norm_volume_sub_integral_face_upper_sub_lower_smul_le {f : ℝⁿ⁺¹ �
     set g := fun y => f y - a - f' (y - x) with hg
     change ∀ y ∈ I.Icc, ‖g y‖ ≤ ε * ‖y - x‖ at hε 
     clear_value g; obtain rfl : f = fun y => a + f' (y - x) + g y := by simp [hg]
-    convert_to‖g (i.insert_nth (I.lower i) y) - g (i.insert_nth (I.upper i) y)‖ ≤ _
+    convert_to ‖g (i.insert_nth (I.lower i) y) - g (i.insert_nth (I.upper i) y)‖ ≤ _
     · congr 1
       have := Fin.insertNth_sub_same i (I.upper i) (I.lower i) y
       simp only [← this, f'.map_sub]; abel
@@ -209,7 +209,7 @@ theorem hasIntegralGPPderiv (f : ℝⁿ⁺¹ → E) (f' : ℝⁿ⁺¹ → ℝⁿ
       · exact Ioc_mem_nhdsWithin_Ioi ⟨le_rfl, one_half_pos⟩
       · rcases((nhdsWithin_hasBasis nhds_basis_closed_ball _).tendsto_iffₓ nhds_basis_closed_ball).1
             (Hs x hx.2) _ (half_pos <| half_pos ε0) with ⟨δ₁, δ₁0, hδ₁⟩
-        filter_upwards [Ioc_mem_nhdsWithin_Ioi ⟨le_rfl, δ₁0⟩]with δ hδ y₁ hy₁ y₂ hy₂
+        filter_upwards [Ioc_mem_nhdsWithin_Ioi ⟨le_rfl, δ₁0⟩] with δ hδ y₁ hy₁ y₂ hy₂
         have : closed_ball x δ ∩ I.Icc ⊆ closed_ball x δ₁ ∩ I.Icc :=
           inter_subset_inter_left _ (closed_ball_subset_closed_ball hδ.2)
         rw [← dist_eq_norm]

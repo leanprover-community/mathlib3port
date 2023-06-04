@@ -262,7 +262,8 @@ noncomputable def prod : Trivialization (F₁ × F₂) (π (E₁ ×ᵇ E₂))
   right_inv' x := Prod.right_inv
   open_source :=
     by
-    convert(e₁.open_source.prod e₂.open_source).Preimage
+    convert
+      (e₁.open_source.prod e₂.open_source).Preimage
         (FiberBundle.Prod.inducing_diag E₁ E₂).Continuous
     ext x
     simp only [Trivialization.source_eq, mfld_simps]
@@ -301,9 +302,9 @@ noncomputable instance FiberBundle.prod : FiberBundle (F₁ × F₂) (E₁ ×ᵇ
     rw [(prod.inducing_diag E₁ E₂).inducing_iff]
     exact (total_space_mk_inducing F₁ E₁ b).prod_mk (total_space_mk_inducing F₂ E₂ b)
   trivializationAtlas :=
-    { e |
+    {e |
       ∃ (e₁ : Trivialization F₁ (π E₁)) (e₂ : Trivialization F₂ (π E₂)) (_ :
-        MemTrivializationAtlas e₁) (_ : MemTrivializationAtlas e₂), e = Trivialization.prod e₁ e₂ }
+        MemTrivializationAtlas e₁) (_ : MemTrivializationAtlas e₂), e = Trivialization.prod e₁ e₂}
   trivializationAt b := (trivializationAt F₁ E₁ b).Prod (trivializationAt F₂ E₂ b)
   mem_baseSet_trivializationAt b :=
     ⟨mem_baseSet_trivializationAt F₁ E₁ b, mem_baseSet_trivializationAt F₂ E₂ b⟩
@@ -445,7 +446,7 @@ noncomputable instance FiberBundle.pullback [∀ x, TopologicalSpace (E x)] [Fib
     inducing_of_inducing_compose (Pullback.continuous_totalSpaceMk F E)
       (Pullback.continuous_lift E f) (totalSpaceMk_inducing F E (f x))
   trivializationAtlas :=
-    { ef | ∃ (e : Trivialization F (π E)) (_ : MemTrivializationAtlas e), ef = e.Pullback f }
+    {ef | ∃ (e : Trivialization F (π E)) (_ : MemTrivializationAtlas e), ef = e.Pullback f}
   trivializationAt x := (trivializationAt F E (f x)).Pullback f
   mem_baseSet_trivializationAt x := mem_baseSet_trivializationAt F E (f x)
   trivialization_mem_atlas x := ⟨trivializationAt F E (f x), by infer_instance, rfl⟩

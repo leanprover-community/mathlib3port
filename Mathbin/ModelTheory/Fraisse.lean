@@ -79,7 +79,7 @@ variable (L : Language.{u, v})
 
 /-- The age of a structure `M` is the class of finitely-generated structures that embed into it. -/
 def age (M : Type w) [L.Structure M] : Set (Bundled.{w} L.Structure) :=
-  { N | Structure.FG L N ∧ Nonempty (N ↪[L] M) }
+  {N | Structure.FG L N ∧ Nonempty (N ↪[L] M)}
 #align first_order.language.age FirstOrder.Language.age
 
 variable {L} (K : Set (Bundled.{w} L.Structure))
@@ -173,18 +173,18 @@ theorem age.jointEmbedding : JointEmbedding (L.age M) := fun N hN P hP =>
 classes). -/
 theorem age.countable_quotient [h : Countable M] : (Quotient.mk' '' L.age M).Countable := by
   classical
-    refine'
-      (congr_arg _ (Set.ext <| forall_quotient_iff.2 fun N => _)).mp
-        (countable_range fun s : Finset M => ⟦⟨closure L (s : Set M), inferInstance⟩⟧)
-    simp only [mem_image, mem_range, mem_set_of_eq, Quotient.eq']
-    constructor
-    · rintro ⟨s, hs⟩
-      use bundled.of ↥(closure L (s : Set M))
-      exact ⟨⟨(fg_iff_Structure_fg _).1 (fg_closure s.finite_to_set), ⟨Subtype _⟩⟩, hs⟩
-    · rintro ⟨P, ⟨⟨s, hs⟩, ⟨PM⟩⟩, hP2⟩
-      refine' ⟨s.image PM, Setoid.trans _ hP2⟩
-      rw [← embedding.coe_to_hom, Finset.coe_image, closure_image PM.to_hom, hs, ← hom.range_eq_map]
-      exact ⟨PM.equiv_range.symm⟩
+  refine'
+    (congr_arg _ (Set.ext <| forall_quotient_iff.2 fun N => _)).mp
+      (countable_range fun s : Finset M => ⟦⟨closure L (s : Set M), inferInstance⟩⟧)
+  simp only [mem_image, mem_range, mem_set_of_eq, Quotient.eq']
+  constructor
+  · rintro ⟨s, hs⟩
+    use bundled.of ↥(closure L (s : Set M))
+    exact ⟨⟨(fg_iff_Structure_fg _).1 (fg_closure s.finite_to_set), ⟨Subtype _⟩⟩, hs⟩
+  · rintro ⟨P, ⟨⟨s, hs⟩, ⟨PM⟩⟩, hP2⟩
+    refine' ⟨s.image PM, Setoid.trans _ hP2⟩
+    rw [← embedding.coe_to_hom, Finset.coe_image, closure_image PM.to_hom, hs, ← hom.range_eq_map]
+    exact ⟨PM.equiv_range.symm⟩
 #align first_order.language.age.countable_quotient FirstOrder.Language.age.countable_quotient
 
 /-- The age of a direct limit of structures is the union of the ages of the structures. -/
@@ -193,24 +193,24 @@ theorem age_directLimit {ι : Type w} [Preorder ι] [IsDirected ι (· ≤ ·)] 
     (G : ι → Type max w w') [∀ i, L.Structure (G i)] (f : ∀ i j, i ≤ j → G i ↪[L] G j)
     [DirectedSystem G fun i j h => f i j h] : L.age (DirectLimit G f) = ⋃ i : ι, L.age (G i) := by
   classical
-    ext M
-    simp only [mem_Union]
-    constructor
-    · rintro ⟨Mfg, ⟨e⟩⟩
-      obtain ⟨s, hs⟩ := Mfg.range e.to_hom
-      let out := @Quotient.out _ (direct_limit.setoid G f)
-      obtain ⟨i, hi⟩ := Finset.exists_le (s.image (Sigma.fst ∘ out))
-      have e' := (direct_limit.of L ι G f i).equivRange.symm.toEmbedding
-      refine' ⟨i, Mfg, ⟨e'.comp ((substructure.inclusion _).comp e.equiv_range.to_embedding)⟩⟩
-      rw [← hs, closure_le]
-      intro x hx
-      refine' ⟨f (out x).1 i (hi (out x).1 (Finset.mem_image_of_mem _ hx)) (out x).2, _⟩
-      rw [embedding.coe_to_hom, direct_limit.of_apply, Quotient.mk_eq_iff_out,
-        direct_limit.equiv_iff G f _ (hi (out x).1 (Finset.mem_image_of_mem _ hx)),
-        DirectedSystem.map_self]
-      rfl
-    · rintro ⟨i, Mfg, ⟨e⟩⟩
-      exact ⟨Mfg, ⟨Embedding.comp (direct_limit.of L ι G f i) e⟩⟩
+  ext M
+  simp only [mem_Union]
+  constructor
+  · rintro ⟨Mfg, ⟨e⟩⟩
+    obtain ⟨s, hs⟩ := Mfg.range e.to_hom
+    let out := @Quotient.out _ (direct_limit.setoid G f)
+    obtain ⟨i, hi⟩ := Finset.exists_le (s.image (Sigma.fst ∘ out))
+    have e' := (direct_limit.of L ι G f i).equivRange.symm.toEmbedding
+    refine' ⟨i, Mfg, ⟨e'.comp ((substructure.inclusion _).comp e.equiv_range.to_embedding)⟩⟩
+    rw [← hs, closure_le]
+    intro x hx
+    refine' ⟨f (out x).1 i (hi (out x).1 (Finset.mem_image_of_mem _ hx)) (out x).2, _⟩
+    rw [embedding.coe_to_hom, direct_limit.of_apply, Quotient.mk_eq_iff_out,
+      direct_limit.equiv_iff G f _ (hi (out x).1 (Finset.mem_image_of_mem _ hx)),
+      DirectedSystem.map_self]
+    rfl
+  · rintro ⟨i, Mfg, ⟨e⟩⟩
+    exact ⟨Mfg, ⟨Embedding.comp (direct_limit.of L ι G f i) e⟩⟩
 #align first_order.language.age_direct_limit FirstOrder.Language.age_directLimit
 
 /-- Sufficient conditions for a class to be the age of a countably-generated structure. -/

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module ring_theory.valuation.integral
-! leanprover-community/mathlib commit 9b2660e1b25419042c8da10bf411aa3c67f14383
+! leanprover-community/mathlib commit af471b9e3ce868f296626d33189b4ce730fa4c00
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.RingTheory.Valuation.Integers
 
 /-!
 # Integral elements over the ring of integers of a valution
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 The ring of integers is integrally closed inside the original ring.
 -/
@@ -69,9 +72,11 @@ variable [Algebra O K] [IsFractionRing O K]
 
 variable (hv : Integers v O)
 
+#print Valuation.Integers.integrallyClosed /-
 theorem integrallyClosed : IsIntegrallyClosed O :=
   (IsIntegrallyClosed.integralClosure_eq_bot_iff K).mp (Valuation.Integers.integralClosure hv)
 #align valuation.integers.integrally_closed Valuation.Integers.integrallyClosed
+-/
 
 end FractionField
 

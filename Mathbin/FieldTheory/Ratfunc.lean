@@ -158,7 +158,8 @@ When `[is_domain K]`, one can use `ratfunc.lift_on'`, which has the stronger req
 of `∀ {p q a : K[X]} (hq : q ≠ 0) (ha : a ≠ 0), f (a * p) (a * q) = f p q)`.
 -/
 protected irreducible_def liftOn {P : Sort v} (x : RatFunc K) (f : ∀ p q : K[X], P)
-  (H : ∀ {p q p' q'} (hq : q ∈ K[X]⁰) (hq' : q' ∈ K[X]⁰), q' * p = q * p' → f p q = f p' q') : P :=
+    (H : ∀ {p q p' q'} (hq : q ∈ K[X]⁰) (hq' : q' ∈ K[X]⁰), q' * p = q * p' → f p q = f p' q') :
+    P :=
   Localization.liftOn (to_fraction_ring x)
     (-- Fix timeout by manipulating elaboration order
     fun p q => f p q)
@@ -274,7 +275,7 @@ The value of `f p 0` for any `p` is never used and in principle this may be anyt
 although many usages of `lift_on'` assume `f p 0 = f 0 1`.
 -/
 protected irreducible_def liftOn' {P : Sort v} (x : RatFunc K) (f : ∀ p q : K[X], P)
-  (H : ∀ {p q a} (hq : q ≠ 0) (ha : a ≠ 0), f (a * p) (a * q) = f p q) : P :=
+    (H : ∀ {p q a} (hq : q ≠ 0) (ha : a ≠ 0), f (a * p) (a * q) = f p q) : P :=
   x.liftOn f fun p q p' q' hq hq' =>
     lift_on_condition_of_lift_on'_condition (@H) (nonZeroDivisors.ne_zero hq)
       (nonZeroDivisors.ne_zero hq')
@@ -291,7 +292,7 @@ theorem liftOn'_mk {P : Sort v} (p q : K[X]) (f : ∀ p q : K[X], P) (f0 : ∀ p
 #align ratfunc.lift_on'_mk RatFunc.liftOn'_mk
 -/
 
-/- ./././Mathport/Syntax/Translate/Command.lean:322:38: unsupported irreducible non-definition -/
+/- ./././Mathport/Syntax/Translate/Command.lean:323:38: unsupported irreducible non-definition -/
 #print RatFunc.induction_on' /-
 /-- Induction principle for `ratfunc K`: if `f p q : P (ratfunc.mk p q)` for all `p q`,
 then `P` holds on all elements of `ratfunc K`.
@@ -299,7 +300,7 @@ then `P` holds on all elements of `ratfunc K`.
 See also `induction_on`, which is a recursion principle defined in terms of `algebra_map`.
 -/
 protected irreducible_def induction_on' {P : RatFunc K → Prop} :
-  ∀ (x : RatFunc K) (f : ∀ (p q : K[X]) (hq : q ≠ 0), P (RatFunc.mk p q)), P x
+    ∀ (x : RatFunc K) (f : ∀ (p q : K[X]) (hq : q ≠ 0), P (RatFunc.mk p q)), P x
   | ⟨x⟩, f =>
     Localization.induction_on x fun ⟨p, q⟩ => by
       simpa only [mk_coe_def, Localization.mk_eq_mk'] using
@@ -1452,10 +1453,12 @@ theorem smul_eq_C_mul (r : K) (x : RatFunc K) : r • x = C r * x := by
   rw [Algebra.smul_def, algebra_map_eq_C]
 #align ratfunc.smul_eq_C_mul RatFunc.smul_eq_C_mul
 
+#print RatFunc.X /-
 /-- `ratfunc.X` is the polynomial variable (aka indeterminate). -/
 def X : RatFunc K :=
   algebraMap K[X] (RatFunc K) Polynomial.X
 #align ratfunc.X RatFunc.X
+-/
 
 @[simp]
 theorem algebraMap_X : algebraMap K[X] (RatFunc K) Polynomial.X = X :=

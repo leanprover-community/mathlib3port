@@ -45,7 +45,7 @@ theorem tendstoUniformlyOn_tsum {f : α → β → F} (hu : Summable u) {s : Set
       s :=
   by
   refine' tendsto_uniformly_on_iff.2 fun ε εpos => _
-  filter_upwards [(tendsto_order.1 (tendsto_tsum_compl_atTop_zero u)).2 _ εpos]with t ht x hx
+  filter_upwards [(tendsto_order.1 (tendsto_tsum_compl_atTop_zero u)).2 _ εpos] with t ht x hx
   have A : Summable fun n => ‖f n x‖ :=
     summable_of_nonneg_of_le (fun n => norm_nonneg _) (fun n => hfu n x hx) hu
   rw [dist_eq_norm, ← sum_add_tsum_subtype_compl (summable_of_summable_norm A) t, add_sub_cancel']
@@ -85,9 +85,9 @@ theorem continuousOn_tsum [TopologicalSpace β] {f : α → β → F} {s : Set �
     (hf : ∀ i, ContinuousOn (f i) s) (hu : Summable u) (hfu : ∀ n x, x ∈ s → ‖f n x‖ ≤ u n) :
     ContinuousOn (fun x => ∑' n, f n x) s := by
   classical
-    refine' (tendstoUniformlyOn_tsum hu hfu).ContinuousOn (eventually_of_forall _)
-    intro t
-    exact continuousOn_finset_sum _ fun i hi => hf i
+  refine' (tendstoUniformlyOn_tsum hu hfu).ContinuousOn (eventually_of_forall _)
+  intro t
+  exact continuousOn_finset_sum _ fun i hi => hf i
 #align continuous_on_tsum continuousOn_tsum
 
 /-- An infinite sum of functions with summable sup norm is continuous if each individual
@@ -130,15 +130,15 @@ theorem hasFDerivAt_tsum_of_isPreconnected (hu : Summable u) (hs : IsOpen s)
     (hf' : ∀ n x, x ∈ s → ‖f' n x‖ ≤ u n) (hx₀ : x₀ ∈ s) (hf0 : Summable fun n => f n x₀)
     (hx : x ∈ s) : HasFDerivAt (fun y => ∑' n, f n y) (∑' n, f' n x) x := by
   classical
-    have A :
-      ∀ x : E, x ∈ s → tendsto (fun t : Finset α => ∑ n in t, f n x) at_top (𝓝 (∑' n, f n x)) :=
-      by
-      intro y hy
-      apply Summable.hasSum
-      exact summable_of_summable_hasFDerivAt_of_isPreconnected hu hs h's hf hf' hx₀ hf0 hy
-    apply
-      hasFDerivAt_of_tendstoUniformlyOn hs (tendstoUniformlyOn_tsum hu hf') (fun t y hy => _) A _ hx
-    exact HasFDerivAt.sum fun n hn => hf n y hy
+  have A :
+    ∀ x : E, x ∈ s → tendsto (fun t : Finset α => ∑ n in t, f n x) at_top (𝓝 (∑' n, f n x)) :=
+    by
+    intro y hy
+    apply Summable.hasSum
+    exact summable_of_summable_hasFDerivAt_of_isPreconnected hu hs h's hf hf' hx₀ hf0 hy
+  apply
+    hasFDerivAt_of_tendstoUniformlyOn hs (tendstoUniformlyOn_tsum hu hf') (fun t y hy => _) A _ hx
+  exact HasFDerivAt.sum fun n hn => hf n y hy
 #align has_fderiv_at_tsum_of_is_preconnected hasFDerivAt_tsum_of_isPreconnected
 
 /-- Consider a series of functions `∑' n, f n x`. If the series converges at a
@@ -179,7 +179,7 @@ theorem differentiable_tsum (hu : Summable u) (hf : ∀ n x, HasFDerivAt (f n) (
   · rcases h with ⟨x₀, hf0⟩
     intro x
     exact (hasFDerivAt_tsum hu hf hf' hf0 x).DifferentiableAt
-  · push_neg  at h 
+  · push_neg at h 
     have : (fun x => ∑' n, f n x) = 0 := by ext1 x; exact tsum_eq_zero_of_not_summable (h x)
     rw [this]
     exact differentiable_const 0
@@ -275,38 +275,38 @@ theorem contDiff_tsum_of_eventually (hf : ∀ i, ContDiff 𝕜 N (f i))
           ∀ᶠ i in (Filter.cofinite : Filter α), ∀ x : E, ‖iteratedFDeriv 𝕜 k (f i) x‖ ≤ v k i) :
     ContDiff 𝕜 N fun x => ∑' i, f i x := by
   classical
-    apply contDiff_iff_forall_nat_le.2 fun m hm => _
-    let t : Set α :=
-      { i : α | ¬∀ k : ℕ, k ∈ Finset.range (m + 1) → ∀ x, ‖iteratedFDeriv 𝕜 k (f i) x‖ ≤ v k i }
-    have ht : Set.Finite t :=
-      haveI A :
-        ∀ᶠ i in (Filter.cofinite : Filter α),
-          ∀ k : ℕ, k ∈ Finset.range (m + 1) → ∀ x : E, ‖iteratedFDeriv 𝕜 k (f i) x‖ ≤ v k i :=
-        by
-        rw [eventually_all_finset]
-        intro i hi
-        apply h'f
-        simp only [Finset.mem_range_succ_iff] at hi 
-        exact (WithTop.coe_le_coe.2 hi).trans hm
-      eventually_cofinite.2 A
-    let T : Finset α := ht.to_finset
-    have :
-      (fun x => ∑' i, f i x) = (fun x => ∑ i in T, f i x) + fun x => ∑' i : { i // i ∉ T }, f i x :=
+  apply contDiff_iff_forall_nat_le.2 fun m hm => _
+  let t : Set α :=
+    {i : α | ¬∀ k : ℕ, k ∈ Finset.range (m + 1) → ∀ x, ‖iteratedFDeriv 𝕜 k (f i) x‖ ≤ v k i}
+  have ht : Set.Finite t :=
+    haveI A :
+      ∀ᶠ i in (Filter.cofinite : Filter α),
+        ∀ k : ℕ, k ∈ Finset.range (m + 1) → ∀ x : E, ‖iteratedFDeriv 𝕜 k (f i) x‖ ≤ v k i :=
       by
-      ext1 x
-      refine' (sum_add_tsum_subtype_compl _ T).symm
-      refine' summable_of_norm_bounded_eventually _ (hv 0 (zero_le _)) _
-      filter_upwards [h'f 0 (zero_le _)]with i hi
-      simpa only [norm_iteratedFDeriv_zero] using hi x
-    rw [this]
-    apply (ContDiff.sum fun i hi => (hf i).of_le hm).add
-    have h'u : ∀ k : ℕ, (k : ℕ∞) ≤ m → Summable (v k ∘ (coe : { i // i ∉ T } → α)) := fun k hk =>
-      (hv k (hk.trans hm)).Subtype _
-    refine' contDiff_tsum (fun i => (hf i).of_le hm) h'u _
-    rintro k ⟨i, hi⟩ x hk
-    dsimp
-    simp only [finite.mem_to_finset, mem_set_of_eq, Finset.mem_range, not_forall, not_le,
-      exists_prop, not_exists, not_and, not_lt] at hi 
-    exact hi k (Nat.lt_succ_iff.2 (WithTop.coe_le_coe.1 hk)) x
+      rw [eventually_all_finset]
+      intro i hi
+      apply h'f
+      simp only [Finset.mem_range_succ_iff] at hi 
+      exact (WithTop.coe_le_coe.2 hi).trans hm
+    eventually_cofinite.2 A
+  let T : Finset α := ht.to_finset
+  have :
+    (fun x => ∑' i, f i x) = (fun x => ∑ i in T, f i x) + fun x => ∑' i : { i // i ∉ T }, f i x :=
+    by
+    ext1 x
+    refine' (sum_add_tsum_subtype_compl _ T).symm
+    refine' summable_of_norm_bounded_eventually _ (hv 0 (zero_le _)) _
+    filter_upwards [h'f 0 (zero_le _)] with i hi
+    simpa only [norm_iteratedFDeriv_zero] using hi x
+  rw [this]
+  apply (ContDiff.sum fun i hi => (hf i).of_le hm).add
+  have h'u : ∀ k : ℕ, (k : ℕ∞) ≤ m → Summable (v k ∘ (coe : { i // i ∉ T } → α)) := fun k hk =>
+    (hv k (hk.trans hm)).Subtype _
+  refine' contDiff_tsum (fun i => (hf i).of_le hm) h'u _
+  rintro k ⟨i, hi⟩ x hk
+  dsimp
+  simp only [finite.mem_to_finset, mem_set_of_eq, Finset.mem_range, not_forall, not_le, exists_prop,
+    not_exists, not_and, not_lt] at hi 
+  exact hi k (Nat.lt_succ_iff.2 (WithTop.coe_le_coe.1 hk)) x
 #align cont_diff_tsum_of_eventually contDiff_tsum_of_eventually
 

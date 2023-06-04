@@ -226,9 +226,9 @@ theorem injective_of_forall_ne_isSome (f : α ≃. β) (a₂ : α)
   HasLeftInverse.injective
     ⟨fun b => Option.recOn b a₂ fun b' => Option.recOn (f.symm b') a₂ id, fun x => by
       classical
-        cases hfx : f x
-        · have : x = a₂ := not_imp_comm.1 (h x) (hfx.symm ▸ by simp); simp [this]
-        · dsimp only; rw [(eq_some_iff f).2 hfx]; rfl⟩
+      cases hfx : f x
+      · have : x = a₂ := not_imp_comm.1 (h x) (hfx.symm ▸ by simp); simp [this]
+      · dsimp only; rw [(eq_some_iff f).2 hfx]; rfl⟩
 #align pequiv.injective_of_forall_ne_is_some PEquiv.injective_of_forall_ne_isSome
 -/
 
@@ -331,7 +331,7 @@ theorem symm_trans_rev (f : α ≃. β) (g : β ≃. γ) : (f.trans g).symm = g.
 -/
 
 #print PEquiv.self_trans_symm /-
-theorem self_trans_symm (f : α ≃. β) : f.trans f.symm = ofSet { a | (f a).isSome } :=
+theorem self_trans_symm (f : α ≃. β) : f.trans f.symm = ofSet {a | (f a).isSome} :=
   by
   ext
   dsimp [PEquiv.trans]
@@ -345,7 +345,7 @@ theorem self_trans_symm (f : α ≃. β) : f.trans f.symm = ofSet { a | (f a).is
 -/
 
 #print PEquiv.symm_trans_self /-
-theorem symm_trans_self (f : α ≃. β) : f.symm.trans f = ofSet { b | (f.symm b).isSome } :=
+theorem symm_trans_self (f : α ≃. β) : f.symm.trans f = ofSet {b | (f.symm b).isSome} :=
   symm_injective <| by simp [symm_trans_rev, self_trans_symm, -symm_symm]
 #align pequiv.symm_trans_self PEquiv.symm_trans_self
 -/

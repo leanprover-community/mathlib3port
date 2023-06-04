@@ -60,7 +60,7 @@ def variance {Ω : Type _} {m : MeasurableSpace Ω} (X : Ω → ℝ) (μ : Measu
 
 variable {Ω : Type _} {m : MeasurableSpace Ω} {X : Ω → ℝ} {μ : Measure Ω}
 
-theorem MeasureTheory.Memℒp.evariance_lt_top [FiniteMeasure μ] (hX : Memℒp X 2 μ) :
+theorem MeasureTheory.Memℒp.evariance_lt_top [IsFiniteMeasure μ] (hX : Memℒp X 2 μ) :
     evariance X μ < ∞ :=
   by
   have := ENNReal.pow_lt_top (hX.sub <| mem_ℒp_const <| μ[X]).2 2
@@ -71,7 +71,7 @@ theorem MeasureTheory.Memℒp.evariance_lt_top [FiniteMeasure μ] (hX : Memℒp 
   exact this
 #align measure_theory.mem_ℒp.evariance_lt_top MeasureTheory.Memℒp.evariance_lt_top
 
-theorem evariance_eq_top [FiniteMeasure μ] (hXm : AEStronglyMeasurable X μ) (hX : ¬Memℒp X 2 μ) :
+theorem evariance_eq_top [IsFiniteMeasure μ] (hXm : AEStronglyMeasurable X μ) (hX : ¬Memℒp X 2 μ) :
     evariance X μ = ∞ := by
   by_contra h
   rw [← Ne.def, ← lt_top_iff_ne_top] at h 
@@ -87,7 +87,7 @@ theorem evariance_eq_top [FiniteMeasure μ] (hXm : AEStronglyMeasurable X μ) (h
   rw [Pi.add_apply, sub_add_cancel]
 #align probability_theory.evariance_eq_top ProbabilityTheory.evariance_eq_top
 
-theorem evariance_lt_top_iff_memℒp [FiniteMeasure μ] (hX : AEStronglyMeasurable X μ) :
+theorem evariance_lt_top_iff_memℒp [IsFiniteMeasure μ] (hX : AEStronglyMeasurable X μ) :
     evariance X μ < ∞ ↔ Memℒp X 2 μ :=
   by
   refine' ⟨_, MeasureTheory.Memℒp.evariance_lt_top⟩
@@ -96,7 +96,7 @@ theorem evariance_lt_top_iff_memℒp [FiniteMeasure μ] (hX : AEStronglyMeasurab
   exact evariance_eq_top hX
 #align probability_theory.evariance_lt_top_iff_mem_ℒp ProbabilityTheory.evariance_lt_top_iff_memℒp
 
-theorem MeasureTheory.Memℒp.ofReal_variance_eq [FiniteMeasure μ] (hX : Memℒp X 2 μ) :
+theorem MeasureTheory.Memℒp.ofReal_variance_eq [IsFiniteMeasure μ] (hX : Memℒp X 2 μ) :
     ENNReal.ofReal (variance X μ) = evariance X μ := by rw [variance, ENNReal.ofReal_toReal];
   exact hX.evariance_lt_top.ne
 #align measure_theory.mem_ℒp.of_real_variance_eq MeasureTheory.Memℒp.ofReal_variance_eq
@@ -129,14 +129,14 @@ theorem MeasureTheory.Memℒp.variance_eq_of_integral_eq_zero (hX : Memℒp X 2 
   · exact ae_of_all _ fun ω => pow_two_nonneg _
 #align measure_theory.mem_ℒp.variance_eq_of_integral_eq_zero MeasureTheory.Memℒp.variance_eq_of_integral_eq_zero
 
-theorem MeasureTheory.Memℒp.variance_eq [FiniteMeasure μ] (hX : Memℒp X 2 μ) :
+theorem MeasureTheory.Memℒp.variance_eq [IsFiniteMeasure μ] (hX : Memℒp X 2 μ) :
     variance X μ = μ[(X - fun ω => μ[X]) ^ 2] :=
   by
   rw [variance, evariance_eq_lintegral_of_real, ← of_real_integral_eq_lintegral_of_real,
     ENNReal.toReal_ofReal]
   · rfl
   · exact integral_nonneg fun ω => pow_two_nonneg _
-  · convert(hX.sub <| mem_ℒp_const (μ[X])).integrable_norm_rpow two_ne_zero ENNReal.two_ne_top
+  · convert (hX.sub <| mem_ℒp_const (μ[X])).integrable_norm_rpow two_ne_zero ENNReal.two_ne_top
     ext ω
     simp only [Pi.sub_apply, Real.norm_eq_abs, ENNReal.toReal_bit0, ENNReal.one_toReal,
       Real.rpow_two, pow_bit0_abs]
@@ -150,7 +150,7 @@ theorem evariance_zero : evariance 0 μ = 0 := by simp [evariance]
 theorem evariance_eq_zero_iff (hX : AEMeasurable X μ) : evariance X μ = 0 ↔ X =ᵐ[μ] fun ω => μ[X] :=
   by
   rw [evariance, lintegral_eq_zero_iff']
-  constructor <;> intro hX <;> filter_upwards [hX]with ω hω
+  constructor <;> intro hX <;> filter_upwards [hX] with ω hω
   · simp only [Pi.zero_apply, pow_eq_zero_iff, Nat.succ_pos', ENNReal.coe_eq_zero, nnnorm_eq_zero,
       sub_eq_zero] at hω 
     exact hω
@@ -214,7 +214,7 @@ omit m
 
 variable [MeasureSpace Ω]
 
-theorem variance_def' [ProbabilityMeasure (ℙ : Measure Ω)] {X : Ω → ℝ} (hX : Memℒp X 2) :
+theorem variance_def' [IsProbabilityMeasure (ℙ : Measure Ω)] {X : Ω → ℝ} (hX : Memℒp X 2) :
     Var[X] = 𝔼[X ^ 2] - 𝔼[X] ^ 2 :=
   by
   rw [hX.variance_eq, sub_sq', integral_sub', integral_add']; rotate_left
@@ -231,7 +231,7 @@ theorem variance_def' [ProbabilityMeasure (ℙ : Measure Ω)] {X : Ω → ℝ} (
   ring
 #align probability_theory.variance_def' ProbabilityTheory.variance_def'
 
-theorem variance_le_expectation_sq [ProbabilityMeasure (ℙ : Measure Ω)] {X : Ω → ℝ}
+theorem variance_le_expectation_sq [IsProbabilityMeasure (ℙ : Measure Ω)] {X : Ω → ℝ}
     (hm : AEStronglyMeasurable X ℙ) : Var[X] ≤ 𝔼[X ^ 2] :=
   by
   by_cases hX : mem_ℒp X 2
@@ -255,7 +255,7 @@ theorem variance_le_expectation_sq [ProbabilityMeasure (ℙ : Measure Ω)] {X : 
   · exact (AEMeasurable.pow_const (hm.ae_measurable.sub_const _) _).AEStronglyMeasurable
 #align probability_theory.variance_le_expectation_sq ProbabilityTheory.variance_le_expectation_sq
 
-theorem evariance_def' [ProbabilityMeasure (ℙ : Measure Ω)] {X : Ω → ℝ}
+theorem evariance_def' [IsProbabilityMeasure (ℙ : Measure Ω)] {X : Ω → ℝ}
     (hX : AEStronglyMeasurable X ℙ) : eVar[X] = (∫⁻ ω, ‖X ω‖₊ ^ 2) - ENNReal.ofReal (𝔼[X] ^ 2) :=
   by
   by_cases hℒ : mem_ℒp X 2
@@ -280,7 +280,7 @@ theorem evariance_def' [ProbabilityMeasure (ℙ : Measure Ω)] {X : Ω → ℝ}
 
 /-- *Chebyshev's inequality* for `ℝ≥0∞`-valued variance. -/
 theorem meas_ge_le_evariance_div_sq {X : Ω → ℝ} (hX : AEStronglyMeasurable X ℙ) {c : ℝ≥0}
-    (hc : c ≠ 0) : ℙ { ω | ↑c ≤ |X ω - 𝔼[X]| } ≤ eVar[X] / c ^ 2 :=
+    (hc : c ≠ 0) : ℙ {ω | ↑c ≤ |X ω - 𝔼[X]|} ≤ eVar[X] / c ^ 2 :=
   by
   have A : (c : ℝ≥0∞) ≠ 0 := by rwa [Ne.def, ENNReal.coe_eq_zero]
   have B : ae_strongly_measurable (fun ω : Ω => 𝔼[X]) ℙ := ae_strongly_measurable_const
@@ -298,19 +298,19 @@ theorem meas_ge_le_evariance_div_sq {X : Ω → ℝ} (hX : AEStronglyMeasurable 
 
 /-- *Chebyshev's inequality* : one can control the deviation probability of a real random variable
 from its expectation in terms of the variance. -/
-theorem meas_ge_le_variance_div_sq [FiniteMeasure (ℙ : Measure Ω)] {X : Ω → ℝ} (hX : Memℒp X 2)
-    {c : ℝ} (hc : 0 < c) : ℙ { ω | c ≤ |X ω - 𝔼[X]| } ≤ ENNReal.ofReal (Var[X] / c ^ 2) :=
+theorem meas_ge_le_variance_div_sq [IsFiniteMeasure (ℙ : Measure Ω)] {X : Ω → ℝ} (hX : Memℒp X 2)
+    {c : ℝ} (hc : 0 < c) : ℙ {ω | c ≤ |X ω - 𝔼[X]|} ≤ ENNReal.ofReal (Var[X] / c ^ 2) :=
   by
   rw [ENNReal.ofReal_div_of_pos (sq_pos_of_ne_zero _ hc.ne.symm), hX.of_real_variance_eq]
-  convert@meas_ge_le_evariance_div_sq _ _ _ hX.1 c.to_nnreal (by simp [hc])
+  convert @meas_ge_le_evariance_div_sq _ _ _ hX.1 c.to_nnreal (by simp [hc])
   · simp only [Real.coe_toNNReal', max_le_iff, abs_nonneg, and_true_iff]
   · rw [ENNReal.ofReal_pow hc.le]
     rfl
 #align probability_theory.meas_ge_le_variance_div_sq ProbabilityTheory.meas_ge_le_variance_div_sq
 
 /-- The variance of the sum of two independent random variables is the sum of the variances. -/
-theorem IndepFunCat.variance_add [ProbabilityMeasure (ℙ : Measure Ω)] {X Y : Ω → ℝ} (hX : Memℒp X 2)
-    (hY : Memℒp Y 2) (h : IndepFunCat X Y) : Var[X + Y] = Var[X] + Var[Y] :=
+theorem IndepFun.variance_add [IsProbabilityMeasure (ℙ : Measure Ω)] {X Y : Ω → ℝ} (hX : Memℒp X 2)
+    (hY : Memℒp Y 2) (h : IndepFun X Y) : Var[X + Y] = Var[X] + Var[Y] :=
   calc
     Var[X + Y] = 𝔼[fun a => X a ^ 2 + Y a ^ 2 + 2 * X a * Y a] - 𝔼[X + Y] ^ 2 := by
       simp [variance_def' (hX.add hY), add_sq']
@@ -331,76 +331,76 @@ theorem IndepFunCat.variance_add [ProbabilityMeasure (ℙ : Measure Ω)] {X Y : 
       exact h.integral_mul_of_integrable (hX.integrable one_le_two) (hY.integrable one_le_two)
     _ = Var[X] + Var[Y] := by simp only [variance_def', hX, hY, Pi.pow_apply]; ring
     
-#align probability_theory.indep_fun.variance_add ProbabilityTheory.IndepFunCat.variance_add
+#align probability_theory.indep_fun.variance_add ProbabilityTheory.IndepFun.variance_add
 
 /-- The variance of a finite sum of pairwise independent random variables is the sum of the
 variances. -/
-theorem IndepFunCat.variance_sum [ProbabilityMeasure (ℙ : Measure Ω)] {ι : Type _} {X : ι → Ω → ℝ}
+theorem IndepFun.variance_sum [IsProbabilityMeasure (ℙ : Measure Ω)] {ι : Type _} {X : ι → Ω → ℝ}
     {s : Finset ι} (hs : ∀ i ∈ s, Memℒp (X i) 2)
-    (h : Set.Pairwise ↑s fun i j => IndepFunCat (X i) (X j)) :
+    (h : Set.Pairwise ↑s fun i j => IndepFun (X i) (X j)) :
     Var[∑ i in s, X i] = ∑ i in s, Var[X i] := by
   classical
-    induction' s using Finset.induction_on with k s ks IH
-    · simp only [Finset.sum_empty, variance_zero]
-    rw [variance_def' (mem_ℒp_finset_sum' _ hs), sum_insert ks, sum_insert ks]
-    simp only [add_sq']
-    calc
-      𝔼[X k ^ 2 + (∑ i in s, X i) ^ 2 + 2 * X k * ∑ i in s, X i] - 𝔼[X k + ∑ i in s, X i] ^ 2 =
-          𝔼[X k ^ 2] + 𝔼[(∑ i in s, X i) ^ 2] + 𝔼[2 * X k * ∑ i in s, X i] -
-            (𝔼[X k] + 𝔼[∑ i in s, X i]) ^ 2 :=
-        by
-        rw [integral_add', integral_add', integral_add']
-        · exact mem_ℒp.integrable one_le_two (hs _ (mem_insert_self _ _))
-        · apply integrable_finset_sum' _ fun i hi => _
-          exact mem_ℒp.integrable one_le_two (hs _ (mem_insert_of_mem hi))
+  induction' s using Finset.induction_on with k s ks IH
+  · simp only [Finset.sum_empty, variance_zero]
+  rw [variance_def' (mem_ℒp_finset_sum' _ hs), sum_insert ks, sum_insert ks]
+  simp only [add_sq']
+  calc
+    𝔼[X k ^ 2 + (∑ i in s, X i) ^ 2 + 2 * X k * ∑ i in s, X i] - 𝔼[X k + ∑ i in s, X i] ^ 2 =
+        𝔼[X k ^ 2] + 𝔼[(∑ i in s, X i) ^ 2] + 𝔼[2 * X k * ∑ i in s, X i] -
+          (𝔼[X k] + 𝔼[∑ i in s, X i]) ^ 2 :=
+      by
+      rw [integral_add', integral_add', integral_add']
+      · exact mem_ℒp.integrable one_le_two (hs _ (mem_insert_self _ _))
+      · apply integrable_finset_sum' _ fun i hi => _
+        exact mem_ℒp.integrable one_le_two (hs _ (mem_insert_of_mem hi))
+      · exact mem_ℒp.integrable_sq (hs _ (mem_insert_self _ _))
+      · apply mem_ℒp.integrable_sq
+        exact mem_ℒp_finset_sum' _ fun i hi => hs _ (mem_insert_of_mem hi)
+      · apply integrable.add
         · exact mem_ℒp.integrable_sq (hs _ (mem_insert_self _ _))
         · apply mem_ℒp.integrable_sq
           exact mem_ℒp_finset_sum' _ fun i hi => hs _ (mem_insert_of_mem hi)
-        · apply integrable.add
-          · exact mem_ℒp.integrable_sq (hs _ (mem_insert_self _ _))
-          · apply mem_ℒp.integrable_sq
-            exact mem_ℒp_finset_sum' _ fun i hi => hs _ (mem_insert_of_mem hi)
-        · rw [mul_assoc]
-          apply integrable.const_mul _ (2 : ℝ)
-          simp only [mul_sum, sum_apply, Pi.mul_apply]
-          apply integrable_finset_sum _ fun i hi => _
-          apply
-            indep_fun.integrable_mul _ (mem_ℒp.integrable one_le_two (hs _ (mem_insert_self _ _)))
-              (mem_ℒp.integrable one_le_two (hs _ (mem_insert_of_mem hi)))
-          apply h (mem_insert_self _ _) (mem_insert_of_mem hi)
-          exact fun hki => ks (hki.symm ▸ hi)
-      _ =
-          Var[X k] + Var[∑ i in s, X i] +
-            (𝔼[2 * X k * ∑ i in s, X i] - 2 * 𝔼[X k] * 𝔼[∑ i in s, X i]) :=
-        by
-        rw [variance_def' (hs _ (mem_insert_self _ _)),
-          variance_def' (mem_ℒp_finset_sum' _ fun i hi => hs _ (mem_insert_of_mem hi))]
-        ring
-      _ = Var[X k] + Var[∑ i in s, X i] :=
-        by
-        simp only [mul_assoc, integral_mul_left, Pi.mul_apply, Pi.bit0_apply, Pi.one_apply,
-          sum_apply, add_right_eq_self, mul_sum]
-        rw [integral_finset_sum s fun i hi => _]; swap
-        · apply integrable.const_mul _ (2 : ℝ)
-          apply
-            indep_fun.integrable_mul _ (mem_ℒp.integrable one_le_two (hs _ (mem_insert_self _ _)))
-              (mem_ℒp.integrable one_le_two (hs _ (mem_insert_of_mem hi)))
-          apply h (mem_insert_self _ _) (mem_insert_of_mem hi)
-          exact fun hki => ks (hki.symm ▸ hi)
-        rw [integral_finset_sum s fun i hi =>
-            mem_ℒp.integrable one_le_two (hs _ (mem_insert_of_mem hi)),
-          mul_sum, mul_sum, ← sum_sub_distrib]
-        apply Finset.sum_eq_zero fun i hi => _
-        rw [integral_mul_left, indep_fun.integral_mul', sub_self]
-        · apply h (mem_insert_self _ _) (mem_insert_of_mem hi)
-          exact fun hki => ks (hki.symm ▸ hi)
-        · exact mem_ℒp.ae_strongly_measurable (hs _ (mem_insert_self _ _))
-        · exact mem_ℒp.ae_strongly_measurable (hs _ (mem_insert_of_mem hi))
-      _ = Var[X k] + ∑ i in s, Var[X i] := by
-        rw [IH (fun i hi => hs i (mem_insert_of_mem hi))
-            (h.mono (by simp only [coe_insert, Set.subset_insert]))]
-      
-#align probability_theory.indep_fun.variance_sum ProbabilityTheory.IndepFunCat.variance_sum
+      · rw [mul_assoc]
+        apply integrable.const_mul _ (2 : ℝ)
+        simp only [mul_sum, sum_apply, Pi.mul_apply]
+        apply integrable_finset_sum _ fun i hi => _
+        apply
+          indep_fun.integrable_mul _ (mem_ℒp.integrable one_le_two (hs _ (mem_insert_self _ _)))
+            (mem_ℒp.integrable one_le_two (hs _ (mem_insert_of_mem hi)))
+        apply h (mem_insert_self _ _) (mem_insert_of_mem hi)
+        exact fun hki => ks (hki.symm ▸ hi)
+    _ =
+        Var[X k] + Var[∑ i in s, X i] +
+          (𝔼[2 * X k * ∑ i in s, X i] - 2 * 𝔼[X k] * 𝔼[∑ i in s, X i]) :=
+      by
+      rw [variance_def' (hs _ (mem_insert_self _ _)),
+        variance_def' (mem_ℒp_finset_sum' _ fun i hi => hs _ (mem_insert_of_mem hi))]
+      ring
+    _ = Var[X k] + Var[∑ i in s, X i] :=
+      by
+      simp only [mul_assoc, integral_mul_left, Pi.mul_apply, Pi.bit0_apply, Pi.one_apply, sum_apply,
+        add_right_eq_self, mul_sum]
+      rw [integral_finset_sum s fun i hi => _]; swap
+      · apply integrable.const_mul _ (2 : ℝ)
+        apply
+          indep_fun.integrable_mul _ (mem_ℒp.integrable one_le_two (hs _ (mem_insert_self _ _)))
+            (mem_ℒp.integrable one_le_two (hs _ (mem_insert_of_mem hi)))
+        apply h (mem_insert_self _ _) (mem_insert_of_mem hi)
+        exact fun hki => ks (hki.symm ▸ hi)
+      rw [integral_finset_sum s fun i hi =>
+          mem_ℒp.integrable one_le_two (hs _ (mem_insert_of_mem hi)),
+        mul_sum, mul_sum, ← sum_sub_distrib]
+      apply Finset.sum_eq_zero fun i hi => _
+      rw [integral_mul_left, indep_fun.integral_mul', sub_self]
+      · apply h (mem_insert_self _ _) (mem_insert_of_mem hi)
+        exact fun hki => ks (hki.symm ▸ hi)
+      · exact mem_ℒp.ae_strongly_measurable (hs _ (mem_insert_self _ _))
+      · exact mem_ℒp.ae_strongly_measurable (hs _ (mem_insert_of_mem hi))
+    _ = Var[X k] + ∑ i in s, Var[X i] := by
+      rw [IH (fun i hi => hs i (mem_insert_of_mem hi))
+          (h.mono (by simp only [coe_insert, Set.subset_insert]))]
+    
+#align probability_theory.indep_fun.variance_sum ProbabilityTheory.IndepFun.variance_sum
 
 end ProbabilityTheory
 

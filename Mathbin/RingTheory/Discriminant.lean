@@ -88,16 +88,16 @@ theorem discr_reindex (b : Basis ι A B) (f : ι ≃ ι') : discr A (b ∘ ⇑f.
 theorem discr_zero_of_not_linearIndependent [IsDomain A] {b : ι → B}
     (hli : ¬LinearIndependent A b) : discr A b = 0 := by
   classical
-    obtain ⟨g, hg, i, hi⟩ := Fintype.not_linearIndependent_iff.1 hli
-    have : (trace_matrix A b).mulVec g = 0 := by
-      ext i
-      have : ∀ j, (trace A B) (b i * b j) * g j = (trace A B) (g j • b j * b i) := by intro j;
-        simp [mul_comm]
-      simp only [mul_vec, dot_product, trace_matrix_apply, Pi.zero_apply, trace_form_apply, fun j =>
-        this j, ← LinearMap.map_sum, ← sum_mul, hg, MulZeroClass.zero_mul, LinearMap.map_zero]
-    by_contra h
-    rw [discr_def] at h 
-    simpa [Matrix.eq_zero_of_mulVec_eq_zero h this] using hi
+  obtain ⟨g, hg, i, hi⟩ := Fintype.not_linearIndependent_iff.1 hli
+  have : (trace_matrix A b).mulVec g = 0 := by
+    ext i
+    have : ∀ j, (trace A B) (b i * b j) * g j = (trace A B) (g j • b j * b i) := by intro j;
+      simp [mul_comm]
+    simp only [mul_vec, dot_product, trace_matrix_apply, Pi.zero_apply, trace_form_apply, fun j =>
+      this j, ← LinearMap.map_sum, ← sum_mul, hg, MulZeroClass.zero_mul, LinearMap.map_zero]
+  by_contra h
+  rw [discr_def] at h 
+  simpa [Matrix.eq_zero_of_mulVec_eq_zero h this] using hi
 #align algebra.discr_zero_of_not_linear_independent Algebra.discr_zero_of_not_linearIndependent
 
 variable {A}
@@ -137,10 +137,10 @@ theorem discr_not_zero_of_basis [IsSeparable K L] (b : Basis ι K L) : discr K b
       span_eq_top_of_linearIndependent_of_card_eq_finrank b.linear_independent
         (finrank_eq_card_basis b).symm
     classical
-      rw [discr_def, trace_matrix]
-      simp_rw [← Basis.mk_apply b.linear_independent this.ge]
-      rw [← trace_matrix, trace_matrix_of_basis, ← BilinForm.nondegenerate_iff_det_ne_zero]
-      exact traceForm_nondegenerate _ _
+    rw [discr_def, trace_matrix]
+    simp_rw [← Basis.mk_apply b.linear_independent this.ge]
+    rw [← trace_matrix, trace_matrix_of_basis, ← BilinForm.nondegenerate_iff_det_ne_zero]
+    exact traceForm_nondegenerate _ _
 #align algebra.discr_not_zero_of_basis Algebra.discr_not_zero_of_basis
 
 /-- Over a field, if `b` is a basis, then `algebra.discr K b` is a unit. -/
@@ -285,8 +285,8 @@ variable {R : Type z} [CommRing R] [Algebra R K] [Algebra R L] [IsScalarTower R 
 ` ∀ i, is_integral R (b i)`, then `is_integral R (discr K b)`. -/
 theorem discr_isIntegral {b : ι → L} (h : ∀ i, IsIntegral R (b i)) : IsIntegral R (discr K b) := by
   classical
-    rw [discr_def]
-    exact IsIntegral.det fun i j => is_integral_trace (isIntegral_mul (h i) (h j))
+  rw [discr_def]
+  exact IsIntegral.det fun i j => is_integral_trace (isIntegral_mul (h i) (h j))
 #align algebra.discr_is_integral Algebra.discr_isIntegral
 
 /-- If `b` and `b'` are `ℚ`-bases of a number field `K` such that
@@ -301,27 +301,27 @@ theorem discr_eq_discr_of_toMatrix_coeff_isIntegral [NumberField K] {b : Basis �
     convert h' i ((b.index_equiv b').symm j)
     simpa
   classical
-    rw [← (b.reindex (b.index_equiv b')).toMatrix_map_vecMul b', discr_of_matrix_vec_mul, ←
-      one_mul (discr ℚ b), Basis.coe_reindex, discr_reindex]
-    congr
-    have hint : IsIntegral ℤ ((b.reindex (b.index_equiv b')).toMatrix b').det :=
-      IsIntegral.det fun i j => h _ _
-    obtain ⟨r, hr⟩ := IsIntegrallyClosed.isIntegral_iff.1 hint
-    have hunit : IsUnit r :=
+  rw [← (b.reindex (b.index_equiv b')).toMatrix_map_vecMul b', discr_of_matrix_vec_mul, ←
+    one_mul (discr ℚ b), Basis.coe_reindex, discr_reindex]
+  congr
+  have hint : IsIntegral ℤ ((b.reindex (b.index_equiv b')).toMatrix b').det :=
+    IsIntegral.det fun i j => h _ _
+  obtain ⟨r, hr⟩ := IsIntegrallyClosed.isIntegral_iff.1 hint
+  have hunit : IsUnit r :=
+    by
+    have : IsIntegral ℤ (b'.to_matrix (b.reindex (b.index_equiv b'))).det :=
+      IsIntegral.det fun i j => h' _ _
+    obtain ⟨r', hr'⟩ := IsIntegrallyClosed.isIntegral_iff.1 this
+    refine' isUnit_iff_exists_inv.2 ⟨r', _⟩
+    suffices algebraMap ℤ ℚ (r * r') = 1
       by
-      have : IsIntegral ℤ (b'.to_matrix (b.reindex (b.index_equiv b'))).det :=
-        IsIntegral.det fun i j => h' _ _
-      obtain ⟨r', hr'⟩ := IsIntegrallyClosed.isIntegral_iff.1 this
-      refine' isUnit_iff_exists_inv.2 ⟨r', _⟩
-      suffices algebraMap ℤ ℚ (r * r') = 1
-        by
-        rw [← RingHom.map_one (algebraMap ℤ ℚ)] at this 
-        exact (IsFractionRing.injective ℤ ℚ) this
-      rw [RingHom.map_mul, hr, hr', ← det_mul, Basis.toMatrix_mul_toMatrix_flip, det_one]
-    rw [← RingHom.map_one (algebraMap ℤ ℚ), ← hr]
-    cases' Int.isUnit_iff.1 hunit with hp hm
-    · simp [hp]
-    · simp [hm]
+      rw [← RingHom.map_one (algebraMap ℤ ℚ)] at this 
+      exact (IsFractionRing.injective ℤ ℚ) this
+    rw [RingHom.map_mul, hr, hr', ← det_mul, Basis.toMatrix_mul_toMatrix_flip, det_one]
+  rw [← RingHom.map_one (algebraMap ℤ ℚ), ← hr]
+  cases' Int.isUnit_iff.1 hunit with hp hm
+  · simp [hp]
+  · simp [hm]
 #align algebra.discr_eq_discr_of_to_matrix_coeff_is_integral Algebra.discr_eq_discr_of_toMatrix_coeff_isIntegral
 
 /-- Let `K` be the fraction field of an integrally closed domain `R` and let `L` be a finite

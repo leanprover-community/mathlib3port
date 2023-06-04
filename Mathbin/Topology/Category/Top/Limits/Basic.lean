@@ -47,7 +47,7 @@ Generally you should just use `limit.cone F`, unless you need the actual definit
 -/
 def limitCone (F : J ⥤ TopCat.{max v u}) : Cone F
     where
-  pt := TopCat.of { u : ∀ j : J, F.obj j | ∀ {i j : J} (f : i ⟶ j), F.map f (u i) = u j }
+  pt := TopCat.of {u : ∀ j : J, F.obj j | ∀ {i j : J} (f : i ⟶ j), F.map f (u i) = u j}
   π :=
     {
       app := fun j =>

@@ -62,7 +62,8 @@ theorem eventually_nhds_zero_forall_closedBall_subset (hK : ∀ i, IsClosed (K i
   rcases nhds_basis_closed_eball.mem_iff.1 ((hU i).mem_nhds <| hKU i hi) with ⟨R, hR₀, hR⟩
   rcases ennreal.lt_iff_exists_nnreal_btwn.mp hR₀ with ⟨r, hr₀, hrR⟩
   filter_upwards [prod_mem_prod (eventually_lt_nhds hr₀)
-      (closed_ball_mem_nhds x (tsub_pos_iff_lt.2 hrR))]with p hp z hz
+      (closed_ball_mem_nhds x (tsub_pos_iff_lt.2 hrR))] with
+    p hp z hz
   apply hR
   calc
     edist z x ≤ edist z p.2 + edist p.2 x := edist_triangle _ _ _
@@ -75,7 +76,7 @@ theorem exists_forall_closedBall_subset_aux₁ (hK : ∀ i, IsClosed (K i)) (hU 
     (hKU : ∀ i, K i ⊆ U i) (hfin : LocallyFinite K) (x : X) :
     ∃ r : ℝ,
       ∀ᶠ y in 𝓝 x,
-        r ∈ Ioi (0 : ℝ) ∩ ENNReal.ofReal ⁻¹' ⋂ (i) (hi : y ∈ K i), { r | closedBall y r ⊆ U i } :=
+        r ∈ Ioi (0 : ℝ) ∩ ENNReal.ofReal ⁻¹' ⋂ (i) (hi : y ∈ K i), {r | closedBall y r ⊆ U i} :=
   by
   have :=
     (ennreal.continuous_of_real.tendsto' 0 0 ENNReal.ofReal_zero).Eventually
@@ -86,8 +87,7 @@ theorem exists_forall_closedBall_subset_aux₁ (hK : ∀ i, IsClosed (K i)) (hU 
 #align emetric.exists_forall_closed_ball_subset_aux₁ EMetric.exists_forall_closedBall_subset_aux₁
 
 theorem exists_forall_closedBall_subset_aux₂ (y : X) :
-    Convex ℝ
-      (Ioi (0 : ℝ) ∩ ENNReal.ofReal ⁻¹' ⋂ (i) (hi : y ∈ K i), { r | closedBall y r ⊆ U i }) :=
+    Convex ℝ (Ioi (0 : ℝ) ∩ ENNReal.ofReal ⁻¹' ⋂ (i) (hi : y ∈ K i), {r | closedBall y r ⊆ U i}) :=
   (convex_Ioi _).inter <|
     OrdConnected.convex <|
       OrdConnected.preimage_ennreal_ofReal <|

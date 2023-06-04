@@ -54,8 +54,8 @@ theorem StrictMonoOn.continuousWithinAt_right_of_exists_between {f : α → β} 
   have has : a ∈ s := mem_of_mem_nhdsWithin ha hs
   refine' tendsto_order.2 ⟨fun b hb => _, fun b hb => _⟩
   ·
-    filter_upwards [hs,
-      self_mem_nhdsWithin]with _ hxs hxa using hb.trans_le ((h_mono.le_iff_le has hxs).2 hxa)
+    filter_upwards [hs, self_mem_nhdsWithin] with _ hxs hxa using
+      hb.trans_le ((h_mono.le_iff_le has hxs).2 hxa)
   · rcases hfs b hb with ⟨c, hcs, hac, hcb⟩
     rw [h_mono.lt_iff_lt has hcs] at hac 
     filter_upwards [hs, Ico_mem_nhdsWithin_Ici (left_mem_Ico.2 hac)]
@@ -76,7 +76,7 @@ theorem continuousWithinAt_right_of_monotoneOn_of_exists_between {f : α → β}
   have ha : a ∈ Ici a := left_mem_Ici
   have has : a ∈ s := mem_of_mem_nhdsWithin ha hs
   refine' tendsto_order.2 ⟨fun b hb => _, fun b hb => _⟩
-  · filter_upwards [hs, self_mem_nhdsWithin]with _ hxs hxa using hb.trans_le (h_mono has hxs hxa)
+  · filter_upwards [hs, self_mem_nhdsWithin] with _ hxs hxa using hb.trans_le (h_mono has hxs hxa)
   · rcases hfs b hb with ⟨c, hcs, hac, hcb⟩
     have : a < c := not_le.1 fun h => hac.not_le <| h_mono hcs has h
     filter_upwards [hs, Ico_mem_nhdsWithin_Ici (left_mem_Ico.2 this)]

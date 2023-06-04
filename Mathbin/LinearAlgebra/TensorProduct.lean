@@ -414,17 +414,17 @@ open scoped BigOperators
 theorem sum_tmul {α : Type _} (s : Finset α) (m : α → M) (n : N) :
     (∑ a in s, m a) ⊗ₜ[R] n = ∑ a in s, m a ⊗ₜ[R] n := by
   classical
-    induction' s using Finset.induction with a s has ih h
-    · simp
-    · simp [Finset.sum_insert has, add_tmul, ih]
+  induction' s using Finset.induction with a s has ih h
+  · simp
+  · simp [Finset.sum_insert has, add_tmul, ih]
 #align tensor_product.sum_tmul TensorProduct.sum_tmul
 
 theorem tmul_sum (m : M) {α : Type _} (s : Finset α) (n : α → N) :
     (m ⊗ₜ[R] ∑ a in s, n a) = ∑ a in s, m ⊗ₜ[R] n a := by
   classical
-    induction' s using Finset.induction with a s has ih h
-    · simp
-    · simp [Finset.sum_insert has, tmul_add, ih]
+  induction' s using Finset.induction with a s has ih h
+  · simp
+  · simp [Finset.sum_insert has, tmul_add, ih]
 #align tensor_product.tmul_sum TensorProduct.tmul_sum
 
 end
@@ -432,7 +432,7 @@ end
 variable (R M N)
 
 /-- The simple (aka pure) elements span the tensor product. -/
-theorem span_tmul_eq_top : Submodule.span R { t : M ⊗[R] N | ∃ m n, m ⊗ₜ n = t } = ⊤ :=
+theorem span_tmul_eq_top : Submodule.span R {t : M ⊗[R] N | ∃ m n, m ⊗ₜ n = t} = ⊤ :=
   by
   ext t; simp only [Submodule.mem_top, iff_true_iff]
   apply t.induction_on
@@ -779,7 +779,7 @@ theorem map_tmul (f : M →ₗ[R] P) (g : N →ₗ[R] Q) (m : M) (n : N) : map f
 #align tensor_product.map_tmul TensorProduct.map_tmul
 
 theorem map_range_eq_span_tmul (f : M →ₗ[R] P) (g : N →ₗ[R] Q) :
-    (map f g).range = Submodule.span R { t | ∃ m n, f m ⊗ₜ g n = t } :=
+    (map f g).range = Submodule.span R {t | ∃ m n, f m ⊗ₜ g n = t} :=
   by
   simp only [← Submodule.map_top, ← span_tmul_eq_top, Submodule.map_span, Set.mem_image,
     Set.mem_setOf_eq]
@@ -1258,7 +1258,7 @@ instance : Neg (M ⊗[R] N)
 
 protected theorem add_left_neg (x : M ⊗[R] N) : -x + x = 0 :=
   TensorProduct.induction_on x (by rw [add_zero]; apply (neg.aux R).map_zero)
-    (fun x y => by convert(add_tmul (-x) x y).symm; rw [add_left_neg, zero_tmul]) fun x y hx hy =>
+    (fun x y => by convert (add_tmul (-x) x y).symm; rw [add_left_neg, zero_tmul]) fun x y hx hy =>
     by
     unfold Neg.neg SubNegMonoid.neg
     rw [AddMonoidHom.map_add]

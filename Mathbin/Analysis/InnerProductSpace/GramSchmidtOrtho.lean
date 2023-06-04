@@ -336,7 +336,7 @@ theorem gramSchmidt_orthonormal {f : ι → E} (h₀ : LinearIndependent 𝕜 f)
 `gram_schmidt_normed` produces an orthornormal system of vectors after removing the vectors which
 become zero in the process. -/
 theorem gramSchmidt_orthonormal' (f : ι → E) :
-    Orthonormal 𝕜 fun i : { i | gramSchmidtNormed 𝕜 f i ≠ 0 } => gramSchmidtNormed 𝕜 f i :=
+    Orthonormal 𝕜 fun i : {i | gramSchmidtNormed 𝕜 f i ≠ 0} => gramSchmidtNormed 𝕜 f i :=
   by
   refine' ⟨fun i => gramSchmidtNormed_unit_length' i.Prop, _⟩
   rintro i j (hij : ¬_)

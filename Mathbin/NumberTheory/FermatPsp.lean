@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Niels Voss
 
 ! This file was ported from Lean 3 source module number_theory.fermat_psp
-! leanprover-community/mathlib commit c0439b4877c24a117bfdd9e32faf62eee9b115eb
+! leanprover-community/mathlib commit 5c1efce12ba86d4901463f61019832f6a4b1a0d0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.Order.Filter.Cofinite
 
 /-!
 # Fermat Pseudoprimes
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 In this file we define Fermat pseudoprimes: composite numbers that pass the Fermat primality test.
 A natural number `n` passes the Fermat primality test to base `b` (and is therefore deemed a
@@ -45,6 +48,7 @@ The main theorems are
 -/
 
 
+#print FermatPsp.ProbablePrime /-
 /--
 `n` is a probable prime to base `b` if `n` passes the Fermat primality test; that is, `n` divides
 `b ^ (n - 1) - 1`.
@@ -54,7 +58,9 @@ probable primes to any base.
 def FermatPsp.ProbablePrime (n b : ℕ) : Prop :=
   n ∣ b ^ (n - 1) - 1
 #align fermat_psp.probable_prime FermatPsp.ProbablePrime
+-/
 
+#print FermatPsp /-
 /--
 `n` is a Fermat pseudoprime to base `b` if `n` is a probable prime to base `b` and is composite. By
 this definition, all composite natural numbers are pseudoprimes to base 0 and 1. This definition
@@ -63,17 +69,23 @@ also permits `n` to be less than `b`, so that 4 is a pseudoprime to base 5, for 
 def FermatPsp (n b : ℕ) : Prop :=
   FermatPsp.ProbablePrime n b ∧ ¬n.Prime ∧ 1 < n
 #align fermat_psp FermatPsp
+-/
 
 namespace FermatPsp
 
+#print FermatPsp.decidableProbablePrime /-
 instance decidableProbablePrime (n b : ℕ) : Decidable (ProbablePrime n b) :=
   Nat.decidableDvd _ _
 #align fermat_psp.decidable_probable_prime FermatPsp.decidableProbablePrime
+-/
 
+#print FermatPsp.decidablePsp /-
 instance decidablePsp (n b : ℕ) : Decidable (FermatPsp n b) :=
   And.decidable
 #align fermat_psp.decidable_psp FermatPsp.decidablePsp
+-/
 
+#print FermatPsp.coprime_of_probablePrime /-
 /-- If `n` passes the Fermat primality test to base `b`, then `n` is coprime with `b`, assuming that
 `n` and `b` are both positive.
 -/
@@ -103,7 +115,9 @@ theorem coprime_of_probablePrime {n b : ℕ} (h : ProbablePrime n b) (h₁ : 1 �
   · rw [show n = 1 by linarith]
     norm_num
 #align fermat_psp.coprime_of_probable_prime FermatPsp.coprime_of_probablePrime
+-/
 
+#print FermatPsp.probablePrime_iff_modEq /-
 theorem probablePrime_iff_modEq (n : ℕ) {b : ℕ} (h : 1 ≤ b) :
     ProbablePrime n b ↔ b ^ (n - 1) ≡ 1 [MOD n] :=
   by
@@ -117,7 +131,9 @@ theorem probablePrime_iff_modEq (n : ℕ) {b : ℕ} (h : 1 ≤ b) :
   · intro h₁
     exact_mod_cast Nat.ModEq.dvd h₁
 #align fermat_psp.probable_prime_iff_modeq FermatPsp.probablePrime_iff_modEq
+-/
 
+#print FermatPsp.coprime_of_fermatPsp /-
 /-- If `n` is a Fermat pseudoprime to base `b`, then `n` is coprime with `b`, assuming that `b` is
 positive.
 
@@ -128,7 +144,9 @@ theorem coprime_of_fermatPsp {n b : ℕ} (h : FermatPsp n b) (h₁ : 1 ≤ b) : 
   rcases h with ⟨hp, hn₁, hn₂⟩
   exact coprime_of_probable_prime hp (by linarith) h₁
 #align fermat_psp.coprime_of_fermat_psp FermatPsp.coprime_of_fermatPsp
+-/
 
+#print FermatPsp.base_one /-
 /-- All composite numbers are Fermat pseudoprimes to base 1.
 -/
 theorem base_one {n : ℕ} (h₁ : 1 < n) (h₂ : ¬n.Prime) : FermatPsp n 1 :=
@@ -136,6 +154,7 @@ theorem base_one {n : ℕ} (h₁ : 1 < n) (h₂ : ¬n.Prime) : FermatPsp n 1 :=
   refine' ⟨show n ∣ 1 ^ (n - 1) - 1 from _, h₂, h₁⟩
   exact show 0 = 1 ^ (n - 1) - 1 by norm_num ▸ dvd_zero n
 #align fermat_psp.base_one FermatPsp.base_one
+-/
 
 -- Lemmas that are needed to prove statements in this file, but aren't directly related to Fermat
 -- pseudoprimes
@@ -239,9 +258,9 @@ private theorem psp_from_prime_psp {b : ℕ} (b_ge_two : 2 ≤ b) {p : ℕ} (p_p
   -- Used to prove that `2 * p * (b ^ 2 - 1) ∣ (b ^ 2 - 1) * (A * B - 1)`.
   have ha₁ : (b ^ 2 - 1) * (A * B - 1) = b * (b ^ (p - 1) - 1) * (b ^ p + b) :=
     by
-    apply_fun fun x => x * (b ^ 2 - 1)  at AB_id 
+    apply_fun fun x => x * (b ^ 2 - 1) at AB_id 
     rw [Nat.div_mul_cancel hd] at AB_id 
-    apply_fun fun x => x - (b ^ 2 - 1)  at AB_id 
+    apply_fun fun x => x - (b ^ 2 - 1) at AB_id 
     nth_rw 2 [← one_mul (b ^ 2 - 1)] at AB_id 
     rw [← Nat.mul_sub_right_distrib, mul_comm] at AB_id 
     rw [AB_id]
@@ -356,6 +375,7 @@ private theorem psp_from_prime_gt_p {b : ℕ} (b_ge_two : 2 ≤ b) {p : ℕ} (p_
   have : p ≤ 2 * p - 2 := le_tsub_of_add_le_left this
   exact Nat.lt_of_le_of_lt this (pow_gt_exponent _ b_ge_two)
 
+#print FermatPsp.exists_infinite_pseudoprimes /-
 /-- For all positive bases, there exist Fermat infinite pseudoprimes to that base.
 Given in this form: for all numbers `b ≥ 1` and `m`, there exists a pseudoprime `n` to base `b` such
 that `m ≤ n`. This form is similar to `nat.exists_infinite_primes`.
@@ -395,7 +415,9 @@ theorem exists_infinite_pseudoprimes {b : ℕ} (h : 1 ≤ b) (m : ℕ) : ∃ n :
     have : ¬Nat.Prime (2 * (m + 2)) := Nat.not_prime_mul (by norm_num) (by norm_num)
     exact ⟨base_one (by linarith) this, by linarith⟩
 #align fermat_psp.exists_infinite_pseudoprimes FermatPsp.exists_infinite_pseudoprimes
+-/
 
+#print FermatPsp.frequently_atTop_fermatPsp /-
 theorem frequently_atTop_fermatPsp {b : ℕ} (h : 1 ≤ b) : ∃ᶠ n in Filter.atTop, FermatPsp n b :=
   by
   -- Based on the proof of `nat.frequently_at_top_modeq_one`
@@ -403,13 +425,15 @@ theorem frequently_atTop_fermatPsp {b : ℕ} (h : 1 ≤ b) : ∃ᶠ n in Filter.
   obtain ⟨p, hp⟩ := exists_infinite_pseudoprimes h n
   exact ⟨p, hp.2, hp.1⟩
 #align fermat_psp.frequently_at_top_fermat_psp FermatPsp.frequently_atTop_fermatPsp
+-/
 
+#print FermatPsp.infinite_setOf_prime_modeq_one /-
 /-- Infinite set variant of `exists_infinite_pseudoprimes`
 -/
-theorem infinite_setOf_prime_modeq_one {b : ℕ} (h : 1 ≤ b) :
-    Set.Infinite { n : ℕ | FermatPsp n b } :=
+theorem infinite_setOf_prime_modeq_one {b : ℕ} (h : 1 ≤ b) : Set.Infinite {n : ℕ | FermatPsp n b} :=
   Nat.frequently_atTop_iff_infinite.mp (frequently_atTop_fermatPsp h)
 #align fermat_psp.infinite_set_of_prime_modeq_one FermatPsp.infinite_setOf_prime_modeq_one
+-/
 
 end FermatPsp
 

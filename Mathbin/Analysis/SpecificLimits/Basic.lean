@@ -126,8 +126,7 @@ theorem tendsto_pow_atTop_nhdsWithin_0_of_lt_1 {𝕜 : Type _} [LinearOrderedFie
 #align tendsto_pow_at_top_nhds_within_0_of_lt_1 tendsto_pow_atTop_nhdsWithin_0_of_lt_1
 
 theorem uniformity_basis_dist_pow_of_lt_1 {α : Type _} [PseudoMetricSpace α] {r : ℝ} (h₀ : 0 < r)
-    (h₁ : r < 1) :
-    (𝓤 α).HasBasis (fun k : ℕ => True) fun k => { p : α × α | dist p.1 p.2 < r ^ k } :=
+    (h₁ : r < 1) : (𝓤 α).HasBasis (fun k : ℕ => True) fun k => {p : α × α | dist p.1 p.2 < r ^ k} :=
   Metric.mk_uniformity_basis (fun i _ => pow_pos h₀ _) fun ε ε0 =>
     (exists_pow_lt_of_lt_one ε0 h₁).imp fun k hk => ⟨trivial, hk.le⟩
 #align uniformity_basis_dist_pow_of_lt_1 uniformity_basis_dist_pow_of_lt_1
@@ -179,7 +178,7 @@ theorem ENNReal.tendsto_pow_atTop_nhds_0_of_lt_1 {r : ℝ≥0∞} (hr : r < 1) :
   by
   rcases ENNReal.lt_iff_exists_coe.1 hr with ⟨r, rfl, hr'⟩
   rw [← ENNReal.coe_zero]
-  norm_cast  at *
+  norm_cast at *
   apply NNReal.tendsto_pow_atTop_nhds_0_of_lt_1 hr
 #align ennreal.tendsto_pow_at_top_nhds_0_of_lt_1 ENNReal.tendsto_pow_atTop_nhds_0_of_lt_1
 
@@ -286,7 +285,7 @@ theorem ENNReal.tsum_geometric (r : ℝ≥0∞) : (∑' n : ℕ, r ^ n) = (1 - r
   by
   cases' lt_or_le r 1 with hr hr
   · rcases ENNReal.lt_iff_exists_coe.1 hr with ⟨r, rfl, hr'⟩
-    norm_cast  at *
+    norm_cast at *
     convert ENNReal.tsum_coe_eq (NNReal.hasSum_geometric hr)
     rw [ENNReal.coe_inv <| ne_of_gt <| tsub_pos_iff_lt.2 hr]
   · rw [tsub_eq_zero_iff_le.mpr hr, ENNReal.inv_zero, ENNReal.tsum_eq_iSup_nat, iSup_eq_top]

@@ -50,7 +50,7 @@ def componentComplMk (G : SimpleGraph V) {v : V} (vK : v ∉ K) : G.ComponentCom
 #print SimpleGraph.ComponentCompl.supp /-
 /-- The set of vertices of `G` making up the connected component `C` -/
 def ComponentCompl.supp (C : G.ComponentCompl K) : Set V :=
-  { v : V | ∃ h : v ∉ K, G.componentComplMk h = C }
+  {v : V | ∃ h : v ∉ K, G.componentComplMk h = C}
 #align simple_graph.component_compl.supp SimpleGraph.ComponentCompl.supp
 -/
 
@@ -279,17 +279,17 @@ theorem hom_infinite (C : G.ComponentCompl L) (h : K ⊆ L) (Cinf : (C : Set V).
 theorem infinite_iff_in_all_ranges {K : Finset V} (C : G.ComponentCompl K) :
     C.supp.Infinite ↔ ∀ (L) (h : K ⊆ L), ∃ D : G.ComponentCompl L, D.hom h = C := by
   classical
-    constructor
-    · rintro Cinf L h
-      obtain ⟨v, ⟨vK, rfl⟩, vL⟩ := Set.Infinite.nonempty (Set.Infinite.diff Cinf L.finite_to_set)
-      exact ⟨component_compl_mk _ vL, rfl⟩
-    · rintro h Cfin
-      obtain ⟨D, e⟩ := h (K ∪ Cfin.to_finset) (Finset.subset_union_left K Cfin.to_finset)
-      obtain ⟨v, vD⟩ := D.nonempty
-      let Ddis := D.disjoint_right
-      simp_rw [Finset.coe_union, Set.Finite.coe_toFinset, Set.disjoint_union_left,
-        Set.disjoint_iff] at Ddis 
-      exact Ddis.right ⟨(component_compl.hom_eq_iff_le _ _ _).mp e vD, vD⟩
+  constructor
+  · rintro Cinf L h
+    obtain ⟨v, ⟨vK, rfl⟩, vL⟩ := Set.Infinite.nonempty (Set.Infinite.diff Cinf L.finite_to_set)
+    exact ⟨component_compl_mk _ vL, rfl⟩
+  · rintro h Cfin
+    obtain ⟨D, e⟩ := h (K ∪ Cfin.to_finset) (Finset.subset_union_left K Cfin.to_finset)
+    obtain ⟨v, vD⟩ := D.nonempty
+    let Ddis := D.disjoint_right
+    simp_rw [Finset.coe_union, Set.Finite.coe_toFinset, Set.disjoint_union_left,
+      Set.disjoint_iff] at Ddis 
+    exact Ddis.right ⟨(component_compl.hom_eq_iff_le _ _ _).mp e vD, vD⟩
 #align simple_graph.component_compl.infinite_iff_in_all_ranges SimpleGraph.ComponentCompl.infinite_iff_in_all_ranges
 -/
 

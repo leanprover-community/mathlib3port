@@ -82,7 +82,7 @@ theorem cyclotomic_pos {n : ℕ} (hn : 2 < n) {R} [LinearOrderedCommRing R] (x :
   have hn'' : 1 < n := one_lt_two.trans hn
   dsimp at ih 
   have := prod_cyclotomic_eq_geom_sum hn' R
-  apply_fun eval x  at this 
+  apply_fun eval x at this 
   rw [← cons_self_proper_divisors hn'.ne', Finset.erase_cons_of_ne _ hn''.ne', Finset.prod_cons,
     eval_mul, eval_geom_sum] at this 
   rcases lt_trichotomy 0 (∑ i in Finset.range n, x ^ i) with (h | h | h)
@@ -169,7 +169,7 @@ theorem eval_one_cyclotomic_not_prime_pow {R : Type _} [Ring R] {n : ℕ}
     apply Finset.dvd_prod_of_mem
     simp [hn'.ne', hn.ne']
   have := prod_cyclotomic_eq_geom_sum hn' ℤ
-  apply_fun eval 1  at this 
+  apply_fun eval 1 at this 
   rw [eval_geom_sum, one_geom_sum, eval_prod, eq_comm, ←
     Finset.prod_sdiff <| @range_pow_padicValNat_subset_divisors' p _ _, Finset.prod_image] at this 
   simp_rw [eval_one_cyclotomic_prime_pow, Finset.prod_const, Finset.card_range, mul_comm] at this 

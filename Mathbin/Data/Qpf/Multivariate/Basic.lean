@@ -180,7 +180,7 @@ theorem mem_supp {α : TypeVec n} (x : F α) (i) (u : α i) :
 #align mvqpf.mem_supp MvQPF.mem_supp
 
 theorem supp_eq {α : TypeVec n} {i} (x : F α) :
-    supp x i = { u | ∀ a f, abs ⟨a, f⟩ = x → u ∈ f i '' univ } := by ext <;> apply mem_supp
+    supp x i = {u | ∀ a f, abs ⟨a, f⟩ = x → u ∈ f i '' univ} := by ext <;> apply mem_supp
 #align mvqpf.supp_eq MvQPF.supp_eq
 
 theorem has_good_supp_iff {α : TypeVec n} (x : F α) :

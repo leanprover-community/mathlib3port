@@ -69,7 +69,7 @@ variable {R : Type u} [CommRing R] [IsDomain R] [IsDedekindDomain R]
 def integer : Subalgebra R K :=
   {
     (⨅ (v) (_ : v ∉ S), (v : HeightOneSpectrum R).Valuation.ValuationSubring.toSubring).copy
-        { x : K | ∀ (v) (_ : v ∉ S), (v : HeightOneSpectrum R).Valuation x ≤ 1 } <|
+        {x : K | ∀ (v) (_ : v ∉ S), (v : HeightOneSpectrum R).Valuation x ≤ 1} <|
       Set.ext fun _ => by simpa only [SetLike.mem_coe, Subring.mem_iInf] with
     algebraMap_mem' := fun x v _ => v.valuation_le_one x }
 #align set.integer Set.integer
@@ -95,7 +95,7 @@ theorem integer_valuation_le_one (x : S.integer K) {v : HeightOneSpectrum R} (hv
 @[simps]
 def unit : Subgroup Kˣ :=
   (⨅ (v) (_ : v ∉ S), (v : HeightOneSpectrum R).Valuation.ValuationSubring.unitGroup).copy
-      { x : Kˣ | ∀ (v) (_ : v ∉ S), (v : HeightOneSpectrum R).Valuation (x : K) = 1 } <|
+      {x : Kˣ | ∀ (v) (_ : v ∉ S), (v : HeightOneSpectrum R).Valuation (x : K) = 1} <|
     Set.ext fun _ => by simpa only [SetLike.mem_coe, Subgroup.mem_iInf, Valuation.mem_unitGroup_iff]
 #align set.unit Set.unit
 

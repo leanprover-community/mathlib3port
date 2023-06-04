@@ -226,14 +226,14 @@ theorem sum_card_slice_div_choose_le_one [Fintype α]
     (h𝒜 : IsAntichain (· ⊆ ·) (𝒜 : Set (Finset α))) :
     (∑ r in range (Fintype.card α + 1), ((𝒜 # r).card : 𝕜) / (Fintype.card α).choose r) ≤ 1 := by
   classical
-    rw [← sum_flip]
-    refine' (le_card_falling_div_choose le_rfl h𝒜).trans _
-    rw [div_le_iff] <;> norm_cast
-    ·
-      simpa only [Nat.sub_self, one_mul, Nat.choose_zero_right, falling] using
-        (sized_falling 0 𝒜).card_le
-    · rw [tsub_self, choose_zero_right]
-      exact zero_lt_one
+  rw [← sum_flip]
+  refine' (le_card_falling_div_choose le_rfl h𝒜).trans _
+  rw [div_le_iff] <;> norm_cast
+  ·
+    simpa only [Nat.sub_self, one_mul, Nat.choose_zero_right, falling] using
+      (sized_falling 0 𝒜).card_le
+  · rw [tsub_self, choose_zero_right]
+    exact zero_lt_one
 #align finset.sum_card_slice_div_choose_le_one Finset.sum_card_slice_div_choose_le_one
 
 end Lym
@@ -247,21 +247,21 @@ theorem IsAntichain.sperner [Fintype α] {𝒜 : Finset (Finset α)}
     (h𝒜 : IsAntichain (· ⊆ ·) (𝒜 : Set (Finset α))) :
     𝒜.card ≤ (Fintype.card α).choose (Fintype.card α / 2) := by
   classical
-    suffices
-      (∑ r in Iic (Fintype.card α),
-          ((𝒜 # r).card : ℚ) / (Fintype.card α).choose (Fintype.card α / 2)) ≤
-        1
-      by
-      rwa [← sum_div, ← Nat.cast_sum, div_le_one, cast_le, sum_card_slice] at this 
-      norm_cast
-      exact choose_pos (Nat.div_le_self _ _)
-    rw [Iic_eq_Icc, ← Ico_succ_right, bot_eq_zero, Ico_zero_eq_range]
-    refine' (sum_le_sum fun r hr => _).trans (sum_card_slice_div_choose_le_one h𝒜)
-    rw [mem_range] at hr 
-    refine' div_le_div_of_le_left _ _ _ <;> norm_cast
-    · exact Nat.zero_le _
-    · exact choose_pos (lt_succ_iff.1 hr)
-    · exact choose_le_middle _ _
+  suffices
+    (∑ r in Iic (Fintype.card α),
+        ((𝒜 # r).card : ℚ) / (Fintype.card α).choose (Fintype.card α / 2)) ≤
+      1
+    by
+    rwa [← sum_div, ← Nat.cast_sum, div_le_one, cast_le, sum_card_slice] at this 
+    norm_cast
+    exact choose_pos (Nat.div_le_self _ _)
+  rw [Iic_eq_Icc, ← Ico_succ_right, bot_eq_zero, Ico_zero_eq_range]
+  refine' (sum_le_sum fun r hr => _).trans (sum_card_slice_div_choose_le_one h𝒜)
+  rw [mem_range] at hr 
+  refine' div_le_div_of_le_left _ _ _ <;> norm_cast
+  · exact Nat.zero_le _
+  · exact choose_pos (lt_succ_iff.1 hr)
+  · exact choose_le_middle _ _
 #align is_antichain.sperner IsAntichain.sperner
 
 end Finset

@@ -186,9 +186,9 @@ def preservesShapeFinOfPreservesBinaryAndTerminal (n : ℕ) :
 def preservesFiniteProductsOfPreservesBinaryAndTerminal (J : Type) [Fintype J] :
     PreservesLimitsOfShape (Discrete J) F := by
   classical
-    let e := Fintype.equivFin J
-    haveI := preserves_shape_fin_of_preserves_binary_and_terminal F (Fintype.card J)
-    apply preservesLimitsOfShapeOfEquiv.{0, 0} (discrete.equivalence e).symm
+  let e := Fintype.equivFin J
+  haveI := preserves_shape_fin_of_preserves_binary_and_terminal F (Fintype.card J)
+  apply preservesLimitsOfShapeOfEquiv.{0, 0} (discrete.equivalence e).symm
 #align category_theory.preserves_finite_products_of_preserves_binary_and_terminal CategoryTheory.preservesFiniteProductsOfPreservesBinaryAndTerminal
 -/
 
@@ -339,9 +339,9 @@ def preservesShapeFinOfPreservesBinaryAndInitial (n : ℕ) :
 def preservesFiniteCoproductsOfPreservesBinaryAndInitial (J : Type) [Fintype J] :
     PreservesColimitsOfShape (Discrete J) F := by
   classical
-    let e := Fintype.equivFin J
-    haveI := preserves_shape_fin_of_preserves_binary_and_initial F (Fintype.card J)
-    apply preservesColimitsOfShapeOfEquiv.{0, 0} (discrete.equivalence e).symm
+  let e := Fintype.equivFin J
+  haveI := preserves_shape_fin_of_preserves_binary_and_initial F (Fintype.card J)
+  apply preservesColimitsOfShapeOfEquiv.{0, 0} (discrete.equivalence e).symm
 #align category_theory.preserves_finite_coproducts_of_preserves_binary_and_initial CategoryTheory.preservesFiniteCoproductsOfPreservesBinaryAndInitial
 -/
 

@@ -144,7 +144,7 @@ theorem zorn_nonempty_preorder₀ (s : Set α)
     (ih : ∀ (c) (_ : c ⊆ s), IsChain (· ≤ ·) c → ∀ y ∈ c, ∃ ub ∈ s, ∀ z ∈ c, z ≤ ub) (x : α)
     (hxs : x ∈ s) : ∃ m ∈ s, x ≤ m ∧ ∀ z ∈ s, m ≤ z → z ≤ m :=
   by
-  rcases zorn_preorder₀ ({ y ∈ s | x ≤ y }) fun c hcs hc => _ with ⟨m, ⟨hms, hxm⟩, hm⟩
+  rcases zorn_preorder₀ ({y ∈ s | x ≤ y}) fun c hcs hc => _ with ⟨m, ⟨hms, hxm⟩, hm⟩
   · exact ⟨m, hms, hxm, fun z hzs hmz => hm _ ⟨hzs, hxm.trans hmz⟩ hmz⟩
   · rcases c.eq_empty_or_nonempty with (rfl | ⟨y, hy⟩)
     · exact ⟨x, ⟨hxs, le_rfl⟩, fun z => False.elim⟩
@@ -236,7 +236,7 @@ theorem zorn_superset_nonempty (S : Set (Set α))
 theorem IsChain.exists_maxChain (hc : IsChain r c) : ∃ M, @IsMaxChain _ r M ∧ c ⊆ M :=
   by
   obtain ⟨M, ⟨_, hM₀⟩, hM₁, hM₂⟩ :=
-    zorn_subset_nonempty { s | c ⊆ s ∧ IsChain r s } _ c ⟨subset.rfl, hc⟩
+    zorn_subset_nonempty {s | c ⊆ s ∧ IsChain r s} _ c ⟨subset.rfl, hc⟩
   · exact ⟨M, ⟨hM₀, fun d hd hMd => (hM₂ _ ⟨hM₁.trans hMd, hd⟩ hMd).symm⟩, hM₁⟩
   rintro cs hcs₀ hcs₁ ⟨s, hs⟩
   refine'

@@ -88,7 +88,7 @@ theorem not_of_mem_foldl_argAux (hr₀ : Irreflexive r) (hr₁ : Transitive r) :
     simp_all [hf.1, hf.2, hr₀ _]
   rw [hf, Option.mem_def] at ho 
   dsimp only at ho 
-  split_ifs  at ho  with hac hac <;> cases' mem_append.1 hb with h h <;> subst ho
+  split_ifs at ho  with hac hac <;> cases' mem_append.1 hb with h h <;> subst ho
   · exact fun hba => ih h hf (hr₁ hba hac)
   · simp_all [hr₀ _]
   · exact ih h hf
@@ -211,7 +211,7 @@ theorem argmax_cons (f : α → β) (a : α) (l : List α) :
 theorem argmin_cons (f : α → β) (a : α) (l : List α) :
     argmin f (a :: l) =
       Option.casesOn (argmin f l) (some a) fun c => if f c < f a then some c else some a :=
-  by convert@argmax_cons _ βᵒᵈ _ _ _ _
+  by convert @argmax_cons _ βᵒᵈ _ _ _ _
 #align list.argmin_cons List.argmin_cons
 
 variable [DecidableEq α]
@@ -227,7 +227,7 @@ theorem index_of_argmax :
       simp_all
     rw [h] at hm 
     dsimp only at hm 
-    obtain rfl | ha := ha <;> split_ifs  at hm  <;> subst hm
+    obtain rfl | ha := ha <;> split_ifs at hm  <;> subst hm
     · cases not_le_of_lt ‹_› ‹_›
     · rw [if_neg, if_neg]
       exact Nat.succ_le_succ (index_of_argmax h ha ham)

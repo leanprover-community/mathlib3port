@@ -185,7 +185,7 @@ theorem Pairwise.forall (hR : Symmetric R) (hl : l.Pairwise R) :
 -/
 
 #print List.Pairwise.set_pairwise /-
-theorem Pairwise.set_pairwise (hl : Pairwise R l) (hr : Symmetric R) : { x | x ∈ l }.Pairwise R :=
+theorem Pairwise.set_pairwise (hl : Pairwise R l) (hr : Symmetric R) : {x | x ∈ l}.Pairwise R :=
   hl.forall hr
 #align list.pairwise.set_pairwise List.Pairwise.set_pairwise
 -/
@@ -386,10 +386,9 @@ theorem pairwise_of_reflexive_on_dupl_of_forall_ne [DecidableEq α] {l : List α
 theorem pairwise_of_forall_mem_list {l : List α} {r : α → α → Prop} (h : ∀ a ∈ l, ∀ b ∈ l, r a b) :
     l.Pairwise r := by
   classical
-    refine'
-      pairwise_of_reflexive_on_dupl_of_forall_ne (fun a ha' => _) fun a ha b hb _ => h a ha b hb
-    have ha := List.one_le_count_iff_mem.1 ha'.le
-    exact h a ha a ha
+  refine' pairwise_of_reflexive_on_dupl_of_forall_ne (fun a ha' => _) fun a ha b hb _ => h a ha b hb
+  have ha := List.one_le_count_iff_mem.1 ha'.le
+  exact h a ha a ha
 #align list.pairwise_of_forall_mem_list List.pairwise_of_forall_mem_list
 -/
 

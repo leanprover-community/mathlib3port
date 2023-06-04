@@ -264,16 +264,15 @@ theorem support_esymm (n : ℕ) [DecidableEq σ] [Nontrivial R] :
 theorem degrees_esymm [Nontrivial R] (n : ℕ) (hpos : 0 < n) (hn : n ≤ Fintype.card σ) :
     (esymm σ R n).degrees = (univ : Finset σ).val := by
   classical
-    have :
-      (Finsupp.toMultiset ∘ fun t : Finset σ => ∑ i : σ in t, Finsupp.single i 1) = Finset.val := by
-      funext; simp [Finsupp.toMultiset_sum_single]
-    rw [degrees_def, support_esymm, sup_image, this, ← comp_sup_eq_sup_comp]
-    · obtain ⟨k, rfl⟩ := Nat.exists_eq_succ_of_ne_zero hpos.ne'
-      simpa using powerset_len_sup _ _ (Nat.lt_of_succ_le hn)
-    · intros
-      simp only [union_val, sup_eq_union]
-      congr
-    · rfl
+  have : (Finsupp.toMultiset ∘ fun t : Finset σ => ∑ i : σ in t, Finsupp.single i 1) = Finset.val :=
+    by funext; simp [Finsupp.toMultiset_sum_single]
+  rw [degrees_def, support_esymm, sup_image, this, ← comp_sup_eq_sup_comp]
+  · obtain ⟨k, rfl⟩ := Nat.exists_eq_succ_of_ne_zero hpos.ne'
+    simpa using powerset_len_sup _ _ (Nat.lt_of_succ_le hn)
+  · intros
+    simp only [union_val, sup_eq_union]
+    congr
+  · rfl
 #align mv_polynomial.degrees_esymm MvPolynomial.degrees_esymm
 -/
 

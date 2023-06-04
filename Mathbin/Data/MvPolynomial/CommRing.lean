@@ -184,15 +184,15 @@ theorem degreeOf_sub_lt {x : σ} {f g : MvPolynomial σ R} {k : ℕ} (h : 0 < k)
     (hg : ∀ m : σ →₀ ℕ, m ∈ g.support → k ≤ m x → coeff m f = coeff m g) : degreeOf x (f - g) < k :=
   by
   classical
-    rw [degree_of_lt_iff h]
-    intro m hm
-    by_contra hc
-    simp only [not_lt] at hc 
-    have h := support_sub σ f g hm
-    simp only [mem_support_iff, Ne.def, coeff_sub, sub_eq_zero] at hm 
-    cases' Finset.mem_union.1 h with cf cg
-    · exact hm (hf m cf hc)
-    · exact hm (hg m cg hc)
+  rw [degree_of_lt_iff h]
+  intro m hm
+  by_contra hc
+  simp only [not_lt] at hc 
+  have h := support_sub σ f g hm
+  simp only [mem_support_iff, Ne.def, coeff_sub, sub_eq_zero] at hm 
+  cases' Finset.mem_union.1 h with cf cg
+  · exact hm (hf m cf hc)
+  · exact hm (hg m cg hc)
 #align mv_polynomial.degree_of_sub_lt MvPolynomial.degreeOf_sub_lt
 
 end DegreeOf
@@ -207,10 +207,10 @@ theorem totalDegree_neg (a : MvPolynomial σ R) : (-a).totalDegree = a.totalDegr
 theorem totalDegree_sub (a b : MvPolynomial σ R) :
     (a - b).totalDegree ≤ max a.totalDegree b.totalDegree := by
   classical calc
-      (a - b).totalDegree = (a + -b).totalDegree := by rw [sub_eq_add_neg]
-      _ ≤ max a.total_degree (-b).totalDegree := (total_degree_add a (-b))
-      _ = max a.total_degree b.total_degree := by rw [total_degree_neg]
-      
+    (a - b).totalDegree = (a + -b).totalDegree := by rw [sub_eq_add_neg]
+    _ ≤ max a.total_degree (-b).totalDegree := (total_degree_add a (-b))
+    _ = max a.total_degree b.total_degree := by rw [total_degree_neg]
+    
 #align mv_polynomial.total_degree_sub MvPolynomial.totalDegree_sub
 
 end TotalDegree

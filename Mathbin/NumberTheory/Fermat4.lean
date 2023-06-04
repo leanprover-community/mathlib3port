@@ -80,7 +80,7 @@ def Minimal (a b c : ℤ) : Prop :=
 /-- if we have a solution to `a ^ 4 + b ^ 4 = c ^ 2` then there must be a minimal one. -/
 theorem exists_minimal {a b c : ℤ} (h : Fermat42 a b c) : ∃ a0 b0 c0, Minimal a0 b0 c0 :=
   by
-  let S : Set ℕ := { n | ∃ s : ℤ × ℤ × ℤ, Fermat42 s.1 s.2.1 s.2.2 ∧ n = Int.natAbs s.2.2 }
+  let S : Set ℕ := {n | ∃ s : ℤ × ℤ × ℤ, Fermat42 s.1 s.2.1 s.2.2 ∧ n = Int.natAbs s.2.2}
   have S_nonempty : S.nonempty := by
     use Int.natAbs c
     rw [Set.mem_setOf_eq]

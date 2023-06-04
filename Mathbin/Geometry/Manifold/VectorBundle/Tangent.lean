@@ -92,7 +92,7 @@ def tangentBundleCore : VectorBundleCore 𝕜 M E (atlas H M)
     by
     rw [Filter.EventuallyEq.fderivWithin_eq, fderivWithin_id', ContinuousLinearMap.id_apply]
     · exact I.unique_diff_at_image
-    · filter_upwards [i.1.extend_target_mem_nhdsWithin I hx]with y hy
+    · filter_upwards [i.1.extend_target_mem_nhdsWithin I hx] with y hy
       exact (i.1.extend I).right_inv hy
     · simp_rw [Function.comp_apply, i.1.extend_left_inv I hx]
   continuousOn_coordChange i j :=
@@ -106,7 +106,7 @@ def tangentBundleCore : VectorBundleCore 𝕜 M E (atlas H M)
     rintro i j k x ⟨⟨hxi, hxj⟩, hxk⟩ v
     rw [fderivWithin_fderivWithin, Filter.EventuallyEq.fderivWithin_eq]
     · have := i.1.extend_preimage_mem_nhds I hxi (j.1.extend_source_mem_nhds I hxj)
-      filter_upwards [nhdsWithin_le_nhds this]with y hy
+      filter_upwards [nhdsWithin_le_nhds this] with y hy
       simp_rw [Function.comp_apply, (j.1.extend I).left_inv hy]
     · simp_rw [Function.comp_apply, i.1.extend_left_inv I hxi, j.1.extend_left_inv I hxj]
     ·

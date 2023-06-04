@@ -67,7 +67,7 @@ def LiftR {α : TypeVec n} (r : ∀ {i}, α i → α i → Prop) (x y : F α) : 
 /-- given `x : F α` and a projection `i` of type vector `α`, `supp x i` is the set
 of `α.i` contained in `x` -/
 def supp {α : TypeVec n} (x : F α) (i : Fin2 n) : Set (α i) :=
-  { y : α i | ∀ ⦃p⦄, LiftP p x → p i y }
+  {y : α i | ∀ ⦃p⦄, LiftP p x → p i y}
 #align mvfunctor.supp MvFunctor.supp
 -/
 

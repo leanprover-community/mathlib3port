@@ -99,19 +99,20 @@ theorem comp_apply_eq_mapMeasure (η : kernel β γ) [IsSFiniteKernel η] (κ : 
 omit mγ
 
 theorem const_mapMeasure_eq_comp_const (κ : kernel α β) [IsSFiniteKernel κ] (μ : Measure α)
-    [FiniteMeasure μ] : const α (mapMeasure κ μ) = κ ∘ₖ const α μ :=
+    [IsFiniteMeasure μ] : const α (mapMeasure κ μ) = κ ∘ₖ const α μ :=
   by
   ext1 a; ext1 s hs
   rw [const_apply, map_measure_apply _ _ hs, comp_apply _ _ _ hs, const_apply]
 #align probability_theory.kernel.const_map_measure_eq_comp_const ProbabilityTheory.kernel.const_mapMeasure_eq_comp_const
 
 theorem comp_const_apply_eq_mapMeasure (κ : kernel α β) [IsSFiniteKernel κ] (μ : Measure α)
-    [FiniteMeasure μ] (a : α) : (κ ∘ₖ const α μ) a = mapMeasure κ μ := by
+    [IsFiniteMeasure μ] (a : α) : (κ ∘ₖ const α μ) a = mapMeasure κ μ := by
   rw [← const_apply (map_measure κ μ) a, const_map_measure_eq_comp_const κ μ]
 #align probability_theory.kernel.comp_const_apply_eq_map_measure ProbabilityTheory.kernel.comp_const_apply_eq_mapMeasure
 
-theorem lintegral_mapMeasure (κ : kernel α β) [IsSFiniteKernel κ] (μ : Measure α) [FiniteMeasure μ]
-    {f : β → ℝ≥0∞} (hf : Measurable f) : (∫⁻ b, f b ∂mapMeasure κ μ) = ∫⁻ a, ∫⁻ b, f b ∂κ a ∂μ :=
+theorem lintegral_mapMeasure (κ : kernel α β) [IsSFiniteKernel κ] (μ : Measure α)
+    [IsFiniteMeasure μ] {f : β → ℝ≥0∞} (hf : Measurable f) :
+    (∫⁻ b, f b ∂mapMeasure κ μ) = ∫⁻ a, ∫⁻ b, f b ∂κ a ∂μ :=
   by
   by_cases hα : Nonempty α
   · have := const_apply μ hα.some
@@ -139,11 +140,11 @@ theorem Invariant.def (hκ : Invariant κ μ) : mapMeasure κ μ = μ :=
   hκ
 #align probability_theory.kernel.invariant.def ProbabilityTheory.kernel.Invariant.def
 
-theorem Invariant.comp_const [IsSFiniteKernel κ] [FiniteMeasure μ] (hκ : Invariant κ μ) :
+theorem Invariant.comp_const [IsSFiniteKernel κ] [IsFiniteMeasure μ] (hκ : Invariant κ μ) :
     κ ∘ₖ const α μ = const α μ := by rw [← const_map_measure_eq_comp_const κ μ, hκ.def]
 #align probability_theory.kernel.invariant.comp_const ProbabilityTheory.kernel.Invariant.comp_const
 
-theorem Invariant.comp [IsSFiniteKernel κ] [IsSFiniteKernel η] [FiniteMeasure μ]
+theorem Invariant.comp [IsSFiniteKernel κ] [IsSFiniteKernel η] [IsFiniteMeasure μ]
     (hκ : Invariant κ μ) (hη : Invariant η μ) : Invariant (κ ∘ₖ η) μ :=
   by
   by_cases hα : Nonempty α

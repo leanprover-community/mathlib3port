@@ -60,7 +60,7 @@ theorem toFinset_some {a : α} [Decidable (some a).Dom] : (some a).toFinset = {a
 
 #print Part.coe_toFinset /-
 @[simp]
-theorem coe_toFinset (o : Part α) [Decidable o.Dom] : (o.toFinset : Set α) = { x | x ∈ o } :=
+theorem coe_toFinset (o : Part α) [Decidable o.Dom] : (o.toFinset : Set α) = {x | x ∈ o} :=
   Set.ext fun x => mem_toFinset
 #align part.coe_to_finset Part.coe_toFinset
 -/

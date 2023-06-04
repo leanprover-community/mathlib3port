@@ -223,7 +223,7 @@ theorem lt_of_tendsto_zero_of_pos {f : ℕ → ℝ} (hf : Tendsto f atTop (𝓝 
   by
   simp only [Metric.tendsto_atTop, Real.dist_eq, sub_zero, lt_def] at hf ⊢
   intro r hr; cases' hf r hr with N hf'
-  have hs : { i : ℕ | f i < r }ᶜ ⊆ { i : ℕ | i ≤ N } := fun i hi1 =>
+  have hs : {i : ℕ | f i < r}ᶜ ⊆ {i : ℕ | i ≤ N} := fun i hi1 =>
     le_of_lt
       (by
         simp only [lt_iff_not_ge] <;>
@@ -299,7 +299,7 @@ private theorem is_st_unique' (x : ℝ*) (r s : ℝ) (hr : IsSt x r) (hs : IsSt 
   have hr' := (hr _ hrs').2
   have hs' := (hs _ hrs').1
   have h : s - (s - r) / 2 = r + (s - r) / 2 := by linarith
-  norm_cast  at *
+  norm_cast at *
   rw [h] at hs' 
   exact not_lt_of_lt hs' hr'
 
@@ -321,8 +321,8 @@ theorem not_infinite_of_exists_st {x : ℝ*} : (∃ r : ℝ, IsSt x r) → ¬Inf
 #align hyperreal.not_infinite_of_exists_st Hyperreal.not_infinite_of_exists_st
 -/
 
-theorem isSt_sSup {x : ℝ*} (hni : ¬Infinite x) : IsSt x (sSup { y : ℝ | (y : ℝ*) < x }) :=
-  let S : Set ℝ := { y : ℝ | (y : ℝ*) < x }
+theorem isSt_sSup {x : ℝ*} (hni : ¬Infinite x) : IsSt x (sSup {y : ℝ | (y : ℝ*) < x}) :=
+  let S : Set ℝ := {y : ℝ | (y : ℝ*) < x}
   let R : _ := sSup S
   have hnile := not_forall.mp (not_or.mp hni).1
   have hnige := not_forall.mp (not_or.mp hni).2
@@ -345,22 +345,22 @@ theorem isSt_sSup {x : ℝ*} (hni : ¬Infinite x) : IsSt x (sSup { y : ℝ | (y 
 
 #print Hyperreal.exists_st_of_not_infinite /-
 theorem exists_st_of_not_infinite {x : ℝ*} (hni : ¬Infinite x) : ∃ r : ℝ, IsSt x r :=
-  ⟨sSup { y : ℝ | (y : ℝ*) < x }, isSt_sSup hni⟩
+  ⟨sSup {y : ℝ | (y : ℝ*) < x}, isSt_sSup hni⟩
 #align hyperreal.exists_st_of_not_infinite Hyperreal.exists_st_of_not_infinite
 -/
 
-theorem st_eq_sSup {x : ℝ*} : st x = sSup { y : ℝ | (y : ℝ*) < x } :=
+theorem st_eq_sSup {x : ℝ*} : st x = sSup {y : ℝ | (y : ℝ*) < x} :=
   by
   unfold st; split_ifs
   · exact is_st_unique (Classical.choose_spec h) (is_st_Sup (not_infinite_of_exists_st h))
   · cases' not_imp_comm.mp exists_st_of_not_infinite h with H H
     · rw [(Set.ext fun i => ⟨fun hi => Set.mem_univ i, fun hi => H i⟩ :
-          { y : ℝ | (y : ℝ*) < x } = Set.univ)]
+          {y : ℝ | (y : ℝ*) < x} = Set.univ)]
       exact real.Sup_univ.symm
     · rw [(Set.ext fun i =>
             ⟨fun hi => False.elim (not_lt_of_lt (H i) hi), fun hi =>
               False.elim (Set.not_mem_empty i hi)⟩ :
-          { y : ℝ | (y : ℝ*) < x } = ∅)]
+          {y : ℝ | (y : ℝ*) < x} = ∅)]
       exact real.Sup_empty.symm
 #align hyperreal.st_eq_Sup Hyperreal.st_eq_sSup
 
@@ -487,7 +487,7 @@ theorem Hyperreal.IsSt.lt {x y : ℝ*} {r s : ℝ} (hxr : IsSt x r) (hys : IsSt 
   have hys' := (hys _ hrs').1
   have H1 : r + (s - r) / 2 = (r + s) / 2 := by linarith
   have H2 : s - (s - r) / 2 = (r + s) / 2 := by linarith
-  norm_cast  at *
+  norm_cast at *
   rw [H1] at hxr' 
   rw [H2] at hys' 
   exact lt_trans hxr' hys'
@@ -708,7 +708,7 @@ theorem infinitePos_of_tendsto_top {f : ℕ → ℝ} (hf : Tendsto f atTop atTop
   Exists.cases_on (hf' (r + 1)) fun i hi =>
     have hi' : ∀ a : ℕ, f a < r + 1 → a < i := fun a => by
       rw [← not_le, ← not_le] <;> exact not_imp_not.mpr (hi a)
-    have hS : { a : ℕ | r < f a }ᶜ ⊆ { a : ℕ | a ≤ i } := by
+    have hS : {a : ℕ | r < f a}ᶜ ⊆ {a : ℕ | a ≤ i} := by
       simp only [Set.compl_setOf, not_lt] <;>
         exact fun a har => le_of_lt (hi' a (lt_of_le_of_lt har (lt_add_one _)))
     Germ.coe_lt.2 <| mem_hyperfilter_of_finite_compl <| (Set.finite_le_nat _).Subset hS
@@ -722,7 +722,7 @@ theorem infiniteNeg_of_tendsto_bot {f : ℕ → ℝ} (hf : Tendsto f atTop atBot
   Exists.cases_on (hf' (r - 1)) fun i hi =>
     have hi' : ∀ a : ℕ, r - 1 < f a → a < i := fun a => by
       rw [← not_le, ← not_le] <;> exact not_imp_not.mpr (hi a)
-    have hS : { a : ℕ | f a < r }ᶜ ⊆ { a : ℕ | a ≤ i } := by
+    have hS : {a : ℕ | f a < r}ᶜ ⊆ {a : ℕ | a ≤ i} := by
       simp only [Set.compl_setOf, not_lt] <;>
         exact fun a har => le_of_lt (hi' a (lt_of_lt_of_le (sub_one_lt _) har))
     Germ.coe_lt.2 <| mem_hyperfilter_of_finite_compl <| (Set.finite_le_nat _).Subset hS
@@ -884,7 +884,7 @@ theorem lt_neg_of_pos_of_infinitesimal {x : ℝ*} : Infinitesimal x → ∀ r : 
 
 theorem gt_of_neg_of_infinitesimal {x : ℝ*} : Infinitesimal x → ∀ r : ℝ, r < 0 → ↑r < x :=
   fun hi r hr => by
-  convert((infinitesimal_def.mp hi) (-r) (neg_pos.mpr hr)).1 <;> exact (neg_neg ↑r).symm
+  convert ((infinitesimal_def.mp hi) (-r) (neg_pos.mpr hr)).1 <;> exact (neg_neg ↑r).symm
 #align hyperreal.gt_of_neg_of_infinitesimal Hyperreal.gt_of_neg_of_infinitesimal
 
 theorem abs_lt_real_iff_infinitesimal {x : ℝ*} : Infinitesimal x ↔ ∀ r : ℝ, r ≠ 0 → |x| < |r| :=
@@ -1001,7 +1001,7 @@ theorem infinitesimal_neg_iff_infiniteNeg_inv {x : ℝ*} :
 #align hyperreal.infinitesimal_neg_iff_infinite_neg_inv Hyperreal.infinitesimal_neg_iff_infiniteNeg_inv
 
 theorem infinitesimal_iff_infinite_inv {x : ℝ*} (h : x ≠ 0) : Infinitesimal x ↔ Infinite x⁻¹ := by
-  convert(infinite_iff_infinitesimal_inv (inv_ne_zero h)).symm <;> simp only [inv_inv]
+  convert (infinite_iff_infinitesimal_inv (inv_ne_zero h)).symm <;> simp only [inv_inv]
 #align hyperreal.infinitesimal_iff_infinite_inv Hyperreal.infinitesimal_iff_infinite_inv
 
 /-!

@@ -99,7 +99,7 @@ namespace ContinuousMap
 /-- Given `K ⊆ α`, `V ⊆ β × β`, and `f : C(α, β)`, we define `compact_conv_nhd K V f` to be the set
 of `g : C(α, β)` that are `V`-close to `f` on `K`. -/
 def compactConvNhd : Set C(α, β) :=
-  { g | ∀ x ∈ K, (f x, g x) ∈ V }
+  {g | ∀ x ∈ K, (f x, g x) ∈ V}
 #align continuous_map.compact_conv_nhd ContinuousMap.compactConvNhd
 -/
 
@@ -146,7 +146,7 @@ theorem compactConvNhd_subset_inter (K₁ K₂ : Set α) (V₁ V₂ : Set (β ×
 
 #print ContinuousMap.compactConvNhd_compact_entourage_nonempty /-
 theorem compactConvNhd_compact_entourage_nonempty :
-    { KV : Set α × Set (β × β) | IsCompact KV.1 ∧ KV.2 ∈ 𝓤 β }.Nonempty :=
+    {KV : Set α × Set (β × β) | IsCompact KV.1 ∧ KV.2 ∈ 𝓤 β}.Nonempty :=
   ⟨⟨∅, univ⟩, isCompact_empty, Filter.univ_mem⟩
 #align continuous_map.compact_conv_nhd_compact_entourage_nonempty ContinuousMap.compactConvNhd_compact_entourage_nonempty
 -/
@@ -325,15 +325,15 @@ theorem compactOpen_eq_compactConvergence :
 #print ContinuousMap.compactConvergenceUniformity /-
 /-- The filter on `C(α, β) × C(α, β)` which underlies the uniform space structure on `C(α, β)`. -/
 def compactConvergenceUniformity : Filter (C(α, β) × C(α, β)) :=
-  ⨅ KV ∈ { KV : Set α × Set (β × β) | IsCompact KV.1 ∧ KV.2 ∈ 𝓤 β },
-    𝓟 { fg : C(α, β) × C(α, β) | ∀ x : α, x ∈ KV.1 → (fg.1 x, fg.2 x) ∈ KV.2 }
+  ⨅ KV ∈ {KV : Set α × Set (β × β) | IsCompact KV.1 ∧ KV.2 ∈ 𝓤 β},
+    𝓟 {fg : C(α, β) × C(α, β) | ∀ x : α, x ∈ KV.1 → (fg.1 x, fg.2 x) ∈ KV.2}
 #align continuous_map.compact_convergence_uniformity ContinuousMap.compactConvergenceUniformity
 -/
 
 theorem hasBasis_compactConvergenceUniformity_aux :
     HasBasis (@compactConvergenceUniformity α β _ _)
       (fun p : Set α × Set (β × β) => IsCompact p.1 ∧ p.2 ∈ 𝓤 β) fun p =>
-      { fg : C(α, β) × C(α, β) | ∀ x ∈ p.1, (fg.1 x, fg.2 x) ∈ p.2 } :=
+      {fg : C(α, β) × C(α, β) | ∀ x ∈ p.1, (fg.1 x, fg.2 x) ∈ p.2} :=
   by
   refine' Filter.hasBasis_biInf_principal _ compact_conv_nhd_compact_entourage_nonempty
   rintro ⟨K₁, V₁⟩ ⟨hK₁, hV₁⟩ ⟨K₂, V₂⟩ ⟨hK₂, hV₂⟩
@@ -347,7 +347,7 @@ theorem hasBasis_compactConvergenceUniformity_aux :
 theorem mem_compactConvergenceUniformity (X : Set (C(α, β) × C(α, β))) :
     X ∈ @compactConvergenceUniformity α β _ _ ↔
       ∃ (K : Set α) (V : Set (β × β)) (hK : IsCompact K) (hV : V ∈ 𝓤 β),
-        { fg : C(α, β) × C(α, β) | ∀ x ∈ K, (fg.1 x, fg.2 x) ∈ V } ⊆ X :=
+        {fg : C(α, β) × C(α, β) | ∀ x ∈ K, (fg.1 x, fg.2 x) ∈ V} ⊆ X :=
   by
   simp only [has_basis_compact_convergence_uniformity_aux.mem_iff, exists_prop, Prod.exists,
     and_assoc']
@@ -369,7 +369,7 @@ instance compactConvergenceUniformSpace : UniformSpace C(α, β)
       Filter.tendsto_principal, Prod.snd_swap, Filter.tendsto_iInf]
     intro K V hK hV
     obtain ⟨V', hV', hsymm, hsub⟩ := symm_of_uniformity hV
-    let X := { fg : C(α, β) × C(α, β) | ∀ x : α, x ∈ K → (fg.1 x, fg.2 x) ∈ V' }
+    let X := {fg : C(α, β) × C(α, β) | ∀ x : α, x ∈ K → (fg.1 x, fg.2 x) ∈ V'}
     have hX : X ∈ compact_convergence_uniformity :=
       (mem_compact_convergence_uniformity X).mpr ⟨K, V', hK, hV', by simp⟩
     exact Filter.eventually_of_mem hX fun fg hfg x hx => hsub (hsymm _ _ (hfg x hx))
@@ -379,7 +379,7 @@ instance compactConvergenceUniformSpace : UniformSpace C(α, β)
     obtain ⟨V', hV', hcomp⟩ := comp_mem_uniformity_sets hV
     let h := fun s : Set (C(α, β) × C(α, β)) => s ○ s
     suffices
-      h { fg : C(α, β) × C(α, β) | ∀ x ∈ K, (fg.1 x, fg.2 x) ∈ V' } ∈
+      h {fg : C(α, β) × C(α, β) | ∀ x ∈ K, (fg.1 x, fg.2 x) ∈ V'} ∈
         compact_convergence_uniformity.lift' h
       by
       apply Filter.mem_of_superset this
@@ -402,20 +402,20 @@ instance compactConvergenceUniformSpace : UniformSpace C(α, β)
 theorem mem_compactConvergence_entourage_iff (X : Set (C(α, β) × C(α, β))) :
     X ∈ 𝓤 C(α, β) ↔
       ∃ (K : Set α) (V : Set (β × β)) (hK : IsCompact K) (hV : V ∈ 𝓤 β),
-        { fg : C(α, β) × C(α, β) | ∀ x ∈ K, (fg.1 x, fg.2 x) ∈ V } ⊆ X :=
+        {fg : C(α, β) × C(α, β) | ∀ x ∈ K, (fg.1 x, fg.2 x) ∈ V} ⊆ X :=
   mem_compactConvergenceUniformity X
 #align continuous_map.mem_compact_convergence_entourage_iff ContinuousMap.mem_compactConvergence_entourage_iff
 
 theorem hasBasis_compactConvergenceUniformity :
     HasBasis (𝓤 C(α, β)) (fun p : Set α × Set (β × β) => IsCompact p.1 ∧ p.2 ∈ 𝓤 β) fun p =>
-      { fg : C(α, β) × C(α, β) | ∀ x ∈ p.1, (fg.1 x, fg.2 x) ∈ p.2 } :=
+      {fg : C(α, β) × C(α, β) | ∀ x ∈ p.1, (fg.1 x, fg.2 x) ∈ p.2} :=
   hasBasis_compactConvergenceUniformity_aux
 #align continuous_map.has_basis_compact_convergence_uniformity ContinuousMap.hasBasis_compactConvergenceUniformity
 
 theorem Filter.HasBasis.compactConvergenceUniformity {ι : Type _} {pi : ι → Prop}
     {s : ι → Set (β × β)} (h : (𝓤 β).HasBasis pi s) :
     HasBasis (𝓤 C(α, β)) (fun p : Set α × ι => IsCompact p.1 ∧ pi p.2) fun p =>
-      { fg : C(α, β) × C(α, β) | ∀ x ∈ p.1, (fg.1 x, fg.2 x) ∈ s p.2 } :=
+      {fg : C(α, β) × C(α, β) | ∀ x ∈ p.1, (fg.1 x, fg.2 x) ∈ s p.2} :=
   by
   refine' has_basis_compact_convergence_uniformity.to_has_basis _ _
   · rintro ⟨t₁, t₂⟩ ⟨h₁, h₂⟩
@@ -472,7 +472,7 @@ variable [CompactSpace α]
 
 theorem hasBasis_compactConvergenceUniformity_of_compact :
     HasBasis (𝓤 C(α, β)) (fun V : Set (β × β) => V ∈ 𝓤 β) fun V =>
-      { fg : C(α, β) × C(α, β) | ∀ x, (fg.1 x, fg.2 x) ∈ V } :=
+      {fg : C(α, β) × C(α, β) | ∀ x, (fg.1 x, fg.2 x) ∈ V} :=
   hasBasis_compactConvergenceUniformity.to_hasBasis
     (fun p hp => ⟨p.2, hp.2, fun fg hfg x hx => hfg x⟩) fun V hV =>
     ⟨⟨univ, V⟩, ⟨isCompact_univ, hV⟩, fun fg hfg x => hfg x (mem_univ x)⟩

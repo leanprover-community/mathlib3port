@@ -248,7 +248,7 @@ variable (σ₁₄ M₁ M₄)
 def compactOperator [Module R₁ M₁] [Module R₄ M₄] [ContinuousConstSMul R₄ M₄]
     [TopologicalAddGroup M₄] : Submodule R₄ (M₁ →SL[σ₁₄] M₄)
     where
-  carrier := { f | IsCompactOperator f }
+  carrier := {f | IsCompactOperator f}
   add_mem' f g hf hg := hf.add hg
   zero_mem' := isCompactOperator_zero
   smul_mem' c f hf := hf.smul c
@@ -416,7 +416,7 @@ theorem isClosed_setOf_isCompactOperator {𝕜₁ 𝕜₂ : Type _} [Nontriviall
     [NormedField 𝕜₂] {σ₁₂ : 𝕜₁ →+* 𝕜₂} {M₁ M₂ : Type _} [SeminormedAddCommGroup M₁]
     [AddCommGroup M₂] [NormedSpace 𝕜₁ M₁] [Module 𝕜₂ M₂] [UniformSpace M₂] [UniformAddGroup M₂]
     [ContinuousConstSMul 𝕜₂ M₂] [T2Space M₂] [CompleteSpace M₂] :
-    IsClosed { f : M₁ →SL[σ₁₂] M₂ | IsCompactOperator f } :=
+    IsClosed {f : M₁ →SL[σ₁₂] M₂ | IsCompactOperator f} :=
   by
   refine' isClosed_of_closure_subset _
   rintro u hu
@@ -430,7 +430,7 @@ theorem isClosed_setOf_isCompactOperator {𝕜₁ 𝕜₂ : Type _} [Nontriviall
   intro U hU
   rcases exists_nhds_zero_half hU with ⟨V, hV, hVU⟩
   let SV : Set M₁ × Set M₂ := ⟨closed_ball 0 1, -V⟩
-  rcases hu { f | ∀ x ∈ SV.1, f x ∈ SV.2 }
+  rcases hu {f | ∀ x ∈ SV.1, f x ∈ SV.2}
       (continuous_linear_map.has_basis_nhds_zero.mem_of_mem
         ⟨NormedSpace.isVonNBounded_closedBall _ _ _, neg_mem_nhds_zero M₂ hV⟩) with
     ⟨v, hv, huv⟩

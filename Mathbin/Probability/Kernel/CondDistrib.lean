@@ -53,7 +53,7 @@ open scoped ENNReal MeasureTheory ProbabilityTheory
 namespace ProbabilityTheory
 
 variable {α β Ω F : Type _} [TopologicalSpace Ω] [MeasurableSpace Ω] [PolishSpace Ω] [BorelSpace Ω]
-  [Nonempty Ω] [NormedAddCommGroup F] {mα : MeasurableSpace α} {μ : Measure α} [FiniteMeasure μ]
+  [Nonempty Ω] [NormedAddCommGroup F] {mα : MeasurableSpace α} {μ : Measure α} [IsFiniteMeasure μ]
   {X : α → β} {Y : α → Ω}
 
 /-- **Regular conditional probability distribution**: kernel associated with the conditional
@@ -63,7 +63,7 @@ the conditional expectation `μ⟦Y ⁻¹' s | mβ.comap X⟧ a`. It also satisf
 `μ[(λ a, f (X a, Y a)) | mβ.comap X] =ᵐ[μ] λ a, ∫ y, f (X a, y) ∂(cond_distrib Y X μ (X a))` for
 all integrable functions `f`. -/
 noncomputable irreducible_def condDistrib {mα : MeasurableSpace α} [MeasurableSpace β] (Y : α → Ω)
-  (X : α → β) (μ : Measure α) [FiniteMeasure μ] : kernel β Ω :=
+    (X : α → β) (μ : Measure α) [IsFiniteMeasure μ] : kernel β Ω :=
   (μ.map fun a => (X a, Y a)).condKernel
 #align probability_theory.cond_distrib ProbabilityTheory.condDistrib
 
@@ -317,7 +317,7 @@ theorem integrable_comp_snd_map_prod_mk_iff {Ω} {mΩ : MeasurableSpace Ω} {X :
 #align probability_theory.integrable_comp_snd_map_prod_mk_iff ProbabilityTheory.integrable_comp_snd_map_prod_mk_iff
 
 theorem condexp_ae_eq_integral_condDistrib_id [NormedSpace ℝ F] [CompleteSpace F] {X : Ω → β}
-    {μ : Measure Ω} [FiniteMeasure μ] (hX : Measurable X) {f : Ω → F} (hf_int : Integrable f μ) :
+    {μ : Measure Ω} [IsFiniteMeasure μ] (hX : Measurable X) {f : Ω → F} (hf_int : Integrable f μ) :
     μ[f|mβ.comap X] =ᵐ[μ] fun a => ∫ y, f y ∂condDistrib id X μ (X a) :=
   condexp_prod_ae_eq_integral_cond_distrib' hX aemeasurable_id (hf_int.comp_snd_map_prod_mk hX)
 #align probability_theory.condexp_ae_eq_integral_cond_distrib_id ProbabilityTheory.condexp_ae_eq_integral_condDistrib_id

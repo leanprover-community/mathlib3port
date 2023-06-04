@@ -98,7 +98,7 @@ quotient group `G/H`.)
 -/
 def upperCentralSeriesStep : Subgroup G
     where
-  carrier := { x : G | ∀ y : G, x * y * x⁻¹ * y⁻¹ ∈ H }
+  carrier := {x : G | ∀ y : G, x * y * x⁻¹ * y⁻¹ ∈ H}
   one_mem' y := by simp [Subgroup.one_mem]
   mul_mem' a b ha hb y :=
     by
@@ -186,7 +186,7 @@ theorem mem_upperCentralSeries_succ_iff (n : ℕ) (x : G) :
 #align mem_upper_central_series_succ_iff mem_upperCentralSeries_succ_iff
 
 #print Group.IsNilpotent /-
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`nilpotent] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`nilpotent] [] -/
 -- is_nilpotent is already defined in the root namespace (for elements of rings).
 /-- A group `G` is nilpotent if its upper central series is eventually `G`. -/
 class Group.IsNilpotent (G : Type _) [Group G] : Prop where
@@ -267,7 +267,7 @@ theorem is_decending_rev_series_of_is_ascending {H : ℕ → Subgroup G} {n : �
     subst hx
     convert Subgroup.one_mem _
     group
-  · push_neg  at hm 
+  · push_neg at hm 
     apply hH
     convert hx
     rw [tsub_add_eq_add_tsub (Nat.succ_le_of_lt hm), Nat.succ_sub_succ]
@@ -283,7 +283,7 @@ theorem is_ascending_rev_series_of_is_descending {H : ℕ → Subgroup G} {n : �
   · have hnm : n - m = 0 := tsub_eq_zero_iff_le.mpr hm
     rw [hnm, h0]
     exact mem_top _
-  · push_neg  at hm 
+  · push_neg at hm 
     convert hH x _ hx g
     rw [tsub_add_eq_add_tsub (Nat.succ_le_of_lt hm), Nat.succ_sub_succ]
 #align is_ascending_rev_series_of_is_descending is_ascending_rev_series_of_is_descending
@@ -331,14 +331,13 @@ theorem lowerCentralSeries_one : lowerCentralSeries G 1 = commutator G :=
 theorem mem_lowerCentralSeries_succ_iff (n : ℕ) (q : G) :
     q ∈ lowerCentralSeries G (n + 1) ↔
       q ∈
-        closure
-          { x | ∃ p ∈ lowerCentralSeries G n, ∃ q ∈ (⊤ : Subgroup G), p * q * p⁻¹ * q⁻¹ = x } :=
+        closure {x | ∃ p ∈ lowerCentralSeries G n, ∃ q ∈ (⊤ : Subgroup G), p * q * p⁻¹ * q⁻¹ = x} :=
   Iff.rfl
 #align mem_lower_central_series_succ_iff mem_lowerCentralSeries_succ_iff
 
 theorem lowerCentralSeries_succ (n : ℕ) :
     lowerCentralSeries G (n + 1) =
-      closure { x | ∃ p ∈ lowerCentralSeries G n, ∃ q ∈ (⊤ : Subgroup G), p * q * p⁻¹ * q⁻¹ = x } :=
+      closure {x | ∃ p ∈ lowerCentralSeries G n, ∃ q ∈ (⊤ : Subgroup G), p * q * p⁻¹ * q⁻¹ = x} :=
   rfl
 #align lower_central_series_succ lowerCentralSeries_succ
 
@@ -957,18 +956,18 @@ theorem IsPGroup.isNilpotent [Finite G] {p : ℕ} [hp : Fact (Nat.Prime p)] (h :
     IsNilpotent G := by
   cases nonempty_fintype G
   classical
-    revert hG
-    induction' val using Fintype.induction_subsingleton_or_nontrivial with G hG hS G hG hN ih
-    · infer_instance
-    · intro; intro h
-      have hcq : Fintype.card (G ⧸ center G) < Fintype.card G :=
-        by
-        rw [card_eq_card_quotient_mul_card_subgroup (center G)]
-        apply lt_mul_of_one_lt_right
-        exact fintype.card_pos_iff.mpr One.nonempty
-        exact (Subgroup.one_lt_card_iff_ne_bot _).mpr (ne_of_gt h.bot_lt_center)
-      have hnq : IsNilpotent (G ⧸ center G) := ih _ hcq (h.to_quotient (center G))
-      exact of_quotient_center_nilpotent hnq
+  revert hG
+  induction' val using Fintype.induction_subsingleton_or_nontrivial with G hG hS G hG hN ih
+  · infer_instance
+  · intro; intro h
+    have hcq : Fintype.card (G ⧸ center G) < Fintype.card G :=
+      by
+      rw [card_eq_card_quotient_mul_card_subgroup (center G)]
+      apply lt_mul_of_one_lt_right
+      exact fintype.card_pos_iff.mpr One.nonempty
+      exact (Subgroup.one_lt_card_iff_ne_bot _).mpr (ne_of_gt h.bot_lt_center)
+    have hnq : IsNilpotent (G ⧸ center G) := ih _ hcq (h.to_quotient (center G))
+    exact of_quotient_center_nilpotent hnq
 #align is_p_group.is_nilpotent IsPGroup.isNilpotent
 -/
 
@@ -979,13 +978,13 @@ theorem isNilpotent_of_product_of_sylow_group
     (e : (∀ p : (Fintype.card G).factorization.support, ∀ P : Sylow p G, (↑P : Subgroup G)) ≃* G) :
     IsNilpotent G := by
   classical
-    let ps := (Fintype.card G).factorization.support
-    have : ∀ (p : ps) (P : Sylow p G), IsNilpotent (↑P : Subgroup G) :=
-      by
-      intro p P
-      haveI : Fact (Nat.Prime ↑p) := Fact.mk (Nat.prime_of_mem_factorization (Finset.coe_mem p))
-      exact P.is_p_group'.is_nilpotent
-    exact nilpotent_of_mulEquiv e
+  let ps := (Fintype.card G).factorization.support
+  have : ∀ (p : ps) (P : Sylow p G), IsNilpotent (↑P : Subgroup G) :=
+    by
+    intro p P
+    haveI : Fact (Nat.Prime ↑p) := Fact.mk (Nat.prime_of_mem_factorization (Finset.coe_mem p))
+    exact P.is_p_group'.is_nilpotent
+  exact nilpotent_of_mulEquiv e
 #align is_nilpotent_of_product_of_sylow_group isNilpotent_of_product_of_sylow_group
 
 /-- A finite group is nilpotent iff the normalizer condition holds, and iff all maximal groups are

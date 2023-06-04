@@ -237,7 +237,7 @@ theorem eq_of_le_of_domain_eq {f g : E →ₗ.[R] F} (hle : f ≤ g) (heq : f.do
 both `f` and `g` are defined at `x` and `f x = g x` form a submodule. -/
 def eqLocus (f g : E →ₗ.[R] F) : Submodule R E
     where
-  carrier := { x | ∃ (hf : x ∈ f.domain) (hg : x ∈ g.domain), f ⟨x, hf⟩ = g ⟨x, hg⟩ }
+  carrier := {x | ∃ (hf : x ∈ f.domain) (hg : x ∈ g.domain), f ⟨x, hf⟩ = g ⟨x, hg⟩}
   zero_mem' := ⟨zero_mem _, zero_mem _, f.map_zero.trans g.map_zero.symm⟩
   add_mem' := fun x y ⟨hfx, hgx, hx⟩ ⟨hfy, hgy, hy⟩ =>
     ⟨add_mem hfx hfy, add_mem hgx hgy, by

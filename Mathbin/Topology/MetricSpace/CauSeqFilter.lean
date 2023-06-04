@@ -60,7 +60,7 @@ theorem CauchySeq.isCauSeq {f : ℕ → β} (hf : CauchySeq f) : IsCauSeq norm f
   by
   cases' cauchy_iff.1 hf with hf1 hf2
   intro ε hε
-  rcases hf2 { x | dist x.1 x.2 < ε } (dist_mem_uniformity hε) with ⟨t, ⟨ht, htsub⟩⟩
+  rcases hf2 {x | dist x.1 x.2 < ε} (dist_mem_uniformity hε) with ⟨t, ⟨ht, htsub⟩⟩
   simp at ht ; cases' ht with N hN
   exists N
   intro j hj
@@ -74,7 +74,7 @@ theorem CauSeq.cauchySeq (f : CauSeq β norm) : CauchySeq f :=
   refine' cauchy_iff.2 ⟨by infer_instance, fun s hs => _⟩
   rcases mem_uniformity_dist.1 hs with ⟨ε, ⟨hε, hεs⟩⟩
   cases' CauSeq.cauchy₂ f hε with N hN
-  exists { n | n ≥ N }.image f
+  exists {n | n ≥ N}.image f
   simp only [exists_prop, mem_at_top_sets, mem_map, mem_image, ge_iff_le, mem_set_of_eq]
   constructor
   · exists N; intro b hb; exists b; simp [hb]

@@ -361,7 +361,7 @@ theorem HasFDerivAt.le_of_lip' {f : E → F} {f' : E →L[𝕜] F} {x₀ : E} (h
   refine' le_of_forall_pos_le_add fun ε ε0 => op_norm_le_of_nhds_zero _ _
   exact add_nonneg hC₀ ε0.le
   rw [← map_add_left_nhds_zero x₀, eventually_map] at hlip 
-  filter_upwards [is_o_iff.1 (hasFDerivAt_iff_isLittleO_nhds_zero.1 hf) ε0, hlip]with y hy hyC
+  filter_upwards [is_o_iff.1 (hasFDerivAt_iff_isLittleO_nhds_zero.1 hf) ε0, hlip] with y hy hyC
   rw [add_sub_cancel'] at hyC 
   calc
     ‖f' y‖ ≤ ‖f (x₀ + y) - f x₀‖ + ‖f (x₀ + y) - f x₀ - f' y‖ := norm_le_insert _ _
@@ -376,7 +376,7 @@ theorem HasFDerivAt.le_of_lip {f : E → F} {f' : E →L[𝕜] F} {x₀ : E} (hf
     {s : Set E} (hs : s ∈ 𝓝 x₀) {C : ℝ≥0} (hlip : LipschitzOnWith C f s) : ‖f'‖ ≤ C :=
   by
   refine' hf.le_of_lip' C.coe_nonneg _
-  filter_upwards [hs]with x hx using hlip.norm_sub_le hx (mem_of_mem_nhds hs)
+  filter_upwards [hs] with x hx using hlip.norm_sub_le hx (mem_of_mem_nhds hs)
 #align has_fderiv_at.le_of_lip HasFDerivAt.le_of_lip
 
 theorem HasFDerivAtFilter.mono (h : HasFDerivAtFilter f f' x L₂) (hst : L₁ ≤ L₂) :

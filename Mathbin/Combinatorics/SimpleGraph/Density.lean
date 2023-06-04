@@ -89,8 +89,8 @@ variable (r)
 theorem card_interedges_add_card_interedges_compl (s : Finset α) (t : Finset β) :
     (interedges r s t).card + (interedges (fun x y => ¬r x y) s t).card = s.card * t.card := by
   classical
-    rw [← card_product, interedges, interedges, ← card_union_eq, filter_union_filter_neg_eq]
-    convert disjoint_filter.2 fun x _ => Classical.not_not.2
+  rw [← card_product, interedges, interedges, ← card_union_eq, filter_union_filter_neg_eq]
+  convert disjoint_filter.2 fun x _ => Classical.not_not.2
 #align rel.card_interedges_add_card_interedges_compl Rel.card_interedges_add_card_interedges_compl
 
 theorem interedges_disjoint_left {s s' : Finset α} (hs : Disjoint s s') (t : Finset β) :
@@ -171,17 +171,17 @@ theorem edgeDensity_empty_right (s : Finset α) : edgeDensity r s ∅ = 0 := by
 theorem card_interedges_finpartition_left [DecidableEq α] (P : Finpartition s) (t : Finset β) :
     (interedges r s t).card = ∑ a in P.parts, (interedges r a t).card := by
   classical
-    simp_rw [← P.bUnion_parts, interedges_bUnion_left, id.def]
-    rw [card_bUnion]
-    exact fun x hx y hy h => interedges_disjoint_left r (P.disjoint hx hy h) _
+  simp_rw [← P.bUnion_parts, interedges_bUnion_left, id.def]
+  rw [card_bUnion]
+  exact fun x hx y hy h => interedges_disjoint_left r (P.disjoint hx hy h) _
 #align rel.card_interedges_finpartition_left Rel.card_interedges_finpartition_left
 
 theorem card_interedges_finpartition_right [DecidableEq β] (s : Finset α) (P : Finpartition t) :
     (interedges r s t).card = ∑ b in P.parts, (interedges r s b).card := by
   classical
-    simp_rw [← P.bUnion_parts, interedges_bUnion_right, id]
-    rw [card_bUnion]
-    exact fun x hx y hy h => interedges_disjoint_right r _ (P.disjoint hx hy h)
+  simp_rw [← P.bUnion_parts, interedges_bUnion_right, id]
+  rw [card_bUnion]
+  exact fun x hx y hy h => interedges_disjoint_right r _ (P.disjoint hx hy h)
 #align rel.card_interedges_finpartition_right Rel.card_interedges_finpartition_right
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/

@@ -64,7 +64,7 @@ theorem limsup_const_mul [CountableInterFilter f] {u : α → ℝ≥0∞} {a : �
   by
   by_cases ha_top : a ≠ ⊤
   · exact limsup_const_mul_of_ne_top ha_top
-  push_neg  at ha_top 
+  push_neg at ha_top 
   by_cases hu : u =ᶠ[f] 0
   · have hau : (fun x => a * u x) =ᶠ[f] 0 :=
       by
@@ -93,7 +93,7 @@ theorem limsup_mul_le [CountableInterFilter f] (u v : α → ℝ≥0∞) :
     f.limsup (u * v) ≤ f.limsup fun x => f.limsup u * v x :=
       by
       refine' limsup_le_limsup _ _
-      · filter_upwards [@eventually_le_limsup _ f _ u]with x hx using mul_le_mul_right' hx _
+      · filter_upwards [@eventually_le_limsup _ f _ u] with x hx using mul_le_mul_right' hx _
       ·
         run_tac
           is_bounded_default

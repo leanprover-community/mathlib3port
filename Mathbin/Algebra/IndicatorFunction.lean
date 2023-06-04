@@ -309,8 +309,8 @@ theorem mulIndicator_preimage (s : Set α) (f : α → M) (B : Set M) :
 theorem mulIndicator_one_preimage (s : Set M) :
     t.mulIndicator 1 ⁻¹' s ∈ ({Set.univ, ∅} : Set (Set α)) := by
   classical
-    rw [mul_indicator_one', preimage_one]
-    split_ifs <;> simp
+  rw [mul_indicator_one', preimage_one]
+  split_ifs <;> simp
 #align set.mul_indicator_one_preimage Set.mulIndicator_one_preimage
 #align set.indicator_zero_preimage Set.indicator_zero_preimage
 -/
@@ -329,8 +329,8 @@ theorem mulIndicator_const_preimage_eq_union (U : Set α) (s : Set M) (a : M) [D
 theorem mulIndicator_const_preimage (U : Set α) (s : Set M) (a : M) :
     (U.mulIndicator fun x => a) ⁻¹' s ∈ ({Set.univ, U, Uᶜ, ∅} : Set (Set α)) := by
   classical
-    rw [mul_indicator_const_preimage_eq_union]
-    split_ifs <;> simp
+  rw [mul_indicator_const_preimage_eq_union]
+  split_ifs <;> simp
 #align set.mul_indicator_const_preimage Set.mulIndicator_const_preimage
 #align set.indicator_const_preimage Set.indicator_const_preimage
 
@@ -645,19 +645,17 @@ theorem mulIndicator_finset_biUnion {ι} (I : Finset ι) (s : ι → Set α) {f 
       mulIndicator (⋃ i ∈ I, s i) f = fun a => ∏ i in I, mulIndicator (s i) f a :=
   by
   classical
-    refine' Finset.induction_on I _ _
-    · intro h; funext; simp
-    intro a I haI ih hI
-    funext
-    rw [Finset.prod_insert haI, Finset.set_biUnion_insert, mul_indicator_union_of_not_mem_inter,
-      ih _]
-    · intro i hi j hj hij
-      exact hI i (Finset.mem_insert_of_mem hi) j (Finset.mem_insert_of_mem hj) hij
-    simp only [not_exists, exists_prop, mem_Union, mem_inter_iff, not_and]
-    intro hx a' ha'
-    refine'
-      disjoint_left.1 (hI a (Finset.mem_insert_self _ _) a' (Finset.mem_insert_of_mem ha') _) hx
-    exact (ne_of_mem_of_not_mem ha' haI).symm
+  refine' Finset.induction_on I _ _
+  · intro h; funext; simp
+  intro a I haI ih hI
+  funext
+  rw [Finset.prod_insert haI, Finset.set_biUnion_insert, mul_indicator_union_of_not_mem_inter, ih _]
+  · intro i hi j hj hij
+    exact hI i (Finset.mem_insert_of_mem hi) j (Finset.mem_insert_of_mem hj) hij
+  simp only [not_exists, exists_prop, mem_Union, mem_inter_iff, not_and]
+  intro hx a' ha'
+  refine' disjoint_left.1 (hI a (Finset.mem_insert_self _ _) a' (Finset.mem_insert_of_mem ha') _) hx
+  exact (ne_of_mem_of_not_mem ha' haI).symm
 #align set.mul_indicator_finset_bUnion Set.mulIndicator_finset_biUnion
 #align set.indicator_finset_bUnion Set.indicator_finset_biUnion
 
@@ -867,22 +865,22 @@ end CanonicallyOrderedMonoid
 
 #print Set.indicator_le_indicator_nonneg /-
 theorem indicator_le_indicator_nonneg {β} [LinearOrder β] [Zero β] (s : Set α) (f : α → β) :
-    s.indicator f ≤ { x | 0 ≤ f x }.indicator f :=
+    s.indicator f ≤ {x | 0 ≤ f x}.indicator f :=
   by
   intro x
   classical
-    simp_rw [indicator_apply]
-    split_ifs
-    · exact le_rfl
-    · exact (not_le.mp h_1).le
-    · exact h_1
-    · exact le_rfl
+  simp_rw [indicator_apply]
+  split_ifs
+  · exact le_rfl
+  · exact (not_le.mp h_1).le
+  · exact h_1
+  · exact le_rfl
 #align set.indicator_le_indicator_nonneg Set.indicator_le_indicator_nonneg
 -/
 
 #print Set.indicator_nonpos_le_indicator /-
 theorem indicator_nonpos_le_indicator {β} [LinearOrder β] [Zero β] (s : Set α) (f : α → β) :
-    { x | f x ≤ 0 }.indicator f ≤ s.indicator f :=
+    {x | f x ≤ 0}.indicator f ≤ s.indicator f :=
   @indicator_le_indicator_nonneg α βᵒᵈ _ _ s f
 #align set.indicator_nonpos_le_indicator Set.indicator_nonpos_le_indicator
 -/

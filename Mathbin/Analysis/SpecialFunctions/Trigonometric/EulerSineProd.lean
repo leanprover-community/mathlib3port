@@ -57,7 +57,7 @@ theorem antideriv_sin_comp_const_mul (hz : z ≠ 0) (x : ℝ) :
   have a : HasDerivAt _ _ ↑x := hasDerivAt_mul_const _
   have b : HasDerivAt (fun y : ℂ => Complex.cos (y * (2 * z))) _ ↑x :=
     HasDerivAt.comp x (Complex.hasDerivAt_cos (x * (2 * z))) a
-  convert(b.comp_of_real.div_const (2 * z)).neg
+  convert (b.comp_of_real.div_const (2 * z)).neg
   · ext1 x; rw [mul_comm _ (2 * z)]; field_simp
   · field_simp; rw [mul_comm _ (2 * z)]
 #align euler_sine.antideriv_sin_comp_const_mul EulerSine.antideriv_sin_comp_const_mul
@@ -105,7 +105,7 @@ theorem integral_sin_mul_sin_mul_cos_pow_eq (hn : 2 ≤ n) (hz : z ≠ 0) :
     by
     intro x hx
     have c := HasDerivAt.comp (x : ℂ) (hasDerivAt_pow (n - 1) _) (Complex.hasDerivAt_cos x)
-    convert((Complex.hasDerivAt_sin x).mul c).comp_of_real using 1
+    convert ((Complex.hasDerivAt_sin x).mul c).comp_of_real using 1
     · ext1 y; simp only [Complex.ofReal_sin, Complex.ofReal_cos]
     · simp only [Complex.ofReal_cos, Complex.ofReal_sin]
       rw [mul_neg, mul_neg, ← sub_eq_add_neg, Function.comp_apply]
@@ -115,9 +115,8 @@ theorem integral_sin_mul_sin_mul_cos_pow_eq (hn : 2 ≤ n) (hz : z ≠ 0) :
           rw [Nat.cast_sub (one_le_two.trans hn), Nat.cast_one]
         rw [Nat.sub_sub, this]
         ring
-  convert integral_mul_deriv_eq_deriv_mul der1 (fun x hx => antideriv_sin_comp_const_mul hz x) _
-      _ using
-    1
+  convert
+    integral_mul_deriv_eq_deriv_mul der1 (fun x hx => antideriv_sin_comp_const_mul hz x) _ _ using 1
   · refine' integral_congr fun x hx => _
     ring_nf
   · -- now a tedious rearrangement of terms
@@ -271,11 +270,11 @@ theorem sin_pi_mul_eq (z : ℂ) (n : ℕ) :
       have : (C : ℂ) ≠ 0 := complex.of_real_ne_zero.mpr (integral_cos_pow_pos _).ne'
       have : 2 * (n : ℂ) + 1 ≠ 0 :=
         by
-        convert(Nat.cast_add_one_ne_zero (2 * n) : (↑(2 * n) + 1 : ℂ) ≠ 0)
+        convert (Nat.cast_add_one_ne_zero (2 * n) : (↑(2 * n) + 1 : ℂ) ≠ 0)
         simp
       have : 2 * (n : ℂ) + 2 ≠ 0 :=
         by
-        convert(Nat.cast_add_one_ne_zero (2 * n + 1) : (↑(2 * n + 1) + 1 : ℂ) ≠ 0) using 1
+        convert (Nat.cast_add_one_ne_zero (2 * n + 1) : (↑(2 * n + 1) + 1 : ℂ) ≠ 0) using 1
         push_cast ; ring
       field_simp; ring
     convert integral_cos_mul_cos_pow_even n hz
@@ -329,7 +328,7 @@ theorem Complex.tendsto_euler_sin_prod (z : ℂ) :
     tendsto.congr (fun n => sin_pi_mul_eq z n) tendsto_const_nhds
   have : 𝓝 (Complex.sin (π * z)) = 𝓝 (Complex.sin (π * z) * 1) := by rw [mul_one]
   simp_rw [this, mul_div_assoc] at A 
-  convert(tendsto_mul_iff_of_ne_zero _ one_ne_zero).mp A
+  convert (tendsto_mul_iff_of_ne_zero _ one_ne_zero).mp A
   suffices :
     tendsto
       (fun n : ℕ =>
@@ -349,7 +348,7 @@ theorem Real.tendsto_euler_sin_prod (x : ℝ) :
     Tendsto (fun n : ℕ => π * x * ∏ j in Finset.range n, 1 - x ^ 2 / (j + 1) ^ 2) atTop
       (𝓝 <| sin (π * x)) :=
   by
-  convert(complex.continuous_re.tendsto _).comp (Complex.tendsto_euler_sin_prod x)
+  convert (complex.continuous_re.tendsto _).comp (Complex.tendsto_euler_sin_prod x)
   · ext1 n
     rw [Function.comp_apply, ← Complex.ofReal_mul, Complex.ofReal_mul_re]
     suffices

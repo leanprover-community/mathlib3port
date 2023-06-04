@@ -207,10 +207,10 @@ theorem simpleFunc_bot' {α} [Nonempty β] (f : @SimpleFunc α ⊥ β) :
   rw [h_eq x, simple_func.coe_const]
 #align measure_theory.simple_func.simple_func_bot' MeasureTheory.SimpleFunc.simpleFunc_bot'
 
-theorem measurableSet_cut (r : α → β → Prop) (f : α →ₛ β) (h : ∀ b, MeasurableSet { a | r a b }) :
-    MeasurableSet { a | r a (f a) } :=
+theorem measurableSet_cut (r : α → β → Prop) (f : α →ₛ β) (h : ∀ b, MeasurableSet {a | r a b}) :
+    MeasurableSet {a | r a (f a)} :=
   by
-  have : { a | r a (f a) } = ⋃ b ∈ range f, { a | r a b } ∩ f ⁻¹' {b} :=
+  have : {a | r a (f a)} = ⋃ b ∈ range f, {a | r a b} ∩ f ⁻¹' {b} :=
     by
     ext a
     suffices r a (f a) ↔ ∃ i, r a (f i) ∧ f a = f i by simpa
@@ -896,7 +896,7 @@ variable [SemilatticeSup β] [OrderBot β] [Zero β]
 by simple functions is defined so that in case `β = ℝ≥0∞` it sends each `a` to the supremum
 of the set `{i k | k ≤ n ∧ i k ≤ f a}`, see `approx_apply` and `supr_approx_apply` for details. -/
 def approx (i : ℕ → β) (f : α → β) (n : ℕ) : α →ₛ β :=
-  (Finset.range n).sup fun k => restrict (const α (i k)) { a : α | i k ≤ f a }
+  (Finset.range n).sup fun k => restrict (const α (i k)) {a : α | i k ≤ f a}
 #align measure_theory.simple_func.approx MeasureTheory.SimpleFunc.approx
 -/
 
@@ -977,7 +977,7 @@ theorem eapprox_lt_top (f : α → ℝ≥0∞) (n : ℕ) (a : α) : eapprox f n 
   split_ifs
   · simp only [coe_zero, coe_piecewise, piecewise_eq_indicator, coe_const]
     calc
-      { a : α | ennreal_rat_embed b ≤ f a }.indicator (fun x => ennreal_rat_embed b) a ≤
+      {a : α | ennreal_rat_embed b ≤ f a}.indicator (fun x => ennreal_rat_embed b) a ≤
           ennreal_rat_embed b :=
         indicator_le_self _ _ a
       _ < ⊤ := ENNReal.coe_lt_top

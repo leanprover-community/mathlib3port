@@ -213,7 +213,7 @@ namespace CommMonoid
 -/
 @[to_additive add_torsion "The torsion submonoid of an additive commutative monoid."]
 def torsion : Submonoid G where
-  carrier := { x | IsOfFinOrder x }
+  carrier := {x | IsOfFinOrder x}
   one_mem' := isOfFinOrder_one
   mul_mem' _ _ hx hy := hx.mul hy
 #align comm_monoid.torsion CommMonoid.torsion
@@ -243,7 +243,7 @@ include hp
   simps]
 def primaryComponent : Submonoid G
     where
-  carrier := { g | ∃ n : ℕ, orderOf g = p ^ n }
+  carrier := {g | ∃ n : ℕ, orderOf g = p ^ n}
   one_mem' := ⟨0, by rw [pow_zero, orderOf_one]⟩
   mul_mem' g₁ g₂ hg₁ hg₂ :=
     exists_orderOf_eq_prime_pow_iff.mpr <|

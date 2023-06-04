@@ -139,7 +139,7 @@ namespace Even.Lift
 This is the span of elements `f'` such that `∃ x m₂, ∀ m₁, f' m₁ = f m₁ m₂ * x`.  -/
 private def S : Submodule R (M →ₗ[R] A) :=
   Submodule.span R
-    { f' | ∃ x m₂, f' = LinearMap.lcomp R _ (f.bilin.flip m₂) (LinearMap.mulRight R x) }
+    {f' | ∃ x m₂, f' = LinearMap.lcomp R _ (f.bilin.flip m₂) (LinearMap.mulRight R x)}
 
 /-- An auxiliary bilinear map that is later passed into `clifford_algebra.fold`. Our desired result
 is stored in the `A` part of the accumulator, while auxiliary recursion state is stored in the `S f`

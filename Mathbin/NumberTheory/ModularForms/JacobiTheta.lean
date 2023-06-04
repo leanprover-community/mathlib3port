@@ -188,7 +188,7 @@ theorem differentiableAt_jacobiTheta {z : ℂ} (hz : 0 < im z) : DifferentiableA
   by
   suffices :
     ∀ (y : ℝ) (hy : 0 < y),
-      DifferentiableOn ℂ (fun z => ∑' n : ℤ, cexp (π * I * n ^ 2 * z)) { w : ℂ | y < im w }
+      DifferentiableOn ℂ (fun z => ∑' n : ℤ, cexp (π * I * n ^ 2 * z)) {w : ℂ | y < im w}
   exact
     let ⟨y, hy, hy'⟩ := exists_between hz
     (this y hy).DifferentiableAt
@@ -196,9 +196,9 @@ theorem differentiableAt_jacobiTheta {z : ℂ} (hz : 0 < im z) : DifferentiableA
   intro y hy
   have h1 :
     ∀ (n : ℤ) (w : ℂ) (hw : y < im w),
-      DifferentiableWithinAt ℂ (fun v : ℂ => cexp (↑π * I * ↑n ^ 2 * v)) { z : ℂ | y < im z } w :=
+      DifferentiableWithinAt ℂ (fun v : ℂ => cexp (↑π * I * ↑n ^ 2 * v)) {z : ℂ | y < im z} w :=
     fun n w hw => (differentiable_at_id.const_mul _).cexp.DifferentiableWithinAt
-  have h2 : IsOpen { w : ℂ | y < im w } := continuous_im.is_open_preimage _ isOpen_Ioi
+  have h2 : IsOpen {w : ℂ | y < im w} := continuous_im.is_open_preimage _ isOpen_Ioi
   obtain ⟨bd, bd_s, le_bd⟩ := exists_summable_bound_exp_mul_sq hy
   exact differentiable_on_tsum_of_summable_norm bd_s h1 h2 fun i w hw => le_bd (le_of_lt hw) i
 #align differentiable_at_jacobi_theta differentiableAt_jacobiTheta

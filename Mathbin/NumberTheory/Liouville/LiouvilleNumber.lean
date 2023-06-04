@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Damiano Testa, Jujian Zhang
 
 ! This file was ported from Lean 3 source module number_theory.liouville.liouville_number
-! leanprover-community/mathlib commit 04e80bb7e8510958cd9aacd32fe2dc147af0b9f1
+! leanprover-community/mathlib commit 5c1efce12ba86d4901463f61019832f6a4b1a0d0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.NumberTheory.Liouville.Basic
 /-!
 
 # Liouville constants
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file contains a construction of a family of Liouville numbers, indexed by a natural number $m$.
 The most important property is that they are examples of transcendental real numbers.
@@ -42,6 +45,7 @@ open scoped Nat BigOperators
 
 open Real Finset
 
+#print liouvilleNumber /-
 /-- For a real number `m`, Liouville's constant is
 $$
 \sum_{i=0}^\infty\frac{1}{m^{i!}}.
@@ -52,9 +56,11 @@ if the series does not converge, then the sum of the series is defined to be zer
 def liouvilleNumber (m : ℝ) : ℝ :=
   ∑' i : ℕ, 1 / m ^ i !
 #align liouville_number liouvilleNumber
+-/
 
 namespace liouvilleNumber
 
+#print LiouvilleNumber.partialSum /-
 /-- `liouville_number.partial_sum` is the sum of the first `k + 1` terms of Liouville's constant,
 i.e.
 $$
@@ -63,8 +69,10 @@ $$
 -/
 def partialSum (m : ℝ) (k : ℕ) : ℝ :=
   ∑ i in range (k + 1), 1 / m ^ i !
-#align liouville_number.partial_sum liouvilleNumber.partialSum
+#align liouville_number.partial_sum LiouvilleNumber.partialSum
+-/
 
+#print LiouvilleNumber.remainder /-
 /-- `liouville_number.remainder` is the sum of the series of the terms in `liouville_number m`
 starting from `k+1`, i.e
 $$
@@ -73,7 +81,8 @@ $$
 -/
 def remainder (m : ℝ) (k : ℕ) : ℝ :=
   ∑' i, 1 / m ^ (i + (k + 1))!
-#align liouville_number.remainder liouvilleNumber.remainder
+#align liouville_number.remainder LiouvilleNumber.remainder
+-/
 
 /-!
 We start with simple observations.
@@ -82,27 +91,27 @@ We start with simple observations.
 
 protected theorem summable {m : ℝ} (hm : 1 < m) : Summable fun i : ℕ => 1 / m ^ i ! :=
   summable_one_div_pow_of_le hm Nat.self_le_factorial
-#align liouville_number.summable liouvilleNumber.summable
+#align liouville_number.summable LiouvilleNumber.summable
 
 theorem remainder_summable {m : ℝ} (hm : 1 < m) (k : ℕ) :
     Summable fun i : ℕ => 1 / m ^ (i + (k + 1))! := by
-  convert(summable_nat_add_iff (k + 1)).2 (liouvilleNumber.summable hm)
-#align liouville_number.remainder_summable liouvilleNumber.remainder_summable
+  convert (summable_nat_add_iff (k + 1)).2 (LiouvilleNumber.summable hm)
+#align liouville_number.remainder_summable LiouvilleNumber.remainder_summable
 
 theorem remainder_pos {m : ℝ} (hm : 1 < m) (k : ℕ) : 0 < remainder m k :=
   tsum_pos (remainder_summable hm k) (fun _ => by positivity) 0 (by positivity)
-#align liouville_number.remainder_pos liouvilleNumber.remainder_pos
+#align liouville_number.remainder_pos LiouvilleNumber.remainder_pos
 
 theorem partialSum_succ (m : ℝ) (n : ℕ) :
     partialSum m (n + 1) = partialSum m n + 1 / m ^ (n + 1)! :=
   sum_range_succ _ _
-#align liouville_number.partial_sum_succ liouvilleNumber.partialSum_succ
+#align liouville_number.partial_sum_succ LiouvilleNumber.partialSum_succ
 
 /-- Split the sum definining a Liouville number into the first `k` term and the rest. -/
 theorem partialSum_add_remainder {m : ℝ} (hm : 1 < m) (k : ℕ) :
     partialSum m k + remainder m k = liouvilleNumber m :=
-  sum_add_tsum_nat_add _ (liouvilleNumber.summable hm)
-#align liouville_number.partial_sum_add_remainder liouvilleNumber.partialSum_add_remainder
+  sum_add_tsum_nat_add _ (LiouvilleNumber.summable hm)
+#align liouville_number.partial_sum_add_remainder LiouvilleNumber.partialSum_add_remainder
 
 /-! We now prove two useful inequalities, before collecting everything together. -/
 
@@ -147,7 +156,7 @@ theorem remainder_lt' (n : ℕ) {m : ℝ} (m1 : 1 < m) :
     _ = (1 - 1 / m)⁻¹ * (1 / m ^ (n + 1)!) :=-- the series if the geometric series
     by rw [tsum_geometric_of_lt_1 (by positivity) mi]
     
-#align liouville_number.remainder_lt' liouvilleNumber.remainder_lt'
+#align liouville_number.remainder_lt' LiouvilleNumber.remainder_lt'
 
 theorem aux_calc (n : ℕ) {m : ℝ} (hm : 2 ≤ m) :
     (1 - 1 / m)⁻¹ * (1 / m ^ (n + 1)!) ≤ 1 / (m ^ n !) ^ n :=
@@ -174,14 +183,14 @@ theorem aux_calc (n : ℕ) {m : ℝ} (hm : 2 ≤ m) :
       exact trans (trans hm (pow_one _).symm.le) (pow_mono (one_le_two.trans hm) n.factorial_pos)
     _ = 1 / (m ^ n !) ^ n := congr_arg ((· / ·) 1) (pow_mul m n ! n)
     
-#align liouville_number.aux_calc liouvilleNumber.aux_calc
+#align liouville_number.aux_calc LiouvilleNumber.aux_calc
 
 /-- An upper estimate on the remainder. This estimate works with `m ∈ ℝ` satisfying `2 ≤ m` and is
 weaker than the estimate `liouville_number.remainder_lt'` above. However, this estimate is
 more useful for the proof. -/
 theorem remainder_lt (n : ℕ) {m : ℝ} (m2 : 2 ≤ m) : remainder m n < 1 / (m ^ n !) ^ n :=
   (remainder_lt' n <| one_lt_two.trans_le m2).trans_le (aux_calc _ m2)
-#align liouville_number.remainder_lt liouvilleNumber.remainder_lt
+#align liouville_number.remainder_lt LiouvilleNumber.remainder_lt
 
 /-!  Starting from here, we specialize to the case in which `m` is a natural number. -/
 
@@ -199,7 +208,7 @@ theorem partialSum_eq_rat {m : ℕ} (hm : 0 < m) (k : ℕ) : ∃ p : ℕ, partia
       rw [add_mul, one_mul, Nat.factorial_succ, add_mul, one_mul, add_tsub_cancel_right, pow_add]
       simp [mul_assoc]
     all_goals positivity
-#align liouville_number.partial_sum_eq_rat liouvilleNumber.partialSum_eq_rat
+#align liouville_number.partial_sum_eq_rat LiouvilleNumber.partialSum_eq_rat
 
 end liouvilleNumber
 

@@ -180,11 +180,11 @@ theorem disjoint_lsingle_lsingle (s t : Set α) (hs : Disjoint s t) :
   rw [disjoint_iff_inf_le]
   refine' le_trans (le_iInf fun i => _) infi_ker_lapply_le_bot
   classical
-    by_cases his : i ∈ s
-    · by_cases hit : i ∈ t
-      · exact (hs.le_bot ⟨his, hit⟩).elim
-      exact inf_le_of_right_le (iInf_le_of_le i <| iInf_le _ hit)
-    exact inf_le_of_left_le (iInf_le_of_le i <| iInf_le _ his)
+  by_cases his : i ∈ s
+  · by_cases hit : i ∈ t
+    · exact (hs.le_bot ⟨his, hit⟩).elim
+    exact inf_le_of_right_le (iInf_le_of_le i <| iInf_le _ hit)
+  exact inf_le_of_left_le (iInf_le_of_le i <| iInf_le _ his)
 #align finsupp.disjoint_lsingle_lsingle Finsupp.disjoint_lsingle_lsingle
 
 theorem span_single_image (s : Set M) (a : α) :
@@ -197,7 +197,7 @@ variable (M R)
 /-- `finsupp.supported M R s` is the `R`-submodule of all `p : α →₀ M` such that `p.support ⊆ s`. -/
 def supported (s : Set α) : Submodule R (α →₀ M) :=
   by
-  refine' ⟨{ p | ↑p.support ⊆ s }, _, _, _⟩
+  refine' ⟨{p | ↑p.support ⊆ s}, _, _, _⟩
   · intro p q hp hq
     refine' subset.trans (subset.trans (Finset.coe_subset.2 support_add) _) (union_subset hp hq)
     rw [Finset.coe_union]
@@ -236,7 +236,7 @@ theorem supported_eq_span_single (s : Set α) :
   · rintro _ ⟨_, hp, rfl⟩; exact single_mem_supported R 1 hp
   · rw [← l.sum_single]
     refine' sum_mem fun i il => _
-    convert@smul_mem R (α →₀ R) _ _ _ _ (single i 1) (l i) _
+    convert @smul_mem R (α →₀ R) _ _ _ _ (single i 1) (l i) _
     · simp
     apply subset_span
     apply Set.mem_image_of_mem _ (hl il)

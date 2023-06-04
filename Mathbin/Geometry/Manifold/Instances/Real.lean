@@ -82,11 +82,11 @@ instance : Inhabited (EuclideanQuadrant n) :=
   ⟨⟨0, fun i => le_rfl⟩⟩
 
 theorem range_half_space (n : ℕ) [Zero (Fin n)] :
-    (range fun x : EuclideanHalfSpace n => x.val) = { y | 0 ≤ y 0 } := by simp
+    (range fun x : EuclideanHalfSpace n => x.val) = {y | 0 ≤ y 0} := by simp
 #align range_half_space range_half_space
 
 theorem range_quadrant (n : ℕ) :
-    (range fun x : EuclideanQuadrant n => x.val) = { y | ∀ i : Fin n, 0 ≤ y i } := by simp
+    (range fun x : EuclideanQuadrant n => x.val) = {y | ∀ i : Fin n, 0 ≤ y i} := by simp
 #align range_quadrant range_quadrant
 
 end
@@ -102,7 +102,7 @@ def modelWithCornersEuclideanHalfSpace (n : ℕ) [Zero (Fin n)] :
   toFun := Subtype.val
   invFun x := ⟨update x 0 (max (x 0) 0), by simp [le_refl]⟩
   source := univ
-  target := { x | 0 ≤ x 0 }
+  target := {x | 0 ≤ x 0}
   map_source' x hx := x.property
   map_target' x hx := mem_univ _
   left_inv' := fun ⟨xval, xprop⟩ hx =>
@@ -131,7 +131,7 @@ def modelWithCornersEuclideanQuadrant (n : ℕ) :
   toFun := Subtype.val
   invFun x := ⟨fun i => max (x i) 0, fun i => by simp only [le_refl, or_true_iff, le_max_iff]⟩
   source := univ
-  target := { x | ∀ i, 0 ≤ x i }
+  target := {x | ∀ i, 0 ≤ x i}
   map_source' x hx := by simpa only [Subtype.range_val] using x.property
   map_target' x hx := mem_univ _
   left_inv' := fun ⟨xval, xprop⟩ hx => by ext i; simp only [Subtype.coe_mk, xprop i, max_eq_left]
@@ -165,8 +165,8 @@ scoped[Manifold]
 -/
 def iccLeftChart (x y : ℝ) [Fact (x < y)] : LocalHomeomorph (Icc x y) (EuclideanHalfSpace 1)
     where
-  source := { z : Icc x y | z.val < y }
-  target := { z : EuclideanHalfSpace 1 | z.val 0 < y - x }
+  source := {z : Icc x y | z.val < y}
+  target := {z : EuclideanHalfSpace 1 | z.val 0 < y - x}
   toFun := fun z : Icc x y => ⟨fun i => z.val - x, sub_nonneg.mpr z.property.1⟩
   invFun z := ⟨min (z.val 0 + x) y, by simp [le_refl, z.prop, le_of_lt (Fact.out (x < y))]⟩
   map_source' := by simp only [imp_self, sub_lt_sub_iff_right, mem_set_of_eq, forall_true_iff]
@@ -186,11 +186,11 @@ def iccLeftChart (x y : ℝ) [Fact (x < y)] : LocalHomeomorph (Icc x y) (Euclide
     rw [Subsingleton.elim i 0]
     simp only [A, add_comm, add_sub_cancel', min_eq_left]
   open_source :=
-    haveI : IsOpen { z : ℝ | z < y } := isOpen_Iio
+    haveI : IsOpen {z : ℝ | z < y} := isOpen_Iio
     this.preimage continuous_subtype_val
   open_target := by
-    have : IsOpen { z : ℝ | z < y - x } := isOpen_Iio
-    have : IsOpen { z : EuclideanSpace ℝ (Fin 1) | z 0 < y - x } :=
+    have : IsOpen {z : ℝ | z < y - x} := isOpen_Iio
+    have : IsOpen {z : EuclideanSpace ℝ (Fin 1) | z 0 < y - x} :=
       this.preimage (@continuous_apply (Fin 1) (fun _ => ℝ) _ 0)
     exact this.preimage continuous_subtype_val
   continuous_toFun := by
@@ -213,8 +213,8 @@ def iccLeftChart (x y : ℝ) [Fact (x < y)] : LocalHomeomorph (Icc x y) (Euclide
 -/
 def iccRightChart (x y : ℝ) [Fact (x < y)] : LocalHomeomorph (Icc x y) (EuclideanHalfSpace 1)
     where
-  source := { z : Icc x y | x < z.val }
-  target := { z : EuclideanHalfSpace 1 | z.val 0 < y - x }
+  source := {z : Icc x y | x < z.val}
+  target := {z : EuclideanHalfSpace 1 | z.val 0 < y - x}
   toFun := fun z : Icc x y => ⟨fun i => y - z.val, sub_nonneg.mpr z.property.2⟩
   invFun z :=
     ⟨max (y - z.val 0) x, by simp [le_refl, z.prop, le_of_lt (Fact.out (x < y)), sub_eq_add_neg]⟩
@@ -235,11 +235,11 @@ def iccRightChart (x y : ℝ) [Fact (x < y)] : LocalHomeomorph (Icc x y) (Euclid
     rw [Subsingleton.elim i 0]
     simp only [A, sub_sub_cancel, max_eq_left]
   open_source :=
-    haveI : IsOpen { z : ℝ | x < z } := isOpen_Ioi
+    haveI : IsOpen {z : ℝ | x < z} := isOpen_Ioi
     this.preimage continuous_subtype_val
   open_target := by
-    have : IsOpen { z : ℝ | z < y - x } := isOpen_Iio
-    have : IsOpen { z : EuclideanSpace ℝ (Fin 1) | z 0 < y - x } :=
+    have : IsOpen {z : ℝ | z < y - x} := isOpen_Iio
+    have : IsOpen {z : EuclideanSpace ℝ (Fin 1) | z 0 < y - x} :=
       this.preimage (@continuous_apply (Fin 1) (fun _ => ℝ) _ 0)
     exact this.preimage continuous_subtype_val
   continuous_toFun := by

@@ -244,7 +244,7 @@ private theorem exists_subset_restrict_nonpos' (hi₁ : MeasurableSet i) (hi₂ 
     ∃ j : Set α, MeasurableSet j ∧ j ⊆ i ∧ s ≤[j] 0 ∧ s j < 0 :=
   by
   by_cases s ≤[i] 0; · exact ⟨i, hi₁, Set.Subset.refl _, h, hi₂⟩
-  push_neg  at hn 
+  push_neg at hn 
   set k := Nat.find hn with hk₁
   have hk₂ : s ≤[i \ ⋃ l < k, restrict_nonpos_seq s i l] 0 := Nat.find_spec hn
   have hmeas : MeasurableSet (⋃ (l : ℕ) (H : l < k), restrict_nonpos_seq s i l) :=
@@ -332,7 +332,7 @@ theorem exists_subset_restrict_nonpos (hi : s i < 0) :
     hi₁.diff (MeasurableSet.iUnion fun _ => restrict_nonpos_seq_measurable_set _)
   refine' ⟨A, A_meas, Set.diff_subset _ _, _, h₂.trans_lt hi⟩
   by_contra hnn
-  rw [restrict_le_restrict_iff _ _ A_meas] at hnn ; push_neg  at hnn 
+  rw [restrict_le_restrict_iff _ _ A_meas] at hnn ; push_neg at hnn 
   obtain ⟨E, hE₁, hE₂, hE₃⟩ := hnn
   have : ∃ k, 1 ≤ bdd k ∧ 1 / (bdd k : ℝ) < s E :=
     by
@@ -340,7 +340,7 @@ theorem exists_subset_restrict_nonpos (hi : s i < 0) :
     obtain ⟨k, hk⟩ := h₄ (max (1 / s E + 1) 1)
     refine' ⟨k, _, _⟩
     · have hle := le_of_max_le_right (hk k le_rfl)
-      norm_cast  at hle 
+      norm_cast at hle 
       exact hle
     · have : 1 / s E < bdd k := by
         linarith (config := { restrict_type := ℝ }) [le_of_max_le_left (hk k le_rfl)]
@@ -364,7 +364,7 @@ end ExistsSubsetRestrictNonpos
 #print MeasureTheory.SignedMeasure.measureOfNegatives /-
 /-- The set of measures of the set of measurable negative sets. -/
 def measureOfNegatives (s : SignedMeasure α) : Set ℝ :=
-  s '' { B | MeasurableSet B ∧ s ≤[B] 0 }
+  s '' {B | MeasurableSet B ∧ s ≤[B] 0}
 #align measure_theory.signed_measure.measure_of_negatives MeasureTheory.SignedMeasure.measureOfNegatives
 -/
 

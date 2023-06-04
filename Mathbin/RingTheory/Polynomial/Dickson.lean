@@ -223,7 +223,7 @@ theorem dickson_one_one_zmod_p (p : ℕ) [Fact p.Prime] : dickson 1 (1 : ZMod p)
   rw [map_dickson, Polynomial.map_pow, map_X]
   apply eq_of_infinite_eval_eq
   -- The two polynomials agree on all `x` of the form `x = y + y⁻¹`.
-  apply @Set.Infinite.mono _ { x : K | ∃ y, x = y + y⁻¹ ∧ y ≠ 0 }
+  apply @Set.Infinite.mono _ {x : K | ∃ y, x = y + y⁻¹ ∧ y ≠ 0}
   · rintro _ ⟨x, rfl, hx⟩
     simp only [eval_X, eval_pow, Set.mem_setOf_eq, @add_pow_char K _ p,
       dickson_one_one_eval_add_inv _ _ (mul_inv_cancel hx), inv_pow, ZMod.castHom_apply,
@@ -239,7 +239,7 @@ theorem dickson_one_one_zmod_p (p : ℕ) [Fact p.Prime] : dickson 1 (1 : ZMod p)
     -- For the moment, we claim that all these sets together cover `K`.
     suffices
       (Set.univ : Set K) =
-        { x : K | ∃ y : K, x = y + y⁻¹ ∧ y ≠ 0 } >>= fun x => { y | x = y + y⁻¹ ∨ y = 0 }
+        {x : K | ∃ y : K, x = y + y⁻¹ ∧ y ≠ 0} >>= fun x => {y | x = y + y⁻¹ ∨ y = 0}
       by
       rw [this]; clear this
       refine' h.bUnion fun x hx => _
@@ -251,17 +251,17 @@ theorem dickson_one_one_zmod_p (p : ℕ) [Fact p.Prime] : dickson 1 (1 : ZMod p)
         simpa [eval_X, eval_one, eval_pow, eval_sub, sub_zero, eval_add, eval_mul,
           MulZeroClass.mul_zero, sq, zero_add, one_ne_zero]
       classical
-        convert(φ.roots ∪ {0}).toFinset.finite_toSet using 1
-        ext1 y
-        simp only [Multiset.mem_toFinset, Set.mem_setOf_eq, Finset.mem_coe, Multiset.mem_union,
-          mem_roots hφ, is_root, eval_add, eval_sub, eval_pow, eval_mul, eval_X, eval_C, eval_one,
-          Multiset.mem_singleton]
-        by_cases hy : y = 0
-        · simp only [hy, eq_self_iff_true, or_true_iff]
-        apply or_congr _ Iff.rfl
-        rw [← mul_left_inj' hy, eq_comm, ← sub_eq_zero, add_mul, inv_mul_cancel hy]
-        apply eq_iff_eq_cancel_right.mpr
-        ring
+      convert (φ.roots ∪ {0}).toFinset.finite_toSet using 1
+      ext1 y
+      simp only [Multiset.mem_toFinset, Set.mem_setOf_eq, Finset.mem_coe, Multiset.mem_union,
+        mem_roots hφ, is_root, eval_add, eval_sub, eval_pow, eval_mul, eval_X, eval_C, eval_one,
+        Multiset.mem_singleton]
+      by_cases hy : y = 0
+      · simp only [hy, eq_self_iff_true, or_true_iff]
+      apply or_congr _ Iff.rfl
+      rw [← mul_left_inj' hy, eq_comm, ← sub_eq_zero, add_mul, inv_mul_cancel hy]
+      apply eq_iff_eq_cancel_right.mpr
+      ring
     -- Finally, we prove the claim that our finite union of finite sets covers all of `K`.
     · apply (Set.eq_univ_of_forall _).symm
       intro x

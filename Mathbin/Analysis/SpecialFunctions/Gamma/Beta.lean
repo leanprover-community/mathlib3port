@@ -82,7 +82,7 @@ theorem beta_integral_convergent {u v : ℂ} (hu : 0 < re u) (hv : 0 < re v) :
   by
   refine' (beta_integral_convergent_left hu v).trans _
   rw [IntervalIntegrable.iff_comp_neg]
-  convert((beta_integral_convergent_left hv u).comp_add_right 1).symm
+  convert ((beta_integral_convergent_left hv u).comp_add_right 1).symm
   · ext1 x
     conv_lhs => rw [mul_comm]
     congr 2 <;> · push_cast ; ring
@@ -198,7 +198,7 @@ theorem betaIntegral_recurrence {u v : ℂ} (hu : 0 < re u) (hv : 0 < re v) :
         apply hasDerivAt_id
       convert HasDerivAt.comp (↑x) A B using 1
       ring
-    convert(U.mul V).comp_of_real
+    convert (U.mul V).comp_of_real
     ring
   have h_int :=
     ((beta_integral_convergent hu hv').const_mul u).sub
@@ -354,7 +354,8 @@ theorem approx_gamma_integral_tendsto_gamma_integral {s : ℂ} (hs : 0 < re s) :
       ext1 n
       rw [neg_div, ← sub_eq_add_neg]
   -- let `convert` identify the remaining goals
-  convert tendsto_integral_of_dominated_convergence _ (fun n => (f_ible n).1)
+  convert
+    tendsto_integral_of_dominated_convergence _ (fun n => (f_ible n).1)
       (Real.Gamma_integral_convergent hs) _
       ((ae_restrict_iff' measurableSet_Ioi).mpr (ae_of_all _ f_tends))
   -- limit of f is the integrand we want

@@ -60,9 +60,9 @@ theorem tan_int_mul_pi_div_two (n : ℤ) : tan (n * π / 2) = 0 :=
   tan_eq_zero_iff.mpr (by use n)
 #align real.tan_int_mul_pi_div_two Real.tan_int_mul_pi_div_two
 
-theorem continuousOn_tan : ContinuousOn tan { x | cos x ≠ 0 } :=
+theorem continuousOn_tan : ContinuousOn tan {x | cos x ≠ 0} :=
   by
-  suffices ContinuousOn (fun x => sin x / cos x) { x | cos x ≠ 0 }
+  suffices ContinuousOn (fun x => sin x / cos x) {x | cos x ≠ 0}
     by
     have h_eq : (fun x => sin x / cos x) = tan := by ext1 x; rw [tan_eq_sin_div_cos]
     rwa [h_eq] at this 
@@ -70,7 +70,7 @@ theorem continuousOn_tan : ContinuousOn tan { x | cos x ≠ 0 } :=
 #align real.continuous_on_tan Real.continuousOn_tan
 
 @[continuity]
-theorem continuous_tan : Continuous fun x : { x | cos x ≠ 0 } => tan x :=
+theorem continuous_tan : Continuous fun x : {x | cos x ≠ 0} => tan x :=
   continuousOn_iff_continuous_restrict.1 continuousOn_tan
 #align real.continuous_tan Real.continuous_tan
 

@@ -371,7 +371,7 @@ variable {γ : Type w} [Primcodable γ] [Inhabited γ]
 /-- Computable and injective mapping of predicates to sets of natural numbers.
 -/
 def toNat (p : Set α) : Set ℕ :=
-  { n | p ((Encodable.decode α n).getD default) }
+  {n | p ((Encodable.decode α n).getD default)}
 #align to_nat toNat
 -/
 

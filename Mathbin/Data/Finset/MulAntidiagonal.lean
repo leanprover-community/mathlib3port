@@ -109,14 +109,14 @@ theorem swap_mem_mulAntidiagonal :
 -/
 
 @[to_additive]
-theorem support_mulAntidiagonal_subset_mul : { a | (mulAntidiagonal hs ht a).Nonempty } ⊆ s * t :=
+theorem support_mulAntidiagonal_subset_mul : {a | (mulAntidiagonal hs ht a).Nonempty} ⊆ s * t :=
   fun a ⟨b, hb⟩ => by rw [mem_mul_antidiagonal] at hb ; exact ⟨b.1, b.2, hb⟩
 #align finset.support_mul_antidiagonal_subset_mul Finset.support_mulAntidiagonal_subset_mul
 #align finset.support_add_antidiagonal_subset_add Finset.support_addAntidiagonal_subset_add
 
 #print Finset.isPwo_support_mulAntidiagonal /-
 @[to_additive]
-theorem isPwo_support_mulAntidiagonal : { a | (mulAntidiagonal hs ht a).Nonempty }.IsPwo :=
+theorem isPwo_support_mulAntidiagonal : {a | (mulAntidiagonal hs ht a).Nonempty}.IsPwo :=
   (hs.mul ht).mono support_mulAntidiagonal_subset_mul
 #align finset.is_pwo_support_mul_antidiagonal Finset.isPwo_support_mulAntidiagonal
 #align finset.is_pwo_support_add_antidiagonal Finset.isPwo_support_addAntidiagonal

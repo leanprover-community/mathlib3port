@@ -181,7 +181,7 @@ theorem AnalyticSet.iInter [hι : Nonempty ι] [Countable ι] [T2Space α] {s : 
     analytic_set_iff_exists_polish_space_range.1 (hs n)
   skip
   let γ := ∀ n, β n
-  let t : Set γ := ⋂ n, { x | f n (x n) = f i₀ (x i₀) }
+  let t : Set γ := ⋂ n, {x | f n (x n) = f i₀ (x i₀)}
   have t_closed : IsClosed t := by
     apply isClosed_iInter
     intro n
@@ -273,7 +273,7 @@ theorem MeasurableSet.analyticSet {α : Type _} [t : TopologicalSpace α] [Polis
     ∃ t' : TopologicalSpace α, t' ≤ t ∧ @PolishSpace α t' ∧ is_closed[t'] s ∧ is_open[t'] s :=
     hs.is_clopenable
   have A := @IsClosed.analyticSet α t' t'_polish s s_closed
-  convert@analytic_set.image_of_continuous α t' α t s A id (continuous_id_of_le t't)
+  convert @analytic_set.image_of_continuous α t' α t s A id (continuous_id_of_le t't)
   simp only [id.def, image_id']
 #align measurable_set.analytic_set MeasurableSet.analyticSet
 -/
@@ -416,7 +416,7 @@ theorem measurablySeparable_range_of_disjoint [T2Space α] [MeasurableSpace α] 
   have M : ∀ n, ¬measurably_separable (f '' cylinder x n) (g '' cylinder y n) :=
     by
     intro n
-    convert(p n).2 using 3
+    convert (p n).2 using 3
     · rw [pn_fst, ← mem_cylinder_iff_eq, mem_cylinder_iff]
       intro i hi
       rw [hx]
@@ -769,14 +769,14 @@ omit hγb
 @[measurability]
 theorem measurableSet_exists_tendsto [hγ : OpensMeasurableSpace γ] [Countable ι] {l : Filter ι}
     [l.IsCountablyGenerated] {f : ι → β → γ} (hf : ∀ i, Measurable (f i)) :
-    MeasurableSet { x | ∃ c, Tendsto (fun n => f n x) l (𝓝 c) } :=
+    MeasurableSet {x | ∃ c, Tendsto (fun n => f n x) l (𝓝 c)} :=
   by
   by_cases hl : l.ne_bot
   swap; · rw [not_ne_bot] at hl ; simp [hl]
   letI := upgradePolishSpace γ
   rcases l.exists_antitone_basis with ⟨u, hu⟩
   simp_rw [← cauchy_map_iff_exists_tendsto]
-  change MeasurableSet { x | _ ∧ _ }
+  change MeasurableSet {x | _ ∧ _}
   have :
     ∀ x,
       (map (fun i => f i x) l ×ᶠ map (fun i => f i x) l).HasAntitoneBasis fun n =>

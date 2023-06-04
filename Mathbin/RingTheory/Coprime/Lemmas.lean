@@ -142,11 +142,11 @@ theorem exists_sum_eq_one_iff_pairwise_coprime [DecidableEq I] (h : t.Nonempty) 
     refine' ⟨ih.mp ⟨Pi.single h.some (μ a * s h.some) + μ * fun _ => s a, _⟩, fun b hb => _⟩
     · rw [prod_eq_mul_prod_diff_singleton h.some_spec, ← mul_assoc, ←
         @if_pos _ _ h.some_spec R (_ * _) 0, ← sum_pi_single', ← sum_add_distrib] at hμ 
-      rw [← hμ, sum_congr rfl]; intro x hx; convert@add_mul R _ _ _ _ _ _ using 2
+      rw [← hμ, sum_congr rfl]; intro x hx; convert @add_mul R _ _ _ _ _ _ using 2
       · by_cases hx : x = h.some
         · rw [hx, Pi.single_eq_same, Pi.single_eq_same]
         · rw [Pi.single_eq_of_ne hx, Pi.single_eq_of_ne hx, MulZeroClass.zero_mul]
-      · convert(mul_assoc _ _ _).symm
+      · convert (mul_assoc _ _ _).symm
         convert prod_eq_mul_prod_diff_singleton (mem x hx) _ using 3
         convert sdiff_sdiff_comm; rw [sdiff_singleton_eq_erase, erase_insert hat]
     · have : IsCoprime (s b) (s a) :=
@@ -165,7 +165,7 @@ theorem exists_sum_eq_one_iff_pairwise_coprime [DecidableEq I] (h : t.Nonempty) 
       hμ', sum_congr rfl]
     intro x hx
     rw [mul_assoc, if_neg fun ha : x = a => hat (ha.casesOn hx)]
-    convert mul_assoc _ _ _; convert(prod_eq_prod_diff_singleton_mul (mem x hx) _).symm using 3
+    convert mul_assoc _ _ _; convert (prod_eq_prod_diff_singleton_mul (mem x hx) _).symm using 3
     convert sdiff_sdiff_comm; rw [sdiff_singleton_eq_erase, erase_insert hat]
 #align exists_sum_eq_one_iff_pairwise_coprime exists_sum_eq_one_iff_pairwise_coprime
 

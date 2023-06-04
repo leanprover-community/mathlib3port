@@ -90,7 +90,7 @@ theorem taylor_coeff (n : ℕ) : (taylor r f).coeff n = (hasseDeriv n f).eval r 
     simp only [lcoeff_apply, ← C_eq_nat_cast, mul_assoc, ← C_pow, ← C_mul, coeff_mul_C,
       (Nat.cast_commute _ _).Eq, coeff_X_pow, boole_mul, Finset.sum_ite_eq, Finset.mem_range]
     split_ifs with h; · rfl
-    push_neg  at h ; rw [Nat.choose_eq_zero_of_lt h, Nat.cast_zero, MulZeroClass.mul_zero]
+    push_neg at h ; rw [Nat.choose_eq_zero_of_lt h, Nat.cast_zero, MulZeroClass.mul_zero]
 #align polynomial.taylor_coeff Polynomial.taylor_coeff
 
 @[simp]
@@ -142,7 +142,7 @@ theorem taylor_eval_sub {R} [CommRing R] (r : R) (f : R[X]) (s : R) :
 theorem taylor_injective {R} [CommRing R] (r : R) : Function.Injective (taylor r) :=
   by
   intro f g h
-  apply_fun taylor (-r)  at h 
+  apply_fun taylor (-r) at h 
   simpa only [taylor_apply, comp_assoc, add_comp, X_comp, C_comp, C_neg, neg_add_cancel_right,
     comp_X] using h
 #align polynomial.taylor_injective Polynomial.taylor_injective

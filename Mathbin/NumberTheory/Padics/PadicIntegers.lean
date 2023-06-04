@@ -88,7 +88,7 @@ variable (p)
 
 /-- The `p`-adic integers as a subring of `ℚ_[p]`. -/
 def subring : Subring ℚ_[p] where
-  carrier := { x : ℚ_[p] | ‖x‖ ≤ 1 }
+  carrier := {x : ℚ_[p] | ‖x‖ ≤ 1}
   zero_mem' := by norm_num
   one_mem' := by norm_num
   add_mem' x y hx hy := (padicNormE.nonarchimedean _ _).trans <| max_le_iff.2 ⟨hx, hy⟩
@@ -219,7 +219,7 @@ def inv : ℤ_[p] → ℤ_[p]
 instance : CharZero ℤ_[p]
     where cast_injective m n h :=
     Nat.cast_injective <|
-      show (m : ℚ_[p]) = n by rw [Subtype.ext_iff] at h ; norm_cast  at h ; exact h
+      show (m : ℚ_[p]) = n by rw [Subtype.ext_iff] at h ; norm_cast at h ; exact h
 
 @[simp, norm_cast]
 theorem coe_int_eq (z1 z2 : ℤ) : (z1 : ℤ_[p]) = z2 ↔ z1 = z2 :=
@@ -258,7 +258,7 @@ instance : MetricSpace ℤ_[p] :=
   Subtype.metricSpace
 
 instance completeSpace : CompleteSpace ℤ_[p] :=
-  have : IsClosed { x : ℚ_[p] | ‖x‖ ≤ 1 } := isClosed_le continuous_norm continuous_const
+  have : IsClosed {x : ℚ_[p] | ‖x‖ ≤ 1} := isClosed_le continuous_norm continuous_const
   this.completeSpace_coe
 #align padic_int.complete_space PadicInt.completeSpace
 
@@ -695,7 +695,7 @@ instance : IsAdicComplete (maximalIdeal ℤ_[p]) ℤ_[p]
       obtain ⟨i, hi⟩ := equiv_def₃ (equiv_lim x') this
       by_cases hin : i ≤ n
       · exact (hi i le_rfl n hin).le
-      · push_neg  at hin ; specialize hi i le_rfl i le_rfl; specialize hx hin.le
+      · push_neg at hin ; specialize hi i le_rfl i le_rfl; specialize hx hin.le
         have := nonarchimedean (x n - x i) (x i - x'.lim)
         rw [sub_add_sub_cancel] at this 
         refine' this.trans (max_le_iff.mpr ⟨hx, hi.le⟩)

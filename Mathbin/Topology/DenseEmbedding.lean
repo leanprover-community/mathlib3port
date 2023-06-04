@@ -218,7 +218,7 @@ theorem continuousAt_extend [T3Space γ] {b : β} {f : α → γ} (di : DenseInd
   suffices ∀ V' ∈ 𝓝 (φ b), IsClosed V' → φ ⁻¹' V' ∈ 𝓝 b by
     simpa [ContinuousAt, (closed_nhds_basis _).tendsto_right_iff]
   intro V' V'_in V'_closed
-  set V₁ := { x | tendsto f (comap i <| 𝓝 x) (𝓝 <| φ x) }
+  set V₁ := {x | tendsto f (comap i <| 𝓝 x) (𝓝 <| φ x)}
   have V₁_in : V₁ ∈ 𝓝 b := by
     filter_upwards [hf]
     rintro x ⟨c, hc⟩
@@ -227,7 +227,7 @@ theorem continuousAt_extend [T3Space γ] {b : β} {f : α → γ} (di : DenseInd
   obtain ⟨V₂, V₂_in, V₂_op, hV₂⟩ : ∃ V₂ ∈ 𝓝 b, IsOpen V₂ ∧ ∀ x ∈ i ⁻¹' V₂, f x ∈ V' := by
     simpa [and_assoc'] using
       ((nhds_basis_opens' b).comap i).tendsto_left_iffₓ.mp (mem_of_mem_nhds V₁_in : b ∈ V₁) V' V'_in
-  suffices ∀ x ∈ V₁ ∩ V₂, φ x ∈ V' by filter_upwards [inter_mem V₁_in V₂_in]using this
+  suffices ∀ x ∈ V₁ ∩ V₂, φ x ∈ V' by filter_upwards [inter_mem V₁_in V₂_in] using this
   rintro x ⟨x_in₁, x_in₂⟩
   have hV₂x : V₂ ∈ 𝓝 x := IsOpen.mem_nhds V₂_op x_in₂
   apply V'_closed.mem_of_tendsto x_in₁
@@ -299,7 +299,7 @@ protected theorem prod {e₁ : α → β} {e₂ : γ → δ} (de₁ : DenseEmbed
 /-- The dense embedding of a subtype inside its closure. -/
 @[simps]
 def subtypeEmb {α : Type _} (p : α → Prop) (e : α → β) (x : { x // p x }) :
-    { x // x ∈ closure (e '' { x | p x }) } :=
+    { x // x ∈ closure (e '' {x | p x}) } :=
   ⟨e x, subset_closure <| mem_image_of_mem e x.Prop⟩
 #align dense_embedding.subtype_emb DenseEmbedding.subtypeEmb
 -/
@@ -338,11 +338,11 @@ theorem Dense.denseEmbedding_val [TopologicalSpace α] {s : Set α} (hs : Dense 
 
 #print isClosed_property /-
 theorem isClosed_property [TopologicalSpace β] {e : α → β} {p : β → Prop} (he : DenseRange e)
-    (hp : IsClosed { x | p x }) (h : ∀ a, p (e a)) : ∀ b, p b :=
-  have : univ ⊆ { b | p b } :=
+    (hp : IsClosed {x | p x}) (h : ∀ a, p (e a)) : ∀ b, p b :=
+  have : univ ⊆ {b | p b} :=
     calc
       univ = closure (range e) := he.closure_range.symm
-      _ ⊆ closure { b | p b } := (closure_mono <| range_subset_iff.mpr h)
+      _ ⊆ closure {b | p b} := (closure_mono <| range_subset_iff.mpr h)
       _ = _ := hp.closure_eq
       
   fun b => this trivial
@@ -350,13 +350,13 @@ theorem isClosed_property [TopologicalSpace β] {e : α → β} {p : β → Prop
 -/
 
 theorem isClosed_property2 [TopologicalSpace β] {e : α → β} {p : β → β → Prop} (he : DenseRange e)
-    (hp : IsClosed { q : β × β | p q.1 q.2 }) (h : ∀ a₁ a₂, p (e a₁) (e a₂)) : ∀ b₁ b₂, p b₁ b₂ :=
+    (hp : IsClosed {q : β × β | p q.1 q.2}) (h : ∀ a₁ a₂, p (e a₁) (e a₂)) : ∀ b₁ b₂, p b₁ b₂ :=
   have : ∀ q : β × β, p q.1 q.2 := isClosed_property (he.Prod_map he) hp fun _ => h _ _
   fun b₁ b₂ => this ⟨b₁, b₂⟩
 #align is_closed_property2 isClosed_property2
 
 theorem isClosed_property3 [TopologicalSpace β] {e : α → β} {p : β → β → β → Prop}
-    (he : DenseRange e) (hp : IsClosed { q : β × β × β | p q.1 q.2.1 q.2.2 })
+    (he : DenseRange e) (hp : IsClosed {q : β × β × β | p q.1 q.2.1 q.2.2})
     (h : ∀ a₁ a₂ a₃, p (e a₁) (e a₂) (e a₃)) : ∀ b₁ b₂ b₃, p b₁ b₂ b₃ :=
   have : ∀ q : β × β × β, p q.1 q.2.1 q.2.2 :=
     isClosed_property (he.Prod_map <| he.Prod_map he) hp fun _ => h _ _ _
@@ -366,21 +366,21 @@ theorem isClosed_property3 [TopologicalSpace β] {e : α → β} {p : β → β 
 #print DenseRange.induction_on /-
 @[elab_as_elim]
 theorem DenseRange.induction_on [TopologicalSpace β] {e : α → β} (he : DenseRange e) {p : β → Prop}
-    (b₀ : β) (hp : IsClosed { b | p b }) (ih : ∀ a : α, p <| e a) : p b₀ :=
+    (b₀ : β) (hp : IsClosed {b | p b}) (ih : ∀ a : α, p <| e a) : p b₀ :=
   isClosed_property he hp ih b₀
 #align dense_range.induction_on DenseRange.induction_on
 -/
 
 @[elab_as_elim]
 theorem DenseRange.induction_on₂ [TopologicalSpace β] {e : α → β} {p : β → β → Prop}
-    (he : DenseRange e) (hp : IsClosed { q : β × β | p q.1 q.2 }) (h : ∀ a₁ a₂, p (e a₁) (e a₂))
+    (he : DenseRange e) (hp : IsClosed {q : β × β | p q.1 q.2}) (h : ∀ a₁ a₂, p (e a₁) (e a₂))
     (b₁ b₂ : β) : p b₁ b₂ :=
   isClosed_property2 he hp h _ _
 #align dense_range.induction_on₂ DenseRange.induction_on₂
 
 @[elab_as_elim]
 theorem DenseRange.induction_on₃ [TopologicalSpace β] {e : α → β} {p : β → β → β → Prop}
-    (he : DenseRange e) (hp : IsClosed { q : β × β × β | p q.1 q.2.1 q.2.2 })
+    (he : DenseRange e) (hp : IsClosed {q : β × β × β | p q.1 q.2.1 q.2.2})
     (h : ∀ a₁ a₂ a₃, p (e a₁) (e a₂) (e a₃)) (b₁ b₂ b₃ : β) : p b₁ b₂ b₃ :=
   isClosed_property3 he hp h _ _ _
 #align dense_range.induction_on₃ DenseRange.induction_on₃
@@ -417,7 +417,7 @@ theorem Filter.HasBasis.hasBasis_of_denseInducing [TopologicalSpace α] [Topolog
         (closure_mono (image_subset f hi')).trans
           (subset.trans (closure_minimal (image_subset_iff.mpr subset.rfl) hT₂) hT₃)⟩
   · obtain ⟨i, hi, hi'⟩ := hT
-    suffices closure (f '' s i) ∈ 𝓝 (f x) by filter_upwards [this]using hi'
+    suffices closure (f '' s i) ∈ 𝓝 (f x) by filter_upwards [this] using hi'
     replace h := (h (s i)).mpr ⟨i, hi, subset.rfl⟩
     exact hf.closure_image_mem_nhds h
 #align filter.has_basis.has_basis_of_dense_inducing Filter.HasBasis.hasBasis_of_denseInducing

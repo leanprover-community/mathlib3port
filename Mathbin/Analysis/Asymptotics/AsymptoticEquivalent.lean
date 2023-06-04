@@ -139,7 +139,7 @@ theorem isEquivalent_zero_iff_isBigO_zero : u ~[l] 0 ↔ u =O[l] (0 : α → β)
   by
   refine' ⟨is_equivalent.is_O, fun h => _⟩
   rw [is_equivalent_zero_iff_eventually_zero, eventually_eq_iff_exists_mem]
-  exact ⟨{ x : α | u x = 0 }, is_O_zero_right_iff.mp h, fun x hx => hx⟩
+  exact ⟨{x : α | u x = 0}, is_O_zero_right_iff.mp h, fun x hx => hx⟩
 #align asymptotics.is_equivalent_zero_iff_is_O_zero Asymptotics.isEquivalent_zero_iff_isBigO_zero
 
 theorem isEquivalent_const_iff_tendsto {c : β} (h : c ≠ 0) : u ~[l] const _ c ↔ Tendsto u l (𝓝 c) :=
@@ -261,8 +261,8 @@ theorem IsEquivalent.smul {α E 𝕜 : Type _} [NormedField 𝕜] [NormedAddComm
   have :
     ((fun x : α => a x • u x) - fun x : α => b x • v x) =ᶠ[l] fun x => b x • (φ x • u x - v x) :=
     by
-    convert(habφ.comp₂ (· • ·) <| eventually_eq.refl _ u).sub
-        (eventually_eq.refl _ fun x => b x • v x)
+    convert
+      (habφ.comp₂ (· • ·) <| eventually_eq.refl _ u).sub (eventually_eq.refl _ fun x => b x • v x)
     ext
     rw [Pi.mul_apply, mul_comm, mul_smul, ← smul_sub]
   refine' (is_o_congr this.symm <| eventually_eq.rfl).mp ((is_O_refl b l).smul_isLittleO _)
@@ -344,8 +344,8 @@ theorem IsEquivalent.tendsto_atTop_iff [OrderTopology β] (huv : u ~[l] v) :
 theorem IsEquivalent.tendsto_atBot [OrderTopology β] (huv : u ~[l] v) (hu : Tendsto u l atBot) :
     Tendsto v l atBot :=
   by
-  convert tendsto_neg_at_top_at_bot.comp
-      (huv.neg.tendsto_at_top <| tendsto_neg_at_bot_at_top.comp hu)
+  convert
+    tendsto_neg_at_top_at_bot.comp (huv.neg.tendsto_at_top <| tendsto_neg_at_bot_at_top.comp hu)
   ext
   simp
 #align asymptotics.is_equivalent.tendsto_at_bot Asymptotics.IsEquivalent.tendsto_atBot

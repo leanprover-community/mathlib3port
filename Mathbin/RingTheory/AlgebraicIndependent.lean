@@ -386,7 +386,7 @@ theorem exists_maximal_algebraicIndependent (s t : Set A) (hst : s ⊆ t)
       AlgebraicIndependent R (coe : u → A) ∧
         s ⊆ u ∧ u ⊆ t ∧ ∀ x : Set A, AlgebraicIndependent R (coe : x → A) → u ⊆ x → x ⊆ t → x = u :=
   by
-  rcases zorn_subset_nonempty { u : Set A | AlgebraicIndependent R (coe : u → A) ∧ s ⊆ u ∧ u ⊆ t }
+  rcases zorn_subset_nonempty {u : Set A | AlgebraicIndependent R (coe : u → A) ∧ s ⊆ u ∧ u ⊆ t}
       (fun c hc chainc hcn =>
         ⟨⋃₀ c,
           by

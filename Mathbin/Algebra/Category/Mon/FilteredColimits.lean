@@ -49,7 +49,7 @@ section
 
 -- We use parameters here, mainly so we can have the abbreviations `M` and `M.mk` below, without
 -- passing around `F` all the time.
-parameter {J : Type v}[SmallCategory J](F : J ⥤ MonCat.{max v u})
+parameter {J : Type v} [SmallCategory J] (F : J ⥤ MonCat.{max v u})
 
 #print MonCat.FilteredColimits.M /-
 /-- The colimit of `F ⋙ forget Mon` in the category of types.
@@ -229,7 +229,7 @@ def coconeMorphism (j : J) : F.obj j ⟶ colimit
   toFun := (Types.colimitCocone (F ⋙ forget MonCat)).ι.app j
   map_one' := (colimit_one_eq j).symm
   map_mul' x y := by
-    convert(colimit_mul_mk_eq F ⟨j, x⟩ ⟨j, y⟩ j (𝟙 j) (𝟙 j)).symm
+    convert (colimit_mul_mk_eq F ⟨j, x⟩ ⟨j, y⟩ j (𝟙 j) (𝟙 j)).symm
     rw [F.map_id, id_apply, id_apply]; rfl
 #align Mon.filtered_colimits.cocone_morphism MonCat.FilteredColimits.coconeMorphism
 #align AddMon.filtered_colimits.cocone_morphism AddMonCat.FilteredColimits.coconeMorphism
@@ -315,7 +315,7 @@ section
 
 -- We use parameters here, mainly so we can have the abbreviation `M` below, without
 -- passing around `F` all the time.
-parameter {J : Type v}[SmallCategory J][IsFiltered J](F : J ⥤ CommMonCat.{max v u})
+parameter {J : Type v} [SmallCategory J] [IsFiltered J] (F : J ⥤ CommMonCat.{max v u})
 
 #print CommMonCat.FilteredColimits.M /-
 /-- The colimit of `F ⋙ forget₂ CommMon Mon` in the category `Mon`.

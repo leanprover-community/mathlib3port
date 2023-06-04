@@ -37,14 +37,14 @@ variable {α : Type _} (r r₁ r₂ : α → α → Prop) (s t : Set α) (a b : 
 #print maximals /-
 /-- Turns a set into an antichain by keeping only the "maximal" elements. -/
 def maximals : Set α :=
-  { a ∈ s | ∀ ⦃b⦄, b ∈ s → r a b → r b a }
+  {a ∈ s | ∀ ⦃b⦄, b ∈ s → r a b → r b a}
 #align maximals maximals
 -/
 
 #print minimals /-
 /-- Turns a set into an antichain by keeping only the "minimal" elements. -/
 def minimals : Set α :=
-  { a ∈ s | ∀ ⦃b⦄, b ∈ s → r b a → r a b }
+  {a ∈ s | ∀ ⦃b⦄, b ∈ s → r b a → r a b}
 #align minimals minimals
 -/
 

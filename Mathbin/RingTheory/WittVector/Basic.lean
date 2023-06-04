@@ -257,13 +257,13 @@ private def ghost_equiv' [Invertible (p : R)] : 𝕎 R ≃ (ℕ → R)
     intro x
     ext n
     have := bind₁_wittPolynomial_xInTermsOfW p R n
-    apply_fun aeval x.coeff  at this 
+    apply_fun aeval x.coeff at this 
     simpa only [aeval_bind₁, aeval_X, ghost_fun, aeval_wittPolynomial]
   right_inv := by
     intro x
     ext n
     have := bind₁_xInTermsOfW_wittPolynomial p R n
-    apply_fun aeval x  at this 
+    apply_fun aeval x at this 
     simpa only [aeval_bind₁, aeval_X, ghost_fun, aeval_wittPolynomial]
 
 include hp

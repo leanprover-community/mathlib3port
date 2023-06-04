@@ -245,7 +245,7 @@ def limitCone {J : Type u} [SmallCategory J] (F : J ⥤ Profinite.{u}) : Limits.
     { toCompHaus := (CompHaus.limitCone.{u, u} (F ⋙ profiniteToCompHaus)).pt
       IsTotallyDisconnected :=
         by
-        change TotallyDisconnectedSpace ↥{ u : ∀ j : J, F.obj j | _ }
+        change TotallyDisconnectedSpace ↥{u : ∀ j : J, F.obj j | _}
         exact Subtype.totallyDisconnectedSpace }
   π := { app := (CompHaus.limitCone.{u, u} (F ⋙ profiniteToCompHaus)).π.app }
 #align Profinite.limit_cone Profinite.limitCone
@@ -297,13 +297,13 @@ noncomputable instance toTopCat.createsLimits : CreatesLimits Profinite.toTopCat
 
 #print Profinite.hasLimits /-
 instance hasLimits : Limits.HasLimits Profinite :=
-  has_limits_of_has_limits_creates_limits Profinite.toTopCat
+  hasLimits_of_hasLimits_createsLimits Profinite.toTopCat
 #align Profinite.has_limits Profinite.hasLimits
 -/
 
 #print Profinite.hasColimits /-
 instance hasColimits : Limits.HasColimits Profinite :=
-  has_colimits_of_reflective profiniteToCompHaus
+  hasColimits_of_reflective profiniteToCompHaus
 #align Profinite.has_colimits Profinite.hasColimits
 -/
 
@@ -388,19 +388,19 @@ theorem epi_iff_surjective {X Y : Profinite.{u}} (f : X ⟶ Y) : Epi f ↔ Funct
     have hUy : U ∈ 𝓝 y := hC.compl_mem_nhds hyU
     obtain ⟨V, hV, hyV, hVU⟩ := is_topological_basis_clopen.mem_nhds_iff.mp hUy
     classical
-      let Z := of (ULift.{u} <| Fin 2)
-      let g : Y ⟶ Z := ⟨(LocallyConstant.ofClopen hV).map ULift.up, LocallyConstant.continuous _⟩
-      let h : Y ⟶ Z := ⟨fun _ => ⟨1⟩, continuous_const⟩
-      have H : h = g := by
-        rw [← cancel_epi f]
-        ext x; dsimp [LocallyConstant.ofClopen]
-        rw [if_neg]; · rfl
-        refine' mt (fun α => hVU α) _
-        simp only [Set.mem_range_self, not_true, not_false_iff, Set.mem_compl_iff]
-      apply_fun fun e => (e y).down  at H 
-      dsimp [LocallyConstant.ofClopen] at H 
-      rw [if_pos hyV] at H 
-      exact top_ne_bot H
+    let Z := of (ULift.{u} <| Fin 2)
+    let g : Y ⟶ Z := ⟨(LocallyConstant.ofClopen hV).map ULift.up, LocallyConstant.continuous _⟩
+    let h : Y ⟶ Z := ⟨fun _ => ⟨1⟩, continuous_const⟩
+    have H : h = g := by
+      rw [← cancel_epi f]
+      ext x; dsimp [LocallyConstant.ofClopen]
+      rw [if_neg]; · rfl
+      refine' mt (fun α => hVU α) _
+      simp only [Set.mem_range_self, not_true, not_false_iff, Set.mem_compl_iff]
+    apply_fun fun e => (e y).down at H 
+    dsimp [LocallyConstant.ofClopen] at H 
+    rw [if_pos hyV] at H 
+    exact top_ne_bot H
   · rw [← CategoryTheory.epi_iff_surjective]
     apply (forget Profinite).epi_of_epi_map
 #align Profinite.epi_iff_surjective Profinite.epi_iff_surjective

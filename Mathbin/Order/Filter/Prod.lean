@@ -98,7 +98,7 @@ theorem prod_mem_prod_iff {s : Set α} {t : Set β} {f : Filter α} {g : Filter 
 #align filter.prod_mem_prod_iff Filter.prod_mem_prod_iff
 
 theorem mem_prod_principal {f : Filter α} {s : Set (α × β)} {t : Set β} :
-    s ∈ f ×ᶠ 𝓟 t ↔ { a | ∀ b ∈ t, (a, b) ∈ s } ∈ f :=
+    s ∈ f ×ᶠ 𝓟 t ↔ {a | ∀ b ∈ t, (a, b) ∈ s} ∈ f :=
   by
   rw [← @exists_mem_subset_iff _ f, mem_prod_iff]
   refine' exists₂_congr fun u u_in => ⟨_, fun h => ⟨t, mem_principal_self t, _⟩⟩
@@ -109,7 +109,7 @@ theorem mem_prod_principal {f : Filter α} {s : Set (α × β)} {t : Set β} :
 #align filter.mem_prod_principal Filter.mem_prod_principal
 
 theorem mem_prod_top {f : Filter α} {s : Set (α × β)} :
-    s ∈ f ×ᶠ (⊤ : Filter β) ↔ { a | ∀ b, (a, b) ∈ s } ∈ f :=
+    s ∈ f ×ᶠ (⊤ : Filter β) ↔ {a | ∀ b, (a, b) ∈ s} ∈ f :=
   by
   rw [← principal_univ, mem_prod_principal]
   simp only [mem_univ, forall_true_left]

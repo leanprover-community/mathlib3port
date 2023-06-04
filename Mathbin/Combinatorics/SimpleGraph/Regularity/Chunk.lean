@@ -214,7 +214,7 @@ theorem card_chunk (hm : m ≠ 0) : (chunk hP G ε hU).parts.card = 4 ^ P.parts.
 
 theorem card_eq_of_mem_parts_chunk (hs : s ∈ (chunk hP G ε hU).parts) :
     s.card = m ∨ s.card = m + 1 := by unfold chunk at hs ;
-  split_ifs  at hs  <;> exact card_eq_of_mem_parts_equitabilise hs
+  split_ifs at hs  <;> exact card_eq_of_mem_parts_equitabilise hs
 #align szemeredi_regularity.card_eq_of_mem_parts_chunk SzemerediRegularity.card_eq_of_mem_parts_chunk
 
 theorem m_le_card_of_mem_chunk_parts (hs : s ∈ (chunk hP G ε hU).parts) : m ≤ s.card :=
@@ -424,7 +424,8 @@ private theorem abs_density_star_sub_density_le_eps (hPε : 100 ≤ 4 ^ P.parts.
           G.edgeDensity (G.nonuniformWitness ε U V) (G.nonuniformWitness ε V U)| ≤
       ε / 5 :=
   by
-  convert abs_edge_density_sub_edge_density_le_two_mul G.adj
+  convert
+    abs_edge_density_sub_edge_density_le_two_mul G.adj
       (bUnion_star_subset_nonuniform_witness hP G ε hU V)
       (bUnion_star_subset_nonuniform_witness hP G ε hV U) (by positivity)
       (one_sub_eps_mul_card_nonuniform_witness_le_card_star hV hUV' hUV hPε hε₁)

@@ -408,7 +408,7 @@ instance isLocalizedModule_toPushforwardStalkAlgHom :
       PrimeSpectrum.isTopologicalBasis_basic_opens.exists_subset_of_mem_open (show p ∈ U.1 from hpU)
         U.2
     change PrimeSpectrum.basicOpen r ≤ U at hrU 
-    apply_fun (Spec.Top_map (algebraMap R S) _* (structure_sheaf S).1).map (hom_of_le hrU).op  at e 
+    apply_fun (Spec.Top_map (algebraMap R S) _* (structure_sheaf S).1).map (hom_of_le hrU).op at e 
     simp only [TopCat.Presheaf.pushforwardObj_map, functor.op_map, map_zero, ← comp_apply,
       to_open_res] at e 
     have : to_open S (PrimeSpectrum.basicOpen <| algebraMap R S r) x = 0 := by refine' Eq.trans _ e;

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module algebraic_geometry.stalks
-! leanprover-community/mathlib commit d39590fc8728fbf6743249802486f8c91ffe07bc
+! leanprover-community/mathlib commit 2ebc1d6c2fed9f54c95bbc3998eaa5570527129a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.Topology.Sheaves.Stalks
 
 /-!
 # Stalks for presheaved spaces
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file lifts constructions of stalks and pushforwards of stalks to work with
 the category of presheafed spaces. Additionally, we prove that restriction of
@@ -127,7 +130,7 @@ theorem id (X : PresheafedSpace.{v} C) (x : X) : stalkMap (𝟙 X) x = 𝟙 (X.s
   dsimp [stalk_map]
   simp only [stalk_pushforward.id]
   rw [← map_comp]
-  convert(stalk_functor C x).map_id X.presheaf
+  convert (stalk_functor C x).map_id X.presheaf
   tidy
 #align algebraic_geometry.PresheafedSpace.stalk_map.id AlgebraicGeometry.PresheafedSpace.stalkMap.id
 

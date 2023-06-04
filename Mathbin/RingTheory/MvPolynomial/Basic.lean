@@ -81,7 +81,7 @@ section Degree
 #print MvPolynomial.restrictTotalDegree /-
 /-- The submodule of polynomials of total degree less than or equal to `m`.-/
 def restrictTotalDegree : Submodule R (MvPolynomial σ R) :=
-  Finsupp.supported _ _ { n | (n.Sum fun n e => e) ≤ m }
+  Finsupp.supported _ _ {n | (n.Sum fun n e => e) ≤ m}
 #align mv_polynomial.restrict_total_degree MvPolynomial.restrictTotalDegree
 -/
 
@@ -89,7 +89,7 @@ def restrictTotalDegree : Submodule R (MvPolynomial σ R) :=
 /-- The submodule of polynomials such that the degree with respect to each individual variable is
 less than or equal to `m`.-/
 def restrictDegree (m : ℕ) : Submodule R (MvPolynomial σ R) :=
-  Finsupp.supported _ _ { n | ∀ i, n i ≤ m }
+  Finsupp.supported _ _ {n | ∀ i, n i ≤ m}
 #align mv_polynomial.restrict_degree MvPolynomial.restrictDegree
 -/
 

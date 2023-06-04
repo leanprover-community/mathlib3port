@@ -76,8 +76,8 @@ open scoped FirstOrder
 
 open Structure Fin
 
-/- ./././Mathport/Syntax/Translate/Command.lean:369:30: infer kinds are unsupported in Lean 4: var {} -/
-/- ./././Mathport/Syntax/Translate/Command.lean:369:30: infer kinds are unsupported in Lean 4: func {} -/
+/- ./././Mathport/Syntax/Translate/Command.lean:370:30: infer kinds are unsupported in Lean 4: var {} -/
+/- ./././Mathport/Syntax/Translate/Command.lean:370:30: infer kinds are unsupported in Lean 4: func {} -/
 #print FirstOrder.Language.Term /-
 /-- A term on `α` is either a variable indexed by an element of `α`
   or a function symbol applied to simpler terms. -/
@@ -360,7 +360,7 @@ def Lequiv.onTerm (φ : L ≃ᴸ L') : L.term α ≃ L'.term α
 
 variable (L) (α)
 
-/- ./././Mathport/Syntax/Translate/Command.lean:369:30: infer kinds are unsupported in Lean 4: falsum {} -/
+/- ./././Mathport/Syntax/Translate/Command.lean:370:30: infer kinds are unsupported in Lean 4: falsum {} -/
 #print FirstOrder.Language.BoundedFormula /-
 /-- `bounded_formula α n` is the type of formulas with free variables indexed by `α` and up to `n`
   additional free variables. -/
@@ -1373,17 +1373,17 @@ theorem distinctConstantsTheory_eq_iUnion (s : Set α) :
         L.distinctConstantsTheory (t.map (Function.Embedding.subtype fun x => x ∈ s)) :=
   by
   classical
-    simp only [distinct_constants_theory]
-    rw [← image_Union, ← Union_inter]
-    refine' congr rfl (congr (congr rfl _) rfl)
-    ext ⟨i, j⟩
-    simp only [prod_mk_mem_set_prod_eq, Finset.coe_map, Function.Embedding.coe_subtype, mem_Union,
-      mem_image, Finset.mem_coe, Subtype.exists, Subtype.coe_mk, exists_and_right, exists_eq_right]
-    refine' ⟨fun h => ⟨{⟨i, h.1⟩, ⟨j, h.2⟩}, ⟨h.1, _⟩, ⟨h.2, _⟩⟩, _⟩
-    · simp
-    · simp
-    · rintro ⟨t, ⟨is, _⟩, ⟨js, _⟩⟩
-      exact ⟨is, js⟩
+  simp only [distinct_constants_theory]
+  rw [← image_Union, ← Union_inter]
+  refine' congr rfl (congr (congr rfl _) rfl)
+  ext ⟨i, j⟩
+  simp only [prod_mk_mem_set_prod_eq, Finset.coe_map, Function.Embedding.coe_subtype, mem_Union,
+    mem_image, Finset.mem_coe, Subtype.exists, Subtype.coe_mk, exists_and_right, exists_eq_right]
+  refine' ⟨fun h => ⟨{⟨i, h.1⟩, ⟨j, h.2⟩}, ⟨h.1, _⟩, ⟨h.2, _⟩⟩, _⟩
+  · simp
+  · simp
+  · rintro ⟨t, ⟨is, _⟩, ⟨js, _⟩⟩
+    exact ⟨is, js⟩
 #align first_order.language.distinct_constants_theory_eq_Union FirstOrder.Language.distinctConstantsTheory_eq_iUnion
 -/
 

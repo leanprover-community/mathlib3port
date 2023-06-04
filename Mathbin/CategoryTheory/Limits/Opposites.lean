@@ -743,13 +743,13 @@ def isColimitEquivIsLimitOp {X Y Z : C} {f : X ⟶ Y} {g : X ⟶ Z} (c : Pushout
   apply equivOfSubsingletonOfSubsingleton
   · intro h
     equiv_rw is_limit.postcompose_hom_equiv _ _
-    equiv_rw(is_limit.whisker_equivalence_equiv walking_span_op_equiv.symm).symm
+    equiv_rw (is_limit.whisker_equivalence_equiv walking_span_op_equiv.symm).symm
     exact is_limit_cocone_op _ h
   · intro h
     equiv_rw is_colimit.equiv_iso_colimit c.op_unop.symm
     apply is_colimit_cone_unop
     equiv_rw is_limit.postcompose_hom_equiv _ _
-    equiv_rw(is_limit.whisker_equivalence_equiv _).symm
+    equiv_rw (is_limit.whisker_equivalence_equiv _).symm
     exact h
 #align category_theory.limits.pushout_cocone.is_colimit_equiv_is_limit_op CategoryTheory.Limits.PushoutCocone.isColimitEquivIsLimitOp
 -/
@@ -764,12 +764,12 @@ def isColimitEquivIsLimitUnop {X Y Z : Cᵒᵖ} {f : X ⟶ Y} {g : X ⟶ Z} (c :
   · intro h
     apply is_limit_cocone_unop
     equiv_rw is_colimit.precompose_hom_equiv _ _
-    equiv_rw(is_colimit.whisker_equivalence_equiv _).symm
+    equiv_rw (is_colimit.whisker_equivalence_equiv _).symm
     exact h
   · intro h
     equiv_rw is_colimit.equiv_iso_colimit c.unop_op.symm
     equiv_rw is_colimit.precompose_hom_equiv _ _
-    equiv_rw(is_colimit.whisker_equivalence_equiv walking_cospan_op_equiv.symm).symm
+    equiv_rw (is_colimit.whisker_equivalence_equiv walking_cospan_op_equiv.symm).symm
     exact is_colimit_cone_op _ h
 #align category_theory.limits.pushout_cocone.is_colimit_equiv_is_limit_unop CategoryTheory.Limits.PushoutCocone.isColimitEquivIsLimitUnop
 -/

@@ -305,7 +305,7 @@ def castHom {α} [MulZeroOneClass α] [HasDistribNeg α] : SignType →*₀ α
 #print SignType.range_eq /-
 theorem range_eq {α} (f : SignType → α) : Set.range f = {f zero, f neg, f pos} := by
   classical simpa only [← Finset.coe_singleton, ← Finset.image_singleton, ← Fintype.coe_image_univ,
-      Finset.coe_image, ← Set.image_insert_eq]
+    Finset.coe_image, ← Set.image_insert_eq]
 #align sign_type.range_eq SignType.range_eq
 -/
 
@@ -361,7 +361,7 @@ theorem sign_eq_one_iff : SignType.sign a = 1 ↔ 0 < a :=
   refine' ⟨fun h => _, fun h => sign_pos h⟩
   by_contra hn
   rw [sign_apply, if_neg hn] at h 
-  split_ifs  at h  <;> simpa using h
+  split_ifs at h  <;> simpa using h
 #align sign_eq_one_iff sign_eq_one_iff
 -/
 
@@ -370,7 +370,7 @@ theorem sign_eq_neg_one_iff : SignType.sign a = -1 ↔ a < 0 :=
   by
   refine' ⟨fun h => _, fun h => sign_neg h⟩
   rw [sign_apply] at h 
-  split_ifs  at h 
+  split_ifs at h 
   · simpa using h
   · exact h_2
   · simpa using h
@@ -389,7 +389,7 @@ theorem sign_eq_zero_iff : SignType.sign a = 0 ↔ a = 0 :=
   by
   refine' ⟨fun h => _, fun h => h.symm ▸ sign_zero⟩
   rw [sign_apply] at h 
-  split_ifs  at h  <;> cases h
+  split_ifs at h  <;> cases h
   exact (le_of_not_lt h_1).eq_of_not_lt h_2
 #align sign_eq_zero_iff sign_eq_zero_iff
 -/

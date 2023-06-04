@@ -125,7 +125,7 @@ instance : UniformGroup (α →ᵤ G) :=
 @[to_additive]
 protected theorem UniformFun.hasBasis_nhds_one_of_basis {p : ι → Prop} {b : ι → Set G}
     (h : (𝓝 1 : Filter G).HasBasis p b) :
-    (𝓝 1 : Filter (α →ᵤ G)).HasBasis p fun i => { f : α →ᵤ G | ∀ x, f x ∈ b i } :=
+    (𝓝 1 : Filter (α →ᵤ G)).HasBasis p fun i => {f : α →ᵤ G | ∀ x, f x ∈ b i} :=
   by
   have := h.comap fun p : G × G => p.2 / p.1
   rw [← uniformity_eq_comap_nhds_one] at this 
@@ -138,7 +138,7 @@ protected theorem UniformFun.hasBasis_nhds_one_of_basis {p : ι → Prop} {b : �
 @[to_additive]
 protected theorem UniformFun.hasBasis_nhds_one :
     (𝓝 1 : Filter (α →ᵤ G)).HasBasis (fun V : Set G => V ∈ (𝓝 1 : Filter G)) fun V =>
-      { f : α → G | ∀ x, f x ∈ V } :=
+      {f : α → G | ∀ x, f x ∈ V} :=
   UniformFun.hasBasis_nhds_one_of_basis (basis_sets _)
 #align uniform_fun.has_basis_nhds_one UniformFun.hasBasis_nhds_one
 #align uniform_fun.has_basis_nhds_zero UniformFun.hasBasis_nhds_zero
@@ -162,7 +162,7 @@ protected theorem UniformOnFun.hasBasis_nhds_one_of_basis (𝔖 : Set <| Set α)
     (h𝔖₂ : DirectedOn (· ⊆ ·) 𝔖) {p : ι → Prop} {b : ι → Set G}
     (h : (𝓝 1 : Filter G).HasBasis p b) :
     (𝓝 1 : Filter (α →ᵤ[𝔖] G)).HasBasis (fun Si : Set α × ι => Si.1 ∈ 𝔖 ∧ p Si.2) fun Si =>
-      { f : α →ᵤ[𝔖] G | ∀ x ∈ Si.1, f x ∈ b Si.2 } :=
+      {f : α →ᵤ[𝔖] G | ∀ x ∈ Si.1, f x ∈ b Si.2} :=
   by
   have := h.comap fun p : G × G => p.1 / p.2
   rw [← uniformity_eq_comap_nhds_one_swapped] at this 
@@ -177,7 +177,7 @@ protected theorem UniformOnFun.hasBasis_nhds_one (𝔖 : Set <| Set α) (h𝔖�
     (h𝔖₂ : DirectedOn (· ⊆ ·) 𝔖) :
     (𝓝 1 : Filter (α →ᵤ[𝔖] G)).HasBasis
       (fun SV : Set α × Set G => SV.1 ∈ 𝔖 ∧ SV.2 ∈ (𝓝 1 : Filter G)) fun SV =>
-      { f : α →ᵤ[𝔖] G | ∀ x ∈ SV.1, f x ∈ SV.2 } :=
+      {f : α →ᵤ[𝔖] G | ∀ x ∈ SV.1, f x ∈ SV.2} :=
   UniformOnFun.hasBasis_nhds_one_of_basis 𝔖 h𝔖₁ h𝔖₂ (basis_sets _)
 #align uniform_on_fun.has_basis_nhds_one UniformOnFun.hasBasis_nhds_one
 #align uniform_on_fun.has_basis_nhds_zero UniformOnFun.hasBasis_nhds_zero
