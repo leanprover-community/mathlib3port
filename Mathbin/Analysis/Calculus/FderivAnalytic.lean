@@ -183,11 +183,14 @@ protected theorem HasFPowerSeriesAt.deriv (h : HasFPowerSeriesAt f p x) :
   h.HasDerivAt.deriv
 #align has_fpower_series_at.deriv HasFPowerSeriesAt.deriv
 
+#print AnalyticOn.deriv /-
 /-- If a function is analytic on a set `s`, so is its derivative. -/
 theorem AnalyticOn.deriv [CompleteSpace F] (h : AnalyticOn 𝕜 f s) : AnalyticOn 𝕜 (deriv f) s :=
   (ContinuousLinearMap.apply 𝕜 F (1 : 𝕜)).comp_analyticOn h.fderiv
 #align analytic_on.deriv AnalyticOn.deriv
+-/
 
+#print AnalyticOn.iterated_deriv /-
 /-- If a function is analytic on a set `s`, so are its successive derivatives. -/
 theorem AnalyticOn.iterated_deriv [CompleteSpace F] (h : AnalyticOn 𝕜 f s) (n : ℕ) :
     AnalyticOn 𝕜 ((deriv^[n]) f) s := by
@@ -195,6 +198,7 @@ theorem AnalyticOn.iterated_deriv [CompleteSpace F] (h : AnalyticOn 𝕜 f s) (n
   · exact h
   · simpa only [Function.iterate_succ', Function.comp_apply] using IH.deriv
 #align analytic_on.iterated_deriv AnalyticOn.iterated_deriv
+-/
 
 end deriv
 
