@@ -114,6 +114,7 @@ variable (p) [hp : Fact p.Prime]
 
 include hp
 
+#print wittStructureRat /-
 /-- `witt_structure_rat Φ` is a family of polynomials `ℕ → mv_polynomial (idx × ℕ) ℚ`
 that are uniquely characterised by the property that
 ```
@@ -135,6 +136,7 @@ when mapped to polynomials over the rationals. -/
 noncomputable def wittStructureRat (Φ : MvPolynomial idx ℚ) (n : ℕ) : MvPolynomial (idx × ℕ) ℚ :=
   bind₁ (fun k => bind₁ (fun i => rename (Prod.mk i) (W_ ℚ k)) Φ) (xInTermsOfW p ℚ n)
 #align witt_structure_rat wittStructureRat
+-/
 
 theorem wittStructureRat_prop (Φ : MvPolynomial idx ℚ) (n : ℕ) :
     bind₁ (wittStructureRat p Φ) (W_ ℚ n) = bind₁ (fun i => rename (Prod.mk i) (W_ ℚ n)) Φ :=
@@ -148,7 +150,7 @@ theorem wittStructureRat_prop (Φ : MvPolynomial idx ℚ) (n : ℕ) :
     
 #align witt_structure_rat_prop wittStructureRat_prop
 
-theorem witt_structure_rat_existsUnique (Φ : MvPolynomial idx ℚ) :
+theorem wittStructureRat_existsUnique (Φ : MvPolynomial idx ℚ) :
     ∃! φ : ℕ → MvPolynomial (idx × ℕ) ℚ,
       ∀ n : ℕ, bind₁ φ (W_ ℚ n) = bind₁ (fun i => rename (Prod.mk i) (W_ ℚ n)) Φ :=
   by
@@ -160,7 +162,7 @@ theorem witt_structure_rat_existsUnique (Φ : MvPolynomial idx ℚ) :
         rw [bind₁_wittPolynomial_xInTermsOfW p, bind₁_X_right]]
     rw [bind₁_bind₁]
     exact eval₂_hom_congr (RingHom.ext_rat _ _) (funext H) rfl
-#align witt_structure_rat_exists_unique witt_structure_rat_existsUnique
+#align witt_structure_rat_exists_unique wittStructureRat_existsUnique
 
 theorem wittStructureRat_rec_aux (Φ : MvPolynomial idx ℚ) (n : ℕ) :
     wittStructureRat p Φ n * C (p ^ n : ℚ) =
@@ -231,7 +233,7 @@ theorem bind₁_rename_expand_wittPolynomial (Φ : MvPolynomial idx ℤ) (n : �
   simp only [IH i hi]
 #align bind₁_rename_expand_witt_polynomial bind₁_rename_expand_wittPolynomial
 
-theorem c_p_pow_dvd_bind₁_rename_wittPolynomial_sub_sum (Φ : MvPolynomial idx ℤ) (n : ℕ)
+theorem C_p_pow_dvd_bind₁_rename_wittPolynomial_sub_sum (Φ : MvPolynomial idx ℤ) (n : ℕ)
     (IH :
       ∀ m : ℕ,
         m < n →
@@ -265,8 +267,8 @@ theorem c_p_pow_dvd_bind₁_rename_wittPolynomial_sub_sum (Φ : MvPolynomial idx
   -- the machine!
   apply dvd_sub_pow_of_dvd_sub
   rw [← C_eq_coe_nat, C_dvd_iff_zmod, RingHom.map_sub, sub_eq_zero, map_expand, RingHom.map_pow,
-    MvPolynomial.expand_zMod]
-#align C_p_pow_dvd_bind₁_rename_witt_polynomial_sub_sum c_p_pow_dvd_bind₁_rename_wittPolynomial_sub_sum
+    MvPolynomial.expand_zmod]
+#align C_p_pow_dvd_bind₁_rename_witt_polynomial_sub_sum C_p_pow_dvd_bind₁_rename_wittPolynomial_sub_sum
 
 variable (p)
 
@@ -297,7 +299,7 @@ theorem map_wittStructureInt (Φ : MvPolynomial idx ℤ) (n : ℕ) :
   rw [← Rat.den_eq_one_iff, eq_intCast, Rat.den_div_cast_eq_one_iff]
   swap; · exact_mod_cast pow_ne_zero n hp.1.NeZero
   revert c; rw [← C_dvd_iff_dvd_coeff]
-  exact c_p_pow_dvd_bind₁_rename_wittPolynomial_sub_sum Φ n IH
+  exact C_p_pow_dvd_bind₁_rename_wittPolynomial_sub_sum Φ n IH
 #align map_witt_structure_int map_wittStructureInt
 
 variable (p)
@@ -319,7 +321,7 @@ theorem eq_wittStructureInt (Φ : MvPolynomial idx ℤ) (φ : ℕ → MvPolynomi
   apply MvPolynomial.map_injective (Int.castRingHom ℚ) Int.cast_injective
   rw [map_wittStructureInt]
   refine' congr_fun _ k
-  apply ExistsUnique.unique (witt_structure_rat_existsUnique p (map (Int.castRingHom ℚ) Φ))
+  apply ExistsUnique.unique (wittStructureRat_existsUnique p (map (Int.castRingHom ℚ) Φ))
   · intro n
     specialize h n
     apply_fun map (Int.castRingHom ℚ) at h 
@@ -328,12 +330,12 @@ theorem eq_wittStructureInt (Φ : MvPolynomial idx ℤ) (φ : ℕ → MvPolynomi
   · intro n; apply wittStructureRat_prop
 #align eq_witt_structure_int eq_wittStructureInt
 
-theorem witt_structure_int_existsUnique (Φ : MvPolynomial idx ℤ) :
+theorem wittStructureInt_existsUnique (Φ : MvPolynomial idx ℤ) :
     ∃! φ : ℕ → MvPolynomial (idx × ℕ) ℤ,
       ∀ n : ℕ,
         bind₁ φ (wittPolynomial p ℤ n) = bind₁ (fun i : idx => rename (Prod.mk i) (W_ ℤ n)) Φ :=
   ⟨wittStructureInt p Φ, wittStructureInt_prop _ _, eq_wittStructureInt _ _⟩
-#align witt_structure_int_exists_unique witt_structure_int_existsUnique
+#align witt_structure_int_exists_unique wittStructureInt_existsUnique
 
 theorem witt_structure_prop (Φ : MvPolynomial idx ℤ) (n) :
     aeval (fun i => map (Int.castRingHom R) (wittStructureInt p Φ i)) (wittPolynomial p ℤ n) =
@@ -392,6 +394,7 @@ theorem constantCoeff_wittStructureInt (Φ : MvPolynomial idx ℤ) (h : constant
 variable (R)
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print wittStructureRat_vars /-
 -- we could relax the fintype on `idx`, but then we need to cast from finset to set.
 -- for our applications `idx` is always finite.
 theorem wittStructureRat_vars [Fintype idx] (Φ : MvPolynomial idx ℚ) (n : ℕ) :
@@ -408,6 +411,7 @@ theorem wittStructureRat_vars [Fintype idx] (Φ : MvPolynomial idx ℚ) (n : ℕ
   rw [Finset.mem_range] at hk 
   exact lt_of_lt_of_le hj hk
 #align witt_structure_rat_vars wittStructureRat_vars
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 -- we could relax the fintype on `idx`, but then we need to cast from finset to set.

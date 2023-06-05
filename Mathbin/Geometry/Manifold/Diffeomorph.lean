@@ -576,7 +576,7 @@ def toTransDiffeomorph (e : E ≃ₘ[𝕜] F) : M ≃ₘ⟮I, I.transDiffeomorph
       simp only [Equiv.coe_refl, id, (· ∘ ·), I.coe_ext_chart_at_trans_diffeomorph,
         (extChartAt I x).right_inv hy.1]
     exact
-      ⟨(extChartAt I x).map_source (mem_ext_chart_source I x), trivial, by simp only [mfld_simps]⟩
+      ⟨(extChartAt I x).map_source (mem_extChartAt_source I x), trivial, by simp only [mfld_simps]⟩
   contMdiff_inv_fun x :=
     by
     refine' contMdiffWithinAt_iff'.2 ⟨continuousWithinAt_id, _⟩
@@ -585,7 +585,7 @@ def toTransDiffeomorph (e : E ≃ₘ[𝕜] F) : M ≃ₘ⟮I, I.transDiffeomorph
       simp only [Equiv.coe_refl, Equiv.refl_symm, id, (· ∘ ·),
         I.coe_ext_chart_at_trans_diffeomorph_symm, (extChartAt I x).right_inv hy.1]
     exact
-      ⟨(extChartAt _ x).map_source (mem_ext_chart_source _ x), trivial, by
+      ⟨(extChartAt _ x).map_source (mem_extChartAt_source _ x), trivial, by
         simp only [e.symm_apply_apply, Equiv.refl_symm, Equiv.coe_refl, mfld_simps]⟩
 #align diffeomorph.to_trans_diffeomorph Diffeomorph.toTransDiffeomorph
 

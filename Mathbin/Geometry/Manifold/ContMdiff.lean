@@ -441,7 +441,7 @@ theorem contMdiffWithinAt_iff_of_mem_source' {x' : M} {y : M'} (hx : x' ∈ (cha
   set e := extChartAt I x; set e' := extChartAt I' (f x)
   refine' fun hc => contDiffWithinAt_congr_nhds _
   rw [← e.image_source_inter_eq', ← map_extChartAt_nhdsWithin_eq_image' I x hx, ←
-    map_extChartAt_nhds_within' I x hx, inter_comm, nhdsWithin_inter_of_mem]
+    map_extChartAt_nhdsWithin' I x hx, inter_comm, nhdsWithin_inter_of_mem]
   exact hc (extChartAt_source_mem_nhds' _ _ hy)
 #align cont_mdiff_within_at_iff_of_mem_source' contMdiffWithinAt_iff_of_mem_source'
 
@@ -470,7 +470,7 @@ theorem contMdiffWithinAt_iff_target_of_mem_source {x : M} {y : M'}
   simp_rw [StructureGroupoid.liftPropWithinAt_self_target]
   simp_rw [((chart_at H' y).ContinuousAt hy).comp_continuousWithinAt hf]
   rw [← extChartAt_source I'] at hy 
-  simp_rw [(continuousAt_ext_chart_at' I' _ hy).comp_continuousWithinAt hf]
+  simp_rw [(continuousAt_extChartAt' I' _ hy).comp_continuousWithinAt hf]
   rfl
 #align cont_mdiff_within_at_iff_target_of_mem_source contMdiffWithinAt_iff_target_of_mem_source
 
@@ -1018,7 +1018,7 @@ theorem ContMdiffWithinAt.comp {t : Set M'} {g : M' → M''} (x : M)
   · filter_upwards [A]
     rintro x' ⟨hx', ht, hfx', hgfx'⟩
     simp only [*, (· ∘ ·), writtenInExtChartAt, e'.left_inv]
-  · simp only [writtenInExtChartAt, (· ∘ ·), mem_ext_chart_source, e.left_inv, e'.left_inv]
+  · simp only [writtenInExtChartAt, (· ∘ ·), mem_extChartAt_source, e.left_inv, e'.left_inv]
 #align cont_mdiff_within_at.comp ContMdiffWithinAt.comp
 
 /-- The composition of `C^∞` functions within domains at points is `C^∞`. -/
@@ -1401,7 +1401,7 @@ theorem ContDiffWithinAt.comp_contMdiffWithinAt {g : F → F'} {f : M → F} {s 
   by
   rw [contMdiffWithinAt_iff] at *
   refine' ⟨hg.continuous_within_at.comp hf.1 h, _⟩
-  rw [← (extChartAt I x).left_inv (mem_ext_chart_source I x)] at hg 
+  rw [← (extChartAt I x).left_inv (mem_extChartAt_source I x)] at hg 
   apply ContDiffWithinAt.comp _ hg hf.2 _
   exact (inter_subset_left _ _).trans (preimage_mono h)
 #align cont_diff_within_at.comp_cont_mdiff_within_at ContDiffWithinAt.comp_contMdiffWithinAt

@@ -35,30 +35,38 @@ noncomputable section
 
 open FiniteDimensional
 
+#print toEuclidean /-
 /-- If `E` is a finite dimensional space over `ℝ`, then `to_euclidean` is a continuous `ℝ`-linear
 equivalence between `E` and the Euclidean space of the same dimension. -/
 def toEuclidean : E ≃L[ℝ] EuclideanSpace ℝ (Fin <| finrank ℝ E) :=
   ContinuousLinearEquiv.ofFinrankEq finrank_euclideanSpace_fin.symm
 #align to_euclidean toEuclidean
+-/
 
 namespace Euclidean
 
+#print Euclidean.dist /-
 /-- If `x` and `y` are two points in a finite dimensional space over `ℝ`, then `euclidean.dist x y`
 is the distance between these points in the metric defined by some inner product space structure on
 `E`. -/
 def dist (x y : E) : ℝ :=
   dist (toEuclidean x) (toEuclidean y)
 #align euclidean.dist Euclidean.dist
+-/
 
+#print Euclidean.closedBall /-
 /-- Closed ball w.r.t. the euclidean distance. -/
 def closedBall (x : E) (r : ℝ) : Set E :=
   {y | dist y x ≤ r}
 #align euclidean.closed_ball Euclidean.closedBall
+-/
 
+#print Euclidean.ball /-
 /-- Open ball w.r.t. the euclidean distance. -/
 def ball (x : E) (r : ℝ) : Set E :=
   {y | dist y x < r}
 #align euclidean.ball Euclidean.ball
+-/
 
 theorem ball_eq_preimage (x : E) (r : ℝ) :
     ball x r = toEuclidean ⁻¹' Metric.ball (toEuclidean x) r :=
@@ -70,13 +78,17 @@ theorem closedBall_eq_preimage (x : E) (r : ℝ) :
   rfl
 #align euclidean.closed_ball_eq_preimage Euclidean.closedBall_eq_preimage
 
+#print Euclidean.ball_subset_closedBall /-
 theorem ball_subset_closedBall {x : E} {r : ℝ} : ball x r ⊆ closedBall x r := fun y (hy : _ < _) =>
   le_of_lt hy
 #align euclidean.ball_subset_closed_ball Euclidean.ball_subset_closedBall
+-/
 
+#print Euclidean.isOpen_ball /-
 theorem isOpen_ball {x : E} {r : ℝ} : IsOpen (ball x r) :=
   Metric.isOpen_ball.Preimage toEuclidean.Continuous
 #align euclidean.is_open_ball Euclidean.isOpen_ball
+-/
 
 theorem mem_ball_self {x : E} {r : ℝ} (hr : 0 < r) : x ∈ ball x r :=
   Metric.mem_ball_self hr
@@ -87,15 +99,19 @@ theorem closedBall_eq_image (x : E) (r : ℝ) :
   rw [to_euclidean.image_symm_eq_preimage, closed_ball_eq_preimage]
 #align euclidean.closed_ball_eq_image Euclidean.closedBall_eq_image
 
+#print Euclidean.isCompact_closedBall /-
 theorem isCompact_closedBall {x : E} {r : ℝ} : IsCompact (closedBall x r) :=
   by
   rw [closed_ball_eq_image]
   exact (is_compact_closed_ball _ _).image to_euclidean.symm.continuous
 #align euclidean.is_compact_closed_ball Euclidean.isCompact_closedBall
+-/
 
+#print Euclidean.isClosed_closedBall /-
 theorem isClosed_closedBall {x : E} {r : ℝ} : IsClosed (closedBall x r) :=
   isCompact_closedBall.IsClosed
 #align euclidean.is_closed_closed_ball Euclidean.isClosed_closedBall
+-/
 
 theorem closure_ball (x : E) {r : ℝ} (h : r ≠ 0) : closure (ball x r) = closedBall x r := by
   rw [ball_eq_preimage, ← to_euclidean.preimage_closure, closure_ball (toEuclidean x) h,

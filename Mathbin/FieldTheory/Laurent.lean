@@ -98,14 +98,14 @@ theorem laurent_algebraMap : laurent r (algebraMap _ _ p) = algebraMap _ _ (tayl
 #align ratfunc.laurent_algebra_map RatFunc.laurent_algebraMap
 
 @[simp]
-theorem laurent_x : laurent r X = X + C r := by
+theorem laurent_X : laurent r X = X + C r := by
   rw [← algebra_map_X, laurent_algebra_map, taylor_X, _root_.map_add, algebra_map_C]
-#align ratfunc.laurent_X RatFunc.laurent_x
+#align ratfunc.laurent_X RatFunc.laurent_X
 
 @[simp]
-theorem laurent_c (x : R) : laurent r (C x) = C x := by
+theorem laurent_C (x : R) : laurent r (C x) = C x := by
   rw [← algebra_map_C, laurent_algebra_map, taylor_C]
-#align ratfunc.laurent_C RatFunc.laurent_c
+#align ratfunc.laurent_C RatFunc.laurent_C
 
 @[simp]
 theorem laurent_at_zero : laurent 0 f = f := by induction f using RatFunc.induction_on; simp

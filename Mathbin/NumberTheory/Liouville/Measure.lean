@@ -131,9 +131,11 @@ theorem ae_not_liouvilleWith : ∀ᵐ x, ∀ p > (2 : ℝ), ¬LiouvilleWith p x 
     volume_iUnion_setOf_liouvilleWith
 #align ae_not_liouville_with ae_not_liouvilleWith
 
+#print ae_not_liouville /-
 theorem ae_not_liouville : ∀ᵐ x, ¬Liouville x :=
   ae_not_liouvilleWith.mono fun x h₁ h₂ => h₁ 3 (by norm_num) (h₂.LiouvilleWith 3)
 #align ae_not_liouville ae_not_liouville
+-/
 
 /-- The set of Liouville numbers has Lebesgue measure zero. -/
 @[simp]

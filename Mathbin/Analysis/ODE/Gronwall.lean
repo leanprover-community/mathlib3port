@@ -43,14 +43,18 @@ open scoped Classical Topology NNReal
 /-! ### Technical lemmas about `gronwall_bound` -/
 
 
+#print gronwallBound /-
 /-- Upper bound used in several Grönwall-like inequalities. -/
 noncomputable def gronwallBound (δ K ε x : ℝ) : ℝ :=
   if K = 0 then δ + ε * x else δ * exp (K * x) + ε / K * (exp (K * x) - 1)
 #align gronwall_bound gronwallBound
+-/
 
+#print gronwallBound_K0 /-
 theorem gronwallBound_K0 (δ ε : ℝ) : gronwallBound δ 0 ε = fun x => δ + ε * x :=
   funext fun x => if_pos rfl
 #align gronwall_bound_K0 gronwallBound_K0
+-/
 
 theorem gronwallBound_of_K_ne_0 {δ K ε : ℝ} (hK : K ≠ 0) :
     gronwallBound δ K ε = fun x => δ * exp (K * x) + ε / K * (exp (K * x) - 1) :=
@@ -74,13 +78,16 @@ theorem hasDerivAt_gronwallBound (δ K ε x : ℝ) :
     ring
 #align has_deriv_at_gronwall_bound hasDerivAt_gronwallBound
 
+#print hasDerivAt_gronwallBound_shift /-
 theorem hasDerivAt_gronwallBound_shift (δ K ε x a : ℝ) :
     HasDerivAt (fun y => gronwallBound δ K ε (y - a)) (K * gronwallBound δ K ε (x - a) + ε) x :=
   by
   convert (hasDerivAt_gronwallBound δ K ε _).comp x ((hasDerivAt_id x).sub_const a)
   rw [id, mul_one]
 #align has_deriv_at_gronwall_bound_shift hasDerivAt_gronwallBound_shift
+-/
 
+#print gronwallBound_x0 /-
 theorem gronwallBound_x0 (δ K ε : ℝ) : gronwallBound δ K ε 0 = δ :=
   by
   by_cases hK : K = 0
@@ -89,6 +96,7 @@ theorem gronwallBound_x0 (δ K ε : ℝ) : gronwallBound δ K ε 0 = δ :=
     simp only [gronwallBound, if_neg hK, MulZeroClass.mul_zero, exp_zero, sub_self, mul_one,
       add_zero]
 #align gronwall_bound_x0 gronwallBound_x0
+-/
 
 theorem gronwallBound_ε0 (δ K x : ℝ) : gronwallBound δ K 0 x = δ * exp (K * x) :=
   by
@@ -101,6 +109,7 @@ theorem gronwallBound_ε0_δ0 (K x : ℝ) : gronwallBound 0 K 0 x = 0 := by
   simp only [gronwallBound_ε0, MulZeroClass.zero_mul]
 #align gronwall_bound_ε0_δ0 gronwallBound_ε0_δ0
 
+#print gronwallBound_continuous_ε /-
 theorem gronwallBound_continuous_ε (δ K x : ℝ) : Continuous fun ε => gronwallBound δ K ε x :=
   by
   by_cases hK : K = 0
@@ -109,6 +118,7 @@ theorem gronwallBound_continuous_ε (δ K x : ℝ) : Continuous fun ε => gronwa
   · simp only [gronwallBound_of_K_ne_0 hK]
     exact continuous_const.add ((continuous_id.mul continuous_const).mul continuous_const)
 #align gronwall_bound_continuous_ε gronwallBound_continuous_ε
+-/
 
 /-! ### Inequality and corollaries -/
 
@@ -259,6 +269,7 @@ theorem ODE_solution_unique_of_mem_set {v : ℝ → E → E} {s : ℝ → Set E}
   rwa [MulZeroClass.zero_mul, dist_le_zero] at this 
 #align ODE_solution_unique_of_mem_set ODE_solution_unique_of_mem_set
 
+#print ODE_solution_unique /-
 /-- There exists only one solution of an ODE \(\dot x=v(t, x)\) with
 a given initial value provided that RHS is Lipschitz continuous in `x`. -/
 theorem ODE_solution_unique {v : ℝ → E → E} {K : ℝ≥0} (hv : ∀ t, LipschitzWith K (v t))
@@ -270,4 +281,5 @@ theorem ODE_solution_unique {v : ℝ → E → E} {K : ℝ≥0} (hv : ∀ t, Lip
   ODE_solution_unique_of_mem_set (fun t x hx y hy => (hv t).dist_le_mul x y) hf hf' hfs hg hg'
     (fun t ht => trivial) ha
 #align ODE_solution_unique ODE_solution_unique
+-/
 

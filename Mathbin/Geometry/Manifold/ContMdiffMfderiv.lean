@@ -226,11 +226,11 @@ theorem ContMdiffAt.mfderiv {x₀ : N} (f : N → M → M') (g : N → M)
     have hI :=
       (contDiffWithinAt_ext_coord_change I (g x₂) (g x₀) <|
             LocalEquiv.mem_symm_trans_source _ hx₂ <|
-              mem_ext_chart_source I (g x₂)).DifferentiableWithinAt
+              mem_extChartAt_source I (g x₂)).DifferentiableWithinAt
         le_top
     have hI' :=
       (contDiffWithinAt_ext_coord_change I' (f x₀ (g x₀)) (f x₂ (g x₂)) <|
-            LocalEquiv.mem_symm_trans_source _ (mem_ext_chart_source I' (f x₂ (g x₂)))
+            LocalEquiv.mem_symm_trans_source _ (mem_extChartAt_source I' (f x₂ (g x₂)))
               h3x₂).DifferentiableWithinAt
         le_top
     have h3f := (h2x₂.mdifferentiable_at le_rfl).2
@@ -239,7 +239,7 @@ theorem ContMdiffAt.mfderiv {x₀ : N} (f : N → M → M') (g : N → M)
     · exact fun x _ => mem_range_self _
     ·
       simp_rw [writtenInExtChartAt, Function.comp_apply,
-        (extChartAt I (g x₂)).left_inv (mem_ext_chart_source I (g x₂))]
+        (extChartAt I (g x₂)).left_inv (mem_extChartAt_source I (g x₂))]
     · simp_rw [Function.comp_apply, (extChartAt I (g x₀)).left_inv hx₂]
   refine' this.congr_of_eventually_eq _
   filter_upwards [h2g, h4f] with x hx h2x

@@ -518,13 +518,14 @@ end Morphisms
 
 end NilpotentModules
 
-instance (priority := 100) LieAlgebra.isSolvableOfIsNilpotent (R : Type u) (L : Type v) [CommRing R]
-    [LieRing L] [LieAlgebra R L] [hL : LieModule.IsNilpotent R L L] : LieAlgebra.IsSolvable R L :=
+instance (priority := 100) LieAlgebra.isSolvable_of_isNilpotent (R : Type u) (L : Type v)
+    [CommRing R] [LieRing L] [LieAlgebra R L] [hL : LieModule.IsNilpotent R L L] :
+    LieAlgebra.IsSolvable R L :=
   by
   obtain ⟨k, h⟩ : ∃ k, LieModule.lowerCentralSeries R L L k = ⊥ := hL.nilpotent
   use k; rw [← le_bot_iff] at h ⊢
   exact le_trans (LieModule.derivedSeries_le_lowerCentralSeries R L k) h
-#align lie_algebra.is_solvable_of_is_nilpotent LieAlgebra.isSolvableOfIsNilpotent
+#align lie_algebra.is_solvable_of_is_nilpotent LieAlgebra.isSolvable_of_isNilpotent
 
 section NilpotentAlgebras
 
