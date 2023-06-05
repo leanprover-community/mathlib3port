@@ -36,10 +36,12 @@ namespace LieAlgebra
 
 variable (R : Type u) (L : Type v) [CommRing R] [LieRing L] [LieAlgebra R L]
 
+#print LieAlgebra.LieCharacter /-
 /-- A character of a Lie algebra is a morphism to the scalars. -/
 abbrev LieCharacter :=
   L →ₗ⁅R⁆ R
 #align lie_algebra.lie_character LieAlgebra.LieCharacter
+-/
 
 variable {R L}
 
@@ -48,6 +50,7 @@ theorem lieCharacter_apply_lie (χ : LieCharacter R L) (x y : L) : χ ⁅x, y⁆
   rw [LieHom.map_lie, LieRing.of_associative_ring_bracket, mul_comm, sub_self]
 #align lie_algebra.lie_character_apply_lie LieAlgebra.lieCharacter_apply_lie
 
+#print LieAlgebra.lieCharacter_apply_of_mem_derived /-
 theorem lieCharacter_apply_of_mem_derived (χ : LieCharacter R L) {x : L}
     (h : x ∈ derivedSeries R L 1) : χ x = 0 :=
   by
@@ -59,6 +62,7 @@ theorem lieCharacter_apply_of_mem_derived (χ : LieCharacter R L) {x : L}
   · intro y z hy hz; rw [LieHom.map_add, hy, hz, add_zero]
   · intro t y hy; rw [LieHom.map_smul, hy, smul_zero]
 #align lie_algebra.lie_character_apply_of_mem_derived LieAlgebra.lieCharacter_apply_of_mem_derived
+-/
 
 /-- For an Abelian Lie algebra, characters are just linear forms. -/
 @[simps]

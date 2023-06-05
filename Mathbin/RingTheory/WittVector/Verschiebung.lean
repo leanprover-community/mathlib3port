@@ -41,7 +41,7 @@ by inserting 0 as the 0th coefficient.
 `verschiebung_fun` is the underlying function of the additive monoid hom `witt_vector.verschiebung`.
 -/
 def verschiebungFun (x : 𝕎 R) : 𝕎 R :=
-  mk p fun n => if n = 0 then 0 else x.coeff (n - 1)
+  mk' p fun n => if n = 0 then 0 else x.coeff (n - 1)
 #align witt_vector.verschiebung_fun WittVector.verschiebungFun
 
 theorem verschiebungFun_coeff (x : 𝕎 R) (n : ℕ) :

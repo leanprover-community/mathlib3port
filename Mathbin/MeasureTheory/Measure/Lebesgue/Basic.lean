@@ -35,7 +35,7 @@ are proved more generally for any additive Haar measure on a finite-dimensional 
 -/
 
 
-assert_not_exists measure_theory.integral
+assert_not_exists MeasureTheory.integral
 
 noncomputable section
 

@@ -24,25 +24,31 @@ universe v u
 
 namespace CategoryTheory
 
+#print CategoryTheory.typesSymmetric /-
 instance typesSymmetric : SymmetricCategory.{u} (Type u) :=
   symmetricOfChosenFiniteProducts Types.terminalLimitCone Types.binaryProductLimitCone
 #align category_theory.types_symmetric CategoryTheory.typesSymmetric
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print CategoryTheory.braiding_hom_apply /-
 @[simp]
 theorem braiding_hom_apply {X Y : Type u} {x : X} {y : Y} :
     ((β_ X Y).Hom : X ⊗ Y → Y ⊗ X) (x, y) = (y, x) :=
   rfl
 #align category_theory.braiding_hom_apply CategoryTheory.braiding_hom_apply
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print CategoryTheory.braiding_inv_apply /-
 @[simp]
 theorem braiding_inv_apply {X Y : Type u} {x : X} {y : Y} :
     ((β_ X Y).inv : Y ⊗ X → X ⊗ Y) (y, x) = (x, y) :=
   rfl
 #align category_theory.braiding_inv_apply CategoryTheory.braiding_inv_apply
+-/
 
 end CategoryTheory
 

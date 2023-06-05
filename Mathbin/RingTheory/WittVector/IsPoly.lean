@@ -540,15 +540,15 @@ omit hp
 
 /-- Addition of Witt vectors is a polynomial function. -/
 @[is_poly]
-theorem add_isPoly₂ [Fact p.Prime] : IsPoly₂ p fun _ _ => (· + ·) :=
+theorem addIsPoly₂ [Fact p.Prime] : IsPoly₂ p fun _ _ => (· + ·) :=
   ⟨⟨wittAdd p, by intros; dsimp only [WittVector.hasAdd]; simp [eval]⟩⟩
-#align witt_vector.add_is_poly₂ WittVector.add_isPoly₂
+#align witt_vector.add_is_poly₂ WittVector.addIsPoly₂
 
 /-- Multiplication of Witt vectors is a polynomial function. -/
 @[is_poly]
-theorem mul_isPoly₂ [Fact p.Prime] : IsPoly₂ p fun _ _ => (· * ·) :=
+theorem mulIsPoly₂ [Fact p.Prime] : IsPoly₂ p fun _ _ => (· * ·) :=
   ⟨⟨wittMul p, by intros; dsimp only [WittVector.hasMul]; simp [eval]⟩⟩
-#align witt_vector.mul_is_poly₂ WittVector.mul_isPoly₂
+#align witt_vector.mul_is_poly₂ WittVector.mulIsPoly₂
 
 include hp
 
@@ -570,23 +570,23 @@ namespace IsPoly₂
 omit hp
 
 instance [Fact p.Prime] : Inhabited (IsPoly₂ p _) :=
-  ⟨add_isPoly₂⟩
+  ⟨addIsPoly₂⟩
 
 variable {p}
 
 /-- The composition of a binary polynomial function
  with a unary polynomial function in the first argument is polynomial. -/
-theorem comp_left {g f} (hg : IsPoly₂ p g) (hf : IsPoly p f) :
+theorem compLeft {g f} (hg : IsPoly₂ p g) (hf : IsPoly p f) :
     IsPoly₂ p fun R _Rcr x y => g (f x) y :=
   hg.comp hf (WittVector.idIsPoly _)
-#align witt_vector.is_poly₂.comp_left WittVector.IsPoly₂.comp_left
+#align witt_vector.is_poly₂.comp_left WittVector.IsPoly₂.compLeft
 
 /-- The composition of a binary polynomial function
  with a unary polynomial function in the second argument is polynomial. -/
-theorem comp_right {g f} (hg : IsPoly₂ p g) (hf : IsPoly p f) :
+theorem compRight {g f} (hg : IsPoly₂ p g) (hf : IsPoly p f) :
     IsPoly₂ p fun R _Rcr x y => g x (f y) :=
   hg.comp (WittVector.idIsPoly p) hf
-#align witt_vector.is_poly₂.comp_right WittVector.IsPoly₂.comp_right
+#align witt_vector.is_poly₂.comp_right WittVector.IsPoly₂.compRight
 
 include hp
 

@@ -233,7 +233,7 @@ variable {p}
 /-- `frobenius_fun` is the function underlying the ring endomorphism
 `frobenius : 𝕎 R →+* frobenius 𝕎 R`. -/
 def frobeniusFun (x : 𝕎 R) : 𝕎 R :=
-  mk p fun n => MvPolynomial.aeval x.coeff (frobeniusPoly p n)
+  mk' p fun n => MvPolynomial.aeval x.coeff (frobeniusPoly p n)
 #align witt_vector.frobenius_fun WittVector.frobeniusFun
 
 theorem coeff_frobeniusFun (x : 𝕎 R) (n : ℕ) :

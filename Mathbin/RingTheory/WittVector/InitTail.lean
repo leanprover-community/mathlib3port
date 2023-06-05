@@ -88,7 +88,7 @@ section
 whose `n`-th coefficient is `x.coeff n` if `P n` is true, and `0` otherwise.
 -/
 def select (P : ℕ → Prop) (x : 𝕎 R) : 𝕎 R :=
-  mk p fun n => if P n then x.coeff n else 0
+  mk' p fun n => if P n then x.coeff n else 0
 #align witt_vector.select WittVector.select
 
 section Select

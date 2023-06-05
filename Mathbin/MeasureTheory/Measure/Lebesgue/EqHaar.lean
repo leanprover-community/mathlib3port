@@ -47,7 +47,7 @@ small `r`, see `eventually_nonempty_inter_smul_of_density_one`.
 -/
 
 
-assert_not_exists measure_theory.integral
+assert_not_exists MeasureTheory.integral
 
 open TopologicalSpace Set Filter Metric
 

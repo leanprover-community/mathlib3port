@@ -112,7 +112,7 @@ variable [CommRing R]
 by setting all coefficients after `x` to be 0.
 -/
 def out (x : TruncatedWittVector p n R) : 𝕎 R :=
-  WittVector.mk p fun i => if h : i < n then x.coeff ⟨i, h⟩ else 0
+  WittVector.mk' p fun i => if h : i < n then x.coeff ⟨i, h⟩ else 0
 #align truncated_witt_vector.out TruncatedWittVector.out
 
 @[simp]
@@ -359,11 +359,11 @@ theorem mem_ker_truncate (x : 𝕎 R) : x ∈ (@truncate p _ n R _).ker ↔ ∀ 
 variable (p)
 
 @[simp]
-theorem truncate_mk (f : ℕ → R) : truncate n (mk p f) = TruncatedWittVector.mk _ fun k => f k :=
+theorem truncate_mk' (f : ℕ → R) : truncate n (mk' p f) = TruncatedWittVector.mk _ fun k => f k :=
   by
   ext i
   rw [coeff_truncate, coeff_mk, TruncatedWittVector.coeff_mk]
-#align witt_vector.truncate_mk WittVector.truncate_mk
+#align witt_vector.truncate_mk WittVector.truncate_mk'
 
 end WittVector
 
@@ -476,7 +476,7 @@ variable (n)
 defining the `k`th entry to be the final entry of `fₖ s`.
 -/
 def liftFun (s : S) : 𝕎 R :=
-  WittVector.mk p fun k => TruncatedWittVector.coeff (Fin.last k) (f (k + 1) s)
+  WittVector.mk' p fun k => TruncatedWittVector.coeff (Fin.last k) (f (k + 1) s)
 #align witt_vector.lift_fun WittVector.liftFun
 
 variable {f}
@@ -487,7 +487,7 @@ include f_compat
 theorem truncate_liftFun (s : S) : WittVector.truncate n (liftFun f s) = f n s :=
   by
   ext i
-  simp only [lift_fun, TruncatedWittVector.coeff_mk, WittVector.truncate_mk]
+  simp only [lift_fun, TruncatedWittVector.coeff_mk, WittVector.truncate_mk']
   rw [← f_compat (i + 1) n i.is_lt, RingHom.comp_apply, TruncatedWittVector.coeff_truncate]
   -- this is a bit unfortunate
   congr with _

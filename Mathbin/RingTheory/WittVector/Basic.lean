@@ -70,7 +70,7 @@ namespace WittVector
 
 /-- `f : α → β` induces a map from `𝕎 α` to `𝕎 β` by applying `f` componentwise.
 If `f` is a ring homomorphism, then so is `f`, see `witt_vector.map f`. -/
-def mapFun (f : α → β) : 𝕎 α → 𝕎 β := fun x => mk _ (f ∘ x.coeff)
+def mapFun (f : α → β) : 𝕎 α → 𝕎 β := fun x => mk' _ (f ∘ x.coeff)
 #align witt_vector.map_fun WittVector.mapFun
 
 namespace MapFun
@@ -80,7 +80,7 @@ theorem injective (f : α → β) (hf : Injective f) : Injective (mapFun f : �
 #align witt_vector.map_fun.injective WittVector.mapFun.injective
 
 theorem surjective (f : α → β) (hf : Surjective f) : Surjective (mapFun f : 𝕎 α → 𝕎 β) := fun x =>
-  ⟨mk _ fun n => Classical.choose <| hf <| x.coeff n, by ext n; dsimp [map_fun];
+  ⟨mk' _ fun n => Classical.choose <| hf <| x.coeff n, by ext n; dsimp [map_fun];
     rw [Classical.choose_spec (hf (x.coeff n))]⟩
 #align witt_vector.map_fun.surjective WittVector.mapFun.surjective
 
@@ -252,7 +252,7 @@ In `witt_vector.ghost_equiv` we upgrade this to an isomorphism of rings. -/
 private def ghost_equiv' [Invertible (p : R)] : 𝕎 R ≃ (ℕ → R)
     where
   toFun := ghostFun
-  invFun x := mk p fun n => aeval x (xInTermsOfW p R n)
+  invFun x := mk' p fun n => aeval x (xInTermsOfW p R n)
   left_inv := by
     intro x
     ext n

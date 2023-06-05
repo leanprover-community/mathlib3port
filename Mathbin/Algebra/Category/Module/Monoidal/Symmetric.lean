@@ -26,15 +26,18 @@ variable {R : Type u} [CommRing R]
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print ModuleCat.braiding /-
 /-- (implementation) the braiding for R-modules -/
 def braiding (M N : ModuleCat.{u} R) : M ⊗ N ≅ N ⊗ M :=
   LinearEquiv.toModuleIso (TensorProduct.comm R M N)
 #align Module.braiding ModuleCat.braiding
+-/
 
 namespace MonoidalCategory
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print ModuleCat.MonoidalCategory.braiding_naturality /-
 @[simp]
 theorem braiding_naturality {X₁ X₂ Y₁ Y₂ : ModuleCat.{u} R} (f : X₁ ⟶ Y₁) (g : X₂ ⟶ Y₂) :
     (f ⊗ g) ≫ (Y₁.braiding Y₂).Hom = (X₁.braiding X₂).Hom ≫ (g ⊗ f) :=
@@ -42,10 +45,12 @@ theorem braiding_naturality {X₁ X₂ Y₁ Y₂ : ModuleCat.{u} R} (f : X₁ �
   apply TensorProduct.ext'
   intro x y
   rfl
-#align Module.monoidal_category.braiding_naturality ModuleCat.monoidalCategory.braiding_naturality
+#align Module.monoidal_category.braiding_naturality ModuleCat.MonoidalCategory.braiding_naturality
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print ModuleCat.MonoidalCategory.hexagon_forward /-
 @[simp]
 theorem hexagon_forward (X Y Z : ModuleCat.{u} R) :
     (α_ X Y Z).Hom ≫ (braiding X _).Hom ≫ (α_ Y Z X).Hom =
@@ -54,10 +59,12 @@ theorem hexagon_forward (X Y Z : ModuleCat.{u} R) :
   apply TensorProduct.ext_threefold
   intro x y z
   rfl
-#align Module.monoidal_category.hexagon_forward ModuleCat.monoidalCategory.hexagon_forward
+#align Module.monoidal_category.hexagon_forward ModuleCat.MonoidalCategory.hexagon_forward
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print ModuleCat.MonoidalCategory.hexagon_reverse /-
 @[simp]
 theorem hexagon_reverse (X Y Z : ModuleCat.{u} R) :
     (α_ X Y Z).inv ≫ (braiding _ Z).Hom ≫ (α_ Z X Y).inv =
@@ -67,10 +74,12 @@ theorem hexagon_reverse (X Y Z : ModuleCat.{u} R) :
   apply TensorProduct.ext_threefold
   intro x y z
   rfl
-#align Module.monoidal_category.hexagon_reverse ModuleCat.monoidalCategory.hexagon_reverse
+#align Module.monoidal_category.hexagon_reverse ModuleCat.MonoidalCategory.hexagon_reverse
+-/
 
 attribute [local ext] TensorProduct.ext
 
+#print ModuleCat.MonoidalCategory.symmetricCategory /-
 /-- The symmetric monoidal structure on `Module R`. -/
 instance symmetricCategory : SymmetricCategory (ModuleCat.{u} R)
     where
@@ -78,7 +87,8 @@ instance symmetricCategory : SymmetricCategory (ModuleCat.{u} R)
   braiding_naturality' X₁ X₂ Y₁ Y₂ f g := braiding_naturality f g
   hexagon_forward' := hexagon_forward
   hexagon_reverse' := hexagon_reverse
-#align Module.monoidal_category.symmetric_category ModuleCat.monoidalCategory.symmetricCategory
+#align Module.monoidal_category.symmetric_category ModuleCat.MonoidalCategory.symmetricCategory
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -86,7 +96,7 @@ instance symmetricCategory : SymmetricCategory (ModuleCat.{u} R)
 theorem braiding_hom_apply {M N : ModuleCat.{u} R} (m : M) (n : N) :
     ((β_ M N).Hom : M ⊗ N ⟶ N ⊗ M) (m ⊗ₜ n) = n ⊗ₜ m :=
   rfl
-#align Module.monoidal_category.braiding_hom_apply ModuleCat.monoidalCategory.braiding_hom_apply
+#align Module.monoidal_category.braiding_hom_apply ModuleCat.MonoidalCategory.braiding_hom_apply
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -94,7 +104,7 @@ theorem braiding_hom_apply {M N : ModuleCat.{u} R} (m : M) (n : N) :
 theorem braiding_inv_apply {M N : ModuleCat.{u} R} (m : M) (n : N) :
     ((β_ M N).inv : N ⊗ M ⟶ M ⊗ N) (n ⊗ₜ m) = m ⊗ₜ n :=
   rfl
-#align Module.monoidal_category.braiding_inv_apply ModuleCat.monoidalCategory.braiding_inv_apply
+#align Module.monoidal_category.braiding_inv_apply ModuleCat.MonoidalCategory.braiding_inv_apply
 
 end MonoidalCategory
 

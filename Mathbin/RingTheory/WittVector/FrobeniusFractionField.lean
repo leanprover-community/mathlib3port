@@ -219,7 +219,7 @@ decreasing_by apply Fin.is_lt
 equation `frobenius (frobenius_rotation a₁ a₂) * a₁ = (frobenius_rotation a₁ a₂) * a₂`.
 -/
 def frobeniusRotation {a₁ a₂ : 𝕎 k} (ha₁ : a₁.coeff 0 ≠ 0) (ha₂ : a₂.coeff 0 ≠ 0) : 𝕎 k :=
-  WittVector.mk p (frobeniusRotationCoeff p ha₁ ha₂)
+  WittVector.mk' p (frobeniusRotationCoeff p ha₁ ha₂)
 #align witt_vector.frobenius_rotation WittVector.frobeniusRotation
 
 theorem frobeniusRotation_nonzero {a₁ a₂ : 𝕎 k} (ha₁ : a₁.coeff 0 ≠ 0) (ha₂ : a₂.coeff 0 ≠ 0) :

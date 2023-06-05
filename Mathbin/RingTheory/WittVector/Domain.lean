@@ -62,7 +62,7 @@ local notation "𝕎" => WittVector p
 This is mainly useful as an auxiliary construction for `witt_vector.verschiebung_nonzero`.
 -/
 def shift (x : 𝕎 R) (n : ℕ) : 𝕎 R :=
-  mk p fun i => x.coeff (n + i)
+  mk' p fun i => x.coeff (n + i)
 #align witt_vector.shift WittVector.shift
 
 theorem shift_coeff (x : 𝕎 R) (n k : ℕ) : (x.shift n).coeff k = x.coeff (n + k) :=

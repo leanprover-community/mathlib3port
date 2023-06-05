@@ -47,6 +47,7 @@ open scoped BigOperators Polynomial
 
 variable (R : Type _) [CommRing R]
 
+#print bernsteinPolynomial /-
 /-- `bernstein_polynomial R n ν` is `(choose n ν) * X^ν * (1 - X)^(n - ν)`.
 
 Although the coefficients are integers, it is convenient to work over an arbitrary commutative ring.
@@ -54,6 +55,7 @@ Although the coefficients are integers, it is convenient to work over an arbitra
 def bernsteinPolynomial (n ν : ℕ) : R[X] :=
   choose n ν * X ^ ν * (1 - X) ^ (n - ν)
 #align bernstein_polynomial bernsteinPolynomial
+-/
 
 example : bernsteinPolynomial ℤ 3 2 = 3 * X ^ 2 - 3 * X ^ 3 :=
   by
@@ -62,9 +64,11 @@ example : bernsteinPolynomial ℤ 3 2 = 3 * X ^ 2 - 3 * X ^ 3 :=
 
 namespace bernsteinPolynomial
 
+#print bernsteinPolynomial.eq_zero_of_lt /-
 theorem eq_zero_of_lt {n ν : ℕ} (h : n < ν) : bernsteinPolynomial R n ν = 0 := by
   simp [bernsteinPolynomial, Nat.choose_eq_zero_of_lt h]
 #align bernstein_polynomial.eq_zero_of_lt bernsteinPolynomial.eq_zero_of_lt
+-/
 
 section
 
@@ -77,15 +81,19 @@ theorem map (f : R →+* S) (n ν : ℕ) :
 
 end
 
+#print bernsteinPolynomial.flip /-
 theorem flip (n ν : ℕ) (h : ν ≤ n) :
     (bernsteinPolynomial R n ν).comp (1 - X) = bernsteinPolynomial R n (n - ν) := by
   simp [bernsteinPolynomial, h, tsub_tsub_assoc, mul_right_comm]
 #align bernstein_polynomial.flip bernsteinPolynomial.flip
+-/
 
+#print bernsteinPolynomial.flip' /-
 theorem flip' (n ν : ℕ) (h : ν ≤ n) :
     bernsteinPolynomial R n ν = (bernsteinPolynomial R n (n - ν)).comp (1 - X) := by
   simp [← flip _ _ _ h, Polynomial.comp_assoc]
 #align bernstein_polynomial.flip' bernsteinPolynomial.flip'
+-/
 
 theorem eval_at_0 (n ν : ℕ) : (bernsteinPolynomial R n ν).eval 0 = if ν = 0 then 1 else 0 :=
   by
@@ -258,6 +266,7 @@ theorem iterate_derivative_at_1_ne_zero [CharZero R] (n ν : ℕ) (h : ν ≤ n)
 
 open Submodule
 
+#print bernsteinPolynomial.linearIndependent_aux /-
 theorem linearIndependent_aux (n k : ℕ) (h : k ≤ n + 1) :
     LinearIndependent ℚ fun ν : Fin k => bernsteinPolynomial ℚ n ν :=
   by
@@ -292,7 +301,9 @@ theorem linearIndependent_aux (n k : ℕ) (h : k ≤ n + 1) :
       · intro x y hx hy; simp [hx, hy]
       · intro a x h; simp [h]
 #align bernstein_polynomial.linear_independent_aux bernsteinPolynomial.linearIndependent_aux
+-/
 
+#print bernsteinPolynomial.linearIndependent /-
 /-- The Bernstein polynomials are linearly independent.
 
 We prove by induction that the collection of `bernstein_polynomial n ν` for `ν = 0, ..., k`
@@ -304,7 +315,9 @@ theorem linearIndependent (n : ℕ) :
     LinearIndependent ℚ fun ν : Fin (n + 1) => bernsteinPolynomial ℚ n ν :=
   linearIndependent_aux n (n + 1) le_rfl
 #align bernstein_polynomial.linear_independent bernsteinPolynomial.linearIndependent
+-/
 
+#print bernsteinPolynomial.sum /-
 theorem sum (n : ℕ) : (∑ ν in Finset.range (n + 1), bernsteinPolynomial R n ν) = 1 :=
   calc
     (∑ ν in Finset.range (n + 1), bernsteinPolynomial R n ν) = (X + (1 - X)) ^ n := by rw [add_pow];
@@ -312,6 +325,7 @@ theorem sum (n : ℕ) : (∑ ν in Finset.range (n + 1), bernsteinPolynomial R n
     _ = 1 := by simp
     
 #align bernstein_polynomial.sum bernsteinPolynomial.sum
+-/
 
 open Polynomial
 
