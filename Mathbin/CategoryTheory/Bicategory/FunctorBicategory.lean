@@ -39,7 +39,7 @@ namespace OplaxNatTrans
 def whiskerLeft (η : F ⟶ G) {θ ι : G ⟶ H} (Γ : θ ⟶ ι) : η ≫ θ ⟶ η ≫ ι
     where
   app a := η.app a ◁ Γ.app a
-  naturality' a b f := by dsimp; rw [associator_inv_naturality_right_assoc, whisker_exchange_assoc];
+  naturality a b f := by dsimp; rw [associator_inv_naturality_right_assoc, whisker_exchange_assoc];
     simp
 #align category_theory.oplax_nat_trans.whisker_left CategoryTheory.OplaxNatTrans.whiskerLeft
 
@@ -48,7 +48,7 @@ def whiskerLeft (η : F ⟶ G) {θ ι : G ⟶ H} (Γ : θ ⟶ ι) : η ≫ θ �
 def whiskerRight {η θ : F ⟶ G} (Γ : η ⟶ θ) (ι : G ⟶ H) : η ≫ ι ⟶ θ ≫ ι
     where
   app a := Γ.app a ▷ ι.app a
-  naturality' a b f := by dsimp;
+  naturality a b f := by dsimp;
     simp_rw [assoc, ← associator_inv_naturality_left, whisker_exchange_assoc]; simp
 #align category_theory.oplax_nat_trans.whisker_right CategoryTheory.OplaxNatTrans.whiskerRight
 

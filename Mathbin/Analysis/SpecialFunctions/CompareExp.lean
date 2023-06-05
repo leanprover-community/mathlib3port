@@ -38,6 +38,7 @@ open scoped Topology
 
 namespace Complex
 
+#print Complex.IsExpCmpFilter /-
 /-- We say that `l : filter ℂ` is an *exponential comparison filter* if the real part tends to
 infinity along `l` and the imaginary part grows subexponentially compared to the real part. These
 properties guarantee that `(λ z, z ^ a₁ * exp (b₁ * z)) =o[l] (λ z, z ^ a₂ * exp (b₂ * z))` for any
@@ -49,6 +50,7 @@ structure IsExpCmpFilter (l : Filter ℂ) : Prop where
   tendsto_re : Tendsto re l atTop
   isBigO_im_pow_re : ∀ n : ℕ, (fun z : ℂ => z.im ^ n) =O[l] fun z => Real.exp z.re
 #align complex.is_exp_cmp_filter Complex.IsExpCmpFilter
+-/
 
 namespace IsExpCmpFilter
 
@@ -77,16 +79,16 @@ theorem of_isBigO_im_re_pow (hre : Tendsto re l atTop) (n : ℕ) (hr : im =O[l] 
   of_isBigO_im_re_rpow hre n <| by simpa only [Real.rpow_nat_cast]
 #align complex.is_exp_cmp_filter.of_is_O_im_re_pow Complex.IsExpCmpFilter.of_isBigO_im_re_pow
 
-theorem of_bounded_under_abs_im (hre : Tendsto re l atTop)
+theorem of_boundedUnder_abs_im (hre : Tendsto re l atTop)
     (him : IsBoundedUnder (· ≤ ·) l fun z => |z.im|) : IsExpCmpFilter l :=
   of_isBigO_im_re_pow hre 0 <| by
     simpa only [pow_zero] using @is_bounded_under.is_O_const ℂ ℝ ℝ _ _ _ l him 1 one_ne_zero
-#align complex.is_exp_cmp_filter.of_bounded_under_abs_im Complex.IsExpCmpFilter.of_bounded_under_abs_im
+#align complex.is_exp_cmp_filter.of_bounded_under_abs_im Complex.IsExpCmpFilter.of_boundedUnder_abs_im
 
-theorem of_bounded_under_im (hre : Tendsto re l atTop) (him_le : IsBoundedUnder (· ≤ ·) l im)
+theorem of_boundedUnder_im (hre : Tendsto re l atTop) (him_le : IsBoundedUnder (· ≤ ·) l im)
     (him_ge : IsBoundedUnder (· ≥ ·) l im) : IsExpCmpFilter l :=
-  of_bounded_under_abs_im hre <| isBoundedUnder_le_abs.2 ⟨him_le, him_ge⟩
-#align complex.is_exp_cmp_filter.of_bounded_under_im Complex.IsExpCmpFilter.of_bounded_under_im
+  of_boundedUnder_abs_im hre <| isBoundedUnder_le_abs.2 ⟨him_le, him_ge⟩
+#align complex.is_exp_cmp_filter.of_bounded_under_im Complex.IsExpCmpFilter.of_boundedUnder_im
 
 /-!
 ### Preliminary lemmas
