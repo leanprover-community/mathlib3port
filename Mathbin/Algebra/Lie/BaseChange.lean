@@ -147,12 +147,14 @@ instance : LieRing (RestrictScalars R A L) :=
 
 variable [CommRing A] [LieAlgebra A L]
 
+#print LieAlgebra.RestrictScalars.lieAlgebra /-
 instance lieAlgebra [CommRing R] [Algebra R A] : LieAlgebra R (RestrictScalars R A L)
     where lie_smul t x y :=
     (lie_smul (algebraMap R A t) (RestrictScalars.addEquiv R A L x)
         (RestrictScalars.addEquiv R A L y) :
       _)
 #align lie_algebra.restrict_scalars.lie_algebra LieAlgebra.RestrictScalars.lieAlgebra
+-/
 
 end RestrictScalars
 

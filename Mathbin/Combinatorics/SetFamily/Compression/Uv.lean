@@ -123,7 +123,7 @@ theorem compress_of_disjoint_of_le' (hva : Disjoint v a) (hua : u ≤ a) :
   rw [compress_of_disjoint_of_le disjoint_sdiff_self_right
       (le_sdiff.2 ⟨(le_sup_right : v ≤ a ⊔ v), hva.mono_right hua⟩),
     sdiff_sup_cancel (le_sup_of_le_left hua), hva.symm.sup_sdiff_cancel_right]
-#align uv.compress_of_disjoint_of_le' Uv.compress_of_disjoint_of_le'
+#align uv.compress_of_disjoint_of_le' UV.compress_of_disjoint_of_le'
 
 /-- `a` is in the UV-compressed family iff it's in the original and its compression is in the
 original, or it's not in the original but it's the compression of something in the original. -/
@@ -132,9 +132,11 @@ theorem mem_compression :
   simp_rw [compression, mem_union, mem_filter, mem_image, and_comm' (a ∉ s)]
 #align uv.mem_compression UV.mem_compression
 
+#print UV.IsCompressed.eq /-
 protected theorem IsCompressed.eq (h : IsCompressed u v s) : 𝓒 u v s = s :=
   h
 #align uv.is_compressed.eq UV.IsCompressed.eq
+-/
 
 #print UV.compress_self /-
 @[simp]
@@ -176,7 +178,7 @@ theorem compress_sdiff_sdiff (a b : α) : compress (a \ b) (b \ a) b = a :=
   refine' (compress_of_disjoint_of_le disjoint_sdiff_self_left sdiff_le).trans _
   rw [sup_sdiff_self_right, sup_sdiff, disjoint_sdiff_self_right.sdiff_eq_left, sup_eq_right]
   exact sdiff_sdiff_le
-#align uv.compress_sdiff_sdiff Uv.compress_sdiff_sdiff
+#align uv.compress_sdiff_sdiff UV.compress_sdiff_sdiff
 
 theorem compress_disjoint (u v : α) :
     Disjoint (s.filterₓ fun a => compress u v a ∈ s)
@@ -254,6 +256,7 @@ theorem card_compression (u v : α) (s : Finset α) : (𝓒 u v s).card = s.card
 #align uv.card_compression UV.card_compression
 -/
 
+#print UV.le_of_mem_compression_of_not_mem /-
 theorem le_of_mem_compression_of_not_mem (h : a ∈ 𝓒 u v s) (ha : a ∉ s) : u ≤ a :=
   by
   rw [mem_compression] at h 
@@ -264,8 +267,10 @@ theorem le_of_mem_compression_of_not_mem (h : a ∈ 𝓒 u v s) (ha : a ∉ s) :
   · rw [← hba, le_sdiff]
     exact ⟨le_sup_right, h.1.mono_right h.2⟩
   · cases ne_of_mem_of_not_mem hb ha hba
-#align uv.le_of_mem_compression_of_not_mem Uv.le_of_mem_compression_of_not_mem
+#align uv.le_of_mem_compression_of_not_mem UV.le_of_mem_compression_of_not_mem
+-/
 
+#print UV.disjoint_of_mem_compression_of_not_mem /-
 theorem disjoint_of_mem_compression_of_not_mem (h : a ∈ 𝓒 u v s) (ha : a ∉ s) : Disjoint v a :=
   by
   rw [mem_compression] at h 
@@ -276,7 +281,8 @@ theorem disjoint_of_mem_compression_of_not_mem (h : a ∈ 𝓒 u v s) (ha : a �
   · rw [← hba]
     exact disjoint_sdiff_self_right
   · cases ne_of_mem_of_not_mem hb ha hba
-#align uv.disjoint_of_mem_compression_of_not_mem Uv.disjoint_of_mem_compression_of_not_mem
+#align uv.disjoint_of_mem_compression_of_not_mem UV.disjoint_of_mem_compression_of_not_mem
+-/
 
 theorem sup_sdiff_mem_of_mem_compression_of_not_mem (h : a ∈ 𝓒 u v s) (ha : a ∉ s) :
     (a ⊔ v) \ u ∈ s := by
@@ -289,7 +295,7 @@ theorem sup_sdiff_mem_of_mem_compression_of_not_mem (h : a ∈ 𝓒 u v s) (ha :
     rwa [← hba, sdiff_sup_cancel (le_sup_of_le_left h.2), sup_sdiff_right_self,
       h.1.symm.sdiff_eq_left]
   · cases ne_of_mem_of_not_mem hb ha hba
-#align uv.sup_sdiff_mem_of_mem_compression_of_not_mem Uv.sup_sdiff_mem_of_mem_compression_of_not_mem
+#align uv.sup_sdiff_mem_of_mem_compression_of_not_mem UV.sup_sdiff_mem_of_mem_compression_of_not_mem
 
 /-- If `a` is in the family compression and can be compressed, then its compression is in the
 original family. -/
@@ -460,7 +466,7 @@ theorem shadow_compression_subset_compression_shadow (u v : Finset α)
   convert this
   rw [insert_union, sdiff_union_of_subset (hus.trans <| subset_union_left _ _),
     insert_sdiff_of_not_mem _ (hwu ∘ hwB ∘ mem_union_right _), union_sdiff_cancel_right hsv]
-#align uv.shadow_compression_subset_compression_shadow Uv.shadow_compression_subset_compression_shadow
+#align uv.shadow_compression_subset_compression_shadow UV.shadow_compression_subset_compression_shadow
 
 /-- UV-compression reduces the size of the shadow of `𝒜` if, for all `x ∈ u` there is `y ∈ v`
 such that `𝒜` is `(u.erase x, v.erase y)`-compressed. This is the key UV-compression fact needed for
@@ -470,7 +476,7 @@ theorem card_shadow_compression_le (u v : Finset α)
     ((∂ ) (𝓒 u v 𝒜)).card ≤ ((∂ ) 𝒜).card :=
   (card_le_of_subset <| shadow_compression_subset_compression_shadow _ _ huv).trans
     (card_compression _ _ _).le
-#align uv.card_shadow_compression_le Uv.card_shadow_compression_le
+#align uv.card_shadow_compression_le UV.card_shadow_compression_le
 
 end Uv
 

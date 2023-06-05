@@ -30,6 +30,7 @@ variable {C D : Type _} [Groupoid C] [Category D] [MonoidalCategory D]
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print CategoryTheory.Monoidal.functorHasRightDual /-
 instance functorHasRightDual [RightRigidCategory D] (F : C ⥤ D) : HasRightDual F
     where
   rightDual :=
@@ -52,12 +53,16 @@ instance functorHasRightDual [RightRigidCategory D] (F : C ⥤ D) : HasRightDual
               coevaluation_comp_right_adjoint_mate, category.assoc, ← comp_tensor_id,
               is_iso.inv_hom_id, tensor_id, category.comp_id] } }
 #align category_theory.monoidal.functor_has_right_dual CategoryTheory.Monoidal.functorHasRightDual
+-/
 
+#print CategoryTheory.Monoidal.rightRigidFunctorCategory /-
 instance rightRigidFunctorCategory [RightRigidCategory D] : RightRigidCategory (C ⥤ D) where
 #align category_theory.monoidal.right_rigid_functor_category CategoryTheory.Monoidal.rightRigidFunctorCategory
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print CategoryTheory.Monoidal.functorHasLeftDual /-
 instance functorHasLeftDual [LeftRigidCategory D] (F : C ⥤ D) : HasLeftDual F
     where
   leftDual :=
@@ -80,12 +85,17 @@ instance functorHasLeftDual [LeftRigidCategory D] (F : C ⥤ D) : HasLeftDual F
               coevaluation_comp_left_adjoint_mate, category.assoc, ← id_tensor_comp,
               is_iso.inv_hom_id, tensor_id, category.comp_id] } }
 #align category_theory.monoidal.functor_has_left_dual CategoryTheory.Monoidal.functorHasLeftDual
+-/
 
+#print CategoryTheory.Monoidal.leftRigidFunctorCategory /-
 instance leftRigidFunctorCategory [LeftRigidCategory D] : LeftRigidCategory (C ⥤ D) where
 #align category_theory.monoidal.left_rigid_functor_category CategoryTheory.Monoidal.leftRigidFunctorCategory
+-/
 
+#print CategoryTheory.Monoidal.rigidFunctorCategory /-
 instance rigidFunctorCategory [RigidCategory D] : RigidCategory (C ⥤ D) where
 #align category_theory.monoidal.rigid_functor_category CategoryTheory.Monoidal.rigidFunctorCategory
+-/
 
 end CategoryTheory.Monoidal
 

@@ -112,11 +112,13 @@ instance hasForgetToLinOrd : HasForget₂ NonemptyFinLinOrdCat LinOrdCat :=
 #align NonemptyFinLinOrd.has_forget_to_LinOrd NonemptyFinLinOrdCat.hasForgetToLinOrd
 -/
 
+#print NonemptyFinLinOrdCat.hasForgetToFinPartOrd /-
 instance hasForgetToFinPartOrd : HasForget₂ NonemptyFinLinOrdCat FinPartOrd
     where forget₂ :=
     { obj := fun X => FinPartOrd.of X
       map := fun X Y => id }
 #align NonemptyFinLinOrd.has_forget_to_FinPartOrd NonemptyFinLinOrdCat.hasForgetToFinPartOrd
+-/
 
 #print NonemptyFinLinOrdCat.Iso.mk /-
 /-- Constructs an equivalence between nonempty finite linear orders from an order isomorphism
@@ -256,6 +258,7 @@ theorem nonemptyFinLinOrdCat_dual_comp_forget_to_linOrdCat :
 #align NonemptyFinLinOrd_dual_comp_forget_to_LinOrd nonemptyFinLinOrdCat_dual_comp_forget_to_linOrdCat
 -/
 
+#print nonemptyFinLinOrdDualCompForgetToFinPartOrd /-
 /-- The forgetful functor `NonemptyFinLinOrd ⥤ FinPartOrd` and `order_dual` commute. -/
 def nonemptyFinLinOrdDualCompForgetToFinPartOrd :
     NonemptyFinLinOrdCat.dual ⋙ forget₂ NonemptyFinLinOrdCat FinPartOrd ≅
@@ -264,4 +267,5 @@ def nonemptyFinLinOrdDualCompForgetToFinPartOrd :
   hom := { app := fun X => OrderHom.id }
   inv := { app := fun X => OrderHom.id }
 #align NonemptyFinLinOrd_dual_comp_forget_to_FinPartOrd nonemptyFinLinOrdDualCompForgetToFinPartOrd
+-/
 
