@@ -611,11 +611,13 @@ instance : CommSemiring (FractionalIdeal S P) :=
 
 variable (S P)
 
+#print FractionalIdeal.coeSubmoduleHom /-
 /-- `fractional_ideal.submodule.has_coe` as a bundled `ring_hom`. -/
 @[simps]
 def coeSubmoduleHom : FractionalIdeal S P →+* Submodule R P :=
   ⟨coe, coe_one, coe_mul, coe_zero, coe_add⟩
 #align fractional_ideal.coe_submodule_hom FractionalIdeal.coeSubmoduleHom
+-/
 
 variable {S P}
 
@@ -682,6 +684,7 @@ theorem one_le {I : FractionalIdeal S P} : 1 ≤ I ↔ (1 : P) ∈ I := by
 
 variable (S P)
 
+#print FractionalIdeal.coeIdealHom /-
 /-- `coe_ideal_hom (S : submonoid R) P` is `coe : ideal R → fractional_ideal S P` as a ring hom -/
 @[simps]
 def coeIdealHom : Ideal R →+* FractionalIdeal S P
@@ -692,6 +695,7 @@ def coeIdealHom : Ideal R →+* FractionalIdeal S P
   map_one' := by rw [Ideal.one_eq_top, coe_ideal_top]
   map_zero' := coeIdeal_bot
 #align fractional_ideal.coe_ideal_hom FractionalIdeal.coeIdealHom
+-/
 
 theorem coeIdeal_pow (I : Ideal R) (n : ℕ) : (↑(I ^ n) : FractionalIdeal S P) = I ^ n :=
   (coeIdealHom S P).map_pow _ n
@@ -878,9 +882,11 @@ theorem coeIdeal_fg (inj : Function.Injective (algebraMap R P)) (I : Ideal R) :
 
 variable {S}
 
+#print FractionalIdeal.fg_unit /-
 theorem fg_unit (I : (FractionalIdeal S P)ˣ) : FG (I : Submodule R P) :=
   Submodule.fg_unit <| Units.map (coeSubmoduleHom S P).toMonoidHom I
 #align fractional_ideal.fg_unit FractionalIdeal.fg_unit
+-/
 
 theorem fg_of_isUnit (I : FractionalIdeal S P) (h : IsUnit I) : FG (I : Submodule R P) :=
   fg_unit h.Unit

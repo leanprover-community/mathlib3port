@@ -59,11 +59,13 @@ open scoped BoundedContinuousFunction
 
 open scoped unitInterval
 
+#print bernstein /-
 /-- The Bernstein polynomials, as continuous functions on `[0,1]`.
 -/
 def bernstein (n ν : ℕ) : C(I, ℝ) :=
   (bernsteinPolynomial ℝ n ν).toContinuousMapOn I
 #align bernstein bernstein
+-/
 
 @[simp]
 theorem bernstein_apply (n ν : ℕ) (x : I) :
@@ -88,6 +90,7 @@ We now give a slight reformulation of `bernstein_polynomial.variance`.
 
 namespace bernstein
 
+#print bernstein.z /-
 /-- Send `k : fin (n+1)` to the equally spaced points `k/n` in the unit interval.
 -/
 def z {n : ℕ} (k : Fin (n + 1)) : I :=
@@ -100,6 +103,7 @@ def z {n : ℕ} (k : Fin (n + 1)) : I :=
       norm_cast
       simp [h₂]⟩
 #align bernstein.z bernstein.z
+-/
 
 -- mathport name: «expr /ₙ»
 local postfix:90 "/ₙ" => z
@@ -140,12 +144,14 @@ open bernstein
 -- mathport name: «expr /ₙ»
 local postfix:1024 "/ₙ" => z
 
+#print bernsteinApproximation /-
 /-- The `n`-th approximation of a continuous function on `[0,1]` by Bernstein polynomials,
 given by `∑ k, f (k/n) * bernstein n k x`.
 -/
 def bernsteinApproximation (n : ℕ) (f : C(I, ℝ)) : C(I, ℝ) :=
   ∑ k : Fin (n + 1), f k/ₙ • bernstein n k
 #align bernstein_approximation bernsteinApproximation
+-/
 
 /-!
 We now set up some of the basic machinery of the proof that the Bernstein approximations
@@ -182,30 +188,30 @@ theorem δ_pos {f : C(I, ℝ)} {ε : ℝ} {h : 0 < ε} : 0 < δ f ε h :=
 
 /-- The set of points `k` so `k/n` is within `δ` of `x`.
 -/
-def s (f : C(I, ℝ)) (ε : ℝ) (h : 0 < ε) (n : ℕ) (x : I) : Finset (Fin (n + 1)) :=
+def S (f : C(I, ℝ)) (ε : ℝ) (h : 0 < ε) (n : ℕ) (x : I) : Finset (Fin (n + 1)) :=
   {k : Fin (n + 1) | dist k/ₙ x < δ f ε h}.toFinset
-#align bernstein_approximation.S bernsteinApproximation.s
+#align bernstein_approximation.S bernsteinApproximation.S
 
 /-- If `k ∈ S`, then `f(k/n)` is close to `f x`.
 -/
-theorem lt_of_mem_s {f : C(I, ℝ)} {ε : ℝ} {h : 0 < ε} {n : ℕ} {x : I} {k : Fin (n + 1)}
-    (m : k ∈ s f ε h n x) : |f k/ₙ - f x| < ε / 2 :=
+theorem lt_of_mem_S {f : C(I, ℝ)} {ε : ℝ} {h : 0 < ε} {n : ℕ} {x : I} {k : Fin (n + 1)}
+    (m : k ∈ S f ε h n x) : |f k/ₙ - f x| < ε / 2 :=
   by
   apply f.dist_lt_of_dist_lt_modulus (ε / 2) (half_pos h)
   simpa [S] using m
-#align bernstein_approximation.lt_of_mem_S bernsteinApproximation.lt_of_mem_s
+#align bernstein_approximation.lt_of_mem_S bernsteinApproximation.lt_of_mem_S
 
 /-- If `k ∉ S`, then as `δ ≤ |x - k/n|`, we have the inequality `1 ≤ δ^-2 * (x - k/n)^2`.
 This particular formulation will be helpful later.
 -/
-theorem le_of_mem_s_compl {f : C(I, ℝ)} {ε : ℝ} {h : 0 < ε} {n : ℕ} {x : I} {k : Fin (n + 1)}
-    (m : k ∈ s f ε h n xᶜ) : (1 : ℝ) ≤ δ f ε h ^ (-2 : ℤ) * (x - k/ₙ) ^ 2 :=
+theorem le_of_mem_S_compl {f : C(I, ℝ)} {ε : ℝ} {h : 0 < ε} {n : ℕ} {x : I} {k : Fin (n + 1)}
+    (m : k ∈ S f ε h n xᶜ) : (1 : ℝ) ≤ δ f ε h ^ (-2 : ℤ) * (x - k/ₙ) ^ 2 :=
   by
   simp only [Finset.mem_compl, not_lt, Set.mem_toFinset, Set.mem_setOf_eq, S] at m 
   rw [zpow_neg, ← div_eq_inv_mul, zpow_two, ← pow_two, one_le_div (pow_pos δ_pos 2), sq_le_sq,
     abs_of_pos δ_pos]
   rwa [dist_comm] at m 
-#align bernstein_approximation.le_of_mem_S_compl bernsteinApproximation.le_of_mem_s_compl
+#align bernstein_approximation.le_of_mem_S_compl bernsteinApproximation.le_of_mem_S_compl
 
 end bernsteinApproximation
 
@@ -217,6 +223,7 @@ open Filter
 
 open scoped Topology
 
+#print bernsteinApproximation_uniform /-
 /-- The Bernstein approximations
 ```
 ∑ k : fin (n+1), f (k/n : ℝ) * n.choose k * x^k * (1-x)^(n-k)
@@ -314,4 +321,5 @@ theorem bernsteinApproximation_uniform (f : C(I, ℝ)) :
       _ < ε / 2 := nh
       
 #align bernstein_approximation_uniform bernsteinApproximation_uniform
+-/
 
