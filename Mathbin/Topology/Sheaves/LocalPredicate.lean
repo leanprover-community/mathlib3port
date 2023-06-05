@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Scott Morrison, Adam Topaz
 
 ! This file was ported from Lean 3 source module topology.sheaves.local_predicate
-! leanprover-community/mathlib commit 599fffe78f0e11eb6a034e834ec51882167b9688
+! leanprover-community/mathlib commit 13361559d66b84f80b6d5a1c4a26aa5054766725
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -44,13 +44,13 @@ We give conditions sufficient to show that this map is injective and/or surjecti
 -/
 
 
-universe v
+universe v w
 
 noncomputable section
 
 variable {X : TopCat.{v}}
 
-variable (T : X → Type v)
+variable (T : X → Type w)
 
 open TopologicalSpace
 
@@ -64,7 +64,6 @@ open CategoryTheory.Limits.Types
 
 namespace TopCat
 
-#print TopCat.PrelocalPredicate /-
 /-- Given a topological space `X : Top` and a type family `T : X → Type`,
 a `P : prelocal_predicate T` consists of:
 * a family of predicates `P.pred`, one for each `U : opens X`, of the form `(Π x : U, T x) → Prop`
@@ -74,33 +73,27 @@ a `P : prelocal_predicate T` consists of:
 structure PrelocalPredicate where
   pred : ∀ {U : Opens X}, (∀ x : U, T x) → Prop
   res : ∀ {U V : Opens X} (i : U ⟶ V) (f : ∀ x : V, T x) (h : pred f), pred fun x : U => f (i x)
-#align Top.prelocal_predicate TopCat.PrelocalPredicate
--/
+#align Top.prelocal_predicate TopCat.PrelocalPredicateₓ
 
 variable (X)
 
-#print TopCat.continuousPrelocal /-
 /-- Continuity is a "prelocal" predicate on functions to a fixed topological space `T`.
 -/
 @[simps]
-def continuousPrelocal (T : TopCat.{v}) : PrelocalPredicate fun x : X => T
+def continuousPrelocal (T : TopCat.{w}) : PrelocalPredicate fun x : X => T
     where
   pred U f := Continuous f
   res U V i f h := Continuous.comp h (Opens.openEmbedding_of_le i.le).Continuous
 #align Top.continuous_prelocal TopCat.continuousPrelocal
--/
 
-#print TopCat.inhabitedPrelocalPredicate /-
 /-- Satisfying the inhabited linter. -/
-instance inhabitedPrelocalPredicate (T : TopCat.{v}) :
+instance inhabitedPrelocalPredicate (T : TopCat.{w}) :
     Inhabited (PrelocalPredicate fun x : X => T) :=
   ⟨continuousPrelocal X T⟩
 #align Top.inhabited_prelocal_predicate TopCat.inhabitedPrelocalPredicate
--/
 
 variable {X}
 
-#print TopCat.LocalPredicate /-
 /-- Given a topological space `X : Top` and a type family `T : X → Type`,
 a `P : local_predicate T` consists of:
 * a family of predicates `P.pred`, one for each `U : opens X`, of the form `(Π x : U, T x) → Prop`
@@ -116,8 +109,7 @@ structure LocalPredicate extends PrelocalPredicate T where
     ∀ {U : Opens X} (f : ∀ x : U, T x)
       (w : ∀ x : U, ∃ (V : Opens X) (m : x.1 ∈ V) (i : V ⟶ U), pred fun x : V => f (i x : U)),
       pred f
-#align Top.local_predicate TopCat.LocalPredicate
--/
+#align Top.local_predicate TopCat.LocalPredicateₓ
 
 variable (X)
 
@@ -175,16 +167,14 @@ theorem PrelocalPredicate.sheafifyOf {T : X → Type v} {P : PrelocalPredicate T
 #align Top.prelocal_predicate.sheafify_of TopCat.PrelocalPredicate.sheafifyOf
 -/
 
-#print TopCat.subpresheafToTypes /-
 /-- The subpresheaf of dependent functions on `X` satisfying the "pre-local" predicate `P`.
 -/
 @[simps]
-def subpresheafToTypes (P : PrelocalPredicate T) : Presheaf (Type v) X
+def subpresheafToTypes (P : PrelocalPredicate T) : Presheaf (Type max v w) X
     where
   obj U := { f : ∀ x : unop U, T x // P.pred f }
   map U V i f := ⟨fun x => f.1 (i.unop x), P.res i.unop f.1 f.2⟩
 #align Top.subpresheaf_to_Types TopCat.subpresheafToTypes
--/
 
 namespace SubpresheafToTypes
 
@@ -198,7 +188,6 @@ def subtype : subpresheafToTypes P ⟶ presheafToTypes X T where app U f := f.1
 
 open TopCat.Presheaf
 
-#print TopCat.subpresheafToTypes.isSheaf /-
 /-- The functions satisfying a local predicate satisfy the sheaf condition.
 -/
 theorem isSheaf (P : LocalPredicate T) : (subpresheafToTypes P.toPrelocalPredicate).IsSheaf :=
@@ -235,27 +224,29 @@ theorem isSheaf (P : LocalPredicate T) : (subpresheafToTypes P.toPrelocalPredica
       ext1
       exact gl_uniq gl'.1 fun i => congr_arg Subtype.val (hgl' i)
 #align Top.subpresheaf_to_Types.is_sheaf TopCat.subpresheafToTypes.isSheaf
--/
 
 end SubpresheafToTypes
 
-#print TopCat.subsheafToTypes /-
 /-- The subsheaf of the sheaf of all dependently typed functions satisfying the local predicate `P`.
 -/
 @[simps]
-def subsheafToTypes (P : LocalPredicate T) : Sheaf (Type v) X :=
+def subsheafToTypes (P : LocalPredicate T) : Sheaf (Type max v w) X :=
   ⟨subpresheafToTypes P.toPrelocalPredicate, subpresheafToTypes.isSheaf P⟩
 #align Top.subsheaf_to_Types TopCat.subsheafToTypes
--/
+
+-- TODO There is further universe generalization to do here,
+-- but it depends on more difficult universe generalization in `topology.sheaves.stalks`.
+-- The aim is to replace `T'` with the more general `T` below.
+variable {T' : X → Type v}
 
 #print TopCat.stalkToFiber /-
 /-- There is a canonical map from the stalk to the original fiber, given by evaluating sections.
 -/
-def stalkToFiber (P : LocalPredicate T) (x : X) : (subsheafToTypes P).Presheaf.stalk x ⟶ T x :=
+def stalkToFiber (P : LocalPredicate T') (x : X) : (subsheafToTypes P).Presheaf.stalk x ⟶ T' x :=
   by
   refine'
     colimit.desc _
-      { pt := T x
+      { pt := T' x
         ι :=
           { app := fun U f => _
             naturality' := _ } }
@@ -264,8 +255,9 @@ def stalkToFiber (P : LocalPredicate T) (x : X) : (subsheafToTypes P).Presheaf.s
 #align Top.stalk_to_fiber TopCat.stalkToFiber
 -/
 
+#print TopCat.stalkToFiber_germ /-
 @[simp]
-theorem stalkToFiber_germ (P : LocalPredicate T) (U : Opens X) (x : U) (f) :
+theorem stalkToFiber_germ (P : LocalPredicate T') (U : Opens X) (x : U) (f) :
     stalkToFiber P x ((subsheafToTypes P).Presheaf.germ x f) = f.1 x :=
   by
   dsimp [presheaf.germ, stalk_to_fiber]
@@ -273,13 +265,14 @@ theorem stalkToFiber_germ (P : LocalPredicate T) (U : Opens X) (x : U) (f) :
   simp
   rfl
 #align Top.stalk_to_fiber_germ TopCat.stalkToFiber_germ
+-/
 
 #print TopCat.stalkToFiber_surjective /-
 /-- The `stalk_to_fiber` map is surjective at `x` if
 every point in the fiber `T x` has an allowed section passing through it.
 -/
-theorem stalkToFiber_surjective (P : LocalPredicate T) (x : X)
-    (w : ∀ t : T x, ∃ (U : OpenNhds x) (f : ∀ y : U.1, T y) (h : P.pred f), f ⟨x, U.2⟩ = t) :
+theorem stalkToFiber_surjective (P : LocalPredicate T') (x : X)
+    (w : ∀ t : T' x, ∃ (U : OpenNhds x) (f : ∀ y : U.1, T' y) (h : P.pred f), f ⟨x, U.2⟩ = t) :
     Function.Surjective (stalkToFiber P x) := fun t =>
   by
   rcases w t with ⟨U, f, h, rfl⟩
@@ -293,9 +286,9 @@ theorem stalkToFiber_surjective (P : LocalPredicate T) (x : X)
 /-- The `stalk_to_fiber` map is injective at `x` if any two allowed sections which agree at `x`
 agree on some neighborhood of `x`.
 -/
-theorem stalkToFiber_injective (P : LocalPredicate T) (x : X)
+theorem stalkToFiber_injective (P : LocalPredicate T') (x : X)
     (w :
-      ∀ (U V : OpenNhds x) (fU : ∀ y : U.1, T y) (hU : P.pred fU) (fV : ∀ y : V.1, T y)
+      ∀ (U V : OpenNhds x) (fU : ∀ y : U.1, T' y) (hU : P.pred fU) (fV : ∀ y : V.1, T' y)
         (hV : P.pred fV) (e : fU ⟨x, U.2⟩ = fV ⟨x, V.2⟩),
         ∃ (W : OpenNhds x) (iU : W ⟶ U) (iV : W ⟶ V),
           ∀ w : W.1, fU (iU w : U.1) = fV (iV w : V.1)) :
@@ -303,7 +296,7 @@ theorem stalkToFiber_injective (P : LocalPredicate T) (x : X)
   by
   -- We promise to provide all the ingredients of the proof later:
   let Q :
-    ∃ (W : (open_nhds x)ᵒᵖ) (s : ∀ w : (unop W).1, T w) (hW : P.pred s),
+    ∃ (W : (open_nhds x)ᵒᵖ) (s : ∀ w : (unop W).1, T' w) (hW : P.pred s),
       tU = (subsheaf_to_Types P).Presheaf.germ ⟨x, (unop W).2⟩ ⟨s, hW⟩ ∧
         tV = (subsheaf_to_Types P).Presheaf.germ ⟨x, (unop W).2⟩ ⟨s, hW⟩ :=
     _
@@ -324,6 +317,8 @@ theorem stalkToFiber_injective (P : LocalPredicate T) (x : X)
 #align Top.stalk_to_fiber_injective TopCat.stalkToFiber_injective
 -/
 
+-- TODO to continue generalizing universes here, we will need to deal with the issue noted
+-- at `presheaf_to_Top` (universe generalization for the Yoneda embedding).
 /-- Some repackaging:
 the presheaf of functions satisfying `continuous_prelocal` is just the same thing as
 the presheaf of continuous functions.

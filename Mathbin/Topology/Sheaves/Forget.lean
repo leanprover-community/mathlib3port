@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module topology.sheaves.forget
-! leanprover-community/mathlib commit f60c6087a7275b72d5db3c5a1d0e19e35a429c0a
+! leanprover-community/mathlib commit 13361559d66b84f80b6d5a1c4a26aa5054766725
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -51,25 +51,24 @@ namespace SheafCondition
 
 open SheafConditionEqualizerProducts
 
-universe v u₁ u₂
+universe v u₁ u₂ w
 
-variable {C : Type u₁} [Category.{v} C] [HasLimits C]
+variable {C : Type u₁} [Category.{v} C] [HasLimitsOfSize.{w, w} C]
 
-variable {D : Type u₂} [Category.{v} D] [HasLimits D]
+variable {D : Type u₂} [Category.{v} D] [HasLimitsOfSize.{w, w} D]
 
-variable (G : C ⥤ D) [PreservesLimits G]
+variable (G : C ⥤ D) [PreservesLimitsOfSize.{w, w} G]
 
-variable {X : TopCat.{v}} (F : Presheaf C X)
+variable {X : TopCat.{w}} (F : Presheaf C X)
 
-variable {ι : Type v} (U : ι → Opens X)
+variable {ι : Type w} (U : ι → Opens X)
 
 attribute [local reducible] diagram left_res right_res
 
-#print TopCat.Presheaf.SheafCondition.diagramCompPreservesLimits /-
 /-- When `G` preserves limits, the sheaf condition diagram for `F` composed with `G` is
 naturally isomorphic to the sheaf condition diagram for `F ⋙ G`.
 -/
-def diagramCompPreservesLimits : diagram F U ⋙ G ≅ diagram.{v} (F ⋙ G) U :=
+def diagramCompPreservesLimits : diagram F U ⋙ G ≅ diagram.{w} (F ⋙ G) U :=
   by
   fapply nat_iso.of_components
   rintro ⟨j⟩
@@ -88,7 +87,6 @@ def diagramCompPreservesLimits : diagram F U ⋙ G ≅ diagram.{v} (F ⋙ G) U :
     dsimp; simp
   · ext; simp; dsimp; simp
 #align Top.presheaf.sheaf_condition.diagram_comp_preserves_limits TopCat.Presheaf.SheafCondition.diagramCompPreservesLimits
--/
 
 attribute [local reducible] res
 
@@ -97,7 +95,7 @@ is the sheaf condition fork for `F ⋙ G`,
 postcomposed with the inverse of the natural isomorphism `diagram_comp_preserves_limits`.
 -/
 def mapConeFork :
-    G.mapCone (fork.{v} F U) ≅
+    G.mapCone (fork.{w} F U) ≅
       (Cones.postcompose (diagramCompPreservesLimits G F U).inv).obj (fork (F ⋙ G) U) :=
   Cones.ext (Iso.refl _) fun j => by
     dsimp; simp [diagram_comp_preserves_limits]; cases j <;> dsimp
@@ -114,7 +112,7 @@ def mapConeFork :
 
 end SheafCondition
 
-universe v u₁ u₂
+universe v u₁ u₂ w
 
 open SheafCondition SheafConditionEqualizerProducts
 
@@ -124,11 +122,10 @@ variable (G : C ⥤ D)
 
 variable [ReflectsIsomorphisms G]
 
-variable [HasLimits C] [HasLimits D] [PreservesLimits G]
+variable [HasLimitsOfSize.{w, w} C] [HasLimitsOfSize.{w, w} D] [PreservesLimitsOfSize.{w, w} G]
 
-variable {X : TopCat.{v}} (F : Presheaf C X)
+variable {X : TopCat.{w}} (F : Presheaf C X)
 
-#print TopCat.Presheaf.isSheaf_iff_isSheaf_comp /-
 /-- If `G : C ⥤ D` is a functor which reflects isomorphisms and preserves limits
 (we assume all limits exist in both `C` and `D`),
 then checking the sheaf condition for a presheaf `F : presheaf C X`
@@ -185,7 +182,7 @@ theorem isSheaf_iff_isSheaf_comp : Presheaf.IsSheaf F ↔ Presheaf.IsSheaf (F �
       -- image under `G` of the equalizer cone for the sheaf condition diagram.
       let c := fork (F ⋙ G) U
       obtain ⟨hc⟩ := S U
-      let d := G.map_cone (equalizer.fork (leftRes.{v} F U) (right_res F U))
+      let d := G.map_cone (equalizer.fork (leftRes.{w} F U) (right_res F U))
       letI := preserves_smallest_limits_of_preserves_limits G
       have hd : is_limit d := preserves_limit.preserves (limit.is_limit _)
       -- Since both of these are limit cones
@@ -196,7 +193,9 @@ theorem isSheaf_iff_isSheaf_comp : Presheaf.IsSheaf F ↔ Presheaf.IsSheaf (F �
       -- introduced above.
       let d' := (cones.postcompose (diagram_comp_preserves_limits G F U).Hom).obj d
       have hd' : is_limit d' :=
-        (is_limit.postcompose_hom_equiv (diagram_comp_preserves_limits G F U : _) d).symm hd
+        (is_limit.postcompose_hom_equiv (diagramCompPreservesLimits.{v, u₁, u₂, w} G F U : _)
+              d).symm
+          hd
       -- Now everything works: we verify that `f` really is a morphism between these cones:
       let f' : c ⟶ d' :=
         fork.mk_hom (G.map f)
@@ -215,7 +214,6 @@ theorem isSheaf_iff_isSheaf_comp : Presheaf.IsSheaf F ↔ Presheaf.IsSheaf (F �
       -- so we're done!
       exact is_iso.of_iso ((cones.forget _).mapIso (as_iso f'))
 #align Top.presheaf.is_sheaf_iff_is_sheaf_comp TopCat.Presheaf.isSheaf_iff_isSheaf_comp
--/
 
 /-!
 As an example, we now have everything we need to check the sheaf condition

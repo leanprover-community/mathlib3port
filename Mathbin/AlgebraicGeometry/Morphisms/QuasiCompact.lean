@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module algebraic_geometry.morphisms.quasi_compact
-! leanprover-community/mathlib commit d39590fc8728fbf6743249802486f8c91ffe07bc
+! leanprover-community/mathlib commit 13361559d66b84f80b6d5a1c4a26aa5054766725
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -311,7 +311,7 @@ theorem exists_pow_mul_eq_zero_of_res_basicOpen_eq_zero_of_isAffineOpen (X : Sch
 
 /-- If `x : Γ(X, U)` is zero on `D(f)` for some `f : Γ(X, U)`, and `U` is quasi-compact, then
 `f ^ n * x = 0` for some `n`. -/
-theorem exists_pow_mul_eq_zero_of_res_basicOpen_eq_zero_of_isCompact (X : Scheme)
+theorem exists_pow_mul_eq_zero_of_res_basicOpen_eq_zero_of_isCompact (X : Scheme.{u})
     {U : Opens X.carrier} (hU : IsCompact U.1) (x f : X.Presheaf.obj (op U))
     (H : x |_ X.basicOpen f = 0) : ∃ n : ℕ, f ^ n * x = 0 :=
   by
@@ -336,7 +336,7 @@ theorem exists_pow_mul_eq_zero_of_res_basicOpen_eq_zero_of_isCompact (X : Scheme
   suffices ∀ i : s, X.presheaf.map (hom_of_le (h₁ i)).op (f ^ finset.univ.sup n * x) = 0
     by
     subst e
-    apply X.sheaf.eq_of_locally_eq fun i : s => (i : opens X.carrier)
+    apply TopCat.Sheaf.eq_of_locally_eq.{u + 1, u} X.sheaf fun i : s => (i : opens X.carrier)
     intro i
     rw [map_zero]
     apply this

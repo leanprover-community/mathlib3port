@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module topology.sheaves.presheaf_of_functions
-! leanprover-community/mathlib commit 33c67ae661dd8988516ff7f247b0be3018cdd952
+! leanprover-community/mathlib commit 13361559d66b84f80b6d5a1c4a26aa5054766725
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -34,7 +34,7 @@ We construct some simple examples of presheaves of functions on a topological sp
 -/
 
 
-universe v u
+universe v u w
 
 open CategoryTheory
 
@@ -46,18 +46,16 @@ namespace TopCat
 
 variable (X : TopCat.{v})
 
-#print TopCat.presheafToTypes /-
 /-- The presheaf of dependently typed functions on `X`, with fibres given by a type family `T`.
 There is no requirement that the functions are continuous, here.
 -/
-def presheafToTypes (T : X → Type v) : X.Presheaf (Type v)
+def presheafToTypes (T : X → Type w) : X.Presheaf (Type max v w)
     where
   obj U := ∀ x : unop U, T x
   map U V i g := fun x : unop V => g (i.unop x)
   map_id' U := by ext (g⟨x, hx⟩); rfl
   map_comp' U V W i j := rfl
 #align Top.presheaf_to_Types TopCat.presheafToTypes
--/
 
 @[simp]
 theorem presheafToTypes_obj {T : X → Type v} {U : (Opens X)ᵒᵖ} :
@@ -71,7 +69,6 @@ theorem presheafToTypes_map {T : X → Type v} {U V : (Opens X)ᵒᵖ} {i : U �
   rfl
 #align Top.presheaf_to_Types_map TopCat.presheafToTypes_map
 
-#print TopCat.presheafToType /-
 -- We don't just define this in terms of `presheaf_to_Types`,
 -- as it's helpful later to see (at a syntactic level) that `(presheaf_to_Type X T).obj U`
 -- is a non-dependent function.
@@ -81,14 +78,13 @@ theorem presheafToTypes_map {T : X → Type v} {U V : (Opens X)ᵒᵖ} {i : U �
 /-- The presheaf of functions on `X` with values in a type `T`.
 There is no requirement that the functions are continuous, here.
 -/
-def presheafToType (T : Type v) : X.Presheaf (Type v)
+def presheafToType (T : Type w) : X.Presheaf (Type max v w)
     where
   obj U := unop U → T
   map U V i g := g ∘ i.unop
   map_id' U := by ext (g⟨x, hx⟩); rfl
   map_comp' U V W i j := rfl
 #align Top.presheaf_to_Type TopCat.presheafToType
--/
 
 @[simp]
 theorem presheafToType_obj {T : Type v} {U : (Opens X)ᵒᵖ} :
@@ -103,6 +99,8 @@ theorem presheafToType_map {T : Type v} {U V : (Opens X)ᵒᵖ} {i : U ⟶ V} {f
 #align Top.presheaf_to_Type_map TopCat.presheafToType_map
 
 #print TopCat.presheafToTop /-
+-- TODO it may prove useful to generalize the universes here,
+-- but the definition would need to change.
 /-- The presheaf of continuous functions on `X` with values in fixed target topological space
 `T`. -/
 def presheafToTop (T : TopCat.{v}) : X.Presheaf (Type v) :=

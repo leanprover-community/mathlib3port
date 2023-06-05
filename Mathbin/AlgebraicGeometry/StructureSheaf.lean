@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Scott Morrison
 
 ! This file was ported from Lean 3 source module algebraic_geometry.structure_sheaf
-! leanprover-community/mathlib commit 2ebc1d6c2fed9f54c95bbc3998eaa5570527129a
+! leanprover-community/mathlib commit 13361559d66b84f80b6d5a1c4a26aa5054766725
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -160,6 +160,7 @@ def isLocallyFraction : LocalPredicate (Localizations R) :=
 #align algebraic_geometry.structure_sheaf.is_locally_fraction AlgebraicGeometry.StructureSheaf.isLocallyFraction
 -/
 
+#print AlgebraicGeometry.StructureSheaf.isLocallyFraction_pred /-
 @[simp]
 theorem isLocallyFraction_pred {U : Opens (PrimeSpectrum.Top R)} (f : ∀ x : U, Localizations R x) :
     (isLocallyFraction R).pred f =
@@ -169,6 +170,7 @@ theorem isLocallyFraction_pred {U : Opens (PrimeSpectrum.Top R)} (f : ∀ x : U,
             ∀ y : V, ¬s ∈ y.1.asIdeal ∧ f (i y : U) * algebraMap _ _ s = algebraMap _ _ r :=
   rfl
 #align algebraic_geometry.structure_sheaf.is_locally_fraction_pred AlgebraicGeometry.StructureSheaf.isLocallyFraction_pred
+-/
 
 /-- The functions satisfying `is_locally_fraction` form a subring.
 -/
@@ -880,12 +882,12 @@ theorem toBasicOpen_surjective (f : R) : Function.Surjective (toBasicOpen R f) :
       (⟨f ^ (n + 1), n + 1, rfl⟩ : Submonoid.powers _)
   rw [to_basic_open_mk']
   -- Since the structure sheaf is a sheaf, we can show the desired equality locally.
-  -- Annoyingly, `sheaf.eq_of_locally_eq` requires an open cover indexed by a *type*, so we need to
+  -- Annoyingly, `sheaf.eq_of_locally_eq'` requires an open cover indexed by a *type*, so we need to
   -- coerce our finset `t` to a type first.
   let tt := ((t : Set (basic_open f)) : Type u)
   apply
-    (structure_sheaf R).eq_of_locally_eq' (fun i : tt => basic_open (h i)) (basic_open f)
-      fun i : tt => iDh i
+    TopCat.Sheaf.eq_of_locally_eq'.{u + 1, u} (structure_sheaf R) (fun i : tt => basic_open (h i))
+      (basic_open f) fun i : tt => iDh i
   · -- This feels a little redundant, since already have `ht_cover` as a hypothesis
     -- Unfortunately, `ht_cover` uses a bounded union over the set `t`, while here we have the
     -- Union indexed by the type `tt`, so we need some boilerplate to translate one to the other

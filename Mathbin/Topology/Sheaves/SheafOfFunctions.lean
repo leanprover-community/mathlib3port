@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Scott Morrison
 
 ! This file was ported from Lean 3 source module topology.sheaves.sheaf_of_functions
-! leanprover-community/mathlib commit f60c6087a7275b72d5db3c5a1d0e19e35a429c0a
+! leanprover-community/mathlib commit 13361559d66b84f80b6d5a1c4a26aa5054766725
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -42,17 +42,16 @@ open TopologicalSpace
 
 open TopologicalSpace.Opens
 
-universe u
+universe v u
 
 noncomputable section
 
-variable (X : TopCat.{u})
+variable (X : TopCat.{v})
 
 open TopCat
 
 namespace TopCat.Presheaf
 
-#print TopCat.Presheaf.toTypes_isSheaf /-
 /-- We show that the presheaf of functions to a type `T`
 (no continuity assumptions, just plain functions)
 form a sheaf.
@@ -93,9 +92,7 @@ theorem toTypes_isSheaf (T : X → Type u) : (presheafToTypes X T).IsSheaf :=
       ext
       rfl
 #align Top.presheaf.to_Types_is_sheaf TopCat.Presheaf.toTypes_isSheaf
--/
 
-#print TopCat.Presheaf.toType_isSheaf /-
 -- We verify that the non-dependent version is an immediate consequence:
 /-- The presheaf of not-necessarily-continuous functions to
 a target type `T` satsifies the sheaf condition.
@@ -103,30 +100,25 @@ a target type `T` satsifies the sheaf condition.
 theorem toType_isSheaf (T : Type u) : (presheafToType X T).IsSheaf :=
   toTypes_isSheaf X fun _ => T
 #align Top.presheaf.to_Type_is_sheaf TopCat.Presheaf.toType_isSheaf
--/
 
 end TopCat.Presheaf
 
 namespace TopCat
 
-#print TopCat.sheafToTypes /-
 /-- The sheaf of not-necessarily-continuous functions on `X` with values in type family
 `T : X → Type u`.
 -/
-def sheafToTypes (T : X → Type u) : Sheaf (Type u) X :=
+def sheafToTypes (T : X → Type u) : Sheaf (Type max v u) X :=
   ⟨presheafToTypes X T, Presheaf.toTypes_isSheaf _ _⟩
 #align Top.sheaf_to_Types TopCat.sheafToTypes
--/
 
 /- warning: Top.sheaf_to_Type clashes with Top.sheafToType -> TopCat.sheafToType
 Case conversion may be inaccurate. Consider using '#align Top.sheaf_to_Type TopCat.sheafToTypeₓ'. -/
-#print TopCat.sheafToType /-
 /-- The sheaf of not-necessarily-continuous functions on `X` with values in a type `T`.
 -/
-def sheafToType (T : Type u) : Sheaf (Type u) X :=
+def sheafToType (T : Type u) : Sheaf (Type max v u) X :=
   ⟨presheafToType X T, Presheaf.toType_isSheaf _ _⟩
 #align Top.sheaf_to_Type TopCat.sheafToType
--/
 
 end TopCat
 

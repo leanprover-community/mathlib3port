@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.limits.shapes.types
-! leanprover-community/mathlib commit cb3ceec8485239a61ed51d944cb9a95b68c6bafc
+! leanprover-community/mathlib commit 13361559d66b84f80b6d5a1c4a26aa5054766725
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -55,23 +55,35 @@ namespace CategoryTheory.Limits.Types
 
 attribute [local tidy] tactic.discrete_cases
 
-#print CategoryTheory.Limits.Types.pi_lift_π_apply /-
 /-- A restatement of `types.lift_π_apply` that uses `pi.π` and `pi.lift`. -/
 @[simp]
-theorem pi_lift_π_apply {β : Type u} (f : β → Type u) {P : Type u} (s : ∀ b, P ⟶ f b) (b : β)
-    (x : P) : (Pi.π f b : (∏ f) → f b) (@Pi.lift β _ _ f _ P s x) = s b x :=
+theorem pi_lift_π_apply {β : Type v} (f : β → Type max v u) {P : Type max v u} (s : ∀ b, P ⟶ f b)
+    (b : β) (x : P) : (Pi.π f b : (∏ f) → f b) (@Pi.lift β _ _ f _ P s x) = s b x :=
   congr_fun (limit.lift_π (Fan.mk P s) ⟨b⟩) x
 #align category_theory.limits.types.pi_lift_π_apply CategoryTheory.Limits.Types.pi_lift_π_apply
--/
 
-#print CategoryTheory.Limits.Types.pi_map_π_apply /-
+/-- A restatement of `types.lift_π_apply` that uses `pi.π` and `pi.lift`,
+with specialized universes. -/
+@[simp]
+theorem pi_lift_π_apply' {β : Type v} (f : β → Type v) {P : Type v} (s : ∀ b, P ⟶ f b) (b : β)
+    (x : P) : (Pi.π f b : (∏ f) → f b) (@Pi.lift β _ _ f _ P s x) = s b x :=
+  congr_fun (limit.lift_π (Fan.mk P s) ⟨b⟩) x
+#align category_theory.limits.types.pi_lift_π_apply' CategoryTheory.Limits.Types.pi_lift_π_apply'
+
 /-- A restatement of `types.map_π_apply` that uses `pi.π` and `pi.map`. -/
 @[simp]
-theorem pi_map_π_apply {β : Type u} {f g : β → Type u} (α : ∀ j, f j ⟶ g j) (b : β) (x) :
+theorem pi_map_π_apply {β : Type v} {f g : β → Type max v u} (α : ∀ j, f j ⟶ g j) (b : β) (x) :
     (Pi.π g b : (∏ g) → g b) (Pi.map α x) = α b ((Pi.π f b : (∏ f) → f b) x) :=
   Limit.map_π_apply _ _ _
 #align category_theory.limits.types.pi_map_π_apply CategoryTheory.Limits.Types.pi_map_π_apply
--/
+
+/-- A restatement of `types.map_π_apply` that uses `pi.π` and `pi.map`,
+with specialized universes. -/
+@[simp]
+theorem pi_map_π_apply' {β : Type v} {f g : β → Type v} (α : ∀ j, f j ⟶ g j) (b : β) (x) :
+    (Pi.π g b : (∏ g) → g b) (Pi.map α x) = α b ((Pi.π f b : (∏ f) → f b) x) :=
+  Limit.map_π_apply _ _ _
+#align category_theory.limits.types.pi_map_π_apply' CategoryTheory.Limits.Types.pi_map_π_apply'
 
 #print CategoryTheory.Limits.Types.terminalLimitCone /-
 /-- The category of types has `punit` as a terminal object. -/

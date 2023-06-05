@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Mario Carneiro, Reid Barton, Andrew Yang
 
 ! This file was ported from Lean 3 source module topology.sheaves.presheaf
-! leanprover-community/mathlib commit 33c67ae661dd8988516ff7f247b0be3018cdd952
+! leanprover-community/mathlib commit 13361559d66b84f80b6d5a1c4a26aa5054766725
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -288,31 +288,29 @@ open CategoryTheory.Limits
 
 section Pullback
 
-variable [HasColimits C]
+variable [HasColimitsOfSize.{w, w} C]
 
 noncomputable section
 
-#print TopCat.Presheaf.pullbackObj /-
 /-- Pullback a presheaf on `Y` along a continuous map `f : X ⟶ Y`, obtaining a presheaf on `X`.
 
 This is defined in terms of left Kan extensions, which is just a fancy way of saying
 "take the colimits over the open sets whose preimage contains U".
 -/
 @[simps]
-def pullbackObj {X Y : TopCat.{v}} (f : X ⟶ Y) (ℱ : Y.Presheaf C) : X.Presheaf C :=
+def pullbackObj {X Y : TopCat.{w}} (f : X ⟶ Y) (ℱ : Y.Presheaf C) : X.Presheaf C :=
   (lan (Opens.map f).op).obj ℱ
 #align Top.presheaf.pullback_obj TopCat.Presheaf.pullbackObj
--/
 
 /-- Pulling back along continuous maps is functorial. -/
-def pullbackMap {X Y : TopCat.{v}} (f : X ⟶ Y) {ℱ 𝒢 : Y.Presheaf C} (α : ℱ ⟶ 𝒢) :
+def pullbackMap {X Y : TopCat.{w}} (f : X ⟶ Y) {ℱ 𝒢 : Y.Presheaf C} (α : ℱ ⟶ 𝒢) :
     pullbackObj f ℱ ⟶ pullbackObj f 𝒢 :=
   (lan (Opens.map f).op).map α
 #align Top.presheaf.pullback_map TopCat.Presheaf.pullbackMap
 
 /-- If `f '' U` is open, then `f⁻¹ℱ U ≅ ℱ (f '' U)`.  -/
 @[simps]
-def pullbackObjObjOfImageOpen {X Y : TopCat.{v}} (f : X ⟶ Y) (ℱ : Y.Presheaf C) (U : Opens X)
+def pullbackObjObjOfImageOpen {X Y : TopCat.{w}} (f : X ⟶ Y) (ℱ : Y.Presheaf C) (U : Opens X)
     (H : IsOpen (f '' U)) : (pullbackObj f ℱ).obj (op U) ≅ ℱ.obj (op ⟨_, H⟩) :=
   by
   let x : costructured_arrow (opens.map f).op (op U) :=
@@ -335,7 +333,7 @@ def pullbackObjObjOfImageOpen {X Y : TopCat.{v}} (f : X ⟶ Y) (ℱ : Y.Presheaf
 
 namespace Pullback
 
-variable {X Y : TopCat.{v}} (ℱ : Y.Presheaf C)
+variable {X Y : TopCat.{w}} (ℱ : Y.Presheaf C)
 
 /-- The pullback along the identity is isomorphic to the original presheaf. -/
 def id : pullbackObj (𝟙 _) ℱ ≅ ℱ :=
@@ -445,12 +443,12 @@ theorem pushforwardToOfIso_app {X Y : TopCat} (H₁ : X ≅ Y) {ℱ : Y.Presheaf
 
 end Iso
 
-variable (C) [HasColimits C]
+variable (C) [HasColimitsOfSize.{w, w} C]
 
 /-- Pullback a presheaf on `Y` along a continuous map `f : X ⟶ Y`, obtaining a presheaf
 on `X`. -/
 @[simps map_app]
-def pullback {X Y : TopCat.{v}} (f : X ⟶ Y) : Y.Presheaf C ⥤ X.Presheaf C :=
+def pullback {X Y : TopCat.{w}} (f : X ⟶ Y) : Y.Presheaf C ⥤ X.Presheaf C :=
   lan (Opens.map f).op
 #align Top.presheaf.pullback TopCat.Presheaf.pullback
 
@@ -462,19 +460,19 @@ theorem pullbackObj_eq_pullbackObj {C} [Category C] [HasColimits C] {X Y : TopCa
 
 /-- The pullback and pushforward along a continuous map are adjoint to each other. -/
 @[simps unit_app_app counit_app_app]
-def pushforwardPullbackAdjunction {X Y : TopCat.{v}} (f : X ⟶ Y) : pullback C f ⊣ pushforward C f :=
+def pushforwardPullbackAdjunction {X Y : TopCat.{w}} (f : X ⟶ Y) : pullback C f ⊣ pushforward C f :=
   Lan.adjunction _ _
 #align Top.presheaf.pushforward_pullback_adjunction TopCat.Presheaf.pushforwardPullbackAdjunction
 
 /-- Pulling back along a homeomorphism is the same as pushing forward along its inverse. -/
-def pullbackHomIsoPushforwardInv {X Y : TopCat.{v}} (H : X ≅ Y) :
+def pullbackHomIsoPushforwardInv {X Y : TopCat.{w}} (H : X ≅ Y) :
     pullback C H.Hom ≅ pushforward C H.inv :=
   Adjunction.leftAdjointUniq (pushforwardPullbackAdjunction C H.Hom)
     (presheafEquivOfIso C H.symm).toAdjunction
 #align Top.presheaf.pullback_hom_iso_pushforward_inv TopCat.Presheaf.pullbackHomIsoPushforwardInv
 
 /-- Pulling back along the inverse of a homeomorphism is the same as pushing forward along it. -/
-def pullbackInvIsoPushforwardHom {X Y : TopCat.{v}} (H : X ≅ Y) :
+def pullbackInvIsoPushforwardHom {X Y : TopCat.{w}} (H : X ≅ Y) :
     pullback C H.inv ≅ pushforward C H.Hom :=
   Adjunction.leftAdjointUniq (pushforwardPullbackAdjunction C H.inv)
     (presheafEquivOfIso C H).toAdjunction

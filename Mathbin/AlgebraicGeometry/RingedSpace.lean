@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Justus Springer, Andrew Yang
 
 ! This file was ported from Lean 3 source module algebraic_geometry.ringed_space
-! leanprover-community/mathlib commit af471b9e3ce868f296626d33189b4ce730fa4c00
+! leanprover-community/mathlib commit 13361559d66b84f80b6d5a1c4a26aa5054766725
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -92,7 +92,7 @@ theorem isUnit_of_isUnit_germ (U : Opens X) (f : X.Presheaf.obj (op U))
   -- Let `g x` denote the inverse of `f` in `U x`.
   choose g hg using fun x : U => IsUnit.exists_right_inv (h_unit x)
   -- We claim that these local inverses glue together to a global inverse of `f`.
-  obtain ⟨gl, gl_spec, -⟩ := X.sheaf.exists_unique_gluing' V U iVU hcover g _
+  obtain ⟨gl, gl_spec, -⟩ := TopCat.Sheaf.existsUnique_gluing'.{v + 1, v} X.sheaf V U iVU hcover g _
   swap
   · intro x y
     apply section_ext X.sheaf (V x ⊓ V y)
@@ -104,7 +104,7 @@ theorem isUnit_of_isUnit_germ (U : Opens X) (f : X.Presheaf.obj (op U))
       X.presheaf.germ_res_apply (iVU y) ⟨z, hzVy⟩ f, ← RingHom.map_mul,
       congr_arg (X.presheaf.germ (⟨z, hzVy⟩ : V y)) (hg y), RingHom.map_one, RingHom.map_one]
   apply isUnit_of_mul_eq_one f gl
-  apply X.sheaf.eq_of_locally_eq' V U iVU hcover
+  apply TopCat.Sheaf.eq_of_locally_eq'.{v + 1, v} X.sheaf V U iVU hcover
   intro i
   rw [RingHom.map_one, RingHom.map_mul, gl_spec]
   exact hg i

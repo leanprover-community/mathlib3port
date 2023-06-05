@@ -74,22 +74,28 @@ def hasRightDualOfEquivalence [IsEquivalence F.toFunctor] (X : C) [HasRightDual 
     infer_instance
 #align category_theory.has_right_dual_of_equivalence CategoryTheory.hasRightDualOfEquivalence
 
+#print CategoryTheory.leftRigidCategoryOfEquivalence /-
 /-- Pull back a left rigid structure along an equivalence. -/
 def leftRigidCategoryOfEquivalence [IsEquivalence F.toFunctor] [LeftRigidCategory D] :
     LeftRigidCategory C where leftDual X := hasLeftDualOfEquivalence F X
 #align category_theory.left_rigid_category_of_equivalence CategoryTheory.leftRigidCategoryOfEquivalence
+-/
 
+#print CategoryTheory.rightRigidCategoryOfEquivalence /-
 /-- Pull back a right rigid structure along an equivalence. -/
 def rightRigidCategoryOfEquivalence [IsEquivalence F.toFunctor] [RightRigidCategory D] :
     RightRigidCategory C where rightDual X := hasRightDualOfEquivalence F X
 #align category_theory.right_rigid_category_of_equivalence CategoryTheory.rightRigidCategoryOfEquivalence
+-/
 
+#print CategoryTheory.rigidCategoryOfEquivalence /-
 /-- Pull back a rigid structure along an equivalence. -/
 def rigidCategoryOfEquivalence [IsEquivalence F.toFunctor] [RigidCategory D] : RigidCategory C
     where
   leftDual X := hasLeftDualOfEquivalence F X
   rightDual X := hasRightDualOfEquivalence F X
 #align category_theory.rigid_category_of_equivalence CategoryTheory.rigidCategoryOfEquivalence
+-/
 
 end CategoryTheory
 
