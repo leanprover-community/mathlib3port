@@ -94,6 +94,7 @@ variable (L : ι → Type w)
 
 variable [∀ i, LieRing (L i)] [∀ i, LieAlgebra R (L i)]
 
+#print DirectSum.lieRing /-
 instance lieRing : LieRing (⨁ i, L i) :=
   {
     (inferInstance :
@@ -107,20 +108,24 @@ instance lieRing : LieRing (⨁ i, L i) :=
       ext; simp only [sub_apply, zip_with_apply, add_apply, zero_apply]
       apply leibniz_lie }
 #align direct_sum.lie_ring DirectSum.lieRing
+-/
 
 @[simp]
 theorem bracket_apply (x y : ⨁ i, L i) (i : ι) : ⁅x, y⁆ i = ⁅x i, y i⁆ :=
   zipWith_apply _ _ x y i
 #align direct_sum.bracket_apply DirectSum.bracket_apply
 
+#print DirectSum.lieAlgebra /-
 instance lieAlgebra : LieAlgebra R (⨁ i, L i) :=
   { (inferInstance : Module R _) with
     lie_smul := fun c x y => by ext;
       simp only [zip_with_apply, smul_apply, bracket_apply, lie_smul] }
 #align direct_sum.lie_algebra DirectSum.lieAlgebra
+-/
 
 variable (R ι L)
 
+#print DirectSum.lieAlgebraOf /-
 /-- The inclusion of each component into the direct sum as morphism of Lie algebras. -/
 @[simps]
 def lieAlgebraOf [DecidableEq ι] (j : ι) : L j →ₗ⁅R⁆ ⨁ i, L i :=
@@ -131,7 +136,9 @@ def lieAlgebraOf [DecidableEq ι] (j : ι) : L j →ₗ⁅R⁆ ⨁ i, L i :=
       · rw [← h]; simp [of]
       · simp [of, single_eq_of_ne h] }
 #align direct_sum.lie_algebra_of DirectSum.lieAlgebraOf
+-/
 
+#print DirectSum.lieAlgebraComponent /-
 /-- The projection map onto one component, as a morphism of Lie algebras. -/
 @[simps]
 def lieAlgebraComponent (j : ι) : (⨁ i, L i) →ₗ⁅R⁆ L j :=
@@ -140,6 +147,7 @@ def lieAlgebraComponent (j : ι) : (⨁ i, L i) →ₗ⁅R⁆ L j :=
     map_lie' := fun x y => by
       simp only [component, bracket_apply, lapply_apply, LinearMap.toFun_eq_coe] }
 #align direct_sum.lie_algebra_component DirectSum.lieAlgebraComponent
+-/
 
 @[ext]
 theorem lieAlgebra_ext {x y : ⨁ i, L i}
@@ -233,17 +241,21 @@ section Ideals
 
 variable {L : Type w} [LieRing L] [LieAlgebra R L] (I : ι → LieIdeal R L)
 
+#print DirectSum.lieRingOfIdeals /-
 /-- The fact that this instance is necessary seems to be a bug in typeclass inference. See
 [this Zulip thread](https://leanprover.zulipchat.com/#narrow/stream/113488-general/topic/
 Typeclass.20resolution.20under.20binders/near/245151099). -/
 instance lieRingOfIdeals : LieRing (⨁ i, I i) :=
   DirectSum.lieRing fun i => ↥(I i)
 #align direct_sum.lie_ring_of_ideals DirectSum.lieRingOfIdeals
+-/
 
+#print DirectSum.lieAlgebraOfIdeals /-
 /-- See `direct_sum.lie_ring_of_ideals` comment. -/
 instance lieAlgebraOfIdeals : LieAlgebra R (⨁ i, I i) :=
   DirectSum.lieAlgebra fun i => ↥(I i)
 #align direct_sum.lie_algebra_of_ideals DirectSum.lieAlgebraOfIdeals
+-/
 
 end Ideals
 
