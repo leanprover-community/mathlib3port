@@ -163,7 +163,7 @@ theorem evenOdd_isCompl : IsCompl (evenOdd Q 0) (evenOdd Q 1) :=
 scalars or vectors (respectively), closed under addition, and under left-multiplication by a pair
 of vectors. -/
 @[elab_as_elim]
-theorem evenOddInduction (n : ZMod 2) {P : ∀ x, x ∈ evenOdd Q n → Prop}
+theorem evenOdd_induction (n : ZMod 2) {P : ∀ x, x ∈ evenOdd Q n → Prop}
     (hr :
       ∀ (v) (h : v ∈ (ι Q).range ^ n.val),
         P v (Submodule.mem_iSup_of_mem ⟨n.val, n.nat_cast_zmod_val⟩ h))
@@ -202,12 +202,12 @@ theorem evenOddInduction (n : ZMod 2) {P : ∀ x, x ∈ evenOdd Q n → Prop}
         apply hadd ihx ihy
   · intro x y hx hy
     apply hadd
-#align clifford_algebra.even_odd_induction CliffordAlgebra.evenOddInduction
+#align clifford_algebra.even_odd_induction CliffordAlgebra.evenOdd_induction
 
 /-- To show a property is true on the even parts, it suffices to show it is true on the
 scalars, closed under addition, and under left-multiplication by a pair of vectors. -/
 @[elab_as_elim]
-theorem evenInduction {P : ∀ x, x ∈ evenOdd Q 0 → Prop}
+theorem even_induction {P : ∀ x, x ∈ evenOdd Q 0 → Prop}
     (hr : ∀ r : R, P (algebraMap _ _ r) (SetLike.algebraMap_mem_graded _ _))
     (hadd : ∀ {x y hx hy}, P x hx → P y hy → P (x + y) (Submodule.add_mem _ hx hy))
     (hιι_mul :
@@ -221,12 +221,13 @@ theorem evenInduction {P : ∀ x, x ∈ evenOdd Q 0 → Prop}
   simp_rw [ZMod.val_zero, pow_zero]
   rintro ⟨r, rfl⟩
   exact hr r
-#align clifford_algebra.even_induction CliffordAlgebra.evenInduction
+#align clifford_algebra.even_induction CliffordAlgebra.even_induction
 
 /-- To show a property is true on the odd parts, it suffices to show it is true on the
 vectors, closed under addition, and under left-multiplication by a pair of vectors. -/
 @[elab_as_elim]
-theorem oddInduction {P : ∀ x, x ∈ evenOdd Q 1 → Prop} (hι : ∀ v, P (ι Q v) (ι_mem_evenOdd_one _ _))
+theorem odd_induction {P : ∀ x, x ∈ evenOdd Q 1 → Prop}
+    (hι : ∀ v, P (ι Q v) (ι_mem_evenOdd_one _ _))
     (hadd : ∀ {x y hx hy}, P x hx → P y hy → P (x + y) (Submodule.add_mem _ hx hy))
     (hιι_mul :
       ∀ (m₁ m₂) {x hx},
@@ -239,7 +240,7 @@ theorem oddInduction {P : ∀ x, x ∈ evenOdd Q 1 → Prop} (hι : ∀ v, P (ι
   simp_rw [ZMod.val_one, pow_one]
   rintro ⟨v, rfl⟩
   exact hι v
-#align clifford_algebra.odd_induction CliffordAlgebra.oddInduction
+#align clifford_algebra.odd_induction CliffordAlgebra.odd_induction
 
 end CliffordAlgebra
 

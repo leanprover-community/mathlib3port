@@ -94,12 +94,12 @@ theorem posDef_of_toQuadraticForm' [DecidableEq n] {M : Matrix n n ℝ} (hM : M.
   apply hMq x hx
 #align matrix.pos_def_of_to_quadratic_form' Matrix.posDef_of_toQuadraticForm'
 
-theorem posDefToQuadraticForm' [DecidableEq n] {M : Matrix n n ℝ} (hM : M.PosDef) :
+theorem posDef_toQuadraticForm' [DecidableEq n] {M : Matrix n n ℝ} (hM : M.PosDef) :
     M.toQuadraticForm'.PosDef := by
   intro x hx
   simp only [to_quadratic_form', BilinForm.toQuadraticForm_apply, Matrix.toBilin'_apply']
   apply hM.2 x hx
-#align matrix.pos_def_to_quadratic_form' Matrix.posDefToQuadraticForm'
+#align matrix.pos_def_to_quadratic_form' Matrix.posDef_toQuadraticForm'
 
 namespace PosDef
 
@@ -128,12 +128,12 @@ namespace QuadraticForm
 
 variable {n : Type _} [Fintype n]
 
-theorem posDefOfToMatrix' [DecidableEq n] {Q : QuadraticForm ℝ (n → ℝ)} (hQ : Q.toMatrix'.PosDef) :
-    Q.PosDef :=
+theorem posDef_of_toMatrix' [DecidableEq n] {Q : QuadraticForm ℝ (n → ℝ)}
+    (hQ : Q.toMatrix'.PosDef) : Q.PosDef :=
   by
   rw [← to_quadratic_form_associated ℝ Q, ← bilin_form.to_matrix'.left_inv ((associated_hom _) Q)]
-  apply Matrix.posDefToQuadraticForm' hQ
-#align quadratic_form.pos_def_of_to_matrix' QuadraticForm.posDefOfToMatrix'
+  apply Matrix.posDef_toQuadraticForm' hQ
+#align quadratic_form.pos_def_of_to_matrix' QuadraticForm.posDef_of_toMatrix'
 
 theorem posDef_toMatrix' [DecidableEq n] {Q : QuadraticForm ℝ (n → ℝ)} (hQ : Q.PosDef) :
     Q.toMatrix'.PosDef :=

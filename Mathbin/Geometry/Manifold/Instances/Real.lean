@@ -48,13 +48,16 @@ open Set Function
 
 open scoped Manifold
 
+#print EuclideanHalfSpace /-
 /-- The half-space in `ℝ^n`, used to model manifolds with boundary. We only define it when
 `1 ≤ n`, as the definition only makes sense in this case.
 -/
 def EuclideanHalfSpace (n : ℕ) [Zero (Fin n)] : Type :=
   { x : EuclideanSpace ℝ (Fin n) // 0 ≤ x 0 }
 #align euclidean_half_space EuclideanHalfSpace
+-/
 
+#print EuclideanQuadrant /-
 /--
 The quadrant in `ℝ^n`, used to model manifolds with corners, made of all vectors with nonnegative
 coordinates.
@@ -62,6 +65,7 @@ coordinates.
 def EuclideanQuadrant (n : ℕ) : Type :=
   { x : EuclideanSpace ℝ (Fin n) // ∀ i : Fin n, 0 ≤ x i }
 #align euclidean_quadrant EuclideanQuadrant
+-/
 
 section
 
@@ -163,7 +167,7 @@ scoped[Manifold]
 /-- The left chart for the topological space `[x, y]`, defined on `[x,y)` and sending `x` to `0` in
 `euclidean_half_space 1`.
 -/
-def iccLeftChart (x y : ℝ) [Fact (x < y)] : LocalHomeomorph (Icc x y) (EuclideanHalfSpace 1)
+def IccLeftChart (x y : ℝ) [Fact (x < y)] : LocalHomeomorph (Icc x y) (EuclideanHalfSpace 1)
     where
   source := {z : Icc x y | z.val < y}
   target := {z : EuclideanHalfSpace 1 | z.val 0 < y - x}
@@ -206,12 +210,12 @@ def iccLeftChart (x y : ℝ) [Fact (x < y)] : LocalHomeomorph (Icc x y) (Euclide
       (continuous_id.add continuous_const).min continuous_const
     have B : Continuous fun z : EuclideanSpace ℝ (Fin 1) => z 0 := continuous_apply 0
     exact (A.comp B).comp continuous_subtype_val
-#align Icc_left_chart iccLeftChart
+#align Icc_left_chart IccLeftChart
 
 /-- The right chart for the topological space `[x, y]`, defined on `(x,y]` and sending `y` to `0` in
 `euclidean_half_space 1`.
 -/
-def iccRightChart (x y : ℝ) [Fact (x < y)] : LocalHomeomorph (Icc x y) (EuclideanHalfSpace 1)
+def IccRightChart (x y : ℝ) [Fact (x < y)] : LocalHomeomorph (Icc x y) (EuclideanHalfSpace 1)
     where
   source := {z : Icc x y | x < z.val}
   target := {z : EuclideanHalfSpace 1 | z.val 0 < y - x}
@@ -255,15 +259,15 @@ def iccRightChart (x y : ℝ) [Fact (x < y)] : LocalHomeomorph (Icc x y) (Euclid
       (continuous_const.sub continuous_id).max continuous_const
     have B : Continuous fun z : EuclideanSpace ℝ (Fin 1) => z 0 := continuous_apply 0
     exact (A.comp B).comp continuous_subtype_val
-#align Icc_right_chart iccRightChart
+#align Icc_right_chart IccRightChart
 
 /-- Charted space structure on `[x, y]`, using only two charts taking values in
 `euclidean_half_space 1`.
 -/
-instance iccManifold (x y : ℝ) [Fact (x < y)] : ChartedSpace (EuclideanHalfSpace 1) (Icc x y)
+instance IccManifold (x y : ℝ) [Fact (x < y)] : ChartedSpace (EuclideanHalfSpace 1) (Icc x y)
     where
-  atlas := {iccLeftChart x y, iccRightChart x y}
-  chartAt z := if z.val < y then iccLeftChart x y else iccRightChart x y
+  atlas := {IccLeftChart x y, IccRightChart x y}
+  chartAt z := if z.val < y then IccLeftChart x y else IccRightChart x y
   mem_chart_source z := by
     by_cases h' : z.val < y
     · simp only [h', if_true]
@@ -272,7 +276,7 @@ instance iccManifold (x y : ℝ) [Fact (x < y)] : ChartedSpace (EuclideanHalfSpa
       apply lt_of_lt_of_le (Fact.out (x < y))
       simpa only [not_lt] using h'
   chart_mem_atlas z := by by_cases h' : (z : ℝ) < y <;> simp [h']
-#align Icc_manifold iccManifold
+#align Icc_manifold IccManifold
 
 /-- The manifold structure on `[x, y]` is smooth.
 -/
@@ -296,23 +300,23 @@ instance Icc_smooth_manifold (x y : ℝ) [Fact (x < y)] :
   · -- `e = left chart`, `e' = right chart`
     apply M.congr_mono _ (subset_univ _)
     rintro _ ⟨⟨hz₁, hz₂⟩, ⟨⟨z, hz₀⟩, rfl⟩⟩
-    simp only [modelWithCornersEuclideanHalfSpace, iccLeftChart, iccRightChart, update_same,
+    simp only [modelWithCornersEuclideanHalfSpace, IccLeftChart, IccRightChart, update_same,
       max_eq_left, hz₀, lt_sub_iff_add_lt, mfld_simps] at hz₁ hz₂ 
     rw [min_eq_left hz₁.le, lt_add_iff_pos_left] at hz₂ 
     ext i
     rw [Subsingleton.elim i 0]
-    simp only [modelWithCornersEuclideanHalfSpace, iccLeftChart, iccRightChart, *, PiLp.add_apply,
+    simp only [modelWithCornersEuclideanHalfSpace, IccLeftChart, IccRightChart, *, PiLp.add_apply,
       PiLp.neg_apply, max_eq_left, min_eq_left hz₁.le, update_same, mfld_simps]
     abel
   · -- `e = right chart`, `e' = left chart`
     apply M.congr_mono _ (subset_univ _)
     rintro _ ⟨⟨hz₁, hz₂⟩, ⟨z, hz₀⟩, rfl⟩
-    simp only [modelWithCornersEuclideanHalfSpace, iccLeftChart, iccRightChart, max_lt_iff,
+    simp only [modelWithCornersEuclideanHalfSpace, IccLeftChart, IccRightChart, max_lt_iff,
       update_same, max_eq_left hz₀, mfld_simps] at hz₁ hz₂ 
     rw [lt_sub_comm] at hz₁ 
     ext i
     rw [Subsingleton.elim i 0]
-    simp only [modelWithCornersEuclideanHalfSpace, iccLeftChart, iccRightChart, PiLp.add_apply,
+    simp only [modelWithCornersEuclideanHalfSpace, IccLeftChart, IccRightChart, PiLp.add_apply,
       PiLp.neg_apply, update_same, max_eq_left, hz₀, hz₁.le, mfld_simps]
     abel
   ·-- `e = right chart`, `e' = right chart`

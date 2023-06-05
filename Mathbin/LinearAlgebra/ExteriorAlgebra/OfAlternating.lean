@@ -127,7 +127,7 @@ theorem liftAlternating_comp (g : N →ₗ[R] N') (f : ∀ i, AlternatingMap R M
   by
   ext v
   rw [LinearMap.comp_apply]
-  induction' v using CliffordAlgebra.leftInduction with r x y hx hy x m hx generalizing f
+  induction' v using CliffordAlgebra.left_induction with r x y hx hy x m hx generalizing f
   ·
     rw [lift_alternating_algebra_map, lift_alternating_algebra_map, map_smul,
       LinearMap.compAlternatingMap_apply]
@@ -142,7 +142,7 @@ theorem liftAlternating_ιMulti :
   by
   ext v
   dsimp
-  induction' v using CliffordAlgebra.leftInduction with r x y hx hy x m hx
+  induction' v using CliffordAlgebra.left_induction with r x y hx hy x m hx
   · rw [lift_alternating_algebra_map, ι_multi_zero_apply, Algebra.algebraMap_eq_smul_one]
   · rw [map_add, hx, hy]
   ·

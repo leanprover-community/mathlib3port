@@ -143,7 +143,7 @@ theorem foldl_prod_map_ι (l : List M) (f : M →ₗ[R] N →ₗ[R] N) (hf) (n :
 
 end Foldl
 
-theorem rightInduction {P : CliffordAlgebra Q → Prop} (hr : ∀ r : R, P (algebraMap _ _ r))
+theorem right_induction {P : CliffordAlgebra Q → Prop} (hr : ∀ r : R, P (algebraMap _ _ r))
     (h_add : ∀ x y, P x → P y → P (x + y)) (h_ι_mul : ∀ m x, P x → P (x * ι Q m)) : ∀ x, P x :=
   by
   /- It would be neat if we could prove this via `foldr` like how we prove
@@ -156,18 +156,18 @@ theorem rightInduction {P : CliffordAlgebra Q → Prop} (hr : ∀ r : R, P (alge
     rintro ⟨m, rfl⟩
     exact h_ι_mul _ _ px
   · simpa only [map_zero] using hr 0
-#align clifford_algebra.right_induction CliffordAlgebra.rightInduction
+#align clifford_algebra.right_induction CliffordAlgebra.right_induction
 
-theorem leftInduction {P : CliffordAlgebra Q → Prop} (hr : ∀ r : R, P (algebraMap _ _ r))
+theorem left_induction {P : CliffordAlgebra Q → Prop} (hr : ∀ r : R, P (algebraMap _ _ r))
     (h_add : ∀ x y, P x → P y → P (x + y)) (h_mul_ι : ∀ x m, P x → P (ι Q m * x)) : ∀ x, P x :=
   by
   refine' reverse_involutive.surjective.forall.2 _
   intro x
-  induction' x using CliffordAlgebra.rightInduction with r x y hx hy m x hx
+  induction' x using CliffordAlgebra.right_induction with r x y hx hy m x hx
   · simpa only [reverse.commutes] using hr r
   · simpa only [map_add] using h_add _ _ hx hy
   · simpa only [reverse.map_mul, reverse_ι] using h_mul_ι _ _ hx
-#align clifford_algebra.left_induction CliffordAlgebra.leftInduction
+#align clifford_algebra.left_induction CliffordAlgebra.left_induction
 
 /-! ### Versions with extra state -/
 
@@ -232,7 +232,7 @@ theorem foldr'_ι_mul (f : M →ₗ[R] CliffordAlgebra Q × N →ₗ[R] N)
   rw [foldr_mul, foldr_ι, foldr'_aux_apply_apply]
   refine' congr_arg (f m) (prod.mk.eta.symm.trans _)
   congr 1
-  induction' x using CliffordAlgebra.leftInduction with r x y hx hy m x hx
+  induction' x using CliffordAlgebra.left_induction with r x y hx hy m x hx
   · simp_rw [foldr_algebra_map, Prod.smul_mk, Algebra.algebraMap_eq_smul_one]
   · rw [map_add, Prod.fst_add, hx, hy]
   · rw [foldr_mul, foldr_ι, foldr'_aux_apply_apply, hx]

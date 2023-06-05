@@ -89,7 +89,7 @@ def contractLeft : Module.Dual R M →ₗ[R] CliffordAlgebra Q →ₗ[R] Cliffor
   map_add' d₁ d₂ :=
     LinearMap.ext fun x => by
       rw [LinearMap.add_apply]
-      induction' x using CliffordAlgebra.leftInduction with r x y hx hy m x hx
+      induction' x using CliffordAlgebra.left_induction with r x y hx hy m x hx
       · simp_rw [foldr'_algebra_map, smul_zero, zero_add]
       · rw [map_add, map_add, map_add, add_add_add_comm, hx, hy]
       · rw [foldr'_ι_mul, foldr'_ι_mul, foldr'_ι_mul, hx]
@@ -98,7 +98,7 @@ def contractLeft : Module.Dual R M →ₗ[R] CliffordAlgebra Q →ₗ[R] Cliffor
   map_smul' c d :=
     LinearMap.ext fun x => by
       rw [LinearMap.smul_apply, RingHom.id_apply]
-      induction' x using CliffordAlgebra.leftInduction with r x y hx hy m x hx
+      induction' x using CliffordAlgebra.left_induction with r x y hx hy m x hx
       · simp_rw [foldr'_algebra_map, smul_zero]
       · rw [map_add, map_add, smul_add, hx, hy]
       · rw [foldr'_ι_mul, foldr'_ι_mul, hx]
@@ -199,7 +199,7 @@ variable {Q}
 /-- This is [grinberg_clifford_2016][] Theorem 7 -/
 theorem contractLeft_contractLeft (x : CliffordAlgebra Q) : d⌋(d⌋x) = 0 :=
   by
-  induction' x using CliffordAlgebra.leftInduction with r x y hx hy m x hx
+  induction' x using CliffordAlgebra.left_induction with r x y hx hy m x hx
   · simp_rw [contract_left_algebra_map, map_zero]
   · rw [map_add, map_add, hx, hy, add_zero]
   ·
@@ -215,7 +215,7 @@ theorem contractRight_contractRight (x : CliffordAlgebra Q) : x⌊d⌊d = 0 := b
 /-- This is [grinberg_clifford_2016][] Theorem 8 -/
 theorem contractLeft_comm (x : CliffordAlgebra Q) : d⌋(d'⌋x) = -(d'⌋(d⌋x)) :=
   by
-  induction' x using CliffordAlgebra.leftInduction with r x y hx hy m x hx
+  induction' x using CliffordAlgebra.left_induction with r x y hx hy m x hx
   · simp_rw [contract_left_algebra_map, map_zero, neg_zero]
   · rw [map_add, map_add, map_add, map_add, hx, hy, neg_add]
   · simp only [contract_left_ι_mul, map_sub, LinearMap.map_smul]
@@ -324,7 +324,7 @@ theorem changeForm_ι_mul_ι (m₁ m₂ : M) :
 theorem changeForm_contractLeft (d : Module.Dual R M) (x : CliffordAlgebra Q) :
     changeForm h (d⌋x) = d⌋changeForm h x :=
   by
-  induction' x using CliffordAlgebra.leftInduction with r x y hx hy m x hx
+  induction' x using CliffordAlgebra.left_induction with r x y hx hy m x hx
   · simp only [contract_left_algebra_map, change_form_algebra_map, map_zero]
   · rw [map_add, map_add, map_add, map_add, hx, hy]
   · simp only [contract_left_ι_mul, change_form_ι_mul, map_sub, LinearMap.map_smul]
@@ -333,7 +333,7 @@ theorem changeForm_contractLeft (d : Module.Dual R M) (x : CliffordAlgebra Q) :
 
 theorem changeForm_self_apply (x : CliffordAlgebra Q) : changeForm changeForm.zero_proof x = x :=
   by
-  induction' x using CliffordAlgebra.leftInduction with r x y hx hy m x hx
+  induction' x using CliffordAlgebra.left_induction with r x y hx hy m x hx
   · simp_rw [change_form_algebra_map]
   · rw [map_add, hx, hy]
   ·
@@ -351,7 +351,7 @@ theorem changeForm_self :
 theorem changeForm_changeForm (x : CliffordAlgebra Q) :
     changeForm h' (changeForm h x) = changeForm (changeForm.add_proof h h') x :=
   by
-  induction' x using CliffordAlgebra.leftInduction with r x y hx hy m x hx
+  induction' x using CliffordAlgebra.left_induction with r x y hx hy m x hx
   · simp_rw [change_form_algebra_map]
   · rw [map_add, map_add, map_add, hx, hy]
   ·

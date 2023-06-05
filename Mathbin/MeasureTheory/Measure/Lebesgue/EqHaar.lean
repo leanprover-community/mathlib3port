@@ -53,16 +53,19 @@ open TopologicalSpace Set Filter Metric
 
 open scoped ENNReal Pointwise Topology NNReal
 
+#print TopologicalSpace.PositiveCompacts.Icc01 /-
 /-- The interval `[0,1]` as a compact set with non-empty interior. -/
-def TopologicalSpace.PositiveCompacts.icc01 : PositiveCompacts ℝ
+def TopologicalSpace.PositiveCompacts.Icc01 : PositiveCompacts ℝ
     where
   carrier := Icc 0 1
   is_compact' := isCompact_Icc
   interior_nonempty' := by simp_rw [interior_Icc, nonempty_Ioo, zero_lt_one]
-#align topological_space.positive_compacts.Icc01 TopologicalSpace.PositiveCompacts.icc01
+#align topological_space.positive_compacts.Icc01 TopologicalSpace.PositiveCompacts.Icc01
+-/
 
 universe u
 
+#print TopologicalSpace.PositiveCompacts.piIcc01 /-
 /-- The set `[0,1]^ι` as a compact set with non-empty interior. -/
 def TopologicalSpace.PositiveCompacts.piIcc01 (ι : Type _) [Fintype ι] : PositiveCompacts (ι → ℝ)
     where
@@ -72,7 +75,9 @@ def TopologicalSpace.PositiveCompacts.piIcc01 (ι : Type _) [Fintype ι] : Posit
     simp only [interior_pi_set, Set.toFinite, interior_Icc, univ_pi_nonempty_iff, nonempty_Ioo,
       imp_true_iff, zero_lt_one]
 #align topological_space.positive_compacts.pi_Icc01 TopologicalSpace.PositiveCompacts.piIcc01
+-/
 
+#print Basis.parallelepiped_basisFun /-
 /-- The parallelepiped formed from the standard basis for `ι → ℝ` is `[0,1]^ι` -/
 theorem Basis.parallelepiped_basisFun (ι : Type _) [Fintype ι] :
     (Pi.basisFun ℝ ι).parallelepiped = TopologicalSpace.PositiveCompacts.piIcc01 ι :=
@@ -82,6 +87,7 @@ theorem Basis.parallelepiped_basisFun (ι : Type _) [Fintype ι] :
     · convert parallelepiped_single 1
     · exact zero_le_one
 #align basis.parallelepiped_basis_fun Basis.parallelepiped_basisFun
+-/
 
 namespace MeasureTheory
 
@@ -92,11 +98,14 @@ open Measure TopologicalSpace.PositiveCompacts FiniteDimensional
 -/
 
 
+#print MeasureTheory.addHaarMeasure_eq_volume /-
 /-- The Haar measure equals the Lebesgue measure on `ℝ`. -/
-theorem addHaarMeasure_eq_volume : addHaarMeasure icc01 = volume := by
+theorem addHaarMeasure_eq_volume : addHaarMeasure Icc01 = volume := by
   convert (add_haar_measure_unique volume Icc01).symm; simp [Icc01]
 #align measure_theory.add_haar_measure_eq_volume MeasureTheory.addHaarMeasure_eq_volume
+-/
 
+#print MeasureTheory.addHaarMeasure_eq_volume_pi /-
 /-- The Haar measure equals the Lebesgue measure on `ℝ^ι`. -/
 theorem addHaarMeasure_eq_volume_pi (ι : Type _) [Fintype ι] :
     addHaarMeasure (piIcc01 ι) = volume :=
@@ -105,6 +114,7 @@ theorem addHaarMeasure_eq_volume_pi (ι : Type _) [Fintype ι] :
   simp only [pi_Icc01, volume_pi_pi fun i => Icc (0 : ℝ) 1, positive_compacts.coe_mk,
     compacts.coe_mk, Finset.prod_const_one, ENNReal.ofReal_one, Real.volume_Icc, one_smul, sub_zero]
 #align measure_theory.add_haar_measure_eq_volume_pi MeasureTheory.addHaarMeasure_eq_volume_pi
+-/
 
 instance isAddHaarMeasure_volume_pi (ι : Type _) [Fintype ι] :
     IsAddHaarMeasure (volume : Measure (ι → ℝ)) := by rw [← add_haar_measure_eq_volume_pi];
@@ -393,6 +403,7 @@ theorem add_haar_smul_of_nonneg {r : ℝ} (hr : 0 ≤ r) (s : Set E) :
 
 variable {μ} {s : Set E}
 
+#print MeasureTheory.Measure.NullMeasurableSet.const_smul /-
 -- Note: We might want to rename this once we acquire the lemma corresponding to
 -- `measurable_set.const_smul`
 theorem NullMeasurableSet.const_smul (hs : NullMeasurableSet s μ) (r : ℝ) :
@@ -407,6 +418,7 @@ theorem NullMeasurableSet.const_smul (hs : NullMeasurableSet s μ) (r : ℝ) :
   rw [← measure_symm_diff_eq_zero_iff] at hst ⊢
   rw [← smul_set_symm_diff₀ hr, add_haar_smul μ, hst, MulZeroClass.mul_zero]
 #align measure_theory.measure.null_measurable_set.const_smul MeasureTheory.Measure.NullMeasurableSet.const_smul
+-/
 
 variable (μ)
 
@@ -490,10 +502,10 @@ theorem add_haar_closedBall_mul (x : E) {r : ℝ} (hr : 0 ≤ r) {s : ℝ} (hs :
 /-- The measure of a closed ball can be expressed in terms of the measure of the closed unit ball.
 Use instead `add_haar_closed_ball`, which uses the measure of the open unit ball as a standard
 form. -/
-theorem add_haar_closed_ball' (x : E) {r : ℝ} (hr : 0 ≤ r) :
+theorem add_haar_closedBall' (x : E) {r : ℝ} (hr : 0 ≤ r) :
     μ (closedBall x r) = ENNReal.ofReal (r ^ finrank ℝ E) * μ (closedBall 0 1) := by
   rw [← add_haar_closed_ball_mul μ x hr zero_le_one, mul_one]
-#align measure_theory.measure.add_haar_closed_ball' MeasureTheory.Measure.add_haar_closed_ball'
+#align measure_theory.measure.add_haar_closed_ball' MeasureTheory.Measure.add_haar_closedBall'
 
 theorem add_haar_closed_unit_ball_eq_add_haar_unit_ball : μ (closedBall (0 : E) 1) = μ (ball 0 1) :=
   by
@@ -517,6 +529,7 @@ theorem add_haar_closedBall (x : E) {r : ℝ} (hr : 0 ≤ r) :
   rw [add_haar_closed_ball' μ x hr, add_haar_closed_unit_ball_eq_add_haar_unit_ball]
 #align measure_theory.measure.add_haar_closed_ball MeasureTheory.Measure.add_haar_closedBall
 
+#print MeasureTheory.Measure.add_haar_closedBall_eq_add_haar_ball /-
 theorem add_haar_closedBall_eq_add_haar_ball [Nontrivial E] (x : E) (r : ℝ) :
     μ (closedBall x r) = μ (ball x r) :=
   by
@@ -525,6 +538,7 @@ theorem add_haar_closedBall_eq_add_haar_ball [Nontrivial E] (x : E) (r : ℝ) :
   push_neg at h 
   rw [add_haar_closed_ball μ x h, add_haar_ball μ x h]
 #align measure_theory.measure.add_haar_closed_ball_eq_add_haar_ball MeasureTheory.Measure.add_haar_closedBall_eq_add_haar_ball
+-/
 
 theorem add_haar_sphere_of_ne_zero (x : E) {r : ℝ} (hr : r ≠ 0) : μ (sphere x r) = 0 :=
   by
@@ -567,6 +581,7 @@ theorem add_haar_singleton_add_smul_div_singleton_add_smul {r : ℝ} (hr : r ≠
     
 #align measure_theory.measure.add_haar_singleton_add_smul_div_singleton_add_smul MeasureTheory.Measure.add_haar_singleton_add_smul_div_singleton_add_smul
 
+#print MeasureTheory.Measure.isUnifLocDoublingMeasureOfIsAddHaarMeasure /-
 instance (priority := 100) isUnifLocDoublingMeasureOfIsAddHaarMeasure :
     IsUnifLocDoublingMeasure μ :=
   by
@@ -576,6 +591,7 @@ instance (priority := 100) isUnifLocDoublingMeasureOfIsAddHaarMeasure :
     ENNReal.ofReal, Real.toNNReal_pow zero_le_two]
   simp only [Real.toNNReal_bit0, Real.toNNReal_one, le_refl]
 #align measure_theory.measure.is_unif_loc_doubling_measure_of_is_add_haar_measure MeasureTheory.Measure.isUnifLocDoublingMeasureOfIsAddHaarMeasure
+-/
 
 section
 
@@ -605,6 +621,7 @@ variable [FiniteDimensional ℝ G] {n : ℕ} [_i : Fact (finrank ℝ G = n)]
 
 include _i
 
+#print AlternatingMap.measure /-
 /-- The Lebesgue measure associated to an alternating map. It gives measure `|ω v|` to the
 parallelepiped spanned by the vectors `v₁, ..., vₙ`. Note that it is not always a Haar measure,
 as it can be zero, but it is always locally finite and translation invariant. -/
@@ -612,6 +629,7 @@ noncomputable irreducible_def AlternatingMap.measure (ω : AlternatingMap ℝ G 
     Measure G :=
   ‖ω (finBasisOfFinrankEq ℝ G _i.out)‖₊ • (finBasisOfFinrankEq ℝ G _i.out).addHaar
 #align alternating_map.measure AlternatingMap.measure
+-/
 
 theorem AlternatingMap.measure_parallelepiped (ω : AlternatingMap ℝ G ℝ (Fin n)) (v : Fin n → G) :
     ω.Measure (parallelepiped v) = ENNReal.ofReal (|ω v|) :=

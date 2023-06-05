@@ -84,19 +84,19 @@ noncomputable def isometrySumSquaresUnits [DecidableEq ι] (w : ι → Units ℂ
 
 /-- A nondegenerate quadratic form on the complex numbers is equivalent to
 the sum of squares, i.e. `weighted_sum_squares` with weight `λ i : ι, 1`. -/
-theorem equivalentSumSquares {M : Type _} [AddCommGroup M] [Module ℂ M] [FiniteDimensional ℂ M]
+theorem equivalent_sum_squares {M : Type _} [AddCommGroup M] [Module ℂ M] [FiniteDimensional ℂ M]
     (Q : QuadraticForm ℂ M) (hQ : (associated Q).Nondegenerate) :
     Equivalent Q (weightedSumSquares ℂ (1 : Fin (FiniteDimensional.finrank ℂ M) → ℂ)) :=
   let ⟨w, ⟨hw₁⟩⟩ := Q.equivalent_weightedSumSquares_units_of_nondegenerate' hQ
   ⟨hw₁.trans (isometrySumSquaresUnits w)⟩
-#align quadratic_form.equivalent_sum_squares QuadraticForm.equivalentSumSquares
+#align quadratic_form.equivalent_sum_squares QuadraticForm.equivalent_sum_squares
 
 /-- All nondegenerate quadratic forms on the complex numbers are equivalent. -/
-theorem complexEquivalent {M : Type _} [AddCommGroup M] [Module ℂ M] [FiniteDimensional ℂ M]
+theorem complex_equivalent {M : Type _} [AddCommGroup M] [Module ℂ M] [FiniteDimensional ℂ M]
     (Q₁ Q₂ : QuadraticForm ℂ M) (hQ₁ : (associated Q₁).Nondegenerate)
     (hQ₂ : (associated Q₂).Nondegenerate) : Equivalent Q₁ Q₂ :=
-  (Q₁.equivalentSumSquares hQ₁).trans (Q₂.equivalentSumSquares hQ₂).symm
-#align quadratic_form.complex_equivalent QuadraticForm.complexEquivalent
+  (Q₁.equivalent_sum_squares hQ₁).trans (Q₂.equivalent_sum_squares hQ₂).symm
+#align quadratic_form.complex_equivalent QuadraticForm.complex_equivalent
 
 end QuadraticForm
 

@@ -155,7 +155,7 @@ theorem Equivalent.pi [Fintype ι] {Q : ∀ i, QuadraticForm R (Mᵢ i)}
 #align quadratic_form.equivalent.pi QuadraticForm.Equivalent.pi
 
 /-- If a family is anisotropic then its components must be. The converse is not true. -/
-theorem anisotropicOfPi [Fintype ι] {R} [OrderedRing R] [∀ i, Module R (Mᵢ i)]
+theorem anisotropic_of_pi [Fintype ι] {R} [OrderedRing R] [∀ i, Module R (Mᵢ i)]
     {Q : ∀ i, QuadraticForm R (Mᵢ i)} (h : (pi Q).Anisotropic) : ∀ i, (Q i).Anisotropic :=
   by
   simp_rw [anisotropic, pi_apply, Function.funext_iff, Pi.zero_apply] at h 
@@ -169,7 +169,7 @@ theorem anisotropicOfPi [Fintype ι] {R} [OrderedRing R] [∀ i, Module R (Mᵢ 
   by_cases hji : j = i
   · subst hji; rw [Pi.single_eq_same, hx]
   · rw [Pi.single_eq_of_ne hji, map_zero]
-#align quadratic_form.anisotropic_of_pi QuadraticForm.anisotropicOfPi
+#align quadratic_form.anisotropic_of_pi QuadraticForm.anisotropic_of_pi
 
 theorem nonneg_pi_iff [Fintype ι] {R} [OrderedRing R] [∀ i, Module R (Mᵢ i)]
     {Q : ∀ i, QuadraticForm R (Mᵢ i)} : (∀ x, 0 ≤ pi Q x) ↔ ∀ i x, 0 ≤ Q i x :=

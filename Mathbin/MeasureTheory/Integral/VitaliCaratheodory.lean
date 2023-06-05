@@ -235,7 +235,7 @@ theorem exists_lt_lowerSemicontinuous_lintegral_ge [SigmaFinite μ] (f : α → 
 there exists a lower semicontinuous function `g > f` with integral arbitrarily close to that of `f`.
 Formulation in terms of `lintegral`.
 Auxiliary lemma for Vitali-Carathéodory theorem `exists_lt_lower_semicontinuous_integral_lt`. -/
-theorem exists_lt_lowerSemicontinuous_lintegral_ge_of_aEMeasurable [SigmaFinite μ] (f : α → ℝ≥0)
+theorem exists_lt_lowerSemicontinuous_lintegral_ge_of_aemeasurable [SigmaFinite μ] (f : α → ℝ≥0)
     (fmeas : AEMeasurable f μ) {ε : ℝ≥0∞} (ε0 : ε ≠ 0) :
     ∃ g : α → ℝ≥0∞,
       (∀ x, (f x : ℝ≥0∞) < g x) ∧ LowerSemicontinuous g ∧ (∫⁻ x, g x ∂μ) ≤ (∫⁻ x, f x ∂μ) + ε :=
@@ -269,7 +269,7 @@ theorem exists_lt_lowerSemicontinuous_lintegral_ge_of_aEMeasurable [SigmaFinite 
             lintegral_indicator, MulZeroClass.mul_zero, restrict_apply]
       _ = (∫⁻ x, f x ∂μ) + ε := by simp only [add_assoc, ENNReal.add_halves, zero_add]
       
-#align measure_theory.exists_lt_lower_semicontinuous_lintegral_ge_of_ae_measurable MeasureTheory.exists_lt_lowerSemicontinuous_lintegral_ge_of_aEMeasurable
+#align measure_theory.exists_lt_lower_semicontinuous_lintegral_ge_of_ae_measurable MeasureTheory.exists_lt_lowerSemicontinuous_lintegral_ge_of_aemeasurable
 
 variable {μ}
 
@@ -277,7 +277,7 @@ variable {μ}
 lower semicontinuous function `g > f` with integral arbitrarily close to that of `f`.
 Formulation in terms of `integral`.
 Auxiliary lemma for Vitali-Carathéodory theorem `exists_lt_lower_semicontinuous_integral_lt`. -/
-theorem exists_lt_lowerSemicontinuous_integral_gt_nNReal [SigmaFinite μ] (f : α → ℝ≥0)
+theorem exists_lt_lowerSemicontinuous_integral_gt_nnreal [SigmaFinite μ] (f : α → ℝ≥0)
     (fint : Integrable (fun x => (f x : ℝ)) μ) {ε : ℝ} (εpos : 0 < ε) :
     ∃ g : α → ℝ≥0∞,
       (∀ x, (f x : ℝ≥0∞) < g x) ∧
@@ -326,7 +326,7 @@ theorem exists_lt_lowerSemicontinuous_integral_gt_nNReal [SigmaFinite μ] (f : �
     · exact fmeas.coe_nnreal_real.ae_strongly_measurable
     · apply Filter.eventually_of_forall fun x => _; simp
     · apply gcont.measurable.ennreal_to_real.ae_measurable.ae_strongly_measurable
-#align measure_theory.exists_lt_lower_semicontinuous_integral_gt_nnreal MeasureTheory.exists_lt_lowerSemicontinuous_integral_gt_nNReal
+#align measure_theory.exists_lt_lower_semicontinuous_integral_gt_nnreal MeasureTheory.exists_lt_lowerSemicontinuous_integral_gt_nnreal
 
 /-! ### Upper semicontinuous lower bound for nonnegative functions -/
 
