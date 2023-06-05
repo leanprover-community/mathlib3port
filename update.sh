@@ -22,9 +22,11 @@ sed -i.bak '
 rm lakefile.lean.bak
 lake update
 
-rm -rf Mathbin
-curl -qsSL https://github.com/leanprover-community/mathport/releases/download/$tag/mathlib3-synport.tar.gz \
-  | tar xz
+rm -rf Mathbin Archive Counterexamples
+for lib in mathlib3 archive counterexamples; do
+  curl -qsSL https://github.com/leanprover-community/mathport/releases/download/$tag/$lib-synport.tar.gz \
+    | tar xz
+done
 
 lake print-paths
 cp build/lib/upstream-rev .
