@@ -128,6 +128,7 @@ theorem IsLocalExtrOn.exists_multipliers_of_hasStrictFDerivAt {ι : Type _} [Fin
   · ext x; simpa [mul_comm] using hsum x
 #align is_local_extr_on.exists_multipliers_of_has_strict_fderiv_at IsLocalExtrOn.exists_multipliers_of_hasStrictFDerivAt
 
+#print IsLocalExtrOn.linear_dependent_of_hasStrictFDerivAt /-
 /-- Lagrange multipliers theorem. Let `f : ι → E → ℝ` be a finite family of functions.
 Suppose that `φ : E → ℝ` has a local extremum on the set `{x | ∀ i, f i x = f i x₀}` at `x₀`.
 Suppose that all functions `f i` as well as `φ` are strictly differentiable at `x₀`.
@@ -148,4 +149,5 @@ theorem IsLocalExtrOn.linear_dependent_of_hasStrictFDerivAt {ι : Type _} [Finit
   · simpa [add_comm] using hΛf
   · simpa [Function.funext_iff, not_and_or, or_comm', Option.exists] using hΛ
 #align is_local_extr_on.linear_dependent_of_has_strict_fderiv_at IsLocalExtrOn.linear_dependent_of_hasStrictFDerivAt
+-/
 
