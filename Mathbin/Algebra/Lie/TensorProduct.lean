@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module algebra.lie.tensor_product
-! leanprover-community/mathlib commit 657df4339ae6ceada048c8a2980fb10e393143ec
+! leanprover-community/mathlib commit 575b4ea3738b017e30fb205cb9b4a8742e5e82b6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.Algebra.Lie.Abelian
 
 /-!
 # Tensor products of Lie modules
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 Tensor products of Lie modules carry natural Lie module structures.
 

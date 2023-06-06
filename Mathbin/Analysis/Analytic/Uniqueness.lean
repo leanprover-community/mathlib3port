@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.analytic.uniqueness
-! leanprover-community/mathlib commit f2ce6086713c78a7f880485f7917ea547a215982
+! leanprover-community/mathlib commit a3209ddf94136d36e5e5c624b10b2a347cc9d090
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -96,7 +96,7 @@ theorem eqOn_zero_of_preconnected_of_eventuallyEq_zero {f : E → F} {U : Set E}
   exact UniformSpace.Completion.coe_injective F this
 #align analytic_on.eq_on_zero_of_preconnected_of_eventually_eq_zero AnalyticOn.eqOn_zero_of_preconnected_of_eventuallyEq_zero
 
-/-- The *identity principle* for analytic functions: If two analytic function coincide in a whole
+/-- The *identity principle* for analytic functions: If two analytic functions coincide in a whole
 neighborhood of a point `z₀`, then they coincide globally along a connected set.
 For a one-dimensional version assuming only that the functions coincide at some points
 arbitrarily close to `z₀`, see `eq_on_of_preconnected_of_frequently_eq`. -/
@@ -107,6 +107,16 @@ theorem eqOn_of_preconnected_of_eventuallyEq {f g : E → F} {U : Set E} (hf : A
   simpa [sub_eq_zero] using fun z hz =>
     (hf.sub hg).eqOn_zero_of_preconnected_of_eventuallyEq_zero hU h₀ hfg' hz
 #align analytic_on.eq_on_of_preconnected_of_eventually_eq AnalyticOn.eqOn_of_preconnected_of_eventuallyEq
+
+/-- The *identity principle* for analytic functions: If two analytic functions on a normed space
+coincide in a neighborhood of a point `z₀`, then they coincide everywhere.
+For a one-dimensional version assuming only that the functions coincide at some points
+arbitrarily close to `z₀`, see `eq_of_frequently_eq`. -/
+theorem eq_of_eventuallyEq {f g : E → F} [PreconnectedSpace E] (hf : AnalyticOn 𝕜 f univ)
+    (hg : AnalyticOn 𝕜 g univ) {z₀ : E} (hfg : f =ᶠ[𝓝 z₀] g) : f = g :=
+  funext fun x =>
+    eqOn_of_preconnected_of_eventuallyEq hf hg isPreconnected_univ (mem_univ z₀) hfg (mem_univ x)
+#align analytic_on.eq_of_eventually_eq AnalyticOn.eq_of_eventuallyEq
 
 end AnalyticOn
 

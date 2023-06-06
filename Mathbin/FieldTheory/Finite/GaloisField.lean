@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson, Alex J. Best, Johan Commelin, Eric Rodriguez, Ruben Van de Velde
 
 ! This file was ported from Lean 3 source module field_theory.finite.galois_field
-! leanprover-community/mathlib commit 12a85fac627bea918960da036049d611b1a3ee43
+! leanprover-community/mathlib commit df76f43357840485b9d04ed5dee5ab115d420e87
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,7 +12,7 @@ import Mathbin.Algebra.CharP.Algebra
 import Mathbin.Data.Zmod.Algebra
 import Mathbin.FieldTheory.Finite.Basic
 import Mathbin.FieldTheory.Galois
-import Mathbin.FieldTheory.SplittingField
+import Mathbin.FieldTheory.SplittingField.IsSplittingField
 
 /-!
 # Galois fields

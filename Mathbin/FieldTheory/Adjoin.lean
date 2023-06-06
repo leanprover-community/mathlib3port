@@ -4,13 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Thomas Browning, Patrick Lutz
 
 ! This file was ported from Lean 3 source module field_theory.adjoin
-! leanprover-community/mathlib commit d4437c68c8d350fc9d4e95e1e174409db35e30d7
+! leanprover-community/mathlib commit df76f43357840485b9d04ed5dee5ab115d420e87
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.FieldTheory.IntermediateField
 import Mathbin.FieldTheory.Separable
-import Mathbin.FieldTheory.SplittingField
+import Mathbin.FieldTheory.SplittingField.IsSplittingField
 import Mathbin.RingTheory.TensorProduct
 
 /-!

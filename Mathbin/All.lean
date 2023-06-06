@@ -16,7 +16,8 @@ import Mathbin.AlgebraicGeometry.Morphisms.QuasiCompact
 import Mathbin.AlgebraicGeometry.Morphisms.QuasiSeparated
 import Mathbin.AlgebraicGeometry.Morphisms.RingHomProperties
 import Mathbin.AlgebraicGeometry.Morphisms.UniversallyClosed
-import Mathbin.AlgebraicGeometry.OpenImmersion
+import Mathbin.AlgebraicGeometry.OpenImmersion.Scheme
+import Mathbin.AlgebraicGeometry.OpenImmersion.Basic
 import Mathbin.AlgebraicGeometry.PresheafedSpace
 import Mathbin.AlgebraicGeometry.PresheafedSpace.Gluing
 import Mathbin.AlgebraicGeometry.PresheafedSpace.HasColimits
@@ -1819,7 +1820,8 @@ import Mathbin.FieldTheory.PrimitiveElement
 import Mathbin.FieldTheory.Ratfunc
 import Mathbin.FieldTheory.SeparableDegree
 import Mathbin.FieldTheory.Separable
-import Mathbin.FieldTheory.SplittingField
+import Mathbin.FieldTheory.SplittingField.Construction
+import Mathbin.FieldTheory.SplittingField.IsSplittingField
 import Mathbin.FieldTheory.Subfield
 import Mathbin.FieldTheory.Tower
 import Mathbin.Geometry.Euclidean.Angle.Oriented.Affine

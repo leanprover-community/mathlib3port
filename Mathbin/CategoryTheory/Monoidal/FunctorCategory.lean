@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.monoidal.functor_category
-! leanprover-community/mathlib commit 73dd4b5411ec8fafb18a9d77c9c826907730af80
+! leanprover-community/mathlib commit 575b4ea3738b017e30fb205cb9b4a8742e5e82b6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.CategoryTheory.Functor.Const
 
 /-!
 # Monoidal structure on `C ⥤ D` when `D` is monoidal.
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 When `C` is any category, and `D` is a monoidal category,
 there is a natural "pointwise" monoidal structure on `C ⥤ D`.

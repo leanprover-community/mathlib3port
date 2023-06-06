@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau, Thomas Browning, Patrick Lutz
 
 ! This file was ported from Lean 3 source module field_theory.normal
-! leanprover-community/mathlib commit 949dc57e616a621462062668c9f39e4e17b64b69
+! leanprover-community/mathlib commit df76f43357840485b9d04ed5dee5ab115d420e87
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -166,11 +166,12 @@ attribute [-instance] AdjoinRoot.hasSmul
 theorem Normal.of_isSplittingField (p : F[X]) [hFEp : IsSplittingField F E p] : Normal F E :=
   by
   rcases eq_or_ne p 0 with (rfl | hp)
-  · haveI : is_splitting_field F F 0 := ⟨splits_zero _, Subsingleton.elim _ _⟩
+  · have := hFEp.adjoin_roots
+    simp only [Polynomial.map_zero, roots_zero, Multiset.toFinset_zero, Finset.coe_empty,
+      Algebra.adjoin_empty] at this 
     exact
-      (AlgEquiv.transfer_normal
-            ((is_splitting_field.alg_equiv F 0).trans (is_splitting_field.alg_equiv E 0).symm)).mp
-        (normal_self F)
+      Normal.of_algEquiv
+        (AlgEquiv.ofBijective (Algebra.ofId F E) (Algebra.bijective_algebraMap_iff.2 this.symm))
   refine' normal_iff.2 fun x => _
   have hFE : FiniteDimensional F E := is_splitting_field.finite_dimensional E p
   have Hx : IsIntegral F x := isIntegral_of_noetherian (IsNoetherian.iff_fg.2 hFE) x
@@ -237,9 +238,6 @@ theorem Normal.of_isSplittingField (p : F[X]) [hFEp : IsSplittingField F E p] : 
       (Algebra.adjoin_res_eq_adjoin_res F E C D hFEp.adjoin_roots AdjoinRoot.adjoinRoot_eq_top)
   rw [Set.image_singleton, RingHom.algebraMap_toAlgebra, AdjoinRoot.lift_root]
 #align normal.of_is_splitting_field Normal.of_isSplittingField
-
-instance (p : F[X]) : Normal F p.SplittingField :=
-  Normal.of_isSplittingField p
 
 end NormalTower
 

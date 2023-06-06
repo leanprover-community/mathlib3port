@@ -4,11 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Loeffler
 
 ! This file was ported from Lean 3 source module analysis.special_functions.gamma.bohr_mollerup
-! leanprover-community/mathlib commit 7982767093ae38cba236487f9c9dd9cd99f63c16
+! leanprover-community/mathlib commit a3209ddf94136d36e5e5c624b10b2a347cc9d090
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.SpecialFunctions.Gamma.Basic
+import Mathbin.Analysis.SpecialFunctions.Gaussian
 
 /-! # Convexity properties of the Gamma function
 
@@ -30,6 +31,14 @@ context of this proof, we place them in a separate namespace `real.bohr_mollerup
 general form of the Euler limit formula valid for any real or complex `x`; see
 `real.Gamma_seq_tendsto_Gamma` and `complex.Gamma_seq_tendsto_Gamma` in the file
 `analysis.special_functions.gamma.beta`.)
+
+As an application of the Bohr-Mollerup theorem we prove the Legendre doubling formula for the
+Gamma function for real positive `s` (which will be upgraded to a proof for all complex `s` in a
+later file).
+
+TODO: This argument can be extended to prove the general `k`-multiplication formula (at least up
+to a constant, and it should be possible to deduce the value of this constant using Stirling's
+formula).
 -/
 
 
@@ -37,7 +46,59 @@ noncomputable section
 
 open Filter Set MeasureTheory
 
-open scoped Nat ENNReal Topology BigOperators
+open scoped Nat ENNReal Topology BigOperators Real
+
+section Convexity
+
+-- Porting note: move the following lemmas to `Analysis.Convex.Function`
+variable {𝕜 E β : Type _} {s : Set E} {f g : E → β} [OrderedSemiring 𝕜] [SMul 𝕜 E] [AddCommMonoid E]
+  [OrderedAddCommMonoid β]
+
+theorem ConvexOn.congr [SMul 𝕜 β] (hf : ConvexOn 𝕜 s f) (hfg : EqOn f g s) : ConvexOn 𝕜 s g :=
+  ⟨hf.1, fun x hx y hy a b ha hb hab => by
+    simpa only [← hfg hx, ← hfg hy, ← hfg (hf.1 hx hy ha hb hab)] using hf.2 hx hy ha hb hab⟩
+#align convex_on.congr ConvexOn.congr
+
+theorem ConcaveOn.congr [SMul 𝕜 β] (hf : ConcaveOn 𝕜 s f) (hfg : EqOn f g s) : ConcaveOn 𝕜 s g :=
+  ⟨hf.1, fun x hx y hy a b ha hb hab => by
+    simpa only [← hfg hx, ← hfg hy, ← hfg (hf.1 hx hy ha hb hab)] using hf.2 hx hy ha hb hab⟩
+#align concave_on.congr ConcaveOn.congr
+
+theorem StrictConvexOn.congr [SMul 𝕜 β] (hf : StrictConvexOn 𝕜 s f) (hfg : EqOn f g s) :
+    StrictConvexOn 𝕜 s g :=
+  ⟨hf.1, fun x hx y hy hxy a b ha hb hab => by
+    simpa only [← hfg hx, ← hfg hy, ← hfg (hf.1 hx hy ha.le hb.le hab)] using
+      hf.2 hx hy hxy ha hb hab⟩
+#align strict_convex_on.congr StrictConvexOn.congr
+
+theorem StrictConcaveOn.congr [SMul 𝕜 β] (hf : StrictConcaveOn 𝕜 s f) (hfg : EqOn f g s) :
+    StrictConcaveOn 𝕜 s g :=
+  ⟨hf.1, fun x hx y hy hxy a b ha hb hab => by
+    simpa only [← hfg hx, ← hfg hy, ← hfg (hf.1 hx hy ha.le hb.le hab)] using
+      hf.2 hx hy hxy ha hb hab⟩
+#align strict_concave_on.congr StrictConcaveOn.congr
+
+theorem ConvexOn.add_const [Module 𝕜 β] (hf : ConvexOn 𝕜 s f) (b : β) :
+    ConvexOn 𝕜 s (f + fun _ => b) :=
+  hf.add (convexOn_const _ hf.1)
+#align convex_on.add_const ConvexOn.add_const
+
+theorem ConcaveOn.add_const [Module 𝕜 β] (hf : ConcaveOn 𝕜 s f) (b : β) :
+    ConcaveOn 𝕜 s (f + fun _ => b) :=
+  hf.add (concaveOn_const _ hf.1)
+#align concave_on.add_const ConcaveOn.add_const
+
+theorem StrictConvexOn.add_const {γ : Type _} {f : E → γ} [OrderedCancelAddCommMonoid γ]
+    [Module 𝕜 γ] (hf : StrictConvexOn 𝕜 s f) (b : γ) : StrictConvexOn 𝕜 s (f + fun _ => b) :=
+  hf.add_convexOn (convexOn_const _ hf.1)
+#align strict_convex_on.add_const StrictConvexOn.add_const
+
+theorem StrictConcaveOn.add_const {γ : Type _} {f : E → γ} [OrderedCancelAddCommMonoid γ]
+    [Module 𝕜 γ] (hf : StrictConcaveOn 𝕜 s f) (b : γ) : StrictConcaveOn 𝕜 s (f + fun _ => b) :=
+  hf.add_concaveOn (concaveOn_const _ hf.1)
+#align strict_concave_on.add_const StrictConcaveOn.add_const
+
+end Convexity
 
 namespace Real
 
@@ -121,18 +182,14 @@ theorem convexOn_log_gamma : ConvexOn ℝ (Ioi 0) (log ∘ gamma) :=
 
 theorem convexOn_gamma : ConvexOn ℝ (Ioi 0) gamma :=
   by
-  refine' ⟨convex_Ioi 0, fun x hx y hy a b ha hb hab => _⟩
-  have :=
-    ConvexOn.comp (convex_on_exp.subset (subset_univ _) _) convex_on_log_Gamma fun u hu v hv huv =>
-      exp_le_exp.mpr huv
-  convert this.2 hx hy ha hb hab
-  · rw [Function.comp_apply, exp_log (Gamma_pos_of_pos <| this.1 hx hy ha hb hab)]
-  · rw [Function.comp_apply, exp_log (Gamma_pos_of_pos hx)]
-  · rw [Function.comp_apply, exp_log (Gamma_pos_of_pos hy)]
-  · rw [convex_iff_is_preconnected]
-    refine' is_preconnected_Ioi.image _ fun x hx => ContinuousAt.continuousWithinAt _
-    refine' (differentiable_at_Gamma fun m => _).ContinuousAt.log (Gamma_pos_of_pos hx).ne'
-    exact (neg_lt_iff_pos_add.mpr (add_pos_of_pos_of_nonneg hx (Nat.cast_nonneg m))).ne'
+  refine'
+    ((convex_on_exp.subset (subset_univ _) _).comp convex_on_log_Gamma
+          (exp_monotone.monotone_on _)).congr
+      fun x hx => exp_log (Gamma_pos_of_pos hx)
+  rw [convex_iff_is_preconnected]
+  refine' is_preconnected_Ioi.image _ fun x hx => ContinuousAt.continuousWithinAt _
+  refine' (differentiable_at_Gamma fun m => _).ContinuousAt.log (Gamma_pos_of_pos hx).ne'
+  exact (neg_lt_iff_pos_add.mpr (add_pos_of_pos_of_nonneg hx (Nat.cast_nonneg m))).ne'
 #align real.convex_on_Gamma Real.convexOn_gamma
 
 end Convexity
@@ -393,6 +450,99 @@ theorem gamma_strictMonoOn_Ici : StrictMonoOn gamma (Ici 2) :=
 #align real.Gamma_strict_mono_on_Ici Real.gamma_strictMonoOn_Ici
 
 end StrictMono
+
+section Doubling
+
+/-!
+## The Gamma doubling formula
+
+As a fun application of the Bohr-Mollerup theorem, we prove the Gamma-function doubling formula
+(for positive real `s`). The idea is that `2 ^ s * Gamma (s / 2) * Gamma (s / 2 + 1 / 2)` is
+log-convex and satisfies the Gamma functional equation, so it must actually be a constant
+multiple of `Gamma`, and we can compute the constant by specialising at `s = 1`. -/
+
+
+/-- Auxiliary definition for the doubling formula (we'll show this is equal to `Gamma s`) -/
+def doublingGamma (s : ℝ) : ℝ :=
+  gamma (s / 2) * gamma (s / 2 + 1 / 2) * 2 ^ (s - 1) / sqrt π
+#align real.doubling_Gamma Real.doublingGamma
+
+theorem doublingGamma_add_one (s : ℝ) (hs : s ≠ 0) : doublingGamma (s + 1) = s * doublingGamma s :=
+  by
+  rw [doubling_Gamma, doubling_Gamma, (by abel : s + 1 - 1 = s - 1 + 1), add_div, add_assoc,
+    add_halves (1 : ℝ), Gamma_add_one (div_ne_zero hs two_ne_zero), rpow_add two_pos, rpow_one]
+  ring
+#align real.doubling_Gamma_add_one Real.doublingGamma_add_one
+
+theorem doublingGamma_one : doublingGamma 1 = 1 := by
+  simp_rw [doubling_Gamma, Gamma_one_half_eq, add_halves (1 : ℝ), sub_self, Gamma_one, mul_one,
+    rpow_zero, mul_one, div_self (sqrt_ne_zero'.mpr pi_pos)]
+#align real.doubling_Gamma_one Real.doublingGamma_one
+
+theorem log_doublingGamma_eq :
+    EqOn (log ∘ doublingGamma)
+      (fun s => log (gamma (s / 2)) + log (gamma (s / 2 + 1 / 2)) + s * log 2 - log (2 * sqrt π))
+      (Ioi 0) :=
+  by
+  intro s hs
+  have h1 : sqrt π ≠ 0 := sqrt_ne_zero'.mpr pi_pos
+  have h2 : Gamma (s / 2) ≠ 0 := (Gamma_pos_of_pos <| div_pos hs two_pos).ne'
+  have h3 : Gamma (s / 2 + 1 / 2) ≠ 0 :=
+    (Gamma_pos_of_pos <| add_pos (div_pos hs two_pos) one_half_pos).ne'
+  have h4 : (2 : ℝ) ^ (s - 1) ≠ 0 := (rpow_pos_of_pos two_pos _).ne'
+  rw [Function.comp_apply, doubling_Gamma, log_div (mul_ne_zero (mul_ne_zero h2 h3) h4) h1,
+    log_mul (mul_ne_zero h2 h3) h4, log_mul h2 h3, log_rpow two_pos, log_mul two_ne_zero h1]
+  ring_nf
+#align real.log_doubling_Gamma_eq Real.log_doublingGamma_eq
+
+theorem doublingGamma_log_convex_Ioi : ConvexOn ℝ (Ioi (0 : ℝ)) (log ∘ doublingGamma) :=
+  by
+  refine' (((ConvexOn.add _ _).add _).AddConst _).congr log_doubling_Gamma_eq.symm
+  · convert
+      convex_on_log_Gamma.comp_affine_map (DistribMulAction.toLinearMap ℝ ℝ (1 / 2 : ℝ)).toAffineMap
+    · simpa only [zero_div] using (preimage_const_mul_Ioi (0 : ℝ) one_half_pos).symm
+    · ext1 x
+      change log (Gamma (x / 2)) = log (Gamma ((1 / 2 : ℝ) • x))
+      rw [smul_eq_mul, mul_comm, mul_one_div]
+  · refine' ConvexOn.subset _ (Ioi_subset_Ioi <| neg_one_lt_zero.le) (convex_Ioi _)
+    convert
+      convex_on_log_Gamma.comp_affine_map
+        ((DistribMulAction.toLinearMap ℝ ℝ (1 / 2 : ℝ)).toAffineMap +
+          AffineMap.const _ _ (1 / 2 : ℝ))
+    · change Ioi (-1 : ℝ) = ((fun x : ℝ => x + 1 / 2) ∘ fun x : ℝ => (1 / 2 : ℝ) * x) ⁻¹' Ioi 0
+      rw [preimage_comp, preimage_add_const_Ioi, zero_sub,
+        preimage_const_mul_Ioi (_ : ℝ) one_half_pos, neg_div, div_self (@one_half_pos ℝ _).ne']
+    · ext1 x
+      change log (Gamma (x / 2 + 1 / 2)) = log (Gamma ((1 / 2 : ℝ) • x + 1 / 2))
+      rw [smul_eq_mul, mul_comm, mul_one_div]
+  ·
+    simpa only [mul_comm _ (log _)] using
+      (convexOn_id (convex_Ioi (0 : ℝ))).smul (log_pos one_lt_two).le
+#align real.doubling_Gamma_log_convex_Ioi Real.doublingGamma_log_convex_Ioi
+
+theorem doublingGamma_eq_gamma {s : ℝ} (hs : 0 < s) : doublingGamma s = gamma s :=
+  by
+  refine'
+    eq_Gamma_of_log_convex doubling_Gamma_log_convex_Ioi
+      (fun y hy => doubling_Gamma_add_one y hy.ne') (fun y hy => _) doubling_Gamma_one hs
+  apply_rules [mul_pos, Gamma_pos_of_pos, add_pos, inv_pos_of_pos, rpow_pos_of_pos, two_pos,
+    one_pos, sqrt_pos_of_pos pi_pos]
+#align real.doubling_Gamma_eq_Gamma Real.doublingGamma_eq_gamma
+
+/-- Legendre's doubling formula for the Gamma function, for positive real arguments. Note that
+we shall later prove this for all `s` as `real.Gamma_mul_Gamma_add_half` (superseding this result)
+but this result is needed as an intermediate step. -/
+theorem gamma_mul_gamma_add_half_of_pos {s : ℝ} (hs : 0 < s) :
+    gamma s * gamma (s + 1 / 2) = gamma (2 * s) * 2 ^ (1 - 2 * s) * sqrt π :=
+  by
+  rw [← doubling_Gamma_eq_Gamma (mul_pos two_pos hs), doubling_Gamma,
+    mul_div_cancel_left _ (two_ne_zero' ℝ), (by abel : 1 - 2 * s = -(2 * s - 1)),
+    rpow_neg zero_le_two]
+  field_simp [(sqrt_pos_of_pos pi_pos).ne', (rpow_pos_of_pos two_pos (2 * s - 1)).ne']
+  ring
+#align real.Gamma_mul_Gamma_add_half_of_pos Real.gamma_mul_gamma_add_half_of_pos
+
+end Doubling
 
 end Real
 

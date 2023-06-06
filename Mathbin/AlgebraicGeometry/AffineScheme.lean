@@ -4,12 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module algebraic_geometry.AffineScheme
-! leanprover-community/mathlib commit d39590fc8728fbf6743249802486f8c91ffe07bc
+! leanprover-community/mathlib commit 533f62f4dd62a5aad24a04326e6e787c8f7e98b1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.AlgebraicGeometry.GammaSpecAdjunction
-import Mathbin.AlgebraicGeometry.OpenImmersion
+import Mathbin.AlgebraicGeometry.OpenImmersion.Scheme
 import Mathbin.CategoryTheory.Limits.Opposites
 import Mathbin.RingTheory.Localization.InvSubmonoid
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vincent Beffara
 
 ! This file was ported from Lean 3 source module analysis.analytic.isolated_zeros
-! leanprover-community/mathlib commit 32253a1a1071173b33dc7d6a218cf722c6feb514
+! leanprover-community/mathlib commit a3209ddf94136d36e5e5c624b10b2a347cc9d090
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -205,6 +205,17 @@ theorem eqOn_of_preconnected_of_mem_closure (hf : AnalyticOn 𝕜 f U) (hg : Ana
     EqOn f g U :=
   hf.eqOn_of_preconnected_of_frequently_eq hg hU h₀ (mem_closure_ne_iff_frequently_within.mp hfg)
 #align analytic_on.eq_on_of_preconnected_of_mem_closure AnalyticOn.eqOn_of_preconnected_of_mem_closure
+
+/-- The *identity principle* for analytic functions, global version: if two functions on a normed
+field `𝕜` are analytic everywhere and coincide at points which accumulate to a point `z₀`, then
+they coincide globally.
+For higher-dimensional versions requiring that the functions coincide in a neighborhood of `z₀`,
+see `eq_of_eventually_eq`. -/
+theorem eq_of_frequently_eq [ConnectedSpace 𝕜] (hf : AnalyticOn 𝕜 f univ) (hg : AnalyticOn 𝕜 g univ)
+    (hfg : ∃ᶠ z in 𝓝[≠] z₀, f z = g z) : f = g :=
+  funext fun x =>
+    eqOn_of_preconnected_of_frequently_eq hf hg isPreconnected_univ (mem_univ z₀) hfg (mem_univ x)
+#align analytic_on.eq_of_frequently_eq AnalyticOn.eq_of_frequently_eq
 
 end AnalyticOn
 
