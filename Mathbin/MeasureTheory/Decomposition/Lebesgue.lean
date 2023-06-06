@@ -934,7 +934,7 @@ theorem singularPart_totalVariation (s : SignedMeasure α) (μ : Measure α) :
 #align measure_theory.signed_measure.singular_part_total_variation MeasureTheory.SignedMeasure.singularPart_totalVariation
 
 theorem mutuallySingular_singularPart (s : SignedMeasure α) (μ : Measure α) :
-    singularPart s μ ⟂ᵥ μ.toEnnrealVectorMeasure :=
+    singularPart s μ ⟂ᵥ μ.toENNRealVectorMeasure :=
   by
   rw [mutually_singular_ennreal_iff, singular_part_total_variation]
   change _ ⟂ₘ vector_measure.equiv_measure.to_fun (vector_measure.equiv_measure.inv_fun μ)
@@ -1005,7 +1005,7 @@ theorem singularPart_add_with_density_rnDeriv_eq [s.HaveLebesgueDecomposition μ
 variable {s μ}
 
 theorem jordan_decomposition_add_withDensity_mutuallySingular {f : α → ℝ} (hf : Measurable f)
-    (htμ : t ⟂ᵥ μ.toEnnrealVectorMeasure) :
+    (htμ : t ⟂ᵥ μ.toENNRealVectorMeasure) :
     (t.toJordanDecomposition.posPart + μ.withDensity fun x : α => ENNReal.ofReal (f x)) ⟂ₘ
       t.toJordanDecomposition.negPart + μ.withDensity fun x : α => ENNReal.ofReal (-f x) :=
   by
@@ -1023,7 +1023,7 @@ theorem jordan_decomposition_add_withDensity_mutuallySingular {f : α → ℝ} (
 #align measure_theory.signed_measure.jordan_decomposition_add_with_density_mutually_singular MeasureTheory.SignedMeasure.jordan_decomposition_add_withDensity_mutuallySingular
 
 theorem toJordanDecomposition_eq_of_eq_add_withDensity {f : α → ℝ} (hf : Measurable f)
-    (hfi : Integrable f μ) (htμ : t ⟂ᵥ μ.toEnnrealVectorMeasure) (hadd : s = t + μ.withDensityᵥ f) :
+    (hfi : Integrable f μ) (htμ : t ⟂ᵥ μ.toENNRealVectorMeasure) (hadd : s = t + μ.withDensityᵥ f) :
     s.toJordanDecomposition =
       @JordanDecomposition.mk α _
         (t.toJordanDecomposition.posPart + μ.withDensity fun x => ENNReal.ofReal (f x))
@@ -1050,7 +1050,7 @@ theorem toJordanDecomposition_eq_of_eq_add_withDensity {f : α → ℝ} (hf : Me
 #align measure_theory.signed_measure.to_jordan_decomposition_eq_of_eq_add_with_density MeasureTheory.SignedMeasure.toJordanDecomposition_eq_of_eq_add_withDensity
 
 private theorem have_lebesgue_decomposition_mk' (μ : Measure α) {f : α → ℝ} (hf : Measurable f)
-    (hfi : Integrable f μ) (htμ : t ⟂ᵥ μ.toEnnrealVectorMeasure) (hadd : s = t + μ.withDensityᵥ f) :
+    (hfi : Integrable f μ) (htμ : t ⟂ᵥ μ.toENNRealVectorMeasure) (hadd : s = t + μ.withDensityᵥ f) :
     s.HaveLebesgueDecomposition μ := by
   have htμ' := htμ
   rw [mutually_singular_ennreal_iff] at htμ 
@@ -1068,7 +1068,7 @@ private theorem have_lebesgue_decomposition_mk' (μ : Measure α) {f : α → �
         rw [to_jordan_decomposition_eq_of_eq_add_with_density hf hfi htμ' hadd] }
 
 theorem haveLebesgueDecomposition_mk (μ : Measure α) {f : α → ℝ} (hf : Measurable f)
-    (htμ : t ⟂ᵥ μ.toEnnrealVectorMeasure) (hadd : s = t + μ.withDensityᵥ f) :
+    (htμ : t ⟂ᵥ μ.toENNRealVectorMeasure) (hadd : s = t + μ.withDensityᵥ f) :
     s.HaveLebesgueDecomposition μ :=
   by
   by_cases hfi : integrable f μ
@@ -1079,7 +1079,7 @@ theorem haveLebesgueDecomposition_mk (μ : Measure α) {f : α → ℝ} (hf : Me
 #align measure_theory.signed_measure.have_lebesgue_decomposition_mk MeasureTheory.SignedMeasure.haveLebesgueDecomposition_mk
 
 private theorem eq_singular_part' (t : SignedMeasure α) {f : α → ℝ} (hf : Measurable f)
-    (hfi : Integrable f μ) (htμ : t ⟂ᵥ μ.toEnnrealVectorMeasure) (hadd : s = t + μ.withDensityᵥ f) :
+    (hfi : Integrable f μ) (htμ : t ⟂ᵥ μ.toENNRealVectorMeasure) (hadd : s = t + μ.withDensityᵥ f) :
     t = s.singularPart μ := by
   have htμ' := htμ
   rw [mutually_singular_ennreal_iff, total_variation_mutually_singular_iff] at htμ 
@@ -1102,7 +1102,7 @@ private theorem eq_singular_part' (t : SignedMeasure α) {f : α → ℝ} (hf : 
 mutually singular with respect to `μ` and `s = t + μ.with_densityᵥ f`, we have
 `t = singular_part s μ`, i.e. `t` is the singular part of the Lebesgue decomposition between
 `s` and `μ`. -/
-theorem eq_singularPart (t : SignedMeasure α) (f : α → ℝ) (htμ : t ⟂ᵥ μ.toEnnrealVectorMeasure)
+theorem eq_singularPart (t : SignedMeasure α) (f : α → ℝ) (htμ : t ⟂ᵥ μ.toENNRealVectorMeasure)
     (hadd : s = t + μ.withDensityᵥ f) : t = s.singularPart μ :=
   by
   by_cases hfi : integrable f μ
@@ -1196,7 +1196,7 @@ theorem singularPart_sub (s t : SignedMeasure α) (μ : Measure α) [s.HaveLebes
 mutually singular with respect to `μ` and `s = t + μ.with_densityᵥ f`, we have
 `f = rn_deriv s μ`, i.e. `f` is the Radon-Nikodym derivative of `s` and `μ`. -/
 theorem eq_rnDeriv (t : SignedMeasure α) (f : α → ℝ) (hfi : Integrable f μ)
-    (htμ : t ⟂ᵥ μ.toEnnrealVectorMeasure) (hadd : s = t + μ.withDensityᵥ f) : f =ᵐ[μ] s.rnDeriv μ :=
+    (htμ : t ⟂ᵥ μ.toENNRealVectorMeasure) (hadd : s = t + μ.withDensityᵥ f) : f =ᵐ[μ] s.rnDeriv μ :=
   by
   set f' := hfi.1.mk f
   have hadd' : s = t + μ.with_densityᵥ f' :=
