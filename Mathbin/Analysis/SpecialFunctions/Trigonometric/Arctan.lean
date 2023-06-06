@@ -42,11 +42,13 @@ theorem tan_add' {x y : ℝ}
   tan_add (Or.inl h)
 #align real.tan_add' Real.tan_add'
 
+#print Real.tan_two_mul /-
 theorem tan_two_mul {x : ℝ} : tan (2 * x) = 2 * tan x / (1 - tan x ^ 2) := by
   simpa only [← Complex.ofReal_inj, Complex.ofReal_sub, Complex.ofReal_div, Complex.ofReal_pow,
     Complex.ofReal_mul, Complex.ofReal_tan, Complex.ofReal_bit0, Complex.ofReal_one] using
     Complex.tan_two_mul
 #align real.tan_two_mul Real.tan_two_mul
+-/
 
 theorem tan_ne_zero_iff {θ : ℝ} : tan θ ≠ 0 ↔ ∀ k : ℤ, θ ≠ k * π / 2 := by
   rw [← Complex.ofReal_ne_zero, Complex.ofReal_tan, Complex.tan_ne_zero_iff] <;> norm_cast
@@ -56,9 +58,11 @@ theorem tan_eq_zero_iff {θ : ℝ} : tan θ = 0 ↔ ∃ k : ℤ, θ = k * π / 2
   rw [← not_iff_not, not_exists, ← Ne, tan_ne_zero_iff]
 #align real.tan_eq_zero_iff Real.tan_eq_zero_iff
 
+#print Real.tan_int_mul_pi_div_two /-
 theorem tan_int_mul_pi_div_two (n : ℤ) : tan (n * π / 2) = 0 :=
   tan_eq_zero_iff.mpr (by use n)
 #align real.tan_int_mul_pi_div_two Real.tan_int_mul_pi_div_two
+-/
 
 theorem continuousOn_tan : ContinuousOn tan {x | cos x ≠ 0} :=
   by
@@ -101,8 +105,10 @@ theorem surjOn_tan : SurjOn tan (Ioo (-(π / 2)) (π / 2)) univ :=
     (by simp [tendsto_tan_neg_pi_div_two, this]) (by simp [tendsto_tan_pi_div_two, this])
 #align real.surj_on_tan Real.surjOn_tan
 
+#print Real.tan_surjective /-
 theorem tan_surjective : Function.Surjective tan := fun x => surjOn_tan.subset_range trivial
 #align real.tan_surjective Real.tan_surjective
+-/
 
 theorem image_tan_Ioo : tan '' Ioo (-(π / 2)) (π / 2) = univ :=
   univ_subset_iff.1 surjOn_tan
@@ -114,17 +120,21 @@ def tanOrderIso : Ioo (-(π / 2)) (π / 2) ≃o ℝ :=
     (OrderIso.setCongr _ _ image_tan_Ioo).trans OrderIso.Set.univ
 #align real.tan_order_iso Real.tanOrderIso
 
+#print Real.arctan /-
 /-- Inverse of the `tan` function, returns values in the range `-π / 2 < arctan x` and
 `arctan x < π / 2` -/
 @[pp_nodot]
 noncomputable def arctan (x : ℝ) : ℝ :=
   tanOrderIso.symm x
 #align real.arctan Real.arctan
+-/
 
+#print Real.tan_arctan /-
 @[simp]
 theorem tan_arctan (x : ℝ) : tan (arctan x) = x :=
   tanOrderIso.apply_symm_apply x
 #align real.tan_arctan Real.tan_arctan
+-/
 
 theorem arctan_mem_Ioo (x : ℝ) : arctan x ∈ Ioo (-(π / 2)) (π / 2) :=
   Subtype.coe_prop _
@@ -210,15 +220,20 @@ theorem arccos_eq_arctan {x : ℝ} (h : 0 < x) : arccos x = arctan (sqrt (1 - x 
   · linarith only [arcsin_pos.2 h]
 #align real.arccos_eq_arctan Real.arccos_eq_arctan
 
+#print Real.continuous_arctan /-
 @[continuity]
 theorem continuous_arctan : Continuous arctan :=
   continuous_subtype_val.comp tanOrderIso.toHomeomorph.continuous_invFun
 #align real.continuous_arctan Real.continuous_arctan
+-/
 
+#print Real.continuousAt_arctan /-
 theorem continuousAt_arctan {x : ℝ} : ContinuousAt arctan x :=
   continuous_arctan.ContinuousAt
 #align real.continuous_at_arctan Real.continuousAt_arctan
+-/
 
+#print Real.tanLocalHomeomorph /-
 /-- `real.tan` as a `local_homeomorph` between `(-(π / 2), π / 2)` and the whole line. -/
 def tanLocalHomeomorph : LocalHomeomorph ℝ ℝ
     where
@@ -235,16 +250,21 @@ def tanLocalHomeomorph : LocalHomeomorph ℝ ℝ
   continuous_toFun := continuousOn_tan_Ioo
   continuous_invFun := continuous_arctan.ContinuousOn
 #align real.tan_local_homeomorph Real.tanLocalHomeomorph
+-/
 
+#print Real.coe_tanLocalHomeomorph /-
 @[simp]
 theorem coe_tanLocalHomeomorph : ⇑tanLocalHomeomorph = tan :=
   rfl
 #align real.coe_tan_local_homeomorph Real.coe_tanLocalHomeomorph
+-/
 
+#print Real.coe_tanLocalHomeomorph_symm /-
 @[simp]
 theorem coe_tanLocalHomeomorph_symm : ⇑tanLocalHomeomorph.symm = arctan :=
   rfl
 #align real.coe_tan_local_homeomorph_symm Real.coe_tanLocalHomeomorph_symm
+-/
 
 end Real
 
