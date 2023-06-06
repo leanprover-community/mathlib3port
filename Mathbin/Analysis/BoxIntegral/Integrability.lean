@@ -39,7 +39,7 @@ namespace BoxIntegral
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (U «expr ⊇ » «expr ∩ »(s, I.Icc)) -/
 /-- The indicator function of a measurable set is McShane integrable with respect to any
 locally-finite measure. -/
-theorem hasIntegral_indicator_const (l : IntegrationParams) (hl : l.bRiemann = false)
+theorem hasIntegralIndicatorConst (l : IntegrationParams) (hl : l.bRiemann = false)
     {s : Set (ι → ℝ)} (hs : MeasurableSet s) (I : Box ι) (y : E) (μ : Measure (ι → ℝ))
     [IsLocallyFiniteMeasure μ] :
     HasIntegral.{u, v, v} I l (s.indicator fun _ => y) μ.toBoxAdditive.toSMul
@@ -99,12 +99,13 @@ theorem hasIntegral_indicator_const (l : IntegrationParams) (hl : l.bRiemann = f
     contrapose hxF
     refine' hrs'F _ ⟨π.tag_mem_Icc J, hxF⟩ _
     simpa only [r, s.piecewise_eq_of_not_mem _ _ hxF] using hπ.1 J hJπ (box.coe_subset_Icc hxJ)
-#align box_integral.has_integral_indicator_const BoxIntegral.hasIntegral_indicator_const
+#align box_integral.has_integral_indicator_const BoxIntegral.hasIntegralIndicatorConst
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (U «expr ⊇ » «expr ⁻¹' »(N, {n})) -/
+#print BoxIntegral.HasIntegral.of_aeEq_zero /-
 /-- If `f` is a.e. equal to zero on a rectangular box, then it has McShane integral zero on this
 box. -/
-theorem hasIntegral_zero_of_ae_eq_zero {l : IntegrationParams} {I : Box ι} {f : (ι → ℝ) → E}
+theorem BoxIntegral.HasIntegral.of_aeEq_zero {l : IntegrationParams} {I : Box ι} {f : (ι → ℝ) → E}
     {μ : Measure (ι → ℝ)} [IsLocallyFiniteMeasure μ] (hf : f =ᵐ[μ.restrict I] 0)
     (hl : l.bRiemann = false) : HasIntegral.{u, v, v} I l f μ.toBoxAdditive.toSMul 0 :=
   by
@@ -157,8 +158,10 @@ theorem hasIntegral_zero_of_ae_eq_zero {l : IntegrationParams} {I : Box ι} {f :
   rw [ENNReal.coe_toReal, ← NNReal.coe_nat_cast, ← NNReal.coe_mul, NNReal.coe_le_coe, ←
     ENNReal.coe_le_coe, ENNReal.coe_mul, ENNReal.coe_nat, mul_comm]
   exact (mul_le_mul_left' this.le _).trans ENNReal.mul_div_le
-#align box_integral.has_integral_zero_of_ae_eq_zero BoxIntegral.hasIntegral_zero_of_ae_eq_zero
+#align box_integral.has_integral_zero_of_ae_eq_zero BoxIntegral.HasIntegral.of_aeEq_zero
+-/
 
+#print BoxIntegral.HasIntegral.congr_ae /-
 /-- If `f` has integral `y` on a box `I` with respect to a locally finite measure `μ` and `g` is
 a.e. equal to `f` on `I`, then `g` has the same integral on `I`.  -/
 theorem HasIntegral.congr_ae {l : IntegrationParams} {I : Box ι} {y : E} {f g : (ι → ℝ) → E}
@@ -169,6 +172,7 @@ theorem HasIntegral.congr_ae {l : IntegrationParams} {I : Box ι} {y : E} {f g :
   have : g - f =ᵐ[μ.restrict I] 0 := hfg.mono fun x hx => sub_eq_zero.2 hx.symm
   simpa using hf.add (has_integral_zero_of_ae_eq_zero this hl)
 #align box_integral.has_integral.congr_ae BoxIntegral.HasIntegral.congr_ae
+-/
 
 end BoxIntegral
 
@@ -176,8 +180,9 @@ namespace MeasureTheory
 
 namespace SimpleFunc
 
+#print MeasureTheory.SimpleFunc.hasBoxIntegral /-
 /-- A simple function is McShane integrable w.r.t. any locally finite measure. -/
-theorem has_box_integral (f : SimpleFunc (ι → ℝ) E) (μ : Measure (ι → ℝ)) [IsLocallyFiniteMeasure μ]
+theorem hasBoxIntegral (f : SimpleFunc (ι → ℝ) E) (μ : Measure (ι → ℝ)) [IsLocallyFiniteMeasure μ]
     (I : Box ι) (l : IntegrationParams) (hl : l.bRiemann = false) :
     HasIntegral.{u, v, v} I l f μ.toBoxAdditive.toSMul (f.integral (μ.restrict I)) :=
   by
@@ -185,28 +190,32 @@ theorem has_box_integral (f : SimpleFunc (ι → ℝ) E) (μ : Measure (ι → �
   ·
     simpa only [measure.restrict_apply hs, const_zero, integral_piecewise_zero, integral_const,
       measure.restrict_apply, MeasurableSet.univ, Set.univ_inter] using
-      BoxIntegral.hasIntegral_indicator_const l hl hs I y μ
+      BoxIntegral.hasIntegralIndicatorConst l hl hs I y μ
   · borelize E; haveI := Fact.mk (I.measure_coe_lt_top μ)
     rw [integral_add]
     exacts [hfi.add hgi, integrable_iff.2 fun _ _ => measure_lt_top _ _,
       integrable_iff.2 fun _ _ => measure_lt_top _ _]
-#align measure_theory.simple_func.has_box_integral MeasureTheory.SimpleFunc.has_box_integral
+#align measure_theory.simple_func.has_box_integral MeasureTheory.SimpleFunc.hasBoxIntegral
+-/
 
+#print MeasureTheory.SimpleFunc.box_integral_eq_integral /-
 /-- For a simple function, its McShane (or Henstock, or `⊥`) box integral is equal to its
 integral in the sense of `measure_theory.simple_func.integral`. -/
 theorem box_integral_eq_integral (f : SimpleFunc (ι → ℝ) E) (μ : Measure (ι → ℝ))
     [IsLocallyFiniteMeasure μ] (I : Box ι) (l : IntegrationParams) (hl : l.bRiemann = false) :
     BoxIntegral.integral.{u, v, v} I l f μ.toBoxAdditive.toSMul = f.integral (μ.restrict I) :=
-  (f.has_box_integral μ I l hl).integral_eq
+  (f.hasBoxIntegral μ I l hl).integral_eq
 #align measure_theory.simple_func.box_integral_eq_integral MeasureTheory.SimpleFunc.box_integral_eq_integral
+-/
 
 end SimpleFunc
 
 open TopologicalSpace
 
+#print MeasureTheory.IntegrableOn.hasBoxIntegral /-
 /-- If `f : ℝⁿ → E` is Bochner integrable w.r.t. a locally finite measure `μ` on a rectangular box
 `I`, then it is McShane integrable on `I` with the same integral.  -/
-theorem IntegrableOn.has_box_integral [CompleteSpace E] {f : (ι → ℝ) → E} {μ : Measure (ι → ℝ)}
+theorem IntegrableOn.hasBoxIntegral [CompleteSpace E] {f : (ι → ℝ) → E} {μ : Measure (ι → ℝ)}
     [IsLocallyFiniteMeasure μ] {I : Box ι} (hf : IntegrableOn f I μ) (l : IntegrationParams)
     (hl : l.bRiemann = false) :
     HasIntegral.{u, v, v} I l f μ.toBoxAdditive.toSMul (∫ x in I, f x ∂μ) :=
@@ -225,7 +234,7 @@ theorem IntegrableOn.has_box_integral [CompleteSpace E] {f : (ι → ℝ) → E}
     simple_func.approx_on g hg.measurable (range g ∪ {0}) 0 (by simp)
   have hfi : ∀ n, integrable_on (f n) I μ :=
     simple_func.integrable_approx_on_range hg.measurable hgi
-  have hfi' := fun n => ((f n).has_box_integral μ I l hl).Integrable
+  have hfi' := fun n => ((f n).hasBoxIntegral μ I l hl).Integrable
   have hfgi : tendsto (fun n => (f n).integral (μ.restrict I)) at_top (𝓝 <| ∫ x in I, g x ∂μ) :=
     tendsto_integral_approx_on_of_measurable_of_range_subset hg.measurable hgi _ subset.rfl
   have hfg_mono : ∀ (x) {m n}, m ≤ n → ‖f n x - g x‖ ≤ ‖f m x - g x‖ :=
@@ -323,7 +332,8 @@ theorem IntegrableOn.has_box_integral [CompleteSpace E] {f : (ι → ℝ) → E}
     rw [dist_eq_norm, ← integral_sub (hfi _ J hJ) (hgi J hJ)]
     refine' norm_integral_le_of_norm_le (hfgi _ J hJ) (eventually_of_forall fun x => _)
     exact hfg_mono x (hNx (π.tag J))
-#align measure_theory.integrable_on.has_box_integral MeasureTheory.IntegrableOn.has_box_integral
+#align measure_theory.integrable_on.has_box_integral MeasureTheory.IntegrableOn.hasBoxIntegral
+-/
 
 end MeasureTheory
 

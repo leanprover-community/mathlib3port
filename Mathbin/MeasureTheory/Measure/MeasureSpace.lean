@@ -2922,11 +2922,11 @@ theorem NullMeasurableSet.mono (h : NullMeasurableSet s μ) (hle : ν ≤ μ) : 
 #align measure_theory.null_measurable_set.mono MeasureTheory.NullMeasurableSet.mono
 -/
 
-#print MeasureTheory.AeDisjoint.preimage /-
-theorem AeDisjoint.preimage {ν : Measure β} {f : α → β} {s t : Set β} (ht : AEDisjoint ν s t)
+#print MeasureTheory.AEDisjoint.preimage /-
+theorem AEDisjoint.preimage {ν : Measure β} {f : α → β} {s t : Set β} (ht : AEDisjoint ν s t)
     (hf : QuasiMeasurePreserving f μ ν) : AEDisjoint μ (f ⁻¹' s) (f ⁻¹' t) :=
   hf.preimage_null ht
-#align measure_theory.ae_disjoint.preimage MeasureTheory.AeDisjoint.preimage
+#align measure_theory.ae_disjoint.preimage MeasureTheory.AEDisjoint.preimage
 -/
 
 @[simp]

@@ -80,9 +80,11 @@ theorem tan_ne_zero_iff {θ : ℂ} : tan θ ≠ 0 ↔ ∀ k : ℤ, θ ≠ k * π
   rw [← not_exists, not_iff_not, tan_eq_zero_iff]
 #align complex.tan_ne_zero_iff Complex.tan_ne_zero_iff
 
+#print Complex.tan_int_mul_pi_div_two /-
 theorem tan_int_mul_pi_div_two (n : ℤ) : tan (n * π / 2) = 0 :=
   tan_eq_zero_iff.mpr (by use n)
 #align complex.tan_int_mul_pi_div_two Complex.tan_int_mul_pi_div_two
+-/
 
 theorem cos_eq_cos_iff {x y : ℂ} : cos x = cos y ↔ ∃ k : ℤ, y = 2 * k * π + x ∨ y = 2 * k * π - x :=
   calc
@@ -133,6 +135,7 @@ theorem tan_add' {x y : ℂ}
   tan_add (Or.inl h)
 #align complex.tan_add' Complex.tan_add'
 
+#print Complex.tan_two_mul /-
 theorem tan_two_mul {z : ℂ} : tan (2 * z) = 2 * tan z / (1 - tan z ^ 2) :=
   by
   by_cases h : ∀ k : ℤ, z ≠ (2 * k + 1) * π / 2
@@ -140,14 +143,15 @@ theorem tan_two_mul {z : ℂ} : tan (2 * z) = 2 * tan z / (1 - tan z ^ 2) :=
   · rw [not_forall_not] at h 
     rw [two_mul, two_mul, sq, tan_add (Or.inr ⟨h, h⟩)]
 #align complex.tan_two_mul Complex.tan_two_mul
+-/
 
-theorem tan_add_mul_i {x y : ℂ}
+theorem tan_add_mul_I {x y : ℂ}
     (h :
       ((∀ k : ℤ, x ≠ (2 * k + 1) * π / 2) ∧ ∀ l : ℤ, y * I ≠ (2 * l + 1) * π / 2) ∨
         (∃ k : ℤ, x = (2 * k + 1) * π / 2) ∧ ∃ l : ℤ, y * I = (2 * l + 1) * π / 2) :
     tan (x + y * I) = (tan x + tanh y * I) / (1 - tan x * tanh y * I) := by
   rw [tan_add h, tan_mul_I, mul_assoc]
-#align complex.tan_add_mul_I Complex.tan_add_mul_i
+#align complex.tan_add_mul_I Complex.tan_add_mul_I
 
 theorem tan_eq {z : ℂ}
     (h :
@@ -180,6 +184,7 @@ theorem cos_eq_iff_quadratic {z w : ℂ} :
 #align complex.cos_eq_iff_quadratic Complex.cos_eq_iff_quadratic
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (w «expr ≠ » 0) -/
+#print Complex.cos_surjective /-
 theorem cos_surjective : Function.Surjective cos :=
   by
   intro x
@@ -196,23 +201,30 @@ theorem cos_surjective : Function.Surjective cos :=
   convert hw
   ring
 #align complex.cos_surjective Complex.cos_surjective
+-/
 
+#print Complex.range_cos /-
 @[simp]
 theorem range_cos : range cos = Set.univ :=
   cos_surjective.range_eq
 #align complex.range_cos Complex.range_cos
+-/
 
+#print Complex.sin_surjective /-
 theorem sin_surjective : Function.Surjective sin :=
   by
   intro x
   rcases cos_surjective x with ⟨z, rfl⟩
   exact ⟨z + π / 2, sin_add_pi_div_two z⟩
 #align complex.sin_surjective Complex.sin_surjective
+-/
 
+#print Complex.range_sin /-
 @[simp]
 theorem range_sin : range sin = Set.univ :=
   sin_surjective.range_eq
 #align complex.range_sin Complex.range_sin
+-/
 
 end Complex
 
