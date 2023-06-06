@@ -181,15 +181,19 @@ theorem MeasureTheory.AEStronglyMeasurable.prod_swap {γ : Type _} [TopologicalS
   exact hf.comp_measurable measurable_swap
 #align measure_theory.ae_strongly_measurable.prod_swap MeasureTheory.AEStronglyMeasurable.prod_swap
 
+#print MeasureTheory.AEStronglyMeasurable.fst /-
 theorem MeasureTheory.AEStronglyMeasurable.fst {γ} [TopologicalSpace γ] [SigmaFinite ν] {f : α → γ}
     (hf : AEStronglyMeasurable f μ) : AEStronglyMeasurable (fun z : α × β => f z.1) (μ.Prod ν) :=
   hf.comp_quasiMeasurePreserving quasiMeasurePreserving_fst
 #align measure_theory.ae_strongly_measurable.fst MeasureTheory.AEStronglyMeasurable.fst
+-/
 
+#print MeasureTheory.AEStronglyMeasurable.snd /-
 theorem MeasureTheory.AEStronglyMeasurable.snd {γ} [TopologicalSpace γ] [SigmaFinite ν] {f : β → γ}
     (hf : AEStronglyMeasurable f ν) : AEStronglyMeasurable (fun z : α × β => f z.2) (μ.Prod ν) :=
   hf.comp_quasiMeasurePreserving quasiMeasurePreserving_snd
 #align measure_theory.ae_strongly_measurable.snd MeasureTheory.AEStronglyMeasurable.snd
+-/
 
 /-- The Bochner integral is a.e.-measurable.
   This shows that the integrand of (the right-hand-side of) Fubini's theorem is a.e.-measurable. -/
@@ -200,6 +204,7 @@ theorem MeasureTheory.AEStronglyMeasurable.integral_prod_right' [SigmaFinite ν]
     filter_upwards [ae_ae_of_ae_prod hf.ae_eq_mk] with _ hx using integral_congr_ae hx⟩
 #align measure_theory.ae_strongly_measurable.integral_prod_right' MeasureTheory.AEStronglyMeasurable.integral_prod_right'
 
+#print MeasureTheory.AEStronglyMeasurable.prod_mk_left /-
 theorem MeasureTheory.AEStronglyMeasurable.prod_mk_left {γ : Type _} [SigmaFinite ν]
     [TopologicalSpace γ] {f : α × β → γ} (hf : AEStronglyMeasurable f (μ.Prod ν)) :
     ∀ᵐ x ∂μ, AEStronglyMeasurable (fun y => f (x, y)) ν :=
@@ -208,6 +213,7 @@ theorem MeasureTheory.AEStronglyMeasurable.prod_mk_left {γ : Type _} [SigmaFini
   exact
     ⟨fun y => hf.mk f (x, y), hf.strongly_measurable_mk.comp_measurable measurable_prod_mk_left, hx⟩
 #align measure_theory.ae_strongly_measurable.prod_mk_left MeasureTheory.AEStronglyMeasurable.prod_mk_left
+-/
 
 end
 
@@ -479,23 +485,29 @@ theorem integral_prod_symm (f : α × β → E) (hf : Integrable f (μ.Prod ν))
   simp_rw [← integral_prod_swap f hf.ae_strongly_measurable]; exact integral_prod _ hf.swap
 #align measure_theory.integral_prod_symm MeasureTheory.integral_prod_symm
 
+#print MeasureTheory.integral_integral /-
 /-- Reversed version of **Fubini's Theorem**. -/
 theorem integral_integral {f : α → β → E} (hf : Integrable (uncurry f) (μ.Prod ν)) :
     (∫ x, ∫ y, f x y ∂ν ∂μ) = ∫ z, f z.1 z.2 ∂μ.Prod ν :=
   (integral_prod _ hf).symm
 #align measure_theory.integral_integral MeasureTheory.integral_integral
+-/
 
+#print MeasureTheory.integral_integral_symm /-
 /-- Reversed version of **Fubini's Theorem** (symmetric version). -/
 theorem integral_integral_symm {f : α → β → E} (hf : Integrable (uncurry f) (μ.Prod ν)) :
     (∫ x, ∫ y, f x y ∂ν ∂μ) = ∫ z, f z.2 z.1 ∂ν.Prod μ :=
   (integral_prod_symm _ hf.symm).symm
 #align measure_theory.integral_integral_symm MeasureTheory.integral_integral_symm
+-/
 
+#print MeasureTheory.integral_integral_swap /-
 /-- Change the order of Bochner integration. -/
 theorem integral_integral_swap ⦃f : α → β → E⦄ (hf : Integrable (uncurry f) (μ.Prod ν)) :
     (∫ x, ∫ y, f x y ∂ν ∂μ) = ∫ y, ∫ x, f x y ∂μ ∂ν :=
   (integral_integral hf).trans (integral_prod_symm _ hf)
 #align measure_theory.integral_integral_swap MeasureTheory.integral_integral_swap
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/

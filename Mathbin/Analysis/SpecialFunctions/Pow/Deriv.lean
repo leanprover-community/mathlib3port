@@ -641,6 +641,7 @@ section Limits
 
 open Real Filter
 
+#print tendsto_one_plus_div_rpow_exp /-
 /-- The function `(1 + t/x) ^ x` tends to `exp t` at `+∞`. -/
 theorem tendsto_one_plus_div_rpow_exp (t : ℝ) :
     Tendsto (fun x : ℝ => (1 + t / x) ^ x) atTop (𝓝 (exp t)) :=
@@ -653,6 +654,7 @@ theorem tendsto_one_plus_div_rpow_exp (t : ℝ) :
   have hx' : 0 < 1 + t / x := by linarith
   simp [mul_comm x, exp_mul, exp_log hx']
 #align tendsto_one_plus_div_rpow_exp tendsto_one_plus_div_rpow_exp
+-/
 
 /-- The function `(1 + t/x) ^ x` tends to `exp t` at `+∞` for naturals `x`. -/
 theorem tendsto_one_plus_div_pow_exp (t : ℝ) :

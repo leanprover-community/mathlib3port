@@ -49,6 +49,7 @@ Show that `quaternion_group 2 ≃* (quaternion ℤ)ˣ`.
 -/
 
 
+#print QuaternionGroup /-
 /-- The (generalised) quaternion group `quaternion_group n` of order `4n`. It can be defined by the
 presentation $\langle a, x | a^{2n} = 1, x^2 = a^n, x^{-1}ax=a^{-1}\rangle$. We write `a i` for
 $a^i$ and `xa i` for $x * a^i$.
@@ -58,6 +59,7 @@ inductive QuaternionGroup (n : ℕ) : Type
   | xa : ZMod (2 * n) → QuaternionGroup
   deriving DecidableEq
 #align quaternion_group QuaternionGroup
+-/
 
 namespace QuaternionGroup
 
@@ -173,6 +175,7 @@ instance [NeZero n] : Fintype (QuaternionGroup n) :=
 instance : Nontrivial (QuaternionGroup n) :=
   ⟨⟨a 0, xa 0, by decide⟩⟩
 
+#print QuaternionGroup.card /-
 /-- If `0 < n`, then `quaternion_group n` has `4n` elements.
 -/
 theorem card [NeZero n] : Fintype.card (QuaternionGroup n) = 4 * n :=
@@ -180,6 +183,7 @@ theorem card [NeZero n] : Fintype.card (QuaternionGroup n) = 4 * n :=
   rw [← fintype.card_eq.mpr ⟨fintype_helper⟩, Fintype.card_sum, ZMod.card, two_mul]
   ring
 #align quaternion_group.card QuaternionGroup.card
+-/
 
 @[simp]
 theorem a_one_pow (k : ℕ) : (a 1 : QuaternionGroup n) ^ k = a k :=
