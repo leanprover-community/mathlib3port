@@ -40,12 +40,14 @@ We also provide the equivalence of the following notions for a domain `R` in `va
 
 universe u v w
 
+#print ValuationRing /-
 /- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`cond] [] -/
 /-- An integral domain is called a `valuation ring` provided that for any pair
 of elements `a b : A`, either `a` divides `b` or vice versa. -/
 class ValuationRing (A : Type u) [CommRing A] [IsDomain A] : Prop where
   cond : ∀ a b : A, ∃ c : A, a * c = b ∨ b * c = a
 #align valuation_ring ValuationRing
+-/
 
 namespace ValuationRing
 
@@ -55,10 +57,12 @@ variable (A : Type u) [CommRing A]
 
 variable (K : Type v) [Field K] [Algebra A K]
 
+#print ValuationRing.ValueGroup /-
 /-- The value group of the valuation ring `A`. Note: this is actually a group with zero. -/
 def ValueGroup : Type v :=
   Quotient (MulAction.orbitRel Aˣ K)
 #align valuation_ring.value_group ValuationRing.ValueGroup
+-/
 
 instance : Inhabited (ValueGroup A K) :=
   ⟨Quotient.mk'' 0⟩
@@ -293,13 +297,16 @@ variable {R : Type _} [CommRing R] [IsDomain R] {K : Type _}
 
 variable [Field K] [Algebra R K] [IsFractionRing R K]
 
+#print ValuationRing.iff_dvd_total /-
 theorem iff_dvd_total : ValuationRing R ↔ IsTotal R (· ∣ ·) := by
   classical
   refine' ⟨fun H => ⟨fun a b => _⟩, fun H => ⟨fun a b => _⟩⟩ <;> skip
   · obtain ⟨c, rfl | rfl⟩ := @ValuationRing.cond _ _ H a b <;> simp
   · obtain ⟨c, rfl⟩ | ⟨c, rfl⟩ := @IsTotal.total _ _ H a b <;> use c <;> simp
 #align valuation_ring.iff_dvd_total ValuationRing.iff_dvd_total
+-/
 
+#print ValuationRing.iff_ideal_total /-
 theorem iff_ideal_total : ValuationRing R ↔ IsTotal (Ideal R) (· ≤ ·) := by
   classical
   refine' ⟨fun _ => ⟨le_total⟩, fun H => iff_dvd_total.mpr ⟨fun a b => _⟩⟩
@@ -307,12 +314,15 @@ theorem iff_ideal_total : ValuationRing R ↔ IsTotal (Ideal R) (· ≤ ·) := b
   simp_rw [Ideal.span_singleton_le_span_singleton] at this 
   exact this.symm
 #align valuation_ring.iff_ideal_total ValuationRing.iff_ideal_total
+-/
 
 variable {R} (K)
 
+#print ValuationRing.dvd_total /-
 theorem dvd_total [h : ValuationRing R] (x y : R) : x ∣ y ∨ y ∣ x :=
   @IsTotal.total _ (iff_dvd_total.mp h) x y
 #align valuation_ring.dvd_total ValuationRing.dvd_total
+-/
 
 theorem unique_irreducible [ValuationRing R] ⦃p q : R⦄ (hp : Irreducible p) (hq : Irreducible q) :
     Associated p q := by
@@ -370,6 +380,7 @@ instance (priority := 100) [ValuationRing R] : IsBezout R := by
   · erw [sup_eq_right.mpr h]; exact ⟨⟨_, rfl⟩⟩
   · erw [sup_eq_left.mpr h]; exact ⟨⟨_, rfl⟩⟩
 
+#print ValuationRing.iff_local_bezout_domain /-
 theorem iff_local_bezout_domain : ValuationRing R ↔ LocalRing R ∧ IsBezout R := by
   classical
   refine' ⟨fun H => ⟨inferInstance, inferInstance⟩, _⟩
@@ -395,6 +406,7 @@ theorem iff_local_bezout_domain : ValuationRing R ↔ LocalRing R ∧ IsBezout R
   right
   all_goals exact mul_dvd_mul_right (is_unit_iff_forall_dvd.mp (isUnit_of_mul_isUnit_right h') _) _
 #align valuation_ring.iff_local_bezout_domain ValuationRing.iff_local_bezout_domain
+-/
 
 protected theorem tFAE (R : Type u) [CommRing R] [IsDomain R] :
     TFAE
@@ -426,6 +438,7 @@ variable {𝒪 : Type u} {K : Type v} {Γ : Type w} [CommRing 𝒪] [IsDomain �
 
 include hh
 
+#print ValuationRing.of_integers /-
 /-- If `𝒪` satisfies `v.integers 𝒪` where `v` is a valuation on a field, then `𝒪`
 is a valuation ring. -/
 theorem of_integers : ValuationRing 𝒪 := by
@@ -437,6 +450,7 @@ theorem of_integers : ValuationRing 𝒪 := by
   · obtain ⟨c, hc⟩ := Valuation.Integers.dvd_of_le hh h
     use c; exact Or.inl hc.symm
 #align valuation_ring.of_integers ValuationRing.of_integers
+-/
 
 end
 
@@ -444,6 +458,7 @@ section
 
 variable (K : Type u) [Field K]
 
+#print ValuationRing.of_field /-
 /-- A field is a valuation ring. -/
 instance (priority := 100) of_field : ValuationRing K :=
   by
@@ -453,6 +468,7 @@ instance (priority := 100) of_field : ValuationRing K :=
   · use 0; left; simp [h]
   · use a * b⁻¹; right; field_simp; rw [mul_comm]
 #align valuation_ring.of_field ValuationRing.of_field
+-/
 
 end
 
@@ -460,6 +476,7 @@ section
 
 variable (A : Type u) [CommRing A] [IsDomain A] [DiscreteValuationRing A]
 
+#print ValuationRing.of_discreteValuationRing /-
 /-- A DVR is a valuation ring. -/
 instance (priority := 100) of_discreteValuationRing : ValuationRing A :=
   by
@@ -482,6 +499,7 @@ instance (priority := 100) of_discreteValuationRing : ValuationRing A :=
     congr 2
     linarith
 #align valuation_ring.of_discrete_valuation_ring ValuationRing.of_discreteValuationRing
+-/
 
 end
 

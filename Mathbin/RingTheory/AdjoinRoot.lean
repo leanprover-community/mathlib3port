@@ -373,12 +373,12 @@ theorem liftHom_of {x : R} : liftHom f a hfx (of f x) = algebraMap _ _ x :=
 
 section AdjoinInv
 
-#print AdjoinRoot.root_is_inv /-
+#print AdjoinRoot.root_isInv /-
 @[simp]
-theorem root_is_inv (r : R) : of _ r * root (C r * X - 1) = 1 := by
+theorem root_isInv (r : R) : of _ r * root (C r * X - 1) = 1 := by
   convert sub_eq_zero.1 ((eval₂_sub _).symm.trans <| eval₂_root <| C r * X - 1) <;>
     simp only [eval₂_mul, eval₂_C, eval₂_X, eval₂_one]
-#align adjoin_root.root_is_inv AdjoinRoot.root_is_inv
+#align adjoin_root.root_is_inv AdjoinRoot.root_isInv
 -/
 
 theorem algHom_subsingleton {S : Type _} [CommRing S] [Algebra R S] {r : R} :

@@ -71,39 +71,55 @@ an additive monoid homomorphism.
 -/
 
 
+#print Behrend.box /-
 /-- The box `{0, ..., d - 1}^n` as a finset. -/
 def box (n d : ℕ) : Finset (Fin n → ℕ) :=
   Fintype.piFinset fun _ => range d
 #align behrend.box Behrend.box
+-/
 
+#print Behrend.mem_box /-
 theorem mem_box : x ∈ box n d ↔ ∀ i, x i < d := by simp only [box, Fintype.mem_piFinset, mem_range]
 #align behrend.mem_box Behrend.mem_box
+-/
 
+#print Behrend.card_box /-
 @[simp]
 theorem card_box : (box n d).card = d ^ n := by simp [box]
 #align behrend.card_box Behrend.card_box
+-/
 
+#print Behrend.box_zero /-
 @[simp]
 theorem box_zero : box (n + 1) 0 = ∅ := by simp [box]
 #align behrend.box_zero Behrend.box_zero
+-/
 
+#print Behrend.sphere /-
 /-- The intersection of the sphere of radius `sqrt k` with the integer points in the positive
 quadrant. -/
 def sphere (n d k : ℕ) : Finset (Fin n → ℕ) :=
   (box n d).filterₓ fun x => (∑ i, x i ^ 2) = k
 #align behrend.sphere Behrend.sphere
+-/
 
+#print Behrend.sphere_zero_subset /-
 theorem sphere_zero_subset : sphere n d 0 ⊆ 0 := fun x => by
   simp (config := { contextual := true }) [sphere, Function.funext_iff]
 #align behrend.sphere_zero_subset Behrend.sphere_zero_subset
+-/
 
+#print Behrend.sphere_zero_right /-
 @[simp]
 theorem sphere_zero_right (n k : ℕ) : sphere (n + 1) 0 k = ∅ := by simp [sphere]
 #align behrend.sphere_zero_right Behrend.sphere_zero_right
+-/
 
+#print Behrend.sphere_subset_box /-
 theorem sphere_subset_box : sphere n d k ⊆ box n d :=
   filter_subset _ _
 #align behrend.sphere_subset_box Behrend.sphere_subset_box
+-/
 
 theorem norm_of_mem_sphere {x : Fin n → ℕ} (hx : x ∈ sphere n d k) :
     ‖(PiLp.equiv 2 _).symm (coe ∘ x : Fin n → ℝ)‖ = sqrt k :=
@@ -113,13 +129,16 @@ theorem norm_of_mem_sphere {x : Fin n → ℕ} (hx : x ∈ sphere n d k) :
   simp_rw [abs_cast, ← cast_pow, ← cast_sum, (mem_filter.1 hx).2]
 #align behrend.norm_of_mem_sphere Behrend.norm_of_mem_sphere
 
+#print Behrend.sphere_subset_preimage_metric_sphere /-
 theorem sphere_subset_preimage_metric_sphere :
     (sphere n d k : Set (Fin n → ℕ)) ⊆
       (fun x : Fin n → ℕ => (PiLp.equiv 2 _).symm (coe ∘ x : Fin n → ℝ)) ⁻¹'
         Metric.sphere (0 : PiLp 2 fun _ : Fin n => ℝ) (sqrt k) :=
   fun x hx => by rw [Set.mem_preimage, mem_sphere_zero_iff_norm, norm_of_mem_sphere hx]
 #align behrend.sphere_subset_preimage_metric_sphere Behrend.sphere_subset_preimage_metric_sphere
+-/
 
+#print Behrend.map /-
 /-- The map that appears in Behrend's bound on Roth numbers. -/
 @[simps]
 def map (d : ℕ) : (Fin n → ℕ) →+ ℕ
@@ -128,6 +147,7 @@ def map (d : ℕ) : (Fin n → ℕ) →+ ℕ
   map_zero' := by simp_rw [Pi.zero_apply, MulZeroClass.zero_mul, sum_const_zero]
   map_add' a b := by simp_rw [Pi.add_apply, add_mul, sum_add_distrib]
 #align behrend.map Behrend.map
+-/
 
 @[simp]
 theorem map_zero (d : ℕ) (a : Fin 0 → ℕ) : map d a = 0 := by simp [map]
@@ -177,6 +197,7 @@ theorem map_le_of_mem_box (hx : x ∈ box n d) :
   map_monotone (2 * d - 1) fun _ => Nat.le_pred_of_lt <| mem_box.1 hx _
 #align behrend.map_le_of_mem_box Behrend.map_le_of_mem_box
 
+#print Behrend.addSalemSpencer_sphere /-
 theorem addSalemSpencer_sphere : AddSalemSpencer (sphere n d k : Set (Fin n → ℕ)) :=
   by
   set f : (Fin n → ℕ) →+ EuclideanSpace ℝ (Fin n) :=
@@ -189,6 +210,7 @@ theorem addSalemSpencer_sphere : AddSalemSpencer (sphere n d k : Set (Fin n → 
   rw [Set.mem_preimage, mem_sphere_zero_iff_norm]
   exact norm_of_mem_sphere
 #align behrend.add_salem_spencer_sphere Behrend.addSalemSpencer_sphere
+-/
 
 theorem addSalemSpencer_image_sphere :
     AddSalemSpencer ((sphere n d k).image (map (2 * d - 1)) : Set ℕ) :=
@@ -205,6 +227,7 @@ theorem addSalemSpencer_image_sphere :
   exact (add_add_add_comm _ _ 1 1).trans_le (add_le_add hai hbi)
 #align behrend.add_salem_spencer_image_sphere Behrend.addSalemSpencer_image_sphere
 
+#print Behrend.sum_sq_le_of_mem_box /-
 theorem sum_sq_le_of_mem_box (hx : x ∈ box n d) : (∑ i : Fin n, x i ^ 2) ≤ n * (d - 1) ^ 2 :=
   by
   rw [mem_box] at hx 
@@ -212,18 +235,24 @@ theorem sum_sq_le_of_mem_box (hx : x ∈ box n d) : (∑ i : Fin n, x i ^ 2) ≤
     Nat.pow_le_pow_of_le_left (Nat.le_pred_of_lt (hx i)) _
   exact (sum_le_card_nsmul univ _ _ fun i _ => this i).trans (by rw [card_fin, smul_eq_mul])
 #align behrend.sum_sq_le_of_mem_box Behrend.sum_sq_le_of_mem_box
+-/
 
+#print Behrend.sum_eq /-
 theorem sum_eq : (∑ i : Fin n, d * (2 * d + 1) ^ (i : ℕ)) = ((2 * d + 1) ^ n - 1) / 2 :=
   by
   refine' (Nat.div_eq_of_eq_mul_left zero_lt_two _).symm
   rw [← sum_range fun i => d * (2 * d + 1) ^ (i : ℕ), ← mul_sum, mul_right_comm, mul_comm d, ←
     geom_sum_mul_add, add_tsub_cancel_right, mul_comm]
 #align behrend.sum_eq Behrend.sum_eq
+-/
 
+#print Behrend.sum_lt /-
 theorem sum_lt : (∑ i : Fin n, d * (2 * d + 1) ^ (i : ℕ)) < (2 * d + 1) ^ n :=
   sum_eq.trans_lt <| (Nat.div_le_self _ 2).trans_lt <| pred_lt (pow_pos (succ_pos _) _).ne'
 #align behrend.sum_lt Behrend.sum_lt
+-/
 
+#print Behrend.card_sphere_le_rothNumberNat /-
 theorem card_sphere_le_rothNumberNat (n d k : ℕ) :
     (sphere n d k).card ≤ rothNumberNat ((2 * d - 1) ^ n) :=
   by
@@ -242,6 +271,7 @@ theorem card_sphere_le_rothNumberNat (n d k : ℕ) :
   simp only [mem_coe, sphere, mem_filter, mem_box, and_imp, two_mul]
   exact fun h _ i => (h i).trans_le le_self_add
 #align behrend.card_sphere_le_roth_number_nat Behrend.card_sphere_le_rothNumberNat
+-/
 
 /-!
 ### Optimization
@@ -399,20 +429,27 @@ theorem ceil_lt_mul {x : ℝ} (hx : 50 / 19 ≤ x) : (⌈x⌉₊ : ℝ) < 1.38 *
 
 end NumericalBounds
 
+#print Behrend.nValue /-
 /-- The (almost) optimal value of `n` in `behrend.bound_aux`. -/
 noncomputable def nValue (N : ℕ) : ℕ :=
   ⌈sqrt (log N)⌉₊
 #align behrend.n_value Behrend.nValue
+-/
 
+#print Behrend.dValue /-
 /-- The (almost) optimal value of `d` in `behrend.bound_aux`. -/
 noncomputable def dValue (N : ℕ) : ℕ :=
   ⌊(N : ℝ) ^ (1 / nValue N : ℝ) / 2⌋₊
 #align behrend.d_value Behrend.dValue
+-/
 
+#print Behrend.nValue_pos /-
 theorem nValue_pos (hN : 2 ≤ N) : 0 < nValue N :=
   ceil_pos.2 <| Real.sqrt_pos.2 <| log_pos <| one_lt_cast.2 <| hN
 #align behrend.n_value_pos Behrend.nValue_pos
+-/
 
+#print Behrend.two_le_nValue /-
 theorem two_le_nValue (hN : 3 ≤ N) : 2 ≤ nValue N :=
   by
   refine' succ_le_of_lt (lt_ceil.2 <| lt_sqrt_of_sq_lt _)
@@ -422,7 +459,9 @@ theorem two_le_nValue (hN : 3 ≤ N) : 2 ≤ nValue N :=
   rw [cast_pos]
   exact (zero_lt_succ _).trans_le hN
 #align behrend.two_le_n_value Behrend.two_le_nValue
+-/
 
+#print Behrend.three_le_nValue /-
 theorem three_le_nValue (hN : 64 ≤ N) : 3 ≤ nValue N :=
   by
   rw [n_value, ← lt_iff_add_one_le, lt_ceil, cast_two]
@@ -437,7 +476,9 @@ theorem three_le_nValue (hN : 64 ≤ N) : 3 ≤ nValue N :=
   rw [cast_pos]
   exact hN.trans_lt' (by norm_num1)
 #align behrend.three_le_n_value Behrend.three_le_nValue
+-/
 
+#print Behrend.dValue_pos /-
 theorem dValue_pos (hN₃ : 8 ≤ N) : 0 < dValue N :=
   by
   have hN₀ : 0 < (N : ℝ) := cast_pos.2 (succ_pos'.trans_le hN₃)
@@ -462,7 +503,9 @@ theorem dValue_pos (hN₃ : 8 ≤ N) : 0 < dValue N :=
   · exact (rpow_pos_of_pos hN₀ _).ne'
   · exact div_pos (rpow_pos_of_pos hN₀ _) zero_lt_two
 #align behrend.d_value_pos Behrend.dValue_pos
+-/
 
+#print Behrend.le_N /-
 theorem le_N (hN : 2 ≤ N) : (2 * dValue N - 1) ^ nValue N ≤ N :=
   by
   have : (2 * d_value N - 1) ^ n_value N ≤ (2 * d_value N) ^ n_value N :=
@@ -479,6 +522,7 @@ theorem le_N (hN : 2 ≤ N) : (2 * dValue N - 1) ^ nValue N ≤ N :=
   · exact floor_le (div_nonneg (rpow_nonneg_of_nonneg (cast_nonneg _) _) zero_le_two)
   apply zero_lt_two
 #align behrend.le_N Behrend.le_N
+-/
 
 theorem bound (hN : 4096 ≤ N) : (N : ℝ) ^ (1 / nValue N : ℝ) / exp 1 < dValue N :=
   by
