@@ -166,7 +166,7 @@ we allow `f` to be non-differentiable (but still continuous) at a countable set 
 TODO: If `n > 0`, then the condition at `x ∈ s` can be replaced by a much weaker estimate but this
 requires either better integrability theorems, or usage of a filter depending on the countable set
 `s` (we need to ensure that none of the faces of a partition contain a point from `s`). -/
-theorem hasIntegralGPPderiv (f : ℝⁿ⁺¹ → E) (f' : ℝⁿ⁺¹ → ℝⁿ⁺¹ →L[ℝ] E) (s : Set ℝⁿ⁺¹)
+theorem hasIntegral_GP_pderiv (f : ℝⁿ⁺¹ → E) (f' : ℝⁿ⁺¹ → ℝⁿ⁺¹ →L[ℝ] E) (s : Set ℝⁿ⁺¹)
     (hs : s.Countable) (Hs : ∀ x ∈ s, ContinuousWithinAt f I.Icc x)
     (Hd : ∀ x ∈ I.Icc \ s, HasFDerivWithinAt f (f' x) I.Icc x) (i : Fin (n + 1)) :
     HasIntegral.{0, u, u} I GP (fun x => f' x (Pi.single i 1)) BoxAdditiveMap.volume
@@ -291,7 +291,7 @@ theorem hasIntegralGPPderiv (f : ℝⁿ⁺¹ → E) (f' : ℝⁿ⁺¹ → ℝⁿ
     · exact ⟨hJδ hy, box.le_iff_Icc.1 hle hy⟩
     · rw [mul_right_comm (2 : ℝ), ← box.volume_apply]
       exact mul_le_mul_of_nonneg_right hlt.le ENNReal.toReal_nonneg
-#align box_integral.has_integral_GP_pderiv BoxIntegral.hasIntegralGPPderiv
+#align box_integral.has_integral_GP_pderiv BoxIntegral.hasIntegral_GP_pderiv
 
 /-- Divergence theorem for a Henstock-Kurzweil style integral.
 
@@ -301,7 +301,7 @@ the sum of integrals of `f` over the faces of `I` taken with appropriate signs.
 
 More precisely, we use a non-standard generalization of the Henstock-Kurzweil integral and
 we allow `f` to be non-differentiable (but still continuous) at a countable set of points. -/
-theorem hasIntegralGPDivergenceOfForallHasDerivWithinAt (f : ℝⁿ⁺¹ → Eⁿ⁺¹)
+theorem hasIntegral_GP_divergence_of_forall_hasDerivWithinAt (f : ℝⁿ⁺¹ → Eⁿ⁺¹)
     (f' : ℝⁿ⁺¹ → ℝⁿ⁺¹ →L[ℝ] Eⁿ⁺¹) (s : Set ℝⁿ⁺¹) (hs : s.Countable)
     (Hs : ∀ x ∈ s, ContinuousWithinAt f I.Icc x)
     (Hd : ∀ x ∈ I.Icc \ s, HasFDerivWithinAt f (f' x) I.Icc x) :
@@ -315,7 +315,7 @@ theorem hasIntegralGPDivergenceOfForallHasDerivWithinAt (f : ℝⁿ⁺¹ → E�
   refine' has_integral_sum fun i hi => _; clear hi
   simp only [hasFDerivWithinAt_pi', continuousWithinAt_pi] at Hd Hs 
   convert has_integral_GP_pderiv I _ _ s hs (fun x hx => Hs x hx i) (fun x hx => Hd x hx i) i
-#align box_integral.has_integral_GP_divergence_of_forall_has_deriv_within_at BoxIntegral.hasIntegralGPDivergenceOfForallHasDerivWithinAt
+#align box_integral.has_integral_GP_divergence_of_forall_has_deriv_within_at BoxIntegral.hasIntegral_GP_divergence_of_forall_hasDerivWithinAt
 
 end BoxIntegral
 

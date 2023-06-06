@@ -122,7 +122,7 @@ theorem integral_divergence_of_hasFDerivWithinAt_off_countable_aux₁ (I : Box (
           ∫ x in (I.face i).Icc, f (i.insertNth (I.lower i) x) i :=
   by
   simp only [← set_integral_congr_set_ae (box.coe_ae_eq_Icc _)]
-  have A := (Hi.mono_set box.coe_subset_Icc).hasBoxIntegral ⊥ rfl
+  have A := (Hi.mono_set box.coe_subset_Icc).has_box_integral ⊥ rfl
   have B :=
     has_integral_GP_divergence_of_forall_has_deriv_within_at I f f' (s ∩ I.Icc)
       (hs.mono (inter_subset_left _ _)) (fun x hx => Hc _ hx.2) fun x hx =>
