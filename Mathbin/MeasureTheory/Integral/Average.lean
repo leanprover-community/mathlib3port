@@ -58,6 +58,7 @@ variable (μ)
 
 include m0
 
+#print MeasureTheory.average /-
 /-- Average value of a function `f` w.r.t. a measure `μ`, notation: `⨍ x, f x ∂μ`. It is defined as
 `(μ univ).to_real⁻¹ • ∫ x, f x ∂μ`, so it is equal to zero if `f` is not integrable or if `μ` is an
 infinite measure. If `μ` is a probability measure, then the average of any function is equal to its
@@ -68,6 +69,7 @@ average w.r.t. the volume, one can omit `∂volume`. -/
 noncomputable def average (f : α → E) :=
   ∫ x, f x ∂(μ univ)⁻¹ • μ
 #align measure_theory.average MeasureTheory.average
+-/
 
 -- mathport name: «expr⨍ , ∂ »
 notation3"⨍ "(...)", "r:(scoped f => f)" ∂"μ => average μ r

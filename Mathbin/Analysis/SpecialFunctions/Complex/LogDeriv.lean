@@ -59,7 +59,7 @@ def expLocalHomeomorph : LocalHomeomorph ℂ ℂ :=
 theorem hasStrictDerivAt_log {x : ℂ} (h : 0 < x.re ∨ x.im ≠ 0) : HasStrictDerivAt log x⁻¹ x :=
   have h0 : x ≠ 0 := by rintro rfl; simpa [lt_irrefl] using h
   expLocalHomeomorph.hasStrictDerivAt_symm h h0 <| by
-    simpa [exp_log h0] using has_strict_deriv_at_exp (log x)
+    simpa [exp_log h0] using hasStrictDerivAt_exp (log x)
 #align complex.has_strict_deriv_at_log Complex.hasStrictDerivAt_log
 
 theorem hasStrictFDerivAt_log_real {x : ℂ} (h : 0 < x.re ∨ x.im ≠ 0) :

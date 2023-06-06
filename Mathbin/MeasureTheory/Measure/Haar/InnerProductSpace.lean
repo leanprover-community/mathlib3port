@@ -51,6 +51,7 @@ theorem Orientation.measure_orthonormalBasis (o : Orientation ℝ F (Fin n))
     o.abs_volume_form_apply_of_orthonormal, ENNReal.ofReal_one]
 #align orientation.measure_orthonormal_basis Orientation.measure_orthonormalBasis
 
+#print Orientation.measure_eq_volume /-
 /-- In an oriented inner product space, the measure coming from the canonical volume form
 associated to an orientation coincides with the volume. -/
 theorem Orientation.measure_eq_volume (o : Orientation ℝ F (Fin n)) :
@@ -63,6 +64,7 @@ theorem Orientation.measure_eq_volume (o : Orientation ℝ F (Fin n)) :
     A, one_smul]
   simp only [volume, Basis.addHaar]
 #align orientation.measure_eq_volume Orientation.measure_eq_volume
+-/
 
 end
 

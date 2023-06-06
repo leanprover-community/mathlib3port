@@ -49,14 +49,14 @@ inductive WithTerminal : Type u
   | of : C → with_terminal
   | star : with_terminal
   deriving Inhabited
-#align category_theory.with_terminal CategoryTheory.WithTerminal
+#align category_theory.with_terminal CategoryTheory.WithTerminalₓ
 
 /-- Formally adjoin an initial object to a category. -/
 inductive WithInitial : Type u
   | of : C → with_initial
   | star : with_initial
   deriving Inhabited
-#align category_theory.with_initial CategoryTheory.WithInitial
+#align category_theory.with_initial CategoryTheory.WithInitialₓ
 
 namespace WithTerminal
 
@@ -202,12 +202,14 @@ def liftToTerminal {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (hZ : Limits.
   lift F (fun x => hZ.from _) fun x y f => hZ.hom_ext _ _
 #align category_theory.with_terminal.lift_to_terminal CategoryTheory.WithTerminal.liftToTerminal
 
+#print CategoryTheory.WithTerminal.inclLiftToTerminal /-
 /-- A variant of `incl_lift` with `Z` a terminal object. -/
 @[simps]
 def inclLiftToTerminal {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (hZ : Limits.IsTerminal Z) :
     incl ⋙ liftToTerminal F hZ ≅ F :=
   inclLift _ _ _
 #align category_theory.with_terminal.incl_lift_to_terminal CategoryTheory.WithTerminal.inclLiftToTerminal
+-/
 
 /-- A variant of `lift_unique` with `Z` a terminal object. -/
 @[simps]
@@ -375,12 +377,14 @@ def liftToInitial {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (hZ : Limits.I
   lift F (fun x => hZ.to _) fun x y f => hZ.hom_ext _ _
 #align category_theory.with_initial.lift_to_initial CategoryTheory.WithInitial.liftToInitial
 
+#print CategoryTheory.WithInitial.inclLiftToInitial /-
 /-- A variant of `incl_lift` with `Z` an initial object. -/
 @[simps]
 def inclLiftToInitial {D : Type _} [Category D] {Z : D} (F : C ⥤ D) (hZ : Limits.IsInitial Z) :
     incl ⋙ liftToInitial F hZ ≅ F :=
   inclLift _ _ _
 #align category_theory.with_initial.incl_lift_to_initial CategoryTheory.WithInitial.inclLiftToInitial
+-/
 
 /-- A variant of `lift_unique` with `Z` an initial object. -/
 @[simps]

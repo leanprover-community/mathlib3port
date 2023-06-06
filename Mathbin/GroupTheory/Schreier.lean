@@ -191,10 +191,12 @@ theorem card_commutator_dvd_index_center_pow [Finite (commutatorSet G)] :
   simpa only [MonoidHom.mem_ker, Subtype.ext_iff] using this
 #align subgroup.card_commutator_dvd_index_center_pow Subgroup.card_commutator_dvd_index_center_pow
 
+#print Subgroup.cardCommutatorBound /-
 /-- A bound for the size of the commutator subgroup in terms of the number of commutators. -/
 def cardCommutatorBound (n : ℕ) :=
   (n ^ (2 * n)) ^ (n ^ (2 * n + 1) + 1)
 #align subgroup.card_commutator_bound Subgroup.cardCommutatorBound
+-/
 
 /-- A theorem of Schur: The size of the commutator subgroup is bounded in terms of the number of
   commutators. -/

@@ -199,16 +199,20 @@ section DerivROrC
 
 variable {𝕂 : Type _} [IsROrC 𝕂]
 
+#print hasStrictDerivAt_exp /-
 /-- The exponential map in `𝕂 = ℝ` or `𝕂 = ℂ` has strict derivative `exp 𝕂 x` at any point
 `x`. -/
 theorem hasStrictDerivAt_exp {x : 𝕂} : HasStrictDerivAt (exp 𝕂) (exp 𝕂 x) x :=
   hasStrictDerivAt_exp_of_mem_ball ((expSeries_radius_eq_top 𝕂 𝕂).symm ▸ edist_lt_top _ _)
 #align has_strict_deriv_at_exp hasStrictDerivAt_exp
+-/
 
+#print hasDerivAt_exp /-
 /-- The exponential map in `𝕂 = ℝ` or `𝕂 = ℂ` has derivative `exp 𝕂 x` at any point `x`. -/
 theorem hasDerivAt_exp {x : 𝕂} : HasDerivAt (exp 𝕂) (exp 𝕂 x) x :=
   hasStrictDerivAt_exp.HasDerivAt
 #align has_deriv_at_exp hasDerivAt_exp
+-/
 
 /-- The exponential map in `𝕂 = ℝ` or `𝕂 = ℂ` has strict derivative `1` at zero. -/
 theorem hasStrictDerivAt_exp_zero : HasStrictDerivAt (exp 𝕂) (1 : 𝕂) 0 :=
@@ -229,9 +233,11 @@ theorem Complex.exp_eq_exp_ℂ : Complex.exp = exp ℂ :=
   exact tendsto_nhds_unique x.exp'.tendsto_limit (expSeries_div_summable ℝ x).HasSum.tendsto_sum_nat
 #align complex.exp_eq_exp_ℂ Complex.exp_eq_exp_ℂ
 
+#print Real.exp_eq_exp_ℝ /-
 theorem Real.exp_eq_exp_ℝ : Real.exp = exp ℝ := by ext x;
   exact_mod_cast congr_fun Complex.exp_eq_exp_ℂ x
 #align real.exp_eq_exp_ℝ Real.exp_eq_exp_ℝ
+-/
 
 /-! ### Derivative of $\exp (ux)$ by $u$
 

@@ -114,7 +114,7 @@ theorem deriv_cos' : deriv cos = fun x => -sin x :=
 theorem hasStrictDerivAt_sinh (x : ℂ) : HasStrictDerivAt sinh (cosh x) x :=
   by
   simp only [cosh, div_eq_mul_inv]
-  convert ((has_strict_deriv_at_exp x).sub (hasStrictDerivAt_id x).neg.cexp).mul_const (2 : ℂ)⁻¹
+  convert ((hasStrictDerivAt_exp x).sub (hasStrictDerivAt_id x).neg.cexp).mul_const (2 : ℂ)⁻¹
   rw [id, mul_neg_one, sub_eq_add_neg, neg_neg]
 #align complex.has_strict_deriv_at_sinh Complex.hasStrictDerivAt_sinh
 
@@ -145,7 +145,7 @@ derivative `sinh x`. -/
 theorem hasStrictDerivAt_cosh (x : ℂ) : HasStrictDerivAt cosh (sinh x) x :=
   by
   simp only [sinh, div_eq_mul_inv]
-  convert ((has_strict_deriv_at_exp x).add (hasStrictDerivAt_id x).neg.cexp).mul_const (2 : ℂ)⁻¹
+  convert ((hasStrictDerivAt_exp x).add (hasStrictDerivAt_id x).neg.cexp).mul_const (2 : ℂ)⁻¹
   rw [id, mul_neg_one, sub_eq_add_neg]
 #align complex.has_strict_deriv_at_cosh Complex.hasStrictDerivAt_cosh
 
