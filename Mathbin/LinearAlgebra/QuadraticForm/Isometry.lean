@@ -35,19 +35,23 @@ variable [AddCommMonoid M] [AddCommMonoid M₁] [AddCommMonoid M₂] [AddCommMon
 
 variable [Module R M] [Module R M₁] [Module R M₂] [Module R M₃]
 
+#print QuadraticForm.Isometry /-
 /-- An isometry between two quadratic spaces `M₁, Q₁` and `M₂, Q₂` over a ring `R`,
 is a linear equivalence between `M₁` and `M₂` that commutes with the quadratic forms. -/
 @[nolint has_nonempty_instance]
 structure Isometry (Q₁ : QuadraticForm R M₁) (Q₂ : QuadraticForm R M₂) extends M₁ ≃ₗ[R] M₂ where
   map_app' : ∀ m, Q₂ (to_fun m) = Q₁ m
 #align quadratic_form.isometry QuadraticForm.Isometry
+-/
 
+#print QuadraticForm.Equivalent /-
 /-- Two quadratic forms over a ring `R` are equivalent
 if there exists an isometry between them:
 a linear equivalence that transforms one quadratic form into the other. -/
 def Equivalent (Q₁ : QuadraticForm R M₁) (Q₂ : QuadraticForm R M₂) :=
   Nonempty (Q₁.Isometry Q₂)
 #align quadratic_form.equivalent QuadraticForm.Equivalent
+-/
 
 namespace Isometry
 
@@ -65,34 +69,40 @@ instance : CoeFun (Q₁.Isometry Q₂) fun _ => M₁ → M₂ :=
   ⟨fun f => ⇑(f : M₁ ≃ₗ[R] M₂)⟩
 
 @[simp]
-theorem coe_to_linearEquiv (f : Q₁.Isometry Q₂) : ⇑(f : M₁ ≃ₗ[R] M₂) = f :=
+theorem coe_toLinearEquiv (f : Q₁.Isometry Q₂) : ⇑(f : M₁ ≃ₗ[R] M₂) = f :=
   rfl
-#align quadratic_form.isometry.coe_to_linear_equiv QuadraticForm.Isometry.coe_to_linearEquiv
+#align quadratic_form.isometry.coe_to_linear_equiv QuadraticForm.Isometry.coe_toLinearEquiv
 
 @[simp]
 theorem map_app (f : Q₁.Isometry Q₂) (m : M₁) : Q₂ (f m) = Q₁ m :=
   f.map_app' m
 #align quadratic_form.isometry.map_app QuadraticForm.Isometry.map_app
 
+#print QuadraticForm.Isometry.refl /-
 /-- The identity isometry from a quadratic form to itself. -/
 @[refl]
 def refl (Q : QuadraticForm R M) : Q.Isometry Q :=
   { LinearEquiv.refl R M with map_app' := fun m => rfl }
 #align quadratic_form.isometry.refl QuadraticForm.Isometry.refl
+-/
 
+#print QuadraticForm.Isometry.symm /-
 /-- The inverse isometry of an isometry between two quadratic forms. -/
 @[symm]
 def symm (f : Q₁.Isometry Q₂) : Q₂.Isometry Q₁ :=
   { (f : M₁ ≃ₗ[R] M₂).symm with
     map_app' := by intro m; rw [← f.map_app]; congr; exact f.to_linear_equiv.apply_symm_apply m }
 #align quadratic_form.isometry.symm QuadraticForm.Isometry.symm
+-/
 
+#print QuadraticForm.Isometry.trans /-
 /-- The composition of two isometries between quadratic forms. -/
 @[trans]
 def trans (f : Q₁.Isometry Q₂) (g : Q₂.Isometry Q₃) : Q₁.Isometry Q₃ :=
   { (f : M₁ ≃ₗ[R] M₂).trans (g : M₂ ≃ₗ[R] M₃) with
     map_app' := by intro m; rw [← f.map_app, ← g.map_app]; rfl }
 #align quadratic_form.isometry.trans QuadraticForm.Isometry.trans
+-/
 
 end Isometry
 
@@ -119,6 +129,7 @@ end Equivalent
 
 variable [Fintype ι] {v : Basis ι R M}
 
+#print QuadraticForm.isometryOfCompLinearEquiv /-
 /-- A quadratic form composed with a `linear_equiv` is isometric to itself. -/
 def isometryOfCompLinearEquiv (Q : QuadraticForm R M) (f : M₁ ≃ₗ[R] M) :
     Q.Isometry (Q.comp (f : M₁ →ₗ[R] M)) :=
@@ -128,12 +139,15 @@ def isometryOfCompLinearEquiv (Q : QuadraticForm R M) (f : M₁ ≃ₗ[R] M) :
       simp only [comp_apply, LinearEquiv.coe_coe, LinearEquiv.toFun_eq_coe,
         LinearEquiv.apply_symm_apply, f.apply_symm_apply] }
 #align quadratic_form.isometry_of_comp_linear_equiv QuadraticForm.isometryOfCompLinearEquiv
+-/
 
+#print QuadraticForm.isometryBasisRepr /-
 /-- A quadratic form is isometric to its bases representations. -/
 noncomputable def isometryBasisRepr (Q : QuadraticForm R M) (v : Basis ι R M) :
     Isometry Q (Q.basis_repr v) :=
   isometryOfCompLinearEquiv Q v.equivFun.symm
 #align quadratic_form.isometry_basis_repr QuadraticForm.isometryBasisRepr
+-/
 
 variable [Field K] [Invertible (2 : K)] [AddCommGroup V] [Module K V]
 

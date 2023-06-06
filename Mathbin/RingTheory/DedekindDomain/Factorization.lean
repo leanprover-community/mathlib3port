@@ -37,11 +37,13 @@ open Set Function UniqueFactorizationMonoid IsDedekindDomain IsDedekindDomain.He
 variable {R : Type _} [CommRing R] [IsDomain R] [IsDedekindDomain R] {K : Type _} [Field K]
   [Algebra R K] [IsFractionRing R K] (v : HeightOneSpectrum R)
 
+#print IsDedekindDomain.HeightOneSpectrum.maxPowDividing /-
 /-- Given a maximal ideal `v` and an ideal `I` of `R`, `max_pow_dividing` returns the maximal
   power of `v` dividing `I`. -/
 def IsDedekindDomain.HeightOneSpectrum.maxPowDividing (I : Ideal R) : Ideal R :=
   v.asIdeal ^ (Associates.mk v.asIdeal).count (Associates.mk I).factors
 #align is_dedekind_domain.height_one_spectrum.max_pow_dividing IsDedekindDomain.HeightOneSpectrum.maxPowDividing
+-/
 
 /-- Only finitely many maximal ideals of `R` divide a given nonzero ideal. -/
 theorem Ideal.finite_factors {I : Ideal R} (hI : I ≠ 0) :
@@ -117,6 +119,7 @@ theorem finite_mulSupport_inv {I : Ideal R} (hI : I ≠ 0) :
   exact finite_mul_support_coe hI
 #align ideal.finite_mul_support_inv Ideal.finite_mulSupport_inv
 
+#print Ideal.finprod_not_dvd /-
 /-- For every nonzero ideal `I` of `v`, `v^(val_v(I) + 1)` does not divide `∏_v v^(val_v(I))`. -/
 theorem finprod_not_dvd (I : Ideal R) (hI : I ≠ 0) :
     ¬v.asIdeal ^ ((Associates.mk v.asIdeal).count (Associates.mk I).factors + 1) ∣
@@ -134,9 +137,11 @@ theorem finprod_not_dvd (I : Ideal R) (hI : I ≠ 0) :
   rw [Prime.dvd_prime_iff_associated hv_prime hw_prime, associated_iff_eq] at hvw 
   exact (finset.mem_erase.mp hw).1 (height_one_spectrum.ext w v (Eq.symm hvw))
 #align ideal.finprod_not_dvd Ideal.finprod_not_dvd
+-/
 
 end Ideal
 
+#print Associates.finprod_ne_zero /-
 theorem Associates.finprod_ne_zero (I : Ideal R) :
     Associates.mk (∏ᶠ v : HeightOneSpectrum R, v.maxPowDividing I) ≠ 0 :=
   by
@@ -147,9 +152,11 @@ theorem Associates.finprod_ne_zero (I : Ideal R) :
     apply pow_ne_zero _ v.ne_bot
   · exact one_ne_zero
 #align associates.finprod_ne_zero Associates.finprod_ne_zero
+-/
 
 namespace Ideal
 
+#print Ideal.finprod_count /-
 /-- The multiplicity of `v` in `∏_v v^(val_v(I))` equals `val_v(I)`. -/
 theorem finprod_count (I : Ideal R) (hI : I ≠ 0) :
     (Associates.mk v.asIdeal).count
@@ -166,6 +173,7 @@ theorem finprod_count (I : Ideal R) (hI : I ≠ 0) :
   rw [not_le] at h_not_dvd 
   apply Nat.eq_of_le_of_lt_succ h_dvd h_not_dvd
 #align ideal.finprod_count Ideal.finprod_count
+-/
 
 /-- The ideal `I` equals the finprod `∏_v v^(val_v(I))`. -/
 theorem finprod_heightOneSpectrum_factorization (I : Ideal R) (hI : I ≠ 0) :
