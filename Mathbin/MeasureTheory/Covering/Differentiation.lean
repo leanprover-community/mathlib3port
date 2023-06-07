@@ -91,12 +91,14 @@ include v
 
 namespace VitaliFamily
 
+#print VitaliFamily.limRatio /-
 /-- The limit along a Vitali family of `ρ a / μ a` where it makes sense, and garbage otherwise.
 Do *not* use this definition: it is only a temporary device to show that this ratio tends almost
 everywhere to the Radon-Nikodym derivative. -/
 noncomputable def limRatio (ρ : Measure α) (x : α) : ℝ≥0∞ :=
   limUnder (v.filterAt x) fun a => ρ a / μ a
 #align vitali_family.lim_ratio VitaliFamily.limRatio
+-/
 
 /-- For almost every point `x`, sufficiently small sets in a Vitali family around `x` have positive
 measure. (This is a nontrivial result, following from the covering property of Vitali families). -/
@@ -469,21 +471,27 @@ theorem exists_measurable_supersets_limRatio {p q : ℝ≥0} (hpq : p < q) :
     
 #align vitali_family.exists_measurable_supersets_lim_ratio VitaliFamily.exists_measurable_supersets_limRatio
 
-theorem aEMeasurable_limRatio : AEMeasurable (v.limRatio ρ) μ :=
+#print VitaliFamily.aemeasurable_limRatio /-
+theorem aemeasurable_limRatio : AEMeasurable (v.limRatio ρ) μ :=
   by
   apply ENNReal.aemeasurable_of_exist_almost_disjoint_supersets _ _ fun p q hpq => _
   exact v.exists_measurable_supersets_lim_ratio hρ hpq
-#align vitali_family.ae_measurable_lim_ratio VitaliFamily.aEMeasurable_limRatio
+#align vitali_family.ae_measurable_lim_ratio VitaliFamily.aemeasurable_limRatio
+-/
 
+#print VitaliFamily.limRatioMeas /-
 /-- A measurable version of `v.lim_ratio ρ`. Do *not* use this definition: it is only a temporary
 device to show that `v.lim_ratio` is almost everywhere equal to the Radon-Nikodym derivative. -/
 noncomputable def limRatioMeas : α → ℝ≥0∞ :=
-  (v.aEMeasurable_limRatio hρ).mk _
+  (v.aemeasurable_limRatio hρ).mk _
 #align vitali_family.lim_ratio_meas VitaliFamily.limRatioMeas
+-/
 
+#print VitaliFamily.limRatioMeas_measurable /-
 theorem limRatioMeas_measurable : Measurable (v.limRatioMeas hρ) :=
   AEMeasurable.measurable_mk _
 #align vitali_family.lim_ratio_meas_measurable VitaliFamily.limRatioMeas_measurable
+-/
 
 theorem ae_tendsto_limRatioMeas :
     ∀ᵐ x ∂μ, Tendsto (fun a => ρ a / μ a) (v.filterAt x) (𝓝 (v.limRatioMeas hρ x)) :=
@@ -739,6 +747,7 @@ theorem le_mul_withDensity {s : Set α} (hs : MeasurableSet s) {t : ℝ≥0} (ht
     
 #align vitali_family.le_mul_with_density VitaliFamily.le_mul_withDensity
 
+#print VitaliFamily.withDensity_limRatioMeas_eq /-
 theorem withDensity_limRatioMeas_eq : μ.withDensity (v.limRatioMeas hρ) = ρ :=
   by
   ext1 s hs
@@ -764,6 +773,7 @@ theorem withDensity_limRatioMeas_eq : μ.withDensity (v.limRatioMeas hρ) = ρ :
     filter_upwards [self_mem_nhdsWithin] with _ ht
     exact v.le_mul_with_density hρ hs ht
 #align vitali_family.with_density_lim_ratio_meas_eq VitaliFamily.withDensity_limRatioMeas_eq
+-/
 
 /-- Weak version of the main theorem on differentiation of measures: given a Vitali family `v`
 for a locally finite measure `μ`, and another locally finite measure `ρ`, then for `μ`-almost
@@ -827,6 +837,7 @@ theorem ae_tendsto_measure_inter_div_of_measurableSet {s : Set α} (hs : Measura
   simpa only [h'x, restrict_apply' hs, inter_comm] using hx
 #align vitali_family.ae_tendsto_measure_inter_div_of_measurable_set VitaliFamily.ae_tendsto_measure_inter_div_of_measurableSet
 
+#print VitaliFamily.ae_tendsto_measure_inter_div /-
 /-- Given an arbitrary set `s`, then `μ (s ∩ a) / μ a` converges to `1` when `a` shrinks to a
 typical point of `s` along a Vitali family. This shows that almost every point of `s` is a
 Lebesgue density point for `s`. A stronger version for measurable sets is given
@@ -853,6 +864,7 @@ theorem ae_tendsto_measure_inter_div (s : Set α) :
   congr 1
   exact measure_to_measurable_inter_of_sigma_finite ha _
 #align vitali_family.ae_tendsto_measure_inter_div VitaliFamily.ae_tendsto_measure_inter_div
+-/
 
 /-! ### Lebesgue differentiation theorem -/
 
@@ -1007,6 +1019,7 @@ theorem ae_tendsto_average_norm_sub {f : α → E} (hf : Integrable f μ) :
     exact NNReal.coe_nonneg _
 #align vitali_family.ae_tendsto_average_norm_sub VitaliFamily.ae_tendsto_average_norm_sub
 
+#print VitaliFamily.ae_tendsto_average /-
 /-- *Lebesgue differentiation theorem*: for almost every point `x`, the
 average of `f` on `a` tends to `f x` as `a` shrinks to `x` along a Vitali family.-/
 theorem ae_tendsto_average [NormedSpace ℝ E] [CompleteSpace E] {f : α → E} (hf : Integrable f μ) :
@@ -1023,6 +1036,7 @@ theorem ae_tendsto_average [NormedSpace ℝ E] [CompleteSpace E] {f : α → E} 
   · exact (integrable_inv_smul_measure ha.ne' h'a.ne).2 hf.integrable_on
   · exact (integrable_inv_smul_measure ha.ne' h'a.ne).2 (integrable_on_const.2 (Or.inr h'a))
 #align vitali_family.ae_tendsto_average VitaliFamily.ae_tendsto_average
+-/
 
 end
 
