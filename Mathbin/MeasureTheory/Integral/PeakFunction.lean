@@ -207,7 +207,7 @@ Version assuming that `μ` gives positive mass to all neighborhoods of `x₀` wi
 For a less precise but more usable version, see
 `tendsto_set_integral_pow_smul_of_unique_maximum_of_is_compact_of_continuous_on`.
  -/
-theorem tendsto_set_integral_pow_smul_of_unique_maximum_of_isCompact_of_measure_nhds_within_pos
+theorem tendsto_set_integral_pow_smul_of_unique_maximum_of_isCompact_of_measure_nhdsWithin_pos
     [MetrizableSpace α] [IsLocallyFiniteMeasure μ] (hs : IsCompact s)
     (hμ : ∀ u, IsOpen u → x₀ ∈ u → 0 < μ (u ∩ s)) {c : α → ℝ} (hc : ContinuousOn c s)
     (h'c : ∀ y ∈ s, y ≠ x₀ → c y < c x₀) (hnc : ∀ x ∈ s, 0 ≤ c x) (hnc₀ : 0 < c x₀) (h₀ : x₀ ∈ s)
@@ -303,7 +303,7 @@ theorem tendsto_set_integral_pow_smul_of_unique_maximum_of_isCompact_of_measure_
       hs.measure_lt_top.ne (eventually_of_forall hnφ) A (eventually_of_forall hiφ) hmg hcg
   convert this
   simp_rw [← smul_smul, integral_smul]
-#align tendsto_set_integral_pow_smul_of_unique_maximum_of_is_compact_of_measure_nhds_within_pos tendsto_set_integral_pow_smul_of_unique_maximum_of_isCompact_of_measure_nhds_within_pos
+#align tendsto_set_integral_pow_smul_of_unique_maximum_of_is_compact_of_measure_nhds_within_pos tendsto_set_integral_pow_smul_of_unique_maximum_of_isCompact_of_measure_nhdsWithin_pos
 
 /-- If a continuous function `c` realizes its maximum at a unique point `x₀` in a compact set `s`,
 then the sequence of functions `(c x) ^ n / ∫ (c x) ^ n` is a sequence of peak functions
@@ -323,7 +323,7 @@ theorem tendsto_set_integral_pow_smul_of_unique_maximum_of_isCompact_of_integrab
   by
   have : x₀ ∈ s := by rw [← hs.is_closed.closure_eq]; exact closure_mono interior_subset h₀
   apply
-    tendsto_set_integral_pow_smul_of_unique_maximum_of_isCompact_of_measure_nhds_within_pos hs _ hc
+    tendsto_set_integral_pow_smul_of_unique_maximum_of_isCompact_of_measure_nhdsWithin_pos hs _ hc
       h'c hnc hnc₀ this hmg hcg
   intro u u_open x₀_u
   calc

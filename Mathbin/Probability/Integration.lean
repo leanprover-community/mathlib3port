@@ -125,7 +125,7 @@ theorem lintegral_mul_eq_lintegral_mul_lintegral_of_indepFun (h_meas_f : Measura
 /-- If `f` and `g` with values in `ℝ≥0∞` are independent and almost everywhere measurable,
    then `E[f * g] = E[f] * E[g]` (slightly generalizing
    `lintegral_mul_eq_lintegral_mul_lintegral_of_indep_fun`). -/
-theorem lintegral_mul_eq_lintegral_mul_lintegral_of_indep_fun' (h_meas_f : AEMeasurable f μ)
+theorem lintegral_mul_eq_lintegral_mul_lintegral_of_indepFun' (h_meas_f : AEMeasurable f μ)
     (h_meas_g : AEMeasurable g μ) (h_indep_fun : IndepFun f g μ) :
     (∫⁻ ω, (f * g) ω ∂μ) = (∫⁻ ω, f ω ∂μ) * ∫⁻ ω, g ω ∂μ :=
   by
@@ -136,13 +136,13 @@ theorem lintegral_mul_eq_lintegral_mul_lintegral_of_indep_fun' (h_meas_f : AEMea
     lintegral_mul_eq_lintegral_mul_lintegral_of_indep_fun h_meas_f.measurable_mk
       h_meas_g.measurable_mk
   exact h_indep_fun.ae_eq h_meas_f.ae_eq_mk h_meas_g.ae_eq_mk
-#align probability_theory.lintegral_mul_eq_lintegral_mul_lintegral_of_indep_fun' ProbabilityTheory.lintegral_mul_eq_lintegral_mul_lintegral_of_indep_fun'
+#align probability_theory.lintegral_mul_eq_lintegral_mul_lintegral_of_indep_fun' ProbabilityTheory.lintegral_mul_eq_lintegral_mul_lintegral_of_indepFun'
 
-theorem lintegral_mul_eq_lintegral_mul_lintegral_of_indep_fun'' (h_meas_f : AEMeasurable f μ)
+theorem lintegral_mul_eq_lintegral_mul_lintegral_of_indepFun'' (h_meas_f : AEMeasurable f μ)
     (h_meas_g : AEMeasurable g μ) (h_indep_fun : IndepFun f g μ) :
     (∫⁻ ω, f ω * g ω ∂μ) = (∫⁻ ω, f ω ∂μ) * ∫⁻ ω, g ω ∂μ :=
-  lintegral_mul_eq_lintegral_mul_lintegral_of_indep_fun' h_meas_f h_meas_g h_indep_fun
-#align probability_theory.lintegral_mul_eq_lintegral_mul_lintegral_of_indep_fun'' ProbabilityTheory.lintegral_mul_eq_lintegral_mul_lintegral_of_indep_fun''
+  lintegral_mul_eq_lintegral_mul_lintegral_of_indepFun' h_meas_f h_meas_g h_indep_fun
+#align probability_theory.lintegral_mul_eq_lintegral_mul_lintegral_of_indep_fun'' ProbabilityTheory.lintegral_mul_eq_lintegral_mul_lintegral_of_indepFun''
 
 /-- The product of two independent, integrable, real_valued random variables is integrable. -/
 theorem IndepFun.integrable_mul {β : Type _} [MeasurableSpace β] {X Y : Ω → β}

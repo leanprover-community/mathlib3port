@@ -49,6 +49,7 @@ variable (M : Type _) [AddCommMonoid M] [Module R M]
 
 namespace TensorAlgebra
 
+#print TensorAlgebra.Rel /-
 /-- An inductively defined relation on `pre R M` used to force the initial algebra structure on
 the associated quotient.
 -/
@@ -59,10 +60,12 @@ inductive Rel : FreeAlgebra R M → FreeAlgebra R M → Prop-- force `ι` to be 
   smul {r : R} {a : M} :
     Rel (FreeAlgebra.ι R (r • a)) (algebraMap R (FreeAlgebra R M) r * FreeAlgebra.ι R a)
 #align tensor_algebra.rel TensorAlgebra.Rel
+-/
 
 end TensorAlgebra
 
 /- ./././Mathport/Syntax/Translate/Command.lean:43:9: unsupported derive handler algebra[algebra] R -/
+#print TensorAlgebra /-
 /-- The tensor algebra of the module `M` over the commutative semiring `R`.
 -/
 def TensorAlgebra :=
@@ -70,6 +73,7 @@ def TensorAlgebra :=
 deriving Inhabited, Semiring,
   «./././Mathport/Syntax/Translate/Command.lean:43:9: unsupported derive handler algebra[algebra] R»
 #align tensor_algebra TensorAlgebra
+-/
 
 namespace TensorAlgebra
 

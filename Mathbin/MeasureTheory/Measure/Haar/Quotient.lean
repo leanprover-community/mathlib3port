@@ -42,6 +42,7 @@ open scoped Pointwise NNReal
 variable {G : Type _} [Group G] [MeasurableSpace G] [TopologicalSpace G] [TopologicalGroup G]
   [BorelSpace G] {μ : Measure G} {Γ : Subgroup G}
 
+#print QuotientGroup.measurableSMul /-
 /-- Measurability of the action of the topological group `G` on the left-coset space `G/Γ`. -/
 @[to_additive
       "Measurability of the action of the additive topological group `G` on the left-coset\n  space `G/Γ`."]
@@ -51,7 +52,8 @@ instance QuotientGroup.measurableSMul [MeasurableSpace (G ⧸ Γ)] [BorelSpace (
   measurable_const_smul g := (continuous_const_smul g).Measurable
   measurable_smul_const x := (QuotientGroup.continuous_smul₁ x).Measurable
 #align quotient_group.has_measurable_smul QuotientGroup.measurableSMul
-#align quotient_add_group.has_measurable_vadd quotientAddGroup.has_measurable_vadd
+#align quotient_add_group.has_measurable_vadd QuotientAddGroup.measurableVAdd
+-/
 
 variable {𝓕 : Set G} (h𝓕 : IsFundamentalDomain Γ.opposite 𝓕 μ)
 
@@ -63,7 +65,7 @@ variable [Countable Γ] [MeasurableSpace (G ⧸ Γ)] [BorelSpace (G ⧸ Γ)]
   invariant measure on `G` to a fundamental domain `𝓕` is a `G`-invariant measure on `G ⧸ Γ`. -/
 @[to_additive
       "The pushforward to the coset space `G ⧸ Γ` of the restriction of a both left- and\n  right-invariant measure on an additive topological group `G` to a fundamental domain `𝓕` is a\n  `G`-invariant measure on `G ⧸ Γ`."]
-theorem MeasureTheory.IsFundamentalDomain.sMulInvariantMeasure_map [μ.IsMulLeftInvariant]
+theorem MeasureTheory.IsFundamentalDomain.smulInvariantMeasure_map [μ.IsMulLeftInvariant]
     [μ.IsMulRightInvariant] :
     SMulInvariantMeasure G (G ⧸ Γ) (Measure.map QuotientGroup.mk (μ.restrict 𝓕)) :=
   {
@@ -96,8 +98,8 @@ theorem MeasureTheory.IsFundamentalDomain.sMulInvariantMeasure_map [μ.IsMulLeft
       ext
       have : π (x * MulOpposite.unop γ) = π x := by simpa [QuotientGroup.eq'] using γ_in_Γ
       simp [(· • ·), this] }
-#align measure_theory.is_fundamental_domain.smul_invariant_measure_map MeasureTheory.IsFundamentalDomain.sMulInvariantMeasure_map
-#align measure_theory.is_add_fundamental_domain.vadd_invariant_measure_map MeasureTheory.IsAddFundamentalDomain.vadd_invariant_measure_map
+#align measure_theory.is_fundamental_domain.smul_invariant_measure_map MeasureTheory.IsFundamentalDomain.smulInvariantMeasure_map
+#align measure_theory.is_add_fundamental_domain.vadd_invariant_measure_map MeasureTheory.IsAddFundamentalDomain.vaddInvariantMeasure_map
 
 /-- Assuming `Γ` is a normal subgroup of a topological group `G`, the pushforward to the quotient
   group `G ⧸ Γ` of the restriction of a both left- and right-invariant measure on `G` to a
@@ -120,7 +122,7 @@ theorem MeasureTheory.IsFundamentalDomain.isMulLeftInvariant_map [Subgroup.Norma
       · exact measurable_const_mul _
       · exact hA }
 #align measure_theory.is_fundamental_domain.is_mul_left_invariant_map MeasureTheory.IsFundamentalDomain.isMulLeftInvariant_map
-#align measure_theory.is_add_fundamental_domain.is_add_left_invariant_map MeasureTheory.IsAddFundamentalDomain.is_add_left_invariant_map
+#align measure_theory.is_add_fundamental_domain.is_add_left_invariant_map MeasureTheory.IsAddFundamentalDomain.isAddLeftInvariant_map
 
 variable [T2Space (G ⧸ Γ)] [SecondCountableTopology (G ⧸ Γ)] (K : PositiveCompacts (G ⧸ Γ))
 
