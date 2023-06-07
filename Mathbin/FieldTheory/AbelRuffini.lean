@@ -109,7 +109,7 @@ theorem gal_x_pow_sub_one_isSolvable (n : ℕ) : IsSolvable (X ^ n - 1 : F[X]).G
     by
     intro σ
     lift n to ℕ+ using hn'
-    exact map_root_of_unity_eq_pow_self σ.to_alg_hom (rootsOfUnity.mkOfPowEq a ha)
+    exact map_rootsOfUnity_eq_pow_self σ.to_alg_hom (rootsOfUnity.mkOfPowEq a ha)
   obtain ⟨c, hc⟩ := key σ
   obtain ⟨d, hd⟩ := key τ
   rw [σ.mul_apply, τ.mul_apply, hc, τ.map_pow, hd, σ.map_pow, hc, ← pow_mul, pow_mul']

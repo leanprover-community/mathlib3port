@@ -419,14 +419,12 @@ theorem toLin'_apply (A : BilinForm R M) (x : M) : ⇑(toLinHom R₂ A x) = A x 
   rfl
 #align bilin_form.to_lin'_apply BilinForm.toLin'_apply
 
-#print BilinForm.toLin' /-
 /-- The linear map obtained from a `bilin_form` by fixing the left co-ordinate and evaluating in
 the right.
 Over a commutative semiring, use `to_lin`, which is linear rather than `ℕ`-linear. -/
 abbrev toLin' : BilinForm R M →ₗ[ℕ] M →ₗ[ℕ] M →ₗ[R] R :=
   toLinHom ℕ
 #align bilin_form.to_lin' BilinForm.toLin'
--/
 
 @[simp]
 theorem sum_left {α} (t : Finset α) (g : α → M) (w : M) :
@@ -461,14 +459,12 @@ theorem toLin'Flip_apply (A : BilinForm R M) (x : M) : ⇑(toLinHomFlip R₂ A x
   rfl
 #align bilin_form.to_lin'_flip_apply BilinForm.toLin'Flip_apply
 
-#print BilinForm.toLin'Flip /-
 /-- The linear map obtained from a `bilin_form` by fixing the right co-ordinate and evaluating in
 the left.
 Over a commutative semiring, use `to_lin_flip`, which is linear rather than `ℕ`-linear. -/
 abbrev toLin'Flip : BilinForm R M →ₗ[ℕ] M →ₗ[ℕ] M →ₗ[R] R :=
   toLinHomFlip ℕ
 #align bilin_form.to_lin'_flip BilinForm.toLin'Flip
--/
 
 end ToLin'
 
@@ -491,7 +487,6 @@ def LinearMap.toBilinAux (f : M₂ →ₗ[R₂] M₂ →ₗ[R₂] R₂) : BilinF
 #align linear_map.to_bilin_aux LinearMap.toBilinAux
 -/
 
-#print BilinForm.toLin /-
 /-- Bilinear forms are linearly equivalent to maps with two arguments that are linear in both. -/
 def BilinForm.toLin : BilinForm R₂ M₂ ≃ₗ[R₂] M₂ →ₗ[R₂] M₂ →ₗ[R₂] R₂ :=
   { BilinForm.toLinHom R₂ with
@@ -499,14 +494,11 @@ def BilinForm.toLin : BilinForm R₂ M₂ ≃ₗ[R₂] M₂ →ₗ[R₂] M₂ �
     left_inv := fun B => by ext; simp [LinearMap.toBilinAux]
     right_inv := fun B => by ext; simp [LinearMap.toBilinAux] }
 #align bilin_form.to_lin BilinForm.toLin
--/
 
-#print LinearMap.toBilin /-
 /-- A map with two arguments that is linear in both is linearly equivalent to bilinear form. -/
 def LinearMap.toBilin : (M₂ →ₗ[R₂] M₂ →ₗ[R₂] R₂) ≃ₗ[R₂] BilinForm R₂ M₂ :=
   BilinForm.toLin.symm
 #align linear_map.to_bilin LinearMap.toBilin
--/
 
 @[simp]
 theorem LinearMap.toBilinAux_eq (f : M₂ →ₗ[R₂] M₂ →ₗ[R₂] R₂) :
@@ -1430,7 +1422,6 @@ theorem iIsOrtho.nondegenerate_iff_not_isOrtho_basis_self {n : Type w} [Nontrivi
 
 section
 
-#print BilinForm.toLin_restrict_ker_eq_inf_orthogonal /-
 theorem toLin_restrict_ker_eq_inf_orthogonal (B : BilinForm K V) (W : Subspace K V) (b : B.IsRefl) :
     (B.toLin.domRestrict W).ker.map W.Subtype = (W ⊓ B.orthogonal ⊤ : Subspace K V) :=
   by
@@ -1449,7 +1440,6 @@ theorem toLin_restrict_ker_eq_inf_orthogonal (B : BilinForm K V) (W : Subspace K
     rw [b]
     exact hx.2 _ Submodule.mem_top
 #align bilin_form.to_lin_restrict_ker_eq_inf_orthogonal BilinForm.toLin_restrict_ker_eq_inf_orthogonal
--/
 
 #print BilinForm.toLin_restrict_range_dualCoannihilator_eq_orthogonal /-
 theorem toLin_restrict_range_dualCoannihilator_eq_orthogonal (B : BilinForm K V)

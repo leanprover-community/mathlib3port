@@ -115,12 +115,10 @@ def lift : (M →ₗ[R] N →ₗ[R] P) ≃ₗ⁅R,L⁆ M ⊗[R] N →ₗ[R] P :=
 #align tensor_product.lie_module.lift TensorProduct.LieModule.lift
 -/
 
-#print TensorProduct.LieModule.lift_apply /-
 @[simp]
 theorem lift_apply (f : M →ₗ[R] N →ₗ[R] P) (m : M) (n : N) : lift R L M N P f (m ⊗ₜ n) = f m n :=
   rfl
 #align tensor_product.lie_module.lift_apply TensorProduct.LieModule.lift_apply
--/
 
 #print TensorProduct.LieModule.liftLie /-
 /-- A weaker form of the universal property for tensor product of modules of a Lie algebra.

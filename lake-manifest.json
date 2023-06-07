@@ -2,17 +2,23 @@
  "packagesDir": "lake-packages",
  "packages":
  [{"git":
+   {"url": "https://github.com/EdAyers/ProofWidgets4",
+    "subDir?": null,
+    "rev": "3b157dc3f6162615de001a8ebe7e01d629c97448",
+    "name": "proofwidgets",
+    "inputRev?": "v0.0.10"}},
+  {"git":
    {"url": "https://github.com/leanprover-community/lean3port.git",
     "subDir?": null,
-    "rev": "e6a567ae2582a8617ffaa46c4d769dad17e96d31",
+    "rev": "ec058ed36485ea3917322645eb4c754a41810773",
     "name": "lean3port",
-    "inputRev?": "e6a567ae2582a8617ffaa46c4d769dad17e96d31"}},
+    "inputRev?": "ec058ed36485ea3917322645eb4c754a41810773"}},
   {"git":
    {"url": "https://github.com/leanprover-community/mathlib4.git",
     "subDir?": null,
-    "rev": "51cf59753a5b06fb822f05564a54f0a96746deab",
+    "rev": "f24c97ec2acd399fb2ce8c3f09f0d74aa9ebf300",
     "name": "mathlib",
-    "inputRev?": "51cf59753a5b06fb822f05564a54f0a96746deab"}},
+    "inputRev?": "f24c97ec2acd399fb2ce8c3f09f0d74aa9ebf300"}},
   {"git":
    {"url": "https://github.com/gebner/quote4",
     "subDir?": null,

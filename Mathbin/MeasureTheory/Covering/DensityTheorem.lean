@@ -49,6 +49,7 @@ variable [SecondCountableTopology α] [BorelSpace α] [IsLocallyFiniteMeasure μ
 
 open scoped Topology
 
+#print IsUnifLocDoublingMeasure.vitaliFamily /-
 /-- A Vitali family in a space with a uniformly locally doubling measure, designed so that the sets
 at `x` contain all `closed_ball y r` when `dist x y ≤ K * r`. -/
 irreducible_def vitaliFamily (K : ℝ) : VitaliFamily μ :=
@@ -74,6 +75,7 @@ irreducible_def vitaliFamily (K : ℝ) : VitaliFamily μ :=
     (Vitali.vitaliFamily μ (scaling_constant_of μ (max (4 * K + 3) 3)) A).enlarge (R / 4)
       (by linarith)
 #align is_unif_loc_doubling_measure.vitali_family IsUnifLocDoublingMeasure.vitaliFamily
+-/
 
 /-- In the Vitali family `is_unif_loc_doubling_measure.vitali_family K`, the sets based at `x`
 contain all balls `closed_ball y r` when `dist x y ≤ K * r`. -/

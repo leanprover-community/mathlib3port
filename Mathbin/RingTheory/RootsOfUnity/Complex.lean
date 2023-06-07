@@ -94,12 +94,14 @@ theorem card_rootsOfUnity (n : ℕ+) : Fintype.card (rootsOfUnity n ℂ) = n :=
   (isPrimitiveRoot_exp n n.NeZero).card_rootsOfUnity
 #align complex.card_roots_of_unity Complex.card_rootsOfUnity
 
+#print Complex.card_primitiveRoots /-
 theorem card_primitiveRoots (k : ℕ) : (primitiveRoots k ℂ).card = φ k :=
   by
   by_cases h : k = 0
   · simp [h]
   exact (is_primitive_root_exp k h).card_primitiveRoots
 #align complex.card_primitive_roots Complex.card_primitiveRoots
+-/
 
 end Complex
 
@@ -113,10 +115,12 @@ theorem IsPrimitiveRoot.nnnorm_eq_one {ζ : ℂ} {n : ℕ} (h : IsPrimitiveRoot 
   Subtype.ext <| h.norm'_eq_one hn
 #align is_primitive_root.nnnorm_eq_one IsPrimitiveRoot.nnnorm_eq_one
 
+#print IsPrimitiveRoot.arg_ext /-
 theorem IsPrimitiveRoot.arg_ext {n m : ℕ} {ζ μ : ℂ} (hζ : IsPrimitiveRoot ζ n)
     (hμ : IsPrimitiveRoot μ m) (hn : n ≠ 0) (hm : m ≠ 0) (h : ζ.arg = μ.arg) : ζ = μ :=
   Complex.ext_abs_arg ((hζ.norm'_eq_one hn).trans (hμ.norm'_eq_one hm).symm) h
 #align is_primitive_root.arg_ext IsPrimitiveRoot.arg_ext
+-/
 
 theorem IsPrimitiveRoot.arg_eq_zero_iff {n : ℕ} {ζ : ℂ} (hζ : IsPrimitiveRoot ζ n) (hn : n ≠ 0) :
     ζ.arg = 0 ↔ ζ = 1 :=

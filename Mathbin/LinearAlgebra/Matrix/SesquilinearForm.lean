@@ -729,22 +729,18 @@ theorem Matrix.separatingLeft_toLinearMap₂'_iff_separatingLeft_toLinearMap₂ 
 
 variable (B : M₁ →ₗ[R₁] M₁ →ₗ[R₁] R₁)
 
-#print Matrix.Nondegenerate.toLinearMap₂' /-
 -- Lemmas transferring nondegeneracy between a matrix and its associated bilinear form
 theorem Matrix.Nondegenerate.toLinearMap₂' {M : Matrix ι ι R₁} (h : M.Nondegenerate) :
     M.toLinearMap₂'.SeparatingLeft := fun x hx =>
   h.eq_zero_of_ortho fun y => by simpa only [to_linear_map₂'_apply'] using hx y
 #align matrix.nondegenerate.to_linear_map₂' Matrix.Nondegenerate.toLinearMap₂'
--/
 
-#print Matrix.separatingLeft_toLinearMap₂'_iff /-
 @[simp]
 theorem Matrix.separatingLeft_toLinearMap₂'_iff {M : Matrix ι ι R₁} :
     M.toLinearMap₂'.SeparatingLeft ↔ M.Nondegenerate :=
   ⟨fun h v hv => h v fun w => (M.toLinearMap₂'_apply' _ _).trans <| hv w,
     Matrix.Nondegenerate.toLinearMap₂'⟩
 #align matrix.separating_left_to_linear_map₂'_iff Matrix.separatingLeft_toLinearMap₂'_iff
--/
 
 theorem Matrix.Nondegenerate.toLinearMap₂ {M : Matrix ι ι R₁} (h : M.Nondegenerate)
     (b : Basis ι R₁ M₁) : (toLinearMap₂ b b M).SeparatingLeft :=
@@ -786,12 +782,10 @@ theorem SeparatingLeft.toMatrix₂ {B : M₁ →ₗ[R₁] M₁ →ₗ[R₁] R₁
 -- Some shorthands for combining the above with `matrix.nondegenerate_of_det_ne_zero`
 variable [IsDomain R₁]
 
-#print LinearMap.separatingLeft_toLinearMap₂'_iff_det_ne_zero /-
 theorem separatingLeft_toLinearMap₂'_iff_det_ne_zero {M : Matrix ι ι R₁} :
     M.toLinearMap₂'.SeparatingLeft ↔ M.det ≠ 0 := by
   rw [Matrix.separatingLeft_toLinearMap₂'_iff, Matrix.nondegenerate_iff_det_ne_zero]
 #align linear_map.separating_left_to_linear_map₂'_iff_det_ne_zero LinearMap.separatingLeft_toLinearMap₂'_iff_det_ne_zero
--/
 
 theorem separatingLeft_toLinearMap₂'_of_det_ne_zero' (M : Matrix ι ι R₁) (h : M.det ≠ 0) :
     M.toLinearMap₂'.SeparatingLeft :=

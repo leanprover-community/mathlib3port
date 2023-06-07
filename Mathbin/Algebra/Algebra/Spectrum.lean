@@ -57,6 +57,7 @@ variable [CommSemiring R] [Ring A] [Algebra R A]
 -- mathport name: «expr↑ₐ»
 local notation "↑ₐ" => algebraMap R A
 
+#print resolventSet /-
 -- definition and basic properties
 /-- Given a commutative ring `R` and an `R`-algebra `A`, the *resolvent set* of `a : A`
 is the `set R` consisting of those `r : R` for which `r•1 - a` is a unit of the
@@ -64,7 +65,9 @@ algebra `A`.  -/
 def resolventSet (a : A) : Set R :=
   {r : R | IsUnit (↑ₐ r - a)}
 #align resolvent_set resolventSet
+-/
 
+#print spectrum /-
 /-- Given a commutative ring `R` and an `R`-algebra `A`, the *spectrum* of `a : A`
 is the `set R` consisting of those `r : R` for which `r•1 - a` is not a unit of the
 algebra `A`.
@@ -73,25 +76,28 @@ The spectrum is simply the complement of the resolvent set.  -/
 def spectrum (a : A) : Set R :=
   resolventSet R aᶜ
 #align spectrum spectrum
+-/
 
 variable {R}
 
+#print resolvent /-
 /-- Given an `a : A` where `A` is an `R`-algebra, the *resolvent* is
     a map `R → A` which sends `r : R` to `(algebra_map R A r - a)⁻¹` when
     `r ∈ resolvent R A` and `0` when `r ∈ spectrum R A`. -/
 noncomputable def resolvent (a : A) (r : R) : A :=
   Ring.inverse (↑ₐ r - a)
 #align resolvent resolvent
+-/
 
 /-- The unit `1 - r⁻¹ • a` constructed from `r • 1 - a` when the latter is a unit. -/
 @[simps]
-noncomputable def IsUnit.subInvSmul {r : Rˣ} {s : R} {a : A} (h : IsUnit <| r • ↑ₐ s - a) : Aˣ
+noncomputable def IsUnit.subInvSMul {r : Rˣ} {s : R} {a : A} (h : IsUnit <| r • ↑ₐ s - a) : Aˣ
     where
   val := ↑ₐ s - r⁻¹ • a
   inv := r • ↑h.Unit⁻¹
   val_inv := by rw [mul_smul_comm, ← smul_mul_assoc, smul_sub, smul_inv_smul, h.mul_coe_inv]
   inv_val := by rw [smul_mul_assoc, ← mul_smul_comm, smul_sub, smul_inv_smul, h.coe_inv_mul]
-#align is_unit.sub_inv_smul IsUnit.subInvSmul
+#align is_unit.sub_inv_smul IsUnit.subInvSMul
 
 end Defs
 
@@ -138,15 +144,19 @@ theorem mem_resolventSet_iff {r : R} {a : A} : r ∈ resolventSet R a ↔ IsUnit
   Iff.rfl
 #align spectrum.mem_resolvent_set_iff spectrum.mem_resolventSet_iff
 
+#print spectrum.resolventSet_of_subsingleton /-
 @[simp]
 theorem resolventSet_of_subsingleton [Subsingleton A] (a : A) : resolventSet R a = Set.univ := by
   simp_rw [resolventSet, Subsingleton.elim (algebraMap R A _ - a) 1, isUnit_one, Set.setOf_true]
 #align spectrum.resolvent_set_of_subsingleton spectrum.resolventSet_of_subsingleton
+-/
 
+#print spectrum.of_subsingleton /-
 @[simp]
 theorem of_subsingleton [Subsingleton A] (a : A) : spectrum R a = ∅ := by
   rw [spectrum, resolvent_set_of_subsingleton, Set.compl_univ]
 #align spectrum.of_subsingleton spectrum.of_subsingleton
+-/
 
 theorem resolvent_eq {a : A} {r : R} (h : r ∈ resolventSet R a) : resolvent a r = ↑h.Unit⁻¹ :=
   Ring.inverse_unit h.Unit
@@ -170,11 +180,13 @@ theorem units_smul_resolvent {r : Rˣ} {s : R} {a : A} :
     simp only [Algebra.algebraMap_eq_smul_one, smul_assoc, smul_inv_smul]
 #align spectrum.units_smul_resolvent spectrum.units_smul_resolvent
 
+#print spectrum.units_smul_resolvent_self /-
 theorem units_smul_resolvent_self {r : Rˣ} {a : A} :
     r • resolvent a (r : R) = resolvent (r⁻¹ • a) (1 : R) := by
   simpa only [Units.smul_def, Algebra.id.smul_eq_mul, Units.inv_mul] using
     @units_smul_resolvent _ _ _ _ _ r r a
 #align spectrum.units_smul_resolvent_self spectrum.units_smul_resolvent_self
+-/
 
 /-- The resolvent is a unit when the argument is in the resolvent set. -/
 theorem isUnit_resolvent {r : R} {a : A} : r ∈ resolventSet R a ↔ IsUnit (resolvent a r) :=
@@ -262,16 +274,20 @@ section Star
 
 variable [InvolutiveStar R] [StarRing A] [StarModule R A]
 
+#print spectrum.star_mem_resolventSet_iff /-
 theorem star_mem_resolventSet_iff {r : R} {a : A} :
     star r ∈ resolventSet R a ↔ r ∈ resolventSet R (star a) := by
   refine' ⟨fun h => _, fun h => _⟩ <;>
     simpa only [mem_resolvent_set_iff, Algebra.algebraMap_eq_smul_one, star_sub, star_smul,
       star_star, star_one] using IsUnit.star h
 #align spectrum.star_mem_resolvent_set_iff spectrum.star_mem_resolventSet_iff
+-/
 
+#print spectrum.map_star /-
 protected theorem map_star (a : A) : σ (star a) = star (σ a) := by ext;
   simpa only [Set.mem_star, mem_iff, not_iff_not] using star_mem_resolvent_set_iff.symm
 #align spectrum.map_star spectrum.map_star
+-/
 
 end Star
 
@@ -294,11 +310,13 @@ theorem subset_subalgebra {S : Subalgebra R A} (a : S) : spectrum R (a : A) ⊆ 
   compl_subset_compl.2 fun _ => IsUnit.map S.val
 #align spectrum.subset_subalgebra spectrum.subset_subalgebra
 
+#print spectrum.subset_starSubalgebra /-
 -- this is why it would be nice if `subset_subalgebra` was registered for `subalgebra_class`.
 theorem subset_starSubalgebra [StarRing R] [StarRing A] [StarModule R A] {S : StarSubalgebra R A}
     (a : S) : spectrum R (a : A) ⊆ spectrum R a :=
   compl_subset_compl.2 fun _ => IsUnit.map S.Subtype
 #align spectrum.subset_star_subalgebra spectrum.subset_starSubalgebra
+-/
 
 theorem singleton_add_eq (a : A) (r : R) : {r} + σ a = σ (↑ₐ r + a) :=
   ext fun x => by

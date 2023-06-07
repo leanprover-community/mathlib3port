@@ -38,6 +38,7 @@ open MulOpposite MulAction Subgroup.leftTransversals MemLeftTransversals
 variable {G : Type _} [Group G] (H : Subgroup G) [IsCommutative H] [FiniteIndex H]
   (α β : leftTransversals (H : Set G))
 
+#print Subgroup.QuotientDiff /-
 /-- The quotient of the transversals of an abelian normal `N` by the `diff` relation. -/
 def QuotientDiff :=
   Quotient
@@ -45,6 +46,7 @@ def QuotientDiff :=
       ⟨fun α => diff_self (MonoidHom.id H) α, fun α β h => by rw [← diff_inv, h, inv_one],
         fun α β γ h h' => by rw [← diff_mul_diff, h, h', one_mul]⟩)
 #align subgroup.quotient_diff Subgroup.QuotientDiff
+-/
 
 instance : Inhabited H.QuotientDiff :=
   Quotient.inhabited _

@@ -95,12 +95,14 @@ end
 
 variable (R) [IsDomain R]
 
+#print ClassGroup /-
 /-- The ideal class group of `R` is the group of invertible fractional ideals
 modulo the principal ideals. -/
 def ClassGroup :=
   (FractionalIdeal R⁰ (FractionRing R))ˣ ⧸ (toPrincipalIdeal R (FractionRing R)).range
 deriving CommGroup
 #align class_group ClassGroup
+-/
 
 noncomputable instance : Inhabited (ClassGroup R) :=
   ⟨1⟩
@@ -394,6 +396,7 @@ noncomputable instance [IsPrincipalIdealRing R] : Fintype (ClassGroup R)
     rw [Finset.mem_singleton]
     exact class_group.mk_eq_one_iff.mpr (I : FractionalIdeal R⁰ (FractionRing R)).IsPrincipal
 
+#print card_classGroup_eq_one /-
 /-- The class number of a principal ideal domain is `1`. -/
 theorem card_classGroup_eq_one [IsPrincipalIdealRing R] : Fintype.card (ClassGroup R) = 1 :=
   by
@@ -402,7 +405,9 @@ theorem card_classGroup_eq_one [IsPrincipalIdealRing R] : Fintype.card (ClassGro
   refine' ClassGroup.induction (FractionRing R) fun I => _
   exact class_group.mk_eq_one_iff.mpr (I : FractionalIdeal R⁰ (FractionRing R)).IsPrincipal
 #align card_class_group_eq_one card_classGroup_eq_one
+-/
 
+#print card_classGroup_eq_one_iff /-
 /-- The class number is `1` iff the ring of integers is a principal ideal domain. -/
 theorem card_classGroup_eq_one_iff [IsDedekindDomain R] [Fintype (ClassGroup R)] :
     Fintype.card (ClassGroup R) = 1 ↔ IsPrincipalIdealRing R :=
@@ -416,4 +421,5 @@ theorem card_classGroup_eq_one_iff [IsDedekindDomain R] [Fintype (ClassGroup R)]
   · rw [hI]; exact bot_isPrincipal
   exact (ClassGroup.mk0_eq_one_iff (mem_non_zero_divisors_iff_ne_zero.mpr hI)).mp (eq_one _)
 #align card_class_group_eq_one_iff card_classGroup_eq_one_iff
+-/
 
