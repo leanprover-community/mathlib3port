@@ -58,13 +58,13 @@ theorem preserves_exact_of_PreservesFiniteColimits_of_epi [PreservesFiniteColimi
     Limits.isColimitCoforkMapOfIsColimit' _ ex.w (Abelian.isColimitOfExactOfEpi _ _ ex)
 #align category_theory.abelian.functor.preserves_exact_of_preserves_finite_colimits_of_epi CategoryTheory.Abelian.Functor.preserves_exact_of_PreservesFiniteColimits_of_epi
 
-theorem exact_of_map_ProjectiveResolution (P : ProjectiveResolution X) [PreservesFiniteColimits F] :
+theorem exact_of_map_projectiveResolution (P : ProjectiveResolution X) [PreservesFiniteColimits F] :
     Exact (((F.mapHomologicalComplex (ComplexShape.down ℕ)).obj P.complex).dTo 0)
       (F.map (P.π.f 0)) :=
   Preadditive.exact_of_iso_of_exact' (F.map (P.complex.d 1 0)) (F.map (P.π.f 0)) _ _
     (HomologicalComplex.xPrevIso ((F.mapHomologicalComplex _).obj P.complex) rfl).symm (Iso.refl _)
     (Iso.refl _) (by simp) (by simp) (preserves_exact_of_PreservesFiniteColimits_of_epi _ P.exact₀)
-#align category_theory.abelian.functor.exact_of_map_projective_resolution CategoryTheory.Abelian.Functor.exact_of_map_ProjectiveResolution
+#align category_theory.abelian.functor.exact_of_map_projective_resolution CategoryTheory.Abelian.Functor.exact_of_map_projectiveResolution
 
 /-- Given `P : ProjectiveResolution X`, a morphism `(F.left_derived 0).obj X ⟶ F.obj X`. -/
 @[nolint unused_arguments]

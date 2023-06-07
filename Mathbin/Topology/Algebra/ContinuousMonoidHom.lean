@@ -470,9 +470,9 @@ theorem map_comp (g : ContinuousMonoidHom B C) (f : ContinuousMonoidHom A B) :
 #align pontryagin_dual.map_comp PontryaginDual.map_comp
 
 @[simp]
-theorem map_mul' (f g : ContinuousMonoidHom A E) : map (f * g) = map f * map g :=
+theorem map_mul (f g : ContinuousMonoidHom A E) : map (f * g) = map f * map g :=
   ext fun x => ext fun y => map_mul x (f y) (g y)
-#align pontryagin_dual.map_mul PontryaginDual.map_mul'
+#align pontryagin_dual.map_mul PontryaginDual.map_mul
 
 variable (A B C D E)
 
@@ -483,7 +483,7 @@ noncomputable def mapHom [LocallyCompactSpace E] :
     where
   toFun := map
   map_one' := map_one
-  map_mul' := map_mul'
+  map_mul' := map_mul
   continuous_toFun := continuous_of_continuous_uncurry _ continuous_comp
 #align pontryagin_dual.map_hom PontryaginDual.mapHom
 

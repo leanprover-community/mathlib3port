@@ -429,9 +429,9 @@ theorem pow_card_pow {n p : ℕ} [Fact p.Prime] (x : ZMod p) : x ^ p ^ n = x :=
 #align zmod.pow_card_pow ZMod.pow_card_pow
 
 @[simp]
-theorem frobenius_zMod (p : ℕ) [Fact p.Prime] : frobenius (ZMod p) p = RingHom.id _ := by ext a;
+theorem frobenius_zmod (p : ℕ) [Fact p.Prime] : frobenius (ZMod p) p = RingHom.id _ := by ext a;
   rw [frobenius_def, ZMod.pow_card, RingHom.id_apply]
-#align zmod.frobenius_zmod ZMod.frobenius_zMod
+#align zmod.frobenius_zmod ZMod.frobenius_zmod
 
 @[simp]
 theorem card_units (p : ℕ) [Fact p.Prime] : Fintype.card (ZMod p)ˣ = p - 1 := by

@@ -795,11 +795,11 @@ omit V
 
 variable (𝕜)
 
-#print AffineIsometryEquiv.constVsub /-
+#print AffineIsometryEquiv.constVSub /-
 /-- `p' ↦ p -ᵥ p'` as an affine isometric equivalence. -/
-def constVsub (p : P) : P ≃ᵃⁱ[𝕜] V :=
+def constVSub (p : P) : P ≃ᵃⁱ[𝕜] V :=
   { AffineEquiv.constVSub 𝕜 p with norm_map := norm_neg }
-#align affine_isometry_equiv.const_vsub AffineIsometryEquiv.constVsub
+#align affine_isometry_equiv.const_vsub AffineIsometryEquiv.constVSub
 -/
 
 variable {𝕜}
@@ -807,42 +807,42 @@ variable {𝕜}
 include V
 
 @[simp]
-theorem coe_constVsub (p : P) : ⇑(constVsub 𝕜 p) = (· -ᵥ ·) p :=
+theorem coe_constVSub (p : P) : ⇑(constVSub 𝕜 p) = (· -ᵥ ·) p :=
   rfl
-#align affine_isometry_equiv.coe_const_vsub AffineIsometryEquiv.coe_constVsub
+#align affine_isometry_equiv.coe_const_vsub AffineIsometryEquiv.coe_constVSub
 
 @[simp]
-theorem symm_constVsub (p : P) :
-    (constVsub 𝕜 p).symm =
+theorem symm_constVSub (p : P) :
+    (constVSub 𝕜 p).symm =
       (LinearIsometryEquiv.neg 𝕜).toAffineIsometryEquiv.trans (vaddConst 𝕜 p) :=
   by ext; rfl
-#align affine_isometry_equiv.symm_const_vsub AffineIsometryEquiv.symm_constVsub
+#align affine_isometry_equiv.symm_const_vsub AffineIsometryEquiv.symm_constVSub
 
 omit V
 
 variable (𝕜 P)
 
-#print AffineIsometryEquiv.constVadd /-
+#print AffineIsometryEquiv.constVAdd /-
 /-- Translation by `v` (that is, the map `p ↦ v +ᵥ p`) as an affine isometric automorphism of `P`.
 -/
-def constVadd (v : V) : P ≃ᵃⁱ[𝕜] P :=
+def constVAdd (v : V) : P ≃ᵃⁱ[𝕜] P :=
   { AffineEquiv.constVAdd 𝕜 P v with norm_map := fun x => rfl }
-#align affine_isometry_equiv.const_vadd AffineIsometryEquiv.constVadd
+#align affine_isometry_equiv.const_vadd AffineIsometryEquiv.constVAdd
 -/
 
 variable {𝕜 P}
 
-#print AffineIsometryEquiv.coe_constVadd /-
+#print AffineIsometryEquiv.coe_constVAdd /-
 @[simp]
-theorem coe_constVadd (v : V) : ⇑(constVadd 𝕜 P v : P ≃ᵃⁱ[𝕜] P) = (· +ᵥ ·) v :=
+theorem coe_constVAdd (v : V) : ⇑(constVAdd 𝕜 P v : P ≃ᵃⁱ[𝕜] P) = (· +ᵥ ·) v :=
   rfl
-#align affine_isometry_equiv.coe_const_vadd AffineIsometryEquiv.coe_constVadd
+#align affine_isometry_equiv.coe_const_vadd AffineIsometryEquiv.coe_constVAdd
 -/
 
 @[simp]
-theorem constVadd_zero : constVadd 𝕜 P (0 : V) = refl 𝕜 P :=
+theorem constVAdd_zero : constVAdd 𝕜 P (0 : V) = refl 𝕜 P :=
   ext <| zero_vadd V
-#align affine_isometry_equiv.const_vadd_zero AffineIsometryEquiv.constVadd_zero
+#align affine_isometry_equiv.const_vadd_zero AffineIsometryEquiv.constVAdd_zero
 
 include 𝕜 V
 
@@ -862,7 +862,7 @@ variable (𝕜)
 #print AffineIsometryEquiv.pointReflection /-
 /-- Point reflection in `x` as an affine isometric automorphism. -/
 def pointReflection (x : P) : P ≃ᵃⁱ[𝕜] P :=
-  (constVsub 𝕜 x).trans (vaddConst 𝕜 x)
+  (constVSub 𝕜 x).trans (vaddConst 𝕜 x)
 #align affine_isometry_equiv.point_reflection AffineIsometryEquiv.pointReflection
 -/
 

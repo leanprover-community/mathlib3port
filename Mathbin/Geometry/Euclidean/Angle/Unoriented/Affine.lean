@@ -87,7 +87,7 @@ theorem AffineSubspace.angle_coe {s : AffineSubspace ℝ P} (p₁ p₂ p₃ : s)
 /-- Angles are translation invariant -/
 @[simp]
 theorem angle_const_vadd (v : V) (p₁ p₂ p₃ : P) : ∠ (v +ᵥ p₁) (v +ᵥ p₂) (v +ᵥ p₃) = ∠ p₁ p₂ p₃ :=
-  (AffineIsometryEquiv.constVadd ℝ P v).toAffineIsometry.angle_map _ _ _
+  (AffineIsometryEquiv.constVAdd ℝ P v).toAffineIsometry.angle_map _ _ _
 #align euclidean_geometry.angle_const_vadd EuclideanGeometry.angle_const_vadd
 
 /-- Angles are translation invariant -/
@@ -99,7 +99,7 @@ theorem angle_vadd_const (v₁ v₂ v₃ : V) (p : P) : ∠ (v₁ +ᵥ p) (v₂ 
 /-- Angles are translation invariant -/
 @[simp]
 theorem angle_const_vsub (p p₁ p₂ p₃ : P) : ∠ (p -ᵥ p₁) (p -ᵥ p₂) (p -ᵥ p₃) = ∠ p₁ p₂ p₃ :=
-  (AffineIsometryEquiv.constVsub ℝ p).toAffineIsometry.angle_map _ _ _
+  (AffineIsometryEquiv.constVSub ℝ p).toAffineIsometry.angle_map _ _ _
 #align euclidean_geometry.angle_const_vsub EuclideanGeometry.angle_const_vsub
 
 /-- Angles are translation invariant -/

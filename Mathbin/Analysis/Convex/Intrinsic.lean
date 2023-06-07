@@ -361,13 +361,13 @@ protected theorem Set.Nonempty.intrinsicInterior (hscv : Convex ℝ s) (hsne : s
   obtain ⟨p, hp⟩ := hsne
   let p' : affineSpan ℝ s := ⟨p, subset_affineSpan _ _ hp⟩
   rw [intrinsicInterior, nonempty_image_iff,
-    aux (AffineIsometryEquiv.constVsub ℝ p').symm.toHomeomorph,
+    aux (AffineIsometryEquiv.constVSub ℝ p').symm.toHomeomorph,
     Convex.interior_nonempty_iff_affineSpan_eq_top, AffineIsometryEquiv.coe_toHomeomorph, ←
     AffineIsometryEquiv.coe_toAffineEquiv, ← comap_span, affineSpan_coe_preimage_eq_top, comap_top]
   exact
     hscv.affine_preimage
       ((affineSpan ℝ s).Subtype.comp
-        (AffineIsometryEquiv.constVsub ℝ p').symm.toAffineEquiv.toAffineMap)
+        (AffineIsometryEquiv.constVSub ℝ p').symm.toAffineEquiv.toAffineMap)
 #align set.nonempty.intrinsic_interior Set.Nonempty.intrinsicInterior
 
 theorem intrinsicInterior_nonempty (hs : Convex ℝ s) :

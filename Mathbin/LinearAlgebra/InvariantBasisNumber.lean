@@ -257,7 +257,7 @@ instance (priority := 100) IsNoetherianRing.strongRankCondition : StrongRankCond
           (LinearEquiv.funCongrLeft R R e)).toLinearMap
   have i' : injective f' := i.comp (LinearEquiv.injective _)
   apply @zero_ne_one (Fin (1 + m) → R) _ _
-  apply (IsNoetherian.equivPunitOfProdInjective f' i').Injective
+  apply (IsNoetherian.equivPUnitOfProdInjective f' i').Injective
   ext
 #align noetherian_ring_strong_rank_condition IsNoetherianRing.strongRankCondition
 -/
