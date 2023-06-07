@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Thomas Browning
 
 ! This file was ported from Lean 3 source module group_theory.transfer
-! leanprover-community/mathlib commit 56489b558d42c30f6aac5947cafc9a594f60813b
+! leanprover-community/mathlib commit 36938f775671ff28bea1c0310f1608e4afbb22e0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.GroupTheory.Sylow
 
 /-!
 # The Transfer Homomorphism
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 In this file we construct the transfer homomorphism.
 

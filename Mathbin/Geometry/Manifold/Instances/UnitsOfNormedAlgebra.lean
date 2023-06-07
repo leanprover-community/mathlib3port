@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicolò Cavalleri, Heather Macbeth
 
 ! This file was ported from Lean 3 source module geometry.manifold.instances.units_of_normed_algebra
-! leanprover-community/mathlib commit ef901ea68d3bb1dd08f8bc3034ab6b32b2e6ecdf
+! leanprover-community/mathlib commit 36938f775671ff28bea1c0310f1608e4afbb22e0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Analysis.NormedSpace.Units
 
 /-!
 # Units of a normed algebra
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file is a stub, containing a construction of the charted space structure on the group of units
 of a complete normed ring `R`, and of the smooth manifold structure on the group of units of a

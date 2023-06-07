@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module algebra.lie.direct_sum
-! leanprover-community/mathlib commit c0cc689babd41c0e9d5f02429211ffbe2403472a
+! leanprover-community/mathlib commit 36938f775671ff28bea1c0310f1608e4afbb22e0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -15,6 +15,9 @@ import Mathbin.Algebra.Lie.Basic
 
 /-!
 # Direct sums of Lie algebras and Lie modules
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 Direct sums of Lie algebras and Lie modules carry natural algebra and module structures.
 

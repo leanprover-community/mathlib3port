@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module geometry.manifold.smooth_manifold_with_corners
-! leanprover-community/mathlib commit ddec54a71a0dd025c05445d467f1a2b7d586a3ba
+! leanprover-community/mathlib commit 36938f775671ff28bea1c0310f1608e4afbb22e0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Geometry.Manifold.ChartedSpace
 
 /-!
 # Smooth manifolds (possibly with boundary or corners)
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 A smooth manifold is a manifold modelled on a normed vector space, or a subset like a
 half-space (to get manifolds with boundaries) for which the changes of coordinates are smooth maps.

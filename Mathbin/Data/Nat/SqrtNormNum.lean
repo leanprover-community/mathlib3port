@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.nat.sqrt_norm_num
-! leanprover-community/mathlib commit ca80c8b003dcb3f7dbe0017d2e951bc687b9ad3f
+! leanprover-community/mathlib commit 36938f775671ff28bea1c0310f1608e4afbb22e0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.Tactic.NormNum
 import Mathbin.Data.Nat.Sqrt
 
 /-! ### `norm_num` plugin for `sqrt`
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 The `norm_num` plugin evaluates `sqrt` by bounding it between consecutive integers.
 -/

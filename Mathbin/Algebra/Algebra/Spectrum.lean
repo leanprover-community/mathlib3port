@@ -4,13 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
 
 ! This file was ported from Lean 3 source module algebra.algebra.spectrum
-! leanprover-community/mathlib commit 11dcb6b59dc9cc74e053b7ca8569bf6df4ac0f1e
+! leanprover-community/mathlib commit 58a272265b5e05f258161260dd2c5d247213cbd3
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Algebra.Star.Pointwise
 import Mathbin.Algebra.Star.Subalgebra
-import Mathbin.FieldTheory.IsAlgClosed.Basic
 import Mathbin.Tactic.NoncommRing
 
 /-!
@@ -36,8 +35,6 @@ This theory will serve as the foundation for spectral theory in Banach algebras.
   units (of `R`) in `σ (a*b)` coincide with those in `σ (b*a)`.
 * `spectrum.scalar_eq`: in a nontrivial algebra over a field, the spectrum of a scalar is
   a singleton.
-* `spectrum.subset_polynomial_aeval`, `spectrum.map_polynomial_aeval_of_degree_pos`,
-  `spectrum.map_polynomial_aeval_of_nonempty`: variations on the spectral mapping theorem.
 
 ## Notations
 
@@ -99,8 +96,6 @@ noncomputable def IsUnit.subInvSmul {r : Rˣ} {s : R} {a : A} (h : IsUnit <| r �
 end Defs
 
 namespace spectrum
-
-open scoped Polynomial
 
 section ScalarSemiring
 
@@ -224,8 +219,6 @@ theorem smul_mem_smul_iff {a : A} {s : R} {r : Rˣ} : r • s ∈ σ (r • a) �
     isUnit_smul_iff]
 #align spectrum.smul_mem_smul_iff spectrum.smul_mem_smul_iff
 
-open scoped Polynomial
-
 theorem unit_smul_eq_smul (a : A) (r : Rˣ) : σ (r • a) = r • σ a :=
   by
   ext
@@ -333,20 +326,6 @@ theorem sub_singleton_eq (a : A) (r : R) : σ a - {r} = σ (a - ↑ₐ r) := by
   simpa only [neg_sub, neg_eq] using congr_arg Neg.neg (singleton_sub_eq a r)
 #align spectrum.sub_singleton_eq spectrum.sub_singleton_eq
 
-open Polynomial
-
-theorem exists_mem_of_not_isUnit_aeval_prod [IsDomain R] {p : R[X]} {a : A} (hp : p ≠ 0)
-    (h : ¬IsUnit (aeval a (Multiset.map (fun x : R => X - C x) p.roots).Prod)) :
-    ∃ k : R, k ∈ σ a ∧ eval k p = 0 :=
-  by
-  rw [← Multiset.prod_toList, AlgHom.map_list_prod] at h 
-  replace h := mt List.prod_isUnit h
-  simp only [not_forall, exists_prop, aeval_C, Multiset.mem_toList, List.mem_map, aeval_X,
-    exists_exists_and_eq_and, Multiset.mem_map, AlgHom.map_sub] at h 
-  rcases h with ⟨r, r_mem, r_nu⟩
-  exact ⟨r, by rwa [mem_iff, ← IsUnit.sub_iff], by rwa [← is_root.def, ← mem_roots hp]⟩
-#align spectrum.exists_mem_of_not_is_unit_aeval_prod spectrum.exists_mem_of_not_isUnit_aeval_prod
-
 end ScalarRing
 
 section ScalarField
@@ -416,97 +395,6 @@ protected theorem map_inv (a : Aˣ) : (σ (a : A))⁻¹ = σ (↑a⁻¹ : A) :=
     simpa only [Units.val_inv_eq_inv_val] using inv_mem_iff.mp hk
 #align spectrum.map_inv spectrum.map_inv
 
-open Polynomial
-
-/-- Half of the spectral mapping theorem for polynomials. We prove it separately
-because it holds over any field, whereas `spectrum.map_polynomial_aeval_of_degree_pos` and
-`spectrum.map_polynomial_aeval_of_nonempty` need the field to be algebraically closed. -/
-theorem subset_polynomial_aeval (a : A) (p : 𝕜[X]) : (fun k => eval k p) '' σ a ⊆ σ (aeval a p) :=
-  by
-  rintro _ ⟨k, hk, rfl⟩
-  let q := C (eval k p) - p
-  have hroot : is_root q k := by simp only [eval_C, eval_sub, sub_self, is_root.def]
-  rw [← mul_div_eq_iff_is_root, ← neg_mul_neg, neg_sub] at hroot 
-  have aeval_q_eq : ↑ₐ (eval k p) - aeval a p = aeval a q := by
-    simp only [aeval_C, AlgHom.map_sub, sub_left_inj]
-  rw [mem_iff, aeval_q_eq, ← hroot, aeval_mul]
-  have hcomm := (Commute.all (C k - X) (-(q / (X - C k)))).map (aeval a)
-  apply mt fun h => (hcomm.is_unit_mul_iff.mp h).1
-  simpa only [aeval_X, aeval_C, AlgHom.map_sub] using hk
-#align spectrum.subset_polynomial_aeval spectrum.subset_polynomial_aeval
-
-/-- The *spectral mapping theorem* for polynomials.  Note: the assumption `degree p > 0`
-is necessary in case `σ a = ∅`, for then the left-hand side is `∅` and the right-hand side,
-assuming `[nontrivial A]`, is `{k}` where `p = polynomial.C k`. -/
-theorem map_polynomial_aeval_of_degree_pos [IsAlgClosed 𝕜] (a : A) (p : 𝕜[X])
-    (hdeg : 0 < degree p) : σ (aeval a p) = (fun k => eval k p) '' σ a :=
-  by
-  -- handle the easy direction via `spectrum.subset_polynomial_aeval`
-  refine' Set.eq_of_subset_of_subset (fun k hk => _) (subset_polynomial_aeval a p)
-  -- write `C k - p` product of linear factors and a constant; show `C k - p ≠ 0`.
-  have hprod := eq_prod_roots_of_splits_id (IsAlgClosed.splits (C k - p))
-  have h_ne : C k - p ≠ 0 :=
-    ne_zero_of_degree_gt
-      (by rwa [degree_sub_eq_right_of_degree_lt (lt_of_le_of_lt degree_C_le hdeg)])
-  have lead_ne := leading_coeff_ne_zero.mpr h_ne
-  have lead_unit := (Units.map ↑ₐ.toMonoidHom (Units.mk0 _ lead_ne)).IsUnit
-  /- leading coefficient is a unit so product of linear factors is not a unit;
-    apply `exists_mem_of_not_is_unit_aeval_prod`. -/
-  have p_a_eq : aeval a (C k - p) = ↑ₐ k - aeval a p := by
-    simp only [aeval_C, AlgHom.map_sub, sub_left_inj]
-  rw [mem_iff, ← p_a_eq, hprod, aeval_mul, ((Commute.all _ _).map (aeval a)).isUnit_mul_iff,
-    aeval_C] at hk 
-  replace hk := exists_mem_of_not_is_unit_aeval_prod h_ne (not_and.mp hk lead_unit)
-  rcases hk with ⟨r, r_mem, r_ev⟩
-  exact ⟨r, r_mem, symm (by simpa [eval_sub, eval_C, sub_eq_zero] using r_ev)⟩
-#align spectrum.map_polynomial_aeval_of_degree_pos spectrum.map_polynomial_aeval_of_degree_pos
-
-/-- In this version of the spectral mapping theorem, we assume the spectrum
-is nonempty instead of assuming the degree of the polynomial is positive. -/
-theorem map_polynomial_aeval_of_nonempty [IsAlgClosed 𝕜] (a : A) (p : 𝕜[X])
-    (hnon : (σ a).Nonempty) : σ (aeval a p) = (fun k => eval k p) '' σ a :=
-  by
-  nontriviality A
-  refine' Or.elim (le_or_gt (degree p) 0) (fun h => _) (map_polynomial_aeval_of_degree_pos a p)
-  · rw [eq_C_of_degree_le_zero h]
-    simp only [Set.image_congr, eval_C, aeval_C, scalar_eq, Set.Nonempty.image_const hnon]
-#align spectrum.map_polynomial_aeval_of_nonempty spectrum.map_polynomial_aeval_of_nonempty
-
-/-- A specialization of `spectrum.subset_polynomial_aeval` to monic monomials for convenience. -/
-theorem pow_image_subset (a : A) (n : ℕ) : (fun x => x ^ n) '' σ a ⊆ σ (a ^ n) := by
-  simpa only [eval_pow, eval_X, aeval_X_pow] using subset_polynomial_aeval a (X ^ n : 𝕜[X])
-#align spectrum.pow_image_subset spectrum.pow_image_subset
-
-/-- A specialization of `spectrum.map_polynomial_aeval_of_nonempty` to monic monomials for
-convenience. -/
-theorem map_pow_of_pos [IsAlgClosed 𝕜] (a : A) {n : ℕ} (hn : 0 < n) :
-    σ (a ^ n) = (fun x => x ^ n) '' σ a := by
-  simpa only [aeval_X_pow, eval_pow, eval_X] using
-    map_polynomial_aeval_of_degree_pos a (X ^ n : 𝕜[X]) (by rw_mod_cast [degree_X_pow]; exact hn)
-#align spectrum.map_pow_of_pos spectrum.map_pow_of_pos
-
-/-- A specialization of `spectrum.map_polynomial_aeval_of_nonempty` to monic monomials for
-convenience. -/
-theorem map_pow_of_nonempty [IsAlgClosed 𝕜] {a : A} (ha : (σ a).Nonempty) (n : ℕ) :
-    σ (a ^ n) = (fun x => x ^ n) '' σ a := by
-  simpa only [aeval_X_pow, eval_pow, eval_X] using map_polynomial_aeval_of_nonempty a (X ^ n) ha
-#align spectrum.map_pow_of_nonempty spectrum.map_pow_of_nonempty
-
-variable (𝕜)
-
--- We will use this both to show eigenvalues exist, and to prove Schur's lemma.
-/-- Every element `a` in a nontrivial finite-dimensional algebra `A`
-over an algebraically closed field `𝕜` has non-empty spectrum. -/
-theorem nonempty_of_isAlgClosed_of_finiteDimensional [IsAlgClosed 𝕜] [Nontrivial A]
-    [I : FiniteDimensional 𝕜 A] (a : A) : ∃ k : 𝕜, k ∈ σ a :=
-  by
-  obtain ⟨p, ⟨h_mon, h_eval_p⟩⟩ := isIntegral_of_noetherian (IsNoetherian.iff_fg.2 I) a
-  have nu : ¬IsUnit (aeval a p) := by rw [← aeval_def] at h_eval_p ; rw [h_eval_p]; simp
-  rw [eq_prod_roots_of_monic_of_splits_id h_mon (IsAlgClosed.splits p)] at nu 
-  obtain ⟨k, hk, _⟩ := exists_mem_of_not_is_unit_aeval_prod (monic.ne_zero h_mon) nu
-  exact ⟨k, hk⟩
-#align spectrum.nonempty_of_is_alg_closed_of_finite_dimensional spectrum.nonempty_of_isAlgClosed_of_finiteDimensional
-
 end ScalarField
 
 end spectrum
@@ -515,7 +403,7 @@ namespace AlgHom
 
 section CommSemiring
 
-variable {F R A B : Type _} [CommRing R] [Ring A] [Algebra R A] [Ring B] [Algebra R B]
+variable {F R A B : Type _} [CommSemiring R] [Ring A] [Algebra R A] [Ring B] [Algebra R B]
 
 variable [AlgHomClass F R A B]
 

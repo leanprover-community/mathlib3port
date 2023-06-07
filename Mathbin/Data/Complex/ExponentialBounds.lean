@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Joseph Myers
 
 ! This file was ported from Lean 3 source module data.complex.exponential_bounds
-! leanprover-community/mathlib commit 402f8982dddc1864bd703da2d6e2ee304a866973
+! leanprover-community/mathlib commit 36938f775671ff28bea1c0310f1608e4afbb22e0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Analysis.SpecialFunctions.Log.Deriv
 
 /-!
 # Bounds on specific values of the exponential
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 -/
 
 

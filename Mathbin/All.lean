@@ -1807,6 +1807,7 @@ import Mathbin.FieldTheory.IntermediateField
 import Mathbin.FieldTheory.IsAlgClosed.AlgebraicClosure
 import Mathbin.FieldTheory.IsAlgClosed.Basic
 import Mathbin.FieldTheory.IsAlgClosed.Classification
+import Mathbin.FieldTheory.IsAlgClosed.Spectrum
 import Mathbin.FieldTheory.KrullTopology
 import Mathbin.FieldTheory.Laurent
 import Mathbin.FieldTheory.Minpoly.Basic

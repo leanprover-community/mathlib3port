@@ -19,10 +19,12 @@ import Mathbin.MeasureTheory.Constructions.BorelSpace.Basic
 
 namespace Real
 
+#print Real.measurable_arctan /-
 @[measurability]
 theorem measurable_arctan : Measurable arctan :=
   continuous_arctan.Measurable
 #align real.measurable_arctan Real.measurable_arctan
+-/
 
 end Real
 
@@ -32,10 +34,12 @@ open Real
 
 variable {α : Type _} {m : MeasurableSpace α} {f : α → ℝ} (hf : Measurable f)
 
+#print Measurable.arctan /-
 @[measurability]
 theorem Measurable.arctan : Measurable fun x => arctan (f x) :=
   measurable_arctan.comp hf
 #align measurable.arctan Measurable.arctan
+-/
 
 end RealComposition
 

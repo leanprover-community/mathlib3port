@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module algebra.lie.character
-! leanprover-community/mathlib commit 132328c4dd48da87adca5d408ca54f315282b719
+! leanprover-community/mathlib commit 36938f775671ff28bea1c0310f1608e4afbb22e0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.LinearAlgebra.Dual
 
 /-!
 # Characters of Lie algebras
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 A character of a Lie algebra `L` over a commutative ring `R` is a morphism of Lie algebras `L → R`,
 where `R` is regarded as a Lie algebra over itself via the ring commutator. For an Abelian Lie

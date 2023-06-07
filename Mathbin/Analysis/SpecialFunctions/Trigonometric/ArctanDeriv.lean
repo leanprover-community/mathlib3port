@@ -97,25 +97,31 @@ theorem hasDerivAt_arctan (x : ℝ) : HasDerivAt arctan (1 / (1 + x ^ 2)) x :=
   (hasStrictDerivAt_arctan x).HasDerivAt
 #align real.has_deriv_at_arctan Real.hasDerivAt_arctan
 
+#print Real.differentiableAt_arctan /-
 theorem differentiableAt_arctan (x : ℝ) : DifferentiableAt ℝ arctan x :=
   (hasDerivAt_arctan x).DifferentiableAt
 #align real.differentiable_at_arctan Real.differentiableAt_arctan
+-/
 
+#print Real.differentiable_arctan /-
 theorem differentiable_arctan : Differentiable ℝ arctan :=
   differentiableAt_arctan
 #align real.differentiable_arctan Real.differentiable_arctan
+-/
 
 @[simp]
 theorem deriv_arctan : deriv arctan = fun x => 1 / (1 + x ^ 2) :=
   funext fun x => (hasDerivAt_arctan x).deriv
 #align real.deriv_arctan Real.deriv_arctan
 
+#print Real.contDiff_arctan /-
 theorem contDiff_arctan {n : ℕ∞} : ContDiff ℝ n arctan :=
   contDiff_iff_contDiffAt.2 fun x =>
     have : cos (arctan x) ≠ 0 := (cos_arctan_pos x).ne'
     tanLocalHomeomorph.contDiffAt_symm_deriv (by simpa) trivial (hasDerivAt_tan this)
       (contDiffAt_tan.2 this)
 #align real.cont_diff_arctan Real.contDiff_arctan
+-/
 
 end Real
 
@@ -193,42 +199,58 @@ theorem fderiv_arctan (hc : DifferentiableAt ℝ f x) :
   hc.HasFDerivAt.arctan.fderiv
 #align fderiv_arctan fderiv_arctan
 
+#print DifferentiableWithinAt.arctan /-
 theorem DifferentiableWithinAt.arctan (hf : DifferentiableWithinAt ℝ f s x) :
     DifferentiableWithinAt ℝ (fun x => Real.arctan (f x)) s x :=
   hf.HasFDerivWithinAt.arctan.DifferentiableWithinAt
 #align differentiable_within_at.arctan DifferentiableWithinAt.arctan
+-/
 
+#print DifferentiableAt.arctan /-
 @[simp]
 theorem DifferentiableAt.arctan (hc : DifferentiableAt ℝ f x) :
     DifferentiableAt ℝ (fun x => arctan (f x)) x :=
   hc.HasFDerivAt.arctan.DifferentiableAt
 #align differentiable_at.arctan DifferentiableAt.arctan
+-/
 
+#print DifferentiableOn.arctan /-
 theorem DifferentiableOn.arctan (hc : DifferentiableOn ℝ f s) :
     DifferentiableOn ℝ (fun x => arctan (f x)) s := fun x h => (hc x h).arctan
 #align differentiable_on.arctan DifferentiableOn.arctan
+-/
 
+#print Differentiable.arctan /-
 @[simp]
 theorem Differentiable.arctan (hc : Differentiable ℝ f) : Differentiable ℝ fun x => arctan (f x) :=
   fun x => (hc x).arctan
 #align differentiable.arctan Differentiable.arctan
+-/
 
+#print ContDiffAt.arctan /-
 theorem ContDiffAt.arctan (h : ContDiffAt ℝ n f x) : ContDiffAt ℝ n (fun x => arctan (f x)) x :=
   contDiff_arctan.ContDiffAt.comp x h
 #align cont_diff_at.arctan ContDiffAt.arctan
+-/
 
+#print ContDiff.arctan /-
 theorem ContDiff.arctan (h : ContDiff ℝ n f) : ContDiff ℝ n fun x => arctan (f x) :=
   contDiff_arctan.comp h
 #align cont_diff.arctan ContDiff.arctan
+-/
 
+#print ContDiffWithinAt.arctan /-
 theorem ContDiffWithinAt.arctan (h : ContDiffWithinAt ℝ n f s x) :
     ContDiffWithinAt ℝ n (fun x => arctan (f x)) s x :=
   contDiff_arctan.comp_contDiffWithinAt h
 #align cont_diff_within_at.arctan ContDiffWithinAt.arctan
+-/
 
+#print ContDiffOn.arctan /-
 theorem ContDiffOn.arctan (h : ContDiffOn ℝ n f s) : ContDiffOn ℝ n (fun x => arctan (f x)) s :=
   contDiff_arctan.comp_contDiffOn h
 #align cont_diff_on.arctan ContDiffOn.arctan
+-/
 
 end fderiv
 

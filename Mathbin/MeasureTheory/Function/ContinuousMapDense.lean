@@ -249,7 +249,7 @@ theorem Integrable.exists_hasCompactSupport_integral_sub_le [LocallyCompactSpace
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (s «expr ⊆ » t) -/
 /-- Any function in `ℒp` can be approximated by bounded continuous functions when `p < ∞`,
 version in terms of `snorm`. -/
-theorem Memℒp.exists_bounded_continuous_snorm_sub_le [μ.WeaklyRegular] (hp : p ≠ ∞) {f : α → E}
+theorem Memℒp.exists_boundedContinuous_snorm_sub_le [μ.WeaklyRegular] (hp : p ≠ ∞) {f : α → E}
     (hf : Memℒp f p μ) {ε : ℝ≥0∞} (hε : ε ≠ 0) :
     ∃ g : α →ᵇ E, snorm (f - g) p μ ≤ ε ∧ Memℒp g p μ :=
   by
@@ -300,11 +300,11 @@ theorem Memℒp.exists_bounded_continuous_snorm_sub_le [μ.WeaklyRegular] (hp : 
     simp only [sub_add_sub_cancel]
   refine' ⟨f, I3, f_cont, f_mem, _⟩
   exact (BoundedContinuousFunction.ofNormedAddCommGroup f f_cont _ f_bound).bounded_range
-#align measure_theory.mem_ℒp.exists_bounded_continuous_snorm_sub_le MeasureTheory.Memℒp.exists_bounded_continuous_snorm_sub_le
+#align measure_theory.mem_ℒp.exists_bounded_continuous_snorm_sub_le MeasureTheory.Memℒp.exists_boundedContinuous_snorm_sub_le
 
 /-- Any function in `ℒp` can be approximated by bounded continuous functions when `0 < p < ∞`,
 version in terms of `∫`. -/
-theorem Memℒp.exists_bounded_continuous_integral_rpow_sub_le [μ.WeaklyRegular] {p : ℝ} (hp : 0 < p)
+theorem Memℒp.exists_boundedContinuous_integral_rpow_sub_le [μ.WeaklyRegular] {p : ℝ} (hp : 0 < p)
     {f : α → E} (hf : Memℒp f (ENNReal.ofReal p) μ) {ε : ℝ} (hε : 0 < ε) :
     ∃ g : α →ᵇ E, (∫ x, ‖f x - g x‖ ^ p ∂μ) ≤ ε ∧ Memℒp g (ENNReal.ofReal p) μ :=
   by
@@ -319,28 +319,28 @@ theorem Memℒp.exists_bounded_continuous_integral_rpow_sub_le [μ.WeaklyRegular
     ENNReal.ofReal_le_ofReal_iff I.le, one_div, ENNReal.toReal_ofReal hp.le,
     Real.rpow_le_rpow_iff _ hε.le (inv_pos.2 hp)] at hg 
   exact integral_nonneg fun x => Real.rpow_nonneg_of_nonneg (norm_nonneg _) _
-#align measure_theory.mem_ℒp.exists_bounded_continuous_integral_rpow_sub_le MeasureTheory.Memℒp.exists_bounded_continuous_integral_rpow_sub_le
+#align measure_theory.mem_ℒp.exists_bounded_continuous_integral_rpow_sub_le MeasureTheory.Memℒp.exists_boundedContinuous_integral_rpow_sub_le
 
 /-- Any integrable function can be approximated by bounded continuous functions,
 version in terms of `∫⁻`. -/
-theorem Integrable.exists_bounded_continuous_lintegral_sub_le [μ.WeaklyRegular] {f : α → E}
+theorem Integrable.exists_boundedContinuous_lintegral_sub_le [μ.WeaklyRegular] {f : α → E}
     (hf : Integrable f μ) {ε : ℝ≥0∞} (hε : ε ≠ 0) :
     ∃ g : α →ᵇ E, (∫⁻ x, ‖f x - g x‖₊ ∂μ) ≤ ε ∧ Integrable g μ :=
   by
   simp only [← mem_ℒp_one_iff_integrable, ← snorm_one_eq_lintegral_nnnorm] at hf ⊢
   exact hf.exists_bounded_continuous_snorm_sub_le ENNReal.one_ne_top hε
-#align measure_theory.integrable.exists_bounded_continuous_lintegral_sub_le MeasureTheory.Integrable.exists_bounded_continuous_lintegral_sub_le
+#align measure_theory.integrable.exists_bounded_continuous_lintegral_sub_le MeasureTheory.Integrable.exists_boundedContinuous_lintegral_sub_le
 
 /-- Any integrable function can be approximated by bounded continuous functions,
 version in terms of `∫`. -/
-theorem Integrable.exists_bounded_continuous_integral_sub_le [μ.WeaklyRegular] {f : α → E}
+theorem Integrable.exists_boundedContinuous_integral_sub_le [μ.WeaklyRegular] {f : α → E}
     (hf : Integrable f μ) {ε : ℝ} (hε : 0 < ε) :
     ∃ g : α →ᵇ E, (∫ x, ‖f x - g x‖ ∂μ) ≤ ε ∧ Integrable g μ :=
   by
   simp only [← mem_ℒp_one_iff_integrable, ← snorm_one_eq_lintegral_nnnorm, ← ENNReal.ofReal_one] at
     hf ⊢
   simpa using hf.exists_bounded_continuous_integral_rpow_sub_le zero_lt_one hε
-#align measure_theory.integrable.exists_bounded_continuous_integral_sub_le MeasureTheory.Integrable.exists_bounded_continuous_integral_sub_le
+#align measure_theory.integrable.exists_bounded_continuous_integral_sub_le MeasureTheory.Integrable.exists_boundedContinuous_integral_sub_le
 
 namespace Lp
 
@@ -357,7 +357,7 @@ theorem boundedContinuousFunction_dense [SecondCountableTopologyEither α E] [_i
   intro ε hε
   have A : ENNReal.ofReal ε ≠ 0 := by simp only [Ne.def, ENNReal.ofReal_eq_zero, not_le, hε]
   obtain ⟨g, hg, g_mem⟩ : ∃ g : α →ᵇ E, snorm (f - g) p μ ≤ ENNReal.ofReal ε ∧ mem_ℒp g p μ
-  exact (Lp.mem_ℒp f).exists_bounded_continuous_snorm_sub_le hp A
+  exact (Lp.mem_ℒp f).exists_boundedContinuous_snorm_sub_le hp A
   refine' ⟨g_mem.to_Lp _, _, ⟨g, rfl⟩⟩
   simp only [dist_eq_norm, Metric.mem_closedBall']
   rw [Lp.norm_def]

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yuma Mizuno
 
 ! This file was ported from Lean 3 source module category_theory.bicategory.natural_transformation
-! leanprover-community/mathlib commit 4ff75f5b8502275a4c2eb2d2f02bdf84d7fb8993
+! leanprover-community/mathlib commit 36938f775671ff28bea1c0310f1608e4afbb22e0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.CategoryTheory.Bicategory.Functor
 
 /-!
 # Oplax natural transformations
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 Just as there are natural transformations between functors, there are oplax natural transformations
 between oplax functors. The equality in the naturality of natural transformations is replaced by a

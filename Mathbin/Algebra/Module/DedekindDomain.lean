@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Pierre-Alexandre Bazin
 
 ! This file was ported from Lean 3 source module algebra.module.dedekind_domain
-! leanprover-community/mathlib commit cdc34484a07418af43daf8198beaf5c00324bca8
+! leanprover-community/mathlib commit 36938f775671ff28bea1c0310f1608e4afbb22e0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.RingTheory.DedekindDomain.Ideal
 
 /-!
 # Modules over a Dedekind domain
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 Over a Dedekind domain, a `I`-torsion module is the internal direct sum of its `p i ^ e i`-torsion
 submodules, where `I = ∏ i, p i ^ e i` is its unique decomposition in prime ideals.

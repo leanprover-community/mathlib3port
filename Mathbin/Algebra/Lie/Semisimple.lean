@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module algebra.lie.semisimple
-! leanprover-community/mathlib commit 356447fe00e75e54777321045cdff7c9ea212e60
+! leanprover-community/mathlib commit 36938f775671ff28bea1c0310f1608e4afbb22e0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.Algebra.Lie.Solvable
 
 /-!
 # Semisimple Lie algebras
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 The famous Cartan-Dynkin-Killing classification of semisimple Lie algebras renders them one of the
 most important classes of Lie algebras. In this file we define simple and semisimple Lie algebras

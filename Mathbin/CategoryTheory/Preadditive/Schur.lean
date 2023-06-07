@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel, Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.preadditive.schur
-! leanprover-community/mathlib commit 5ec62c8106221a3f9160e4e4fcc3eed79fe213e9
+! leanprover-community/mathlib commit 58a272265b5e05f258161260dd2c5d247213cbd3
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,7 +12,7 @@ import Mathbin.Algebra.Group.Ext
 import Mathbin.CategoryTheory.Simple
 import Mathbin.CategoryTheory.Linear.Basic
 import Mathbin.CategoryTheory.Endomorphism
-import Mathbin.Algebra.Algebra.Spectrum
+import Mathbin.FieldTheory.IsAlgClosed.Spectrum
 
 /-!
 # Schur's lemma

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module algebra.lie.skew_adjoint
-! leanprover-community/mathlib commit 075b3f7d19b9da85a0b54b3e33055a74fc388dec
+! leanprover-community/mathlib commit 36938f775671ff28bea1c0310f1608e4afbb22e0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.LinearAlgebra.Matrix.BilinearForm
 
 /-!
 # Lie algebras of skew-adjoint endomorphisms of a bilinear form
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 When a module carries a bilinear form, the Lie algebra of endomorphisms of the module contains a
 distinguished Lie subalgebra: the skew-adjoint endomorphisms. Such subalgebras are important
