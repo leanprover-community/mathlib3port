@@ -30,28 +30,28 @@ variable {α β : Type _} [TopologicalSpace α]
 
 #print rtendsto_nhds /-
 theorem rtendsto_nhds {r : Rel β α} {l : Filter β} {a : α} :
-    Rtendsto r l (𝓝 a) ↔ ∀ s, IsOpen s → a ∈ s → r.Core s ∈ l :=
+    RTendsto r l (𝓝 a) ↔ ∀ s, IsOpen s → a ∈ s → r.Core s ∈ l :=
   all_mem_nhds_filter _ _ (fun s t => id) _
 #align rtendsto_nhds rtendsto_nhds
 -/
 
 #print rtendsto'_nhds /-
 theorem rtendsto'_nhds {r : Rel β α} {l : Filter β} {a : α} :
-    Rtendsto' r l (𝓝 a) ↔ ∀ s, IsOpen s → a ∈ s → r.Preimage s ∈ l := by rw [rtendsto'_def];
+    RTendsto' r l (𝓝 a) ↔ ∀ s, IsOpen s → a ∈ s → r.Preimage s ∈ l := by rw [rtendsto'_def];
   apply all_mem_nhds_filter; apply Rel.preimage_mono
 #align rtendsto'_nhds rtendsto'_nhds
 -/
 
 #print ptendsto_nhds /-
 theorem ptendsto_nhds {f : β →. α} {l : Filter β} {a : α} :
-    Ptendsto f l (𝓝 a) ↔ ∀ s, IsOpen s → a ∈ s → f.Core s ∈ l :=
+    PTendsto f l (𝓝 a) ↔ ∀ s, IsOpen s → a ∈ s → f.Core s ∈ l :=
   rtendsto_nhds
 #align ptendsto_nhds ptendsto_nhds
 -/
 
 #print ptendsto'_nhds /-
 theorem ptendsto'_nhds {f : β →. α} {l : Filter β} {a : α} :
-    Ptendsto' f l (𝓝 a) ↔ ∀ s, IsOpen s → a ∈ s → f.Preimage s ∈ l :=
+    PTendsto' f l (𝓝 a) ↔ ∀ s, IsOpen s → a ∈ s → f.Preimage s ∈ l :=
   rtendsto'_nhds
 #align ptendsto'_nhds ptendsto'_nhds
 -/
@@ -73,7 +73,7 @@ theorem open_dom_of_pcontinuous {f : α →. β} (h : PContinuous f) : IsOpen f.
 #align open_dom_of_pcontinuous open_dom_of_pcontinuous
 
 theorem pcontinuous_iff' {f : α →. β} :
-    PContinuous f ↔ ∀ {x y} (h : y ∈ f x), Ptendsto' f (𝓝 x) (𝓝 y) :=
+    PContinuous f ↔ ∀ {x y} (h : y ∈ f x), PTendsto' f (𝓝 x) (𝓝 y) :=
   by
   constructor
   · intro h x y h'
@@ -97,7 +97,7 @@ theorem pcontinuous_iff' {f : α →. β} :
 #align pcontinuous_iff' pcontinuous_iff'
 
 theorem continuousWithinAt_iff_ptendsto_res (f : α → β) {x : α} {s : Set α} :
-    ContinuousWithinAt f s x ↔ Ptendsto (PFun.res f s) (𝓝 x) (𝓝 (f x)) :=
+    ContinuousWithinAt f s x ↔ PTendsto (PFun.res f s) (𝓝 x) (𝓝 (f x)) :=
   tendsto_iff_ptendsto _ _ _ _
 #align continuous_within_at_iff_ptendsto_res continuousWithinAt_iff_ptendsto_res
 

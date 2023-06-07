@@ -33,6 +33,7 @@ open Real Finset
 
 variable {ι : Type _} [Fintype ι]
 
+#print QuadraticForm.isometrySignWeightedSumSquares /-
 /-- The isometry between a weighted sum of squares with weights `u` on the
 (non-zero) real numbers and the weighted sum of squares with weights `sign ∘ u`. -/
 noncomputable def isometrySignWeightedSumSquares [DecidableEq ι] (w : ι → ℝ) :
@@ -78,6 +79,7 @@ noncomputable def isometrySignWeightedSumSquares [DecidableEq ι] (w : ι → �
     mul_assoc (SignType.sign (u j)) (u j)⁻¹, inv_mul_cancel (Units.ne_zero _), mul_one]
   infer_instance
 #align quadratic_form.isometry_sign_weighted_sum_squares QuadraticForm.isometrySignWeightedSumSquares
+-/
 
 /-- **Sylvester's law of inertia**: A nondegenerate real quadratic form is equivalent to a weighted
 sum of squares with the weights being ±1. -/
