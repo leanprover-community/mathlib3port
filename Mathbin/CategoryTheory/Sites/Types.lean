@@ -27,6 +27,7 @@ namespace CategoryTheory
 
 open scoped CategoryTheory.Type
 
+#print CategoryTheory.typesGrothendieckTopology /-
 /-- A Grothendieck topology associated to the category of all types.
 A sieve is a covering iff it is jointly surjective. -/
 def typesGrothendieckTopology : GrothendieckTopology (Type u)
@@ -36,7 +37,9 @@ def typesGrothendieckTopology : GrothendieckTopology (Type u)
   pullback_stable' α β S f hs x := hs (f x)
   transitive' α S hs R hr x := hr (hs x) PUnit.unit
 #align category_theory.types_grothendieck_topology CategoryTheory.typesGrothendieckTopology
+-/
 
+#print CategoryTheory.discreteSieve /-
 /-- The discrete sieve on a type, which only includes arrows whose image is a subsingleton. -/
 @[simps]
 def discreteSieve (α : Type u) : Sieve α
@@ -44,19 +47,26 @@ def discreteSieve (α : Type u) : Sieve α
   arrows β f := ∃ x, ∀ y, f y = x
   downward_closed' := fun β γ f ⟨x, hx⟩ g => ⟨x, fun y => hx <| g y⟩
 #align category_theory.discrete_sieve CategoryTheory.discreteSieve
+-/
 
+#print CategoryTheory.discreteSieve_mem /-
 theorem discreteSieve_mem (α : Type u) : discreteSieve α ∈ typesGrothendieckTopology α := fun x =>
   ⟨x, fun y => rfl⟩
 #align category_theory.discrete_sieve_mem CategoryTheory.discreteSieve_mem
+-/
 
+#print CategoryTheory.discretePresieve /-
 /-- The discrete presieve on a type, which only includes arrows whose domain is a singleton. -/
 def discretePresieve (α : Type u) : Presieve α := fun β f => ∃ x : β, ∀ y : β, y = x
 #align category_theory.discrete_presieve CategoryTheory.discretePresieve
+-/
 
+#print CategoryTheory.generate_discretePresieve_mem /-
 theorem generate_discretePresieve_mem (α : Type u) :
     Sieve.generate (discretePresieve α) ∈ typesGrothendieckTopology α := fun x =>
   ⟨PUnit, id, fun _ => x, ⟨PUnit.unit, fun _ => Subsingleton.elim _ _⟩, rfl⟩
 #align category_theory.generate_discrete_presieve_mem CategoryTheory.generate_discretePresieve_mem
+-/
 
 open Presieve
 
@@ -71,6 +81,7 @@ theorem isSheaf_yoneda' {α : Type u} : IsSheaf typesGrothendieckTopology (yoned
     fun f hf => funext fun y => by convert congr_fun (hf _ (hs y)) PUnit.unit⟩
 #align category_theory.is_sheaf_yoneda' CategoryTheory.isSheaf_yoneda'
 
+#print CategoryTheory.yoneda' /-
 /-- The yoneda functor that sends a type to a sheaf over the category of types -/
 @[simps]
 def yoneda' : Type u ⥤ SheafOfTypes typesGrothendieckTopology
@@ -78,11 +89,14 @@ def yoneda' : Type u ⥤ SheafOfTypes typesGrothendieckTopology
   obj α := ⟨yoneda.obj α, isSheaf_yoneda'⟩
   map α β f := ⟨yoneda.map f⟩
 #align category_theory.yoneda' CategoryTheory.yoneda'
+-/
 
+#print CategoryTheory.yoneda'_comp /-
 @[simp]
 theorem yoneda'_comp : yoneda'.{u} ⋙ sheafOfTypesToPresheaf _ = yoneda :=
   rfl
 #align category_theory.yoneda'_comp CategoryTheory.yoneda'_comp
+-/
 
 open Opposite
 
@@ -182,10 +196,13 @@ noncomputable def typeEquiv : Type u ≌ SheafOfTypes typesGrothendieckTopology 
             funext fun α => funext fun s => funext fun x => eval_app S₁ S₂ f (unop α) s x)
 #align category_theory.type_equiv CategoryTheory.typeEquiv
 
+#print CategoryTheory.subcanonical_typesGrothendieckTopology /-
 theorem subcanonical_typesGrothendieckTopology : Sheaf.Subcanonical typesGrothendieckTopology.{u} :=
   Sheaf.Subcanonical.of_yoneda_isSheaf _ fun X => isSheaf_yoneda'
 #align category_theory.subcanonical_types_grothendieck_topology CategoryTheory.subcanonical_typesGrothendieckTopology
+-/
 
+#print CategoryTheory.typesGrothendieckTopology_eq_canonical /-
 theorem typesGrothendieckTopology_eq_canonical :
     typesGrothendieckTopology.{u} = Sheaf.canonicalTopology (Type u) :=
   le_antisymm subcanonical_typesGrothendieckTopology <|
@@ -204,6 +221,7 @@ theorem typesGrothendieckTopology_eq_canonical :
                   Bool.noConfusion <| ULift.up.inj <| (congr_fun this PUnit.unit : _),
                 fun hs β f => isSheaf_yoneda' _ fun y => hs _⟩⟩
 #align category_theory.types_grothendieck_topology_eq_canonical CategoryTheory.typesGrothendieckTopology_eq_canonical
+-/
 
 end CategoryTheory
 

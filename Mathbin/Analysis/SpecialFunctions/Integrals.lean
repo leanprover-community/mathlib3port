@@ -608,7 +608,7 @@ theorem integral_mul_rpow_one_add_sq {t : ℝ} (ht : t ≠ -1) :
     exact add_nonneg zero_le_one (sq_nonneg x)
   rw [← of_real_inj]
   convert integral_mul_cpow_one_add_sq (_ : (t : ℂ) ≠ -1)
-  · rw [← intervalIntegral.integral_of_real]
+  · rw [← intervalIntegral.integral_ofReal]
     congr with x : 1
     rw [of_real_mul, this x t]
   · simp_rw [of_real_sub, of_real_div, this a (t + 1), this b (t + 1)]

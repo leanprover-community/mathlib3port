@@ -1228,11 +1228,11 @@ end ContinuousLinearEquiv
 
 variable [CompleteSpace E] [NormedSpace ℝ E] [CompleteSpace F] [NormedSpace ℝ F]
 
-#print integral_of_real /-
+#print integral_ofReal /-
 @[norm_cast]
-theorem integral_of_real {f : α → ℝ} : (∫ a, (f a : 𝕜) ∂μ) = ↑(∫ a, f a ∂μ) :=
+theorem integral_ofReal {f : α → ℝ} : (∫ a, (f a : 𝕜) ∂μ) = ↑(∫ a, f a ∂μ) :=
   (@IsROrC.ofRealLi 𝕜 _).integral_comp_comm f
-#align integral_of_real integral_of_real
+#align integral_of_real integral_ofReal
 -/
 
 theorem integral_re {f : α → 𝕜} (hf : Integrable f μ) :
@@ -1262,7 +1262,7 @@ theorem integral_coe_re_add_coe_im {f : α → 𝕜} (hf : Integrable f μ) :
 
 theorem integral_re_add_im {f : α → 𝕜} (hf : Integrable f μ) :
     ((∫ x, IsROrC.re (f x) ∂μ : ℝ) : 𝕜) + (∫ x, IsROrC.im (f x) ∂μ : ℝ) * IsROrC.i = ∫ x, f x ∂μ :=
-  by rw [← integral_of_real, ← integral_of_real, integral_coe_re_add_coe_im hf]
+  by rw [← integral_ofReal, ← integral_ofReal, integral_coe_re_add_coe_im hf]
 #align integral_re_add_im integral_re_add_im
 
 theorem set_integral_re_add_im {f : α → 𝕜} {i : Set α} (hf : IntegrableOn f i μ) :

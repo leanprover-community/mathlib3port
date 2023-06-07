@@ -138,7 +138,7 @@ theorem bernoulli_zero_fourier_coeff {n : ℤ} (hn : n ≠ 0) : bernoulliFourier
 /-- The `0`-th Fourier coefficient of `Bₖ(x)`. -/
 theorem bernoulliFourierCoeff_zero {k : ℕ} (hk : k ≠ 0) : bernoulliFourierCoeff k 0 = 0 := by
   simp_rw [bernoulliFourierCoeff, fourierCoeffOn_eq_integral, neg_zero, fourier_zero, sub_zero,
-    div_one, one_smul, intervalIntegral.integral_of_real, integral_bernoulliFun_eq_zero hk,
+    div_one, one_smul, intervalIntegral.integral_ofReal, integral_bernoulliFun_eq_zero hk,
     of_real_zero]
 #align bernoulli_fourier_coeff_zero bernoulliFourierCoeff_zero
 

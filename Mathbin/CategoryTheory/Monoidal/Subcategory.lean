@@ -39,6 +39,7 @@ open Iso
 
 variable {C : Type u} [Category.{v} C] [MonoidalCategory C] (P : C → Prop)
 
+#print CategoryTheory.MonoidalCategory.MonoidalPredicate /-
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- A property `C → Prop` is a monoidal predicate if it is closed under `𝟙_` and `⊗`.
 -/
@@ -46,6 +47,7 @@ class MonoidalPredicate : Prop where
   prop_id' : P (𝟙_ C) := by obviously
   prop_tensor' : ∀ {X Y}, P X → P Y → P (X ⊗ Y) := by obviously
 #align category_theory.monoidal_category.monoidal_predicate CategoryTheory.MonoidalCategory.MonoidalPredicate
+-/
 
 restate_axiom monoidal_predicate.prop_id'
 
@@ -230,13 +232,13 @@ open ClosedPredicate
 
 variable [ClosedPredicate P]
 
+#print CategoryTheory.MonoidalCategory.fullMonoidalClosedSubcategory /-
 instance fullMonoidalClosedSubcategory : MonoidalClosed (FullSubcategory P)
     where closed' X :=
     {
       isAdj :=
         { right :=
-            FullSubcategory.lift P (fullSubcategoryInclusion P ⋙ ihom X.1) fun Y =>
-              prop_ihom X.2 Y.2
+            FullSubcategory.lift P (fullSubcategoryInclusion P ⋙ ihom X.1) fun Y => propIhom X.2 Y.2
           adj :=
             Adjunction.mkOfUnitCounit
               { Unit :=
@@ -248,18 +250,23 @@ instance fullMonoidalClosedSubcategory : MonoidalClosed (FullSubcategory P)
                 left_triangle := by ext Y; simp; exact ihom.ev_coev X.1 Y.1
                 right_triangle := by ext Y; simp; exact ihom.coev_ev X.1 Y.1 } } }
 #align category_theory.monoidal_category.full_monoidal_closed_subcategory CategoryTheory.MonoidalCategory.fullMonoidalClosedSubcategory
+-/
 
+#print CategoryTheory.MonoidalCategory.fullMonoidalClosedSubcategory_ihom_obj /-
 @[simp]
 theorem fullMonoidalClosedSubcategory_ihom_obj (X Y : FullSubcategory P) :
     ((ihom X).obj Y).obj = (ihom X.obj).obj Y.obj :=
   rfl
 #align category_theory.monoidal_category.full_monoidal_closed_subcategory_ihom_obj CategoryTheory.MonoidalCategory.fullMonoidalClosedSubcategory_ihom_obj
+-/
 
+#print CategoryTheory.MonoidalCategory.fullMonoidalClosedSubcategory_ihom_map /-
 @[simp]
 theorem fullMonoidalClosedSubcategory_ihom_map (X : FullSubcategory P) {Y Z : FullSubcategory P}
     (f : Y ⟶ Z) : (ihom X).map f = (ihom X.obj).map f :=
   rfl
 #align category_theory.monoidal_category.full_monoidal_closed_subcategory_ihom_map CategoryTheory.MonoidalCategory.fullMonoidalClosedSubcategory_ihom_map
+-/
 
 end Closed
 

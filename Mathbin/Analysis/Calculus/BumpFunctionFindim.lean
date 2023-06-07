@@ -49,9 +49,9 @@ theorem exists_smooth_tsupport_subset {s : Set E} {x : E} (hs : s ∈ 𝓝 x) :
   exact euclidean.nhds_basis_closed_ball.mem_iff.1 hs
   let c : ContDiffBump (toEuclidean x) :=
     { R := d / 2
-      r := d
-      r_pos := half_pos d_pos
-      r_lt_r := half_lt_self d_pos }
+      rOut := d
+      rIn_pos := half_pos d_pos
+      rIn_lt_rOut := half_lt_self d_pos }
   let f : E → ℝ := c ∘ toEuclidean
   have f_supp : f.support ⊆ Euclidean.ball x d :=
     by

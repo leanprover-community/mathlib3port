@@ -246,7 +246,7 @@ theorem integral_gaussian (b : ℝ) : (∫ x, exp (-b * x ^ 2)) = sqrt (π / b) 
   -- Assume now `b > 0`. Then both sides are non-negative and their squares agree.
   refine' (sq_eq_sq _ (sqrt_nonneg _)).1 _
   · exact integral_nonneg fun x => (exp_pos _).le
-  rw [← of_real_inj, of_real_pow, ← integral_of_real, sq_sqrt (div_pos pi_pos hb).le, of_real_div]
+  rw [← of_real_inj, of_real_pow, ← integral_ofReal, sq_sqrt (div_pos pi_pos hb).le, of_real_div]
   convert integral_gaussian_sq_complex (by rwa [of_real_re] : 0 < (b : ℂ).re)
   ext1 x
   rw [of_real_exp, of_real_mul, of_real_pow, of_real_neg]
@@ -307,7 +307,7 @@ theorem integral_gaussian_complex {b : ℂ} (hb : 0 < re b) :
       by
       intro x
       simp only [of_real_exp, neg_mul, one_mul, of_real_neg, of_real_pow]
-    simp_rw [this, integral_of_real]
+    simp_rw [this, integral_ofReal]
     conv_rhs =>
       congr
       rw [← of_real_one, ← of_real_div]
@@ -354,7 +354,7 @@ theorem integral_gaussian_Ioi (b : ℝ) : (∫ x in Ioi 0, exp (-b * x ^ 2)) = s
   · rw [integral_undef, sqrt_eq_zero_of_nonpos, zero_div]
     exact div_nonpos_of_nonneg_of_nonpos pi_pos.le hb
     rwa [← integrable_on, integrableOn_Ioi_exp_neg_mul_sq_iff, not_lt]
-  rw [← of_real_inj, ← integral_of_real]
+  rw [← of_real_inj, ← integral_ofReal]
   convert integral_gaussian_complex_Ioi (by rwa [of_real_re] : 0 < (b : ℂ).re)
   · ext1 x; simp
   · rw [sqrt_eq_rpow, ← of_real_div, of_real_div, of_real_cpow]

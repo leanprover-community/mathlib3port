@@ -98,11 +98,13 @@ finite measure, this is implemented as the induced topology from the mapping
 -/
 
 
+#print MeasureTheory.ProbabilityMeasure /-
 /-- Probability measures are defined as the subtype of measures that have the property of being
 probability measures (i.e., their total mass is one). -/
 def ProbabilityMeasure (Ω : Type _) [MeasurableSpace Ω] : Type _ :=
   { μ : Measure Ω // IsProbabilityMeasure μ }
 #align measure_theory.probability_measure MeasureTheory.ProbabilityMeasure
+-/
 
 namespace ProbabilityMeasure
 
@@ -126,86 +128,112 @@ theorem coeFn_eq_toNNReal_coeFn_to_measure (ν : ProbabilityMeasure Ω) :
   rfl
 #align measure_theory.probability_measure.coe_fn_eq_to_nnreal_coe_fn_to_measure MeasureTheory.ProbabilityMeasure.coeFn_eq_toNNReal_coeFn_to_measure
 
+#print MeasureTheory.ProbabilityMeasure.val_eq_to_measure /-
 @[simp]
 theorem val_eq_to_measure (ν : ProbabilityMeasure Ω) : ν.val = (ν : Measure Ω) :=
   rfl
 #align measure_theory.probability_measure.val_eq_to_measure MeasureTheory.ProbabilityMeasure.val_eq_to_measure
+-/
 
-theorem coe_injective : Function.Injective (coe : ProbabilityMeasure Ω → Measure Ω) :=
+#print MeasureTheory.ProbabilityMeasure.toMeasure_injective /-
+theorem toMeasure_injective : Function.Injective (coe : ProbabilityMeasure Ω → Measure Ω) :=
   Subtype.coe_injective
-#align measure_theory.probability_measure.coe_injective MeasureTheory.ProbabilityMeasure.coe_injective
+#align measure_theory.probability_measure.coe_injective MeasureTheory.ProbabilityMeasure.toMeasure_injective
+-/
 
+#print MeasureTheory.ProbabilityMeasure.coeFn_univ /-
 @[simp]
 theorem coeFn_univ (ν : ProbabilityMeasure Ω) : ν univ = 1 :=
   congr_arg ENNReal.toNNReal ν.Prop.measure_univ
 #align measure_theory.probability_measure.coe_fn_univ MeasureTheory.ProbabilityMeasure.coeFn_univ
+-/
 
 theorem coeFn_univ_ne_zero (ν : ProbabilityMeasure Ω) : ν univ ≠ 0 := by
   simp only [coe_fn_univ, Ne.def, one_ne_zero, not_false_iff]
 #align measure_theory.probability_measure.coe_fn_univ_ne_zero MeasureTheory.ProbabilityMeasure.coeFn_univ_ne_zero
 
+#print MeasureTheory.ProbabilityMeasure.toFiniteMeasure /-
 /-- A probability measure can be interpreted as a finite measure. -/
 def toFiniteMeasure (μ : ProbabilityMeasure Ω) : FiniteMeasure Ω :=
   ⟨μ, inferInstance⟩
 #align measure_theory.probability_measure.to_finite_measure MeasureTheory.ProbabilityMeasure.toFiniteMeasure
+-/
 
+#print MeasureTheory.ProbabilityMeasure.toMeasure_comp_toFiniteMeasure_eq_toMeasure /-
 @[simp]
-theorem coe_comp_toFiniteMeasure_eq_coe (ν : ProbabilityMeasure Ω) :
+theorem toMeasure_comp_toFiniteMeasure_eq_toMeasure (ν : ProbabilityMeasure Ω) :
     (ν.toFiniteMeasure : Measure Ω) = (ν : Measure Ω) :=
   rfl
-#align measure_theory.probability_measure.coe_comp_to_finite_measure_eq_coe MeasureTheory.ProbabilityMeasure.coe_comp_toFiniteMeasure_eq_coe
+#align measure_theory.probability_measure.coe_comp_to_finite_measure_eq_coe MeasureTheory.ProbabilityMeasure.toMeasure_comp_toFiniteMeasure_eq_toMeasure
+-/
 
+#print MeasureTheory.ProbabilityMeasure.coeFn_comp_toFiniteMeasure_eq_coeFn /-
 @[simp]
 theorem coeFn_comp_toFiniteMeasure_eq_coeFn (ν : ProbabilityMeasure Ω) :
     (ν.toFiniteMeasure : Set Ω → ℝ≥0) = (ν : Set Ω → ℝ≥0) :=
   rfl
 #align measure_theory.probability_measure.coe_fn_comp_to_finite_measure_eq_coe_fn MeasureTheory.ProbabilityMeasure.coeFn_comp_toFiniteMeasure_eq_coeFn
+-/
 
+#print MeasureTheory.ProbabilityMeasure.ennreal_coeFn_eq_coeFn_toMeasure /-
 @[simp]
-theorem eNNReal_coeFn_eq_coeFn_to_measure (ν : ProbabilityMeasure Ω) (s : Set Ω) :
+theorem ennreal_coeFn_eq_coeFn_toMeasure (ν : ProbabilityMeasure Ω) (s : Set Ω) :
     (ν s : ℝ≥0∞) = (ν : Measure Ω) s := by
   rw [← coe_fn_comp_to_finite_measure_eq_coe_fn, finite_measure.ennreal_coe_fn_eq_coe_fn_to_measure,
     coe_comp_to_finite_measure_eq_coe]
-#align measure_theory.probability_measure.ennreal_coe_fn_eq_coe_fn_to_measure MeasureTheory.ProbabilityMeasure.eNNReal_coeFn_eq_coeFn_to_measure
+#align measure_theory.probability_measure.ennreal_coe_fn_eq_coe_fn_to_measure MeasureTheory.ProbabilityMeasure.ennreal_coeFn_eq_coeFn_toMeasure
+-/
 
+#print MeasureTheory.ProbabilityMeasure.apply_mono /-
 theorem apply_mono (μ : ProbabilityMeasure Ω) {s₁ s₂ : Set Ω} (h : s₁ ⊆ s₂) : μ s₁ ≤ μ s₂ :=
   by
   rw [← coe_fn_comp_to_finite_measure_eq_coe_fn]
   exact MeasureTheory.FiniteMeasure.apply_mono _ h
 #align measure_theory.probability_measure.apply_mono MeasureTheory.ProbabilityMeasure.apply_mono
+-/
 
-theorem nonempty_of_probabilityMeasure (μ : ProbabilityMeasure Ω) : Nonempty Ω :=
+#print MeasureTheory.ProbabilityMeasure.nonempty /-
+theorem nonempty (μ : ProbabilityMeasure Ω) : Nonempty Ω :=
   by
   by_contra maybe_empty
   have zero : (μ : Measure Ω) univ = 0 := by
     rw [univ_eq_empty_iff.mpr (not_nonempty_iff.mp maybe_empty), measure_empty]
   rw [measure_univ] at zero 
   exact zero_ne_one zero.symm
-#align measure_theory.probability_measure.nonempty_of_probability_measure MeasureTheory.ProbabilityMeasure.nonempty_of_probabilityMeasure
+#align measure_theory.probability_measure.nonempty_of_probability_measure MeasureTheory.ProbabilityMeasure.nonempty
+-/
 
+#print MeasureTheory.ProbabilityMeasure.eq_of_forall_toMeasure_apply_eq /-
 @[ext]
-theorem eq_of_forall_measure_apply_eq (μ ν : ProbabilityMeasure Ω)
+theorem eq_of_forall_toMeasure_apply_eq (μ ν : ProbabilityMeasure Ω)
     (h : ∀ s : Set Ω, MeasurableSet s → (μ : Measure Ω) s = (ν : Measure Ω) s) : μ = ν := by ext1;
   ext1 s s_mble; exact h s s_mble
-#align measure_theory.probability_measure.eq_of_forall_measure_apply_eq MeasureTheory.ProbabilityMeasure.eq_of_forall_measure_apply_eq
+#align measure_theory.probability_measure.eq_of_forall_measure_apply_eq MeasureTheory.ProbabilityMeasure.eq_of_forall_toMeasure_apply_eq
+-/
 
+#print MeasureTheory.ProbabilityMeasure.eq_of_forall_apply_eq /-
 theorem eq_of_forall_apply_eq (μ ν : ProbabilityMeasure Ω)
     (h : ∀ s : Set Ω, MeasurableSet s → μ s = ν s) : μ = ν :=
   by
   ext1 s s_mble
   simpa [ennreal_coe_fn_eq_coe_fn_to_measure] using congr_arg (coe : ℝ≥0 → ℝ≥0∞) (h s s_mble)
 #align measure_theory.probability_measure.eq_of_forall_apply_eq MeasureTheory.ProbabilityMeasure.eq_of_forall_apply_eq
+-/
 
+#print MeasureTheory.ProbabilityMeasure.mass_toFiniteMeasure /-
 @[simp]
 theorem mass_toFiniteMeasure (μ : ProbabilityMeasure Ω) : μ.toFiniteMeasure.mass = 1 :=
   μ.coeFn_univ
 #align measure_theory.probability_measure.mass_to_finite_measure MeasureTheory.ProbabilityMeasure.mass_toFiniteMeasure
+-/
 
+#print MeasureTheory.ProbabilityMeasure.toFiniteMeasure_nonzero /-
 theorem toFiniteMeasure_nonzero (μ : ProbabilityMeasure Ω) : μ.toFiniteMeasure ≠ 0 :=
   by
   rw [← finite_measure.mass_nonzero_iff, μ.mass_to_finite_measure]
   exact one_ne_zero
 #align measure_theory.probability_measure.to_finite_measure_nonzero MeasureTheory.ProbabilityMeasure.toFiniteMeasure_nonzero
+-/
 
 variable [TopologicalSpace Ω] [OpensMeasurableSpace Ω]
 
@@ -227,25 +255,25 @@ theorem toFiniteMeasure_continuous :
 
 /-- Probability measures yield elements of the `weak_dual` of bounded continuous nonnegative
 functions via `measure_theory.finite_measure.test_against_nn`, i.e., integration. -/
-def toWeakDualBcnn : ProbabilityMeasure Ω → WeakDual ℝ≥0 (Ω →ᵇ ℝ≥0) :=
+def toWeakDualBCNN : ProbabilityMeasure Ω → WeakDual ℝ≥0 (Ω →ᵇ ℝ≥0) :=
   FiniteMeasure.toWeakDualBCNN ∘ toFiniteMeasure
-#align measure_theory.probability_measure.to_weak_dual_bcnn MeasureTheory.ProbabilityMeasure.toWeakDualBcnn
+#align measure_theory.probability_measure.to_weak_dual_bcnn MeasureTheory.ProbabilityMeasure.toWeakDualBCNN
 
 @[simp]
-theorem coe_toWeakDualBcnn (μ : ProbabilityMeasure Ω) :
+theorem coe_toWeakDualBCNN (μ : ProbabilityMeasure Ω) :
     ⇑μ.toWeakDualBCNN = μ.toFiniteMeasure.testAgainstNN :=
   rfl
-#align measure_theory.probability_measure.coe_to_weak_dual_bcnn MeasureTheory.ProbabilityMeasure.coe_toWeakDualBcnn
+#align measure_theory.probability_measure.coe_to_weak_dual_bcnn MeasureTheory.ProbabilityMeasure.coe_toWeakDualBCNN
 
 @[simp]
-theorem toWeakDualBcnn_apply (μ : ProbabilityMeasure Ω) (f : Ω →ᵇ ℝ≥0) :
+theorem toWeakDualBCNN_apply (μ : ProbabilityMeasure Ω) (f : Ω →ᵇ ℝ≥0) :
     μ.toWeakDualBCNN f = (∫⁻ ω, f ω ∂(μ : Measure Ω)).toNNReal :=
   rfl
-#align measure_theory.probability_measure.to_weak_dual_bcnn_apply MeasureTheory.ProbabilityMeasure.toWeakDualBcnn_apply
+#align measure_theory.probability_measure.to_weak_dual_bcnn_apply MeasureTheory.ProbabilityMeasure.toWeakDualBCNN_apply
 
-theorem toWeakDualBcnn_continuous : Continuous fun μ : ProbabilityMeasure Ω => μ.toWeakDualBCNN :=
+theorem toWeakDualBCNN_continuous : Continuous fun μ : ProbabilityMeasure Ω => μ.toWeakDualBCNN :=
   FiniteMeasure.toWeakDualBCNN_continuous.comp toFiniteMeasure_continuous
-#align measure_theory.probability_measure.to_weak_dual_bcnn_continuous MeasureTheory.ProbabilityMeasure.toWeakDualBcnn_continuous
+#align measure_theory.probability_measure.to_weak_dual_bcnn_continuous MeasureTheory.ProbabilityMeasure.toWeakDualBCNN_continuous
 
 /- Integration of (nonnegative bounded continuous) test functions against Borel probability
 measures depends continuously on the measure. -/
@@ -262,11 +290,11 @@ theorem toFiniteMeasure_embedding (Ω : Type _) [MeasurableSpace Ω] [Topologica
     inj := fun μ ν h => Subtype.eq (by convert congr_arg coe h) }
 #align measure_theory.probability_measure.to_finite_measure_embedding MeasureTheory.ProbabilityMeasure.toFiniteMeasure_embedding
 
-theorem tendsto_nhds_iff_to_finite_measures_tendsto_nhds {δ : Type _} (F : Filter δ)
+theorem tendsto_nhds_iff_toFiniteMeasure_tendsto_nhds {δ : Type _} (F : Filter δ)
     {μs : δ → ProbabilityMeasure Ω} {μ₀ : ProbabilityMeasure Ω} :
     Tendsto μs F (𝓝 μ₀) ↔ Tendsto (toFiniteMeasure ∘ μs) F (𝓝 μ₀.toFiniteMeasure) :=
   Embedding.tendsto_nhds_iff (toFiniteMeasure_embedding Ω)
-#align measure_theory.probability_measure.tendsto_nhds_iff_to_finite_measures_tendsto_nhds MeasureTheory.ProbabilityMeasure.tendsto_nhds_iff_to_finite_measures_tendsto_nhds
+#align measure_theory.probability_measure.tendsto_nhds_iff_to_finite_measures_tendsto_nhds MeasureTheory.ProbabilityMeasure.tendsto_nhds_iff_toFiniteMeasure_tendsto_nhds
 
 /-- A characterization of weak convergence of probability measures by the condition that the
 integrals of every continuous bounded nonnegative function converge to the integral of the function
@@ -317,6 +345,7 @@ namespace FiniteMeasure
 
 variable {Ω : Type _} [Nonempty Ω] {m0 : MeasurableSpace Ω} (μ : FiniteMeasure Ω)
 
+#print MeasureTheory.FiniteMeasure.normalize /-
 /-- Normalize a finite measure so that it becomes a probability measure, i.e., divide by the
 total mass. -/
 def normalize : ProbabilityMeasure Ω :=
@@ -330,6 +359,7 @@ def normalize : ProbabilityMeasure Ω :=
         norm_cast
         exact inv_mul_cancel zero }
 #align measure_theory.finite_measure.normalize MeasureTheory.FiniteMeasure.normalize
+-/
 
 @[simp]
 theorem self_eq_mass_mul_normalize (s : Set Ω) : μ s = μ.mass * μ.normalize s :=
@@ -343,6 +373,7 @@ theorem self_eq_mass_mul_normalize (s : Set Ω) : μ s = μ.mass * μ.normalize 
     finite_measure.coe_fn_eq_to_nnreal_coe_fn_to_measure]
 #align measure_theory.finite_measure.self_eq_mass_mul_normalize MeasureTheory.FiniteMeasure.self_eq_mass_mul_normalize
 
+#print MeasureTheory.FiniteMeasure.self_eq_mass_smul_normalize /-
 theorem self_eq_mass_smul_normalize : μ = μ.mass • μ.normalize.toFiniteMeasure :=
   by
   apply eq_of_forall_apply_eq
@@ -350,12 +381,14 @@ theorem self_eq_mass_smul_normalize : μ = μ.mass • μ.normalize.toFiniteMeas
   rw [μ.self_eq_mass_mul_normalize s, coe_fn_smul_apply, smul_eq_mul,
     probability_measure.coe_fn_comp_to_finite_measure_eq_coe_fn]
 #align measure_theory.finite_measure.self_eq_mass_smul_normalize MeasureTheory.FiniteMeasure.self_eq_mass_smul_normalize
+-/
 
 theorem normalize_eq_of_nonzero (nonzero : μ ≠ 0) (s : Set Ω) : μ.normalize s = μ.mass⁻¹ * μ s := by
   simp only [μ.self_eq_mass_mul_normalize, μ.mass_nonzero_iff.mpr nonzero, inv_mul_cancel_left₀,
     Ne.def, not_false_iff]
 #align measure_theory.finite_measure.normalize_eq_of_nonzero MeasureTheory.FiniteMeasure.normalize_eq_of_nonzero
 
+#print MeasureTheory.FiniteMeasure.normalize_eq_inv_mass_smul_of_nonzero /-
 theorem normalize_eq_inv_mass_smul_of_nonzero (nonzero : μ ≠ 0) :
     μ.normalize.toFiniteMeasure = μ.mass⁻¹ • μ :=
   by
@@ -364,15 +397,18 @@ theorem normalize_eq_inv_mass_smul_of_nonzero (nonzero : μ ≠ 0) :
   simp only [μ.mass_nonzero_iff.mpr nonzero, Algebra.id.smul_eq_mul, inv_mul_cancel, Ne.def,
     not_false_iff, one_smul]
 #align measure_theory.finite_measure.normalize_eq_inv_mass_smul_of_nonzero MeasureTheory.FiniteMeasure.normalize_eq_inv_mass_smul_of_nonzero
+-/
 
-theorem coe_normalize_eq_of_nonzero (nonzero : μ ≠ 0) : (μ.normalize : Measure Ω) = μ.mass⁻¹ • μ :=
+theorem toMeasure_normalize_eq_of_nonzero (nonzero : μ ≠ 0) :
+    (μ.normalize : Measure Ω) = μ.mass⁻¹ • μ :=
   by
   ext1 s s_mble
   simp only [← μ.normalize.ennreal_coe_fn_eq_coe_fn_to_measure s,
     μ.normalize_eq_of_nonzero nonzero s, ENNReal.coe_mul, ennreal_coe_fn_eq_coe_fn_to_measure,
     measure.coe_nnreal_smul_apply]
-#align measure_theory.finite_measure.coe_normalize_eq_of_nonzero MeasureTheory.FiniteMeasure.coe_normalize_eq_of_nonzero
+#align measure_theory.finite_measure.coe_normalize_eq_of_nonzero MeasureTheory.FiniteMeasure.toMeasure_normalize_eq_of_nonzero
 
+#print ProbabilityMeasure.toFiniteMeasure_normalize_eq_self /-
 @[simp]
 theorem ProbabilityMeasure.toFiniteMeasure_normalize_eq_self {m0 : MeasurableSpace Ω}
     (μ : ProbabilityMeasure Ω) : μ.toFiniteMeasure.normalize = μ :=
@@ -383,7 +419,9 @@ theorem ProbabilityMeasure.toFiniteMeasure_normalize_eq_self {m0 : MeasurableSpa
   simp only [probability_measure.mass_to_finite_measure, inv_one, one_mul,
     probability_measure.coe_fn_comp_to_finite_measure_eq_coe_fn]
 #align probability_measure.to_finite_measure_normalize_eq_self ProbabilityMeasure.toFiniteMeasure_normalize_eq_self
+-/
 
+#print MeasureTheory.FiniteMeasure.average_eq_integral_normalize /-
 /-- Averaging with respect to a finite measure is the same as integraing against
 `measure_theory.finite_measure.normalize`. -/
 theorem average_eq_integral_normalize {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E]
@@ -395,6 +433,7 @@ theorem average_eq_integral_normalize {E : Type _} [NormedAddCommGroup E] [Norme
   simp only [RingHom.toFun_eq_coe, ENNReal.coe_ofNNRealHom,
     ENNReal.coe_inv (μ.mass_nonzero_iff.mpr nonzero), ennreal_mass]
 #align measure_theory.finite_measure.average_eq_integral_normalize MeasureTheory.FiniteMeasure.average_eq_integral_normalize
+-/
 
 variable [TopologicalSpace Ω]
 
@@ -466,14 +505,14 @@ theorem tendsto_normalize_testAgainstNN_of_tendsto {γ : Type _} {F : Filter γ}
 
 /-- If the normalized versions of finite measures converge weakly and their total masses
 also converge, then the finite measures themselves converge weakly. -/
-theorem tendsto_of_tendsto_normalize_test_against_nn_of_tendsto_mass {γ : Type _} {F : Filter γ}
+theorem tendsto_of_tendsto_normalize_testAgainstNN_of_tendsto_mass {γ : Type _} {F : Filter γ}
     {μs : γ → FiniteMeasure Ω} (μs_lim : Tendsto (fun i => (μs i).normalize) F (𝓝 μ.normalize))
     (mass_lim : Tendsto (fun i => (μs i).mass) F (𝓝 μ.mass)) : Tendsto μs F (𝓝 μ) :=
   by
   rw [tendsto_iff_forall_test_against_nn_tendsto]
   exact fun f =>
     tendsto_test_against_nn_of_tendsto_normalize_test_against_nn_of_tendsto_mass μs_lim mass_lim f
-#align measure_theory.finite_measure.tendsto_of_tendsto_normalize_test_against_nn_of_tendsto_mass MeasureTheory.FiniteMeasure.tendsto_of_tendsto_normalize_test_against_nn_of_tendsto_mass
+#align measure_theory.finite_measure.tendsto_of_tendsto_normalize_test_against_nn_of_tendsto_mass MeasureTheory.FiniteMeasure.tendsto_of_tendsto_normalize_testAgainstNN_of_tendsto_mass
 
 /-- If finite measures themselves converge weakly to a nonzero limit measure, then their
 normalized versions also converge weakly. -/

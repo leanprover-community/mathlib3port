@@ -48,6 +48,7 @@ namespace Measure
 
 include m
 
+#print MeasureTheory.Measure.withDensity_rnDeriv_eq /-
 theorem withDensity_rnDeriv_eq (μ ν : Measure α) [HaveLebesgueDecomposition μ ν] (h : μ ≪ ν) :
     ν.withDensity (rnDeriv μ ν) = μ :=
   by
@@ -66,7 +67,9 @@ theorem withDensity_rnDeriv_eq (μ ν : Measure α) [HaveLebesgueDecomposition �
   rw [this, zero_add] at hadd 
   exact hadd.symm
 #align measure_theory.measure.with_density_rn_deriv_eq MeasureTheory.Measure.withDensity_rnDeriv_eq
+-/
 
+#print MeasureTheory.Measure.absolutelyContinuous_iff_withDensity_rnDeriv_eq /-
 /-- **The Radon-Nikodym theorem**: Given two measures `μ` and `ν`, if
 `have_lebesgue_decomposition μ ν`, then `μ` is absolutely continuous to `ν` if and only if
 `ν.with_density (rn_deriv μ ν) = μ`. -/
@@ -74,8 +77,10 @@ theorem absolutelyContinuous_iff_withDensity_rnDeriv_eq {μ ν : Measure α}
     [HaveLebesgueDecomposition μ ν] : μ ≪ ν ↔ ν.withDensity (rnDeriv μ ν) = μ :=
   ⟨withDensity_rnDeriv_eq μ ν, fun h => h ▸ withDensity_absolutelyContinuous _ _⟩
 #align measure_theory.measure.absolutely_continuous_iff_with_density_rn_deriv_eq MeasureTheory.Measure.absolutelyContinuous_iff_withDensity_rnDeriv_eq
+-/
 
-theorem with_density_rnDeriv_toReal_eq {μ ν : Measure α} [IsFiniteMeasure μ]
+#print MeasureTheory.Measure.withDensity_rnDeriv_toReal_eq /-
+theorem withDensity_rnDeriv_toReal_eq {μ ν : Measure α} [IsFiniteMeasure μ]
     [HaveLebesgueDecomposition μ ν] (h : μ ≪ ν) {i : Set α} (hi : MeasurableSet i) :
     (∫ x in i, (μ.rnDeriv ν x).toReal ∂ν) = (μ i).toReal :=
   by
@@ -85,7 +90,8 @@ theorem with_density_rnDeriv_toReal_eq {μ ν : Measure α} [IsFiniteMeasure μ]
       ae_lt_top (μ.measurable_rn_deriv ν) (lt_of_le_of_lt (lintegral_mono_set i.subset_univ) _).Ne
     rw [← with_density_apply _ MeasurableSet.univ, with_density_rn_deriv_eq μ ν h]
     exact measure_lt_top _ _
-#align measure_theory.measure.with_density_rn_deriv_to_real_eq MeasureTheory.Measure.with_density_rnDeriv_toReal_eq
+#align measure_theory.measure.with_density_rn_deriv_to_real_eq MeasureTheory.Measure.withDensity_rnDeriv_toReal_eq
+-/
 
 end Measure
 
