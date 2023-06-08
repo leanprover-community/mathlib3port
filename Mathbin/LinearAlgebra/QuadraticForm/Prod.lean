@@ -4,13 +4,16 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module linear_algebra.quadratic_form.prod
-! leanprover-community/mathlib commit 9b2755b951bc323c962bd072cd447b375cf58101
+! leanprover-community/mathlib commit c20927220ef87bb4962ba08bf6da2ce3cf50a6dd
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.LinearAlgebra.QuadraticForm.Isometry
 
 /-! # Quadratic form on product and pi types
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 ## Main definitions
 

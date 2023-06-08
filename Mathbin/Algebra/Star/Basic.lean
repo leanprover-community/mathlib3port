@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module algebra.star.basic
-! leanprover-community/mathlib commit dc7ac07acd84584426773e69e51035bea9a770e7
+! leanprover-community/mathlib commit 31c24aa72e7b3e5ed97a8412470e904f82b81004
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -27,23 +27,12 @@ These are implemented as "mixin" typeclasses, so to summon a star ring (for exam
 one needs to write `(R : Type) [ring R] [star_ring R]`.
 This avoids difficulties with diamond inheritance.
 
-We also define the class `star_ordered_ring R`, which says that the order on `R` respects the
-star operation, i.e. an element `r` is nonnegative iff there exists an `s` such that
-`r = star s * s`.
-
 For now we simply do not introduce notations,
 as different users are expected to feel strongly about the relative merits of
 `r^*`, `r†`, `rᘁ`, and so on.
 
 Our star rings are actually star semirings, but of course we can prove
 `star_neg : star (-r) = - star r` when the underlying semiring is a ring.
-
-## TODO
-
-* In a Banach star algebra without a well-defined square root, the natural ordering is given by the
-positive cone which is the closure of the sums of elements `star r * r`. A weaker version of
-`star_ordered_ring` could be defined for this case. Note that the current definition has the
-advantage of not requiring a topology.
 -/
 
 
@@ -502,67 +491,6 @@ def starRingOfComm {R : Type _} [CommSemiring R] : StarRing R :=
     star_add := fun x y => rfl }
 #align star_ring_of_comm starRingOfComm
 -/
-
-#print StarOrderedRing /-
-/-- An ordered `*`-ring is a ring which is both an `ordered_add_comm_group` and a `*`-ring,
-and `0 ≤ r ↔ ∃ s, r = star s * s`.
--/
-class StarOrderedRing (R : Type u) [NonUnitalSemiring R] [PartialOrder R] extends StarRing R where
-  add_le_add_left : ∀ a b : R, a ≤ b → ∀ c : R, c + a ≤ c + b
-  nonneg_iff : ∀ r : R, 0 ≤ r ↔ ∃ s, r = star s * s
-#align star_ordered_ring StarOrderedRing
--/
-
-namespace StarOrderedRing
-
--- see note [lower instance priority]
-instance (priority := 100) [NonUnitalRing R] [PartialOrder R] [StarOrderedRing R] :
-    OrderedAddCommGroup R :=
-  { show NonUnitalRing R by infer_instance, show PartialOrder R by infer_instance,
-    show StarOrderedRing R by infer_instance with }
-
-end StarOrderedRing
-
-section NonUnitalSemiring
-
-variable [NonUnitalSemiring R] [PartialOrder R] [StarOrderedRing R]
-
-theorem star_mul_self_nonneg {r : R} : 0 ≤ star r * r :=
-  (StarOrderedRing.nonneg_iff _).mpr ⟨r, rfl⟩
-#align star_mul_self_nonneg star_mul_self_nonneg
-
-theorem star_mul_self_nonneg' {r : R} : 0 ≤ r * star r := by nth_rw_rhs 1 [← star_star r];
-  exact star_mul_self_nonneg
-#align star_mul_self_nonneg' star_mul_self_nonneg'
-
-theorem conjugate_nonneg {a : R} (ha : 0 ≤ a) (c : R) : 0 ≤ star c * a * c :=
-  by
-  obtain ⟨x, rfl⟩ := (StarOrderedRing.nonneg_iff _).1 ha
-  exact (StarOrderedRing.nonneg_iff _).2 ⟨x * c, by rw [star_mul, ← mul_assoc, mul_assoc _ _ c]⟩
-#align conjugate_nonneg conjugate_nonneg
-
-theorem conjugate_nonneg' {a : R} (ha : 0 ≤ a) (c : R) : 0 ≤ c * a * star c := by
-  simpa only [star_star] using conjugate_nonneg ha (star c)
-#align conjugate_nonneg' conjugate_nonneg'
-
-end NonUnitalSemiring
-
-section NonUnitalRing
-
-variable [NonUnitalRing R] [PartialOrder R] [StarOrderedRing R]
-
-theorem conjugate_le_conjugate {a b : R} (hab : a ≤ b) (c : R) : star c * a * c ≤ star c * b * c :=
-  by
-  rw [← sub_nonneg] at hab ⊢
-  convert conjugate_nonneg hab c
-  simp only [mul_sub, sub_mul]
-#align conjugate_le_conjugate conjugate_le_conjugate
-
-theorem conjugate_le_conjugate' {a b : R} (hab : a ≤ b) (c : R) : c * a * star c ≤ c * b * star c :=
-  by simpa only [star_star] using conjugate_le_conjugate hab (star c)
-#align conjugate_le_conjugate' conjugate_le_conjugate'
-
-end NonUnitalRing
 
 #print StarModule /-
 /-- A star module `A` over a star ring `R` is a module which is a star add monoid,

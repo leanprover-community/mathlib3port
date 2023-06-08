@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 
 ! This file was ported from Lean 3 source module measure_theory.function.ae_eq_of_integral
-! leanprover-community/mathlib commit 915591b2bb3ea303648db07284a161a7f2a9e3d4
+! leanprover-community/mathlib commit c20927220ef87bb4962ba08bf6da2ce3cf50a6dd
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.MeasureTheory.Function.StronglyMeasurable.Lp
 import Mathbin.MeasureTheory.Integral.SetIntegral
 
 /-! # From equality of integrals to equality of functions
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file provides various statements of the general form "if two functions have the same integral
 on all sets, then they are equal almost everywhere".

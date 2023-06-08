@@ -4,11 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Floris van Doorn
 
 ! This file was ported from Lean 3 source module geometry.manifold.cont_mdiff_mfderiv
-! leanprover-community/mathlib commit 3a69562db5a458db8322b190ec8d9a8bbd8a5b14
+! leanprover-community/mathlib commit e354e865255654389cc46e6032160238df2e0f40
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Geometry.Manifold.Mfderiv
+import Mathbin.Geometry.Manifold.ContMdiffMap
 
 /-!
 ### Interactions between differentiability, smoothness and manifold derivatives
@@ -264,6 +265,28 @@ theorem ContMdiffAt.mfderiv_const {x₀ : M} {f : M → M'} (hf : ContMdiffAt I 
     ContMdiffAt.comp (x₀, x₀) hf contMdiffAt_snd
   this.mfderiv (fun x => f) id contMdiffAt_id hmn
 #align cont_mdiff_at.mfderiv_const ContMdiffAt.mfderiv_const
+
+include Js
+
+/-- The function that sends `x` to the `y`-derivative of `f(x,y)` at `g(x)` applied to `g₂(x)` is
+`C^n` at `x₀`, where the derivative is taken as a continuous linear map.
+We have to assume that `f` is `C^(n+1)` at `(x₀, g(x₀))` and `g` is `C^n` at `x₀`.
+We have to insert a coordinate change from `x₀` to `g₁(x)` to make the derivative sensible.
+
+This is  similar to `cont_mdiff_at.mfderiv`, but where the continuous linear map is applied to a
+(variable) vector.
+-/
+theorem ContMdiffAt.mfderiv_apply {x₀ : N'} (f : N → M → M') (g : N → M) (g₁ : N' → N) (g₂ : N' → E)
+    (hf : ContMdiffAt (J.Prod I) I' n (Function.uncurry f) (g₁ x₀, g (g₁ x₀)))
+    (hg : ContMdiffAt J I m g (g₁ x₀)) (hg₁ : ContMdiffAt J' J m g₁ x₀)
+    (hg₂ : ContMdiffAt J' 𝓘(𝕜, E) m g₂ x₀) (hmn : m + 1 ≤ n) :
+    ContMdiffAt J' 𝓘(𝕜, E') m
+      (fun x =>
+        inTangentCoordinates I I' g (fun x => f x (g x)) (fun x => mfderiv I I' (f x) (g x)) (g₁ x₀)
+          (g₁ x) (g₂ x))
+      x₀ :=
+  ((hf.mfderiv f g hg hmn).comp_of_eq hg₁ rfl).clm_apply hg₂
+#align cont_mdiff_at.mfderiv_apply ContMdiffAt.mfderiv_apply
 
 end mfderiv
 
@@ -697,4 +720,26 @@ theorem tangentMap_tangentBundle_pure (p : TangentBundle I M) :
 #align tangent_bundle.tangent_map_tangent_bundle_pure TangentBundle.tangentMap_tangentBundle_pure
 
 end TangentBundle
+
+namespace ContMdiffMap
+
+-- These helpers for dot notation have been moved here from `geometry.manifold.cont_mdiff_map`
+-- to avoid needing to import `geometry.manifold.cont_mdiff_mfderiv` there.
+-- (However as a consequence we import `geometry.manifold.cont_mdiff_map` here now.)
+-- They could be moved to another file (perhaps a new file) if desired.
+open scoped Manifold
+
+protected theorem mdifferentiable' (f : C^n⟮I, M; I', M'⟯) (hn : 1 ≤ n) : Mdifferentiable I I' f :=
+  f.ContMdiff.Mdifferentiable hn
+#align cont_mdiff_map.mdifferentiable' ContMdiffMap.mdifferentiable'
+
+protected theorem mdifferentiable (f : C^∞⟮I, M; I', M'⟯) : Mdifferentiable I I' f :=
+  f.ContMdiff.Mdifferentiable le_top
+#align cont_mdiff_map.mdifferentiable ContMdiffMap.mdifferentiable
+
+protected theorem mdifferentiableAt (f : C^∞⟮I, M; I', M'⟯) {x} : MdifferentiableAt I I' f x :=
+  f.Mdifferentiable x
+#align cont_mdiff_map.mdifferentiable_at ContMdiffMap.mdifferentiableAt
+
+end ContMdiffMap
 

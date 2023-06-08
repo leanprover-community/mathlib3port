@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module algebra.lie.weights
-! leanprover-community/mathlib commit 938fead7abdc0cbbca8eba7a1052865a169dc102
+! leanprover-community/mathlib commit 6b0169218d01f2837d79ea2784882009a0da1aa1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,7 +13,7 @@ import Mathbin.Algebra.Lie.TensorProduct
 import Mathbin.Algebra.Lie.Character
 import Mathbin.Algebra.Lie.Engel
 import Mathbin.Algebra.Lie.CartanSubalgebra
-import Mathbin.LinearAlgebra.Eigenspace
+import Mathbin.LinearAlgebra.Eigenspace.Basic
 import Mathbin.RingTheory.TensorProduct
 
 /-!

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying
 
 ! This file was ported from Lean 3 source module measure_theory.measure.with_density_vector_measure
-! leanprover-community/mathlib commit d1bd9c5df2867c1cb463bc6364446d57bdd9f7f1
+! leanprover-community/mathlib commit c20927220ef87bb4962ba08bf6da2ce3cf50a6dd
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.MeasureTheory.Function.AeEqOfIntegral
 /-!
 
 # Vector measure defined by an integral
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 Given a measure `μ` and an integrable function `f : α → E`, we can define a vector measure `v` such
 that for all measurable set `s`, `v i = ∫ x in s, f x ∂μ`. This definition is useful for

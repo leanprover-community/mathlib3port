@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 
 ! This file was ported from Lean 3 source module probability.kernel.composition
-! leanprover-community/mathlib commit c0d694db494dd4f9aa57f2714b6e4c82b4ebc113
+! leanprover-community/mathlib commit 3b92d54a05ee592aa2c6181a4e76b1bb7cc45d0b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -17,8 +17,8 @@ We define
 * the composition-product `κ ⊗ₖ η` of two s-finite kernels `κ : kernel α β` and
   `η : kernel (α × β) γ`, a kernel from `α` to `β × γ`.
 * the map and comap of a kernel along a measurable function.
-* the composition `η ∘ₖ κ` of s-finite kernels `κ : kernel α β` and `η : kernel β γ`,
-  a kernel from `α` to `γ`.
+* the composition `η ∘ₖ κ` of kernels `κ : kernel α β` and `η : kernel β γ`,  kernel from `α` to
+  `γ`.
 * the product `κ ×ₖ η` of s-finite kernels `κ : kernel α β` and `η : kernel α γ`,
   a kernel from `α` to `β × γ`.
 
@@ -38,7 +38,7 @@ Kernels built from other kernels:
   `∫⁻ c, g c ∂(map κ f hf a) = ∫⁻ b, g (f b) ∂(κ a)`
 * `comap (κ : kernel α β) (f : γ → α) (hf : measurable f) : kernel γ β`
   `∫⁻ b, g b ∂(comap κ f hf c) = ∫⁻ b, g b ∂(κ (f c))`
-* `comp (η : kernel β γ) (κ : kernel α β) : kernel α γ`: composition of 2 s-finite kernels.
+* `comp (η : kernel β γ) (κ : kernel α β) : kernel α γ`: composition of 2 kernels.
   We define a notation `η ∘ₖ κ = comp η κ`.
   `∫⁻ c, g c ∂((η ∘ₖ κ) a) = ∫⁻ b, ∫⁻ c, g c ∂(η b) ∂(κ a)`
 * `prod (κ : kernel α β) (η : kernel α γ) : kernel α (β × γ)`: product of 2 s-finite kernels.
@@ -829,66 +829,71 @@ variable {γ : Type _} {mγ : MeasurableSpace γ} {f : β → γ} {g : γ → α
 include mγ
 
 /-- Composition of two s-finite kernels. -/
-noncomputable def comp (η : kernel β γ) [IsSFiniteKernel η] (κ : kernel α β) [IsSFiniteKernel κ] :
-    kernel α γ :=
-  snd (κ ⊗ₖ prodMkLeft α η)
+noncomputable def comp (η : kernel β γ) (κ : kernel α β) : kernel α γ
+    where
+  val a := (κ a).bind η
+  property := (Measure.measurable_bind' (kernel.measurable _)).comp (kernel.measurable _)
 #align probability_theory.kernel.comp ProbabilityTheory.kernel.comp
 
 -- mathport name: kernel.comp
 scoped[ProbabilityTheory] infixl:100 " ∘ₖ " => ProbabilityTheory.kernel.comp
 
-theorem comp_apply (η : kernel β γ) [IsSFiniteKernel η] (κ : kernel α β) [IsSFiniteKernel κ] (a : α)
-    {s : Set γ} (hs : MeasurableSet s) : (η ∘ₖ κ) a s = ∫⁻ b, η b s ∂κ a :=
-  by
-  rw [comp, snd_apply' _ _ hs, comp_prod_apply]
-  swap; · exact measurable_snd hs
-  simp only [Set.mem_setOf_eq, Set.setOf_mem_eq, prod_mk_left_apply' _ _ s]
+theorem comp_apply (η : kernel β γ) (κ : kernel α β) (a : α) : (η ∘ₖ κ) a = (κ a).bind η :=
+  rfl
 #align probability_theory.kernel.comp_apply ProbabilityTheory.kernel.comp_apply
 
-theorem lintegral_comp (η : kernel β γ) [IsSFiniteKernel η] (κ : kernel α β) [IsSFiniteKernel κ]
-    (a : α) {g : γ → ℝ≥0∞} (hg : Measurable g) :
-    (∫⁻ c, g c ∂(η ∘ₖ κ) a) = ∫⁻ b, ∫⁻ c, g c ∂η b ∂κ a :=
+theorem comp_apply' (η : kernel β γ) (κ : kernel α β) (a : α) {s : Set γ} (hs : MeasurableSet s) :
+    (η ∘ₖ κ) a s = ∫⁻ b, η b s ∂κ a := by
+  rw [comp_apply, measure.bind_apply hs (kernel.measurable _)]
+#align probability_theory.kernel.comp_apply' ProbabilityTheory.kernel.comp_apply'
+
+theorem comp_eq_snd_compProd (η : kernel β γ) [IsSFiniteKernel η] (κ : kernel α β)
+    [IsSFiniteKernel κ] : η ∘ₖ κ = snd (κ ⊗ₖ prodMkLeft α η) :=
   by
-  rw [comp, lintegral_snd _ _ hg]
-  change
-    (∫⁻ bc, (fun a b => g b) bc.fst bc.snd ∂(κ ⊗ₖ prod_mk_left α η) a) = ∫⁻ b, ∫⁻ c, g c ∂η b ∂κ a
-  exact lintegral_comp_prod _ _ _ (hg.comp measurable_snd)
+  ext (a s hs) : 2
+  rw [comp_apply' _ _ _ hs, snd_apply' _ _ hs, comp_prod_apply]
+  swap; · exact measurable_snd hs
+  simp only [Set.mem_setOf_eq, Set.setOf_mem_eq, prod_mk_left_apply' _ _ s]
+#align probability_theory.kernel.comp_eq_snd_comp_prod ProbabilityTheory.kernel.comp_eq_snd_compProd
+
+theorem lintegral_comp (η : kernel β γ) (κ : kernel α β) (a : α) {g : γ → ℝ≥0∞}
+    (hg : Measurable g) : (∫⁻ c, g c ∂(η ∘ₖ κ) a) = ∫⁻ b, ∫⁻ c, g c ∂η b ∂κ a := by
+  rw [comp_apply, measure.lintegral_bind (kernel.measurable _) hg]
 #align probability_theory.kernel.lintegral_comp ProbabilityTheory.kernel.lintegral_comp
 
 instance IsMarkovKernel.comp (η : kernel β γ) [IsMarkovKernel η] (κ : kernel α β)
-    [IsMarkovKernel κ] : IsMarkovKernel (η ∘ₖ κ) := by rw [comp]; infer_instance
+    [IsMarkovKernel κ] : IsMarkovKernel (η ∘ₖ κ) := by rw [comp_eq_snd_comp_prod]; infer_instance
 #align probability_theory.kernel.is_markov_kernel.comp ProbabilityTheory.kernel.IsMarkovKernel.comp
 
 instance IsFiniteKernel.comp (η : kernel β γ) [IsFiniteKernel η] (κ : kernel α β)
-    [IsFiniteKernel κ] : IsFiniteKernel (η ∘ₖ κ) := by rw [comp]; infer_instance
+    [IsFiniteKernel κ] : IsFiniteKernel (η ∘ₖ κ) := by rw [comp_eq_snd_comp_prod]; infer_instance
 #align probability_theory.kernel.is_finite_kernel.comp ProbabilityTheory.kernel.IsFiniteKernel.comp
 
 instance IsSFiniteKernel.comp (η : kernel β γ) [IsSFiniteKernel η] (κ : kernel α β)
-    [IsSFiniteKernel κ] : IsSFiniteKernel (η ∘ₖ κ) := by rw [comp]; infer_instance
+    [IsSFiniteKernel κ] : IsSFiniteKernel (η ∘ₖ κ) := by rw [comp_eq_snd_comp_prod]; infer_instance
 #align probability_theory.kernel.is_s_finite_kernel.comp ProbabilityTheory.kernel.IsSFiniteKernel.comp
 
 /-- Composition of kernels is associative. -/
 theorem comp_assoc {δ : Type _} {mδ : MeasurableSpace δ} (ξ : kernel γ δ) [IsSFiniteKernel ξ]
-    (η : kernel β γ) [IsSFiniteKernel η] (κ : kernel α β) [IsSFiniteKernel κ] :
-    ξ ∘ₖ η ∘ₖ κ = ξ ∘ₖ (η ∘ₖ κ) :=
+    (η : kernel β γ) (κ : kernel α β) : ξ ∘ₖ η ∘ₖ κ = ξ ∘ₖ (η ∘ₖ κ) :=
   by
   refine' ext_fun fun a f hf => _
   simp_rw [lintegral_comp _ _ _ hf, lintegral_comp _ _ _ hf.lintegral_kernel]
 #align probability_theory.kernel.comp_assoc ProbabilityTheory.kernel.comp_assoc
 
-theorem deterministic_comp_eq_map (hf : Measurable f) (κ : kernel α β) [IsSFiniteKernel κ] :
+theorem deterministic_comp_eq_map (hf : Measurable f) (κ : kernel α β) :
     deterministic f hf ∘ₖ κ = map κ f hf :=
   by
   ext (a s hs) : 2
-  simp_rw [map_apply' _ _ _ hs, comp_apply _ _ _ hs, deterministic_apply' hf _ hs,
+  simp_rw [map_apply' _ _ _ hs, comp_apply' _ _ _ hs, deterministic_apply' hf _ hs,
     lintegral_indicator_const_comp hf hs, one_mul]
 #align probability_theory.kernel.deterministic_comp_eq_map ProbabilityTheory.kernel.deterministic_comp_eq_map
 
-theorem comp_deterministic_eq_comap (κ : kernel α β) [IsSFiniteKernel κ] (hg : Measurable g) :
+theorem comp_deterministic_eq_comap (κ : kernel α β) (hg : Measurable g) :
     κ ∘ₖ deterministic g hg = comap κ g hg :=
   by
   ext (a s hs) : 2
-  simp_rw [comap_apply' _ _ _ s, comp_apply _ _ _ hs, deterministic_apply hg a,
+  simp_rw [comap_apply' _ _ _ s, comp_apply' _ _ _ hs, deterministic_apply hg a,
     lintegral_dirac' _ (kernel.measurable_coe κ hs)]
 #align probability_theory.kernel.comp_deterministic_eq_comap ProbabilityTheory.kernel.comp_deterministic_eq_comap
 

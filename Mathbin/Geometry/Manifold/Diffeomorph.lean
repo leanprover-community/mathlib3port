@@ -4,11 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicolò Cavalleri, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module geometry.manifold.diffeomorph
-! leanprover-community/mathlib commit f2ce6086713c78a7f880485f7917ea547a215982
+! leanprover-community/mathlib commit e354e865255654389cc46e6032160238df2e0f40
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Geometry.Manifold.ContMdiffMap
+import Mathbin.Geometry.Manifold.ContMdiffMfderiv
 
 /-!
 # Diffeomorphisms
@@ -164,6 +165,12 @@ theorem coeFn_injective : Injective fun (h : M ≃ₘ^n⟮I, I'⟯ M') (x : M) =
 theorem ext {h h' : M ≃ₘ^n⟮I, I'⟯ M'} (Heq : ∀ x, h x = h' x) : h = h' :=
   coeFn_injective <| funext Heq
 #align diffeomorph.ext Diffeomorph.ext
+
+instance : ContinuousMapClass (M ≃ₘ⟮I, J⟯ N) M N
+    where
+  coe := coeFn
+  coe_injective' := coeFn_injective
+  map_continuous f := f.Continuous
 
 section
 

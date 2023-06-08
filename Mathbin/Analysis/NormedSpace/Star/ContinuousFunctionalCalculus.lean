@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
 
 ! This file was ported from Lean 3 source module analysis.normed_space.star.continuous_functional_calculus
-! leanprover-community/mathlib commit f9dd3204df14a0749cd456fac1e6849dfe7d2b88
+! leanprover-community/mathlib commit 31c24aa72e7b3e5ed97a8412470e904f82b81004
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -105,7 +105,7 @@ theorem spectrum_star_mul_self_of_isStarNormal :
     rw [← spectrum.gelfandTransform_eq (star a' * a'), ContinuousMap.spectrum_eq_range]
     rintro - ⟨φ, rfl⟩
     rw [gelfand_transform_apply_apply ℂ _ (star a' * a') φ, map_mul φ, map_star φ]
-    rw [Complex.eq_coe_norm_of_nonneg star_mul_self_nonneg, ← map_star, ← map_mul]
+    rw [Complex.eq_coe_norm_of_nonneg (star_mul_self_nonneg _), ← map_star, ← map_mul]
     exact
       ⟨Complex.zero_le_real.2 (norm_nonneg _),
         Complex.real_le_real.2 (AlgHom.norm_apply_le_self φ (star a' * a'))⟩

@@ -4,11 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicolò Cavalleri
 
 ! This file was ported from Lean 3 source module geometry.manifold.cont_mdiff_map
-! leanprover-community/mathlib commit be2c24f56783935652cefffb4bfca7e4b25d167e
+! leanprover-community/mathlib commit e354e865255654389cc46e6032160238df2e0f40
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
-import Mathbin.Geometry.Manifold.ContMdiffMfderiv
+import Mathbin.Geometry.Manifold.ContMdiff
 import Mathbin.Topology.ContinuousFunction.Basic
 
 /-!
@@ -25,7 +25,11 @@ variable {𝕜 : Type _} [NontriviallyNormedField 𝕜] {E : Type _} [NormedAddC
   (I' : ModelWithCorners 𝕜 E' H') (M : Type _) [TopologicalSpace M] [ChartedSpace H M] (M' : Type _)
   [TopologicalSpace M'] [ChartedSpace H' M'] {E'' : Type _} [NormedAddCommGroup E'']
   [NormedSpace 𝕜 E''] {H'' : Type _} [TopologicalSpace H''] {I'' : ModelWithCorners 𝕜 E'' H''}
-  {M'' : Type _} [TopologicalSpace M''] [ChartedSpace H'' M''] (n : ℕ∞)
+  {M'' : Type _} [TopologicalSpace M''] [ChartedSpace H'' M'']
+  -- declare a manifold `N` over the pair `(F, G)`.
+  {F : Type _}
+  [NormedAddCommGroup F] [NormedSpace 𝕜 F] {G : Type _} [TopologicalSpace G]
+  {J : ModelWithCorners 𝕜 F G} {N : Type _} [TopologicalSpace N] [ChartedSpace G N] (n : ℕ∞)
 
 /-- Bundled `n` times continuously differentiable maps. -/
 @[protect_proj]
@@ -77,18 +81,6 @@ protected theorem smooth (f : C^∞⟮I, M; I', M'⟯) : Smooth I I' f :=
   f.contMdiff_toFun
 #align cont_mdiff_map.smooth ContMdiffMap.smooth
 
-protected theorem mdifferentiable' (f : C^n⟮I, M; I', M'⟯) (hn : 1 ≤ n) : Mdifferentiable I I' f :=
-  f.ContMdiff.Mdifferentiable hn
-#align cont_mdiff_map.mdifferentiable' ContMdiffMap.mdifferentiable'
-
-protected theorem mdifferentiable (f : C^∞⟮I, M; I', M'⟯) : Mdifferentiable I I' f :=
-  f.ContMdiff.Mdifferentiable le_top
-#align cont_mdiff_map.mdifferentiable ContMdiffMap.mdifferentiable
-
-protected theorem mdifferentiableAt (f : C^∞⟮I, M; I', M'⟯) {x} : MdifferentiableAt I I' f x :=
-  f.Mdifferentiable x
-#align cont_mdiff_map.mdifferentiable_at ContMdiffMap.mdifferentiableAt
-
 theorem coe_inj ⦃f g : C^n⟮I, M; I', M'⟯⦄ (h : (f : M → M') = g) : f = g := by
   cases f <;> cases g <;> cases h <;> rfl
 #align cont_mdiff_map.coe_inj ContMdiffMap.coe_inj
@@ -128,6 +120,21 @@ instance [Inhabited M'] : Inhabited C^n⟮I, M; I', M'⟯ :=
 def const (y : M') : C^n⟮I, M; I', M'⟯ :=
   ⟨fun x => y, contMdiff_const⟩
 #align cont_mdiff_map.const ContMdiffMap.const
+
+/-- The first projection of a product, as a smooth map. -/
+def fst : C^n⟮I.Prod I', M × M'; I, M⟯ :=
+  ⟨Prod.fst, contMdiff_fst⟩
+#align cont_mdiff_map.fst ContMdiffMap.fst
+
+/-- The second projection of a product, as a smooth map. -/
+def snd : C^n⟮I.Prod I', M × M'; I', M'⟯ :=
+  ⟨Prod.snd, contMdiff_snd⟩
+#align cont_mdiff_map.snd ContMdiffMap.snd
+
+/-- Given two smooth maps `f` and `g`, this is the smooth map `x ↦ (f x, g x)`. -/
+def prodMk (f : C^n⟮J, N; I, M⟯) (g : C^n⟮J, N; I', M'⟯) : C^n⟮J, N; I.Prod I', M × M'⟯ :=
+  ⟨fun x => (f x, g x), f.2.prod_mk g.2⟩
+#align cont_mdiff_map.prod_mk ContMdiffMap.prodMk
 
 end ContMdiffMap
 

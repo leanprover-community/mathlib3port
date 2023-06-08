@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicolò Cavalleri
 
 ! This file was ported from Lean 3 source module geometry.manifold.algebra.monoid
-! leanprover-community/mathlib commit 3d7987cda72abc473c7cdbbb075170e9ac620042
+! leanprover-community/mathlib commit e354e865255654389cc46e6032160238df2e0f40
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -450,4 +450,17 @@ theorem smooth_finprod_cond (hc : ∀ i, p i → Smooth I' I (f i))
 #align smooth_finsum_cond smooth_finsum_cond
 
 end CommMonoid
+
+section
+
+variable {𝕜 : Type _} [NontriviallyNormedField 𝕜] {E : Type _} [NormedAddCommGroup E]
+  [NormedSpace 𝕜 E]
+
+instance hasSmoothAddSelf : HasSmoothAdd 𝓘(𝕜, E) E :=
+  ⟨by
+    convert cont_diff_add.cont_mdiff; exact model_with_corners_self_prod.symm
+    exact chartedSpaceSelf_prod⟩
+#align has_smooth_add_self hasSmoothAddSelf
+
+end
 

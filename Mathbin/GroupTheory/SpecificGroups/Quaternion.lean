@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Julian Kuelshammer
 
 ! This file was ported from Lean 3 source module group_theory.specific_groups.quaternion
-! leanprover-community/mathlib commit 879155bff5af618b9062cbb2915347dafd749ad6
+! leanprover-community/mathlib commit c20927220ef87bb4962ba08bf6da2ce3cf50a6dd
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -16,6 +16,9 @@ import Mathbin.GroupTheory.SpecificGroups.Cyclic
 
 /-!
 # Quaternion Groups
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 We define the (generalised) quaternion groups `quaternion_group n` of order `4n`, also known as
 dicyclic groups, with elements `a i` and `xa i` for `i : zmod n`. The (generalised) quaternion

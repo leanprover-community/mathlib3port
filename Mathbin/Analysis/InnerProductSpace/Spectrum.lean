@@ -4,13 +4,14 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.spectrum
-! leanprover-community/mathlib commit a33d01f7f8d39883e1ab4b86c9bf21692f1d4356
+! leanprover-community/mathlib commit 6b0169218d01f2837d79ea2784882009a0da1aa1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.InnerProductSpace.Rayleigh
 import Mathbin.Analysis.InnerProductSpace.PiL2
 import Mathbin.Algebra.DirectSum.Decomposition
+import Mathbin.LinearAlgebra.Eigenspace.Minpoly
 
 /-! # Spectral theory of self-adjoint operators
 

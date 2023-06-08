@@ -4,10 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Floris van Doorn, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module data.real.sqrt
-! leanprover-community/mathlib commit 69c6a5a12d8a2b159f20933e60115a4f2de62b58
+! leanprover-community/mathlib commit 31c24aa72e7b3e5ed97a8412470e904f82b81004
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
+import Mathbin.Algebra.Star.Order
 import Mathbin.Topology.Algebra.Order.MonotoneContinuity
 import Mathbin.Topology.Instances.Nnreal
 import Mathbin.Tactic.Positivity
@@ -466,13 +467,12 @@ theorem real_sqrt_le_nat_sqrt_succ {a : ℕ} : Real.sqrt ↑a ≤ Nat.sqrt a + 1
 #align real.real_sqrt_le_nat_sqrt_succ Real.real_sqrt_le_nat_sqrt_succ
 
 instance : StarOrderedRing ℝ :=
-  { Real.orderedAddCommGroup with
-    nonneg_iff := fun r =>
-      by
-      refine'
-        ⟨fun hr => ⟨sqrt r, show r = sqrt r * sqrt r by rw [← sqrt_mul hr, sqrt_mul_self hr]⟩, _⟩
-      rintro ⟨s, rfl⟩
-      exact mul_self_nonneg s }
+  StarOrderedRing.ofNonnegIff' (fun _ _ => add_le_add_left) fun r =>
+    by
+    refine'
+      ⟨fun hr => ⟨sqrt r, show r = sqrt r * sqrt r by rw [← sqrt_mul hr, sqrt_mul_self hr]⟩, _⟩
+    rintro ⟨s, rfl⟩
+    exact mul_self_nonneg s
 
 end Real
 

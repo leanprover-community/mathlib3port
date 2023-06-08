@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Heather Macbeth
 
 ! This file was ported from Lean 3 source module geometry.manifold.vector_bundle.tangent
-! leanprover-community/mathlib commit 3a69562db5a458db8322b190ec8d9a8bbd8a5b14
+! leanprover-community/mathlib commit e354e865255654389cc46e6032160238df2e0f40
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -39,6 +39,8 @@ open Bundle Set SmoothManifoldWithCorners LocalHomeomorph ContinuousLinearMap
 open scoped Manifold Topology Bundle
 
 noncomputable section
+
+section General
 
 variable {𝕜 : Type _} [NontriviallyNormedField 𝕜] {E : Type _} [NormedAddCommGroup E]
   [NormedSpace 𝕜 E] {E' : Type _} [NormedAddCommGroup E'] [NormedSpace 𝕜 E'] {H : Type _}
@@ -172,6 +174,8 @@ instance : Module 𝕜 (TangentSpace I x) := by delta_instance tangent_space
 
 instance : Inhabited (TangentSpace I x) :=
   ⟨0⟩
+
+instance {x : M} : ContinuousAdd (TangentSpace I x) := by delta_instance tangent_space
 
 end
 
@@ -445,4 +449,16 @@ theorem inTangentCoordinates_eq (f : N → M) (g : N → M') (ϕ : N → E →L[
 #align in_tangent_coordinates_eq inTangentCoordinates_eq
 
 end inTangentCoordinates
+
+end General
+
+section Real
+
+variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] {H : Type _} [TopologicalSpace H]
+  {I : ModelWithCorners ℝ E H} {M : Type _} [TopologicalSpace M] [ChartedSpace H M]
+  [SmoothManifoldWithCorners I M]
+
+instance {x : M} : PathConnectedSpace (TangentSpace I x) := by delta_instance tangent_space
+
+end Real
 

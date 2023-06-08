@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Peter Nelson
 
 ! This file was ported from Lean 3 source module data.set.ncard
-! leanprover-community/mathlib commit 74c2af38a828107941029b03839882c5c6f87a04
+! leanprover-community/mathlib commit c20927220ef87bb4962ba08bf6da2ce3cf50a6dd
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Algebra.BigOperators.Finprod
 
 /-!
 # Noncomputable Set Cardinality
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 We define the cardinality `set.ncard s` of a set `s` as a natural number. This function is
 noncomputable (being defined in terms of `nat.card`) and takes the value `0` if `s` is infinite.

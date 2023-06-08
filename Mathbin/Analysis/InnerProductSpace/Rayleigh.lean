@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth, Frédéric Dupuis
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.rayleigh
-! leanprover-community/mathlib commit 3f655f5297b030a87d641ad4e825af8d9679eb0b
+! leanprover-community/mathlib commit 6b0169218d01f2837d79ea2784882009a0da1aa1
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,7 +12,7 @@ import Mathbin.Analysis.InnerProductSpace.Calculus
 import Mathbin.Analysis.InnerProductSpace.Dual
 import Mathbin.Analysis.InnerProductSpace.Adjoint
 import Mathbin.Analysis.Calculus.LagrangeMultipliers
-import Mathbin.LinearAlgebra.Eigenspace
+import Mathbin.LinearAlgebra.Eigenspace.Basic
 
 /-!
 # The Rayleigh quotient

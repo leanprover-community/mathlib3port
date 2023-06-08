@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Floris van Doorn
 
 ! This file was ported from Lean 3 source module geometry.manifold.mfderiv
-! leanprover-community/mathlib commit 3a69562db5a458db8322b190ec8d9a8bbd8a5b14
+! leanprover-community/mathlib commit e354e865255654389cc46e6032160238df2e0f40
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -101,7 +101,7 @@ noncomputable section
 
 open scoped Classical Topology Manifold Bundle
 
-open Set
+open Set Bundle
 
 universe u
 
@@ -731,6 +731,53 @@ theorem tangentMap_fst {p : TangentBundle I M} : (tangentMap I I' f p).1 = f p.1
 
 omit Is I's
 
+theorem MdifferentiableWithinAt.prod_mk {f : M → M'} {g : M → M''}
+    (hf : MdifferentiableWithinAt I I' f s x) (hg : MdifferentiableWithinAt I I'' g s x) :
+    MdifferentiableWithinAt I (I'.Prod I'') (fun x => (f x, g x)) s x :=
+  ⟨hf.1.Prod hg.1, hf.2.Prod hg.2⟩
+#align mdifferentiable_within_at.prod_mk MdifferentiableWithinAt.prod_mk
+
+theorem MdifferentiableAt.prod_mk {f : M → M'} {g : M → M''} (hf : MdifferentiableAt I I' f x)
+    (hg : MdifferentiableAt I I'' g x) :
+    MdifferentiableAt I (I'.Prod I'') (fun x => (f x, g x)) x :=
+  ⟨hf.1.Prod hg.1, hf.2.Prod hg.2⟩
+#align mdifferentiable_at.prod_mk MdifferentiableAt.prod_mk
+
+theorem MdifferentiableOn.prod_mk {f : M → M'} {g : M → M''} (hf : MdifferentiableOn I I' f s)
+    (hg : MdifferentiableOn I I'' g s) :
+    MdifferentiableOn I (I'.Prod I'') (fun x => (f x, g x)) s := fun x hx =>
+  (hf x hx).prod_mk (hg x hx)
+#align mdifferentiable_on.prod_mk MdifferentiableOn.prod_mk
+
+theorem Mdifferentiable.prod_mk {f : M → M'} {g : M → M''} (hf : Mdifferentiable I I' f)
+    (hg : Mdifferentiable I I'' g) : Mdifferentiable I (I'.Prod I'') fun x => (f x, g x) := fun x =>
+  (hf x).prod_mk (hg x)
+#align mdifferentiable.prod_mk Mdifferentiable.prod_mk
+
+theorem MdifferentiableWithinAt.prod_mk_space {f : M → E'} {g : M → E''}
+    (hf : MdifferentiableWithinAt I 𝓘(𝕜, E') f s x)
+    (hg : MdifferentiableWithinAt I 𝓘(𝕜, E'') g s x) :
+    MdifferentiableWithinAt I 𝓘(𝕜, E' × E'') (fun x => (f x, g x)) s x :=
+  ⟨hf.1.Prod hg.1, hf.2.Prod hg.2⟩
+#align mdifferentiable_within_at.prod_mk_space MdifferentiableWithinAt.prod_mk_space
+
+theorem MdifferentiableAt.prod_mk_space {f : M → E'} {g : M → E''}
+    (hf : MdifferentiableAt I 𝓘(𝕜, E') f x) (hg : MdifferentiableAt I 𝓘(𝕜, E'') g x) :
+    MdifferentiableAt I 𝓘(𝕜, E' × E'') (fun x => (f x, g x)) x :=
+  ⟨hf.1.Prod hg.1, hf.2.Prod hg.2⟩
+#align mdifferentiable_at.prod_mk_space MdifferentiableAt.prod_mk_space
+
+theorem MdifferentiableOn.prod_mk_space {f : M → E'} {g : M → E''}
+    (hf : MdifferentiableOn I 𝓘(𝕜, E') f s) (hg : MdifferentiableOn I 𝓘(𝕜, E'') g s) :
+    MdifferentiableOn I 𝓘(𝕜, E' × E'') (fun x => (f x, g x)) s := fun x hx =>
+  (hf x hx).prod_mk_space (hg x hx)
+#align mdifferentiable_on.prod_mk_space MdifferentiableOn.prod_mk_space
+
+theorem Mdifferentiable.prod_mk_space {f : M → E'} {g : M → E''} (hf : Mdifferentiable I 𝓘(𝕜, E') f)
+    (hg : Mdifferentiable I 𝓘(𝕜, E'') g) : Mdifferentiable I 𝓘(𝕜, E' × E'') fun x => (f x, g x) :=
+  fun x => (hf x).prod_mk_space (hg x)
+#align mdifferentiable.prod_mk_space Mdifferentiable.prod_mk_space
+
 /-! ### Congruence lemmas for derivatives on manifolds -/
 
 
@@ -846,6 +893,18 @@ theorem Filter.EventuallyEq.mfderiv_eq (hL : f₁ =ᶠ[𝓝 x] f) :
   exact hL.mfderiv_within_eq (uniqueMdiffWithinAt_univ I) A
 #align filter.eventually_eq.mfderiv_eq Filter.EventuallyEq.mfderiv_eq
 
+/-- A congruence lemma for `mfderiv`, (ab)using the fact that `tangent_space I' (f x)` is
+definitionally equal to `E'`. -/
+theorem mfderiv_congr_point {x' : M} (h : x = x') :
+    @Eq (E →L[𝕜] E') (mfderiv I I' f x) (mfderiv I I' f x') := by subst h
+#align mfderiv_congr_point mfderiv_congr_point
+
+/-- A congruence lemma for `mfderiv`, (ab)using the fact that `tangent_space I' (f x)` is
+definitionally equal to `E'`. -/
+theorem mfderiv_congr {f' : M → M'} (h : f = f') :
+    @Eq (E →L[𝕜] E') (mfderiv I I' f x) (mfderiv I I' f' x) := by subst h
+#align mfderiv_congr mfderiv_congr
+
 /-! ### Composition lemmas -/
 
 
@@ -943,6 +1002,12 @@ theorem mfderiv_comp (hg : MdifferentiableAt I' I'' g (f x)) (hf : Mdifferentiab
   apply HasMfderivAt.mfderiv
   exact HasMfderivAt.comp x hg.has_mfderiv_at hf.has_mfderiv_at
 #align mfderiv_comp mfderiv_comp
+
+theorem mfderiv_comp_of_eq {x : M} {y : M'} (hg : MdifferentiableAt I' I'' g y)
+    (hf : MdifferentiableAt I I' f x) (hy : f x = y) :
+    mfderiv I I'' (g ∘ f) x = (mfderiv I' I'' g (f x)).comp (mfderiv I I' f x) := by subst hy;
+  exact mfderiv_comp x hg hf
+#align mfderiv_comp_of_eq mfderiv_comp_of_eq
 
 theorem MdifferentiableOn.comp (hg : MdifferentiableOn I' I'' g u) (hf : MdifferentiableOn I I' f s)
     (st : s ⊆ f ⁻¹' u) : MdifferentiableOn I I'' (g ∘ f) s := fun x hx =>
@@ -1120,7 +1185,9 @@ variable {𝕜 : Type _} [NontriviallyNormedField 𝕜] {E : Type _} [NormedAddC
   [TopologicalSpace M] [ChartedSpace H M] [SmoothManifoldWithCorners I M] {E' : Type _}
   [NormedAddCommGroup E'] [NormedSpace 𝕜 E'] {H' : Type _} [TopologicalSpace H']
   (I' : ModelWithCorners 𝕜 E' H') {M' : Type _} [TopologicalSpace M'] [ChartedSpace H' M']
-  [SmoothManifoldWithCorners I' M']
+  [SmoothManifoldWithCorners I' M'] {E'' : Type _} [NormedAddCommGroup E''] [NormedSpace 𝕜 E'']
+  {H'' : Type _} [TopologicalSpace H''] (I'' : ModelWithCorners 𝕜 E'' H'') {M'' : Type _}
+  [TopologicalSpace M''] [ChartedSpace H'' M''] [SmoothManifoldWithCorners I'' M'']
 
 namespace ContinuousLinearMap
 
@@ -1210,7 +1277,7 @@ section id
 theorem hasMfderivAt_id (x : M) :
     HasMfderivAt I I (@id M) x (ContinuousLinearMap.id 𝕜 (TangentSpace I x)) :=
   by
-  refine' ⟨continuous_id.continuous_at, _⟩
+  refine' ⟨continuousAt_id, _⟩
   have : ∀ᶠ y in 𝓝[range I] (extChartAt I x) x, (extChartAt I x ∘ (extChartAt I x).symm) y = id y :=
     by
     apply Filter.mem_of_superset (extChartAt_target_mem_nhdsWithin I x)
@@ -1313,6 +1380,202 @@ theorem mfderivWithin_const (hxs : UniqueMdiffWithinAt I s x) :
 #align mfderiv_within_const mfderivWithin_const
 
 end Const
+
+section Prod
+
+/-! Operations on the product of two manifolds-/
+
+
+theorem hasMfderivAt_fst (x : M × M') :
+    HasMfderivAt (I.Prod I') I Prod.fst x
+      (ContinuousLinearMap.fst 𝕜 (TangentSpace I x.1) (TangentSpace I' x.2)) :=
+  by
+  refine' ⟨continuous_fst.continuous_at, _⟩
+  have :
+    ∀ᶠ y in 𝓝[range (I.prod I')] extChartAt (I.prod I') x x,
+      (extChartAt I x.1 ∘ Prod.fst ∘ (extChartAt (I.prod I') x).symm) y = y.1 :=
+    by
+    apply Filter.mem_of_superset (extChartAt_target_mem_nhdsWithin (I.prod I') x)
+    mfld_set_tac
+  apply HasFDerivWithinAt.congr_of_eventuallyEq hasFDerivWithinAt_fst this
+  simp only [mfld_simps]
+#align has_mfderiv_at_fst hasMfderivAt_fst
+
+theorem hasMfderivWithinAt_fst (s : Set (M × M')) (x : M × M') :
+    HasMfderivWithinAt (I.Prod I') I Prod.fst s x
+      (ContinuousLinearMap.fst 𝕜 (TangentSpace I x.1) (TangentSpace I' x.2)) :=
+  (hasMfderivAt_fst I I' x).HasMfderivWithinAt
+#align has_mfderiv_within_at_fst hasMfderivWithinAt_fst
+
+theorem mdifferentiableAt_fst {x : M × M'} : MdifferentiableAt (I.Prod I') I Prod.fst x :=
+  (hasMfderivAt_fst I I' x).MdifferentiableAt
+#align mdifferentiable_at_fst mdifferentiableAt_fst
+
+theorem mdifferentiableWithinAt_fst {s : Set (M × M')} {x : M × M'} :
+    MdifferentiableWithinAt (I.Prod I') I Prod.fst s x :=
+  (mdifferentiableAt_fst I I').MdifferentiableWithinAt
+#align mdifferentiable_within_at_fst mdifferentiableWithinAt_fst
+
+theorem mdifferentiable_fst : Mdifferentiable (I.Prod I') I (Prod.fst : M × M' → M) := fun x =>
+  mdifferentiableAt_fst I I'
+#align mdifferentiable_fst mdifferentiable_fst
+
+theorem mdifferentiableOn_fst {s : Set (M × M')} : MdifferentiableOn (I.Prod I') I Prod.fst s :=
+  (mdifferentiable_fst I I').MdifferentiableOn
+#align mdifferentiable_on_fst mdifferentiableOn_fst
+
+@[simp, mfld_simps]
+theorem mfderiv_fst {x : M × M'} :
+    mfderiv (I.Prod I') I Prod.fst x =
+      ContinuousLinearMap.fst 𝕜 (TangentSpace I x.1) (TangentSpace I' x.2) :=
+  (hasMfderivAt_fst I I' x).mfderiv
+#align mfderiv_fst mfderiv_fst
+
+theorem mfderivWithin_fst {s : Set (M × M')} {x : M × M'}
+    (hxs : UniqueMdiffWithinAt (I.Prod I') s x) :
+    mfderivWithin (I.Prod I') I Prod.fst s x =
+      ContinuousLinearMap.fst 𝕜 (TangentSpace I x.1) (TangentSpace I' x.2) :=
+  by rw [Mdifferentiable.mfderivWithin (mdifferentiableAt_fst I I') hxs]; exact mfderiv_fst I I'
+#align mfderiv_within_fst mfderivWithin_fst
+
+@[simp, mfld_simps]
+theorem tangentMap_prod_fst {p : TangentBundle (I.Prod I') (M × M')} :
+    tangentMap (I.Prod I') I Prod.fst p = totalSpaceMk p.proj.1 p.2.1 := by simp [tangentMap]
+#align tangent_map_prod_fst tangentMap_prod_fst
+
+theorem tangentMapWithin_prod_fst {s : Set (M × M')} {p : TangentBundle (I.Prod I') (M × M')}
+    (hs : UniqueMdiffWithinAt (I.Prod I') s p.proj) :
+    tangentMapWithin (I.Prod I') I Prod.fst s p = totalSpaceMk p.proj.1 p.2.1 :=
+  by
+  simp only [tangentMapWithin]
+  rw [mfderivWithin_fst]
+  · rcases p with ⟨⟩; rfl
+  · exact hs
+#align tangent_map_within_prod_fst tangentMapWithin_prod_fst
+
+theorem hasMfderivAt_snd (x : M × M') :
+    HasMfderivAt (I.Prod I') I' Prod.snd x
+      (ContinuousLinearMap.snd 𝕜 (TangentSpace I x.1) (TangentSpace I' x.2)) :=
+  by
+  refine' ⟨continuous_snd.continuous_at, _⟩
+  have :
+    ∀ᶠ y in 𝓝[range (I.prod I')] extChartAt (I.prod I') x x,
+      (extChartAt I' x.2 ∘ Prod.snd ∘ (extChartAt (I.prod I') x).symm) y = y.2 :=
+    by
+    apply Filter.mem_of_superset (extChartAt_target_mem_nhdsWithin (I.prod I') x)
+    mfld_set_tac
+  apply HasFDerivWithinAt.congr_of_eventuallyEq hasFDerivWithinAt_snd this
+  simp only [mfld_simps]
+#align has_mfderiv_at_snd hasMfderivAt_snd
+
+theorem hasMfderivWithinAt_snd (s : Set (M × M')) (x : M × M') :
+    HasMfderivWithinAt (I.Prod I') I' Prod.snd s x
+      (ContinuousLinearMap.snd 𝕜 (TangentSpace I x.1) (TangentSpace I' x.2)) :=
+  (hasMfderivAt_snd I I' x).HasMfderivWithinAt
+#align has_mfderiv_within_at_snd hasMfderivWithinAt_snd
+
+theorem mdifferentiableAt_snd {x : M × M'} : MdifferentiableAt (I.Prod I') I' Prod.snd x :=
+  (hasMfderivAt_snd I I' x).MdifferentiableAt
+#align mdifferentiable_at_snd mdifferentiableAt_snd
+
+theorem mdifferentiableWithinAt_snd {s : Set (M × M')} {x : M × M'} :
+    MdifferentiableWithinAt (I.Prod I') I' Prod.snd s x :=
+  (mdifferentiableAt_snd I I').MdifferentiableWithinAt
+#align mdifferentiable_within_at_snd mdifferentiableWithinAt_snd
+
+theorem mdifferentiable_snd : Mdifferentiable (I.Prod I') I' (Prod.snd : M × M' → M') := fun x =>
+  mdifferentiableAt_snd I I'
+#align mdifferentiable_snd mdifferentiable_snd
+
+theorem mdifferentiableOn_snd {s : Set (M × M')} : MdifferentiableOn (I.Prod I') I' Prod.snd s :=
+  (mdifferentiable_snd I I').MdifferentiableOn
+#align mdifferentiable_on_snd mdifferentiableOn_snd
+
+@[simp, mfld_simps]
+theorem mfderiv_snd {x : M × M'} :
+    mfderiv (I.Prod I') I' Prod.snd x =
+      ContinuousLinearMap.snd 𝕜 (TangentSpace I x.1) (TangentSpace I' x.2) :=
+  (hasMfderivAt_snd I I' x).mfderiv
+#align mfderiv_snd mfderiv_snd
+
+theorem mfderivWithin_snd {s : Set (M × M')} {x : M × M'}
+    (hxs : UniqueMdiffWithinAt (I.Prod I') s x) :
+    mfderivWithin (I.Prod I') I' Prod.snd s x =
+      ContinuousLinearMap.snd 𝕜 (TangentSpace I x.1) (TangentSpace I' x.2) :=
+  by rw [Mdifferentiable.mfderivWithin (mdifferentiableAt_snd I I') hxs]; exact mfderiv_snd I I'
+#align mfderiv_within_snd mfderivWithin_snd
+
+@[simp, mfld_simps]
+theorem tangentMap_prod_snd {p : TangentBundle (I.Prod I') (M × M')} :
+    tangentMap (I.Prod I') I' Prod.snd p = totalSpaceMk p.proj.2 p.2.2 := by simp [tangentMap]
+#align tangent_map_prod_snd tangentMap_prod_snd
+
+theorem tangentMapWithin_prod_snd {s : Set (M × M')} {p : TangentBundle (I.Prod I') (M × M')}
+    (hs : UniqueMdiffWithinAt (I.Prod I') s p.proj) :
+    tangentMapWithin (I.Prod I') I' Prod.snd s p = totalSpaceMk p.proj.2 p.2.2 :=
+  by
+  simp only [tangentMapWithin]
+  rw [mfderivWithin_snd]
+  · rcases p with ⟨⟩; rfl
+  · exact hs
+#align tangent_map_within_prod_snd tangentMapWithin_prod_snd
+
+variable {I I' I''}
+
+theorem MdifferentiableAt.mfderiv_prod {f : M → M'} {g : M → M''} {x : M}
+    (hf : MdifferentiableAt I I' f x) (hg : MdifferentiableAt I I'' g x) :
+    mfderiv I (I'.Prod I'') (fun x => (f x, g x)) x = (mfderiv I I' f x).Prod (mfderiv I I'' g x) :=
+  by
+  classical
+  simp_rw [mfderiv, if_pos (hf.prod_mk hg), if_pos hf, if_pos hg]
+  exact hf.2.fderivWithin_prod hg.2 (I.unique_diff _ (mem_range_self _))
+#align mdifferentiable_at.mfderiv_prod MdifferentiableAt.mfderiv_prod
+
+variable (I I' I'')
+
+theorem mfderiv_prod_left {x₀ : M} {y₀ : M'} :
+    mfderiv I (I.Prod I') (fun x => (x, y₀)) x₀ =
+      ContinuousLinearMap.inl 𝕜 (TangentSpace I x₀) (TangentSpace I' y₀) :=
+  by
+  refine' ((mdifferentiableAt_id I).mfderiv_prod (mdifferentiableAt_const I I')).trans _
+  rw [mfderiv_id, mfderiv_const, ContinuousLinearMap.inl]
+#align mfderiv_prod_left mfderiv_prod_left
+
+theorem mfderiv_prod_right {x₀ : M} {y₀ : M'} :
+    mfderiv I' (I.Prod I') (fun y => (x₀, y)) y₀ =
+      ContinuousLinearMap.inr 𝕜 (TangentSpace I x₀) (TangentSpace I' y₀) :=
+  by
+  refine' ((mdifferentiableAt_const I' I).mfderiv_prod (mdifferentiableAt_id I')).trans _
+  rw [mfderiv_id, mfderiv_const, ContinuousLinearMap.inr]
+#align mfderiv_prod_right mfderiv_prod_right
+
+/-- The total derivative of a function in two variables is the sum of the partial derivatives.
+  Note that to state this (without casts) we need to be able to see through the definition of
+  `tangent_space`. -/
+theorem mfderiv_prod_eq_add {f : M × M' → M''} {p : M × M'}
+    (hf : MdifferentiableAt (I.Prod I') I'' f p) :
+    mfderiv (I.Prod I') I'' f p =
+      show E × E' →L[𝕜] E'' from
+        mfderiv (I.Prod I') I'' (fun z : M × M' => f (z.1, p.2)) p +
+          mfderiv (I.Prod I') I'' (fun z : M × M' => f (p.1, z.2)) p :=
+  by
+  dsimp only
+  rw [← @Prod.mk.eta _ _ p] at hf 
+  rw [mfderiv_comp_of_eq hf ((mdifferentiableAt_fst I I').prod_mk (mdifferentiableAt_const _ _))
+      rfl,
+    mfderiv_comp_of_eq hf ((mdifferentiableAt_const _ _).prod_mk (mdifferentiableAt_snd I I')) rfl,
+    ← ContinuousLinearMap.comp_add,
+    (mdifferentiableAt_fst I I').mfderiv_prod (mdifferentiableAt_const (I.prod I') I'),
+    (mdifferentiableAt_const (I.prod I') I).mfderiv_prod (mdifferentiableAt_snd I I'), mfderiv_fst,
+    mfderiv_snd, mfderiv_const, mfderiv_const]
+  symm
+  convert ContinuousLinearMap.comp_id _
+  · exact ContinuousLinearMap.coprod_inl_inr
+  simp_rw [Prod.mk.eta]
+  all_goals infer_instance
+#align mfderiv_prod_eq_add mfderiv_prod_eq_add
+
+end Prod
 
 section Arithmetic
 

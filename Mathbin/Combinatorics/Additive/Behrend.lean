@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module combinatorics.additive.behrend
-! leanprover-community/mathlib commit 4fa54b337f7d52805480306db1b1439c741848c8
+! leanprover-community/mathlib commit c20927220ef87bb4962ba08bf6da2ce3cf50a6dd
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -15,6 +15,9 @@ import Mathbin.Data.Complex.ExponentialBounds
 
 /-!
 # Behrend's bound on Roth numbers
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file proves Behrend's lower bound on Roth numbers. This says that we can find a subset of
 `{1, ..., n}` of size `n / exp (O (sqrt (log n)))` which does not contain arithmetic progressions of

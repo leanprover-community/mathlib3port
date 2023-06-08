@@ -86,14 +86,14 @@ theorem zero_comp [HasZeroMorphisms C] {X : C} {Y Z : C} {f : Y ⟶ Z} :
 #align category_theory.limits.zero_comp CategoryTheory.Limits.zero_comp
 -/
 
-#print CategoryTheory.Limits.hasZeroMorphismsPempty /-
-instance hasZeroMorphismsPempty : HasZeroMorphisms (Discrete PEmpty) where Zero := by tidy
-#align category_theory.limits.has_zero_morphisms_pempty CategoryTheory.Limits.hasZeroMorphismsPempty
+#print CategoryTheory.Limits.hasZeroMorphismsPEmpty /-
+instance hasZeroMorphismsPEmpty : HasZeroMorphisms (Discrete PEmpty) where Zero := by tidy
+#align category_theory.limits.has_zero_morphisms_pempty CategoryTheory.Limits.hasZeroMorphismsPEmpty
 -/
 
-#print CategoryTheory.Limits.hasZeroMorphismsPunit /-
-instance hasZeroMorphismsPunit : HasZeroMorphisms (Discrete PUnit) where Zero := by tidy
-#align category_theory.limits.has_zero_morphisms_punit CategoryTheory.Limits.hasZeroMorphismsPunit
+#print CategoryTheory.Limits.hasZeroMorphismsPUnit /-
+instance hasZeroMorphismsPUnit : HasZeroMorphisms (Discrete PUnit) where Zero := by tidy
+#align category_theory.limits.has_zero_morphisms_punit CategoryTheory.Limits.hasZeroMorphismsPUnit
 -/
 
 namespace HasZeroMorphisms

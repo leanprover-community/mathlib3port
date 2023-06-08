@@ -470,6 +470,7 @@ import Mathbin.Algebra.Star.BigOperators
 import Mathbin.Algebra.Star.Chsh
 import Mathbin.Algebra.Star.Free
 import Mathbin.Algebra.Star.Module
+import Mathbin.Algebra.Star.Order
 import Mathbin.Algebra.Star.Pi
 import Mathbin.Algebra.Star.Pointwise
 import Mathbin.Algebra.Star.Prod
@@ -1659,6 +1660,7 @@ import Mathbin.Data.Rat.MetaDefs
 import Mathbin.Data.Rat.Nnrat
 import Mathbin.Data.Rat.Order
 import Mathbin.Data.Rat.Sqrt
+import Mathbin.Data.Rat.Star
 import Mathbin.Data.Rbmap.Basic
 import Mathbin.Data.Rbmap.Default
 import Mathbin.Data.Rbtree.Basic
@@ -2004,7 +2006,9 @@ import Mathbin.LinearAlgebra.Dimension
 import Mathbin.LinearAlgebra.DirectSum.Finsupp
 import Mathbin.LinearAlgebra.DirectSum.TensorProduct
 import Mathbin.LinearAlgebra.Dual
-import Mathbin.LinearAlgebra.Eigenspace
+import Mathbin.LinearAlgebra.Eigenspace.Basic
+import Mathbin.LinearAlgebra.Eigenspace.IsAlgClosed
+import Mathbin.LinearAlgebra.Eigenspace.Minpoly
 import Mathbin.LinearAlgebra.ExteriorAlgebra.Basic
 import Mathbin.LinearAlgebra.ExteriorAlgebra.Grading
 import Mathbin.LinearAlgebra.ExteriorAlgebra.OfAlternating
