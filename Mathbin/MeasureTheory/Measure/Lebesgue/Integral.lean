@@ -22,6 +22,7 @@ variable {α : Type _}
 
 variable [MeasurableSpace α] {μ : Measure α} {f g : α → ℝ} {s : Set α}
 
+#print volume_regionBetween_eq_integral' /-
 theorem volume_regionBetween_eq_integral' [SigmaFinite μ] (f_int : IntegrableOn f s μ)
     (g_int : IntegrableOn g s μ) (hs : MeasurableSet s) (hfg : f ≤ᵐ[μ.restrict s] g) :
     μ.Prod volume (regionBetween f g s) = ENNReal.ofReal (∫ y in s, (g - f) y ∂μ) :=
@@ -33,6 +34,7 @@ theorem volume_regionBetween_eq_integral' [SigmaFinite μ] (f_int : IntegrableOn
     lintegral_coe_eq_integral _ ((integrable_congr h).mp (g_int.sub f_int))]
   simpa only
 #align volume_region_between_eq_integral' volume_regionBetween_eq_integral'
+-/
 
 /-- If two functions are integrable on a measurable set, and one function is less than
     or equal to the other on that set, then the volume of the region
@@ -50,6 +52,7 @@ section SummableNormIcc
 
 open ContinuousMap
 
+#print Real.integrable_of_summable_norm_Icc /-
 /- The following lemma is a minor variation on `integrable_of_summable_norm_restrict` in
 `measure_theory.integral.set_integral`, but it is placed here because it needs to know that
 `Icc a b` has volume `b - a`. -/
@@ -76,6 +79,7 @@ theorem Real.integrable_of_summable_norm_Icc {E : Type _} [NormedAddCommGroup E]
   simpa only [ContinuousMap.restrict_apply, comp_apply, coe_add_right, Subtype.coe_mk,
     sub_add_cancel] using this
 #align real.integrable_of_summable_norm_Icc Real.integrable_of_summable_norm_Icc
+-/
 
 end SummableNormIcc
 

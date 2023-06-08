@@ -64,6 +64,7 @@ unsafe instance rat.reflect : has_reflect ℚ :=
 
 end
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
       `rat.to_pexpr q` creates a `pexpr` that will evaluate to `q`.
@@ -82,6 +83,7 @@ end
           if d = 1 then n . to_pexpr else ` `( $ ( n . to_pexpr ) / $ ( d . to_pexpr ) )
 #align rat.to_pexpr rat.to_pexpr
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
       Evaluates an expression as a rational number,
@@ -118,6 +120,7 @@ protected unsafe def expr.to_rat : expr → Option ℚ
   | e => e.to_nonneg_rat
 #align expr.to_rat expr.to_rat
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
       Evaluates an expression into a rational number, if that expression is built up from

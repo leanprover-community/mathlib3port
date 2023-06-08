@@ -363,7 +363,7 @@ theorem WithSeminorms.isOpen_iff_mem_balls (hp : WithSeminorms p) (U : Set E) :
   simp_rw [← WithSeminorms.mem_nhds_iff hp _ U, isOpen_iff_mem_nhds]
 #align with_seminorms.is_open_iff_mem_balls WithSeminorms.isOpen_iff_mem_balls
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x «expr ≠ » 0) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (x «expr ≠ » 0) -/
 /- Note that through the following lemmas, one also immediately has that separating families
 of seminorms induce T₂ and T₃ topologies by `topological_add_group.t2_space`
 and `topological_add_group.t3_space` -/
@@ -391,7 +391,7 @@ theorem WithSeminorms.separating_of_T1 [T1Space E] (hp : WithSeminorms p) (x : E
   simp only [ball_finset_sup_eq_Inter _ _ _ hr, mem_Inter₂, mem_ball_zero, h, hr, forall_true_iff]
 #align with_seminorms.separating_of_t1 WithSeminorms.separating_of_T1
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x «expr ≠ » 0) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (x «expr ≠ » 0) -/
 /-- A family of seminorms is separating iff it induces a T₁ topology. -/
 theorem WithSeminorms.separating_iff_T1 (hp : WithSeminorms p) :
     (∀ (x) (_ : x ≠ 0), ∃ i, p i x ≠ 0) ↔ T1Space E :=

@@ -91,13 +91,8 @@ universe u
 
 variable {G : Type _}
 
-/- failed to parenthesize: unknown constant 'Lean.Meta._root_.Lean.Parser.Command.registerSimpAttr'
-[PrettyPrinter.parenthesize.input] (Lean.Meta._root_.Lean.Parser.Command.registerSimpAttr
-     [(Command.docComment
-       "/--"
-       "The simpset `field_simps` is used by the tactic `field_simp` to\nreduce an expression in a field to an expression of the form `n / d` where `n` and `d` are\ndivision-free. -/")]
-     "register_simp_attr"
-     `field_simps)-/-- failed to format: unknown constant 'Lean.Meta._root_.Lean.Parser.Command.registerSimpAttr'
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
+-- failed to format: unknown constant 'Lean.Meta._root_.Lean.Parser.Command.registerSimpAttr'
 /--
     The simpset `field_simps` is used by the tactic `field_simp` to
     reduce an expression in a field to an expression of the form `n / d` where `n` and `d` are

@@ -148,6 +148,7 @@ unsafe def derive_functor (pre : Option Name) : tactic Unit := do
       derive_map_equations pre n vs tgt
 #align tactic.interactive.derive_functor tactic.interactive.derive_functor
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /-- `seq_apply_constructor f [x,y,z]` synthesizes `f <*> x <*> y <*> z` -/ private unsafe
   def
@@ -191,6 +192,7 @@ unsafe def traverse_field (n : Name) (appl_inst cl f v e : expr) : tactic (Sum e
       else is_def_eq t cl >> Sum.inr <$> mk_app `` comp.mk [e] <|> pure (Sum.inl e)
 #align tactic.interactive.traverse_field tactic.interactive.traverse_field
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
       For a sum type `inductive foo (α : Type) | foo1 : list α → ℕ → foo | ...`

@@ -210,6 +210,7 @@ theorem factorsHelper_end (n : ℕ) (l : List ℕ) (H : FactorsHelper n 2 l) : N
   (List.eq_of_perm_of_sorted (Nat.factors_unique h₃ h₂) this (Nat.factors_sorted _)).symm
 #align tactic.norm_num.factors_helper_end Tactic.NormNum.factorsHelper_end
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /-- Given `n` and `a` natural numerals, returns `(l, ⊢ factors_helper n a l)`. -/ unsafe
   def

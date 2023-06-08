@@ -753,7 +753,7 @@ theorem isOpen_singleton_nhdsAdjoint {α : Type _} {a b : α} (f : Filter α) (h
 #align is_open_singleton_nhds_adjoint isOpen_singleton_nhdsAdjoint
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (b «expr ≠ » a) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (b «expr ≠ » a) -/
 theorem le_nhdsAdjoint_iff' {α : Type _} (a : α) (f : Filter α) (t : TopologicalSpace α) :
     t ≤ nhdsAdjoint a f ↔ @nhds α t a ≤ pure a ⊔ f ∧ ∀ (b) (_ : b ≠ a), @nhds α t b = pure b :=
   by

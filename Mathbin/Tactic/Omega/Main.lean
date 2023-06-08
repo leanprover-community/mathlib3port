@@ -34,6 +34,7 @@ unsafe def type_domain (x : expr) : tactic (Option Bool) :=
   if x = q(Int) then return (some true) else if x = q(Nat) then return (some false) else failed
 #align omega.type_domain omega.type_domain
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
       Detects domain of a formula from its expr.

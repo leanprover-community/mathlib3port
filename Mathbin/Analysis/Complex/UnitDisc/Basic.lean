@@ -136,13 +136,13 @@ instance isScalarTower_circle : IsScalarTower circle 𝔻 𝔻 :=
   isScalarTower_sphere_ball_ball
 #align complex.unit_disc.is_scalar_tower_circle Complex.UnitDisc.isScalarTower_circle
 
-instance sMulCommClass_circle : SMulCommClass circle 𝔻 𝔻 :=
-  sMulCommClass_sphere_ball_ball
-#align complex.unit_disc.smul_comm_class_circle Complex.UnitDisc.sMulCommClass_circle
+instance instSMulCommClass_circle : SMulCommClass circle 𝔻 𝔻 :=
+  instSMulCommClass_sphere_ball_ball
+#align complex.unit_disc.smul_comm_class_circle Complex.UnitDisc.instSMulCommClass_circle
 
-instance sMulCommClass_circle' : SMulCommClass 𝔻 circle 𝔻 :=
+instance instSMulCommClass_circle' : SMulCommClass 𝔻 circle 𝔻 :=
   SMulCommClass.symm _ _ _
-#align complex.unit_disc.smul_comm_class_circle' Complex.UnitDisc.sMulCommClass_circle'
+#align complex.unit_disc.smul_comm_class_circle' Complex.UnitDisc.instSMulCommClass_circle'
 
 @[simp, norm_cast]
 theorem coe_smul_circle (z : circle) (w : 𝔻) : ↑(z • w) = (z * w : ℂ) :=
@@ -162,21 +162,21 @@ instance isScalarTower_closedBall : IsScalarTower (closedBall (0 : ℂ) 1) 𝔻 
   isScalarTower_closedBall_ball_ball
 #align complex.unit_disc.is_scalar_tower_closed_ball Complex.UnitDisc.isScalarTower_closedBall
 
-instance sMulCommClass_closedBall : SMulCommClass (closedBall (0 : ℂ) 1) 𝔻 𝔻 :=
+instance instSMulCommClass_closedBall : SMulCommClass (closedBall (0 : ℂ) 1) 𝔻 𝔻 :=
   ⟨fun a b c => Subtype.ext <| mul_left_comm _ _ _⟩
-#align complex.unit_disc.smul_comm_class_closed_ball Complex.UnitDisc.sMulCommClass_closedBall
+#align complex.unit_disc.smul_comm_class_closed_ball Complex.UnitDisc.instSMulCommClass_closedBall
 
-instance sMulCommClass_closed_ball' : SMulCommClass 𝔻 (closedBall (0 : ℂ) 1) 𝔻 :=
+instance instSMulCommClass_closedBall' : SMulCommClass 𝔻 (closedBall (0 : ℂ) 1) 𝔻 :=
   SMulCommClass.symm _ _ _
-#align complex.unit_disc.smul_comm_class_closed_ball' Complex.UnitDisc.sMulCommClass_closed_ball'
+#align complex.unit_disc.smul_comm_class_closed_ball' Complex.UnitDisc.instSMulCommClass_closedBall'
 
-instance sMulCommClass_circle_closedBall : SMulCommClass circle (closedBall (0 : ℂ) 1) 𝔻 :=
-  sMulCommClass_sphere_closedBall_ball
-#align complex.unit_disc.smul_comm_class_circle_closed_ball Complex.UnitDisc.sMulCommClass_circle_closedBall
+instance instSMulCommClass_circle_closedBall : SMulCommClass circle (closedBall (0 : ℂ) 1) 𝔻 :=
+  instSMulCommClass_sphere_closedBall_ball
+#align complex.unit_disc.smul_comm_class_circle_closed_ball Complex.UnitDisc.instSMulCommClass_circle_closedBall
 
-instance sMulCommClass_closedBall_circle : SMulCommClass (closedBall (0 : ℂ) 1) circle 𝔻 :=
+instance instSMulCommClass_closedBall_circle : SMulCommClass (closedBall (0 : ℂ) 1) circle 𝔻 :=
   SMulCommClass.symm _ _ _
-#align complex.unit_disc.smul_comm_class_closed_ball_circle Complex.UnitDisc.sMulCommClass_closedBall_circle
+#align complex.unit_disc.smul_comm_class_closed_ball_circle Complex.UnitDisc.instSMulCommClass_closedBall_circle
 
 @[simp, norm_cast]
 theorem coe_smul_closedBall (z : closedBall (0 : ℂ) 1) (w : 𝔻) : ↑(z • w) = (z * w : ℂ) :=

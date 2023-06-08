@@ -1177,6 +1177,7 @@ add_tactic_doc
     tags := ["context management"] }
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
       `generalize' : e = x` replaces all occurrences of `e` in the target with a new hypothesis `x` of

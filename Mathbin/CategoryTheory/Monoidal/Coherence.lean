@@ -303,6 +303,7 @@ unsafe def mk_project_map_expr (e : expr) : tactic expr :=
 #align tactic.mk_project_map_expr tactic.mk_project_map_expr
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:330:4: warning: unsupported (TODO): `[tacs] -/
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /-- Coherence tactic for monoidal categories. -/ unsafe
   def

@@ -449,6 +449,7 @@ theorem correctness {α} [CommSemiring α] (t : Tree α) (r₁ r₂ : CsringExpr
   repeat' rw [← (horner_expr.cseval_of_csexpr t _).2] <;> rw [H]
 #align tactic.ring2.correctness Tactic.Ring2.correctness
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
       Reflects a csring expression into a `csring_expr`, together
@@ -521,6 +522,7 @@ open Tactic.Ring2
 local postfix:1024 "?" => optional
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:330:4: warning: unsupported (TODO): `[tacs] -/
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
       `ring2` solves equations in the language of rings.

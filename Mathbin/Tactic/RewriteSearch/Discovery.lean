@@ -27,6 +27,7 @@ once in each direction.
 private unsafe def rules_from_exprs (l : List expr) : List (expr × Bool) :=
   (l.map fun e => (e, false)) ++ l.map fun e => (e, true)
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /-- Returns true if expression is an equation or iff. -/ private unsafe
   def

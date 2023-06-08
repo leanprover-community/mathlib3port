@@ -106,6 +106,7 @@ def HeadSymbolMatch.toString : HeadSymbolMatch → String
   | both => "iff.mp and iff.mpr"
 #align tactic.suggest.head_symbol_match.to_string Tactic.Suggest.HeadSymbolMatch.toString
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /-- Determine if, and in which way, a given expression matches the specified head symbol. -/ unsafe
   def

@@ -116,6 +116,7 @@ unsafe def prove_univ_close (m : Nat) (p : Preform) : tactic expr := do
   to_expr ``(univClose_of_unsat_negElim_not $(q(m)) $(q(p)) $(x))
 #align omega.nat.prove_univ_close omega.nat.prove_univ_close
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /-- Reification to imtermediate shadow syntax that retains exprs -/ unsafe
   def
@@ -136,6 +137,7 @@ unsafe def prove_univ_close (m : Nat) (p : Preform) : tactic expr := do
         ( do let m ← eval_expr' Nat x return ( exprterm.cst m ) ) <|> ( return <| exprterm.exp 1 x )
 #align omega.nat.to_exprterm omega.nat.to_exprterm
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /-- Reification to imtermediate shadow syntax that retains exprs -/ unsafe
   def
@@ -241,6 +243,7 @@ unsafe def eq_nat (x : expr) : tactic Unit :=
   if x = q(Nat) then skip else failed
 #align omega.nat.eq_nat omega.nat.eq_nat
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /-- Check whether argument is expr of a well-formed formula of LNA-/ unsafe
   def

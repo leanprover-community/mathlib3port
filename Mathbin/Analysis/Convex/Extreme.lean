@@ -153,7 +153,7 @@ theorem isExtreme_sInter {F : Set (Set E)} (hF : F.Nonempty) (hAF : ∀ B ∈ F,
 #align is_extreme_sInter isExtreme_sInter
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x₁ x₂ «expr ∈ » A) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (x₁ x₂ «expr ∈ » A) -/
 #print mem_extremePoints /-
 theorem mem_extremePoints :
     x ∈ A.extremePoints 𝕜 ↔
@@ -286,7 +286,7 @@ variable {𝕜} [LinearOrderedRing 𝕜] [AddCommGroup E] [Module 𝕜 E]
 
 variable [DenselyOrdered 𝕜] [NoZeroSMulDivisors 𝕜 E] {A B : Set E} {x : E}
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x₁ x₂ «expr ∈ » A) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (x₁ x₂ «expr ∈ » A) -/
 /-- A useful restatement using `segment`: `x` is an extreme point iff the only (closed) segments
 that contain it are those with `x` as one of their endpoints. -/
 theorem mem_extremePoints_iff_forall_segment :

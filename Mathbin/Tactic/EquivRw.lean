@@ -161,6 +161,7 @@ unsafe def equiv_rw_type_core (eq : expr) (cfg : equiv_rw_cfg) : tactic Unit := 
                   trace f! "Attempting to adapt to {gs}" }
 #align tactic.equiv_rw_type_core tactic.equiv_rw_type_core
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
       `equiv_rw_type e t` rewrites the type `t` using the equivalence `e : α ≃ β`,
@@ -201,13 +202,8 @@ unsafe def equiv_rw_type_core (eq : expr) (cfg : equiv_rw_cfg) : tactic Unit := 
           Prod.fst <$> new_eqv { failIfUnchanged := ff }
 #align tactic.equiv_rw_type tactic.equiv_rw_type
 
-/- failed to parenthesize: unknown constant 'Lean.Meta._root_.Lean.Parser.Command.registerSimpAttr'
-[PrettyPrinter.parenthesize.input] (Lean.Meta._root_.Lean.Parser.Command.registerSimpAttr
-     [(Command.docComment
-       "/--"
-       "The simpset `equiv_rw_simp` is used by the tactic `equiv_rw` to\nsimplify applications of equivalences and their inverses. -/")]
-     "register_simp_attr"
-     `equiv_rw_simp)-/-- failed to format: unknown constant 'Lean.Meta._root_.Lean.Parser.Command.registerSimpAttr'
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
+-- failed to format: unknown constant 'Lean.Meta._root_.Lean.Parser.Command.registerSimpAttr'
 /--
     The simpset `equiv_rw_simp` is used by the tactic `equiv_rw` to
     simplify applications of equivalences and their inverses. -/
@@ -217,6 +213,7 @@ unsafe def equiv_rw_type_core (eq : expr) (cfg : equiv_rw_cfg) : tactic Unit := 
 attribute [equiv_rw_simp] Equiv.symm_symm Equiv.apply_symm_apply Equiv.symm_apply_apply
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:330:4: warning: unsupported (TODO): `[tacs] -/
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
       Attempt to replace the hypothesis with name `x`
@@ -341,6 +338,7 @@ add_tactic_doc
     declNames := [`tactic.interactive.equiv_rw]
     tags := ["rewriting", "equiv", "transport"] }
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
       Solve a goal of the form `t ≃ _`,

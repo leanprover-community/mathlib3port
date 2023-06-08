@@ -507,6 +507,7 @@ theorem unfold_div {α} [DivisionRing α] (a b c : α) (h : a * b⁻¹ = c) : a 
   rw [div_eq_mul_inv, h]
 #align tactic.ring.unfold_div Tactic.Ring.unfold_div
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
       Evaluate a ring expression `e` recursively to normal form, together with a proof of
@@ -792,6 +793,7 @@ namespace Interactive
 open Tactic.Ring
 
 /- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
       Tactic for solving equations in the language of *commutative* (semi)rings.

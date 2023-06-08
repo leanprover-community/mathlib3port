@@ -98,6 +98,7 @@ unsafe def alias_direct (doc : Option String) (d : declaration) (al : Name) : ta
   add_doc_string al (doc target)
 #align tactic.alias.alias_direct tactic.alias.alias_direct
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
       Given a proof of `Π x y z, a ↔ b`, produces a proof of `Π x y z, a → b` or `Π x y z, b → a`

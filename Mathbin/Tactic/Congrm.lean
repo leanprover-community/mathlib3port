@@ -105,6 +105,7 @@ private unsafe def extract_subgoals :
   | _, _, [] => pure []
   | _, _, _ => fail "unsupported congr lemma"
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
       `equate_with_pattern_core pat` solves a single goal of the form `lhs = rhs`

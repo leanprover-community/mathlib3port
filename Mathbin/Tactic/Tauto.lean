@@ -16,6 +16,7 @@ open Expr
 
 open Tactic.Interactive (casesm constructor_matching)
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
       find all assumptions of the shape `¬ (p ∧ q)` or `¬ (p ∨ q)` and
@@ -100,6 +101,7 @@ unsafe def add_refl (r : tauto_state) (e : expr) : tactic (expr × expr) := do
   return (e, p)
 #align tactic.add_refl tactic.add_refl
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
       If there exists a symmetry lemma that can be applied to the hypothesis `e`,
@@ -166,6 +168,7 @@ unsafe def root (r : tauto_state) : expr → tactic (expr × expr)
       | none => Prod.mk e <$> mk_mapp `rfl [none, some e]
 #align tactic.root tactic.root
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
       Given hypotheses `a` and `b`, build a proof that `a` is equivalent to `b`,
@@ -279,6 +282,7 @@ unsafe def find_eq_type (r : tauto_state) : expr → List expr → tactic (expr 
     Prod.mk H <$> symm_eq r e t <|> find_eq_type e Hs
 #align tactic.find_eq_type tactic.find_eq_type
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 private unsafe
   def

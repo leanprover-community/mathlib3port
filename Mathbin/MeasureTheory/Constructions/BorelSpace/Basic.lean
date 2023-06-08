@@ -240,6 +240,7 @@ unsafe def add_borel_instance (α : expr) : tactic Unit := do
   reset_instance_cache
 #align tactic.add_borel_instance tactic.add_borel_instance
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
       Given a type `α`, an assumption `i : measurable_space α`, and an instance `[borel_space α]`,

@@ -340,6 +340,7 @@ end NoZeroSMulDivisors
 
 open Positivity
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
       Extension for the `positivity` tactic: scalar multiplication is nonnegative/positive/nonzero if

@@ -557,6 +557,7 @@ unsafe def prove_eq_ne_fin : expr → expr → tactic (expr × Bool × expr)
           pure (n, ff, q(@ne_of_gt (Fin $(n)) _).mk_app [a, b, p])
 #align tactic.norm_fin.prove_eq_ne_fin tactic.norm_fin.prove_eq_ne_fin
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
       A `norm_num` extension that evaluates equalities and inequalities on the type `fin n`.

@@ -82,11 +82,8 @@ class IsROrC (K : Type _) extends DenselyNormedField K, StarRing K, NormedAlgebr
 
 end
 
-/- failed to parenthesize: unknown constant 'Lean.Meta._root_.Lean.Parser.Command.registerSimpAttr'
-[PrettyPrinter.parenthesize.input] (Lean.Meta._root_.Lean.Parser.Command.registerSimpAttr
-     [(Command.docComment "/--" "Simp attribute for lemmas about `is_R_or_C` -/")]
-     "register_simp_attr"
-     `is_R_or_C_simps)-/-- failed to format: unknown constant 'Lean.Meta._root_.Lean.Parser.Command.registerSimpAttr'
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
+-- failed to format: unknown constant 'Lean.Meta._root_.Lean.Parser.Command.registerSimpAttr'
 /-- Simp attribute for lemmas about `is_R_or_C` -/ register_simp_attr is_R_or_C_simps
 
 variable {K E : Type _} [IsROrC K]

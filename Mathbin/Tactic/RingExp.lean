@@ -1471,6 +1471,7 @@ open Tactic
 
 open ExType
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
       Compute a normalized form (of type `ex`) from an expression (of type `expr`).

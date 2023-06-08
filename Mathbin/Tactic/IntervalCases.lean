@@ -51,6 +51,7 @@ namespace Tactic
 
 namespace IntervalCases
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
       If `e` easily implies `(%%n < %%b)`
@@ -100,6 +101,7 @@ namespace IntervalCases
               | _ => failed
 #align tactic.interval_cases.gives_upper_bound tactic.interval_cases.gives_upper_bound
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
       If `e` easily implies `(%%n ≥ %%b)`
@@ -177,6 +179,7 @@ unsafe def update_bounds (n : expr) (bounds : Option expr × Option expr) (e : e
   return (clb, cub)
 #align tactic.interval_cases.update_bounds tactic.interval_cases.update_bounds
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
       Attempt to find a lower bound for the variable `n`, by evaluating `bot_le n`.
@@ -192,6 +195,7 @@ unsafe def update_bounds (n : expr) (bounds : Option expr × Option expr) (e : e
           match t with | q( $ ( b ) ≤ $ ( n ) ) => do return e | _ => failed
 #align tactic.interval_cases.initial_lower_bound tactic.interval_cases.initial_lower_bound
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
       Attempt to find an upper bound for the variable `n`, by evaluating `le_top n`.

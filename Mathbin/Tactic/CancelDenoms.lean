@@ -106,6 +106,7 @@ open Tactic Expr
 
 open Tree
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
       `find_cancel_factor e` produces a natural number `n`, such that multiplying `e` by `n` will
@@ -156,6 +157,7 @@ open Tree
 /- ./././Mathport/Syntax/Translate/Expr.lean:330:4: warning: unsupported (TODO): `[tacs] -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:330:4: warning: unsupported (TODO): `[tacs] -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:330:4: warning: unsupported (TODO): `[tacs] -/
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
       `mk_prod_prf n tr e` produces a proof of `n*e = e'`, where numeric denominators have been
@@ -230,6 +232,7 @@ unsafe def derive (e : expr) : tactic (ℕ × expr) :=
 #align cancel_factors.derive cancel_factors.derive
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:330:4: warning: unsupported (TODO): `[tacs] -/
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
       Given `e`, a term with rational divison, produces a natural number `n` and a proof of `e = e' / n`,
@@ -251,6 +254,7 @@ unsafe def derive (e : expr) : tactic (ℕ × expr) :=
             mk_mapp ` ` cancel_factors_eq_div [ none , none , n' , none , none , p , pn ]
 #align cancel_factors.derive_div cancel_factors.derive_div
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
       `find_comp_lemma e` arranges `e` in the form `lhs R rhs`, where `R ∈ {<, ≤, =}`, and returns

@@ -97,6 +97,7 @@ open Expr
 
 namespace UnfoldCases
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
       Given an equation `f x = y`, this tactic tries to infer an expression that can be
@@ -146,6 +147,7 @@ unsafe def unfold_cases_core (inner : interactive.itactic) : tactic Unit :=
           skip
 #align tactic.unfold_cases.unfold_cases_core tactic.unfold_cases.unfold_cases_core
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
       Given a target of the form `⊢ f x₁ ... xₙ = y`, unfolds `f` using a delta reduction.

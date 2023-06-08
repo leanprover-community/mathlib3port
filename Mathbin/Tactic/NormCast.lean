@@ -67,13 +67,8 @@ unsafe def trace_norm_cast {α} [has_to_tactic_format α] (msg : String) (a : α
     trace ("[norm_cast] " ++ msg ++ a : format)
 #align norm_cast.trace_norm_cast norm_cast.trace_norm_cast
 
-/- failed to parenthesize: unknown constant 'Lean.Meta._root_.Lean.Parser.Command.registerSimpAttr'
-[PrettyPrinter.parenthesize.input] (Lean.Meta._root_.Lean.Parser.Command.registerSimpAttr
-     [(Command.docComment
-       "/--"
-       "The `push_cast` simp attribute uses `norm_cast` lemmas\nto move casts toward the leaf nodes of the expression. -/")]
-     "register_simp_attr"
-     `push_cast)-/-- failed to format: unknown constant 'Lean.Meta._root_.Lean.Parser.Command.registerSimpAttr'
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
+-- failed to format: unknown constant 'Lean.Meta._root_.Lean.Parser.Command.registerSimpAttr'
 /--
     The `push_cast` simp attribute uses `norm_cast` lemmas
     to move casts toward the leaf nodes of the expression. -/
@@ -149,6 +144,7 @@ private unsafe def count_internal_coes (e : expr) : tactic ℕ := do
   let ncoes ← count_coes e
   pure <| ncoes - count_head_coes e
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
       Classifies a declaration of type `ty` as a `norm_cast` rule.
@@ -388,6 +384,7 @@ namespace NormCast
 
 open Tactic Expr
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /-- Prove `a = b` using the given simp set. -/ unsafe
   def
@@ -404,6 +401,7 @@ open Tactic Expr
           mk_eq_trans a_a' b'_b
 #align norm_cast.prove_eq_using norm_cast.prove_eq_using
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /-- Prove `a = b` by simplifying using move and squash lemmas. -/ unsafe
   def

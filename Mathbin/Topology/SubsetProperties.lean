@@ -344,7 +344,7 @@ theorem IsCompact.nonempty_iInter_of_sequence_nonempty_compact_closed (Z : ℕ �
 #align is_compact.nonempty_Inter_of_sequence_nonempty_compact_closed IsCompact.nonempty_iInter_of_sequence_nonempty_compact_closed
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (b' «expr ⊆ » b) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (b' «expr ⊆ » b) -/
 /-- For every open cover of a compact set, there exists a finite subcover. -/
 theorem IsCompact.elim_finite_subcover_image {b : Set ι} {c : ι → Set α} (hs : IsCompact s)
     (hc₁ : ∀ i ∈ b, IsOpen (c i)) (hc₂ : s ⊆ ⋃ i ∈ b, c i) :
@@ -1676,7 +1676,7 @@ protected noncomputable def LocallyFinite.encodable {ι : Type _} {f : ι → Se
 #align locally_finite.encodable LocallyFinite.encodable
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 #print countable_cover_nhdsWithin_of_sigma_compact /-
 /-- In a topological space with sigma compact topology, if `f` is a function that sends each point
 `x` of a closed set `s` to a neighborhood of `x` within `s`, then for some countable set `t ⊆ s`,
@@ -2117,7 +2117,7 @@ def irreducibleComponents (α : Type _) [TopologicalSpace α] : Set (Set α) :=
 #align irreducible_components irreducibleComponents
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (s «expr ∈ » irreducible_components[irreducible_components] α) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (s «expr ∈ » irreducible_components[irreducible_components] α) -/
 #print isClosed_of_mem_irreducibleComponents /-
 theorem isClosed_of_mem_irreducibleComponents (s) (_ : s ∈ irreducibleComponents α) : IsClosed s :=
   by

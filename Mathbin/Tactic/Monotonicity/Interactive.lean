@@ -272,6 +272,7 @@ unsafe def parse_ac_mono_function' (l r : pexpr) := do
   parse_ac_mono_function l' r'
 #align tactic.interactive.parse_ac_mono_function' tactic.interactive.parse_ac_mono_function'
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 unsafe
   def
@@ -440,6 +441,7 @@ unsafe def find_lemma (pat : expr) : List Name → tactic (List expr)
     (cons <$> match_rule pat r <|> pure id) <*> find_lemma rs
 #align tactic.interactive.find_lemma tactic.interactive.find_lemma
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 unsafe
   def
@@ -489,6 +491,7 @@ unsafe def side_conditions (e : expr) : tactic format := do
 
 open Monad
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
       tactic-facing function, similar to `interactive.tactic.generalize` with the

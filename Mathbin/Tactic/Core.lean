@@ -1159,6 +1159,7 @@ unsafe def replace (h : Name) (p : pexpr) : tactic Unit := do
   clear h'
 #align tactic.replace tactic.replace
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
       Auxiliary function for `iff_mp` and `iff_mpr`. Takes a name, which should be either `` `iff.mp``
@@ -2029,6 +2030,7 @@ unsafe def mk_comp (v : expr) : expr → tactic expr
     mk_mapp `` id [t]
 #align tactic.mk_comp tactic.mk_comp
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /-- Given two expressions `e₀` and `e₁`, return the expression `` `(%%e₀ ↔ %%e₁)``. -/ unsafe
   def mk_iff ( e₀ : expr ) ( e₁ : expr ) : expr := q( $ ( e₀ ) ↔ $ ( e₁ ) )
@@ -2609,6 +2611,7 @@ unsafe def apply_under_pis (func arg : pexpr) (pi_expr : expr) : pexpr :=
   apply_under_n_pis func arg pi_expr pi_expr.pi_arity
 #align tactic.apply_under_pis tactic.apply_under_pis
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
       If `func` is a `pexpr` representing a function that takes an argument `a`,

@@ -38,6 +38,7 @@ namespace ComputeDegree
 
 open Expr Polynomial
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
       `guess_degree e` assumes that `e` is an expression in a polynomial ring, and makes an attempt
@@ -97,6 +98,7 @@ open Expr Polynomial
             pure <| expr.mk_app pe [ e ]
 #align tactic.compute_degree.guess_degree tactic.compute_degree.guess_degree
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
       `resolve_sum_step` assumes that the current goal is of the form `f.nat_degree ≤ d`, failing
@@ -209,6 +211,7 @@ unsafe def norm_assum : tactic Unit :=
   try sorry >> try assumption
 #align tactic.compute_degree.norm_assum tactic.compute_degree.norm_assum
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
       `eval_guessing n e` takes a natural number `n` and an expression `e` and gives an

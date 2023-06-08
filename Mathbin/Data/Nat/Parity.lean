@@ -148,11 +148,8 @@ theorem succ_mod_two_add_mod_two (m : ℕ) : (m + 1) % 2 + m % 2 = 1 := by
 #align nat.succ_mod_two_add_mod_two Nat.succ_mod_two_add_mod_two
 -/
 
-/- failed to parenthesize: unknown constant 'Lean.Meta._root_.Lean.Parser.Command.registerSimpAttr'
-[PrettyPrinter.parenthesize.input] (Lean.Meta._root_.Lean.Parser.Command.registerSimpAttr
-     [(Command.docComment "/--" "Simp attribute for lemmas about `even` -/")]
-     "register_simp_attr"
-     `parity_simps)-/-- failed to format: unknown constant 'Lean.Meta._root_.Lean.Parser.Command.registerSimpAttr'
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
+-- failed to format: unknown constant 'Lean.Meta._root_.Lean.Parser.Command.registerSimpAttr'
 /-- Simp attribute for lemmas about `even` -/ register_simp_attr parity_simps
 
 #print Nat.not_even_one /-

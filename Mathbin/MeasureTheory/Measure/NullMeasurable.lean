@@ -249,7 +249,7 @@ protected theorem insert [MeasurableSingletonClass (NullMeasurableSpace α μ)]
 #align measure_theory.null_measurable_set.insert MeasureTheory.NullMeasurableSet.insert
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (t «expr ⊇ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (t «expr ⊇ » s) -/
 #print MeasureTheory.NullMeasurableSet.exists_measurable_superset_ae_eq /-
 theorem exists_measurable_superset_ae_eq (h : NullMeasurableSet s μ) :
     ∃ (t : _) (_ : t ⊇ s), MeasurableSet t ∧ t =ᵐ[μ] s :=
@@ -274,7 +274,7 @@ theorem compl_toMeasurable_compl_ae_eq (h : NullMeasurableSet s μ) : toMeasurab
   by simpa only [compl_compl] using h.compl.to_measurable_ae_eq.compl
 #align measure_theory.null_measurable_set.compl_to_measurable_compl_ae_eq MeasureTheory.NullMeasurableSet.compl_toMeasurable_compl_ae_eq
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 #print MeasureTheory.NullMeasurableSet.exists_measurable_subset_ae_eq /-
 theorem exists_measurable_subset_ae_eq (h : NullMeasurableSet s μ) :
     ∃ (t : _) (_ : t ⊆ s), MeasurableSet t ∧ t =ᵐ[μ] s :=

@@ -537,6 +537,7 @@ unsafe def reify_atom (atoms : ref (Buffer expr)) (e : expr) : tactic Prop := do
     | some i => pure <| prop.var i
 #align tactic.itauto.reify_atom tactic.itauto.reify_atom
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
       Reify an `expr` into a `prop`, allocating anything non-propositional as an atom in the

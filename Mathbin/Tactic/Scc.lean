@@ -142,6 +142,7 @@ unsafe def merge_intl (cl : closure) (p e₀ p₀ e₁ p₁ : expr) : tactic Uni
   modify_ref cl fun m => m e₀ <| Sum.inr (e₁, p)
 #align tactic.closure.merge_intl tactic.closure.merge_intl
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
       `merge cl p`, with `p` a proof of `e₀ ↔ e₁` for some `e₀` and `e₁`,
@@ -216,6 +217,7 @@ unsafe def with_impl_graph {α} : (impl_graph → tactic α) → tactic α :=
 
 namespace ImplGraph
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
       `add_edge g p`, with `p` a proof of `v₀ → v₁` or `v₀ ↔ v₁`, adds an edge to the implication
@@ -341,6 +343,7 @@ unsafe def mk_scc (cl : closure) : tactic (expr_map (List (expr × expr))) :=
 
 end ImplGraph
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 unsafe
   def
@@ -349,6 +352,7 @@ unsafe
     := do let q( $ ( p ) ↔ $ ( q ) ) ← target >>= whnf cl p q >>= exact
 #align tactic.prove_eqv_target tactic.prove_eqv_target
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
       `scc` uses the available equivalences and implications to prove

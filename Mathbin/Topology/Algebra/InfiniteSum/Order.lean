@@ -74,7 +74,7 @@ theorem le_hasSum_of_le_sum (hf : HasSum f a) (h : ∀ s, a₂ ≤ ∑ i in s, f
 #align le_has_sum_of_le_sum le_hasSum_of_le_sum
 -/
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (c «expr ∉ » set.range[set.range] e) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (c «expr ∉ » set.range[set.range] e) -/
 theorem hasSum_le_inj {g : κ → α} (e : ι → κ) (he : Injective e)
     (hs : ∀ (c) (_ : c ∉ Set.range e), 0 ≤ g c) (h : ∀ i, f i ≤ g (e i)) (hf : HasSum f a₁)
     (hg : HasSum g a₂) : a₁ ≤ a₂ :=
@@ -99,14 +99,14 @@ theorem hasSum_le_inj {g : κ → α} (e : ι → κ) (he : Injective e)
     exact hs _ h
 #align has_sum_le_inj hasSum_le_inj
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (c «expr ∉ » set.range[set.range] e) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (c «expr ∉ » set.range[set.range] e) -/
 theorem tsum_le_tsum_of_inj {g : κ → α} (e : ι → κ) (he : Injective e)
     (hs : ∀ (c) (_ : c ∉ Set.range e), 0 ≤ g c) (h : ∀ i, f i ≤ g (e i)) (hf : Summable f)
     (hg : Summable g) : tsum f ≤ tsum g :=
   hasSum_le_inj _ he hs h hf.HasSum hg.HasSum
 #align tsum_le_tsum_of_inj tsum_le_tsum_of_inj
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (i «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (i «expr ∉ » s) -/
 theorem sum_le_hasSum (s : Finset ι) (hs : ∀ (i) (_ : i ∉ s), 0 ≤ f i) (hf : HasSum f a) :
     (∑ i in s, f i) ≤ a :=
   ge_of_tendsto hf
@@ -119,7 +119,7 @@ theorem isLUB_hasSum (h : ∀ i, 0 ≤ f i) (hf : HasSum f a) :
   isLUB_of_tendsto_atTop (Finset.sum_mono_set_of_nonneg h) hf
 #align is_lub_has_sum isLUB_hasSum
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (b' «expr ≠ » i) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (b' «expr ≠ » i) -/
 theorem le_hasSum (hf : HasSum f a) (i : ι) (hb : ∀ (b') (_ : b' ≠ i), 0 ≤ f b') : f i ≤ a :=
   calc
     f i = ∑ i in {i}, f i := Finset.sum_singleton.symm
@@ -127,13 +127,13 @@ theorem le_hasSum (hf : HasSum f a) (i : ι) (hb : ∀ (b') (_ : b' ≠ i), 0 �
     
 #align le_has_sum le_hasSum
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (i «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (i «expr ∉ » s) -/
 theorem sum_le_tsum {f : ι → α} (s : Finset ι) (hs : ∀ (i) (_ : i ∉ s), 0 ≤ f i) (hf : Summable f) :
     (∑ i in s, f i) ≤ ∑' i, f i :=
   sum_le_hasSum s hs hf.HasSum
 #align sum_le_tsum sum_le_tsum
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (b' «expr ≠ » i) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (b' «expr ≠ » i) -/
 theorem le_tsum (hf : Summable f) (i : ι) (hb : ∀ (b') (_ : b' ≠ i), 0 ≤ f b') : f i ≤ ∑' i, f i :=
   le_hasSum (Summable.hasSum hf) i hb
 #align le_tsum le_tsum

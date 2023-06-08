@@ -341,6 +341,7 @@ unsafe def eval_smul' (c : context) (eval : expr → tactic (normal_expr × expr
     | none => eval_atom c orig
 #align tactic.abel.eval_smul' tactic.abel.eval_smul'
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 unsafe
   def
@@ -470,6 +471,7 @@ namespace Interactive
 open Tactic.Abel
 
 /- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
       Tactic for solving equations in the language of

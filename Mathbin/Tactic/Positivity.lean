@@ -248,6 +248,7 @@ unsafe def compare_hyp_ne (e a b p₂ : expr) : tactic strictness := do
             " is non-zero")
 #align tactic.positivity.compare_hyp_ne tactic.positivity.compare_hyp_ne
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
       Third base case of the `positivity` tactic.  Prove an expression `e` is
@@ -338,6 +339,7 @@ open scoped Positivity
 namespace Interactive
 
 /- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
       Tactic solving goals of the form `0 ≤ x`, `0 < x` and `x ≠ 0`.  The tactic works recursively
@@ -535,6 +537,7 @@ unsafe def positivity_max : expr → tactic strictness
   | e => pp e >>= fail ∘ format.bracket "The expression `" "` isn't of the form `max a b`"
 #align tactic.positivity_max tactic.positivity_max
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
       Extension for the `positivity` tactic: addition is nonnegative if both summands are nonnegative,
@@ -590,6 +593,7 @@ private theorem mul_ne_zero_of_ne_zero_of_pos [NoZeroDivisors R] (ha : a ≠ 0) 
 
 end OrderedSemiring
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
       Extension for the `positivity` tactic: multiplication is nonnegative/positive/nonzero if both
@@ -667,6 +671,7 @@ private theorem int_div_nonneg_of_nonneg_of_pos {a b : ℤ} (ha : 0 ≤ a) (hb :
 private theorem int_div_nonneg_of_pos_of_pos {a b : ℤ} (ha : 0 < a) (hb : 0 < b) : 0 ≤ a / b :=
   Int.div_nonneg ha.le hb.le
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
       Extension for the `positivity` tactic: division is nonnegative if both numerator and denominator
@@ -745,6 +750,7 @@ private theorem int_div_nonneg_of_pos_of_pos {a b : ℤ} (ha : 0 < a) (hb : 0 < 
       | e => pp e >>= fail ∘ format.bracket "The expression `" "` isn't of the form `a / b`"
 #align tactic.positivity_div tactic.positivity_div
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
       Extension for the `positivity` tactic: an inverse of a positive number is positive, an inverse
@@ -774,6 +780,7 @@ private theorem pow_zero_pos [OrderedSemiring R] [Nontrivial R] (a : R) : 0 < a 
 private theorem zpow_zero_pos [LinearOrderedSemifield R] (a : R) : 0 < a ^ (0 : ℤ) :=
   zero_lt_one.trans_le (zpow_zero a).ge
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
       Extension for the `positivity` tactic: raising a number `a` to a natural/integer power `n` is
@@ -875,6 +882,7 @@ private theorem zpow_zero_pos [LinearOrderedSemifield R] (a : R) : 0 < a ^ (0 : 
       | e => pp e >>= fail ∘ format.bracket "The expression `" "` isn't of the form `a ^ n`"
 #align tactic.positivity_pow tactic.positivity_pow
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
       Extension for the `positivity` tactic: raising a positive number in a canonically ordered

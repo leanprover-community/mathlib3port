@@ -83,6 +83,7 @@ private unsafe def fin_cases_at_aux : ∀ (with_list : List expr) (e : expr), ta
         skip
       | _ => failed
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
       `fin_cases_at with_list e` performs case analysis on `e : α`, where `α` is a fintype.

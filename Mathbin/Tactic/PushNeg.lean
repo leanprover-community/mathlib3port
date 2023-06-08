@@ -91,6 +91,7 @@ unsafe def whnf_reducible (e : expr) : tactic expr :=
   whnf e reducible
 #align push_neg.whnf_reducible push_neg.whnf_reducible
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 private unsafe
   def
@@ -298,6 +299,7 @@ unsafe def name_with_opt : lean.parser (Name × Option Name) :=
   Prod.mk <$> ident <*> (some <$> (tk "with" *> ident) <|> return none)
 #align name_with_opt name_with_opt
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
       Transforms the goal into its contrapositive.

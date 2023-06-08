@@ -951,7 +951,7 @@ theorem ncard_eq_one : s.ncard = 1 ↔ ∃ a, s = {a} :=
 -/
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic to_finite_tac -/
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (a «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (a «expr ∉ » s) -/
 #print Set.exists_eq_insert_iff_ncard /-
 theorem exists_eq_insert_iff_ncard
     (hs : s.Finite := by

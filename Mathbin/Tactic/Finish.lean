@@ -163,6 +163,7 @@ def classicalNormalizeLemmaNames : List Name :=
   commonNormalizeLemmaNames ++ [`` classical.implies_iff_not_or]
 #align auto.classical_normalize_lemma_names Auto.classicalNormalizeLemmaNames
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /-- optionally returns an equivalent expression and proof of equivalence -/ private unsafe
   def
@@ -297,6 +298,7 @@ unsafe def eelims : tactic Unit :=
 -/
 
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /-- carries out a subst if there is one, fails otherwise -/ unsafe
   def
@@ -325,6 +327,7 @@ unsafe def do_substs : tactic Unit :=
 -/
 
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
       Assumes `pr` is a proof of `t`. Adds the consequences of `t` to the context
@@ -506,6 +509,7 @@ private unsafe def case_cont (s : CaseOption) (cont : CaseOption → tactic Unit
           cont case_option.at_most_one
     | case_option.accept => focus' [cont case_option.accept, cont case_option.accept]
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 unsafe
   def

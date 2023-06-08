@@ -217,6 +217,7 @@ unsafe def match_n_plus_m (md) : ℕ → expr → tactic (ℕ × expr) := fun n 
     | _ => pure (n, e)
 #align tactic.unify_equations.match_n_plus_m tactic.unify_equations.match_n_plus_m
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
       Given `equ : n + m = n` or `equ : n = n + m` with `n` and `m` natural numbers
@@ -261,6 +262,7 @@ unsafe def match_n_plus_m (md) : ℕ → expr → tactic (ℕ × expr) := fun n 
           pure q( add_add_one_ne $ ( n ) $ ( m ) $ ( equ ) )
 #align tactic.unify_equations.contradict_n_eq_n_plus_m tactic.unify_equations.contradict_n_eq_n_plus_m
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
       Given `equ : t = u` with `t, u : I` and `I.sizeof t ≠ I.sizeof u`, we solve the

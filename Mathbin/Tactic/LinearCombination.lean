@@ -87,6 +87,7 @@ unsafe structure linear_combination_config : Type where
 /-! ### Part 1: Multiplying Equations by Constants and Adding Them Together -/
 
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
       Given that `lhs = rhs`, this tactic returns an `expr` proving that
@@ -232,6 +233,7 @@ unsafe def move_to_left_side (h_equality : expr) : tactic expr :=
   mk_app `` left_minus_right [h_equality]
 #align linear_combo.move_to_left_side linear_combo.move_to_left_side
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
       This tactic replaces the target with the result of moving all the terms in the
@@ -343,6 +345,7 @@ unsafe def linear_combination (h_eqs_names : List pexpr) (coeffs : List pexpr)
   normalize_if_desired config
 #align linear_combo.linear_combination linear_combo.linear_combination
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /-- `mk_mul [p₀, p₁, ..., pₙ]` produces the pexpr `p₀ * p₁ * ... * pₙ`. -/ unsafe
   def
@@ -351,6 +354,7 @@ unsafe def linear_combination (h_eqs_names : List pexpr) (coeffs : List pexpr)
     | [ ] => ` `( 1 ) | [ e ] => e | e :: es => ` `( $ ( e ) * $ ( mk_mul es ) )
 #align linear_combo.mk_mul linear_combo.mk_mul
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
       `as_linear_combo neg ms e` is used to parse the argument to `linear_combination`.

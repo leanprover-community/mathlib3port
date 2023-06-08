@@ -51,10 +51,12 @@ variable {f : ℝ → ℝ} {μ ν : Measure ℝ} [IsLocallyFiniteMeasure μ] (c 
 /-! ### Interval integrability -/
 
 
+#print intervalIntegral.intervalIntegrable_pow /-
 @[simp]
 theorem intervalIntegrable_pow : IntervalIntegrable (fun x => x ^ n) μ a b :=
   (continuous_pow n).IntervalIntegrable a b
 #align interval_integral.interval_integrable_pow intervalIntegral.intervalIntegrable_pow
+-/
 
 theorem intervalIntegrable_zpow {n : ℤ} (h : 0 ≤ n ∨ (0 : ℝ) ∉ [a, b]) :
     IntervalIntegrable (fun x => x ^ n) μ a b :=
@@ -190,15 +192,19 @@ theorem intervalIntegrable_cpow' {r : ℂ} (h : -1 < r.re) :
     simp
 #align interval_integral.interval_integrable_cpow' intervalIntegral.intervalIntegrable_cpow'
 
+#print intervalIntegral.intervalIntegrable_id /-
 @[simp]
 theorem intervalIntegrable_id : IntervalIntegrable (fun x => x) μ a b :=
   continuous_id.IntervalIntegrable a b
 #align interval_integral.interval_integrable_id intervalIntegral.intervalIntegrable_id
+-/
 
+#print intervalIntegral.intervalIntegrable_const /-
 @[simp]
 theorem intervalIntegrable_const : IntervalIntegrable (fun x => c) μ a b :=
   continuous_const.IntervalIntegrable a b
 #align interval_integral.interval_integrable_const intervalIntegral.intervalIntegrable_const
+-/
 
 theorem intervalIntegrable_one_div (h : ∀ x : ℝ, x ∈ [a, b] → f x ≠ 0)
     (hf : ContinuousOn f [a, b]) : IntervalIntegrable (fun x => 1 / f x) μ a b :=
@@ -211,10 +217,12 @@ theorem intervalIntegrable_inv (h : ∀ x : ℝ, x ∈ [a, b] → f x ≠ 0) (hf
   simpa only [one_div] using interval_integrable_one_div h hf
 #align interval_integral.interval_integrable_inv intervalIntegral.intervalIntegrable_inv
 
+#print intervalIntegral.intervalIntegrable_exp /-
 @[simp]
 theorem intervalIntegrable_exp : IntervalIntegrable exp μ a b :=
   continuous_exp.IntervalIntegrable a b
 #align interval_integral.interval_integrable_exp intervalIntegral.intervalIntegrable_exp
+-/
 
 @[simp]
 theorem IntervalIntegrable.log (hf : ContinuousOn f [a, b]) (h : ∀ x : ℝ, x ∈ [a, b] → f x ≠ 0) :
@@ -227,16 +235,21 @@ theorem intervalIntegrable_log (h : (0 : ℝ) ∉ [a, b]) : IntervalIntegrable l
   IntervalIntegrable.log continuousOn_id fun x hx => ne_of_mem_of_not_mem hx h
 #align interval_integral.interval_integrable_log intervalIntegral.intervalIntegrable_log
 
+#print intervalIntegral.intervalIntegrable_sin /-
 @[simp]
 theorem intervalIntegrable_sin : IntervalIntegrable sin μ a b :=
   continuous_sin.IntervalIntegrable a b
 #align interval_integral.interval_integrable_sin intervalIntegral.intervalIntegrable_sin
+-/
 
+#print intervalIntegral.intervalIntegrable_cos /-
 @[simp]
 theorem intervalIntegrable_cos : IntervalIntegrable cos μ a b :=
   continuous_cos.IntervalIntegrable a b
 #align interval_integral.interval_integrable_cos intervalIntegral.intervalIntegrable_cos
+-/
 
+#print intervalIntegral.intervalIntegrable_one_div_one_add_sq /-
 theorem intervalIntegrable_one_div_one_add_sq :
     IntervalIntegrable (fun x : ℝ => 1 / (1 + x ^ 2)) μ a b :=
   by
@@ -244,11 +257,14 @@ theorem intervalIntegrable_one_div_one_add_sq :
   · continuity
   · nlinarith
 #align interval_integral.interval_integrable_one_div_one_add_sq intervalIntegral.intervalIntegrable_one_div_one_add_sq
+-/
 
+#print intervalIntegral.intervalIntegrable_inv_one_add_sq /-
 @[simp]
 theorem intervalIntegrable_inv_one_add_sq : IntervalIntegrable (fun x : ℝ => (1 + x ^ 2)⁻¹) μ a b :=
   by simpa only [one_div] using interval_integrable_one_div_one_add_sq
 #align interval_integral.interval_integrable_inv_one_add_sq intervalIntegral.intervalIntegrable_inv_one_add_sq
+-/
 
 /-! ### Integrals of the form `c * ∫ x in a..b, f (c * x + d)` -/
 
@@ -432,8 +448,10 @@ theorem integral_one : (∫ x in a..b, (1 : ℝ)) = b - a := by
   simp only [mul_one, smul_eq_mul, integral_const]
 #align integral_one integral_one
 
+#print integral_const_on_unit_interval /-
 theorem integral_const_on_unit_interval : (∫ x in a..a + 1, b) = b := by simp
 #align integral_const_on_unit_interval integral_const_on_unit_interval
+-/
 
 @[simp]
 theorem integral_inv (h : (0 : ℝ) ∉ [a, b]) : (∫ x in a..b, x⁻¹) = log (b / a) :=
@@ -664,6 +682,7 @@ theorem integral_sin_sq : (∫ x in a..b, sin x ^ 2) = (sin a * cos a - sin b * 
   by field_simp [integral_sin_pow, add_sub_assoc]
 #align integral_sin_sq integral_sin_sq
 
+#print integral_sin_pow_odd /-
 theorem integral_sin_pow_odd :
     (∫ x in 0 ..π, sin x ^ (2 * n + 1)) = 2 * ∏ i in range n, (2 * i + 2) / (2 * i + 3) :=
   by
@@ -672,7 +691,9 @@ theorem integral_sin_pow_odd :
   norm_cast
   simp [-cast_add, field_simps]
 #align integral_sin_pow_odd integral_sin_pow_odd
+-/
 
+#print integral_sin_pow_even /-
 theorem integral_sin_pow_even :
     (∫ x in 0 ..π, sin x ^ (2 * n)) = π * ∏ i in range n, (2 * i + 1) / (2 * i + 2) :=
   by
@@ -681,6 +702,7 @@ theorem integral_sin_pow_even :
   norm_cast
   simp [-cast_add, field_simps]
 #align integral_sin_pow_even integral_sin_pow_even
+-/
 
 theorem integral_sin_pow_pos : 0 < ∫ x in 0 ..π, sin x ^ n := by
   rcases even_or_odd' n with ⟨k, rfl | rfl⟩ <;>
@@ -696,9 +718,11 @@ theorem integral_sin_pow_succ_le : (∫ x in 0 ..π, sin x ^ (n + 1)) ≤ ∫ x 
   refine' integral_mono_on pi_pos.le _ _ H <;> exact (continuous_sin.pow _).IntervalIntegrable 0 π
 #align integral_sin_pow_succ_le integral_sin_pow_succ_le
 
+#print integral_sin_pow_antitone /-
 theorem integral_sin_pow_antitone : Antitone fun n : ℕ => ∫ x in 0 ..π, sin x ^ n :=
   antitone_nat_of_succ_le integral_sin_pow_succ_le
 #align integral_sin_pow_antitone integral_sin_pow_antitone
+-/
 
 /-! ### Integral of `cos x ^ n` -/
 

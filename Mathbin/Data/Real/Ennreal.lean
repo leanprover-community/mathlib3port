@@ -281,12 +281,12 @@ theorem forall_ennreal {p : ℝ≥0∞ → Prop} : (∀ a, p a) ↔ (∀ r : ℝ
     | none => h₂⟩
 #align ennreal.forall_ennreal ENNReal.forall_ennreal
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (a «expr ≠ » ennreal.top()) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (a «expr ≠ » ennreal.top()) -/
 theorem forall_ne_top {p : ℝ≥0∞ → Prop} : (∀ (a) (_ : a ≠ ∞), p a) ↔ ∀ r : ℝ≥0, p r :=
   Option.ball_ne_none
 #align ennreal.forall_ne_top ENNReal.forall_ne_top
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (a «expr ≠ » ennreal.top()) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (a «expr ≠ » ennreal.top()) -/
 theorem exists_ne_top' {p : ℝ≥0∞ → Prop} : (∃ (a : _) (_ : a ≠ ∞), p a) ↔ ∃ r : ℝ≥0, p r :=
   Option.bex_ne_none
 #align ennreal.exists_ne_top ENNReal.exists_ne_top'
@@ -509,7 +509,7 @@ theorem cinfi_ne_top [InfSet α] (f : ℝ≥0∞ → α) : (⨅ x : { x // x ≠
   Eq.symm <| neTopEquivNNReal.symm.Surjective.iInf_congr _ fun x => rfl
 #align ennreal.cinfi_ne_top ENNReal.cinfi_ne_top
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x «expr ≠ » ennreal.top()) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (x «expr ≠ » ennreal.top()) -/
 theorem iInf_ne_top [CompleteLattice α] (f : ℝ≥0∞ → α) :
     (⨅ (x) (_ : x ≠ ∞), f x) = ⨅ x : ℝ≥0, f x := by rw [iInf_subtype', cinfi_ne_top]
 #align ennreal.infi_ne_top ENNReal.iInf_ne_top
@@ -518,7 +518,7 @@ theorem csupr_ne_top [SupSet α] (f : ℝ≥0∞ → α) : (⨆ x : { x // x ≠
   @cinfi_ne_top αᵒᵈ _ _
 #align ennreal.csupr_ne_top ENNReal.csupr_ne_top
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x «expr ≠ » ennreal.top()) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (x «expr ≠ » ennreal.top()) -/
 theorem iSup_ne_top [CompleteLattice α] (f : ℝ≥0∞ → α) :
     (⨆ (x) (_ : x ≠ ∞), f x) = ⨆ x : ℝ≥0, f x :=
   @iInf_ne_top αᵒᵈ _ _

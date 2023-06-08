@@ -49,6 +49,7 @@ unsafe def congr_core' : tactic Unit := do
       apply_heq_congr_core <|> apply_iff_congr_core <|> fail "congr tactic failed"
 #align tactic.congr_core' tactic.congr_core'
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
       The main function in `convert_to`. Changes the goal to `r` and a proof obligation that the goal
@@ -163,6 +164,7 @@ add_tactic_doc
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `parser.optional -/
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
       The `exact e` and `refine e` tactics require a term `e` whose type is

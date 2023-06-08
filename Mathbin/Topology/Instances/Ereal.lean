@@ -214,7 +214,7 @@ theorem continuous_coe_ennreal_iff {f : α → ℝ≥0∞} :
 /-! ### Neighborhoods of infinity -/
 
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (a «expr ≠ » «expr⊤»()) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (a «expr ≠ » «expr⊤»()) -/
 theorem nhds_top : 𝓝 (⊤ : EReal) = ⨅ (a) (_ : a ≠ ⊤), 𝓟 (Ioi a) :=
   nhds_top_order.trans <| by simp [lt_top_iff_ne_top, Ioi]
 #align ereal.nhds_top EReal.nhds_top
@@ -243,7 +243,7 @@ theorem tendsto_nhds_top_iff_real {α : Type _} {m : α → EReal} {f : Filter �
   simp only [nhds_top', mem_Ioi, tendsto_infi, tendsto_principal]
 #align ereal.tendsto_nhds_top_iff_real EReal.tendsto_nhds_top_iff_real
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (a «expr ≠ » «expr⊥»()) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (a «expr ≠ » «expr⊥»()) -/
 theorem nhds_bot : 𝓝 (⊥ : EReal) = ⨅ (a) (_ : a ≠ ⊥), 𝓟 (Iio a) :=
   nhds_bot_order.trans <| by simp [bot_lt_iff_ne_bot]
 #align ereal.nhds_bot EReal.nhds_bot

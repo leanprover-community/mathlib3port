@@ -384,6 +384,7 @@ unsafe def prove_pos_nat (c : instance_cache) : expr → tactic (instance_cache 
 
 end
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /-- Given `a` a rational numeral, returns `⊢ 0 < a`. -/ unsafe
   def
@@ -1272,6 +1273,7 @@ unsafe def prove_sub_nat (ic : instance_cache) (a b : expr) : tactic (expr × ex
       return (q((0 : ℕ)), q(sub_nat_neg).mk_app [a, b, c, p])
 #align norm_num.prove_sub_nat norm_num.prove_sub_nat
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
       Evaluates the basic field operations `+`,`neg`,`-`,`*`,`inv`,`/` on numerals.
@@ -1454,6 +1456,7 @@ theorem ge_intro {α} [LE α] (a b : α) (c) (h : (a ≤ b) = c) : (b ≥ a) = c
   h
 #align norm_num.ge_intro NormNum.ge_intro
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /-- Evaluates the inequality operations `=`,`<`,`>`,`≤`,`≥`,`≠` on numerals. -/ unsafe
   def
@@ -2076,6 +2079,7 @@ theorem dvd_eq_int (a b c : ℤ) (p) (h₁ : b % a = c) (h₂ : (c = 0) = p) : (
   (propext <| by rw [← h₁, Int.dvd_iff_emod_eq_zero]).trans h₂
 #align norm_num.dvd_eq_int NormNum.dvd_eq_int
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
       Evaluates some extra numeric operations on `nat` and `int`, specifically

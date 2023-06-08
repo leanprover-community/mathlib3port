@@ -50,7 +50,7 @@ variable (R A K : Type _) [CommRing R] [CommRing A] [Field K]
 
 open scoped nonZeroDivisors Polynomial
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (p «expr ≠ » («expr⊥»() : ideal[ideal] R)) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (p «expr ≠ » («expr⊥»() : ideal[ideal] R)) -/
 #print Ring.DimensionLEOne /-
 /-- A ring `R` has Krull dimension at most one if all nonzero prime ideals are maximal. -/
 def Ring.DimensionLEOne : Prop :=

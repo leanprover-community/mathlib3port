@@ -13,6 +13,7 @@ import Mathbin.Tactic.Monotonicity.Default
 namespace Tactic
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:330:4: warning: unsupported (TODO): `[tacs] -/
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
       Apply the function `f` given by `e : pexpr` to the local hypothesis `hyp`, which must either be
@@ -70,6 +71,7 @@ namespace Tactic
           try <| tactic.dsimp_hyp hyp simp_lemmas.mk [ ] { eta := False beta := True }
 #align tactic.apply_fun_to_hyp tactic.apply_fun_to_hyp
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
       Attempt to "apply" a function `f` represented by the argument `e : pexpr` to the goal.

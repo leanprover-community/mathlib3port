@@ -134,6 +134,7 @@ unsafe def erw (q : parse rw_rules) (cfg : RewriteCfg := { md := semireducible }
 
 open Interactive.Types
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
       `guard_target t` fails if the target of the conv goal is not `t`.

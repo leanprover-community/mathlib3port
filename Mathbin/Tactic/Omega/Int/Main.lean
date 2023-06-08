@@ -49,6 +49,7 @@ unsafe def prove_univ_close (m : Nat) (p : Preform) : tactic expr := do
   return q(univClose_of_unsat_clausify $(q(m)) $(q(p)) $(x))
 #align omega.int.prove_univ_close omega.int.prove_univ_close
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /-- Reification to imtermediate shadow syntax that retains exprs -/ unsafe
   def
@@ -71,6 +72,7 @@ unsafe def prove_univ_close (m : Nat) (p : Preform) : tactic expr := do
         ( do let z ← eval_expr' Int x return ( exprterm.cst z ) ) <|> ( return <| exprterm.exp 1 x )
 #align omega.int.to_exprterm omega.int.to_exprterm
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /-- Reification to imtermediate shadow syntax that retains exprs -/ unsafe
   def
@@ -171,6 +173,7 @@ unsafe def eq_int (x : expr) : tactic Unit :=
   if x = q(Int) then skip else failed
 #align omega.int.eq_int omega.int.eq_int
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /-- Check whether argument is expr of a well-formed formula of LIA-/ unsafe
   def

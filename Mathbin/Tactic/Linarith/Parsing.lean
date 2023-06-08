@@ -125,6 +125,7 @@ unsafe def linear_form_of_atom (red : Transparency) (m : exmap) (e : expr) : tac
     return ((e, n) :: m, var n)
 #align linarith.linear_form_of_atom linarith.linear_form_of_atom
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
       `linear_form_of_expr red map e` computes the linear form of `e`.

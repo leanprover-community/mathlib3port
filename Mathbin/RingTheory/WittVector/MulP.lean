@@ -54,7 +54,7 @@ noncomputable def wittMulN : ℕ → ℕ → MvPolynomial ℕ ℤ
 
 variable {p}
 
-theorem mul_n_coeff (n : ℕ) (x : 𝕎 R) (k : ℕ) : (x * n).coeff k = aeval x.coeff (wittMulN p n k) :=
+theorem mulN_coeff (n : ℕ) (x : 𝕎 R) (k : ℕ) : (x * n).coeff k = aeval x.coeff (wittMulN p n k) :=
   by
   induction' n with n ih generalizing k
   ·
@@ -67,15 +67,17 @@ theorem mul_n_coeff (n : ℕ) (x : 𝕎 R) (k : ℕ) : (x * n).coeff k = aeval x
     fin_cases b
     · simp only [Function.uncurry, Matrix.cons_val_zero, ih]
     · simp only [Function.uncurry, Matrix.cons_val_one, Matrix.head_cons, aeval_X]
-#align witt_vector.mul_n_coeff WittVector.mul_n_coeff
+#align witt_vector.mul_n_coeff WittVector.mulN_coeff
 
 variable (p)
 
+#print WittVector.mulN_isPoly /-
 /-- Multiplication by `n` is a polynomial function. -/
 @[is_poly]
-theorem mulNIsPoly (n : ℕ) : IsPoly p fun R _Rcr x => x * n :=
+theorem mulN_isPoly (n : ℕ) : IsPoly p fun R _Rcr x => x * n :=
   ⟨⟨wittMulN p n, fun R _Rcr x => by funext k; exact mul_n_coeff n x k⟩⟩
-#align witt_vector.mul_n_is_poly WittVector.mulNIsPoly
+#align witt_vector.mul_n_is_poly WittVector.mulN_isPoly
+-/
 
 @[simp]
 theorem bind₁_wittMulN_wittPolynomial (n k : ℕ) :

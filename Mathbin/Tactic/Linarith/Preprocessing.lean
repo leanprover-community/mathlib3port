@@ -54,6 +54,7 @@ unsafe def rem_neg (prf : expr) : expr → tactic expr
   | e => failed
 #align linarith.rem_neg linarith.rem_neg
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 private unsafe
   def
@@ -98,6 +99,7 @@ unsafe def mk_coe_nat_nonneg_prf (e : expr) : tactic expr :=
   mk_app `int.coe_nat_nonneg [e]
 #align linarith.mk_coe_nat_nonneg_prf linarith.mk_coe_nat_nonneg_prf
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /-- `get_nat_comps e` returns a list of all subexpressions of `e` of the form `((t : ℕ) : ℤ)`. -/
     unsafe
@@ -109,6 +111,7 @@ unsafe def mk_coe_nat_nonneg_prf (e : expr) : tactic expr :=
       | e => match is_nat_int_coe e with | some e' => [ e' ] | none => [ ]
 #align linarith.get_nat_comps linarith.get_nat_comps
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
       If `pf` is a proof of a strict inequality `(a : ℤ) < b`,
@@ -262,6 +265,7 @@ unsafe def cancel_denoms : preprocessor
       return [pf]
 #align linarith.cancel_denoms linarith.cancel_denoms
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
       `find_squares m e` collects all terms of the form `a ^ 2` and `a * a` that appear in `e`

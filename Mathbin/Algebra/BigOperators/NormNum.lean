@@ -334,6 +334,7 @@ theorem List.prod_cons_congr {α : Type _} [Monoid α] (xs : List α) (x y z : �
 #align tactic.norm_num.list.sum_cons_congr Tactic.NormNum.List.sum_cons_congr
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
       Evaluate `list.prod %%xs`,
@@ -375,6 +376,7 @@ theorem List.prod_cons_congr {α : Type _} [Monoid α] (xs : List α) (x y z : �
 #align tactic.norm_num.list.prove_prod tactic.norm_num.list.prove_prod
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
       Evaluate `list.sum %%xs`,

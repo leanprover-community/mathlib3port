@@ -65,6 +65,7 @@ private unsafe def replace_target_side (new_target lam : pexpr) (prf : expr) : t
   let prf' ← to_expr ``(congr_arg $(lam) $(prf)) true false
   tactic.replace_target new_target prf'
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 unsafe
   def
@@ -77,6 +78,7 @@ unsafe
           replace_target_side ` `( $ ( new_lhs ) = $ ( rhs ) ) ` `( fun L => L = $ ( rhs ) ) prf
 #align tactic.rewrite_all.tracked_rewrite.replace_target_lhs tactic.rewrite_all.tracked_rewrite.replace_target_lhs
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 unsafe
   def

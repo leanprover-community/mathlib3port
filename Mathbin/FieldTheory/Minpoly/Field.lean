@@ -95,15 +95,15 @@ theorem dvd_map_of_isScalarTower (A K : Type _) {R : Type _} [CommRing A] [Field
   rw [aeval_map_algebra_map, minpoly.aeval]
 #align minpoly.dvd_map_of_is_scalar_tower minpoly.dvd_map_of_isScalarTower
 
-theorem dvd_map_of_is_scalar_tower' (R : Type _) {S : Type _} (K L : Type _) [CommRing R]
-    [CommRing S] [Field K] [CommRing L] [Algebra R S] [Algebra R K] [Algebra S L] [Algebra K L]
-    [Algebra R L] [IsScalarTower R K L] [IsScalarTower R S L] (s : S) :
+theorem dvd_map_of_isScalarTower' (R : Type _) {S : Type _} (K L : Type _) [CommRing R] [CommRing S]
+    [Field K] [CommRing L] [Algebra R S] [Algebra R K] [Algebra S L] [Algebra K L] [Algebra R L]
+    [IsScalarTower R K L] [IsScalarTower R S L] (s : S) :
     minpoly K (algebraMap S L s) ∣ map (algebraMap R K) (minpoly R s) :=
   by
   apply minpoly.dvd K (algebraMap S L s)
   rw [← map_aeval_eq_aeval_map, minpoly.aeval, map_zero]
   rw [← IsScalarTower.algebraMap_eq, ← IsScalarTower.algebraMap_eq]
-#align minpoly.dvd_map_of_is_scalar_tower' minpoly.dvd_map_of_is_scalar_tower'
+#align minpoly.dvd_map_of_is_scalar_tower' minpoly.dvd_map_of_isScalarTower'
 
 /-- If `y` is a conjugate of `x` over a field `K`, then it is a conjugate over a subring `R`. -/
 theorem aeval_of_isScalarTower (R : Type _) {K T U : Type _} [CommRing R] [Field K] [CommRing T]

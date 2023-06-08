@@ -260,11 +260,8 @@ instance Function.nontrivial [h : Nonempty α] [Nontrivial β] : Nontrivial (α 
 #align function.nontrivial Function.nontrivial
 -/
 
-/- failed to parenthesize: unknown constant 'Lean.Meta._root_.Lean.Parser.Command.registerSimpAttr'
-[PrettyPrinter.parenthesize.input] (Lean.Meta._root_.Lean.Parser.Command.registerSimpAttr
-     [(Command.docComment "/--" "Simp lemmas for `nontriviality` tactic -/")]
-     "register_simp_attr"
-     `nontriviality)-/-- failed to format: unknown constant 'Lean.Meta._root_.Lean.Parser.Command.registerSimpAttr'
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
+-- failed to format: unknown constant 'Lean.Meta._root_.Lean.Parser.Command.registerSimpAttr'
 /-- Simp lemmas for `nontriviality` tactic -/ register_simp_attr nontriviality
 
 #print Subsingleton.le /-

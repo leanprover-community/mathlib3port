@@ -150,6 +150,7 @@ unsafe def poly_form_of_atom (red : Transparency) (vars : List expr) (e : expr) 
       | none => (vars e, poly.var vars))
 #align polyrith.poly_form_of_atom polyrith.poly_form_of_atom
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
       `poly_form_of_expr red map e` computes the polynomial form of `e`.
@@ -212,6 +213,7 @@ The following section contains code that can convert an a `poly` object into a `
 
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `n -/
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
       This can convert a `poly` into a `pexpr` that would evaluate to a polynomial.
@@ -402,6 +404,7 @@ and converts them into `poly` objects.
 -/
 
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /-- Convert an expression of the form `lhs = rhs` into the form `lhs - rhs` -/ unsafe
   def

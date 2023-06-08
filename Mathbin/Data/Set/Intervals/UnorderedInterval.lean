@@ -307,7 +307,7 @@ theorem monotone_or_antitone_iff_uIcc :
   · exact ⟨a, c, b, Icc_subset_uIcc ⟨hab, hbc⟩, fun h => h.1.not_lt <| lt_min hfba hfbc⟩
 #align set.monotone_or_antitone_iff_uIcc Set.monotone_or_antitone_iff_uIcc
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (a b c «expr ∈ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (a b c «expr ∈ » s) -/
 theorem monotoneOn_or_antitoneOn_iff_uIcc :
     MonotoneOn f s ∨ AntitoneOn f s ↔
       ∀ (a) (_ : a ∈ s) (b) (_ : b ∈ s) (c) (_ : c ∈ s), c ∈ [a, b] → f c ∈ [f a, f b] :=

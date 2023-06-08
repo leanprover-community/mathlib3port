@@ -128,7 +128,7 @@ theorem isOpen_iff {s : Set ℝₗ} : IsOpen s ↔ ∀ x ∈ s, ∃ y > x, Ico x
   isOpen_iff_mem_nhds.trans <| forall₂_congr fun x hx => (nhds_basis_Ico x).mem_iff
 #align counterexample.sorgenfrey_line.is_open_iff Counterexample.SorgenfreyLine.isOpen_iff
 
-/- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (x «expr ∉ » s) -/
+/- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (x «expr ∉ » s) -/
 theorem isClosed_iff {s : Set ℝₗ} : IsClosed s ↔ ∀ (x) (_ : x ∉ s), ∃ y > x, Disjoint (Ico x y) s :=
   by simp only [← isOpen_compl_iff, is_open_iff, mem_compl_iff, subset_compl_iff_disjoint_right]
 #align counterexample.sorgenfrey_line.is_closed_iff Counterexample.SorgenfreyLine.isClosed_iff

@@ -102,6 +102,7 @@ unsafe def get_lift_prf (h : Option pexpr) (e P : expr) : tactic (expr × Bool) 
       return (prf, ff)
 #align tactic.get_lift_prf tactic.get_lift_prf
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
       Lift the expression `p` to the type `t`, with proof obligation given by `h`.

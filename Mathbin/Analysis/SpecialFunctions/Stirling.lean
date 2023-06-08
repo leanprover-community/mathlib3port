@@ -246,7 +246,7 @@ theorem tendsto_self_div_two_mul_self_add_one :
 `(stirling_seq n)^4 / (stirling_seq (2*n))^2 * (n / (2 * n + 1)) = W n`, where `W n` is the
 `n`-th partial product of Wallis' formula for `π / 2`. -/
 theorem stirlingSeq_pow_four_div_stirlingSeq_pow_two_eq (n : ℕ) (hn : n ≠ 0) :
-    stirlingSeq n ^ 4 / stirlingSeq (2 * n) ^ 2 * (n / (2 * n + 1)) = Wallis.w n :=
+    stirlingSeq n ^ 4 / stirlingSeq (2 * n) ^ 2 * (n / (2 * n + 1)) = Wallis.W n :=
   by
   rw [bit0_eq_two_mul, stirling_seq, pow_mul, stirling_seq, wallis.W_eq_factorial_ratio]
   simp_rw [div_pow, mul_pow]
@@ -265,7 +265,7 @@ theorem stirlingSeq_pow_four_div_stirlingSeq_pow_two_eq (n : ℕ) (hn : n ≠ 0)
 Then the Wallis sequence `W n` has limit `a^2 / 2`.
 -/
 theorem second_wallis_limit (a : ℝ) (hane : a ≠ 0) (ha : Tendsto stirlingSeq atTop (𝓝 a)) :
-    Tendsto Wallis.w atTop (𝓝 (a ^ 2 / 2)) :=
+    Tendsto Wallis.W atTop (𝓝 (a ^ 2 / 2)) :=
   by
   refine'
     tendsto.congr'

@@ -407,6 +407,7 @@ These functions are used by multiple modules, so we put them here for accessibil
 
 open Tactic
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
       `get_rel_sides e` returns the left and right hand sides of `e` if `e` is a comparison,
@@ -426,6 +427,7 @@ open Tactic
       | _ => tactic.failed
 #align linarith.get_rel_sides linarith.get_rel_sides
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
       `parse_into_comp_and_expr e` checks if `e` is of the form `t < 0`, `t ≤ 0`, or `t = 0`.
@@ -442,6 +444,7 @@ open Tactic
 #align linarith.parse_into_comp_and_expr linarith.parse_into_comp_and_expr
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:330:4: warning: unsupported (TODO): `[tacs] -/
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
       `mk_single_comp_zero_pf c h` assumes that `h` is a proof of `t R 0`.

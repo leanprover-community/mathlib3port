@@ -42,6 +42,7 @@ unsafe def mk_sometimes (u : level) (α nonemp p : expr) :
         else (val, spec)
 #align tactic.mk_sometimes tactic.mk_sometimes
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
       Changes `(h : ∀xs, ∃a:α, p a) ⊢ g` to `(d : ∀xs, a) (s : ∀xs, p (d xs)) ⊢ g` and

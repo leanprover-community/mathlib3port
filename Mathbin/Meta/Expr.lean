@@ -409,6 +409,7 @@ protected unsafe def to_list {α} (f : expr → Option α) : expr → Option (Li
   | _ => none
 #align expr.to_list expr.to_list
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
       `is_num_eq n1 n2` returns true if `n1` and `n2` are both numerals with the same numeral structure,

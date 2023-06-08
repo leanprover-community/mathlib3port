@@ -31,6 +31,7 @@ open Ineq Tactic Native
 /-! ### Auxiliary functions for assembling proofs -/
 
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
       `mul_expr n e` creates a `pexpr` representing `n*e`.
@@ -43,6 +44,7 @@ open Ineq Tactic Native
     := if n = 1 then ` `( $ ( e ) ) else ` `( $ ( nat.to_pexpr n ) * $ ( e ) )
 #align linarith.mul_expr linarith.mul_expr
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 private unsafe
   def
@@ -123,6 +125,7 @@ unsafe def mk_neg_eq_zero_pf (e : expr) : tactic expr :=
   to_expr ``(neg_eq_zero.mpr $(e))
 #align linarith.mk_neg_eq_zero_pf linarith.mk_neg_eq_zero_pf
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
       `prove_eq_zero_using tac e` tries to use `tac` to construct a proof of `e = 0`.

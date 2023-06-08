@@ -64,6 +64,7 @@ def lastTwo {α : Type _} (l : List α) : Option (α × α) :=
   | _ => none
 #align tactic.interactive.last_two Tactic.Interactive.lastTwo
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 unsafe
   def

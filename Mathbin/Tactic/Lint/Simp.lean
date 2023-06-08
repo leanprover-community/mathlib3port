@@ -23,6 +23,7 @@ This files defines several linters that prevent common mistakes when declaring s
 
 open Tactic Expr
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /-- `simp_lhs_rhs ty` returns the left-hand and right-hand side of a simp lemma with type `ty`. -/
     private
@@ -48,6 +49,7 @@ open Tactic Expr
 private unsafe def simp_lhs (ty : expr) : tactic expr :=
   Prod.fst <$> simp_lhs_rhs ty
 
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
       `simp_is_conditional_core ty` returns `none` if `ty` is a conditional simp

@@ -53,6 +53,7 @@ namespace Interactive
 /- ./././Mathport/Syntax/Translate/Expr.lean:330:4: warning: unsupported (TODO): `[tacs] -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:330:4: warning: unsupported (TODO): `[tacs] -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:330:4: warning: unsupported (TODO): `[tacs] -/
+-- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--
       `init_ring` is an auxiliary tactic that discharges goals factoring `init` over ring operations.
@@ -110,13 +111,13 @@ theorem coeff_select (x : 𝕎 R) (n : ℕ) : (select P x).coeff n = aeval x.coe
 #align witt_vector.coeff_select WittVector.coeff_select
 
 @[is_poly]
-theorem selectIsPoly (P : ℕ → Prop) : IsPoly p fun R _Rcr x => select P x :=
+theorem select_isPoly (P : ℕ → Prop) : IsPoly p fun R _Rcr x => select P x :=
   by
   use select_poly P
   rintro R _Rcr x
   funext i
   apply coeff_select
-#align witt_vector.select_is_poly WittVector.selectIsPoly
+#align witt_vector.select_is_poly WittVector.select_isPoly
 
 include hp
 
@@ -232,9 +233,9 @@ variable (p)
 omit hp
 
 /-- `witt_vector.init n x` is polynomial in the coefficients of `x`. -/
-theorem initIsPoly (n : ℕ) : IsPoly p fun R _Rcr => init n :=
-  selectIsPoly fun i => i < n
-#align witt_vector.init_is_poly WittVector.initIsPoly
+theorem init_isPoly (n : ℕ) : IsPoly p fun R _Rcr => init n :=
+  select_isPoly fun i => i < n
+#align witt_vector.init_is_poly WittVector.init_isPoly
 
 end
 

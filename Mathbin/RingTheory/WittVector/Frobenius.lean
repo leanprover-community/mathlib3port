@@ -247,9 +247,9 @@ variable (p)
 
 See also `frobenius_is_poly`. -/
 @[is_poly]
-theorem frobeniusFunIsPoly : IsPoly p fun R _Rcr => @frobeniusFun p R _ _Rcr :=
+theorem frobeniusFun_isPoly : IsPoly p fun R _Rcr => @frobeniusFun p R _ _Rcr :=
   ⟨⟨frobeniusPoly p, by intros; funext n; apply coeff_frobenius_fun⟩⟩
-#align witt_vector.frobenius_fun_is_poly WittVector.frobeniusFunIsPoly
+#align witt_vector.frobenius_fun_is_poly WittVector.frobeniusFun_isPoly
 
 variable {p}
 
@@ -300,9 +300,9 @@ variable (p)
 
 /-- `frobenius` is tautologically a polynomial function. -/
 @[is_poly]
-theorem frobeniusIsPoly : IsPoly p fun R _Rcr => @frobenius p R _ _Rcr :=
-  frobeniusFunIsPoly _
-#align witt_vector.frobenius_is_poly WittVector.frobeniusIsPoly
+theorem frobenius_isPoly : IsPoly p fun R _Rcr => @frobenius p R _ _Rcr :=
+  frobeniusFun_isPoly _
+#align witt_vector.frobenius_is_poly WittVector.frobenius_isPoly
 
 section CharP
 
