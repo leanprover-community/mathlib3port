@@ -51,6 +51,7 @@ theorem quotientSpanXSubCAlgEquiv_symm_apply (x : R) (y : R) :
 #align polynomial.quotient_span_X_sub_C_alg_equiv_symm_apply Polynomial.quotientSpanXSubCAlgEquiv_symm_apply
 -/
 
+#print Polynomial.quotientSpanCXSubCAlgEquiv /-
 /-- For a commutative ring $R$, evaluating a polynomial at an element $y \in R$ induces an
 isomorphism of $R$-algebras $R[X] / \langle x, X - y \rangle \cong R / \langle x \rangle$. -/
 noncomputable def quotientSpanCXSubCAlgEquiv (x y : R) :
@@ -61,6 +62,7 @@ noncomputable def quotientSpanCXSubCAlgEquiv (x y : R) :
         Ideal.quotientEquivAlgOfEq R <| by simp only [Ideal.map_span, Set.image_singleton]; congr 2;
           exact eval_C
 #align polynomial.quotient_span_C_X_sub_C_alg_equiv Polynomial.quotientSpanCXSubCAlgEquiv
+-/
 
 end Polynomial
 
