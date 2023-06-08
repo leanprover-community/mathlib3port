@@ -69,15 +69,19 @@ include dec_ι
 
 variable (R ι M)
 
+#print DirectSum.lmk /-
 /-- Create the direct sum given a family `M` of `R` modules indexed over `ι`. -/
 def lmk : ∀ s : Finset ι, (∀ i : (↑s : Set ι), M i.val) →ₗ[R] ⨁ i, M i :=
   Dfinsupp.lmk
 #align direct_sum.lmk DirectSum.lmk
+-/
 
+#print DirectSum.lof /-
 /-- Inclusion of each component into the direct sum. -/
 def lof : ∀ i : ι, M i →ₗ[R] ⨁ i, M i :=
   Dfinsupp.lsingle
 #align direct_sum.lof DirectSum.lof
+-/
 
 theorem lof_eq_of (i : ι) (b : M i) : lof R ι M i b = of M i b :=
   rfl
@@ -112,10 +116,12 @@ variable (φ : ∀ i, M i →ₗ[R] N)
 
 variable (R ι N φ)
 
+#print DirectSum.toModule /-
 /-- The linear map constructed using the universal property of the coproduct. -/
 def toModule : (⨁ i, M i) →ₗ[R] N :=
   Dfinsupp.lsum ℕ φ
 #align direct_sum.to_module DirectSum.toModule
+-/
 
 /-- Coproducts in the categories of modules and additive monoids commute with the forgetful functor
 from modules to additive monoids. -/
@@ -143,6 +149,7 @@ theorem toModule.unique (f : ⨁ i, M i) : ψ f = toModule R ι N (fun i => ψ.c
 
 variable {ψ} {ψ' : (⨁ i, M i) →ₗ[R] N}
 
+#print DirectSum.linearMap_ext /-
 /-- Two `linear_map`s out of a direct sum are equal if they agree on the generators.
 
 See note [partially-applied ext lemmas]. -/
@@ -151,18 +158,22 @@ theorem linearMap_ext ⦃ψ ψ' : (⨁ i, M i) →ₗ[R] N⦄
     (H : ∀ i, ψ.comp (lof R ι M i) = ψ'.comp (lof R ι M i)) : ψ = ψ' :=
   Dfinsupp.lhom_ext' H
 #align direct_sum.linear_map_ext DirectSum.linearMap_ext
+-/
 
+#print DirectSum.lsetToSet /-
 /-- The inclusion of a subset of the direct summands
 into a larger subset of the direct summands, as a linear map.
 -/
 def lsetToSet (S T : Set ι) (H : S ⊆ T) : (⨁ i : S, M i) →ₗ[R] ⨁ i : T, M i :=
   toModule R _ _ fun i => lof R T (fun i : Subtype T => M i) ⟨i, H i.Prop⟩
 #align direct_sum.lset_to_set DirectSum.lsetToSet
+-/
 
 omit dec_ι
 
 variable (ι M)
 
+#print DirectSum.linearEquivFunOnFintype /-
 /-- Given `fintype α`, `linear_equiv_fun_on_fintype R` is the natural `R`-linear equivalence
 between `⨁ i, M i` and `Π i, M i`. -/
 @[simps apply]
@@ -172,6 +183,7 @@ def linearEquivFunOnFintype [Fintype ι] : (⨁ i, M i) ≃ₗ[R] ∀ i, M i :=
     map_add' := fun f g => by ext; simp only [add_apply, Pi.add_apply]
     map_smul' := fun c f => by ext; simp only [Dfinsupp.coe_smul, RingHom.id_apply] }
 #align direct_sum.linear_equiv_fun_on_fintype DirectSum.linearEquivFunOnFintype
+-/
 
 variable {ι M}
 
@@ -199,18 +211,22 @@ theorem linearEquivFunOnFintype_symm_coe [Fintype ι] (f : ⨁ i, M i) :
     (linearEquivFunOnFintype R ι M).symm f = f := by ext; simp [linear_equiv_fun_on_fintype]
 #align direct_sum.linear_equiv_fun_on_fintype_symm_coe DirectSum.linearEquivFunOnFintype_symm_coe
 
+#print DirectSum.lid /-
 /-- The natural linear equivalence between `⨁ _ : ι, M` and `M` when `unique ι`. -/
 protected def lid (M : Type v) (ι : Type _ := PUnit) [AddCommMonoid M] [Module R M] [Unique ι] :
     (⨁ _ : ι, M) ≃ₗ[R] M :=
   { DirectSum.id M ι, toModule R ι M fun i => LinearMap.id with }
 #align direct_sum.lid DirectSum.lid
+-/
 
 variable (ι M)
 
+#print DirectSum.component /-
 /-- The projection map onto one component, as a linear map. -/
 def component (i : ι) : (⨁ i, M i) →ₗ[R] M i :=
   Dfinsupp.lapply i
 #align direct_sum.component DirectSum.component
+-/
 
 variable {ι M}
 
@@ -272,10 +288,12 @@ variable {α : ι → Type _} {δ : ∀ i, α i → Type w}
 variable [∀ i j, AddCommMonoid (δ i j)] [∀ i j, Module R (δ i j)]
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
+#print DirectSum.sigmaLcurry /-
 /-- `curry` as a linear map.-/
 noncomputable def sigmaLcurry : (⨁ i : Σ i, _, δ i.1 i.2) →ₗ[R] ⨁ (i) (j), δ i j :=
   { sigmaCurry with map_smul' := fun r => by convert @Dfinsupp.sigmaCurry_smul _ _ _ δ _ _ _ r }
 #align direct_sum.sigma_lcurry DirectSum.sigmaLcurry
+-/
 
 @[simp]
 theorem sigmaLcurry_apply (f : ⨁ i : Σ i, _, δ i.1 i.2) (i : ι) (j : α i) :
@@ -284,11 +302,13 @@ theorem sigmaLcurry_apply (f : ⨁ i : Σ i, _, δ i.1 i.2) (i : ι) (j : α i) 
 #align direct_sum.sigma_lcurry_apply DirectSum.sigmaLcurry_apply
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
+#print DirectSum.sigmaLuncurry /-
 /-- `uncurry` as a linear map.-/
 def sigmaLuncurry [∀ i, DecidableEq (α i)] [∀ i j, DecidableEq (δ i j)] :
     (⨁ (i) (j), δ i j) →ₗ[R] ⨁ i : Σ i, _, δ i.1 i.2 :=
   { sigmaUncurry with map_smul' := Dfinsupp.sigmaUncurry_smul }
 #align direct_sum.sigma_luncurry DirectSum.sigmaLuncurry
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 @[simp]
@@ -298,11 +318,13 @@ theorem sigmaLuncurry_apply [∀ i, DecidableEq (α i)] [∀ i j, DecidableEq (�
 #align direct_sum.sigma_luncurry_apply DirectSum.sigmaLuncurry_apply
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
+#print DirectSum.sigmaLcurryEquiv /-
 /-- `curry_equiv` as a linear equiv.-/
 noncomputable def sigmaLcurryEquiv [∀ i, DecidableEq (α i)] [∀ i j, DecidableEq (δ i j)] :
     (⨁ i : Σ i, _, δ i.1 i.2) ≃ₗ[R] ⨁ (i) (j), δ i j :=
   { sigmaCurryEquiv, sigmaLcurry R with }
 #align direct_sum.sigma_lcurry_equiv DirectSum.sigmaLcurryEquiv
+-/
 
 end Sigma
 
@@ -337,11 +359,13 @@ variable {M : Type _} [AddCommMonoid M] [Module R M]
 
 variable (A : ι → Submodule R M)
 
+#print DirectSum.coeLinearMap /-
 /-- The canonical embedding from `⨁ i, A i` to `M`  where `A` is a collection of `submodule R M`
 indexed by `ι`. This is `direct_sum.coe_add_monoid_hom` as a `linear_map`. -/
 def coeLinearMap : (⨁ i, A i) →ₗ[R] M :=
   toModule R ι M fun i => (A i).Subtype
 #align direct_sum.coe_linear_map DirectSum.coeLinearMap
+-/
 
 @[simp]
 theorem coeLinearMap_of (i : ι) (x : A i) : DirectSum.coeLinearMap A (of (fun i => A i) i x) = x :=

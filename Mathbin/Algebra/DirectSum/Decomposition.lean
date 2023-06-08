@@ -241,6 +241,7 @@ variable [Decomposition ℳ]
 
 include M
 
+#print DirectSum.decomposeLinearEquiv /-
 /-- If `M` is graded by `ι` with degree `i` component `ℳ i`, then it is isomorphic as
 a module to a direct sum of components. -/
 @[simps (config := { fullyApplied := false })]
@@ -248,6 +249,7 @@ def decomposeLinearEquiv : M ≃ₗ[R] ⨁ i, ℳ i :=
   LinearEquiv.symm
     { (decomposeAddEquiv ℳ).symm with map_smul' := map_smul (DirectSum.coeLinearMap ℳ) }
 #align direct_sum.decompose_linear_equiv DirectSum.decomposeLinearEquiv
+-/
 
 @[simp]
 theorem decompose_smul (r : R) (x : M) : decompose ℳ (r • x) = r • decompose ℳ x :=

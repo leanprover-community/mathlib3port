@@ -83,6 +83,7 @@ def gsmulHom [GMonoid A] [Gmodule A M] {i j} : A i →+ M j →+ M (i + j)
 
 namespace Gmodule
 
+#print DirectSum.Gmodule.smulAddMonoidHom /-
 /-- For graded monoid `A` and a graded module `M` over `A`. `gmodule.smul_add_monoid_hom` is the
 `⨁ᵢ Aᵢ`-scalar multiplication on `⨁ᵢ Mᵢ` induced by `gsmul_hom`. -/
 def smulAddMonoidHom [DecidableEq ι] [GMonoid A] [Gmodule A M] :
@@ -91,6 +92,7 @@ def smulAddMonoidHom [DecidableEq ι] [GMonoid A] [Gmodule A M] :
     AddMonoidHom.flip <|
       toAddMonoid fun j => AddMonoidHom.flip <| (of M _).compHom.comp <| gsmulHom A M
 #align direct_sum.gmodule.smul_add_monoid_hom DirectSum.Gmodule.smulAddMonoidHom
+-/
 
 section
 

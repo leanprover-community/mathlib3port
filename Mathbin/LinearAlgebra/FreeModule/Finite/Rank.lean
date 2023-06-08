@@ -115,6 +115,7 @@ theorem finrank_pi {ι : Type v} [Fintype ι] : finrank R (ι → R) = card ι :
 #align finite_dimensional.finrank_pi FiniteDimensional.finrank_pi
 -/
 
+#print FiniteDimensional.finrank_directSum /-
 /-- The finrank of the direct sum is the sum of the finranks. -/
 @[simp]
 theorem finrank_directSum {ι : Type v} [Fintype ι] (M : ι → Type w) [∀ i : ι, AddCommGroup (M i)]
@@ -125,6 +126,7 @@ theorem finrank_directSum {ι : Type v} [Fintype ι] (M : ι → Type w) [∀ i 
   simp only [finrank, fun i => rank_eq_card_choose_basis_index R (M i), rank_directSum, ← mk_sigma,
     mk_to_nat_eq_card, card_sigma]
 #align finite_dimensional.finrank_direct_sum FiniteDimensional.finrank_directSum
+-/
 
 /-- The finrank of `M × N` is `(finrank R M) + (finrank R N)`. -/
 @[simp]

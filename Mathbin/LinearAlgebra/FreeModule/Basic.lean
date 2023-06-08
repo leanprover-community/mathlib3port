@@ -210,10 +210,12 @@ instance dfinsupp {ι : Type _} (M : ι → Type _) [∀ i : ι, AddCommMonoid (
   of_basis <| Dfinsupp.basis fun i => chooseBasis R (M i)
 #align module.free.dfinsupp Module.Free.dfinsupp
 
+#print Module.Free.directSum /-
 instance directSum {ι : Type _} (M : ι → Type _) [∀ i : ι, AddCommMonoid (M i)]
     [∀ i : ι, Module R (M i)] [∀ i : ι, Module.Free R (M i)] : Module.Free R (⨁ i, M i) :=
   Module.Free.dfinsupp R M
 #align module.free.direct_sum Module.Free.directSum
+-/
 
 end Semiring
 

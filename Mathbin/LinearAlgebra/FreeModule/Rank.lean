@@ -63,6 +63,7 @@ theorem rank_finsupp_self (ι : Type w) : Module.rank R (ι →₀ R) = (#ι).li
 theorem rank_finsupp_self' {ι : Type u} : Module.rank R (ι →₀ R) = (#ι) := by simp
 #align rank_finsupp_self' rank_finsupp_self'
 
+#print rank_directSum /-
 /-- The rank of the direct sum is the sum of the ranks. -/
 @[simp]
 theorem rank_directSum {ι : Type v} (M : ι → Type w) [∀ i : ι, AddCommGroup (M i)]
@@ -73,6 +74,7 @@ theorem rank_directSum {ι : Type v} (M : ι → Type w) [∀ i : ι, AddCommGro
   let b : Basis _ R (⨁ i, M i) := Dfinsupp.basis fun i => B i
   simp [← b.mk_eq_rank'', fun i => (B i).mk_eq_rank'']
 #align rank_direct_sum rank_directSum
+-/
 
 /-- If `m` and `n` are `fintype`, the rank of `m × n` matrices is `(# m).lift * (# n).lift`. -/
 @[simp]
