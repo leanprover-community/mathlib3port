@@ -61,6 +61,7 @@ namespace SatelliteConfig
 
 variable [NormedSpace ℝ E] {N : ℕ} {τ : ℝ} (a : SatelliteConfig E N τ)
 
+#print Besicovitch.SatelliteConfig.centerAndRescale /-
 /-- Rescaling a satellite configuration in a vector space, to put the basepoint at `0` and the base
 radius at `1`. -/
 def centerAndRescale : SatelliteConfig E N τ
@@ -113,6 +114,7 @@ def centerAndRescale : SatelliteConfig E N τ
     convert H using 2
     abel
 #align besicovitch.satellite_config.center_and_rescale Besicovitch.SatelliteConfig.centerAndRescale
+-/
 
 theorem centerAndRescale_center : a.centerAndRescale.c (last N) = 0 := by
   simp [satellite_config.center_and_rescale]
@@ -128,11 +130,13 @@ end SatelliteConfig
 /-! ### Disjoint balls of radius close to `1` in the radius `2` ball. -/
 
 
+#print Besicovitch.multiplicity /-
 /-- The maximum cardinality of a `1`-separated set in the ball of radius `2`. This is also the
 optimal number of families in the Besicovitch covering theorem. -/
 def multiplicity (E : Type _) [NormedAddCommGroup E] :=
   sSup {N | ∃ s : Finset E, s.card = N ∧ (∀ c ∈ s, ‖c‖ ≤ 2) ∧ ∀ c ∈ s, ∀ d ∈ s, c ≠ d → 1 ≤ ‖c - d‖}
 #align besicovitch.multiplicity Besicovitch.multiplicity
+-/
 
 section
 
@@ -190,6 +194,7 @@ theorem card_le_of_separated (s : Finset E) (hs : ∀ c ∈ s, ‖c‖ ≤ 2)
   exact_mod_cast K
 #align besicovitch.card_le_of_separated Besicovitch.card_le_of_separated
 
+#print Besicovitch.multiplicity_le /-
 theorem multiplicity_le : multiplicity E ≤ 5 ^ finrank ℝ E :=
   by
   apply csSup_le
@@ -197,6 +202,7 @@ theorem multiplicity_le : multiplicity E ≤ 5 ^ finrank ℝ E :=
   · rintro _ ⟨s, ⟨rfl, h⟩⟩
     exact Besicovitch.card_le_of_separated s h.1 h.2
 #align besicovitch.multiplicity_le Besicovitch.multiplicity_le
+-/
 
 theorem card_le_multiplicity {s : Finset E} (hs : ∀ c ∈ s, ‖c‖ ≤ 2)
     (h's : ∀ c ∈ s, ∀ d ∈ s, c ≠ d → 1 ≤ ‖c - d‖) : s.card ≤ multiplicity E :=
@@ -213,7 +219,7 @@ variable (E)
 
 /-- If `δ` is small enough, a `(1-δ)`-separated set in the ball of radius `2` also has cardinality
 at most `multiplicity E`. -/
-theorem exists_good_δ :
+theorem exists_goodδ :
     ∃ δ : ℝ,
       0 < δ ∧
         δ < 1 ∧
@@ -297,24 +303,28 @@ theorem exists_good_δ :
   have : s.card ≤ multiplicity E := card_le_multiplicity hs h's
   rw [s_card, hN] at this 
   exact lt_irrefl _ ((Nat.lt_succ_self (multiplicity E)).trans_le this)
-#align besicovitch.exists_good_δ Besicovitch.exists_good_δ
+#align besicovitch.exists_good_δ Besicovitch.exists_goodδ
 
+#print Besicovitch.goodδ /-
 /-- A small positive number such that any `1 - δ`-separated set in the ball of radius `2` has
 cardinality at most `besicovitch.multiplicity E`. -/
 def goodδ : ℝ :=
-  (exists_good_δ E).some
+  (exists_goodδ E).some
 #align besicovitch.good_δ Besicovitch.goodδ
+-/
 
 theorem goodδ_lt_one : goodδ E < 1 :=
-  (exists_good_δ E).choose_spec.2.1
+  (exists_goodδ E).choose_spec.2.1
 #align besicovitch.good_δ_lt_one Besicovitch.goodδ_lt_one
 
+#print Besicovitch.goodτ /-
 /-- A number `τ > 1`, but chosen close enough to `1` so that the construction in the Besicovitch
 covering theorem using this parameter `τ` will give the smallest possible number of covering
 families. -/
 def goodτ : ℝ :=
   1 + goodδ E / 4
 #align besicovitch.good_τ Besicovitch.goodτ
+-/
 
 theorem one_lt_goodτ : 1 < goodτ E := by dsimp [good_τ, good_δ];
   linarith [(exists_good_δ E).choose_spec.1]
@@ -324,7 +334,7 @@ variable {E}
 
 theorem card_le_multiplicity_of_δ {s : Finset E} (hs : ∀ c ∈ s, ‖c‖ ≤ 2)
     (h's : ∀ c ∈ s, ∀ d ∈ s, c ≠ d → 1 - goodδ E ≤ ‖c - d‖) : s.card ≤ multiplicity E :=
-  (Classical.choose_spec (exists_good_δ E)).2.2 s hs h's
+  (Classical.choose_spec (exists_goodδ E)).2.2 s hs h's
 #align besicovitch.card_le_multiplicity_of_δ Besicovitch.card_le_multiplicity_of_δ
 
 theorem le_multiplicity_of_δ_of_fin {n : ℕ} (f : Fin n → E) (h : ∀ i, ‖f i‖ ≤ 2)
@@ -576,6 +586,7 @@ end SatelliteConfig
 
 variable (E) [NormedSpace ℝ E] [FiniteDimensional ℝ E]
 
+#print Besicovitch.isEmpty_satelliteConfig_multiplicity /-
 /-- In a normed vector space `E`, there can be no satellite configuration with `multiplicity E + 1`
 points and the parameter `good_τ E`. This will ensure that in the inductive construction to get
 the Besicovitch covering families, there will never be more than `multiplicity E` nonempty
@@ -591,6 +602,7 @@ theorem isEmpty_satelliteConfig_multiplicity :
     exact
       lt_irrefl _ ((Nat.lt_succ_self _).trans_le (le_multiplicity_of_δ_of_fin c' c'_le_two hc'))⟩
 #align besicovitch.is_empty_satellite_config_multiplicity Besicovitch.isEmpty_satelliteConfig_multiplicity
+-/
 
 instance (priority := 100) : HasBesicovitchCovering E :=
   ⟨⟨multiplicity E, goodτ E, one_lt_goodτ E, isEmpty_satelliteConfig_multiplicity E⟩⟩

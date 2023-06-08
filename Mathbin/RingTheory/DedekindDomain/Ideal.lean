@@ -332,8 +332,8 @@ theorem integrallyClosed : IsIntegrallyClosed A :=
 
 open Ring
 
-#print IsDedekindDomainInv.dimensionLeOne /-
-theorem dimensionLeOne : DimensionLEOne A :=
+#print IsDedekindDomainInv.dimensionLEOne /-
+theorem dimensionLEOne : DimensionLEOne A :=
   by
   -- We're going to show that `P` is maximal because any (maximal) ideal `M`
   -- that is strictly larger would be `⊤`.
@@ -371,7 +371,7 @@ theorem dimensionLeOne : DimensionLEOne A :=
   rw [IsFractionRing.injective A (FractionRing A) zy_eq] at hzy 
   -- But `P` is a prime ideal, so `z ∉ P` implies `y ∈ P`, as desired.
   exact mem_coe_ideal_of_mem A⁰ (Or.resolve_left (hP.mem_or_mem hzy) hzp)
-#align is_dedekind_domain_inv.dimension_le_one IsDedekindDomainInv.dimensionLeOne
+#align is_dedekind_domain_inv.dimension_le_one IsDedekindDomainInv.dimensionLEOne
 -/
 
 #print IsDedekindDomainInv.isDedekindDomain /-

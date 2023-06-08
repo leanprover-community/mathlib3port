@@ -167,6 +167,7 @@ theorem not_intervalIntegrable_of_sub_inv_isBigO_punctured {f : ℝ → F} {a b 
       (hf.congr' (A.mono fun x hx => hx.deriv.symm) eventually_eq.rfl) hne hc
 #align not_interval_integrable_of_sub_inv_is_O_punctured not_intervalIntegrable_of_sub_inv_isBigO_punctured
 
+#print intervalIntegrable_sub_inv_iff /-
 /-- The function `λ x, (x - c)⁻¹` is integrable on `a..b` if and only if `a = b` or `c ∉ [a, b]`. -/
 @[simp]
 theorem intervalIntegrable_sub_inv_iff {a b c : ℝ} :
@@ -180,11 +181,14 @@ theorem intervalIntegrable_sub_inv_iff {a b c : ℝ} :
     refine' ((continuous_sub_right c).ContinuousOn.inv₀ _).IntervalIntegrable
     exact fun x hx => sub_ne_zero.2 <| ne_of_mem_of_not_mem hx h₀
 #align interval_integrable_sub_inv_iff intervalIntegrable_sub_inv_iff
+-/
 
+#print intervalIntegrable_inv_iff /-
 /-- The function `λ x, x⁻¹` is integrable on `a..b` if and only if `a = b` or `0 ∉ [a, b]`. -/
 @[simp]
 theorem intervalIntegrable_inv_iff {a b : ℝ} :
     IntervalIntegrable (fun x => x⁻¹) volume a b ↔ a = b ∨ (0 : ℝ) ∉ [a, b] := by
   simp only [← intervalIntegrable_sub_inv_iff, sub_zero]
 #align interval_integrable_inv_iff intervalIntegrable_inv_iff
+-/
 

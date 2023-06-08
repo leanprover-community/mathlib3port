@@ -147,7 +147,7 @@ theorem IsLocalization.AtPrime.discreteValuationRing_of_dedekind_domain [IsDedek
   letI : LocalRing Aₘ := IsLocalization.AtPrime.localRing Aₘ P
   have hnf := IsLocalization.AtPrime.not_isField A hP Aₘ
   exact
-    ((DiscreteValuationRing.tFAE Aₘ hnf).out 0 2).mpr
+    ((DiscreteValuationRing.TFAE Aₘ hnf).out 0 2).mpr
       (IsLocalization.AtPrime.isDedekindDomain A P _)
 #align is_localization.at_prime.discrete_valuation_ring_of_dedekind_domain IsLocalization.AtPrime.discreteValuationRing_of_dedekind_domain
 

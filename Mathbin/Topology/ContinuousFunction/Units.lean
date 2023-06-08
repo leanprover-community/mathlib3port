@@ -58,7 +58,7 @@ section NormedRing
 
 variable [NormedRing R] [CompleteSpace R]
 
-theorem NormedRing.isUnit_unit_continuous {f : C(X, R)} (h : ∀ x, IsUnit (f x)) :
+theorem ContinuousMap.continuous_isUnit_unit {f : C(X, R)} (h : ∀ x, IsUnit (f x)) :
     Continuous fun x => (h x).Unit :=
   by
   refine'
@@ -68,7 +68,7 @@ theorem NormedRing.isUnit_unit_continuous {f : C(X, R)} (h : ∀ x, IsUnit (f x)
   have := NormedRing.inverse_continuousAt (h x).Unit
   simp only [← Ring.inverse_unit, IsUnit.unit_spec, ← Function.comp_apply] at this ⊢
   exact this.comp (f.continuous_at x)
-#align normed_ring.is_unit_unit_continuous NormedRing.isUnit_unit_continuous
+#align normed_ring.is_unit_unit_continuous ContinuousMap.continuous_isUnit_unit
 
 /-- Construct a continuous map into the group of units of a normed ring from a function into the
 normed ring and a proof that every element of the range is a unit. -/
@@ -76,7 +76,7 @@ normed ring and a proof that every element of the range is a unit. -/
 noncomputable def unitsOfForallIsUnit {f : C(X, R)} (h : ∀ x, IsUnit (f x)) : C(X, Rˣ)
     where
   toFun x := (h x).Unit
-  continuous_toFun := NormedRing.isUnit_unit_continuous h
+  continuous_toFun := ContinuousMap.continuous_isUnit_unit h
 #align continuous_map.units_of_forall_is_unit ContinuousMap.unitsOfForallIsUnit
 
 instance canLift :

@@ -68,10 +68,12 @@ open scoped Witt
 
 namespace WittVector
 
+#print WittVector.mapFun /-
 /-- `f : α → β` induces a map from `𝕎 α` to `𝕎 β` by applying `f` componentwise.
 If `f` is a ring homomorphism, then so is `f`, see `witt_vector.map f`. -/
 def mapFun (f : α → β) : 𝕎 α → 𝕎 β := fun x => mk' _ (f ∘ x.coeff)
 #align witt_vector.map_fun WittVector.mapFun
+-/
 
 namespace MapFun
 
@@ -202,11 +204,13 @@ variable (x y : 𝕎 R)
 
 omit hp
 
+#print WittVector.matrix_vecEmpty_coeff /-
 @[local simp]
 theorem matrix_vecEmpty_coeff {R} (i j) :
     @coeff p R (Matrix.vecEmpty i) j = (Matrix.vecEmpty i : ℕ → R) j := by
   rcases i with ⟨_ | _ | _ | _ | i_val, ⟨⟩⟩
 #align witt_vector.matrix_vec_empty_coeff WittVector.matrix_vecEmpty_coeff
+-/
 
 include hp
 

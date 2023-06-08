@@ -84,29 +84,37 @@ open scoped Classical Topology
 -- mathport name: exprβ
 local notation "β" => ofTypeMonad Ultrafilter
 
+#print Compactum /-
 /-- The type `Compactum` of Compacta, defined as algebras for the ultrafilter monad. -/
 def Compactum :=
   Monad.Algebra β
 deriving Category, Inhabited
 #align Compactum Compactum
+-/
 
 namespace Compactum
 
+#print Compactum.forget /-
 /-- The forgetful functor to Type* -/
 def forget : Compactum ⥤ Type _ :=
   Monad.forget _
 deriving CreatesLimits, Faithful
 #align Compactum.forget Compactum.forget
+-/
 
+#print Compactum.free /-
 /-- The "free" Compactum functor. -/
 def free : Type _ ⥤ Compactum :=
   Monad.free _
 #align Compactum.free Compactum.free
+-/
 
+#print Compactum.adj /-
 /-- The adjunction between `free` and `forget`. -/
 def adj : free ⊣ forget :=
   Monad.adj _
 #align Compactum.adj Compactum.adj
+-/
 
 -- Basic instances
 instance : ConcreteCategory Compactum where forget := forget
@@ -410,6 +418,7 @@ theorem continuous_of_hom {X Y : Compactum} (f : X ⟶ Y) : Continuous f :=
   rw [← str_hom_commute, str_eq_of_le_nhds _ x h]
 #align Compactum.continuous_of_hom Compactum.continuous_of_hom
 
+#print Compactum.ofTopologicalSpace /-
 /-- Given any compact Hausdorff space, we construct a Compactum. -/
 noncomputable def ofTopologicalSpace (X : Type _) [TopologicalSpace X] [CompactSpace X]
     [T2Space X] : Compactum where
@@ -442,6 +451,7 @@ noncomputable def ofTopologicalSpace (X : Type _) [TopologicalSpace X] [CompactS
     rw [le_nhds_iff]
     exact c4
 #align Compactum.of_topological_space Compactum.ofTopologicalSpace
+-/
 
 /-- Any continuous map between Compacta is a morphism of compacta. -/
 def homOfContinuous {X Y : Compactum} (f : X → Y) (cont : Continuous f) : X ⟶ Y :=
@@ -456,6 +466,7 @@ def homOfContinuous {X Y : Compactum} (f : X → Y) (cont : Continuous f) : X �
 
 end Compactum
 
+#print compactumToCompHaus /-
 /-- The functor functor from Compactum to CompHaus. -/
 def compactumToCompHaus : Compactum ⥤ CompHaus
     where
@@ -464,17 +475,22 @@ def compactumToCompHaus : Compactum ⥤ CompHaus
     { toFun := f
       continuous_toFun := Compactum.continuous_of_hom _ }
 #align Compactum_to_CompHaus compactumToCompHaus
+-/
 
 namespace compactumToCompHaus
 
+#print compactumToCompHaus.full /-
 /-- The functor Compactum_to_CompHaus is full. -/
 def full : Full compactumToCompHaus.{u} where preimage X Y f := Compactum.homOfContinuous f.1 f.2
 #align Compactum_to_CompHaus.full compactumToCompHaus.full
+-/
 
+#print compactumToCompHaus.faithful /-
 /-- The functor Compactum_to_CompHaus is faithful. -/
 theorem faithful : Faithful compactumToCompHaus :=
   { }
 #align Compactum_to_CompHaus.faithful compactumToCompHaus.faithful
+-/
 
 /-- This definition is used to prove essential surjectivity of Compactum_to_CompHaus. -/
 def isoOfTopologicalSpace {D : CompHaus} :
@@ -490,11 +506,14 @@ def isoOfTopologicalSpace {D : CompHaus} :
         continuous_def.2 fun _ h1 => by rw [isOpen_iff_ultrafilter']; intro _ h2; exact h1 _ h2 }
 #align Compactum_to_CompHaus.iso_of_topological_space compactumToCompHaus.isoOfTopologicalSpace
 
+#print compactumToCompHaus.essSurj /-
 /-- The functor Compactum_to_CompHaus is essentially surjective. -/
 theorem essSurj : EssSurj compactumToCompHaus :=
   { mem_essImage := fun X => ⟨Compactum.ofTopologicalSpace X, ⟨isoOfTopologicalSpace⟩⟩ }
 #align Compactum_to_CompHaus.ess_surj compactumToCompHaus.essSurj
+-/
 
+#print compactumToCompHaus.isEquivalence /-
 /-- The functor Compactum_to_CompHaus is an equivalence of categories. -/
 noncomputable instance isEquivalence : IsEquivalence compactumToCompHaus :=
   by
@@ -503,16 +522,20 @@ noncomputable instance isEquivalence : IsEquivalence compactumToCompHaus :=
   exact compactumToCompHaus.faithful
   exact compactumToCompHaus.essSurj
 #align Compactum_to_CompHaus.is_equivalence compactumToCompHaus.isEquivalence
+-/
 
 end compactumToCompHaus
 
+#print compactumToCompHausCompForget /-
 /-- The forgetful functors of `Compactum` and `CompHaus` are compatible via
 `Compactum_to_CompHaus`. -/
 def compactumToCompHausCompForget :
     compactumToCompHaus ⋙ CategoryTheory.forget CompHaus ≅ Compactum.forget :=
   (NatIso.ofComponents fun X => eqToIso rfl) <| by intro X Y f; dsimp; simpa
 #align Compactum_to_CompHaus_comp_forget compactumToCompHausCompForget
+-/
 
+#print CompHaus.forgetCreatesLimits /-
 /-
 TODO: `forget CompHaus` is monadic, as it is isomorphic to the composition
 of an equivalence with the monadic functor `forget Compactum`.
@@ -531,10 +554,13 @@ noncomputable instance CompHaus.forgetCreatesLimits : CreatesLimits (forget Comp
   exact Compactum_to_CompHaus.as_equivalence.symm.unit_iso
   exact creates_limits_of_nat_iso e.symm
 #align CompHaus.forget_creates_limits CompHaus.forgetCreatesLimits
+-/
 
+#print Profinite.forgetCreatesLimits /-
 noncomputable instance Profinite.forgetCreatesLimits : CreatesLimits (forget Profinite) :=
   by
   change creates_limits (profiniteToCompHaus ⋙ forget _)
   infer_instance
 #align Profinite.forget_creates_limits Profinite.forgetCreatesLimits
+-/
 
