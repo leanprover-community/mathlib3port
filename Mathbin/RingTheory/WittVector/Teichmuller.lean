@@ -40,6 +40,7 @@ variable (p : ℕ) {R S : Type _} [hp : Fact p.Prime] [CommRing R] [CommRing S]
 -- mathport name: expr𝕎
 local notation "𝕎" => WittVector p
 
+#print WittVector.teichmullerFun /-
 -- type as `\bbW`
 /-- The underlying function of the monoid hom `witt_vector.teichmuller`.
 The `0`-th coefficient of `teichmuller_fun p r` is `r`, and all others are `0`.
@@ -47,6 +48,7 @@ The `0`-th coefficient of `teichmuller_fun p r` is `r`, and all others are `0`.
 def teichmullerFun (r : R) : 𝕎 R :=
   ⟨p, fun n => if n = 0 then r else 0⟩
 #align witt_vector.teichmuller_fun WittVector.teichmullerFun
+-/
 
 /-!
 ## `teichmuller` is a monoid homomorphism

@@ -346,13 +346,11 @@ protected def ofNat : ∀ n : ℕ, Nat → Bitvec n
 #align bitvec.of_nat Bitvec.ofNat
 -/
 
-#print Bitvec.ofInt /-
 /-- Create a bitvector in the two's complement representation from an `int` -/
 protected def ofInt : ∀ n : ℕ, Int → Bitvec (succ n)
   | n, Int.ofNat m => false ::ᵥ Bitvec.ofNat n m
   | n, Int.negSucc m => true ::ᵥ not (Bitvec.ofNat n m)
 #align bitvec.of_int Bitvec.ofInt
--/
 
 #print Bitvec.addLsb /-
 /-- `add_lsb r b` is `r + r + 1` if `b` is `tt` and `r + r` otherwise. -/

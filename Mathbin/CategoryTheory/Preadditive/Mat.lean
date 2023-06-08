@@ -71,7 +71,7 @@ structure Mat_ where
   ι : Type
   [f : Fintype ι]
   pt : ι → C
-#align category_theory.Mat_ CategoryTheory.Mat_
+#align category_theory.Mat_ CategoryTheory.Mat_ₓ
 
 attribute [instance] Mat_.F
 
@@ -396,6 +396,7 @@ def lift (F : C ⥤ D) [Functor.Additive F] : Mat_ C ⥤ D
 instance lift_additive (F : C ⥤ D) [Functor.Additive F] : Functor.Additive (lift F) where
 #align category_theory.Mat_.lift_additive CategoryTheory.Mat_.lift_additive
 
+#print CategoryTheory.Mat_.embeddingLiftIso /-
 /-- An additive functor `C ⥤ D` factors through its lift to `Mat_ C ⥤ D`. -/
 @[simps]
 def embeddingLiftIso (F : C ⥤ D) [Functor.Additive F] : embedding C ⋙ lift F ≅ F :=
@@ -411,6 +412,7 @@ def embeddingLiftIso (F : C ⥤ D) [Functor.Additive F] : embedding C ⋙ lift F
     -- Not sure why this doesn't fire via `simp`.
     simp
 #align category_theory.Mat_.embedding_lift_iso CategoryTheory.Mat_.embeddingLiftIso
+-/
 
 /-- `Mat_.lift F` is the unique additive functor `L : Mat_ C ⥤ D` such that `F ≅ embedding C ⋙ L`.
 -/
@@ -485,6 +487,7 @@ end Mat_
 
 universe u
 
+#print CategoryTheory.Mat /-
 /-- A type synonym for `Fintype`, which we will equip with a category structure
 where the morphisms are matrices with components in `R`. -/
 @[nolint unused_arguments]
@@ -492,6 +495,7 @@ def Mat (R : Type u) :=
   FintypeCat.{u}
 deriving Inhabited
 #align category_theory.Mat CategoryTheory.Mat
+-/
 
 instance (R : Type u) : CoeSort (Mat R) (Type u) :=
   Bundled.hasCoeToSort

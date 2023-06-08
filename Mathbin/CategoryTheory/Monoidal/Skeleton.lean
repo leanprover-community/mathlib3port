@@ -28,6 +28,7 @@ universe v u
 variable {C : Type u} [Category.{v} C] [MonoidalCategory C]
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print CategoryTheory.monoidOfSkeletalMonoidal /-
 /-- If `C` is monoidal and skeletal, it is a monoid.
 See note [reducible non-instances]. -/
 @[reducible]
@@ -39,11 +40,14 @@ def monoidOfSkeletalMonoidal (hC : Skeletal C) : Monoid C
   mul_one X := hC ⟨ρ_ X⟩
   mul_assoc X Y Z := hC ⟨α_ X Y Z⟩
 #align category_theory.monoid_of_skeletal_monoidal CategoryTheory.monoidOfSkeletalMonoidal
+-/
 
+#print CategoryTheory.commMonoidOfSkeletalBraided /-
 /-- If `C` is braided and skeletal, it is a commutative monoid. -/
 def commMonoidOfSkeletalBraided [BraidedCategory C] (hC : Skeletal C) : CommMonoid C :=
   { monoidOfSkeletalMonoidal hC with mul_comm := fun X Y => hC ⟨β_ X Y⟩ }
 #align category_theory.comm_monoid_of_skeletal_braided CategoryTheory.commMonoidOfSkeletalBraided
+-/
 
 /-- The skeleton of a monoidal category has a monoidal structure itself, induced by the equivalence.
 -/

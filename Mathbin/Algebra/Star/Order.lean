@@ -55,27 +55,31 @@ class StarOrderedRing (R : Type u) [NonUnitalSemiring R] [PartialOrder R] extend
 
 namespace StarOrderedRing
 
+#print StarOrderedRing.toOrderedAddCommMonoid /-
 -- see note [lower instance priority]
 instance (priority := 100) toOrderedAddCommMonoid [NonUnitalSemiring R] [PartialOrder R]
     [StarOrderedRing R] : OrderedAddCommMonoid R :=
   { show NonUnitalSemiring R by infer_instance, show PartialOrder R by infer_instance,
     show StarOrderedRing R by infer_instance with }
 #align star_ordered_ring.to_ordered_add_comm_monoid StarOrderedRing.toOrderedAddCommMonoid
+-/
 
 -- see note [lower instance priority]
-instance (priority := 100) to_existsAddOfLE [NonUnitalSemiring R] [PartialOrder R]
+instance (priority := 100) toExistsAddOfLE [NonUnitalSemiring R] [PartialOrder R]
     [StarOrderedRing R] : ExistsAddOfLE R
     where exists_add_of_le a b h :=
     match (le_iff _ _).mp h with
     | ⟨p, _, hp⟩ => ⟨p, hp⟩
-#align star_ordered_ring.to_has_exists_add_of_le StarOrderedRing.to_existsAddOfLE
+#align star_ordered_ring.to_has_exists_add_of_le StarOrderedRing.toExistsAddOfLE
 
+#print StarOrderedRing.toOrderedAddCommGroup /-
 -- see note [lower instance priority]
 instance (priority := 100) toOrderedAddCommGroup [NonUnitalRing R] [PartialOrder R]
     [StarOrderedRing R] : OrderedAddCommGroup R :=
   { show NonUnitalRing R by infer_instance, show PartialOrder R by infer_instance,
     show StarOrderedRing R by infer_instance with }
 #align star_ordered_ring.to_ordered_add_comm_group StarOrderedRing.toOrderedAddCommGroup
+-/
 
 -- set note [reducible non-instances]
 /-- To construct a `star_ordered_ring` instance it suffices to show that `x ≤ y` if and only if

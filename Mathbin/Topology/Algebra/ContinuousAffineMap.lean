@@ -34,12 +34,14 @@ to the notation `E →L[R] F` for `continuous_linear_map R E F`.
 -/
 
 
+#print ContinuousAffineMap /-
 /-- A continuous map of affine spaces. -/
 structure ContinuousAffineMap (R : Type _) {V W : Type _} (P Q : Type _) [Ring R] [AddCommGroup V]
     [Module R V] [TopologicalSpace P] [AddTorsor V P] [AddCommGroup W] [Module R W]
     [TopologicalSpace Q] [AddTorsor W Q] extends P →ᵃ[R] Q where
   cont : Continuous to_fun
 #align continuous_affine_map ContinuousAffineMap
+-/
 
 -- mathport name: «expr →A[ ] »
 notation:25 P " →A[" R "] " Q => ContinuousAffineMap R P Q
@@ -93,10 +95,12 @@ theorem congr_fun {f g : P →A[R] Q} (h : f = g) (x : P) : f x = g x :=
   FunLike.congr_fun h _
 #align continuous_affine_map.congr_fun ContinuousAffineMap.congr_fun
 
+#print ContinuousAffineMap.toContinuousMap /-
 /-- Forgetting its algebraic properties, a continuous affine map is a continuous map. -/
 def toContinuousMap (f : P →A[R] Q) : C(P, Q) :=
   ⟨f, f.cont⟩
 #align continuous_affine_map.to_continuous_map ContinuousAffineMap.toContinuousMap
+-/
 
 instance : Coe (P →A[R] Q) C(P, Q) :=
   ⟨toContinuousMap⟩
@@ -151,12 +155,14 @@ protected theorem continuous (f : P →A[R] Q) : Continuous f :=
 
 variable (R P)
 
+#print ContinuousAffineMap.const /-
 /-- The constant map is a continuous affine map. -/
 def const (q : Q) : P →A[R] Q :=
   { AffineMap.const R P q with
     toFun := AffineMap.const R P q
     cont := continuous_const }
 #align continuous_affine_map.const ContinuousAffineMap.const
+-/
 
 @[simp]
 theorem coe_const (q : Q) : (const R P q : P → Q) = Function.const P q :=
@@ -172,10 +178,12 @@ variable [AddCommGroup W₂] [Module R W₂] [TopologicalSpace Q₂] [AddTorsor 
 
 include W₂
 
+#print ContinuousAffineMap.comp /-
 /-- The composition of morphisms is a morphism. -/
 def comp (f : Q →A[R] Q₂) (g : P →A[R] Q) : P →A[R] Q₂ :=
   { (f : Q →ᵃ[R] Q₂).comp (g : P →ᵃ[R] Q) with cont := f.cont.comp g.cont }
 #align continuous_affine_map.comp ContinuousAffineMap.comp
+-/
 
 @[simp, norm_cast]
 theorem coe_comp (f : Q →A[R] Q₂) (g : P →A[R] Q) :
@@ -297,6 +305,7 @@ variable [AddCommGroup V] [Module R V] [TopologicalSpace V]
 
 variable [AddCommGroup W] [Module R W] [TopologicalSpace W]
 
+#print ContinuousLinearMap.toContinuousAffineMap /-
 /-- A continuous linear map can be regarded as a continuous affine map. -/
 def toContinuousAffineMap (f : V →L[R] W) : V →A[R] W
     where
@@ -305,6 +314,7 @@ def toContinuousAffineMap (f : V →L[R] W) : V →A[R] W
   map_vadd' := by simp
   cont := f.cont
 #align continuous_linear_map.to_continuous_affine_map ContinuousLinearMap.toContinuousAffineMap
+-/
 
 @[simp]
 theorem coe_toContinuousAffineMap (f : V →L[R] W) : ⇑f.toContinuousAffineMap = f :=

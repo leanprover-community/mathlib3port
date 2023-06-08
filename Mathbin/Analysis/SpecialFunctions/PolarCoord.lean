@@ -114,6 +114,7 @@ theorem hasFDerivAt_polarCoord_symm (p : ℝ × ℝ) :
     simp only [smul_smul, add_comm, neg_mul, neg_smul, smul_neg]
 #align has_fderiv_at_polar_coord_symm hasFDerivAt_polarCoord_symm
 
+#print polarCoord_source_ae_eq_univ /-
 theorem polarCoord_source_ae_eq_univ : polarCoord.source =ᵐ[volume] univ :=
   by
   have A : polar_coord.sourceᶜ ⊆ (LinearMap.snd ℝ ℝ ℝ).ker :=
@@ -132,7 +133,9 @@ theorem polarCoord_source_ae_eq_univ : polarCoord.source =ᵐ[volume] univ :=
   simp only [ae_eq_univ]
   exact le_antisymm ((measure_mono A).trans (le_of_eq B)) bot_le
 #align polar_coord_source_ae_eq_univ polarCoord_source_ae_eq_univ
+-/
 
+#print integral_comp_polarCoord_symm /-
 theorem integral_comp_polarCoord_symm {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E]
     [CompleteSpace E] (f : ℝ × ℝ → E) :
     (∫ p in polarCoord.target, p.1 • f (polarCoord.symm p)) = ∫ p, f p :=
@@ -165,4 +168,5 @@ theorem integral_comp_polarCoord_symm {E : Type _} [NormedAddCommGroup E] [Norme
       exact hx.1
     
 #align integral_comp_polar_coord_symm integral_comp_polarCoord_symm
+-/
 

@@ -54,6 +54,7 @@ variable (R A K : Type _) [CommRing R] [CommRing A] [IsDomain A] [Field K]
 
 open scoped nonZeroDivisors Polynomial
 
+#print IsDedekindDomainDvr /-
 /- ./././Mathport/Syntax/Translate/Basic.lean:635:2: warning: expanding binder collection (P «expr ≠ » («expr⊥»() : ideal[ideal] A)) -/
 /-- A Dedekind domain is an integral domain that is Noetherian, and the
 localization at every nonzero prime is a discrete valuation ring.
@@ -66,6 +67,7 @@ structure IsDedekindDomainDvr : Prop where
   is_dvr_at_nonzero_prime :
     ∀ (P) (_ : P ≠ (⊥ : Ideal A)), P.IsPrime → DiscreteValuationRing (Localization.AtPrime P)
 #align is_dedekind_domain_dvr IsDedekindDomainDvr
+-/
 
 /-- Localizing a domain of Krull dimension `≤ 1` gives another ring of Krull dimension `≤ 1`.
 
@@ -151,6 +153,7 @@ theorem IsLocalization.AtPrime.discreteValuationRing_of_dedekind_domain [IsDedek
       (IsLocalization.AtPrime.isDedekindDomain A P _)
 #align is_localization.at_prime.discrete_valuation_ring_of_dedekind_domain IsLocalization.AtPrime.discreteValuationRing_of_dedekind_domain
 
+#print IsDedekindDomain.isDedekindDomainDvr /-
 /-- Dedekind domains, in the sense of Noetherian integrally closed domains of Krull dimension ≤ 1,
 are also Dedekind domains in the sense of Noetherian domains where the localization at every
 nonzero prime ideal is a DVR. -/
@@ -159,4 +162,5 @@ theorem IsDedekindDomain.isDedekindDomainDvr [IsDedekindDomain A] : IsDedekindDo
     is_dvr_at_nonzero_prime := fun P hP pP =>
       IsLocalization.AtPrime.discreteValuationRing_of_dedekind_domain A hP _ }
 #align is_dedekind_domain.is_dedekind_domain_dvr IsDedekindDomain.isDedekindDomainDvr
+-/
 
