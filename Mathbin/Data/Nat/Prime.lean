@@ -509,7 +509,6 @@ theorem minFac_sq_le_self {n : ℕ} (w : 0 < n) (h : ¬Prime n) : minFac n ^ 2 �
     minFac n ^ 2 = minFac n * minFac n := sq (minFac n)
     _ ≤ n / minFac n * minFac n := (Nat.mul_le_mul_right (minFac n) t)
     _ ≤ n := div_mul_le_self n (minFac n)
-    
 #align nat.min_fac_sq_le_self Nat.minFac_sq_le_self
 -/
 
@@ -746,7 +745,6 @@ theorem Prime.pow_not_prime {x n : ℕ} (hn : 2 ≤ n) : ¬(x ^ n).Prime := fun 
         x = x ^ 1 := (pow_one _).symm
         _ < x ^ n := (Nat.pow_right_strictMono (hxn.symm ▸ hp.two_le) hn)
         _ = x := hxn.symm
-        
 #align nat.prime.pow_not_prime Nat.Prime.pow_not_prime
 -/
 

@@ -146,7 +146,6 @@ theorem eigenspace_div (f : End K V) (a b : K) (hb : b ≠ 0) :
     _ = (f - b⁻¹ • algebraMap K (End K V) a).ker := rfl
     _ = (b • (f - b⁻¹ • algebraMap K (End K V) a)).ker := by rw [LinearMap.ker_smul _ b hb]
     _ = (b • f - algebraMap K (End K V) a).ker := by rw [smul_sub, smul_inv_smul₀ hb]
-    
 #align module.End.eigenspace_div Module.End.eigenspace_div
 
 #print Module.End.eigenspaces_independent /-
@@ -206,7 +205,6 @@ theorem eigenspaces_independent (f : End K V) : CompleteLattice.Independent f.ei
         _ = g (Dfinsupp.lsum ℕ (fun μ => (LinearMap.id : V →ₗ[K] V)) a) := _
         _ = g (S l) := _
         _ = 0 := by rw [hl, g.map_zero]
-        
       · exact Dfinsupp.sum_mapRange_index.linearMap
       · congr
         ext (μ v)
@@ -231,7 +229,6 @@ theorem eigenspaces_independent (f : End K V) : CompleteLattice.Independent f.ei
           simp only [l', LinearMap.id_coe, id.def, LinearMap.smul_apply, Dfinsupp.mapRange_apply,
             Dfinsupp.mapRange.linearMap_apply]
         _ = 0 := by rw [l'_eq_0]; rfl
-        
     -- Thus, the eigenspace-representatives in `l` for all `μ ≠ μ₀` are `0`.
     have h_lμ_eq_0 : ∀ μ : K, μ ≠ μ₀ → l μ = 0 :=
       by
@@ -490,7 +487,6 @@ theorem generalized_eigenvec_disjoint_range_ker [FiniteDimensional K V] (f : End
       _ = f.generalized_eigenspace μ (finrank K V + finrank K V) := by rw [← pow_add]; rfl
       _ = f.generalized_eigenspace μ (finrank K V) := by
         rw [generalized_eigenspace_eq_generalized_eigenspace_finrank_of_le]; linarith
-      
   rw [disjoint_iff_inf_le, generalized_eigenrange, LinearMap.range_eq_map,
     Submodule.map_inf_eq_map_inf_comap, top_inf_eq, h]
   apply Submodule.map_comap_le
@@ -516,7 +512,6 @@ theorem pos_finrank_generalizedEigenspace_of_hasEigenvalue [FiniteDimensional K 
     _ < finrank K (f.eigenspace μ) := (Submodule.finrank_lt_finrank_of_lt (bot_lt_iff_ne_bot.2 hx))
     _ ≤ finrank K (f.generalizedEigenspace μ k) :=
       Submodule.finrank_mono ((f.generalizedEigenspace μ).Monotone (Nat.succ_le_of_lt hk))
-    
 #align module.End.pos_finrank_generalized_eigenspace_of_has_eigenvalue Module.End.pos_finrank_generalizedEigenspace_of_hasEigenvalue
 -/
 
@@ -530,7 +525,6 @@ theorem map_generalizedEigenrange_le {f : End K V} {μ : K} {n : ℕ} :
     _ = ((f - algebraMap _ _ μ) ^ n * f).range := by rw [Algebra.mul_sub_algebraMap_pow_commutes]
     _ = Submodule.map ((f - algebraMap _ _ μ) ^ n) f.range := (LinearMap.range_comp _ _)
     _ ≤ f.generalizedEigenrange μ n := LinearMap.map_le_range
-    
 #align module.End.map_generalized_eigenrange_le Module.End.map_generalizedEigenrange_le
 -/
 

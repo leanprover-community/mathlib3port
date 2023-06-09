@@ -244,7 +244,6 @@ theorem imo1988_q6 {a b : ℕ} (h : a * b + 1 ∣ a ^ 2 + b ^ 2) :
       x * x + x * x = x * x * 2 := by rw [mul_two]
       _ ≤ x * x * k := (Nat.mul_le_mul_left (x * x) k_lt_one)
       _ < (x * x + 1) * k := by linarith
-      
   · -- Show the descent step.
     intro x y hx x_lt_y hxky h z h_root hV₁ hV₀
     constructor
@@ -267,7 +266,6 @@ theorem imo1988_q6 {a b : ℕ} (h : a * b + 1 ∣ a ^ 2 + b ^ 2) :
       calc
         z * y > x * x := by apply mul_lt_mul' <;> linarith
         _ ≥ x * x - k := sub_le_self _ (Int.ofNat_zero_le k)
-        
   ·-- There is no base case in this application of Vieta jumping.
     simp
 #align imo1988_q6 imo1988_q6
@@ -317,7 +315,6 @@ example {a b : ℕ} (h : a * b ∣ a ^ 2 + b ^ 2 + 1) : 3 * a * b = a ^ 2 + b ^ 
           rw [mul_add, mul_one]
           apply add_lt_add_left
           assumption_mod_cast
-        
   · -- Show the base case.
     intro x y h h_base
     obtain rfl | rfl : x = 0 ∨ x = 1 := by rwa [Nat.le_add_one_iff, le_zero_iff] at h_base 

@@ -107,7 +107,6 @@ theorem coe_map_subset_range (f : α ↪ β) (s : Finset α) : (s.map f : Set β
   calc
     ↑(s.map f) = f '' s := coe_map f s
     _ ⊆ Set.range f := Set.image_subset_range f ↑s
-    
 #align finset.coe_map_subset_range Finset.coe_map_subset_range
 
 #print Finset.map_perm /-
@@ -482,7 +481,6 @@ theorem image_subset_iff : s.image f ⊆ t ↔ ∀ x ∈ s, f x ∈ t :=
   calc
     s.image f ⊆ t ↔ f '' ↑s ⊆ ↑t := by norm_cast
     _ ↔ _ := Set.image_subset_iff
-    
 #align finset.image_subset_iff Finset.image_subset_iff
 -/
 
@@ -498,7 +496,6 @@ theorem coe_image_subset_range : ↑(s.image f) ⊆ Set.range f :=
   calc
     ↑(s.image f) = f '' ↑s := coe_image
     _ ⊆ Set.range f := Set.image_subset_range f ↑s
-    
 #align finset.coe_image_subset_range Finset.coe_image_subset_range
 -/
 

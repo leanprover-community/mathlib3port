@@ -151,7 +151,6 @@ theorem Asymptotics.IsLittleO.sum_range {α : Type _} [NormedAddCommGroup α] {f
       rw [← mul_sum]
       exact add_le_add hn (mul_le_mul_of_nonneg_left le_rfl (half_pos εpos).le)
     _ = ε * ‖∑ i in range n, g i‖ := by simp [B]; ring
-    
 #align asymptotics.is_o.sum_range Asymptotics.IsLittleO.sum_range
 
 theorem Asymptotics.isLittleO_sum_range_of_tendsto_zero {α : Type _} [NormedAddCommGroup α]

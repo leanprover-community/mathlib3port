@@ -460,7 +460,6 @@ theorem LeftInverse.eq_rightInverse {f : α → β} {g₁ g₂ : β → α} (h�
   calc
     g₁ = g₁ ∘ f ∘ g₂ := by rw [h₂.comp_eq_id, comp.right_id]
     _ = g₂ := by rw [← comp.assoc, h₁.comp_eq_id, comp.left_id]
-    
 #align function.left_inverse.eq_right_inverse Function.LeftInverse.eq_rightInverse
 
 attribute [local instance 10] Classical.propDecidable

@@ -89,7 +89,6 @@ theorem integral_comp_smul (f : E → F) (R : ℝ) :
             f).symm
       _ = |(R ^ finrank ℝ E)⁻¹| • ∫ x, f x ∂μ := by
         simp only [map_add_haar_smul μ hR, integral_smul_measure, ENNReal.toReal_ofReal, abs_nonneg]
-      
 #align measure_theory.measure.integral_comp_smul MeasureTheory.Measure.integral_comp_smul
 
 /-- The integral of `f (R • x)` with respect to an additive Haar measure is a multiple of the

@@ -387,7 +387,6 @@ theorem ωSup_eq_some {c : Chain (Part α)} {a : α} (h : some a ∈ c) : Part.�
   calc
     Part.ωSup c = some (Classical.choose this) := dif_pos this
     _ = some a := congr_arg _ (eq_of_chain a' h)
-    
 #align part.ωSup_eq_some Part.ωSup_eq_some
 
 theorem ωSup_eq_none {c : Chain (Part α)} (h : ¬∃ a, some a ∈ c) : Part.ωSup c = none :=

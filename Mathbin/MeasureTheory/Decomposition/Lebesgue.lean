@@ -420,7 +420,6 @@ theorem eq_rnDeriv [SigmaFinite ν] {s : Measure α} {f : α → ℝ≥0∞} (hf
     (∫⁻ x : α in a, f x ∂ν) = ν.with_density f a := (with_density_apply f ha).symm
     _ = ν.with_density (μ.rn_deriv ν) a := by rw [eq_with_density_rn_deriv hf hs hadd]
     _ = ∫⁻ x : α in a, μ.rn_deriv ν x ∂ν := with_density_apply _ ha
-    
 #align measure_theory.measure.eq_rn_deriv MeasureTheory.Measure.eq_rnDeriv
 -/
 

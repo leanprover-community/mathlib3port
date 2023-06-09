@@ -697,7 +697,6 @@ theorem totalDegree_pow (a : MvPolynomial σ R) (n : ℕ) : (a ^ n).totalDegree 
     total_degree (a * a ^ n) ≤ a.total_degree + (a ^ n).totalDegree := total_degree_mul _ _
     _ ≤ a.total_degree + n * a.total_degree := (add_le_add_left ih _)
     _ = (n + 1) * a.total_degree := by rw [add_mul, one_mul, add_comm]
-    
 #align mv_polynomial.total_degree_pow MvPolynomial.totalDegree_pow
 
 @[simp]
@@ -755,7 +754,6 @@ theorem exists_degree_lt [Fintype σ] (f : MvPolynomial σ R) (n : ℕ)
     _ ≤ ∑ s, d s := (Finset.sum_le_sum fun s _ => h s)
     _ ≤ d.sum fun i e => e := by rw [Finsupp.sum_fintype]; intros; rfl
     _ ≤ f.total_degree := Finset.le_sup hd
-    
 #align mv_polynomial.exists_degree_lt MvPolynomial.exists_degree_lt
 
 theorem coeff_eq_zero_of_totalDegree_lt {f : MvPolynomial σ R} {d : σ →₀ ℕ}
@@ -853,7 +851,6 @@ theorem hom_congr_vars {f₁ f₂ : MvPolynomial σ R →+* S} {p₁ p₂ : MvPo
     f₁ p₁ = eval₂Hom (f₁.comp C) (f₁ ∘ X) p₁ := RingHom.congr_fun (by ext <;> simp) _
     _ = eval₂Hom (f₂.comp C) (f₂ ∘ X) p₂ := (eval₂Hom_congr' hC hv hp)
     _ = f₂ p₂ := RingHom.congr_fun (by ext <;> simp) _
-    
 #align mv_polynomial.hom_congr_vars MvPolynomial.hom_congr_vars
 
 theorem exists_rename_eq_of_vars_subset_range (p : MvPolynomial σ R) (f : τ → σ) (hfi : Injective f)

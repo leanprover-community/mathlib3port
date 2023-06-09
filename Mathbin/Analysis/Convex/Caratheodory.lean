@@ -82,7 +82,6 @@ theorem mem_convexHull_erase [DecidableEq E] {t : Finset E} (h : ¬AffineIndepen
         conv_rhs => rw [← insert_erase hi₀, sum_insert (not_mem_erase i₀ t), hk, zero_add]
       _ = ∑ e in t, f e - f i₀ / g i₀ * g e := rfl
       _ = 1 := by rw [sum_sub_distrib, fsum, ← mul_sum, gsum, MulZeroClass.mul_zero, sub_zero]
-      
   refine' ⟨⟨i₀, hi₀⟩, k, _, by convert ksum, _⟩
   · simp only [and_imp, sub_nonneg, mem_erase, Ne.def, Subtype.coe_mk]
     intro e hei₀ het
@@ -96,7 +95,6 @@ theorem mem_convexHull_erase [DecidableEq E] {t : Finset E} (h : ¬AffineIndepen
             _ ≤
             f e :=
           fpos e het
-        
       · apply div_nonneg (fpos i₀ (mem_of_subset (filter_subset _ t) mem)) (le_of_lt hg)
       · simpa only [mem_filter, het, true_and_iff, not_lt] using hes
   · simp only [Subtype.coe_mk, center_mass_eq_of_sum_1 _ id ksum, id]
@@ -104,7 +102,6 @@ theorem mem_convexHull_erase [DecidableEq E] {t : Finset E} (h : ¬AffineIndepen
       (∑ e in t.erase i₀, k e • e) = ∑ e in t, k e • e := sum_erase _ (by rw [hk, zero_smul])
       _ = ∑ e in t, (f e - f i₀ / g i₀ * g e) • e := rfl
       _ = t.center_mass f id := _
-      
     simp only [sub_smul, mul_smul, sum_sub_distrib, ← smul_sum, gcombo, smul_zero, sub_zero,
       center_mass, fsum, inv_one, one_smul, id.def]
 #align caratheodory.mem_convex_hull_erase Caratheodory.mem_convexHull_erase

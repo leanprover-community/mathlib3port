@@ -328,7 +328,6 @@ theorem add_def'' {a b c d : ℤ} (b0 : b ≠ 0) (d0 : d ≠ 0) :
       simp [mul_add, mul_comm, mul_left_comm]
     _ = a * d₁ * d₂ * d + c * d₂ * (d₁ * b) := by rw [h₁, h₂]
     _ = (a * d + c * b) * (d₁ * d₂) := by simp [mul_add, mul_comm, mul_left_comm]
-    
 #align rat.add_def Rat.add_def''
 
 #print Rat.neg /-
@@ -736,7 +735,6 @@ theorem div_num_den (q r : ℚ) : q / r = q.num * r.den /. (q.den * r.num) :=
       _ = q.num /. q.den * (r.num /. r.den)⁻¹ := by simp
       _ = q.num /. q.den * (r.den /. r.num) := by rw [inv_def]
       _ = q.num * r.den /. (q.den * r.num) := mul_def' (by simpa using denom_ne_zero q) hr
-      
 #align rat.div_num_denom Rat.div_num_den
 
 section Casts

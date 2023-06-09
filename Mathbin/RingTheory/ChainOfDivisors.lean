@@ -210,7 +210,6 @@ theorem eq_pow_second_of_chain_of_has_chain {q : Associates M} {n : ℕ} (hn : n
       (Finset.card_le_of_subset _)
     _ ≤ (Finset.univ : Finset (Fin (i + 1))).card := Finset.card_image_le
     _ = i + 1 := Finset.card_fin _
-    
   intro r hr
   obtain ⟨j, -, rfl⟩ := Finset.mem_image.1 hr
   have := h₂.2 ⟨j, rfl⟩

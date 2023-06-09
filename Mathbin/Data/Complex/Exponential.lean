@@ -73,7 +73,6 @@ theorem isCauSeq_of_decreasing_bounded (f : ℕ → α) {a : α} {m : ℕ} (ham 
         rw [← Nat.succ_pred_eq_of_pos (Nat.pos_of_ne_zero hl0), succ_nsmul', sub_add,
           add_sub_cancel]
     _ < f j + ε := add_lt_add_right (hl j (le_trans hi.1 hj)) _
-    
 #align is_cau_of_decreasing_bounded isCauSeq_of_decreasing_bounded
 
 theorem isCauSeq_of_mono_bounded (f : ℕ → α) {a : α} {m : ℕ} (ham : ∀ n ≥ m, |f n| ≤ a)
@@ -294,7 +293,6 @@ theorem cauchy_product {a b : ℕ → β} (ha : IsCauSeq abs fun m => ∑ n in r
         N ≤ max N M := le_max_left _ _
         _ < max N M + 1 := (Nat.lt_succ_self _)
         _ < K := hNMK
-        
     have hsumlesum :
       (∑ i in range (max N M + 1),
           abv (a i) * abv ((∑ k in range (K - i), b k) - ∑ k in range K, b k)) ≤
@@ -318,7 +316,6 @@ theorem cauchy_product {a b : ℕ → β} (ha : IsCauSeq abs fun m => ∑ n in r
         (∑ n in range (max N M + 1), abv (a n)) = |∑ n in range (max N M + 1), abv (a n)| :=
           Eq.symm (abs_of_nonneg (sum_nonneg fun x h => abv_nonneg abv (a x)))
         _ < P := hP (max N M + 1)
-        
     rw [h₁, h₂, h₃, sum_mul, ← sub_sub, sub_right_comm, sub_self, zero_sub, abv_neg abv]
     refine' lt_of_le_of_lt (abv_sum_le_sum_abv _ _) _
     suffices
@@ -356,8 +353,7 @@ theorem cauchy_product {a b : ℕ → β} (ha : IsCauSeq abs fun m => ∑ n in r
                         (lt_of_le_of_lt (abv_nonneg _ _) (hQ 0))).2
               (lt_of_le_of_lt (le_abs_self _)
                 (hM _ (le_trans (Nat.le_succ_of_le (le_max_right _ _)) (le_of_lt hNMK)) _
-                  (Nat.le_succ_of_le (le_max_right _ _))))
-      ⟩
+                  (Nat.le_succ_of_le (le_max_right _ _))))⟩
 #align cauchy_product cauchy_product
 
 end
@@ -1046,7 +1042,6 @@ theorem cos_add_cos : cos x + cos y = 2 * cos ((x + y) / 2) * cos ((x - y) / 2) 
           (cos ((x + y) / 2) * cos ((x - y) / 2) + sin ((x + y) / 2) * sin ((x - y) / 2)) :=
       _
     _ = 2 * cos ((x + y) / 2) * cos ((x - y) / 2) := _
-    
   · congr <;> field_simp [h2] <;> ring
   · rw [cos_add, cos_sub]
   ring
@@ -1706,14 +1701,12 @@ theorem sum_le_exp_of_nonneg {x : ℝ} (hx : 0 ≤ x) (n : ℕ) : (∑ i in rang
       refine' le_add_of_nonneg_right (sum_nonneg fun i hi => _)
       positivity
     _ = exp x := by rw [exp, Complex.exp, ← cau_seq_re, lim_re]
-    
 #align real.sum_le_exp_of_nonneg Real.sum_le_exp_of_nonneg
 
 theorem quadratic_le_exp_of_nonneg {x : ℝ} (hx : 0 ≤ x) : 1 + x + x ^ 2 / 2 ≤ exp x :=
   calc
     1 + x + x ^ 2 / 2 = ∑ i in range 3, x ^ i / i ! := by simp [Finset.sum_range_succ]
     _ ≤ exp x := sum_le_exp_of_nonneg hx 3
-    
 #align real.quadratic_le_exp_of_nonneg Real.quadratic_le_exp_of_nonneg
 
 theorem add_one_lt_exp_of_pos {x : ℝ} (hx : 0 < x) : x + 1 < exp x :=
@@ -1872,7 +1865,6 @@ theorem sum_div_factorial_le {α : Type _} [LinearOrderedField α] (n j : ℕ) (
       exact
         sub_le_self _
           (mul_nonneg (Nat.cast_nonneg _) (pow_nonneg (inv_nonneg.2 (Nat.cast_nonneg _)) _))
-    
 #align complex.sum_div_factorial_le Complex.sum_div_factorial_le
 
 theorem exp_bound {x : ℂ} (hx : abs x ≤ 1) {n : ℕ} (hn : 0 < n) :
@@ -1907,7 +1899,6 @@ theorem exp_bound {x : ℂ} (hx : abs x ≤ 1) {n : ℕ} (hn : 0 < n) :
       simp [abs_mul, abv_pow abs, abs_div, mul_sum.symm]
     _ ≤ abs x ^ n * (n.succ * (n ! * n)⁻¹) :=
       mul_le_mul_of_nonneg_left (sum_div_factorial_le _ _ hn) (pow_nonneg (abs.nonneg _) _)
-    
 #align complex.exp_bound Complex.exp_bound
 
 theorem exp_bound' {x : ℂ} {n : ℕ} (hx : abs x / n.succ ≤ 1 / 2) :
@@ -1929,7 +1920,6 @@ theorem exp_bound' {x : ℂ} {n : ℕ} (hx : abs x / n.succ ≤ 1 / 2) :
     _ ≤ ∑ i : ℕ in range k, abs x ^ (n + i) / (n ! * n.succ ^ i) := _
     _ = ∑ i : ℕ in range k, abs x ^ n / n ! * (abs x ^ i / n.succ ^ i) := _
     _ ≤ abs x ^ n / ↑n ! * 2 := _
-    
   · refine' sum_le_sum fun m hm => div_le_div (pow_nonneg (abs.nonneg x) (n + m)) le_rfl _ _
     · exact_mod_cast mul_pos n.factorial_pos (pow_pos n.succ_pos _)
     · exact_mod_cast Nat.factorial_mul_pow_le_factorial
@@ -1955,7 +1945,6 @@ theorem abs_exp_sub_one_le {x : ℂ} (hx : abs x ≤ 1) : abs (exp x - 1) ≤ 2 
     abs (exp x - 1) = abs (exp x - ∑ m in range 1, x ^ m / m !) := by simp [sum_range_succ]
     _ ≤ abs x ^ 1 * (Nat.succ 1 * (1! * (1 : ℕ))⁻¹) := (exp_bound hx (by decide))
     _ = 2 * abs x := by simp [two_mul, mul_two, mul_add, mul_comm]
-    
 #align complex.abs_exp_sub_one_le Complex.abs_exp_sub_one_le
 
 theorem abs_exp_sub_one_sub_id_le {x : ℂ} (hx : abs x ≤ 1) : abs (exp x - 1 - x) ≤ abs x ^ 2 :=
@@ -1965,7 +1954,6 @@ theorem abs_exp_sub_one_sub_id_le {x : ℂ} (hx : abs x ≤ 1) : abs (exp x - 1 
     _ ≤ abs x ^ 2 * (Nat.succ 2 * (2! * (2 : ℕ))⁻¹) := (exp_bound hx (by decide))
     _ ≤ abs x ^ 2 * 1 := (mul_le_mul_of_nonneg_left (by norm_num) (sq_nonneg (abs x)))
     _ = abs x ^ 2 := by rw [mul_one]
-    
 #align complex.abs_exp_sub_one_sub_id_le Complex.abs_exp_sub_one_sub_id_le
 
 end Complex
@@ -2102,7 +2090,6 @@ theorem cos_bound {x : ℝ} (hx : |x| ≤ 1) : |cos x - (1 - x ^ 2 / 2)| ≤ |x|
         ((div_le_div_right (by norm_num)).2 (Complex.exp_bound (by simpa) (by decide))))
     _ ≤ |x| ^ 4 * (5 / 96) := by
       norm_num <;> simp [mul_assoc, mul_comm, mul_left_comm, mul_div_assoc]
-    
 #align real.cos_bound Real.cos_bound
 
 theorem sin_bound {x : ℝ} (hx : |x| ≤ 1) : |sin x - (x - x ^ 3 / 6)| ≤ |x| ^ 4 * (5 / 96) :=
@@ -2139,7 +2126,6 @@ theorem sin_bound {x : ℝ} (hx : |x| ≤ 1) : |sin x - (x - x ^ 3 / 6)| ≤ |x|
         ((div_le_div_right (by norm_num)).2 (Complex.exp_bound (by simpa) (by decide))))
     _ ≤ |x| ^ 4 * (5 / 96) := by
       norm_num <;> simp [mul_assoc, mul_comm, mul_left_comm, mul_div_assoc]
-    
 #align real.sin_bound Real.sin_bound
 
 theorem cos_pos_of_le_one {x : ℝ} (hx : |x| ≤ 1) : 0 < cos x :=
@@ -2154,10 +2140,8 @@ theorem cos_pos_of_le_one {x : ℝ} (hx : |x| ≤ 1) : 0 < cos x :=
                   (by
                     rw [sq, ← abs_mul_self, _root_.abs_mul] <;>
                       exact mul_le_one hx (abs_nonneg _) hx))
-            _ < 1 := by norm_num
-            )
+            _ < 1 := by norm_num)
     _ ≤ cos x := sub_le_comm.1 (abs_sub_le_iff.1 (cos_bound hx)).2
-    
 #align real.cos_pos_of_le_one Real.cos_pos_of_le_one
 
 theorem sin_pos_of_pos_of_le_one {x : ℝ} (hx0 : 0 < x) (hx : x ≤ 1) : 0 < sin x :=
@@ -2173,19 +2157,15 @@ theorem sin_pos_of_pos_of_le_one {x : ℝ} (hx0 : 0 < x) (hx : x ≤ 1) : 0 < si
                     |x| ^ 4 ≤ |x| ^ 1 :=
                       pow_le_pow_of_le_one (abs_nonneg _)
                         (by rwa [_root_.abs_of_nonneg (le_of_lt hx0)]) (by decide)
-                    _ = x := by simp [_root_.abs_of_nonneg (le_of_lt hx0)]
-                    )
+                    _ = x := by simp [_root_.abs_of_nonneg (le_of_lt hx0)])
                   (by norm_num))
                 ((div_le_div_right (by norm_num)).2
                   (calc
                     x ^ 3 ≤ x ^ 1 := pow_le_pow_of_le_one (le_of_lt hx0) hx (by decide)
-                    _ = x := pow_one _
-                    ))
-            _ < x := by linarith
-            )
+                    _ = x := pow_one _))
+            _ < x := by linarith)
     _ ≤ sin x :=
       sub_le_comm.1 (abs_sub_le_iff.1 (sin_bound (by rwa [_root_.abs_of_nonneg (le_of_lt hx0)]))).2
-    
 #align real.sin_pos_of_pos_of_le_one Real.sin_pos_of_pos_of_le_one
 
 theorem sin_pos_of_pos_of_le_two {x : ℝ} (hx0 : 0 < x) (hx : x ≤ 2) : 0 < sin x :=
@@ -2195,7 +2175,6 @@ theorem sin_pos_of_pos_of_le_two {x : ℝ} (hx0 : 0 < x) (hx : x ≤ 2) : 0 < si
       mul_pos (mul_pos (by norm_num) (sin_pos_of_pos_of_le_one (half_pos hx0) this))
         (cos_pos_of_le_one (by rwa [_root_.abs_of_nonneg (le_of_lt (half_pos hx0))]))
     _ = sin x := by rw [← sin_two_mul, two_mul, add_halves]
-    
 #align real.sin_pos_of_pos_of_le_two Real.sin_pos_of_pos_of_le_two
 
 theorem cos_one_le : cos 1 ≤ 2 / 3 :=
@@ -2203,7 +2182,6 @@ theorem cos_one_le : cos 1 ≤ 2 / 3 :=
     cos 1 ≤ |(1 : ℝ)| ^ 4 * (5 / 96) + (1 - 1 ^ 2 / 2) :=
       sub_le_iff_le_add.1 (abs_sub_le_iff.1 (cos_bound (by simp))).1
     _ ≤ 2 / 3 := by norm_num
-    
 #align real.cos_one_le Real.cos_one_le
 
 theorem cos_one_pos : 0 < cos 1 :=
@@ -2221,7 +2199,6 @@ theorem cos_two_neg : cos 2 < 0 :=
           zero_le_two)
         _)
     _ < 0 := by norm_num
-    
 #align real.cos_two_neg Real.cos_two_neg
 
 theorem exp_bound_div_one_sub_of_interval' {x : ℝ} (h1 : 0 < x) (h2 : x < 1) :
@@ -2230,12 +2207,10 @@ theorem exp_bound_div_one_sub_of_interval' {x : ℝ} (h1 : 0 < x) (h2 : x < 1) :
     calc
       0 < x ^ 3 := by positivity
       _ = 1 - (1 + x + x ^ 2) * (1 - x) := by ring
-      
   calc
     exp x ≤ _ := exp_bound' h1.le h2.le zero_lt_three
     _ ≤ 1 + x + x ^ 2 := by norm_num [Finset.sum] <;> nlinarith
     _ < 1 / (1 - x) := by rw [lt_div_iff] <;> nlinarith
-    
 #align real.exp_bound_div_one_sub_of_interval' Real.exp_bound_div_one_sub_of_interval'
 
 theorem exp_bound_div_one_sub_of_interval {x : ℝ} (h1 : 0 ≤ x) (h2 : x < 1) :

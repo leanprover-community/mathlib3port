@@ -246,7 +246,6 @@ protected theorem continuousMul : ContinuousMul Γ₀ :=
       calc
         x * y < γ / y * y := mul_lt_right₀ _ hx hy
         _ = γ := div_mul_cancel _ hy
-        
     · have hy : y ≠ 0 := ((zero_lt_iff.mpr hx).trans_le hle).ne'
       rw [ContinuousAt, nhds_prod_eq, nhds_of_ne_zero hx, nhds_of_ne_zero hy, prod_pure_pure]
       exact pure_le_nhds (x * y)⟩

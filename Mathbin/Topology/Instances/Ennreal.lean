@@ -274,7 +274,6 @@ theorem nhds_of_ne_top (xt : x ≠ ⊤) : 𝓝 x = ⨅ ε > 0, 𝓟 (Icc (x - ε
     calc
       a < b := ab
       _ ≤ y := h₁
-      
   · rcases exists_between xs with ⟨b, xb, ba⟩
     have bx_pos : 0 < b - x := tsub_pos_iff_lt.2 xb
     have xbx : x + (b - x) = b := add_tsub_cancel_of_le xb.le
@@ -284,7 +283,6 @@ theorem nhds_of_ne_top (xt : x ≠ ⊤) : 𝓝 x = ⨅ ε > 0, 𝓟 (Icc (x - ε
     calc
       y ≤ b := h₂
       _ < a := ba
-      
 #align ennreal.nhds_of_ne_top ENNReal.nhds_of_ne_top
 
 /-- Characterization of neighborhoods for `ℝ≥0∞` numbers. See also `tendsto_order`
@@ -342,7 +340,6 @@ theorem tendsto_sub {a b : ℝ≥0∞} (h : a ≠ ∞ ∨ b ≠ ∞) :
       calc
         (n : ℝ≥0∞) + y + (b + 1) = (n : ℝ≥0∞) + (b + 1) + y := by abel
         _ < x + (b + 1) := ENNReal.add_lt_add hx hy
-        
     exact lt_of_add_lt_add_right this
   · simp only [some_eq_coe, WithTop.sub_top, none_eq_top]
     suffices H : ∀ᶠ p : ℝ≥0∞ × ℝ≥0∞ in 𝓝 (a, ∞), 0 = p.1 - p.2
@@ -1009,7 +1006,6 @@ protected theorem tsum_mul_left : (∑' i, a * f i) = a * ∑' i, f i :=
         calc
           0 < f i := lt_of_le_of_ne (zero_le _) hi.symm
           _ ≤ ∑' i, f i := ENNReal.le_tsum _
-          
     have : Tendsto (fun s : Finset α => ∑ j in s, a * f j) atTop (𝓝 (a * ∑' i, f i)) := by
       rw [←
           show ((· * ·) a ∘ fun s : Finset α => ∑ j in s, f j) = fun s => ∑ j in s, a * f j from
@@ -1039,12 +1035,10 @@ theorem tsum_iSup_eq {α : Type _} (a : α) {f : α → ℝ≥0∞} : (∑' b : 
                 Finset.sum_le_sum_of_ne_zero fun b _ hb =>
                   suffices a = b by simpa using this.symm
                   by_contradiction fun h => by simpa [h] using hb
-              _ = f a := by simp
-              )
+              _ = f a := by simp)
     (calc
       f a ≤ ⨆ h : a = a, f a := le_iSup (fun h : a = a => f a) rfl
-      _ ≤ ∑' b : α, ⨆ h : a = b, f b := ENNReal.le_tsum _
-      )
+      _ ≤ ∑' b : α, ⨆ h : a = b, f b := ENNReal.le_tsum _)
 #align ennreal.tsum_supr_eq ENNReal.tsum_iSup_eq
 
 theorem hasSum_iff_tendsto_nat {f : ℕ → ℝ≥0∞} (r : ℝ≥0∞) :
@@ -1127,7 +1121,6 @@ theorem tsum_union_le (f : α → ℝ≥0∞) (s t : Set α) :
     _ = (∑' x : s, f x) + ∑' x : t \ s, f x :=
       (tsum_union_disjoint disjoint_sdiff_self_right ENNReal.summable ENNReal.summable)
     _ ≤ (∑' x : s, f x) + ∑' x : t, f x := add_le_add le_rfl (tsum_mono_subtype _ (diff_subset _ _))
-    
 #align ennreal.tsum_union_le ENNReal.tsum_union_le
 
 theorem tsum_biUnion_le {ι : Type _} (f : α → ℝ≥0∞) (s : Finset ι) (t : ι → Set α) :
@@ -1142,7 +1135,6 @@ theorem tsum_biUnion_le {ι : Type _} (f : α → ℝ≥0∞) (s : Finset ι) (t
       tsum_union_le _ _ _
     _ ≤ (∑' x : t i, f x) + ∑ i in s, ∑' x : t i, f x := (add_le_add le_rfl ihs)
     _ = ∑ j in insert i s, ∑' x : t j, f x := (Finset.sum_insert hi).symm
-    
 #align ennreal.tsum_bUnion_le ENNReal.tsum_biUnion_le
 
 theorem tsum_iUnion_le {ι : Type _} [Fintype ι] (f : α → ℝ≥0∞) (t : ι → Set α) :
@@ -1567,7 +1559,6 @@ theorem edist_ne_top_of_mem_ball {a : β} {r : ℝ≥0∞} (x y : ball a r) : ed
       edist x y ≤ edist a x + edist a y := edist_triangle_left x.1 y.1 a
       _ < r + r := by rw [edist_comm a x, edist_comm a y] <;> exact add_lt_add x.2 y.2
       _ ≤ ⊤ := le_top
-      
 #align edist_ne_top_of_mem_ball edist_ne_top_of_mem_ball
 
 #print metricSpaceEMetricBall /-
@@ -1648,8 +1639,7 @@ theorem EMetric.cauchySeq_iff_le_tendsto_0 [Nonempty β] [SemilatticeSup β] {s 
       ⟨N, fun m hm n hn =>
         calc
           edist (s m) (s n) ≤ b N := b_bound m n N hm hn
-          _ < ε := hN _ (le_refl N)
-          ⟩⟩
+          _ < ε := hN _ (le_refl N)⟩⟩
 #align emetric.cauchy_seq_iff_le_tendsto_0 EMetric.cauchySeq_iff_le_tendsto_0
 
 theorem continuous_of_le_add_edist {f : α → ℝ≥0∞} (C : ℝ≥0∞) (hC : C ≠ ⊤)
@@ -1675,13 +1665,11 @@ theorem continuous_of_le_add_edist {f : α → ℝ≥0∞} (C : ℝ≥0∞) (hC 
           f x ≤ f y + C * edist x y := h x y
           _ ≤ f y + C * (ε / C) := (add_le_add_left (mul_le_mul_left' hy C) (f y))
           _ = f y + ε := by rw [hεC]
-          
       ·
         calc
           f y ≤ f x + C * edist y x := h y x
           _ ≤ f x + C * (ε / C) := (add_le_add_left (mul_le_mul_left' hy C) (f x))
           _ = f x + ε := by rw [hεC]
-          
 #align continuous_of_le_add_edist continuous_of_le_add_edist
 
 theorem continuous_edist : Continuous fun p : α × α => edist p.1 p.2 :=
@@ -1694,7 +1682,6 @@ theorem continuous_edist : Continuous fun p : α × α => edist p.1 p.2 :=
     _ ≤ edist x' y' + (edist (x, y) (x', y') + edist (x, y) (x', y')) :=
       (add_le_add_left (add_le_add (le_max_left _ _) (le_max_right _ _)) _)
     _ = edist x' y' + 2 * edist (x, y) (x', y') := by rw [← mul_two, mul_comm]
-    
 #align continuous_edist continuous_edist
 
 @[continuity]
@@ -1770,7 +1757,6 @@ theorem ediam_eq {s : Set ℝ} (h : Bounded s) : EMetric.diam s = ENNReal.ofReal
       Sup s - Inf s ≤ dist (Sup s) (Inf s) := le_abs_self _
       _ ≤ diam (closure s) :=
         dist_le_diam_of_mem h.closure (csSup_mem_closure hne h'.2) (csInf_mem_closure hne h'.1)
-      
 #align real.ediam_eq Real.ediam_eq
 
 /-- For a bounded set `s : set ℝ`, its `metric.diam` is equal to `Sup s - Inf s`. -/

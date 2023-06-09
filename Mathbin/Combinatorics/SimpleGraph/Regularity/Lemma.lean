@@ -123,7 +123,6 @@ theorem szemeredi_regularity (hε : 0 < ε) (hl : l ≤ card α) :
         ((mul_lt_mul_left <| by positivity).2 (Nat.lt_floor_add_one _))
       _ ≤ (P.energy G : ℝ) := by rwa [← Nat.cast_add_one]
       _ ≤ 1 := by exact_mod_cast P.energy_le_one G
-      
   -- Let's do the actual induction.
   intro i
   induction' i with i ih

@@ -89,7 +89,6 @@ noncomputable def ofPreNNDist (d : X → X → ℝ≥0) (dist_self : ∀ x, d x 
           (zip_with d (x::lxy ++ y::lyz) ((lxy ++ y::lyz) ++ [z])).Sum :=
         ciInf_le (OrderBot.bddBelow _) (lxy ++ y::lyz)
       _ = (zip_with d (x::lxy) (lxy ++ [y])).Sum + (zip_with d (y::lyz) (lyz ++ [z])).Sum := _
-      
     rw [← sum_append, ← zip_with_append, cons_append, ← @singleton_append _ y, append_assoc,
       append_assoc, append_assoc]
     rw [length_cons, length_append, length_singleton]

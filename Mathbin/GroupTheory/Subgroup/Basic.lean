@@ -2820,8 +2820,7 @@ def ker (f : G →* M) : Subgroup G :=
     inv_mem' := fun x (hx : f x = 1) =>
       calc
         f x⁻¹ = f x * f x⁻¹ := by rw [hx, one_mul]
-        _ = 1 := by rw [← map_mul, mul_inv_self, map_one]
-         }
+        _ = 1 := by rw [← map_mul, mul_inv_self, map_one] }
 #align monoid_hom.ker MonoidHom.ker
 #align add_monoid_hom.ker AddMonoidHom.ker
 -/

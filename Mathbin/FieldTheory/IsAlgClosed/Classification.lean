@@ -79,7 +79,6 @@ theorem cardinal_mk_le_max : (#L) ≤ max (#R) ℵ₀ :=
     _ ≤ max (max (max (#R) ℵ₀) ℵ₀) ℵ₀ :=
       (max_le_max (max_le_max Polynomial.cardinal_mk_le_max le_rfl) le_rfl)
     _ = max (#R) ℵ₀ := by simp only [max_assoc, max_comm ℵ₀, max_left_comm ℵ₀, max_self]
-    
 #align algebra.is_algebraic.cardinal_mk_le_max Algebra.IsAlgebraic.cardinal_mk_le_max
 
 end Algebra.IsAlgebraic
@@ -153,7 +152,6 @@ theorem cardinal_le_max_transcendence_basis (hv : IsTranscendenceBasis R v) :
     _ = max (#MvPolynomial ι R) ℵ₀ := by rw [Cardinal.eq.2 ⟨hv.1.aevalEquiv.toEquiv⟩]
     _ ≤ max (max (max (#R) (#ι)) ℵ₀) ℵ₀ := (max_le_max MvPolynomial.cardinal_mk_le_max le_rfl)
     _ = _ := by simp [max_assoc]
-    
 #align is_alg_closed.cardinal_le_max_transcendence_basis IsAlgClosed.cardinal_le_max_transcendence_basis
 
 /-- If `K` is an uncountable algebraically closed field, then its
@@ -166,15 +164,13 @@ theorem cardinal_eq_cardinal_transcendence_basis_of_aleph0_lt [Nontrivial R]
         calc
           (#K) ≤ max (max (#R) (#ι)) ℵ₀ := cardinal_le_max_transcendence_basis v hv
           _ ≤ _ := max_le (max_le hR (le_of_lt h)) le_rfl
-          
   le_antisymm
     (calc
       (#K) ≤ max (max (#R) (#ι)) ℵ₀ := cardinal_le_max_transcendence_basis v hv
       _ = (#ι) := by
         rw [max_eq_left, max_eq_right]
         · exact le_trans hR this
-        · exact le_max_of_le_right this
-      )
+        · exact le_max_of_le_right this)
     (mk_le_of_injective (show Function.Injective v from hv.1.Injective))
 #align is_alg_closed.cardinal_eq_cardinal_transcendence_basis_of_aleph_0_lt IsAlgClosed.cardinal_eq_cardinal_transcendence_basis_of_aleph0_lt
 

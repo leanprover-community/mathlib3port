@@ -931,27 +931,23 @@ theorem nonneg_mul {a b : ℤ√d} (ha : nonneg a) (hb : nonneg b) : nonneg (a *
   | _, _, ⟨x, y, Or.inr <| Or.inr rfl⟩, ⟨z, w, Or.inr <| Or.inr rfl⟩, ha, hb => by
     rw [calc
           (⟨-x, y⟩ * ⟨-z, w⟩ : ℤ√d) = ⟨_, _⟩ := rfl
-          _ = ⟨x * z + d * y * w, -(x * w + y * z)⟩ := by simp [add_comm]
-          ] <;>
+          _ = ⟨x * z + d * y * w, -(x * w + y * z)⟩ := by simp [add_comm]] <;>
       exact nonnegg_pos_neg.2 (sq_le_mul.left (nonnegg_neg_pos.1 ha) (nonnegg_neg_pos.1 hb))
   | _, _, ⟨x, y, Or.inr <| Or.inr rfl⟩, ⟨z, w, Or.inr <| Or.inl rfl⟩, ha, hb => by
     rw [calc
           (⟨-x, y⟩ * ⟨z, -w⟩ : ℤ√d) = ⟨_, _⟩ := rfl
-          _ = ⟨-(x * z + d * y * w), x * w + y * z⟩ := by simp [add_comm]
-          ] <;>
+          _ = ⟨-(x * z + d * y * w), x * w + y * z⟩ := by simp [add_comm]] <;>
       exact nonnegg_neg_pos.2 (sq_le_mul.right.left (nonnegg_neg_pos.1 ha) (nonnegg_pos_neg.1 hb))
   | _, _, ⟨x, y, Or.inr <| Or.inl rfl⟩, ⟨z, w, Or.inr <| Or.inr rfl⟩, ha, hb => by
     rw [calc
           (⟨x, -y⟩ * ⟨-z, w⟩ : ℤ√d) = ⟨_, _⟩ := rfl
-          _ = ⟨-(x * z + d * y * w), x * w + y * z⟩ := by simp [add_comm]
-          ] <;>
+          _ = ⟨-(x * z + d * y * w), x * w + y * z⟩ := by simp [add_comm]] <;>
       exact
         nonnegg_neg_pos.2 (sq_le_mul.right.right.left (nonnegg_pos_neg.1 ha) (nonnegg_neg_pos.1 hb))
   | _, _, ⟨x, y, Or.inr <| Or.inl rfl⟩, ⟨z, w, Or.inr <| Or.inl rfl⟩, ha, hb => by
     rw [calc
           (⟨x, -y⟩ * ⟨z, -w⟩ : ℤ√d) = ⟨_, _⟩ := rfl
-          _ = ⟨x * z + d * y * w, -(x * w + y * z)⟩ := by simp [add_comm]
-          ] <;>
+          _ = ⟨x * z + d * y * w, -(x * w + y * z)⟩ := by simp [add_comm]] <;>
       exact
         nonnegg_pos_neg.2
           (sq_le_mul.right.right.right (nonnegg_pos_neg.1 ha) (nonnegg_pos_neg.1 hb))
@@ -1077,7 +1073,6 @@ protected theorem eq_zero_or_eq_zero_of_mul_eq_zero : ∀ {a b : ℤ√d}, a * b
                   calc
                     x * x * w = -y * (x * z) := by simp [h2, mul_assoc, mul_left_comm]
                     _ = d * y * y * w := by simp [h1, mul_assoc, mul_left_comm]
-                    
         else
           Or.inl <|
             Fin <|
@@ -1085,7 +1080,6 @@ protected theorem eq_zero_or_eq_zero_of_mul_eq_zero : ∀ {a b : ℤ√d}, a * b
                 calc
                   x * x * z = d * -y * (x * w) := by simp [h1, mul_assoc, mul_left_comm]
                   _ = d * y * y * z := by simp [h2, mul_assoc, mul_left_comm]
-                  
 #align zsqrtd.eq_zero_or_eq_zero_of_mul_eq_zero Zsqrtd.eq_zero_or_eq_zero_of_mul_eq_zero
 -/
 

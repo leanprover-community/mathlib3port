@@ -291,7 +291,6 @@ theorem tsupport_subset_extChartAt_source : tsupport f ⊆ (extChartAt I c).sour
       f.tsupport_subset_symm_image_closedBall
     _ ⊆ (extChartAt I c).symm '' (extChartAt I c).target := (image_subset _ f.closedBall_subset)
     _ = (extChartAt I c).source := (extChartAt I c).symm_image_target_eq_source
-    
 #align smooth_bump_function.tsupport_subset_ext_chart_at_source SmoothBumpFunction.tsupport_subset_extChartAt_source
 
 theorem tsupport_subset_chartAt_source : tsupport f ⊆ (chartAt H c).source := by
@@ -366,7 +365,6 @@ theorem smooth_smul {G} [NormedAddCommGroup G] [NormedSpace ℝ G] {g : M → G}
     x ∈ tsupport fun x => f x • g x := hx
     _ ⊆ tsupport f := (tsupport_smul_subset_left _ _)
     _ ⊆ (chart_at _ c).source := f.tsupport_subset_chart_at_source
-    
   exact
     f.smooth_at.smul ((hg _ this).ContMdiffAt <| IsOpen.mem_nhds (chart_at _ _).open_source this)
 #align smooth_bump_function.smooth_smul SmoothBumpFunction.smooth_smul

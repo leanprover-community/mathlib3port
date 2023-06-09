@@ -102,7 +102,6 @@ theorem iso_isometry_of_normNoninc {V W : SemiNormedGroup} (i : V ≅ W) (h1 : i
   calc
     ‖v‖ = ‖i.inv (i.hom v)‖ := by rw [iso.hom_inv_id_apply]
     _ ≤ ‖i.hom v‖ := h2 _
-    
 #align SemiNormedGroup.iso_isometry_of_norm_noninc SemiNormedGroup.iso_isometry_of_normNoninc
 
 end SemiNormedGroup
@@ -235,7 +234,6 @@ theorem iso_isometry {V W : SemiNormedGroup₁} (i : V ≅ W) : Isometry i.hom :
   calc
     ‖v‖ = ‖i.inv (i.hom v)‖ := by rw [iso.hom_inv_id_apply]
     _ ≤ ‖i.hom v‖ := i.inv.2 _
-    
 #align SemiNormedGroup₁.iso_isometry SemiNormedGroup₁.iso_isometry
 
 end SemiNormedGroup₁

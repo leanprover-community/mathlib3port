@@ -218,7 +218,6 @@ theorem quotient_norm_eq_zero_iff (S : AddSubgroup M) (m : M) :
       _ ↔ ∀ ε > 0, ∃ x ∈ S, x ∈ Metric.ball m ε := by
         simp [dist_eq_norm, ← sub_eq_add_neg, norm_sub_rev]
       _ ↔ m ∈ closure ↑S := by simp [Metric.mem_closure_iff, dist_comm]
-      
     refine' forall₂_congr fun ε ε_pos => _
     rw [← S.exists_neg_mem_iff_exists_mem]
     simp
@@ -263,7 +262,6 @@ theorem quotient_norm_add_le (S : AddSubgroup M) (x y : M ⧸ S) : ‖x + y‖ �
     _ ≤ ‖m + n‖ := (quotient_norm_mk_le S (m + n))
     _ ≤ ‖m‖ + ‖n‖ := (norm_add_le _ _)
     _ ≤ ‖mk' S m‖ + ‖mk' S n‖ + ε := by linarith
-    
 #align quotient_norm_add_le quotient_norm_add_le
 
 /-- The quotient norm of `0` is `0`. -/
@@ -451,7 +449,6 @@ theorem norm_normedMk (S : AddSubgroup M) (h : (S.topologicalClosure : Set M) �
     _ = ‖y‖ / ‖m‖ := by rw [normed_mk.apply, hm]
     _ ≥ (1 + min ε (1 / 2) / (1 - min ε (1 / 2)))⁻¹ := (le_of_lt hlt)
     _ = 1 - min ε (1 / 2) := by field_simp [(ne_of_lt hδ).symm]
-    
 #align add_subgroup.norm_normed_mk AddSubgroup.norm_normedMk
 
 /-- The operator norm of the projection is `0` if the subspace is dense. -/
@@ -493,8 +490,7 @@ noncomputable def lift {N : Type _} [SeminormedAddCommGroup N] (S : AddSubgroup 
       calc
         ‖f m‖ ≤ c * ‖m‖ := hc m
         _ ≤ c * (‖mk' S m‖ + ε / c) := ((mul_lt_mul_left hcpos).mpr hmnorm).le
-        _ = c * ‖mk' S m‖ + ε := by rw [mul_add, mul_div_cancel' _ hcpos.ne.symm]
-         }
+        _ = c * ‖mk' S m‖ + ε := by rw [mul_add, mul_div_cancel' _ hcpos.ne.symm] }
 #align normed_add_group_hom.lift NormedAddGroupHom.lift
 
 theorem lift_mk {N : Type _} [SeminormedAddCommGroup N] (S : AddSubgroup M)
@@ -557,7 +553,6 @@ theorem lift_norm_le {N : Type _} [SeminormedAddCommGroup N] (S : AddSubgroup M)
     calc
       ‖f x‖ ≤ 0 * ‖x‖ := f.le_of_op_norm_le fb x
       _ = 0 := MulZeroClass.zero_mul _
-      
   · replace hc : 0 < c := pos_iff_ne_zero.mpr hc
     apply le_of_forall_pos_le_add
     intro ε hε
@@ -569,7 +564,6 @@ theorem lift_norm_le {N : Type _} [SeminormedAddCommGroup N] (S : AddSubgroup M)
       ‖f x‖ ≤ c * ‖x‖ := f.le_of_op_norm_le fb x
       _ ≤ c * (‖S.normed_mk x‖ + ε / c) := ((mul_le_mul_left _).mpr Hx.le)
       _ = c * _ + ε := _
-      
     · exact_mod_cast hc
     · rw [mul_add, mul_div_cancel']; exact_mod_cast hc.ne'
 #align normed_add_group_hom.lift_norm_le NormedAddGroupHom.lift_norm_le
@@ -649,8 +643,7 @@ instance Submodule.Quotient.normedSpace (𝕜 : Type _) [NormedField 𝕜] [Norm
         specialize h ‖a‖ ⟨by linarith, by linarith [Submodule.Quotient.norm_mk_le S a]⟩
         calc
           _ ≤ ‖k‖ * ‖a‖ := (quotient_norm_mk_le S.to_add_subgroup (k • a)).trans_eq (norm_smul k a)
-          _ ≤ _ := (sub_lt_iff_lt_add'.mp h.1).le
-           }
+          _ ≤ _ := (sub_lt_iff_lt_add'.mp h.1).le }
 #align submodule.quotient.normed_space Submodule.Quotient.normedSpace
 -/
 
@@ -691,8 +684,7 @@ instance Ideal.Quotient.semiNormedCommRing : SeminormedCommRing (R ⧸ I) :=
             ⟨by linarith, by linarith [Ideal.Quotient.norm_mk_le I b]⟩
         calc
           _ ≤ ‖a‖ * ‖b‖ := (Ideal.Quotient.norm_mk_le I (a * b)).trans (norm_mul_le a b)
-          _ ≤ _ := (sub_lt_iff_lt_add'.mp h.1).le
-           }
+          _ ≤ _ := (sub_lt_iff_lt_add'.mp h.1).le }
 #align ideal.quotient.semi_normed_comm_ring Ideal.Quotient.semiNormedCommRing
 -/
 

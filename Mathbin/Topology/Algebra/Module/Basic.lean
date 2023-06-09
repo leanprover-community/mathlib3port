@@ -197,7 +197,6 @@ theorem Submodule.closure_smul_self_subset (s : Submodule R M) :
       refine' ⟨_, fun hx => ⟨⟨1, x⟩, ⟨Set.mem_univ _, hx⟩, one_smul R _⟩⟩
       rintro ⟨⟨c, y⟩, ⟨hc, hy⟩, rfl⟩
       simp [s.smul_mem c hy]
-    
 #align submodule.closure_smul_self_subset Submodule.closure_smul_self_subset
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/

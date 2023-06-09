@@ -560,7 +560,6 @@ theorem coeff_root_pow (h : IsAdjoinRootMonic S f) {n} (hn : n < natDegree f) :
         rw [h.basis.repr_self, ← Finsupp.single_eq_pi_single,
           Finsupp.single_apply_left Fin.val_injective]
       _ = Pi.single n 1 i := by rw [Fin.val_mk, Fin.val_mk]
-      
   · refine' (Pi.single_eq_of_ne _ (1 : (fun _ => R) _)).symm
     rintro rfl
     simpa [hi] using hn

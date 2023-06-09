@@ -513,7 +513,6 @@ theorem norm_lt_one_mul {z1 z2 : ℤ_[p]} (hz2 : ‖z2‖ < 1) : ‖z1 * z2‖ <
   calc
     ‖z1 * z2‖ = ‖z1‖ * ‖z2‖ := by simp
     _ < 1 := mul_lt_one_of_nonneg_of_lt_one_right (norm_le_one _) (norm_nonneg _) hz2
-    
 #align padic_int.norm_lt_one_mul PadicInt.norm_lt_one_mul
 
 @[simp]

@@ -173,7 +173,6 @@ theorem prod_add (f g : α → β) (s : Finset α) :
         exact ⟨fun hx => (H x (h₁ hx)).1 hx, fun hx => (H x (h₂ hx)).2 hx⟩
       · intro f hf
         exact ⟨s.filter fun a : α => ∃ h : a ∈ s, f a h, by simp, by funext <;> intros <;> simp [*]⟩
-    
 #align finset.prod_add Finset.prod_add
 
 /-- `∏ i, (f i + g i) = (∏ i, f i) + ∑ i, g i * (∏ j < i, f j + g j) * (∏ j > i, f j)`. -/

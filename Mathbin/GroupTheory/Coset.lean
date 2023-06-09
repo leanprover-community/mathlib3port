@@ -339,7 +339,6 @@ theorem leftRel_apply {x y : α} : @Setoid.r _ (leftRel s) x y ↔ x⁻¹ * y �
       s.oppositeEquiv.symm.exists_congr_left
     _ ↔ ∃ a : s, x⁻¹ * y = a⁻¹ := by simp only [inv_mul_eq_iff_eq_mul, eq_mul_inv_iff_mul_eq]
     _ ↔ x⁻¹ * y ∈ s := by simp [SetLike.exists]
-    
 #align quotient_group.left_rel_apply QuotientGroup.leftRel_apply
 #align quotient_add_group.left_rel_apply QuotientAddGroup.leftRel_apply
 
@@ -388,7 +387,6 @@ theorem rightRel_apply {x y : α} : @Setoid.r _ (rightRel s) x y ↔ y * x⁻¹ 
     (∃ a : s, (a : α) * y = x) ↔ ∃ a : s, y * x⁻¹ = a⁻¹ := by
       simp only [mul_inv_eq_iff_eq_mul, eq_inv_mul_iff_mul_eq]
     _ ↔ y * x⁻¹ ∈ s := by simp [SetLike.exists]
-    
 #align quotient_group.right_rel_apply QuotientGroup.rightRel_apply
 #align quotient_add_group.right_rel_apply QuotientAddGroup.rightRel_apply
 
@@ -545,7 +543,6 @@ protected theorem eq {a b : α} : (a : α ⧸ s) = b ↔ a⁻¹ * b ∈ s :=
   calc
     _ ↔ @Setoid.r _ (leftRel s) a b := Quotient.eq''
     _ ↔ _ := by rw [left_rel_apply]
-    
 #align quotient_group.eq QuotientGroup.eq
 #align quotient_add_group.eq QuotientAddGroup.eq
 
@@ -641,7 +638,6 @@ noncomputable def groupEquivQuotientProdSubgroup : α ≃ (α ⧸ s) × s :=
         simp [-Quotient.eq''])
     _ ≃ Σ L : α ⧸ s, s := (Equiv.sigmaCongrRight fun L => leftCosetEquivSubgroup _)
     _ ≃ (α ⧸ s) × s := Equiv.sigmaEquivProd _ _
-    
 #align subgroup.group_equiv_quotient_times_subgroup Subgroup.groupEquivQuotientProdSubgroup
 #align add_subgroup.add_group_equiv_quotient_times_add_subgroup AddSubgroup.addGroupEquivQuotientProdAddSubgroup
 
@@ -841,7 +837,6 @@ theorem card_dvd_of_injective [Fintype α] [Fintype H] (f : α →* H) (hf : Fun
   classical calc
     card α = card (f.range : Subgroup H) := card_congr (Equiv.ofInjective f hf)
     _ ∣ card H := card_subgroup_dvd_card _
-    
 #align subgroup.card_dvd_of_injective Subgroup.card_dvd_of_injective
 #align add_subgroup.card_dvd_of_injective AddSubgroup.card_dvd_of_injective
 
@@ -860,7 +855,6 @@ theorem card_comap_dvd_of_injective (K : Subgroup H) [Fintype K] (f : α →* H)
       Fintype.card (K.comap f) = Fintype.card ((K.comap f).map f) :=
         Fintype.card_congr (equiv_map_of_injective _ _ hf).toEquiv
       _ ∣ Fintype.card K := card_dvd_of_le (map_comap_le _ _)
-      
 #align subgroup.card_comap_dvd_of_injective Subgroup.card_comap_dvd_of_injective
 #align add_subgroup.card_comap_dvd_of_injective AddSubgroup.card_comap_dvd_of_injective
 

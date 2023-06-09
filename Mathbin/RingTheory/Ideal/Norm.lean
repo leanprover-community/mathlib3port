@@ -339,7 +339,6 @@ theorem natAbs_det_equiv (I : Ideal S) {E : Type _} [AddEquivClass E S I] (e : E
       _ = (LinearMap.det ((Submodule.subtype I).restrictScalars ℤ ∘ₗ _)).natAbs :=
         (int.nat_abs_eq_iff_associated.mpr (LinearMap.associated_det_comp_equiv _ _ _))
       _ = abs_norm I := this
-      
   have ha : ∀ i, f (b' i) = a i • b' i := by intro i;
     rw [f_apply, b'.equiv_apply, Equiv.refl_apply, ab_eq]
   have mem_I_iff : ∀ x, x ∈ I ↔ ∀ i, a i ∣ b'.repr x i :=
@@ -363,7 +362,6 @@ theorem natAbs_det_equiv (I : Ideal S) {E : Type _} [AddEquivClass E S I] (e : E
     _ = ∏ i, Int.natAbs (a i) := (map_prod Int.natAbsHom a Finset.univ)
     _ = Fintype.card (S ⧸ I) := _
     _ = abs_norm I := (Submodule.cardQuot_apply _).symm
-    
   -- since `linear_map.to_matrix b' b' f` is the diagonal matrix with `a` along the diagonal.
   · congr; ext (i j)
     rw [LinearMap.toMatrix_apply, ha, LinearEquiv.map_smul, Basis.repr_self, Finsupp.smul_single,
@@ -391,7 +389,6 @@ theorem natAbs_det_basis_change {ι : Type _} [Fintype ι] [DecidableEq ι] (b :
         (LinearMap.det ((Submodule.subtype I).restrictScalars ℤ ∘ₗ (e : S →ₗ[ℤ] I))).natAbs :=
       by rw [Basis.det_comp_basis]
     _ = _ := nat_abs_det_equiv I e
-    
 #align ideal.nat_abs_det_basis_change Ideal.natAbs_det_basis_change
 
 @[simp]

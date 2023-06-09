@@ -1476,7 +1476,6 @@ theorem Function.LeftInverse.closed_range [T2Space α] {f : α → β} {g : β �
     calc
       x = g (f x) := (this hx).symm
       _ ∈ _ := mem_range_self _
-      
 #align function.left_inverse.closed_range Function.LeftInverse.closed_range
 -/
 

@@ -1359,7 +1359,7 @@ theorem AEMeasurable.isGLB {ι} {μ : Measure δ} [Countable ι] {f : ι → δ 
 #print Monotone.measurable /-
 protected theorem Monotone.measurable [LinearOrder β] [OrderClosedTopology β] {f : β → α}
     (hf : Monotone f) : Measurable f :=
-  suffices h : ∀ x, OrdConnected (f ⁻¹' Ioi x) from measurable_of_Ioi fun x => (h x).MeasurableSet
+  suffices h (∀ x, OrdConnected (f ⁻¹' Ioi x)) from measurable_of_Ioi fun x => (h x).MeasurableSet
   fun x => ordConnected_def.mpr fun a ha b hb c hc => lt_of_lt_of_le ha (hf hc.1)
 #align monotone.measurable Monotone.measurable
 -/
@@ -1738,7 +1738,6 @@ theorem measure_eq_measure_preimage_add_measure_tsum_Ico_zpow [MeasurableSpace �
         f x < t ^ (i + 1) := hx.2.2
         _ ≤ t ^ j := (ENNReal.zpow_le_of_le (ENNReal.one_le_coe_iff.2 ht.le) h)
         _ ≤ f x := h'x.2.1
-        
     · intro n
       exact hs.inter (hf measurableSet_Ico)
   rw [A, B, C, add_assoc]

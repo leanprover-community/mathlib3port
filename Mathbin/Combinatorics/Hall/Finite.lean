@@ -106,7 +106,6 @@ theorem hall_hard_inductive_step_A {n : ℕ} (hn : Fintype.card ι = n + 1)
       0 < 1 := Nat.one_pos
       _ ≤ (Finset.biUnion {x} t).card := (ht {x})
       _ = (t x).card := by rw [Finset.singleton_biUnion]
-      
   choose y hy using tx_ne
   -- Restrict to everything except `x` and `y`.
   let ι' := {x' : ι | x' ≠ x}
@@ -115,7 +114,6 @@ theorem hall_hard_inductive_step_A {n : ℕ} (hn : Fintype.card ι = n + 1)
     calc
       Fintype.card ι' = Fintype.card ι - 1 := Set.card_ne_eq _
       _ = n := by rw [hn, Nat.add_succ_sub_one, add_zero]
-      
   rcases ih t' card_ι'.le (hall_cond_of_erase y ha) with ⟨f', hfinj, hfr⟩
   -- Extend the resulting function.
   refine' ⟨fun z => if h : z = x then y else f' ⟨z, h⟩, _, _⟩
@@ -200,7 +198,6 @@ theorem hall_hard_inductive_step_B {n : ℕ} (hn : Fintype.card ι = n + 1)
       Fintype.card s = s.card := Fintype.card_coe _
       _ < Fintype.card ι := ((card_lt_iff_ne_univ _).mpr hns)
       _ = n.succ := hn
-      
   rcases ih t' card_ι'_le (hall_cond_of_restrict ht) with ⟨f', hf', hsf'⟩
   -- Restrict to `sᶜ` in the domain and `(s.bUnion t)ᶜ` in the codomain.
   set ι'' := (s : Set ι)ᶜ with ι''_def

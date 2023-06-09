@@ -170,7 +170,6 @@ theorem IsOpen.exists_smooth_support_eq {s : Set E} (hs : IsOpen s) :
         positivity
       _ ≤ M⁻¹ * δ n * M := (mul_le_mul_of_nonneg_left ((hR i x).trans (IR i hi)) (by positivity))
       _ = δ n := by field_simp [M_pos.ne']
-      
   choose r rpos hr using this
   have S : ∀ x, Summable fun n => (r n • g n) x :=
     by
@@ -589,7 +588,6 @@ instance (priority := 100) {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ 
           2 / (R + 1) * ‖x‖ ≤ 2 / (R + 1) * 1 :=
             mul_le_mul_of_nonneg_left hx (div_nonneg zero_le_two A.le)
           _ = 1 - (R - 1) / (R + 1) := by field_simp [A.ne']; ring
-          
       support := fun R hR => by
         have A : 0 < (R + 1) / 2 := by linarith
         have A' : 0 < R + 1 := by linarith

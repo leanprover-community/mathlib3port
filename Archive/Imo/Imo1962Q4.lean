@@ -125,7 +125,6 @@ theorem formula {R : Type _} [CommRing R] [IsDomain R] [CharZero R] (a : R) :
     _ ↔ a * (2 * a ^ 2 - 1) * (4 * a ^ 2 - 3) = 0 := by simp [(by norm_num : (2 : R) ≠ 0)]
     _ ↔ (2 * a ^ 2 - 1) * (4 * a ^ 3 - 3 * a) = 0 := by
       constructor <;> intro h <;> convert h using 1 <;> ring
-    
 #align imo1962_q4.formula imo1962_q4.formula
 
 /-
@@ -150,6 +149,5 @@ theorem imo1962_q4' {x : ℝ} : ProblemEquation x ↔ x ∈ solutionSet :=
     ProblemEquation x ↔ cos x ^ 2 + cos (2 * x) ^ 2 + cos (3 * x) ^ 2 = 1 := by rfl
     _ ↔ cos (2 * x) = 0 ∨ cos (3 * x) = 0 := by simp [cos_two_mul, cos_three_mul, formula]
     _ ↔ x ∈ solutionSet := by rw [solve_cos2x_0, solve_cos3x_0, ← exists_or]; rfl
-    
 #align imo1962_q4' imo1962_q4'
 

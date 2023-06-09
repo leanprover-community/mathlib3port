@@ -144,7 +144,6 @@ theorem exists_norm_eq_iInf_of_complete_convex {K : Set F} (ne : K.Nonempty) (h�
           have eq₂ : u + u - (wq + wp) = a + b; show u + u - (wq + wp) = u - wq + (u - wp); abel
           rw [eq₁, eq₂]
         _ = 2 * (‖a‖ * ‖a‖ + ‖b‖ * ‖b‖) := parallelogram_law_with_norm ℝ _ _
-        
     have eq : δ ≤ ‖u - half • (wq + wp)‖ := by
       rw [smul_add]
       apply δ_le'; apply h₂
@@ -172,7 +171,6 @@ theorem exists_norm_eq_iInf_of_complete_convex {K : Set F} (ne : K.Nonempty) (h�
       _ ≤ 2 * ((δ + div) * (δ + div) + (δ + div) * (δ + div)) - 4 * δ * δ :=
         (sub_le_sub_right (mul_le_mul_of_nonneg_left (add_le_add eq₂ eq₂') (by norm_num)) _)
       _ = 8 * δ * div + 4 * div * div := by ring
-      
     exact
       add_nonneg (mul_nonneg (mul_nonneg (by norm_num) zero_le_δ) (le_of_lt Nat.one_div_pos_of_nat))
         (mul_nonneg (mul_nonneg (by norm_num) nat.one_div_pos_of_nat.le) nat.one_div_pos_of_nat.le)
@@ -245,7 +243,6 @@ theorem norm_eq_iInf_iff_real_inner_le_zero {K : Set F} (h : Convex ℝ K) {u : 
                   absR θ * ‖w - v‖ * (absR θ * ‖w - v‖) =
                 ‖u - v‖ * ‖u - v‖ - 2 * θ * inner (u - v) (w - v) + θ * θ * (‖w - v‖ * ‖w - v‖)
             rw [abs_of_pos hθ₁]; ring
-          
       have eq₁ :
         ‖u - v‖ ^ 2 - 2 * θ * inner (u - v) (w - v) + θ * θ * ‖w - v‖ ^ 2 =
           ‖u - v‖ ^ 2 + (θ * θ * ‖w - v‖ ^ 2 - 2 * θ * inner (u - v) (w - v)) :=
@@ -272,13 +269,11 @@ theorem norm_eq_iInf_iff_real_inner_le_zero {K : Set F} (h : Convex ℝ K) {u : 
           calc
             θ * q ≤ p / q * q := mul_le_mul_of_nonneg_right (min_le_right _ _) (sq_nonneg _)
             _ = p := div_mul_cancel _ hq
-            
         have : 2 * p ≤ p :=
           calc
             2 * p ≤ θ * q := by
               refine' this θ (lt_min (by norm_num) (div_pos hp q_pos)) (by norm_num)
             _ ≤ p := eq₁
-            
         linarith)
     (by
       intro h
@@ -293,7 +288,6 @@ theorem norm_eq_iInf_iff_real_inner_le_zero {K : Set F} (h : Convex ℝ K) {u : 
             refine' le_add_of_nonneg_right _; exact sq_nonneg _
           _ = ‖u - v - (w - v)‖ ^ 2 := (@norm_sub_sq ℝ _ _ _ _ _ _).symm
           _ = ‖u - w‖ * ‖u - w‖ := by have : u - v - (w - v) = u - w; abel; rw [this, sq]
-          
       · show (⨅ w : K, ‖u - w‖) ≤ (fun w : K => ‖u - w‖) ⟨v, hv⟩
         apply ciInf_le; use 0; rintro y ⟨z, rfl⟩; exact norm_nonneg _)
 #align norm_eq_infi_iff_real_inner_le_zero norm_eq_iInf_iff_real_inner_le_zero
@@ -378,7 +372,6 @@ theorem norm_eq_iInf_iff_inner_eq_zero {u : E} {v : E} (hv : v ∈ K) :
         _ = re ⟪u - v, -I • w⟫ := (A _ (K.smul_mem (-I) hw)).symm
         _ = re (-I * ⟪u - v, w⟫) := by rw [inner_smul_right]
         _ = im ⟪u - v, w⟫ := by simp
-        
   · intro H
     have : ∀ w ∈ K', ⟪u - v, w⟫_ℝ = 0 := by
       intro w hw
@@ -1120,7 +1113,6 @@ theorem inner_orthogonalProjection_eq_of_mem_right [CompleteSpace K] (u : K) (v 
     _ = ⟪(orthogonalProjection K v : E), u⟫ + ⟪v - orthogonalProjection K v, u⟫ := by
       rw [orthogonalProjection_inner_eq_zero _ _ (Submodule.coe_mem _), add_zero]
     _ = ⟪v, u⟫ := by rw [← inner_add_left, add_sub_cancel'_right]
-    
 #align inner_orthogonal_projection_eq_of_mem_right inner_orthogonalProjection_eq_of_mem_right
 
 @[simp]

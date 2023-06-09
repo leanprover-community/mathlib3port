@@ -144,7 +144,6 @@ theorem real_roots_Phi_ge_aux (hab : b < a) :
           refine' add_le_add (sub_le_sub_left (pow_le_pow ha _) _) _ <;> linarith
         _ = -(a - 1) ^ 2 * (a + 1) := by ring
         _ ≤ 0 := by nlinarith
-        
     have ha' := neg_nonpos.mpr (hle.trans ha)
     obtain ⟨x, ⟨-, hx1⟩, hx2⟩ := intermediate_value_Icc ha' (hc _) (set.mem_Icc.mpr ⟨hfa, hf0⟩)
     exact ⟨x, 1, (hx1.trans_lt zero_lt_one).Ne, hx2, hf1⟩

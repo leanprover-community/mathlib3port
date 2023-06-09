@@ -186,8 +186,7 @@ theorem uniformity_translate_mul (a : α) : ((𝓤 α).map fun x : α × α => (
             (x.1 * a, x.2 * a) :=
         by simp [Filter.map_map, (· ∘ ·)] <;> exact filter.map_id.symm
       _ ≤ (𝓤 α).map fun x : α × α => (x.1 * a, x.2 * a) :=
-        Filter.map_mono (uniformContinuous_id.mul uniformContinuous_const)
-      )
+        Filter.map_mono (uniformContinuous_id.mul uniformContinuous_const))
 #align uniformity_translate_mul uniformity_translate_mul
 #align uniformity_translate_add uniformity_translate_add
 

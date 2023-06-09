@@ -61,7 +61,6 @@ theorem mersenne_pos {p : ℕ} (h : 0 < p) : 0 < mersenne p :=
   calc
     0 < 2 ^ 1 - 1 := by norm_num
     _ ≤ 2 ^ p - 1 := Nat.pred_le_pred (Nat.pow_le_pow_of_le_right (Nat.succ_pos 1) h)
-    
 #align mersenne_pos mersenne_pos
 -/
 
@@ -416,7 +415,6 @@ theorem closed_form (i : ℕ) : (s i : X q) = (ω : X q) ^ 2 ^ i + (ωb : X q) ^
       _ = (ω ^ 2 ^ i) ^ 2 + (ωb ^ 2 ^ i) ^ 2 := by
         rw [← mul_pow ωb ω, ωb_mul_ω, one_pow, mul_one, add_sub_cancel]
       _ = ω ^ 2 ^ (i + 1) + ωb ^ 2 ^ (i + 1) := by rw [← pow_mul, ← pow_mul, pow_succ']
-      
 #align lucas_lehmer.X.closed_form LucasLehmer.X.closed_form
 
 end X
@@ -442,8 +440,7 @@ theorem two_lt_q (p' : ℕ) : 2 < q (p' + 2) :=
         (calc
           2 ≤ p' + 2 := Nat.le_add_left _ _
           _ < 2 ^ (p' + 2) := (Nat.lt_two_pow _)
-          _ = 2 := Nat.pred_inj (Nat.one_le_two_pow _) (by decide) h'
-          )
+          _ = 2 := Nat.pred_inj (Nat.one_le_two_pow _) (by decide) h')
   · -- If q = 2, we get a contradiction from 2 ∣ 2^p - 1
     dsimp [q] at h ; injection h with h'; clear h
     rw [mersenne, PNat.one_coe, Nat.minFac_eq_two_iff, pow_succ] at h' 
@@ -496,7 +493,6 @@ theorem ω_pow_eq_one (p' : ℕ) (h : lucasLehmerResidue (p' + 2) = 0) :
     (ω : X (q (p' + 2))) ^ 2 ^ (p' + 2) = (ω ^ 2 ^ (p' + 1)) ^ 2 := by rw [← pow_mul, ← pow_succ']
     _ = (-1) ^ 2 := by rw [ω_pow_eq_neg_one p' h]
     _ = 1 := by simp
-    
 #align lucas_lehmer.ω_pow_eq_one LucasLehmer.ω_pow_eq_one
 
 /-- `ω` as an element of the group of units. -/
@@ -542,7 +538,6 @@ theorem order_ineq (p' : ℕ) (h : lucasLehmerResidue (p' + 2) = 0) :
     2 ^ (p' + 2) = orderOf (ωUnit (p' + 2)) := (order_ω p' h).symm
     _ ≤ Fintype.card (X _)ˣ := orderOf_le_card_univ
     _ < (q (p' + 2) : ℕ) ^ 2 := card_units_lt (Nat.lt_of_succ_lt (two_lt_q _))
-    
 #align lucas_lehmer.order_ineq LucasLehmer.order_ineq
 
 end LucasLehmer
@@ -582,9 +577,9 @@ theorem sMod_succ {p a i b c} (h1 : (2 ^ p - 1 : ℤ) = a) (h2 : sMod p i = b)
   rw [h1, h2, sq, h3]
 #align lucas_lehmer.s_mod_succ LucasLehmer.sMod_succ
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:330:4: warning: unsupported (TODO): `[tacs] -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:330:4: warning: unsupported (TODO): `[tacs] -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:330:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
 /-- Given a goal of the form `lucas_lehmer_test p`,
 attempt to do the calculation using `norm_num` to certify each step.
 -/

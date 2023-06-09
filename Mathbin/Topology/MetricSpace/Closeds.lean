@@ -75,7 +75,6 @@ theorem continuous_infEdist_Hausdorff_edist :
     _ ≤ inf_edist y t + (edist (x, s) (y, t) + edist (x, s) (y, t)) :=
       (add_le_add_left (add_le_add (le_max_left _ _) (le_max_right _ _)) _)
     _ = inf_edist y t + 2 * edist (x, s) (y, t) := by rw [← mul_two, mul_comm]
-    
 #align emetric.continuous_inf_edist_Hausdorff_edist Emetric.continuous_infEdist_Hausdorff_edist
 
 #print EMetric.isClosed_subsets_of_isClosed /-
@@ -196,8 +195,7 @@ instance Closeds.completeSpace [CompleteSpace α] : CompleteSpace (Closeds α) :
         calc
           edist x y ≤ edist x z + edist z y := edist_triangle _ _ _
           _ ≤ B n + B n := (add_le_add (le_of_lt Dxz) (le_of_lt Dzy))
-          _ = 2 * B n := (two_mul _).symm
-          ⟩
+          _ = 2 * B n := (two_mul _).symm⟩
   -- Deduce from the above inequalities that the distance between `s n` and `t0` is at most `2 B n`.
   have main : ∀ n : ℕ, edist (s n) t ≤ 2 * B n := fun n =>
     Hausdorff_edist_le_of_mem_edist (I1 n) (I2 n)
@@ -329,7 +327,6 @@ theorem NonemptyCompacts.isClosed_in_closeds [CompleteSpace α] :
         edist x y ≤ edist x z + edist z y := edist_triangle _ _ _
         _ < ε / 2 + ε / 2 := (ENNReal.add_lt_add Dxz Dzy)
         _ = ε := ENNReal.add_halves _
-        
     exact mem_bUnion hy this
 #align emetric.nonempty_compacts.is_closed_in_closeds EMetric.NonemptyCompacts.isClosed_in_closeds
 -/
@@ -401,7 +398,6 @@ instance NonemptyCompacts.secondCountableTopology [SecondCountableTopology α] :
           edist x (F z) ≤ edist x z + edist z (F z) := edist_triangle _ _ _
           _ < δ / 2 + δ / 2 := (ENNReal.add_lt_add Dxz (Fspec z).2)
           _ = δ := ENNReal.add_halves _
-          
       -- keep only the points in `b` that are close to point in `t`, yielding a new set `c`
       let c := {y ∈ b | ∃ x ∈ t, edist x y < δ}
       have : c.finite := ‹b.finite›.Subset fun x hx => hx.1
@@ -420,7 +416,6 @@ instance NonemptyCompacts.secondCountableTopology [SecondCountableTopology α] :
           calc
             edist y x = edist x y := edist_comm _ _
             _ ≤ δ := le_of_lt Dyx
-            
         exact ⟨x, xt, this⟩
       -- it follows that their Hausdorff distance is small
       have : Hausdorff_edist (t : Set α) c ≤ δ := Hausdorff_edist_le_of_mem_edist tc ct

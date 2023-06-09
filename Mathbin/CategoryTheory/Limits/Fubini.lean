@@ -332,7 +332,6 @@ noncomputable def limitCurrySwapCompLimIsoLimitCurryCompLim :
       (limitIsoLimitCurryCompLim _).symm
     _ ≅ limit G := (HasLimit.isoOfEquivalence (braiding K J) (Iso.refl _))
     _ ≅ limit (curry.obj G ⋙ lim) := limitIsoLimitCurryCompLim _
-    
 #align category_theory.limits.limit_curry_swap_comp_lim_iso_limit_curry_comp_lim CategoryTheory.Limits.limitCurrySwapCompLimIsoLimitCurryCompLim
 
 @[simp]

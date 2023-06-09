@@ -105,7 +105,7 @@ instance [Inhabited α] : Inhabited (Discrete α) :=
 instance [Subsingleton α] : Subsingleton (Discrete α) :=
   ⟨by intros; ext; apply Subsingleton.elim⟩
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:330:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
 /-- A simple tactic to run `cases` on any `discrete α` hypotheses. -/
 unsafe def _root_.tactic.discrete_cases : tactic Unit :=
   sorry

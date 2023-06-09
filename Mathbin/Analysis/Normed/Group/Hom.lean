@@ -74,8 +74,7 @@ theorem exists_pos_bound_of_bound {V W : Type _} [SeminormedAddCommGroup V]
   ⟨max M 1, lt_of_lt_of_le zero_lt_one (le_max_right _ _), fun x =>
     calc
       ‖f x‖ ≤ M * ‖x‖ := h x
-      _ ≤ max M 1 * ‖x‖ := mul_le_mul_of_nonneg_right (le_max_left _ _) (norm_nonneg _)
-      ⟩
+      _ ≤ max M 1 * ‖x‖ := mul_le_mul_of_nonneg_right (le_max_left _ _) (norm_nonneg _)⟩
 #align exists_pos_bound_of_bound exists_pos_bound_of_bound
 
 namespace NormedAddGroupHom
@@ -338,8 +337,7 @@ instance : Add (NormedAddGroupHom V₁ V₂) :=
       calc
         ‖f v + g v‖ ≤ ‖f v‖ + ‖g v‖ := norm_add_le _ _
         _ ≤ ‖f‖ * ‖v‖ + ‖g‖ * ‖v‖ := (add_le_add (le_opNorm f v) (le_opNorm g v))
-        _ = (‖f‖ + ‖g‖) * ‖v‖ := by rw [add_mul]
-        ⟩
+        _ = (‖f‖ + ‖g‖) * ‖v‖ := by rw [add_mul]⟩
 
 /-- The operator norm satisfies the triangle inequality. -/
 theorem opNorm_add_le : ‖f + g‖ ≤ ‖f‖ + ‖g‖ :=
@@ -392,8 +390,7 @@ theorem opNorm_zero_iff {V₁ V₂ : Type _} [NormedAddCommGroup V₁] [NormedAd
         norm_le_zero_iff.1
           (calc
             _ ≤ ‖f‖ * ‖x‖ := le_opNorm _ _
-            _ = _ := by rw [hn, MulZeroClass.zero_mul]
-            ))
+            _ = _ := by rw [hn, MulZeroClass.zero_mul]))
     fun hf => by rw [hf, op_norm_zero]
 #align normed_add_group_hom.op_norm_zero_iff NormedAddGroupHom.opNorm_zero_iff
 
@@ -671,7 +668,6 @@ protected def comp (g : NormedAddGroupHom V₂ V₃) (f : NormedAddGroupHom V₁
       ‖g (f v)‖ ≤ ‖g‖ * ‖f v‖ := le_opNorm _ _
       _ ≤ ‖g‖ * (‖f‖ * ‖v‖) := (mul_le_mul_of_nonneg_left (le_opNorm _ _) (opNorm_nonneg _))
       _ = ‖g‖ * ‖f‖ * ‖v‖ := by rw [mul_assoc]
-      
 #align normed_add_group_hom.comp NormedAddGroupHom.comp
 -/
 

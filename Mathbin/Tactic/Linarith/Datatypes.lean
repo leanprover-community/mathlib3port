@@ -370,7 +370,7 @@ unsafe def certificate_oracle : Type :=
   List Comp → ℕ → tactic (rb_map ℕ ℕ)
 #align linarith.certificate_oracle linarith.certificate_oracle
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:330:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
 /-- A configuration object for `linarith`. -/
 unsafe structure linarith_config : Type where
   discharger : tactic Unit := sorry
@@ -384,7 +384,7 @@ unsafe structure linarith_config : Type where
   oracle : Option certificate_oracle := none
 #align linarith.linarith_config linarith.linarith_config
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:330:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
 /-- `cfg.update_reducibility reduce_semi` will change the transparency setting of `cfg` to
 `semireducible` if `reduce_semi` is true. In this case, it also sets the discharger to `ring!`,
 since this is typically needed when using stronger unification.
@@ -443,7 +443,7 @@ open Tactic
       | _ => none
 #align linarith.parse_into_comp_and_expr linarith.parse_into_comp_and_expr
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:330:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
 -- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
 /--

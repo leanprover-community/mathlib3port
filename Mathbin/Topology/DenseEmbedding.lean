@@ -83,7 +83,6 @@ theorem closure_image_mem_nhds {s : Set α} {a : α} (di : DenseInducing i) (hs 
   calc
     U ⊆ closure (i '' (i ⁻¹' U)) := di.dense.subset_closure_image_preimage_of_is_open hUo
     _ ⊆ closure (i '' s) := closure_mono (image_subset i sub)
-    
 #align dense_inducing.closure_image_mem_nhds DenseInducing.closure_image_mem_nhds
 
 theorem dense_image (di : DenseInducing i) {s : Set α} : Dense (i '' s) ↔ Dense s :=
@@ -344,7 +343,6 @@ theorem isClosed_property [TopologicalSpace β] {e : α → β} {p : β → Prop
       univ = closure (range e) := he.closure_range.symm
       _ ⊆ closure {b | p b} := (closure_mono <| range_subset_iff.mpr h)
       _ = _ := hp.closure_eq
-      
   fun b => this trivial
 #align is_closed_property isClosed_property
 -/

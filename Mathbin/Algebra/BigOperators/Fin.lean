@@ -515,7 +515,6 @@ theorem alternatingSum_eq_finset_sum {G : Type _} [AddCommGroup G] :
         unfold_coes
         simp [Nat.succ_eq_add_one, pow_add]
         rfl
-      
 #align list.alternating_sum_eq_finset_sum List.alternatingSum_eq_finset_sum
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -541,7 +540,6 @@ theorem alternatingProd_eq_finset_prod {G : Type _} [CommGroup G] :
         unfold_coes
         simp [Nat.succ_eq_add_one, pow_add]
         rfl
-      
 #align list.alternating_prod_eq_finset_prod List.alternatingProd_eq_finset_prod
 #align list.alternating_sum_eq_finset_sum List.alternatingSum_eq_finset_sum
 

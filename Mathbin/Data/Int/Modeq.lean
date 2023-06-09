@@ -356,7 +356,6 @@ theorem modEq_add_fac {a b n : ℤ} (c : ℤ) (ha : a ≡ b [ZMOD n]) : a + n * 
     a + n * c ≡ b + n * c [ZMOD n] := ha.add_right _
     _ ≡ b + 0 [ZMOD n] := ((dvd_mul_right _ _).modEq_zero_int.add_left _)
     _ ≡ b [ZMOD n] := by rw [add_zero]
-    
 #align int.modeq_add_fac Int.modEq_add_fac
 -/
 
@@ -373,8 +372,7 @@ theorem mod_coprime {a b : ℕ} (hab : Nat.coprime a b) : ∃ y : ℤ, a * y ≡
     calc
       ↑a * Nat.gcdA a b ≡ ↑a * Nat.gcdA a b + ↑b * Nat.gcdB a b [ZMOD ↑b] :=
         ModEq.symm <| modEq_add_fac _ <| ModEq.refl _
-      _ ≡ 1 [ZMOD ↑b] := by rw [← Nat.gcd_eq_gcd_ab, hgcd] <;> rfl
-      ⟩
+      _ ≡ 1 [ZMOD ↑b] := by rw [← Nat.gcd_eq_gcd_ab, hgcd] <;> rfl⟩
 #align int.mod_coprime Int.mod_coprime
 -/
 

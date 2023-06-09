@@ -327,7 +327,6 @@ instance [hp : Fact p.Prime] [Finite (Sylow p G)] : IsPretransitive G (Sylow p G
           forall_congr' fun a => Subtype.ext_iff
         _ ↔ R.1 ≤ S := R.2.sylow_mem_fixedPoints_iff
         _ ↔ S.1.1 = R := ⟨fun h => R.3 S.1.2 h, ge_of_eq⟩
-        
     suffices Set.Nonempty (fixed_points Q (orbit G P)) by
       exact Exists.elim this fun R hR => (congr_arg _ (Sylow.ext (H.mp hR))).mp R.2
     apply Q.2.nonempty_fixed_point_of_prime_not_dvd_card
@@ -336,7 +335,6 @@ instance [hp : Fact p.Prime] [Finite (Sylow p G)] : IsPretransitive G (Sylow p G
       1 = card (fixed_points P (orbit G P)) := _
       _ ≡ card (orbit G P) [MOD p] := (P.2.card_modEq_card_fixedPoints (orbit G P)).symm
       _ ≡ 0 [MOD p] := nat.modeq_zero_iff_dvd.mpr h
-      
     rw [← Set.card_singleton (⟨P, mem_orbit_self P⟩ : orbit G P)]
     refine' card_congr' (congr_arg _ (Eq.symm _))
     rw [Set.eq_singleton_iff_unique_mem]
@@ -356,7 +354,6 @@ theorem card_sylow_modEq_one [Fact p.Prime] [Fintype (Sylow p G)] : card (Sylow 
         Q ∈ fixed_points P (Sylow p G) ↔ P.1 ≤ Q := P.2.sylow_mem_fixedPoints_iff
         _ ↔ Q.1 = P.1 := ⟨P.3 Q.2, ge_of_eq⟩
         _ ↔ Q ∈ {P} := sylow.ext_iff.symm.trans set.mem_singleton_iff.symm
-        
   have : Fintype (fixed_points P.1 (Sylow p G)) := by rw [this]; infer_instance
   have : card (fixed_points P.1 (Sylow p G)) = 1 := by simp [this]
   exact (P.2.card_modEq_card_fixedPoints (Sylow p G)).trans (by rw [this])
@@ -433,7 +430,6 @@ noncomputable def Sylow.equivQuotientNormalizer [Fact p.Prime] [Fintype (Sylow p
     _ ≃ orbit G P := by rw [P.orbit_eq_top]
     _ ≃ G ⧸ stabilizer G P := (orbitEquivQuotientStabilizer G P)
     _ ≃ G ⧸ (P : Subgroup G).normalizer := by rw [P.stabilizer_eq_normalizer]
-    
 #align sylow.equiv_quotient_normalizer Sylow.equivQuotientNormalizer
 -/
 
@@ -869,7 +865,6 @@ noncomputable def directProductOfNormal [Fintype G]
         (Finset.prod_finset_coe (fun p => p ^ (card G).factorization p) _)
       _ = (card G).factorization.Prod pow := rfl
       _ = card G := Nat.factorization_prod_pow_eq_self Fintype.card_ne_zero
-      
 #align sylow.direct_product_of_normal Sylow.directProductOfNormal
 
 end Sylow

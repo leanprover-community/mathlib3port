@@ -379,7 +379,6 @@ theorem dist_sq_add_dist_sq_eq_two_mul_dist_midpoint_sq_add_half_dist_sq (a b c 
           2 / dist b c * (dist a b ^ 2 * (2⁻¹ * dist b c) + dist a c ^ 2 * (2⁻¹ * dist b c)) :=
         by field_simp; ring
       _ = 2 * (dist a (midpoint ℝ b c) ^ 2 + (dist b c / 2) ^ 2) := by rw [hm]; field_simp; ring
-      
 #align euclidean_geometry.dist_sq_add_dist_sq_eq_two_mul_dist_midpoint_sq_add_half_dist_sq EuclideanGeometry.dist_sq_add_dist_sq_eq_two_mul_dist_midpoint_sq_add_half_dist_sq
 
 theorem dist_mul_of_eq_angle_of_dist_mul (a b c a' b' c' : P) (r : ℝ) (h : ∠ a' b' c' = ∠ a b c)
@@ -394,7 +393,6 @@ theorem dist_mul_of_eq_angle_of_dist_mul (a b c a' b' c' : P) (r : ℝ) (h : ∠
     _ = r ^ 2 * (dist a b ^ 2 + dist c b ^ 2 - 2 * dist a b * dist c b * Real.cos (∠ a b c)) := by
       rw [h, hab, hcb]; ring
     _ = (r * dist a c) ^ 2 := by simp [pow_two, ← law_cos a b c, mul_pow]
-    
   by_cases hab₁ : a = b
   · have hab'₁ : a' = b' := by
       rw [← dist_eq_zero, hab, dist_eq_zero.mpr hab₁, MulZeroClass.mul_zero r]

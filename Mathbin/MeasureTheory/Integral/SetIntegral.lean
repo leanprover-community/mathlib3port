@@ -191,7 +191,6 @@ theorem integral_indicator (hs : MeasurableSet s) : (∫ x, indicator s f x ∂�
       (congr_arg₂ (· + ·) (integral_congr_ae (indicator_ae_eq_restrict hs))
         (integral_congr_ae (indicator_ae_eq_restrict_compl hs)))
     _ = ∫ x in s, f x ∂μ := by simp
-    
 #align measure_theory.integral_indicator MeasureTheory.integral_indicator
 
 theorem set_integral_indicator (ht : MeasurableSet t) :
@@ -209,7 +208,6 @@ theorem ofReal_set_integral_one_of_measure_ne_top {α : Type _} {m : MeasurableS
       rw [of_real_integral_norm_eq_lintegral_nnnorm (integrable_on_const.2 (Or.inr hs.lt_top))]
       simp only [nnnorm_one, ENNReal.coe_one]
     _ = μ s := set_lintegral_one _
-    
 #align measure_theory.of_real_set_integral_one_of_measure_ne_top MeasureTheory.ofReal_set_integral_one_of_measure_ne_top
 
 theorem ofReal_set_integral_one {α : Type _} {m : MeasurableSpace α} (μ : Measure α)
@@ -339,7 +337,6 @@ theorem integral_union_eq_left_of_ae (ht_eq : ∀ᵐ x ∂μ.restrict t, f x = 0
     _ = ∫ x in s, f x ∂μ :=
       integral_congr_ae
         (ae_mono (measure.restrict_mono (subset_union_left s t) le_rfl) H.1.ae_eq_mk.symm)
-    
 #align measure_theory.integral_union_eq_left_of_ae MeasureTheory.integral_union_eq_left_of_ae
 
 theorem integral_union_eq_left_of_forall₀ {f : α → E} (ht : NullMeasurableSet t μ)
@@ -379,7 +376,6 @@ theorem set_integral_eq_of_subset_of_ae_diff_eq_zero_aux (hts : s ⊆ t)
       have : ∀ x ∈ s ∩ k, f x = 0 := fun x hx => hx.2
       rw [set_integral_eq_zero_of_forall_eq_zero this, zero_add]
     _ = ∫ x in s, f x ∂μ := by rw [integral_inter_add_diff hk (h'aux.mono hts le_rfl)]
-    
 #align measure_theory.set_integral_eq_of_subset_of_ae_diff_eq_zero_aux MeasureTheory.set_integral_eq_of_subset_of_ae_diff_eq_zero_aux
 
 /-- If a function vanishes almost everywhere on `t \ s` with `s ⊆ t`, then its integrals on `s`
@@ -404,7 +400,6 @@ theorem set_integral_eq_of_subset_of_ae_diff_eq_zero (ht : NullMeasurableSet t �
       apply integral_congr_ae
       apply ae_restrict_of_ae_restrict_of_subset hts
       exact h.1.ae_eq_mk.symm
-    
 #align measure_theory.set_integral_eq_of_subset_of_ae_diff_eq_zero MeasureTheory.set_integral_eq_of_subset_of_ae_diff_eq_zero
 
 /-- If a function vanishes on `t \ s` with `s ⊆ t`, then its integrals on `s`
@@ -474,7 +469,6 @@ theorem integral_norm_eq_pos_sub_neg {f : α → ℝ} (hfi : Integrable f μ) :
       linarith
     _ = (∫ x in {x | 0 ≤ f x}, f x ∂μ) - ∫ x in {x | f x ≤ 0}, f x ∂μ := by
       rw [← set_integral_neg_eq_set_integral_nonpos hfi.1]; congr; ext1 x; simp
-    
 #align measure_theory.integral_norm_eq_pos_sub_neg MeasureTheory.integral_norm_eq_pos_sub_neg
 
 #print MeasureTheory.set_integral_const /-
@@ -502,7 +496,6 @@ theorem set_integral_indicatorConstLp {p : ℝ≥0∞} (hs : MeasurableSet s) (h
     (∫ a in s, indicatorConstLp p ht hμt x a ∂μ) = ∫ a in s, t.indicator (fun _ => x) a ∂μ := by
       rw [set_integral_congr_ae hs (indicator_const_Lp_coe_fn.mono fun x hx hxs => hx)]
     _ = (μ (t ∩ s)).toReal • x := by rw [integral_indicator_const _ ht, measure.restrict_apply ht]
-    
 #align measure_theory.set_integral_indicator_const_Lp MeasureTheory.set_integral_indicatorConstLp
 
 theorem integral_indicatorConstLp {p : ℝ≥0∞} (ht : MeasurableSet t) (hμt : μ t ≠ ∞) (x : E) :
@@ -512,7 +505,6 @@ theorem integral_indicatorConstLp {p : ℝ≥0∞} (ht : MeasurableSet t) (hμt 
       rw [integral_univ]
     _ = (μ (t ∩ univ)).toReal • x := (set_integral_indicatorConstLp MeasurableSet.univ ht hμt x)
     _ = (μ t).toReal • x := by rw [inter_univ]
-    
 #align measure_theory.integral_indicator_const_Lp MeasureTheory.integral_indicatorConstLp
 
 #print MeasureTheory.set_integral_map /-
@@ -1367,7 +1359,6 @@ theorem integral_withDensity_eq_integral_smul₀ {f : α → ℝ≥0} (hf : AEMe
       apply integral_congr_ae
       filter_upwards [hf.ae_eq_mk] with x hx
       rw [hx]
-    
 #align integral_with_density_eq_integral_smul₀ integral_withDensity_eq_integral_smul₀
 
 theorem set_integral_withDensity_eq_set_integral_smul {f : α → ℝ≥0} (f_meas : Measurable f)

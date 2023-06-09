@@ -71,7 +71,7 @@ def FunctorCategory.prodPreservesColimits [HasBinaryProducts D] [HasColimits D]
             by
             apply evaluation_jointly_reflects_colimits _ fun k => _
             change is_colimit ((prod.functor.obj F ⋙ (evaluation _ _).obj k).mapCocone c)
-            let this :=
+            let this.1 :=
               is_colimit_of_preserves ((evaluation C D).obj k ⋙ prod.functor.obj (F.obj k)) t
             apply is_colimit.map_cocone_equiv _ this
             apply (nat_iso.of_components _ _).symm

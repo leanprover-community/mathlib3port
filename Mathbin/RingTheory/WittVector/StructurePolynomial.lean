@@ -150,7 +150,6 @@ theorem wittStructureRat_prop (Φ : MvPolynomial idx ℚ) (n : ℕ) :
       by rw [bind₁_bind₁]; exact eval₂_hom_congr (RingHom.ext_rat _ _) rfl rfl
     _ = bind₁ (fun i => rename (Prod.mk i) (W_ ℚ n)) Φ := by
       rw [bind₁_xInTermsOfW_wittPolynomial p _ n, bind₁_X_right]
-    
 #align witt_structure_rat_prop wittStructureRat_prop
 
 theorem wittStructureRat_existsUnique (Φ : MvPolynomial idx ℚ) :
@@ -192,7 +191,6 @@ theorem wittStructureRat_rec (Φ : MvPolynomial idx ℚ) (n : ℕ) :
   calc
     wittStructureRat p Φ n = C (1 / p ^ n : ℚ) * (wittStructureRat p Φ n * C (p ^ n : ℚ)) := _
     _ = _ := by rw [wittStructureRat_rec_aux]
-    
   rw [mul_left_comm, ← C_mul, div_mul_cancel, C_1, mul_one]
   exact pow_ne_zero _ (Nat.cast_ne_zero.2 hp.1.NeZero)
 #align witt_structure_rat_rec wittStructureRat_rec

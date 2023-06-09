@@ -82,7 +82,6 @@ theorem mul : m₁ = m₂ := by
     m₁ a b = m₁ (m₂ a e₁) (m₂ e₁ b) := by
       simp only [one h₁ h₂ Distrib, h₁.left_id, h₁.right_id, h₂.left_id, h₂.right_id]
     _ = m₂ a b := by simp only [Distrib, h₁.left_id, h₁.right_id, h₂.left_id, h₂.right_id]
-    
 #align eckmann_hilton.mul EckmannHilton.mul
 -/
 

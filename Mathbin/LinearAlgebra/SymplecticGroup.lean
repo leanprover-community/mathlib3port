@@ -178,7 +178,6 @@ theorem transpose_mem (hA : A ∈ symplecticGroup l R) : Aᵀ ∈ symplecticGrou
     _ = -(J l R)⁻¹ := by
       rw [mul_nonsing_inv_cancel_left _ _ huAT, nonsing_inv_mul_cancel_right _ _ huA]
     _ = J l R := by simp [J_inv]
-    
 #align symplectic_group.transpose_mem SymplecticGroup.transpose_mem
 
 @[simp]
@@ -207,7 +206,6 @@ theorem inv_left_mul_aux (hA : A ∈ symplecticGroup l R) : -J l R ⬝ Aᵀ ⬝ 
     _ = (-1 : R) • J l R ⬝ J l R := by simp only [Matrix.neg_mul, neg_smul, one_smul]
     _ = (-1 : R) • -1 := by rw [J_squared]
     _ = 1 := by simp only [neg_smul_neg, one_smul]
-    
 #align symplectic_group.inv_left_mul_aux SymplecticGroup.inv_left_mul_aux
 
 theorem coe_inv' (A : symplecticGroup l R) : (↑A⁻¹ : Matrix (Sum l l) (Sum l l) R) = A⁻¹ :=

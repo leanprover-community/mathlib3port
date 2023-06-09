@@ -35,7 +35,6 @@ theorem isThin_iff : Quiver.IsThin C ↔ ∀ c : C, Subsingleton (c ⟶ c) :=
     f = f ≫ inv g ≫ g := by simp only [inv_eq_inv, is_iso.inv_hom_id, category.comp_id]
     _ = f ≫ inv f ≫ g := by congr
     _ = g := by simp only [inv_eq_inv, is_iso.hom_inv_id_assoc]
-    
 #align category_theory.groupoid.is_thin_iff CategoryTheory.Groupoid.isThin_iff
 
 end Thin

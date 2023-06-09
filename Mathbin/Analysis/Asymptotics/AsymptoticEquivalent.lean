@@ -281,7 +281,6 @@ theorem IsEquivalent.smul {α E 𝕜 : Type _} [NormedField 𝕜] [NormedAddComm
         mul_le_mul_of_nonneg_right hφx.le (norm_nonneg <| u x)
       _ ≤ c / 2 / C * (C * ‖v x‖) := (mul_le_mul_of_nonneg_left hCuvx (div_pos (by linarith) hC).le)
       _ = c / 2 * ‖v x‖ := by field_simp [hC.ne.symm]; ring
-      
   calc
     ‖((fun x : α => φ x • u x) - v) x‖ = ‖(φ x - 1) • u x + (u x - v x)‖ := by
       simp [sub_smul, sub_add]
@@ -290,7 +289,6 @@ theorem IsEquivalent.smul {α E 𝕜 : Type _} [NormedField 𝕜] [NormedAddComm
     _ ≤ c / 2 * ‖v x‖ + ‖u x - v x‖ := (add_le_add_right key _)
     _ ≤ c / 2 * ‖v x‖ + c / 2 * ‖v x‖ := (add_le_add_left huvx _)
     _ = c * ‖v x‖ := by ring
-    
 #align asymptotics.is_equivalent.smul Asymptotics.IsEquivalent.smul
 
 end Smul

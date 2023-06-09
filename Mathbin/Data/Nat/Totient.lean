@@ -129,7 +129,6 @@ theorem Ico_filter_coprime_le {a : ℕ} (k n : ℕ) (a_pos : 0 < a) :
       rw [filter_union, ← filter_coprime_Ico_eq_totient a (k + n % a + a * i)]
       apply card_union_le
     _ ≤ a.totient * i + a.totient + a.totient := add_le_add_right ih (totient a)
-    
 #align nat.Ico_filter_coprime_le Nat.Ico_filter_coprime_le
 
 open ZMod
@@ -147,7 +146,6 @@ theorem ZMod.card_units_eq_totient (n : ℕ) [NeZero n] [Fintype (ZMod n)ˣ] :
       simp only [totient, Finset.card_eq_sum_ones, Fintype.card_subtype, Finset.sum_filter, ←
         Fin.sum_univ_eq_sum_range, @Nat.coprime_comm (m + 1)]
       rfl
-    
 #align zmod.card_units_eq_totient ZMod.card_units_eq_totient
 
 #print Nat.totient_even /-
@@ -248,7 +246,6 @@ theorem totient_prime_pow_succ {p : ℕ} (hp : p.Prime) (n : ℕ) : φ (p ^ (n +
         exact (mul_lt_mul_right hp.pos).2 h
       rw [card_sdiff h2, card_image_of_inj_on (h1.inj_on _), card_range, card_range, ←
         one_mul (p ^ n), pow_succ, ← tsub_mul, one_mul, mul_comm]
-    
 #align nat.totient_prime_pow_succ Nat.totient_prime_pow_succ
 -/
 
@@ -391,7 +388,6 @@ theorem totient_gcd_mul_totient_mul (a b : ℕ) : φ (a.gcd b) * φ (a * b) = φ
     calc
       a1 / b1 * c1 * (a2 / b2 * c2) = a1 / b1 * (a2 / b2) * (c1 * c2) := by apply mul_mul_mul_comm
       _ = a1 * a2 / (b1 * b2) * (c1 * c2) := by congr 1; exact div_mul_div_comm h1 h2
-      
   simp only [totient_eq_div_factors_mul]
   rw [shuffle, shuffle]
   rotate_left; repeat' apply prod_prime_factors_dvd

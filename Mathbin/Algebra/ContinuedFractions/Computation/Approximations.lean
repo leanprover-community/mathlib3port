@@ -286,7 +286,6 @@ theorem zero_le_of_continuantsAux_b : 0 ≤ ((of v).continuantsAux n).b :=
             fib (n + 1) :=
           by exact_mod_cast (n + 1).fib.zero_le
         _ ≤ ((of v).continuantsAux (n + 1)).b := fib_le_of_continuants_aux_b (Or.inr not_terminated)
-        
 #align generalized_continued_fraction.zero_le_of_continuants_aux_b GeneralizedContinuedFraction.zero_le_of_continuantsAux_b
 
 /-- Shows that all denominators are nonnegative. -/
@@ -333,7 +332,6 @@ theorem of_denom_mono : (of v).denominators n ≤ (of v).denominators (n + 1) :=
       g.denominators n ≤ b * g.denominators n := by
         simpa using mul_le_mul_of_nonneg_right this zero_le_of_denom
       _ ≤ g.denominators (n + 1) := le_of_succ_nth_denom nth_part_denom_eq
-      
 #align generalized_continued_fraction.of_denom_mono GeneralizedContinuedFraction.of_denom_mono
 
 section Determinant
@@ -383,7 +381,6 @@ theorem determinant_aux (hyp : n = 0 ∨ ¬(of v).TerminatedAt (n - 1)) :
         by ring
       _ = pA * ppB - pB * ppA := by ring
       _ = (-1) ^ (n + 1) := by assumption
-      
     suffices ppA * pB - ppB * pA = (-1) ^ n
       by
       have pow_succ_n : (-1 : K) ^ (n + 1) = -1 * (-1) ^ n := pow_succ (-1) n
@@ -504,7 +501,6 @@ theorem sub_convergents_eq {ifp : IntFractPair K}
       _ = (pA * B - pB * A) / ((pB + ifp.fr⁻¹ * B) * B) := by ring
       _ = (-1) ^ n / ((pB + ifp.fr⁻¹ * B) * B) := by rw [determinant_eq]
       _ = (-1) ^ n / (B * (ifp.fr⁻¹ * B + pB)) := by ac_rfl
-      
 #align generalized_continued_fraction.sub_convergents_eq GeneralizedContinuedFraction.sub_convergents_eq
 
 /-- Shows that `|v - Aₙ / Bₙ| ≤ 1 / (Bₙ * Bₙ₊₁)` -/

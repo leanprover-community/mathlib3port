@@ -118,7 +118,6 @@ theorem mem_ordConnectedComponent_trans (hxy : y ∈ ordConnectedComponent s x)
   calc
     [x, z] ⊆ [x, y] ∪ [y, z] := uIcc_subset_uIcc_union_uIcc
     _ ⊆ s := union_subset hxy hyz
-    
 #align set.mem_ord_connected_component_trans Set.mem_ordConnectedComponent_trans
 -/
 
@@ -273,7 +272,6 @@ theorem disjoint_ordT5Nhd : Disjoint (ordT5Nhd s t) (ordT5Nhd t s) :=
     calc
       [a, b] ⊆ [a, x] ∪ [x, b] := uIcc_subset_uIcc_union_uIcc
       _ ⊆ (ord_separating_set s t).ordConnectedSectionᶜ := union_subset ha' hb'
-      
   clear ha' hb'
   cases' le_total x a with hxa hax
   · exact hb (Icc_subset_uIcc' ⟨hxa, hab⟩) has

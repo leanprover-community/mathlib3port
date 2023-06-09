@@ -71,7 +71,6 @@ protected theorem comp (hf : IsFixedPt f x) (hg : IsFixedPt g x) : IsFixedPt (f 
   calc
     f (g x) = f x := congr_arg f hg
     _ = x := hf
-    
 #align function.is_fixed_pt.comp Function.IsFixedPt.comp
 -/
 
@@ -88,7 +87,6 @@ theorem left_of_comp (hfg : IsFixedPt (f ∘ g) x) (hg : IsFixedPt g x) : IsFixe
   calc
     f x = f (g x) := congr_arg f hg.symm
     _ = x := hfg
-    
 #align function.is_fixed_pt.left_of_comp Function.IsFixedPt.left_of_comp
 -/
 
@@ -99,7 +97,6 @@ theorem to_leftInverse (hf : IsFixedPt f x) (h : LeftInverse g f) : IsFixedPt g 
   calc
     g x = g (f x) := congr_arg g hf.symm
     _ = x := h x
-    
 #align function.is_fixed_pt.to_left_inverse Function.IsFixedPt.to_leftInverse
 -/
 
@@ -111,7 +108,6 @@ protected theorem map {x : α} (hx : IsFixedPt fa x) {g : α → β} (h : Semico
   calc
     fb (g x) = g (fa x) := (h.Eq x).symm
     _ = g x := congr_arg g hx
-    
 #align function.is_fixed_pt.map Function.IsFixedPt.map
 -/
 

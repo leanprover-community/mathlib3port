@@ -111,7 +111,6 @@ theorem exists_extension_norm_eq (p : Subspace 𝕜 F) (f : p →L[𝕜] 𝕜) :
       _ = ‖fr‖ := hnormeq
       _ ≤ ‖re_clm‖ * ‖f‖ := (ContinuousLinearMap.op_norm_comp_le _ _)
       _ = ‖f‖ := by rw [re_clm_norm, one_mul]
-      
   · exact f.op_norm_le_bound g.extend_to_𝕜.op_norm_nonneg fun x => h x ▸ g.extend_to_𝕜.le_op_norm x
 #align exists_extension_norm_eq exists_extension_norm_eq
 
@@ -145,7 +144,6 @@ theorem exists_dual_vector (x : E) (h : x ≠ 0) : ∃ g : E →L[𝕜] 𝕜, �
       g x = g (⟨x, mem_span_singleton_self x⟩ : 𝕜 ∙ x) := by rw [coe_mk]
       _ = ((‖x‖ : 𝕜) • coord 𝕜 x h) (⟨x, mem_span_singleton_self x⟩ : 𝕜 ∙ x) := by rw [← hg.1]
       _ = ‖x‖ := by simp
-      
 #align exists_dual_vector exists_dual_vector
 
 /-- Variant of Hahn-Banach, eliminating the hypothesis that `x` be nonzero, and choosing

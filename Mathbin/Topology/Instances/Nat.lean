@@ -80,7 +80,6 @@ theorem closedBall_eq_Icc (x : ℕ) (r : ℝ) : closedBall x r = Icc ⌈↑x - r
     calc
       ⌊(x : ℝ) + r⌋₊ ≤ ⌊(x : ℝ)⌋₊ := by apply floor_mono; linarith
       _ < ⌈↑x - r⌉₊ := by rw [floor_coe, Nat.lt_ceil]; linarith
-      
 #align nat.closed_ball_eq_Icc Nat.closedBall_eq_Icc
 
 instance : ProperSpace ℕ :=

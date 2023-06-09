@@ -175,12 +175,10 @@ def toLinearEquiv (A : unitaryGroup n α) : (n → α) ≃ₗ[α] n → α :=
       calc
         (toLin' A⁻¹).comp (toLin' A) x = (toLin' (A⁻¹ * A)) x := by rw [← to_lin'_mul]
         _ = x := by rw [mul_left_inv, to_lin'_one, id_apply]
-        
     right_inv := fun x =>
       calc
         (toLin' A).comp (toLin' A⁻¹) x = toLin' (A * A⁻¹) x := by rw [← to_lin'_mul]
-        _ = x := by rw [mul_right_inv, to_lin'_one, id_apply]
-         }
+        _ = x := by rw [mul_right_inv, to_lin'_one, id_apply] }
 #align matrix.unitary_group.to_linear_equiv Matrix.UnitaryGroup.toLinearEquiv
 
 /-- `to_GL` is the map from the unitary group to the general linear group -/

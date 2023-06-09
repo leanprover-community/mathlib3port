@@ -217,7 +217,6 @@ theorem toEven_comp_ofEven : (toEven Q).comp (ofEven Q) = AlgHom.id R _ :=
                 rw [sub_eq_add_neg, sub_eq_add_neg, h1, h2, h3]
               _ = ι _ (m₁, r₁) * ι _ (m₂, r₂) := by
                 rw [ι_eq_v_add_smul_e0, ι_eq_v_add_smul_e0, mul_add, add_mul, add_mul, add_assoc]
-              
 #align clifford_algebra.to_even_comp_of_even CliffordAlgebra.toEven_comp_ofEven
 
 theorem ofEven_comp_toEven : (ofEven Q).comp (toEven Q) = AlgHom.id R _ :=
@@ -231,7 +230,6 @@ theorem ofEven_comp_toEven : (ofEven Q).comp (toEven Q) = AlgHom.id R _ :=
           simp_rw [to_even_ι]
           exact of_even_ι Q _ _
         _ = ι Q m := by rw [map_one, map_zero, map_zero, sub_zero, zero_add, one_mul]
-        
 #align clifford_algebra.of_even_comp_to_even CliffordAlgebra.ofEven_comp_toEven
 
 /-- Any clifford algebra is isomorphic to the even subalgebra of a clifford algebra with an extra

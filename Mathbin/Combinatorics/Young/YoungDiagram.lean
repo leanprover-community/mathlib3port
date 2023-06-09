@@ -544,7 +544,6 @@ def ofRowLens (w : List ℕ) (hw : w.Sorted (· ≥ ·)) : YoungDiagram
       j1 ≤ j2 := hj
       _ < w.nth_le i2 _ := h2
       _ ≤ w.nth_le i1 _ := _
-      
     obtain rfl | h := eq_or_lt_of_le hi
     · rfl
     · apply list.pairwise_iff_nth_le.mp hw _ _ _ h

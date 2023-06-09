@@ -96,7 +96,6 @@ theorem ne_zero_of_eq_one [NeZero (1 : α)] {a : α} (h : a = 1) : a ≠ 0 :=
   calc
     a = 1 := h
     _ ≠ 0 := one_ne_zero
-    
 #align ne_zero_of_eq_one ne_zero_of_eq_one
 -/
 

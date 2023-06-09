@@ -223,7 +223,6 @@ theorem coeff_bdd_of_roots_le {B : ℝ} {d : ℕ} (f : F →+* K) {p : F[X]} (h1
       _ ≤ max B 1 ^ d * d.choose (d / 2) :=
         mul_le_mul_of_nonneg_left
           (nat.cast_le.mpr ((i.choose_mono h3).trans (i.choose_le_middle d))) _
-      
     all_goals positivity
   · rw [eq_one_of_roots_le hB h1 h2 h4, Polynomial.map_one, coeff_one]
     refine' trans _ (one_le_mul_of_one_le_of_one_le (one_le_pow_of_one_le (le_max_right B 1) d) _)

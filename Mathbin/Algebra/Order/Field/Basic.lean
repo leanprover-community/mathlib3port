@@ -123,8 +123,7 @@ theorem le_div_iff (hc : 0 < c) : a ≤ b / c ↔ a * c ≤ b :=
     calc
       a = a * c * (1 / c) := mul_mul_div a (ne_of_lt hc).symm
       _ ≤ b * (1 / c) := (mul_le_mul_of_nonneg_right h (one_div_pos.2 hc).le)
-      _ = b / c := (div_eq_mul_one_div b c).symm
-      ⟩
+      _ = b / c := (div_eq_mul_one_div b c).symm⟩
 #align le_div_iff le_div_iff
 
 theorem le_div_iff' (hc : 0 < c) : a ≤ b / c ↔ c * a ≤ b := by rw [mul_comm, le_div_iff hc]
@@ -134,15 +133,13 @@ theorem div_le_iff (hb : 0 < b) : a / b ≤ c ↔ a ≤ c * b :=
   ⟨fun h =>
     calc
       a = a / b * b := by rw [div_mul_cancel _ (ne_of_lt hb).symm]
-      _ ≤ c * b := mul_le_mul_of_nonneg_right h hb.le
-      ,
+      _ ≤ c * b := mul_le_mul_of_nonneg_right h hb.le,
     fun h =>
     calc
       a / b = a * (1 / b) := div_eq_mul_one_div a b
       _ ≤ c * b * (1 / b) := (mul_le_mul_of_nonneg_right h (one_div_pos.2 hb).le)
       _ = c * b / b := (div_eq_mul_one_div (c * b) b).symm
-      _ = c := by refine' (div_eq_iff (ne_of_gt hb)).mpr rfl
-      ⟩
+      _ = c := by refine' (div_eq_iff (ne_of_gt hb)).mpr rfl⟩
 #align div_le_iff div_le_iff
 
 theorem div_le_iff' (hb : 0 < b) : a / b ≤ c ↔ a ≤ b * c := by rw [mul_comm, div_le_iff hb]
@@ -580,12 +577,10 @@ instance (priority := 100) LinearOrderedSemifield.to_denselyOrdered : DenselyOrd
     ⟨(a₁ + a₂) / 2,
       calc
         a₁ = (a₁ + a₁) / 2 := (add_self_div_two a₁).symm
-        _ < (a₁ + a₂) / 2 := div_lt_div_of_lt zero_lt_two (add_lt_add_left h _)
-        ,
+        _ < (a₁ + a₂) / 2 := div_lt_div_of_lt zero_lt_two (add_lt_add_left h _),
       calc
         (a₁ + a₂) / 2 < (a₂ + a₂) / 2 := div_lt_div_of_lt zero_lt_two (add_lt_add_right h _)
-        _ = a₂ := add_self_div_two a₂
-        ⟩
+        _ = a₂ := add_self_div_two a₂⟩
 #align linear_ordered_semifield.to_densely_ordered LinearOrderedSemifield.to_denselyOrdered
 
 theorem min_div_div_right {c : α} (hc : 0 ≤ c) (a b : α) : min (a / c) (b / c) = min a b / c :=
@@ -705,8 +700,7 @@ theorem div_le_iff_of_neg (hc : c < 0) : b / c ≤ a ↔ a * c ≤ b :=
     calc
       a = a * c * (1 / c) := mul_mul_div a (ne_of_lt hc)
       _ ≥ b * (1 / c) := (mul_le_mul_of_nonpos_right h (one_div_neg.2 hc).le)
-      _ = b / c := (div_eq_mul_one_div b c).symm
-      ⟩
+      _ = b / c := (div_eq_mul_one_div b c).symm⟩
 #align div_le_iff_of_neg div_le_iff_of_neg
 
 theorem div_le_iff_of_neg' (hc : c < 0) : b / c ≤ a ↔ c * a ≤ b := by

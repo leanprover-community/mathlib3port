@@ -314,7 +314,6 @@ def pseudoEmetricAux : PseudoEMetricSpace (PiLp p β)
             (∑ i, edist (f i) (g i) ^ p.to_real) ^ (1 / p.to_real) +
               (∑ i, edist (g i) (h i) ^ p.to_real) ^ (1 / p.to_real) :=
           ENNReal.Lp_add_le _ _ _ hp
-        
 #align pi_Lp.pseudo_emetric_aux PiLp.pseudoEmetricAux
 
 attribute [local instance] PiLp.pseudoEmetricAux
@@ -393,7 +392,6 @@ theorem lipschitzWith_equiv_aux : LipschitzWith 1 (PiLp.equiv p β) :=
         by
         apply ENNReal.rpow_le_rpow _ (one_div_nonneg.2 <| zero_le_one.trans h)
         exact Finset.single_le_sum (fun i hi => (bot_le : (0 : ℝ≥0∞) ≤ _)) (Finset.mem_univ i)
-      
 #align pi_Lp.lipschitz_with_equiv_aux PiLp.lipschitzWith_equiv_aux
 
 theorem antilipschitzWith_equiv_aux :
@@ -426,7 +424,6 @@ theorem antilipschitzWith_equiv_aux :
         have : (Fintype.card ι : ℝ≥0∞) = (Fintype.card ι : ℝ≥0) :=
           (ENNReal.coe_nat (Fintype.card ι)).symm
         rw [this, ENNReal.coe_rpow_of_nonneg _ nonneg]
-      
 #align pi_Lp.antilipschitz_with_equiv_aux PiLp.antilipschitzWith_equiv_aux
 
 theorem aux_uniformity_eq : 𝓤 (PiLp p β) = 𝓤[Pi.uniformSpace _] :=
@@ -445,7 +442,6 @@ theorem aux_cobounded_eq : cobounded (PiLp p α) = @cobounded _ Pi.instBornology
       le_antisymm (antilipschitzWith_equiv_aux p α).tendsto_cobounded.le_comap
         (lipschitzWith_equiv_aux p α).comap_cobounded_le
     _ = _ := comap_id
-    
 #align pi_Lp.aux_cobounded_eq PiLp.aux_cobounded_eq
 
 end Aux

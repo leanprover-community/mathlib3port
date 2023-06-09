@@ -115,7 +115,6 @@ private def lift_to_multiset : (α → R) ≃ (Multiplicative (Multiset α) →*
           _ = Multiset.prod (Multiset.map f x + Multiset.map f y) := by congr 1;
             exact Multiset.map_add _ _ _
           _ = _ := Multiset.prod_add _ _
-          
       map_one' := rfl }
   invFun F x := F (Multiplicative.ofAdd ({x} : Multiset α))
   left_inv f := funext fun x => show (Multiset.map f {x}).Prod = _ by simp

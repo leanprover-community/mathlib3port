@@ -373,7 +373,6 @@ def FiniteSpanningSetsIn.pi {C : ∀ i, Set (Set (α i))}
         (pi_pi_aux μ _ fun i => measurable_set_to_measurable _ _)
       _ = ∏ i, μ i ((hμ i).Set (e n i)) := by simp only [measure_to_measurable]
       _ < ∞ := ENNReal.prod_lt_top fun i hi => ((hμ i).Finite _).Ne
-      
   ·
     simp_rw [(surjective_decode_iget (ι → ℕ)).iUnion_comp fun x =>
         pi univ fun i => (hμ i).Set (x i),

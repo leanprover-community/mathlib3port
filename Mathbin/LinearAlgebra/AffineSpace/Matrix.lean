@@ -103,7 +103,6 @@ theorem affineSpan_eq_top_of_toMatrix_left_inv [DecidableEq ι] [Nontrivial k] (
       _ = ∑ l, ∑ j, A i j * b.to_matrix p j l := by rw [Finset.sum_comm]
       _ = ∑ l, (A ⬝ b.to_matrix p) i l := rfl
       _ = 1 := by simp [hA, Matrix.one_apply, Finset.filter_eq]
-      
   have hbi : b i = finset.univ.affine_combination k p (A i) :=
     by
     apply b.ext_elem

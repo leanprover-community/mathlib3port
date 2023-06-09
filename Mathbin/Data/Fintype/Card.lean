@@ -567,7 +567,6 @@ theorem card_lt_of_injective_of_not_mem (f : α → β) (h : Function.Injective 
     card α = (univ.map ⟨f, h⟩).card := (card_map _).symm
     _ < card β :=
       Finset.card_lt_univ_of_not_mem <| by rwa [← mem_coe, coe_map, coe_univ, Set.image_univ]
-    
 #align fintype.card_lt_of_injective_of_not_mem Fintype.card_lt_of_injective_of_not_mem
 
 theorem card_lt_of_injective_not_surjective (f : α → β) (h : Function.Injective f)
@@ -1179,7 +1178,6 @@ theorem of_injective_to_set {s : Set α} (hs : s ≠ Set.univ) {f : α → s} (h
       _ = s.to_finset.card := s.to_finset_card.symm
       _ < Fintype.card α :=
         Finset.card_lt_card <| by rwa [Set.toFinset_ssubset_univ, Set.ssubset_univ_iff]
-      
 #align infinite.of_injective_to_set Infinite.of_injective_to_set
 -/
 

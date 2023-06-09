@@ -164,8 +164,7 @@ theorem isFiniteKernel_withDensity_of_bounded (κ : kernel α β) [IsFiniteKerne
             (∫⁻ b in Set.univ, f a b ∂κ a) ≤ ∫⁻ b in Set.univ, B ∂κ a := lintegral_mono (hf_B a)
             _ = B * κ a Set.univ := by
               simp only [measure.restrict_univ, MeasureTheory.lintegral_const]
-            _ ≤ B * is_finite_kernel.bound κ := mul_le_mul_left' (measure_le_bound κ a Set.univ) _
-            ⟩⟩
+            _ ≤ B * is_finite_kernel.bound κ := mul_le_mul_left' (measure_le_bound κ a Set.univ) _⟩⟩
   · rw [with_density_of_not_measurable _ hf]
     infer_instance
 #align probability_theory.kernel.is_finite_kernel_with_density_of_bounded ProbabilityTheory.kernel.isFiniteKernel_withDensity_of_bounded
@@ -239,7 +238,6 @@ theorem isSFiniteKernel_withDensity_of_isFiniteKernel (κ : kernel α β) [IsFin
     fs n a b ≤ min (f a b) (n + 1) := tsub_le_self
     _ ≤ n + 1 := (min_le_right _ _)
     _ = ↑(n + 1) := by norm_cast
-    
 #align probability_theory.kernel.is_s_finite_kernel_with_density_of_is_finite_kernel ProbabilityTheory.kernel.isSFiniteKernel_withDensity_of_isFiniteKernel
 
 /-- For a s-finite kernel `κ` and a function `f : α → β → ℝ≥0∞` which is everywhere finite,

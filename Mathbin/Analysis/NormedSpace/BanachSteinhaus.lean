@@ -78,7 +78,6 @@ theorem banach_steinhaus {ι : Type _} [CompleteSpace E] {g : ι → E →SL[σ�
       (le_mul_of_one_le_right (Nat.cast_nonneg _)
         ((one_le_div <| div_pos ε_pos (zero_lt_one.trans hk)).2 le_y))
     _ = (m + m : ℕ) / (ε / ‖k‖) * ‖y‖ := (mul_comm_div _ _ _).symm
-    
 #align banach_steinhaus banach_steinhaus
 
 open scoped ENNReal
@@ -99,7 +98,6 @@ theorem banach_steinhaus_iSup_nnnorm {ι : Type _} [CompleteSpace E] {g : ι →
       calc
         (‖g i x‖₊ : ℝ≥0∞) ≤ ⨆ j, ‖g j x‖₊ := le_iSup _ i
         _ = p := hp₁
-        
   cases' banach_steinhaus h' with C' hC'
   refine' (iSup_le fun i => _).trans_lt (@coe_lt_top C'.to_nnreal)
   rw [← norm_toNNReal]
@@ -131,7 +129,6 @@ def continuousLinearMapOfTendsto [CompleteSpace E] [T2Space F] (g : ℕ → E �
       calc
         ‖g n x‖ ≤ ‖g 0 x‖ + ‖g n x - g 0 x‖ := norm_le_insert' _ _
         _ ≤ C + ‖g 0 x‖ := by linarith [hC n 0]
-        
     cases' banach_steinhaus h_point_bdd with C' hC'
     /- show the uniform bound from `banach_steinhaus` is a norm bound of the limit map
              by allowing "an `ε` of room." -/
@@ -144,6 +141,5 @@ def continuousLinearMapOfTendsto [CompleteSpace E] [T2Space F] (g : ℕ → E �
       ‖f x‖ ≤ ‖g n x‖ + ‖g n x - f x‖ := norm_le_insert _ _
       _ < ‖g n‖ * ‖x‖ + ε := by linarith [lt_ε, (g n).le_op_norm x]
       _ ≤ C' * ‖x‖ + ε := by nlinarith [hC' n, norm_nonneg x]
-      
 #align continuous_linear_map_of_tendsto continuousLinearMapOfTendsto
 

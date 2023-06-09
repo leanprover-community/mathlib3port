@@ -88,7 +88,6 @@ theorem ext ⦃α β : X ≅ Y⦄ (w : α.Hom = β.Hom) : α = β :=
     α.inv = α.inv ≫ β.Hom ≫ β.inv := by rw [iso.hom_inv_id, category.comp_id]
     _ = (α.inv ≫ α.Hom) ≫ β.inv := by rw [category.assoc, ← w]
     _ = β.inv := by rw [iso.inv_hom_id, category.id_comp]
-    
 #align category_theory.iso.ext CategoryTheory.Iso.ext
 -/
 

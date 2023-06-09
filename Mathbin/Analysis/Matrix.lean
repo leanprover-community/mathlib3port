@@ -309,7 +309,6 @@ theorem linfty_op_nnnorm_mul (A : Matrix l m α) (B : Matrix m n α) : ‖A ⬝ 
         Finset.sum_le_sum fun j hj => mul_le_mul_of_nonneg_left (Finset.le_sup hj) (zero_le _))
     _ ≤ (finset.univ.sup fun i => ∑ j, ‖A i j‖₊) * finset.univ.sup fun i => ∑ j, ‖B i j‖₊ := by
       simp_rw [← Finset.sum_mul, ← NNReal.finset_sup_mul]
-    
 #align matrix.linfty_op_nnnorm_mul Matrix.linfty_op_nnnorm_mul
 
 theorem linfty_op_norm_mul (A : Matrix l m α) (B : Matrix m n α) : ‖A ⬝ B‖ ≤ ‖A‖ * ‖B‖ :=

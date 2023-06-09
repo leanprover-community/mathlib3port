@@ -621,7 +621,7 @@ def GroupCohomology.extIso (V : Rep k G) (n : ℕ) :
               (GroupCohomology.resolution k G)).homology
           n).unop :=
   by
-  let this :=
+  let this.1 :=
       (((linear_yoneda k (Rep k G)).obj V).rightOp.leftDerivedObjIso n
             (GroupCohomology.projectiveResolution k G)).unop.symm <;>
     exact this

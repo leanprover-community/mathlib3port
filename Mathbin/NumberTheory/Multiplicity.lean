@@ -79,7 +79,6 @@ theorem sq_dvd_add_pow_sub_sub (p x : R) (n : ℕ) :
           pow_dvd_pow p (le_tsub_of_add_le_left (by linarith [finset.mem_range.mp hy]))
         _ ∣ x ^ y * p ^ (n + 1 - y) * ↑((n + 1).choose y) :=
           dvd_mul_of_dvd_left (dvd_mul_left _ _) ((n + 1).choose y)
-        
 #align sq_dvd_add_pow_sub_sub sq_dvd_add_pow_sub_sub
 
 theorem not_dvd_geom_sum₂ {p : R} (hp : Prime p) (hxy : p ∣ x - y) (hx : ¬p ∣ x) (hn : ¬p ∣ n) :
@@ -100,7 +99,6 @@ theorem odd_sq_dvd_geom_sum₂_sub (hp : Odd p) :
       ↑p ^ 2 ∣ (↑p * b) ^ 2 := by simp only [mul_pow, dvd_mul_right]
       _ ∣ (a + ↑p * b) ^ i - (a ^ (i - 1) * (↑p * b) * ↑i + a ^ i) := by
         simp only [sq_dvd_add_pow_sub_sub (↑p * b) a i, ← sub_sub]
-      
   simp_rw [← mem_span_singleton, ← Ideal.Quotient.eq] at *
   calc
     Ideal.Quotient.mk (span {↑p ^ 2}) (∑ i in range p, (a + ↑p * b) ^ i * a ^ (p - 1 - i)) =
@@ -150,7 +148,6 @@ theorem odd_sq_dvd_geom_sum₂_sub (hp : Odd p) :
         Nat.mul_div_assoc _ (even_iff_two_dvd.mp (Nat.Odd.sub_odd hp odd_one))]
       ring
       simp only [← map_pow, mul_eq_zero_of_left, Ideal.Quotient.eq_zero_iff_mem, mem_span_singleton]
-    
 #align odd_sq_dvd_geom_sum₂_sub odd_sq_dvd_geom_sum₂_sub
 
 namespace multiplicity
@@ -286,7 +283,6 @@ theorem Int.sq_mod_four_eq_one_of_odd {x : ℤ} : Odd x → x ^ 2 % 4 = 1 :=
   calc
     x ^ 2 % (4 : ℕ) = 1 % (4 : ℕ) := _
     _ = 1 := by norm_num
-    
   rw [← ZMod.int_cast_eq_int_cast_iff'] at hx ⊢
   push_cast
   rw [← map_intCast (ZMod.castHom (show 2 ∣ 4 by norm_num) (ZMod 2)) x] at hx 

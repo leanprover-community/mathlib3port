@@ -633,7 +633,7 @@ unsafe def extract_def (n : Name) (trusted : Bool) (elab_def : tactic Unit) : ta
   applyc n
 #align tactic.extract_def tactic.extract_def
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:330:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
 /-- Attempts to close the goal with `dec_trivial`. -/
 unsafe def exact_dec_trivial : tactic Unit :=
   sorry

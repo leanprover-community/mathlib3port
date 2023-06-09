@@ -446,7 +446,6 @@ theorem norm_rpow_eq_tsum (hp : 0 < p.toReal) (f : lp E p) :
   calc
     (0 : ℝ) = 0 ^ p.to_real := by rw [Real.zero_rpow hp.ne']
     _ ≤ _ := Real.rpow_le_rpow rfl.le (norm_nonneg (f i)) hp.le
-    
 #align lp.norm_rpow_eq_tsum lp.norm_rpow_eq_tsum
 
 theorem hasSum_norm (hp : 0 < p.toReal) (f : lp E p) :
@@ -820,7 +819,6 @@ theorem Memℓp.infty_mul {f g : ∀ i, B i} (hf : Memℓp f ∞) (hg : Memℓp 
     _ ≤ Cf * Cg :=
       mul_le_mul (hCf ⟨i, rfl⟩) (hCg ⟨i, rfl⟩) (norm_nonneg _)
         ((norm_nonneg _).trans (hCf ⟨i, rfl⟩))
-    
 #align mem_ℓp.infty_mul Memℓp.infty_mul
 
 instance : Mul (lp B ∞) where mul f g := ⟨(f * g : ∀ i, B i), f.property.infty_mul g.property⟩
@@ -842,8 +840,7 @@ instance : NonUnitalNormedRing (lp B ∞) :=
           ‖(f * g) i‖ ≤ ‖f i‖ * ‖g i‖ := norm_mul_le _ _
           _ ≤ ‖f‖ * ‖g‖ :=
             mul_le_mul (lp.norm_apply_le_norm ENNReal.top_ne_zero f i)
-              (lp.norm_apply_le_norm ENNReal.top_ne_zero g i) (norm_nonneg _) (norm_nonneg _)
-           }
+              (lp.norm_apply_le_norm ENNReal.top_ne_zero g i) (norm_nonneg _) (norm_nonneg _) }
 
 -- we also want a `non_unital_normed_comm_ring` instance, but this has to wait for #13719
 instance infty_isScalarTower {𝕜} [NormedRing 𝕜] [∀ i, Module 𝕜 (B i)] [∀ i, BoundedSMul 𝕜 (B i)]

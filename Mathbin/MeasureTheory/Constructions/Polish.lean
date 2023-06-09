@@ -609,7 +609,6 @@ theorem measurableSet_range_of_continuous_injective {β : Type _} [TopologicalSp
           (add_le_add ((dist_le_diam_of_mem (hs m).1 (hy m) zsm).trans (hs m).2)
             ((dist_le_diam_of_mem (hs n).1 zsn (hy n)).trans (hs n).2))
         _ ≤ 2 * u m := by linarith [u_anti.antitone hmn]
-        
     haveI : Nonempty γ := ⟨y 0⟩
     -- let `z` be its limit.
     let z := limUnder at_top y
@@ -637,7 +636,6 @@ theorem measurableSet_range_of_continuous_injective {β : Type _} [TopologicalSp
         _ ≤ u n + dist (y n) z :=
           (add_le_add_right ((dist_le_diam_of_mem (hs n).1 ha (hy n)).trans (hs n).2) _)
         _ < δ := hn
-        
     -- as `x` belongs to the closure of `f '' (s n)`, it belongs to the closure of `v`.
     have : x ∈ closure v := closure_mono fsnv (hxs n).1
     -- this is a contradiction, as `x` is supposed to belong to `w`, which is disjoint from

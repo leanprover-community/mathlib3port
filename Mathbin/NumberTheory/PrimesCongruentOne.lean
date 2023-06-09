@@ -41,7 +41,6 @@ theorem exists_prime_gt_modEq_one {k : ℕ} (n : ℕ) (hk0 : k ≠ 0) :
       1 ≤ b - 1 := le_tsub_of_add_le_left hb
       _ < (eval (b : ℤ) (cyclotomic (k + 1) ℤ)).natAbs :=
         sub_one_lt_nat_abs_cyclotomic_eval hk1 (succ_le_iff.1 hb).ne'
-      
   let p := min_fac (eval (↑b) (cyclotomic k ℤ)).natAbs
   haveI hprime : Fact p.prime := ⟨min_fac_prime (ne_of_lt hgt).symm⟩
   have hroot : is_root (cyclotomic k (ZMod p)) (cast_ring_hom (ZMod p) b) :=

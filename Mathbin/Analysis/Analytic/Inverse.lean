@@ -302,7 +302,6 @@ private theorem left_inv_eq_right_inv_aux (p : FormalMultilinearSeries 𝕜 E F)
     _ = ((leftInv p i).comp p).comp (rightInv p i) := by rw [comp_assoc]
     _ = (id 𝕜 E).comp (rightInv p i) := by rw [left_inv_comp p i h]
     _ = rightInv p i := by simp
-    
 
 /-- The left inverse and the right inverse of a formal multilinear series coincide. This is not at
 all obvious from their definition, but it follows from uniqueness of inverses (which comes from the
@@ -313,7 +312,6 @@ theorem leftInv_eq_rightInv (p : FormalMultilinearSeries 𝕜 E F) (i : E ≃L[�
     leftInv p i = leftInv p.removeZero i := by rw [left_inv_remove_zero]
     _ = rightInv p.removeZero i := by apply left_inv_eq_right_inv_aux <;> simp [h]
     _ = rightInv p i := by rw [right_inv_remove_zero]
-    
 #align formal_multilinear_series.left_inv_eq_right_inv FormalMultilinearSeries.leftInv_eq_rightInv
 
 /-!
@@ -451,7 +449,6 @@ theorem radius_right_inv_pos_of_radius_pos_aux1 (n : ℕ) (p : ℕ → ℝ) (hp 
       simp only [MultilinearMap.mkPiAlgebra_apply]
       dsimp
       simp [prod_const, ← mul_sum, mul_pow]
-    
 #align formal_multilinear_series.radius_right_inv_pos_of_radius_pos_aux1 FormalMultilinearSeries.radius_right_inv_pos_of_radius_pos_aux1
 
 /-- Second technical lemma to control the growth of coefficients of the inverse. Bound the explicit
@@ -518,7 +515,6 @@ theorem radius_rightInv_pos_of_radius_pos_aux2 {n : ℕ} (hn : 2 ≤ n + 1)
       apply
         radius_right_inv_pos_of_radius_pos_aux1 n (fun k => ‖p.right_inv i k‖)
           (fun k => norm_nonneg _) hr ha
-    
 #align formal_multilinear_series.radius_right_inv_pos_of_radius_pos_aux2 FormalMultilinearSeries.radius_rightInv_pos_of_radius_pos_aux2
 
 /-- If a a formal multilinear series has a positive radius of convergence, then its right inverse
@@ -566,7 +562,6 @@ theorem radius_rightInv_pos_of_radius_pos (p : FormalMultilinearSeries 𝕜 E F)
         calc
           r * S n ≤ r * ((I + 1) * a) := mul_le_mul_of_nonneg_left hn rpos.le
           _ ≤ 1 / 2 := by rwa [← mul_assoc]
-          
       calc
         S (n + 1) ≤ I * a + I * C * ∑ k in Ico 2 (n + 1), (r * S n) ^ k :=
           radius_right_inv_pos_of_radius_pos_aux2 In p i rpos.le apos.le Cpos.le ple
@@ -585,7 +580,6 @@ theorem radius_rightInv_pos_of_radius_pos (p : FormalMultilinearSeries 𝕜 E F)
             Cpos.le, zero_le_two, pow_le_pow_of_le_left, rpos.le]
         _ = (I + 2 * I * C * r ^ 2 * (I + 1) ^ 2 * a) * a := by ring
         _ ≤ (I + 1) * a := by apply_rules [mul_le_mul_of_nonneg_right, apos.le, add_le_add, le_refl]
-        
   -- conclude that all coefficients satisfy `aⁿ Qₙ ≤ (I + 1) a`.
   let a' : NNReal := ⟨a, apos.le⟩
   suffices H : (a' : ENNReal) ≤ (p.right_inv i).radius
@@ -603,7 +597,6 @@ theorem radius_rightInv_pos_of_radius_pos (p : FormalMultilinearSeries 𝕜 E F)
           mul_nonneg (pow_nonneg apos.le _) (norm_nonneg _)
         single_le_sum this (by simp [one_le_n]))
       _ ≤ (I + 1) * a := IRec (n + 1) (by decide)
-      
 #align formal_multilinear_series.radius_right_inv_pos_of_radius_pos FormalMultilinearSeries.radius_rightInv_pos_of_radius_pos
 
 end FormalMultilinearSeries

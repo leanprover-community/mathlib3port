@@ -258,7 +258,6 @@ theorem le_compProd_apply (κ : kernel α β) [IsSFiniteKernel κ] (η : kernel 
     _ = (κ ⊗ₖ η) a (toMeasurable ((κ ⊗ₖ η) a) s) :=
       (kernel.compProd_apply_eq_compProdFun κ η a (measurableSet_toMeasurable _ _)).symm
     _ = (κ ⊗ₖ η) a s := measure_toMeasurable s
-    
 #align probability_theory.kernel.le_comp_prod_apply ProbabilityTheory.kernel.le_compProd_apply
 
 section Ae
@@ -521,7 +520,6 @@ theorem compProd_apply_univ_le (κ : kernel α β) [IsSFiniteKernel κ] (η : ke
       lintegral_mono fun b => measure_le_bound η (a, b) Set.univ
     _ = Cη * κ a Set.univ := (MeasureTheory.lintegral_const Cη)
     _ = κ a Set.univ * Cη := mul_comm _ _
-    
 #align probability_theory.kernel.comp_prod_apply_univ_le ProbabilityTheory.kernel.compProd_apply_univ_le
 
 instance IsFiniteKernel.compProd (κ : kernel α β) [IsFiniteKernel κ] (η : kernel (α × β) γ)
@@ -531,8 +529,7 @@ instance IsFiniteKernel.compProd (κ : kernel α β) [IsFiniteKernel κ] (η : k
       calc
         (κ ⊗ₖ η) a Set.univ ≤ κ a Set.univ * IsFiniteKernel.bound η := compProd_apply_univ_le κ η a
         _ ≤ IsFiniteKernel.bound κ * IsFiniteKernel.bound η :=
-          mul_le_mul (measure_le_bound κ a Set.univ) le_rfl (zero_le _) (zero_le _)
-        ⟩⟩
+          mul_le_mul (measure_le_bound κ a Set.univ) le_rfl (zero_le _) (zero_le _)⟩⟩
 #align probability_theory.kernel.is_finite_kernel.comp_prod ProbabilityTheory.kernel.IsFiniteKernel.compProd
 
 instance IsSFiniteKernel.compProd (κ : kernel α β) [IsSFiniteKernel κ] (η : kernel (α × β) γ)

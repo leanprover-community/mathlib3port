@@ -2815,7 +2815,7 @@ theorem nat_of_done_bounded {val : ℕ} (h : nat cb n = done n' val) :
     exact hl h
 #align parser.nat_of_done_bounded Parser.nat_of_done_bounded
 
-/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:564:6: unsupported: specialize @hyp -/
+/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:567:6: unsupported: specialize @hyp -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- The `val : ℕ` produced by a successful parse of a `cb : char_buffer` is the numerical value
 represented by the string of decimal digits (possibly padded with 0s on the left)

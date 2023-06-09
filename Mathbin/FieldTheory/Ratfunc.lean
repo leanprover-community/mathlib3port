@@ -185,7 +185,6 @@ theorem lift_on_condition_of_lift_on'_condition {P : Sort v} {f : ∀ p q : K[X]
     f p q = f (q' * p) (q' * q) := (H hq hq').symm
     _ = f (q * p') (q * q') := by rw [h, mul_comm q']
     _ = f p' q' := H hq' hq
-    
 #align ratfunc.lift_on_condition_of_lift_on'_condition RatFunc.lift_on_condition_of_lift_on'_condition
 -/
 
@@ -541,14 +540,14 @@ end Field
 
 section TacticInterlude
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:330:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
 -- pre-porting note: should comm_ring be disabled here?
 /-- Solve equations for `ratfunc K` by working in `fraction_ring K[X]`. -/
 unsafe def frac_tac : tactic Unit :=
   sorry
 #align ratfunc.frac_tac ratfunc.frac_tac
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:330:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
 /-- Solve equations for `ratfunc K` by applying `ratfunc.induction_on`. -/
 unsafe def smul_tac : tactic Unit :=
   sorry

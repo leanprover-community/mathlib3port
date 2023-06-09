@@ -367,7 +367,6 @@ theorem HasFDerivAt.le_of_lip' {f : E → F} {f' : E →L[𝕜] F} {x₀ : E} (h
     ‖f' y‖ ≤ ‖f (x₀ + y) - f x₀‖ + ‖f (x₀ + y) - f x₀ - f' y‖ := norm_le_insert _ _
     _ ≤ C * ‖y‖ + ε * ‖y‖ := (add_le_add hyC hy)
     _ = (C + ε) * ‖y‖ := (add_mul _ _ _).symm
-    
 #align has_fderiv_at.le_of_lip' HasFDerivAt.le_of_lip'
 
 /-- Converse to the mean value inequality: if `f` is differentiable at `x₀` and `C`-lipschitz
@@ -820,7 +819,6 @@ theorem hasFDerivWithinAt_congr_set' (y : E) (h : s =ᶠ[𝓝[{y}ᶜ] x] t) :
       simpa only [set_eventually_eq_iff_inf_principal, ← nhdsWithin_inter', diff_eq,
         inter_comm] using h
     _ ↔ HasFDerivWithinAt f f' t x := hasFDerivWithinAt_diff_singleton _
-    
 #align has_fderiv_within_at_congr_set' hasFDerivWithinAt_congr_set'
 
 theorem hasFDerivWithinAt_congr_set (h : s =ᶠ[𝓝 x] t) :

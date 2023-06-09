@@ -53,7 +53,6 @@ theorem le_of_all_pow_lt_succ {x y : ℝ} (hx : 1 < x) (hy : 1 < y)
         1 ≤ x ^ i := hx'
         _ = x ^ i * 1 := (mul_one _).symm
         _ ≤ x ^ i * y ^ (n - 1 - i) := mul_le_mul_of_nonneg_left hy' (zero_le_one.trans hx')
-        
     calc
       (x - y) * (n : ℝ) = (n : ℝ) * (x - y) := mul_comm _ _
       _ = (∑ i : ℕ in Finset.range n, (1 : ℝ)) * (x - y) := by
@@ -61,7 +60,6 @@ theorem le_of_all_pow_lt_succ {x y : ℝ} (hx : 1 < x) (hy : 1 < y)
       _ ≤ (∑ i : ℕ in Finset.range n, x ^ i * y ^ (n - 1 - i)) * (x - y) :=
         ((mul_le_mul_right hxmy).mpr (Finset.sum_le_sum hterm))
       _ = x ^ n - y ^ n := geom_sum₂_mul x y n
-      
   -- Choose n larger than 1 / (x - y).
   obtain ⟨N, hN⟩ := exists_nat_gt (1 / (x - y))
   have hNp : 0 < N := by exact_mod_cast (one_div_pos.mpr hxmy).trans hN
@@ -70,7 +68,6 @@ theorem le_of_all_pow_lt_succ {x y : ℝ} (hx : 1 < x) (hy : 1 < y)
       1 = (x - y) * (1 / (x - y)) := by field_simp [ne_of_gt hxmy]
       _ < (x - y) * N := ((mul_lt_mul_left hxmy).mpr hN)
       _ ≤ x ^ N - y ^ N := hn N hNp
-      
   linarith [h N hNp]
 #align imo2013_q5.le_of_all_pow_lt_succ Imo2013Q5.le_of_all_pow_lt_succ
 
@@ -89,14 +86,12 @@ theorem le_of_all_pow_lt_succ' {x y : ℝ} (hx : 1 < x) (hy : 0 < y)
     calc
       y' < x * 2 / 2 := hh
       _ = x := by field_simp
-      
   have h1_lt_y' : 1 < y' :=
     by
     have hh' : 1 * 2 / 2 < (x + 1) / 2 := by linarith
     calc
       1 = 1 * 2 / 2 := by field_simp
       _ < y' := hh'
-      
   have h_y_lt_y' : y < y' := hy''.trans_lt h1_lt_y'
   have hh : ∀ n, 0 < n → x ^ n - 1 < y' ^ n :=
     by
@@ -104,7 +99,6 @@ theorem le_of_all_pow_lt_succ' {x y : ℝ} (hx : 1 < x) (hy : 0 < y)
     calc
       x ^ n - 1 < y ^ n := h n hn
       _ ≤ y' ^ n := pow_le_pow_of_le_left hy.le h_y_lt_y'.le n
-      
   exact h_y'_lt_x.not_le (le_of_all_pow_lt_succ hx h1_lt_y' hh)
 #align imo2013_q5.le_of_all_pow_lt_succ' Imo2013Q5.le_of_all_pow_lt_succ'
 
@@ -120,12 +114,10 @@ theorem f_pos_of_pos {f : ℚ → ℝ} {q : ℚ} (hq : 0 < q)
       _ = f q.num := by rw [Nat.cast_natAbs, abs_of_nonneg num_pos.le]
       _ = f (q * q.denom) := by rw [← Rat.mul_den_eq_num]
       _ ≤ f q * f q.denom := H1 q q.denom hq (nat.cast_pos.mpr q.pos)
-      
   have h_f_denom_pos :=
     calc
       (0 : ℝ) < q.denom := nat.cast_pos.mpr q.pos
       _ ≤ f q.denom := H4 q.denom q.pos
-      
   exact pos_of_mul_pos_left hmul_pos h_f_denom_pos.le
 #align imo2013_q5.f_pos_of_pos Imo2013Q5.f_pos_of_pos
 
@@ -138,7 +130,6 @@ theorem fx_gt_xm1 {f : ℚ → ℝ} {x : ℚ} (hx : 1 ≤ x)
     calc
       (x - 1 : ℝ) < ⌊x⌋₊ := by exact_mod_cast Nat.sub_one_lt_floor x
       _ ≤ f ⌊x⌋₊ := H4 _ (Nat.floor_pos.2 hx)
-      
   obtain h_eq | h_lt := (Nat.floor_le <| zero_le_one.trans hx).eq_or_lt
   · rwa [h_eq] at hx0 
   calc
@@ -146,7 +137,6 @@ theorem fx_gt_xm1 {f : ℚ → ℝ} {x : ℚ} (hx : 1 ≤ x)
     _ < f (x - ⌊x⌋₊) + f ⌊x⌋₊ := (lt_add_of_pos_left _ (f_pos_of_pos (sub_pos.mpr h_lt) H1 H4))
     _ ≤ f (x - ⌊x⌋₊ + ⌊x⌋₊) := (H2 _ _ (sub_pos.mpr h_lt) (Nat.cast_pos.2 (Nat.floor_pos.2 hx)))
     _ = f x := by rw [sub_add_cancel]
-    
 #align imo2013_q5.fx_gt_xm1 Imo2013Q5.fx_gt_xm1
 
 theorem pow_f_le_f_pow {f : ℚ → ℝ} {n : ℕ} (hn : 0 < n) {x : ℚ} (hx : 1 < x)
@@ -162,7 +152,6 @@ theorem pow_f_le_f_pow {f : ℚ → ℝ} {n : ℕ} (hn : 0 < n) {x : ℚ} (hx : 
   calc
     f (x ^ (pn + 1) * x) ≤ f (x ^ (pn + 1)) * f x := H1 (x ^ (pn + 1)) x (pow_pos hxp (pn + 1)) hxp
     _ ≤ f x ^ (pn + 1) * f x := (mul_le_mul_right (f_pos_of_pos hxp H1 H4)).mpr hpn'
-    
 #align imo2013_q5.pow_f_le_f_pow Imo2013Q5.pow_f_le_f_pow
 
 theorem fixed_point_of_pos_nat_pow {f : ℚ → ℝ} {n : ℕ} (hn : 0 < n)
@@ -175,7 +164,6 @@ theorem fixed_point_of_pos_nat_pow {f : ℚ → ℝ} {n : ℕ} (hn : 0 < n)
     calc
       f (a ^ n) ≤ f a ^ n := pow_f_le_f_pow hn ha1 H1 H4
       _ = (a : ℝ) ^ n := by rw [← hae]
-      
   exact hh1.antisymm hh0
 #align imo2013_q5.fixed_point_of_pos_nat_pow Imo2013Q5.fixed_point_of_pos_nat_pow
 
@@ -191,7 +179,6 @@ theorem fixed_point_of_gt_1 {f : ℚ → ℝ} {x : ℚ} (hx : 1 < x)
     calc
       (x : ℝ) + (a ^ N - x : ℚ) ≤ f x + (a ^ N - x : ℚ) := add_le_add_right (H5 x hx) _
       _ ≤ f x + f (a ^ N - x) := add_le_add_left (H5 _ h_big_enough) _
-      
   have hxp : 0 < x := by positivity
   have hNp : 0 < N := by by_contra' H; rw [le_zero_iff.mp H] at hN ; linarith
   have h2 :=
@@ -201,7 +188,6 @@ theorem fixed_point_of_gt_1 {f : ℚ → ℝ} {x : ℚ} (hx : 1 < x)
       _ = f (a ^ N) := by ring_nf
       _ = a ^ N := (fixed_point_of_pos_nat_pow hNp H1 H4 H5 ha1 hae)
       _ = x + (a ^ N - x) := by ring
-      
   have heq := h1.antisymm (by exact_mod_cast h2)
   linarith [H5 x hx, H5 _ h_big_enough]
 #align imo2013_q5.fixed_point_of_gt_1 Imo2013Q5.fixed_point_of_gt_1
@@ -230,7 +216,6 @@ theorem imo2013_q5 (f : ℚ → ℝ) (H1 : ∀ x y, 0 < x → 0 < y → f (x * y
       _ = f ((↑pn + 1) * x + 1 * x) := by rw [one_mul]
       _ = f ((↑pn + 1 + 1) * x) := (congr_arg f (add_mul (↑pn + 1) 1 x).symm)
       _ = f (↑(pn + 2) * x) := by norm_cast
-      
   have H4 : ∀ n : ℕ, 0 < n → (n : ℝ) ≤ f n :=
     by
     intro n hn
@@ -244,13 +229,11 @@ theorem imo2013_q5 (f : ℚ → ℝ) (H1 : ∀ x y, 0 < x → 0 < y → f (x * y
         _ = f (a * 1) := by rw [mul_one]
         _ ≤ f a * f 1 := ((H1 a 1) (zero_lt_one.trans ha1) zero_lt_one)
         _ = ↑a * f 1 := by rw [hae]
-        
     calc
       (n : ℝ) = (n : ℝ) * 1 := (mul_one _).symm
       _ ≤ (n : ℝ) * f 1 := (mul_le_mul_of_nonneg_left hf1 (Nat.cast_nonneg _))
       _ ≤ f (n * 1) := (H3 1 zero_lt_one n hn)
       _ = f n := by rw [mul_one]
-      
   have H5 : ∀ x : ℚ, 1 < x → (x : ℝ) ≤ f x :=
     by
     intro x hx
@@ -261,7 +244,6 @@ theorem imo2013_q5 (f : ℚ → ℝ) (H1 : ∀ x y, 0 < x → 0 < y → f (x * y
         (x : ℝ) ^ n - 1 < f (x ^ n) := by
           exact_mod_cast fx_gt_xm1 (one_le_pow_of_one_le hx.le n) H1 H2 H4
         _ ≤ f x ^ n := pow_f_le_f_pow hn hx H1 H4
-        
     have hx' : 1 < (x : ℝ) := by exact_mod_cast hx
     have hxp : 0 < x := by positivity
     exact le_of_all_pow_lt_succ' hx' (f_pos_of_pos hxp H1 H4) hxnm1
@@ -293,21 +275,18 @@ theorem imo2013_q5 (f : ℚ → ℝ) (H1 : ∀ x y, 0 < x → 0 < y → f (x * y
       0 < x.denom := x.pos
       _ < x.denom + x.denom := (lt_add_of_pos_left x.denom x.pos)
       _ = 2 * x.denom := by ring
-      
   have hxcnez : (x.denom : ℚ) ≠ (0 : ℚ) := ne_of_gt (nat.cast_pos.mpr x.pos)
   have hx2cnezr : (x2denom : ℝ) ≠ (0 : ℝ) := nat.cast_ne_zero.mpr (ne_of_gt hx2pos)
   have hrat_expand2 :=
     calc
       x = x.num / x.denom := by exact_mod_cast rat.num_denom.symm
       _ = x2num / x2denom := by field_simp [-Rat.num_div_den]; linarith
-      
   have h_denom_times_fx :=
     calc
       (x2denom : ℝ) * f x = f (x2denom * x) :=
         (h_f_commutes_with_pos_nat_mul x2denom hx2pos x hx).symm
       _ = f (x2denom * (x2num / x2denom)) := by rw [hrat_expand2]
       _ = f x2num := by congr; field_simp; ring
-      
   have h_fx2num_fixed : f x2num = x2num :=
     by
     have hx2num_gt_one : (1 : ℚ) < (2 * x.num : ℤ) := by norm_cast;
@@ -323,6 +302,5 @@ theorem imo2013_q5 (f : ℚ → ℝ) (H1 : ∀ x y, 0 < x → 0 < y → f (x * y
     _ = x2num / x2denom := by rw [h_fx2num_fixed]
     _ = (((x2num : ℚ) / (x2denom : ℚ) : ℚ) : ℝ) := by norm_cast
     _ = x := by rw [← hrat_expand2]
-    
 #align imo2013_q5 imo2013_q5
 

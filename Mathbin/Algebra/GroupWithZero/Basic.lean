@@ -200,14 +200,12 @@ theorem mul_right_eq_self₀ : a * b = a ↔ b = 1 ∨ a = 0 :=
   calc
     a * b = a ↔ a * b = a * 1 := by rw [mul_one]
     _ ↔ b = 1 ∨ a = 0 := mul_eq_mul_left_iff
-    
 #align mul_right_eq_self₀ mul_right_eq_self₀
 
 theorem mul_left_eq_self₀ : a * b = b ↔ a = 1 ∨ b = 0 :=
   calc
     a * b = b ↔ a * b = 1 * b := by rw [one_mul]
     _ ↔ a = 1 ∨ b = 0 := mul_eq_mul_right_iff
-    
 #align mul_left_eq_self₀ mul_left_eq_self₀
 
 @[simp]
@@ -251,7 +249,6 @@ theorem mul_inv_cancel_right₀ (h : b ≠ 0) (a : G₀) : a * b * b⁻¹ = a :=
   calc
     a * b * b⁻¹ = a * (b * b⁻¹) := mul_assoc _ _ _
     _ = a := by simp [h]
-    
 #align mul_inv_cancel_right₀ mul_inv_cancel_right₀
 
 @[simp]
@@ -259,7 +256,6 @@ theorem mul_inv_cancel_left₀ (h : a ≠ 0) (b : G₀) : a * (a⁻¹ * b) = b :
   calc
     a * (a⁻¹ * b) = a * a⁻¹ * b := (mul_assoc _ _ _).symm
     _ = b := by simp [h]
-    
 #align mul_inv_cancel_left₀ mul_inv_cancel_left₀
 
 theorem inv_ne_zero (h : a ≠ 0) : a⁻¹ ≠ 0 := fun a_eq_0 => by simpa [a_eq_0] using mul_inv_cancel h
@@ -271,7 +267,6 @@ theorem inv_mul_cancel (h : a ≠ 0) : a⁻¹ * a = 1 :=
     a⁻¹ * a = a⁻¹ * a * a⁻¹ * a⁻¹⁻¹ := by simp [inv_ne_zero h]
     _ = a⁻¹ * a⁻¹⁻¹ := by simp [h]
     _ = 1 := by simp [inv_ne_zero h]
-    
 #align inv_mul_cancel inv_mul_cancel
 
 theorem GroupWithZero.mul_left_injective (h : x ≠ 0) : Function.Injective fun y => x * y :=
@@ -289,7 +284,6 @@ theorem inv_mul_cancel_right₀ (h : b ≠ 0) (a : G₀) : a * b⁻¹ * b = a :=
   calc
     a * b⁻¹ * b = a * (b⁻¹ * b) := mul_assoc _ _ _
     _ = a := by simp [h]
-    
 #align inv_mul_cancel_right₀ inv_mul_cancel_right₀
 
 @[simp]
@@ -297,7 +291,6 @@ theorem inv_mul_cancel_left₀ (h : a ≠ 0) (b : G₀) : a⁻¹ * (a * b) = b :
   calc
     a⁻¹ * (a * b) = a⁻¹ * a * b := (mul_assoc _ _ _).symm
     _ = b := by simp [h]
-    
 #align inv_mul_cancel_left₀ inv_mul_cancel_left₀
 
 private theorem inv_eq_of_mul (h : a * b = 1) : a⁻¹ = b := by
@@ -397,7 +390,6 @@ theorem div_self_mul_self' (a : G₀) : a / (a * a) = a⁻¹ :=
   calc
     a / (a * a) = a⁻¹⁻¹ * a⁻¹ * a⁻¹ := by simp [mul_inv_rev]
     _ = a⁻¹ := inv_mul_mul_self _
-    
 #align div_self_mul_self' div_self_mul_self'
 
 theorem one_div_ne_zero {a : G₀} (h : a ≠ 0) : 1 / a ≠ 0 := by

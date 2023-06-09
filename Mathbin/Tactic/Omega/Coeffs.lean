@@ -291,7 +291,6 @@ theorem valBetween_map_div {as : List Int} {i : Int} {l : Nat} (h1 : ∀ x ∈ a
             repeat' rw [mul_comm _ (v (l + m))]
             rw [Int.mul_ediv_assoc]
             apply forall_val_dvd_of_forall_mem_dvd h1
-          
     apply dvd_mul_of_dvd_left
     apply forall_val_dvd_of_forall_mem_dvd h1
 #align omega.coeffs.val_between_map_div Omega.Coeffs.valBetween_map_div

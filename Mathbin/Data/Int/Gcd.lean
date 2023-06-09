@@ -243,7 +243,6 @@ theorem natAbs_ediv (a b : ℤ) (H : b ∣ a) : natAbs (a / b) = natAbs a / natA
     _ = nat_abs (a / b) * nat_abs b / nat_abs b := by rw [Nat.mul_div_assoc _ dvd_rfl]
     _ = nat_abs (a / b * b) / nat_abs b := by rw [nat_abs_mul (a / b) b]
     _ = nat_abs a / nat_abs b := by rw [Int.ediv_mul_cancel H]
-    
 #align int.nat_abs_div Int.natAbs_ediv
 
 theorem dvd_of_mul_dvd_mul_left {i j k : ℤ} (k_non_zero : k ≠ 0) (H : k * i ∣ k * j) : i ∣ j :=

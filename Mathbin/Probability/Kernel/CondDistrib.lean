@@ -123,7 +123,6 @@ theorem integrable_toReal_condDistrib (hX : AEMeasurable X μ) (hs : MeasurableS
       (∫⁻ a, cond_distrib Y X μ (X a) s ∂μ) ≤ ∫⁻ a, 1 ∂μ := lintegral_mono fun a => prob_le_one
       _ = μ univ := lintegral_one
       _ < ∞ := measure_lt_top _ _
-      
 #align probability_theory.integrable_to_real_cond_distrib ProbabilityTheory.integrable_toReal_condDistrib
 
 theorem MeasureTheory.Integrable.condDistrib_ae_map (hX : AEMeasurable X μ) (hY : AEMeasurable Y μ)

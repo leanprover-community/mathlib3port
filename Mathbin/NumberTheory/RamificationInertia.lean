@@ -343,7 +343,6 @@ theorem FinrankQuotientMap.span_eq_top [IsDomain R] [IsDomain S] [Algebra K L] [
       p • ⊤ = Submodule.map M.mkq (p • ⊤) := by
         rw [Submodule.map_smul'', Submodule.map_top, M.range_mkq]
       _ = ⊤ := by rw [Ideal.smul_top_eq_map, (Submodule.map_mkQ_eq_top M _).mpr hb']
-      
   -- we can write the elements of `a` as `p`-linear combinations of other elements of `a`.
   have exists_sum : ∀ x : S ⧸ M, ∃ a' : Fin n → R, (∀ i, a' i ∈ p) ∧ (∑ i, a' i • a i) = x :=
     by
@@ -369,7 +368,6 @@ theorem FinrankQuotientMap.span_eq_top [IsDomain R] [IsDomain S] [Algebra K L] [
       A.det • a i = ∑ j, (B ⬝ A) i j • a j := _
       _ = ∑ k, B i k • ∑ j, A k j • a j := _
       _ = 0 := Finset.sum_eq_zero fun k _ => _
-      
     ·
       simp only [Matrix.adjugate_mul, Pi.smul_apply, Matrix.one_apply, mul_ite, ite_smul,
         smul_eq_mul, mul_one, MulZeroClass.mul_zero, one_smul, zero_smul, Finset.sum_ite_eq,
@@ -393,8 +391,7 @@ theorem FinrankQuotientMap.span_eq_top [IsDomain R] [IsDomain S] [Algebra K L] [
     top_le_iff.mp
       (calc
         ⊤ = (Ideal.span {algebraMap R L A.det}).restrictScalars K := _
-        _ ≤ Submodule.span K (algebraMap S L '' b) := _
-        )
+        _ ≤ Submodule.span K (algebraMap S L '' b) := _)
   -- Because `det A ≠ 0`, we have `span L {det A} = ⊤`.
   · rw [eq_comm, Submodule.restrictScalars_eq_top_iff, Ideal.span_singleton_eq_top]
     refine'
@@ -413,7 +410,6 @@ theorem FinrankQuotientMap.span_eq_top [IsDomain R] [IsDomain S] [Algebra K L] [
       _ = Matrix.det (-1 : Matrix (Fin n) (Fin n) (R ⧸ p)) := _
       _ = (-1 : R ⧸ p) ^ n := by rw [Matrix.det_neg, Fintype.card_fin, Matrix.det_one, mul_one]
       _ ≠ 0 := IsUnit.ne_zero (is_unit_one.neg.pow _)
-      
     · refine' congr_arg Matrix.det (Matrix.ext fun i j => _)
       rw [map_sub, RingHom.mapMatrix_apply, map_one]
       rfl
@@ -931,7 +927,6 @@ theorem sum_ramification_inertia (K L : Type _) [Field K] [Field L] [IsDomain R]
       (finrank_pi_fintype (R ⧸ p)).symm
     _ = finrank (R ⧸ p) (S ⧸ map (algebraMap R S) p) := _
     _ = finrank K L := _
-    
   · rw [← Finset.sum_attach]
     refine' Finset.sum_congr rfl fun P _ => _
     rw [factors.finrank_pow_ramification_idx]

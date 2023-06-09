@@ -81,7 +81,7 @@ unsafe def restrict_attr : user_attribute (tactic Unit → tactic Unit) Unit
       dependencies := [] }
 #align Top.presheaf.restrict_attr Top.presheaf.restrict_attr
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:330:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
 /-- A tactic to discharge goals of type `U ≤ V` for `Top.presheaf.restrict_open` -/
 unsafe def restrict_tac : ∀ n : ℕ, tactic Unit
   | 0 => tactic.fail "`restrict_tac` failed"

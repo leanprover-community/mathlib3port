@@ -154,7 +154,6 @@ theorem prod_le_prod_of_subset_of_one_le' (h : s ⊆ t) (hf : ∀ i ∈ t, i ∉
       le_mul_of_one_le_left' <| one_le_prod' <| by simpa only [mem_sdiff, and_imp]
     _ = ∏ i in t \ s ∪ s, f i := (prod_union sdiff_disjoint).symm
     _ = ∏ i in t, f i := by rw [sdiff_union_of_subset h]
-    
 #align finset.prod_le_prod_of_subset_of_one_le' Finset.prod_le_prod_of_subset_of_one_le'
 #align finset.sum_le_sum_of_subset_of_nonneg Finset.sum_le_sum_of_subset_of_nonneg
 
@@ -197,7 +196,6 @@ theorem single_le_prod' (hf : ∀ i ∈ s, 1 ≤ f i) {a} (h : a ∈ s) : f a �
     f a = ∏ i in {a}, f i := prod_singleton.symm
     _ ≤ ∏ i in s, f i :=
       prod_le_prod_of_subset_of_one_le' (singleton_subset_iff.2 h) fun i hi _ => hf i hi
-    
 #align finset.single_le_prod' Finset.single_le_prod'
 #align finset.single_le_sum Finset.single_le_sum
 
@@ -238,7 +236,6 @@ theorem prod_fiberwise_le_prod_of_one_le_prod_fiber' {t : Finset ι'} {g : ι �
       prod_le_prod_of_subset_of_one_le' (subset_union_left _ _) fun y hyts => h y
     _ = ∏ x in s, f x :=
       prod_fiberwise_of_maps_to (fun x hx => mem_union.2 <| Or.inr <| mem_image_of_mem _ hx) _
-    
 #align finset.prod_fiberwise_le_prod_of_one_le_prod_fiber' Finset.prod_fiberwise_le_prod_of_one_le_prod_fiber'
 #align finset.sum_fiberwise_le_sum_of_sum_fiber_nonneg Finset.sum_fiberwise_le_sum_of_sum_fiber_nonneg
 
@@ -284,7 +281,6 @@ theorem card_le_mul_card_image_of_maps_to {f : α → β} {s : Finset α} {t : F
     s.card = ∑ a in t, (s.filterₓ fun x => f x = a).card := card_eq_sum_card_fiberwise Hf
     _ ≤ ∑ _ in t, n := (sum_le_sum hn)
     _ = _ := by simp [mul_comm]
-    
 #align finset.card_le_mul_card_image_of_maps_to Finset.card_le_mul_card_image_of_maps_to
 
 theorem card_le_mul_card_image {f : α → β} (s : Finset α) (n : ℕ)
@@ -299,7 +295,6 @@ theorem mul_card_image_le_card_of_maps_to {f : α → β} {s : Finset α} {t : F
     n * t.card = ∑ _ in t, n := by simp [mul_comm]
     _ ≤ ∑ a in t, (s.filterₓ fun x => f x = a).card := (sum_le_sum hn)
     _ = s.card := by rw [← card_eq_sum_card_fiberwise Hf]
-    
 #align finset.mul_card_image_le_card_of_maps_to Finset.mul_card_image_le_card_of_maps_to
 
 theorem mul_card_image_le_card {f : α → β} (s : Finset α) (n : ℕ)
@@ -333,7 +328,6 @@ theorem sum_card_le [Fintype α] (h : ∀ a, (B.filterₓ <| (· ∈ ·) a).card
   calc
     (∑ s in B, s.card) = ∑ s in B, (univ ∩ s).card := by simp_rw [univ_inter]
     _ ≤ Fintype.card α * n := sum_card_inter_le fun a _ => h a
-    
 #align finset.sum_card_le Finset.sum_card_le
 -/
 
@@ -357,7 +351,6 @@ theorem le_sum_card [Fintype α] (h : ∀ a, n ≤ (B.filterₓ <| (· ∈ ·) a
   calc
     Fintype.card α * n ≤ ∑ s in B, (univ ∩ s).card := le_sum_card_inter fun a _ => h a
     _ = ∑ s in B, s.card := by simp_rw [univ_inter]
-    
 #align finset.le_sum_card Finset.le_sum_card
 -/
 
@@ -441,7 +434,6 @@ theorem prod_le_prod_of_ne_one' (h : ∀ x ∈ s, f x ≠ 1 → x ∈ t) : (∏ 
       mul_le_of_le_one_of_le
         (prod_le_one' <| by simp only [mem_filter, and_imp] <;> exact fun _ _ => le_of_eq)
         (prod_le_prod_of_subset' <| by simpa only [subset_iff, mem_filter, and_imp])
-    
 #align finset.prod_le_prod_of_ne_one' Finset.prod_le_prod_of_ne_one'
 #align finset.sum_le_sum_of_ne_zero Finset.sum_le_sum_of_ne_zero
 
@@ -485,7 +477,6 @@ theorem prod_lt_prod_of_subset' (h : s ⊆ t) {i : ι} (ht : i ∈ t) (hs : i �
       · intro x hx h'x
         simp only [mem_insert, not_or] at h'x 
         exact hle x hx h'x.2
-    
 #align finset.prod_lt_prod_of_subset' Finset.prod_lt_prod_of_subset'
 #align finset.sum_lt_sum_of_subset Finset.sum_lt_sum_of_subset
 
@@ -497,7 +488,6 @@ theorem single_lt_prod' {i j : ι} (hij : j ≠ i) (hi : i ∈ s) (hj : j ∈ s)
     _ < ∏ k in s, f k :=
       prod_lt_prod_of_subset' (singleton_subset_iff.2 hi) hj (mt mem_singleton.1 hij) hlt
         fun k hks hki => hle k hks (mt mem_singleton.2 hki)
-    
 #align finset.single_lt_prod' Finset.single_lt_prod'
 #align finset.single_lt_sum Finset.single_lt_sum
 
@@ -572,7 +562,6 @@ theorem exists_one_lt_of_prod_one_of_exists_ne_one' (f : ι → M) (h₁ : (∏ 
   calc
     (∏ j in s, f j) < ∏ j in s, 1 := prod_lt_prod' h₁ ⟨i, m, (h₁ i m).lt_of_ne i_ne⟩
     _ = 1 := prod_const_one
-    
 #align finset.exists_one_lt_of_prod_one_of_exists_ne_one' Finset.exists_one_lt_of_prod_one_of_exists_ne_one'
 #align finset.exists_pos_of_sum_zero_of_exists_nonzero Finset.exists_pos_of_sum_zero_of_exists_nonzero
 

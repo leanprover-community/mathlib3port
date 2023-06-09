@@ -627,8 +627,7 @@ instance nontrivial (n : ℕ) [Fact (1 < n)] : Nontrivial (ZMod n) :=
         calc
           0 = (0 : ZMod n).val := by rw [val_zero]
           _ = (1 : ZMod n).val := (congr_arg ZMod.val h)
-          _ = 1 := val_one n
-          ⟩⟩
+          _ = 1 := val_one n⟩⟩
 #align zmod.nontrivial ZMod.nontrivial
 -/
 
@@ -666,7 +665,6 @@ theorem mul_inv_eq_gcd {n : ℕ} (a : ZMod n) : a * a⁻¹ = Nat.gcd a.val n :=
       a * a⁻¹ = a * Int.sign a := rfl
       _ = a.nat_abs := by rw [Int.mul_sign]
       _ = a.val.gcd 0 := by rw [Nat.gcd_zero_right] <;> rfl
-      
   · set k := n.succ
     calc
       a * a⁻¹ = a * a⁻¹ + k * Nat.gcdB (val a) k := by
@@ -674,7 +672,6 @@ theorem mul_inv_eq_gcd {n : ℕ} (a : ZMod n) : a * a⁻¹ = Nat.gcd a.val n :=
       _ = ↑(↑a.val * Nat.gcdA (val a) k + k * Nat.gcdB (val a) k) := by push_cast ;
         rw [nat_cast_zmod_val]; rfl
       _ = Nat.gcd a.val k := (congr_arg coe (Nat.gcd_eq_gcd_ab a.val k)).symm
-      
 #align zmod.mul_inv_eq_gcd ZMod.mul_inv_eq_gcd
 
 @[simp]
@@ -891,7 +888,6 @@ theorem neg_val' {n : ℕ} [NeZero n] (a : ZMod n) : (-a).val = (n - a.val) % n 
         (by
           rw [Nat.ModEq, ← val_add, add_left_neg, tsub_add_cancel_of_le a.val_le, Nat.mod_self,
             val_zero])
-    
 #align zmod.neg_val' ZMod.neg_val'
 
 theorem neg_val {n : ℕ} [NeZero n] (a : ZMod n) : (-a).val = if a = 0 then 0 else n - a.val :=

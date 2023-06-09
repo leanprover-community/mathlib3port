@@ -326,7 +326,6 @@ theorem sum (n : ℕ) : (∑ ν in Finset.range (n + 1), bernsteinPolynomial R n
     (∑ ν in Finset.range (n + 1), bernsteinPolynomial R n ν) = (X + (1 - X)) ^ n := by rw [add_pow];
       simp only [bernsteinPolynomial, mul_comm, mul_assoc, mul_left_comm]
     _ = 1 := by simp
-    
 #align bernstein_polynomial.sum bernsteinPolynomial.sum
 -/
 
@@ -449,7 +448,6 @@ theorem variance (n : ℕ) :
     _ = _ := Finset.sum_congr rfl fun k m => _
     _ = _ := p
     _ = _ := _
-    
   · congr 1; simp only [← nat_cast_mul, push_cast]
     cases k <;> · simp; ring
   · simp only [← nat_cast_mul, push_cast]

@@ -343,7 +343,6 @@ def TopologicalSpace.Opens.CompleteCopy.instMetricSpace (s : Set α) :
         rw [← Real.dist_eq, ← Real.dist_eq, ← Real.dist_eq]
         exact add_le_add (dist_triangle _ _ _) (dist_triangle _ _ _)
       _ = dist x y + dist y z := by rw [dist_complete_copy_eq, dist_complete_copy_eq]; abel
-      
   eq_of_dist_eq_zero := by
     intro x y hxy
     apply Subtype.coe_injective
@@ -424,7 +423,6 @@ theorem TopologicalSpace.Opens.CompleteCopy.instCompleteSpace [CompleteSpace α]
       _ = dist (u n) (u 0) + dist (1 / inf_dist (u 0).1 (sᶜ)) 0 := rfl
       _ < (1 / 2) ^ 0 + dist (1 / inf_dist (u 0).1 (sᶜ)) 0 :=
         add_lt_add_right (hu 0 n 0 (zero_le _) le_rfl) _
-      
   have Cpos : 0 < C := by
     apply lt_of_le_of_lt _ (hC 0)
     simp [inf_dist_nonneg]

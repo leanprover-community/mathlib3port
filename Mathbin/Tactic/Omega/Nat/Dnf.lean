@@ -33,7 +33,7 @@ def dnfCore : Preform → List Clause
 #align omega.nat.dnf_core Omega.Nat.dnfCore
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic omega.nat.preform.induce -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:330:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
 theorem exists_clause_holds_core {v : Nat → Nat} :
     ∀ {p : Preform},
       p.NegFree → p.SubFree → p.Holds v → ∃ c ∈ dnfCore p, Clause.Holds (fun x => ↑(v x)) c :=

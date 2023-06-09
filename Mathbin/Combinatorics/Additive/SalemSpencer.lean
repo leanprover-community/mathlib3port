@@ -442,7 +442,6 @@ theorem mulRothNumber_union_le (s t : Finset α) :
     _ ≤ mulRothNumber s + mulRothNumber t :=
       add_le_add ((hu.mono <| inter_subset_left _ _).le_mulRothNumber <| inter_subset_right _ _)
         ((hu.mono <| inter_subset_left _ _).le_mulRothNumber <| inter_subset_right _ _)
-    
 #align mul_roth_number_union_le mulRothNumber_union_le
 #align add_roth_number_union_le addRothNumber_union_le
 -/

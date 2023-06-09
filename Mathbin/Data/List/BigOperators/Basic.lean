@@ -49,7 +49,6 @@ theorem prod_cons : (a :: l).Prod = a * l.Prod :=
     (a :: l).Prod = foldl (· * ·) (a * 1) l := by
       simp only [List.prod, foldl_cons, one_mul, mul_one]
     _ = _ := foldl_assoc
-    
 #align list.prod_cons List.prod_cons
 #align list.sum_cons List.sum_cons
 
@@ -58,7 +57,6 @@ theorem prod_append : (l₁ ++ l₂).Prod = l₁.Prod * l₂.Prod :=
   calc
     (l₁ ++ l₂).Prod = foldl (· * ·) (foldl (· * ·) 1 l₁ * 1) l₂ := by simp [List.prod]
     _ = l₁.Prod * l₂.Prod := foldl_assoc
-    
 #align list.prod_append List.prod_append
 #align list.sum_append List.sum_append
 

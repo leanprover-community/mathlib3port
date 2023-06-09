@@ -80,7 +80,6 @@ theorem edist_inequality (hf : ContractingWith K f) {x y} (h : edist x y ≠ ∞
     edist x y ≤ edist x (f x) + edist (f x) (f y) + edist (f y) y := edist_triangle4 _ _ _ _
     _ = edist x (f x) + edist y (f y) + edist (f x) (f y) := by rw [edist_comm y, add_right_comm]
     _ ≤ edist x (f x) + edist y (f y) + K * edist x y := add_le_add le_rfl (hf.2 _ _)
-    
 #align contracting_with.edist_inequality ContractingWith.edist_inequality
 
 theorem edist_le_of_fixedPoint (hf : ContractingWith K f) {x y} (h : edist x y ≠ ∞)
@@ -296,7 +295,6 @@ theorem dist_inequality (x y) : dist x y ≤ (dist x (f x) + dist y (f y)) / (1 
   calc
     dist x y ≤ dist x (f x) + dist y (f y) + dist (f x) (f y) := dist_triangle4_right _ _ _ _
     _ ≤ dist x (f x) + dist y (f y) + K * dist x y := add_le_add_left (hf.dist_le_mul _ _) _
-    
 #align contracting_with.dist_inequality ContractingWith.dist_inequality
 
 theorem dist_le_of_fixedPoint (x) {y} (hy : IsFixedPt f y) : dist x y ≤ dist x (f x) / (1 - K) := by
@@ -318,7 +316,6 @@ theorem dist_fixedPoint_fixedPoint_of_dist_le' (g : α → α) {x y} (hx : IsFix
     _ ≤ dist y (f y) / (1 - K) := (hf.dist_le_of_fixedPoint y hx)
     _ = dist (f y) (g y) / (1 - K) := by rw [hy.eq, dist_comm]
     _ ≤ C / (1 - K) := (div_le_div_right hf.one_sub_K_pos).2 (hfg y)
-    
 #align contracting_with.dist_fixed_point_fixed_point_of_dist_le' ContractingWith.dist_fixedPoint_fixedPoint_of_dist_le'
 
 noncomputable section

@@ -25,6 +25,7 @@ variable (C : Type u₁) [Category.{v₁} C] [MonoidalCategory.{v₁} C]
 
 variable {C}
 
+#print Mod_ /-
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -36,6 +37,7 @@ structure Mod_ (A : Mon_ C) where
   one_act' : (A.one ⊗ 𝟙 X) ≫ act = (λ_ X).Hom := by obviously
   assoc' : (A.mul ⊗ 𝟙 X) ≫ act = (α_ A.pt A.pt X).Hom ≫ (𝟙 A.pt ⊗ act) ≫ act := by obviously
 #align Mod_ Mod_
+-/
 
 restate_axiom Mod_.one_act'
 
@@ -49,10 +51,13 @@ variable {A : Mon_ C} (M : Mod_ A)
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print Mod_.assoc_flip /-
 theorem assoc_flip :
     (𝟙 A.pt ⊗ M.act) ≫ M.act = (α_ A.pt A.pt M.pt).inv ≫ (A.mul ⊗ 𝟙 M.pt) ≫ M.act := by simp
 #align Mod_.assoc_flip Mod_.assoc_flip
+-/
 
+#print Mod_.Hom /-
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- A morphism of module objects. -/
 @[ext]
@@ -60,62 +65,78 @@ structure Hom (M N : Mod_ A) where
   Hom : M.pt ⟶ N.pt
   act_hom' : M.act ≫ hom = (𝟙 A.pt ⊗ hom) ≫ N.act := by obviously
 #align Mod_.hom Mod_.Hom
+-/
 
 restate_axiom hom.act_hom'
 
 attribute [simp, reassoc] hom.act_hom
 
+#print Mod_.id /-
 /-- The identity morphism on a module object. -/
 @[simps]
 def id (M : Mod_ A) : Hom M M where Hom := 𝟙 M.pt
 #align Mod_.id Mod_.id
+-/
 
+#print Mod_.homInhabited /-
 instance homInhabited (M : Mod_ A) : Inhabited (Hom M M) :=
   ⟨id M⟩
 #align Mod_.hom_inhabited Mod_.homInhabited
+-/
 
+#print Mod_.comp /-
 /-- Composition of module object morphisms. -/
 @[simps]
 def comp {M N O : Mod_ A} (f : Hom M N) (g : Hom N O) : Hom M O where Hom := f.Hom ≫ g.Hom
 #align Mod_.comp Mod_.comp
+-/
 
 instance : Category (Mod_ A) where
   Hom M N := Hom M N
   id := id
   comp M N O f g := comp f g
 
+#print Mod_.id_hom' /-
 @[simp]
 theorem id_hom' (M : Mod_ A) : (𝟙 M : Hom M M).Hom = 𝟙 M.pt :=
   rfl
 #align Mod_.id_hom' Mod_.id_hom'
+-/
 
+#print Mod_.comp_hom' /-
 @[simp]
 theorem comp_hom' {M N K : Mod_ A} (f : M ⟶ N) (g : N ⟶ K) :
     (f ≫ g : Hom M K).Hom = f.Hom ≫ g.Hom :=
   rfl
 #align Mod_.comp_hom' Mod_.comp_hom'
+-/
 
 variable (A)
 
+#print Mod_.regular /-
 /-- A monoid object as a module over itself. -/
 @[simps]
 def regular : Mod_ A where
   pt := A.pt
   act := A.mul
 #align Mod_.regular Mod_.regular
+-/
 
 instance : Inhabited (Mod_ A) :=
   ⟨regular A⟩
 
+#print Mod_.forget /-
 /-- The forgetful functor from module objects to the ambient category. -/
 def forget : Mod_ A ⥤ C where
   obj A := A.pt
   map A B f := f.Hom
 #align Mod_.forget Mod_.forget
+-/
 
 open CategoryTheory.MonoidalCategory
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print Mod_.comap /-
 /-- A morphism of monoid objects induces a "restriction" or "comap" functor
 between the categories of module objects.
 -/
@@ -148,6 +169,7 @@ def comap {A B : Mon_ C} (f : A ⟶ B) : Mod_ B ⥤ Mod_ A
         slice_rhs 2 3 => rw [← g.act_hom]
         rw [category.assoc] }
 #align Mod_.comap Mod_.comap
+-/
 
 -- Lots more could be said about `comap`, e.g. how it interacts with
 -- identities, compositions, and equalities of monoid object morphisms.

@@ -155,7 +155,6 @@ theorem geom_mean_weighted_of_constant (w z : ι → ℝ) (x : ℝ) (hw : ∀ i 
       obtain ⟨i, his, hi⟩ := exists_ne_zero_of_sum_ne_zero this
       rw [← hx i his hi]
       exact hz i his
-    
 #align real.geom_mean_weighted_of_constant Real.geom_mean_weighted_of_constant
 
 theorem arith_mean_weighted_of_constant (w z : ι → ℝ) (x : ℝ) (hw' : (∑ i in s, w i) = 1)
@@ -168,7 +167,6 @@ theorem arith_mean_weighted_of_constant (w z : ι → ℝ) (x : ℝ) (hw' : (∑
       · rw [hwi, MulZeroClass.zero_mul, MulZeroClass.zero_mul]
       · rw [hx i hi hwi]
     _ = x := by rw [← sum_mul, hw', one_mul]
-    
 #align real.arith_mean_weighted_of_constant Real.arith_mean_weighted_of_constant
 
 theorem geom_mean_eq_arith_mean_weighted_of_constant (w z : ι → ℝ) (x : ℝ) (hw : ∀ i ∈ s, 0 ≤ w i)
@@ -274,7 +272,6 @@ theorem young_inequality (a b : ℝ) {p q : ℝ} (hpq : p.IsConjugateExponent q)
     _ = |a| * |b| := (abs_mul a b)
     _ ≤ |a| ^ p / p + |b| ^ q / q :=
       Real.young_inequality_of_nonneg (abs_nonneg a) (abs_nonneg b) hpq
-    
 #align real.young_inequality Real.young_inequality
 
 end Real
@@ -346,7 +343,6 @@ private theorem inner_le_Lp_mul_Lp_of_norm_le_one (f g : ι → ℝ≥0) {p q : 
       · rwa [div_le_iff hp_ne_zero, div_mul_cancel _ hp_ne_zero]
       · rwa [div_le_iff hq_ne_zero, div_mul_cancel _ hq_ne_zero]
     _ = 1 := hpq.inv_add_inv_conj_nnreal
-    
 
 private theorem inner_le_Lp_mul_Lp_of_norm_eq_zero (f g : ι → ℝ≥0) {p q : ℝ}
     (hpq : p.IsConjugateExponent q) (hf : (∑ i in s, f i ^ p) = 0) :
@@ -374,7 +370,6 @@ theorem inner_le_Lp_mul_Lq (f g : ι → ℝ≥0) {p q : ℝ} (hpq : p.IsConjuga
       _ ≤ (∑ i in s, g i ^ q) ^ (1 / q) * (∑ i in s, f i ^ p) ^ (1 / p) :=
         (inner_le_Lp_mul_Lp_of_norm_eq_zero s g f hpq.symm hG_zero)
       _ = (∑ i in s, f i ^ p) ^ (1 / p) * (∑ i in s, g i ^ q) ^ (1 / q) := mul_comm _ _
-      
   let f' i := f i / (∑ i in s, f i ^ p) ^ (1 / p)
   let g' i := g i / (∑ i in s, g i ^ q) ^ (1 / q)
   suffices (∑ i in s, f' i * g' i) ≤ 1

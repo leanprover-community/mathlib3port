@@ -132,7 +132,6 @@ theorem edist_triangle4 (x y z t : α) : edist x t ≤ edist x y + edist y z + e
   calc
     edist x t ≤ edist x z + edist z t := edist_triangle x z t
     _ ≤ edist x y + edist y z + edist z t := add_le_add_right (edist_triangle x y z) _
-    
 #align edist_triangle4 edist_triangle4
 
 /-- The triangle (polygon) inequality for sequences of points; `finset.Ico` version. -/
@@ -150,7 +149,6 @@ theorem edist_le_Ico_sum_edist (f : ℕ → α) {m n} (h : m ≤ n) :
       _ ≤ (∑ i in Finset.Ico m n, _) + _ := (add_le_add hrec le_rfl)
       _ = ∑ i in Finset.Ico m (n + 1), _ := by
         rw [Nat.Ico_succ_right_eq_insert_Ico hn, Finset.sum_insert, add_comm] <;> simp
-      
 #align edist_le_Ico_sum_edist edist_le_Ico_sum_edist
 
 /-- The triangle (polygon) inequality for sequences of points; `finset.range` version. -/
@@ -658,7 +656,6 @@ theorem ball_subset (h : edist x y + ε₁ ≤ ε₂) (h' : edist x y ≠ ∞) :
     _ = edist x y + edist z x := (add_comm _ _)
     _ < edist x y + ε₁ := (ENNReal.add_lt_add_left h' zx)
     _ ≤ ε₂ := h
-    
 #align emetric.ball_subset EMetric.ball_subset
 
 theorem exists_ball_subset_ball (h : y ∈ ball x ε) : ∃ ε' > 0, ball y ε' ⊆ ball x ε :=
@@ -873,7 +870,6 @@ theorem subset_countable_closure_of_almost_dense_set (s : Set α)
         edist z y ≤ edist z x + edist y x := edist_triangle_right _ _ _
         _ ≤ r + r := (add_le_add hz.1 hxy)
         _ = r * 2 := (mul_two r).symm
-        
   choose f hfs hf
   refine'
     ⟨⋃ n : ℕ, f n⁻¹ '' T n, Union_subset fun n => image_subset_iff.2 fun z hz => hfs _ _,
@@ -885,7 +881,6 @@ theorem subset_countable_closure_of_almost_dense_set (s : Set α)
   calc
     edist x (f n⁻¹ y) ≤ n⁻¹ * 2 := hf _ _ ⟨hyx, hx⟩
     _ < ε := ENNReal.mul_lt_of_lt_div hn
-    
 #align emetric.subset_countable_closure_of_almost_dense_set EMetric.subset_countable_closure_of_almost_dense_set
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (t «expr ⊆ » s) -/
@@ -1023,7 +1018,6 @@ theorem diam_union {t : Set α} (xs : x ∈ s) (yt : y ∈ t) :
       edist a b ≤ edist a x + edist x y + edist y b := edist_triangle4 _ _ _ _
       _ ≤ diam s + edist x y + diam t :=
         add_le_add (add_le_add (edist_le_diam_of_mem ha xs) le_rfl) (edist_le_diam_of_mem yt hb)
-      
   refine' diam_le fun a ha b hb => _
   cases' (mem_union _ _ _).1 ha with h'a h'a <;> cases' (mem_union _ _ _).1 hb with h'b h'b
   ·
@@ -1031,14 +1025,12 @@ theorem diam_union {t : Set α} (xs : x ∈ s) (yt : y ∈ t) :
       edist a b ≤ diam s := edist_le_diam_of_mem h'a h'b
       _ ≤ diam s + (edist x y + diam t) := le_self_add
       _ = diam s + edist x y + diam t := (add_assoc _ _ _).symm
-      
   · exact A a h'a b h'b
   · have Z := A b h'b a h'a; rwa [edist_comm] at Z 
   ·
     calc
       edist a b ≤ diam t := edist_le_diam_of_mem h'a h'b
       _ ≤ diam s + edist x y + diam t := le_add_self
-      
 #align emetric.diam_union EMetric.diam_union
 
 theorem diam_union' {t : Set α} (h : (s ∩ t).Nonempty) : diam (s ∪ t) ≤ diam s + diam t :=
@@ -1053,7 +1045,6 @@ theorem diam_closedBall {r : ℝ≥0∞} : diam (closedBall x r) ≤ 2 * r :=
       edist a b ≤ edist a x + edist b x := edist_triangle_right _ _ _
       _ ≤ r + r := (add_le_add ha hb)
       _ = 2 * r := (two_mul r).symm
-      
 #align emetric.diam_closed_ball EMetric.diam_closedBall
 
 theorem diam_ball {r : ℝ≥0∞} : diam (ball x r) ≤ 2 * r :=
@@ -1267,8 +1258,7 @@ instance [PseudoEMetricSpace X] : EDist (UniformSpace.SeparationQuotient X) :=
         edist x y = edist x' y :=
           edist_congr_right <| EMetric.inseparable_iff.1 <| separationRel_iff_inseparable.1 hx
         _ = edist x' y' :=
-          edist_congr_left <| EMetric.inseparable_iff.1 <| separationRel_iff_inseparable.1 hy
-        ⟩
+          edist_congr_left <| EMetric.inseparable_iff.1 <| separationRel_iff_inseparable.1 hy⟩
 
 #print UniformSpace.SeparationQuotient.edist_mk /-
 @[simp]

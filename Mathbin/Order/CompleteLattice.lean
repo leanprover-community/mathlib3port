@@ -1696,7 +1696,6 @@ theorem sup_iSup_nat_succ (u : ℕ → α) : (u 0 ⊔ ⨆ i, u (i + 1)) = ⨆ i,
     (u 0 ⊔ ⨆ i, u (i + 1)) = ⨆ x ∈ {0} ∪ range Nat.succ, u x := by
       rw [iSup_union, iSup_singleton, iSup_range]
     _ = ⨆ i, u i := by rw [Nat.zero_union_range_succ, iSup_univ]
-    
 #align sup_supr_nat_succ sup_iSup_nat_succ
 
 theorem inf_iInf_nat_succ (u : ℕ → α) : (u 0 ⊓ ⨅ i, u (i + 1)) = ⨅ i, u i :=

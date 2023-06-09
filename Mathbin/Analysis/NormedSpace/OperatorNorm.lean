@@ -384,7 +384,6 @@ protected theorem tmp_closedBall_div_subset {a b : ℝ} (ha : 0 < a) (hb : 0 < b
     ‖f x‖ ≤ ‖f‖ * ‖x‖ := le_op_norm _ _
     _ ≤ a / b * b := (mul_le_mul hf hx (norm_nonneg _) (div_pos ha hb).le)
     _ = a := div_mul_cancel a hb.ne.symm
-    
 #align continuous_linear_map.tmp_closed_ball_div_subset ContinuousLinearMap.tmp_closedBall_div_subset
 
 end Tmp
@@ -1015,7 +1014,6 @@ theorem norm_precompR_le (L : E →L[𝕜] Fₗ →L[𝕜] Gₗ) : ‖precompR E
     ‖precompR Eₗ L‖ ≤ ‖compL 𝕜 Eₗ Fₗ Gₗ‖ * ‖L‖ := op_norm_comp_le _ _
     _ ≤ 1 * ‖L‖ := (mul_le_mul_of_nonneg_right (norm_compL_le _ _ _ _) (norm_nonneg _))
     _ = ‖L‖ := by rw [one_mul]
-    
 #align continuous_linear_map.norm_precompR_le ContinuousLinearMap.norm_precompR_le
 
 theorem norm_precompL_le (L : E →L[𝕜] Fₗ →L[𝕜] Gₗ) : ‖precompL Eₗ L‖ ≤ ‖L‖ := by
@@ -1430,7 +1428,6 @@ theorem bound_of_ball_bound {r : ℝ} (r_pos : 0 < r) (c : ℝ) (f : E →ₗ[�
     ‖f x‖ ≤ c := h _ (mem_ball_zero_iff.mpr hxo)
     _ ≤ c * (‖x‖ * ‖k‖ / r) := (le_mul_of_one_le_right _ _)
     _ = _ := by ring
-    
   · exact le_trans (norm_nonneg _) (h 0 (by simp [r_pos]))
   · rw [div_le_iff (zero_lt_one.trans hk)] at hko 
     exact (one_le_div r_pos).mpr hko
@@ -1460,7 +1457,6 @@ theorem antilipschitz_of_comap_nhds_le [h : RingHomIsometric σ₁₂] (f : E �
       rwa [← norm_inv, ← norm_smul, inv_smul_smul₀ (zpow_ne_zero _ _)]
     _ ≤ ‖c ^ n‖⁻¹ * 1 := (mul_le_mul_of_nonneg_left (hε _ hlt).le (inv_nonneg.2 (norm_nonneg _)))
     _ ≤ ε⁻¹ * ‖c‖ * ‖f x‖ := by rwa [mul_one]
-    
 #align linear_map.antilipschitz_of_comap_nhds_le LinearMap.antilipschitz_of_comap_nhds_le
 
 end LinearMap
@@ -1479,8 +1475,7 @@ theorem op_norm_zero_iff [RingHomIsometric σ₁₂] : ‖f‖ = 0 ↔ f = 0 :=
         norm_le_zero_iff.1
           (calc
             _ ≤ ‖f‖ * ‖x‖ := le_op_norm _ _
-            _ = _ := by rw [hn, MulZeroClass.zero_mul]
-            ))
+            _ = _ := by rw [hn, MulZeroClass.zero_mul]))
     (by rintro rfl; exact op_norm_zero)
 #align continuous_linear_map.op_norm_zero_iff ContinuousLinearMap.op_norm_zero_iff
 
@@ -1772,7 +1767,6 @@ theorem op_norm_extend_le : ‖ψ‖ ≤ N * ‖f‖ :=
         ‖f x‖ ≤ ‖f‖ * ‖x‖ := le_op_norm _ _
         _ ≤ ‖f‖ * (N * ‖e x‖) := (mul_le_mul_of_nonneg_left (h_e x) (norm_nonneg _))
         _ ≤ N * ‖f‖ * ‖e x‖ := by rw [mul_comm ↑N ‖f‖, mul_assoc]
-        
   · have he : ∀ x : E, x = 0 := by
       intro x
       have N0 : N ≤ 0 := le_of_lt (lt_of_not_ge N0)
@@ -1863,7 +1857,6 @@ theorem norm_smulRight_apply (c : E →L[𝕜] 𝕜) (f : Fₗ) : ‖smulRight c
       ‖c x • f‖ = ‖c x‖ * ‖f‖ := norm_smul _ _
       _ ≤ ‖c‖ * ‖x‖ * ‖f‖ := (mul_le_mul_of_nonneg_right (le_op_norm _ _) (norm_nonneg _))
       _ = ‖c‖ * ‖f‖ * ‖x‖ := by ring
-      
   · by_cases h : f = 0
     · simp [h]
     · have : 0 < ‖f‖ := norm_pos_iff.2 h
@@ -1874,7 +1867,6 @@ theorem norm_smulRight_apply (c : E →L[𝕜] 𝕜) (f : Fₗ) : ‖smulRight c
         ‖c x‖ * ‖f‖ = ‖c x • f‖ := (norm_smul _ _).symm
         _ = ‖smul_right c f x‖ := rfl
         _ ≤ ‖smul_right c f‖ * ‖x‖ := le_op_norm _ _
-        
 #align continuous_linear_map.norm_smul_right_apply ContinuousLinearMap.norm_smulRight_apply
 
 /-- The non-negative norm of the tensor product of a scalar linear map and of an element of a normed

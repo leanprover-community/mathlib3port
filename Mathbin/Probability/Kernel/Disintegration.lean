@@ -137,7 +137,6 @@ theorem set_lintegral_condKernelReal_prod {s : Set α} (hs : MeasurableSet s) {t
           simp only [diff_self, empty_prod, union_empty]
         · rw [prod_subset_prod_iff]
           exact Or.inl ⟨subset_rfl, subset_univ t⟩
-      
   · intro f hf_disj hf_meas hf_eq
     simp_rw [measure_Union hf_disj hf_meas]
     rw [lintegral_tsum fun i => (kernel.measurable_coe _ (hf_meas i)).AEMeasurable.restrict,
@@ -215,7 +214,6 @@ theorem lintegral_condKernelReal_mem {s : Set (α × ℝ)} (hs : MeasurableSet s
         exact measure_lt_top ρ univ
       _ = ρ univ - ρ t := by rw [ht_eq, lintegral_cond_kernel_real_univ]
       _ = ρ (tᶜ) := (measure_compl ht (measure_ne_top _ _)).symm
-      
   · intro f hf_disj hf_meas hf_eq
     have h_eq : ∀ a, {x | (a, x) ∈ ⋃ i, f i} = ⋃ i, {x | (a, x) ∈ f i} :=
       by
@@ -243,7 +241,6 @@ theorem lintegral_condKernelReal_mem {s : Set (α × ℝ)} (hs : MeasurableSet s
         (lintegral_tsum fun i => (kernel.measurable_kernel_prod_mk_left (hf_meas i)).AEMeasurable)
       _ = ∑' i, ρ (f i) := by simp_rw [hf_eq]
       _ = ρ (Union f) := (measure_Union hf_disj hf_meas).symm
-      
 #align probability_theory.lintegral_cond_kernel_real_mem ProbabilityTheory.lintegral_condKernelReal_mem
 
 theorem kernel.const_eq_compProd_real (γ : Type _) [MeasurableSpace γ] (ρ : Measure (α × ℝ))

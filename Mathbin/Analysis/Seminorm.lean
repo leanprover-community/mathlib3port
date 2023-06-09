@@ -852,7 +852,6 @@ theorem balanced_ball_zero (r : ℝ) : Balanced 𝕜 (ball p 0 r) :=
   calc
     _ ≤ p y := mul_le_of_le_one_left (map_nonneg p _) ha
     _ < r := by rwa [mem_ball_zero] at hy 
-    
 #align seminorm.balanced_ball_zero Seminorm.balanced_ball_zero
 
 /-- Closed seminorm-balls at the origin are balanced. -/
@@ -863,7 +862,6 @@ theorem balanced_closedBall_zero (r : ℝ) : Balanced 𝕜 (closedBall p 0 r) :=
   calc
     _ ≤ p y := mul_le_of_le_one_left (map_nonneg p _) ha
     _ ≤ r := by rwa [mem_closed_ball_zero] at hy 
-    
 #align seminorm.balanced_closed_ball_zero Seminorm.balanced_closedBall_zero
 
 theorem ball_finset_sup_eq_iInter (p : ι → Seminorm 𝕜 E) (s : Finset ι) (x : E) {r : ℝ}
@@ -1068,7 +1066,6 @@ protected theorem convexOn : ConvexOn ℝ univ p :=
     _ = a * p x + b * p y := by
       rw [norm_smul, norm_smul, norm_one, mul_one, mul_one, Real.norm_of_nonneg ha,
         Real.norm_of_nonneg hb]
-    
 #align seminorm.convex_on Seminorm.convexOn
 
 end SMul

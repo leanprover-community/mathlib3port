@@ -487,7 +487,6 @@ theorem map_le_of_map_zero (x : ℝ) : f x ≤ f 0 + ⌈x⌉ :=
   calc
     f x ≤ f ⌈x⌉ := f.Monotone <| le_ceil _
     _ = f 0 + ⌈x⌉ := f.map_int_of_map_zero _
-    
 #align circle_deg1_lift.map_le_of_map_zero CircleDeg1Lift.map_le_of_map_zero
 
 theorem map_map_zero_le : f (g 0) ≤ f 0 + ⌈g 0⌉ :=
@@ -498,14 +497,12 @@ theorem floor_map_map_zero_le : ⌊f (g 0)⌋ ≤ ⌊f 0⌋ + ⌈g 0⌉ :=
   calc
     ⌊f (g 0)⌋ ≤ ⌊f 0 + ⌈g 0⌉⌋ := floor_mono <| f.map_map_zero_le g
     _ = ⌊f 0⌋ + ⌈g 0⌉ := floor_add_int _ _
-    
 #align circle_deg1_lift.floor_map_map_zero_le CircleDeg1Lift.floor_map_map_zero_le
 
 theorem ceil_map_map_zero_le : ⌈f (g 0)⌉ ≤ ⌈f 0⌉ + ⌈g 0⌉ :=
   calc
     ⌈f (g 0)⌉ ≤ ⌈f 0 + ⌈g 0⌉⌉ := ceil_mono <| f.map_map_zero_le g
     _ = ⌈f 0⌉ + ⌈g 0⌉ := ceil_add_int _ _
-    
 #align circle_deg1_lift.ceil_map_map_zero_le CircleDeg1Lift.ceil_map_map_zero_le
 
 theorem map_map_zero_lt : f (g 0) < f 0 + g 0 + 1 :=
@@ -513,14 +510,12 @@ theorem map_map_zero_lt : f (g 0) < f 0 + g 0 + 1 :=
     f (g 0) ≤ f 0 + ⌈g 0⌉ := f.map_map_zero_le g
     _ < f 0 + (g 0 + 1) := (add_lt_add_left (ceil_lt_add_one _) _)
     _ = f 0 + g 0 + 1 := (add_assoc _ _ _).symm
-    
 #align circle_deg1_lift.map_map_zero_lt CircleDeg1Lift.map_map_zero_lt
 
 theorem le_map_of_map_zero (x : ℝ) : f 0 + ⌊x⌋ ≤ f x :=
   calc
     f 0 + ⌊x⌋ = f ⌊x⌋ := (f.map_int_of_map_zero _).symm
     _ ≤ f x := f.Monotone <| floor_le _
-    
 #align circle_deg1_lift.le_map_of_map_zero CircleDeg1Lift.le_map_of_map_zero
 
 theorem le_map_map_zero : f 0 + ⌊g 0⌋ ≤ f (g 0) :=
@@ -531,14 +526,12 @@ theorem le_floor_map_map_zero : ⌊f 0⌋ + ⌊g 0⌋ ≤ ⌊f (g 0)⌋ :=
   calc
     ⌊f 0⌋ + ⌊g 0⌋ = ⌊f 0 + ⌊g 0⌋⌋ := (floor_add_int _ _).symm
     _ ≤ ⌊f (g 0)⌋ := floor_mono <| f.le_map_map_zero g
-    
 #align circle_deg1_lift.le_floor_map_map_zero CircleDeg1Lift.le_floor_map_map_zero
 
 theorem le_ceil_map_map_zero : ⌈f 0⌉ + ⌊g 0⌋ ≤ ⌈(f * g) 0⌉ :=
   calc
     ⌈f 0⌉ + ⌊g 0⌋ = ⌈f 0 + ⌊g 0⌋⌉ := (ceil_add_int _ _).symm
     _ ≤ ⌈f (g 0)⌉ := ceil_mono <| f.le_map_map_zero g
-    
 #align circle_deg1_lift.le_ceil_map_map_zero CircleDeg1Lift.le_ceil_map_map_zero
 
 theorem lt_map_map_zero : f 0 + g 0 - 1 < f (g 0) :=
@@ -546,7 +539,6 @@ theorem lt_map_map_zero : f 0 + g 0 - 1 < f (g 0) :=
     f 0 + g 0 - 1 = f 0 + (g 0 - 1) := add_sub_assoc _ _ _
     _ < f 0 + ⌊g 0⌋ := (add_lt_add_left (sub_one_lt_floor _) _)
     _ ≤ f (g 0) := f.le_map_map_zero g
-    
 #align circle_deg1_lift.lt_map_map_zero CircleDeg1Lift.lt_map_map_zero
 
 theorem dist_map_map_zero_lt : dist (f 0 + g 0) (f (g 0)) < 1 :=
@@ -563,7 +555,6 @@ theorem dist_map_zero_lt_of_semiconj {f g₁ g₂ : CircleDeg1Lift} (h : Functio
       simp only [h.eq, Real.dist_eq, sub_sub, add_comm (f 0), sub_sub_eq_add_sub,
         abs_sub_comm (g₂ (f 0))]
     _ < 2 := add_lt_add (f.dist_map_map_zero_lt g₁) (g₂.dist_map_map_zero_lt f)
-    
 #align circle_deg1_lift.dist_map_zero_lt_of_semiconj CircleDeg1Lift.dist_map_zero_lt_of_semiconj
 
 theorem dist_map_zero_lt_of_semiconjBy {f g₁ g₂ : CircleDeg1Lift} (h : SemiconjBy f g₁ g₂) :
@@ -938,7 +929,6 @@ theorem map_lt_add_translationNumber_add_one (x : ℝ) : f x < x + τ f + 1 :=
   calc
     f x < x + ⌊τ f⌋ + 1 := f.map_lt_add_floor_translationNumber_add_one x
     _ ≤ x + τ f + 1 := by mono*; exact floor_le (τ f)
-    
 #align circle_deg1_lift.map_lt_add_translation_number_add_one CircleDeg1Lift.map_lt_add_translationNumber_add_one
 
 theorem lt_map_of_int_lt_translationNumber {n : ℤ} (h : ↑n < τ f) (x : ℝ) : x + n < f x :=
@@ -1050,7 +1040,6 @@ theorem semiconj_of_group_action_of_forall_translationNumber_eq {G : Type _} [Gr
       _ ≤ x + τ (f₂ g) + τ (f₂ g⁻¹) + 1 + 1 := by mono;
         exact (map_lt_add_translation_number_add_one _ _).le
       _ = x + 2 := by simp [this, bit0, add_assoc]
-      
   -- We have a theorem about actions by `order_iso`, so we introduce auxiliary maps
   -- to `ℝ ≃o ℝ`.
   set F₁ := to_order_iso.comp f₁.to_hom_units

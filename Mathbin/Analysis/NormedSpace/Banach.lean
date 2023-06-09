@@ -141,7 +141,6 @@ theorem exists_approx_preimage_norm_le (surj : Surjective f) :
             · rw [← dist_eq_norm, dist_comm]; exact le_of_lt h₁
             · rw [← dist_eq_norm, dist_comm]; exact le_of_lt h₂
           _ = 2 * δ := (two_mul _).symm
-          
       have J : ‖f (d⁻¹ • x) - y‖ ≤ 1 / 2 * ‖y‖ :=
         calc
           ‖f (d⁻¹ • x) - y‖ = ‖d⁻¹ • f x - (d⁻¹ * d) • y‖ := by
@@ -155,7 +154,6 @@ theorem exists_approx_preimage_norm_le (surj : Surjective f) :
           _ = ‖d‖⁻¹ * ‖d‖ * ‖y‖ / 2 := by simp only [δ]; ring
           _ = ‖y‖ / 2 := by rw [inv_mul_cancel, one_mul]; simp [norm_eq_zero, hd]
           _ = 1 / 2 * ‖y‖ := by ring
-          
       rw [← dist_eq_norm] at J 
       have K : ‖d⁻¹ • x‖ ≤ (ε / 2)⁻¹ * ‖c‖ * 2 * ↑n * ‖y‖ :=
         calc
@@ -167,7 +165,6 @@ theorem exists_approx_preimage_norm_le (surj : Surjective f) :
             · apply mul_nonneg (mul_nonneg _ (norm_nonneg _)) (norm_nonneg _)
               exact inv_nonneg.2 (le_of_lt (half_pos εpos))
           _ = (ε / 2)⁻¹ * ‖c‖ * 2 * ↑n * ‖y‖ := by ring
-          
       exact ⟨d⁻¹ • x, J, K⟩
 #align continuous_linear_map.exists_approx_preimage_norm_le ContinuousLinearMap.exists_approx_preimage_norm_le
 
@@ -210,7 +207,6 @@ theorem exists_preimage_norm_le (surj : Surjective f) :
     calc
       C * ‖(h^[n]) y‖ ≤ C * ((1 / 2) ^ n * ‖y‖) := mul_le_mul_of_nonneg_left (hnle n) C0
       _ = (1 / 2) ^ n * (C * ‖y‖) := by ring
-      
   have sNu : Summable fun n => ‖u n‖ :=
     by
     refine' summable_of_nonneg_of_le (fun n => norm_nonneg _) ule _
@@ -226,7 +222,6 @@ theorem exists_preimage_norm_le (surj : Surjective f) :
       _ = 2 * C * ‖y‖ := by rw [tsum_geometric_two, mul_assoc]
       _ ≤ 2 * C * ‖y‖ + ‖y‖ := (le_add_of_nonneg_right (norm_nonneg y))
       _ = (2 * C + 1) * ‖y‖ := by ring
-      
   have fsumeq : ∀ n : ℕ, f (∑ i in Finset.range n, u i) = y - (h^[n]) y :=
     by
     intro n
@@ -271,7 +266,6 @@ protected theorem isOpenMap (surj : Surjective f) : IsOpenMap f :=
         apply mul_lt_mul_of_pos_left _ Cpos
         rwa [mem_ball, dist_eq_norm] at hz 
       _ = ε := mul_div_cancel' _ (ne_of_gt Cpos)
-      
   exact Set.mem_image_of_mem _ (hε this)
 #align continuous_linear_map.is_open_map ContinuousLinearMap.isOpenMap
 

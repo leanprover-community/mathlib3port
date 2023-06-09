@@ -51,7 +51,6 @@ theorem oangle_eq_two_zsmul_oangle_sub_of_norm_eq {x y z : V} (hxyne : x ≠ y) 
     _ = (2 : ℤ) • o.oangle (x - y) (x - z) := by
       rw [o.oangle_sub_right (sub_ne_zero_of_ne hxyne) (sub_ne_zero_of_ne hxzne) hx]
     _ = (2 : ℤ) • o.oangle (y - x) (z - x) := by rw [← oangle_neg_neg, neg_sub, neg_sub]
-    
 #align orientation.oangle_eq_two_zsmul_oangle_sub_of_norm_eq Orientation.oangle_eq_two_zsmul_oangle_sub_of_norm_eq
 
 /-- Angle at center of a circle equals twice angle at circumference, oriented vector angle

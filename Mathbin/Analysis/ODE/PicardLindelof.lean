@@ -218,7 +218,6 @@ protected theorem mem_closedBall (t : Icc v.tMin v.tMax) : f t ∈ closedBall v.
     _ ≤ v.C * dist t v.t₀ := (f.lipschitz.dist_le_mul _ _)
     _ ≤ v.C * v.tDist := (mul_le_mul_of_nonneg_left (v.dist_t₀_le _) v.C.2)
     _ ≤ v.r := v.is_pl.C_mul_le_R
-    
 #align picard_lindelof.fun_space.mem_closed_ball PicardLindelof.FunSpace.mem_closedBall
 
 /-- Given a curve $γ \colon [t_{\min}, t_{\max}] → E$, `v_comp` is the function
@@ -332,7 +331,6 @@ theorem dist_next_apply_le_of_le {f₁ f₂ : FunSpace v} {n : ℕ} {d : ℝ}
         rw [v.proj_of_mem]
         exact uIcc_subset_Icc v.t₀.2 t.2 <| Ioc_subset_Icc_self hτ
     _ = (v.L * |t - v.t₀|) ^ (n + 1) / (n + 1)! * d := _
-    
   simp_rw [mul_pow, div_eq_mul_inv, mul_assoc, MeasureTheory.integral_mul_left,
     MeasureTheory.integral_mul_right, integral_pow_abs_sub_uIoc, div_eq_mul_inv, pow_succ (v.L : ℝ),
     Nat.factorial_succ, Nat.cast_mul, Nat.cast_succ, mul_inv, mul_assoc]

@@ -668,7 +668,7 @@ variable {R M ι : Type _}
 
 variable [CommSemiring R] [AddCommMonoid M] [Module R M] [DecidableEq ι]
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:330:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
 -- TODO: In Lean 4 we can remove this and use `by { intros; exact Set.toFinite _ }` as a default
 -- argument.
 /-- Try using `set.to_finite` to dispatch a `set.finite` goal. -/

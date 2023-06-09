@@ -189,7 +189,6 @@ instance (priority := 100) BoundedSMul.continuousSMul : ContinuousSMul α β
       _ ≤ _ := dist_triangle _ (a • b') _
       _ ≤ δ * (dist a 0 + dist b 0 + δ) := _
       _ < ε := _
-      
     · have : 0 ≤ dist a' a := dist_nonneg
       have := dist_triangle b' b 0
       have := dist_comm (a • b') (a' • b')

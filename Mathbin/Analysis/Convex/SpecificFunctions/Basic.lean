@@ -62,7 +62,6 @@ theorem strictConvexOn_exp : StrictConvexOn ℝ univ exp :=
       _ = exp y * (1 - exp (x - y)) := by ring
       _ < exp y * -(x - y) := (mul_lt_mul_of_pos_left _ y.exp_pos)
       _ = exp y * (y - x) := by ring
-      
     linarith [add_one_lt_exp_of_nonzero h2.ne]
   · have h1 : 0 < z - y := by linarith
     rw [lt_div_iff h1]
@@ -70,7 +69,6 @@ theorem strictConvexOn_exp : StrictConvexOn ℝ univ exp :=
       exp y * (z - y) < exp y * (exp (z - y) - 1) := mul_lt_mul_of_pos_left _ y.exp_pos
       _ = exp (z - y) * exp y - exp y := by ring
       _ ≤ exp z - exp y := by rw [← exp_add] <;> ring_nf
-      
     linarith [add_one_lt_exp_of_nonzero h1.ne']
 #align strict_convex_on_exp strictConvexOn_exp
 
@@ -105,7 +103,6 @@ theorem convexOn_pow (n : ℕ) : ConvexOn ℝ (Ici 0) fun x : ℝ => x ^ n :=
     _ ≤ (μ * a + ν * b) * (μ * a ^ k + ν * b ^ k) + (b ^ k - a ^ k) * (b - a) * μ * ν := by linarith
     _ = (μ + ν) * (μ * a ^ k.succ + ν * b ^ k.succ) := by ring
     _ = μ * a ^ k.succ + ν * b ^ k.succ := by rw [h] <;> ring
-    
 #align convex_on_pow convexOn_pow
 
 /-- `x^n`, `n : ℕ` is convex on the whole real line whenever `n` is even.
@@ -124,7 +121,6 @@ theorem Even.convexOn_pow {n : ℕ} (hn : Even n) : ConvexOn ℝ Set.univ fun x 
     _ = (μ * a ^ 2 + ν * b ^ 2) ^ k := by rw [h] <;> ring
     _ ≤ μ * (a ^ 2) ^ k + ν * (b ^ 2) ^ k := _
     _ ≤ μ * a ^ (2 * k) + ν * b ^ (2 * k) := by ring
-    
   · linarith
   · refine' (convexOn_pow k).2 _ _ hμ hν h <;> dsimp <;> positivity
 #align even.convex_on_pow Even.convexOn_pow
@@ -150,7 +146,6 @@ theorem convexOn_zpow : ∀ m : ℤ, ConvexOn ℝ (Ioi 0) fun x : ℝ => x ^ m
         _ ≤ ((μ * b + ν * a) * (μ * a + ν * b)) ^ (n + 1) := (pow_le_pow_of_le_left _ _ _)
         _ = (μ * b + ν * a) ^ (n + 1) * (μ * a + ν * b) ^ (n + 1) := by rw [mul_pow]
         _ ≤ (μ * b ^ (n + 1) + ν * a ^ (n + 1)) * (μ * a + ν * b) ^ (n + 1) := _
-        
       · positivity
       · have : 0 ≤ μ * ν * (a - b) ^ 2 := by positivity
         linarith
@@ -182,7 +177,6 @@ theorem strictConcaveOn_log_Ioi : StrictConcaveOn ℝ (Ioi 0) log :=
       log z - log y = log (z / y) := by rw [← log_div hz.ne' hy.ne']
       _ < z / y - 1 := (log_lt_sub_one_of_pos hyz' hyz'')
       _ = y⁻¹ * (z - y) := by field_simp [hy.ne']
-      
   · have h : 0 < y - x := by linarith
     rw [lt_div_iff h]
     have hxy' : 0 < x / y := by positivity
@@ -195,7 +189,6 @@ theorem strictConcaveOn_log_Ioi : StrictConcaveOn ℝ (Ioi 0) log :=
       _ < -log (x / y) := by linarith [log_lt_sub_one_of_pos hxy' hxy'']
       _ = -(log x - log y) := by rw [log_div hx.ne' hy.ne']
       _ = log y - log x := by ring
-      
 #align strict_concave_on_log_Ioi strictConcaveOn_log_Ioi
 
 /-- **Bernoulli's inequality** for real exponents, strict version: for `1 < p` and `-1 ≤ s`, with
@@ -303,6 +296,5 @@ theorem strictConcaveOn_log_Iio : StrictConcaveOn ℝ (Iio 0) log :=
     _ < log (a • -x + b • -y) := (strictConcaveOn_log_Ioi.2 hx' hy' hxy' ha hb hab)
     _ = log (-(a • x + b • y)) := by congr 1 <;> simp only [Algebra.id.smul_eq_mul] <;> ring
     _ = _ := by rw [log_neg_eq_log]
-    
 #align strict_concave_on_log_Iio strictConcaveOn_log_Iio
 

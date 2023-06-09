@@ -164,7 +164,6 @@ theorem exists_disjoint_subfamily_covering_enlargment (B : ι → Set α) (t : S
           δ c ≤ m := le_csSup bddA (mem_image_of_mem _ ⟨ct, H⟩)
           _ = τ * (m / τ) := by field_simp [(zero_lt_one.trans hτ).ne']; ring
           _ ≤ τ * δ b := mul_le_mul_of_nonneg_left ha' (zero_le_one.trans hτ.le)
-          
       · rw [← not_disjoint_iff_nonempty_inter] at hcb 
         exact (hcb (H _ H')).elim
 #align vitali.exists_disjoint_subfamily_covering_enlargment Vitali.exists_disjoint_subfamily_covering_enlargment
@@ -261,7 +260,6 @@ theorem exists_disjoint_covering_ae [MetricSpace α] [MeasurableSpace α] [Opens
         20 * min 1 (R / 20) ≤ 20 * (R / 20) :=
           mul_le_mul_of_nonneg_left (min_le_right _ _) (by norm_num)
         _ = R := by ring
-        
   choose R hR0 hR1 hRμ
   -- we restrict to a subfamily `t'` of `t`, made of elements small enough to ensure that
   -- they only see a finite part of the measure, and with a doubling property
@@ -348,7 +346,6 @@ theorem exists_disjoint_covering_ae [MetricSpace α] [MeasurableSpace α] [Opens
         exact u_disj.subset vu
       _ ≤ μ (closed_ball x K) := (measure_mono (Union₂_subset fun a ha => hK a (vu ha) ha.2))
       _ < ∞ := μK
-      
   -- we can obtain a finite subfamily of `v`, such that the measures of the remaining elements
   -- add up to an arbitrarily small number, say `ε / C`.
   obtain ⟨w, hw⟩ : ∃ w : Finset ↥v, (∑' a : { a // a ∉ w }, μ (B a)) < ε / C :=
@@ -429,7 +426,6 @@ theorem exists_disjoint_covering_ae [MetricSpace α] [MeasurableSpace α] [Opens
     _ = C * ∑' a : { a // a ∉ w }, μ (B a) := ENNReal.tsum_mul_left
     _ ≤ C * (ε / C) := (mul_le_mul_left' hw.le _)
     _ ≤ ε := ENNReal.mul_div_le
-    
 #align vitali.exists_disjoint_covering_ae Vitali.exists_disjoint_covering_ae
 
 /-- Assume that around every point there are arbitrarily small scales at which the measure is

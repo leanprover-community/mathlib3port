@@ -308,7 +308,6 @@ theorem measure_preimage_mul (μ : Measure G) [IsMulLeftInvariant μ] (g : G) (A
     μ ((fun h => g * h) ⁻¹' A) = map (fun h => g * h) μ A :=
       ((MeasurableEquiv.mulLeft g).map_apply A).symm
     _ = μ A := by rw [map_mul_left_eq_self μ g]
-    
 #align measure_theory.measure_preimage_mul MeasureTheory.measure_preimage_mul
 #align measure_theory.measure_preimage_add MeasureTheory.measure_preimage_add
 
@@ -319,7 +318,6 @@ theorem measure_preimage_mul_right (μ : Measure G) [IsMulRightInvariant μ] (g 
     μ ((fun h => h * g) ⁻¹' A) = map (fun h => h * g) μ A :=
       ((MeasurableEquiv.mulRight g).map_apply A).symm
     _ = μ A := by rw [map_mul_right_eq_self μ g]
-    
 #align measure_theory.measure_preimage_mul_right MeasureTheory.measure_preimage_mul_right
 #align measure_theory.measure_preimage_add_right MeasureTheory.measure_preimage_add_right
 
@@ -572,7 +570,6 @@ theorem isOpenPosMeasure_of_mulLeftInvariant_of_compact (K : Set G) (hK : IsComp
     μ K ≤ μ (⋃ (g : G) (H : g ∈ t), (fun h : G => g * h) ⁻¹' U) := measure_mono hKt
     _ ≤ ∑ g in t, μ ((fun h : G => g * h) ⁻¹' U) := (measure_bUnion_finset_le _ _)
     _ = 0 := by simp [measure_preimage_mul, h]
-    
 #align measure_theory.is_open_pos_measure_of_mul_left_invariant_of_compact MeasureTheory.isOpenPosMeasure_of_mulLeftInvariant_of_compact
 #align measure_theory.is_open_pos_measure_of_add_left_invariant_of_compact MeasureTheory.isOpenPosMeasure_of_addLeftInvariant_of_compact
 
@@ -623,7 +620,6 @@ theorem measure_lt_top_of_isCompact_of_isMulLeftInvariant (U : Set G) (hU : IsOp
     _ ≤ ∑ g in t, μ ((fun h : G => g * h) ⁻¹' U) := (measure_bUnion_finset_le _ _)
     _ = Finset.card t * μ U := by simp only [measure_preimage_mul, Finset.sum_const, nsmul_eq_mul]
     _ < ∞ := ENNReal.mul_lt_top (ENNReal.nat_ne_top _) h
-    
 #align measure_theory.measure_lt_top_of_is_compact_of_is_mul_left_invariant MeasureTheory.measure_lt_top_of_isCompact_of_isMulLeftInvariant
 #align measure_theory.measure_lt_top_of_is_compact_of_is_add_left_invariant MeasureTheory.measure_lt_top_of_isCompact_of_isAddLeftInvariant
 
@@ -684,7 +680,6 @@ theorem measure_univ_of_isMulLeftInvariant [LocallyCompactSpace G] [NoncompactSp
           exact measure_union' (hg _ (Lcompact _)) (Lclosed _).MeasurableSet
         _ = (n + 1 + 1 : ℕ) * μ K := by
           simp only [IH, measure_smul, add_mul, Nat.cast_add, algebraMap.coe_one, one_mul]
-        
   have N : tendsto (fun n => μ (L n)) at_top (𝓝 (∞ * μ K)) :=
     by
     simp_rw [M]

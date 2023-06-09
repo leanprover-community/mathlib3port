@@ -89,7 +89,6 @@ theorem traceAux_eq : traceAux R b = traceAux R c :=
       _ = Matrix.trace (LinearMap.toMatrix c c ((f.comp LinearMap.id).comp LinearMap.id)) := by
         rw [LinearMap.toMatrix_comp _ b, LinearMap.toMatrix_comp _ c]
       _ = Matrix.trace (LinearMap.toMatrix c c f) := by rw [LinearMap.comp_id, LinearMap.comp_id]
-      
 #align linear_map.trace_aux_eq LinearMap.traceAux_eq
 
 open scoped Classical

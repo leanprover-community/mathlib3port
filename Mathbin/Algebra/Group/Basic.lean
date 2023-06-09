@@ -201,7 +201,6 @@ theorem mul_right_eq_self : a * b = a ↔ b = 1 :=
   calc
     a * b = a ↔ a * b = a * 1 := by rw [mul_one]
     _ ↔ b = 1 := mul_left_cancel_iff
-    
 #align mul_right_eq_self mul_right_eq_self
 #align add_right_eq_self add_right_eq_self
 
@@ -234,7 +233,6 @@ theorem mul_left_eq_self : a * b = b ↔ a = 1 :=
   calc
     a * b = b ↔ a * b = 1 * b := by rw [one_mul]
     _ ↔ a = 1 := mul_right_cancel_iff
-    
 #align mul_left_eq_self mul_left_eq_self
 #align add_left_eq_self add_left_eq_self
 

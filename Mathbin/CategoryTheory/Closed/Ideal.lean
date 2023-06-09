@@ -209,7 +209,6 @@ noncomputable def bijection (A B : C) (X : D) :
       haveI := preserves_smallest_limits_of_preserves_limits i
       exact (preserves_limit_pair.iso _ _ _).symm
     _ ≃ ((leftAdjoint i).obj A ⨯ (leftAdjoint i).obj B ⟶ X) := (equivOfFullyFaithful _).symm
-    
 #align category_theory.bijection CategoryTheory.bijection
 
 theorem bijection_symm_apply_id (A B : C) : (bijection i A B _).symm (𝟙 _) = prodComparison _ _ _ :=

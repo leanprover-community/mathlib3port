@@ -112,7 +112,6 @@ theorem volume_univ : volume (univ : Set ℝ) = ∞ :=
     calc
       (r : ℝ≥0∞) = volume (Icc (0 : ℝ) r) := by simp
       _ ≤ volume univ := measure_mono (subset_univ _)
-      
 #align real.volume_univ Real.volume_univ
 
 @[simp]
@@ -163,7 +162,6 @@ theorem volume_Ioi {a : ℝ} : volume (Ioi a) = ∞ :=
       calc
         (n : ℝ≥0∞) = volume (Ioo a (a + n)) := by simp
         _ ≤ volume (Ioi a) := measure_mono Ioo_subset_Ioi_self
-        
 #align real.volume_Ioi Real.volume_Ioi
 
 @[simp]
@@ -177,7 +175,6 @@ theorem volume_Iio {a : ℝ} : volume (Iio a) = ∞ :=
       calc
         (n : ℝ≥0∞) = volume (Ioo (a - n) a) := by simp
         _ ≤ volume (Iio a) := measure_mono Ioo_subset_Iio_self
-        
 #align real.volume_Iio Real.volume_Iio
 
 @[simp]
@@ -316,7 +313,6 @@ theorem volume_pi_le_prod_diam (s : Set (ι → ℝ)) :
     _ = ∏ i, volume (closure <| Function.eval i '' s) := (volume_pi_pi _)
     _ ≤ ∏ i : ι, EMetric.diam (Function.eval i '' s) :=
       Finset.prod_le_prod' fun i hi => (volume_le_diam _).trans_eq (EMetric.diam_closure _)
-    
 #align real.volume_pi_le_prod_diam Real.volume_pi_le_prod_diam
 
 theorem volume_pi_le_diam_pow (s : Set (ι → ℝ)) : volume s ≤ EMetric.diam s ^ Fintype.card ι :=
@@ -326,7 +322,6 @@ theorem volume_pi_le_diam_pow (s : Set (ι → ℝ)) : volume s ≤ EMetric.diam
       (Finset.prod_le_prod' fun i hi => (LipschitzWith.eval i).ediam_image_le s)
     _ = EMetric.diam s ^ Fintype.card ι := by
       simp only [ENNReal.coe_one, one_mul, Finset.prod_const, Fintype.card]
-    
 #align real.volume_pi_le_diam_pow Real.volume_pi_le_diam_pow
 
 /-!
@@ -364,7 +359,6 @@ theorem volume_preimage_mul_left {a : ℝ} (h : a ≠ 0) (s : Set ℝ) :
     volume ((· * ·) a ⁻¹' s) = Measure.map ((· * ·) a) volume s :=
       ((Homeomorph.mulLeft₀ a h).toMeasurableEquiv.map_apply s).symm
     _ = ENNReal.ofReal (abs a⁻¹) * volume s := by rw [map_volume_mul_left h]; rfl
-    
 #align real.volume_preimage_mul_left Real.volume_preimage_mul_left
 
 theorem smul_map_volume_mul_right {a : ℝ} (h : a ≠ 0) :
@@ -384,7 +378,6 @@ theorem volume_preimage_mul_right {a : ℝ} (h : a ≠ 0) (s : Set ℝ) :
     volume ((· * a) ⁻¹' s) = Measure.map (· * a) volume s :=
       ((Homeomorph.mulRight₀ a h).toMeasurableEquiv.map_apply s).symm
     _ = ENNReal.ofReal (abs a⁻¹) * volume s := by rw [map_volume_mul_right h]; rfl
-    
 #align real.volume_preimage_mul_right Real.volume_preimage_mul_right
 
 /-!

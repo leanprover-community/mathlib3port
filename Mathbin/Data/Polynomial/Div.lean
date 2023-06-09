@@ -301,12 +301,10 @@ theorem degree_add_divByMonic (hq : Monic q) (h : degree q ≤ degree p) :
         rw [degree_mul' hlc, degree_eq_nat_degree hq.ne_zero, degree_eq_nat_degree hdiv0, ←
             WithBot.coe_add, WithBot.coe_le_coe] <;>
           exact Nat.le_add_right _ _
-      
   calc
     degree q + degree (p /ₘ q) = degree (q * (p /ₘ q)) := Eq.symm (degree_mul' hlc)
     _ = degree (p %ₘ q + q * (p /ₘ q)) := (degree_add_eq_right_of_degree_lt hmod).symm
     _ = _ := congr_arg _ (mod_by_monic_add_div _ hq)
-    
 #align polynomial.degree_add_div_by_monic Polynomial.degree_add_divByMonic
 -/
 
@@ -377,7 +375,6 @@ theorem div_modByMonic_unique {f g} (q r : R[X]) (hg : Monic g)
     calc
       degree (r - f %ₘ g) ≤ max (degree r) (degree (f %ₘ g)) := degree_sub_le _ _
       _ < degree g := max_lt_iff.2 ⟨h.2, degree_mod_by_monic_lt _ hg⟩
-      
   have h₅ : q - f /ₘ g = 0 :=
     by_contradiction fun hqf =>
       not_le_of_gt h₄ <|
@@ -386,7 +383,6 @@ theorem div_modByMonic_unique {f g} (q r : R[X]) (hg : Monic g)
             erw [degree_eq_nat_degree hg.ne_zero, degree_eq_nat_degree hqf, WithBot.coe_le_coe] <;>
               exact Nat.le_add_right _ _
           _ = degree (r - f %ₘ g) := by rw [h₂, degree_mul'] <;> simpa [monic.def.1 hg]
-          
   exact ⟨Eq.symm <| eq_of_sub_eq_zero h₅, Eq.symm <| eq_of_sub_eq_zero <| by simpa [h₅] using h₁⟩
 #align polynomial.div_mod_by_monic_unique Polynomial.div_modByMonic_unique
 -/
@@ -406,8 +402,7 @@ theorem map_mod_divByMonic [CommRing S] (f : R →+* S) (hq : Monic q) :
           _ = _ :=
             Eq.symm <|
               degree_map_eq_of_leading_coeff_ne_zero _
-                (by rw [monic.def.1 hq, f.map_one] <;> exact one_ne_zero)
-          ⟩
+                (by rw [monic.def.1 hq, f.map_one] <;> exact one_ne_zero)⟩
   exact ⟨this.1.symm, this.2.symm⟩
 #align polynomial.map_mod_div_by_monic Polynomial.map_mod_divByMonic
 -/

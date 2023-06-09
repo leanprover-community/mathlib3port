@@ -72,7 +72,6 @@ theorem not_distrib : ¬(p ⊔ q1) ⊓ (p ⊔ q2) ≤ p ⊔ q1 ⊓ q2 :=
         _ = q2 ((1, 1) - x) := rfl
         _ ≤ (p ⊔ q2) ((1, 1) - x) := le_sup_right
         _ ≤ (p ⊔ q1) x + (p ⊔ q2) ((1, 1) - x) := le_add_of_nonneg_left (map_nonneg _ _)
-        
     ·
       calc
         4 / 3 = 2 / 3 + (1 - 1 / 3) := by norm_num
@@ -80,7 +79,6 @@ theorem not_distrib : ¬(p ⊔ q1) ⊓ (p ⊔ q2) ≤ p ⊔ q1 ⊓ q2 :=
         _ ≤ |x.snd| + |1 - x.fst| := (add_le_add (le_abs_self _) (le_abs_self _))
         _ ≤ p x + p ((1, 1) - x) := (add_le_add le_sup_right le_sup_left)
         _ ≤ (p ⊔ q1) x + (p ⊔ q2) ((1, 1) - x) := add_le_add le_sup_left le_sup_left
-        
   ·
     calc
       4 / 3 = 4 * (1 / 3) := by norm_num
@@ -89,7 +87,6 @@ theorem not_distrib : ¬(p ⊔ q1) ⊓ (p ⊔ q2) ≤ p ⊔ q1 ⊓ q2 :=
       _ = q1 x := rfl
       _ ≤ (p ⊔ q1) x := le_sup_right
       _ ≤ (p ⊔ q1) x + (p ⊔ q2) ((1, 1) - x) := le_add_of_nonneg_right (map_nonneg _ _)
-      
 #align counterexample.seminorm_not_distrib.not_distrib Counterexample.SeminormNotDistrib.not_distrib
 
 end SeminormNotDistrib

@@ -607,7 +607,6 @@ theorem IsCycle.swap_mul {α : Type _} [DecidableEq α] {f : Perm α} (hf : IsCy
       calc
         (f ^ (i - 1)) (f x) = (f ^ (i - 1) * f ^ (1 : ℤ)) x := by rw [zpow_one, mul_apply]
         _ = y := by rwa [← zpow_add, sub_add_cancel]
-        
     isCycle_swap_mul_aux₂ (i - 1) hy hi⟩
 #align equiv.perm.is_cycle.swap_mul Equiv.Perm.IsCycle.swap_mul
 -/
@@ -638,7 +637,6 @@ theorem IsCycle.sign : ∀ {f : Perm α} (hf : IsCycle f), sign f = -(-1) ^ f.su
           rw [sign_mul, sign_swap hx.1.symm, (hf.swap_mul hx.1 h1).sign, ← h]
           simp only [pow_add, mul_one, neg_neg, one_mul, mul_neg, eq_self_iff_true, pow_one,
             neg_mul_neg]
-      
 termination_by' ⟨_, measure_wf fun f => f.support.card⟩
 #align equiv.perm.is_cycle.sign Equiv.Perm.IsCycle.sign
 

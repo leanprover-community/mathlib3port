@@ -35,7 +35,6 @@ theorem imo2011_q3 (f : ℝ → ℝ) (hf : ∀ x y, f (x + y) ≤ y * f x + f (f
       f t = f (x + (t - x)) := by rw [add_eq_of_eq_sub' rfl]
       _ ≤ (t - x) * f x + f (f x) := (hf x (t - x))
       _ = t * f x - x * f x + f (f x) := by rw [sub_mul]
-      
   have h_ab_combined : ∀ a b, a * f a + b * f b ≤ 2 * f a * f b :=
     by
     intro a b
@@ -58,7 +57,6 @@ theorem imo2011_q3 (f : ℝ → ℝ) (hf : ∀ x y, f (x + y) ≤ y * f x + f (f
       f (min 0 s - 1) ≤ (min 0 s - 1) * f x - x * f x + f (f x) := hxt x (min 0 s - 1)
       _ < s * f x - x * f x + f (f x) := by linarith [(mul_lt_mul_right hp).mpr hm]
       _ = 0 := by rw [(eq_div_iff hp.ne.symm).mp rfl]; linarith
-      
   have h_fx_zero_of_neg : ∀ x < 0, f x = 0 :=
     by
     intro x hxz

@@ -137,7 +137,6 @@ private theorem glue_dist_triangle (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ)
         dist z (Φ p) + dist x (Ψ p) ≤ dist y z + dist y (Φ p) + dist x (Ψ p) :=
           add_le_add (dist_triangle_left _ _ _) le_rfl
         _ = dist y (Φ p) + dist x (Ψ p) + dist y z := by ring
-        
     linarith
   | inr x, inr y, inl z =>
     by
@@ -159,7 +158,6 @@ private theorem glue_dist_triangle (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ)
         dist z (Φ p) + dist x (Ψ p) ≤ dist z (Φ p) + (dist x y + dist y (Ψ p)) :=
           add_le_add le_rfl (dist_triangle _ _ _)
         _ = dist x y + (dist z (Φ p) + dist y (Ψ p)) := by ring
-        
     linarith
   | inl x, inl y, inr z =>
     by
@@ -181,7 +179,6 @@ private theorem glue_dist_triangle (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ)
         dist x (Φ p) + dist z (Ψ p) ≤ dist x y + dist y (Φ p) + dist z (Ψ p) :=
           add_le_add (dist_triangle _ _ _) le_rfl
         _ = dist x y + (dist y (Φ p) + dist z (Ψ p)) := by ring
-        
     linarith
   | inl x, inr y, inr z =>
     by
@@ -203,7 +200,6 @@ private theorem glue_dist_triangle (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ)
         dist x (Φ p) + dist z (Ψ p) ≤ dist x (Φ p) + (dist y z + dist y (Ψ p)) :=
           add_le_add le_rfl (dist_triangle_left _ _ _)
         _ = dist x (Φ p) + dist y (Ψ p) + dist y z := by ring
-        
     linarith
   | inl x, inr y, inl z =>
     le_of_forall_pos_le_add fun δ δpos =>
@@ -222,7 +218,6 @@ private theorem glue_dist_triangle (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ)
           (add_le_add (add_le_add (add_le_add le_rfl (dist_triangle_left _ _ _)) le_rfl) le_rfl)
         _ ≤ (⨅ p, dist x (Φ p) + dist y (Ψ p)) + ε + ((⨅ p, dist z (Φ p) + dist y (Ψ p)) + ε) + δ :=
           by linarith
-        
   | inr x, inl y, inr z =>
     le_of_forall_pos_le_add fun δ δpos =>
       by
@@ -240,7 +235,6 @@ private theorem glue_dist_triangle (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ)
           (add_le_add (add_le_add (add_le_add le_rfl (dist_triangle_left _ _ _)) le_rfl) le_rfl)
         _ ≤ (⨅ p, dist y (Φ p) + dist x (Ψ p)) + ε + ((⨅ p, dist y (Φ p) + dist z (Ψ p)) + ε) + δ :=
           by linarith
-        
 
 private theorem glue_eq_of_dist_eq_zero (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ) (ε0 : 0 < ε) :
     ∀ p q : Sum X Y, glueDist Φ Ψ ε p q = 0 → p = q
@@ -489,7 +483,6 @@ protected theorem dist_triangle (x y z : Σ i, E i) : dist x z ≤ dist x y + di
         dist x z ≤ dist x (Nonempty.some ⟨x⟩) + 0 + 0 + (0 + 0 + dist (Nonempty.some ⟨z⟩) z) := by
           simpa only [zero_add, add_zero] using dist_triangle _ _ _
         _ ≤ _ := by apply_rules [add_le_add, le_rfl, dist_nonneg, zero_le_one]
-        
   · rcases eq_or_ne i j with (rfl | hij)
     · simp only [hik, sigma.dist_ne, Ne.def, not_false_iff, sigma.dist_same]
       calc
@@ -497,7 +490,6 @@ protected theorem dist_triangle (x y z : Σ i, E i) : dist x z ≤ dist x y + di
             dist x y + dist y (Nonempty.some ⟨y⟩) + 1 + dist (Nonempty.some ⟨z⟩) z :=
           by apply_rules [add_le_add, le_rfl, dist_triangle]
         _ = _ := by abel
-        
     · rcases eq_or_ne j k with (rfl | hjk)
       · simp only [hij, sigma.dist_ne, Ne.def, not_false_iff, sigma.dist_same]
         calc
@@ -505,14 +497,12 @@ protected theorem dist_triangle (x y z : Σ i, E i) : dist x z ≤ dist x y + di
               dist x (Nonempty.some ⟨x⟩) + 1 + (dist (Nonempty.some ⟨z⟩) y + dist y z) :=
             by apply_rules [add_le_add, le_rfl, dist_triangle]
           _ = _ := by abel
-          
       · simp only [hik, hij, hjk, sigma.dist_ne, Ne.def, not_false_iff]
         calc
           dist x (Nonempty.some ⟨x⟩) + 1 + dist (Nonempty.some ⟨z⟩) z =
               dist x (Nonempty.some ⟨x⟩) + 1 + 0 + (0 + 0 + dist (Nonempty.some ⟨z⟩) z) :=
             by simp only [add_zero, zero_add]
           _ ≤ _ := by apply_rules [add_le_add, zero_le_one, dist_nonneg, le_rfl]
-          
 #align metric.sigma.dist_triangle Metric.Sigma.dist_triangle
 
 protected theorem isOpen_iff (s : Set (Σ i, E i)) :
@@ -531,7 +521,6 @@ protected theorem isOpen_iff (s : Set (Σ i, E i)) :
       calc
         1 ≤ sigma.dist ⟨i, x⟩ ⟨j, y⟩ := sigma.one_le_dist_of_ne hij _ _
         _ < 1 := hy.trans_le (min_le_right _ _)
-        
   · intro H
     apply isOpen_sigma_iff.2 fun i => _
     apply Metric.isOpen_iff.2 fun x hx => _
@@ -565,7 +554,6 @@ protected def metricSpace : MetricSpace (Σ i, E i) :=
       calc
         1 ≤ sigma.dist (⟨i, x⟩ : Σ k, E k) ⟨j, y⟩ := sigma.one_le_dist_of_ne hij _ _
         _ < 1 := by rw [h]; exact zero_lt_one
-        
 #align metric.sigma.metric_space Metric.Sigma.metricSpace
 -/
 
@@ -762,7 +750,6 @@ def inductivePremetric (I : ∀ n, Isometry (f n)) : PseudoMetricSpace (Σ n, X 
         (dist_triangle _ _ _)
       _ = inductive_limit_dist f x y + inductive_limit_dist f y z := by
         rw [inductive_limit_dist_eq_dist I x y m hx hy, inductive_limit_dist_eq_dist I y z m hy hz]
-      
 #align metric.inductive_premetric Metric.inductivePremetric
 -/
 

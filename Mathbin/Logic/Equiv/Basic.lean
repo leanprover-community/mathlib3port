@@ -172,7 +172,6 @@ def punitProd (α : Type _) : PUnit.{u + 1} × α ≃ α :=
   calc
     PUnit × α ≃ α × PUnit := prodComm _ _
     _ ≃ α := prodPUnit _
-    
 #align equiv.punit_prod Equiv.punitProd
 
 /-- Any `unique` type is a right identity for type product up to equivalence. -/
@@ -968,7 +967,6 @@ def prodSumDistrib (α β γ : Sort _) : α × Sum β γ ≃ Sum (α × β) (α 
     α × Sum β γ ≃ Sum β γ × α := prodComm _ _
     _ ≃ Sum (β × α) (γ × α) := (sumProdDistrib _ _ _)
     _ ≃ Sum (α × β) (α × γ) := sumCongr (prodComm _ _) (prodComm _ _)
-    
 #align equiv.prod_sum_distrib Equiv.prodSumDistrib
 -/
 
@@ -1258,7 +1256,6 @@ def sigmaSubtypeFiberEquiv {α : Type u} {β : Type v} (f : α → β) (p : β �
   calc
     _ ≃ Σ y : β, { x : α // f x = y } := sigmaSubtypeEquivOfSubset _ p fun y ⟨x, h'⟩ => h' ▸ h x
     _ ≃ α := sigmaFiberEquiv f
-    
 #align equiv.sigma_subtype_fiber_equiv Equiv.sigmaSubtypeFiberEquiv
 -/
 
@@ -1280,7 +1277,6 @@ def sigmaSubtypeFiberEquivSubtype {α : Type u} {β : Type v} (f : α → β) {p
         ⟨fun ⟨hp, h'⟩ => congr_arg Subtype.val h', fun h' =>
           ⟨(h x).2 (h'.symm ▸ y.2), Subtype.eq h'⟩⟩
     _ ≃ Subtype p := sigmaFiberEquiv fun x : Subtype p => (⟨f x, (h x).1 x.property⟩ : Subtype q)
-    
 #align equiv.sigma_subtype_fiber_equiv_subtype Equiv.sigmaSubtypeFiberEquivSubtype
 -/
 

@@ -55,7 +55,6 @@ theorem one_le_two [LE α] [ZeroLEOneClass α] [CovariantClass α α (· + ·) (
   calc
     1 = 1 + 0 := (add_zero 1).symm
     _ ≤ 1 + 1 := add_le_add_left zero_le_one _
-    
 #align one_le_two one_le_two
 
 theorem one_le_two' [LE α] [ZeroLEOneClass α] [CovariantClass α α (swap (· + ·)) (· ≤ ·)] :
@@ -63,7 +62,6 @@ theorem one_le_two' [LE α] [ZeroLEOneClass α] [CovariantClass α α (swap (· 
   calc
     1 = 0 + 1 := (zero_add 1).symm
     _ ≤ 1 + 1 := add_le_add_right zero_le_one _
-    
 #align one_le_two' one_le_two'
 
 section

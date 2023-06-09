@@ -111,7 +111,6 @@ theorem integralSum_biUnion_partition (f : ℝⁿ → E) (vol : ι →ᵇᵃ E �
     _ = vol J (f (π.tag J)) :=
       (vol.map ⟨fun g : E →L[ℝ] F => g (f (π.tag J)), rfl, fun _ _ => rfl⟩).sum_partition_boxes
         le_top (hπi J hJ)
-    
 #align box_integral.integral_sum_bUnion_partition BoxIntegral.integralSum_biUnion_partition
 -/
 
@@ -708,7 +707,6 @@ theorem dist_integralSum_sum_integral_le_of_memBaseSet_of_iUnion_eq (h : Integra
       dist_triangle _ _ _
     _ ≤ ε + δ' + ∑ J in π₀.boxes, δ' := (add_le_add this (dist_sum_sum_le_of_le _ hπiδ'))
     _ = ε + δ := by field_simp [H0.ne']; ring
-    
 #align box_integral.integrable.dist_integral_sum_sum_integral_le_of_mem_base_set_of_Union_eq BoxIntegral.Integrable.dist_integralSum_sum_integral_le_of_memBaseSet_of_iUnion_eq
 
 /-- **Henstock-Sacks inequality**. Let `r : ℝⁿ → (0, ∞)` be a function such that for any tagged

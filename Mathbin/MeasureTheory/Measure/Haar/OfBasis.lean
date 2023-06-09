@@ -145,7 +145,7 @@ theorem convex_parallelepiped (v : ι → E) : Convex ℝ (parallelepiped v) :=
   by
   rw [parallelepiped_eq_sum_segment]
   -- TODO: add `convex.sum` to match `convex.add`
-  let this : AddSubmonoid (Set E) :=
+  let this.1 : AddSubmonoid (Set E) :=
     { carrier := {s | Convex ℝ s}
       zero_mem' := convex_singleton _
       add_mem' := fun x y => Convex.add }
@@ -158,7 +158,7 @@ theorem parallelepiped_eq_convexHull (v : ι → E) :
     parallelepiped v = convexHull ℝ (∑ i, {(0 : E), v i}) :=
   by
   -- TODO: add `convex_hull_sum` to match `convex_hull_add`
-  let this : Set E →+ Set E :=
+  let this.1 : Set E →+ Set E :=
     { toFun := convexHull ℝ
       map_zero' := convexHull_singleton _
       map_add' := convexHull_add }

@@ -143,7 +143,6 @@ theorem norm_le_dual_bound (x : E) {M : ℝ} (hMp : 0 ≤ M) (hM : ∀ f : Dual 
       _ = ‖f x‖ := by rw [hfx]
       _ ≤ M * ‖f‖ := (hM f)
       _ = M := by rw [hf₁, mul_one]
-      
 #align normed_space.norm_le_dual_bound NormedSpace.norm_le_dual_bound
 
 theorem eq_zero_of_forall_dual_eq_zero {x : E} (h : ∀ f : Dual 𝕜 E, f x = (0 : 𝕜)) : x = 0 :=
@@ -258,7 +257,6 @@ theorem polar_ball_subset_closedBall_div {c : 𝕜} (hc : 1 < ‖c‖) {r : ℝ}
   calc
     ‖x' x‖ ≤ 1 := hx' _ h₂
     _ ≤ ‖c‖ / r * ‖x‖ := (inv_pos_le_iff_one_le_mul' hcr).1 (by rwa [inv_div])
-    
 #align normed_space.polar_ball_subset_closed_ball_div NormedSpace.polar_ball_subset_closedBall_div
 
 variable (𝕜)
@@ -272,7 +270,6 @@ theorem closedBall_inv_subset_polar_closedBall {r : ℝ} :
         (dist_nonneg.trans hx'))
     _ = r / r := (inv_mul_eq_div _ _)
     _ ≤ 1 := div_self_le_one r
-    
 #align normed_space.closed_ball_inv_subset_polar_closed_ball NormedSpace.closedBall_inv_subset_polar_closedBall
 
 /-- The `polar` of closed ball in a normed space `E` is the closed ball of the dual with

@@ -225,7 +225,6 @@ theorem braiding_leftUnitor_aux₂ (X : C) :
       slice_lhs 2 3 => rw [← braiding_naturality]; simp only [assoc]
     _ = (α_ _ _ _).Hom ≫ (𝟙 _ ⊗ (λ_ _).Hom) := by rw [iso.hom_inv_id, comp_id]
     _ = (ρ_ X).Hom ⊗ 𝟙 (𝟙_ C) := by rw [triangle]
-    
 #align category_theory.braiding_left_unitor_aux₂ CategoryTheory.braiding_leftUnitor_aux₂
 -/
 
@@ -290,7 +289,6 @@ theorem braiding_rightUnitor_aux₂ (X : C) :
       slice_lhs 2 3 => rw [← braiding_naturality]; simp only [assoc]
     _ = (α_ _ _ _).inv ≫ ((ρ_ _).Hom ⊗ 𝟙 _) := by rw [iso.hom_inv_id, comp_id]
     _ = 𝟙 (𝟙_ C) ⊗ (λ_ X).Hom := by rw [triangle_assoc_comp_right]
-    
 #align category_theory.braiding_right_unitor_aux₂ CategoryTheory.braiding_rightUnitor_aux₂
 -/
 

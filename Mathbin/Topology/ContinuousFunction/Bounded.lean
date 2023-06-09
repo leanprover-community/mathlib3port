@@ -389,7 +389,6 @@ instance [CompleteSpace β] : CompleteSpace (α →ᵇ β) :=
         dist (F x) (F y) ≤ dist (f 0 x) (f 0 y) + (dist (f 0 x) (F x) + dist (f 0 y) (F y)) :=
           dist_triangle4_left _ _ _ _
         _ ≤ C + (b 0 + b 0) := by mono*
-        
     · -- Check that `F` is close to `f N` in distance terms
       refine' tendsto_iff_dist_tendsto_zero.2 (squeeze_zero (fun _ => dist_nonneg) _ b_lim)
       exact fun N => (dist_le (b0 _)).2 fun x => fF_bdd x N
@@ -452,8 +451,7 @@ def comp (G : β → γ) {C : ℝ≥0} (H : LipschitzWith C G) (f : α →ᵇ β
       calc
         dist (G (f x)) (G (f y)) ≤ C * dist (f x) (f y) := H.dist_le_mul _ _
         _ ≤ max C 0 * dist (f x) (f y) := (mul_le_mul_of_nonneg_right (le_max_left C 0) dist_nonneg)
-        _ ≤ max C 0 * D := mul_le_mul_of_nonneg_left (hD _ _) (le_max_right C 0)
-        ⟩⟩
+        _ ≤ max C 0 * D := mul_le_mul_of_nonneg_left (hD _ _) (le_max_right C 0)⟩⟩
 #align bounded_continuous_function.comp BoundedContinuousFunction.comp
 -/
 
@@ -465,7 +463,6 @@ theorem lipschitz_comp {G : β → γ} {C : ℝ≥0} (H : LipschitzWith C G) :
       calc
         dist (G (f x)) (G (g x)) ≤ C * dist (f x) (g x) := H.dist_le_mul _ _
         _ ≤ C * dist f g := mul_le_mul_of_nonneg_left (dist_coe_le_dist _) C.2
-        
 #align bounded_continuous_function.lipschitz_comp BoundedContinuousFunction.lipschitz_comp
 
 /-- The composition operator (in the target) with a Lipschitz map is uniformly continuous -/
@@ -537,7 +534,6 @@ theorem dist_extend_extend (f : α ↪ δ) (g₁ g₂ : α →ᵇ β) (h₁ h₂
         dist (h₁ x) (h₂ x) = dist (h₁.restrict (range fᶜ) x) (h₂.restrict (range fᶜ) x) := rfl
         _ ≤ dist (h₁.restrict (range fᶜ)) (h₂.restrict (range fᶜ)) := (dist_coe_le_dist x)
         _ ≤ _ := le_max_right _ _
-        
   · refine' (dist_le dist_nonneg).2 fun x => _
     rw [← extend_apply f g₁ h₁, ← extend_apply f g₂ h₂]
     exact dist_coe_le_dist _
@@ -546,7 +542,6 @@ theorem dist_extend_extend (f : α ↪ δ) (g₁ g₂ : α →ᵇ β) (h₁ h₂
       dist (h₁ x) (h₂ x) = dist (extend f g₁ h₁ x) (extend f g₂ h₂ x) := by
         rw [extend_apply' x.coe_prop, extend_apply' x.coe_prop]
       _ ≤ _ := dist_coe_le_dist _
-      
 #align bounded_continuous_function.dist_extend_extend BoundedContinuousFunction.dist_extend_extend
 
 theorem isometry_extend (f : α ↪ δ) (h : δ →ᵇ β) : Isometry fun g : α →ᵇ β => extend f g h :=
@@ -621,7 +616,6 @@ theorem arzela_ascoli₁ [CompactSpace β] (A : Set (α →ᵇ β)) (closed : Is
       dist_triangle4_right _ _ _ _
     _ ≤ ε₂ + ε₂ + ε₁ / 2 := (le_of_lt (add_lt_add (add_lt_add _ _) _))
     _ = ε₁ := by rw [add_halves, add_halves]
-    
   · exact (hU x').2.2 _ hx' _ (hU x').1 hf
   · exact (hU x').2.2 _ hx' _ (hU x').1 hg
   · have F_f_g : F (f x') = F (g x') :=
@@ -632,7 +626,6 @@ theorem arzela_ascoli₁ [CompactSpace β] (A : Set (α →ᵇ β)) (closed : Is
       _ = dist (f x') (F (f x')) + dist (g x') (F (g x')) := by rw [F_f_g]
       _ < ε₂ + ε₂ := (add_lt_add (hF (f x')).2 (hF (g x')).2)
       _ = ε₁ / 2 := add_halves _
-      
 #align bounded_continuous_function.arzela_ascoli₁ BoundedContinuousFunction.arzela_ascoli₁
 
 /-- Second version, with pointwise equicontinuity and range in a compact subset -/
@@ -894,7 +887,6 @@ theorem norm_coe_le_norm (x : α) : ‖f x‖ ≤ ‖f‖ :=
   calc
     ‖f x‖ = dist (f x) ((0 : α →ᵇ β) x) := by simp [dist_zero_right]
     _ ≤ ‖f‖ := dist_coe_le_dist _
-    
 #align bounded_continuous_function.norm_coe_le_norm BoundedContinuousFunction.norm_coe_le_norm
 
 theorem dist_le_two_norm' {f : γ → β} {C : ℝ} (hC : ∀ x, ‖f x‖ ≤ C) (x y : γ) :
@@ -903,7 +895,6 @@ theorem dist_le_two_norm' {f : γ → β} {C : ℝ} (hC : ∀ x, ‖f x‖ ≤ C
     dist (f x) (f y) ≤ ‖f x‖ + ‖f y‖ := dist_le_norm_add_norm _ _
     _ ≤ C + C := (add_le_add (hC x) (hC y))
     _ = 2 * C := (two_mul _).symm
-    
 #align bounded_continuous_function.dist_le_two_norm' BoundedContinuousFunction.dist_le_two_norm'
 
 /-- Distance between the images of any two points is at most twice the norm of the function. -/
@@ -1508,8 +1499,7 @@ instance hasSmul' : SMul (α →ᵇ 𝕜) (α →ᵇ β) :=
       calc
         ‖f x • g x‖ ≤ ‖f x‖ * ‖g x‖ := norm_smul_le _ _
         _ ≤ ‖f‖ * ‖g‖ :=
-          mul_le_mul (f.norm_coe_le_norm _) (g.norm_coe_le_norm _) (norm_nonneg _) (norm_nonneg _)
-        ⟩
+          mul_le_mul (f.norm_coe_le_norm _) (g.norm_coe_le_norm _) (norm_nonneg _) (norm_nonneg _)⟩
 #align bounded_continuous_function.has_smul' BoundedContinuousFunction.hasSmul'
 -/
 

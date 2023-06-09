@@ -451,7 +451,7 @@ theorem to_nat_inj {m n : Num} : (m : ℕ) = n ↔ m = n :=
 #align num.to_nat_inj Num.to_nat_inj
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:330:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
 /-- This tactic tries to turn an (in)equality about `num`s to one about `nat`s by rewriting.
 ```lean
 example (n : num) (m : num) : n ≤ n + m :=
@@ -465,7 +465,7 @@ unsafe def transfer_rw : tactic Unit :=
   sorry
 #align num.transfer_rw num.transfer_rw
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:330:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
 /--
 This tactic tries to prove (in)equalities about `num`s by transfering them to the `nat` world and
 then trying to call `simp`.
@@ -710,7 +710,7 @@ theorem natSize_pos (n) : 0 < natSize n := by cases n <;> apply Nat.succ_pos
 #align pos_num.nat_size_pos PosNum.natSize_pos
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:330:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
 /-- This tactic tries to turn an (in)equality about `pos_num`s to one about `nat`s by rewriting.
 ```lean
 example (n : pos_num) (m : pos_num) : n ≤ n + m :=
@@ -724,7 +724,7 @@ unsafe def transfer_rw : tactic Unit :=
   sorry
 #align pos_num.transfer_rw pos_num.transfer_rw
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:330:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
 /--
 This tactic tries to prove (in)equalities about `pos_num`s by transferring them to the `nat` world
 and then trying to call `simp`.
@@ -1664,7 +1664,7 @@ theorem cast_inj [LinearOrderedRing α] {m n : ZNum} : (m : α) = n ↔ m = n :=
   rw [← cast_to_int m, ← cast_to_int n, Int.cast_inj, to_int_inj]
 #align znum.cast_inj ZNum.cast_inj
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:330:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
 /-- This tactic tries to turn an (in)equality about `znum`s to one about `int`s by rewriting.
 ```lean
 example (n : znum) (m : znum) : n ≤ n + m * m :=
@@ -1678,7 +1678,7 @@ unsafe def transfer_rw : tactic Unit :=
   sorry
 #align znum.transfer_rw znum.transfer_rw
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:330:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
 /--
 This tactic tries to prove (in)equalities about `znum`s by transfering them to the `int` world and
 then trying to call `simp`.

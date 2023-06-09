@@ -1106,7 +1106,6 @@ theorem eq_pow_of_pell_lem {a y k} (hy0 : y ≠ 0) (hk0 : k ≠ 0) (hyk : y ^ k 
       have := hya.le
       mono* <;> simpa only [sub_nonneg, Nat.cast_le, Nat.one_le_cast, Nat.one_le_iff_ne_zero]
     _ = 2 * a * y - y * y - 1 := by ring
-    
 #align pell.eq_pow_of_pell_lem Pell.eq_pow_of_pell_lem
 -/
 
@@ -1145,7 +1144,6 @@ theorem eq_pow_of_pell {m n k} :
         n ^ k ≤ n ^ w := Nat.pow_le_pow_of_le_right hn kw
         _ < (w + 1) ^ w := (Nat.pow_lt_pow_of_lt_left (Nat.lt_succ_of_le nw) wpos)
         _ ≤ a := xn_ge_a_pow w1 w
-        
     lift (2 * a * n - n * n - 1 : ℤ) to ℕ using (Nat.cast_nonneg _).trans nt.le with t te
     have tm : x ≡ y * (a - n) + n ^ k [MOD t] :=
       by
@@ -1180,7 +1178,6 @@ theorem eq_pow_of_pell {m n k} :
       n ^ k ≤ n ^ j := Nat.pow_le_pow_of_le_right hn0 (le_trans kw wj)
       _ < (w + 1) ^ j := (Nat.pow_lt_pow_of_lt_left (Nat.lt_succ_of_le nw) hj0)
       _ ≤ xn hw1 j := xn_ge_a_pow hw1 j
-      
     have nt : (↑(n ^ k) : ℤ) < 2 * xn hw1 j * n - n * n - 1 :=
       eq_pow_of_pell_lem hn0.ne' hk0.ne' hnka
     have na : n ≤ xn hw1 j := (Nat.le_self_pow hk0.ne' _).trans hnka.le

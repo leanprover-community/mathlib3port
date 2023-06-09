@@ -57,7 +57,6 @@ theorem mul_norm_eq_abs_sub_sq_norm {x y z : V} (h₁ : ∃ k : ℝ, k ≠ 1 ∧
       _ = k • x - k • y - (x + y) := by simp_rw [← sub_sub, sub_right_comm]
       _ = k • (x - y) - (x + y) := by rw [← smul_sub k x y]
       _ = 0 := sub_eq_zero.mpr hk.symm
-      
   have hzy : ⟪z, y⟫ = 0 := by
     rwa [inner_eq_zero_iff_angle_eq_pi_div_two, ← norm_add_eq_norm_sub_iff_angle_eq_pi_div_two,
       eq_comm]
@@ -71,7 +70,6 @@ theorem mul_norm_eq_abs_sub_sq_norm {x y z : V} (h₁ : ∃ k : ℝ, k ≠ 1 ∧
     _ = |‖x‖ ^ 2 - ‖y‖ ^ 2| := by simp [hxy, norm_smul, mul_pow, sq_abs]
     _ = |‖z + y‖ ^ 2 - ‖z - x‖ ^ 2| := by
       simp [norm_add_sq_real, norm_sub_sq_real, hzy, hzx, abs_sub_comm]
-    
 #align inner_product_geometry.mul_norm_eq_abs_sub_sq_norm InnerProductGeometry.mul_norm_eq_abs_sub_sq_norm
 
 end InnerProductGeometry

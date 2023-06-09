@@ -298,7 +298,6 @@ protected theorem gc : GaloisConnection lower_adjoint fun 𝓕 => UniformFun.fil
             𝓐 ×ᶠ (⊤ : Filter α) :=
       (forall₂_congr fun U hU => mem_prod_top.symm)
     _ ↔ lower_adjoint 𝓐 ≤ 𝓕 := Iff.rfl
-    
 #align uniform_fun.gc UniformFun.gc
 
 variable [UniformSpace β]
@@ -448,7 +447,6 @@ protected theorem postcomp_uniformContinuous [UniformSpace γ] {f : γ → β}
       𝒰(α, γ, _) ≤ 𝒰(α, γ, ‹UniformSpace β›.comap f) :=
         UniformFun.mono (uniformContinuous_iff.mp hf)
       _ = 𝒰(α, β, _).comap ((· ∘ ·) f) := UniformFun.comap_eq
-      
 #align uniform_fun.postcomp_uniform_continuous UniformFun.postcomp_uniformContinuous
 -/
 
@@ -759,7 +757,6 @@ protected theorem mono ⦃u₁ u₂ : UniformSpace γ⦄ (hu : u₁ ≤ u₂) �
   calc
     𝒱(α, γ, 𝔖₁, u₁) ≤ 𝒱(α, γ, 𝔖₂, u₁) := iInf_le_iInf_of_subset h𝔖
     _ ≤ 𝒱(α, γ, 𝔖₂, u₂) := iInf₂_mono fun i hi => UniformSpace.comap_mono <| UniformFun.mono hu
-    
 #align uniform_on_fun.mono UniformOnFun.mono
 
 /-- If `x : α` is in some `S ∈ 𝔖`, then evaluation at `x` is uniformly continuous on
@@ -821,7 +818,6 @@ protected theorem postcomp_uniformContinuous [UniformSpace γ] {f : γ → β}
     𝒱(α, γ, 𝔖, _) ≤ 𝒱(α, γ, 𝔖, ‹UniformSpace β›.comap f) :=
       UniformOnFun.mono (uniform_continuous_iff.mp hf) subset_rfl
     _ = 𝒱(α, β, 𝔖, _).comap ((· ∘ ·) f) := UniformOnFun.comap_eq
-    
 #align uniform_on_fun.postcomp_uniform_continuous UniformOnFun.postcomp_uniformContinuous
 -/
 

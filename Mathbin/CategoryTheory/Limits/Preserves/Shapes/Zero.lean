@@ -79,7 +79,6 @@ instance (priority := 100) preservesZeroMorphisms_of_isLeftAdjoint (F : C ⥤ D)
       F.map (0 : X ⟶ Y) = F.map 0 ≫ F.map (adj.unit.app Y) ≫ adj.counit.app (F.obj Y) := _
       _ = F.map 0 ≫ F.map ((right_adjoint F).map (0 : F.obj X ⟶ _)) ≫ adj.counit.app (F.obj Y) := _
       _ = 0 := _
-      
     · rw [adjunction.left_triangle_components]; exact (category.comp_id _).symm
     · simp only [← category.assoc, ← F.map_comp, zero_comp]
     · simp only [adjunction.counit_naturality, comp_zero]
@@ -95,7 +94,6 @@ instance (priority := 100) preservesZeroMorphisms_of_isRightAdjoint (G : C ⥤ D
       G.map (0 : X ⟶ Y) = adj.unit.app (G.obj X) ≫ G.map (adj.counit.app X) ≫ G.map 0 := _
       _ = adj.unit.app (G.obj X) ≫ G.map ((left_adjoint G).map (0 : _ ⟶ G.obj X)) ≫ G.map 0 := _
       _ = 0 := _
-      
     · rw [adjunction.right_triangle_components_assoc]
     · simp only [← G.map_comp, comp_zero]
     · simp only [adjunction.unit_naturality_assoc, zero_comp]
@@ -109,7 +107,6 @@ instance (priority := 100) preservesZeroMorphisms_of_full (F : C ⥤ D) [Full F]
     calc
       F.map (0 : X ⟶ Y) = F.map (0 ≫ F.preimage (0 : F.obj Y ⟶ F.obj Y)) := by rw [zero_comp]
       _ = 0 := by rw [F.map_comp, F.image_preimage, comp_zero]
-      
 #align category_theory.functor.preserves_zero_morphisms_of_full CategoryTheory.Functor.preservesZeroMorphisms_of_full
 -/
 
@@ -141,8 +138,7 @@ theorem preservesZeroMorphisms_of_map_zero_object (i : F.obj 0 ≅ 0) : Preserve
       calc
         F.map (0 : X ⟶ Y) = F.map (0 : X ⟶ 0) ≫ F.map 0 := by rw [← functor.map_comp, comp_zero]
         _ = F.map 0 ≫ (i.Hom ≫ i.inv) ≫ F.map 0 := by rw [iso.hom_inv_id, category.id_comp]
-        _ = 0 := by simp only [zero_of_to_zero i.hom, zero_comp, comp_zero]
-         }
+        _ = 0 := by simp only [zero_of_to_zero i.hom, zero_comp, comp_zero] }
 #align category_theory.functor.preserves_zero_morphisms_of_map_zero_object CategoryTheory.Functor.preservesZeroMorphisms_of_map_zero_object
 
 #print CategoryTheory.Functor.preservesZeroMorphisms_of_preserves_initial_object /-

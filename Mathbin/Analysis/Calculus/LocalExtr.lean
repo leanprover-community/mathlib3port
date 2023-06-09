@@ -452,7 +452,6 @@ theorem card_roots_le_derivative (p : ℝ[X]) : p.roots.card ≤ p.derivative.ro
         Multiset.toFinset_sum_count_eq, ← Finset.sum_subset (Finset.subset_union_right _ _)]
       intro x hx₁ hx₂
       simpa only [Multiset.mem_toFinset, Multiset.count_eq_zero] using hx₂
-    
 #align polynomial.card_roots_le_derivative Polynomial.card_roots_le_derivative
 
 /-- The number of real roots of a polynomial is at most the number of roots of its derivative plus

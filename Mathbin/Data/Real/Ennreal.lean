@@ -1096,7 +1096,6 @@ theorem mul_lt_mul (ac : a < c) (bd : b < d) : a * b < c * d :=
       coe_lt_coe.2 (mul_lt_mul' aa'.le bb' (zero_le _) ((zero_le a).trans_lt aa'))
     _ = ↑a' * ↑b' := coe_mul
     _ ≤ c * d := mul_le_mul' a'c.le b'd.le
-    
 #align ennreal.mul_lt_mul ENNReal.mul_lt_mul
 
 -- TODO: generalize to `covariant_class α α (*) (≤)`
@@ -2644,7 +2643,6 @@ theorem iInf_add_iInf (h : ∀ i j, ∃ k, f k + g k ≤ f i + g j) : iInf f + i
           let ⟨k, h⟩ := h a a'
           iInf_le_of_le k h
     _ = iInf f + iInf g := by simp [add_infi, infi_add]
-    
 #align ennreal.infi_add_infi ENNReal.iInf_add_iInf
 
 theorem iInf_sum {f : ι → α → ℝ≥0∞} {s : Finset α} [Nonempty ι]

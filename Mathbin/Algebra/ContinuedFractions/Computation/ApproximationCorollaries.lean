@@ -157,7 +157,6 @@ theorem of_convergence_epsilon : ∀ ε > (0 : K), ∃ N : ℕ, ∀ n ≥ N, |v 
           (by exact_mod_cast (fib (n + 1)).zero_le))
       _ ≤ B * nB :=
         mul_le_mul B_ineq nB_ineq (by exact_mod_cast (fib (n + 2)).zero_le) (le_of_lt zero_lt_B)
-      
 #align generalized_continued_fraction.of_convergence_epsilon GeneralizedContinuedFraction.of_convergence_epsilon
 
 attribute [local instance] Preorder.topology

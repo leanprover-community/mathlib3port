@@ -181,7 +181,6 @@ theorem memℒp_approxOn [BorelSpace E] {f : β → E} {μ : Measure β} (fmeas 
         snorm (fun x => ‖f x - y₀‖ + ‖f x - y₀‖) p μ :=
       snorm_mono_ae this
     _ < ⊤ := snorm_add_lt_top hf' hf'
-    
 #align measure_theory.simple_func.mem_ℒp_approx_on MeasureTheory.SimpleFunc.memℒp_approxOn
 -/
 

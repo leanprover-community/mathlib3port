@@ -563,7 +563,6 @@ theorem dist_sq_smul_orthogonal_vadd_smul_orthogonal_vadd {s : AffineSubspace �
       rw [norm_smul, Real.norm_eq_abs]; ring
     _ = dist p1 p2 * dist p1 p2 + (r1 - r2) * (r1 - r2) * (‖v‖ * ‖v‖) := by
       rw [dist_eq_norm_vsub V p1, abs_mul_abs_self, mul_assoc]
-    
 #align euclidean_geometry.dist_sq_smul_orthogonal_vadd_smul_orthogonal_vadd EuclideanGeometry.dist_sq_smul_orthogonal_vadd_smul_orthogonal_vadd
 
 #print EuclideanGeometry.reflection /-

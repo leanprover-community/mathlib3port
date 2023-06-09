@@ -72,7 +72,6 @@ theorem Finset.prod_nonneg_of_card_nonpos_even {α β : Type _} [LinearOrderedCo
     _ = _ := by
       rw [Finset.prod_mul_distrib, Finset.prod_ite, Finset.prod_const_one, mul_one,
         Finset.prod_const, neg_one_pow_eq_pow_mod_two, Nat.even_iff.1 h0, pow_zero, one_mul]
-    
 #align finset.prod_nonneg_of_card_nonpos_even Finset.prod_nonneg_of_card_nonpos_even
 
 theorem int_prod_range_nonneg (m : ℤ) (n : ℕ) (hn : Even n) : 0 ≤ ∏ k in Finset.range n, m - k :=

@@ -212,7 +212,6 @@ theorem coeff_contract {p : ℕ} (hp : p ≠ 0) (f : R[X]) (n : ℕ) :
     f.nat_degree < f.nat_degree + 1 := Nat.lt_succ_self _
     _ ≤ n * 1 := by simpa only [mul_one] using hn
     _ ≤ n * p := mul_le_mul_of_nonneg_left (show 1 ≤ p from hp.bot_lt) (zero_le n)
-    
 #align polynomial.coeff_contract Polynomial.coeff_contract
 -/
 

@@ -275,7 +275,6 @@ theorem comap_uniformity_of_spaced_out {α} {f : α → β} {s : Set (β × β)}
     comap (Prod.map f f) (𝓤 β) ≤ comap (Prod.map f f) (𝓟 s) := comap_mono (le_principal_iff.2 hs)
     _ = 𝓟 (Prod.map f f ⁻¹' s) := comap_principal
     _ ≤ 𝓟 idRel := principal_mono.2 _
-    
   rintro ⟨x, y⟩; simpa [not_imp_not] using @hf x y
 #align comap_uniformity_of_spaced_out comap_uniformity_of_spaced_out
 
@@ -501,8 +500,7 @@ theorem completeSpace_extension {m : β → α} (hm : UniformInducing m) (dense 
     ⟨x,
       calc
         f ≤ g := by assumption
-        _ ≤ 𝓝 x := le_nhds_of_cauchy_adhp ‹Cauchy g› this
-        ⟩⟩
+        _ ≤ 𝓝 x := le_nhds_of_cauchy_adhp ‹Cauchy g› this⟩⟩
 #align complete_space_extension completeSpace_extension
 
 #print totallyBounded_preimage /-
@@ -647,7 +645,6 @@ theorem uniformContinuous_uniformly_extend [cγ : CompleteSpace γ] : UniformCon
           _ ⊆ preimage (fun p : β × β => (e p.1, e p.2)) (interior t) := preimage_mono hm
           _ ⊆ preimage (fun p : β × β => (e p.1, e p.2)) t := (preimage_mono interior_subset)
           _ ⊆ preimage (fun p : β × β => (f p.1, f p.2)) s := ts
-          
       have : (f '' (e ⁻¹' m₁)) ×ˢ (f '' (e ⁻¹' m₂)) ⊆ s :=
         calc
           (f '' (e ⁻¹' m₁)) ×ˢ (f '' (e ⁻¹' m₂)) =
@@ -656,7 +653,6 @@ theorem uniformContinuous_uniformly_extend [cγ : CompleteSpace γ] : UniformCon
           _ ⊆ (fun p : β × β => (f p.1, f p.2)) '' ((fun p : β × β => (f p.1, f p.2)) ⁻¹' s) :=
             (monotone_image this)
           _ ⊆ s := image_preimage_subset _ _
-          
       have : (a, b) ∈ s := @this (a, b) ⟨ha₁, hb₁⟩
       hs_comp <| show (ψ x₁, ψ x₂) ∈ compRel s (compRel s s) from ⟨a, ha₂, ⟨b, this, hb₂⟩⟩
 #align uniform_continuous_uniformly_extend uniformContinuous_uniformly_extend

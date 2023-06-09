@@ -282,7 +282,6 @@ theorem IsCyclic.card_pow_eq_one_le [DecidableEq α] [Fintype α] [IsCyclic α] 
       rw [Nat.mul_div_cancel_left _ (gcd_pos_of_pos_left _ hn0), gcd_mul_left_left, hm,
         Nat.mul_div_cancel _ hm0]
       exact le_of_dvd hn0 (Nat.gcd_dvd_left _ _)
-    
 #align is_cyclic.card_pow_eq_one_le IsCyclic.card_pow_eq_one_le
 #align is_add_cyclic.card_pow_eq_one_le IsAddCyclic.card_pow_eq_one_le
 
@@ -342,8 +341,7 @@ private theorem card_pow_eq_one_eq_order_of_aux (a : α) :
                   rw [← hi, ← zpow_ofNat, ← zpow_mul, mul_comm, zpow_mul, zpow_ofNat,
                     pow_orderOf_eq_one, one_zpow]⟩⟩)
           fun _ _ h => Subtype.eq (Subtype.mk.inj h))
-      _ = (univ.filterₓ fun b : α => b ^ orderOf a = 1).card := Fintype.card_ofFinset _ _
-      )
+      _ = (univ.filterₓ fun b : α => b ^ orderOf a = 1).card := Fintype.card_ofFinset _ _)
 
 open scoped Nat
 
@@ -406,7 +404,6 @@ theorem card_orderOf_eq_totient_aux₂ {d : ℕ} (hd : d ∣ Fintype.card α) :
     _ < ∑ m in c.divisors, φ m :=
       (sum_erase_lt_of_pos (mem_divisors.2 ⟨hd, hc0.ne'⟩) (totient_pos (pos_of_dvd_of_pos hd hc0)))
     _ = c := sum_totient _
-    
 #align card_order_of_eq_totient_aux₂ card_orderOf_eq_totient_aux₂
 
 theorem isCyclic_of_card_pow_eq_one_le : IsCyclic α :=
@@ -493,7 +490,6 @@ theorem commutative_of_cyclic_center_quotient [IsCyclic H] (f : G →* H) (hf : 
     _ = y ^ m * y ^ n * y ^ (-m) * (a * (y ^ (-n) * b)) := by simp [mul_assoc]
     _ = y ^ m * y ^ n * y ^ (-m) * (y ^ (-n) * b * a) := by rw [mem_center_iff.1 hb]
     _ = b * a := by group
-    
 #align commutative_of_cyclic_center_quotient commutative_of_cyclic_center_quotient
 #align commutative_of_add_cyclic_center_quotient commutative_of_add_cyclic_center_quotient
 

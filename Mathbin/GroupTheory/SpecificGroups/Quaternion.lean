@@ -101,7 +101,6 @@ instance : Group (QuaternionGroup n) where
       -(n : ZMod (2 * n)) = 0 - n := by rw [zero_sub]
       _ = 2 * n - n := by norm_cast; simp
       _ = n := by ring
-      
   one := one
   one_mul := by
     rintro (i | i)

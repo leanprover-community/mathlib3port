@@ -1483,8 +1483,7 @@ theorem order_separated {a₁ a₂ : α} (h : a₁ < a₂) :
       calc
         b₁ ≤ a₁ := h₂ _ hb₁
         _ < a₂ := h
-        _ ≤ b₂ := h₁ _ hb₂
-        ⟩
+        _ ≤ b₂ := h₁ _ hb₂⟩
 #align order_separated order_separated
 -/
 
@@ -2769,7 +2768,6 @@ theorem closure_interior_Icc {a b : α} (h : a ≠ b) : closure (interior (Icc a
       Icc a b = closure (Ioo a b) := (closure_Ioo h).symm
       _ ⊆ closure (interior (Icc a b)) :=
         closure_mono (interior_maximal Ioo_subset_Icc_self isOpen_Ioo)
-      
 #align closure_interior_Icc closure_interior_Icc
 -/
 
@@ -2784,7 +2782,6 @@ theorem Ioc_subset_closure_interior (a b : α) : Ioc a b ⊆ closure (interior (
       _ = closure (Ioo a b) := (closure_Ioo h).symm
       _ ⊆ closure (interior (Ioc a b)) :=
         closure_mono (interior_maximal Ioo_subset_Ioc_self isOpen_Ioo)
-      
 #align Ioc_subset_closure_interior Ioc_subset_closure_interior
 -/
 

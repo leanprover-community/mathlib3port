@@ -358,7 +358,6 @@ theorem prod_prod (s : Set α) (t : Set β) : μ.Prod ν (s ×ˢ t) = μ s * ν 
           lintegral_indicator _ (measurable_set_to_measurable _ _), lintegral_const,
           restrict_apply_univ, mul_comm]
       _ = μ s * ν t := by rw [measure_to_measurable, measure_to_measurable]
-      
   · -- Formalization is based on https://mathoverflow.net/a/254134/136589
     set ST := to_measurable (μ.prod ν) (s ×ˢ t)
     have hSTm : MeasurableSet ST := measurable_set_to_measurable _ _
@@ -374,7 +373,6 @@ theorem prod_prod (s : Set α) (t : Set β) : μ.Prod ν (s ×ˢ t) = μ s * ν 
       _ ≤ ∫⁻ x, f x ∂μ := (lintegral_mono' restrict_le_self le_rfl)
       _ = μ.prod ν ST := (prod_apply hSTm).symm
       _ = μ.prod ν (s ×ˢ t) := measure_to_measurable _
-      
 #align measure_theory.measure.prod_prod MeasureTheory.Measure.prod_prod
 
 instance {X Y : Type _} [TopologicalSpace X] [TopologicalSpace Y] {m : MeasurableSpace X}

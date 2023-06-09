@@ -1034,7 +1034,6 @@ theorem StructureGroupoid.compatible_of_mem_maximalAtlas {e e' : LocalHomeomorph
       _ ≈ (e.symm ≫ₕ of_set f.source f.open_source) ≫ₕ e' := by simp [trans_assoc]
       _ ≈ e.symm.restr s ≫ₕ e' := by simp [s, trans_of_set']
       _ ≈ (e.symm ≫ₕ e').restr s := by simp [restr_trans]
-      
   exact G.eq_on_source C (Setoid.symm D)
 #align structure_groupoid.compatible_of_mem_maximal_atlas StructureGroupoid.compatible_of_mem_maximalAtlas
 
@@ -1263,7 +1262,6 @@ def Structomorph.trans (e : Structomorph G M M') (e' : Structomorph G M' M'') :
           _ ≈ ((c.symm ≫ₕ f₁) ≫ₕ f₂ ≫ₕ c').restr s := by simp [restr_trans]
           _ ≈ (c.symm ≫ₕ (f₁ ≫ₕ f₂) ≫ₕ c').restr s := by simp [eq_on_source.restr, trans_assoc]
           _ ≈ F₂ := by simp [F₂, feq]
-          
       have : F₂ ∈ G := G.eq_on_source A (Setoid.symm this)
       exact this }
 #align structomorph.trans Structomorph.trans

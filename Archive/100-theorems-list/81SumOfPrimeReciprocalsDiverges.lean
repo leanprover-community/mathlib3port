@@ -137,7 +137,6 @@ theorem card_le_mul_sum {x k : ℕ} : (card (u x k) : ℝ) ≤ x * ∑ p in p x 
     (card (Finset.biUnion P N) : ℝ) ≤ ∑ p in P, card (N p) := by assumption_mod_cast
     _ ≤ ∑ p in P, x * (1 / p) := (sum_le_sum fun p hp => _)
     _ = x * ∑ p in P, 1 / p := mul_sum.symm
-    
   simp only [mul_one_div, N, sep_def, filter_congr_decidable, Nat.card_multiples, Nat.cast_div_le]
 #align theorems_100.card_le_mul_sum Theorems100.card_le_mul_sum
 
@@ -173,7 +172,6 @@ theorem card_le_two_pow {x k : ℕ} : card ({e ∈ m x k | Squarefree (e + 1)}) 
     _ ≤ 2 ^ card (image Nat.succ (range k)) := by simp only [K, card_powerset]
     _ ≤ 2 ^ card (range k) := (pow_le_pow one_le_two card_image_le)
     _ = 2 ^ k := by rw [card_range k]
-    
 #align theorems_100.card_le_two_pow Theorems100.card_le_two_pow
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -206,7 +204,6 @@ theorem card_le_two_pow_mul_sqrt {x k : ℕ} : card (m x k) ≤ 2 ^ k * Nat.sqrt
         b < b + 1 := lt_add_one b
         _ ≤ (m + 1).sqrt := by simpa only [Nat.le_sqrt, pow_two] using Nat.le_of_dvd hm' hbm
         _ ≤ x.sqrt := Nat.sqrt_le_sqrt (nat.succ_le_iff.mpr hm.1)
-        
     · exact hm.2 p ⟨hp.1, hp.2.trans (Nat.dvd_of_pow_dvd one_le_two hbm)⟩
   have h2 : card M₂ ≤ Nat.sqrt x := by rw [← card_range (Nat.sqrt x)]; apply card_le_of_subset;
     simp [M₂, M]
@@ -215,7 +212,6 @@ theorem card_le_two_pow_mul_sqrt {x k : ℕ} : card (m x k) ≤ 2 ^ k * Nat.sqrt
     _ ≤ card K := card_image_le
     _ = card M₁ * card M₂ := (card_product M₁ M₂)
     _ ≤ 2 ^ k * x.sqrt := mul_le_mul' card_le_two_pow h2
-    
 #align theorems_100.card_le_two_pow_mul_sqrt Theorems100.card_le_two_pow_mul_sqrt
 
 theorem Real.tendsto_sum_one_div_prime_atTop :
@@ -248,19 +244,16 @@ theorem Real.tendsto_sum_one_div_prime_atTop :
       (card U : ℝ) ≤ x * ∑ p in P, 1 / p := card_le_mul_sum
       _ < x * (1 / 2) := (mul_lt_mul_of_pos_left (h1 x) (by norm_num))
       _ = x / 2 := mul_one_div x 2
-      
   have h4 :=
     calc
       (card M : ℝ) ≤ 2 ^ k * x.sqrt := by exact_mod_cast card_le_two_pow_mul_sqrt
       _ = 2 ^ k * ↑(2 ^ (k + 1)) := by rw [Nat.sqrt_eq]
       _ = x / 2 := by field_simp [x, mul_right_comm, ← pow_succ']
-      
   refine' lt_irrefl (x : ℝ) _
   calc
     (x : ℝ) = (card U : ℝ) + (card M : ℝ) := by assumption_mod_cast
     _ < x / 2 + x / 2 := (add_lt_add_of_lt_of_le h3 h4)
     _ = x := add_halves ↑x
-    
 #align theorems_100.real.tendsto_sum_one_div_prime_at_top Theorems100.Real.tendsto_sum_one_div_prime_atTop
 
 end Theorems100

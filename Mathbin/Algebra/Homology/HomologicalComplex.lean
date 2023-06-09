@@ -535,8 +535,7 @@ def isoOfComponents (f : ∀ i, C₁.pt i ≅ C₂.pt i)
         calc
           (f i).inv ≫ C₁.d i j = (f i).inv ≫ (C₁.d i j ≫ (f j).Hom) ≫ (f j).inv := by simp
           _ = (f i).inv ≫ ((f i).Hom ≫ C₂.d i j) ≫ (f j).inv := by rw [hf i j hij]
-          _ = C₂.d i j ≫ (f j).inv := by simp
-           }
+          _ = C₂.d i j ≫ (f j).inv := by simp }
   hom_inv_id' := by ext i; exact (f i).hom_inv_id
   inv_hom_id' := by ext i; exact (f i).inv_hom_id
 #align homological_complex.hom.iso_of_components HomologicalComplex.Hom.isoOfComponents

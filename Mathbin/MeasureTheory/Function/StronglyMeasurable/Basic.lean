@@ -258,7 +258,6 @@ theorem tendsto_approxBounded_of_norm_le {β} {f : α → β} [NormedAddCommGrou
         · exact min_le_left _ _
         · exact le_min zero_le_one (div_nonneg ((norm_nonneg _).trans hfx) (norm_nonneg _))
       _ = ‖hf.approx n x‖ := by rw [norm_one, one_mul]
-      
   rw [← one_smul ℝ (f x)]
   refine' tendsto.smul _ h_tendsto
   have : min 1 (c / ‖f x‖) = 1 :=

@@ -49,7 +49,6 @@ private theorem funext_fin {n : ℕ} {p : MvPolynomial (Fin n) R}
     calc
       _ = _ := eval_polynomial_eval_fin_succ_equiv p _ _
       _ = 0 := h _
-      
 
 /-- Two multivariate polynomials over an infinite integral domain are equal
 if they are equal upon evaluating them on an arbitrary assignment of the variables. -/

@@ -604,7 +604,6 @@ theorem norm_image_sub_le_of_norm_hasFDerivWithin_le' (hf : ∀ x ∈ s, HasFDer
     _ = ‖f y - φ y - (f x - φ x)‖ := by abel
     _ = ‖g y - g x‖ := by simp
     _ ≤ C * ‖y - x‖ := Convex.norm_image_sub_le_of_norm_hasFDerivWithin_le hg bound hs xs ys
-    
 #align convex.norm_image_sub_le_of_norm_has_fderiv_within_le' Convex.norm_image_sub_le_of_norm_hasFDerivWithin_le'
 
 /-- Variant of the mean value inequality on a convex set. Version with `fderiv_within`. -/

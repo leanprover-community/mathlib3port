@@ -399,7 +399,6 @@ theorem of_sections {f : α → β}
       𝓝 (f x) = map f (map g (𝓝 (f x))) := by rw [map_map, hgf.comp_eq_id, map_id]
       _ ≤ map f (𝓝 (g (f x))) := (map_mono hgc)
       _ = map f (𝓝 x) := by rw [hgx]
-      
 #align is_open_map.of_sections IsOpenMap.of_sections
 
 #print IsOpenMap.of_inverse /-
@@ -465,8 +464,7 @@ theorem isOpenMap_iff_interior [TopologicalSpace α] [TopologicalSpace β] {f : 
     subset_interior_iff_isOpen.mp <|
       calc
         f '' u = f '' interior u := by rw [hu.interior_eq]
-        _ ⊆ interior (f '' u) := hs u
-        ⟩
+        _ ⊆ interior (f '' u) := hs u⟩
 #align is_open_map_iff_interior isOpenMap_iff_interior
 
 /-- An inducing map with an open range is an open map. -/
@@ -551,8 +549,7 @@ theorem isClosedMap_iff_closure_image [TopologicalSpace α] [TopologicalSpace β
     isClosed_of_closure_subset <|
       calc
         closure (f '' c) ⊆ f '' closure c := hs c
-        _ = f '' c := by rw [hc.closure_eq]
-        ⟩
+        _ = f '' c := by rw [hc.closure_eq]⟩
 #align is_closed_map_iff_closure_image isClosedMap_iff_closure_image
 
 section OpenEmbedding

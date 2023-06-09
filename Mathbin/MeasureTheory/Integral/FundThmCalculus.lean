@@ -896,7 +896,7 @@ theorem integral_hasFDerivWithinAt (hf : IntervalIntegrable f volume a b)
 #align interval_integral.integral_has_fderiv_within_at intervalIntegral.integral_hasFDerivWithinAt
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:330:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
 /-- An auxiliary tactic closing goals `unique_diff_within_at ℝ s a` where
 `s ∈ {Iic a, Ici a, univ}`. -/
 unsafe def unique_diff_within_at_Ici_Iic_univ : tactic Unit :=
@@ -1119,7 +1119,6 @@ theorem sub_le_integral_of_hasDeriv_right_of_le_Ico (hab : a ≤ b) (hcont : Con
                 (hx.right.trans_lt hu.right).trans_le (min_le_left M b), mem_Ioo, and_self_iff]
             convert le_of_lt (H this)
             exact EReal.coe_toReal G'x.ne (ne_bot_of_gt (f_lt_G' x))
-        
     -- bound from above the increase of `g u - g a` on the right of `t`, using the derivative at `t`
     have I2 : ∀ᶠ u in 𝓝[>] t, g u - g t ≤ (u - t) * y :=
       by
@@ -1154,7 +1153,6 @@ theorem sub_le_integral_of_hasDeriv_right_of_le_Ico (hab : a ≤ b) (hcont : Con
         · rw [intervalIntegrable_iff_integrable_Ioc_of_le h'x.1.le]
           apply integrable_on.mono_set G'int
           refine' Ioc_subset_Icc_self.trans (Icc_subset_Icc ht.2.1 (h'x.2.trans (min_le_right _ _)))
-      
   -- now that we know that `s` contains `[a, b]`, we get the desired result by applying this to `b`.
   calc
     g b - g a ≤ ∫ y in a..b, (G' y).toReal := main (right_mem_Icc.2 hab)
@@ -1162,7 +1160,6 @@ theorem sub_le_integral_of_hasDeriv_right_of_le_Ico (hab : a ≤ b) (hcont : Con
       convert hG'.le <;>
         · rw [intervalIntegral.integral_of_le hab]
           simp only [integral_Icc_eq_integral_Ioc', Real.volume_singleton]
-    
 #align interval_integral.sub_le_integral_of_has_deriv_right_of_le_Ico intervalIntegral.sub_le_integral_of_hasDeriv_right_of_le_Ico
 
 /-- Hard part of FTC-2 for integrable derivatives, real-valued functions: one has

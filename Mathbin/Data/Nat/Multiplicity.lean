@@ -78,7 +78,6 @@ theorem multiplicity_eq_card_pow_dvd {m n b : ℕ} (hm : m ≠ 1) (hn : 0 < n) (
             exact
               le_log_of_pow_le (one_lt_iff_ne_zero_and_ne_one.2 ⟨m.succ_ne_zero, hm⟩)
                 (le_of_dvd hn h.2)
-    
 #align nat.multiplicity_eq_card_pow_dvd Nat.multiplicity_eq_card_pow_dvd
 
 namespace Prime
@@ -126,7 +125,6 @@ theorem multiplicity_factorial {p : ℕ} (hp : p.Prime) :
         rw [sum_add_distrib, sum_boole]; simp
       _ = (∑ i in Ico 1 b, (n + 1) / p ^ i : ℕ) :=
         congr_arg coe <| Finset.sum_congr rfl fun _ _ => (succ_div _ _).symm
-      
 #align nat.prime.multiplicity_factorial Nat.Prime.multiplicity_factorial
 
 /-- The multiplicity of `p` in `(p * (n + 1))!` is one more than the sum
@@ -195,7 +193,6 @@ theorem multiplicity_choose_aux {p n b k : ℕ} (hp : p.Prime) (hkn : k ≤ n) :
           k / p ^ i + (n - k) / p ^ i + if p ^ i ≤ k % p ^ i + (n - k) % p ^ i then 1 else 0 :=
       by simp only [Nat.add_div (pow_pos hp.pos _)]
     _ = _ := by simp [sum_add_distrib, sum_boole]
-    
 #align nat.prime.multiplicity_choose_aux Nat.Prime.multiplicity_choose_aux
 
 /-- The multiplicity of `p` in `choose n k` is the number of carries when `k` and `n - k`

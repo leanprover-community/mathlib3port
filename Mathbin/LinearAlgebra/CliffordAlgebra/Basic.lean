@@ -216,7 +216,6 @@ theorem ι_mul_ι_add_swap (a b : M) :
       rw [ι_sq_scalar, ι_sq_scalar, ι_sq_scalar]
     _ = algebraMap R _ (Q (a + b) - Q a - Q b) := by rw [← RingHom.map_sub, ← RingHom.map_sub]
     _ = algebraMap R _ (QuadraticForm.polar Q a b) := rfl
-    
 #align clifford_algebra.ι_mul_ι_add_swap CliffordAlgebra.ι_mul_ι_add_swap
 
 theorem ι_mul_comm (a b : M) :

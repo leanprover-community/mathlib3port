@@ -444,7 +444,6 @@ theorem sum_Ico_pow (n p : ℕ) :
         _ =
         ∑ i in range p.succ.succ, f' i :=
       by simp_rw [sum_range_succ']
-    
 #align sum_Ico_pow sum_Ico_pow
 
 end Faulhaber

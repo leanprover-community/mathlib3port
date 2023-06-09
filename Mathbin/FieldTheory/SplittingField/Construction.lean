@@ -430,8 +430,7 @@ instance algebra'' {n : ℕ} {f : K[X]} : Algebra K (SplittingFieldAux n f.remov
 
 instance scalar_tower' {n : ℕ} {f : K[X]} :
     IsScalarTower K (AdjoinRoot f.factor) (SplittingFieldAux n f.removeFactor) :=
-  haveI-- finding this instance ourselves makes things faster
-   : IsScalarTower K (AdjoinRoot f.factor) (AdjoinRoot f.factor) := IsScalarTower.right
+  haveI : IsScalarTower K (AdjoinRoot f.factor) (AdjoinRoot f.factor) := IsScalarTower.right
   splitting_field_aux.is_scalar_tower n K (AdjoinRoot f.factor)
 #align polynomial.splitting_field_aux.scalar_tower' Polynomial.SplittingFieldAux.scalar_tower'
 

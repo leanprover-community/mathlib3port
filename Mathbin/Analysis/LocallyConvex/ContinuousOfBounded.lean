@@ -74,7 +74,6 @@ def LinearMap.clmOfExistsBoundedImage (f : E →ₗ[𝕜] F)
         _ = f ⁻¹' (x⁻¹ • x • U) := by
           ext <;> simp only [Set.mem_inv_smul_set_iff₀ x_ne, Set.mem_preimage, LinearMap.map_smul]
         _ ⊆ f ⁻¹' U := by rw [inv_smul_smul₀ x_ne _]
-        
     -- Using this inclusion, it suffices to show that `x⁻¹ • V` is in `𝓝 0`, which is trivial.
     refine' mem_of_superset _ this
     convert set_smul_mem_nhds_smul hV (inv_ne_zero x_ne)

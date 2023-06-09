@@ -166,9 +166,7 @@ private theorem one_sub_eps_mul_card_nonuniform_witness_le_card_star (hV : V ∈
             (mul_le_mul_of_nonneg_left (pow_le_pow_of_le_one (by positivity) hε₁ <| le_succ _)
               (by positivity))
           _ = (2 ^ 2) ^ P.parts.card * ε ^ (2 * 2) := by norm_num
-          
       _ = 2 ^ P.parts.card * (ε * (ε / 10)) := by rw [mul_div_assoc, sq, mul_div_assoc]
-      
   calc
     (1 - ε / 10) * (G.nonuniform_witness ε U V).card ≤
         (1 - 2 ^ P.parts.card * m / (U.card * ε)) * (G.nonuniform_witness ε U V).card :=
@@ -196,7 +194,6 @@ private theorem one_sub_eps_mul_card_nonuniform_witness_le_card_star (hV : V ∈
         cast_sub (card_le_of_subset <| bUnion_star_subset_nonuniform_witness hP G ε hU V), ←
         card_sdiff (bUnion_star_subset_nonuniform_witness hP G ε hU V), cast_le]
       exact card_nonuniform_witness_sdiff_bUnion_star hV hUV hunif
-    
 
 variable {hP G ε U hU V}
 
@@ -472,7 +469,6 @@ private theorem eps_le_card_star_div [Nonempty α] (hPα : P.parts.card * 16 ^ P
       rw [mul_div_assoc', div_le_one hm, ← one_div, one_sub_div hm.ne', mul_div_assoc',
         div_le_iff hm]
       linarith
-    
 
 /-!
 ### Final bounds
@@ -582,7 +578,6 @@ theorem edgeDensity_chunk_not_uniform [Nonempty α] (hPα : P.parts.card * 16 ^ 
         rw [card_chunk (m_pos hPα).ne', card_chunk (m_pos hPα).ne', ← mul_pow]
         norm_num
         exact hP
-    
 #align szemeredi_regularity.edge_density_chunk_not_uniform SzemerediRegularity.edgeDensity_chunk_not_uniform
 
 /-- Lower bound on the edge densities between parts of `szemeredi_regularity.increment`. This is the

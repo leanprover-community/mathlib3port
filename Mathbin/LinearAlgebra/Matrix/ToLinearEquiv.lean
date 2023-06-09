@@ -176,7 +176,6 @@ theorem exists_mulVec_eq_zero_iff' {A : Type _} (K : Type _) [DecidableEq n] [Co
           _
         _ = 0 := _
         _ = algebraMap A K 0 := (RingHom.map_zero _).symm
-        
       ·
         simp_rw [RingHom.map_mulVec, mul_vec, dot_product, Function.comp_apply, hf, Subtype.coe_mk,
           RingHom.mapMatrix_apply, Pi.smul_apply, smul_eq_mul, Algebra.smul_def]

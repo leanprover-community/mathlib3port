@@ -144,7 +144,6 @@ def toDual : E ≃ₗᵢ⋆[𝕜] NormedSpace.Dual 𝕜 E :=
               0 = ⟪z, ℓ z • x - ℓ x • z⟫ := by rw [(Y.mem_orthogonal' z).mp hz]; exact h₁
               _ = ⟪z, ℓ z • x⟫ - ⟪z, ℓ x • z⟫ := by rw [inner_sub_right]
               _ = ℓ z * ⟪z, x⟫ - ℓ x * ⟪z, z⟫ := by simp [inner_smul_right]
-              
           sub_eq_zero.mp (Eq.symm h₃)
         have h₄ :=
           calc
@@ -152,7 +151,6 @@ def toDual : E ≃ₗᵢ⋆[𝕜] NormedSpace.Dual 𝕜 E :=
             _ = ℓ z * ⟪z, x⟫ / ⟪z, z⟫ := by rw [← div_mul_eq_mul_div]
             _ = ℓ x * ⟪z, z⟫ / ⟪z, z⟫ := by rw [h₂]
             _ = ℓ x := by field_simp [inner_self_ne_zero.2 z_ne_0]
-            
         exact h₄)
 #align inner_product_space.to_dual InnerProductSpace.toDual
 -/

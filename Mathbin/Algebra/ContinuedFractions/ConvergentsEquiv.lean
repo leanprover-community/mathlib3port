@@ -318,7 +318,6 @@ theorem succ_nth_convergent_eq_squashGCF_nth_convergent [Field K]
             _ =
             g.h + a / b :=
           by rw [mul_div_cancel_left _ b_ne_zero]
-        
     case
       succ =>
       obtain ⟨⟨pa, pb⟩, s_n'th_eq⟩ : ∃ gp_n', g.s.nth n' = some gp_n' :=

@@ -1066,7 +1066,6 @@ theorem mk_list_eq_mk (α : Type u) [Infinite α] : (#List α) = (#α) :=
         (#List α) = sum fun n : ℕ => (#α) ^ (n : Cardinal.{u}) := mk_list_eq_sum_pow α
         _ ≤ sum fun n : ℕ => #α := (sum_le_sum _ _ fun n => pow_le H1 <| nat_lt_aleph0 n)
         _ = (#α) := by simp [H1]
-        
 #align cardinal.mk_list_eq_mk Cardinal.mk_list_eq_mk
 -/
 
@@ -1101,7 +1100,6 @@ theorem mk_finset_of_infinite (α : Type u) [Infinite α] : (#Finset α) = (#α)
       calc
         (#Finset α) ≤ (#List α) := mk_le_of_surjective List.toFinset_surjective
         _ = (#α) := mk_list_eq_mk α
-        
 #align cardinal.mk_finset_of_infinite Cardinal.mk_finset_of_infinite
 -/
 
@@ -1116,7 +1114,6 @@ theorem mk_finsupp_lift_of_infinite (α : Type u) (β : Type v) [Infinite α] [Z
       _ = (#α × β) := (mk_finset_of_infinite _)
       _ = max (lift.{v} (#α)) (lift.{u} (#β)) := by
         rw [mk_prod, mul_eq_max_of_aleph_0_le_left] <;> simp
-      
   · apply max_le <;> rw [← lift_id (#α →₀ β), ← lift_umax]
     · cases' exists_ne (0 : β) with b hb
       exact lift_mk_le.{u, max u v, v}.2 ⟨⟨_, Finsupp.single_left_injective hb⟩⟩

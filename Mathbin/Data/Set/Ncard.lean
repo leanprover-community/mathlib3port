@@ -62,7 +62,7 @@ noncomputable def ncard (s : Set α) :=
 #align set.ncard Set.ncard
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:330:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
 /-- A tactic, for use in `auto_param`s, that finds a `t.finite` term for a set `t`
   whose finiteness can be deduced from typeclasses (eg. in a `finite` type). -/
 unsafe def to_finite_tac : tactic Unit :=

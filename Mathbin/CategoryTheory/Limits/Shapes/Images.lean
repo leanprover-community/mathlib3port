@@ -541,7 +541,6 @@ theorem image.ext [HasImage f] {W : C} {g h : image f ⟶ W} [HasLimit (parallel
     _ = v ≫ q ≫ h := by rw [equalizer.condition g h]
     _ = 𝟙 (image f) ≫ h := by rw [← category.assoc, t]
     _ = h := by rw [category.id_comp]
-    
 #align category_theory.limits.image.ext CategoryTheory.Limits.image.ext
 -/
 

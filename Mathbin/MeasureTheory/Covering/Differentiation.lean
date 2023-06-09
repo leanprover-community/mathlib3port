@@ -123,7 +123,6 @@ theorem ae_eventually_measure_pos [SecondCountableTopology α] :
     μ s ≤ ∑' x : h.index, μ (h.covering x) := h.measure_le_tsum
     _ = ∑' x : h.index, 0 := by congr; ext1 x; exact h.covering_mem x.2
     _ = 0 := by simp only [tsum_zero, add_zero]
-    
 #align vitali_family.ae_eventually_measure_pos VitaliFamily.ae_eventually_measure_pos
 
 /-- For every point `x`, sufficiently small sets in a Vitali family around `x` have finite measure.
@@ -165,7 +164,6 @@ theorem measure_le_of_frequently_le [SecondCountableTopology α] [BorelSpace α]
       rw [measure_Union h.covering_disjoint_subtype fun i => h.measurable_set_u i.2]
     _ ≤ ν U := (measure_mono (Union_subset fun i => (h.covering_mem i.2).2))
     _ ≤ ν s + ε := νU
-    
 #align vitali_family.measure_le_of_frequently_le VitaliFamily.measure_le_of_frequently_le
 
 section
@@ -205,7 +203,6 @@ theorem ae_eventually_measure_zero_of_singular (hρ : ρ ⟂ₘ μ) :
         exact hx.1
       _ ≤ ε⁻¹ * ρ o := (mul_le_mul_left' (measure_mono (inter_subset_right _ _)) _)
       _ = 0 := by rw [ρo, MulZeroClass.mul_zero]
-      
   obtain ⟨u, u_anti, u_pos, u_lim⟩ :
     ∃ u : ℕ → ℝ≥0, StrictAnti u ∧ (∀ n : ℕ, 0 < u n) ∧ tendsto u at_top (𝓝 0) :=
     exists_seq_strictAnti_tendsto (0 : ℝ≥0)
@@ -252,7 +249,6 @@ theorem null_of_frequently_le_of_frequently_ge {c d : ℝ≥0} (hcd : c < d) (s 
     _ ≤ ρ s' :=
       v.measure_le_of_frequently_le ρ ((measure.absolutely_continuous.refl μ).smul d) s' fun x hx =>
         hd x hx.1
-    
 #align vitali_family.null_of_frequently_le_of_frequently_ge VitaliFamily.null_of_frequently_le_of_frequently_ge
 
 /-- If `ρ` is absolutely continuous with respect to `μ`, then for almost every `x`,
@@ -392,7 +388,6 @@ theorem exists_measurable_supersets_limRatio {p q : ℝ≥0} (hpq : p < q) :
       _ ≤ ∑' (m) (n), μ (to_measurable (ρ + μ) (u m) ∩ to_measurable (ρ + μ) (w n)) :=
         ((measure_Union_le _).trans (ENNReal.tsum_le_tsum fun m => measure_Union_le _))
       _ = 0 := by simp only [H, tsum_zero]
-      
   -- now starts the nontrivial part of the argument. We fix `m` and `n`, and show that the
   -- measurable supersets of `u m` and `w n` have zero measure intersection by using the lemmas
   -- `measure_to_measurable_add_inter_left` (to reduce to `u m` or `w n` instead of the measurable
@@ -426,7 +421,6 @@ theorem exists_measurable_supersets_limRatio {p q : ℝ≥0} (hpq : p < q) :
       _ = p * μ (to_measurable (ρ + μ) (u m) ∩ to_measurable (ρ + μ) (w n)) := by
         simp only [coe_nnreal_smul_apply,
           measure_to_measurable_add_inter_right (measurable_set_to_measurable _ _) I]
-      
   have B :
     (q : ℝ≥0∞) * μ (to_measurable (ρ + μ) (u m) ∩ to_measurable (ρ + μ) (w n)) ≤
       ρ (to_measurable (ρ + μ) (u m) ∩ to_measurable (ρ + μ) (w n)) :=
@@ -453,7 +447,6 @@ theorem exists_measurable_supersets_limRatio {p q : ℝ≥0} (hpq : p < q) :
         conv_rhs => rw [inter_comm]
         rw [inter_comm]
         exact (measure_to_measurable_add_inter_left (measurable_set_to_measurable _ _) J).symm
-      
   by_contra
   apply lt_irrefl (ρ (to_measurable (ρ + μ) (u m) ∩ to_measurable (ρ + μ) (w n)))
   calc
@@ -471,7 +464,6 @@ theorem exists_measurable_supersets_limRatio {p q : ℝ≥0} (hpq : p < q) :
       apply lt_of_le_of_lt (measure_mono _) (measure_spanning_sets_lt_top (ρ + μ) m)
       exact inter_subset_right _ _
     _ ≤ ρ (to_measurable (ρ + μ) (u m) ∩ to_measurable (ρ + μ) (w n)) := B
-    
 #align vitali_family.exists_measurable_supersets_lim_ratio VitaliFamily.exists_measurable_supersets_limRatio
 
 #print VitaliFamily.aemeasurable_limRatio /-
@@ -521,7 +513,6 @@ theorem measure_le_mul_of_subset_limRatioMeas_lt {p : ℝ≥0} {s : Set α}
         (add_le_add H ((measure_mono (inter_subset_right _ _)).trans (hρ A).le))
       _ ≤ p * μ s := by rw [add_zero];
         exact mul_le_mul_left' (measure_mono (inter_subset_left _ _)) _
-      
   refine' v.measure_le_of_frequently_le _ hρ _ fun x hx => _
   have I : ∀ᶠ b : Set α in v.filter_at x, ρ b / μ b < p := (tendsto_order.1 hx.2).2 _ (h hx.1)
   apply I.frequently.mono fun a ha => _
@@ -549,7 +540,6 @@ theorem mul_measure_le_of_subset_lt_limRatioMeas {q : ℝ≥0} {s : Set α}
         exact mul_le_mul_left' (measure_mono (inter_subset_right _ _)) _
       _ ≤ ρ s := by rw [A, MulZeroClass.mul_zero, add_zero];
         exact measure_mono (inter_subset_left _ _)
-      
   refine' v.measure_le_of_frequently_le _ (absolutely_continuous.rfl.smul _) _ _
   intro x hx
   have I : ∀ᶠ a in v.filter_at x, (q : ℝ≥0∞) < ρ a / μ a := (tendsto_order.1 hx.2).1 _ (h hx.1)
@@ -673,7 +663,6 @@ theorem withDensity_le_mul {s : Set α} (hs : MeasurableSet s) {t : ℝ≥0} (ht
         refine' mul_lt_mul' le_rfl _ (zero_le _) (NNReal.zpow_pos t_ne_zero' _)
         rw [zpow_neg_one]
         exact inv_lt_one ht
-      
   calc
     ν s =
         ν (s ∩ f ⁻¹' {0}) + ν (s ∩ f ⁻¹' {∞}) + ∑' n : ℤ, ν (s ∩ f ⁻¹' Ico (t ^ n) (t ^ (n + 1))) :=
@@ -684,7 +673,6 @@ theorem withDensity_le_mul {s : Set α} (hs : MeasurableSet s) {t : ℝ≥0} (ht
       (add_le_add (add_le_add A B) (ENNReal.tsum_le_tsum C))
     _ = ((t : ℝ≥0∞) ^ 2 • ρ) s :=
       (measure_eq_measure_preimage_add_measure_tsum_Ico_zpow ((t : ℝ≥0∞) ^ 2 • ρ) f_meas hs ht).symm
-    
 #align vitali_family.with_density_le_mul VitaliFamily.withDensity_le_mul
 
 /-- As an intermediate step to show that `μ.with_density (v.lim_ratio_meas hρ) = ρ`, we show here
@@ -736,7 +724,6 @@ theorem le_mul_withDensity {s : Set α} (hs : MeasurableSet s) {t : ℝ≥0} (ht
         rw [add_comm, ENNReal.zpow_add t_ne_zero ENNReal.coe_ne_top, zpow_one]
         exact mul_le_mul_left' hx.2.1 _
       _ = t * ∫⁻ x in s ∩ f ⁻¹' I, f x ∂μ := lintegral_const_mul _ f_meas
-      
   calc
     ρ s =
         ρ (s ∩ f ⁻¹' {0}) + ρ (s ∩ f ⁻¹' {∞}) + ∑' n : ℤ, ρ (s ∩ f ⁻¹' Ico (t ^ n) (t ^ (n + 1))) :=
@@ -747,7 +734,6 @@ theorem le_mul_withDensity {s : Set α} (hs : MeasurableSet s) {t : ℝ≥0} (ht
       (add_le_add (add_le_add A B) (ENNReal.tsum_le_tsum C))
     _ = (t • ν) s :=
       (measure_eq_measure_preimage_add_measure_tsum_Ico_zpow (t • ν) f_meas hs ht).symm
-    
 #align vitali_family.le_mul_with_density VitaliFamily.le_mul_withDensity
 
 #print VitaliFamily.withDensity_limRatioMeas_eq /-
@@ -940,7 +926,6 @@ theorem ae_tendsto_lintegral_nnnorm_sub_div' {f : α → E} (hf : Integrable f �
             simp only [integrable_indicator_iff (IsOpen.measurableSet (A.set_mem n)),
               integrable_on_const, A.finite n, or_true_iff]
           ENNReal.add_lt_add hf.2 I.2
-        
   filter_upwards [main, v.ae_eventually_measure_pos] with x hx h'x
   have M :
     ∀ c ∈ t, tendsto (fun a => (∫⁻ y in a, ‖f y - c‖₊ ∂μ) / μ a) (v.filter_at x) (𝓝 ‖f x - c‖₊) :=
@@ -980,7 +965,6 @@ theorem ae_tendsto_lintegral_nnnorm_sub_div' {f : α → E} (hf : Integrable f �
       · simp only [lintegral_const, measure.restrict_apply, MeasurableSet.univ, univ_inter]
         exact mul_le_mul_right' xc.le _
     _ = ε * μ a := by rw [← add_mul, ENNReal.add_halves]
-    
 #align vitali_family.ae_tendsto_lintegral_nnnorm_sub_div' VitaliFamily.ae_tendsto_lintegral_nnnorm_sub_div'
 
 theorem ae_tendsto_lintegral_nnnorm_sub_div {f : α → E} (hf : Integrable f μ) :

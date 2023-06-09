@@ -100,10 +100,8 @@ theorem degree_divX_lt (hp0 : p ≠ 0) : (divX p).degree < p.degree := by
                         rw [zero_le_degree_iff, Ne.def, div_X_eq_zero_iff] <;>
                           exact fun h0 => h (h0.symm ▸ degree_C_le))
                       le_rfl
-              
           rw [degree_add_eq_left_of_degree_lt this] <;> exact degree_lt_degree_mul_X hXp0
       _ = p.degree := congr_arg _ (div_X_mul_X_add _)
-      
 #align polynomial.degree_div_X_lt Polynomial.degree_divX_lt
 -/
 

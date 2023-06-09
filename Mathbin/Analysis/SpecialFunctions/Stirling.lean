@@ -181,7 +181,6 @@ theorem log_stirlingSeq_bounded_aux :
     _ ≤ ∑ k in range n, 1 / 4 * (1 / k.succ ^ 2) := (sum_le_sum fun k _ => h₁ k)
     _ = 1 / 4 * ∑ k in range n, 1 / k.succ ^ 2 := by rw [mul_sum]
     _ ≤ 1 / 4 * d := mul_le_mul_of_nonneg_left h₂ <| by positivity
-    
 #align stirling.log_stirling_seq_bounded_aux Stirling.log_stirlingSeq_bounded_aux
 
 /-- The sequence `log_stirling_seq` is bounded below for `n ≥ 1`. -/

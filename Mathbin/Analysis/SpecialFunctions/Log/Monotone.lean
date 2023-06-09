@@ -60,7 +60,6 @@ theorem log_div_self_antitoneOn : AntitoneOn (fun x : ℝ => log x / x) {x | exp
     _ ≤ y / x - 1 := (log_le_sub_one_of_pos (div_pos y_pos x_pos))
     _ ≤ log x * (y / x - 1) := (le_mul_of_one_le_left hyx hlogx)
     _ = log x / x * y - log x := by ring
-    
 #align real.log_div_self_antitone_on Real.log_div_self_antitoneOn
 
 theorem log_div_self_rpow_antitoneOn {a : ℝ} (ha : 0 < a) :

@@ -206,12 +206,10 @@ theorem approx_le_approx_of_U_sub_C {c₁ c₂ : CU X} (h : c₁.U ⊆ c₂.C) (
     calc
       approx n₂ c₂ x = 0 := approx_of_mem_C _ _ (h hx)
       _ ≤ approx n₁ c₁ x := approx_nonneg _ _ _
-      
   ·
     calc
       approx n₂ c₂ x ≤ 1 := approx_le_one _ _ _
       _ = approx n₁ c₁ x := (approx_of_nmem_U _ _ hx).symm
-      
 #align urysohns.CU.approx_le_approx_of_U_sub_C Urysohns.CU.approx_le_approx_of_U_sub_C
 
 #print Urysohns.CU.approx_mem_Icc_right_left /-

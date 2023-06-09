@@ -264,7 +264,6 @@ theorem pow_eq_mod_orderOf {n : ℕ} : x ^ n = x ^ (n % orderOf x) :=
   calc
     x ^ n = x ^ (n % orderOf x + orderOf x * (n / orderOf x)) := by rw [Nat.mod_add_div]
     _ = x ^ (n % orderOf x) := by simp [pow_add, pow_mul, pow_orderOf_eq_one]
-    
 #align pow_eq_mod_order_of pow_eq_mod_orderOf
 #align nsmul_eq_mod_add_order_of nsmul_eq_mod_addOrderOf
 -/
@@ -627,7 +626,6 @@ theorem zpow_eq_mod_orderOf : x ^ i = x ^ (i % orderOf x) :=
   calc
     x ^ i = x ^ (i % orderOf x + orderOf x * (i / orderOf x)) := by rw [Int.emod_add_ediv]
     _ = x ^ (i % orderOf x) := by simp [zpow_add, zpow_mul, pow_orderOf_eq_one]
-    
 #align zpow_eq_mod_order_of zpow_eq_mod_orderOf
 #align zsmul_eq_mod_add_order_of zsmul_eq_mod_addOrderOf
 -/
@@ -747,7 +745,6 @@ theorem sum_card_orderOf_eq_card_pow_eq_one [Fintype G] [DecidableEq G] (hn : n 
                 let ⟨m, hm⟩ := h.2
                 rw [hm, pow_mul, pow_orderOf_eq_one, one_pow], fun h =>
                 ⟨orderOf_le_of_pow_eq_one hn.bot_lt h, orderOf_dvd_of_pow_eq_one h⟩⟩))
-    
 #align sum_card_order_of_eq_card_pow_eq_one sum_card_orderOf_eq_card_pow_eq_one
 #align sum_card_add_order_of_eq_card_nsmul_eq_zero sum_card_addOrderOf_eq_card_nsmul_eq_zero
 
@@ -990,12 +987,10 @@ theorem orderOf_dvd_card_univ : orderOf x ∣ Fintype.card G := by
       _ = @Fintype.card _ (@Prod.fintype _ _ ft_cosets ft_s) :=
         (congr_arg (@Fintype.card _) <| Subsingleton.elim _ _)
       _ = @Fintype.card _ ft_cosets * @Fintype.card _ ft_s := @Fintype.card_prod _ _ ft_cosets ft_s
-      
   have eq₂ : orderOf x = @Fintype.card _ ft_s :=
     calc
       orderOf x = _ := orderOf_eq_card_zpowers
       _ = _ := congr_arg (@Fintype.card _) <| Subsingleton.elim _ _
-      
   exact Dvd.intro (@Fintype.card (G ⧸ Subgroup.zpowers x) ft_cosets) (by rw [eq₁, eq₂, mul_comm])
 #align order_of_dvd_card_univ orderOf_dvd_card_univ
 #align add_order_of_dvd_card_univ addOrderOf_dvd_card_univ

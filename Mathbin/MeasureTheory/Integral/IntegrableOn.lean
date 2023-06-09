@@ -392,7 +392,6 @@ theorem Integrable.lintegral_lt_top {f : α → ℝ} (hf : Integrable f μ) :
   calc
     (∫⁻ x, ENNReal.ofReal (f x) ∂μ) ≤ ∫⁻ x, ↑‖f x‖₊ ∂μ := lintegral_ofReal_le_lintegral_nnnorm f
     _ < ∞ := hf.2
-    
 #align measure_theory.integrable.lintegral_lt_top MeasureTheory.Integrable.lintegral_lt_top
 
 theorem IntegrableOn.set_lintegral_lt_top {f : α → ℝ} {s : Set α} (hf : IntegrableOn f s μ) :

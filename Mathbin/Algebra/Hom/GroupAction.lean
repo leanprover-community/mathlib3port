@@ -159,8 +159,7 @@ def comp (g : Y →[M'] Z) (f : X →[M'] Y) : X →[M'] Z :=
   ⟨g ∘ f, fun m x =>
     calc
       g (f (m • x)) = g (m • f x) := by rw [f.map_smul]
-      _ = m • g (f x) := g.map_smul _ _
-      ⟩
+      _ = m • g (f x) := g.map_smul _ _⟩
 #align mul_action_hom.comp MulActionHom.comp
 -/
 
@@ -192,7 +191,6 @@ def inverse (f : A →[M] B) (g : B → A) (h₁ : Function.LeftInverse g f)
       g (m • x) = g (m • f (g x)) := by rw [h₂]
       _ = g (f (m • g x)) := by rw [f.map_smul]
       _ = m • g x := by rw [h₁]
-      
 #align mul_action_hom.inverse MulActionHom.inverse
 
 end MulActionHom

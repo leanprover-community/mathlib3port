@@ -138,7 +138,6 @@ theorem Convex.combo_interior_closure_subset_interior {s : Set E} (hs : Convex �
       _ = interior (a • s) + b • s := by rw [is_open_interior.add_closure (b • s)]
       _ ⊆ interior (a • s + b • s) := subset_interior_add_left
       _ ⊆ interior s := interior_mono <| hs.set_combo_subset ha.le hb hab
-      
 #align convex.combo_interior_closure_subset_interior Convex.combo_interior_closure_subset_interior
 
 /-- If `s` is a convex set, then `a • interior s + b • s ⊆ interior s` for all `0 < a`, `0 ≤ b`,
@@ -149,7 +148,6 @@ theorem Convex.combo_interior_self_subset_interior {s : Set E} (hs : Convex 𝕜
     a • interior s + b • s ⊆ a • interior s + b • closure s :=
       add_subset_add Subset.rfl <| image_subset _ subset_closure
     _ ⊆ interior s := hs.combo_interior_closure_subset_interior ha hb hab
-    
 #align convex.combo_interior_self_subset_interior Convex.combo_interior_self_subset_interior
 
 /-- If `s` is a convex set, then `a • closure s + b • interior s ⊆ interior s` for all `0 ≤ a`,

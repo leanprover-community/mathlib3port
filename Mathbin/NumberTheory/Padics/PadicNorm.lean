@@ -240,7 +240,6 @@ theorem triangle_ineq (q r : ℚ) : padicNorm p (q + r) ≤ padicNorm p q + padi
     padicNorm p (q + r) ≤ max (padicNorm p q) (padicNorm p r) := padicNorm.nonarchimedean
     _ ≤ padicNorm p q + padicNorm p r :=
       max_le_add_of_nonneg (padicNorm.nonneg _) (padicNorm.nonneg _)
-    
 #align padic_norm.triangle_ineq padicNorm.triangle_ineq
 
 /-- The `p`-adic norm of a difference is at most the max of each component. Restates the archimedean
@@ -261,7 +260,6 @@ theorem add_eq_max_of_ne {q r : ℚ} (hne : padicNorm p q ≠ padicNorm p r) :
       padicNorm p q = padicNorm p (q + r - r) := by congr <;> ring
       _ ≤ max (padicNorm p (q + r)) (padicNorm p (-r)) := padicNorm.nonarchimedean
       _ = max (padicNorm p (q + r)) (padicNorm p r) := by simp
-      
   have hnge : padicNorm p r ≤ padicNorm p (q + r) :=
     by
     apply le_of_not_gt

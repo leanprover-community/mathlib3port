@@ -228,7 +228,6 @@ theorem sum_range_id_mul_two (n : ℕ) : (∑ i in range n, i) * 2 = n * (n - 1)
     _ = ∑ i in range n, n - 1 :=
       (sum_congr rfl fun i hi => add_tsub_cancel_of_le <| Nat.le_pred_of_lt <| mem_range.1 hi)
     _ = n * (n - 1) := by rw [sum_const, card_range, Nat.nsmul_eq_mul]
-    
 #align finset.sum_range_id_mul_two Finset.sum_range_id_mul_two
 -/
 

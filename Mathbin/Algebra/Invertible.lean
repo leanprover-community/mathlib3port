@@ -260,7 +260,6 @@ theorem Commute.invOf_right [Monoid α] {a b : α} [Invertible b] (h : Commute a
     a * ⅟ b = ⅟ b * (b * a * ⅟ b) := by simp [mul_assoc]
     _ = ⅟ b * (a * b * ⅟ b) := by rw [h.eq]
     _ = ⅟ b * a := by simp [mul_assoc]
-    
 #align commute.inv_of_right Commute.invOf_right
 
 theorem Commute.invOf_left [Monoid α] {a b : α} [Invertible b] (h : Commute b a) :
@@ -269,7 +268,6 @@ theorem Commute.invOf_left [Monoid α] {a b : α} [Invertible b] (h : Commute b 
     ⅟ b * a = ⅟ b * (a * b * ⅟ b) := by simp [mul_assoc]
     _ = ⅟ b * (b * a * ⅟ b) := by rw [h.eq]
     _ = a * ⅟ b := by simp [mul_assoc]
-    
 #align commute.inv_of_left Commute.invOf_left
 
 #print commute_invOf /-
@@ -277,7 +275,6 @@ theorem commute_invOf {M : Type _} [One M] [Mul M] (m : M) [Invertible m] : Comm
   calc
     m * ⅟ m = 1 := mul_invOf_self m
     _ = ⅟ m * m := (invOf_mul_self m).symm
-    
 #align commute_inv_of commute_invOf
 -/
 
@@ -287,7 +284,6 @@ theorem nonzero_of_invertible [MulZeroOneClass α] (a : α) [Nontrivial α] [Inv
     calc
       0 = ⅟ a * a := by simp [ha]
       _ = 1 := invOf_mul_self a
-      
 #align nonzero_of_invertible nonzero_of_invertible
 
 instance (priority := 100) Invertible.ne_zero [MulZeroOneClass α] [Nontrivial α] (a : α)

@@ -371,7 +371,6 @@ theorem mul_apply_antidiagonal [Mul G] (f g : MonoidAlgebra k G) (x : G) (s : Fi
           by_cases h1 : f p.1 = 0
           · rw [h1, MulZeroClass.zero_mul]
           · rw [hp hps h1, MulZeroClass.mul_zero]
-      
 #align monoid_algebra.mul_apply_antidiagonal MonoidAlgebra.mul_apply_antidiagonal
 
 @[simp]
@@ -473,7 +472,6 @@ theorem mul_single_apply_aux [Mul G] (f : MonoidAlgebra k G) {r : k} {x y z : G}
         simp only [mul_apply, A, H]
       _ = if y ∈ f.support then f y * r else 0 := (f.support.sum_ite_eq' _ _)
       _ = f y * r := by split_ifs with h <;> simp at h  <;> simp [h]
-      
 #align monoid_algebra.mul_single_apply_aux MonoidAlgebra.mul_single_apply_aux
 
 theorem mul_single_one_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x : G) :
@@ -504,7 +502,6 @@ theorem single_mul_apply_aux [Mul G] (f : MonoidAlgebra k G) {r : k} {x y z : G}
       _ = f.sum fun a b => ite (a = z) (r * b) 0 := by simp only [H]
       _ = if z ∈ f.support then r * f z else 0 := (f.support.sum_ite_eq' _ _)
       _ = _ := by split_ifs with h <;> simp at h  <;> simp [h]
-      
 #align monoid_algebra.single_mul_apply_aux MonoidAlgebra.single_mul_apply_aux
 
 theorem single_one_mul_apply [MulOneClass G] (f : MonoidAlgebra k G) (r : k) (x : G) :
@@ -962,7 +959,6 @@ theorem mul_apply_left (f g : MonoidAlgebra k G) (x : G) :
     (f * g) x = Sum f fun a b => (single a b * g) x := by
       rw [← Finsupp.sum_apply, ← Finsupp.sum_mul, f.sum_single]
     _ = _ := by simp only [single_mul_apply, Finsupp.sum]
-    
 #align monoid_algebra.mul_apply_left MonoidAlgebra.mul_apply_left
 
 -- If we'd assumed `comm_semiring`, we could deduce this from `mul_apply_left`.
@@ -972,7 +968,6 @@ theorem mul_apply_right (f g : MonoidAlgebra k G) (x : G) :
     (f * g) x = Sum g fun a b => (f * single a b) x := by
       rw [← Finsupp.sum_apply, ← Finsupp.mul_sum, g.sum_single]
     _ = _ := by simp only [mul_single_apply, Finsupp.sum]
-    
 #align monoid_algebra.mul_apply_right MonoidAlgebra.mul_apply_right
 
 end

@@ -325,13 +325,11 @@ theorem center_normal : IsNormalSubgroup (center G) :=
       calc
         g * a⁻¹ = a⁻¹ * (g * a) * a⁻¹ := by simp [ha g]
         _ = a⁻¹ * g := by rw [← mul_assoc, mul_assoc] <;> simp
-        
     Normal := fun n ha g h =>
       calc
         h * (g * n * g⁻¹) = h * n := by simp [ha g, mul_assoc]
         _ = g * g⁻¹ * n * h := by rw [ha h] <;> simp
-        _ = g * n * g⁻¹ * h := by rw [mul_assoc g, ha g⁻¹, ← mul_assoc]
-         }
+        _ = g * n * g⁻¹ * h := by rw [mul_assoc g, ha g⁻¹, ← mul_assoc] }
 #align is_subgroup.center_normal IsSubgroup.center_normal
 #align is_add_subgroup.add_center_normal IsAddSubgroup.add_center_normal
 -/

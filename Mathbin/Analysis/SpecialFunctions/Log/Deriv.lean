@@ -267,7 +267,6 @@ theorem abs_log_sub_add_sum_range_le {x : ℝ} (h : |x| < 1) (n : ℕ) :
         have : 1 - |x| ≤ |1 - y| := le_trans (by linarith [hy.2]) (le_abs_self _)
         simp only [← pow_abs, abs_div, abs_neg]
         apply_rules [div_le_div, pow_nonneg, abs_nonneg, pow_le_pow_of_le_left]
-      
   -- third step: apply the mean value inequality
   have C : ‖F x - F 0‖ ≤ |x| ^ n / (1 - |x|) * ‖x - 0‖ :=
     by
@@ -310,7 +309,6 @@ theorem hasSum_pow_div_log_of_abs_lt_1 {x : ℝ} (h : |x| < 1) :
         norm_num
       _ ≤ |x| ^ i := by
         simpa [pow_succ'] using mul_le_of_le_one_right (pow_nonneg (abs_nonneg x) i) (le_of_lt h)
-      
 #align real.has_sum_pow_div_log_of_abs_lt_1 Real.hasSum_pow_div_log_of_abs_lt_1
 
 /-- Power series expansion of `log(1 + x) - log(1 - x)` for `|x| < 1`. -/

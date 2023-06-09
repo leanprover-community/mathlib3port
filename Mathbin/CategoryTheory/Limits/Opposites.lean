@@ -555,7 +555,6 @@ def opCospan {X Y Z : C} (f : X ⟶ Z) (g : Y ⟶ Z) :
     _ ≅ walkingCospanOpEquiv.Functor ⋙ walkingCospanOpEquiv.inverse ⋙ (cospan f g).op :=
       (Functor.associator _ _ _)
     _ ≅ walkingCospanOpEquiv.Functor ⋙ span f.op g.op := isoWhiskerLeft _ (spanOp f g).symm
-    
 #align category_theory.limits.op_cospan CategoryTheory.Limits.opCospan
 -/
 
@@ -581,7 +580,6 @@ def opSpan {X Y Z : C} (f : X ⟶ Y) (g : X ⟶ Z) :
     _ ≅ walkingSpanOpEquiv.Functor ⋙ walkingSpanOpEquiv.inverse ⋙ (span f g).op :=
       (Functor.associator _ _ _)
     _ ≅ walkingSpanOpEquiv.Functor ⋙ cospan f.op g.op := isoWhiskerLeft _ (cospanOp f g).symm
-    
 #align category_theory.limits.op_span CategoryTheory.Limits.opSpan
 -/
 

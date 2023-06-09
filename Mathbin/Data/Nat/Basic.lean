@@ -747,8 +747,7 @@ protected theorem div_pos {a b : ℕ} (hba : b ≤ a) (hb : 0 < b) : 0 < a / b :
       (calc
         a = a % b := by simpa [h] using (mod_add_div a b).symm
         _ < b := (Nat.mod_lt a hb)
-        _ ≤ a := hba
-        )
+        _ ≤ a := hba)
 #align nat.div_pos Nat.div_pos
 -/
 

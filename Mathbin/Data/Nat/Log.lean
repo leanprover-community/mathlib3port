@@ -269,7 +269,6 @@ theorem log_anti_left {b c n : ℕ} (hc : 1 < c) (hb : c ≤ b) : log b n ≤ lo
   calc
     c ^ log b n ≤ b ^ log b n := pow_le_pow_of_le_left' hb _
     _ ≤ n := pow_log_le_self _ hn
-    
 #align nat.log_anti_left Nat.log_anti_left
 -/
 
@@ -459,7 +458,6 @@ theorem clog_anti_left {b c n : ℕ} (hc : 1 < c) (hb : c ≤ b) : clog b n ≤ 
   calc
     n ≤ c ^ clog c n := le_pow_clog hc _
     _ ≤ b ^ clog c n := pow_le_pow_of_le_left (zero_lt_one.trans hc).le hb _
-    
 #align nat.clog_anti_left Nat.clog_anti_left
 -/
 

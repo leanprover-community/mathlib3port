@@ -464,7 +464,6 @@ theorem CompleteLattice.Independent.subtype_ne_bot_le_finrank_aux [FiniteDimensi
       hp.subtype_ne_bot_le_rank
     _ = Cardinal.lift.{w} (finrank K V : Cardinal.{v}) := by rw [finrank_eq_rank]
     _ = Cardinal.lift.{v} (finrank K V : Cardinal.{w}) := by simp
-    
 #align complete_lattice.independent.subtype_ne_bot_le_finrank_aux CompleteLattice.Independent.subtype_ne_bot_le_finrank_aux
 
 /-- If `p` is an independent family of subspaces of a finite-dimensional space `V`, then the
@@ -1302,7 +1301,6 @@ theorem span_eq_top_of_linearIndependent_of_card_eq_finrank {ι : Type _} [hι :
     calc
       Fintype.card ι = finrank K V := card_eq
       _ = 0 := dif_neg (mt is_noetherian.iff_rank_lt_aleph_0.mpr Fin)
-      
 #align span_eq_top_of_linear_independent_of_card_eq_finrank span_eq_top_of_linearIndependent_of_card_eq_finrank
 
 #print basisOfLinearIndependentOfCardEqFinrank /-
@@ -1604,7 +1602,6 @@ theorem exists_ker_pow_eq_ker_pow_succ [FiniteDimensional K V] (f : End K V) :
         n.succ ≤ (finrank K ↥(LinearMap.ker (f ^ n))).succ :=
           Nat.succ_le_succ (ih (Nat.le_of_succ_le hn))
         _ ≤ finrank K ↥(LinearMap.ker (f ^ n.succ)) := Nat.succ_le_of_lt h_finrank_lt_finrank
-        
   have h_le_finrank_V : ∀ n, finrank K (f ^ n).ker ≤ finrank K V := fun n => Submodule.finrank_le _
   have h_any_n_lt : ∀ n, n ≤ (finrank K V).succ → n ≤ finrank K V := fun n hn =>
     (h_le_ker_pow n hn).trans (h_le_finrank_V n)
@@ -1640,7 +1637,6 @@ theorem ker_pow_eq_ker_pow_finrank_of_le [FiniteDimensional K V] {f : End K V} {
     _ = (f ^ k).ker := by rw [ker_pow_constant hk _]
     _ = (f ^ (k + (finrank K V - k))).ker := (ker_pow_constant hk (finrank K V - k))
     _ = (f ^ finrank K V).ker := by rw [add_tsub_cancel_of_le h_k_le]
-    
 #align module.End.ker_pow_eq_ker_pow_finrank_of_le Module.End.ker_pow_eq_ker_pow_finrank_of_le
 -/
 
@@ -1676,7 +1672,6 @@ theorem cardinal_mk_eq_cardinal_mk_field_pow_rank (K V : Type u) [DivisionRing K
     (#V) = (#s →₀ K) := Quotient.sound ⟨hs.repr.to_equiv⟩
     _ = (#s → K) := (Quotient.sound ⟨Finsupp.equivFunOnFinite⟩)
     _ = _ := by rw [← Cardinal.lift_inj.1 hs.mk_eq_rank, Cardinal.power_def]
-    
 #align cardinal_mk_eq_cardinal_mk_field_pow_rank cardinal_mk_eq_cardinal_mk_field_pow_rank
 -/
 

@@ -46,7 +46,6 @@ theorem reClm_norm : ‖reClm‖ = 1 :=
     calc
       1 = ‖reClm 1‖ := by simp
       _ ≤ ‖reClm‖ := unit_le_op_norm _ _ (by simp)
-      
 #align complex.re_clm_norm Complex.reClm_norm
 
 @[simp]
@@ -60,7 +59,6 @@ theorem imClm_norm : ‖imClm‖ = 1 :=
     calc
       1 = ‖imClm I‖ := by simp
       _ ≤ ‖imClm‖ := unit_le_op_norm _ _ (by simp)
-      
 #align complex.im_clm_norm Complex.imClm_norm
 
 @[simp]

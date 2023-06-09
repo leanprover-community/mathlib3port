@@ -219,7 +219,6 @@ theorem rename_esymm (n : ℕ) (e : σ ≃ τ) : rename e (esymm σ R n) = esymm
     _ = ∑ t in powersetLen n (univ.map e.toEmbedding), ∏ i in t, X i := by
       simp [Finset.powersetLen_map, -Finset.map_univ_equiv]
     _ = ∑ t in powersetLen n univ, ∏ i in t, X i := by rw [Finset.map_univ_equiv]
-    
 #align mv_polynomial.rename_esymm MvPolynomial.rename_esymm
 
 theorem esymm_isSymmetric (n : ℕ) : IsSymmetric (esymm σ R n) := by intro; rw [rename_esymm]

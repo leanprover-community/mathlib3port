@@ -286,8 +286,7 @@ instance NeZero.one : NeZero (1 : M₀) :=
       x = 1 * x := by rw [one_mul]
       _ = 0 := by rw [h, MulZeroClass.zero_mul]
       _ = 1 * y := by rw [h, MulZeroClass.zero_mul]
-      _ = y := by rw [one_mul]
-      ⟩
+      _ = y := by rw [one_mul]⟩
 #align ne_zero.one NeZero.one
 
 variable {M₀}

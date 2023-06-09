@@ -88,7 +88,6 @@ theorem sum_choose_succ_mul {R : Type _} [Semiring R] (f : ℕ → ℕ → R) (n
       simp only [Nat.choose_succ_succ, Nat.cast_add, Nat.succ_sub_succ_eq_sub, tsub_zero, add_mul]
       rw [Finset.sum_add_distrib, ← A]
       abel
-    
 #align finset.sum_choose_succ_mul Finset.sum_choose_succ_mul
 
 /-- The sum along the antidiagonal of `(n+1).choose i * f i j` can be split into two sums along the
@@ -1404,7 +1403,6 @@ theorem iteratedFDerivWithin_add_apply {f g : E → F} (hf : ContDiffOn 𝕜 i f
             x (h 0) (Fin.tail h) :=
         by rw [Pi.add_def, fderivWithin_add (hu x hx) (hdf x hx) (hdg x hx)]; rfl
       _ = (iteratedFDerivWithin 𝕜 (i + 1) f s + iteratedFDerivWithin 𝕜 (i + 1) g s) x h := rfl
-      
 #align iterated_fderiv_within_add_apply iteratedFDerivWithin_add_apply
 
 /-- The iterated derivative of the sum of two functions is the sum of the iterated derivatives.
@@ -1483,7 +1481,6 @@ theorem iteratedFDerivWithin_neg_apply {f : E → F} (hu : UniqueDiffOn 𝕜 s) 
       _ = -(fderivWithin 𝕜 (iteratedFDerivWithin 𝕜 i f s) s) x (h 0) (Fin.tail h) := by
         rw [Pi.neg_def, fderivWithin_neg (hu x hx)]; rfl
       _ = -(iteratedFDerivWithin 𝕜 (i + 1) f s) x h := rfl
-      
 #align iterated_fderiv_within_neg_apply iteratedFDerivWithin_neg_apply
 
 theorem iteratedFDeriv_neg_apply {i : ℕ} {f : E → F} :
@@ -1765,7 +1762,6 @@ theorem iteratedFDerivWithin_const_smul_apply (hf : ContDiffOn 𝕜 i f s) (hu :
       _ = (a • fderivWithin 𝕜 (iteratedFDerivWithin 𝕜 i f s)) s x (h 0) (Fin.tail h) := by
         rw [Pi.smul_def, fderivWithin_const_smul (hu x hx) (hdf x hx)]; rfl
       _ = a • iteratedFDerivWithin 𝕜 (i + 1) f s x h := rfl
-      
 #align iterated_fderiv_within_const_smul_apply iteratedFDerivWithin_const_smul_apply
 
 theorem iteratedFDeriv_const_smul_apply {x : E} (hf : ContDiff 𝕜 i f) :
@@ -2516,7 +2512,6 @@ theorem ContinuousLinearMap.norm_iteratedFDerivWithin_le_of_bilinear_aux {Du Eu 
           apply Finset.sum_congr rfl fun i hi => _
           rw [Nat.succ_sub (Nat.lt_succ_iff.1 (Finset.mem_range.1 hi)),
             iteratedFDerivWithin_succ_eq_comp_right hs hx, LinearIsometryEquiv.norm_map]
-        
     have I2 :
       ‖iteratedFDerivWithin 𝕜 n (fun y : Du => B.precompL Du (fderivWithin 𝕜 f s y) (g y)) s x‖ ≤
         ‖B‖ *
@@ -2541,7 +2536,6 @@ theorem ContinuousLinearMap.norm_iteratedFDerivWithin_le_of_bilinear_aux {Du Eu 
           congr 1
           apply Finset.sum_congr rfl fun i hi => _
           rw [iteratedFDerivWithin_succ_eq_comp_right hs hx, LinearIsometryEquiv.norm_map]
-        
     have J :
       iteratedFDerivWithin 𝕜 n (fun y : Du => fderivWithin 𝕜 (fun y : Du => B (f y) (g y)) s y) s
           x =
@@ -2624,7 +2618,6 @@ theorem ContinuousLinearMap.norm_iteratedFDerivWithin_le_of_bilinear (B : E →L
       _ ≤ ‖B‖ * ‖isoE y‖ * ‖isoF x‖ :=
         (mul_le_mul_of_nonneg_right (ContinuousLinearMap.le_op_norm _ _) (norm_nonneg _))
       _ = ‖B‖ * ‖y‖ * ‖x‖ := by simp only [LinearIsometryEquiv.norm_map]
-      
   let su := isoD ⁻¹' s
   have hsu : UniqueDiffOn 𝕜 su := isoD.to_continuous_linear_equiv.unique_diff_on_preimage_iff.2 hs
   let xu := isoD.symm x
@@ -2916,7 +2909,6 @@ theorem norm_iteratedFDerivWithin_comp_le_aux {Fu Gu : Type u} [NormedAddCommGro
     _ = (n + 1)! * C * D ^ (n + 1) := by
       simp only [mul_assoc, mul_one, Finset.sum_const, Finset.card_range, nsmul_eq_mul,
         Nat.factorial_succ, Nat.cast_mul]
-    
 #align norm_iterated_fderiv_within_comp_le_aux norm_iteratedFDerivWithin_comp_le_aux
 
 /-- If the derivatives within a set of `g` at `f x` are bounded by `C`, and the `i`-th derivative

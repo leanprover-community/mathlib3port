@@ -135,7 +135,6 @@ theorem exact_of_split {A B C : 𝒜} {f : A ⟶ B} {g : B ⟶ C} {χ : C ⟶ B}
       calc
         (kernel_subobject g).arrow ≫ φ ≫ f = (kernel_subobject g).arrow ≫ 𝟙 B := _
         _ = (kernel_subobject g).arrow := category.comp_id _
-        
       rw [← H, preadditive.comp_add]
       simp only [add_zero, zero_comp, kernel_subobject_arrow_comp_assoc] }
 #align category_theory.exact_of_split CategoryTheory.exact_of_split

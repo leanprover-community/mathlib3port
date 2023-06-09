@@ -136,7 +136,6 @@ theorem scaleRoots_eval₂_mul {p : S[X]} (f : S →+* R) (r : R) (s : S) :
         exact le_nat_degree_of_ne_zero (polynomial.mem_support_iff.mp hi))
     _ = f s ^ p.natDegree * p.support.Sum fun i : ℕ => f (p.coeff i) * r ^ i := Finset.mul_sum.symm
     _ = f s ^ p.natDegree * eval₂ f r p := by simp [eval₂_eq_sum, sum_def]
-    
 #align polynomial.scale_roots_eval₂_mul Polynomial.scaleRoots_eval₂_mul
 
 theorem scaleRoots_eval₂_eq_zero {p : S[X]} (f : S →+* R) {r : R} {s : S} (hr : eval₂ f r p = 0) :

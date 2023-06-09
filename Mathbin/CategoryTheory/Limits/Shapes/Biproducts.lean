@@ -264,11 +264,11 @@ def whiskerIsBilimitIff {f : J → C} (c : Bicone f) (g : K ≃ J) :
     (c.whisker g).IsBilimit ≃ c.IsBilimit :=
   by
   refine' equivOfSubsingletonOfSubsingleton (fun hc => ⟨_, _⟩) fun hc => ⟨_, _⟩
-  · let this := is_limit.of_iso_limit hc.is_limit (bicone.whisker_to_cone c g)
-    let this := (is_limit.postcompose_hom_equiv (discrete.functor_comp f g).symm _) this
+  · let this.1 := is_limit.of_iso_limit hc.is_limit (bicone.whisker_to_cone c g)
+    let this.1 := (is_limit.postcompose_hom_equiv (discrete.functor_comp f g).symm _) this
     exact is_limit.of_whisker_equivalence (discrete.equivalence g) this
-  · let this := is_colimit.of_iso_colimit hc.is_colimit (bicone.whisker_to_cocone c g)
-    let this := (is_colimit.precompose_hom_equiv (discrete.functor_comp f g) _) this
+  · let this.1 := is_colimit.of_iso_colimit hc.is_colimit (bicone.whisker_to_cocone c g)
+    let this.1 := (is_colimit.precompose_hom_equiv (discrete.functor_comp f g) _) this
     exact is_colimit.of_whisker_equivalence (discrete.equivalence g) this
   · apply is_limit.of_iso_limit _ (bicone.whisker_to_cone c g).symm
     apply (is_limit.postcompose_hom_equiv (discrete.functor_comp f g).symm _).symm _

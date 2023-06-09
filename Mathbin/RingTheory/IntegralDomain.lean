@@ -256,7 +256,6 @@ theorem sum_hom_units_eq_zero (f : G →* R) (hf : f ≠ 1) : (∑ g : G, f g) =
         _ =
         0 :=
       smul_zero _
-    
   · -- remaining goal 1
     show (univ.filter fun g : G => f.to_hom_units g = u).card = c
     apply card_fiber_eq_of_mem_range f.to_hom_units
@@ -279,7 +278,6 @@ theorem sum_hom_units_eq_zero (f : G →* R) (hf : f ≠ 1) : (∑ g : G, f g) =
           ⟨n % orderOf x, mem_range.2 (Nat.mod_lt _ (orderOf_pos _)), by
             rw [← pow_eq_mod_orderOf, hn]⟩
     _ = 0 := _
-    
   rw [← mul_left_inj' hx1, MulZeroClass.zero_mul, geom_sum_mul, coe_coe]
   norm_cast
   simp [pow_orderOf_eq_one]

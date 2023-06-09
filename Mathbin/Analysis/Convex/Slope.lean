@@ -250,7 +250,6 @@ theorem ConvexOn.secant_mono_aux1 (hf : ConvexOn 𝕜 s f) {x y z : 𝕜} (hx : 
     f y = f ((z - y) / (z - x) * x + (y - x) / (z - x) * z) := _
     _ ≤ (z - y) / (z - x) * f x + (y - x) / (z - x) * f z := (hf.2 hx hz ha hb _)
     _ = ((z - y) * f x + (y - x) * f z) / (z - x) := _
-    
   · congr 1
     field_simp [hxy'.ne', hyz'.ne', hxz'.ne']
     ring
@@ -303,7 +302,6 @@ theorem StrictConvexOn.secant_strict_mono_aux1 (hf : StrictConvexOn 𝕜 s f) {x
     f y = f ((z - y) / (z - x) * x + (y - x) / (z - x) * z) := _
     _ < (z - y) / (z - x) * f x + (y - x) / (z - x) * f z := (hf.2 hx hz (by linarith) ha hb _)
     _ = ((z - y) * f x + (y - x) * f z) / (z - x) := _
-    
   · congr 1
     field_simp [hxy'.ne', hyz'.ne', hxz'.ne']
     ring

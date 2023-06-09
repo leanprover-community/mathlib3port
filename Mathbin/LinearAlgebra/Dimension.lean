@@ -1206,7 +1206,6 @@ theorem rank_span_of_finset (s : Finset V) : Module.rank K (span K (↑s : Set V
     Module.rank K (span K (↑s : Set V)) ≤ (#(↑s : Set V)) := rank_span_le ↑s
     _ = s.card := by rw [Finset.coe_sort_coe, Cardinal.mk_coe_finset]
     _ < ℵ₀ := Cardinal.nat_lt_aleph0 _
-    
 #align rank_span_of_finset rank_span_of_finset
 -/
 
@@ -1538,7 +1537,6 @@ theorem rank_add_le (f g : V →ₗ[K] V') : rank (f + g) ≤ rank f + rank g :=
             show f x + g x ∈ (f.range ⊔ g.range : Submodule K V') from
               mem_sup.2 ⟨_, ⟨x, rfl⟩, _, ⟨x, rfl⟩, rfl⟩
     _ ≤ rank f + rank g := Submodule.rank_add_le_rank_add_rank _ _
-    
 #align linear_map.rank_add_le LinearMap.rank_add_le
 
 theorem rank_finset_sum_le {η} (s : Finset η) (f : η → V →ₗ[K] V') :

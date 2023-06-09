@@ -99,7 +99,6 @@ theorem isConj_one_left {a : α} : IsConj a 1 ↔ a = 1 :=
   calc
     IsConj a 1 ↔ IsConj 1 a := ⟨IsConj.symm, IsConj.symm⟩
     _ ↔ a = 1 := isConj_one_right
-    
 #align is_conj_one_left isConj_one_left
 
 end CancelMonoid

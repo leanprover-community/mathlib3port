@@ -588,8 +588,7 @@ theorem Prod.snd_exp [CompleteSpace 𝔹] (x : 𝔸 × 𝔹) : (exp 𝕂 x).snd 
 theorem Pi.exp_apply {ι : Type _} {𝔸 : ι → Type _} [Fintype ι] [∀ i, NormedRing (𝔸 i)]
     [∀ i, NormedAlgebra 𝕂 (𝔸 i)] [∀ i, CompleteSpace (𝔸 i)] (x : ∀ i, 𝔸 i) (i : ι) :
     exp 𝕂 x i = exp 𝕂 (x i) :=
-  letI-- Lean struggles to infer this instance due to it wanting `[Π i, semi_normed_ring (𝔸 i)]`
-   : NormedAlgebra 𝕂 (∀ i, 𝔸 i) := Pi.normedAlgebra _
+  letI : NormedAlgebra 𝕂 (∀ i, 𝔸 i) := Pi.normedAlgebra _
   map_exp _ (Pi.evalRingHom 𝔸 i) (continuous_apply _) x
 #align pi.exp_apply Pi.exp_apply
 

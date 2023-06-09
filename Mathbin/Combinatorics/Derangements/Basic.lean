@@ -82,7 +82,6 @@ protected def subtypeEquiv (p : α → Prop) [DecidablePred p] :
     _ ≃ { f : Perm α // ∀ a, ¬p a ↔ a ∈ fixedPoints f } :=
       subtypeEquivRight fun f => by
         simp_rw [exists_prop, ← forall_and, ← iff_iff_implies_and_implies]
-    
 #align derangements.subtype_equiv derangements.subtypeEquiv
 -/
 
@@ -116,7 +115,6 @@ def atMostOneFixedPointEquivSum_derangements [DecidableEq α] (a : α) :
           (subtype_equiv_right fun f => mem_derangements_iff_fixed_points_eq_empty.symm)
       rw [eq_comm, Set.ext_iff]
       simp_rw [Set.mem_compl_iff, Classical.not_not]
-    
 #align derangements.at_most_one_fixed_point_equiv_sum_derangements derangements.atMostOneFixedPointEquivSum_derangements
 -/
 
@@ -207,7 +205,6 @@ def derangementsOptionEquivSigmaAtMostOneFixedPoint :
     _ ≃ Σ a : α, ↥(equiv.remove_none.fiber (some a)) :=
       (sigma_option_equiv_of_some _ fiber_none_is_false)
     _ ≃ Σ a : α, {f : perm α | fixed_points f ⊆ {a}} := by simp_rw [equiv.remove_none.fiber_some]
-    
 #align derangements.derangements_option_equiv_sigma_at_most_one_fixed_point derangements.derangementsOptionEquivSigmaAtMostOneFixedPoint
 -/
 

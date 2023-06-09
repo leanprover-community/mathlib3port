@@ -77,7 +77,6 @@ theorem card_image_polynomial_eval [DecidableEq R] [Fintype R] {p : R[X]} (hp : 
         congr_arg card (by simp [Finset.ext_iff, mem_roots_sub_C hp])
       _ ≤ (p - C a).roots.card := (Multiset.toFinset_card_le _)
       _ ≤ _ := card_roots_sub_C' hp
-      
 #align finite_field.card_image_polynomial_eval FiniteField.card_image_polynomial_eval
 -/
 
@@ -109,7 +108,6 @@ theorem exists_root_sum_quadratic [Fintype R] {f g : R[X]} (hf2 : degree f = 2) 
         rw [card_disjoint_union hd] <;>
           simp [nat_degree_eq_of_degree_eq_some hf2, nat_degree_eq_of_degree_eq_some hg2, bit0,
             mul_add]
-      
 #align finite_field.exists_root_sum_quadratic FiniteField.exists_root_sum_quadratic
 
 end Polynomial
@@ -136,7 +134,6 @@ theorem pow_card_sub_one_eq_one (a : K) (ha : a ≠ 0) : a ^ (q - 1) = 1 :=
       classical
       rw [← Fintype.card_units, pow_card_eq_one]
       rfl
-    
 #align finite_field.pow_card_sub_one_eq_one FiniteField.pow_card_sub_one_eq_one
 
 #print FiniteField.pow_card /-
@@ -221,7 +218,6 @@ theorem sum_pow_units [Fintype Kˣ] (i : ℕ) :
   calc
     (∑ x : Kˣ, φ x) = if φ = 1 then Fintype.card Kˣ else 0 := sum_hom_units φ
     _ = if q - 1 ∣ i then -1 else 0 := _
-    
   suffices q - 1 ∣ i ↔ φ = 1 by
     simp only [this]
     split_ifs with h h; swap; rfl
@@ -252,7 +248,6 @@ theorem sum_pow_lt_card_sub_one (i : ℕ) (h : i < q - 1) : (∑ x : K, x ^ i) =
         add_zero]
     _ = ∑ x : Kˣ, x ^ i := by rw [← this, univ.sum_map φ]; rfl
     _ = 0 := by rw [sum_pow_units K i, if_neg]; exact hiq
-    
 #align finite_field.sum_pow_lt_card_sub_one FiniteField.sum_pow_lt_card_sub_one
 
 open Polynomial
@@ -280,7 +275,6 @@ theorem X_pow_card_sub_X_ne_zero (hp : 1 < p) : (X ^ p - X : K'[X]) ≠ 0 :=
     calc
       1 < _ := hp
       _ = _ := (X_pow_card_sub_X_natDegree_eq K' hp).symm
-      
 #align finite_field.X_pow_card_sub_X_ne_zero FiniteField.X_pow_card_sub_X_ne_zero
 
 theorem X_pow_card_pow_sub_X_ne_zero (hn : n ≠ 0) (hp : 1 < p) : (X ^ p ^ n - X : K'[X]) ≠ 0 :=

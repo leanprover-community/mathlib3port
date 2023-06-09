@@ -460,7 +460,6 @@ theorem eq_zero_of_mem_fdo_of_t_zpow_mem_fdo {n : ℤ} (hz : z ∈ 𝒟ᵒ) (hg 
     |(n : ℝ)| ≤ |z.re| + |z.re + (n : ℝ)| := abs_add' (n : ℝ) z.re
     _ < 1 / 2 + 1 / 2 := (add_lt_add h₁ h₂)
     _ = 1 := add_halves 1
-    
 #align modular_group.eq_zero_of_mem_fdo_of_T_zpow_mem_fdo ModularGroup.eq_zero_of_mem_fdo_of_t_zpow_mem_fdo
 
 /-- Any `z : ℍ` can be moved to `𝒟` by an element of `SL(2,ℤ)`  -/
@@ -538,7 +537,6 @@ theorem abs_c_le_one (hz : z ∈ 𝒟ᵒ) (hg : g • z ∈ 𝒟ᵒ) : |↑ₘg 
       rw [special_linear_group.im_smul_eq_div_norm_sq, div_pow]
       ring
     _ ≤ 16 := by rw [← mul_pow]; linarith
-    
 #align modular_group.abs_c_le_one ModularGroup.abs_c_le_one
 
 /-- An auxiliary result en route to `modular_group.eq_smul_self_of_mem_fdo_mem_fdo`. -/

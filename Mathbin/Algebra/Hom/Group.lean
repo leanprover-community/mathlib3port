@@ -1746,7 +1746,6 @@ def ofMapMulInv {H : Type _} [Group H] (f : G → H)
       f (x * y) = f x * (f <| 1 * 1⁻¹ * y⁻¹)⁻¹ := by
         simp only [one_mul, inv_one, ← map_div, inv_inv]
       _ = f x * f y := by simp only [map_div]; simp only [mul_right_inv, one_mul, inv_inv]
-      
 #align monoid_hom.of_map_mul_inv MonoidHom.ofMapMulInv
 #align add_monoid_hom.of_map_add_neg AddMonoidHom.ofMapAddNeg
 

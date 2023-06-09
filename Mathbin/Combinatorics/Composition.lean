@@ -356,7 +356,6 @@ def embedding (i : Fin c.length) : Fin (c.blocksFun i) ↪o Fin n :=
         c.sizeUpTo i + c.blocksFun i = c.sizeUpTo (i + 1) := (c.sizeUpTo_succ _).symm
         _ ≤ c.sizeUpTo c.length := (monotone_sum_take _ i.2)
         _ = n := c.sizeUpTo_length
-        
 #align composition.embedding Composition.embedding
 -/
 
@@ -473,7 +472,6 @@ theorem disjoint_range {i₁ i₂ : Fin c.length} (h : i₁ ≠ i₂) :
     (x : ℕ) < c.size_up_to (i₁ : ℕ).succ := (c.mem_range_embedding_iff.1 hx₁).2
     _ ≤ c.size_up_to (i₂ : ℕ) := (monotone_sum_take _ A)
     _ ≤ x := (c.mem_range_embedding_iff.1 hx₂).1
-    
 #align composition.disjoint_range Composition.disjoint_range
 
 theorem mem_range_embedding (j : Fin n) : j ∈ Set.range (c.Embedding (c.index j)) :=
@@ -635,7 +633,6 @@ theorem eq_ones_iff_length {c : Composition n} : c = ones n ↔ c.length = n :=
         rw [← hj] at i_blocks 
         exact Finset.sum_lt_sum (fun i hi => by simp [blocks_fun]) ⟨j, Finset.mem_univ _, i_blocks⟩
       _ = n := c.sum_blocks_fun
-      
 #align composition.eq_ones_iff_length Composition.eq_ones_iff_length
 -/
 
@@ -717,7 +714,6 @@ theorem ne_single_iff {n : ℕ} (hn : 0 < n) {c : Composition n} :
         _ < ∑ k, c.blocks_fun k :=
           Finset.single_lt_sum ji (Finset.mem_univ _) (Finset.mem_univ _) (c.one_le_blocks_fun j)
             fun _ _ _ => zero_le _
-        
     simpa using Fintype.card_eq_one_of_forall_eq this
 #align composition.ne_single_iff Composition.ne_single_iff
 -/

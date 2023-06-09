@@ -302,10 +302,8 @@ theorem Basis.op_nnnorm_le {ι : Type _} [Fintype ι] (v : Basis ι 𝕜 E) {u :
         (suffices _ from mul_le_mul_of_nonneg_right this (zero_le M)
         calc
           (∑ i, ‖v.equiv_fun e i‖₊) ≤ Fintype.card ι • ‖φ e‖₊ := Pi.sum_nnnorm_apply_le_nnnorm _
-          _ ≤ Fintype.card ι • (‖φ‖₊ * ‖e‖₊) := nsmul_le_nsmul_of_le_right (φ.le_op_nnnorm e) _
-          )
+          _ ≤ Fintype.card ι • (‖φ‖₊ * ‖e‖₊) := nsmul_le_nsmul_of_le_right (φ.le_op_nnnorm e) _)
       _ = Fintype.card ι • ‖φ‖₊ * M * ‖e‖₊ := by simp only [smul_mul_assoc, mul_right_comm]
-      
 #align basis.op_nnnorm_le Basis.op_nnnorm_le
 
 theorem Basis.op_norm_le {ι : Type _} [Fintype ι] (v : Basis ι 𝕜 E) {u : E →L[𝕜] F} {M : ℝ}
@@ -380,7 +378,6 @@ instance [FiniteDimensional 𝕜 E] [SecondCountableTopology F] :
     dist x y ≤ dist x (Φ x) + dist (Φ x) y := dist_triangle _ _ _
     _ = dist x (Φ x) + dist y (Φ y) := by simp [Φ, hxy, dist_comm]
     _ ≤ ε := by linarith [hn x, hn y]
-    
 
 variable (𝕜 E)
 
@@ -488,7 +485,6 @@ theorem finiteDimensional_of_isCompact_closed_ball₀ {r : ℝ} (rpos : 0 < r)
     calc
       ‖c‖ * ‖f n‖ ≤ r / R * R := mul_le_mul hc.2.le (fle n) (norm_nonneg _) rRpos.le
       _ = r := by field_simp [(zero_lt_one.trans Rgt).ne']
-      
   obtain ⟨x, hx, φ, φmono, φlim⟩ :
     ∃ (x : E) (H : x ∈ Metric.closedBall (0 : E) r) (φ : ℕ → ℕ),
       StrictMono φ ∧ tendsto (g ∘ φ) at_top (𝓝 x) :=
@@ -505,7 +501,6 @@ theorem finiteDimensional_of_isCompact_closed_ball₀ {r : ℝ} (rpos : 0 < r)
       apply mul_le_mul_of_nonneg_left (lef _ _ (ne_of_gt _)) (norm_nonneg _)
       exact φmono (Nat.lt_succ_self N)
     _ < ‖c‖ := hN (N + 1) (Nat.le_succ N)
-    
 #align finite_dimensional_of_is_compact_closed_ball₀ finiteDimensional_of_isCompact_closed_ball₀
 
 /-- **Riesz's theorem**: if a closed ball of positive radius is compact in a vector space, then the

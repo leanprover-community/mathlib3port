@@ -1316,8 +1316,7 @@ theorem support_neg [AddGroup G] (f : α →₀ G) : support (-f) = support f :=
   Finset.Subset.antisymm support_mapRange
     (calc
       support f = support (- -f) := congr_arg support (neg_neg _).symm
-      _ ⊆ support (-f) := support_mapRange
-      )
+      _ ⊆ support (-f) := support_mapRange)
 #align finsupp.support_neg Finsupp.support_neg
 
 theorem support_sub [DecidableEq α] [AddGroup G] {f g : α →₀ G} :

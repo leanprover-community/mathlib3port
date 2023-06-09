@@ -450,7 +450,6 @@ theorem mem_colon_singleton {N : Submodule R M} {x : M} {r : R} :
     r ∈ N.colon (Submodule.span R {x}) ↔ ∀ a : R, r • a • x ∈ N := by
       simp [Submodule.mem_colon, Submodule.mem_span_singleton]
     _ ↔ r • x ∈ N := by simp_rw [smul_comm r] <;> exact SetLike.forall_smul_mem_iff
-    
 #align submodule.mem_colon_singleton Submodule.mem_colon_singleton
 -/
 
@@ -879,7 +878,6 @@ theorem pow_le_self {n : ℕ} (hn : n ≠ 0) : I ^ n ≤ I :=
   calc
     I ^ n ≤ I ^ 1 := pow_le_pow (Nat.pos_of_ne_zero hn)
     _ = I := pow_one _
-    
 #align ideal.pow_le_self Ideal.pow_le_self
 -/
 
@@ -1129,8 +1127,7 @@ theorem radical_pow (n : ℕ) (H : n > 0) : radical (I ^ n) = radical I :=
             radical (I ^ (n + 1)) = radical I ⊓ radical (I ^ n) := by rw [pow_succ];
               exact radical_mul _ _
             _ = radical I ⊓ radical I := by rw [ih H]
-            _ = radical I := inf_idem
-            )
+            _ = radical I := inf_idem)
         fun H => H ▸ (pow_one I).symm ▸ rfl)
     H
 #align ideal.radical_pow Ideal.radical_pow
@@ -1209,9 +1206,9 @@ theorem subset_union {R : Type u} [Ring R] {I J K : Ideal R} :
       Set.Subset.trans h <| Set.subset_union_right J K⟩
 #align ideal.subset_union Ideal.subset_union
 
-/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:564:6: unsupported: specialize @hyp -/
-/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:564:6: unsupported: specialize @hyp -/
-/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:564:6: unsupported: specialize @hyp -/
+/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:567:6: unsupported: specialize @hyp -/
+/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:567:6: unsupported: specialize @hyp -/
+/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:567:6: unsupported: specialize @hyp -/
 theorem subset_union_prime' {R : Type u} [CommRing R] {s : Finset ι} {f : ι → Ideal R} {a b : ι}
     (hp : ∀ i ∈ s, IsPrime (f i)) {I : Ideal R} :
     ((I : Set R) ⊆ f a ∪ f b ∪ ⋃ i ∈ (↑s : Set ι), f i) ↔ I ≤ f a ∨ I ≤ f b ∨ ∃ i ∈ s, I ≤ f i :=
@@ -1900,7 +1897,6 @@ theorem map.isMaximal {I : Ideal R} (H : IsMaximal I) : IsMaximal (map f I) := b
       I = comap f (map f I) := ((rel_iso_of_bijective f hf).right_inv I).symm
       _ = comap f ⊤ := by rw [h]
       _ = ⊤ := by rw [comap_top]
-      
 #align ideal.map.is_maximal Ideal.map.isMaximal
 
 end Bijective

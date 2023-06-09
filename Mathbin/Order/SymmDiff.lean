@@ -484,7 +484,6 @@ theorem symmDiff_symmDiff_left : a ∆ b ∆ c = a \ (b ⊔ c) ⊔ b \ (a ⊔ c)
     _ = a \ (b ⊔ c) ⊔ b \ (a ⊔ c) ⊔ (c \ (a ⊔ b) ⊔ c ⊓ a ⊓ b) := by
       rw [sdiff_symmDiff', @sup_comm _ _ (c ⊓ a ⊓ b), symmDiff_sdiff]
     _ = a \ (b ⊔ c) ⊔ b \ (a ⊔ c) ⊔ c \ (a ⊔ b) ⊔ a ⊓ b ⊓ c := by ac_rfl
-    
 #align symm_diff_symm_diff_left symmDiff_symmDiff_left
 
 theorem symmDiff_symmDiff_right :
@@ -494,7 +493,6 @@ theorem symmDiff_symmDiff_right :
     _ = a \ (b ⊔ c) ⊔ a ⊓ b ⊓ c ⊔ (b \ (c ⊔ a) ⊔ c \ (b ⊔ a)) := by
       rw [sdiff_symmDiff', @sup_comm _ _ (a ⊓ b ⊓ c), symmDiff_sdiff]
     _ = a \ (b ⊔ c) ⊔ b \ (a ⊔ c) ⊔ c \ (a ⊔ b) ⊔ a ⊓ b ⊓ c := by ac_rfl
-    
 #align symm_diff_symm_diff_right symmDiff_symmDiff_right
 
 theorem symmDiff_assoc : a ∆ b ∆ c = a ∆ (b ∆ c) := by
@@ -570,7 +568,6 @@ theorem symmDiff_eq_left : a ∆ b = a ↔ b = ⊥ :=
   calc
     a ∆ b = a ↔ a ∆ b = a ∆ ⊥ := by rw [symmDiff_bot]
     _ ↔ b = ⊥ := by rw [symmDiff_right_inj]
-    
 #align symm_diff_eq_left symmDiff_eq_left
 
 @[simp]
@@ -812,7 +809,6 @@ theorem symmDiff_symmDiff_right' :
       · congr 1
         rw [inf_comm, inf_assoc]
       · apply inf_left_right_swap
-    
 #align symm_diff_symm_diff_right' symmDiff_symmDiff_right'
 
 variable {a b c}

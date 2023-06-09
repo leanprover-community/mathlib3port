@@ -127,7 +127,6 @@ theorem sum_range_choose_halfway (m : Nat) : (∑ i in range (m + 1), choose (2 
       _ = ∑ i in range (2 * m + 2), choose (2 * m + 1) i := (sum_range_add_sum_Ico _ (by linarith))
       _ = 2 ^ (2 * m + 1) := (sum_range_choose (2 * m + 1))
       _ = 2 * 4 ^ m := by rw [pow_succ, pow_mul]; rfl
-      
 #align nat.sum_range_choose_halfway Nat.sum_range_choose_halfway
 -/
 
@@ -149,7 +148,6 @@ theorem four_pow_le_two_mul_add_one_mul_central_binom (n : ℕ) :
     _ ≤ ∑ m in range (2 * n + 1), choose (2 * n) (2 * n / 2) :=
       (sum_le_sum fun i hi => choose_le_middle i (2 * n))
     _ = (2 * n + 1) * choose (2 * n) n := by simp
-    
 #align nat.four_pow_le_two_mul_add_one_mul_central_binom Nat.four_pow_le_two_mul_add_one_mul_central_binom
 -/
 

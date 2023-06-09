@@ -176,8 +176,7 @@ theorem pi_le_four : π ≤ 4 :=
   (div_le_div_right (show (0 : ℝ) < 2 by norm_num)).1
     (calc
       π / 2 ≤ 2 := pi_div_two_le_two
-      _ = 4 / 2 := by norm_num
-      )
+      _ = 4 / 2 := by norm_num)
 #align real.pi_le_four Real.pi_le_four
 
 theorem pi_pos : 0 < π :=
@@ -612,14 +611,12 @@ theorem sin_eq_zero_iff_of_lt_of_lt {x : ℝ} (hx₁ : -π < x) (hx₂ : x < π)
         lt_irrefl (0 : ℝ) <|
           calc
             0 < sin x := sin_pos_of_pos_of_lt_pi h0 hx₂
-            _ = 0 := h
-            )
+            _ = 0 := h)
       (le_of_not_gt fun h0 =>
         lt_irrefl (0 : ℝ) <|
           calc
             0 = sin x := h.symm
-            _ < 0 := sin_neg_of_neg_of_neg_pi_lt h0 hx₁
-            ),
+            _ < 0 := sin_neg_of_neg_of_neg_pi_lt h0 hx₁),
     fun h => by simp [h]⟩
 #align real.sin_eq_zero_iff_of_lt_of_lt Real.sin_eq_zero_iff_of_lt_of_lt
 
@@ -688,13 +685,11 @@ theorem cos_lt_cos_of_nonneg_of_le_pi {x y : ℝ} (hx₁ : 0 ≤ x) (hy₂ : y �
       (fun hx =>
         calc
           cos y ≤ 0 := cos_nonpos_of_pi_div_two_le_of_le hy (by linarith [pi_pos])
-          _ < cos x := cos_pos_of_mem_Ioo ⟨by linarith, hx⟩
-          )
+          _ < cos x := cos_pos_of_mem_Ioo ⟨by linarith, hx⟩)
       fun hx =>
       calc
         cos y < 0 := cos_neg_of_pi_div_two_lt_of_lt (by linarith) (by linarith [pi_pos])
         _ = cos x := by rw [hx, cos_pi_div_two]
-        
   | Or.inr hx, Or.inl hy => by linarith
   | Or.inr hx, Or.inr hy =>
     neg_lt_neg_iff.1
@@ -1115,8 +1110,7 @@ theorem tan_lt_tan_of_lt_of_lt_pi_div_two {x y : ℝ} (hx₁ : -(π / 2) < x) (h
       (fun hy0 =>
         calc
           tan x ≤ 0 := tan_nonpos_of_nonpos_of_neg_pi_div_two_le hx0 (le_of_lt hx₁)
-          _ < tan y := tan_pos_of_pos_of_lt_pi_div_two hy0 hy₂
-          )
+          _ < tan y := tan_pos_of_pos_of_lt_pi_div_two hy0 hy₂)
       fun hy0 => by
       rw [← hy0, tan_zero] <;> exact tan_neg_of_neg_of_pi_div_two_lt (hy0.symm ▸ hxy) hx₁
   | Or.inr hx0, Or.inl hy0 => by linarith
@@ -1271,7 +1265,6 @@ theorem cos_pi_div_two : cos (π / 2) = 0 :=
   calc
     cos (π / 2) = Real.cos (π / 2) := by rw [of_real_cos] <;> simp
     _ = 0 := by simp
-    
 #align complex.cos_pi_div_two Complex.cos_pi_div_two
 -/
 
@@ -1281,7 +1274,6 @@ theorem sin_pi_div_two : sin (π / 2) = 1 :=
   calc
     sin (π / 2) = Real.sin (π / 2) := by rw [of_real_sin] <;> simp
     _ = 1 := by simp
-    
 #align complex.sin_pi_div_two Complex.sin_pi_div_two
 -/
 

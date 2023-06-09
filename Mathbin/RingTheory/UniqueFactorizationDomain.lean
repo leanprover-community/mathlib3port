@@ -324,7 +324,6 @@ theorem WfDvdMonoid.of_exists_prime_factors : WfDvdMonoid α :=
         (Multiset.card_add _ _).symm
       _ = Multiset.card (Classical.choose (pf b h)) :=
         Multiset.card_eq_card_of_rel (prime_factors_unique _ (Classical.choose_spec (pf _ h)).1 _)
-      
     · convert (Classical.choose_spec (pf c cne0)).2.symm
       rw [Con, Multiset.prod_zero]
     · intro x hadd
@@ -415,7 +414,6 @@ theorem irreducible_iff_prime_of_exists_unique_irreducible_factors [CancelCommMo
               rw [hx, Multiset.prod_cons] <;> exact hfx.2.mul_left _
             _ ~ᵤ fa.Prod * fb.Prod := (hfa.2.symm.mul_mul hfb.2.symm)
             _ = _ := by rw [Multiset.prod_add]
-            
         exact
           let ⟨q, hqf, hq⟩ := Multiset.exists_mem_of_rel_of_mem h (Multiset.mem_cons_self p _)
           (Multiset.mem_add.1 hqf).elim
@@ -512,8 +510,7 @@ theorem exists_mem_factors_of_dvd {a p : α} (ha0 : a ≠ 0) (hp : Irreducible p
           Multiset.prod (factors a) ~ᵤ a := factors_prod ha0
           _ = p * b := hb
           _ ~ᵤ Multiset.prod (p ::ₘ factors b) := by
-            rw [Multiset.prod_cons] <;> exact (factors_prod hb0).symm.mul_left _
-          )
+            rw [Multiset.prod_cons] <;> exact (factors_prod hb0).symm.mul_left _)
   Multiset.exists_mem_of_rel_of_mem this (by simp)
 #align unique_factorization_monoid.exists_mem_factors_of_dvd UniqueFactorizationMonoid.exists_mem_factors_of_dvd
 
@@ -667,8 +664,7 @@ theorem exists_mem_normalizedFactors_of_dvd {a p : α} (ha0 : a ≠ 0) (hp : Irr
           Multiset.prod (normalizedFactors a) ~ᵤ a := normalizedFactors_prod ha0
           _ = p * b := hb
           _ ~ᵤ Multiset.prod (p ::ₘ normalizedFactors b) := by
-            rw [Multiset.prod_cons] <;> exact (normalized_factors_prod hb0).symm.mul_left _
-          )
+            rw [Multiset.prod_cons] <;> exact (normalized_factors_prod hb0).symm.mul_left _)
   Multiset.exists_mem_of_rel_of_mem this (by simp)
 #align unique_factorization_monoid.exists_mem_normalized_factors_of_dvd UniqueFactorizationMonoid.exists_mem_normalizedFactors_of_dvd
 
@@ -1209,7 +1205,6 @@ theorem multiplicative_of_coprime (f : α → β) (a b : α) (h0 : f 0 = 0)
       _ = 0 := by simp only [h1 isUnit_one, hf1, MulZeroClass.mul_zero]
       _ = f a * f (b * 1) := by simp only [h1 isUnit_one, hf1, MulZeroClass.mul_zero]
       _ = f a * f b := by rw [mul_one]
-      
   have h1' : f 1 = 1 := (mul_left_inj' hf1).mp (by rw [← h1 isUnit_one, one_mul, one_mul])
   haveI : Nontrivial α := ⟨⟨_, _, ha0⟩⟩
   letI : NormalizationMonoid α := UniqueFactorizationMonoid.normalizationMonoid

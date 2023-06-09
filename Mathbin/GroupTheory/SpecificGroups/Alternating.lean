@@ -99,7 +99,7 @@ end Equiv.Perm
 theorem two_mul_card_alternatingGroup [Nontrivial α] :
     2 * card (alternatingGroup α) = card (Perm α) :=
   by
-  let this := (QuotientGroup.quotientKerEquivOfSurjective _ (sign_surjective α)).toEquiv
+  let this.1 := (QuotientGroup.quotientKerEquivOfSurjective _ (sign_surjective α)).toEquiv
   rw [← Fintype.card_units_int, ← Fintype.card_congr this]
   exact (Subgroup.card_eq_card_quotient_mul_card_subgroup _).symm
 #align two_mul_card_alternating_group two_mul_card_alternatingGroup

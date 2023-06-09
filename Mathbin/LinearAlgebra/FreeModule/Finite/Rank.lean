@@ -257,7 +257,6 @@ theorem Submodule.finrank_le_finrank_of_le {s t : Submodule R M} [Module.Finite 
     finrank R s = finrank R (s.comap t.Subtype) :=
       (Submodule.comapSubtypeEquivOfLe hst).finrank_eq.symm
     _ ≤ finrank R t := Submodule.finrank_le _
-    
 #align submodule.finrank_le_finrank_of_le Submodule.finrank_le_finrank_of_le
 
 end

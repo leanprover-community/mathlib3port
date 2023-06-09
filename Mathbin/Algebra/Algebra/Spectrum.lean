@@ -253,13 +253,11 @@ theorem unit_mem_mul_iff_mem_swap_mul {a b : A} {r : Rˣ} : ↑r ∈ σ (a * b) 
           1 - y * x + y * ((1 - x * y) * h.unit.inv) * x :=
         by noncomm_ring
       _ = 1 := by simp only [Units.inv_eq_val_inv, IsUnit.mul_val_inv, mul_one, sub_add_cancel]
-      
     calc
       (1 + y * (IsUnit.unit h).inv * x) * (1 - y * x) =
           1 - y * x + y * (h.unit.inv * (1 - x * y)) * x :=
         by noncomm_ring
       _ = 1 := by simp only [Units.inv_eq_val_inv, IsUnit.val_inv_mul, mul_one, sub_add_cancel]
-      
   simpa only [mem_iff, not_iff_not, Algebra.algebraMap_eq_smul_one, ← Units.smul_def,
     IsUnit.smul_sub_iff_sub_inv_smul, ← smul_mul_assoc, ← mul_smul_comm r⁻¹ b a] using
     Iff.intro (h₁ (r⁻¹ • a) b) (h₁ b (r⁻¹ • a))
@@ -380,7 +378,6 @@ theorem one_eq [Nontrivial A] : σ (1 : A) = {1} :=
   calc
     σ (1 : A) = σ (↑ₐ 1) := by rw [Algebra.algebraMap_eq_smul_one, one_smul]
     _ = {1} := scalar_eq 1
-    
 #align spectrum.one_eq spectrum.one_eq
 
 /-- the assumption `(σ a).nonempty` is necessary and cannot be removed without

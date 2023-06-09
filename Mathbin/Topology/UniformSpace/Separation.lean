@@ -337,7 +337,6 @@ instance separationSetoid.uniformSpace {α : Type u} [u : UniformSpace α] :
             (u.uniformity.lift' fun s : Set (α × α) => compRel s (compRel s s)) :=
         by rw [map_lift'_eq] <;> exact monotone_id.comp_rel (monotone_id.comp_rel monotone_id)
       _ ≤ map (fun p : α × α => (⟦p.1⟧, ⟦p.2⟧)) u.uniformity := map_mono comp_le_uniformity3
-      
   isOpen_uniformity s :=
     by
     have :
@@ -521,7 +520,6 @@ theorem map_unique {f : α → β} (hf : UniformContinuous f)
     calc
       map f ⟦a⟧ = ⟦f a⟧ := map_mk hf a
       _ = g ⟦a⟧ := congr_fun comm a
-      
 #align uniform_space.separation_quotient.map_unique UniformSpace.SeparationQuotient.map_unique
 -/
 

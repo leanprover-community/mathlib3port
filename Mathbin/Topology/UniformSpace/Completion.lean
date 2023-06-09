@@ -106,7 +106,6 @@ private theorem symm_gen : map Prod.swap ((𝓤 α).lift' gen) ≤ (𝓤 α).lif
           have h := fun p : CauchyFilter α × CauchyFilter α => @Filter.prod_comm _ _ p.2.val p.1.val
           simp [Function.comp, h, -Subtype.val_eq_coe, mem_map']
           exact le_rfl)
-    
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -138,7 +137,6 @@ private theorem comp_gen : (((𝓤 α).lift' gen).lift' fun s => compRel s s) �
       exact monotone_id.comp_rel monotone_id
       exact monotone_gen
     _ ≤ (𝓤 α).lift' gen := lift'_mono comp_le_uniformity le_rfl
-    
 
 instance : UniformSpace (CauchyFilter α) :=
   UniformSpace.ofCore
@@ -172,8 +170,7 @@ theorem uniformInducing_pureCauchy : UniformInducing (pure_cauchy : α → Cauch
       comap (fun x : α × α => (pure_cauchy x.fst, pure_cauchy x.snd)) ((𝓤 α).lift' gen) =
           (𝓤 α).lift' ((preimage fun x : α × α => (pure_cauchy x.fst, pure_cauchy x.snd)) ∘ gen) :=
         comap_lift'_eq
-      _ = 𝓤 α := by simp [this]
-      ⟩
+      _ = 𝓤 α := by simp [this]⟩
 #align Cauchy.uniform_inducing_pure_cauchy CauchyFilter.uniformInducing_pureCauchy
 
 theorem uniformEmbedding_pureCauchy : UniformEmbedding (pure_cauchy : α → CauchyFilter α) :=

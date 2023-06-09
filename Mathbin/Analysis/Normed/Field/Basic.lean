@@ -282,8 +282,7 @@ instance Prod.nonUnitalSeminormedRing [NonUnitalSeminormedRing β] :
         _ ≤ max ‖x.1‖ ‖x.2‖ * max ‖y.2‖ ‖y.1‖ := by
           apply max_mul_mul_le_max_mul_max <;> simp [norm_nonneg]
         _ = max ‖x.1‖ ‖x.2‖ * max ‖y.1‖ ‖y.2‖ := by simp [max_comm]
-        _ = ‖x‖ * ‖y‖ := rfl
-         }
+        _ = ‖x‖ * ‖y‖ := rfl }
 #align prod.non_unital_semi_normed_ring Prod.nonUnitalSeminormedRing
 -/
 
@@ -300,8 +299,7 @@ instance Pi.nonUnitalSeminormedRing {π : ι → Type _} [Fintype ι]
               Finset.univ.sup ((fun i => ‖x i‖₊) * fun i => ‖y i‖₊) :=
             Finset.sup_mono_fun fun b hb => norm_mul_le _ _
           _ ≤ (Finset.univ.sup fun i => ‖x i‖₊) * Finset.univ.sup fun i => ‖y i‖₊ :=
-            Finset.sup_mul_le_mul_sup_of_nonneg _ (fun i _ => zero_le _) fun i _ => zero_le _
-           }
+            Finset.sup_mul_le_mul_sup_of_nonneg _ (fun i _ => zero_le _) fun i _ => zero_le _ }
 #align pi.non_unital_semi_normed_ring Pi.nonUnitalSeminormedRing
 -/
 
@@ -534,7 +532,6 @@ instance (priority := 100) semi_normed_ring_top_monoid [NonUnitalSeminormedRing 
               rw [mul_sub, sub_mul, sub_add_sub_cancel]
             _ ≤ ‖e.1‖ * ‖e.2 - x.2‖ + ‖e.1 - x.1‖ * ‖x.2‖ :=
               norm_add_le_of_le (norm_mul_le _ _) (norm_mul_le _ _)
-            
         refine' squeeze_zero (fun e => norm_nonneg _) this _
         convert
           ((continuous_fst.tendsto x).norm.mul
@@ -690,7 +687,6 @@ instance (priority := 100) NormedDivisionRing.to_hasContinuousInv₀ : HasContin
       _ = ‖r - e‖ / ‖r‖ / ‖e‖ := by field_simp [mul_comm]
       _ ≤ ‖r - e‖ / ‖r‖ / ε :=
         div_le_div_of_le_left (div_nonneg (norm_nonneg _) (norm_nonneg _)) ε0 he.le
-      
   refine' squeeze_zero' (eventually_of_forall fun _ => norm_nonneg _) this _
   refine' (((continuous_const.sub continuous_id).norm.div_const _).div_const _).tendsto' _ _ _
   simp

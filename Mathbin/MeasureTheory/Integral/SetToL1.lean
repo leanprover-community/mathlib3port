@@ -500,7 +500,6 @@ theorem setToSimpleFunc_add (T : Set α → E →L[ℝ] F) (h_add : FinMeasAddit
       by
       rw [map_set_to_simple_func T h_add hp_pair Prod.snd_zero,
         map_set_to_simple_func T h_add hp_pair Prod.fst_zero]
-    
 #align measure_theory.simple_func.set_to_simple_func_add MeasureTheory.SimpleFunc.setToSimpleFunc_add
 
 theorem setToSimpleFunc_neg (T : Set α → E →L[ℝ] F) (h_add : FinMeasAdditive μ T) {f : α →ₛ E}
@@ -511,7 +510,6 @@ theorem setToSimpleFunc_neg (T : Set α → E →L[ℝ] F) (h_add : FinMeasAddit
       by
       rw [map_set_to_simple_func T h_add hf neg_zero, set_to_simple_func, ← sum_neg_distrib]
       exact Finset.sum_congr rfl fun x h => ContinuousLinearMap.map_neg _ _
-    
 #align measure_theory.simple_func.set_to_simple_func_neg MeasureTheory.SimpleFunc.setToSimpleFunc_neg
 
 theorem setToSimpleFunc_sub (T : Set α → E →L[ℝ] F) (h_add : FinMeasAdditive μ T) {f g : α →ₛ E}
@@ -536,7 +534,6 @@ theorem setToSimpleFunc_smul_real (T : Set α → E →L[ℝ] F) (h_add : FinMea
     _ = ∑ x in f.range, c • T (f ⁻¹' {x}) x :=
       (Finset.sum_congr rfl fun b hb => by rw [ContinuousLinearMap.map_smul (T (f ⁻¹' {b})) c b])
     _ = c • setToSimpleFunc T f := by simp only [set_to_simple_func, smul_sum, smul_smul, mul_comm]
-    
 #align measure_theory.simple_func.set_to_simple_func_smul_real MeasureTheory.SimpleFunc.setToSimpleFunc_smul_real
 
 theorem setToSimpleFunc_smul {E} [NormedAddCommGroup E] [NormedField 𝕜] [NormedSpace 𝕜 E]
@@ -550,7 +547,6 @@ theorem setToSimpleFunc_smul {E} [NormedAddCommGroup E] [NormedField 𝕜] [Norm
       rw [smul_zero]
     _ = ∑ x in f.range, c • T (f ⁻¹' {x}) x := (Finset.sum_congr rfl fun b hb => by rw [h_smul])
     _ = c • setToSimpleFunc T f := by simp only [set_to_simple_func, smul_sum, smul_smul, mul_comm]
-    
 #align measure_theory.simple_func.set_to_simple_func_smul MeasureTheory.SimpleFunc.setToSimpleFunc_smul
 
 section Order
@@ -619,7 +615,6 @@ theorem norm_setToSimpleFunc_le_sum_op_norm {m : MeasurableSpace α} (T : Set α
     ‖∑ x in f.range, T (f ⁻¹' {x}) x‖ ≤ ∑ x in f.range, ‖T (f ⁻¹' {x}) x‖ := norm_sum_le _ _
     _ ≤ ∑ x in f.range, ‖T (f ⁻¹' {x})‖ * ‖x‖ := by refine' Finset.sum_le_sum fun b hb => _;
       simp_rw [ContinuousLinearMap.le_op_norm]
-    
 #align measure_theory.simple_func.norm_set_to_simple_func_le_sum_op_norm MeasureTheory.SimpleFunc.norm_setToSimpleFunc_le_sum_op_norm
 
 theorem norm_setToSimpleFunc_le_sum_mul_norm (T : Set α → F →L[ℝ] F') {C : ℝ}
@@ -633,7 +628,6 @@ theorem norm_setToSimpleFunc_le_sum_mul_norm (T : Set α → F →L[ℝ] F') {C 
         mul_le_mul_of_nonneg_right (hT_norm _ <| SimpleFunc.measurableSet_fiber _ _) <|
           norm_nonneg _)
     _ ≤ C * ∑ x in f.range, (μ (f ⁻¹' {x})).toReal * ‖x‖ := by simp_rw [mul_sum, ← mul_assoc]
-    
 #align measure_theory.simple_func.norm_set_to_simple_func_le_sum_mul_norm MeasureTheory.SimpleFunc.norm_setToSimpleFunc_le_sum_mul_norm
 
 theorem norm_setToSimpleFunc_le_sum_mul_norm_of_integrable (T : Set α → E →L[ℝ] F') {C : ℝ}
@@ -654,7 +648,6 @@ theorem norm_setToSimpleFunc_le_sum_mul_norm_of_integrable (T : Set α → E →
             simple_func.measure_preimage_lt_top_of_integrable _ hf hb)
           (norm_nonneg _)
     _ ≤ C * ∑ x in f.range, (μ (f ⁻¹' {x})).toReal * ‖x‖ := by simp_rw [mul_sum, ← mul_assoc]
-    
 #align measure_theory.simple_func.norm_set_to_simple_func_le_sum_mul_norm_of_integrable MeasureTheory.SimpleFunc.norm_setToSimpleFunc_le_sum_mul_norm_of_integrable
 
 theorem setToSimpleFunc_indicator (T : Set α → F →L[ℝ] F') (hT_empty : T ∅ = 0)
@@ -1298,7 +1291,6 @@ theorem norm_setToL1_le_norm_setToL1SCLM (hT : DominatedFinMeasAdditive μ T C) 
       rw [NNReal.coe_one, one_mul]
       rfl
     _ = ‖setToL1SCLM α E μ hT‖ := by rw [NNReal.coe_one, one_mul]
-    
 #align measure_theory.L1.norm_set_to_L1_le_norm_set_to_L1s_clm MeasureTheory.L1.norm_setToL1_le_norm_setToL1SCLM
 
 theorem norm_setToL1_le_mul_norm (hT : DominatedFinMeasAdditive μ T C) (hC : 0 ≤ C)
@@ -1307,7 +1299,6 @@ theorem norm_setToL1_le_mul_norm (hT : DominatedFinMeasAdditive μ T C) (hC : 0 
     ‖setToL1 hT f‖ ≤ ‖setToL1SCLM α E μ hT‖ * ‖f‖ :=
       ContinuousLinearMap.le_of_op_norm_le _ (norm_setToL1_le_norm_setToL1SCLM hT) _
     _ ≤ C * ‖f‖ := mul_le_mul (norm_setToL1SCLM_le hT hC) le_rfl (norm_nonneg _) hC
-    
 #align measure_theory.L1.norm_set_to_L1_le_mul_norm MeasureTheory.L1.norm_setToL1_le_mul_norm
 
 theorem norm_setToL1_le_mul_norm' (hT : DominatedFinMeasAdditive μ T C) (f : α →₁[μ] E) :
@@ -1317,7 +1308,6 @@ theorem norm_setToL1_le_mul_norm' (hT : DominatedFinMeasAdditive μ T C) (f : α
       ContinuousLinearMap.le_of_op_norm_le _ (norm_setToL1_le_norm_setToL1SCLM hT) _
     _ ≤ max C 0 * ‖f‖ :=
       mul_le_mul (norm_setToL1SCLM_le' hT) le_rfl (norm_nonneg _) (le_max_right _ _)
-    
 #align measure_theory.L1.norm_set_to_L1_le_mul_norm' MeasureTheory.L1.norm_setToL1_le_mul_norm'
 
 theorem norm_setToL1_le (hT : DominatedFinMeasAdditive μ T C) (hC : 0 ≤ C) : ‖setToL1 hT‖ ≤ C :=
@@ -1713,7 +1703,6 @@ theorem continuous_L1_toL1 {μ' : Measure α} (c' : ℝ≥0∞) (hc' : c' ≠ �
     _ = ε / 2 := by refine' mul_div_cancel' (ε / 2) _; rw [Ne.def, to_real_eq_zero_iff];
       simp [hc', hc'0]
     _ < ε := half_lt_self hε_pos
-    
 #align measure_theory.continuous_L1_to_L1 MeasureTheory.continuous_L1_toL1
 
 theorem setToFun_congr_measure_of_integrable {μ' : Measure α} (c' : ℝ≥0∞) (hc' : c' ≠ ∞)

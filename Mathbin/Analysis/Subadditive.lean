@@ -71,7 +71,6 @@ theorem apply_mul_add_le (k n r) : u (k * n + r) ≤ k * u n + u r :=
     _ ≤ u n + u (k * n + r) := (h _ _)
     _ ≤ u n + (k * u n + u r) := (add_le_add_left IH _)
     _ = (k + 1 : ℕ) * u n + u r := by simp <;> ring
-    
 #align subadditive.apply_mul_add_le Subadditive.apply_mul_add_le
 
 theorem eventually_div_lt_of_div_lt {L : ℝ} {n : ℕ} (hn : n ≠ 0) (hL : u n / n < L) :
@@ -103,7 +102,6 @@ theorem eventually_div_lt_of_div_lt {L : ℝ} {n : ℕ} (hn : n ≠ 0) (hL : u n
       _ = (s * n + r) * w + (u r - r * w) := by ring
       _ = p * w + (u r - r * w) := by rw [hp]; simp only [Nat.cast_add, Nat.cast_mul]
       _ ≤ p * w + x := add_le_add_left (hx _ (Nat.mod_lt _ hn.bot_lt)) _
-      
   have B : ∀ᶠ p in at_top, u p / p ≤ w + x / p :=
     by
     refine' eventually_at_top.2 ⟨1, fun p hp => _⟩

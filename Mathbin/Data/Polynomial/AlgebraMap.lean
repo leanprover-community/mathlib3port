@@ -493,7 +493,6 @@ theorem eval_mul_X_sub_C {p : R[X]} (r : R) : (p * (X - C r)).eval r = 0 :=
       (p * (X - C r)).natDegree ≤ p.nat_degree + (X - C r).natDegree := nat_degree_mul_le
       _ ≤ p.nat_degree + 1 := (add_le_add_left (nat_degree_X_sub_C_le _) _)
       _ < p.nat_degree + 2 := lt_add_one _
-      
   rw [sum_over_range' _ _ (p.nat_degree + 2) bound]
   swap
   · simp

@@ -60,7 +60,6 @@ theorem bound (ha : 0 < a) (hb : 0 < b) (hc : 0 < c) :
       by ring
     _ ≥ 0 :=
       add_nonneg (add_nonneg (mul_nonneg zero_le_two (sq_nonneg _)) (sq_nonneg _)) (sq_nonneg _)
-    
 #align imo2001_q2.bound Imo2001Q2.bound
 
 theorem imo2001_q2' (ha : 0 < a) (hb : 0 < b) (hc : 0 < c) :
@@ -73,7 +72,6 @@ theorem imo2001_q2' (ha : 0 < a) (hb : 0 < b) (hc : 0 < c) :
   calc
     _ ≥ _ := add_le_add (add_le_add (bound ha hb hc) (bound hb hc ha)) (bound hc ha hb)
     _ = 1 := by rw [h₁, h₂, ← add_div, ← add_div, div_self <| ne_of_gt <| denom_pos ha hb hc]
-    
 #align imo2001_q2.imo2001_q2' Imo2001Q2.imo2001_q2'
 
 end imo2001_q2
@@ -88,6 +86,5 @@ theorem imo2001_q2 (ha : 0 < a) (hb : 0 < b) (hc : 0 < c) :
   calc
     1 ≤ _ := imo2001_q2' (rpow_pos_of_pos ha _) (rpow_pos_of_pos hb _) (rpow_pos_of_pos hc _)
     _ = _ := by rw [h3 ha, h3 hb, h3 hc]
-    
 #align imo2001_q2 imo2001_q2
 

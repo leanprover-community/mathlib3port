@@ -113,7 +113,6 @@ theorem norm_dslope_le_div_of_mapsTo_ball (hd : DifferentiableOn ℂ f (ball c R
       by
       refine' schwarz_aux (g.differentiable.comp_differentiable_on hd) (maps_to.comp _ h_maps) hz
       simpa only [hg', NNReal.coe_one, one_mul] using g.lipschitz.maps_to_ball hg₀ (f c) R₂
-    
 #align complex.norm_dslope_le_div_of_maps_to_ball Complex.norm_dslope_le_div_of_mapsTo_ball
 
 /-- Equality case in the **Schwarz Lemma**: in the setup of `norm_dslope_le_div_of_maps_to_ball`, if

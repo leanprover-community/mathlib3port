@@ -462,7 +462,6 @@ theorem closed_range_toBcf : IsClosed (range (toBcf : C₀(α, β) → α →ᵇ
       dist (f x) 0 ≤ dist (g.to_bcf x) (f x) + dist (g x) 0 := dist_triangle_left _ _ _
       _ < dist g.to_bcf f + ε / 2 := (add_lt_add_of_le_of_lt (dist_coe_le_dist x) hx)
       _ < ε := by simpa [add_halves ε] using add_lt_add_right hg (ε / 2)
-      
   exact ⟨⟨f.to_continuous_map, this⟩, by ext; rfl⟩
 #align zero_at_infty_continuous_map.closed_range_to_bcf ZeroAtInftyContinuousMap.closed_range_toBcf
 

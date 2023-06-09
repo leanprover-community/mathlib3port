@@ -53,7 +53,6 @@ theorem mul_tendsto_nhds_zero_right (x : α) :
     |b| = |b - x + x| := by rw [sub_add_cancel b x]
     _ ≤ |b - x| + |x| := (abs_add (b - x) x)
     _ ≤ 2 * (1 + |x|) := by linarith
-    
 #align mul_tendsto_nhds_zero_right mul_tendsto_nhds_zero_right
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -85,7 +84,6 @@ theorem nhds_eq_map_mul_left_nhds_one {x₀ : α} (hx₀ : x₀ ≠ 0) :
       _ < |x₀| * (i / |x₀|) := (mul_lt_mul' le_rfl hx (by positivity) (abs_pos.2 hx₀))
       _ = |x₀| * i / |x₀| := by ring
       _ = i := mul_div_cancel_left i fun h => hx₀ (abs_eq_zero.1 h)
-      
   · obtain ⟨i, hi, hit⟩ := h
     refine' ⟨i * |x₀|, mul_pos hi (abs_pos.2 hx₀), fun x hx => _⟩
     have : |x / x₀ - 1| < i
@@ -95,7 +93,6 @@ theorem nhds_eq_map_mul_left_nhds_one {x₀ : α} (hx₀ : x₀ ≠ 0) :
       _ = |x - x₀| / |x₀| := (abs_div (x - x₀) x₀)
       _ < i * |x₀| / |x₀| := (div_lt_div_of_lt (abs_pos.2 hx₀) hx)
       _ = i := by rw [← mul_div_assoc', div_self (ne_of_lt <| abs_pos.2 hx₀).symm, mul_one]
-      
     specialize hit (x / x₀) this
     rwa [mul_div_assoc', mul_div_cancel_left x hx₀] at hit 
 #align nhds_eq_map_mul_left_nhds_one nhds_eq_map_mul_left_nhds_one
@@ -126,7 +123,6 @@ theorem mul_tendsto_nhds_one_nhds_one :
       _ ≤ 1 - ε / 2 - ε / 2 + ε / 2 * (ε / 2) := (le_add_of_nonneg_right (by positivity))
       _ = (1 - ε / 2) * (1 - ε / 2) := by ring_nf
       _ ≤ (1 - ε / 4) * (1 - ε / 4) := mul_le_mul (by linarith) (by linarith) (by linarith) hε'
-      
   ·
     calc
       (1 + ε / 4) * (1 + ε / 4) = 1 + ε / 2 + ε / 4 * (ε / 4) := by ring_nf
@@ -138,7 +134,6 @@ theorem mul_tendsto_nhds_one_nhds_one :
             (by linarith))
           (1 + ε / 2))
       _ ≤ 1 + ε := by ring_nf
-      
 #align mul_tendsto_nhds_one_nhds_one mul_tendsto_nhds_one_nhds_one
 
 -- see Note [lower instance priority]
@@ -171,8 +166,7 @@ instance (priority := 100) LinearOrderedField.continuousMul : ContinuousMul α :
       _ = 𝓝 (x₀ * y₀) := by
         rw [← Filter.map_map, ← nhds_eq_map_mul_right_nhds_one hy₀,
           nhds_eq_map_mul_left_nhds_one hy₀, Filter.map_map, key₂, ←
-          nhds_eq_map_mul_left_nhds_one hxy]
-      ⟩
+          nhds_eq_map_mul_left_nhds_one hxy]⟩
 #align linear_ordered_field.has_continuous_mul LinearOrderedField.continuousMul
 
 end continuous_mul

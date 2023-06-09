@@ -192,8 +192,7 @@ theorem ofFn_mul {m n} (f : Fin (m * n) → α) :
                 calc
                   ↑i * n + j < (i + 1) * n :=
                     (add_lt_add_left j.Prop _).trans_eq (add_one_mul _ _).symm
-                  _ ≤ _ := Nat.mul_le_mul_right _ i.Prop
-                  ⟩) :=
+                  _ ≤ _ := Nat.mul_le_mul_right _ i.Prop⟩) :=
   by
   induction' m with m IH
   · simp_rw [of_fn_zero, MulZeroClass.zero_mul, of_fn_zero, join]
@@ -213,8 +212,7 @@ theorem ofFn_mul' {m n} (f : Fin (m * n) → α) :
                 calc
                   m * i + j < m * (i + 1) :=
                     (add_lt_add_left j.Prop _).trans_eq (mul_add_one _ _).symm
-                  _ ≤ _ := Nat.mul_le_mul_left _ i.Prop
-                  ⟩) :=
+                  _ ≤ _ := Nat.mul_le_mul_left _ i.Prop⟩) :=
   by simp_rw [mul_comm m n, mul_comm m, of_fn_mul, Fin.cast_mk]
 #align list.of_fn_mul' List.ofFn_mul'
 -/

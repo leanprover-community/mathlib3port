@@ -65,8 +65,6 @@ theorem natDegree_comp_le : natDegree (p.comp q) ≤ natDegree p * natDegree q :
                 WithBot.coe_le_coe.2 <|
                   mul_le_mul_of_nonneg_right (le_natDegree_of_ne_zero (mem_support_iff.1 hn))
                     (Nat.zero_le _)
-              
-        
 #align polynomial.nat_degree_comp_le Polynomial.natDegree_comp_le
 -/
 
@@ -109,7 +107,6 @@ theorem natDegree_C_mul_le (a : R) (f : R[X]) : (C a * f).natDegree ≤ f.natDeg
     (C a * f).natDegree ≤ (C a).natDegree + f.natDegree := natDegree_mul_le
     _ = 0 + f.natDegree := by rw [nat_degree_C a]
     _ = f.natDegree := zero_add _
-    
 #align polynomial.nat_degree_C_mul_le Polynomial.natDegree_C_mul_le
 
 theorem natDegree_mul_C_le (f : R[X]) (a : R) : (f * C a).natDegree ≤ f.natDegree :=
@@ -117,7 +114,6 @@ theorem natDegree_mul_C_le (f : R[X]) (a : R) : (f * C a).natDegree ≤ f.natDeg
     (f * C a).natDegree ≤ f.natDegree + (C a).natDegree := natDegree_mul_le
     _ = f.natDegree + 0 := by rw [nat_degree_C a]
     _ = f.natDegree := add_zero _
-    
 #align polynomial.nat_degree_mul_C_le Polynomial.natDegree_mul_C_le
 
 #print Polynomial.eq_natDegree_of_le_mem_support /-
@@ -133,8 +129,7 @@ theorem natDegree_C_mul_eq_of_mul_eq_one {ai : R} (au : ai * a = 1) :
     (calc
       p.natDegree = (1 * p).natDegree := by nth_rw 1 [← one_mul p]
       _ = (C ai * (C a * p)).natDegree := by rw [← C_1, ← au, RingHom.map_mul, ← mul_assoc]
-      _ ≤ (C a * p).natDegree := natDegree_C_mul_le ai (C a * p)
-      )
+      _ ≤ (C a * p).natDegree := natDegree_C_mul_le ai (C a * p))
 #align polynomial.nat_degree_C_mul_eq_of_mul_eq_one Polynomial.natDegree_C_mul_eq_of_mul_eq_one
 
 theorem natDegree_mul_C_eq_of_mul_eq_one {ai : R} (au : a * ai = 1) :
@@ -143,8 +138,7 @@ theorem natDegree_mul_C_eq_of_mul_eq_one {ai : R} (au : a * ai = 1) :
     (calc
       p.natDegree = (p * 1).natDegree := by nth_rw 1 [← mul_one p]
       _ = (p * C a * C ai).natDegree := by rw [← C_1, ← au, RingHom.map_mul, ← mul_assoc]
-      _ ≤ (p * C a).natDegree := natDegree_mul_C_le (p * C a) ai
-      )
+      _ ≤ (p * C a).natDegree := natDegree_mul_C_le (p * C a) ai)
 #align polynomial.nat_degree_mul_C_eq_of_mul_eq_one Polynomial.natDegree_mul_C_eq_of_mul_eq_one
 
 /-- Although not explicitly stated, the assumptions of lemma `nat_degree_mul_C_eq_of_mul_ne_zero`

@@ -84,7 +84,6 @@ theorem prod_single_index {a : α} {b : M} {h : α → M → N} (h_zero : h a 0 
       prod_of_support_subset _ support_single_subset h fun x hx =>
         (mem_singleton.1 hx).symm ▸ h_zero
     _ = h a b := by simp
-    
 #align finsupp.prod_single_index Finsupp.prod_single_index
 #align finsupp.sum_single_index Finsupp.sum_single_index
 

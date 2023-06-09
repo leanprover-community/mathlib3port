@@ -187,7 +187,6 @@ theorem finrank_linear_map' (F : Type u) (K : Type v) (V : Type w) [Field F] [Fi
       finrank F K * finrank K (V →ₗ[F] K) = finrank F (V →ₗ[F] K) := finrank_mul_finrank _ _ _
       _ = finrank F V * finrank F K := (finrank_linearMap F V K)
       _ = finrank F K * finrank F V := mul_comm _ _
-      
 #align finite_dimensional.finrank_linear_map' FiniteDimensional.finrank_linear_map'
 -/
 

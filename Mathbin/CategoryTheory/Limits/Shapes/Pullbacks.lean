@@ -2491,7 +2491,7 @@ variable [HasPullback (f' ≫ f) g]
 noncomputable def pullbackRightPullbackFstIso :
     pullback f' (pullback.fst : pullback f g ⟶ _) ≅ pullback (f' ≫ f) g :=
   by
-  let this :=
+  let this.1 :=
     big_square_is_pullback (pullback.snd : pullback f' (pullback.fst : pullback f g ⟶ _) ⟶ _)
       pullback.snd f' f pullback.fst pullback.fst g pullback.condition pullback.condition
       (pullback_is_pullback _ _) (pullback_is_pullback _ _)

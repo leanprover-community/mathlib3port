@@ -989,7 +989,6 @@ theorem eval₂_mul_monomial :
         _ = (p * monomial (single n 1) 1).eval₂ f g * f a * s.prod fun n e => g n ^ e := by
           simp [ih, prod_single_index, prod_add_index, pow_one, pow_add, mul_assoc, mul_left_comm,
             f.map_one, -add_comm]
-        
 #align mv_polynomial.eval₂_mul_monomial MvPolynomial.eval₂_mul_monomial
 
 theorem eval₂_mul_C : (p * C a).eval₂ f g = p.eval₂ f g * f a :=

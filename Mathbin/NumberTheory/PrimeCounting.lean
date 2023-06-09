@@ -104,7 +104,6 @@ theorem primeCounting'_add_le {a k : ℕ} (h0 : 0 < a) (h1 : a < k) (n : ℕ) :
       by
       rw [add_le_add_iff_left]
       exact Ico_filter_coprime_le k n h0
-    
 #align nat.prime_counting'_add_le Nat.primeCounting'_add_le
 
 end Nat

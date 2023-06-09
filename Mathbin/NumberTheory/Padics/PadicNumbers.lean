@@ -957,7 +957,6 @@ theorem norm_int_lt_one_iff_dvd (k : ℤ) : ‖(k : ℚ_[p])‖ < 1 ↔ ↑p ∣
       ‖(k : ℚ_[p])‖ = ‖((k : ℚ) : ℚ_[p])‖ := by norm_cast
       _ = padicNorm p k := (padicNormE.eq_padicNorm _)
       _ = 1 := _
-      
     rw [padicNorm]
     split_ifs with H
     · exfalso
@@ -977,7 +976,6 @@ theorem norm_int_lt_one_iff_dvd (k : ℤ) : ‖(k : ℚ_[p])‖ < 1 ↔ ↑p ∣
       _ ≤ ‖(p : ℚ_[p])‖ * 1 :=
         mul_le_mul le_rfl (by simpa using norm_int_le_one _) (norm_nonneg _) (norm_nonneg _)
       _ < 1 := _
-      
     · rw [mul_one, padicNormE.norm_p]
       apply inv_lt_one
       exact_mod_cast hp.1.one_lt
@@ -1043,7 +1041,6 @@ theorem padicNormE_lim_le {f : CauSeq ℚ_[p] norm} {a : ℝ} (ha : 0 < a) (hf :
     ‖f.lim‖ = ‖f.lim - f N + f N‖ := by simp
     _ ≤ max ‖f.lim - f N‖ ‖f N‖ := (padicNormE.nonarchimedean _ _)
     _ ≤ a := max_le (le_of_lt (hN _ le_rfl)) (hf _)
-    
 #align padic.padic_norm_e_lim_le Padic.padicNormE_lim_le
 
 open Filter Set

@@ -166,7 +166,6 @@ theorem mul_eq_one_comm : A ⬝ B = 1 ↔ B ⬝ A = 1 :=
     _ = B ⬝ (A ⬝ B ⬝ ⅟ B) := by simp only [Matrix.mul_assoc]
     _ = B ⬝ ⅟ B := by rw [h, Matrix.one_mul]
     _ = 1 := Matrix.mul_invOf_self B
-    
 #align matrix.mul_eq_one_comm Matrix.mul_eq_one_comm
 
 variable (A B)
@@ -426,7 +425,6 @@ theorem nonsing_inv_nonsing_inv (h : IsUnit A.det) : A⁻¹⁻¹ = A :=
     _ = A ⬝ A⁻¹ ⬝ A⁻¹⁻¹ := by rw [A.mul_nonsing_inv h]
     _ = A := by
       rw [Matrix.mul_assoc, A⁻¹.mul_nonsing_inv (A.is_unit_nonsing_inv_det h), Matrix.mul_one]
-    
 #align matrix.nonsing_inv_nonsing_inv Matrix.nonsing_inv_nonsing_inv
 
 theorem isUnit_nonsing_inv_det_iff {A : Matrix n n α} : IsUnit A⁻¹.det ↔ IsUnit A.det := by

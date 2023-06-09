@@ -172,7 +172,6 @@ theorem iterate_verschiebung_mul (x y : 𝕎 R) (i j : ℕ) :
     _ = (verschiebung^[i]) ((verschiebung^[j]) ((frobenius^[i]) y * (frobenius^[j]) x)) := _
     _ = (verschiebung^[i + j]) ((frobenius^[i]) y * (frobenius^[j]) x) := _
     _ = _ := _
-    
   · apply iterate_verschiebung_mul_left
   · rw [verschiebung_frobenius_comm.iterate_iterate] <;> infer_instance
   · rw [mul_comm]
@@ -200,7 +199,6 @@ theorem iterate_verschiebung_mul_coeff (x y : 𝕎 R) (i j : ℕ) :
     _ = ((frobenius^[j]) x * (frobenius^[i]) y).coeff 0 := _
     _ = ((frobenius^[j]) x).coeff 0 * ((frobenius^[i]) y).coeff 0 := _
     _ = _ := _
-    
   · rw [iterate_verschiebung_mul]
   · convert iterate_verschiebung_coeff _ _ _ using 2
     rw [zero_add]

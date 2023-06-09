@@ -235,7 +235,6 @@ theorem totient_le_degree_minpoly : Nat.totient n ≤ (minpoly ℤ μ).natDegree
     _ ≤ P_K.roots.card := (Multiset.toFinset_card_le _)
     _ ≤ P_K.nat_degree := (card_roots' _)
     _ ≤ P.nat_degree := nat_degree_map_le _ _
-    
 #align is_primitive_root.totient_le_degree_minpoly IsPrimitiveRoot.totient_le_degree_minpoly
 
 end IsDomain

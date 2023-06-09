@@ -415,7 +415,6 @@ theorem le_padicValRat_add_of_le {q r : ℚ} (hqr : q + r ≠ 0)
                     (Nat.prime_iff_prime_int.1 hp.1)] <;>
                 exact add_le_add_left h _)
         _ ≤ _ := min_le_multiplicity_add
-        
       all_goals exact hp
 #align padic_val_rat.le_padic_val_rat_add_of_le padicValRat.le_padicValRat_add_of_le
 -/

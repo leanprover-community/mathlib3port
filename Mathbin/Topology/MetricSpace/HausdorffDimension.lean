@@ -257,7 +257,6 @@ theorem exists_mem_nhdsWithin_lt_dimH_of_lt_dimH {s : Set X} {r : ℝ≥0∞} (h
     dimH s ≤ dimH (⋃ x ∈ S, t x) := dimH_mono hSU
     _ = ⨆ x ∈ S, dimH (t x) := (dimH_bUnion hSc _)
     _ ≤ r := iSup₂_le fun x hx => htr x <| hSs hx
-    
 #align exists_mem_nhds_within_lt_dimH_of_lt_dimH exists_mem_nhdsWithin_lt_dimH_of_lt_dimH
 
 /-- In an (extended) metric space with second countable topology, the Hausdorff dimension
@@ -416,7 +415,6 @@ theorem le_dimH_image (hf : AntilipschitzWith K f) (s : Set X) : dimH s ≤ dimH
   calc
     dimH s ≤ dimH (f ⁻¹' (f '' s)) := dimH_mono (subset_preimage_image _ _)
     _ ≤ dimH (f '' s) := hf.dimH_preimage_le _
-    
 #align antilipschitz_with.le_dimH_image AntilipschitzWith.le_dimH_image
 
 end AntilipschitzWith
@@ -572,7 +570,6 @@ theorem ContDiff.dimH_range_le {f : E → F} (h : ContDiff ℝ 1 f) : dimH (rang
     dimH (range f) = dimH (f '' univ) := by rw [image_univ]
     _ ≤ dimH (univ : Set E) := (h.ContDiffOn.dimH_image_le convex_univ Subset.rfl)
     _ = finrank ℝ E := Real.dimH_univ_eq_finrank E
-    
 #align cont_diff.dimH_range_le ContDiff.dimH_range_le
 
 /-- A particular case of Sard's Theorem. Let `f : E → F` be a map between finite dimensional real

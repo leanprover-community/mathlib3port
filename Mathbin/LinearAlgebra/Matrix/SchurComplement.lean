@@ -119,7 +119,6 @@ theorem det_one_add_mul_comm (A : Matrix m n α) (B : Matrix n m α) :
     det (1 + A ⬝ B) = det (fromBlocks 1 (-A) B 1) := by
       rw [det_from_blocks_one₂₂, Matrix.neg_mul, sub_neg_eq_add]
     _ = det (1 + B ⬝ A) := by rw [det_from_blocks_one₁₁, Matrix.mul_neg, sub_neg_eq_add]
-    
 #align matrix.det_one_add_mul_comm Matrix.det_one_add_mul_comm
 
 /-- Alternate statement of the **Weinstein–Aronszajn identity** -/

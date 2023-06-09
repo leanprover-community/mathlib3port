@@ -390,7 +390,6 @@ theorem MeasureTheory.Measure.restrict_map_of_aemeasurable {f : α → δ} (hf :
       simp only [ht, measure.restrict_apply]
       apply measure_congr
       apply (eventually_eq.refl _ _).inter (hf.ae_eq_mk.symm.preimage s)
-    
 #align measure_theory.measure.restrict_map_of_ae_measurable MeasureTheory.Measure.restrict_map_of_aemeasurable
 
 theorem MeasureTheory.Measure.map_mono_of_aemeasurable {f : α → δ} (h : μ ≤ ν)

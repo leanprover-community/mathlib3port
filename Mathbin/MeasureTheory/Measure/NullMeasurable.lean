@@ -321,7 +321,6 @@ theorem measure_iUnion₀ [Countable ι] {f : ι → Set α} (hd : Pairwise (AED
     μ (⋃ i, f i) = μ (⋃ i, t i) := measure_congr (EventuallyEq.countable_iUnion ht_eq)
     _ = ∑' i, μ (t i) := (measure_Union htd htm)
     _ = ∑' i, μ (f i) := tsum_congr fun i => measure_congr (ht_eq _).symm
-    
 #align measure_theory.measure_Union₀ MeasureTheory.measure_iUnion₀
 
 theorem measure_union₀_aux (hs : NullMeasurableSet s μ) (ht : NullMeasurableSet t μ)
@@ -347,12 +346,10 @@ theorem measure_inter_add_diff₀ (s : Set α) (ht : NullMeasurableSet t μ) :
             (@disjoint_inf_sdiff _ s' t _).AEDisjoint).symm
       _ = μ s' := (congr_arg μ (inter_union_diff _ _))
       _ = μ s := hs'
-      
   ·
     calc
       μ s = μ (s ∩ t ∪ s \ t) := by rw [inter_union_diff]
       _ ≤ μ (s ∩ t) + μ (s \ t) := measure_union_le _ _
-      
 #align measure_theory.measure_inter_add_diff₀ MeasureTheory.measure_inter_add_diff₀
 
 theorem measure_union_add_inter₀ (s : Set α) (ht : NullMeasurableSet t μ) :

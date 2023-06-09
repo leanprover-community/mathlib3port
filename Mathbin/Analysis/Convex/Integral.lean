@@ -323,7 +323,6 @@ theorem StrictConvexOn.ae_eq_const_or_map_average_lt [IsFiniteMeasure μ] (hg : 
     _ ≤ (a * ⨍ x in t, g (f x) ∂μ) + b * ⨍ x in tᶜ, g (f x) ∂μ :=
       add_le_add (mul_le_mul_of_nonneg_left (this h₀).2 ha.le)
         (mul_le_mul_of_nonneg_left (this h₀').2 hb.le)
-    
 #align strict_convex_on.ae_eq_const_or_map_average_lt StrictConvexOn.ae_eq_const_or_map_average_lt
 
 /-- **Jensen's inequality**, strict version: if an integrable function `f : α → E` takes values in a

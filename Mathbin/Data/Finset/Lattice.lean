@@ -1824,7 +1824,6 @@ theorem card_le_of_interleaved {s t : Finset α}
       _ < f y :=
         (Finset.lt_inf_iff <| WithTop.coe_lt_top a).2 fun b hb =>
           WithTop.coe_lt_coe.2 <| hay.trans (mem_filter.1 hb).2
-      
   calc
     s.card = (s.image f).card := (card_image_of_inj_on f_mono.inj_on).symm
     _ ≤ (insert ⊤ (t.image coe) : Finset (WithTop α)).card :=
@@ -1833,7 +1832,6 @@ theorem card_le_of_interleaved {s t : Finset α}
           insert_subset_insert _ (image_subset_image <| filter_subset _ _)
             (min_mem_insert_top_image_coe _))
     _ ≤ t.card + 1 := (card_insert_le _ _).trans (add_le_add_right card_image_le _)
-    
 #align finset.card_le_of_interleaved Finset.card_le_of_interleaved
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (x y «expr ∈ » s) -/

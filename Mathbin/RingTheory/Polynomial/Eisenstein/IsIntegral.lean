@@ -203,7 +203,6 @@ theorem dvd_coeff_zero_of_aeval_eq_prime_smul_of_minpoly_is_eiseinstein_at {B : 
             ∑ x : ℕ in (range (Q.nat_degree + 1)).eraseₓ 0, p • Q.coeff x • f (x + n)) :=
       (congr_arg (norm K) (eq_sub_of_add_eq _))
     _ = _ := _
-    
   · simp only [Algebra.smul_def, algebraMap_apply R K L, Algebra.norm_algebraMap, _root_.map_mul,
       _root_.map_pow, finrank_K_L, power_basis.norm_gen_eq_coeff_zero_minpoly,
       minpoly.isIntegrallyClosed_eq_field_fractions' K hBint, coeff_map, ← hn]
@@ -224,7 +223,6 @@ theorem dvd_coeff_zero_of_aeval_eq_prime_smul_of_minpoly_is_eiseinstein_at {B : 
       by rw [pow_zero]
     _ = aeval B.gen Q * B.gen ^ n := _
     _ = _ := by rw [hQ, Algebra.smul_mul_assoc]
-    
   · have :
       ∀ i ∈ (range (Q.nat_degree + 1)).eraseₓ 0,
         Q.coeff i • (B.gen ^ i * B.gen ^ n) = p • Q.coeff i • f (i + n) :=

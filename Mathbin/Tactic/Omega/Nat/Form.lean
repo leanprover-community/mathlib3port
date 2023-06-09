@@ -191,7 +191,7 @@ theorem valid_of_unsat_not {p : Preform} : (¬* p).Unsat → p.valid :=
   rw [not_exists_not]; intro h; assumption
 #align omega.nat.valid_of_unsat_not Omega.Nat.valid_of_unsat_not
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:330:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
 /-- Tactic for setting up proof by induction over preforms. -/
 unsafe def preform.induce (t : tactic Unit := tactic.skip) : tactic Unit :=
   sorry

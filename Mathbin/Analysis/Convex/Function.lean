@@ -222,8 +222,7 @@ theorem ConvexOn.add (hf : ConvexOn 𝕜 s f) (hg : ConvexOn 𝕜 s g) : ConvexO
     calc
       f (a • x + b • y) + g (a • x + b • y) ≤ a • f x + b • f y + (a • g x + b • g y) :=
         add_le_add (hf.2 hx hy ha hb hab) (hg.2 hx hy ha hb hab)
-      _ = a • (f x + g x) + b • (f y + g y) := by rw [smul_add, smul_add, add_add_add_comm]
-      ⟩
+      _ = a • (f x + g x) + b • (f y + g y) := by rw [smul_add, smul_add, add_add_add_comm]⟩
 #align convex_on.add ConvexOn.add
 
 theorem ConcaveOn.add (hf : ConcaveOn 𝕜 s f) (hg : ConcaveOn 𝕜 s g) : ConcaveOn 𝕜 s (f + g) :=
@@ -268,8 +267,7 @@ theorem ConvexOn.convex_le (hf : ConvexOn 𝕜 s f) (r : β) : Convex 𝕜 ({x �
       f (a • x + b • y) ≤ a • f x + b • f y := hf.2 hx.1 hy.1 ha hb hab
       _ ≤ a • r + b • r :=
         (add_le_add (smul_le_smul_of_nonneg hx.2 ha) (smul_le_smul_of_nonneg hy.2 hb))
-      _ = r := Convex.combo_self hab r
-      ⟩
+      _ = r := Convex.combo_self hab r⟩
 #align convex_on.convex_le ConvexOn.convex_le
 
 theorem ConcaveOn.convex_ge (hf : ConcaveOn 𝕜 s f) (r : β) : Convex 𝕜 ({x ∈ s | r ≤ f x}) :=
@@ -284,7 +282,6 @@ theorem ConvexOn.convex_epigraph (hf : ConvexOn 𝕜 s f) :
   calc
     f (a • x + b • y) ≤ a • f x + b • f y := hf.2 hx hy ha hb hab
     _ ≤ a • r + b • t := add_le_add (smul_le_smul_of_nonneg hr ha) (smul_le_smul_of_nonneg ht hb)
-    
 #align convex_on.convex_epigraph ConvexOn.convex_epigraph
 
 theorem ConcaveOn.convex_hypograph (hf : ConcaveOn 𝕜 s f) :
@@ -315,8 +312,7 @@ theorem ConvexOn.translate_right (hf : ConvexOn 𝕜 s f) (c : E) :
     calc
       f (c + (a • x + b • y)) = f (a • (c + x) + b • (c + y)) := by
         rw [smul_add, smul_add, add_add_add_comm, Convex.combo_self hab]
-      _ ≤ a • f (c + x) + b • f (c + y) := hf.2 hx hy ha hb hab
-      ⟩
+      _ ≤ a • f (c + x) + b • f (c + y) := hf.2 hx hy ha hb hab⟩
 #align convex_on.translate_right ConvexOn.translate_right
 
 /-- Right translation preserves concavity. -/
@@ -429,8 +425,7 @@ theorem StrictConvexOn.convex_lt (hf : StrictConvexOn 𝕜 s f) (r : β) :
         f (a • x + b • y) < a • f x + b • f y := hf.2 hx.1 hy.1 hxy ha hb hab
         _ ≤ a • r + b • r :=
           (add_le_add (smul_lt_smul_of_pos hx.2 ha).le (smul_lt_smul_of_pos hy.2 hb).le)
-        _ = r := Convex.combo_self hab r
-        ⟩
+        _ = r := Convex.combo_self hab r⟩
 #align strict_convex_on.convex_lt StrictConvexOn.convex_lt
 
 theorem StrictConcaveOn.convex_gt (hf : StrictConcaveOn 𝕜 s f) (r : β) :
@@ -533,8 +528,7 @@ theorem ConvexOn.comp_linearMap {f : F → β} {s : Set F} (hf : ConvexOn 𝕜 s
   ⟨hf.1.linear_preimage _, fun x hx y hy a b ha hb hab =>
     calc
       f (g (a • x + b • y)) = f (a • g x + b • g y) := by rw [g.map_add, g.map_smul, g.map_smul]
-      _ ≤ a • f (g x) + b • f (g y) := hf.2 hx hy ha hb hab
-      ⟩
+      _ ≤ a • f (g x) + b • f (g y) := hf.2 hx hy ha hb hab⟩
 #align convex_on.comp_linear_map ConvexOn.comp_linearMap
 
 /-- If `g` is concave on `s`, so is `(g ∘ f)` on `f ⁻¹' s` for a linear `f`. -/
@@ -561,8 +555,7 @@ theorem StrictConvexOn.add_convexOn (hf : StrictConvexOn 𝕜 s f) (hg : ConvexO
     calc
       f (a • x + b • y) + g (a • x + b • y) < a • f x + b • f y + (a • g x + b • g y) :=
         add_lt_add_of_lt_of_le (hf.2 hx hy hxy ha hb hab) (hg.2 hx hy ha.le hb.le hab)
-      _ = a • (f x + g x) + b • (f y + g y) := by rw [smul_add, smul_add, add_add_add_comm]
-      ⟩
+      _ = a • (f x + g x) + b • (f y + g y) := by rw [smul_add, smul_add, add_add_add_comm]⟩
 #align strict_convex_on.add_convex_on StrictConvexOn.add_convexOn
 
 theorem ConvexOn.add_strictConvexOn (hf : ConvexOn 𝕜 s f) (hg : StrictConvexOn 𝕜 s g) :
@@ -576,8 +569,7 @@ theorem StrictConvexOn.add (hf : StrictConvexOn 𝕜 s f) (hg : StrictConvexOn �
     calc
       f (a • x + b • y) + g (a • x + b • y) < a • f x + b • f y + (a • g x + b • g y) :=
         add_lt_add (hf.2 hx hy hxy ha hb hab) (hg.2 hx hy hxy ha hb hab)
-      _ = a • (f x + g x) + b • (f y + g y) := by rw [smul_add, smul_add, add_add_add_comm]
-      ⟩
+      _ = a • (f x + g x) + b • (f y + g y) := by rw [smul_add, smul_add, add_add_add_comm]⟩
 #align strict_convex_on.add StrictConvexOn.add
 
 theorem StrictConcaveOn.add_concaveOn (hf : StrictConcaveOn 𝕜 s f) (hg : ConcaveOn 𝕜 s g) :
@@ -609,8 +601,7 @@ theorem ConvexOn.convex_lt (hf : ConvexOn 𝕜 s f) (r : β) : Convex 𝕜 ({x �
         _ < a • r + b • r :=
           (add_lt_add_of_lt_of_le (smul_lt_smul_of_pos hx.2 ha)
             (smul_le_smul_of_nonneg hy.2.le hb.le))
-        _ = r := Convex.combo_self hab _
-        ⟩
+        _ = r := Convex.combo_self hab _⟩
 #align convex_on.convex_lt ConvexOn.convex_lt
 
 theorem ConcaveOn.convex_gt (hf : ConcaveOn 𝕜 s f) (r : β) : Convex 𝕜 ({x ∈ s | r < f x}) :=
@@ -627,7 +618,6 @@ theorem ConvexOn.openSegment_subset_strict_epigraph (hf : ConvexOn 𝕜 s f) (p 
     f (a • p.1 + b • q.1) ≤ a • f p.1 + b • f q.1 := hf.2 hp.1 hq.1 ha.le hb.le hab
     _ < a • p.2 + b • q.2 :=
       add_lt_add_of_lt_of_le (smul_lt_smul_of_pos hp.2 ha) (smul_le_smul_of_nonneg hq.2 hb.le)
-    
 #align convex_on.open_segment_subset_strict_epigraph ConvexOn.openSegment_subset_strict_epigraph
 
 theorem ConcaveOn.openSegment_subset_strict_hypograph (hf : ConcaveOn 𝕜 s f) (p q : E × β)
@@ -665,13 +655,11 @@ theorem ConvexOn.sup (hf : ConvexOn 𝕜 s f) (hg : ConvexOn 𝕜 s g) : ConvexO
       f (a • x + b • y) ≤ a • f x + b • f y := hf.right hx hy ha hb hab
       _ ≤ a • (f x ⊔ g x) + b • (f y ⊔ g y) :=
         add_le_add (smul_le_smul_of_nonneg le_sup_left ha) (smul_le_smul_of_nonneg le_sup_left hb)
-      
   ·
     calc
       g (a • x + b • y) ≤ a • g x + b • g y := hg.right hx hy ha hb hab
       _ ≤ a • (f x ⊔ g x) + b • (f y ⊔ g y) :=
         add_le_add (smul_le_smul_of_nonneg le_sup_right ha) (smul_le_smul_of_nonneg le_sup_right hb)
-      
 #align convex_on.sup ConvexOn.sup
 
 /-- The pointwise minimum of concave functions is concave. -/
@@ -688,14 +676,12 @@ theorem StrictConvexOn.sup (hf : StrictConvexOn 𝕜 s f) (hg : StrictConvexOn �
         f (a • x + b • y) < a • f x + b • f y := hf.2 hx hy hxy ha hb hab
         _ ≤ a • (f x ⊔ g x) + b • (f y ⊔ g y) :=
           add_le_add (smul_le_smul_of_nonneg le_sup_left ha.le)
-            (smul_le_smul_of_nonneg le_sup_left hb.le)
-        )
+            (smul_le_smul_of_nonneg le_sup_left hb.le))
       (calc
         g (a • x + b • y) < a • g x + b • g y := hg.2 hx hy hxy ha hb hab
         _ ≤ a • (f x ⊔ g x) + b • (f y ⊔ g y) :=
           add_le_add (smul_le_smul_of_nonneg le_sup_right ha.le)
-            (smul_le_smul_of_nonneg le_sup_right hb.le)
-        )⟩
+            (smul_le_smul_of_nonneg le_sup_right hb.le))⟩
 #align strict_convex_on.sup StrictConvexOn.sup
 
 /-- The pointwise minimum of strictly concave functions is strictly concave. -/
@@ -713,7 +699,6 @@ theorem ConvexOn.le_on_segment' (hf : ConvexOn 𝕜 s f) {x y : E} (hx : x ∈ s
       (add_le_add (smul_le_smul_of_nonneg (le_max_left _ _) ha)
         (smul_le_smul_of_nonneg (le_max_right _ _) hb))
     _ = max (f x) (f y) := Convex.combo_self hab _
-    
 #align convex_on.le_on_segment' ConvexOn.le_on_segment'
 
 /-- A concave function on a segment is lower-bounded by the min of its endpoints. -/
@@ -746,7 +731,6 @@ theorem StrictConvexOn.lt_on_open_segment' (hf : StrictConvexOn 𝕜 s f) {x y :
       (add_le_add (smul_le_smul_of_nonneg (le_max_left _ _) ha.le)
         (smul_le_smul_of_nonneg (le_max_right _ _) hb.le))
     _ = max (f x) (f y) := Convex.combo_self hab _
-    
 #align strict_convex_on.lt_on_open_segment' StrictConvexOn.lt_on_open_segment'
 
 /-- A strictly concave function on an open segment is strictly lower-bounded by the min of its
@@ -792,7 +776,6 @@ theorem ConvexOn.le_left_of_right_le' (hf : ConvexOn 𝕜 s f) {x y : E} (hx : x
         _ < a • f (a • x + b • y) + b • f (a • x + b • y) :=
           (add_lt_add_of_lt_of_le (smul_lt_smul_of_pos h ha) (smul_le_smul_of_nonneg hfy hb))
         _ = f (a • x + b • y) := Convex.combo_self hab _
-        
 #align convex_on.le_left_of_right_le' ConvexOn.le_left_of_right_le'
 
 theorem ConcaveOn.left_le_of_le_right' (hf : ConcaveOn 𝕜 s f) {x y : E} (hx : x ∈ s) (hy : y ∈ s)
@@ -856,7 +839,6 @@ theorem ConvexOn.lt_left_of_right_lt' (hf : ConvexOn 𝕜 s f) {x y : E} (hx : x
         _ < a • f (a • x + b • y) + b • f (a • x + b • y) :=
           (add_lt_add_of_le_of_lt (smul_le_smul_of_nonneg h ha.le) (smul_lt_smul_of_pos hfy hb))
         _ = f (a • x + b • y) := Convex.combo_self hab _
-        
 #align convex_on.lt_left_of_right_lt' ConvexOn.lt_left_of_right_lt'
 
 theorem ConcaveOn.left_lt_of_lt_right' (hf : ConcaveOn 𝕜 s f) {x y : E} (hx : x ∈ s) (hy : y ∈ s)
@@ -1020,8 +1002,7 @@ theorem StrictConvexOn.translate_right (hf : StrictConvexOn 𝕜 s f) (c : E) :
     calc
       f (c + (a • x + b • y)) = f (a • (c + x) + b • (c + y)) := by
         rw [smul_add, smul_add, add_add_add_comm, Convex.combo_self hab]
-      _ < a • f (c + x) + b • f (c + y) := hf.2 hx hy ((add_right_injective c).Ne hxy) ha hb hab
-      ⟩
+      _ < a • f (c + x) + b • f (c + y) := hf.2 hx hy ((add_right_injective c).Ne hxy) ha hb hab⟩
 #align strict_convex_on.translate_right StrictConvexOn.translate_right
 
 /-- Right translation preserves strict concavity. -/
@@ -1063,8 +1044,8 @@ theorem ConvexOn.smul {c : 𝕜} (hc : 0 ≤ c) (hf : ConvexOn 𝕜 s f) : Conve
     calc
       c • f (a • x + b • y) ≤ c • (a • f x + b • f y) :=
         smul_le_smul_of_nonneg (hf.2 hx hy ha hb hab) hc
-      _ = a • c • f x + b • c • f y := by rw [smul_add, smul_comm c, smul_comm c] <;> infer_instance
-      ⟩
+      _ = a • c • f x + b • c • f y := by
+        rw [smul_add, smul_comm c, smul_comm c] <;> infer_instance⟩
 #align convex_on.smul ConvexOn.smul
 
 theorem ConcaveOn.smul {c : 𝕜} (hc : 0 ≤ c) (hf : ConcaveOn 𝕜 s f) :
@@ -1097,8 +1078,7 @@ theorem ConvexOn.comp_affineMap {f : F → β} (g : E →ᵃ[𝕜] F) {s : Set F
     calc
       (f ∘ g) (a • x + b • y) = f (g (a • x + b • y)) := rfl
       _ = f (a • g x + b • g y) := by rw [Convex.combo_affine_apply hab]
-      _ ≤ a • f (g x) + b • f (g y) := hf.2 hx hy ha hb hab
-      ⟩
+      _ ≤ a • f (g x) + b • f (g y) := hf.2 hx hy ha hb hab⟩
 #align convex_on.comp_affine_map ConvexOn.comp_affineMap
 
 /-- If a function is concave on `s`, it remains concave when precomposed by an affine map. -/

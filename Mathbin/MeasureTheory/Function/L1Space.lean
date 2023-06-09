@@ -145,7 +145,6 @@ theorem HasFiniteIntegral.mono {f : α → β} {g : α → γ} (hg : HasFiniteIn
     (∫⁻ a, ENNReal.ofReal ‖f a‖ ∂μ) ≤ ∫⁻ a : α, ENNReal.ofReal ‖g a‖ ∂μ :=
       lintegral_mono_ae (h.mono fun a h => of_real_le_of_real h)
     _ < ∞ := hg
-    
 #align measure_theory.has_finite_integral.mono MeasureTheory.HasFiniteIntegral.mono
 
 theorem HasFiniteIntegral.mono' {f : α → β} {g : α → ℝ} (hg : HasFiniteIntegral g μ)
@@ -324,7 +323,6 @@ theorem hasFiniteIntegral_of_dominated_convergence {F : ℕ → α → β} {f : 
       rw [← has_finite_integral_iff_of_real]
       · exact bound_has_finite_integral
       exact (h_bound 0).mono fun a h => le_trans (norm_nonneg _) h
-    
 #align measure_theory.has_finite_integral_of_dominated_convergence MeasureTheory.hasFiniteIntegral_of_dominated_convergence
 
 theorem tendsto_lintegral_norm_of_dominated_convergence {F : ℕ → α → β} {f : α → β} {bound : α → ℝ}
@@ -352,7 +350,6 @@ theorem tendsto_lintegral_norm_of_dominated_convergence {F : ℕ → α → β} 
         · apply norm_sub_le; · exact norm_nonneg _; · exact norm_nonneg _
       _ ≤ ENNReal.ofReal (bound a) + ENNReal.ofReal (bound a) := (add_le_add h₁ h₂)
       _ = b a := by rw [← two_mul]
-      
   -- On the other hand, `F n a --> f a` implies that `‖F n a - f a‖ --> 0`
   have h : ∀ᵐ a ∂μ, Tendsto (fun n => ENNReal.ofReal ‖F n a - f a‖) atTop (𝓝 0) :=
     by
@@ -376,7 +373,6 @@ theorem tendsto_lintegral_norm_of_dominated_convergence {F : ℕ → α → β} 
         (∫⁻ a, b a ∂μ) = 2 * ∫⁻ a, ENNReal.ofReal (bound a) ∂μ := by rw [lintegral_const_mul'];
           exact coe_ne_top
         _ ≠ ∞ := mul_ne_top coe_ne_top bound_has_finite_integral.ne
-        
     filter_upwards [h_bound 0] with _ h using le_trans (norm_nonneg _) h
   -- Show `‖f a - F n a‖ --> 0`
   · exact h
@@ -420,7 +416,6 @@ theorem HasFiniteIntegral.smul [NormedAddCommGroup 𝕜] [SMulZeroClass 𝕜 β]
     _ < ∞ := by
       rw [lintegral_const_mul']
       exacts [mul_lt_top coe_ne_top hfi.ne, coe_ne_top]
-    
 #align measure_theory.has_finite_integral.smul MeasureTheory.HasFiniteIntegral.smul
 
 theorem hasFiniteIntegral_smul_iff [NormedRing 𝕜] [MulActionWithZero 𝕜 β] [BoundedSMul 𝕜 β] {c : 𝕜}
@@ -690,7 +685,6 @@ theorem Integrable.add' {f g : α → β} (hf : Integrable f μ) (hg : Integrabl
       lintegral_mono fun a => by exact_mod_cast nnnorm_add_le _ _
     _ = _ := (lintegral_nnnorm_add_left hf.AEStronglyMeasurable _)
     _ < ∞ := add_lt_top.2 ⟨hf.HasFiniteIntegral, hg.HasFiniteIntegral⟩
-    
 #align measure_theory.integrable.add' MeasureTheory.Integrable.add'
 
 theorem Integrable.add {f g : α → β} (hf : Integrable f μ) (hg : Integrable g μ) :
@@ -781,7 +775,6 @@ theorem Integrable.essSup_smul {𝕜 : Type _} [NormedField 𝕜] [NormedSpace �
     snorm (fun x : α => g x • f x) 1 μ ≤ _ :=
       MeasureTheory.snorm_smul_le_mul_snorm hf.1 g_ae_strongly_measurable h
     _ < ∞ := ENNReal.mul_lt_top hg' hf.2.Ne
-    
 #align measure_theory.integrable.ess_sup_smul MeasureTheory.Integrable.essSup_smul
 
 /-- Hölder's inequality for integrable functions: the scalar multiplication of an integrable
@@ -799,7 +792,6 @@ theorem Integrable.smul_essSup {𝕜 : Type _} [NormedRing 𝕜] [Module 𝕜 β
     snorm (fun x : α => f x • g x) 1 μ ≤ _ :=
       MeasureTheory.snorm_smul_le_mul_snorm g_ae_strongly_measurable hf.1 h
     _ < ∞ := ENNReal.mul_lt_top hf.2.Ne hg'
-    
 #align measure_theory.integrable.smul_ess_sup MeasureTheory.Integrable.smul_essSup
 
 theorem integrable_norm_iff {f : α → β} (hf : AEStronglyMeasurable f μ) :
@@ -816,7 +808,6 @@ theorem integrable_of_norm_sub_le {f₀ f₁ : α → β} {g : α → ℝ} (hf�
     calc
       ‖f₁ a‖ ≤ ‖f₀ a‖ + ‖f₀ a - f₁ a‖ := norm_le_insert _ _
       _ ≤ ‖f₀ a‖ + g a := add_le_add_left ha _
-      
   integrable.mono' (hf₀_i.norm.add hg_i) hf₁_m this
 #align measure_theory.integrable_of_norm_sub_le MeasureTheory.integrable_of_norm_sub_le
 
@@ -827,8 +818,7 @@ theorem Integrable.prod_mk {f : α → β} {g : α → γ} (hf : Integrable f μ
       eventually_of_forall fun x =>
         calc
           max ‖f x‖ ‖g x‖ ≤ ‖f x‖ + ‖g x‖ := max_le_add_of_nonneg (norm_nonneg _) (norm_nonneg _)
-          _ ≤ ‖‖f x‖ + ‖g x‖‖ := le_abs_self _
-          ⟩
+          _ ≤ ‖‖f x‖ + ‖g x‖‖ := le_abs_self _⟩
 #align measure_theory.integrable.prod_mk MeasureTheory.Integrable.prod_mk
 
 theorem Memℒp.integrable {q : ℝ≥0∞} (hq1 : 1 ≤ q) {f : α → β} [IsFiniteMeasure μ]
@@ -940,7 +930,6 @@ theorem integrable_withDensity_iff_integrable_coe_smul₀ {f : α → ℝ≥0} (
       apply integrable_congr
       filter_upwards [hf.ae_eq_mk] with x hx
       simp [hx]
-    
 #align measure_theory.integrable_with_density_iff_integrable_coe_smul₀ MeasureTheory.integrable_withDensity_iff_integrable_coe_smul₀
 
 theorem integrable_withDensity_iff_integrable_smul₀ {f : α → ℝ≥0} (hf : AEMeasurable f μ)

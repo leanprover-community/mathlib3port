@@ -322,7 +322,6 @@ theorem Monotone.forall_le_of_antitone {β : Type _} [Preorder β] {f g : α →
     f m ≤ f (m ⊔ n) := hf le_sup_left
     _ ≤ g (m ⊔ n) := (h _)
     _ ≤ g n := hg le_sup_right
-    
 #align monotone.forall_le_of_antitone Monotone.forall_le_of_antitone
 
 theorem SemilatticeSup.ext_sup {α} {A B : SemilatticeSup α}
@@ -684,12 +683,10 @@ def Lattice.mk' {α : Type _} [Sup α] [Inf α] (sup_comm : ∀ a b : α, a ⊔ 
     calc
       b ⊔ b = b ⊔ b ⊓ (b ⊔ b) := by rw [inf_sup_self]
       _ = b := by rw [sup_inf_self]
-      
   have inf_idem : ∀ b : α, b ⊓ b = b := fun b =>
     calc
       b ⊓ b = b ⊓ (b ⊔ b ⊓ b) := by rw [sup_inf_self]
       _ = b := by rw [inf_sup_self]
-      
   let semilatt_inf_inst := SemilatticeInf.mk' inf_comm inf_assoc inf_idem
   let semilatt_sup_inst := SemilatticeSup.mk' sup_comm sup_assoc sup_idem
   let
@@ -832,7 +829,6 @@ theorem inf_sup_left : x ⊓ (y ⊔ z) = x ⊓ y ⊔ x ⊓ z :=
     _ = (x ⊔ x ⊓ y) ⊓ (x ⊓ y ⊔ z) := by rw [sup_inf_self]
     _ = (x ⊓ y ⊔ x) ⊓ (x ⊓ y ⊔ z) := by rw [sup_comm]
     _ = x ⊓ y ⊔ x ⊓ z := by rw [sup_inf_left]
-    
 #align inf_sup_left inf_sup_left
 
 instance (α : Type _) [DistribLattice α] : DistribLattice αᵒᵈ :=
@@ -850,7 +846,6 @@ theorem le_of_inf_le_sup_le (h₁ : x ⊓ z ≤ y ⊓ z) (h₂ : x ⊔ z ≤ y �
     _ = y ⊔ x ⊓ z := sup_inf_left.symm
     _ ≤ y ⊔ y ⊓ z := (sup_le_sup_left h₁ _)
     _ ≤ _ := sup_le (le_refl y) inf_le_left
-    
 #align le_of_inf_le_sup_le le_of_inf_le_sup_le
 
 theorem eq_of_inf_eq_sup_eq {α : Type u} [DistribLattice α] {a b c : α} (h₁ : b ⊓ a = c ⊓ a)

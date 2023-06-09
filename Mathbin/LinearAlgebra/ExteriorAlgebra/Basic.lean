@@ -258,7 +258,6 @@ theorem ι_add_mul_swap (x y : M) : ι R x * ι R y + ι R y * ι R x = 0 :=
   calc
     _ = ι R (x + y) * ι R (x + y) := by simp [mul_add, add_mul]
     _ = _ := ι_sq_zero _
-    
 #align exterior_algebra.ι_add_mul_swap ExteriorAlgebra.ι_add_mul_swap
 
 theorem ι_mul_prod_list {n : ℕ} (f : Fin n → M) (i : Fin n) :

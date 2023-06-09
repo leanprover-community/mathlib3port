@@ -127,7 +127,6 @@ theorem pow_eq_mod_exponent {n : ℕ} (g : G) : g ^ n = g ^ (n % exponent G) :=
   calc
     g ^ n = g ^ (n % exponent G + exponent G * (n / exponent G)) := by rw [Nat.mod_add_div]
     _ = g ^ (n % exponent G) := by simp [pow_add, pow_mul, pow_exponent_eq_one]
-    
 #align monoid.pow_eq_mod_exponent Monoid.pow_eq_mod_exponent
 #align add_monoid.nsmul_eq_mod_exponent AddMonoid.nsmul_eq_mod_exponent
 -/

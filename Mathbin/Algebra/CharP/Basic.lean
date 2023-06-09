@@ -503,7 +503,6 @@ theorem cast_eq_mod (p : ℕ) [CharP R p] (k : ℕ) : (k : R) = (k % p : ℕ) :=
   calc
     (k : R) = ↑(k % p + p * (k / p)) := by rw [Nat.mod_add_div]
     _ = ↑(k % p) := by simp [cast_eq_zero]
-    
 #align char_p.cast_eq_mod CharP.cast_eq_mod
 -/
 
@@ -626,7 +625,6 @@ instance (priority := 100) [CharP R 1] : Subsingleton R :=
       _ = (1 : ℕ) * r := by rw [Nat.cast_one]
       _ = 0 * r := by rw [CharP.cast_eq_zero]
       _ = 0 := by rw [MulZeroClass.zero_mul]
-      
 
 #print CharP.false_of_nontrivial_of_char_one /-
 theorem false_of_nontrivial_of_char_one [Nontrivial R] [CharP R 1] : False :=

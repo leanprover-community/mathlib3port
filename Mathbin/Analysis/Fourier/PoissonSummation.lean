@@ -119,7 +119,6 @@ theorem Real.fourierCoeff_tsum_comp_add {f : C(ℝ, ℂ)}
       congr 2
       push_cast
       ring
-    
 #align real.fourier_coeff_tsum_comp_add Real.fourierCoeff_tsum_comp_add
 
 /-- **Poisson's summation formula**, most general form. -/

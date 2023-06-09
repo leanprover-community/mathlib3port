@@ -820,7 +820,6 @@ theorem self_le_sinh_iff : x ≤ sinh x ↔ 0 ≤ x :=
   calc
     x ≤ sinh x ↔ sinh 0 - 0 ≤ sinh x - x := by simp
     _ ↔ 0 ≤ x := sinh_sub_id_strictMono.le_iff_le
-    
 #align real.self_le_sinh_iff Real.self_le_sinh_iff
 
 @[simp]
@@ -828,7 +827,6 @@ theorem sinh_le_self_iff : sinh x ≤ x ↔ x ≤ 0 :=
   calc
     sinh x ≤ x ↔ sinh x - x ≤ sinh 0 - 0 := by simp
     _ ↔ x ≤ 0 := sinh_sub_id_strictMono.le_iff_le
-    
 #align real.sinh_le_self_iff Real.sinh_le_self_iff
 
 @[simp]

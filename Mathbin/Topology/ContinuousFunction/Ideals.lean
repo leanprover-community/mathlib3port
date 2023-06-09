@@ -254,7 +254,6 @@ theorem idealOfSet_of_ideal_eq_closure (I : Ideal C(X, 𝕜)) :
             simp only [Algebra.algebraMap_eq_smul_one, NNReal.smul_def, NNReal.coe_sub (hg x),
               sub_smul, Nonneg.coe_one, one_smul]
           _ ≤ 1 := (nnnorm_algebraMap_nNReal 𝕜 (1 - g x)).trans_le tsub_le_self
-          
       calc
         ‖f x - f x * (algebraMapClm ℝ≥0 𝕜 : C(ℝ≥0, 𝕜)).comp g x‖₊ =
             ‖f x * (1 - (algebraMapClm ℝ≥0 𝕜 : C(ℝ≥0, 𝕜)).comp g) x‖₊ :=
@@ -263,7 +262,6 @@ theorem idealOfSet_of_ideal_eq_closure (I : Ideal C(X, 𝕜)) :
           ((nnnorm_mul_le _ _).trans
             (mul_le_mul_right' (not_le.mp <| show ¬ε / 2 ≤ ‖f x‖₊ from hx).le _))
         _ ≤ ε / 2 := by simpa only [mul_one] using mul_le_mul_left' this _
-        
   /- There is some `g' : C(X, ℝ≥0)` which is strictly positive on `t` such that the composition
     `↑g` with the natural embedding of `ℝ≥0` into `𝕜` lies in `I`. This follows from compactness of
     `t` and that we can do it in any neighborhood of a point `x ∈ t`. Indeed, since `x ∈ t`, then

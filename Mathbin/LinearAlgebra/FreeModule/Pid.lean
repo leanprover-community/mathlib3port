@@ -236,8 +236,7 @@ theorem Submodule.basis_of_pid_aux [Finite ι] {O : Type _} [AddCommGroup O] [Mo
         a • ϕ ⟨y', y'M⟩ = ϕ ⟨a • y', _⟩ := (ϕ.map_smul a ⟨y', y'M⟩).symm
         _ = ϕ ⟨y, N_le_M yN⟩ := by simp only [a_smul_y']
         _ = a := ϕy_eq
-        _ = a * 1 := (mul_one a).symm
-        )
+        _ = a * 1 := (mul_one a).symm)
   have ϕy'_ne_zero : ϕ ⟨y', y'M⟩ ≠ 0 := by simpa only [ϕy'_eq] using one_ne_zero
   -- `M' := ker (ϕ : M → R)` is smaller than `M` and `N' := ker (ϕ : N → R)` is smaller than `N`.
   let M' : Submodule R O := ϕ.ker.map M.subtype
@@ -413,7 +412,6 @@ noncomputable def Module.basisOfFiniteTypeTorsionFree [Fintype ι] {s : ι → M
       (∏ j, a j) • s i = (∏ j in {i}ᶜ, a j) • a i • s i := by
         rw [Fintype.prod_eq_prod_compl_mul i, mul_smul]
       _ ∈ N := N.smul_mem _ (ha' i)
-      
   -- Since a submodule of a free `R`-module is free, we get that `A • M` is free
   obtain ⟨n, b : Basis (Fin n) R φ.range⟩ := Submodule.basisOfPidOfLE this sI_basis
   -- hence `M` is free.

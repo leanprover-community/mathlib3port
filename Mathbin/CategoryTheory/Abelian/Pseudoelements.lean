@@ -441,8 +441,7 @@ theorem pseudo_exact_of_exact {P Q R : C} {f : P ⟶ Q} {g : Q ⟶ R} (h : Exact
           rw [abelian.image.fac]
         _ = (pullback.snd ≫ c) ≫ kernel.ι (cokernel.π f) := by
           rw [← category.assoc, pullback.condition]
-        _ = pullback.snd ≫ b.hom := by rw [category.assoc]; congr
-        ⟩
+        _ = pullback.snd ≫ b.hom := by rw [category.assoc]; congr⟩
 #align category_theory.abelian.pseudoelement.pseudo_exact_of_exact CategoryTheory.Abelian.Pseudoelement.pseudo_exact_of_exact
 -/
 

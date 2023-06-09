@@ -286,7 +286,6 @@ theorem Convex.combo_eq_smul_sub_add [Module R M] {x y : M} {a b : R} (h : a + b
   calc
     a • x + b • y = b • y - b • x + (a • x + b • x) := by abel
     _ = b • (y - x) + x := by rw [smul_sub, Convex.combo_self h]
-    
 #align convex.combo_eq_smul_sub_add Convex.combo_eq_smul_sub_add
 
 end AddCommGroup
@@ -760,8 +759,7 @@ theorem smul_left_injective {x : M} (hx : x ≠ 0) : Function.Injective fun c : 
     ((smul_eq_zero.mp
           (calc
             (c - d) • x = c • x - d • x := sub_smul c d x
-            _ = 0 := sub_eq_zero.mpr h
-            )).resolve_right
+            _ = 0 := sub_eq_zero.mpr h)).resolve_right
       hx)
 #align smul_left_injective smul_left_injective
 

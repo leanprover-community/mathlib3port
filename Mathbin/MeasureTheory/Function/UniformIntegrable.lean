@@ -775,7 +775,6 @@ theorem unifIntegrable_of' (hp : 1 ≤ p) (hp' : p ≠ ∞) {f : ι → α → �
       by
       rw [← ENNReal.ofReal_add (half_pos hε).le (half_pos hε).le, add_halves]
       exact le_rfl
-    
 #align measure_theory.unif_integrable_of' MeasureTheory.unifIntegrable_of'
 
 theorem unifIntegrable_of (hp : 1 ≤ p) (hp' : p ≠ ∞) {f : ι → α → β}
@@ -928,7 +927,6 @@ theorem uniformIntegrable_of' [IsFiniteMeasure μ] (hp : 1 ≤ p) (hp' : p ≠ �
               (ENNReal.rpow_ne_top_of_nonneg (inv_nonneg.2 ENNReal.toReal_nonneg)
                 (measure_lt_top _ _).Ne),
             ENNReal.one_ne_top⟩
-    
 #align measure_theory.uniform_integrable_of' MeasureTheory.uniformIntegrable_of'
 
 /-- A sequene of functions `(fₙ)` is uniformly integrable in the probability sense if for all
@@ -985,7 +983,6 @@ theorem UniformIntegrable.spec' (hp : p ≠ 0) (hp' : p ≠ ∞) (hf : ∀ i, St
               (eventually_of_forall fun x hx => _)
           rwa [nnnorm_indicator_eq_indicator_nnnorm, indicator_of_mem hx]
         _ ≤ snorm (f (ℐ C)) p μ := snorm_indicator_le _
-        
     specialize this (2 * max M 1 * δ⁻¹ ^ (1 / p.to_real))
     rw [ENNReal.coe_rpow_of_nonneg _ (one_div_nonneg.2 ENNReal.toReal_nonneg), ← ENNReal.coe_smul,
       smul_eq_mul, mul_assoc, NNReal.inv_rpow,

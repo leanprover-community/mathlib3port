@@ -217,7 +217,6 @@ theorem ContinuousLinearEquiv.homothety_inverse (a : ℝ) (ha : 0 < a) (f : E �
     ‖f.symm y‖ = a⁻¹ * (a * ‖f.symm y‖) := _
     _ = a⁻¹ * ‖f (f.symm y)‖ := by rw [hf]
     _ = a⁻¹ * ‖y‖ := by simp
-    
   rw [← mul_assoc, inv_mul_cancel (ne_of_lt ha).symm, one_mul]
 #align continuous_linear_equiv.homothety_inverse ContinuousLinearEquiv.homothety_inverse
 

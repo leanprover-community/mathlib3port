@@ -46,13 +46,16 @@ open CategoryTheory CategoryTheory.Category CategoryTheory.Limits
 
 attribute [local instance] monoidal_of_has_finite_products
 
+#print CategoryTheory.Exponentiable /-
 /-- An object `X` is *exponentiable* if `(X × -)` is a left adjoint.
 We define this as being `closed` in the cartesian monoidal structure.
 -/
 abbrev Exponentiable {C : Type u} [Category.{v} C] [HasFiniteProducts C] (X : C) :=
   Closed X
 #align category_theory.exponentiable CategoryTheory.Exponentiable
+-/
 
+#print CategoryTheory.binaryProductExponentiable /-
 /-- If `X` and `Y` are exponentiable then `X ⨯ Y` is.
 This isn't an instance because it's not usually how we want to construct exponentials, we'll usually
 prove all objects are exponential uniformly.
@@ -61,7 +64,9 @@ def binaryProductExponentiable {C : Type u} [Category.{v} C] [HasFiniteProducts 
     (hX : Exponentiable X) (hY : Exponentiable Y) : Exponentiable (X ⨯ Y) :=
   tensorClosed hX hY
 #align category_theory.binary_product_exponentiable CategoryTheory.binaryProductExponentiable
+-/
 
+#print CategoryTheory.terminalExponentiable /-
 /-- The terminal object is always exponentiable.
 This isn't an instance because most of the time we'll prove cartesian closed for all objects
 at once, rather than just for this one.
@@ -70,22 +75,27 @@ def terminalExponentiable {C : Type u} [Category.{v} C] [HasFiniteProducts C] :
     Exponentiable (⊤_ C) :=
   unitClosed
 #align category_theory.terminal_exponentiable CategoryTheory.terminalExponentiable
+-/
 
+#print CategoryTheory.CartesianClosed /-
 /-- A category `C` is cartesian closed if it has finite products and every object is exponentiable.
 We define this as `monoidal_closed` with respect to the cartesian monoidal structure.
 -/
 abbrev CartesianClosed (C : Type u) [Category.{v} C] [HasFiniteProducts C] :=
   MonoidalClosed C
 #align category_theory.cartesian_closed CategoryTheory.CartesianClosed
+-/
 
 variable {C : Type u} [Category.{v} C] (A B : C) {X X' Y Y' Z : C}
 
 variable [HasFiniteProducts C] [Exponentiable A]
 
+#print CategoryTheory.exp /-
 /-- This is (-)^A. -/
 abbrev exp : C ⥤ C :=
   ihom A
 #align category_theory.exp CategoryTheory.exp
+-/
 
 namespace exp
 
@@ -175,10 +185,12 @@ theorem uncurry_natural_left (f : X ⟶ X') (g : X' ⟶ A ⟹ Y) :
   Adjunction.homEquiv_naturality_left_symm _ _ _
 #align category_theory.cartesian_closed.uncurry_natural_left CategoryTheory.CartesianClosed.uncurry_natural_left
 
+#print CategoryTheory.CartesianClosed.uncurry_curry /-
 @[simp]
 theorem uncurry_curry (f : A ⨯ X ⟶ Y) : uncurry (curry f) = f :=
   (Closed.isAdj.adj.homEquiv _ _).left_inv f
 #align category_theory.cartesian_closed.uncurry_curry CategoryTheory.CartesianClosed.uncurry_curry
+-/
 
 @[simp]
 theorem curry_uncurry (f : X ⟶ A ⟹ Y) : curry (uncurry f) = f :=
@@ -242,10 +254,12 @@ section Pre
 
 variable {B}
 
+#print CategoryTheory.pre /-
 /-- Pre-compose an internal hom with an external hom. -/
 def pre (f : B ⟶ A) [Exponentiable B] : exp A ⟶ exp B :=
   transferNatTransSelf (exp.adjunction _) (exp.adjunction _) (prod.functor.map f)
 #align category_theory.pre CategoryTheory.pre
+-/
 
 theorem prod_map_pre_app_comp_ev (f : B ⟶ A) [Exponentiable B] (X : C) :
     Limits.prod.map (𝟙 B) ((pre f).app X) ≫ (exp.ev B).app X =
@@ -264,25 +278,32 @@ theorem coev_app_comp_pre_app (f : B ⟶ A) [Exponentiable B] :
   unit_transferNatTransSelf _ _ (prod.functor.map f) X
 #align category_theory.coev_app_comp_pre_app CategoryTheory.coev_app_comp_pre_app
 
+#print CategoryTheory.pre_id /-
 @[simp]
 theorem pre_id (A : C) [Exponentiable A] : pre (𝟙 A) = 𝟙 _ := by simp [pre]
 #align category_theory.pre_id CategoryTheory.pre_id
+-/
 
+#print CategoryTheory.pre_map /-
 @[simp]
 theorem pre_map {A₁ A₂ A₃ : C} [Exponentiable A₁] [Exponentiable A₂] [Exponentiable A₃]
     (f : A₁ ⟶ A₂) (g : A₂ ⟶ A₃) : pre (f ≫ g) = pre g ≫ pre f := by
   rw [pre, pre, pre, transfer_nat_trans_self_comp, prod.functor.map_comp]
 #align category_theory.pre_map CategoryTheory.pre_map
+-/
 
 end Pre
 
+#print CategoryTheory.internalHom /-
 /-- The internal hom functor given by the cartesian closed structure. -/
 def internalHom [CartesianClosed C] : Cᵒᵖ ⥤ C ⥤ C
     where
   obj X := exp X.unop
   map X Y f := pre f.unop
 #align category_theory.internal_hom CategoryTheory.internalHom
+-/
 
+#print CategoryTheory.zeroMul /-
 /-- If an initial object `I` exists in a CCC, then `A ⨯ I ≅ I`. -/
 @[simps]
 def zeroMul {I : C} (t : IsInitial I) : A ⨯ I ≅ I
@@ -298,11 +319,14 @@ def zeroMul {I : C} (t : IsInitial I) : A ⨯ I ≅ I
     apply t.hom_ext
   inv_hom_id' := t.hom_ext _ _
 #align category_theory.zero_mul CategoryTheory.zeroMul
+-/
 
+#print CategoryTheory.mulZero /-
 /-- If an initial object `0` exists in a CCC, then `0 ⨯ A ≅ 0`. -/
 def mulZero {I : C} (t : IsInitial I) : I ⨯ A ≅ I :=
   Limits.prod.braiding _ _ ≪≫ zeroMul t
 #align category_theory.mul_zero CategoryTheory.mulZero
+-/
 
 /-- If an initial object `0` exists in a CCC then `0^B ≅ 1` for any `B`. -/
 def powZero {I : C} (t : IsInitial I) [CartesianClosed C] : I ⟹ B ≅ ⊤_ C
@@ -317,6 +341,7 @@ def powZero {I : C} (t : IsInitial I) [CartesianClosed C] : I ⟹ B ≅ ⊤_ C
     · infer_instance
 #align category_theory.pow_zero CategoryTheory.powZero
 
+#print CategoryTheory.prodCoprodDistrib /-
 -- TODO: Generalise the below to its commutated variants.
 -- TODO: Define a distributive category, so that zero_mul and friends can be derived from this.
 /-- In a CCC with binary coproducts, the distribution morphism is an isomorphism. -/
@@ -339,7 +364,9 @@ def prodCoprodDistrib [HasBinaryCoproducts C] [CartesianClosed C] (X Y Z : C) :
     rw [coprod.inr_desc_assoc, ← curry_natural_right, coprod.inr_desc, ← curry_natural_left,
       comp_id]
 #align category_theory.prod_coprod_distrib CategoryTheory.prodCoprodDistrib
+-/
 
+#print CategoryTheory.strict_initial /-
 /-- If an initial object `I` exists in a CCC then it is a strict initial object,
 i.e. any morphism to `I` is an iso.
 This actually shows a slightly stronger version: any morphism to an initial object from an
@@ -352,11 +379,15 @@ theorem strict_initial {I : C} (t : IsInitial I) (f : A ⟶ I) : IsIso f :=
   haveI : is_split_epi f := is_split_epi.mk' ⟨t.to _, t.hom_ext _ _⟩
   apply is_iso_of_mono_of_is_split_epi
 #align category_theory.strict_initial CategoryTheory.strict_initial
+-/
 
+#print CategoryTheory.to_initial_isIso /-
 instance to_initial_isIso [HasInitial C] (f : A ⟶ ⊥_ C) : IsIso f :=
   strict_initial initialIsInitial _
 #align category_theory.to_initial_is_iso CategoryTheory.to_initial_isIso
+-/
 
+#print CategoryTheory.initial_mono /-
 /-- If an initial object `0` exists in a CCC then every morphism from it is monic. -/
 theorem initial_mono {I : C} (B : C) (t : IsInitial I) [CartesianClosed C] : Mono (t.to B) :=
   ⟨fun B g h _ => by
@@ -364,10 +395,13 @@ theorem initial_mono {I : C} (B : C) (t : IsInitial I) [CartesianClosed C] : Mon
     haveI := strict_initial t h
     exact eq_of_inv_eq_inv (t.hom_ext _ _)⟩
 #align category_theory.initial_mono CategoryTheory.initial_mono
+-/
 
+#print CategoryTheory.Initial.mono_to /-
 instance Initial.mono_to [HasInitial C] (B : C) [CartesianClosed C] : Mono (initial.to B) :=
   initial_mono B initialIsInitial
 #align category_theory.initial.mono_to CategoryTheory.Initial.mono_to
+-/
 
 variable {D : Type u₂} [Category.{v} D]
 

@@ -231,7 +231,6 @@ theorem of_diff_of_diff_eq_zero {A B : Set α} (hA : MeasurableSet A) (hB : Meas
       · exact hA.inter hB
       · exact hB.diff hA
     _ = v (A \ B) + v B := by rw [Set.union_comm, Set.inter_comm, Set.diff_union_inter]
-    
 #align measure_theory.vector_measure.of_diff_of_diff_eq_zero MeasureTheory.VectorMeasure.of_diff_of_diff_eq_zero
 
 theorem of_iUnion_nonneg {M : Type _} [TopologicalSpace M] [OrderedAddCommMonoid M]

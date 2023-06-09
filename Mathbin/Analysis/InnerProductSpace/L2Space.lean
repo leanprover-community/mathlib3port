@@ -135,7 +135,6 @@ instance : InnerProductSpace 𝕜 (lp G 2) :=
         _ = ∑' i, re ⟪f i, f i⟫ := by simp only [@norm_sq_eq_inner 𝕜]
         _ = re (∑' i, ⟪f i, f i⟫) := (is_R_or_C.re_clm.map_tsum _).symm
         _ = _ := by congr
-        
       · norm_num
       · exact summable_inner f f
     conj_symm := fun f g => by
@@ -144,7 +143,6 @@ instance : InnerProductSpace 𝕜 (lp G 2) :=
         _ = ∑' i, conj ⟪g i, f i⟫ := is_R_or_C.conj_cle.map_tsum
         _ = ∑' i, ⟪f i, g i⟫ := by simp only [inner_conj_symm]
         _ = _ := by congr
-        
     add_left := fun f₁ f₂ g =>
       by
       calc
@@ -153,7 +151,6 @@ instance : InnerProductSpace 𝕜 (lp G 2) :=
           simp only [inner_add_left, Pi.add_apply, coe_fn_add]
         _ = (∑' i, ⟪f₁ i, g i⟫) + ∑' i, ⟪f₂ i, g i⟫ := (tsum_add _ _)
         _ = _ := by congr
-        
       · congr
       · exact summable_inner f₁ g
       · exact summable_inner f₂ g
@@ -164,7 +161,6 @@ instance : InnerProductSpace 𝕜 (lp G 2) :=
         _ = ∑' i, conj c * ⟪f i, g i⟫ := by simp only [inner_smul_left]
         _ = conj c * ∑' i, ⟪f i, g i⟫ := tsum_mul_left
         _ = _ := _
-        
       · simp only [coe_fn_smul, Pi.smul_apply]
       · congr }
 

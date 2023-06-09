@@ -646,7 +646,6 @@ theorem high_scores [LinearOrder β] [NoMaxOrder β] {u : ℕ → β} (hu : Tend
   calc
     u l ≤ u k := hlk
     _ < u n := hnk
-    
 #align filter.high_scores Filter.high_scores
 
 -- see Note [nolint_ge]
@@ -763,7 +762,6 @@ theorem Tendsto.nsmul_atTop (hf : Tendsto f l atTop) {n : ℕ} (hn : 0 < n) :
           y ≤ f x := hy
           _ = 1 • f x := (one_nsmul _).symm
           _ ≤ n • f x := nsmul_le_nsmul h₀ hn
-          
 #align filter.tendsto.nsmul_at_top Filter.Tendsto.nsmul_atTop
 
 theorem Tendsto.nsmul_atBot (hf : Tendsto f l atBot) {n : ℕ} (hn : 0 < n) :
@@ -1815,13 +1813,11 @@ theorem map_div_atTop_eq_nat (k : ℕ) (hk : 0 < k) : map (fun a => a / k) atTop
         _ ↔ _ := by
           cases k
           exact (lt_irrefl _ hk).elim
-          rw [add_mul, one_mul, Nat.succ_sub_succ_eq_sub, tsub_zero, Nat.add_succ, Nat.lt_succ_iff]
-        )
+          rw [add_mul, one_mul, Nat.succ_sub_succ_eq_sub, tsub_zero, Nat.add_succ, Nat.lt_succ_iff])
     fun b _ =>
     calc
       b = b * k / k := by rw [Nat.mul_div_cancel b hk]
       _ ≤ (b * k + (k - 1)) / k := Nat.div_le_div_right <| Nat.le_add_right _ _
-      
 #align filter.map_div_at_top_eq_nat Filter.map_div_atTop_eq_nat
 -/
 
@@ -1852,7 +1848,6 @@ theorem unbounded_of_tendsto_atTop [Nonempty α] [SemilatticeSup α] [Preorder �
   calc
     M < f a := ha a le_rfl
     _ ≤ M := hM (Set.mem_range_self a)
-    
 #align filter.unbounded_of_tendsto_at_top Filter.unbounded_of_tendsto_atTop
 
 theorem unbounded_of_tendsto_atBot [Nonempty α] [SemilatticeSup α] [Preorder β] [NoMinOrder β]

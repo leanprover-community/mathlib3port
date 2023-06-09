@@ -116,7 +116,7 @@ theorem hasFiniteProducts_of_has_binary_and_terminal : HasFiniteProducts C :=
   by
   refine' ⟨fun n => ⟨fun K => _⟩⟩
   letI := has_product_fin n fun n => K.obj ⟨n⟩
-  let this : (discrete.functor fun n => K.obj ⟨n⟩) ≅ K := discrete.nat_iso fun ⟨i⟩ => iso.refl _
+  let this.1 : (discrete.functor fun n => K.obj ⟨n⟩) ≅ K := discrete.nat_iso fun ⟨i⟩ => iso.refl _
   apply has_limit_of_iso this
 #align category_theory.has_finite_products_of_has_binary_and_terminal CategoryTheory.hasFiniteProducts_of_has_binary_and_terminal
 -/
@@ -150,7 +150,7 @@ noncomputable def preservesFinOfPreservesBinaryAndTerminal :
       preserves_limit_of_preserves_limit_cone
         (extend_fan_is_limit f (limit.is_limit _) (limit.is_limit _)) _
     apply (is_limit_map_cone_fan_mk_equiv _ _ _).symm _
-    let this :=
+    let this.1 :=
       extend_fan_is_limit (fun i => F.obj (f i)) (is_limit_of_has_product_of_preserves_limit F _)
         (is_limit_of_has_binary_product_of_preserves_limit F _ _)
     refine' is_limit.of_iso_limit this _
@@ -175,7 +175,7 @@ def preservesShapeFinOfPreservesBinaryAndTerminal (n : ℕ) :
     PreservesLimitsOfShape (Discrete (Fin n)) F
     where PreservesLimit K :=
     by
-    let this : (discrete.functor fun n => K.obj ⟨n⟩) ≅ K := discrete.nat_iso fun ⟨i⟩ => iso.refl _
+    let this.1 : (discrete.functor fun n => K.obj ⟨n⟩) ≅ K := discrete.nat_iso fun ⟨i⟩ => iso.refl _
     haveI := preserves_fin_of_preserves_binary_and_terminal F n fun n => K.obj ⟨n⟩
     apply preserves_limit_of_iso_diagram F this
 #align category_theory.preserves_shape_fin_of_preserves_binary_and_terminal CategoryTheory.preservesShapeFinOfPreservesBinaryAndTerminal
@@ -269,7 +269,7 @@ theorem hasFiniteCoproducts_of_has_binary_and_initial : HasFiniteCoproducts C :=
   by
   refine' ⟨fun n => ⟨fun K => _⟩⟩
   letI := has_coproduct_fin n fun n => K.obj ⟨n⟩
-  let this : K ≅ discrete.functor fun n => K.obj ⟨n⟩ := discrete.nat_iso fun ⟨i⟩ => iso.refl _
+  let this.1 : K ≅ discrete.functor fun n => K.obj ⟨n⟩ := discrete.nat_iso fun ⟨i⟩ => iso.refl _
   apply has_colimit_of_iso this
 #align category_theory.has_finite_coproducts_of_has_binary_and_initial CategoryTheory.hasFiniteCoproducts_of_has_binary_and_initial
 -/
@@ -303,7 +303,7 @@ noncomputable def preservesFinOfPreservesBinaryAndInitial :
       preserves_colimit_of_preserves_colimit_cocone
         (extend_cofan_is_colimit f (colimit.is_colimit _) (colimit.is_colimit _)) _
     apply (is_colimit_map_cocone_cofan_mk_equiv _ _ _).symm _
-    let this :=
+    let this.1 :=
       extend_cofan_is_colimit (fun i => F.obj (f i))
         (is_colimit_of_has_coproduct_of_preserves_colimit F _)
         (is_colimit_of_has_binary_coproduct_of_preserves_colimit F _ _)
@@ -328,7 +328,7 @@ def preservesShapeFinOfPreservesBinaryAndInitial (n : ℕ) :
     PreservesColimitsOfShape (Discrete (Fin n)) F
     where PreservesColimit K :=
     by
-    let this : (discrete.functor fun n => K.obj ⟨n⟩) ≅ K := discrete.nat_iso fun ⟨i⟩ => iso.refl _
+    let this.1 : (discrete.functor fun n => K.obj ⟨n⟩) ≅ K := discrete.nat_iso fun ⟨i⟩ => iso.refl _
     haveI := preserves_fin_of_preserves_binary_and_initial F n fun n => K.obj ⟨n⟩
     apply preserves_colimit_of_iso_diagram F this
 #align category_theory.preserves_shape_fin_of_preserves_binary_and_initial CategoryTheory.preservesShapeFinOfPreservesBinaryAndInitial

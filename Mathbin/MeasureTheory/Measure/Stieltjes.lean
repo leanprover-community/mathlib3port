@@ -314,7 +314,6 @@ noncomputable def Monotone.stieltjesFunction {f : ℝ → ℝ} (hf : Monotone f)
     calc
       right_lim f z ≤ f a := hf.right_lim_le za
       _ < u := (h'y ⟨hz.1.trans_lt za, ay.le⟩).2
-      
 #align monotone.stieltjes_function Monotone.stieltjesFunction
 -/
 
@@ -471,7 +470,6 @@ theorem outer_Ioc (a b : ℝ) : f.outer (Ioc a b) = ofReal (f b - f a) :=
       Icc a' b ⊆ Ioc a b := fun x hx => ⟨aa'.trans_le hx.1, hx.2⟩
       _ ⊆ ⋃ i, s i := hs
       _ ⊆ ⋃ i, Ioo (g i).1 (g i).2 := Union_mono fun i => (hg i).1
-      
   calc
     of_real (f b - f a) = of_real (f b - f a' + (f a' - f a)) := by rw [sub_add_sub_cancel]
     _ ≤ of_real (f b - f a') + of_real (f a' - f a) := ENNReal.ofReal_add_le
@@ -483,7 +481,6 @@ theorem outer_Ioc (a b : ℝ) : f.outer (Ioc a b) = ofReal (f b - f a) :=
     _ = ((∑' i, f.length (s i)) + ∑' i, ε' i) + δ := by rw [ENNReal.tsum_add]
     _ ≤ (∑' i, f.length (s i)) + δ + δ := (add_le_add (add_le_add le_rfl hε.le) le_rfl)
     _ = (∑' i : ℕ, f.length (s i)) + ε := by simp [add_assoc, ENNReal.add_halves]
-    
 #align stieltjes_function.outer_Ioc StieltjesFunction.outer_Ioc
 
 #print StieltjesFunction.measurableSet_Ioi /-

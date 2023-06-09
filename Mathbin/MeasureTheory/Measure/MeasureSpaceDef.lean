@@ -490,7 +490,6 @@ theorem ae_le_set : s ≤ᵐ[μ] t ↔ μ (s \ t) = 0 :=
   calc
     s ≤ᵐ[μ] t ↔ ∀ᵐ x ∂μ, x ∈ s → x ∈ t := Iff.rfl
     _ ↔ μ (s \ t) = 0 := by simp [ae_iff] <;> rfl
-    
 #align measure_theory.ae_le_set MeasureTheory.ae_le_set
 
 theorem ae_le_set_inter {s' t' : Set α} (h : s ≤ᵐ[μ] t) (h' : s' ≤ᵐ[μ] t') :
@@ -598,7 +597,6 @@ theorem measure_mono_ae (H : s ≤ᵐ[μ] t) : μ s ≤ μ t :=
     _ = μ (t ∪ s \ t) := by rw [union_diff_self, Set.union_comm]
     _ ≤ μ t + μ (s \ t) := (measure_union_le _ _)
     _ = μ t := by rw [ae_le_set.1 H, add_zero]
-    
 #align measure_theory.measure_mono_ae MeasureTheory.measure_mono_ae
 
 alias measure_mono_ae ← _root_.filter.eventually_le.measure_le
@@ -695,7 +693,7 @@ notation3"∀ᵐ "(...)", "r:(scoped P =>
 notation3"∃ᵐ "(...)", "r:(scoped P =>
   Filter.Frequently P MeasureTheory.Measure.ae MeasureTheory.MeasureSpace.volume) => r
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:330:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
 /-- The tactic `exact volume`, to be used in optional (`auto_param`) arguments. -/
 unsafe def volume_tac : tactic Unit :=
   sorry

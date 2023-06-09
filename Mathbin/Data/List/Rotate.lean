@@ -123,7 +123,6 @@ theorem rotate'_length_mul (l : List α) : ∀ n : ℕ, l.rotate' (l.length * n)
           (l.rotate' (l.length * n)).rotate' (l.rotate' (l.length * n)).length :=
         by simp [-rotate'_length, Nat.mul_succ, rotate'_rotate']
       _ = l := by rw [rotate'_length, rotate'_length_mul]
-      
 #align list.rotate'_length_mul List.rotate'_length_mul
 -/
 
@@ -134,7 +133,6 @@ theorem rotate'_mod (l : List α) (n : ℕ) : l.rotate' (n % l.length) = l.rotat
         (l.rotate' (n % l.length)).rotate' ((l.rotate' (n % l.length)).length * (n / l.length)) :=
       by rw [rotate'_length_mul]
     _ = l.rotate' n := by rw [rotate'_rotate', length_rotate', Nat.mod_add_div]
-    
 #align list.rotate'_mod List.rotate'_mod
 -/
 

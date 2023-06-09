@@ -286,7 +286,7 @@ theorem ofRestrict_invApp {C : Type _} [Category C] (X : PresheafedSpace C) {Y :
 theorem to_iso (f : X ⟶ Y) [h : is_open_immersion f] [h' : Epi f.base] : IsIso f :=
   by
   apply (config := { instances := false }) is_iso_of_components
-  · let this : X ≃ₜ Y :=
+  · let this.1 : X ≃ₜ Y :=
       (Homeomorph.ofEmbedding _ h.base_open.to_embedding).trans
         { toFun := Subtype.val
           invFun := fun x =>

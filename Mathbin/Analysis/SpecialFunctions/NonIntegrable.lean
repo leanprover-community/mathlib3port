@@ -102,7 +102,6 @@ theorem not_intervalIntegrable_of_tendsto_norm_atTop_of_deriv_isBigO_filter {f :
     _ ≤ ∫ x in Ι a b, C * ‖g x‖ :=
       set_integral_mono_set hgi.def (ae_of_all _ fun x => mul_nonneg hC₀ (norm_nonneg _))
         hsub'.eventually_le
-    
 #align not_interval_integrable_of_tendsto_norm_at_top_of_deriv_is_O_filter not_intervalIntegrable_of_tendsto_norm_atTop_of_deriv_isBigO_filter
 
 /-- If `a ≠ b`, `c ∈ [a, b]`, `f` is differentiable in the neighborhood of `c` within

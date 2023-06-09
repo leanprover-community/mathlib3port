@@ -444,7 +444,7 @@ theorem ite_eq_of_not_lt [DecidableRel lt] [IsStrictOrder α lt] {a b} {β : Typ
 
 attribute [local simp] ite_eq_of_not_lt
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:330:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
 private unsafe def simp_fi : tactic Unit :=
   sorry
 
@@ -569,7 +569,7 @@ theorem find_balance1_lt {l r t v x y lo hi} (h : lt x y) (hl : IsSearchable lt 
     · apply weak_trichotomous lt y_1 x <;> intros <;> simp [*]
 #align rbnode.find_balance1_lt Rbnode.find_balance1_lt
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:330:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
 unsafe def ins_ne_leaf_tac :=
   sorry
 #align rbnode.ins_ne_leaf_tac rbnode.ins_ne_leaf_tac

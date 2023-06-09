@@ -900,7 +900,6 @@ theorem continuousWithinAt_update_same [DecidableEq α] {f : α → β} {s : Set
     _ ↔ Tendsto f (𝓝[s \ {x}] x) (𝓝 y) :=
       tendsto_congr' <|
         eventually_nhdsWithin_iff.2 <| eventually_of_forall fun z hz => update_noteq hz.2 _ _
-    
 #align continuous_within_at_update_same continuousWithinAt_update_same
 
 @[simp]
@@ -1150,7 +1149,6 @@ theorem ContinuousOn.preimage_interior_subset_interior_preimage {f : α → β} 
       interior_maximal (inter_subset_inter (Subset.refl _) (preimage_mono interior_subset))
         (hf.preimage_open_of_open hs isOpen_interior)
     _ = s ∩ interior (f ⁻¹' t) := by rw [interior_inter, hs.interior_eq]
-    
 #align continuous_on.preimage_interior_subset_interior_preimage ContinuousOn.preimage_interior_subset_interior_preimage
 
 theorem continuousOn_of_locally_continuousOn {f : α → β} {s : Set α}

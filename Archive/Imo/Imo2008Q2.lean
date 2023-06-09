@@ -102,7 +102,6 @@ theorem imo2008_q2b : Set.Infinite rationalSolutions :=
             (x ^ 2 * t ^ 4 + y ^ 2 * (t + 1) ^ 4 + z ^ 2) / (t ^ 2 + t + 1) ^ 2 :=
           by rw [hx1, hy1, hz1]; field_simp
         _ = 1 := by rw [hx_t, hy_t, hz_t]; field_simp; ring
-        
     exact ⟨h₁, h₂, h₃, h₄, h₅, h₆⟩
   have hW_inf : Set.Infinite W :=
     by
@@ -133,7 +132,6 @@ theorem imo2008_q2b : Set.Infinite rationalSolutions :=
           _ ≤ t := (le_max_left (q + 1) 1)
           _ ≤ t + t ^ 2 := by linarith [sq_nonneg t]
           _ = t * (t + 1) := by ring
-          
       exact ⟨h₁, h₂⟩
     have hK_inf : Set.Infinite K := by intro h; apply hK_not_bdd; exact Set.Finite.bddAbove h
     exact hK_inf.of_image g

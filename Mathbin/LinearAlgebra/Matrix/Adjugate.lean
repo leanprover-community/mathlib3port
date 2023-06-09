@@ -184,7 +184,6 @@ theorem sum_cramer_apply {β} (s : Finset β) (f : n → β → α) (i : n) :
       (Finset.sum_apply i s _).symm
     _ = cramer A (fun j : n => ∑ x in s, f j x) i := by rw [sum_cramer, cramer_apply]; congr with j;
       apply Finset.sum_apply
-    
 #align matrix.sum_cramer_apply Matrix.sum_cramer_apply
 
 theorem cramer_submatrix_equiv (A : Matrix m m α) (e : n ≃ m) (b : n → α) :
@@ -321,7 +320,6 @@ theorem adjugate_mul (A : Matrix n n α) : adjugate A ⬝ A = A.det • 1 :=
     adjugate A ⬝ A = (Aᵀ ⬝ adjugate Aᵀ)ᵀ := by
       rw [← adjugate_transpose, ← transpose_mul, transpose_transpose]
     _ = A.det • 1 := by rw [mul_adjugate Aᵀ, det_transpose, transpose_smul, transpose_one]
-    
 #align matrix.adjugate_mul Matrix.adjugate_mul
 
 theorem adjugate_smul (r : α) (A : Matrix n n α) :
@@ -419,7 +417,6 @@ theorem det_adjugate (A : Matrix n n α) : (adjugate A).det = A.det ^ (Fintype.c
     A'.det * A'.adjugate.det = (A' ⬝ adjugate A').det := (det_mul _ _).symm
     _ = A'.det ^ Fintype.card n := by rw [mul_adjugate, det_smul, det_one, mul_one]
     _ = A'.det * A'.det ^ (Fintype.card n - 1) := by rw [← pow_succ, h_card]
-    
 #align matrix.det_adjugate Matrix.det_adjugate
 
 @[simp]

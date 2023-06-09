@@ -57,7 +57,6 @@ theorem find_specified_factor {p : ℕ} (hp : Nat.Prime p) (hp' : IsCoprime (6 :
       apply_rules [Int.ModEq.sub_right, Int.ModEq.add, Int.ModEq.mul_left,
         Int.ModEq.pow_card_sub_one_eq_one hp]
     _ = 0 := by norm_num
-    
   -- Since `6` has an inverse mod `p`, `a (p - 2)` itself is a multiple of `p`
   calc
     (a (p - 2) : ℤ) = 1 * a (p - 2) := by ring
@@ -65,7 +64,6 @@ theorem find_specified_factor {p : ℕ} (hp : Nat.Prime p) (hp' : IsCoprime (6 :
     _ = b * (6 * a (p - 2)) := by ring
     _ ≡ b * 0 [ZMOD p] := (Int.ModEq.mul_left _ H)
     _ = 0 := by ring
-    
 #align imo2005_q4.find_specified_factor Imo2005Q4.find_specified_factor
 
 end imo2005_q4

@@ -2729,12 +2729,10 @@ theorem map_symm_eq_iff (e : M ≃ₛₗ[τ₁₂] M₂) {K : Submodule R₂ M�
     calc
       map e (map e.symm K) = comap e.symm (map e.symm K) := map_equiv_eq_comap_symm _ _
       _ = K := comap_map_eq_of_injective e.symm.injective _
-      
   ·
     calc
       map e.symm (map e p) = comap e (map e p) := (comap_equiv_eq_map_symm _ _).symm
       _ = p := comap_map_eq_of_injective e.injective _
-      
 #align submodule.map_symm_eq_iff Submodule.map_symm_eq_iff
 
 theorem orderIsoMapComap_apply' (e : M ≃ₛₗ[τ₁₂] M₂) (p : Submodule R M) :

@@ -210,8 +210,8 @@ unsafe def reorder_oper (op : pexpr) (lp : List (Bool × pexpr)) : expr → tact
   | e => pure (e, lp.map fun _ => true)
 #align tactic.move_op.reorder_oper tactic.move_op.reorder_oper
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:330:4: warning: unsupported (TODO): `[tacs] -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:330:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
 /-- Passes the user input `na` to `reorder_oper` at a single location, that could either be
 `none` (referring to the goal) or `some name` (referring to hypothesis `name`).  Replaces the
 given hypothesis/goal with the rearranged one that `reorder_hyp` receives from `reorder_oper`.

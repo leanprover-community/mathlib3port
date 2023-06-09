@@ -170,7 +170,6 @@ theorem sum_le_of_monotoneOn_Icc (f : α → E) {s : Set α} {m n : ℕ} {u : �
       apply Finset.sum_congr rfl fun i hi => _
       simp only [v, add_assoc]
     _ ≤ evariationOn f s := sum_le_of_monotone_on_Iic f hv vs
-    
 #align evariation_on.sum_le_of_monotone_on_Icc evariationOn.sum_le_of_monotoneOn_Icc
 
 theorem mono (f : α → E) {s t : Set α} (hst : t ⊆ s) : evariationOn f t ≤ evariationOn f s :=
@@ -349,7 +348,6 @@ theorem add_point (f : α → E) {s : Set α} {x : α} (hx : x ∈ s) (u : ℕ �
           simp only [hi.le, this, if_true]
         _ ≤ ∑ j in Finset.range (n + 2), edist (f (v (j + 1))) (f (v j)) :=
           Finset.sum_le_sum_of_subset (Finset.range_mono (Nat.le_add_right n 2))
-        
   have exists_N : ∃ N, N ≤ n ∧ x < u N := ⟨n, le_rfl, h⟩
   let N := Nat.find exists_N
   have hN : N ≤ n ∧ x < u N := Nat.find_spec exists_N
@@ -402,7 +400,6 @@ theorem add_point (f : α → E) {s : Set α} {x : α} (hx : x ∈ s) (u : ℕ �
         apply Finset.sum_le_sum_of_subset _
         rw [Finset.range_eq_Ico]
         exact Finset.Ico_subset_Ico zero_le_one le_rfl
-      
   ·
     calc
       (∑ i in Finset.range n, edist (f (u (i + 1))) (f (u i))) =
@@ -478,7 +475,6 @@ theorem add_point (f : α → E) {s : Set α} {x : α} (hx : x ∈ s) (u : ℕ �
         · exact Nat.succ_le_succ hN.left
         · exact zero_le _
         · exact N.pred_le.trans N.le_succ
-      
 #align evariation_on.add_point evariationOn.add_point
 
 /-- The variation of a function on the union of two sets `s` and `t`, with `s` to the left of `t`,
@@ -557,7 +553,6 @@ theorem add_le_union (f : α → E) {s t : Set α} (h : ∀ x ∈ s, ∀ y ∈ t
         simp only [Finset.mem_Ico, Finset.mem_range] at hi h'i 
         exact hi.not_lt (Nat.lt_of_succ_le h'i.left)
     _ ≤ evariationOn f (s ∪ t) := sum_le f _ hw wst
-    
 #align evariation_on.add_le_union evariationOn.add_le_union
 
 /-- If a set `s` is to the left of a set `t`, and both contain the boundary point `x`, then
@@ -605,7 +600,6 @@ theorem union (f : α → E) {s t : Set α} {x : α} (hs : IsGreatest s x) (ht :
           · rw [← Nx]; exact hv hi.1
         rw [this]
         exact ht.1
-    
 #align evariation_on.union evariationOn.union
 
 theorem Icc_add_Icc (f : α → E) {s : Set α} {a b c : α} (hab : a ≤ b) (hbc : b ≤ c) (hb : b ∈ s) :
@@ -745,7 +739,6 @@ theorem MonotoneOn.evariationOn_le {f : α → ℝ} {s : Set α} (hf : MonotoneO
       by
       apply ENNReal.ofReal_le_ofReal
       exact sub_le_sub (hf (us n).1 bs (us n).2.2) (hf as (us 0).1 (us 0).2.1)
-    
 #align monotone_on.evariation_on_le MonotoneOn.evariationOn_le
 
 theorem MonotoneOn.hasLocallyBoundedVariationOn {f : α → ℝ} {s : Set α} (hf : MonotoneOn f s) :
@@ -911,7 +904,6 @@ theorem sub_self_monotoneOn {f : α → ℝ} {s : Set α} (hf : HasLocallyBounde
       exacts [⟨bs, le_rfl, bc⟩, ⟨cs, bc, le_rfl⟩]
     _ = variationOnFromTo f s a c - variationOnFromTo f s a b := by
       rw [← add hf as bs cs, add_sub_cancel']
-    
 #align variation_on_from_to.sub_self_monotone_on variationOnFromTo.sub_self_monotoneOn
 
 @[protected]
@@ -961,7 +953,6 @@ theorem LipschitzOnWith.comp_evariationOn_le {f : E → F} {C : ℝ≥0} {t : Se
       Finset.sum_le_sum fun i hi => h (hg (us _)) (hg (us _))
     _ = C * ∑ i in Finset.range n, edist (g (u (i + 1))) (g (u i)) := by rw [Finset.mul_sum]
     _ ≤ C * evariationOn g s := mul_le_mul_left' (evariationOn.sum_le _ _ hu us) _
-    
 #align lipschitz_on_with.comp_evariation_on_le LipschitzOnWith.comp_evariationOn_le
 
 theorem LipschitzOnWith.comp_hasBoundedVariationOn {f : E → F} {C : ℝ≥0} {t : Set E}

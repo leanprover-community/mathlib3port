@@ -874,8 +874,7 @@ protected irreducible_def add (z w : Localization M) : Localization M :=
           ↑t₅ * ↑t₆ * (↑b' * ↑d' * ((b : R) * c + d * a)) =
               t₆ * (d' * c) * (t₅ * (b' * b)) + t₅ * (b' * a) * (t₆ * (d' * d)) :=
             by ring
-          _ = t₅ * t₆ * (b * d * (b' * c' + d' * a')) := by rw [ht₆, ht₅] <;> ring
-          )
+          _ = t₅ * t₆ * (b * d * (b' * c' + d' * a')) := by rw [ht₆, ht₅] <;> ring)
 #align localization.add Localization.add
 -/
 
@@ -894,7 +893,7 @@ theorem add_mk_self (a b c) : (mk a b : Localization M) + mk c b = mk (a + c) b 
   ring
 #align localization.add_mk_self Localization.add_mk_self
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:330:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
 private unsafe def tac :=
   sorry
 
@@ -1161,7 +1160,6 @@ theorem sub_mk (a c) (b d) : (mk a b : Localization M) - mk c d = mk (d * a - b 
     _ = mk a b + mk (-c) d := by rw [neg_mk]
     _ = mk (b * -c + d * a) (b * d) := (add_mk _ _ _ _)
     _ = mk (d * a - b * c) (b * d) := by congr <;> ring
-    
 #align localization.sub_mk Localization.sub_mk
 
 theorem mk_int_cast (m : ℤ) : (mk m 1 : Localization M) = m := by

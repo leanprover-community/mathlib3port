@@ -120,7 +120,6 @@ theorem infEdist_le_infEdist_add_edist : infEdist x s ≤ infEdist y s + edist x
     (⨅ z ∈ s, edist x z) ≤ ⨅ z ∈ s, edist y z + edist x y :=
       iInf₂_mono fun z hz => (edist_triangle _ _ _).trans_eq (add_comm _ _)
     _ = (⨅ z ∈ s, edist y z) + edist x y := by simp only [ENNReal.iInf_add]
-    
 #align emetric.inf_edist_le_inf_edist_add_edist EMetric.infEdist_le_infEdist_add_edist
 
 theorem infEdist_le_edist_add_infEdist : infEdist x s ≤ edist x y + infEdist y s := by
@@ -134,7 +133,6 @@ theorem edist_le_infEdist_add_ediam (hy : y ∈ s) : edist x y ≤ infEdist x s 
   calc
     edist x y ≤ edist x i + edist i y := edist_triangle _ _ _
     _ ≤ edist x i + diam s := add_le_add le_rfl (edist_le_diam_of_mem hi hy)
-    
 #align emetric.edist_le_inf_edist_add_ediam EMetric.edist_le_infEdist_add_ediam
 
 /-- The edist to a set depends continuously on the point -/
@@ -162,7 +160,6 @@ theorem infEdist_closure : infEdist x (closure s) = infEdist x s :=
     _ ≤ edist x y + edist y z := (edist_triangle _ _ _)
     _ ≤ inf_edist x (closure s) + ε / 2 + ε / 2 := (add_le_add (le_of_lt hy) (le_of_lt dyz))
     _ = inf_edist x (closure s) + ↑ε := by rw [add_assoc, ENNReal.add_halves]
-    
 #align emetric.inf_edist_closure EMetric.infEdist_closure
 -/
 
@@ -207,7 +204,6 @@ theorem disjoint_closedBall_of_lt_infEdist {r : ℝ≥0∞} (h : r < infEdist x 
     inf_edist x s ≤ edist x y := inf_edist_le_edist_of_mem h'y
     _ ≤ r := by rwa [mem_closed_ball, edist_comm] at hy 
     _ < inf_edist x s := h
-    
 #align emetric.disjoint_closed_ball_of_lt_inf_edist EMetric.disjoint_closedBall_of_lt_infEdist
 
 #print EMetric.infEdist_image /-
@@ -348,7 +344,6 @@ theorem exists_edist_lt_of_hausdorffEdist_lt {r : ℝ≥0∞} (h : x ∈ s) (H :
     calc
       infEdist x t ≤ hausdorffEdist s t := infEdist_le_hausdorffEdist_of_mem h
       _ < r := H
-      
 #align emetric.exists_edist_lt_of_Hausdorff_edist_lt EMetric.exists_edist_lt_of_hausdorffEdist_lt
 
 /-- The distance from `x` to `s` or `t` is controlled in terms of the Hausdorff distance
@@ -372,7 +367,6 @@ theorem infEdist_le_infEdist_add_hausdorffEdist :
       _ ≤ inf_edist x s + ε / 2 + (Hausdorff_edist s t + ε / 2) := (add_le_add dxy.le dyz.le)
       _ = inf_edist x s + Hausdorff_edist s t + ε := by
         simp [ENNReal.add_halves, add_comm, add_left_comm]
-      
 #align emetric.inf_edist_le_inf_edist_add_Hausdorff_edist EMetric.infEdist_le_infEdist_add_hausdorffEdist
 
 #print EMetric.hausdorffEdist_image /-
@@ -409,7 +403,6 @@ theorem hausdorffEdist_triangle : hausdorffEdist s u ≤ hausdorffEdist s t + ha
         inf_edist_le_inf_edist_add_Hausdorff_edist
       _ ≤ Hausdorff_edist s t + Hausdorff_edist t u :=
         add_le_add_right (inf_edist_le_Hausdorff_edist_of_mem xs) _
-      
   show ∀ x ∈ u, inf_edist x s ≤ Hausdorff_edist s t + Hausdorff_edist t u;
   exact fun x xu =>
     calc
@@ -418,7 +411,6 @@ theorem hausdorffEdist_triangle : hausdorffEdist s u ≤ hausdorffEdist s t + ha
       _ ≤ Hausdorff_edist u t + Hausdorff_edist t s :=
         (add_le_add_right (inf_edist_le_Hausdorff_edist_of_mem xu) _)
       _ = Hausdorff_edist s t + Hausdorff_edist t u := by simp [Hausdorff_edist_comm, add_comm]
-      
 #align emetric.Hausdorff_edist_triangle EMetric.hausdorffEdist_triangle
 
 /-- Two sets are at zero Hausdorff edistance if and only if they have the same closure -/
@@ -433,7 +425,6 @@ theorem hausdorffEdist_zero_iff_closure_eq_closure :
         Subset.antisymm (closure_minimal h.1 isClosed_closure)
           (closure_minimal h.2 isClosed_closure),
         fun h => ⟨h ▸ subset_closure, h.symm ▸ subset_closure⟩⟩
-    
 #align emetric.Hausdorff_edist_zero_iff_closure_eq_closure EMetric.hausdorffEdist_zero_iff_closure_eq_closure
 
 /-- The Hausdorff edistance between a set and its closure vanishes -/
@@ -452,12 +443,10 @@ theorem hausdorffEdist_closure₁ : hausdorffEdist (closure s) t = hausdorffEdis
     calc
       _ ≤ Hausdorff_edist (closure s) s + Hausdorff_edist s t := Hausdorff_edist_triangle
       _ = Hausdorff_edist s t := by simp [Hausdorff_edist_comm]
-      
   ·
     calc
       _ ≤ Hausdorff_edist s (closure s) + Hausdorff_edist (closure s) t := Hausdorff_edist_triangle
       _ = Hausdorff_edist (closure s) t := by simp
-      
 #align emetric.Hausdorff_edist_closure₁ EMetric.hausdorffEdist_closure₁
 -/
 
@@ -565,7 +554,6 @@ theorem infEdist_ne_top (h : s.Nonempty) : infEdist x s ≠ ⊤ :=
   calc
     inf_edist x s ≤ edist x y := inf_edist_le_edist_of_mem hy
     _ < ⊤ := lt_top_iff_ne_top.2 (edist_ne_top _ _)
-    
 #align metric.inf_edist_ne_top Metric.infEdist_ne_top
 
 /-- The minimal distance of a point to a set containing it vanishes -/
@@ -624,7 +612,6 @@ theorem disjoint_ball_infDist : Disjoint (ball x (infDist x s)) s :=
       calc
         dist x y = dist y x := dist_comm _ _
         _ < infDist x s := hy
-        
 #align metric.disjoint_ball_inf_dist Metric.disjoint_ball_infDist
 
 theorem ball_infDist_subset_compl : ball x (infDist x s) ⊆ sᶜ :=
@@ -978,13 +965,11 @@ theorem hausdorffDist_triangle (fin : hausdorffEdist s t ≠ ⊤) :
       Hausdorff_dist s u = 0 + 0 := by simp [Hausdorff_dist, h]
       _ ≤ Hausdorff_dist s t + Hausdorff_dist t u :=
         add_le_add Hausdorff_dist_nonneg Hausdorff_dist_nonneg
-      
   · have Dtu : Hausdorff_edist t u < ⊤ :=
       calc
         Hausdorff_edist t u ≤ Hausdorff_edist t s + Hausdorff_edist s u := Hausdorff_edist_triangle
         _ = Hausdorff_edist s t + Hausdorff_edist s u := by simp [Hausdorff_edist_comm]
         _ < ⊤ := lt_top_iff_ne_top.mpr <| ennreal.add_ne_top.mpr ⟨Fin, h⟩
-        
     rw [Hausdorff_dist, Hausdorff_dist, Hausdorff_dist, ← ENNReal.toReal_add Fin Dtu.ne,
       ENNReal.toReal_le_toReal h]
     · exact Hausdorff_edist_triangle
@@ -1180,7 +1165,6 @@ theorem Bounded.thickening {δ : ℝ} {E : Set X} (h : Bounded E) : Bounded (thi
   calc
     dist y x ≤ dist z x + dist y z := by rw [add_comm]; exact dist_triangle _ _ _
     _ ≤ R + δ := add_le_add (hR zE) hz.le
-    
 #align metric.bounded.thickening Metric.Bounded.thickening
 -/
 
@@ -1479,7 +1463,6 @@ theorem Disjoint.exists_thickenings (hst : Disjoint s t) (hs : IsCompact s) (ht 
     edist x y ≤ edist z x + edist z y := edist_triangle_left _ _ _
     _ ≤ ↑(r / 2) + ↑(r / 2) := (add_le_add hzx.le hzy.le)
     _ = r := by rw [← ENNReal.coe_add, add_halves]
-    
 #align disjoint.exists_thickenings Disjoint.exists_thickenings
 
 theorem Disjoint.exists_cthickenings (hst : Disjoint s t) (hs : IsCompact s) (ht : IsClosed t) :

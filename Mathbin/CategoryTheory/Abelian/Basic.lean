@@ -728,7 +728,6 @@ instance epi_pullback_of_epi_f [Epi f] : Epi (pullback.snd : pullback f g ⟶ Y)
       f ≫ d = (biprod.inl ≫ biprod.desc f (-g)) ≫ d := by rw [biprod.inl_desc]
       _ = biprod.inl ≫ u := by rw [category.assoc, hd]
       _ = 0 := biprod.inl_desc _ _
-      
     -- But f is an epimorphism, so d = 0...
     have : d = 0 := (cancel_epi f).1 (by simpa)
     -- ...or, in other words, e = 0.
@@ -738,7 +737,6 @@ instance epi_pullback_of_epi_f [Epi f] : Epi (pullback.snd : pullback f g ⟶ Y)
       _ = biprod.inr ≫ biprod.desc f (-g) ≫ 0 := by rw [this]
       _ = (biprod.inr ≫ biprod.desc f (-g)) ≫ 0 := by rw [← category.assoc]
       _ = 0 := has_zero_morphisms.comp_zero _ _
-      
 #align category_theory.abelian.epi_pullback_of_epi_f CategoryTheory.Abelian.epi_pullback_of_epi_f
 -/
 
@@ -769,7 +767,6 @@ instance epi_pullback_of_epi_g [Epi g] : Epi (pullback.fst : pullback f g ⟶ X)
       (-g) ≫ d = (biprod.inr ≫ biprod.desc f (-g)) ≫ d := by rw [biprod.inr_desc]
       _ = biprod.inr ≫ u := by rw [category.assoc, hd]
       _ = 0 := biprod.inr_desc _ _
-      
     -- But g is an epimorphism, thus so is -g, so d = 0...
     have : d = 0 := (cancel_epi (-g)).1 (by simpa)
     -- ...or, in other words, e = 0.
@@ -779,7 +776,6 @@ instance epi_pullback_of_epi_g [Epi g] : Epi (pullback.fst : pullback f g ⟶ X)
       _ = biprod.inl ≫ biprod.desc f (-g) ≫ 0 := by rw [this]
       _ = (biprod.inl ≫ biprod.desc f (-g)) ≫ 0 := by rw [← category.assoc]
       _ = 0 := has_zero_morphisms.comp_zero _ _
-      
 #align category_theory.abelian.epi_pullback_of_epi_g CategoryTheory.Abelian.epi_pullback_of_epi_g
 -/
 
@@ -835,7 +831,6 @@ instance mono_pushout_of_mono_f [Mono f] : Mono (pushout.inr : Z ⟶ pushout f g
       d ≫ f = d ≫ biprod.lift f (-g) ≫ biprod.fst := by rw [biprod.lift_fst]
       _ = u ≫ biprod.fst := by rw [← category.assoc, hd]
       _ = 0 := biprod.lift_fst _ _
-      
     have : d = 0 := (cancel_mono f).1 (by simpa)
     calc
       e = u ≫ biprod.snd := by rw [biprod.lift_snd]
@@ -843,7 +838,6 @@ instance mono_pushout_of_mono_f [Mono f] : Mono (pushout.inr : Z ⟶ pushout f g
       _ = (0 ≫ biprod.lift f (-g)) ≫ biprod.snd := by rw [this]
       _ = 0 ≫ biprod.lift f (-g) ≫ biprod.snd := by rw [category.assoc]
       _ = 0 := zero_comp
-      
 #align category_theory.abelian.mono_pushout_of_mono_f CategoryTheory.Abelian.mono_pushout_of_mono_f
 -/
 
@@ -864,7 +858,6 @@ instance mono_pushout_of_mono_g [Mono g] : Mono (pushout.inl : Y ⟶ pushout f g
       d ≫ (-g) = d ≫ biprod.lift f (-g) ≫ biprod.snd := by rw [biprod.lift_snd]
       _ = u ≫ biprod.snd := by rw [← category.assoc, hd]
       _ = 0 := biprod.lift_snd _ _
-      
     have : d = 0 := (cancel_mono (-g)).1 (by simpa)
     calc
       e = u ≫ biprod.fst := by rw [biprod.lift_fst]
@@ -872,7 +865,6 @@ instance mono_pushout_of_mono_g [Mono g] : Mono (pushout.inl : Y ⟶ pushout f g
       _ = (0 ≫ biprod.lift f (-g)) ≫ biprod.fst := by rw [this]
       _ = 0 ≫ biprod.lift f (-g) ≫ biprod.fst := by rw [category.assoc]
       _ = 0 := zero_comp
-      
 #align category_theory.abelian.mono_pushout_of_mono_g CategoryTheory.Abelian.mono_pushout_of_mono_g
 -/
 

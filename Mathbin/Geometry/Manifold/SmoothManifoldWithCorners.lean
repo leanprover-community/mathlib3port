@@ -986,7 +986,6 @@ theorem map_extend_nhdsWithin_eq_image {y : M} (hy : y ∈ f.source) :
           ((f.extend I).left_inv <| by rwa [f.extend_source])
           (continuous_at_extend_symm f I hy).ContinuousWithinAt
           (continuous_at_extend f I hy).ContinuousWithinAt
-      
 #align local_homeomorph.map_extend_nhds_within_eq_image LocalHomeomorph.map_extend_nhdsWithin_eq_image
 
 theorem map_extend_nhdsWithin {y : M} (hy : y ∈ f.source) :

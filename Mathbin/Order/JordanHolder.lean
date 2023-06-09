@@ -560,7 +560,6 @@ theorem append_succ_castAdd_aux (i : Fin m) (h : a (Fin.last _) = b 0) :
       b ⟨i + 1 - m, by simp [this]⟩ = b 0 := congr_arg b (by simp [Fin.ext_iff, this])
       _ = a (Fin.last _) := h.symm
       _ = _ := congr_arg a (by simp [Fin.ext_iff, this])
-      
 #align composition_series.append_succ_cast_add_aux CompositionSeries.append_succ_castAdd_aux
 
 theorem append_natAdd_aux (i : Fin n) :
@@ -760,7 +759,6 @@ theorem append {s₁ s₂ t₁ t₂ : CompositionSeries X} (hs : s₁.top = s₂
       Fin (s₁.length + s₂.length) ≃ Sum (Fin s₁.length) (Fin s₂.length) := finSumFinEquiv.symm
       _ ≃ Sum (Fin t₁.length) (Fin t₂.length) := (Equiv.sumCongr h₁.some h₂.some)
       _ ≃ Fin (t₁.length + t₂.length) := finSumFinEquiv
-      
   ⟨e, by
     intro i
     refine' Fin.addCases _ _ i
@@ -780,7 +778,6 @@ protected theorem snoc {s₁ s₂ : CompositionSeries X} {x₁ x₂ : X} {hsat�
       Fin (s₁.length + 1) ≃ Option (Fin s₁.length) := finSuccEquivLast
       _ ≃ Option (Fin s₂.length) := (Functor.mapEquiv Option hequiv.some)
       _ ≃ Fin (s₂.length + 1) := finSuccEquivLast.symm
-      
   ⟨e, fun i => by
     refine' Fin.lastCases _ _ i
     · simpa [top] using htop

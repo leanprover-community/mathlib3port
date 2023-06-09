@@ -239,7 +239,6 @@ theorem sqrt_eq_one : sqrt x = 1 ↔ x = 1 :=
   calc
     sqrt x = 1 ↔ 1 * 1 = x := sqrt_eq_iff_mul_self_eq_of_pos zero_lt_one
     _ ↔ x = 1 := by rw [eq_comm, mul_one]
-    
 #align real.sqrt_eq_one Real.sqrt_eq_one
 
 @[simp]

@@ -331,7 +331,6 @@ theorem compiler_correctness :
     calc
       ζ₁ = outcome (compile map e_s₁ t) η := by cc
       _ ≃[t] { η with ac := ν₁ } := by apply e_ih_s₁ <;> assumption
-      
     have hζ₁_ν₁ : ζ₁.ac = ν₁ := by finish [state_eq]
     have hζ₂ : ζ₂ ≃[t + 1]/ac write t ν₁ η
     calc
@@ -343,7 +342,6 @@ theorem compiler_correctness :
         by
         apply state_eq_rs_implies_write_eq_rs
         simp [state_eq_rs]
-      
     have hζ₂_ν₂ : read t ζ₂ = ν₁ := by
       simp [state_eq_rs] at hζ₂ ⊢
       specialize hζ₂ t (register.lt_succ_self _)
@@ -358,13 +356,11 @@ theorem compiler_correctness :
         read (loc x map) ζ₂ = read (loc x map) (write t ν₁ η) := hζ₂ _ (ht' _)
         _ = read (loc x map) η := by simp only [loc] at ht ; simp [(ht _).Ne]
         _ = ξ x := hmap x
-        
     have hζ₃ : ζ₃ ≃[t + 1] { write t ν₁ η with ac := ν₂ }
     calc
       ζ₃ = outcome (compile map e_s₂ (t + 1)) ζ₂ := by cc
       _ ≃[t + 1] { ζ₂ with ac := ν₂ } := by apply e_ih_s₂ <;> assumption
       _ ≃[t + 1] { write t ν₁ η with ac := ν₂ } := by simp [state_eq]; apply hζ₂
-      
     have hζ₃_ν₂ : ζ₃.ac = ν₂ := by finish [state_eq]
     have hζ₃_ν₁ : read t ζ₃ = ν₁ :=
       by
@@ -380,7 +376,6 @@ theorem compiler_correctness :
       _ ≃[t + 1] { { write t ν₁ η with ac := ν₂ } with ac := ν } := by simp [state_eq] at hζ₃ ⊢;
         cases hζ₃; assumption
       _ ≃[t + 1] { write t ν₁ η with ac := ν } := by simp
-      
     apply write_eq_implies_state_eq <;> assumption
 #align arithcc.compiler_correctness Arithcc.compiler_correctness
 

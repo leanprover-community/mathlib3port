@@ -188,7 +188,6 @@ theorem iUnion_of_tendsto_zero {ι} (m : OuterMeasure α) {s : ι → Set α} (l
       m S = m (s k ∪ S \ s k) := by rw [union_diff_self, union_eq_self_of_subset_left hsS]
       _ ≤ m (s k) + m (S \ s k) := (m.union _ _)
       _ ≤ M + m (S \ s k) := add_le_add_right (le_iSup _ k) _
-      
   have B : tendsto (fun k => M + m (S \ s k)) l (𝓝 (M + 0)) := tendsto_const_nhds.add h0
   rw [add_zero] at B 
   exact ge_of_tendsto' B A
@@ -226,7 +225,6 @@ theorem diff_null (m : OuterMeasure α) (s : Set α) {t : Set α} (ht : m t = 0)
     m s ≤ m (s ∩ t) + m (s \ t) := le_inter_add_diff _
     _ ≤ m t + m (s \ t) := (add_le_add_right (m.mono <| inter_subset_right _ _) _)
     _ = m (s \ t) := by rw [ht, zero_add]
-    
 #align measure_theory.outer_measure.diff_null MeasureTheory.OuterMeasure.diff_null
 
 theorem union_null (m : OuterMeasure α) {s₁ s₂ : Set α} (h₁ : m s₁ = 0) (h₂ : m s₂ = 0) :
@@ -278,8 +276,7 @@ instance : Add (OuterMeasure α) :=
         calc
           m₁ (⋃ i, s i) + m₂ (⋃ i, s i) ≤ (∑' i, m₁ (s i)) + ∑' i, m₂ (s i) :=
             add_le_add (m₁.iUnion_nat s) (m₂.iUnion_nat s)
-          _ = _ := ENNReal.tsum_add.symm
-           }⟩
+          _ = _ := ENNReal.tsum_add.symm }⟩
 
 @[simp]
 theorem coe_add (m₁ m₂ : OuterMeasure α) : ⇑(m₁ + m₂) = m₁ + m₂ :=
@@ -396,8 +393,7 @@ instance : SupSet (OuterMeasure α) :=
           calc
             m (⋃ i, f i) ≤ ∑' i : ℕ, m (f i) := m.iUnion_nat _
             _ ≤ ∑' i, ⨆ m ∈ ms, (m : OuterMeasure α) (f i) :=
-              ENNReal.tsum_le_tsum fun i => le_iSup₂ m hm
-             }⟩
+              ENNReal.tsum_le_tsum fun i => le_iSup₂ m hm }⟩
 
 instance : CompleteLattice (OuterMeasure α) :=
   { OuterMeasure.orderBot,
@@ -501,7 +497,6 @@ def dirac (a : α) : OuterMeasure α
         indicator (⋃ n, s n) (fun _ => (1 : ℝ≥0∞)) a = 1 := indicator_of_mem hs _
         _ = indicator (s i) (fun _ => 1) a := (indicator_of_mem hi _).symm
         _ ≤ ∑' n, indicator (s n) (fun _ => 1) a := ENNReal.le_tsum _
-        
     else by simp only [indicator_of_not_mem hs, zero_le]
 #align measure_theory.outer_measure.dirac MeasureTheory.OuterMeasure.dirac
 -/
@@ -752,7 +747,6 @@ theorem ofFunction_union_of_top_of_nonempty_inter {s t : Set α}
       μ s + μ t ≤ ∞ := le_top
       _ = m (f i) := (h (f i) hs ht).symm
       _ ≤ ∑' i, m (f i) := ENNReal.le_tsum i
-      
   set I := fun s => {i : ℕ | (s ∩ f i).Nonempty}
   have hd : Disjoint (I s) (I t) := disjoint_iff_inf_le.mpr fun i hi => he ⟨i, hi⟩
   have hI : ∀ (u) (_ : u ⊆ s ∪ t), μ u ≤ ∑' i : I u, μ (f i) := fun u hu =>
@@ -762,7 +756,6 @@ theorem ofFunction_union_of_top_of_nonempty_inter {s t : Set α}
           let ⟨i, hi⟩ := mem_Union.1 (hf (hu hx))
           mem_Union.2 ⟨⟨i, ⟨x, hx, hi⟩⟩, hi⟩
       _ ≤ ∑' i : I u, μ (f i) := μ.Union _
-      
   calc
     μ s + μ t ≤ (∑' i : I s, μ (f i)) + ∑' i : I t, μ (f i) :=
       add_le_add (hI _ <| subset_union_left _ _) (hI _ <| subset_union_right _ _)
@@ -773,7 +766,6 @@ theorem ofFunction_union_of_top_of_nonempty_inter {s t : Set α}
       (tsum_le_tsum_of_inj coe Subtype.coe_injective (fun _ _ => zero_le _) (fun _ => le_rfl)
         ENNReal.summable ENNReal.summable)
     _ ≤ ∑' i, m (f i) := ENNReal.tsum_le_tsum fun i => of_function_le _
-    
 #align measure_theory.outer_measure.of_function_union_of_top_of_nonempty_inter MeasureTheory.OuterMeasure.ofFunction_union_of_top_of_nonempty_inter
 
 theorem comap_ofFunction {β} (f : β → α) (h : Monotone m ∨ Surjective f) :
@@ -1287,7 +1279,6 @@ theorem restrict_iInf_restrict {ι} (s : Set α) (m : ι → OuterMeasure α) :
       by rw [Subtype.range_coe]
     _ = map (coe : s → α) (⨅ i, comap coe (m i)) := (map_iInf Subtype.coe_injective _).symm
     _ = restrict s (⨅ i, m i) := congr_arg (map coe) (comap_iInf _ _).symm
-    
 #align measure_theory.outer_measure.restrict_infi_restrict MeasureTheory.OuterMeasure.restrict_iInf_restrict
 
 theorem restrict_iInf {ι} [Nonempty ι] (s : Set α) (m : ι → OuterMeasure α) :

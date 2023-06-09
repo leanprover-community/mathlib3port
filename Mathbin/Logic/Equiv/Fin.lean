@@ -614,8 +614,7 @@ def finProdFinEquiv : Fin m × Fin n ≃ Fin (m * n)
         x.2.1 + n * x.1.1 + 1 = x.1.1 * n + x.2.1 + 1 := by ac_rfl
         _ ≤ x.1.1 * n + n := (Nat.add_le_add_left x.2.2 _)
         _ = (x.1.1 + 1) * n := (Eq.symm <| Nat.succ_mul _ _)
-        _ ≤ m * n := Nat.mul_le_mul_right _ x.1.2
-        ⟩
+        _ ≤ m * n := Nat.mul_le_mul_right _ x.1.2⟩
   invFun x := (x.divNat, x.modNat)
   left_inv := fun ⟨x, y⟩ =>
     have H : 0 < n := Nat.pos_of_ne_zero fun H => Nat.not_lt_zero y.1 <| H ▸ y.2
@@ -624,13 +623,11 @@ def finProdFinEquiv : Fin m × Fin n ≃ Fin (m * n)
         calc
           (y.1 + n * x.1) / n = y.1 / n + x.1 := Nat.add_mul_div_left _ _ H
           _ = 0 + x.1 := by rw [Nat.div_eq_of_lt y.2]
-          _ = x.1 := Nat.zero_add x.1
-          )
+          _ = x.1 := Nat.zero_add x.1)
       (Fin.eq_of_veq <|
         calc
           (y.1 + n * x.1) % n = y.1 % n := Nat.add_mul_mod_self_left _ _ _
-          _ = y.1 := Nat.mod_eq_of_lt y.2
-          )
+          _ = y.1 := Nat.mod_eq_of_lt y.2)
   right_inv x := Fin.eq_of_veq <| Nat.mod_add_div _ _
 #align fin_prod_fin_equiv finProdFinEquiv
 -/

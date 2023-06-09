@@ -124,7 +124,6 @@ theorem le_hasSum (hf : HasSum f a) (i : ι) (hb : ∀ (b') (_ : b' ≠ i), 0 �
   calc
     f i = ∑ i in {i}, f i := Finset.sum_singleton.symm
     _ ≤ a := sum_le_hasSum _ (by convert hb; simp) hf
-    
 #align le_has_sum le_hasSum
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (i «expr ∉ » s) -/
@@ -318,7 +317,6 @@ theorem summable_abs_iff [LinearOrderedAddCommGroup α] [UniformSpace α] [Unifo
     _ ↔ (Summable fun x : {x | 0 ≤ f x} => f x) ∧ Summable fun x : {x | 0 ≤ f x}ᶜ => -f x := by
       simp only [h1, h2]
     _ ↔ _ := by simp only [summable_neg_iff, summable_subtype_and_compl]
-    
 #align summable_abs_iff summable_abs_iff
 
 alias summable_abs_iff ↔ Summable.of_abs Summable.abs

@@ -96,7 +96,6 @@ theorem embeddingOfSubset_isometry (H : DenseRange x) : Isometry (embeddingOfSub
               (embedding_of_subset x b - embedding_of_subset x a) n
         nlinarith
       _ = dist (embedding_of_subset x b) (embedding_of_subset x a) + e := by ring
-      
   simpa [dist_comm] using this
 #align Kuratowski_embedding.embedding_of_subset_isometry KuratowskiEmbedding.embeddingOfSubset_isometry
 

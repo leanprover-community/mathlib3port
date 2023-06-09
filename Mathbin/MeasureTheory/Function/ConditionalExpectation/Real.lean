@@ -103,7 +103,6 @@ theorem snorm_one_condexp_le_snorm (f : α → ℝ) : snorm (μ[f|m]) 1 μ ≤ s
             (@ae_of_all _ m0 _ μ (fun x => abs_nonneg (f x) : ∀ x, 0 ≤ |f x|))
       filter_upwards [this] with x hx
       exact abs_eq_self.2 hx
-    
 #align measure_theory.snorm_one_condexp_le_snorm MeasureTheory.snorm_one_condexp_le_snorm
 
 theorem integral_abs_condexp_le (f : α → ℝ) : (∫ x, |(μ[f|m]) x| ∂μ) ≤ ∫ x, |f x| ∂μ :=
@@ -289,7 +288,6 @@ theorem condexp_strongly_measurable_simpleFunc_mul (hm : m ≤ m0) (f : @SimpleF
         exact condexp_add (hg.simple_func_mul' hm _) (hg.simple_func_mul' hm _)
       _ =ᵐ[μ] ⇑g₁ * μ[g|m] + ⇑g₂ * μ[g|m] := (eventually_eq.add h_eq₁ h_eq₂)
       _ =ᵐ[μ] ⇑(g₁ + g₂) * μ[g|m] := by rw [h_add, add_mul]
-      
 #align measure_theory.condexp_strongly_measurable_simple_func_mul MeasureTheory.condexp_strongly_measurable_simpleFunc_mul
 
 theorem condexp_stronglyMeasurable_mul_of_bound (hm : m ≤ m0) [IsFiniteMeasure μ] {f g : α → ℝ}

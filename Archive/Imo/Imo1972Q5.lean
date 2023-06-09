@@ -52,7 +52,6 @@ example (f g : ℝ → ℝ) (hf1 : ∀ x, ∀ y, f (x + y) + f (x - y) = 2 * f x
       _ ≤ ‖f (x + y)‖ + ‖f (x - y)‖ := (norm_add_le _ _)
       _ ≤ k + k := (add_le_add (hk₁ _) (hk₁ _))
       _ = 2 * k := (two_mul _).symm
-      
   -- Suppose the conclusion does not hold.
   by_contra' hneg
   set k' := k / ‖g y‖
@@ -64,7 +63,6 @@ example (f g : ℝ → ℝ) (hf1 : ∀ x, ∀ y, f (x + y) + f (x - y) = 2 * f x
       calc
         0 < ‖f x‖ := norm_pos_iff.mpr hx
         _ ≤ k := hk₁ x
-        
     rw [div_lt_iff]
     apply lt_mul_of_one_lt_right h₁ hneg
     exact trans zero_lt_one hneg
@@ -85,7 +83,6 @@ example (f g : ℝ → ℝ) (hf1 : ∀ x, ∀ y, f (x + y) + f (x - y) = 2 * f x
   calc
     k' < k := H₁
     _ ≤ k' := H₂
-    
 
 /-- IMO 1972 Q5
 
@@ -115,7 +112,6 @@ example (f g : ℝ → ℝ) (hf1 : ∀ x, ∀ y, f (x + y) + f (x - y) = 2 * f x
       _ = ‖f (x + y) + f (x - y)‖ := by rw [hf1]
       _ ≤ ‖f (x + y)‖ + ‖f (x - y)‖ := (abs_add _ _)
       _ ≤ 2 * k := by linarith [h (x + y), h (x - y)]
-      
   linarith
 
 end Imo1972Q5

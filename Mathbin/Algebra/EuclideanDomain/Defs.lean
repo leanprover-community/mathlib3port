@@ -126,7 +126,6 @@ theorem mod_eq_sub_mul_div {R : Type _} [EuclideanDomain R] (a b : R) : a % b = 
   calc
     a % b = b * (a / b) + a % b - b * (a / b) := (add_sub_cancel' _ _).symm
     _ = a - b * (a / b) := by rw [div_add_mod]
-    
 #align euclidean_domain.mod_eq_sub_mul_div EuclideanDomain.mod_eq_sub_mul_div
 
 theorem mod_lt : ∀ (a) {b : R}, b ≠ 0 → a % b ≺ b :=

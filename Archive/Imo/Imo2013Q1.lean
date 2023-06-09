@@ -40,7 +40,6 @@ theorem arith_lemma (k n : ℕ) : 0 < 2 * n + 2 ^ k.succ :=
     _ = 2 ^ 1 := (pow_one 2).symm
     _ ≤ 2 ^ k.succ := (Nat.pow_le_pow_of_le_right zero_lt_two (Nat.le_add_left 1 k))
     _ ≤ 2 * n + 2 ^ k.succ := Nat.le_add_left _ _
-    
 #align imo2013_q1.arith_lemma Imo2013Q1.arith_lemma
 
 theorem prod_lemma (m : ℕ → ℕ+) (k : ℕ) (nm : ℕ+) :
@@ -91,7 +90,6 @@ theorem imo2013_q1 (n : ℕ+) (k : ℕ) :
       _ = (∏ i in Finset.range pk, 1 + 1 / m i) * (1 + 1 / m pk) := by
         rw [prod_lemma, hpm, ← hmpk, mul_comm]
       _ = ∏ i in Finset.range pk.succ, 1 + 1 / m i := by rw [← Finset.prod_range_succ _ pk]
-      
   · -- odd case
     let t_succ : ℕ+ := ⟨t + 1, t.succ_pos⟩
     obtain ⟨pm, hpm⟩ := hpk t_succ
@@ -111,6 +109,5 @@ theorem imo2013_q1 (n : ℕ+) (k : ℕ) :
       _ = (∏ i in Finset.range pk, 1 + 1 / m i) * (1 + 1 / ↑(m pk)) := by
         rw [prod_lemma, hpm, ← hmpk, mul_comm]
       _ = ∏ i in Finset.range pk.succ, 1 + 1 / m i := by rw [← Finset.prod_range_succ _ pk]
-      
 #align imo2013_q1 imo2013_q1
 

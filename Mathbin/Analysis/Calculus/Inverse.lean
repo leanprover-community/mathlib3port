@@ -262,7 +262,6 @@ theorem surjOn_closedBall_of_nonlinearRightInverse (hf : ApproximatesLinearOn f 
         apply mul_le_mul_of_nonneg_left _ (NNReal.coe_nonneg c)
         simpa [hv, dist_eq_norm'] using f'symm.bound (y - f z)
       _ = c * f'symm.nnnorm * dist (f z) y := by ring
-      
   -- Third bound: a complicated bound on `dist w b` (that will show up in the induction) is enough
   -- to check that `w` is in the ball on which one has controls. Will be used to check that `u n`
   -- belongs to this ball for all `n`.
@@ -289,7 +288,6 @@ theorem surjOn_closedBall_of_nonlinearRightInverse (hf : ApproximatesLinearOn f 
         rw [mul_one]
         exact mul_le_mul_of_nonneg_left (mem_closed_ball'.1 hy) (NNReal.coe_nonneg _)
       _ = ε * (1 - c * f'symm.nnnorm) := by field_simp; ring
-      
   /- Main inductive control: `f (u n)` becomes exponentially close to `y`, and therefore
     `dist (u (n+1)) (u n)` becomes exponentally small, making it possible to get an inductive
     bound on `dist (u n) b`, from which one checks that `u n` remains in the ball on which we
@@ -319,7 +317,6 @@ theorem surjOn_closedBall_of_nonlinearRightInverse (hf : ApproximatesLinearOn f 
             f'symm.nnnorm * (1 - (c * f'symm.nnnorm) ^ n.succ) / (1 - c * f'symm.nnnorm) *
               dist (f b) y :=
           by field_simp [Jcf']; ring
-        
     refine' ⟨_, Ign⟩
     calc
       dist (f (g (u n))) y ≤ c * f'symm.nnnorm * dist (f (u n)) y :=
@@ -327,7 +324,6 @@ theorem surjOn_closedBall_of_nonlinearRightInverse (hf : ApproximatesLinearOn f 
       _ ≤ c * f'symm.nnnorm * ((c * f'symm.nnnorm) ^ n * dist (f b) y) :=
         (mul_le_mul_of_nonneg_left IH.1 (mul_nonneg (NNReal.coe_nonneg _) (NNReal.coe_nonneg _)))
       _ = (c * f'symm.nnnorm) ^ n.succ * dist (f b) y := by ring
-      
   -- Deduce from the inductive bound that `uₙ` is a Cauchy sequence, therefore converging.
   have : CauchySeq u :=
     haveI :
@@ -340,7 +336,6 @@ theorem surjOn_closedBall_of_nonlinearRightInverse (hf : ApproximatesLinearOn f 
         _ ≤ f'symm.nnnorm * ((c * f'symm.nnnorm) ^ n * dist (f b) y) :=
           (mul_le_mul_of_nonneg_left (D n).1 (NNReal.coe_nonneg _))
         _ = f'symm.nnnorm * dist (f b) y * (c * f'symm.nnnorm) ^ n := by ring
-        
     cauchySeq_of_le_geometric _ _ Icf' this
   obtain ⟨x, hx⟩ : ∃ x, tendsto u at_top (𝓝 x) := cauchySeq_tendsto_of_complete this
   -- As all the `uₙ` belong to the ball `closed_ball b ε`, so does their limit `x`.
@@ -495,7 +490,6 @@ theorem to_inv (hf : ApproximatesLinearOn f (f' : E →L[𝕜] F) s c) (hc : Sub
       exact (hf.antilipschitz hc).le_mul_dist ⟨y', y's⟩ ⟨x', x's⟩
     _ = (N * (N⁻¹ - c)⁻¹ * c : ℝ≥0) * ‖A x' - A y'‖ := by simp only [norm_sub_rev, Nonneg.coe_mul];
       ring
-    
 #align approximates_linear_on.to_inv ApproximatesLinearOn.to_inv
 
 include cs

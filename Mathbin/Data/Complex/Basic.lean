@@ -893,7 +893,6 @@ theorem abs_of_nat (n : ℕ) : Complex.abs n = n :=
   calc
     Complex.abs n = Complex.abs (n : ℝ) := by rw [of_real_nat_cast]
     _ = _ := abs_of_nonneg (Nat.cast_nonneg n)
-    
 #align complex.abs_of_nat Complex.abs_of_nat
 
 theorem mul_self_abs (z : ℂ) : abs z * abs z = normSq z :=
@@ -923,7 +922,6 @@ theorem abs_two : abs 2 = 2 :=
   calc
     abs 2 = abs (2 : ℝ) := by rw [of_real_bit0, of_real_one]
     _ = (2 : ℝ) := abs_of_nonneg (by norm_num)
-    
 #align complex.abs_two Complex.abs_two
 
 @[simp]
@@ -998,7 +996,6 @@ theorem abs_le_sqrt_two_mul_max (z : ℂ) : abs z ≤ Real.sqrt 2 * max (|z.re|)
       Real.sqrt_le_sqrt (add_le_add_right (sq_le_sq.2 hle) _)
     _ = Real.sqrt 2 * max (|x|) (|y|) := by
       rw [max_eq_right hle, ← two_mul, Real.sqrt_mul two_pos.le, Real.sqrt_sq_eq_abs]
-    
 #align complex.abs_le_sqrt_two_mul_max Complex.abs_le_sqrt_two_mul_max
 
 theorem abs_re_div_abs_le_one (z : ℂ) : |z.re / z.abs| ≤ 1 :=
@@ -1191,7 +1188,6 @@ theorem lim_eq_lim_im_add_lim_re (f : CauSeq ℂ abs) :
       _ = CauSeq.const abs (↑(limUnder (cauSeqRe f)) + ↑(limUnder (cauSeqIm f)) * I) :=
         CauSeq.ext fun _ =>
           Complex.ext (by simp [lim_aux, cau_seq_re]) (by simp [lim_aux, cau_seq_im])
-      
 #align complex.lim_eq_lim_im_add_lim_re Complex.lim_eq_lim_im_add_lim_re
 
 theorem lim_re (f : CauSeq ℂ abs) : limUnder (cauSeqRe f) = (limUnder f).re := by

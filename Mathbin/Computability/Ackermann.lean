@@ -219,7 +219,6 @@ theorem add_lt_ack : ∀ m n, m + n < ack m n
       _ ≤ ack m (ack (m + 1) n) :=
         (ack_mono_right m <| le_of_eq_of_le (by ring_nf) <| succ_le_of_lt <| add_lt_ack (m + 1) n)
       _ = ack (m + 1) (n + 1) := (ack_succ_succ m n).symm
-      
 #align add_lt_ack add_lt_ack
 -/
 
@@ -353,7 +352,6 @@ theorem ack_ack_lt_ack_max_add_two (m n k : ℕ) : ack m (ack n k) < ack (max m 
       (ack_strictMono_right _ <| ack_strictMono_left k <| lt_succ_of_le <| le_max_right m n)
     _ = ack (max m n + 1) (k + 1) := (ack_succ_succ _ _).symm
     _ ≤ ack (max m n + 2) k := ack_succ_right_le_ack_succ_left _ _
-    
 #align ack_ack_lt_ack_max_add_two ack_ack_lt_ack_max_add_two
 
 #print ack_add_one_sq_lt_ack_add_four /-
@@ -365,7 +363,6 @@ theorem ack_add_one_sq_lt_ack_add_four (m n : ℕ) : ack m ((n + 1) ^ 2) < ack (
     _ ≤ ack (m + 2) (ack (m + 3) n) := (ack_mono_left _ <| by linarith)
     _ = ack (m + 3) (n + 1) := (ack_succ_succ _ n).symm
     _ ≤ ack (m + 4) n := ack_succ_right_le_ack_succ_left _ n
-    
 #align ack_add_one_sq_lt_ack_add_four ack_add_one_sq_lt_ack_add_four
 -/
 

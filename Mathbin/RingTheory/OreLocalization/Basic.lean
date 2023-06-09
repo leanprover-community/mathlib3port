@@ -144,7 +144,6 @@ protected theorem eq_of_num_factor_eq {r r' r₁ r₂ : R} {s t : S} (h : r * t 
     _ = r₁ * r' * (r₂ * t') /ₒ (s * t') := by rw [hr₂]
     _ = r₁ * r' * r₂ * t' /ₒ (s * t') := by simp [← mul_assoc]
     _ = r₁ * r' * r₂ /ₒ s := by symm <;> apply OreLocalization.expand
-    
 #align ore_localization.eq_of_num_factor_eq OreLocalization.eq_of_num_factor_eq
 
 /-- A function or predicate over `R` and `S` can be lifted to `R[S⁻¹]` if it is invariant
@@ -208,7 +207,6 @@ private theorem mul'_char (r₁ r₂ : R) (s₁ s₂ : S) (u : S) (v : R) (huv :
       (s₁ : R) * (v * r₃) = r₂ * u * r₃ := by assoc_rw [← huv] <;> symm <;> apply mul_assoc
       _ = r₂ * u₀ * s₃ := by assoc_rw [← h₃] <;> rfl
       _ = s₁ * (v₀ * s₃) := by assoc_rw [h₀] <;> apply mul_assoc
-      
   rcases ore_left_cancel _ _ _ this with ⟨s₄, hs₄⟩
   symm; rw [ore_div_eq_iff]
   use s₃ * s₄; use r₃ * s₄; simp only [Submonoid.coe_mul]; constructor

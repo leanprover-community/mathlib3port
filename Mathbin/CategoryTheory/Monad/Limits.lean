@@ -446,7 +446,7 @@ noncomputable def leftAdjointPreservesTerminalOfReflective (R : D ⥤ C) [Reflec
     apply is_limit_change_empty_cone D (limit.is_limit F)
     apply (as_iso ((adjunction.of_right_adjoint R).counit.app _)).symm.trans
     · apply (left_adjoint R).mapIso; letI := monadicCreatesLimits.{v, v} R
-      let this := (CategoryTheory.preservesLimitOfCreatesLimitAndHasLimit F R).preserves
+      let this.1 := (CategoryTheory.preservesLimitOfCreatesLimitAndHasLimit F R).preserves
       apply (this (limit.is_limit F)).conePointUniqueUpToIso h
     infer_instance
 #align category_theory.left_adjoint_preserves_terminal_of_reflective CategoryTheory.leftAdjointPreservesTerminalOfReflective

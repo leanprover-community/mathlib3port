@@ -234,7 +234,6 @@ theorem normSq_div_sub_div_lt_one (x y : ℤ[i]) : ((x / y : ℂ) - ((x / y : �
           rw [to_complex_div_im] <;> simp [norm_sq, this] <;>
             simpa using abs_sub_round (x / y : ℂ).im))
     _ < 1 := by simp [norm_sq] <;> norm_num
-    
 #align gaussian_int.norm_sq_div_sub_div_lt_one GaussianInt.normSq_div_sub_div_lt_one
 
 instance : Mod ℤ[i] :=
@@ -254,7 +253,6 @@ theorem norm_mod_lt (x : ℤ[i]) {y : ℤ[i]} (hy : y ≠ 0) : (x % y).norm < y.
       _ < (y : ℂ).normSq * 1 :=
         (mul_lt_mul_of_pos_left (normSq_div_sub_div_lt_one _ _) (normSq_pos.2 this))
       _ = Zsqrtd.norm y := by simp
-      
 #align gaussian_int.norm_mod_lt GaussianInt.norm_mod_lt
 
 theorem natAbs_norm_mod_lt (x : ℤ[i]) {y : ℤ[i]} (hy : y ≠ 0) :
@@ -321,7 +319,6 @@ theorem mod_four_eq_three_of_nat_prime_of_prime (p : ℕ) [hp : Fact p.Prime]
               (Nat.pos_of_ne_zero fun hk0 => by clear_aux_decl <;> simp_all [pow_succ']) _
           _ = k * (k + 1) := by simp [add_comm, mul_add]
           _ < p * p := mul_lt_mul k_lt_p k_lt_p (Nat.succ_pos _) (Nat.zero_le _)
-          
       have hpk₁ : ¬(p : ℤ[i]) ∣ ⟨k, -1⟩ := fun ⟨x, hx⟩ =>
         lt_irrefl (p * x : ℤ[i]).norm.natAbs <|
           calc
@@ -330,7 +327,6 @@ theorem mod_four_eq_three_of_nat_prime_of_prime (p : ℕ) [hp : Fact p.Prime]
             _ ≤ (norm (p * x : ℤ[i])).natAbs :=
               norm_le_norm_mul_left _ fun hx0 =>
                 show (-1 : ℤ) ≠ 0 by decide <| by simpa [hx0] using congr_arg Zsqrtd.im hx
-            
       have hpk₂ : ¬(p : ℤ[i]) ∣ ⟨k, 1⟩ := fun ⟨x, hx⟩ =>
         lt_irrefl (p * x : ℤ[i]).norm.natAbs <|
           calc
@@ -339,7 +335,6 @@ theorem mod_four_eq_three_of_nat_prime_of_prime (p : ℕ) [hp : Fact p.Prime]
             _ ≤ (norm (p * x : ℤ[i])).natAbs :=
               norm_le_norm_mul_left _ fun hx0 =>
                 show (1 : ℤ) ≠ 0 by decide <| by simpa [hx0] using congr_arg Zsqrtd.im hx
-            
       have hpu : ¬IsUnit (p : ℤ[i]) :=
         mt norm_eq_one_iff.2
           (by

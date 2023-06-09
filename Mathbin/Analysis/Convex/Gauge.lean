@@ -501,7 +501,6 @@ theorem Convex.lipschitzWith_gauge {r : ℝ≥0} (hc : Convex ℝ s) (hr : 0 < r
       _ ≤ gauge s y + ‖x - y‖ / r :=
         (add_le_add_left ((gauge_mono this hs (x - y)).trans_eq (gauge_ball hr _)) _)
       _ = gauge s y + r⁻¹ * dist x y := by rw [dist_eq_norm, div_eq_inv_mul]
-      
 #align convex.lipschitz_with_gauge Convex.lipschitzWith_gauge
 
 theorem Convex.uniformContinuous_gauge (hc : Convex ℝ s) (h₀ : s ∈ 𝓝 (0 : E)) :

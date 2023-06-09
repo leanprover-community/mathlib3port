@@ -130,7 +130,6 @@ theorem cubic_eq_zero_iff (ha : a ≠ 0) (hω : IsPrimitiveRoot ω 3)
     calc
       b / a / 3 = b / (a * 3) := by field_simp [ha]
       _ = b / (3 * a) := by rw [mul_comm]
-      
   rw [h₄]
 #align theorems_100.cubic_eq_zero_iff Theorems100.cubic_eq_zero_iff
 
@@ -157,7 +156,6 @@ theorem cubic_eq_zero_iff_of_p_eq_zero (ha : a ≠ 0) (hω : IsPrimitiveRoot ω 
       _ = a * (x + b / (3 * a)) ^ 3 + (d - (9 * a * b * c - 2 * b ^ 3) * a / (3 * a) ^ 3) := by
         simp only [hb2, hb3]; field_simp; ring
       _ = a * ((x + b / (3 * a)) ^ 3 - s ^ 3) := by rw [hs3, hq]; field_simp [h54]; ring
-      
   have h₃ : ∀ x, a * x = 0 ↔ x = 0 := by intro x; simp [ha]
   have h₄ : ∀ x : K, x ^ 3 - s ^ 3 = (x - s) * (x - s * ω) * (x - s * ω ^ 2) :=
     by
@@ -168,7 +166,6 @@ theorem cubic_eq_zero_iff_of_p_eq_zero (ha : a ≠ 0) (hω : IsPrimitiveRoot ω 
       _ = (x - s) * (x ^ 2 - (ω + ω ^ 2) * x * s + ω ^ 3 * s ^ 2) := by
         rw [hω.pow_eq_one, cube_root_of_unity_sum hω]; simp
       _ = (x - s) * (x - s * ω) * (x - s * ω ^ 2) := by ring
-      
   rw [h₁, h₂, h₃, h₄ (x + b / (3 * a))]
   ring_nf
 #align theorems_100.cubic_eq_zero_iff_of_p_eq_zero Theorems100.cubic_eq_zero_iff_of_p_eq_zero

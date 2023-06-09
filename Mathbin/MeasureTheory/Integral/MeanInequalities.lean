@@ -76,7 +76,6 @@ theorem lintegral_mul_le_one_of_lintegral_rpow_eq_one {p q : ℝ} (hpq : p.IsCon
           div_eq_mul_inv, ← div_eq_mul_inv, hpq.inv_add_inv_conj_ennreal]
         simp [hpq.symm.pos]
       · exact (hf.pow_const _).mul_const _
-    
 #align ennreal.lintegral_mul_le_one_of_lintegral_rpow_eq_one ENNReal.lintegral_mul_le_one_of_lintegral_rpow_eq_one
 
 #print ENNReal.funMulInvSnorm /-
@@ -135,7 +134,6 @@ theorem lintegral_mul_le_Lp_mul_Lq_of_ne_zero_of_ne_top {p q : ℝ} (hpq : p.IsC
       have hf1 := lintegral_rpow_fun_mul_inv_snorm_eq_one hpq.pos hf_nonzero hf_nontop
       have hg1 := lintegral_rpow_fun_mul_inv_snorm_eq_one hpq.symm.pos hg_nonzero hg_nontop
       exact lintegral_mul_le_one_of_lintegral_rpow_eq_one hpq (hf.mul_const _) hf1 hg1
-    
 #align ennreal.lintegral_mul_le_Lp_mul_Lq_of_ne_zero_of_ne_top ENNReal.lintegral_mul_le_Lp_mul_Lq_of_ne_zero_of_ne_top
 
 theorem ae_eq_zero_of_lintegral_rpow_eq_zero {p : ℝ} (hp0 : 0 ≤ p) {f : α → ℝ≥0∞}
@@ -231,7 +229,6 @@ theorem lintegral_rpow_add_lt_top_of_lintegral_rpow_lt_top {p : ℝ} {f g : α �
         lintegral_const_mul' _ _ h_two, ENNReal.add_lt_top]
       · exact ⟨ENNReal.mul_lt_top h_two hf_top.ne, ENNReal.mul_lt_top h_two hg_top.ne⟩
       · exact (hf.pow_const p).const_mul _
-    
 #align ennreal.lintegral_rpow_add_lt_top_of_lintegral_rpow_lt_top ENNReal.lintegral_rpow_add_lt_top_of_lintegral_rpow_lt_top
 
 theorem lintegral_Lp_mul_le_Lq_mul_Lr {α} [MeasurableSpace α] {p q r : ℝ} (hp0_lt : 0 < p)
@@ -272,7 +269,6 @@ theorem lintegral_Lp_mul_le_Lq_mul_Lr {α} [MeasurableSpace α] {p q r : ℝ} (h
         rw [← inv_inv r, ← one_div, ← one_div, h_one_div_r]
         field_simp [q2, Real.conjugateExponent, p2, hp0_ne, hq0_ne]
       simp_rw [div_mul_div_comm, mul_one, mul_comm p2, mul_comm q2, hpp2, hpq2]
-    
 #align ennreal.lintegral_Lp_mul_le_Lq_mul_Lr ENNReal.lintegral_Lp_mul_le_Lq_mul_Lr
 
 theorem lintegral_mul_rpow_le_lintegral_rpow_mul_lintegral_rpow {p q : ℝ}
@@ -335,7 +331,6 @@ theorem lintegral_rpow_add_le_add_snorm_mul_lintegral_rpow_add {p q : ℝ}
         add_le_add
           (lintegral_mul_rpow_le_lintegral_rpow_mul_lintegral_rpow hpq hf (hf.add hg) hf_top)
           (lintegral_mul_rpow_le_lintegral_rpow_mul_lintegral_rpow hpq hg (hf.add hg) hg_top)
-    
 #align ennreal.lintegral_rpow_add_le_add_snorm_mul_lintegral_rpow_add ENNReal.lintegral_rpow_add_le_add_snorm_mul_lintegral_rpow_add
 
 private theorem lintegral_Lp_add_le_aux {p q : ℝ} (hpq : p.IsConjugateExponent q) {f g : α → ℝ≥0∞}
@@ -421,7 +416,6 @@ theorem lintegral_Lp_add_le_of_le_one {p : ℝ} {f g : α → ℝ≥0∞} (hf : 
       exact lintegral_mono fun a => rpow_add_le_add_rpow _ _ hp0 hp1
     _ ≤ 2 ^ (1 / p - 1) * ((∫⁻ a, f a ^ p ∂μ) ^ (1 / p) + (∫⁻ a, g a ^ p ∂μ) ^ (1 / p)) :=
       rpow_add_le_mul_rpow_add_rpow _ _ ((one_le_div hp).2 hp1)
-    
 #align ennreal.lintegral_Lp_add_le_of_le_one ENNReal.lintegral_Lp_add_le_of_le_one
 
 end ENNReal

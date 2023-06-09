@@ -600,7 +600,6 @@ theorem norm_fst_eq_snd (a : 𝓜(𝕜, A)) : ‖a.fst‖ = ‖a.snd‖ :=
       _ ≤ ‖a.snd (star (a.fst b))‖₊ * ‖b‖₊ := (a.central (star (a.fst b)) b ▸ nnnorm_mul_le _ _)
       _ ≤ ‖a.snd‖₊ * ‖a.fst b‖₊ * ‖b‖₊ :=
         nnnorm_star (a.fst b) ▸ mul_le_mul_right' (a.snd.le_op_nnnorm _) _
-      
   have h2 : ∀ b, ‖a.snd b‖₊ ^ 2 ≤ ‖a.fst‖₊ * ‖a.snd b‖₊ * ‖b‖₊ :=
     by
     intro b
@@ -612,7 +611,6 @@ theorem norm_fst_eq_snd (a : 𝓜(𝕜, A)) : ‖a.fst‖ = ‖a.snd‖ :=
       _ = ‖a.fst (star (a.snd b))‖₊ * ‖b‖₊ := (mul_comm _ _)
       _ ≤ ‖a.fst‖₊ * ‖a.snd b‖₊ * ‖b‖₊ :=
         nnnorm_star (a.snd b) ▸ mul_le_mul_right' (a.fst.le_op_nnnorm _) _
-      
   exact le_antisymm (h0 _ _ h1) (h0 _ _ h2)
 #align double_centralizer.norm_fst_eq_snd DoubleCentralizer.norm_fst_eq_snd
 
@@ -679,7 +677,6 @@ instance : CstarRing 𝓜(𝕜, A)
               (mul_le_mul' (a.fst.le_op_norm_of_le ((nnnorm_star x).trans_le hx))
                 (a.fst.le_op_norm_of_le hy))
             _ ≤ ‖a‖₊ * ‖a‖₊ := by simp only [mul_one, nnnorm_fst]
-            
         rw [← nnnorm_snd]
         simp only [mul_snd, ← Sup_closed_unit_ball_eq_nnnorm, star_snd, mul_apply]
         simp only [← @op_nnnorm_mul 𝕜 A]

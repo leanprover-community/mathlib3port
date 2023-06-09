@@ -127,7 +127,6 @@ theorem num_lt_succ_floor_mul_den (q : ℚ) : q.num < (⌊q⌋ + 1) * q.den :=
       (q - fract q + 1) * q.denom = (q + (1 - fract q)) * q.denom := by ring
       _ = q * q.denom + (1 - fract q) * q.denom := by rw [add_mul]
       _ = q.num + (1 - fract q) * q.denom := by simp
-      
     rwa [this]
   suffices 0 < (1 - fract q) * q.denom by rw [← sub_lt_iff_lt_add']; simpa
   have : 0 < 1 - fract q := by

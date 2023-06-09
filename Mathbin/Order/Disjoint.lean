@@ -567,7 +567,6 @@ theorem inf_left_le_of_le_sup_right (h : IsCompl x y) (hle : a ≤ b ⊔ y) : a 
     _ = b ⊓ x ⊔ y ⊓ x := inf_sup_right
     _ = b ⊓ x := by rw [h.symm.inf_eq_bot, sup_bot_eq]
     _ ≤ b := inf_le_left
-    
 #align is_compl.inf_left_le_of_le_sup_right IsCompl.inf_left_le_of_le_sup_right
 
 theorem le_sup_right_iff_inf_left_le {a b} (h : IsCompl x y) : a ≤ b ⊔ y ↔ a ⊓ x ≤ b :=

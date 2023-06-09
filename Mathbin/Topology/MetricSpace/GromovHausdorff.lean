@@ -307,7 +307,6 @@ theorem hausdorffDist_optimal {X : Type u} [MetricSpace X] [CompactSpace X] [Non
               diam (univ : Set Y) :=
           by rw [DΦ, DΨ]; apply add_le_add (add_le_add le_rfl (le_of_lt dy)) le_rfl
         _ = 2 * diam (univ : Set X) + 1 + 2 * diam (univ : Set Y) := by ring
-        
     let f : Sum X Y → ℓ_infty_ℝ := fun x =>
       match x with
       | inl y => Φ y
@@ -324,13 +323,11 @@ theorem hausdorffDist_optimal {X : Type u} [MetricSpace X] [CompactSpace X] [Non
           calc
             F (inl x, inl y) = dist (Φ x) (Φ y) := rfl
             _ = dist x y := Φisom.dist_eq x y
-            
       ·
         exact fun x y =>
           calc
             F (inr x, inr y) = dist (Ψ x) (Ψ y) := rfl
             _ = dist x y := Ψisom.dist_eq x y
-            
       · exact fun x y => dist_comm _ _
       · exact fun x y z => dist_triangle _ _ _
       ·
@@ -348,7 +345,6 @@ theorem hausdorffDist_optimal {X : Type u} [MetricSpace X] [CompactSpace X] [Non
               rw [Φrange, Ψrange]
               exact (p ⊔ q).IsCompact.Bounded
             _ ≤ 2 * diam (univ : Set X) + 1 + 2 * diam (univ : Set Y) := I
-            
     let Fb := candidates_b_of_candidates F Fgood
     have : Hausdorff_dist (range (optimal_GH_injl X Y)) (range (optimal_GH_injr X Y)) ≤ HD Fb :=
       Hausdorff_dist_optimal_le_HD _ _ (candidates_b_of_candidates_mem F Fgood)
@@ -369,7 +365,6 @@ theorem hausdorffDist_optimal {X : Type u} [MetricSpace X] [CompactSpace X] [Non
         _ = dist (Φ x) (Ψ y) := rfl
         _ = dist (f (inl x)) z := by rw [hy]
         _ ≤ r := le_of_lt hz
-        
     have I2 : ∀ y : Y, (⨅ x, Fb (inl x, inr y)) ≤ r :=
       by
       intro y
@@ -386,7 +381,6 @@ theorem hausdorffDist_optimal {X : Type u} [MetricSpace X] [CompactSpace X] [Non
         _ = dist (Φ x) (Ψ y) := rfl
         _ = dist z (f (inr y)) := by rw [hx]
         _ ≤ r := le_of_lt hz
-        
     simp only [HD, ciSup_le I1, ciSup_le I2, max_le_iff, and_self_iff]
   /- Get the same inequality for any coupling. If the coupling is quite good, the desired
     inequality has been proved above. If it is bad, then the inequality is obvious. -/
@@ -408,7 +402,6 @@ theorem hausdorffDist_optimal {X : Type u} [MetricSpace X] [CompactSpace X] [Non
           Hausdorff_dist_optimal_le_HD _ _ candidates_b_dist_mem_candidates_b
         _ ≤ diam (univ : Set X) + 1 + diam (univ : Set Y) := HD_candidates_b_dist_le
         _ ≤ Hausdorff_dist (p : Set ℓ_infty_ℝ) q := not_lt.1 h
-        
   refine' le_antisymm _ _
   · apply le_csInf
     · refine' (Set.Nonempty.prod _ _).image _ <;> exact ⟨_, rfl⟩
@@ -549,7 +542,6 @@ instance : MetricSpace GHSpace where
       _ = dist (to_GH_space X) (to_GH_space Y) + dist (to_GH_space Y) (to_GH_space Z) := by
         rw [Hausdorff_dist_optimal, Hausdorff_dist_optimal, GH_dist, GH_dist]
       _ = dist x y + dist y z := by rw [x.to_GH_space_rep, y.to_GH_space_rep, z.to_GH_space_rep]
-      
 
 end GHSpace
 
@@ -625,7 +617,6 @@ theorem gHDist_le_of_approx_subsets {s : Set X} (Φ : s → Y) {ε₁ ε₂ ε�
     calc
       |dist p q - dist (Φ p) (Φ q)| ≤ ε₂ := H p q
       _ ≤ 2 * (ε₂ / 2 + δ) := by linarith
-      
   -- glue `X` and `Y` along the almost matching subsets
   letI : MetricSpace (Sum X Y) :=
     glue_metric_approx (fun x : s => (x : X)) (fun x => Φ x) (ε₂ / 2 + δ) (by linarith) this
@@ -812,7 +803,6 @@ instance : SecondCountableTopology GHSpace :=
             (abs_mul _ _).symm
           _ = |ε⁻¹ * dist x y - ε⁻¹ * dist (Ψ x) (Ψ y)| := by congr; ring
           _ ≤ 1 := le_of_lt (abs_sub_lt_one_of_floor_eq_floor this)
-          
       calc
         |dist x y - dist (Ψ x) (Ψ y)| = ε * ε⁻¹ * |dist x y - dist (Ψ x) (Ψ y)| := by
           rw [mul_inv_cancel (ne_of_gt εpos), one_mul]
@@ -820,12 +810,10 @@ instance : SecondCountableTopology GHSpace :=
           rw [abs_of_nonneg (le_of_lt (inv_pos.2 εpos)), mul_assoc]
         _ ≤ ε * 1 := (mul_le_mul_of_nonneg_left I (le_of_lt εpos))
         _ = ε := mul_one _
-        
   calc
     dist p q = GH_dist p.rep q.rep := dist_GH_dist p q
     _ ≤ ε + ε / 2 + ε := main
     _ = δ := by simp only [ε]; ring
-    
 
 /-- Compactness criterion: a closed set of compact metric spaces is compact if the spaces have
 a uniformly bounded diameter, and for all `ε` the number of balls of radius `ε` required
@@ -942,7 +930,6 @@ theorem totallyBounded {t : Set GHSpace} {C : ℝ} {u : ℕ → ℝ} {K : ℕ �
             refine'
               le_trans (dist_le_diam_of_mem is_compact_univ.bounded (mem_univ _) (mem_univ _)) _
             exact hdiam p pt
-          
       -- Express `dist (Φ x) (Φ y)` in terms of `F q`
       have Aq : ((F q).2 ⟨i, hiq⟩ ⟨j, hjq⟩).1 = ⌊ε⁻¹ * dist (Ψ x) (Ψ y)⌋₊ :=
         calc
@@ -957,7 +944,6 @@ theorem totallyBounded {t : Set GHSpace} {C : ℝ} {u : ℕ → ℝ} {K : ℕ �
             refine'
               le_trans (dist_le_diam_of_mem is_compact_univ.bounded (mem_univ _) (mem_univ _)) _
             exact hdiam q qt
-          
       -- use the equality between `F p` and `F q` to deduce that the distances have equal
       -- integer parts
       have : ((F p).2 ⟨i, hip⟩ ⟨j, hjp⟩).1 = ((F q).2 ⟨i, hiq⟩ ⟨j, hjq⟩).1 :=
@@ -988,7 +974,6 @@ theorem totallyBounded {t : Set GHSpace} {C : ℝ} {u : ℕ → ℝ} {K : ℕ �
             (abs_mul _ _).symm
           _ = |ε⁻¹ * dist x y - ε⁻¹ * dist (Ψ x) (Ψ y)| := by congr; ring
           _ ≤ 1 := le_of_lt (abs_sub_lt_one_of_floor_eq_floor this)
-          
       calc
         |dist x y - dist (Ψ x) (Ψ y)| = ε * ε⁻¹ * |dist x y - dist (Ψ x) (Ψ y)| := by
           rw [mul_inv_cancel (ne_of_gt εpos), one_mul]
@@ -996,13 +981,11 @@ theorem totallyBounded {t : Set GHSpace} {C : ℝ} {u : ℕ → ℝ} {K : ℕ �
           rw [abs_of_nonneg (le_of_lt (inv_pos.2 εpos)), mul_assoc]
         _ ≤ ε * 1 := (mul_le_mul_of_nonneg_left I (le_of_lt εpos))
         _ = ε := mul_one _
-        
   calc
     dist p q = GH_dist p.rep q.rep := dist_GH_dist p q
     _ ≤ ε + ε / 2 + ε := main
     _ = δ / 2 := by simp only [ε, one_div]; ring
     _ < δ := half_lt_self δpos
-    
 #align Gromov_Hausdorff.totally_bounded GromovHausdorff.totallyBounded
 
 section Complete

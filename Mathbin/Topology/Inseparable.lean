@@ -206,7 +206,6 @@ theorem specializes_of_nhdsWithin (h₁ : 𝓝[s] x ≤ 𝓝[s] y) (h₂ : x ∈
       pure x ≤ 𝓝[s] x := le_inf (pure_le_nhds _) (le_principal_iff.2 h₂)
       _ ≤ 𝓝[s] y := h₁
       _ ≤ 𝓝 y := inf_le_left
-      
 #align specializes_of_nhds_within specializes_of_nhdsWithin
 
 theorem Specializes.map_of_continuousAt (h : x ⤳ y) (hy : ContinuousAt f y) : f x ⤳ f y :=

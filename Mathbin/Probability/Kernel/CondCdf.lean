@@ -172,7 +172,6 @@ theorem lintegral_iInf_directed_of_measurable {mα : MeasurableSpace α} [Counta
       refine' le_antisymm (le_iInf fun b => _) (le_iInf fun n => _)
       · exact iInf_le_of_le (Encodable.encode b + 1) (lintegral_mono <| h_directed.sequence_le b)
       · exact iInf_le (fun b => ∫⁻ a, f b a ∂μ) _
-    
 #align lintegral_infi_directed_of_measurable lintegral_iInf_directed_of_measurable
 
 -- todo: move to measure_theory/pi_system
@@ -381,7 +380,6 @@ theorem set_lintegral_iInf_gt_preCdf (ρ : Measure (α × ℝ)) [IsFiniteMeasure
     calc
       (∫⁻ x in s, ⨅ r : Ioi t, pre_cdf ρ r x ∂ρ.fst) ≤ ⨅ q : Ioi t, ρ.Iic_snd q s := le_iInf h
       _ = ρ.Iic_snd t s := measure.infi_Iic_snd_gt ρ t hs
-      
   · rw [(set_lintegral_pre_cdf_fst ρ t hs).symm]
     refine' set_lintegral_mono_ae measurable_pre_cdf _ _
     · exact measurable_iInf fun _ => measurable_pre_cdf
@@ -490,7 +488,6 @@ theorem tendsto_preCdf_atTop_one (ρ : Measure (α × ℝ)) [IsFiniteMeasure ρ]
       _ = ρ.fst univ := lintegral_one
       _ = ρ univ := measure.fst_univ
       _ ≠ ∞ := measure_ne_top ρ _
-      
   rw [lintegral_eq_zero_iff' (ae_measurable_const.sub hF_ae_meas)] at this 
   filter_upwards [this, hF_le_one] with ha h_one_sub_eq_zero h_le_one
   rw [Pi.zero_apply, tsub_eq_zero_iff_le] at h_one_sub_eq_zero 
@@ -978,7 +975,6 @@ theorem set_lintegral_condCdf (ρ : Measure (α × ℝ)) [IsFiniteMeasure ρ] (x
       _ = ρ.fst s := by rw [measure.fst_apply hs]
       _ = ρ.fst.restrict s univ := by rw [measure.restrict_apply_univ]
       _ = 0 := by simp only [hρ_zero, measure.coe_zero, Pi.zero_apply]
-      
   have h :
     (∫⁻ a in s, ENNReal.ofReal (cond_cdf ρ a x) ∂ρ.fst) =
       ∫⁻ a in s, ENNReal.ofReal (⨅ r : { r' : ℚ // x < r' }, cond_cdf ρ a r) ∂ρ.fst :=

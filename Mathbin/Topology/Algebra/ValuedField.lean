@@ -77,7 +77,6 @@ theorem Valuation.inversion_estimate {x y : K} {γ : Γ₀ˣ} (y_ne : y ≠ 0)
     _ = (v <| y - x) * (v y * v y)⁻¹ := rfl
     _ = (v <| x - y) * (v y * v y)⁻¹ := by rw [Valuation.map_sub_swap]
     _ < γ := hyp1'
-    
 #align valuation.inversion_estimate Valuation.inversion_estimate
 
 end InversionEstimate
@@ -201,7 +200,6 @@ instance (priority := 100) completable : CompletableTopField K :=
             calc
               ↑γ₀ * ↑γ₀ ≤ ↑γ₀ * v x := mul_le_mul_left' x_in₀ ↑γ₀
               _ ≤ _ := mul_le_mul_right' x_in₀ (v x)
-              
           rw [Units.val_mul]
           exact mul_le_mul_left' this γ }
 #align valued.completable Valued.completable
@@ -295,7 +293,6 @@ theorem continuous_extension : Continuous (Valued.extension : hat K → Γ₀) :
       v a = v (a * z₀⁻¹ * z₀) := by rw [mul_assoc, inv_mul_cancel z₀_ne, mul_one]
       _ = v (a * z₀⁻¹) * v z₀ := (Valuation.map_mul _ _ _)
       _ = v z₀ := by rw [this, one_mul]
-      
 #align valued.continuous_extension Valued.continuous_extension
 
 @[simp, norm_cast]

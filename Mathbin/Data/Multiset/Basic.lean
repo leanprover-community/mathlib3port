@@ -3030,7 +3030,6 @@ theorem attach_count_eq_count_coe (m : Multiset α) (a) : m.attach.count a = m.c
     m.attach.count a = (m.attach.map (coe : _ → α)).count (a : α) :=
       (Multiset.count_map_eq_count' _ _ Subtype.coe_injective _).symm
     _ = m.count (a : α) := congr_arg _ m.attach_map_val
-    
 #align multiset.attach_count_eq_count_coe Multiset.attach_count_eq_count_coe
 
 #print Multiset.filter_eq' /-
@@ -3585,8 +3584,7 @@ def chooseX : ∀ hp : ∃! a, a ∈ l ∧ p a, { a // a ∈ l ∧ p a } :=
         congr
         calc
           x = z := z_unique x px
-          _ = y := (z_unique y py).symm
-          )
+          _ = y := (z_unique y py).symm)
 #align multiset.choose_x Multiset.chooseX
 -/
 

@@ -195,7 +195,6 @@ theorem norm_eq (h : f 0 = 0) : ‖f‖ = ‖f.contLinear‖ :=
     ‖f‖ = max ‖f 0‖ ‖f.contLinear‖ := by rw [norm_def]
     _ = max 0 ‖f.contLinear‖ := by rw [h, norm_zero]
     _ = ‖f.contLinear‖ := max_eq_right (norm_nonneg _)
-    
 #align continuous_affine_map.norm_eq ContinuousAffineMap.norm_eq
 
 noncomputable instance : NormedAddCommGroup (V →A[𝕜] W) :=
@@ -241,7 +240,6 @@ theorem norm_comp_le (g : W₂ →A[𝕜] V) : ‖f.comp g‖ ≤ ‖f‖ * ‖g
       _ ≤ ‖f‖ * ‖g‖ + ‖f 0‖ :=
         add_le_add_right
           (mul_le_mul f.norm_cont_linear_le g.norm_image_zero_le (norm_nonneg _) (norm_nonneg _)) _
-      
   ·
     calc
       ‖(f.comp g).contLinear‖ ≤ ‖f.cont_linear‖ * ‖g.cont_linear‖ :=
@@ -249,7 +247,6 @@ theorem norm_comp_le (g : W₂ →A[𝕜] V) : ‖f.comp g‖ ≤ ‖f‖ * ‖g
       _ ≤ ‖f‖ * ‖g‖ :=
         (mul_le_mul f.norm_cont_linear_le g.norm_cont_linear_le (norm_nonneg _) (norm_nonneg _))
       _ ≤ ‖f‖ * ‖g‖ + ‖f 0‖ := by rw [le_add_iff_nonneg_right]; apply norm_nonneg
-      
 #align continuous_affine_map.norm_comp_le ContinuousAffineMap.norm_comp_le
 
 variable (𝕜 V W)

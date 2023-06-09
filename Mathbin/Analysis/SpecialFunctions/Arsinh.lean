@@ -69,7 +69,6 @@ theorem exp_arsinh (x : ℝ) : exp (arsinh x) = x + sqrt (1 + x ^ 2) :=
   calc
     -x ≤ sqrt (x ^ 2) := le_sqrt_of_sq_le (neg_pow_bit0 _ _).le
     _ < sqrt (1 + x ^ 2) := sqrt_lt_sqrt (sq_nonneg _) (lt_one_add _)
-    
 #align real.exp_arsinh Real.exp_arsinh
 
 @[simp]

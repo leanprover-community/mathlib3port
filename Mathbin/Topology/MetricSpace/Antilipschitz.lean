@@ -142,7 +142,6 @@ theorem comp {Kg : ℝ≥0} {g : β → γ} (hg : AntilipschitzWith Kg g) {Kf : 
     edist x y ≤ Kf * edist (f x) (f y) := hf x y
     _ ≤ Kf * (Kg * edist (g (f x)) (g (f y))) := (ENNReal.mul_left_mono (hg _ _))
     _ = _ := by rw [ENNReal.coe_mul, mul_assoc]
-    
 #align antilipschitz_with.comp AntilipschitzWith.comp
 
 theorem restrict (hf : AntilipschitzWith K f) (s : Set α) : AntilipschitzWith K (s.restrict f) :=
@@ -240,7 +239,6 @@ theorem bounded_preimage (hf : AntilipschitzWith K f) {s : Set β} (hs : Bounded
     calc
       dist x y ≤ K * dist (f x) (f y) := hf.le_mul_dist x y
       _ ≤ K * diam s := mul_le_mul_of_nonneg_left (dist_le_diam_of_mem hs hx hy) K.2
-      
 #align antilipschitz_with.bounded_preimage AntilipschitzWith.bounded_preimage
 
 theorem tendsto_cobounded (hf : AntilipschitzWith K f) : Tendsto f (cobounded α) (cobounded β) :=

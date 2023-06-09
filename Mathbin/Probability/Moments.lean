@@ -364,7 +364,6 @@ theorem measure_ge_le_exp_mul_mgf [IsFiniteMeasure μ] (ε : ℝ) (ht : 0 ≤ t)
         mul_meas_ge_le_integral_of_nonneg (fun x => (exp_pos _).le) h_int _
       rwa [mul_comm (exp (t * ε))⁻¹, ← div_eq_mul_inv, le_div_iff' (exp_pos _)]
     _ = exp (-t * ε) * mgf X μ t := by rw [neg_mul, exp_neg]; rfl
-    
 #align probability_theory.measure_ge_le_exp_mul_mgf ProbabilityTheory.measure_ge_le_exp_mul_mgf
 
 /-- **Chernoff bound** on the lower tail of a real random variable. -/

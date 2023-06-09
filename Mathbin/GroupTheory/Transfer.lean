@@ -140,7 +140,6 @@ theorem transfer_eq_prod_quotient_orbitRel_zpowers_quot [FiniteIndex H] (g : G)
     _ = _ := ((quotient_equiv_sigma_zmod H g).symm.prod_comp _).symm
     _ = _ := (Finset.prod_sigma _ _ _)
     _ = _ := Fintype.prod_congr _ _ fun q => _
-    
   simp only [quotient_equiv_sigma_zmod_symm_apply, transfer_transversal_apply',
     transfer_transversal_apply'']
   rw [Fintype.prod_eq_single (0 : ZMod (Function.minimalPeriod ((· • ·) g) q.out')) fun k hk => _]

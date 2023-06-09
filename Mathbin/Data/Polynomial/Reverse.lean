@@ -150,7 +150,6 @@ theorem coeff_reflect (N : ℕ) (f : R[X]) (i : ℕ) : coeff (reflect N f) i = f
     Finsupp.embDomain (rev_at N) f i = Finsupp.embDomain (rev_at N) f (rev_at N (rev_at N i)) := by
       rw [rev_at_invol]
     _ = f (rev_at N i) := Finsupp.embDomain_apply _ _ _
-    
 #align polynomial.coeff_reflect Polynomial.coeff_reflect
 -/
 

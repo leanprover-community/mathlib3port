@@ -103,7 +103,6 @@ theorem exists_forall_closed_ball_dist_add_le_two_sub (hε : 0 < ε) :
         have : ∀ x' y', x - y = x' - y' + (x - x') + (y' - y) := fun _ _ => by abel
         rw [sub_le_iff_le_add, norm_sub_rev _ x, ← add_assoc, this]
         exact norm_add₃_le _ _ _
-      
   calc
     ‖x + y‖ ≤ ‖x' + y'‖ + ‖x' - x‖ + ‖y' - y‖ :=
       by
@@ -118,7 +117,6 @@ theorem exists_forall_closed_ball_dist_add_le_two_sub (hε : 0 < ε) :
       ring_nf
       rw [← mul_div_cancel' δ three_ne_zero]
       exact mul_le_mul_of_nonneg_left (min_le_of_right_le <| min_le_right _ _) three_pos.le
-    
 #align exists_forall_closed_ball_dist_add_le_two_sub exists_forall_closed_ball_dist_add_le_two_sub
 
 theorem exists_forall_closed_ball_dist_add_le_two_mul_sub (hε : 0 < ε) (r : ℝ) :

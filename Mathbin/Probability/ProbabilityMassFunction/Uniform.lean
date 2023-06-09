@@ -55,8 +55,7 @@ def uniformOfFinset (s : Finset α) (hs : s.Nonempty) : Pmf α :=
             (by
               simpa only [Ne.def, Nat.cast_eq_zero, Finset.card_eq_zero] using
                 Finset.nonempty_iff_ne_empty.1 hs)
-            (ENNReal.nat_ne_top s.card)
-        )
+            (ENNReal.nat_ne_top s.card))
     fun x hx => by simp only [hx, if_false]
 #align pmf.uniform_of_finset Pmf.uniformOfFinset
 -/
@@ -116,7 +115,6 @@ theorem toOuterMeasure_uniformOfFinset_apply :
       have : (s.card : ℝ≥0∞) ≠ 0 :=
         Nat.cast_ne_zero.2 (hs.recOn fun _ => Finset.card_ne_zero_of_mem)
       simp only [div_eq_mul_inv, Finset.sum_const, nsmul_eq_mul]
-    
 #align pmf.to_outer_measure_uniform_of_finset_apply Pmf.toOuterMeasure_uniformOfFinset_apply
 
 @[simp]
@@ -192,8 +190,7 @@ def ofMultiset (s : Multiset α) (hs : s ≠ 0) : Pmf α :=
         _ = 1 := by
           rw [← Nat.cast_sum, Multiset.toFinset_sum_count_eq s,
             ENNReal.inv_mul_cancel (Nat.cast_ne_zero.2 (hs ∘ Multiset.card_eq_zero.1))
-              (ENNReal.nat_ne_top _)]
-        )⟩
+              (ENNReal.nat_ne_top _)])⟩
 #align pmf.of_multiset Pmf.ofMultiset
 -/
 

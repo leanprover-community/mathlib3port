@@ -376,7 +376,6 @@ theorem absorbent_nhds_zero (hA : A ∈ 𝓝 (0 : E)) : Absorbent 𝕜 A :=
   calc
     ‖a‖⁻¹ ≤ r / 2 := (inv_le (half_pos hr₁) ha₂).mp ha₁
     _ < r := half_lt_self hr₁
-    
 #align absorbent_nhds_zero absorbent_nhds_zero
 
 /-- The union of `{0}` with the interior of a balanced set is balanced. -/
@@ -394,7 +393,6 @@ theorem balanced_zero_union_interior (hA : Balanced 𝕜 A) : Balanced 𝕜 ((0 
       calc
         a • interior A ⊆ interior (a • A) := (isOpenMap_smul₀ h).image_interior_subset A
         _ ⊆ interior A := interior_mono (hA _ ha)
-        
 #align balanced_zero_union_interior balanced_zero_union_interior
 
 /-- The interior of a balanced set is balanced if it contains the origin. -/

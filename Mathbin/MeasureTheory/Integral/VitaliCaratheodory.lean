@@ -146,7 +146,6 @@ theorem SimpleFunc.exists_le_lowerSemicontinuous_lintegral_ge (f : α →ₛ ℝ
           simp_rw [mul_add]
           rw [ENNReal.mul_div_cancel' _ ENNReal.coe_ne_top]
           simpa using hc
-        
   · rcases h₁ (ENNReal.half_pos ε0).ne' with ⟨g₁, f₁_le_g₁, g₁cont, g₁int⟩
     rcases h₂ (ENNReal.half_pos ε0).ne' with ⟨g₂, f₂_le_g₂, g₂cont, g₂int⟩
     refine'
@@ -200,7 +199,6 @@ theorem exists_le_lowerSemicontinuous_lintegral_ge (f : α → ℝ≥0∞) (hf :
         rw [← lintegral_tsum]
         · simp_rw [tsum_eapprox_diff f hf, le_refl]
         · intro n; exact (simple_func.measurable _).coe_nnreal_ennreal.AEMeasurable
-      
 #align measure_theory.exists_le_lower_semicontinuous_lintegral_ge MeasureTheory.exists_le_lowerSemicontinuous_lintegral_ge
 
 /-- Given a measurable function `f` with values in `ℝ≥0` in a sigma-finite space, there exists a
@@ -223,7 +221,6 @@ theorem exists_lt_lowerSemicontinuous_lintegral_ge [SigmaFinite μ] (f : α → 
     calc
       (f x : ℝ≥0∞) < f' x := by simpa [← ENNReal.coe_lt_coe] using add_lt_add_left (wpos x) (f x)
       _ ≤ g x := le_g x
-      
   ·
     calc
       (∫⁻ x : α, g x ∂μ) ≤ (∫⁻ x : α, f x + w x ∂μ) + ε / 2 := gint
@@ -231,7 +228,6 @@ theorem exists_lt_lowerSemicontinuous_lintegral_ge [SigmaFinite μ] (f : α → 
         rw [lintegral_add_right _ wmeas.coe_nnreal_ennreal]
       _ ≤ (∫⁻ x : α, f x ∂μ) + ε / 2 + ε / 2 := (add_le_add_right (add_le_add_left wint.le _) _)
       _ = (∫⁻ x : α, f x ∂μ) + ε := by rw [add_assoc, ENNReal.add_halves]
-      
 #align measure_theory.exists_lt_lower_semicontinuous_lintegral_ge MeasureTheory.exists_lt_lowerSemicontinuous_lintegral_ge
 
 /-- Given an almost everywhere measurable function `f` with values in `ℝ≥0` in a sigma-finite space,
@@ -271,7 +267,6 @@ theorem exists_lt_lowerSemicontinuous_lintegral_ge_of_aemeasurable [SigmaFinite 
           simp only [smeas, μs, lintegral_const, Set.univ_inter, MeasurableSet.univ,
             lintegral_indicator, MulZeroClass.mul_zero, restrict_apply]
       _ = (∫⁻ x, f x ∂μ) + ε := by simp only [add_assoc, ENNReal.add_halves, zero_add]
-      
 #align measure_theory.exists_lt_lower_semicontinuous_lintegral_ge_of_ae_measurable MeasureTheory.exists_lt_lowerSemicontinuous_lintegral_ge_of_aemeasurable
 
 variable {μ}
@@ -324,7 +319,6 @@ theorem exists_lt_lowerSemicontinuous_integral_gt_nnreal [SigmaFinite μ] (f : �
           rw [ENNReal.toReal_add int_f_ne_top ENNReal.coe_ne_top, ENNReal.coe_toReal]
         _ < ENNReal.toReal (∫⁻ a : α, f a ∂μ) + ε := (add_lt_add_left hδε _)
         _ = (∫⁻ a : α, ENNReal.ofReal ↑(f a) ∂μ).toReal + ε := by simp
-        
     · apply Filter.eventually_of_forall fun x => _; simp
     · exact fmeas.coe_nnreal_real.ae_strongly_measurable
     · apply Filter.eventually_of_forall fun x => _; simp
@@ -382,7 +376,6 @@ theorem SimpleFunc.exists_upperSemicontinuous_le_lintegral_le (f : α →ₛ ℝ
           simp_rw [mul_add]
           rw [ENNReal.mul_div_cancel' _ ENNReal.coe_ne_top]
           simpa using hc
-        
   · have A : ((∫⁻ x : α, f₁ x ∂μ) + ∫⁻ x : α, f₂ x ∂μ) ≠ ⊤ := by
       rwa [← lintegral_add_left f₁.measurable.coe_nnreal_ennreal]
     rcases h₁ (ENNReal.add_ne_top.1 A).1 (ENNReal.half_pos ε0).ne' with
@@ -433,7 +426,6 @@ theorem exists_upperSemicontinuous_le_lintegral_le (f : α → ℝ≥0) (int_f :
     (∫⁻ x, f x ∂μ) ≤ (∫⁻ x, fs x ∂μ) + ε / 2 := int_fs
     _ ≤ (∫⁻ x, g x ∂μ) + ε / 2 + ε / 2 := (add_le_add gint le_rfl)
     _ = (∫⁻ x, g x ∂μ) + ε := by rw [add_assoc, ENNReal.add_halves]
-    
 #align measure_theory.exists_upper_semicontinuous_le_lintegral_le MeasureTheory.exists_upperSemicontinuous_le_lintegral_le
 
 /-- Given an integrable function `f` with values in `ℝ≥0`, there exists an upper semicontinuous
@@ -524,7 +516,6 @@ theorem exists_lt_lowerSemicontinuous_integral_lt [SigmaFinite μ] (f : α → �
       _ = (∫ x : α, f x ∂μ) + 2 * δ := by
         simp_rw [integral_eq_integral_pos_part_sub_integral_neg_part hf, fp, fm]; ring
       _ = (∫ x : α, f x ∂μ) + ε := by congr 1; field_simp [δ, mul_comm]
-      
   show ∀ᵐ x : α ∂μ, g x < ⊤
   · filter_upwards [gp_lt_top] with _ hx
     simp only [g, sub_eq_add_neg, coe_coe, Ne.def, (EReal.add_lt_top _ _).Ne, lt_top_iff_ne_top,

@@ -362,8 +362,7 @@ theorem prod_map_map_eq.{u, v, w, x} {α₁ : Type u} {α₂ : Type v} {β₁ : 
         calc
           (m₁ '' s₁) ×ˢ (m₂ '' s₂) = (fun p : α₁ × α₂ => (m₁ p.1, m₂ p.2)) '' s₁ ×ˢ s₂ :=
             Set.prod_image_image_eq
-          _ ⊆ _ := by rwa [image_subset_iff]
-          )
+          _ ⊆ _ := by rwa [image_subset_iff])
     ((Tendsto.comp le_rfl tendsto_fst).prod_mk (Tendsto.comp le_rfl tendsto_snd))
 #align filter.prod_map_map_eq Filter.prod_map_map_eq
 -/

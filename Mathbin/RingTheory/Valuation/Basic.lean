@@ -277,8 +277,7 @@ def map (f : Γ₀ →*₀ Γ'₀) (hf : Monotone f) (v : Valuation R Γ₀) : V
     map_add_le_max' := fun r s =>
       calc
         f (v (r + s)) ≤ f (max (v r) (v s)) := hf (v.map_add r s)
-        _ = max (f (v r)) (f (v s)) := hf.map_max
-         }
+        _ = max (f (v r)) (f (v s)) := hf.map_max }
 #align valuation.map Valuation.map
 
 #print Valuation.IsEquiv /-
@@ -308,7 +307,6 @@ theorem map_sub (x y : R) : v (x - y) ≤ max (v x) (v y) :=
     v (x - y) = v (x + -y) := by rw [sub_eq_add_neg]
     _ ≤ max (v x) (v <| -y) := (v.map_add _ _)
     _ = max (v x) (v y) := by rw [map_neg]
-    
 #align valuation.map_sub Valuation.map_sub
 
 theorem map_sub_le {x y g} (hx : v x ≤ g) (hy : v y ≤ g) : v (x - y) ≤ g :=
@@ -330,7 +328,6 @@ theorem map_add_of_distinct_val (h : v x ≠ v y) : v (x + y) = max (v x) (v y) 
     v x = v (x + y - y) := by simp
     _ ≤ max (v <| x + y) (v y) := (map_sub _ _ _)
     _ < v x := max_lt h' vyx
-    
 #align valuation.map_add_of_distinct_val Valuation.map_add_of_distinct_val
 
 theorem map_add_eq_of_lt_right (h : v x < v y) : v (x + y) = v y :=
@@ -416,7 +413,6 @@ theorem map {v' : Valuation R Γ₀} (f : Γ₀ →*₀ Γ'₀) (hf : Monotone f
     f (v r) ≤ f (v s) ↔ v r ≤ v s := by rw [H.le_iff_le]
     _ ↔ v' r ≤ v' s := (h r s)
     _ ↔ f (v' r) ≤ f (v' s) := by rw [H.le_iff_le]
-    
 #align valuation.is_equiv.map Valuation.IsEquiv.map
 
 /-- `comap` preserves equivalence. -/
@@ -565,13 +561,11 @@ def supp : Ideal R where
       calc
         v (x + y) ≤ max (v x) (v y) := v.map_add x y
         _ ≤ 0 := max_le (le_zero_iff.mpr hx) (le_zero_iff.mpr hy)
-        
   smul_mem' c x hx :=
     calc
       v (c * x) = v c * v x := map_mul v c x
       _ = v c * 0 := (congr_arg _ hx)
       _ = 0 := MulZeroClass.mul_zero _
-      
 #align valuation.supp Valuation.supp
 -/
 
@@ -588,8 +582,7 @@ instance [Nontrivial Γ₀] [NoZeroDivisors Γ₀] : Ideal.IsPrime (supp v) :=
       show (1 : Γ₀) = 0 from
         calc
           1 = v 1 := v.map_one.symm
-          _ = 0 := show (1 : R) ∈ supp v by rw [h]; trivial
-          ,
+          _ = 0 := show (1 : R) ∈ supp v by rw [h]; trivial,
     fun x y hxy => by
     show v x = 0 ∨ v y = 0
     change v (x * y) = 0 at hxy 
@@ -604,7 +597,6 @@ theorem map_add_supp (a : R) {s : R} (h : s ∈ supp v) : v (a + s) = v a :=
   calc
     v a = v (a + s + -s) := by simp
     _ ≤ v (a + s) := aux (a + s) (-s) (by rwa [← Ideal.neg_mem_iff] at h )
-    
 #align valuation.map_add_supp Valuation.map_add_supp
 
 theorem comap_supp {S : Type _} [CommRing S] (f : S →+* R) :

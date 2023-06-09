@@ -173,7 +173,6 @@ theorem rightLim_le_leftLim (h : x < y) : rightLim f x ≤ leftLim f y :=
   calc
     right_lim f x ≤ f a := hf.right_lim_le xa
     _ ≤ left_lim f y := hf.le_left_lim ay
-    
 #align monotone.right_lim_le_left_lim Monotone.rightLim_le_leftLim
 
 variable [TopologicalSpace α] [OrderTopology α]
@@ -271,7 +270,6 @@ theorem countable_not_continuousWithinAt_Ioi [TopologicalSpace.SecondCountableTo
     calc
       f x < z x := (hz x hx).1
       _ ≤ f y := (hz x hx).2 y hxy
-      
   -- show that `f s` is countable by arguing that a disjoint family of disjoint open intervals
   -- (the intervals `(f x, z x)`) is at most countable.
   have fs_count : (f '' s).Countable :=

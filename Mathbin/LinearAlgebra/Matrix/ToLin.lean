@@ -891,7 +891,6 @@ theorem leftMulMatrix_injective : Function.Injective (leftMulMatrix b) := fun x 
     x = Algebra.lmul R S x 1 := (mul_one x).symm
     _ = Algebra.lmul R S x' 1 := by rw [(LinearMap.toMatrix b b).Injective h]
     _ = x' := mul_one x'
-    
 #align algebra.left_mul_matrix_injective Algebra.leftMulMatrix_injective
 
 end Lmul

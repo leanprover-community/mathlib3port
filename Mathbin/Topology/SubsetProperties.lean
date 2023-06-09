@@ -478,8 +478,7 @@ theorem Set.Finite.isCompact_biUnion {s : Set ι} {f : ι → Set α} (hs : s.Fi
       (hf i hi).elim_finite_subcover _ hUo
         (calc
           f i ⊆ ⋃ i ∈ s, f i := subset_biUnion_of_mem hi
-          _ ⊆ ⋃ j, U j := hsU
-          )
+          _ ⊆ ⋃ j, U j := hsU)
     let ⟨finite_subcovers, h⟩ := axiom_of_choice this
     haveI : Fintype (Subtype s) := hs.fintype
     let t := Finset.biUnion Finset.univ finite_subcovers
@@ -489,7 +488,6 @@ theorem Set.Finite.isCompact_biUnion {s : Set ι} {f : ι → Set α} (hs : s.Fi
           f i ⊆ ⋃ j ∈ finite_subcovers ⟨i, hi⟩, U j := h ⟨i, hi⟩
           _ ⊆ ⋃ j ∈ t, U j :=
             bUnion_subset_bUnion_left fun j hj => finset.mem_bUnion.mpr ⟨_, Finset.mem_univ _, hj⟩
-          
     ⟨t, this⟩
 #align set.finite.is_compact_bUnion Set.Finite.isCompact_biUnion
 
@@ -1036,7 +1034,6 @@ theorem isClosedMap_snd_of_compactSpace {X : Type _} [TopologicalSpace X] [Compa
     calc
       map πY (comap πY (𝓝 y) ⊓ 𝓟 C) = 𝓝 y ⊓ map πY (𝓟 C) := Filter.push_pull' _ _ _
       _ = 𝓝 y ⊓ 𝓟 (πY '' C) := by rw [map_principal]
-      
   obtain ⟨x, hx⟩ : ∃ x, ClusterPt x (map πX (comap πY (𝓝 y) ⊓ 𝓟 C))
   exact cluster_point_of_compact _
   refine' ⟨⟨x, y⟩, _, by simp [πY]⟩
@@ -1049,7 +1046,6 @@ theorem isClosedMap_snd_of_compactSpace {X : Type _} [TopologicalSpace X] [Compa
     _ = map πX (comap πY (𝓝 y) ⊓ 𝓟 C ⊓ comap πX (𝓝 x)) := by ac_rfl
     _ = map πX (comap πY (𝓝 y) ⊓ 𝓟 C) ⊓ 𝓝 x := by rw [Filter.push_pull]
     _ = 𝓝 x ⊓ map πX (comap πY (𝓝 y) ⊓ 𝓟 C) := by rw [inf_comm]
-    
 #align is_closed_proj_of_is_compact isClosedMap_snd_of_compactSpace
 
 theorem exists_subset_nhds_of_compactSpace [CompactSpace α] {ι : Type _} [Nonempty ι]
@@ -1070,14 +1066,12 @@ theorem Inducing.isCompact_iff {f : α → β} (hf : Inducing f) {s : Set α} :
     hs
       (calc
         map f F ≤ map f (𝓟 s) := map_mono F_le
-        _ = 𝓟 (f '' s) := map_principal
-        )
+        _ = 𝓟 (f '' s) := map_principal)
   use x, x_in
   suffices (map f (𝓝 x ⊓ F)).ne_bot by simpa [Filter.map_neBot_iff]
   rwa [calc
       map f (𝓝 x ⊓ F) = map f ((comap f <| 𝓝 <| f x) ⊓ F) := by rw [hf.nhds_eq_comap]
-      _ = 𝓝 (f x) ⊓ map f F := Filter.push_pull' _ _ _
-      ]
+      _ = 𝓝 (f x) ⊓ map f F := Filter.push_pull' _ _ _]
 #align inducing.is_compact_iff Inducing.isCompact_iff
 -/
 

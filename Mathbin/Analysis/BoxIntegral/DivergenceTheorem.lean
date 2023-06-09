@@ -155,7 +155,6 @@ theorem norm_volume_sub_integral_face_upper_sub_lower_smul_le {f : ℝⁿ⁺¹ �
       by
       rw [← measure.to_box_additive_apply, box.volume_apply, ← I.volume_face_mul i]
       ac_rfl
-    
 #align box_integral.norm_volume_sub_integral_face_upper_sub_lower_smul_le BoxIntegral.norm_volume_sub_integral_face_upper_sub_lower_smul_le
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (y₁ y₂ «expr ∈ » «expr ∩ »(closed_ball x δ, I.Icc)) -/
@@ -220,7 +219,6 @@ theorem hasIntegral_GP_pderiv (f : ℝⁿ⁺¹ → E) (f' : ℝⁿ⁺¹ → ℝ�
           dist (f y₁) (f y₂) ≤ dist (f y₁) (f x) + dist (f y₂) (f x) := dist_triangle_right _ _ _
           _ ≤ ε / 2 / 2 + ε / 2 / 2 := (add_le_add (hδ₁ _ <| this hy₁) (hδ₁ _ <| this hy₂))
           _ = ε / 2 := add_halves _
-          
       · have :
           ContinuousWithinAt (fun δ => (2 * δ) ^ (n + 1) * ‖f' x (Pi.single i 1)‖) (Ioi (0 : ℝ))
             0 :=
@@ -256,12 +254,10 @@ theorem hasIntegral_GP_pderiv (f : ℝⁿ⁺¹ → E) (f' : ℝⁿ⁺¹ → ℝ�
           _ ≤ dist J.upper x + dist J.lower x := (dist_triangle_right _ _ _)
           _ ≤ δ + δ := (add_le_add (hJδ J.upper_mem_Icc) (hJδ J.lower_mem_Icc))
           _ = 2 * δ := (two_mul δ).symm
-          
       calc
         (∏ j, |J.upper j - J.lower j|) ≤ ∏ j : Fin (n + 1), 2 * δ :=
           prod_le_prod (fun _ _ => abs_nonneg _) fun j hj => this j
         _ = (2 * δ) ^ (n + 1) := by simp
-        
     · refine'
         (norm_integral_le_of_le_const (fun y hy => hdfδ _ (Hmaps _ Hu hy) _ (Hmaps _ Hl hy))
               _).trans
@@ -278,7 +274,6 @@ theorem hasIntegral_GP_pderiv (f : ℝⁿ⁺¹ → E) (f' : ℝⁿ⁺¹ → ℝ�
         _ ≤ δ + δ := (add_le_add (hJδ J.upper_mem_Icc) (hJδ J.lower_mem_Icc))
         _ ≤ 1 / 2 + 1 / 2 := (add_le_add hδ12 hδ12)
         _ = 1 := add_halves 1
-        
   · intro c x hx ε ε0
     /- At a point `x ∉ s`, we unfold the definition of Fréchet differentiability, then use
         an estimate we proved earlier in this file. -/

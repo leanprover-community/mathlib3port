@@ -219,7 +219,6 @@ theorem Ideal.exists_pow_le_of_le_radical_of_fG (hIJ : I ≤ J.radical) (hJ : J.
   calc
     I ^ k ≤ J.radical ^ k := Ideal.pow_mono hIJ _
     _ ≤ J := hk
-    
 #align ideal.exists_pow_le_of_le_radical_of_fg Ideal.exists_pow_le_of_le_radical_of_fG
 
 end LocalCohomologyEquiv

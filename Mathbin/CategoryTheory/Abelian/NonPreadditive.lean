@@ -141,7 +141,6 @@ instance : Epi (Abelian.factorThruImage f) :=
             rw [← category.assoc]
       _ = t ≫ 0 := (hu.w ▸ rfl)
       _ = 0 := has_zero_morphisms.comp_zero _ _
-      
     -- h factors through the cokernel of f via some l.
     obtain ⟨l, hl⟩ := cokernel.desc' f h fh
     have hih : i ≫ h = 0;
@@ -149,7 +148,6 @@ instance : Epi (Abelian.factorThruImage f) :=
       i ≫ h = i ≫ cokernel.π f ≫ l := hl ▸ rfl
       _ = 0 ≫ l := by rw [← category.assoc, kernel.condition]
       _ = 0 := zero_comp
-      
     -- i factors through u = ker h via some s.
     obtain ⟨s, hs⟩ := normal_mono.lift' u i hih
     have hs' : (s ≫ kernel.ι g) ≫ i = 𝟙 I ≫ i := by rw [category.assoc, hs, category.id_comp]
@@ -189,7 +187,6 @@ instance : Mono (Abelian.factorThruCoimage f) :=
             rw [← category.assoc]
       _ = 0 ≫ t := by rw [← category.assoc, hu.w]
       _ = 0 := zero_comp
-      
     -- h factors through the kernel of f via some l.
     obtain ⟨l, hl⟩ := kernel.lift' f h hf
     have hhp : h ≫ p = 0;
@@ -197,7 +194,6 @@ instance : Mono (Abelian.factorThruCoimage f) :=
       h ≫ p = (l ≫ kernel.ι f) ≫ p := hl ▸ rfl
       _ = l ≫ 0 := by rw [category.assoc, cokernel.condition]
       _ = 0 := comp_zero
-      
     -- p factors through u = coker h via some s.
     obtain ⟨s, hs⟩ := normal_epi.desc' u p hhp
     have hs' : p ≫ cokernel.π g ≫ s = p ≫ 𝟙 I := by rw [← category.assoc, hs, category.comp_id]
@@ -365,7 +361,6 @@ theorem σ_comp {X Y : C} (f : X ⟶ Y) : σ ≫ f = Limits.prod.map f f ≫ σ 
     _ = prod.lift (𝟙 X) 0 ≫ limits.prod.map f f ≫ σ := by rw [lift_map_assoc]
     _ = prod.lift (𝟙 X) 0 ≫ σ ≫ g := by rw [← hg, cokernel_cofork.π_of_π]
     _ = g := by rw [← category.assoc, lift_σ, category.id_comp]
-    
 #align category_theory.non_preadditive_abelian.σ_comp CategoryTheory.NonPreadditiveAbelian.σ_comp
 -/
 

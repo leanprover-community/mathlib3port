@@ -207,7 +207,6 @@ theorem measure_le_tsum_of_absolutelyContinuous [SecondCountableTopology α] {ρ
       rw [hρ h.measure_diff_bUnion,
         measure_bUnion h.index_countable h.covering_disjoint fun x hx => h.measurable_set_u hx,
         zero_add]
-    
 #align vitali_family.fine_subfamily_on.measure_le_tsum_of_absolutely_continuous VitaliFamily.FineSubfamilyOn.measure_le_tsum_of_absolutelyContinuous
 
 theorem measure_le_tsum [SecondCountableTopology α] : μ s ≤ ∑' x : h.index, μ (h.covering x) :=

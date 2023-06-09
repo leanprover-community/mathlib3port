@@ -311,7 +311,6 @@ theorem derivative_mul {f g : R[X]} : derivative (f * g) = derivative f * g + f 
         ·rw [← sum_C_mul_X_pow_eq f]
       simp only [Sum, sum_add_distrib, Finset.mul_sum, Finset.sum_mul, derivative_apply]
       simp_rw [← smul_mul_assoc, smul_C, nsmul_eq_mul']
-    
 #align polynomial.derivative_mul Polynomial.derivative_mul
 
 theorem derivative_eval (p : R[X]) (x : R) :
@@ -416,7 +415,6 @@ theorem coeff_iterate_derivative_as_prod_range {k} (p : R[X]) :
       rw [← Nat.cast_add_one, ← nsmul_eq_mul', smul_smul, mul_comm]
     _ = (∏ i in range k.succ, m + k.succ - i) • p.coeff (m + k.succ) := by
       rw [prod_range_succ, add_tsub_assoc_of_le k.le_succ, Nat.succ_sub le_rfl, tsub_self]
-    
 #align polynomial.coeff_iterate_derivative_as_prod_range Polynomial.coeff_iterate_derivative_as_prod_range
 
 theorem iterate_derivative_mul {n} (p q : R[X]) :
@@ -457,7 +455,6 @@ theorem iterate_derivative_mul {n} (p q : R[X]) :
         ∑ k : ℕ in range n.succ.succ,
           n.succ.choose k • ((derivative^[n.succ - k]) p * (derivative^[k]) q) :=
       by rw [sum_range_succ' _ n.succ, Nat.choose_zero_right, tsub_zero]
-    
   congr
   refine' (sum_range_succ' _ _).trans (congr_arg₂ (· + ·) _ _)
   · rw [sum_range_succ, Nat.choose_succ_self, zero_smul, add_zero]

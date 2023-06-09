@@ -221,12 +221,10 @@ theorem limsInf_eq_of_le_nhds {f : Filter α} {a : α} [NeBot f] (h : f ≤ 𝓝
     (calc
       f.limsInf ≤ f.limsSup := limsInf_le_limsSup hb_le hb_ge
       _ ≤ (𝓝 a).limsSup := (limsSup_le_limsSup_of_le h hb_ge.isCobounded_flip (isBounded_le_nhds a))
-      _ = a := limsSup_nhds a
-      )
+      _ = a := limsSup_nhds a)
     (calc
       a = (𝓝 a).limsInf := (limsInf_nhds a).symm
-      _ ≤ f.limsInf := limsInf_le_limsInf_of_le h (isBounded_ge_nhds a) hb_le.isCobounded_flip
-      )
+      _ ≤ f.limsInf := limsInf_le_limsInf_of_le h (isBounded_ge_nhds a) hb_le.isCobounded_flip)
 #align Liminf_eq_of_le_nhds limsInf_eq_of_le_nhds
 
 /-- If a filter is converging, its liminf coincides with its limit. -/

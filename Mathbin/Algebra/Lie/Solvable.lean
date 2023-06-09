@@ -214,7 +214,6 @@ theorem derivedSeries_add_eq_bot {k l : ℕ} {I J : LieIdeal R L} (hI : derivedS
   calc
     D (k + l) (I + J) ≤ D k I + D l J := derived_series_of_ideal_add_le_add I J k l
     _ ≤ ⊥ := by rw [hI, hJ]; simp
-    
 #align lie_ideal.derived_series_add_eq_bot LieIdeal.derivedSeries_add_eq_bot
 -/
 

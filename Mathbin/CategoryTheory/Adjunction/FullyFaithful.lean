@@ -226,7 +226,6 @@ def Adjunction.restrictFullyFaithful (iC : C ⥤ C') (iD : D ⥤ D') {L' : C' �
           _ ≃ (iC.obj X ⟶ R'.obj (iD.obj Y)) := (adj.homEquiv _ _)
           _ ≃ (iC.obj X ⟶ iC.obj (R.obj Y)) := (Iso.homCongr (Iso.refl _) (comm2.app Y))
           _ ≃ (X ⟶ R.obj Y) := (equivOfFullyFaithful iC).symm
-          
       homEquiv_naturality_left_symm := fun X' X Y f g =>
         by
         apply iD.map_injective

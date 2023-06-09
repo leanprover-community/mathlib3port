@@ -1292,7 +1292,6 @@ theorem set_lintegral_nnnorm_condexpL2_indicator_le (hm : m ≤ m0) (hs : Measur
       exact (Lp.strongly_measurable _).ennnorm
     _ ≤ μ (s ∩ t) * ‖x‖₊ :=
       mul_le_mul_right' (lintegral_nnnorm_condexpL2_indicator_le_real hs hμs ht hμt) _
-    
 #align measure_theory.set_lintegral_nnnorm_condexp_L2_indicator_le MeasureTheory.set_lintegral_nnnorm_condexpL2_indicator_le
 
 theorem lintegral_nnnorm_condexpL2_indicator_le (hm : m ≤ m0) (hs : MeasurableSet s) (hμs : μ s ≠ ∞)
@@ -1386,7 +1385,6 @@ theorem set_lintegral_nnnorm_condexpIndSmul_le (hm : m ≤ m0) (hs : MeasurableS
       exact (Lp.strongly_measurable _).ennnorm
     _ ≤ μ (s ∩ t) * ‖x‖₊ :=
       mul_le_mul_right' (lintegral_nnnorm_condexpL2_indicator_le_real hs hμs ht hμt) _
-    
 #align measure_theory.set_lintegral_nnnorm_condexp_ind_smul_le MeasureTheory.set_lintegral_nnnorm_condexpIndSmul_le
 
 theorem lintegral_nnnorm_condexpIndSmul_le (hm : m ≤ m0) (hs : MeasurableSet s) (hμs : μ s ≠ ∞)
@@ -1429,7 +1427,6 @@ theorem set_integral_condexpL2_indicator (hs : measurable_set[m] s) (ht : Measur
       @integral_condexpL2_eq α _ ℝ _ _ _ _ _ _ _ _ _ hm (indicatorConstLp 2 ht hμt (1 : ℝ)) hs hμs
     _ = (μ (t ∩ s)).toReal • 1 := (set_integral_indicatorConstLp (hm s hs) ht hμt (1 : ℝ))
     _ = (μ (t ∩ s)).toReal := by rw [smul_eq_mul, mul_one]
-    
 #align measure_theory.set_integral_condexp_L2_indicator MeasureTheory.set_integral_condexpL2_indicator
 
 theorem set_integral_condexpIndSmul (hs : measurable_set[m] s) (ht : MeasurableSet t)
@@ -1443,7 +1440,6 @@ theorem set_integral_condexpIndSmul (hs : measurable_set[m] s) (ht : MeasurableS
     _ = (∫ a in s, condexpL2 ℝ hm (indicatorConstLp 2 ht hμt (1 : ℝ)) a ∂μ) • x :=
       (integral_smul_const _ x)
     _ = (μ (t ∩ s)).toReal • x := by rw [set_integral_condexp_L2_indicator hs ht hμs hμt]
-    
 #align measure_theory.set_integral_condexp_ind_smul MeasureTheory.set_integral_condexpIndSmul
 
 theorem condexpL2_indicator_nonneg (hm : m ≤ m0) (hs : MeasurableSet s) (hμs : μ s ≠ ∞)
@@ -1775,7 +1771,6 @@ theorem set_integral_condexpInd (hs : measurable_set[m] s) (ht : MeasurableSet t
       set_integral_congr_ae (hm s hs)
         ((condexpInd_ae_eq_condexpIndSmul hm ht hμt x).mono fun x hx hxs => hx)
     _ = (μ (t ∩ s)).toReal • x := set_integral_condexpIndSmul hs ht hμs hμt x
-    
 #align measure_theory.set_integral_condexp_ind MeasureTheory.set_integral_condexpInd
 
 theorem condexpInd_of_measurable (hs : measurable_set[m] s) (hμs : μ s ≠ ∞) (c : G) :
@@ -2322,7 +2317,6 @@ theorem condexp_neg (f : α → F') : μ[-f|m] =ᵐ[μ] -μ[f|m] := by
       μ[-f|m] = μ[(-1 : ℝ) • f|m] := by rw [neg_one_smul ℝ f]
       _ =ᵐ[μ] (-1 : ℝ) • μ[f|m] := (condexp_smul (-1) f)
       _ = -μ[f|m] := neg_one_smul ℝ (μ[f|m])
-      
 #align measure_theory.condexp_neg MeasureTheory.condexp_neg
 
 theorem condexp_sub (hf : Integrable f μ) (hg : Integrable g μ) :

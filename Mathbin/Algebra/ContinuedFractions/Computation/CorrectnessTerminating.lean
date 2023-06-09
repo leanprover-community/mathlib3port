@@ -128,7 +128,6 @@ theorem compExactValue_correctness_of_stream_eq_some :
       calc
         v = Int.fract v + ⌊v⌋ := by rw [Int.fract_add_floor]
         _ = ⌊v⌋ := by simp [fract_eq_zero]
-        
     -- int.fract v ≠ 0; the claim then easily follows by unfolding a single computation step
     ·
       field_simp [continuants_aux, next_continuants, next_numerator, next_denominator,

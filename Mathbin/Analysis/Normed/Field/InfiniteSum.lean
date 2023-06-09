@@ -40,7 +40,7 @@ theorem Summable.mul_of_nonneg {f : ι → ℝ} {g : ι' → ℝ} (hf : Summable
     (hf' : 0 ≤ f) (hg' : 0 ≤ g) : Summable fun x : ι × ι' => f x.1 * g x.2 :=
   let ⟨s, hf⟩ := hf
   let ⟨t, hg⟩ := hg
-  suffices this : ∀ u : Finset (ι × ι'), (∑ x in u, f x.1 * g x.2) ≤ s * t from
+  suffices this (∀ u : Finset (ι × ι'), (∑ x in u, f x.1 * g x.2) ≤ s * t) from
     summable_of_sum_le (fun x => mul_nonneg (hf' _) (hg' _)) this
   fun u =>
   calc
@@ -55,7 +55,6 @@ theorem Summable.mul_of_nonneg {f : ι → ℝ} {g : ι' → ℝ} (hf : Summable
     _ = (∑ x in u.image Prod.fst, f x) * t := sum_mul.symm
     _ ≤ s * t :=
       mul_le_mul_of_nonneg_right (sum_le_hasSum _ (fun _ _ => hf' _) hf) (hg.NonNeg fun _ => hg' _)
-    
 #align summable.mul_of_nonneg Summable.mul_of_nonneg
 
 theorem Summable.mul_norm {f : ι → α} {g : ι' → α} (hf : Summable fun x => ‖f x‖)
@@ -109,7 +108,6 @@ theorem summable_norm_sum_mul_antidiagonal_of_summable_norm {f g : ℕ → α}
     ‖∑ kl in antidiagonal n, f kl.1 * g kl.2‖ ≤ ∑ kl in antidiagonal n, ‖f kl.1 * g kl.2‖ :=
       norm_sum_le _ _
     _ ≤ ∑ kl in antidiagonal n, ‖f kl.1‖ * ‖g kl.2‖ := sum_le_sum fun i _ => norm_mul_le _ _
-    
 #align summable_norm_sum_mul_antidiagonal_of_summable_norm summable_norm_sum_mul_antidiagonal_of_summable_norm
 -/
 

@@ -178,7 +178,6 @@ theorem tsub_tsub_le_tsub_add {a b c : α} : a - (b - c) ≤ a - b + c :=
       a ≤ a - b + b := le_tsub_add
       _ ≤ a - b + (c + (b - c)) := (add_le_add_left le_add_tsub _)
       _ = a - b + c + (b - c) := (add_assoc _ _ _).symm
-      
 #align tsub_tsub_le_tsub_add tsub_tsub_le_tsub_add
 
 /-- See `tsub_add_tsub_comm` for the equality. -/

@@ -445,7 +445,6 @@ theorem mul_add_eq_mul_add_iff_sub_mul_add_eq : a * e + c = b * e + d ↔ (a - b
     a * e + c = b * e + d ↔ a * e + c = d + b * e := by simp [add_comm]
     _ ↔ a * e + c - b * e = d := (Iff.intro (fun h => by rw [h]; simp) fun h => by rw [← h]; simp)
     _ ↔ (a - b) * e + c = d := by simp [sub_mul, sub_add_eq_add_sub]
-    
 #align mul_add_eq_mul_add_iff_sub_mul_add_eq mul_add_eq_mul_add_iff_sub_mul_add_eq
 
 /-- A simplification of one side of an equation exploiting right distributivity in rings
@@ -455,7 +454,6 @@ theorem sub_mul_add_eq_of_mul_add_eq_mul_add : a * e + c = b * e + d → (a - b)
   calc
     (a - b) * e + c = a * e + c - b * e := by simp [sub_mul, sub_add_eq_add_sub]
     _ = d := by rw [h]; simp [@add_sub_cancel α]
-    
 #align sub_mul_add_eq_of_mul_add_eq_mul_add sub_mul_add_eq_of_mul_add_eq_mul_add
 
 end NonUnitalNonAssocRing

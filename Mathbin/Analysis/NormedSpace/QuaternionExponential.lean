@@ -71,7 +71,6 @@ theorem hasSum_expSeries_of_imaginary {q : Quaternion ℝ} (hq : q.re = 0) {c s 
       k⁻¹ • q ^ (2 * n) = k⁻¹ • (-norm_sq q) ^ n := by rw [pow_mul, hq2]
       _ = k⁻¹ • ↑((-1) ^ n * ‖q‖ ^ (2 * n)) := _
       _ = ↑((-1) ^ n * ‖q‖ ^ (2 * n) / k) := _
-      
     · congr 1
       rw [neg_pow, norm_sq_eq_norm_sq, pow_mul, sq]
       push_cast
@@ -85,7 +84,6 @@ theorem hasSum_expSeries_of_imaginary {q : Quaternion ℝ} (hq : q.re = 0) {c s 
       k⁻¹ • q ^ (2 * n + 1) = k⁻¹ • ((-norm_sq q) ^ n * q) := by rw [pow_succ', pow_mul, hq2]
       _ = k⁻¹ • ((-1) ^ n * ‖q‖ ^ (2 * n)) • q := _
       _ = ((-1) ^ n * ‖q‖ ^ (2 * n + 1) / k / ‖q‖) • q := _
-      
     · congr 1
       rw [neg_pow, norm_sq_eq_norm_sq, pow_mul, sq, ← coe_mul_eq_smul]
       push_cast
@@ -137,7 +135,6 @@ theorem normSq_exp (q : ℍ[ℝ]) : normSq (exp ℝ q) = exp ℝ q.re ^ 2 :=
         smul_zero, smul_zero, MulZeroClass.mul_zero, add_zero, div_pow, norm_sq_coe,
         norm_sq_eq_norm_sq, ← sq, div_mul_cancel _ (pow_ne_zero _ hv)]
     _ = exp ℝ q.re ^ 2 := by rw [Real.cos_sq_add_sin_sq, mul_one]
-    
 #align quaternion.norm_sq_exp Quaternion.normSq_exp
 
 /-- Note that this implies that exponentials of pure imaginary quaternions are unit quaternions

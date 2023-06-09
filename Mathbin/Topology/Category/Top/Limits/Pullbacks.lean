@@ -341,7 +341,7 @@ theorem openEmbedding_of_pullback_open_embeddings {X Y S : TopCat} {f : X ⟶ S}
 theorem fst_iso_of_right_embedding_range_subset {X Y S : TopCat} (f : X ⟶ S) {g : Y ⟶ S}
     (hg : Embedding g) (H : Set.range f ⊆ Set.range g) : IsIso (pullback.fst : pullback f g ⟶ X) :=
   by
-  let this : (pullback f g : TopCat) ≃ₜ X :=
+  let this.1 : (pullback f g : TopCat) ≃ₜ X :=
     (Homeomorph.ofEmbedding _ (fst_embedding_of_right_embedding f hg)).trans
       { toFun := coe
         invFun := fun x =>
@@ -356,7 +356,7 @@ theorem fst_iso_of_right_embedding_range_subset {X Y S : TopCat} (f : X ⟶ S) {
 theorem snd_iso_of_left_embedding_range_subset {X Y S : TopCat} {f : X ⟶ S} (hf : Embedding f)
     (g : Y ⟶ S) (H : Set.range g ⊆ Set.range f) : IsIso (pullback.snd : pullback f g ⟶ Y) :=
   by
-  let this : (pullback f g : TopCat) ≃ₜ Y :=
+  let this.1 : (pullback f g : TopCat) ≃ₜ Y :=
     (Homeomorph.ofEmbedding _ (snd_embedding_of_left_embedding hf g)).trans
       { toFun := coe
         invFun := fun x =>

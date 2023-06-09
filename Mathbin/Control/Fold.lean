@@ -331,7 +331,6 @@ theorem foldMap_hom [Monoid α] [Monoid β] (f : α →* β) (g : γ → α) (x 
     _ = (mapFold f).app _ (traverse (Const.mk' ∘ g) x) := rfl
     _ = traverse ((mapFold f).app _ ∘ Const.mk' ∘ g) x := (naturality (mapFold f) _ _)
     _ = foldMap (f ∘ g) x := rfl
-    
 #align traversable.fold_map_hom Traversable.foldMap_hom
 
 theorem foldMap_hom_free [Monoid β] (f : FreeMonoid α →* β) (x : t α) :
@@ -391,7 +390,6 @@ theorem toList_spec (xs : t α) : toList xs = FreeMonoid.toList (foldMap FreeMon
         rw [fold_map_hom_free (foldl.of_free_monoid (flip <| @cons α))]
         · simp only [to_list, foldl, List.reverse_inj, foldl.get, foldl.of_free_monoid_comp_of]
         · infer_instance
-      
 #align traversable.to_list_spec Traversable.toList_spec
 -/
 
@@ -483,7 +481,6 @@ theorem foldlm_toList {f : α → β → m α} {x : α} {xs : t β} :
       simp only [mfoldl, to_list_spec, fold_map_hom_free (mfoldl.of_free_monoid f),
         mfoldl.of_free_monoid_comp_of, mfoldl.get, FreeMonoid.ofList_toList]
     _ = List.foldlM f x (toList xs) := by simp [mfoldl.of_free_monoid, unop_op, flip]
-    
 #align traversable.mfoldl_to_list Traversable.foldlm_toList
 -/
 

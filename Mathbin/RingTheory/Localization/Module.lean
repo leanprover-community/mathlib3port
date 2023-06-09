@@ -153,7 +153,6 @@ theorem Basis.localizationLocalization_repr_algebraMap {ι : Type _} (b : Basis 
       (Finset.sum_eq_single i (fun j _ hj => by simp [hj]) fun hi => by
         simp [finsupp.not_mem_support_iff.mp hi])
     _ = algebraMap R Rₛ (b.repr x i) := by simp [Algebra.smul_def]
-    
 #align basis.localization_localization_repr_algebra_map Basis.localizationLocalization_repr_algebraMap
 
 end LocalizationLocalization

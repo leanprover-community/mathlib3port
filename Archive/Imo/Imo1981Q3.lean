@@ -61,7 +61,6 @@ theorem m_le_n {m n : ℤ} (h1 : ProblemPredicate N m n) : m ≤ n :=
     calc
       1 = (n ^ 2 - m * n - m ^ 2) ^ 2 := h1.eq_one.symm
       _ = (n * (n - m) - m ^ 2) ^ 2 := by ring
-      
   have h4 : n * (n - m) - m ^ 2 < -1 := by nlinarith [h1.n_range.left]
   have h5 : 1 < (n * (n - m) - m ^ 2) ^ 2 := by nlinarith
   exact h5.ne h3
@@ -72,7 +71,6 @@ theorem eq_imp_1 {n : ℤ} (h1 : ProblemPredicate N n n) : n = 1 :=
     calc
       _ = (n ^ 2 - n * n - n ^ 2) ^ 2 := by simp [sq, mul_assoc]
       _ = 1 := h1.eq_one
-      
   eq_one_of_mul_eq_one_right h1.m_range.left.le this
 #align imo1981_q3.problem_predicate.eq_imp_1 Imo1981Q3.ProblemPredicate.eq_imp_1
 
@@ -89,14 +87,12 @@ theorem reduction {m n : ℤ} (h1 : ProblemPredicate N m n) (h2 : 1 < n) :
       calc
         _ < n := sub_lt_self n h1.m_range.left
         _ ≤ N := h1.n_range.right
-        
     exact ⟨h5, h6.le⟩
   -- eq_one:
   ·
     calc
       _ = (n ^ 2 - m * n - m ^ 2) ^ 2 := by ring
       _ = 1 := h1.eq_one
-      
 #align imo1981_q3.problem_predicate.reduction Imo1981Q3.ProblemPredicate.reduction
 
 end ProblemPredicate
@@ -174,12 +170,10 @@ theorem m_n_bounds {m n : ℕ} (h1 : NatPredicate N m n) : m ≤ fib K ∧ n ≤
       calc
         m = fib k := hm
         _ ≤ fib K := fib_mono h3
-        
     · have h6 : k + 1 ≤ K + 1 := succ_le_succ h3
       calc
         n = fib (k + 1) := hn
         _ ≤ fib (K + 1) := fib_mono h6
-        
   · have h7 : N < n := by
       have h8 : K + 2 ≤ k + 1 := succ_le_succ (not_lt.mp h2)
       rw [← fib_add_two] at HK 
@@ -187,7 +181,6 @@ theorem m_n_bounds {m n : ℕ} (h1 : NatPredicate N m n) : m ≤ fib K ∧ n ≤
         N < fib (K + 2) := HK
         _ ≤ fib (k + 1) := (fib_mono h8)
         _ = n := hn.symm
-        
     have h9 : n ≤ N := h1.n_le_N
     exact absurd h7 h9.not_lt
 #align imo1981_q3.m_n_bounds Imo1981Q3.m_n_bounds

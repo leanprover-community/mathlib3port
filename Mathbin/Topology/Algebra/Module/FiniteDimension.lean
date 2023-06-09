@@ -136,7 +136,6 @@ theorem unique_topology_of_t2 {t : TopologicalSpace 𝕜} (h₁ : @TopologicalAd
         (@tendsto.smul_const _ _ _ hnorm.to_uniform_space.to_topological_space t _ _ _ _ _
           tendsto_id (1 : 𝕜))
       _ = @nhds 𝕜 t 0 := by rw [zero_smul]
-      
 #align unique_topology_of_t2 unique_topology_of_t2
 
 /-- Any linear form on a topological vector space over a nontrivially normed field is continuous if

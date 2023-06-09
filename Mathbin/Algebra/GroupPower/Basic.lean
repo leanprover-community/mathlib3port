@@ -218,7 +218,6 @@ theorem pow_mul_pow_eq_one {a b : M} (n : ℕ) (h : a * b = 1) : a ^ n * b ^ n =
       a ^ n.succ * b ^ n.succ = a ^ n * a * (b * b ^ n) := by rw [pow_succ', pow_succ]
       _ = a ^ n * (a * b) * b ^ n := by simp only [mul_assoc]
       _ = 1 := by simp [h, hn]
-      
 #align pow_mul_pow_eq_one pow_mul_pow_eq_one
 #align nsmul_add_nsmul_eq_zero nsmul_add_nsmul_eq_zero
 

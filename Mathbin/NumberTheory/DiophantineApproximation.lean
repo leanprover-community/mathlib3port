@@ -524,7 +524,6 @@ private theorem aux₃ :
     _ ≤ (u' * (2 * u' - 1))⁻¹ := by
       rwa [inv_le_inv (mul_pos (mul_pos Hu Hv') hξ₀) <| mul_pos Hu Hu', mul_assoc,
         mul_le_mul_left Hu]
-    
 
 -- The conditions `ass ξ u v` persist in the inductive step.
 private theorem invariant : ContfracLegendre.Ass (fract ξ)⁻¹ v (u - ⌊ξ⌋ * v) :=

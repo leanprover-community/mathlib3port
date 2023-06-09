@@ -142,8 +142,7 @@ theorem add_one_pow_unbounded_of_pos [StrictOrderedSemiring α] [Archimedean α]
       _ ≤ (1 + y) ^ n :=
         (one_add_mul_le_pow' (mul_nonneg hy.le hy.le) (mul_nonneg this this)
           (add_nonneg zero_le_two hy.le) _)
-      _ = (y + 1) ^ n := by rw [add_comm]
-      ⟩
+      _ = (y + 1) ^ n := by rw [add_comm]⟩
 #align add_one_pow_unbounded_of_pos add_one_pow_unbounded_of_pos
 
 section StrictOrderedRing

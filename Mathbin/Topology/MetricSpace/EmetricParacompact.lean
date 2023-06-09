@@ -117,7 +117,6 @@ instance (priority := 100) [PseudoEMetricSpace α] : ParacompactSpace α := by
     calc
       2⁻¹ ^ n = 1 * 2⁻¹ ^ n := (one_mul _).symm
       _ ≤ 3 * 2⁻¹ ^ n := mul_le_mul_right' _ _
-      
     -- TODO: use `norm_num`
     have : ((1 : ℕ) : ℝ≥0∞) ≤ (3 : ℕ) := Nat.cast_le.2 (by norm_num1)
     exact_mod_cast this
@@ -152,7 +151,6 @@ instance (priority := 100) [PseudoEMetricSpace α] : ParacompactSpace α := by
         _ ≤ 2⁻¹ ^ (k + 1) + 2⁻¹ ^ (k + 1) :=
           (add_le_add (hpow_le <| by linarith) (hpow_le <| by linarith))
         _ = 2⁻¹ ^ k := by rw [← two_mul, h2pow]
-        
     -- For each `m ≤ n + k` there is at most one `j` such that `D m j ∩ B` is nonempty.
     have Hle : ∀ m ≤ n + k, Set.Subsingleton {j | (D m j ∩ B).Nonempty} :=
       by
@@ -173,7 +171,6 @@ instance (priority := 100) [PseudoEMetricSpace α] : ParacompactSpace α := by
         _ ≤ 2 * (2⁻¹ ^ m + 2⁻¹ ^ (m + 1)) :=
           (mul_le_mul' le_rfl <| add_le_add le_rfl <| hpow_le (add_le_add hm le_rfl))
         _ = 3 * 2⁻¹ ^ m := by rw [mul_add, h2pow, bit1, add_mul, one_mul]
-        
     -- Finally, we glue `Hgt` and `Hle`
     have : (⋃ (m ≤ n + k) (i ∈ {i : ι | (D m i ∩ B).Nonempty}), {(m, i)}).Finite :=
       (finite_le_nat _).biUnion' fun i hi =>

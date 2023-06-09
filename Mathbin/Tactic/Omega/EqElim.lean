@@ -145,7 +145,6 @@ theorem rhs_correct {v : Nat → Int} {b : Int} {as : List Int} (n : Nat) :
         apply fun_mono_2
         · rw [coeffs.val_except_update_set]
         · simp only [m, a_n]; ring
-      
 #align omega.rhs_correct Omega.rhs_correct
 
 def symSym (m b : Int) : Int :=
@@ -244,7 +243,6 @@ theorem coeffsReduce_correct {v : Nat → Int} {b : Int} {as : List Int} {n : Na
         by
         simp only [coeffs_reduce, term.val, m, a_n]
         rw [← coeffs.val_except_add_eq n, coeffs.val_except_update_set, get_set, update_eq]
-      
   rw [← Int.mul_ediv_cancel (term.val _ _) h3, ← h4, Int.zero_div]
 #align omega.coeffs_reduce_correct Omega.coeffsReduce_correct
 

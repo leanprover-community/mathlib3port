@@ -141,7 +141,6 @@ theorem tendsto_set_integral_peak_smul_of_integrableOn_of_continuousWithinAt_aux
         apply set_integral_congr hs fun x hx => _
         rw [Real.norm_of_nonneg (hφpos _ hx)]
       _ = δ := by rw [integral_mul_right, h'i, one_mul]
-      
   have C : ‖∫ x in s \ u, φ i x • g x ∂μ‖ ≤ δ * ∫ x in s, ‖g x‖ ∂μ :=
     calc
       ‖∫ x in s \ u, φ i x • g x ∂μ‖ ≤ ∫ x in s \ u, ‖φ i x • g x‖ ∂μ :=
@@ -159,7 +158,6 @@ theorem tendsto_set_integral_peak_smul_of_integrableOn_of_continuousWithinAt_aux
         apply mul_le_mul_of_nonneg_left (set_integral_mono_set hmg.norm _ _) δpos.le
         · exact eventually_of_forall fun x => norm_nonneg _
         · apply eventually_of_forall; exact diff_subset s u
-      
   calc
     ‖∫ x in s, φ i x • g x ∂μ‖ = ‖(∫ x in s \ u, φ i x • g x ∂μ) + ∫ x in s ∩ u, φ i x • g x ∂μ‖ :=
       by
@@ -168,7 +166,6 @@ theorem tendsto_set_integral_peak_smul_of_integrableOn_of_continuousWithinAt_aux
           (h''i.mono_set (diff_subset _ _)) (h''i.mono_set (inter_subset_left _ _))]
     _ ≤ ‖∫ x in s \ u, φ i x • g x ∂μ‖ + ‖∫ x in s ∩ u, φ i x • g x ∂μ‖ := (norm_add_le _ _)
     _ ≤ (δ * ∫ x in s, ‖g x‖ ∂μ) + δ := add_le_add C B
-    
 #align tendsto_set_integral_peak_smul_of_integrable_on_of_continuous_within_at_aux tendsto_set_integral_peak_smul_of_integrableOn_of_continuousWithinAt_aux
 
 /- If a sequence of peak functions `φᵢ` converges uniformly to zero away from a point `x₀`, and
@@ -282,7 +279,6 @@ theorem tendsto_set_integral_pow_smul_of_unique_maximum_of_isCompact_of_measure_
               exact pow_le_pow_of_le_left t'_pos.le (le_of_lt (hv hx)) _
           _ ≤ ∫ y in s, c y ^ n ∂μ :=
             set_integral_mono_set (I n) (J n) (eventually_of_forall (inter_subset_right _ _))
-          
       simp_rw [φ, ← div_eq_inv_mul, div_pow, div_div]
       apply div_le_div (pow_nonneg t_pos n) _ _ B
       · exact pow_le_pow_of_le_left (hnc _ hx.1) (ht x hx) _
@@ -333,7 +329,6 @@ theorem tendsto_set_integral_pow_smul_of_unique_maximum_of_isCompact_of_integrab
     0 < μ (u ∩ interior s) :=
       (u_open.inter isOpen_interior).measure_pos μ (_root_.mem_closure_iff.1 h₀ u u_open x₀_u)
     _ ≤ μ (u ∩ s) := measure_mono (inter_subset_inter_right _ interior_subset)
-    
 #align tendsto_set_integral_pow_smul_of_unique_maximum_of_is_compact_of_integrable_on tendsto_set_integral_pow_smul_of_unique_maximum_of_isCompact_of_integrableOn
 
 /-- If a continuous function `c` realizes its maximum at a unique point `x₀` in a compact set `s`,

@@ -206,7 +206,6 @@ def changeInv (f : α ≃ᵤ β) (g : β → α) (hg : Function.RightInverse g f
       calc
         g x = f.symm (f (g x)) := (f.left_inv (g x)).symm
         _ = f.symm x := by rw [hg x]
-        
   { toFun := f
     invFun := g
     left_inv := by convert f.left_inv

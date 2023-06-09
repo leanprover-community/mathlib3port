@@ -377,7 +377,6 @@ protected theorem FiniteSpanningSetsIn.outerRegular [OpensMeasurableSpace α] {�
     _ = (∑' n, μ (A n)) + ∑' n, δ n := ENNReal.tsum_add
     _ = μ (⋃ n, A n) + ∑' n, δ n := (congr_arg₂ (· + ·) (measure_Union hAd hAm).symm rfl)
     _ < r := hδε
-    
 #align measure_theory.measure.finite_spanning_sets_in.outer_regular MeasureTheory.Measure.FiniteSpanningSetsIn.outerRegular
 -/
 
@@ -406,7 +405,6 @@ theorem measurableSet_of_open [OuterRegular μ] (H : InnerRegular μ p IsOpen) (
     _ ≤ μ (K \ U') + μ U' + ε := (add_le_add_right (tsub_le_iff_right.1 le_measure_diff) _)
     _ ≤ μ (K \ U') + ε + ε := by mono*; exacts [hμU'.le, le_rfl]
     _ = μ (K \ U') + (ε + ε) := add_assoc _ _ _
-    
 #align measure_theory.measure.inner_regular.measurable_set_of_open MeasureTheory.Measure.InnerRegular.measurableSet_of_open
 
 open Finset
@@ -472,7 +470,6 @@ theorem weaklyRegular_of_finite [BorelSpace α] (μ : Measure α) [IsFiniteMeasu
         _ ≤ (∑ k in t, μ (F k)) + ε / 2 + ε / 2 :=
           (add_le_add_right (add_le_add_left ((ENNReal.sum_le_tsum _).trans hδε.le) _) _)
         _ = μ (⋃ k ∈ t, F k) + ε := _
-        
       rw [measure_bUnion_finset, add_assoc, ENNReal.add_halves]
       exacts [fun k _ n _ hkn => (hsd hkn).mono (hFs k) (hFs n), fun k hk => (hFc k).MeasurableSet]
     ·
@@ -481,7 +478,6 @@ theorem weaklyRegular_of_finite [BorelSpace α] (μ : Measure α) [IsFiniteMeasu
         _ ≤ ∑' n, μ (s n) + δ n := (ENNReal.tsum_le_tsum hU)
         _ = μ (⋃ n, s n) + ∑' n, δ n := by rw [measure_Union hsd hsm, ENNReal.tsum_add]
         _ ≤ μ (⋃ n, s n) + ε := add_le_add_left (hδε.le.trans ENNReal.half_le_self) _
-        
 #align measure_theory.measure.inner_regular.weakly_regular_of_finite MeasureTheory.Measure.InnerRegular.weaklyRegular_of_finite
 -/
 

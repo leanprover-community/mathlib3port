@@ -180,7 +180,6 @@ theorem conjugate_nonneg {a : R} (ha : 0 ≤ a) (c : R) : 0 ≤ star c * a * c :
       0 ≤ star c * x * c + 0 := by rw [add_zero] <;> exact hx
       _ ≤ star c * x * c + star c * y * c := (StarOrderedRing.add_le_add_left _ _ hy _)
       _ ≤ _ := by rw [mul_add, add_mul]
-      
 #align conjugate_nonneg conjugate_nonneg
 
 theorem conjugate_nonneg' {a : R} (ha : 0 ≤ a) (c : R) : 0 ≤ c * a * star c := by

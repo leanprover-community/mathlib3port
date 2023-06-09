@@ -435,7 +435,6 @@ theorem norm_le_of_forall_mem_frontier_norm_le {f : E → F} {U : Set E} (hU : B
     ‖f z‖ = ‖f (e 0)‖ := by simp only [e, line_map_apply_zero]
     _ ≤ ‖f (e ζ)‖ := (hζ (subset_closure h₀))
     _ ≤ C := hC _ (hde.continuous.frontier_preimage_subset _ hζU)
-    
 #align complex.norm_le_of_forall_mem_frontier_norm_le Complex.norm_le_of_forall_mem_frontier_norm_le
 
 /-- If two complex differentiable functions `f g : E → F` are equal on the boundary of a bounded set

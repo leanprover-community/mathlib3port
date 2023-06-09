@@ -199,7 +199,6 @@ theorem integral_truncation_le_integral_of_nonneg (hf : Integrable f μ) (h'f : 
       truncation f A x ≤ |truncation f A x| := le_abs_self _
       _ ≤ |f x| := (abs_truncation_le_abs_self _ _ _)
       _ = f x := abs_of_nonneg (h'f x)
-      
 #align probability_theory.integral_truncation_le_integral_of_nonneg ProbabilityTheory.integral_truncation_le_integral_of_nonneg
 
 /-- If a function is integrable, then the integral of its truncated versions converges to the
@@ -304,7 +303,6 @@ theorem sum_prob_mem_Ioc_le {X : Ω → ℝ} (hint : Integrable X) (hnonneg : 0 
           Algebra.id.smul_eq_mul, mul_one]
         rw [← ENNReal.one_toReal]
         exact ENNReal.toReal_mono ENNReal.one_ne_top prob_le_one
-      
   have B : ∀ a b, ℙ {ω | X ω ∈ Set.Ioc a b} = ENNReal.ofReal (∫ x in Set.Ioc a b, (1 : ℝ) ∂ρ) :=
     by
     intro a b
@@ -326,7 +324,6 @@ theorem sum_prob_mem_Ioc_le {X : Ω → ℝ} (hint : Integrable X) (hnonneg : 0 
       refine' sum_congr rfl fun j hj => _
       rw [intervalIntegral.integral_of_le (Nat.cast_le.2 ((mem_range.1 hj).le.trans hKN))]
     _ ≤ ENNReal.ofReal (𝔼[X] + 1) := ENNReal.ofReal_le_ofReal A
-    
 #align probability_theory.sum_prob_mem_Ioc_le ProbabilityTheory.sum_prob_mem_Ioc_le
 
 theorem tsum_prob_mem_Ioi_lt_top {X : Ω → ℝ} (hint : Integrable X) (hnonneg : 0 ≤ X) :
@@ -425,7 +422,6 @@ theorem sum_variance_truncation_le {X : Ω → ℝ} (hint : Integrable X) (hnonn
                 linarith only [show (0 : ℝ) ≤ k from Nat.cast_nonneg k])
               (mul_nonneg zero_le_two ((Nat.cast_nonneg k).trans hx.1.le)))
           _ = 2 * x := by rw [one_mul]
-          
     _ = 2 * ∫ x in (0 : ℝ)..K, x ∂ρ :=
       by
       rw [intervalIntegral.sum_integral_adjacent_intervals fun k hk => _]
@@ -438,7 +434,6 @@ theorem sum_variance_truncation_le {X : Ω → ℝ} (hint : Integrable X) (hnonn
           rw [← integral_truncation_eq_interval_integral_of_nonneg hint.1 hnonneg]
           exact integral_truncation_le_integral_of_nonneg hint hnonneg)
         zero_le_two
-    
 #align probability_theory.sum_variance_truncation_le ProbabilityTheory.sum_variance_truncation_le
 
 end MomentEstimates
@@ -494,7 +489,6 @@ theorem strong_law_aux1 {c : ℝ} (c_one : 1 < c) {ε : ℝ} (εpos : 0 < ε) :
         rw [(hident j).truncation.variance_eq]
         exact variance_le_expectation_sq (hX 0).truncation
       _ ≤ 2 * 𝔼[X 0] := sum_variance_truncation_le hint (hnonneg 0) K
-      
   let C := c ^ 5 * (c - 1)⁻¹ ^ 3 * (2 * 𝔼[X 0])
   have I2 : ∀ N, (∑ i in range N, ((u i : ℝ) ^ 2)⁻¹ * Var[S (u i)]) ≤ C :=
     by
@@ -545,7 +539,6 @@ theorem strong_law_aux1 {c : ℝ} (c_one : 1 < c) {ε : ℝ} (εpos : 0 < ε) :
         apply mul_le_mul_of_nonneg_left (I1 _)
         apply mul_nonneg (pow_nonneg c_pos.le _)
         exact pow_nonneg (inv_nonneg.2 (sub_nonneg.2 c_one.le)) _
-      
   have I3 :
     ∀ N,
       (∑ i in range N, ℙ {ω | (u i * ε : ℝ) ≤ |S (u i) ω - 𝔼[S (u i)]|}) ≤
@@ -577,7 +570,6 @@ theorem strong_law_aux1 {c : ℝ} (c_one : 1 < c) {ε : ℝ} (εpos : 0 < ε) :
         refine' mul_le_mul_of_nonneg_left _ (sq_nonneg _)
         simp_rw [inv_pow]
         exact I2 N
-      
   have I4 : (∑' i, ℙ {ω | (u i * ε : ℝ) ≤ |S (u i) ω - 𝔼[S (u i)]|}) < ∞ :=
     (le_of_tendsto_of_tendsto' (ENNReal.tendsto_nat_tsum _) tendsto_const_nhds I3).trans_lt
       ENNReal.ofReal_lt_top

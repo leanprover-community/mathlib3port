@@ -63,7 +63,6 @@ theorem hasFiniteIntegral_prod_mk_left (a : α) {s : Set (β × γ)} (h2s : (κ 
     _ ≤ (κ ⊗ₖ η) a t := (le_comp_prod_apply _ _ _ _)
     _ = (κ ⊗ₖ η) a s := (measure_to_measurable s)
     _ < ⊤ := h2s.lt_top
-    
 #align probability_theory.has_finite_integral_prod_mk_left ProbabilityTheory.hasFiniteIntegral_prod_mk_left
 
 theorem integrable_kernel_prod_mk_left (a : α) {s : Set (β × γ)} (hs : MeasurableSet s)

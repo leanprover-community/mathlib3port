@@ -120,7 +120,6 @@ theorem min_firstDiff_le (x y z : ∀ n, E n) (h : x ≠ z) :
       x (first_diff x z) = y (first_diff x z) :=
         apply_eq_of_lt_first_diff (H.trans_le (min_le_left _ _))
       _ = z (first_diff x z) := apply_eq_of_lt_first_diff (H.trans_le (min_le_right _ _))
-      
   exact (apply_first_diff_ne h this).elim
 #align pi_nat.min_first_diff_le PiNat.min_firstDiff_le
 
@@ -376,7 +375,6 @@ protected theorem dist_triangle (x y z : ∀ n, E n) : dist x z ≤ dist x y + d
   calc
     dist x z ≤ max (dist x y) (dist y z) := dist_triangle_nonarch x y z
     _ ≤ dist x y + dist y z := max_le_add_of_nonneg (PiNat.dist_nonneg _ _) (PiNat.dist_nonneg _ _)
-    
 #align pi_nat.dist_triangle PiNat.dist_triangle
 
 protected theorem eq_of_dist_eq_zero (x y : ∀ n, E n) (hxy : dist x y = 0) : x = y :=
@@ -593,7 +591,6 @@ theorem exists_disjoint_cylinder {s : Set (∀ n, E n)} (hs : IsClosed s) {x : �
     inf_dist x s ≤ dist x y := inf_dist_le_dist_of_mem ys
     _ ≤ (1 / 2) ^ n := by rw [mem_cylinder_comm] at hy ; exact mem_cylinder_iff_dist_le.1 hy
     _ < inf_dist x s := hn
-    
 #align pi_nat.exists_disjoint_cylinder PiNat.exists_disjoint_cylinder
 
 #print PiNat.shortestPrefixDiff /-
@@ -899,7 +896,6 @@ theorem exists_nat_nat_continuous_surjective_of_completeSpace (α : Type _) [Met
       _ = dist (g x) (u (x.1 n)) + dist (g y) (u (y.1 n)) := by rw [← B]
       _ ≤ (1 / 2) ^ n + (1 / 2) ^ n := (add_le_add (A x n) (A y n))
       _ = 4 * (1 / 2) ^ (n + 1) := by ring
-      
   have g_surj : surjective g := by
     intro y
     have : ∀ n : ℕ, ∃ j, y ∈ closed_ball (u j) ((1 / 2) ^ n) :=
@@ -916,7 +912,6 @@ theorem exists_nat_nat_continuous_surjective_of_completeSpace (α : Type _) [Met
         dist (g ⟨x, I⟩) y ≤ dist (g ⟨x, I⟩) (u (x n)) + dist y (u (x n)) :=
           dist_triangle_right _ _ _
         _ ≤ (1 / 2) ^ n + (1 / 2) ^ n := add_le_add (A ⟨x, I⟩ n) (hx n)
-        
     have L : tendsto (fun n : ℕ => (1 / 2 : ℝ) ^ n + (1 / 2) ^ n) at_top (𝓝 (0 + 0)) :=
       (tendsto_pow_atTop_nhds_0_of_lt_1 I0.le I1).add (tendsto_pow_atTop_nhds_0_of_lt_1 I0.le I1)
     rw [add_zero] at L 
@@ -1046,7 +1041,6 @@ protected def metricSpace : MetricSpace (∀ i, F i)
             min ((1 / 2) ^ encode i) (dist (x i) (y i)) +
               min ((1 / 2) ^ encode i) (dist (y i) (z i)) :=
           min_le_right _ _
-        
     calc
       dist x z ≤
           ∑' i,
@@ -1054,7 +1048,6 @@ protected def metricSpace : MetricSpace (∀ i, F i)
               min ((1 / 2) ^ encode i) (dist (y i) (z i)) :=
         tsum_le_tsum I (dist_summable x z) ((dist_summable x y).add (dist_summable y z))
       _ = dist x y + dist y z := tsum_add (dist_summable x y) (dist_summable y z)
-      
   eq_of_dist_eq_zero := by
     intro x y hxy
     ext1 n
@@ -1115,7 +1108,6 @@ protected def metricSpace : MetricSpace (∀ i, F i)
           _ ≤ ε / 2 + ε / 2 :=
             (add_le_add_right (by simpa only [Finset.sum_const, nsmul_eq_mul] using hδ) _)
           _ = ε := add_halves _
-          
     · simp only [le_iInf_iff, le_principal_iff]
       intro i ε εpos
       refine' mem_infi_of_mem (min ((1 / 2) ^ encode i) ε) _
@@ -1126,7 +1118,6 @@ protected def metricSpace : MetricSpace (∀ i, F i)
       calc
         dist (x i) (y i) ≤ dist x y := dist_le_dist_pi_of_dist_lt hn
         _ < ε := hε
-        
 #align pi_countable.metric_space PiCountable.metricSpace
 -/
 

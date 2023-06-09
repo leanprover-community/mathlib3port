@@ -123,7 +123,6 @@ theorem det_vandermonde {n : ℕ} (v : Fin n → R) :
       (congr_arg ((· * ·) _) _)
     _ = ∏ i : Fin n.succ, ∏ j in Ioi i, v j - v i := by
       simp_rw [ih (v ∘ Fin.succ), Fin.prod_univ_succ, Fin.prod_Ioi_zero, Fin.prod_Ioi_succ]
-    
   · intro i j
     simp_rw [of_apply]
     rw [Matrix.cons_val_zero]

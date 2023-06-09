@@ -127,7 +127,6 @@ theorem Metric.Bounded.smul {s : Set E} (hs : Bounded s) (c : 𝕜) : Bounded (c
   calc
     ‖c • y‖ = ‖c‖ * ‖y‖ := norm_smul _ _
     _ ≤ ‖c‖ * R := mul_le_mul_of_nonneg_left (hR y ys) (norm_nonneg _)
-    
 #align metric.bounded.smul Metric.Bounded.smul
 -/
 
@@ -151,7 +150,6 @@ theorem eventually_singleton_add_smul_subset {x : E} {s : Set E} (hs : Bounded s
         (mul_le_mul (mem_closedBall_zero_iff.1 hr) (mem_closedBall_zero_iff.1 (hR zs))
           (norm_nonneg _) (div_pos εpos Rpos).le)
       _ = ε := by field_simp [Rpos.ne']
-      
   have : y = x + r • z := by simp only [hz, add_neg_cancel_left]
   apply hε
   simpa only [this, dist_eq_norm, add_sub_cancel', mem_closed_ball] using I

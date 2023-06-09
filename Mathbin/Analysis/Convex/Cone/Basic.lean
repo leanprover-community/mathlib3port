@@ -627,8 +627,7 @@ theorem salient_positive : Salient (positive 𝕜 E) := fun x xs hx hx' =>
     (calc
       0 < x := lt_of_le_of_ne xs hx.symm
       _ ≤ x + -x := (le_add_of_nonneg_right hx')
-      _ = 0 := add_neg_self x
-      )
+      _ = 0 := add_neg_self x)
 #align convex_cone.salient_positive ConvexCone.salient_positive
 
 /-- The positive cone of an ordered module is always pointed. -/
@@ -894,7 +893,6 @@ theorem exists_extension_of_le_sublinear (f : E →ₗ.[ℝ] ℝ) (N : E → ℝ
         calc
           N (c • p.1) = c * N p.1 := N_hom c hc p.1
           _ ≤ c * p.2 := mul_le_mul_of_nonneg_left hp hc.le
-          
       add_mem' := fun x hx y hy => (N_add _ _).trans (add_le_add hx hy) }
   obtain ⟨g, g_eq, g_nonneg⟩ := riesz_extension s ((-f).coprod (linear_map.id.to_pmap ⊤)) _ _ <;>
     try

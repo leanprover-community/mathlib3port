@@ -233,7 +233,6 @@ theorem integral_gaussian_sq_complex {b : ℂ} (hb : 0 < b.re) :
         integral_mul_cexp_neg_mul_sq hb]
       field_simp [(by contrapose! hb; rw [hb, zero_re] : b ≠ 0)]
       ring
-    
 #align integral_gaussian_sq_complex integral_gaussian_sq_complex
 
 theorem integral_gaussian (b : ℝ) : (∫ x, exp (-b * x ^ 2)) = sqrt (π / b) :=

@@ -26,7 +26,7 @@ def mkMemName (sub : Name) : Name → Name
   | n => n
 #align tactic.mk_mem_name Tactic.mkMemName
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:330:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
 unsafe def derive_field_subtype : tactic Unit := do
   let field ← get_current_field
   let b ← target >>= is_prop

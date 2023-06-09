@@ -394,7 +394,6 @@ theorem card_eq_of_bijective (f : ∀ i, i < n → α) (hf : ∀ a ∈ s, ∃ i,
         Subtype.eq <| f_inj i j (mem_range.1 hi) (mem_range.1 hj) Eq)
     _ = card (range n) := card_attach
     _ = n := card_range n
-    
 #align finset.card_eq_of_bijective Finset.card_eq_of_bijective
 -/
 
@@ -415,7 +414,6 @@ theorem card_congr {t : Finset β} (f : ∀ a ∈ s, β) (h₁ : ∀ a ha, f a h
             fun h =>
             let ⟨a, ha₁, ha₂⟩ := h₃ b h
             mem_image.2 ⟨⟨a, ha₁⟩, by simp [ha₂]⟩⟩)
-    
 #align finset.card_congr Finset.card_congr
 -/
 
@@ -425,7 +423,6 @@ theorem card_le_card_of_inj_on {t : Finset β} (f : α → β) (hf : ∀ a ∈ s
   classical calc
     s.card = (s.image f).card := (card_image_of_inj_on f_inj).symm
     _ ≤ t.card := card_le_of_subset <| image_subset_iff.2 hf
-    
 #align finset.card_le_card_of_inj_on Finset.card_le_card_of_inj_on
 -/
 
@@ -447,7 +444,6 @@ theorem le_card_of_inj_on_range (f : ℕ → α) (hf : ∀ i < n, f i ∈ s)
   calc
     n = card (range n) := (card_range n).symm
     _ ≤ s.card := card_le_card_of_inj_on f (by simpa only [mem_range]) (by simpa only [mem_range])
-    
 #align finset.le_card_of_inj_on_range Finset.le_card_of_inj_on_range
 -/
 
@@ -556,7 +552,6 @@ theorem le_card_sdiff (s t : Finset α) : t.card - s.card ≤ card (t \ s) :=
       tsub_le_tsub_left (card_le_of_subset (inter_subset_left s t)) _
     _ = card (t \ (s ∩ t)) := (card_sdiff (inter_subset_right s t)).symm
     _ ≤ card (t \ s) := by rw [sdiff_inter_self_right t s]
-    
 #align finset.le_card_sdiff Finset.le_card_sdiff
 -/
 

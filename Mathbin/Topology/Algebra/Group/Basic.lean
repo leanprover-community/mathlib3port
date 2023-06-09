@@ -1523,7 +1523,6 @@ instance (priority := 100) TopologicalGroup.regularSpace : RegularSpace G :=
     _ = U * interior V := (is_open_interior.closure_mul U)
     _ ⊆ U * V := (mul_subset_mul_left interior_subset)
     _ ⊆ s := hUV
-    
 #align topological_group.regular_space TopologicalGroup.regularSpace
 #align topological_add_group.regular_space TopologicalAddGroup.regularSpace
 -/
@@ -1742,7 +1741,6 @@ theorem local_isCompact_isClosed_nhds_of_group [LocallyCompactSpace G] {U : Set 
       _ = interior V * V := (is_open_interior.mul_closure _)
       _ ⊆ V * V := (mul_subset_mul_right interior_subset)
       _ ⊆ L := by rintro x ⟨y, z, yv, zv, rfl⟩; exact hV _ yv _ zv
-      
   exact
     ⟨closure V, isCompact_of_isClosed_subset Lcomp isClosed_closure VL, isClosed_closure,
       VL.trans LU, interior_mono subset_closure (mem_interior_iff_mem_nhds.2 Vnhds)⟩
@@ -1764,7 +1762,6 @@ theorem nhds_mul (x y : G) : 𝓝 (x * y) = 𝓝 x * 𝓝 y :=
     _ = 𝓝 x * 𝓝 y := by
       rw [← map_mul_left_nhds_one x, ← map_mul_right_nhds_one y, ← map₂_mul, map₂_map_left,
         map₂_map_right]
-    
 #align nhds_mul nhds_mul
 #align nhds_add nhds_add
 

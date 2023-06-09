@@ -285,6 +285,5 @@ theorem CommApplicative.commutative_map {m : Type _ → Type _} [Applicative m] 
     _ = (fun b a => f a b) <$> b <*> a := by
       rw [CommApplicative.commutative_prod] <;>
         simp [seq_map_assoc, map_seq, seq_assoc, seq_pure, map_map]
-    
 #align is_comm_applicative.commutative_map CommApplicative.commutative_map
 

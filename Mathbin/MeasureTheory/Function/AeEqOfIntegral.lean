@@ -110,7 +110,6 @@ theorem ae_eq_zero_of_forall_dual_of_isSeparable [NormedAddCommGroup E] [NormedS
       _ < ‖a‖ / 2 := by rw [one_mul]; rwa [dist_eq_norm'] at hx 
       _ < ‖(x : E)‖ := I
       _ = ‖s x x‖ := by rw [(hs x).2, IsROrC.norm_coe_norm]
-      
   have hfs : ∀ y : d, ∀ᵐ x ∂μ, ⟪f x, s y⟫ = (0 : 𝕜) := fun y => hf (s y)
   have hf' : ∀ᵐ x ∂μ, ∀ y : d, ⟪f x, s y⟫ = (0 : 𝕜) := by rwa [ae_all_iff]
   filter_upwards [hf', h't] with x hx h'x
@@ -199,7 +198,6 @@ theorem ae_le_of_forall_set_lintegral_le_of_sigmaFinite [SigmaFinite μ] {f g : 
         _ ≤ ∫⁻ x in s, f x ∂μ :=
           (set_lintegral_mono (hg.add measurable_const) hf fun x hx => hx.1.1)
         _ ≤ (∫⁻ x in s, g x ∂μ) + 0 := by rw [add_zero]; exact h s s_meas s_lt_top
-        
     have B : (∫⁻ x in s, g x ∂μ) ≠ ∞ := by
       apply ne_of_lt
       calc
@@ -210,7 +208,6 @@ theorem ae_le_of_forall_set_lintegral_le_of_sigmaFinite [SigmaFinite μ] {f g : 
         _ < ∞ := by
           simp only [lt_top_iff_ne_top, s_lt_top.ne, and_false_iff, ENNReal.coe_ne_top,
             WithTop.mul_eq_top_iff, Ne.def, not_false_iff, false_and_iff, or_self_iff]
-        
     have : (ε : ℝ≥0∞) * μ s ≤ 0 := ENNReal.le_of_add_le_add_left B A
     simpa only [ENNReal.coe_eq_zero, nonpos_iff_eq_zero, mul_eq_zero, εpos.ne', false_or_iff]
   obtain ⟨u, u_mono, u_pos, u_lim⟩ :
@@ -240,7 +237,6 @@ theorem ae_le_of_forall_set_lintegral_le_of_sigmaFinite [SigmaFinite μ] {f g : 
     μ ({x : α | (fun x : α => f x ≤ g x) x}ᶜ) ≤ μ (⋃ n, s n) := measure_mono B
     _ ≤ ∑' n, μ (s n) := (measure_Union_le _)
     _ = 0 := by simp only [μs, tsum_zero]
-    
 #align measure_theory.ae_le_of_forall_set_lintegral_le_of_sigma_finite MeasureTheory.ae_le_of_forall_set_lintegral_le_of_sigmaFinite
 
 theorem ae_eq_of_forall_set_lintegral_eq_of_sigmaFinite [SigmaFinite μ] {f g : α → ℝ≥0∞}
@@ -282,7 +278,6 @@ theorem ae_nonneg_of_forall_set_integral_nonneg_of_stronglyMeasurable (hfm : Str
       _ ≤ (∫⁻ x, ‖f x‖₊ ∂μ) / c :=
         (meas_ge_le_lintegral_div hfm.ae_measurable.ennnorm c_pos ENNReal.coe_ne_top)
       _ < ∞ := ENNReal.div_lt_top (ne_of_lt hf.2) c_pos
-      
   have h_int_gt : (∫ x in s, f x ∂μ) ≤ b * (μ s).toReal :=
     by
     have h_const_le : (∫ x in s, f x ∂μ) ≤ ∫ x in s, b ∂μ :=

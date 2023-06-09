@@ -233,7 +233,6 @@ theorem rank_R [Fintype σ] : Module.rank K (R σ K) = Fintype.card (σ → K) :
       (Equiv.arrowCongr (Equiv.refl σ) Fin.equivSubtype.symm).cardinal_eq
     _ = (#σ → K) := (Equiv.arrowCongr (Equiv.refl σ) (Fintype.equivFin K).symm).cardinal_eq
     _ = Fintype.card (σ → K) := Cardinal.mk_fintype _
-    
 #align mv_polynomial.rank_R MvPolynomial.rank_R
 
 instance [Finite σ] : FiniteDimensional K (R σ K) :=

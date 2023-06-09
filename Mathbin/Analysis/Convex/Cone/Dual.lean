@@ -217,7 +217,6 @@ theorem ConvexCone.hyperplane_separation_of_nonempty_of_isClosed_of_nmem (K : Co
       _ ≤ ⟪b - z, b - z⟫_ℝ + ⟪b - z, z⟫_ℝ := (add_le_add rfl.ge hinner₀)
       _ = ⟪b - z, b - z + z⟫_ℝ := (inner_add_right _ _ _).symm
       _ = ⟪b - z, b⟫_ℝ := by rw [sub_add_cancel]
-      
 #align convex_cone.hyperplane_separation_of_nonempty_of_is_closed_of_nmem ConvexCone.hyperplane_separation_of_nonempty_of_isClosed_of_nmem
 
 #print ConvexCone.innerDualCone_of_innerDualCone_eq_self /-

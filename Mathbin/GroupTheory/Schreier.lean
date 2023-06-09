@@ -129,13 +129,11 @@ theorem exists_finset_card_le_mul [FiniteIndex H] {S : Finset G} (hS : closure (
     _ ≤ (R ×ˢ S).card := Finset.card_image_le
     _ = R.card * S.card := (R.card_product S)
     _ = H.index * S.card := congr_arg (· * S.card) _
-    
   calc
     R.card = Fintype.card R := (Fintype.card_coe R).symm
     _ = _ := (Fintype.card_congr (mem_right_transversals.to_equiv hR)).symm
     _ = Fintype.card (G ⧸ H) := (QuotientGroup.card_quotient_rightRel H)
     _ = H.index := H.index_eq_card.symm
-    
 #align subgroup.exists_finset_card_le_mul Subgroup.exists_finset_card_le_mul
 
 /-- **Schreier's Lemma**: A finite index subgroup of a finitely generated
@@ -157,7 +155,6 @@ theorem rank_le_index_mul_rank [hG : Group.FG G] [FiniteIndex H] :
     Group.rank H ≤ T.card := Group.rank_le H hT
     _ ≤ H.index * S.card := hT₀
     _ = H.index * Group.rank G := congr_arg ((· * ·) H.index) hS₀
-    
 #align subgroup.rank_le_index_mul_rank Subgroup.rank_le_index_mul_rank
 
 variable (G)

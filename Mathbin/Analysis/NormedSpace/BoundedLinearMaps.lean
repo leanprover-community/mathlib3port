@@ -144,7 +144,6 @@ theorem smul (c : 𝕜) (hf : IsBoundedLinearMap 𝕜 f) : IsBoundedLinearMap �
       ‖c • f x‖ = ‖c‖ * ‖f x‖ := norm_smul c (f x)
       _ ≤ ‖c‖ * (M * ‖x‖) := (mul_le_mul_of_nonneg_left (hM _) (norm_nonneg _))
       _ = ‖c‖ * M * ‖x‖ := (mul_assoc _ _ _).symm
-      
 #align is_bounded_linear_map.smul IsBoundedLinearMap.smul
 
 theorem neg (hf : IsBoundedLinearMap 𝕜 f) : IsBoundedLinearMap 𝕜 fun e => -f e :=
@@ -161,7 +160,6 @@ theorem add (hf : IsBoundedLinearMap 𝕜 f) (hg : IsBoundedLinearMap 𝕜 g) :
     calc
       ‖f x + g x‖ ≤ Mf * ‖x‖ + Mg * ‖x‖ := norm_add_le_of_le (hMf x) (hMg x)
       _ ≤ (Mf + Mg) * ‖x‖ := by rw [add_mul]
-      
 #align is_bounded_linear_map.add IsBoundedLinearMap.add
 
 theorem sub (hf : IsBoundedLinearMap 𝕜 f) (hg : IsBoundedLinearMap 𝕜 g) :
@@ -180,8 +178,7 @@ protected theorem tendsto (x : E) (hf : IsBoundedLinearMap 𝕜 f) : Tendsto f (
       (fun e =>
         calc
           ‖f e - f x‖ = ‖hf.mk' f (e - x)‖ := by rw [(hf.mk' _).map_sub e x] <;> rfl
-          _ ≤ M * ‖e - x‖ := hM (e - x)
-          )
+          _ ≤ M * ‖e - x‖ := hM (e - x))
       (suffices Tendsto (fun e : E => M * ‖e - x‖) (𝓝 x) (𝓝 (M * 0)) by simpa
       tendsto_const_nhds.mul (tendsto_norm_sub_self _))
 #align is_bounded_linear_map.tendsto IsBoundedLinearMap.tendsto
@@ -266,7 +263,6 @@ theorem isBoundedLinearMap_continuousMultilinearMap_comp_linear (g : G →L[𝕜
       exact Finset.prod_le_prod (fun i hi => norm_nonneg _) fun i hi => g.le_op_norm _
     _ = ‖g‖ ^ Fintype.card ι * ‖f‖ * ∏ i, ‖m i‖ := by
       simp [Finset.prod_mul_distrib, Finset.card_univ]; ring
-    
 #align is_bounded_linear_map_continuous_multilinear_map_comp_linear isBoundedLinearMap_continuousMultilinearMap_comp_linear
 
 end
@@ -390,7 +386,6 @@ theorem IsBoundedBilinearMap.map_sub_left (h : IsBoundedBilinearMap 𝕜 f) {x y
     f (x - y, z) = f (x + (-1 : 𝕜) • y, z) := by simp [sub_eq_add_neg]
     _ = f (x, z) + (-1 : 𝕜) • f (y, z) := by simp only [h.add_left, h.smul_left]
     _ = f (x, z) - f (y, z) := by simp [sub_eq_add_neg]
-    
 #align is_bounded_bilinear_map.map_sub_left IsBoundedBilinearMap.map_sub_left
 
 theorem IsBoundedBilinearMap.map_sub_right (h : IsBoundedBilinearMap 𝕜 f) {x : E} {y z : F} :
@@ -399,7 +394,6 @@ theorem IsBoundedBilinearMap.map_sub_right (h : IsBoundedBilinearMap 𝕜 f) {x 
     f (x, y - z) = f (x, y + (-1 : 𝕜) • z) := by simp [sub_eq_add_neg]
     _ = f (x, y) + (-1 : 𝕜) • f (x, z) := by simp only [h.add_right, h.smul_right]
     _ = f (x, y) - f (x, z) := by simp [sub_eq_add_neg]
-    
 #align is_bounded_bilinear_map.map_sub_right IsBoundedBilinearMap.map_sub_right
 
 /-- Useful to use together with `continuous.comp₂`. -/
@@ -464,8 +458,7 @@ theorem IsBoundedBilinearMap.isBoundedLinearMap_left (h : IsBoundedBilinearMap �
         ‖f (x, y)‖ ≤ C * ‖x‖ * ‖y‖ := hC x y
         _ ≤ C * ‖x‖ * (‖y‖ + 1) := by
           apply_rules [norm_nonneg, mul_le_mul_of_nonneg_left, le_of_lt C_pos, mul_nonneg]
-        _ = C * (‖y‖ + 1) * ‖x‖ := by ring
-         }
+        _ = C * (‖y‖ + 1) * ‖x‖ := by ring }
 #align is_bounded_bilinear_map.is_bounded_linear_map_left IsBoundedBilinearMap.isBoundedLinearMap_left
 
 theorem IsBoundedBilinearMap.isBoundedLinearMap_right (h : IsBoundedBilinearMap 𝕜 f) (x : E) :
@@ -480,8 +473,7 @@ theorem IsBoundedBilinearMap.isBoundedLinearMap_right (h : IsBoundedBilinearMap 
         ‖f (x, y)‖ ≤ C * ‖x‖ * ‖y‖ := hC x y
         _ ≤ C * (‖x‖ + 1) * ‖y‖ := by
           apply_rules [mul_le_mul_of_nonneg_right, norm_nonneg, mul_le_mul_of_nonneg_left,
-            le_of_lt C_pos]
-         }
+            le_of_lt C_pos] }
 #align is_bounded_bilinear_map.is_bounded_linear_map_right IsBoundedBilinearMap.isBoundedLinearMap_right
 
 theorem isBoundedBilinearMap_smul {𝕜' : Type _} [NormedField 𝕜'] [NormedAlgebra 𝕜 𝕜'] {E : Type _}
@@ -570,7 +562,6 @@ def IsBoundedBilinearMap.deriv (h : IsBoundedBilinearMap 𝕜 f) (p : E × F) : 
         apply mul_le_mul_of_nonneg_right _ (norm_nonneg _)
         exact mul_le_mul_of_nonneg_left (le_max_left _ _) (le_of_lt Cpos)
       _ = (C * ‖p.1‖ + C * ‖p.2‖) * ‖q‖ := by ring
-      
 #align is_bounded_bilinear_map.deriv IsBoundedBilinearMap.deriv
 
 @[simp]
@@ -617,7 +608,6 @@ theorem IsBoundedBilinearMap.isBoundedLinearMap_deriv (h : IsBoundedBilinearMap 
         apply_rules [add_le_add, mul_le_mul, norm_nonneg, Cpos.le, le_refl, le_max_left,
           le_max_right, mul_nonneg]
       _ = (C + C) * ‖p‖ * ‖q‖ := by ring
-      
 #align is_bounded_bilinear_map.is_bounded_linear_map_deriv IsBoundedBilinearMap.isBoundedLinearMap_deriv
 
 end BilinearMap

@@ -265,7 +265,6 @@ theorem norm_resolvent_le_forall (a : A) :
         exact
           mul_lt_mul_of_pos_left
             ((inv_mul_lt_iff ha₁).mpr ((mul_one (‖a‖ + 1)).symm ▸ lt_add_one _)) δ_pos
-      
   rw [← inv_smul_smul z (resolvent a (z : 𝕜)), units_smul_resolvent_self, resolvent,
     Algebra.algebraMap_eq_smul_one, one_smul, Units.smul_def, norm_smul, Units.val_inv_eq_inv_val,
     norm_inv]
@@ -274,7 +273,6 @@ theorem norm_resolvent_le_forall (a : A) :
       mul_le_mul (hz.trans (min_le_right _ _)) (hδ (mem_ball_zero_iff.mpr lt_δ)) (norm_nonneg _)
         (mul_pos hε (inv_pos.mpr c_pos)).le
     _ = _ := inv_mul_cancel_right₀ c_pos.ne.symm ε
-    
 #align spectrum.norm_resolvent_le_forall spectrum.norm_resolvent_le_forall
 
 end resolvent

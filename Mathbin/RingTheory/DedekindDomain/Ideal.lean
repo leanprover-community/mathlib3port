@@ -351,7 +351,6 @@ theorem dimensionLEOne : DimensionLEOne A :=
       (1 : FractionalIdeal A⁰ (FractionRing A)) = _ * _ * _ := _
       _ ≤ _ * _ := (mul_right_mono (P⁻¹ * M : FractionalIdeal A⁰ (FractionRing A)) this)
       _ = M := _
-      
     · rw [mul_assoc, ← mul_assoc ↑P, h.mul_inv_eq_one P'_ne, one_mul, h.inv_mul_eq_one M'_ne]
     · rw [← mul_assoc ↑P, h.mul_inv_eq_one P'_ne, one_mul]
     · infer_instance
@@ -874,7 +873,6 @@ theorem Ideal.exist_integer_multiples_not_mem {J : Ideal A} (hJ : J ≠ ⊤) {ι
     ↑J / I = ↑J * I⁻¹ := div_eq_mul_inv (↑J) I
     _ < 1 * I⁻¹ := (mul_right_strict_mono (inv_ne_zero hI0) _)
     _ = I⁻¹ := one_mul _
-    
   · rw [← coe_ideal_top]
     -- And multiplying by `I⁻¹` is indeed strictly monotone.
     exact
@@ -1450,8 +1448,7 @@ noncomputable def IsDedekindDomain.quotientEquivPiFactors {I : Ideal R} (hI : I 
         (factors I).toFinset.prod_coe_sort fun P => P ^ (factors I).count P
       _ = ((factors I).map fun P => P).Prod := (Finset.prod_multiset_map_count (factors I) id).symm
       _ = (factors I).Prod := by rw [Multiset.map_id']
-      _ = I := (@associated_iff_eq (Ideal R) _ Ideal.uniqueUnits _ _).mp (factors_prod hI)
-      )
+      _ = I := (@associated_iff_eq (Ideal R) _ Ideal.uniqueUnits _ _).mp (factors_prod hI))
 #align is_dedekind_domain.quotient_equiv_pi_factors IsDedekindDomain.quotientEquivPiFactors
 
 @[simp]

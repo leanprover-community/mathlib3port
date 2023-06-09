@@ -408,7 +408,6 @@ theorem map_nhdsWithin_eq (e : LocalHomeomorph α β) {x} (hx : x ∈ e.source) 
       (e.LeftInvOn.mono <| inter_subset_left _ _).map_nhdsWithin_eq (e.left_inv hx)
         (e.continuousAt_symm (e.map_source hx)).ContinuousWithinAt
         (e.ContinuousAt hx).ContinuousWithinAt
-    
 #align local_homeomorph.map_nhds_within_eq LocalHomeomorph.map_nhdsWithin_eq
 
 theorem map_nhdsWithin_preimage_eq (e : LocalHomeomorph α β) {x} (hx : x ∈ e.source) (s : Set β) :

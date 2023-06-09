@@ -89,7 +89,7 @@ namespace Tactic.Interactive
 /- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
 open Tactic
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:330:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
 /-- Tactic for normalizing expressions in multiplicative groups, without assuming
 commutativity, using only the group axioms without any information about which group
 is manipulated.

@@ -49,8 +49,7 @@ theorem convexOn_norm (hs : Convex ℝ s) : ConvexOn ℝ s norm :=
     calc
       ‖a • x + b • y‖ ≤ ‖a • x‖ + ‖b • y‖ := norm_add_le _ _
       _ = a * ‖x‖ + b * ‖y‖ := by
-        rw [norm_smul, norm_smul, Real.norm_of_nonneg ha, Real.norm_of_nonneg hb]
-      ⟩
+        rw [norm_smul, norm_smul, Real.norm_of_nonneg ha, Real.norm_of_nonneg hb]⟩
 #align convex_on_norm convexOn_norm
 
 /-- The norm on a real normed space is convex on the whole space. See also `seminorm.convex_on`

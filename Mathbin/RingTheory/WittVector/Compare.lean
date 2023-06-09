@@ -165,7 +165,6 @@ theorem toZmodPow_compat (m n : ℕ) (h : m ≤ n) :
       by rw [commutes_symm, RingHom.comp_assoc]
     _ = (zmodEquivTrunc p m).symm.toRingHom.comp (truncate m) := by
       rw [RingHom.comp_assoc, truncate_comp_witt_vector_truncate]
-    
 #align witt_vector.to_zmod_pow_compat WittVector.toZmodPow_compat
 
 /-- `to_padic_int` lifts `to_zmod_pow : 𝕎 (zmod p) →+* zmod (p ^ k)` to a ring hom to `ℤ_[p]`

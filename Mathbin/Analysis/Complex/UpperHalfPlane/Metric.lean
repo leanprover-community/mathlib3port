@@ -269,7 +269,6 @@ theorem dist_log_im_le (z w : ℍ) : dist (log z.im) (log w.im) ≤ dist z w :=
           div_le_div_of_le (mul_nonneg zero_le_two (sqrt_nonneg _)) <| by
             simpa [sqrt_sq_eq_abs] using Complex.abs_im_le_abs (z - w))
         zero_le_two
-    
 #align upper_half_plane.dist_log_im_le UpperHalfPlane.dist_log_im_le
 
 theorem im_le_im_mul_exp_dist (z w : ℍ) : z.im ≤ w.im * exp (dist z w) :=
@@ -290,7 +289,6 @@ theorem dist_coe_le (z w : ℍ) : dist (z : ℂ) w ≤ w.im * (exp (dist z w) - 
       dist_triangle_right _ _ _
     _ = w.im * (exp (dist z w) - 1) := by
       rw [dist_center_dist, dist_self_center, ← mul_add, ← add_sub_assoc, Real.sinh_add_cosh]
-    
 #align upper_half_plane.dist_coe_le UpperHalfPlane.dist_coe_le
 
 /-- An upper estimate on the complex distance between two points in terms of the hyperbolic distance
@@ -301,7 +299,6 @@ theorem le_dist_coe (z w : ℍ) : w.im * (1 - exp (-dist z w)) ≤ dist (z : ℂ
         dist (z : ℂ) (w.center (dist z w)) - dist (w : ℂ) (w.center (dist z w)) :=
       by rw [dist_center_dist, dist_self_center, ← Real.cosh_sub_sinh]; ring
     _ ≤ dist (z : ℂ) w := sub_le_iff_le_add.2 <| dist_triangle _ _ _
-    
 #align upper_half_plane.le_dist_coe UpperHalfPlane.le_dist_coe
 
 /-- The hyperbolic metric on the upper half plane. We ensure that the projection to
@@ -334,7 +331,6 @@ theorem im_pos_of_dist_center_le {z : ℍ} {r : ℝ} {w : ℂ} (h : dist w (cent
     _ = (z.center r).im - z.im * sinh r := (mul_sub _ _ _)
     _ ≤ (z.center r).im - dist (z.center r : ℂ) w := (sub_le_sub_left (by rwa [dist_comm]) _)
     _ ≤ w.im := sub_le_comm.1 <| (le_abs_self _).trans (abs_im_le_abs <| z.center r - w)
-    
 #align upper_half_plane.im_pos_of_dist_center_le UpperHalfPlane.im_pos_of_dist_center_le
 
 theorem image_coe_closedBall (z : ℍ) (r : ℝ) :

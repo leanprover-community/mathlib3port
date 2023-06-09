@@ -76,7 +76,6 @@ theorem add_self : a + a = 0 :=
       a + a = (a + a) * (a + a) := by rw [mul_self]
       _ = a * a + a * a + (a * a + a * a) := by rw [add_mul, mul_add]
       _ = a + a + (a + a) := by rw [mul_self]
-      
   rwa [self_eq_add_left] at this 
 #align add_self add_self
 
@@ -86,14 +85,12 @@ theorem neg_eq : -a = a :=
     -a = -a + 0 := by rw [add_zero]
     _ = -a + -a + a := by rw [← neg_add_self, add_assoc]
     _ = a := by rw [add_self, zero_add]
-    
 #align neg_eq neg_eq
 
 theorem add_eq_zero' : a + b = 0 ↔ a = b :=
   calc
     a + b = 0 ↔ a = -b := add_eq_zero_iff_eq_neg
     _ ↔ a = b := by rw [neg_eq]
-    
 #align add_eq_zero' add_eq_zero'
 
 @[simp]
@@ -105,7 +102,6 @@ theorem mul_add_mul : a * b + b * a = 0 :=
       _ = a * a + a * b + (b * a + b * b) := by rw [add_mul, mul_add, mul_add]
       _ = a + a * b + (b * a + b) := by simp only [mul_self]
       _ = a + b + (a * b + b * a) := by abel
-      
   rwa [self_eq_add_right] at this 
 #align mul_add_mul mul_add_mul
 
@@ -265,7 +261,6 @@ theorem le_sup_inf_aux (a b c : α) : (a + b + a * b) * (a + c + a * c) = a + b 
           (a * b * c + a * a * b * c) :=
       by ring
     _ = a + b * c + a * (b * c) := by simp only [mul_self, add_self, add_zero]
-    
 #align boolean_ring.le_sup_inf_aux BooleanRing.le_sup_inf_aux
 
 #print BooleanRing.le_sup_inf /-
@@ -363,7 +358,6 @@ private theorem of_boolalg_symm_diff_aux (a b : α) : (a + b + a * b) * (1 + a *
     (a + b + a * b) * (1 + a * b) = a + b + (a * b + a * b * (a * b)) + (a * (b * b) + a * a * b) :=
       by ring
     _ = a + b := by simp only [mul_self, add_self, add_zero]
-    
 
 #print ofBoolAlg_symmDiff /-
 @[simp]

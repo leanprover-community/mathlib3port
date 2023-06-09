@@ -328,7 +328,7 @@ theorem List.applyId_zip_eq [DecidableEq α] {xs ys : List α} (h₀ : List.Nodu
         · apply h₀; apply nth_mem h₂
 #align slim_check.injective_function.list.apply_id_zip_eq SlimCheck.InjectiveFunction.List.applyId_zip_eq
 
-/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:564:6: unsupported: specialize @hyp -/
+/- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:567:6: unsupported: specialize @hyp -/
 theorem applyId_mem_iff [DecidableEq α] {xs ys : List α} (h₀ : List.Nodup xs) (h₁ : xs ~ ys)
     (x : α) : List.applyId.{u} (xs.zip ys) x ∈ ys ↔ x ∈ xs :=
   by

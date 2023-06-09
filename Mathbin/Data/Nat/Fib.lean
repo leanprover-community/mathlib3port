@@ -113,7 +113,6 @@ theorem fib_pos {n : ℕ} (n_pos : 0 < n) : 0 < fib n :=
   calc
     0 < fib 1 := by decide
     _ ≤ fib n := fib_mono n_pos
-    
 #align nat.fib_pos Nat.fib_pos
 -/
 
@@ -153,7 +152,6 @@ theorem le_fib_self {n : ℕ} (five_le_n : 5 ≤ n) : n ≤ fib n :=
     calc
       n ≤ fib n := IH
       _ < fib (n + 1) := fib_lt_fib_succ (le_trans (by decide) five_le_n)
-      
 #align nat.le_fib_self Nat.le_fib_self
 -/
 
@@ -305,7 +303,6 @@ theorem gcd_fib_add_self (m n : ℕ) : gcd (fib m) (fib (n + m)) = gcd (fib m) (
       rw [add_comm, gcd_add_mul_right_right (fib m) _ (fib n.pred)]
     _ = gcd (fib m) (fib (n.pred + 1)) :=
       coprime.gcd_mul_right_cancel_right (fib (n.pred + 1)) (coprime.symm (fib_coprime_fib_succ m))
-    
 #align nat.gcd_fib_add_self Nat.gcd_fib_add_self
 -/
 
@@ -357,7 +354,6 @@ theorem fib_succ_eq_succ_sum (n : ℕ) : fib (n + 1) = (∑ k in Finset.range n,
       fib (n + 2) = fib n + fib (n + 1) := fib_add_two
       _ = (fib n + ∑ k in Finset.range n, fib k) + 1 := by rw [ih, add_assoc]
       _ = (∑ k in Finset.range (n + 1), fib k) + 1 := by simp [Finset.range_add_one]
-      
 #align nat.fib_succ_eq_succ_sum Nat.fib_succ_eq_succ_sum
 -/
 

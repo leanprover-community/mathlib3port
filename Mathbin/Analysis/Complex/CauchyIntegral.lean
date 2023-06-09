@@ -365,7 +365,6 @@ theorem circleIntegral_eq_of_differentiable_on_annulus_off_countable {c : ℂ} {
         ((continuousOn_id.sub continuousOn_const).smul hc) fun z hz =>
         (differentiableAt_id.sub_const _).smul (hd z hz))
     _ = ∮ z in C(c, r), f z := circleIntegral.integral_sub_inv_smul_sub_smul _ _ _ _
-    
 #align complex.circle_integral_eq_of_differentiable_on_annulus_off_countable Complex.circleIntegral_eq_of_differentiable_on_annulus_off_countable
 
 /-- **Cauchy integral formula** for the value at the center of a disc. If `f` is continuous on a
@@ -425,7 +424,6 @@ theorem circleIntegral_sub_center_inv_smul_of_differentiable_on_off_countable_of
       refine' mul_le_mul_of_nonneg_left (hδ _ ⟨_, hzne⟩).le (inv_nonneg.2 hr0.le)
       rwa [mem_closedBall_iff_norm, hz]
     _ = ε := by field_simp [hr0.ne', real.two_pi_pos.ne']; ac_rfl
-    
 #align complex.circle_integral_sub_center_inv_smul_of_differentiable_on_off_countable_of_tendsto Complex.circleIntegral_sub_center_inv_smul_of_differentiable_on_off_countable_of_tendsto
 
 /-- **Cauchy integral formula** for the value at the center of a disc. If `f : ℂ → E` is continuous
@@ -456,7 +454,6 @@ theorem circleIntegral_eq_zero_of_differentiable_on_off_countable {R : ℝ} (h0 
         ((continuous_on_id.sub continuousOn_const).smul hc) fun z hz =>
         (differentiable_at_id.sub_const _).smul (hd z hz))
     _ = 0 := by rw [sub_self, zero_smul, smul_zero]
-    
 #align complex.circle_integral_eq_zero_of_differentiable_on_off_countable Complex.circleIntegral_eq_zero_of_differentiable_on_off_countable
 
 /-- An auxiliary lemma for
@@ -484,7 +481,6 @@ theorem circleIntegral_sub_inv_smul_of_differentiable_on_off_countable_aux {R : 
     calc
       F z = (z - w)⁻¹ • (f z - f w) := update_noteq (hne z hz) _ _
       _ = (z - w)⁻¹ • f z - (z - w)⁻¹ • f w := smul_sub _ _ _
-      
   have hc' : ContinuousOn (fun z => (z - w)⁻¹) (sphere c R) :=
     (continuous_on_id.sub continuousOn_const).inv₀ fun z hz => sub_ne_zero.2 <| hne z hz
   rw [← circleIntegral.integral_sub_inv_of_mem_ball hw.1, ← circleIntegral.integral_smul_const, ←
@@ -508,7 +504,7 @@ theorem two_pi_i_inv_smul_circleIntegral_sub_inv_smul_of_differentiable_on_off_c
     have A : ContinuousAt (fun w => (2 * π * I : ℂ)⁻¹ • ∮ z in C(c, R), (z - w)⁻¹ • f z) w :=
       by
       have :=
-        has_fpower_series_on_cauchy_integral
+        hasFPowerSeriesOn_cauchy_integral
           ((hc.mono sphere_subset_closed_ball).CircleIntegrable R.coe_nonneg) hR
       refine' this.continuous_on.continuous_at (emetric.is_open_ball.mem_nhds _)
       rwa [Metric.emetric_ball_nnreal]
@@ -613,7 +609,7 @@ theorem hasFPowerSeriesOnBall_of_differentiable_off_countable {R : ℝ≥0} {c :
         two_pi_I_inv_smul_circle_integral_sub_inv_smul_of_differentiable_on_off_countable hs hw' hc
           hd]
       exact
-        (has_fpower_series_on_cauchy_integral
+        (hasFPowerSeriesOn_cauchy_integral
               ((hc.mono sphere_subset_closed_ball).CircleIntegrable R.2) hR).HasSum
           hw }
 #align complex.has_fpower_series_on_ball_of_differentiable_off_countable Complex.hasFPowerSeriesOnBall_of_differentiable_off_countable

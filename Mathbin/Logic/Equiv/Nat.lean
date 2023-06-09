@@ -73,7 +73,6 @@ def prodEquivOfEquivNat (e : α ≃ ℕ) : α × α ≃ α :=
     α × α ≃ ℕ × ℕ := prodCongr e e
     _ ≃ ℕ := pairEquiv
     _ ≃ α := e.symm
-    
 #align equiv.prod_equiv_of_equiv_nat Equiv.prodEquivOfEquivNat
 -/
 

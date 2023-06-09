@@ -219,7 +219,6 @@ theorem horizontal_strip (hfd : DiffContOnCl ℂ f (im ⁻¹' Ioo a b))
       calc
         ‖g ε w • f w‖ ≤ expR (δ * expR (d * R) + B * expR (c * R) + Real.log A) := _
         _ ≤ C := hR
-        
       rw [norm_smul, Real.exp_add, ← hre, Real.exp_add, Real.exp_log hA₀, mul_assoc, mul_comm _ A]
       exact
         mul_le_mul (hδ <| Ioo_subset_Icc_self him) (Hle _ hre him) (norm_nonneg _)
@@ -838,7 +837,6 @@ theorem right_half_plane_of_tendsto_zero_on_real (hd : DiffContOnCl ℂ f {z | 0
         _ ≤ |x₀ - z.re| := (le_abs_self _)
         _ = |(z - x₀).re| := by rw [sub_re, of_real_re, _root_.abs_sub_comm]
         _ ≤ abs (z - x₀) := abs_re_le_abs _
-        
     -- Thus we have `C < ‖f x₀‖ = ‖f 0‖ ≤ C`. Contradiction completes the proof.
     refine' (h.not_le <| this ▸ _).elim
     simpa using him 0
@@ -942,7 +940,6 @@ theorem eq_zero_on_right_half_plane_of_superexponential_decay (hd : DiffContOnCl
         z.re ≤ abs z := re_le_abs _
         _ = abs z ^ (1 : ℝ) := (Real.rpow_one _).symm
         _ ≤ abs z ^ max c 1 := Real.rpow_le_rpow_of_exponent_le hr (le_max_right _ _)
-        
     ·
       exact
         mul_le_mul (le_max_left _ _) (Real.rpow_le_rpow_of_exponent_le hr (le_max_left _ _))

@@ -82,7 +82,6 @@ theorem primorial_add_dvd {m n : ℕ} (h : n ≤ m) : (m + n)# ∣ m# * choose (
           exact
             hp.2.dvd_choose_add hp.1.1 (h.trans_lt (m.lt_succ_self.trans_le hp.1.1))
               (Nat.lt_succ_iff.1 hp.1.2)
-    
 #align primorial_add_dvd primorial_add_dvd
 -/
 
@@ -107,7 +106,6 @@ theorem primorial_le_4_pow (n : ℕ) : n# ≤ 4 ^ n :=
         (mul_le_mul' (ihn _ <| succ_lt_succ <| (lt_add_iff_pos_left _).2 hm)
           (choose_middle_le_pow _))
       _ ≤ 4 ^ (m + m + 1) := by rw [← pow_add, add_right_comm]
-      
   · rcases Decidable.eq_or_ne n 1 with (rfl | hn)
     · decide
     ·
@@ -115,7 +113,6 @@ theorem primorial_le_4_pow (n : ℕ) : n# ≤ 4 ^ n :=
         (n + 1)# = n# := primorial_succ hn ho
         _ ≤ 4 ^ n := (ihn n n.lt_succ_self)
         _ ≤ 4 ^ (n + 1) := pow_le_pow_of_le_right four_pos n.le_succ
-        
 #align primorial_le_4_pow primorial_le_4_pow
 -/
 

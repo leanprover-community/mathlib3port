@@ -236,8 +236,7 @@ theorem coe_cycleRange_of_le {n : ℕ} {i j : Fin n.succ} (h : j ≤ i) :
     coe_add_one_of_lt
       (calc
         (j : ℕ) < i := fin.lt_iff_coe_lt_coe.mp (lt_of_le_of_ne h h')
-        _ ≤ n := nat.lt_succ_iff.mp i.2
-        )
+        _ ≤ n := nat.lt_succ_iff.mp i.2)
 #align fin.coe_cycle_range_of_le Fin.coe_cycleRange_of_le
 -/
 

@@ -104,7 +104,7 @@ def preservesFiniteLimitsOfPreservesFiniteLimitsOfSize (F : C ⥤ D)
     PreservesFiniteLimits F :=
   ⟨fun J hJ hhJ => by
     skip
-    let this : Category.{w, w} (ULiftHom.{w} (ULift.{w, 0} J)) := by apply ULiftHom.category.{0};
+    let this.1 : Category.{w, w} (ULiftHom.{w} (ULift.{w, 0} J)) := by apply ULiftHom.category.{0};
       exact CategoryTheory.uliftCategory J
     haveI := h (ULiftHom.{w} (ULift.{w} J)) CategoryTheory.finCategoryUlift
     exact preserves_limits_of_shape_of_equiv (ULiftHomULiftCategory.equiv.{w, w} J).symm F⟩
@@ -182,7 +182,7 @@ def preservesFiniteColimitsOfPreservesFiniteColimitsOfSize (F : C ⥤ D)
     PreservesFiniteColimits F :=
   ⟨fun J hJ hhJ => by
     skip
-    let this : Category.{w, w} (ULiftHom.{w} (ULift.{w, 0} J)) := by apply ULiftHom.category.{0};
+    let this.1 : Category.{w, w} (ULiftHom.{w} (ULift.{w, 0} J)) := by apply ULiftHom.category.{0};
       exact CategoryTheory.uliftCategory J
     haveI := h (ULiftHom.{w} (ULift.{w} J)) CategoryTheory.finCategoryUlift
     exact preserves_colimits_of_shape_of_equiv (ULiftHomULiftCategory.equiv.{w, w} J).symm F⟩

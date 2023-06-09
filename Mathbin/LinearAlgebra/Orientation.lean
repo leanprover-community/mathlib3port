@@ -241,7 +241,6 @@ theorem orientation_eq_iff_det_pos (e₁ e₂ : Basis ι R M) :
     e₁.Orientation = e₂.Orientation ↔ SameRay R e₁.det e₂.det := ray_eq_iff _ _
     _ ↔ SameRay R (e₁.det e₂ • e₂.det) e₂.det := by rw [← e₁.det.eq_smul_basis_det e₂]
     _ ↔ 0 < e₁.det e₂ := sameRay_smul_left_iff_of_ne e₂.det_ne_zero (e₁.isUnit_det e₂).NeZero
-    
 #align basis.orientation_eq_iff_det_pos Basis.orientation_eq_iff_det_pos
 
 /-- Given a basis, any orientation equals the orientation given by that basis or its negation. -/

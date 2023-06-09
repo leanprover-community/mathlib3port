@@ -595,7 +595,6 @@ theorem norm_le_mul_norm_add (u v : E) : ‖u‖ ≤ ‖u * v‖ + ‖v‖ :=
   calc
     ‖u‖ = ‖u * v / v‖ := by rw [mul_div_cancel'']
     _ ≤ ‖u * v‖ + ‖v‖ := norm_div_le _ _
-    
 #align norm_le_mul_norm_add norm_le_mul_norm_add
 #align norm_le_add_norm_add norm_le_add_norm_add
 
@@ -1168,7 +1167,6 @@ theorem Filter.Tendsto.op_one_isBoundedUnder_le' {f : α → E} {g : α → F} {
       mul_le_mul (mul_le_mul_of_nonneg_left hf.le hA) hg (norm_nonneg' _) (mul_nonneg hA δ₀.le)
     _ = A * C * δ := (mul_right_comm _ _ _)
     _ < ε := hδ
-    
 #align filter.tendsto.op_one_is_bounded_under_le' Filter.Tendsto.op_one_isBoundedUnder_le'
 #align filter.tendsto.op_zero_is_bounded_under_le' Filter.Tendsto.op_zero_isBoundedUnder_le'
 
@@ -1809,7 +1807,6 @@ theorem NNReal.coe_natAbs (n : ℤ) : (n.natAbs : ℝ≥0) = ‖n‖₊ :=
       ((n.natAbs : ℝ≥0) : ℝ) = (n.natAbs : ℤ) := by simp only [Int.cast_ofNat, NNReal.coe_nat_cast]
       _ = |n| := by simp only [Int.coe_natAbs, Int.cast_abs]
       _ = ‖n‖ := rfl
-      
 #align nnreal.coe_nat_abs NNReal.coe_natAbs
 -/
 
@@ -1880,7 +1877,6 @@ theorem mul' (hf : LipschitzWith Kf f) (hg : LipschitzWith Kg g) :
       edist_mul_mul_le _ _ _ _
     _ ≤ Kf * edist x y + Kg * edist x y := (add_le_add (hf x y) (hg x y))
     _ = (Kf + Kg) * edist x y := (add_mul _ _ _).symm
-    
 #align lipschitz_with.mul' LipschitzWith.mul'
 #align lipschitz_with.add LipschitzWith.add
 
@@ -1910,7 +1906,6 @@ theorem mul_lipschitzWith (hf : AntilipschitzWith Kf f) (hg : LipschitzWith Kg g
     ↑Kf⁻¹ * dist x y - Kg * dist x y ≤ dist (f x) (f y) - dist (g x) (g y) :=
       sub_le_sub (hf.mul_le_dist x y) (hg.dist_le_mul x y)
     _ ≤ _ := le_trans (le_abs_self _) (abs_dist_sub_le_dist_mul_mul _ _ _ _)
-    
 #align antilipschitz_with.mul_lipschitz_with AntilipschitzWith.mul_lipschitzWith
 #align antilipschitz_with.add_lipschitz_with AntilipschitzWith.add_lipschitzWith
 

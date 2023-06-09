@@ -369,7 +369,6 @@ theorem hasSum_coe_mul_geometric_of_norm_lt_1 {𝕜 : Type _} [NormedField 𝕜]
       simp [pow_succ, mul_left_comm _ r, tsum_mul_left]
     _ = r / (1 - r) ^ 2 := by
       simp [add_mul, tsum_add A B.summable, mul_add, B.tsum_eq, ← div_eq_mul_inv, sq, div_div]
-    
 #align has_sum_coe_mul_geometric_of_norm_lt_1 hasSum_coe_mul_geometric_of_norm_lt_1
 
 /-- If `‖r‖ < 1`, then `∑' n : ℕ, n * r ^ n = r / (1 - r) ^ 2`. -/
@@ -699,7 +698,6 @@ theorem Real.summable_pow_div_factorial (x : ℝ) : Summable (fun n => x ^ n / n
         Real.norm_coe_nat, Nat.cast_succ]
     _ ≤ ‖x‖ / (⌊‖x‖⌋₊ + 1) * ‖x ^ n / n !‖ := by
       mono* with 0 ≤ ‖x ^ n / n !‖, 0 ≤ ‖x‖ <;> apply norm_nonneg
-    
 #align real.summable_pow_div_factorial Real.summable_pow_div_factorial
 
 theorem Real.tendsto_pow_div_factorial_atTop (x : ℝ) :

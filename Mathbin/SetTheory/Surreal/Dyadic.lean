@@ -134,12 +134,10 @@ theorem add_powHalf_succ_self_eq_powHalf (n) : powHalf (n + 1) + powHalf (n + 1)
         calc
           0 + pow_half n.succ ≈ pow_half n.succ := zero_add_equiv _
           _ < pow_half n := pow_half_succ_lt_pow_half n
-          
       ·
         calc
           pow_half n.succ + 0 ≈ pow_half n.succ := add_zero_equiv _
           _ < pow_half n := pow_half_succ_lt_pow_half n
-          
     · cases n; · rintro ⟨⟩
       rintro ⟨⟩
       apply lf_of_move_right_le
@@ -148,25 +146,21 @@ theorem add_powHalf_succ_self_eq_powHalf (n) : powHalf (n + 1) + powHalf (n + 1)
         pow_half n.succ + pow_half (n.succ + 1) ≤ pow_half n.succ + pow_half n.succ :=
           add_le_add_left (pow_half_succ_le_pow_half _) _
         _ ≈ pow_half n := hn _ (Nat.lt_succ_self n)
-        
     · simp only [pow_half_move_left, forall_const]
       apply lf_of_lt
       calc
         0 ≈ 0 + 0 := (add_zero_equiv 0).symm
         _ ≤ pow_half n.succ + 0 := (add_le_add_right (zero_le_pow_half _) _)
         _ < pow_half n.succ + pow_half n.succ := add_lt_add_left (pow_half_pos _) _
-        
     · rintro (⟨⟨⟩⟩ | ⟨⟨⟩⟩) <;> apply lf_of_lt
       ·
         calc
           pow_half n ≈ pow_half n + 0 := (add_zero_equiv _).symm
           _ < pow_half n + pow_half n.succ := add_lt_add_left (pow_half_pos _) _
-          
       ·
         calc
           pow_half n ≈ 0 + pow_half n := (zero_add_equiv _).symm
           _ < pow_half n.succ + pow_half n := add_lt_add_right (pow_half_pos _) _
-          
 #align pgame.add_pow_half_succ_self_eq_pow_half PGame.add_powHalf_succ_self_eq_powHalf
 
 theorem half_add_half_equiv_one : powHalf 1 + powHalf 1 ≈ 1 :=
@@ -275,7 +269,6 @@ def dyadicMap : Localization.Away (2 : ℤ) →+ Surreal
           by simp only [add_smul, mul_comm, add_comm]
         _ = c • pow_half d' + a • pow_half b' := by simp only [zsmul_pow_two_pow_half]
         _ = a • pow_half b' + c • pow_half d' := add_comm _ _
-        
 #align surreal.dyadic_map Surreal.dyadicMap
 
 @[simp]

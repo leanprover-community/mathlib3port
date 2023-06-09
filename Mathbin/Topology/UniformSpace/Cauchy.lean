@@ -172,8 +172,7 @@ theorem Cauchy.map [UniformSpace β] {f : Filter α} {m : α → β} (hf : Cauch
     calc
       map m f ×ᶠ map m f = map (fun p : α × α => (m p.1, m p.2)) (f ×ᶠ f) := Filter.prod_map_map_eq
       _ ≤ map (fun p : α × α => (m p.1, m p.2)) (𝓤 α) := (map_mono hf.right)
-      _ ≤ 𝓤 β := hm
-      ⟩
+      _ ≤ 𝓤 β := hm⟩
 #align cauchy.map Cauchy.map
 -/
 
@@ -185,8 +184,7 @@ theorem Cauchy.comap [UniformSpace β] {f : Filter β} {m : α → β} (hf : Cau
       comap m f ×ᶠ comap m f = comap (fun p : α × α => (m p.1, m p.2)) (f ×ᶠ f) :=
         Filter.prod_comap_comap_eq
       _ ≤ comap (fun p : α × α => (m p.1, m p.2)) (𝓤 β) := (comap_mono hf.right)
-      _ ≤ 𝓤 α := hm
-      ⟩
+      _ ≤ 𝓤 α := hm⟩
 #align cauchy.comap Cauchy.comap
 
 theorem Cauchy.comap' [UniformSpace β] {f : Filter β} {m : α → β} (hf : Cauchy f)

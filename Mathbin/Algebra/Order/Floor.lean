@@ -1098,7 +1098,6 @@ theorem fract_div_intCast_eq_div_intCast_mod {m : ℤ} {n : ℕ} : fract ((m : k
     _ = fract ((m₁ : k) / n) := _
     _ = ↑(m₁ % (n : ℤ)) / ↑n := (this hm₁)
     _ = ↑(-(↑m₀ : ℤ) % ↑n) / ↑n := _
-    
   · rw [← fract_int_add q, ← mul_div_cancel (q : k) (ne_of_gt hn), ← add_div, ← sub_eq_add_neg]
     push_cast
   · congr 2

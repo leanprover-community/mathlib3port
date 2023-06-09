@@ -340,7 +340,6 @@ theorem ordConnected_of_uIcc_subset_left (h : ∀ y ∈ s, [x, y] ⊆ s) : OrdCo
       [y, z] ⊆ [y, x] ∪ [x, z] := uIcc_subset_uIcc_union_uIcc
       _ = [x, y] ∪ [x, z] := by rw [uIcc_comm]
       _ ⊆ s := union_subset (h y hy) (h z hz)
-      
 #align set.ord_connected_of_uIcc_subset_left Set.ordConnected_of_uIcc_subset_left
 -/
 

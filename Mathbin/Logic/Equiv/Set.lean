@@ -72,7 +72,6 @@ protected theorem subset_image' {α β} (e : α ≃ β) (s : Set α) (t : Set β
   calc
     s ⊆ e.symm '' t ↔ e.symm.symm '' s ⊆ t := by rw [e.symm.subset_image]
     _ ↔ e '' s ⊆ t := by rw [e.symm_symm]
-    
 #align equiv.subset_image' Equiv.subset_image'
 
 @[simp]
@@ -304,7 +303,6 @@ protected def insert {α} {s : Set.{u} α} [DecidablePred (· ∈ s)] {a : α} (
     (insert a s : Set α) ≃ ↥(s ∪ {a}) := Equiv.Set.ofEq (by simp)
     _ ≃ Sum s ({a} : Set α) := (Equiv.Set.union fun x ⟨hx, hx'⟩ => by simp_all)
     _ ≃ Sum s PUnit.{u + 1} := sumCongr (Equiv.refl _) (Equiv.Set.singleton _)
-    
 #align equiv.set.insert Equiv.Set.insert
 -/
 
@@ -346,7 +344,6 @@ protected def sumCompl {α} (s : Set α) [DecidablePred (· ∈ s)] : Sum s (s�
     Sum s (sᶜ : Set α) ≃ ↥(s ∪ sᶜ) := (Equiv.Set.union (by simp [Set.ext_iff])).symm
     _ ≃ @univ α := (Equiv.Set.ofEq (by simp))
     _ ≃ α := Equiv.Set.univ _
-    
 #align equiv.set.sum_compl Equiv.Set.sumCompl
 
 #print Equiv.Set.sumCompl_apply_inl /-
@@ -399,7 +396,6 @@ protected def sumDiffSubset {α} {s t : Set α} (h : s ⊆ t) [DecidablePred (·
     Sum s (t \ s : Set α) ≃ (s ∪ t \ s : Set α) :=
       (Equiv.Set.union (by simp [inter_diff_self])).symm
     _ ≃ t := Equiv.Set.ofEq (by simp [union_diff_self, union_eq_self_of_subset_left h])
-    
 #align equiv.set.sum_diff_subset Equiv.Set.sumDiffSubset
 
 #print Equiv.Set.sumDiffSubset_apply_inl /-
@@ -448,7 +444,6 @@ protected def unionSumInter {α : Type u} (s t : Set α) [DecidablePred (· ∈ 
           refine' (set.union' (· ∉ s) _ _).symm
           exacts [fun x hx => hx.2, fun x hx => not_not_intro hx.1]))
     _ ≃ Sum s t := by rw [(_ : t \ s ∪ s ∩ t = t)]; rw [union_comm, inter_comm, inter_union_diff]
-    
 #align equiv.set.union_sum_inter Equiv.Set.unionSumInter
 
 #print Equiv.Set.compl /-
@@ -472,8 +467,7 @@ protected def compl {α : Type u} {β : Type v} {s : Set α} {t : Set β} [Decid
       (calc
         α ≃ Sum s (sᶜ : Set α) := (Set.sumCompl s).symm
         _ ≃ Sum t (tᶜ : Set β) := (e₀.sumCongr e₁)
-        _ ≃ β := Set.sumCompl t
-        )
+        _ ≃ β := Set.sumCompl t)
       fun x => by
       simp only [Sum.map_inl, trans_apply, sum_congr_apply, set.sum_compl_apply_inl,
         set.sum_compl_symm_apply]

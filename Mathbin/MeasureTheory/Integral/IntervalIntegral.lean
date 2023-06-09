@@ -657,7 +657,6 @@ theorem norm_integral_le_integral_norm_Ioc : ‖∫ x in a..b, f x ∂μ‖ ≤ 
   calc
     ‖∫ x in a..b, f x ∂μ‖ = ‖∫ x in Ι a b, f x ∂μ‖ := norm_integral_eq_norm_integral_Ioc f
     _ ≤ ∫ x in Ι a b, ‖f x‖ ∂μ := norm_integral_le_integral_norm f
-    
 #align interval_integral.norm_integral_le_integral_norm_Ioc intervalIntegral.norm_integral_le_integral_norm_Ioc
 
 theorem norm_integral_le_abs_integral_norm : ‖∫ x in a..b, f x ∂μ‖ ≤ |∫ x in a..b, ‖f x‖ ∂μ| :=
@@ -856,7 +855,6 @@ theorem integral_comp_add_right (d) : (∫ x in a..b, f (x + d)) = ∫ x in a + 
     (∫ x in a..b, f (x + d)) = ∫ x in a + d..b + d, f x ∂Measure.map (fun x => x + d) volume := by
       simp [intervalIntegral, A.set_integral_map]
     _ = ∫ x in a + d..b + d, f x := by rw [map_add_right_eq_self]
-    
 #align interval_integral.integral_comp_add_right intervalIntegral.integral_comp_add_right
 
 @[simp]
@@ -1130,7 +1128,6 @@ theorem integral_zero_ae (h : ∀ᵐ x ∂μ, x ∈ Ι a b → f x = 0) : (∫ x
   calc
     (∫ x in a..b, f x ∂μ) = ∫ x in a..b, 0 ∂μ := integral_congr_ae h
     _ = 0 := integral_zero
-    
 #align interval_integral.integral_zero_ae intervalIntegral.integral_zero_ae
 
 theorem integral_indicator {a₁ a₂ a₃ : ℝ} (h : a₂ ∈ Icc a₁ a₃) :
@@ -1606,7 +1603,6 @@ theorem abs_integral_mono_interval {c d} (h : Ι a b ⊆ Ι c d) (hf : 0 ≤ᵐ[
     _ ≤ ∫ x in Ι c d, f x ∂μ := (set_integral_mono_set hfi.def hf h.EventuallyLE)
     _ ≤ |∫ x in Ι c d, f x ∂μ| := (le_abs_self _)
     _ = |∫ x in c..d, f x ∂μ| := (abs_integral_eq_abs_integral_uIoc f).symm
-    
 #align interval_integral.abs_integral_mono_interval intervalIntegral.abs_integral_mono_interval
 -/
 

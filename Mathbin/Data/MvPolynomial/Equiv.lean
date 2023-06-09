@@ -490,7 +490,6 @@ theorem support_finSuccEquiv_nonempty {f : MvPolynomial (Fin (n + 1)) R} (h : f 
           simpa only [ii, ← AlgEquiv.invFun_eq_symm] using ((finSuccEquiv R n).left_inv f).symm
         _ = ii 0 := by rw [c]
         _ = 0 := by simp
-        
     simpa [h'] using h
   simpa [c] using h
 #align mv_polynomial.support_fin_succ_equiv_nonempty MvPolynomial.support_finSuccEquiv_nonempty

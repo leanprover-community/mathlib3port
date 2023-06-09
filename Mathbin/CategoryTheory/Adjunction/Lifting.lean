@@ -159,7 +159,6 @@ noncomputable def constructLeftAdjointEquiv [∀ X : B, RegularEpi (adj₁.couni
         assoc, adj₁.counit_naturality, adj₁.counit_naturality_assoc]
       apply eq_comm
     _ ≃ (X ⟶ R.obj Y) := (Cofork.IsColimit.homIso (counitCoequalises adj₁ X) _).symm
-    
 #align category_theory.lift_adjoint.construct_left_adjoint_equiv CategoryTheory.LiftAdjoint.constructLeftAdjointEquiv
 
 /-- Construct the left adjoint to `R`, with object map `construct_left_adjoint_obj`. -/
@@ -203,15 +202,16 @@ noncomputable def monadicAdjointTriangleLift (U : B ⥤ C) [MonadicRightAdjoint 
   by
   let R' : A ⥤ _ := R ⋙ monad.comparison (adjunction.of_right_adjoint U)
   rsuffices : is_right_adjoint R'
-  · let this : is_right_adjoint (R' ⋙ (monad.comparison (adjunction.of_right_adjoint U)).inv) := by
-      infer_instance
-    · let this : R' ⋙ (monad.comparison (adjunction.of_right_adjoint U)).inv ≅ R :=
+  · let this.1 : is_right_adjoint (R' ⋙ (monad.comparison (adjunction.of_right_adjoint U)).inv) :=
+      by infer_instance
+    · let this.1 : R' ⋙ (monad.comparison (adjunction.of_right_adjoint U)).inv ≅ R :=
         (iso_whisker_left R (monad.comparison _).asEquivalence.unitIso.symm : _) ≪≫ R.right_unitor
       exact adjunction.right_adjoint_of_nat_iso this
-  let this : is_right_adjoint (R' ⋙ monad.forget (adjunction.of_right_adjoint U).toMonad) :=
+  let this.1 : is_right_adjoint (R' ⋙ monad.forget (adjunction.of_right_adjoint U).toMonad) :=
     adjunction.right_adjoint_of_nat_iso
       (iso_whisker_left R (monad.comparison_forget (adjunction.of_right_adjoint U)).symm : _)
-  let this : ∀ X, regular_epi ((monad.adj (adjunction.of_right_adjoint U).toMonad).counit.app X) :=
+  let this.1 :
+    ∀ X, regular_epi ((monad.adj (adjunction.of_right_adjoint U).toMonad).counit.app X) :=
     by
     intro X
     simp only [monad.adj_counit]
@@ -242,7 +242,7 @@ noncomputable def adjointSquareLift (Q : A ⥤ B) (V : B ⥤ D) (U : A ⥤ C) (R
     [∀ X, RegularEpi ((Adjunction.ofRightAdjoint V).counit.app X)] [HasReflexiveCoequalizers A] :
     IsRightAdjoint Q :=
   by
-  let this := adjunction.right_adjoint_of_nat_iso comm
+  let this.1 := adjunction.right_adjoint_of_nat_iso comm
   exact adjoint_triangle_lift Q (adjunction.of_right_adjoint V)
 #align category_theory.adjoint_square_lift CategoryTheory.adjointSquareLift
 
@@ -263,7 +263,7 @@ noncomputable def monadicAdjointSquareLift (Q : A ⥤ B) (V : B ⥤ D) (U : A �
     (comm : U ⋙ R ≅ Q ⋙ V) [IsRightAdjoint U] [MonadicRightAdjoint V] [IsRightAdjoint R]
     [HasReflexiveCoequalizers A] : IsRightAdjoint Q :=
   by
-  let this := adjunction.right_adjoint_of_nat_iso comm
+  let this.1 := adjunction.right_adjoint_of_nat_iso comm
   exact monadic_adjoint_triangle_lift V
 #align category_theory.monadic_adjoint_square_lift CategoryTheory.monadicAdjointSquareLift
 

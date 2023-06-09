@@ -165,7 +165,6 @@ theorem integralNormalization_eval₂_eq_zero {p : R[X]} (f : R →+* S) {z : S}
       congr 1
       exact @Finset.sum_attach _ _ p.support _ fun i => f (p.coeff i) * z ^ i
     _ = 0 := by rw [hz, _root_.mul_zero]
-    
 #align polynomial.integral_normalization_eval₂_eq_zero Polynomial.integralNormalization_eval₂_eq_zero
 
 theorem integralNormalization_aeval_eq_zero [Algebra R S] {f : R[X]} {z : S} (hz : aeval z f = 0)

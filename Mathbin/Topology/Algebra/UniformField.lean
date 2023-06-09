@@ -225,8 +225,7 @@ instance (priority := 100) completableTopField_of_complete (L : Type _) [Field L
         Filter.Tendsto.cauchy_map
           (calc
             map (fun x => x⁻¹) F ≤ map (fun x => x⁻¹) (𝓝 x) := map_mono hx
-            _ ≤ 𝓝 x⁻¹ := continuous_at_inv₀ hx'
-            ) }
+            _ ≤ 𝓝 x⁻¹ := continuous_at_inv₀ hx') }
 #align completable_top_field_of_complete completableTopField_of_complete
 -/
 

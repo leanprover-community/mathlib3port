@@ -194,7 +194,6 @@ theorem bitwise'_comm {f : Bool → Bool → Bool} (hf : ∀ b b', f b b' = f b'
   calc
     bitwise' f = bitwise' (swap f) := congr_arg _ <| funext fun _ => funext <| hf _
     _ = swap (bitwise' f) := bitwise'_swap hf'
-    
 #align nat.bitwise_comm Nat.bitwise'_comm
 -/
 
@@ -252,7 +251,7 @@ theorem lor'_zero (n : ℕ) : lor' n 0 = n := by simp [lor]
 #align nat.lor_zero Nat.lor'_zero
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:330:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
 /-- Proving associativity of bitwise operations in general essentially boils down to a huge case
     distinction, so it is shorter to use this tactic instead of proving it in the general case. -/
 unsafe def bitwise_assoc_tac : tactic Unit :=

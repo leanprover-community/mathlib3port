@@ -211,7 +211,6 @@ theorem sum_lineCount_eq_sum_pointCount [Fintype P] [Fintype L] :
       (Equiv.subtypeProdEquivSigmaSubtype (· ∈ ·)).symm
     _ ≃ { x : L × P // x.2 ∈ x.1 } := ((Equiv.prodComm P L).subtypeEquiv fun x => Iff.rfl)
     _ ≃ Σ l, { p // p ∈ l } := Equiv.subtypeProdEquivSigmaSubtype fun (l : L) (p : P) => p ∈ l
-    
 #align configuration.sum_line_count_eq_sum_point_count Configuration.sum_lineCount_eq_sum_pointCount
 
 variable {P L}
@@ -257,7 +256,6 @@ theorem HasLines.card_le [HasLines P L] [Fintype P] [Fintype L] : Fintype.card P
           (fun l hl => rfl) (fun l₁ l₂ hl₁ hl₂ hl₃ => hf₁ hl₃) fun p => by
           simp_rw [Finset.mem_image, eq_comm, imp_self])
       _ < ∑ p, line_count L p := _
-      
   · exact lt_irrefl _ this
   · obtain ⟨p, hp⟩ := not_forall.mp (mt (Fintype.card_le_of_surjective f) hc₂)
     refine'

@@ -101,7 +101,6 @@ protected theorem nhdsWithin_iUnion (hf : LocallyFinite f) (a : X) :
     _ = ⨆ i ∈ {j | (f j ∩ U).Nonempty}, 𝓝[f i ∩ U] a := (nhdsWithin_biUnion hfin _ _)
     _ ≤ ⨆ i, 𝓝[f i ∩ U] a := (iSup₂_le_iSup _ _)
     _ ≤ ⨆ i, 𝓝[f i] a := iSup_mono fun i => nhdsWithin_mono _ <| inter_subset_left _ _
-    
 #align locally_finite.nhds_within_Union LocallyFinite.nhdsWithin_iUnion
 
 theorem continuousOn_iUnion' {g : X → Y} (hf : LocallyFinite f)
@@ -187,7 +186,6 @@ theorem exists_forall_eventually_eq_prod {π : X → Sort _} {f : ℕ → ∀ x 
     f n y = f (N x + 1) y := hN _ _ hn _ hy
     _ = f (max (N x + 1) (N y + 1)) y := (hN _ _ (le_max_left _ _) _ hy).symm
     _ = f (N y + 1) y := hN _ _ (le_max_right _ _) _ (mem_of_mem_nhds <| hUx y)
-    
 #align locally_finite.exists_forall_eventually_eq_prod LocallyFinite.exists_forall_eventually_eq_prod
 -/
 

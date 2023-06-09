@@ -542,7 +542,6 @@ theorem same_gf [Field α] (m : ℕ) :
     _ = π₁ * π₂ * (1 + X ^ (m + 1)) := by ring
     _ = π₃ * (1 + X ^ (m + 1)) := by rw [ih]
     _ = _ := by rw [prod_range_succ]
-    
 #align theorems_100.same_gf Theorems100.same_gf
 
 theorem same_coeffs [Field α] (m n : ℕ) (h : n ≤ m) :

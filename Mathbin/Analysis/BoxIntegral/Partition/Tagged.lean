@@ -300,7 +300,6 @@ theorem IsHenstock.card_filter_tag_eq_le [Fintype ι] (h : π.IsHenstock) (x : �
       rw [Finset.mem_filter] at hJ ⊢; rcases hJ with ⟨hJ, rfl⟩
       exact ⟨hJ, h J hJ⟩
     _ ≤ 2 ^ Fintype.card ι := π.toPrepartition.card_filter_mem_Icc_le x
-    
 #align box_integral.tagged_prepartition.is_Henstock.card_filter_tag_eq_le BoxIntegral.TaggedPrepartition.IsHenstock.card_filter_tag_eq_le
 -/
 
@@ -345,7 +344,6 @@ theorem IsSubordinate.diam_le [Fintype ι] {π : TaggedPrepartition I} (h : π.I
   calc
     diam J.Icc ≤ diam (closedBall (π.Tag J) (r <| π.Tag J)) := diam_mono (h J hJ) bounded_closedBall
     _ ≤ 2 * r (π.Tag J) := diam_closedBall (le_of_lt (r _).2)
-    
 #align box_integral.tagged_prepartition.is_subordinate.diam_le BoxIntegral.TaggedPrepartition.IsSubordinate.diam_le
 
 /-- Tagged prepartition with single box and prescribed tag. -/

@@ -176,7 +176,7 @@ instance : Zero F :=
 instance : One F :=
   ⟨F.one⟩
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:330:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
 /-- A tactic to prove trivial goals by enumeration. -/
 unsafe def boom : tactic Unit :=
   sorry

@@ -2038,7 +2038,6 @@ theorem is_local_structomorph_on_contDiffGroupoid_iff_aux {f : LocalHomeomorph M
       f y = c'.symm (c' (f y)) := by rw [c'.left_inv hy₁]
       _ = c'.symm (c' (f (c.symm (c y)))) := by rw [c.left_inv hy₂]
       _ = c'.symm (e (c y)) := by rw [← he' hy₃]
-      
   refine' (H₁.congr H₂).mono _
   mfld_set_tac
 #align is_local_structomorph_on_cont_diff_groupoid_iff_aux is_local_structomorph_on_contDiffGroupoid_iff_aux

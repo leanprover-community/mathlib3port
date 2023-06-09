@@ -134,8 +134,7 @@ theorem linearIndependent_iff' :
               fun hnis => hnis.elim his)
         _ = (∑ j in s, Finsupp.single j (g j)) i :=
           (Finsupp.lapply i : (ι →₀ R) →ₗ[R] R).map_sum.symm
-        _ = 0 := Finsupp.ext_iff.1 h i
-        ,
+        _ = 0 := Finsupp.ext_iff.1 h i,
       fun hf l hl =>
       Finsupp.ext fun i =>
         by_contradiction fun hni => hni <| hf _ _ hl _ <| Finsupp.mem_support_iff.2 hni⟩
@@ -1114,8 +1113,7 @@ theorem linearIndependent_monoidHom (G : Type _) [Monoid G] (L : Type _) [CommRi
                             a x * (∑ i in insert a s, (g i • i : G → L)) y :=
                         by rw [Finset.sum_apply, Finset.sum_apply, Finset.mul_sum] <;> rfl
                       _ = 0 - a x * 0 := by rw [hg] <;> rfl
-                      _ = 0 := by rw [MulZeroClass.mul_zero, sub_zero]
-                      )
+                      _ = 0 := by rw [MulZeroClass.mul_zero, sub_zero])
                   i his
           -- On the other hand, since `a` is not already in `s`, for any character `i ∈ s`
           -- there is some element of the monoid on which it differs from `a`.
@@ -1142,7 +1140,6 @@ theorem linearIndependent_monoidHom (G : Type _) [Monoid G] (L : Type _) [CommRi
                   rw [h3 i (his.resolve_left hia), zero_smul]
                 · intro haas; exfalso; apply haas; exact Finset.mem_insert_self a s
               _ = 0 := by rw [hg] <;> rfl
-              
           (-- Now we're done; the last two facts together imply that `g` vanishes on every element
                 -- of `insert a s`.
                 Finset.forall_mem_insert

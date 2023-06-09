@@ -311,8 +311,8 @@ theorem ContinuousMul.of_nhds_one {M : Type u} [Monoid M] [TopologicalSpace M]
       _ = map ((fun x => x₀ * x) ∘ fun x => x * y₀) (map (uncurry (· * ·)) (𝓝 1 ×ᶠ 𝓝 1)) := by
         rw [key, ← Filter.map_map]
       _ ≤ map ((fun x : M => x₀ * x) ∘ fun x => x * y₀) (𝓝 1) := (map_mono hmul)
-      _ = 𝓝 (x₀ * y₀) := by rw [← Filter.map_map, ← hright, hleft y₀, Filter.map_map, key₂, ← hleft]
-      ⟩
+      _ = 𝓝 (x₀ * y₀) := by
+        rw [← Filter.map_map, ← hright, hleft y₀, Filter.map_map, key₂, ← hleft]⟩
 #align has_continuous_mul.of_nhds_one ContinuousMul.of_nhds_one
 #align has_continuous_add.of_nhds_zero ContinuousAdd.of_nhds_zero
 

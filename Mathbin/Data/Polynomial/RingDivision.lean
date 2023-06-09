@@ -514,8 +514,7 @@ theorem exists_multiset_roots :
           (card (x ::ₘ t) : WithBot ℕ) = t.card + 1 := by exact_mod_cast card_cons _ _
           _ ≤ degree p := by
             rw [← degree_add_div_by_monic (monic_X_sub_C x) hdeg, degree_X_sub_C, add_comm] <;>
-              exact add_le_add (le_refl (1 : WithBot ℕ)) htd
-          ,
+              exact add_le_add (le_refl (1 : WithBot ℕ)) htd,
         by
         intro a
         conv_rhs => rw [← mul_div_by_monic_eq_iff_is_root.mpr hx]
@@ -564,7 +563,6 @@ theorem card_roots_sub_C {p : R[X]} {a : R} (hp0 : 0 < degree p) :
     ((p - C a).roots.card : WithBot ℕ) ≤ degree (p - C a) :=
       card_roots <| mt sub_eq_zero.1 fun h => not_le_of_gt hp0 <| h.symm ▸ degree_C_le
     _ = degree p := by rw [sub_eq_add_neg, ← C_neg] <;> exact degree_add_C hp0
-    
 #align polynomial.card_roots_sub_C Polynomial.card_roots_sub_C
 
 theorem card_roots_sub_C' {p : R[X]} {a : R} (hp0 : 0 < degree p) :
@@ -789,7 +787,6 @@ theorem card_roots_X_pow_sub_C {n : ℕ} (hn : 0 < n) (a : R) :
       ((roots ((X : R[X]) ^ n - C a)).card : WithBot ℕ) ≤ degree ((X : R[X]) ^ n - C a) :=
         card_roots (X_pow_sub_C_ne_zero hn a)
       _ = n := degree_X_pow_sub_C hn a
-      
 #align polynomial.card_roots_X_pow_sub_C Polynomial.card_roots_X_pow_sub_C
 
 section NthRoots

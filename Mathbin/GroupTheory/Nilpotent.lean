@@ -604,7 +604,6 @@ theorem nilpotent_of_surjective {G' : Type _} [Group G'] [h : IsNilpotent G] (f 
     _ = Subgroup.map f ⊤ := (MonoidHom.range_eq_map _)
     _ = Subgroup.map f (upperCentralSeries G n) := by rw [hn]
     _ ≤ upperCentralSeries G' n := upperCentralSeries.map hf n
-    
 #align nilpotent_of_surjective nilpotent_of_surjective
 
 /-- The nilpotency class of the range of a surejctive homomorphism from a
@@ -621,7 +620,6 @@ theorem nilpotencyClass_le_of_surjective {G' : Type _} [Group G'] (f : G →* G'
     _ = Subgroup.map f ⊤ := (MonoidHom.range_eq_map _)
     _ = Subgroup.map f (upperCentralSeries G n) := by rw [hn]
     _ ≤ upperCentralSeries G' n := upperCentralSeries.map hf n
-    
 #align nilpotency_class_le_of_surjective nilpotencyClass_le_of_surjective
 
 /-- Nilpotency respects isomorphisms -/
@@ -667,7 +665,6 @@ theorem comap_upperCentralSeries_quotient_center (n : ℕ) :
         (comap_center_subst ih)
       _ = upperCentralSeriesStep (upperCentralSeries G n.succ) :=
         symm (upperCentralSeriesStep_eq_comap_center _)
-      
 #align comap_upper_central_series_quotient_center comap_upperCentralSeries_quotient_center
 -/
 
@@ -700,7 +697,6 @@ theorem nilpotencyClass_quotient_center [hH : IsNilpotent G] :
         _ = Group.nilpotencyClass G := (symm hn)
         _ ≤ Group.nilpotencyClass (G ⧸ center G) + 1 :=
           nilpotencyClass_le_of_ker_le_center _ (le_of_eq (ker_mk _)) _
-        
 #align nilpotency_class_quotient_center nilpotencyClass_quotient_center
 -/
 
@@ -798,7 +794,6 @@ theorem lowerCentralSeries_prod (n : ℕ) :
       _ = ⁅lowerCentralSeries G₁ n, (⊤ : Subgroup G₁)⁆.Prod ⁅lowerCentralSeries G₂ n, ⊤⁆ :=
         (commutator_prod_prod _ _ _ _)
       _ = (lowerCentralSeries G₁ n.succ).Prod (lowerCentralSeries G₂ n.succ) := rfl
-      
 #align lower_central_series_prod lowerCentralSeries_prod
 
 /-- Products of nilpotent groups are nilpotent -/
@@ -840,7 +835,6 @@ theorem lowerCentralSeries_pi_le (n : ℕ) :
       _ = ⁅pi fun i => lowerCentralSeries (Gs i) n, pi fun i => ⊤⁆ := by simp [pi, pi_top]
       _ ≤ pi fun i => ⁅lowerCentralSeries (Gs i) n, ⊤⁆ := (commutator_pi_pi_le _ _)
       _ = pi fun i => lowerCentralSeries (Gs i) n.succ := rfl
-      
 #align lower_central_series_pi_le lowerCentralSeries_pi_le
 
 #print isNilpotent_pi_of_bounded_class /-
@@ -878,7 +872,6 @@ theorem lowerCentralSeries_pi_of_finite [Finite η] (n : ℕ) :
       _ = ⁅pi fun i => lowerCentralSeries (Gs i) n, pi fun i => ⊤⁆ := by simp [pi, pi_top]
       _ = pi fun i => ⁅lowerCentralSeries (Gs i) n, ⊤⁆ := (commutator_pi_pi_of_finite _ _)
       _ = pi fun i => lowerCentralSeries (Gs i) n.succ := rfl
-      
 #align lower_central_series_pi_of_finite lowerCentralSeries_pi_of_finite
 
 #print isNilpotent_pi /-

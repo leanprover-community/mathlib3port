@@ -49,7 +49,7 @@ unsafe def expr_list_to_list_expr : ∀ e : expr, tactic (List expr)
   | _ => failed
 #align tactic.expr_list_to_list_expr tactic.expr_list_to_list_expr
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:330:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
 private unsafe def fin_cases_at_aux : ∀ (with_list : List expr) (e : expr), tactic Unit
   | with_list, e => do
     let result ← cases_core e

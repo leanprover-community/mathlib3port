@@ -534,7 +534,6 @@ theorem two_zsmul_oangle_QPA₂_eq_two_zsmul_oangle_QB₂A₂ :
         cfg.b₂_ne_a₂)
     _ = (2 : ℤ) • ∡ cfg.q cfg.b₂ cfg.a₂ := by
       rw [cfg.wbtw_B_Q_B₂.symm.oangle_eq_left cfg.B₂_ne_Q.symm]
-    
 #align imo2019_q2.imo2019q2_cfg.two_zsmul_oangle_QPA₂_eq_two_zsmul_oangle_QB₂A₂ Imo2019Q2.Imo2019q2Cfg.two_zsmul_oangle_QPA₂_eq_two_zsmul_oangle_QB₂A₂
 
 end Oriented
@@ -583,7 +582,6 @@ theorem two_zsmul_oangle_CA₂A₁_eq_two_zsmul_oangle_CBA :
       Sphere.two_zsmul_oangle_eq cfg.c_mem_circumsphere cfg.a₂_mem_circumsphere
         cfg.b_mem_circumsphere cfg.a_mem_circumsphere cfg.a₂_ne_c cfg.a₂_ne_a cfg.b_ne_c
         cfg.a_ne_b.symm
-    
 #align imo2019_q2.imo2019q2_cfg.two_zsmul_oangle_CA₂A₁_eq_two_zsmul_oangle_CBA Imo2019Q2.Imo2019q2Cfg.two_zsmul_oangle_CA₂A₁_eq_two_zsmul_oangle_CBA
 
 theorem two_zsmul_oangle_CA₂A₁_eq_two_zsmul_oangle_CQ₁A₁ :
@@ -593,7 +591,6 @@ theorem two_zsmul_oangle_CA₂A₁_eq_two_zsmul_oangle_CQ₁A₁ :
       cfg.two_zsmul_oangle_CA₂A₁_eq_two_zsmul_oangle_CBA
     _ = (2 : ℤ) • ∡ cfg.C cfg.q₁ cfg.q := by rw [oangle_CQ₁Q_eq_oangle_CBA]
     _ = (2 : ℤ) • ∡ cfg.C cfg.q₁ cfg.a₁ := by rw [cfg.sbtw_Q_A₁_Q₁.symm.oangle_eq_right]
-    
 #align imo2019_q2.imo2019q2_cfg.two_zsmul_oangle_CA₂A₁_eq_two_zsmul_oangle_CQ₁A₁ Imo2019Q2.Imo2019q2Cfg.two_zsmul_oangle_CA₂A₁_eq_two_zsmul_oangle_CQ₁A₁
 
 end Oriented
@@ -640,7 +637,6 @@ theorem two_zsmul_oangle_QQ₁A₂_eq_two_zsmul_oangle_QPA₂ :
         cfg.a_mem_circumsphere cfg.a₂_mem_circumsphere cfg.b_ne_c.symm cfg.a₂_ne_c.symm cfg.a_ne_b
         cfg.a₂_ne_a.symm)
     _ = (2 : ℤ) • ∡ cfg.q cfg.P cfg.a₂ := cfg.two_zsmul_oangle_QPA₂_eq_two_zsmul_oangle_BAA₂.symm
-    
 #align imo2019_q2.imo2019q2_cfg.two_zsmul_oangle_QQ₁A₂_eq_two_zsmul_oangle_QPA₂ Imo2019Q2.Imo2019q2Cfg.two_zsmul_oangle_QQ₁A₂_eq_two_zsmul_oangle_QPA₂
 
 end Oriented

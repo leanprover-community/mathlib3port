@@ -103,7 +103,6 @@ theorem smul_nonpos_of_nonpos_of_nonneg (hc : c ≤ 0) (ha : 0 ≤ a) : c • a 
   calc
     c • a ≤ c • 0 := smul_le_smul_of_nonpos ha hc
     _ = 0 := smul_zero c
-    
 #align smul_nonpos_of_nonpos_of_nonneg smul_nonpos_of_nonpos_of_nonneg
 
 theorem smul_nonneg_of_nonpos_of_nonpos (hc : c ≤ 0) (ha : a ≤ 0) : 0 ≤ c • a :=

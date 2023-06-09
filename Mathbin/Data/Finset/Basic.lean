@@ -2492,7 +2492,6 @@ theorem erase_ssubset {a : α} {s : Finset α} (h : a ∈ s) : s.eraseₓ a ⊂ 
   calc
     s.eraseₓ a ⊂ insert a (s.eraseₓ a) := ssubset_insert <| not_mem_erase _ _
     _ = _ := insert_erase h
-    
 #align finset.erase_ssubset Finset.erase_ssubset
 -/
 
@@ -3644,7 +3643,6 @@ theorem sdiff_eq_self (s₁ s₂ : Finset α) : s₁ \ s₂ = s₁ ↔ s₁ ∩ 
       s₁ \ s₂ ⊇ s₁ \ (s₁ ∩ s₂) := by simp [(· ⊇ ·)]
       _ ⊇ s₁ \ ∅ := by mono using (· ⊇ ·)
       _ ⊇ s₁ := by simp [(· ⊇ ·)]
-      
 #align finset.sdiff_eq_self Finset.sdiff_eq_self
 -/
 

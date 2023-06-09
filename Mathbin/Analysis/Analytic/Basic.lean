@@ -207,7 +207,6 @@ theorem isLittleO_of_lt_radius (h : ↑r < p.radius) :
     |‖p n‖ * r ^ n| = ‖p n‖ * t ^ n * (r / t) ^ n := by
       field_simp [mul_right_comm, abs_mul, this.ne']
     _ ≤ C * (r / t) ^ n := mul_le_mul_of_nonneg_right (hC n) (pow_nonneg (div_nonneg r.2 t.2) _)
-    
 #align formal_multilinear_series.is_o_of_lt_radius FormalMultilinearSeries.isLittleO_of_lt_radius
 
 /-- For `r` strictly smaller than the radius of `p`, then `‖pₙ‖ rⁿ = o(1)`. -/
@@ -690,7 +689,6 @@ theorem HasFPowerSeriesOnBall.uniform_geometric_approx' {r' : ℝ≥0}
     _ ≤ C * a ^ n * (‖y‖ / r') ^ n :=
       (mul_le_mul_of_nonneg_right (hp n) (pow_nonneg (div_nonneg (norm_nonneg _) r'.coe_nonneg) _))
     _ ≤ C * (a * (‖y‖ / r')) ^ n := by rw [mul_pow, mul_assoc]
-    
 #align has_fpower_series_on_ball.uniform_geometric_approx' HasFPowerSeriesOnBall.uniform_geometric_approx'
 
 /-- If a function admits a power series expansion, then it is exponentially close to the partial
@@ -779,7 +777,6 @@ theorem HasFPowerSeriesOnBall.isBigO_image_sub_image_sub_deriv_principal
             ha.1.le]
         _ = B n := by field_simp [B, pow_succ, hr'0.ne'];
           simp only [mul_assoc, mul_comm, mul_left_comm]
-        
     have hBL : HasSum B (L y) := by
       apply HasSum.mul_left
       simp only [add_mul]
@@ -984,7 +981,6 @@ theorem Asymptotics.IsBigO.continuousMultilinearMap_apply_eq_zero {n : ℕ} {p :
           simpa only [norm_pow, norm_norm] using ht (k • y) (δε (mem_ball_zero_iff.mpr h₁))
         _ = ‖k‖ ^ n.succ * (‖k‖ * (c * ‖y‖ ^ (n.succ + 1))) := by simp only [norm_smul, mul_pow];
           rw [pow_succ]; ring
-        
     have h₃ : ‖k‖ * (c * ‖y‖ ^ (n.succ + 1)) < ε :=
       inv_mul_cancel_right₀ h₀.ne.symm ε ▸
         mul_lt_mul_of_pos_right (lt_of_lt_of_le k_norm (min_le_right _ _)) h₀
@@ -998,7 +994,6 @@ theorem Asymptotics.IsBigO.continuousMultilinearMap_apply_eq_zero {n : ℕ} {p :
       _ = ‖(k⁻¹ * k) ^ n.succ‖ * (‖k‖ * (c * ‖y‖ ^ (n.succ + 1))) := by rw [← mul_assoc];
         simp [norm_mul, mul_pow]
       _ ≤ 0 + ε := by rw [inv_mul_cancel (norm_pos_iff.mp k_pos)]; simpa using h₃.le
-      
 #align asymptotics.is_O.continuous_multilinear_map_apply_eq_zero Asymptotics.IsBigO.continuousMultilinearMap_apply_eq_zero
 
 /-- If a formal multilinear series `p` represents the zero function at `x : E`, then the

@@ -254,7 +254,6 @@ def adjointifyη : 𝟭 C ≅ F ⋙ G :=
     _ ≅ (F ⋙ G) ⋙ F ⋙ G := (associator F G (F ⋙ G)).symm
     _ ≅ 𝟭 C ⋙ F ⋙ G := (isoWhiskerRight η.symm (F ⋙ G))
     _ ≅ F ⋙ G := leftUnitor (F ⋙ G)
-    
 #align category_theory.equivalence.adjointify_η CategoryTheory.Equivalence.adjointifyη
 -/
 

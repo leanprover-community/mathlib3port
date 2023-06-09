@@ -71,7 +71,6 @@ theorem lt_pow_self {p : ℕ} (h : 1 < p) : ∀ n : ℕ, n < p ^ n
     calc
       n + 1 < p ^ n + 1 := Nat.add_lt_add_right (lt_pow_self _) _
       _ ≤ p ^ (n + 1) := pow_lt_pow_succ h _
-      
 #align nat.lt_pow_self Nat.lt_pow_self
 -/
 

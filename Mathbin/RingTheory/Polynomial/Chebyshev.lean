@@ -150,7 +150,6 @@ theorem U_eq_X_mul_U_add_T : ∀ n : ℕ, U R (n + 1) = X * U R n + T R (n + 1)
         simp only [U_add_two, U_eq_X_mul_U_add_T n, U_eq_X_mul_U_add_T (n + 1)]
       _ = X * (2 * X * U R (n + 1) - U R n) + (2 * X * T R (n + 2) - T R (n + 1)) := by ring
       _ = X * U R (n + 2) + T R (n + 2 + 1) := by simp only [U_add_two, T_add_two]
-      
 #align polynomial.chebyshev.U_eq_X_mul_U_add_T Polynomial.Chebyshev.U_eq_X_mul_U_add_T
 -/
 
@@ -175,7 +174,6 @@ theorem T_eq_X_mul_T_sub_pol_U : ∀ n : ℕ, T R (n + 2) = X * T R (n + 1) - (1
       _ = X * (2 * X * T R (n + 2) - T R (n + 1)) - (1 - X ^ 2) * (2 * X * U R (n + 1) - U R n) :=
         by ring
       _ = X * T R (n + 2 + 1) - (1 - X ^ 2) * U R (n + 2) := by rw [T_add_two _ (n + 1), U_add_two]
-      
 #align polynomial.chebyshev.T_eq_X_mul_T_sub_pol_U Polynomial.Chebyshev.T_eq_X_mul_T_sub_pol_U
 
 theorem one_sub_X_sq_mul_U_eq_pol_in_T (n : ℕ) :
@@ -233,7 +231,6 @@ theorem T_derivative_eq_U : ∀ n : ℕ, derivative (T R (n + 1)) = (n + 1) * U 
       _ = (n + 1) * U R (n + 2) + 2 * U R (n + 2) := by rw [U_add_two]
       _ = (n + 2 + 1) * U R (n + 2) := by ring
       _ = (↑(n + 2) + 1) * U R (n + 2) := by norm_cast
-      
 #align polynomial.chebyshev.T_derivative_eq_U Polynomial.Chebyshev.T_derivative_eq_U
 
 theorem one_sub_X_sq_mul_derivative_T_eq_poly_in_T (n : ℕ) :
@@ -245,7 +242,6 @@ theorem one_sub_X_sq_mul_derivative_T_eq_poly_in_T (n : ℕ) :
     _ = (n + 1) * (X * T R (n + 1) - (2 * X * T R (n + 1) - T R n)) := by
       rw [one_sub_X_sq_mul_U_eq_pol_in_T, T_add_two]
     _ = (n + 1) * (T R n - X * T R (n + 1)) := by ring
-    
 #align polynomial.chebyshev.one_sub_X_sq_mul_derivative_T_eq_poly_in_T Polynomial.Chebyshev.one_sub_X_sq_mul_derivative_T_eq_poly_in_T
 
 theorem add_one_mul_T_eq_poly_in_U (n : ℕ) :
@@ -276,7 +272,6 @@ theorem add_one_mul_T_eq_poly_in_U (n : ℕ) :
           U R (n + 1) :=
       by rw [h]
     _ = X * U R n - (1 - X ^ 2) * derivative (U R n) := by ring
-    
 #align polynomial.chebyshev.add_one_mul_T_eq_poly_in_U Polynomial.Chebyshev.add_one_mul_T_eq_poly_in_U
 
 variable (R)

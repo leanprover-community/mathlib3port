@@ -149,7 +149,6 @@ theorem norm_jacobiTheta_sub_one_le {z : ℂ} (hz : 0 < im z) :
       _ ≤ 2 * (rexp (-π * z.im) / (1 - rexp (-π * z.im))) := by
         rwa [mul_le_mul_left (zero_lt_two' ℝ)]
       _ = 2 / (1 - rexp (-π * z.im)) * rexp (-π * z.im) := by rw [div_mul_comm, mul_comm]
-      
   have : ∀ n : ℕ, ‖cexp (π * I * (n + 1) ^ 2 * z)‖ ≤ exp (-π * z.im) ^ (n + 1) :=
     by
     intro n

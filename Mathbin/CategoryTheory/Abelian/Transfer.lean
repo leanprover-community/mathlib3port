@@ -105,7 +105,6 @@ def cokernelIso {X Y : C} (f : X ⟶ Y) : G.obj (cokernel (F.map f)) ≅ cokerne
     _ ≅ cokernel (_ ≫ f ≫ _) := (cokernel_iso_of_eq (nat_iso.naturality_2 i f).symm)
     _ ≅ cokernel (f ≫ _) := (cokernel_epi_comp _ _)
     _ ≅ cokernel f := cokernel_comp_is_iso _ _
-    
 #align category_theory.abelian_of_adjunction.cokernel_iso CategoryTheory.AbelianOfAdjunction.cokernelIso
 
 variable [Limits.HasKernels C] [PreservesFiniteLimits G]
@@ -133,7 +132,6 @@ def coimageIsoImageAux {X Y : C} (f : X ⟶ Y) :
             nat_iso.inv_inv_app]))
     _ ≅ kernel (cokernel.π f ≫ _) := (kernel_is_iso_comp _ _)
     _ ≅ kernel (cokernel.π f) := kernel_comp_mono _ _
-    
 #align category_theory.abelian_of_adjunction.coimage_iso_image_aux CategoryTheory.AbelianOfAdjunction.coimageIsoImageAux
 
 variable [Functor.PreservesZeroMorphisms F]
@@ -158,7 +156,6 @@ def coimageIsoImage {X Y : C} (f : X ⟶ Y) : Abelian.coimage f ≅ Abelian.imag
     _ ≅ kernel (G.map (cokernel.π (F.map f))) := (preserves_kernel.iso _ _)
     _ ≅ kernel (cokernel.π f) := (coimage_iso_image_aux F G i adj f)
     _ ≅ abelian.image f := iso.refl _
-    
 #align category_theory.abelian_of_adjunction.coimage_iso_image CategoryTheory.AbelianOfAdjunction.coimageIsoImage
 -/
 

@@ -82,7 +82,6 @@ private theorem one_le_max_var : 1 ≤ maxVar X Y :=
     (1 : Real) = 2 * 0 + 1 + 2 * 0 := by simp
     _ ≤ 2 * diam (univ : Set X) + 1 + 2 * diam (univ : Set Y) := by
       apply_rules [add_le_add, mul_le_mul_of_nonneg_left, diam_nonneg] <;> norm_num
-    
 
 /-- The set of functions on `X ⊕ Y` that are candidates distances to realize the
 minimum of the Hausdorff distances between `X` and `Y` in a coupling -/
@@ -129,7 +128,6 @@ private theorem max_var_bound : dist x y ≤ maxVar X Y :=
       by
       apply_rules [add_le_add, mul_le_mul_of_nonneg_right, diam_nonneg, le_refl]
       norm_num; norm_num
-    
 
 private theorem candidates_symm (fA : f ∈ candidates X Y) : f (x, y) = f (y, x) :=
   fA.1.1.1.2 x y
@@ -148,7 +146,6 @@ private theorem candidates_nonneg (fA : f ∈ candidates X Y) : 0 ≤ f (x, y) :
       _ ≤ f (x, y) + f (y, x) := (candidates_triangle fA)
       _ = f (x, y) + f (x, y) := by rw [candidates_symm fA]
       _ = 2 * f (x, y) := by ring
-      
   · linarith
 
 private theorem candidates_dist_inl (fA : f ∈ candidates X Y) (x y : X) :
@@ -172,21 +169,18 @@ private theorem candidates_dist_bound (fA : f ∈ candidates X Y) :
       _ = 1 * dist (inl x) (inl y) := by simp
       _ ≤ maxVar X Y * dist (inl x) (inl y) :=
         mul_le_mul_of_nonneg_right (one_le_maxVar X Y) dist_nonneg
-      
   | inl x, inr y =>
     calc
       f (inl x, inr y) ≤ maxVar X Y := candidates_le_maxVar fA
       _ = maxVar X Y * 1 := by simp
       _ ≤ maxVar X Y * dist (inl x) (inr y) :=
         mul_le_mul_of_nonneg_left Sum.one_le_dist_inl_inr (le_trans zero_le_one (one_le_maxVar X Y))
-      
   | inr x, inl y =>
     calc
       f (inr x, inl y) ≤ maxVar X Y := candidates_le_maxVar fA
       _ = maxVar X Y * 1 := by simp
       _ ≤ maxVar X Y * dist (inl x) (inr y) :=
         mul_le_mul_of_nonneg_left Sum.one_le_dist_inl_inr (le_trans zero_le_one (one_le_maxVar X Y))
-      
   | inr x, inr y =>
     calc
       f (inr x, inr y) = dist x y := candidates_dist_inr fA x y
@@ -194,7 +188,6 @@ private theorem candidates_dist_bound (fA : f ∈ candidates X Y) :
       _ = 1 * dist (inr x) (inr y) := by simp
       _ ≤ maxVar X Y * dist (inr x) (inr y) :=
         mul_le_mul_of_nonneg_right (one_le_maxVar X Y) dist_nonneg
-      
 
 /-- Technical lemma to prove that candidates are Lipschitz -/
 private theorem candidates_lipschitz_aux (fA : f ∈ candidates X Y) :
@@ -218,7 +211,6 @@ private theorem candidates_lipschitz_aux (fA : f ∈ candidates X Y) :
           (zero_le_one.trans (one_le_max_var X Y))
     _ = 2 * maxVar X Y * max (dist x z) (dist y t) := by simp [dist_comm]; ring
     _ = 2 * maxVar X Y * dist (x, y) (z, t) := by rfl
-    
 
 /-- Candidates are Lipschitz -/
 private theorem candidates_lipschitz (fA : f ∈ candidates X Y) : LipschitzWith (2 * maxVar X Y) f :=
@@ -350,7 +342,6 @@ private theorem HD_bound_aux1 (f : Cb X Y) (C : ℝ) :
   calc
     (⨅ y, f (inl x, inr y) + C) ≤ f (inl x, inr default) + C := ciInf_le (HD_below_aux1 C) default
     _ ≤ Cf + C := add_le_add ((fun x => hCf (mem_range_self x)) _) le_rfl
-    
 
 theorem HD_below_aux2 {f : Cb X Y} (C : ℝ) {y : Y} :
     BddBelow (range fun x : X => f (inl x, inr y) + C) :=
@@ -366,7 +357,6 @@ private theorem HD_bound_aux2 (f : Cb X Y) (C : ℝ) :
   calc
     (⨅ x, f (inl x, inr y) + C) ≤ f (inl default, inr y) + C := ciInf_le (HD_below_aux2 C) default
     _ ≤ Cf + C := add_le_add ((fun x => hCf (mem_range_self x)) _) le_rfl
-    
 
 /-- Explicit bound on `HD (dist)`. This means that when looking for minimizers it will
 be sufficient to look for functions with `HD(f)` bounded by this bound. -/
@@ -387,7 +377,6 @@ theorem HD_candidatesBDist_le :
           any_goals exact OrderedAddCommMonoid.to_covariantClass_left ℝ
           any_goals exact OrderedAddCommMonoid.to_covariantClass_right ℝ
           exact dist_le_diam_of_mem bounded_of_compact_space (mem_univ _) (mem_univ _)
-        
     exact le_trans A B
   · have A :
       (⨅ x, candidates_b_dist X Y (inl x, inr y)) ≤ candidates_b_dist X Y (inl default, inr y) :=
@@ -402,7 +391,6 @@ theorem HD_candidatesBDist_le :
           any_goals exact OrderedAddCommMonoid.to_covariantClass_left ℝ
           any_goals exact OrderedAddCommMonoid.to_covariantClass_right ℝ
           exact dist_le_diam_of_mem bounded_of_compact_space (mem_univ _) (mem_univ _)
-        
     exact le_trans A B
 #align Gromov_Hausdorff.HD_candidates_b_dist_le GromovHausdorff.HD_candidatesBDist_le
 

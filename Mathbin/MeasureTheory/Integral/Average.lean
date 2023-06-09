@@ -198,7 +198,6 @@ theorem average_union_mem_segment {f : α → E} {s t : Set α} (hd : AEDisjoint
     calc
       0 < (μ s).toReal := ENNReal.toReal_pos hse hsμ
       _ ≤ _ := le_add_of_nonneg_right ENNReal.toReal_nonneg
-      
 #align measure_theory.average_union_mem_segment MeasureTheory.average_union_mem_segment
 
 theorem average_mem_openSegment_compl_self [IsFiniteMeasure μ] {f : α → E} {s : Set α}

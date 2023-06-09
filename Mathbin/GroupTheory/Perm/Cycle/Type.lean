@@ -573,7 +573,6 @@ theorem exists_prime_orderOf_dvd_card {G : Type _} [Group G] [Fintype G] (p : �
     calc
       p ∣ Fintype.card G ^ (p - 1) := hdvd.trans (dvd_pow (dvd_refl _) hp')
       _ = Fintype.card (vectors_prod_eq_one G p) := (vectors_prod_eq_one.card G p).symm
-      
   let f : ℕ → vectors_prod_eq_one G p → vectors_prod_eq_one G p := fun k v =>
     vectors_prod_eq_one.rotate v k
   have hf1 : ∀ v, f 0 v = v := vectors_prod_eq_one.rotate_zero

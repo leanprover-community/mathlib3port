@@ -520,7 +520,6 @@ theorem iUnion_Ioo_of_tendsto [Finite ι] {I : Box ι} {J : ℕ → Box ι} (hJ 
         iUnion_Ioo_of_mono_of_isGLB_of_isLUB (hl' i) (hu' i)
           (isGLB_of_tendsto_atTop (hl' i) (tendsto_pi_nhds.1 hl _))
           (isLUB_of_tendsto_atTop (hu' i) (tendsto_pi_nhds.1 hu _))
-    
 #align box_integral.box.Union_Ioo_of_tendsto BoxIntegral.Box.iUnion_Ioo_of_tendsto
 
 theorem exists_seq_mono_tendsto (I : Box ι) :
@@ -571,7 +570,6 @@ theorem nndist_le_distortion_mul (I : Box ι) (i : ι) :
       (div_mul_cancel _ <| mt nndist_eq_zero.1 (I.lower_lt_upper i).Ne).symm
     _ ≤ I.distortion * nndist (I.lower i) (I.upper i) :=
       mul_le_mul_right' (Finset.le_sup <| Finset.mem_univ i) _
-    
 #align box_integral.box.nndist_le_distortion_mul BoxIntegral.Box.nndist_le_distortion_mul
 
 theorem dist_le_distortion_mul (I : Box ι) (i : ι) :
@@ -592,7 +590,6 @@ theorem diam_Icc_le_of_distortion_le (I : Box ι) (i : ι) {c : ℝ≥0} (h : I.
       _ ≤ I.distortion * (I.upper i - I.lower i) := (I.dist_le_distortion_mul i)
       _ ≤ c * (I.upper i - I.lower i) :=
         mul_le_mul_of_nonneg_right h (sub_nonneg.2 (I.lower_le_upper i))
-      
 #align box_integral.box.diam_Icc_le_of_distortion_le BoxIntegral.Box.diam_Icc_le_of_distortion_le
 
 end Distortion

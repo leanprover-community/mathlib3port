@@ -648,7 +648,6 @@ theorem uniformity_lift_le_swap {g : Set (α × α) → Filter β} {f : Filter �
     (𝓤 α).lift g ≤ (Filter.map (@Prod.swap α α) <| 𝓤 α).lift g :=
       lift_mono uniformity_le_symm le_rfl
     _ ≤ _ := by rw [map_lift_eq2 hg, image_swap_eq_preimage_swap] <;> exact h
-    
 #align uniformity_lift_le_swap uniformity_lift_le_swap
 
 theorem uniformity_lift_le_comp {f : Set (α × α) → Filter β} (h : Monotone f) :
@@ -660,7 +659,6 @@ theorem uniformity_lift_le_comp {f : Set (α × α) → Filter β} (h : Monotone
       exact monotone_id.comp_rel monotone_id
       exact h
     _ ≤ (𝓤 α).lift f := lift_mono comp_le_uniformity le_rfl
-    
 #align uniformity_lift_le_comp uniformity_lift_le_comp
 
 theorem comp_le_uniformity3 : ((𝓤 α).lift' fun s : Set (α × α) => s ○ (s ○ s)) ≤ 𝓤 α :=
@@ -679,7 +677,6 @@ theorem comp_le_uniformity3 : ((𝓤 α).lift' fun s : Set (α × α) => s ○ (
       (lift_lift'_same_eq_lift' (fun s => monotone_const.compRel monotone_id) fun s =>
         monotone_id.compRel monotone_const)
     _ ≤ 𝓤 α := comp_le_uniformity
-    
 #align comp_le_uniformity3 comp_le_uniformity3
 
 /-- See also `comp_open_symm_mem_uniformity_sets`. -/
@@ -692,7 +689,6 @@ theorem comp_symm_mem_uniformity_sets {s : Set (α × α)} (hs : s ∈ 𝓤 α) 
   calc
     symmetrizeRel w ○ symmetrizeRel w ⊆ w ○ w := by mono
     _ ⊆ s := w_sub
-    
 #align comp_symm_mem_uniformity_sets comp_symm_mem_uniformity_sets
 
 #print subset_comp_self_of_mem_uniformity /-
@@ -713,7 +709,6 @@ theorem comp_comp_symm_mem_uniformity_sets {s : Set (α × α)} (hs : s ∈ 𝓤
     _ ⊆ w ○ (t ○ t) := by mono
     _ ⊆ w ○ w := by mono
     _ ⊆ s := w_sub
-    
 #align comp_comp_symm_mem_uniformity_sets comp_comp_symm_mem_uniformity_sets
 
 /-!
@@ -984,7 +979,6 @@ theorem IsCompact.nhdsSet_basis_uniformity {p : ι → Prop} {s : ι → Set (α
   calc
     ball x (s i) ⊆ ball z (s (I z) ○ s (I z)) := fun y hy => ⟨x, hzx, hi z hzt hy⟩
     _ ⊆ U := hI z (htK z hzt)
-    
 #align is_compact.nhds_set_basis_uniformity IsCompact.nhdsSet_basis_uniformity
 
 theorem Disjoint.exists_uniform_thickening {A B : Set α} (hA : IsCompact A) (hB : IsClosed B)
@@ -1155,7 +1149,6 @@ theorem closure_eq_inter_uniformity {t : Set (α × α)} : closure t = ⋂ d ∈
         UniformSpace.hasBasis_symmetric.biInter_mem fun V₁ V₂ hV =>
           compRel_mono (compRel_mono hV Subset.rfl) hV)
     _ = ⋂ V ∈ 𝓤 α, V ○ (t ○ V) := by simp only [compRel_assoc]
-    
 #align closure_eq_inter_uniformity closure_eq_inter_uniformity
 
 #print uniformity_eq_uniformity_interior /-
@@ -1175,7 +1168,6 @@ theorem uniformity_eq_uniformity_interior : 𝓤 α = (𝓤 α).lift' interior :
               ht.subset_interior_iff.mpr fun x (hx : x ∈ t) =>
                 let ⟨x, y, h₁, h₂, h₃⟩ := ht_comp hx
                 hs_comp ⟨x, h₁, y, h₂, h₃⟩
-            
         have : interior d ∈ 𝓤 α := by filter_upwards [hs] using this
         simp [this])
     fun s hs => ((𝓤 α).lift' interior).sets_of_superset (mem_lift' hs) interior_subset

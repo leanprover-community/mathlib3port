@@ -48,7 +48,6 @@ theorem degree_le_of_ne_zero {p : A[X]} (pnz : p ≠ 0) (hp : Polynomial.aeval x
     degree (minpoly A x) ≤ degree (p * C (leadingCoeff p)⁻¹) :=
       min A x (monic_mul_leadingCoeff_inv pnz) (by simp [hp])
     _ = degree p := degree_mul_leadingCoeff_inv p pnz
-    
 #align minpoly.degree_le_of_ne_zero minpoly.degree_le_of_ne_zero
 
 theorem ne_zero_of_finite_field_extension (e : B) [FiniteDimensional A B] : minpoly A e ≠ 0 :=

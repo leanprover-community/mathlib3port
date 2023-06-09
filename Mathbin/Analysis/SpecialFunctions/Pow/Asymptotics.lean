@@ -183,7 +183,6 @@ theorem isBigO_cpow_rpow (hl : IsBoundedUnder (· ≤ ·) l fun x => |(g x).im|)
     _ =Θ[l] fun x => abs (f x) ^ (g x).re / (1 : ℝ) :=
       ((isTheta_refl _ _).div (isTheta_exp_arg_mul_im hl))
     _ =ᶠ[l] fun x => abs (f x) ^ (g x).re := by simp only [of_real_one, div_one]
-    
 #align complex.is_O_cpow_rpow Complex.isBigO_cpow_rpow
 
 theorem isTheta_cpow_rpow (hl_im : IsBoundedUnder (· ≤ ·) l fun x => |(g x).im|)
@@ -195,7 +194,6 @@ theorem isTheta_cpow_rpow (hl_im : IsBoundedUnder (· ≤ ·) l fun x => |(g x).
     _ =Θ[l] fun x => abs (f x) ^ (g x).re / (1 : ℝ) :=
       ((isTheta_refl _ _).div (isTheta_exp_arg_mul_im hl_im))
     _ =ᶠ[l] fun x => abs (f x) ^ (g x).re := by simp only [of_real_one, div_one]
-    
 #align complex.is_Theta_cpow_rpow Complex.isTheta_cpow_rpow
 
 theorem isTheta_cpow_const_rpow {b : ℂ} (hl : b.re = 0 → b ≠ 0 → ∀ᶠ x in l, f x ≠ 0) :
@@ -224,7 +222,6 @@ theorem IsBigOWith.rpow (h : IsBigOWith c l f g) (hc : 0 ≤ c) (hr : 0 ≤ r) (
     |f x ^ r| ≤ |f x| ^ r := abs_rpow_le_abs_rpow _ _
     _ ≤ (c * |g x|) ^ r := (rpow_le_rpow (abs_nonneg _) hx hr)
     _ = c ^ r * |g x ^ r| := by rw [mul_rpow hc (abs_nonneg _), abs_rpow_of_nonneg hgx]
-    
 #align asymptotics.is_O_with.rpow Asymptotics.IsBigOWith.rpow
 
 theorem IsBigO.rpow (hr : 0 ≤ r) (hg : 0 ≤ᶠ[l] g) (h : f =O[l] g) :
@@ -290,7 +287,6 @@ theorem isLittleO_log_rpow_atTop {r : ℝ} (hr : 0 < r) : log =o[atTop] fun x =>
     _ =ᶠ[atTop] fun x => log (x ^ r) :=
       ((eventually_gt_atTop 0).mono fun x hx => (log_rpow hx _).symm)
     _ =o[atTop] fun x => x ^ r := isLittleO_log_id_atTop.comp_tendsto (tendsto_rpow_atTop hr)
-    
 #align is_o_log_rpow_at_top isLittleO_log_rpow_atTop
 
 theorem isLittleO_log_rpow_rpow_atTop {s : ℝ} (r : ℝ) (hs : 0 < s) :
@@ -311,7 +307,6 @@ theorem isLittleO_log_rpow_rpow_atTop {s : ℝ} (r : ℝ) (hs : 0 < s) :
         (tendsto_rpow_atTop H).Eventually <| eventually_ge_atTop 0)
     _ =ᶠ[atTop] fun x => x ^ s :=
       (eventually_ge_atTop 0).mono fun x hx => by simp only [← rpow_mul hx, div_mul_cancel _ hr.ne']
-    
 #align is_o_log_rpow_rpow_at_top isLittleO_log_rpow_rpow_atTop
 
 theorem isLittleO_abs_log_rpow_rpow_nhds_zero {s : ℝ} (r : ℝ) (hs : s < 0) :

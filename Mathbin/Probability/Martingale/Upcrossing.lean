@@ -737,7 +737,6 @@ theorem mul_upcrossingsBefore_le (hf : a ≤ f N ω) (hab : a < b) :
         · rw [sub_eq_zero_of_upcrossings_before_lt hab]
           rw [Finset.mem_range, not_lt] at hi 
           exact lt_of_le_of_ne hi (Ne.symm hi')
-      
   refine' le_trans _ h₂
   rw [Finset.sum_const, Finset.card_range, nsmul_eq_mul, mul_comm]
 #align measure_theory.mul_upcrossings_before_le MeasureTheory.mul_upcrossingsBefore_le
@@ -756,7 +755,6 @@ theorem integral_mul_upcrossingsBefore_le_integral [IsFiniteMeasure μ] (hf : Su
         simpa using mul_upcrossings_before_le (hfN ω) hab
     _ ≤ μ[f N] - μ[f 0] := hf.sum_mul_upcrossingStrat_le
     _ ≤ μ[f N] := (sub_le_self_iff _).2 (integral_nonneg hfzero)
-    
 #align measure_theory.integral_mul_upcrossings_before_le_integral MeasureTheory.integral_mul_upcrossingsBefore_le_integral
 
 theorem crossing_pos_eq (hab : a < b) :

@@ -245,7 +245,6 @@ theorem exists_embedding_l_infty : ∃ f : X → ℕ →ᵇ ℝ, Embedding f :=
       (0 : ℝ) = F x UV := (hf0 UV hxU).symm
       _ = F y UV := by rw [hxy]
       _ = ε UV := hfε UV fun h : y ∈ V => hVy h rfl
-      
   · /- Now we prove that each neighborhood `V` of `x : X` include a preimage of a neighborhood of
         `F x` under `F`. Without loss of generality, `V` belongs to `B`. Choose `U ∈ B` such that
         `x ∈ V` and `closure V ⊆ U`. Then the preimage of the `(ε (U, V))`-neighborhood of `F x`

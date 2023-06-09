@@ -76,7 +76,6 @@ theorem pow_inv_comm' (A : M) (m n : ℕ) : A⁻¹ ^ m ⬝ A ^ n = A ^ n ⬝ A�
       _ = A ^ n ⬝ (A ⬝ A⁻¹) ⬝ A⁻¹ ^ m := by simp only [h', Matrix.mul_one, Matrix.one_mul]
       _ = A ^ (n + 1) ⬝ A⁻¹ ^ (m + 1) := by
         simp only [pow_succ' A, pow_succ A⁻¹, mul_eq_mul, Matrix.mul_assoc]
-      
   · simp [h]
 #align matrix.pow_inv_comm' Matrix.pow_inv_comm'
 
@@ -171,7 +170,6 @@ theorem zpow_add_one {A : M} (h : IsUnit A.det) : ∀ n : ℤ, A ^ (n + 1) = A ^
         rw [mul_inv_rev, Matrix.mul_assoc, nonsing_inv_mul _ h, Matrix.mul_one]
       _ = A ^ (-(n + 1 : ℤ)) * A := by
         rw [zpow_neg h, ← Int.ofNat_succ, zpow_ofNat, pow_succ, mul_eq_mul, mul_eq_mul]
-      
 #align matrix.zpow_add_one Matrix.zpow_add_one
 
 theorem zpow_sub_one {A : M} (h : IsUnit A.det) (n : ℤ) : A ^ (n - 1) = A ^ n * A⁻¹ :=
@@ -179,7 +177,6 @@ theorem zpow_sub_one {A : M} (h : IsUnit A.det) (n : ℤ) : A ^ (n - 1) = A ^ n 
     A ^ (n - 1) = A ^ (n - 1) * A * A⁻¹ := by
       rw [mul_assoc, mul_eq_mul A, mul_nonsing_inv _ h, mul_one]
     _ = A ^ n * A⁻¹ := by rw [← zpow_add_one h, sub_add_cancel]
-    
 #align matrix.zpow_sub_one Matrix.zpow_sub_one
 
 theorem zpow_add {A : M} (ha : IsUnit A.det) (m n : ℤ) : A ^ (m + n) = A ^ m * A ^ n :=

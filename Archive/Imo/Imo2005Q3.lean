@@ -55,7 +55,6 @@ theorem key_insight (x y z : ℝ) (hx : x > 0) (hy : y > 0) (hz : z > 0) (h : x 
       refine' (div_le_div_right h₄).mpr _; simp
       exact (le_mul_iff_one_le_right (pow_pos hx 2)).mpr h
     _ = (x ^ 2 - y * z) / (x ^ 2 + y ^ 2 + z ^ 2) := by field_simp [h₂.ne', h₃.ne']; ring
-    
 #align imo2005_q3.key_insight Imo2005Q3.key_insight
 
 end imo2005_q3
@@ -83,6 +82,5 @@ theorem imo2005_q3 (x y z : ℝ) (hx : x > 0) (hy : y > 0) (hz : z > 0) (h : x *
     _ ≥ 0 :=
       div_nonneg (by linarith [sq_nonneg (x - y), sq_nonneg (y - z), sq_nonneg (z - x)])
         (by linarith [sq_nonneg x, sq_nonneg y, sq_nonneg z])
-    
 #align imo2005_q3 imo2005_q3
 

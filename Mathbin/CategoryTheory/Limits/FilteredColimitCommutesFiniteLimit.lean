@@ -292,7 +292,6 @@ theorem colimitLimitToLimitColimit_surjective :
           rw [← functor_to_types.map_comp_apply, prod_comp, id_comp, assoc]
         _ = F.map ((𝟙 j', g j' ≫ gf (𝟙 j') ≫ i (𝟙 j')) : (j', k j') ⟶ (j', k'')) (y j') := by
           rw [s f (𝟙 j'), ← s (𝟙 j') (𝟙 j')]
-        
   -- Finally we check that this maps to `x`.
   · -- We can do this componentwise:
     apply limit_ext'

@@ -49,7 +49,6 @@ theorem sq_add_sq_of_two_mul_sq_add_sq {m x y : ℤ} (h : 2 * m = x ^ 2 + y ^ 2)
         rw [Int.mul_ediv_cancel' hxsuby, Int.mul_ediv_cancel' hxaddy]
       _ = 2 * 2 * (((x - y) / 2) ^ 2 + ((x + y) / 2) ^ 2) := by
         simp [mul_add, pow_succ, mul_comm, mul_assoc, mul_left_comm]
-      
 #align int.sq_add_sq_of_two_mul_sq_add_sq Int.sq_add_sq_of_two_mul_sq_add_sq
 
 theorem exists_sq_add_sq_add_one_eq_k (p : ℕ) [hp : Fact p.Prime] :
@@ -82,8 +81,7 @@ theorem exists_sq_add_sq_add_one_eq_k (p : ℕ) [hp : Fact p.Prime] :
                 (lt_add_iff_pos_right _).2
                   (add_pos_of_nonneg_of_pos (Nat.zero_le _)
                     (mul_pos (by decide) (Nat.div_pos hp.1.two_le (by decide))))
-          _ = p * p := by conv_rhs => rw [← Nat.mod_add_div p 2]; ring
-          )
+          _ = p * p := by conv_rhs => rw [← Nat.mod_add_div p 2]; ring)
         (show 0 ≤ p from Nat.zero_le _)⟩
 #align int.exists_sq_add_sq_add_one_eq_k Int.exists_sq_add_sq_add_one_eq_k
 
@@ -195,7 +193,6 @@ private theorem prime_sum_four_squares (p : ℕ) [hp : Fact p.Prime] :
             conv_rhs => rw [← Nat.mod_add_div m 2]
             simp [-Nat.mod_add_div, mul_add, add_mul, bit0, bit1, mul_comm, mul_assoc,
               mul_left_comm, pow_add, add_comm, add_left_comm]
-          
       have hwxyzabcd :
         ((w ^ 2 + x ^ 2 + y ^ 2 + z ^ 2 : ℤ) : ZMod m) =
           ((a ^ 2 + b ^ 2 + c ^ 2 + d ^ 2 : ℤ) : ZMod m) :=
@@ -251,7 +248,6 @@ private theorem prime_sum_four_squares (p : ℕ) [hp : Fact p.Prime] :
             _ = (w ^ 2 + x ^ 2 + y ^ 2 + z ^ 2) * (a ^ 2 + b ^ 2 + c ^ 2 + d ^ 2) := by
               simp only [hs.symm, ht.symm, hu.symm, hv.symm]; ring
             _ = _ := by rw [hn, habcd, Int.natAbs_of_nonneg hn_nonneg]; dsimp [m]; ring
-            
       False.elim <| Nat.find_min hm hnm ⟨lt_trans hnm hmp, hn0, s, t, u, v, hstuv⟩
 
 #print Nat.sum_four_squares /-

@@ -69,7 +69,6 @@ theorem eventually_nhds_zero_forall_closedBall_subset (hK : ∀ i, IsClosed (K i
     edist z x ≤ edist z p.2 + edist p.2 x := edist_triangle _ _ _
     _ ≤ p.1 + (R - p.1) := (add_le_add hz <| le_trans hp.2 <| tsub_le_tsub_left hp.1.out.le _)
     _ = R := add_tsub_cancel_of_le (lt_trans hp.1 hrR).le
-    
 #align emetric.eventually_nhds_zero_forall_closed_ball_subset EMetric.eventually_nhds_zero_forall_closedBall_subset
 
 theorem exists_forall_closedBall_subset_aux₁ (hK : ∀ i, IsClosed (K i)) (hU : ∀ i, IsOpen (U i))

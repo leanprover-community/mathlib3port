@@ -155,7 +155,6 @@ theorem remainder_lt' (n : ℕ) {m : ℝ} (m1 : 1 < m) :
       tsum_mul_right
     _ = (1 - 1 / m)⁻¹ * (1 / m ^ (n + 1)!) :=-- the series if the geometric series
     by rw [tsum_geometric_of_lt_1 (by positivity) mi]
-    
 #align liouville_number.remainder_lt' LiouvilleNumber.remainder_lt'
 
 theorem aux_calc (n : ℕ) {m : ℝ} (hm : 2 ≤ m) :
@@ -182,7 +181,6 @@ theorem aux_calc (n : ℕ) {m : ℝ} (hm : 2 ≤ m) :
       -- `2 ≤ m ^ n!` is a consequence of monotonicity of exponentiation at `2 ≤ m`.
       exact trans (trans hm (pow_one _).symm.le) (pow_mono (one_le_two.trans hm) n.factorial_pos)
     _ = 1 / (m ^ n !) ^ n := congr_arg ((· / ·) 1) (pow_mul m n ! n)
-    
 #align liouville_number.aux_calc LiouvilleNumber.aux_calc
 
 /-- An upper estimate on the remainder. This estimate works with `m ∈ ℝ` satisfying `2 ≤ m` and is

@@ -161,13 +161,11 @@ theorem cpow_nat_inv_pow (x : ℂ) {n : ℕ} (hn : n ≠ 0) : (x ^ (n⁻¹ : ℂ
       -π * n ≤ -π * 1 := mul_le_mul_of_nonpos_left hn1 (neg_nonpos.2 real.pi_pos.le)
       _ = -π := (mul_one _)
       _ < im (log x) := neg_pi_lt_log_im _
-      
   · rw [div_le_iff hn']
     calc
       im (log x) ≤ π := log_im_le_pi _
       _ = π * 1 := (mul_one π).symm
       _ ≤ π * n := mul_le_mul_of_nonneg_left hn1 real.pi_pos.le
-      
 #align complex.cpow_nat_inv_pow Complex.cpow_nat_inv_pow
 
 theorem mul_cpow_of_real_nonneg {a b : ℝ} (ha : 0 ≤ a) (hb : 0 ≤ b) (r : ℂ) :

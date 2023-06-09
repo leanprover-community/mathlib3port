@@ -245,20 +245,17 @@ instance : CstarRing (E →L[𝕜] E) :=
       calc
         ‖A† * A‖ ≤ ‖A†‖ * ‖A‖ := op_norm_comp_le _ _
         _ = ‖A‖ * ‖A‖ := by rw [LinearIsometryEquiv.norm_map]
-        
     · rw [← sq, ← Real.sqrt_le_sqrt_iff (norm_nonneg _), Real.sqrt_sq (norm_nonneg _)]
       refine' op_norm_le_bound _ (Real.sqrt_nonneg _) fun x => _
       have :=
         calc
           re ⟪(A† * A) x, x⟫ ≤ ‖(A† * A) x‖ * ‖x‖ := re_inner_le_norm _ _
           _ ≤ ‖A† * A‖ * ‖x‖ * ‖x‖ := mul_le_mul_of_nonneg_right (le_op_norm _ _) (norm_nonneg _)
-          
       calc
         ‖A x‖ = Real.sqrt (re ⟪(A† * A) x, x⟫) := by rw [apply_norm_eq_sqrt_inner_adjoint_left]
         _ ≤ Real.sqrt (‖A† * A‖ * ‖x‖ * ‖x‖) := (Real.sqrt_le_sqrt this)
         _ = Real.sqrt ‖A† * A‖ * ‖x‖ := by
-          rw [mul_assoc, Real.sqrt_mul (norm_nonneg _), Real.sqrt_mul_self (norm_nonneg _)]
-        ⟩
+          rw [mul_assoc, Real.sqrt_mul (norm_nonneg _), Real.sqrt_mul_self (norm_nonneg _)]⟩
 
 section Real
 

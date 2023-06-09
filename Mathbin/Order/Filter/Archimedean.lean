@@ -167,7 +167,6 @@ theorem Tendsto.const_mul_atTop' (hr : 0 < r) (hf : Tendsto f l atTop) :
     _ ≤ r * n * max b 0 := (mul_le_mul_of_nonneg_right hn (le_max_right _ _))
     _ = r * (n * max b 0) := by rw [mul_assoc]
     _ ≤ r * f x := mul_le_mul_of_nonneg_left hx (le_of_lt hr)
-    
 #align filter.tendsto.const_mul_at_top' Filter.Tendsto.const_mul_atTop'
 
 /-- If a function tends to infinity along a filter, then this function multiplied by a positive
@@ -186,7 +185,6 @@ theorem Tendsto.atTop_mul_const' (hr : 0 < r) (hf : Tendsto f l atTop) :
     _ ≤ max b 0 * (n * r) := (mul_le_mul_of_nonneg_left hn' (le_max_right _ _))
     _ = max b 0 * n * r := by rw [mul_assoc]
     _ ≤ f x * r := mul_le_mul_of_nonneg_right hx (le_of_lt hr)
-    
 #align filter.tendsto.at_top_mul_const' Filter.Tendsto.atTop_mul_const'
 
 end LinearOrderedSemiring

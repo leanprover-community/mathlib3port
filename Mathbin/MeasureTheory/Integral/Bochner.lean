@@ -248,7 +248,6 @@ theorem norm_weightedSMul_le (s : Set α) : ‖(weightedSMul μ s : F →L[ℝ] 
       ((mul_le_mul_of_nonneg_left norm_id_le (norm_nonneg _)).trans (mul_one _).le)
     _ = abs (μ s).toReal := (Real.norm_eq_abs _)
     _ = (μ s).toReal := abs_eq_self.mpr ENNReal.toReal_nonneg
-    
 #align measure_theory.norm_weighted_smul_le MeasureTheory.norm_weightedSMul_le
 
 theorem dominatedFinMeasAdditive_weightedSMul {m : MeasurableSpace α} (μ : Measure α) :
@@ -364,7 +363,6 @@ theorem integral_const {m : MeasurableSpace α} (μ : Measure α) (y : F) :
     (const α y).integral μ = ∑ z in {y}, (μ (const α y ⁻¹' {z})).toReal • z :=
       integral_eq_sum_of_subset <| (filter_subset _ _).trans (range_const_subset _ _)
     _ = (μ univ).toReal • y := by simp
-    
 #align measure_theory.simple_func.integral_const MeasureTheory.SimpleFunc.integral_const
 
 @[simp]
@@ -456,7 +454,6 @@ theorem norm_setToSimpleFunc_le_integral_norm (T : Set α → E →L[ℝ] F) {C 
       norm_setToSimpleFunc_le_sum_mul_norm_of_integrable T hT_norm f hf
     _ = C * (f.map norm).integral μ := by rw [map_integral f norm hf norm_zero];
       simp_rw [smul_eq_mul]
-    
 #align measure_theory.simple_func.norm_set_to_simple_func_le_integral_norm MeasureTheory.SimpleFunc.norm_setToSimpleFunc_le_integral_norm
 
 theorem norm_integral_le_integral_norm (f : α →ₛ E) (hf : Integrable f μ) :
@@ -772,7 +769,6 @@ theorem norm_integral_le (f : α →₁[μ] E) : ‖integral f‖ ≤ ‖f‖ :=
     _ ≤ ‖Integral‖ * ‖f‖ := (le_op_norm _ _)
     _ ≤ 1 * ‖f‖ := (mul_le_mul_of_nonneg_right norm_Integral_le_one <| norm_nonneg _)
     _ = ‖f‖ := one_mul _
-    
 #align measure_theory.L1.norm_integral_le MeasureTheory.L1.norm_integral_le
 
 @[continuity]
@@ -1104,7 +1100,6 @@ theorem hasSum_integral_of_dominated_convergence {ι} [Countable ι] {F : ι →
     calc
       ‖∑ n in s, F n a‖ ≤ ∑ n in s, bound n a := norm_sum_le_of_le _ fun n hn => hFa n
       _ ≤ ∑' n, bound n a := sum_le_tsum _ (fun n hn => ha0 n) has
-      
 #align measure_theory.has_sum_integral_of_dominated_convergence MeasureTheory.hasSum_integral_of_dominated_convergence
 
 variable {X : Type _} [TopologicalSpace X] [FirstCountableTopology X]
@@ -1422,8 +1417,7 @@ theorem norm_integral_le_integral_norm (f : α → E) : ‖∫ a, f a ∂μ‖ �
       calc
         ‖∫ a, f a ∂μ‖ ≤ ENNReal.toReal (∫⁻ a, ENNReal.ofReal ‖f a‖ ∂μ) :=
           norm_integral_le_lintegral_norm _
-        _ = ∫ a, ‖f a‖ ∂μ := (integral_eq_lintegral_of_nonneg_ae le_ae <| h.norm).symm
-        )
+        _ = ∫ a, ‖f a‖ ∂μ := (integral_eq_lintegral_of_nonneg_ae le_ae <| h.norm).symm)
     fun h : ¬AEStronglyMeasurable f μ =>
     by
     rw [integral_non_ae_strongly_measurable h, norm_zero]
@@ -1435,7 +1429,6 @@ theorem norm_integral_le_of_norm_le {f : α → E} {g : α → ℝ} (hg : Integr
   calc
     ‖∫ x, f x ∂μ‖ ≤ ∫ x, ‖f x‖ ∂μ := norm_integral_le_integral_norm f
     _ ≤ ∫ x, g x ∂μ := integral_mono_of_nonneg (eventually_of_forall fun x => norm_nonneg _) hg h
-    
 #align measure_theory.norm_integral_le_of_norm_le MeasureTheory.norm_integral_le_of_norm_le
 
 theorem SimpleFunc.integral_eq_integral (f : α →ₛ E) (hfi : Integrable f μ) :
@@ -1474,7 +1467,6 @@ theorem norm_integral_le_of_norm_le_const [IsFiniteMeasure μ] {f : α → E} {C
   calc
     ‖∫ x, f x ∂μ‖ ≤ ∫ x, C ∂μ := norm_integral_le_of_norm_le (integrable_const C) h
     _ = C * (μ univ).toReal := by rw [integral_const, smul_eq_mul, mul_comm]
-    
 #align measure_theory.norm_integral_le_of_norm_le_const MeasureTheory.norm_integral_le_of_norm_le_const
 
 #print MeasureTheory.tendsto_integral_approxOn_of_measurable /-
@@ -1671,7 +1663,6 @@ theorem integral_map {β} [MeasurableSpace β] {φ : α → β} (hφ : AEMeasura
       (integral_map_of_stronglyMeasurable hφ.measurable_mk hfm.stronglyMeasurable_mk)
     _ = ∫ x, g (φ x) ∂μ := (integral_congr_ae (hφ.ae_eq_mk.symm.fun_comp _))
     _ = ∫ x, f (φ x) ∂μ := integral_congr_ae <| ae_eq_comp hφ hfm.ae_eq_mk.symm
-    
 #align measure_theory.integral_map MeasureTheory.integral_map
 
 theorem MeasurableEmbedding.integral_map {β} {_ : MeasurableSpace β} {f : α → β}
@@ -1715,7 +1706,6 @@ theorem integral_dirac' [MeasurableSpace α] (f : α → E) (a : α) (hfm : Stro
     (∫ x, f x ∂measure.dirac a) = ∫ x, f a ∂measure.dirac a :=
       integral_congr_ae <| ae_eq_dirac' hfm.measurable
     _ = f a := by simp [measure.dirac_apply_of_mem]
-    
 #align measure_theory.integral_dirac' MeasureTheory.integral_dirac'
 
 @[simp]
@@ -1724,7 +1714,6 @@ theorem integral_dirac [MeasurableSpace α] [MeasurableSingletonClass α] (f : �
   calc
     (∫ x, f x ∂Measure.dirac a) = ∫ x, f a ∂Measure.dirac a := integral_congr_ae <| ae_eq_dirac f
     _ = f a := by simp [measure.dirac_apply_of_mem]
-    
 #align measure_theory.integral_dirac MeasureTheory.integral_dirac
 
 theorem set_integral_dirac' {mα : MeasurableSpace α} {f : α → E} (hf : StronglyMeasurable f) (a : α)

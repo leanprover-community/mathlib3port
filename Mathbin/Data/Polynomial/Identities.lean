@@ -54,7 +54,6 @@ def powAddExpansion {R : Type _} [CommSemiring R] (x y : R) :
       _ = (x + y) * (x ^ (n + 1) + ↑(n + 1) * x ^ (n + 1 - 1) * y + z * y ^ 2) := by rw [hz]
       _ = x ^ (n + 2) + ↑(n + 2) * x ^ (n + 1) * y + (x * z + (n + 1) * x ^ n + z * y) * y ^ 2 := by
         push_cast ; ring!
-      
 #align polynomial.pow_add_expansion Polynomial.powAddExpansion
 
 variable [CommRing R]

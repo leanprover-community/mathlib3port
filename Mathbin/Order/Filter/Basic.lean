@@ -272,7 +272,7 @@ namespace Tactic.Interactive
 open Tactic
 
 /- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
-/- ./././Mathport/Syntax/Translate/Expr.lean:330:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
 /-- `filter_upwards [h₁, ⋯, hₙ]` replaces a goal of the form `s ∈ f` and terms
 `h₁ : t₁ ∈ f, ⋯, hₙ : tₙ ∈ f` with `∀ x, x ∈ t₁ → ⋯ → x ∈ tₙ → x ∈ s`.
 The list is an optional parameter, `[]` being its default value.
@@ -3033,7 +3033,6 @@ protected theorem push_pull (f : α → β) (F : Filter α) (G : Filter β) :
     calc
       map f (F ⊓ comap f G) ≤ map f F ⊓ (map f <| comap f G) := map_inf_le
       _ ≤ map f F ⊓ G := inf_le_inf_left (map f F) map_comap_le
-      
   · rintro U ⟨V, V_in, W, ⟨Z, Z_in, hZ⟩, h⟩
     apply mem_inf_of_inter (image_mem_map V_in) Z_in
     calc
@@ -3041,7 +3040,6 @@ protected theorem push_pull (f : α → β) (F : Filter α) (G : Filter β) :
       _ ⊆ f '' (V ∩ W) := (image_subset _ (inter_subset_inter_right _ ‹_›))
       _ = f '' (f ⁻¹' U) := by rw [h]
       _ ⊆ U := image_preimage_subset f U
-      
 #align filter.push_pull Filter.push_pull
 
 protected theorem push_pull' (f : α → β) (F : Filter α) (G : Filter β) :
@@ -3241,7 +3239,6 @@ theorem mem_bind {s : Set β} {f : Filter α} {m : α → Filter β} :
     s ∈ bind f m ↔ {a | s ∈ m a} ∈ f := Iff.rfl
     _ ↔ ∃ t ∈ f, t ⊆ {a | s ∈ m a} := exists_mem_subset_iff.symm
     _ ↔ ∃ t ∈ f, ∀ x ∈ t, s ∈ m x := Iff.rfl
-    
 #align filter.mem_bind Filter.mem_bind
 
 theorem bind_le {f : Filter α} {g : α → Filter β} {l : Filter β} (h : ∀ᶠ x in f, g x ≤ l) :
@@ -3517,7 +3514,6 @@ theorem Tendsto.of_tendsto_comp {f : α → β} {g : β → γ} {a : Filter α} 
   calc
     a ≤ comap (g ∘ f) c := hfg
     _ ≤ comap f b := by simpa [comap_comap] using comap_mono hg
-    
 #align filter.tendsto.of_tendsto_comp Filter.Tendsto.of_tendsto_comp
 
 #print Filter.comap_eq_of_inverse /-

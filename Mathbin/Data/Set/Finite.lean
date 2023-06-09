@@ -792,11 +792,11 @@ instance finite_image (s : Set α) (f : α → β) [Finite s] : Finite (f '' s) 
 #align finite.set.finite_image Finite.Set.finite_image
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:366:4: unsupported set replacement {(f x) | x : α} -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:372:4: unsupported set replacement {(f x) | x : α} -/
 #print Finite.Set.finite_replacement /-
 instance finite_replacement [Finite α] (f : α → β) :
     Finite
-      "./././Mathport/Syntax/Translate/Expr.lean:366:4: unsupported set replacement {(f x) | x : α}" :=
+      "./././Mathport/Syntax/Translate/Expr.lean:372:4: unsupported set replacement {(f x) | x : α}" :=
   Finite.Set.finite_range f
 #align finite.set.finite_replacement Finite.Set.finite_replacement
 -/
@@ -1468,7 +1468,6 @@ theorem card_image_of_inj_on {s : Set α} [Fintype s] {f : α → β} [Fintype (
       (Finset.card_image_of_injOn fun x hx y hy hxy =>
         H x (mem_to_finset.1 hx) y (mem_to_finset.1 hy) hxy)
     _ = Fintype.card s := (Fintype.card_of_finset' _ fun a => mem_to_finset).symm
-    
 #align set.card_image_of_inj_on Set.card_image_of_inj_on
 -/
 

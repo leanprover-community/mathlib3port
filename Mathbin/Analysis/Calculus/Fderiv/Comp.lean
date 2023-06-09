@@ -85,7 +85,6 @@ example {g : F → G} {g' : F →L[𝕜] G} (hg : HasFDerivAtFilter g g' (f x) (
       (fun x' => g (f x') - g (f x) - g' (f x' - f x)) =o[L] fun x' => f x' - f x :=
         hg.comp_tendsto le_rfl
       _ =O[L] fun x' => x' - x := hf.is_O_sub
-      
   refine' this.triangle _
   calc
     (fun x' : E => g' (f x' - f x) - g'.comp f' (x' - x)) =ᶠ[L] fun x' =>
@@ -93,7 +92,6 @@ example {g : F → G} {g' : F →L[𝕜] G} (hg : HasFDerivAtFilter g g' (f x) (
       eventually_of_forall fun x' => by simp
     _ =O[L] fun x' => f x' - f x - f' (x' - x) := (g'.is_O_comp _ _)
     _ =o[L] fun x' => x' - x := hf
-    
 
 theorem HasFDerivWithinAt.comp {g : F → G} {g' : F →L[𝕜] G} {t : Set F}
     (hg : HasFDerivWithinAt g g' t (f x)) (hf : HasFDerivWithinAt f f' s x) (hst : MapsTo f s t) :

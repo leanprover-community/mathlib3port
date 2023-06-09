@@ -223,7 +223,6 @@ theorem zpow_sub_one (a : G) (n : ℤ) : a ^ (n - 1) = a ^ n * a⁻¹ :=
   calc
     a ^ (n - 1) = a ^ (n - 1) * a * a⁻¹ := (mul_inv_cancel_right _ _).symm
     _ = a ^ n * a⁻¹ := by rw [← zpow_add_one, sub_add_cancel]
-    
 #align zpow_sub_one zpow_sub_one
 #align sub_one_zsmul sub_one_zsmul
 
@@ -342,7 +341,6 @@ theorem zpow_strictMono_right (ha : 1 < a) : StrictMono fun n : ℤ => a ^ n := 
     a ^ m = a ^ m * 1 := (mul_one _).symm
     _ < a ^ m * a ^ (n - m) := (mul_lt_mul_left' (one_lt_zpow' ha <| sub_pos_of_lt h) _)
     _ = a ^ n := by rw [← zpow_add]; simp
-    
 #align zpow_strict_mono_right zpow_strictMono_right
 #align zsmul_strict_mono_left zsmul_strictMono_left
 
@@ -352,7 +350,6 @@ theorem zpow_mono_right (ha : 1 ≤ a) : Monotone fun n : ℤ => a ^ n := fun m 
     a ^ m = a ^ m * 1 := (mul_one _).symm
     _ ≤ a ^ m * a ^ (n - m) := (mul_le_mul_left' (one_le_zpow ha <| sub_nonneg_of_le h) _)
     _ = a ^ n := by rw [← zpow_add]; simp
-    
 #align zpow_mono_right zpow_mono_right
 #align zsmul_mono_left zsmul_mono_left
 
@@ -668,7 +665,6 @@ theorem one_add_mul_le_pow' (Hsq : 0 ≤ a * a) (Hsq' : 0 ≤ (1 + a) * (1 + a))
       _ ≤ (1 + a) * (1 + a) * (1 + a) ^ n :=
         (mul_le_mul_of_nonneg_left (one_add_mul_le_pow' n) Hsq')
       _ = (1 + a) ^ (n + 2) := by simp only [pow_succ, mul_assoc]
-      
 #align one_add_mul_le_pow' one_add_mul_le_pow'
 
 #print pow_le_pow_of_le_one_aux /-

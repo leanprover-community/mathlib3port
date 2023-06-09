@@ -273,6 +273,5 @@ theorem two_nsmul_lie_lmul_lmul_add_add_eq_zero (a b c : A) :
         lie_skew (L (b * b)), ← lie_skew (L (c * c))]
       abel
     _ = 2 • (⁅L a, L (b * c)⁆ + ⁅L b, L (c * a)⁆ + ⁅L c, L (a * b)⁆) := by rw [nsmul_add, nsmul_add]
-    
 #align two_nsmul_lie_lmul_lmul_add_add_eq_zero two_nsmul_lie_lmul_lmul_add_add_eq_zero
 

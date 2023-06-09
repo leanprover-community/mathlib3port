@@ -278,7 +278,6 @@ theorem le_mul_left (h : a ≤ c) : a ≤ b * c :=
   calc
     a = 1 * a := by simp
     _ ≤ b * c := mul_le_mul' (one_le _) h
-    
 #align le_mul_left le_mul_left
 #align le_add_left le_add_left
 
@@ -287,7 +286,6 @@ theorem le_mul_right (h : a ≤ b) : a ≤ b * c :=
   calc
     a = a * 1 := by simp
     _ ≤ b * c := mul_le_mul' h (one_le _)
-    
 #align le_mul_right le_mul_right
 #align le_add_right le_add_right
 

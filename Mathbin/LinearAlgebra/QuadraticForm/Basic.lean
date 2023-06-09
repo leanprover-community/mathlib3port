@@ -834,7 +834,6 @@ theorem toQuadraticForm_associated : (associatedHom S Q).toQuadraticForm = Q :=
         simp only [add_assoc, add_sub_cancel', one_mul, to_quadratic_form_apply, add_mul,
           associated_apply, map_add_self, bit0]
       _ = Q x := by rw [← two_mul (Q x), ← mul_assoc, invOf_mul_self, one_mul]
-      
 #align quadratic_form.to_quadratic_form_associated QuadraticForm.toQuadraticForm_associated
 
 -- note: usually `right_inverse` lemmas are named the other way around, but this is consistent

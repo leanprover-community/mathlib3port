@@ -646,7 +646,6 @@ theorem snorm_indicator_const_le (c : G) (p : ℝ≥0∞) :
     _ = ‖c‖₊ * μ t ^ (1 / p.to_real) :=
       (snorm_indicator_const (measurable_set_to_measurable _ _) hp h'p)
     _ = ‖c‖₊ * μ s ^ (1 / p.to_real) := by rw [measure_to_measurable]
-    
 #align measure_theory.snorm_indicator_const_le MeasureTheory.snorm_indicator_const_le
 
 theorem Memℒp.indicator (hs : MeasurableSet s) (hf : Memℒp f p μ) : Memℒp (s.indicator f) p μ :=

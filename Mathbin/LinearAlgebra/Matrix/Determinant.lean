@@ -190,11 +190,9 @@ theorem det_mul (M N : Matrix n n R) : det (M ⬝ N) = det M * det N :=
               ε σ * ε (τ * σ⁻¹) = ε (τ * σ⁻¹ * σ) := by rw [mul_comm, sign_mul (τ * σ⁻¹)];
                 simp only [Int.cast_mul, Units.val_mul]
               _ = ε τ := by simp only [inv_mul_cancel_right]
-              
           simp_rw [Equiv.coe_mulRight, h]
           simp only [this])
     _ = det M * det N := by simp only [det_apply', Finset.mul_sum, mul_comm, mul_left_comm]
-    
 #align matrix.det_mul Matrix.det_mul
 
 #print Matrix.detMonoidHom /-
@@ -292,7 +290,6 @@ theorem det_smul (A : Matrix n n R) (c : R) : det (c • A) = c ^ Fintype.card n
     det (c • A) = det (Matrix.mul (diagonal fun _ => c) A) := by rw [smul_eq_diagonal_mul]
     _ = det (diagonal fun _ => c) * det A := (det_mul _ _)
     _ = c ^ Fintype.card n * det A := by simp [card_univ]
-    
 #align matrix.det_smul Matrix.det_smul
 
 @[simp]
@@ -319,7 +316,6 @@ theorem det_mul_row (v : n → R) (A : Matrix n n R) :
     det (of fun i j => v j * A i j) = det (A ⬝ diagonal v) :=
       congr_arg det <| by ext; simp [mul_comm]
     _ = (∏ i, v i) * det A := by rw [det_mul, det_diagonal, mul_comm]
-    
 #align matrix.det_mul_row Matrix.det_mul_row
 
 /-- Multiplying each column by a fixed `v j` multiplies the determinant by
@@ -444,7 +440,6 @@ theorem det_eq_of_eq_mul_det_one {A B : Matrix n n R} (C : Matrix n n R) (hC : d
     det A = det (B ⬝ C) := congr_arg _ hA
     _ = det B * det C := (det_mul _ _)
     _ = det B := by rw [hC, mul_one]
-    
 #align matrix.det_eq_of_eq_mul_det_one Matrix.det_eq_of_eq_mul_det_one
 
 theorem det_eq_of_eq_det_one_mul {A B : Matrix n n R} (C : Matrix n n R) (hC : det C = 1)
@@ -453,7 +448,6 @@ theorem det_eq_of_eq_det_one_mul {A B : Matrix n n R} (C : Matrix n n R) (hC : d
     det A = det (C ⬝ B) := congr_arg _ hA
     _ = det C * det B := (det_mul _ _)
     _ = det B := by rw [hC, one_mul]
-    
 #align matrix.det_eq_of_eq_det_one_mul Matrix.det_eq_of_eq_det_one_mul
 
 theorem det_updateRow_add_self (A : Matrix n n R) {i j : n} (hij : i ≠ j) :
@@ -759,7 +753,6 @@ theorem det_succ_column_zero {n : ℕ} (A : Matrix (Fin n.succ) (Fin n.succ) R) 
       by
       simp only [mul_assoc, mul_comm, _root_.neg_mul, one_mul, zsmul_eq_mul, neg_inj, neg_smul,
         Fin.succAbove_cycleRange]
-    
 #align matrix.det_succ_column_zero Matrix.det_succ_column_zero
 -/
 
@@ -786,7 +779,6 @@ theorem det_succ_row {n : ℕ} (A : Matrix (Fin n.succ) (Fin n.succ) R) (i : Fin
     calc
       det A = ↑((-1 : ℤˣ) ^ (i : ℕ) * (-1 : ℤˣ) ^ (i : ℕ) : ℤˣ) * det A := by simp
       _ = (-1 : R) ^ (i : ℕ) * i.cycle_range⁻¹.sign * det A := by simp [-Int.units_mul_self]
-      
   rw [this, mul_assoc]
   congr
   rw [← det_permute, det_succ_row_zero]

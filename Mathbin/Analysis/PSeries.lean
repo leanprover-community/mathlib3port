@@ -341,7 +341,6 @@ theorem sum_Ioo_inv_sq_le (k n : ℕ) : (∑ i in Ioo k n, ((i ^ 2)⁻¹ : α)) 
       refine' div_le_div zero_le_one le_rfl (zero_lt_one.trans_le A) _
       simpa using pow_le_pow A one_le_two
     _ = 2 / (k + 1) := by ring
-    
 #align sum_Ioo_inv_sq_le sum_Ioo_inv_sq_le
 
 end

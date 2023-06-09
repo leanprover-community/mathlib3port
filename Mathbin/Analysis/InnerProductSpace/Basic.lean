@@ -374,7 +374,6 @@ theorem norm_inner_le_norm (x y : F) : ‖⟪x, y⟫‖ ≤ ‖x‖ * ‖y‖ :=
       ‖⟪x, y⟫‖ * ‖⟪x, y⟫‖ = ‖⟪x, y⟫‖ * ‖⟪y, x⟫‖ := by rw [norm_inner_symm]
       _ ≤ re ⟪x, x⟫ * re ⟪y, y⟫ := (inner_mul_inner_self_le x y)
       _ = ‖x‖ * ‖y‖ * (‖x‖ * ‖y‖) := by simp only [inner_self_eq_norm_mul_norm] <;> ring
-      
 #align inner_product_space.core.norm_inner_le_norm InnerProductSpace.Core.norm_inner_le_norm
 
 #print InnerProductSpace.Core.toNormedAddCommGroup /-
@@ -742,7 +741,6 @@ theorem real_inner_mul_inner_self_le (x y : F) : ⟪x, y⟫_ℝ * ⟪x, y⟫_ℝ
     ⟪x, y⟫_ℝ * ⟪x, y⟫_ℝ ≤ ‖⟪x, y⟫_ℝ‖ * ‖⟪y, x⟫_ℝ‖ := by rw [real_inner_comm y, ← norm_mul];
       exact le_abs_self _
     _ ≤ ⟪x, x⟫_ℝ * ⟪y, y⟫_ℝ := @inner_mul_inner_self_le ℝ _ _ _ _ x y
-    
 #align real_inner_mul_inner_self_le real_inner_mul_inner_self_le
 
 /-- A family of vectors is linearly independent if they are nonzero
@@ -1050,7 +1048,6 @@ theorem norm_eq_sqrt_inner (x : E) : ‖x‖ = sqrt (re ⟪x, x⟫) :=
   calc
     ‖x‖ = sqrt (‖x‖ ^ 2) := (sqrt_sq (norm_nonneg _)).symm
     _ = sqrt (re ⟪x, x⟫) := congr_arg _ (norm_sq_eq_inner _)
-    
 #align norm_eq_sqrt_inner norm_eq_sqrt_inner
 
 #print norm_eq_sqrt_real_inner /-
@@ -1239,7 +1236,6 @@ theorem dist_div_norm_sq_smul {x y : F} (hx : x ≠ 0) (hy : y ≠ 0) (R : ℝ) 
       rw [sqrt_mul (sq_nonneg _), sqrt_sq (norm_nonneg _),
         sqrt_sq (div_nonneg (sq_nonneg _) (mul_nonneg (norm_nonneg _) (norm_nonneg _))),
         dist_eq_norm]
-    
 #align dist_div_norm_sq_smul dist_div_norm_sq_smul
 
 #print InnerProductSpace.toUniformConvexSpace /-
@@ -1686,7 +1682,6 @@ theorem norm_inner_eq_norm_iff {x y : E} (hx₀ : x ≠ 0) (hy₀ : y ≠ 0) :
     _ ↔ ∃ r : 𝕜, r ≠ 0 ∧ y = r • x :=
       ⟨fun ⟨r, h⟩ => ⟨r, fun hr₀ => hy₀ <| h.symm ▸ smul_eq_zero.2 <| Or.inl hr₀, h⟩,
         fun ⟨r, hr₀, h⟩ => ⟨r, h⟩⟩
-    
 #align norm_inner_eq_norm_iff norm_inner_eq_norm_iff
 
 /-- The inner product of two vectors, divided by the product of their
@@ -1788,7 +1783,6 @@ theorem inner_lt_norm_mul_iff_real {x y : F} : ⟪x, y⟫_ℝ < ‖x‖ * ‖y�
     ⟪x, y⟫_ℝ < ‖x‖ * ‖y‖ ↔ ⟪x, y⟫_ℝ ≠ ‖x‖ * ‖y‖ :=
       ⟨ne_of_lt, lt_of_le_of_ne (real_inner_le_norm _ _)⟩
     _ ↔ ‖y‖ • x ≠ ‖x‖ • y := not_congr inner_eq_norm_mul_iff_real
-    
 #align inner_lt_norm_mul_iff_real inner_lt_norm_mul_iff_real
 
 /-- If the inner product of two unit vectors is strictly less than `1`, then the two vectors are
@@ -1867,7 +1861,6 @@ theorem innerSL_apply_norm (x : E) : ‖innerSL 𝕜 x‖ = ‖x‖ :=
       ‖x‖ * ‖x‖ = ‖(⟪x, x⟫ : 𝕜)‖ := by
         rw [← sq, inner_self_eq_norm_sq_to_K, norm_pow, norm_of_real, abs_norm]
       _ ≤ ‖innerSL 𝕜 x‖ * ‖x‖ := (innerSL 𝕜 x).le_opNorm _
-      
 #align innerSL_apply_norm innerSL_apply_norm
 
 #print innerSLFlip /-
@@ -1913,7 +1906,6 @@ theorem toSesqForm_apply_norm_le {f : E →L[𝕜] E'} {v : E'} : ‖toSesqForm 
     ‖⟪v, f x⟫‖ ≤ ‖v‖ * ‖f x‖ := h₂
     _ ≤ ‖v‖ * (‖f‖ * ‖x‖) := (mul_le_mul_of_nonneg_left h₁ (norm_nonneg v))
     _ = ‖f‖ * ‖v‖ * ‖x‖ := by ring
-    
 #align continuous_linear_map.to_sesq_form_apply_norm_le ContinuousLinearMap.toSesqForm_apply_norm_le
 
 end ContinuousLinearMap
@@ -2103,7 +2095,6 @@ theorem OrthogonalFamily.inner_right_dfinsupp (l : ⨁ i, G i) (i : ι) (v : G i
       split_ifs with h h
       · simp only [LinearIsometry.inner_map_map]
       · simp only [of_not_not h, inner_zero_right]
-    
 #align orthogonal_family.inner_right_dfinsupp OrthogonalFamily.inner_right_dfinsupp
 
 omit dec_ι dec_V
@@ -2115,7 +2106,6 @@ theorem OrthogonalFamily.inner_right_fintype [Fintype ι] (l : ∀ i, G i) (i : 
     _ = ∑ j, ite (i = j) ⟪V i v, V j (l j)⟫ 0 :=
       (congr_arg (Finset.sum Finset.univ) <| funext fun j => hV.eq_ite v (l j))
     _ = ⟪v, l i⟫ := by simp only [Finset.sum_ite_eq, Finset.mem_univ, (V i).inner_map_map, if_true]
-    
 #align orthogonal_family.inner_right_fintype OrthogonalFamily.inner_right_fintype
 
 theorem OrthogonalFamily.inner_sum (l₁ l₂ : ∀ i, G i) (s : Finset ι) :
@@ -2131,7 +2121,6 @@ theorem OrthogonalFamily.inner_sum (l₁ l₂ : ∀ i, G i) (s : Finset ι) :
     _ = ∑ i in s, ⟪l₁ i, l₂ i⟫ := by
       simp only [Finset.sum_ite_of_true, Finset.sum_ite_eq', LinearIsometry.inner_map_map, imp_self,
         imp_true_iff]
-    
 #align orthogonal_family.inner_sum OrthogonalFamily.inner_sum
 
 theorem OrthogonalFamily.norm_sum (l : ∀ i, G i) (s : Finset ι) :
@@ -2262,7 +2251,6 @@ theorem OrthogonalFamily.independent {V : ι → Submodule 𝕜 E}
       simpa only [Dfinsupp.sumAddHom_apply, Dfinsupp.lsum_apply_apply] using
         (hV.inner_right_dfinsupp v i (v i)).symm
     _ = 0 := by simp only [hv, inner_zero_right]
-    
 #align orthogonal_family.independent OrthogonalFamily.independent
 
 include dec_ι

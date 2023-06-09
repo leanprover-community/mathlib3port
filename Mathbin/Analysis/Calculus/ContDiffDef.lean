@@ -967,7 +967,6 @@ theorem iteratedFDerivWithin_succ_apply_right {n : ℕ} (hs : UniqueDiffOn 𝕜 
           iteratedFDerivWithin 𝕜 (Nat.succ n) (fun y => fderivWithin 𝕜 f s y) s x (init m)
             (m (last (n + 1))) :=
         by rw [iteratedFDerivWithin_succ_apply_left, tail_init_eq_init_tail]; rfl
-      
 #align iterated_fderiv_within_succ_apply_right iteratedFDerivWithin_succ_apply_right
 
 #print iteratedFDerivWithin_succ_eq_comp_right /-

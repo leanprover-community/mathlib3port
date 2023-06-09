@@ -243,7 +243,6 @@ theorem integral_divergence_of_hasFDerivWithinAt_off_countable_aux₂ (I : Box (
         _ ≤ ε / ∏ j, (I.face i).upper j - (I.face i).lower j :=
           hδ _ (I.maps_to_insert_nth_face_Icc hd <| Hsub hx) _
             (I.maps_to_insert_nth_face_Icc (hc _) <| Hsub hx) _
-        
       rw [Fin.dist_insertNth_insertNth, dist_self, dist_comm]
       exact max_le hk.le δpos.lt.le
     _ ≤ ε :=
@@ -254,7 +253,6 @@ theorem integral_divergence_of_hasFDerivWithinAt_off_countable_aux₂ (I : Box (
         div_le_div_of_le_left εpos.le (hvol_pos _) (prod_le_prod (fun j hj => _) fun j hj => _)
       exacts [sub_nonneg.2 (box.lower_le_upper _ _),
         sub_le_sub ((hJ_sub' _ (J _).upper_mem_Icc).2 _) ((hJ_sub' _ (J _).lower_mem_Icc).1 _)]
-    
 #align measure_theory.integral_divergence_of_has_fderiv_within_at_off_countable_aux₂ MeasureTheory.integral_divergence_of_hasFDerivWithinAt_off_countable_aux₂
 
 variable (a b : ℝⁿ⁺¹)
@@ -374,7 +372,6 @@ theorem integral_divergence_of_hasFDerivWithinAt_off_countable_of_equiv {F : Typ
           interior_pi_set finite_univ, interior_Icc] using hx.1
       · rw [← he_vol.integrable_on_comp_preimage he_emb, hIcc]
         simp [← hDF, (· ∘ ·), Hi]
-    
 #align measure_theory.integral_divergence_of_has_fderiv_within_at_off_countable_of_equiv MeasureTheory.integral_divergence_of_hasFDerivWithinAt_off_countable_of_equiv
 
 end
@@ -437,7 +434,6 @@ theorem integral_eq_of_hasDerivWithinAt_off_countable_of_le (f f' : ℝ → E) {
       simp only [Fin.sum_univ_one, e_symm]
       have : ∀ c : ℝ, const (Fin 0) c = isEmptyElim := fun c => Subsingleton.elim _ _
       simp [this, volume_pi, measure.pi_of_empty fun _ : Fin 0 => volume]
-    
 #align measure_theory.integral_eq_of_has_deriv_within_at_off_countable_of_le MeasureTheory.integral_eq_of_hasDerivWithinAt_off_countable_of_le
 
 /-- **Fundamental theorem of calculus, part 2**. This version assumes that `f` is continuous on the
@@ -521,7 +517,6 @@ theorem integral_divergence_prod_Icc_of_hasFDerivWithinAt_off_countable_of_le (f
       simp only [intervalIntegral.integral_of_le hle.1, intervalIntegral.integral_of_le hle.2,
         set_integral_congr_set_ae Ioc_ae_eq_Icc]
       abel
-    
 #align measure_theory.integral_divergence_prod_Icc_of_has_fderiv_within_at_off_countable_of_le MeasureTheory.integral_divergence_prod_Icc_of_hasFDerivWithinAt_off_countable_of_le
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -577,7 +572,6 @@ theorem integral2_divergence_prod_of_hasFDerivWithinAt_off_countable (f g : ℝ 
           integral_divergence_prod_Icc_of_has_fderiv_within_at_off_countable_of_le f g f' g'
             (a₁, a₂) (b₁, b₂) ⟨h₁, h₂⟩ s <;>
         assumption
-    
 #align measure_theory.integral2_divergence_prod_of_has_fderiv_within_at_off_countable MeasureTheory.integral2_divergence_prod_of_hasFDerivWithinAt_off_countable
 
 end MeasureTheory

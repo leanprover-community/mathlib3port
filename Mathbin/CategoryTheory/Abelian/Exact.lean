@@ -202,11 +202,12 @@ theorem exact_cokernel : Exact f (cokernel.π f) := by rw [exact_iff]; tidy
 -/
 
 instance (h : Exact f g) : Mono (cokernel.desc f g h.w) :=
-  suffices h :
-    cokernel.desc f g h.w =
-      (IsColimit.coconePointUniqueUpToIso (colimit.isColimit _) (isColimitImage f g h)).Hom ≫
-        Limits.image.ι g
-    from by rw [h]; apply mono_comp
+  suffices
+    h
+      (cokernel.desc f g h.w =
+        (IsColimit.coconePointUniqueUpToIso (colimit.isColimit _) (isColimitImage f g h)).Hom ≫
+          Limits.image.ι g)
+    by rw [h]; apply mono_comp
   (cancel_epi (cokernel.π f)).1 <| by simp
 
 /-- If `ex : exact f g` and `epi g`, then `cokernel.desc _ _ ex.w` is an isomorphism. -/

@@ -70,7 +70,7 @@ theorem eq_zero_of_sub_eq_zero {α} [AddGroup α] {x y : α} (h : y = 0) (h2 : x
 /-! ### Configuration -/
 
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:330:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
 /-- A configuration object for `linear_combination`.
 
 `normalize` describes whether or not the normalization step should be used.

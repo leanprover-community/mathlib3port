@@ -296,7 +296,6 @@ theorem exists_discrete_support_nonpos (f : BoundedAdditiveMeasure α) :
       f (↑u \ ↑s) ≤ S := le_ciSup B _
       _ = 2 * (S / 2) := by ring
       _ ≤ 2 * f (↑t \ ↑s) := mul_le_mul_of_nonneg_left ht.le (by norm_num)
-      
   choose! F hF using this
   -- iterate the above construction, by adding at each step a set with measure close to maximal in
   -- the complement of already chosen points. This is the set `s n` at step `n`.
@@ -333,7 +332,6 @@ theorem exists_discrete_support_nonpos (f : BoundedAdditiveMeasure α) :
       calc
         ((n + 1 : ℕ) : ℝ) * (ε / 2) = ε / 2 + n * (ε / 2) := by simp only [Nat.cast_succ] <;> ring
         _ ≤ f (↑(s (n + 1 : ℕ)) \ ↑(s n)) + f ↑(s n) := add_le_add (I1 n) IH
-        
   rcases exists_nat_gt (f.C / (ε / 2)) with ⟨n, hn⟩
   have : (n : ℝ) ≤ f.C / (ε / 2) := by rw [le_div_iff (half_pos ε_pos)];
     exact (I2 n).trans (f.le_bound _)
@@ -465,7 +463,6 @@ theorem continuousPart_evalClm_eq_zero [TopologicalSpace α] [DiscreteTopology �
     _ = f (univ \ f.discreteSupport ∩ (s \ {x})) := rfl
     _ = indicator (univ \ f.discreteSupport ∩ (s \ {x})) 1 x := rfl
     _ = 0 := by simp
-    
 #align counterexample.phillips_1940.continuous_part_eval_clm_eq_zero Counterexample.Phillips1940.continuousPart_evalClm_eq_zero
 
 theorem to_functions_to_measure [MeasurableSpace α] (μ : Measure α) [IsFiniteMeasure μ] (s : Set α)

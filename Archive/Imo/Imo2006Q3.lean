@@ -46,7 +46,6 @@ theorem lhs_ineq {x y : ℝ} (hxy : 0 ≤ x * y) :
   calc
     ((x + y) ^ 2) ^ 2 - 16 * x ^ 2 * y ^ 2 = (x - y) ^ 2 * ((x + y) ^ 2 + 4 * (x * y)) := by ring
     _ ≥ 0 := mul_nonneg (sq_nonneg _) <| add_nonneg (sq_nonneg _) <| mul_nonneg zero_lt_four.le hxy
-    
 #align imo2006_q3.lhs_ineq Imo2006Q3.lhs_ineq
 
 theorem four_pow_four_pos : (0 : ℝ) < 4 ^ 4 :=
@@ -62,7 +61,6 @@ theorem mid_ineq {s t : ℝ} : s * t ^ 3 ≤ (3 * t + s) ^ 4 / 4 ^ 4 :=
         _ ≥ 0 :=
           mul_nonneg (sq_nonneg _) <|
             add_nonneg (sq_nonneg _) <| mul_nonneg zero_le_two (sq_nonneg _)
-        
 #align imo2006_q3.mid_ineq Imo2006Q3.mid_ineq
 
 /-- Replacing `x` and `y` with their average decreases the right side. -/
@@ -71,7 +69,6 @@ theorem rhs_ineq {x y : ℝ} : 3 * (x + y) ^ 2 ≤ 2 * (x ^ 2 + y ^ 2 + (x + y) 
     calc
       _ = (x - y) ^ 2 := by ring
       _ ≥ 0 := sq_nonneg _
-      
 #align imo2006_q3.rhs_ineq Imo2006Q3.rhs_ineq
 
 theorem zero_lt_32 : (0 : ℝ) < 32 := by norm_num
@@ -89,7 +86,6 @@ theorem subst_wlog {x y z s : ℝ} (hxy : 0 ≤ x * y) (hxyz : x + y + z = 0) :
         div_le_div_of_le four_pow_four_pos.le <|
           pow_le_pow_of_le_left (add_nonneg (mul_nonneg zero_lt_three.le (sq_nonneg _)) hs)
             (add_le_add_right rhs_ineq _) _
-      
   le_of_pow_le_pow _ (mul_nonneg (sqrt_nonneg _) (sq_nonneg _)) Nat.succ_pos' <|
     calc
       (32 * |x * y * z * s|) ^ 2 = 32 * (2 * s ^ 2 * (16 * x ^ 2 * y ^ 2 * (x + y) ^ 2)) := by
@@ -99,7 +95,6 @@ theorem subst_wlog {x y z s : ℝ} (hxy : 0 ≤ x * y) (hxyz : x + y + z = 0) :
       _ = (sqrt 2 * (x ^ 2 + y ^ 2 + z ^ 2 + s ^ 2) ^ 2) ^ 2 := by
         rw [mul_pow, sq_sqrt zero_le_two, hz, ← pow_mul, ← mul_add, mul_pow, ← mul_comm_div, ←
           mul_assoc, show 32 / 4 ^ 4 * 2 ^ 4 = (2 : ℝ) by norm_num, show 2 * 2 = 4 by rfl]
-      
 #align imo2006_q3.subst_wlog Imo2006Q3.subst_wlog
 
 /-- Proof that `M = 9 * sqrt 2 / 32` works with the substitution. -/
@@ -131,7 +126,6 @@ theorem proof₁ {a b c : ℝ} :
     _ = _ := congr_arg _ <| lhs_identity a b c
     _ ≤ _ := (subst_proof₁ (a - b) (b - c) (c - a) (-(a + b + c)) (by ring))
     _ = _ := by ring
-    
 #align imo2006_q3.proof₁ Imo2006Q3.proof₁
 
 theorem proof₂ (M : ℝ)

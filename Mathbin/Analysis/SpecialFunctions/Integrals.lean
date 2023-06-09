@@ -423,7 +423,6 @@ theorem integral_pow_abs_sub_uIoc : (∫ x in Ι a b, |x - a| ^ n) = |b - a| ^ (
         rw [uIcc_of_le (sub_nonneg.2 hab)] at hx 
         exact hx.1
       _ = |b - a| ^ (n + 1) / (n + 1) := by simp [abs_of_nonneg (sub_nonneg.2 hab)]
-      
   ·
     calc
       (∫ x in Ι a b, |x - a| ^ n) = ∫ x in b..a, |x - a| ^ n := by
@@ -436,7 +435,6 @@ theorem integral_pow_abs_sub_uIoc : (∫ x in Ι a b, |x - a| ^ n) = |b - a| ^ (
         exact hx.2
       _ = |b - a| ^ (n + 1) / (n + 1) := by
         simp [integral_comp_neg fun x => x ^ n, abs_of_neg (sub_neg.2 hab)]
-      
 #align integral_pow_abs_sub_uIoc integral_pow_abs_sub_uIoc
 
 @[simp]
@@ -661,7 +659,6 @@ theorem integral_sin_pow_aux :
     _ = (C + (n + 1) * ∫ x in a..b, sin x ^ n) - (n + 1) * ∫ x in a..b, sin x ^ (n + 2) := by
       rw [integral_sub, mul_sub, add_sub_assoc] <;> apply Continuous.intervalIntegrable <;>
         continuity
-    
   all_goals apply Continuous.intervalIntegrable; continuity
 #align integral_sin_pow_aux integral_sin_pow_aux
 
@@ -748,7 +745,6 @@ theorem integral_cos_pow_aux :
     _ = (C + (n + 1) * ∫ x in a..b, cos x ^ n) - (n + 1) * ∫ x in a..b, cos x ^ (n + 2) := by
       rw [integral_sub, mul_sub, add_sub_assoc] <;> apply Continuous.intervalIntegrable <;>
         continuity
-    
   all_goals apply Continuous.intervalIntegrable; continuity
 #align integral_cos_pow_aux integral_cos_pow_aux
 
@@ -782,7 +778,6 @@ theorem integral_sin_pow_mul_cos_pow_odd (m n : ℕ) :
       by simp only [pow_succ', ← mul_assoc, pow_mul, cos_sq']
     _ = ∫ u in sin a..sin b, u ^ m * (1 - u ^ 2) ^ n :=
       integral_comp_mul_deriv (fun x hx => hasDerivAt_sin x) continuousOn_cos hc
-    
 #align integral_sin_pow_mul_cos_pow_odd integral_sin_pow_mul_cos_pow_odd
 
 /-- The integral of `sin x * cos x`, given in terms of sin².
@@ -816,7 +811,6 @@ theorem integral_sin_pow_odd_mul_cos_pow (m n : ℕ) :
     _ = ∫ x in b..a, cos x ^ n * (1 - cos x ^ 2) ^ m * -sin x := by congr; ext; ring
     _ = ∫ u in cos b..cos a, u ^ n * (1 - u ^ 2) ^ m :=
       integral_comp_mul_deriv (fun x hx => hasDerivAt_cos x) continuousOn_sin.neg hc
-    
 #align integral_sin_pow_odd_mul_cos_pow integral_sin_pow_odd_mul_cos_pow
 
 /-- The integral of `sin x * cos x`, given in terms of cos².

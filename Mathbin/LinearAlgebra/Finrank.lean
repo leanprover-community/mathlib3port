@@ -355,7 +355,6 @@ theorem finrank_span_finset_le_card (s : Finset V) : (s : Set V).finrank K ≤ s
   calc
     (s : Set V).finrank K ≤ (s : Set V).toFinset.card := finrank_span_le_card s
     _ = s.card := by simp
-    
 #align finrank_span_finset_le_card finrank_span_finset_le_card
 -/
 
@@ -435,7 +434,6 @@ theorem linearIndependent_of_top_le_span_of_card_eq_finrank {ι : Type _} [Finty
         _ = (finset.univ.erase i).card := (congr_arg Finset.card (Finset.ext (by simp [and_comm'])))
         _ < finset.univ.card := (Finset.card_erase_lt_of_mem (Finset.mem_univ i))
         _ = finrank K V := card_eq
-        
     -- We already have that `b '' univ` spans the whole space,
     -- so we only need to show that the span of `b '' (univ \ {i})` contains each `b j`.
     refine' spans.trans (span_le.mpr _)
@@ -461,7 +459,6 @@ theorem linearIndependent_of_top_le_span_of_card_eq_finrank {ι : Type _} [Finty
         by rw [smul_add, ← mul_smul, inv_mul_cancel gx_ne_zero, one_smul]
       _ = (g i)⁻¹ • 0 := (congr_arg _ _)
       _ = 0 := smul_zero _
-      
     -- And then it's just a bit of manipulation with finite sums.
     rwa [← Finset.insert_erase i_mem_s, Finset.sum_insert (Finset.not_mem_erase _ _)] at dependent 
 #align linear_independent_of_top_le_span_of_card_eq_finrank linearIndependent_of_top_le_span_of_card_eq_finrank

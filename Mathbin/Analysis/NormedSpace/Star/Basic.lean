@@ -130,12 +130,10 @@ instance (priority := 100) to_normedStarGroup : NormedStarGroup E :=
         calc
           ‖x‖ * ‖x‖ = ‖x⋆ * x‖ := norm_star_mul_self.symm
           _ ≤ ‖x⋆‖ * ‖x‖ := norm_mul_le _ _
-          
       have h₂ :=
         calc
           ‖x⋆‖ * ‖x⋆‖ = ‖x * x⋆‖ := by rw [← norm_star_mul_self, star_star]
           _ ≤ ‖x‖ * ‖x⋆‖ := norm_mul_le _ _
-          
       exact le_antisymm (le_of_mul_le_mul_right h₂ hnt_star) (le_of_mul_le_mul_right h₁ hnt)⟩
 #align cstar_ring.to_normed_star_group CstarRing.to_normedStarGroup
 -/
@@ -261,13 +259,11 @@ theorem norm_coe_unitary_mul (U : unitary E) (A : E) : ‖(U : E) * A‖ = ‖A�
     calc
       _ ≤ ‖(U : E)‖ * ‖A‖ := norm_mul_le _ _
       _ = ‖A‖ := by rw [norm_coe_unitary, one_mul]
-      
   ·
     calc
       _ = ‖(U : E)⋆ * U * A‖ := by rw [unitary.coe_star_mul_self U, one_mul]
       _ ≤ ‖(U : E)⋆‖ * ‖(U : E) * A‖ := by rw [mul_assoc]; exact norm_mul_le _ _
       _ = ‖(U : E) * A‖ := by rw [norm_star, norm_coe_unitary, one_mul]
-      
 #align cstar_ring.norm_coe_unitary_mul CstarRing.norm_coe_unitary_mul
 
 @[simp]
@@ -286,7 +282,6 @@ theorem norm_mul_coe_unitary (A : E) (U : unitary E) : ‖A * U‖ = ‖A‖ :=
     _ = ‖(U : E)⋆ * A⋆‖ := by rw [norm_star]
     _ = ‖A⋆‖ := (norm_mem_unitary_mul (star A) (unitary.star_mem U.Prop))
     _ = ‖A‖ := norm_star _
-    
 #align cstar_ring.norm_mul_coe_unitary CstarRing.norm_mul_coe_unitary
 
 theorem norm_mul_mem_unitary (A : E) {U : E} (hU : U ∈ unitary E) : ‖A * U‖ = ‖A‖ :=

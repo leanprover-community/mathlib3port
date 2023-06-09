@@ -280,7 +280,6 @@ theorem isSheafOpensLeCover_iff_isSheafPairwiseIntersections :
           (IsLimit.equivIsoLimit (Functor.mapConePostcomposeEquivalenceFunctor _).symm)
         _ ≃ IsLimit (F.mapCone (Pairwise.cocone U).op) :=
           IsLimit.equivIsoLimit ((Cones.functoriality _ _).mapIso (pairwiseCoconeIso U : _).symm)
-        
 #align Top.presheaf.is_sheaf_opens_le_cover_iff_is_sheaf_pairwise_intersections TopCat.Presheaf.isSheafOpensLeCover_iff_isSheafPairwiseIntersections
 -/
 

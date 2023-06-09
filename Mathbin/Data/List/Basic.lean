@@ -2323,7 +2323,6 @@ theorem get_reverse_aux₂ :
       calc
         length (a :: l) - 1 - (i + 1) = length l - (1 + i) := by rw [add_comm] <;> rfl
         _ = length l - 1 - i := by rw [← tsub_add_eq_tsub_tsub]
-        
     rw [← HEq] at aux 
     apply aux
 #align list.nth_le_reverse_aux2 List.get_reverse_aux₂
@@ -3249,7 +3248,6 @@ theorem drop_length (l : List α) : l.drop l.length = [] :=
   calc
     l.drop l.length = (l ++ []).drop l.length := by simp
     _ = [] := drop_left _ _
-    
 #align list.drop_length List.drop_length
 -/
 
@@ -3343,7 +3341,6 @@ theorem drop_drop (n : ℕ) : ∀ (m) (l : List α), drop n (drop m l) = drop (n
       drop n (drop (m + 1) (a :: l)) = drop n (drop m l) := rfl
       _ = drop (n + m) l := (drop_drop m l)
       _ = drop (n + (m + 1)) (a :: l) := rfl
-      
 #align list.drop_drop List.drop_drop
 -/
 
@@ -3928,7 +3925,6 @@ theorem foldl_assoc : ∀ {l : List α} {a₁ a₂}, (l <*> a₁ * a₂) = a₁ 
     calc
       ((a :: l) <*> a₁ * a₂) = l <*> a₁ * a₂ * a := by simp only [foldl_cons, ha.assoc]
       _ = a₁ * (a :: l) <*> a₂ := by rw [foldl_assoc, foldl_cons]
-      
 #align list.foldl_assoc List.foldl_assoc
 -/
 
@@ -5346,7 +5342,6 @@ theorem diff_sublist : ∀ l₁ l₂ : List α, l₁.diffₓ l₂ <+ l₁
       l₁.diffₓ (a :: l₂) = (l₁.eraseₓ a).diffₓ l₂ := diff_cons _ _ _
       _ <+ l₁.eraseₓ a := (diff_sublist _ _)
       _ <+ l₁ := List.erase_sublist _ _
-      
 #align list.diff_sublist List.diff_sublist
 
 theorem diff_subset (l₁ l₂ : List α) : l₁.diffₓ l₂ ⊆ l₁ :=
@@ -6053,7 +6048,6 @@ theorem nthLe_attach (L : List α) (i) (H : i < L.attach.length) :
     (L.attach.nthLe i H).1 = (L.attach.map Subtype.val).nthLe i (by simpa using H) := by
       rw [nth_le_map']
     _ = L.nthLe i _ := by congr <;> apply attach_map_val
-    
 #align list.nth_le_attach List.nthLe_attach
 -/
 

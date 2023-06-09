@@ -245,7 +245,6 @@ theorem mul_slash_SL2 (k1 k2 : ℤ) (A : SL(2, ℤ)) (f g : ℍ → ℂ) :
     (f * g) ∣[k1 + k2] (A : GL(2, ℝ)⁺) = _ • f ∣[k1] A * g ∣[k2] A := mul_slash _ _ _ _ _
     _ = (1 : ℝ) • f ∣[k1] A * g ∣[k2] A := by simp [-Matrix.SpecialLinearGroup.coe_matrix_coe]
     _ = f ∣[k1] A * g ∣[k2] A := by simp
-    
 #align modular_form.mul_slash_SL2 ModularForm.mul_slash_SL2
 
 theorem mul_slash_subgroup (k1 k2 : ℤ) (Γ : Subgroup SL(2, ℤ)) (A : Γ) (f g : ℍ → ℂ) :

@@ -88,7 +88,6 @@ theorem map_smul (c : 𝕜) (x : V) : e (c • x) = ‖c‖₊ * e x :=
       (‖c‖₊ : ℝ≥0∞) * e x = ‖c‖₊ * e (c⁻¹ • c • x) := by rw [inv_smul_smul₀ hc]
       _ ≤ ‖c‖₊ * (‖c⁻¹‖₊ * e (c • x)) := _
       _ = e (c • x) := _
-      
     · exact mul_le_mul_left' (e.map_smul_le' _ _) _
     ·
       rw [← mul_assoc, nnnorm_inv, ENNReal.coe_inv, ENNReal.mul_inv_cancel _ ENNReal.coe_ne_top,
@@ -110,7 +109,6 @@ theorem map_neg (x : V) : e (-x) = e x :=
   calc
     e (-x) = ‖(-1 : 𝕜)‖₊ * e x := by rw [← map_smul, neg_one_smul]
     _ = e x := by simp
-    
 #align enorm.map_neg ENorm.map_neg
 
 theorem map_sub_rev (x y : V) : e (x - y) = e (y - x) := by rw [← neg_sub, e.map_neg]
@@ -125,7 +123,6 @@ theorem map_sub_le (x y : V) : e (x - y) ≤ e x + e y :=
     e (x - y) = e (x + -y) := by rw [sub_eq_add_neg]
     _ ≤ e x + e (-y) := (e.map_add_le x (-y))
     _ = e x + e y := by rw [e.map_neg]
-    
 #align enorm.map_sub_le ENorm.map_sub_le
 
 instance : PartialOrder (ENorm 𝕜 V)
@@ -201,7 +198,6 @@ def emetricSpace : EMetricSpace V where
     calc
       e (x - z) = e (x - y + (y - z)) := by rw [sub_add_sub_cancel]
       _ ≤ e (x - y) + e (y - z) := e.map_add_le (x - y) (y - z)
-      
 #align enorm.emetric_space ENorm.emetricSpace
 -/
 
@@ -215,7 +211,6 @@ def finiteSubspace : Subspace 𝕜 V where
     calc
       e (c • x) = ‖c‖₊ * e x := e.map_smul c x
       _ < ⊤ := ENNReal.mul_lt_top ENNReal.coe_ne_top hx.Ne
-      
 #align enorm.finite_subspace ENorm.finiteSubspace
 -/
 

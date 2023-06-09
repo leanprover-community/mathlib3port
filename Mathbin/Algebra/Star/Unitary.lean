@@ -45,13 +45,11 @@ def unitary (R : Type _) [Monoid R] [StarSemigroup R] : Submonoid R
         star (U * B) * (U * B) = star B * star U * U * B := by simp only [mul_assoc, star_mul]
         _ = star B * (star U * U) * B := by rw [← mul_assoc]
         _ = 1 := by rw [hA₁, mul_one, hB₁]
-        
     ·
       calc
         U * B * star (U * B) = U * B * (star B * star U) := by rw [star_mul]
         _ = U * (B * star B) * star U := by simp_rw [← mul_assoc]
         _ = 1 := by rw [hB₂, mul_one, hA₂]
-        
 #align unitary unitary
 -/
 

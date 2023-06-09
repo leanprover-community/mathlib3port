@@ -214,13 +214,11 @@ instance : T5Space ℝₗ :=
       min (X x) (Y y) ≤ X x := min_le_left _ _
       _ ≤ y := (not_lt.1 fun hyx => (hXd x hx).le_bot ⟨⟨hle, hyx⟩, subset_closure hy⟩)
       _ ≤ max x y := le_max_right _ _
-      
   ·
     calc
       min (X x) (Y y) ≤ Y y := min_le_right _ _
       _ ≤ x := (not_lt.1 fun hxy => (hYd y hy).le_bot ⟨⟨hle, hxy⟩, subset_closure hx⟩)
       _ ≤ max x y := le_max_left _ _
-      
 
 theorem denseRange_coe_rat : DenseRange (coe : ℚ → ℝₗ) :=
   by

@@ -171,7 +171,6 @@ theorem card_le_of_separated (s : Finset E) (hs : ∀ c ∈ s, ‖c‖ ≤ 2)
     calc
       δ + dist x 0 ≤ δ + 2 := by rw [dist_zero_right]; exact add_le_add le_rfl (hs x hx)
       _ = 5 / 2 := by norm_num [δ]
-      
   have I :
     (s.card : ℝ≥0∞) * ENNReal.ofReal (δ ^ finrank ℝ E) * μ (ball 0 1) ≤
       ENNReal.ofReal (ρ ^ finrank ℝ E) * μ (ball 0 1) :=
@@ -185,7 +184,6 @@ theorem card_le_of_separated (s : Finset E) (hs : ∀ c ∈ s, ‖c‖ ≤ 2)
       _ ≤ μ (ball (0 : E) ρ) := (measure_mono A_subset)
       _ = ENNReal.ofReal (ρ ^ finrank ℝ E) * μ (ball 0 1) := by
         simp only [μ.add_haar_ball_of_pos _ ρpos]
-      
   have J : (s.card : ℝ≥0∞) * ENNReal.ofReal (δ ^ finrank ℝ E) ≤ ENNReal.ofReal (ρ ^ finrank ℝ E) :=
     (ENNReal.mul_le_mul_right (measure_ball_pos _ _ zero_lt_one).ne' measure_ball_lt_top.ne).1 I
   have K : (s.card : ℝ) ≤ (5 : ℝ) ^ finrank ℝ E := by
@@ -400,7 +398,6 @@ theorem exists_normalized_aux1 {N : ℕ} {τ : ℝ} (a : SatelliteConfig E N τ)
       (1 - δ / 4) * τ ≤ (1 - δ / 4) * (1 + δ / 4) := mul_le_mul_of_nonneg_left hδ1 D
       _ = 1 - δ ^ 2 / 16 := by ring
       _ ≤ 1 := by linarith only [sq_nonneg δ]
-      
   have J : 1 - δ ≤ 1 - δ / 4 := by linarith only [δnonneg]
   have K : 1 - δ / 4 ≤ τ⁻¹ := by rw [inv_eq_one_div, le_div_iff τpos]; exact I
   suffices L : τ⁻¹ ≤ ‖a.c i - a.c j‖; · linarith only [J, K, L]
@@ -444,7 +441,6 @@ theorem exists_normalized_aux2 {N : ℕ} {τ : ℝ} (a : SatelliteConfig E N τ)
       (1 - δ / 4) * τ ≤ (1 - δ / 4) * (1 + δ / 4) := mul_le_mul_of_nonneg_left hδ1 D
       _ = 1 - δ ^ 2 / 16 := by ring
       _ ≤ 1 := by linarith only [sq_nonneg δ]
-      
   have A : a.r j - δ ≤ ‖a.c i - a.c j‖ :=
     by
     rcases ah j i inej.symm with (H | H); · rw [norm_sub_rev]; linarith [H.1]
@@ -454,7 +450,6 @@ theorem exists_normalized_aux2 {N : ℕ} {τ : ℝ} (a : SatelliteConfig E N τ)
         _ ≤ τ * 2 := (mul_le_mul_of_nonneg_left I τpos.le)
         _ ≤ 5 / 4 * 2 := (mul_le_mul_of_nonneg_right (by linarith only [hδ1, hδ2]) zero_le_two)
         _ ≤ 4 := by norm_num
-        
     calc
       a.r j - δ ≤ a.r j - a.r j / 4 * δ :=
         by
@@ -465,7 +460,6 @@ theorem exists_normalized_aux2 {N : ℕ} {τ : ℝ} (a : SatelliteConfig E N τ)
       _ ≤ (1 - δ / 4) * (τ * a.r i) := (mul_le_mul_of_nonneg_left H.2 D)
       _ ≤ 1 * a.r i := by rw [← mul_assoc]; apply mul_le_mul_of_nonneg_right J (a.rpos _).le
       _ ≤ ‖a.c i - a.c j‖ := by rw [one_mul]; exact H.1
-      
   set d := (2 / ‖a.c j‖) • a.c j with hd
   have : a.r j - δ ≤ ‖a.c i - d‖ + (a.r j - 1) :=
     calc
@@ -478,7 +472,6 @@ theorem exists_normalized_aux2 {N : ℕ} {τ : ℝ} (a : SatelliteConfig E N τ)
           abs_of_nonneg A, sub_mul]
         field_simp [(zero_le_two.trans_lt hj).ne']
         linarith only [hcrj]
-      
   linarith only [this]
 #align besicovitch.satellite_config.exists_normalized_aux2 Besicovitch.SatelliteConfig.exists_normalized_aux2
 
@@ -518,7 +511,6 @@ theorem exists_normalized_aux3 {N : ℕ} {τ : ℝ} (a : SatelliteConfig E N τ)
         rw [add_left_inj, hd, ← sub_smul, norm_smul, Real.norm_eq_abs, abs_of_nonneg, sub_mul,
           one_mul, div_mul_cancel _ (zero_le_two.trans_lt hj).ne']
         rwa [sub_nonneg, div_le_iff (zero_lt_two.trans hj), one_mul]
-      
   have J : a.r j - ‖a.c j - a.c i‖ ≤ s / 2 * δ :=
     calc
       a.r j - ‖a.c j - a.c i‖ ≤ s * (τ - 1) :=
@@ -528,16 +520,13 @@ theorem exists_normalized_aux3 {N : ℕ} {τ : ℝ} (a : SatelliteConfig E N τ)
           calc
             a.r j - ‖a.c j - a.c i‖ ≤ 0 := sub_nonpos.2 H.1
             _ ≤ s * (τ - 1) := mul_nonneg spos.le (sub_nonneg.2 hτ)
-            
         · rw [norm_sub_rev] at H 
           calc
             a.r j - ‖a.c j - a.c i‖ ≤ τ * a.r i - a.r i := sub_le_sub H.2 H.1
             _ = a.r i * (τ - 1) := by ring
             _ ≤ s * (τ - 1) := mul_le_mul_of_nonneg_right A (sub_nonneg.2 hτ)
-            
       _ ≤ s * (δ / 2) := (mul_le_mul_of_nonneg_left (by linarith only [δnonneg, hδ1]) spos.le)
       _ = s / 2 * δ := by ring
-      
   have invs_nonneg : 0 ≤ 2 / s := div_nonneg zero_le_two (zero_le_two.trans hi.le)
   calc
     1 - δ = 2 / s * (s / 2 - s / 2 * δ) := by field_simp [spos.ne']; ring
@@ -549,7 +538,6 @@ theorem exists_normalized_aux3 {N : ℕ} {τ : ℝ} (a : SatelliteConfig E N τ)
       rw [← Real.norm_eq_abs, ← norm_smul, smul_sub, hd, smul_smul]
       congr 3
       field_simp [spos.ne']
-    
 #align besicovitch.satellite_config.exists_normalized_aux3 Besicovitch.SatelliteConfig.exists_normalized_aux3
 
 theorem exists_normalized {N : ℕ} {τ : ℝ} (a : SatelliteConfig E N τ) (lastc : a.c (last N) = 0)

@@ -301,7 +301,6 @@ theorem le_succ_of_forall_lt_le {x y : s} (h : ∀ z < x, z ≤ y) : x ≤ succ 
         calc
           ↑y ≤ ↑y + Nat.find hx := le_add_of_nonneg_right (Nat.zero_le _)
           _ < ↑y + Nat.find hx + 1 := Nat.lt_succ_self _
-          
 #align nat.subtype.le_succ_of_forall_lt_le Nat.Subtype.le_succ_of_forall_lt_le
 -/
 
@@ -310,7 +309,6 @@ theorem lt_succ_self (x : s) : x < succ x :=
   calc
     (x : ℕ) ≤ x + _ := le_self_add
     _ < succ x := Nat.lt_succ_self (x + _)
-    
 #align nat.subtype.lt_succ_self Nat.Subtype.lt_succ_self
 -/
 

@@ -780,7 +780,6 @@ theorem add_overlap_pf {ps qs pq} (p : α) : ps + qs = pq → p * ps + p * qs = 
   calc
     p * ps + p * qs = p * (ps + qs) := symm (mul_add _ _ _)
     _ = p * pq := by rw [pq_pf]
-    
 #align tactic.ring_exp.add_overlap_pf Tactic.RingExp.add_overlap_pf
 
 theorem add_overlap_pf_zero {ps qs} (p : α) : ps + qs = 0 → p * ps + p * qs = 0 := fun pq_pf =>
@@ -788,7 +787,6 @@ theorem add_overlap_pf_zero {ps qs} (p : α) : ps + qs = 0 → p * ps + p * qs =
     p * ps + p * qs = p * (ps + qs) := symm (mul_add _ _ _)
     _ = p * 0 := by rw [pq_pf]
     _ = 0 := MulZeroClass.mul_zero _
-    
 #align tactic.ring_exp.add_overlap_pf_zero Tactic.RingExp.add_overlap_pf_zero
 
 /-- Given arguments `ps`, `qs` of the form `ps' * x` and `ps' * y` respectively
@@ -828,14 +826,12 @@ theorem add_pf_z_sum {ps qs qs' : α} : ps = 0 → qs = qs' → ps + qs = qs' :=
   calc
     ps + qs = 0 + qs' := by rw [ps_pf, qs_pf]
     _ = qs' := zero_add _
-    
 #align tactic.ring_exp.add_pf_z_sum Tactic.RingExp.add_pf_z_sum
 
 theorem add_pf_sum_z {ps ps' qs : α} : ps = ps' → qs = 0 → ps + qs = ps' := fun ps_pf qs_pf =>
   calc
     ps + qs = ps' + 0 := by rw [ps_pf, qs_pf]
     _ = ps' := add_zero _
-    
 #align tactic.ring_exp.add_pf_sum_z Tactic.RingExp.add_pf_sum_z
 
 theorem add_pf_sum_overlap {pps p ps qqs q qs pq pqs : α} :
@@ -850,7 +846,6 @@ theorem add_pf_sum_overlap_zero {pps p ps qqs q qs pqs : α} :
     _ = p + q + (ps + qs) := by cc
     _ = 0 + pqs := by rw [pq_pf, pqs_pf]
     _ = pqs := zero_add _
-    
 #align tactic.ring_exp.add_pf_sum_overlap_zero Tactic.RingExp.add_pf_sum_overlap_zero
 
 theorem add_pf_sum_lt {pps p ps qqs pqs : α} :
@@ -1005,7 +1000,6 @@ theorem mul_p_pf_sum {pps p ps qs ppsqs : α} :
     pps * qs = (p + ps) * qs := by rw [pps_pf]
     _ = p * qs + ps * qs := (add_mul _ _ _)
     _ = ppsqs := ppsqs_pf
-    
 #align tactic.ring_exp.mul_p_pf_sum Tactic.RingExp.mul_p_pf_sum
 
 /-- Multiply two expressions.
@@ -1042,7 +1036,6 @@ theorem mul_pf_sum {ps qqs q qs psqqs : α} :
     ps * qqs = ps * (q + qs) := by rw [qs_pf]
     _ = ps * q + ps * qs := (mul_add _ _ _)
     _ = psqqs := psqqs_pf
-    
 #align tactic.ring_exp.mul_pf_sum Tactic.RingExp.mul_pf_sum
 
 /-- Multiply two expressions.
@@ -1077,7 +1070,6 @@ theorem pow_e_pf_exp {pps p : α} {ps qs psqs : ℕ} :
     pps ^ qs = (p ^ ps) ^ qs := by rw [pps_pf]
     _ = p ^ (ps * qs) := (symm (pow_mul _ _ _))
     _ = p ^ psqs := by rw [psqs_pf]
-    
 #align tactic.ring_exp.pow_e_pf_exp Tactic.RingExp.pow_e_pf_exp
 
 /-- Compute the exponentiation of two coefficients.
@@ -1127,7 +1119,6 @@ theorem pow_pp_pf_prod {pps p ps pqs psqs : α} {qs : ℕ} :
     pps ^ qs = (p * ps) ^ qs := by rw [pps_pf]
     _ = p ^ qs * ps ^ qs := (mul_pow _ _ _)
     _ = pqs * psqs := by rw [pqs_pf, psqs_pf]
-    
 #align tactic.ring_exp.pow_pp_pf_prod Tactic.RingExp.pow_pp_pf_prod
 
 /-- Exponentiate two expressions.
@@ -1174,7 +1165,6 @@ theorem pow_p_pf_one {ps ps' : α} {qs : ℕ} : ps = ps' → qs = succ zero → 
   calc
     ps ^ qs = ps' ^ 1 := by rw [ps_pf, qs_pf]
     _ = ps' := pow_one _
-    
 #align tactic.ring_exp.pow_p_pf_one Tactic.RingExp.pow_p_pf_one
 
 theorem pow_p_pf_zero {ps : α} {qs qs' : ℕ} : ps = 0 → qs = succ qs' → ps ^ qs = 0 :=
@@ -1182,7 +1172,6 @@ theorem pow_p_pf_zero {ps : α} {qs qs' : ℕ} : ps = 0 → qs = succ qs' → ps
   calc
     ps ^ qs = 0 ^ succ qs' := by rw [ps_pf, qs_pf]
     _ = 0 := zero_pow (succ_pos qs')
-    
 #align tactic.ring_exp.pow_p_pf_zero Tactic.RingExp.pow_p_pf_zero
 
 theorem pow_p_pf_succ {ps pqqs : α} {qs qs' : ℕ} :
@@ -1191,7 +1180,6 @@ theorem pow_p_pf_succ {ps pqqs : α} {qs qs' : ℕ} :
     ps ^ qs = ps ^ succ qs' := by rw [qs_pf]
     _ = ps * ps ^ qs' := (pow_succ _ _)
     _ = pqqs := by rw [pqqs_pf]
-    
 #align tactic.ring_exp.pow_p_pf_succ Tactic.RingExp.pow_p_pf_succ
 
 theorem pow_p_pf_singleton {pps p pqs : α} {qs : ℕ} : pps = p + 0 → p ^ qs = pqs → pps ^ qs = pqs :=
@@ -1252,7 +1240,6 @@ theorem pow_pf_zero {ps : α} {qs : ℕ} : qs = 0 → ps ^ qs = 1 := fun qs_pf =
   calc
     ps ^ qs = ps ^ 0 := by rw [qs_pf]
     _ = 1 := pow_zero _
-    
 #align tactic.ring_exp.pow_pf_zero Tactic.RingExp.pow_pf_zero
 
 theorem pow_pf_sum {ps psqqs : α} {qqs q qs : ℕ} :
@@ -1261,7 +1248,6 @@ theorem pow_pf_sum {ps psqqs : α} {qqs q qs : ℕ} :
     ps ^ qqs = ps ^ (q + qs) := by rw [qqs_pf]
     _ = ps ^ q * ps ^ qs := (pow_add _ _ _)
     _ = psqqs := psqqs_pf
-    
 #align tactic.ring_exp.pow_pf_sum Tactic.RingExp.pow_pf_sum
 
 /-- Exponentiate two expressions.

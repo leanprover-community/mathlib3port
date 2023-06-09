@@ -689,7 +689,6 @@ protected theorem Associated.irreducible [Monoid α] {p q : α} (h : p ~ᵤ q) (
       calc
         p = p * u * (u⁻¹ : αˣ) := by simp
         _ = _ := by rw [hu] <;> simp [hab, mul_assoc]
-        
     (hp.isUnit_or_isUnit hpab).elim Or.inl fun ⟨v, hv⟩ => Or.inr ⟨v * u, by simp [hv]⟩⟩
 #align associated.irreducible Associated.irreducible
 -/
@@ -962,7 +961,6 @@ theorem isUnit_mk {a : α} : IsUnit (Associates.mk a) ↔ IsUnit a :=
     IsUnit (Associates.mk a) ↔ a ~ᵤ 1 := by
       rw [is_unit_iff_eq_one, one_eq_mk_one, mk_eq_mk_iff_associated]
     _ ↔ IsUnit a := associated_one_iff_isUnit
-    
 #align associates.is_unit_mk Associates.isUnit_mk
 
 section Order
@@ -997,8 +995,7 @@ theorem dvd_of_mk_le_mk {a b : α} : Associates.mk a ≤ Associates.mk b → a �
         ⟨↑d * c,
           calc
             b = a * c * ↑d := hd.symm
-            _ = a * (↑d * c) := by ac_rfl
-            ⟩)
+            _ = a * (↑d * c) := by ac_rfl⟩)
       hc'
 #align associates.dvd_of_mk_le_mk Associates.dvd_of_mk_le_mk
 

@@ -177,7 +177,6 @@ theorem borel_le_caratheodory (hm : IsMetric μ) : borel X ≤ μ.caratheodory :
       μ (s ∩ t) + μ (S n) = μ (s ∩ t ∪ S n) := Eq.symm <| hm _ _ <| (Ssep' n).symm
       _ ≤ μ (s ∩ t ∪ s \ t) := by mono*; exact le_rfl
       _ = μ s := by rw [inter_union_diff]
-      
   have Union_S : (⋃ n, S n) = s \ t :=
     by
     refine' subset.antisymm (Union_subset S_sub) _
@@ -197,7 +196,6 @@ theorem borel_le_caratheodory (hm : IsMetric μ) : borel X ≤ μ.caratheodory :
     _ ≤ μ (s ∩ t) + ⨆ n, μ (S n) := (add_le_add le_rfl this)
     _ = ⨆ n, μ (s ∩ t) + μ (S n) := ENNReal.add_iSup
     _ ≤ μ s := iSup_le hSs
-    
   /- It suffices to show that `∑' k, μ (S (k + 1) \ S k) ≠ ∞`. Indeed, if we have this,
     then for all `N` we have `μ (⋃ n, S n) ≤ μ (S N) + ∑' k, m (S (N + k + 1) \ S (N + k))`
     and the second term tends to zero, see `outer_measure.Union_nat_of_monotone_of_tsum_ne_top`
@@ -582,7 +580,6 @@ theorem mkMetric_le_liminf_tsum {β : Type _} {ι : β → Type _} [∀ n, Count
         tsum_iUnion_decode₂ (fun t : Set X => ⨆ h : t.Nonempty, m (diam t)) (by simp) _
       _ ≤ ∑' i : ι n, m (diam (t n i)) := (ENNReal.tsum_le_tsum fun b => iSup_le fun htb => le_rfl)
       _ ≤ c := hn.le
-      
 #align measure_theory.measure.mk_metric_le_liminf_tsum MeasureTheory.Measure.mkMetric_le_liminf_tsum
 
 /-- To bound the Hausdorff measure (or, more generally, for a measure defined using
@@ -722,7 +719,6 @@ theorem hausdorffMeasure_zero_singleton (x : X) : μH[0] ({x} : Set X) = 1 :=
     calc
       (1 : ℝ≥0∞) = ⨆ h : (t m).Nonempty, 1 := by simp only [A, ciSup_pos]
       _ ≤ ∑' n, ⨆ h : (t n).Nonempty, 1 := ENNReal.le_tsum _
-      
 #align measure_theory.measure.hausdorff_measure_zero_singleton MeasureTheory.Measure.hausdorffMeasure_zero_singleton
 
 theorem one_le_hausdorffMeasure_zero_of_nonempty {s : Set X} (h : s.Nonempty) : 1 ≤ μH[0] s :=
@@ -731,7 +727,6 @@ theorem one_le_hausdorffMeasure_zero_of_nonempty {s : Set X} (h : s.Nonempty) : 
   calc
     (1 : ℝ≥0∞) = μH[0] ({x} : Set X) := (hausdorff_measure_zero_singleton x).symm
     _ ≤ μH[0] s := measure_mono (singleton_subset_iff.2 hx)
-    
 #align measure_theory.measure.one_le_hausdorff_measure_zero_of_nonempty MeasureTheory.Measure.one_le_hausdorffMeasure_zero_of_nonempty
 
 theorem hausdorffMeasure_le_one_of_subsingleton {s : Set X} (hs : s.Subsingleton) {d : ℝ}
@@ -903,7 +898,6 @@ theorem le_hausdorffMeasure_image (hf : AntilipschitzWith K f) (hd : 0 ≤ d) (s
   calc
     μH[d] s ≤ μH[d] (f ⁻¹' (f '' s)) := measure_mono (subset_preimage_image _ _)
     _ ≤ K ^ d * μH[d] (f '' s) := hf.hausdorffMeasure_preimage_le hd (f '' s)
-    
 #align antilipschitz_with.le_hausdorff_measure_image AntilipschitzWith.le_hausdorffMeasure_image
 
 end AntilipschitzWith
@@ -1050,13 +1044,11 @@ theorem hausdorffMeasure_pi_real {ι : Type _} [Fintype ι] :
           refine' add_le_add le_rfl ((div_le_div_right npos).2 _)
           exact Nat.floor_le (mul_nonneg (sub_nonneg.2 (hx i).1.le) npos.le)
         _ = x i := by field_simp [npos.ne']
-        
     ·
       calc
         x i = (a i : ℝ) + (x i - a i) * n / n := by field_simp [npos.ne']
         _ ≤ (a i : ℝ) + (⌊(x i - a i) * n⌋₊ + 1) / n :=
           add_le_add le_rfl ((div_le_div_right npos).2 (Nat.lt_floor_add_one _).le)
-        
   calc
     μH[Fintype.card ι] (Set.pi univ fun i : ι => Ioo (a i : ℝ) (b i)) ≤
         liminf (fun n : ℕ => ∑ i : γ n, diam (t n i) ^ ↑(Fintype.card ι)) at_top :=
@@ -1089,7 +1081,6 @@ theorem hausdorffMeasure_pi_real {ι : Type _} [Fintype ι] :
         simp only [ENNReal.ofReal_div_of_pos (nat.cast_pos.mpr hn), comp_app,
           ENNReal.ofReal_coe_nat]
       · simp only [ENNReal.ofReal_ne_top, Ne.def, not_false_iff]
-    
 #align measure_theory.hausdorff_measure_pi_real MeasureTheory.hausdorffMeasure_pi_real
 
 variable (ι X)

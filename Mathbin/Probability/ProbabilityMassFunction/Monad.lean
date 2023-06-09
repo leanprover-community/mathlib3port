@@ -214,7 +214,6 @@ theorem toOuterMeasure_bind_apply :
       (tsum_congr fun a => (congr_arg fun x => p a * x) <| tsum_congr fun b => by split_ifs <;> rfl)
     _ = ∑' a, p a * (f a).toOuterMeasure s :=
       tsum_congr fun a => by simp only [to_outer_measure_apply, Set.indicator_apply]
-    
 #align pmf.to_outer_measure_bind_apply Pmf.toOuterMeasure_bind_apply
 
 /-- The measure of a set under `p.bind f` is the sum over `a : α`
@@ -374,7 +373,6 @@ theorem toOuterMeasure_bindOnSupport_apply :
       (tsum_congr fun a => by simp only [← ENNReal.tsum_mul_left, mul_ite, MulZeroClass.mul_zero])
     _ = ∑' a, p a * dite (p a = 0) (fun h => 0) fun h => ∑' b, ite (b ∈ s) (f a h b) 0 :=
       tsum_congr fun a => by split_ifs with ha <;> simp only [if_t_t, tsum_zero, eq_self_iff_true]
-    
 #align pmf.to_outer_measure_bind_on_support_apply Pmf.toOuterMeasure_bindOnSupport_apply
 
 /-- The measure of a set under `p.bind_on_support f` is the sum over `a : α`

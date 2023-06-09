@@ -636,7 +636,6 @@ theorem exist_finset_disjoint_balls_large_measure (μ : Measure α) [IsFiniteMea
         · simp only [Npos, Ne.def, Nat.cast_eq_zero, not_false_iff]
         · exact ENNReal.nat_ne_top _
       _ ≤ ∑ i, μ (s ∩ v i) := by conv_lhs => rw [A]; apply measure_Union_fintype_le
-      
   -- choose an index `i` of a subfamily covering at least a proportion `1/N` of `s`.
   obtain ⟨i, -, hi⟩ : ∃ (i : Fin N) (hi : i ∈ Finset.univ), μ s / N ≤ μ (s ∩ v i) :=
     by
@@ -697,7 +696,6 @@ theorem exist_finset_disjoint_balls_large_measure (μ : Measure α) [IsFiniteMea
           exact this.mono fun k => inter_subset_right _ _
         · intro b hb
           apply omeas.inter measurableSet_closedBall
-      
   -- show that the balls are disjoint
   · intro k hk l hl hkl
     obtain ⟨k', k'w, rfl⟩ : ∃ k' : u i, k' ∈ w ∧ ↑↑k' = k := by
@@ -848,7 +846,6 @@ theorem exists_disjoint_closedBall_covering_ae_of_finiteMeasure_aux (μ : Measur
             N / (N + 1) * μ (s \ ⋃ (p : α × ℝ) (hp : p ∈ u n), closed_ball p.fst p.snd) :=
           by rw [u_succ]; exact (hF (u n) (Pu n)).2.2
         _ ≤ (N / (N + 1)) ^ n.succ * μ s := by rw [pow_succ, mul_assoc]; exact mul_le_mul_left' IH _
-        
     have C : tendsto (fun n : ℕ => ((N : ℝ≥0∞) / (N + 1)) ^ n * μ s) at_top (𝓝 (0 * μ s)) :=
       by
       apply ENNReal.Tendsto.mul_const _ (Or.inr (measure_lt_top μ s).Ne)
@@ -1108,7 +1105,6 @@ theorem exists_closedBall_covering_tsum_measure_le (μ : Measure α) [SigmaFinit
           intro x hx
           apply subset.trans (closed_ball_subset_ball (hr0 x hx).2.2) (hR x (t0s hx)).2
         _ ≤ μ s + ε / 2 := μu
-        
     -- each subfamily in the second step has measure at most `ε / (2 N)`.
     have B : ∀ i : Fin N, (∑' x : (coe : s' → α) '' S i, μ (closed_ball x (r x))) ≤ ε / 2 / N :=
       fun i =>
@@ -1133,7 +1129,6 @@ theorem exists_closedBall_covering_tsum_measure_le (μ : Measure α) [SigmaFinit
           intro x xs' xSi
           exact (hr1 x xs').2
         _ ≤ ε / 2 / N := by have : μ s' = 0 := μt0; rwa [this, zero_add] at μv 
-        
     -- add up all these to prove the desired estimate
     calc
       (∑' x : t0 ∪ ⋃ i : Fin N, (coe : s' → α) '' S i, μ (closed_ball x (r x))) ≤
@@ -1154,7 +1149,6 @@ theorem exists_closedBall_covering_tsum_measure_le (μ : Measure α) [SigmaFinit
         refine' add_le_add le_rfl _
         simp only [Finset.card_fin, Finset.sum_const, nsmul_eq_mul, ENNReal.mul_div_le]
       _ = μ s + ε := by rw [add_assoc, ENNReal.add_halves]
-      
 #align besicovitch.exists_closed_ball_covering_tsum_measure_le Besicovitch.exists_closedBall_covering_tsum_measure_le
 
 /-! ### Consequences on differentiation of measures -/

@@ -338,7 +338,6 @@ protected theorem inv_eq_of_mul_eq_one_left {a : α} (h : a * u = 1) : ↑u⁻¹
   calc
     ↑u⁻¹ = 1 * ↑u⁻¹ := by rw [one_mul]
     _ = a := by rw [← h, mul_inv_cancel_right]
-    
 #align units.inv_eq_of_mul_eq_one_left Units.inv_eq_of_mul_eq_one_left
 #align add_units.neg_eq_of_add_eq_zero_left AddUnits.neg_eq_of_add_eq_zero_left
 
@@ -347,7 +346,6 @@ protected theorem inv_eq_of_mul_eq_one_right {a : α} (h : ↑u * a = 1) : ↑u�
   calc
     ↑u⁻¹ = ↑u⁻¹ * 1 := by rw [mul_one]
     _ = a := by rw [← h, inv_mul_cancel_left]
-    
 #align units.inv_eq_of_mul_eq_one_right Units.inv_eq_of_mul_eq_one_right
 #align add_units.neg_eq_of_add_eq_zero_right AddUnits.neg_eq_of_add_eq_zero_right
 

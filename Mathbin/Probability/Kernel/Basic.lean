@@ -56,6 +56,7 @@ open scoped MeasureTheory ENNReal NNReal BigOperators
 
 namespace ProbabilityTheory
 
+#print ProbabilityTheory.kernel /-
 /-- A kernel from a measurable space `α` to another measurable space `β` is a measurable function
 `κ : α → measure β`. The measurable space structure on `measure β` is given by
 `measure_theory.measure.measurable_space`. A map `κ : α → measure β` is measurable iff
@@ -66,6 +67,7 @@ def kernel (α β : Type _) [MeasurableSpace α] [MeasurableSpace β] : AddSubmo
   zero_mem' := measurable_zero
   add_mem' f g hf hg := Measurable.add hf hg
 #align probability_theory.kernel ProbabilityTheory.kernel
+-/
 
 instance {α β : Type _} [MeasurableSpace α] [MeasurableSpace β] :
     CoeFun (kernel α β) fun _ => α → Measure β :=
@@ -97,10 +99,12 @@ def coeAddHom (α β : Type _) [MeasurableSpace α] [MeasurableSpace β] :
 
 include mα mβ
 
+#print ProbabilityTheory.kernel.zero_apply /-
 @[simp]
 theorem zero_apply (a : α) : (0 : kernel α β) a = 0 :=
   rfl
 #align probability_theory.kernel.zero_apply ProbabilityTheory.kernel.zero_apply
+-/
 
 @[simp]
 theorem coe_finset_sum (I : Finset ι) (κ : ι → kernel α β) : ⇑(∑ i in I, κ i) = ∑ i in I, κ i :=
@@ -148,11 +152,13 @@ theorem kernel.measure_le_bound (κ : kernel α β) [h : IsFiniteKernel κ] (a :
   (measure_mono (Set.subset_univ s)).trans (h.exists_univ_le.choose_spec.2 a)
 #align probability_theory.kernel.measure_le_bound ProbabilityTheory.kernel.measure_le_bound
 
+#print ProbabilityTheory.isFiniteKernel_zero /-
 instance isFiniteKernel_zero (α β : Type _) {mα : MeasurableSpace α} {mβ : MeasurableSpace β} :
     IsFiniteKernel (0 : kernel α β) :=
   ⟨⟨0, ENNReal.coe_lt_top, fun a => by
       simp only [kernel.zero_apply, measure.coe_zero, Pi.zero_apply, le_zero_iff]⟩⟩
 #align probability_theory.is_finite_kernel_zero ProbabilityTheory.isFiniteKernel_zero
+-/
 
 instance IsFiniteKernel.add (κ η : kernel α β) [IsFiniteKernel κ] [IsFiniteKernel η] :
     IsFiniteKernel (κ + η) :=
@@ -378,10 +384,12 @@ theorem deterministic_apply' {f : α → β} (hf : Measurable f) (a : α) {s : S
   simp_rw [measure.dirac_apply' _ hs]
 #align probability_theory.kernel.deterministic_apply' ProbabilityTheory.kernel.deterministic_apply'
 
+#print ProbabilityTheory.kernel.isMarkovKernel_deterministic /-
 instance isMarkovKernel_deterministic {f : α → β} (hf : Measurable f) :
     IsMarkovKernel (deterministic f hf) :=
   ⟨fun a => by rw [deterministic_apply hf]; infer_instance⟩
 #align probability_theory.kernel.is_markov_kernel_deterministic ProbabilityTheory.kernel.isMarkovKernel_deterministic
+-/
 
 theorem lintegral_deterministic' {f : β → ℝ≥0∞} {g : α → β} {a : α} (hg : Measurable g)
     (hf : Measurable f) : (∫⁻ x, f x ∂kernel.deterministic g hg a) = f (g a) := by
@@ -450,41 +458,55 @@ def const (α : Type _) {β : Type _} [MeasurableSpace α] {mβ : MeasurableSpac
 
 include mα mβ
 
+#print ProbabilityTheory.kernel.const_apply /-
 theorem const_apply (μβ : Measure β) (a : α) : const α μβ a = μβ :=
   rfl
 #align probability_theory.kernel.const_apply ProbabilityTheory.kernel.const_apply
+-/
 
+#print ProbabilityTheory.kernel.isFiniteKernel_const /-
 instance isFiniteKernel_const {μβ : Measure β} [hμβ : IsFiniteMeasure μβ] :
     IsFiniteKernel (const α μβ) :=
   ⟨⟨μβ Set.univ, measure_lt_top _ _, fun a => le_rfl⟩⟩
 #align probability_theory.kernel.is_finite_kernel_const ProbabilityTheory.kernel.isFiniteKernel_const
+-/
 
+#print ProbabilityTheory.kernel.isMarkovKernel_const /-
 instance isMarkovKernel_const {μβ : Measure β} [hμβ : IsProbabilityMeasure μβ] :
     IsMarkovKernel (const α μβ) :=
   ⟨fun a => hμβ⟩
 #align probability_theory.kernel.is_markov_kernel_const ProbabilityTheory.kernel.isMarkovKernel_const
+-/
 
+#print ProbabilityTheory.kernel.lintegral_const /-
 @[simp]
 theorem lintegral_const {f : β → ℝ≥0∞} {μ : Measure β} {a : α} :
     (∫⁻ x, f x ∂kernel.const α μ a) = ∫⁻ x, f x ∂μ := by rw [kernel.const_apply]
 #align probability_theory.kernel.lintegral_const ProbabilityTheory.kernel.lintegral_const
+-/
 
+#print ProbabilityTheory.kernel.set_lintegral_const /-
 @[simp]
 theorem set_lintegral_const {f : β → ℝ≥0∞} {μ : Measure β} {a : α} {s : Set β} :
     (∫⁻ x in s, f x ∂kernel.const α μ a) = ∫⁻ x in s, f x ∂μ := by rw [kernel.const_apply]
 #align probability_theory.kernel.set_lintegral_const ProbabilityTheory.kernel.set_lintegral_const
+-/
 
+#print ProbabilityTheory.kernel.integral_const /-
 @[simp]
 theorem integral_const {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
     {f : β → E} {μ : Measure β} {a : α} : (∫ x, f x ∂kernel.const α μ a) = ∫ x, f x ∂μ := by
   rw [kernel.const_apply]
 #align probability_theory.kernel.integral_const ProbabilityTheory.kernel.integral_const
+-/
 
+#print ProbabilityTheory.kernel.set_integral_const /-
 @[simp]
 theorem set_integral_const {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
     {f : β → E} {μ : Measure β} {a : α} {s : Set β} :
     (∫ x in s, f x ∂kernel.const α μ a) = ∫ x in s, f x ∂μ := by rw [kernel.const_apply]
 #align probability_theory.kernel.set_integral_const ProbabilityTheory.kernel.set_integral_const
+-/
 
 end Const
 

@@ -44,7 +44,6 @@ theorem prod_eraseNone (f : α → M) (s : Finset (Option α)) :
       (Prod_map s.erase_none embedding.some <| Option.elim' 1 f).symm
     _ = ∏ x in s.erase none, Option.elim' 1 f x := by rw [map_some_erase_none]
     _ = ∏ x in s, Option.elim' 1 f x := prod_erase _ rfl
-    
 #align finset.prod_erase_none Finset.prod_eraseNone
 #align finset.sum_erase_none Finset.sum_eraseNone
 

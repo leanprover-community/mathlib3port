@@ -74,7 +74,6 @@ theorem setOf_liouvilleWith_subset_aux :
     calc
       (b : ℝ) = b ^ (1 : ℝ) := (rpow_one _).symm
       _ ≤ b ^ (2 + 1 / (n + 1 : ℕ) : ℝ) := rpow_le_rpow_of_exponent_le hb (one_le_two.trans _)
-      
     simpa using n.cast_add_one_pos.le
   rw [sub_div' _ _ _ hb0.ne', abs_div, abs_of_pos hb0, div_lt_div_right hb0, abs_sub_lt_iff,
     sub_lt_iff_lt_add, sub_lt_iff_lt_add, ← sub_lt_iff_lt_add'] at hlt 
@@ -87,7 +86,6 @@ theorem setOf_liouvilleWith_subset_aux :
     calc
       x * b ≤ 1 * b := mul_le_mul_of_nonneg_right hx01.2.le hb0.le
       _ = b := one_mul b
-      
 #align set_of_liouville_with_subset_aux setOf_liouvilleWith_subset_aux
 
 /-- The set of numbers satisfying the Liouville condition with some exponent `p > 2` has Lebesgue
@@ -121,7 +119,6 @@ theorem volume_iUnion_setOf_liouvilleWith :
         simp only [hB, Int.card_Icc, Finset.sum_const, nsmul_eq_mul, sub_zero, ← Int.ofNat_succ,
           Int.toNat_coe_nat, ← Nat.cast_succ, ENNReal.coe_mul, ENNReal.coe_nat]
       _ = _ := _
-      
     have : 1 - r ≠ 0 := by linarith
     rw [ENNReal.coe_eq_coe]
     simp [add_mul, div_eq_mul_inv, NNReal.rpow_neg, NNReal.rpow_sub' _ this, mul_add, mul_left_comm]

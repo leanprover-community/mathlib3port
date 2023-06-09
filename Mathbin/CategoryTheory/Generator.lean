@@ -423,7 +423,6 @@ theorem eq_of_isDetecting [HasPullbacks C] {𝒢 : Set C} (h𝒢 : IsDetecting �
     P = P ⊓ Q := Eq.symm <| inf_eq_of_isDetecting h𝒢 _ _ fun G hG f hf => (h G hG).1 hf
     _ = Q ⊓ P := inf_comm
     _ = Q := inf_eq_of_isDetecting h𝒢 _ _ fun G hG f hf => (h G hG).2 hf
-    
 #align category_theory.subobject.eq_of_is_detecting CategoryTheory.Subobject.eq_of_isDetecting
 -/
 

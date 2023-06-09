@@ -510,7 +510,6 @@ theorem coprime_of_mul_modEq_one (b : ℕ) {a n : ℕ} (h : a * b ≡ 1 [MOD n])
     1 ≡ a * b [MOD a.gcd n] := Nat.ModEq.of_mul_right g (hh.subst h).symm
     _ ≡ 0 * b [MOD a.gcd n] := ((nat.modeq_zero_iff_dvd.mpr (Nat.gcd_dvd_left _ _)).mul_right b)
     _ = 0 := by rw [MulZeroClass.zero_mul]
-    
 #align nat.coprime_of_mul_modeq_one Nat.coprime_of_mul_modEq_one
 -/
 

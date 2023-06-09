@@ -240,7 +240,6 @@ theorem NormedAddGroupHom.ker_completion {f : NormedAddGroupHom G H} {C : ℝ}
       _ = ‖f.completion (g - hatg)‖ := by rw [map_sub]
       _ ≤ ‖f.completion‖ * ‖(g : completion G) - hatg‖ := (f.completion.le_op_norm _)
       _ = ‖f‖ * ‖hatg - g‖ := by rw [norm_sub_rev, f.norm_completion]
-      
     have : ‖(g' : completion G)‖ ≤ C' * ‖f‖ * ‖hatg - g‖
     calc
       ‖(g' : completion G)‖ = ‖g'‖ := completion.norm_coe _
@@ -248,7 +247,6 @@ theorem NormedAddGroupHom.ker_completion {f : NormedAddGroupHom G H} {C : ℝ}
       _ ≤ C' * ‖f‖ * ‖hatg - g‖ := by
         rw [mul_assoc]
         exact (mul_le_mul_left C'_pos).mpr this
-      
     refine' ⟨g - g', _, _⟩
     · norm_cast
       rw [NormedAddGroupHom.comp_range]
@@ -262,7 +260,6 @@ theorem NormedAddGroupHom.ker_completion {f : NormedAddGroupHom G H} {C : ℝ}
         _ ≤ δ + C' * ‖f‖ * δ := (add_le_add_left (mul_le_mul_of_nonneg_left hg.le hCf) δ)
         _ = (1 + C' * ‖f‖) * δ := by ring
         _ = ε := mul_div_cancel' _ ineq.ne.symm
-        
   · rw [← f.completion.is_closed_ker.closure_eq]
     exact closure_mono f.ker_le_ker_completion
 #align normed_add_group_hom.ker_completion NormedAddGroupHom.ker_completion

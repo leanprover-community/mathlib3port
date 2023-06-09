@@ -150,7 +150,7 @@ theorem FormallySmooth.exists_lift {B : Type u} [CommRing B] [_RB : Algebra R B]
   apply Ideal.IsNilpotent.induction_on I hI
   · intro B _ I hI _; exact formally_smooth.comp_surjective I hI
   · intro B _ I J hIJ h₁ h₂ _ g
-    let this : ((B ⧸ I) ⧸ J.map (Ideal.Quotient.mk I)) ≃ₐ[R] B ⧸ J :=
+    let this.1 : ((B ⧸ I) ⧸ J.map (Ideal.Quotient.mk I)) ≃ₐ[R] B ⧸ J :=
       {
         (DoubleQuot.quotQuotEquivQuotSup I J).trans
           (Ideal.quotEquivOfEq (sup_eq_right.mpr hIJ)) with
@@ -517,7 +517,7 @@ theorem FormallySmooth.of_isLocalization : FormallySmooth R Rₘ :=
     apply (IsNilpotent.isUnit_quotient_mk_iff ⟨2, e⟩).mp
     convert (IsLocalization.map_units Rₘ x).map f
     simp only [Ideal.Quotient.mk_algebraMap, AlgHom.commutes]
-  let this : Rₘ →ₐ[R] Q :=
+  let this.1 : Rₘ →ₐ[R] Q :=
     { IsLocalization.lift this with commutes' := IsLocalization.lift_eq this }
   use this
   apply AlgHom.coe_ringHom_injective

@@ -187,7 +187,6 @@ theorem continuous_eval' [LocallyCompactSpace α] : Continuous fun p : C(α, β)
           f' x' ∈ f' '' s := mem_image_of_mem f' (us hx')
           _ ⊆ v := hf'
           _ ⊆ n := vn
-          
       have : IsOpen w := (ContinuousMap.isOpen_gen sc vo).Prod uo
       have : (f, x) ∈ w := ⟨image_subset_iff.mpr sv, xu⟩
       mem_nhds_iff.mpr ⟨w, by assumption, by assumption, by assumption⟩

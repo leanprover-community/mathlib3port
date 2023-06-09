@@ -2014,7 +2014,7 @@ theorem addCases_right {m n : ℕ} {C : Fin (m + n) → Sort _} (hleft : ∀ i, 
 
 end Rec
 
-theorem lift_fun_iff_succ {α : Type _} (r : α → α → Prop) [IsTrans α r] {f : Fin (n + 1) → α} :
+theorem liftFun_iff_succ {α : Type _} (r : α → α → Prop) [IsTrans α r] {f : Fin (n + 1) → α} :
     ((· < ·) ⇒ r) f f ↔ ∀ i : Fin n, r (f i.cast_succ) (f i.succ) :=
   by
   constructor
@@ -2026,32 +2026,32 @@ theorem lift_fun_iff_succ {α : Type _} (r : α → α → Prop) [IsTrans α r] 
       rw [← le_cast_succ_iff] at hij 
       rcases hij.eq_or_lt with (rfl | hlt)
       exacts [H j, trans (ihj hlt) (H j)]
-#align fin.lift_fun_iff_succ Fin.lift_fun_iff_succ
+#align fin.lift_fun_iff_succ Fin.liftFun_iff_succ
 
 /-- A function `f` on `fin (n + 1)` is strictly monotone if and only if `f i < f (i + 1)`
 for all `i`. -/
 theorem strictMono_iff_lt_succ {α : Type _} [Preorder α] {f : Fin (n + 1) → α} :
     StrictMono f ↔ ∀ i : Fin n, f i.cast_succ < f i.succ :=
-  lift_fun_iff_succ (· < ·)
+  liftFun_iff_succ (· < ·)
 #align fin.strict_mono_iff_lt_succ Fin.strictMono_iff_lt_succ
 
 /-- A function `f` on `fin (n + 1)` is monotone if and only if `f i ≤ f (i + 1)` for all `i`. -/
 theorem monotone_iff_le_succ {α : Type _} [Preorder α] {f : Fin (n + 1) → α} :
     Monotone f ↔ ∀ i : Fin n, f i.cast_succ ≤ f i.succ :=
-  monotone_iff_forall_lt.trans <| lift_fun_iff_succ (· ≤ ·)
+  monotone_iff_forall_lt.trans <| liftFun_iff_succ (· ≤ ·)
 #align fin.monotone_iff_le_succ Fin.monotone_iff_le_succ
 
 /-- A function `f` on `fin (n + 1)` is strictly antitone if and only if `f (i + 1) < f i`
 for all `i`. -/
 theorem strictAnti_iff_succ_lt {α : Type _} [Preorder α] {f : Fin (n + 1) → α} :
     StrictAnti f ↔ ∀ i : Fin n, f i.succ < f i.cast_succ :=
-  lift_fun_iff_succ (· > ·)
+  liftFun_iff_succ (· > ·)
 #align fin.strict_anti_iff_succ_lt Fin.strictAnti_iff_succ_lt
 
 /-- A function `f` on `fin (n + 1)` is antitone if and only if `f (i + 1) ≤ f i` for all `i`. -/
 theorem antitone_iff_succ_le {α : Type _} [Preorder α] {f : Fin (n + 1) → α} :
     Antitone f ↔ ∀ i : Fin n, f i.succ ≤ f i.cast_succ :=
-  antitone_iff_forall_lt.trans <| lift_fun_iff_succ (· ≥ ·)
+  antitone_iff_forall_lt.trans <| liftFun_iff_succ (· ≥ ·)
 #align fin.antitone_iff_succ_le Fin.antitone_iff_succ_le
 
 section AddGroup
@@ -2435,7 +2435,6 @@ theorem predAbove_right_monotone (p : Fin n) : Monotone p.predAbove := fun a b H
     calc
       _ ≤ _ := Nat.pred_le _
       _ ≤ _ := H
-      
   · simp at ha ; exact le_pred_of_lt (lt_of_le_of_lt ha hb)
   · exact H
 #align fin.pred_above_right_monotone Fin.predAbove_right_monotone

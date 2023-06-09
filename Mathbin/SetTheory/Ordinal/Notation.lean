@@ -860,7 +860,6 @@ theorem repr_opow_aux₂ {a0 a'} [N0 : NF a0] [Na' : NF a'] (m : ℕ) (d : ω �
       rw [nat_cast_succ, RR, ← mul_assoc]
     _ = ((ω0^k) * α' + R) * α' + ((ω0^k) * α' + R) * m := _
     _ = (α' + m^succ k.succ) := by rw [← mul_add, nat_cast_succ, opow_succ, IH.2]
-    
   congr 1
   · have αd : ω ∣ α' :=
       dvd_add (dvd_mul_of_dvd_left (by simpa using opow_dvd_opow ω (one_le_iff_ne_zero.2 e0)) _) d

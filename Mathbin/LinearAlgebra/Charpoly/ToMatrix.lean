@@ -90,7 +90,6 @@ theorem charpoly_toMatrix {ι : Type w} [Fintype ι] (b : Basis ι R M) :
       by ring
     _ = (scalar ι' X - C.map_matrix A').det := by rw [← det_mul, hPQ, det_one, one_mul]
     _ = f.charpoly := rfl
-    
 #align linear_map.charpoly_to_matrix LinearMap.charpoly_toMatrix
 
 end Basic

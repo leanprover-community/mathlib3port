@@ -451,8 +451,7 @@ protected theorem rel_equiv : Equivalence (FilteredColimit.Rel F) :=
         _ = F.map ((f' ≫ gl) ≫ n) y.2 := by rw [hn]
         _ = F.map (gl ≫ n) (F.map f' y.2) := by simp
         _ = F.map (gl ≫ n) (F.map g' z.2) := by rw [h']
-        _ = F.map (g' ≫ gl ≫ n) z.2 := by simp
-        ⟩⟩
+        _ = F.map (g' ≫ gl ≫ n) z.2 := by simp⟩⟩
 #align category_theory.limits.types.filtered_colimit.rel_equiv CategoryTheory.Limits.Types.FilteredColimit.rel_equiv
 
 protected theorem rel_eq_eqvGen_quot_rel : FilteredColimit.Rel F = EqvGen (Quot.Rel F) :=

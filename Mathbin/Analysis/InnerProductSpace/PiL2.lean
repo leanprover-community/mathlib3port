@@ -517,7 +517,6 @@ theorem Basis.coe_toOrthonormalBasis (v : Basis ι 𝕜 E) (hv : Orthonormal �
     (v.toOrthonormalBasis hv : ι → E) = ((v.toOrthonormalBasis hv).toBasis : ι → E) := by
       classical rw [OrthonormalBasis.coe_toBasis]
     _ = (v : ι → E) := by simp
-    
 #align basis.coe_to_orthonormal_basis Basis.coe_toOrthonormalBasis
 
 variable {v : ι → E}
@@ -926,7 +925,6 @@ noncomputable def LinearIsometry.extend (L : S →ₗᵢ[𝕜] V) : V →ₗᵢ[
         simp only [← LS.finrank_add_finrank_orthogonal, add_tsub_cancel_left]
       _ = finrank 𝕜 V - finrank 𝕜 S := by simp only [LinearMap.finrank_range_of_inj L.injective]
       _ = finrank 𝕜 Sᗮ := by simp only [← S.finrank_add_finrank_orthogonal, add_tsub_cancel_left]
-      
     exact
       (stdOrthonormalBasis 𝕜 Sᗮ).repr.trans
         ((stdOrthonormalBasis 𝕜 LSᗮ).reindex <| finCongr dim_LS_perp).repr.symm

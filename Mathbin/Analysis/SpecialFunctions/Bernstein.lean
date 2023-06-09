@@ -272,7 +272,6 @@ theorem bernsteinApproximation_uniform (f : C(I, ℝ)) :
         ε / 2 + ε / 2 :=
       (add_lt_add_of_le_of_lt _ _)
     _ = ε := add_halves ε
-    
   ·-- We now work on the terms in `S`: uniform continuity and `bernstein.probability`
     -- quickly give us a bound.
     calc
@@ -287,7 +286,6 @@ theorem bernsteinApproximation_uniform (f : C(I, ℝ)) :
         (mul_le_mul_of_nonneg_left (Finset.sum_le_univ_sum_of_nonneg fun k => bernstein_nonneg)
           (le_of_lt (half_pos h)))
       _ = ε / 2 := by rw [bernstein.probability, mul_one]
-      
   ·-- We now turn to working on `Sᶜ`: we control the difference term just using `‖f‖`,
     -- and then insert a `δ^(-2) * (x - k/n)^2` factor
     -- (which is at least one because we are not in `S`).
@@ -322,7 +320,6 @@ theorem bernsteinApproximation_uniform (f : C(I, ℝ)) :
         ((div_le_div_right npos).mpr <| by
           refine' mul_le_of_le_of_le_one' (mul_le_of_le_one_right w₂ _) _ _ w₂ <;> unit_interval)
       _ < ε / 2 := nh
-      
 #align bernstein_approximation_uniform bernsteinApproximation_uniform
 -/
 

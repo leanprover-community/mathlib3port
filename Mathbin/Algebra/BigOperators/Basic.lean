@@ -630,7 +630,6 @@ theorem prod_image' [DecidableEq α] {s : Finset γ} {g : γ → α} (h : γ →
         let ⟨c, hcs, hc⟩ := mem_image.1 hx
         hc ▸ Eq c hcs
     _ = ∏ x in s, h x := prod_fiberwise_of_maps_to (fun x => mem_image_of_mem g) _
-    
 #align finset.prod_image' Finset.prod_image'
 #align finset.sum_image' Finset.sum_image'
 -/
@@ -727,7 +726,6 @@ theorem prod_eq_one {f : α → β} {s : Finset α} (h : ∀ x ∈ s, f x = 1) :
   calc
     (∏ x in s, f x) = ∏ x in s, 1 := Finset.prod_congr rfl h
     _ = 1 := Finset.prod_const_one
-    
 #align finset.prod_eq_one Finset.prod_eq_one
 #align finset.sum_eq_zero Finset.sum_eq_zero
 
@@ -778,7 +776,6 @@ theorem prod_filter (p : α → Prop) [DecidablePred p] (f : α → β) :
       refine' prod_subset (filter_subset _ s) fun x hs h => _
       rw [mem_filter, not_and] at h 
       exact if_neg (h hs)
-    
 #align finset.prod_filter Finset.prod_filter
 #align finset.sum_filter Finset.sum_filter
 
@@ -794,7 +791,6 @@ theorem prod_eq_single_of_mem {s : Finset α} {f : α → β} (a : α) (h : a �
       · intro _ H; rwa [mem_singleton.1 H]
       · simpa only [mem_singleton]
     _ = f a := prod_singleton
-    
 #align finset.prod_eq_single_of_mem Finset.prod_eq_single_of_mem
 #align finset.sum_eq_single_of_mem Finset.sum_eq_single_of_mem
 
@@ -859,7 +855,6 @@ theorem prod_attach {f : α → β} : (∏ x in s.attach, f x) = ∏ x in s, f x
     (∏ x in s.attach, f x.val) = ∏ x in s.attach.image Subtype.val, f x := by
       rw [prod_image] <;> exact fun x _ y _ => Subtype.eq
     _ = _ := by rw [attach_image_val]
-    
 #align finset.prod_attach Finset.prod_attach
 #align finset.sum_attach Finset.sum_attach
 -/
@@ -983,7 +978,6 @@ theorem prod_apply_dite {s : Finset α} {p : α → Prop} {hp : DecidablePred p}
           ∏ x in (s.filterₓ fun x => ¬p x).attach, h (g x.1 (mem_filter.mp x.2).2) :=
       congr_arg₂ _ (prod_congr rfl fun x hx => congr_arg h (dif_pos (mem_filter.mp x.2).2))
         (prod_congr rfl fun x hx => congr_arg h (dif_neg (mem_filter.mp x.2).2))
-    
 #align finset.prod_apply_dite Finset.prod_apply_dite
 #align finset.sum_apply_dite Finset.sum_apply_dite
 
@@ -1177,7 +1171,6 @@ theorem prod_bij_ne_one {s : Finset α} {t : Finset γ} {f : α → β} {g : γ 
             let ⟨a, ha₁, ha₂, Eq⟩ := i_surj b h₁ h₂
             ⟨a, mem_filter.mpr ⟨ha₁, ha₂⟩, Eq⟩)
       _ = ∏ x in t, g x := prod_filter_ne_one
-      
 #align finset.prod_bij_ne_one Finset.prod_bij_ne_one
 #align finset.sum_bij_ne_zero Finset.sum_bij_ne_zero
 
@@ -1562,7 +1555,6 @@ theorem prod_comp [DecidableEq γ] (f : γ → β) (g : α → γ) :
       (prod_congr rfl fun b hb => prod_congr rfl (by simp (config := { contextual := true })))
     _ = ∏ b in s.image g, f b ^ (s.filterₓ fun a => g a = b).card :=
       prod_congr rfl fun _ _ => prod_const _
-    
 #align finset.prod_comp Finset.prod_comp
 #align finset.sum_comp Finset.sum_comp
 -/
@@ -1922,7 +1914,6 @@ theorem card_biUnion [DecidableEq β] {s : Finset α} {t : α → Finset β}
     (s.biUnion t).card = ∑ i in s.biUnion t, 1 := by simp
     _ = ∑ a in s, ∑ i in t a, 1 := (Finset.sum_biUnion h)
     _ = ∑ u in s, card (t u) := by simp
-    
 #align finset.card_bUnion Finset.card_biUnion
 
 #print Finset.card_biUnion_le /-
@@ -1934,7 +1925,6 @@ theorem card_biUnion_le [DecidableEq β] {s : Finset α} {t : α → Finset β} 
       ((insert a s).biUnion t).card ≤ (t a).card + (s.biUnion t).card := by
         rw [bUnion_insert] <;> exact Finset.card_union_le _ _
       _ ≤ ∑ a in insert a s, card (t a) := by rw [sum_insert has] <;> exact add_le_add_left ih _
-      
 #align finset.card_bUnion_le Finset.card_biUnion_le
 -/
 
@@ -2215,7 +2205,6 @@ theorem toFinset_sum_count_eq (s : Multiset α) : (∑ a in s.toFinset, s.count 
       simp only [smul_eq_mul, mul_one]
     _ = (s.map fun _ => 1).Sum := (Finset.sum_multiset_map_count _ _).symm
     _ = s.card := by simp
-    
 #align multiset.to_finset_sum_count_eq Multiset.toFinset_sum_count_eq
 
 theorem count_sum' {s : Finset β} {a : α} {f : β → Multiset α} :

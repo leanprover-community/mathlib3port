@@ -504,7 +504,7 @@ variable {α ι E : Type _} [MeasurableSpace α] {μ : Measure α} {l : Filter �
 theorem AeCover.integral_tendsto_of_countably_generated [l.IsCountablyGenerated] {φ : ι → Set α}
     (hφ : AeCover μ l φ) {f : α → E} (hfi : Integrable f μ) :
     Tendsto (fun i => ∫ x in φ i, f x ∂μ) l (𝓝 <| ∫ x, f x ∂μ) :=
-  suffices h : Tendsto (fun i => ∫ x : α, (φ i).indicator f x ∂μ) l (𝓝 (∫ x : α, f x ∂μ)) from by
+  suffices h (Tendsto (fun i => ∫ x : α, (φ i).indicator f x ∂μ) l (𝓝 (∫ x : α, f x ∂μ))) by
     convert h; ext n; rw [integral_indicator (hφ.measurable n)]
   tendsto_integral_filter_of_dominated_convergence (fun x => ‖f x‖)
     (eventually_of_forall fun i => hfi.AEStronglyMeasurable.indicator <| hφ.Measurable i)
@@ -757,7 +757,6 @@ theorem integrableOn_Ioi_deriv_of_nonneg (hcont : ContinuousOn g (Ici a))
       dsimp
       rw [abs_of_nonneg]
       exact g'pos _ hy.1
-    
 #align measure_theory.integrable_on_Ioi_deriv_of_nonneg MeasureTheory.integrableOn_Ioi_deriv_of_nonneg
 
 /-- When a function has a limit at infinity, and its derivative is nonnegative, then the derivative

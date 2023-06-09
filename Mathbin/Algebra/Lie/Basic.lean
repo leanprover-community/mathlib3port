@@ -461,8 +461,7 @@ def inverse (f : L₁ →ₗ⁅R⁆ L₂) (g : L₂ → L₁) (h₁ : Function.L
       calc
         g ⁅x, y⁆ = g ⁅f (g x), f (g y)⁆ := by conv_lhs => rw [← h₂ x, ← h₂ y]
         _ = g (f ⁅g x, g y⁆) := by rw [map_lie]
-        _ = ⁅g x, g y⁆ := h₁ _
-         }
+        _ = ⁅g x, g y⁆ := h₁ _ }
 #align lie_hom.inverse LieHom.inverse
 
 end LieHom
@@ -881,8 +880,7 @@ def inverse (f : M →ₗ⁅R,L⁆ N) (g : N → M) (h₁ : Function.LeftInverse
       calc
         g ⁅x, n⁆ = g ⁅x, f (g n)⁆ := by rw [h₂]
         _ = g (f ⁅x, g n⁆) := by rw [map_lie]
-        _ = ⁅x, g n⁆ := h₁ _
-         }
+        _ = ⁅x, g n⁆ := h₁ _ }
 #align lie_module_hom.inverse LieModuleHom.inverse
 
 instance : Add (M →ₗ⁅R,L⁆ N)

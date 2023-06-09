@@ -597,7 +597,6 @@ theorem sum_one_eq_card_units [Fintype R] [DecidableEq R] :
     _ = ((Finset.univ : Finset R).filterₓ IsUnit).card := Finset.sum_boole
     _ = (finset.univ.map ⟨(coe : Rˣ → R), Units.ext⟩).card := _
     _ = Fintype.card Rˣ := congr_arg _ (Finset.card_map _)
-    
   · split_ifs with h h
     · exact one_apply_coe h.unit
     · exact map_nonunit _ h

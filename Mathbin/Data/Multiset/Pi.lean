@@ -85,7 +85,6 @@ theorem Pi.cons_injective {a : α} {b : δ a} {s : Multiset α} (hs : a ∉ s) :
         f₁ a' h' = Pi.cons s a b f₁ a' this := by rw [pi.cons_ne this Ne.symm]
         _ = Pi.cons s a b f₂ a' this := by rw [Eq]
         _ = f₂ a' h' := by rw [pi.cons_ne this Ne.symm]
-        
 #align multiset.pi.cons_injective Multiset.Pi.cons_injective
 
 /-- `pi m t` constructs the Cartesian product over `t` indexed by `m`. -/

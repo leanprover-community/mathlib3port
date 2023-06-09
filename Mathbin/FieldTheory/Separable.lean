@@ -273,7 +273,6 @@ theorem separable_X_pow_sub_C_unit {n : ℕ} (u : Rˣ) (hn : IsUnit (n : R)) :
     _ = 1 := by
       simp only [Units.inv_mul, hn', C.map_one, mul_one, ← pow_succ,
         Nat.sub_add_cancel (show 1 ≤ n from hpos), sub_add_cancel]
-    
 #align polynomial.separable_X_pow_sub_C_unit Polynomial.separable_X_pow_sub_C_unit
 
 #print Polynomial.rootMultiplicity_le_one_of_separable /-

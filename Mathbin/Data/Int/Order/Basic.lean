@@ -884,13 +884,11 @@ theorem toNat_eq_zero : ∀ {n : ℤ}, n.toNat = 0 ↔ n ≤ 0
     calc
       _ ↔ n = 0 := ⟨(toNat_coe_nat n).symm.trans, (toNat_coe_nat n).trans⟩
       _ ↔ _ := coe_nat_nonpos_iff.symm
-      
   | -[n+1] =>
     show (-((n : ℤ) + 1)).toNat = 0 ↔ (-(n + 1) : ℤ) ≤ 0 from
       calc
         _ ↔ True := ⟨fun _ => trivial, fun h => toNat_neg_nat _⟩
         _ ↔ _ := ⟨fun h => neg_nonpos_of_nonneg (ofNat_zero_le _), fun _ => trivial⟩
-        
 #align int.to_nat_eq_zero Int.toNat_eq_zero
 -/
 

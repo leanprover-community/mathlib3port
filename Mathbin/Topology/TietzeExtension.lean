@@ -90,20 +90,17 @@ theorem tietze_extension_step (f : X →ᵇ ℝ) (e : C(X, Y)) (he : ClosedEmbed
         |g (e x) - f x| = -‖f‖ / 3 - f x := by
           rw [hg₁ (mem_image_of_mem _ hle₁), abs_of_nonneg (sub_nonneg.2 hle₁)]
         _ ≤ 2 / 3 * ‖f‖ := by linarith
-        
     · cases' le_total (f x) (‖f‖ / 3) with hle₂ hle₂
       · simp only [neg_div] at *
         calc
           dist (g (e x)) (f x) ≤ |g (e x)| + |f x| := dist_le_norm_add_norm _ _
           _ ≤ ‖f‖ / 3 + ‖f‖ / 3 := (add_le_add (abs_le.2 <| hgf _) (abs_le.2 ⟨hle₁, hle₂⟩))
           _ = 2 / 3 * ‖f‖ := by linarith
-          
       ·
         calc
           |g (e x) - f x| = f x - ‖f‖ / 3 := by
             rw [hg₂ (mem_image_of_mem _ hle₂), abs_sub_comm, abs_of_nonneg (sub_nonneg.2 hle₂)]
           _ ≤ 2 / 3 * ‖f‖ := by linarith
-          
 #align bounded_continuous_function.tietze_extension_step BoundedContinuousFunction.tietze_extension_step
 
 /-- **Tietze extension theorem** for real-valued bounded continuous maps, a version with a closed
@@ -137,7 +134,6 @@ theorem exists_extension_norm_eq_of_closedEmbedding' (f : X →ᵇ ℝ) (e : C(X
       _ = 1 / 3 * dist ((g n).comp_continuous e) f := by rw [dist_eq_norm', one_div, div_eq_inv_mul]
       _ ≤ 1 / 3 * ((2 / 3) ^ n * ‖f‖) := (mul_le_mul_of_nonneg_left (hgf n) (by norm_num1))
       _ = 1 / 3 * ‖f‖ * (2 / 3) ^ n := by ac_rfl
-      
   have hg_cau : CauchySeq g := cauchySeq_of_le_geometric _ _ (by norm_num1) hg_dist
   have :
     tendsto (fun n => (g n).comp_continuous e) at_top
@@ -264,7 +260,6 @@ theorem exists_extension_forall_exists_le_ge_of_closedEmbedding [Nonempty X] (f 
           calc
             0 < c - g y := sub_pos.2 hac
             _ = dg y := (dga rfl).symm
-            
         · exact hlt.trans_le ((le_add_iff_nonneg_right _).2 <| (dgmem y).1)
       rcases ha.exists_between hay with ⟨_, ⟨x, rfl⟩, hax, hxy⟩
       refine' ⟨x, hxy.le, _⟩
@@ -274,7 +269,6 @@ theorem exists_extension_forall_exists_le_ge_of_closedEmbedding [Nonempty X] (f 
         calc
           g y + dg y ≤ c + (c - a) := add_le_add hc (dgmem _).2
           _ = b := by rw [hsub, add_sub_cancel'_right]
-          
   /- Now we deal with the case `∀ x, f x ≠ b`. The proof is the same as in the first case, with
     minor modifications that make it hard to deduplicate code. -/
   choose xl hxl hgb using hg_mem
@@ -301,7 +295,6 @@ theorem exists_extension_forall_exists_le_ge_of_closedEmbedding [Nonempty X] (f 
         calc
           0 < g y - c := sub_pos.2 hcb
           _ = dg y := (dgb rfl).symm
-          
       · exact ((sub_le_self_iff _).2 (dgmem _).1).trans_lt hlt
     rcases hb.exists_between hyb with ⟨_, ⟨xu, rfl⟩, hyxu, hxub⟩
     cases' lt_or_le c (g y) with hc hc
@@ -310,13 +303,11 @@ theorem exists_extension_forall_exists_le_ge_of_closedEmbedding [Nonempty X] (f 
         calc
           f x = c - (b - c) := by rw [← hsub, sub_sub_cancel]
           _ ≤ g y - dg y := sub_le_sub hc.le (dgmem _).2
-          
       · have hay : a < (g - dg) y := by
           calc
             a = c - (b - c) := by rw [← hsub, sub_sub_cancel]
             _ < g y - (b - c) := (sub_lt_sub_right hc _)
             _ ≤ g y - dg y := sub_le_sub_left (dgmem _).2 _
-            
         rcases ha.exists_between hay with ⟨_, ⟨x, rfl⟩, ha, hxy⟩
         exact ⟨x, xu, hxy.le, hyxu.le⟩
     · refine' ⟨xl y, xu, _, hyxu.le⟩

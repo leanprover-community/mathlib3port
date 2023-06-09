@@ -70,8 +70,7 @@ def add (x : Rˣ) (t : R) (h : ‖t‖ < ‖(↑x⁻¹ : R)‖⁻¹) : Rˣ :=
             ‖-(↑x⁻¹ * t)‖ = ‖↑x⁻¹ * t‖ := by rw [norm_neg]
             _ ≤ ‖(↑x⁻¹ : R)‖ * ‖t‖ := (norm_mul_le ↑x⁻¹ _)
             _ < ‖(↑x⁻¹ : R)‖ * ‖(↑x⁻¹ : R)‖⁻¹ := by nlinarith only [h, hpos]
-            _ = 1 := mul_inv_cancel (ne_of_gt hpos)
-            ))
+            _ = 1 := mul_inv_cancel (ne_of_gt hpos)))
     (x + t) (by simp [mul_add]) _ rfl
 #align units.add Units.add
 
@@ -265,7 +264,6 @@ theorem inverse_add_norm_diff_nth_order (x : Rˣ) (n : ℕ) :
       _ = ‖↑x⁻¹ * t‖ ^ n := by rw [norm_neg]
       _ ≤ (‖(↑x⁻¹ : R)‖ * ‖t‖) ^ n := _
       _ = ‖(↑x⁻¹ : R)‖ ^ n * ‖t‖ ^ n := mul_pow _ _ n
-      
     exact pow_le_pow_of_le_left (norm_nonneg _) (norm_mul_le (↑x⁻¹) t) n
   have h'' : 0 ≤ ‖(↑x⁻¹ : R)‖ ^ n * ‖t‖ ^ n := by
     refine' mul_nonneg _ _ <;> exact pow_nonneg (norm_nonneg _) n

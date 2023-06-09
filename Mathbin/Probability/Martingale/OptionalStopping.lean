@@ -275,7 +275,6 @@ theorem maximal_ineq [IsFiniteMeasure μ] (hsub : Submartingale f 𝒢 μ) (hnon
       exact
         hsub.expected_stopped_value_mono (hitting_is_stopping_time hsub.adapted measurableSet_Ici)
           (is_stopping_time_const _ _) (fun ω => hitting_le ω) (fun ω => le_rfl : ∀ ω, n ≤ n)
-    
 #align measure_theory.maximal_ineq MeasureTheory.maximal_ineq
 
 end Maximal

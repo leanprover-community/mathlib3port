@@ -119,7 +119,6 @@ theorem condexp_indicator (hf_int : Integrable f μ) (hs : measurable_set[m] s) 
       refine' (condexp_indicator_aux hs _).symm.trans _
       · exact indicator_ae_eq_restrict_compl (hm _ hs)
       · rw [Set.indicator_indicator, Set.inter_self]
-    
 #align measure_theory.condexp_indicator MeasureTheory.condexp_indicator
 
 theorem condexp_restrict_ae_eq_restrict (hm : m ≤ m0) [SigmaFinite (μ.trim hm)]
@@ -150,7 +149,6 @@ theorem condexp_restrict_ae_eq_restrict (hm : m ≤ m0) [SigmaFinite (μ.trim hm
       _ = ∫ x in t, s.indicator f x ∂μ := by
         rw [integral_indicator (hm _ hs_m), measure.restrict_restrict (hm _ hs_m),
           measure.restrict_restrict (hm _ ht), Set.inter_comm]
-      
   · exact (strongly_measurable_condexp.indicator hs_m).aestronglyMeasurable'
 #align measure_theory.condexp_restrict_ae_eq_restrict MeasureTheory.condexp_restrict_ae_eq_restrict
 
@@ -195,7 +193,6 @@ theorem condexp_ae_eq_restrict_of_measurableSpace_eq_on {m m₂ m0 : MeasurableS
           refine' set_integral_congr_ae (hm₂ _ ht) _
           filter_upwards [this] with x hx h using hx
         _ = 0 := integral_zero _ _
-        
     refine' condexp_ae_eq_restrict_zero hs_m.compl _
     exact indicator_ae_eq_restrict_compl (hm _ hs_m)
   have hst_m : measurable_set[m] (s ∩ t) := (hs _).mpr (hs_m₂.inter ht)

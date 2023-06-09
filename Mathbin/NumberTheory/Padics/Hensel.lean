@@ -52,7 +52,6 @@ theorem padic_polynomial_dist {p : ℕ} [Fact p.Prime] (F : Polynomial ℤ_[p]) 
     ‖F.eval x - F.eval y‖ = ‖z‖ * ‖x - y‖ := by simp [hz]
     _ ≤ 1 * ‖x - y‖ := (mul_le_mul_of_nonneg_right (PadicInt.norm_le_one _) (norm_nonneg _))
     _ = ‖x - y‖ := by simp
-    
 #align padic_polynomial_dist padic_polynomial_dist
 
 open Filter Metric
@@ -163,7 +162,6 @@ private theorem calc_norm_le_one {n : ℕ} {z : ℤ_[p]} (hz : ih n z) :
       ((div_le_div_right deriv_norm_pos).2 hz.2)
     _ = ‖F.derivative.eval a‖ * T ^ 2 ^ n := (div_sq_cancel _ _)
     _ ≤ 1 := mul_le_one (PadicInt.norm_le_one _) (T_pow_nonneg _) (le_of_lt (T_pow' _))
-    
 
 private theorem calc_deriv_dist {z z' z1 : ℤ_[p]} (hz' : z' = z - z1)
     (hz1 : ‖z1‖ = ‖F.eval z‖ / ‖F.derivative.eval a‖) {n} (hz : ih n z) :
@@ -176,7 +174,6 @@ private theorem calc_deriv_dist {z z' z1 : ℤ_[p]} (hz' : z' = z - z1)
       ((div_le_div_right deriv_norm_pos).2 hz.2)
     _ = ‖F.derivative.eval a‖ * T ^ 2 ^ n := (div_sq_cancel _ _)
     _ < ‖F.derivative.eval a‖ := (mul_lt_iff_lt_one_right deriv_norm_pos).2 (T_pow' _)
-    
 
 private def calc_eval_z' {z z' z1 : ℤ_[p]} (hz' : z' = z - z1) {n} (hz : ih n z)
     (h1 : ‖(↑(F.eval z) : ℚ_[p]) / ↑(F.derivative.eval z)‖ ≤ 1) (hzeq : z1 = ⟨_, h1⟩) :
@@ -197,7 +194,6 @@ private def calc_eval_z' {z z' z1 : ℤ_[p]} (hz' : z' = z - z1) {n} (hz : ih n 
       _ = -⟨↑(F.derivative.eval z) * (↑(F.eval z) / ↑(F.derivative.eval z)), this⟩ :=
         (Subtype.ext <| by simp only [PadicInt.coe_neg, PadicInt.coe_mul, Subtype.coe_mk])
       _ = -F.eval z := by simp only [mul_div_cancel' _ hdzne', Subtype.coe_eta]
-      
   exact ⟨q, by simpa only [sub_eq_add_neg, this, hz', add_right_neg, neg_sq, zero_add] using hq⟩
 
 private def calc_eval_z'_norm {z z' z1 : ℤ_[p]} {n} (hz : ih n z) {q} (heq : F.eval z' = q * z1 ^ 2)
@@ -214,7 +210,6 @@ private def calc_eval_z'_norm {z z' z1 : ℤ_[p]} {n} (hz : ih n z) {q} (heq : F
       simp only [mul_pow]
     _ = ‖F.derivative.eval a‖ ^ 2 * (T ^ 2 ^ n) ^ 2 := (div_sq_cancel _ _)
     _ = ‖F.derivative.eval a‖ ^ 2 * T ^ 2 ^ (n + 1) := by rw [← pow_mul, pow_succ' 2]
-    
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:334:40: warning: unsupported option eqn_compiler.zeta -/
 set_option eqn_compiler.zeta true
@@ -272,7 +267,6 @@ private theorem newton_seq_succ_dist (n : ℕ) :
     _ ≤ ‖F.derivative.eval a‖ ^ 2 * T ^ 2 ^ n / ‖F.derivative.eval a‖ :=
       ((div_le_div_right deriv_norm_pos).2 (newton_seq_norm_le _))
     _ = ‖F.derivative.eval a‖ * T ^ 2 ^ n := div_sq_cancel _ _
-    
 
 include hnsol
 
@@ -299,7 +293,6 @@ private theorem newton_seq_succ_dist_weak (n : ℕ) :
       rw [T, sq, pow_one, norm_div, ← mul_div_assoc, padicNormE.mul]
       apply mul_div_mul_left
       apply deriv_norm_ne_zero <;> assumption
-    
 
 private theorem newton_seq_dist_aux (n : ℕ) :
     ∀ k : ℕ, ‖newton_seq (n + k) - newton_seq n‖ ≤ ‖F.derivative.eval a‖ * T ^ 2 ^ n
@@ -319,7 +312,6 @@ private theorem newton_seq_dist_aux (n : ℕ) :
         max_eq_right <|
           mul_le_mul_of_nonneg_left (pow_le_pow_of_le_one (norm_nonneg _) (le_of_lt T_lt_one) this)
             (norm_nonneg _)
-      
 
 private theorem newton_seq_dist {n k : ℕ} (hnk : n ≤ k) :
     ‖newton_seq k - newton_seq n‖ ≤ ‖F.derivative.eval a‖ * T ^ 2 ^ n :=
@@ -345,7 +337,6 @@ private theorem newton_seq_dist_to_a :
       _ = ‖newton_seq (k + 1) - a‖ := (max_eq_right_of_lt hlt)
       _ = ‖Polynomial.eval a F‖ / ‖Polynomial.eval a (Polynomial.derivative F)‖ :=
         newton_seq_dist_to_a (k + 1) (succ_pos _)
-      
 
 private theorem bound' : Tendsto (fun n : ℕ => ‖F.derivative.eval a‖ * T ^ 2 ^ n) atTop (𝓝 0) :=
   by
@@ -428,7 +419,6 @@ private theorem soln_unique (z : ℤ_[p]) (hev : F.eval z = 0)
       ‖z - soln‖ = ‖z - a + (a - soln)‖ := by rw [sub_add_sub_cancel]
       _ ≤ max ‖z - a‖ ‖a - soln‖ := (PadicInt.nonarchimedean _ _)
       _ < ‖F.derivative.eval a‖ := max_lt hnlt (norm_sub_rev soln a ▸ soln_dist_to_a_lt_deriv)
-      
   let h := z - soln
   let ⟨q, hq⟩ := F.binomExpansion soln h
   have : (F.derivative.eval soln + q * h) * h = 0 :=
@@ -436,8 +426,7 @@ private theorem soln_unique (z : ℤ_[p]) (hev : F.eval z = 0)
       (calc
         0 = F.eval (soln + h) := by simp [hev, h]
         _ = F.derivative.eval soln * h + q * h ^ 2 := by rw [hq, eval_soln, zero_add]
-        _ = (F.derivative.eval soln + q * h) * h := by rw [sq, right_distrib, mul_assoc]
-        )
+        _ = (F.derivative.eval soln + q * h) * h := by rw [sq, right_distrib, mul_assoc])
   have : h = 0 :=
     by_contradiction fun hne =>
       have : F.derivative.eval soln + q * h = 0 :=
@@ -450,8 +439,7 @@ private theorem soln_unique (z : ℤ_[p]) (hev : F.eval z = 0)
             rw [PadicInt.norm_mul]
             exact mul_le_mul_of_nonneg_right (PadicInt.norm_le_one _) (norm_nonneg _)
           _ = ‖z - soln‖ := by simp [h]
-          _ < ‖F.derivative.eval soln‖ := by rw [soln_deriv_norm] <;> apply soln_dist
-          )
+          _ < ‖F.derivative.eval soln‖ := by rw [soln_deriv_norm] <;> apply soln_dist)
   eq_of_sub_eq_zero (by rw [← this] <;> rfl)
 
 end Hensel
@@ -467,8 +455,7 @@ private theorem a_soln_is_unique (ha : F.eval a = 0) (z' : ℤ_[p]) (hz' : F.eva
       (calc
         0 = F.eval (a + h) := show 0 = F.eval (a + (z' - a)) by rw [add_comm] <;> simp [hz']
         _ = F.derivative.eval a * h + q * h ^ 2 := by rw [hq, ha, zero_add]
-        _ = (F.derivative.eval a + q * h) * h := by rw [sq, right_distrib, mul_assoc]
-        )
+        _ = (F.derivative.eval a + q * h) * h := by rw [sq, right_distrib, mul_assoc])
   have : h = 0 :=
     by_contradiction fun hne =>
       have : F.derivative.eval a + q * h = 0 :=
@@ -478,8 +465,7 @@ private theorem a_soln_is_unique (ha : F.eval a = 0) (z' : ℤ_[p]) (hz' : F.eva
         (calc
           ‖F.derivative.eval a‖ = ‖q‖ * ‖h‖ := by simp [this]
           _ ≤ 1 * ‖h‖ := (mul_le_mul_of_nonneg_right (PadicInt.norm_le_one _) (norm_nonneg _))
-          _ < ‖F.derivative.eval a‖ := by simpa [h]
-          )
+          _ < ‖F.derivative.eval a‖ := by simpa [h])
   eq_of_sub_eq_zero (by rw [← this] <;> rfl)
 
 variable (hnorm : ‖F.eval a‖ < ‖F.derivative.eval a‖ ^ 2)

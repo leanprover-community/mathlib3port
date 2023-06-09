@@ -346,7 +346,7 @@ theorem Subsequent.mk_right {xl xr} (xL : xl → PGame) (xR : xr → PGame) (j :
 #align pgame.subsequent.mk_right PGame.Subsequent.mk_right
 -/
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:330:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
 /-- A local tactic for proving well-foundedness of recursive definitions involving pregames. -/
 unsafe def pgame_wf_tac :=
   sorry
@@ -2111,7 +2111,6 @@ theorem add_lf_add_right {y z : PGame} (h : y ⧏ z) (x) : y + x ⧏ z + x :=
     _ ≤ y + (x + -x) := (addAssocRelabelling _ _ _).le
     _ ≤ y + 0 := (add_le_add_left (add_right_neg_le_zero x) _)
     _ ≤ y := (addZeroRelabelling _).le
-    
 #align pgame.add_lf_add_right PGame.add_lf_add_right
 -/
 
@@ -2186,8 +2185,7 @@ theorem le_iff_sub_nonneg {x y : PGame} : x ≤ y ↔ 0 ≤ y - x :=
       _ ≤ y - x + x := (add_le_add_right h _)
       _ ≤ y + (-x + x) := (addAssocRelabelling _ _ _).le
       _ ≤ y + 0 := (add_le_add_left (add_left_neg_le_zero x) _)
-      _ ≤ y := (addZeroRelabelling y).le
-      ⟩
+      _ ≤ y := (addZeroRelabelling y).le⟩
 #align pgame.le_iff_sub_nonneg PGame.le_iff_sub_nonneg
 -/
 
@@ -2199,8 +2197,7 @@ theorem lf_iff_sub_zero_lf {x y : PGame} : x ⧏ y ↔ 0 ⧏ y - x :=
       _ ⧏ y - x + x := (add_lf_add_right h _)
       _ ≤ y + (-x + x) := (addAssocRelabelling _ _ _).le
       _ ≤ y + 0 := (add_le_add_left (add_left_neg_le_zero x) _)
-      _ ≤ y := (addZeroRelabelling y).le
-      ⟩
+      _ ≤ y := (addZeroRelabelling y).le⟩
 #align pgame.lf_iff_sub_zero_lf PGame.lf_iff_sub_zero_lf
 -/
 
@@ -2211,8 +2208,7 @@ theorem lt_iff_sub_pos {x y : PGame} : x < y ↔ 0 < y - x :=
       _ < y - x + x := (add_lt_add_right h _)
       _ ≤ y + (-x + x) := (addAssocRelabelling _ _ _).le
       _ ≤ y + 0 := (add_le_add_left (add_left_neg_le_zero x) _)
-      _ ≤ y := (addZeroRelabelling y).le
-      ⟩
+      _ ≤ y := (addZeroRelabelling y).le⟩
 #align pgame.lt_iff_sub_pos PGame.lt_iff_sub_pos
 
 /-! ### Special pre-games -/

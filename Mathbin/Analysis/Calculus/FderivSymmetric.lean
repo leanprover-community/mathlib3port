@@ -152,7 +152,6 @@ theorem Convex.taylor_approx_two_segment {v w : E} (hv : x + v ∈ interior s)
           (add_le_add le_rfl
             (mul_le_mul_of_nonneg_right ht.2.le (mul_nonneg hpos.le (norm_nonneg _))))
         _ = h * (‖v‖ + ‖w‖) := by ring
-        
     calc
       ‖g' t‖ = ‖(f' (x + h • v + (t * h) • w) - f' x - f'' (h • v + (t * h) • w)) (h • w)‖ :=
         by
@@ -182,7 +181,6 @@ theorem Convex.taylor_approx_two_segment {v w : E} (hv : x + v ∈ interior s)
         exact mul_le_of_le_one_left (mul_nonneg hpos.le (norm_nonneg _)) ht.2.le
       _ = ε * ((‖v‖ + ‖w‖) * ‖w‖) * h ^ 2 := by
         simp only [norm_smul, Real.norm_eq_abs, abs_mul, abs_of_nonneg, hpos.le]; ring
-      
   -- conclude using the mean value inequality
   have I : ‖g 1 - g 0‖ ≤ ε * ((‖v‖ + ‖w‖) * ‖w‖) * h ^ 2 := by
     simpa only [mul_one, sub_zero] using

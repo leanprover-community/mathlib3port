@@ -615,7 +615,6 @@ theorem det_traceForm_ne_zero [IsSeparable K L] [DecidableEq ι] (b : Basis ι K
       _ = 1 := by
         simp only [Basis.toMatrix_mul_toMatrix_flip, Matrix.transpose_one, Matrix.mul_one,
           Matrix.det_one]
-      
   simpa only [trace_matrix_of_basis] using det_traceMatrix_ne_zero' pb
 #align det_trace_form_ne_zero det_traceForm_ne_zero
 

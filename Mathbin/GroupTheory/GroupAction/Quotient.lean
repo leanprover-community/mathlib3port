@@ -175,7 +175,6 @@ def ofQuotientStabilizer (g : α ⧸ MulAction.stabilizer α x) : β :=
     calc
       g1 • x = g1 • (g1⁻¹ * g2) • x := congr_arg _ (leftRel_apply.mp H).symm
       _ = g2 • x := by rw [smul_smul, mul_inv_cancel_left]
-      
 #align mul_action.of_quotient_stabilizer MulAction.ofQuotientStabilizer
 #align add_action.of_quotient_stabilizer AddAction.ofQuotientStabilizer
 -/
@@ -279,7 +278,6 @@ noncomputable def selfEquivSigmaOrbitsQuotientStabilizer' {φ : Ω → β}
       Equiv.sigmaCongrRight fun ω =>
         (Equiv.Set.ofEq <| orbitRel.Quotient.orbit_eq_orbit_out _ hφ).trans <|
           orbitEquivQuotientStabilizer α (φ ω)
-    
 #align mul_action.self_equiv_sigma_orbits_quotient_stabilizer' MulAction.selfEquivSigmaOrbitsQuotientStabilizer'
 #align add_action.self_equiv_sigma_orbits_quotient_stabilizer' AddAction.selfEquivSigmaOrbitsQuotientStabilizer'
 -/
@@ -351,7 +349,6 @@ noncomputable def sigmaFixedByEquivOrbitsProdGroup : (Σ a : α, fixedBy α β a
       (Equiv.sigmaCongrRight fun ω => Equiv.sigmaEquivProd _ _)
     _ ≃ Σ ω : Ω, α := (Equiv.sigmaCongrRight fun ω => orbitProdStabilizerEquivGroup α ω.out')
     _ ≃ Ω × α := Equiv.sigmaEquivProd Ω α
-    
 #align mul_action.sigma_fixed_by_equiv_orbits_prod_group MulAction.sigmaFixedByEquivOrbitsProdGroup
 #align add_action.sigma_fixed_by_equiv_orbits_sum_add_group AddAction.sigmaFixedByEquivOrbitsSumAddGroup
 -/

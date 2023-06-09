@@ -330,7 +330,6 @@ theorem IndepFun.variance_add [IsProbabilityMeasure (ℙ : Measure Ω)] {X Y : �
       congr
       exact h.integral_mul_of_integrable (hX.integrable one_le_two) (hY.integrable one_le_two)
     _ = Var[X] + Var[Y] := by simp only [variance_def', hX, hY, Pi.pow_apply]; ring
-    
 #align probability_theory.indep_fun.variance_add ProbabilityTheory.IndepFun.variance_add
 
 /-- The variance of a finite sum of pairwise independent random variables is the sum of the
@@ -399,7 +398,6 @@ theorem IndepFun.variance_sum [IsProbabilityMeasure (ℙ : Measure Ω)] {ι : Ty
     _ = Var[X k] + ∑ i in s, Var[X i] := by
       rw [IH (fun i hi => hs i (mem_insert_of_mem hi))
           (h.mono (by simp only [coe_insert, Set.subset_insert]))]
-    
 #align probability_theory.indep_fun.variance_sum ProbabilityTheory.IndepFun.variance_sum
 
 end ProbabilityTheory

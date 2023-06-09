@@ -73,7 +73,6 @@ theorem choose_le_centralBinom (r n : ℕ) : choose (2 * n) r ≤ centralBinom n
   calc
     (2 * n).choose r ≤ (2 * n).choose (2 * n / 2) := choose_le_middle r (2 * n)
     _ = (2 * n).choose n := by rw [Nat.mul_div_cancel_left n zero_lt_two]
-    
 #align nat.choose_le_central_binom Nat.choose_le_centralBinom
 -/
 
@@ -83,7 +82,6 @@ theorem two_le_centralBinom (n : ℕ) (n_pos : 0 < n) : 2 ≤ centralBinom n :=
     2 ≤ 2 * n := le_mul_of_pos_right n_pos
     _ = (2 * n).choose 1 := (choose_one_right (2 * n)).symm
     _ ≤ centralBinom n := choose_le_centralBinom 1 n
-    
 #align nat.two_le_central_binom Nat.two_le_centralBinom
 -/
 
@@ -100,7 +98,6 @@ theorem succ_mul_centralBinom_succ (n : ℕ) :
       rw [two_mul n, add_assoc, Nat.add_sub_cancel_left]
     _ = 2 * ((2 * n).choose n * (2 * n + 1)) := by rw [choose_mul_succ_eq]
     _ = 2 * (2 * n + 1) * (2 * n).choose n := by rw [mul_assoc, mul_comm (2 * n + 1)]
-    
 #align nat.succ_mul_central_binom_succ Nat.succ_mul_centralBinom_succ
 -/
 
@@ -121,7 +118,6 @@ theorem four_pow_lt_mul_centralBinom (n : ℕ) (n_big : 4 ≤ n) : 4 ^ n < n * c
       (mul_lt_mul_left <| zero_lt_four' ℕ).mpr (IH n n.lt_succ_self (Nat.le_of_lt_succ hn))
     _ ≤ 2 * (2 * n + 1) * central_binom n := by rw [← mul_assoc]; linarith
     _ = (n + 1) * central_binom (n + 1) := (succ_mul_central_binom_succ n).symm
-    
 #align nat.four_pow_lt_mul_central_binom Nat.four_pow_lt_mul_centralBinom
 -/
 
@@ -140,7 +136,6 @@ theorem four_pow_le_two_mul_self_mul_centralBinom :
     calc
       4 ^ n ≤ n * centralBinom n := (four_pow_lt_mul_centralBinom _ le_add_self).le
       _ ≤ 2 * n * centralBinom n := by rw [mul_assoc]; refine' le_mul_of_pos_left zero_lt_two
-      
 #align nat.four_pow_le_two_mul_self_mul_central_binom Nat.four_pow_le_two_mul_self_mul_centralBinom
 -/
 

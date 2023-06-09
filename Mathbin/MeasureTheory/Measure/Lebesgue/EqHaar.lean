@@ -149,7 +149,6 @@ theorem add_haar_eq_zero_of_disjoint_translates_aux {E : Type _} [NormedAddCommG
           simpa only [image_add_left, singleton_add] using measurable_id.const_add _ h's]
     _ = μ (range u + s) := by rw [← Union_add, Union_singleton_eq_range]
     _ < ∞ := bounded.measure_lt_top (hu.add sb)
-    
 #align measure_theory.measure.add_haar_eq_zero_of_disjoint_translates_aux MeasureTheory.Measure.add_haar_eq_zero_of_disjoint_translates_aux
 
 /-- If a set is disjoint of its translates by infinitely many bounded vectors, then it has measure
@@ -165,7 +164,6 @@ theorem add_haar_eq_zero_of_disjoint_translates {E : Type _} [NormedAddCommGroup
       μ s ≤ ∑' n : ℕ, μ (s ∩ closed_ball 0 n) := by
         conv_lhs => rw [← Union_inter_closed_ball_nat s 0]; exact measure_Union_le _
       _ = 0 := by simp only [H, tsum_zero]
-      
   intro R
   apply
     add_haar_eq_zero_of_disjoint_translates_aux μ u
@@ -285,7 +283,6 @@ theorem add_haar_preimage_linearMap {f : E →ₗ[ℝ] E} (hf : f.det ≠ 0) (s 
           s).symm
     _ = ENNReal.ofReal (abs f.det⁻¹) * μ s := by rw [map_linear_map_add_haar_eq_smul_add_haar μ hf];
       rfl
-    
 #align measure_theory.measure.add_haar_preimage_linear_map MeasureTheory.Measure.add_haar_preimage_linearMap
 
 /-- The preimage of a set `s` under a continuous linear map `f` with nonzero determinant has measure
@@ -377,7 +374,6 @@ theorem add_haar_preimage_smul {r : ℝ} (hr : r ≠ 0) (s : Set E) :
     μ ((· • ·) r ⁻¹' s) = Measure.map ((· • ·) r) μ s :=
       ((Homeomorph.smul (isUnit_iff_ne_zero.2 hr).Unit).toMeasurableEquiv.map_apply s).symm
     _ = ENNReal.ofReal (abs (r ^ finrank ℝ E)⁻¹) * μ s := by rw [map_add_haar_smul μ hr]; rfl
-    
 #align measure_theory.measure.add_haar_preimage_smul MeasureTheory.Measure.add_haar_preimage_smul
 
 /-- Rescaling a set by a factor `r` multiplies its measure by `abs (r ^ dim)`. -/
@@ -433,7 +429,6 @@ theorem add_haar_image_homothety (x : E) (r : ℝ) (s : Set E) :
       simp only [← image_smul, image_image, ← sub_eq_add_neg]; rfl
     _ = ENNReal.ofReal (abs (r ^ finrank ℝ E)) * μ s := by
       simp only [image_add_right, measure_preimage_add_right, add_haar_smul]
-    
 #align measure_theory.measure.add_haar_image_homothety MeasureTheory.Measure.add_haar_image_homothety
 
 /-! We don't need to state `map_add_haar_neg` here, because it has already been proved for
@@ -581,7 +576,6 @@ theorem add_haar_singleton_add_smul_div_singleton_add_smul {r : ℝ} (hr : r ≠
       rw [ENNReal.mul_inv_cancel, one_mul, div_eq_mul_inv]
       · simp only [pow_pos (abs_pos.mpr hr), ENNReal.ofReal_eq_zero, not_le, Ne.def]
       · simp only [ENNReal.ofReal_ne_top, Ne.def, not_false_iff]
-    
 #align measure_theory.measure.add_haar_singleton_add_smul_div_singleton_add_smul MeasureTheory.Measure.add_haar_singleton_add_smul_div_singleton_add_smul
 
 #print MeasureTheory.Measure.isUnifLocDoublingMeasureOfIsAddHaarMeasure /-
@@ -730,7 +724,6 @@ theorem tendsto_add_haar_inter_smul_zero_of_density_zero_aux1 (s : Set E) (x : E
       rw [ENNReal.mul_inv_cancel (measure_closed_ball_pos μ x rpos).ne'
           measure_closed_ball_lt_top.ne,
         one_mul]
-    
 #align measure_theory.measure.tendsto_add_haar_inter_smul_zero_of_density_zero_aux1 MeasureTheory.Measure.tendsto_add_haar_inter_smul_zero_of_density_zero_aux1
 
 theorem tendsto_add_haar_inter_smul_zero_of_density_zero_aux2 (s : Set E) (x : E)
@@ -788,7 +781,6 @@ theorem tendsto_add_haar_inter_smul_zero_of_density_zero (s : Set E) (x : E)
       _ = 0 := by
         simp only [h't, add_haar_smul, image_add_left, measure_preimage_add, singleton_add,
           MulZeroClass.mul_zero]
-      
   obtain ⟨n, npos, hn⟩ : ∃ n : ℕ, 0 < n ∧ μ (t \ closed_ball 0 n) < ε / 2 * μ t :=
     by
     have A :
@@ -823,7 +815,6 @@ theorem tendsto_add_haar_inter_smul_zero_of_density_zero (s : Set E) (x : E)
         (measure_union_le _ _)
       _ ≤ μ (s ∩ ({x} + r • (t ∩ closed_ball 0 n))) + μ ({x} + r • (t \ closed_ball 0 n)) :=
         add_le_add le_rfl (measure_mono (inter_subset_right _ _))
-      
   calc
     μ (s ∩ ({x} + r • t)) / μ ({x} + r • t) ≤
         (μ (s ∩ ({x} + r • (t ∩ closed_ball 0 n))) + μ ({x} + r • (t \ closed_ball 0 n))) /
@@ -835,7 +826,6 @@ theorem tendsto_add_haar_inter_smul_zero_of_density_zero (s : Set E) (x : E)
       rwa [add_haar_singleton_add_smul_div_singleton_add_smul μ rpos.ne',
         ENNReal.div_lt_iff (Or.inl h't) (Or.inl h''t)]
     _ = ε := ENNReal.add_halves _
-    
 #align measure_theory.measure.tendsto_add_haar_inter_smul_zero_of_density_zero MeasureTheory.Measure.tendsto_add_haar_inter_smul_zero_of_density_zero
 
 theorem tendsto_add_haar_inter_smul_one_of_density_one_aux (s : Set E) (hs : MeasurableSet s)

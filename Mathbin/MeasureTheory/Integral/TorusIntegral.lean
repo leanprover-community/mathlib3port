@@ -232,11 +232,9 @@ theorem norm_torusIntegral_le_of_norm_le_const {C : ℝ} (hf : ∀ θ, ‖f (tor
             by simp [norm_smul]
           _ ≤ (∏ i : Fin n, |R i|) * C :=
             mul_le_mul_of_nonneg_left (hf _) (Finset.prod_nonneg fun _ _ => abs_nonneg _)
-          
     _ = ((2 * π) ^ (n : ℕ) * ∏ i, |R i|) * C := by
       simp only [Pi.zero_def, Real.volume_Icc_pi_toReal fun _ => real.two_pi_pos.le, sub_zero,
         Fin.prod_const, mul_assoc, mul_comm ((2 * π) ^ (n : ℕ))]
-    
 #align norm_torus_integral_le_of_norm_le_const norm_torusIntegral_le_of_norm_le_const
 
 @[simp]

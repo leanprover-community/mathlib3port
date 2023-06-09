@@ -75,7 +75,6 @@ theorem range_list_getD (d : α) : (range fun n => l.getD n d) = insert d {x | x
       simp only [← range_comp, (· ∘ ·), nthd_eq_get_or_else_nth]
     _ = insert d {x | x ∈ l} := by
       simp only [range_list_nth, image_insert_eq, Option.getD, image_image, image_id']
-    
 #align set.range_list_nthd Set.range_list_getD
 -/
 

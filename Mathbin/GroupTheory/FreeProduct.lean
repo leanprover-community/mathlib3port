@@ -729,7 +729,6 @@ theorem lift_word_ping_pong {i j k} (w : NeWord H i j) (hk : j ≠ k) : lift f w
         simp [MulAction.mul_smul]
       _ ⊆ lift f w₁.prod • X k := (set_smul_subset_set_smul_iff.mpr (hIw₂ hm))
       _ ⊆ X i := hIw₁ hne
-      
 #align free_product.lift_word_ping_pong FreeProduct.lift_word_ping_pong
 
 include X hXnonempty hXdisj
@@ -952,9 +951,7 @@ theorem FreeGroup.injective_lift_of_ping_pong : Function.Injective (FreeGroup.li
               _ ⊆ a i ^ n • X i := (smul_set_mono <| hX i)
               _ ⊆ a i ^ n • Y iᶜ := (smul_set_mono (hXYdisj i i).subset_compl_right)
               _ ⊆ X i := hi
-              
         _ ⊆ X' i := Set.subset_union_left _ _
-        
     · have h1n : n ≤ -1 := by apply Int.le_of_lt_add_one; simpa using hgt
       calc
         a i ^ n • X' j ⊆ a i ^ n • X iᶜ :=
@@ -969,9 +966,7 @@ theorem FreeGroup.injective_lift_of_ping_pong : Function.Injective (FreeGroup.li
               _ ⊆ a i ^ n • Y i := (smul_set_mono <| hY i)
               _ ⊆ a i ^ n • X iᶜ := (smul_set_mono (hXYdisj i i).symm.subset_compl_right)
               _ ⊆ Y i := hi
-              
         _ ⊆ X' i := Set.subset_union_right _ _
-        
 #align free_group.injective_lift_of_ping_pong FreeGroup.injective_lift_of_ping_pong
 
 end PingPongLemma

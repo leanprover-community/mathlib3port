@@ -107,7 +107,6 @@ theorem lfp_le_map {a : α} (ha : lfp f ≤ a) : lfp f ≤ f a :=
   calc
     lfp f = f (lfp f) := f.map_lfp.symm
     _ ≤ f a := f.mono ha
-    
 #align order_hom.lfp_le_map OrderHom.lfp_le_map
 -/
 
@@ -220,7 +219,6 @@ theorem lfp_lfp (h : α →o α →o α) : lfp (lfp.comp h) = lfp h.onDiag :=
     h a a = h a (lfp (h a)) := congr_arg (h a) ha.symm
     _ = lfp (h a) := (h a).map_lfp
     _ = a := ha
-    
 #align order_hom.lfp_lfp OrderHom.lfp_lfp
 -/
 
@@ -249,8 +247,7 @@ def prevFixed (x : α) (hx : f x ≤ x) : fixedPoints f :=
     calc
       f (gfp (const α x ⊓ f)) = x ⊓ f (gfp (const α x ⊓ f)) :=
         Eq.symm <| inf_of_le_right <| (f.mono <| f.gfp_const_inf_le x).trans hx
-      _ = gfp (const α x ⊓ f) := (const α x ⊓ f).map_gfp
-      ⟩
+      _ = gfp (const α x ⊓ f) := (const α x ⊓ f).map_gfp⟩
 #align order_hom.prev_fixed OrderHom.prevFixed
 -/
 
@@ -309,7 +306,6 @@ theorem le_map_sup_fixedPoints (x y : fixedPoints f) : (x ⊔ y : α) ≤ f (x �
   calc
     (x ⊔ y : α) = f x ⊔ f y := congr_arg₂ (· ⊔ ·) x.2.symm y.2.symm
     _ ≤ f (x ⊔ y) := f.mono.le_map_sup x y
-    
 #align order_hom.le_map_sup_fixed_points OrderHom.le_map_sup_fixedPoints
 
 theorem map_inf_fixedPoints_le (x y : fixedPoints f) : f (x ⊓ y) ≤ x ⊓ y :=

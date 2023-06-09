@@ -102,7 +102,6 @@ theorem area_disc : volume (disc r) = NNReal.pi * r ^ 2 :=
           neg_le_self (sqrt_nonneg _))
       _ = ENNReal.ofReal (∫ x in (-r : ℝ)..r, 2 * f x) := by simp [two_mul, integral_of_le]
       _ = NNReal.pi * r ^ 2 := by rw_mod_cast [this, ← ENNReal.coe_nnreal_eq]
-      
   obtain ⟨hle, heq | hlt⟩ := NNReal.coe_nonneg r, hle.eq_or_lt; · simp [← HEq]
   have hderiv : ∀ x ∈ Ioo (-r : ℝ) r, HasDerivAt F (2 * f x) x :=
     by
@@ -124,12 +123,10 @@ theorem area_disc : volume (disc r) = NNReal.pi * r ^ 2 :=
       calc
         -(1 : ℝ) = r⁻¹ * -r := by simp [hlt.ne']
         _ < r⁻¹ * x := by nlinarith [inv_pos.mpr hlt]
-        
     · suffices (r : ℝ)⁻¹ * x < 1 by exact this.ne
       calc
         (r : ℝ)⁻¹ * x < r⁻¹ * r := by nlinarith [inv_pos.mpr hlt]
         _ = 1 := inv_mul_cancel hlt.ne'
-        
     · nlinarith
   have hcont := (by continuity : Continuous F).ContinuousOn
   calc
@@ -137,7 +134,6 @@ theorem area_disc : volume (disc r) = NNReal.pi * r ^ 2 :=
       integral_eq_sub_of_has_deriv_at_of_le (neg_le_self r.2) hcont hderiv
         (continuous_const.mul hf).ContinuousOn.IntervalIntegrable
     _ = NNReal.pi * r ^ 2 := by norm_num [F, inv_mul_cancel hlt.ne', ← mul_div_assoc, mul_comm π]
-    
 #align theorems_100.area_disc Theorems100.area_disc
 
 end Theorems100

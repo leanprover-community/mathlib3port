@@ -102,7 +102,6 @@ theorem cos_eq_cos_iff {x y : ℂ} : cos x = cos y ↔ ∃ k : ℤ, y = 2 * k * 
           sub_eq_iff_eq_add, mul_comm (2 : ℂ), mul_right_comm _ (2 : ℂ)]
       constructor <;> · rintro ⟨k, rfl⟩; use -k; simp
     _ ↔ ∃ k : ℤ, y = 2 * k * π + x ∨ y = 2 * k * π - x := exists_or.symm
-    
 #align complex.cos_eq_cos_iff Complex.cos_eq_cos_iff
 
 theorem sin_eq_sin_iff {x y : ℂ} :

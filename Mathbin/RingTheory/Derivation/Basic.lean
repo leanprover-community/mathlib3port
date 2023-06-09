@@ -424,7 +424,6 @@ theorem leibniz_of_mul_eq_one {a b : A} (h : a * b = 1) : D a = -a ^ 2 • D b :
     D a + a ^ 2 • D b = a • b • D a + a • a • D b := by simp only [smul_smul, h, one_smul, sq]
     _ = a • D (a * b) := by rw [leibniz, smul_add, add_comm]
     _ = 0 := by rw [h, map_one_eq_zero, smul_zero]
-    
 #align derivation.leibniz_of_mul_eq_one Derivation.leibniz_of_mul_eq_one
 
 theorem leibniz_invOf [Invertible a] : D (⅟ a) = -⅟ a ^ 2 • D a :=

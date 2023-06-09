@@ -68,20 +68,17 @@ theorem MvPolynomial.sum_eval_eq_zero (f : MvPolynomial σ K)
       simp only [eval_eq']
     _ = ∑ d in f.support, ∑ x : σ → K, f.coeff d * ∏ i, x i ^ d i := sum_comm
     _ = 0 := sum_eq_zero _
-    
   intro d hd
   obtain ⟨i, hi⟩ : ∃ i, d i < q - 1; exact f.exists_degree_lt (q - 1) h hd
   calc
     (∑ x : σ → K, f.coeff d * ∏ i, x i ^ d i) = f.coeff d * ∑ x : σ → K, ∏ i, x i ^ d i :=
       mul_sum.symm
     _ = 0 := (mul_eq_zero.mpr ∘ Or.inr) _
-    
   calc
     (∑ x : σ → K, ∏ i, x i ^ d i) =
         ∑ (x₀ : { j // j ≠ i } → K) (x : { x : σ → K // x ∘ coe = x₀ }), ∏ j, (x : σ → K) j ^ d j :=
       (Fintype.sum_fiberwise _ _).symm
     _ = 0 := Fintype.sum_eq_zero _ _
-    
   intro x₀
   let e : K ≃ { x // x ∘ coe = x₀ } := (Equiv.subtypeEquivCodomain _).symm
   calc
@@ -91,7 +88,6 @@ theorem MvPolynomial.sum_eval_eq_zero (f : MvPolynomial σ K)
     _ = ∑ a : K, (∏ j, x₀ j ^ d j) * a ^ d i := (Fintype.sum_congr _ _ _)
     _ = (∏ j, x₀ j ^ d j) * ∑ a : K, a ^ d i := by rw [mul_sum]
     _ = 0 := by rw [sum_pow_lt_card_sub_one _ hi, MulZeroClass.mul_zero]
-    
   intro a
   let e' : Sum { j // j = i } { j // j ≠ i } ≃ σ := Equiv.sumCompl _
   letI : Unique { j // j = i } :=
@@ -108,7 +104,6 @@ theorem MvPolynomial.sum_eval_eq_zero (f : MvPolynomial σ K)
         _ =
         (∏ j, x₀ j ^ d j) * a ^ d i :=
       mul_comm _ _
-    
   · -- the remaining step of the calculation above
     rintro ⟨j, hj⟩
     show (e a : σ → K) j ^ d j = x₀ ⟨j, hj⟩ ^ d j
@@ -142,7 +137,6 @@ theorem char_dvd_card_solutions_of_sum_lt {s : Finset ι} {f : ι → MvPolynomi
     calc
       eval x F = ∏ i in s, eval x (1 - f i ^ (q - 1)) := eval_prod s _ x
       _ = if x ∈ S then 1 else 0 := _
-      
     simp only [(eval x).map_sub, (eval x).map_pow, (eval x).map_one]
     split_ifs with hx hx
     · apply Finset.prod_eq_one
@@ -173,7 +167,6 @@ theorem char_dvd_card_solutions_of_sum_lt {s : Finset ι} {f : ι → MvPolynomi
         (q - 1) * ∑ i in s, (f i).totalDegree :=
       mul_sum.symm
     _ < (q - 1) * Fintype.card σ := by rwa [mul_lt_mul_left hq]
-    
   -- Now we prove the remaining step from the preceding calculation
   show (1 - f i ^ (q - 1)).totalDegree ≤ (q - 1) * (f i).totalDegree
   calc
@@ -182,7 +175,6 @@ theorem char_dvd_card_solutions_of_sum_lt {s : Finset ι} {f : ι → MvPolynomi
       total_degree_sub _ _
     _ ≤ (f i ^ (q - 1)).totalDegree := by simp only [max_eq_right, Nat.zero_le, total_degree_one]
     _ ≤ (q - 1) * (f i).totalDegree := total_degree_pow _ _
-    
 #align char_dvd_card_solutions_of_sum_lt char_dvd_card_solutions_of_sum_lt
 
 /-- The **Chevalley–Warning theorem**, fintype version.

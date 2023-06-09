@@ -266,7 +266,6 @@ theorem det_kroneckerMapBilinear [CommSemiring R] [Fintype m] [Fintype n] [Decid
       · exact LinearMap.map_zero₂ _ _
       · exact map_zero _
     _ = _ := by simp_rw [det_block_diagonal, Finset.prod_const, Finset.card_univ]
-    
 #align matrix.det_kronecker_map_bilinear Matrix.det_kroneckerMapBilinear
 
 end KroneckerMap

@@ -325,7 +325,6 @@ theorem norm_sub_eq_add_norm_iff_angle_eq_pi {x y : V} (hx : x ≠ 0) (hy : y �
   calc
     ⟪x, y⟫ = (‖x‖ ^ 2 + ‖y‖ ^ 2 - (‖x‖ + ‖y‖) ^ 2) / 2 := by linarith
     _ = -(‖x‖ * ‖y‖) := by ring
-    
 #align inner_product_geometry.norm_sub_eq_add_norm_iff_angle_eq_pi InnerProductGeometry.norm_sub_eq_add_norm_iff_angle_eq_pi
 
 /-- The norm of the sum of two non-zero vectors equals the sum of their norms
@@ -340,7 +339,6 @@ theorem norm_add_eq_add_norm_iff_angle_eq_zero {x y : V} (hx : x ≠ 0) (hy : y 
   calc
     ⟪x, y⟫ = ((‖x‖ + ‖y‖) ^ 2 - ‖x‖ ^ 2 - ‖y‖ ^ 2) / 2 := by linarith
     _ = ‖x‖ * ‖y‖ := by ring
-    
 #align inner_product_geometry.norm_add_eq_add_norm_iff_angle_eq_zero InnerProductGeometry.norm_add_eq_add_norm_iff_angle_eq_zero
 
 /-- The norm of the difference of two non-zero vectors equals the absolute value
@@ -355,7 +353,6 @@ theorem norm_sub_eq_abs_sub_norm_iff_angle_eq_zero {x y : V} (hx : x ≠ 0) (hy 
   calc
     ⟪x, y⟫ = ((‖x‖ + ‖y‖) ^ 2 - ‖x‖ ^ 2 - ‖y‖ ^ 2) / 2 := by linarith
     _ = ‖x‖ * ‖y‖ := by ring
-    
 #align inner_product_geometry.norm_sub_eq_abs_sub_norm_iff_angle_eq_zero InnerProductGeometry.norm_sub_eq_abs_sub_norm_iff_angle_eq_zero
 
 /-- The norm of the sum of two vectors equals the norm of their difference if and only if

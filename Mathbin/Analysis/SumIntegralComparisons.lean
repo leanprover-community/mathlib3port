@@ -79,7 +79,6 @@ theorem AntitoneOn.integral_le_sum (hf : AntitoneOn f (Icc x₀ (x₀ + a))) :
       · refine' mem_Icc.2 ⟨le_trans (by simp) hx.1, le_trans hx.2 _⟩
         simp only [add_le_add_iff_left, Nat.cast_le, Nat.succ_le_of_lt ia]
     _ = ∑ i in Finset.range a, f (x₀ + i) := by simp
-    
 #align antitone_on.integral_le_sum AntitoneOn.integral_le_sum
 
 theorem AntitoneOn.integral_le_sum_Ico (hab : a ≤ b) (hf : AntitoneOn f (Set.Icc a b)) :
@@ -140,7 +139,6 @@ theorem AntitoneOn.sum_le_integral (hf : AntitoneOn f (Icc x₀ (x₀ + a))) :
       by
       convert intervalIntegral.sum_integral_adjacent_intervals hint
       simp only [Nat.cast_zero, add_zero]
-    
 #align antitone_on.sum_le_integral AntitoneOn.sum_le_integral
 
 theorem AntitoneOn.sum_le_integral_Ico (hab : a ≤ b) (hf : AntitoneOn f (Set.Icc a b)) :

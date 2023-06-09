@@ -154,7 +154,6 @@ def unitCompPartialBijective [Reflective i] (A : C) {B : C} (hB : B ∈ i.essIma
     (A ⟶ B) ≃ (A ⟶ i.obj hB.witness) := Iso.homCongr (Iso.refl _) hB.getIso.symm
     _ ≃ (i.obj _ ⟶ i.obj hB.witness) := (unitCompPartialBijectiveAux _ _)
     _ ≃ (i.obj ((leftAdjoint i).obj A) ⟶ B) := Iso.homCongr (Iso.refl _) hB.getIso
-    
 #align category_theory.unit_comp_partial_bijective CategoryTheory.unitCompPartialBijective
 
 @[simp]

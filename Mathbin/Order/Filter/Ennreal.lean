@@ -98,7 +98,6 @@ theorem limsup_mul_le [CountableInterFilter f] (u v : α → ℝ≥0∞) :
         run_tac
           is_bounded_default
     _ = f.limsup u * f.limsup v := limsup_const_mul
-    
 #align ennreal.limsup_mul_le ENNReal.limsup_mul_le
 
 theorem limsup_add_le [CountableInterFilter f] (u v : α → ℝ≥0∞) :

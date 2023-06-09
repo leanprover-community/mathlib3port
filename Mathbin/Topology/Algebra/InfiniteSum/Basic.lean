@@ -576,7 +576,6 @@ theorem tsum_tsum_eq_single (f : β → γ → α) (b : β) (c : γ) (hfb : ∀ 
   calc
     (∑' (b') (c'), f b' c') = ∑' b', f b' c := tsum_congr fun b' => tsum_eq_single _ (hfc b')
     _ = f b c := tsum_eq_single _ hfb
-    
 #align tsum_tsum_eq_single tsum_tsum_eq_single
 
 @[simp]
@@ -716,7 +715,6 @@ theorem tsum_eq_add_tsum_ite' {f : β → α} (b : β) (hf : Summable (f.update 
       exact tsum_eq_single b fun b' hb' => if_neg hb'
     _ = f b + ∑' x, ite (x = b) 0 (f x) := by
       simp only [Function.update, eq_self_iff_true, if_true, eq_rec_constant, dite_eq_ite]
-    
 #align tsum_eq_add_tsum_ite' tsum_eq_add_tsum_ite'
 
 variable [AddCommMonoid δ] [TopologicalSpace δ] [T3Space δ] [ContinuousAdd δ]
@@ -1134,7 +1132,6 @@ theorem HasSum.sum_nat_of_sum_int {α : Type _} [AddCommMonoid α] [TopologicalS
     _ = (∑ b in v', f b) + ∑ b in v', f (-b) := by
       simp only [sum_image, Nat.cast_inj, imp_self, imp_true_iff, neg_inj]
     _ = ∑ b in v', f b + f (-b) := sum_add_distrib.symm
-    
 #align has_sum.sum_nat_of_sum_int HasSum.sum_nat_of_sum_int
 
 end Nat
@@ -1230,7 +1227,6 @@ theorem Summable.summable_of_eq_zero_or_self (hf : Summable f) (h : ∀ b, g b =
             intro b hbt hb
             simp only [(· ∉ ·), Finset.mem_filter, and_iff_right hbt] at hb 
             exact (h b).resolve_right hb
-          
       Eq ▸ hs _ <| Finset.disjoint_of_subset_left (Finset.filter_subset _ _) ht⟩
 #align summable.summable_of_eq_zero_or_self Summable.summable_of_eq_zero_or_self
 

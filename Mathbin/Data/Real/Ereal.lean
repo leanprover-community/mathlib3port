@@ -744,7 +744,6 @@ theorem add_lt_add_of_lt_of_le {x y z t : EReal} (h : x < y) (h' : z ≤ t) (hz 
     calc
       x + z < y + z := add_lt_add_right_coe h _
       _ ≤ y + t := add_le_add le_rfl h'
-      
   · exact (ht (top_le_iff.1 h')).elim
 #align ereal.add_lt_add_of_lt_of_le EReal.add_lt_add_of_lt_of_le
 
@@ -760,7 +759,6 @@ theorem add_lt_add {x y z t : EReal} (h1 : x < y) (h2 : z < t) : x + z < y + t :
     calc
       (x : EReal) + z < x + t := add_lt_add_left_coe h2 _
       _ ≤ y + t := add_le_add h1.le le_rfl
-      
   · exact (lt_irrefl _ (h1.trans_le le_top)).elim
 #align ereal.add_lt_add EReal.add_lt_add
 

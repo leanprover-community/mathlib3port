@@ -127,10 +127,9 @@ private theorem pseudo_metric_space.dist_nonneg' {α} {x y : α} (dist : α → 
     calc
       2 * dist x y = dist x y + dist y x := by rw [dist_comm x y, two_mul]
       _ ≥ 0 := by rw [← dist_self x] <;> apply dist_triangle
-      
   nonneg_of_mul_nonneg_right this zero_lt_two
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:330:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
 /-- This tactic is used to populate `pseudo_metric_space.edist_dist` when the default `edist` is
 used. -/
 protected unsafe def pseudo_metric_space.edist_dist_tac : tactic Unit :=
@@ -261,7 +260,6 @@ theorem dist_triangle4 (x y z w : α) : dist x w ≤ dist x y + dist y z + dist 
   calc
     dist x w ≤ dist x z + dist z w := dist_triangle x z w
     _ ≤ dist x y + dist y z + dist z w := add_le_add_right (dist_triangle x y z) _
-    
 #align dist_triangle4 dist_triangle4
 
 theorem dist_triangle4_left (x₁ y₁ x₂ y₂ : α) :
@@ -287,7 +285,6 @@ theorem dist_le_Ico_sum_dist (f : ℕ → α) {m n} (h : m ≤ n) :
       _ ≤ (∑ i in Finset.Ico m n, _) + _ := (add_le_add hrec le_rfl)
       _ = ∑ i in Finset.Ico m (n + 1), _ := by
         rw [Nat.Ico_succ_right_eq_insert_Ico hn, Finset.sum_insert, add_comm] <;> simp
-      
 #align dist_le_Ico_sum_dist dist_le_Ico_sum_dist
 
 /-- The triangle (polygon) inequality for sequences of points; `finset.range` version. -/
@@ -687,7 +684,6 @@ theorem ball_subset_ball' (h : ε₁ + dist x y ≤ ε₂) : ball x ε₁ ⊆ ba
     dist z y ≤ dist z x + dist x y := dist_triangle _ _ _
     _ < ε₁ + dist x y := (add_lt_add_right hz _)
     _ ≤ ε₂ := h
-    
 #align metric.ball_subset_ball' Metric.ball_subset_ball'
 
 theorem closedBall_subset_closedBall (h : ε₁ ≤ ε₂) : closedBall x ε₁ ⊆ closedBall x ε₂ :=
@@ -700,7 +696,6 @@ theorem closedBall_subset_closedBall' (h : ε₁ + dist x y ≤ ε₂) :
     dist z y ≤ dist z x + dist x y := dist_triangle _ _ _
     _ ≤ ε₁ + dist x y := (add_le_add_right hz _)
     _ ≤ ε₂ := h
-    
 #align metric.closed_ball_subset_closed_ball' Metric.closedBall_subset_closedBall'
 
 theorem closedBall_subset_ball (h : ε₁ < ε₂) : closedBall x ε₁ ⊆ ball x ε₂ :=
@@ -713,7 +708,6 @@ theorem closedBall_subset_ball' (h : ε₁ + dist x y < ε₂) : closedBall x ε
     dist z y ≤ dist z x + dist x y := dist_triangle _ _ _
     _ ≤ ε₁ + dist x y := (add_le_add_right hz _)
     _ < ε₂ := h
-    
 #align metric.closed_ball_subset_ball' Metric.closedBall_subset_ball'
 
 theorem dist_le_add_of_nonempty_closedBall_inter_closedBall
@@ -722,7 +716,6 @@ theorem dist_le_add_of_nonempty_closedBall_inter_closedBall
   calc
     dist x y ≤ dist z x + dist z y := dist_triangle_left _ _ _
     _ ≤ ε₁ + ε₂ := add_le_add hz.1 hz.2
-    
 #align metric.dist_le_add_of_nonempty_closed_ball_inter_closed_ball Metric.dist_le_add_of_nonempty_closedBall_inter_closedBall
 
 theorem dist_lt_add_of_nonempty_closedBall_inter_ball (h : (closedBall x ε₁ ∩ ball y ε₂).Nonempty) :
@@ -731,7 +724,6 @@ theorem dist_lt_add_of_nonempty_closedBall_inter_ball (h : (closedBall x ε₁ �
   calc
     dist x y ≤ dist z x + dist z y := dist_triangle_left _ _ _
     _ < ε₁ + ε₂ := add_lt_add_of_le_of_lt hz.1 hz.2
-    
 #align metric.dist_lt_add_of_nonempty_closed_ball_inter_ball Metric.dist_lt_add_of_nonempty_closedBall_inter_ball
 
 theorem dist_lt_add_of_nonempty_ball_inter_closedBall (h : (ball x ε₁ ∩ closedBall y ε₂).Nonempty) :
@@ -1707,7 +1699,6 @@ theorem cauchySeq_of_le_tendsto_0' {s : β → α} (b : β → ℝ)
         dist (s n) (s N) = dist (s N) (s n) := dist_comm _ _
         _ ≤ b N := (h _ _ hn)
         _ < ε := hN
-        
 #align cauchy_seq_of_le_tendsto_0' cauchySeq_of_le_tendsto_0'
 
 /-- If the distance between `s n` and `s m`, `n, m ≥ N` is bounded above by `b N`
@@ -2201,7 +2192,6 @@ theorem TopologicalSpace.IsSeparable.separableSpace {s : Set α} (hs : IsSeparab
     dist x A.some ≤ dist x z + dist z A.some := dist_triangle _ _ _
     _ < r / 2 + r / 2 := (add_lt_add (hz.trans hn) ((Metric.mem_ball'.1 A.some_spec.1).trans hn))
     _ = r := add_halves _
-    
 #align topological_space.is_separable.separable_space TopologicalSpace.IsSeparable.separableSpace
 
 #print Inducing.isSeparable_preimage /-
@@ -2676,8 +2666,7 @@ theorem bounded_closedBall : Bounded (closedBall x r) :=
     simp only [mem_closed_ball] at *
     calc
       dist y z ≤ dist y x + dist z x := dist_triangle_right _ _ _
-      _ ≤ r + r := add_le_add hy hz
-      ⟩
+      _ ≤ r + r := add_le_add hy hz⟩
 #align metric.bounded_closed_ball Metric.bounded_closedBall
 -/
 
@@ -2707,8 +2696,7 @@ theorem bounded_iff_subset_ball (c : α) : Bounded s ↔ ∃ r, s ⊆ closedBall
         ⟨C + dist x c, fun y hy =>
           calc
             dist y c ≤ dist y x + dist x c := dist_triangle _ _ _
-            _ ≤ C + dist x c := add_le_add_right (hC y hy x hx) _
-            ⟩
+            _ ≤ C + dist x c := add_le_add_right (hC y hy x hx) _⟩
   · exact bounded_closed_ball.mono hC
 #align metric.bounded_iff_subset_ball Metric.bounded_iff_subset_ball
 -/
@@ -3177,7 +3165,6 @@ theorem diam_le_of_subset_closedBall {r : ℝ} (hr : 0 ≤ r) (h : s ⊆ closedB
       dist a b ≤ dist a x + dist b x := dist_triangle_right _ _ _
       _ ≤ r + r := (add_le_add (h ha) (h hb))
       _ = 2 * r := by simp [mul_two, mul_comm]
-      
 #align metric.diam_le_of_subset_closed_ball Metric.diam_le_of_subset_closedBall
 
 /-- The diameter of a closed ball of radius `r` is at most `2 r`. -/

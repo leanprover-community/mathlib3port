@@ -204,7 +204,6 @@ theorem HasConstantSpeedOnWith.ratio {l' : ℝ≥0} (hl' : l' ≠ 0) {φ : ℝ �
       (variationOnFromTo.comp_eq_of_monotoneOn f φ φm xs ys)
     _ = l' * (φ y - φ x) := (hf.2 ⟨x, xs, rfl⟩ ⟨y, ys, rfl⟩)
     _ = (φ y - φ x) * l' := by rw [mul_comm]
-    
 #align has_constant_speed_on_with.ratio HasConstantSpeedOnWith.ratio
 
 /-- `f` has unit speed on `s` if it is linearly parameterized by `l = 1` on `s`. -/

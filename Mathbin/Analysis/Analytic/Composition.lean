@@ -349,7 +349,6 @@ theorem compAlongComposition_bound {n : ℕ} (p : FormalMultilinearSeries 𝕜 E
       by
       rw [← c.blocks_fin_equiv.prod_comp, ← Finset.univ_sigma_univ, Finset.prod_sigma]
       congr
-    
 #align formal_multilinear_series.comp_along_composition_bound FormalMultilinearSeries.compAlongComposition_bound
 
 /-- The norm of `q.comp_along_composition p c` is controlled by the product of
@@ -511,7 +510,6 @@ theorem comp_summable_nNReal (q : FormalMultilinearSeries 𝕜 F G) (p : FormalM
       ‖q c.length‖₊ * rq ^ n ≤ ‖q c.length‖₊ * rq ^ c.length :=
         mul_le_mul' le_rfl (pow_le_pow_of_le_one rq.2 hrq.1.le c.length_le)
       _ ≤ Cq := hCq _
-      
     have B
     calc
       (∏ i, ‖p (c.blocks_fun i)‖₊) * rp ^ n = ∏ i, ‖p (c.blocks_fun i)‖₊ * rp ^ c.blocks_fun i := by
@@ -519,7 +517,6 @@ theorem comp_summable_nNReal (q : FormalMultilinearSeries 𝕜 F G) (p : FormalM
       _ ≤ ∏ i : Fin c.length, Cp := (Finset.prod_le_prod' fun i _ => hCp _)
       _ = Cp ^ c.length := by simp
       _ ≤ Cp ^ n := pow_le_pow hCp1 c.length_le
-      
     calc
       ‖q.comp_along_composition p c‖₊ * r ^ n ≤
           (‖q c.length‖₊ * ∏ i, ‖p (c.blocks_fun i)‖₊) * r ^ n :=
@@ -531,7 +528,6 @@ theorem comp_summable_nNReal (q : FormalMultilinearSeries 𝕜 F G) (p : FormalM
         simp only [r0]
         field_simp [mul_pow, (zero_lt_one.trans_le hCp1).ne']
         ring
-      
   refine' ⟨r, r_pos, NNReal.summable_of_le I _⟩
   simp_rw [div_eq_mul_inv]
   refine' Summable.mul_left _ _
@@ -568,7 +564,6 @@ theorem le_comp_radius_of_summable (q : FormalMultilinearSeries 𝕜 F G)
       exact mul_le_mul' (nnnorm_sum_le _ _) le_rfl
     _ ≤ ∑' i : Σ n : ℕ, Composition n, ‖comp_along_composition q p i.snd‖₊ * r ^ i.fst :=
       NNReal.tsum_comp_le_tsum_of_inj hr sigma_mk_injective
-    
 #align formal_multilinear_series.le_comp_radius_of_summable FormalMultilinearSeries.le_comp_radius_of_summable
 
 /-!
@@ -710,7 +705,6 @@ theorem compChangeOfVariables_sum {α : Type _} [AddCommMonoid α] (m M N : ℕ)
         apply Composition.blocksFun_congr <;> try rw [HEq]
         rfl
       _ = blocks_fun' i := comp_change_of_variables_blocks_fun m M N H' i
-      
   -- 4 - show that the map is surjective
   · intro i hi
     apply comp_partial_sum_target_subset_image_comp_partial_sum_source m M N i
@@ -884,7 +878,6 @@ theorem HasFPowerSeriesAt.comp {g : F → G} {f : E → F} {q : FormalMultilinea
           rw [EMetric.mem_ball, edist_eq_coe_nnnorm] at hy 
           have := le_trans (le_of_lt hy) (min_le_right _ _)
           rwa [ENNReal.coe_le_coe, ← NNReal.coe_le_coe, coe_nnnorm] at this 
-        
     tendsto_nhds_of_cauchySeq_of_subseq cau comp_partial_sum_target_tendsto_at_top C
   -- Fifth step: the sum over `n` of `q.comp p n` can be expressed as a particular resummation of
   -- the sum over all compositions, by grouping together the compositions of the same
@@ -1031,7 +1024,6 @@ def gather (a : Composition n) (b : Composition a.length) : Composition n
       calc
         0 < j.length := length_pos_of_mem_split_wrt_composition hj
         _ ≤ j.sum := length_le_sum_of_one_le _ H
-        
     intro i hi
     apply a.one_le_blocks
     rw [← a.blocks.join_split_wrt_composition b]

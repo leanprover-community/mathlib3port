@@ -159,7 +159,6 @@ theorem polar_univ (h : SeparatingRight B) : B.polar Set.univ = {(0 : F)} :=
         mul_inv_cancel_left₀ hc.ne']
     _ ≤ ε * 1 := (mul_le_mul hcε.le (hy _ trivial) (norm_nonneg _) hε.le)
     _ = ε := mul_one _
-    
 #align linear_map.polar_univ LinearMap.polar_univ
 
 end NontriviallyNormedField

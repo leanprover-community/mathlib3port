@@ -286,7 +286,6 @@ theorem uniq {K : J ⥤ C} {c : Cone K} (hc : IsLimit c) (s : Cone (K ⋙ F))
     g₁.right = hc.lift (c.extend g₁.right) := by apply hc.uniq (c.extend _); tidy
     _ = hc.lift (c.extend g₂.right) := by congr; exact this
     _ = g₂.right := by symm; apply hc.uniq (c.extend _); tidy
-    
   -- Finally, since `fᵢ` factors through `F(gᵢ)`, the result follows.
   calc
     f₁ = 𝟙 _ ≫ f₁ := by simp
@@ -294,7 +293,6 @@ theorem uniq {K : J ⥤ C} {c : Cone K} (hc : IsLimit c) (s : Cone (K ⋙ F))
     _ = c₀.X.hom ≫ F.map g₂.right := by rw [this]
     _ = 𝟙 _ ≫ f₂ := g₂.w.symm
     _ = f₂ := by simp
-    
 #align category_theory.preserves_finite_limits_of_flat.uniq CategoryTheory.PreservesFiniteLimitsOfFlat.uniq
 
 end PreservesFiniteLimitsOfFlat

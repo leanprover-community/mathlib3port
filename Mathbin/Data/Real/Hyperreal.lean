@@ -812,7 +812,6 @@ private theorem is_st_mul' {x y : ℝ*} {r s : ℝ} (hxr : IsSt x r) (hys : IsSt
                 half_pos <| coe_pos.2 hd)
               _)
           _ = (d : ℝ*) := by rw [mul_one, add_halves]
-          
 
 theorem Hyperreal.IsSt.mul {x y : ℝ*} {r s : ℝ} (hxr : IsSt x r) (hys : IsSt y s) :
     IsSt (x * y) (r * s) :=

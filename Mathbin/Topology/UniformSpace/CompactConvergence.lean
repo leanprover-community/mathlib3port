@@ -285,7 +285,6 @@ theorem iInter_compactOpen_gen_subset_compactConvNhd (hK : IsCompact K) (hV : V 
       _ ⊆ closure (f '' U x) := f.continuous.continuous_on.image_closure
       _ ⊆ closure (ball (f x) Z) := by apply closure_mono; simp
       _ ⊆ ball (f x) W := hZW
-      
   refine'
     ⟨t, t.fintype_coe_sort, C, fun i => hK.inter_right isClosed_closure, fun i =>
       ball (f ((i : K) : α)) W, fun i => is_open_ball _ hW₄, by simp [compact_open.gen, hfC],

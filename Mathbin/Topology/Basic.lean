@@ -495,7 +495,6 @@ theorem interior_sInter_subset (S : Set (Set α)) : interior (⋂₀ S) ⊆ ⋂ 
   calc
     interior (⋂₀ S) = interior (⋂ s ∈ S, s) := by rw [sInter_eq_bInter]
     _ ⊆ ⋂ s ∈ S, interior s := interior_Inter₂_subset _ _
-    
 #align interior_sInter_subset interior_sInter_subset
 -/
 
@@ -1395,7 +1394,6 @@ theorem mapClusterPt_of_comp {ι δ : Type _} {F : Filter ι} {φ : δ → ι} {
     calc
       map (u ∘ φ) p = map u (map φ p) := map_map
       _ ≤ map u F := map_mono h
-      
   have : map (u ∘ φ) p ≤ 𝓝 x ⊓ map u F := le_inf H this
   exact ne_bot_of_le this
 #align map_cluster_pt_of_comp mapClusterPt_of_comp
@@ -1488,7 +1486,6 @@ theorem isOpen_iff_nhds {s : Set α} : IsOpen s ↔ ∀ a ∈ s, 𝓝 a ≤ 𝓟
   calc
     IsOpen s ↔ s ⊆ interior s := subset_interior_iff_isOpen.symm
     _ ↔ ∀ a ∈ s, 𝓝 a ≤ 𝓟 s := by rw [interior_eq_nhds] <;> rfl
-    
 #align is_open_iff_nhds isOpen_iff_nhds
 
 #print isOpen_iff_mem_nhds /-
@@ -1653,7 +1650,6 @@ theorem isClosed_iff_clusterPt {s : Set α} : IsClosed s ↔ ∀ a, ClusterPt a 
   calc
     IsClosed s ↔ closure s ⊆ s := closure_subset_iff_isClosed.symm
     _ ↔ ∀ a, ClusterPt a (𝓟 s) → a ∈ s := by simp only [subset_def, mem_closure_iff_clusterPt]
-    
 #align is_closed_iff_cluster_pt isClosed_iff_clusterPt
 -/
 
@@ -1687,7 +1683,6 @@ theorem Dense.open_subset_closure_inter {s t : Set α} (hs : Dense s) (ht : IsOp
   calc
     t = t ∩ closure s := by rw [hs.closure_eq, inter_univ]
     _ ⊆ closure (t ∩ s) := ht.inter_closure
-    
 #align dense.open_subset_closure_inter Dense.open_subset_closure_inter
 
 theorem mem_closure_of_mem_closure_union {s₁ s₂ : Set α} {x : α} (h : x ∈ closure (s₁ ∪ s₂))
@@ -1699,8 +1694,7 @@ theorem mem_closure_of_mem_closure_union {s₁ s₂ : Set α} {x : α} (h : x �
       𝓝 x ⊓ principal (s₁ ∪ s₂) = 𝓝 x ⊓ (principal s₁ ⊔ principal s₂) := by rw [sup_principal]
       _ = 𝓝 x ⊓ principal s₁ ⊔ 𝓝 x ⊓ principal s₂ := inf_sup_left
       _ = ⊥ ⊔ 𝓝 x ⊓ principal s₂ := by rw [inf_principal_eq_bot.mpr h₁]
-      _ = 𝓝 x ⊓ principal s₂ := bot_sup_eq
-      ]
+      _ = 𝓝 x ⊓ principal s₂ := bot_sup_eq]
 #align mem_closure_of_mem_closure_union mem_closure_of_mem_closure_union
 
 /-- The intersection of an open dense set with a dense set is a dense set. -/
@@ -1727,7 +1721,6 @@ theorem closure_diff {s t : Set α} : closure s \ closure t ⊆ closure (s \ t) 
     _ ⊆ closure (closure tᶜ ∩ s) := (isOpen_compl_iff.mpr <| isClosed_closure).inter_closure
     _ = closure (s \ closure t) := by simp only [diff_eq, inter_comm]
     _ ⊆ closure (s \ t) := closure_mono <| diff_subset_diff (Subset.refl s) subset_closure
-    
 #align closure_diff closure_diff
 
 #print Filter.Frequently.mem_of_closed /-

@@ -166,7 +166,6 @@ theorem integral_comp_polarCoord_symm {E : Type _} [NormedAddCommGroup E] [Norme
       apply set_integral_congr polar_coord.open_target.measurable_set fun x hx => _
       rw [B_det, abs_of_pos]
       exact hx.1
-    
 #align integral_comp_polar_coord_symm integral_comp_polarCoord_symm
 -/
 

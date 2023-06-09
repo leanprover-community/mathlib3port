@@ -465,20 +465,16 @@ theorem Set.OrdConnected.starConvex [OrderedSemiring 𝕜] [OrderedAddCommMonoid
     calc
       x = a • x + b • x := (Convex.combo_self hab _).symm
       _ ≤ a • x + b • y := add_le_add_left (smul_le_smul_of_nonneg hxy hb) _
-      
     calc
       a • x + b • y ≤ a • y + b • y := add_le_add_right (smul_le_smul_of_nonneg hxy ha) _
       _ = y := Convex.combo_self hab _
-      
   · refine' hs.out hy hx (mem_Icc.2 ⟨_, _⟩)
     calc
       y = a • y + b • y := (Convex.combo_self hab _).symm
       _ ≤ a • x + b • y := add_le_add_right (smul_le_smul_of_nonneg hyx ha) _
-      
     calc
       a • x + b • y ≤ a • x + b • x := add_le_add_left (smul_le_smul_of_nonneg hyx hb) _
       _ = x := Convex.combo_self hab _
-      
 #align set.ord_connected.star_convex Set.OrdConnected.starConvex
 
 theorem starConvex_iff_ordConnected [LinearOrderedField 𝕜] {x : 𝕜} {s : Set 𝕜} (hx : x ∈ s) :

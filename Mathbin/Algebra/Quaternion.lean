@@ -1346,7 +1346,6 @@ theorem normSq_add (a b : ℍ[R]) : normSq (a + b) = normSq a + normSq b + 2 * (
     _ = normSq a + normSq b + ((a * star b).re + (b * star a).re) := by abel
     _ = normSq a + normSq b + 2 * (a * star b).re := by
       rw [← add_re, ← star_mul_star a b, self_add_star', coe_re]
-    
 #align quaternion.norm_sq_add Quaternion.normSq_add
 
 end Quaternion

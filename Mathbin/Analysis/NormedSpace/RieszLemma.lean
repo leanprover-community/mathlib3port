@@ -70,7 +70,6 @@ theorem riesz_lemma {F : Subspace 𝕜 E} (hFc : IsClosed (F : Set E)) (hF : ∃
     _ < d := by rw [← dist_eq_norm]; exact (lt_div_iff' hlt).1 hxy₀
     _ ≤ dist x (y₀ + y) := (Metric.infDist_le_dist_of_mem hy₀y)
     _ = ‖x - y₀ - y‖ := by rw [sub_sub, dist_eq_norm]
-    
 #align riesz_lemma riesz_lemma
 
 /--
@@ -105,7 +104,6 @@ theorem riesz_lemma_of_norm_lt {c : 𝕜} (hc : 1 < ‖c‖) {R : ℝ} (hR : ‖
     _ ≤ ‖d‖ * ‖x - y'‖ :=
       (mul_le_mul_of_nonneg_left (hx y' (by simp [hy', Submodule.smul_mem _ _ hy])) (norm_nonneg _))
     _ = ‖d • x - y‖ := by simp [yy', ← smul_sub, norm_smul]
-    
 #align riesz_lemma_of_norm_lt riesz_lemma_of_norm_lt
 
 #print Metric.closedBall_infDist_compl_subset_closure /-

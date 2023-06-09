@@ -78,8 +78,7 @@ theorem Function.Injective.isLieAbelian {R : Type u} {L₁ : Type v} {L₂ : Typ
         calc
           f ⁅x, y⁆ = ⁅f x, f y⁆ := LieHom.map_lie f x y
           _ = 0 := (trivial_lie_zero _ _ _ _)
-          _ = f 0 := f.map_zero.symm
-           }
+          _ = f 0 := f.map_zero.symm }
 #align function.injective.is_lie_abelian Function.Injective.isLieAbelian
 
 theorem Function.Surjective.isLieAbelian {R : Type u} {L₁ : Type v} {L₂ : Type w} [CommRing R]

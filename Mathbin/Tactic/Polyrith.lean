@@ -594,7 +594,7 @@ unsafe def process_output (eq_names : List expr) (m : List expr) (R : expr) (sag
     return <| "linear_combination " ++ format.nest 2 (format.group expr_string)
 #align polyrith.process_output polyrith.process_output
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:330:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
 /-- Tactic for the special case when no hypotheses are available. -/
 unsafe def no_hypotheses_case : tactic (Option format) :=
   (do
@@ -603,7 +603,7 @@ unsafe def no_hypotheses_case : tactic (Option format) :=
     fail "polyrith did not find any relevant hypotheses and the goal is not provable by ring"
 #align polyrith.no_hypotheses_case polyrith.no_hypotheses_case
 
-/- ./././Mathport/Syntax/Translate/Expr.lean:330:4: warning: unsupported (TODO): `[tacs] -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
 /-- Tactic for the special case when there are no variables. -/
 unsafe def no_variables_case : tactic (Option format) :=
   (do

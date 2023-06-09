@@ -257,7 +257,6 @@ theorem card_rootsOfUnity : Fintype.card (rootsOfUnity k R) ≤ k :=
     _ ≤ (nthRoots k (1 : R)).attach.card := (Multiset.card_le_of_le (Multiset.dedup_le _))
     _ = (nthRoots k (1 : R)).card := Multiset.card_attach
     _ ≤ k := card_nthRoots k 1
-    
 #align card_roots_of_unity card_rootsOfUnity
 
 variable {k R}
@@ -803,7 +802,6 @@ theorem zpowers_eq {k : ℕ+} {ζ : Rˣ} (h : IsPrimitiveRoot ζ k) :
     Fintype.card (rootsOfUnity k R) ≤ k := card_rootsOfUnity R k
     _ = Fintype.card (ZMod k) := (ZMod.card k).symm
     _ = Fintype.card (Subgroup.zpowers ζ) := Fintype.card_congr h.zmod_equiv_zpowers.toEquiv
-    
 #align is_primitive_root.zpowers_eq IsPrimitiveRoot.zpowers_eq
 
 theorem eq_pow_of_mem_rootsOfUnity {k : ℕ+} {ζ ξ : Rˣ} (h : IsPrimitiveRoot ζ k)
@@ -864,7 +862,6 @@ theorem card_rootsOfUnity' {n : ℕ+} (h : IsPrimitiveRoot ζ n) :
       Fintype.card_congr <| by rw [h.zpowers_eq]
     _ = Fintype.card (ZMod n) := (Fintype.card_congr e.to_equiv.symm)
     _ = n := ZMod.card n
-    
 #align is_primitive_root.card_roots_of_unity' IsPrimitiveRoot.card_rootsOfUnity'
 
 theorem card_rootsOfUnity {ζ : R} {n : ℕ+} (h : IsPrimitiveRoot ζ n) :

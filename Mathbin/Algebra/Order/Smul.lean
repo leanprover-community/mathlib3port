@@ -110,7 +110,6 @@ theorem smul_nonneg (hc : 0 ≤ c) (ha : 0 ≤ a) : 0 ≤ c • a :=
   calc
     (0 : M) = c • (0 : M) := (smul_zero c).symm
     _ ≤ c • a := smul_le_smul_of_nonneg ha hc
-    
 #align smul_nonneg smul_nonneg
 
 theorem smul_nonpos_of_nonneg_of_nonpos (hc : 0 ≤ c) (ha : a ≤ 0) : c • a ≤ 0 :=
@@ -135,7 +134,6 @@ theorem smul_pos_iff_of_pos (hc : 0 < c) : 0 < c • a ↔ 0 < a :=
   calc
     0 < c • a ↔ c • 0 < c • a := by rw [smul_zero]
     _ ↔ 0 < a := smul_lt_smul_iff_of_pos hc
-    
 #align smul_pos_iff_of_pos smul_pos_iff_of_pos
 
 alias smul_pos_iff_of_pos ↔ _ smul_pos

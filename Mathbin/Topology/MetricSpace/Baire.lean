@@ -88,14 +88,12 @@ instance (priority := 100) baire_category_theorem_emetric_complete [PseudoEMetri
         _ ≤ min (min (δ / 2) r) (B (n + 1)) + δ / 2 := (add_le_add hz (le_of_lt xy))
         _ ≤ δ / 2 + δ / 2 := (add_le_add (le_trans (min_le_left _ _) (min_le_left _ _)) le_rfl)
         _ = δ := ENNReal.add_halves δ
-        
     show z ∈ f n;
     exact
       hr
         (calc
           edist z y ≤ min (min (δ / 2) r) (B (n + 1)) := hz
-          _ ≤ r := le_trans (min_le_left _ _) (min_le_right _ _)
-          )
+          _ ≤ r := le_trans (min_le_left _ _) (min_le_right _ _))
   choose! center radius Hpos HB Hball using this
   refine' fun x => (mem_closure_iff_nhds_basis nhds_basis_closed_eball).2 fun ε εpos => _
   /- `ε` is positive. We have to find a point in the ball of radius `ε` around `x` belonging to all
@@ -130,7 +128,6 @@ instance (priority := 100) baire_category_theorem_emetric_complete [PseudoEMetri
         closed_ball (c (n + 1)) (r (n + 1)) ⊆ closed_ball (c n) (r n) :=
           subset.trans (incl n) (inter_subset_left _ _)
         _ ⊆ closed_ball (c n) (B n) := closed_ball_subset_closed_ball (rB n)
-        
     exact I A
   have : CauchySeq c := cauchySeq_of_edist_le_geometric_two _ one_ne_top cdist
   -- as the sequence `c n` is Cauchy in a complete space, it converges to a limit `y`.

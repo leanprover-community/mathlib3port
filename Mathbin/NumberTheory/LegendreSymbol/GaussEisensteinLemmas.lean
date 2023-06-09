@@ -41,7 +41,6 @@ theorem wilsons_lemma : ((p - 1)! : ZMod p) = -1 :=
       _ = -1 := by
         simp_rw [← Units.coeHom_apply, ← (Units.coeHom (ZMod p)).map_prod,
           prod_univ_units_id_eq_neg_one, Units.coeHom_apply, Units.val_neg, Units.val_one]
-      
   have hp : 0 < p := (Fact.out p.prime).Pos
   symm
   refine' prod_bij (fun a _ => (a : ZMod p).val) _ _ _ _
@@ -158,7 +157,6 @@ private theorem gauss_lemma_aux₁ (p : ℕ) [Fact p.Prime] [Fact (p % 2 = 1)] {
       rw [← prod_nat_cast, Finset.prod_eq_multiset_prod,
         Ico_map_val_min_abs_nat_abs_eq_Ico_map_id p a hap, ← Finset.prod_eq_multiset_prod,
         prod_Ico_id_eq_factorial]
-    
 
 theorem gauss_lemma_aux (p : ℕ) [hp : Fact p.Prime] [Fact (p % 2 = 1)] {a : ℤ}
     (hap : (a : ZMod p) ≠ 0) :
@@ -222,10 +220,8 @@ private theorem eisenstein_lemma_aux₁ (p : ℕ) [Fact p.Prime] [hp2 : Fact (p 
           _ = _ := by
             rw [Finset.sum_eq_multiset_sum, Ico_map_val_min_abs_nat_abs_eq_Ico_map_id p a hap, ←
                 Finset.sum_eq_multiset_sum] <;>
-              simp [Nat.cast_sum]
-          )
+              simp [Nat.cast_sum])
         rfl
-    
 
 theorem eisenstein_lemma_aux (p : ℕ) [Fact p.Prime] [Fact (p % 2 = 1)] {a : ℕ} (ha2 : a % 2 = 1)
     (hap : (a : ZMod p) ≠ 0) :
@@ -249,7 +245,6 @@ theorem div_eq_filter_card {a b c : ℕ} (hb0 : 0 < b) (hc : a / b ≤ c) :
           by
           have : x * b ≤ a → x ≤ c := fun h => le_trans (by rwa [le_div_iff_mul_le hb0]) hc
           simp [lt_succ_iff, le_div_iff_mul_le hb0] <;> tauto
-    
 #align zmod.div_eq_filter_card ZMod.div_eq_filter_card
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -270,8 +265,7 @@ private theorem sum_Ico_eq_card_lt {p q : ℕ} :
               x * q / p ≤ p / 2 * q / p :=
                 Nat.div_le_div_right
                   (mul_le_mul_of_nonneg_right (le_of_lt_succ <| (mem_Ico.mp hx).2) (Nat.zero_le _))
-              _ ≤ _ := Nat.div_mul_div_le_div _ _ _
-              )
+              _ ≤ _ := Nat.div_mul_div_le_div _ _ _)
       _ = _ := by
         rw [← card_sigma] <;>
           exact
@@ -287,7 +281,6 @@ private theorem sum_Ico_eq_card_lt {p q : ℕ} :
                 revert h <;>
                   simp (config := { contextual := true }) only [mem_filter, eq_self_iff_true,
                     exists_prop_of_true, mem_sigma, and_self_iff, forall_true_iff, mem_product]⟩
-      
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/

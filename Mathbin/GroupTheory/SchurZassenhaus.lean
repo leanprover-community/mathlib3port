@@ -112,7 +112,6 @@ theorem eq_one_of_smul_eq_one (hH : Nat.coprime (Nat.card H) H.index) (α : H.Qu
         h ^ H.index = diff (MonoidHom.id H) (op ((h⁻¹ : H) : G) • α) α := by
           rw [← diff_inv, smul_diff', diff_self, one_mul, inv_pow, inv_inv]
         _ = 1 ^ H.index := (Quotient.exact' hα).trans (one_pow H.index).symm
-        
 #align subgroup.eq_one_of_smul_eq_one Subgroup.eq_one_of_smul_eq_one
 
 theorem exists_smul_eq (hH : Nat.coprime (Nat.card H) H.index) (α β : H.QuotientDiff) :

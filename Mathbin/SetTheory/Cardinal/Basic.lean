@@ -892,7 +892,6 @@ theorem add_one_le_succ (c : Cardinal.{u}) : c + 1 ≤ succ c :=
   calc
     (#γ) + 1 = (#Option γ) := mk_option.symm
     _ ≤ (#β) := (f.option_elim b hb).cardinal_le
-    
 #align cardinal.add_one_le_succ Cardinal.add_one_le_succ
 
 #print Cardinal.IsLimit /-
@@ -953,7 +952,6 @@ theorem sum_const (ι : Type u) (a : Cardinal.{v}) :
       calc
         (Σ i : ι, Quotient.out (#α)) ≃ ι × Quotient.out (#α) := Equiv.sigmaEquivProd _ _
         _ ≃ ULift ι × ULift α := Equiv.ulift.symm.prodCongr (outMkEquiv.trans Equiv.ulift.symm)
-        
 #align cardinal.sum_const Cardinal.sum_const
 
 theorem sum_const' (ι : Type u) (a : Cardinal.{u}) : (sum fun _ : ι => a) = (#ι) * a := by simp
@@ -1734,7 +1732,6 @@ theorem eq_one_iff_unique {α : Type _} : (#α) = 1 ↔ Subsingleton α ∧ None
     (#α) = 1 ↔ (#α) ≤ 1 ∧ 1 ≤ (#α) := le_antisymm_iff
     _ ↔ Subsingleton α ∧ Nonempty α :=
       le_one_iff_subsingleton.And (one_le_iff_ne_zero.trans mk_ne_zero_iff)
-    
 #align cardinal.eq_one_iff_unique Cardinal.eq_one_iff_unique
 -/
 
@@ -2149,7 +2146,6 @@ theorem mk_list_eq_sum_pow (α : Type u) : (#List α) = sum fun n : ℕ => (#α)
   calc
     (#List α) = (#Σ n, Vector α n) := mk_congr (Equiv.sigmaFiberEquiv List.length).symm
     _ = sum fun n : ℕ => (#α) ^ℕ n := by simp
-    
 #align cardinal.mk_list_eq_sum_pow Cardinal.mk_list_eq_sum_pow
 -/
 
@@ -2254,7 +2250,6 @@ theorem mk_iUnion_le_sum_mk {α ι : Type u} {f : ι → Set α} : (#⋃ i, f i)
   calc
     (#⋃ i, f i) ≤ (#Σ i, f i) := mk_le_of_surjective (Set.sigmaToiUnion_surjective f)
     _ = sum fun i => #f i := mk_sigma _
-    
 #align cardinal.mk_Union_le_sum_mk Cardinal.mk_iUnion_le_sum_mk
 -/
 
@@ -2263,7 +2258,6 @@ theorem mk_iUnion_eq_sum_mk {α ι : Type u} {f : ι → Set α}
   calc
     (#⋃ i, f i) = (#Σ i, f i) := mk_congr (Set.unionEqSigmaOfDisjoint h)
     _ = sum fun i => #f i := mk_sigma _
-    
 #align cardinal.mk_Union_eq_sum_mk Cardinal.mk_iUnion_eq_sum_mk
 
 theorem mk_iUnion_le {α ι : Type u} (f : ι → Set α) : (#⋃ i, f i) ≤ (#ι) * ⨆ i, #f i :=
@@ -2505,7 +2499,6 @@ theorem exists_not_mem_of_length_lt {α : Type _} (l : List α) (h : ↑l.length
     _ ≤ (#l.to_finset) := (mk_le_mk_of_subset fun x _ => list.mem_to_finset.mpr (h x))
     _ = l.to_finset.card := Cardinal.mk_coe_finset
     _ ≤ l.length := cardinal.nat_cast_le.mpr (List.toFinset_card_le l)
-    
 #align cardinal.exists_not_mem_of_length_lt Cardinal.exists_not_mem_of_length_lt
 
 theorem three_le {α : Type _} (h : 3 ≤ (#α)) (x : α) (y : α) : ∃ z : α, z ≠ x ∧ z ≠ y :=

@@ -872,7 +872,6 @@ theorem convolution_neg_of_neg_eq (h1 : ∀ᵐ x ∂μ, f (-x) = f x) (h2 : ∀�
       simp_rw [ht, ← h't, neg_add']
     _ = ∫ t : G, (L (f t)) (g (x - t)) ∂μ := by rw [← integral_neg_eq_self];
       simp only [neg_neg, ← sub_eq_add_neg]
-    
 #align convolution_neg_of_neg_eq convolution_neg_of_neg_eq
 
 end Measurable
@@ -1185,7 +1184,6 @@ theorem convolution_assoc' (hL : ∀ (x : E) (y : E') (z : E''), L₂ (L x y) z 
         ((quasi_measure_preserving_sub_left_of_right_invariant ν x₀).ae hgk).mono fun t ht => _
       exact (L₃ (f t)).integral_comp_comm ht
     _ = (f ⋆[L₃, ν] g ⋆[L₄, μ] k) x₀ := rfl
-    
 #align convolution_assoc' convolution_assoc'
 
 /-- Convolution is associative. This requires that

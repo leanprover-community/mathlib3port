@@ -188,8 +188,7 @@ theorem elementalStarAlgebra.isUnit_of_isUnit_of_isStarNormal (h : IsUnit a) :
           refine' (IsSelfAdjoint.spectralRadius_eq_nnnorm _).symm
           rw [IsSelfAdjoint, star_sub, star_mul, star_star, ← algebraMap_star_comm, IsROrC.star_def,
             IsROrC.conj_ofReal]
-        _ < ‖star a * a‖₊ := spectrum.spectralRadius_lt_of_forall_lt _ h₂
-        )
+        _ < ‖star a * a‖₊ := spectrum.spectralRadius_lt_of_forall_lt _ h₂)
 #align elemental_star_algebra.is_unit_of_is_unit_of_is_star_normal elementalStarAlgebra.isUnit_of_isUnit_of_isStarNormal
 
 /-- For `x : A` which is invertible in `A`, the inverse lies in any unital C⋆-subalgebra `S`

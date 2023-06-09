@@ -333,7 +333,6 @@ theorem outerMeasure_lt_top_of_isCompact [LocallyCompactSpace G] {K : Set G} (hK
     _ ≤ μ ⟨F, h1F⟩ := by
       apply μ.outer_measure_le ⟨interior F, isOpen_interior⟩ ⟨F, h1F⟩ interior_subset
     _ < ⊤ := μ.lt_top _
-    
 #align measure_theory.content.outer_measure_lt_top_of_is_compact MeasureTheory.Content.outerMeasure_lt_top_of_isCompact
 
 @[to_additive]
@@ -481,7 +480,6 @@ theorem measure_eq_content_of_regular (H : MeasureTheory.Content.ContentRegular 
       μ.measure ↑K ≤ μ.measure (interior ↑K') := _
       _ ≤ μ K' := _
       _ ≤ μ K + ε := K'_hyp.right
-      
     · rw [μ.measure_apply isOpen_interior.MeasurableSet,
         μ.measure_apply K.is_compact.measurable_set]
       exact μ.outer_measure.mono K'_hyp.left

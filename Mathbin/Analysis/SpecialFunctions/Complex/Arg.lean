@@ -86,7 +86,6 @@ theorem abs_eq_one_iff (z : ℂ) : abs z = 1 ↔ ∃ θ : ℝ, exp (θ * I) = z 
     calc
       exp (arg z * I) = abs z * exp (arg z * I) := by rw [hz, of_real_one, one_mul]
       _ = z := abs_mul_exp_arg_mul_I z
-      
   · rintro ⟨θ, rfl⟩
     exact Complex.abs_exp_ofReal_mul_I θ
 #align complex.abs_eq_one_iff Complex.abs_eq_one_iff
@@ -173,7 +172,6 @@ theorem arg_nonneg_iff {z : ℂ} : 0 ≤ arg z ↔ 0 ≤ z.im :=
       ⟨fun h => Real.sin_nonneg_of_mem_Icc ⟨h, arg_le_pi z⟩, by contrapose!; intro h;
         exact Real.sin_neg_of_neg_of_neg_pi_lt h (neg_pi_lt_arg _)⟩
     _ ↔ _ := by rw [sin_arg, le_div_iff (abs.pos h₀), MulZeroClass.zero_mul]
-    
 #align complex.arg_nonneg_iff Complex.arg_nonneg_iff
 
 @[simp]

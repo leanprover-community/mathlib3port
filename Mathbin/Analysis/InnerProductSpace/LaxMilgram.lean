@@ -72,7 +72,6 @@ theorem bounded_below (coercive : IsCoercive B) : ∃ C, 0 < C ∧ ∀ v, C * �
       C * ‖v‖ * ‖v‖ ≤ B v v := coercivity v
       _ = ⟪B♯ v, v⟫_ℝ := (continuous_linear_map_of_bilin_apply ℝ B v v).symm
       _ ≤ ‖B♯ v‖ * ‖v‖ := real_inner_le_norm (B♯ v) v
-      
   · have : v = 0 := by simpa using h
     simp [this]
 #align is_coercive.bounded_below IsCoercive.bounded_below
@@ -119,7 +118,6 @@ theorem range_eq_top (coercive : IsCoercive B) : range B♯ = ⊤ :=
         C * ‖w‖ * ‖w‖ ≤ B w w := coercivity w
         _ = ⟪B♯ w, w⟫_ℝ := (continuous_linear_map_of_bilin_apply ℝ B w w).symm
         _ = 0 := mem_w_orthogonal _ ⟨w, rfl⟩
-        
     · exact mul_nonneg (mul_nonneg C_pos.le (norm_nonneg w)) (norm_nonneg w)
   exact inner_zero_left _
 #align is_coercive.range_eq_top IsCoercive.range_eq_top

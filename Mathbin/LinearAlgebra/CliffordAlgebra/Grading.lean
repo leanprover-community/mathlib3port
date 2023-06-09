@@ -149,7 +149,6 @@ theorem iSup_ι_range_eq_top : (⨆ i : ℕ, (ι Q).range ^ i) = ⊤ :=
       by rw [iSup_sigma]
     _ = ⨆ i : ℕ, (ι Q).range ^ i :=
       Function.Surjective.iSup_congr (fun i => i.2) (fun i => ⟨⟨_, i, rfl⟩, rfl⟩) fun _ => rfl
-    
 #align clifford_algebra.supr_ι_range_eq_top CliffordAlgebra.iSup_ι_range_eq_top
 
 theorem evenOdd_isCompl : IsCompl (evenOdd Q 0) (evenOdd Q 1) :=

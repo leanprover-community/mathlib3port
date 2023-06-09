@@ -282,7 +282,6 @@ theorem slice_eq (x : Holor α (d :: ds)) (y : Holor α (d :: ds)) (h : slice x 
         x ⟨i :: is, _⟩ = slice x i hid ⟨is, hisds⟩ := congr_arg (fun t => x t) (Subtype.eq rfl)
         _ = slice y i hid ⟨is, hisds⟩ := by rw [h]
         _ = y ⟨i :: is, _⟩ := congr_arg (fun t => y t) (Subtype.eq rfl)
-        
 #align holor.slice_eq Holor.slice_eq
 -/
 
