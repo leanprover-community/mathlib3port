@@ -151,6 +151,7 @@ theorem affineSpan_eq_top_of_nonempty_interior {s : Set V}
       (affineSpan_mono _ interior_subset).trans_eq (affineSpan_convexHull _)
 #align affine_span_eq_top_of_nonempty_interior affineSpan_eq_top_of_nonempty_interior
 
+#print AffineBasis.centroid_mem_interior_convexHull /-
 theorem AffineBasis.centroid_mem_interior_convexHull {ι} [Fintype ι] (b : AffineBasis ι ℝ V) :
     Finset.univ.centroid ℝ b ∈ interior (convexHull ℝ (range b)) :=
   by
@@ -158,6 +159,7 @@ theorem AffineBasis.centroid_mem_interior_convexHull {ι} [Fintype ι] (b : Affi
   simp only [b.interior_convex_hull, mem_set_of_eq, b.coord_apply_centroid (Finset.mem_univ _),
     inv_pos, Nat.cast_pos, Finset.card_pos, Finset.univ_nonempty, forall_true_iff]
 #align affine_basis.centroid_mem_interior_convex_hull AffineBasis.centroid_mem_interior_convexHull
+-/
 
 theorem interior_convexHull_nonempty_iff_affineSpan_eq_top [FiniteDimensional ℝ V] {s : Set V} :
     (interior (convexHull ℝ s)).Nonempty ↔ affineSpan ℝ s = ⊤ :=

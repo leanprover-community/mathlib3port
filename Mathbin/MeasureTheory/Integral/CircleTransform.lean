@@ -98,10 +98,12 @@ theorem continuous_circleTransformDeriv {R : ℝ} (hR : 0 < R) {f : ℂ → E} {
   exact (continuous_circleMap_inv hw).smul (continuous_circle_transform hR hf hw)
 #align complex.continuous_circle_transform_deriv Complex.continuous_circleTransformDeriv
 
+#print Complex.circleTransformBoundingFunction /-
 /-- A useful bound for circle integrals (with complex codomain)-/
 def circleTransformBoundingFunction (R : ℝ) (z : ℂ) (w : ℂ × ℝ) : ℂ :=
   circleTransformDeriv R z w.1 (fun x => 1) w.2
 #align complex.circle_transform_bounding_function Complex.circleTransformBoundingFunction
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem continuousOn_prod_circle_transform_function {R r : ℝ} (hr : r < R) {z : ℂ} :
