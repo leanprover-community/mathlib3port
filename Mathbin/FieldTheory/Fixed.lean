@@ -46,6 +46,7 @@ variable (G : Type u) [Group G]
 
 variable (F : Type v) [Field F] [MulSemiringAction M F] [MulSemiringAction G F] (m : M)
 
+#print FixedBy.subfield /-
 /-- The subfield of F fixed by the field endomorphism `m`. -/
 def FixedBy.subfield : Subfield F where
   carrier := fixedBy M F m
@@ -56,15 +57,18 @@ def FixedBy.subfield : Subfield F where
   mul_mem' x y hx hy := (smul_mul' m x y).trans <| congr_arg₂ _ hx hy
   inv_mem' x hx := (smul_inv'' m x).trans <| congr_arg _ hx
 #align fixed_by.subfield FixedBy.subfield
+-/
 
 section InvariantSubfields
 
 variable (M) {F}
 
+#print IsInvariantSubfield /-
 /-- A typeclass for subrings invariant under a `mul_semiring_action`. -/
 class IsInvariantSubfield (S : Subfield F) : Prop where
   smul_mem : ∀ (m : M) {x : F}, x ∈ S → m • x ∈ S
 #align is_invariant_subfield IsInvariantSubfield
+-/
 
 variable (S : Subfield F)
 
@@ -88,12 +92,14 @@ namespace FixedPoints
 
 variable (M)
 
+#print FixedPoints.subfield /-
 -- we use `subfield.copy` so that the underlying set is `fixed_points M F`
 /-- The subfield of fixed points by a monoid action. -/
 def subfield : Subfield F :=
   Subfield.copy (⨅ m : M, FixedBy.subfield F m) (fixedPoints M F)
     (by ext z; simp [fixed_points, FixedBy.subfield, iInf, Subfield.mem_sInf])
 #align fixed_points.subfield FixedPoints.subfield
+-/
 
 instance : IsInvariantSubfield M (FixedPoints.subfield M F)
     where smul_mem g x hx g' := by rw [hx, hx]
@@ -315,6 +321,7 @@ theorem finrank_le_card [Fintype G] : finrank (subfield G F) F ≤ Fintype.card 
 
 end FixedPoints
 
+#print linearIndependent_toLinearMap /-
 theorem linearIndependent_toLinearMap (R : Type u) (A : Type v) (B : Type w) [CommSemiring R]
     [Ring A] [Algebra R A] [CommRing B] [IsDomain B] [Algebra R B] :
     LinearIndependent B (AlgHom.toLinearMap : (A →ₐ[R] B) → A →ₗ[R] B) :=
@@ -324,6 +331,7 @@ theorem linearIndependent_toLinearMap (R : Type u) (A : Type v) (B : Type w) [Co
       _)
   this.of_comp _
 #align linear_independent_to_linear_map linearIndependent_toLinearMap
+-/
 
 theorem cardinal_mk_algHom (K : Type u) (V : Type v) (W : Type w) [Field K] [Field V] [Algebra K V]
     [FiniteDimensional K V] [Field W] [Algebra K W] [FiniteDimensional K W] :
@@ -331,15 +339,19 @@ theorem cardinal_mk_algHom (K : Type u) (V : Type v) (W : Type w) [Field K] [Fie
   cardinal_mk_le_finrank_of_linearIndependent <| linearIndependent_toLinearMap K V W
 #align cardinal_mk_alg_hom cardinal_mk_algHom
 
+#print AlgEquiv.fintype /-
 noncomputable instance AlgEquiv.fintype (K : Type u) (V : Type v) [Field K] [Field V] [Algebra K V]
     [FiniteDimensional K V] : Fintype (V ≃ₐ[K] V) :=
   Fintype.ofEquiv (V →ₐ[K] V) (algEquivEquivAlgHom K V).symm
 #align alg_equiv.fintype AlgEquiv.fintype
+-/
 
+#print finrank_algHom /-
 theorem finrank_algHom (K : Type u) (V : Type v) [Field K] [Field V] [Algebra K V]
     [FiniteDimensional K V] : Fintype.card (V →ₐ[K] V) ≤ finrank V (V →ₗ[K] V) :=
   fintype_card_le_finrank_of_linearIndependent <| linearIndependent_toLinearMap K V V
 #align finrank_alg_hom finrank_algHom
+-/
 
 namespace FixedPoints
 
