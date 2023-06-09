@@ -1875,7 +1875,7 @@ local notation "cfg₁" => Cfg Γ Λ σ
 
 /-- The configuration state of the TM. -/
 inductive Λ' : Type max u_1 u_2 u_3
-  | normal : Λ → Λ'
+  | Normal : Λ → Λ'
   | write : Γ → stmt₁ → Λ'
 #align turing.TM1to1.Λ' Turing.TM1to1.Λ'
 
@@ -2236,7 +2236,7 @@ parameter {Λ : Type _} [Inhabited Λ]
 as `normal q` states, but the actual operation is split into two parts, a jump to `act s q`
 followed by the action and a jump to the next `normal` state.  -/
 inductive Λ'
-  | normal : Λ → Λ'
+  | Normal : Λ → Λ'
   | act : TM0.Stmt Γ → Λ → Λ'
 #align turing.TM0to1.Λ' Turing.TM0to1.Λ'
 
@@ -2726,7 +2726,7 @@ end
 next TM2 action, or we can be in the "go" and "return" states to go to the top of the stack and
 return to the bottom, respectively. -/
 inductive Λ' : Type max u_1 u_2 u_3 u_4
-  | normal : Λ → Λ'
+  | Normal : Λ → Λ'
   | go (k) : st_act k → stmt₂ → Λ'
   | ret : stmt₂ → Λ'
 #align turing.TM2to1.Λ' Turing.TM2to1.Λ'
@@ -2734,7 +2734,7 @@ inductive Λ' : Type max u_1 u_2 u_3 u_4
 open Λ'
 
 instance Λ'.inhabited : Inhabited Λ' :=
-  ⟨normal default⟩
+  ⟨Normal default⟩
 #align turing.TM2to1.Λ'.inhabited Turing.TM2to1.Λ'.inhabited
 
 -- mathport name: exprstmt₁
@@ -2783,7 +2783,7 @@ def trNormal : stmt₂ → stmt₁
   | TM2.stmt.pop k f q => goto fun _ _ => go k (st_act.pop f) q
   | TM2.stmt.load a q => load (fun _ => a) (tr_normal q)
   | TM2.stmt.branch f q₁ q₂ => branch (fun a => f) (tr_normal q₁) (tr_normal q₂)
-  | TM2.stmt.goto l => goto fun a s => normal (l s)
+  | TM2.stmt.goto l => goto fun a s => Normal (l s)
   | TM2.stmt.halt => halt
 #align turing.TM2to1.tr_normal Turing.TM2to1.trNormal
 
@@ -2891,7 +2891,7 @@ include M
 /-- The TM2 emulator machine states written as a TM1 program.
 This handles the `go` and `ret` states, which shuttle to and from a stack top. -/
 def tr : Λ' → stmt₁
-  | normal q => tr_normal (M q)
+  | Normal q => tr_normal (M q)
   | go k s q =>
     branch (fun a s => (a.2 k).isNone) (tr_st_act (goto fun _ _ => ret q) s)
       (move Dir.right <| goto fun _ _ => go k s q)
@@ -2905,7 +2905,7 @@ inductive TrCfg : cfg₂ → cfg₁ → Prop
   |
   mk {q v} {S : ∀ k, List (Γ k)} (L : ListBlank (∀ k, Option (Γ k))) :
     (∀ k, L.map (proj k) = ListBlank.mk ((S k).map some).reverse) →
-      tr_cfg ⟨q, v, S⟩ ⟨q.map normal, v, Tape.mk' ∅ (add_bottom L)⟩
+      tr_cfg ⟨q, v, S⟩ ⟨q.map Normal, v, Tape.mk' ∅ (add_bottom L)⟩
 #align turing.TM2to1.tr_cfg Turing.TM2to1.TrCfg
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (n «expr ≤ » S.length) -/
@@ -3015,7 +3015,7 @@ theorem tr_eval (k) (L : List (Γ k)) {L₁ L₂} (H₁ : L₁ ∈ TM1.eval tr (
 
 /-- The support of a set of TM2 states in the TM2 emulator. -/
 noncomputable def trSupp (S : Finset Λ) : Finset Λ' :=
-  S.biUnion fun l => insert (normal l) (tr_stmts₁ (M l))
+  S.biUnion fun l => insert (Normal l) (tr_stmts₁ (M l))
 #align turing.TM2to1.tr_supp Turing.TM2to1.trSupp
 
 theorem tr_supports {S} (ss : TM2.Supports M S) : TM1.Supports tr (tr_supp S) :=

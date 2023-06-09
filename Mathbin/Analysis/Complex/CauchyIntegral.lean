@@ -493,7 +493,7 @@ theorem circleIntegral_sub_inv_smul_of_differentiable_on_off_countable_aux {R : 
 complex differentiable at all but countably many points of its interior, then for any `w` in this
 interior we have $\frac{1}{2πi}\oint_{|z-c|=R}(z-w)^{-1}f(z)\,dz=f(w)$.
 -/
-theorem two_pi_i_inv_smul_circleIntegral_sub_inv_smul_of_differentiable_on_off_countable {R : ℝ}
+theorem two_pi_I_inv_smul_circleIntegral_sub_inv_smul_of_differentiable_on_off_countable {R : ℝ}
     {c w : ℂ} {f : ℂ → E} {s : Set ℂ} (hs : s.Countable) (hw : w ∈ ball c R)
     (hc : ContinuousOn f (closedBall c R)) (hd : ∀ x ∈ ball c R \ s, DifferentiableAt ℂ f x) :
     ((2 * π * I : ℂ)⁻¹ • ∮ z in C(c, R), (z - w)⁻¹ • f z) = f w :=
@@ -529,7 +529,7 @@ theorem two_pi_i_inv_smul_circleIntegral_sub_inv_smul_of_differentiable_on_off_c
     rw [← Cardinal.le_aleph0_iff_set_countable, Cardinal.mk_Ioo_real (hlu₀.1.trans hlu₀.2)] at this 
     exact this.not_lt Cardinal.aleph0_lt_continuum
   exact ⟨g x, (hlu_sub hx.1).1, (hlu_sub hx.1).2, hx.2⟩
-#align complex.two_pi_I_inv_smul_circle_integral_sub_inv_smul_of_differentiable_on_off_countable Complex.two_pi_i_inv_smul_circleIntegral_sub_inv_smul_of_differentiable_on_off_countable
+#align complex.two_pi_I_inv_smul_circle_integral_sub_inv_smul_of_differentiable_on_off_countable Complex.two_pi_I_inv_smul_circleIntegral_sub_inv_smul_of_differentiable_on_off_countable
 
 /-- **Cauchy integral formula**: if `f : ℂ → E` is continuous on a closed disc of radius `R` and is
 complex differentiable at all but countably many points of its interior, then for any `w` in this

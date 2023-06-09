@@ -577,7 +577,7 @@ theorem diophPfun_vec (f : Vector3 ℕ n →. ℕ) : DiophPfun f ↔ Dioph {v | 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem diophFn_compn :
     ∀ {n} {S : Set (Sum α (Fin2 n) → ℕ)} (d : Dioph S) {f : Vector3 ((α → ℕ) → ℕ) n}
-      (df : VectorAllp DiophFn f), Dioph {v : α → ℕ | (v ⊗ fun i => f i v) ∈ S}
+      (df : VectorAllP DiophFn f), Dioph {v : α → ℕ | (v ⊗ fun i => f i v) ∈ S}
   | 0, S, d, f => fun df =>
     ext (reindex_dioph _ (id ⊗ Fin2.elim0) d) fun v => by dsimp; congr; ext x;
       obtain _ | _ | _ := x; rfl
@@ -596,19 +596,19 @@ theorem diophFn_compn :
 #align dioph.dioph_fn_compn Dioph.diophFn_compn
 
 theorem dioph_comp {S : Set (Vector3 ℕ n)} (d : Dioph S) (f : Vector3 ((α → ℕ) → ℕ) n)
-    (df : VectorAllp DiophFn f) : Dioph {v | (fun i => f i v) ∈ S} :=
+    (df : VectorAllP DiophFn f) : Dioph {v | (fun i => f i v) ∈ S} :=
   diophFn_compn (reindex_dioph _ inr d) df
 #align dioph.dioph_comp Dioph.dioph_comp
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem diophFn_comp {f : Vector3 ℕ n → ℕ} (df : DiophFn f) (g : Vector3 ((α → ℕ) → ℕ) n)
-    (dg : VectorAllp DiophFn g) : DiophFn fun v => f fun i => g i v :=
+    (dg : VectorAllP DiophFn g) : DiophFn fun v => f fun i => g i v :=
   dioph_comp ((diophFn_vec _).1 df) ((fun v => v none)::fun i v => g i (v ∘ some)) <| by
     simp <;>
       exact
         ⟨proj_dioph none,
-          (vectorAllp_iff_forall _ _).2 fun i =>
-            reindex_dioph_fn _ <| (vectorAllp_iff_forall _ _).1 dg _⟩
+          (vectorAllP_iff_forall _ _).2 fun i =>
+            reindex_dioph_fn _ <| (vectorAllP_iff_forall _ _).1 dg _⟩
 #align dioph.dioph_fn_comp Dioph.diophFn_comp
 
 -- mathport name: dioph.inter

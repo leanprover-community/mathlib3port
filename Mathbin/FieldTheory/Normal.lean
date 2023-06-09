@@ -36,12 +36,14 @@ open Polynomial IsScalarTower
 
 variable (F K : Type _) [Field F] [Field K] [Algebra F K]
 
+#print Normal /-
 /-- Typeclass for normal field extension: `K` is a normal extension of `F` iff the minimal
 polynomial of every element `x` in `K` splits in `K`, i.e. every conjugate of `x` is in `K`. -/
 class Normal : Prop where
   is_algebraic' : Algebra.IsAlgebraic F K
   splits' (x : K) : Splits (algebraMap F K) (minpoly F x)
 #align normal Normal
+-/
 
 variable {F K}
 
@@ -68,10 +70,12 @@ theorem Normal.out : Normal F K → ∀ x : K, IsIntegral F x ∧ Splits (algebr
 
 variable (F K)
 
+#print normal_self /-
 instance normal_self : Normal F F :=
   ⟨fun x => isIntegral_algebraMap.IsAlgebraic F, fun x =>
     (minpoly.eq_X_sub_C' x).symm ▸ splits_X_sub_C _⟩
 #align normal_self normal_self
+-/
 
 variable {K}
 

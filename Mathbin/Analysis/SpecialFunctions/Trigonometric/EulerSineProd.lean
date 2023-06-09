@@ -184,6 +184,7 @@ theorem integral_cos_mul_cos_pow_even (n : ℕ) (hz : z ≠ 0) :
   · push_cast ; ring
 #align euler_sine.integral_cos_mul_cos_pow_even EulerSine.integral_cos_mul_cos_pow_even
 
+#print EulerSine.integral_cos_pow_eq /-
 /-- Relate the integral `cos x ^ n` over `[0, π/2]` to the integral of `sin x ^ n` over `[0, π]`,
 which is studied in `data.real.pi.wallis` and other places. -/
 theorem integral_cos_pow_eq (n : ℕ) :
@@ -208,11 +209,13 @@ theorem integral_cos_pow_eq (n : ℕ) :
     dsimp only
     rw [sin_add_pi_div_two]
 #align euler_sine.integral_cos_pow_eq EulerSine.integral_cos_pow_eq
+-/
 
 theorem integral_cos_pow_pos (n : ℕ) : 0 < ∫ x : ℝ in 0 ..π / 2, cos x ^ n :=
   (integral_cos_pow_eq n).symm ▸ mul_pos one_half_pos (integral_sin_pow_pos _)
 #align euler_sine.integral_cos_pow_pos EulerSine.integral_cos_pow_pos
 
+#print EulerSine.sin_pi_mul_eq /-
 /-- Finite form of Euler's sine product, with remainder term expressed as a ratio of cosine
 integrals. -/
 theorem sin_pi_mul_eq (z : ℂ) (n : ℕ) :
@@ -280,6 +283,7 @@ theorem sin_pi_mul_eq (z : ℂ) (n : ℕ) :
     convert integral_cos_mul_cos_pow_even n hz
     rw [Nat.cast_succ]
 #align euler_sine.sin_pi_mul_eq EulerSine.sin_pi_mul_eq
+-/
 
 end IntegralRecursion
 
@@ -313,6 +317,7 @@ theorem tendsto_integral_cos_pow_mul_div {f : ℝ → ℂ} (hf : ContinuousOn f 
       continuous_on_cos c_lt c_nonneg c_zero_pos zero_mem hf
 #align euler_sine.tendsto_integral_cos_pow_mul_div EulerSine.tendsto_integral_cos_pow_mul_div
 
+#print Complex.tendsto_euler_sin_prod /-
 /-- Euler's infinite product formula for the complex sine function. -/
 theorem Complex.tendsto_euler_sin_prod (z : ℂ) :
     Tendsto (fun n : ℕ => ↑π * z * ∏ j in Finset.range n, 1 - z ^ 2 / (j + 1) ^ 2) atTop
@@ -342,7 +347,9 @@ theorem Complex.tendsto_euler_sin_prod (z : ℂ) :
   · ext1 n; congr 2 with x : 1; rw [mul_comm]
   · rw [Complex.ofReal_zero, MulZeroClass.mul_zero, Complex.cos_zero]
 #align complex.tendsto_euler_sin_prod Complex.tendsto_euler_sin_prod
+-/
 
+#print Real.tendsto_euler_sin_prod /-
 /-- Euler's infinite product formula for the real sine function. -/
 theorem Real.tendsto_euler_sin_prod (x : ℝ) :
     Tendsto (fun n : ℕ => π * x * ∏ j in Finset.range n, 1 - x ^ 2 / (j + 1) ^ 2) atTop
@@ -360,6 +367,7 @@ theorem Real.tendsto_euler_sin_prod (x : ℝ) :
     norm_cast
   · rw [← Complex.ofReal_mul, ← Complex.ofReal_sin, Complex.ofReal_re]
 #align real.tendsto_euler_sin_prod Real.tendsto_euler_sin_prod
+-/
 
 end EulerSine
 
