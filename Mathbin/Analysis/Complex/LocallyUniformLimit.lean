@@ -46,7 +46,7 @@ noncomputable def cderiv (r : ℝ) (f : ℂ → E) (z : ℂ) : E :=
 
 theorem cderiv_eq_deriv (hU : IsOpen U) (hf : DifferentiableOn ℂ f U) (hr : 0 < r)
     (hzr : closedBall z r ⊆ U) : cderiv r f z = deriv f z :=
-  two_pi_i_inv_smul_circleIntegral_sub_sq_inv_smul_of_differentiable hU hzr hf (mem_ball_self hr)
+  two_pi_I_inv_smul_circleIntegral_sub_sq_inv_smul_of_differentiable hU hzr hf (mem_ball_self hr)
 #align complex.cderiv_eq_deriv Complex.cderiv_eq_deriv
 
 theorem norm_cderiv_le (hr : 0 < r) (hf : ∀ w ∈ sphere z r, ‖f w‖ ≤ M) : ‖cderiv r f z‖ ≤ M / r :=

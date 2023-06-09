@@ -147,7 +147,7 @@ theorem tendsto_limUnder_of_differentiable_on_punctured_nhds_of_bounded_under {f
 #align complex.tendsto_lim_of_differentiable_on_punctured_nhds_of_bounded_under Complex.tendsto_limUnder_of_differentiable_on_punctured_nhds_of_bounded_under
 
 /-- The Cauchy formula for the derivative of a holomorphic function. -/
-theorem two_pi_i_inv_smul_circleIntegral_sub_sq_inv_smul_of_differentiable {U : Set ℂ}
+theorem two_pi_I_inv_smul_circleIntegral_sub_sq_inv_smul_of_differentiable {U : Set ℂ}
     (hU : IsOpen U) {c w₀ : ℂ} {R : ℝ} {f : ℂ → E} (hc : closedBall c R ⊆ U)
     (hf : DifferentiableOn ℂ f U) (hw₀ : w₀ ∈ ball c R) :
     ((2 * π * I : ℂ)⁻¹ • ∮ z in C(c, R), ((z - w₀) ^ 2)⁻¹ • f z) = deriv f w₀ :=
@@ -177,7 +177,7 @@ theorem two_pi_i_inv_smul_circleIntegral_sub_sq_inv_smul_of_differentiable {U : 
   · refine' circleIntegral.integral_congr (pos_of_mem_ball hw₀).le fun z hz => _
     simp only [dslope_of_ne, metric.sphere_disjoint_ball.ne_of_mem hz hw₀, slope, ← smul_assoc, sq,
       mul_inv, Ne.def, not_false_iff, vsub_eq_sub, Algebra.id.smul_eq_mul]
-#align complex.two_pi_I_inv_smul_circle_integral_sub_sq_inv_smul_of_differentiable Complex.two_pi_i_inv_smul_circleIntegral_sub_sq_inv_smul_of_differentiable
+#align complex.two_pi_I_inv_smul_circle_integral_sub_sq_inv_smul_of_differentiable Complex.two_pi_I_inv_smul_circleIntegral_sub_sq_inv_smul_of_differentiable
 
 end Complex
 
