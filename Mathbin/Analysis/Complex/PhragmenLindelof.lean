@@ -419,7 +419,7 @@ theorem eqOn_vertical_strip {g : ℂ → E} (hdf : DiffContOnCl ℂ f (re ⁻¹'
 * `‖f z‖` is bounded from above by a constant `C` on the boundary of the first quadrant.
 
 Then `‖f z‖` is bounded from above by the same constant on the closed first quadrant. -/
-theorem quadrant_i (hd : DiffContOnCl ℂ f (Ioi 0 ×ℂ Ioi 0))
+theorem quadrant_I (hd : DiffContOnCl ℂ f (Ioi 0 ×ℂ Ioi 0))
     (hB :
       ∃ c < (2 : ℝ),
         ∃ B, f =O[comap Complex.abs atTop ⊓ 𝓟 (Ioi 0 ×ℂ Ioi 0)] fun z => expR (B * abs z ^ c))
@@ -487,7 +487,7 @@ theorem quadrant_i (hd : DiffContOnCl ℂ f (Ioi 0 ×ℂ Ioi 0))
       Real.cos_pi_div_two, Real.sin_pi_div_two, of_real_zero, of_real_one, one_mul, zero_add, ←
       of_real_exp]
     exact him _ (Real.exp_pos _).le
-#align phragmen_lindelof.quadrant_I PhragmenLindelof.quadrant_i
+#align phragmen_lindelof.quadrant_I PhragmenLindelof.quadrant_I
 
 /-- **Phragmen-Lindelöf principle** in the first quadrant. Let `f : ℂ → E` be a function such that
 
@@ -497,16 +497,16 @@ theorem quadrant_i (hd : DiffContOnCl ℂ f (Ioi 0 ×ℂ Ioi 0))
 * `f` is equal to zero on the boundary of the first quadrant.
 
 Then `f` is equal to zero on the closed first quadrant. -/
-theorem eq_zero_on_quadrant_i (hd : DiffContOnCl ℂ f (Ioi 0 ×ℂ Ioi 0))
+theorem eq_zero_on_quadrant_I (hd : DiffContOnCl ℂ f (Ioi 0 ×ℂ Ioi 0))
     (hB :
       ∃ c < (2 : ℝ),
         ∃ B, f =O[comap Complex.abs atTop ⊓ 𝓟 (Ioi 0 ×ℂ Ioi 0)] fun z => expR (B * abs z ^ c))
     (hre : ∀ x : ℝ, 0 ≤ x → f x = 0) (him : ∀ x : ℝ, 0 ≤ x → f (x * I) = 0) :
     EqOn f 0 {z | 0 ≤ z.re ∧ 0 ≤ z.im} := fun z hz =>
   norm_le_zero_iff.1 <|
-    quadrant_i hd hB (fun x hx => norm_le_zero_iff.2 <| hre x hx)
+    quadrant_I hd hB (fun x hx => norm_le_zero_iff.2 <| hre x hx)
       (fun x hx => norm_le_zero_iff.2 <| him x hx) hz.1 hz.2
-#align phragmen_lindelof.eq_zero_on_quadrant_I PhragmenLindelof.eq_zero_on_quadrant_i
+#align phragmen_lindelof.eq_zero_on_quadrant_I PhragmenLindelof.eq_zero_on_quadrant_I
 
 /-- **Phragmen-Lindelöf principle** in the first quadrant. Let `f g : ℂ → E` be functions such that
 
@@ -516,7 +516,7 @@ theorem eq_zero_on_quadrant_i (hd : DiffContOnCl ℂ f (Ioi 0 ×ℂ Ioi 0))
 * `f` is equal to `g` on the boundary of the first quadrant.
 
 Then `f` is equal to `g` on the closed first quadrant. -/
-theorem eqOn_quadrant_i (hdf : DiffContOnCl ℂ f (Ioi 0 ×ℂ Ioi 0))
+theorem eqOn_quadrant_I (hdf : DiffContOnCl ℂ f (Ioi 0 ×ℂ Ioi 0))
     (hBf :
       ∃ c < (2 : ℝ),
         ∃ B, f =O[comap Complex.abs atTop ⊓ 𝓟 (Ioi 0 ×ℂ Ioi 0)] fun z => expR (B * abs z ^ c))
@@ -527,9 +527,9 @@ theorem eqOn_quadrant_i (hdf : DiffContOnCl ℂ f (Ioi 0 ×ℂ Ioi 0))
     (hre : ∀ x : ℝ, 0 ≤ x → f x = g x) (him : ∀ x : ℝ, 0 ≤ x → f (x * I) = g (x * I)) :
     EqOn f g {z | 0 ≤ z.re ∧ 0 ≤ z.im} := fun z hz =>
   sub_eq_zero.1 <|
-    eq_zero_on_quadrant_i (hdf.sub hdg) (isBigO_sub_exp_rpow hBf hBg)
+    eq_zero_on_quadrant_I (hdf.sub hdg) (isBigO_sub_exp_rpow hBf hBg)
       (fun x hx => sub_eq_zero.2 <| hre x hx) (fun x hx => sub_eq_zero.2 <| him x hx) hz
-#align phragmen_lindelof.eq_on_quadrant_I PhragmenLindelof.eqOn_quadrant_i
+#align phragmen_lindelof.eq_on_quadrant_I PhragmenLindelof.eqOn_quadrant_I
 
 /-- **Phragmen-Lindelöf principle** in the second quadrant. Let `f : ℂ → E` be a function such that
 

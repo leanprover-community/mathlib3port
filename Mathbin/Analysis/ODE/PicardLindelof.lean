@@ -48,6 +48,7 @@ noncomputable section
 
 variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E]
 
+#print IsPicardLindelof /-
 /-- `Prop` structure holding the hypotheses of the Picard-Lindelöf theorem.
 
 The similarly named `picard_lindelof` structure is part of the internal API for convenience, so as
@@ -61,7 +62,9 @@ structure IsPicardLindelof {E : Type _} [NormedAddCommGroup E] (v : ℝ → E �
   norm_le : ∀ t ∈ Icc t_min t_max, ∀ x ∈ closedBall x₀ R, ‖v t x‖ ≤ C
   C_mul_le_R : (C : ℝ) * LinearOrder.max (t_max - t₀) (t₀ - t_min) ≤ R
 #align is_picard_lindelof IsPicardLindelof
+-/
 
+#print PicardLindelof /-
 /-- This structure holds arguments of the Picard-Lipschitz (Cauchy-Lipschitz) theorem. It is part of
 the internal API for convenience, so as not to constantly invoke choice. Unless you want to use one
 of the auxiliary lemmas, use `exists_forall_deriv_within_Icc_eq_of_lipschitz_of_continuous` instead
@@ -78,6 +81,7 @@ structure PicardLindelof (E : Type _) [NormedAddCommGroup E] [NormedSpace ℝ E]
   (C r l : ℝ≥0)
   is_pl : IsPicardLindelof to_fun t_min t₀ t_max x₀ L R C
 #align picard_lindelof PicardLindelof
+-/
 
 namespace PicardLindelof
 
@@ -99,9 +103,11 @@ theorem tMin_le_tMax : v.tMin ≤ v.tMax :=
   v.t₀.2.1.trans v.t₀.2.2
 #align picard_lindelof.t_min_le_t_max PicardLindelof.tMin_le_tMax
 
+#print PicardLindelof.nonempty_Icc /-
 protected theorem nonempty_Icc : (Icc v.tMin v.tMax).Nonempty :=
   nonempty_Icc.2 v.tMin_le_tMax
 #align picard_lindelof.nonempty_Icc PicardLindelof.nonempty_Icc
+-/
 
 protected theorem lipschitzOnWith {t} (ht : t ∈ Icc v.tMin v.tMax) :
     LipschitzOnWith v.l (v t) (closedBall v.x₀ v.r) :=
@@ -122,10 +128,12 @@ theorem norm_le {t : ℝ} (ht : t ∈ Icc v.tMin v.tMax) {x : E} (hx : x ∈ clo
   v.is_pl.norm_le _ ht _ hx
 #align picard_lindelof.norm_le PicardLindelof.norm_le
 
+#print PicardLindelof.tDist /-
 /-- The maximum of distances from `t₀` to the endpoints of `[t_min, t_max]`. -/
 def tDist : ℝ :=
   max (v.tMax - v.t₀) (v.t₀ - v.tMin)
 #align picard_lindelof.t_dist PicardLindelof.tDist
+-/
 
 theorem tDist_nonneg : 0 ≤ v.tDist :=
   le_max_iff.2 <| Or.inl <| sub_nonneg.2 v.t₀.2.2
@@ -141,25 +149,34 @@ theorem dist_t₀_le (t : Icc v.tMin v.tMax) : dist t v.t₀ ≤ v.tDist :=
     exact (sub_le_sub_right t.2.2 _).trans (le_max_left _ _)
 #align picard_lindelof.dist_t₀_le PicardLindelof.dist_t₀_le
 
+#print PicardLindelof.proj /-
 /-- Projection $ℝ → [t_{\min}, t_{\max}]$ sending $(-∞, t_{\min}]$ to $t_{\min}$ and $[t_{\max}, ∞)$
 to $t_{\max}$. -/
 def proj : ℝ → Icc v.tMin v.tMax :=
   projIcc v.tMin v.tMax v.tMin_le_tMax
 #align picard_lindelof.proj PicardLindelof.proj
+-/
 
+#print PicardLindelof.proj_coe /-
 theorem proj_coe (t : Icc v.tMin v.tMax) : v.proj t = t :=
   projIcc_val _ _
 #align picard_lindelof.proj_coe PicardLindelof.proj_coe
+-/
 
+#print PicardLindelof.proj_of_mem /-
 theorem proj_of_mem {t : ℝ} (ht : t ∈ Icc v.tMin v.tMax) : ↑(v.proj t) = t := by
   simp only [proj, proj_Icc_of_mem _ ht, Subtype.coe_mk]
 #align picard_lindelof.proj_of_mem PicardLindelof.proj_of_mem
+-/
 
+#print PicardLindelof.continuous_proj /-
 @[continuity]
 theorem continuous_proj : Continuous v.proj :=
   continuous_projIcc
 #align picard_lindelof.continuous_proj PicardLindelof.continuous_proj
+-/
 
+#print PicardLindelof.FunSpace /-
 /-- The space of curves $γ \colon [t_{\min}, t_{\max}] \to E$ such that $γ(t₀) = x₀$ and $γ$ is
 Lipschitz continuous with constant $C$. The map sending $γ$ to
 $\mathbf Pγ(t)=x₀ + ∫_{t₀}^{t} v(τ, γ(τ))\,dτ$ is a contracting map on this space, and its fixed
@@ -169,6 +186,7 @@ structure FunSpace where
   map_t₀' : to_fun v.t₀ = v.x₀
   lipschitz' : LipschitzWith v.C to_fun
 #align picard_lindelof.fun_space PicardLindelof.FunSpace
+-/
 
 namespace FunSpace
 
@@ -180,18 +198,24 @@ instance : CoeFun (FunSpace v) fun _ => Icc v.tMin v.tMax → E :=
 instance : Inhabited v.FunSpace :=
   ⟨⟨fun _ => v.x₀, rfl, (LipschitzWith.const _).weaken (zero_le _)⟩⟩
 
+#print PicardLindelof.FunSpace.lipschitz /-
 protected theorem lipschitz : LipschitzWith v.C f :=
   f.lipschitz'
 #align picard_lindelof.fun_space.lipschitz PicardLindelof.FunSpace.lipschitz
+-/
 
+#print PicardLindelof.FunSpace.continuous /-
 protected theorem continuous : Continuous f :=
   f.lipschitz.Continuous
 #align picard_lindelof.fun_space.continuous PicardLindelof.FunSpace.continuous
+-/
 
+#print PicardLindelof.FunSpace.toContinuousMap /-
 /-- Each curve in `picard_lindelof.fun_space` is continuous. -/
 def toContinuousMap : v.FunSpace ↪ C(Icc v.tMin v.tMax, E) :=
   ⟨fun f => ⟨f, f.Continuous⟩, fun f g h => by cases f; cases g; simpa using h⟩
 #align picard_lindelof.fun_space.to_continuous_map PicardLindelof.FunSpace.toContinuousMap
+-/
 
 instance : MetricSpace v.FunSpace :=
   MetricSpace.induced toContinuousMap toContinuousMap.Injective inferInstance
@@ -200,6 +224,7 @@ theorem uniformInducing_toContinuousMap : UniformInducing (@toContinuousMap _ _ 
   ⟨rfl⟩
 #align picard_lindelof.fun_space.uniform_inducing_to_continuous_map PicardLindelof.FunSpace.uniformInducing_toContinuousMap
 
+#print PicardLindelof.FunSpace.range_toContinuousMap /-
 theorem range_toContinuousMap :
     range toContinuousMap = {f : C(Icc v.tMin v.tMax, E) | f v.t₀ = v.x₀ ∧ LipschitzWith v.C f} :=
   by
@@ -207,10 +232,13 @@ theorem range_toContinuousMap :
   · rintro ⟨⟨f, hf₀, hf_lip⟩, rfl⟩; exact ⟨hf₀, hf_lip⟩
   · rcases f with ⟨f, hf⟩; rintro ⟨hf₀, hf_lip⟩; exact ⟨⟨f, hf₀, hf_lip⟩, rfl⟩
 #align picard_lindelof.fun_space.range_to_continuous_map PicardLindelof.FunSpace.range_toContinuousMap
+-/
 
+#print PicardLindelof.FunSpace.map_t₀ /-
 theorem map_t₀ : f v.t₀ = v.x₀ :=
   f.map_t₀'
 #align picard_lindelof.fun_space.map_t₀ PicardLindelof.FunSpace.map_t₀
+-/
 
 protected theorem mem_closedBall (t : Icc v.tMin v.tMax) : f t ∈ closedBall v.x₀ v.r :=
   calc
@@ -220,23 +248,29 @@ protected theorem mem_closedBall (t : Icc v.tMin v.tMax) : f t ∈ closedBall v.
     _ ≤ v.r := v.is_pl.C_mul_le_R
 #align picard_lindelof.fun_space.mem_closed_ball PicardLindelof.FunSpace.mem_closedBall
 
+#print PicardLindelof.FunSpace.vComp /-
 /-- Given a curve $γ \colon [t_{\min}, t_{\max}] → E$, `v_comp` is the function
 $F(t)=v(π t, γ(π t))$, where `π` is the projection $ℝ → [t_{\min}, t_{\max}]$. The integral of this
 function is the image of `γ` under the contracting map we are going to define below. -/
 def vComp (t : ℝ) : E :=
   v (v.proj t) (f (v.proj t))
 #align picard_lindelof.fun_space.v_comp PicardLindelof.FunSpace.vComp
+-/
 
+#print PicardLindelof.FunSpace.vComp_apply_coe /-
 theorem vComp_apply_coe (t : Icc v.tMin v.tMax) : f.vComp t = v t (f t) := by
   simp only [v_comp, proj_coe]
 #align picard_lindelof.fun_space.v_comp_apply_coe PicardLindelof.FunSpace.vComp_apply_coe
+-/
 
+#print PicardLindelof.FunSpace.continuous_vComp /-
 theorem continuous_vComp : Continuous f.vComp :=
   by
   have := (continuous_subtype_coe.prod_mk f.continuous).comp v.continuous_proj
   refine' ContinuousOn.comp_continuous v.continuous_on this fun x => _
   exact ⟨(v.proj x).2, f.mem_closed_ball _⟩
 #align picard_lindelof.fun_space.continuous_v_comp PicardLindelof.FunSpace.continuous_vComp
+-/
 
 theorem norm_vComp_le (t : ℝ) : ‖f.vComp t‖ ≤ v.C :=
   v.norm_le (v.proj t).2 <| f.mem_closedBall _
@@ -265,12 +299,15 @@ instance [CompleteSpace E] : CompleteSpace v.FunSpace :=
     isClosed_setOf_lipschitzWith v.C
   exact this.preimage ContinuousMap.continuous_coe
 
+#print PicardLindelof.FunSpace.intervalIntegrable_vComp /-
 theorem intervalIntegrable_vComp (t₁ t₂ : ℝ) : IntervalIntegrable f.vComp volume t₁ t₂ :=
   f.continuous_vComp.IntervalIntegrable _ _
 #align picard_lindelof.fun_space.interval_integrable_v_comp PicardLindelof.FunSpace.intervalIntegrable_vComp
+-/
 
 variable [CompleteSpace E]
 
+#print PicardLindelof.FunSpace.next /-
 /-- The Picard-Lindelöf operator. This is a contracting map on `picard_lindelof.fun_space v` such
 that the fixed point of this map is the solution of the corresponding ODE.
 
@@ -287,11 +324,13 @@ def next (f : FunSpace v) : FunSpace v
           (f.interval_integrable_v_comp _ _)]
       exact norm_integral_le_of_norm_le_const fun t ht => f.norm_v_comp_le _
 #align picard_lindelof.fun_space.next PicardLindelof.FunSpace.next
+-/
 
 theorem next_apply (t : Icc v.tMin v.tMax) : f.next t = v.x₀ + ∫ τ : ℝ in v.t₀..t, f.vComp τ :=
   rfl
 #align picard_lindelof.fun_space.next_apply PicardLindelof.FunSpace.next_apply
 
+#print PicardLindelof.FunSpace.hasDerivWithinAt_next /-
 theorem hasDerivWithinAt_next (t : Icc v.tMin v.tMax) :
     HasDerivWithinAt (f.next ∘ v.proj) (v t (f t)) (Icc v.tMin v.tMax) t :=
   by
@@ -309,6 +348,7 @@ theorem hasDerivWithinAt_next (t : Icc v.tMin v.tMax) :
   filter_upwards [self_mem_nhdsWithin] with _ ht'
   rw [v.proj_of_mem ht']
 #align picard_lindelof.fun_space.has_deriv_within_at_next PicardLindelof.FunSpace.hasDerivWithinAt_next
+-/
 
 theorem dist_next_apply_le_of_le {f₁ f₂ : FunSpace v} {n : ℕ} {d : ℝ}
     (h : ∀ t, dist (f₁ t) (f₂ t) ≤ (v.l * |t - v.t₀|) ^ n / n ! * d) (t : Icc v.tMin v.tMax) :
@@ -373,13 +413,16 @@ theorem exists_contracting_iterate :
     ⟨N, ⟨_, this⟩, hN, LipschitzWith.of_dist_le_mul fun f g => fun_space.dist_iterate_next_le f g N⟩
 #align picard_lindelof.exists_contracting_iterate PicardLindelof.exists_contracting_iterate
 
+#print PicardLindelof.exists_fixed /-
 theorem exists_fixed : ∃ f : v.FunSpace, f.next = f :=
   let ⟨N, K, hK⟩ := exists_contracting_iterate v
   ⟨_, hK.isFixedPt_fixedPoint_iterate⟩
 #align picard_lindelof.exists_fixed PicardLindelof.exists_fixed
+-/
 
 end
 
+#print PicardLindelof.exists_solution /-
 /-- Picard-Lindelöf (Cauchy-Lipschitz) theorem. Use
 `exists_forall_deriv_within_Icc_eq_of_is_picard_lindelof` instead for the public API. -/
 theorem exists_solution :
@@ -394,6 +437,7 @@ theorem exists_solution :
     lift t to Icc v.t_min v.t_max using ht
     simpa only [hf, v.proj_coe] using f.has_deriv_within_at_next t
 #align picard_lindelof.exists_solution PicardLindelof.exists_solution
+-/
 
 end PicardLindelof
 
@@ -403,8 +447,9 @@ theorem IsPicardLindelof.norm_le₀ {E : Type _} [NormedAddCommGroup E] {v : ℝ
   hpl.norm_le t₀ hpl.ht₀ x₀ <| mem_closedBall_self hpl.hR
 #align is_picard_lindelof.norm_le₀ IsPicardLindelof.norm_le₀
 
+#print IsPicardLindelof.exists_forall_hasDerivWithinAt_Icc_eq /-
 /-- Picard-Lindelöf (Cauchy-Lipschitz) theorem. -/
-theorem exists_forall_deriv_within_Icc_eq_of_isPicardLindelof [CompleteSpace E] {v : ℝ → E → E}
+theorem IsPicardLindelof.exists_forall_hasDerivWithinAt_Icc_eq [CompleteSpace E] {v : ℝ → E → E}
     {t_min t₀ t_max : ℝ} (x₀ : E) {C R : ℝ} {L : ℝ≥0}
     (hpl : IsPicardLindelof v t_min t₀ t_max x₀ L R C) :
     ∃ f : ℝ → E,
@@ -415,7 +460,8 @@ theorem exists_forall_deriv_within_Icc_eq_of_isPicardLindelof [CompleteSpace E] 
   exact
     PicardLindelof.exists_solution
       ⟨v, t_min, t_max, t₀, x₀, C, ⟨R, hpl.hR⟩, L, { hpl with ht₀ := t₀.property }⟩
-#align exists_forall_deriv_within_Icc_eq_of_is_picard_lindelof exists_forall_deriv_within_Icc_eq_of_isPicardLindelof
+#align exists_forall_deriv_within_Icc_eq_of_is_picard_lindelof IsPicardLindelof.exists_forall_hasDerivWithinAt_Icc_eq
+-/
 
 variable [ProperSpace E] {v : E → E} (t₀ : ℝ) (x₀ : E)
 
@@ -470,7 +516,7 @@ theorem exists_forall_deriv_at_Ioo_eq_of_contDiffOn_nhds {s : Set E} (hv : ContD
       ∃ f : ℝ → E, f t₀ = x₀ ∧ ∀ t ∈ Ioo (t₀ - ε) (t₀ + ε), f t ∈ s ∧ HasDerivAt f (v (f t)) t :=
   by
   obtain ⟨ε, hε, L, R, C, hpl⟩ := exists_isPicardLindelof_const_of_contDiffOn_nhds t₀ x₀ hv hs
-  obtain ⟨f, hf1, hf2⟩ := exists_forall_deriv_within_Icc_eq_of_isPicardLindelof x₀ hpl
+  obtain ⟨f, hf1, hf2⟩ := IsPicardLindelof.exists_forall_hasDerivWithinAt_Icc_eq x₀ hpl
   have hf2' : ∀ t ∈ Ioo (t₀ - ε) (t₀ + ε), HasDerivAt f (v (f t)) t := fun t ht =>
     (hf2 t (Ioo_subset_Icc_self ht)).HasDerivAt (Icc_mem_nhds ht.1 ht.2)
   have h : f ⁻¹' s ∈ 𝓝 t₀ :=
@@ -496,11 +542,11 @@ theorem exists_forall_deriv_at_Ioo_eq_of_contDiffOn_nhds {s : Set E} (hv : ContD
 #align exists_forall_deriv_at_Ioo_eq_of_cont_diff_on_nhds exists_forall_deriv_at_Ioo_eq_of_contDiffOn_nhds
 
 /-- A time-independent, continuously differentiable ODE admits a solution in some open interval. -/
-theorem exists_forall_deriv_at_Ioo_eq_of_contDiff (hv : ContDiff ℝ 1 v) :
+theorem exists_forall_hasDerivAt_Ioo_eq_of_contDiff (hv : ContDiff ℝ 1 v) :
     ∃ ε > (0 : ℝ), ∃ f : ℝ → E, f t₀ = x₀ ∧ ∀ t ∈ Ioo (t₀ - ε) (t₀ + ε), HasDerivAt f (v (f t)) t :=
   let ⟨ε, hε, f, hf1, hf2⟩ :=
     exists_forall_deriv_at_Ioo_eq_of_contDiffOn_nhds t₀ x₀ hv.ContDiffOn
       (IsOpen.mem_nhds isOpen_univ (mem_univ _))
   ⟨ε, hε, f, hf1, fun t ht => (hf2 t ht).2⟩
-#align exists_forall_deriv_at_Ioo_eq_of_cont_diff exists_forall_deriv_at_Ioo_eq_of_contDiff
+#align exists_forall_deriv_at_Ioo_eq_of_cont_diff exists_forall_hasDerivAt_Ioo_eq_of_contDiff
 

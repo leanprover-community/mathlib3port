@@ -54,10 +54,12 @@ open Nat Finset
 
 namespace Polynomial
 
+#print Polynomial.bernoulli /-
 /-- The Bernoulli polynomials are defined in terms of the negative Bernoulli numbers. -/
 def bernoulli (n : ℕ) : ℚ[X] :=
   ∑ i in range (n + 1), Polynomial.monomial (n - i) (bernoulli i * choose n i)
 #align polynomial.bernoulli Polynomial.bernoulli
+-/
 
 theorem bernoulli_def (n : ℕ) :
     bernoulli n = ∑ i in range (n + 1), Polynomial.monomial i (bernoulli (n - i) * choose n i) :=
@@ -73,10 +75,13 @@ theorem bernoulli_def (n : ℕ) :
 -/
 section Examples
 
+#print Polynomial.bernoulli_zero /-
 @[simp]
 theorem bernoulli_zero : bernoulli 0 = 1 := by simp [bernoulli]
 #align polynomial.bernoulli_zero Polynomial.bernoulli_zero
+-/
 
+#print Polynomial.bernoulli_eval_zero /-
 @[simp]
 theorem bernoulli_eval_zero (n : ℕ) : (bernoulli n).eval 0 = bernoulli n :=
   by
@@ -88,7 +93,9 @@ theorem bernoulli_eval_zero (n : ℕ) : (bernoulli n).eval 0 = bernoulli n :=
     simp [h]
   simp [this]
 #align polynomial.bernoulli_eval_zero Polynomial.bernoulli_eval_zero
+-/
 
+#print Polynomial.bernoulli_eval_one /-
 @[simp]
 theorem bernoulli_eval_one (n : ℕ) : (bernoulli n).eval 1 = bernoulli' n :=
   by
@@ -100,6 +107,7 @@ theorem bernoulli_eval_one (n : ℕ) : (bernoulli n).eval 1 = bernoulli' n :=
   · simp [h]
     exact bernoulli_eq_bernoulli'_of_ne_one h
 #align polynomial.bernoulli_eval_one Polynomial.bernoulli_eval_one
+-/
 
 end Examples
 
@@ -125,6 +133,7 @@ theorem derivative_bernoulli (k : ℕ) : (bernoulli k).derivative = k * bernoull
   · exact_mod_cast derivative_bernoulli_add_one k
 #align polynomial.derivative_bernoulli Polynomial.derivative_bernoulli
 
+#print Polynomial.sum_bernoulli /-
 @[simp]
 theorem sum_bernoulli (n : ℕ) :
     (∑ k in range (n + 1), ((n + 1).choose k : ℚ) • bernoulli k) = monomial n (n + 1 : ℚ) :=
@@ -161,6 +170,7 @@ theorem sum_bernoulli (n : ℕ) :
     exact (f x hx) h₁
   rw [g, zero_smul]
 #align polynomial.sum_bernoulli Polynomial.sum_bernoulli
+-/
 
 /-- Another version of `polynomial.sum_bernoulli`. -/
 theorem bernoulli_eq_sub_sum (n : ℕ) :
