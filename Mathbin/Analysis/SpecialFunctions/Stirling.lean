@@ -47,12 +47,14 @@ namespace Stirling
 -/
 
 
+#print Stirling.stirlingSeq /-
 /-- Define `stirling_seq n` as $\frac{n!}{\sqrt{2n}(\frac{n}{e})^n}$.
 Stirling's formula states that this sequence has limit $\sqrt(π)$.
 -/
 noncomputable def stirlingSeq (n : ℕ) : ℝ :=
   n ! / (sqrt (2 * n) * (n / exp 1) ^ n)
 #align stirling.stirling_seq Stirling.stirlingSeq
+-/
 
 @[simp]
 theorem stirlingSeq_zero : stirlingSeq 0 = 0 := by
@@ -105,11 +107,13 @@ theorem log_stirlingSeq_diff_hasSum (m : ℕ) :
     ring
 #align stirling.log_stirling_seq_diff_has_sum Stirling.log_stirlingSeq_diff_hasSum
 
+#print Stirling.log_stirlingSeq'_antitone /-
 /-- The sequence `log ∘ stirling_seq ∘ succ` is monotone decreasing -/
-theorem log_stirling_seq'_antitone : Antitone (Real.log ∘ stirlingSeq ∘ succ) :=
+theorem log_stirlingSeq'_antitone : Antitone (Real.log ∘ stirlingSeq ∘ succ) :=
   antitone_nat_of_succ_le fun n =>
     sub_nonneg.mp <| (log_stirlingSeq_diff_hasSum n).NonNeg fun m => by positivity
-#align stirling.log_stirling_seq'_antitone Stirling.log_stirling_seq'_antitone
+#align stirling.log_stirling_seq'_antitone Stirling.log_stirlingSeq'_antitone
+-/
 
 /-- We have a bound for successive elements in the sequence `log (stirling_seq k)`.
 -/
@@ -191,23 +195,25 @@ theorem log_stirlingSeq_bounded_by_constant : ∃ c, ∀ n : ℕ, c ≤ log (sti
 #align stirling.log_stirling_seq_bounded_by_constant Stirling.log_stirlingSeq_bounded_by_constant
 
 /-- The sequence `stirling_seq` is positive for `n > 0`  -/
-theorem stirling_seq'_pos (n : ℕ) : 0 < stirlingSeq n.succ := by unfold stirling_seq; positivity
-#align stirling.stirling_seq'_pos Stirling.stirling_seq'_pos
+theorem stirlingSeq'_pos (n : ℕ) : 0 < stirlingSeq n.succ := by unfold stirling_seq; positivity
+#align stirling.stirling_seq'_pos Stirling.stirlingSeq'_pos
 
 /-- The sequence `stirling_seq` has a positive lower bound.
 -/
-theorem stirling_seq'_bounded_by_pos_constant : ∃ a, 0 < a ∧ ∀ n : ℕ, a ≤ stirlingSeq n.succ :=
+theorem stirlingSeq'_bounded_by_pos_constant : ∃ a, 0 < a ∧ ∀ n : ℕ, a ≤ stirlingSeq n.succ :=
   by
   cases' log_stirling_seq_bounded_by_constant with c h
   refine' ⟨exp c, exp_pos _, fun n => _⟩
   rw [← le_log_iff_exp_le (stirling_seq'_pos n)]
   exact h n
-#align stirling.stirling_seq'_bounded_by_pos_constant Stirling.stirling_seq'_bounded_by_pos_constant
+#align stirling.stirling_seq'_bounded_by_pos_constant Stirling.stirlingSeq'_bounded_by_pos_constant
 
+#print Stirling.stirlingSeq'_antitone /-
 /-- The sequence `stirling_seq ∘ succ` is monotone decreasing -/
-theorem stirling_seq'_antitone : Antitone (stirlingSeq ∘ succ) := fun n m h =>
-  (log_le_log (stirling_seq'_pos m) (stirling_seq'_pos n)).mp (log_stirling_seq'_antitone h)
-#align stirling.stirling_seq'_antitone Stirling.stirling_seq'_antitone
+theorem stirlingSeq'_antitone : Antitone (stirlingSeq ∘ succ) := fun n m h =>
+  (log_le_log (stirlingSeq'_pos m) (stirlingSeq'_pos n)).mp (log_stirlingSeq'_antitone h)
+#align stirling.stirling_seq'_antitone Stirling.stirlingSeq'_antitone
+-/
 
 /-- The limit `a` of the sequence `stirling_seq` satisfies `0 < a` -/
 theorem stirlingSeq_has_pos_limit_a : ∃ a : ℝ, 0 < a ∧ Tendsto stirlingSeq atTop (𝓝 a) :=
@@ -283,6 +289,7 @@ theorem second_wallis_limit (a : ℝ) (hane : a ≠ 0) (ha : Tendsto stirlingSeq
       tendsto_self_div_two_mul_self_add_one
 #align stirling.second_wallis_limit Stirling.second_wallis_limit
 
+#print Stirling.tendsto_stirlingSeq_sqrt_pi /-
 /-- **Stirling's Formula** -/
 theorem tendsto_stirlingSeq_sqrt_pi : Tendsto (fun n : ℕ => stirlingSeq n) atTop (𝓝 (sqrt π)) :=
   by
@@ -291,6 +298,7 @@ theorem tendsto_stirlingSeq_sqrt_pi : Tendsto (fun n : ℕ => stirlingSeq n) atT
     tendsto_nhds_unique wallis.tendsto_W_nhds_pi_div_two (second_wallis_limit a hapos.ne' halimit)
   rwa [(div_left_inj' (two_ne_zero' ℝ)).mp hπ, sqrt_sq hapos.le]
 #align stirling.tendsto_stirling_seq_sqrt_pi Stirling.tendsto_stirlingSeq_sqrt_pi
+-/
 
 end Stirling
 
