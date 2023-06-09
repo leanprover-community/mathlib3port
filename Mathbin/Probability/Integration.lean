@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Martin Zinkevich, Vincent Beffara
 
 ! This file was ported from Lean 3 source module probability.integration
-! leanprover-community/mathlib commit 2f8347015b12b0864dfaf366ec4909eb70c78740
+! leanprover-community/mathlib commit 7e5137f579de09a059a5ce98f364a04e221aabf0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Probability.Independence.Basic
 
 /-!
 # Integration in Probability Theory
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 Integration results for independent random variables. Specifically, for two
 independent random variables X and Y over the extended non-negative

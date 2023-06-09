@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Thomas Browning, Jireh Loreaux
 
 ! This file was ported from Lean 3 source module group_theory.subsemigroup.centralizer
-! leanprover-community/mathlib commit c3291da49cfa65f0d43b094750541c0731edc932
+! leanprover-community/mathlib commit b915e9392ecb2a861e1e766f0e1df6ac481188ca
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -129,6 +129,16 @@ theorem centralizer_subset [Mul M] (h : S ⊆ T) : centralizer T ⊆ centralizer
 #align set.add_centralizer_subset Set.add_centralizer_subset
 -/
 
+theorem center_subset_centralizer [Mul M] (S : Set M) : Set.center M ⊆ S.centralizer :=
+  fun x hx m _ => hx m
+#align set.center_subset_centralizer Set.center_subset_centralizer
+
+@[simp]
+theorem centralizer_eq_top_iff_subset {s : Set M} [Mul M] :
+    centralizer s = Set.univ ↔ s ⊆ center M :=
+  eq_top_iff.trans <| ⟨fun h x hx g => (h trivial _ hx).symm, fun h x _ m hm => (h hm x).symm⟩
+#align set.centralizer_eq_top_iff_subset Set.centralizer_eq_top_iff_subset
+
 variable (M)
 
 #print Set.centralizer_univ /-
@@ -184,11 +194,20 @@ instance decidableMemCentralizer (a) [Decidable <| ∀ b ∈ S, b * a = a * b] :
 #align subsemigroup.decidable_mem_centralizer Subsemigroup.decidableMemCentralizer
 #align add_subsemigroup.decidable_mem_centralizer AddSubsemigroup.decidableMemCentralizer
 
+theorem center_le_centralizer (S) : center M ≤ centralizer S :=
+  S.center_subset_centralizer
+#align subsemigroup.center_le_centralizer Subsemigroup.center_le_centralizer
+
 @[to_additive]
 theorem centralizer_le (h : S ⊆ T) : centralizer T ≤ centralizer S :=
   Set.centralizer_subset h
 #align subsemigroup.centralizer_le Subsemigroup.centralizer_le
 #align add_subsemigroup.centralizer_le AddSubsemigroup.centralizer_le
+
+@[simp]
+theorem centralizer_eq_top_iff_subset {s : Set M} : centralizer s = ⊤ ↔ s ⊆ center M :=
+  SetLike.ext'_iff.trans Set.centralizer_eq_top_iff_subset
+#align subsemigroup.centralizer_eq_top_iff_subset Subsemigroup.centralizer_eq_top_iff_subset
 
 variable (M)
 

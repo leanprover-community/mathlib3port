@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Thomas Browning
 
 ! This file was ported from Lean 3 source module group_theory.submonoid.centralizer
-! leanprover-community/mathlib commit baba818b9acea366489e8ba32d2cc0fcaf50a1f7
+! leanprover-community/mathlib commit b915e9392ecb2a861e1e766f0e1df6ac481188ca
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -71,6 +71,10 @@ theorem mem_centralizer_iff {z : M} : z ∈ centralizer S ↔ ∀ g ∈ S, g * z
 #align submonoid.mem_centralizer_iff Submonoid.mem_centralizer_iff
 #align add_submonoid.mem_centralizer_iff AddSubmonoid.mem_centralizer_iff
 
+theorem center_le_centralizer (s) : center M ≤ centralizer s :=
+  s.center_subset_centralizer
+#align submonoid.center_le_centralizer Submonoid.center_le_centralizer
+
 @[to_additive]
 instance decidableMemCentralizer (a) [Decidable <| ∀ b ∈ S, b * a = a * b] :
     Decidable (a ∈ centralizer S) :=
@@ -83,6 +87,11 @@ theorem centralizer_le (h : S ⊆ T) : centralizer T ≤ centralizer S :=
   Set.centralizer_subset h
 #align submonoid.centralizer_le Submonoid.centralizer_le
 #align add_submonoid.centralizer_le AddSubmonoid.centralizer_le
+
+@[simp]
+theorem centralizer_eq_top_iff_subset {s : Set M} : centralizer s = ⊤ ↔ s ⊆ center M :=
+  SetLike.ext'_iff.trans Set.centralizer_eq_top_iff_subset
+#align submonoid.centralizer_eq_top_iff_subset Submonoid.centralizer_eq_top_iff_subset
 
 variable (M)
 

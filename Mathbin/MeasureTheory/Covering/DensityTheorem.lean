@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module measure_theory.covering.density_theorem
-! leanprover-community/mathlib commit 5f6e827d81dfbeb6151d7016586ceeb0099b9655
+! leanprover-community/mathlib commit 7e5137f579de09a059a5ce98f364a04e221aabf0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.MeasureTheory.Covering.Differentiation
 
 /-!
 # Uniformly locally doubling measures and Lebesgue's density theorem
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 Lebesgue's density theorem states that given a set `S` in a sigma compact metric space with
 locally-finite uniformly locally doubling measure `μ` then for almost all points `x` in `S`, for any

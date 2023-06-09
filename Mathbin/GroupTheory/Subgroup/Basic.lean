@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying
 
 ! This file was ported from Lean 3 source module group_theory.subgroup.basic
-! leanprover-community/mathlib commit 6b60020790e39e77bfd633ba3d5562ff82e52c79
+! leanprover-community/mathlib commit b915e9392ecb2a861e1e766f0e1df6ac481188ca
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -2334,11 +2334,20 @@ theorem le_centralizer_iff : H ≤ K.centralizer ↔ K ≤ H.centralizer :=
 #align subgroup.le_centralizer_iff Subgroup.le_centralizer_iff
 #align add_subgroup.le_centralizer_iff AddSubgroup.le_centralizer_iff
 
+theorem center_le_centralizer (s) : center G ≤ centralizer s :=
+  Set.center_subset_centralizer s
+#align subgroup.center_le_centralizer Subgroup.center_le_centralizer
+
 @[to_additive]
 theorem centralizer_le (h : H ≤ K) : centralizer K ≤ centralizer H :=
   Submonoid.centralizer_le h
 #align subgroup.centralizer_le Subgroup.centralizer_le
 #align add_subgroup.centralizer_le AddSubgroup.centralizer_le
+
+@[simp]
+theorem centralizer_eq_top_iff_subset {s} : centralizer s = ⊤ ↔ s ≤ center G :=
+  SetLike.ext'_iff.trans Set.centralizer_eq_top_iff_subset
+#align subgroup.centralizer_eq_top_iff_subset Subgroup.centralizer_eq_top_iff_subset
 
 #print Subgroup.Centralizer.characteristic /-
 @[to_additive]
