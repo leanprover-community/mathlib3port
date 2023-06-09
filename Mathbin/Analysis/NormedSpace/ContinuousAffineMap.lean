@@ -60,12 +60,14 @@ variable [NontriviallyNormedField 𝕜] [NormedSpace 𝕜 V] [NormedSpace 𝕜 W
 
 include V W
 
+#print ContinuousAffineMap.contLinear /-
 /-- The linear map underlying a continuous affine map is continuous. -/
 def contLinear (f : P →A[R] Q) : V →L[R] W :=
   { f.linear with
     toFun := f.linear
     cont := by rw [AffineMap.continuous_linear_iff]; exact f.cont }
 #align continuous_affine_map.cont_linear ContinuousAffineMap.contLinear
+-/
 
 @[simp]
 theorem coe_contLinear (f : P →A[R] Q) : (f.contLinear : V → W) = f.linear :=
@@ -171,11 +173,13 @@ section NormedSpaceStructure
 
 variable (f : V →A[𝕜] W)
 
+#print ContinuousAffineMap.hasNorm /-
 /-- Note that unlike the operator norm for linear maps, this norm is _not_ submultiplicative:
 we do _not_ necessarily have `‖f.comp g‖ ≤ ‖f‖ * ‖g‖`. See `norm_comp_le` for what we can say. -/
 noncomputable instance hasNorm : Norm (V →A[𝕜] W) :=
   ⟨fun f => max ‖f 0‖ ‖f.contLinear‖⟩
 #align continuous_affine_map.has_norm ContinuousAffineMap.hasNorm
+-/
 
 theorem norm_def : ‖f‖ = max ‖f 0‖ ‖f.contLinear‖ :=
   rfl

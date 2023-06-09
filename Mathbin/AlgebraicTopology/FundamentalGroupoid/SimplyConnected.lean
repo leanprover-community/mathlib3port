@@ -75,7 +75,7 @@ instance (priority := 100) ofContractible (Y : Type _) [TopologicalSpace Y] [Con
     where equiv_unit :=
     let H : TopCat.of Y ≃ₕ TopCat.of Unit := (ContractibleSpace.hequiv_unit Y).some
     ⟨(FundamentalGroupoidFunctor.equivOfHomotopyEquiv H).trans
-        FundamentalGroupoid.punitEquivDiscretePunit⟩
+        FundamentalGroupoid.punitEquivDiscretePUnit⟩
 #align simply_connected_space.of_contractible SimplyConnectedSpace.ofContractible
 
 end SimplyConnectedSpace
