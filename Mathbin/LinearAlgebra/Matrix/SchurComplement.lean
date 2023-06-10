@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Bentkamp, Eric Wieser, Jeremy Avigad, Johan Commelin
 
 ! This file was ported from Lean 3 source module linear_algebra.matrix.schur_complement
-! leanprover-community/mathlib commit a07a7ae98384cd6485d7825e161e528ba78ef3bc
+! leanprover-community/mathlib commit 96aa788f3e443efb3dace8a634258a9259364f43
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -20,6 +20,10 @@ This file proves properties of 2×2 block matrices `[A B; C D]` that relate to t
 
  * `matrix.det_from_blocks₁₁`, `matrix.det_from_blocks₂₂`: determinant of a block matrix in terms of
    the Schur complement.
+ * `matrix.inv_of_from_blocks_zero₂₁_eq`, `matrix.inv_of_from_blocks_zero₁₂_eq`: the inverse of a
+   block triangular matrix.
+ * `matrix.is_unit_from_blocks_zero₂₁`, `matrix.is_unit_from_blocks_zero₁₂`: invertibility of a
+   block triangular matrix.
  * `matrix.det_one_add_mul_comm`: the **Weinstein–Aronszajn identity**.
  * `matrix.schur_complement_pos_semidef_iff` : If a matrix `A` is positive definite, then
   `[A B; Bᴴ D]` is postive semidefinite if and only if `D - Bᴴ A⁻¹ B` is postive semidefinite.
@@ -66,6 +70,174 @@ theorem fromBlocks_eq_of_invertible₂₂ (A : Matrix l m α) (B : Matrix l n α
       submatrix_mul_equiv _ _ _ (Equiv.sumComm n l), Equiv.sumComm_apply,
       from_blocks_submatrix_sum_swap_sum_swap] using from_blocks_eq_of_invertible₁₁ D C B A
 #align matrix.from_blocks_eq_of_invertible₂₂ Matrix.fromBlocks_eq_of_invertible₂₂
+
+section Triangular
+
+/-! #### Block triangular matrices -/
+
+
+/-- An upper-block-triangular matrix is invertible if its diagonal is. -/
+def fromBlocksZero₂₁Invertible (A : Matrix m m α) (B : Matrix m n α) (D : Matrix n n α)
+    [Invertible A] [Invertible D] : Invertible (fromBlocks A B 0 D) :=
+  invertibleOfLeftInverse _ (fromBlocks (⅟ A) (-⅟ A ⬝ B ⬝ ⅟ D) 0 (⅟ D)) <| by
+    simp_rw [from_blocks_multiply, Matrix.mul_zero, Matrix.zero_mul, zero_add, add_zero,
+      Matrix.neg_mul, Matrix.invOf_mul_self, Matrix.mul_invOf_mul_self_cancel, add_right_neg,
+      from_blocks_one]
+#align matrix.from_blocks_zero₂₁_invertible Matrix.fromBlocksZero₂₁Invertible
+
+/-- A lower-block-triangular matrix is invertible if its diagonal is. -/
+def fromBlocksZero₁₂Invertible (A : Matrix m m α) (C : Matrix n m α) (D : Matrix n n α)
+    [Invertible A] [Invertible D] : Invertible (fromBlocks A 0 C D) :=
+  invertibleOfLeftInverse _
+      (fromBlocks (⅟ A) 0 (-⅟ D ⬝ C ⬝ ⅟ A)
+        (⅟ D)) <|-- a symmetry argument is more work than just copying the proof
+  by
+    simp_rw [from_blocks_multiply, Matrix.mul_zero, Matrix.zero_mul, zero_add, add_zero,
+      Matrix.neg_mul, Matrix.invOf_mul_self, Matrix.mul_invOf_mul_self_cancel, add_left_neg,
+      from_blocks_one]
+#align matrix.from_blocks_zero₁₂_invertible Matrix.fromBlocksZero₁₂Invertible
+
+theorem invOf_fromBlocks_zero₂₁_eq (A : Matrix m m α) (B : Matrix m n α) (D : Matrix n n α)
+    [Invertible A] [Invertible D] [Invertible (fromBlocks A B 0 D)] :
+    ⅟ (fromBlocks A B 0 D) = fromBlocks (⅟ A) (-⅟ A ⬝ B ⬝ ⅟ D) 0 (⅟ D) :=
+  by
+  letI := from_blocks_zero₂₁_invertible A B D
+  convert (rfl : ⅟ (from_blocks A B 0 D) = _)
+#align matrix.inv_of_from_blocks_zero₂₁_eq Matrix.invOf_fromBlocks_zero₂₁_eq
+
+theorem invOf_fromBlocks_zero₁₂_eq (A : Matrix m m α) (C : Matrix n m α) (D : Matrix n n α)
+    [Invertible A] [Invertible D] [Invertible (fromBlocks A 0 C D)] :
+    ⅟ (fromBlocks A 0 C D) = fromBlocks (⅟ A) 0 (-⅟ D ⬝ C ⬝ ⅟ A) (⅟ D) :=
+  by
+  letI := from_blocks_zero₁₂_invertible A C D
+  convert (rfl : ⅟ (from_blocks A 0 C D) = _)
+#align matrix.inv_of_from_blocks_zero₁₂_eq Matrix.invOf_fromBlocks_zero₁₂_eq
+
+/-- Both diagonal entries of an invertible upper-block-triangular matrix are invertible (by reading
+off the diagonal entries of the inverse). -/
+def invertibleOfFromBlocksZero₂₁Invertible (A : Matrix m m α) (B : Matrix m n α) (D : Matrix n n α)
+    [Invertible (fromBlocks A B 0 D)] : Invertible A × Invertible D
+    where
+  fst :=
+    invertibleOfLeftInverse _ (⅟ (fromBlocks A B 0 D)).toBlocks₁₁ <|
+      by
+      have := Matrix.invOf_mul_self (from_blocks A B 0 D)
+      rw [← from_blocks_to_blocks (⅟ (from_blocks A B 0 D)), from_blocks_multiply] at this 
+      replace := congr_arg Matrix.toBlocks₁₁ this
+      simpa only [Matrix.toBlocks_fromBlocks₁₁, Matrix.mul_zero, add_zero, ← from_blocks_one] using
+        this
+  snd :=
+    invertibleOfRightInverse _ (⅟ (fromBlocks A B 0 D)).toBlocks₂₂ <|
+      by
+      have := Matrix.mul_invOf_self (from_blocks A B 0 D)
+      rw [← from_blocks_to_blocks (⅟ (from_blocks A B 0 D)), from_blocks_multiply] at this 
+      replace := congr_arg Matrix.toBlocks₂₂ this
+      simpa only [Matrix.toBlocks_fromBlocks₂₂, Matrix.zero_mul, zero_add, ← from_blocks_one] using
+        this
+#align matrix.invertible_of_from_blocks_zero₂₁_invertible Matrix.invertibleOfFromBlocksZero₂₁Invertible
+
+/-- Both diagonal entries of an invertible lower-block-triangular matrix are invertible (by reading
+off the diagonal entries of the inverse). -/
+def invertibleOfFromBlocksZero₁₂Invertible (A : Matrix m m α) (C : Matrix n m α) (D : Matrix n n α)
+    [Invertible (fromBlocks A 0 C D)] : Invertible A × Invertible D
+    where
+  fst :=
+    invertibleOfRightInverse _ (⅟ (fromBlocks A 0 C D)).toBlocks₁₁ <|
+      by
+      have := Matrix.mul_invOf_self (from_blocks A 0 C D)
+      rw [← from_blocks_to_blocks (⅟ (from_blocks A 0 C D)), from_blocks_multiply] at this 
+      replace := congr_arg Matrix.toBlocks₁₁ this
+      simpa only [Matrix.toBlocks_fromBlocks₁₁, Matrix.zero_mul, add_zero, ← from_blocks_one] using
+        this
+  snd :=
+    invertibleOfLeftInverse _ (⅟ (fromBlocks A 0 C D)).toBlocks₂₂ <|
+      by
+      have := Matrix.invOf_mul_self (from_blocks A 0 C D)
+      rw [← from_blocks_to_blocks (⅟ (from_blocks A 0 C D)), from_blocks_multiply] at this 
+      replace := congr_arg Matrix.toBlocks₂₂ this
+      simpa only [Matrix.toBlocks_fromBlocks₂₂, Matrix.mul_zero, zero_add, ← from_blocks_one] using
+        this
+#align matrix.invertible_of_from_blocks_zero₁₂_invertible Matrix.invertibleOfFromBlocksZero₁₂Invertible
+
+/-- `invertible_of_from_blocks_zero₂₁_invertible` and `from_blocks_zero₂₁_invertible` form
+an equivalence. -/
+def fromBlocksZero₂₁InvertibleEquiv (A : Matrix m m α) (B : Matrix m n α) (D : Matrix n n α) :
+    Invertible (fromBlocks A B 0 D) ≃ Invertible A × Invertible D
+    where
+  toFun _ := invertible_of_from_blocks_zero₂₁_invertible A B D
+  invFun i := by letI := i.1 <;> letI := i.2 <;> exact from_blocks_zero₂₁_invertible A B D
+  left_inv _ := Subsingleton.elim _ _
+  right_inv _ := Subsingleton.elim _ _
+#align matrix.from_blocks_zero₂₁_invertible_equiv Matrix.fromBlocksZero₂₁InvertibleEquiv
+
+/-- `invertible_of_from_blocks_zero₁₂_invertible` and `from_blocks_zero₁₂_invertible` form
+an equivalence. -/
+def fromBlocksZero₁₂InvertibleEquiv (A : Matrix m m α) (C : Matrix n m α) (D : Matrix n n α) :
+    Invertible (fromBlocks A 0 C D) ≃ Invertible A × Invertible D
+    where
+  toFun _ := invertible_of_from_blocks_zero₁₂_invertible A C D
+  invFun i := by letI := i.1 <;> letI := i.2 <;> exact from_blocks_zero₁₂_invertible A C D
+  left_inv _ := Subsingleton.elim _ _
+  right_inv _ := Subsingleton.elim _ _
+#align matrix.from_blocks_zero₁₂_invertible_equiv Matrix.fromBlocksZero₁₂InvertibleEquiv
+
+/-- An upper block-triangular matrix is invertible iff both elements of its diagonal are.
+
+This is a propositional form of `matrix.from_blocks_zero₂₁_invertible_equiv`. -/
+@[simp]
+theorem isUnit_fromBlocks_zero₂₁ {A : Matrix m m α} {B : Matrix m n α} {D : Matrix n n α} :
+    IsUnit (fromBlocks A B 0 D) ↔ IsUnit A ∧ IsUnit D := by
+  simp only [← nonempty_invertible_iff_isUnit, ← nonempty_prod,
+    (from_blocks_zero₂₁_invertible_equiv _ _ _).nonempty_congr]
+#align matrix.is_unit_from_blocks_zero₂₁ Matrix.isUnit_fromBlocks_zero₂₁
+
+/-- A lower block-triangular matrix is invertible iff both elements of its diagonal are.
+
+This is a propositional form of  `matrix.from_blocks_zero₁₂_invertible_equiv` forms an `iff`. -/
+@[simp]
+theorem isUnit_fromBlocks_zero₁₂ {A : Matrix m m α} {C : Matrix n m α} {D : Matrix n n α} :
+    IsUnit (fromBlocks A 0 C D) ↔ IsUnit A ∧ IsUnit D := by
+  simp only [← nonempty_invertible_iff_isUnit, ← nonempty_prod,
+    (from_blocks_zero₁₂_invertible_equiv _ _ _).nonempty_congr]
+#align matrix.is_unit_from_blocks_zero₁₂ Matrix.isUnit_fromBlocks_zero₁₂
+
+/-- An expression for the inverse of an upper block-triangular matrix, when either both elements of
+diagonal are invertible, or both are not. -/
+theorem inv_fromBlocks_zero₂₁_of_isUnit_iff (A : Matrix m m α) (B : Matrix m n α) (D : Matrix n n α)
+    (hAD : IsUnit A ↔ IsUnit D) : (fromBlocks A B 0 D)⁻¹ = fromBlocks A⁻¹ (-A⁻¹ ⬝ B ⬝ D⁻¹) 0 D⁻¹ :=
+  by
+  by_cases hA : IsUnit A
+  · have hD := hAD.mp hA
+    cases hA.nonempty_invertible
+    cases hD.nonempty_invertible
+    letI := from_blocks_zero₂₁_invertible A B D
+    simp_rw [← inv_of_eq_nonsing_inv, inv_of_from_blocks_zero₂₁_eq]
+  · have hD := hAD.not.mp hA
+    have : ¬IsUnit (from_blocks A B 0 D) :=
+      is_unit_from_blocks_zero₂₁.not.mpr (not_and'.mpr fun _ => hA)
+    simp_rw [nonsing_inv_eq_ring_inverse, Ring.inverse_non_unit _ hA, Ring.inverse_non_unit _ hD,
+      Ring.inverse_non_unit _ this, Matrix.zero_mul, neg_zero, from_blocks_zero]
+#align matrix.inv_from_blocks_zero₂₁_of_is_unit_iff Matrix.inv_fromBlocks_zero₂₁_of_isUnit_iff
+
+/-- An expression for the inverse of a lower block-triangular matrix, when either both elements of
+diagonal are invertible, or both are not. -/
+theorem inv_fromBlocks_zero₁₂_of_isUnit_iff (A : Matrix m m α) (C : Matrix n m α) (D : Matrix n n α)
+    (hAD : IsUnit A ↔ IsUnit D) : (fromBlocks A 0 C D)⁻¹ = fromBlocks A⁻¹ 0 (-D⁻¹ ⬝ C ⬝ A⁻¹) D⁻¹ :=
+  by
+  by_cases hA : IsUnit A
+  · have hD := hAD.mp hA
+    cases hA.nonempty_invertible
+    cases hD.nonempty_invertible
+    letI := from_blocks_zero₁₂_invertible A C D
+    simp_rw [← inv_of_eq_nonsing_inv, inv_of_from_blocks_zero₁₂_eq]
+  · have hD := hAD.not.mp hA
+    have : ¬IsUnit (from_blocks A 0 C D) :=
+      is_unit_from_blocks_zero₁₂.not.mpr (not_and'.mpr fun _ => hA)
+    simp_rw [nonsing_inv_eq_ring_inverse, Ring.inverse_non_unit _ hA, Ring.inverse_non_unit _ hD,
+      Ring.inverse_non_unit _ this, Matrix.zero_mul, neg_zero, from_blocks_zero]
+#align matrix.inv_from_blocks_zero₁₂_of_is_unit_iff Matrix.inv_fromBlocks_zero₁₂_of_isUnit_iff
+
+end Triangular
 
 /-! ### Lemmas about `matrix.det` -/
 

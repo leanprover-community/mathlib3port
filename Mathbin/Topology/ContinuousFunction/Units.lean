@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
 
 ! This file was ported from Lean 3 source module topology.continuous_function.units
-! leanprover-community/mathlib commit a148d797a1094ab554ad4183a4ad6f130358ef64
+! leanprover-community/mathlib commit 6b31d1eebd64eab86d5bd9936bfaada6ca8b5842
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.Topology.ContinuousFunction.Algebra
 
 /-!
 # Units of continuous functions
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file concerns itself with `C(X, M)ˣ` and `C(X, Mˣ)` when `X` is a topological space
 and `M` has some monoid structure compatible with its topology.

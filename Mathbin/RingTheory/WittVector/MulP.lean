@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module ring_theory.witt_vector.mul_p
-! leanprover-community/mathlib commit 7abfbc92eec87190fba3ed3d5ec58e7c167e7144
+! leanprover-community/mathlib commit 6b31d1eebd64eab86d5bd9936bfaada6ca8b5842
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.RingTheory.WittVector.IsPoly
 
 /-!
 ## Multiplication by `n` in the ring of Witt vectors
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 In this file we show that multiplication by `n` in the ring of Witt vectors
 is a polynomial function. We then use this fact to show that the composition of Frobenius

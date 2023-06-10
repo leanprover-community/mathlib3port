@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module ring_theory.dedekind_domain.pid
-! leanprover-community/mathlib commit 6010cf523816335f7bae7f8584cb2edaace73940
+! leanprover-community/mathlib commit 6b31d1eebd64eab86d5bd9936bfaada6ca8b5842
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.RingTheory.DedekindDomain.Ideal
 
 /-!
 # Proving a Dedekind domain is a PID
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file contains some results that we can use to show all ideals in a Dedekind domain are
 principal.

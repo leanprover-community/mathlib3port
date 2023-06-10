@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Thomas Browning, Jireh Loreaux
 
 ! This file was ported from Lean 3 source module group_theory.subsemigroup.centralizer
-! leanprover-community/mathlib commit b915e9392ecb2a861e1e766f0e1df6ac481188ca
+! leanprover-community/mathlib commit cc67cd75b4e54191e13c2e8d722289a89e67e4fa
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -129,15 +129,18 @@ theorem centralizer_subset [Mul M] (h : S ⊆ T) : centralizer T ⊆ centralizer
 #align set.add_centralizer_subset Set.add_centralizer_subset
 -/
 
+@[to_additive add_center_subset_add_centralizer]
 theorem center_subset_centralizer [Mul M] (S : Set M) : Set.center M ⊆ S.centralizer :=
   fun x hx m _ => hx m
 #align set.center_subset_centralizer Set.center_subset_centralizer
+#align set.add_center_subset_add_centralizer Set.add_center_subset_add_centralizer
 
-@[simp]
+@[simp, to_additive add_centralizer_eq_top_iff_subset]
 theorem centralizer_eq_top_iff_subset {s : Set M} [Mul M] :
     centralizer s = Set.univ ↔ s ⊆ center M :=
   eq_top_iff.trans <| ⟨fun h x hx g => (h trivial _ hx).symm, fun h x _ m hm => (h hm x).symm⟩
 #align set.centralizer_eq_top_iff_subset Set.centralizer_eq_top_iff_subset
+#align set.add_centralizer_eq_top_iff_subset Set.add_centralizer_eq_top_iff_subset
 
 variable (M)
 
@@ -194,9 +197,11 @@ instance decidableMemCentralizer (a) [Decidable <| ∀ b ∈ S, b * a = a * b] :
 #align subsemigroup.decidable_mem_centralizer Subsemigroup.decidableMemCentralizer
 #align add_subsemigroup.decidable_mem_centralizer AddSubsemigroup.decidableMemCentralizer
 
+@[to_additive]
 theorem center_le_centralizer (S) : center M ≤ centralizer S :=
   S.center_subset_centralizer
 #align subsemigroup.center_le_centralizer Subsemigroup.center_le_centralizer
+#align add_subsemigroup.center_le_centralizer AddSubsemigroup.center_le_centralizer
 
 @[to_additive]
 theorem centralizer_le (h : S ⊆ T) : centralizer T ≤ centralizer S :=
@@ -204,10 +209,11 @@ theorem centralizer_le (h : S ⊆ T) : centralizer T ≤ centralizer S :=
 #align subsemigroup.centralizer_le Subsemigroup.centralizer_le
 #align add_subsemigroup.centralizer_le AddSubsemigroup.centralizer_le
 
-@[simp]
+@[simp, to_additive]
 theorem centralizer_eq_top_iff_subset {s : Set M} : centralizer s = ⊤ ↔ s ⊆ center M :=
   SetLike.ext'_iff.trans Set.centralizer_eq_top_iff_subset
 #align subsemigroup.centralizer_eq_top_iff_subset Subsemigroup.centralizer_eq_top_iff_subset
+#align add_subsemigroup.centralizer_eq_top_iff_subset AddSubsemigroup.centralizer_eq_top_iff_subset
 
 variable (M)
 

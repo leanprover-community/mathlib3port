@@ -4,13 +4,16 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Hanting Zhang
 
 ! This file was ported from Lean 3 source module data.real.pi.wallis
-! leanprover-community/mathlib commit 980755c33b9168bc82f774f665eaa27878140fac
+! leanprover-community/mathlib commit 6b31d1eebd64eab86d5bd9936bfaada6ca8b5842
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.SpecialFunctions.Integrals
 
 /-! # The Wallis formula for Pi
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file establishes the Wallis product for `π` (`real.tendsto_prod_pi_div_two`). Our proof is
 largely about analyzing the behaviour of the sequence `∫ x in 0..π, sin x ^ n` as `n → ∞`.

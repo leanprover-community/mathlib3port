@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 
 ! This file was ported from Lean 3 source module number_theory.modular_forms.basic
-! leanprover-community/mathlib commit ef74e2bd3a553d31fdb139188a251509b6c6b038
+! leanprover-community/mathlib commit 59150e4a8ab64a88e35d5cfa0a17b762a68acfe9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -65,7 +65,7 @@ structure CuspForm extends SlashInvariantForm Γ k where
 add_decl_doc CuspForm.toSlashInvariantForm
 
 /-- `modular_form_class F Γ k` says that `F` is a type of bundled functions that extend
-`slash_invariant_forms_class` by requiring that the functions be holomorphic and bounded
+`slash_invariant_form_class` by requiring that the functions be holomorphic and bounded
 at infinity. -/
 class ModularFormClass extends SlashInvariantFormClass F Γ k where
   holo : ∀ f : F, Mdifferentiable 𝓘(ℂ) 𝓘(ℂ) (f : ℍ → ℂ)
@@ -73,7 +73,7 @@ class ModularFormClass extends SlashInvariantFormClass F Γ k where
 #align modular_form_class ModularFormClass
 
 /-- `cusp_form_class F Γ k` says that `F` is a type of bundled functions that extend
-`slash_invariant_forms_class` by requiring that the functions be holomorphic and zero
+`slash_invariant_form_class` by requiring that the functions be holomorphic and zero
 at infinity. -/
 class CuspFormClass extends SlashInvariantFormClass F Γ k where
   holo : ∀ f : F, Mdifferentiable 𝓘(ℂ) 𝓘(ℂ) (f : ℍ → ℂ)

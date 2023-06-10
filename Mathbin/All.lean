@@ -343,6 +343,7 @@ import Mathbin.Algebra.Module.Submodule.Lattice
 import Mathbin.Algebra.Module.Submodule.Pointwise
 import Mathbin.Algebra.Module.Torsion
 import Mathbin.Algebra.Module.Ulift
+import Mathbin.Algebra.Module.Zlattice
 import Mathbin.Algebra.MonoidAlgebra.Basic
 import Mathbin.Algebra.MonoidAlgebra.Degree
 import Mathbin.Algebra.MonoidAlgebra.Division
@@ -2518,6 +2519,7 @@ import Mathbin.Probability.Martingale.Basic
 import Mathbin.Probability.Martingale.BorelCantelli
 import Mathbin.Probability.Martingale.Centering
 import Mathbin.Probability.Martingale.Convergence
+import Mathbin.Probability.Martingale.OptionalSampling
 import Mathbin.Probability.Martingale.OptionalStopping
 import Mathbin.Probability.Martingale.Upcrossing
 import Mathbin.Probability.Moments

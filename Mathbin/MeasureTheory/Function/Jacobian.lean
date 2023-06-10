@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module measure_theory.function.jacobian
-! leanprover-community/mathlib commit b84aee748341da06a6d78491367e2c0e9f15e8a5
+! leanprover-community/mathlib commit 6b31d1eebd64eab86d5bd9936bfaada6ca8b5842
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -17,6 +17,9 @@ import Mathbin.MeasureTheory.Constructions.Polish
 
 /-!
 # Change of variables in higher-dimensional integrals
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 Let `μ` be a Lebesgue measure on a finite-dimensional real vector space `E`.
 Let `f : E → E` be a function which is injective and differentiable on a measurable set `s`,

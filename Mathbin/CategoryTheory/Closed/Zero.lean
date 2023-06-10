@@ -38,6 +38,7 @@ variable {C : Type u} [Category.{v} C]
 
 variable [HasFiniteProducts C] [CartesianClosed C]
 
+#print CategoryTheory.uniqueHomsetOfInitialIsoTerminal /-
 /-- If a cartesian closed category has an initial object which is isomorphic to the terminal object,
 then each homset has exactly one element.
 -/
@@ -48,9 +49,11 @@ def uniqueHomsetOfInitialIsoTerminal [HasInitial C] (i : ⊥_ C ≅ ⊤_ C) (X Y
       _ ≃ (X ⨯ ⊥_ C ⟶ Y) := (Iso.homCongr (prod.mapIso (Iso.refl _) i.symm) (Iso.refl _))
       _ ≃ (⊥_ C ⟶ Y ^^ X) := (exp.adjunction _).homEquiv _ _
 #align category_theory.unique_homset_of_initial_iso_terminal CategoryTheory.uniqueHomsetOfInitialIsoTerminal
+-/
 
 open scoped ZeroObject
 
+#print CategoryTheory.uniqueHomsetOfZero /-
 /-- If a cartesian closed category has a zero object, each homset has exactly one element. -/
 def uniqueHomsetOfZero [HasZeroObject C] (X Y : C) : Unique (X ⟶ Y) :=
   by
@@ -58,6 +61,7 @@ def uniqueHomsetOfZero [HasZeroObject C] (X Y : C) : Unique (X ⟶ Y) :=
   apply unique_homset_of_initial_iso_terminal _ X Y
   refine' ⟨default, (default : ⊤_ C ⟶ 0) ≫ default, _, _⟩ <;> simp
 #align category_theory.unique_homset_of_zero CategoryTheory.uniqueHomsetOfZero
+-/
 
 attribute [local instance] unique_homset_of_zero
 

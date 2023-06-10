@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Bentkamp
 
 ! This file was ported from Lean 3 source module linear_algebra.eigenspace.basic
-! leanprover-community/mathlib commit 6b0169218d01f2837d79ea2784882009a0da1aa1
+! leanprover-community/mathlib commit 6b31d1eebd64eab86d5bd9936bfaada6ca8b5842
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.LinearAlgebra.FiniteDimensional
 
 /-!
 # Eigenvectors and eigenvalues
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file defines eigenspaces, eigenvalues, and eigenvalues, as well as their generalized
 counterparts. We follow Axler's approach [axler2015] because it allows us to derive many properties

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module algebra.category.Module.algebra
-! leanprover-community/mathlib commit 1c775cc661988d96c477aa4ca6f7b5641a2a924b
+! leanprover-community/mathlib commit 6b31d1eebd64eab86d5bd9936bfaada6ca8b5842
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.Algebra.Category.Module.Basic
 
 /-!
 # Additional typeclass for modules over an algebra
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 For an object in `M : Module A`, where `A` is a `k`-algebra,
 we provide additional typeclasses on the underlying type `M`,
