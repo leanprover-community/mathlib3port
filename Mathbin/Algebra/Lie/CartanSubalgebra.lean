@@ -35,6 +35,7 @@ variable {R : Type u} {L : Type v}
 
 variable [CommRing R] [LieRing L] [LieAlgebra R L] (H : LieSubalgebra R L)
 
+#print LieSubmodule.IsUcsLimit /-
 /-- Given a Lie module `M` of a Lie algebra `L`, `lie_submodule.is_ucs_limit` is the proposition
 that a Lie submodule `N ⊆ M` is the limiting value for the upper central series.
 
@@ -44,25 +45,31 @@ def LieSubmodule.IsUcsLimit {M : Type _} [AddCommGroup M] [Module R M] [LieRingM
     [LieModule R L M] (N : LieSubmodule R L M) : Prop :=
   ∃ k, ∀ l, k ≤ l → (⊥ : LieSubmodule R L M).ucs l = N
 #align lie_submodule.is_ucs_limit LieSubmodule.IsUcsLimit
+-/
 
 namespace LieSubalgebra
 
+#print LieSubalgebra.IsCartanSubalgebra /-
 /-- A Cartan subalgebra is a nilpotent, self-normalizing subalgebra. -/
 class IsCartanSubalgebra : Prop where
   nilpotent : LieAlgebra.IsNilpotent R H
   self_normalizing : H.normalizer = H
 #align lie_subalgebra.is_cartan_subalgebra LieSubalgebra.IsCartanSubalgebra
+-/
 
 instance [H.IsCartanSubalgebra] : LieAlgebra.IsNilpotent R H :=
   IsCartanSubalgebra.nilpotent
 
+#print LieSubalgebra.normalizer_eq_self_of_isCartanSubalgebra /-
 @[simp]
 theorem normalizer_eq_self_of_isCartanSubalgebra (H : LieSubalgebra R L) [H.IsCartanSubalgebra] :
     H.toLieSubmodule.normalizer = H.toLieSubmodule := by
   rw [← LieSubmodule.coe_toSubmodule_eq_iff, coe_normalizer_eq_normalizer,
     is_cartan_subalgebra.self_normalizing, coe_to_lie_submodule]
 #align lie_subalgebra.normalizer_eq_self_of_is_cartan_subalgebra LieSubalgebra.normalizer_eq_self_of_isCartanSubalgebra
+-/
 
+#print LieSubalgebra.ucs_eq_self_of_isCartanSubalgebra /-
 @[simp]
 theorem ucs_eq_self_of_isCartanSubalgebra (H : LieSubalgebra R L) [H.IsCartanSubalgebra] (k : ℕ) :
     H.toLieSubmodule.ucs k = H.toLieSubmodule :=
@@ -71,7 +78,9 @@ theorem ucs_eq_self_of_isCartanSubalgebra (H : LieSubalgebra R L) [H.IsCartanSub
   · simp
   · simp [ih]
 #align lie_subalgebra.ucs_eq_self_of_is_cartan_subalgebra LieSubalgebra.ucs_eq_self_of_isCartanSubalgebra
+-/
 
+#print LieSubalgebra.isCartanSubalgebra_iff_isUcsLimit /-
 theorem isCartanSubalgebra_iff_isUcsLimit : H.IsCartanSubalgebra ↔ H.toLieSubmodule.IsUcsLimit :=
   by
   constructor
@@ -98,6 +107,7 @@ theorem isCartanSubalgebra_iff_isUcsLimit : H.IsCartanSubalgebra ↔ H.toLieSubm
           rw [← LieSubalgebra.coe_to_submodule_eq_iff, ← LieSubalgebra.coe_normalizer_eq_normalizer,
             hk', LieSubalgebra.coe_toLieSubmodule] }
 #align lie_subalgebra.is_cartan_subalgebra_iff_is_ucs_limit LieSubalgebra.isCartanSubalgebra_iff_isUcsLimit
+-/
 
 end LieSubalgebra
 

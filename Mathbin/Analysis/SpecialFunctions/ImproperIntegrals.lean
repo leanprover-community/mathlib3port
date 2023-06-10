@@ -32,6 +32,7 @@ open Real Set Filter MeasureTheory intervalIntegral
 
 open scoped Topology
 
+#print integrableOn_exp_Iic /-
 theorem integrableOn_exp_Iic (c : ℝ) : IntegrableOn exp (Iic c) :=
   by
   refine'
@@ -41,7 +42,9 @@ theorem integrableOn_exp_Iic (c : ℝ) : IntegrableOn exp (Iic c) :=
   simp_rw [norm_of_nonneg (exp_pos _).le, integral_exp, sub_le_self_iff]
   exact (exp_pos _).le
 #align integrable_on_exp_Iic integrableOn_exp_Iic
+-/
 
+#print integral_exp_Iic /-
 theorem integral_exp_Iic (c : ℝ) : (∫ x : ℝ in Iic c, exp x) = exp c :=
   by
   refine'
@@ -50,18 +53,23 @@ theorem integral_exp_Iic (c : ℝ) : (∫ x : ℝ in Iic c, exp x) = exp c :=
   simp_rw [integral_exp, show 𝓝 (exp c) = 𝓝 (exp c - 0) by rw [sub_zero]]
   exact tendsto_exp_at_bot.const_sub _
 #align integral_exp_Iic integral_exp_Iic
+-/
 
+#print integral_exp_Iic_zero /-
 theorem integral_exp_Iic_zero : (∫ x : ℝ in Iic 0, exp x) = 1 :=
   exp_zero ▸ integral_exp_Iic 0
 #align integral_exp_Iic_zero integral_exp_Iic_zero
+-/
 
 theorem integral_exp_neg_Ioi (c : ℝ) : (∫ x : ℝ in Ioi c, exp (-x)) = exp (-c) := by
   simpa only [integral_comp_neg_Ioi] using integral_exp_Iic (-c)
 #align integral_exp_neg_Ioi integral_exp_neg_Ioi
 
+#print integral_exp_neg_Ioi_zero /-
 theorem integral_exp_neg_Ioi_zero : (∫ x : ℝ in Ioi 0, exp (-x)) = 1 := by
   simpa only [neg_zero, exp_zero] using integral_exp_neg_Ioi 0
 #align integral_exp_neg_Ioi_zero integral_exp_neg_Ioi_zero
+-/
 
 /-- If `0 < c`, then `(λ t : ℝ, t ^ a)` is integrable on `(c, ∞)` for all `a < -1`. -/
 theorem integrableOn_Ioi_rpow_of_lt {a : ℝ} (ha : a < -1) {c : ℝ} (hc : 0 < c) :

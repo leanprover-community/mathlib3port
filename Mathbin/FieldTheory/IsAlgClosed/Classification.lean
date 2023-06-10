@@ -103,12 +103,12 @@ variable {κ : Type _} (w : κ → L)
 
 variable (hv : AlgebraicIndependent R v)
 
-theorem isAlgClosureOfTranscendenceBasis [IsAlgClosed K] (hv : IsTranscendenceBasis R v) :
+theorem isAlgClosure_of_transcendence_basis [IsAlgClosed K] (hv : IsTranscendenceBasis R v) :
     IsAlgClosure (Algebra.adjoin R (Set.range v)) K :=
   letI := RingHom.domain_nontrivial (algebraMap R K)
   { alg_closed := by infer_instance
     algebraic := hv.is_algebraic }
-#align is_alg_closed.is_alg_closure_of_transcendence_basis IsAlgClosed.isAlgClosureOfTranscendenceBasis
+#align is_alg_closed.is_alg_closure_of_transcendence_basis IsAlgClosed.isAlgClosure_of_transcendence_basis
 
 variable (hw : AlgebraicIndependent R w)
 

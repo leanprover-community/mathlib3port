@@ -48,6 +48,7 @@ open Polynomial
 
 variable (k : Type u) [Field k]
 
+#print IsAlgClosed /-
 /-- Typeclass for algebraically closed fields.
 
 To show `polynomial.splits p f` for an arbitrary ring homomorphism `f`,
@@ -56,6 +57,7 @@ see `is_alg_closed.splits_codomain` and `is_alg_closed.splits_domain`.
 class IsAlgClosed : Prop where
   Splits : ∀ p : k[X], p.Splits <| RingHom.id k
 #align is_alg_closed IsAlgClosed
+-/
 
 /-- Every polynomial splits in the field extension `f : K →+* k` if `k` is algebraically closed.
 
@@ -78,9 +80,11 @@ namespace IsAlgClosed
 
 variable {k}
 
+#print IsAlgClosed.exists_root /-
 theorem exists_root [IsAlgClosed k] (p : k[X]) (hp : p.degree ≠ 0) : ∃ x, IsRoot p x :=
   exists_root_of_splits _ (IsAlgClosed.splits p) hp
 #align is_alg_closed.exists_root IsAlgClosed.exists_root
+-/
 
 theorem exists_pow_nat_eq [IsAlgClosed k] (x : k) {n : ℕ} (hn : 0 < n) : ∃ z, z ^ n = x :=
   by
@@ -182,16 +186,20 @@ class IsAlgClosure (R : Type u) (K : Type v) [CommRing R] [Field K] [Algebra R K
   algebraic : Algebra.IsAlgebraic R K
 #align is_alg_closure IsAlgClosure
 
+#print isAlgClosure_iff /-
 theorem isAlgClosure_iff (K : Type v) [Field K] [Algebra k K] :
     IsAlgClosure k K ↔ IsAlgClosed K ∧ Algebra.IsAlgebraic k K :=
   ⟨fun h => ⟨h.1, h.2⟩, fun h => ⟨h.1, h.2⟩⟩
 #align is_alg_closure_iff isAlgClosure_iff
+-/
 
+#print IsAlgClosure.normal /-
 instance (priority := 100) IsAlgClosure.normal (R K : Type _) [Field R] [Field K] [Algebra R K]
     [IsAlgClosure R K] : Normal R K :=
   ⟨IsAlgClosure.algebraic, fun _ =>
     @IsAlgClosed.splits_codomain _ _ _ (IsAlgClosure.alg_closed R) _ _ _⟩
 #align is_alg_closure.normal IsAlgClosure.normal
+-/
 
 instance (priority := 100) IsAlgClosure.separable (R K : Type _) [Field R] [Field K] [Algebra R K]
     [IsAlgClosure R K] [CharZero R] : IsSeparable R K :=
@@ -287,10 +295,12 @@ theorem exists_maximal_subfieldWithHom : ∃ E : SubfieldWithHom K L M hL, ∀ N
   exists_maximal_of_chains_bounded maximal_subfieldWithHom_chain_bounded fun _ _ _ => le_trans
 #align lift.subfield_with_hom.exists_maximal_subfield_with_hom lift.SubfieldWithHom.exists_maximal_subfieldWithHom
 
+#print lift.SubfieldWithHom.maximalSubfieldWithHom /-
 /-- The maximal `subfield_with_hom`. We later prove that this is equal to `⊤`. -/
 noncomputable def maximalSubfieldWithHom : SubfieldWithHom K L M hL :=
   Classical.choose (exists_maximal_subfieldWithHom M hL)
 #align lift.subfield_with_hom.maximal_subfield_with_hom lift.SubfieldWithHom.maximalSubfieldWithHom
+-/
 
 theorem maximalSubfieldWithHom_is_maximal :
     ∀ N : SubfieldWithHom K L M hL,
@@ -298,6 +308,7 @@ theorem maximalSubfieldWithHom_is_maximal :
   Classical.choose_spec (exists_maximal_subfieldWithHom M hL)
 #align lift.subfield_with_hom.maximal_subfield_with_hom_is_maximal lift.SubfieldWithHom.maximalSubfieldWithHom_is_maximal
 
+#print lift.SubfieldWithHom.maximalSubfieldWithHom_eq_top /-
 theorem maximalSubfieldWithHom_eq_top : (maximalSubfieldWithHom M hL).carrier = ⊤ :=
   by
   rw [eq_top_iff]
@@ -332,6 +343,7 @@ theorem maximalSubfieldWithHom_eq_top : (maximalSubfieldWithHom M hL).carrier = 
   refine' (maximal_subfield_with_hom_is_maximal M hL O' hO').fst _
   exact Algebra.subset_adjoin (Set.mem_singleton x)
 #align lift.subfield_with_hom.maximal_subfield_with_hom_eq_top lift.SubfieldWithHom.maximalSubfieldWithHom_eq_top
+-/
 
 end SubfieldWithHom
 
