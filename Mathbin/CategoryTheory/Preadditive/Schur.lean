@@ -35,12 +35,15 @@ variable {C : Type _} [Category C]
 
 variable [Preadditive C]
 
+#print CategoryTheory.mono_of_nonzero_from_simple /-
 -- See also `epi_of_nonzero_to_simple`, which does not require `preadditive C`.
 theorem mono_of_nonzero_from_simple [HasKernels C] {X Y : C} [Simple X] {f : X ⟶ Y} (w : f ≠ 0) :
     Mono f :=
   Preadditive.mono_of_kernel_zero (kernel_zero_of_nonzero_from_simple w)
 #align category_theory.mono_of_nonzero_from_simple CategoryTheory.mono_of_nonzero_from_simple
+-/
 
+#print CategoryTheory.isIso_of_hom_simple /-
 /-- The part of **Schur's lemma** that holds in any preadditive category with kernels:
 that a nonzero morphism between simple objects is an isomorphism.
 -/
@@ -49,7 +52,9 @@ theorem isIso_of_hom_simple [HasKernels C] {X Y : C} [Simple X] [Simple Y] {f : 
   haveI := mono_of_nonzero_from_simple w
   is_iso_of_mono_of_nonzero w
 #align category_theory.is_iso_of_hom_simple CategoryTheory.isIso_of_hom_simple
+-/
 
+#print CategoryTheory.isIso_iff_nonzero /-
 /-- As a corollary of Schur's lemma for preadditive categories,
 any morphism between simple objects is (exclusively) either an isomorphism or zero.
 -/
@@ -60,6 +65,7 @@ theorem isIso_iff_nonzero [HasKernels C] {X Y : C} [Simple X] [Simple Y] (f : X 
     apply id_nonzero X
     simp only [← is_iso.hom_inv_id f, h, zero_comp], fun w => isIso_of_hom_simple w⟩
 #align category_theory.is_iso_iff_nonzero CategoryTheory.isIso_iff_nonzero
+-/
 
 /-- In any preadditive category with kernels,
 the endomorphisms of a simple object form a division ring.
@@ -153,6 +159,7 @@ theorem endomorphism_simple_eq_smul_id {X : C} [Simple X] [I : FiniteDimensional
     f
 #align category_theory.endomorphism_simple_eq_smul_id CategoryTheory.endomorphism_simple_eq_smul_id
 
+#print CategoryTheory.fieldEndOfFiniteDimensional /-
 /-- Endomorphisms of a simple object form a field if they are finite dimensional.
 This can't be an instance as `𝕜` would be undetermined.
 -/
@@ -166,7 +173,9 @@ noncomputable def fieldEndOfFiniteDimensional (X : C) [Simple X] [I : FiniteDime
         obtain ⟨d, rfl⟩ := endomorphism_simple_eq_smul_id 𝕜 g
         simp [← mul_smul, mul_comm c d] }
 #align category_theory.field_End_of_finite_dimensional CategoryTheory.fieldEndOfFiniteDimensional
+-/
 
+#print CategoryTheory.finrank_hom_simple_simple_le_one /-
 -- There is a symmetric argument that uses `[finite_dimensional 𝕜 (Y ⟶ Y)]` instead,
 -- but we don't bother proving that here.
 /-- **Schur's lemma** for `𝕜`-linear categories:
@@ -189,7 +198,9 @@ theorem finrank_hom_simple_simple_le_one (X Y : C) [FiniteDimensional 𝕜 (X �
     obtain ⟨c, w⟩ := endomorphism_simple_eq_smul_id 𝕜 (g ≫ inv f)
     exact ⟨c, by simpa using w =≫ f⟩
 #align category_theory.finrank_hom_simple_simple_le_one CategoryTheory.finrank_hom_simple_simple_le_one
+-/
 
+#print CategoryTheory.finrank_hom_simple_simple_eq_one_iff /-
 theorem finrank_hom_simple_simple_eq_one_iff (X Y : C) [FiniteDimensional 𝕜 (X ⟶ X)]
     [FiniteDimensional 𝕜 (X ⟶ Y)] [Simple X] [Simple Y] :
     finrank 𝕜 (X ⟶ Y) = 1 ↔ Nonempty (X ≅ Y) :=
@@ -206,7 +217,9 @@ theorem finrank_hom_simple_simple_eq_one_iff (X Y : C) [FiniteDimensional 𝕜 (
       finrank_pos_iff_exists_ne_zero.mpr ⟨f.hom, (is_iso_iff_nonzero f.hom).mp inferInstance⟩
     linarith
 #align category_theory.finrank_hom_simple_simple_eq_one_iff CategoryTheory.finrank_hom_simple_simple_eq_one_iff
+-/
 
+#print CategoryTheory.finrank_hom_simple_simple_eq_zero_iff /-
 theorem finrank_hom_simple_simple_eq_zero_iff (X Y : C) [FiniteDimensional 𝕜 (X ⟶ X)]
     [FiniteDimensional 𝕜 (X ⟶ Y)] [Simple X] [Simple Y] : finrank 𝕜 (X ⟶ Y) = 0 ↔ IsEmpty (X ≅ Y) :=
   by
@@ -217,9 +230,11 @@ theorem finrank_hom_simple_simple_eq_zero_iff (X Y : C) [FiniteDimensional 𝕜 
   · exact h'
   · exact False.elim (h h')
 #align category_theory.finrank_hom_simple_simple_eq_zero_iff CategoryTheory.finrank_hom_simple_simple_eq_zero_iff
+-/
 
 open scoped Classical
 
+#print CategoryTheory.finrank_hom_simple_simple /-
 theorem finrank_hom_simple_simple (X Y : C) [∀ X Y : C, FiniteDimensional 𝕜 (X ⟶ Y)] [Simple X]
     [Simple Y] : finrank 𝕜 (X ⟶ Y) = if Nonempty (X ≅ Y) then 1 else 0 :=
   by
@@ -227,6 +242,7 @@ theorem finrank_hom_simple_simple (X Y : C) [∀ X Y : C, FiniteDimensional 𝕜
   exact (finrank_hom_simple_simple_eq_one_iff 𝕜 X Y).2 h
   exact (finrank_hom_simple_simple_eq_zero_iff 𝕜 X Y).2 (not_nonempty_iff.mp h)
 #align category_theory.finrank_hom_simple_simple CategoryTheory.finrank_hom_simple_simple
+-/
 
 end CategoryTheory
 
