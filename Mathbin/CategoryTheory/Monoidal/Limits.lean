@@ -37,9 +37,11 @@ variable {J : Type v} [SmallCategory J]
 
 variable {C : Type u} [Category.{v} C] [HasLimits C]
 
+#print CategoryTheory.Limits.limitFunctorial /-
 instance limitFunctorial : Functorial fun F : J ⥤ C => limit F :=
   { Limits.lim with }
 #align category_theory.limits.limit_functorial CategoryTheory.Limits.limitFunctorial
+-/
 
 @[simp]
 theorem limitFunctorial_map {F G : J ⥤ C} (α : F ⟶ G) :
@@ -53,6 +55,7 @@ variable [MonoidalCategory.{v} C]
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print CategoryTheory.Limits.limitLaxMonoidal /-
 @[simps]
 instance limitLaxMonoidal : LaxMonoidal fun F : J ⥤ C => limit F
     where
@@ -108,11 +111,14 @@ instance limitLaxMonoidal : LaxMonoidal fun F : J ⥤ C => limit F
     slice_rhs 2 3 => rw [right_unitor_naturality]
     simp
 #align category_theory.limits.limit_lax_monoidal CategoryTheory.Limits.limitLaxMonoidal
+-/
 
+#print CategoryTheory.Limits.limLax /-
 /-- The limit functor `F ↦ limit F` bundled as a lax monoidal functor. -/
 def limLax : LaxMonoidalFunctor (J ⥤ C) C :=
   LaxMonoidalFunctor.of fun F : J ⥤ C => limit F
 #align category_theory.limits.lim_lax CategoryTheory.Limits.limLax
+-/
 
 @[simp]
 theorem limLax_obj (F : J ⥤ C) : limLax.obj F = limit F :=

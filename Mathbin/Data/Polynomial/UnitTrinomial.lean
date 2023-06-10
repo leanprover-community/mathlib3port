@@ -37,10 +37,12 @@ section Semiring
 
 variable {R : Type _} [Semiring R] (k m n : ℕ) (u v w : R)
 
+#print Polynomial.trinomial /-
 /-- Shorthand for a trinomial -/
 noncomputable def trinomial :=
   C u * X ^ k + C v * X ^ m + C w * X ^ n
 #align polynomial.trinomial Polynomial.trinomial
+-/
 
 theorem trinomial_def : trinomial k m n u v w = C u * X ^ k + C v * X ^ m + C w * X ^ n :=
   rfl
@@ -48,23 +50,29 @@ theorem trinomial_def : trinomial k m n u v w = C u * X ^ k + C v * X ^ m + C w 
 
 variable {k m n u v w}
 
+#print Polynomial.trinomial_leading_coeff' /-
 theorem trinomial_leading_coeff' (hkm : k < m) (hmn : m < n) :
     (trinomial k m n u v w).coeff n = w := by
   rw [trinomial_def, coeff_add, coeff_add, coeff_C_mul_X_pow, coeff_C_mul_X_pow, coeff_C_mul_X_pow,
     if_neg (hkm.trans hmn).ne', if_neg hmn.ne', if_pos rfl, zero_add, zero_add]
 #align polynomial.trinomial_leading_coeff' Polynomial.trinomial_leading_coeff'
+-/
 
+#print Polynomial.trinomial_middle_coeff /-
 theorem trinomial_middle_coeff (hkm : k < m) (hmn : m < n) : (trinomial k m n u v w).coeff m = v :=
   by
   rw [trinomial_def, coeff_add, coeff_add, coeff_C_mul_X_pow, coeff_C_mul_X_pow, coeff_C_mul_X_pow,
     if_neg hkm.ne', if_pos rfl, if_neg hmn.ne, zero_add, add_zero]
 #align polynomial.trinomial_middle_coeff Polynomial.trinomial_middle_coeff
+-/
 
+#print Polynomial.trinomial_trailing_coeff' /-
 theorem trinomial_trailing_coeff' (hkm : k < m) (hmn : m < n) :
     (trinomial k m n u v w).coeff k = u := by
   rw [trinomial_def, coeff_add, coeff_add, coeff_C_mul_X_pow, coeff_C_mul_X_pow, coeff_C_mul_X_pow,
     if_pos rfl, if_neg hkm.ne, if_neg (hkm.trans hmn).Ne, add_zero, add_zero]
 #align polynomial.trinomial_trailing_coeff' Polynomial.trinomial_trailing_coeff'
+-/
 
 theorem trinomial_natDegree (hkm : k < m) (hmn : m < n) (hw : w ≠ 0) :
     (trinomial k m n u v w).natDegree = n :=
@@ -106,12 +114,14 @@ theorem trinomial_trailingCoeff (hkm : k < m) (hmn : m < n) (hu : u ≠ 0) :
   rw [trailing_coeff, trinomial_nat_trailing_degree hkm hmn hu, trinomial_trailing_coeff' hkm hmn]
 #align polynomial.trinomial_trailing_coeff Polynomial.trinomial_trailingCoeff
 
+#print Polynomial.trinomial_monic /-
 theorem trinomial_monic (hkm : k < m) (hmn : m < n) : (trinomial k m n u v 1).Monic :=
   by
   cases' subsingleton_or_nontrivial R with h h
   · apply Subsingleton.elim
   · exact trinomial_leading_coeff hkm hmn one_ne_zero
 #align polynomial.trinomial_monic Polynomial.trinomial_monic
+-/
 
 theorem trinomial_mirror (hkm : k < m) (hmn : m < n) (hu : u ≠ 0) (hw : w ≠ 0) :
     (trinomial k m n u v w).mirror = trinomial k (n - m + k) n w v u := by
