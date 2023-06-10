@@ -347,7 +347,7 @@ theorem FinrankQuotientMap.span_eq_top [IsDomain R] [IsDomain S] [Algebra K L] [
         rw [Submodule.map_smul'', Submodule.map_top, M.range_mkq]
       _ = ⊤ := by rw [Ideal.smul_top_eq_map, (Submodule.map_mkQ_eq_top M _).mpr hb']
   -- we can write the elements of `a` as `p`-linear combinations of other elements of `a`.
-  have exists_sum : ∀ x : S ⧸ M, ∃ a' : Fin n → R, (∀ i, a' i ∈ p) ∧ (∑ i, a' i • a i) = x :=
+  have exists_sum : ∀ x : S ⧸ M, ∃ a' : Fin n → R, (∀ i, a' i ∈ p) ∧ ∑ i, a' i • a i = x :=
     by
     intro x
     obtain ⟨a'', ha'', hx⟩ := (Submodule.mem_ideal_smul_span_iff_exists_sum p a x).1 _
@@ -360,7 +360,7 @@ theorem FinrankQuotientMap.span_eq_top [IsDomain R] [IsDomain S] [Algebra K L] [
   -- This gives us a(n invertible) matrix `A` such that `det A ∈ (M = span R b)`,
   let A : Matrix (Fin n) (Fin n) R := A' - 1
   let B := A.adjugate
-  have A_smul : ∀ i, (∑ j, A i j • a j) = 0 := by
+  have A_smul : ∀ i, ∑ j, A i j • a j = 0 := by
     intros
     simp only [A, Pi.sub_apply, sub_smul, Finset.sum_sub_distrib, hA', Matrix.one_apply, ite_smul,
       one_smul, zero_smul, Finset.sum_ite_eq, Finset.mem_univ, if_true, sub_self]
@@ -904,8 +904,8 @@ theorem sum_ramification_inertia (K L : Type _) [Field K] [Field L] [IsDomain R]
     [IsDedekindDomain R] [Algebra R K] [IsFractionRing R K] [Algebra S L] [IsFractionRing S L]
     [Algebra K L] [Algebra R L] [IsScalarTower R S L] [IsScalarTower R K L] [IsNoetherian R S]
     [IsIntegralClosure S R L] [p.IsMaximal] (hp0 : p ≠ ⊥) :
-    (∑ P in (factors (map (algebraMap R S) p)).toFinset,
-        ramificationIdx (algebraMap R S) p P * inertiaDeg (algebraMap R S) p P) =
+    ∑ P in (factors (map (algebraMap R S) p)).toFinset,
+        ramificationIdx (algebraMap R S) p P * inertiaDeg (algebraMap R S) p P =
       finrank K L :=
   by
   set e := ramification_idx (algebraMap R S) p
@@ -920,7 +920,7 @@ theorem sum_ramification_inertia (K L : Type _) [Field K] [Field L] [IsDomain R]
     rw [← RingHom.coe_comp, ← IsScalarTower.algebraMap_eq]
     exact inj_RL
   calc
-    (∑ P in (factors (map (algebraMap R S) p)).toFinset, e P * f P) =
+    ∑ P in (factors (map (algebraMap R S) p)).toFinset, e P * f P =
         ∑ P in (factors (map (algebraMap R S) p)).toFinset.attach,
           finrank (R ⧸ p) (S ⧸ (P : Ideal S) ^ e P) :=
       _

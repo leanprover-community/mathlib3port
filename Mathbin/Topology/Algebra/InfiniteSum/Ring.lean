@@ -57,11 +57,11 @@ section tsum
 
 variable [T2Space α]
 
-theorem Summable.tsum_mul_left (a) (hf : Summable f) : (∑' i, a * f i) = a * ∑' i, f i :=
+theorem Summable.tsum_mul_left (a) (hf : Summable f) : ∑' i, a * f i = a * ∑' i, f i :=
   (hf.HasSum.mulLeft _).tsum_eq
 #align summable.tsum_mul_left Summable.tsum_mul_left
 
-theorem Summable.tsum_mul_right (a) (hf : Summable f) : (∑' i, f i * a) = (∑' i, f i) * a :=
+theorem Summable.tsum_mul_right (a) (hf : Summable f) : ∑' i, f i * a = (∑' i, f i) * a :=
   (hf.HasSum.mulRight _).tsum_eq
 #align summable.tsum_mul_right Summable.tsum_mul_right
 
@@ -116,7 +116,7 @@ theorem summable_div_const_iff (h : a ≠ 0) : (Summable fun i => f i / a) ↔ S
   simpa only [div_eq_mul_inv] using summable_mul_right_iff (inv_ne_zero h)
 #align summable_div_const_iff summable_div_const_iff
 
-theorem tsum_mul_left [T2Space α] : (∑' x, a * f x) = a * ∑' x, f x :=
+theorem tsum_mul_left [T2Space α] : ∑' x, a * f x = a * ∑' x, f x :=
   if hf : Summable f then hf.tsum_mul_left a
   else
     if ha : a = 0 then by simp [ha]
@@ -125,7 +125,7 @@ theorem tsum_mul_left [T2Space α] : (∑' x, a * f x) = a * ∑' x, f x :=
         tsum_eq_zero_of_not_summable (mt (summable_mul_left_iff ha).mp hf), MulZeroClass.mul_zero]
 #align tsum_mul_left tsum_mul_left
 
-theorem tsum_mul_right [T2Space α] : (∑' x, f x * a) = (∑' x, f x) * a :=
+theorem tsum_mul_right [T2Space α] : ∑' x, f x * a = (∑' x, f x) * a :=
   if hf : Summable f then hf.tsum_mul_right a
   else
     if ha : a = 0 then by simp [ha]
@@ -134,7 +134,7 @@ theorem tsum_mul_right [T2Space α] : (∑' x, f x * a) = (∑' x, f x) * a :=
         tsum_eq_zero_of_not_summable (mt (summable_mul_right_iff ha).mp hf), MulZeroClass.zero_mul]
 #align tsum_mul_right tsum_mul_right
 
-theorem tsum_div_const [T2Space α] : (∑' x, f x / a) = (∑' x, f x) / a := by
+theorem tsum_div_const [T2Space α] : ∑' x, f x / a = (∑' x, f x) / a := by
   simpa only [div_eq_mul_inv] using tsum_mul_right
 #align tsum_div_const tsum_div_const
 
@@ -180,7 +180,7 @@ theorem HasSum.mul (hf : HasSum f s) (hg : HasSum g t)
     See also `tsum_mul_tsum_of_summable_norm` if `f` and `g` are abolutely summable. -/
 theorem tsum_mul_tsum (hf : Summable f) (hg : Summable g)
     (hfg : Summable fun x : ι × κ => f x.1 * g x.2) :
-    ((∑' x, f x) * ∑' y, g y) = ∑' z : ι × κ, f z.1 * g z.2 :=
+    (∑' x, f x) * ∑' y, g y = ∑' z : ι × κ, f z.1 * g z.2 :=
   hf.HasSum.mul_eq hg.HasSum hfg.HasSum
 #align tsum_mul_tsum tsum_mul_tsum
 
@@ -231,7 +231,7 @@ See also `tsum_mul_tsum_eq_tsum_sum_antidiagonal_of_summable_norm` if `f` and `g
 summable. -/
 theorem tsum_mul_tsum_eq_tsum_sum_antidiagonal (hf : Summable f) (hg : Summable g)
     (hfg : Summable fun x : ℕ × ℕ => f x.1 * g x.2) :
-    ((∑' n, f n) * ∑' n, g n) = ∑' n, ∑ kl in Nat.antidiagonal n, f kl.1 * g kl.2 :=
+    (∑' n, f n) * ∑' n, g n = ∑' n, ∑ kl in Nat.antidiagonal n, f kl.1 * g kl.2 :=
   by
   conv_rhs =>
     congr
@@ -257,7 +257,7 @@ See also `tsum_mul_tsum_eq_tsum_sum_range_of_summable_norm` if `f` and `g` are a
 -/
 theorem tsum_mul_tsum_eq_tsum_sum_range (hf : Summable f) (hg : Summable g)
     (hfg : Summable fun x : ℕ × ℕ => f x.1 * g x.2) :
-    ((∑' n, f n) * ∑' n, g n) = ∑' n, ∑ k in range (n + 1), f k * g (n - k) :=
+    (∑' n, f n) * ∑' n, g n = ∑' n, ∑ k in range (n + 1), f k * g (n - k) :=
   by
   simp_rw [← nat.sum_antidiagonal_eq_sum_range_succ fun k l => f k * g l]
   exact tsum_mul_tsum_eq_tsum_sum_antidiagonal hf hg hfg

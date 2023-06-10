@@ -321,9 +321,9 @@ theorem linearIndependent (n : ℕ) :
 -/
 
 #print bernsteinPolynomial.sum /-
-theorem sum (n : ℕ) : (∑ ν in Finset.range (n + 1), bernsteinPolynomial R n ν) = 1 :=
+theorem sum (n : ℕ) : ∑ ν in Finset.range (n + 1), bernsteinPolynomial R n ν = 1 :=
   calc
-    (∑ ν in Finset.range (n + 1), bernsteinPolynomial R n ν) = (X + (1 - X)) ^ n := by rw [add_pow];
+    ∑ ν in Finset.range (n + 1), bernsteinPolynomial R n ν = (X + (1 - X)) ^ n := by rw [add_pow];
       simp only [bernsteinPolynomial, mul_comm, mul_assoc, mul_left_comm]
     _ = 1 := by simp
 #align bernstein_polynomial.sum bernsteinPolynomial.sum
@@ -333,7 +333,7 @@ open Polynomial
 
 open MvPolynomial
 
-theorem sum_smul (n : ℕ) : (∑ ν in Finset.range (n + 1), ν • bernsteinPolynomial R n ν) = n • X :=
+theorem sum_smul (n : ℕ) : ∑ ν in Finset.range (n + 1), ν • bernsteinPolynomial R n ν = n • X :=
   by
   -- We calculate the `x`-derivative of `(x+y)^n`, evaluated at `y=(1-x)`,
   -- either directly or by using the binomial theorem.
@@ -374,7 +374,7 @@ theorem sum_smul (n : ℕ) : (∑ ν in Finset.range (n + 1), ν • bernsteinPo
 #align bernstein_polynomial.sum_smul bernsteinPolynomial.sum_smul
 
 theorem sum_mul_smul (n : ℕ) :
-    (∑ ν in Finset.range (n + 1), (ν * (ν - 1)) • bernsteinPolynomial R n ν) =
+    ∑ ν in Finset.range (n + 1), (ν * (ν - 1)) • bernsteinPolynomial R n ν =
       (n * (n - 1)) • X ^ 2 :=
   by
   -- We calculate the second `x`-derivative of `(x+y)^n`, evaluated at `y=(1-x)`,
@@ -425,7 +425,7 @@ theorem sum_mul_smul (n : ℕ) :
 which we'll want later.
 -/
 theorem variance (n : ℕ) :
-    (∑ ν in Finset.range (n + 1), (n • Polynomial.X - ν) ^ 2 * bernsteinPolynomial R n ν) =
+    ∑ ν in Finset.range (n + 1), (n • Polynomial.X - ν) ^ 2 * bernsteinPolynomial R n ν =
       n • Polynomial.X * (1 - Polynomial.X) :=
   by
   have p :

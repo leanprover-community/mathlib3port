@@ -243,12 +243,12 @@ protected theorem aemeasurable [MeasurableSpace β] {μ : Measure α} (f : α �
 -/
 
 protected theorem sum_measure_preimage_singleton (f : α →ₛ β) {μ : Measure α} (s : Finset β) :
-    (∑ y in s, μ (f ⁻¹' {y})) = μ (f ⁻¹' ↑s) :=
+    ∑ y in s, μ (f ⁻¹' {y}) = μ (f ⁻¹' ↑s) :=
   sum_measure_preimage_singleton _ fun _ _ => f.measurableSet_fiber _
 #align measure_theory.simple_func.sum_measure_preimage_singleton MeasureTheory.SimpleFunc.sum_measure_preimage_singleton
 
 theorem sum_range_measure_preimage_singleton (f : α →ₛ β) (μ : Measure α) :
-    (∑ y in f.range, μ (f ⁻¹' {y})) = μ univ := by
+    ∑ y in f.range, μ (f ⁻¹' {y}) = μ univ := by
   rw [f.sum_measure_preimage_singleton, coe_range, preimage_range]
 #align measure_theory.simple_func.sum_range_measure_preimage_singleton MeasureTheory.SimpleFunc.sum_range_measure_preimage_singleton
 
@@ -1023,7 +1023,7 @@ def eapproxDiff (f : α → ℝ≥0∞) : ∀ n : ℕ, α →ₛ ℝ≥0
 -/
 
 theorem sum_eapproxDiff (f : α → ℝ≥0∞) (n : ℕ) (a : α) :
-    (∑ k in Finset.range (n + 1), (eapproxDiff f k a : ℝ≥0∞)) = eapprox f n a :=
+    ∑ k in Finset.range (n + 1), (eapproxDiff f k a : ℝ≥0∞) = eapprox f n a :=
   by
   induction' n with n IH
   · simp only [Nat.zero_eq, Finset.sum_singleton, Finset.range_one]; rfl
@@ -1036,7 +1036,7 @@ theorem sum_eapproxDiff (f : α → ℝ≥0∞) (n : ℕ) (a : α) :
 #align measure_theory.simple_func.sum_eapprox_diff MeasureTheory.SimpleFunc.sum_eapproxDiff
 
 theorem tsum_eapproxDiff (f : α → ℝ≥0∞) (hf : Measurable f) (a : α) :
-    (∑' n, (eapproxDiff f n a : ℝ≥0∞)) = f a := by
+    ∑' n, (eapproxDiff f n a : ℝ≥0∞) = f a := by
   simp_rw [ENNReal.tsum_eq_iSup_nat' (tendsto_add_at_top_nat 1), sum_eapprox_diff,
     supr_eapprox_apply f hf a]
 #align measure_theory.simple_func.tsum_eapprox_diff MeasureTheory.SimpleFunc.tsum_eapproxDiff
@@ -1092,10 +1092,10 @@ theorem map_lintegral (g : β → ℝ≥0∞) (f : α →ₛ β) :
 theorem add_lintegral (f g : α →ₛ ℝ≥0∞) : (f + g).lintegral μ = f.lintegral μ + g.lintegral μ :=
   calc
     (f + g).lintegral μ =
-        ∑ x in (pair f g).range, x.1 * μ (pair f g ⁻¹' {x}) + x.2 * μ (pair f g ⁻¹' {x}) :=
+        ∑ x in (pair f g).range, (x.1 * μ (pair f g ⁻¹' {x}) + x.2 * μ (pair f g ⁻¹' {x})) :=
       by rw [add_eq_map₂, map_lintegral] <;> exact Finset.sum_congr rfl fun a ha => add_mul _ _ _
     _ =
-        (∑ x in (pair f g).range, x.1 * μ (pair f g ⁻¹' {x})) +
+        ∑ x in (pair f g).range, x.1 * μ (pair f g ⁻¹' {x}) +
           ∑ x in (pair f g).range, x.2 * μ (pair f g ⁻¹' {x}) :=
       by rw [Finset.sum_add_distrib]
     _ = ((pair f g).map Prod.fst).lintegral μ + ((pair f g).map Prod.snd).lintegral μ := by

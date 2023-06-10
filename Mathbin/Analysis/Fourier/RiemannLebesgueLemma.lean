@@ -81,7 +81,7 @@ local notation "i" => fun w => (1 / (2 * ‖w‖ ^ 2)) • w
 
 /-- Shifting `f` by `(1 / (2 * ‖w‖ ^ 2)) • w` negates the integral in the Riemann-Lebesgue lemma. -/
 theorem fourier_integral_half_period_translate {w : V} (hw : w ≠ 0) :
-    (∫ v : V, e[-⟪v, w⟫] • f (v + i w)) = -∫ v : V, e[-⟪v, w⟫] • f v :=
+    ∫ v : V, e[-⟪v, w⟫] • f (v + i w) = -∫ v : V, e[-⟪v, w⟫] • f v :=
   by
   have hiw : ⟪i w, w⟫ = 1 / 2 :=
     by
@@ -104,7 +104,7 @@ theorem fourier_integral_half_period_translate {w : V} (hw : w ≠ 0) :
 /-- Rewrite the Fourier integral in a form that allows us to use uniform continuity. -/
 theorem fourier_integral_eq_half_sub_half_period_translate {w : V} (hw : w ≠ 0)
     (hf : Integrable f) :
-    (∫ v : V, e[-⟪v, w⟫] • f v) = (1 / (2 : ℂ)) • ∫ v : V, e[-⟪v, w⟫] • (f v - f (v + i w)) :=
+    ∫ v : V, e[-⟪v, w⟫] • f v = (1 / (2 : ℂ)) • ∫ v : V, e[-⟪v, w⟫] • (f v - f (v + i w)) :=
   by
   simp_rw [smul_sub]
   rw [integral_sub, fourier_integral_half_period_translate hw, sub_eq_add_neg, neg_neg, ←
@@ -168,7 +168,7 @@ theorem tendsto_integral_exp_inner_smul_cocompact_of_continuous_compact_support 
   refine' lt_of_le_of_lt (norm_integral_le_integral_norm _) _
   simp_rw [norm_smul, norm_eq_abs, abs_coe_circle, one_mul]
   --* Show integral can be taken over A only.
-  have int_A : (∫ v : V, ‖f v - f (v + i w)‖) = ∫ v in A, ‖f v - f (v + i w)‖ :=
+  have int_A : ∫ v : V, ‖f v - f (v + i w)‖ = ∫ v in A, ‖f v - f (v + i w)‖ :=
     by
     refine' (set_integral_eq_integral_of_forall_compl_eq_zero fun v hv => _).symm
     dsimp only [A] at hv 

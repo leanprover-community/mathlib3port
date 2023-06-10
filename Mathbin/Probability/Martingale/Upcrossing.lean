@@ -484,7 +484,7 @@ theorem Submartingale.sum_mul_upcrossingStrat_le [IsFiniteMeasure μ] (hf : Subm
     simp only [Finset.range_zero, Finset.sum_empty, integral_zero']
   have h₂ :
     μ[∑ k in Finset.range n, (1 - upcrossing_strat a b f N k) * (f (k + 1) - f k)] =
-      μ[∑ k in Finset.range n, f (k + 1) - f k] -
+      μ[∑ k in Finset.range n, (f (k + 1) - f k)] -
         μ[∑ k in Finset.range n, upcrossing_strat a b f N k * (f (k + 1) - f k)] :=
     by
     simp only [sub_mul, one_mul, Finset.sum_sub_distrib, Pi.sub_apply, Finset.sum_apply,
@@ -679,10 +679,10 @@ theorem mul_upcrossingsBefore_le (hf : a ≤ f N ω) (hab : a < b) :
   rw [Finset.sum_comm]
   have h₁ :
     ∀ k,
-      (∑ n in Finset.range N,
+      ∑ n in Finset.range N,
           (Set.Ico (lower_crossing_time a b f N k ω)
                 (upper_crossing_time a b f N (k + 1) ω)).indicator
-            (fun m => f (m + 1) ω - f m ω) n) =
+            (fun m => f (m + 1) ω - f m ω) n =
         stopped_value f (upper_crossing_time a b f N (k + 1)) ω -
           stopped_value f (lower_crossing_time a b f N k) ω :=
     by
@@ -704,24 +704,24 @@ theorem mul_upcrossingsBefore_le (hf : a ≤ f N ω) (hab : a < b) :
       exact fun _ h => lt_of_lt_of_le h upper_crossing_time_le
   simp_rw [h₁]
   have h₂ :
-    (∑ k in Finset.range (upcrossings_before a b f N ω), b - a) ≤
+    ∑ k in Finset.range (upcrossings_before a b f N ω), (b - a) ≤
       ∑ k in Finset.range N,
-        stopped_value f (upper_crossing_time a b f N (k + 1)) ω -
-          stopped_value f (lower_crossing_time a b f N k) ω :=
+        (stopped_value f (upper_crossing_time a b f N (k + 1)) ω -
+          stopped_value f (lower_crossing_time a b f N k) ω) :=
     by
     calc
-      (∑ k in Finset.range (upcrossings_before a b f N ω), b - a) ≤
+      ∑ k in Finset.range (upcrossings_before a b f N ω), (b - a) ≤
           ∑ k in Finset.range (upcrossings_before a b f N ω),
-            stopped_value f (upper_crossing_time a b f N (k + 1)) ω -
-              stopped_value f (lower_crossing_time a b f N k) ω :=
+            (stopped_value f (upper_crossing_time a b f N (k + 1)) ω -
+              stopped_value f (lower_crossing_time a b f N k) ω) :=
         by
         refine'
           Finset.sum_le_sum fun i hi => le_sub_of_le_upcrossings_before (zero_lt_iff.2 hN) hab _
         rwa [Finset.mem_range] at hi 
       _ ≤
           ∑ k in Finset.range N,
-            stopped_value f (upper_crossing_time a b f N (k + 1)) ω -
-              stopped_value f (lower_crossing_time a b f N k) ω :=
+            (stopped_value f (upper_crossing_time a b f N (k + 1)) ω -
+              stopped_value f (lower_crossing_time a b f N k) ω) :=
         by
         refine'
           Finset.sum_le_sum_of_subset_of_nonneg
@@ -969,12 +969,12 @@ theorem upcrossings_lt_top_iff :
 /-- A variant of Doob's upcrossing estimate obtained by taking the supremum on both sides. -/
 theorem Submartingale.mul_lintegral_upcrossings_le_lintegral_pos_part [IsFiniteMeasure μ] (a b : ℝ)
     (hf : Submartingale f ℱ μ) :
-    (ENNReal.ofReal (b - a) * ∫⁻ ω, upcrossings a b f ω ∂μ) ≤
+    ENNReal.ofReal (b - a) * ∫⁻ ω, upcrossings a b f ω ∂μ ≤
       ⨆ N, ∫⁻ ω, ENNReal.ofReal ((f N ω - a)⁺) ∂μ :=
   by
   by_cases hab : a < b
   · simp_rw [upcrossings]
-    have : ∀ N, (∫⁻ ω, ENNReal.ofReal ((f N ω - a)⁺) ∂μ) = ENNReal.ofReal (∫ ω, (f N ω - a)⁺ ∂μ) :=
+    have : ∀ N, ∫⁻ ω, ENNReal.ofReal ((f N ω - a)⁺) ∂μ = ENNReal.ofReal (∫ ω, (f N ω - a)⁺ ∂μ) :=
       by
       intro N
       rw [of_real_integral_eq_lintegral_of_real]
@@ -984,7 +984,7 @@ theorem Submartingale.mul_lintegral_upcrossings_le_lintegral_pos_part [IsFiniteM
     · simp_rw [this, ENNReal.mul_iSup, iSup_le_iff]
       intro N
       rw [(by simp :
-          (∫⁻ ω, upcrossings_before a b f N ω ∂μ) = ∫⁻ ω, ↑(upcrossings_before a b f N ω : ℝ≥0) ∂μ),
+          ∫⁻ ω, upcrossings_before a b f N ω ∂μ = ∫⁻ ω, ↑(upcrossings_before a b f N ω : ℝ≥0) ∂μ),
         lintegral_coe_eq_integral, ← ENNReal.ofReal_mul (sub_pos.2 hab).le]
       · simp_rw [NNReal.coe_nat_cast]
         exact

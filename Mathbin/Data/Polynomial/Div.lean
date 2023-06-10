@@ -510,7 +510,7 @@ theorem eval₂_modByMonic_eq_self_of_root [CommRing S] {f : R →+* S} {p q : R
 #align polynomial.eval₂_mod_by_monic_eq_self_of_root Polynomial.eval₂_modByMonic_eq_self_of_root
 
 theorem sum_modByMonic_coeff (hq : q.Monic) {n : ℕ} (hn : q.degree ≤ n) :
-    (∑ i : Fin n, monomial i ((p %ₘ q).coeff i)) = p %ₘ q :=
+    ∑ i : Fin n, monomial i ((p %ₘ q).coeff i) = p %ₘ q :=
   by
   nontriviality R
   exact

@@ -302,7 +302,7 @@ theorem summable_geometric_of_norm_lt_1 (h : ‖ξ‖ < 1) : Summable fun n : �
   ⟨_, hasSum_geometric_of_norm_lt_1 h⟩
 #align summable_geometric_of_norm_lt_1 summable_geometric_of_norm_lt_1
 
-theorem tsum_geometric_of_norm_lt_1 (h : ‖ξ‖ < 1) : (∑' n : ℕ, ξ ^ n) = (1 - ξ)⁻¹ :=
+theorem tsum_geometric_of_norm_lt_1 (h : ‖ξ‖ < 1) : ∑' n : ℕ, ξ ^ n = (1 - ξ)⁻¹ :=
   (hasSum_geometric_of_norm_lt_1 h).tsum_eq
 #align tsum_geometric_of_norm_lt_1 tsum_geometric_of_norm_lt_1
 
@@ -315,7 +315,7 @@ theorem summable_geometric_of_abs_lt_1 {r : ℝ} (h : |r| < 1) : Summable fun n 
   summable_geometric_of_norm_lt_1 h
 #align summable_geometric_of_abs_lt_1 summable_geometric_of_abs_lt_1
 
-theorem tsum_geometric_of_abs_lt_1 {r : ℝ} (h : |r| < 1) : (∑' n : ℕ, r ^ n) = (1 - r)⁻¹ :=
+theorem tsum_geometric_of_abs_lt_1 {r : ℝ} (h : |r| < 1) : ∑' n : ℕ, r ^ n = (1 - r)⁻¹ :=
   tsum_geometric_of_norm_lt_1 h
 #align tsum_geometric_of_abs_lt_1 tsum_geometric_of_abs_lt_1
 
@@ -363,9 +363,9 @@ theorem hasSum_coe_mul_geometric_of_norm_lt_1 {𝕜 : Type _} [NormedField 𝕜]
   calc
     s = (1 - r) * s / (1 - r) := (mul_div_cancel_left _ (sub_ne_zero.2 hr'.symm)).symm
     _ = (s - r * s) / (1 - r) := by rw [sub_mul, one_mul]
-    _ = (((0 : ℕ) * r ^ 0 + ∑' n : ℕ, (n + 1 : ℕ) * r ^ (n + 1)) - r * s) / (1 - r) := by
+    _ = ((0 : ℕ) * r ^ 0 + ∑' n : ℕ, (n + 1 : ℕ) * r ^ (n + 1) - r * s) / (1 - r) := by
       rw [← tsum_eq_zero_add A]
-    _ = ((r * ∑' n : ℕ, (n + 1) * r ^ n) - r * s) / (1 - r) := by
+    _ = (r * ∑' n : ℕ, (n + 1) * r ^ n - r * s) / (1 - r) := by
       simp [pow_succ, mul_left_comm _ r, tsum_mul_left]
     _ = r / (1 - r) ^ 2 := by
       simp [add_mul, tsum_add A B.summable, mul_add, B.tsum_eq, ← div_eq_mul_inv, sq, div_div]
@@ -407,7 +407,7 @@ theorem cauchySeq_finset_of_geometric_bound (hr : r < 1) (hf : ∀ n, ‖f n‖ 
 distance `C * r ^ n / (1 - r)` of the sum of the series. This lemma does not assume `0 ≤ r` or
 `0 ≤ C`. -/
 theorem norm_sub_le_of_geometric_bound_of_hasSum (hr : r < 1) (hf : ∀ n, ‖f n‖ ≤ C * r ^ n) {a : α}
-    (ha : HasSum f a) (n : ℕ) : ‖(∑ x in Finset.range n, f x) - a‖ ≤ C * r ^ n / (1 - r) :=
+    (ha : HasSum f a) (n : ℕ) : ‖∑ x in Finset.range n, f x - a‖ ≤ C * r ^ n / (1 - r) :=
   by
   rw [← dist_eq_norm]
   apply dist_le_of_le_geometric_of_tendsto r C hr (dist_partial_sum_le_of_le_geometric hf)
@@ -508,7 +508,7 @@ theorem geom_series_mul_neg (x : R) (h : ‖x‖ < 1) : (∑' i : ℕ, x ^ i) * 
   rw [← geom_sum_mul_neg, Finset.sum_mul]
 #align geom_series_mul_neg geom_series_mul_neg
 
-theorem mul_neg_geom_series (x : R) (h : ‖x‖ < 1) : ((1 - x) * ∑' i : ℕ, x ^ i) = 1 :=
+theorem mul_neg_geom_series (x : R) (h : ‖x‖ < 1) : (1 - x) * ∑' i : ℕ, x ^ i = 1 :=
   by
   have := (NormedRing.summable_geometric_of_norm_lt_1 x h).HasSum.mul_left (1 - x)
   refine' tendsto_nhds_unique this.tendsto_sum_nat _

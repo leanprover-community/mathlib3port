@@ -582,8 +582,7 @@ theorem limsup_eq_tendsto_sum_indicator_nat_atTop (s : ℕ → Set α) :
       push_neg at hk 
       obtain ⟨i, hi⟩ := hk
       obtain ⟨j, hj₁, hj₂⟩ := hω (i + 1)
-      replace hi : (∑ k in Finset.range i, (s (k + 1)).indicator 1 ω) = k + 1 :=
-        le_antisymm (h i) hi
+      replace hi : ∑ k in Finset.range i, (s (k + 1)).indicator 1 ω = k + 1 := le_antisymm (h i) hi
       refine' not_lt.2 (h <| j + 1) _
       rw [← Finset.sum_range_add_sum_Ico _ (i.le_succ.trans (hj₁.trans j.le_succ)), hi]
       refine' lt_add_of_pos_right _ _
@@ -603,9 +602,9 @@ theorem limsup_eq_tendsto_sum_indicator_nat_atTop (s : ℕ → Set α) :
     by_contra hcon
     push_neg at hcon 
     obtain ⟨j, h⟩ := hω (i + 1)
-    have : (∑ k in Finset.range j, (s (k + 1)).indicator 1 ω) ≤ i :=
+    have : ∑ k in Finset.range j, (s (k + 1)).indicator 1 ω ≤ i :=
       by
-      have hle : ∀ j ≤ i, (∑ k in Finset.range j, (s (k + 1)).indicator 1 ω) ≤ i :=
+      have hle : ∀ j ≤ i, ∑ k in Finset.range j, (s (k + 1)).indicator 1 ω ≤ i :=
         by
         refine' fun j hij =>
           (Finset.sum_le_card_nsmul _ _ _ _ : _ ≤ (Finset.range j).card • 1).trans _
@@ -614,7 +613,7 @@ theorem limsup_eq_tendsto_sum_indicator_nat_atTop (s : ℕ → Set α) :
       by_cases hij : j < i
       · exact hle _ hij.le
       · rw [← Finset.sum_range_add_sum_Ico _ (not_lt.1 hij)]
-        suffices (∑ k in Finset.Ico i j, (s (k + 1)).indicator 1 ω) = 0
+        suffices ∑ k in Finset.Ico i j, (s (k + 1)).indicator 1 ω = 0
           by
           rw [this, add_zero]
           exact hle _ le_rfl

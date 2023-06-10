@@ -233,7 +233,7 @@ theorem separable_prod {ι : Sort _} [Fintype ι] {f : ι → R[X]} (h1 : Pairwi
 #align polynomial.separable_prod Polynomial.separable_prod
 
 theorem Separable.inj_of_prod_X_sub_C [Nontrivial R] {ι : Sort _} {f : ι → R} {s : Finset ι}
-    (hfs : (∏ i in s, X - C (f i)).Separable) {x y : ι} (hx : x ∈ s) (hy : y ∈ s)
+    (hfs : (∏ i in s, (X - C (f i))).Separable) {x y : ι} (hx : x ∈ s) (hy : y ∈ s)
     (hfxy : f x = f y) : x = y := by
   by_contra hxy
   rw [← insert_erase hx, prod_insert (not_mem_erase _ _), ←
@@ -243,7 +243,7 @@ theorem Separable.inj_of_prod_X_sub_C [Nontrivial R] {ι : Sort _} {f : ι → R
 #align polynomial.separable.inj_of_prod_X_sub_C Polynomial.Separable.inj_of_prod_X_sub_C
 
 theorem Separable.injective_of_prod_X_sub_C [Nontrivial R] {ι : Sort _} [Fintype ι] {f : ι → R}
-    (hfs : (∏ i, X - C (f i)).Separable) : Function.Injective f := fun x y hfxy =>
+    (hfs : (∏ i, (X - C (f i))).Separable) : Function.Injective f := fun x y hfxy =>
   hfs.inj_of_prod_X_sub_C (mem_univ _) (mem_univ _) hfxy
 #align polynomial.separable.injective_of_prod_X_sub_C Polynomial.Separable.injective_of_prod_X_sub_C
 
@@ -330,7 +330,7 @@ theorem separable_map (f : F →+* K) {p : F[X]} : (p.map f).Separable ↔ p.Sep
 -/
 
 theorem separable_prod_X_sub_C_iff' {ι : Sort _} {f : ι → F} {s : Finset ι} :
-    (∏ i in s, X - C (f i)).Separable ↔ ∀ x ∈ s, ∀ y ∈ s, f x = f y → x = y :=
+    (∏ i in s, (X - C (f i))).Separable ↔ ∀ x ∈ s, ∀ y ∈ s, f x = f y → x = y :=
   ⟨fun hfs x hx y hy hfxy => hfs.inj_of_prod_X_sub_C hx hy hfxy, fun H => by rw [← prod_attach];
     exact
       separable_prod'
@@ -341,7 +341,7 @@ theorem separable_prod_X_sub_C_iff' {ι : Sort _} {f : ι → F} {s : Finset ι}
 #align polynomial.separable_prod_X_sub_C_iff' Polynomial.separable_prod_X_sub_C_iff'
 
 theorem separable_prod_X_sub_C_iff {ι : Sort _} [Fintype ι] {f : ι → F} :
-    (∏ i, X - C (f i)).Separable ↔ Function.Injective f :=
+    (∏ i, (X - C (f i))).Separable ↔ Function.Injective f :=
   separable_prod_X_sub_C_iff'.trans <| by simp_rw [mem_univ, true_imp_iff, Function.Injective]
 #align polynomial.separable_prod_X_sub_C_iff Polynomial.separable_prod_X_sub_C_iff
 

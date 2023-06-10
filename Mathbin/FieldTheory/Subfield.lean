@@ -320,13 +320,13 @@ protected theorem multiset_sum_mem (m : Multiset K) : (∀ a ∈ m, a ∈ s) →
 
 /-- Product of elements of a subfield indexed by a `finset` is in the subfield. -/
 protected theorem prod_mem {ι : Type _} {t : Finset ι} {f : ι → K} (h : ∀ c ∈ t, f c ∈ s) :
-    (∏ i in t, f i) ∈ s :=
+    ∏ i in t, f i ∈ s :=
   prod_mem h
 #align subfield.prod_mem Subfield.prod_mem
 
 /-- Sum of elements in a `subfield` indexed by a `finset` is in the `subfield`. -/
 protected theorem sum_mem {ι : Type _} {t : Finset ι} {f : ι → K} (h : ∀ c ∈ t, f c ∈ s) :
-    (∑ i in t, f i) ∈ s :=
+    ∑ i in t, f i ∈ s :=
   sum_mem h
 #align subfield.sum_mem Subfield.sum_mem
 

@@ -189,7 +189,7 @@ theorem Integrable.withDensityᵥ_eq_iff {f g : α → E} (hf : Integrable f μ)
 
 section SignedMeasure
 
-theorem withDensityᵥ_toReal {f : α → ℝ≥0∞} (hfm : AEMeasurable f μ) (hf : (∫⁻ x, f x ∂μ) ≠ ∞) :
+theorem withDensityᵥ_toReal {f : α → ℝ≥0∞} (hfm : AEMeasurable f μ) (hf : ∫⁻ x, f x ∂μ ≠ ∞) :
     (μ.withDensityᵥ fun x => (f x).toReal) =
       @toSignedMeasure α _ (μ.withDensity f) (isFiniteMeasure_withDensity hf) :=
   by

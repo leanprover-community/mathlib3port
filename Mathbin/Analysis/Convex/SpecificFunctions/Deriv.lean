@@ -74,7 +74,7 @@ theorem Finset.prod_nonneg_of_card_nonpos_even {α β : Type _} [LinearOrderedCo
         Finset.prod_const, neg_one_pow_eq_pow_mod_two, Nat.even_iff.1 h0, pow_zero, one_mul]
 #align finset.prod_nonneg_of_card_nonpos_even Finset.prod_nonneg_of_card_nonpos_even
 
-theorem int_prod_range_nonneg (m : ℤ) (n : ℕ) (hn : Even n) : 0 ≤ ∏ k in Finset.range n, m - k :=
+theorem int_prod_range_nonneg (m : ℤ) (n : ℕ) (hn : Even n) : 0 ≤ ∏ k in Finset.range n, (m - k) :=
   by
   rcases hn with ⟨n, rfl⟩
   induction' n with n ihn; · simp
@@ -90,7 +90,7 @@ theorem int_prod_range_nonneg (m : ℤ) (n : ℕ) (hn : Even n) : 0 ≤ ∏ k in
 #align int_prod_range_nonneg int_prod_range_nonneg
 
 theorem int_prod_range_pos {m : ℤ} {n : ℕ} (hn : Even n) (hm : m ∉ Ico (0 : ℤ) n) :
-    0 < ∏ k in Finset.range n, m - k :=
+    0 < ∏ k in Finset.range n, (m - k) :=
   by
   refine' (int_prod_range_nonneg m n hn).lt_of_ne fun h => hm _
   rw [eq_comm, Finset.prod_eq_zero_iff] at h 

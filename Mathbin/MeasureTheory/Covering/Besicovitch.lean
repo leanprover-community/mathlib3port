@@ -630,9 +630,9 @@ theorem exist_finset_disjoint_balls_large_measure (μ : Measure α) [IsFiniteMea
     refine' mem_Union.2 ⟨i, ⟨hx, _⟩⟩
     simp only [v, exists_prop, mem_Union, SetCoe.exists, exists_and_right, Subtype.coe_mk]
     exact ⟨y, ⟨y.2, by simpa only [Subtype.coe_eta]⟩, ball_subset_closed_ball h'⟩
-  have S : (∑ i : Fin N, μ s / N) ≤ ∑ i, μ (s ∩ v i) :=
+  have S : ∑ i : Fin N, μ s / N ≤ ∑ i, μ (s ∩ v i) :=
     calc
-      (∑ i : Fin N, μ s / N) = μ s :=
+      ∑ i : Fin N, μ s / N = μ s :=
         by
         simp only [Finset.card_fin, Finset.sum_const, nsmul_eq_mul]
         rw [ENNReal.mul_div_cancel']
@@ -980,7 +980,7 @@ theorem exists_closedBall_covering_tsum_measure_le (μ : Measure α) [SigmaFinit
       t.Countable ∧
         t ⊆ s ∧
           (∀ x ∈ t, r x ∈ f x) ∧
-            (s ⊆ ⋃ x ∈ t, closedBall x (r x)) ∧ (∑' x : t, μ (closedBall x (r x))) ≤ μ s + ε :=
+            (s ⊆ ⋃ x ∈ t, closedBall x (r x)) ∧ ∑' x : t, μ (closedBall x (r x)) ≤ μ s + ε :=
   by
   /- For the proof, first cover almost all `s` with disjoint balls thanks to the usual Besicovitch
     theorem. Taking the balls included in a well-chosen open neighborhood `u` of `s`, one may
@@ -1092,9 +1092,9 @@ theorem exists_closedBall_covering_tsum_measure_le (μ : Measure α) [SigmaFinit
       rwa [r_t0 _ yt0]
   -- the only nontrivial property is the measure control, which we check now
   · -- the sets in the first step have measure at most `μ s + ε / 2`
-    have A : (∑' x : t0, μ (closed_ball x (r x))) ≤ μ s + ε / 2 :=
+    have A : ∑' x : t0, μ (closed_ball x (r x)) ≤ μ s + ε / 2 :=
       calc
-        (∑' x : t0, μ (closed_ball x (r x))) = ∑' x : t0, μ (closed_ball x (r0 x)) := by congr 1;
+        ∑' x : t0, μ (closed_ball x (r x)) = ∑' x : t0, μ (closed_ball x (r0 x)) := by congr 1;
           ext x; rw [r_t0 x x.2]
         _ = μ (⋃ x : t0, closed_ball x (r0 x)) :=
           by
@@ -1109,10 +1109,10 @@ theorem exists_closedBall_covering_tsum_measure_le (μ : Measure α) [SigmaFinit
           apply subset.trans (closed_ball_subset_ball (hr0 x hx).2.2) (hR x (t0s hx)).2
         _ ≤ μ s + ε / 2 := μu
     -- each subfamily in the second step has measure at most `ε / (2 N)`.
-    have B : ∀ i : Fin N, (∑' x : (coe : s' → α) '' S i, μ (closed_ball x (r x))) ≤ ε / 2 / N :=
+    have B : ∀ i : Fin N, ∑' x : (coe : s' → α) '' S i, μ (closed_ball x (r x)) ≤ ε / 2 / N :=
       fun i =>
       calc
-        (∑' x : (coe : s' → α) '' S i, μ (closed_ball x (r x))) =
+        ∑' x : (coe : s' → α) '' S i, μ (closed_ball x (r x)) =
             ∑' x : S i, μ (closed_ball x (r x)) :=
           by
           have : inj_on (coe : s' → α) (S i) := subtype.coe_injective.inj_on _
@@ -1134,12 +1134,12 @@ theorem exists_closedBall_covering_tsum_measure_le (μ : Measure α) [SigmaFinit
         _ ≤ ε / 2 / N := by have : μ s' = 0 := μt0; rwa [this, zero_add] at μv 
     -- add up all these to prove the desired estimate
     calc
-      (∑' x : t0 ∪ ⋃ i : Fin N, (coe : s' → α) '' S i, μ (closed_ball x (r x))) ≤
-          (∑' x : t0, μ (closed_ball x (r x))) +
+      ∑' x : t0 ∪ ⋃ i : Fin N, (coe : s' → α) '' S i, μ (closed_ball x (r x)) ≤
+          ∑' x : t0, μ (closed_ball x (r x)) +
             ∑' x : ⋃ i : Fin N, (coe : s' → α) '' S i, μ (closed_ball x (r x)) :=
         ENNReal.tsum_union_le (fun x => μ (closed_ball x (r x))) _ _
       _ ≤
-          (∑' x : t0, μ (closed_ball x (r x))) +
+          ∑' x : t0, μ (closed_ball x (r x)) +
             ∑ i : Fin N, ∑' x : (coe : s' → α) '' S i, μ (closed_ball x (r x)) :=
         (add_le_add le_rfl (ENNReal.tsum_iUnion_le (fun x => μ (closed_ball x (r x))) _))
       _ ≤ μ s + ε / 2 + ∑ i : Fin N, ε / 2 / N :=

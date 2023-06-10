@@ -1382,7 +1382,7 @@ end OrderedCancelAddCommMonoid
 @[to_additive]
 theorem prod_prod_Ioi_mul_eq_prod_prod_off_diag [Fintype ι] [LinearOrder ι]
     [LocallyFiniteOrderTop ι] [LocallyFiniteOrderBot ι] [CommMonoid α] (f : ι → ι → α) :
-    (∏ i, ∏ j in Ioi i, f j i * f i j) = ∏ i, ∏ j in {i}ᶜ, f j i :=
+    ∏ i, ∏ j in Ioi i, f j i * f i j = ∏ i, ∏ j in {i}ᶜ, f j i :=
   by
   simp_rw [← Ioi_disj_union_Iio, prod_disj_union, prod_mul_distrib]
   congr 1

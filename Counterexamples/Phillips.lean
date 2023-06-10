@@ -474,7 +474,7 @@ theorem to_functions_to_measure [MeasurableSpace α] (μ : Measure α) [IsFinite
         (of_normed_add_comm_group_discrete (indicator s 1) 1 (norm_indicator_le_one s)) =
       (μ s).toReal
   rw [extension_to_bounded_functions_apply]
-  · change (∫ x, s.indicator (fun y => (1 : ℝ)) x ∂μ) = _
+  · change ∫ x, s.indicator (fun y => (1 : ℝ)) x ∂μ = _
     simp [integral_indicator hs]
   · change integrable (indicator s 1) μ
     have : integrable (fun x => (1 : ℝ)) μ := integrable_const (1 : ℝ)
@@ -629,7 +629,7 @@ theorem integrable_comp (Hcont : (#ℝ) = aleph 1) (φ : (DiscreteCopy ℝ →�
 #align counterexample.phillips_1940.integrable_comp Counterexample.Phillips1940.integrable_comp
 
 theorem integral_comp (Hcont : (#ℝ) = aleph 1) (φ : (DiscreteCopy ℝ →ᵇ ℝ) →L[ℝ] ℝ) :
-    (∫ x in Icc 0 1, φ (f Hcont x)) = φ.toBoundedAdditiveMeasure.continuousPart univ :=
+    ∫ x in Icc 0 1, φ (f Hcont x) = φ.toBoundedAdditiveMeasure.continuousPart univ :=
   by
   rw [← integral_congr_ae (comp_ae_eq_const Hcont φ)]
   simp
@@ -661,7 +661,7 @@ theorem norm_bound (Hcont : (#ℝ) = aleph 1) (x : ℝ) : ‖f Hcont x‖ ≤ 1 
 /-- The function `f Hcont : ℝ → (discrete_copy ℝ →ᵇ ℝ)` has no Pettis integral. -/
 theorem no_pettis_integral (Hcont : (#ℝ) = aleph 1) :
     ¬∃ g : DiscreteCopy ℝ →ᵇ ℝ,
-        ∀ φ : (DiscreteCopy ℝ →ᵇ ℝ) →L[ℝ] ℝ, (∫ x in Icc 0 1, φ (f Hcont x)) = φ g :=
+        ∀ φ : (DiscreteCopy ℝ →ᵇ ℝ) →L[ℝ] ℝ, ∫ x in Icc 0 1, φ (f Hcont x) = φ g :=
   by
   rintro ⟨g, h⟩
   simp only [integral_comp] at h 

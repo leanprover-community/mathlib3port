@@ -150,7 +150,7 @@ theorem tendsto_limUnder_of_differentiable_on_punctured_nhds_of_bounded_under {f
 theorem two_pi_I_inv_smul_circleIntegral_sub_sq_inv_smul_of_differentiable {U : Set ℂ}
     (hU : IsOpen U) {c w₀ : ℂ} {R : ℝ} {f : ℂ → E} (hc : closedBall c R ⊆ U)
     (hf : DifferentiableOn ℂ f U) (hw₀ : w₀ ∈ ball c R) :
-    ((2 * π * I : ℂ)⁻¹ • ∮ z in C(c, R), ((z - w₀) ^ 2)⁻¹ • f z) = deriv f w₀ :=
+    (2 * π * I : ℂ)⁻¹ • ∮ z in C(c, R), ((z - w₀) ^ 2)⁻¹ • f z = deriv f w₀ :=
   by
   -- We apply the removable singularity theorem and the Cauchy formula to `dslope f w₀`
   have hR : 0 < R := not_le.mp (ball_eq_empty.not.mp (nonempty_of_mem hw₀).ne_empty)
@@ -170,7 +170,7 @@ theorem two_pi_I_inv_smul_circleIntegral_sub_sq_inv_smul_of_differentiable {U : 
       exact h1.smul (hf.continuous_on.mono (sphere_subset_closed_ball.trans hc))
     have h3 : CircleIntegrable (fun z : ℂ => ((z - w₀) ^ 2)⁻¹ • f w₀) c R :=
       ContinuousOn.circleIntegrable (pos_of_mem_ball hw₀).le (h1.smul continuousOn_const)
-    have h4 : (∮ z : ℂ in C(c, R), ((z - w₀) ^ 2)⁻¹) = 0 := by
+    have h4 : ∮ z : ℂ in C(c, R), ((z - w₀) ^ 2)⁻¹ = 0 := by
       simpa using circleIntegral.integral_sub_zpow_of_ne (by decide : (-2 : ℤ) ≠ -1) c w₀ R
     simp only [smul_sub, circleIntegral.integral_sub h2 h3, h4, circleIntegral.integral_smul_const,
       zero_smul, sub_zero]

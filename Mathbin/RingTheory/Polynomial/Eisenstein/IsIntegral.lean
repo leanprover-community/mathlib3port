@@ -374,8 +374,8 @@ theorem mem_adjoin_of_smul_prime_smul_of_minpoly_is_eiseinstein_at {B : PowerBas
     have hintsum :
       IsIntegral R
         (z * B.gen ^ (P.nat_degree - (j + 2)) -
-          ((∑ x : ℕ in (range (Q.nat_degree - j)).eraseₓ 0,
-              Q.coeff (j + 1 + x) • f (x + P.nat_degree - 1)) +
+          (∑ x : ℕ in (range (Q.nat_degree - j)).eraseₓ 0,
+              Q.coeff (j + 1 + x) • f (x + P.nat_degree - 1) +
             ∑ x : ℕ in range (j + 1), g x • B.gen ^ x * B.gen ^ (P.nat_degree - (j + 2)))) :=
       by
       refine'

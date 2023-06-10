@@ -105,7 +105,7 @@ theorem integralSum_biUnion_partition (f : ℝⁿ → E) (vol : ι →ᵇᵃ E �
   by
   refine' (π.to_prepartition.sum_bUnion_boxes _ _).trans (sum_congr rfl fun J hJ => _)
   calc
-    (∑ J' in (πi J).boxes, vol J' (f (π.tag <| π.to_prepartition.bUnion_index πi J'))) =
+    ∑ J' in (πi J).boxes, vol J' (f (π.tag <| π.to_prepartition.bUnion_index πi J')) =
         ∑ J' in (πi J).boxes, vol J' (f (π.tag J)) :=
       sum_congr rfl fun J' hJ' => by rw [prepartition.bUnion_index_of_mem _ hJ hJ']
     _ = vol J (f (π.tag J)) :=
@@ -124,8 +124,7 @@ theorem integralSum_inf_partition (f : ℝⁿ → E) (vol : ι →ᵇᵃ E →L[
 
 theorem integralSum_fiberwise {α} (g : Box ι → α) (f : ℝⁿ → E) (vol : ι →ᵇᵃ E →L[ℝ] F)
     (π : TaggedPrepartition I) :
-    (∑ y in π.boxes.image g, integralSum f vol (π.filterₓ fun x => g x = y)) =
-      integralSum f vol π :=
+    ∑ y in π.boxes.image g, integralSum f vol (π.filterₓ fun x => g x = y) = integralSum f vol π :=
   π.toPrepartition.sum_fiberwise g fun J => vol J (f <| π.Tag J)
 #align box_integral.integral_sum_fiberwise BoxIntegral.integralSum_fiberwise
 
@@ -133,8 +132,8 @@ theorem integralSum_sub_partitions (f : ℝⁿ → E) (vol : ι →ᵇᵃ E →L
     {π₁ π₂ : TaggedPrepartition I} (h₁ : π₁.IsPartition) (h₂ : π₂.IsPartition) :
     integralSum f vol π₁ - integralSum f vol π₂ =
       ∑ J in (π₁.toPrepartition ⊓ π₂.toPrepartition).boxes,
-        vol J (f <| (π₁.infPrepartition π₂.toPrepartition).Tag J) -
-          vol J (f <| (π₂.infPrepartition π₁.toPrepartition).Tag J) :=
+        (vol J (f <| (π₁.infPrepartition π₂.toPrepartition).Tag J) -
+          vol J (f <| (π₂.infPrepartition π₁.toPrepartition).Tag J)) :=
   by
   rw [← integral_sum_inf_partition f vol π₁ h₂, ← integral_sum_inf_partition f vol π₂ h₁,
     integral_sum, integral_sum, Finset.sum_sub_distrib]
@@ -751,7 +750,7 @@ of `f` over the boxes of `π₁` is equal to the sum of integrals of `f` over th
 See also `box_integral.integrable.to_box_additive` for a bundled version. -/
 theorem sum_integral_congr (h : Integrable I l f vol) {π₁ π₂ : Prepartition I}
     (hU : π₁.iUnion = π₂.iUnion) :
-    (∑ J in π₁.boxes, integral J l f vol) = ∑ J in π₂.boxes, integral J l f vol :=
+    ∑ J in π₁.boxes, integral J l f vol = ∑ J in π₂.boxes, integral J l f vol :=
   by
   refine' tendsto_nhds_unique (h.tendsto_integral_sum_sum_integral π₁) _
   rw [l.to_filter_Union_congr _ hU]

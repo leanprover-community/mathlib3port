@@ -311,7 +311,7 @@ theorem degree_basis (hvs : Set.InjOn v s) (hi : i ∈ s) :
 -/
 
 #print Lagrange.sum_basis /-
-theorem sum_basis (hvs : Set.InjOn v s) (hs : s.Nonempty) : (∑ j in s, Lagrange.basis s v j) = 1 :=
+theorem sum_basis (hvs : Set.InjOn v s) (hs : s.Nonempty) : ∑ j in s, Lagrange.basis s v j = 1 :=
   by
   refine' eq_of_degrees_lt_of_eval_index_eq s hvs (lt_of_le_of_lt (degree_sum_le _ _) _) _ _
   · rw [Finset.sup_lt_iff (WithBot.bot_lt_coe s.card)]
@@ -502,7 +502,7 @@ theorem interpolate_eq_sum_interpolate_insert_sdiff (hvt : Set.InjOn v t) (hs : 
       refine' sum_eq_zero fun j hj => _
       rcases mem_erase.mp hj with ⟨hij, hj⟩
       rw [eval_basis_of_ne hij hi', MulZeroClass.mul_zero]
-    · have H : (∑ j in s, eval (v i) (Lagrange.basis s v j)) = 1 := by
+    · have H : ∑ j in s, eval (v i) (Lagrange.basis s v j) = 1 := by
         rw [← eval_finset_sum, sum_basis (hvt.mono hst) hs, eval_one]
       rw [← mul_one (r i), ← H, mul_sum]
       refine' sum_congr rfl fun j hj => _
@@ -544,11 +544,11 @@ with appropriate multiplicity.
 We can use `nodal` to define the barycentric forms of the evaluated interpolant.
 -/
 def nodal (s : Finset ι) (v : ι → F) : F[X] :=
-  ∏ i in s, X - C (v i)
+  ∏ i in s, (X - C (v i))
 #align lagrange.nodal Lagrange.nodal
 -/
 
-theorem nodal_eq (s : Finset ι) (v : ι → F) : nodal s v = ∏ i in s, X - C (v i) :=
+theorem nodal_eq (s : Finset ι) (v : ι → F) : nodal s v = ∏ i in s, (X - C (v i)) :=
   rfl
 #align lagrange.nodal_eq Lagrange.nodal_eq
 
@@ -561,7 +561,7 @@ theorem degree_nodal : (nodal s v).degree = s.card := by
   simp_rw [nodal, degree_prod, degree_X_sub_C, sum_const, Nat.smul_one_eq_coe]
 #align lagrange.degree_nodal Lagrange.degree_nodal
 
-theorem eval_nodal {x : F} : (nodal s v).eval x = ∏ i in s, x - v i := by
+theorem eval_nodal {x : F} : (nodal s v).eval x = ∏ i in s, (x - v i) := by
   simp_rw [nodal, eval_prod, eval_sub, eval_X, eval_C]
 #align lagrange.eval_nodal Lagrange.eval_nodal
 
@@ -667,7 +667,7 @@ theorem eval_interpolate_not_at_node (hx : ∀ i ∈ s, x ≠ v i) :
 #align lagrange.eval_interpolate_not_at_node Lagrange.eval_interpolate_not_at_node
 
 theorem sum_nodalWeight_mul_inv_sub_ne_zero (hvs : Set.InjOn v s) (hx : ∀ i ∈ s, x ≠ v i)
-    (hs : s.Nonempty) : (∑ i in s, nodalWeight s v i * (x - v i)⁻¹) ≠ 0 :=
+    (hs : s.Nonempty) : ∑ i in s, nodalWeight s v i * (x - v i)⁻¹ ≠ 0 :=
   @right_ne_zero_of_mul_eq_one _ _ _ (eval x (nodal s v)) _ <| by
     simpa only [Pi.one_apply, interpolate_one hvs hs, eval_one, mul_one] using
       (eval_interpolate_not_at_node 1 hx).symm

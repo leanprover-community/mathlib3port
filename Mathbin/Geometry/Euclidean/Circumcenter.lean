@@ -552,7 +552,7 @@ def pointIndexEmbedding (n : ℕ) : Fin (n + 1) ↪ PointsWithCircumcenterIndex 
 /-- The sum of a function over `points_with_circumcenter_index`. -/
 theorem sum_points_with_circumcenter {α : Type _} [AddCommMonoid α] {n : ℕ}
     (f : PointsWithCircumcenterIndex n → α) :
-    (∑ i, f i) = (∑ i : Fin (n + 1), f (point_index i)) + f circumcenter_index :=
+    ∑ i, f i = ∑ i : Fin (n + 1), f (point_index i) + f circumcenter_index :=
   by
   have h : univ = insert circumcenter_index (univ.map (point_index_embedding n)) :=
     by
@@ -561,7 +561,7 @@ theorem sum_points_with_circumcenter {α : Type _} [AddCommMonoid α] {n : ℕ}
     cases' x with i
     · exact mem_insert_of_mem (mem_map_of_mem _ (mem_univ i))
     · exact mem_insert_self _ _
-  change _ = (∑ i, f (point_index_embedding n i)) + _
+  change _ = ∑ i, f (point_index_embedding n i) + _
   rw [add_comm, h, ← sum_map, sum_insert]
   simp_rw [Finset.mem_map, not_exists]
   intro x hx h
@@ -604,7 +604,7 @@ def pointWeightsWithCircumcenter {n : ℕ} (i : Fin (n + 1)) : PointsWithCircumc
 /-- `point_weights_with_circumcenter` sums to 1. -/
 @[simp]
 theorem sum_pointWeightsWithCircumcenter {n : ℕ} (i : Fin (n + 1)) :
-    (∑ j, pointWeightsWithCircumcenter i j) = 1 :=
+    ∑ j, pointWeightsWithCircumcenter i j = 1 :=
   by
   convert sum_ite_eq' univ (point_index i) (Function.const _ (1 : ℝ))
   · ext j
@@ -647,7 +647,7 @@ def centroidWeightsWithCircumcenter {n : ℕ} (fs : Finset (Fin (n + 1))) :
 nonempty. -/
 @[simp]
 theorem sum_centroidWeightsWithCircumcenter {n : ℕ} {fs : Finset (Fin (n + 1))} (h : fs.Nonempty) :
-    (∑ i, centroidWeightsWithCircumcenter fs i) = 1 :=
+    ∑ i, centroidWeightsWithCircumcenter fs i = 1 :=
   by
   simp_rw [sum_points_with_circumcenter, centroid_weights_with_circumcenter, add_zero, ←
     fs.sum_centroid_weights_eq_one_of_nonempty ℝ h, Set.sum_indicator_subset _ fs.subset_univ]
@@ -686,7 +686,7 @@ def circumcenterWeightsWithCircumcenter (n : ℕ) : PointsWithCircumcenterIndex 
 /-- `circumcenter_weights_with_circumcenter` sums to 1. -/
 @[simp]
 theorem sum_circumcenterWeightsWithCircumcenter (n : ℕ) :
-    (∑ i, circumcenterWeightsWithCircumcenter n i) = 1 :=
+    ∑ i, circumcenterWeightsWithCircumcenter n i = 1 :=
   by
   convert sum_ite_eq' univ circumcenter_index (Function.const _ (1 : ℝ))
   · ext ⟨j⟩ <;> simp [circumcenter_weights_with_circumcenter]
@@ -721,7 +721,7 @@ def reflectionCircumcenterWeightsWithCircumcenter {n : ℕ} (i₁ i₂ : Fin (n 
 /-- `reflection_circumcenter_weights_with_circumcenter` sums to 1. -/
 @[simp]
 theorem sum_reflectionCircumcenterWeightsWithCircumcenter {n : ℕ} {i₁ i₂ : Fin (n + 1)}
-    (h : i₁ ≠ i₂) : (∑ i, reflectionCircumcenterWeightsWithCircumcenter i₁ i₂ i) = 1 :=
+    (h : i₁ ≠ i₂) : ∑ i, reflectionCircumcenterWeightsWithCircumcenter i₁ i₂ i = 1 :=
   by
   simp_rw [sum_points_with_circumcenter, reflection_circumcenter_weights_with_circumcenter, sum_ite,
     sum_const, filter_or, filter_eq']

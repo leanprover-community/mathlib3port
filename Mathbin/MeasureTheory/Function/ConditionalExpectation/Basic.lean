@@ -809,7 +809,7 @@ variable {m m0 : MeasurableSpace α} {μ : Measure α}
 theorem lpMeas.ae_eq_zero_of_forall_set_integral_eq_zero (hm : m ≤ m0) (f : lpMeas E' 𝕜 m p μ)
     (hp_ne_zero : p ≠ 0) (hp_ne_top : p ≠ ∞)
     (hf_int_finite : ∀ s, measurable_set[m] s → μ s < ∞ → IntegrableOn f s μ)
-    (hf_zero : ∀ s : Set α, measurable_set[m] s → μ s < ∞ → (∫ x in s, f x ∂μ) = 0) : f =ᵐ[μ] 0 :=
+    (hf_zero : ∀ s : Set α, measurable_set[m] s → μ s < ∞ → ∫ x in s, f x ∂μ = 0) : f =ᵐ[μ] 0 :=
   by
   obtain ⟨g, hg_sm, hfg⟩ := Lp_meas.ae_fin_strongly_measurable' hm f hp_ne_zero hp_ne_top
   refine' hfg.trans _
@@ -831,7 +831,7 @@ variable (𝕜)
 theorem Lp.ae_eq_zero_of_forall_set_integral_eq_zero' (hm : m ≤ m0) (f : Lp E' p μ)
     (hp_ne_zero : p ≠ 0) (hp_ne_top : p ≠ ∞)
     (hf_int_finite : ∀ s, measurable_set[m] s → μ s < ∞ → IntegrableOn f s μ)
-    (hf_zero : ∀ s : Set α, measurable_set[m] s → μ s < ∞ → (∫ x in s, f x ∂μ) = 0)
+    (hf_zero : ∀ s : Set α, measurable_set[m] s → μ s < ∞ → ∫ x in s, f x ∂μ = 0)
     (hf_meas : AeStronglyMeasurable' m f μ) : f =ᵐ[μ] 0 :=
   by
   let f_meas : Lp_meas E' 𝕜 m p μ := ⟨f, hf_meas⟩
@@ -852,12 +852,12 @@ theorem Lp.ae_eq_zero_of_forall_set_integral_eq_zero' (hm : m ≤ m0) (f : Lp E'
 theorem Lp.ae_eq_of_forall_set_integral_eq' (hm : m ≤ m0) (f g : Lp E' p μ) (hp_ne_zero : p ≠ 0)
     (hp_ne_top : p ≠ ∞) (hf_int_finite : ∀ s, measurable_set[m] s → μ s < ∞ → IntegrableOn f s μ)
     (hg_int_finite : ∀ s, measurable_set[m] s → μ s < ∞ → IntegrableOn g s μ)
-    (hfg : ∀ s : Set α, measurable_set[m] s → μ s < ∞ → (∫ x in s, f x ∂μ) = ∫ x in s, g x ∂μ)
+    (hfg : ∀ s : Set α, measurable_set[m] s → μ s < ∞ → ∫ x in s, f x ∂μ = ∫ x in s, g x ∂μ)
     (hf_meas : AeStronglyMeasurable' m f μ) (hg_meas : AeStronglyMeasurable' m g μ) : f =ᵐ[μ] g :=
   by
   suffices h_sub : ⇑(f - g) =ᵐ[μ] 0
   · rw [← sub_ae_eq_zero]; exact (Lp.coe_fn_sub f g).symm.trans h_sub
-  have hfg' : ∀ s : Set α, measurable_set[m] s → μ s < ∞ → (∫ x in s, (f - g) x ∂μ) = 0 :=
+  have hfg' : ∀ s : Set α, measurable_set[m] s → μ s < ∞ → ∫ x in s, (f - g) x ∂μ = 0 :=
     by
     intro s hs hμs
     rw [integral_congr_ae (ae_restrict_of_ae (Lp.coe_fn_sub f g))]
@@ -882,7 +882,7 @@ omit 𝕜
 theorem ae_eq_of_forall_set_integral_eq_of_sigma_finite' (hm : m ≤ m0) [SigmaFinite (μ.trim hm)]
     {f g : α → F'} (hf_int_finite : ∀ s, measurable_set[m] s → μ s < ∞ → IntegrableOn f s μ)
     (hg_int_finite : ∀ s, measurable_set[m] s → μ s < ∞ → IntegrableOn g s μ)
-    (hfg_eq : ∀ s : Set α, measurable_set[m] s → μ s < ∞ → (∫ x in s, f x ∂μ) = ∫ x in s, g x ∂μ)
+    (hfg_eq : ∀ s : Set α, measurable_set[m] s → μ s < ∞ → ∫ x in s, f x ∂μ = ∫ x in s, g x ∂μ)
     (hfm : AeStronglyMeasurable' m f μ) (hgm : AeStronglyMeasurable' m g μ) : f =ᵐ[μ] g :=
   by
   rw [← ae_eq_trim_iff_of_ae_strongly_measurable' hm hfm hgm]
@@ -905,7 +905,7 @@ theorem ae_eq_of_forall_set_integral_eq_of_sigma_finite' (hm : m ≤ m0) [SigmaF
   have hfg_mk_eq :
     ∀ s : Set α,
       measurable_set[m] s →
-        μ.trim hm s < ∞ → (∫ x in s, hfm.mk f x ∂μ.trim hm) = ∫ x in s, hgm.mk g x ∂μ.trim hm :=
+        μ.trim hm s < ∞ → ∫ x in s, hfm.mk f x ∂μ.trim hm = ∫ x in s, hgm.mk g x ∂μ.trim hm :=
     by
     intro s hs hμs
     rw [trim_measurable_set_eq hm hs] at hμs 
@@ -929,8 +929,8 @@ Then `∫ x in s, ‖g x‖ ∂μ ≤ ∫ x in s, ‖f x‖ ∂μ` on all `m`-me
 theorem integral_norm_le_of_forall_fin_meas_integral_eq (hm : m ≤ m0) {f g : α → ℝ}
     (hf : StronglyMeasurable f) (hfi : IntegrableOn f s μ) (hg : strongly_measurable[m] g)
     (hgi : IntegrableOn g s μ)
-    (hgf : ∀ t, measurable_set[m] t → μ t < ∞ → (∫ x in t, g x ∂μ) = ∫ x in t, f x ∂μ)
-    (hs : measurable_set[m] s) (hμs : μ s ≠ ∞) : (∫ x in s, ‖g x‖ ∂μ) ≤ ∫ x in s, ‖f x‖ ∂μ :=
+    (hgf : ∀ t, measurable_set[m] t → μ t < ∞ → ∫ x in t, g x ∂μ = ∫ x in t, f x ∂μ)
+    (hs : measurable_set[m] s) (hμs : μ s ≠ ∞) : ∫ x in s, ‖g x‖ ∂μ ≤ ∫ x in s, ‖f x‖ ∂μ :=
   by
   rw [integral_norm_eq_pos_sub_neg hgi, integral_norm_eq_pos_sub_neg hfi]
   have h_meas_nonneg_g : measurable_set[m] {x | 0 ≤ g x} :=
@@ -963,8 +963,8 @@ measure. -/
 theorem lintegral_nnnorm_le_of_forall_fin_meas_integral_eq (hm : m ≤ m0) {f g : α → ℝ}
     (hf : StronglyMeasurable f) (hfi : IntegrableOn f s μ) (hg : strongly_measurable[m] g)
     (hgi : IntegrableOn g s μ)
-    (hgf : ∀ t, measurable_set[m] t → μ t < ∞ → (∫ x in t, g x ∂μ) = ∫ x in t, f x ∂μ)
-    (hs : measurable_set[m] s) (hμs : μ s ≠ ∞) : (∫⁻ x in s, ‖g x‖₊ ∂μ) ≤ ∫⁻ x in s, ‖f x‖₊ ∂μ :=
+    (hgf : ∀ t, measurable_set[m] t → μ t < ∞ → ∫ x in t, g x ∂μ = ∫ x in t, f x ∂μ)
+    (hs : measurable_set[m] s) (hμs : μ s ≠ ∞) : ∫⁻ x in s, ‖g x‖₊ ∂μ ≤ ∫⁻ x in s, ‖f x‖₊ ∂μ :=
   by
   rw [← of_real_integral_norm_eq_lintegral_nnnorm hfi, ←
     of_real_integral_norm_eq_lintegral_nnnorm hgi, ENNReal.ofReal_le_ofReal_iff]
@@ -1076,11 +1076,11 @@ section Real
 variable {hm : m ≤ m0}
 
 theorem integral_condexpL2_eq_of_fin_meas_real (f : Lp 𝕜 2 μ) (hs : measurable_set[m] s)
-    (hμs : μ s ≠ ∞) : (∫ x in s, condexpL2 𝕜 hm f x ∂μ) = ∫ x in s, f x ∂μ :=
+    (hμs : μ s ≠ ∞) : ∫ x in s, condexpL2 𝕜 hm f x ∂μ = ∫ x in s, f x ∂μ :=
   by
   rw [← L2.inner_indicator_const_Lp_one (hm s hs) hμs]
   have h_eq_inner :
-    (∫ x in s, condexp_L2 𝕜 hm f x ∂μ) =
+    ∫ x in s, condexp_L2 𝕜 hm f x ∂μ =
       inner (indicator_const_Lp 2 (hm s hs) hμs (1 : 𝕜)) (condexp_L2 𝕜 hm f) :=
     by
     rw [L2.inner_indicator_const_Lp_one (hm s hs) hμs]
@@ -1089,7 +1089,7 @@ theorem integral_condexpL2_eq_of_fin_meas_real (f : Lp 𝕜 2 μ) (hs : measurab
 #align measure_theory.integral_condexp_L2_eq_of_fin_meas_real MeasureTheory.integral_condexpL2_eq_of_fin_meas_real
 
 theorem lintegral_nnnorm_condexpL2_le (hs : measurable_set[m] s) (hμs : μ s ≠ ∞) (f : Lp ℝ 2 μ) :
-    (∫⁻ x in s, ‖condexpL2 ℝ hm f x‖₊ ∂μ) ≤ ∫⁻ x in s, ‖f x‖₊ ∂μ :=
+    ∫⁻ x in s, ‖condexpL2 ℝ hm f x‖₊ ∂μ ≤ ∫⁻ x in s, ‖f x‖₊ ∂μ :=
   by
   let h_meas := Lp_meas.ae_strongly_measurable' (condexp_L2 ℝ hm f)
   let g := h_meas.some
@@ -1117,7 +1117,7 @@ theorem lintegral_nnnorm_condexpL2_le (hs : measurable_set[m] s) (hμs : μ s �
 theorem condexpL2_ae_eq_zero_of_ae_eq_zero (hs : measurable_set[m] s) (hμs : μ s ≠ ∞) {f : Lp ℝ 2 μ}
     (hf : f =ᵐ[μ.restrict s] 0) : condexpL2 ℝ hm f =ᵐ[μ.restrict s] 0 :=
   by
-  suffices h_nnnorm_eq_zero : (∫⁻ x in s, ‖condexp_L2 ℝ hm f x‖₊ ∂μ) = 0
+  suffices h_nnnorm_eq_zero : ∫⁻ x in s, ‖condexp_L2 ℝ hm f x‖₊ ∂μ = 0
   · rw [lintegral_eq_zero_iff] at h_nnnorm_eq_zero 
     refine' h_nnnorm_eq_zero.mono fun x hx => _
     dsimp only at hx 
@@ -1138,11 +1138,11 @@ theorem condexpL2_ae_eq_zero_of_ae_eq_zero (hs : measurable_set[m] s) (hμs : μ
 
 theorem lintegral_nnnorm_condexpL2_indicator_le_real (hs : MeasurableSet s) (hμs : μ s ≠ ∞)
     (ht : measurable_set[m] t) (hμt : μ t ≠ ∞) :
-    (∫⁻ a in t, ‖condexpL2 ℝ hm (indicatorConstLp 2 hs hμs (1 : ℝ)) a‖₊ ∂μ) ≤ μ (s ∩ t) :=
+    ∫⁻ a in t, ‖condexpL2 ℝ hm (indicatorConstLp 2 hs hμs (1 : ℝ)) a‖₊ ∂μ ≤ μ (s ∩ t) :=
   by
   refine' (lintegral_nnnorm_condexp_L2_le ht hμt _).trans (le_of_eq _)
   have h_eq :
-    (∫⁻ x in t, ‖(indicator_const_Lp 2 hs hμs (1 : ℝ)) x‖₊ ∂μ) =
+    ∫⁻ x in t, ‖(indicator_const_Lp 2 hs hμs (1 : ℝ)) x‖₊ ∂μ =
       ∫⁻ x in t, s.indicator (fun x => (1 : ℝ≥0∞)) x ∂μ :=
     by
     refine' lintegral_congr_ae (ae_restrict_of_ae _)
@@ -1190,7 +1190,7 @@ theorem condexpL2_const_inner (hm : m ≤ m0) (f : Lp E 2 μ) (c : E) :
 
 /-- `condexp_L2` verifies the equality of integrals defining the conditional expectation. -/
 theorem integral_condexpL2_eq (hm : m ≤ m0) (f : Lp E' 2 μ) (hs : measurable_set[m] s)
-    (hμs : μ s ≠ ∞) : (∫ x in s, condexpL2 𝕜 hm f x ∂μ) = ∫ x in s, f x ∂μ :=
+    (hμs : μ s ≠ ∞) : ∫ x in s, condexpL2 𝕜 hm f x ∂μ = ∫ x in s, f x ∂μ :=
   by
   rw [← sub_eq_zero, Lp_meas_coe, ←
     integral_sub' (integrable_on_Lp_of_measure_ne_top _ fact_one_le_two_ennreal.elim hμs)
@@ -1279,9 +1279,9 @@ variable {𝕜}
 
 theorem set_lintegral_nnnorm_condexpL2_indicator_le (hm : m ≤ m0) (hs : MeasurableSet s)
     (hμs : μ s ≠ ∞) (x : E') {t : Set α} (ht : measurable_set[m] t) (hμt : μ t ≠ ∞) :
-    (∫⁻ a in t, ‖condexpL2 𝕜 hm (indicatorConstLp 2 hs hμs x) a‖₊ ∂μ) ≤ μ (s ∩ t) * ‖x‖₊ :=
+    ∫⁻ a in t, ‖condexpL2 𝕜 hm (indicatorConstLp 2 hs hμs x) a‖₊ ∂μ ≤ μ (s ∩ t) * ‖x‖₊ :=
   calc
-    (∫⁻ a in t, ‖condexpL2 𝕜 hm (indicatorConstLp 2 hs hμs x) a‖₊ ∂μ) =
+    ∫⁻ a in t, ‖condexpL2 𝕜 hm (indicatorConstLp 2 hs hμs x) a‖₊ ∂μ =
         ∫⁻ a in t, ‖condexpL2 ℝ hm (indicatorConstLp 2 hs hμs (1 : ℝ)) a • x‖₊ ∂μ :=
       set_lintegral_congr_fun (hm t ht)
         ((condexpL2_indicator_ae_eq_smul 𝕜 hm hs hμs x).mono fun a ha hat => by rw [ha])
@@ -1296,7 +1296,7 @@ theorem set_lintegral_nnnorm_condexpL2_indicator_le (hm : m ≤ m0) (hs : Measur
 
 theorem lintegral_nnnorm_condexpL2_indicator_le (hm : m ≤ m0) (hs : MeasurableSet s) (hμs : μ s ≠ ∞)
     (x : E') [SigmaFinite (μ.trim hm)] :
-    (∫⁻ a, ‖condexpL2 𝕜 hm (indicatorConstLp 2 hs hμs x) a‖₊ ∂μ) ≤ μ s * ‖x‖₊ :=
+    ∫⁻ a, ‖condexpL2 𝕜 hm (indicatorConstLp 2 hs hμs x) a‖₊ ∂μ ≤ μ s * ‖x‖₊ :=
   by
   refine' lintegral_le_of_forall_fin_meas_le' hm (μ s * ‖x‖₊) _ fun t ht hμt => _
   · rw [Lp_meas_coe]
@@ -1372,9 +1372,9 @@ theorem condexpIndSmul_ae_eq_smul (hm : m ≤ m0) (hs : MeasurableSet s) (hμs :
 
 theorem set_lintegral_nnnorm_condexpIndSmul_le (hm : m ≤ m0) (hs : MeasurableSet s) (hμs : μ s ≠ ∞)
     (x : G) {t : Set α} (ht : measurable_set[m] t) (hμt : μ t ≠ ∞) :
-    (∫⁻ a in t, ‖condexpIndSmul hm hs hμs x a‖₊ ∂μ) ≤ μ (s ∩ t) * ‖x‖₊ :=
+    ∫⁻ a in t, ‖condexpIndSmul hm hs hμs x a‖₊ ∂μ ≤ μ (s ∩ t) * ‖x‖₊ :=
   calc
-    (∫⁻ a in t, ‖condexpIndSmul hm hs hμs x a‖₊ ∂μ) =
+    ∫⁻ a in t, ‖condexpIndSmul hm hs hμs x a‖₊ ∂μ =
         ∫⁻ a in t, ‖condexpL2 ℝ hm (indicatorConstLp 2 hs hμs (1 : ℝ)) a • x‖₊ ∂μ :=
       set_lintegral_congr_fun (hm t ht)
         ((condexpIndSmul_ae_eq_smul hm hs hμs x).mono fun a ha hat => by rw [ha])
@@ -1388,7 +1388,7 @@ theorem set_lintegral_nnnorm_condexpIndSmul_le (hm : m ≤ m0) (hs : MeasurableS
 #align measure_theory.set_lintegral_nnnorm_condexp_ind_smul_le MeasureTheory.set_lintegral_nnnorm_condexpIndSmul_le
 
 theorem lintegral_nnnorm_condexpIndSmul_le (hm : m ≤ m0) (hs : MeasurableSet s) (hμs : μ s ≠ ∞)
-    (x : G) [SigmaFinite (μ.trim hm)] : (∫⁻ a, ‖condexpIndSmul hm hs hμs x a‖₊ ∂μ) ≤ μ s * ‖x‖₊ :=
+    (x : G) [SigmaFinite (μ.trim hm)] : ∫⁻ a, ‖condexpIndSmul hm hs hμs x a‖₊ ∂μ ≤ μ s * ‖x‖₊ :=
   by
   refine' lintegral_le_of_forall_fin_meas_le' hm (μ s * ‖x‖₊) _ fun t ht hμt => _
   · exact (Lp.ae_strongly_measurable _).ennnorm
@@ -1420,9 +1420,9 @@ theorem condexpIndSmul_empty {x : G} :
 
 theorem set_integral_condexpL2_indicator (hs : measurable_set[m] s) (ht : MeasurableSet t)
     (hμs : μ s ≠ ∞) (hμt : μ t ≠ ∞) :
-    (∫ x in s, (condexpL2 ℝ hm (indicatorConstLp 2 ht hμt (1 : ℝ))) x ∂μ) = (μ (t ∩ s)).toReal :=
+    ∫ x in s, (condexpL2 ℝ hm (indicatorConstLp 2 ht hμt (1 : ℝ))) x ∂μ = (μ (t ∩ s)).toReal :=
   calc
-    (∫ x in s, (condexpL2 ℝ hm (indicatorConstLp 2 ht hμt (1 : ℝ))) x ∂μ) =
+    ∫ x in s, (condexpL2 ℝ hm (indicatorConstLp 2 ht hμt (1 : ℝ))) x ∂μ =
         ∫ x in s, indicatorConstLp 2 ht hμt (1 : ℝ) x ∂μ :=
       @integral_condexpL2_eq α _ ℝ _ _ _ _ _ _ _ _ _ hm (indicatorConstLp 2 ht hμt (1 : ℝ)) hs hμs
     _ = (μ (t ∩ s)).toReal • 1 := (set_integral_indicatorConstLp (hm s hs) ht hμt (1 : ℝ))
@@ -1431,9 +1431,9 @@ theorem set_integral_condexpL2_indicator (hs : measurable_set[m] s) (ht : Measur
 
 theorem set_integral_condexpIndSmul (hs : measurable_set[m] s) (ht : MeasurableSet t)
     (hμs : μ s ≠ ∞) (hμt : μ t ≠ ∞) (x : G') :
-    (∫ a in s, (condexpIndSmul hm ht hμt x) a ∂μ) = (μ (t ∩ s)).toReal • x :=
+    ∫ a in s, (condexpIndSmul hm ht hμt x) a ∂μ = (μ (t ∩ s)).toReal • x :=
   calc
-    (∫ a in s, (condexpIndSmul hm ht hμt x) a ∂μ) =
+    ∫ a in s, (condexpIndSmul hm ht hμt x) a ∂μ =
         ∫ a in s, condexpL2 ℝ hm (indicatorConstLp 2 ht hμt (1 : ℝ)) a • x ∂μ :=
       set_integral_congr_ae (hm s hs)
         ((condexpIndSmul_ae_eq_smul hm ht hμt x).mono fun x hx hxs => hx)
@@ -1561,7 +1561,7 @@ theorem norm_condexpIndL1Fin_le (hs : MeasurableSet s) (hμs : μ s ≠ ∞) (x 
     of_real_integral_norm_eq_lintegral_nnnorm]
   swap; · rw [← mem_ℒp_one_iff_integrable]; exact Lp.mem_ℒp _
   have h_eq :
-    (∫⁻ a, ‖condexp_ind_L1_fin hm hs hμs x a‖₊ ∂μ) = ∫⁻ a, ‖condexp_ind_smul hm hs hμs x a‖₊ ∂μ :=
+    ∫⁻ a, ‖condexp_ind_L1_fin hm hs hμs x a‖₊ ∂μ = ∫⁻ a, ‖condexp_ind_smul hm hs hμs x a‖₊ ∂μ :=
     by
     refine' lintegral_congr_ae _
     refine' (condexp_ind_L1_fin_ae_eq_condexp_ind_smul hm hs hμs x).mono fun z hz => _
@@ -1765,9 +1765,9 @@ theorem dominatedFinMeasAdditive_condexpInd (hm : m ≤ m0) (μ : Measure α)
 variable {G}
 
 theorem set_integral_condexpInd (hs : measurable_set[m] s) (ht : MeasurableSet t) (hμs : μ s ≠ ∞)
-    (hμt : μ t ≠ ∞) (x : G') : (∫ a in s, condexpInd hm μ t x a ∂μ) = (μ (t ∩ s)).toReal • x :=
+    (hμt : μ t ≠ ∞) (x : G') : ∫ a in s, condexpInd hm μ t x a ∂μ = (μ (t ∩ s)).toReal • x :=
   calc
-    (∫ a in s, condexpInd hm μ t x a ∂μ) = ∫ a in s, condexpIndSmul hm ht hμt x a ∂μ :=
+    ∫ a in s, condexpInd hm μ t x a ∂μ = ∫ a in s, condexpIndSmul hm ht hμt x a ∂μ :=
       set_integral_congr_ae (hm s hs)
         ((condexpInd_ae_eq_condexpIndSmul hm ht hμt x).mono fun x hx hxs => hx)
     _ = (μ (t ∩ s)).toReal • x := set_integral_condexpIndSmul hs ht hμs hμt x
@@ -1826,11 +1826,11 @@ theorem condexpL1Clm_indicatorConst (hs : MeasurableSet s) (hμs : μ s ≠ ∞)
 
 /-- Auxiliary lemma used in the proof of `set_integral_condexp_L1_clm`. -/
 theorem set_integral_condexpL1Clm_of_measure_ne_top (f : α →₁[μ] F') (hs : measurable_set[m] s)
-    (hμs : μ s ≠ ∞) : (∫ x in s, condexpL1Clm hm μ f x ∂μ) = ∫ x in s, f x ∂μ :=
+    (hμs : μ s ≠ ∞) : ∫ x in s, condexpL1Clm hm μ f x ∂μ = ∫ x in s, f x ∂μ :=
   by
   refine'
     Lp.induction ENNReal.one_ne_top
-      (fun f : α →₁[μ] F' => (∫ x in s, condexp_L1_clm hm μ f x ∂μ) = ∫ x in s, f x ∂μ) _ _
+      (fun f : α →₁[μ] F' => ∫ x in s, condexp_L1_clm hm μ f x ∂μ = ∫ x in s, f x ∂μ) _ _
       (isClosed_eq _ _) f
   · intro x t ht hμt
     simp_rw [condexp_L1_clm_indicator_const ht hμt.ne x]
@@ -1856,7 +1856,7 @@ theorem set_integral_condexpL1Clm_of_measure_ne_top (f : α →₁[μ] F') (hs :
 to the integral of `f` on that set. See also `set_integral_condexp`, the similar statement for
 `condexp`. -/
 theorem set_integral_condexpL1Clm (f : α →₁[μ] F') (hs : measurable_set[m] s) :
-    (∫ x in s, condexpL1Clm hm μ f x ∂μ) = ∫ x in s, f x ∂μ :=
+    ∫ x in s, condexpL1Clm hm μ f x ∂μ = ∫ x in s, f x ∂μ :=
   by
   let S := spanning_sets (μ.trim hm)
   have hS_meas : ∀ i, measurable_set[m] (S i) := measurable_spanning_sets (μ.trim hm)
@@ -1999,7 +1999,7 @@ theorem integrable_condexpL1 (f : α → F') : Integrable (condexpL1 hm μ f) μ
 the integral of `f` on that set. See also `set_integral_condexp`, the similar statement for
 `condexp`. -/
 theorem set_integral_condexpL1 (hf : Integrable f μ) (hs : measurable_set[m] s) :
-    (∫ x in s, condexpL1 hm μ f x ∂μ) = ∫ x in s, f x ∂μ :=
+    ∫ x in s, condexpL1 hm μ f x ∂μ = ∫ x in s, f x ∂μ :=
   by
   simp_rw [condexp_L1_eq hf]
   rw [set_integral_condexp_L1_clm (hf.to_L1 f) hs]
@@ -2201,16 +2201,16 @@ theorem integrable_condexp : Integrable (μ[f|m]) μ :=
 /-- The integral of the conditional expectation `μ[f|hm]` over an `m`-measurable set is equal to
 the integral of `f` on that set. -/
 theorem set_integral_condexp (hm : m ≤ m0) [SigmaFinite (μ.trim hm)] (hf : Integrable f μ)
-    (hs : measurable_set[m] s) : (∫ x in s, (μ[f|m]) x ∂μ) = ∫ x in s, f x ∂μ :=
+    (hs : measurable_set[m] s) : ∫ x in s, (μ[f|m]) x ∂μ = ∫ x in s, f x ∂μ :=
   by
   rw [set_integral_congr_ae (hm s hs) ((condexp_ae_eq_condexp_L1 hm f).mono fun x hx _ => hx)]
   exact set_integral_condexp_L1 hf hs
 #align measure_theory.set_integral_condexp MeasureTheory.set_integral_condexp
 
 theorem integral_condexp (hm : m ≤ m0) [hμm : SigmaFinite (μ.trim hm)] (hf : Integrable f μ) :
-    (∫ x, (μ[f|m]) x ∂μ) = ∫ x, f x ∂μ :=
+    ∫ x, (μ[f|m]) x ∂μ = ∫ x, f x ∂μ :=
   by
-  suffices (∫ x in Set.univ, (μ[f|m]) x ∂μ) = ∫ x in Set.univ, f x ∂μ by
+  suffices ∫ x in Set.univ, (μ[f|m]) x ∂μ = ∫ x in Set.univ, f x ∂μ by
     simp_rw [integral_univ] at this ; exact this
   exact set_integral_condexp hm hf (@MeasurableSet.univ _ m)
 #align measure_theory.integral_condexp MeasureTheory.integral_condexp
@@ -2221,7 +2221,7 @@ as `f` on all `m`-measurable sets, then it is a.e. equal to `μ[f|hm]`. -/
 theorem ae_eq_condexp_of_forall_set_integral_eq (hm : m ≤ m0) [SigmaFinite (μ.trim hm)]
     {f g : α → F'} (hf : Integrable f μ)
     (hg_int_finite : ∀ s, measurable_set[m] s → μ s < ∞ → IntegrableOn g s μ)
-    (hg_eq : ∀ s : Set α, measurable_set[m] s → μ s < ∞ → (∫ x in s, g x ∂μ) = ∫ x in s, f x ∂μ)
+    (hg_eq : ∀ s : Set α, measurable_set[m] s → μ s < ∞ → ∫ x in s, g x ∂μ = ∫ x in s, f x ∂μ)
     (hgm : AeStronglyMeasurable' m g μ) : g =ᵐ[μ] μ[f|m] :=
   by
   refine'
@@ -2247,7 +2247,7 @@ theorem condexp_bot' [hμ : μ.ae.ne_bot] (f : α → F') :
   have h_meas : strongly_measurable[⊥] (μ[f|⊥]) := strongly_measurable_condexp
   obtain ⟨c, h_eq⟩ := strongly_measurable_bot_iff.mp h_meas
   rw [h_eq]
-  have h_integral : (∫ x, (μ[f|⊥]) x ∂μ) = ∫ x, f x ∂μ := integral_condexp bot_le hf
+  have h_integral : ∫ x, (μ[f|⊥]) x ∂μ = ∫ x, f x ∂μ := integral_condexp bot_le hf
   simp_rw [h_eq, integral_const] at h_integral 
   rw [← h_integral, ← smul_assoc, smul_eq_mul, inv_mul_cancel, one_smul]
   rw [Ne.def, ENNReal.toReal_eq_zero_iff, Auto.not_or_eq, measure.measure_univ_eq_zero, ← ae_eq_bot,

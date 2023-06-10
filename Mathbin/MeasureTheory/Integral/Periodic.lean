@@ -171,7 +171,7 @@ noncomputable def measurableEquivIco (a : ℝ) : AddCircle T ≃ᵐ Ico a (a + T
 /-- The lower integral of a function over `add_circle T` is equal to the lower integral over an
 interval (t, t + T] in `ℝ` of its lift to `ℝ`. -/
 protected theorem lintegral_preimage (t : ℝ) (f : AddCircle T → ℝ≥0∞) :
-    (∫⁻ a in Ioc t (t + T), f a) = ∫⁻ b : AddCircle T, f b :=
+    ∫⁻ a in Ioc t (t + T), f a = ∫⁻ b : AddCircle T, f b :=
   by
   have m : MeasurableSet (Ioc t (t + T)) := measurableSet_Ioc
   have := lintegral_map_equiv f (measurable_equiv_Ioc T t).symm
@@ -196,7 +196,7 @@ variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace 
 /-- The integral of an almost-everywhere strongly measurable function over `add_circle T` is equal
 to the integral over an interval (t, t + T] in `ℝ` of its lift to `ℝ`. -/
 protected theorem integral_preimage (t : ℝ) (f : AddCircle T → E) :
-    (∫ a in Ioc t (t + T), f a) = ∫ b : AddCircle T, f b :=
+    ∫ a in Ioc t (t + T), f a = ∫ b : AddCircle T, f b :=
   by
   have m : MeasurableSet (Ioc t (t + T)) := measurableSet_Ioc
   have := integral_map_equiv (measurable_equiv_Ioc T t).symm f
@@ -213,7 +213,7 @@ protected theorem integral_preimage (t : ℝ) (f : AddCircle T → E) :
 /-- The integral of an almost-everywhere strongly measurable function over `add_circle T` is equal
 to the integral over an interval (t, t + T] in `ℝ` of its lift to `ℝ`. -/
 protected theorem intervalIntegral_preimage (t : ℝ) (f : AddCircle T → E) :
-    (∫ a in t..t + T, f a) = ∫ b : AddCircle T, f b :=
+    ∫ a in t..t + T, f a = ∫ b : AddCircle T, f b :=
   by
   rw [integral_of_le, AddCircle.integral_preimage T t f]
   linarith [hT.out]
@@ -249,7 +249,7 @@ protected theorem measurePreserving_mk (t : ℝ) :
 /-- The integral of a measurable function over `unit_add_circle` is equal to the integral over an
 interval (t, t + 1] in `ℝ` of its lift to `ℝ`. -/
 protected theorem lintegral_preimage (t : ℝ) (f : UnitAddCircle → ℝ≥0∞) :
-    (∫⁻ a in Ioc t (t + 1), f a) = ∫⁻ b : UnitAddCircle, f b :=
+    ∫⁻ a in Ioc t (t + 1), f a = ∫⁻ b : UnitAddCircle, f b :=
   AddCircle.lintegral_preimage 1 t f
 #align unit_add_circle.lintegral_preimage UnitAddCircle.lintegral_preimage
 
@@ -258,14 +258,14 @@ variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace 
 /-- The integral of an almost-everywhere strongly measurable function over `unit_add_circle` is
 equal to the integral over an interval (t, t + 1] in `ℝ` of its lift to `ℝ`. -/
 protected theorem integral_preimage (t : ℝ) (f : UnitAddCircle → E) :
-    (∫ a in Ioc t (t + 1), f a) = ∫ b : UnitAddCircle, f b :=
+    ∫ a in Ioc t (t + 1), f a = ∫ b : UnitAddCircle, f b :=
   AddCircle.integral_preimage 1 t f
 #align unit_add_circle.integral_preimage UnitAddCircle.integral_preimage
 
 /-- The integral of an almost-everywhere strongly measurable function over `unit_add_circle` is
 equal to the integral over an interval (t, t + 1] in `ℝ` of its lift to `ℝ`. -/
 protected theorem intervalIntegral_preimage (t : ℝ) (f : UnitAddCircle → E) :
-    (∫ a in t..t + 1, f a) = ∫ b : UnitAddCircle, f b :=
+    ∫ a in t..t + 1, f a = ∫ b : UnitAddCircle, f b :=
   AddCircle.intervalIntegral_preimage 1 t f
 #align unit_add_circle.interval_integral_preimage UnitAddCircle.intervalIntegral_preimage
 
@@ -281,7 +281,7 @@ variable {f : ℝ → E} {T : ℝ}
 
 /-- An auxiliary lemma for a more general `function.periodic.interval_integral_add_eq`. -/
 theorem intervalIntegral_add_eq_of_pos (hf : Periodic f T) (hT : 0 < T) (t s : ℝ) :
-    (∫ x in t..t + T, f x) = ∫ x in s..s + T, f x :=
+    ∫ x in t..t + T, f x = ∫ x in s..s + T, f x :=
   by
   simp only [integral_of_le, hT.le, le_add_iff_nonneg_right]
   haveI : vadd_invariant_measure (AddSubgroup.zmultiples T) ℝ volume :=
@@ -294,7 +294,7 @@ theorem intervalIntegral_add_eq_of_pos (hf : Periodic f T) (hT : 0 < T) (t s : �
 /-- If `f` is a periodic function with period `T`, then its integral over `[t, t + T]` does not
 depend on `t`. -/
 theorem intervalIntegral_add_eq (hf : Periodic f T) (t s : ℝ) :
-    (∫ x in t..t + T, f x) = ∫ x in s..s + T, f x :=
+    ∫ x in t..t + T, f x = ∫ x in s..s + T, f x :=
   by
   rcases lt_trichotomy 0 T with (hT | rfl | hT)
   · exact hf.interval_integral_add_eq_of_pos hT t s
@@ -308,7 +308,7 @@ theorem intervalIntegral_add_eq (hf : Periodic f T) (t s : ℝ) :
 is the sum of its integrals over the intervals `[t, s]` and `[t, t + T]`. -/
 theorem intervalIntegral_add_eq_add (hf : Periodic f T) (t s : ℝ)
     (h_int : ∀ t₁ t₂, IntervalIntegrable f MeasureSpace.volume t₁ t₂) :
-    (∫ x in t..s + T, f x) = (∫ x in t..s, f x) + ∫ x in t..t + T, f x := by
+    ∫ x in t..s + T, f x = (∫ x in t..s, f x) + ∫ x in t..t + T, f x := by
   rw [hf.interval_integral_add_eq t s, integral_add_adjacent_intervals (h_int t s) (h_int s _)]
 #align function.periodic.interval_integral_add_eq_add Function.Periodic.intervalIntegral_add_eq_add
 
@@ -316,14 +316,14 @@ theorem intervalIntegral_add_eq_add (hf : Periodic f T) (t s : ℝ)
 integral over `[t, t + n • T]` is `n` times its integral over `[t, t + T]`. -/
 theorem intervalIntegral_add_zsmul_eq (hf : Periodic f T) (n : ℤ) (t : ℝ)
     (h_int : ∀ t₁ t₂, IntervalIntegrable f MeasureSpace.volume t₁ t₂) :
-    (∫ x in t..t + n • T, f x) = n • ∫ x in t..t + T, f x :=
+    ∫ x in t..t + n • T, f x = n • ∫ x in t..t + T, f x :=
   by
   -- Reduce to the case `b = 0`
-  suffices (∫ x in 0 ..n • T, f x) = n • ∫ x in 0 ..T, f x by
+  suffices ∫ x in 0 ..n • T, f x = n • ∫ x in 0 ..T, f x by
     simp only [hf.interval_integral_add_eq t 0, (hf.zsmul n).intervalIntegral_add_eq t 0, zero_add,
       this]
   -- First prove it for natural numbers
-  have : ∀ m : ℕ, (∫ x in 0 ..m • T, f x) = m • ∫ x in 0 ..T, f x :=
+  have : ∀ m : ℕ, ∫ x in 0 ..m • T, f x = m • ∫ x in 0 ..T, f x :=
     by
     intros
     induction' m with m ih
@@ -353,7 +353,7 @@ include hg h_int
 `t ↦ ∫ x in 0..t, g x` is bounded below by `t ↦ X + ⌊t/T⌋ • Y` for appropriate constants `X` and
 `Y`. -/
 theorem sInf_add_zsmul_le_integral_of_pos (hT : 0 < T) (t : ℝ) :
-    (sInf ((fun t => ∫ x in 0 ..t, g x) '' Icc 0 T) + ⌊t / T⌋ • ∫ x in 0 ..T, g x) ≤
+    sInf ((fun t => ∫ x in 0 ..t, g x) '' Icc 0 T) + ⌊t / T⌋ • ∫ x in 0 ..T, g x ≤
       ∫ x in 0 ..t, g x :=
   by
   let ε := Int.fract (t / T) * T
@@ -371,7 +371,7 @@ theorem sInf_add_zsmul_le_integral_of_pos (hT : 0 < T) (t : ℝ) :
 `t ↦ ∫ x in 0..t, g x` is bounded above by `t ↦ X + ⌊t/T⌋ • Y` for appropriate constants `X` and
 `Y`. -/
 theorem integral_le_sSup_add_zsmul_of_pos (hT : 0 < T) (t : ℝ) :
-    (∫ x in 0 ..t, g x) ≤
+    ∫ x in 0 ..t, g x ≤
       sSup ((fun t => ∫ x in 0 ..t, g x) '' Icc 0 T) + ⌊t / T⌋ • ∫ x in 0 ..T, g x :=
   by
   let ε := Int.fract (t / T) * T

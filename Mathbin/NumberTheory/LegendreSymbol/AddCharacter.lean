@@ -392,20 +392,19 @@ variable [Fintype R]
 /-- The sum over the values of a nontrivial additive character vanishes if the target ring
 is a domain. -/
 theorem sum_eq_zero_of_isNontrivial [IsDomain R'] {ψ : AddChar R R'} (hψ : IsNontrivial ψ) :
-    (∑ a, ψ a) = 0 := by
+    ∑ a, ψ a = 0 := by
   rcases hψ with ⟨b, hb⟩
-  have h₁ : (∑ a : R, ψ (b + a)) = ∑ a : R, ψ a :=
+  have h₁ : ∑ a : R, ψ (b + a) = ∑ a : R, ψ a :=
     Fintype.sum_bijective _ (AddGroup.addLeft_bijective b) _ _ fun x => rfl
   simp_rw [map_add_mul] at h₁ 
-  have h₂ : (∑ a : R, ψ a) = finset.univ.sum ⇑ψ := rfl
+  have h₂ : ∑ a : R, ψ a = finset.univ.sum ⇑ψ := rfl
   rw [← Finset.mul_sum, h₂] at h₁ 
   exact eq_zero_of_mul_eq_self_left hb h₁
 #align add_char.sum_eq_zero_of_is_nontrivial AddChar.sum_eq_zero_of_isNontrivial
 
 /-- The sum over the values of the trivial additive character is the cardinality of the source. -/
 theorem sum_eq_card_of_is_trivial {ψ : AddChar R R'} (hψ : ¬IsNontrivial ψ) :
-    (∑ a, ψ a) = Fintype.card R :=
-  by
+    ∑ a, ψ a = Fintype.card R := by
   simp only [is_nontrivial] at hψ 
   push_neg at hψ 
   simp only [hψ, Finset.sum_const, Nat.smul_one_eq_coe]
@@ -415,7 +414,7 @@ theorem sum_eq_card_of_is_trivial {ψ : AddChar R R'} (hψ : ¬IsNontrivial ψ) 
 /-- The sum over the values of `mul_shift ψ b` for `ψ` primitive is zero when `b ≠ 0`
 and `#R` otherwise. -/
 theorem sum_mul_shift [DecidableEq R] [IsDomain R'] {ψ : AddChar R R'} (b : R)
-    (hψ : IsPrimitive ψ) : (∑ x : R, ψ (x * b)) = if b = 0 then Fintype.card R else 0 :=
+    (hψ : IsPrimitive ψ) : ∑ x : R, ψ (x * b) = if b = 0 then Fintype.card R else 0 :=
   by
   split_ifs with h
   · -- case `b = 0`

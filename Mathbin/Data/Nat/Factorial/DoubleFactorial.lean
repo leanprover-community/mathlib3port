@@ -90,7 +90,8 @@ theorem doubleFactorial_eq_prod_even : ∀ n : ℕ, (2 * n)‼ = ∏ i in Finset
 -/
 
 #print Nat.doubleFactorial_eq_prod_odd /-
-theorem doubleFactorial_eq_prod_odd : ∀ n : ℕ, (2 * n + 1)‼ = ∏ i in Finset.range n, 2 * (i + 1) + 1
+theorem doubleFactorial_eq_prod_odd :
+    ∀ n : ℕ, (2 * n + 1)‼ = ∏ i in Finset.range n, (2 * (i + 1) + 1)
   | 0 => rfl
   | n + 1 =>
     by

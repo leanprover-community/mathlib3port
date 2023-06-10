@@ -214,15 +214,15 @@ theorem card_Icc : (Icc f g).card = ∏ i in f.support ∪ g.support, (Icc (f i)
   card_dfinsupp _ _
 #align dfinsupp.card_Icc Dfinsupp.card_Icc
 
-theorem card_Ico : (Ico f g).card = (∏ i in f.support ∪ g.support, (Icc (f i) (g i)).card) - 1 := by
+theorem card_Ico : (Ico f g).card = ∏ i in f.support ∪ g.support, (Icc (f i) (g i)).card - 1 := by
   rw [card_Ico_eq_card_Icc_sub_one, card_Icc]
 #align dfinsupp.card_Ico Dfinsupp.card_Ico
 
-theorem card_Ioc : (Ioc f g).card = (∏ i in f.support ∪ g.support, (Icc (f i) (g i)).card) - 1 := by
+theorem card_Ioc : (Ioc f g).card = ∏ i in f.support ∪ g.support, (Icc (f i) (g i)).card - 1 := by
   rw [card_Ioc_eq_card_Icc_sub_one, card_Icc]
 #align dfinsupp.card_Ioc Dfinsupp.card_Ioc
 
-theorem card_Ioo : (Ioo f g).card = (∏ i in f.support ∪ g.support, (Icc (f i) (g i)).card) - 2 := by
+theorem card_Ioo : (Ioo f g).card = ∏ i in f.support ∪ g.support, (Icc (f i) (g i)).card - 2 := by
   rw [card_Ioo_eq_card_Icc_sub_two, card_Icc]
 #align dfinsupp.card_Ioo Dfinsupp.card_Ioo
 
@@ -241,7 +241,7 @@ theorem card_Iic : (Iic f).card = ∏ i in f.support, (Iic (f i)).card := by
     bot_eq_zero]
 #align dfinsupp.card_Iic Dfinsupp.card_Iic
 
-theorem card_Iio : (Iio f).card = (∏ i in f.support, (Iic (f i)).card) - 1 := by
+theorem card_Iio : (Iio f).card = ∏ i in f.support, (Iic (f i)).card - 1 := by
   rw [card_Iio_eq_card_Iic_sub_one, card_Iic]
 #align dfinsupp.card_Iio Dfinsupp.card_Iio
 

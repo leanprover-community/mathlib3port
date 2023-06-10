@@ -211,8 +211,8 @@ theorem rightInv_removeZero (p : FormalMultilinearSeries 𝕜 E F) (i : E ≃L[�
 theorem comp_right_inv_aux1 {n : ℕ} (hn : 0 < n) (p : FormalMultilinearSeries 𝕜 E F)
     (q : FormalMultilinearSeries 𝕜 F E) (v : Fin n → F) :
     p.comp q n v =
-      (∑ c : Composition n in {c : Composition n | 1 < c.length}.toFinset,
-          p c.length (q.applyComposition c v)) +
+      ∑ c : Composition n in {c : Composition n | 1 < c.length}.toFinset,
+          p c.length (q.applyComposition c v) +
         p 1 fun i => q n v :=
   by
   have A :
@@ -241,8 +241,8 @@ theorem comp_right_inv_aux1 {n : ℕ} (hn : 0 < n) (p : FormalMultilinearSeries 
 
 theorem comp_rightInv_aux2 (p : FormalMultilinearSeries 𝕜 E F) (i : E ≃L[𝕜] F) (n : ℕ)
     (v : Fin (n + 2) → F) :
-    (∑ c : Composition (n + 2) in {c : Composition (n + 2) | 1 < c.length}.toFinset,
-        p c.length (applyComposition (fun k : ℕ => ite (k < n + 2) (p.right_inv i k) 0) c v)) =
+    ∑ c : Composition (n + 2) in {c : Composition (n + 2) | 1 < c.length}.toFinset,
+        p c.length (applyComposition (fun k : ℕ => ite (k < n + 2) (p.right_inv i k) 0) c v) =
       ∑ c : Composition (n + 2) in {c : Composition (n + 2) | 1 < c.length}.toFinset,
         p c.length ((p.right_inv i).applyComposition c v) :=
   by
@@ -389,16 +389,16 @@ expression for `∑_{k<n+1} aᵏ Qₖ` in terms of a sum of powers of the same s
 in a general abstract setup. -/
 theorem radius_right_inv_pos_of_radius_pos_aux1 (n : ℕ) (p : ℕ → ℝ) (hp : ∀ k, 0 ≤ p k) {r a : ℝ}
     (hr : 0 ≤ r) (ha : 0 ≤ a) :
-    (∑ k in Ico 2 (n + 1),
+    ∑ k in Ico 2 (n + 1),
         a ^ k *
           ∑ c in ({c | 1 < Composition.length c}.toFinset : Finset (Composition k)),
-            r ^ c.length * ∏ j, p (c.blocksFun j)) ≤
+            r ^ c.length * ∏ j, p (c.blocksFun j) ≤
       ∑ j in Ico 2 (n + 1), r ^ j * (∑ k in Ico 1 n, a ^ k * p k) ^ j :=
   calc
-    (∑ k in Ico 2 (n + 1),
+    ∑ k in Ico 2 (n + 1),
           a ^ k *
             ∑ c in ({c | 1 < Composition.length c}.toFinset : Finset (Composition k)),
-              r ^ c.length * ∏ j, p (c.blocksFun j)) =
+              r ^ c.length * ∏ j, p (c.blocksFun j) =
         ∑ k in Ico 2 (n + 1),
           ∑ c in ({c | 1 < Composition.length c}.toFinset : Finset (Composition k)),
             ∏ j, r * (a ^ c.blocksFun j * p (c.blocksFun j)) :=
@@ -458,13 +458,13 @@ in the specific setup we are interesting in, by reducing to the general bound in
 theorem radius_rightInv_pos_of_radius_pos_aux2 {n : ℕ} (hn : 2 ≤ n + 1)
     (p : FormalMultilinearSeries 𝕜 E F) (i : E ≃L[𝕜] F) {r a C : ℝ} (hr : 0 ≤ r) (ha : 0 ≤ a)
     (hC : 0 ≤ C) (hp : ∀ n, ‖p n‖ ≤ C * r ^ n) :
-    (∑ k in Ico 1 (n + 1), a ^ k * ‖p.right_inv i k‖) ≤
+    ∑ k in Ico 1 (n + 1), a ^ k * ‖p.right_inv i k‖ ≤
       ‖(i.symm : F →L[𝕜] E)‖ * a +
         ‖(i.symm : F →L[𝕜] E)‖ * C *
           ∑ k in Ico 2 (n + 1), (r * ∑ j in Ico 1 n, a ^ j * ‖p.right_inv i j‖) ^ k :=
   let I := ‖(i.symm : F →L[𝕜] E)‖
   calc
-    (∑ k in Ico 1 (n + 1), a ^ k * ‖p.right_inv i k‖) =
+    ∑ k in Ico 1 (n + 1), a ^ k * ‖p.right_inv i k‖ =
         a * I + ∑ k in Ico 2 (n + 1), a ^ k * ‖p.right_inv i k‖ :=
       by
       simp only [LinearIsometryEquiv.norm_map, pow_one, right_inv_coeff_one, Nat.Ico_succ_singleton,

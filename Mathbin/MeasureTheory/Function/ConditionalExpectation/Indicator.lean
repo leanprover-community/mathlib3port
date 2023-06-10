@@ -140,7 +140,7 @@ theorem condexp_restrict_ae_eq_restrict (hm : m ≤ m0) [SigmaFinite (μ.trim hm
     exact integrable_condexp.indicator (hm _ ht)
   · intro t ht hμt
     calc
-      (∫ x in t, s.indicator (μ.restrict s[f|m]) x ∂μ) =
+      ∫ x in t, s.indicator (μ.restrict s[f|m]) x ∂μ =
           ∫ x in t, (μ.restrict s[f|m]) x ∂μ.restrict s :=
         by
         rw [integral_indicator (hm _ hs_m), measure.restrict_restrict (hm _ hs_m),
@@ -177,18 +177,17 @@ theorem condexp_ae_eq_restrict_of_measurableSpace_eq_on {m m₂ m0 : MeasurableS
         (fun t => (hs t).mp) _
     exact condexp_ae_eq_restrict_zero hs_m.compl (indicator_ae_eq_restrict_compl (hm _ hs_m))
   intro t ht hμt
-  have : (∫ x in t, (μ[s.indicator f|m]) x ∂μ) = ∫ x in s ∩ t, (μ[s.indicator f|m]) x ∂μ :=
+  have : ∫ x in t, (μ[s.indicator f|m]) x ∂μ = ∫ x in s ∩ t, (μ[s.indicator f|m]) x ∂μ :=
     by
     rw [← integral_add_compl (hm _ hs_m) integrable_condexp.integrable_on]
-    suffices (∫ x in sᶜ, (μ[s.indicator f|m]) x ∂μ.restrict t) = 0 by
+    suffices ∫ x in sᶜ, (μ[s.indicator f|m]) x ∂μ.restrict t = 0 by
       rw [this, add_zero, measure.restrict_restrict (hm _ hs_m)]
     rw [measure.restrict_restrict (MeasurableSet.compl (hm _ hs_m))]
     suffices μ[s.indicator f|m] =ᵐ[μ.restrict (sᶜ)] 0
       by
       rw [Set.inter_comm, ← measure.restrict_restrict (hm₂ _ ht)]
       calc
-        (∫ x : α in t, (μ[s.indicator f|m]) x ∂μ.restrict (sᶜ)) =
-            ∫ x : α in t, 0 ∂μ.restrict (sᶜ) :=
+        ∫ x : α in t, (μ[s.indicator f|m]) x ∂μ.restrict (sᶜ) = ∫ x : α in t, 0 ∂μ.restrict (sᶜ) :=
           by
           refine' set_integral_congr_ae (hm₂ _ ht) _
           filter_upwards [this] with x hx h using hx

@@ -170,7 +170,7 @@ theorem linearIndependent_smul_of_linearIndependent {s : Finset F} :
     ext
     rw [to_fun_apply, ← mul_inv_cancel_left g g', mul_smul, ← smul_mul', ← to_fun_apply _ x]
   show
-    (∑ x in s, g • (fun y => l y • MulAction.toFun G F y) x (g⁻¹ * g')) =
+    ∑ x in s, g • (fun y => l y • MulAction.toFun G F y) x (g⁻¹ * g') =
       ∑ x in s, (fun y => l y • MulAction.toFun G F y) x g'
   rw [← smul_sum, ← sum_apply _ _ fun y => l y • to_fun G F y, ←
     sum_apply _ _ fun y => l y • to_fun G F y]

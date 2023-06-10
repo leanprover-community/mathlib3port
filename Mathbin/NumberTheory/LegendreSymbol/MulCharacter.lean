@@ -578,7 +578,7 @@ open scoped BigOperators
 /-- The sum over all values of a nontrivial multiplicative character on a finite ring is zero
 (when the target is a domain). -/
 theorem IsNontrivial.sum_eq_zero [Fintype R] [IsDomain R'] {χ : MulChar R R'}
-    (hχ : χ.IsNontrivial) : (∑ a, χ a) = 0 :=
+    (hχ : χ.IsNontrivial) : ∑ a, χ a = 0 :=
   by
   rcases hχ with ⟨b, hb⟩
   refine' eq_zero_of_mul_eq_self_left hb _
@@ -589,10 +589,10 @@ theorem IsNontrivial.sum_eq_zero [Fintype R] [IsDomain R'] {χ : MulChar R R'}
 /-- The sum over all values of the trivial multiplicative character on a finite ring is
 the cardinality of its unit group. -/
 theorem sum_one_eq_card_units [Fintype R] [DecidableEq R] :
-    (∑ a, (1 : MulChar R R') a) = Fintype.card Rˣ :=
+    ∑ a, (1 : MulChar R R') a = Fintype.card Rˣ :=
   by
   calc
-    (∑ a, (1 : MulChar R R') a) = ∑ a : R, if IsUnit a then 1 else 0 :=
+    ∑ a, (1 : MulChar R R') a = ∑ a : R, if IsUnit a then 1 else 0 :=
       Finset.sum_congr rfl fun a _ => _
     _ = ((Finset.univ : Finset R).filterₓ IsUnit).card := Finset.sum_boole
     _ = (finset.univ.map ⟨(coe : Rˣ → R), Units.ext⟩).card := _

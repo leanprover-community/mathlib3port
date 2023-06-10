@@ -174,13 +174,13 @@ theorem log_stirlingSeq_bounded_aux :
   intro n
   have h₁ : ∀ k, log_stirling_seq' k - log_stirling_seq' (k + 1) ≤ 1 / 4 * (1 / k.succ ^ 2) := by
     intro k; convert log_stirling_seq_sub_log_stirling_seq_succ k using 1; field_simp
-  have h₂ : (∑ k : ℕ in range n, (1 : ℝ) / k.succ ^ 2) ≤ d :=
+  have h₂ : ∑ k : ℕ in range n, (1 : ℝ) / k.succ ^ 2 ≤ d :=
     sum_le_tsum (range n) (fun k _ => by positivity)
       ((summable_nat_add_iff 1).mpr <| real.summable_one_div_nat_pow.mpr one_lt_two)
   calc
     log (stirling_seq 1) - log (stirling_seq n.succ) = log_stirling_seq' 0 - log_stirling_seq' n :=
       rfl
-    _ = ∑ k in range n, log_stirling_seq' k - log_stirling_seq' (k + 1) := by
+    _ = ∑ k in range n, (log_stirling_seq' k - log_stirling_seq' (k + 1)) := by
       rw [← sum_range_sub' log_stirling_seq' n]
     _ ≤ ∑ k in range n, 1 / 4 * (1 / k.succ ^ 2) := (sum_le_sum fun k _ => h₁ k)
     _ = 1 / 4 * ∑ k in range n, 1 / k.succ ^ 2 := by rw [mul_sum]

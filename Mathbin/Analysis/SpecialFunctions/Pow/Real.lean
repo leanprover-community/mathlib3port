@@ -229,13 +229,13 @@ theorem le_rpow_add {x : ℝ} (hx : 0 ≤ x) (y z : ℝ) : x ^ y * x ^ z ≤ x ^
 #align real.le_rpow_add Real.le_rpow_add
 
 theorem rpow_sum_of_pos {ι : Type _} {a : ℝ} (ha : 0 < a) (f : ι → ℝ) (s : Finset ι) :
-    (a ^ ∑ x in s, f x) = ∏ x in s, a ^ f x :=
+    a ^ ∑ x in s, f x = ∏ x in s, a ^ f x :=
   @AddMonoidHom.map_sum ℝ ι (Additive ℝ) _ _ ⟨fun x : ℝ => (a ^ x : ℝ), rpow_zero a, rpow_add ha⟩ f
     s
 #align real.rpow_sum_of_pos Real.rpow_sum_of_pos
 
 theorem rpow_sum_of_nonneg {ι : Type _} {a : ℝ} (ha : 0 ≤ a) {s : Finset ι} {f : ι → ℝ}
-    (h : ∀ x ∈ s, 0 ≤ f x) : (a ^ ∑ x in s, f x) = ∏ x in s, a ^ f x :=
+    (h : ∀ x ∈ s, 0 ≤ f x) : a ^ ∑ x in s, f x = ∏ x in s, a ^ f x :=
   by
   induction' s using Finset.cons_induction with i s hi ihs
   · rw [sum_empty, Finset.prod_empty, rpow_zero]

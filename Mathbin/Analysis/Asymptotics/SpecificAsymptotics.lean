@@ -133,7 +133,7 @@ theorem Asymptotics.IsLittleO.sum_range {α : Type _} [NormedAddCommGroup α] {f
     exact Or.inr (h'g.congr fun n => (B n).symm)
   filter_upwards [is_o_iff.1 this (half_pos εpos), Ici_mem_at_top N] with n hn Nn
   calc
-    ‖∑ i in range n, f i‖ = ‖(∑ i in range N, f i) + ∑ i in Ico N n, f i‖ := by
+    ‖∑ i in range n, f i‖ = ‖∑ i in range N, f i + ∑ i in Ico N n, f i‖ := by
       rw [sum_range_add_sum_Ico _ Nn]
     _ ≤ ‖∑ i in range N, f i‖ + ‖∑ i in Ico N n, f i‖ := (norm_add_le _ _)
     _ ≤ ‖∑ i in range N, f i‖ + ∑ i in Ico N n, ε / 2 * g i :=

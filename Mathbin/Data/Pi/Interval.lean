@@ -49,15 +49,15 @@ theorem card_Icc : (Icc a b).card = ∏ i, (Icc (a i) (b i)).card :=
   card_piFinset _
 #align pi.card_Icc Pi.card_Icc
 
-theorem card_Ico : (Ico a b).card = (∏ i, (Icc (a i) (b i)).card) - 1 := by
+theorem card_Ico : (Ico a b).card = ∏ i, (Icc (a i) (b i)).card - 1 := by
   rw [card_Ico_eq_card_Icc_sub_one, card_Icc]
 #align pi.card_Ico Pi.card_Ico
 
-theorem card_Ioc : (Ioc a b).card = (∏ i, (Icc (a i) (b i)).card) - 1 := by
+theorem card_Ioc : (Ioc a b).card = ∏ i, (Icc (a i) (b i)).card - 1 := by
   rw [card_Ioc_eq_card_Icc_sub_one, card_Icc]
 #align pi.card_Ioc Pi.card_Ioc
 
-theorem card_Ioo : (Ioo a b).card = (∏ i, (Icc (a i) (b i)).card) - 2 := by
+theorem card_Ioo : (Ioo a b).card = ∏ i, (Icc (a i) (b i)).card - 2 := by
   rw [card_Ioo_eq_card_Icc_sub_two, card_Icc]
 #align pi.card_Ioo Pi.card_Ioo
 
@@ -79,7 +79,7 @@ theorem card_Iic : (Iic b).card = ∏ i, (Iic (b i)).card :=
   card_piFinset _
 #align pi.card_Iic Pi.card_Iic
 
-theorem card_Iio : (Iio b).card = (∏ i, (Iic (b i)).card) - 1 := by
+theorem card_Iio : (Iio b).card = ∏ i, (Iic (b i)).card - 1 := by
   rw [card_Iio_eq_card_Iic_sub_one, card_Iic]
 #align pi.card_Iio Pi.card_Iio
 
@@ -97,7 +97,7 @@ theorem card_Ici : (Ici a).card = ∏ i, (Ici (a i)).card :=
   card_piFinset _
 #align pi.card_Ici Pi.card_Ici
 
-theorem card_Ioi : (Ioi a).card = (∏ i, (Ici (a i)).card) - 1 := by
+theorem card_Ioi : (Ioi a).card = ∏ i, (Ici (a i)).card - 1 := by
   rw [card_Ioi_eq_card_Ici_sub_one, card_Ici]
 #align pi.card_Ioi Pi.card_Ioi
 

@@ -70,8 +70,8 @@ theorem isUnit_norm_of_isGalois [IsGalois K L] {x : 𝓞 L} : IsUnit (norm K x) 
   ext
   push_cast
   convert_to
-    (((univ \ {AlgEquiv.refl}).Prod fun σ : L ≃ₐ[K] L => σ x) *
-        ∏ σ : L ≃ₐ[K] L in {AlgEquiv.refl}, σ (x : L)) =
+    ((univ \ {AlgEquiv.refl}).Prod fun σ : L ≃ₐ[K] L => σ x) *
+        ∏ σ : L ≃ₐ[K] L in {AlgEquiv.refl}, σ (x : L) =
       _
   · rw [prod_singleton, AlgEquiv.coe_refl, id]
   · rw [prod_sdiff <| subset_univ _, ← norm_eq_prod_automorphisms, coe_algebra_map_norm]
@@ -81,7 +81,7 @@ theorem isUnit_norm_of_isGalois [IsGalois K L] {x : 𝓞 L} : IsUnit (norm K x) 
 `x ∣ algebra_map (𝓞 K) (𝓞 L) (norm K x)`. -/
 theorem dvd_norm [IsGalois K L] (x : 𝓞 L) : x ∣ algebraMap (𝓞 K) (𝓞 L) (norm K x) := by
   classical
-  have hint : (∏ σ : L ≃ₐ[K] L in univ.erase AlgEquiv.refl, σ x) ∈ 𝓞 L :=
+  have hint : ∏ σ : L ≃ₐ[K] L in univ.erase AlgEquiv.refl, σ x ∈ 𝓞 L :=
     Subalgebra.prod_mem _ fun σ hσ =>
       (mem_ring_of_integers _ _).2 (map_isIntegral σ (ring_of_integers.is_integral_coe x))
   refine' ⟨⟨_, hint⟩, Subtype.ext _⟩

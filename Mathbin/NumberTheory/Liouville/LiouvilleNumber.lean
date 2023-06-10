@@ -128,7 +128,7 @@ theorem remainder_lt' (n : ℕ) {m : ℝ} (m1 : 1 < m) :
     zero_lt_one.trans m1
   have mi : 1 / m < 1 := (div_lt_one m0).mpr m1
   calc
-    (∑' i, 1 / m ^ (i + (n + 1))!) <
+    ∑' i, 1 / m ^ (i + (n + 1))! <
         ∑' i,
           1 /
             m ^

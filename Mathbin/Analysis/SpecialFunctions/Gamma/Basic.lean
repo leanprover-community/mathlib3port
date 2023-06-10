@@ -513,7 +513,7 @@ theorem gamma_eq_integral {s : ℝ} (hs : 0 < s) : gamma s = ∫ x in Ioi 0, exp
   dsimp only [Complex.gammaIntegral]
   simp_rw [← Complex.ofReal_one, ← Complex.ofReal_sub]
   suffices
-    (∫ x : ℝ in Ioi 0, ↑(exp (-x)) * (x : ℂ) ^ ((s - 1 : ℝ) : ℂ)) =
+    ∫ x : ℝ in Ioi 0, ↑(exp (-x)) * (x : ℂ) ^ ((s - 1 : ℝ) : ℂ) =
       ∫ x : ℝ in Ioi 0, ((exp (-x) * x ^ (s - 1) : ℝ) : ℂ)
     by rw [this, _root_.integral_of_real, Complex.ofReal_re]
   refine' set_integral_congr measurableSet_Ioi fun x hx => _

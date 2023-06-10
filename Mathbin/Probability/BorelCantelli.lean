@@ -74,7 +74,7 @@ open Filter
 /-- **The second Borel-Cantelli lemma**: Given a sequence of independent sets `(sₙ)` such that
 `∑ n, μ sₙ = ∞`, `limsup sₙ` has measure 1. -/
 theorem measure_limsup_eq_one {s : ℕ → Set Ω} (hsm : ∀ n, MeasurableSet (s n)) (hs : iIndepSet s μ)
-    (hs' : (∑' n, μ (s n)) = ∞) : μ (limsup s atTop) = 1 :=
+    (hs' : ∑' n, μ (s n) = ∞) : μ (limsup s atTop) = 1 :=
   by
   rw [measure_congr
       (eventually_eq_set.2 (ae_mem_limsup_at_top_iff μ <| measurable_set_filtration_of_set' hsm) :

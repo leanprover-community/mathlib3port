@@ -120,7 +120,7 @@ theorem integrable_toReal_condDistrib (hX : AEMeasurable X μ) (hs : MeasurableS
   · exact Measurable.comp_aemeasurable (kernel.measurable_coe _ hs) hX
   · refine' ne_of_lt _
     calc
-      (∫⁻ a, cond_distrib Y X μ (X a) s ∂μ) ≤ ∫⁻ a, 1 ∂μ := lintegral_mono fun a => prob_le_one
+      ∫⁻ a, cond_distrib Y X μ (X a) s ∂μ ≤ ∫⁻ a, 1 ∂μ := lintegral_mono fun a => prob_le_one
       _ = μ univ := lintegral_one
       _ < ∞ := measure_lt_top _ _
 #align probability_theory.integrable_to_real_cond_distrib ProbabilityTheory.integrable_toReal_condDistrib
@@ -180,7 +180,7 @@ end Integrability
 
 theorem set_lintegral_preimage_condDistrib (hX : Measurable X) (hY : AEMeasurable Y μ)
     (hs : MeasurableSet s) (ht : MeasurableSet t) :
-    (∫⁻ a in X ⁻¹' t, condDistrib Y X μ (X a) s ∂μ) = μ (X ⁻¹' t ∩ Y ⁻¹' s) := by
+    ∫⁻ a in X ⁻¹' t, condDistrib Y X μ (X a) s ∂μ = μ (X ⁻¹' t ∩ Y ⁻¹' s) := by
   rw [lintegral_comp (kernel.measurable_coe _ hs) hX, cond_distrib, ← measure.restrict_map hX ht, ←
     measure.fst_map_prod_mk₀ hX.ae_measurable hY, set_lintegral_cond_kernel_eq_measure_prod _ ht hs,
     measure.map_apply_of_ae_measurable (hX.ae_measurable.prod_mk hY) (ht.prod hs), mk_preimage_prod]
@@ -188,7 +188,7 @@ theorem set_lintegral_preimage_condDistrib (hX : Measurable X) (hY : AEMeasurabl
 
 theorem set_lintegral_condDistrib_of_measurableSet (hX : Measurable X) (hY : AEMeasurable Y μ)
     (hs : MeasurableSet s) {t : Set α} (ht : measurable_set[mβ.comap X] t) :
-    (∫⁻ a in t, condDistrib Y X μ (X a) s ∂μ) = μ (t ∩ Y ⁻¹' s) := by obtain ⟨t', ht', rfl⟩ := ht;
+    ∫⁻ a in t, condDistrib Y X μ (X a) s ∂μ = μ (t ∩ Y ⁻¹' s) := by obtain ⟨t', ht', rfl⟩ := ht;
   rw [set_lintegral_preimage_cond_distrib hX hY hs ht']
 #align probability_theory.set_lintegral_cond_distrib_of_measurable_set ProbabilityTheory.set_lintegral_condDistrib_of_measurableSet
 
@@ -222,7 +222,7 @@ theorem condexp_prod_ae_eq_integral_cond_distrib' [NormedSpace ℝ F] [CompleteS
   · exact (hf_int.integral_cond_distrib hX.ae_measurable hY).IntegrableOn
   · rintro s ⟨t, ht, rfl⟩ _
     change
-      (∫ a in X ⁻¹' t, ((fun x' => ∫ y, f (x', y) ∂(cond_distrib Y X μ) x') ∘ X) a ∂μ) =
+      ∫ a in X ⁻¹' t, ((fun x' => ∫ y, f (x', y) ∂(cond_distrib Y X μ) x') ∘ X) a ∂μ =
         ∫ a in X ⁻¹' t, f (X a, Y a) ∂μ
     rw [← integral_map hX.ae_measurable]
     swap

@@ -345,15 +345,15 @@ theorem fib_succ_eq_sum_choose :
 -/
 
 #print Nat.fib_succ_eq_succ_sum /-
-theorem fib_succ_eq_succ_sum (n : ℕ) : fib (n + 1) = (∑ k in Finset.range n, fib k) + 1 :=
+theorem fib_succ_eq_succ_sum (n : ℕ) : fib (n + 1) = ∑ k in Finset.range n, fib k + 1 :=
   by
   induction' n with n ih
   · simp
   ·
     calc
       fib (n + 2) = fib n + fib (n + 1) := fib_add_two
-      _ = (fib n + ∑ k in Finset.range n, fib k) + 1 := by rw [ih, add_assoc]
-      _ = (∑ k in Finset.range (n + 1), fib k) + 1 := by simp [Finset.range_add_one]
+      _ = fib n + ∑ k in Finset.range n, fib k + 1 := by rw [ih, add_assoc]
+      _ = ∑ k in Finset.range (n + 1), fib k + 1 := by simp [Finset.range_add_one]
 #align nat.fib_succ_eq_succ_sum Nat.fib_succ_eq_succ_sum
 -/
 

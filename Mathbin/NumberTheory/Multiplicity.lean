@@ -45,7 +45,7 @@ section CommRing
 variable [CommRing R] {a b x y : R}
 
 theorem dvd_geom_sum₂_iff_of_dvd_sub {x y p : R} (h : p ∣ x - y) :
-    (p ∣ ∑ i in range n, x ^ i * y ^ (n - 1 - i)) ↔ p ∣ n * y ^ (n - 1) :=
+    p ∣ ∑ i in range n, x ^ i * y ^ (n - 1 - i) ↔ p ∣ n * y ^ (n - 1) :=
   by
   rw [← mem_span_singleton, ← Ideal.Quotient.eq] at h 
   simp only [← mem_span_singleton, ← eq_zero_iff_mem, RingHom.map_geom_sum₂, h, geom_sum₂_self,
@@ -53,7 +53,7 @@ theorem dvd_geom_sum₂_iff_of_dvd_sub {x y p : R} (h : p ∣ x - y) :
 #align dvd_geom_sum₂_iff_of_dvd_sub dvd_geom_sum₂_iff_of_dvd_sub
 
 theorem dvd_geom_sum₂_iff_of_dvd_sub' {x y p : R} (h : p ∣ x - y) :
-    (p ∣ ∑ i in range n, x ^ i * y ^ (n - 1 - i)) ↔ p ∣ n * x ^ (n - 1) := by
+    p ∣ ∑ i in range n, x ^ i * y ^ (n - 1 - i) ↔ p ∣ n * x ^ (n - 1) := by
   rw [geom_sum₂_comm, dvd_geom_sum₂_iff_of_dvd_sub] <;> simpa using h.neg_right
 #align dvd_geom_sum₂_iff_of_dvd_sub' dvd_geom_sum₂_iff_of_dvd_sub'
 
@@ -90,7 +90,7 @@ theorem not_dvd_geom_sum₂ {p : R} (hp : Prime p) (hxy : p ∣ x - y) (hx : ¬p
 variable {p : ℕ} (a b)
 
 theorem odd_sq_dvd_geom_sum₂_sub (hp : Odd p) :
-    ↑p ^ 2 ∣ (∑ i in range p, (a + p * b) ^ i * a ^ (p - 1 - i)) - p * a ^ (p - 1) :=
+    ↑p ^ 2 ∣ ∑ i in range p, (a + p * b) ^ i * a ^ (p - 1 - i) - p * a ^ (p - 1) :=
   by
   have h1 : ∀ i, ↑p ^ 2 ∣ (a + ↑p * b) ^ i - (a ^ (i - 1) * (↑p * b) * ↑i + a ^ i) :=
     by
@@ -264,7 +264,7 @@ end multiplicity
 end CommRing
 
 theorem pow_two_pow_sub_pow_two_pow [CommRing R] {x y : R} (n : ℕ) :
-    x ^ 2 ^ n - y ^ 2 ^ n = (∏ i in Finset.range n, x ^ 2 ^ i + y ^ 2 ^ i) * (x - y) :=
+    x ^ 2 ^ n - y ^ 2 ^ n = (∏ i in Finset.range n, (x ^ 2 ^ i + y ^ 2 ^ i)) * (x - y) :=
   by
   induction' n with d hd
   · simp only [pow_zero, pow_one, Finset.range_zero, Finset.prod_empty, one_mul]

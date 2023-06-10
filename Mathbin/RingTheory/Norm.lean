@@ -173,8 +173,7 @@ theorem norm_eq_zero_iff [IsDomain R] [IsDomain S] [Module.Free R S] [Module.Fin
     rintro ⟨v, v_ne, hv⟩
     rw [← b.equiv_fun.apply_symm_apply v, b.equiv_fun_symm_apply, b.equiv_fun_apply,
       left_mul_matrix_mul_vec_repr] at hv 
-    refine'
-      (mul_eq_zero.mp (b.ext_elem fun i => _)).resolve_right (show (∑ i, v i • b i) ≠ 0 from _)
+    refine' (mul_eq_zero.mp (b.ext_elem fun i => _)).resolve_right (show ∑ i, v i • b i ≠ 0 from _)
     · simpa only [LinearEquiv.map_zero, Pi.zero_apply] using congr_fun hv i
     · contrapose! v_ne with sum_eq
       apply b.equiv_fun.symm.injective
@@ -294,7 +293,7 @@ theorem norm_eq_prod_roots [IsSeparable K L] [FiniteDimensional K L] {x : L}
 
 theorem prod_embeddings_eq_finrank_pow [Algebra L F] [IsScalarTower K L F] [IsAlgClosed E]
     [IsSeparable K F] [FiniteDimensional K F] (pb : PowerBasis K L) :
-    (∏ σ : F →ₐ[K] E, σ (algebraMap L F pb.gen)) =
+    ∏ σ : F →ₐ[K] E, σ (algebraMap L F pb.gen) =
       ((@Finset.univ pb.AlgHom.Fintype).Prod fun σ : L →ₐ[K] E => σ pb.gen) ^ finrank L F :=
   by
   haveI : FiniteDimensional L F := FiniteDimensional.right K L F
@@ -382,7 +381,7 @@ theorem norm_norm [Algebra L F] [IsScalarTower K L F] [IsSeparable K F] (x : F) 
     suffices
       ∀ σ : L →ₐ[K] A,
         haveI := σ.to_ring_hom.to_algebra
-        (∏ π : F →ₐ[L] A, π x) = σ (norm L x)
+        ∏ π : F →ₐ[L] A, π x = σ (norm L x)
       by simp_rw [← Finset.univ_sigma_univ, Finset.prod_sigma, this, norm_eq_prod_embeddings]
     · intro σ
       letI : Algebra L A := σ.to_ring_hom.to_algebra

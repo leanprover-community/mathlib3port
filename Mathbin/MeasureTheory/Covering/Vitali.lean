@@ -338,9 +338,9 @@ theorem exists_disjoint_covering_ae [MetricSpace α] [MeasurableSpace α] [Opens
       nonpos_iff_eq_zero.mp (le_of_forall_le_of_dense fun ε εpos => _)⟩
   -- the elements of `v` are disjoint and all contained in a finite volume ball, hence the sum
   -- of their measures is finite.
-  have I : (∑' a : v, μ (B a)) < ∞ := by
+  have I : ∑' a : v, μ (B a) < ∞ := by
     calc
-      (∑' a : v, μ (B a)) = μ (⋃ a ∈ v, B a) :=
+      ∑' a : v, μ (B a) = μ (⋃ a ∈ v, B a) :=
         by
         rw [measure_bUnion (u_count.mono vu) _ fun a ha => (h't _ (vu.trans ut ha)).MeasurableSet]
         exact u_disj.subset vu
@@ -348,7 +348,7 @@ theorem exists_disjoint_covering_ae [MetricSpace α] [MeasurableSpace α] [Opens
       _ < ∞ := μK
   -- we can obtain a finite subfamily of `v`, such that the measures of the remaining elements
   -- add up to an arbitrarily small number, say `ε / C`.
-  obtain ⟨w, hw⟩ : ∃ w : Finset ↥v, (∑' a : { a // a ∉ w }, μ (B a)) < ε / C :=
+  obtain ⟨w, hw⟩ : ∃ w : Finset ↥v, ∑' a : { a // a ∉ w }, μ (B a) < ε / C :=
     haveI : 0 < ε / C := by
       simp only [ENNReal.div_pos_iff, εpos.ne', ENNReal.coe_ne_top, Ne.def, not_false_iff,
         and_self_iff]

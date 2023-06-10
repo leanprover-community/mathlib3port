@@ -89,7 +89,7 @@ variable [NormedSpace ℝ E] [FiniteDimensional ℝ E]
 variable {E}
 
 theorem finite_integral_rpow_sub_one_pow_aux {r : ℝ} (n : ℕ) (hnr : (n : ℝ) < r) :
-    (∫⁻ x : ℝ in Ioc 0 1, ENNReal.ofReal ((x ^ (-r⁻¹) - 1) ^ n)) < ∞ :=
+    ∫⁻ x : ℝ in Ioc 0 1, ENNReal.ofReal ((x ^ (-r⁻¹) - 1) ^ n) < ∞ :=
   by
   have hr : 0 < r := lt_of_le_of_lt n.cast_nonneg hnr
   have h_int :
@@ -114,7 +114,7 @@ theorem finite_integral_rpow_sub_one_pow_aux {r : ℝ} (n : ℕ) (hnr : (n : ℝ
 
 theorem finite_integral_one_add_norm [MeasureSpace E] [BorelSpace E]
     [(@volume E _).IsAddHaarMeasure] {r : ℝ} (hnr : (finrank ℝ E : ℝ) < r) :
-    (∫⁻ x : E, ENNReal.ofReal ((1 + ‖x‖) ^ (-r))) < ∞ :=
+    ∫⁻ x : E, ENNReal.ofReal ((1 + ‖x‖) ^ (-r)) < ∞ :=
   by
   have hr : 0 < r := lt_of_le_of_lt (finrank ℝ E).cast_nonneg hnr
   -- We start by applying the layer cake formula
@@ -172,7 +172,7 @@ theorem integrable_one_add_norm [MeasureSpace E] [BorelSpace E] [(@volume E _).I
   by
   refine' ⟨by measurability, _⟩
   -- Lower Lebesgue integral
-  have : (∫⁻ a : E, ‖(1 + ‖a‖) ^ (-r)‖₊) = ∫⁻ a : E, ENNReal.ofReal ((1 + ‖a‖) ^ (-r)) :=
+  have : ∫⁻ a : E, ‖(1 + ‖a‖) ^ (-r)‖₊ = ∫⁻ a : E, ENNReal.ofReal ((1 + ‖a‖) ^ (-r)) :=
     lintegral_nnnorm_eq_of_nonneg fun _ => rpow_nonneg_of_nonneg (by positivity) _
   rw [has_finite_integral, this]
   exact finite_integral_one_add_norm hnr

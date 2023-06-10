@@ -123,8 +123,8 @@ structure SmoothPartitionOfUnity (s : Set M := univ) where
   toFun : ι → C^∞⟮I, M; 𝓘(ℝ), ℝ⟯
   locally_finite' : LocallyFinite fun i => support (to_fun i)
   nonneg' : ∀ i x, 0 ≤ to_fun i x
-  sum_eq_one' : ∀ x ∈ s, (∑ᶠ i, to_fun i x) = 1
-  sum_le_one' : ∀ x, (∑ᶠ i, to_fun i x) ≤ 1
+  sum_eq_one' : ∀ x ∈ s, ∑ᶠ i, to_fun i x = 1
+  sum_le_one' : ∀ x, ∑ᶠ i, to_fun i x ≤ 1
 #align smooth_partition_of_unity SmoothPartitionOfUnity
 
 variable {ι I M}
@@ -144,11 +144,11 @@ theorem nonneg (i : ι) (x : M) : 0 ≤ f i x :=
   f.nonneg' i x
 #align smooth_partition_of_unity.nonneg SmoothPartitionOfUnity.nonneg
 
-theorem sum_eq_one {x} (hx : x ∈ s) : (∑ᶠ i, f i x) = 1 :=
+theorem sum_eq_one {x} (hx : x ∈ s) : ∑ᶠ i, f i x = 1 :=
   f.sum_eq_one' x hx
 #align smooth_partition_of_unity.sum_eq_one SmoothPartitionOfUnity.sum_eq_one
 
-theorem sum_le_one (x : M) : (∑ᶠ i, f i x) ≤ 1 :=
+theorem sum_le_one (x : M) : ∑ᶠ i, f i x ≤ 1 :=
   f.sum_le_one' x
 #align smooth_partition_of_unity.sum_le_one SmoothPartitionOfUnity.sum_le_one
 
@@ -200,7 +200,7 @@ theorem smooth_finsum_smul {g : ι → M → F}
 #align smooth_partition_of_unity.smooth_finsum_smul SmoothPartitionOfUnity.smooth_finsum_smul
 
 theorem finsum_smul_mem_convex {g : ι → M → F} {t : Set F} {x : M} (hx : x ∈ s)
-    (hg : ∀ i, f i x ≠ 0 → g i x ∈ t) (ht : Convex ℝ t) : (∑ᶠ i, f i x • g i x) ∈ t :=
+    (hg : ∀ i, f i x ≠ 0 → g i x ∈ t) (ht : Convex ℝ t) : ∑ᶠ i, f i x • g i x ∈ t :=
   ht.finsum_mem (fun i => f.NonNeg _ _) (f.sum_eq_one hx) hg
 #align smooth_partition_of_unity.finsum_smul_mem_convex SmoothPartitionOfUnity.finsum_smul_mem_convex
 
@@ -429,21 +429,21 @@ def toSmoothPartitionOfUnity : SmoothPartitionOfUnity ι I M s :=
 #align smooth_bump_covering.to_smooth_partition_of_unity SmoothBumpCovering.toSmoothPartitionOfUnity
 
 theorem toSmoothPartitionOfUnity_apply (i : ι) (x : M) :
-    fs.toSmoothPartitionOfUnity i x = fs i x * ∏ᶠ (j) (hj : WellOrderingRel j i), 1 - fs j x :=
+    fs.toSmoothPartitionOfUnity i x = fs i x * ∏ᶠ (j) (hj : WellOrderingRel j i), (1 - fs j x) :=
   rfl
 #align smooth_bump_covering.to_smooth_partition_of_unity_apply SmoothBumpCovering.toSmoothPartitionOfUnity_apply
 
 theorem toSmoothPartitionOfUnity_eq_mul_prod (i : ι) (x : M) (t : Finset ι)
     (ht : ∀ j, WellOrderingRel j i → fs j x ≠ 0 → j ∈ t) :
     fs.toSmoothPartitionOfUnity i x =
-      fs i x * ∏ j in t.filterₓ fun j => WellOrderingRel j i, 1 - fs j x :=
+      fs i x * ∏ j in t.filterₓ fun j => WellOrderingRel j i, (1 - fs j x) :=
   fs.toBumpCovering.toPartitionOfUnity_eq_mul_prod i x t ht
 #align smooth_bump_covering.to_smooth_partition_of_unity_eq_mul_prod SmoothBumpCovering.toSmoothPartitionOfUnity_eq_mul_prod
 
 theorem exists_finset_toSmoothPartitionOfUnity_eventuallyEq (i : ι) (x : M) :
     ∃ t : Finset ι,
       fs.toSmoothPartitionOfUnity i =ᶠ[𝓝 x]
-        fs i * ∏ j in t.filterₓ fun j => WellOrderingRel j i, 1 - fs j :=
+        fs i * ∏ j in t.filterₓ fun j => WellOrderingRel j i, (1 - fs j) :=
   fs.toBumpCovering.exists_finset_toPartitionOfUnity_eventuallyEq i x
 #align smooth_bump_covering.exists_finset_to_smooth_partition_of_unity_eventually_eq SmoothBumpCovering.exists_finset_toSmoothPartitionOfUnity_eventuallyEq
 
@@ -463,7 +463,7 @@ theorem IsSubordinate.toSmoothPartitionOfUnity {f : SmoothBumpCovering ι I M s}
 #align smooth_bump_covering.is_subordinate.to_smooth_partition_of_unity SmoothBumpCovering.IsSubordinate.toSmoothPartitionOfUnity
 
 theorem sum_toSmoothPartitionOfUnity_eq (x : M) :
-    (∑ᶠ i, fs.toSmoothPartitionOfUnity i x) = 1 - ∏ᶠ i, 1 - fs i x :=
+    ∑ᶠ i, fs.toSmoothPartitionOfUnity i x = 1 - ∏ᶠ i, (1 - fs i x) :=
   fs.toBumpCovering.sum_toPartitionOfUnity_eq x
 #align smooth_bump_covering.sum_to_smooth_partition_of_unity_eq SmoothBumpCovering.sum_toSmoothPartitionOfUnity_eq
 

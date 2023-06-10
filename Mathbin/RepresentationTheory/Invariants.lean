@@ -51,7 +51,7 @@ theorem mul_average_left (g : G) :
   simp only [mul_one, Finset.mul_sum, Algebra.mul_smul_comm, average, MonoidAlgebra.of_apply,
     Finset.sum_congr, MonoidAlgebra.single_mul_single]
   set f : G → MonoidAlgebra k G := fun x => Finsupp.single x 1
-  show (⅟ ↑(Fintype.card G) • ∑ x : G, f (g * x)) = ⅟ ↑(Fintype.card G) • ∑ x : G, f x
+  show ⅟ ↑(Fintype.card G) • ∑ x : G, f (g * x) = ⅟ ↑(Fintype.card G) • ∑ x : G, f x
   rw [Function.Bijective.sum_comp (Group.mulLeft_bijective g) _]
 #align group_algebra.mul_average_left GroupAlgebra.mul_average_left
 
@@ -63,7 +63,7 @@ theorem mul_average_right (g : G) : average k G * Finsupp.single g 1 = average k
   simp only [mul_one, Finset.sum_mul, Algebra.smul_mul_assoc, average, MonoidAlgebra.of_apply,
     Finset.sum_congr, MonoidAlgebra.single_mul_single]
   set f : G → MonoidAlgebra k G := fun x => Finsupp.single x 1
-  show (⅟ ↑(Fintype.card G) • ∑ x : G, f (x * g)) = ⅟ ↑(Fintype.card G) • ∑ x : G, f x
+  show ⅟ ↑(Fintype.card G) • ∑ x : G, f (x * g) = ⅟ ↑(Fintype.card G) • ∑ x : G, f x
   rw [Function.Bijective.sum_comp (Group.mulRight_bijective g) _]
 #align group_algebra.mul_average_right GroupAlgebra.mul_average_right
 

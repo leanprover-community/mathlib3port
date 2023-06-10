@@ -99,7 +99,7 @@ variable {R : Type u} [Field R] [Fintype R] {R' : Type v} [CommRing R'] [IsDomai
 -- A helper lemma for `gauss_sum_mul_gauss_sum_eq_card` below
 -- Is this useful enough in other contexts to be public?
 private theorem gauss_sum_mul_aux {χ : MulChar R R'} (hχ : IsNontrivial χ) (ψ : AddChar R R')
-    (b : R) : (∑ a, χ (a * b⁻¹) * ψ (a - b)) = ∑ c, χ c * ψ (b * (c - 1)) :=
+    (b : R) : ∑ a, χ (a * b⁻¹) * ψ (a - b) = ∑ c, χ c * ψ (b * (c - 1)) :=
   by
   cases' eq_or_ne b 0 with hb hb
   · -- case `b = 0`

@@ -444,9 +444,9 @@ instance [LinearOrder α] [Fintype α] : BoundedOrder (Finset.Colex α) :=
 #print Colex.sum_two_pow_lt_iff_lt /-
 /-- For subsets of ℕ, we can show that colex is equivalent to binary. -/
 theorem sum_two_pow_lt_iff_lt (A B : Finset ℕ) :
-    ((∑ i in A, 2 ^ i) < ∑ i in B, 2 ^ i) ↔ A.toColex < B.toColex :=
+    ∑ i in A, 2 ^ i < ∑ i in B, 2 ^ i ↔ A.toColex < B.toColex :=
   by
-  have z : ∀ A B : Finset ℕ, A.toColex < B.toColex → (∑ i in A, 2 ^ i) < ∑ i in B, 2 ^ i :=
+  have z : ∀ A B : Finset ℕ, A.toColex < B.toColex → ∑ i in A, 2 ^ i < ∑ i in B, 2 ^ i :=
     by
     intro A B
     rw [← sdiff_lt_sdiff_iff_lt, Colex.lt_def]
@@ -473,7 +473,7 @@ theorem sum_two_pow_lt_iff_lt (A B : Finset ℕ) :
 #print Colex.sum_two_pow_le_iff_lt /-
 /-- For subsets of ℕ, we can show that colex is equivalent to binary. -/
 theorem sum_two_pow_le_iff_lt (A B : Finset ℕ) :
-    ((∑ i in A, 2 ^ i) ≤ ∑ i in B, 2 ^ i) ↔ A.toColex ≤ B.toColex := by
+    ∑ i in A, 2 ^ i ≤ ∑ i in B, 2 ^ i ↔ A.toColex ≤ B.toColex := by
   rw [le_iff_le_iff_lt_iff_lt, sum_two_pow_lt_iff_lt]
 #align colex.sum_two_pow_le_iff_lt Colex.sum_two_pow_le_iff_lt
 -/

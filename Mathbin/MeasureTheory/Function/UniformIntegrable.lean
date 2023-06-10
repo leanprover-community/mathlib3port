@@ -186,8 +186,7 @@ variable {f : α → β}
 /-- This lemma is weaker than `measure_theory.mem_ℒp.integral_indicator_norm_ge_nonneg_le`
 as the latter provides `0 ≤ M` and does not require the measurability of `f`. -/
 theorem Memℒp.integral_indicator_norm_ge_le (hf : Memℒp f 1 μ) (hmeas : StronglyMeasurable f)
-    {ε : ℝ} (hε : 0 < ε) :
-    ∃ M : ℝ, (∫⁻ x, ‖{x | M ≤ ‖f x‖₊}.indicator f x‖₊ ∂μ) ≤ ENNReal.ofReal ε :=
+    {ε : ℝ} (hε : 0 < ε) : ∃ M : ℝ, ∫⁻ x, ‖{x | M ≤ ‖f x‖₊}.indicator f x‖₊ ∂μ ≤ ENNReal.ofReal ε :=
   by
   have htendsto :
     ∀ᵐ x ∂μ, tendsto (fun M : ℕ => {x | (M : ℝ) ≤ ‖f x‖₊}.indicator f x) at_top (𝓝 0) :=
@@ -227,13 +226,13 @@ theorem Memℒp.integral_indicator_norm_ge_le (hf : Memℒp f 1 μ) (hmeas : Str
 which does not require measurability. -/
 theorem Memℒp.integral_indicator_norm_ge_nonneg_le_of_meas (hf : Memℒp f 1 μ)
     (hmeas : StronglyMeasurable f) {ε : ℝ} (hε : 0 < ε) :
-    ∃ M : ℝ, 0 ≤ M ∧ (∫⁻ x, ‖{x | M ≤ ‖f x‖₊}.indicator f x‖₊ ∂μ) ≤ ENNReal.ofReal ε :=
+    ∃ M : ℝ, 0 ≤ M ∧ ∫⁻ x, ‖{x | M ≤ ‖f x‖₊}.indicator f x‖₊ ∂μ ≤ ENNReal.ofReal ε :=
   let ⟨M, hM⟩ := hf.integral_indicator_norm_ge_le μ hmeas hε
   ⟨max M 0, le_max_right _ _, by simpa⟩
 #align measure_theory.mem_ℒp.integral_indicator_norm_ge_nonneg_le_of_meas MeasureTheory.Memℒp.integral_indicator_norm_ge_nonneg_le_of_meas
 
 theorem Memℒp.integral_indicator_norm_ge_nonneg_le (hf : Memℒp f 1 μ) {ε : ℝ} (hε : 0 < ε) :
-    ∃ M : ℝ, 0 ≤ M ∧ (∫⁻ x, ‖{x | M ≤ ‖f x‖₊}.indicator f x‖₊ ∂μ) ≤ ENNReal.ofReal ε :=
+    ∃ M : ℝ, 0 ≤ M ∧ ∫⁻ x, ‖{x | M ≤ ‖f x‖₊}.indicator f x‖₊ ∂μ ≤ ENNReal.ofReal ε :=
   by
   have hf_mk : mem_ℒp (hf.1.mk f) 1 μ := (mem_ℒp_congr_ae hf.1.ae_eq_mk).mp hf
   obtain ⟨M, hM_pos, hfM⟩ :=

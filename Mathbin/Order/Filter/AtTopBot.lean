@@ -1900,7 +1900,7 @@ condition for comparison of the filter `at_top.map (λ s, ∏ b in s, f b)` with
 theorem map_atTop_finset_prod_le_of_prod_eq [CommMonoid α] {f : β → α} {g : γ → α}
     (h_eq :
       ∀ u : Finset γ,
-        ∃ v : Finset β, ∀ v', v ⊆ v' → ∃ u', u ⊆ u' ∧ (∏ x in u', g x) = ∏ b in v', f b) :
+        ∃ v : Finset β, ∀ v', v ⊆ v' → ∃ u', u ⊆ u' ∧ ∏ x in u', g x = ∏ b in v', f b) :
     (atTop.map fun s : Finset β => ∏ b in s, f b) ≤ atTop.map fun s : Finset γ => ∏ x in s, g x :=
   by
   rw [map_at_top_eq, map_at_top_eq] <;>

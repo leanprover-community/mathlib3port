@@ -149,7 +149,7 @@ theorem inverse_add (x : Rˣ) : ∀ᶠ t in 𝓝 0, inverse ((x : R) + t) = inve
 #align normed_ring.inverse_add NormedRing.inverse_add
 
 theorem inverse_one_sub_nth_order (n : ℕ) :
-    ∀ᶠ t in 𝓝 0, inverse ((1 : R) - t) = (∑ i in range n, t ^ i) + t ^ n * inverse (1 - t) :=
+    ∀ᶠ t in 𝓝 0, inverse ((1 : R) - t) = ∑ i in range n, t ^ i + t ^ n * inverse (1 - t) :=
   by
   simp only [eventually_iff, Metric.mem_nhds_iff]
   use 1, by norm_num

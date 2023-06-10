@@ -179,10 +179,10 @@ end Preimage
 @[to_additive]
 theorem prod_preimage' [CommMonoid β] (f : α → γ) [DecidablePred fun x => x ∈ Set.range f]
     (s : Finset γ) (hf : Set.InjOn f (f ⁻¹' ↑s)) (g : γ → β) :
-    (∏ x in s.Preimage f hf, g (f x)) = ∏ x in s.filterₓ fun x => x ∈ Set.range f, g x := by
+    ∏ x in s.Preimage f hf, g (f x) = ∏ x in s.filterₓ fun x => x ∈ Set.range f, g x := by
   haveI := Classical.decEq γ <;>
     calc
-      (∏ x in preimage s f hf, g (f x)) = ∏ x in image f (preimage s f hf), g x :=
+      ∏ x in preimage s f hf, g (f x) = ∏ x in image f (preimage s f hf), g x :=
         Eq.symm <| prod_image <| by simpa only [mem_preimage, inj_on] using hf
       _ = ∏ x in s.filter fun x => x ∈ Set.range f, g x := by rw [image_preimage]
 #align finset.prod_preimage' Finset.prod_preimage'
@@ -192,7 +192,7 @@ theorem prod_preimage' [CommMonoid β] (f : α → γ) [DecidablePred fun x => x
 @[to_additive]
 theorem prod_preimage [CommMonoid β] (f : α → γ) (s : Finset γ) (hf : Set.InjOn f (f ⁻¹' ↑s))
     (g : γ → β) (hg : ∀ x ∈ s, x ∉ Set.range f → g x = 1) :
-    (∏ x in s.Preimage f hf, g (f x)) = ∏ x in s, g x := by
+    ∏ x in s.Preimage f hf, g (f x) = ∏ x in s, g x := by
   classical
   rw [prod_preimage', prod_filter_of_ne]
   exact fun x hx => Not.imp_symm (hg x hx)
@@ -203,7 +203,7 @@ theorem prod_preimage [CommMonoid β] (f : α → γ) (s : Finset γ) (hf : Set.
 @[to_additive]
 theorem prod_preimage_of_bij [CommMonoid β] (f : α → γ) (s : Finset γ)
     (hf : Set.BijOn f (f ⁻¹' ↑s) ↑s) (g : γ → β) :
-    (∏ x in s.Preimage f hf.InjOn, g (f x)) = ∏ x in s, g x :=
+    ∏ x in s.Preimage f hf.InjOn, g (f x) = ∏ x in s, g x :=
   prod_preimage _ _ hf.InjOn g fun x hxs hxf => (hxf <| hf.subset_range hxs).elim
 #align finset.prod_preimage_of_bij Finset.prod_preimage_of_bij
 #align finset.sum_preimage_of_bij Finset.sum_preimage_of_bij

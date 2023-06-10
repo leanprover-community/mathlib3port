@@ -1366,7 +1366,7 @@ theorem Ideal.pow_le_prime_iff {I P : Ideal R} [hP : P.IsPrime] {n : ℕ} (hn : 
 -/
 
 theorem Ideal.prod_le_prime {ι : Type _} {s : Finset ι} {f : ι → Ideal R} {P : Ideal R}
-    [hP : P.IsPrime] : (∏ i in s, f i) ≤ P ↔ ∃ i ∈ s, f i ≤ P :=
+    [hP : P.IsPrime] : ∏ i in s, f i ≤ P ↔ ∃ i ∈ s, f i ≤ P :=
   by
   by_cases hP0 : P = ⊥
   · simp only [hP0, le_bot_iff]
@@ -1413,7 +1413,7 @@ theorem IsDedekindDomain.inf_prime_pow_eq_prod {ι : Type _} (s : Finset ι) (f 
 `∏ i, P i ^ e i`, then `R ⧸ I` factors as `Π i, R ⧸ (P i ^ e i)`. -/
 noncomputable def IsDedekindDomain.quotientEquivPiOfProdEq {ι : Type _} [Fintype ι] (I : Ideal R)
     (P : ι → Ideal R) (e : ι → ℕ) (prime : ∀ i, Prime (P i)) (coprime : ∀ i j, i ≠ j → P i ≠ P j)
-    (prod_eq : (∏ i, P i ^ e i) = I) : R ⧸ I ≃+* ∀ i, R ⧸ P i ^ e i :=
+    (prod_eq : ∏ i, P i ^ e i = I) : R ⧸ I ≃+* ∀ i, R ⧸ P i ^ e i :=
   (Ideal.quotEquivOfEq
         (by
           simp only [← prod_eq, Finset.inf_eq_iInf, Finset.mem_univ, ciInf_pos, ←
@@ -1443,7 +1443,7 @@ noncomputable def IsDedekindDomain.quotientEquivPiFactors {I : Ideal R} (hI : I 
     (fun P : (factors I).toFinset => prime_of_factor _ (Multiset.mem_toFinset.mp P.Prop))
     (fun i j hij => Subtype.coe_injective.Ne hij)
     (calc
-      (∏ P : (factors I).toFinset, (P : Ideal R) ^ (factors I).count (P : Ideal R)) =
+      ∏ P : (factors I).toFinset, (P : Ideal R) ^ (factors I).count (P : Ideal R) =
           ∏ P in (factors I).toFinset, P ^ (factors I).count P :=
         (factors I).toFinset.prod_coe_sort fun P => P ^ (factors I).count P
       _ = ((factors I).map fun P => P).Prod := (Finset.prod_multiset_map_count (factors I) id).symm
@@ -1475,7 +1475,7 @@ the product to a finite subset `s` of a potentially infinite indexing type `ι`.
 noncomputable def IsDedekindDomain.quotientEquivPiOfFinsetProdEq {ι : Type _} {s : Finset ι}
     (I : Ideal R) (P : ι → Ideal R) (e : ι → ℕ) (prime : ∀ i ∈ s, Prime (P i))
     (coprime : ∀ (i) (_ : i ∈ s) (j) (_ : j ∈ s), i ≠ j → P i ≠ P j)
-    (prod_eq : (∏ i in s, P i ^ e i) = I) : R ⧸ I ≃+* ∀ i : s, R ⧸ P i ^ e i :=
+    (prod_eq : ∏ i in s, P i ^ e i = I) : R ⧸ I ≃+* ∀ i : s, R ⧸ P i ^ e i :=
   IsDedekindDomain.quotientEquivPiOfProdEq I (fun i : s => P i) (fun i : s => e i)
     (fun i => Prime i i.2) (fun i j h => coprime i i.2 j j.2 (Subtype.coe_injective.Ne h))
     (trans (Finset.prod_coe_sort s fun i => P i ^ e i) prod_eq)

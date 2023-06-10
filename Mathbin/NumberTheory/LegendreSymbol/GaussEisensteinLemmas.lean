@@ -61,7 +61,7 @@ theorem wilsons_lemma : ((p - 1)! : ZMod p) = -1 :=
 #align zmod.wilsons_lemma ZMod.wilsons_lemma
 
 @[simp]
-theorem prod_Ico_one_prime : (∏ x in Ico 1 p, (x : ZMod p)) = -1 :=
+theorem prod_Ico_one_prime : ∏ x in Ico 1 p, (x : ZMod p) = -1 :=
   by
   conv in Ico 1 p => rw [← succ_sub_one p, succ_sub (Fact.out p.prime).Pos]
   rw [← prod_nat_cast, Finset.prod_Ico_id_eq_factorial, wilsons_lemma]
@@ -191,13 +191,13 @@ theorem gauss_lemma {p : ℕ} [Fact p.Prime] {a : ℤ} (hp : p ≠ 2) (ha0 : (a 
 private theorem eisenstein_lemma_aux₁ (p : ℕ) [Fact p.Prime] [hp2 : Fact (p % 2 = 1)] {a : ℕ}
     (hap : (a : ZMod p) ≠ 0) :
     ((∑ x in Ico 1 (p / 2).succ, a * x : ℕ) : ZMod 2) =
-      (((Ico 1 (p / 2).succ).filterₓ fun x : ℕ => p / 2 < (a * x : ZMod p).val).card +
-          ∑ x in Ico 1 (p / 2).succ, x) +
+      ((Ico 1 (p / 2).succ).filterₓ fun x : ℕ => p / 2 < (a * x : ZMod p).val).card +
+          ∑ x in Ico 1 (p / 2).succ, x +
         (∑ x in Ico 1 (p / 2).succ, a * x / p : ℕ) :=
   have hp2 : (p : ZMod 2) = (1 : ℕ) := (eq_iff_modEq_nat _).2 hp2.1
   calc
     ((∑ x in Ico 1 (p / 2).succ, a * x : ℕ) : ZMod 2) =
-        ((∑ x in Ico 1 (p / 2).succ, a * x % p + p * (a * x / p) : ℕ) : ZMod 2) :=
+        ((∑ x in Ico 1 (p / 2).succ, (a * x % p + p * (a * x / p)) : ℕ) : ZMod 2) :=
       by simp only [mod_add_div]
     _ =
         (∑ x in Ico 1 (p / 2).succ, ((a * x : ℕ) : ZMod p).val : ℕ) +
@@ -251,13 +251,13 @@ theorem div_eq_filter_card {a b c : ℕ} (hb0 : 0 < b) (hc : a / b ≤ c) :
 /-- The given sum is the number of integer points in the triangle formed by the diagonal of the
   rectangle `(0, p/2) × (0, q/2)`  -/
 private theorem sum_Ico_eq_card_lt {p q : ℕ} :
-    (∑ a in Ico 1 (p / 2).succ, a * q / p) =
+    ∑ a in Ico 1 (p / 2).succ, a * q / p =
       ((Ico 1 (p / 2).succ ×ˢ Ico 1 (q / 2).succ).filterₓ fun x : ℕ × ℕ =>
           x.2 * p ≤ x.1 * q).card :=
   if hp0 : p = 0 then by simp [hp0, Finset.ext_iff]
   else
     calc
-      (∑ a in Ico 1 (p / 2).succ, a * q / p) =
+      ∑ a in Ico 1 (p / 2).succ, a * q / p =
           ∑ a in Ico 1 (p / 2).succ, ((Ico 1 (q / 2).succ).filterₓ fun x => x * p ≤ a * q).card :=
         Finset.sum_congr rfl fun x hx =>
           div_eq_filter_card (Nat.pos_of_ne_zero hp0)
@@ -293,8 +293,7 @@ private theorem sum_Ico_eq_card_lt {p q : ℕ} :
   two triangles formed by the diagonal of the rectangle `(0, p/2) × (0, q/2)`. Adding them
   gives the number of points in the rectangle. -/
 theorem sum_mul_div_add_sum_mul_div_eq_mul (p q : ℕ) [hp : Fact p.Prime] (hq0 : (q : ZMod p) ≠ 0) :
-    ((∑ a in Ico 1 (p / 2).succ, a * q / p) + ∑ a in Ico 1 (q / 2).succ, a * p / q) =
-      p / 2 * (q / 2) :=
+    ∑ a in Ico 1 (p / 2).succ, a * q / p + ∑ a in Ico 1 (q / 2).succ, a * p / q = p / 2 * (q / 2) :=
   by
   have hswap :
     ((Ico 1 (q / 2).succ ×ˢ Ico 1 (p / 2).succ).filterₓ fun x : ℕ × ℕ => x.2 * q ≤ x.1 * p).card =

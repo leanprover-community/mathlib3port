@@ -40,11 +40,11 @@ theorem Summable.mul_of_nonneg {f : ι → ℝ} {g : ι' → ℝ} (hf : Summable
     (hf' : 0 ≤ f) (hg' : 0 ≤ g) : Summable fun x : ι × ι' => f x.1 * g x.2 :=
   let ⟨s, hf⟩ := hf
   let ⟨t, hg⟩ := hg
-  suffices this (∀ u : Finset (ι × ι'), (∑ x in u, f x.1 * g x.2) ≤ s * t) from
+  suffices this (∀ u : Finset (ι × ι'), ∑ x in u, f x.1 * g x.2 ≤ s * t) from
     summable_of_sum_le (fun x => mul_nonneg (hf' _) (hg' _)) this
   fun u =>
   calc
-    (∑ x in u, f x.1 * g x.2) ≤ ∑ x in u.image Prod.fst ×ˢ u.image Prod.snd, f x.1 * g x.2 :=
+    ∑ x in u, f x.1 * g x.2 ≤ ∑ x in u.image Prod.fst ×ˢ u.image Prod.snd, f x.1 * g x.2 :=
       sum_mono_set_of_nonneg (fun x => mul_nonneg (hf' _) (hg' _)) subset_product
     _ = ∑ x in u.image Prod.fst, ∑ y in u.image Prod.snd, f x * g y := sum_product
     _ = ∑ x in u.image Prod.fst, f x * ∑ y in u.image Prod.snd, g y :=
@@ -74,7 +74,7 @@ theorem summable_mul_of_summable_norm [CompleteSpace α] {f : ι → α} {g : ι
     See also `tsum_mul_tsum` if `f` and `g` are *not* absolutely summable. -/
 theorem tsum_mul_tsum_of_summable_norm [CompleteSpace α] {f : ι → α} {g : ι' → α}
     (hf : Summable fun x => ‖f x‖) (hg : Summable fun x => ‖g x‖) :
-    ((∑' x, f x) * ∑' y, g y) = ∑' z : ι × ι', f z.1 * g z.2 :=
+    (∑' x, f x) * ∑' y, g y = ∑' z : ι × ι', f z.1 * g z.2 :=
   tsum_mul_tsum (summable_of_summable_norm hf) (summable_of_summable_norm hg)
     (summable_mul_of_summable_norm hf hg)
 #align tsum_mul_tsum_of_summable_norm tsum_mul_tsum_of_summable_norm
@@ -117,7 +117,7 @@ theorem summable_norm_sum_mul_antidiagonal_of_summable_norm {f g : ℕ → α}
     *not* absolutely summable. -/
 theorem tsum_mul_tsum_eq_tsum_sum_antidiagonal_of_summable_norm [CompleteSpace α] {f g : ℕ → α}
     (hf : Summable fun x => ‖f x‖) (hg : Summable fun x => ‖g x‖) :
-    ((∑' n, f n) * ∑' n, g n) = ∑' n, ∑ kl in antidiagonal n, f kl.1 * g kl.2 :=
+    (∑' n, f n) * ∑' n, g n = ∑' n, ∑ kl in antidiagonal n, f kl.1 * g kl.2 :=
   tsum_mul_tsum_eq_tsum_sum_antidiagonal (summable_of_summable_norm hf)
     (summable_of_summable_norm hg) (summable_mul_of_summable_norm hf hg)
 #align tsum_mul_tsum_eq_tsum_sum_antidiagonal_of_summable_norm tsum_mul_tsum_eq_tsum_sum_antidiagonal_of_summable_norm
@@ -135,7 +135,7 @@ theorem summable_norm_sum_mul_range_of_summable_norm {f g : ℕ → α} (hf : Su
     *not* absolutely summable. -/
 theorem tsum_mul_tsum_eq_tsum_sum_range_of_summable_norm [CompleteSpace α] {f g : ℕ → α}
     (hf : Summable fun x => ‖f x‖) (hg : Summable fun x => ‖g x‖) :
-    ((∑' n, f n) * ∑' n, g n) = ∑' n, ∑ k in range (n + 1), f k * g (n - k) :=
+    (∑' n, f n) * ∑' n, g n = ∑' n, ∑ k in range (n + 1), f k * g (n - k) :=
   by
   simp_rw [← sum_antidiagonal_eq_sum_range_succ fun k l => f k * g l]
   exact tsum_mul_tsum_eq_tsum_sum_antidiagonal_of_summable_norm hf hg

@@ -245,7 +245,7 @@ theorem volume_Icc_pi {a b : ι → ℝ} : volume (Icc a b) = ∏ i, ENNReal.ofR
 
 @[simp]
 theorem volume_Icc_pi_toReal {a b : ι → ℝ} (h : a ≤ b) :
-    (volume (Icc a b)).toReal = ∏ i, b i - a i := by
+    (volume (Icc a b)).toReal = ∏ i, (b i - a i) := by
   simp only [volume_Icc_pi, ENNReal.toReal_prod, ENNReal.toReal_ofReal (sub_nonneg.2 (h _))]
 #align real.volume_Icc_pi_to_real Real.volume_Icc_pi_toReal
 
@@ -258,7 +258,7 @@ theorem volume_pi_Ioo {a b : ι → ℝ} :
 
 @[simp]
 theorem volume_pi_Ioo_toReal {a b : ι → ℝ} (h : a ≤ b) :
-    (volume (pi univ fun i => Ioo (a i) (b i))).toReal = ∏ i, b i - a i := by
+    (volume (pi univ fun i => Ioo (a i) (b i))).toReal = ∏ i, (b i - a i) := by
   simp only [volume_pi_Ioo, ENNReal.toReal_prod, ENNReal.toReal_ofReal (sub_nonneg.2 (h _))]
 #align real.volume_pi_Ioo_to_real Real.volume_pi_Ioo_toReal
 
@@ -271,7 +271,7 @@ theorem volume_pi_Ioc {a b : ι → ℝ} :
 
 @[simp]
 theorem volume_pi_Ioc_toReal {a b : ι → ℝ} (h : a ≤ b) :
-    (volume (pi univ fun i => Ioc (a i) (b i))).toReal = ∏ i, b i - a i := by
+    (volume (pi univ fun i => Ioc (a i) (b i))).toReal = ∏ i, (b i - a i) := by
   simp only [volume_pi_Ioc, ENNReal.toReal_prod, ENNReal.toReal_ofReal (sub_nonneg.2 (h _))]
 #align real.volume_pi_Ioc_to_real Real.volume_pi_Ioc_toReal
 
@@ -284,7 +284,7 @@ theorem volume_pi_Ico {a b : ι → ℝ} :
 
 @[simp]
 theorem volume_pi_Ico_toReal {a b : ι → ℝ} (h : a ≤ b) :
-    (volume (pi univ fun i => Ico (a i) (b i))).toReal = ∏ i, b i - a i := by
+    (volume (pi univ fun i => Ico (a i) (b i))).toReal = ∏ i, (b i - a i) := by
   simp only [volume_pi_Ico, ENNReal.toReal_prod, ENNReal.toReal_ofReal (sub_nonneg.2 (h _))]
 #align real.volume_pi_Ico_to_real Real.volume_pi_Ico_toReal
 

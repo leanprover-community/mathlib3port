@@ -202,7 +202,7 @@ noncomputable def pointCount (l : L) : ℕ :=
 variable (P L)
 
 theorem sum_lineCount_eq_sum_pointCount [Fintype P] [Fintype L] :
-    (∑ p : P, lineCount L p) = ∑ l : L, pointCount P l := by
+    ∑ p : P, lineCount L p = ∑ l : L, pointCount P l := by
   classical
   simp only [line_count, point_count, Nat.card_eq_fintype_card, ← Fintype.card_sigma]
   apply Fintype.card_congr
@@ -248,7 +248,7 @@ theorem HasLines.card_le [HasLines P L] [Fintype P] [Fintype L] : Fintype.card P
   obtain ⟨f, hf₁, hf₂⟩ := nondegenerate.exists_injective_of_card_le (le_of_not_le hc₂)
   have :=
     calc
-      (∑ p, line_count L p) = ∑ l, point_count P l := sum_line_count_eq_sum_point_count P L
+      ∑ p, line_count L p = ∑ l, point_count P l := sum_line_count_eq_sum_point_count P L
       _ ≤ ∑ l, line_count L (f l) :=
         (Finset.sum_le_sum fun l hl => has_lines.point_count_le_line_count (hf₂ l))
       _ = ∑ p in finset.univ.image f, line_count L p :=
@@ -301,11 +301,11 @@ theorem HasLines.lineCount_eq_pointCount [HasLines P L] [Fintype P] [Fintype L]
   classical
   obtain ⟨f, hf1, hf2⟩ := has_lines.exists_bijective_of_card_eq hPL
   let s : Finset (P × L) := Set.toFinset {i | i.1 ∈ i.2}
-  have step1 : (∑ i : P × L, line_count L i.1) = ∑ i : P × L, point_count P i.2 :=
+  have step1 : ∑ i : P × L, line_count L i.1 = ∑ i : P × L, point_count P i.2 :=
     by
     rw [← Finset.univ_product_univ, Finset.sum_product_right, Finset.sum_product]
     simp_rw [Finset.sum_const, Finset.card_univ, hPL, sum_line_count_eq_sum_point_count]
-  have step2 : (∑ i in s, line_count L i.1) = ∑ i in s, point_count P i.2 :=
+  have step2 : ∑ i in s, line_count L i.1 = ∑ i in s, point_count P i.2 :=
     by
     rw [s.sum_finset_product Finset.univ fun p => Set.toFinset {l | p ∈ l}]
     rw [s.sum_finset_product_right Finset.univ fun l => Set.toFinset {p | p ∈ l}]
@@ -318,7 +318,7 @@ theorem HasLines.lineCount_eq_pointCount [HasLines P L] [Fintype P] [Fintype L]
     · obtain ⟨l, hl⟩ := hf1.2 p
       exact ⟨l, Finset.mem_univ l, hl.symm⟩
     all_goals simp_rw [Finset.mem_univ, true_and_iff, Set.mem_toFinset]; exact fun p => Iff.rfl
-  have step3 : (∑ i in sᶜ, line_count L i.1) = ∑ i in sᶜ, point_count P i.2 := by
+  have step3 : ∑ i in sᶜ, line_count L i.1 = ∑ i in sᶜ, point_count P i.2 := by
     rwa [← s.sum_add_sum_compl, ← s.sum_add_sum_compl, step2, add_left_cancel_iff] at step1 
   rw [← Set.toFinset_compl] at step3 
   exact

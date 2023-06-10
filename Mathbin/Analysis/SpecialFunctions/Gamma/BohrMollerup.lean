@@ -269,7 +269,7 @@ theorem logGammaSeq_add_one (x : ℝ) (n : ℕ) :
   · rw [Nat.cast_ne_zero]; exact Nat.succ_ne_zero n
   · rw [Nat.cast_ne_zero]; exact Nat.factorial_ne_zero n
   have :
-    (∑ m : ℕ in Finset.range (n + 1), log (x + 1 + ↑m)) =
+    ∑ m : ℕ in Finset.range (n + 1), log (x + 1 + ↑m) =
       ∑ k : ℕ in Finset.range (n + 1), log (x + ↑(k + 1)) :=
     by
     refine' Finset.sum_congr (by rfl) fun m hm => _

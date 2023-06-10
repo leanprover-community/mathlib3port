@@ -395,7 +395,7 @@ variable (b : Basis ι R M)
 
 #print Basis.sum_dual_apply_smul_coord /-
 @[simp]
-theorem sum_dual_apply_smul_coord (f : Module.Dual R M) : (∑ x, f (b x) • b.Coord x) = f :=
+theorem sum_dual_apply_smul_coord (f : Module.Dual R M) : ∑ x, f (b x) • b.Coord x = f :=
   by
   ext m
   simp_rw [LinearMap.sum_apply, LinearMap.smul_apply, smul_eq_mul, mul_comm (f _), ← smul_eq_mul, ←

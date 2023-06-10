@@ -125,7 +125,7 @@ def mongePointWeightsWithCircumcenter (n : ℕ) : PointsWithCircumcenterIndex (n
 /-- `monge_point_weights_with_circumcenter` sums to 1. -/
 @[simp]
 theorem sum_mongePointWeightsWithCircumcenter (n : ℕ) :
-    (∑ i, mongePointWeightsWithCircumcenter n i) = 1 :=
+    ∑ i, mongePointWeightsWithCircumcenter n i = 1 :=
   by
   simp_rw [sum_points_with_circumcenter, monge_point_weights_with_circumcenter, sum_const, card_fin,
     nsmul_eq_mul]
@@ -197,7 +197,7 @@ theorem mongePointVsubFaceCentroidWeightsWithCircumcenter_eq_sub {n : ℕ} {i₁
 /-- `monge_point_vsub_face_centroid_weights_with_circumcenter` sums to 0. -/
 @[simp]
 theorem sum_mongePointVsubFaceCentroidWeightsWithCircumcenter {n : ℕ} {i₁ i₂ : Fin (n + 3)}
-    (h : i₁ ≠ i₂) : (∑ i, mongePointVsubFaceCentroidWeightsWithCircumcenter i₁ i₂ i) = 0 :=
+    (h : i₁ ≠ i₂) : ∑ i, mongePointVsubFaceCentroidWeightsWithCircumcenter i₁ i₂ i = 0 :=
   by
   rw [monge_point_vsub_face_centroid_weights_with_circumcenter_eq_sub h]
   simp_rw [Pi.sub_apply, sum_sub_distrib, sum_monge_point_weights_with_circumcenter]
@@ -233,9 +233,8 @@ theorem inner_mongePoint_vsub_face_centroid_vsub {n : ℕ} (s : Simplex ℝ P (n
   · simp [h]
   simp_rw [monge_point_vsub_face_centroid_eq_weighted_vsub_of_points_with_circumcenter s h,
     point_eq_affine_combination_of_points_with_circumcenter, affine_combination_vsub]
-  have hs :
-    (∑ i, (point_weights_with_circumcenter i₁ - point_weights_with_circumcenter i₂) i) = 0 := by
-    simp
+  have hs : ∑ i, (point_weights_with_circumcenter i₁ - point_weights_with_circumcenter i₂) i = 0 :=
+    by simp
   rw [inner_weighted_vsub _ (sum_monge_point_vsub_face_centroid_weights_with_circumcenter h) _ hs,
     sum_points_with_circumcenter, points_with_circumcenter_eq_circumcenter]
   simp only [monge_point_vsub_face_centroid_weights_with_circumcenter,

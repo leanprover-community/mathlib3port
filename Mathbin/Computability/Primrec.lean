@@ -1624,7 +1624,7 @@ open Nat (Primrec')
 
 open Nat.Primrec'
 
-/- ./././Mathport/Syntax/Translate/Command.lean:697:6: unsupported: hide command -/
+/- ./././Mathport/Syntax/Translate/Command.lean:699:6: unsupported: hide command -/
 #print Nat.Primrec'.to_prim /-
 theorem to_prim {n f} (pf : @Primrec' n f) : Primrec f :=
   by

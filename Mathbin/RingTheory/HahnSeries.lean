@@ -628,8 +628,8 @@ instance [NonUnitalNonAssocSemiring R] : Mul (HahnSeries Γ R)
       isPwo_support' :=
         haveI h :
           {a : Γ |
-              (∑ ij : Γ × Γ in add_antidiagonal x.is_pwo_support y.is_pwo_support a,
-                  x.coeff ij.fst * y.coeff ij.snd) ≠
+              ∑ ij : Γ × Γ in add_antidiagonal x.is_pwo_support y.is_pwo_support a,
+                  x.coeff ij.fst * y.coeff ij.snd ≠
                 0} ⊆
             {a : Γ | (add_antidiagonal x.is_pwo_support y.is_pwo_support a).Nonempty} :=
           by

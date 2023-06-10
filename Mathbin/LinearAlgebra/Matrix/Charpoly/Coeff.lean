@@ -68,7 +68,7 @@ namespace Matrix
 variable (M)
 
 theorem charpoly_sub_diagonal_degree_lt :
-    (M.charpoly - ∏ i : n, X - C (M i i)).degree < ↑(Fintype.card n - 1) :=
+    (M.charpoly - ∏ i : n, (X - C (M i i))).degree < ↑(Fintype.card n - 1) :=
   by
   rw [charpoly, det_apply', ← insert_erase (mem_univ (Equiv.refl n)),
     sum_insert (not_mem_erase (Equiv.refl n) univ), add_comm]
@@ -85,7 +85,7 @@ theorem charpoly_sub_diagonal_degree_lt :
 #align matrix.charpoly_sub_diagonal_degree_lt Matrix.charpoly_sub_diagonal_degree_lt
 
 theorem charpoly_coeff_eq_prod_coeff_of_le {k : ℕ} (h : Fintype.card n - 1 ≤ k) :
-    M.charpoly.coeff k = (∏ i : n, X - C (M i i)).coeff k :=
+    M.charpoly.coeff k = (∏ i : n, (X - C (M i i))).coeff k :=
   by
   apply eq_of_sub_eq_zero; rw [← coeff_sub]; apply Polynomial.coeff_eq_zero_of_degree_lt
   apply lt_of_lt_of_le (charpoly_sub_diagonal_degree_lt M) _; rw [WithBot.coe_le_coe]; apply h
@@ -101,8 +101,8 @@ theorem charpoly_degree_eq_dim [Nontrivial R] (M : Matrix n n R) :
   by
   by_cases Fintype.card n = 0
   · rw [h]; unfold charpoly; rw [det_of_card_zero]; · simp; · assumption
-  rw [← sub_add_cancel M.charpoly (∏ i : n, X - C (M i i))]
-  have h1 : (∏ i : n, X - C (M i i)).degree = Fintype.card n :=
+  rw [← sub_add_cancel M.charpoly (∏ i : n, (X - C (M i i)))]
+  have h1 : (∏ i : n, (X - C (M i i))).degree = Fintype.card n :=
     by
     rw [degree_eq_iff_nat_degree_eq_of_pos]; swap; apply Nat.pos_of_ne_zero h
     rw [nat_degree_prod']; simp_rw [nat_degree_X_sub_C]; unfold Fintype.card; simp
@@ -125,9 +125,9 @@ theorem charpoly_monic (M : Matrix n n R) : M.charpoly.Monic :=
   by
   nontriviality
   by_cases Fintype.card n = 0; · rw [charpoly, det_of_card_zero h]; apply monic_one
-  have mon : (∏ i : n, X - C (M i i)).Monic := by
+  have mon : (∏ i : n, (X - C (M i i))).Monic := by
     apply monic_prod_of_monic univ fun i : n => X - C (M i i); simp [monic_X_sub_C]
-  rw [← sub_add_cancel (∏ i : n, X - C (M i i)) M.charpoly] at mon 
+  rw [← sub_add_cancel (∏ i : n, (X - C (M i i))) M.charpoly] at mon 
   rw [monic] at *; rw [leading_coeff_add_of_degree_lt] at mon ; rw [← mon]
   rw [charpoly_degree_eq_dim]; rw [← neg_sub]; rw [degree_neg]
   apply lt_trans (charpoly_sub_diagonal_degree_lt M); rw [WithBot.coe_lt_coe]
@@ -226,7 +226,7 @@ theorem coeff_charpoly_mem_ideal_pow {I : Ideal R} (h : ∀ i j, M i j ∈ I) (k
   apply sum_mem
   rintro c -
   rw [coeff_smul, Submodule.smul_mem_iff']
-  have : (∑ x : n, 1) = Fintype.card n := by rw [Finset.sum_const, card_univ, smul_eq_mul, mul_one]
+  have : ∑ x : n, 1 = Fintype.card n := by rw [Finset.sum_const, card_univ, smul_eq_mul, mul_one]
   rw [← this]
   apply coeff_prod_mem_ideal_pow_tsub
   rintro i - (_ | k)

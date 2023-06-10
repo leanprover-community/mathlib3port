@@ -37,7 +37,7 @@ open Nat hiding zero_le Prime
 
 namespace imo2019_q4
 
-theorem upper_bound {k n : ℕ} (hk : k > 0) (h : (k ! : ℤ) = ∏ i in range n, 2 ^ n - 2 ^ i) :
+theorem upper_bound {k n : ℕ} (hk : k > 0) (h : (k ! : ℤ) = ∏ i in range n, (2 ^ n - 2 ^ i)) :
     n < 6 := by
   have prime_2 : Prime (2 : ℤ) := prime_iff_prime_int.mp prime_two
   have h2 : n * (n - 1) / 2 < k :=
@@ -85,7 +85,7 @@ theorem upper_bound {k n : ℕ} (hk : k > 0) (h : (k ! : ℤ) = ∏ i in range n
 end imo2019_q4
 
 theorem imo2019_q4 {k n : ℕ} (hk : k > 0) (hn : n > 0) :
-    ((k ! : ℤ) = ∏ i in range n, 2 ^ n - 2 ^ i) ↔ (k, n) = (1, 1) ∨ (k, n) = (3, 2) :=
+    (k ! : ℤ) = ∏ i in range n, (2 ^ n - 2 ^ i) ↔ (k, n) = (1, 1) ∨ (k, n) = (3, 2) :=
   by
   -- The implication `←` holds.
   constructor;

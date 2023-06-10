@@ -47,7 +47,7 @@ def uniformOfFinset (s : Finset α) (hs : s.Nonempty) : Pmf α :=
   ofFinset (fun a => if a ∈ s then s.card⁻¹ else 0) s
     (Exists.rec_on hs fun x hx =>
       calc
-        (∑ a : α in s, ite (a ∈ s) (s.card : ℝ≥0∞)⁻¹ 0) = ∑ a : α in s, (s.card : ℝ≥0∞)⁻¹ :=
+        ∑ a : α in s, ite (a ∈ s) (s.card : ℝ≥0∞)⁻¹ 0 = ∑ a : α in s, (s.card : ℝ≥0∞)⁻¹ :=
           Finset.sum_congr rfl fun x hx => by simp [hx]
         _ = (s.card : ℝ≥0∞) * (s.card : ℝ≥0∞)⁻¹ := by rw [Finset.sum_const, nsmul_eq_mul]
         _ = 1 :=
@@ -181,7 +181,7 @@ def ofMultiset (s : Multiset α) (hs : s ≠ 0) : Pmf α :=
   ⟨fun a => s.count a / s.card,
     ENNReal.summable.hasSum_iff.2
       (calc
-        (∑' b : α, (s.count b : ℝ≥0∞) / s.card) = s.card⁻¹ * ∑' b, s.count b := by
+        ∑' b : α, (s.count b : ℝ≥0∞) / s.card = s.card⁻¹ * ∑' b, s.count b := by
           simp_rw [ENNReal.div_eq_inv_mul, ENNReal.tsum_mul_left]
         _ = s.card⁻¹ * ∑ b in s.toFinset, (s.count b : ℝ≥0∞) :=
           (congr_arg (fun x => s.card⁻¹ * x)

@@ -88,7 +88,7 @@ theorem antideriv_bernoulliFun (k : ℕ) (x : ℝ) :
 #align antideriv_bernoulli_fun antideriv_bernoulliFun
 
 theorem integral_bernoulliFun_eq_zero {k : ℕ} (hk : k ≠ 0) :
-    (∫ x : ℝ in 0 ..1, bernoulliFun k x) = 0 :=
+    ∫ x : ℝ in 0 ..1, bernoulliFun k x = 0 :=
   by
   rw [integral_eq_sub_of_has_deriv_at (fun x hx => antideriv_bernoulliFun k x)
       ((Polynomial.continuous _).IntervalIntegrable _ _)]

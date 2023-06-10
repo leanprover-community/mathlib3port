@@ -514,7 +514,7 @@ theorem completed_zeta_eq_mellin_of_one_lt_re {s : ℂ} (hs : 1 < re s) :
 /-- Auxiliary lemma for `mellin_zeta_kernel₁_eq_tsum`, computing the Mellin transform of an
 individual term in the series. -/
 theorem integral_cpow_mul_exp_neg_pi_mul_sq {s : ℂ} (hs : 0 < s.re) (n : ℕ) :
-    (∫ t : ℝ in Ioi 0, (t : ℂ) ^ (s - 1) * rexp (-π * t * (n + 1) ^ 2)) =
+    ∫ t : ℝ in Ioi 0, (t : ℂ) ^ (s - 1) * rexp (-π * t * (n + 1) ^ 2) =
       ↑π ^ (-s) * Complex.gamma s * (1 / (n + 1) ^ (2 * s)) :=
   by
   rw [Complex.gamma_eq_integral hs, Gamma_integral_eq_mellin]

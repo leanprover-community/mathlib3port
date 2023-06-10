@@ -960,13 +960,13 @@ theorem Basis.map_equivFun (f : M ≃ₗ[R] M') : (b.map f).equivFun = f.symm.tr
   rfl
 #align basis.map_equiv_fun Basis.map_equivFun
 
-theorem Basis.sum_equivFun (u : M) : (∑ i, b.equivFun u i • b i) = u :=
+theorem Basis.sum_equivFun (u : M) : ∑ i, b.equivFun u i • b i = u :=
   by
   conv_rhs => rw [← b.total_repr u]
   simp [Finsupp.total_apply, Finsupp.sum_fintype, b.equiv_fun_apply]
 #align basis.sum_equiv_fun Basis.sum_equivFun
 
-theorem Basis.sum_repr (u : M) : (∑ i, b.repr u i • b i) = u :=
+theorem Basis.sum_repr (u : M) : ∑ i, b.repr u i • b i = u :=
   b.sum_equivFun u
 #align basis.sum_repr Basis.sum_repr
 
@@ -1100,7 +1100,7 @@ theorem equiv'_symm_apply (f : M → M') (g : M' → M) (hf hg hgf hfg) (i : ι'
 #align basis.equiv'_symm_apply Basis.equiv'_symm_apply
 
 theorem sum_repr_mul_repr {ι'} [Fintype ι'] (b' : Basis ι' R M) (x : M) (i : ι) :
-    (∑ j : ι', b.repr (b' j) i * b'.repr x j) = b.repr x i :=
+    ∑ j : ι', b.repr (b' j) i * b'.repr x j = b.repr x i :=
   by
   conv_rhs => rw [← b'.sum_repr x]
   simp_rw [LinearEquiv.map_sum, LinearEquiv.map_smul, Finset.sum_apply']

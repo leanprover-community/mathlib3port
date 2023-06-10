@@ -99,7 +99,7 @@ theorem Multiset.prod_primes_dvd [CancelCommMonoidWithZero α]
 
 #print Finset.prod_primes_dvd /-
 theorem Finset.prod_primes_dvd [CancelCommMonoidWithZero α] [Unique αˣ] {s : Finset α} (n : α)
-    (h : ∀ a ∈ s, Prime a) (div : ∀ a ∈ s, a ∣ n) : (∏ p in s, p) ∣ n := by
+    (h : ∀ a ∈ s, Prime a) (div : ∀ a ∈ s, a ∣ n) : ∏ p in s, p ∣ n := by
   classical exact
     Multiset.prod_primes_dvd n (by simpa only [Multiset.map_id', Finset.mem_def] using h)
       (by simpa only [Multiset.map_id', Finset.mem_def] using div)
@@ -120,7 +120,7 @@ theorem prod_mk {p : Multiset α} : (p.map Associates.mk).Prod = Associates.mk p
 #align associates.prod_mk Associates.prod_mk
 
 theorem finset_prod_mk {p : Finset β} {f : β → α} :
-    (∏ i in p, Associates.mk (f i)) = Associates.mk (∏ i in p, f i) := by
+    ∏ i in p, Associates.mk (f i) = Associates.mk (∏ i in p, f i) := by
   rw [Finset.prod_eq_multiset_prod, ← Multiset.map_map, prod_mk, ← Finset.prod_eq_multiset_prod]
 #align associates.finset_prod_mk Associates.finset_prod_mk
 

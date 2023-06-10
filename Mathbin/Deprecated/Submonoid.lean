@@ -282,7 +282,7 @@ of the submonoid. -/
 @[to_additive
       "The sum of elements of an `add_submonoid` of an `add_comm_monoid` indexed by\na `finset` is an element of the `add_submonoid`."]
 theorem finset_prod_mem {M A} [CommMonoid M] {s : Set M} (hs : IsSubmonoid s) (f : A → M) :
-    ∀ t : Finset A, (∀ b ∈ t, f b ∈ s) → (∏ b in t, f b) ∈ s
+    ∀ t : Finset A, (∀ b ∈ t, f b ∈ s) → ∏ b in t, f b ∈ s
   | ⟨m, hm⟩, _ => multiset_prod_mem hs _ (by simpa)
 #align is_submonoid.finset_prod_mem IsSubmonoid.finset_prod_mem
 #align is_add_submonoid.finset_sum_mem IsAddSubmonoid.finset_sum_mem

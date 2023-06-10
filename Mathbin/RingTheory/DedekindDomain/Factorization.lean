@@ -180,7 +180,7 @@ theorem finprod_count (I : Ideal R) (hI : I ≠ 0) :
 
 /-- The ideal `I` equals the finprod `∏_v v^(val_v(I))`. -/
 theorem finprod_heightOneSpectrum_factorization (I : Ideal R) (hI : I ≠ 0) :
-    (∏ᶠ v : HeightOneSpectrum R, v.maxPowDividing I) = I :=
+    ∏ᶠ v : HeightOneSpectrum R, v.maxPowDividing I = I :=
   by
   rw [← associated_iff_eq, ← Associates.mk_eq_mk_iff_associated]
   apply Associates.eq_of_eq_counts
@@ -198,9 +198,9 @@ theorem finprod_heightOneSpectrum_factorization (I : Ideal R) (hI : I ≠ 0) :
 /-- The ideal `I` equals the finprod `∏_v v^(val_v(I))`, when both sides are regarded as fractional
 ideals of `R`. -/
 theorem finprod_heightOneSpectrum_factorization_coe (I : Ideal R) (hI : I ≠ 0) :
-    (∏ᶠ v : HeightOneSpectrum R,
+    ∏ᶠ v : HeightOneSpectrum R,
         (v.asIdeal : FractionalIdeal R⁰ K) ^
-          ((Associates.mk v.asIdeal).count (Associates.mk I).factors : ℤ)) =
+          ((Associates.mk v.asIdeal).count (Associates.mk I).factors : ℤ) =
       I :=
   by
   conv_rhs => rw [← Ideal.finprod_heightOneSpectrum_factorization I hI]

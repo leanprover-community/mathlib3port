@@ -306,7 +306,7 @@ theorem slice_zero [Zero α] (i : ℕ) (hid : i < d) : slice (0 : Holor α (d ::
 -/
 
 theorem slice_sum [AddCommMonoid α] {β : Type} (i : ℕ) (hid : i < d) (s : Finset β)
-    (f : β → Holor α (d :: ds)) : (∑ x in s, slice (f x) i hid) = slice (∑ x in s, f x) i hid :=
+    (f : β → Holor α (d :: ds)) : ∑ x in s, slice (f x) i hid = slice (∑ x in s, f x) i hid :=
   by
   letI := Classical.decEq β
   refine' Finset.induction_on s _ _
@@ -319,8 +319,8 @@ theorem slice_sum [AddCommMonoid α] {β : Type} (i : ℕ) (hid : i < d) (s : Fi
 summing up. -/
 @[simp]
 theorem sum_unitVec_mul_slice [Ring α] (x : Holor α (d :: ds)) :
-    (∑ i in (Finset.range d).attach,
-        unitVec d i ⊗ slice x i (Nat.succ_le_of_lt (Finset.mem_range.1 i.Prop))) =
+    ∑ i in (Finset.range d).attach,
+        unitVec d i ⊗ slice x i (Nat.succ_le_of_lt (Finset.mem_range.1 i.Prop)) =
       x :=
   by
   apply slice_eq _ _ _

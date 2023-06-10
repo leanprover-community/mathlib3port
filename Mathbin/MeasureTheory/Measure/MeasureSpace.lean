@@ -206,7 +206,7 @@ theorem measure_biUnion_finset {s : Finset ι} {f : ι → Set α} (hd : Pairwis
 the measures of the sets. -/
 theorem tsum_meas_le_meas_iUnion_of_disjoint {ι : Type _} [MeasurableSpace α] (μ : Measure α)
     {As : ι → Set α} (As_mble : ∀ i : ι, MeasurableSet (As i))
-    (As_disj : Pairwise (Disjoint on As)) : (∑' i, μ (As i)) ≤ μ (⋃ i, As i) :=
+    (As_disj : Pairwise (Disjoint on As)) : ∑' i, μ (As i) ≤ μ (⋃ i, As i) :=
   by
   rcases show Summable fun i => μ (As i) from ENNReal.summable with ⟨S, hS⟩
   rw [hS.tsum_eq]
@@ -219,14 +219,14 @@ theorem tsum_meas_le_meas_iUnion_of_disjoint {ι : Type _} [MeasurableSpace α] 
 /-- If `s` is a countable set, then the measure of its preimage can be found as the sum of measures
 of the fibers `f ⁻¹' {y}`. -/
 theorem tsum_measure_preimage_singleton {s : Set β} (hs : s.Countable) {f : α → β}
-    (hf : ∀ y ∈ s, MeasurableSet (f ⁻¹' {y})) : (∑' b : s, μ (f ⁻¹' {↑b})) = μ (f ⁻¹' s) := by
+    (hf : ∀ y ∈ s, MeasurableSet (f ⁻¹' {y})) : ∑' b : s, μ (f ⁻¹' {↑b}) = μ (f ⁻¹' s) := by
   rw [← Set.biUnion_preimage_singleton, measure_bUnion hs (pairwise_disjoint_fiber _ _) hf]
 #align measure_theory.tsum_measure_preimage_singleton MeasureTheory.tsum_measure_preimage_singleton
 
 /-- If `s` is a `finset`, then the measure of its preimage can be found as the sum of measures
 of the fibers `f ⁻¹' {y}`. -/
 theorem sum_measure_preimage_singleton (s : Finset β) {f : α → β}
-    (hf : ∀ y ∈ s, MeasurableSet (f ⁻¹' {y})) : (∑ b in s, μ (f ⁻¹' {b})) = μ (f ⁻¹' ↑s) := by
+    (hf : ∀ y ∈ s, MeasurableSet (f ⁻¹' {y})) : ∑ b in s, μ (f ⁻¹' {b}) = μ (f ⁻¹' ↑s) := by
   simp only [← measure_bUnion_finset (pairwise_disjoint_fiber _ _) hf,
     Finset.set_biUnion_preimage_singleton]
 #align measure_theory.sum_measure_preimage_singleton MeasureTheory.sum_measure_preimage_singleton
@@ -405,12 +405,12 @@ theorem measure_union_toMeasurable : μ (s ∪ toMeasurable μ t) = μ (s ∪ t)
 
 theorem sum_measure_le_measure_univ {s : Finset ι} {t : ι → Set α}
     (h : ∀ i ∈ s, MeasurableSet (t i)) (H : Set.PairwiseDisjoint (↑s) t) :
-    (∑ i in s, μ (t i)) ≤ μ (univ : Set α) := by rw [← measure_bUnion_finset H h];
+    ∑ i in s, μ (t i) ≤ μ (univ : Set α) := by rw [← measure_bUnion_finset H h];
   exact measure_mono (subset_univ _)
 #align measure_theory.sum_measure_le_measure_univ MeasureTheory.sum_measure_le_measure_univ
 
 theorem tsum_measure_le_measure_univ {s : ι → Set α} (hs : ∀ i, MeasurableSet (s i))
-    (H : Pairwise (Disjoint on s)) : (∑' i, μ (s i)) ≤ μ (univ : Set α) :=
+    (H : Pairwise (Disjoint on s)) : ∑' i, μ (s i) ≤ μ (univ : Set α) :=
   by
   rw [ENNReal.tsum_eq_iSup_sum]
   exact iSup_le fun s => sum_measure_le_measure_univ (fun i hi => hs i) fun i hi j hj hij => H hij
@@ -495,7 +495,7 @@ theorem measure_iUnion_eq_iSup [Countable ι] {s : ι → Set α} (hd : Directed
     _ ≤ ⨆ n, μ (t n) := iSup_le fun I => _
   rcases hd.finset_le I with ⟨N, hN⟩
   calc
-    (∑ n in I, μ (Td n)) = μ (⋃ n ∈ I, Td n) :=
+    ∑ n in I, μ (Td n) = μ (⋃ n ∈ I, Td n) :=
       (measure_bUnion_finset ((disjoint_disjointed T).set_pairwise I) fun n _ => hm n).symm
     _ ≤ μ (⋃ n ∈ I, T n) := (measure_mono (Union₂_mono fun n hn => disjointed_subset _ _))
     _ = μ (⋃ n ∈ I, t n) := (measure_bUnion_to_measurable I.countable_to_set _)
@@ -597,13 +597,12 @@ theorem tendsto_measure_biInter_gt {ι : Type _} [LinearOrder ι] [TopologicalSp
 
 /-- One direction of the **Borel-Cantelli lemma**: if (sᵢ) is a sequence of sets such
 that `∑ μ sᵢ` is finite, then the limit superior of the `sᵢ` is a null set. -/
-theorem measure_limsup_eq_zero {s : ℕ → Set α} (hs : (∑' i, μ (s i)) ≠ ∞) :
-    μ (limsup s atTop) = 0 :=
+theorem measure_limsup_eq_zero {s : ℕ → Set α} (hs : ∑' i, μ (s i) ≠ ∞) : μ (limsup s atTop) = 0 :=
   by
   -- First we replace the sequence `sₙ` with a sequence of measurable sets `tₙ ⊇ sₙ` of the same
   -- measure.
   set t : ℕ → Set α := fun n => to_measurable μ (s n)
-  have ht : (∑' i, μ (t i)) ≠ ∞ := by simpa only [t, measure_to_measurable] using hs
+  have ht : ∑' i, μ (t i) ≠ ∞ := by simpa only [t, measure_to_measurable] using hs
   suffices μ (limsup t at_top) = 0
     by
     have A : s ≤ t := fun n => subset_to_measurable μ (s n)
@@ -630,7 +629,7 @@ theorem measure_limsup_eq_zero {s : ℕ → Set α} (hs : (∑' i, μ (s i)) ≠
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic filter.is_bounded_default -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic filter.is_bounded_default -/
-theorem measure_liminf_eq_zero {s : ℕ → Set α} (h : (∑' i, μ (s i)) ≠ ⊤) : μ (liminf s atTop) = 0 :=
+theorem measure_liminf_eq_zero {s : ℕ → Set α} (h : ∑' i, μ (s i) ≠ ⊤) : μ (liminf s atTop) = 0 :=
   by
   rw [← le_zero_iff]
   have : liminf s at_top ≤ limsup s at_top :=
@@ -824,7 +823,7 @@ instance [MeasurableSpace α] : Add (Measure α) :=
   ⟨fun μ₁ μ₂ =>
     { toOuterMeasure := μ₁.toOuterMeasure + μ₂.toOuterMeasure
       m_iUnion := fun s hs hd =>
-        show μ₁ (⋃ i, s i) + μ₂ (⋃ i, s i) = ∑' i, μ₁ (s i) + μ₂ (s i) by
+        show μ₁ (⋃ i, s i) + μ₂ (⋃ i, s i) = ∑' i, (μ₁ (s i) + μ₂ (s i)) by
           rw [ENNReal.tsum_add, measure_Union hd hs, measure_Union hd hs]
       trimmed := by rw [outer_measure.trim_add, μ₁.trimmed, μ₂.trimmed] }⟩
 
@@ -2174,7 +2173,7 @@ def sum (f : ι → Measure α) : Measure α :=
 #align measure_theory.measure.sum MeasureTheory.Measure.sum
 -/
 
-theorem le_sum_apply (f : ι → Measure α) (s : Set α) : (∑' i, f i s) ≤ sum f s :=
+theorem le_sum_apply (f : ι → Measure α) (s : Set α) : ∑' i, f i s ≤ sum f s :=
   le_toMeasure_apply _ _ _
 #align measure_theory.measure.le_sum_apply MeasureTheory.Measure.le_sum_apply
 
@@ -2315,9 +2314,9 @@ theorem sum_smul_dirac [Countable α] [MeasurableSingletonClass α] (μ : Measur
 /-- Given that `α` is a countable, measurable space with all singleton sets measurable,
 write the measure of a set `s` as the sum of the measure of `{x}` for all `x ∈ s`. -/
 theorem tsum_indicator_apply_singleton [Countable α] [MeasurableSingletonClass α] (μ : Measure α)
-    (s : Set α) (hs : MeasurableSet s) : (∑' x : α, s.indicator (fun x => μ {x}) x) = μ s :=
+    (s : Set α) (hs : MeasurableSet s) : ∑' x : α, s.indicator (fun x => μ {x}) x = μ s :=
   calc
-    (∑' x : α, s.indicator (fun x => μ {x}) x) = Measure.sum (fun a => μ {a} • Measure.dirac a) s :=
+    ∑' x : α, s.indicator (fun x => μ {x}) x = Measure.sum (fun a => μ {a} • Measure.dirac a) s :=
       by
       simp only [measure.sum_apply _ hs, measure.smul_apply, smul_eq_mul, measure.dirac_apply,
         Set.indicator_apply, mul_ite, Pi.one_apply, mul_one, MulZeroClass.mul_zero]
@@ -3209,7 +3208,7 @@ theorem ae_restrict_congr_set {s t} (hst : s =ᵐ[μ] t) {p : α → Prop} :
 /-- A version of the **Borel-Cantelli lemma**: if `pᵢ` is a sequence of predicates such that
 `∑ μ {x | pᵢ x}` is finite, then the measure of `x` such that `pᵢ x` holds frequently as `i → ∞` (or
 equivalently, `pᵢ x` holds for infinitely many `i`) is equal to zero. -/
-theorem measure_setOf_frequently_eq_zero {p : ℕ → α → Prop} (hp : (∑' i, μ {x | p i x}) ≠ ∞) :
+theorem measure_setOf_frequently_eq_zero {p : ℕ → α → Prop} (hp : ∑' i, μ {x | p i x} ≠ ∞) :
     μ {x | ∃ᶠ n in atTop, p n x} = 0 := by
   simpa only [limsup_eq_infi_supr_of_nat, frequently_at_top, set_of_forall, set_of_exists] using
     measure_limsup_eq_zero hp
@@ -3217,7 +3216,7 @@ theorem measure_setOf_frequently_eq_zero {p : ℕ → α → Prop} (hp : (∑' i
 
 /-- A version of the **Borel-Cantelli lemma**: if `sᵢ` is a sequence of sets such that
 `∑ μ sᵢ` exists, then for almost all `x`, `x` does not belong to almost all `sᵢ`. -/
-theorem ae_eventually_not_mem {s : ℕ → Set α} (hs : (∑' i, μ (s i)) ≠ ∞) :
+theorem ae_eventually_not_mem {s : ℕ → Set α} (hs : ∑' i, μ (s i) ≠ ∞) :
     ∀ᵐ x ∂μ, ∀ᶠ n in atTop, x ∉ s n :=
   measure_setOf_frequently_eq_zero hs
 #align measure_theory.ae_eventually_not_mem MeasureTheory.ae_eventually_not_mem

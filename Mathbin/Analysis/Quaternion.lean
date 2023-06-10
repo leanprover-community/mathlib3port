@@ -261,7 +261,7 @@ theorem summable_coe {f : α → ℝ} : (Summable fun a => (f a : ℍ)) ↔ Summ
 #align quaternion.summable_coe Quaternion.summable_coe
 
 @[norm_cast]
-theorem tsum_coe (f : α → ℝ) : (∑' a, (f a : ℍ)) = ↑(∑' a, f a) :=
+theorem tsum_coe (f : α → ℝ) : ∑' a, (f a : ℍ) = ↑(∑' a, f a) :=
   by
   by_cases hf : Summable f
   · exact (has_sum_coe.mpr hf.has_sum).tsum_eq

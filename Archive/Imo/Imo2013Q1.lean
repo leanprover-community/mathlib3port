@@ -43,8 +43,8 @@ theorem arith_lemma (k n : ℕ) : 0 < 2 * n + 2 ^ k.succ :=
 #align imo2013_q1.arith_lemma Imo2013Q1.arith_lemma
 
 theorem prod_lemma (m : ℕ → ℕ+) (k : ℕ) (nm : ℕ+) :
-    (∏ i : ℕ in Finset.range k, (1 : ℚ) + 1 / ↑(if i < k then m i else nm)) =
-      ∏ i : ℕ in Finset.range k, 1 + 1 / m i :=
+    ∏ i : ℕ in Finset.range k, ((1 : ℚ) + 1 / ↑(if i < k then m i else nm)) =
+      ∏ i : ℕ in Finset.range k, (1 + 1 / m i) :=
   by
   suffices : ∀ i, i ∈ Finset.range k → (1 : ℚ) + 1 / ↑(if i < k then m i else nm) = 1 + 1 / m i
   exact Finset.prod_congr rfl this
@@ -57,7 +57,7 @@ end imo2013_q1
 open imo2013_q1
 
 theorem imo2013_q1 (n : ℕ+) (k : ℕ) :
-    ∃ m : ℕ → ℕ+, (1 : ℚ) + (2 ^ k - 1) / n = ∏ i in Finset.range k, 1 + 1 / m i :=
+    ∃ m : ℕ → ℕ+, (1 : ℚ) + (2 ^ k - 1) / n = ∏ i in Finset.range k, (1 + 1 / m i) :=
   by
   revert n
   induction' k with pk hpk
@@ -87,9 +87,9 @@ theorem imo2013_q1 (n : ℕ+) (k : ℕ) :
         field_simp [t.cast_add_one_ne_zero]
         ring
       _ = (1 + 1 / (2 * t + 2 ^ pk.succ)) * (1 + (2 ^ pk - 1) / t_succ) := by norm_cast
-      _ = (∏ i in Finset.range pk, 1 + 1 / m i) * (1 + 1 / m pk) := by
+      _ = (∏ i in Finset.range pk, (1 + 1 / m i)) * (1 + 1 / m pk) := by
         rw [prod_lemma, hpm, ← hmpk, mul_comm]
-      _ = ∏ i in Finset.range pk.succ, 1 + 1 / m i := by rw [← Finset.prod_range_succ _ pk]
+      _ = ∏ i in Finset.range pk.succ, (1 + 1 / m i) := by rw [← Finset.prod_range_succ _ pk]
   · -- odd case
     let t_succ : ℕ+ := ⟨t + 1, t.succ_pos⟩
     obtain ⟨pm, hpm⟩ := hpk t_succ
@@ -106,8 +106,8 @@ theorem imo2013_q1 (n : ℕ+) (k : ℕ) :
         field_simp [t.cast_add_one_ne_zero]
         ring
       _ = (1 + 1 / (2 * t + 1)) * (1 + (2 ^ pk - 1) / t_succ) := by norm_cast
-      _ = (∏ i in Finset.range pk, 1 + 1 / m i) * (1 + 1 / ↑(m pk)) := by
+      _ = (∏ i in Finset.range pk, (1 + 1 / m i)) * (1 + 1 / ↑(m pk)) := by
         rw [prod_lemma, hpm, ← hmpk, mul_comm]
-      _ = ∏ i in Finset.range pk.succ, 1 + 1 / m i := by rw [← Finset.prod_range_succ _ pk]
+      _ = ∏ i in Finset.range pk.succ, (1 + 1 / m i) := by rw [← Finset.prod_range_succ _ pk]
 #align imo2013_q1 imo2013_q1
 

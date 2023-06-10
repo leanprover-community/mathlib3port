@@ -217,7 +217,7 @@ theorem isPartitionSplit (I : Box ι) (i : ι) (x : ℝ) : IsPartition (split I 
 -/
 
 theorem sum_split_boxes {M : Type _} [AddCommMonoid M] (I : Box ι) (i : ι) (x : ℝ) (f : Box ι → M) :
-    (∑ J in (split I i x).boxes, f J) = (I.splitLower i x).elim 0 f + (I.splitUpper i x).elim 0 f :=
+    ∑ J in (split I i x).boxes, f J = (I.splitLower i x).elim 0 f + (I.splitUpper i x).elim 0 f :=
   by rw [split, sum_of_with_bot, Finset.sum_pair (I.split_lower_ne_split_upper i x)]
 #align box_integral.prepartition.sum_split_boxes BoxIntegral.Prepartition.sum_split_boxes
 

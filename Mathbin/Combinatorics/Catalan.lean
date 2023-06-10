@@ -155,7 +155,7 @@ theorem catalan_eq_centralBinom_div (n : ℕ) : catalan n = n.centralBinom / (n 
         push_cast
         rw [Nat.cast_sub i.is_le]
         exact tsub_le_self
-    · trans ∑ i : Fin d.succ, gosper_catalan (d + 1) (i + 1) - gosper_catalan (d + 1) i
+    · trans ∑ i : Fin d.succ, (gosper_catalan (d + 1) (i + 1) - gosper_catalan (d + 1) i)
       · refine' sum_congr rfl fun i _ => _
         rw_mod_cast [gosper_trick i.is_le, mul_div]
       · rw [← sum_range fun i => gosper_catalan (d + 1) (i + 1) - gosper_catalan (d + 1) i,

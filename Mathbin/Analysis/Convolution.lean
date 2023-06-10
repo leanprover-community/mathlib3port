@@ -865,7 +865,7 @@ theorem convolution_mul_swap [NormedSpace ℝ 𝕜] [CompleteSpace 𝕜] {f : G 
 theorem convolution_neg_of_neg_eq (h1 : ∀ᵐ x ∂μ, f (-x) = f x) (h2 : ∀ᵐ x ∂μ, g (-x) = g x) :
     (f ⋆[L, μ] g) (-x) = (f ⋆[L, μ] g) x :=
   calc
-    (∫ t : G, (L (f t)) (g (-x - t)) ∂μ) = ∫ t : G, (L (f (-t))) (g (x + t)) ∂μ :=
+    ∫ t : G, (L (f t)) (g (-x - t)) ∂μ = ∫ t : G, (L (f (-t))) (g (x + t)) ∂μ :=
       by
       apply integral_congr_ae
       filter_upwards [h1, (eventually_add_left_iff μ x).2 h2] with t ht h't
@@ -981,7 +981,7 @@ on a ball with the same radius around `x₀`.
 This is a special case of `dist_convolution_le'` where `L` is `(•)`, `f` has integral 1 and `f` is
 nonnegative. -/
 theorem dist_convolution_le {f : G → ℝ} {x₀ : G} {R ε : ℝ} {z₀ : E'} (hε : 0 ≤ ε)
-    (hf : support f ⊆ ball (0 : G) R) (hnf : ∀ x, 0 ≤ f x) (hintf : (∫ x, f x ∂μ) = 1)
+    (hf : support f ⊆ ball (0 : G) R) (hnf : ∀ x, 0 ≤ f x) (hintf : ∫ x, f x ∂μ = 1)
     (hmg : AEStronglyMeasurable g μ) (hg : ∀ x ∈ ball x₀ R, dist (g x) z₀ ≤ ε) :
     dist ((f ⋆[lsmul ℝ ℝ, μ] g : G → E') x₀) z₀ ≤ ε :=
   by
@@ -1004,7 +1004,7 @@ See also `cont_diff_bump.convolution_tendsto_right`.
 -/
 theorem convolution_tendsto_right {ι} {g : ι → G → E'} {l : Filter ι} {x₀ : G} {z₀ : E'}
     {φ : ι → G → ℝ} {k : ι → G} (hnφ : ∀ᶠ i in l, ∀ x, 0 ≤ φ i x)
-    (hiφ : ∀ᶠ i in l, (∫ x, φ i x ∂μ) = 1)
+    (hiφ : ∀ᶠ i in l, ∫ x, φ i x ∂μ = 1)
     -- todo: we could weaken this to "the integral tends to 1"
     (hφ : Tendsto (fun n => support (φ n)) l (𝓝 0).smallSets)
     (hmg : ∀ᶠ i in l, AEStronglyMeasurable (g i) μ) (hcg : Tendsto (uncurry g) (l ×ᶠ 𝓝 x₀) (𝓝 z₀))
@@ -1149,7 +1149,7 @@ variable [SigmaFinite μ] [SigmaFinite ν] [IsAddRightInvariant μ]
 
 theorem integral_convolution [MeasurableAdd₂ G] [MeasurableNeg G] [NormedSpace ℝ E]
     [NormedSpace ℝ E'] [CompleteSpace E] [CompleteSpace E'] (hf : Integrable f ν)
-    (hg : Integrable g μ) : (∫ x, (f ⋆[L, ν] g) x ∂μ) = L (∫ x, f x ∂ν) (∫ x, g x ∂μ) :=
+    (hg : Integrable g μ) : ∫ x, (f ⋆[L, ν] g) x ∂μ = L (∫ x, f x ∂ν) (∫ x, g x ∂μ) :=
   by
   refine' (integral_integral_swap (by apply hf.convolution_integrand L hg)).trans _
   simp_rw [integral_comp_comm _ (hg.comp_sub_right _), integral_sub_right_eq_self]
@@ -1796,7 +1796,7 @@ of their integrals over this set. (Compare `integral_convolution` for the two-si
 theorem integral_pos_convolution [CompleteSpace E] [CompleteSpace E'] {μ ν : Measure ℝ}
     [SigmaFinite μ] [SigmaFinite ν] [IsAddRightInvariant μ] [NoAtoms ν] {f : ℝ → E} {g : ℝ → E'}
     (hf : IntegrableOn f (Ioi 0) ν) (hg : IntegrableOn g (Ioi 0) μ) (L : E →L[ℝ] E' →L[ℝ] F) :
-    (∫ x : ℝ in Ioi 0, ∫ t : ℝ in 0 ..x, L (f t) (g (x - t)) ∂ν ∂μ) =
+    ∫ x : ℝ in Ioi 0, ∫ t : ℝ in 0 ..x, L (f t) (g (x - t)) ∂ν ∂μ =
       L (∫ x : ℝ in Ioi 0, f x ∂ν) (∫ x : ℝ in Ioi 0, g x ∂μ) :=
   by
   rw [← integrable_indicator_iff (measurableSet_Ioi : MeasurableSet (Ioi (0 : ℝ)))] at hf hg 

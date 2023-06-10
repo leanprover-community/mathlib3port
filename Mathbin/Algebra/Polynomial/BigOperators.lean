@@ -178,7 +178,7 @@ the product of the leading coefficients, provided that this product is nonzero.
 See `polynomial.leading_coeff_prod` (without the `'`) for a version for integral domains,
 where this condition is automatically satisfied.
 -/
-theorem leadingCoeff_prod' (h : (∏ i in s, (f i).leadingCoeff) ≠ 0) :
+theorem leadingCoeff_prod' (h : ∏ i in s, (f i).leadingCoeff ≠ 0) :
     (∏ i in s, f i).leadingCoeff = ∏ i in s, (f i).leadingCoeff := by
   simpa using leading_coeff_multiset_prod' (s.1.map f) (by simpa using h)
 #align polynomial.leading_coeff_prod' Polynomial.leadingCoeff_prod'
@@ -206,7 +206,7 @@ the sum of the degrees, provided that the product of leading coefficients is non
 See `polynomial.nat_degree_prod` (without the `'`) for a version for integral domains,
 where this condition is automatically satisfied.
 -/
-theorem natDegree_prod' (h : (∏ i in s, (f i).leadingCoeff) ≠ 0) :
+theorem natDegree_prod' (h : ∏ i in s, (f i).leadingCoeff ≠ 0) :
     (∏ i in s, f i).natDegree = ∑ i in s, (f i).natDegree := by
   simpa using nat_degree_multiset_prod' (s.1.map f) (by simpa using h)
 #align polynomial.nat_degree_prod' Polynomial.natDegree_prod'
@@ -287,7 +287,7 @@ theorem multiset_prod_X_sub_C_nextCoeff (t : Multiset R) :
 #align polynomial.multiset_prod_X_sub_C_next_coeff Polynomial.multiset_prod_X_sub_C_nextCoeff
 
 theorem prod_X_sub_C_nextCoeff {s : Finset ι} (f : ι → R) :
-    nextCoeff (∏ i in s, X - C (f i)) = -∑ i in s, f i := by
+    nextCoeff (∏ i in s, (X - C (f i))) = -∑ i in s, f i := by
   simpa using multiset_prod_X_sub_C_next_coeff (s.1.map f)
 #align polynomial.prod_X_sub_C_next_coeff Polynomial.prod_X_sub_C_nextCoeff
 
@@ -307,7 +307,7 @@ theorem multiset_prod_X_sub_C_coeff_card_pred (t : Multiset R) (ht : 0 < t.card)
 #align polynomial.multiset_prod_X_sub_C_coeff_card_pred Polynomial.multiset_prod_X_sub_C_coeff_card_pred
 
 theorem prod_X_sub_C_coeff_card_pred (s : Finset ι) (f : ι → R) (hs : 0 < s.card) :
-    (∏ i in s, X - C (f i)).coeff (s.card - 1) = -∑ i in s, f i := by
+    (∏ i in s, (X - C (f i))).coeff (s.card - 1) = -∑ i in s, f i := by
   simpa using multiset_prod_X_sub_C_coeff_card_pred (s.1.map f) (by simpa using hs)
 #align polynomial.prod_X_sub_C_coeff_card_pred Polynomial.prod_X_sub_C_coeff_card_pred
 

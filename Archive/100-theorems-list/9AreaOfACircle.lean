@@ -91,7 +91,7 @@ theorem area_disc : volume (disc r) = NNReal.pi * r ^ 2 :=
   let f x := sqrt (r ^ 2 - x ^ 2)
   let F x := (r : ℝ) ^ 2 * arcsin (r⁻¹ * x) + x * sqrt (r ^ 2 - x ^ 2)
   have hf : Continuous f := by continuity
-  suffices (∫ x in -r..r, 2 * f x) = NNReal.pi * r ^ 2
+  suffices ∫ x in -r..r, 2 * f x = NNReal.pi * r ^ 2
     by
     have h : integrable_on f (Ioc (-r) r) := hf.integrable_on_Icc.mono_set Ioc_subset_Icc_self
     calc
@@ -130,7 +130,7 @@ theorem area_disc : volume (disc r) = NNReal.pi * r ^ 2 :=
     · nlinarith
   have hcont := (by continuity : Continuous F).ContinuousOn
   calc
-    (∫ x in -r..r, 2 * f x) = F r - F (-r) :=
+    ∫ x in -r..r, 2 * f x = F r - F (-r) :=
       integral_eq_sub_of_has_deriv_at_of_le (neg_le_self r.2) hcont hderiv
         (continuous_const.mul hf).ContinuousOn.IntervalIntegrable
     _ = NNReal.pi * r ^ 2 := by norm_num [F, inv_mul_cancel hlt.ne', ← mul_div_assoc, mul_comm π]

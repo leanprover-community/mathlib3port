@@ -393,7 +393,7 @@ theorem addHaar_image_le_mul_of_det_lt (A : E →L[ℝ] E) {m : ℝ≥0}
           t ⊆ s ∧
             (∀ x : E, x ∈ t → 0 < r x) ∧
               (s ⊆ ⋃ x ∈ t, closed_ball x (r x)) ∧
-                (∑' x : ↥t, μ (closed_ball (↑x) (r ↑x))) ≤ μ s + a :=
+                ∑' x : ↥t, μ (closed_ball (↑x) (r ↑x)) ≤ μ s + a :=
       Besicovitch.exists_closedBall_covering_tsum_measure_le μ ha.ne' (fun x => Ioi 0) s
         fun x xs δ δpos => ⟨δ / 2, by simp [half_pos δpos, half_lt_self δpos]⟩
     haveI : Encodable t := t_count.to_encodable
@@ -878,7 +878,7 @@ directions, first up to controlled errors and then letting these errors tend to 
 
 theorem addHaar_image_le_lintegral_abs_det_fderiv_aux1 (hs : MeasurableSet s)
     (hf' : ∀ x ∈ s, HasFDerivWithinAt f (f' x) s x) {ε : ℝ≥0} (εpos : 0 < ε) :
-    μ (f '' s) ≤ (∫⁻ x in s, ENNReal.ofReal (|(f' x).det|) ∂μ) + 2 * ε * μ s :=
+    μ (f '' s) ≤ ∫⁻ x in s, ENNReal.ofReal (|(f' x).det|) ∂μ + 2 * ε * μ s :=
   by
   /- To bound `μ (f '' s)`, we cover `s` by sets where `f` is well-approximated by linear maps
     `A n` (and where `f'` is almost everywhere close to `A n`), and then use that `f` expands the
@@ -962,7 +962,7 @@ theorem addHaar_image_le_lintegral_abs_det_fderiv_aux1 (hs : MeasurableSet s)
         rw [← inter_Union]
         exact subset.antisymm (subset_inter subset.rfl t_cover) (inter_subset_left _ _)
       rw [← this]
-    _ = (∫⁻ x in s, ENNReal.ofReal (|(f' x).det|) ∂μ) + 2 * ε * μ s := by
+    _ = ∫⁻ x in s, ENNReal.ofReal (|(f' x).det|) ∂μ + 2 * ε * μ s := by
       simp only [lintegral_add_right' _ aemeasurable_const, set_lintegral_const]
 #align measure_theory.add_haar_image_le_lintegral_abs_det_fderiv_aux1 MeasureTheory.addHaar_image_le_lintegral_abs_det_fderiv_aux1
 
@@ -972,8 +972,8 @@ theorem addHaar_image_le_lintegral_abs_det_fderiv_aux2 (hs : MeasurableSet s) (h
   by
   -- We just need to let the error tend to `0` in the previous lemma.
   have :
-    tendsto (fun ε : ℝ≥0 => (∫⁻ x in s, ENNReal.ofReal (|(f' x).det|) ∂μ) + 2 * ε * μ s) (𝓝[>] 0)
-      (𝓝 ((∫⁻ x in s, ENNReal.ofReal (|(f' x).det|) ∂μ) + 2 * (0 : ℝ≥0) * μ s)) :=
+    tendsto (fun ε : ℝ≥0 => ∫⁻ x in s, ENNReal.ofReal (|(f' x).det|) ∂μ + 2 * ε * μ s) (𝓝[>] 0)
+      (𝓝 (∫⁻ x in s, ENNReal.ofReal (|(f' x).det|) ∂μ + 2 * (0 : ℝ≥0) * μ s)) :=
     by
     apply tendsto.mono_left _ nhdsWithin_le_nhds
     refine' tendsto_const_nhds.add _
@@ -1023,7 +1023,7 @@ theorem addHaar_image_le_lintegral_abs_det_fderiv (hs : MeasurableSet s)
 
 theorem lintegral_abs_det_fderiv_le_addHaar_image_aux1 (hs : MeasurableSet s)
     (hf' : ∀ x ∈ s, HasFDerivWithinAt f (f' x) s x) (hf : InjOn f s) {ε : ℝ≥0} (εpos : 0 < ε) :
-    (∫⁻ x in s, ENNReal.ofReal (|(f' x).det|) ∂μ) ≤ μ (f '' s) + 2 * ε * μ s :=
+    ∫⁻ x in s, ENNReal.ofReal (|(f' x).det|) ∂μ ≤ μ (f '' s) + 2 * ε * μ s :=
   by
   /- To bound `∫⁻ x in s, ennreal.of_real (|(f' x).det|) ∂μ`, we cover `s` by sets where `f` is
     well-approximated by linear maps `A n` (and where `f'` is almost everywhere close to `A n`),
@@ -1084,7 +1084,7 @@ theorem lintegral_abs_det_fderiv_le_addHaar_image_aux1 (hs : MeasurableSet s)
     rw [← inter_Union]
     exact subset.antisymm (subset_inter subset.rfl t_cover) (inter_subset_left _ _)
   calc
-    (∫⁻ x in s, ENNReal.ofReal (|(f' x).det|) ∂μ) =
+    ∫⁻ x in s, ENNReal.ofReal (|(f' x).det|) ∂μ =
         ∑' n, ∫⁻ x in s ∩ t n, ENNReal.ofReal (|(f' x).det|) ∂μ :=
       by
       conv_lhs => rw [s_eq]
@@ -1108,9 +1108,9 @@ theorem lintegral_abs_det_fderiv_le_addHaar_image_aux1 (hs : MeasurableSet s)
           ENNReal.ofReal_le_ofReal I
         _ = ENNReal.ofReal (|(A n).det|) + ε := by
           simp only [ENNReal.ofReal_add, abs_nonneg, NNReal.zero_le_coe, ENNReal.ofReal_coe_nnreal]
-    _ = ∑' n, ENNReal.ofReal (|(A n).det|) * μ (s ∩ t n) + ε * μ (s ∩ t n) := by
+    _ = ∑' n, (ENNReal.ofReal (|(A n).det|) * μ (s ∩ t n) + ε * μ (s ∩ t n)) := by
       simp only [set_lintegral_const, lintegral_add_right _ measurable_const]
-    _ ≤ ∑' n, μ (f '' (s ∩ t n)) + ε * μ (s ∩ t n) + ε * μ (s ∩ t n) :=
+    _ ≤ ∑' n, (μ (f '' (s ∩ t n)) + ε * μ (s ∩ t n) + ε * μ (s ∩ t n)) :=
       by
       refine' ENNReal.tsum_le_tsum fun n => add_le_add_right _ _
       exact (hδ (A n)).2.2 _ _ (ht n)
@@ -1136,7 +1136,7 @@ theorem lintegral_abs_det_fderiv_le_addHaar_image_aux1 (hs : MeasurableSet s)
 
 theorem lintegral_abs_det_fderiv_le_addHaar_image_aux2 (hs : MeasurableSet s) (h's : μ s ≠ ∞)
     (hf' : ∀ x ∈ s, HasFDerivWithinAt f (f' x) s x) (hf : InjOn f s) :
-    (∫⁻ x in s, ENNReal.ofReal (|(f' x).det|) ∂μ) ≤ μ (f '' s) :=
+    ∫⁻ x in s, ENNReal.ofReal (|(f' x).det|) ∂μ ≤ μ (f '' s) :=
   by
   -- We just need to let the error tend to `0` in the previous lemma.
   have :
@@ -1156,7 +1156,7 @@ theorem lintegral_abs_det_fderiv_le_addHaar_image_aux2 (hs : MeasurableSet s) (h
 
 theorem lintegral_abs_det_fderiv_le_addHaar_image (hs : MeasurableSet s)
     (hf' : ∀ x ∈ s, HasFDerivWithinAt f (f' x) s x) (hf : InjOn f s) :
-    (∫⁻ x in s, ENNReal.ofReal (|(f' x).det|) ∂μ) ≤ μ (f '' s) :=
+    ∫⁻ x in s, ENNReal.ofReal (|(f' x).det|) ∂μ ≤ μ (f '' s) :=
   by
   /- We already know the result for finite-measure sets. We cover `s` by finite-measure sets using
     `spanning_sets μ`, and apply the previous result to each of these parts. -/
@@ -1168,7 +1168,7 @@ theorem lintegral_abs_det_fderiv_le_addHaar_image (hs : MeasurableSet s)
   have A : s = ⋃ n, s ∩ u n := by
     rw [← inter_Union, iUnion_disjointed, Union_spanning_sets, inter_univ]
   calc
-    (∫⁻ x in s, ENNReal.ofReal (|(f' x).det|) ∂μ) =
+    ∫⁻ x in s, ENNReal.ofReal (|(f' x).det|) ∂μ =
         ∑' n, ∫⁻ x in s ∩ u n, ENNReal.ofReal (|(f' x).det|) ∂μ :=
       by
       conv_lhs => rw [A]
@@ -1205,7 +1205,7 @@ integral of `|(f' x).det|` on `s`.
 Note that the measurability of `f '' s` is given by `measurable_image_of_fderiv_within`. -/
 theorem lintegral_abs_det_fderiv_eq_addHaar_image (hs : MeasurableSet s)
     (hf' : ∀ x ∈ s, HasFDerivWithinAt f (f' x) s x) (hf : InjOn f s) :
-    (∫⁻ x in s, ENNReal.ofReal (|(f' x).det|) ∂μ) = μ (f '' s) :=
+    ∫⁻ x in s, ENNReal.ofReal (|(f' x).det|) ∂μ = μ (f '' s) :=
   le_antisymm (lintegral_abs_det_fderiv_le_addHaar_image μ hs hf' hf)
     (addHaar_image_le_lintegral_abs_det_fderiv μ hs hf')
 #align measure_theory.lintegral_abs_det_fderiv_eq_add_haar_image MeasureTheory.lintegral_abs_det_fderiv_eq_addHaar_image
@@ -1278,7 +1278,7 @@ injective and differentiable on a measurable set `s`, then the Lebesgue integral
 Note that the measurability of `f '' s` is given by `measurable_image_of_fderiv_within`. -/
 theorem lintegral_image_eq_lintegral_abs_det_fderiv_mul (hs : MeasurableSet s)
     (hf' : ∀ x ∈ s, HasFDerivWithinAt f (f' x) s x) (hf : InjOn f s) (g : E → ℝ≥0∞) :
-    (∫⁻ x in f '' s, g x ∂μ) = ∫⁻ x in s, ENNReal.ofReal (|(f' x).det|) * g (f x) ∂μ :=
+    ∫⁻ x in f '' s, g x ∂μ = ∫⁻ x in s, ENNReal.ofReal (|(f' x).det|) * g (f x) ∂μ :=
   by
   rw [← restrict_map_with_density_abs_det_fderiv_eq_add_haar μ hs hf' hf,
     (measurable_embedding_of_fderiv_within hs hf' hf).lintegral_map]
@@ -1316,7 +1316,7 @@ injective and differentiable on a measurable set `s`, then the Bochner integral 
 `g : E → F` on `f '' s` coincides with the integral of `|(f' x).det| • g ∘ f` on `s`. -/
 theorem integral_image_eq_integral_abs_det_fderiv_smul [CompleteSpace F] (hs : MeasurableSet s)
     (hf' : ∀ x ∈ s, HasFDerivWithinAt f (f' x) s x) (hf : InjOn f s) (g : E → F) :
-    (∫ x in f '' s, g x ∂μ) = ∫ x in s, |(f' x).det| • g (f x) ∂μ :=
+    ∫ x in f '' s, g x ∂μ = ∫ x in s, |(f' x).det| • g (f x) ∂μ :=
   by
   rw [← restrict_map_with_density_abs_det_fderiv_eq_add_haar μ hs hf' hf,
     (measurable_embedding_of_fderiv_within hs hf' hf).integral_map]
@@ -1365,7 +1365,7 @@ theorem integrableOn_image_iff_integrableOn_abs_deriv_smul {s : Set ℝ} {f : �
 function `g : ℝ → F` on `f '' s` coincides with the integral of `|(f' x)| • g ∘ f` on `s`. -/
 theorem integral_image_eq_integral_abs_deriv_smul {s : Set ℝ} {f : ℝ → ℝ} {f' : ℝ → ℝ}
     [CompleteSpace F] (hs : MeasurableSet s) (hf' : ∀ x ∈ s, HasDerivWithinAt f (f' x) s x)
-    (hf : InjOn f s) (g : ℝ → F) : (∫ x in f '' s, g x) = ∫ x in s, |f' x| • g (f x) := by
+    (hf : InjOn f s) (g : ℝ → F) : ∫ x in f '' s, g x = ∫ x in s, |f' x| • g (f x) := by
   simpa only [det_one_smul_right] using
     integral_image_eq_integral_abs_det_fderiv_smul volume hs
       (fun x hx => (hf' x hx).HasFDerivWithinAt) hf g
@@ -1373,7 +1373,7 @@ theorem integral_image_eq_integral_abs_deriv_smul {s : Set ℝ} {f : ℝ → ℝ
 
 theorem integral_target_eq_integral_abs_det_fderiv_smul [CompleteSpace F] {f : LocalHomeomorph E E}
     (hf' : ∀ x ∈ f.source, HasFDerivAt f (f' x) x) (g : E → F) :
-    (∫ x in f.target, g x ∂μ) = ∫ x in f.source, |(f' x).det| • g (f x) ∂μ :=
+    ∫ x in f.target, g x ∂μ = ∫ x in f.source, |(f' x).det| • g (f x) ∂μ :=
   by
   have : f '' f.source = f.target := LocalEquiv.image_source_eq_target f.to_local_equiv
   rw [← this]

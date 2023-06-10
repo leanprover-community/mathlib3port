@@ -83,10 +83,10 @@ open MeasureTheory
 theorem norm_volume_sub_integral_face_upper_sub_lower_smul_le {f : ℝⁿ⁺¹ → E} {f' : ℝⁿ⁺¹ →L[ℝ] E}
     (hfc : ContinuousOn f I.Icc) {x : ℝⁿ⁺¹} (hxI : x ∈ I.Icc) {a : E} {ε : ℝ} (h0 : 0 < ε)
     (hε : ∀ y ∈ I.Icc, ‖f y - a - f' (y - x)‖ ≤ ε * ‖y - x‖) {c : ℝ≥0} (hc : I.distortion ≤ c) :
-    ‖(∏ j, I.upper j - I.lower j) • f' (Pi.single i 1) -
+    ‖(∏ j, (I.upper j - I.lower j)) • f' (Pi.single i 1) -
           (integral (I.face i) ⊥ (f ∘ i.insertNth (I.upper i)) BoxAdditiveMap.volume -
             integral (I.face i) ⊥ (f ∘ i.insertNth (I.lower i)) BoxAdditiveMap.volume)‖ ≤
-      2 * ε * c * ∏ j, I.upper j - I.lower j :=
+      2 * ε * c * ∏ j, (I.upper j - I.lower j) :=
   by
   /- **Plan of the proof**. The difference of the integrals of the affine function
     `λ y, a + f' (y - x)` over the faces `x i = I.upper i` and `x i = I.lower i` is equal to the
@@ -129,7 +129,7 @@ theorem norm_volume_sub_integral_face_upper_sub_lower_smul_le {f : ℝⁿ⁺¹ �
       rw [two_mul, add_mul]
       exact norm_sub_le_of_le (hε _ (this _ Hl)) (hε _ (this _ Hu))
   calc
-    ‖(∏ j, I.upper j - I.lower j) • f' (Pi.single i 1) -
+    ‖(∏ j, (I.upper j - I.lower j)) • f' (Pi.single i 1) -
             (integral (I.face i) ⊥ (f ∘ i.insert_nth (I.upper i)) box_additive_map.volume -
               integral (I.face i) ⊥ (f ∘ i.insert_nth (I.lower i)) box_additive_map.volume)‖ =
         ‖integral.{0, u, u} (I.face i) ⊥
@@ -151,7 +151,7 @@ theorem norm_volume_sub_integral_face_upper_sub_lower_smul_le {f : ℝⁿ⁺¹ �
       exact
         mul_le_mul_of_nonneg_left (I.diam_Icc_le_of_distortion_le i hc)
           (mul_nonneg zero_le_two h0.le)
-    _ = 2 * ε * c * ∏ j, I.upper j - I.lower j :=
+    _ = 2 * ε * c * ∏ j, (I.upper j - I.lower j) :=
       by
       rw [← measure.to_box_additive_apply, box.volume_apply, ← I.volume_face_mul i]
       ac_rfl
@@ -255,7 +255,7 @@ theorem hasIntegral_GP_pderiv (f : ℝⁿ⁺¹ → E) (f' : ℝⁿ⁺¹ → ℝ�
           _ ≤ δ + δ := (add_le_add (hJδ J.upper_mem_Icc) (hJδ J.lower_mem_Icc))
           _ = 2 * δ := (two_mul δ).symm
       calc
-        (∏ j, |J.upper j - J.lower j|) ≤ ∏ j : Fin (n + 1), 2 * δ :=
+        ∏ j, |J.upper j - J.lower j| ≤ ∏ j : Fin (n + 1), 2 * δ :=
           prod_le_prod (fun _ _ => abs_nonneg _) fun j hj => this j
         _ = (2 * δ) ^ (n + 1) := by simp
     · refine'
@@ -305,10 +305,10 @@ theorem hasIntegral_GP_divergence_of_forall_hasDerivWithinAt (f : ℝⁿ⁺¹ �
     (Hd : ∀ x ∈ I.Icc \ s, HasFDerivWithinAt f (f' x) I.Icc x) :
     HasIntegral.{0, u, u} I GP (fun x => ∑ i, f' x (Pi.single i 1) i) BoxAdditiveMap.volume
       (∑ i,
-        integral.{0, u, u} (I.face i) GP (fun x => f (i.insertNth (I.upper i) x) i)
+        (integral.{0, u, u} (I.face i) GP (fun x => f (i.insertNth (I.upper i) x) i)
             BoxAdditiveMap.volume -
           integral.{0, u, u} (I.face i) GP (fun x => f (i.insertNth (I.lower i) x) i)
-            BoxAdditiveMap.volume) :=
+            BoxAdditiveMap.volume)) :=
   by
   refine' has_integral_sum fun i hi => _; clear hi
   simp only [hasFDerivWithinAt_pi', continuousWithinAt_pi] at Hd Hs 

@@ -179,15 +179,15 @@ theorem essSup_eq [ConditionallyCompleteLinearOrder γ] [TopologicalSpace γ] [O
 #align probability_theory.ident_distrib.ess_sup_eq ProbabilityTheory.IdentDistrib.essSup_eq
 
 theorem lintegral_eq {f : α → ℝ≥0∞} {g : β → ℝ≥0∞} (h : IdentDistrib f g μ ν) :
-    (∫⁻ x, f x ∂μ) = ∫⁻ x, g x ∂ν :=
+    ∫⁻ x, f x ∂μ = ∫⁻ x, g x ∂ν :=
   by
-  change (∫⁻ x, id (f x) ∂μ) = ∫⁻ x, id (g x) ∂ν
+  change ∫⁻ x, id (f x) ∂μ = ∫⁻ x, id (g x) ∂ν
   rw [← lintegral_map' aemeasurable_id h.ae_measurable_fst, ←
     lintegral_map' aemeasurable_id h.ae_measurable_snd, h.map_eq]
 #align probability_theory.ident_distrib.lintegral_eq ProbabilityTheory.IdentDistrib.lintegral_eq
 
 theorem integral_eq [NormedAddCommGroup γ] [NormedSpace ℝ γ] [CompleteSpace γ] [BorelSpace γ]
-    (h : IdentDistrib f g μ ν) : (∫ x, f x ∂μ) = ∫ x, g x ∂ν :=
+    (h : IdentDistrib f g μ ν) : ∫ x, f x ∂μ = ∫ x, g x ∂ν :=
   by
   by_cases hf : ae_strongly_measurable f μ
   · have A : ae_strongly_measurable id (measure.map f μ) :=
@@ -198,7 +198,7 @@ theorem integral_eq [NormedAddCommGroup γ] [NormedSpace ℝ γ] [CompleteSpace 
       rw [ae_map_iff h.ae_measurable_fst]
       · filter_upwards [ht] with x hx using subset_closure hx
       · exact is_closed_closure.measurable_set
-    change (∫ x, id (f x) ∂μ) = ∫ x, id (g x) ∂ν
+    change ∫ x, id (f x) ∂μ = ∫ x, id (g x) ∂ν
     rw [← integral_map h.ae_measurable_fst A]
     rw [h.map_eq] at A 
     rw [← integral_map h.ae_measurable_snd A, h.map_eq]

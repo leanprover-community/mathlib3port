@@ -1034,7 +1034,7 @@ protected theorem sum_mul [Fintype m] (s : Finset β) (f : β → Matrix l m α)
 #align matrix.sum_mul Matrix.sum_mul
 
 protected theorem mul_sum [Fintype m] (s : Finset β) (f : β → Matrix m n α) (M : Matrix l m α) :
-    (M ⬝ ∑ a in s, f a) = ∑ a in s, M ⬝ f a :=
+    M ⬝ ∑ a in s, f a = ∑ a in s, M ⬝ f a :=
   (addMonoidHomMulLeft M : Matrix m n α →+ _).map_sum f s
 #align matrix.mul_sum Matrix.mul_sum
 

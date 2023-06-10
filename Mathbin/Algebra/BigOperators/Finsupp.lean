@@ -437,12 +437,12 @@ theorem sum_single [AddCommMonoid M] (f : α →₀ M) : f.Sum single = f :=
 
 @[simp]
 theorem sum_univ_single [AddCommMonoid M] [Fintype α] (i : α) (m : M) :
-    (∑ j : α, (single i m) j) = m := by simp [single]
+    ∑ j : α, (single i m) j = m := by simp [single]
 #align finsupp.sum_univ_single Finsupp.sum_univ_single
 
 @[simp]
 theorem sum_univ_single' [AddCommMonoid M] [Fintype α] (i : α) (m : M) :
-    (∑ j : α, (single j m) i) = m := by simp [single]
+    ∑ j : α, (single j m) i = m := by simp [single]
 #align finsupp.sum_univ_single' Finsupp.sum_univ_single'
 
 @[simp]
@@ -481,7 +481,7 @@ theorem prod_embDomain [Zero M] [CommMonoid N] {v : α →₀ M} {f : α ↪ β}
 @[to_additive]
 theorem prod_finset_sum_index [AddCommMonoid M] [CommMonoid N] {s : Finset ι} {g : ι → α →₀ M}
     {h : α → M → N} (h_zero : ∀ a, h a 0 = 1) (h_add : ∀ a b₁ b₂, h a (b₁ + b₂) = h a b₁ * h a b₂) :
-    (∏ i in s, (g i).Prod h) = (∑ i in s, g i).Prod h :=
+    ∏ i in s, (g i).Prod h = (∑ i in s, g i).Prod h :=
   Finset.cons_induction_on s rfl fun a s has ih => by
     rw [prod_cons, ih, sum_cons, prod_add_index' h_zero h_add]
 #align finsupp.prod_finset_sum_index Finsupp.prod_finset_sum_index
@@ -540,7 +540,7 @@ theorem prod_add_index_of_disjoint [AddCommMonoid M] {f1 f2 : α →₀ M}
   by
   have :
     ∀ {f1 f2 : α →₀ M},
-      Disjoint f1.support f2.support → (∏ x in f1.support, g x (f1 x + f2 x)) = f1.Prod g :=
+      Disjoint f1.support f2.support → ∏ x in f1.support, g x (f1 x + f2 x) = f1.Prod g :=
     fun f1 f2 hd =>
     Finset.prod_congr rfl fun x hx => by
       simp only [not_mem_support_iff.mp (disjoint_left.mp hd hx), add_zero]

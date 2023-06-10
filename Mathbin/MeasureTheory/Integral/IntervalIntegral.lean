@@ -547,15 +547,15 @@ variable [CompleteSpace E] [NormedSpace ℝ E]
 as `∫ x in Ioc a b, f x ∂μ - ∫ x in Ioc b a, f x ∂μ`. If `a ≤ b`, then it equals
 `∫ x in Ioc a b, f x ∂μ`, otherwise it equals `-∫ x in Ioc b a, f x ∂μ`. -/
 def intervalIntegral (f : ℝ → E) (a b : ℝ) (μ : Measure ℝ) : E :=
-  (∫ x in Ioc a b, f x ∂μ) - ∫ x in Ioc b a, f x ∂μ
+  ∫ x in Ioc a b, f x ∂μ - ∫ x in Ioc b a, f x ∂μ
 #align interval_integral intervalIntegral
 -/
 
 -- mathport name: «expr∫ in .. , ∂ »
-notation3"∫ "(...)" in "a".."b", "r:(scoped f => f)" ∂"μ => intervalIntegral r a b μ
+notation3"∫ "(...)" in "a".."b", "r:60:(scoped f => f)" ∂"μ:70 => intervalIntegral r a b μ
 
 -- mathport name: «expr∫ in .. , »
-notation3"∫ "(...)" in "a".."b", "r:(scoped f => intervalIntegral f a b volume) => r
+notation3"∫ "(...)" in "a".."b", "r:60:(scoped f => intervalIntegral f a b volume) => r
 
 namespace intervalIntegral
 
@@ -564,28 +564,28 @@ section Basic
 variable {a b : ℝ} {f g : ℝ → E} {μ : Measure ℝ}
 
 @[simp]
-theorem integral_zero : (∫ x in a..b, (0 : E) ∂μ) = 0 := by simp [intervalIntegral]
+theorem integral_zero : ∫ x in a..b, (0 : E) ∂μ = 0 := by simp [intervalIntegral]
 #align interval_integral.integral_zero intervalIntegral.integral_zero
 
-theorem integral_of_le (h : a ≤ b) : (∫ x in a..b, f x ∂μ) = ∫ x in Ioc a b, f x ∂μ := by
+theorem integral_of_le (h : a ≤ b) : ∫ x in a..b, f x ∂μ = ∫ x in Ioc a b, f x ∂μ := by
   simp [intervalIntegral, h]
 #align interval_integral.integral_of_le intervalIntegral.integral_of_le
 
 @[simp]
-theorem integral_same : (∫ x in a..a, f x ∂μ) = 0 :=
+theorem integral_same : ∫ x in a..a, f x ∂μ = 0 :=
   sub_self _
 #align interval_integral.integral_same intervalIntegral.integral_same
 
-theorem integral_symm (a b) : (∫ x in b..a, f x ∂μ) = -∫ x in a..b, f x ∂μ := by
+theorem integral_symm (a b) : ∫ x in b..a, f x ∂μ = -∫ x in a..b, f x ∂μ := by
   simp only [intervalIntegral, neg_sub]
 #align interval_integral.integral_symm intervalIntegral.integral_symm
 
-theorem integral_of_ge (h : b ≤ a) : (∫ x in a..b, f x ∂μ) = -∫ x in Ioc b a, f x ∂μ := by
+theorem integral_of_ge (h : b ≤ a) : ∫ x in a..b, f x ∂μ = -∫ x in Ioc b a, f x ∂μ := by
   simp only [integral_symm b, integral_of_le h]
 #align interval_integral.integral_of_ge intervalIntegral.integral_of_ge
 
 theorem intervalIntegral_eq_integral_uIoc (f : ℝ → E) (a b : ℝ) (μ : Measure ℝ) :
-    (∫ x in a..b, f x ∂μ) = (if a ≤ b then 1 else -1 : ℝ) • ∫ x in Ι a b, f x ∂μ :=
+    ∫ x in a..b, f x ∂μ = (if a ≤ b then 1 else -1 : ℝ) • ∫ x in Ι a b, f x ∂μ :=
   by
   split_ifs with h
   · simp only [integral_of_le h, uIoc_of_le h, one_smul]
@@ -607,11 +607,11 @@ theorem abs_intervalIntegral_eq (f : ℝ → ℝ) (a b : ℝ) (μ : Measure ℝ)
 #align interval_integral.abs_interval_integral_eq intervalIntegral.abs_intervalIntegral_eq
 
 theorem integral_cases (f : ℝ → E) (a b) :
-    (∫ x in a..b, f x ∂μ) ∈ ({∫ x in Ι a b, f x ∂μ, -∫ x in Ι a b, f x ∂μ} : Set E) := by
+    ∫ x in a..b, f x ∂μ ∈ ({∫ x in Ι a b, f x ∂μ, -∫ x in Ι a b, f x ∂μ} : Set E) := by
   rw [interval_integral_eq_integral_uIoc]; split_ifs <;> simp
 #align interval_integral.integral_cases intervalIntegral.integral_cases
 
-theorem integral_undef (h : ¬IntervalIntegrable f μ a b) : (∫ x in a..b, f x ∂μ) = 0 := by
+theorem integral_undef (h : ¬IntervalIntegrable f μ a b) : ∫ x in a..b, f x ∂μ = 0 := by
   cases' le_total a b with hab hab <;>
         simp only [integral_of_le, integral_of_ge, hab, neg_eq_zero] <;>
       refine' integral_undef (not_imp_not.mpr _ h) <;>
@@ -620,17 +620,17 @@ theorem integral_undef (h : ¬IntervalIntegrable f μ a b) : (∫ x in a..b, f x
 #align interval_integral.integral_undef intervalIntegral.integral_undef
 
 theorem intervalIntegrable_of_integral_ne_zero {a b : ℝ} {f : ℝ → E} {μ : Measure ℝ}
-    (h : (∫ x in a..b, f x ∂μ) ≠ 0) : IntervalIntegrable f μ a b := by contrapose! h;
+    (h : ∫ x in a..b, f x ∂μ ≠ 0) : IntervalIntegrable f μ a b := by contrapose! h;
   exact intervalIntegral.integral_undef h
 #align interval_integral.interval_integrable_of_integral_ne_zero intervalIntegral.intervalIntegrable_of_integral_ne_zero
 
 theorem integral_non_aestronglyMeasurable (hf : ¬AEStronglyMeasurable f (μ.restrict (Ι a b))) :
-    (∫ x in a..b, f x ∂μ) = 0 := by
+    ∫ x in a..b, f x ∂μ = 0 := by
   rw [interval_integral_eq_integral_uIoc, integral_non_ae_strongly_measurable hf, smul_zero]
 #align interval_integral.integral_non_ae_strongly_measurable intervalIntegral.integral_non_aestronglyMeasurable
 
 theorem integral_non_aestronglyMeasurable_of_le (h : a ≤ b)
-    (hf : ¬AEStronglyMeasurable f (μ.restrict (Ioc a b))) : (∫ x in a..b, f x ∂μ) = 0 :=
+    (hf : ¬AEStronglyMeasurable f (μ.restrict (Ioc a b))) : ∫ x in a..b, f x ∂μ = 0 :=
   integral_non_aestronglyMeasurable <| by rwa [uIoc_of_le h]
 #align interval_integral.integral_non_ae_strongly_measurable_of_le intervalIntegral.integral_non_aestronglyMeasurable_of_le
 
@@ -695,79 +695,78 @@ theorem norm_integral_le_of_norm_le_const {a b C : ℝ} {f : ℝ → E} (h : ∀
 
 @[simp]
 theorem integral_add (hf : IntervalIntegrable f μ a b) (hg : IntervalIntegrable g μ a b) :
-    (∫ x in a..b, f x + g x ∂μ) = (∫ x in a..b, f x ∂μ) + ∫ x in a..b, g x ∂μ := by
+    ∫ x in a..b, f x + g x ∂μ = ∫ x in a..b, f x ∂μ + ∫ x in a..b, g x ∂μ := by
   simp only [interval_integral_eq_integral_uIoc, integral_add hf.def hg.def, smul_add]
 #align interval_integral.integral_add intervalIntegral.integral_add
 
 #print intervalIntegral.integral_finset_sum /-
 theorem integral_finset_sum {ι} {s : Finset ι} {f : ι → ℝ → E}
     (h : ∀ i ∈ s, IntervalIntegrable (f i) μ a b) :
-    (∫ x in a..b, ∑ i in s, f i x ∂μ) = ∑ i in s, ∫ x in a..b, f i x ∂μ := by
+    ∫ x in a..b, ∑ i in s, f i x ∂μ = ∑ i in s, ∫ x in a..b, f i x ∂μ := by
   simp only [interval_integral_eq_integral_uIoc, integral_finset_sum s fun i hi => (h i hi).def,
     Finset.smul_sum]
 #align interval_integral.integral_finset_sum intervalIntegral.integral_finset_sum
 -/
 
 @[simp]
-theorem integral_neg : (∫ x in a..b, -f x ∂μ) = -∫ x in a..b, f x ∂μ := by
+theorem integral_neg : ∫ x in a..b, -f x ∂μ = -∫ x in a..b, f x ∂μ := by
   simp only [intervalIntegral, integral_neg]; abel
 #align interval_integral.integral_neg intervalIntegral.integral_neg
 
 @[simp]
 theorem integral_sub (hf : IntervalIntegrable f μ a b) (hg : IntervalIntegrable g μ a b) :
-    (∫ x in a..b, f x - g x ∂μ) = (∫ x in a..b, f x ∂μ) - ∫ x in a..b, g x ∂μ := by
+    ∫ x in a..b, f x - g x ∂μ = ∫ x in a..b, f x ∂μ - ∫ x in a..b, g x ∂μ := by
   simpa only [sub_eq_add_neg] using (integral_add hf hg.neg).trans (congr_arg _ integral_neg)
 #align interval_integral.integral_sub intervalIntegral.integral_sub
 
 #print intervalIntegral.integral_smul /-
 @[simp]
 theorem integral_smul {𝕜 : Type _} [NontriviallyNormedField 𝕜] [NormedSpace 𝕜 E]
-    [SMulCommClass ℝ 𝕜 E] (r : 𝕜) (f : ℝ → E) :
-    (∫ x in a..b, r • f x ∂μ) = r • ∫ x in a..b, f x ∂μ := by
-  simp only [intervalIntegral, integral_smul, smul_sub]
+    [SMulCommClass ℝ 𝕜 E] (r : 𝕜) (f : ℝ → E) : ∫ x in a..b, r • f x ∂μ = r • ∫ x in a..b, f x ∂μ :=
+  by simp only [intervalIntegral, integral_smul, smul_sub]
 #align interval_integral.integral_smul intervalIntegral.integral_smul
 -/
 
 #print intervalIntegral.integral_smul_const /-
 @[simp]
 theorem integral_smul_const {𝕜 : Type _} [IsROrC 𝕜] [NormedSpace 𝕜 E] (f : ℝ → 𝕜) (c : E) :
-    (∫ x in a..b, f x • c ∂μ) = (∫ x in a..b, f x ∂μ) • c := by
+    ∫ x in a..b, f x • c ∂μ = (∫ x in a..b, f x ∂μ) • c := by
   simp only [interval_integral_eq_integral_uIoc, integral_smul_const, smul_assoc]
 #align interval_integral.integral_smul_const intervalIntegral.integral_smul_const
 -/
 
 @[simp]
 theorem integral_const_mul {𝕜 : Type _} [IsROrC 𝕜] (r : 𝕜) (f : ℝ → 𝕜) :
-    (∫ x in a..b, r * f x ∂μ) = r * ∫ x in a..b, f x ∂μ :=
+    ∫ x in a..b, r * f x ∂μ = r * ∫ x in a..b, f x ∂μ :=
   integral_smul r f
 #align interval_integral.integral_const_mul intervalIntegral.integral_const_mul
 
 @[simp]
 theorem integral_mul_const {𝕜 : Type _} [IsROrC 𝕜] (r : 𝕜) (f : ℝ → 𝕜) :
-    (∫ x in a..b, f x * r ∂μ) = (∫ x in a..b, f x ∂μ) * r := by
+    ∫ x in a..b, f x * r ∂μ = (∫ x in a..b, f x ∂μ) * r := by
   simpa only [mul_comm r] using integral_const_mul r f
 #align interval_integral.integral_mul_const intervalIntegral.integral_mul_const
 
 @[simp]
 theorem integral_div {𝕜 : Type _} [IsROrC 𝕜] (r : 𝕜) (f : ℝ → 𝕜) :
-    (∫ x in a..b, f x / r ∂μ) = (∫ x in a..b, f x ∂μ) / r := by
+    ∫ x in a..b, f x / r ∂μ = (∫ x in a..b, f x ∂μ) / r := by
   simpa only [div_eq_mul_inv] using integral_mul_const r⁻¹ f
 #align interval_integral.integral_div intervalIntegral.integral_div
 
 theorem integral_const' (c : E) :
-    (∫ x in a..b, c ∂μ) = ((μ <| Ioc a b).toReal - (μ <| Ioc b a).toReal) • c := by
+    ∫ x in a..b, c ∂μ = ((μ <| Ioc a b).toReal - (μ <| Ioc b a).toReal) • c := by
   simp only [intervalIntegral, set_integral_const, sub_smul]
 #align interval_integral.integral_const' intervalIntegral.integral_const'
 
 @[simp]
-theorem integral_const (c : E) : (∫ x in a..b, c) = (b - a) • c := by
+theorem integral_const (c : E) : ∫ x in a..b, c = (b - a) • c := by
   simp only [integral_const', Real.volume_Ioc, ENNReal.toReal_ofReal', ← neg_sub b,
     max_zero_sub_eq_self]
 #align interval_integral.integral_const intervalIntegral.integral_const
 
 #print intervalIntegral.integral_smul_measure /-
 theorem integral_smul_measure (c : ℝ≥0∞) :
-    (∫ x in a..b, f x ∂c • μ) = c.toReal • ∫ x in a..b, f x ∂μ := by
+    ∫ x in a..b, f x ∂c • μ = c.toReal • ∫ x in a..b, f x ∂μ := by
   simp only [intervalIntegral, measure.restrict_smul, integral_smul_measure, smul_sub]
 #align interval_integral.integral_smul_measure intervalIntegral.integral_smul_measure
 -/
@@ -775,7 +774,7 @@ theorem integral_smul_measure (c : ℝ≥0∞) :
 end Basic
 
 theorem integral_ofReal {a b : ℝ} {μ : Measure ℝ} {f : ℝ → ℝ} :
-    (∫ x in a..b, (f x : ℂ) ∂μ) = ↑(∫ x in a..b, f x ∂μ) := by
+    ∫ x in a..b, (f x : ℂ) ∂μ = ↑(∫ x in a..b, f x ∂μ) := by
   simp only [intervalIntegral, integral_ofReal, Complex.ofReal_sub]
 #align interval_integral.integral_of_real intervalIntegral.integral_ofReal
 
@@ -796,7 +795,7 @@ theorem ContinuousLinearMap.intervalIntegral_apply {a b : ℝ} {φ : ℝ → F �
 variable [NormedSpace ℝ F] [CompleteSpace F]
 
 theorem ContinuousLinearMap.intervalIntegral_comp_comm (L : E →L[𝕜] F)
-    (hf : IntervalIntegrable f μ a b) : (∫ x in a..b, L (f x) ∂μ) = L (∫ x in a..b, f x ∂μ) := by
+    (hf : IntervalIntegrable f μ a b) : ∫ x in a..b, L (f x) ∂μ = L (∫ x in a..b, f x ∂μ) := by
   simp_rw [intervalIntegral, L.integral_comp_comm hf.1, L.integral_comp_comm hf.2, L.map_sub]
 #align continuous_linear_map.interval_integral_comp_comm ContinuousLinearMap.intervalIntegral_comp_comm
 
@@ -808,7 +807,7 @@ variable {a b c d : ℝ} (f : ℝ → E)
 
 @[simp]
 theorem integral_comp_mul_right (hc : c ≠ 0) :
-    (∫ x in a..b, f (x * c)) = c⁻¹ • ∫ x in a * c..b * c, f x :=
+    ∫ x in a..b, f (x * c) = c⁻¹ • ∫ x in a * c..b * c, f x :=
   by
   have A : MeasurableEmbedding fun x => x * c :=
     (Homeomorph.mulRight₀ c hc).ClosedEmbedding.MeasurableEmbedding
@@ -821,110 +820,109 @@ theorem integral_comp_mul_right (hc : c ≠ 0) :
 #align interval_integral.integral_comp_mul_right intervalIntegral.integral_comp_mul_right
 
 @[simp]
-theorem smul_integral_comp_mul_right (c) :
-    (c • ∫ x in a..b, f (x * c)) = ∫ x in a * c..b * c, f x := by by_cases hc : c = 0 <;> simp [hc]
+theorem smul_integral_comp_mul_right (c) : c • ∫ x in a..b, f (x * c) = ∫ x in a * c..b * c, f x :=
+  by by_cases hc : c = 0 <;> simp [hc]
 #align interval_integral.smul_integral_comp_mul_right intervalIntegral.smul_integral_comp_mul_right
 
 @[simp]
 theorem integral_comp_mul_left (hc : c ≠ 0) :
-    (∫ x in a..b, f (c * x)) = c⁻¹ • ∫ x in c * a..c * b, f x := by
+    ∫ x in a..b, f (c * x) = c⁻¹ • ∫ x in c * a..c * b, f x := by
   simpa only [mul_comm c] using integral_comp_mul_right f hc
 #align interval_integral.integral_comp_mul_left intervalIntegral.integral_comp_mul_left
 
 @[simp]
-theorem smul_integral_comp_mul_left (c) : (c • ∫ x in a..b, f (c * x)) = ∫ x in c * a..c * b, f x :=
+theorem smul_integral_comp_mul_left (c) : c • ∫ x in a..b, f (c * x) = ∫ x in c * a..c * b, f x :=
   by by_cases hc : c = 0 <;> simp [hc]
 #align interval_integral.smul_integral_comp_mul_left intervalIntegral.smul_integral_comp_mul_left
 
 @[simp]
-theorem integral_comp_div (hc : c ≠ 0) : (∫ x in a..b, f (x / c)) = c • ∫ x in a / c..b / c, f x :=
-  by simpa only [inv_inv] using integral_comp_mul_right f (inv_ne_zero hc)
+theorem integral_comp_div (hc : c ≠ 0) : ∫ x in a..b, f (x / c) = c • ∫ x in a / c..b / c, f x := by
+  simpa only [inv_inv] using integral_comp_mul_right f (inv_ne_zero hc)
 #align interval_integral.integral_comp_div intervalIntegral.integral_comp_div
 
 @[simp]
-theorem inv_smul_integral_comp_div (c) :
-    (c⁻¹ • ∫ x in a..b, f (x / c)) = ∫ x in a / c..b / c, f x := by
-  by_cases hc : c = 0 <;> simp [hc]
+theorem inv_smul_integral_comp_div (c) : c⁻¹ • ∫ x in a..b, f (x / c) = ∫ x in a / c..b / c, f x :=
+  by by_cases hc : c = 0 <;> simp [hc]
 #align interval_integral.inv_smul_integral_comp_div intervalIntegral.inv_smul_integral_comp_div
 
 @[simp]
-theorem integral_comp_add_right (d) : (∫ x in a..b, f (x + d)) = ∫ x in a + d..b + d, f x :=
+theorem integral_comp_add_right (d) : ∫ x in a..b, f (x + d) = ∫ x in a + d..b + d, f x :=
   have A : MeasurableEmbedding fun x => x + d :=
     (Homeomorph.addRight d).ClosedEmbedding.MeasurableEmbedding
   calc
-    (∫ x in a..b, f (x + d)) = ∫ x in a + d..b + d, f x ∂Measure.map (fun x => x + d) volume := by
+    ∫ x in a..b, f (x + d) = ∫ x in a + d..b + d, f x ∂Measure.map (fun x => x + d) volume := by
       simp [intervalIntegral, A.set_integral_map]
     _ = ∫ x in a + d..b + d, f x := by rw [map_add_right_eq_self]
 #align interval_integral.integral_comp_add_right intervalIntegral.integral_comp_add_right
 
 @[simp]
-theorem integral_comp_add_left (d) : (∫ x in a..b, f (d + x)) = ∫ x in d + a..d + b, f x := by
+theorem integral_comp_add_left (d) : ∫ x in a..b, f (d + x) = ∫ x in d + a..d + b, f x := by
   simpa only [add_comm] using integral_comp_add_right f d
 #align interval_integral.integral_comp_add_left intervalIntegral.integral_comp_add_left
 
 @[simp]
 theorem integral_comp_mul_add (hc : c ≠ 0) (d) :
-    (∫ x in a..b, f (c * x + d)) = c⁻¹ • ∫ x in c * a + d..c * b + d, f x := by
+    ∫ x in a..b, f (c * x + d) = c⁻¹ • ∫ x in c * a + d..c * b + d, f x := by
   rw [← integral_comp_add_right, ← integral_comp_mul_left _ hc]
 #align interval_integral.integral_comp_mul_add intervalIntegral.integral_comp_mul_add
 
 @[simp]
 theorem smul_integral_comp_mul_add (c d) :
-    (c • ∫ x in a..b, f (c * x + d)) = ∫ x in c * a + d..c * b + d, f x := by
+    c • ∫ x in a..b, f (c * x + d) = ∫ x in c * a + d..c * b + d, f x := by
   by_cases hc : c = 0 <;> simp [hc]
 #align interval_integral.smul_integral_comp_mul_add intervalIntegral.smul_integral_comp_mul_add
 
 @[simp]
 theorem integral_comp_add_mul (hc : c ≠ 0) (d) :
-    (∫ x in a..b, f (d + c * x)) = c⁻¹ • ∫ x in d + c * a..d + c * b, f x := by
+    ∫ x in a..b, f (d + c * x) = c⁻¹ • ∫ x in d + c * a..d + c * b, f x := by
   rw [← integral_comp_add_left, ← integral_comp_mul_left _ hc]
 #align interval_integral.integral_comp_add_mul intervalIntegral.integral_comp_add_mul
 
 @[simp]
 theorem smul_integral_comp_add_mul (c d) :
-    (c • ∫ x in a..b, f (d + c * x)) = ∫ x in d + c * a..d + c * b, f x := by
+    c • ∫ x in a..b, f (d + c * x) = ∫ x in d + c * a..d + c * b, f x := by
   by_cases hc : c = 0 <;> simp [hc]
 #align interval_integral.smul_integral_comp_add_mul intervalIntegral.smul_integral_comp_add_mul
 
 @[simp]
 theorem integral_comp_div_add (hc : c ≠ 0) (d) :
-    (∫ x in a..b, f (x / c + d)) = c • ∫ x in a / c + d..b / c + d, f x := by
+    ∫ x in a..b, f (x / c + d) = c • ∫ x in a / c + d..b / c + d, f x := by
   simpa only [div_eq_inv_mul, inv_inv] using integral_comp_mul_add f (inv_ne_zero hc) d
 #align interval_integral.integral_comp_div_add intervalIntegral.integral_comp_div_add
 
 @[simp]
 theorem inv_smul_integral_comp_div_add (c d) :
-    (c⁻¹ • ∫ x in a..b, f (x / c + d)) = ∫ x in a / c + d..b / c + d, f x := by
+    c⁻¹ • ∫ x in a..b, f (x / c + d) = ∫ x in a / c + d..b / c + d, f x := by
   by_cases hc : c = 0 <;> simp [hc]
 #align interval_integral.inv_smul_integral_comp_div_add intervalIntegral.inv_smul_integral_comp_div_add
 
 @[simp]
 theorem integral_comp_add_div (hc : c ≠ 0) (d) :
-    (∫ x in a..b, f (d + x / c)) = c • ∫ x in d + a / c..d + b / c, f x := by
+    ∫ x in a..b, f (d + x / c) = c • ∫ x in d + a / c..d + b / c, f x := by
   simpa only [div_eq_inv_mul, inv_inv] using integral_comp_add_mul f (inv_ne_zero hc) d
 #align interval_integral.integral_comp_add_div intervalIntegral.integral_comp_add_div
 
 @[simp]
 theorem inv_smul_integral_comp_add_div (c d) :
-    (c⁻¹ • ∫ x in a..b, f (d + x / c)) = ∫ x in d + a / c..d + b / c, f x := by
+    c⁻¹ • ∫ x in a..b, f (d + x / c) = ∫ x in d + a / c..d + b / c, f x := by
   by_cases hc : c = 0 <;> simp [hc]
 #align interval_integral.inv_smul_integral_comp_add_div intervalIntegral.inv_smul_integral_comp_add_div
 
 @[simp]
 theorem integral_comp_mul_sub (hc : c ≠ 0) (d) :
-    (∫ x in a..b, f (c * x - d)) = c⁻¹ • ∫ x in c * a - d..c * b - d, f x := by
+    ∫ x in a..b, f (c * x - d) = c⁻¹ • ∫ x in c * a - d..c * b - d, f x := by
   simpa only [sub_eq_add_neg] using integral_comp_mul_add f hc (-d)
 #align interval_integral.integral_comp_mul_sub intervalIntegral.integral_comp_mul_sub
 
 @[simp]
 theorem smul_integral_comp_mul_sub (c d) :
-    (c • ∫ x in a..b, f (c * x - d)) = ∫ x in c * a - d..c * b - d, f x := by
+    c • ∫ x in a..b, f (c * x - d) = ∫ x in c * a - d..c * b - d, f x := by
   by_cases hc : c = 0 <;> simp [hc]
 #align interval_integral.smul_integral_comp_mul_sub intervalIntegral.smul_integral_comp_mul_sub
 
 @[simp]
 theorem integral_comp_sub_mul (hc : c ≠ 0) (d) :
-    (∫ x in a..b, f (d - c * x)) = c⁻¹ • ∫ x in d - c * b..d - c * a, f x :=
+    ∫ x in a..b, f (d - c * x) = c⁻¹ • ∫ x in d - c * b..d - c * a, f x :=
   by
   simp only [sub_eq_add_neg, neg_mul_eq_neg_mul]
   rw [integral_comp_add_mul f (neg_ne_zero.mpr hc) d, integral_symm]
@@ -933,46 +931,46 @@ theorem integral_comp_sub_mul (hc : c ≠ 0) (d) :
 
 @[simp]
 theorem smul_integral_comp_sub_mul (c d) :
-    (c • ∫ x in a..b, f (d - c * x)) = ∫ x in d - c * b..d - c * a, f x := by
+    c • ∫ x in a..b, f (d - c * x) = ∫ x in d - c * b..d - c * a, f x := by
   by_cases hc : c = 0 <;> simp [hc]
 #align interval_integral.smul_integral_comp_sub_mul intervalIntegral.smul_integral_comp_sub_mul
 
 @[simp]
 theorem integral_comp_div_sub (hc : c ≠ 0) (d) :
-    (∫ x in a..b, f (x / c - d)) = c • ∫ x in a / c - d..b / c - d, f x := by
+    ∫ x in a..b, f (x / c - d) = c • ∫ x in a / c - d..b / c - d, f x := by
   simpa only [div_eq_inv_mul, inv_inv] using integral_comp_mul_sub f (inv_ne_zero hc) d
 #align interval_integral.integral_comp_div_sub intervalIntegral.integral_comp_div_sub
 
 @[simp]
 theorem inv_smul_integral_comp_div_sub (c d) :
-    (c⁻¹ • ∫ x in a..b, f (x / c - d)) = ∫ x in a / c - d..b / c - d, f x := by
+    c⁻¹ • ∫ x in a..b, f (x / c - d) = ∫ x in a / c - d..b / c - d, f x := by
   by_cases hc : c = 0 <;> simp [hc]
 #align interval_integral.inv_smul_integral_comp_div_sub intervalIntegral.inv_smul_integral_comp_div_sub
 
 @[simp]
 theorem integral_comp_sub_div (hc : c ≠ 0) (d) :
-    (∫ x in a..b, f (d - x / c)) = c • ∫ x in d - b / c..d - a / c, f x := by
+    ∫ x in a..b, f (d - x / c) = c • ∫ x in d - b / c..d - a / c, f x := by
   simpa only [div_eq_inv_mul, inv_inv] using integral_comp_sub_mul f (inv_ne_zero hc) d
 #align interval_integral.integral_comp_sub_div intervalIntegral.integral_comp_sub_div
 
 @[simp]
 theorem inv_smul_integral_comp_sub_div (c d) :
-    (c⁻¹ • ∫ x in a..b, f (d - x / c)) = ∫ x in d - b / c..d - a / c, f x := by
+    c⁻¹ • ∫ x in a..b, f (d - x / c) = ∫ x in d - b / c..d - a / c, f x := by
   by_cases hc : c = 0 <;> simp [hc]
 #align interval_integral.inv_smul_integral_comp_sub_div intervalIntegral.inv_smul_integral_comp_sub_div
 
 @[simp]
-theorem integral_comp_sub_right (d) : (∫ x in a..b, f (x - d)) = ∫ x in a - d..b - d, f x := by
+theorem integral_comp_sub_right (d) : ∫ x in a..b, f (x - d) = ∫ x in a - d..b - d, f x := by
   simpa only [sub_eq_add_neg] using integral_comp_add_right f (-d)
 #align interval_integral.integral_comp_sub_right intervalIntegral.integral_comp_sub_right
 
 @[simp]
-theorem integral_comp_sub_left (d) : (∫ x in a..b, f (d - x)) = ∫ x in d - b..d - a, f x := by
+theorem integral_comp_sub_left (d) : ∫ x in a..b, f (d - x) = ∫ x in d - b..d - a, f x := by
   simpa only [one_mul, one_smul, inv_one] using integral_comp_sub_mul f one_ne_zero d
 #align interval_integral.integral_comp_sub_left intervalIntegral.integral_comp_sub_left
 
 @[simp]
-theorem integral_comp_neg : (∫ x in a..b, f (-x)) = ∫ x in -b..-a, f x := by
+theorem integral_comp_neg : ∫ x in a..b, f (-x) = ∫ x in -b..-a, f x := by
   simpa only [zero_sub] using integral_comp_sub_left f 0
 #align interval_integral.integral_comp_neg intervalIntegral.integral_comp_neg
 
@@ -994,7 +992,7 @@ variable {a b c d : ℝ} {f g : ℝ → E} {μ : Measure ℝ}
 #print intervalIntegral.integral_congr /-
 /-- If two functions are equal in the relevant interval, their interval integrals are also equal. -/
 theorem integral_congr {a b : ℝ} (h : EqOn f g [a, b]) :
-    (∫ x in a..b, f x ∂μ) = ∫ x in a..b, g x ∂μ := by
+    ∫ x in a..b, f x ∂μ = ∫ x in a..b, g x ∂μ := by
   cases' le_total a b with hab hab <;>
     simpa [hab, integral_of_le, integral_of_ge] using
       set_integral_congr measurableSet_Ioc (h.mono Ioc_subset_Icc_self)
@@ -1003,7 +1001,7 @@ theorem integral_congr {a b : ℝ} (h : EqOn f g [a, b]) :
 
 theorem integral_add_adjacent_intervals_cancel (hab : IntervalIntegrable f μ a b)
     (hbc : IntervalIntegrable f μ b c) :
-    (((∫ x in a..b, f x ∂μ) + ∫ x in b..c, f x ∂μ) + ∫ x in c..a, f x ∂μ) = 0 :=
+    ∫ x in a..b, f x ∂μ + ∫ x in b..c, f x ∂μ + ∫ x in c..a, f x ∂μ = 0 :=
   by
   have hac := hab.trans hbc
   simp only [intervalIntegral, sub_add_sub_comm, sub_eq_zero]
@@ -1018,13 +1016,13 @@ theorem integral_add_adjacent_intervals_cancel (hab : IntervalIntegrable f μ a 
 
 theorem integral_add_adjacent_intervals (hab : IntervalIntegrable f μ a b)
     (hbc : IntervalIntegrable f μ b c) :
-    ((∫ x in a..b, f x ∂μ) + ∫ x in b..c, f x ∂μ) = ∫ x in a..c, f x ∂μ := by
+    ∫ x in a..b, f x ∂μ + ∫ x in b..c, f x ∂μ = ∫ x in a..c, f x ∂μ := by
   rw [← add_neg_eq_zero, ← integral_symm, integral_add_adjacent_intervals_cancel hab hbc]
 #align interval_integral.integral_add_adjacent_intervals intervalIntegral.integral_add_adjacent_intervals
 
 theorem sum_integral_adjacent_intervals_Ico {a : ℕ → ℝ} {m n : ℕ} (hmn : m ≤ n)
     (hint : ∀ k ∈ Ico m n, IntervalIntegrable f μ (a k) (a <| k + 1)) :
-    (∑ k : ℕ in Finset.Ico m n, ∫ x in a k..a <| k + 1, f x ∂μ) = ∫ x in a m..a n, f x ∂μ :=
+    ∑ k : ℕ in Finset.Ico m n, ∫ x in a k..a <| k + 1, f x ∂μ = ∫ x in a m..a n, f x ∂μ :=
   by
   revert hint
   refine' Nat.le_induction _ _ n hmn
@@ -1042,7 +1040,7 @@ theorem sum_integral_adjacent_intervals_Ico {a : ℕ → ℝ} {m n : ℕ} (hmn :
 #print intervalIntegral.sum_integral_adjacent_intervals /-
 theorem sum_integral_adjacent_intervals {a : ℕ → ℝ} {n : ℕ}
     (hint : ∀ k < n, IntervalIntegrable f μ (a k) (a <| k + 1)) :
-    (∑ k : ℕ in Finset.range n, ∫ x in a k..a <| k + 1, f x ∂μ) = ∫ x in a 0 ..a n, f x ∂μ :=
+    ∑ k : ℕ in Finset.range n, ∫ x in a k..a <| k + 1, f x ∂μ = ∫ x in a 0 ..a n, f x ∂μ :=
   by
   rw [← Nat.Ico_zero_eq_range]
   exact sum_integral_adjacent_intervals_Ico (zero_le n) fun k hk => hint k hk.2
@@ -1051,36 +1049,33 @@ theorem sum_integral_adjacent_intervals {a : ℕ → ℝ} {n : ℕ}
 
 theorem integral_interval_sub_left (hab : IntervalIntegrable f μ a b)
     (hac : IntervalIntegrable f μ a c) :
-    ((∫ x in a..b, f x ∂μ) - ∫ x in a..c, f x ∂μ) = ∫ x in c..b, f x ∂μ :=
+    ∫ x in a..b, f x ∂μ - ∫ x in a..c, f x ∂μ = ∫ x in c..b, f x ∂μ :=
   sub_eq_of_eq_add' <| Eq.symm <| integral_add_adjacent_intervals hac (hac.symm.trans hab)
 #align interval_integral.integral_interval_sub_left intervalIntegral.integral_interval_sub_left
 
 theorem integral_interval_add_interval_comm (hab : IntervalIntegrable f μ a b)
     (hcd : IntervalIntegrable f μ c d) (hac : IntervalIntegrable f μ a c) :
-    ((∫ x in a..b, f x ∂μ) + ∫ x in c..d, f x ∂μ) = (∫ x in a..d, f x ∂μ) + ∫ x in c..b, f x ∂μ :=
-  by
+    ∫ x in a..b, f x ∂μ + ∫ x in c..d, f x ∂μ = ∫ x in a..d, f x ∂μ + ∫ x in c..b, f x ∂μ := by
   rw [← integral_add_adjacent_intervals hac hcd, add_assoc, add_left_comm,
     integral_add_adjacent_intervals hac (hac.symm.trans hab), add_comm]
 #align interval_integral.integral_interval_add_interval_comm intervalIntegral.integral_interval_add_interval_comm
 
 theorem integral_interval_sub_interval_comm (hab : IntervalIntegrable f μ a b)
     (hcd : IntervalIntegrable f μ c d) (hac : IntervalIntegrable f μ a c) :
-    ((∫ x in a..b, f x ∂μ) - ∫ x in c..d, f x ∂μ) = (∫ x in a..c, f x ∂μ) - ∫ x in b..d, f x ∂μ :=
-  by
+    ∫ x in a..b, f x ∂μ - ∫ x in c..d, f x ∂μ = ∫ x in a..c, f x ∂μ - ∫ x in b..d, f x ∂μ := by
   simp only [sub_eq_add_neg, ← integral_symm,
     integral_interval_add_interval_comm hab hcd.symm (hac.trans hcd)]
 #align interval_integral.integral_interval_sub_interval_comm intervalIntegral.integral_interval_sub_interval_comm
 
 theorem integral_interval_sub_interval_comm' (hab : IntervalIntegrable f μ a b)
     (hcd : IntervalIntegrable f μ c d) (hac : IntervalIntegrable f μ a c) :
-    ((∫ x in a..b, f x ∂μ) - ∫ x in c..d, f x ∂μ) = (∫ x in d..b, f x ∂μ) - ∫ x in c..a, f x ∂μ :=
-  by
+    ∫ x in a..b, f x ∂μ - ∫ x in c..d, f x ∂μ = ∫ x in d..b, f x ∂μ - ∫ x in c..a, f x ∂μ := by
   rw [integral_interval_sub_interval_comm hab hcd hac, integral_symm b d, integral_symm a c,
     sub_neg_eq_add, sub_eq_neg_add]
 #align interval_integral.integral_interval_sub_interval_comm' intervalIntegral.integral_interval_sub_interval_comm'
 
 theorem integral_Iic_sub_Iic (ha : IntegrableOn f (Iic a) μ) (hb : IntegrableOn f (Iic b) μ) :
-    ((∫ x in Iic b, f x ∂μ) - ∫ x in Iic a, f x ∂μ) = ∫ x in a..b, f x ∂μ :=
+    ∫ x in Iic b, f x ∂μ - ∫ x in Iic a, f x ∂μ = ∫ x in a..b, f x ∂μ :=
   by
   wlog hab : a ≤ b generalizing a b
   · rw [integral_symm, ← this hb ha (le_of_not_le hab), neg_sub]
@@ -1091,7 +1086,7 @@ theorem integral_Iic_sub_Iic (ha : IntegrableOn f (Iic a) μ) (hb : IntegrableOn
 
 /-- If `μ` is a finite measure then `∫ x in a..b, c ∂μ = (μ (Iic b) - μ (Iic a)) • c`. -/
 theorem integral_const_of_cdf [IsFiniteMeasure μ] (c : E) :
-    (∫ x in a..b, c ∂μ) = ((μ (Iic b)).toReal - (μ (Iic a)).toReal) • c :=
+    ∫ x in a..b, c ∂μ = ((μ (Iic b)).toReal - (μ (Iic a)).toReal) • c :=
   by
   simp only [sub_smul, ← set_integral_const]
   refine' (integral_Iic_sub_Iic _ _).symm <;>
@@ -1099,7 +1094,7 @@ theorem integral_const_of_cdf [IsFiniteMeasure μ] (c : E) :
 #align interval_integral.integral_const_of_cdf intervalIntegral.integral_const_of_cdf
 
 theorem integral_eq_integral_of_support_subset {a b} (h : support f ⊆ Ioc a b) :
-    (∫ x in a..b, f x ∂μ) = ∫ x, f x ∂μ :=
+    ∫ x in a..b, f x ∂μ = ∫ x, f x ∂μ :=
   by
   cases' le_total a b with hab hab
   ·
@@ -1111,7 +1106,7 @@ theorem integral_eq_integral_of_support_subset {a b} (h : support f ⊆ Ioc a b)
 
 #print intervalIntegral.integral_congr_ae' /-
 theorem integral_congr_ae' (h : ∀ᵐ x ∂μ, x ∈ Ioc a b → f x = g x)
-    (h' : ∀ᵐ x ∂μ, x ∈ Ioc b a → f x = g x) : (∫ x in a..b, f x ∂μ) = ∫ x in a..b, g x ∂μ := by
+    (h' : ∀ᵐ x ∂μ, x ∈ Ioc b a → f x = g x) : ∫ x in a..b, f x ∂μ = ∫ x in a..b, g x ∂μ := by
   simp only [intervalIntegral, set_integral_congr_ae measurableSet_Ioc h,
     set_integral_congr_ae measurableSet_Ioc h']
 #align interval_integral.integral_congr_ae' intervalIntegral.integral_congr_ae'
@@ -1119,19 +1114,19 @@ theorem integral_congr_ae' (h : ∀ᵐ x ∂μ, x ∈ Ioc a b → f x = g x)
 
 #print intervalIntegral.integral_congr_ae /-
 theorem integral_congr_ae (h : ∀ᵐ x ∂μ, x ∈ Ι a b → f x = g x) :
-    (∫ x in a..b, f x ∂μ) = ∫ x in a..b, g x ∂μ :=
+    ∫ x in a..b, f x ∂μ = ∫ x in a..b, g x ∂μ :=
   integral_congr_ae' (ae_uIoc_iff.mp h).1 (ae_uIoc_iff.mp h).2
 #align interval_integral.integral_congr_ae intervalIntegral.integral_congr_ae
 -/
 
-theorem integral_zero_ae (h : ∀ᵐ x ∂μ, x ∈ Ι a b → f x = 0) : (∫ x in a..b, f x ∂μ) = 0 :=
+theorem integral_zero_ae (h : ∀ᵐ x ∂μ, x ∈ Ι a b → f x = 0) : ∫ x in a..b, f x ∂μ = 0 :=
   calc
-    (∫ x in a..b, f x ∂μ) = ∫ x in a..b, 0 ∂μ := integral_congr_ae h
+    ∫ x in a..b, f x ∂μ = ∫ x in a..b, 0 ∂μ := integral_congr_ae h
     _ = 0 := integral_zero
 #align interval_integral.integral_zero_ae intervalIntegral.integral_zero_ae
 
 theorem integral_indicator {a₁ a₂ a₃ : ℝ} (h : a₂ ∈ Icc a₁ a₃) :
-    (∫ x in a₁..a₃, indicator {x | x ≤ a₂} f x ∂μ) = ∫ x in a₁..a₂, f x ∂μ :=
+    ∫ x in a₁..a₃, indicator {x | x ≤ a₂} f x ∂μ = ∫ x in a₁..a₂, f x ∂μ :=
   by
   have : {x | x ≤ a₂} ∩ Ioc a₁ a₃ = Ioc a₁ a₂ := Iic_inter_Ioc_of_le h.2
   rw [integral_of_le h.1, integral_of_le (h.1.trans h.2), integral_indicator,
@@ -1198,7 +1193,7 @@ theorem hasSum_intervalIntegral_of_summable_norm [Countable ι] {f : ι → C(�
 
 theorem tsum_intervalIntegral_eq_of_summable_norm [Countable ι] {f : ι → C(ℝ, E)}
     (hf_sum : Summable fun i : ι => ‖(f i).restrict (⟨uIcc a b, isCompact_uIcc⟩ : Compacts ℝ)‖) :
-    (∑' i : ι, ∫ x in a..b, f i x) = ∫ x in a..b, ∑' i : ι, f i x :=
+    ∑' i : ι, ∫ x in a..b, f i x = ∫ x in a..b, ∑' i : ι, f i x :=
   (hasSum_intervalIntegral_of_summable_norm hf_sum).tsum_eq
 #align interval_integral.tsum_interval_integral_eq_of_summable_norm intervalIntegral.tsum_intervalIntegral_eq_of_summable_norm
 
@@ -1279,7 +1274,7 @@ theorem continuousWithinAt_primitive (hb₀ : μ {b₀} = 0)
         exact
           ⟨min_le_of_left_le <| (min_le_right _ _).trans h₁,
             le_max_of_le_right <| h₂.trans <| le_max_right _ _⟩
-    have : ∀ b ∈ Icc b₁ b₂, (∫ x in a..b, f x ∂μ) = (∫ x in a..b₁, f x ∂μ) + ∫ x in b₁..b, f x ∂μ :=
+    have : ∀ b ∈ Icc b₁ b₂, ∫ x in a..b, f x ∂μ = ∫ x in a..b₁, f x ∂μ + ∫ x in b₁..b, f x ∂μ :=
       by
       rintro b ⟨h₁, h₂⟩
       rw [← integral_add_adjacent_intervals _ (h_int' ⟨h₁, h₂⟩)]
@@ -1344,7 +1339,7 @@ theorem continuousOn_primitive [NoAtoms μ] (h_int : IntegrableOn f (Icc a b) μ
     ContinuousOn (fun x => ∫ t in Ioc a x, f t ∂μ) (Icc a b) :=
   by
   by_cases h : a ≤ b
-  · have : ∀ x ∈ Icc a b, (∫ t in Ioc a x, f t ∂μ) = ∫ t in a..x, f t ∂μ :=
+  · have : ∀ x ∈ Icc a b, ∫ t in Ioc a x, f t ∂μ = ∫ t in a..x, f t ∂μ :=
       by
       intro x x_in
       simp_rw [← uIoc_of_le h, integral_of_le x_in.1]
@@ -1426,14 +1421,14 @@ section
 variable {f g : ℝ → ℝ} {a b : ℝ} {μ : Measure ℝ}
 
 theorem integral_eq_zero_iff_of_le_of_nonneg_ae (hab : a ≤ b) (hf : 0 ≤ᵐ[μ.restrict (Ioc a b)] f)
-    (hfi : IntervalIntegrable f μ a b) : (∫ x in a..b, f x ∂μ) = 0 ↔ f =ᵐ[μ.restrict (Ioc a b)] 0 :=
+    (hfi : IntervalIntegrable f μ a b) : ∫ x in a..b, f x ∂μ = 0 ↔ f =ᵐ[μ.restrict (Ioc a b)] 0 :=
   by rw [integral_of_le hab, integral_eq_zero_iff_of_nonneg_ae hf hfi.1]
 #align interval_integral.integral_eq_zero_iff_of_le_of_nonneg_ae intervalIntegral.integral_eq_zero_iff_of_le_of_nonneg_ae
 
 #print intervalIntegral.integral_eq_zero_iff_of_nonneg_ae /-
 theorem integral_eq_zero_iff_of_nonneg_ae (hf : 0 ≤ᵐ[μ.restrict (Ioc a b ∪ Ioc b a)] f)
     (hfi : IntervalIntegrable f μ a b) :
-    (∫ x in a..b, f x ∂μ) = 0 ↔ f =ᵐ[μ.restrict (Ioc a b ∪ Ioc b a)] 0 :=
+    ∫ x in a..b, f x ∂μ = 0 ↔ f =ᵐ[μ.restrict (Ioc a b ∪ Ioc b a)] 0 :=
   by
   cases' le_total a b with hab hab <;>
     simp only [Ioc_eq_empty hab.not_lt, empty_union, union_empty] at hf ⊢
@@ -1448,13 +1443,13 @@ integral over `a..b` is positive if and only if `a < b` and the measure of
 `function.support f ∩ set.Ioc a b` is positive. -/
 theorem integral_pos_iff_support_of_nonneg_ae' (hf : 0 ≤ᵐ[μ.restrict (Ι a b)] f)
     (hfi : IntervalIntegrable f μ a b) :
-    (0 < ∫ x in a..b, f x ∂μ) ↔ a < b ∧ 0 < μ (support f ∩ Ioc a b) :=
+    0 < ∫ x in a..b, f x ∂μ ↔ a < b ∧ 0 < μ (support f ∩ Ioc a b) :=
   by
   cases' lt_or_le a b with hab hba
   · rw [uIoc_of_le hab.le] at hf 
     simp only [hab, true_and_iff, integral_of_le hab.le,
       set_integral_pos_iff_support_of_nonneg_ae hf hfi.1]
-  · suffices (∫ x in a..b, f x ∂μ) ≤ 0 by simp only [this.not_lt, hba.not_lt, false_and_iff]
+  · suffices ∫ x in a..b, f x ∂μ ≤ 0 by simp only [this.not_lt, hba.not_lt, false_and_iff]
     rw [integral_of_ge hba, neg_nonpos]
     rw [uIoc_swap, uIoc_of_le hba] at hf 
     exact integral_nonneg_of_ae hf
@@ -1465,7 +1460,7 @@ theorem integral_pos_iff_support_of_nonneg_ae' (hf : 0 ≤ᵐ[μ.restrict (Ι a 
 `set.uIoc a b`, then its integral over `a..b` is positive if and only if `a < b` and the
 measure of `function.support f ∩ set.Ioc a b` is positive. -/
 theorem integral_pos_iff_support_of_nonneg_ae (hf : 0 ≤ᵐ[μ] f) (hfi : IntervalIntegrable f μ a b) :
-    (0 < ∫ x in a..b, f x ∂μ) ↔ a < b ∧ 0 < μ (support f ∩ Ioc a b) :=
+    0 < ∫ x in a..b, f x ∂μ ↔ a < b ∧ 0 < μ (support f ∩ Ioc a b) :=
   integral_pos_iff_support_of_nonneg_ae' (ae_mono Measure.restrict_le_self hf) hfi
 #align interval_integral.integral_pos_iff_support_of_nonneg_ae intervalIntegral.integral_pos_iff_support_of_nonneg_ae
 
@@ -1500,7 +1495,7 @@ of nonzero measure, then `∫ x in a..b, f x ∂μ < ∫ x in a..b, g x ∂μ`. 
 theorem integral_lt_integral_of_ae_le_of_measure_setOf_lt_ne_zero (hab : a ≤ b)
     (hfi : IntervalIntegrable f μ a b) (hgi : IntervalIntegrable g μ a b)
     (hle : f ≤ᵐ[μ.restrict (Ioc a b)] g) (hlt : μ.restrict (Ioc a b) {x | f x < g x} ≠ 0) :
-    (∫ x in a..b, f x ∂μ) < ∫ x in a..b, g x ∂μ :=
+    ∫ x in a..b, f x ∂μ < ∫ x in a..b, g x ∂μ :=
   by
   rw [← sub_pos, ← integral_sub hgi hfi, integral_of_le hab,
     MeasureTheory.integral_pos_iff_support_of_nonneg_ae]
@@ -1514,7 +1509,7 @@ theorem integral_lt_integral_of_ae_le_of_measure_setOf_lt_ne_zero (hab : a ≤ b
 theorem integral_lt_integral_of_continuousOn_of_le_of_exists_lt {f g : ℝ → ℝ} {a b : ℝ}
     (hab : a < b) (hfc : ContinuousOn f (Icc a b)) (hgc : ContinuousOn g (Icc a b))
     (hle : ∀ x ∈ Ioc a b, f x ≤ g x) (hlt : ∃ c ∈ Icc a b, f c < g c) :
-    (∫ x in a..b, f x) < ∫ x in a..b, g x :=
+    ∫ x in a..b, f x < ∫ x in a..b, g x :=
   by
   refine'
     integral_lt_integral_of_ae_le_of_measure_set_of_lt_ne_zero hab.le
@@ -1562,24 +1557,24 @@ variable (hab : a ≤ b) (hf : IntervalIntegrable f μ a b) (hg : IntervalIntegr
 include hab hf hg
 
 theorem integral_mono_ae_restrict (h : f ≤ᵐ[μ.restrict (Icc a b)] g) :
-    (∫ u in a..b, f u ∂μ) ≤ ∫ u in a..b, g u ∂μ :=
+    ∫ u in a..b, f u ∂μ ≤ ∫ u in a..b, g u ∂μ :=
   by
   let H := h.filter_mono <| ae_mono <| Measure.restrict_mono Ioc_subset_Icc_self <| le_refl μ
   simpa only [integral_of_le hab] using set_integral_mono_ae_restrict hf.1 hg.1 H
 #align interval_integral.integral_mono_ae_restrict intervalIntegral.integral_mono_ae_restrict
 
-theorem integral_mono_ae (h : f ≤ᵐ[μ] g) : (∫ u in a..b, f u ∂μ) ≤ ∫ u in a..b, g u ∂μ := by
+theorem integral_mono_ae (h : f ≤ᵐ[μ] g) : ∫ u in a..b, f u ∂μ ≤ ∫ u in a..b, g u ∂μ := by
   simpa only [integral_of_le hab] using set_integral_mono_ae hf.1 hg.1 h
 #align interval_integral.integral_mono_ae intervalIntegral.integral_mono_ae
 
 theorem integral_mono_on (h : ∀ x ∈ Icc a b, f x ≤ g x) :
-    (∫ u in a..b, f u ∂μ) ≤ ∫ u in a..b, g u ∂μ :=
+    ∫ u in a..b, f u ∂μ ≤ ∫ u in a..b, g u ∂μ :=
   by
   let H x hx := h x <| Ioc_subset_Icc_self hx
   simpa only [integral_of_le hab] using set_integral_mono_on hf.1 hg.1 measurableSet_Ioc H
 #align interval_integral.integral_mono_on intervalIntegral.integral_mono_on
 
-theorem integral_mono (h : f ≤ g) : (∫ u in a..b, f u ∂μ) ≤ ∫ u in a..b, g u ∂μ :=
+theorem integral_mono (h : f ≤ g) : ∫ u in a..b, f u ∂μ ≤ ∫ u in a..b, g u ∂μ :=
   integral_mono_ae hab hf hg <| ae_of_all _ h
 #align interval_integral.integral_mono intervalIntegral.integral_mono
 
@@ -1587,7 +1582,7 @@ omit hg hab
 
 theorem integral_mono_interval {c d} (hca : c ≤ a) (hab : a ≤ b) (hbd : b ≤ d)
     (hf : 0 ≤ᵐ[μ.restrict (Ioc c d)] f) (hfi : IntervalIntegrable f μ c d) :
-    (∫ x in a..b, f x ∂μ) ≤ ∫ x in c..d, f x ∂μ :=
+    ∫ x in a..b, f x ∂μ ≤ ∫ x in c..d, f x ∂μ :=
   by
   rw [integral_of_le hab, integral_of_le (hca.trans (hab.trans hbd))]
   exact set_integral_mono_set hfi.1 hf (Ioc_subset_Ioc hca hbd).EventuallyLE

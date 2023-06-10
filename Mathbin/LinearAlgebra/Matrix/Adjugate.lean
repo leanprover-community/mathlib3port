@@ -172,15 +172,15 @@ theorem cramer_zero [Nontrivial n] : cramer (0 : Matrix n n α) = 0 :=
 
 /-- Use linearity of `cramer` to take it out of a summation. -/
 theorem sum_cramer {β} (s : Finset β) (f : β → n → α) :
-    (∑ x in s, cramer A (f x)) = cramer A (∑ x in s, f x) :=
+    ∑ x in s, cramer A (f x) = cramer A (∑ x in s, f x) :=
   (LinearMap.map_sum (cramer A)).symm
 #align matrix.sum_cramer Matrix.sum_cramer
 
 /-- Use linearity of `cramer` and vector evaluation to take `cramer A _ i` out of a summation. -/
 theorem sum_cramer_apply {β} (s : Finset β) (f : n → β → α) (i : n) :
-    (∑ x in s, cramer A (fun j => f j x) i) = cramer A (fun j : n => ∑ x in s, f j x) i :=
+    ∑ x in s, cramer A (fun j => f j x) i = cramer A (fun j : n => ∑ x in s, f j x) i :=
   calc
-    (∑ x in s, cramer A (fun j => f j x) i) = (∑ x in s, cramer A fun j => f j x) i :=
+    ∑ x in s, cramer A (fun j => f j x) i = (∑ x in s, cramer A fun j => f j x) i :=
       (Finset.sum_apply i s _).symm
     _ = cramer A (fun j : n => ∑ x in s, f j x) i := by rw [sum_cramer, cramer_apply]; congr with j;
       apply Finset.sum_apply
@@ -256,7 +256,7 @@ theorem adjugate_transpose (A : Matrix n n α) : (adjugate A)ᵀ = adjugate Aᵀ
     congr 1 with rfl
     rw [Pi.single_eq_same, Pi.single_eq_same]
   · -- Otherwise, we need to show that there is a `0` somewhere in the product.
-    have : (∏ j' : n, update_column A j (Pi.single i 1) (σ j') j') = 0 :=
+    have : ∏ j' : n, update_column A j (Pi.single i 1) (σ j') j' = 0 :=
       by
       apply prod_eq_zero (mem_univ j)
       rw [update_column_self, Pi.single_eq_of_ne' h]

@@ -106,7 +106,7 @@ variable [Fintype m] [DecidableEq m]
 theorem Matrix.vecMul_stdBasis (M : Matrix m n R) (i j) :
     M.vecMul (stdBasis R (fun _ => R) i 1) j = M i j :=
   by
-  have : (∑ i', (if i = i' then 1 else 0) * M i' j) = M i j := by
+  have : ∑ i', (if i = i' then 1 else 0) * M i' j = M i j := by
     simp_rw [boole_mul, Finset.sum_ite_eq, Finset.mem_univ, if_true]
   convert this
   ext

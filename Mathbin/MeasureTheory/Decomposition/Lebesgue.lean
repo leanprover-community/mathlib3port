@@ -206,12 +206,12 @@ instance [TopologicalSpace α] [IsLocallyFiniteMeasure μ] :
   isLocallyFiniteMeasure_of_le <| withDensity_rnDeriv_le μ ν
 
 theorem lintegral_rnDeriv_lt_top_of_measure_ne_top {μ : Measure α} (ν : Measure α) {s : Set α}
-    (hs : μ s ≠ ∞) : (∫⁻ x in s, μ.rnDeriv ν x ∂ν) < ∞ :=
+    (hs : μ s ≠ ∞) : ∫⁻ x in s, μ.rnDeriv ν x ∂ν < ∞ :=
   by
   by_cases hl : have_lebesgue_decomposition μ ν
   · haveI := hl
     obtain ⟨-, -, hadd⟩ := have_lebesgue_decomposition_spec μ ν
-    suffices : (∫⁻ x in to_measurable μ s, μ.rn_deriv ν x ∂ν) < ∞
+    suffices : ∫⁻ x in to_measurable μ s, μ.rn_deriv ν x ∂ν < ∞
     exact lt_of_le_of_lt (lintegral_mono_set (subset_to_measurable _ _)) this
     rw [← with_density_apply _ (measurable_set_to_measurable _ _)]
     refine'
@@ -228,7 +228,7 @@ theorem lintegral_rnDeriv_lt_top_of_measure_ne_top {μ : Measure α} (ν : Measu
 #align measure_theory.measure.lintegral_rn_deriv_lt_top_of_measure_ne_top MeasureTheory.Measure.lintegral_rnDeriv_lt_top_of_measure_ne_top
 
 theorem lintegral_rnDeriv_lt_top (μ ν : Measure α) [IsFiniteMeasure μ] :
-    (∫⁻ x, μ.rnDeriv ν x ∂ν) < ∞ := by
+    ∫⁻ x, μ.rnDeriv ν x ∂ν < ∞ := by
   rw [← set_lintegral_univ]
   exact lintegral_rn_deriv_lt_top_of_measure_ne_top _ (measure_lt_top _ _).Ne
 #align measure_theory.measure.lintegral_rn_deriv_lt_top MeasureTheory.Measure.lintegral_rnDeriv_lt_top
@@ -417,7 +417,7 @@ theorem eq_rnDeriv [SigmaFinite ν] {s : Measure α} {f : α → ℝ≥0∞} (hf
   refine' ae_eq_of_forall_set_lintegral_eq_of_sigma_finite hf (measurable_rn_deriv μ ν) _
   intro a ha h'a
   calc
-    (∫⁻ x : α in a, f x ∂ν) = ν.with_density f a := (with_density_apply f ha).symm
+    ∫⁻ x : α in a, f x ∂ν = ν.with_density f a := (with_density_apply f ha).symm
     _ = ν.with_density (μ.rn_deriv ν) a := by rw [eq_with_density_rn_deriv hf hs hadd]
     _ = ∫⁻ x : α in a, μ.rn_deriv ν x ∂ν := with_density_apply _ ha
 #align measure_theory.measure.eq_rn_deriv MeasureTheory.Measure.eq_rnDeriv
@@ -525,7 +525,7 @@ functions `f`, such that, for all measurable sets `A`, `∫⁻ x in A, f x ∂μ
 
 This is useful for the Lebesgue decomposition theorem. -/
 def measurableLE (μ ν : Measure α) : Set (α → ℝ≥0∞) :=
-  {f | Measurable f ∧ ∀ (A : Set α) (hA : MeasurableSet A), (∫⁻ x in A, f x ∂μ) ≤ ν A}
+  {f | Measurable f ∧ ∀ (A : Set α) (hA : MeasurableSet A), ∫⁻ x in A, f x ∂μ ≤ ν A}
 #align measure_theory.measure.lebesgue_decomposition.measurable_le MeasureTheory.Measure.LebesgueDecomposition.measurableLE
 -/
 
@@ -685,14 +685,14 @@ theorem haveLebesgueDecomposition_of_finiteMeasure [IsFiniteMeasure μ] [IsFinit
       -- positive with respect to `ν - εμ`
       obtain ⟨ε, hε₁, E, hE₁, hE₂, hE₃⟩ := exists_positive_of_not_mutually_singular μ₁ ν h
       simp_rw [hμ₁] at hE₃ 
-      have hξle : ∀ A, MeasurableSet A → (∫⁻ a in A, ξ a ∂ν) ≤ μ A :=
+      have hξle : ∀ A, MeasurableSet A → ∫⁻ a in A, ξ a ∂ν ≤ μ A :=
         by
         intro A hA; rw [hξ]
         simp_rw [iSup_apply]
         rw [lintegral_supr (fun n => (supr_mem_measurable_le _ hf₁ n).1) (supr_monotone _)]
         exact iSup_le fun n => (supr_mem_measurable_le _ hf₁ n).2 A hA
       -- since `E` is positive, we have `∫⁻ a in A ∩ E, ε + ξ a ∂ν ≤ μ (A ∩ E)` for all `A`
-      have hε₂ : ∀ A : Set α, MeasurableSet A → (∫⁻ a in A ∩ E, ε + ξ a ∂ν) ≤ μ (A ∩ E) :=
+      have hε₂ : ∀ A : Set α, MeasurableSet A → ∫⁻ a in A ∩ E, ε + ξ a ∂ν ≤ μ (A ∩ E) :=
         by
         intro A hA
         have := subset_le_of_restrict_le_restrict _ _ hE₁ hE₃ (inter_subset_right A E)
@@ -716,8 +716,8 @@ theorem haveLebesgueDecomposition_of_finiteMeasure [IsFiniteMeasure μ] [IsFinit
         by
         refine' ⟨Measurable.add hξm (Measurable.indicator measurable_const hE₁), fun A hA => _⟩
         have :
-          (∫⁻ a in A, (ξ + E.indicator fun _ => ε) a ∂ν) =
-            (∫⁻ a in A ∩ E, ε + ξ a ∂ν) + ∫⁻ a in A \ E, ξ a ∂ν :=
+          ∫⁻ a in A, (ξ + E.indicator fun _ => ε) a ∂ν =
+            ∫⁻ a in A ∩ E, ε + ξ a ∂ν + ∫⁻ a in A \ E, ξ a ∂ν :=
           by
           simp only [lintegral_add_left measurable_const, lintegral_add_left hξm,
             set_lintegral_const, add_assoc, lintegral_inter_add_diff _ _ hE₁, Pi.add_apply,
@@ -725,7 +725,7 @@ theorem haveLebesgueDecomposition_of_finiteMeasure [IsFiniteMeasure μ] [IsFinit
           rw [inter_comm, add_comm]
         rw [this, ← measure_inter_add_diff A hE₁]
         exact add_le_add (hε₂ A hA) (hξle (A \ E) (hA.diff hE₁))
-      have : (∫⁻ a, ξ a + E.indicator (fun _ => ε) a ∂ν) ≤ Sup (measurable_le_eval ν μ) :=
+      have : ∫⁻ a, ξ a + E.indicator (fun _ => ε) a ∂ν ≤ Sup (measurable_le_eval ν μ) :=
         le_sSup ⟨ξ + E.indicator fun _ => ε, hξε, rfl⟩
       -- but this contradicts the maximality of `∫⁻ x, ξ x ∂ν`
       refine' not_lt.2 this _

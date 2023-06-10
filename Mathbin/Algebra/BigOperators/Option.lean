@@ -32,15 +32,15 @@ variable {α M : Type _} [CommMonoid M]
 
 @[simp, to_additive]
 theorem prod_insertNone (f : Option α → M) (s : Finset α) :
-    (∏ x in s.insertNone, f x) = f none * ∏ x in s, f (some x) := by simp [insert_none]
+    ∏ x in s.insertNone, f x = f none * ∏ x in s, f (some x) := by simp [insert_none]
 #align finset.prod_insert_none Finset.prod_insertNone
 #align finset.sum_insert_none Finset.sum_insertNone
 
 @[to_additive]
 theorem prod_eraseNone (f : α → M) (s : Finset (Option α)) :
-    (∏ x in s.eraseNone, f x) = ∏ x in s, Option.elim' 1 f x := by
+    ∏ x in s.eraseNone, f x = ∏ x in s, Option.elim' 1 f x := by
   classical calc
-    (∏ x in s.erase_none, f x) = ∏ x in s.erase_none.map embedding.some, Option.elim' 1 f x :=
+    ∏ x in s.erase_none, f x = ∏ x in s.erase_none.map embedding.some, Option.elim' 1 f x :=
       (Prod_map s.erase_none embedding.some <| Option.elim' 1 f).symm
     _ = ∏ x in s.erase none, Option.elim' 1 f x := by rw [map_some_erase_none]
     _ = ∏ x in s, Option.elim' 1 f x := prod_erase _ rfl

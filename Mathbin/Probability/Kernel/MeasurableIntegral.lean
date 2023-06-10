@@ -155,7 +155,7 @@ theorem Measurable.lintegral_kernel_prod_right {f : α → β → ℝ≥0∞} (h
   have h : ∀ a, (⨆ n, F n a) = uncurry f a := simple_func.supr_eapprox_apply (uncurry f) hf
   simp only [Prod.forall, uncurry_apply_pair] at h 
   simp_rw [← h]
-  have : ∀ a, (∫⁻ b, ⨆ n, F n (a, b) ∂κ a) = ⨆ n, ∫⁻ b, F n (a, b) ∂κ a :=
+  have : ∀ a, ∫⁻ b, ⨆ n, F n (a, b) ∂κ a = ⨆ n, ∫⁻ b, F n (a, b) ∂κ a :=
     by
     intro a
     rw [lintegral_supr]

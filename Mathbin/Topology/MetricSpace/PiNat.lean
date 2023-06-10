@@ -1044,8 +1044,8 @@ protected def metricSpace : MetricSpace (∀ i, F i)
     calc
       dist x z ≤
           ∑' i,
-            min ((1 / 2) ^ encode i) (dist (x i) (y i)) +
-              min ((1 / 2) ^ encode i) (dist (y i) (z i)) :=
+            (min ((1 / 2) ^ encode i) (dist (x i) (y i)) +
+              min ((1 / 2) ^ encode i) (dist (y i) (z i))) :=
         tsum_le_tsum I (dist_summable x z) ((dist_summable x y).add (dist_summable y z))
       _ = dist x y + dist y z := tsum_add (dist_summable x y) (dist_summable y z)
   eq_of_dist_eq_zero := by
@@ -1065,7 +1065,7 @@ protected def metricSpace : MetricSpace (∀ i, F i)
     · simp only [le_iInf_iff, le_principal_iff]
       intro ε εpos
       obtain ⟨K, hK⟩ :
-        ∃ K : Finset ι, (∑' i : { j // j ∉ K }, (1 / 2 : ℝ) ^ encode (i : ι)) < ε / 2 :=
+        ∃ K : Finset ι, ∑' i : { j // j ∉ K }, (1 / 2 : ℝ) ^ encode (i : ι) < ε / 2 :=
         ((tendsto_order.1 (tendsto_tsum_compl_atTop_zero fun i : ι => (1 / 2 : ℝ) ^ encode i)).2 _
             (half_pos εpos)).exists
       obtain ⟨δ, δpos, hδ⟩ : ∃ (δ : ℝ) (δpos : 0 < δ), (K.card : ℝ) * δ ≤ ε / 2 :=
@@ -1090,17 +1090,16 @@ protected def metricSpace : MetricSpace (∀ i, F i)
         calc
           dist x y = ∑' i : ι, min ((1 / 2) ^ encode i) (dist (x i) (y i)) := rfl
           _ =
-              (∑ i in K, min ((1 / 2) ^ encode i) (dist (x i) (y i))) +
+              ∑ i in K, min ((1 / 2) ^ encode i) (dist (x i) (y i)) +
                 ∑' i : (↑K : Set ι)ᶜ, min ((1 / 2) ^ encode (i : ι)) (dist (x i) (y i)) :=
             (sum_add_tsum_compl (dist_summable _ _)).symm
-          _ ≤ (∑ i in K, dist (x i) (y i)) + ∑' i : (↑K : Set ι)ᶜ, (1 / 2) ^ encode (i : ι) :=
+          _ ≤ ∑ i in K, dist (x i) (y i) + ∑' i : (↑K : Set ι)ᶜ, (1 / 2) ^ encode (i : ι) :=
             by
             refine' add_le_add (Finset.sum_le_sum fun i hi => min_le_right _ _) _
             refine' tsum_le_tsum (fun i => min_le_left _ _) _ _
             · apply Summable.subtype (dist_summable x y) ((↑K : Set ι)ᶜ)
             · apply Summable.subtype summable_geometric_two_encode ((↑K : Set ι)ᶜ)
-          _ < (∑ i in K, δ) + ε / 2 :=
-            by
+          _ < ∑ i in K, δ + ε / 2 := by
             apply add_lt_add_of_le_of_lt _ hK
             apply Finset.sum_le_sum fun i hi => _
             apply (hxy i _).le

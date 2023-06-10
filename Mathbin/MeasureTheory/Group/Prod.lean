@@ -209,7 +209,7 @@ theorem absolutelyContinuous_inv : μ ≪ μ.inv :=
 @[to_additive]
 theorem lintegral_lintegral_mul_inv [IsMulLeftInvariant ν] (f : G → G → ℝ≥0∞)
     (hf : AEMeasurable (uncurry f) (μ.Prod ν)) :
-    (∫⁻ x, ∫⁻ y, f (y * x) x⁻¹ ∂ν ∂μ) = ∫⁻ x, ∫⁻ y, f x y ∂ν ∂μ :=
+    ∫⁻ x, ∫⁻ y, f (y * x) x⁻¹ ∂ν ∂μ = ∫⁻ x, ∫⁻ y, f x y ∂ν ∂μ :=
   by
   have h : Measurable fun z : G × G => (z.2 * z.1, z.1⁻¹) :=
     (measurable_snd.mul measurable_fst).prod_mk measurable_fst.inv
@@ -260,7 +260,7 @@ theorem absolutelyContinuous_map_div_left (g : G) : μ ≪ map (fun h => g / h) 
 /-- This is the computation performed in the proof of [Halmos, §60 Th. A]. -/
 @[to_additive "This is the computation performed in the proof of [Halmos, §60 Th. A]."]
 theorem measure_mul_lintegral_eq [IsMulLeftInvariant ν] (sm : MeasurableSet s) (f : G → ℝ≥0∞)
-    (hf : Measurable f) : (μ s * ∫⁻ y, f y ∂ν) = ∫⁻ x, ν ((fun z => z * x) ⁻¹' s) * f x⁻¹ ∂μ :=
+    (hf : Measurable f) : μ s * ∫⁻ y, f y ∂ν = ∫⁻ x, ν ((fun z => z * x) ⁻¹' s) * f x⁻¹ ∂μ :=
   by
   rw [← set_lintegral_one, ← lintegral_indicator _ sm, ←
     lintegral_lintegral_mul (measurable_const.indicator sm).AEMeasurable hf.ae_measurable, ←
@@ -340,7 +340,7 @@ theorem ae_measure_preimage_mul_right_lt_top_of_ne_zero [IsMulLeftInvariant ν]
       "A technical lemma relating two different measures. This is basically\n[Halmos, §60 Th. A]. Note that if `f` is the characteristic function of a measurable set `t` this\nstates that `μ t = c * μ s` for a constant `c` that does not depend on `μ`.\n\nNote: There is a gap in the last step of the proof in [Halmos]. In the last line, the equality\n`g(-x) + ν(s - x) = f(x)` holds if we can prove that `0 < ν(s - x) < ∞`. The first inequality\nfollows from §59, Th. D, but the second inequality is not justified. We prove this inequality for\nalmost all `x` in `measure_theory.ae_measure_preimage_add_right_lt_top_of_ne_zero`."]
 theorem measure_lintegral_div_measure [IsMulLeftInvariant ν] (sm : MeasurableSet s) (h2s : ν s ≠ 0)
     (h3s : ν s ≠ ∞) (f : G → ℝ≥0∞) (hf : Measurable f) :
-    (μ s * ∫⁻ y, f y⁻¹ / ν ((fun x => x * y⁻¹) ⁻¹' s) ∂ν) = ∫⁻ x, f x ∂μ :=
+    μ s * ∫⁻ y, f y⁻¹ / ν ((fun x => x * y⁻¹) ⁻¹' s) ∂ν = ∫⁻ x, f x ∂μ :=
   by
   set g := fun y => f y⁻¹ / ν ((fun x => x * y⁻¹) ⁻¹' s)
   have hg : Measurable g :=

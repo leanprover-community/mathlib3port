@@ -169,11 +169,11 @@ theorem Submartingale.upcrossings_ae_lt_top' [IsFiniteMeasure μ] (hf : Submarti
   have := hf.mul_lintegral_upcrossings_le_lintegral_pos_part a b
   rw [mul_comm, ← ENNReal.le_div_iff_mul_le] at this 
   · refine' (lt_of_le_of_lt this (ENNReal.div_lt_top _ _)).Ne
-    · have hR' : ∀ n, (∫⁻ ω, ‖f n ω - a‖₊ ∂μ) ≤ R + ‖a‖₊ * μ Set.univ :=
+    · have hR' : ∀ n, ∫⁻ ω, ‖f n ω - a‖₊ ∂μ ≤ R + ‖a‖₊ * μ Set.univ :=
         by
         simp_rw [snorm_one_eq_lintegral_nnnorm] at hbdd 
         intro n
-        refine' (lintegral_mono _ : (∫⁻ ω, ‖f n ω - a‖₊ ∂μ) ≤ ∫⁻ ω, ‖f n ω‖₊ + ‖a‖₊ ∂μ).trans _
+        refine' (lintegral_mono _ : ∫⁻ ω, ‖f n ω - a‖₊ ∂μ ≤ ∫⁻ ω, ‖f n ω‖₊ + ‖a‖₊ ∂μ).trans _
         · intro ω
           simp_rw [sub_eq_add_neg, ← nnnorm_neg a, ← ENNReal.coe_add, ENNReal.coe_le_coe]
           exact nnnorm_add_le _ _
@@ -421,7 +421,7 @@ theorem Integrable.tendsto_ae_condexp (hg : Integrable g μ)
   have :
     ∀ n s,
       measurable_set[ℱ n] s →
-        (∫ x in s, g x ∂μ) = ∫ x in s, ℱ.limit_process (fun n x => (μ[g|ℱ n]) x) μ x ∂μ :=
+        ∫ x in s, g x ∂μ = ∫ x in s, ℱ.limit_process (fun n x => (μ[g|ℱ n]) x) μ x ∂μ :=
     by
     intro n s hs
     rw [← set_integral_condexp (ℱ.le n) hg hs, ← set_integral_condexp (ℱ.le n) hlimint hs]

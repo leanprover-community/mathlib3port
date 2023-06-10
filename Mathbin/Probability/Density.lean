@@ -136,8 +136,8 @@ namespace Pdf
 
 variable {m : MeasurableSpace Ω} {ℙ : Measure Ω} {μ : Measure E}
 
-theorem lintegral_eq_measure_univ {X : Ω → E} [HasPdf X ℙ μ] :
-    (∫⁻ x, pdf X ℙ μ x ∂μ) = ℙ Set.univ := by
+theorem lintegral_eq_measure_univ {X : Ω → E} [HasPdf X ℙ μ] : ∫⁻ x, pdf X ℙ μ x ∂μ = ℙ Set.univ :=
+  by
   rw [← set_lintegral_univ, ← map_eq_set_lintegral_pdf X ℙ μ MeasurableSet.univ,
     measure.map_apply (has_pdf.measurable X ℙ μ) MeasurableSet.univ, Set.preimage_univ]
 #align measure_theory.pdf.lintegral_eq_measure_univ MeasureTheory.pdf.lintegral_eq_measure_univ
@@ -171,7 +171,7 @@ theorem integrable_iff_integrable_mul_pdf [IsFiniteMeasure ℙ] {X : Ω → E} [
 function `f`, `f ∘ X` is a random variable with expectation `∫ x, f x * pdf X ∂μ`
 where `μ` is a measure on the codomain of `X`. -/
 theorem integral_fun_mul_eq_integral [IsFiniteMeasure ℙ] {X : Ω → E} [HasPdf X ℙ μ] {f : E → ℝ}
-    (hf : Measurable f) : (∫ x, f x * (pdf X ℙ μ x).toReal ∂μ) = ∫ x, f (X x) ∂ℙ :=
+    (hf : Measurable f) : ∫ x, f x * (pdf X ℙ μ x).toReal ∂μ = ∫ x, f (X x) ∂ℙ :=
   by
   by_cases hpdf : integrable (fun x => f x * (pdf X ℙ μ x).toReal) μ
   · rw [← integral_map (has_pdf.measurable X ℙ μ).AEMeasurable hf.ae_strongly_measurable,
@@ -305,13 +305,12 @@ theorem Real.hasPdf_iff : HasPdf X ℙ ↔ Measurable X ∧ map X ℙ ≪ volume
 
 /-- If `X` is a real-valued random variable that has pdf `f`, then the expectation of `X` equals
 `∫ x, x * f x ∂λ` where `λ` is the Lebesgue measure. -/
-theorem integral_mul_eq_integral [HasPdf X ℙ] :
-    (∫ x, x * (pdf X ℙ volume x).toReal) = ∫ x, X x ∂ℙ :=
+theorem integral_mul_eq_integral [HasPdf X ℙ] : ∫ x, x * (pdf X ℙ volume x).toReal = ∫ x, X x ∂ℙ :=
   integral_fun_mul_eq_integral measurable_id
 #align measure_theory.pdf.integral_mul_eq_integral MeasureTheory.pdf.integral_mul_eq_integral
 
 theorem hasFiniteIntegral_mul {f : ℝ → ℝ} {g : ℝ → ℝ≥0∞} (hg : pdf X ℙ =ᵐ[volume] g)
-    (hgi : (∫⁻ x, ‖f x‖₊ * g x) ≠ ∞) : HasFiniteIntegral fun x => f x * (pdf X ℙ volume x).toReal :=
+    (hgi : ∫⁻ x, ‖f x‖₊ * g x ≠ ∞) : HasFiniteIntegral fun x => f x * (pdf X ℙ volume x).toReal :=
   by
   rw [has_finite_integral]
   have : (fun x => ↑‖f x‖₊ * g x) =ᵐ[volume] fun x => ‖f x * (pdf X ℙ volume x).toReal‖₊ :=
@@ -427,7 +426,7 @@ theorem mul_pdf_integrable [IsFiniteMeasure ℙ] (hcs : IsCompact s) (huX : IsUn
 /-- A real uniform random variable `X` with support `s` has expectation
 `(λ s)⁻¹ * ∫ x in s, x ∂λ` where `λ` is the Lebesgue measure. -/
 theorem integral_eq (hnt : volume s ≠ ∞) (huX : IsUniform X s ℙ) :
-    (∫ x, X x ∂ℙ) = (volume s)⁻¹.toReal * ∫ x in s, x :=
+    ∫ x, X x ∂ℙ = (volume s)⁻¹.toReal * ∫ x in s, x :=
   by
   haveI := has_pdf hns hnt huX
   haveI := huX.is_probability_measure hns hnt hms
@@ -443,7 +442,7 @@ theorem integral_eq (hnt : volume s ≠ ∞) (huX : IsUniform X s ℙ) :
     · simp [Set.indicator_of_mem hx]
     · simp [Set.indicator_of_not_mem hx]
   simp_rw [this, ← s.indicator_mul_right fun x => x, integral_indicator hms]
-  change (∫ x in s, x * (volume s)⁻¹.toReal • 1 ∂volume) = _
+  change ∫ x in s, x * (volume s)⁻¹.toReal • 1 ∂volume = _
   rw [integral_mul_right, mul_comm, Algebra.id.smul_eq_mul, mul_one]
 #align measure_theory.pdf.is_uniform.integral_eq MeasureTheory.pdf.IsUniform.integral_eq
 

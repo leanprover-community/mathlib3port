@@ -195,7 +195,7 @@ theorem series_ratio_test {f : ℕ → β} (n : ℕ) (r : α) (hr0 : 0 ≤ r) (h
 
 #print sum_range_diag_flip /-
 theorem sum_range_diag_flip {α : Type _} [AddCommMonoid α] (n : ℕ) (f : ℕ → ℕ → α) :
-    (∑ m in range n, ∑ k in range (m + 1), f k (m - k)) =
+    ∑ m in range n, ∑ k in range (m + 1), f k (m - k) =
       ∑ m in range n, ∑ k in range (n - m), f m k :=
   by
   rw [sum_sigma', sum_sigma'] <;>
@@ -255,7 +255,7 @@ theorem cauchy_product {a b : ℕ → β} (ha : IsCauSeq abs fun m => ∑ n in r
     ∃ i : ℕ,
       ∀ j ≥ i,
         abv
-            (((∑ k in range j, a k) * ∑ k in range j, b k) -
+            ((∑ k in range j, a k) * ∑ k in range j, b k -
               ∑ n in range j, ∑ m in range (n + 1), a m * b (n - m)) <
           ε :=
   let ⟨Q, hQ⟩ := CauSeq.bounded ⟨_, hb⟩
@@ -269,15 +269,15 @@ theorem cauchy_product {a b : ℕ → β} (ha : IsCauSeq abs fun m => ∑ n in r
   ⟨2 * (max N M + 1), fun K hK =>
     by
     have h₁ :
-      (∑ m in range K, ∑ k in range (m + 1), a k * b (m - k)) =
+      ∑ m in range K, ∑ k in range (m + 1), a k * b (m - k) =
         ∑ m in range K, ∑ n in range (K - m), a m * b n :=
       by simpa using sum_range_diag_flip K fun m n => a m * b n
     have h₂ :
       (fun i => ∑ k in range (K - i), a i * b k) = fun i => a i * ∑ k in range (K - i), b k := by
       simp [Finset.mul_sum]
     have h₃ :
-      (∑ i in range K, a i * ∑ k in range (K - i), b k) =
-        (∑ i in range K, a i * ((∑ k in range (K - i), b k) - ∑ k in range K, b k)) +
+      ∑ i in range K, a i * ∑ k in range (K - i), b k =
+        ∑ i in range K, a i * (∑ k in range (K - i), b k - ∑ k in range K, b k) +
           ∑ i in range K, a i * ∑ k in range K, b k :=
       by rw [← sum_add_distrib] <;> simp [(mul_add _ _ _).symm]
     have two_mul_two : (4 : α) = 2 * 2 := by norm_num
@@ -294,8 +294,8 @@ theorem cauchy_product {a b : ℕ → β} (ha : IsCauSeq abs fun m => ∑ n in r
         _ < max N M + 1 := (Nat.lt_succ_self _)
         _ < K := hNMK
     have hsumlesum :
-      (∑ i in range (max N M + 1),
-          abv (a i) * abv ((∑ k in range (K - i), b k) - ∑ k in range K, b k)) ≤
+      ∑ i in range (max N M + 1),
+          abv (a i) * abv (∑ k in range (K - i), b k - ∑ k in range K, b k) ≤
         ∑ i in range (max N M + 1), abv (a i) * (ε / (2 * P)) :=
       sum_le_sum fun m hmJ =>
         mul_le_mul_of_nonneg_left
@@ -311,19 +311,19 @@ theorem cauchy_product {a b : ℕ → β} (ha : IsCauSeq abs fun m => ∑ n in r
                   hK))
               K (le_of_lt hKN)))
           (abv_nonneg abv _)
-    have hsumltP : (∑ n in range (max N M + 1), abv (a n)) < P :=
+    have hsumltP : ∑ n in range (max N M + 1), abv (a n) < P :=
       calc
-        (∑ n in range (max N M + 1), abv (a n)) = |∑ n in range (max N M + 1), abv (a n)| :=
+        ∑ n in range (max N M + 1), abv (a n) = |∑ n in range (max N M + 1), abv (a n)| :=
           Eq.symm (abs_of_nonneg (sum_nonneg fun x h => abv_nonneg abv (a x)))
         _ < P := hP (max N M + 1)
     rw [h₁, h₂, h₃, sum_mul, ← sub_sub, sub_right_comm, sub_self, zero_sub, abv_neg abv]
     refine' lt_of_le_of_lt (abv_sum_le_sum_abv _ _) _
     suffices
-      (∑ i in range (max N M + 1),
-            abv (a i) * abv ((∑ k in range (K - i), b k) - ∑ k in range K, b k)) +
-          ((∑ i in range K, abv (a i) * abv ((∑ k in range (K - i), b k) - ∑ k in range K, b k)) -
+      ∑ i in range (max N M + 1),
+            abv (a i) * abv (∑ k in range (K - i), b k - ∑ k in range K, b k) +
+          (∑ i in range K, abv (a i) * abv (∑ k in range (K - i), b k - ∑ k in range K, b k) -
             ∑ i in range (max N M + 1),
-              abv (a i) * abv ((∑ k in range (K - i), b k) - ∑ k in range K, b k)) <
+              abv (a i) * abv (∑ k in range (K - i), b k - ∑ k in range K, b k)) <
         ε / (2 * P) * P + ε / (4 * Q) * (2 * Q)
       by rw [hε] at this ; simpa [abv_mul abv]
     refine'
@@ -333,8 +333,8 @@ theorem cauchy_product {a b : ℕ → β} (ha : IsCauSeq abs fun m => ∑ n in r
         _
     rw [sum_range_sub_sum_range (le_of_lt hNMK)]
     calc
-      (∑ i in (range K).filterₓ fun k => max N M + 1 ≤ k,
-            abv (a i) * abv ((∑ k in range (K - i), b k) - ∑ k in range K, b k)) ≤
+      ∑ i in (range K).filterₓ fun k => max N M + 1 ≤ k,
+            abv (a i) * abv (∑ k in range (K - i), b k - ∑ k in range K, b k) ≤
           ∑ i in (range K).filterₓ fun k => max N M + 1 ≤ k, abv (a i) * (2 * Q) :=
         sum_le_sum fun n hn =>
           by
@@ -538,7 +538,7 @@ theorem exp_add : exp (x + y) = exp x * exp y :=
   by
   have hj :
     ∀ j : ℕ,
-      (∑ m in range j, (x + y) ^ m / m !) =
+      ∑ m in range j, (x + y) ^ m / m ! =
         ∑ i in range j, ∑ k in range (i + 1), x ^ k / k ! * (y ^ (i - k) / (i - k)!) :=
     by
     intro j
@@ -1690,9 +1690,9 @@ theorem sinh_three_mul : sinh (3 * x) = 4 * sinh x ^ 3 + 3 * sinh x := by
 
 open IsAbsoluteValue
 
-theorem sum_le_exp_of_nonneg {x : ℝ} (hx : 0 ≤ x) (n : ℕ) : (∑ i in range n, x ^ i / i !) ≤ exp x :=
+theorem sum_le_exp_of_nonneg {x : ℝ} (hx : 0 ≤ x) (n : ℕ) : ∑ i in range n, x ^ i / i ! ≤ exp x :=
   calc
-    (∑ i in range n, x ^ i / i !) ≤ limUnder (⟨_, isCauSeq_re (exp' x)⟩ : CauSeq ℝ Abs.abs) :=
+    ∑ i in range n, x ^ i / i ! ≤ limUnder (⟨_, isCauSeq_re (exp' x)⟩ : CauSeq ℝ Abs.abs) :=
       by
       refine' le_lim (CauSeq.le_of_exists ⟨n, fun j hj => _⟩)
       simp only [exp', const_apply, mk_to_fun, re_sum]
@@ -1813,10 +1813,9 @@ end Real
 namespace Complex
 
 theorem sum_div_factorial_le {α : Type _} [LinearOrderedField α] (n j : ℕ) (hn : 0 < n) :
-    (∑ m in Filter (fun k => n ≤ k) (range j), (1 / m ! : α)) ≤ n.succ / (n ! * n) :=
+    ∑ m in Filter (fun k => n ≤ k) (range j), (1 / m ! : α) ≤ n.succ / (n ! * n) :=
   calc
-    (∑ m in Filter (fun k => n ≤ k) (range j), (1 / m ! : α)) =
-        ∑ m in range (j - n), 1 / (m + n)! :=
+    ∑ m in Filter (fun k => n ≤ k) (range j), (1 / m ! : α) = ∑ m in range (j - n), 1 / (m + n)! :=
       sum_bij (fun m _ => m - n)
         (fun m hm =>
           mem_range.2 <|
@@ -1874,7 +1873,7 @@ theorem exp_bound {x : ℂ} (hx : abs x ≤ 1) {n : ℕ} (hn : 0 < n) :
   refine' lim_le (CauSeq.le_of_exists ⟨n, fun j hj => _⟩)
   simp_rw [← sub_eq_add_neg]
   show
-    abs ((∑ m in range j, x ^ m / m !) - ∑ m in range n, x ^ m / m !) ≤
+    abs (∑ m in range j, x ^ m / m ! - ∑ m in range n, x ^ m / m !) ≤
       abs x ^ n * (n.succ * (n ! * n)⁻¹)
   rw [sum_range_sub_sum_range hj]
   calc
@@ -1907,7 +1906,7 @@ theorem exp_bound' {x : ℂ} {n : ℕ} (hx : abs x / n.succ ≤ 1 / 2) :
   rw [← lim_const (∑ m in range n, _), exp, sub_eq_add_neg, ← lim_neg, lim_add, ← lim_abs]
   refine' lim_le (CauSeq.le_of_exists ⟨n, fun j hj => _⟩)
   simp_rw [← sub_eq_add_neg]
-  show abs ((∑ m in range j, x ^ m / m !) - ∑ m in range n, x ^ m / m !) ≤ abs x ^ n / n ! * 2
+  show abs (∑ m in range j, x ^ m / m ! - ∑ m in range n, x ^ m / m !) ≤ abs x ^ n / n ! * 2
   let k := j - n
   have hj : j = n + k := (add_tsub_cancel_of_le hj).symm
   rw [hj, sum_range_add_sub_sum_range]
@@ -1970,7 +1969,7 @@ theorem exp_bound {x : ℝ} (hx : |x| ≤ 1) {n : ℕ} (hn : 0 < n) :
 #align real.exp_bound Real.exp_bound
 
 theorem exp_bound' {x : ℝ} (h1 : 0 ≤ x) (h2 : x ≤ 1) {n : ℕ} (hn : 0 < n) :
-    Real.exp x ≤ (∑ m in Finset.range n, x ^ m / m !) + x ^ n * (n + 1) / (n ! * n) :=
+    Real.exp x ≤ ∑ m in Finset.range n, x ^ m / m ! + x ^ n * (n + 1) / (n ! * n) :=
   by
   have h3 : |x| = x := by simpa
   have h4 : |x| ≤ 1 := by rwa [h3]
@@ -2000,7 +1999,7 @@ For fixed `n` this is just a linear map wrt `r`, and each map is a simple linear
 of the previous (see `exp_near_succ`), with `exp_near n x r ⟶ exp x` as `n ⟶ ∞`,
 for any `r`. -/
 def expNear (n : ℕ) (x r : ℝ) : ℝ :=
-  (∑ m in range n, x ^ m / m !) + x ^ n / n ! * r
+  ∑ m in range n, x ^ m / m ! + x ^ n / n ! * r
 #align real.exp_near Real.expNear
 -/
 
@@ -2066,7 +2065,7 @@ theorem cos_bound {x : ℝ} (hx : |x| ≤ 1) : |cos x - (1 - x ^ 2 / 2)| ≤ |x|
       simp [Complex.cos, sub_div, add_div, neg_div, div_self (two_ne_zero' ℂ)]
     _ =
         abs
-          (((Complex.exp (x * I) - ∑ m in range 4, (x * I) ^ m / m !) +
+          ((Complex.exp (x * I) - ∑ m in range 4, (x * I) ^ m / m ! +
               (Complex.exp (-x * I) - ∑ m in range 4, (-x * I) ^ m / m !)) /
             2) :=
       (congr_arg abs
@@ -2101,7 +2100,7 @@ theorem sin_bound {x : ℝ} (hx : |x| ≤ 1) : |sin x - (x - x ^ 3 / 6)| ≤ |x|
         show (3 : ℂ) * 2 = 6 by norm_num]
     _ =
         abs
-          (((Complex.exp (-x * I) - ∑ m in range 4, (-x * I) ^ m / m !) -
+          ((Complex.exp (-x * I) - ∑ m in range 4, (-x * I) ^ m / m ! -
                 (Complex.exp (x * I) - ∑ m in range 4, (x * I) ^ m / m !)) *
               I /
             2) :=

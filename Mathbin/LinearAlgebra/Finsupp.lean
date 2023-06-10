@@ -1078,7 +1078,7 @@ variable {v} {x : M}
 
 /-- An element `x` lies in the span of `v` iff it can be written as sum `∑ cᵢ • vᵢ = x`.
 -/
-theorem mem_span_range_iff_exists_fun : x ∈ span R (range v) ↔ ∃ c : α → R, (∑ i, c i • v i) = x :=
+theorem mem_span_range_iff_exists_fun : x ∈ span R (range v) ↔ ∃ c : α → R, ∑ i, c i • v i = x :=
   by
   simp only [Finsupp.mem_span_range_iff_exists_finsupp,
     finsupp.equiv_fun_on_finite.surjective.exists, Finsupp.equivFunOnFinite_apply]
@@ -1089,7 +1089,7 @@ theorem mem_span_range_iff_exists_fun : x ∈ span R (range v) ↔ ∃ c : α �
 can be written as sum `∑ cᵢ • vᵢ = x`.
 -/
 theorem top_le_span_range_iff_forall_exists_fun :
-    ⊤ ≤ span R (range v) ↔ ∀ x, ∃ c : α → R, (∑ i, c i • v i) = x :=
+    ⊤ ≤ span R (range v) ↔ ∀ x, ∃ c : α → R, ∑ i, c i • v i = x :=
   by
   simp_rw [← mem_span_range_iff_exists_fun]
   exact ⟨fun h x => h trivial, fun h x _ => h x⟩
@@ -1153,7 +1153,7 @@ theorem Submodule.mem_iSup_iff_exists_finset {ι : Sort _} {p : ι → Submodule
 
 #print mem_span_finset /-
 theorem mem_span_finset {s : Finset M} {x : M} :
-    x ∈ span R (↑s : Set M) ↔ ∃ f : M → R, (∑ i in s, f i • i) = x :=
+    x ∈ span R (↑s : Set M) ↔ ∃ f : M → R, ∑ i in s, f i • i = x :=
   ⟨fun hx =>
     let ⟨v, hvs, hvx⟩ :=
       (Finsupp.mem_span_image_iff_total _).1

@@ -374,7 +374,7 @@ open scoped BigOperators
 omit dec_ι
 
 theorem mem_iSup_finset_iff_exists_sum {s : Finset ι} (p : ι → Submodule R N) (a : N) :
-    (a ∈ ⨆ i ∈ s, p i) ↔ ∃ μ : ∀ i, p i, (∑ i in s, (μ i : N)) = a := by
+    (a ∈ ⨆ i ∈ s, p i) ↔ ∃ μ : ∀ i, p i, ∑ i in s, (μ i : N) = a := by
   classical
   rw [Submodule.mem_iSup_iff_exists_dfinsupp']
   constructor <;> rintro ⟨μ, hμ⟩

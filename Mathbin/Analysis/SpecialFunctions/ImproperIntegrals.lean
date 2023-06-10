@@ -45,7 +45,7 @@ theorem integrableOn_exp_Iic (c : ℝ) : IntegrableOn exp (Iic c) :=
 -/
 
 #print integral_exp_Iic /-
-theorem integral_exp_Iic (c : ℝ) : (∫ x : ℝ in Iic c, exp x) = exp c :=
+theorem integral_exp_Iic (c : ℝ) : ∫ x : ℝ in Iic c, exp x = exp c :=
   by
   refine'
     tendsto_nhds_unique
@@ -56,17 +56,17 @@ theorem integral_exp_Iic (c : ℝ) : (∫ x : ℝ in Iic c, exp x) = exp c :=
 -/
 
 #print integral_exp_Iic_zero /-
-theorem integral_exp_Iic_zero : (∫ x : ℝ in Iic 0, exp x) = 1 :=
+theorem integral_exp_Iic_zero : ∫ x : ℝ in Iic 0, exp x = 1 :=
   exp_zero ▸ integral_exp_Iic 0
 #align integral_exp_Iic_zero integral_exp_Iic_zero
 -/
 
-theorem integral_exp_neg_Ioi (c : ℝ) : (∫ x : ℝ in Ioi c, exp (-x)) = exp (-c) := by
+theorem integral_exp_neg_Ioi (c : ℝ) : ∫ x : ℝ in Ioi c, exp (-x) = exp (-c) := by
   simpa only [integral_comp_neg_Ioi] using integral_exp_Iic (-c)
 #align integral_exp_neg_Ioi integral_exp_neg_Ioi
 
 #print integral_exp_neg_Ioi_zero /-
-theorem integral_exp_neg_Ioi_zero : (∫ x : ℝ in Ioi 0, exp (-x)) = 1 := by
+theorem integral_exp_neg_Ioi_zero : ∫ x : ℝ in Ioi 0, exp (-x) = 1 := by
   simpa only [neg_zero, exp_zero] using integral_exp_neg_Ioi 0
 #align integral_exp_neg_Ioi_zero integral_exp_neg_Ioi_zero
 -/
@@ -89,7 +89,7 @@ theorem integrableOn_Ioi_rpow_of_lt {a : ℝ} (ha : a < -1) {c : ℝ} (hc : 0 < 
 #align integrable_on_Ioi_rpow_of_lt integrableOn_Ioi_rpow_of_lt
 
 theorem integral_Ioi_rpow_of_lt {a : ℝ} (ha : a < -1) {c : ℝ} (hc : 0 < c) :
-    (∫ t : ℝ in Ioi c, t ^ a) = -c ^ (a + 1) / (a + 1) :=
+    ∫ t : ℝ in Ioi c, t ^ a = -c ^ (a + 1) / (a + 1) :=
   by
   have hd : ∀ (x : ℝ) (hx : x ∈ Ici c), HasDerivAt (fun t => t ^ (a + 1) / (a + 1)) (x ^ a) x :=
     by
@@ -116,7 +116,7 @@ theorem integrableOn_Ioi_cpow_of_lt {a : ℂ} (ha : a.re < -1) {c : ℝ} (hc : 0
 #align integrable_on_Ioi_cpow_of_lt integrableOn_Ioi_cpow_of_lt
 
 theorem integral_Ioi_cpow_of_lt {a : ℂ} (ha : a.re < -1) {c : ℝ} (hc : 0 < c) :
-    (∫ t : ℝ in Ioi c, (t : ℂ) ^ a) = -(c : ℂ) ^ (a + 1) / (a + 1) :=
+    ∫ t : ℝ in Ioi c, (t : ℂ) ^ a = -(c : ℂ) ^ (a + 1) / (a + 1) :=
   by
   refine'
     tendsto_nhds_unique

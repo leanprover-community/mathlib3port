@@ -80,7 +80,7 @@ theorem multiset_noncommProd_mem (K : Subgroup G) (g : Multiset G) (comm) :
 @[to_additive
       "Sum of elements in an `add_subgroup` of an `add_comm_group` indexed by a `finset`\nis in the `add_subgroup`."]
 protected theorem prod_mem {G : Type _} [CommGroup G] (K : Subgroup G) {ι : Type _} {t : Finset ι}
-    {f : ι → G} (h : ∀ c ∈ t, f c ∈ K) : (∏ c in t, f c) ∈ K :=
+    {f : ι → G} (h : ∀ c ∈ t, f c ∈ K) : ∏ c in t, f c ∈ K :=
   prod_mem h
 #align subgroup.prod_mem Subgroup.prod_mem
 #align add_subgroup.sum_mem AddSubgroup.sum_mem

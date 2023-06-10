@@ -107,8 +107,8 @@ structure PartitionOfUnity (ι X : Type _) [TopologicalSpace X] (s : Set X := un
   toFun : ι → C(X, ℝ)
   locally_finite' : LocallyFinite fun i => support (to_fun i)
   nonneg' : 0 ≤ to_fun
-  sum_eq_one' : ∀ x ∈ s, (∑ᶠ i, to_fun i x) = 1
-  sum_le_one' : ∀ x, (∑ᶠ i, to_fun i x) ≤ 1
+  sum_eq_one' : ∀ x ∈ s, ∑ᶠ i, to_fun i x = 1
+  sum_le_one' : ∀ x, ∑ᶠ i, to_fun i x ≤ 1
 #align partition_of_unity PartitionOfUnity
 -/
 
@@ -159,7 +159,7 @@ theorem nonneg (i : ι) (x : X) : 0 ≤ f i x :=
   f.nonneg' i x
 #align partition_of_unity.nonneg PartitionOfUnity.nonneg
 
-theorem sum_eq_one {x : X} (hx : x ∈ s) : (∑ᶠ i, f i x) = 1 :=
+theorem sum_eq_one {x : X} (hx : x ∈ s) : ∑ᶠ i, f i x = 1 :=
   f.sum_eq_one' x hx
 #align partition_of_unity.sum_eq_one PartitionOfUnity.sum_eq_one
 
@@ -172,7 +172,7 @@ theorem exists_pos {x : X} (hx : x ∈ s) : ∃ i, 0 < f i x :=
   simpa only [fun i => (H i).antisymm (f.nonneg i x), finsum_zero] using zero_ne_one
 #align partition_of_unity.exists_pos PartitionOfUnity.exists_pos
 
-theorem sum_le_one (x : X) : (∑ᶠ i, f i x) ≤ 1 :=
+theorem sum_le_one (x : X) : ∑ᶠ i, f i x ≤ 1 :=
   f.sum_le_one' x
 #align partition_of_unity.sum_le_one PartitionOfUnity.sum_le_one
 
@@ -404,7 +404,7 @@ of `1 - f j x` vanishes, and `∑ᶠ i, g i x = 1`.
 
 In order to avoid an assumption `linear_order ι`, we use `well_ordering_rel` instead of `(<)`. -/
 def toPouFun (i : ι) (x : X) : ℝ :=
-  f i x * ∏ᶠ (j) (hj : WellOrderingRel j i), 1 - f j x
+  f i x * ∏ᶠ (j) (hj : WellOrderingRel j i), (1 - f j x)
 #align bump_covering.to_pou_fun BumpCovering.toPouFun
 -/
 
@@ -418,7 +418,7 @@ theorem support_toPouFun_subset (i : ι) : support (f.toPouFun i) ⊆ support (f
 
 theorem toPouFun_eq_mul_prod (i : ι) (x : X) (t : Finset ι)
     (ht : ∀ j, WellOrderingRel j i → f j x ≠ 0 → j ∈ t) :
-    f.toPouFun i x = f i x * ∏ j in t.filterₓ fun j => WellOrderingRel j i, 1 - f j x :=
+    f.toPouFun i x = f i x * ∏ j in t.filterₓ fun j => WellOrderingRel j i, (1 - f j x) :=
   by
   refine' congr_arg _ (finprod_cond_eq_prod_of_cond_iff _ fun j hj => _)
   rw [Ne.def, sub_eq_self] at hj 
@@ -426,7 +426,7 @@ theorem toPouFun_eq_mul_prod (i : ι) (x : X) (t : Finset ι)
   exact flip (ht j) hj
 #align bump_covering.to_pou_fun_eq_mul_prod BumpCovering.toPouFun_eq_mul_prod
 
-theorem sum_toPouFun_eq (x : X) : (∑ᶠ i, f.toPouFun i x) = 1 - ∏ᶠ i, 1 - f i x :=
+theorem sum_toPouFun_eq (x : X) : ∑ᶠ i, f.toPouFun i x = 1 - ∏ᶠ i, (1 - f i x) :=
   by
   set s := (f.point_finite x).toFinset
   have hs : (s : Set ι) = {i | f i x ≠ 0} := finite.coe_to_finset _
@@ -446,7 +446,7 @@ theorem sum_toPouFun_eq (x : X) : (∑ᶠ i, f.toPouFun i x) = 1 - ∏ᶠ i, 1 -
 
 theorem exists_finset_toPouFun_eventuallyEq (i : ι) (x : X) :
     ∃ t : Finset ι,
-      f.toPouFun i =ᶠ[𝓝 x] f i * ∏ j in t.filterₓ fun j => WellOrderingRel j i, 1 - f j :=
+      f.toPouFun i =ᶠ[𝓝 x] f i * ∏ j in t.filterₓ fun j => WellOrderingRel j i, (1 - f j) :=
   by
   rcases f.locally_finite x with ⟨U, hU, hf⟩
   use hf.to_finset
@@ -497,19 +497,20 @@ def toPartitionOfUnity : PartitionOfUnity ι X s
 -/
 
 theorem toPartitionOfUnity_apply (i : ι) (x : X) :
-    f.toPartitionOfUnity i x = f i x * ∏ᶠ (j) (hj : WellOrderingRel j i), 1 - f j x :=
+    f.toPartitionOfUnity i x = f i x * ∏ᶠ (j) (hj : WellOrderingRel j i), (1 - f j x) :=
   rfl
 #align bump_covering.to_partition_of_unity_apply BumpCovering.toPartitionOfUnity_apply
 
 theorem toPartitionOfUnity_eq_mul_prod (i : ι) (x : X) (t : Finset ι)
     (ht : ∀ j, WellOrderingRel j i → f j x ≠ 0 → j ∈ t) :
-    f.toPartitionOfUnity i x = f i x * ∏ j in t.filterₓ fun j => WellOrderingRel j i, 1 - f j x :=
+    f.toPartitionOfUnity i x = f i x * ∏ j in t.filterₓ fun j => WellOrderingRel j i, (1 - f j x) :=
   f.toPouFun_eq_mul_prod i x t ht
 #align bump_covering.to_partition_of_unity_eq_mul_prod BumpCovering.toPartitionOfUnity_eq_mul_prod
 
 theorem exists_finset_toPartitionOfUnity_eventuallyEq (i : ι) (x : X) :
     ∃ t : Finset ι,
-      f.toPartitionOfUnity i =ᶠ[𝓝 x] f i * ∏ j in t.filterₓ fun j => WellOrderingRel j i, 1 - f j :=
+      f.toPartitionOfUnity i =ᶠ[𝓝 x]
+        f i * ∏ j in t.filterₓ fun j => WellOrderingRel j i, (1 - f j) :=
   f.exists_finset_toPouFun_eventuallyEq i x
 #align bump_covering.exists_finset_to_partition_of_unity_eventually_eq BumpCovering.exists_finset_toPartitionOfUnity_eventuallyEq
 
@@ -524,7 +525,7 @@ theorem support_toPartitionOfUnity_subset (i : ι) :
 #align bump_covering.support_to_partition_of_unity_subset BumpCovering.support_toPartitionOfUnity_subset
 
 theorem sum_toPartitionOfUnity_eq (x : X) :
-    (∑ᶠ i, f.toPartitionOfUnity i x) = 1 - ∏ᶠ i, 1 - f i x :=
+    ∑ᶠ i, f.toPartitionOfUnity i x = 1 - ∏ᶠ i, (1 - f i x) :=
   f.sum_toPouFun_eq x
 #align bump_covering.sum_to_partition_of_unity_eq BumpCovering.sum_toPartitionOfUnity_eq
 

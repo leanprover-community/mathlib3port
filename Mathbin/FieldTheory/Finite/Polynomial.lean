@@ -71,7 +71,7 @@ variable [Fintype K] [Fintype σ]
 #print MvPolynomial.indicator /-
 /-- Over a field, this is the indicator function as an `mv_polynomial`. -/
 def indicator [CommRing K] (a : σ → K) : MvPolynomial σ K :=
-  ∏ n, 1 - (X n - C (a n)) ^ (Fintype.card K - 1)
+  ∏ n, (1 - (X n - C (a n)) ^ (Fintype.card K - 1))
 #align mv_polynomial.indicator MvPolynomial.indicator
 -/
 

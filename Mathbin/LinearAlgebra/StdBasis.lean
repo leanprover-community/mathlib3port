@@ -122,7 +122,7 @@ theorem iInf_ker_proj_le_iSup_range_stdBasis {I : Finset ι} {J : Set ι} (hu : 
       intro b hb
       simp only [mem_infi, mem_ker, proj_apply] at hb 
       rw [←
-        show (∑ i in I, std_basis R φ i (b i)) = b by
+        show ∑ i in I, std_basis R φ i (b i) = b by
           ext i
           rw [Finset.sum_apply, ← std_basis_same R φ i (b i)]
           refine' Finset.sum_eq_single i (fun j hjI ne => std_basis_ne _ _ _ _ Ne.symm _) _

@@ -86,7 +86,7 @@ any bicone `b` for `f` satisfying `total : ∑ j : J, b.π j ≫ b.ι j = 𝟙 b
 
 (That is, such a bicone is a limit cone and a colimit cocone.)
 -/
-def isBilimitOfTotal {f : J → C} (b : Bicone f) (total : (∑ j : J, b.π j ≫ b.ι j) = 𝟙 b.pt) :
+def isBilimitOfTotal {f : J → C} (b : Bicone f) (total : ∑ j : J, b.π j ≫ b.ι j = 𝟙 b.pt) :
     b.IsBilimit
     where
   IsLimit :=
@@ -118,7 +118,7 @@ def isBilimitOfTotal {f : J → C} (b : Bicone f) (total : (∑ j : J, b.π j �
 
 #print CategoryTheory.Limits.IsBilimit.total /-
 theorem IsBilimit.total {f : J → C} {b : Bicone f} (i : b.IsBilimit) :
-    (∑ j : J, b.π j ≫ b.ι j) = 𝟙 b.pt :=
+    ∑ j : J, b.π j ≫ b.ι j = 𝟙 b.pt :=
   i.IsLimit.hom_ext fun j => by cases j; simp [sum_comp, b.ι_π, comp_dite]
 #align category_theory.limits.is_bilimit.total CategoryTheory.Limits.IsBilimit.total
 -/
@@ -129,8 +129,8 @@ any bicone `b` for `f` satisfying `total : ∑ j : J, b.π j ≫ b.ι j = 𝟙 b
 
 (That is, such a bicone is a limit cone and a colimit cocone.)
 -/
-theorem hasBiproduct_of_total {f : J → C} (b : Bicone f)
-    (total : (∑ j : J, b.π j ≫ b.ι j) = 𝟙 b.pt) : HasBiproduct f :=
+theorem hasBiproduct_of_total {f : J → C} (b : Bicone f) (total : ∑ j : J, b.π j ≫ b.ι j = 𝟙 b.pt) :
+    HasBiproduct f :=
   HasBiproduct.mk
     { Bicone := b
       IsBilimit := isBilimitOfTotal b Total }
@@ -224,7 +224,7 @@ variable {f : J → C} [HasBiproduct f]
 `∑ j : J, biproduct.π f j ≫ biproduct.ι f j = 𝟙 (⨁ f)`
 -/
 @[simp]
-theorem biproduct.total : (∑ j : J, biproduct.π f j ≫ biproduct.ι f j) = 𝟙 (⨁ f) :=
+theorem biproduct.total : ∑ j : J, biproduct.π f j ≫ biproduct.ι f j = 𝟙 (⨁ f) :=
   IsBilimit.total (biproduct.isBilimit _)
 #align category_theory.limits.biproduct.total CategoryTheory.Limits.biproduct.total
 -/

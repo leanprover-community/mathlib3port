@@ -57,7 +57,7 @@ variable {α E ι : Type _} {hm : MeasurableSpace α} {μ : Measure α} [Topolog
 `g` is integrable and continuous at `x₀`, then `φᵢ • g` is eventually integrable. -/
 theorem integrableOn_peak_smul_of_integrableOn_of_continuousWithinAt (hs : MeasurableSet s)
     (hlφ : ∀ u : Set α, IsOpen u → x₀ ∈ u → TendstoUniformlyOn φ 0 l (s \ u))
-    (hiφ : ∀ᶠ i in l, (∫ x in s, φ i x ∂μ) = 1) (hmg : IntegrableOn g s μ)
+    (hiφ : ∀ᶠ i in l, ∫ x in s, φ i x ∂μ = 1) (hmg : IntegrableOn g s μ)
     (hcg : ContinuousWithinAt g s x₀) : ∀ᶠ i in l, IntegrableOn (fun x => φ i x • g x) s μ :=
   by
   obtain ⟨u, u_open, x₀u, hu⟩ : ∃ u, IsOpen u ∧ x₀ ∈ u ∧ ∀ x ∈ u ∩ s, g x ∈ ball (g x₀) 1
@@ -92,20 +92,20 @@ where one assumes additionally `g x₀ = 0`. -/
 theorem tendsto_set_integral_peak_smul_of_integrableOn_of_continuousWithinAt_aux
     (hs : MeasurableSet s) (hnφ : ∀ᶠ i in l, ∀ x ∈ s, 0 ≤ φ i x)
     (hlφ : ∀ u : Set α, IsOpen u → x₀ ∈ u → TendstoUniformlyOn φ 0 l (s \ u))
-    (hiφ : ∀ᶠ i in l, (∫ x in s, φ i x ∂μ) = 1) (hmg : IntegrableOn g s μ) (h'g : g x₀ = 0)
+    (hiφ : ∀ᶠ i in l, ∫ x in s, φ i x ∂μ = 1) (hmg : IntegrableOn g s μ) (h'g : g x₀ = 0)
     (hcg : ContinuousWithinAt g s x₀) : Tendsto (fun i : ι => ∫ x in s, φ i x • g x ∂μ) l (𝓝 0) :=
   by
   refine' Metric.tendsto_nhds.2 fun ε εpos => _
-  obtain ⟨δ, hδ, δpos⟩ : ∃ δ, (δ * ∫ x in s, ‖g x‖ ∂μ) + δ < ε ∧ 0 < δ :=
+  obtain ⟨δ, hδ, δpos⟩ : ∃ δ, δ * ∫ x in s, ‖g x‖ ∂μ + δ < ε ∧ 0 < δ :=
     by
     have A :
-      tendsto (fun δ => (δ * ∫ x in s, ‖g x‖ ∂μ) + δ) (𝓝[>] 0) (𝓝 ((0 * ∫ x in s, ‖g x‖ ∂μ) + 0)) :=
+      tendsto (fun δ => δ * ∫ x in s, ‖g x‖ ∂μ + δ) (𝓝[>] 0) (𝓝 (0 * ∫ x in s, ‖g x‖ ∂μ + 0)) :=
       by
       apply tendsto.mono_left _ nhdsWithin_le_nhds
       exact (tendsto_id.mul tendsto_const_nhds).add tendsto_id
     rw [MulZeroClass.zero_mul, zero_add] at A 
     exact (((tendsto_order.1 A).2 ε εpos).And self_mem_nhdsWithin).exists
-  suffices ∀ᶠ i in l, ‖∫ x in s, φ i x • g x ∂μ‖ ≤ (δ * ∫ x in s, ‖g x‖ ∂μ) + δ
+  suffices ∀ᶠ i in l, ‖∫ x in s, φ i x • g x ∂μ‖ ≤ δ * ∫ x in s, ‖g x‖ ∂μ + δ
     by
     filter_upwards [this] with i hi
     simp only [dist_zero_right]
@@ -159,13 +159,13 @@ theorem tendsto_set_integral_peak_smul_of_integrableOn_of_continuousWithinAt_aux
         · exact eventually_of_forall fun x => norm_nonneg _
         · apply eventually_of_forall; exact diff_subset s u
   calc
-    ‖∫ x in s, φ i x • g x ∂μ‖ = ‖(∫ x in s \ u, φ i x • g x ∂μ) + ∫ x in s ∩ u, φ i x • g x ∂μ‖ :=
+    ‖∫ x in s, φ i x • g x ∂μ‖ = ‖∫ x in s \ u, φ i x • g x ∂μ + ∫ x in s ∩ u, φ i x • g x ∂μ‖ :=
       by
       conv_lhs => rw [← diff_union_inter s u]
       rw [integral_union (disjoint_sdiff_inter _ _) (hs.inter u_open.measurable_set)
           (h''i.mono_set (diff_subset _ _)) (h''i.mono_set (inter_subset_left _ _))]
     _ ≤ ‖∫ x in s \ u, φ i x • g x ∂μ‖ + ‖∫ x in s ∩ u, φ i x • g x ∂μ‖ := (norm_add_le _ _)
-    _ ≤ (δ * ∫ x in s, ‖g x‖ ∂μ) + δ := add_le_add C B
+    _ ≤ δ * ∫ x in s, ‖g x‖ ∂μ + δ := add_le_add C B
 #align tendsto_set_integral_peak_smul_of_integrable_on_of_continuous_within_at_aux tendsto_set_integral_peak_smul_of_integrableOn_of_continuousWithinAt_aux
 
 /- If a sequence of peak functions `φᵢ` converges uniformly to zero away from a point `x₀`, and
@@ -179,7 +179,7 @@ theorem tendsto_set_integral_peak_smul_of_integrableOn_of_continuousWithinAt (hs
   by
   let h := g - fun y => g x₀
   have A :
-    tendsto (fun i : ι => (∫ x in s, φ i x • h x ∂μ) + (∫ x in s, φ i x ∂μ) • g x₀) l
+    tendsto (fun i : ι => ∫ x in s, φ i x • h x ∂μ + (∫ x in s, φ i x ∂μ) • g x₀) l
       (𝓝 (0 + (1 : ℝ) • g x₀)) :=
     by
     refine' tendsto.add _ (tendsto.smul (tendsto_const_nhds.congr' hiφ.symm) tendsto_const_nhds)
@@ -241,7 +241,7 @@ theorem tendsto_set_integral_pow_smul_of_unique_maximum_of_isCompact_of_measure_
       _root_.continuous_on_iff.1 hc x₀ h₀ (Ioi (0 : ℝ)) isOpen_Ioi hnc₀
     apply (hμ u u_open x₀_u).trans_le
     exact measure_mono fun x hx => ⟨ne_of_gt (pow_pos (hu hx) _), hx.2⟩
-  have hiφ : ∀ n, (∫ x in s, φ n x ∂μ) = 1 := fun n => by
+  have hiφ : ∀ n, ∫ x in s, φ n x ∂μ = 1 := fun n => by
     rw [integral_mul_left, inv_mul_cancel (P n).ne']
   have A : ∀ u : Set α, IsOpen u → x₀ ∈ u → TendstoUniformlyOn φ 0 at_top (s \ u) :=
     by

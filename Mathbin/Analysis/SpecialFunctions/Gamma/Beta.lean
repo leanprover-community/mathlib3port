@@ -116,7 +116,7 @@ theorem betaIntegral_eval_one_right {u : ℂ} (hu : 0 < re u) : betaIntegral u 1
 #align complex.beta_integral_eval_one_right Complex.betaIntegral_eval_one_right
 
 theorem betaIntegral_scaled (s t : ℂ) {a : ℝ} (ha : 0 < a) :
-    (∫ x in 0 ..a, (x : ℂ) ^ (s - 1) * (a - x) ^ (t - 1)) = a ^ (s + t - 1) * betaIntegral s t :=
+    ∫ x in 0 ..a, (x : ℂ) ^ (s - 1) * (a - x) ^ (t - 1) = a ^ (s + t - 1) * betaIntegral s t :=
   by
   have ha' : (a : ℂ) ≠ 0 := of_real_ne_zero.mpr ha.ne'
   rw [beta_integral]
@@ -233,7 +233,7 @@ theorem betaIntegral_recurrence {u v : ℂ} (hu : 0 < re u) (hv : 0 < re v) :
 
 /-- Explicit formula for the Beta function when second argument is a positive integer. -/
 theorem betaIntegral_eval_nat_add_one_right {u : ℂ} (hu : 0 < re u) (n : ℕ) :
-    betaIntegral u (n + 1) = n ! / ∏ j : ℕ in Finset.range (n + 1), u + j :=
+    betaIntegral u (n + 1) = n ! / ∏ j : ℕ in Finset.range (n + 1), (u + j) :=
   by
   induction' n with n IH generalizing u
   ·
@@ -265,7 +265,7 @@ namespace Complex
 /-- The sequence with `n`-th term `n ^ s * n! / (s * (s + 1) * ... * (s + n))`, for complex `s`.
 We will show that this tends to `Γ(s)` as `n → ∞`. -/
 noncomputable def gammaSeq (s : ℂ) (n : ℕ) :=
-  (n : ℂ) ^ s * n ! / ∏ j : ℕ in Finset.range (n + 1), s + j
+  (n : ℂ) ^ s * n ! / ∏ j : ℕ in Finset.range (n + 1), (s + j)
 #align complex.Gamma_seq Complex.gammaSeq
 
 theorem gammaSeq_eq_betaIntegral_of_re_pos {s : ℂ} (hs : 0 < re s) (n : ℕ) :
@@ -432,7 +432,7 @@ namespace Complex
 
 theorem gammaSeq_mul (z : ℂ) {n : ℕ} (hn : n ≠ 0) :
     gammaSeq z n * gammaSeq (1 - z) n =
-      n / (n + 1 - z) * (1 / (z * ∏ j in Finset.range n, 1 - z ^ 2 / (j + 1) ^ 2)) :=
+      n / (n + 1 - z) * (1 / (z * ∏ j in Finset.range n, (1 - z ^ 2 / (j + 1) ^ 2))) :=
   by
   -- also true for n = 0 but we don't need it
   have aux : ∀ a b c d : ℂ, a * b * (c * d) = a * c * (b * d) := by intros; ring
@@ -531,7 +531,7 @@ namespace Real
 /-- The sequence with `n`-th term `n ^ s * n! / (s * (s + 1) * ... * (s + n))`, for real `s`. We
 will show that this tends to `Γ(s)` as `n → ∞`. -/
 noncomputable def gammaSeq (s : ℝ) (n : ℕ) :=
-  (n : ℝ) ^ s * n ! / ∏ j : ℕ in Finset.range (n + 1), s + j
+  (n : ℝ) ^ s * n ! / ∏ j : ℕ in Finset.range (n + 1), (s + j)
 #align real.Gamma_seq Real.gammaSeq
 
 /-- Euler's limit formula for the real Gamma function. -/

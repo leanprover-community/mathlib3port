@@ -200,7 +200,7 @@ theorem mgf_nonneg : 0 ≤ mgf X μ t :=
 theorem mgf_pos' (hμ : μ ≠ 0) (h_int_X : Integrable (fun ω => exp (t * X ω)) μ) : 0 < mgf X μ t :=
   by
   simp_rw [mgf]
-  have : (∫ x : Ω, exp (t * X x) ∂μ) = ∫ x : Ω in Set.univ, exp (t * X x) ∂μ := by
+  have : ∫ x : Ω, exp (t * X x) ∂μ = ∫ x : Ω in Set.univ, exp (t * X x) ∂μ := by
     simp only [measure.restrict_univ]
   rw [this, set_integral_pos_iff_support_of_nonneg_ae _ _]
   · have h_eq_univ : (Function.support fun x : Ω => exp (t * X x)) = Set.univ :=

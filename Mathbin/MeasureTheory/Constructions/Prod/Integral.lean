@@ -351,7 +351,7 @@ theorem Integrable.integral_prod_right [SigmaFinite μ] ⦃f : α × β → E⦄
 variable [SigmaFinite μ]
 
 theorem integral_prod_swap (f : α × β → E) (hf : AEStronglyMeasurable f (μ.Prod ν)) :
-    (∫ z, f z.symm ∂ν.Prod μ) = ∫ z, f z ∂μ.Prod ν :=
+    ∫ z, f z.symm ∂ν.Prod μ = ∫ z, f z ∂μ.Prod ν :=
   by
   rw [← prod_swap] at hf 
   rw [← integral_map measurable_swap.ae_measurable hf, prod_swap]
@@ -366,7 +366,7 @@ variable {E' : Type _} [NormedAddCommGroup E'] [CompleteSpace E'] [NormedSpace �
 /-- Integrals commute with addition inside another integral. `F` can be any function. -/
 theorem integral_fn_integral_add ⦃f g : α × β → E⦄ (F : E → E') (hf : Integrable f (μ.Prod ν))
     (hg : Integrable g (μ.Prod ν)) :
-    (∫ x, F (∫ y, f (x, y) + g (x, y) ∂ν) ∂μ) = ∫ x, F ((∫ y, f (x, y) ∂ν) + ∫ y, g (x, y) ∂ν) ∂μ :=
+    ∫ x, F (∫ y, f (x, y) + g (x, y) ∂ν) ∂μ = ∫ x, F (∫ y, f (x, y) ∂ν + ∫ y, g (x, y) ∂ν) ∂μ :=
   by
   refine' integral_congr_ae _
   filter_upwards [hf.prod_right_ae, hg.prod_right_ae] with _ h2f h2g
@@ -377,7 +377,7 @@ theorem integral_fn_integral_add ⦃f g : α × β → E⦄ (F : E → E') (hf :
   `F` can be any measurable function. -/
 theorem integral_fn_integral_sub ⦃f g : α × β → E⦄ (F : E → E') (hf : Integrable f (μ.Prod ν))
     (hg : Integrable g (μ.Prod ν)) :
-    (∫ x, F (∫ y, f (x, y) - g (x, y) ∂ν) ∂μ) = ∫ x, F ((∫ y, f (x, y) ∂ν) - ∫ y, g (x, y) ∂ν) ∂μ :=
+    ∫ x, F (∫ y, f (x, y) - g (x, y) ∂ν) ∂μ = ∫ x, F (∫ y, f (x, y) ∂ν - ∫ y, g (x, y) ∂ν) ∂μ :=
   by
   refine' integral_congr_ae _
   filter_upwards [hf.prod_right_ae, hg.prod_right_ae] with _ h2f h2g
@@ -388,8 +388,7 @@ theorem integral_fn_integral_sub ⦃f g : α × β → E⦄ (F : E → E') (hf :
   `F` can be any function. -/
 theorem lintegral_fn_integral_sub ⦃f g : α × β → E⦄ (F : E → ℝ≥0∞) (hf : Integrable f (μ.Prod ν))
     (hg : Integrable g (μ.Prod ν)) :
-    (∫⁻ x, F (∫ y, f (x, y) - g (x, y) ∂ν) ∂μ) =
-      ∫⁻ x, F ((∫ y, f (x, y) ∂ν) - ∫ y, g (x, y) ∂ν) ∂μ :=
+    ∫⁻ x, F (∫ y, f (x, y) - g (x, y) ∂ν) ∂μ = ∫⁻ x, F (∫ y, f (x, y) ∂ν - ∫ y, g (x, y) ∂ν) ∂μ :=
   by
   refine' lintegral_congr_ae _
   filter_upwards [hf.prod_right_ae, hg.prod_right_ae] with _ h2f h2g
@@ -399,7 +398,7 @@ theorem lintegral_fn_integral_sub ⦃f g : α × β → E⦄ (F : E → ℝ≥0�
 /-- Double integrals commute with addition. -/
 theorem integral_integral_add ⦃f g : α × β → E⦄ (hf : Integrable f (μ.Prod ν))
     (hg : Integrable g (μ.Prod ν)) :
-    (∫ x, ∫ y, f (x, y) + g (x, y) ∂ν ∂μ) = (∫ x, ∫ y, f (x, y) ∂ν ∂μ) + ∫ x, ∫ y, g (x, y) ∂ν ∂μ :=
+    ∫ x, ∫ y, f (x, y) + g (x, y) ∂ν ∂μ = ∫ x, ∫ y, f (x, y) ∂ν ∂μ + ∫ x, ∫ y, g (x, y) ∂ν ∂μ :=
   (integral_fn_integral_add id hf hg).trans <|
     integral_add hf.integral_prod_left hg.integral_prod_left
 #align measure_theory.integral_integral_add MeasureTheory.integral_integral_add
@@ -408,14 +407,14 @@ theorem integral_integral_add ⦃f g : α × β → E⦄ (hf : Integrable f (μ.
   (instead of `f (x, y) + g (x, y)`) in the LHS. -/
 theorem integral_integral_add' ⦃f g : α × β → E⦄ (hf : Integrable f (μ.Prod ν))
     (hg : Integrable g (μ.Prod ν)) :
-    (∫ x, ∫ y, (f + g) (x, y) ∂ν ∂μ) = (∫ x, ∫ y, f (x, y) ∂ν ∂μ) + ∫ x, ∫ y, g (x, y) ∂ν ∂μ :=
+    ∫ x, ∫ y, (f + g) (x, y) ∂ν ∂μ = ∫ x, ∫ y, f (x, y) ∂ν ∂μ + ∫ x, ∫ y, g (x, y) ∂ν ∂μ :=
   integral_integral_add hf hg
 #align measure_theory.integral_integral_add' MeasureTheory.integral_integral_add'
 
 /-- Double integrals commute with subtraction. -/
 theorem integral_integral_sub ⦃f g : α × β → E⦄ (hf : Integrable f (μ.Prod ν))
     (hg : Integrable g (μ.Prod ν)) :
-    (∫ x, ∫ y, f (x, y) - g (x, y) ∂ν ∂μ) = (∫ x, ∫ y, f (x, y) ∂ν ∂μ) - ∫ x, ∫ y, g (x, y) ∂ν ∂μ :=
+    ∫ x, ∫ y, f (x, y) - g (x, y) ∂ν ∂μ = ∫ x, ∫ y, f (x, y) ∂ν ∂μ - ∫ x, ∫ y, g (x, y) ∂ν ∂μ :=
   (integral_fn_integral_sub id hf hg).trans <|
     integral_sub hf.integral_prod_left hg.integral_prod_left
 #align measure_theory.integral_integral_sub MeasureTheory.integral_integral_sub
@@ -424,7 +423,7 @@ theorem integral_integral_sub ⦃f g : α × β → E⦄ (hf : Integrable f (μ.
   (instead of `f (x, y) - g (x, y)`) in the LHS. -/
 theorem integral_integral_sub' ⦃f g : α × β → E⦄ (hf : Integrable f (μ.Prod ν))
     (hg : Integrable g (μ.Prod ν)) :
-    (∫ x, ∫ y, (f - g) (x, y) ∂ν ∂μ) = (∫ x, ∫ y, f (x, y) ∂ν ∂μ) - ∫ x, ∫ y, g (x, y) ∂ν ∂μ :=
+    ∫ x, ∫ y, (f - g) (x, y) ∂ν ∂μ = ∫ x, ∫ y, f (x, y) ∂ν ∂μ - ∫ x, ∫ y, g (x, y) ∂ν ∂μ :=
   integral_integral_sub hf hg
 #align measure_theory.integral_integral_sub' MeasureTheory.integral_integral_sub'
 
@@ -460,7 +459,7 @@ theorem continuous_integral_integral :
   of the right-hand side is integrable. -/
 theorem integral_prod :
     ∀ (f : α × β → E) (hf : Integrable f (μ.Prod ν)),
-      (∫ z, f z ∂μ.Prod ν) = ∫ x, ∫ y, f (x, y) ∂ν ∂μ :=
+      ∫ z, f z ∂μ.Prod ν = ∫ x, ∫ y, f (x, y) ∂ν ∂μ :=
   by
   apply integrable.induction
   · intro c s hs h2s
@@ -484,14 +483,14 @@ theorem integral_prod :
   the Bochner integral of `f` is equal to the iterated Bochner integral.
   This version has the integrals on the right-hand side in the other order. -/
 theorem integral_prod_symm (f : α × β → E) (hf : Integrable f (μ.Prod ν)) :
-    (∫ z, f z ∂μ.Prod ν) = ∫ y, ∫ x, f (x, y) ∂μ ∂ν := by
+    ∫ z, f z ∂μ.Prod ν = ∫ y, ∫ x, f (x, y) ∂μ ∂ν := by
   simp_rw [← integral_prod_swap f hf.ae_strongly_measurable]; exact integral_prod _ hf.swap
 #align measure_theory.integral_prod_symm MeasureTheory.integral_prod_symm
 
 #print MeasureTheory.integral_integral /-
 /-- Reversed version of **Fubini's Theorem**. -/
 theorem integral_integral {f : α → β → E} (hf : Integrable (uncurry f) (μ.Prod ν)) :
-    (∫ x, ∫ y, f x y ∂ν ∂μ) = ∫ z, f z.1 z.2 ∂μ.Prod ν :=
+    ∫ x, ∫ y, f x y ∂ν ∂μ = ∫ z, f z.1 z.2 ∂μ.Prod ν :=
   (integral_prod _ hf).symm
 #align measure_theory.integral_integral MeasureTheory.integral_integral
 -/
@@ -499,7 +498,7 @@ theorem integral_integral {f : α → β → E} (hf : Integrable (uncurry f) (μ
 #print MeasureTheory.integral_integral_symm /-
 /-- Reversed version of **Fubini's Theorem** (symmetric version). -/
 theorem integral_integral_symm {f : α → β → E} (hf : Integrable (uncurry f) (μ.Prod ν)) :
-    (∫ x, ∫ y, f x y ∂ν ∂μ) = ∫ z, f z.2 z.1 ∂ν.Prod μ :=
+    ∫ x, ∫ y, f x y ∂ν ∂μ = ∫ z, f z.2 z.1 ∂ν.Prod μ :=
   (integral_prod_symm _ hf.symm).symm
 #align measure_theory.integral_integral_symm MeasureTheory.integral_integral_symm
 -/
@@ -507,7 +506,7 @@ theorem integral_integral_symm {f : α → β → E} (hf : Integrable (uncurry f
 #print MeasureTheory.integral_integral_swap /-
 /-- Change the order of Bochner integration. -/
 theorem integral_integral_swap ⦃f : α → β → E⦄ (hf : Integrable (uncurry f) (μ.Prod ν)) :
-    (∫ x, ∫ y, f x y ∂ν ∂μ) = ∫ y, ∫ x, f x y ∂μ ∂ν :=
+    ∫ x, ∫ y, f x y ∂ν ∂μ = ∫ y, ∫ x, f x y ∂μ ∂ν :=
   (integral_integral hf).trans (integral_prod_symm _ hf)
 #align measure_theory.integral_integral_swap MeasureTheory.integral_integral_swap
 -/
@@ -517,14 +516,14 @@ theorem integral_integral_swap ⦃f : α → β → E⦄ (hf : Integrable (uncur
 /-- **Fubini's Theorem** for set integrals. -/
 theorem set_integral_prod (f : α × β → E) {s : Set α} {t : Set β}
     (hf : IntegrableOn f (s ×ˢ t) (μ.Prod ν)) :
-    (∫ z in s ×ˢ t, f z ∂μ.Prod ν) = ∫ x in s, ∫ y in t, f (x, y) ∂ν ∂μ :=
+    ∫ z in s ×ˢ t, f z ∂μ.Prod ν = ∫ x in s, ∫ y in t, f (x, y) ∂ν ∂μ :=
   by
   simp only [← measure.prod_restrict s t, integrable_on] at hf ⊢
   exact integral_prod f hf
 #align measure_theory.set_integral_prod MeasureTheory.set_integral_prod
 
 theorem integral_prod_mul {L : Type _} [IsROrC L] (f : α → L) (g : β → L) :
-    (∫ z, f z.1 * g z.2 ∂μ.Prod ν) = (∫ x, f x ∂μ) * ∫ y, g y ∂ν :=
+    ∫ z, f z.1 * g z.2 ∂μ.Prod ν = (∫ x, f x ∂μ) * ∫ y, g y ∂ν :=
   by
   by_cases h : integrable (fun z : α × β => f z.1 * g z.2) (μ.prod ν)
   · rw [integral_prod _ h]
@@ -538,9 +537,8 @@ theorem integral_prod_mul {L : Type _} [IsROrC L] (f : α → L) (g : β → L) 
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem set_integral_prod_mul {L : Type _} [IsROrC L] (f : α → L) (g : β → L) (s : Set α)
-    (t : Set β) :
-    (∫ z in s ×ˢ t, f z.1 * g z.2 ∂μ.Prod ν) = (∫ x in s, f x ∂μ) * ∫ y in t, g y ∂ν := by
-  simp only [← measure.prod_restrict s t, integrable_on, integral_prod_mul]
+    (t : Set β) : ∫ z in s ×ˢ t, f z.1 * g z.2 ∂μ.Prod ν = (∫ x in s, f x ∂μ) * ∫ y in t, g y ∂ν :=
+  by simp only [← measure.prod_restrict s t, integrable_on, integral_prod_mul]
 #align measure_theory.set_integral_prod_mul MeasureTheory.set_integral_prod_mul
 
 end MeasureTheory

@@ -80,7 +80,7 @@ is less than 1/2.
 -/
 theorem sum_lt_half_of_not_tendsto
     (h : ¬Tendsto (fun n => ∑ p in {p ∈ range n | Nat.Prime p}, 1 / (p : ℝ)) atTop atTop) :
-    ∃ k, ∀ x, (∑ p in p x k, 1 / (p : ℝ)) < 1 / 2 :=
+    ∃ k, ∀ x, ∑ p in p x k, 1 / (p : ℝ) < 1 / 2 :=
   by
   have h0 :
     (fun n => ∑ p in {p ∈ range n | Nat.Prime p}, 1 / (p : ℝ)) = fun n =>

@@ -154,6 +154,7 @@ theorem cardinal_le_max_transcendence_basis (hv : IsTranscendenceBasis R v) :
     _ = _ := by simp [max_assoc]
 #align is_alg_closed.cardinal_le_max_transcendence_basis IsAlgClosed.cardinal_le_max_transcendence_basis
 
+#print IsAlgClosed.cardinal_eq_cardinal_transcendence_basis_of_aleph0_lt /-
 /-- If `K` is an uncountable algebraically closed field, then its
 cardinality is the same as that of a transcendence basis. -/
 theorem cardinal_eq_cardinal_transcendence_basis_of_aleph0_lt [Nontrivial R]
@@ -173,6 +174,7 @@ theorem cardinal_eq_cardinal_transcendence_basis_of_aleph0_lt [Nontrivial R]
         · exact le_max_of_le_right this)
     (mk_le_of_injective (show Function.Injective v from hv.1.Injective))
 #align is_alg_closed.cardinal_eq_cardinal_transcendence_basis_of_aleph_0_lt IsAlgClosed.cardinal_eq_cardinal_transcendence_basis_of_aleph0_lt
+-/
 
 end Cardinal
 

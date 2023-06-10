@@ -216,7 +216,7 @@ theorem coord_apply_combination_of_not_mem (hi : i ∉ s) {w : ι → k} (hw : s
 #align affine_basis.coord_apply_combination_of_not_mem AffineBasis.coord_apply_combination_of_not_mem
 
 @[simp]
-theorem sum_coord_apply_eq_one [Fintype ι] (q : P) : (∑ i, b.Coord i q) = 1 :=
+theorem sum_coord_apply_eq_one [Fintype ι] (q : P) : ∑ i, b.Coord i q = 1 :=
   by
   have hq : q ∈ affineSpan k (range b) := by rw [b.tot]; exact AffineSubspace.mem_top k V q
   obtain ⟨w, hw, rfl⟩ := eq_affineCombination_of_mem_affineSpan_of_fintype hq
@@ -240,7 +240,7 @@ theorem affineCombination_coord_eq_self [Fintype ι] (q : P) :
 affine space is a module so we can talk about linear combinations. -/
 @[simp]
 theorem linear_combination_coord_eq_self [Fintype ι] (b : AffineBasis ι k V) (v : V) :
-    (∑ i, b.Coord i v • b i) = v :=
+    ∑ i, b.Coord i v • b i = v :=
   by
   have hb := b.affine_combination_coord_eq_self v
   rwa [finset.univ.affine_combination_eq_linear_combination _ _ (b.sum_coord_apply_eq_one v)] at hb 

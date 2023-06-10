@@ -2233,7 +2233,7 @@ theorem coeff_mul_one_sub_of_lt_order {R : Type _} [CommRing R] {φ ψ : PowerSe
 
 theorem coeff_mul_prod_one_sub_of_lt_order {R ι : Type _} [CommRing R] (k : ℕ) (s : Finset ι)
     (φ : PowerSeries R) (f : ι → PowerSeries R) :
-    (∀ i ∈ s, ↑k < (f i).order) → coeff R k (φ * ∏ i in s, 1 - f i) = coeff R k φ :=
+    (∀ i ∈ s, ↑k < (f i).order) → coeff R k (φ * ∏ i in s, (1 - f i)) = coeff R k φ :=
   by
   apply Finset.induction_on s
   · simp

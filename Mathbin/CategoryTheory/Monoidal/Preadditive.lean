@@ -113,7 +113,7 @@ open scoped BigOperators
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print CategoryTheory.tensor_sum /-
 theorem tensor_sum {P Q R S : C} {J : Type _} (s : Finset J) (f : P ⟶ Q) (g : J → (R ⟶ S)) :
-    (f ⊗ ∑ j in s, g j) = ∑ j in s, f ⊗ g j :=
+    f ⊗ ∑ j in s, g j = ∑ j in s, f ⊗ g j :=
   by
   rw [← tensor_id_comp_id_tensor]
   let tQ := (((tensoring_left C).obj Q).mapAddHom : (R ⟶ S) →+ _)

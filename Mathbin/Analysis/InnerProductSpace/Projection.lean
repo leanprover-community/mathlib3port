@@ -1326,7 +1326,7 @@ open scoped DirectSum
 /-- If `x` lies within an orthogonal family `v`, it can be expressed as a sum of projections. -/
 theorem OrthogonalFamily.sum_projection_of_mem_iSup [Fintype ι] {V : ι → Submodule 𝕜 E}
     [∀ i, CompleteSpace ↥(V i)] (hV : OrthogonalFamily 𝕜 (fun i => V i) fun i => (V i).subtypeₗᵢ)
-    (x : E) (hx : x ∈ iSup V) : (∑ i, (orthogonalProjection (V i) x : E)) = x :=
+    (x : E) (hx : x ∈ iSup V) : ∑ i, (orthogonalProjection (V i) x : E) = x :=
   by
   refine' Submodule.iSup_induction _ hx (fun i x hx => _) _ fun x y hx hy => _
   · refine'

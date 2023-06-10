@@ -156,7 +156,7 @@ theorem centralBinom_le_of_no_bertrand_prime (n : ℕ) (n_big : 2 < n)
   have n2_pos : 1 ≤ 2 * n := mul_pos (zero_lt_two' ℕ) n_pos
   let S := (Finset.range (2 * n / 3 + 1)).filterₓ Nat.Prime
   let f x := x ^ n.central_binom.factorization x
-  have : (∏ x : ℕ in S, f x) = ∏ x : ℕ in Finset.range (2 * n / 3 + 1), f x :=
+  have : ∏ x : ℕ in S, f x = ∏ x : ℕ in Finset.range (2 * n / 3 + 1), f x :=
     by
     refine' Finset.prod_filter_of_ne fun p hp h => _
     contrapose! h; dsimp only [f]

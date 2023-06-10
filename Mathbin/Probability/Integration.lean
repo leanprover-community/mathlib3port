@@ -51,7 +51,7 @@ namespace ProbabilityTheory
 theorem lintegral_mul_indicator_eq_lintegral_mul_lintegral_indicator {Mf mΩ : MeasurableSpace Ω}
     {μ : Measure Ω} (hMf : Mf ≤ mΩ) (c : ℝ≥0∞) {T : Set Ω} (h_meas_T : MeasurableSet T)
     (h_ind : IndepSets {s | measurable_set[Mf] s} {T} μ) (h_meas_f : measurable[Mf] f) :
-    (∫⁻ ω, f ω * T.indicator (fun _ => c) ω ∂μ) =
+    ∫⁻ ω, f ω * T.indicator (fun _ => c) ω ∂μ =
       (∫⁻ ω, f ω ∂μ) * ∫⁻ ω, T.indicator (fun _ => c) ω ∂μ :=
   by
   revert f
@@ -91,7 +91,7 @@ theorem lintegral_mul_indicator_eq_lintegral_mul_lintegral_indicator {Mf mΩ : M
 theorem lintegral_mul_eq_lintegral_mul_lintegral_of_independent_measurableSpace
     {Mf Mg mΩ : MeasurableSpace Ω} {μ : Measure Ω} (hMf : Mf ≤ mΩ) (hMg : Mg ≤ mΩ)
     (h_ind : Indep Mf Mg μ) (h_meas_f : measurable[Mf] f) (h_meas_g : measurable[Mg] g) :
-    (∫⁻ ω, f ω * g ω ∂μ) = (∫⁻ ω, f ω ∂μ) * ∫⁻ ω, g ω ∂μ :=
+    ∫⁻ ω, f ω * g ω ∂μ = (∫⁻ ω, f ω ∂μ) * ∫⁻ ω, g ω ∂μ :=
   by
   revert g
   have h_measM_f : Measurable f := h_meas_f.mono hMf le_rfl
@@ -119,7 +119,7 @@ theorem lintegral_mul_eq_lintegral_mul_lintegral_of_independent_measurableSpace
    then `E[f * g] = E[f] * E[g]`. -/
 theorem lintegral_mul_eq_lintegral_mul_lintegral_of_indepFun (h_meas_f : Measurable f)
     (h_meas_g : Measurable g) (h_indep_fun : IndepFun f g μ) :
-    (∫⁻ ω, (f * g) ω ∂μ) = (∫⁻ ω, f ω ∂μ) * ∫⁻ ω, g ω ∂μ :=
+    ∫⁻ ω, (f * g) ω ∂μ = (∫⁻ ω, f ω ∂μ) * ∫⁻ ω, g ω ∂μ :=
   lintegral_mul_eq_lintegral_mul_lintegral_of_independent_measurableSpace
     (measurable_iff_comap_le.1 h_meas_f) (measurable_iff_comap_le.1 h_meas_g) h_indep_fun
     (Measurable.of_comap_le le_rfl) (Measurable.of_comap_le le_rfl)
@@ -130,7 +130,7 @@ theorem lintegral_mul_eq_lintegral_mul_lintegral_of_indepFun (h_meas_f : Measura
    `lintegral_mul_eq_lintegral_mul_lintegral_of_indep_fun`). -/
 theorem lintegral_mul_eq_lintegral_mul_lintegral_of_indepFun' (h_meas_f : AEMeasurable f μ)
     (h_meas_g : AEMeasurable g μ) (h_indep_fun : IndepFun f g μ) :
-    (∫⁻ ω, (f * g) ω ∂μ) = (∫⁻ ω, f ω ∂μ) * ∫⁻ ω, g ω ∂μ :=
+    ∫⁻ ω, (f * g) ω ∂μ = (∫⁻ ω, f ω ∂μ) * ∫⁻ ω, g ω ∂μ :=
   by
   have fg_ae : f * g =ᵐ[μ] h_meas_f.mk _ * h_meas_g.mk _ := h_meas_f.ae_eq_mk.mul h_meas_g.ae_eq_mk
   rw [lintegral_congr_ae h_meas_f.ae_eq_mk, lintegral_congr_ae h_meas_g.ae_eq_mk,
@@ -143,7 +143,7 @@ theorem lintegral_mul_eq_lintegral_mul_lintegral_of_indepFun' (h_meas_f : AEMeas
 
 theorem lintegral_mul_eq_lintegral_mul_lintegral_of_indepFun'' (h_meas_f : AEMeasurable f μ)
     (h_meas_g : AEMeasurable g μ) (h_indep_fun : IndepFun f g μ) :
-    (∫⁻ ω, f ω * g ω ∂μ) = (∫⁻ ω, f ω ∂μ) * ∫⁻ ω, g ω ∂μ :=
+    ∫⁻ ω, f ω * g ω ∂μ = (∫⁻ ω, f ω ∂μ) * ∫⁻ ω, g ω ∂μ :=
   lintegral_mul_eq_lintegral_mul_lintegral_of_indepFun' h_meas_f h_meas_g h_indep_fun
 #align probability_theory.lintegral_mul_eq_lintegral_mul_lintegral_of_indep_fun'' ProbabilityTheory.lintegral_mul_eq_lintegral_mul_lintegral_of_indepFun''
 
@@ -160,7 +160,7 @@ theorem IndepFun.integrable_mul {β : Type _} [MeasurableSpace β] {X Y : Ω →
     hXY'.comp measurable_coe_nnreal_ennreal measurable_coe_nnreal_ennreal
   have hnX : AEMeasurable nX μ := hX.1.AEMeasurable.nnnorm.coe_nnreal_ennreal
   have hnY : AEMeasurable nY μ := hY.1.AEMeasurable.nnnorm.coe_nnreal_ennreal
-  have hmul : (∫⁻ a, nX a * nY a ∂μ) = (∫⁻ a, nX a ∂μ) * ∫⁻ a, nY a ∂μ := by
+  have hmul : ∫⁻ a, nX a * nY a ∂μ = (∫⁻ a, nX a ∂μ) * ∫⁻ a, nY a ∂μ := by
     convert lintegral_mul_eq_lintegral_mul_lintegral_of_indep_fun' hnX hnY hXY''
   refine' ⟨hX.1.mul hY.1, _⟩
   simp_rw [has_finite_integral, Pi.mul_apply, nnnorm_mul, ENNReal.coe_mul, hmul]
@@ -174,7 +174,7 @@ theorem IndepFun.integrable_left_of_integrable_mul {β : Type _} [MeasurableSpac
     (hX : AEStronglyMeasurable X μ) (hY : AEStronglyMeasurable Y μ) (h'Y : ¬Y =ᵐ[μ] 0) :
     Integrable X μ := by
   refine' ⟨hX, _⟩
-  have I : (∫⁻ ω, ‖Y ω‖₊ ∂μ) ≠ 0 := by
+  have I : ∫⁻ ω, ‖Y ω‖₊ ∂μ ≠ 0 := by
     intro H
     have I : (fun ω => ↑‖Y ω‖₊) =ᵐ[μ] 0 := (lintegral_eq_zero_iff' hY.ennnorm).1 H
     apply h'Y
@@ -185,7 +185,7 @@ theorem IndepFun.integrable_left_of_integrable_mul {β : Type _} [MeasurableSpac
     by
     have M : Measurable fun x : β => (‖x‖₊ : ℝ≥0∞) := measurable_nnnorm.coe_nnreal_ennreal
     apply indep_fun.comp hXY M M
-  have A : (∫⁻ ω, ‖X ω * Y ω‖₊ ∂μ) < ∞ := h'XY.2
+  have A : ∫⁻ ω, ‖X ω * Y ω‖₊ ∂μ < ∞ := h'XY.2
   simp only [nnnorm_mul, ENNReal.coe_mul] at A 
   rw [lintegral_mul_eq_lintegral_mul_lintegral_of_indep_fun'' hX.ennnorm hY.ennnorm J, H] at A 
   simpa [ENNReal.top_mul', I] using A
@@ -198,7 +198,7 @@ theorem IndepFun.integrable_right_of_integrable_mul {β : Type _} [MeasurableSpa
     (hX : AEStronglyMeasurable X μ) (hY : AEStronglyMeasurable Y μ) (h'X : ¬X =ᵐ[μ] 0) :
     Integrable Y μ := by
   refine' ⟨hY, _⟩
-  have I : (∫⁻ ω, ‖X ω‖₊ ∂μ) ≠ 0 := by
+  have I : ∫⁻ ω, ‖X ω‖₊ ∂μ ≠ 0 := by
     intro H
     have I : (fun ω => ↑‖X ω‖₊) =ᵐ[μ] 0 := (lintegral_eq_zero_iff' hX.ennnorm).1 H
     apply h'X
@@ -209,7 +209,7 @@ theorem IndepFun.integrable_right_of_integrable_mul {β : Type _} [MeasurableSpa
     by
     have M : Measurable fun x : β => (‖x‖₊ : ℝ≥0∞) := measurable_nnnorm.coe_nnreal_ennreal
     apply indep_fun.comp hXY M M
-  have A : (∫⁻ ω, ‖X ω * Y ω‖₊ ∂μ) < ∞ := h'XY.2
+  have A : ∫⁻ ω, ‖X ω * Y ω‖₊ ∂μ < ∞ := h'XY.2
   simp only [nnnorm_mul, ENNReal.coe_mul] at A 
   rw [lintegral_mul_eq_lintegral_mul_lintegral_of_indep_fun'' hX.ennnorm hY.ennnorm J, H] at A 
   simpa [ENNReal.top_mul', I] using A

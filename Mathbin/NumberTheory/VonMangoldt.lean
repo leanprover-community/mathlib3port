@@ -117,7 +117,7 @@ theorem vonMangoldt_eq_zero_iff {n : ℕ} : Λ n = 0 ↔ ¬IsPrimePow n :=
 
 open scoped BigOperators
 
-theorem vonMangoldt_sum {n : ℕ} : (∑ i in n.divisors, Λ i) = Real.log n :=
+theorem vonMangoldt_sum {n : ℕ} : ∑ i in n.divisors, Λ i = Real.log n :=
   by
   refine' rec_on_prime_coprime _ _ _ n
   · simp
@@ -151,14 +151,14 @@ theorem moebius_mul_log_eq_vonMangoldt : (μ : ArithmeticFunction ℝ) * log = �
   simp
 #align nat.arithmetic_function.moebius_mul_log_eq_von_mangoldt Nat.ArithmeticFunction.moebius_mul_log_eq_vonMangoldt
 
-theorem sum_moebius_mul_log_eq {n : ℕ} : (∑ d in n.divisors, (μ d : ℝ) * log d) = -Λ n :=
+theorem sum_moebius_mul_log_eq {n : ℕ} : ∑ d in n.divisors, (μ d : ℝ) * log d = -Λ n :=
   by
   simp only [← log_mul_moebius_eq_von_mangoldt, mul_comm log, mul_apply, log_apply, int_coe_apply, ←
     Finset.sum_neg_distrib, neg_mul_eq_mul_neg]
   rw [sum_divisors_antidiagonal fun i j => (μ i : ℝ) * -Real.log j]
   have :
-    (∑ i : ℕ in n.divisors, (μ i : ℝ) * -Real.log (n / i : ℕ)) =
-      ∑ i : ℕ in n.divisors, (μ i : ℝ) * Real.log i - μ i * Real.log n :=
+    ∑ i : ℕ in n.divisors, (μ i : ℝ) * -Real.log (n / i : ℕ) =
+      ∑ i : ℕ in n.divisors, ((μ i : ℝ) * Real.log i - μ i * Real.log n) :=
     by
     apply sum_congr rfl
     simp only [and_imp, Int.cast_eq_zero, mul_eq_mul_left_iff, Ne.def, neg_inj, mem_divisors]

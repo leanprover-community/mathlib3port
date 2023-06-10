@@ -180,7 +180,7 @@ protected theorem multiset_sum_mem {m : Multiset A} (h : ∀ x ∈ m, x ∈ S) :
 #align subalgebra.multiset_sum_mem Subalgebra.multiset_sum_mem
 
 protected theorem sum_mem {ι : Type w} {t : Finset ι} {f : ι → A} (h : ∀ x ∈ t, f x ∈ S) :
-    (∑ x in t, f x) ∈ S :=
+    ∑ x in t, f x ∈ S :=
   sum_mem h
 #align subalgebra.sum_mem Subalgebra.sum_mem
 
@@ -191,7 +191,7 @@ protected theorem multiset_prod_mem {R : Type u} {A : Type v} [CommSemiring R] [
 
 protected theorem prod_mem {R : Type u} {A : Type v} [CommSemiring R] [CommSemiring A] [Algebra R A]
     (S : Subalgebra R A) {ι : Type w} {t : Finset ι} {f : ι → A} (h : ∀ x ∈ t, f x ∈ S) :
-    (∏ x in t, f x) ∈ S :=
+    ∏ x in t, f x ∈ S :=
   prod_mem h
 #align subalgebra.prod_mem Subalgebra.prod_mem
 
@@ -1490,7 +1490,7 @@ end Centralizer
 `r ^ n • x ∈ M'` for some `n` for each `r : s`. -/
 theorem mem_of_finset_sum_eq_one_of_pow_smul_mem {S : Type _} [CommRing S] [Algebra R S]
     (S' : Subalgebra R S) {ι : Type _} (ι' : Finset ι) (s : ι → S) (l : ι → S)
-    (e : (∑ i in ι', l i * s i) = 1) (hs : ∀ i, s i ∈ S') (hl : ∀ i, l i ∈ S') (x : S)
+    (e : ∑ i in ι', l i * s i = 1) (hs : ∀ i, s i ∈ S') (hl : ∀ i, l i ∈ S') (x : S)
     (H : ∀ i, ∃ n : ℕ, (s i ^ n : S) • x ∈ S') : x ∈ S' := by
   classical
   suffices x ∈ (Algebra.ofId S' S).range.toSubmodule by obtain ⟨x, rfl⟩ := this; exact x.2

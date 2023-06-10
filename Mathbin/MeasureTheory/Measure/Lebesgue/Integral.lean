@@ -97,7 +97,7 @@ of finite integrals, see `interval_integral.integral_comp_neg`.
 
 @[simp]
 theorem integral_comp_neg_Iic {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E]
-    [CompleteSpace E] (c : ℝ) (f : ℝ → E) : (∫ x in Iic c, f (-x)) = ∫ x in Ioi (-c), f x :=
+    [CompleteSpace E] (c : ℝ) (f : ℝ → E) : ∫ x in Iic c, f (-x) = ∫ x in Ioi (-c), f x :=
   by
   have A : MeasurableEmbedding fun x : ℝ => -x :=
     (Homeomorph.neg ℝ).ClosedEmbedding.MeasurableEmbedding
@@ -108,7 +108,7 @@ theorem integral_comp_neg_Iic {E : Type _} [NormedAddCommGroup E] [NormedSpace �
 
 @[simp]
 theorem integral_comp_neg_Ioi {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E]
-    [CompleteSpace E] (c : ℝ) (f : ℝ → E) : (∫ x in Ioi c, f (-x)) = ∫ x in Iic (-c), f x :=
+    [CompleteSpace E] (c : ℝ) (f : ℝ → E) : ∫ x in Ioi c, f (-x) = ∫ x in Iic (-c), f x :=
   by
   rw [← neg_neg c, ← integral_comp_neg_Iic]
   simp only [neg_neg]

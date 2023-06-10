@@ -388,14 +388,14 @@ theorem integrableOn_Lp_of_measure_ne_top {E} [NormedAddCommGroup E] {p : ℝ≥
 #align measure_theory.integrable_on_Lp_of_measure_ne_top MeasureTheory.integrableOn_Lp_of_measure_ne_top
 
 theorem Integrable.lintegral_lt_top {f : α → ℝ} (hf : Integrable f μ) :
-    (∫⁻ x, ENNReal.ofReal (f x) ∂μ) < ∞ :=
+    ∫⁻ x, ENNReal.ofReal (f x) ∂μ < ∞ :=
   calc
-    (∫⁻ x, ENNReal.ofReal (f x) ∂μ) ≤ ∫⁻ x, ↑‖f x‖₊ ∂μ := lintegral_ofReal_le_lintegral_nnnorm f
+    ∫⁻ x, ENNReal.ofReal (f x) ∂μ ≤ ∫⁻ x, ↑‖f x‖₊ ∂μ := lintegral_ofReal_le_lintegral_nnnorm f
     _ < ∞ := hf.2
 #align measure_theory.integrable.lintegral_lt_top MeasureTheory.Integrable.lintegral_lt_top
 
 theorem IntegrableOn.set_lintegral_lt_top {f : α → ℝ} {s : Set α} (hf : IntegrableOn f s μ) :
-    (∫⁻ x in s, ENNReal.ofReal (f x) ∂μ) < ∞ :=
+    ∫⁻ x in s, ENNReal.ofReal (f x) ∂μ < ∞ :=
   Integrable.lintegral_lt_top hf
 #align measure_theory.integrable_on.set_lintegral_lt_top MeasureTheory.IntegrableOn.set_lintegral_lt_top
 

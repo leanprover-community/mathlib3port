@@ -138,14 +138,14 @@ namespace Box
 #print BoxIntegral.Box.volume_apply /-
 @[simp]
 theorem volume_apply (I : Box ι) :
-    (volume : Measure (ι → ℝ)).toBoxAdditive I = ∏ i, I.upper i - I.lower i := by
+    (volume : Measure (ι → ℝ)).toBoxAdditive I = ∏ i, (I.upper i - I.lower i) := by
   rw [measure.to_box_additive_apply, coe_eq_pi, Real.volume_pi_Ioc_toReal I.lower_le_upper]
 #align box_integral.box.volume_apply BoxIntegral.Box.volume_apply
 -/
 
 theorem volume_face_mul {n} (i : Fin (n + 1)) (I : Box (Fin (n + 1))) :
-    (∏ j, (I.face i).upper j - (I.face i).lower j) * (I.upper i - I.lower i) =
-      ∏ j, I.upper j - I.lower j :=
+    (∏ j, ((I.face i).upper j - (I.face i).lower j)) * (I.upper i - I.lower i) =
+      ∏ j, (I.upper j - I.lower j) :=
   by simp only [face_lower, face_upper, (· ∘ ·), Fin.prod_univ_succAbove _ i, mul_comm]
 #align box_integral.box.volume_face_mul BoxIntegral.Box.volume_face_mul
 
@@ -162,7 +162,7 @@ protected def volume {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] : �
 -/
 
 theorem volume_apply {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] (I : Box ι) (x : E) :
-    BoxAdditiveMap.volume I x = (∏ j, I.upper j - I.lower j) • x :=
+    BoxAdditiveMap.volume I x = (∏ j, (I.upper j - I.lower j)) • x :=
   congr_arg₂ (· • ·) I.volume_apply rfl
 #align box_integral.box_additive_map.volume_apply BoxIntegral.BoxAdditiveMap.volume_apply
 

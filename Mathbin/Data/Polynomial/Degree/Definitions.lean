@@ -469,7 +469,7 @@ theorem sum_over_range [AddCommMonoid S] (p : R[X]) {f : ℕ → R → S} (h : �
 
 -- TODO this is essentially a duplicate of `sum_over_range`, and should be removed.
 theorem sum_fin [AddCommMonoid S] (f : ℕ → R → S) (hf : ∀ i, f i 0 = 0) {n : ℕ} {p : R[X]}
-    (hn : p.degree < n) : (∑ i : Fin n, f i (p.coeff i)) = p.Sum f :=
+    (hn : p.degree < n) : ∑ i : Fin n, f i (p.coeff i) = p.Sum f :=
   by
   by_cases hp : p = 0
   · rw [hp, sum_zero_index, Finset.sum_eq_zero]; intro i _; exact hf i

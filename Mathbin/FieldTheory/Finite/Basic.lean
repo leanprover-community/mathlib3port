@@ -113,9 +113,9 @@ theorem exists_root_sum_quadratic [Fintype R] {f g : R[X]} (hf2 : degree f = 2) 
 end Polynomial
 
 theorem prod_univ_units_id_eq_neg_one [CommRing K] [IsDomain K] [Fintype Kˣ] :
-    (∏ x : Kˣ, x) = (-1 : Kˣ) := by
+    ∏ x : Kˣ, x = (-1 : Kˣ) := by
   classical
-  have : (∏ x in (@univ Kˣ _).eraseₓ (-1), x) = 1 :=
+  have : ∏ x in (@univ Kˣ _).eraseₓ (-1), x = 1 :=
     prod_involution (fun x _ => x⁻¹) (by simp)
       (fun a => by simp (config := { contextual := true }) [Units.inv_eq_self_iff])
       (fun a => by simp [@inv_eq_iff_eq_inv _ _ a]) (by simp)
@@ -207,8 +207,7 @@ theorem forall_pow_eq_one_iff (i : ℕ) : (∀ x : Kˣ, x ^ i = 1) ↔ q - 1 ∣
 
 /-- The sum of `x ^ i` as `x` ranges over the units of a finite field of cardinality `q`
 is equal to `0` unless `(q - 1) ∣ i`, in which case the sum is `q - 1`. -/
-theorem sum_pow_units [Fintype Kˣ] (i : ℕ) :
-    (∑ x : Kˣ, (x ^ i : K)) = if q - 1 ∣ i then -1 else 0 :=
+theorem sum_pow_units [Fintype Kˣ] (i : ℕ) : ∑ x : Kˣ, (x ^ i : K) = if q - 1 ∣ i then -1 else 0 :=
   by
   let φ : Kˣ →* K :=
     { toFun := fun x => x ^ i
@@ -216,7 +215,7 @@ theorem sum_pow_units [Fintype Kˣ] (i : ℕ) :
       map_mul' := by intros; rw [Units.val_mul, mul_pow] }
   have : Decidable (φ = 1) := by classical infer_instance
   calc
-    (∑ x : Kˣ, φ x) = if φ = 1 then Fintype.card Kˣ else 0 := sum_hom_units φ
+    ∑ x : Kˣ, φ x = if φ = 1 then Fintype.card Kˣ else 0 := sum_hom_units φ
     _ = if q - 1 ∣ i then -1 else 0 := _
   suffices q - 1 ∣ i ↔ φ = 1 by
     simp only [this]
@@ -231,7 +230,7 @@ theorem sum_pow_units [Fintype Kˣ] (i : ℕ) :
 
 /-- The sum of `x ^ i` as `x` ranges over a finite field of cardinality `q`
 is equal to `0` if `i < q - 1`. -/
-theorem sum_pow_lt_card_sub_one (i : ℕ) (h : i < q - 1) : (∑ x : K, x ^ i) = 0 :=
+theorem sum_pow_lt_card_sub_one (i : ℕ) (h : i < q - 1) : ∑ x : K, x ^ i = 0 :=
   by
   by_cases hi : i = 0
   · simp only [hi, nsmul_one, sum_const, pow_zero, card_univ, cast_card_eq_zero]
@@ -243,7 +242,7 @@ theorem sum_pow_lt_card_sub_one (i : ℕ) (h : i < q - 1) : (∑ x : K, x ^ i) =
     simp only [true_and_iff, embedding.coe_fn_mk, mem_sdiff, Units.exists_iff_ne_zero, mem_univ,
       mem_map, exists_prop_of_true, mem_singleton]
   calc
-    (∑ x : K, x ^ i) = ∑ x in univ \ {(0 : K)}, x ^ i := by
+    ∑ x : K, x ^ i = ∑ x in univ \ {(0 : K)}, x ^ i := by
       rw [← sum_sdiff ({0} : Finset K).subset_univ, sum_singleton, zero_pow (Nat.pos_of_ne_zero hi),
         add_zero]
     _ = ∑ x : Kˣ, x ^ i := by rw [← this, univ.sum_map φ]; rfl

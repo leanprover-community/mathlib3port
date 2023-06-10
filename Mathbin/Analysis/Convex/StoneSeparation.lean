@@ -69,7 +69,7 @@ theorem not_disjoint_segment_convexHull_triple {p q u v x y z : E} (hz : z ∈ s
     · exact mul_nonneg (mul_nonneg haz hav) hbu
     · exact mul_nonneg (mul_nonneg hbz hau) hbv
     · exact mul_nonneg hau hav
-  have hw : (∑ i, w i) = az * av + bz * au :=
+  have hw : ∑ i, w i = az * av + bz * au :=
     by
     trans az * av * bu + (bz * au * bv + au * av)
     · simp [w, Fin.sum_univ_succ, Fin.sum_univ_zero]

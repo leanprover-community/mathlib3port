@@ -359,7 +359,7 @@ private theorem card_order_of_eq_totient_aux₁ :
   rcases card_pos.1 hpos with ⟨a, ha'⟩
   have ha : orderOf a = d := (mem_filter.1 ha').2
   have h1 :
-    (∑ m in d.proper_divisors, (univ.filter fun a : α => orderOf a = m).card) =
+    ∑ m in d.proper_divisors, (univ.filter fun a : α => orderOf a = m).card =
       ∑ m in d.proper_divisors, φ m :=
     by
     refine' Finset.sum_congr rfl fun m hm => _
@@ -368,8 +368,7 @@ private theorem card_order_of_eq_totient_aux₁ :
     simp only [mem_filter, mem_univ, orderOf_pow a, ha, true_and_iff,
       Nat.gcd_eq_right (div_dvd_of_dvd hm.1), Nat.div_div_self hm.1 hd0]
   have h2 :
-    (∑ m in d.divisors, (univ.filter fun a : α => orderOf a = m).card) = ∑ m in d.divisors, φ m :=
-    by
+    ∑ m in d.divisors, (univ.filter fun a : α => orderOf a = m).card = ∑ m in d.divisors, φ m := by
     rw [← filter_dvd_eq_divisors hd0, sum_card_orderOf_eq_card_pow_eq_one hd0,
       filter_dvd_eq_divisors hd0, sum_totient, ← ha, card_pow_eq_one_eq_order_of_aux hn a]
   simpa [← cons_self_proper_divisors hd0, ← h1] using h2

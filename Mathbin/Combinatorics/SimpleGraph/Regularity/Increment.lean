@@ -121,7 +121,7 @@ private noncomputable def pair_contrib (G : SimpleGraph α) (ε : ℝ) (hP : P.I
     G.edgeDensity i.fst i.snd ^ 2
 
 theorem offDiag_pairs_le_increment_energy :
-    (∑ x in P.parts.offDiag.attach, pairContrib G ε hP x / (increment hP G ε).parts.card ^ 2) ≤
+    ∑ x in P.parts.offDiag.attach, pairContrib G ε hP x / (increment hP G ε).parts.card ^ 2 ≤
       (increment hP G ε).energy G :=
   by
   simp_rw [pair_contrib, ← sum_div]
@@ -161,7 +161,7 @@ theorem pairContrib_lower_bound [Nonempty α] (x : { i // i ∈ P.parts.offDiag 
 theorem uniform_add_nonuniform_eq_offDiag_pairs [Nonempty α] (hε₁ : ε ≤ 1) (hP₇ : 7 ≤ P.parts.card)
     (hPα : P.parts.card * 16 ^ P.parts.card ≤ card α) (hPε : 100 ≤ 4 ^ P.parts.card * ε ^ 5)
     (hPG : ¬P.IsUniform G ε) :
-    ((∑ x in P.parts.offDiag, G.edgeDensity x.1 x.2 ^ 2) + P.parts.card ^ 2 * (ε ^ 5 / 4) : ℝ) /
+    (∑ x in P.parts.offDiag, G.edgeDensity x.1 x.2 ^ 2 + P.parts.card ^ 2 * (ε ^ 5 / 4) : ℝ) /
         P.parts.card ^ 2 ≤
       ∑ x in P.parts.offDiag.attach, pairContrib G ε hP x / (increment hP G ε).parts.card ^ 2 :=
   by
@@ -179,12 +179,13 @@ theorem uniform_add_nonuniform_eq_offDiag_pairs [Nonempty α] (hε₁ : ε ≤ 1
   swap
   · exact sum_le_sum fun i hi => pair_contrib_lower_bound i hε₁ hPα hPε
   have :
-    (∑ x in P.parts.off_diag.attach,
+    ∑ x in P.parts.off_diag.attach,
         (G.edge_density x.1.1 x.1.2 ^ 2 - ε ^ 5 / 25 +
             if G.is_uniform ε x.1.1 x.1.2 then 0 else ε ^ 4 / 3 :
-          ℝ)) =
+          ℝ) =
       ∑ x in P.parts.off_diag,
-        G.edge_density x.1 x.2 ^ 2 - ε ^ 5 / 25 + if G.is_uniform ε x.1 x.2 then 0 else ε ^ 4 / 3 :=
+        (G.edge_density x.1 x.2 ^ 2 - ε ^ 5 / 25 +
+          if G.is_uniform ε x.1 x.2 then 0 else ε ^ 4 / 3) :=
     by convert sum_attach; rfl
   rw [this, sum_add_distrib, sum_sub_distrib, sum_const, nsmul_eq_mul, sum_ite, sum_const_zero,
     zero_add, sum_const, nsmul_eq_mul, ← Finpartition.nonUniforms]

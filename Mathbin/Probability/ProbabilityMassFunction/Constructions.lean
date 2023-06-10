@@ -183,13 +183,13 @@ section OfFinset
 /- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (a «expr ∉ » s) -/
 /-- Given a finset `s` and a function `f : α → ℝ≥0∞` with sum `1` on `s`,
   such that `f a = 0` for `a ∉ s`, we get a `pmf` -/
-def ofFinset (f : α → ℝ≥0∞) (s : Finset α) (h : (∑ a in s, f a) = 1)
+def ofFinset (f : α → ℝ≥0∞) (s : Finset α) (h : ∑ a in s, f a = 1)
     (h' : ∀ (a) (_ : a ∉ s), f a = 0) : Pmf α :=
   ⟨f, h ▸ hasSum_sum_of_ne_finset_zero h'⟩
 #align pmf.of_finset Pmf.ofFinset
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (a «expr ∉ » s) -/
-variable {f : α → ℝ≥0∞} {s : Finset α} (h : (∑ a in s, f a) = 1) (h' : ∀ (a) (_ : a ∉ s), f a = 0)
+variable {f : α → ℝ≥0∞} {s : Finset α} (h : ∑ a in s, f a = 1) (h' : ∀ (a) (_ : a ∉ s), f a = 0)
 
 @[simp]
 theorem ofFinset_apply (a : α) : ofFinset f s h h' a = f a :=
@@ -232,11 +232,11 @@ end OfFinset
 section OfFintype
 
 /-- Given a finite type `α` and a function `f : α → ℝ≥0∞` with sum 1, we get a `pmf`. -/
-def ofFintype [Fintype α] (f : α → ℝ≥0∞) (h : (∑ a, f a) = 1) : Pmf α :=
+def ofFintype [Fintype α] (f : α → ℝ≥0∞) (h : ∑ a, f a = 1) : Pmf α :=
   ofFinset f Finset.univ h fun a ha => absurd (Finset.mem_univ a) ha
 #align pmf.of_fintype Pmf.ofFintype
 
-variable [Fintype α] {f : α → ℝ≥0∞} (h : (∑ a, f a) = 1)
+variable [Fintype α] {f : α → ℝ≥0∞} (h : ∑ a, f a = 1)
 
 @[simp]
 theorem ofFintype_apply (a : α) : ofFintype f h a = f a :=

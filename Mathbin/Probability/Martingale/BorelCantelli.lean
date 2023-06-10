@@ -313,7 +313,7 @@ theorem adapted_process (hs : ∀ n, measurable_set[ℱ n] (s n)) : Adapted ℱ 
 
 theorem martingalePart_process_ae_eq (ℱ : Filtration ℕ m0) (μ : Measure Ω) (s : ℕ → Set Ω) (n : ℕ) :
     martingalePart (process s) ℱ μ n =
-      ∑ k in Finset.range n, (s (k + 1)).indicator 1 - μ[(s (k + 1)).indicator 1|ℱ k] :=
+      ∑ k in Finset.range n, ((s (k + 1)).indicator 1 - μ[(s (k + 1)).indicator 1|ℱ k]) :=
   by
   simp only [martingale_part_eq_sum, process_zero, zero_add]
   refine' Finset.sum_congr rfl fun k hk => _

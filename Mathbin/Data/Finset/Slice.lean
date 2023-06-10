@@ -207,7 +207,7 @@ theorem biUnion_slice [DecidableEq α] : (Iic <| Fintype.card α).biUnion 𝒜.s
 #align finset.bUnion_slice Finset.biUnion_slice
 
 @[simp]
-theorem sum_card_slice : (∑ r in Iic (Fintype.card α), (𝒜 # r).card) = 𝒜.card :=
+theorem sum_card_slice : ∑ r in Iic (Fintype.card α), (𝒜 # r).card = 𝒜.card :=
   by
   letI := Classical.decEq α
   rw [← card_bUnion, bUnion_slice]

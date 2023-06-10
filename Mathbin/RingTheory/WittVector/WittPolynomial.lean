@@ -330,7 +330,7 @@ theorem bind₁_wittPolynomial_xInTermsOfW [Invertible (p : R)] (n : ℕ) :
   apply Nat.strong_induction_on n
   clear n; intro n H
   rw [xInTermsOfW_eq, AlgHom.map_mul, AlgHom.map_sub, bind₁_X_right, alg_hom_C, AlgHom.map_sum]
-  have : (W_ R n - ∑ i in range n, C (p ^ i : R) * X i ^ p ^ (n - i)) = C (p ^ n : R) * X n := by
+  have : W_ R n - ∑ i in range n, C (p ^ i : R) * X i ^ p ^ (n - i) = C (p ^ n : R) * X n := by
     simp only [wittPolynomial_eq_sum_c_mul_x_pow, tsub_self, sum_range_succ_comm, pow_one,
       add_sub_cancel, pow_zero]
   rw [sum_congr rfl, this]

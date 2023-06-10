@@ -53,7 +53,7 @@ theorem hasFiniteIntegral_prod_mk_left (a : α) {s : Set (β × γ)} (h2s : (κ 
   let t := to_measurable ((κ ⊗ₖ η) a) s
   simp_rw [has_finite_integral, ennnorm_eq_of_real to_real_nonneg]
   calc
-    (∫⁻ b, ENNReal.ofReal (η (a, b) (Prod.mk b ⁻¹' s)).toReal ∂κ a) ≤
+    ∫⁻ b, ENNReal.ofReal (η (a, b) (Prod.mk b ⁻¹' s)).toReal ∂κ a ≤
         ∫⁻ b, η (a, b) (Prod.mk b ⁻¹' t) ∂κ a :=
       by
       refine' lintegral_mono_ae _
@@ -166,8 +166,8 @@ variable [NormedSpace ℝ E] [CompleteSpace E] {E' : Type _} [NormedAddCommGroup
 
 theorem kernel.integral_fn_integral_add ⦃f g : β × γ → E⦄ (F : E → E')
     (hf : Integrable f ((κ ⊗ₖ η) a)) (hg : Integrable g ((κ ⊗ₖ η) a)) :
-    (∫ x, F (∫ y, f (x, y) + g (x, y) ∂η (a, x)) ∂κ a) =
-      ∫ x, F ((∫ y, f (x, y) ∂η (a, x)) + ∫ y, g (x, y) ∂η (a, x)) ∂κ a :=
+    ∫ x, F (∫ y, f (x, y) + g (x, y) ∂η (a, x)) ∂κ a =
+      ∫ x, F (∫ y, f (x, y) ∂η (a, x) + ∫ y, g (x, y) ∂η (a, x)) ∂κ a :=
   by
   refine' integral_congr_ae _
   filter_upwards [hf.comp_prod_mk_left_ae, hg.comp_prod_mk_left_ae] with _ h2f h2g
@@ -176,8 +176,8 @@ theorem kernel.integral_fn_integral_add ⦃f g : β × γ → E⦄ (F : E → E'
 
 theorem kernel.integral_fn_integral_sub ⦃f g : β × γ → E⦄ (F : E → E')
     (hf : Integrable f ((κ ⊗ₖ η) a)) (hg : Integrable g ((κ ⊗ₖ η) a)) :
-    (∫ x, F (∫ y, f (x, y) - g (x, y) ∂η (a, x)) ∂κ a) =
-      ∫ x, F ((∫ y, f (x, y) ∂η (a, x)) - ∫ y, g (x, y) ∂η (a, x)) ∂κ a :=
+    ∫ x, F (∫ y, f (x, y) - g (x, y) ∂η (a, x)) ∂κ a =
+      ∫ x, F (∫ y, f (x, y) ∂η (a, x) - ∫ y, g (x, y) ∂η (a, x)) ∂κ a :=
   by
   refine' integral_congr_ae _
   filter_upwards [hf.comp_prod_mk_left_ae, hg.comp_prod_mk_left_ae] with _ h2f h2g
@@ -186,8 +186,8 @@ theorem kernel.integral_fn_integral_sub ⦃f g : β × γ → E⦄ (F : E → E'
 
 theorem kernel.lintegral_fn_integral_sub ⦃f g : β × γ → E⦄ (F : E → ℝ≥0∞)
     (hf : Integrable f ((κ ⊗ₖ η) a)) (hg : Integrable g ((κ ⊗ₖ η) a)) :
-    (∫⁻ x, F (∫ y, f (x, y) - g (x, y) ∂η (a, x)) ∂κ a) =
-      ∫⁻ x, F ((∫ y, f (x, y) ∂η (a, x)) - ∫ y, g (x, y) ∂η (a, x)) ∂κ a :=
+    ∫⁻ x, F (∫ y, f (x, y) - g (x, y) ∂η (a, x)) ∂κ a =
+      ∫⁻ x, F (∫ y, f (x, y) ∂η (a, x) - ∫ y, g (x, y) ∂η (a, x)) ∂κ a :=
   by
   refine' lintegral_congr_ae _
   filter_upwards [hf.comp_prod_mk_left_ae, hg.comp_prod_mk_left_ae] with _ h2f h2g
@@ -196,31 +196,31 @@ theorem kernel.lintegral_fn_integral_sub ⦃f g : β × γ → E⦄ (F : E → �
 
 theorem kernel.integral_integral_add ⦃f g : β × γ → E⦄ (hf : Integrable f ((κ ⊗ₖ η) a))
     (hg : Integrable g ((κ ⊗ₖ η) a)) :
-    (∫ x, ∫ y, f (x, y) + g (x, y) ∂η (a, x) ∂κ a) =
-      (∫ x, ∫ y, f (x, y) ∂η (a, x) ∂κ a) + ∫ x, ∫ y, g (x, y) ∂η (a, x) ∂κ a :=
+    ∫ x, ∫ y, f (x, y) + g (x, y) ∂η (a, x) ∂κ a =
+      ∫ x, ∫ y, f (x, y) ∂η (a, x) ∂κ a + ∫ x, ∫ y, g (x, y) ∂η (a, x) ∂κ a :=
   (kernel.integral_fn_integral_add id hf hg).trans <|
     integral_add hf.integral_compProd hg.integral_compProd
 #align probability_theory.kernel.integral_integral_add ProbabilityTheory.kernel.integral_integral_add
 
 theorem kernel.integral_integral_add' ⦃f g : β × γ → E⦄ (hf : Integrable f ((κ ⊗ₖ η) a))
     (hg : Integrable g ((κ ⊗ₖ η) a)) :
-    (∫ x, ∫ y, (f + g) (x, y) ∂η (a, x) ∂κ a) =
-      (∫ x, ∫ y, f (x, y) ∂η (a, x) ∂κ a) + ∫ x, ∫ y, g (x, y) ∂η (a, x) ∂κ a :=
+    ∫ x, ∫ y, (f + g) (x, y) ∂η (a, x) ∂κ a =
+      ∫ x, ∫ y, f (x, y) ∂η (a, x) ∂κ a + ∫ x, ∫ y, g (x, y) ∂η (a, x) ∂κ a :=
   kernel.integral_integral_add hf hg
 #align probability_theory.kernel.integral_integral_add' ProbabilityTheory.kernel.integral_integral_add'
 
 theorem kernel.integral_integral_sub ⦃f g : β × γ → E⦄ (hf : Integrable f ((κ ⊗ₖ η) a))
     (hg : Integrable g ((κ ⊗ₖ η) a)) :
-    (∫ x, ∫ y, f (x, y) - g (x, y) ∂η (a, x) ∂κ a) =
-      (∫ x, ∫ y, f (x, y) ∂η (a, x) ∂κ a) - ∫ x, ∫ y, g (x, y) ∂η (a, x) ∂κ a :=
+    ∫ x, ∫ y, f (x, y) - g (x, y) ∂η (a, x) ∂κ a =
+      ∫ x, ∫ y, f (x, y) ∂η (a, x) ∂κ a - ∫ x, ∫ y, g (x, y) ∂η (a, x) ∂κ a :=
   (kernel.integral_fn_integral_sub id hf hg).trans <|
     integral_sub hf.integral_compProd hg.integral_compProd
 #align probability_theory.kernel.integral_integral_sub ProbabilityTheory.kernel.integral_integral_sub
 
 theorem kernel.integral_integral_sub' ⦃f g : β × γ → E⦄ (hf : Integrable f ((κ ⊗ₖ η) a))
     (hg : Integrable g ((κ ⊗ₖ η) a)) :
-    (∫ x, ∫ y, (f - g) (x, y) ∂η (a, x) ∂κ a) =
-      (∫ x, ∫ y, f (x, y) ∂η (a, x) ∂κ a) - ∫ x, ∫ y, g (x, y) ∂η (a, x) ∂κ a :=
+    ∫ x, ∫ y, (f - g) (x, y) ∂η (a, x) ∂κ a =
+      ∫ x, ∫ y, f (x, y) ∂η (a, x) ∂κ a - ∫ x, ∫ y, g (x, y) ∂η (a, x) ∂κ a :=
   kernel.integral_integral_sub hf hg
 #align probability_theory.kernel.integral_integral_sub' ProbabilityTheory.kernel.integral_integral_sub'
 
@@ -252,7 +252,7 @@ theorem kernel.continuous_integral_integral :
 
 theorem integral_compProd :
     ∀ {f : β × γ → E} (hf : Integrable f ((κ ⊗ₖ η) a)),
-      (∫ z, f z ∂(κ ⊗ₖ η) a) = ∫ x, ∫ y, f (x, y) ∂η (a, x) ∂κ a :=
+      ∫ z, f z ∂(κ ⊗ₖ η) a = ∫ x, ∫ y, f (x, y) ∂η (a, x) ∂κ a :=
   by
   apply integrable.induction
   · intro c s hs h2s
@@ -281,7 +281,7 @@ theorem integral_compProd :
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem set_integral_compProd {f : β × γ → E} {s : Set β} {t : Set γ} (hs : MeasurableSet s)
     (ht : MeasurableSet t) (hf : IntegrableOn f (s ×ˢ t) ((κ ⊗ₖ η) a)) :
-    (∫ z in s ×ˢ t, f z ∂(κ ⊗ₖ η) a) = ∫ x in s, ∫ y in t, f (x, y) ∂η (a, x) ∂κ a :=
+    ∫ z in s ×ˢ t, f z ∂(κ ⊗ₖ η) a = ∫ x in s, ∫ y in t, f (x, y) ∂η (a, x) ∂κ a :=
   by
   rw [← kernel.restrict_apply (κ ⊗ₖ η) (hs.prod ht), ← comp_prod_restrict, integral_comp_prod]
   · simp_rw [kernel.restrict_apply]
@@ -292,7 +292,7 @@ theorem set_integral_compProd {f : β × γ → E} {s : Set β} {t : Set γ} (hs
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem set_integral_compProd_univ_right (f : β × γ → E) {s : Set β} (hs : MeasurableSet s)
     (hf : IntegrableOn f (s ×ˢ univ) ((κ ⊗ₖ η) a)) :
-    (∫ z in s ×ˢ univ, f z ∂(κ ⊗ₖ η) a) = ∫ x in s, ∫ y, f (x, y) ∂η (a, x) ∂κ a := by
+    ∫ z in s ×ˢ univ, f z ∂(κ ⊗ₖ η) a = ∫ x in s, ∫ y, f (x, y) ∂η (a, x) ∂κ a := by
   simp_rw [set_integral_comp_prod hs MeasurableSet.univ hf, measure.restrict_univ]
 #align probability_theory.set_integral_comp_prod_univ_right ProbabilityTheory.set_integral_compProd_univ_right
 
@@ -300,7 +300,7 @@ theorem set_integral_compProd_univ_right (f : β × γ → E) {s : Set β} (hs :
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem set_integral_compProd_univ_left (f : β × γ → E) {t : Set γ} (ht : MeasurableSet t)
     (hf : IntegrableOn f (univ ×ˢ t) ((κ ⊗ₖ η) a)) :
-    (∫ z in univ ×ˢ t, f z ∂(κ ⊗ₖ η) a) = ∫ x, ∫ y in t, f (x, y) ∂η (a, x) ∂κ a := by
+    ∫ z in univ ×ˢ t, f z ∂(κ ⊗ₖ η) a = ∫ x, ∫ y in t, f (x, y) ∂η (a, x) ∂κ a := by
   simp_rw [set_integral_comp_prod MeasurableSet.univ ht hf, measure.restrict_univ]
 #align probability_theory.set_integral_comp_prod_univ_left ProbabilityTheory.set_integral_compProd_univ_left
 

@@ -585,7 +585,7 @@ without changing the value of the sum. -/
 @[to_additive]
 theorem prod_mulIndicator_subset_of_eq_one [One N] (f : α → N) (g : α → N → M) {s t : Finset α}
     (h : s ⊆ t) (hg : ∀ a, g a 1 = 1) :
-    (∏ i in s, g i (f i)) = ∏ i in t, g i (mulIndicator (↑s) f i) :=
+    ∏ i in s, g i (f i) = ∏ i in t, g i (mulIndicator (↑s) f i) :=
   by
   rw [← Finset.prod_subset h _]
   · apply Finset.prod_congr rfl
@@ -613,7 +613,7 @@ taking the original function over the original `finset`. -/
 @[to_additive
       "Summing an indicator function over a possibly larger `finset` is the same as summing\nthe original function over the original `finset`."]
 theorem prod_mulIndicator_subset (f : α → M) {s t : Finset α} (h : s ⊆ t) :
-    (∏ i in s, f i) = ∏ i in t, mulIndicator (↑s) f i :=
+    ∏ i in s, f i = ∏ i in t, mulIndicator (↑s) f i :=
   prod_mulIndicator_subset_of_eq_one _ (fun a b => b) h fun _ => rfl
 #align set.prod_mul_indicator_subset Set.prod_mulIndicator_subset
 #align set.sum_indicator_subset Set.sum_indicator_subset
@@ -621,7 +621,7 @@ theorem prod_mulIndicator_subset (f : α → M) {s t : Finset α} (h : s ⊆ t) 
 @[to_additive]
 theorem Finset.prod_mulIndicator_eq_prod_filter (s : Finset ι) (f : ι → α → M) (t : ι → Set α)
     (g : ι → α) [DecidablePred fun i => g i ∈ t i] :
-    (∏ i in s, mulIndicator (t i) (f i) (g i)) = ∏ i in s.filterₓ fun i => g i ∈ t i, f i (g i) :=
+    ∏ i in s, mulIndicator (t i) (f i) (g i) = ∏ i in s.filterₓ fun i => g i ∈ t i, f i (g i) :=
   by
   refine' (Finset.prod_filter_mul_prod_filter_not s (fun i => g i ∈ t i) _).symm.trans _
   refine' Eq.trans _ (mul_one _)

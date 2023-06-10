@@ -197,8 +197,8 @@ theorem IsAntichain.disjoint_slice_shadow_falling {m n : ℕ}
 /-- A bound on any top part of the sum in LYM in terms of the size of `falling k 𝒜`. -/
 theorem le_card_falling_div_choose [Fintype α] (hk : k ≤ Fintype.card α)
     (h𝒜 : IsAntichain (· ⊆ ·) (𝒜 : Set (Finset α))) :
-    (∑ r in range (k + 1),
-        ((𝒜 # (Fintype.card α - r)).card : 𝕜) / (Fintype.card α).choose (Fintype.card α - r)) ≤
+    ∑ r in range (k + 1),
+        ((𝒜 # (Fintype.card α - r)).card : 𝕜) / (Fintype.card α).choose (Fintype.card α - r) ≤
       (falling (Fintype.card α - k) 𝒜).card / (Fintype.card α).choose (Fintype.card α - k) :=
   by
   induction' k with k ih
@@ -224,7 +224,7 @@ variable {𝒜 : Finset (Finset α)} {s : Finset α} {k : ℕ}
 proportion of elements it takes from each layer is less than `1`. -/
 theorem sum_card_slice_div_choose_le_one [Fintype α]
     (h𝒜 : IsAntichain (· ⊆ ·) (𝒜 : Set (Finset α))) :
-    (∑ r in range (Fintype.card α + 1), ((𝒜 # r).card : 𝕜) / (Fintype.card α).choose r) ≤ 1 := by
+    ∑ r in range (Fintype.card α + 1), ((𝒜 # r).card : 𝕜) / (Fintype.card α).choose r ≤ 1 := by
   classical
   rw [← sum_flip]
   refine' (le_card_falling_div_choose le_rfl h𝒜).trans _
@@ -248,8 +248,7 @@ theorem IsAntichain.sperner [Fintype α] {𝒜 : Finset (Finset α)}
     𝒜.card ≤ (Fintype.card α).choose (Fintype.card α / 2) := by
   classical
   suffices
-    (∑ r in Iic (Fintype.card α),
-        ((𝒜 # r).card : ℚ) / (Fintype.card α).choose (Fintype.card α / 2)) ≤
+    ∑ r in Iic (Fintype.card α), ((𝒜 # r).card : ℚ) / (Fintype.card α).choose (Fintype.card α / 2) ≤
       1
     by
     rwa [← sum_div, ← Nat.cast_sum, div_le_one, cast_le, sum_card_slice] at this 

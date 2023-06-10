@@ -80,10 +80,10 @@ theorem not_intervalIntegrable_of_tendsto_norm_atTop_of_deriv_isBigO_filter {f :
       ⟨C, C₀, s, hsl, fun x hx y hy z hz => (hs x hx y hy z hz).2, fun x hx y hy z hz =>
         (hs x hx y hy z hz).1.1, fun x hx y hy z hz => (hs x hx y hy z hz).1.2⟩
   replace hgi : IntervalIntegrable (fun x => C * ‖g x‖) volume a b; · convert hgi.norm.smul C
-  obtain ⟨c, hc, d, hd, hlt⟩ : ∃ c ∈ s, ∃ d ∈ s, (‖f c‖ + ∫ y in Ι a b, C * ‖g y‖) < ‖f d‖ :=
+  obtain ⟨c, hc, d, hd, hlt⟩ : ∃ c ∈ s, ∃ d ∈ s, ‖f c‖ + ∫ y in Ι a b, C * ‖g y‖ < ‖f d‖ :=
     by
     rcases Filter.nonempty_of_mem hsl with ⟨c, hc⟩
-    have : ∀ᶠ x in l, (‖f c‖ + ∫ y in Ι a b, C * ‖g y‖) < ‖f x‖ :=
+    have : ∀ᶠ x in l, ‖f c‖ + ∫ y in Ι a b, C * ‖g y‖ < ‖f x‖ :=
       hf.eventually (eventually_gt_at_top _)
     exact ⟨c, hc, (this.and hsl).exists.imp fun d hd => ⟨hd.2, hd.1⟩⟩
   specialize hsub c hc d hd; specialize hfd c hc d hd

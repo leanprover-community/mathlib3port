@@ -102,7 +102,7 @@ theorem box_zero : box (n + 1) 0 = ∅ := by simp [box]
 /-- The intersection of the sphere of radius `sqrt k` with the integer points in the positive
 quadrant. -/
 def sphere (n d k : ℕ) : Finset (Fin n → ℕ) :=
-  (box n d).filterₓ fun x => (∑ i, x i ^ 2) = k
+  (box n d).filterₓ fun x => ∑ i, x i ^ 2 = k
 #align behrend.sphere Behrend.sphere
 -/
 
@@ -231,7 +231,7 @@ theorem addSalemSpencer_image_sphere :
 #align behrend.add_salem_spencer_image_sphere Behrend.addSalemSpencer_image_sphere
 
 #print Behrend.sum_sq_le_of_mem_box /-
-theorem sum_sq_le_of_mem_box (hx : x ∈ box n d) : (∑ i : Fin n, x i ^ 2) ≤ n * (d - 1) ^ 2 :=
+theorem sum_sq_le_of_mem_box (hx : x ∈ box n d) : ∑ i : Fin n, x i ^ 2 ≤ n * (d - 1) ^ 2 :=
   by
   rw [mem_box] at hx 
   have : ∀ i, x i ^ 2 ≤ (d - 1) ^ 2 := fun i =>
@@ -241,7 +241,7 @@ theorem sum_sq_le_of_mem_box (hx : x ∈ box n d) : (∑ i : Fin n, x i ^ 2) ≤
 -/
 
 #print Behrend.sum_eq /-
-theorem sum_eq : (∑ i : Fin n, d * (2 * d + 1) ^ (i : ℕ)) = ((2 * d + 1) ^ n - 1) / 2 :=
+theorem sum_eq : ∑ i : Fin n, d * (2 * d + 1) ^ (i : ℕ) = ((2 * d + 1) ^ n - 1) / 2 :=
   by
   refine' (Nat.div_eq_of_eq_mul_left zero_lt_two _).symm
   rw [← sum_range fun i => d * (2 * d + 1) ^ (i : ℕ), ← mul_sum, mul_right_comm, mul_comm d, ←
@@ -250,7 +250,7 @@ theorem sum_eq : (∑ i : Fin n, d * (2 * d + 1) ^ (i : ℕ)) = ((2 * d + 1) ^ n
 -/
 
 #print Behrend.sum_lt /-
-theorem sum_lt : (∑ i : Fin n, d * (2 * d + 1) ^ (i : ℕ)) < (2 * d + 1) ^ n :=
+theorem sum_lt : ∑ i : Fin n, d * (2 * d + 1) ^ (i : ℕ) < (2 * d + 1) ^ n :=
   sum_eq.trans_lt <| (Nat.div_le_self _ 2).trans_lt <| pred_lt (pow_pos (succ_pos _) _).ne'
 #align behrend.sum_lt Behrend.sum_lt
 -/

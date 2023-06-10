@@ -783,7 +783,7 @@ theorem dvd_iff_prime_pow_dvd_dvd (n d : ℕ) : d ∣ n ↔ ∀ p k : ℕ, Prime
 #align nat.dvd_iff_prime_pow_dvd_dvd Nat.dvd_iff_prime_pow_dvd_dvd
 -/
 
-theorem prod_prime_factors_dvd (n : ℕ) : (∏ p : ℕ in n.factors.toFinset, p) ∣ n :=
+theorem prod_prime_factors_dvd (n : ℕ) : ∏ p : ℕ in n.factors.toFinset, p ∣ n :=
   by
   by_cases hn : n = 0; · subst hn; simp
   simpa [prod_factors hn] using Multiset.toFinset_prod_dvd_prod (n.factors : Multiset ℕ)
@@ -1051,7 +1051,7 @@ theorem eq_iff_prime_padicValNat_eq (a b : ℕ) (ha : a ≠ 0) (hb : b ≠ 0) :
 
 #print Nat.prod_pow_prime_padicValNat /-
 theorem prod_pow_prime_padicValNat (n : Nat) (hn : n ≠ 0) (m : Nat) (pr : n < m) :
-    (∏ p in Finset.filter Nat.Prime (Finset.range m), p ^ padicValNat p n) = n :=
+    ∏ p in Finset.filter Nat.Prime (Finset.range m), p ^ padicValNat p n = n :=
   by
   nth_rw_rhs 1 [← factorization_prod_pow_eq_self hn]
   rw [eq_comm]

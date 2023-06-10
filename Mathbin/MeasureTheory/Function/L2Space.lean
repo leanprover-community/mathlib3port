@@ -98,7 +98,7 @@ theorem Integrable.inner_const (hf : Integrable f μ) (c : E) : Integrable (fun 
 variable [CompleteSpace E] [NormedSpace ℝ E]
 
 theorem integral_inner {f : α → E} (hf : Integrable f μ) (c : E) :
-    (∫ x, ⟪c, f x⟫ ∂μ) = ⟪c, ∫ x, f x ∂μ⟫ :=
+    ∫ x, ⟪c, f x⟫ ∂μ = ⟪c, ∫ x, f x ∂μ⟫ :=
   ((innerSL 𝕜 c).restrictScalars ℝ).integral_comp_comm hf
 #align integral_inner integral_inner
 
@@ -109,7 +109,7 @@ variable (𝕜)
 local notation "⟪" x ", " y "⟫" => @inner 𝕜 E _ x y
 
 theorem integral_eq_zero_of_forall_integral_inner_eq_zero (f : α → E) (hf : Integrable f μ)
-    (hf_int : ∀ c : E, (∫ x, ⟪c, f x⟫ ∂μ) = 0) : (∫ x, f x ∂μ) = 0 := by
+    (hf_int : ∀ c : E, ∫ x, ⟪c, f x⟫ ∂μ = 0) : ∫ x, f x ∂μ = 0 := by
   specialize hf_int (∫ x, f x ∂μ); rwa [integral_inner hf, inner_self_eq_zero] at hf_int 
 #align integral_eq_zero_of_forall_integral_inner_eq_zero integral_eq_zero_of_forall_integral_inner_eq_zero
 
@@ -163,7 +163,7 @@ theorem inner_def (f g : α →₂[μ] E) : ⟪f, g⟫ = ∫ a : α, ⟪f a, g a
 #align measure_theory.L2.inner_def MeasureTheory.L2.inner_def
 
 theorem integral_inner_eq_sq_snorm (f : α →₂[μ] E) :
-    (∫ a, ⟪f a, f a⟫ ∂μ) = ENNReal.toReal (∫⁻ a, (‖f a‖₊ : ℝ≥0∞) ^ (2 : ℝ) ∂μ) :=
+    ∫ a, ⟪f a, f a⟫ ∂μ = ENNReal.toReal (∫⁻ a, (‖f a‖₊ : ℝ≥0∞) ^ (2 : ℝ) ∂μ) :=
   by
   simp_rw [inner_self_eq_norm_sq_to_K]
   norm_cast
@@ -241,7 +241,7 @@ theorem inner_indicatorConstLp_eq_set_integral_inner (f : Lp E 2 μ) (hs : Measu
     (hμs : μ s ≠ ∞) : (⟪indicatorConstLp 2 hs hμs c, f⟫ : 𝕜) = ∫ x in s, ⟪c, f x⟫ ∂μ :=
   by
   rw [inner_def, ← integral_add_compl hs (L2.integrable_inner _ f)]
-  have h_left : (∫ x in s, ⟪(indicator_const_Lp 2 hs hμs c) x, f x⟫ ∂μ) = ∫ x in s, ⟪c, f x⟫ ∂μ :=
+  have h_left : ∫ x in s, ⟪(indicator_const_Lp 2 hs hμs c) x, f x⟫ ∂μ = ∫ x in s, ⟪c, f x⟫ ∂μ :=
     by
     suffices h_ae_eq : ∀ᵐ x ∂μ, x ∈ s → ⟪indicator_const_Lp 2 hs hμs c x, f x⟫ = ⟪c, f x⟫
     exact set_integral_congr_ae hs h_ae_eq
@@ -250,12 +250,12 @@ theorem inner_indicatorConstLp_eq_set_integral_inner (f : Lp E 2 μ) (hs : Measu
     refine' h_indicator.mono fun x hx hxs => _
     congr
     exact hx hxs
-  have h_right : (∫ x in sᶜ, ⟪(indicator_const_Lp 2 hs hμs c) x, f x⟫ ∂μ) = 0 :=
+  have h_right : ∫ x in sᶜ, ⟪(indicator_const_Lp 2 hs hμs c) x, f x⟫ ∂μ = 0 :=
     by
     suffices h_ae_eq : ∀ᵐ x ∂μ, x ∉ s → ⟪indicator_const_Lp 2 hs hμs c x, f x⟫ = 0
     · simp_rw [← Set.mem_compl_iff] at h_ae_eq 
       suffices h_int_zero :
-        (∫ x in sᶜ, inner (indicator_const_Lp 2 hs hμs c x) (f x) ∂μ) = ∫ x in sᶜ, (0 : 𝕜) ∂μ
+        ∫ x in sᶜ, inner (indicator_const_Lp 2 hs hμs c x) (f x) ∂μ = ∫ x in sᶜ, (0 : 𝕜) ∂μ
       · rw [h_int_zero]
         simp
       exact set_integral_congr_ae hs.compl h_ae_eq

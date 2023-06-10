@@ -95,25 +95,25 @@ namespace Nat
 
 #print Nat.sum_range_choose /-
 /-- The sum of entries in a row of Pascal's triangle -/
-theorem sum_range_choose (n : ℕ) : (∑ m in range (n + 1), choose n m) = 2 ^ n := by
+theorem sum_range_choose (n : ℕ) : ∑ m in range (n + 1), choose n m = 2 ^ n := by
   simpa using (add_pow 1 1 n).symm
 #align nat.sum_range_choose Nat.sum_range_choose
 -/
 
 #print Nat.sum_range_choose_halfway /-
-theorem sum_range_choose_halfway (m : Nat) : (∑ i in range (m + 1), choose (2 * m + 1) i) = 4 ^ m :=
+theorem sum_range_choose_halfway (m : Nat) : ∑ i in range (m + 1), choose (2 * m + 1) i = 4 ^ m :=
   have :
-    (∑ i in range (m + 1), choose (2 * m + 1) (2 * m + 1 - i)) =
+    ∑ i in range (m + 1), choose (2 * m + 1) (2 * m + 1 - i) =
       ∑ i in range (m + 1), choose (2 * m + 1) i :=
     sum_congr rfl fun i hi => choose_symm <| by linarith [mem_range.1 hi]
   mul_right_injective₀ two_ne_zero <|
     calc
-      (2 * ∑ i in range (m + 1), choose (2 * m + 1) i) =
-          (∑ i in range (m + 1), choose (2 * m + 1) i) +
+      2 * ∑ i in range (m + 1), choose (2 * m + 1) i =
+          ∑ i in range (m + 1), choose (2 * m + 1) i +
             ∑ i in range (m + 1), choose (2 * m + 1) (2 * m + 1 - i) :=
         by rw [two_mul, this]
       _ =
-          (∑ i in range (m + 1), choose (2 * m + 1) i) +
+          ∑ i in range (m + 1), choose (2 * m + 1) i +
             ∑ i in Ico (m + 1) (2 * m + 2), choose (2 * m + 1) i :=
         by
         rw [range_eq_Ico, sum_Ico_reflect]
@@ -154,7 +154,7 @@ theorem four_pow_le_two_mul_add_one_mul_central_binom (n : ℕ) :
 end Nat
 
 theorem Int.alternating_sum_range_choose {n : ℕ} :
-    (∑ m in range (n + 1), ((-1) ^ m * ↑(choose n m) : ℤ)) = if n = 0 then 1 else 0 :=
+    ∑ m in range (n + 1), ((-1) ^ m * ↑(choose n m) : ℤ) = if n = 0 then 1 else 0 :=
   by
   cases n; · simp
   have h := add_pow (-1 : ℤ) 1 n.succ
@@ -163,14 +163,14 @@ theorem Int.alternating_sum_range_choose {n : ℕ} :
 #align int.alternating_sum_range_choose Int.alternating_sum_range_choose
 
 theorem Int.alternating_sum_range_choose_of_ne {n : ℕ} (h0 : n ≠ 0) :
-    (∑ m in range (n + 1), ((-1) ^ m * ↑(choose n m) : ℤ)) = 0 := by
+    ∑ m in range (n + 1), ((-1) ^ m * ↑(choose n m) : ℤ) = 0 := by
   rw [Int.alternating_sum_range_choose, if_neg h0]
 #align int.alternating_sum_range_choose_of_ne Int.alternating_sum_range_choose_of_ne
 
 namespace Finset
 
 theorem sum_powerset_apply_card {α β : Type _} [AddCommMonoid α] (f : ℕ → α) {x : Finset β} :
-    (∑ m in x.powerset, f m.card) = ∑ m in range (x.card + 1), x.card.choose m • f m :=
+    ∑ m in x.powerset, f m.card = ∑ m in range (x.card + 1), x.card.choose m • f m :=
   by
   trans ∑ m in range (x.card + 1), ∑ j in x.powerset.filter fun z => z.card = m, f j.card
   · refine' (sum_fiberwise_of_maps_to _ _).symm
@@ -185,14 +185,14 @@ theorem sum_powerset_apply_card {α β : Type _} [AddCommMonoid α] (f : ℕ →
 #align finset.sum_powerset_apply_card Finset.sum_powerset_apply_card
 
 theorem sum_powerset_neg_one_pow_card {α : Type _} [DecidableEq α] {x : Finset α} :
-    (∑ m in x.powerset, (-1 : ℤ) ^ m.card) = if x = ∅ then 1 else 0 :=
+    ∑ m in x.powerset, (-1 : ℤ) ^ m.card = if x = ∅ then 1 else 0 :=
   by
   rw [sum_powerset_apply_card]
   simp only [nsmul_eq_mul', ← card_eq_zero, Int.alternating_sum_range_choose]
 #align finset.sum_powerset_neg_one_pow_card Finset.sum_powerset_neg_one_pow_card
 
 theorem sum_powerset_neg_one_pow_card_of_nonempty {α : Type _} {x : Finset α} (h0 : x.Nonempty) :
-    (∑ m in x.powerset, (-1 : ℤ) ^ m.card) = 0 := by
+    ∑ m in x.powerset, (-1 : ℤ) ^ m.card = 0 := by
   classical
   rw [sum_powerset_neg_one_pow_card, if_neg]
   rw [← Ne.def, ← nonempty_iff_ne_empty]

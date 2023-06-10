@@ -82,7 +82,7 @@ theorem withDensity_apply' (κ : kernel α β) [IsSFiniteKernel κ]
 
 theorem lintegral_withDensity (κ : kernel α β) [IsSFiniteKernel κ]
     (hf : Measurable (Function.uncurry f)) (a : α) {g : β → ℝ≥0∞} (hg : Measurable g) :
-    (∫⁻ b, g b ∂withDensity κ f a) = ∫⁻ b, f a b * g b ∂κ a :=
+    ∫⁻ b, g b ∂withDensity κ f a = ∫⁻ b, f a b * g b ∂κ a :=
   by
   rw [kernel.with_density_apply _ hf,
     lintegral_with_density_eq_lintegral_mul _ (Measurable.of_uncurry_left hf) hg]
@@ -92,7 +92,7 @@ theorem lintegral_withDensity (κ : kernel α β) [IsSFiniteKernel κ]
 theorem integral_withDensity {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
     {f : β → E} [IsSFiniteKernel κ] {a : α} {g : α → β → ℝ≥0}
     (hg : Measurable (Function.uncurry g)) :
-    (∫ b, f b ∂withDensity κ (fun a b => g a b) a) = ∫ b, g a b • f b ∂κ a :=
+    ∫ b, f b ∂withDensity κ (fun a b => g a b) a = ∫ b, g a b • f b ∂κ a :=
   by
   rw [kernel.with_density_apply, integral_withDensity_eq_integral_smul]
   · exact Measurable.of_uncurry_left hg
@@ -140,7 +140,7 @@ theorem withDensity_tsum [Countable ι] (κ : kernel α β) [IsSFiniteKernel κ]
       exact pi.summable.mpr fun p => ENNReal.summable
     rw [this]
     exact Measurable.ennreal_tsum' hf
-  have : (∫⁻ b in s, (∑' n, f n) a b ∂κ a) = ∫⁻ b in s, ∑' n, (fun b => f n a b) b ∂κ a :=
+  have : ∫⁻ b in s, (∑' n, f n) a b ∂κ a = ∫⁻ b in s, ∑' n, (fun b => f n a b) b ∂κ a :=
     by
     congr with b
     rw [tsum_apply h_sum, tsum_apply (h_sum_a a)]
@@ -161,7 +161,7 @@ theorem isFiniteKernel_withDensity_of_bounded (κ : kernel α β) [IsFiniteKerne
           fun a => by
           rw [with_density_apply' κ hf a MeasurableSet.univ]
           calc
-            (∫⁻ b in Set.univ, f a b ∂κ a) ≤ ∫⁻ b in Set.univ, B ∂κ a := lintegral_mono (hf_B a)
+            ∫⁻ b in Set.univ, f a b ∂κ a ≤ ∫⁻ b in Set.univ, B ∂κ a := lintegral_mono (hf_B a)
             _ = B * κ a Set.univ := by
               simp only [measure.restrict_univ, MeasureTheory.lintegral_const]
             _ ≤ B * is_finite_kernel.bound κ := mul_le_mul_left' (measure_le_bound κ a Set.univ) _⟩⟩
@@ -211,7 +211,7 @@ theorem isSFiniteKernel_withDensity_of_isFiniteKernel (κ : kernel α β) [IsFin
     ext (a b) : 2
     rw [tsum_apply (pi.summable.mpr h_sum_a), tsum_apply (h_sum_a a),
       ENNReal.tsum_eq_liminf_sum_nat]
-    have h_finset_sum : ∀ n, (∑ i in Finset.range n, fs i a b) = min (f a b) n :=
+    have h_finset_sum : ∀ n, ∑ i in Finset.range n, fs i a b = min (f a b) n :=
       by
       intro n
       induction' n with n hn

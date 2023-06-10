@@ -36,7 +36,7 @@ attribute [local instance] CategoryTheory.ConcreteCategory.hasCoeToSort
 /-- The topological simplex associated to `x : simplex_category`.
   This is the object part of the functor `simplex_category.to_Top`. -/
 def toTopObj (x : SimplexCategory) :=
-  {f : x → ℝ≥0 | (∑ i, f i) = 1}
+  {f : x → ℝ≥0 | ∑ i, f i = 1}
 #align simplex_category.to_Top_obj SimplexCategory.toTopObj
 
 instance (x : SimplexCategory) : CoeFun x.toTopObj fun _ => x → ℝ≥0 :=

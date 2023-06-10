@@ -402,18 +402,18 @@ theorem coeff_iterate_derivative_as_prod_Ico {k} (p : R[X]) :
 #align polynomial.coeff_iterate_derivative_as_prod_Ico Polynomial.coeff_iterate_derivative_as_prod_Ico
 
 theorem coeff_iterate_derivative_as_prod_range {k} (p : R[X]) :
-    ∀ m : ℕ, ((derivative^[k]) p).coeff m = (∏ i in range k, m + k - i) • p.coeff (m + k) :=
+    ∀ m : ℕ, ((derivative^[k]) p).coeff m = (∏ i in range k, (m + k - i)) • p.coeff (m + k) :=
   by
   induction' k with k ih
   · simp
   intro m
   calc
     ((derivative^[k + 1]) p).coeff m =
-        (∏ i in range k, m + k.succ - i) • p.coeff (m + k.succ) * (m + 1) :=
+        (∏ i in range k, (m + k.succ - i)) • p.coeff (m + k.succ) * (m + 1) :=
       by rw [Function.iterate_succ_apply', coeff_derivative, ih m.succ, Nat.succ_add, Nat.add_succ]
-    _ = ((∏ i in range k, m + k.succ - i) * (m + 1)) • p.coeff (m + k.succ) := by
+    _ = ((∏ i in range k, (m + k.succ - i)) * (m + 1)) • p.coeff (m + k.succ) := by
       rw [← Nat.cast_add_one, ← nsmul_eq_mul', smul_smul, mul_comm]
-    _ = (∏ i in range k.succ, m + k.succ - i) • p.coeff (m + k.succ) := by
+    _ = (∏ i in range k.succ, (m + k.succ - i)) • p.coeff (m + k.succ) := by
       rw [prod_range_succ, add_tsub_assoc_of_le k.le_succ, Nat.succ_sub le_rfl, tsub_self]
 #align polynomial.coeff_iterate_derivative_as_prod_range Polynomial.coeff_iterate_derivative_as_prod_range
 
@@ -429,26 +429,26 @@ theorem iterate_derivative_mul {n} (p q : R[X]) :
             n.choose k • ((derivative^[n - k]) p * (derivative^[k]) q)).derivative :=
       by rw [Function.iterate_succ_apply', IH]
     _ =
-        (∑ k : ℕ in range n.succ, n.choose k • ((derivative^[n - k + 1]) p * (derivative^[k]) q)) +
+        ∑ k : ℕ in range n.succ, n.choose k • ((derivative^[n - k + 1]) p * (derivative^[k]) q) +
           ∑ k : ℕ in range n.succ, n.choose k • ((derivative^[n - k]) p * (derivative^[k + 1]) q) :=
       by
       simp_rw [derivative_sum, derivative_smul, derivative_mul, Function.iterate_succ_apply',
         smul_add, sum_add_distrib]
     _ =
-        (∑ k : ℕ in range n.succ,
-              n.choose k.succ • ((derivative^[n - k]) p * (derivative^[k + 1]) q)) +
+        ∑ k : ℕ in range n.succ,
+              n.choose k.succ • ((derivative^[n - k]) p * (derivative^[k + 1]) q) +
             1 • ((derivative^[n + 1]) p * (derivative^[0]) q) +
           ∑ k : ℕ in range n.succ, n.choose k • ((derivative^[n - k]) p * (derivative^[k + 1]) q) :=
       _
     _ =
-        ((∑ k : ℕ in range n.succ, n.choose k • ((derivative^[n - k]) p * (derivative^[k + 1]) q)) +
+        ∑ k : ℕ in range n.succ, n.choose k • ((derivative^[n - k]) p * (derivative^[k + 1]) q) +
             ∑ k : ℕ in range n.succ,
-              n.choose k.succ • ((derivative^[n - k]) p * (derivative^[k + 1]) q)) +
+              n.choose k.succ • ((derivative^[n - k]) p * (derivative^[k + 1]) q) +
           1 • ((derivative^[n + 1]) p * (derivative^[0]) q) :=
       by rw [add_comm, add_assoc]
     _ =
-        (∑ i : ℕ in range n.succ,
-            (n + 1).choose (i + 1) • ((derivative^[n + 1 - (i + 1)]) p * (derivative^[i + 1]) q)) +
+        ∑ i : ℕ in range n.succ,
+            (n + 1).choose (i + 1) • ((derivative^[n + 1 - (i + 1)]) p * (derivative^[i + 1]) q) +
           1 • ((derivative^[n + 1]) p * (derivative^[0]) q) :=
       by simp_rw [Nat.choose_succ_succ, Nat.succ_sub_succ, add_smul, sum_add_distrib]
     _ =
@@ -531,7 +531,7 @@ theorem derivative_X_add_C_sq (c : R) : ((X + C c) ^ 2).derivative = C 2 * (X + 
 #align polynomial.derivative_X_add_C_sq Polynomial.derivative_X_add_C_sq
 
 theorem iterate_derivative_X_add_pow (n k : ℕ) (c : R) :
-    (derivative^[k]) ((X + C c) ^ n) = ↑(∏ i in Finset.range k, n - i) * (X + C c) ^ (n - k) :=
+    (derivative^[k]) ((X + C c) ^ n) = ↑(∏ i in Finset.range k, (n - i)) * (X + C c) ^ (n - k) :=
   by
   induction' k with k IH
   ·
@@ -671,7 +671,7 @@ theorem derivative_X_sub_C_sq (c : R) : ((X - C c) ^ 2).derivative = C 2 * (X - 
 #align polynomial.derivative_X_sub_C_sq Polynomial.derivative_X_sub_C_sq
 
 theorem iterate_derivative_X_sub_pow (n k : ℕ) (c : R) :
-    (derivative^[k]) ((X - C c) ^ n) = ↑(∏ i in Finset.range k, n - i) * (X - C c) ^ (n - k) := by
+    (derivative^[k]) ((X - C c) ^ n) = ↑(∏ i in Finset.range k, (n - i)) * (X - C c) ^ (n - k) := by
   simp_rw [sub_eq_add_neg, ← C_neg, iterate_derivative_X_add_pow]
 #align polynomial.iterate_derivative_X_sub_pow Polynomial.iterate_derivative_X_sub_pow
 

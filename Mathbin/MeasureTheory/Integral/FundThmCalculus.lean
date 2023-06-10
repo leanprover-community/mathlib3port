@@ -298,7 +298,7 @@ theorem measure_integral_sub_linear_isLittleO_of_tendsto_ae' [IsMeasurablyGenera
     [TendstoIxxClass Ioc l l'] (hfm : StronglyMeasurableAtFilter f l' μ)
     (hf : Tendsto f (l' ⊓ μ.ae) (𝓝 c)) (hl : μ.FiniteAtFilter l') (hu : Tendsto u lt l)
     (hv : Tendsto v lt l) :
-    (fun t => (∫ x in u t..v t, f x ∂μ) - ∫ x in u t..v t, c ∂μ) =o[lt] fun t =>
+    (fun t => ∫ x in u t..v t, f x ∂μ - ∫ x in u t..v t, c ∂μ) =o[lt] fun t =>
       ∫ x in u t..v t, (1 : ℝ) ∂μ :=
   by
   have A := hf.integral_sub_linear_is_o_ae hfm hl (hu.Ioc hv)
@@ -327,7 +327,7 @@ theorem measure_integral_sub_linear_isLittleO_of_tendsto_ae_of_le' [IsMeasurably
     [TendstoIxxClass Ioc l l'] (hfm : StronglyMeasurableAtFilter f l' μ)
     (hf : Tendsto f (l' ⊓ μ.ae) (𝓝 c)) (hl : μ.FiniteAtFilter l') (hu : Tendsto u lt l)
     (hv : Tendsto v lt l) (huv : u ≤ᶠ[lt] v) :
-    (fun t => (∫ x in u t..v t, f x ∂μ) - (μ (Ioc (u t) (v t))).toReal • c) =o[lt] fun t =>
+    (fun t => ∫ x in u t..v t, f x ∂μ - (μ (Ioc (u t) (v t))).toReal • c) =o[lt] fun t =>
       (μ <| Ioc (u t) (v t)).toReal :=
   (measure_integral_sub_linear_isLittleO_of_tendsto_ae' hfm hf hl hu hv).congr'
     (huv.mono fun x hx => by simp [integral_const', hx])
@@ -350,7 +350,7 @@ theorem measure_integral_sub_linear_isLittleO_of_tendsto_ae_of_ge' [IsMeasurably
     [TendstoIxxClass Ioc l l'] (hfm : StronglyMeasurableAtFilter f l' μ)
     (hf : Tendsto f (l' ⊓ μ.ae) (𝓝 c)) (hl : μ.FiniteAtFilter l') (hu : Tendsto u lt l)
     (hv : Tendsto v lt l) (huv : v ≤ᶠ[lt] u) :
-    (fun t => (∫ x in u t..v t, f x ∂μ) + (μ (Ioc (v t) (u t))).toReal • c) =o[lt] fun t =>
+    (fun t => ∫ x in u t..v t, f x ∂μ + (μ (Ioc (v t) (u t))).toReal • c) =o[lt] fun t =>
       (μ <| Ioc (v t) (u t)).toReal :=
   (measure_integral_sub_linear_isLittleO_of_tendsto_ae_of_le' hfm hf hl hv hu
           huv).neg_left.congr_left
@@ -379,7 +379,7 @@ a statement that works in both cases `u ≤ v` and `v ≤ u`. -/
 theorem measure_integral_sub_linear_isLittleO_of_tendsto_ae
     (hfm : StronglyMeasurableAtFilter f l' μ) (hf : Tendsto f (l' ⊓ μ.ae) (𝓝 c))
     (hu : Tendsto u lt l) (hv : Tendsto v lt l) :
-    (fun t => (∫ x in u t..v t, f x ∂μ) - ∫ x in u t..v t, c ∂μ) =o[lt] fun t =>
+    (fun t => ∫ x in u t..v t, f x ∂μ - ∫ x in u t..v t, c ∂μ) =o[lt] fun t =>
       ∫ x in u t..v t, (1 : ℝ) ∂μ :=
   measure_integral_sub_linear_isLittleO_of_tendsto_ae' hfm hf (FTCFilter.finite_at_inner l) hu hv
 #align interval_integral.measure_integral_sub_linear_is_o_of_tendsto_ae intervalIntegral.measure_integral_sub_linear_isLittleO_of_tendsto_ae
@@ -394,7 +394,7 @@ e.g., for `l = l' = at_top`. -/
 theorem measure_integral_sub_linear_isLittleO_of_tendsto_ae_of_le
     (hfm : StronglyMeasurableAtFilter f l' μ) (hf : Tendsto f (l' ⊓ μ.ae) (𝓝 c))
     (hu : Tendsto u lt l) (hv : Tendsto v lt l) (huv : u ≤ᶠ[lt] v) :
-    (fun t => (∫ x in u t..v t, f x ∂μ) - (μ (Ioc (u t) (v t))).toReal • c) =o[lt] fun t =>
+    (fun t => ∫ x in u t..v t, f x ∂μ - (μ (Ioc (u t) (v t))).toReal • c) =o[lt] fun t =>
       (μ <| Ioc (u t) (v t)).toReal :=
   measure_integral_sub_linear_isLittleO_of_tendsto_ae_of_le' hfm hf (FTCFilter.finite_at_inner l) hu
     hv huv
@@ -410,7 +410,7 @@ e.g., for `l = l' = at_top`. -/
 theorem measure_integral_sub_linear_isLittleO_of_tendsto_ae_of_ge
     (hfm : StronglyMeasurableAtFilter f l' μ) (hf : Tendsto f (l' ⊓ μ.ae) (𝓝 c))
     (hu : Tendsto u lt l) (hv : Tendsto v lt l) (huv : v ≤ᶠ[lt] u) :
-    (fun t => (∫ x in u t..v t, f x ∂μ) + (μ (Ioc (v t) (u t))).toReal • c) =o[lt] fun t =>
+    (fun t => ∫ x in u t..v t, f x ∂μ + (μ (Ioc (v t) (u t))).toReal • c) =o[lt] fun t =>
       (μ <| Ioc (v t) (u t)).toReal :=
   measure_integral_sub_linear_isLittleO_of_tendsto_ae_of_ge' hfm hf (FTCFilter.finite_at_inner l) hu
     hv huv
@@ -439,8 +439,8 @@ theorem measure_integral_sub_integral_sub_linear_isLittleO_of_tendsto_ae
     (hb_lim : Tendsto f (lb' ⊓ μ.ae) (𝓝 cb)) (hua : Tendsto ua lt la) (hva : Tendsto va lt la)
     (hub : Tendsto ub lt lb) (hvb : Tendsto vb lt lb) :
     (fun t =>
-        ((∫ x in va t..vb t, f x ∂μ) - ∫ x in ua t..ub t, f x ∂μ) -
-          ((∫ x in ub t..vb t, cb ∂μ) - ∫ x in ua t..va t, ca ∂μ)) =o[lt]
+        ∫ x in va t..vb t, f x ∂μ - ∫ x in ua t..ub t, f x ∂μ -
+          (∫ x in ub t..vb t, cb ∂μ - ∫ x in ua t..va t, ca ∂μ)) =o[lt]
       fun t => ‖∫ x in ua t..va t, (1 : ℝ) ∂μ‖ + ‖∫ x in ub t..vb t, (1 : ℝ) ∂μ‖ :=
   by
   refine'
@@ -475,8 +475,8 @@ as `u` and `v` tend to `lb`.
 theorem measure_integral_sub_integral_sub_linear_isLittleO_of_tendsto_ae_right
     (hab : IntervalIntegrable f μ a b) (hmeas : StronglyMeasurableAtFilter f lb' μ)
     (hf : Tendsto f (lb' ⊓ μ.ae) (𝓝 c)) (hu : Tendsto u lt lb) (hv : Tendsto v lt lb) :
-    (fun t => ((∫ x in a..v t, f x ∂μ) - ∫ x in a..u t, f x ∂μ) - ∫ x in u t..v t, c ∂μ) =o[lt]
-      fun t => ∫ x in u t..v t, (1 : ℝ) ∂μ :=
+    (fun t => ∫ x in a..v t, f x ∂μ - ∫ x in a..u t, f x ∂μ - ∫ x in u t..v t, c ∂μ) =o[lt] fun t =>
+      ∫ x in u t..v t, (1 : ℝ) ∂μ :=
   by
   simpa using
     measure_integral_sub_integral_sub_linear_is_o_of_tendsto_ae hab stronglyMeasurableAt_bot hmeas
@@ -496,8 +496,8 @@ as `u` and `v` tend to `la`.
 theorem measure_integral_sub_integral_sub_linear_isLittleO_of_tendsto_ae_left
     (hab : IntervalIntegrable f μ a b) (hmeas : StronglyMeasurableAtFilter f la' μ)
     (hf : Tendsto f (la' ⊓ μ.ae) (𝓝 c)) (hu : Tendsto u lt la) (hv : Tendsto v lt la) :
-    (fun t => ((∫ x in v t..b, f x ∂μ) - ∫ x in u t..b, f x ∂μ) + ∫ x in u t..v t, c ∂μ) =o[lt]
-      fun t => ∫ x in u t..v t, (1 : ℝ) ∂μ :=
+    (fun t => ∫ x in v t..b, f x ∂μ - ∫ x in u t..b, f x ∂μ + ∫ x in u t..v t, c ∂μ) =o[lt] fun t =>
+      ∫ x in u t..v t, (1 : ℝ) ∂μ :=
   by
   simpa using
     measure_integral_sub_integral_sub_linear_is_o_of_tendsto_ae hab hmeas stronglyMeasurableAt_bot
@@ -1204,7 +1204,7 @@ theorem sub_le_integral_of_hasDeriv_right_of_le (hab : a ≤ b) (hcont : Continu
 /-- Auxiliary lemma in the proof of `integral_eq_sub_of_has_deriv_right_of_le`. -/
 theorem integral_le_sub_of_hasDeriv_right_of_le (hab : a ≤ b) (hcont : ContinuousOn g (Icc a b))
     (hderiv : ∀ x ∈ Ioo a b, HasDerivWithinAt g (g' x) (Ioi x) x) (φint : IntegrableOn φ (Icc a b))
-    (hφg : ∀ x ∈ Ioo a b, φ x ≤ g' x) : (∫ y in a..b, φ y) ≤ g b - g a :=
+    (hφg : ∀ x ∈ Ioo a b, φ x ≤ g' x) : ∫ y in a..b, φ y ≤ g b - g a :=
   by
   rw [← neg_le_neg_iff]
   convert
@@ -1217,7 +1217,7 @@ theorem integral_le_sub_of_hasDeriv_right_of_le (hab : a ≤ b) (hcont : Continu
 /-- Auxiliary lemma in the proof of `integral_eq_sub_of_has_deriv_right_of_le`: real version -/
 theorem integral_eq_sub_of_hasDeriv_right_of_le_real (hab : a ≤ b)
     (hcont : ContinuousOn g (Icc a b)) (hderiv : ∀ x ∈ Ioo a b, HasDerivWithinAt g (g' x) (Ioi x) x)
-    (g'int : IntegrableOn g' (Icc a b)) : (∫ y in a..b, g' y) = g b - g a :=
+    (g'int : IntegrableOn g' (Icc a b)) : ∫ y in a..b, g' y = g b - g a :=
   le_antisymm (integral_le_sub_of_hasDeriv_right_of_le hab hcont hderiv g'int fun x hx => le_rfl)
     (sub_le_integral_of_hasDeriv_right_of_le hab hcont hderiv g'int fun x hx => le_rfl)
 #align interval_integral.integral_eq_sub_of_has_deriv_right_of_le_real intervalIntegral.integral_eq_sub_of_hasDeriv_right_of_le_real
@@ -1229,7 +1229,7 @@ variable {f' : ℝ → E}
   then `∫ y in a..b, f' y` equals `f b - f a`. -/
 theorem integral_eq_sub_of_hasDeriv_right_of_le (hab : a ≤ b) (hcont : ContinuousOn f (Icc a b))
     (hderiv : ∀ x ∈ Ioo a b, HasDerivWithinAt f (f' x) (Ioi x) x)
-    (f'int : IntervalIntegrable f' volume a b) : (∫ y in a..b, f' y) = f b - f a :=
+    (f'int : IntervalIntegrable f' volume a b) : ∫ y in a..b, f' y = f b - f a :=
   by
   refine' (NormedSpace.eq_iff_forall_dual_eq ℝ).2 fun g => _
   rw [← g.interval_integral_comp_comm f'int, g.map_sub]
@@ -1244,7 +1244,7 @@ theorem integral_eq_sub_of_hasDeriv_right_of_le (hab : a ≤ b) (hcont : Continu
   `∫ y in a..b, f' y` equals `f b - f a`. -/
 theorem integral_eq_sub_of_hasDeriv_right (hcont : ContinuousOn f (uIcc a b))
     (hderiv : ∀ x ∈ Ioo (min a b) (max a b), HasDerivWithinAt f (f' x) (Ioi x) x)
-    (hint : IntervalIntegrable f' volume a b) : (∫ y in a..b, f' y) = f b - f a :=
+    (hint : IntervalIntegrable f' volume a b) : ∫ y in a..b, f' y = f b - f a :=
   by
   cases' le_total a b with hab hab
   · simp only [uIcc_of_le, min_eq_left, max_eq_right, hab] at hcont hderiv hint 
@@ -1258,7 +1258,7 @@ theorem integral_eq_sub_of_hasDeriv_right (hcont : ContinuousOn f (uIcc a b))
   `∫ y in a..b, f' y` equals `f b - f a`. -/
 theorem integral_eq_sub_of_hasDerivAt_of_le (hab : a ≤ b) (hcont : ContinuousOn f (Icc a b))
     (hderiv : ∀ x ∈ Ioo a b, HasDerivAt f (f' x) x) (hint : IntervalIntegrable f' volume a b) :
-    (∫ y in a..b, f' y) = f b - f a :=
+    ∫ y in a..b, f' y = f b - f a :=
   integral_eq_sub_of_hasDeriv_right_of_le hab hcont (fun x hx => (hderiv x hx).HasDerivWithinAt)
     hint
 #align interval_integral.integral_eq_sub_of_has_deriv_at_of_le intervalIntegral.integral_eq_sub_of_hasDerivAt_of_le
@@ -1266,7 +1266,7 @@ theorem integral_eq_sub_of_hasDerivAt_of_le (hab : a ≤ b) (hcont : ContinuousO
 /-- Fundamental theorem of calculus-2: If `f : ℝ → E` has a derivative at `f' x` for all `x` in
   `[a, b]` and `f'` is integrable on `[a, b]`, then `∫ y in a..b, f' y` equals `f b - f a`. -/
 theorem integral_eq_sub_of_hasDerivAt (hderiv : ∀ x ∈ uIcc a b, HasDerivAt f (f' x) x)
-    (hint : IntervalIntegrable f' volume a b) : (∫ y in a..b, f' y) = f b - f a :=
+    (hint : IntervalIntegrable f' volume a b) : ∫ y in a..b, f' y = f b - f a :=
   integral_eq_sub_of_hasDeriv_right (HasDerivAt.continuousOn hderiv)
     (fun x hx => (hderiv _ (mem_Icc_of_Ioo hx)).HasDerivWithinAt) hint
 #align interval_integral.integral_eq_sub_of_has_deriv_at intervalIntegral.integral_eq_sub_of_hasDerivAt
@@ -1274,7 +1274,7 @@ theorem integral_eq_sub_of_hasDerivAt (hderiv : ∀ x ∈ uIcc a b, HasDerivAt f
 theorem integral_eq_sub_of_hasDerivAt_of_tendsto (hab : a < b) {fa fb}
     (hderiv : ∀ x ∈ Ioo a b, HasDerivAt f (f' x) x) (hint : IntervalIntegrable f' volume a b)
     (ha : Tendsto f (𝓝[>] a) (𝓝 fa)) (hb : Tendsto f (𝓝[<] b) (𝓝 fb)) :
-    (∫ y in a..b, f' y) = fb - fa :=
+    ∫ y in a..b, f' y = fb - fa :=
   by
   set F : ℝ → E := update (update f a fa) b fb
   have Fderiv : ∀ x ∈ Ioo a b, HasDerivAt F (f' x) x :=
@@ -1297,13 +1297,13 @@ theorem integral_eq_sub_of_hasDerivAt_of_tendsto (hab : a < b) {fa fb}
 /-- Fundamental theorem of calculus-2: If `f : ℝ → E` is differentiable at every `x` in `[a, b]` and
   its derivative is integrable on `[a, b]`, then `∫ y in a..b, deriv f y` equals `f b - f a`. -/
 theorem integral_deriv_eq_sub (hderiv : ∀ x ∈ uIcc a b, DifferentiableAt ℝ f x)
-    (hint : IntervalIntegrable (deriv f) volume a b) : (∫ y in a..b, deriv f y) = f b - f a :=
+    (hint : IntervalIntegrable (deriv f) volume a b) : ∫ y in a..b, deriv f y = f b - f a :=
   integral_eq_sub_of_hasDerivAt (fun x hx => (hderiv x hx).HasDerivAt) hint
 #align interval_integral.integral_deriv_eq_sub intervalIntegral.integral_deriv_eq_sub
 
 theorem integral_deriv_eq_sub' (f) (hderiv : deriv f = f')
     (hdiff : ∀ x ∈ uIcc a b, DifferentiableAt ℝ f x) (hcont : ContinuousOn f' (uIcc a b)) :
-    (∫ y in a..b, f' y) = f b - f a :=
+    ∫ y in a..b, f' y = f b - f a :=
   by
   rw [← hderiv, integral_deriv_eq_sub hdiff]
   rw [hderiv]
@@ -1328,23 +1328,23 @@ theorem integrableOn_deriv_right_of_nonneg (hcont : ContinuousOn g (Icc a b))
     apply (aemeasurable_derivWithin_Ioi g _).congr
     refine' (ae_restrict_mem measurableSet_Ioo).mono fun x hx => _
     exact (hderiv x hx).derivWithin (uniqueDiffWithinAt_Ioi _)
-  suffices H : (∫⁻ x in Ioo a b, ‖g' x‖₊) ≤ ENNReal.ofReal (g b - g a)
+  suffices H : ∫⁻ x in Ioo a b, ‖g' x‖₊ ≤ ENNReal.ofReal (g b - g a)
   exact ⟨meas_g'.ae_strongly_measurable, H.trans_lt ENNReal.ofReal_lt_top⟩
   by_contra' H
   obtain ⟨f, fle, fint, hf⟩ :
     ∃ f : simple_func ℝ ℝ≥0,
       (∀ x, f x ≤ ‖g' x‖₊) ∧
-        (∫⁻ x : ℝ in Ioo a b, f x) < ∞ ∧ ENNReal.ofReal (g b - g a) < ∫⁻ x : ℝ in Ioo a b, f x :=
+        ∫⁻ x : ℝ in Ioo a b, f x < ∞ ∧ ENNReal.ofReal (g b - g a) < ∫⁻ x : ℝ in Ioo a b, f x :=
     exists_lt_lintegral_simple_func_of_lt_lintegral H
   let F : ℝ → ℝ := coe ∘ f
   have intF : integrable_on F (Ioo a b) :=
     by
     refine' ⟨f.measurable.coe_nnreal_real.ae_strongly_measurable, _⟩
     simpa only [has_finite_integral, NNReal.nnnorm_eq] using fint
-  have A : (∫⁻ x : ℝ in Ioo a b, f x) = ENNReal.ofReal (∫ x in Ioo a b, F x) :=
+  have A : ∫⁻ x : ℝ in Ioo a b, f x = ENNReal.ofReal (∫ x in Ioo a b, F x) :=
     lintegral_coe_eq_integral _ intF
   rw [A] at hf 
-  have B : (∫ x : ℝ in Ioo a b, F x) ≤ g b - g a :=
+  have B : ∫ x : ℝ in Ioo a b, F x ≤ g b - g a :=
     by
     rw [← integral_Ioc_eq_integral_Ioo, ← intervalIntegral.integral_of_le hab.le]
     apply integral_le_sub_of_has_deriv_right_of_le hab.le hcont hderiv _ fun x hx => _
@@ -1389,7 +1389,7 @@ variable [NormedRing A] [NormedAlgebra ℝ A] [CompleteSpace A]
 theorem integral_deriv_mul_eq_sub {u v u' v' : ℝ → A} (hu : ∀ x ∈ uIcc a b, HasDerivAt u (u' x) x)
     (hv : ∀ x ∈ uIcc a b, HasDerivAt v (v' x) x) (hu' : IntervalIntegrable u' volume a b)
     (hv' : IntervalIntegrable v' volume a b) :
-    (∫ x in a..b, u' x * v x + u x * v' x) = u b * v b - u a * v a :=
+    ∫ x in a..b, u' x * v x + u x * v' x = u b * v b - u a * v a :=
   (integral_eq_sub_of_hasDerivAt fun x hx => (hu x hx).mul (hv x hx)) <|
     (hu'.mul_continuousOn (HasDerivAt.continuousOn hv)).add
       (hv'.continuousOn_mul (HasDerivAt.continuousOn hu))
@@ -1398,7 +1398,7 @@ theorem integral_deriv_mul_eq_sub {u v u' v' : ℝ → A} (hu : ∀ x ∈ uIcc a
 theorem integral_mul_deriv_eq_deriv_mul {u v u' v' : ℝ → A}
     (hu : ∀ x ∈ uIcc a b, HasDerivAt u (u' x) x) (hv : ∀ x ∈ uIcc a b, HasDerivAt v (v' x) x)
     (hu' : IntervalIntegrable u' volume a b) (hv' : IntervalIntegrable v' volume a b) :
-    (∫ x in a..b, u x * v' x) = u b * v b - u a * v a - ∫ x in a..b, u' x * v x :=
+    ∫ x in a..b, u x * v' x = u b * v b - u a * v a - ∫ x in a..b, u' x * v x :=
   by
   rw [← integral_deriv_mul_eq_sub hu hv hu' hv', ← integral_sub]
   · exact integral_congr fun x hx => by simp only [add_sub_cancel']
@@ -1427,7 +1427,7 @@ theorem integral_comp_smul_deriv''' {f f' : ℝ → ℝ} {g : ℝ → E} (hf : C
     (hff' : ∀ x ∈ Ioo (min a b) (max a b), HasDerivWithinAt f (f' x) (Ioi x) x)
     (hg_cont : ContinuousOn g (f '' Ioo (min a b) (max a b))) (hg1 : IntegrableOn g (f '' [a, b]))
     (hg2 : IntegrableOn (fun x => f' x • (g ∘ f) x) [a, b]) :
-    (∫ x in a..b, f' x • (g ∘ f) x) = ∫ u in f a..f b, g u :=
+    ∫ x in a..b, f' x • (g ∘ f) x = ∫ u in f a..f b, g u :=
   by
   rw [hf.image_uIcc, ← intervalIntegrable_iff'] at hg1 
   have h_cont : ContinuousOn (fun u => ∫ t in f a..f u, g t) [a, b] :=
@@ -1473,7 +1473,7 @@ substitute `u = f x` to get `∫ x in a..b, f' x • (g ∘ f) x = ∫ u in f a.
 theorem integral_comp_smul_deriv'' {f f' : ℝ → ℝ} {g : ℝ → E} (hf : ContinuousOn f [a, b])
     (hff' : ∀ x ∈ Ioo (min a b) (max a b), HasDerivWithinAt f (f' x) (Ioi x) x)
     (hf' : ContinuousOn f' [a, b]) (hg : ContinuousOn g (f '' [a, b])) :
-    (∫ x in a..b, f' x • (g ∘ f) x) = ∫ u in f a..f b, g u :=
+    ∫ x in a..b, f' x • (g ∘ f) x = ∫ u in f a..f b, g u :=
   by
   refine'
     integral_comp_smul_deriv''' hf hff' (hg.mono <| image_subset _ Ioo_subset_Icc_self) _
@@ -1491,7 +1491,7 @@ Compared to `interval_integral.integral_comp_smul_deriv` we only require that `g
 -/
 theorem integral_comp_smul_deriv' {f f' : ℝ → ℝ} {g : ℝ → E}
     (h : ∀ x ∈ uIcc a b, HasDerivAt f (f' x) x) (h' : ContinuousOn f' (uIcc a b))
-    (hg : ContinuousOn g (f '' [a, b])) : (∫ x in a..b, f' x • (g ∘ f) x) = ∫ x in f a..f b, g x :=
+    (hg : ContinuousOn g (f '' [a, b])) : ∫ x in a..b, f' x • (g ∘ f) x = ∫ x in f a..f b, g x :=
   integral_comp_smul_deriv'' (fun x hx => (h x hx).ContinuousAt.ContinuousWithinAt)
     (fun x hx => (h x <| Ioo_subset_Icc_self hx).HasDerivWithinAt) h' hg
 #align interval_integral.integral_comp_smul_deriv' intervalIntegral.integral_comp_smul_deriv'
@@ -1504,7 +1504,7 @@ and `g` is continuous, then we can substitute `u = f x` to get
 -/
 theorem integral_comp_smul_deriv {f f' : ℝ → ℝ} {g : ℝ → E}
     (h : ∀ x ∈ uIcc a b, HasDerivAt f (f' x) x) (h' : ContinuousOn f' (uIcc a b))
-    (hg : Continuous g) : (∫ x in a..b, f' x • (g ∘ f) x) = ∫ x in f a..f b, g x :=
+    (hg : Continuous g) : ∫ x in a..b, f' x • (g ∘ f) x = ∫ x in f a..f b, g x :=
   integral_comp_smul_deriv' h h' hg.ContinuousOn
 #align interval_integral.integral_comp_smul_deriv intervalIntegral.integral_comp_smul_deriv
 -/
@@ -1514,7 +1514,7 @@ theorem integral_deriv_comp_smul_deriv' {f f' : ℝ → ℝ} {g g' : ℝ → E} 
     (hf' : ContinuousOn f' [a, b]) (hg : ContinuousOn g [f a, f b])
     (hgg' : ∀ x ∈ Ioo (min (f a) (f b)) (max (f a) (f b)), HasDerivWithinAt g (g' x) (Ioi x) x)
     (hg' : ContinuousOn g' (f '' [a, b])) :
-    (∫ x in a..b, f' x • (g' ∘ f) x) = (g ∘ f) b - (g ∘ f) a :=
+    ∫ x in a..b, f' x • (g' ∘ f) x = (g ∘ f) b - (g ∘ f) a :=
   by
   rw [integral_comp_smul_deriv'' hf hff' hf' hg',
     integral_eq_sub_of_has_deriv_right hg hgg' (hg'.mono _).IntervalIntegrable]
@@ -1524,7 +1524,7 @@ theorem integral_deriv_comp_smul_deriv' {f f' : ℝ → ℝ} {g g' : ℝ → E} 
 theorem integral_deriv_comp_smul_deriv {f f' : ℝ → ℝ} {g g' : ℝ → E}
     (hf : ∀ x ∈ uIcc a b, HasDerivAt f (f' x) x)
     (hg : ∀ x ∈ uIcc a b, HasDerivAt g (g' (f x)) (f x)) (hf' : ContinuousOn f' (uIcc a b))
-    (hg' : Continuous g') : (∫ x in a..b, f' x • (g' ∘ f) x) = (g ∘ f) b - (g ∘ f) a :=
+    (hg' : Continuous g') : ∫ x in a..b, f' x • (g' ∘ f) x = (g ∘ f) b - (g ∘ f) a :=
   integral_eq_sub_of_hasDerivAt (fun x hx => (hg x hx).scomp x <| hf x hx)
     (hf'.smul (hg'.comp_continuousOn <| HasDerivAt.continuousOn hf)).IntervalIntegrable
 #align interval_integral.integral_deriv_comp_smul_deriv intervalIntegral.integral_deriv_comp_smul_deriv
@@ -1542,7 +1542,7 @@ theorem integral_comp_mul_deriv''' {a b : ℝ} {f f' : ℝ → ℝ} {g : ℝ →
     (hff' : ∀ x ∈ Ioo (min a b) (max a b), HasDerivWithinAt f (f' x) (Ioi x) x)
     (hg_cont : ContinuousOn g (f '' Ioo (min a b) (max a b))) (hg1 : IntegrableOn g (f '' [a, b]))
     (hg2 : IntegrableOn (fun x => (g ∘ f) x * f' x) [a, b]) :
-    (∫ x in a..b, (g ∘ f) x * f' x) = ∫ u in f a..f b, g u :=
+    ∫ x in a..b, (g ∘ f) x * f' x = ∫ u in f a..f b, g u :=
   by
   have hg2' : integrable_on (fun x => f' x • (g ∘ f) x) [a, b] := by simpa [mul_comm] using hg2
   simpa [mul_comm] using integral_comp_smul_deriv''' hf hff' hg_cont hg1 hg2'
@@ -1555,7 +1555,7 @@ substitute `u = f x` to get `∫ x in a..b, (g ∘ f) x * f' x = ∫ u in f a..f
 theorem integral_comp_mul_deriv'' {f f' g : ℝ → ℝ} (hf : ContinuousOn f [a, b])
     (hff' : ∀ x ∈ Ioo (min a b) (max a b), HasDerivWithinAt f (f' x) (Ioi x) x)
     (hf' : ContinuousOn f' [a, b]) (hg : ContinuousOn g (f '' [a, b])) :
-    (∫ x in a..b, (g ∘ f) x * f' x) = ∫ u in f a..f b, g u := by
+    ∫ x in a..b, (g ∘ f) x * f' x = ∫ u in f a..f b, g u := by
   simpa [mul_comm] using integral_comp_smul_deriv'' hf hff' hf' hg
 #align interval_integral.integral_comp_mul_deriv'' intervalIntegral.integral_comp_mul_deriv''
 
@@ -1567,7 +1567,7 @@ Compared to `interval_integral.integral_comp_mul_deriv` we only require that `g`
 -/
 theorem integral_comp_mul_deriv' {f f' g : ℝ → ℝ} (h : ∀ x ∈ uIcc a b, HasDerivAt f (f' x) x)
     (h' : ContinuousOn f' (uIcc a b)) (hg : ContinuousOn g (f '' [a, b])) :
-    (∫ x in a..b, (g ∘ f) x * f' x) = ∫ x in f a..f b, g x := by
+    ∫ x in a..b, (g ∘ f) x * f' x = ∫ x in f a..f b, g x := by
   simpa [mul_comm] using integral_comp_smul_deriv' h h' hg
 #align interval_integral.integral_comp_mul_deriv' intervalIntegral.integral_comp_mul_deriv'
 
@@ -1577,7 +1577,7 @@ and `g` is continuous, then we can substitute `u = f x` to get
 -/
 theorem integral_comp_mul_deriv {f f' g : ℝ → ℝ} (h : ∀ x ∈ uIcc a b, HasDerivAt f (f' x) x)
     (h' : ContinuousOn f' (uIcc a b)) (hg : Continuous g) :
-    (∫ x in a..b, (g ∘ f) x * f' x) = ∫ x in f a..f b, g x :=
+    ∫ x in a..b, (g ∘ f) x * f' x = ∫ x in f a..f b, g x :=
   integral_comp_mul_deriv' h h' hg.ContinuousOn
 #align interval_integral.integral_comp_mul_deriv intervalIntegral.integral_comp_mul_deriv
 
@@ -1586,14 +1586,14 @@ theorem integral_deriv_comp_mul_deriv' {f f' g g' : ℝ → ℝ} (hf : Continuou
     (hf' : ContinuousOn f' [a, b]) (hg : ContinuousOn g [f a, f b])
     (hgg' : ∀ x ∈ Ioo (min (f a) (f b)) (max (f a) (f b)), HasDerivWithinAt g (g' x) (Ioi x) x)
     (hg' : ContinuousOn g' (f '' [a, b])) :
-    (∫ x in a..b, (g' ∘ f) x * f' x) = (g ∘ f) b - (g ∘ f) a := by
+    ∫ x in a..b, (g' ∘ f) x * f' x = (g ∘ f) b - (g ∘ f) a := by
   simpa [mul_comm] using integral_deriv_comp_smul_deriv' hf hff' hf' hg hgg' hg'
 #align interval_integral.integral_deriv_comp_mul_deriv' intervalIntegral.integral_deriv_comp_mul_deriv'
 
 theorem integral_deriv_comp_mul_deriv {f f' g g' : ℝ → ℝ}
     (hf : ∀ x ∈ uIcc a b, HasDerivAt f (f' x) x)
     (hg : ∀ x ∈ uIcc a b, HasDerivAt g (g' (f x)) (f x)) (hf' : ContinuousOn f' (uIcc a b))
-    (hg' : Continuous g') : (∫ x in a..b, (g' ∘ f) x * f' x) = (g ∘ f) b - (g ∘ f) a := by
+    (hg' : Continuous g') : ∫ x in a..b, (g' ∘ f) x * f' x = (g ∘ f) b - (g ∘ f) a := by
   simpa [mul_comm] using integral_deriv_comp_smul_deriv hf hg hf' hg'
 #align interval_integral.integral_deriv_comp_mul_deriv intervalIntegral.integral_deriv_comp_mul_deriv
 

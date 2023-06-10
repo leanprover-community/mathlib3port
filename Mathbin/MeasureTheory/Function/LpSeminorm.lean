@@ -130,7 +130,7 @@ theorem Memℒp.aestronglyMeasurable {f : α → E} {p : ℝ≥0∞} (h : Memℒ
 -/
 
 theorem lintegral_rpow_nnnorm_eq_rpow_snorm' {f : α → F} (hq0_lt : 0 < q) :
-    (∫⁻ a, ‖f a‖₊ ^ q ∂μ) = snorm' f q μ ^ q :=
+    ∫⁻ a, ‖f a‖₊ ^ q ∂μ = snorm' f q μ ^ q :=
   by
   rw [snorm', ← ENNReal.rpow_mul, one_div, inv_mul_cancel, ENNReal.rpow_one]
   exact (ne_of_lt hq0_lt).symm
@@ -149,14 +149,14 @@ theorem Memℒp.snorm_ne_top {f : α → E} (hfp : Memℒp f p μ) : snorm f p �
 #align measure_theory.mem_ℒp.snorm_ne_top MeasureTheory.Memℒp.snorm_ne_top
 
 theorem lintegral_rpow_nnnorm_lt_top_of_snorm'_lt_top {f : α → F} (hq0_lt : 0 < q)
-    (hfq : snorm' f q μ < ∞) : (∫⁻ a, ‖f a‖₊ ^ q ∂μ) < ∞ :=
+    (hfq : snorm' f q μ < ∞) : ∫⁻ a, ‖f a‖₊ ^ q ∂μ < ∞ :=
   by
   rw [lintegral_rpow_nnnorm_eq_rpow_snorm' hq0_lt]
   exact ENNReal.rpow_lt_top_of_nonneg (le_of_lt hq0_lt) (ne_of_lt hfq)
 #align measure_theory.lintegral_rpow_nnnorm_lt_top_of_snorm'_lt_top MeasureTheory.lintegral_rpow_nnnorm_lt_top_of_snorm'_lt_top
 
 theorem lintegral_rpow_nnnorm_lt_top_of_snorm_lt_top {f : α → F} (hp_ne_zero : p ≠ 0)
-    (hp_ne_top : p ≠ ∞) (hfp : snorm f p μ < ∞) : (∫⁻ a, ‖f a‖₊ ^ p.toReal ∂μ) < ∞ :=
+    (hp_ne_top : p ≠ ∞) (hfp : snorm f p μ < ∞) : ∫⁻ a, ‖f a‖₊ ^ p.toReal ∂μ < ∞ :=
   by
   apply lintegral_rpow_nnnorm_lt_top_of_snorm'_lt_top
   · exact ENNReal.toReal_pos hp_ne_zero hp_ne_top
@@ -164,7 +164,7 @@ theorem lintegral_rpow_nnnorm_lt_top_of_snorm_lt_top {f : α → F} (hp_ne_zero 
 #align measure_theory.lintegral_rpow_nnnorm_lt_top_of_snorm_lt_top MeasureTheory.lintegral_rpow_nnnorm_lt_top_of_snorm_lt_top
 
 theorem snorm_lt_top_iff_lintegral_rpow_nnnorm_lt_top {f : α → F} (hp_ne_zero : p ≠ 0)
-    (hp_ne_top : p ≠ ∞) : snorm f p μ < ∞ ↔ (∫⁻ a, ‖f a‖₊ ^ p.toReal ∂μ) < ∞ :=
+    (hp_ne_top : p ≠ ∞) : snorm f p μ < ∞ ↔ ∫⁻ a, ‖f a‖₊ ^ p.toReal ∂μ < ∞ :=
   ⟨lintegral_rpow_nnnorm_lt_top_of_snorm_lt_top hp_ne_zero hp_ne_top,
     by
     intro h
@@ -589,7 +589,7 @@ theorem Memℒp.of_bound [IsFiniteMeasure μ] {f : α → E} (hf : AEStronglyMea
 theorem snorm'_mono_measure (f : α → F) (hμν : ν ≤ μ) (hq : 0 ≤ q) : snorm' f q ν ≤ snorm' f q μ :=
   by
   simp_rw [snorm']
-  suffices h_integral_mono : (∫⁻ a, (‖f a‖₊ : ℝ≥0∞) ^ q ∂ν) ≤ ∫⁻ a, ‖f a‖₊ ^ q ∂μ
+  suffices h_integral_mono : ∫⁻ a, (‖f a‖₊ : ℝ≥0∞) ^ q ∂ν ≤ ∫⁻ a, ‖f a‖₊ ^ q ∂μ
   exact ENNReal.rpow_le_rpow h_integral_mono (by simp [hq])
   exact lintegral_mono' hμν le_rfl
 #align measure_theory.snorm'_mono_measure MeasureTheory.snorm'_mono_measure
@@ -1088,8 +1088,7 @@ theorem snorm'_le_snorm'_mul_rpow_measure_univ {p q : ℝ} (hp0_lt : 0 < p) (hpq
     exact le_rfl
   have hpq : p < q := lt_of_le_of_ne hpq hpq_eq
   let g := fun a : α => (1 : ℝ≥0∞)
-  have h_rw : (∫⁻ a, ↑‖f a‖₊ ^ p ∂μ) = ∫⁻ a, (‖f a‖₊ * g a) ^ p ∂μ :=
-    lintegral_congr fun a => by simp
+  have h_rw : ∫⁻ a, ↑‖f a‖₊ ^ p ∂μ = ∫⁻ a, (‖f a‖₊ * g a) ^ p ∂μ := lintegral_congr fun a => by simp
   repeat' rw [snorm']
   rw [h_rw]
   let r := p * q / (q - p)
@@ -1107,7 +1106,7 @@ theorem snorm'_le_snorm'_mul_rpow_measure_univ {p q : ℝ} (hp0_lt : 0 < p) (hpq
 theorem snorm'_le_snormEssSup_mul_rpow_measure_univ (hq_pos : 0 < q) {f : α → F} :
     snorm' f q μ ≤ snormEssSup f μ * μ Set.univ ^ (1 / q) :=
   by
-  have h_le : (∫⁻ a : α, ↑‖f a‖₊ ^ q ∂μ) ≤ ∫⁻ a : α, snorm_ess_sup f μ ^ q ∂μ :=
+  have h_le : ∫⁻ a : α, ↑‖f a‖₊ ^ q ∂μ ≤ ∫⁻ a : α, snorm_ess_sup f μ ^ q ∂μ :=
     by
     refine' lintegral_mono_ae _
     have h_nnnorm_le_snorm_ess_sup := coe_nnnorm_ae_le_snorm_ess_sup f μ

@@ -69,7 +69,7 @@ theorem exists_mem_of_not_isUnit_aeval_prod [IsDomain R] {p : R[X]} {a : A} (hp 
     exists_exists_and_eq_and, Multiset.mem_map, AlgHom.map_sub] at h 
   rcases h with ⟨r, r_mem, r_nu⟩
   exact ⟨r, by rwa [mem_iff, ← IsUnit.sub_iff], by rwa [← is_root.def, ← mem_roots hp]⟩
-#align spectrum.exists_mem_of_not_is_unit_aeval_prod spectrum.exists_mem_of_not_isUnit_aeval_prod
+#align spectrum.exists_mem_of_not_is_unit_aeval_prod spectrum.exists_mem_of_not_isUnit_aeval_prodₓ
 
 end ScalarRing
 
@@ -163,6 +163,7 @@ theorem map_pow_of_nonempty [IsAlgClosed 𝕜] {a : A} (ha : (σ a).Nonempty) (n
 
 variable (𝕜)
 
+#print spectrum.nonempty_of_isAlgClosed_of_finiteDimensional /-
 -- We will use this both to show eigenvalues exist, and to prove Schur's lemma.
 /-- Every element `a` in a nontrivial finite-dimensional algebra `A`
 over an algebraically closed field `𝕜` has non-empty spectrum. -/
@@ -175,6 +176,7 @@ theorem nonempty_of_isAlgClosed_of_finiteDimensional [IsAlgClosed 𝕜] [Nontriv
   obtain ⟨k, hk, _⟩ := exists_mem_of_not_is_unit_aeval_prod (monic.ne_zero h_mon) nu
   exact ⟨k, hk⟩
 #align spectrum.nonempty_of_is_alg_closed_of_finite_dimensional spectrum.nonempty_of_isAlgClosed_of_finiteDimensional
+-/
 
 end ScalarField
 

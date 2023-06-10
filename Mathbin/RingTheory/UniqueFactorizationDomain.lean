@@ -1103,7 +1103,7 @@ open scoped BigOperators
 theorem prime_pow_coprime_prod_of_coprime_insert [DecidableEq α] {s : Finset α} (i : α → ℕ) (p : α)
     (hps : p ∉ s) (is_prime : ∀ q ∈ insert p s, Prime q)
     (is_coprime : ∀ (q) (_ : q ∈ insert p s) (q') (_ : q' ∈ insert p s), q ∣ q' → q = q') :
-    ∀ q : α, q ∣ p ^ i p → (q ∣ ∏ p' in s, p' ^ i p') → IsUnit q :=
+    ∀ q : α, q ∣ p ^ i p → q ∣ ∏ p' in s, p' ^ i p' → IsUnit q :=
   by
   have hp := is_prime _ (Finset.mem_insert_self _ _)
   refine' fun _ => no_factors_of_no_prime_factors (pow_ne_zero _ hp.ne_zero) _

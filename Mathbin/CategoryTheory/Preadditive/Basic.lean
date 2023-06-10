@@ -208,7 +208,7 @@ theorem comp_zsmul (n : ℤ) : f ≫ (n • g) = n • f ≫ g :=
 
 @[reassoc]
 theorem comp_sum {P Q R : C} {J : Type _} (s : Finset J) (f : P ⟶ Q) (g : J → (Q ⟶ R)) :
-    (f ≫ ∑ j in s, g j) = ∑ j in s, f ≫ g j :=
+    f ≫ ∑ j in s, g j = ∑ j in s, f ≫ g j :=
   map_sum (leftComp R f) _ _
 #align category_theory.preadditive.comp_sum CategoryTheory.Preadditive.comp_sum
 

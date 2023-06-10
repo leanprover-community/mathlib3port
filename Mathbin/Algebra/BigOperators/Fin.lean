@@ -42,7 +42,7 @@ namespace Finset
 #print Finset.prod_range /-
 @[to_additive]
 theorem prod_range [CommMonoid β] {n : ℕ} (f : ℕ → β) :
-    (∏ i in Finset.range n, f i) = ∏ i : Fin n, f i :=
+    ∏ i in Finset.range n, f i = ∏ i : Fin n, f i :=
   prod_bij' (fun k w => ⟨k, mem_range.mp w⟩) (fun a ha => mem_univ _)
     (fun a ha => congr_arg _ (Fin.val_mk _).symm) (fun a m => a) (fun a m => mem_range.mpr a.Prop)
     (fun a ha => Fin.val_mk _) fun a ha => Fin.eta _ _
@@ -56,7 +56,7 @@ namespace Fin
 
 @[to_additive]
 theorem prod_univ_def [CommMonoid β] {n : ℕ} (f : Fin n → β) :
-    (∏ i, f i) = ((List.finRange n).map f).Prod := by simp [univ_def]
+    ∏ i, f i = ((List.finRange n).map f).Prod := by simp [univ_def]
 #align fin.prod_univ_def Fin.prod_univ_def
 #align fin.sum_univ_def Fin.sum_univ_def
 
@@ -68,7 +68,7 @@ theorem prod_ofFn [CommMonoid β] {n : ℕ} (f : Fin n → β) : (List.ofFn f).P
 
 /-- A product of a function `f : fin 0 → β` is `1` because `fin 0` is empty -/
 @[to_additive "A sum of a function `f : fin 0 → β` is `0` because `fin 0` is empty"]
-theorem prod_univ_zero [CommMonoid β] (f : Fin 0 → β) : (∏ i, f i) = 1 :=
+theorem prod_univ_zero [CommMonoid β] (f : Fin 0 → β) : ∏ i, f i = 1 :=
   rfl
 #align fin.prod_univ_zero Fin.prod_univ_zero
 #align fin.sum_univ_zero Fin.sum_univ_zero
@@ -78,7 +78,7 @@ is the product of `f x`, for some `x : fin (n + 1)` times the remaining product 
 @[to_additive
       "A sum of a function `f : fin (n + 1) → β` over all `fin (n + 1)` is the sum of `f x`,\nfor some `x : fin (n + 1)` plus the remaining product"]
 theorem prod_univ_succAbove [CommMonoid β] {n : ℕ} (f : Fin (n + 1) → β) (x : Fin (n + 1)) :
-    (∏ i, f i) = f x * ∏ i : Fin n, f (x.succAbove i) := by
+    ∏ i, f i = f x * ∏ i : Fin n, f (x.succAbove i) := by
   rw [univ_succ_above, prod_cons, Finset.prod_map, RelEmbedding.coe_toEmbedding]
 #align fin.prod_univ_succ_above Fin.prod_univ_succAbove
 #align fin.sum_univ_succ_above Fin.sum_univ_succAbove
@@ -88,7 +88,7 @@ is the product of `f 0` plus the remaining product -/
 @[to_additive
       "A sum of a function `f : fin (n + 1) → β` over all `fin (n + 1)` is the sum of `f 0`\nplus the remaining product"]
 theorem prod_univ_succ [CommMonoid β] {n : ℕ} (f : Fin (n + 1) → β) :
-    (∏ i, f i) = f 0 * ∏ i : Fin n, f i.succ :=
+    ∏ i, f i = f 0 * ∏ i : Fin n, f i.succ :=
   prod_univ_succAbove f 0
 #align fin.prod_univ_succ Fin.prod_univ_succ
 #align fin.sum_univ_succ Fin.sum_univ_succ
@@ -98,107 +98,106 @@ is the product of `f (fin.last n)` plus the remaining product -/
 @[to_additive
       "A sum of a function `f : fin (n + 1) → β` over all `fin (n + 1)` is the sum of\n`f (fin.last n)` plus the remaining sum"]
 theorem prod_univ_castSucc [CommMonoid β] {n : ℕ} (f : Fin (n + 1) → β) :
-    (∏ i, f i) = (∏ i : Fin n, f i.cast_succ) * f (last n) := by
+    ∏ i, f i = (∏ i : Fin n, f i.cast_succ) * f (last n) := by
   simpa [mul_comm] using prod_univ_succ_above f (last n)
 #align fin.prod_univ_cast_succ Fin.prod_univ_castSucc
 #align fin.sum_univ_cast_succ Fin.sum_univ_castSucc
 
 @[to_additive]
 theorem prod_cons [CommMonoid β] {n : ℕ} (x : β) (f : Fin n → β) :
-    (∏ i : Fin n.succ, (cons x f : Fin n.succ → β) i) = x * ∏ i : Fin n, f i := by
+    ∏ i : Fin n.succ, (cons x f : Fin n.succ → β) i = x * ∏ i : Fin n, f i := by
   simp_rw [prod_univ_succ, cons_zero, cons_succ]
 #align fin.prod_cons Fin.prod_cons
 #align fin.sum_cons Fin.sum_cons
 
 @[to_additive sum_univ_one]
-theorem prod_univ_one [CommMonoid β] (f : Fin 1 → β) : (∏ i, f i) = f 0 := by simp
+theorem prod_univ_one [CommMonoid β] (f : Fin 1 → β) : ∏ i, f i = f 0 := by simp
 #align fin.prod_univ_one Fin.prod_univ_one
 #align fin.sum_univ_one Fin.sum_univ_one
 
 @[simp, to_additive]
-theorem prod_univ_two [CommMonoid β] (f : Fin 2 → β) : (∏ i, f i) = f 0 * f 1 := by
+theorem prod_univ_two [CommMonoid β] (f : Fin 2 → β) : ∏ i, f i = f 0 * f 1 := by
   simp [prod_univ_succ]
 #align fin.prod_univ_two Fin.prod_univ_two
 #align fin.sum_univ_two Fin.sum_univ_two
 
 @[to_additive]
-theorem prod_univ_three [CommMonoid β] (f : Fin 3 → β) : (∏ i, f i) = f 0 * f 1 * f 2 := by
+theorem prod_univ_three [CommMonoid β] (f : Fin 3 → β) : ∏ i, f i = f 0 * f 1 * f 2 := by
   rw [prod_univ_cast_succ, prod_univ_two]; rfl
 #align fin.prod_univ_three Fin.prod_univ_three
 #align fin.sum_univ_three Fin.sum_univ_three
 
 @[to_additive]
-theorem prod_univ_four [CommMonoid β] (f : Fin 4 → β) : (∏ i, f i) = f 0 * f 1 * f 2 * f 3 := by
+theorem prod_univ_four [CommMonoid β] (f : Fin 4 → β) : ∏ i, f i = f 0 * f 1 * f 2 * f 3 := by
   rw [prod_univ_cast_succ, prod_univ_three]; rfl
 #align fin.prod_univ_four Fin.prod_univ_four
 #align fin.sum_univ_four Fin.sum_univ_four
 
 @[to_additive]
-theorem prod_univ_five [CommMonoid β] (f : Fin 5 → β) : (∏ i, f i) = f 0 * f 1 * f 2 * f 3 * f 4 :=
-  by rw [prod_univ_cast_succ, prod_univ_four]; rfl
+theorem prod_univ_five [CommMonoid β] (f : Fin 5 → β) : ∏ i, f i = f 0 * f 1 * f 2 * f 3 * f 4 := by
+  rw [prod_univ_cast_succ, prod_univ_four]; rfl
 #align fin.prod_univ_five Fin.prod_univ_five
 #align fin.sum_univ_five Fin.sum_univ_five
 
 @[to_additive]
 theorem prod_univ_six [CommMonoid β] (f : Fin 6 → β) :
-    (∏ i, f i) = f 0 * f 1 * f 2 * f 3 * f 4 * f 5 := by rw [prod_univ_cast_succ, prod_univ_five];
-  rfl
+    ∏ i, f i = f 0 * f 1 * f 2 * f 3 * f 4 * f 5 := by rw [prod_univ_cast_succ, prod_univ_five]; rfl
 #align fin.prod_univ_six Fin.prod_univ_six
 #align fin.sum_univ_six Fin.sum_univ_six
 
 @[to_additive]
 theorem prod_univ_seven [CommMonoid β] (f : Fin 7 → β) :
-    (∏ i, f i) = f 0 * f 1 * f 2 * f 3 * f 4 * f 5 * f 6 := by
+    ∏ i, f i = f 0 * f 1 * f 2 * f 3 * f 4 * f 5 * f 6 := by
   rw [prod_univ_cast_succ, prod_univ_six]; rfl
 #align fin.prod_univ_seven Fin.prod_univ_seven
 #align fin.sum_univ_seven Fin.sum_univ_seven
 
 @[to_additive]
 theorem prod_univ_eight [CommMonoid β] (f : Fin 8 → β) :
-    (∏ i, f i) = f 0 * f 1 * f 2 * f 3 * f 4 * f 5 * f 6 * f 7 := by
+    ∏ i, f i = f 0 * f 1 * f 2 * f 3 * f 4 * f 5 * f 6 * f 7 := by
   rw [prod_univ_cast_succ, prod_univ_seven]; rfl
 #align fin.prod_univ_eight Fin.prod_univ_eight
 #align fin.sum_univ_eight Fin.sum_univ_eight
 
 theorem sum_pow_mul_eq_add_pow {n : ℕ} {R : Type _} [CommSemiring R] (a b : R) :
-    (∑ s : Finset (Fin n), a ^ s.card * b ^ (n - s.card)) = (a + b) ^ n := by
+    ∑ s : Finset (Fin n), a ^ s.card * b ^ (n - s.card) = (a + b) ^ n := by
   simpa using Fintype.sum_pow_mul_eq_add_pow (Fin n) a b
 #align fin.sum_pow_mul_eq_add_pow Fin.sum_pow_mul_eq_add_pow
 
 #print Fin.prod_const /-
-theorem prod_const [CommMonoid α] (n : ℕ) (x : α) : (∏ i : Fin n, x) = x ^ n := by simp
+theorem prod_const [CommMonoid α] (n : ℕ) (x : α) : ∏ i : Fin n, x = x ^ n := by simp
 #align fin.prod_const Fin.prod_const
 -/
 
 #print Fin.sum_const /-
-theorem sum_const [AddCommMonoid α] (n : ℕ) (x : α) : (∑ i : Fin n, x) = n • x := by simp
+theorem sum_const [AddCommMonoid α] (n : ℕ) (x : α) : ∑ i : Fin n, x = n • x := by simp
 #align fin.sum_const Fin.sum_const
 -/
 
 @[to_additive]
 theorem prod_Ioi_zero {M : Type _} [CommMonoid M] {n : ℕ} {v : Fin n.succ → M} :
-    (∏ i in Ioi 0, v i) = ∏ j : Fin n, v j.succ := by
+    ∏ i in Ioi 0, v i = ∏ j : Fin n, v j.succ := by
   rw [Ioi_zero_eq_map, Finset.prod_map, RelEmbedding.coe_toEmbedding, coe_succ_embedding]
 #align fin.prod_Ioi_zero Fin.prod_Ioi_zero
 #align fin.sum_Ioi_zero Fin.sum_Ioi_zero
 
 @[to_additive]
 theorem prod_Ioi_succ {M : Type _} [CommMonoid M] {n : ℕ} (i : Fin n) (v : Fin n.succ → M) :
-    (∏ j in Ioi i.succ, v j) = ∏ j in Ioi i, v j.succ := by
+    ∏ j in Ioi i.succ, v j = ∏ j in Ioi i, v j.succ := by
   rw [Ioi_succ, Finset.prod_map, RelEmbedding.coe_toEmbedding, coe_succ_embedding]
 #align fin.prod_Ioi_succ Fin.prod_Ioi_succ
 #align fin.sum_Ioi_succ Fin.sum_Ioi_succ
 
 @[to_additive]
 theorem prod_congr' {M : Type _} [CommMonoid M] {a b : ℕ} (f : Fin b → M) (h : a = b) :
-    (∏ i : Fin a, f (cast h i)) = ∏ i : Fin b, f i := by subst h; congr; ext; congr; ext;
+    ∏ i : Fin a, f (cast h i) = ∏ i : Fin b, f i := by subst h; congr; ext; congr; ext;
   rw [coe_cast]
 #align fin.prod_congr' Fin.prod_congr'
 #align fin.sum_congr' Fin.sum_congr'
 
 @[to_additive]
 theorem prod_univ_add {M : Type _} [CommMonoid M] {a b : ℕ} (f : Fin (a + b) → M) :
-    (∏ i : Fin (a + b), f i) = (∏ i : Fin a, f (castAdd b i)) * ∏ i : Fin b, f (natAdd a i) :=
+    ∏ i : Fin (a + b), f i = (∏ i : Fin a, f (castAdd b i)) * ∏ i : Fin b, f (natAdd a i) :=
   by
   rw [Fintype.prod_equiv fin_sum_fin_equiv.symm f fun i => f (fin_sum_fin_equiv.to_fun i)]; swap
   · intro x
@@ -210,7 +209,7 @@ theorem prod_univ_add {M : Type _} [CommMonoid M] {a b : ℕ} (f : Fin (a + b) �
 @[to_additive]
 theorem prod_trunc {M : Type _} [CommMonoid M] {a b : ℕ} (f : Fin (a + b) → M)
     (hf : ∀ j : Fin b, f (natAdd a j) = 1) :
-    (∏ i : Fin (a + b), f i) = ∏ i : Fin a, f (castLE (Nat.le.intro rfl) i) := by
+    ∏ i : Fin (a + b), f i = ∏ i : Fin a, f (castLE (Nat.le.intro rfl) i) := by
   simpa only [prod_univ_add, Fintype.prod_eq_one _ hf, mul_one]
 #align fin.prod_trunc Fin.prod_trunc
 #align fin.sum_trunc Fin.sum_trunc
@@ -371,7 +370,7 @@ def finPiFinEquiv {m : ℕ} {n : Fin m → ℕ} : (∀ i : Fin m, Fin (n i)) ≃
         rw [Fin.prod_univ_castSucc, Fin.sum_univ_castSucc]
         suffices
           ∀ (n : Fin m → ℕ) (nn : ℕ) (f : ∀ i : Fin m, Fin (n i)) (fn : Fin nn),
-            ((∑ i : Fin m, ↑(f i) * ∏ j : Fin i, n (Fin.castLE i.prop.le j)) + ↑fn * ∏ j, n j) <
+            ∑ i : Fin m, ↑(f i) * ∏ j : Fin i, n (Fin.castLE i.prop.le j) + ↑fn * ∏ j, n j <
               (∏ i : Fin m, n i) * nn
           by
           replace this := this (Fin.init n) (n (Fin.last _)) (Fin.init f) (f (Fin.last _))
@@ -412,7 +411,7 @@ def finPiFinEquiv {m : ℕ} {n : Fin m → ℕ} : (∀ i : Fin m, Fin (n i)) ≃
         simp_rw [this]; clear this
         dsimp only [Fin.val_zero]
         simp_rw [Fintype.prod_empty, Nat.div_one, mul_one, Fin.cons_zero, Fin.prod_univ_succ]
-        change (_ + ∑ y : _, _ / (x * _) % _ * (x * _)) = _
+        change _ + ∑ y : _, _ / (x * _) % _ * (x * _) = _
         simp_rw [← Nat.div_div_eq_div_mul, mul_left_comm (_ % _ : ℕ), ← mul_sum]
         convert Nat.mod_add_div _ _
         refine' Eq.trans _ (ih (a / x) (Nat.div_lt_of_lt_mul <| a.is_lt.trans_eq _))

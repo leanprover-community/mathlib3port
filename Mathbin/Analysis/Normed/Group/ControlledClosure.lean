@@ -103,22 +103,22 @@ theorem controlled_closure_of_complete {f : NormedAddGroupHom G H} {K : AddSubgr
         ‖u 0‖ ≤ C * ‖v 0‖ := hnorm_u 0
         _ ≤ C * (‖h‖ + b 0) := (mul_le_mul_of_nonneg_left this hC.le)
         _ = C * b 0 + C * ‖h‖ := by rw [add_comm, mul_add]
-    have : (∑ k in range (n + 1), C * b k) ≤ ε * ‖h‖ :=
+    have : ∑ k in range (n + 1), C * b k ≤ ε * ‖h‖ :=
       calc
-        (∑ k in range (n + 1), C * b k) = (∑ k in range (n + 1), (1 / 2) ^ k) * (ε * ‖h‖ / 2) := by
+        ∑ k in range (n + 1), C * b k = (∑ k in range (n + 1), (1 / 2) ^ k) * (ε * ‖h‖ / 2) := by
           simp only [b, mul_div_cancel' _ hC.ne.symm, ← sum_mul]
         _ ≤ 2 * (ε * ‖h‖ / 2) :=
           (mul_le_mul_of_nonneg_right (sum_geometric_two_le _) (by nlinarith [hε, norm_nonneg h]))
         _ = ε * ‖h‖ := mul_div_cancel' _ two_ne_zero
     calc
       ‖s n‖ ≤ ∑ k in range (n + 1), ‖u k‖ := norm_sum_le _ _
-      _ = (∑ k in range n, ‖u (k + 1)‖) + ‖u 0‖ := (sum_range_succ' _ _)
-      _ ≤ (∑ k in range n, C * ‖v (k + 1)‖) + ‖u 0‖ :=
+      _ = ∑ k in range n, ‖u (k + 1)‖ + ‖u 0‖ := (sum_range_succ' _ _)
+      _ ≤ ∑ k in range n, C * ‖v (k + 1)‖ + ‖u 0‖ :=
         (add_le_add_right (sum_le_sum fun _ _ => hnorm_u _) _)
-      _ ≤ (∑ k in range n, C * b (k + 1)) + (C * b 0 + C * ‖h‖) :=
+      _ ≤ ∑ k in range n, C * b (k + 1) + (C * b 0 + C * ‖h‖) :=
         (add_le_add (sum_le_sum fun k _ => mul_le_mul_of_nonneg_left (hv _ k.succ_pos).le hC.le)
           hnorm₀)
-      _ = (∑ k in range (n + 1), C * b k) + C * ‖h‖ := by rw [← add_assoc, sum_range_succ']
+      _ = ∑ k in range (n + 1), C * b k + C * ‖h‖ := by rw [← add_assoc, sum_range_succ']
       _ ≤ (C + ε) * ‖h‖ := by rw [add_comm, add_mul]; apply add_le_add_left this
 #align controlled_closure_of_complete controlled_closure_of_complete
 

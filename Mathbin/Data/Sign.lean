@@ -542,7 +542,7 @@ open scoped BigOperators
 private theorem exists_signed_sum_aux [DecidableEq α] (s : Finset α) (f : α → ℤ) :
     ∃ (β : Type u_1) (t : Finset β) (sgn : β → SignType) (g : β → α),
       (∀ b, g b ∈ s) ∧
-        (t.card = ∑ a in s, (f a).natAbs) ∧
+        t.card = ∑ a in s, (f a).natAbs ∧
           ∀ a ∈ s, (∑ b in t, if g b = a then (sgn b : ℤ) else 0) = f a :=
   by
   refine'
@@ -557,7 +557,7 @@ private theorem exists_signed_sum_aux [DecidableEq α] (s : Finset α) (f : α �
 theorem exists_signed_sum [DecidableEq α] (s : Finset α) (f : α → ℤ) :
     ∃ (β : Type u_1) (_ : Fintype β) (sgn : β → SignType) (g : β → α),
       (∀ b, g b ∈ s) ∧
-        (Fintype.card β = ∑ a in s, (f a).natAbs) ∧
+        Fintype.card β = ∑ a in s, (f a).natAbs ∧
           ∀ a ∈ s, (∑ b, if g b = a then (sgn b : ℤ) else 0) = f a :=
   let ⟨β, t, sgn, g, hg, ht, hf⟩ := exists_signed_sum_aux s f
   ⟨t, inferInstance, fun b => sgn b, fun b => g b, fun b => hg b, by simp [ht], fun a ha =>
@@ -566,7 +566,7 @@ theorem exists_signed_sum [DecidableEq α] (s : Finset α) (f : α → ℤ) :
 
 /-- We can decompose a sum of absolute value less than `n` into a sum of at most `n` signs. -/
 theorem exists_signed_sum' [Nonempty α] [DecidableEq α] (s : Finset α) (f : α → ℤ) (n : ℕ)
-    (h : (∑ i in s, (f i).natAbs) ≤ n) :
+    (h : ∑ i in s, (f i).natAbs ≤ n) :
     ∃ (β : Type u_1) (_ : Fintype β) (sgn : β → SignType) (g : β → α),
       (∀ b, g b ∉ s → sgn b = 0) ∧
         Fintype.card β = n ∧ ∀ a ∈ s, (∑ i, if g i = a then (sgn i : ℤ) else 0) = f a :=

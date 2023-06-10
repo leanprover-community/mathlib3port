@@ -92,7 +92,7 @@ It is stated for an arbitrary commutative semiring `α`, though it usually suffi
 or `ℝ`.
 -/
 def partialDistinctGf (m : ℕ) [CommSemiring α] :=
-  ∏ i in range m, 1 + (X : PowerSeries α) ^ (i + 1)
+  ∏ i in range m, (1 + (X : PowerSeries α) ^ (i + 1))
 #align theorems_100.partial_distinct_gf Theorems100.partialDistinctGf
 
 /--
@@ -511,10 +511,10 @@ theorem same_gf [Field α] (m : ℕ) :
   induction' m with m ih
   · simp
   rw [Nat.succ_eq_add_one]
-  set π₀ : PowerSeries α := ∏ i in range m, 1 - X ^ (m + 1 + i + 1) with hπ₀
+  set π₀ : PowerSeries α := ∏ i in range m, (1 - X ^ (m + 1 + i + 1)) with hπ₀
   set π₁ : PowerSeries α := ∏ i in range m, (1 - X ^ (2 * i + 1))⁻¹ with hπ₁
-  set π₂ : PowerSeries α := ∏ i in range m, 1 - X ^ (m + i + 1) with hπ₂
-  set π₃ : PowerSeries α := ∏ i in range m, 1 + X ^ (i + 1) with hπ₃
+  set π₂ : PowerSeries α := ∏ i in range m, (1 - X ^ (m + i + 1)) with hπ₂
+  set π₃ : PowerSeries α := ∏ i in range m, (1 + X ^ (i + 1)) with hπ₃
   rw [← hπ₃] at ih 
   have h : constant_coeff α (1 - X ^ (2 * m + 1)) ≠ 0 :=
     by
@@ -522,15 +522,15 @@ theorem same_gf [Field α] (m : ℕ) :
       zero_pow (2 * m).succ_pos, sub_zero]
     exact one_ne_zero
   calc
-    ((∏ i in range (m + 1), (1 - X ^ (2 * i + 1))⁻¹) *
-          ∏ i in range (m + 1), 1 - X ^ (m + 1 + i + 1)) =
+    (∏ i in range (m + 1), (1 - X ^ (2 * i + 1))⁻¹) *
+          ∏ i in range (m + 1), (1 - X ^ (m + 1 + i + 1)) =
         π₁ * (1 - X ^ (2 * m + 1))⁻¹ * (π₀ * (1 - X ^ (m + 1 + m + 1))) :=
       by rw [prod_range_succ _ m, ← hπ₁, prod_range_succ _ m, ← hπ₀]
     _ = π₁ * (1 - X ^ (2 * m + 1))⁻¹ * (π₀ * ((1 + X ^ (m + 1)) * (1 - X ^ (m + 1)))) := by
       rw [← sq_sub_sq, one_pow, add_assoc _ m 1, ← two_mul (m + 1), pow_mul']
     _ = π₀ * (1 - X ^ (m + 1)) * (1 - X ^ (2 * m + 1))⁻¹ * (π₁ * (1 + X ^ (m + 1))) := by ring
     _ =
-        (∏ i in range (m + 1), 1 - X ^ (m + 1 + i)) * (1 - X ^ (2 * m + 1))⁻¹ *
+        (∏ i in range (m + 1), (1 - X ^ (m + 1 + i))) * (1 - X ^ (2 * m + 1))⁻¹ *
           (π₁ * (1 + X ^ (m + 1))) :=
       by rw [prod_range_succ', add_zero, hπ₀]; simp_rw [← add_assoc]
     _ = π₂ * (1 - X ^ (m + 1 + m)) * (1 - X ^ (2 * m + 1))⁻¹ * (π₁ * (1 + X ^ (m + 1))) := by

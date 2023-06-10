@@ -145,8 +145,8 @@ theorem ENNReal.ofReal_cinfi (f : α → ℝ) [Nonempty α] :
 /-- Monotone convergence for an infimum over a directed family and indexed by a countable type -/
 theorem lintegral_iInf_directed_of_measurable {mα : MeasurableSpace α} [Countable β]
     {f : β → α → ℝ≥0∞} {μ : Measure α} (hμ : μ ≠ 0) (hf : ∀ b, Measurable (f b))
-    (hf_int : ∀ b, (∫⁻ a, f b a ∂μ) ≠ ∞) (h_directed : Directed (· ≥ ·) f) :
-    (∫⁻ a, ⨅ b, f b a ∂μ) = ⨅ b, ∫⁻ a, f b a ∂μ :=
+    (hf_int : ∀ b, ∫⁻ a, f b a ∂μ ≠ ∞) (h_directed : Directed (· ≥ ·) f) :
+    ∫⁻ a, ⨅ b, f b a ∂μ = ⨅ b, ∫⁻ a, f b a ∂μ :=
   by
   cases nonempty_encodable β
   cases isEmpty_or_nonempty β
@@ -161,7 +161,7 @@ theorem lintegral_iInf_directed_of_measurable {mα : MeasurableSpace α} [Counta
         (le_iInf fun b => iInf_le_of_le (Encodable.encode b + 1) _)
     exact h_directed.sequence_le b a
   calc
-    (∫⁻ a, ⨅ b, f b a ∂μ) = ∫⁻ a, ⨅ n, f (h_directed.sequence f n) a ∂μ := by simp only [this]
+    ∫⁻ a, ⨅ b, f b a ∂μ = ∫⁻ a, ⨅ n, f (h_directed.sequence f n) a ∂μ := by simp only [this]
     _ = ⨅ n, ∫⁻ a, f (h_directed.sequence f n) a ∂μ :=
       by
       rw [lintegral_infi (fun n => _) h_directed.sequence_anti]
@@ -341,9 +341,9 @@ theorem withDensity_preCdf (ρ : Measure (α × ℝ)) (r : ℚ) [IsFiniteMeasure
 #align probability_theory.with_density_pre_cdf ProbabilityTheory.withDensity_preCdf
 
 theorem set_lintegral_preCdf_fst (ρ : Measure (α × ℝ)) (r : ℚ) {s : Set α} (hs : MeasurableSet s)
-    [IsFiniteMeasure ρ] : (∫⁻ x in s, preCdf ρ r x ∂ρ.fst) = ρ.iicSnd r s :=
+    [IsFiniteMeasure ρ] : ∫⁻ x in s, preCdf ρ r x ∂ρ.fst = ρ.iicSnd r s :=
   by
-  have : ∀ r, (∫⁻ x in s, pre_cdf ρ r x ∂ρ.fst) = ∫⁻ x in s, (pre_cdf ρ r * 1) x ∂ρ.fst := by
+  have : ∀ r, ∫⁻ x in s, pre_cdf ρ r x ∂ρ.fst = ∫⁻ x in s, (pre_cdf ρ r * 1) x ∂ρ.fst := by
     simp only [mul_one, eq_self_iff_true, forall_const]
   rw [this, ← set_lintegral_with_density_eq_set_lintegral_mul _ measurable_pre_cdf _ hs]
   ·
@@ -366,10 +366,10 @@ theorem monotone_preCdf (ρ : Measure (α × ℝ)) [IsFiniteMeasure ρ] :
 #align probability_theory.monotone_pre_cdf ProbabilityTheory.monotone_preCdf
 
 theorem set_lintegral_iInf_gt_preCdf (ρ : Measure (α × ℝ)) [IsFiniteMeasure ρ] (t : ℚ) {s : Set α}
-    (hs : MeasurableSet s) : (∫⁻ x in s, ⨅ r : Ioi t, preCdf ρ r x ∂ρ.fst) = ρ.iicSnd t s :=
+    (hs : MeasurableSet s) : ∫⁻ x in s, ⨅ r : Ioi t, preCdf ρ r x ∂ρ.fst = ρ.iicSnd t s :=
   by
   refine' le_antisymm _ _
-  · have h : ∀ q : Ioi t, (∫⁻ x in s, ⨅ r : Ioi t, pre_cdf ρ r x ∂ρ.fst) ≤ ρ.Iic_snd q s :=
+  · have h : ∀ q : Ioi t, ∫⁻ x in s, ⨅ r : Ioi t, pre_cdf ρ r x ∂ρ.fst ≤ ρ.Iic_snd q s :=
       by
       intro q
       rw [coe_coe, ← set_lintegral_pre_cdf_fst ρ _ hs]
@@ -378,7 +378,7 @@ theorem set_lintegral_iInf_gt_preCdf (ρ : Measure (α × ℝ)) [IsFiniteMeasure
       · filter_upwards [monotone_pre_cdf] with a ha_mono
         exact fun _ => iInf_le _ q
     calc
-      (∫⁻ x in s, ⨅ r : Ioi t, pre_cdf ρ r x ∂ρ.fst) ≤ ⨅ q : Ioi t, ρ.Iic_snd q s := le_iInf h
+      ∫⁻ x in s, ⨅ r : Ioi t, pre_cdf ρ r x ∂ρ.fst ≤ ⨅ q : Ioi t, ρ.Iic_snd q s := le_iInf h
       _ = ρ.Iic_snd t s := measure.infi_Iic_snd_gt ρ t hs
   · rw [(set_lintegral_pre_cdf_fst ρ t hs).symm]
     refine' set_lintegral_mono_ae measurable_pre_cdf _ _
@@ -461,7 +461,7 @@ theorem tendsto_preCdf_atTop_one (ρ : Measure (α × ℝ)) [IsFiniteMeasure ρ]
     rwa [ha_eq] at ha_tendsto 
   -- since `F` is at most 1, proving that its integral is the same as the integral of 1 will tell
   -- us that `F` is 1 a.e.
-  have h_lintegral_eq : (∫⁻ a, F a ∂ρ.fst) = ∫⁻ a, 1 ∂ρ.fst :=
+  have h_lintegral_eq : ∫⁻ a, F a ∂ρ.fst = ∫⁻ a, 1 ∂ρ.fst :=
     by
     have h_lintegral :
       tendsto (fun r : ℕ => ∫⁻ a, pre_cdf ρ r a ∂ρ.fst) at_top (𝓝 (∫⁻ a, F a ∂ρ.fst)) :=
@@ -480,11 +480,11 @@ theorem tendsto_preCdf_atTop_one (ρ : Measure (α × ℝ)) [IsFiniteMeasure ρ]
       rw [lintegral_one, measure.fst_univ]
       exact (tendsto_lintegral_pre_cdf_at_top ρ).comp tendsto_nat_cast_atTop_atTop
     exact tendsto_nhds_unique h_lintegral h_lintegral'
-  have : (∫⁻ a, 1 - F a ∂ρ.fst) = 0 :=
+  have : ∫⁻ a, 1 - F a ∂ρ.fst = 0 :=
     by
     rw [lintegral_sub' hF_ae_meas _ hF_le_one, h_lintegral_eq, tsub_self]
     calc
-      (∫⁻ a, F a ∂ρ.fst) = ∫⁻ a, 1 ∂ρ.fst := h_lintegral_eq
+      ∫⁻ a, F a ∂ρ.fst = ∫⁻ a, 1 ∂ρ.fst := h_lintegral_eq
       _ = ρ.fst univ := lintegral_one
       _ = ρ univ := measure.fst_univ
       _ ≠ ∞ := measure_ne_top ρ _
@@ -528,7 +528,7 @@ theorem tendsto_preCdf_atBot_zero (ρ : Measure (α × ℝ)) [IsFiniteMeasure ρ
     filter_upwards [h_exists] with a ha
     simp_rw [F, dif_pos ha]
     exact ha.some_spec
-  suffices h_lintegral_eq : (∫⁻ a, F a ∂ρ.fst) = 0
+  suffices h_lintegral_eq : ∫⁻ a, F a ∂ρ.fst = 0
   · have hF_ae_meas : AEMeasurable F ρ.fst :=
       by
       refine' aemeasurable_of_tendsto_metrizable_ae _ (fun n => _) h_tendsto
@@ -951,7 +951,7 @@ theorem measurable_condCdf (ρ : Measure (α × ℝ)) (x : ℝ) : Measurable fun
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Auxiliary lemma for `set_lintegral_cond_cdf`. -/
 theorem set_lintegral_condCdf_rat (ρ : Measure (α × ℝ)) [IsFiniteMeasure ρ] (r : ℚ) {s : Set α}
-    (hs : MeasurableSet s) : (∫⁻ a in s, ENNReal.ofReal (condCdf ρ a r) ∂ρ.fst) = ρ (s ×ˢ Iic r) :=
+    (hs : MeasurableSet s) : ∫⁻ a in s, ENNReal.ofReal (condCdf ρ a r) ∂ρ.fst = ρ (s ×ˢ Iic r) :=
   by
   have : ∀ᵐ a ∂ρ.fst, a ∈ s → ENNReal.ofReal (cond_cdf ρ a r) = pre_cdf ρ r a := by
     filter_upwards [of_real_cond_cdf_ae_eq ρ r] with a ha using fun _ => ha
@@ -962,7 +962,7 @@ theorem set_lintegral_condCdf_rat (ρ : Measure (α × ℝ)) [IsFiniteMeasure ρ
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem set_lintegral_condCdf (ρ : Measure (α × ℝ)) [IsFiniteMeasure ρ] (x : ℝ) {s : Set α}
-    (hs : MeasurableSet s) : (∫⁻ a in s, ENNReal.ofReal (condCdf ρ a x) ∂ρ.fst) = ρ (s ×ˢ Iic x) :=
+    (hs : MeasurableSet s) : ∫⁻ a in s, ENNReal.ofReal (condCdf ρ a x) ∂ρ.fst = ρ (s ×ˢ Iic x) :=
   by
   -- We have the result for `x : ℚ` thanks to `set_lintegral_cond_cdf_rat`. We use the equality
   -- `cond_cdf ρ a x = ⨅ r : {r' : ℚ // x < r'}, cond_cdf ρ a r` and a monotone convergence
@@ -976,7 +976,7 @@ theorem set_lintegral_condCdf (ρ : Measure (α × ℝ)) [IsFiniteMeasure ρ] (x
       _ = ρ.fst.restrict s univ := by rw [measure.restrict_apply_univ]
       _ = 0 := by simp only [hρ_zero, measure.coe_zero, Pi.zero_apply]
   have h :
-    (∫⁻ a in s, ENNReal.ofReal (cond_cdf ρ a x) ∂ρ.fst) =
+    ∫⁻ a in s, ENNReal.ofReal (cond_cdf ρ a x) ∂ρ.fst =
       ∫⁻ a in s, ENNReal.ofReal (⨅ r : { r' : ℚ // x < r' }, cond_cdf ρ a r) ∂ρ.fst :=
     by
     congr with a : 1
@@ -1013,7 +1013,7 @@ theorem set_lintegral_condCdf (ρ : Measure (α × ℝ)) [IsFiniteMeasure ρ] (x
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem lintegral_condCdf (ρ : Measure (α × ℝ)) [IsFiniteMeasure ρ] (x : ℝ) :
-    (∫⁻ a, ENNReal.ofReal (condCdf ρ a x) ∂ρ.fst) = ρ (univ ×ˢ Iic x) := by
+    ∫⁻ a, ENNReal.ofReal (condCdf ρ a x) ∂ρ.fst = ρ (univ ×ˢ Iic x) := by
   rw [← set_lintegral_univ, set_lintegral_cond_cdf ρ _ MeasurableSet.univ]
 #align probability_theory.lintegral_cond_cdf ProbabilityTheory.lintegral_condCdf
 
@@ -1042,7 +1042,7 @@ theorem integrable_condCdf (ρ : Measure (α × ℝ)) [IsFiniteMeasure ρ] (x : 
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem set_integral_condCdf (ρ : Measure (α × ℝ)) [IsFiniteMeasure ρ] (x : ℝ) {s : Set α}
-    (hs : MeasurableSet s) : (∫ a in s, condCdf ρ a x ∂ρ.fst) = (ρ (s ×ˢ Iic x)).toReal :=
+    (hs : MeasurableSet s) : ∫ a in s, condCdf ρ a x ∂ρ.fst = (ρ (s ×ˢ Iic x)).toReal :=
   by
   have h := set_lintegral_cond_cdf ρ x hs
   rw [← of_real_integral_eq_lintegral_of_real] at h 
@@ -1054,7 +1054,7 @@ theorem set_integral_condCdf (ρ : Measure (α × ℝ)) [IsFiniteMeasure ρ] (x 
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem integral_condCdf (ρ : Measure (α × ℝ)) [IsFiniteMeasure ρ] (x : ℝ) :
-    (∫ a, condCdf ρ a x ∂ρ.fst) = (ρ (univ ×ˢ Iic x)).toReal := by
+    ∫ a, condCdf ρ a x ∂ρ.fst = (ρ (univ ×ˢ Iic x)).toReal := by
   rw [← set_integral_cond_cdf ρ _ MeasurableSet.univ, measure.restrict_univ]
 #align probability_theory.integral_cond_cdf ProbabilityTheory.integral_condCdf
 

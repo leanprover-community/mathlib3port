@@ -171,7 +171,7 @@ theorem ofFn_blocksFun : ofFn c.blocksFun = c.blocks :=
 -/
 
 #print Composition.sum_blocksFun /-
-theorem sum_blocksFun : (∑ i, c.blocksFun i) = n := by
+theorem sum_blocksFun : ∑ i, c.blocksFun i = n := by
   conv_rhs => rw [← c.blocks_sum, ← of_fn_blocks_fun, sum_of_fn]
 #align composition.sum_blocks_fun Composition.sum_blocksFun
 -/
@@ -710,7 +710,7 @@ theorem ne_single_iff {n : ℕ} (hn : 0 < n) {c : Composition n} :
       by_contra ji
       apply lt_irrefl (∑ k, c.blocks_fun k)
       calc
-        (∑ k, c.blocks_fun k) ≤ c.blocks_fun i := by simp only [c.sum_blocks_fun, hi]
+        ∑ k, c.blocks_fun k ≤ c.blocks_fun i := by simp only [c.sum_blocks_fun, hi]
         _ < ∑ k, c.blocks_fun k :=
           Finset.single_lt_sum ji (Finset.mem_univ _) (Finset.mem_univ _) (c.one_le_blocks_fun j)
             fun _ _ _ => zero_le _

@@ -96,7 +96,7 @@ theorem div_eq_quo_add_sum_rem_div (f : R[X]) {ι : Type _} {g : ι → R[X]} {s
     (hg : ∀ i ∈ s, (g i).Monic) (hcop : Set.Pairwise ↑s fun i j => IsCoprime (g i) (g j)) :
     ∃ (q : R[X]) (r : ι → R[X]),
       (∀ i ∈ s, (r i).degree < (g i).degree) ∧
-        ((↑f : K) / ∏ i in s, ↑(g i)) = ↑q + ∑ i in s, ↑(r i) / ↑(g i) :=
+        (↑f : K) / ∏ i in s, ↑(g i) = ↑q + ∑ i in s, ↑(r i) / ↑(g i) :=
   by
   induction' s using Finset.induction_on with a b hab Hind f generalizing f
   · refine' ⟨f, fun i : ι => (0 : R[X]), fun i => _, by simp⟩

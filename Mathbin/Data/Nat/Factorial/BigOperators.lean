@@ -38,7 +38,7 @@ theorem prod_factorial_pos : 0 < ∏ i in s, (f i)! :=
 -/
 
 #print Nat.prod_factorial_dvd_factorial_sum /-
-theorem prod_factorial_dvd_factorial_sum : (∏ i in s, (f i)!) ∣ (∑ i in s, f i)! := by
+theorem prod_factorial_dvd_factorial_sum : ∏ i in s, (f i)! ∣ (∑ i in s, f i)! := by
   classical
   induction' s using Finset.induction with a' s' has ih
   · simp only [Finset.sum_empty, Finset.prod_empty, factorial]

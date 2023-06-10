@@ -251,7 +251,7 @@ theorem IntegrableOn.hasBoxIntegral [CompleteSpace E] {f : (ι → ℝ) → E} {
   refine' has_integral_of_mul ((μ I).toReal + 1 + 1) fun ε ε0 => _
   lift ε to ℝ≥0 using ε0.le; rw [NNReal.coe_pos] at ε0 ; have ε0' := ENNReal.coe_pos.2 ε0
   -- Choose `N` such that the integral of `‖f N x - g x‖` is less than or equal to `ε`.
-  obtain ⟨N₀, hN₀⟩ : ∃ N : ℕ, (∫ x in I, ‖f N x - g x‖ ∂μ) ≤ ε :=
+  obtain ⟨N₀, hN₀⟩ : ∃ N : ℕ, ∫ x in I, ‖f N x - g x‖ ∂μ ≤ ε :=
     by
     have : tendsto (fun n => ∫⁻ x in I, ‖f n x - g x‖₊ ∂μ) at_top (𝓝 0) :=
       simple_func.tendsto_approx_on_range_L1_nnnorm hg.measurable hgi

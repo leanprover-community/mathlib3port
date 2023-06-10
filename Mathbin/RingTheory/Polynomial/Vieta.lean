@@ -82,7 +82,7 @@ theorem prod_X_add_C_coeff' {σ} (s : Multiset σ) (r : σ → R) {k : ℕ} (h :
 #align multiset.prod_X_add_C_coeff' Multiset.prod_X_add_C_coeff'
 
 theorem Finset.prod_X_add_C_coeff {σ} (s : Finset σ) (r : σ → R) {k : ℕ} (h : k ≤ s.card) :
-    (∏ i in s, X + C (r i)).coeff k = ∑ t in s.powersetLen (s.card - k), ∏ i in t, r i := by
+    (∏ i in s, (X + C (r i))).coeff k = ∑ t in s.powersetLen (s.card - k), ∏ i in t, r i := by
   rw [Finset.prod, prod_X_add_C_coeff' _ r h, Finset.esymm_map_val]; rfl
 #align finset.prod_X_add_C_coeff Finset.prod_X_add_C_coeff
 
@@ -166,7 +166,7 @@ variable (R σ : Type _) [CommSemiring R] [Fintype σ]
 the product of linear terms `λ + X i` is equal to a linear combination of
 the symmetric polynomials `esymm σ R j`. -/
 theorem MvPolynomial.prod_C_add_X_eq_sum_esymm :
-    (∏ i : σ, X + C (MvPolynomial.X i)) =
+    ∏ i : σ, (X + C (MvPolynomial.X i)) =
       ∑ j in range (card σ + 1), C (MvPolynomial.esymm σ R j) * X ^ (card σ - j) :=
   by
   let s := finset.univ.val.map fun i : σ => MvPolynomial.X i
@@ -178,7 +178,7 @@ theorem MvPolynomial.prod_C_add_X_eq_sum_esymm :
 #align mv_polynomial.prod_C_add_X_eq_sum_esymm MvPolynomial.prod_C_add_X_eq_sum_esymm
 
 theorem MvPolynomial.prod_X_add_C_coeff (k : ℕ) (h : k ≤ card σ) :
-    (∏ i : σ, X + C (MvPolynomial.X i)).coeff k = MvPolynomial.esymm σ R (card σ - k) :=
+    (∏ i : σ, (X + C (MvPolynomial.X i))).coeff k = MvPolynomial.esymm σ R (card σ - k) :=
   by
   let s := finset.univ.val.map fun i => (MvPolynomial.X i : MvPolynomial σ R)
   rw [(_ : card σ = s.card)] at h ⊢

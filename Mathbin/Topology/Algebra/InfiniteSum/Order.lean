@@ -35,8 +35,8 @@ variable [Preorder α] [AddCommMonoid α] [TopologicalSpace α] [OrderClosedTopo
   {f : ℕ → α} {c : α}
 
 #print tsum_le_of_sum_range_le /-
-theorem tsum_le_of_sum_range_le (hf : Summable f) (h : ∀ n, (∑ i in range n, f i) ≤ c) :
-    (∑' n, f n) ≤ c :=
+theorem tsum_le_of_sum_range_le (hf : Summable f) (h : ∀ n, ∑ i in range n, f i ≤ c) :
+    ∑' n, f n ≤ c :=
   let ⟨l, hl⟩ := hf
   hl.tsum_eq.symm ▸ le_of_tendsto' hl.tendsto_sum_nat h
 #align tsum_le_of_sum_range_le tsum_le_of_sum_range_le
@@ -63,7 +63,7 @@ theorem hasSum_mono (hf : HasSum f a₁) (hg : HasSum g a₂) (h : f ≤ g) : a�
 -/
 
 #print hasSum_le_of_sum_le /-
-theorem hasSum_le_of_sum_le (hf : HasSum f a) (h : ∀ s, (∑ i in s, f i) ≤ a₂) : a ≤ a₂ :=
+theorem hasSum_le_of_sum_le (hf : HasSum f a) (h : ∀ s, ∑ i in s, f i ≤ a₂) : a ≤ a₂ :=
   le_of_tendsto' hf h
 #align has_sum_le_of_sum_le hasSum_le_of_sum_le
 -/
@@ -108,7 +108,7 @@ theorem tsum_le_tsum_of_inj {g : κ → α} (e : ι → κ) (he : Injective e)
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (i «expr ∉ » s) -/
 theorem sum_le_hasSum (s : Finset ι) (hs : ∀ (i) (_ : i ∉ s), 0 ≤ f i) (hf : HasSum f a) :
-    (∑ i in s, f i) ≤ a :=
+    ∑ i in s, f i ≤ a :=
   ge_of_tendsto hf
     (eventually_atTop.2
       ⟨s, fun t hst => sum_le_sum_of_subset_of_nonneg hst fun i hbt hbs => hs i hbs⟩)
@@ -128,7 +128,7 @@ theorem le_hasSum (hf : HasSum f a) (i : ι) (hb : ∀ (b') (_ : b' ≠ i), 0 �
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (i «expr ∉ » s) -/
 theorem sum_le_tsum {f : ι → α} (s : Finset ι) (hs : ∀ (i) (_ : i ∉ s), 0 ≤ f i) (hf : Summable f) :
-    (∑ i in s, f i) ≤ ∑' i, f i :=
+    ∑ i in s, f i ≤ ∑' i, f i :=
   sum_le_hasSum s hs hf.HasSum
 #align sum_le_tsum sum_le_tsum
 
@@ -139,25 +139,25 @@ theorem le_tsum (hf : Summable f) (i : ι) (hb : ∀ (b') (_ : b' ≠ i), 0 ≤ 
 
 #print tsum_le_tsum /-
 theorem tsum_le_tsum (h : ∀ i, f i ≤ g i) (hf : Summable f) (hg : Summable g) :
-    (∑' i, f i) ≤ ∑' i, g i :=
+    ∑' i, f i ≤ ∑' i, g i :=
   hasSum_le h hf.HasSum hg.HasSum
 #align tsum_le_tsum tsum_le_tsum
 -/
 
 #print tsum_mono /-
 @[mono]
-theorem tsum_mono (hf : Summable f) (hg : Summable g) (h : f ≤ g) : (∑' n, f n) ≤ ∑' n, g n :=
+theorem tsum_mono (hf : Summable f) (hg : Summable g) (h : f ≤ g) : ∑' n, f n ≤ ∑' n, g n :=
   tsum_le_tsum h hf hg
 #align tsum_mono tsum_mono
 -/
 
 #print tsum_le_of_sum_le /-
-theorem tsum_le_of_sum_le (hf : Summable f) (h : ∀ s, (∑ i in s, f i) ≤ a₂) : (∑' i, f i) ≤ a₂ :=
+theorem tsum_le_of_sum_le (hf : Summable f) (h : ∀ s, ∑ i in s, f i ≤ a₂) : ∑' i, f i ≤ a₂ :=
   hasSum_le_of_sum_le hf.HasSum h
 #align tsum_le_of_sum_le tsum_le_of_sum_le
 -/
 
-theorem tsum_le_of_sum_le' (ha₂ : 0 ≤ a₂) (h : ∀ s, (∑ i in s, f i) ≤ a₂) : (∑' i, f i) ≤ a₂ :=
+theorem tsum_le_of_sum_le' (ha₂ : 0 ≤ a₂) (h : ∀ s, ∑ i in s, f i ≤ a₂) : ∑' i, f i ≤ a₂ :=
   by
   by_cases hf : Summable f
   · exact tsum_le_of_sum_le hf h
@@ -180,7 +180,7 @@ theorem tsum_nonneg (h : ∀ i, 0 ≤ g i) : 0 ≤ ∑' i, g i :=
   · simp [tsum_eq_zero_of_not_summable hg]
 #align tsum_nonneg tsum_nonneg
 
-theorem tsum_nonpos (h : ∀ i, f i ≤ 0) : (∑' i, f i) ≤ 0 :=
+theorem tsum_nonpos (h : ∀ i, f i ≤ 0) : ∑' i, f i ≤ 0 :=
   by
   by_cases hf : Summable f
   · exact hf.has_sum.nonpos h
@@ -210,14 +210,13 @@ theorem hasSum_strict_mono (hf : HasSum f a₁) (hg : HasSum g a₂) (h : f < g)
 -/
 
 theorem tsum_lt_tsum (h : f ≤ g) (hi : f i < g i) (hf : Summable f) (hg : Summable g) :
-    (∑' n, f n) < ∑' n, g n :=
+    ∑' n, f n < ∑' n, g n :=
   hasSum_lt h hi hf.HasSum hg.HasSum
 #align tsum_lt_tsum tsum_lt_tsum
 
 #print tsum_strict_mono /-
 @[mono]
-theorem tsum_strict_mono (hf : Summable f) (hg : Summable g) (h : f < g) :
-    (∑' n, f n) < ∑' n, g n :=
+theorem tsum_strict_mono (hf : Summable f) (hg : Summable g) (h : f < g) : ∑' n, f n < ∑' n, g n :=
   let ⟨hle, i, hi⟩ := Pi.lt_def.mp h
   tsum_lt_tsum hle hi hf hg
 #align tsum_strict_mono tsum_strict_mono
@@ -265,11 +264,11 @@ theorem hasSum_zero_iff : HasSum f 0 ↔ ∀ x, f x = 0 :=
     exact funext h
 #align has_sum_zero_iff hasSum_zero_iff
 
-theorem tsum_eq_zero_iff (hf : Summable f) : (∑' i, f i) = 0 ↔ ∀ x, f x = 0 := by
+theorem tsum_eq_zero_iff (hf : Summable f) : ∑' i, f i = 0 ↔ ∀ x, f x = 0 := by
   rw [← hasSum_zero_iff, hf.has_sum_iff]
 #align tsum_eq_zero_iff tsum_eq_zero_iff
 
-theorem tsum_ne_zero_iff (hf : Summable f) : (∑' i, f i) ≠ 0 ↔ ∃ x, f x ≠ 0 := by
+theorem tsum_ne_zero_iff (hf : Summable f) : ∑' i, f i ≠ 0 ↔ ∃ x, f x ≠ 0 := by
   rw [Ne.def, tsum_eq_zero_iff hf, not_forall]
 #align tsum_ne_zero_iff tsum_ne_zero_iff
 

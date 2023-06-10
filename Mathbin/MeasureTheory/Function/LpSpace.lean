@@ -677,7 +677,7 @@ theorem snorm_indicator_eq_snorm_restrict {f : α → F} (hs : MeasurableSet s) 
   · simp_rw [hp_top, snorm_exponent_top]
     exact snorm_ess_sup_indicator_eq_snorm_ess_sup_restrict hs
   simp_rw [snorm_eq_lintegral_rpow_nnnorm hp_zero hp_top]
-  suffices (∫⁻ x, ‖s.indicator f x‖₊ ^ p.to_real ∂μ) = ∫⁻ x in s, ‖f x‖₊ ^ p.to_real ∂μ by rw [this]
+  suffices ∫⁻ x, ‖s.indicator f x‖₊ ^ p.to_real ∂μ = ∫⁻ x in s, ‖f x‖₊ ^ p.to_real ∂μ by rw [this]
   rw [← lintegral_indicator _ hs]
   congr
   simp_rw [nnnorm_indicator_eq_indicator_nnnorm, ENNReal.coe_indicator]
@@ -1202,7 +1202,7 @@ theorem snorm'_lim_eq_lintegral_liminf {ι} [Nonempty ι] [LinearOrder ι] {f : 
     snorm' f_lim p μ = (∫⁻ a, atTop.liminf fun m => (‖f m a‖₊ : ℝ≥0∞) ^ p ∂μ) ^ (1 / p) :=
   by
   suffices h_no_pow :
-    (∫⁻ a, ‖f_lim a‖₊ ^ p ∂μ) = ∫⁻ a, at_top.liminf fun m => (‖f m a‖₊ : ℝ≥0∞) ^ p ∂μ
+    ∫⁻ a, ‖f_lim a‖₊ ^ p ∂μ = ∫⁻ a, at_top.liminf fun m => (‖f m a‖₊ : ℝ≥0∞) ^ p ∂μ
   · rw [snorm', h_no_pow]
   refine' lintegral_congr_ae (h_lim.mono fun a ha => _)
   rw [tendsto.liminf_eq]
@@ -1328,7 +1328,7 @@ theorem cauchySeq_Lp_iff_cauchySeq_ℒp {ι} [Nonempty ι] [SemilatticeSup ι] [
 
 theorem completeSpace_lp_of_cauchy_complete_ℒp [hp : Fact (1 ≤ p)]
     (H :
-      ∀ (f : ℕ → α → E) (hf : ∀ n, Memℒp (f n) p μ) (B : ℕ → ℝ≥0∞) (hB : (∑' i, B i) < ∞)
+      ∀ (f : ℕ → α → E) (hf : ∀ n, Memℒp (f n) p μ) (B : ℕ → ℝ≥0∞) (hB : ∑' i, B i < ∞)
         (h_cau : ∀ N n m : ℕ, N ≤ n → N ≤ m → snorm (f n - f m) p μ < B N),
         ∃ (f_lim : α → E) (hf_lim_meas : Memℒp f_lim p μ),
           atTop.Tendsto (fun n => snorm (f n - f_lim) p μ) (𝓝 0)) :
@@ -1346,14 +1346,14 @@ theorem completeSpace_lp_of_cauchy_complete_ℒp [hp : Fact (1 ≤ p)]
   let B1 n := ENNReal.ofReal (B n)
   have hB1_has : HasSum B1 (ENNReal.ofReal M) :=
     by
-    have h_tsum_B1 : (∑' i, B1 i) = ENNReal.ofReal M :=
+    have h_tsum_B1 : ∑' i, B1 i = ENNReal.ofReal M :=
       by
-      change (∑' n : ℕ, ENNReal.ofReal (B n)) = ENNReal.ofReal M
+      change ∑' n : ℕ, ENNReal.ofReal (B n) = ENNReal.ofReal M
       rw [← hB.tsum_eq]
       exact (ENNReal.ofReal_tsum_of_nonneg (fun n => le_of_lt (hB_pos n)) hB.summable).symm
     have h_sum := (@ENNReal.summable _ B1).HasSum
     rwa [h_tsum_B1] at h_sum 
-  have hB1 : (∑' i, B1 i) < ∞ := by rw [hB1_has.tsum_eq]; exact ENNReal.ofReal_lt_top
+  have hB1 : ∑' i, B1 i < ∞ := by rw [hB1_has.tsum_eq]; exact ENNReal.ofReal_lt_top
   let f1 : ℕ → α → E := fun n => f n
   refine' H f1 (fun n => Lp.mem_ℒp (f n)) B1 hB1 fun N n m hn hm => _
   specialize hf N n m hn hm
@@ -1387,7 +1387,7 @@ private theorem snorm'_sum_norm_sub_le_tsum_of_cauchy_snorm' {f : ℕ → α →
 private theorem lintegral_rpow_sum_coe_nnnorm_sub_le_rpow_tsum {f : ℕ → α → E}
     (hf : ∀ n, AEStronglyMeasurable (f n) μ) {p : ℝ} (hp1 : 1 ≤ p) {B : ℕ → ℝ≥0∞} (n : ℕ)
     (hn : snorm' (fun x => ∑ i in Finset.range (n + 1), ‖f (i + 1) x - f i x‖) p μ ≤ ∑' i, B i) :
-    (∫⁻ a, (∑ i in Finset.range (n + 1), ‖f (i + 1) a - f i a‖₊ : ℝ≥0∞) ^ p ∂μ) ≤ (∑' i, B i) ^ p :=
+    ∫⁻ a, (∑ i in Finset.range (n + 1), ‖f (i + 1) a - f i a‖₊ : ℝ≥0∞) ^ p ∂μ ≤ (∑' i, B i) ^ p :=
   by
   have hp_pos : 0 < p := zero_lt_one.trans_le hp1
   rw [← one_div_one_div p, @ENNReal.le_rpow_one_div_iff _ _ (1 / p) (by simp [hp_pos]),
@@ -1415,20 +1415,20 @@ private theorem lintegral_rpow_tsum_coe_nnnorm_sub_le_tsum {f : ℕ → α → E
     (hf : ∀ n, AEStronglyMeasurable (f n) μ) {p : ℝ} (hp1 : 1 ≤ p) {B : ℕ → ℝ≥0∞}
     (h :
       ∀ n,
-        (∫⁻ a, (∑ i in Finset.range (n + 1), ‖f (i + 1) a - f i a‖₊ : ℝ≥0∞) ^ p ∂μ) ≤
+        ∫⁻ a, (∑ i in Finset.range (n + 1), ‖f (i + 1) a - f i a‖₊ : ℝ≥0∞) ^ p ∂μ ≤
           (∑' i, B i) ^ p) :
     (∫⁻ a, (∑' i, ‖f (i + 1) a - f i a‖₊ : ℝ≥0∞) ^ p ∂μ) ^ (1 / p) ≤ ∑' i, B i :=
   by
   have hp_pos : 0 < p := zero_lt_one.trans_le hp1
-  suffices h_pow : (∫⁻ a, (∑' i, ‖f (i + 1) a - f i a‖₊ : ℝ≥0∞) ^ p ∂μ) ≤ (∑' i, B i) ^ p
+  suffices h_pow : ∫⁻ a, (∑' i, ‖f (i + 1) a - f i a‖₊ : ℝ≥0∞) ^ p ∂μ ≤ (∑' i, B i) ^ p
   · rwa [← ENNReal.le_rpow_one_div_iff (by simp [hp_pos] : 0 < 1 / p), one_div_one_div]
   have h_tsum_1 :
-    ∀ g : ℕ → ℝ≥0∞, (∑' i, g i) = at_top.liminf fun n => ∑ i in Finset.range (n + 1), g i := by
+    ∀ g : ℕ → ℝ≥0∞, ∑' i, g i = at_top.liminf fun n => ∑ i in Finset.range (n + 1), g i := by
     intro g; rw [ENNReal.tsum_eq_liminf_sum_nat, ← liminf_nat_add _ 1]
   simp_rw [h_tsum_1 _]
   rw [← h_tsum_1]
   have h_liminf_pow :
-    (∫⁻ a, (at_top.liminf fun n => ∑ i in Finset.range (n + 1), ‖f (i + 1) a - f i a‖₊) ^ p ∂μ) =
+    ∫⁻ a, (at_top.liminf fun n => ∑ i in Finset.range (n + 1), ‖f (i + 1) a - f i a‖₊) ^ p ∂μ =
       ∫⁻ a, at_top.liminf fun n => (∑ i in Finset.range (n + 1), ‖f (i + 1) a - f i a‖₊) ^ p ∂μ :=
     by
     refine' lintegral_congr fun x => _
@@ -1448,12 +1448,12 @@ private theorem lintegral_rpow_tsum_coe_nnnorm_sub_le_tsum {f : ℕ → α → E
   · exact liminf_le_of_frequently_le' (frequently_of_forall h)
 
 private theorem tsum_nnnorm_sub_ae_lt_top {f : ℕ → α → E} (hf : ∀ n, AEStronglyMeasurable (f n) μ)
-    {p : ℝ} (hp1 : 1 ≤ p) {B : ℕ → ℝ≥0∞} (hB : (∑' i, B i) ≠ ∞)
+    {p : ℝ} (hp1 : 1 ≤ p) {B : ℕ → ℝ≥0∞} (hB : ∑' i, B i ≠ ∞)
     (h : (∫⁻ a, (∑' i, ‖f (i + 1) a - f i a‖₊ : ℝ≥0∞) ^ p ∂μ) ^ (1 / p) ≤ ∑' i, B i) :
     ∀ᵐ x ∂μ, (∑' i, ‖f (i + 1) x - f i x‖₊ : ℝ≥0∞) < ∞ :=
   by
   have hp_pos : 0 < p := zero_lt_one.trans_le hp1
-  have h_integral : (∫⁻ a, (∑' i, ‖f (i + 1) a - f i a‖₊ : ℝ≥0∞) ^ p ∂μ) < ∞ :=
+  have h_integral : ∫⁻ a, (∑' i, ‖f (i + 1) a - f i a‖₊ : ℝ≥0∞) ^ p ∂μ < ∞ :=
     by
     have h_tsum_lt_top : (∑' i, B i) ^ p < ∞ := ENNReal.rpow_lt_top_of_nonneg hp_pos.le hB
     refine' lt_of_le_of_lt _ h_tsum_lt_top
@@ -1467,7 +1467,7 @@ private theorem tsum_nnnorm_sub_ae_lt_top {f : ℕ → α → E} (hf : ∀ n, AE
     ENNReal.top_rpow_of_pos (by simp [hp_pos] : 0 < 1 / p)] at hx 
 
 theorem ae_tendsto_of_cauchy_snorm' [CompleteSpace E] {f : ℕ → α → E} {p : ℝ}
-    (hf : ∀ n, AEStronglyMeasurable (f n) μ) (hp1 : 1 ≤ p) {B : ℕ → ℝ≥0∞} (hB : (∑' i, B i) ≠ ∞)
+    (hf : ∀ n, AEStronglyMeasurable (f n) μ) (hp1 : 1 ≤ p) {B : ℕ → ℝ≥0∞} (hB : ∑' i, B i ≠ ∞)
     (h_cau : ∀ N n m : ℕ, N ≤ n → N ≤ m → snorm' (f n - f m) p μ < B N) :
     ∀ᵐ x ∂μ, ∃ l : E, atTop.Tendsto (fun n => f n x) (𝓝 l) :=
   by
@@ -1478,7 +1478,7 @@ theorem ae_tendsto_of_cauchy_snorm' [CompleteSpace E] {f : ℕ → α → E} {p 
       snorm'_sum_norm_sub_le_tsum_of_cauchy_snorm' hf hp1 h_cau
     have h2 :
       ∀ n,
-        (∫⁻ a, (∑ i in Finset.range (n + 1), ‖f (i + 1) a - f i a‖₊ : ℝ≥0∞) ^ p ∂μ) ≤
+        ∫⁻ a, (∑ i in Finset.range (n + 1), ‖f (i + 1) a - f i a‖₊ : ℝ≥0∞) ^ p ∂μ ≤
           (∑' i, B i) ^ p :=
       fun n => lintegral_rpow_sum_coe_nnnorm_sub_le_rpow_tsum hf hp1 n (h1 n)
     have h3 : (∫⁻ a, (∑' i, ‖f (i + 1) a - f i a‖₊ : ℝ≥0∞) ^ p ∂μ) ^ (1 / p) ≤ ∑' i, B i :=
@@ -1490,18 +1490,20 @@ theorem ae_tendsto_of_cauchy_snorm' [CompleteSpace E] {f : ℕ → α → E} {p 
         summable_of_summable_nnnorm
           (ennreal.tsum_coe_ne_top_iff_summable.mp (lt_top_iff_ne_top.mp hx))
   have h :
-    ∀ᵐ x ∂μ, ∃ l : E, at_top.tendsto (fun n => ∑ i in Finset.range n, f (i + 1) x - f i x) (𝓝 l) :=
+    ∀ᵐ x ∂μ,
+      ∃ l : E, at_top.tendsto (fun n => ∑ i in Finset.range n, (f (i + 1) x - f i x)) (𝓝 l) :=
     by
     refine' h_summable.mono fun x hx => _
     let hx_sum := hx.has_sum.tendsto_sum_nat
-    exact ⟨∑' i, f (i + 1) x - f i x, hx_sum⟩
+    exact ⟨∑' i, (f (i + 1) x - f i x), hx_sum⟩
   refine' h.mono fun x hx => _
   cases' hx with l hx
-  have h_rw_sum : (fun n => ∑ i in Finset.range n, f (i + 1) x - f i x) = fun n => f n x - f 0 x :=
+  have h_rw_sum :
+    (fun n => ∑ i in Finset.range n, (f (i + 1) x - f i x)) = fun n => f n x - f 0 x :=
     by
     ext1 n
     change
-      (∑ i : ℕ in Finset.range n, (fun m => f m x) (i + 1) - (fun m => f m x) i) = f n x - f 0 x
+      ∑ i : ℕ in Finset.range n, ((fun m => f m x) (i + 1) - (fun m => f m x) i) = f n x - f 0 x
     rw [Finset.sum_range_sub]
   rw [h_rw_sum] at hx 
   have hf_rw : (fun n => f n x) = fun n => f n x - f 0 x + f 0 x := by ext1 n; abel
@@ -1510,7 +1512,7 @@ theorem ae_tendsto_of_cauchy_snorm' [CompleteSpace E] {f : ℕ → α → E} {p 
 #align measure_theory.Lp.ae_tendsto_of_cauchy_snorm' MeasureTheory.Lp.ae_tendsto_of_cauchy_snorm'
 
 theorem ae_tendsto_of_cauchy_snorm [CompleteSpace E] {f : ℕ → α → E}
-    (hf : ∀ n, AEStronglyMeasurable (f n) μ) (hp : 1 ≤ p) {B : ℕ → ℝ≥0∞} (hB : (∑' i, B i) ≠ ∞)
+    (hf : ∀ n, AEStronglyMeasurable (f n) μ) (hp : 1 ≤ p) {B : ℕ → ℝ≥0∞} (hB : ∑' i, B i ≠ ∞)
     (h_cau : ∀ N n m : ℕ, N ≤ n → N ≤ m → snorm (f n - f m) p μ < B N) :
     ∀ᵐ x ∂μ, ∃ l : E, atTop.Tendsto (fun n => f n x) (𝓝 l) :=
   by
@@ -1546,7 +1548,7 @@ theorem ae_tendsto_of_cauchy_snorm [CompleteSpace E] {f : ℕ → α → E}
 #align measure_theory.Lp.ae_tendsto_of_cauchy_snorm MeasureTheory.Lp.ae_tendsto_of_cauchy_snorm
 
 theorem cauchy_tendsto_of_tendsto {f : ℕ → α → E} (hf : ∀ n, AEStronglyMeasurable (f n) μ)
-    (f_lim : α → E) {B : ℕ → ℝ≥0∞} (hB : (∑' i, B i) ≠ ∞)
+    (f_lim : α → E) {B : ℕ → ℝ≥0∞} (hB : ∑' i, B i ≠ ∞)
     (h_cau : ∀ N n m : ℕ, N ≤ n → N ≤ m → snorm (f n - f m) p μ < B N)
     (h_lim : ∀ᵐ x : α ∂μ, Tendsto (fun n => f n x) atTop (𝓝 (f_lim x))) :
     atTop.Tendsto (fun n => snorm (f n - f_lim) p μ) (𝓝 0) :=
@@ -1592,7 +1594,7 @@ theorem memℒp_of_cauchy_tendsto (hp : 1 ≤ p) {f : ℕ → α → E} (hf : �
 #align measure_theory.Lp.mem_ℒp_of_cauchy_tendsto MeasureTheory.Lp.memℒp_of_cauchy_tendsto
 
 theorem cauchy_complete_ℒp [CompleteSpace E] (hp : 1 ≤ p) {f : ℕ → α → E}
-    (hf : ∀ n, Memℒp (f n) p μ) {B : ℕ → ℝ≥0∞} (hB : (∑' i, B i) ≠ ∞)
+    (hf : ∀ n, Memℒp (f n) p μ) {B : ℕ → ℝ≥0∞} (hB : ∑' i, B i ≠ ∞)
     (h_cau : ∀ N n m : ℕ, N ≤ n → N ≤ m → snorm (f n - f m) p μ < B N) :
     ∃ (f_lim : α → E) (hf_lim_meas : Memℒp f_lim p μ),
       atTop.Tendsto (fun n => snorm (f n - f_lim) p μ) (𝓝 0) :=

@@ -41,11 +41,11 @@ variable (hy : AntitoneOn y (Finset.Icc 1 n))
 include hx hy hσ
 
 theorem imo1975_q1 :
-    (∑ i in Finset.Icc 1 n, (x i - y i) ^ 2) ≤ ∑ i in Finset.Icc 1 n, (x i - y (σ i)) ^ 2 :=
+    ∑ i in Finset.Icc 1 n, (x i - y i) ^ 2 ≤ ∑ i in Finset.Icc 1 n, (x i - y (σ i)) ^ 2 :=
   by
   simp only [sub_sq, Finset.sum_add_distrib, Finset.sum_sub_distrib]
   -- a finite sum is invariant if we permute the order of summation
-  have hσy : (∑ i : ℕ in Finset.Icc 1 n, y i ^ 2) = ∑ i : ℕ in Finset.Icc 1 n, y (σ i) ^ 2 := by
+  have hσy : ∑ i : ℕ in Finset.Icc 1 n, y i ^ 2 = ∑ i : ℕ in Finset.Icc 1 n, y (σ i) ^ 2 := by
     rw [← Equiv.Perm.sum_comp σ (Finset.Icc 1 n) _ hσ]
   -- let's cancel terms appearing on both sides
   norm_num [hσy, mul_assoc, ← Finset.mul_sum]

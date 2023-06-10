@@ -674,7 +674,7 @@ more easily. -/
 theorem compChangeOfVariables_sum {α : Type _} [AddCommMonoid α] (m M N : ℕ)
     (f : (Σ n : ℕ, Fin n → ℕ) → α) (g : (Σ n, Composition n) → α)
     (h : ∀ (e) (he : e ∈ compPartialSumSource m M N), f e = g (compChangeOfVariables m M N e he)) :
-    (∑ e in compPartialSumSource m M N, f e) = ∑ e in compPartialSumTarget m M N, g e :=
+    ∑ e in compPartialSumSource m M N, f e = ∑ e in compPartialSumTarget m M N, g e :=
   by
   apply Finset.sum_bij (comp_change_of_variables m M N)
   -- We should show that the correspondance we have set up is indeed a bijection
@@ -1219,7 +1219,7 @@ theorem comp_assoc (r : FormalMultilinearSeries 𝕜 G H) (q : FormalMultilinear
   let g : (Σ c : Composition n, ∀ i : Fin c.length, Composition (c.blocksFun i)) → H := fun c =>
     r c.1.length fun i : Fin c.1.length =>
       q (c.2 i).length (apply_composition p (c.2 i) (v ∘ c.1.Embedding i))
-  suffices (∑ c, f c) = ∑ c, g c by
+  suffices ∑ c, f c = ∑ c, g c by
     simpa only [FormalMultilinearSeries.comp, ContinuousMultilinearMap.sum_apply,
       comp_along_composition_apply, ContinuousMultilinearMap.map_sum, Finset.sum_sigma',
       apply_composition]

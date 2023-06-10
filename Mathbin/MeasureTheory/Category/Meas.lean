@@ -131,7 +131,7 @@ def Integral : Giry.Algebra where
   assoc' :=
     Subtype.eq <|
       funext fun μ : Measure (Measure ℝ≥0∞) =>
-        show (∫⁻ x, x ∂μ.join) = ∫⁻ x, x ∂Measure.map (fun m : Measure ℝ≥0∞ => ∫⁻ x, x ∂m) μ by
+        show ∫⁻ x, x ∂μ.join = ∫⁻ x, x ∂Measure.map (fun m : Measure ℝ≥0∞ => ∫⁻ x, x ∂m) μ by
           rw [measure.lintegral_join, lintegral_map] <;>
             apply_rules [measurable_id, measure.measurable_lintegral]
 #align Meas.Integral MeasCat.Integral

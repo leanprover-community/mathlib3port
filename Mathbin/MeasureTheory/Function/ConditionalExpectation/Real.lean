@@ -105,7 +105,7 @@ theorem snorm_one_condexp_le_snorm (f : α → ℝ) : snorm (μ[f|m]) 1 μ ≤ s
       exact abs_eq_self.2 hx
 #align measure_theory.snorm_one_condexp_le_snorm MeasureTheory.snorm_one_condexp_le_snorm
 
-theorem integral_abs_condexp_le (f : α → ℝ) : (∫ x, |(μ[f|m]) x| ∂μ) ≤ ∫ x, |f x| ∂μ :=
+theorem integral_abs_condexp_le (f : α → ℝ) : ∫ x, |(μ[f|m]) x| ∂μ ≤ ∫ x, |f x| ∂μ :=
   by
   by_cases hm : m ≤ m0
   swap
@@ -131,7 +131,7 @@ theorem integral_abs_condexp_le (f : α → ℝ) : (∫ x, |(μ[f|m]) x| ∂μ) 
 #align measure_theory.integral_abs_condexp_le MeasureTheory.integral_abs_condexp_le
 
 theorem set_integral_abs_condexp_le {s : Set α} (hs : measurable_set[m] s) (f : α → ℝ) :
-    (∫ x in s, |(μ[f|m]) x| ∂μ) ≤ ∫ x in s, |f x| ∂μ :=
+    ∫ x in s, |(μ[f|m]) x| ∂μ ≤ ∫ x in s, |f x| ∂μ :=
   by
   by_cases hnm : m ≤ m0
   swap
@@ -142,7 +142,7 @@ theorem set_integral_abs_condexp_le {s : Set α} (hs : measurable_set[m] s) (f :
   · simp only [condexp_undef hfint, Pi.zero_apply, abs_zero, integral_const, Algebra.id.smul_eq_mul,
       MulZeroClass.mul_zero]
     exact integral_nonneg fun x => abs_nonneg _
-  have : (∫ x in s, |(μ[f|m]) x| ∂μ) = ∫ x, |(μ[s.indicator f|m]) x| ∂μ :=
+  have : ∫ x in s, |(μ[f|m]) x| ∂μ = ∫ x, |(μ[s.indicator f|m]) x| ∂μ :=
     by
     rw [← integral_indicator]
     swap; · exact hnm _ hs

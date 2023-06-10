@@ -141,7 +141,7 @@ theorem polarCoord_source_ae_eq_univ : polarCoord.source =ᵐ[volume] univ :=
 #print integral_comp_polarCoord_symm /-
 theorem integral_comp_polarCoord_symm {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E]
     [CompleteSpace E] (f : ℝ × ℝ → E) :
-    (∫ p in polarCoord.target, p.1 • f (polarCoord.symm p)) = ∫ p, f p :=
+    ∫ p in polarCoord.target, p.1 • f (polarCoord.symm p) = ∫ p, f p :=
   by
   set B : ℝ × ℝ → ℝ × ℝ →L[ℝ] ℝ × ℝ := fun p =>
     (Matrix.toLin (Basis.finTwoProd ℝ) (Basis.finTwoProd ℝ)
@@ -157,7 +157,7 @@ theorem integral_comp_polarCoord_symm {E : Type _} [NormedAddCommGroup E] [Norme
     ring
   symm
   calc
-    (∫ p, f p) = ∫ p in polar_coord.source, f p :=
+    ∫ p, f p = ∫ p in polar_coord.source, f p :=
       by
       rw [← integral_univ]
       apply set_integral_congr_set_ae

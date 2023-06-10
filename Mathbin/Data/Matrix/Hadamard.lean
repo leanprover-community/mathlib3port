@@ -151,7 +151,7 @@ variable [Fintype m] [Fintype n]
 
 variable (R) [Semiring α] [Semiring R] [Module R α]
 
-theorem sum_hadamard_eq : (∑ (i : m) (j : n), (A ⊙ B) i j) = trace (A ⬝ Bᵀ) :=
+theorem sum_hadamard_eq : ∑ (i : m) (j : n), (A ⊙ B) i j = trace (A ⬝ Bᵀ) :=
   rfl
 #align matrix.sum_hadamard_eq Matrix.sum_hadamard_eq
 

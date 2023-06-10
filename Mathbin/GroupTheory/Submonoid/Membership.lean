@@ -100,7 +100,7 @@ theorem multiset_prod_mem {M} [CommMonoid M] [SetLike B M] [SubmonoidClass B M] 
 @[to_additive
       "Sum of elements in an `add_submonoid` of an `add_comm_monoid` indexed by a `finset`\nis in the `add_submonoid`."]
 theorem prod_mem {M : Type _} [CommMonoid M] [SetLike B M] [SubmonoidClass B M] {ι : Type _}
-    {t : Finset ι} {f : ι → M} (h : ∀ c ∈ t, f c ∈ S) : (∏ c in t, f c) ∈ S :=
+    {t : Finset ι} {f : ι → M} (h : ∀ c ∈ t, f c ∈ S) : ∏ c in t, f c ∈ S :=
   multiset_prod_mem (t.1.map f) fun x hx =>
     let ⟨i, hi, hix⟩ := Multiset.mem_map.1 hx
     hix ▸ h i hi
@@ -162,7 +162,7 @@ theorem multiset_noncommProd_mem (S : Submonoid M) (m : Multiset M) (comm) (h : 
 @[to_additive
       "Sum of elements in an `add_submonoid` of an `add_comm_monoid` indexed by a `finset`\nis in the `add_submonoid`."]
 theorem prod_mem {M : Type _} [CommMonoid M] (S : Submonoid M) {ι : Type _} {t : Finset ι}
-    {f : ι → M} (h : ∀ c ∈ t, f c ∈ S) : (∏ c in t, f c) ∈ S :=
+    {f : ι → M} (h : ∀ c ∈ t, f c ∈ S) : ∏ c in t, f c ∈ S :=
   S.multiset_prod_mem (t.1.map f) fun x hx =>
     let ⟨i, hi, hix⟩ := Multiset.mem_map.1 hx
     hix ▸ h i hi

@@ -1141,7 +1141,7 @@ variable {f : Filtration ℕ m} {u : ℕ → Ω → β} {τ π : Ω → ℕ}
 
 theorem stoppedValue_sub_eq_sum [AddCommGroup β] (hle : τ ≤ π) :
     stoppedValue u π - stoppedValue u τ = fun ω =>
-      (∑ i in Finset.Ico (τ ω) (π ω), u (i + 1) - u i) ω :=
+      (∑ i in Finset.Ico (τ ω) (π ω), (u (i + 1) - u i)) ω :=
   by
   ext ω
   rw [Finset.sum_Ico_eq_sub _ (hle ω), Finset.sum_range_sub, Finset.sum_range_sub]

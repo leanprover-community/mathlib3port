@@ -117,7 +117,7 @@ theorem integrable (hf : Martingale f ℱ μ) (i : ι) : Integrable (f i) μ :=
 #align measure_theory.martingale.integrable MeasureTheory.Martingale.integrable
 
 theorem set_integral_eq [SigmaFiniteFiltration μ ℱ] (hf : Martingale f ℱ μ) {i j : ι} (hij : i ≤ j)
-    {s : Set Ω} (hs : measurable_set[ℱ i] s) : (∫ ω in s, f i ω ∂μ) = ∫ ω in s, f j ω ∂μ :=
+    {s : Set Ω} (hs : measurable_set[ℱ i] s) : ∫ ω in s, f i ω ∂μ = ∫ ω in s, f j ω ∂μ :=
   by
   rw [← @set_integral_condexp _ _ _ _ _ (ℱ i) m0 _ _ _ (ℱ.le i) _ (hf.integrable j) hs]
   refine' set_integral_congr_ae (ℱ.le i s hs) _
@@ -191,7 +191,7 @@ theorem condexp_ae_le [LE E] (hf : Supermartingale f ℱ μ) {i j : ι} (hij : i
 
 theorem set_integral_le [SigmaFiniteFiltration μ ℱ] {f : ι → Ω → ℝ} (hf : Supermartingale f ℱ μ)
     {i j : ι} (hij : i ≤ j) {s : Set Ω} (hs : measurable_set[ℱ i] s) :
-    (∫ ω in s, f j ω ∂μ) ≤ ∫ ω in s, f i ω ∂μ :=
+    ∫ ω in s, f j ω ∂μ ≤ ∫ ω in s, f i ω ∂μ :=
   by
   rw [← set_integral_condexp (ℱ.le i) (hf.integrable j) hs]
   refine' set_integral_mono_ae integrable_condexp.integrable_on (hf.integrable i).IntegrableOn _
@@ -273,7 +273,7 @@ theorem neg [Preorder E] [CovariantClass E E (· + ·) (· ≤ ·)] (hf : Submar
 /-- The converse of this lemma is `measure_theory.submartingale_of_set_integral_le`. -/
 theorem set_integral_le [SigmaFiniteFiltration μ ℱ] {f : ι → Ω → ℝ} (hf : Submartingale f ℱ μ)
     {i j : ι} (hij : i ≤ j) {s : Set Ω} (hs : measurable_set[ℱ i] s) :
-    (∫ ω in s, f i ω ∂μ) ≤ ∫ ω in s, f j ω ∂μ :=
+    ∫ ω in s, f i ω ∂μ ≤ ∫ ω in s, f j ω ∂μ :=
   by
   rw [← neg_le_neg_iff, ← integral_neg, ← integral_neg]
   exact supermartingale.set_integral_le hf.neg hij hs
@@ -320,7 +320,7 @@ theorem submartingale_of_set_integral_le [IsFiniteMeasure μ] {f : ι → Ω →
     (hint : ∀ i, Integrable (f i) μ)
     (hf :
       ∀ i j : ι,
-        i ≤ j → ∀ s : Set Ω, measurable_set[ℱ i] s → (∫ ω in s, f i ω ∂μ) ≤ ∫ ω in s, f j ω ∂μ) :
+        i ≤ j → ∀ s : Set Ω, measurable_set[ℱ i] s → ∫ ω in s, f i ω ∂μ ≤ ∫ ω in s, f j ω ∂μ) :
     Submartingale f ℱ μ := by
   refine' ⟨hadp, fun i j hij => _, hint⟩
   suffices f i ≤ᵐ[μ.trim (ℱ.le i)] μ[f j|ℱ i] by exact ae_le_of_ae_le_trim this
@@ -437,8 +437,7 @@ variable {𝒢 : Filtration ℕ m0}
 
 theorem submartingale_of_set_integral_le_succ [IsFiniteMeasure μ] {f : ℕ → Ω → ℝ}
     (hadp : Adapted 𝒢 f) (hint : ∀ i, Integrable (f i) μ)
-    (hf :
-      ∀ i, ∀ s : Set Ω, measurable_set[𝒢 i] s → (∫ ω in s, f i ω ∂μ) ≤ ∫ ω in s, f (i + 1) ω ∂μ) :
+    (hf : ∀ i, ∀ s : Set Ω, measurable_set[𝒢 i] s → ∫ ω in s, f i ω ∂μ ≤ ∫ ω in s, f (i + 1) ω ∂μ) :
     Submartingale f 𝒢 μ :=
   by
   refine' submartingale_of_set_integral_le hadp hint fun i j hij s hs => _
@@ -449,8 +448,7 @@ theorem submartingale_of_set_integral_le_succ [IsFiniteMeasure μ] {f : ℕ → 
 
 theorem supermartingale_of_set_integral_succ_le [IsFiniteMeasure μ] {f : ℕ → Ω → ℝ}
     (hadp : Adapted 𝒢 f) (hint : ∀ i, Integrable (f i) μ)
-    (hf :
-      ∀ i, ∀ s : Set Ω, measurable_set[𝒢 i] s → (∫ ω in s, f (i + 1) ω ∂μ) ≤ ∫ ω in s, f i ω ∂μ) :
+    (hf : ∀ i, ∀ s : Set Ω, measurable_set[𝒢 i] s → ∫ ω in s, f (i + 1) ω ∂μ ≤ ∫ ω in s, f i ω ∂μ) :
     Supermartingale f 𝒢 μ := by
   rw [← neg_neg f]
   refine' (submartingale_of_set_integral_le_succ hadp.neg (fun i => (hint i).neg) _).neg
@@ -459,8 +457,7 @@ theorem supermartingale_of_set_integral_succ_le [IsFiniteMeasure μ] {f : ℕ �
 
 theorem martingale_of_set_integral_eq_succ [IsFiniteMeasure μ] {f : ℕ → Ω → ℝ} (hadp : Adapted 𝒢 f)
     (hint : ∀ i, Integrable (f i) μ)
-    (hf :
-      ∀ i, ∀ s : Set Ω, measurable_set[𝒢 i] s → (∫ ω in s, f i ω ∂μ) = ∫ ω in s, f (i + 1) ω ∂μ) :
+    (hf : ∀ i, ∀ s : Set Ω, measurable_set[𝒢 i] s → ∫ ω in s, f i ω ∂μ = ∫ ω in s, f (i + 1) ω ∂μ) :
     Martingale f 𝒢 μ :=
   martingale_iff.2
     ⟨supermartingale_of_set_integral_succ_le hadp hint fun i s hs => (hf i s hs).ge,
@@ -471,7 +468,7 @@ theorem submartingale_nat [IsFiniteMeasure μ] {f : ℕ → Ω → ℝ} (hadp : 
     (hint : ∀ i, Integrable (f i) μ) (hf : ∀ i, f i ≤ᵐ[μ] μ[f (i + 1)|𝒢 i]) : Submartingale f 𝒢 μ :=
   by
   refine' submartingale_of_set_integral_le_succ hadp hint fun i s hs => _
-  have : (∫ ω in s, f (i + 1) ω ∂μ) = ∫ ω in s, (μ[f (i + 1)|𝒢 i]) ω ∂μ :=
+  have : ∫ ω in s, f (i + 1) ω ∂μ = ∫ ω in s, (μ[f (i + 1)|𝒢 i]) ω ∂μ :=
     (set_integral_condexp (𝒢.le i) (hint _) hs).symm
   rw [this]
   exact set_integral_mono_ae (hint i).IntegrableOn integrable_condexp.integrable_on (hf i)

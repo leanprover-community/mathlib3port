@@ -211,7 +211,7 @@ theorem Memℒp.exists_hasCompactSupport_integral_rpow_sub_le [LocallyCompactSpa
     {p : ℝ} (hp : 0 < p) {f : α → E} (hf : Memℒp f (ENNReal.ofReal p) μ) {ε : ℝ} (hε : 0 < ε) :
     ∃ g : α → E,
       HasCompactSupport g ∧
-        (∫ x, ‖f x - g x‖ ^ p ∂μ) ≤ ε ∧ Continuous g ∧ Memℒp g (ENNReal.ofReal p) μ :=
+        ∫ x, ‖f x - g x‖ ^ p ∂μ ≤ ε ∧ Continuous g ∧ Memℒp g (ENNReal.ofReal p) μ :=
   by
   have I : 0 < ε ^ (1 / p) := Real.rpow_pos_of_pos hε _
   have A : ENNReal.ofReal (ε ^ (1 / p)) ≠ 0 := by
@@ -231,8 +231,7 @@ theorem Memℒp.exists_hasCompactSupport_integral_rpow_sub_le [LocallyCompactSpa
 continuous functions, version in terms of `∫⁻`. -/
 theorem Integrable.exists_hasCompactSupport_lintegral_sub_le [LocallyCompactSpace α] [μ.regular]
     {f : α → E} (hf : Integrable f μ) {ε : ℝ≥0∞} (hε : ε ≠ 0) :
-    ∃ g : α → E,
-      HasCompactSupport g ∧ (∫⁻ x, ‖f x - g x‖₊ ∂μ) ≤ ε ∧ Continuous g ∧ Integrable g μ :=
+    ∃ g : α → E, HasCompactSupport g ∧ ∫⁻ x, ‖f x - g x‖₊ ∂μ ≤ ε ∧ Continuous g ∧ Integrable g μ :=
   by
   simp only [← mem_ℒp_one_iff_integrable, ← snorm_one_eq_lintegral_nnnorm] at hf ⊢
   exact hf.exists_has_compact_support_snorm_sub_le ENNReal.one_ne_top hε
@@ -242,7 +241,7 @@ theorem Integrable.exists_hasCompactSupport_lintegral_sub_le [LocallyCompactSpac
 continuous functions, version in terms of `∫`. -/
 theorem Integrable.exists_hasCompactSupport_integral_sub_le [LocallyCompactSpace α] [μ.regular]
     {f : α → E} (hf : Integrable f μ) {ε : ℝ} (hε : 0 < ε) :
-    ∃ g : α → E, HasCompactSupport g ∧ (∫ x, ‖f x - g x‖ ∂μ) ≤ ε ∧ Continuous g ∧ Integrable g μ :=
+    ∃ g : α → E, HasCompactSupport g ∧ ∫ x, ‖f x - g x‖ ∂μ ≤ ε ∧ Continuous g ∧ Integrable g μ :=
   by
   simp only [← mem_ℒp_one_iff_integrable, ← snorm_one_eq_lintegral_nnnorm, ← ENNReal.ofReal_one] at
     hf ⊢
@@ -309,7 +308,7 @@ theorem Memℒp.exists_boundedContinuous_snorm_sub_le [μ.WeaklyRegular] (hp : p
 version in terms of `∫`. -/
 theorem Memℒp.exists_boundedContinuous_integral_rpow_sub_le [μ.WeaklyRegular] {p : ℝ} (hp : 0 < p)
     {f : α → E} (hf : Memℒp f (ENNReal.ofReal p) μ) {ε : ℝ} (hε : 0 < ε) :
-    ∃ g : α →ᵇ E, (∫ x, ‖f x - g x‖ ^ p ∂μ) ≤ ε ∧ Memℒp g (ENNReal.ofReal p) μ :=
+    ∃ g : α →ᵇ E, ∫ x, ‖f x - g x‖ ^ p ∂μ ≤ ε ∧ Memℒp g (ENNReal.ofReal p) μ :=
   by
   have I : 0 < ε ^ (1 / p) := Real.rpow_pos_of_pos hε _
   have A : ENNReal.ofReal (ε ^ (1 / p)) ≠ 0 := by
@@ -328,7 +327,7 @@ theorem Memℒp.exists_boundedContinuous_integral_rpow_sub_le [μ.WeaklyRegular]
 version in terms of `∫⁻`. -/
 theorem Integrable.exists_boundedContinuous_lintegral_sub_le [μ.WeaklyRegular] {f : α → E}
     (hf : Integrable f μ) {ε : ℝ≥0∞} (hε : ε ≠ 0) :
-    ∃ g : α →ᵇ E, (∫⁻ x, ‖f x - g x‖₊ ∂μ) ≤ ε ∧ Integrable g μ :=
+    ∃ g : α →ᵇ E, ∫⁻ x, ‖f x - g x‖₊ ∂μ ≤ ε ∧ Integrable g μ :=
   by
   simp only [← mem_ℒp_one_iff_integrable, ← snorm_one_eq_lintegral_nnnorm] at hf ⊢
   exact hf.exists_bounded_continuous_snorm_sub_le ENNReal.one_ne_top hε
@@ -338,7 +337,7 @@ theorem Integrable.exists_boundedContinuous_lintegral_sub_le [μ.WeaklyRegular] 
 version in terms of `∫`. -/
 theorem Integrable.exists_boundedContinuous_integral_sub_le [μ.WeaklyRegular] {f : α → E}
     (hf : Integrable f μ) {ε : ℝ} (hε : 0 < ε) :
-    ∃ g : α →ᵇ E, (∫ x, ‖f x - g x‖ ∂μ) ≤ ε ∧ Integrable g μ :=
+    ∃ g : α →ᵇ E, ∫ x, ‖f x - g x‖ ∂μ ≤ ε ∧ Integrable g μ :=
   by
   simp only [← mem_ℒp_one_iff_integrable, ← snorm_one_eq_lintegral_nnnorm, ← ENNReal.ofReal_one] at
     hf ⊢

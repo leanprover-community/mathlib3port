@@ -26,6 +26,7 @@ open scoped Polynomial
 
 namespace Complex
 
+#print Complex.exists_root /-
 /-- **Fundamental theorem of algebra**: every non constant complex polynomial
   has a root -/
 theorem exists_root {f : ℂ[X]} (hf : 0 < degree f) : ∃ z : ℂ, IsRoot f z :=
@@ -38,6 +39,7 @@ theorem exists_root {f : ℂ[X]} (hf : 0 < degree f) : ∃ z : ℂ, IsRoot f z :
     simp only [bounded_iff_forall_norm_le, Set.forall_range_iff, norm_inv]
     exact ⟨‖eval z₀ f‖⁻¹, fun z => inv_le_inv_of_le (norm_pos_iff.2 <| hf z₀) (h₀ z)⟩
 #align complex.exists_root Complex.exists_root
+-/
 
 instance isAlgClosed : IsAlgClosed ℂ :=
   IsAlgClosed.of_exists_root _ fun p _ hp => Complex.exists_root <| degree_pos_of_irreducible hp

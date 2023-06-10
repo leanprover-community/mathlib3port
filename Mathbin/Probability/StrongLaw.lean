@@ -141,10 +141,10 @@ theorem MeasureTheory.AEStronglyMeasurable.integrable_truncation [IsFiniteMeasur
 #align measure_theory.ae_strongly_measurable.integrable_truncation MeasureTheory.AEStronglyMeasurable.integrable_truncation
 
 theorem moment_truncation_eq_intervalIntegral (hf : AEStronglyMeasurable f μ) {A : ℝ} (hA : 0 ≤ A)
-    {n : ℕ} (hn : n ≠ 0) : (∫ x, truncation f A x ^ n ∂μ) = ∫ y in -A..A, y ^ n ∂Measure.map f μ :=
+    {n : ℕ} (hn : n ≠ 0) : ∫ x, truncation f A x ^ n ∂μ = ∫ y in -A..A, y ^ n ∂Measure.map f μ :=
   by
   have M : MeasurableSet (Set.Ioc (-A) A) := measurableSet_Ioc
-  change (∫ x, (fun z => indicator (Set.Ioc (-A) A) id z ^ n) (f x) ∂μ) = _
+  change ∫ x, (fun z => indicator (Set.Ioc (-A) A) id z ^ n) (f x) ∂μ = _
   rw [← integral_map hf.ae_measurable, intervalIntegral.integral_of_le, ← integral_indicator M]
   · simp only [indicator, zero_pow' _ hn, id.def, ite_pow]
   · linarith
@@ -153,12 +153,12 @@ theorem moment_truncation_eq_intervalIntegral (hf : AEStronglyMeasurable f μ) {
 
 theorem moment_truncation_eq_intervalIntegral_of_nonneg (hf : AEStronglyMeasurable f μ) {A : ℝ}
     {n : ℕ} (hn : n ≠ 0) (h'f : 0 ≤ f) :
-    (∫ x, truncation f A x ^ n ∂μ) = ∫ y in 0 ..A, y ^ n ∂Measure.map f μ :=
+    ∫ x, truncation f A x ^ n ∂μ = ∫ y in 0 ..A, y ^ n ∂Measure.map f μ :=
   by
   have M : MeasurableSet (Set.Ioc 0 A) := measurableSet_Ioc
   have M' : MeasurableSet (Set.Ioc A 0) := measurableSet_Ioc
   rw [truncation_eq_of_nonneg h'f]
-  change (∫ x, (fun z => indicator (Set.Ioc 0 A) id z ^ n) (f x) ∂μ) = _
+  change ∫ x, (fun z => indicator (Set.Ioc 0 A) id z ^ n) (f x) ∂μ = _
   rcases le_or_lt 0 A with (hA | hA)
   · rw [← integral_map hf.ae_measurable, intervalIntegral.integral_of_le hA, ← integral_indicator M]
     · simp only [indicator, zero_pow' _ hn, id.def, ite_pow]
@@ -179,17 +179,17 @@ theorem moment_truncation_eq_intervalIntegral_of_nonneg (hf : AEStronglyMeasurab
 #align probability_theory.moment_truncation_eq_interval_integral_of_nonneg ProbabilityTheory.moment_truncation_eq_intervalIntegral_of_nonneg
 
 theorem integral_truncation_eq_intervalIntegral (hf : AEStronglyMeasurable f μ) {A : ℝ}
-    (hA : 0 ≤ A) : (∫ x, truncation f A x ∂μ) = ∫ y in -A..A, y ∂Measure.map f μ := by
+    (hA : 0 ≤ A) : ∫ x, truncation f A x ∂μ = ∫ y in -A..A, y ∂Measure.map f μ := by
   simpa using moment_truncation_eq_interval_integral hf hA one_ne_zero
 #align probability_theory.integral_truncation_eq_interval_integral ProbabilityTheory.integral_truncation_eq_intervalIntegral
 
 theorem integral_truncation_eq_intervalIntegral_of_nonneg (hf : AEStronglyMeasurable f μ) {A : ℝ}
-    (h'f : 0 ≤ f) : (∫ x, truncation f A x ∂μ) = ∫ y in 0 ..A, y ∂Measure.map f μ := by
+    (h'f : 0 ≤ f) : ∫ x, truncation f A x ∂μ = ∫ y in 0 ..A, y ∂Measure.map f μ := by
   simpa using moment_truncation_eq_interval_integral_of_nonneg hf one_ne_zero h'f
 #align probability_theory.integral_truncation_eq_interval_integral_of_nonneg ProbabilityTheory.integral_truncation_eq_intervalIntegral_of_nonneg
 
 theorem integral_truncation_le_integral_of_nonneg (hf : Integrable f μ) (h'f : 0 ≤ f) {A : ℝ} :
-    (∫ x, truncation f A x ∂μ) ≤ ∫ x, f x ∂μ :=
+    ∫ x, truncation f A x ∂μ ≤ ∫ x, f x ∂μ :=
   by
   apply
     integral_mono_of_nonneg (eventually_of_forall fun x => _) hf (eventually_of_forall fun x => _)
@@ -234,13 +234,13 @@ variable {Ω : Type _} [MeasureSpace Ω] [IsProbabilityMeasure (ℙ : Measure Ω
 section MomentEstimates
 
 theorem sum_prob_mem_Ioc_le {X : Ω → ℝ} (hint : Integrable X) (hnonneg : 0 ≤ X) {K : ℕ} {N : ℕ}
-    (hKN : K ≤ N) : (∑ j in range K, ℙ {ω | X ω ∈ Set.Ioc (j : ℝ) N}) ≤ ENNReal.ofReal (𝔼[X] + 1) :=
+    (hKN : K ≤ N) : ∑ j in range K, ℙ {ω | X ω ∈ Set.Ioc (j : ℝ) N} ≤ ENNReal.ofReal (𝔼[X] + 1) :=
   by
   let ρ : Measure ℝ := measure.map X ℙ
   haveI : is_probability_measure ρ := is_probability_measure_map hint.ae_measurable
-  have A : (∑ j in range K, ∫ x in j..N, (1 : ℝ) ∂ρ) ≤ 𝔼[X] + 1 :=
+  have A : ∑ j in range K, ∫ x in j..N, (1 : ℝ) ∂ρ ≤ 𝔼[X] + 1 :=
     calc
-      (∑ j in range K, ∫ x in j..N, (1 : ℝ) ∂ρ) =
+      ∑ j in range K, ∫ x in j..N, (1 : ℝ) ∂ρ =
           ∑ j in range K, ∑ i in Ico j N, ∫ x in i..(i + 1 : ℕ), (1 : ℝ) ∂ρ :=
         by
         apply sum_congr rfl fun j hj => _
@@ -287,7 +287,7 @@ theorem sum_prob_mem_Ioc_le {X : Ω → ℝ} (hint : Integrable X) (hnonneg : 0 
         rw [intervalIntegral.sum_integral_adjacent_intervals fun k hk => _]
         · norm_cast
         · exact (continuous_id.add continuous_const).IntervalIntegrable _ _
-      _ = (∫ x in 0 ..N, x ∂ρ) + ∫ x in 0 ..N, 1 ∂ρ :=
+      _ = ∫ x in 0 ..N, x ∂ρ + ∫ x in 0 ..N, 1 ∂ρ :=
         by
         rw [intervalIntegral.integral_add]
         · exact continuous_id.interval_integrable _ _
@@ -310,7 +310,7 @@ theorem sum_prob_mem_Ioc_le {X : Ω → ℝ} (hint : Integrable X) (hnonneg : 0 
       measure.map_apply_of_ae_measurable hint.ae_measurable measurableSet_Ioc]
     rfl
   calc
-    (∑ j in range K, ℙ {ω | X ω ∈ Set.Ioc (j : ℝ) N}) =
+    ∑ j in range K, ℙ {ω | X ω ∈ Set.Ioc (j : ℝ) N} =
         ∑ j in range K, ENNReal.ofReal (∫ x in Set.Ioc (j : ℝ) N, (1 : ℝ) ∂ρ) :=
       by simp_rw [B]
     _ = ENNReal.ofReal (∑ j in range K, ∫ x in Set.Ioc (j : ℝ) N, (1 : ℝ) ∂ρ) :=
@@ -327,9 +327,9 @@ theorem sum_prob_mem_Ioc_le {X : Ω → ℝ} (hint : Integrable X) (hnonneg : 0 
 #align probability_theory.sum_prob_mem_Ioc_le ProbabilityTheory.sum_prob_mem_Ioc_le
 
 theorem tsum_prob_mem_Ioi_lt_top {X : Ω → ℝ} (hint : Integrable X) (hnonneg : 0 ≤ X) :
-    (∑' j : ℕ, ℙ {ω | X ω ∈ Set.Ioi (j : ℝ)}) < ∞ :=
+    ∑' j : ℕ, ℙ {ω | X ω ∈ Set.Ioi (j : ℝ)} < ∞ :=
   by
-  suffices : ∀ K : ℕ, (∑ j in range K, ℙ {ω | X ω ∈ Set.Ioi (j : ℝ)}) ≤ ENNReal.ofReal (𝔼[X] + 1)
+  suffices : ∀ K : ℕ, ∑ j in range K, ℙ {ω | X ω ∈ Set.Ioi (j : ℝ)} ≤ ENNReal.ofReal (𝔼[X] + 1)
   exact
     (le_of_tendsto_of_tendsto (ENNReal.tendsto_nat_tsum _) tendsto_const_nhds
           (eventually_of_forall this)).trans_lt
@@ -359,7 +359,7 @@ theorem tsum_prob_mem_Ioi_lt_top {X : Ω → ℝ} (hint : Integrable X) (hnonneg
 #align probability_theory.tsum_prob_mem_Ioi_lt_top ProbabilityTheory.tsum_prob_mem_Ioi_lt_top
 
 theorem sum_variance_truncation_le {X : Ω → ℝ} (hint : Integrable X) (hnonneg : 0 ≤ X) (K : ℕ) :
-    (∑ j in range K, ((j : ℝ) ^ 2)⁻¹ * 𝔼[truncation X j ^ 2]) ≤ 2 * 𝔼[X] :=
+    ∑ j in range K, ((j : ℝ) ^ 2)⁻¹ * 𝔼[truncation X j ^ 2] ≤ 2 * 𝔼[X] :=
   by
   set Y := fun n : ℕ => truncation X n
   let ρ : Measure ℝ := measure.map X ℙ
@@ -369,7 +369,7 @@ theorem sum_variance_truncation_le {X : Ω → ℝ} (hint : Integrable X) (hnonn
     change 𝔼[fun x => Y n x ^ 2] = _
     rw [moment_truncation_eq_interval_integral_of_nonneg hint.1 two_ne_zero hnonneg]
   calc
-    (∑ j in range K, ((j : ℝ) ^ 2)⁻¹ * 𝔼[Y j ^ 2]) =
+    ∑ j in range K, ((j : ℝ) ^ 2)⁻¹ * 𝔼[Y j ^ 2] =
         ∑ j in range K, ((j : ℝ) ^ 2)⁻¹ * ∫ x in 0 ..j, x ^ 2 ∂ρ :=
       by simp_rw [Y2]
     _ = ∑ j in range K, ((j : ℝ) ^ 2)⁻¹ * ∑ k in range j, ∫ x in k..(k + 1 : ℕ), x ^ 2 ∂ρ :=
@@ -454,7 +454,7 @@ This follows from a variance control. -/
 theorem strong_law_aux1 {c : ℝ} (c_one : 1 < c) {ε : ℝ} (εpos : 0 < ε) :
     ∀ᵐ ω,
       ∀ᶠ n : ℕ in atTop,
-        |(∑ i in range ⌊c ^ n⌋₊, truncation (X i) i ω) -
+        |∑ i in range ⌊c ^ n⌋₊, truncation (X i) i ω -
               𝔼[∑ i in range ⌊c ^ n⌋₊, truncation (X i) i]| <
           ε * ⌊c ^ n⌋₊ :=
   by
@@ -477,11 +477,11 @@ theorem strong_law_aux1 {c : ℝ} (c_one : 1 < c) {ε : ℝ} (εpos : 0 < ε) :
   set S := fun n => ∑ i in range n, Y i with hS
   let u : ℕ → ℕ := fun n => ⌊c ^ n⌋₊
   have u_mono : Monotone u := fun i j hij => Nat.floor_mono (pow_le_pow c_one.le hij)
-  have I1 : ∀ K, (∑ j in range K, ((j : ℝ) ^ 2)⁻¹ * Var[Y j]) ≤ 2 * 𝔼[X 0] :=
+  have I1 : ∀ K, ∑ j in range K, ((j : ℝ) ^ 2)⁻¹ * Var[Y j] ≤ 2 * 𝔼[X 0] :=
     by
     intro K
     calc
-      (∑ j in range K, ((j : ℝ) ^ 2)⁻¹ * Var[Y j]) ≤
+      ∑ j in range K, ((j : ℝ) ^ 2)⁻¹ * Var[Y j] ≤
           ∑ j in range K, ((j : ℝ) ^ 2)⁻¹ * 𝔼[truncation (X 0) j ^ 2] :=
         by
         apply sum_le_sum fun j hj => _
@@ -490,11 +490,11 @@ theorem strong_law_aux1 {c : ℝ} (c_one : 1 < c) {ε : ℝ} (εpos : 0 < ε) :
         exact variance_le_expectation_sq (hX 0).truncation
       _ ≤ 2 * 𝔼[X 0] := sum_variance_truncation_le hint (hnonneg 0) K
   let C := c ^ 5 * (c - 1)⁻¹ ^ 3 * (2 * 𝔼[X 0])
-  have I2 : ∀ N, (∑ i in range N, ((u i : ℝ) ^ 2)⁻¹ * Var[S (u i)]) ≤ C :=
+  have I2 : ∀ N, ∑ i in range N, ((u i : ℝ) ^ 2)⁻¹ * Var[S (u i)] ≤ C :=
     by
     intro N
     calc
-      (∑ i in range N, ((u i : ℝ) ^ 2)⁻¹ * Var[S (u i)]) =
+      ∑ i in range N, ((u i : ℝ) ^ 2)⁻¹ * Var[S (u i)] =
           ∑ i in range N, ((u i : ℝ) ^ 2)⁻¹ * ∑ j in range (u i), Var[Y j] :=
         by
         congr 1 with i
@@ -541,12 +541,12 @@ theorem strong_law_aux1 {c : ℝ} (c_one : 1 < c) {ε : ℝ} (εpos : 0 < ε) :
         exact pow_nonneg (inv_nonneg.2 (sub_nonneg.2 c_one.le)) _
   have I3 :
     ∀ N,
-      (∑ i in range N, ℙ {ω | (u i * ε : ℝ) ≤ |S (u i) ω - 𝔼[S (u i)]|}) ≤
+      ∑ i in range N, ℙ {ω | (u i * ε : ℝ) ≤ |S (u i) ω - 𝔼[S (u i)]|} ≤
         ENNReal.ofReal (ε⁻¹ ^ 2 * C) :=
     by
     intro N
     calc
-      (∑ i in range N, ℙ {ω | (u i * ε : ℝ) ≤ |S (u i) ω - 𝔼[S (u i)]|}) ≤
+      ∑ i in range N, ℙ {ω | (u i * ε : ℝ) ≤ |S (u i) ω - 𝔼[S (u i)]|} ≤
           ∑ i in range N, ENNReal.ofReal (Var[S (u i)] / (u i * ε) ^ 2) :=
         by
         refine' sum_le_sum fun i hi => _
@@ -570,7 +570,7 @@ theorem strong_law_aux1 {c : ℝ} (c_one : 1 < c) {ε : ℝ} (εpos : 0 < ε) :
         refine' mul_le_mul_of_nonneg_left _ (sq_nonneg _)
         simp_rw [inv_pow]
         exact I2 N
-  have I4 : (∑' i, ℙ {ω | (u i * ε : ℝ) ≤ |S (u i) ω - 𝔼[S (u i)]|}) < ∞ :=
+  have I4 : ∑' i, ℙ {ω | (u i * ε : ℝ) ≤ |S (u i) ω - 𝔼[S (u i)]|} < ∞ :=
     (le_of_tendsto_of_tendsto' (ENNReal.tendsto_nat_tsum _) tendsto_const_nhds I3).trans_lt
       ENNReal.ofReal_lt_top
   filter_upwards [ae_eventually_not_mem I4.ne] with ω hω
@@ -584,7 +584,7 @@ theorem strong_law_aux1 {c : ℝ} (c_one : 1 < c) {ε : ℝ} (εpos : 0 < ε) :
 theorem strong_law_aux2 {c : ℝ} (c_one : 1 < c) :
     ∀ᵐ ω,
       (fun n : ℕ =>
-          (∑ i in range ⌊c ^ n⌋₊, truncation (X i) i ω) -
+          ∑ i in range ⌊c ^ n⌋₊, truncation (X i) i ω -
             𝔼[∑ i in range ⌊c ^ n⌋₊, truncation (X i) i]) =o[atTop]
         fun n : ℕ => (⌊c ^ n⌋₊ : ℝ) :=
   by
@@ -627,7 +627,7 @@ include hindep hnonneg
 fact that the truncated and the original expectations have the same asymptotic behavior. -/
 theorem strong_law_aux4 {c : ℝ} (c_one : 1 < c) :
     ∀ᵐ ω,
-      (fun n : ℕ => (∑ i in range ⌊c ^ n⌋₊, truncation (X i) i ω) - ⌊c ^ n⌋₊ * 𝔼[X 0]) =o[atTop]
+      (fun n : ℕ => ∑ i in range ⌊c ^ n⌋₊, truncation (X i) i ω - ⌊c ^ n⌋₊ * 𝔼[X 0]) =o[atTop]
         fun n : ℕ => (⌊c ^ n⌋₊ : ℝ) :=
   by
   filter_upwards [strong_law_aux2 X hint hindep hident hnonneg c_one] with ω hω
@@ -645,10 +645,10 @@ almost surely coincide at all but finitely many steps. This follows from a proba
 and Borel-Cantelli. -/
 theorem strong_law_aux5 :
     ∀ᵐ ω,
-      (fun n : ℕ => (∑ i in range n, truncation (X i) i ω) - ∑ i in range n, X i ω) =o[atTop]
+      (fun n : ℕ => ∑ i in range n, truncation (X i) i ω - ∑ i in range n, X i ω) =o[atTop]
         fun n : ℕ => (n : ℝ) :=
   by
-  have A : (∑' j : ℕ, ℙ {ω | X j ω ∈ Set.Ioi (j : ℝ)}) < ∞ :=
+  have A : ∑' j : ℕ, ℙ {ω | X j ω ∈ Set.Ioi (j : ℝ)} < ∞ :=
     by
     convert tsum_prob_mem_Ioi_lt_top hint (hnonneg 0)
     ext1 j
@@ -688,7 +688,7 @@ theorem strong_law_aux6 {c : ℝ} (c_one : 1 < c) :
     strong_law_aux5 X hint hident hnonneg] with ω hω h'ω
   rw [← tendsto_sub_nhds_zero_iff, ← Asymptotics.isLittleO_one_iff ℝ]
   have L :
-    (fun n : ℕ => (∑ i in range ⌊c ^ n⌋₊, X i ω) - ⌊c ^ n⌋₊ * 𝔼[X 0]) =o[at_top] fun n =>
+    (fun n : ℕ => ∑ i in range ⌊c ^ n⌋₊, X i ω - ⌊c ^ n⌋₊ * 𝔼[X 0]) =o[at_top] fun n =>
       (⌊c ^ n⌋₊ : ℝ) :=
     by
     have A : tendsto (fun n : ℕ => ⌊c ^ n⌋₊) at_top at_top :=

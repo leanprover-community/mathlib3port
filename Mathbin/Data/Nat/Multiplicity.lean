@@ -121,7 +121,7 @@ theorem multiplicity_factorial {p : ℕ} (hp : p.Prime) :
         by
         rw [multiplicity_factorial ((log_mono_right <| le_succ _).trans_lt hb), ←
           multiplicity_eq_card_pow_dvd hp.ne_one (succ_pos _) hb]
-      _ = (∑ i in Ico 1 b, n / p ^ i + if p ^ i ∣ n + 1 then 1 else 0 : ℕ) := by
+      _ = (∑ i in Ico 1 b, (n / p ^ i + if p ^ i ∣ n + 1 then 1 else 0) : ℕ) := by
         rw [sum_add_distrib, sum_boole]; simp
       _ = (∑ i in Ico 1 b, (n + 1) / p ^ i : ℕ) :=
         congr_arg coe <| Finset.sum_congr rfl fun _ _ => (succ_div _ _).symm
@@ -182,15 +182,15 @@ theorem multiplicity_factorial_le_div_pred {p : ℕ} (hp : p.Prime) (n : ℕ) :
 #align nat.prime.multiplicity_factorial_le_div_pred Nat.Prime.multiplicity_factorial_le_div_pred
 
 theorem multiplicity_choose_aux {p n b k : ℕ} (hp : p.Prime) (hkn : k ≤ n) :
-    (∑ i in Finset.Ico 1 b, n / p ^ i) =
-      ((∑ i in Finset.Ico 1 b, k / p ^ i) + ∑ i in Finset.Ico 1 b, (n - k) / p ^ i) +
+    ∑ i in Finset.Ico 1 b, n / p ^ i =
+      ∑ i in Finset.Ico 1 b, k / p ^ i + ∑ i in Finset.Ico 1 b, (n - k) / p ^ i +
         ((Finset.Ico 1 b).filterₓ fun i => p ^ i ≤ k % p ^ i + (n - k) % p ^ i).card :=
   calc
-    (∑ i in Finset.Ico 1 b, n / p ^ i) = ∑ i in Finset.Ico 1 b, (k + (n - k)) / p ^ i := by
+    ∑ i in Finset.Ico 1 b, n / p ^ i = ∑ i in Finset.Ico 1 b, (k + (n - k)) / p ^ i := by
       simp only [add_tsub_cancel_of_le hkn]
     _ =
         ∑ i in Finset.Ico 1 b,
-          k / p ^ i + (n - k) / p ^ i + if p ^ i ≤ k % p ^ i + (n - k) % p ^ i then 1 else 0 :=
+          (k / p ^ i + (n - k) / p ^ i + if p ^ i ≤ k % p ^ i + (n - k) % p ^ i then 1 else 0) :=
       by simp only [Nat.add_div (pow_pos hp.pos _)]
     _ = _ := by simp [sum_add_distrib, sum_boole]
 #align nat.prime.multiplicity_choose_aux Nat.Prime.multiplicity_choose_aux

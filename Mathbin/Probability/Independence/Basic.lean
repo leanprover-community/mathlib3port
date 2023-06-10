@@ -323,7 +323,7 @@ theorem iIndepSets.indepSets {s : ι → Set (Set Ω)} [MeasurableSpace Ω] {μ 
       ite (i = i) t₁ t₂ ∩ ite (j = i) t₁ t₂ :=
     by simp only [Finset.set_biInter_singleton, Finset.set_biInter_insert]
   have h_prod :
-    (∏ t : ι in ({i, j} : Finset ι), μ (ite (t = i) t₁ t₂)) =
+    ∏ t : ι in ({i, j} : Finset ι), μ (ite (t = i) t₁ t₂) =
       μ (ite (i = i) t₁ t₂) * μ (ite (j = i) t₁ t₂) :=
     by
     simp only [hij, Finset.prod_singleton, Finset.prod_insert, not_false_iff, Finset.mem_singleton]
@@ -759,7 +759,7 @@ theorem iIndepFun_iff_measure_inter_preimage_eq_mul {ι : Type _} {β : ι → T
     constructor <;> intro h hi_mem <;> specialize h hi_mem
     · rwa [h_preim i hi_mem] at h 
     · rwa [h_preim i hi_mem]
-  have h_right_eq : (∏ i in S, μ (setsΩ i)) = ∏ i in S, μ (f i ⁻¹' setsβ i) :=
+  have h_right_eq : ∏ i in S, μ (setsΩ i) = ∏ i in S, μ (f i ⁻¹' setsβ i) :=
     by
     refine' Finset.prod_congr rfl fun i hi_mem => _
     rw [h_preim i hi_mem]
@@ -970,11 +970,11 @@ theorem iIndepFun.indepFun_finset_prod_of_not_mem [IsProbabilityMeasure μ] {ι 
   have h_meas_right :
     Measurable fun p : ∀ j : ({i} : Finset ι), β => p ⟨i, Finset.mem_singleton_self i⟩ :=
     measurable_pi_apply ⟨i, Finset.mem_singleton_self i⟩
-  have h_left : (∏ j in s, f j) = (fun p : ∀ j : s, β => ∏ j, p j) ∘ fun a (j : s) => f j a :=
+  have h_left : ∏ j in s, f j = (fun p : ∀ j : s, β => ∏ j, p j) ∘ fun a (j : s) => f j a :=
     by
     ext1 a
     simp only [Function.comp_apply]
-    have : (∏ j : ↥s, f (↑j) a) = (∏ j : ↥s, f ↑j) a := by rw [Finset.prod_apply]
+    have : ∏ j : ↥s, f (↑j) a = (∏ j : ↥s, f ↑j) a := by rw [Finset.prod_apply]
     rw [this, Finset.prod_coe_sort]
   have h_meas_left : Measurable fun p : ∀ j : s, β => ∏ j, p j :=
     finset.univ.measurable_prod fun (j : ↥s) (H : j ∈ Finset.univ) => measurable_pi_apply j

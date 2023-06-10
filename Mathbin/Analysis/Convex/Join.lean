@@ -236,7 +236,7 @@ theorem convexHull_insert (hs : s.Nonempty) :
   rw [convexHull_eq] at hx 
   obtain ⟨ι, t, w, z, hw₀, hw₁, hz, rfl⟩ := hx
   have :
-    ((∑ i in t.filter fun i => z i = x, w i) • x + ∑ i in t.filter fun i => z i ≠ x, w i • z i) =
+    (∑ i in t.filter fun i => z i = x, w i) • x + ∑ i in t.filter fun i => z i ≠ x, w i • z i =
       t.center_mass w z :=
     by
     rw [Finset.centerMass_eq_of_sum_1 _ _ hw₁, Finset.sum_smul]

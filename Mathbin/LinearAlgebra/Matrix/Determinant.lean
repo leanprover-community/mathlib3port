@@ -143,7 +143,7 @@ theorem det_eq_elem_of_card_eq_one {A : Matrix n n R} (h : Fintype.card n = 1) (
 #align matrix.det_eq_elem_of_card_eq_one Matrix.det_eq_elem_of_card_eq_one
 
 theorem det_mul_aux {M N : Matrix n n R} {p : n → n} (H : ¬Bijective p) :
-    (∑ σ : Perm n, ε σ * ∏ x, M (σ x) (p x) * N (p x) x) = 0 :=
+    ∑ σ : Perm n, ε σ * ∏ x, M (σ x) (p x) * N (p x) x = 0 :=
   by
   obtain ⟨i, j, hpij, hij⟩ : ∃ i j, p i = p j ∧ i ≠ j :=
     by
@@ -154,7 +154,7 @@ theorem det_mul_aux {M N : Matrix n n R} {p : n → n} (H : ¬Bijective p) :
     sum_involution (fun σ _ => σ * swap i j)
       (fun σ _ =>
         by
-        have : (∏ x, M (σ x) (p x)) = ∏ x, M ((σ * swap i j) x) (p x) :=
+        have : ∏ x, M (σ x) (p x) = ∏ x, M ((σ * swap i j) x) (p x) :=
           Fintype.prod_equiv (swap i j) _ _ (by simp [apply_swap_eq_self hpij])
         simp [this, sign_swap hij, prod_mul_distrib])
       (fun σ _ _ => (not_congr mul_swap_eq_iff).mpr hij) (fun _ _ => mem_univ _) fun σ _ =>
@@ -183,7 +183,7 @@ theorem det_mul (M N : Matrix n n R) : det (M ⬝ N) = det M * det N :=
       (sum_congr rfl fun σ _ =>
         Fintype.sum_equiv (Equiv.mulRight σ⁻¹) _ _ fun τ =>
           by
-          have : (∏ j, M (τ j) (σ j)) = ∏ j, M ((τ * σ⁻¹) j) j := by rw [← (σ⁻¹ : _ ≃ _).prod_comp];
+          have : ∏ j, M (τ j) (σ j) = ∏ j, M ((τ * σ⁻¹) j) j := by rw [← (σ⁻¹ : _ ≃ _).prod_comp];
             simp only [Equiv.Perm.coe_mul, apply_inv_self]
           have h : ε σ * ε (τ * σ⁻¹) = ε τ :=
             calc
@@ -740,7 +740,7 @@ theorem det_succ_column_zero {n : ℕ} (A : Matrix (Fin n.succ) (Fin n.succ) R) 
   refine' Finset.sum_congr rfl fun σ _ => _
   rw [Equiv.Perm.decomposeFin.symm_sign, if_neg (Fin.succ_ne_zero i)]
   calc
-    ((-1 * σ.sign : ℤ) • ∏ i', A (equiv.perm.decompose_fin.symm (Fin.succ i, σ) i') i') =
+    (-1 * σ.sign : ℤ) • ∏ i', A (equiv.perm.decompose_fin.symm (Fin.succ i, σ) i') i' =
         (-1 * σ.sign : ℤ) •
           (A (Fin.succ i) 0 * ∏ i', A ((Fin.succ i).succAbove (Fin.cycleRange i (σ i'))) i'.succ) :=
       by

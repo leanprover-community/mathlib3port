@@ -97,7 +97,7 @@ theorem IsCoprime.of_prod_right (H1 : IsCoprime x (∏ i in t, s i)) (i : I) (hi
 
 #print Finset.prod_dvd_of_coprime /-
 theorem Finset.prod_dvd_of_coprime :
-    ∀ (Hs : (t : Set I).Pairwise (IsCoprime on s)) (Hs1 : ∀ i ∈ t, s i ∣ z), (∏ x in t, s x) ∣ z :=
+    ∀ (Hs : (t : Set I).Pairwise (IsCoprime on s)) (Hs1 : ∀ i ∈ t, s i ∣ z), ∏ x in t, s x ∣ z :=
   Finset.induction_on t (fun _ _ => one_dvd z)
     (by
       intro a r har ih Hs Hs1
@@ -113,7 +113,7 @@ theorem Finset.prod_dvd_of_coprime :
 
 #print Fintype.prod_dvd_of_coprime /-
 theorem Fintype.prod_dvd_of_coprime [Fintype I] (Hs : Pairwise (IsCoprime on s))
-    (Hs1 : ∀ i, s i ∣ z) : (∏ x, s x) ∣ z :=
+    (Hs1 : ∀ i, s i ∣ z) : ∏ x, s x ∣ z :=
   Finset.prod_dvd_of_coprime (Hs.set_pairwise _) fun i _ => Hs1 i
 #align fintype.prod_dvd_of_coprime Fintype.prod_dvd_of_coprime
 -/
@@ -123,7 +123,7 @@ end
 open Finset
 
 theorem exists_sum_eq_one_iff_pairwise_coprime [DecidableEq I] (h : t.Nonempty) :
-    (∃ μ : I → R, (∑ i in t, μ i * ∏ j in t \ {i}, s j) = 1) ↔
+    (∃ μ : I → R, ∑ i in t, μ i * ∏ j in t \ {i}, s j = 1) ↔
       Pairwise (IsCoprime on fun i : t => s i) :=
   by
   refine' h.cons_induction _ _ <;> clear t h
@@ -159,7 +159,7 @@ theorem exists_sum_eq_one_iff_pairwise_coprime [DecidableEq I] (h : t.Nonempty) 
   · rintro ⟨hs, Hb⟩; obtain ⟨μ, hμ⟩ := ih.mpr hs
     obtain ⟨u, v, huv⟩ := IsCoprime.prod_left fun b hb => (Hb b hb).right
     use fun i => if i = a then u else v * μ i
-    have hμ' : (∑ i in t, v * ((μ i * ∏ j in t \ {i}, s j) * s a)) = v * s a := by
+    have hμ' : ∑ i in t, v * ((μ i * ∏ j in t \ {i}, s j) * s a) = v * s a := by
       rw [← mul_sum, ← sum_mul, hμ, one_mul]
     rw [sum_cons, cons_eq_insert, sdiff_singleton_eq_erase, erase_insert hat, if_pos rfl, ← huv, ←
       hμ', sum_congr rfl]
@@ -170,7 +170,7 @@ theorem exists_sum_eq_one_iff_pairwise_coprime [DecidableEq I] (h : t.Nonempty) 
 #align exists_sum_eq_one_iff_pairwise_coprime exists_sum_eq_one_iff_pairwise_coprime
 
 theorem exists_sum_eq_one_iff_pairwise_coprime' [Fintype I] [Nonempty I] [DecidableEq I] :
-    (∃ μ : I → R, (∑ i : I, μ i * ∏ j in {i}ᶜ, s j) = 1) ↔ Pairwise (IsCoprime on s) :=
+    (∃ μ : I → R, ∑ i : I, μ i * ∏ j in {i}ᶜ, s j = 1) ↔ Pairwise (IsCoprime on s) :=
   by
   convert exists_sum_eq_one_iff_pairwise_coprime Finset.univ_nonempty using 1
   simp only [Function.onFun, pairwise_subtype_iff_pairwise_finset', coe_univ, Set.pairwise_univ]

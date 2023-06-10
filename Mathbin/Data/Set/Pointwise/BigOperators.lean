@@ -56,7 +56,7 @@ theorem image_multiset_prod (f : F) :
 
 @[to_additive]
 theorem image_finset_prod (f : F) (m : Finset ι) (s : ι → Set α) :
-    ((f : α → β) '' ∏ i in m, s i) = ∏ i in m, f '' s i :=
+    (f : α → β) '' ∏ i in m, s i = ∏ i in m, f '' s i :=
   (image_multiset_prod f _).trans <| congr_arg Multiset.prod <| Multiset.map_map _ _ _
 #align set.image_finset_prod Set.image_finset_prod
 #align set.image_finset_sum Set.image_finset_sum
@@ -64,7 +64,7 @@ theorem image_finset_prod (f : F) (m : Finset ι) (s : ι → Set α) :
 /-- The n-ary version of `set.mem_mul`. -/
 @[to_additive " The n-ary version of `set.mem_add`. "]
 theorem mem_finset_prod (t : Finset ι) (f : ι → Set α) (a : α) :
-    (a ∈ ∏ i in t, f i) ↔ ∃ (g : ι → α) (hg : ∀ {i}, i ∈ t → g i ∈ f i), (∏ i in t, g i) = a := by
+    a ∈ ∏ i in t, f i ↔ ∃ (g : ι → α) (hg : ∀ {i}, i ∈ t → g i ∈ f i), ∏ i in t, g i = a := by
   classical
   induction' t using Finset.induction_on with i is hi ih generalizing a
   · simp_rw [Finset.prod_empty, Set.mem_one]
@@ -89,7 +89,7 @@ theorem mem_finset_prod (t : Finset ι) (f : ι → Set α) (a : α) :
 /-- A version of `set.mem_finset_prod` with a simpler RHS for products over a fintype. -/
 @[to_additive " A version of `set.mem_finset_sum` with a simpler RHS for sums over a fintype. "]
 theorem mem_fintype_prod [Fintype ι] (f : ι → Set α) (a : α) :
-    (a ∈ ∏ i, f i) ↔ ∃ (g : ι → α) (hg : ∀ i, g i ∈ f i), (∏ i, g i) = a := by rw [mem_finset_prod];
+    a ∈ ∏ i, f i ↔ ∃ (g : ι → α) (hg : ∀ i, g i ∈ f i), ∏ i, g i = a := by rw [mem_finset_prod];
   simp
 #align set.mem_fintype_prod Set.mem_fintype_prod
 #align set.mem_fintype_sum Set.mem_fintype_sum
@@ -163,7 +163,7 @@ theorem multiset_prod_singleton {M : Type _} [CommMonoid M] (s : Multiset M) :
 /-- An n-ary version of `set.mul_mem_mul`. -/
 @[to_additive " An n-ary version of `set.add_mem_add`. "]
 theorem finset_prod_mem_finset_prod (t : Finset ι) (f : ι → Set α) (g : ι → α)
-    (hg : ∀ i ∈ t, g i ∈ f i) : (∏ i in t, g i) ∈ ∏ i in t, f i :=
+    (hg : ∀ i ∈ t, g i ∈ f i) : ∏ i in t, g i ∈ ∏ i in t, f i :=
   multiset_prod_mem_multiset_prod _ _ _ hg
 #align set.finset_prod_mem_finset_prod Set.finset_prod_mem_finset_prod
 #align set.finset_sum_mem_finset_sum Set.finset_sum_mem_finset_sum
@@ -171,14 +171,14 @@ theorem finset_prod_mem_finset_prod (t : Finset ι) (f : ι → Set α) (g : ι 
 /-- An n-ary version of `set.mul_subset_mul`. -/
 @[to_additive " An n-ary version of `set.add_subset_add`. "]
 theorem finset_prod_subset_finset_prod (t : Finset ι) (f₁ f₂ : ι → Set α)
-    (hf : ∀ i ∈ t, f₁ i ⊆ f₂ i) : (∏ i in t, f₁ i) ⊆ ∏ i in t, f₂ i :=
+    (hf : ∀ i ∈ t, f₁ i ⊆ f₂ i) : ∏ i in t, f₁ i ⊆ ∏ i in t, f₂ i :=
   multiset_prod_subset_multiset_prod _ _ _ hf
 #align set.finset_prod_subset_finset_prod Set.finset_prod_subset_finset_prod
 #align set.finset_sum_subset_finset_sum Set.finset_sum_subset_finset_sum
 
 @[to_additive]
 theorem finset_prod_singleton {M ι : Type _} [CommMonoid M] (s : Finset ι) (I : ι → M) :
-    (∏ i : ι in s, ({I i} : Set M)) = {∏ i : ι in s, I i} :=
+    ∏ i : ι in s, ({I i} : Set M) = {∏ i : ι in s, I i} :=
   (map_prod (singletonMonoidHom : M →* Set M) _ _).symm
 #align set.finset_prod_singleton Set.finset_prod_singleton
 #align set.finset_sum_singleton Set.finset_sum_singleton

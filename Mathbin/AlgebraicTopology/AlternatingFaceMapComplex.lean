@@ -92,7 +92,7 @@ theorem d_squared (n : ℕ) : objD X (n + 1) ≫ objD X n = 0 :=
   let P := Fin (n + 2) × Fin (n + 3)
   let S := finset.univ.filter fun ij : P => (ij.2 : ℕ) ≤ (ij.1 : ℕ)
   let term := fun ij : P => d_l ij.2 ≫ d_r ij.1
-  erw [show (∑ ij : P, term ij) = (∑ ij in S, term ij) + ∑ ij in Sᶜ, term ij by
+  erw [show ∑ ij : P, term ij = ∑ ij in S, term ij + ∑ ij in Sᶜ, term ij by
       rw [Finset.sum_add_sum_compl]]
   rw [← eq_neg_iff_add_eq_zero, ← Finset.sum_neg_distrib]
   /- we are reduced to showing that two sums are equal, and this is obtained

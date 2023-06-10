@@ -374,7 +374,7 @@ variable [IsAlgClosed E]
 
 theorem sum_embeddings_eq_finrank_mul [FiniteDimensional K F] [IsSeparable K F]
     (pb : PowerBasis K L) :
-    (∑ σ : F →ₐ[K] E, σ (algebraMap L F pb.gen)) =
+    ∑ σ : F →ₐ[K] E, σ (algebraMap L F pb.gen) =
       finrank L F •
         (@Finset.univ (PowerBasis.AlgHom.fintype pb)).Sum fun σ : L →ₐ[K] E => σ pb.gen :=
   by

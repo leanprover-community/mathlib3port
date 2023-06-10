@@ -116,16 +116,15 @@ noncomputable irreducible_def finprod (f : α → M) : M :=
 end
 
 -- mathport name: finsum
-scoped[BigOperators] notation3"∑ᶠ "(...)", "r:(scoped f => finsum f) => r
+scoped[BigOperators] notation3"∑ᶠ "(...)", "r:67:(scoped f => finsum f) => r
 
 -- mathport name: finprod
-scoped[BigOperators] notation3"∏ᶠ "(...)", "r:(scoped f => finprod f) => r
+scoped[BigOperators] notation3"∏ᶠ "(...)", "r:67:(scoped f => finprod f) => r
 
 @[to_additive]
 theorem finprod_eq_prod_pLift_of_mulSupport_toFinset_subset {f : α → M}
     (hf : (mulSupport (f ∘ PLift.down)).Finite) {s : Finset (PLift α)} (hs : hf.toFinset ⊆ s) :
-    (∏ᶠ i, f i) = ∏ i in s, f i.down :=
-  by
+    ∏ᶠ i, f i = ∏ i in s, f i.down := by
   rw [finprod, dif_pos]
   refine' Finset.prod_subset hs fun x hx hxf => _
   rwa [hf.mem_to_finset, nmem_mul_support] at hxf 
@@ -134,14 +133,14 @@ theorem finprod_eq_prod_pLift_of_mulSupport_toFinset_subset {f : α → M}
 
 @[to_additive]
 theorem finprod_eq_prod_pLift_of_mulSupport_subset {f : α → M} {s : Finset (PLift α)}
-    (hs : mulSupport (f ∘ PLift.down) ⊆ s) : (∏ᶠ i, f i) = ∏ i in s, f i.down :=
+    (hs : mulSupport (f ∘ PLift.down) ⊆ s) : ∏ᶠ i, f i = ∏ i in s, f i.down :=
   finprod_eq_prod_pLift_of_mulSupport_toFinset_subset (s.finite_toSet.Subset hs) fun x hx => by
     rw [finite.mem_to_finset] at hx ; exact hs hx
 #align finprod_eq_prod_plift_of_mul_support_subset finprod_eq_prod_pLift_of_mulSupport_subset
 #align finsum_eq_sum_plift_of_support_subset finsum_eq_sum_pLift_of_support_subset
 
 @[simp, to_additive]
-theorem finprod_one : (∏ᶠ i : α, (1 : M)) = 1 :=
+theorem finprod_one : ∏ᶠ i : α, (1 : M) = 1 :=
   by
   have : (mul_support fun x : PLift α => (fun _ => 1 : α → M) x.down) ⊆ (∅ : Finset (PLift α)) :=
     fun x h => h rfl
@@ -150,20 +149,19 @@ theorem finprod_one : (∏ᶠ i : α, (1 : M)) = 1 :=
 #align finsum_zero finsum_zero
 
 @[to_additive]
-theorem finprod_of_isEmpty [IsEmpty α] (f : α → M) : (∏ᶠ i, f i) = 1 := by rw [← finprod_one]; congr
+theorem finprod_of_isEmpty [IsEmpty α] (f : α → M) : ∏ᶠ i, f i = 1 := by rw [← finprod_one]; congr
 #align finprod_of_is_empty finprod_of_isEmpty
 #align finsum_of_is_empty finsum_of_isEmpty
 
 @[simp, to_additive]
-theorem finprod_false (f : False → M) : (∏ᶠ i, f i) = 1 :=
+theorem finprod_false (f : False → M) : ∏ᶠ i, f i = 1 :=
   finprod_of_isEmpty _
 #align finprod_false finprod_false
 #align finsum_false finsum_false
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (x «expr ≠ » a) -/
 @[to_additive]
-theorem finprod_eq_single (f : α → M) (a : α) (ha : ∀ (x) (_ : x ≠ a), f x = 1) :
-    (∏ᶠ x, f x) = f a :=
+theorem finprod_eq_single (f : α → M) (a : α) (ha : ∀ (x) (_ : x ≠ a), f x = 1) : ∏ᶠ x, f x = f a :=
   by
   have : mul_support (f ∘ PLift.down) ⊆ ({PLift.up a} : Finset (PLift α)) :=
     by
@@ -175,7 +173,7 @@ theorem finprod_eq_single (f : α → M) (a : α) (ha : ∀ (x) (_ : x ≠ a), f
 
 #print finprod_unique /-
 @[to_additive]
-theorem finprod_unique [Unique α] (f : α → M) : (∏ᶠ i, f i) = f default :=
+theorem finprod_unique [Unique α] (f : α → M) : ∏ᶠ i, f i = f default :=
   finprod_eq_single f default fun x hx => (hx <| Unique.eq_default _).elim
 #align finprod_unique finprod_unique
 #align finsum_unique finsum_unique
@@ -183,7 +181,7 @@ theorem finprod_unique [Unique α] (f : α → M) : (∏ᶠ i, f i) = f default 
 
 #print finprod_true /-
 @[simp, to_additive]
-theorem finprod_true (f : True → M) : (∏ᶠ i, f i) = f trivial :=
+theorem finprod_true (f : True → M) : ∏ᶠ i, f i = f trivial :=
   @finprod_unique M True _ ⟨⟨trivial⟩, fun _ => rfl⟩ f
 #align finprod_true finprod_true
 #align finsum_true finsum_true
@@ -191,8 +189,7 @@ theorem finprod_true (f : True → M) : (∏ᶠ i, f i) = f trivial :=
 
 @[to_additive]
 theorem finprod_eq_dif {p : Prop} [Decidable p] (f : p → M) :
-    (∏ᶠ i, f i) = if h : p then f h else 1 :=
-  by
+    ∏ᶠ i, f i = if h : p then f h else 1 := by
   split_ifs
   · haveI : Unique p := ⟨⟨h⟩, fun _ => rfl⟩; exact finprod_unique f
   · haveI : IsEmpty p := ⟨h⟩; exact finprod_of_isEmpty f
@@ -200,7 +197,7 @@ theorem finprod_eq_dif {p : Prop} [Decidable p] (f : p → M) :
 #align finsum_eq_dif finsum_eq_dif
 
 @[to_additive]
-theorem finprod_eq_if {p : Prop} [Decidable p] {x : M} : (∏ᶠ i : p, x) = if p then x else 1 :=
+theorem finprod_eq_if {p : Prop} [Decidable p] {x : M} : ∏ᶠ i : p, x = if p then x else 1 :=
   finprod_eq_dif fun _ => x
 #align finprod_eq_if finprod_eq_if
 #align finsum_eq_if finsum_eq_if
@@ -296,14 +293,14 @@ theorem finsum_smul {R M : Type _} [Ring R] [AddCommGroup M] [Module R M] [NoZer
 #align finsum_smul finsum_smul
 
 theorem smul_finsum {R M : Type _} [Ring R] [AddCommGroup M] [Module R M] [NoZeroSMulDivisors R M]
-    (c : R) (f : ι → M) : (c • ∑ᶠ i, f i) = ∑ᶠ i, c • f i :=
+    (c : R) (f : ι → M) : c • ∑ᶠ i, f i = ∑ᶠ i, c • f i :=
   by
   rcases eq_or_ne c 0 with (rfl | hc); · simp
   exact (smulAddHom R M c).map_finsum_of_injective (smul_right_injective M hc) _
 #align smul_finsum smul_finsum
 
 @[to_additive]
-theorem finprod_inv_distrib [DivisionCommMonoid G] (f : α → G) : (∏ᶠ x, (f x)⁻¹) = (∏ᶠ x, f x)⁻¹ :=
+theorem finprod_inv_distrib [DivisionCommMonoid G] (f : α → G) : ∏ᶠ x, (f x)⁻¹ = (∏ᶠ x, f x)⁻¹ :=
   ((MulEquiv.inv G).map_finprod f).symm
 #align finprod_inv_distrib finprod_inv_distrib
 #align finsum_neg_distrib finsum_neg_distrib
@@ -318,25 +315,25 @@ open scoped BigOperators
 
 @[to_additive]
 theorem finprod_eq_mulIndicator_apply (s : Set α) (f : α → M) (a : α) :
-    (∏ᶠ h : a ∈ s, f a) = mulIndicator s f a := by convert finprod_eq_if
+    ∏ᶠ h : a ∈ s, f a = mulIndicator s f a := by convert finprod_eq_if
 #align finprod_eq_mul_indicator_apply finprod_eq_mulIndicator_apply
 #align finsum_eq_indicator_apply finsum_eq_indicator_apply
 
 @[simp, to_additive]
-theorem finprod_mem_mulSupport (f : α → M) (a : α) : (∏ᶠ h : f a ≠ 1, f a) = f a := by
+theorem finprod_mem_mulSupport (f : α → M) (a : α) : ∏ᶠ h : f a ≠ 1, f a = f a := by
   rw [← mem_mul_support, finprod_eq_mulIndicator_apply, mul_indicator_mul_support]
 #align finprod_mem_mul_support finprod_mem_mulSupport
 #align finsum_mem_support finsum_mem_support
 
 @[to_additive]
-theorem finprod_mem_def (s : Set α) (f : α → M) : (∏ᶠ a ∈ s, f a) = ∏ᶠ a, mulIndicator s f a :=
+theorem finprod_mem_def (s : Set α) (f : α → M) : ∏ᶠ a ∈ s, f a = ∏ᶠ a, mulIndicator s f a :=
   finprod_congr <| finprod_eq_mulIndicator_apply s f
 #align finprod_mem_def finprod_mem_def
 #align finsum_mem_def finsum_mem_def
 
 @[to_additive]
 theorem finprod_eq_prod_of_mulSupport_subset (f : α → M) {s : Finset α} (h : mulSupport f ⊆ s) :
-    (∏ᶠ i, f i) = ∏ i in s, f i :=
+    ∏ᶠ i, f i = ∏ i in s, f i :=
   by
   have A : mul_support (f ∘ PLift.down) = equiv.plift.symm '' mul_support f :=
     by
@@ -351,14 +348,14 @@ theorem finprod_eq_prod_of_mulSupport_subset (f : α → M) {s : Finset α} (h :
 
 @[to_additive]
 theorem finprod_eq_prod_of_mulSupport_toFinset_subset (f : α → M) (hf : (mulSupport f).Finite)
-    {s : Finset α} (h : hf.toFinset ⊆ s) : (∏ᶠ i, f i) = ∏ i in s, f i :=
+    {s : Finset α} (h : hf.toFinset ⊆ s) : ∏ᶠ i, f i = ∏ i in s, f i :=
   finprod_eq_prod_of_mulSupport_subset _ fun x hx => h <| hf.mem_toFinset.2 hx
 #align finprod_eq_prod_of_mul_support_to_finset_subset finprod_eq_prod_of_mulSupport_toFinset_subset
 #align finsum_eq_sum_of_support_to_finset_subset finsum_eq_sum_of_support_toFinset_subset
 
 @[to_additive]
 theorem finprod_eq_finset_prod_of_mulSupport_subset (f : α → M) {s : Finset α}
-    (h : mulSupport f ⊆ (s : Set α)) : (∏ᶠ i, f i) = ∏ i in s, f i :=
+    (h : mulSupport f ⊆ (s : Set α)) : ∏ᶠ i, f i = ∏ i in s, f i :=
   haveI h' : (s.finite_to_set.subset h).toFinset ⊆ s := by
     simpa [← Finset.coe_subset, Set.coe_toFinset]
   finprod_eq_prod_of_mulSupport_toFinset_subset _ _ h'
@@ -367,7 +364,7 @@ theorem finprod_eq_finset_prod_of_mulSupport_subset (f : α → M) {s : Finset �
 
 @[to_additive]
 theorem finprod_def (f : α → M) [Decidable (mulSupport f).Finite] :
-    (∏ᶠ i : α, f i) = if h : (mulSupport f).Finite then ∏ i in h.toFinset, f i else 1 :=
+    ∏ᶠ i : α, f i = if h : (mulSupport f).Finite then ∏ i in h.toFinset, f i else 1 :=
   by
   split_ifs
   · exact finprod_eq_prod_of_mulSupport_toFinset_subset _ h (Finset.Subset.refl _)
@@ -378,26 +375,26 @@ theorem finprod_def (f : α → M) [Decidable (mulSupport f).Finite] :
 #align finsum_def finsum_def
 
 @[to_additive]
-theorem finprod_of_infinite_mulSupport {f : α → M} (hf : (mulSupport f).Infinite) :
-    (∏ᶠ i, f i) = 1 := by classical rw [finprod_def, dif_neg hf]
+theorem finprod_of_infinite_mulSupport {f : α → M} (hf : (mulSupport f).Infinite) : ∏ᶠ i, f i = 1 :=
+  by classical rw [finprod_def, dif_neg hf]
 #align finprod_of_infinite_mul_support finprod_of_infinite_mulSupport
 #align finsum_of_infinite_support finsum_of_infinite_support
 
 @[to_additive]
 theorem finprod_eq_prod (f : α → M) (hf : (mulSupport f).Finite) :
-    (∏ᶠ i : α, f i) = ∏ i in hf.toFinset, f i := by classical rw [finprod_def, dif_pos hf]
+    ∏ᶠ i : α, f i = ∏ i in hf.toFinset, f i := by classical rw [finprod_def, dif_pos hf]
 #align finprod_eq_prod finprod_eq_prod
 #align finsum_eq_sum finsum_eq_sum
 
 @[to_additive]
-theorem finprod_eq_prod_of_fintype [Fintype α] (f : α → M) : (∏ᶠ i : α, f i) = ∏ i, f i :=
+theorem finprod_eq_prod_of_fintype [Fintype α] (f : α → M) : ∏ᶠ i : α, f i = ∏ i, f i :=
   finprod_eq_prod_of_mulSupport_toFinset_subset _ (Set.toFinite _) <| Finset.subset_univ _
 #align finprod_eq_prod_of_fintype finprod_eq_prod_of_fintype
 #align finsum_eq_sum_of_fintype finsum_eq_sum_of_fintype
 
 @[to_additive]
 theorem finprod_cond_eq_prod_of_cond_iff (f : α → M) {p : α → Prop} {t : Finset α}
-    (h : ∀ {x}, f x ≠ 1 → (p x ↔ x ∈ t)) : (∏ᶠ (i) (hi : p i), f i) = ∏ i in t, f i :=
+    (h : ∀ {x}, f x ≠ 1 → (p x ↔ x ∈ t)) : ∏ᶠ (i) (hi : p i), f i = ∏ i in t, f i :=
   by
   set s := {x | p x}
   have : mul_support (s.mul_indicator f) ⊆ t := by rw [Set.mulSupport_mulIndicator]; intro x hx;
@@ -412,7 +409,7 @@ theorem finprod_cond_eq_prod_of_cond_iff (f : α → M) {p : α → Prop} {t : F
 /- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (i «expr ≠ » a) -/
 @[to_additive]
 theorem finprod_cond_ne (f : α → M) (a : α) [DecidableEq α] (hf : (mulSupport f).Finite) :
-    (∏ᶠ (i) (_ : i ≠ a), f i) = ∏ i in hf.toFinset.eraseₓ a, f i :=
+    ∏ᶠ (i) (_ : i ≠ a), f i = ∏ i in hf.toFinset.eraseₓ a, f i :=
   by
   apply finprod_cond_eq_prod_of_cond_iff
   intro x hx
@@ -423,63 +420,62 @@ theorem finprod_cond_ne (f : α → M) (a : α) [DecidableEq α] (hf : (mulSuppo
 
 @[to_additive]
 theorem finprod_mem_eq_prod_of_inter_mulSupport_eq (f : α → M) {s : Set α} {t : Finset α}
-    (h : s ∩ mulSupport f = t ∩ mulSupport f) : (∏ᶠ i ∈ s, f i) = ∏ i in t, f i :=
+    (h : s ∩ mulSupport f = t ∩ mulSupport f) : ∏ᶠ i ∈ s, f i = ∏ i in t, f i :=
   finprod_cond_eq_prod_of_cond_iff _ <| by simpa [Set.ext_iff] using h
 #align finprod_mem_eq_prod_of_inter_mul_support_eq finprod_mem_eq_prod_of_inter_mulSupport_eq
 #align finsum_mem_eq_sum_of_inter_support_eq finsum_mem_eq_sum_of_inter_support_eq
 
 @[to_additive]
 theorem finprod_mem_eq_prod_of_subset (f : α → M) {s : Set α} {t : Finset α}
-    (h₁ : s ∩ mulSupport f ⊆ t) (h₂ : ↑t ⊆ s) : (∏ᶠ i ∈ s, f i) = ∏ i in t, f i :=
+    (h₁ : s ∩ mulSupport f ⊆ t) (h₂ : ↑t ⊆ s) : ∏ᶠ i ∈ s, f i = ∏ i in t, f i :=
   finprod_cond_eq_prod_of_cond_iff _ fun x hx => ⟨fun h => h₁ ⟨h, hx⟩, fun h => h₂ h⟩
 #align finprod_mem_eq_prod_of_subset finprod_mem_eq_prod_of_subset
 #align finsum_mem_eq_sum_of_subset finsum_mem_eq_sum_of_subset
 
 @[to_additive]
 theorem finprod_mem_eq_prod (f : α → M) {s : Set α} (hf : (s ∩ mulSupport f).Finite) :
-    (∏ᶠ i ∈ s, f i) = ∏ i in hf.toFinset, f i :=
+    ∏ᶠ i ∈ s, f i = ∏ i in hf.toFinset, f i :=
   finprod_mem_eq_prod_of_inter_mulSupport_eq _ <| by simp [inter_assoc]
 #align finprod_mem_eq_prod finprod_mem_eq_prod
 #align finsum_mem_eq_sum finsum_mem_eq_sum
 
 @[to_additive]
 theorem finprod_mem_eq_prod_filter (f : α → M) (s : Set α) [DecidablePred (· ∈ s)]
-    (hf : (mulSupport f).Finite) :
-    (∏ᶠ i ∈ s, f i) = ∏ i in Finset.filter (· ∈ s) hf.toFinset, f i :=
+    (hf : (mulSupport f).Finite) : ∏ᶠ i ∈ s, f i = ∏ i in Finset.filter (· ∈ s) hf.toFinset, f i :=
   finprod_mem_eq_prod_of_inter_mulSupport_eq _ <| by simp [inter_comm, inter_left_comm]
 #align finprod_mem_eq_prod_filter finprod_mem_eq_prod_filter
 #align finsum_mem_eq_sum_filter finsum_mem_eq_sum_filter
 
 @[to_additive]
 theorem finprod_mem_eq_toFinset_prod (f : α → M) (s : Set α) [Fintype s] :
-    (∏ᶠ i ∈ s, f i) = ∏ i in s.toFinset, f i :=
+    ∏ᶠ i ∈ s, f i = ∏ i in s.toFinset, f i :=
   finprod_mem_eq_prod_of_inter_mulSupport_eq _ <| by rw [coe_to_finset]
 #align finprod_mem_eq_to_finset_prod finprod_mem_eq_toFinset_prod
 #align finsum_mem_eq_to_finset_sum finsum_mem_eq_toFinset_sum
 
 @[to_additive]
 theorem finprod_mem_eq_finite_toFinset_prod (f : α → M) {s : Set α} (hs : s.Finite) :
-    (∏ᶠ i ∈ s, f i) = ∏ i in hs.toFinset, f i :=
+    ∏ᶠ i ∈ s, f i = ∏ i in hs.toFinset, f i :=
   finprod_mem_eq_prod_of_inter_mulSupport_eq _ <| by rw [hs.coe_to_finset]
 #align finprod_mem_eq_finite_to_finset_prod finprod_mem_eq_finite_toFinset_prod
 #align finsum_mem_eq_finite_to_finset_sum finsum_mem_eq_finite_toFinset_sum
 
 @[to_additive]
-theorem finprod_mem_finset_eq_prod (f : α → M) (s : Finset α) : (∏ᶠ i ∈ s, f i) = ∏ i in s, f i :=
+theorem finprod_mem_finset_eq_prod (f : α → M) (s : Finset α) : ∏ᶠ i ∈ s, f i = ∏ i in s, f i :=
   finprod_mem_eq_prod_of_inter_mulSupport_eq _ rfl
 #align finprod_mem_finset_eq_prod finprod_mem_finset_eq_prod
 #align finsum_mem_finset_eq_sum finsum_mem_finset_eq_sum
 
 @[to_additive]
 theorem finprod_mem_coe_finset (f : α → M) (s : Finset α) :
-    (∏ᶠ i ∈ (s : Set α), f i) = ∏ i in s, f i :=
+    ∏ᶠ i ∈ (s : Set α), f i = ∏ i in s, f i :=
   finprod_mem_eq_prod_of_inter_mulSupport_eq _ rfl
 #align finprod_mem_coe_finset finprod_mem_coe_finset
 #align finsum_mem_coe_finset finsum_mem_coe_finset
 
 @[to_additive]
 theorem finprod_mem_eq_one_of_infinite {f : α → M} {s : Set α} (hs : (s ∩ mulSupport f).Infinite) :
-    (∏ᶠ i ∈ s, f i) = 1 := by
+    ∏ᶠ i ∈ s, f i = 1 := by
   rw [finprod_mem_def]
   apply finprod_of_infinite_mulSupport
   rwa [← mul_support_mul_indicator] at hs 
@@ -488,27 +484,27 @@ theorem finprod_mem_eq_one_of_infinite {f : α → M} {s : Set α} (hs : (s ∩ 
 
 @[to_additive]
 theorem finprod_mem_eq_one_of_forall_eq_one {f : α → M} {s : Set α} (h : ∀ x ∈ s, f x = 1) :
-    (∏ᶠ i ∈ s, f i) = 1 := by simp (config := { contextual := true }) [h]
+    ∏ᶠ i ∈ s, f i = 1 := by simp (config := { contextual := true }) [h]
 #align finprod_mem_eq_one_of_forall_eq_one finprod_mem_eq_one_of_forall_eq_one
 #align finsum_mem_eq_zero_of_forall_eq_zero finsum_mem_eq_zero_of_forall_eq_zero
 
 @[to_additive]
 theorem finprod_mem_inter_mulSupport (f : α → M) (s : Set α) :
-    (∏ᶠ i ∈ s ∩ mulSupport f, f i) = ∏ᶠ i ∈ s, f i := by
+    ∏ᶠ i ∈ s ∩ mulSupport f, f i = ∏ᶠ i ∈ s, f i := by
   rw [finprod_mem_def, finprod_mem_def, mul_indicator_inter_mul_support]
 #align finprod_mem_inter_mul_support finprod_mem_inter_mulSupport
 #align finsum_mem_inter_support finsum_mem_inter_support
 
 @[to_additive]
 theorem finprod_mem_inter_mulSupport_eq (f : α → M) (s t : Set α)
-    (h : s ∩ mulSupport f = t ∩ mulSupport f) : (∏ᶠ i ∈ s, f i) = ∏ᶠ i ∈ t, f i := by
+    (h : s ∩ mulSupport f = t ∩ mulSupport f) : ∏ᶠ i ∈ s, f i = ∏ᶠ i ∈ t, f i := by
   rw [← finprod_mem_inter_mulSupport, h, finprod_mem_inter_mulSupport]
 #align finprod_mem_inter_mul_support_eq finprod_mem_inter_mulSupport_eq
 #align finsum_mem_inter_support_eq finsum_mem_inter_support_eq
 
 @[to_additive]
 theorem finprod_mem_inter_mulSupport_eq' (f : α → M) (s t : Set α)
-    (h : ∀ x ∈ mulSupport f, x ∈ s ↔ x ∈ t) : (∏ᶠ i ∈ s, f i) = ∏ᶠ i ∈ t, f i :=
+    (h : ∀ x ∈ mulSupport f, x ∈ s ↔ x ∈ t) : ∏ᶠ i ∈ s, f i = ∏ᶠ i ∈ t, f i :=
   by
   apply finprod_mem_inter_mulSupport_eq
   ext x
@@ -518,7 +514,7 @@ theorem finprod_mem_inter_mulSupport_eq' (f : α → M) (s t : Set α)
 
 #print finprod_mem_univ /-
 @[to_additive]
-theorem finprod_mem_univ (f : α → M) : (∏ᶠ i ∈ @Set.univ α, f i) = ∏ᶠ i : α, f i :=
+theorem finprod_mem_univ (f : α → M) : ∏ᶠ i ∈ @Set.univ α, f i = ∏ᶠ i : α, f i :=
   finprod_congr fun i => finprod_true _
 #align finprod_mem_univ finprod_mem_univ
 #align finsum_mem_univ finsum_mem_univ
@@ -527,14 +523,13 @@ theorem finprod_mem_univ (f : α → M) : (∏ᶠ i ∈ @Set.univ α, f i) = ∏
 variable {f g : α → M} {a b : α} {s t : Set α}
 
 @[to_additive]
-theorem finprod_mem_congr (h₀ : s = t) (h₁ : ∀ x ∈ t, f x = g x) :
-    (∏ᶠ i ∈ s, f i) = ∏ᶠ i ∈ t, g i :=
+theorem finprod_mem_congr (h₀ : s = t) (h₁ : ∀ x ∈ t, f x = g x) : ∏ᶠ i ∈ s, f i = ∏ᶠ i ∈ t, g i :=
   h₀.symm ▸ finprod_congr fun i => finprod_congr_Prop rfl (h₁ i)
 #align finprod_mem_congr finprod_mem_congr
 #align finsum_mem_congr finsum_mem_congr
 
 @[to_additive]
-theorem finprod_eq_one_of_forall_eq_one {f : α → M} (h : ∀ x, f x = 1) : (∏ᶠ i, f i) = 1 := by
+theorem finprod_eq_one_of_forall_eq_one {f : α → M} (h : ∀ x, f x = 1) : ∏ᶠ i, f i = 1 := by
   simp (config := { contextual := true }) [h]
 #align finprod_eq_one_of_forall_eq_one finprod_eq_one_of_forall_eq_one
 #align finsum_eq_zero_of_forall_eq_zero finsum_eq_zero_of_forall_eq_zero
@@ -549,7 +544,7 @@ the product of `f i` multiplied by the product of `g i`. -/
 @[to_additive
       "If the additive supports of `f` and `g` are finite, then the sum of `f i + g i`\nequals the sum of `f i` plus the sum of `g i`."]
 theorem finprod_mul_distrib (hf : (mulSupport f).Finite) (hg : (mulSupport g).Finite) :
-    (∏ᶠ i, f i * g i) = (∏ᶠ i, f i) * ∏ᶠ i, g i := by
+    ∏ᶠ i, f i * g i = (∏ᶠ i, f i) * ∏ᶠ i, g i := by
   classical
   rw [finprod_eq_prod_of_mulSupport_toFinset_subset _ hf (Finset.subset_union_left _ _),
     finprod_eq_prod_of_mulSupport_toFinset_subset _ hg (Finset.subset_union_right _ _), ←
@@ -564,7 +559,7 @@ equals the product of `f i` divided by the product of `g i`. -/
 @[to_additive
       "If the additive supports of `f` and `g` are finite, then the sum of `f i - g i`\nequals the sum of `f i` minus the sum of `g i`."]
 theorem finprod_div_distrib [DivisionCommMonoid G] {f g : α → G} (hf : (mulSupport f).Finite)
-    (hg : (mulSupport g).Finite) : (∏ᶠ i, f i / g i) = (∏ᶠ i, f i) / ∏ᶠ i, g i := by
+    (hg : (mulSupport g).Finite) : ∏ᶠ i, f i / g i = (∏ᶠ i, f i) / ∏ᶠ i, g i := by
   simp only [div_eq_mul_inv, finprod_mul_distrib hf ((mul_support_inv g).symm.rec hg),
     finprod_inv_distrib]
 #align finprod_div_distrib finprod_div_distrib
@@ -575,7 +570,7 @@ theorem finprod_div_distrib [DivisionCommMonoid G] {f g : α → G} (hf : (mulSu
 @[to_additive
       "A more general version of `finsum_mem_add_distrib` that only requires `s ∩ support f`\nand `s ∩ support g` rather than `s` to be finite."]
 theorem finprod_mem_mul_distrib' (hf : (s ∩ mulSupport f).Finite) (hg : (s ∩ mulSupport g).Finite) :
-    (∏ᶠ i ∈ s, f i * g i) = (∏ᶠ i ∈ s, f i) * ∏ᶠ i ∈ s, g i :=
+    ∏ᶠ i ∈ s, f i * g i = (∏ᶠ i ∈ s, f i) * ∏ᶠ i ∈ s, g i :=
   by
   rw [← mul_support_mul_indicator] at hf hg 
   simp only [finprod_mem_def, mul_indicator_mul, finprod_mul_distrib hf hg]
@@ -584,14 +579,14 @@ theorem finprod_mem_mul_distrib' (hf : (s ∩ mulSupport f).Finite) (hg : (s ∩
 
 /-- The product of the constant function `1` over any set equals `1`. -/
 @[to_additive "The product of the constant function `0` over any set equals `0`."]
-theorem finprod_mem_one (s : Set α) : (∏ᶠ i ∈ s, (1 : M)) = 1 := by simp
+theorem finprod_mem_one (s : Set α) : ∏ᶠ i ∈ s, (1 : M) = 1 := by simp
 #align finprod_mem_one finprod_mem_one
 #align finsum_mem_zero finsum_mem_zero
 
 /-- If a function `f` equals `1` on a set `s`, then the product of `f i` over `i ∈ s` equals `1`. -/
 @[to_additive
       "If a function `f` equals `0` on a set `s`, then the product of `f i` over `i ∈ s`\nequals `0`."]
-theorem finprod_mem_of_eqOn_one (hf : s.EqOn f 1) : (∏ᶠ i ∈ s, f i) = 1 := by
+theorem finprod_mem_of_eqOn_one (hf : s.EqOn f 1) : ∏ᶠ i ∈ s, f i = 1 := by
   rw [← finprod_mem_one s]; exact finprod_mem_congr rfl hf
 #align finprod_mem_of_eq_on_one finprod_mem_of_eqOn_one
 #align finsum_mem_of_eq_on_zero finsum_mem_of_eqOn_zero
@@ -600,7 +595,7 @@ theorem finprod_mem_of_eqOn_one (hf : s.EqOn f 1) : (∏ᶠ i ∈ s, f i) = 1 :=
 `f x ≠ 1`. -/
 @[to_additive
       "If the product of `f i` over `i ∈ s` is not equal to `0`, then there is some `x ∈ s`\nsuch that `f x ≠ 0`."]
-theorem exists_ne_one_of_finprod_mem_ne_one (h : (∏ᶠ i ∈ s, f i) ≠ 1) : ∃ x ∈ s, f x ≠ 1 :=
+theorem exists_ne_one_of_finprod_mem_ne_one (h : ∏ᶠ i ∈ s, f i ≠ 1) : ∃ x ∈ s, f x ≠ 1 :=
   by
   by_contra' h'
   exact h (finprod_mem_of_eqOn_one h')
@@ -612,7 +607,7 @@ over `i ∈ s` times the product of `g i` over `i ∈ s`. -/
 @[to_additive
       "Given a finite set `s`, the sum of `f i + g i` over `i ∈ s` equals the sum of `f i`\nover `i ∈ s` plus the sum of `g i` over `i ∈ s`."]
 theorem finprod_mem_mul_distrib (hs : s.Finite) :
-    (∏ᶠ i ∈ s, f i * g i) = (∏ᶠ i ∈ s, f i) * ∏ᶠ i ∈ s, g i :=
+    ∏ᶠ i ∈ s, f i * g i = (∏ᶠ i ∈ s, f i) * ∏ᶠ i ∈ s, g i :=
   finprod_mem_mul_distrib' (hs.inter_of_left _) (hs.inter_of_left _)
 #align finprod_mem_mul_distrib finprod_mem_mul_distrib
 #align finsum_mem_add_distrib finsum_mem_add_distrib
@@ -662,7 +657,7 @@ theorem MulEquiv.map_finprod_mem (g : M ≃* N) (f : α → M) {s : Set α} (hs 
 
 @[to_additive]
 theorem finprod_mem_inv_distrib [DivisionCommMonoid G] (f : α → G) (hs : s.Finite) :
-    (∏ᶠ x ∈ s, (f x)⁻¹) = (∏ᶠ x ∈ s, f x)⁻¹ :=
+    ∏ᶠ x ∈ s, (f x)⁻¹ = (∏ᶠ x ∈ s, f x)⁻¹ :=
   ((MulEquiv.inv G).map_finprod_mem f hs).symm
 #align finprod_mem_inv_distrib finprod_mem_inv_distrib
 #align finsum_mem_neg_distrib finsum_mem_neg_distrib
@@ -672,7 +667,7 @@ over `i ∈ s` divided by the product of `g i` over `i ∈ s`. -/
 @[to_additive
       "Given a finite set `s`, the sum of `f i / g i` over `i ∈ s` equals the sum of `f i`\nover `i ∈ s` minus the sum of `g i` over `i ∈ s`."]
 theorem finprod_mem_div_distrib [DivisionCommMonoid G] (f g : α → G) (hs : s.Finite) :
-    (∏ᶠ i ∈ s, f i / g i) = (∏ᶠ i ∈ s, f i) / ∏ᶠ i ∈ s, g i := by
+    ∏ᶠ i ∈ s, f i / g i = (∏ᶠ i ∈ s, f i) / ∏ᶠ i ∈ s, g i := by
   simp only [div_eq_mul_inv, finprod_mem_mul_distrib hs, finprod_mem_inv_distrib g hs]
 #align finprod_mem_div_distrib finprod_mem_div_distrib
 #align finsum_mem_sub_distrib finsum_mem_sub_distrib
@@ -684,13 +679,13 @@ theorem finprod_mem_div_distrib [DivisionCommMonoid G] (f g : α → G) (hs : s.
 
 /-- The product of any function over an empty set is `1`. -/
 @[to_additive "The sum of any function over an empty set is `0`."]
-theorem finprod_mem_empty : (∏ᶠ i ∈ (∅ : Set α), f i) = 1 := by simp
+theorem finprod_mem_empty : ∏ᶠ i ∈ (∅ : Set α), f i = 1 := by simp
 #align finprod_mem_empty finprod_mem_empty
 #align finsum_mem_empty finsum_mem_empty
 
 /-- A set `s` is nonempty if the product of some function over `s` is not equal to `1`. -/
 @[to_additive "A set `s` is nonempty if the sum of some function over `s` is not equal to `0`."]
-theorem nonempty_of_finprod_mem_ne_one (h : (∏ᶠ i ∈ s, f i) ≠ 1) : s.Nonempty :=
+theorem nonempty_of_finprod_mem_ne_one (h : ∏ᶠ i ∈ s, f i ≠ 1) : s.Nonempty :=
   nonempty_iff_ne_empty.2 fun h' => h <| h'.symm ▸ finprod_mem_empty
 #align nonempty_of_finprod_mem_ne_one nonempty_of_finprod_mem_ne_one
 #align nonempty_of_finsum_mem_ne_zero nonempty_of_finsum_mem_ne_zero
@@ -701,7 +696,7 @@ over `i ∈ t`. -/
 @[to_additive
       "Given finite sets `s` and `t`, the sum of `f i` over `i ∈ s ∪ t` plus the sum of\n`f i` over `i ∈ s ∩ t` equals the sum of `f i` over `i ∈ s` plus the sum of `f i` over `i ∈ t`."]
 theorem finprod_mem_union_inter (hs : s.Finite) (ht : t.Finite) :
-    ((∏ᶠ i ∈ s ∪ t, f i) * ∏ᶠ i ∈ s ∩ t, f i) = (∏ᶠ i ∈ s, f i) * ∏ᶠ i ∈ t, f i :=
+    (∏ᶠ i ∈ s ∪ t, f i) * ∏ᶠ i ∈ s ∩ t, f i = (∏ᶠ i ∈ s, f i) * ∏ᶠ i ∈ t, f i :=
   by
   lift s to Finset α using hs; lift t to Finset α using ht
   classical
@@ -715,7 +710,7 @@ theorem finprod_mem_union_inter (hs : s.Finite) (ht : t.Finite) :
 @[to_additive
       "A more general version of `finsum_mem_union_inter` that requires `s ∩ support f` and\n`t ∩ support f` rather than `s` and `t` to be finite."]
 theorem finprod_mem_union_inter' (hs : (s ∩ mulSupport f).Finite) (ht : (t ∩ mulSupport f).Finite) :
-    ((∏ᶠ i ∈ s ∪ t, f i) * ∏ᶠ i ∈ s ∩ t, f i) = (∏ᶠ i ∈ s, f i) * ∏ᶠ i ∈ t, f i :=
+    (∏ᶠ i ∈ s ∪ t, f i) * ∏ᶠ i ∈ s ∩ t, f i = (∏ᶠ i ∈ s, f i) * ∏ᶠ i ∈ t, f i :=
   by
   rw [← finprod_mem_inter_mulSupport f s, ← finprod_mem_inter_mulSupport f t, ←
     finprod_mem_union_inter hs ht, ← union_inter_distrib_right, finprod_mem_inter_mulSupport, ←
@@ -730,7 +725,7 @@ theorem finprod_mem_union_inter' (hs : (s ∩ mulSupport f).Finite) (ht : (t ∩
 @[to_additive
       "A more general version of `finsum_mem_union` that requires `s ∩ support f` and\n`t ∩ support f` rather than `s` and `t` to be finite."]
 theorem finprod_mem_union' (hst : Disjoint s t) (hs : (s ∩ mulSupport f).Finite)
-    (ht : (t ∩ mulSupport f).Finite) : (∏ᶠ i ∈ s ∪ t, f i) = (∏ᶠ i ∈ s, f i) * ∏ᶠ i ∈ t, f i := by
+    (ht : (t ∩ mulSupport f).Finite) : ∏ᶠ i ∈ s ∪ t, f i = (∏ᶠ i ∈ s, f i) * ∏ᶠ i ∈ t, f i := by
   rw [← finprod_mem_union_inter' hs ht, disjoint_iff_inter_eq_empty.1 hst, finprod_mem_empty,
     mul_one]
 #align finprod_mem_union' finprod_mem_union'
@@ -741,7 +736,7 @@ product of `f i` over `i ∈ s` times the product of `f i` over `i ∈ t`. -/
 @[to_additive
       "Given two finite disjoint sets `s` and `t`, the sum of `f i` over `i ∈ s ∪ t` equals\nthe sum of `f i` over `i ∈ s` plus the sum of `f i` over `i ∈ t`."]
 theorem finprod_mem_union (hst : Disjoint s t) (hs : s.Finite) (ht : t.Finite) :
-    (∏ᶠ i ∈ s ∪ t, f i) = (∏ᶠ i ∈ s, f i) * ∏ᶠ i ∈ t, f i :=
+    ∏ᶠ i ∈ s ∪ t, f i = (∏ᶠ i ∈ s, f i) * ∏ᶠ i ∈ t, f i :=
   finprod_mem_union' hst (hs.inter_of_left _) (ht.inter_of_left _)
 #align finprod_mem_union finprod_mem_union
 #align finsum_mem_union finsum_mem_union
@@ -752,7 +747,7 @@ theorem finprod_mem_union (hst : Disjoint s t) (hs : s.Finite) (ht : t.Finite) :
       "A more general version of `finsum_mem_union'` that requires `s ∩ support f` and\n`t ∩ support f` rather than `s` and `t` to be disjoint"]
 theorem finprod_mem_union'' (hst : Disjoint (s ∩ mulSupport f) (t ∩ mulSupport f))
     (hs : (s ∩ mulSupport f).Finite) (ht : (t ∩ mulSupport f).Finite) :
-    (∏ᶠ i ∈ s ∪ t, f i) = (∏ᶠ i ∈ s, f i) * ∏ᶠ i ∈ t, f i := by
+    ∏ᶠ i ∈ s ∪ t, f i = (∏ᶠ i ∈ s, f i) * ∏ᶠ i ∈ t, f i := by
   rw [← finprod_mem_inter_mulSupport f s, ← finprod_mem_inter_mulSupport f t, ←
     finprod_mem_union hst hs ht, ← union_inter_distrib_right, finprod_mem_inter_mulSupport]
 #align finprod_mem_union'' finprod_mem_union''
@@ -761,7 +756,7 @@ theorem finprod_mem_union'' (hst : Disjoint (s ∩ mulSupport f) (t ∩ mulSuppo
 #print finprod_mem_singleton /-
 /-- The product of `f i` over `i ∈ {a}` equals `f a`. -/
 @[to_additive "The sum of `f i` over `i ∈ {a}` equals `f a`."]
-theorem finprod_mem_singleton : (∏ᶠ i ∈ ({a} : Set α), f i) = f a := by
+theorem finprod_mem_singleton : ∏ᶠ i ∈ ({a} : Set α), f i = f a := by
   rw [← Finset.coe_singleton, finprod_mem_coe_finset, Finset.prod_singleton]
 #align finprod_mem_singleton finprod_mem_singleton
 #align finsum_mem_singleton finsum_mem_singleton
@@ -770,7 +765,7 @@ theorem finprod_mem_singleton : (∏ᶠ i ∈ ({a} : Set α), f i) = f a := by
 /- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (i «expr = » a) -/
 #print finprod_cond_eq_left /-
 @[simp, to_additive]
-theorem finprod_cond_eq_left : (∏ᶠ (i) (_ : i = a), f i) = f a :=
+theorem finprod_cond_eq_left : ∏ᶠ (i) (_ : i = a), f i = f a :=
   finprod_mem_singleton
 #align finprod_cond_eq_left finprod_cond_eq_left
 #align finsum_cond_eq_left finsum_cond_eq_left
@@ -778,7 +773,7 @@ theorem finprod_cond_eq_left : (∏ᶠ (i) (_ : i = a), f i) = f a :=
 
 #print finprod_cond_eq_right /-
 @[simp, to_additive]
-theorem finprod_cond_eq_right : (∏ᶠ (i) (hi : a = i), f i) = f a := by simp [@eq_comm _ a]
+theorem finprod_cond_eq_right : ∏ᶠ (i) (hi : a = i), f i = f a := by simp [@eq_comm _ a]
 #align finprod_cond_eq_right finprod_cond_eq_right
 #align finsum_cond_eq_right finsum_cond_eq_right
 -/
@@ -788,7 +783,7 @@ to be finite. -/
 @[to_additive
       "A more general version of `finsum_mem_insert` that requires `s ∩ support f` rather\nthan `s` to be finite."]
 theorem finprod_mem_insert' (f : α → M) (h : a ∉ s) (hs : (s ∩ mulSupport f).Finite) :
-    (∏ᶠ i ∈ insert a s, f i) = f a * ∏ᶠ i ∈ s, f i :=
+    ∏ᶠ i ∈ insert a s, f i = f a * ∏ᶠ i ∈ s, f i :=
   by
   rw [insert_eq, finprod_mem_union' _ _ hs, finprod_mem_singleton]
   · rwa [disjoint_singleton_left]
@@ -801,7 +796,7 @@ theorem finprod_mem_insert' (f : α → M) (h : a ∉ s) (hs : (s ∩ mulSupport
 @[to_additive
       "Given a finite set `s` and an element `a ∉ s`, the sum of `f i` over `i ∈ insert a s`\nequals `f a` plus the sum of `f i` over `i ∈ s`."]
 theorem finprod_mem_insert (f : α → M) (h : a ∉ s) (hs : s.Finite) :
-    (∏ᶠ i ∈ insert a s, f i) = f a * ∏ᶠ i ∈ s, f i :=
+    ∏ᶠ i ∈ insert a s, f i = f a * ∏ᶠ i ∈ s, f i :=
   finprod_mem_insert' f h <| hs.inter_of_left _
 #align finprod_mem_insert finprod_mem_insert
 #align finsum_mem_insert finsum_mem_insert
@@ -811,7 +806,7 @@ theorem finprod_mem_insert (f : α → M) (h : a ∉ s) (hs : s.Finite) :
 @[to_additive
       "If `f a = 0` when `a ∉ s`, then the sum of `f i` over `i ∈ insert a s` equals the sum\nof `f i` over `i ∈ s`."]
 theorem finprod_mem_insert_of_eq_one_if_not_mem (h : a ∉ s → f a = 1) :
-    (∏ᶠ i ∈ insert a s, f i) = ∏ᶠ i ∈ s, f i :=
+    ∏ᶠ i ∈ insert a s, f i = ∏ᶠ i ∈ s, f i :=
   by
   refine' finprod_mem_inter_mulSupport_eq' _ _ _ fun x hx => ⟨_, Or.inr⟩
   rintro (rfl | hxs)
@@ -823,7 +818,7 @@ theorem finprod_mem_insert_of_eq_one_if_not_mem (h : a ∉ s → f a = 1) :
 `i ∈ s`. -/
 @[to_additive
       "If `f a = 0`, then the sum of `f i` over `i ∈ insert a s` equals the sum of `f i`\nover `i ∈ s`."]
-theorem finprod_mem_insert_one (h : f a = 1) : (∏ᶠ i ∈ insert a s, f i) = ∏ᶠ i ∈ s, f i :=
+theorem finprod_mem_insert_one (h : f a = 1) : ∏ᶠ i ∈ insert a s, f i = ∏ᶠ i ∈ s, f i :=
   finprod_mem_insert_of_eq_one_if_not_mem fun _ => h
 #align finprod_mem_insert_one finprod_mem_insert_one
 #align finsum_mem_insert_zero finsum_mem_insert_zero
@@ -841,7 +836,7 @@ theorem finprod_mem_dvd {f : α → N} (a : α) (hf : (mulSupport f).Finite) : f
 
 /-- The product of `f i` over `i ∈ {a, b}`, `a ≠ b`, is equal to `f a * f b`. -/
 @[to_additive "The sum of `f i` over `i ∈ {a, b}`, `a ≠ b`, is equal to `f a + f b`."]
-theorem finprod_mem_pair (h : a ≠ b) : (∏ᶠ i ∈ ({a, b} : Set α), f i) = f a * f b := by
+theorem finprod_mem_pair (h : a ≠ b) : ∏ᶠ i ∈ ({a, b} : Set α), f i = f a * f b := by
   rw [finprod_mem_insert, finprod_mem_singleton]; exacts [h, finite_singleton b]
 #align finprod_mem_pair finprod_mem_pair
 #align finsum_mem_pair finsum_mem_pair
@@ -851,7 +846,7 @@ provided that `g` is injective on `s ∩ mul_support (f ∘ g)`. -/
 @[to_additive
       "The sum of `f y` over `y ∈ g '' s` equals the sum of `f (g i)` over `s` provided that\n`g` is injective on `s ∩ support (f ∘ g)`."]
 theorem finprod_mem_image' {s : Set β} {g : β → α} (hg : (s ∩ mulSupport (f ∘ g)).InjOn g) :
-    (∏ᶠ i ∈ g '' s, f i) = ∏ᶠ j ∈ s, f (g j) := by
+    ∏ᶠ i ∈ g '' s, f i = ∏ᶠ j ∈ s, f (g j) := by
   classical
   by_cases hs : (s ∩ mul_support (f ∘ g)).Finite
   · have hg : ∀ x ∈ hs.to_finset, ∀ y ∈ hs.to_finset, g x = g y → x = y := by
@@ -869,7 +864,7 @@ theorem finprod_mem_image' {s : Set β} {g : β → α} (hg : (s ∩ mulSupport 
 @[to_additive
       "The sum of `f y` over `y ∈ g '' s` equals the sum of `f (g i)` over `s` provided that\n`g` is injective on `s`."]
 theorem finprod_mem_image {s : Set β} {g : β → α} (hg : s.InjOn g) :
-    (∏ᶠ i ∈ g '' s, f i) = ∏ᶠ j ∈ s, f (g j) :=
+    ∏ᶠ i ∈ g '' s, f i = ∏ᶠ j ∈ s, f (g j) :=
   finprod_mem_image' <| hg.mono <| inter_subset_left _ _
 #align finprod_mem_image finprod_mem_image
 #align finsum_mem_image finsum_mem_image
@@ -879,7 +874,7 @@ provided that `g` is injective on `mul_support (f ∘ g)`. -/
 @[to_additive
       "The sum of `f y` over `y ∈ set.range g` equals the sum of `f (g i)` over all `i`\nprovided that `g` is injective on `support (f ∘ g)`."]
 theorem finprod_mem_range' {g : β → α} (hg : (mulSupport (f ∘ g)).InjOn g) :
-    (∏ᶠ i ∈ range g, f i) = ∏ᶠ j, f (g j) :=
+    ∏ᶠ i ∈ range g, f i = ∏ᶠ j, f (g j) :=
   by
   rw [← image_univ, finprod_mem_image', finprod_mem_univ]
   rwa [univ_inter]
@@ -890,7 +885,7 @@ theorem finprod_mem_range' {g : β → α} (hg : (mulSupport (f ∘ g)).InjOn g)
 provided that `g` is injective. -/
 @[to_additive
       "The sum of `f y` over `y ∈ set.range g` equals the sum of `f (g i)` over all `i`\nprovided that `g` is injective."]
-theorem finprod_mem_range {g : β → α} (hg : Injective g) : (∏ᶠ i ∈ range g, f i) = ∏ᶠ j, f (g j) :=
+theorem finprod_mem_range {g : β → α} (hg : Injective g) : ∏ᶠ i ∈ range g, f i = ∏ᶠ j, f (g j) :=
   finprod_mem_range' (hg.InjOn _)
 #align finprod_mem_range finprod_mem_range
 #align finsum_mem_range finsum_mem_range
@@ -898,7 +893,7 @@ theorem finprod_mem_range {g : β → α} (hg : Injective g) : (∏ᶠ i ∈ ran
 /-- See also `finset.prod_bij`. -/
 @[to_additive "See also `finset.sum_bij`."]
 theorem finprod_mem_eq_of_bijOn {s : Set α} {t : Set β} {f : α → M} {g : β → M} (e : α → β)
-    (he₀ : s.BijOn e t) (he₁ : ∀ x ∈ s, f x = g (e x)) : (∏ᶠ i ∈ s, f i) = ∏ᶠ j ∈ t, g j :=
+    (he₀ : s.BijOn e t) (he₁ : ∀ x ∈ s, f x = g (e x)) : ∏ᶠ i ∈ s, f i = ∏ᶠ j ∈ t, g j :=
   by
   rw [← Set.BijOn.image_eq he₀, finprod_mem_image he₀.2.1]
   exact finprod_mem_congr rfl he₁
@@ -908,7 +903,7 @@ theorem finprod_mem_eq_of_bijOn {s : Set α} {t : Set β} {f : α → M} {g : β
 /-- See `finprod_comp`, `fintype.prod_bijective` and `finset.prod_bij`. -/
 @[to_additive "See `finsum_comp`, `fintype.sum_bijective` and `finset.sum_bij`."]
 theorem finprod_eq_of_bijective {f : α → M} {g : β → M} (e : α → β) (he₀ : Bijective e)
-    (he₁ : ∀ x, f x = g (e x)) : (∏ᶠ i, f i) = ∏ᶠ j, g j :=
+    (he₁ : ∀ x, f x = g (e x)) : ∏ᶠ i, f i = ∏ᶠ j, g j :=
   by
   rw [← finprod_mem_univ f, ← finprod_mem_univ g]
   exact finprod_mem_eq_of_bijOn _ (bijective_iff_bij_on_univ.mp he₀) fun x _ => he₁ x
@@ -918,19 +913,19 @@ theorem finprod_eq_of_bijective {f : α → M} {g : β → M} (e : α → β) (h
 /-- See also `finprod_eq_of_bijective`, `fintype.prod_bijective` and `finset.prod_bij`. -/
 @[to_additive "See also `finsum_eq_of_bijective`, `fintype.sum_bijective` and `finset.sum_bij`."]
 theorem finprod_comp {g : β → M} (e : α → β) (he₀ : Function.Bijective e) :
-    (∏ᶠ i, g (e i)) = ∏ᶠ j, g j :=
+    ∏ᶠ i, g (e i) = ∏ᶠ j, g j :=
   finprod_eq_of_bijective e he₀ fun x => rfl
 #align finprod_comp finprod_comp
 #align finsum_comp finsum_comp
 
 @[to_additive]
-theorem finprod_comp_equiv (e : α ≃ β) {f : β → M} : (∏ᶠ i, f (e i)) = ∏ᶠ i', f i' :=
+theorem finprod_comp_equiv (e : α ≃ β) {f : β → M} : ∏ᶠ i, f (e i) = ∏ᶠ i', f i' :=
   finprod_comp e e.Bijective
 #align finprod_comp_equiv finprod_comp_equiv
 #align finsum_comp_equiv finsum_comp_equiv
 
 @[to_additive]
-theorem finprod_set_coe_eq_finprod_mem (s : Set α) : (∏ᶠ j : s, f j) = ∏ᶠ i ∈ s, f i :=
+theorem finprod_set_coe_eq_finprod_mem (s : Set α) : ∏ᶠ j : s, f j = ∏ᶠ i ∈ s, f i :=
   by
   rw [← finprod_mem_range, Subtype.range_coe]
   exact Subtype.coe_injective
@@ -940,7 +935,7 @@ theorem finprod_set_coe_eq_finprod_mem (s : Set α) : (∏ᶠ j : s, f j) = ∏�
 #print finprod_subtype_eq_finprod_cond /-
 @[to_additive]
 theorem finprod_subtype_eq_finprod_cond (p : α → Prop) :
-    (∏ᶠ j : Subtype p, f j) = ∏ᶠ (i) (hi : p i), f i :=
+    ∏ᶠ j : Subtype p, f j = ∏ᶠ (i) (hi : p i), f i :=
   finprod_set_coe_eq_finprod_mem {i | p i}
 #align finprod_subtype_eq_finprod_cond finprod_subtype_eq_finprod_cond
 #align finsum_subtype_eq_finsum_cond finsum_subtype_eq_finsum_cond
@@ -948,7 +943,7 @@ theorem finprod_subtype_eq_finprod_cond (p : α → Prop) :
 
 @[to_additive]
 theorem finprod_mem_inter_mul_diff' (t : Set α) (h : (s ∩ mulSupport f).Finite) :
-    ((∏ᶠ i ∈ s ∩ t, f i) * ∏ᶠ i ∈ s \ t, f i) = ∏ᶠ i ∈ s, f i :=
+    (∏ᶠ i ∈ s ∩ t, f i) * ∏ᶠ i ∈ s \ t, f i = ∏ᶠ i ∈ s, f i :=
   by
   rw [← finprod_mem_union', inter_union_diff]
   rw [disjoint_iff_inf_le]
@@ -959,7 +954,7 @@ theorem finprod_mem_inter_mul_diff' (t : Set α) (h : (s ∩ mulSupport f).Finit
 
 @[to_additive]
 theorem finprod_mem_inter_mul_diff (t : Set α) (h : s.Finite) :
-    ((∏ᶠ i ∈ s ∩ t, f i) * ∏ᶠ i ∈ s \ t, f i) = ∏ᶠ i ∈ s, f i :=
+    (∏ᶠ i ∈ s ∩ t, f i) * ∏ᶠ i ∈ s \ t, f i = ∏ᶠ i ∈ s, f i :=
   finprod_mem_inter_mul_diff' _ <| h.inter_of_left _
 #align finprod_mem_inter_mul_diff finprod_mem_inter_mul_diff
 #align finsum_mem_inter_add_diff finsum_mem_inter_add_diff
@@ -969,7 +964,7 @@ theorem finprod_mem_inter_mul_diff (t : Set α) (h : s.Finite) :
 @[to_additive
       "A more general version of `finsum_mem_add_diff` that requires `t ∩ support f` rather\nthan `t` to be finite."]
 theorem finprod_mem_mul_diff' (hst : s ⊆ t) (ht : (t ∩ mulSupport f).Finite) :
-    ((∏ᶠ i ∈ s, f i) * ∏ᶠ i ∈ t \ s, f i) = ∏ᶠ i ∈ t, f i := by
+    (∏ᶠ i ∈ s, f i) * ∏ᶠ i ∈ t \ s, f i = ∏ᶠ i ∈ t, f i := by
   rw [← finprod_mem_inter_mul_diff' _ ht, inter_eq_self_of_subset_right hst]
 #align finprod_mem_mul_diff' finprod_mem_mul_diff'
 #align finsum_mem_add_diff' finsum_mem_add_diff'
@@ -979,7 +974,7 @@ times the product of `f i` over `t \ s` equals the product of `f i` over `i ∈ 
 @[to_additive
       "Given a finite set `t` and a subset `s` of `t`, the sum of `f i` over `i ∈ s` plus\nthe sum of `f i` over `t \\ s` equals the sum of `f i` over `i ∈ t`."]
 theorem finprod_mem_mul_diff (hst : s ⊆ t) (ht : t.Finite) :
-    ((∏ᶠ i ∈ s, f i) * ∏ᶠ i ∈ t \ s, f i) = ∏ᶠ i ∈ t, f i :=
+    (∏ᶠ i ∈ s, f i) * ∏ᶠ i ∈ t \ s, f i = ∏ᶠ i ∈ t, f i :=
   finprod_mem_mul_diff' hst (ht.inter_of_left _)
 #align finprod_mem_mul_diff finprod_mem_mul_diff
 #align finsum_mem_add_diff finsum_mem_add_diff
@@ -990,7 +985,7 @@ theorem finprod_mem_mul_diff (hst : s ⊆ t) (ht : t.Finite) :
 @[to_additive
       "Given a family of pairwise disjoint finite sets `t i` indexed by a finite type, the\nsum of `f a` over the union `⋃ i, t i` is equal to the sum over all indexes `i` of the sums of `f a`\nover `a ∈ t i`."]
 theorem finprod_mem_iUnion [Finite ι] {t : ι → Set α} (h : Pairwise (Disjoint on t))
-    (ht : ∀ i, (t i).Finite) : (∏ᶠ a ∈ ⋃ i : ι, t i, f a) = ∏ᶠ i, ∏ᶠ a ∈ t i, f a :=
+    (ht : ∀ i, (t i).Finite) : ∏ᶠ a ∈ ⋃ i : ι, t i, f a = ∏ᶠ i, ∏ᶠ a ∈ t i, f a :=
   by
   cases nonempty_fintype ι
   lift t to ι → Finset α using ht
@@ -1009,7 +1004,7 @@ over `a ∈ ⋃ i ∈ I, t i` is equal to the product over `i ∈ I` of the prod
 @[to_additive
       "Given a family of sets `t : ι → set α`, a finite set `I` in the index type such that\nall sets `t i`, `i ∈ I`, are finite, if all `t i`, `i ∈ I`, are pairwise disjoint, then the sum of\n`f a` over `a ∈ ⋃ i ∈ I, t i` is equal to the sum over `i ∈ I` of the sums of `f a` over\n`a ∈ t i`."]
 theorem finprod_mem_biUnion {I : Set ι} {t : ι → Set α} (h : I.PairwiseDisjoint t) (hI : I.Finite)
-    (ht : ∀ i ∈ I, (t i).Finite) : (∏ᶠ a ∈ ⋃ x ∈ I, t x, f a) = ∏ᶠ i ∈ I, ∏ᶠ j ∈ t i, f j :=
+    (ht : ∀ i ∈ I, (t i).Finite) : ∏ᶠ a ∈ ⋃ x ∈ I, t x, f a = ∏ᶠ i ∈ I, ∏ᶠ j ∈ t i, f j :=
   by
   haveI := hI.fintype
   rw [bUnion_eq_Union, finprod_mem_iUnion, ← finprod_set_coe_eq_finprod_mem]
@@ -1022,7 +1017,7 @@ over `a ∈ ⋃₀ t` is the product over `s ∈ t` of the products of `f a` ove
 @[to_additive
       "If `t` is a finite set of pairwise disjoint finite sets, then the sum of `f a` over\n`a ∈ ⋃₀ t` is the sum over `s ∈ t` of the sums of `f a` over `a ∈ s`."]
 theorem finprod_mem_sUnion {t : Set (Set α)} (h : t.PairwiseDisjoint id) (ht₀ : t.Finite)
-    (ht₁ : ∀ x ∈ t, Set.Finite x) : (∏ᶠ a ∈ ⋃₀ t, f a) = ∏ᶠ s ∈ t, ∏ᶠ a ∈ s, f a := by
+    (ht₁ : ∀ x ∈ t, Set.Finite x) : ∏ᶠ a ∈ ⋃₀ t, f a = ∏ᶠ s ∈ t, ∏ᶠ a ∈ s, f a := by
   rw [Set.sUnion_eq_biUnion]; exact finprod_mem_biUnion h ht₀ ht₁
 #align finprod_mem_sUnion finprod_mem_sUnion
 #align finsum_mem_sUnion finsum_mem_sUnion
@@ -1030,7 +1025,7 @@ theorem finprod_mem_sUnion {t : Set (Set α)} (h : t.PairwiseDisjoint id) (ht₀
 /- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (i «expr ≠ » a) -/
 @[to_additive]
 theorem mul_finprod_cond_ne (a : α) (hf : (mulSupport f).Finite) :
-    (f a * ∏ᶠ (i) (_ : i ≠ a), f i) = ∏ᶠ i, f i := by
+    f a * ∏ᶠ (i) (_ : i ≠ a), f i = ∏ᶠ i, f i := by
   classical
   rw [finprod_eq_prod _ hf]
   have h : ∀ x : α, f x ≠ 1 → (x ≠ a ↔ x ∈ hf.to_finset \ {a}) :=
@@ -1052,7 +1047,7 @@ taking the product over `t`. -/
 @[to_additive
       "If `s : set α` and `t : set β` are finite sets, then summing over `s` commutes with\nsumming over `t`."]
 theorem finprod_mem_comm {s : Set α} {t : Set β} (f : α → β → M) (hs : s.Finite) (ht : t.Finite) :
-    (∏ᶠ i ∈ s, ∏ᶠ j ∈ t, f i j) = ∏ᶠ j ∈ t, ∏ᶠ i ∈ s, f i j :=
+    ∏ᶠ i ∈ s, ∏ᶠ j ∈ t, f i j = ∏ᶠ j ∈ t, ∏ᶠ i ∈ s, f i j :=
   by
   lift s to Finset α using hs; lift t to Finset β using ht
   simp only [finprod_mem_coe_finset]
@@ -1087,7 +1082,7 @@ theorem single_le_finprod {M : Type _} [OrderedCommMonoid M] (i : α) {f : α �
 #align single_le_finsum single_le_finsum
 
 theorem finprod_eq_zero {M₀ : Type _} [CommMonoidWithZero M₀] (f : α → M₀) (x : α) (hx : f x = 0)
-    (hf : (mulSupport f).Finite) : (∏ᶠ x, f x) = 0 :=
+    (hf : (mulSupport f).Finite) : ∏ᶠ x, f x = 0 :=
   by
   nontriviality
   rw [finprod_eq_prod f hf]
@@ -1098,7 +1093,7 @@ theorem finprod_eq_zero {M₀ : Type _} [CommMonoidWithZero M₀] (f : α → M�
 @[to_additive]
 theorem finprod_prod_comm (s : Finset β) (f : α → β → M)
     (h : ∀ b ∈ s, (mulSupport fun a => f a b).Finite) :
-    (∏ᶠ a : α, ∏ b in s, f a b) = ∏ b in s, ∏ᶠ a : α, f a b :=
+    ∏ᶠ a : α, ∏ b in s, f a b = ∏ b in s, ∏ᶠ a : α, f a b :=
   by
   have hU :
     (mul_support fun a => ∏ b in s, f a b) ⊆
@@ -1119,13 +1114,13 @@ theorem finprod_prod_comm (s : Finset β) (f : α → β → M)
 
 @[to_additive]
 theorem prod_finprod_comm (s : Finset α) (f : α → β → M) (h : ∀ a ∈ s, (mulSupport (f a)).Finite) :
-    (∏ a in s, ∏ᶠ b : β, f a b) = ∏ᶠ b : β, ∏ a in s, f a b :=
+    ∏ a in s, ∏ᶠ b : β, f a b = ∏ᶠ b : β, ∏ a in s, f a b :=
   (finprod_prod_comm s (fun b a => f a b) h).symm
 #align prod_finprod_comm prod_finprod_comm
 #align sum_finsum_comm sum_finsum_comm
 
 theorem mul_finsum {R : Type _} [Semiring R] (f : α → R) (r : R) (h : (support f).Finite) :
-    (r * ∑ᶠ a : α, f a) = ∑ᶠ a : α, r * f a :=
+    r * ∑ᶠ a : α, f a = ∑ᶠ a : α, r * f a :=
   (AddMonoidHom.mulLeft r).map_finsum h
 #align mul_finsum mul_finsum
 
@@ -1154,12 +1149,12 @@ iterating this lemma, e.g., if we have `f : α × β × γ → M`. -/
       "Note that `b ∈ (s.filter (λ ab, prod.fst ab = a)).image prod.snd` iff `(a, b) ∈ s` so\nwe can simplify the right hand side of this lemma. However the form stated here is more useful for\niterating this lemma, e.g., if we have `f : α × β × γ → M`."]
 theorem finprod_mem_finset_product' [DecidableEq α] [DecidableEq β] (s : Finset (α × β))
     (f : α × β → M) :
-    (∏ᶠ (ab) (h : ab ∈ s), f ab) =
+    ∏ᶠ (ab) (h : ab ∈ s), f ab =
       ∏ᶠ (a) (b) (h : b ∈ (s.filterₓ fun ab => Prod.fst ab = a).image Prod.snd), f (a, b) :=
   by
   have :
     ∀ a,
-      (∏ i : β in (s.filter fun ab => Prod.fst ab = a).image Prod.snd, f (a, i)) =
+      ∏ i : β in (s.filter fun ab => Prod.fst ab = a).image Prod.snd, f (a, i) =
         (Finset.filter (fun ab => Prod.fst ab = a) s).Prod f :=
     by
     refine' fun a => Finset.prod_bij (fun b _ => (a, b)) _ _ _ _ <;>-- `finish` closes these goals
@@ -1182,7 +1177,7 @@ theorem finprod_mem_finset_product' [DecidableEq α] [DecidableEq β] (s : Finse
 /-- See also `finprod_mem_finset_product'`. -/
 @[to_additive "See also `finsum_mem_finset_product'`."]
 theorem finprod_mem_finset_product (s : Finset (α × β)) (f : α × β → M) :
-    (∏ᶠ (ab) (h : ab ∈ s), f ab) = ∏ᶠ (a) (b) (h : (a, b) ∈ s), f (a, b) := by
+    ∏ᶠ (ab) (h : ab ∈ s), f ab = ∏ᶠ (a) (b) (h : (a, b) ∈ s), f (a, b) := by
   classical
   rw [finprod_mem_finset_product']
   simp
@@ -1192,7 +1187,7 @@ theorem finprod_mem_finset_product (s : Finset (α × β)) (f : α × β → M) 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b c) -/
 @[to_additive]
 theorem finprod_mem_finset_product₃ {γ : Type _} (s : Finset (α × β × γ)) (f : α × β × γ → M) :
-    (∏ᶠ (abc) (h : abc ∈ s), f abc) = ∏ᶠ (a) (b) (c) (h : (a, b, c) ∈ s), f (a, b, c) := by
+    ∏ᶠ (abc) (h : abc ∈ s), f abc = ∏ᶠ (a) (b) (c) (h : (a, b, c) ∈ s), f (a, b, c) := by
   classical
   rw [finprod_mem_finset_product']
   simp_rw [finprod_mem_finset_product']
@@ -1203,10 +1198,10 @@ theorem finprod_mem_finset_product₃ {γ : Type _} (s : Finset (α × β × γ)
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
 @[to_additive]
 theorem finprod_curry (f : α × β → M) (hf : (mulSupport f).Finite) :
-    (∏ᶠ ab, f ab) = ∏ᶠ (a) (b), f (a, b) :=
+    ∏ᶠ ab, f ab = ∏ᶠ (a) (b), f (a, b) :=
   by
-  have h₁ : ∀ a, (∏ᶠ h : a ∈ hf.to_finset, f a) = f a := by simp
-  have h₂ : (∏ᶠ a, f a) = ∏ᶠ (a) (h : a ∈ hf.to_finset), f a := by simp
+  have h₁ : ∀ a, ∏ᶠ h : a ∈ hf.to_finset, f a = f a := by simp
+  have h₂ : ∏ᶠ a, f a = ∏ᶠ (a) (h : a ∈ hf.to_finset), f a := by simp
   simp_rw [h₂, finprod_mem_finset_product, h₁]
 #align finprod_curry finprod_curry
 #align finsum_curry finsum_curry
@@ -1214,14 +1209,14 @@ theorem finprod_curry (f : α × β → M) (hf : (mulSupport f).Finite) :
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b c) -/
 @[to_additive]
 theorem finprod_curry₃ {γ : Type _} (f : α × β × γ → M) (h : (mulSupport f).Finite) :
-    (∏ᶠ abc, f abc) = ∏ᶠ (a) (b) (c), f (a, b, c) := by rw [finprod_curry f h]; congr; ext a;
+    ∏ᶠ abc, f abc = ∏ᶠ (a) (b) (c), f (a, b, c) := by rw [finprod_curry f h]; congr; ext a;
   rw [finprod_curry]; simp [h]
 #align finprod_curry₃ finprod_curry₃
 #align finsum_curry₃ finsum_curry₃
 
 @[to_additive]
 theorem finprod_dmem {s : Set α} [DecidablePred (· ∈ s)] (f : ∀ a : α, a ∈ s → M) :
-    (∏ᶠ (a : α) (h : a ∈ s), f a h) = ∏ᶠ (a : α) (h : a ∈ s), if h' : a ∈ s then f a h' else 1 :=
+    ∏ᶠ (a : α) (h : a ∈ s), f a h = ∏ᶠ (a : α) (h : a ∈ s), if h' : a ∈ s then f a h' else 1 :=
   finprod_congr fun a => finprod_congr fun ha => (dif_pos ha).symm
 #align finprod_dmem finprod_dmem
 #align finsum_dmem finsum_dmem

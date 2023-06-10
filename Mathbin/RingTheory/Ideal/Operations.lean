@@ -514,7 +514,7 @@ theorem pow_mem_pow {x : R} (hx : x ∈ I) (n : ℕ) : x ^ n ∈ I ^ n :=
 -/
 
 theorem prod_mem_prod {ι : Type _} {s : Finset ι} {I : ι → Ideal R} {x : ι → R} :
-    (∀ i ∈ s, x i ∈ I i) → (∏ i in s, x i) ∈ ∏ i in s, I i := by
+    (∀ i ∈ s, x i ∈ I i) → ∏ i in s, x i ∈ ∏ i in s, I i := by
   classical
   apply Finset.induction_on s
   · intro; rw [Finset.prod_empty, Finset.prod_empty, one_eq_top]; exact Submodule.mem_top
@@ -674,12 +674,12 @@ theorem span_singleton_mul_eq_span_singleton_mul {x y : R} (I J : Ideal R) :
 #align ideal.span_singleton_mul_eq_span_singleton_mul Ideal.span_singleton_mul_eq_span_singleton_mul
 
 theorem prod_span {ι : Type _} (s : Finset ι) (I : ι → Set R) :
-    (∏ i in s, Ideal.span (I i)) = Ideal.span (∏ i in s, I i) :=
+    ∏ i in s, Ideal.span (I i) = Ideal.span (∏ i in s, I i) :=
   Submodule.prod_span s I
 #align ideal.prod_span Ideal.prod_span
 
 theorem prod_span_singleton {ι : Type _} (s : Finset ι) (I : ι → R) :
-    (∏ i in s, Ideal.span ({I i} : Set R)) = Ideal.span {∏ i in s, I i} :=
+    ∏ i in s, Ideal.span ({I i} : Set R) = Ideal.span {∏ i in s, I i} :=
   Submodule.prod_span_singleton s I
 #align ideal.prod_span_singleton Ideal.prod_span_singleton
 
@@ -770,7 +770,7 @@ theorem mul_sup_eq_of_coprime_right (h : K ⊔ J = ⊤) : I * K ⊔ J = I ⊔ J 
 #align ideal.mul_sup_eq_of_coprime_right Ideal.mul_sup_eq_of_coprime_right
 
 theorem sup_prod_eq_top {s : Finset ι} {J : ι → Ideal R} (h : ∀ i, i ∈ s → I ⊔ J i = ⊤) :
-    (I ⊔ ∏ i in s, J i) = ⊤ :=
+    I ⊔ ∏ i in s, J i = ⊤ :=
   Finset.prod_induction _ (fun J => I ⊔ J = ⊤)
     (fun J K hJ hK => (sup_mul_eq_of_coprime_left hJ).trans hK) (by rw [one_eq_top, sup_top_eq]) h
 #align ideal.sup_prod_eq_top Ideal.sup_prod_eq_top

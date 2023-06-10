@@ -373,8 +373,8 @@ protected theorem FiniteSpanningSetsIn.outerRegular [OpensMeasurableSpace α] {�
   refine' ⟨⋃ n, U n, Union_mono hAU, isOpen_iUnion hUo, _⟩
   calc
     μ (⋃ n, U n) ≤ ∑' n, μ (U n) := measure_Union_le _
-    _ ≤ ∑' n, μ (A n) + δ n := (ENNReal.tsum_le_tsum fun n => (hU n).le)
-    _ = (∑' n, μ (A n)) + ∑' n, δ n := ENNReal.tsum_add
+    _ ≤ ∑' n, (μ (A n) + δ n) := (ENNReal.tsum_le_tsum fun n => (hU n).le)
+    _ = ∑' n, μ (A n) + ∑' n, δ n := ENNReal.tsum_add
     _ = μ (⋃ n, A n) + ∑' n, δ n := (congr_arg₂ (· + ·) (measure_Union hAd hAm).symm rfl)
     _ < r := hδε
 #align measure_theory.measure.finite_spanning_sets_in.outer_regular MeasureTheory.Measure.FiniteSpanningSetsIn.outerRegular
@@ -456,7 +456,7 @@ theorem weaklyRegular_of_finite [BorelSpace α] (μ : Measure α) [IsFiniteMeasu
     -- the approximating closed set is constructed by considering finitely many sets `s i`, which
     -- cover all the measure up to `ε/2`, approximating each of these by a closed set `F i`, and
     -- taking the union of these (finitely many) `F i`.
-    have : tendsto (fun t => (∑ k in t, μ (s k)) + ε / 2) at_top (𝓝 <| μ (⋃ n, s n) + ε / 2) := by
+    have : tendsto (fun t => ∑ k in t, μ (s k) + ε / 2) at_top (𝓝 <| μ (⋃ n, s n) + ε / 2) := by
       rw [measure_Union hsd hsm]; exact tendsto.add ennreal.summable.has_sum tendsto_const_nhds
     rcases(this.eventually <| lt_mem_nhds <| ENNReal.lt_add_right hfin ε0').exists with ⟨t, ht⟩
     -- the approximating open set is constructed by taking for each `s n` an approximating open set
@@ -465,9 +465,9 @@ theorem weaklyRegular_of_finite [BorelSpace α] (μ : Measure α) [IsFiniteMeasu
       ⟨⋃ k ∈ t, F k, Union_mono fun k => Union_subset fun _ => hFs _, ⋃ n, U n, Union_mono hsU,
         isClosed_biUnion t.finite_to_set fun k _ => hFc k, isOpen_iUnion hUo, ht.le.trans _, _⟩
     · calc
-        (∑ k in t, μ (s k)) + ε / 2 ≤ ((∑ k in t, μ (F k)) + ∑ k in t, δ k) + ε / 2 := by
+        ∑ k in t, μ (s k) + ε / 2 ≤ ∑ k in t, μ (F k) + ∑ k in t, δ k + ε / 2 := by
           rw [← sum_add_distrib]; exact add_le_add_right (sum_le_sum fun k hk => hF k) _
-        _ ≤ (∑ k in t, μ (F k)) + ε / 2 + ε / 2 :=
+        _ ≤ ∑ k in t, μ (F k) + ε / 2 + ε / 2 :=
           (add_le_add_right (add_le_add_left ((ENNReal.sum_le_tsum _).trans hδε.le) _) _)
         _ = μ (⋃ k ∈ t, F k) + ε := _
       rw [measure_bUnion_finset, add_assoc, ENNReal.add_halves]
@@ -475,7 +475,7 @@ theorem weaklyRegular_of_finite [BorelSpace α] (μ : Measure α) [IsFiniteMeasu
     ·
       calc
         μ (⋃ n, U n) ≤ ∑' n, μ (U n) := measure_Union_le _
-        _ ≤ ∑' n, μ (s n) + δ n := (ENNReal.tsum_le_tsum hU)
+        _ ≤ ∑' n, (μ (s n) + δ n) := (ENNReal.tsum_le_tsum hU)
         _ = μ (⋃ n, s n) + ∑' n, δ n := by rw [measure_Union hsd hsm, ENNReal.tsum_add]
         _ ≤ μ (⋃ n, s n) + ε := add_le_add_left (hδε.le.trans ENNReal.half_le_self) _
 #align measure_theory.measure.inner_regular.weakly_regular_of_finite MeasureTheory.Measure.InnerRegular.weaklyRegular_of_finite

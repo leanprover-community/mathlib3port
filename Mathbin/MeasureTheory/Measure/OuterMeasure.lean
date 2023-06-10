@@ -196,7 +196,7 @@ theorem iUnion_of_tendsto_zero {ι} (m : OuterMeasure α) {s : ι → Set α} (l
 /-- If `s : ℕ → set α` is a monotone sequence of sets such that `∑' k, m (s (k + 1) \ s k) ≠ ∞`,
 then `m (⋃ n, s n) = ⨆ n, m (s n)`. -/
 theorem iUnion_nat_of_monotone_of_tsum_ne_top (m : OuterMeasure α) {s : ℕ → Set α}
-    (h_mono : ∀ n, s n ⊆ s (n + 1)) (h0 : (∑' k, m (s (k + 1) \ s k)) ≠ ∞) :
+    (h_mono : ∀ n, s n ⊆ s (n + 1)) (h0 : ∑' k, m (s (k + 1) \ s k) ≠ ∞) :
     m (⋃ n, s n) = ⨆ n, m (s n) :=
   by
   refine' m.Union_of_tendsto_zero at_top _
@@ -274,7 +274,7 @@ instance : Add (OuterMeasure α) :=
       mono := fun s₁ s₂ h => add_le_add (m₁.mono h) (m₂.mono h)
       iUnion_nat := fun s =>
         calc
-          m₁ (⋃ i, s i) + m₂ (⋃ i, s i) ≤ (∑' i, m₁ (s i)) + ∑' i, m₂ (s i) :=
+          m₁ (⋃ i, s i) + m₂ (⋃ i, s i) ≤ ∑' i, m₁ (s i) + ∑' i, m₂ (s i) :=
             add_le_add (m₁.iUnion_nat s) (m₂.iUnion_nat s)
           _ = _ := ENNReal.tsum_add.symm }⟩
 
@@ -666,12 +666,12 @@ protected def ofFunction : OuterMeasure α :=
     iUnion_nat := fun s =>
       ENNReal.le_of_forall_pos_le_add <|
         by
-        intro ε hε (hb : (∑' i, μ (s i)) < ∞)
+        intro ε hε (hb : ∑' i, μ (s i) < ∞)
         rcases ENNReal.exists_pos_sum_of_countable (ENNReal.coe_pos.2 hε).ne' ℕ with ⟨ε', hε', hl⟩
         refine' le_trans _ (add_le_add_left (le_of_lt hl) _)
         rw [← ENNReal.tsum_add]
         choose f hf using
-          show ∀ i, ∃ f : ℕ → Set α, (s i ⊆ ⋃ i, f i) ∧ (∑' i, m (f i)) < μ (s i) + ε' i
+          show ∀ i, ∃ f : ℕ → Set α, (s i ⊆ ⋃ i, f i) ∧ ∑' i, m (f i) < μ (s i) + ε' i
             by
             intro
             have : μ (s i) < μ (s i) + ε' i :=
@@ -757,7 +757,7 @@ theorem ofFunction_union_of_top_of_nonempty_inter {s t : Set α}
           mem_Union.2 ⟨⟨i, ⟨x, hx, hi⟩⟩, hi⟩
       _ ≤ ∑' i : I u, μ (f i) := μ.Union _
   calc
-    μ s + μ t ≤ (∑' i : I s, μ (f i)) + ∑' i : I t, μ (f i) :=
+    μ s + μ t ≤ ∑' i : I s, μ (f i) + ∑' i : I t, μ (f i) :=
       add_le_add (hI _ <| subset_union_left _ _) (hI _ <| subset_union_right _ _)
     _ = ∑' i : I s ∪ I t, μ (f i) :=
       (@tsum_union_disjoint _ _ _ _ _ (fun i => μ (f i)) _ _ _ hd ENNReal.summable
@@ -1007,7 +1007,7 @@ theorem isCaratheodory_inter (h₁ : is_caratheodory s₁) (h₂ : is_caratheodo
 
 theorem isCaratheodory_sum {s : ℕ → Set α} (h : ∀ i, is_caratheodory (s i))
     (hd : Pairwise (Disjoint on s)) {t : Set α} :
-    ∀ {n}, (∑ i in Finset.range n, m (t ∩ s i)) = m (t ∩ ⋃ i < n, s i)
+    ∀ {n}, ∑ i in Finset.range n, m (t ∩ s i) = m (t ∩ ⋃ i < n, s i)
   | 0 => by simp [Nat.not_lt_zero, m.empty]
   | Nat.succ n =>
     by

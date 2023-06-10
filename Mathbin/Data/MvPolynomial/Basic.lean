@@ -910,7 +910,7 @@ section AsSum
 
 @[simp]
 theorem support_sum_monomial_coeff (p : MvPolynomial σ R) :
-    (∑ v in p.support, monomial v (coeff v p)) = p :=
+    ∑ v in p.support, monomial v (coeff v p) = p :=
   Finsupp.sum_single p
 #align mv_polynomial.support_sum_monomial_coeff MvPolynomial.support_sum_monomial_coeff
 

@@ -63,26 +63,26 @@ namespace Finset
 /-- The sum of `(n+1).choose i * f i (n+1-i)` can be split into two sums at rank `n`,
 respectively of `n.choose i * f i (n+1-i)` and `n.choose i * f (i+1) (n-i)`. -/
 theorem sum_choose_succ_mul {R : Type _} [Semiring R] (f : ℕ → ℕ → R) (n : ℕ) :
-    (∑ i in range (n + 2), ((n + 1).choose i : R) * f i (n + 1 - i)) =
-      (∑ i in range (n + 1), (n.choose i : R) * f i (n + 1 - i)) +
+    ∑ i in range (n + 2), ((n + 1).choose i : R) * f i (n + 1 - i) =
+      ∑ i in range (n + 1), (n.choose i : R) * f i (n + 1 - i) +
         ∑ i in range (n + 1), (n.choose i : R) * f (i + 1) (n - i) :=
   by
   have A :
-    (∑ i in range (n + 1), (n.choose (i + 1) : R) * f (i + 1) (n - i)) + f 0 (n + 1) =
+    ∑ i in range (n + 1), (n.choose (i + 1) : R) * f (i + 1) (n - i) + f 0 (n + 1) =
       ∑ i in range (n + 1), n.choose i * f i (n + 1 - i) :=
     by
     rw [Finset.sum_range_succ, Finset.sum_range_succ']
     simp only [Nat.choose_succ_self, algebraMap.coe_zero, MulZeroClass.zero_mul, add_zero,
       Nat.succ_sub_succ_eq_sub, Nat.choose_zero_right, algebraMap.coe_one, one_mul, tsub_zero]
   calc
-    (∑ i in Finset.range (n + 2), ((n + 1).choose i : R) * f i (n + 1 - i)) =
-        (∑ i in Finset.range (n + 1), ((n + 1).choose (i + 1) : R) * f (i + 1) (n + 1 - (i + 1))) +
+    ∑ i in Finset.range (n + 2), ((n + 1).choose i : R) * f i (n + 1 - i) =
+        ∑ i in Finset.range (n + 1), ((n + 1).choose (i + 1) : R) * f (i + 1) (n + 1 - (i + 1)) +
           f 0 (n + 1 - 0) :=
       by
       rw [Finset.sum_range_succ']
       simp only [Nat.choose_zero_right, algebraMap.coe_one, one_mul]
     _ =
-        (∑ i in Finset.range (n + 1), (n.choose i : R) * f i (n + 1 - i)) +
+        ∑ i in Finset.range (n + 1), (n.choose i : R) * f i (n + 1 - i) +
           ∑ i in Finset.range (n + 1), n.choose i * f (i + 1) (n - i) :=
       by
       simp only [Nat.choose_succ_succ, Nat.cast_add, Nat.succ_sub_succ_eq_sub, tsub_zero, add_mul]
@@ -93,8 +93,8 @@ theorem sum_choose_succ_mul {R : Type _} [Semiring R] (f : ℕ → ℕ → R) (n
 /-- The sum along the antidiagonal of `(n+1).choose i * f i j` can be split into two sums along the
 antidiagonal at rank `n`, respectively of `n.choose i * f i (j+1)` and `n.choose j * f (i+1) j`. -/
 theorem sum_antidiagonal_choose_succ_mul {R : Type _} [Semiring R] (f : ℕ → ℕ → R) (n : ℕ) :
-    (∑ ij in Nat.antidiagonal (n + 1), ((n + 1).choose ij.1 : R) * f ij.1 ij.2) =
-      (∑ ij in Nat.antidiagonal n, (n.choose ij.1 : R) * f ij.1 (ij.2 + 1)) +
+    ∑ ij in Nat.antidiagonal (n + 1), ((n + 1).choose ij.1 : R) * f ij.1 ij.2 =
+      ∑ ij in Nat.antidiagonal n, (n.choose ij.1 : R) * f ij.1 (ij.2 + 1) +
         ∑ ij in Nat.antidiagonal n, (n.choose ij.2 : R) * f (ij.1 + 1) ij.2 :=
   by
   convert sum_choose_succ_mul f n using 1
@@ -105,7 +105,7 @@ theorem sum_antidiagonal_choose_succ_mul {R : Type _} [Semiring R] (f : ℕ → 
     have : n + 1 - i = n - i + 1 := Nat.sub_add_comm (Nat.lt_succ_iff.1 (Finset.mem_range.1 hi))
     simp only [this]
   · suffices H :
-      (∑ ij in nat.antidiagonal n, (n.choose ij.2 : R) * f (ij.1 + 1) ij.2) =
+      ∑ ij in nat.antidiagonal n, (n.choose ij.2 : R) * f (ij.1 + 1) ij.2 =
         ∑ ij in nat.antidiagonal n, (n.choose ij.1 : R) * f (ij.1 + 1) ij.2
     · rw [H, nat.sum_antidiagonal_eq_sum_range_succ (fun i j => (n.choose i : R) * f (i + 1) j) n]
     apply Finset.sum_congr rfl fun i hi => _

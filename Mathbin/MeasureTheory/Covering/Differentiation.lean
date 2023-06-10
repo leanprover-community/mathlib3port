@@ -642,7 +642,7 @@ theorem withDensity_le_mul {s : Set α} (hs : MeasurableSet s) {t : ℝ≥0} (ht
     have M : MeasurableSet (s ∩ f ⁻¹' I) := hs.inter (f_meas measurableSet_Ico)
     simp only [f, M, with_density_apply, coe_nnreal_smul_apply]
     calc
-      (∫⁻ x in s ∩ f ⁻¹' I, f x ∂μ) ≤ ∫⁻ x in s ∩ f ⁻¹' I, t ^ (n + 1) ∂μ :=
+      ∫⁻ x in s ∩ f ⁻¹' I, f x ∂μ ≤ ∫⁻ x in s ∩ f ⁻¹' I, t ^ (n + 1) ∂μ :=
         lintegral_mono_ae ((ae_restrict_iff' M).2 (eventually_of_forall fun x hx => hx.2.2.le))
       _ = t ^ (n + 1) * μ (s ∩ f ⁻¹' I) := by
         simp only [lintegral_const, MeasurableSet.univ, measure.restrict_apply, univ_inter]
@@ -858,7 +858,7 @@ theorem ae_tendsto_measure_inter_div (s : Set α) :
 /-! ### Lebesgue differentiation theorem -/
 
 
-theorem ae_tendsto_lintegral_div' {f : α → ℝ≥0∞} (hf : Measurable f) (h'f : (∫⁻ y, f y ∂μ) ≠ ∞) :
+theorem ae_tendsto_lintegral_div' {f : α → ℝ≥0∞} (hf : Measurable f) (h'f : ∫⁻ y, f y ∂μ ≠ ∞) :
     ∀ᵐ x ∂μ, Tendsto (fun a => (∫⁻ y in a, f y ∂μ) / μ a) (v.filterAt x) (𝓝 (f x)) :=
   by
   let ρ := μ.with_density f
@@ -870,10 +870,10 @@ theorem ae_tendsto_lintegral_div' {f : α → ℝ≥0∞} (hf : Measurable f) (h
   rw [← with_density_apply f ha]
 #align vitali_family.ae_tendsto_lintegral_div' VitaliFamily.ae_tendsto_lintegral_div'
 
-theorem ae_tendsto_lintegral_div {f : α → ℝ≥0∞} (hf : AEMeasurable f μ) (h'f : (∫⁻ y, f y ∂μ) ≠ ∞) :
+theorem ae_tendsto_lintegral_div {f : α → ℝ≥0∞} (hf : AEMeasurable f μ) (h'f : ∫⁻ y, f y ∂μ ≠ ∞) :
     ∀ᵐ x ∂μ, Tendsto (fun a => (∫⁻ y in a, f y ∂μ) / μ a) (v.filterAt x) (𝓝 (f x)) :=
   by
-  have A : (∫⁻ y, hf.mk f y ∂μ) ≠ ∞ := by
+  have A : ∫⁻ y, hf.mk f y ∂μ ≠ ∞ := by
     convert h'f using 1
     apply lintegral_congr_ae
     exact hf.ae_eq_mk.symm
@@ -911,7 +911,7 @@ theorem ae_tendsto_lintegral_nnnorm_sub_div' {f : α → E} (hf : Integrable f �
       exact strongly_measurable_const.indicator (IsOpen.measurableSet (A.set_mem n))
     · apply ne_of_lt
       calc
-        (∫⁻ y, ↑‖f y - (A.set n).indicator (fun y : α => c) y‖₊ ∂μ) ≤
+        ∫⁻ y, ↑‖f y - (A.set n).indicator (fun y : α => c) y‖₊ ∂μ ≤
             ∫⁻ y, ‖f y‖₊ + ‖(A.set n).indicator (fun y : α => c) y‖₊ ∂μ :=
           by
           apply lintegral_mono
@@ -919,7 +919,7 @@ theorem ae_tendsto_lintegral_nnnorm_sub_div' {f : α → E} (hf : Integrable f �
           dsimp
           rw [← ENNReal.coe_add]
           exact ENNReal.coe_le_coe.2 (nnnorm_sub_le _ _)
-        _ = (∫⁻ y, ‖f y‖₊ ∂μ) + ∫⁻ y, ‖(A.set n).indicator (fun y : α => c) y‖₊ ∂μ :=
+        _ = ∫⁻ y, ‖f y‖₊ ∂μ + ∫⁻ y, ‖(A.set n).indicator (fun y : α => c) y‖₊ ∂μ :=
           (lintegral_add_left h'f.ennnorm _)
         _ < ∞ + ∞ :=
           haveI I : integrable ((A.set n).indicator fun y : α => c) μ := by
@@ -952,11 +952,11 @@ theorem ae_tendsto_lintegral_nnnorm_sub_div' {f : α → E} (hf : Integrable f �
     a ha h'a h''a
   apply ENNReal.div_le_of_le_mul
   calc
-    (∫⁻ y in a, ‖f y - f x‖₊ ∂μ) ≤ ∫⁻ y in a, ‖f y - c‖₊ + ‖f x - c‖₊ ∂μ :=
+    ∫⁻ y in a, ‖f y - f x‖₊ ∂μ ≤ ∫⁻ y in a, ‖f y - c‖₊ + ‖f x - c‖₊ ∂μ :=
       by
       apply lintegral_mono fun x => _
       simpa only [← edist_eq_coe_nnnorm_sub] using edist_triangle_right _ _ _
-    _ = (∫⁻ y in a, ‖f y - c‖₊ ∂μ) + ∫⁻ y in a, ‖f x - c‖₊ ∂μ :=
+    _ = ∫⁻ y in a, ‖f y - c‖₊ ∂μ + ∫⁻ y in a, ‖f x - c‖₊ ∂μ :=
       (lintegral_add_right _ measurable_const)
     _ ≤ ε / 2 * μ a + ε / 2 * μ a := by
       refine' add_le_add _ _

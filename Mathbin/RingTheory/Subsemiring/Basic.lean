@@ -390,14 +390,14 @@ protected theorem multiset_sum_mem (m : Multiset R) : (∀ a ∈ m, a ∈ s) →
 /-- Product of elements of a subsemiring of a `comm_semiring` indexed by a `finset` is in the
     subsemiring. -/
 protected theorem prod_mem {R : Type _} [CommSemiring R] (s : Subsemiring R) {ι : Type _}
-    {t : Finset ι} {f : ι → R} (h : ∀ c ∈ t, f c ∈ s) : (∏ i in t, f i) ∈ s :=
+    {t : Finset ι} {f : ι → R} (h : ∀ c ∈ t, f c ∈ s) : ∏ i in t, f i ∈ s :=
   prod_mem h
 #align subsemiring.prod_mem Subsemiring.prod_mem
 
 /-- Sum of elements in an `subsemiring` of an `semiring` indexed by a `finset`
 is in the `add_subsemiring`. -/
 protected theorem sum_mem (s : Subsemiring R) {ι : Type _} {t : Finset ι} {f : ι → R}
-    (h : ∀ c ∈ t, f c ∈ s) : (∑ i in t, f i) ∈ s :=
+    (h : ∀ c ∈ t, f c ∈ s) : ∑ i in t, f i ∈ s :=
   sum_mem h
 #align subsemiring.sum_mem Subsemiring.sum_mem
 

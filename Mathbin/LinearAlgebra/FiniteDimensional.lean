@@ -500,7 +500,7 @@ open Finset
 then there is a nontrivial linear relation amongst its elements.
 -/
 theorem exists_nontrivial_relation_of_rank_lt_card [FiniteDimensional K V] {t : Finset V}
-    (h : finrank K V < t.card) : ∃ f : V → K, (∑ e in t, f e • e) = 0 ∧ ∃ x ∈ t, f x ≠ 0 :=
+    (h : finrank K V < t.card) : ∃ f : V → K, ∑ e in t, f e • e = 0 ∧ ∃ x ∈ t, f x ≠ 0 :=
   by
   have := mt finset_card_le_finrank_of_linear_independent (by simpa using h)
   rw [not_linearIndependent_iff] at this 
@@ -533,7 +533,7 @@ such that the coefficients of the relation sum to zero.
 -/
 theorem exists_nontrivial_relation_sum_zero_of_rank_succ_lt_card [FiniteDimensional K V]
     {t : Finset V} (h : finrank K V + 1 < t.card) :
-    ∃ f : V → K, (∑ e in t, f e • e) = 0 ∧ (∑ e in t, f e) = 0 ∧ ∃ x ∈ t, f x ≠ 0 :=
+    ∃ f : V → K, ∑ e in t, f e • e = 0 ∧ ∑ e in t, f e = 0 ∧ ∃ x ∈ t, f x ≠ 0 :=
   by
   -- Pick an element x₀ ∈ t,
   have card_pos : 0 < t.card := lt_trans (Nat.succ_pos _) h
@@ -553,7 +553,7 @@ theorem exists_nontrivial_relation_sum_zero_of_rank_succ_lt_card [FiniteDimensio
   refine' ⟨f, _, _, _⟩
   -- After this, it's a matter of verifiying the properties,
   -- based on the corresponding properties for `g`.
-  · show (∑ e : V in t, f e • e) = 0
+  · show ∑ e : V in t, f e • e = 0
     -- We prove this by splitting off the `x₀` term of the sum,
     -- which is itself a sum over `t.erase x₀`,
     -- combining the two sums, and
@@ -580,10 +580,10 @@ theorem exists_nontrivial_relation_sum_zero_of_rank_succ_lt_card [FiniteDimensio
     simp only [← smul_sub]
     -- At the end we have to reindex the sum, so we use `change` to
     -- express the summand using `shift`.
-    change (∑ x : V in t.erase x₀, (fun e => g e • e) (shift x)) = 0
+    change ∑ x : V in t.erase x₀, (fun e => g e • e) (shift x) = 0
     rw [← sum_map _ shift]
     exact gsum
-  · show (∑ e : V in t, f e) = 0
+  · show ∑ e : V in t, f e = 0
     -- Again we split off the `x₀` term,
     -- observing that it exactly cancels the other terms.
     rw [← insert_erase m, sum_insert (not_mem_erase x₀ t)]
@@ -622,7 +622,7 @@ we can ensure a positive coefficient, not just a nonzero coefficient.
 -/
 theorem exists_relation_sum_zero_pos_coefficient_of_rank_succ_lt_card [FiniteDimensional L W]
     {t : Finset W} (h : finrank L W + 1 < t.card) :
-    ∃ f : W → L, (∑ e in t, f e • e) = 0 ∧ (∑ e in t, f e) = 0 ∧ ∃ x ∈ t, 0 < f x :=
+    ∃ f : W → L, ∑ e in t, f e • e = 0 ∧ ∑ e in t, f e = 0 ∧ ∃ x ∈ t, 0 < f x :=
   by
   obtain ⟨f, sum, total, nonzero⟩ := exists_nontrivial_relation_sum_zero_of_rank_succ_lt_card h
   exact ⟨f, Sum, Total, exists_pos_of_sum_zero_of_exists_nonzero f Total nonzero⟩

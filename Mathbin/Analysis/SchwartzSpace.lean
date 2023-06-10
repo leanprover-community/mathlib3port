@@ -764,7 +764,7 @@ def bilinLeftClm (B : E →L[ℝ] F →L[ℝ] G) {g : D → F} (hg : g.HasTemper
       simp_rw [mul_assoc ‖B‖]
       refine' mul_le_mul_of_nonneg_left _ (by positivity)
       rw [Finset.mul_sum]
-      have : (∑ x_1 : ℕ in Finset.range (n + 1), (1 : ℝ)) = n + 1 := by simp
+      have : ∑ x_1 : ℕ in Finset.range (n + 1), (1 : ℝ) = n + 1 := by simp
       repeat' rw [mul_assoc ((n : ℝ) + 1)]
       rw [← this, Finset.sum_mul]
       refine' Finset.sum_le_sum fun i hi => _

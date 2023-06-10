@@ -60,29 +60,29 @@ variable {K σ ι : Type _} [Fintype K] [Field K] [Fintype σ] [DecidableEq σ]
 local notation "q" => Fintype.card K
 
 theorem MvPolynomial.sum_eval_eq_zero (f : MvPolynomial σ K)
-    (h : f.totalDegree < (q - 1) * Fintype.card σ) : (∑ x, eval x f) = 0 :=
+    (h : f.totalDegree < (q - 1) * Fintype.card σ) : ∑ x, eval x f = 0 :=
   by
   haveI : DecidableEq K := Classical.decEq K
   calc
-    (∑ x, eval x f) = ∑ x : σ → K, ∑ d in f.support, f.coeff d * ∏ i, x i ^ d i := by
+    ∑ x, eval x f = ∑ x : σ → K, ∑ d in f.support, f.coeff d * ∏ i, x i ^ d i := by
       simp only [eval_eq']
     _ = ∑ d in f.support, ∑ x : σ → K, f.coeff d * ∏ i, x i ^ d i := sum_comm
     _ = 0 := sum_eq_zero _
   intro d hd
   obtain ⟨i, hi⟩ : ∃ i, d i < q - 1; exact f.exists_degree_lt (q - 1) h hd
   calc
-    (∑ x : σ → K, f.coeff d * ∏ i, x i ^ d i) = f.coeff d * ∑ x : σ → K, ∏ i, x i ^ d i :=
+    ∑ x : σ → K, f.coeff d * ∏ i, x i ^ d i = f.coeff d * ∑ x : σ → K, ∏ i, x i ^ d i :=
       mul_sum.symm
     _ = 0 := (mul_eq_zero.mpr ∘ Or.inr) _
   calc
-    (∑ x : σ → K, ∏ i, x i ^ d i) =
+    ∑ x : σ → K, ∏ i, x i ^ d i =
         ∑ (x₀ : { j // j ≠ i } → K) (x : { x : σ → K // x ∘ coe = x₀ }), ∏ j, (x : σ → K) j ^ d j :=
       (Fintype.sum_fiberwise _ _).symm
     _ = 0 := Fintype.sum_eq_zero _ _
   intro x₀
   let e : K ≃ { x // x ∘ coe = x₀ } := (Equiv.subtypeEquivCodomain _).symm
   calc
-    (∑ x : { x : σ → K // x ∘ coe = x₀ }, ∏ j, (x : σ → K) j ^ d j) =
+    ∑ x : { x : σ → K // x ∘ coe = x₀ }, ∏ j, (x : σ → K) j ^ d j =
         ∑ a : K, ∏ j : σ, (e a : σ → K) j ^ d j :=
       (e.sum_comp _).symm
     _ = ∑ a : K, (∏ j, x₀ j ^ d j) * a ^ d i := (Fintype.sum_congr _ _ _)
@@ -94,7 +94,7 @@ theorem MvPolynomial.sum_eval_eq_zero (f : MvPolynomial σ K)
     { default := ⟨i, rfl⟩
       uniq := fun ⟨j, h⟩ => Subtype.val_injective h }
   calc
-    (∏ j : σ, (e a : σ → K) j ^ d j) =
+    ∏ j : σ, (e a : σ → K) j ^ d j =
         (e a : σ → K) i ^ d i * ∏ j : { j // j ≠ i }, (e a : σ → K) j ^ d j :=
       by rw [← e'.prod_comp, Fintype.prod_sum_type, univ_unique, prod_singleton]; rfl
     _ = a ^ d i * ∏ j : { j // j ≠ i }, (e a : σ → K) j ^ d j := by
@@ -118,7 +118,7 @@ in finitely many variables (`X s`, `s : σ`) over a finite field of characterist
 Assume that the sum of the total degrees of the `f i` is less than the cardinality of `σ`.
 Then the number of common solutions of the `f i` is divisible by `p`. -/
 theorem char_dvd_card_solutions_of_sum_lt {s : Finset ι} {f : ι → MvPolynomial σ K}
-    (h : (∑ i in s, (f i).totalDegree) < Fintype.card σ) :
+    (h : ∑ i in s, (f i).totalDegree < Fintype.card σ) :
     p ∣ Fintype.card { x : σ → K // ∀ i ∈ s, eval x (f i) = 0 } :=
   by
   have hq : 0 < q - 1 := by rw [← Fintype.card_units, Fintype.card_pos_iff]; exact ⟨1⟩
@@ -130,7 +130,7 @@ theorem char_dvd_card_solutions_of_sum_lt {s : Finset ι} {f : ι → MvPolynomi
     while it is `0` outside that locus.
     Hence the sum of its values is equal to the cardinality of
     `{x : σ → K // ∀ i ∈ s, (f i).eval x = 0}` modulo `p`. -/
-  let F : MvPolynomial σ K := ∏ i in s, 1 - f i ^ (q - 1)
+  let F : MvPolynomial σ K := ∏ i in s, (1 - f i ^ (q - 1))
   have hF : ∀ x, eval x F = if x ∈ S then 1 else 0 :=
     by
     intro x
@@ -148,13 +148,13 @@ theorem char_dvd_card_solutions_of_sum_lt {s : Finset ι} {f : ι → MvPolynomi
       apply Finset.prod_eq_zero hi
       rw [pow_card_sub_one_eq_one (eval x (f i)) hx, sub_self]
   -- In particular, we can now show:
-  have key : (∑ x, eval x F) = Fintype.card { x : σ → K // ∀ i ∈ s, eval x (f i) = 0 }
+  have key : ∑ x, eval x F = Fintype.card { x : σ → K // ∀ i ∈ s, eval x (f i) = 0 }
   rw [Fintype.card_of_subtype S hS, card_eq_sum_ones, Nat.cast_sum, Nat.cast_one, ←
     Fintype.sum_extend_by_zero S, sum_congr rfl fun x hx => hF x]
   -- With these preparations under our belt, we will approach the main goal.
   show p ∣ Fintype.card { x // ∀ i : ι, i ∈ s → eval x (f i) = 0 }
   rw [← CharP.cast_eq_zero_iff K, ← key]
-  show (∑ x, eval x F) = 0
+  show ∑ x, eval x F = 0
   -- We are now ready to apply the main machine, proven before.
   apply F.sum_eval_eq_zero
   -- It remains to verify the crucial assumption of this machine
@@ -183,7 +183,7 @@ in finitely many variables (`X s`, `s : σ`) over a finite field of characterist
 Assume that the sum of the total degrees of the `f i` is less than the cardinality of `σ`.
 Then the number of common solutions of the `f i` is divisible by `p`. -/
 theorem char_dvd_card_solutions_of_fintype_sum_lt [Fintype ι] {f : ι → MvPolynomial σ K}
-    (h : (∑ i, (f i).totalDegree) < Fintype.card σ) :
+    (h : ∑ i, (f i).totalDegree < Fintype.card σ) :
     p ∣ Fintype.card { x : σ → K // ∀ i, eval x (f i) = 0 } := by
   simpa using char_dvd_card_solutions_of_sum_lt p h
 #align char_dvd_card_solutions_of_fintype_sum_lt char_dvd_card_solutions_of_fintype_sum_lt
@@ -198,7 +198,7 @@ theorem char_dvd_card_solutions {f : MvPolynomial σ K} (h : f.totalDegree < Fin
     p ∣ Fintype.card { x : σ → K // eval x f = 0 } :=
   by
   let F : Unit → MvPolynomial σ K := fun _ => f
-  have : (∑ i : Unit, (F i).totalDegree) < Fintype.card σ := h
+  have : ∑ i : Unit, (F i).totalDegree < Fintype.card σ := h
   simpa only [F, Fintype.univ_punit, forall_eq, mem_singleton] using
     char_dvd_card_solutions_of_sum_lt p this
 #align char_dvd_card_solutions char_dvd_card_solutions
@@ -213,7 +213,7 @@ theorem char_dvd_card_solutions_of_add_lt {f₁ f₂ : MvPolynomial σ K}
     p ∣ Fintype.card { x : σ → K // eval x f₁ = 0 ∧ eval x f₂ = 0 } :=
   by
   let F : Bool → MvPolynomial σ K := fun b => cond b f₂ f₁
-  have : (∑ b : Bool, (F b).totalDegree) < Fintype.card σ := (add_comm _ _).trans_lt h
+  have : ∑ b : Bool, (F b).totalDegree < Fintype.card σ := (add_comm _ _).trans_lt h
   simpa only [F, Bool.forall_bool] using char_dvd_card_solutions_of_fintype_sum_lt p this
 #align char_dvd_card_solutions_of_add_lt char_dvd_card_solutions_of_add_lt
 

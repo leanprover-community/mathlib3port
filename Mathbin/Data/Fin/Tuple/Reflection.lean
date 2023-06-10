@@ -180,7 +180,7 @@ theorem sum_eq [AddCommMonoid α] : ∀ {m} (a : Fin m → α), sum a = ∑ i, a
   | n + 2, a => by rw [Fin.sum_univ_castSucc, Sum, sum_eq]
 #align fin_vec.sum_eq FinVec.sum_eq
 
-example [AddCommMonoid α] (a : Fin 3 → α) : (∑ i, a i) = a 0 + a 1 + a 2 :=
+example [AddCommMonoid α] (a : Fin 3 → α) : ∑ i, a i = a 0 + a 1 + a 2 :=
   (sum_eq _).symm
 
 end FinVec

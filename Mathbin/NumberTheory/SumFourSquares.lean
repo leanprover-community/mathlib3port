@@ -125,7 +125,7 @@ private theorem sum_four_squares_of_two_mul_sum_four_squares {m a b c d : ℤ}
     rw [← Int.sq_add_sq_of_two_mul_sq_add_sq hx.symm, add_assoc, ←
       Int.sq_add_sq_of_two_mul_sq_add_sq hy.symm, ← mul_right_inj' (show (2 : ℤ) ≠ 0 by decide), ←
       h, mul_add, ← hx, ← hy]
-    have : (∑ x, f (σ x) ^ 2) = ∑ x, f x ^ 2 := by conv_rhs => rw [← Equiv.sum_comp σ]
+    have : ∑ x, f (σ x) ^ 2 = ∑ x, f x ^ 2 := by conv_rhs => rw [← Equiv.sum_comp σ]
     simpa only [Fin.sum_univ_four, add_assoc] using this⟩
 
 private theorem prime_sum_four_squares (p : ℕ) [hp : Fact p.Prime] :

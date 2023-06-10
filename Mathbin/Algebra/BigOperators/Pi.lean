@@ -54,7 +54,7 @@ theorem Finset.prod_apply {α : Type _} {β : α → Type _} {γ} [∀ a, CommMo
 /-- An 'unapplied' analogue of `finset.prod_apply`. -/
 @[to_additive "An 'unapplied' analogue of `finset.sum_apply`."]
 theorem Finset.prod_fn {α : Type _} {β : α → Type _} {γ} [∀ a, CommMonoid (β a)] (s : Finset γ)
-    (g : γ → ∀ a, β a) : (∏ c in s, g c) = fun a => ∏ c in s, g c a :=
+    (g : γ → ∀ a, β a) : ∏ c in s, g c = fun a => ∏ c in s, g c a :=
   funext fun a => Finset.prod_apply _ _ _
 #align finset.prod_fn Finset.prod_fn
 #align finset.sum_fn Finset.sum_fn
@@ -81,8 +81,8 @@ variable {I : Type _} [DecidableEq I] {Z : I → Type _}
 variable [∀ i, CommMonoid (Z i)]
 
 @[to_additive]
-theorem Finset.univ_prod_mulSingle [Fintype I] (f : ∀ i, Z i) : (∏ i, Pi.mulSingle i (f i)) = f :=
-  by ext a; simp
+theorem Finset.univ_prod_mulSingle [Fintype I] (f : ∀ i, Z i) : ∏ i, Pi.mulSingle i (f i) = f := by
+  ext a; simp
 #align finset.univ_prod_mul_single Finset.univ_prod_mulSingle
 #align finset.univ_sum_single Finset.univ_sum_single
 

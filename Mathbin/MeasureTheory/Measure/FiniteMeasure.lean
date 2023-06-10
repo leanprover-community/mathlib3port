@@ -346,7 +346,7 @@ theorem BoundedContinuousFunction.NNReal.coe_ennreal_comp_measurable {Ω : Type 
 #align bounded_continuous_function.nnreal.to_ennreal_comp_measurable BoundedContinuousFunction.NNReal.coe_ennreal_comp_measurable
 
 theorem MeasureTheory.lintegral_lt_top_of_boundedContinuous_to_nnreal (μ : Measure Ω)
-    [IsFiniteMeasure μ] (f : Ω →ᵇ ℝ≥0) : (∫⁻ ω, f ω ∂μ) < ∞ :=
+    [IsFiniteMeasure μ] (f : Ω →ᵇ ℝ≥0) : ∫⁻ ω, f ω ∂μ < ∞ :=
   by
   apply IsFiniteMeasure.lintegral_lt_top_of_bounded_to_eNNReal
   use nndist f 0
@@ -726,14 +726,14 @@ theorem integrable_of_boundedContinuous_to_real (μ : Measure Ω) [IsFiniteMeasu
 
 theorem BoundedContinuousFunction.integral_eq_integral_nnrealPart_sub (μ : Measure Ω)
     [IsFiniteMeasure μ] (f : Ω →ᵇ ℝ) :
-    (∫ ω, f ω ∂μ) = (∫ ω, f.nnrealPart ω ∂μ) - ∫ ω, (-f).nnrealPart ω ∂μ := by
+    ∫ ω, f ω ∂μ = ∫ ω, f.nnrealPart ω ∂μ - ∫ ω, (-f).nnrealPart ω ∂μ := by
   simp only [f.self_eq_nnreal_part_sub_nnreal_part_neg, Pi.sub_apply, integral_sub,
     integrable_of_bounded_continuous_to_nnreal]
 #align bounded_continuous_function.integral_eq_integral_nnreal_part_sub BoundedContinuousFunction.integral_eq_integral_nnrealPart_sub
 
 theorem lintegral_lt_top_of_boundedContinuous_to_real {Ω : Type _} [MeasurableSpace Ω]
     [TopologicalSpace Ω] (μ : Measure Ω) [IsFiniteMeasure μ] (f : Ω →ᵇ ℝ) :
-    (∫⁻ ω, ENNReal.ofReal (f ω) ∂μ) < ∞ :=
+    ∫⁻ ω, ENNReal.ofReal (f ω) ∂μ < ∞ :=
   lintegral_lt_top_of_boundedContinuous_to_nnreal _ f.nnrealPart
 #align measure_theory.finite_measure.lintegral_lt_top_of_bounded_continuous_to_real MeasureTheory.FiniteMeasure.lintegral_lt_top_of_boundedContinuous_to_real
 

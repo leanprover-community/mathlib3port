@@ -508,7 +508,7 @@ open Fintype Finset
 `r n ∈ Aₙ`. This follows from multilinearity by expanding successively with respect to each
 coordinate. Here, we give an auxiliary statement tailored for an inductive proof. Use instead
 `map_sum_finset`. -/
-theorem map_sum_finset_aux [DecidableEq ι] [Fintype ι] {n : ℕ} (h : (∑ i, (A i).card) = n) :
+theorem map_sum_finset_aux [DecidableEq ι] [Fintype ι] {n : ℕ} (h : ∑ i, (A i).card = n) :
     (f fun i => ∑ j in A i, g i j) = ∑ r in piFinset A, f fun i => g i (r i) :=
   by
   letI := fun i => Classical.decEq (α i)
@@ -516,7 +516,7 @@ theorem map_sum_finset_aux [DecidableEq ι] [Fintype ι] {n : ℕ} (h : (∑ i, 
   -- If one of the sets is empty, then all the sums are zero
   by_cases Ai_empty : ∃ i, A i = ∅
   · rcases Ai_empty with ⟨i, hi⟩
-    have : (∑ j in A i, g i j) = 0 := by rw [hi, Finset.sum_empty]
+    have : ∑ j in A i, g i j = 0 := by rw [hi, Finset.sum_empty]
     rw [f.map_coord_zero i this]
     have : pi_finset A = ∅ :=
       by
@@ -570,8 +570,7 @@ theorem map_sum_finset_aux [DecidableEq ι] [Fintype ι] {n : ℕ} (h : (∑ i, 
   -- split the sum at `i₀` as the sum over `B i₀` plus the sum over `C i₀`, to use additivity.
   have A_eq_BC :
     (fun i => ∑ j in A i, g i j) =
-      Function.update (fun i => ∑ j in A i, g i j) i₀
-        ((∑ j in B i₀, g i₀ j) + ∑ j in C i₀, g i₀ j) :=
+      Function.update (fun i => ∑ j in A i, g i j) i₀ (∑ j in B i₀, g i₀ j + ∑ j in C i₀, g i₀ j) :=
     by
     ext i
     by_cases hi : i = i₀
@@ -610,7 +609,7 @@ theorem map_sum_finset_aux [DecidableEq ι] [Fintype ι] {n : ℕ} (h : (∑ i, 
   -- Express the inductive assumption for `B`
   have Brec : (f fun i => ∑ j in B i, g i j) = ∑ r in pi_finset B, f fun i => g i (r i) :=
     by
-    have : (∑ i, Finset.card (B i)) < ∑ i, Finset.card (A i) :=
+    have : ∑ i, Finset.card (B i) < ∑ i, Finset.card (A i) :=
       by
       refine'
         Finset.sum_lt_sum (fun i hi => Finset.card_le_of_subset (B_subset_A i))
@@ -623,7 +622,7 @@ theorem map_sum_finset_aux [DecidableEq ι] [Fintype ι] {n : ℕ} (h : (∑ i, 
   -- Express the inductive assumption for `C`
   have Crec : (f fun i => ∑ j in C i, g i j) = ∑ r in pi_finset C, f fun i => g i (r i) :=
     by
-    have : (∑ i, Finset.card (C i)) < ∑ i, Finset.card (A i) :=
+    have : ∑ i, Finset.card (C i) < ∑ i, Finset.card (A i) :=
       Finset.sum_lt_sum (fun i hi => Finset.card_le_of_subset (C_subset_A i))
         ⟨i₀, Finset.mem_univ _, by simp [C, hi₀]⟩
     rw [h] at this 

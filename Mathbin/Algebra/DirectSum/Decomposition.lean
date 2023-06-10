@@ -176,7 +176,7 @@ theorem decompose_symm_sum {ι'} (s : Finset ι') (f : ι' → ⨁ i, ℳ i) :
 #align direct_sum.decompose_symm_sum DirectSum.decompose_symm_sum
 
 theorem sum_support_decompose [∀ (i) (x : ℳ i), Decidable (x ≠ 0)] (r : M) :
-    (∑ i in (decompose ℳ r).support, (decompose ℳ r i : M)) = r :=
+    ∑ i in (decompose ℳ r).support, (decompose ℳ r i : M) = r :=
   by
   conv_rhs =>
     rw [← (decompose ℳ).symm_apply_apply r, ← sum_support_of (fun i => ℳ i) (decompose ℳ r)]

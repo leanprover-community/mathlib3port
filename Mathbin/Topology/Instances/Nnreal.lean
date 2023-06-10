@@ -208,11 +208,11 @@ theorem coe_tsum_of_nonneg {f : α → ℝ} (hf₁ : ∀ n, 0 ≤ f n) :
   simp_rw [← NNReal.coe_tsum, Subtype.coe_eta]
 #align nnreal.coe_tsum_of_nonneg NNReal.coe_tsum_of_nonneg
 
-theorem tsum_mul_left (a : ℝ≥0) (f : α → ℝ≥0) : (∑' x, a * f x) = a * ∑' x, f x :=
+theorem tsum_mul_left (a : ℝ≥0) (f : α → ℝ≥0) : ∑' x, a * f x = a * ∑' x, f x :=
   NNReal.eq <| by simp only [coe_tsum, NNReal.coe_mul, tsum_mul_left]
 #align nnreal.tsum_mul_left NNReal.tsum_mul_left
 
-theorem tsum_mul_right (f : α → ℝ≥0) (a : ℝ≥0) : (∑' x, f x * a) = (∑' x, f x) * a :=
+theorem tsum_mul_right (f : α → ℝ≥0) (a : ℝ≥0) : ∑' x, f x * a = (∑' x, f x) * a :=
   NNReal.eq <| by simp only [coe_tsum, NNReal.coe_mul, tsum_mul_right]
 #align nnreal.tsum_mul_right NNReal.tsum_mul_right
 
@@ -238,7 +238,7 @@ theorem hasSum_nat_add_iff {f : ℕ → ℝ≥0} (k : ℕ) {a : ℝ≥0} :
 #align nnreal.has_sum_nat_add_iff NNReal.hasSum_nat_add_iff
 
 theorem sum_add_tsum_nat_add {f : ℕ → ℝ≥0} (k : ℕ) (hf : Summable f) :
-    (∑' i, f i) = (∑ i in range k, f i) + ∑' i, f (i + k) := by
+    ∑' i, f i = ∑ i in range k, f i + ∑' i, f (i + k) := by
   rw [← NNReal.coe_eq, coe_tsum, NNReal.coe_add, coe_sum, coe_tsum,
     sum_add_tsum_nat_add k (NNReal.summable_coe.2 hf)]
 #align nnreal.sum_add_tsum_nat_add NNReal.sum_add_tsum_nat_add

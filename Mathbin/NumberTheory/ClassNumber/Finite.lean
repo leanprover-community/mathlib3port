@@ -244,7 +244,7 @@ theorem exists_mem_finsetApprox (a : S) {b} (hb : b ≠ (0 : R)) :
     by
     intro i j
     rw [q_eq, r_eq, EuclideanDomain.div_add_mod]
-  have μ_mul_a_eq : ∀ j, μ j • a = (b • ∑ i, qs j i • bS i) + ∑ i, rs j i • bS i :=
+  have μ_mul_a_eq : ∀ j, μ j • a = b • ∑ i, qs j i • bS i + ∑ i, rs j i • bS i :=
     by
     intro j
     rw [← bS.sum_repr a]
@@ -257,7 +257,7 @@ theorem exists_mem_finsetApprox (a : S) {b} (hb : b ≠ (0 : R)) :
   set r := μ k - μ j with r_eq
   refine' ⟨q, r, (mem_finset_approx bS adm).mpr _, _⟩
   · exact ⟨k, j, j_ne_k.symm, rfl⟩
-  have : r • a - b • q = ∑ x : ι, rs k x • bS x - rs j x • bS x :=
+  have : r • a - b • q = ∑ x : ι, (rs k x • bS x - rs j x • bS x) :=
     by
     simp only [r_eq, sub_smul, μ_mul_a_eq, q_eq, Finset.smul_sum, ← Finset.sum_add_distrib, ←
       Finset.sum_sub_distrib, smul_sub]

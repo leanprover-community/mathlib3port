@@ -634,7 +634,7 @@ instance : IdemCommSemiring (Submodule R A) :=
   { Submodule.idemSemiring with mul_comm := Submodule.mul_comm }
 
 theorem prod_span {ι : Type _} (s : Finset ι) (M : ι → Set A) :
-    (∏ i in s, Submodule.span R (M i)) = Submodule.span R (∏ i in s, M i) :=
+    ∏ i in s, Submodule.span R (M i) = Submodule.span R (∏ i in s, M i) :=
   by
   letI := Classical.decEq ι
   refine' Finset.induction_on s _ _
@@ -644,7 +644,7 @@ theorem prod_span {ι : Type _} (s : Finset ι) (M : ι → Set A) :
 #align submodule.prod_span Submodule.prod_span
 
 theorem prod_span_singleton {ι : Type _} (s : Finset ι) (x : ι → A) :
-    (∏ i in s, span R ({x i} : Set A)) = span R {∏ i in s, x i} := by
+    ∏ i in s, span R ({x i} : Set A) = span R {∏ i in s, x i} := by
   rw [prod_span, Set.finset_prod_singleton]
 #align submodule.prod_span_singleton Submodule.prod_span_singleton
 

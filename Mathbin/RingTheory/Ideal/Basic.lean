@@ -83,7 +83,7 @@ theorem ext {I J : Ideal α} (h : ∀ x, x ∈ I ↔ x ∈ J) : I = J :=
 -/
 
 theorem sum_mem (I : Ideal α) {ι : Type _} {t : Finset ι} {f : ι → α} :
-    (∀ c ∈ t, f c ∈ I) → (∑ i in t, f i) ∈ I :=
+    (∀ c ∈ t, f c ∈ I) → ∑ i in t, f i ∈ I :=
   Submodule.sum_mem I
 #align ideal.sum_mem Ideal.sum_mem
 

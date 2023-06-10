@@ -385,17 +385,17 @@ theorem isArtinian_of_fg_of_artinian {R M} [Ring R] [AddCommGroup M] [Module R M
   · fapply LinearMap.mk
     · exact fun f => ⟨∑ i in s.attach, f i • i.1, N.sum_mem fun c _ => N.smul_mem _ <| this _ c.2⟩
     · intro f g; apply Subtype.eq
-      change (∑ i in s.attach, (f i + g i) • _) = _
+      change ∑ i in s.attach, (f i + g i) • _ = _
       simp only [add_smul, Finset.sum_add_distrib]; rfl
     · intro c f; apply Subtype.eq
-      change (∑ i in s.attach, (c • f i) • _) = _
+      change ∑ i in s.attach, (c • f i) • _ = _
       simp only [smul_eq_mul, mul_smul]
       exact finset.smul_sum.symm
   rintro ⟨n, hn⟩; change n ∈ N at hn 
   rw [← hs, ← Set.image_id ↑s, Finsupp.mem_span_image_iff_total] at hn 
   rcases hn with ⟨l, hl1, hl2⟩
   refine' ⟨fun x => l x, Subtype.ext _⟩
-  change (∑ i in s.attach, l i • (i : M)) = n
+  change ∑ i in s.attach, l i • (i : M) = n
   rw [@Finset.sum_attach M M s _ fun i => l i • i, ← hl2, Finsupp.total_apply, Finsupp.sum, eq_comm]
   refine' Finset.sum_subset hl1 fun x _ hx => _
   rw [Finsupp.not_mem_support_iff.1 hx, zero_smul]

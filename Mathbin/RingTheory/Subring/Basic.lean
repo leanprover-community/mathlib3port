@@ -431,14 +431,14 @@ protected theorem multiset_sum_mem {R} [Ring R] (s : Subring R) (m : Multiset R)
 /-- Product of elements of a subring of a `comm_ring` indexed by a `finset` is in the
     subring. -/
 protected theorem prod_mem {R : Type _} [CommRing R] (s : Subring R) {ι : Type _} {t : Finset ι}
-    {f : ι → R} (h : ∀ c ∈ t, f c ∈ s) : (∏ i in t, f i) ∈ s :=
+    {f : ι → R} (h : ∀ c ∈ t, f c ∈ s) : ∏ i in t, f i ∈ s :=
   prod_mem h
 #align subring.prod_mem Subring.prod_mem
 
 /-- Sum of elements in a `subring` of a `ring` indexed by a `finset`
 is in the `subring`. -/
 protected theorem sum_mem {R : Type _} [Ring R] (s : Subring R) {ι : Type _} {t : Finset ι}
-    {f : ι → R} (h : ∀ c ∈ t, f c ∈ s) : (∑ i in t, f i) ∈ s :=
+    {f : ι → R} (h : ∀ c ∈ t, f c ∈ s) : ∑ i in t, f i ∈ s :=
   sum_mem h
 #align subring.sum_mem Subring.sum_mem
 

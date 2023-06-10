@@ -128,7 +128,7 @@ theorem tendsto_approxOn_Lp_snorm [OpensMeasurableSpace E] {f : β → E} (hf : 
     eventually_of_forall fun x =>
       rpow_le_rpow (coe_mono (nnnorm_approx_on_le hf h₀ x n)) to_real_nonneg
   -- (3) The bounding function `λ x, ‖f x - y₀‖ ^ p.to_real` has finite integral
-  have h_fin : (∫⁻ a : β, ‖f a - y₀‖₊ ^ p.to_real ∂μ) ≠ ⊤ :=
+  have h_fin : ∫⁻ a : β, ‖f a - y₀‖₊ ^ p.to_real ∂μ ≠ ⊤ :=
     (lintegral_rpow_nnnorm_lt_top_of_snorm_lt_top hp_zero hp_ne_top hi).Ne
   -- (4) The functions "`p`-th power of distance between `f` and the approximation" tend pointwise
   -- to zero

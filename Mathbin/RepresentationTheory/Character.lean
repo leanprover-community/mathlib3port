@@ -93,7 +93,7 @@ theorem char_linHom (V W : FdRep k G) (g : G) :
 variable [Fintype G] [Invertible (Fintype.card G : k)]
 
 theorem average_char_eq_finrank_invariants (V : FdRep k G) :
-    (⅟ (Fintype.card G : k) • ∑ g : G, V.character g) = finrank k (invariants V.ρ) := by
+    ⅟ (Fintype.card G : k) • ∑ g : G, V.character g = finrank k (invariants V.ρ) := by
   rw [← (is_proj_average_map V.ρ).trace]; simp [character, GroupAlgebra.average, _root_.map_sum]
 #align fdRep.average_char_eq_finrank_invariants FdRep.average_char_eq_finrank_invariants
 
@@ -110,7 +110,7 @@ variable [Fintype G] [Invertible (Fintype.card G : k)]
 /-- Orthogonality of characters for irreducible representations of finite group over an
 algebraically closed field whose characteristic doesn't divide the order of the group. -/
 theorem char_orthonormal (V W : FdRep k G) [Simple V] [Simple W] :
-    (⅟ (Fintype.card G : k) • ∑ g : G, V.character g * W.character g⁻¹) =
+    ⅟ (Fintype.card G : k) • ∑ g : G, V.character g * W.character g⁻¹ =
       if Nonempty (V ≅ W) then ↑1 else ↑0 :=
   by
   -- First, we can rewrite the summand `V.character g * W.character g⁻¹` as the character

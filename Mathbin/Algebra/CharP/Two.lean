@@ -116,7 +116,7 @@ theorem sum_sq (s : Finset ι) (f : ι → R) : (∑ i in s, f i) ^ 2 = ∑ i in
 -/
 
 theorem sum_mul_self (s : Finset ι) (f : ι → R) :
-    ((∑ i in s, f i) * ∑ i in s, f i) = ∑ i in s, f i * f i := by simp_rw [← pow_two, sum_sq]
+    (∑ i in s, f i) * ∑ i in s, f i = ∑ i in s, f i * f i := by simp_rw [← pow_two, sum_sq]
 #align char_two.sum_mul_self CharTwo.sum_mul_self
 
 end CommSemiring

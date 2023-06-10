@@ -101,10 +101,10 @@ instance PiLp.innerProductSpace {ι : Type _} [Fintype ι] (f : ι → Type _)
     rintro z -
     apply inner_conj_symm
   add_left x y z :=
-    show (∑ i, inner (x i + y i) (z i)) = (∑ i, inner (x i) (z i)) + ∑ i, inner (y i) (z i) by
+    show ∑ i, inner (x i + y i) (z i) = ∑ i, inner (x i) (z i) + ∑ i, inner (y i) (z i) by
       simp only [inner_add_left, Finset.sum_add_distrib]
   smul_left x y r :=
-    show (∑ i : ι, inner (r • x i) (y i)) = conj r * ∑ i, inner (x i) (y i) by
+    show ∑ i : ι, inner (r • x i) (y i) = conj r * ∑ i, inner (x i) (y i) by
       simp only [Finset.mul_sum, inner_smul_left]
 #align pi_Lp.inner_product_space PiLp.innerProductSpace
 
@@ -428,16 +428,16 @@ protected theorem coe_toBasis_repr_apply (b : OrthonormalBasis ι 𝕜 E) (x : E
     LinearIsometryEquiv.coe_toLinearEquiv]
 #align orthonormal_basis.coe_to_basis_repr_apply OrthonormalBasis.coe_toBasis_repr_apply
 
-protected theorem sum_repr (b : OrthonormalBasis ι 𝕜 E) (x : E) : (∑ i, b.repr x i • b i) = x := by
+protected theorem sum_repr (b : OrthonormalBasis ι 𝕜 E) (x : E) : ∑ i, b.repr x i • b i = x := by
   simp_rw [← b.coe_to_basis_repr_apply, ← b.coe_to_basis]; exact b.to_basis.sum_repr x
 #align orthonormal_basis.sum_repr OrthonormalBasis.sum_repr
 
 protected theorem sum_repr_symm (b : OrthonormalBasis ι 𝕜 E) (v : EuclideanSpace 𝕜 ι) :
-    (∑ i, v i • b i) = b.repr.symm v := by simpa using (b.to_basis.equiv_fun_symm_apply v).symm
+    ∑ i, v i • b i = b.repr.symm v := by simpa using (b.to_basis.equiv_fun_symm_apply v).symm
 #align orthonormal_basis.sum_repr_symm OrthonormalBasis.sum_repr_symm
 
 protected theorem sum_inner_mul_inner (b : OrthonormalBasis ι 𝕜 E) (x y : E) :
-    (∑ i, ⟪x, b i⟫ * ⟪b i, y⟫) = ⟪x, y⟫ :=
+    ∑ i, ⟪x, b i⟫ * ⟪b i, y⟫ = ⟪x, y⟫ :=
   by
   have := congr_arg (innerSL 𝕜 x) (b.sum_repr y)
   rw [map_sum] at this 

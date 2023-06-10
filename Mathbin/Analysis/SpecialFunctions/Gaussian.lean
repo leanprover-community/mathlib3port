@@ -126,7 +126,7 @@ theorem integrableOn_Ioi_exp_neg_mul_sq_iff {b : ℝ} :
   by
   refine' ⟨fun h => _, fun h => (integrable_exp_neg_mul_sq h).IntegrableOn⟩
   by_contra' hb
-  have : (∫⁻ x : ℝ in Ioi 0, 1) ≤ ∫⁻ x : ℝ in Ioi 0, ‖exp (-b * x ^ 2)‖₊ :=
+  have : ∫⁻ x : ℝ in Ioi 0, 1 ≤ ∫⁻ x : ℝ in Ioi 0, ‖exp (-b * x ^ 2)‖₊ :=
     by
     apply lintegral_mono fun x => _
     simp only [neg_mul, ENNReal.one_le_coe_iff, ← to_nnreal_one, to_nnreal_le_iff_le_coe,
@@ -177,7 +177,7 @@ theorem integrable_mul_cexp_neg_mul_sq {b : ℂ} (hb : 0 < b.re) :
 #align integrable_mul_cexp_neg_mul_sq integrable_mul_cexp_neg_mul_sq
 
 theorem integral_mul_cexp_neg_mul_sq {b : ℂ} (hb : 0 < b.re) :
-    (∫ r : ℝ in Ioi 0, (r : ℂ) * cexp (-b * r ^ 2)) = (2 * b)⁻¹ :=
+    ∫ r : ℝ in Ioi 0, (r : ℂ) * cexp (-b * r ^ 2) = (2 * b)⁻¹ :=
   by
   have hb' : b ≠ 0 := by contrapose! hb; rw [hb, zero_re]
   have A :
@@ -235,7 +235,7 @@ theorem integral_gaussian_sq_complex {b : ℂ} (hb : 0 < b.re) :
       ring
 #align integral_gaussian_sq_complex integral_gaussian_sq_complex
 
-theorem integral_gaussian (b : ℝ) : (∫ x, exp (-b * x ^ 2)) = sqrt (π / b) :=
+theorem integral_gaussian (b : ℝ) : ∫ x, exp (-b * x ^ 2) = sqrt (π / b) :=
   by
   -- First we deal with the crazy case where `b ≤ 0`: then both sides vanish.
   rcases le_or_lt b 0 with (hb | hb)
@@ -278,7 +278,7 @@ theorem continuousAt_gaussian_integral (b : ℂ) (hb : 0 < re b) :
 #align continuous_at_gaussian_integral continuousAt_gaussian_integral
 
 theorem integral_gaussian_complex {b : ℂ} (hb : 0 < re b) :
-    (∫ x : ℝ, cexp (-b * x ^ 2)) = (π / b) ^ (1 / 2 : ℂ) :=
+    ∫ x : ℝ, cexp (-b * x ^ 2) = (π / b) ^ (1 / 2 : ℂ) :=
   by
   have nv : ∀ {b : ℂ}, 0 < re b → b ≠ 0 := by intro b hb; contrapose! hb; rw [hb]; simp
   refine'
@@ -320,16 +320,16 @@ theorem integral_gaussian_complex {b : ℂ} (hb : 0 < re b) :
 
 -- The Gaussian integral on the half-line, `∫ x in Ioi 0, exp (-b * x^2)`, for complex `b`.
 theorem integral_gaussian_complex_Ioi {b : ℂ} (hb : 0 < re b) :
-    (∫ x : ℝ in Ioi 0, cexp (-b * x ^ 2)) = (π / b) ^ (1 / 2 : ℂ) / 2 :=
+    ∫ x : ℝ in Ioi 0, cexp (-b * x ^ 2) = (π / b) ^ (1 / 2 : ℂ) / 2 :=
   by
   have full_integral := integral_gaussian_complex hb
   have : MeasurableSet (Ioi (0 : ℝ)) := measurableSet_Ioi
   rw [← integral_add_compl this (integrable_cexp_neg_mul_sq hb), compl_Ioi] at full_integral 
-  suffices (∫ x : ℝ in Iic 0, cexp (-b * x ^ 2)) = ∫ x : ℝ in Ioi 0, cexp (-b * x ^ 2)
+  suffices ∫ x : ℝ in Iic 0, cexp (-b * x ^ 2) = ∫ x : ℝ in Ioi 0, cexp (-b * x ^ 2)
     by
     rw [this, ← mul_two] at full_integral 
     rwa [eq_div_iff]; exact two_ne_zero
-  have : ∀ c : ℝ, (∫ x in 0 ..c, cexp (-b * x ^ 2)) = ∫ x in -c..0, cexp (-b * x ^ 2) :=
+  have : ∀ c : ℝ, ∫ x in 0 ..c, cexp (-b * x ^ 2) = ∫ x in -c..0, cexp (-b * x ^ 2) :=
     by
     intro c
     have := @intervalIntegral.integral_comp_sub_left _ _ _ _ 0 c (fun x => cexp (-b * x ^ 2)) 0
@@ -347,7 +347,7 @@ theorem integral_gaussian_complex_Ioi {b : ℂ} (hb : 0 < re b) :
 #align integral_gaussian_complex_Ioi integral_gaussian_complex_Ioi
 
 -- The Gaussian integral on the half-line, `∫ x in Ioi 0, exp (-b * x^2)`, for real `b`.
-theorem integral_gaussian_Ioi (b : ℝ) : (∫ x in Ioi 0, exp (-b * x ^ 2)) = sqrt (π / b) / 2 :=
+theorem integral_gaussian_Ioi (b : ℝ) : ∫ x in Ioi 0, exp (-b * x ^ 2) = sqrt (π / b) / 2 :=
   by
   rcases le_or_lt b 0 with (hb | hb)
   · rw [integral_undef, sqrt_eq_zero_of_nonpos, zero_div]
@@ -510,7 +510,7 @@ theorem integrable_cexp_neg_mul_sq_add_real_mul_i (hb : 0 < b.re) (c : ℝ) :
 #align gaussian_fourier.integrable_cexp_neg_mul_sq_add_real_mul_I GaussianFourier.integrable_cexp_neg_mul_sq_add_real_mul_i
 
 theorem integral_cexp_neg_mul_sq_add_real_mul_i (hb : 0 < b.re) (c : ℝ) :
-    (∫ x : ℝ, cexp (-b * (x + c * I) ^ 2)) = (π / b) ^ (1 / 2 : ℂ) :=
+    ∫ x : ℝ, cexp (-b * (x + c * I) ^ 2) = (π / b) ^ (1 / 2 : ℂ) :=
   by
   refine'
     tendsto_nhds_unique
@@ -554,7 +554,7 @@ theorem integral_cexp_neg_mul_sq_add_real_mul_i (hb : 0 < b.re) (c : ℝ) :
 #align gaussian_fourier.integral_cexp_neg_mul_sq_add_real_mul_I GaussianFourier.integral_cexp_neg_mul_sq_add_real_mul_i
 
 theorem integral_cexp_neg_mul_sq_add_const (hb : 0 < b.re) (c : ℂ) :
-    (∫ x : ℝ, cexp (-b * (x + c) ^ 2)) = (π / b) ^ (1 / 2 : ℂ) :=
+    ∫ x : ℝ, cexp (-b * (x + c) ^ 2) = (π / b) ^ (1 / 2 : ℂ) :=
   by
   rw [← re_add_im c]
   simp_rw [← add_assoc, ← of_real_add]
@@ -564,7 +564,7 @@ theorem integral_cexp_neg_mul_sq_add_const (hb : 0 < b.re) (c : ℂ) :
 #align integral_cexp_neg_mul_sq_add_const integral_cexp_neg_mul_sq_add_const
 
 theorem fourier_transform_gaussian (hb : 0 < b.re) (t : ℂ) :
-    (∫ x : ℝ, cexp (I * t * x) * cexp (-b * x ^ 2)) =
+    ∫ x : ℝ, cexp (I * t * x) * cexp (-b * x ^ 2) =
       cexp (-t ^ 2 / (4 * b)) * (π / b) ^ (1 / 2 : ℂ) :=
   by
   have : b ≠ 0 := by contrapose! hb; rw [hb, zero_re]
@@ -638,7 +638,7 @@ theorem isLittleO_exp_neg_mul_sq_cocompact {a : ℂ} (ha : 0 < a.re) (s : ℝ) :
 #align is_o_exp_neg_mul_sq_cocompact isLittleO_exp_neg_mul_sq_cocompact
 
 theorem Complex.tsum_exp_neg_mul_int_sq {a : ℂ} (ha : 0 < a.re) :
-    (∑' n : ℤ, cexp (-π * a * n ^ 2)) = 1 / a ^ (1 / 2 : ℂ) * ∑' n : ℤ, cexp (-π / a * n ^ 2) :=
+    ∑' n : ℤ, cexp (-π * a * n ^ 2) = 1 / a ^ (1 / 2 : ℂ) * ∑' n : ℤ, cexp (-π / a * n ^ 2) :=
   by
   let f := fun x : ℝ => cexp (-π * a * x ^ 2)
   have h1 : 0 < (↑π * a).re := by
@@ -671,7 +671,7 @@ theorem Complex.tsum_exp_neg_mul_int_sq {a : ℂ} (ha : 0 < a.re) :
 #align complex.tsum_exp_neg_mul_int_sq Complex.tsum_exp_neg_mul_int_sq
 
 theorem Real.tsum_exp_neg_mul_int_sq {a : ℝ} (ha : 0 < a) :
-    (∑' n : ℤ, exp (-π * a * n ^ 2)) = 1 / a ^ (1 / 2 : ℝ) * ∑' n : ℤ, exp (-π / a * n ^ 2) := by
+    ∑' n : ℤ, exp (-π * a * n ^ 2) = 1 / a ^ (1 / 2 : ℝ) * ∑' n : ℤ, exp (-π / a * n ^ 2) := by
   simpa only [← of_real_inj, of_real_mul, of_real_tsum, of_real_exp, of_real_div, of_real_pow,
     of_real_int_cast, of_real_neg, of_real_cpow ha.le, of_real_bit0, of_real_one] using
     Complex.tsum_exp_neg_mul_int_sq (by rwa [of_real_re] : 0 < (a : ℂ).re)

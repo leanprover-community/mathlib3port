@@ -86,7 +86,7 @@ theorem bernoulli_zero : bernoulli 0 = 1 := by simp [bernoulli]
 theorem bernoulli_eval_zero (n : ℕ) : (bernoulli n).eval 0 = bernoulli n :=
   by
   rw [bernoulli, eval_finset_sum, sum_range_succ]
-  have : (∑ x : ℕ in range n, _root_.bernoulli x * n.choose x * 0 ^ (n - x)) = 0 :=
+  have : ∑ x : ℕ in range n, _root_.bernoulli x * n.choose x * 0 ^ (n - x) = 0 :=
     by
     apply sum_eq_zero fun x hx => _
     have h : 0 < n - x := tsub_pos_of_lt (mem_range.1 hx)
@@ -136,7 +136,7 @@ theorem derivative_bernoulli (k : ℕ) : (bernoulli k).derivative = k * bernoull
 #print Polynomial.sum_bernoulli /-
 @[simp]
 theorem sum_bernoulli (n : ℕ) :
-    (∑ k in range (n + 1), ((n + 1).choose k : ℚ) • bernoulli k) = monomial n (n + 1 : ℚ) :=
+    ∑ k in range (n + 1), ((n + 1).choose k : ℚ) • bernoulli k = monomial n (n + 1 : ℚ) :=
   by
   simp_rw [bernoulli_def, Finset.smul_sum, Finset.range_eq_Ico, ← Finset.sum_Ico_Ico_comm,
     Finset.sum_Ico_eq_sum_range]
@@ -183,7 +183,7 @@ theorem bernoulli_eq_sub_sum (n : ℕ) :
 
 /-- Another version of `bernoulli.sum_range_pow`. -/
 theorem sum_range_pow_eq_bernoulli_sub (n p : ℕ) :
-    ((p + 1 : ℚ) * ∑ k in range n, (k : ℚ) ^ p) = (bernoulli p.succ).eval n - bernoulli p.succ :=
+    (p + 1 : ℚ) * ∑ k in range n, (k : ℚ) ^ p = (bernoulli p.succ).eval n - bernoulli p.succ :=
   by
   rw [sum_range_pow, bernoulli_def, eval_finset_sum, ← sum_div, mul_div_cancel' _ _]
   · simp_rw [eval_monomial]

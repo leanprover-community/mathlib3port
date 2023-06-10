@@ -76,11 +76,11 @@ theorem mem_convexHull_erase [DecidableEq E] {t : Finset E} (h : ¬AffineIndepen
   have hi₀ : i₀ ∈ t := filter_subset _ _ mem
   let k : E → 𝕜 := fun z => f z - f i₀ / g i₀ * g z
   have hk : k i₀ = 0 := by field_simp [k, ne_of_gt hg]
-  have ksum : (∑ e in t.erase i₀, k e) = 1 := by
+  have ksum : ∑ e in t.erase i₀, k e = 1 := by
     calc
-      (∑ e in t.erase i₀, k e) = ∑ e in t, k e := by
+      ∑ e in t.erase i₀, k e = ∑ e in t, k e := by
         conv_rhs => rw [← insert_erase hi₀, sum_insert (not_mem_erase i₀ t), hk, zero_add]
-      _ = ∑ e in t, f e - f i₀ / g i₀ * g e := rfl
+      _ = ∑ e in t, (f e - f i₀ / g i₀ * g e) := rfl
       _ = 1 := by rw [sum_sub_distrib, fsum, ← mul_sum, gsum, MulZeroClass.mul_zero, sub_zero]
   refine' ⟨⟨i₀, hi₀⟩, k, _, by convert ksum, _⟩
   · simp only [and_imp, sub_nonneg, mem_erase, Ne.def, Subtype.coe_mk]
@@ -99,7 +99,7 @@ theorem mem_convexHull_erase [DecidableEq E] {t : Finset E} (h : ¬AffineIndepen
       · simpa only [mem_filter, het, true_and_iff, not_lt] using hes
   · simp only [Subtype.coe_mk, center_mass_eq_of_sum_1 _ id ksum, id]
     calc
-      (∑ e in t.erase i₀, k e • e) = ∑ e in t, k e • e := sum_erase _ (by rw [hk, zero_smul])
+      ∑ e in t.erase i₀, k e • e = ∑ e in t, k e • e := sum_erase _ (by rw [hk, zero_smul])
       _ = ∑ e in t, (f e - f i₀ / g i₀ * g e) • e := rfl
       _ = t.center_mass f id := _
     simp only [sub_smul, mul_smul, sum_sub_distrib, ← smul_sum, gcombo, smul_zero, sub_zero,
@@ -186,7 +186,7 @@ theorem convexHull_eq_union :
 theorem eq_pos_convex_span_of_mem_convexHull {x : E} (hx : x ∈ convexHull 𝕜 s) :
     ∃ (ι : Sort (u + 1)) (_ : Fintype ι),
       ∃ (z : ι → E) (w : ι → 𝕜) (hss : Set.range z ⊆ s) (hai : AffineIndependent 𝕜 z) (hw :
-        ∀ i, 0 < w i), (∑ i, w i) = 1 ∧ (∑ i, w i • z i) = x :=
+        ∀ i, 0 < w i), ∑ i, w i = 1 ∧ ∑ i, w i • z i = x :=
   by
   rw [convexHull_eq_union] at hx 
   simp only [exists_prop, Set.mem_iUnion] at hx 
@@ -201,7 +201,7 @@ theorem eq_pos_convex_span_of_mem_convexHull {x : E} (hx : x ∈ convexHull 𝕜
     exact fun i =>
       (hw₁ _ (finset.mem_filter.mp i.2).1).lt_of_ne (finset.mem_filter.mp i.property).2.symm
   · erw [Finset.sum_attach, Finset.sum_filter_ne_zero, hw₂]
-  · change (∑ i : t' in t'.attach, (fun e => w e • e) ↑i) = x
+  · change ∑ i : t' in t'.attach, (fun e => w e • e) ↑i = x
     erw [Finset.sum_attach, Finset.sum_filter_of_ne]
     · rw [t.center_mass_eq_of_sum_1 id hw₂] at hw₃ ; exact hw₃
     · intro e he hwe contra; apply hwe; rw [contra, zero_smul]

@@ -209,7 +209,7 @@ theorem sum_totient (n : ℕ) : n.divisors.Sum φ = n :=
 #align nat.sum_totient Nat.sum_totient
 -/
 
-theorem sum_totient' (n : ℕ) : (∑ m in (range n.succ).filterₓ (· ∣ n), φ m) = n :=
+theorem sum_totient' (n : ℕ) : ∑ m in (range n.succ).filterₓ (· ∣ n), φ m = n :=
   by
   convert sum_totient _ using 1
   simp only [Nat.divisors, sum_filter, range_eq_Ico]
@@ -340,7 +340,7 @@ theorem totient_eq_prod_factorization {n : ℕ} (hn : n ≠ 0) :
 
 /-- Euler's product formula for the totient function. -/
 theorem totient_mul_prod_factors (n : ℕ) :
-    (φ n * ∏ p in n.factors.toFinset, p) = n * ∏ p in n.factors.toFinset, p - 1 :=
+    φ n * ∏ p in n.factors.toFinset, p = n * ∏ p in n.factors.toFinset, (p - 1) :=
   by
   by_cases hn : n = 0; · simp [hn]
   rw [totient_eq_prod_factorization hn]
@@ -353,7 +353,7 @@ theorem totient_mul_prod_factors (n : ℕ) :
 
 /-- Euler's product formula for the totient function. -/
 theorem totient_eq_div_factors_mul (n : ℕ) :
-    φ n = (n / ∏ p in n.factors.toFinset, p) * ∏ p in n.factors.toFinset, p - 1 :=
+    φ n = (n / ∏ p in n.factors.toFinset, p) * ∏ p in n.factors.toFinset, (p - 1) :=
   by
   rw [← mul_div_left n.totient, totient_mul_prod_factors, mul_comm,
     Nat.mul_div_assoc _ (prod_prime_factors_dvd n), mul_comm]
@@ -361,11 +361,12 @@ theorem totient_eq_div_factors_mul (n : ℕ) :
 #align nat.totient_eq_div_factors_mul Nat.totient_eq_div_factors_mul
 
 /-- Euler's product formula for the totient function. -/
-theorem totient_eq_mul_prod_factors (n : ℕ) : (φ n : ℚ) = n * ∏ p in n.factors.toFinset, 1 - p⁻¹ :=
+theorem totient_eq_mul_prod_factors (n : ℕ) :
+    (φ n : ℚ) = n * ∏ p in n.factors.toFinset, (1 - p⁻¹) :=
   by
   by_cases hn : n = 0; · simp [hn]
   have hn' : (n : ℚ) ≠ 0 := by simp [hn]
-  have hpQ : (∏ p in n.factors.to_finset, (p : ℚ)) ≠ 0 :=
+  have hpQ : ∏ p in n.factors.to_finset, (p : ℚ) ≠ 0 :=
     by
     rw [← cast_prod, cast_ne_zero, ← zero_lt_iff, ← prod_factorization_eq_prod_factors]
     exact prod_pos fun p hp => pos_of_mem_factorization hp

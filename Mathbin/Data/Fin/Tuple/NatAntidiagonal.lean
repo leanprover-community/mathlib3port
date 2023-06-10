@@ -92,7 +92,7 @@ theorem antidiagonalTuple_zero_succ (n : ℕ) : antidiagonalTuple 0 n.succ = [] 
 
 #print List.Nat.mem_antidiagonalTuple /-
 theorem mem_antidiagonalTuple {n : ℕ} {k : ℕ} {x : Fin k → ℕ} :
-    x ∈ antidiagonalTuple k n ↔ (∑ i, x i) = n :=
+    x ∈ antidiagonalTuple k n ↔ ∑ i, x i = n :=
   by
   revert n
   refine' Fin.consInduction _ _ x
@@ -233,7 +233,7 @@ theorem antidiagonalTuple_zero_succ (n : ℕ) : antidiagonalTuple 0 n.succ = 0 :
 
 #print Multiset.Nat.mem_antidiagonalTuple /-
 theorem mem_antidiagonalTuple {n : ℕ} {k : ℕ} {x : Fin k → ℕ} :
-    x ∈ antidiagonalTuple k n ↔ (∑ i, x i) = n :=
+    x ∈ antidiagonalTuple k n ↔ ∑ i, x i = n :=
   List.Nat.mem_antidiagonalTuple
 #align multiset.nat.mem_antidiagonal_tuple Multiset.Nat.mem_antidiagonalTuple
 -/
@@ -294,7 +294,7 @@ theorem antidiagonalTuple_zero_succ (n : ℕ) : antidiagonalTuple 0 n.succ = ∅
 
 #print Finset.Nat.mem_antidiagonalTuple /-
 theorem mem_antidiagonalTuple {n : ℕ} {k : ℕ} {x : Fin k → ℕ} :
-    x ∈ antidiagonalTuple k n ↔ (∑ i, x i) = n :=
+    x ∈ antidiagonalTuple k n ↔ ∑ i, x i = n :=
   List.Nat.mem_antidiagonalTuple
 #align finset.nat.mem_antidiagonal_tuple Finset.Nat.mem_antidiagonalTuple
 -/

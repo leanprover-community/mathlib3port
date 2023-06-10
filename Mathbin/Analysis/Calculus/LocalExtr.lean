@@ -423,23 +423,22 @@ theorem card_roots_le_derivative (p : ℝ[X]) : p.roots.card ≤ p.derivative.ro
   calc
     p.roots.card = ∑ x in p.roots.toFinset, p.roots.count x :=
       (Multiset.toFinset_sum_count_eq _).symm
-    _ = ∑ x in p.roots.toFinset, p.roots.count x - 1 + 1 :=
+    _ = ∑ x in p.roots.toFinset, (p.roots.count x - 1 + 1) :=
       (Eq.symm <|
         Finset.sum_congr rfl fun x hx =>
           tsub_add_cancel_of_le <|
             Nat.succ_le_iff.2 <| Multiset.count_pos.2 <| Multiset.mem_toFinset.1 hx)
-    _ = (∑ x in p.roots.toFinset, p.rootMultiplicity x - 1) + p.roots.toFinset.card := by
+    _ = ∑ x in p.roots.toFinset, (p.rootMultiplicity x - 1) + p.roots.toFinset.card := by
       simp only [Finset.sum_add_distrib, Finset.card_eq_sum_ones, count_roots]
     _ ≤
-        (∑ x in p.roots.toFinset, p.derivative.rootMultiplicity x) +
+        ∑ x in p.roots.toFinset, p.derivative.rootMultiplicity x +
           ((p.derivative.roots.toFinset \ p.roots.toFinset).card + 1) :=
       (add_le_add
         (Finset.sum_le_sum fun x hx => rootMultiplicity_sub_one_le_derivative_rootMultiplicity _ _)
         p.card_roots_toFinset_le_card_roots_derivative_diff_roots_succ)
     _ ≤
-        (∑ x in p.roots.toFinset, p.derivative.roots.count x) +
-          ((∑ x in p.derivative.roots.toFinset \ p.roots.toFinset, p.derivative.roots.count x) +
-            1) :=
+        ∑ x in p.roots.toFinset, p.derivative.roots.count x +
+          (∑ x in p.derivative.roots.toFinset \ p.roots.toFinset, p.derivative.roots.count x + 1) :=
       by
       simp only [← count_roots]
       refine' add_le_add_left (add_le_add_right ((Finset.card_eq_sum_ones _).trans_le _) _) _

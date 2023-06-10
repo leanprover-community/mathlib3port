@@ -238,16 +238,16 @@ where the main point of the bound is that it tends to `0`. The goal is to deduce
 expansion of the logarithm, in `has_sum_pow_div_log_of_abs_lt_1`.
 -/
 theorem abs_log_sub_add_sum_range_le {x : ℝ} (h : |x| < 1) (n : ℕ) :
-    |(∑ i in range n, x ^ (i + 1) / (i + 1)) + log (1 - x)| ≤ |x| ^ (n + 1) / (1 - |x|) :=
+    |∑ i in range n, x ^ (i + 1) / (i + 1) + log (1 - x)| ≤ |x| ^ (n + 1) / (1 - |x|) :=
   by
   /- For the proof, we show that the derivative of the function to be estimated is small,
     and then apply the mean value inequality. -/
-  let F : ℝ → ℝ := fun x => (∑ i in range n, x ^ (i + 1) / (i + 1)) + log (1 - x)
+  let F : ℝ → ℝ := fun x => ∑ i in range n, x ^ (i + 1) / (i + 1) + log (1 - x)
   -- First step: compute the derivative of `F`
   have A : ∀ y ∈ Ioo (-1 : ℝ) 1, deriv F y = -y ^ n / (1 - y) :=
     by
     intro y hy
-    have : (∑ i in range n, (↑i + 1) * y ^ i / (↑i + 1)) = ∑ i in range n, y ^ i :=
+    have : ∑ i in range n, (↑i + 1) * y ^ i / (↑i + 1) = ∑ i in range n, y ^ i :=
       by
       congr with i
       exact mul_div_cancel_left _ (Nat.cast_add_one_pos i).ne'

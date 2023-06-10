@@ -246,8 +246,8 @@ theorem polyOfInterest_vars (n : ℕ) : (polyOfInterest p n).vars ⊆ univ ×ˢ 
 
 theorem peval_polyOfInterest (n : ℕ) (x y : 𝕎 k) :
     peval (polyOfInterest p n) ![fun i => x.coeff i, fun i => y.coeff i] =
-      ((x * y).coeff (n + 1) + p ^ (n + 1) * x.coeff (n + 1) * y.coeff (n + 1) -
-          y.coeff (n + 1) * ∑ i in range (n + 1 + 1), p ^ i * x.coeff i ^ p ^ (n + 1 - i)) -
+      (x * y).coeff (n + 1) + p ^ (n + 1) * x.coeff (n + 1) * y.coeff (n + 1) -
+          y.coeff (n + 1) * ∑ i in range (n + 1 + 1), p ^ i * x.coeff i ^ p ^ (n + 1 - i) -
         x.coeff (n + 1) * ∑ i in range (n + 1 + 1), p ^ i * y.coeff i ^ p ^ (n + 1 - i) :=
   by
   simp only [poly_of_interest, peval, map_natCast, Matrix.head_cons, map_pow,
@@ -275,8 +275,7 @@ theorem peval_poly_of_interest' (n : ℕ) (x y : 𝕎 k) :
     zero_pow']
   have sum_zero_pow_mul_pow_p :
     ∀ y : 𝕎 k,
-      (∑ x : ℕ in range (n + 1 + 1), 0 ^ x * y.coeff x ^ p ^ (n + 1 - x)) =
-        y.coeff 0 ^ p ^ (n + 1) :=
+      ∑ x : ℕ in range (n + 1 + 1), 0 ^ x * y.coeff x ^ p ^ (n + 1 - x) = y.coeff 0 ^ p ^ (n + 1) :=
     by
     intro y
     rw [Finset.sum_eq_single_of_mem 0]

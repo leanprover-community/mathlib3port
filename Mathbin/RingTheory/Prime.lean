@@ -34,7 +34,7 @@ open scoped BigOperators
 theorem mul_eq_mul_prime_prod {α : Type _} [DecidableEq α] {x y a : R} {s : Finset α} {p : α → R}
     (hp : ∀ i ∈ s, Prime (p i)) (hx : x * y = a * ∏ i in s, p i) :
     ∃ (t u : Finset α) (b c : R),
-      t ∪ u = s ∧ Disjoint t u ∧ a = b * c ∧ (x = b * ∏ i in t, p i) ∧ y = c * ∏ i in u, p i :=
+      t ∪ u = s ∧ Disjoint t u ∧ a = b * c ∧ x = b * ∏ i in t, p i ∧ y = c * ∏ i in u, p i :=
   by
   induction' s using Finset.induction with i s his ih generalizing x y a
   · exact ⟨∅, ∅, x, y, by simp [hx]⟩

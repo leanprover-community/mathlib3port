@@ -92,7 +92,7 @@ theorem OxfordInvariants.week3_p1 (n : ℕ) (a : ℕ → ℕ) (a_pos : ∀ i ≤
     Set up the stronger induction hypothesis -/
   rsuffices ⟨b, hb, -⟩ :
     ∃ b : ℕ,
-      ((b : α) = ∑ i in Finset.range (n + 1), a 0 * a (n + 1) / (a i * a (i + 1))) ∧
+      (b : α) = ∑ i in Finset.range (n + 1), a 0 * a (n + 1) / (a i * a (i + 1)) ∧
         a (n + 1) ∣ a n * b - a 0
   · exact ⟨b, hb⟩
   simp_rw [← @Nat.cast_pos α] at a_pos 

@@ -490,10 +490,10 @@ theorem setToSimpleFunc_add (T : Set α → E →L[ℝ] F) (h_add : FinMeasAddit
   calc
     setToSimpleFunc T (f + g) = ∑ x in (pair f g).range, T (pair f g ⁻¹' {x}) (x.fst + x.snd) := by
       rw [add_eq_map₂, map_set_to_simple_func T h_add hp_pair]; simp
-    _ = ∑ x in (pair f g).range, T (pair f g ⁻¹' {x}) x.fst + T (pair f g ⁻¹' {x}) x.snd :=
+    _ = ∑ x in (pair f g).range, (T (pair f g ⁻¹' {x}) x.fst + T (pair f g ⁻¹' {x}) x.snd) :=
       (Finset.sum_congr rfl fun a ha => ContinuousLinearMap.map_add _ _ _)
     _ =
-        (∑ x in (pair f g).range, T (pair f g ⁻¹' {x}) x.fst) +
+        ∑ x in (pair f g).range, T (pair f g ⁻¹' {x}) x.fst +
           ∑ x in (pair f g).range, T (pair f g ⁻¹' {x}) x.snd :=
       by rw [Finset.sum_add_distrib]
     _ = ((pair f g).map Prod.fst).setToSimpleFunc T + ((pair f g).map Prod.snd).setToSimpleFunc T :=

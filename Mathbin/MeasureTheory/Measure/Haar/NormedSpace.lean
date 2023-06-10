@@ -70,7 +70,7 @@ variable (μ) {s : Set E}
 integral of `f`. The formula we give works even when `f` is not integrable or `R = 0`
 thanks to the convention that a non-integrable function has integral zero. -/
 theorem integral_comp_smul (f : E → F) (R : ℝ) :
-    (∫ x, f (R • x) ∂μ) = |(R ^ finrank ℝ E)⁻¹| • ∫ x, f x ∂μ :=
+    ∫ x, f (R • x) ∂μ = |(R ^ finrank ℝ E)⁻¹| • ∫ x, f x ∂μ :=
   by
   rcases eq_or_ne R 0 with (rfl | hR)
   · simp only [zero_smul, integral_const]
@@ -84,7 +84,7 @@ theorem integral_comp_smul (f : E → F) (R : ℝ) :
         inv_zero, abs_zero]
   ·
     calc
-      (∫ x, f (R • x) ∂μ) = ∫ y, f y ∂measure.map (fun x => R • x) μ :=
+      ∫ x, f (R • x) ∂μ = ∫ y, f y ∂measure.map (fun x => R • x) μ :=
         (integral_map_equiv (Homeomorph.smul (isUnit_iff_ne_zero.2 hR).Unit).toMeasurableEquiv
             f).symm
       _ = |(R ^ finrank ℝ E)⁻¹| • ∫ x, f x ∂μ := by
@@ -95,7 +95,7 @@ theorem integral_comp_smul (f : E → F) (R : ℝ) :
 integral of `f`. The formula we give works even when `f` is not integrable or `R = 0`
 thanks to the convention that a non-integrable function has integral zero. -/
 theorem integral_comp_smul_of_nonneg (f : E → F) (R : ℝ) {hR : 0 ≤ R} :
-    (∫ x, f (R • x) ∂μ) = (R ^ finrank ℝ E)⁻¹ • ∫ x, f x ∂μ := by
+    ∫ x, f (R • x) ∂μ = (R ^ finrank ℝ E)⁻¹ • ∫ x, f x ∂μ := by
   rw [integral_comp_smul μ f R, abs_of_nonneg (inv_nonneg.2 (pow_nonneg hR _))]
 #align measure_theory.measure.integral_comp_smul_of_nonneg MeasureTheory.Measure.integral_comp_smul_of_nonneg
 
@@ -103,7 +103,7 @@ theorem integral_comp_smul_of_nonneg (f : E → F) (R : ℝ) {hR : 0 ≤ R} :
 integral of `f`. The formula we give works even when `f` is not integrable or `R = 0`
 thanks to the convention that a non-integrable function has integral zero. -/
 theorem integral_comp_inv_smul (f : E → F) (R : ℝ) :
-    (∫ x, f (R⁻¹ • x) ∂μ) = |R ^ finrank ℝ E| • ∫ x, f x ∂μ := by
+    ∫ x, f (R⁻¹ • x) ∂μ = |R ^ finrank ℝ E| • ∫ x, f x ∂μ := by
   rw [integral_comp_smul μ f R⁻¹, inv_pow, inv_inv]
 #align measure_theory.measure.integral_comp_inv_smul MeasureTheory.Measure.integral_comp_inv_smul
 
@@ -111,29 +111,29 @@ theorem integral_comp_inv_smul (f : E → F) (R : ℝ) :
 integral of `f`. The formula we give works even when `f` is not integrable or `R = 0`
 thanks to the convention that a non-integrable function has integral zero. -/
 theorem integral_comp_inv_smul_of_nonneg (f : E → F) {R : ℝ} (hR : 0 ≤ R) :
-    (∫ x, f (R⁻¹ • x) ∂μ) = R ^ finrank ℝ E • ∫ x, f x ∂μ := by
+    ∫ x, f (R⁻¹ • x) ∂μ = R ^ finrank ℝ E • ∫ x, f x ∂μ := by
   rw [integral_comp_inv_smul μ f R, abs_of_nonneg (pow_nonneg hR _)]
 #align measure_theory.measure.integral_comp_inv_smul_of_nonneg MeasureTheory.Measure.integral_comp_inv_smul_of_nonneg
 
-theorem integral_comp_mul_left (g : ℝ → F) (a : ℝ) : (∫ x : ℝ, g (a * x)) = |a⁻¹| • ∫ y : ℝ, g y :=
-  by simp_rw [← smul_eq_mul, measure.integral_comp_smul, FiniteDimensional.finrank_self, pow_one]
+theorem integral_comp_mul_left (g : ℝ → F) (a : ℝ) : ∫ x : ℝ, g (a * x) = |a⁻¹| • ∫ y : ℝ, g y := by
+  simp_rw [← smul_eq_mul, measure.integral_comp_smul, FiniteDimensional.finrank_self, pow_one]
 #align measure_theory.measure.integral_comp_mul_left MeasureTheory.Measure.integral_comp_mul_left
 
 theorem integral_comp_inv_mul_left (g : ℝ → F) (a : ℝ) :
-    (∫ x : ℝ, g (a⁻¹ * x)) = |a| • ∫ y : ℝ, g y := by
+    ∫ x : ℝ, g (a⁻¹ * x) = |a| • ∫ y : ℝ, g y := by
   simp_rw [← smul_eq_mul, measure.integral_comp_inv_smul, FiniteDimensional.finrank_self, pow_one]
 #align measure_theory.measure.integral_comp_inv_mul_left MeasureTheory.Measure.integral_comp_inv_mul_left
 
-theorem integral_comp_mul_right (g : ℝ → F) (a : ℝ) : (∫ x : ℝ, g (x * a)) = |a⁻¹| • ∫ y : ℝ, g y :=
+theorem integral_comp_mul_right (g : ℝ → F) (a : ℝ) : ∫ x : ℝ, g (x * a) = |a⁻¹| • ∫ y : ℝ, g y :=
   by simpa only [mul_comm] using integral_comp_mul_left g a
 #align measure_theory.measure.integral_comp_mul_right MeasureTheory.Measure.integral_comp_mul_right
 
 theorem integral_comp_inv_mul_right (g : ℝ → F) (a : ℝ) :
-    (∫ x : ℝ, g (x * a⁻¹)) = |a| • ∫ y : ℝ, g y := by
+    ∫ x : ℝ, g (x * a⁻¹) = |a| • ∫ y : ℝ, g y := by
   simpa only [mul_comm] using integral_comp_inv_mul_left g a
 #align measure_theory.measure.integral_comp_inv_mul_right MeasureTheory.Measure.integral_comp_inv_mul_right
 
-theorem integral_comp_div (g : ℝ → F) (a : ℝ) : (∫ x : ℝ, g (x / a)) = |a| • ∫ y : ℝ, g y :=
+theorem integral_comp_div (g : ℝ → F) (a : ℝ) : ∫ x : ℝ, g (x / a) = |a| • ∫ y : ℝ, g y :=
   integral_comp_inv_mul_right g a
 #align measure_theory.measure.integral_comp_div MeasureTheory.Measure.integral_comp_div
 

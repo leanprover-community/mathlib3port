@@ -111,7 +111,7 @@ def z {n : ℕ} (k : Fin (n + 1)) : I :=
 -- mathport name: «expr /ₙ»
 local postfix:90 "/ₙ" => z
 
-theorem probability (n : ℕ) (x : I) : (∑ k : Fin (n + 1), bernstein n k x) = 1 :=
+theorem probability (n : ℕ) (x : I) : ∑ k : Fin (n + 1), bernstein n k x = 1 :=
   by
   have := bernsteinPolynomial.sum ℝ n
   apply_fun fun p => Polynomial.aeval (x : ℝ) p at this 
@@ -120,7 +120,7 @@ theorem probability (n : ℕ) (x : I) : (∑ k : Fin (n + 1), bernstein n k x) =
 #align bernstein.probability bernstein.probability
 
 theorem variance {n : ℕ} (h : 0 < (n : ℝ)) (x : I) :
-    (∑ k : Fin (n + 1), (x - k/ₙ : ℝ) ^ 2 * bernstein n k x) = x * (1 - x) / n :=
+    ∑ k : Fin (n + 1), (x - k/ₙ : ℝ) ^ 2 * bernstein n k x = x * (1 - x) / n :=
   by
   have h' : (n : ℝ) ≠ 0 := ne_of_gt h
   apply_fun fun x : ℝ => x * n using GroupWithZero.mul_right_injective h'
@@ -265,7 +265,7 @@ theorem bernsteinApproximation_uniform (f : C(I, ℝ)) :
     _ ≤ ∑ k : Fin (n + 1), |(f k/ₙ - f x) * bernstein n k x| := (Finset.abs_sum_le_sum_abs _ _)
     _ = ∑ k : Fin (n + 1), |f k/ₙ - f x| * bernstein n k x := by
       simp_rw [abs_mul, abs_eq_self.mpr bernstein_nonneg]
-    _ = (∑ k in S, |f k/ₙ - f x| * bernstein n k x) + ∑ k in Sᶜ, |f k/ₙ - f x| * bernstein n k x :=
+    _ = ∑ k in S, |f k/ₙ - f x| * bernstein n k x + ∑ k in Sᶜ, |f k/ₙ - f x| * bernstein n k x :=
       (S.sum_add_sum_compl _).symm
     -- We'll now deal with the terms in `S` and the terms in `Sᶜ` in separate calc blocks.
         _ <
@@ -275,7 +275,7 @@ theorem bernsteinApproximation_uniform (f : C(I, ℝ)) :
   ·-- We now work on the terms in `S`: uniform continuity and `bernstein.probability`
     -- quickly give us a bound.
     calc
-      (∑ k in S, |f k/ₙ - f x| * bernstein n k x) ≤ ∑ k in S, ε / 2 * bernstein n k x :=
+      ∑ k in S, |f k/ₙ - f x| * bernstein n k x ≤ ∑ k in S, ε / 2 * bernstein n k x :=
         Finset.sum_le_sum fun k m =>
           mul_le_mul_of_nonneg_right (le_of_lt (lt_of_mem_S m)) bernstein_nonneg
       _ = ε / 2 * ∑ k in S, bernstein n k x := by rw [Finset.mul_sum]
@@ -290,7 +290,7 @@ theorem bernsteinApproximation_uniform (f : C(I, ℝ)) :
     -- and then insert a `δ^(-2) * (x - k/n)^2` factor
     -- (which is at least one because we are not in `S`).
     calc
-      (∑ k in Sᶜ, |f k/ₙ - f x| * bernstein n k x) ≤ ∑ k in Sᶜ, 2 * ‖f‖ * bernstein n k x :=
+      ∑ k in Sᶜ, |f k/ₙ - f x| * bernstein n k x ≤ ∑ k in Sᶜ, 2 * ‖f‖ * bernstein n k x :=
         Finset.sum_le_sum fun k m =>
           mul_le_mul_of_nonneg_right (f.dist_le_two_norm _ _) bernstein_nonneg
       _ = 2 * ‖f‖ * ∑ k in Sᶜ, bernstein n k x := by rw [Finset.mul_sum]
