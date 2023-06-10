@@ -905,10 +905,12 @@ end DivisionRing
 
 section Centralizer
 
+#print Subring.centralizer /-
 /-- The centralizer of a set inside a ring as a `subring`. -/
 def centralizer (s : Set R) : Subring R :=
   { Subsemiring.centralizer s with neg_mem' := fun x => Set.neg_mem_centralizer }
 #align subring.centralizer Subring.centralizer
+-/
 
 @[simp, norm_cast]
 theorem coe_centralizer (s : Set R) : (centralizer s : Set R) = s.centralizer :=
@@ -920,10 +922,12 @@ theorem centralizer_toSubmonoid (s : Set R) :
   rfl
 #align subring.centralizer_to_submonoid Subring.centralizer_toSubmonoid
 
+#print Subring.centralizer_toSubsemiring /-
 theorem centralizer_toSubsemiring (s : Set R) :
     (centralizer s).toSubsemiring = Subsemiring.centralizer s :=
   rfl
 #align subring.centralizer_to_subsemiring Subring.centralizer_toSubsemiring
+-/
 
 theorem mem_centralizer_iff {s : Set R} {z : R} : z ∈ centralizer s ↔ ∀ g ∈ s, g * z = z * g :=
   Iff.rfl
@@ -942,10 +946,12 @@ theorem centralizer_eq_top_iff_subset {s : Set R} : centralizer s = ⊤ ↔ s �
   SetLike.ext'_iff.trans Set.centralizer_eq_top_iff_subset
 #align subring.centralizer_eq_top_iff_subset Subring.centralizer_eq_top_iff_subset
 
+#print Subring.centralizer_univ /-
 @[simp]
 theorem centralizer_univ : centralizer Set.univ = center R :=
   SetLike.ext' (Set.centralizer_univ R)
 #align subring.centralizer_univ Subring.centralizer_univ
+-/
 
 end Centralizer
 

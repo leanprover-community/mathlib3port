@@ -48,11 +48,13 @@ variable [NormedAddCommGroup E] [NormedSpace K E]
 
 variable (b : Basis ι K E)
 
+#print Zspan.fundamentalDomain /-
 /-- The fundamental domain of the ℤ-lattice spanned by `b`. See `zspan.is_add_fundamental_domain`
 for the proof that it is the fundamental domain. -/
 def fundamentalDomain : Set E :=
   {m | ∀ i, b.repr m i ∈ Set.Ico (0 : K) 1}
 #align zspan.fundamental_domain Zspan.fundamentalDomain
+-/
 
 @[simp]
 theorem mem_fundamentalDomain {m : E} :
@@ -114,11 +116,13 @@ theorem ceil_eq_self_of_mem (m : E) (h : m ∈ span ℤ (Set.range b)) : (ceil b
   exact congr_arg (coe : ℤ → K) (Int.ceil_intCast z)
 #align zspan.ceil_eq_self_of_mem Zspan.ceil_eq_self_of_mem
 
+#print Zspan.fract /-
 /-- The map that sends a vector `E` to the fundamental domain of the lattice,
 see `zspan.fract_mem_fundamental_domain`. -/
 def fract (m : E) : E :=
   m - floor b m
 #align zspan.fract Zspan.fract
+-/
 
 theorem fract_apply (m : E) : fract b m = m - floor b m :=
   rfl
@@ -198,10 +202,12 @@ theorem coe_floor_self (k : K) : (floor (Basis.singleton ι K) k : K) = ⌊k⌋ 
   Basis.ext_elem _ fun _ => by rw [repr_floor_apply, Basis.singleton_repr, Basis.singleton_repr]
 #align zspan.coe_floor_self Zspan.coe_floor_self
 
+#print Zspan.coe_fract_self /-
 @[simp]
 theorem coe_fract_self (k : K) : (fract (Basis.singleton ι K) k : K) = Int.fract k :=
   Basis.ext_elem _ fun _ => by rw [repr_fract_apply, Basis.singleton_repr, Basis.singleton_repr]
 #align zspan.coe_fract_self Zspan.coe_fract_self
+-/
 
 end Unique
 

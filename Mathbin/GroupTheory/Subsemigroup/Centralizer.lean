@@ -129,18 +129,22 @@ theorem centralizer_subset [Mul M] (h : S ⊆ T) : centralizer T ⊆ centralizer
 #align set.add_centralizer_subset Set.add_centralizer_subset
 -/
 
+#print Set.center_subset_centralizer /-
 @[to_additive add_center_subset_add_centralizer]
 theorem center_subset_centralizer [Mul M] (S : Set M) : Set.center M ⊆ S.centralizer :=
   fun x hx m _ => hx m
 #align set.center_subset_centralizer Set.center_subset_centralizer
-#align set.add_center_subset_add_centralizer Set.add_center_subset_add_centralizer
+#align set.add_center_subset_add_centralizer Set.addCenter_subset_addCentralizer
+-/
 
+#print Set.centralizer_eq_top_iff_subset /-
 @[simp, to_additive add_centralizer_eq_top_iff_subset]
 theorem centralizer_eq_top_iff_subset {s : Set M} [Mul M] :
     centralizer s = Set.univ ↔ s ⊆ center M :=
   eq_top_iff.trans <| ⟨fun h x hx g => (h trivial _ hx).symm, fun h x _ m hm => (h hm x).symm⟩
 #align set.centralizer_eq_top_iff_subset Set.centralizer_eq_top_iff_subset
-#align set.add_centralizer_eq_top_iff_subset Set.add_centralizer_eq_top_iff_subset
+#align set.add_centralizer_eq_top_iff_subset Set.addCentralizer_eq_top_iff_subset
+-/
 
 variable (M)
 
