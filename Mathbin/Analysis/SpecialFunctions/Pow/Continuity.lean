@@ -373,7 +373,7 @@ theorem continuousAt_cpow_const_of_re_pos {z w : ℂ} (hz : 0 ≤ re z ∨ im z 
 #align complex.continuous_at_cpow_const_of_re_pos Complex.continuousAt_cpow_const_of_re_pos
 
 /-- Continuity of `(x, y) ↦ x ^ y` as a function on `ℝ × ℂ`. -/
-theorem continuousAt_of_real_cpow (x : ℝ) (y : ℂ) (h : 0 < y.re ∨ x ≠ 0) :
+theorem continuousAt_ofReal_cpow (x : ℝ) (y : ℂ) (h : 0 < y.re ∨ x ≠ 0) :
     ContinuousAt (fun p => ↑p.1 ^ p.2 : ℝ × ℂ → ℂ) (x, y) :=
   by
   rcases lt_trichotomy 0 x with (hx | rfl | hx)
@@ -402,18 +402,18 @@ theorem continuousAt_of_real_cpow (x : ℝ) (y : ℂ) (h : 0 < y.re ∨ x ≠ 0)
     · refine' (continuousAt_cpow (Or.inl _)).comp A
       rwa [neg_re, of_real_re, neg_pos]
     · exact (continuous_exp.comp (continuous_const.mul continuous_snd)).ContinuousAt
-#align complex.continuous_at_of_real_cpow Complex.continuousAt_of_real_cpow
+#align complex.continuous_at_of_real_cpow Complex.continuousAt_ofReal_cpow
 
-theorem continuousAt_of_real_cpow_const (x : ℝ) (y : ℂ) (h : 0 < y.re ∨ x ≠ 0) :
+theorem continuousAt_ofReal_cpow_const (x : ℝ) (y : ℂ) (h : 0 < y.re ∨ x ≠ 0) :
     ContinuousAt (fun a => a ^ y : ℝ → ℂ) x :=
-  @ContinuousAt.comp _ _ _ _ _ _ _ _ x (continuousAt_of_real_cpow x y h)
+  @ContinuousAt.comp _ _ _ _ _ _ _ _ x (continuousAt_ofReal_cpow x y h)
     (continuous_id.prod_mk continuous_const).ContinuousAt
-#align complex.continuous_at_of_real_cpow_const Complex.continuousAt_of_real_cpow_const
+#align complex.continuous_at_of_real_cpow_const Complex.continuousAt_ofReal_cpow_const
 
-theorem continuous_of_real_cpow_const {y : ℂ} (hs : 0 < y.re) :
+theorem continuous_ofReal_cpow_const {y : ℂ} (hs : 0 < y.re) :
     Continuous (fun x => x ^ y : ℝ → ℂ) :=
-  continuous_iff_continuousAt.mpr fun x => continuousAt_of_real_cpow_const x y (Or.inl hs)
-#align complex.continuous_of_real_cpow_const Complex.continuous_of_real_cpow_const
+  continuous_iff_continuousAt.mpr fun x => continuousAt_ofReal_cpow_const x y (Or.inl hs)
+#align complex.continuous_of_real_cpow_const Complex.continuous_ofReal_cpow_const
 
 end Complex
 

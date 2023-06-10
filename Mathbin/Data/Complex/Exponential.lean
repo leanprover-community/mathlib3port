@@ -721,16 +721,16 @@ theorem ofReal_sinh (x : ℝ) : (Real.sinh x : ℂ) = sinh x :=
   ofReal_sinh_ofReal_re _
 #align complex.of_real_sinh Complex.ofReal_sinh
 
-#print Complex.sinh_of_real_im /-
+#print Complex.sinh_ofReal_im /-
 @[simp]
-theorem sinh_of_real_im (x : ℝ) : (sinh x).im = 0 := by rw [← of_real_sinh_of_real_re, of_real_im]
-#align complex.sinh_of_real_im Complex.sinh_of_real_im
+theorem sinh_ofReal_im (x : ℝ) : (sinh x).im = 0 := by rw [← of_real_sinh_of_real_re, of_real_im]
+#align complex.sinh_of_real_im Complex.sinh_ofReal_im
 -/
 
-#print Complex.sinh_of_real_re /-
-theorem sinh_of_real_re (x : ℝ) : (sinh x).re = Real.sinh x :=
+#print Complex.sinh_ofReal_re /-
+theorem sinh_ofReal_re (x : ℝ) : (sinh x).re = Real.sinh x :=
   rfl
-#align complex.sinh_of_real_re Complex.sinh_of_real_re
+#align complex.sinh_of_real_re Complex.sinh_ofReal_re
 -/
 
 #print Complex.cosh_conj /-
@@ -1145,16 +1145,16 @@ theorem ofReal_tan (x : ℝ) : (Real.tan x : ℂ) = tan x :=
   ofReal_tan_ofReal_re _
 #align complex.of_real_tan Complex.ofReal_tan
 
-#print Complex.tan_of_real_im /-
+#print Complex.tan_ofReal_im /-
 @[simp]
-theorem tan_of_real_im (x : ℝ) : (tan x).im = 0 := by rw [← of_real_tan_of_real_re, of_real_im]
-#align complex.tan_of_real_im Complex.tan_of_real_im
+theorem tan_ofReal_im (x : ℝ) : (tan x).im = 0 := by rw [← of_real_tan_of_real_re, of_real_im]
+#align complex.tan_of_real_im Complex.tan_ofReal_im
 -/
 
-#print Complex.tan_of_real_re /-
-theorem tan_of_real_re (x : ℝ) : (tan x).re = Real.tan x :=
+#print Complex.tan_ofReal_re /-
+theorem tan_ofReal_re (x : ℝ) : (tan x).re = Real.tan x :=
   rfl
-#align complex.tan_of_real_re Complex.tan_of_real_re
+#align complex.tan_of_real_re Complex.tan_ofReal_re
 -/
 
 theorem cos_add_sin_I : cos x + sin x * I = exp (x * I) := by

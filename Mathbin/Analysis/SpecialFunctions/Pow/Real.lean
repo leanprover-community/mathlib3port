@@ -60,7 +60,7 @@ theorem rpow_def (x y : ℝ) : x ^ y = ((x : ℂ) ^ (y : ℂ)).re :=
 theorem rpow_def_of_nonneg {x : ℝ} (hx : 0 ≤ x) (y : ℝ) :
     x ^ y = if x = 0 then if y = 0 then 1 else 0 else exp (log x * y) := by
   simp only [rpow_def, Complex.cpow_def] <;> split_ifs <;>
-    simp_all [(Complex.of_real_log hx).symm, -Complex.ofReal_mul, -IsROrC.ofReal_mul,
+    simp_all [(Complex.ofReal_log hx).symm, -Complex.ofReal_mul, -IsROrC.ofReal_mul,
       (Complex.ofReal_mul _ _).symm, Complex.exp_ofReal_re]
 #align real.rpow_def_of_nonneg Real.rpow_def_of_nonneg
 
@@ -88,7 +88,7 @@ theorem rpow_def_of_neg {x : ℝ} (hx : x < 0) (y : ℝ) : x ^ y = exp (log x * 
   rw [rpow_def, Complex.cpow_def, if_neg]
   have : Complex.log x * y = ↑(log (-x) * y) + ↑(y * π) * Complex.I :=
     by
-    simp only [Complex.log, abs_of_neg hx, Complex.arg_of_real_of_neg hx, Complex.abs_ofReal,
+    simp only [Complex.log, abs_of_neg hx, Complex.arg_ofReal_of_neg hx, Complex.abs_ofReal,
       Complex.ofReal_mul]
     ring
   · rw [this, Complex.exp_add_mul_I, ← Complex.ofReal_exp, ← Complex.ofReal_cos, ←
@@ -264,12 +264,12 @@ end Real
 
 namespace Complex
 
-theorem of_real_cpow {x : ℝ} (hx : 0 ≤ x) (y : ℝ) : ((x ^ y : ℝ) : ℂ) = (x : ℂ) ^ (y : ℂ) := by
+theorem ofReal_cpow {x : ℝ} (hx : 0 ≤ x) (y : ℝ) : ((x ^ y : ℝ) : ℂ) = (x : ℂ) ^ (y : ℂ) := by
   simp only [Real.rpow_def_of_nonneg hx, Complex.cpow_def, of_real_eq_zero] <;> split_ifs <;>
-    simp [Complex.of_real_log hx]
-#align complex.of_real_cpow Complex.of_real_cpow
+    simp [Complex.ofReal_log hx]
+#align complex.of_real_cpow Complex.ofReal_cpow
 
-theorem of_real_cpow_of_nonpos {x : ℝ} (hx : x ≤ 0) (y : ℂ) :
+theorem ofReal_cpow_of_nonpos {x : ℝ} (hx : x ≤ 0) (y : ℂ) :
     (x : ℂ) ^ y = (-x : ℂ) ^ y * exp (π * I * y) :=
   by
   rcases hx.eq_or_lt with (rfl | hlt)
@@ -278,7 +278,7 @@ theorem of_real_cpow_of_nonpos {x : ℝ} (hx : x ≤ 0) (y : ℂ) :
   rw [cpow_def_of_ne_zero hne, cpow_def_of_ne_zero (neg_ne_zero.2 hne), ← exp_add, ← add_mul, log,
     log, abs.map_neg, arg_of_real_of_neg hlt, ← of_real_neg,
     arg_of_real_of_nonneg (neg_nonneg.2 hx), of_real_zero, MulZeroClass.zero_mul, add_zero]
-#align complex.of_real_cpow_of_nonpos Complex.of_real_cpow_of_nonpos
+#align complex.of_real_cpow_of_nonpos Complex.ofReal_cpow_of_nonpos
 
 theorem abs_cpow_of_ne_zero {z : ℂ} (hz : z ≠ 0) (w : ℂ) :
     abs (z ^ w) = abs z ^ w.re / Real.exp (arg z * im w) := by
@@ -340,9 +340,9 @@ namespace Real
 variable {x y z : ℝ}
 
 theorem rpow_mul {x : ℝ} (hx : 0 ≤ x) (y z : ℝ) : x ^ (y * z) = (x ^ y) ^ z := by
-  rw [← Complex.ofReal_inj, Complex.of_real_cpow (rpow_nonneg_of_nonneg hx _),
-      Complex.of_real_cpow hx, Complex.ofReal_mul, Complex.cpow_mul, Complex.of_real_cpow hx] <;>
-    simp only [(Complex.ofReal_mul _ _).symm, (Complex.of_real_log hx).symm, Complex.ofReal_im,
+  rw [← Complex.ofReal_inj, Complex.ofReal_cpow (rpow_nonneg_of_nonneg hx _),
+      Complex.ofReal_cpow hx, Complex.ofReal_mul, Complex.cpow_mul, Complex.ofReal_cpow hx] <;>
+    simp only [(Complex.ofReal_mul _ _).symm, (Complex.ofReal_log hx).symm, Complex.ofReal_im,
       neg_lt_zero, pi_pos, le_of_lt pi_pos]
 #align real.rpow_mul Real.rpow_mul
 

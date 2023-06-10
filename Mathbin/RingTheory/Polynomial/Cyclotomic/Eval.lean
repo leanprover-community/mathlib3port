@@ -213,7 +213,7 @@ theorem sub_one_pow_totient_lt_cyclotomic_eval {n : ℕ} {q : ℝ} (hn' : 2 ≤ 
     rw [Complex.sameRay_iff]
     push_neg
     refine' ⟨by exact_mod_cast hq.ne', hζ.ne_zero hn.ne', _⟩
-    rw [Complex.arg_of_real_of_nonneg hq.le, Ne.def, eq_comm, hζ.arg_eq_zero_iff hn.ne']
+    rw [Complex.arg_ofReal_of_nonneg hq.le, Ne.def, eq_comm, hζ.arg_eq_zero_iff hn.ne']
     clear_value ζ
     rintro rfl
     linarith [hζ.unique IsPrimitiveRoot.one]
@@ -276,7 +276,7 @@ theorem cyclotomic_eval_lt_add_one_pow_totient {n : ℕ} {q : ℝ} (hn' : 3 ≤ 
     rw [Complex.sameRay_iff]
     push_neg
     refine' ⟨by exact_mod_cast hq.ne', neg_ne_zero.mpr <| hζ.ne_zero hn.ne', _⟩
-    rw [Complex.arg_of_real_of_nonneg hq.le, Ne.def, eq_comm]
+    rw [Complex.arg_ofReal_of_nonneg hq.le, Ne.def, eq_comm]
     intro h
     rw [Complex.arg_eq_zero_iff, Complex.neg_re, neg_nonneg, Complex.neg_im, neg_eq_zero] at h 
     have hζ₀ : ζ ≠ 0 := by

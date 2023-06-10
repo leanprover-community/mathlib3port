@@ -220,8 +220,8 @@ theorem tan_arg (x : ℂ) : Real.tan (arg x) = x.im / x.re :=
   rw [Real.tan_eq_sin_div_cos, sin_arg, cos_arg h, div_div_div_cancel_right _ (abs.ne_zero h)]
 #align complex.tan_arg Complex.tan_arg
 
-theorem arg_of_real_of_nonneg {x : ℝ} (hx : 0 ≤ x) : arg x = 0 := by simp [arg, hx]
-#align complex.arg_of_real_of_nonneg Complex.arg_of_real_of_nonneg
+theorem arg_ofReal_of_nonneg {x : ℝ} (hx : 0 ≤ x) : arg x = 0 := by simp [arg, hx]
+#align complex.arg_of_real_of_nonneg Complex.arg_ofReal_of_nonneg
 
 theorem arg_eq_zero_iff {z : ℂ} : arg z = 0 ↔ 0 ≤ z.re ∧ z.im = 0 :=
   by
@@ -246,9 +246,9 @@ theorem arg_lt_pi_iff {z : ℂ} : arg z < π ↔ 0 ≤ z.re ∨ z.im ≠ 0 := by
   rw [(arg_le_pi z).lt_iff_ne, not_iff_comm, not_or, not_le, Classical.not_not, arg_eq_pi_iff]
 #align complex.arg_lt_pi_iff Complex.arg_lt_pi_iff
 
-theorem arg_of_real_of_neg {x : ℝ} (hx : x < 0) : arg x = π :=
+theorem arg_ofReal_of_neg {x : ℝ} (hx : x < 0) : arg x = π :=
   arg_eq_pi_iff.2 ⟨hx, rfl⟩
-#align complex.arg_of_real_of_neg Complex.arg_of_real_of_neg
+#align complex.arg_of_real_of_neg Complex.arg_ofReal_of_neg
 
 theorem arg_eq_pi_div_two_iff {z : ℂ} : arg z = π / 2 ↔ z.re = 0 ∧ 0 < z.im :=
   by

@@ -529,7 +529,7 @@ theorem hasDerivAt_fourier (n : ℤ) (x : ℝ) :
       (2 * π * I * n / T * fourier n (x : AddCircle T)) x :=
   by
   simp_rw [fourier_coe_apply]
-  refine' (_ : HasDerivAt (fun y => exp (2 * π * I * n * y / T)) _ _).comp_of_real
+  refine' (_ : HasDerivAt (fun y => exp (2 * π * I * n * y / T)) _ _).comp_ofReal
   rw [(fun α β => by ring : ∀ α β : ℂ, α * exp β = exp β * α)]
   refine' (hasDerivAt_exp _).comp x _
   convert hasDerivAt_mul_const (2 * ↑π * I * ↑n / T)

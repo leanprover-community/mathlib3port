@@ -168,7 +168,7 @@ theorem cpow_nat_inv_pow (x : ℂ) {n : ℕ} (hn : n ≠ 0) : (x ^ (n⁻¹ : ℂ
       _ ≤ π * n := mul_le_mul_of_nonneg_left hn1 real.pi_pos.le
 #align complex.cpow_nat_inv_pow Complex.cpow_nat_inv_pow
 
-theorem mul_cpow_of_real_nonneg {a b : ℝ} (ha : 0 ≤ a) (hb : 0 ≤ b) (r : ℂ) :
+theorem mul_cpow_ofReal_nonneg {a b : ℝ} (ha : 0 ≤ a) (hb : 0 ≤ b) (r : ℂ) :
     ((a : ℂ) * (b : ℂ)) ^ r = (a : ℂ) ^ r * (b : ℂ) ^ r :=
   by
   rcases eq_or_ne r 0 with (rfl | hr)
@@ -181,7 +181,7 @@ theorem mul_cpow_of_real_nonneg {a b : ℝ} (ha : 0 ≤ a) (hb : 0 ≤ b) (r : �
   have hb'' : (b : ℂ) ≠ 0 := of_real_ne_zero.mpr hb'.ne'
   rw [cpow_def_of_ne_zero (mul_ne_zero ha'' hb''), log_of_real_mul ha' hb'', of_real_log ha,
     add_mul, exp_add, ← cpow_def_of_ne_zero ha'', ← cpow_def_of_ne_zero hb'']
-#align complex.mul_cpow_of_real_nonneg Complex.mul_cpow_of_real_nonneg
+#align complex.mul_cpow_of_real_nonneg Complex.mul_cpow_ofReal_nonneg
 
 #print Complex.inv_cpow_eq_ite /-
 theorem inv_cpow_eq_ite (x : ℂ) (n : ℂ) :

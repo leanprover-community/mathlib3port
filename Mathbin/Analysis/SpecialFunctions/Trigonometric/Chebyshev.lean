@@ -53,14 +53,14 @@ theorem algebraMap_eval_U (x : R) (n : ℕ) :
 #align polynomial.chebyshev.algebra_map_eval_U Polynomial.Chebyshev.algebraMap_eval_U
 
 @[simp, norm_cast]
-theorem complex_of_real_eval_T : ∀ x n, ((T ℝ n).eval x : ℂ) = (T ℂ n).eval x :=
+theorem complex_ofReal_eval_T : ∀ x n, ((T ℝ n).eval x : ℂ) = (T ℂ n).eval x :=
   @algebraMap_eval_T ℝ ℂ _ _ _
-#align polynomial.chebyshev.complex_of_real_eval_T Polynomial.Chebyshev.complex_of_real_eval_T
+#align polynomial.chebyshev.complex_of_real_eval_T Polynomial.Chebyshev.complex_ofReal_eval_T
 
 @[simp, norm_cast]
-theorem complex_of_real_eval_U : ∀ x n, ((U ℝ n).eval x : ℂ) = (U ℂ n).eval x :=
+theorem complex_ofReal_eval_U : ∀ x n, ((U ℝ n).eval x : ℂ) = (U ℂ n).eval x :=
   @algebraMap_eval_U ℝ ℂ _ _ _
-#align polynomial.chebyshev.complex_of_real_eval_U Polynomial.Chebyshev.complex_of_real_eval_U
+#align polynomial.chebyshev.complex_of_real_eval_U Polynomial.Chebyshev.complex_ofReal_eval_U
 
 /-! ### Complex versions -/
 

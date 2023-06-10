@@ -117,7 +117,7 @@ theorem bernoulliFourierCoeff_recurrence (k : ℕ) {n : ℤ} (hn : n ≠ 0) :
   by
   unfold bernoulliFourierCoeff
   rw [fourierCoeffOn_of_hasDerivAt zero_lt_one hn
-      (fun x hx => (hasDerivAt_bernoulliFun k x).of_real_comp)
+      (fun x hx => (hasDerivAt_bernoulliFun k x).ofReal_comp)
       ((continuous_of_real.comp <|
             continuous_const.mul <| Polynomial.continuous _).IntervalIntegrable
         _ _)]

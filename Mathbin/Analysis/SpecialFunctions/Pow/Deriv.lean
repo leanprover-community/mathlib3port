@@ -227,13 +227,13 @@ theorem HasDerivWithinAt.cpow_const (hf : HasDerivWithinAt f f' s x)
 
 /-- Although `λ x, x ^ r` for fixed `r` is *not* complex-differentiable along the negative real
 line, it is still real-differentiable, and the derivative is what one would formally expect. -/
-theorem hasDerivAt_of_real_cpow {x : ℝ} (hx : x ≠ 0) {r : ℂ} (hr : r ≠ -1) :
+theorem hasDerivAt_ofReal_cpow {x : ℝ} (hx : x ≠ 0) {r : ℂ} (hr : r ≠ -1) :
     HasDerivAt (fun y : ℝ => (y : ℂ) ^ (r + 1) / (r + 1)) (x ^ r) x :=
   by
   rw [Ne.def, ← add_eq_zero_iff_eq_neg, ← Ne.def] at hr 
   rcases lt_or_gt_of_ne hx.symm with (hx | hx)
   · -- easy case : `0 < x`
-    convert (((hasDerivAt_id (x : ℂ)).cpow_const _).div_const (r + 1)).comp_of_real
+    convert (((hasDerivAt_id (x : ℂ)).cpow_const _).div_const (r + 1)).comp_ofReal
     · rw [add_sub_cancel, id.def, mul_one, mul_comm, mul_div_cancel _ hr]
     · rw [id.def, of_real_re]; exact Or.inl hx
   · -- harder case : `x < 0`
@@ -266,7 +266,7 @@ theorem hasDerivAt_of_real_cpow {x : ℝ} (hx : x ≠ 0) {r : ℂ} (hr : r ≠ -
     convert (hasDerivAt_id ((-x : ℝ) : ℂ)).cpow_const _ using 1
     · simp
     · left; rwa [id.def, of_real_re, neg_pos]
-#align has_deriv_at_of_real_cpow hasDerivAt_of_real_cpow
+#align has_deriv_at_of_real_cpow hasDerivAt_ofReal_cpow
 
 end deriv
 

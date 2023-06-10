@@ -518,7 +518,7 @@ theorem gamma_eq_integral {s : ℝ} (hs : 0 < s) : gamma s = ∫ x in Ioi 0, exp
     by rw [this, _root_.integral_of_real, Complex.ofReal_re]
   refine' set_integral_congr measurableSet_Ioi fun x hx => _
   push_cast
-  rw [Complex.of_real_cpow (le_of_lt hx)]
+  rw [Complex.ofReal_cpow (le_of_lt hx)]
   push_cast
 #align real.Gamma_eq_integral Real.gamma_eq_integral
 

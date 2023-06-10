@@ -201,7 +201,7 @@ theorem betaIntegral_recurrence {u v : ℂ} (hu : 0 < re u) (hv : 0 < re v) :
         apply hasDerivAt_id
       convert HasDerivAt.comp (↑x) A B using 1
       ring
-    convert (U.mul V).comp_of_real
+    convert (U.mul V).comp_ofReal
     ring
   have h_int :=
     ((beta_integral_convergent hu hv').const_mul u).sub
@@ -543,7 +543,7 @@ theorem gammaSeq_tendsto_gamma (s : ℝ) : Tendsto (gammaSeq s) atTop (𝓝 <| g
   ext1 n
   dsimp only [Gamma_seq, Function.comp_apply, Complex.gammaSeq]
   push_cast
-  rw [Complex.of_real_cpow n.cast_nonneg, Complex.ofReal_nat_cast]
+  rw [Complex.ofReal_cpow n.cast_nonneg, Complex.ofReal_nat_cast]
 #align real.Gamma_seq_tendsto_Gamma Real.gammaSeq_tendsto_gamma
 
 /-- Euler's reflection formula for the real Gamma function. -/

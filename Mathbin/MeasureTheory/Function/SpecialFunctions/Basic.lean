@@ -107,9 +107,9 @@ theorem measurable_im : Measurable im :=
 -/
 
 @[measurability]
-theorem measurable_of_real : Measurable (coe : ℝ → ℂ) :=
+theorem measurable_ofReal : Measurable (coe : ℝ → ℂ) :=
   continuous_ofReal.Measurable
-#align complex.measurable_of_real Complex.measurable_of_real
+#align complex.measurable_of_real Complex.measurable_ofReal
 
 #print Complex.measurable_exp /-
 @[measurability]
@@ -162,8 +162,8 @@ theorem measurable_arg : Measurable arg :=
 #print Complex.measurable_log /-
 @[measurability]
 theorem measurable_log : Measurable log :=
-  (measurable_of_real.comp <| Real.measurable_log.comp measurable_norm).add <|
-    (measurable_of_real.comp measurable_arg).mul_const I
+  (measurable_ofReal.comp <| Real.measurable_log.comp measurable_norm).add <|
+    (measurable_ofReal.comp measurable_arg).mul_const I
 #align complex.measurable_log Complex.measurable_log
 -/
 
@@ -296,8 +296,8 @@ instance Complex.hasMeasurablePow : MeasurablePow ℂ ℂ :=
 #print Real.hasMeasurablePow /-
 instance Real.hasMeasurablePow : MeasurablePow ℝ ℝ :=
   ⟨Complex.measurable_re.comp <|
-      (Complex.measurable_of_real.comp measurable_fst).pow
-        (Complex.measurable_of_real.comp measurable_snd)⟩
+      (Complex.measurable_ofReal.comp measurable_fst).pow
+        (Complex.measurable_ofReal.comp measurable_snd)⟩
 #align real.has_measurable_pow Real.hasMeasurablePow
 -/
 

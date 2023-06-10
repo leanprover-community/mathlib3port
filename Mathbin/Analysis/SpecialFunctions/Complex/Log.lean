@@ -74,25 +74,25 @@ theorem exp_inj_of_neg_pi_lt_of_le_pi {x y : ℂ} (hx₁ : -π < x.im) (hx₂ : 
   rw [← log_exp hx₁ hx₂, ← log_exp hy₁ hy₂, hxy]
 #align complex.exp_inj_of_neg_pi_lt_of_le_pi Complex.exp_inj_of_neg_pi_lt_of_le_pi
 
-theorem of_real_log {x : ℝ} (hx : 0 ≤ x) : (x.log : ℂ) = log x :=
+theorem ofReal_log {x : ℝ} (hx : 0 ≤ x) : (x.log : ℂ) = log x :=
   Complex.ext (by rw [log_re, of_real_re, abs_of_nonneg hx])
     (by rw [of_real_im, log_im, arg_of_real_of_nonneg hx])
-#align complex.of_real_log Complex.of_real_log
+#align complex.of_real_log Complex.ofReal_log
 
-theorem log_of_real_re (x : ℝ) : (log (x : ℂ)).re = Real.log x := by simp [log_re]
-#align complex.log_of_real_re Complex.log_of_real_re
+theorem log_ofReal_re (x : ℝ) : (log (x : ℂ)).re = Real.log x := by simp [log_re]
+#align complex.log_of_real_re Complex.log_ofReal_re
 
-theorem log_of_real_mul {r : ℝ} (hr : 0 < r) {x : ℂ} (hx : x ≠ 0) :
+theorem log_ofReal_mul {r : ℝ} (hr : 0 < r) {x : ℂ} (hx : x ≠ 0) :
     log (r * x) = Real.log r + log x :=
   by
   replace hx := complex.abs.ne_zero_iff.mpr hx
   simp_rw [log, map_mul, abs_of_real, arg_real_mul _ hr, abs_of_pos hr, Real.log_mul hr.ne' hx,
     of_real_add, add_assoc]
-#align complex.log_of_real_mul Complex.log_of_real_mul
+#align complex.log_of_real_mul Complex.log_ofReal_mul
 
-theorem log_mul_of_real (r : ℝ) (hr : 0 < r) (x : ℂ) (hx : x ≠ 0) :
+theorem log_mul_ofReal (r : ℝ) (hr : 0 < r) (x : ℂ) (hx : x ≠ 0) :
     log (x * r) = Real.log r + log x := by rw [mul_comm, log_of_real_mul hr hx, add_comm]
-#align complex.log_mul_of_real Complex.log_mul_of_real
+#align complex.log_mul_of_real Complex.log_mul_ofReal
 
 @[simp]
 theorem log_zero : log 0 = 0 := by simp [log]
