@@ -38,6 +38,7 @@ open FiniteDimensional
 
 variable {K : Type v} {V : Type w} [Field K] [AddCommGroup V] [Module K V]
 
+#print Module.End.exists_eigenvalue /-
 -- This is Lemma 5.21 of [axler2015], although we are no longer following that proof.
 /-- Every linear operator on a vector space over an algebraically closed field has
     an eigenvalue. -/
@@ -47,6 +48,7 @@ theorem exists_eigenvalue [IsAlgClosed K] [FiniteDimensional K V] [Nontrivial V]
   simp_rw [has_eigenvalue_iff_mem_spectrum]
   exact spectrum.nonempty_of_isAlgClosed_of_finiteDimensional K f
 #align module.End.exists_eigenvalue Module.End.exists_eigenvalue
+-/
 
 noncomputable instance [IsAlgClosed K] [FiniteDimensional K V] [Nontrivial V] (f : End K V) :
     Inhabited f.Eigenvalues :=
