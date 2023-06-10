@@ -126,24 +126,24 @@ local notation "F" => FreeLieAlgebra.of R ∘ Generators.F
 local notation "ad" => LieAlgebra.ad R (FreeLieAlgebra R (Generators B))
 
 /-- The terms correpsonding to the `⁅H, H⁆`-relations. -/
-def hH : B × B → FreeLieAlgebra R (Generators B) :=
+def HH : B × B → FreeLieAlgebra R (Generators B) :=
   uncurry fun i j => ⁅H i, H j⁆
-#align cartan_matrix.relations.HH CartanMatrix.Relations.hH
+#align cartan_matrix.relations.HH CartanMatrix.Relations.HH
 
 /-- The terms correpsonding to the `⁅E, F⁆`-relations. -/
-def eF : B × B → FreeLieAlgebra R (Generators B) :=
+def EF : B × B → FreeLieAlgebra R (Generators B) :=
   uncurry fun i j => if i = j then ⁅E i, F i⁆ - H i else ⁅E i, F j⁆
-#align cartan_matrix.relations.EF CartanMatrix.Relations.eF
+#align cartan_matrix.relations.EF CartanMatrix.Relations.EF
 
 /-- The terms correpsonding to the `⁅H, E⁆`-relations. -/
-def hE : B × B → FreeLieAlgebra R (Generators B) :=
+def HE : B × B → FreeLieAlgebra R (Generators B) :=
   uncurry fun i j => ⁅H i, E j⁆ - A i j • E j
-#align cartan_matrix.relations.HE CartanMatrix.Relations.hE
+#align cartan_matrix.relations.HE CartanMatrix.Relations.HE
 
 /-- The terms correpsonding to the `⁅H, F⁆`-relations. -/
-def hF : B × B → FreeLieAlgebra R (Generators B) :=
+def HF : B × B → FreeLieAlgebra R (Generators B) :=
   uncurry fun i j => ⁅H i, F j⁆ + A i j • F j
-#align cartan_matrix.relations.HF CartanMatrix.Relations.hF
+#align cartan_matrix.relations.HF CartanMatrix.Relations.HF
 
 /-- The terms correpsonding to the `ad E`-relations.
 
@@ -173,7 +173,7 @@ private theorem ad_F_of_eq_eq_zero (i : B) (h : A i i = 2) : adF R A ⟨i, i⟩ 
 
 /-- The union of all the relations as a subset of the free Lie algebra. -/
 def toSet : Set (FreeLieAlgebra R (Generators B)) :=
-  (Set.range <| hH R) ∪ (Set.range <| eF R) ∪ (Set.range <| hE R A) ∪ (Set.range <| hF R A) ∪
+  (Set.range <| HH R) ∪ (Set.range <| EF R) ∪ (Set.range <| HE R A) ∪ (Set.range <| HF R A) ∪
       (Set.range <| adE R A) ∪
     (Set.range <| adF R A)
 #align cartan_matrix.relations.to_set CartanMatrix.Relations.toSet
@@ -200,6 +200,7 @@ deriving Inhabited, LieRing,
 
 namespace CartanMatrix
 
+#print CartanMatrix.E₆ /-
 /-- The Cartan matrix of type e₆. See [bourbaki1968] plate V, page 277.
 
 The corresponding Dynkin diagram is:
@@ -209,15 +210,17 @@ The corresponding Dynkin diagram is:
 o --- o --- o --- o --- o
 ```
 -/
-def e₆ : Matrix (Fin 6) (Fin 6) ℤ :=
+def E₆ : Matrix (Fin 6) (Fin 6) ℤ :=
   !![2, 0, -1, 0, 0, 0;
     0, 2, 0, -1, 0, 0;
     -1, 0, 2, -1, 0, 0;
     0, -1, -1, 2, -1, 0;
     0, 0, 0, -1, 2, -1;
     0, 0, 0, 0, -1, 2]
-#align cartan_matrix.E₆ CartanMatrix.e₆
+#align cartan_matrix.E₆ CartanMatrix.E₆
+-/
 
+#print CartanMatrix.E₇ /-
 /-- The Cartan matrix of type e₇. See [bourbaki1968] plate VI, page 281.
 
 The corresponding Dynkin diagram is:
@@ -227,7 +230,7 @@ The corresponding Dynkin diagram is:
 o --- o --- o --- o --- o --- o
 ```
 -/
-def e₇ : Matrix (Fin 7) (Fin 7) ℤ :=
+def E₇ : Matrix (Fin 7) (Fin 7) ℤ :=
   !![2, 0, -1, 0, 0, 0, 0;
     0, 2, 0, -1, 0, 0, 0;
     -1, 0, 2, -1, 0, 0, 0;
@@ -235,8 +238,10 @@ def e₇ : Matrix (Fin 7) (Fin 7) ℤ :=
     0, 0, 0, -1, 2, -1, 0;
     0, 0, 0, 0, -1, 2, -1;
     0, 0, 0, 0, 0, -1, 2]
-#align cartan_matrix.E₇ CartanMatrix.e₇
+#align cartan_matrix.E₇ CartanMatrix.E₇
+-/
 
+#print CartanMatrix.E₈ /-
 /-- The Cartan matrix of type e₈. See [bourbaki1968] plate VII, page 285.
 
 The corresponding Dynkin diagram is:
@@ -246,7 +251,7 @@ The corresponding Dynkin diagram is:
 o --- o --- o --- o --- o --- o --- o
 ```
 -/
-def e₈ : Matrix (Fin 8) (Fin 8) ℤ :=
+def E₈ : Matrix (Fin 8) (Fin 8) ℤ :=
   !![2, 0, -1, 0, 0, 0, 0, 0;
     0, 2, 0, -1, 0, 0, 0, 0;
     -1, 0, 2, -1, 0, 0, 0, 0;
@@ -255,8 +260,10 @@ def e₈ : Matrix (Fin 8) (Fin 8) ℤ :=
     0, 0, 0, 0, -1, 2, -1, 0;
     0, 0, 0, 0, 0, -1, 2, -1;
     0, 0, 0, 0, 0, 0, -1, 2]
-#align cartan_matrix.E₈ CartanMatrix.e₈
+#align cartan_matrix.E₈ CartanMatrix.E₈
+-/
 
+#print CartanMatrix.F₄ /-
 /-- The Cartan matrix of type f₄. See [bourbaki1968] plate VIII, page 288.
 
 The corresponding Dynkin diagram is:
@@ -264,10 +271,12 @@ The corresponding Dynkin diagram is:
 o --- o =>= o --- o
 ```
 -/
-def f₄ : Matrix (Fin 4) (Fin 4) ℤ :=
+def F₄ : Matrix (Fin 4) (Fin 4) ℤ :=
   !![2, -1, 0, 0; -1, 2, -2, 0; 0, -1, 2, -1; 0, 0, -1, 2]
-#align cartan_matrix.F₄ CartanMatrix.f₄
+#align cartan_matrix.F₄ CartanMatrix.F₄
+-/
 
+#print CartanMatrix.G₂ /-
 /-- The Cartan matrix of type g₂. See [bourbaki1968] plate IX, page 290.
 
 The corresponding Dynkin diagram is:
@@ -276,38 +285,49 @@ o ≡>≡ o
 ```
 Actually we are using the transpose of Bourbaki's matrix. This is to make this matrix consistent
 with `cartan_matrix.F₄`, in the sense that all non-zero values below the diagonal are -1. -/
-def g₂ : Matrix (Fin 2) (Fin 2) ℤ :=
+def G₂ : Matrix (Fin 2) (Fin 2) ℤ :=
   !![2, -3; -1, 2]
-#align cartan_matrix.G₂ CartanMatrix.g₂
+#align cartan_matrix.G₂ CartanMatrix.G₂
+-/
 
 end CartanMatrix
 
 namespace LieAlgebra
 
+#print LieAlgebra.e₆ /-
 /-- The exceptional split Lie algebra of type e₆. -/
-abbrev E₆ :=
-  CartanMatrix.e₆.ToLieAlgebra R
-#align lie_algebra.e₆ LieAlgebra.E₆
+abbrev e₆ :=
+  CartanMatrix.E₆.ToLieAlgebra R
+#align lie_algebra.e₆ LieAlgebra.e₆
+-/
 
+#print LieAlgebra.e₇ /-
 /-- The exceptional split Lie algebra of type e₇. -/
-abbrev E₇ :=
-  CartanMatrix.e₇.ToLieAlgebra R
-#align lie_algebra.e₇ LieAlgebra.E₇
+abbrev e₇ :=
+  CartanMatrix.E₇.ToLieAlgebra R
+#align lie_algebra.e₇ LieAlgebra.e₇
+-/
 
+#print LieAlgebra.e₈ /-
 /-- The exceptional split Lie algebra of type e₈. -/
-abbrev E₈ :=
-  CartanMatrix.e₈.ToLieAlgebra R
-#align lie_algebra.e₈ LieAlgebra.E₈
+abbrev e₈ :=
+  CartanMatrix.E₈.ToLieAlgebra R
+#align lie_algebra.e₈ LieAlgebra.e₈
+-/
 
+#print LieAlgebra.f₄ /-
 /-- The exceptional split Lie algebra of type f₄. -/
-abbrev F₄ :=
-  CartanMatrix.f₄.ToLieAlgebra R
-#align lie_algebra.f₄ LieAlgebra.F₄
+abbrev f₄ :=
+  CartanMatrix.F₄.ToLieAlgebra R
+#align lie_algebra.f₄ LieAlgebra.f₄
+-/
 
+#print LieAlgebra.g₂ /-
 /-- The exceptional split Lie algebra of type g₂. -/
-abbrev G₂ :=
-  CartanMatrix.g₂.ToLieAlgebra R
-#align lie_algebra.g₂ LieAlgebra.G₂
+abbrev g₂ :=
+  CartanMatrix.G₂.ToLieAlgebra R
+#align lie_algebra.g₂ LieAlgebra.g₂
+-/
 
 end LieAlgebra
 
