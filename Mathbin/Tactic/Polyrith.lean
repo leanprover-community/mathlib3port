@@ -73,13 +73,13 @@ namespace Polyrith
 Each `poly` can be converted into a string.
 -/
 inductive Poly
-  | const : ℚ → poly
-  | var : ℕ → poly
-  | add : poly → poly → poly
-  | sub : poly → poly → poly
-  | mul : poly → poly → poly
-  | pow : poly → ℕ → poly
-  | neg : poly → poly
+  | const : ℚ → Poly
+  | var : ℕ → Poly
+  | add : Poly → Poly → Poly
+  | sub : Poly → Poly → Poly
+  | mul : Poly → Poly → Poly
+  | pow : Poly → ℕ → Poly
+  | neg : Poly → Poly
   deriving DecidableEq
 #align polyrith.poly Polyrith.Poly
 
@@ -90,7 +90,7 @@ The output of this function must be valid Python syntax, and it assumes the vari
 `scripts/polyrith.py.`
 -/
 unsafe def poly.mk_string : Poly → String
-  | poly.const z => toString z
+  | Poly.const z => toString z
   | poly.var n => "var" ++ toString n
   | poly.add p q => "(" ++ poly.mk_string p ++ " + " ++ poly.mk_string q ++ ")"
   | poly.sub p q => "(" ++ poly.mk_string p ++ " - " ++ poly.mk_string q ++ ")"
@@ -229,7 +229,7 @@ The following section contains code that can convert an a `poly` object into a `
   def
     poly.to_pexpr
     : List expr → Poly → tactic pexpr
-    | _ , poly.const z => return z . to_pexpr
+    | _ , Poly.const z => return z . to_pexpr
       |
         m , poly.var n
         =>

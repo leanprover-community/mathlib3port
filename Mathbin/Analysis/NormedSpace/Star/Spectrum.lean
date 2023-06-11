@@ -117,19 +117,19 @@ theorem selfAdjoint.mem_spectrum_eq_re [StarModule ℂ A] (a : selfAdjoint A) {z
 #align self_adjoint.mem_spectrum_eq_re selfAdjoint.mem_spectrum_eq_re
 
 /-- The spectrum of a selfadjoint is real -/
-theorem IsSelfAdjoint.coe_re_map_spectrum [StarModule ℂ A] {a : A} (ha : IsSelfAdjoint a) :
+theorem IsSelfAdjoint.val_re_map_spectrum [StarModule ℂ A] {a : A} (ha : IsSelfAdjoint a) :
     spectrum ℂ a = (coe ∘ re '' spectrum ℂ a : Set ℂ) :=
   le_antisymm (fun z hz => ⟨z, hz, (ha.mem_spectrum_eq_re hz).symm⟩) fun z =>
     by
     rintro ⟨z, hz, rfl⟩
     simpa only [(ha.mem_spectrum_eq_re hz).symm, Function.comp_apply] using hz
-#align is_self_adjoint.coe_re_map_spectrum IsSelfAdjoint.coe_re_map_spectrum
+#align is_self_adjoint.coe_re_map_spectrum IsSelfAdjoint.val_re_map_spectrum
 
 /-- The spectrum of a selfadjoint is real -/
-theorem selfAdjoint.coe_re_map_spectrum [StarModule ℂ A] (a : selfAdjoint A) :
+theorem selfAdjoint.val_re_map_spectrum [StarModule ℂ A] (a : selfAdjoint A) :
     spectrum ℂ (a : A) = (coe ∘ re '' spectrum ℂ (a : A) : Set ℂ) :=
-  a.property.coe_re_map_spectrum
-#align self_adjoint.coe_re_map_spectrum selfAdjoint.coe_re_map_spectrum
+  a.property.val_re_map_spectrum
+#align self_adjoint.coe_re_map_spectrum selfAdjoint.val_re_map_spectrum
 
 end ComplexScalars
 
@@ -196,22 +196,22 @@ noncomputable instance (priority := 100) : StarHomClass F A ℂ
       simp only [map_add, map_smul, star_add, star_smul, hsa, selfAdjoint.star_val_eq]
     · intro s
       have := AlgHom.apply_mem_spectrum φ (s : A)
-      rw [selfAdjoint.coe_re_map_spectrum s] at this 
+      rw [selfAdjoint.val_re_map_spectrum s] at this 
       rcases this with ⟨⟨_, _⟩, _, heq⟩
       rw [← HEq, IsROrC.star_def, IsROrC.conj_ofReal]
 
 /-- This is not an instance to avoid type class inference loops. See
 `weak_dual.complex.star_hom_class`. -/
-noncomputable def AlgHomClass.starAlgHomClass : StarAlgHomClass F ℂ A ℂ :=
+noncomputable def AlgHomClass.instStarAlgHomClass : StarAlgHomClass F ℂ A ℂ :=
   { WeakDual.Complex.starHomClass, hF with coe := fun f => f }
-#align alg_hom_class.star_alg_hom_class AlgHomClass.starAlgHomClass
+#align alg_hom_class.star_alg_hom_class AlgHomClass.instStarAlgHomClass
 
 omit hF
 
 namespace CharacterSpace
 
 noncomputable instance : StarAlgHomClass (characterSpace ℂ A) ℂ A ℂ :=
-  { AlgHomClass.starAlgHomClass with coe := fun f => f }
+  { AlgHomClass.instStarAlgHomClass with coe := fun f => f }
 
 end CharacterSpace
 
