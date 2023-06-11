@@ -96,7 +96,7 @@ theorem Ideal.toCharacterSpace_apply_eq_zero_of_mem {a : A} (ha : a ∈ I) :
 
 /-- If `a : A` is not a unit, then some character takes the value zero at `a`. This is equivlaent
 to `gelfand_transform ℂ A a` takes the value zero at some character. -/
-theorem WeakDual.characterSpace.exists_apply_eq_zero {a : A} (ha : ¬IsUnit a) :
+theorem WeakDual.CharacterSpace.exists_apply_eq_zero {a : A} (ha : ¬IsUnit a) :
     ∃ f : characterSpace ℂ A, f a = 0 :=
   by
   obtain ⟨M, hM, haM⟩ := (span {a}).exists_le_maximal (span_singleton_ne_top ha)
@@ -104,31 +104,31 @@ theorem WeakDual.characterSpace.exists_apply_eq_zero {a : A} (ha : ¬IsUnit a) :
     ⟨M.to_character_space,
       M.to_character_space_apply_eq_zero_of_mem
         (haM (mem_span_singleton.mpr ⟨1, (mul_one a).symm⟩))⟩
-#align weak_dual.character_space.exists_apply_eq_zero WeakDual.characterSpace.exists_apply_eq_zero
+#align weak_dual.character_space.exists_apply_eq_zero WeakDual.CharacterSpace.exists_apply_eq_zero
 
-theorem WeakDual.characterSpace.mem_spectrum_iff_exists {a : A} {z : ℂ} :
+theorem WeakDual.CharacterSpace.mem_spectrum_iff_exists {a : A} {z : ℂ} :
     z ∈ spectrum ℂ a ↔ ∃ f : characterSpace ℂ A, f a = z :=
   by
   refine' ⟨fun hz => _, _⟩
-  · obtain ⟨f, hf⟩ := WeakDual.characterSpace.exists_apply_eq_zero hz
+  · obtain ⟨f, hf⟩ := WeakDual.CharacterSpace.exists_apply_eq_zero hz
     simp only [map_sub, sub_eq_zero, AlgHomClass.commutes, Algebra.id.map_eq_id,
       RingHom.id_apply] at hf 
     exact (ContinuousMap.spectrum_eq_range (gelfand_transform ℂ A a)).symm ▸ ⟨f, hf.symm⟩
   · rintro ⟨f, rfl⟩
     exact AlgHom.apply_mem_spectrum f a
-#align weak_dual.character_space.mem_spectrum_iff_exists WeakDual.characterSpace.mem_spectrum_iff_exists
+#align weak_dual.character_space.mem_spectrum_iff_exists WeakDual.CharacterSpace.mem_spectrum_iff_exists
 
 /-- The Gelfand transform is spectrum-preserving. -/
 theorem spectrum.gelfandTransform_eq (a : A) : spectrum ℂ (gelfandTransform ℂ A a) = spectrum ℂ a :=
   by
   ext z
-  rw [ContinuousMap.spectrum_eq_range, WeakDual.characterSpace.mem_spectrum_iff_exists]
+  rw [ContinuousMap.spectrum_eq_range, WeakDual.CharacterSpace.mem_spectrum_iff_exists]
   exact Iff.rfl
 #align spectrum.gelfand_transform_eq spectrum.gelfandTransform_eq
 
 instance [Nontrivial A] : Nonempty (characterSpace ℂ A) :=
   ⟨Classical.choose <|
-      WeakDual.characterSpace.exists_apply_eq_zero <| zero_mem_nonunits.2 zero_ne_one⟩
+      WeakDual.CharacterSpace.exists_apply_eq_zero <| zero_mem_nonunits.2 zero_ne_one⟩
 
 end ComplexBanachAlgebra
 
@@ -230,7 +230,7 @@ noncomputable def compContinuousMap (ψ : A →⋆ₐ[ℂ] B) : C(characterSpace
   continuous_toFun :=
     Continuous.subtype_mk
       (continuous_of_continuous_eval fun a => map_continuous <| gelfandTransform ℂ B (ψ a)) _
-#align weak_dual.character_space.comp_continuous_map WeakDual.characterSpace.compContinuousMap
+#align weak_dual.character_space.comp_continuous_map WeakDual.CharacterSpace.compContinuousMap
 
 variable (A)
 
@@ -239,7 +239,7 @@ variable (A)
 theorem compContinuousMap_id :
     compContinuousMap (StarAlgHom.id ℂ A) = ContinuousMap.id (characterSpace ℂ A) :=
   ContinuousMap.ext fun a => ext fun x => rfl
-#align weak_dual.character_space.comp_continuous_map_id WeakDual.characterSpace.compContinuousMap_id
+#align weak_dual.character_space.comp_continuous_map_id WeakDual.CharacterSpace.compContinuousMap_id
 
 variable {A}
 
@@ -248,7 +248,7 @@ variable {A}
 theorem compContinuousMap_comp (ψ₂ : B →⋆ₐ[ℂ] C) (ψ₁ : A →⋆ₐ[ℂ] B) :
     compContinuousMap (ψ₂.comp ψ₁) = (compContinuousMap ψ₁).comp (compContinuousMap ψ₂) :=
   ContinuousMap.ext fun a => ext fun x => rfl
-#align weak_dual.character_space.comp_continuous_map_comp WeakDual.characterSpace.compContinuousMap_comp
+#align weak_dual.character_space.comp_continuous_map_comp WeakDual.CharacterSpace.compContinuousMap_comp
 
 end CharacterSpace
 
