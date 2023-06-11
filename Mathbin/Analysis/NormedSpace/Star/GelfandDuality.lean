@@ -76,7 +76,7 @@ algebra. In particular, the character, which may be identified as an algebra hom
 `weak_dual.character_space.equiv_alg_hom`, is given by the composition of the quotient map and
 the Gelfand-Mazur isomorphism `normed_ring.alg_equiv_complex_of_complete`. -/
 noncomputable def Ideal.toCharacterSpace : characterSpace ℂ A :=
-  characterSpace.equivAlgHom.symm <|
+  CharacterSpace.equivAlgHom.symm <|
     ((@NormedRing.algEquivComplexOfComplete (A ⧸ I) _ _
               (letI := quotient.field I
               @isUnit_iff_ne_zero (A ⧸ I) _)

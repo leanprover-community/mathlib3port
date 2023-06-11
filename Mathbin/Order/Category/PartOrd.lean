@@ -62,11 +62,9 @@ instance : Inhabited PartOrdCat :=
 instance (α : PartOrdCat) : PartialOrder α :=
   α.str
 
-#print PartOrdCat.hasForgetToPreordCat /-
 instance hasForgetToPreordCat : HasForget₂ PartOrdCat PreordCat :=
   BundledHom.forget₂ _ _
 #align PartOrd.has_forget_to_Preord PartOrdCat.hasForgetToPreordCat
--/
 
 #print PartOrdCat.Iso.mk /-
 /-- Constructs an equivalence between partial orders from an order isomorphism between them. -/

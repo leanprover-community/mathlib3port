@@ -89,11 +89,9 @@ instance concreteCategory : ConcreteCategory Profinite :=
 #align Profinite.concrete_category Profinite.concreteCategory
 -/
 
-#print Profinite.hasForget₂ /-
 instance hasForget₂ : HasForget₂ Profinite TopCat :=
   InducedCategory.hasForget₂ _
 #align Profinite.has_forget₂ Profinite.hasForget₂
--/
 
 instance : CoeSort Profinite (Type _) :=
   ⟨fun X => X.toCompHaus⟩

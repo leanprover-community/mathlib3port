@@ -110,13 +110,11 @@ instance moduleConcreteCategory : ConcreteCategory.{v} (ModuleCat.{v} R)
 #align Module.Module_concrete_category ModuleCat.moduleConcreteCategory
 -/
 
-#print ModuleCat.hasForgetToAddCommGroup /-
 instance hasForgetToAddCommGroup : HasForget₂ (ModuleCat R) AddCommGroupCat
     where forget₂ :=
     { obj := fun M => AddCommGroupCat.of M
       map := fun M₁ M₂ f => LinearMap.toAddMonoidHom f }
 #align Module.has_forget_to_AddCommGroup ModuleCat.hasForgetToAddCommGroup
--/
 
 instance (M N : ModuleCat R) : LinearMapClass (M ⟶ N) R M N :=
   { LinearMap.semilinearMapClass with coe := fun f => f }

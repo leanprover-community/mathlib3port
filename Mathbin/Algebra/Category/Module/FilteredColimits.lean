@@ -54,19 +54,19 @@ parameter (F : J ⥤ ModuleCat.{max v u} R)
 /-- The colimit of `F ⋙ forget₂ (Module R) AddCommGroup` in the category `AddCommGroup`.
 In the following, we will show that this has the structure of an `R`-module.
 -/
-abbrev m : AddCommGroupCat :=
+abbrev M : AddCommGroupCat :=
   AddCommGroupCat.FilteredColimits.colimit (F ⋙ forget₂ (ModuleCat R) AddCommGroupCat.{max v u})
-#align Module.filtered_colimits.M ModuleCat.FilteredColimits.m
+#align Module.filtered_colimits.M ModuleCat.FilteredColimits.M
 
 /-- The canonical projection into the colimit, as a quotient type. -/
-abbrev m.mk : (Σ j, F.obj j) → M :=
+abbrev M.mk : (Σ j, F.obj j) → M :=
   Quot.mk (Types.Quot.Rel (F ⋙ forget (ModuleCat R)))
-#align Module.filtered_colimits.M.mk ModuleCat.FilteredColimits.m.mk
+#align Module.filtered_colimits.M.mk ModuleCat.FilteredColimits.M.mk
 
-theorem m.mk_eq (x y : Σ j, F.obj j)
+theorem M.mk_eq (x y : Σ j, F.obj j)
     (h : ∃ (k : J) (f : x.1 ⟶ k) (g : y.1 ⟶ k), F.map f x.2 = F.map g y.2) : M.mk x = M.mk y :=
   Quot.EqvGen_sound (Types.FilteredColimit.eqvGen_quot_rel_of_rel (F ⋙ forget (ModuleCat R)) x y h)
-#align Module.filtered_colimits.M.mk_eq ModuleCat.FilteredColimits.m.mk_eq
+#align Module.filtered_colimits.M.mk_eq ModuleCat.FilteredColimits.M.mk_eq
 
 /-- The "unlifted" version of scalar multiplication in the colimit. -/
 def colimitSmulAux (r : R) (x : Σ j, F.obj j) : M :=
@@ -184,6 +184,7 @@ def colimitCoconeIsColimit : IsColimit colimit_cocone
         ((forget (ModuleCat R)).mapCocone t) m fun j => funext fun x => LinearMap.congr_fun (h j) x
 #align Module.filtered_colimits.colimit_cocone_is_colimit ModuleCat.FilteredColimits.colimitCoconeIsColimit
 
+#print ModuleCat.FilteredColimits.forget₂AddCommGroupPreservesFilteredColimits /-
 instance forget₂AddCommGroupPreservesFilteredColimits :
     PreservesFilteredColimits (forget₂ (ModuleCat R) AddCommGroupCat.{u})
     where PreservesFilteredColimits J _ _ :=
@@ -193,11 +194,14 @@ instance forget₂AddCommGroupPreservesFilteredColimits :
           (AddCommGroupCat.FilteredColimits.colimitCoconeIsColimit
             (F ⋙ forget₂ (ModuleCat.{u} R) AddCommGroupCat.{u})) }
 #align Module.filtered_colimits.forget₂_AddCommGroup_preserves_filtered_colimits ModuleCat.FilteredColimits.forget₂AddCommGroupPreservesFilteredColimits
+-/
 
+#print ModuleCat.FilteredColimits.forgetPreservesFilteredColimits /-
 instance forgetPreservesFilteredColimits : PreservesFilteredColimits (forget (ModuleCat.{u} R)) :=
   Limits.compPreservesFilteredColimits (forget₂ (ModuleCat R) AddCommGroupCat)
     (forget AddCommGroupCat)
 #align Module.filtered_colimits.forget_preserves_filtered_colimits ModuleCat.FilteredColimits.forgetPreservesFilteredColimits
+-/
 
 end
 

@@ -69,13 +69,11 @@ include 𝒞'
 variable (obj : ∀ ⦃α⦄, c α → c' α)
   (map : ∀ ⦃α β Iα Iβ f⦄, @hom α β Iα Iβ f → hom' (obj Iα) (obj Iβ) f)
 
-#print CategoryTheory.UnbundledHom.mkHasForget₂ /-
 /-- A custom constructor for forgetful functor
 between concrete categories defined using `unbundled_hom`. -/
 def mkHasForget₂ : HasForget₂ (Bundled c) (Bundled c') :=
   BundledHom.mkHasForget₂ obj (fun X Y f => ⟨f.val, map f.property⟩) fun _ _ _ => rfl
 #align category_theory.unbundled_hom.mk_has_forget₂ CategoryTheory.UnbundledHom.mkHasForget₂
--/
 
 end HasForget₂
 

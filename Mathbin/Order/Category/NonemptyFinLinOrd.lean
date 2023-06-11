@@ -106,19 +106,15 @@ instance : Inhabited NonemptyFinLinOrdCat :=
 instance (α : NonemptyFinLinOrdCat) : NonemptyFinLinOrd α :=
   α.str
 
-#print NonemptyFinLinOrdCat.hasForgetToLinOrd /-
 instance hasForgetToLinOrd : HasForget₂ NonemptyFinLinOrdCat LinOrdCat :=
   BundledHom.forget₂ _ _
 #align NonemptyFinLinOrd.has_forget_to_LinOrd NonemptyFinLinOrdCat.hasForgetToLinOrd
--/
 
-#print NonemptyFinLinOrdCat.hasForgetToFinPartOrd /-
 instance hasForgetToFinPartOrd : HasForget₂ NonemptyFinLinOrdCat FinPartOrd
     where forget₂ :=
     { obj := fun X => FinPartOrd.of X
       map := fun X Y => id }
 #align NonemptyFinLinOrd.has_forget_to_FinPartOrd NonemptyFinLinOrdCat.hasForgetToFinPartOrd
--/
 
 #print NonemptyFinLinOrdCat.Iso.mk /-
 /-- Constructs an equivalence between nonempty finite linear orders from an order isomorphism

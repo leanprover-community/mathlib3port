@@ -121,13 +121,11 @@ theorem ext (G H : GroupCat) (f₁ f₂ : G ⟶ H) (w : ∀ x, f₁ x = f₂ x) 
 #align Group.ext GroupCat.ext
 #align AddGroup.ext AddGroupCat.ext
 
-#print GroupCat.hasForgetToMonCat /-
 @[to_additive has_forget_to_AddMon]
 instance hasForgetToMonCat : HasForget₂ GroupCat MonCat :=
   BundledHom.forget₂ _ _
 #align Group.has_forget_to_Mon GroupCat.hasForgetToMonCat
 #align AddGroup.has_forget_to_AddMon AddGroupCat.hasForgetToAddMonCat
--/
 
 @[to_additive]
 instance : Coe GroupCat.{u} MonCat.{u} where coe := (forget₂ GroupCat MonCat).obj
@@ -238,24 +236,20 @@ theorem ext (G H : CommGroupCat) (f₁ f₂ : G ⟶ H) (w : ∀ x, f₁ x = f₂
 #align CommGroup.ext CommGroupCat.ext
 #align AddCommGroup.ext AddCommGroupCat.ext
 
-#print CommGroupCat.hasForgetToGroup /-
 @[to_additive has_forget_to_AddGroup]
 instance hasForgetToGroup : HasForget₂ CommGroupCat GroupCat :=
   BundledHom.forget₂ _ _
 #align CommGroup.has_forget_to_Group CommGroupCat.hasForgetToGroup
 #align AddCommGroup.has_forget_to_AddGroup AddCommGroupCat.hasForgetToAddGroup
--/
 
 @[to_additive]
 instance : Coe CommGroupCat.{u} GroupCat.{u} where coe := (forget₂ CommGroupCat GroupCat).obj
 
-#print CommGroupCat.hasForgetToCommMonCat /-
 @[to_additive has_forget_to_AddCommMon]
 instance hasForgetToCommMonCat : HasForget₂ CommGroupCat CommMonCat :=
   InducedCategory.hasForget₂ fun G : CommGroupCat => CommMonCat.of G
 #align CommGroup.has_forget_to_CommMon CommGroupCat.hasForgetToCommMonCat
 #align AddCommGroup.has_forget_to_AddCommMon AddCommGroupCat.hasForgetToAddCommMonCat
--/
 
 @[to_additive]
 instance : Coe CommGroupCat.{u} CommMonCat.{u} where coe := (forget₂ CommGroupCat CommMonCat).obj

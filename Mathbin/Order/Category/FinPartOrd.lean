@@ -84,19 +84,15 @@ instance concreteCategory : ConcreteCategory FinPartOrd :=
 #align FinPartOrd.concrete_category FinPartOrd.concreteCategory
 -/
 
-#print FinPartOrd.hasForgetToPartOrdCat /-
 instance hasForgetToPartOrdCat : HasForget₂ FinPartOrd PartOrdCat :=
   InducedCategory.hasForget₂ FinPartOrd.toPartOrd
 #align FinPartOrd.has_forget_to_PartOrd FinPartOrd.hasForgetToPartOrdCat
--/
 
-#print FinPartOrd.hasForgetToFintype /-
 instance hasForgetToFintype : HasForget₂ FinPartOrd FintypeCat
     where forget₂ :=
     { obj := fun X => ⟨X⟩
       map := fun X Y => coeFn }
 #align FinPartOrd.has_forget_to_Fintype FinPartOrd.hasForgetToFintype
--/
 
 #print FinPartOrd.Iso.mk /-
 /-- Constructs an isomorphism of finite partial orders from an order isomorphism between them. -/

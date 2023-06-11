@@ -318,10 +318,8 @@ instance : Faithful (forget V G) where map_injective' X Y f g w := Hom.ext _ _ w
 instance [ConcreteCategory V] : ConcreteCategory (Action V G)
     where forget := forget V G ⋙ ConcreteCategory.forget V
 
-#print Action.hasForgetToV /-
 instance hasForgetToV [ConcreteCategory V] : HasForget₂ (Action V G) V where forget₂ := forget V G
 #align Action.has_forget_to_V Action.hasForgetToV
--/
 
 /-- The forgetful functor is intertwined by `functor_category_equivalence` with
 evaluation at `punit.star`. -/

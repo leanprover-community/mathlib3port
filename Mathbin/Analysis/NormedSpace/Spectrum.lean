@@ -50,6 +50,7 @@ This file contains the basic theory for the resolvent and spectrum of a Banach a
 
 open scoped ENNReal NNReal
 
+#print spectralRadius /-
 /-- The *spectral radius* is the supremum of the `nnnorm` (`‖⬝‖₊`) of elements in the spectrum,
     coerced into an element of `ℝ≥0∞`. Note that it is possible for `spectrum 𝕜 a = ∅`. In this
     case, `spectral_radius a = 0`.  It is also possible that `spectrum 𝕜 a` be unbounded (though
@@ -59,6 +60,7 @@ noncomputable def spectralRadius (𝕜 : Type _) {A : Type _} [NormedField 𝕜]
     (a : A) : ℝ≥0∞ :=
   ⨆ k ∈ spectrum 𝕜 a, ‖k‖₊
 #align spectral_radius spectralRadius
+-/
 
 variable {𝕜 : Type _} {A : Type _}
 
@@ -574,11 +576,13 @@ instance (priority := 100) [AlgHomClass F 𝕜 A 𝕜] : ContinuousLinearMapClas
       AddMonoidHomClass.continuous_of_bound φ ‖(1 : A)‖ fun a =>
         mul_comm ‖a‖ ‖(1 : A)‖ ▸ spectrum.norm_le_norm_mul_of_mem (apply_mem_spectrum φ _) }
 
+#print AlgHom.toContinuousLinearMap /-
 /-- An algebra homomorphism into the base field, as a continuous linear map (since it is
 automatically bounded). -/
 def toContinuousLinearMap (φ : A →ₐ[𝕜] 𝕜) : A →L[𝕜] 𝕜 :=
   { φ.toLinearMap with cont := map_continuous φ }
 #align alg_hom.to_continuous_linear_map AlgHom.toContinuousLinearMap
+-/
 
 @[simp]
 theorem coe_toContinuousLinearMap (φ : A →ₐ[𝕜] 𝕜) : ⇑φ.toContinuousLinearMap = φ :=
@@ -623,6 +627,7 @@ variable [NontriviallyNormedField 𝕜] [NormedRing A] [CompleteSpace A]
 
 variable [NormedAlgebra 𝕜 A]
 
+#print WeakDual.CharacterSpace.equivAlgHom /-
 /-- The equivalence between characters and algebra homomorphisms into the base field. -/
 def equivAlgHom : characterSpace 𝕜 A ≃ (A →ₐ[𝕜] 𝕜)
     where
@@ -632,17 +637,18 @@ def equivAlgHom : characterSpace 𝕜 A ≃ (A →ₐ[𝕜] 𝕜)
       property := by rw [eq_set_map_one_map_mul]; exact ⟨map_one f, map_mul f⟩ }
   left_inv f := Subtype.ext <| ContinuousLinearMap.ext fun x => rfl
   right_inv f := AlgHom.ext fun x => rfl
-#align weak_dual.character_space.equiv_alg_hom WeakDual.characterSpace.equivAlgHom
+#align weak_dual.character_space.equiv_alg_hom WeakDual.CharacterSpace.equivAlgHom
+-/
 
 @[simp]
 theorem equivAlgHom_coe (f : characterSpace 𝕜 A) : ⇑(equivAlgHom f) = f :=
   rfl
-#align weak_dual.character_space.equiv_alg_hom_coe WeakDual.characterSpace.equivAlgHom_coe
+#align weak_dual.character_space.equiv_alg_hom_coe WeakDual.CharacterSpace.equivAlgHom_coe
 
 @[simp]
 theorem equivAlgHom_symm_coe (f : A →ₐ[𝕜] 𝕜) : ⇑(equivAlgHom.symm f) = f :=
   rfl
-#align weak_dual.character_space.equiv_alg_hom_symm_coe WeakDual.characterSpace.equivAlgHom_symm_coe
+#align weak_dual.character_space.equiv_alg_hom_symm_coe WeakDual.CharacterSpace.equivAlgHom_symm_coe
 
 end CharacterSpace
 

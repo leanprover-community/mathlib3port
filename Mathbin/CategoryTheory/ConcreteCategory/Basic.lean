@@ -206,7 +206,6 @@ theorem ConcreteCategory.hasCoeToFun_Type {X Y : Type u} (f : X ⟶ Y) : coeFn f
 
 end
 
-#print CategoryTheory.HasForget₂ /-
 /-- `has_forget₂ C D`, where `C` and `D` are both concrete categories, provides a functor
 `forget₂ C D : C ⥤ D` and a proof that `forget₂ ⋙ (forget D) = forget C`.
 -/
@@ -215,9 +214,7 @@ class HasForget₂ (C : Type v) (D : Type v') [Category C] [ConcreteCategory.{u}
   forget₂ : C ⥤ D
   forget_comp : forget₂ ⋙ forget D = forget C := by obviously
 #align category_theory.has_forget₂ CategoryTheory.HasForget₂
--/
 
-#print CategoryTheory.forget₂ /-
 /-- The forgetful functor `C ⥤ D` between concrete categories for which we have an instance
 `has_forget₂ C `. -/
 @[reducible]
@@ -225,16 +222,12 @@ def forget₂ (C : Type v) (D : Type v') [Category C] [ConcreteCategory C] [Cate
     [ConcreteCategory D] [HasForget₂ C D] : C ⥤ D :=
   HasForget₂.forget₂
 #align category_theory.forget₂ CategoryTheory.forget₂
--/
 
-#print CategoryTheory.forget₂_faithful /-
 instance forget₂_faithful (C : Type v) (D : Type v') [Category C] [ConcreteCategory C] [Category D]
     [ConcreteCategory D] [HasForget₂ C D] : Faithful (forget₂ C D) :=
   HasForget₂.forget_comp.faithful_of_comp
 #align category_theory.forget₂_faithful CategoryTheory.forget₂_faithful
--/
 
-#print CategoryTheory.forget₂_preservesMonomorphisms /-
 instance forget₂_preservesMonomorphisms (C : Type v) (D : Type v') [Category C] [ConcreteCategory C]
     [Category D] [ConcreteCategory D] [HasForget₂ C D] [(forget C).PreservesMonomorphisms] :
     (forget₂ C D).PreservesMonomorphisms :=
@@ -242,9 +235,7 @@ instance forget₂_preservesMonomorphisms (C : Type v) (D : Type v') [Category C
     infer_instance
   functor.preserves_monomorphisms_of_preserves_of_reflects _ (forget D)
 #align category_theory.forget₂_preserves_monomorphisms CategoryTheory.forget₂_preservesMonomorphisms
--/
 
-#print CategoryTheory.forget₂_preservesEpimorphisms /-
 instance forget₂_preservesEpimorphisms (C : Type v) (D : Type v') [Category C] [ConcreteCategory C]
     [Category D] [ConcreteCategory D] [HasForget₂ C D] [(forget C).PreservesEpimorphisms] :
     (forget₂ C D).PreservesEpimorphisms :=
@@ -252,23 +243,18 @@ instance forget₂_preservesEpimorphisms (C : Type v) (D : Type v') [Category C]
     infer_instance
   functor.preserves_epimorphisms_of_preserves_of_reflects _ (forget D)
 #align category_theory.forget₂_preserves_epimorphisms CategoryTheory.forget₂_preservesEpimorphisms
--/
 
-#print CategoryTheory.InducedCategory.concreteCategory /-
 instance InducedCategory.concreteCategory {C : Type v} {D : Type v'} [Category D]
     [ConcreteCategory D] (f : C → D) : ConcreteCategory (InducedCategory D f)
     where forget := inducedFunctor f ⋙ forget D
 #align category_theory.induced_category.concrete_category CategoryTheory.InducedCategory.concreteCategory
--/
 
-#print CategoryTheory.InducedCategory.hasForget₂ /-
 instance InducedCategory.hasForget₂ {C : Type v} {D : Type v'} [Category D] [ConcreteCategory D]
     (f : C → D) : HasForget₂ (InducedCategory D f) D
     where
   forget₂ := inducedFunctor f
   forget_comp := rfl
 #align category_theory.induced_category.has_forget₂ CategoryTheory.InducedCategory.hasForget₂
--/
 
 instance FullSubcategory.concreteCategory {C : Type v} [Category C] [ConcreteCategory C]
     (Z : C → Prop) : ConcreteCategory (FullSubcategory Z)
@@ -294,7 +280,6 @@ def HasForget₂.mk' {C : Type v} {D : Type v'} [Category C] [ConcreteCategory C
   forget_comp := by apply faithful.div_comp
 #align category_theory.has_forget₂.mk' CategoryTheory.HasForget₂.mk'
 
-#print CategoryTheory.hasForgetToType /-
 /-- Every forgetful functor factors through the identity functor. This is not a global instance as
     it is prone to creating type class resolution loops. -/
 def hasForgetToType (C : Type v) [Category C] [ConcreteCategory C] : HasForget₂ C (Type u)
@@ -302,7 +287,6 @@ def hasForgetToType (C : Type v) [Category C] [ConcreteCategory C] : HasForget�
   forget₂ := forget C
   forget_comp := Functor.comp_id _
 #align category_theory.has_forget_to_Type CategoryTheory.hasForgetToType
--/
 
 end CategoryTheory
 

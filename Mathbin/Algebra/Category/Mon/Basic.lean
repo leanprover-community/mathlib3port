@@ -186,13 +186,11 @@ theorem coe_of (R : Type u) [CommMonoid R] : (CommMonCat.of R : Type u) = R :=
 #align AddCommMon.coe_of AddCommMonCat.coe_of
 -/
 
-#print CommMonCat.hasForgetToMonCat /-
 @[to_additive has_forget_to_AddMon]
 instance hasForgetToMonCat : HasForget₂ CommMonCat MonCat :=
   BundledHom.forget₂ _ _
 #align CommMon.has_forget_to_Mon CommMonCat.hasForgetToMonCat
 #align AddCommMon.has_forget_to_AddMon AddCommMonCat.hasForgetToAddMonCat
--/
 
 @[to_additive]
 instance : Coe CommMonCat.{u} MonCat.{u} where coe := (forget₂ CommMonCat MonCat).obj

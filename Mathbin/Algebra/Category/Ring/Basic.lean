@@ -95,21 +95,17 @@ theorem coe_of (R : Type u) [Semiring R] : (SemiRingCat.of R : Type u) = R :=
 #align SemiRing.coe_of SemiRingCat.coe_of
 -/
 
-#print SemiRingCat.hasForgetToMonCat /-
 instance hasForgetToMonCat : HasForget₂ SemiRingCat MonCat :=
   BundledHom.mkHasForget₂ (fun R hR => @MonoidWithZero.toMonoid R (@Semiring.toMonoidWithZero R hR))
     (fun R₁ R₂ => RingHom.toMonoidHom) fun _ _ _ => rfl
 #align SemiRing.has_forget_to_Mon SemiRingCat.hasForgetToMonCat
--/
 
-#print SemiRingCat.hasForgetToAddCommMonCat /-
 instance hasForgetToAddCommMonCat : HasForget₂ SemiRingCat AddCommMonCat
     where-- can't use bundled_hom.mk_has_forget₂, since AddCommMon is an induced category
   forget₂ :=
     { obj := fun R => AddCommMonCat.of R
       map := fun R₁ R₂ f => RingHom.toAddMonoidHom f }
 #align SemiRing.has_forget_to_AddCommMon SemiRingCat.hasForgetToAddCommMonCat
--/
 
 end SemiRingCat
 
@@ -163,20 +159,16 @@ theorem coe_of (R : Type u) [Ring R] : (RingCat.of R : Type u) = R :=
 #align Ring.coe_of RingCat.coe_of
 -/
 
-#print RingCat.hasForgetToSemiRingCat /-
 instance hasForgetToSemiRingCat : HasForget₂ RingCat SemiRingCat :=
   BundledHom.forget₂ _ _
 #align Ring.has_forget_to_SemiRing RingCat.hasForgetToSemiRingCat
--/
 
-#print RingCat.hasForgetToAddCommGroupCat /-
 instance hasForgetToAddCommGroupCat : HasForget₂ RingCat AddCommGroupCat
     where-- can't use bundled_hom.mk_has_forget₂, since AddCommGroup is an induced category
   forget₂ :=
     { obj := fun R => AddCommGroupCat.of R
       map := fun R₁ R₂ f => RingHom.toAddMonoidHom f }
 #align Ring.has_forget_to_AddCommGroup RingCat.hasForgetToAddCommGroupCat
--/
 
 end RingCat
 
@@ -230,19 +222,15 @@ theorem coe_of (R : Type u) [CommSemiring R] : (CommSemiRing.of R : Type u) = R 
 #align CommSemiRing.coe_of CommSemiRing.coe_of
 -/
 
-#print CommSemiRing.hasForgetToSemiRingCat /-
 instance hasForgetToSemiRingCat : HasForget₂ CommSemiRingCat SemiRingCat :=
   BundledHom.forget₂ _ _
 #align CommSemiRing.has_forget_to_SemiRing CommSemiRing.hasForgetToSemiRingCat
--/
 
-#print CommSemiRing.hasForgetToCommMonCat /-
 /-- The forgetful functor from commutative rings to (multiplicative) commutative monoids. -/
 instance hasForgetToCommMonCat : HasForget₂ CommSemiRingCat CommMonCat :=
   HasForget₂.mk' (fun R : CommSemiRingCat => CommMonCat.of R) (fun R => rfl)
     (fun R₁ R₂ f => f.toMonoidHom) (by tidy)
 #align CommSemiRing.has_forget_to_CommMon CommSemiRing.hasForgetToCommMonCat
--/
 
 end CommSemiRingCat
 
@@ -296,19 +284,15 @@ theorem coe_of (R : Type u) [CommRing R] : (CommRingCat.of R : Type u) = R :=
 #align CommRing.coe_of CommRingCat.coe_of
 -/
 
-#print CommRingCat.hasForgetToRingCat /-
 instance hasForgetToRingCat : HasForget₂ CommRingCat RingCat :=
   BundledHom.forget₂ _ _
 #align CommRing.has_forget_to_Ring CommRingCat.hasForgetToRingCat
--/
 
-#print CommRingCat.hasForgetToCommSemiRingCat /-
 /-- The forgetful functor from commutative rings to (multiplicative) commutative monoids. -/
 instance hasForgetToCommSemiRingCat : HasForget₂ CommRingCat CommSemiRingCat :=
   HasForget₂.mk' (fun R : CommRingCat => CommSemiRing.of R) (fun R => rfl) (fun R₁ R₂ f => f)
     (by tidy)
 #align CommRing.has_forget_to_CommSemiRing CommRingCat.hasForgetToCommSemiRingCat
--/
 
 instance : Full (forget₂ CommRingCat CommSemiRingCat) where preimage X Y f := f
 

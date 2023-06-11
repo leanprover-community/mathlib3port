@@ -94,11 +94,9 @@ instance concreteCategory : ConcreteCategory TwoP :=
 #align Twop.concrete_category TwoP.concreteCategory
 -/
 
-#print TwoP.hasForgetToBipointed /-
 instance hasForgetToBipointed : HasForget₂ TwoP Bipointed :=
   InducedCategory.hasForget₂ toBipointed
 #align Twop.has_forget_to_Bipointed TwoP.hasForgetToBipointed
--/
 
 #print TwoP.swap /-
 /-- Swaps the pointed elements of a two-pointed type. `two_pointing.swap` as a functor. -/
