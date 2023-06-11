@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Loeffler
 
 ! This file was ported from Lean 3 source module measure_theory.integral.exp_decay
-! leanprover-community/mathlib commit d4817f8867c368d6c5571f7379b3888aaec1d95a
+! leanprover-community/mathlib commit fd4551cfe4b7484b81c2c9ba3405edae27659676
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.MeasureTheory.Integral.IntegralEqImproper
 
 /-!
 # Integrals with exponential decay at ∞
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 As easy special cases of general theorems in the library, we prove the following test
 for integrability:

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 
 ! This file was ported from Lean 3 source module measure_theory.group.integration
-! leanprover-community/mathlib commit ec247d43814751ffceb33b758e8820df2372bf6f
+! leanprover-community/mathlib commit fd4551cfe4b7484b81c2c9ba3405edae27659676
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.MeasureTheory.Group.Action
 
 /-!
 # Integration on Groups
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 We develop properties of integrals with a group as domain.
 This file contains properties about integrability, Lebesgue integration and Bochner integration.

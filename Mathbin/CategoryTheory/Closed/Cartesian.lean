@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta, Edward Ayers, Thomas Read
 
 ! This file was ported from Lean 3 source module category_theory.closed.cartesian
-! leanprover-community/mathlib commit 239d882c4fb58361ee8b3b39fb2091320edef10a
+! leanprover-community/mathlib commit fd4551cfe4b7484b81c2c9ba3405edae27659676
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -18,6 +18,9 @@ import Mathbin.CategoryTheory.Closed.Monoidal
 
 /-!
 # Cartesian closed categories
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 Given a category with finite products, the cartesian monoidal structure is provided by the local
 instance `monoidal_of_has_finite_products`.

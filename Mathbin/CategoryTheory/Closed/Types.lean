@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.closed.types
-! leanprover-community/mathlib commit 024a4231815538ac739f52d08dd20a55da0d6b23
+! leanprover-community/mathlib commit fd4551cfe4b7484b81c2c9ba3405edae27659676
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -15,6 +15,9 @@ import Mathbin.CategoryTheory.Closed.Cartesian
 
 /-!
 # Cartesian closure of Type
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 Show that `Type u₁` is cartesian closed, and `C ⥤ Type u₁` is cartesian closed for `C` a small
 category in `Type u₁`.

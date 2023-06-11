@@ -2024,6 +2024,7 @@ import Mathbin.LinearAlgebra.FreeModule.Finite.Basic
 import Mathbin.LinearAlgebra.FreeModule.Finite.Matrix
 import Mathbin.LinearAlgebra.FreeModule.Finite.Rank
 import Mathbin.LinearAlgebra.FreeModule.IdealQuotient
+import Mathbin.LinearAlgebra.FreeModule.Norm
 import Mathbin.LinearAlgebra.FreeModule.Pid
 import Mathbin.LinearAlgebra.FreeModule.Rank
 import Mathbin.LinearAlgebra.FreeModule.StrongRankCondition

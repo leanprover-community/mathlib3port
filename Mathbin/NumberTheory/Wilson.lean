@@ -4,11 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: John Nicol
 
 ! This file was ported from Lean 3 source module number_theory.wilson
-! leanprover-community/mathlib commit e985d48324225202b17a7f9eb50b29ba09b77b44
+! leanprover-community/mathlib commit c471da714c044131b90c133701e51b877c246677
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
-import Mathbin.NumberTheory.LegendreSymbol.GaussEisensteinLemmas
+import Mathbin.FieldTheory.Finite.Basic
 
 /-!
 # Wilson's theorem.
@@ -26,11 +26,57 @@ This could be generalized to similar results about finite abelian groups.
 
 ## TODO
 
-* Move `wilsons_lemma` into this file, and give it a descriptive name.
+* Give `wilsons_lemma` a descriptive name.
 -/
 
 
-open scoped Nat
+open Finset Nat FiniteField ZMod
+
+open scoped BigOperators Nat
+
+namespace ZMod
+
+variable (p : ℕ) [Fact p.Prime]
+
+/-- **Wilson's Lemma**: the product of `1`, ..., `p-1` is `-1` modulo `p`. -/
+@[simp]
+theorem wilsons_lemma : ((p - 1)! : ZMod p) = -1 :=
+  by
+  refine'
+    calc
+      ((p - 1)! : ZMod p) = ∏ x in Ico 1 (succ (p - 1)), x := by
+        rw [← Finset.prod_Ico_id_eq_factorial, prod_nat_cast]
+      _ = ∏ x : (ZMod p)ˣ, x := _
+      _ = -1 := by
+        simp_rw [← Units.coeHom_apply, ← (Units.coeHom (ZMod p)).map_prod,
+          prod_univ_units_id_eq_neg_one, Units.coeHom_apply, Units.val_neg, Units.val_one]
+  have hp : 0 < p := (Fact.out p.prime).Pos
+  symm
+  refine' prod_bij (fun a _ => (a : ZMod p).val) _ _ _ _
+  · intro a ha
+    rw [mem_Ico, ← Nat.succ_sub hp, Nat.succ_sub_one]
+    constructor
+    · apply Nat.pos_of_ne_zero; rw [← @val_zero p]
+      intro h; apply Units.ne_zero a (val_injective p h)
+    · exact val_lt _
+  · intro a ha; simp only [cast_id, nat_cast_val]
+  · intro _ _ _ _ h; rw [Units.ext_iff]; exact val_injective p h
+  · intro b hb
+    rw [mem_Ico, Nat.succ_le_iff, ← succ_sub hp, succ_sub_one, pos_iff_ne_zero] at hb 
+    refine' ⟨Units.mk0 b _, Finset.mem_univ _, _⟩
+    · intro h; apply hb.1; apply_fun val at h 
+      simpa only [val_cast_of_lt hb.right, val_zero] using h
+    · simp only [val_cast_of_lt hb.right, Units.val_mk0]
+#align zmod.wilsons_lemma ZMod.wilsons_lemma
+
+@[simp]
+theorem prod_Ico_one_prime : ∏ x in Ico 1 p, (x : ZMod p) = -1 :=
+  by
+  conv in Ico 1 p => rw [← succ_sub_one p, succ_sub (Fact.out p.prime).Pos]
+  rw [← prod_nat_cast, Finset.prod_Ico_id_eq_factorial, wilsons_lemma]
+#align zmod.prod_Ico_one_prime ZMod.prod_Ico_one_prime
+
+end ZMod
 
 namespace Nat
 
@@ -58,4 +104,6 @@ theorem prime_iff_fac_equiv_neg_one (h : n ≠ 1) : Prime n ↔ ((n - 1)! : ZMod
 #align nat.prime_iff_fac_equiv_neg_one Nat.prime_iff_fac_equiv_neg_one
 
 end Nat
+
+assert_not_exists legendre_sym.quadratic_reciprocity
 

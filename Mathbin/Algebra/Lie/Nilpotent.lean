@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module algebra.lie.nilpotent
-! leanprover-community/mathlib commit 6b0169218d01f2837d79ea2784882009a0da1aa1
+! leanprover-community/mathlib commit fd4551cfe4b7484b81c2c9ba3405edae27659676
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -16,6 +16,9 @@ import Mathbin.RingTheory.Nilpotent
 
 /-!
 # Nilpotent Lie algebras
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 Like groups, Lie algebras admit a natural concept of nilpotency. More generally, any Lie module
 carries a natural concept of nilpotency. We define these here via the lower central series.
