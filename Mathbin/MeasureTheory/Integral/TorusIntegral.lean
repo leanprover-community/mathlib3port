@@ -98,11 +98,13 @@ local notation "ℂⁿ⁺¹" => Fin (n + 1) → ℂ
 -/
 
 
+#print torusMap /-
 /-- The n dimensional exponential map $θ_i ↦ c + R e^{θ_i*I}, θ ∈ ℝⁿ$ representing
 a torus in `ℂⁿ` with center `c ∈ ℂⁿ` and generalized radius `R ∈ ℝⁿ`, so we can adjust
 it to every n axis. -/
 def torusMap (c : ℂⁿ) (R : ℝⁿ) : ℝⁿ → ℂⁿ := fun θ i => c i + R i * exp (θ i * I)
 #align torus_map torusMap
+-/
 
 theorem torusMap_sub_center (c : ℂⁿ) (R : ℝⁿ) (θ : ℝⁿ) : torusMap c R θ - c = torusMap 0 R θ := by
   ext1 i; simp [torusMap]
@@ -122,43 +124,55 @@ theorem torusMap_zero_radius (c : ℂⁿ) : torusMap c 0 = const ℝⁿ c := by 
 -/
 
 
+#print TorusIntegrable /-
 /-- A function `f : ℂⁿ → E` is integrable on the generalized torus if the function
 `f ∘ torus_map c R θ` is integrable on `Icc (0 : ℝⁿ) (λ _, 2 * π)`-/
 def TorusIntegrable (f : ℂⁿ → E) (c : ℂⁿ) (R : ℝⁿ) : Prop :=
   IntegrableOn (fun θ : ℝⁿ => f (torusMap c R θ)) (Icc (0 : ℝⁿ) fun _ => 2 * π) volume
 #align torus_integrable TorusIntegrable
+-/
 
 namespace TorusIntegrable
 
 variable {f g : ℂⁿ → E} {c : ℂⁿ} {R : ℝⁿ}
 
+#print TorusIntegrable.torusIntegrable_const /-
 /-- Constant functions are torus integrable -/
 theorem torusIntegrable_const (a : E) (c : ℂⁿ) (R : ℝⁿ) : TorusIntegrable (fun _ => a) c R := by
   simp [TorusIntegrable, measure_Icc_lt_top]
 #align torus_integrable.torus_integrable_const TorusIntegrable.torusIntegrable_const
+-/
 
+#print TorusIntegrable.neg /-
 /-- If `f` is torus integrable then `-f` is torus integrable. -/
 protected theorem neg (hf : TorusIntegrable f c R) : TorusIntegrable (-f) c R :=
   hf.neg
 #align torus_integrable.neg TorusIntegrable.neg
+-/
 
+#print TorusIntegrable.add /-
 /-- If `f` and `g` are two torus integrable functions, then so is `f + g`. -/
 protected theorem add (hf : TorusIntegrable f c R) (hg : TorusIntegrable g c R) :
     TorusIntegrable (f + g) c R :=
   hf.add hg
 #align torus_integrable.add TorusIntegrable.add
+-/
 
+#print TorusIntegrable.sub /-
 /-- If `f` and `g` are two torus integrable functions, then so is `f - g`. -/
 protected theorem sub (hf : TorusIntegrable f c R) (hg : TorusIntegrable g c R) :
     TorusIntegrable (f - g) c R :=
   hf.sub hg
 #align torus_integrable.sub TorusIntegrable.sub
+-/
 
+#print TorusIntegrable.torusIntegrable_zero_radius /-
 theorem torusIntegrable_zero_radius {f : ℂⁿ → E} {c : ℂⁿ} : TorusIntegrable f c 0 :=
   by
   rw [TorusIntegrable, torusMap_zero_radius]
   apply torus_integrable_const (f c) c 0
 #align torus_integrable.torus_integrable_zero_radius TorusIntegrable.torusIntegrable_zero_radius
+-/
 
 /-- The function given in the definition of `torus_integral` is integrable. -/
 theorem function_integrable [NormedSpace ℂ E] (hf : TorusIntegrable f c R) :

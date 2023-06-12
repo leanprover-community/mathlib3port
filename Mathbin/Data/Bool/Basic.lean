@@ -461,13 +461,17 @@ theorem xor_iff_ne : ∀ {x y : Bool}, xor x y = true ↔ x ≠ y := by decide
 /-! ### De Morgan's laws for booleans-/
 
 
+#print Bool.not_and /-
 @[simp]
 theorem not_and : ∀ a b : Bool, !(a && b) = (!a || !b) := by decide
 #align bool.bnot_band Bool.not_and
+-/
 
+#print Bool.not_or /-
 @[simp]
 theorem not_or : ∀ a b : Bool, !(a || b) = (!a && !b) := by decide
 #align bool.bnot_bor Bool.not_or
+-/
 
 theorem not_inj : ∀ {a b : Bool}, !a = !b → a = b := by decide
 #align bool.bnot_inj Bool.not_inj

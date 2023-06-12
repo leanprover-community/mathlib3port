@@ -500,11 +500,11 @@ theorem dvd_iff_isRoot : X - C a ∣ p ↔ IsRoot p a :=
     fun h => ⟨p /ₘ (X - C a), by rw [mul_div_by_monic_eq_iff_is_root.2 h]⟩⟩
 #align polynomial.dvd_iff_is_root Polynomial.dvd_iff_isRoot
 
-theorem x_sub_c_dvd_sub_c_eval : X - C a ∣ p - C (p.eval a) := by
+theorem X_sub_C_dvd_sub_C_eval : X - C a ∣ p - C (p.eval a) := by
   rw [dvd_iff_is_root, is_root, eval_sub, eval_C, sub_self]
-#align polynomial.X_sub_C_dvd_sub_C_eval Polynomial.x_sub_c_dvd_sub_c_eval
+#align polynomial.X_sub_C_dvd_sub_C_eval Polynomial.X_sub_C_dvd_sub_C_eval
 
-theorem mem_span_c_x_sub_c_x_sub_c_iff_eval_eval_eq_zero {b : R[X]} {P : R[X][X]} :
+theorem mem_span_C_X_sub_C_X_sub_C_iff_eval_eval_eq_zero {b : R[X]} {P : R[X][X]} :
     P ∈ (Ideal.span {C (X - C a), X - C b} : Ideal R[X][X]) ↔ (P.eval b).eval a = 0 :=
   by
   rw [Ideal.mem_span_pair]
@@ -515,7 +515,7 @@ theorem mem_span_c_x_sub_c_x_sub_c_iff_eval_eval_eq_zero {b : R[X]} {P : R[X][X]
   · cases' dvd_iff_is_root.mpr h with p hp
     cases' @X_sub_C_dvd_sub_C_eval _ b _ P with q hq
     exact ⟨C p, q, by rw [mul_comm, mul_comm q, eq_add_of_sub_eq' hq, hp, C_mul]⟩
-#align polynomial.mem_span_C_X_sub_C_X_sub_C_iff_eval_eval_eq_zero Polynomial.mem_span_c_x_sub_c_x_sub_c_iff_eval_eval_eq_zero
+#align polynomial.mem_span_C_X_sub_C_X_sub_C_iff_eval_eval_eq_zero Polynomial.mem_span_C_X_sub_C_X_sub_C_iff_eval_eval_eq_zero
 
 theorem modByMonic_X (p : R[X]) : p %ₘ X = C (p.eval 0) := by
   rw [← mod_by_monic_X_sub_C_eq_C_eval, C_0, sub_zero]

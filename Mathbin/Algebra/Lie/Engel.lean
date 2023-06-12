@@ -161,6 +161,7 @@ open LieModule hiding IsNilpotent
 
 variable (R L)
 
+#print LieAlgebra.IsEngelian /-
 /-- A Lie algebra `L` is said to be Engelian if a sufficient condition for any `L`-Lie module `M` to
 be nilpotent is that the image of the map `L → End(M)` consists of nilpotent elements.
 
@@ -172,6 +173,7 @@ def LieAlgebra.IsEngelian : Prop :=
       ∀ [LieModule R L M],
         ∀ h : ∀ x : L, IsNilpotent (to_endomorphism R L M x), LieModule.IsNilpotent R L M
 #align lie_algebra.is_engelian LieAlgebra.IsEngelian
+-/
 
 variable {R L}
 
@@ -197,10 +199,12 @@ theorem Function.Surjective.isEngelian {f : L →ₗ⁅R⁆ L₂} (hf : Function
   simp
 #align function.surjective.is_engelian Function.Surjective.isEngelian
 
+#print LieEquiv.isEngelian_iff /-
 theorem LieEquiv.isEngelian_iff (e : L ≃ₗ⁅R⁆ L₂) :
     LieAlgebra.IsEngelian.{u₁, u₂, u₄} R L ↔ LieAlgebra.IsEngelian.{u₁, u₃, u₄} R L₂ :=
   ⟨e.Surjective.IsEngelian, e.symm.Surjective.IsEngelian⟩
 #align lie_equiv.is_engelian_iff LieEquiv.isEngelian_iff
+-/
 
 theorem LieAlgebra.exists_engelian_lieSubalgebra_of_lt_normalizer {K : LieSubalgebra R L}
     (hK₁ : LieAlgebra.IsEngelian.{u₁, u₂, u₄} R K) (hK₂ : K < K.normalizer) :
@@ -286,6 +290,7 @@ theorem LieAlgebra.isEngelian_of_isNoetherian : LieAlgebra.IsEngelian R L :=
   exact hK₃ ▸ hK₁
 #align lie_algebra.is_engelian_of_is_noetherian LieAlgebra.isEngelian_of_isNoetherian
 
+#print LieModule.isNilpotent_iff_forall /-
 /-- Engel's theorem. -/
 theorem LieModule.isNilpotent_iff_forall :
     LieModule.IsNilpotent R L M ↔ ∀ x, IsNilpotent <| toEndomorphism R L M x :=
@@ -294,6 +299,7 @@ theorem LieModule.isNilpotent_iff_forall :
     obtain ⟨k, hk⟩ := nilpotent_endo_of_nilpotent_module R L M
     exact fun x => ⟨k, hk x⟩, fun h => LieAlgebra.isEngelian_of_isNoetherian M h⟩
 #align lie_module.is_nilpotent_iff_forall LieModule.isNilpotent_iff_forall
+-/
 
 /-- Engel's theorem. -/
 theorem LieAlgebra.isNilpotent_iff_forall :

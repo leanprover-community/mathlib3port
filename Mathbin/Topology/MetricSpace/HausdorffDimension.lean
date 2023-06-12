@@ -93,10 +93,12 @@ open MeasureTheory MeasureTheory.Measure Set TopologicalSpace FiniteDimensional 
 
 variable {ι X Y : Type _} [EMetricSpace X] [EMetricSpace Y]
 
+#print dimH /-
 /-- Hausdorff dimension of a set in an (e)metric space. -/
 noncomputable irreducible_def dimH (s : Set X) : ℝ≥0∞ := by borelize X;
   exact ⨆ (d : ℝ≥0) (hd : @hausdorff_measure X _ _ ⟨rfl⟩ d s = ∞), d
 #align dimH dimH
+-/
 
 /-!
 ### Basic properties
@@ -107,11 +109,13 @@ section Measurable
 
 variable [MeasurableSpace X] [BorelSpace X]
 
+#print dimH_def /-
 /-- Unfold the definition of `dimH` using `[measurable_space X] [borel_space X]` from the
 environment. -/
 theorem dimH_def (s : Set X) : dimH s = ⨆ (d : ℝ≥0) (hd : μH[d] s = ∞), d := by borelize X;
   rw [dimH]
 #align dimH_def dimH_def
+-/
 
 theorem hausdorffMeasure_of_lt_dimH {s : Set X} {d : ℝ≥0} (h : ↑d < dimH s) : μH[d] s = ∞ :=
   by
@@ -121,17 +125,23 @@ theorem hausdorffMeasure_of_lt_dimH {s : Set X} {d : ℝ≥0} (h : ↑d < dimH s
   exact top_unique (hsd' ▸ hausdorff_measure_mono hdd'.le _)
 #align hausdorff_measure_of_lt_dimH hausdorffMeasure_of_lt_dimH
 
+#print dimH_le /-
 theorem dimH_le {s : Set X} {d : ℝ≥0∞} (H : ∀ d' : ℝ≥0, μH[d'] s = ∞ → ↑d' ≤ d) : dimH s ≤ d :=
   (dimH_def s).trans_le <| iSup₂_le H
 #align dimH_le dimH_le
+-/
 
+#print dimH_le_of_hausdorffMeasure_ne_top /-
 theorem dimH_le_of_hausdorffMeasure_ne_top {s : Set X} {d : ℝ≥0} (h : μH[d] s ≠ ∞) : dimH s ≤ d :=
   le_of_not_lt <| mt hausdorffMeasure_of_lt_dimH h
 #align dimH_le_of_hausdorff_measure_ne_top dimH_le_of_hausdorffMeasure_ne_top
+-/
 
+#print le_dimH_of_hausdorffMeasure_eq_top /-
 theorem le_dimH_of_hausdorffMeasure_eq_top {s : Set X} {d : ℝ≥0} (h : μH[d] s = ∞) : ↑d ≤ dimH s :=
   by rw [dimH_def]; exact le_iSup₂ d h
 #align le_dimH_of_hausdorff_measure_eq_top le_dimH_of_hausdorffMeasure_eq_top
+-/
 
 theorem hausdorffMeasure_of_dimH_lt {s : Set X} {d : ℝ≥0} (h : dimH s < d) : μH[d] s = 0 :=
   by
@@ -141,19 +151,25 @@ theorem hausdorffMeasure_of_dimH_lt {s : Set X} {d : ℝ≥0} (h : dimH s < d) :
   exact (hausdorff_measure_zero_or_top hd'd s).resolve_right fun h => hsd'.not_le <| le_iSup₂ d' h
 #align hausdorff_measure_of_dimH_lt hausdorffMeasure_of_dimH_lt
 
+#print measure_zero_of_dimH_lt /-
 theorem measure_zero_of_dimH_lt {μ : Measure X} {d : ℝ≥0} (h : μ ≪ μH[d]) {s : Set X}
     (hd : dimH s < d) : μ s = 0 :=
   h <| hausdorffMeasure_of_dimH_lt hd
 #align measure_zero_of_dimH_lt measure_zero_of_dimH_lt
+-/
 
+#print le_dimH_of_hausdorffMeasure_ne_zero /-
 theorem le_dimH_of_hausdorffMeasure_ne_zero {s : Set X} {d : ℝ≥0} (h : μH[d] s ≠ 0) : ↑d ≤ dimH s :=
   le_of_not_lt <| mt hausdorffMeasure_of_dimH_lt h
 #align le_dimH_of_hausdorff_measure_ne_zero le_dimH_of_hausdorffMeasure_ne_zero
+-/
 
+#print dimH_of_hausdorffMeasure_ne_zero_ne_top /-
 theorem dimH_of_hausdorffMeasure_ne_zero_ne_top {d : ℝ≥0} {s : Set X} (h : μH[d] s ≠ 0)
     (h' : μH[d] s ≠ ∞) : dimH s = d :=
   le_antisymm (dimH_le_of_hausdorffMeasure_ne_top h') (le_dimH_of_hausdorffMeasure_ne_zero h)
 #align dimH_of_hausdorff_measure_ne_zero_ne_top dimH_of_hausdorffMeasure_ne_zero_ne_top
+-/
 
 end Measurable
 
@@ -210,10 +226,12 @@ theorem dimH_sUnion {S : Set (Set X)} (hS : S.Countable) : dimH (⋃₀ S) = ⨆
   rw [sUnion_eq_bUnion, dimH_bUnion hS]
 #align dimH_sUnion dimH_sUnion
 
+#print dimH_union /-
 @[simp]
 theorem dimH_union (s t : Set X) : dimH (s ∪ t) = max (dimH s) (dimH t) := by
   rw [union_eq_Union, dimH_iUnion, iSup_bool_eq, cond, cond, ENNReal.sup_eq_max]
 #align dimH_union dimH_union
+-/
 
 theorem dimH_countable {s : Set X} (hs : s.Countable) : dimH s = 0 :=
   biUnion_of_singleton s ▸ by simp only [dimH_bUnion hs, dimH_singleton, ENNReal.iSup_zero_eq_zero]
@@ -494,15 +512,20 @@ theorem dimH_ball_pi_fin {n : ℕ} (x : Fin n → ℝ) {r : ℝ} (hr : 0 < r) :
     dimH (Metric.ball x r) = n := by rw [dimH_ball_pi x hr, Fintype.card_fin]
 #align real.dimH_ball_pi_fin Real.dimH_ball_pi_fin
 
+#print Real.dimH_univ_pi /-
 theorem dimH_univ_pi (ι : Type _) [Fintype ι] : dimH (univ : Set (ι → ℝ)) = Fintype.card ι := by
   simp only [← Metric.iUnion_ball_nat_succ (0 : ι → ℝ), dimH_iUnion,
     dimH_ball_pi _ (Nat.cast_add_one_pos _), iSup_const]
 #align real.dimH_univ_pi Real.dimH_univ_pi
+-/
 
+#print Real.dimH_univ_pi_fin /-
 theorem dimH_univ_pi_fin (n : ℕ) : dimH (univ : Set (Fin n → ℝ)) = n := by
   rw [dimH_univ_pi, Fintype.card_fin]
 #align real.dimH_univ_pi_fin Real.dimH_univ_pi_fin
+-/
 
+#print Real.dimH_of_mem_nhds /-
 theorem dimH_of_mem_nhds {x : E} {s : Set E} (h : s ∈ 𝓝 x) : dimH s = finrank ℝ E :=
   by
   have e : E ≃L[ℝ] Fin (finrank ℝ E) → ℝ :=
@@ -514,21 +537,28 @@ theorem dimH_of_mem_nhds {x : E} {s : Set E} (h : s ∈ 𝓝 x) : dimH s = finra
     rcases metric.nhds_basis_ball.mem_iff.1 this with ⟨r, hr0, hr⟩
     simpa only [dimH_ball_pi_fin (e x) hr0] using dimH_mono hr
 #align real.dimH_of_mem_nhds Real.dimH_of_mem_nhds
+-/
 
+#print Real.dimH_of_nonempty_interior /-
 theorem dimH_of_nonempty_interior {s : Set E} (h : (interior s).Nonempty) : dimH s = finrank ℝ E :=
   let ⟨x, hx⟩ := h
   dimH_of_mem_nhds (mem_interior_iff_mem_nhds.1 hx)
 #align real.dimH_of_nonempty_interior Real.dimH_of_nonempty_interior
+-/
 
 variable (E)
 
+#print Real.dimH_univ_eq_finrank /-
 theorem dimH_univ_eq_finrank : dimH (univ : Set E) = finrank ℝ E :=
   dimH_of_mem_nhds (@univ_mem _ (𝓝 0))
 #align real.dimH_univ_eq_finrank Real.dimH_univ_eq_finrank
+-/
 
+#print Real.dimH_univ /-
 theorem dimH_univ : dimH (univ : Set ℝ) = 1 := by
   rw [dimH_univ_eq_finrank ℝ, FiniteDimensional.finrank_self, Nat.cast_one]
 #align real.dimH_univ Real.dimH_univ
+-/
 
 end Real
 
