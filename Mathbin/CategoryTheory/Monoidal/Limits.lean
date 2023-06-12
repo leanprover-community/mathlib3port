@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module category_theory.monoidal.limits
-! leanprover-community/mathlib commit 744d59af0b28d0c42f631038627df9b85ae1d1ce
+! leanprover-community/mathlib commit 660b3a2db3522fa0db036e569dc995a615c4c848
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.CategoryTheory.Limits.HasLimits
 
 /-!
 # `lim : (J ⥤ C) ⥤ C` is lax monoidal when `C` is a monoidal category.
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 When `C` is a monoidal category, the functorial association `F ↦ limit F` is lax monoidal,
 i.e. there are morphisms

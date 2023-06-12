@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Xavier Roblot
 
 ! This file was ported from Lean 3 source module algebra.module.zlattice
-! leanprover-community/mathlib commit a3e83f0fa4391c8740f7d773a7a9b74e311ae2a3
+! leanprover-community/mathlib commit 660b3a2db3522fa0db036e569dc995a615c4c848
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.MeasureTheory.Group.FundamentalDomain
 
 /-!
 # ℤ-lattices
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 Let `E` be a finite dimensional vector space over a `normed_linear_ordered_field` `K` with a solid
 norm and that is also a `floor_ring`, e.g. `ℚ` or `ℝ`. A (full) ℤ-lattice `L` of `E` is a discrete

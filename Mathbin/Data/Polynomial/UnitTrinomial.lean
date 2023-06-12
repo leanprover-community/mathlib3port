@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Thomas Browning
 
 ! This file was ported from Lean 3 source module data.polynomial.unit_trinomial
-! leanprover-community/mathlib commit 302eab4f46abb63de520828de78c04cb0f9b5836
+! leanprover-community/mathlib commit 660b3a2db3522fa0db036e569dc995a615c4c848
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Data.Polynomial.Mirror
 
 /-!
 # Unit Trinomials
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file defines irreducible trinomials and proves an irreducibility criterion.
 

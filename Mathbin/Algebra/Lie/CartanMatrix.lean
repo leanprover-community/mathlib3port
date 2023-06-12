@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module algebra.lie.cartan_matrix
-! leanprover-community/mathlib commit 65ec59902eb17e4ab7da8d7e3d0bd9774d1b8b99
+! leanprover-community/mathlib commit 660b3a2db3522fa0db036e569dc995a615c4c848
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.Data.Matrix.Notation
 
 /-!
 # Lie algebras from Cartan matrices
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 Split semi-simple Lie algebras are uniquely determined by their Cartan matrix. Indeed, if `A` is
 an `l × l` Cartan matrix, the corresponding Lie algebra may be obtained as the Lie algebra on
