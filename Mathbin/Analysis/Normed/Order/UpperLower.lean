@@ -79,6 +79,7 @@ section Finite
 
 variable [Finite ι] {s : Set (ι → ℝ)} {x y : ι → ℝ} {δ : ℝ}
 
+#print IsUpperSet.mem_interior_of_forall_lt /-
 theorem IsUpperSet.mem_interior_of_forall_lt (hs : IsUpperSet s) (hx : x ∈ closure s)
     (h : ∀ i, x i < y i) : y ∈ interior s :=
   by
@@ -98,7 +99,9 @@ theorem IsUpperSet.mem_interior_of_forall_lt (hs : IsUpperSet s) (hx : x ∈ clo
   simp_rw [ball_pi _ hδ, Real.ball_eq_Ioo] at hw 
   exact ((lt_sub_iff_add_lt.2 <| hyz _).trans (hw _ <| mem_univ _).1).le
 #align is_upper_set.mem_interior_of_forall_lt IsUpperSet.mem_interior_of_forall_lt
+-/
 
+#print IsLowerSet.mem_interior_of_forall_lt /-
 theorem IsLowerSet.mem_interior_of_forall_lt (hs : IsLowerSet s) (hx : x ∈ closure s)
     (h : ∀ i, y i < x i) : y ∈ interior s :=
   by
@@ -119,6 +122,7 @@ theorem IsLowerSet.mem_interior_of_forall_lt (hs : IsLowerSet s) (hx : x ∈ clo
   simp_rw [ball_pi _ hδ, Real.ball_eq_Ioo] at hw 
   exact ((hw _ <| mem_univ _).2.trans <| hyz _).le
 #align is_lower_set.mem_interior_of_forall_lt IsLowerSet.mem_interior_of_forall_lt
+-/
 
 end Finite
 
@@ -126,6 +130,7 @@ section Fintype
 
 variable [Fintype ι] {s : Set (ι → ℝ)} {x y : ι → ℝ} {δ : ℝ}
 
+#print IsUpperSet.exists_subset_ball /-
 theorem IsUpperSet.exists_subset_ball (hs : IsUpperSet s) (hx : x ∈ closure s) (hδ : 0 < δ) :
     ∃ y, closedBall y (δ / 4) ⊆ closedBall x δ ∧ closedBall y (δ / 4) ⊆ interior s :=
   by
@@ -144,7 +149,9 @@ theorem IsUpperSet.exists_subset_ball (hs : IsUpperSet s) (hx : x ∈ closure s)
   rw [abs_sub_le_iff] at hxy hz 
   linarith
 #align is_upper_set.exists_subset_ball IsUpperSet.exists_subset_ball
+-/
 
+#print IsLowerSet.exists_subset_ball /-
 theorem IsLowerSet.exists_subset_ball (hs : IsLowerSet s) (hx : x ∈ closure s) (hδ : 0 < δ) :
     ∃ y, closedBall y (δ / 4) ⊆ closedBall x δ ∧ closedBall y (δ / 4) ⊆ interior s :=
   by
@@ -163,6 +170,7 @@ theorem IsLowerSet.exists_subset_ball (hs : IsLowerSet s) (hx : x ∈ closure s)
   rw [abs_sub_le_iff] at hxy hz 
   linarith
 #align is_lower_set.exists_subset_ball IsLowerSet.exists_subset_ball
+-/
 
 end Fintype
 

@@ -53,6 +53,7 @@ namespace Nat.Partrec
 
 open Nat (pair)
 
+#print Nat.Partrec.rfind' /-
 theorem rfind' {f} (hf : Nat.Partrec f) :
     Nat.Partrec
       (Nat.unpaired fun a m =>
@@ -74,6 +75,7 @@ theorem rfind' {f} (hf : Nat.Partrec f) :
                     (primrec.snd.comp <| primrec.unpair.comp Primrec.fst))).to_comp).to₂)
     simp at this ; exact this
 #align nat.partrec.rfind' Nat.Partrec.rfind'
+-/
 
 #print Nat.Partrec.Code /-
 /-- Code for partial recursive functions from ℕ to ℕ.
@@ -311,6 +313,7 @@ theorem rfind_prim : Primrec rfind' :=
 #align nat.partrec.code.rfind_prim Nat.Partrec.Code.rfind_prim
 -/
 
+#print Nat.Partrec.Code.rec_prim' /-
 theorem rec_prim' {α σ} [Primcodable α] [Primcodable σ] {c : α → Code} (hc : Primrec c) {z : α → σ}
     (hz : Primrec z) {s : α → σ} (hs : Primrec s) {l : α → σ} (hl : Primrec l) {r : α → σ}
     (hr : Primrec r) {pr : α → Code × Code × σ × σ → σ} (hpr : Primrec₂ pr)
@@ -405,7 +408,9 @@ theorem rec_prim' {α σ} [Primcodable α] [Primcodable σ] {c : α → Code} (h
   simp [of_nat_code]
   cases n.bodd <;> cases n.div2.bodd <;> rfl
 #align nat.partrec.code.rec_prim' Nat.Partrec.Code.rec_prim'
+-/
 
+#print Nat.Partrec.Code.rec_prim /-
 /-- Recursion on `nat.partrec.code` is primitive recursive. -/
 theorem rec_prim {α σ} [Primcodable α] [Primcodable σ] {c : α → Code} (hc : Primrec c) {z : α → σ}
     (hz : Primrec z) {s : α → σ} (hs : Primrec s) {l : α → σ} (hl : Primrec l) {r : α → σ}
@@ -505,6 +510,7 @@ theorem rec_prim {α σ} [Primcodable α] [Primcodable σ] {c : α → Code} (hc
   simp [of_nat_code]
   cases n.bodd <;> cases n.div2.bodd <;> rfl
 #align nat.partrec.code.rec_prim Nat.Partrec.Code.rec_prim
+-/
 
 end
 
@@ -512,6 +518,7 @@ section
 
 open Computable
 
+#print Nat.Partrec.Code.rec_computable /-
 /-- Recursion on `nat.partrec.code` is computable. -/
 theorem rec_computable {α σ} [Primcodable α] [Primcodable σ] {c : α → Code} (hc : Computable c)
     {z : α → σ} (hz : Computable z) {s : α → σ} (hs : Computable s) {l : α → σ} (hl : Computable l)
@@ -611,6 +618,7 @@ theorem rec_computable {α σ} [Primcodable α] [Primcodable σ] {c : α → Cod
   simp [of_nat_code]
   cases n.bodd <;> cases n.div2.bodd <;> rfl
 #align nat.partrec.code.rec_computable Nat.Partrec.Code.rec_computable
+-/
 
 end
 
@@ -655,6 +663,7 @@ theorem eval_prec_zero (cf cg : Code) (a : ℕ) : eval (prec cf cg) (pair a 0) =
 #align nat.partrec.code.eval_prec_zero Nat.Partrec.Code.eval_prec_zero
 -/
 
+#print Nat.Partrec.Code.eval_prec_succ /-
 /-- Helper lemma for the evaluation of `prec` in the recursive case. -/
 theorem eval_prec_succ (cf cg : Code) (a k : ℕ) :
     eval (prec cf cg) (pair a (Nat.succ k)) = do
@@ -664,6 +673,7 @@ theorem eval_prec_succ (cf cg : Code) (a k : ℕ) :
   rw [eval, Nat.unpaired, Part.bind_eq_bind, Nat.unpair_pair, Nat.rec_add_one]
   simp
 #align nat.partrec.code.eval_prec_succ Nat.Partrec.Code.eval_prec_succ
+-/
 
 instance : Membership (ℕ →. ℕ) Code :=
   ⟨fun f c => eval c = f⟩

@@ -112,15 +112,19 @@ def pi : TwoPointing (α → β) where
 #align two_pointing.pi TwoPointing.pi
 -/
 
+#print TwoPointing.pi_fst /-
 @[simp]
 theorem pi_fst : (q.pi α).fst = const α q.fst :=
   rfl
 #align two_pointing.pi_fst TwoPointing.pi_fst
+-/
 
+#print TwoPointing.pi_snd /-
 @[simp]
 theorem pi_snd : (q.pi α).snd = const α q.snd :=
   rfl
 #align two_pointing.pi_snd TwoPointing.pi_snd
+-/
 
 end Pi
 
@@ -133,15 +137,19 @@ def prod : TwoPointing (α × β) where
 #align two_pointing.prod TwoPointing.prod
 -/
 
+#print TwoPointing.prod_fst /-
 @[simp]
 theorem prod_fst : (p.Prod q).fst = (p.fst, q.fst) :=
   rfl
 #align two_pointing.prod_fst TwoPointing.prod_fst
+-/
 
+#print TwoPointing.prod_snd /-
 @[simp]
 theorem prod_snd : (p.Prod q).snd = (p.snd, q.snd) :=
   rfl
 #align two_pointing.prod_snd TwoPointing.prod_snd
+-/
 
 #print TwoPointing.sum /-
 /-- The sum of two pointings. Keeps the first point from the left and the second point from the
@@ -151,15 +159,19 @@ protected def sum : TwoPointing (Sum α β) :=
 #align two_pointing.sum TwoPointing.sum
 -/
 
+#print TwoPointing.sum_fst /-
 @[simp]
 theorem sum_fst : (p.Sum q).fst = Sum.inl p.fst :=
   rfl
 #align two_pointing.sum_fst TwoPointing.sum_fst
+-/
 
+#print TwoPointing.sum_snd /-
 @[simp]
 theorem sum_snd : (p.Sum q).snd = Sum.inr q.snd :=
   rfl
 #align two_pointing.sum_snd TwoPointing.sum_snd
+-/
 
 #print TwoPointing.bool /-
 /-- The `ff`, `tt` two-pointing of `bool`. -/

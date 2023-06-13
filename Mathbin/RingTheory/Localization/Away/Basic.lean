@@ -65,13 +65,16 @@ noncomputable def invSelf : S :=
 #align is_localization.away.inv_self IsLocalization.Away.invSelf
 -/
 
+#print IsLocalization.Away.mul_invSelf /-
 @[simp]
 theorem mul_invSelf : algebraMap R S x * invSelf x = 1 := by
   convert IsLocalization.mk'_mul_mk'_eq_one _ 1; symm; apply IsLocalization.mk'_one
 #align is_localization.away.mul_inv_self IsLocalization.Away.mul_invSelf
+-/
 
 variable {g : R →+* P}
 
+#print IsLocalization.Away.lift /-
 /-- Given `x : R`, a localization map `F : R →+* S` away from `x`, and a map of `comm_semiring`s
 `g : R →+* P` such that `g x` is invertible, the homomorphism induced from `S` to `P` sending
 `z : S` to `g y * (g x)⁻ⁿ`, where `y : R, n : ℕ` are such that `z = F y * (F x)⁻ⁿ`. -/
@@ -82,17 +85,23 @@ noncomputable def lift (hg : IsUnit (g x)) : S →+* P :=
       rw [← hn, g.map_pow]
       exact IsUnit.map (powMonoidHom n : P →* P) hg
 #align is_localization.away.lift IsLocalization.Away.lift
+-/
 
+#print IsLocalization.Away.AwayMap.lift_eq /-
 @[simp]
 theorem AwayMap.lift_eq (hg : IsUnit (g x)) (a : R) : lift x hg ((algebraMap R S) a) = g a :=
   lift_eq _ _
 #align is_localization.away.away_map.lift_eq IsLocalization.Away.AwayMap.lift_eq
+-/
 
+#print IsLocalization.Away.AwayMap.lift_comp /-
 @[simp]
 theorem AwayMap.lift_comp (hg : IsUnit (g x)) : (lift x hg).comp (algebraMap R S) = g :=
   lift_comp _
 #align is_localization.away.away_map.lift_comp IsLocalization.Away.AwayMap.lift_comp
+-/
 
+#print IsLocalization.Away.awayToAwayRight /-
 /-- Given `x y : R` and localizations `S`, `P` away from `x` and `x * y`
 respectively, the homomorphism induced from `S` to `P`. -/
 noncomputable def awayToAwayRight (y : R) [Algebra R P] [IsLocalization.Away (x * y) P] : S →+* P :=
@@ -101,15 +110,18 @@ noncomputable def awayToAwayRight (y : R) [Algebra R P] [IsLocalization.Away (x 
       isUnit_of_mul_eq_one ((algebraMap R P) x) (mk' P y ⟨x * y, Submonoid.mem_powers _⟩) <| by
         rw [mul_mk'_eq_mk'_of_mul, mk'_self]
 #align is_localization.away.away_to_away_right IsLocalization.Away.awayToAwayRight
+-/
 
 variable (S) (Q : Type _) [CommSemiring Q] [Algebra P Q]
 
+#print IsLocalization.Away.map /-
 /-- Given a map `f : R →+* S` and an element `r : R`, we may construct a map `Rᵣ →+* Sᵣ`. -/
 noncomputable def map (f : R →+* P) (r : R) [IsLocalization.Away r S]
     [IsLocalization.Away (f r) Q] : S →+* Q :=
   IsLocalization.map Q f
     (show Submonoid.powers r ≤ (Submonoid.powers (f r)).comap f by rintro x ⟨n, rfl⟩; use n; simp)
 #align is_localization.away.map IsLocalization.Away.map
+-/
 
 end Away
 
@@ -121,6 +133,7 @@ section AtUnits
 
 variable (R) (S) (M)
 
+#print IsLocalization.atUnits /-
 /-- The localization at a module of units is isomorphic to the ring -/
 noncomputable def atUnits (H : ∀ x : M, IsUnit (x : R)) : R ≃ₐ[R] S :=
   by
@@ -137,6 +150,7 @@ noncomputable def atUnits (H : ∀ x : M, IsUnit (x : R)) : R ≃ₐ[R] S :=
     rw [RingHom.map_mul, ← Eq, ← hu, mul_assoc, ← RingHom.map_mul]
     simp
 #align is_localization.at_units IsLocalization.atUnits
+-/
 
 #print IsLocalization.atUnit /-
 /-- The localization away from a unit is isomorphic to the ring -/
@@ -158,6 +172,7 @@ noncomputable def atOne [IsLocalization.Away (1 : R) S] : R ≃ₐ[R] S :=
 #align is_localization.at_one IsLocalization.atOne
 -/
 
+#print IsLocalization.away_of_isUnit_of_bijective /-
 theorem away_of_isUnit_of_bijective {R : Type _} (S : Type _) [CommRing R] [CommRing S]
     [Algebra R S] {r : R} (hr : IsUnit r) (H : Function.Bijective (algebraMap R S)) :
     IsLocalization.Away r S :=
@@ -169,6 +184,7 @@ theorem away_of_isUnit_of_bijective {R : Type _} (S : Type _) [CommRing R] [Comm
       · rintro rfl; exact ⟨1, rfl⟩
       · rintro ⟨⟨_, n, rfl⟩, e⟩; exact (hr.pow _).mul_right_inj.mp e }
 #align is_localization.away_of_is_unit_of_bijective IsLocalization.away_of_isUnit_of_bijective
+-/
 
 end AtUnits
 
@@ -180,18 +196,22 @@ open IsLocalization
 
 variable {M}
 
+#print Localization.awayLift /-
 /-- Given a map `f : R →+* S` and an element `r : R`, such that `f r` is invertible,
   we may construct a map `Rᵣ →+* S`. -/
 noncomputable abbrev awayLift (f : R →+* P) (r : R) (hr : IsUnit (f r)) :
     Localization.Away r →+* P :=
   IsLocalization.Away.lift r hr
 #align localization.away_lift Localization.awayLift
+-/
 
+#print Localization.awayMap /-
 /-- Given a map `f : R →+* S` and an element `r : R`, we may construct a map `Rᵣ →+* Sᵣ`. -/
 noncomputable abbrev awayMap (f : R →+* P) (r : R) :
     Localization.Away r →+* Localization.Away (f r) :=
   IsLocalization.Away.map _ _ f r
 #align localization.away_map Localization.awayMap
+-/
 
 end Localization
 
@@ -216,24 +236,33 @@ noncomputable def selfZpow (m : ℤ) : B :=
 #align self_zpow selfZpow
 -/
 
+#print selfZpow_of_nonneg /-
 theorem selfZpow_of_nonneg {n : ℤ} (hn : 0 ≤ n) : selfZpow x B n = algebraMap R B x ^ n.natAbs :=
   dif_pos hn
 #align self_zpow_of_nonneg selfZpow_of_nonneg
+-/
 
+#print selfZpow_coe_nat /-
 @[simp]
 theorem selfZpow_coe_nat (d : ℕ) : selfZpow x B d = algebraMap R B x ^ d :=
   selfZpow_of_nonneg _ _ (Int.coe_nat_nonneg d)
 #align self_zpow_coe_nat selfZpow_coe_nat
+-/
 
+#print selfZpow_zero /-
 @[simp]
 theorem selfZpow_zero : selfZpow x B 0 = 1 := by simp [selfZpow_of_nonneg _ _ le_rfl]
 #align self_zpow_zero selfZpow_zero
+-/
 
+#print selfZpow_of_neg /-
 theorem selfZpow_of_neg {n : ℤ} (hn : n < 0) :
     selfZpow x B n = mk' _ (1 : R) (Submonoid.pow x n.natAbs) :=
   dif_neg hn.not_le
 #align self_zpow_of_neg selfZpow_of_neg
+-/
 
+#print selfZpow_of_nonpos /-
 theorem selfZpow_of_nonpos {n : ℤ} (hn : n ≤ 0) :
     selfZpow x B n = mk' _ (1 : R) (Submonoid.pow x n.natAbs) :=
   by
@@ -241,12 +270,16 @@ theorem selfZpow_of_nonpos {n : ℤ} (hn : n ≤ 0) :
   · simp [hn0, selfZpow_zero, Submonoid.pow_apply]
   · simp [selfZpow_of_neg _ _ (lt_of_le_of_ne hn hn0)]
 #align self_zpow_of_nonpos selfZpow_of_nonpos
+-/
 
+#print selfZpow_neg_coe_nat /-
 @[simp]
 theorem selfZpow_neg_coe_nat (d : ℕ) : selfZpow x B (-d) = mk' _ (1 : R) (Submonoid.pow x d) := by
   simp [selfZpow_of_nonpos _ _ (neg_nonpos.mpr (Int.coe_nat_nonneg d))]
 #align self_zpow_neg_coe_nat selfZpow_neg_coe_nat
+-/
 
+#print selfZpow_sub_cast_nat /-
 @[simp]
 theorem selfZpow_sub_cast_nat {n m : ℕ} :
     selfZpow x B (n - m) = mk' _ (x ^ n) (Submonoid.pow x m) :=
@@ -259,7 +292,9 @@ theorem selfZpow_sub_cast_nat {n m : ℕ} :
       IsLocalization.mk'_eq_iff_eq]
     simp [Submonoid.pow_apply, ← pow_add, Nat.sub_add_cancel (le_of_not_le h)]
 #align self_zpow_sub_cast_nat selfZpow_sub_cast_nat
+-/
 
+#print selfZpow_add /-
 @[simp]
 theorem selfZpow_add {n m : ℤ} : selfZpow x B (n + m) = selfZpow x B n * selfZpow x B m :=
   by
@@ -281,7 +316,9 @@ theorem selfZpow_add {n m : ℤ} : selfZpow x B (n + m) = selfZpow x B n * selfZ
     ext
     simp [pow_add]
 #align self_zpow_add selfZpow_add
+-/
 
+#print selfZpow_mul_neg /-
 theorem selfZpow_mul_neg (d : ℤ) : selfZpow x B d * selfZpow x B (-d) = 1 :=
   by
   by_cases hd : d ≤ 0
@@ -295,11 +332,15 @@ theorem selfZpow_mul_neg (d : ℤ) : selfZpow x B d * selfZpow x B (-d) = 1 :=
     refine' nonpos_of_neg_nonneg (le_of_lt _)
     rwa [neg_neg, ← not_le]
 #align self_zpow_mul_neg selfZpow_mul_neg
+-/
 
+#print selfZpow_neg_mul /-
 theorem selfZpow_neg_mul (d : ℤ) : selfZpow x B (-d) * selfZpow x B d = 1 := by
   rw [mul_comm, selfZpow_mul_neg x B d]
 #align self_zpow_neg_mul selfZpow_neg_mul
+-/
 
+#print selfZpow_pow_sub /-
 theorem selfZpow_pow_sub (a : R) (b : B) (m d : ℤ) :
     selfZpow x B (m - d) * mk' B a (1 : Submonoid.powers x) = b ↔
       selfZpow x B m * mk' B a (1 : Submonoid.powers x) = selfZpow x B d * b :=
@@ -315,9 +356,11 @@ theorem selfZpow_pow_sub (a : R) (b : B) (m d : ℤ) :
     simp only at this 
     rwa [mul_comm _ b, mul_assoc b _ _, selfZpow_mul_neg, mul_one] at this 
 #align self_zpow_pow_sub selfZpow_pow_sub
+-/
 
 variable [IsDomain R] [NormalizationMonoid R] [UniqueFactorizationMonoid R]
 
+#print exists_reduced_fraction' /-
 theorem exists_reduced_fraction' {b : B} (hb : b ≠ 0) (hx : Irreducible x) :
     ∃ (a : R) (n : ℤ), ¬x ∣ a ∧ selfZpow x B n * algebraMap R B a = b := by
   classical
@@ -344,6 +387,7 @@ theorem exists_reduced_fraction' {b : B} (hb : b ≠ 0) (hx : Irreducible x) :
     mul_comm _ b, H, hyp2, map_mul, map_pow _ _ m]
   exact ⟨hyp1, congr_arg _ (IsLocalization.mk'_one _ _)⟩
 #align exists_reduced_fraction' exists_reduced_fraction'
+-/
 
 end NumDenom
 

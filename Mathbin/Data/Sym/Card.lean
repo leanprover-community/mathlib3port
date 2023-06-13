@@ -69,6 +69,7 @@ section Sym
 
 variable (α) (n : ℕ)
 
+#print Sym.e1 /-
 /-- Over `fin n+1`, the multisets of size `k+1` containing `0` are equivalent to those of size `k`,
 as demonstrated by respectively erasing or appending `0`.
 -/
@@ -79,7 +80,9 @@ protected def e1 {n k : ℕ} : { s : Sym (Fin n.succ) k.succ // ↑0 ∈ s } ≃
   left_inv s := by simp
   right_inv s := by simp
 #align sym.E1 Sym.e1
+-/
 
+#print Sym.e2 /-
 /-- The multisets of size `k` over `fin n+2` not containing `0`
 are equivalent to those of size `k` over `fin n+1`,
 as demonstrated by respectively decrementing or incrementing every element of the multiset.
@@ -102,6 +105,7 @@ protected def e2 {n k : ℕ} : { s : Sym (Fin n.succ.succ) k // ↑0 ∉ s } ≃
     refine' Sym.map_congr fun v hv => _
     rw [← Fin.zero_succAbove v, ← @Fin.castSucc_zero n.succ, Fin.predAbove_succAbove 0 v]
 #align sym.E2 Sym.e2
+-/
 
 #print Sym.card_sym_fin_eq_multichoose /-
 theorem card_sym_fin_eq_multichoose (n k : ℕ) : card (Sym (Fin n) k) = multichoose n k :=

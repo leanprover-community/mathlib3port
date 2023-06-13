@@ -44,11 +44,13 @@ instance smulLeft [SMul R M] : SMul (ULift R) M :=
 #align ulift.has_vadd_left ULift.vaddLeft
 -/
 
+#print ULift.smul_def /-
 @[simp, to_additive]
 theorem smul_def [SMul R M] (s : ULift R) (x : M) : s • x = s.down • x :=
   rfl
 #align ulift.smul_def ULift.smul_def
 #align ulift.vadd_def ULift.vadd_def
+-/
 
 #print ULift.isScalarTower /-
 instance isScalarTower [SMul R M] [SMul M N] [SMul R N] [IsScalarTower R M N] :

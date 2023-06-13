@@ -297,7 +297,6 @@ inductive Point
   | some {x y : R} (h : W.Nonsingular x y)
 #align weierstrass_curve.point WeierstrassCurve.Point
 
--- mathport name: «expr ⟮ ⟯»
 scoped notation W "⟮" S "⟯" => (W.base_change S).Point
 
 namespace Point
@@ -470,8 +469,6 @@ theorem baseChange_slope_of_baseChange {R : Type u} [CommRing R] (W : Weierstras
   by rw [← base_change_slope, base_change_base_change]
 #align weierstrass_curve.base_change_slope_of_base_change WeierstrassCurve.baseChange_slope_of_baseChange
 
-include h₁' h₂'
-
 theorem Y_eq_of_X_eq (hx : x₁ = x₂) : y₁ = y₂ ∨ y₁ = W.negY x₂ y₂ :=
   by
   rw [equation_iff] at h₁' h₂' 
@@ -545,10 +542,6 @@ theorem equation_add (hxy : x₁ = x₂ → y₁ ≠ W.negY x₂ y₂) :
   equation_neg <| equation_add' h₁' h₂' hxy
 #align weierstrass_curve.equation_add WeierstrassCurve.equation_add
 
-omit h₁' h₂'
-
-include h₁ h₂
-
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.2574636079.eval_simp -/
 /-- The addition of two nonsingular affine points in `W` on a sloped line,
 before applying the final negation that maps $Y$ to $-Y - a_1X - a_3$, is nonsingular. -/
@@ -577,8 +570,6 @@ theorem nonsingular_add (hxy : x₁ = x₂ → y₁ ≠ W.negY x₂ y₂) :
     W.Nonsingular (W.addX x₁ x₂ <| W.slope x₁ x₂ y₁ y₂) (W.addY x₁ x₂ y₁ <| W.slope x₁ x₂ y₁ y₂) :=
   nonsingular_neg <| nonsingular_add' h₁ h₂ hxy
 #align weierstrass_curve.nonsingular_add WeierstrassCurve.nonsingular_add
-
-omit h₁ h₂
 
 namespace Point
 

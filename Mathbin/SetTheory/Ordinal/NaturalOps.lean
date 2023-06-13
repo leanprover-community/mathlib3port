@@ -91,10 +91,12 @@ theorem toOrdinal_symm_eq : NatOrdinal.toOrdinal.symm = Ordinal.toNatOrdinal :=
 #align nat_ordinal.to_ordinal_symm_eq NatOrdinal.toOrdinal_symm_eq
 -/
 
+#print NatOrdinal.toOrdinal_toNatOrdinal /-
 @[simp]
 theorem toOrdinal_toNatOrdinal (a : NatOrdinal) : a.toOrdinal.toNatOrdinal = a :=
   rfl
 #align nat_ordinal.to_ordinal_to_nat_ordinal NatOrdinal.toOrdinal_toNatOrdinal
+-/
 
 #print NatOrdinal.lt_wf /-
 theorem lt_wf : @WellFounded NatOrdinal (· < ·) :=
@@ -108,44 +110,60 @@ instance : WellFoundedLT NatOrdinal :=
 instance : IsWellOrder NatOrdinal (· < ·) :=
   Ordinal.HasLt.Lt.isWellOrder
 
+#print NatOrdinal.toOrdinal_zero /-
 @[simp]
 theorem toOrdinal_zero : toOrdinal 0 = 0 :=
   rfl
 #align nat_ordinal.to_ordinal_zero NatOrdinal.toOrdinal_zero
+-/
 
+#print NatOrdinal.toOrdinal_one /-
 @[simp]
 theorem toOrdinal_one : toOrdinal 1 = 1 :=
   rfl
 #align nat_ordinal.to_ordinal_one NatOrdinal.toOrdinal_one
+-/
 
+#print NatOrdinal.toOrdinal_eq_zero /-
 @[simp]
 theorem toOrdinal_eq_zero (a) : toOrdinal a = 0 ↔ a = 0 :=
   Iff.rfl
 #align nat_ordinal.to_ordinal_eq_zero NatOrdinal.toOrdinal_eq_zero
+-/
 
+#print NatOrdinal.toOrdinal_eq_one /-
 @[simp]
 theorem toOrdinal_eq_one (a) : toOrdinal a = 1 ↔ a = 1 :=
   Iff.rfl
 #align nat_ordinal.to_ordinal_eq_one NatOrdinal.toOrdinal_eq_one
+-/
 
+#print NatOrdinal.toOrdinal_max /-
 @[simp]
 theorem toOrdinal_max : (max a b).toOrdinal = max a.toOrdinal b.toOrdinal :=
   rfl
 #align nat_ordinal.to_ordinal_max NatOrdinal.toOrdinal_max
+-/
 
+#print NatOrdinal.toOrdinal_min /-
 @[simp]
 theorem toOrdinal_min : (min a b).toOrdinal = min a.toOrdinal b.toOrdinal :=
   rfl
 #align nat_ordinal.to_ordinal_min NatOrdinal.toOrdinal_min
+-/
 
+#print NatOrdinal.succ_def /-
 theorem succ_def (a : NatOrdinal) : succ a = (a.toOrdinal + 1).toNatOrdinal :=
   rfl
 #align nat_ordinal.succ_def NatOrdinal.succ_def
+-/
 
+#print NatOrdinal.rec /-
 /-- A recursor for `nat_ordinal`. Use as `induction x using nat_ordinal.rec`. -/
 protected def rec {β : NatOrdinal → Sort _} (h : ∀ a, β (toNatOrdinal a)) : ∀ a, β a := fun a =>
   h a.toOrdinal
 #align nat_ordinal.rec NatOrdinal.rec
+-/
 
 #print NatOrdinal.induction /-
 /-- `ordinal.induction` but for `nat_ordinal`. -/
@@ -167,41 +185,55 @@ theorem toNatOrdinal_symm_eq : toNatOrdinal.symm = NatOrdinal.toOrdinal :=
 #align ordinal.to_nat_ordinal_symm_eq Ordinal.toNatOrdinal_symm_eq
 -/
 
+#print Ordinal.toNatOrdinal_toOrdinal /-
 @[simp]
 theorem toNatOrdinal_toOrdinal (a : Ordinal) : a.toNatOrdinal.toOrdinal = a :=
   rfl
 #align ordinal.to_nat_ordinal_to_ordinal Ordinal.toNatOrdinal_toOrdinal
+-/
 
+#print Ordinal.toNatOrdinal_zero /-
 @[simp]
 theorem toNatOrdinal_zero : toNatOrdinal 0 = 0 :=
   rfl
 #align ordinal.to_nat_ordinal_zero Ordinal.toNatOrdinal_zero
+-/
 
+#print Ordinal.toNatOrdinal_one /-
 @[simp]
 theorem toNatOrdinal_one : toNatOrdinal 1 = 1 :=
   rfl
 #align ordinal.to_nat_ordinal_one Ordinal.toNatOrdinal_one
+-/
 
+#print Ordinal.toNatOrdinal_eq_zero /-
 @[simp]
 theorem toNatOrdinal_eq_zero (a) : toNatOrdinal a = 0 ↔ a = 0 :=
   Iff.rfl
 #align ordinal.to_nat_ordinal_eq_zero Ordinal.toNatOrdinal_eq_zero
+-/
 
+#print Ordinal.toNatOrdinal_eq_one /-
 @[simp]
 theorem toNatOrdinal_eq_one (a) : toNatOrdinal a = 1 ↔ a = 1 :=
   Iff.rfl
 #align ordinal.to_nat_ordinal_eq_one Ordinal.toNatOrdinal_eq_one
+-/
 
+#print Ordinal.toNatOrdinal_max /-
 @[simp]
 theorem toNatOrdinal_max : toNatOrdinal (max a b) = max a.toNatOrdinal b.toNatOrdinal :=
   rfl
 #align ordinal.to_nat_ordinal_max Ordinal.toNatOrdinal_max
+-/
 
+#print Ordinal.toNatOrdinal_min /-
 @[simp]
 theorem toNatOrdinal_min :
     (LinearOrder.min a b).toNatOrdinal = LinearOrder.min a.toNatOrdinal b.toNatOrdinal :=
   rfl
 #align ordinal.to_nat_ordinal_min Ordinal.toNatOrdinal_min
+-/
 
 #print Ordinal.nadd /-
 /-- Natural addition on ordinals `a ♯ b`, also known as the Hessenberg sum, is recursively defined
@@ -216,17 +248,20 @@ decreasing_by solve_by_elim [PSigma.Lex.left, PSigma.Lex.right]
 #align ordinal.nadd Ordinal.nadd
 -/
 
--- mathport name: ordinal.nadd
 scoped[NaturalOps] infixl:65 " ♯ " => Ordinal.nadd
 
+#print Ordinal.nadd_def /-
 theorem nadd_def (a b : Ordinal) :
     a ♯ b = max (blsub.{u, u} a fun a' h => a' ♯ b) (blsub.{u, u} b fun b' h => a ♯ b') := by
   rw [nadd]
 #align ordinal.nadd_def Ordinal.nadd_def
+-/
 
+#print Ordinal.lt_nadd_iff /-
 theorem lt_nadd_iff : a < b ♯ c ↔ (∃ b' < b, a ≤ b' ♯ c) ∨ ∃ c' < c, a ≤ b ♯ c' := by rw [nadd_def];
   simp [lt_blsub_iff]
 #align ordinal.lt_nadd_iff Ordinal.lt_nadd_iff
+-/
 
 #print Ordinal.nadd_le_iff /-
 theorem nadd_le_iff : b ♯ c ≤ a ↔ (∀ b' < b, b' ♯ c < a) ∧ ∀ c' < c, b ♯ c' < a := by rw [nadd_def];
@@ -275,6 +310,7 @@ decreasing_by solve_by_elim [PSigma.Lex.left, PSigma.Lex.right]
 #align ordinal.nadd_comm Ordinal.nadd_comm
 -/
 
+#print Ordinal.blsub_nadd_of_mono /-
 theorem blsub_nadd_of_mono {f : ∀ c < a ♯ b, Ordinal.{max u v}}
     (hf : ∀ {i j} (hi hj), i ≤ j → f i hi ≤ f j hj) :
     blsub _ f =
@@ -290,6 +326,7 @@ theorem blsub_nadd_of_mono {f : ∀ c < a ♯ b, Ordinal.{max u v}}
     rintro c ⟨d, hd, rfl⟩
     apply mem_brange_self
 #align ordinal.blsub_nadd_of_mono Ordinal.blsub_nadd_of_mono
+-/
 
 #print Ordinal.nadd_assoc /-
 theorem nadd_assoc : ∀ a b c, a ♯ b ♯ c = a ♯ (b ♯ c)
@@ -321,6 +358,7 @@ theorem zero_nadd : 0 ♯ a = a := by rw [nadd_comm, nadd_zero]
 #align ordinal.zero_nadd Ordinal.zero_nadd
 -/
 
+#print Ordinal.nadd_one /-
 @[simp]
 theorem nadd_one : a ♯ 1 = succ a :=
   by
@@ -329,10 +367,13 @@ theorem nadd_one : a ♯ 1 = succ a :=
   intro i hi
   rwa [IH i hi, succ_lt_succ_iff]
 #align ordinal.nadd_one Ordinal.nadd_one
+-/
 
+#print Ordinal.one_nadd /-
 @[simp]
 theorem one_nadd : 1 ♯ a = succ a := by rw [nadd_comm, nadd_one]
 #align ordinal.one_nadd Ordinal.one_nadd
+-/
 
 #print Ordinal.nadd_succ /-
 theorem nadd_succ : a ♯ succ b = succ (a ♯ b) := by rw [← nadd_one (a ♯ b), nadd_assoc, nadd_one]
@@ -414,11 +455,14 @@ instance : OrderedCancelAddCommMonoid NatOrdinal :=
 instance : AddMonoidWithOne NatOrdinal :=
   AddMonoidWithOne.unary
 
+#print NatOrdinal.add_one_eq_succ /-
 @[simp]
 theorem add_one_eq_succ : ∀ a : NatOrdinal, a + 1 = succ a :=
   nadd_one
 #align nat_ordinal.add_one_eq_succ NatOrdinal.add_one_eq_succ
+-/
 
+#print NatOrdinal.toOrdinal_cast_nat /-
 @[simp]
 theorem toOrdinal_cast_nat (n : ℕ) : toOrdinal n = n :=
   by
@@ -428,6 +472,7 @@ theorem toOrdinal_cast_nat (n : ℕ) : toOrdinal n = n :=
     rw [hn]
     apply nadd_one
 #align nat_ordinal.to_ordinal_cast_nat NatOrdinal.toOrdinal_cast_nat
+-/
 
 end NatOrdinal
 
@@ -437,9 +482,11 @@ open scoped NaturalOps
 
 namespace Ordinal
 
+#print Ordinal.toNatOrdinal_cast_nat /-
 @[simp]
 theorem toNatOrdinal_cast_nat (n : ℕ) : toNatOrdinal n = n := by rw [← to_ordinal_cast_nat n]; rfl
 #align ordinal.to_nat_ordinal_cast_nat Ordinal.toNatOrdinal_cast_nat
+-/
 
 #print Ordinal.lt_of_nadd_lt_nadd_left /-
 theorem lt_of_nadd_lt_nadd_left : ∀ {a b c}, a ♯ b < a ♯ c → b < c :=

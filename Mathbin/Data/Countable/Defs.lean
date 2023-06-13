@@ -36,7 +36,7 @@ variable {α : Sort u} {β : Sort v}
 
 
 #print Countable /-
-/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`exists_injective_nat] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`exists_injective_nat] [] -/
 /-- A type `α` is countable if there exists an injective map `α → ℕ`. -/
 @[mk_iff countable_iff_exists_injective]
 class Countable (α : Sort u) : Prop where
@@ -77,9 +77,11 @@ theorem countable_iff_exists_surjective [Nonempty α] : Countable α ↔ ∃ f :
 #align countable_iff_exists_surjective countable_iff_exists_surjective
 -/
 
+#print Countable.of_equiv /-
 theorem Countable.of_equiv (α : Sort _) [Countable α] (e : α ≃ β) : Countable β :=
   e.symm.Injective.Countable
 #align countable.of_equiv Countable.of_equiv
+-/
 
 #print Equiv.countable_iff /-
 theorem Equiv.countable_iff (e : α ≃ β) : Countable α ↔ Countable β :=

@@ -29,6 +29,7 @@ variable {R : Type u} {S : Type v} [Ring R] [Ring S] (I I' : Ideal R) (J J' : Id
 
 namespace Ideal
 
+#print Ideal.prod /-
 /-- `I × J` as an ideal of `R × S`. -/
 def prod : Ideal (R × S) where
   carrier := {x | x.fst ∈ I ∧ x.snd ∈ J}
@@ -40,6 +41,7 @@ def prod : Ideal (R × S) where
     rintro ⟨a₁, a₂⟩ ⟨b₁, b₂⟩ ⟨hb₁, hb₂⟩
     exact ⟨I.mul_mem_left _ hb₁, J.mul_mem_left _ hb₂⟩
 #align ideal.prod Ideal.prod
+-/
 
 #print Ideal.mem_prod /-
 @[simp]
@@ -48,11 +50,14 @@ theorem mem_prod {r : R} {s : S} : (⟨r, s⟩ : R × S) ∈ prod I J ↔ r ∈ 
 #align ideal.mem_prod Ideal.mem_prod
 -/
 
+#print Ideal.prod_top_top /-
 @[simp]
 theorem prod_top_top : prod (⊤ : Ideal R) (⊤ : Ideal S) = ⊤ :=
   Ideal.ext <| by simp
 #align ideal.prod_top_top Ideal.prod_top_top
+-/
 
+#print Ideal.ideal_prod_eq /-
 /-- Every ideal of the product ring is of the form `I × J`, where `I` and `J` can be explicitly
     given as the image under the projection maps. -/
 theorem ideal_prod_eq (I : Ideal (R × S)) :
@@ -66,7 +71,9 @@ theorem ideal_prod_eq (I : Ideal (R × S)) :
   rintro ⟨⟨⟨r, s'⟩, ⟨h₁, rfl⟩⟩, ⟨⟨r', s⟩, ⟨h₂, rfl⟩⟩⟩
   simpa using I.add_mem (I.mul_mem_left (1, 0) h₁) (I.mul_mem_left (0, 1) h₂)
 #align ideal.ideal_prod_eq Ideal.ideal_prod_eq
+-/
 
+#print Ideal.map_fst_prod /-
 @[simp]
 theorem map_fst_prod (I : Ideal R) (J : Ideal S) : map (RingHom.fst R S) (prod I J) = I :=
   by
@@ -74,7 +81,9 @@ theorem map_fst_prod (I : Ideal R) (J : Ideal S) : map (RingHom.fst R S) (prod I
   rw [mem_map_iff_of_surjective (RingHom.fst R S) Prod.fst_surjective]
   exact ⟨by rintro ⟨x, ⟨h, rfl⟩⟩; exact h.1, fun h => ⟨⟨x, 0⟩, ⟨⟨h, Ideal.zero_mem _⟩, rfl⟩⟩⟩
 #align ideal.map_fst_prod Ideal.map_fst_prod
+-/
 
+#print Ideal.map_snd_prod /-
 @[simp]
 theorem map_snd_prod (I : Ideal R) (J : Ideal S) : map (RingHom.snd R S) (prod I J) = J :=
   by
@@ -82,7 +91,9 @@ theorem map_snd_prod (I : Ideal R) (J : Ideal S) : map (RingHom.snd R S) (prod I
   rw [mem_map_iff_of_surjective (RingHom.snd R S) Prod.snd_surjective]
   exact ⟨by rintro ⟨x, ⟨h, rfl⟩⟩; exact h.2, fun h => ⟨⟨0, x⟩, ⟨⟨Ideal.zero_mem _, h⟩, rfl⟩⟩⟩
 #align ideal.map_snd_prod Ideal.map_snd_prod
+-/
 
+#print Ideal.map_prodComm_prod /-
 @[simp]
 theorem map_prodComm_prod :
     map ((RingEquiv.prodComm : R × S ≃+* S × R) : R × S →+* S × R) (prod I J) = prod J I :=
@@ -90,7 +101,9 @@ theorem map_prodComm_prod :
   refine' trans (ideal_prod_eq _) _
   simp [map_map]
 #align ideal.map_prod_comm_prod Ideal.map_prodComm_prod
+-/
 
+#print Ideal.idealProdEquiv /-
 /-- Ideals of `R × S` are in one-to-one correspondence with pairs of ideals of `R` and ideals of
     `S`. -/
 def idealProdEquiv : Ideal (R × S) ≃ Ideal R × Ideal S
@@ -100,18 +113,24 @@ def idealProdEquiv : Ideal (R × S) ≃ Ideal R × Ideal S
   left_inv I := (ideal_prod_eq I).symm
   right_inv := fun ⟨I, J⟩ => by simp
 #align ideal.ideal_prod_equiv Ideal.idealProdEquiv
+-/
 
+#print Ideal.idealProdEquiv_symm_apply /-
 @[simp]
 theorem idealProdEquiv_symm_apply (I : Ideal R) (J : Ideal S) :
     idealProdEquiv.symm ⟨I, J⟩ = prod I J :=
   rfl
 #align ideal.ideal_prod_equiv_symm_apply Ideal.idealProdEquiv_symm_apply
+-/
 
+#print Ideal.prod.ext_iff /-
 theorem prod.ext_iff {I I' : Ideal R} {J J' : Ideal S} : prod I J = prod I' J' ↔ I = I' ∧ J = J' :=
   by
   simp only [← ideal_prod_equiv_symm_apply, ideal_prod_equiv.symm.injective.eq_iff, Prod.mk.inj_iff]
 #align ideal.prod.ext_iff Ideal.prod.ext_iff
+-/
 
+#print Ideal.isPrime_of_isPrime_prod_top /-
 theorem isPrime_of_isPrime_prod_top {I : Ideal R} (h : (Ideal.prod I (⊤ : Ideal S)).IsPrime) :
     I.IsPrime := by
   constructor
@@ -124,14 +143,18 @@ theorem isPrime_of_isPrime_prod_top {I : Ideal R} (h : (Ideal.prod I (⊤ : Idea
       exact ⟨hxy, trivial⟩
     simpa using h.mem_or_mem this
 #align ideal.is_prime_of_is_prime_prod_top Ideal.isPrime_of_isPrime_prod_top
+-/
 
+#print Ideal.isPrime_of_isPrime_prod_top' /-
 theorem isPrime_of_isPrime_prod_top' {I : Ideal S} (h : (Ideal.prod (⊤ : Ideal R) I).IsPrime) :
     I.IsPrime := by
   apply @is_prime_of_is_prime_prod_top _ R
   rw [← map_prod_comm_prod]
   exact map_is_prime_of_equiv _
 #align ideal.is_prime_of_is_prime_prod_top' Ideal.isPrime_of_isPrime_prod_top'
+-/
 
+#print Ideal.isPrime_ideal_prod_top /-
 theorem isPrime_ideal_prod_top {I : Ideal R} [h : I.IsPrime] : (prod I (⊤ : Ideal S)).IsPrime :=
   by
   constructor
@@ -143,14 +166,18 @@ theorem isPrime_ideal_prod_top {I : Ideal R} [h : I.IsPrime] : (prod I (⊤ : Id
   · exact Or.inl ⟨h, trivial⟩
   · exact Or.inr ⟨h, trivial⟩
 #align ideal.is_prime_ideal_prod_top Ideal.isPrime_ideal_prod_top
+-/
 
+#print Ideal.isPrime_ideal_prod_top' /-
 theorem isPrime_ideal_prod_top' {I : Ideal S} [h : I.IsPrime] : (prod (⊤ : Ideal R) I).IsPrime :=
   by
   rw [← map_prod_comm_prod]
   apply map_is_prime_of_equiv _
   exact is_prime_ideal_prod_top
 #align ideal.is_prime_ideal_prod_top' Ideal.isPrime_ideal_prod_top'
+-/
 
+#print Ideal.ideal_prod_prime_aux /-
 theorem ideal_prod_prime_aux {I : Ideal R} {J : Ideal S} :
     (Ideal.prod I J).IsPrime → I = ⊤ ∨ J = ⊤ :=
   by
@@ -158,7 +185,9 @@ theorem ideal_prod_prime_aux {I : Ideal R} {J : Ideal S} :
   simp only [ne_top_iff_one, is_prime_iff, not_and, not_forall, not_or]
   exact fun ⟨hI, hJ⟩ hIJ => ⟨⟨0, 1⟩, ⟨1, 0⟩, by simp, by simp [hJ], by simp [hI]⟩
 #align ideal.ideal_prod_prime_aux Ideal.ideal_prod_prime_aux
+-/
 
+#print Ideal.ideal_prod_prime /-
 /-- Classification of prime ideals in product rings: the prime ideals of `R × S` are precisely the
     ideals of the form `p × S` or `R × p`, where `p` is a prime ideal of `R` or `S`. -/
 theorem ideal_prod_prime (I : Ideal (R × S)) :
@@ -180,6 +209,7 @@ theorem ideal_prod_prime (I : Ideal (R × S)) :
     · exact is_prime_ideal_prod_top
     · exact is_prime_ideal_prod_top'
 #align ideal.ideal_prod_prime Ideal.ideal_prod_prime
+-/
 
 end Ideal
 

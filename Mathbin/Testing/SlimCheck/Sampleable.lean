@@ -105,7 +105,6 @@ namespace SlimCheck
 
 variable (α : Type u)
 
--- mathport name: «expr ≺ »
 local infixl:50 " ≺ " => WellFoundedRelation.R
 
 /-- `sizeof_lt x y` compares the sizes of `x` and `y`. -/
@@ -120,7 +119,7 @@ def ShrinkFn (α : Type _) [SizeOf α] :=
   ∀ x : α, LazyList { y : α // SizeofLt y x }
 #align slim_check.shrink_fn SlimCheck.ShrinkFn
 
-/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`sample] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`sample] [] -/
 /-- `sampleable α` provides ways of creating examples of type `α`,
 and given such an example `x : α`, gives us a way to shrink it
 and find simpler examples.  -/
@@ -135,7 +134,7 @@ attribute [instance 100] hasWellFoundedOfHasSizeof defaultHasSizeof
 
 attribute [instance 200] sampleable.wf
 
-/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`sample] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`sample] [] -/
 /-- `sampleable_functor F` makes it possible to create samples of and
 shrink `F α` given a sampling function and a shrinking function for
 arbitrary `α` -/
@@ -146,7 +145,7 @@ class SampleableFunctor (F : Type u → Type v) [Functor F] where
   pRepr : ∀ α, Repr α → Repr (F α)
 #align slim_check.sampleable_functor SlimCheck.SampleableFunctor
 
-/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`sample] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`sample] [] -/
 /-- `sampleable_bifunctor F` makes it possible to create samples of
 and shrink `F α β` given a sampling function and a shrinking function
 for arbitrary `α` and `β` -/
@@ -165,8 +164,9 @@ unsafe def sampleable.mk_trivial_interp : tactic Unit :=
   tactic.refine ``(id)
 #align slim_check.sampleable.mk_trivial_interp slim_check.sampleable.mk_trivial_interp
 
-/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`interp] [] -/
-/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`sample] [] -/
+#print SlimCheck.SampleableExt /-
+/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`interp] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`sample] [] -/
 /-- `sampleable_ext` generalizes the behavior of `sampleable`
 and makes it possible to express instances for types that
 do not lend themselves to introspection, such as `ℕ → ℕ`.
@@ -184,6 +184,7 @@ class SampleableExt (α : Sort u) where
   sample : Gen proxy_repr
   shrink : ShrinkFn proxy_repr
 #align slim_check.sampleable_ext SlimCheck.SampleableExt
+-/
 
 attribute [instance 100] sampleable_ext.p_repr sampleable_ext.wf
 
@@ -267,6 +268,7 @@ def Nat.shrink' (k : ℕ) :
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print SlimCheck.Nat.shrink /-
 /-- `nat.shrink n` creates a list of smaller natural numbers by
 successively dividing by 2 and subtracting the difference from
 `n`. For example, `nat.shrink 100 = [50, 75, 88, 94, 97, 99]`. -/
@@ -279,6 +281,7 @@ def Nat.shrink (n : ℕ) : List { m : ℕ // WellFoundedRelation.R m n } :=
     ⟨n / 11, this _ (by norm_num)⟩::⟨n / 3, this _ (by norm_num)⟩::Nat.shrink' n n le_rfl []
   else []
 #align slim_check.nat.shrink SlimCheck.Nat.shrink
+-/
 
 open Gen
 
@@ -454,9 +457,11 @@ def sampleableChar (length : Nat) (characters : String) : Sampleable Char
   shrink _ := LazyList.nil
 #align slim_check.sampleable_char SlimCheck.sampleableChar
 
+#print SlimCheck.Char.sampleable /-
 instance Char.sampleable : Sampleable Char :=
   sampleableChar 3 " 0123abcABC:,;`\\/"
 #align slim_check.char.sampleable SlimCheck.Char.sampleable
+-/
 
 variable {α}
 
@@ -889,6 +894,7 @@ instance Perm'.slimCheck {xs : List α} : SlimCheck.Sampleable { ys : List α //
 /- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
 open Tactic
 
+#print SlimCheck.printSamples /-
 /-- Print (at most) 10 samples of a given type to stdout for debugging.
 -/
 def printSamples {t : Type u} [Repr t] (g : Gen t) : Io Unit := do
@@ -899,6 +905,7 @@ def printSamples {t : Type u} [Repr t] (g : Gen t) : Io Unit := do
           pure ⟨xs repr⟩
   xs Io.putStrLn
 #align slim_check.print_samples SlimCheck.printSamples
+-/
 
 /-- Create a `gen α` expression from the argument of `#sample` -/
 unsafe def mk_generator (e : expr) : tactic (expr × expr) := do

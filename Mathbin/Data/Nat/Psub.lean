@@ -112,12 +112,14 @@ theorem psub_eq_sub {m n} (h : n ≤ m) : psub m n = some (m - n) :=
 #align nat.psub_eq_sub Nat.psub_eq_sub
 -/
 
+#print Nat.psub_add /-
 theorem psub_add (m n k) :
     psub m (n + k) = do
       let x ← psub m n
       psub x k :=
   by induction k <;> simp [*, add_succ, bind_assoc]
 #align nat.psub_add Nat.psub_add
+-/
 
 #print Nat.psub' /-
 /-- Same as `psub`, but with a more efficient implementation. -/

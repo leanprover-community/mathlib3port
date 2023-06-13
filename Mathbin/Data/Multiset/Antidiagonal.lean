@@ -115,11 +115,14 @@ theorem antidiagonal_eq_map_powerset [DecidableEq α] (s : Multiset α) :
 #align multiset.antidiagonal_eq_map_powerset Multiset.antidiagonal_eq_map_powerset
 -/
 
+#print Multiset.card_antidiagonal /-
 @[simp]
 theorem card_antidiagonal (s : Multiset α) : card (antidiagonal s) = 2 ^ card s := by
   have := card_powerset s <;> rwa [← antidiagonal_map_fst, card_map] at this 
 #align multiset.card_antidiagonal Multiset.card_antidiagonal
+-/
 
+#print Multiset.prod_map_add /-
 theorem prod_map_add [CommSemiring β] {s : Multiset α} {f g : α → β} :
     prod (s.map fun a => f a + g a) =
       sum ((antidiagonal s).map fun p => (p.1.map f).Prod * (p.2.map g).Prod) :=
@@ -132,6 +135,7 @@ theorem prod_map_add [CommSemiring β] {s : Multiset α} {f g : α → β} :
       sum_map_mul_left.symm]
     cc
 #align multiset.prod_map_add Multiset.prod_map_add
+-/
 
 end Multiset
 

@@ -91,8 +91,10 @@ variable (I J : Box ι) {x y : ι → ℝ}
 instance : Inhabited (Box ι) :=
   ⟨⟨0, 1, fun i => zero_lt_one⟩⟩
 
+#print BoxIntegral.Box.lower_le_upper /-
 theorem lower_le_upper : I.lower ≤ I.upper := fun i => (I.lower_lt_upper i).le
 #align box_integral.box.lower_le_upper BoxIntegral.Box.lower_le_upper
+-/
 
 #print BoxIntegral.Box.lower_ne_upper /-
 theorem lower_ne_upper (i) : I.lower i ≠ I.upper i :=
@@ -106,10 +108,12 @@ instance : Membership (ι → ℝ) (Box ι) :=
 instance : CoeTC (Box ι) (Set <| ι → ℝ) :=
   ⟨fun I => {x | x ∈ I}⟩
 
+#print BoxIntegral.Box.mem_mk /-
 @[simp]
 theorem mem_mk {l u x : ι → ℝ} {H} : x ∈ mk l u H ↔ ∀ i, x i ∈ Ioc (l i) (u i) :=
   Iff.rfl
 #align box_integral.box.mem_mk BoxIntegral.Box.mem_mk
+-/
 
 #print BoxIntegral.Box.mem_coe /-
 @[simp, norm_cast]
@@ -177,6 +181,7 @@ theorem le_def : I ≤ J ↔ ∀ x ∈ I, x ∈ J :=
 #align box_integral.box.le_def BoxIntegral.Box.le_def
 -/
 
+#print BoxIntegral.Box.le_TFAE /-
 theorem le_TFAE :
     TFAE
       [I ≤ J, (I : Set (ι → ℝ)) ⊆ J, Icc I.lower I.upper ⊆ Icc J.lower J.upper,
@@ -190,6 +195,7 @@ theorem le_TFAE :
   tfae_have 4 → 2; exact fun h x hx i => Ioc_subset_Ioc (h.1 i) (h.2 i) (hx i)
   tfae_finish
 #align box_integral.box.le_tfae BoxIntegral.Box.le_TFAE
+-/
 
 variable {I J}
 
@@ -200,9 +206,11 @@ theorem coe_subset_coe : (I : Set (ι → ℝ)) ⊆ J ↔ I ≤ J :=
 #align box_integral.box.coe_subset_coe BoxIntegral.Box.coe_subset_coe
 -/
 
+#print BoxIntegral.Box.le_iff_bounds /-
 theorem le_iff_bounds : I ≤ J ↔ J.lower ≤ I.lower ∧ I.upper ≤ J.upper :=
   (le_TFAE I J).out 0 3
 #align box_integral.box.le_iff_bounds BoxIntegral.Box.le_iff_bounds
+-/
 
 #print BoxIntegral.Box.injective_coe /-
 theorem injective_coe : Injective (coe : Box ι → Set (ι → ℝ)) :=
@@ -228,9 +236,11 @@ theorem ext (H : ∀ x, x ∈ I ↔ x ∈ J) : I = J :=
 #align box_integral.box.ext BoxIntegral.Box.ext
 -/
 
+#print BoxIntegral.Box.ne_of_disjoint_coe /-
 theorem ne_of_disjoint_coe (h : Disjoint (I : Set (ι → ℝ)) J) : I ≠ J :=
   mt coe_inj.2 <| h.Ne I.coe_ne_empty
 #align box_integral.box.ne_of_disjoint_coe BoxIntegral.Box.ne_of_disjoint_coe
+-/
 
 instance : PartialOrder (Box ι) :=
   { PartialOrder.lift (coe : Box ι → Set (ι → ℝ)) injective_coe with le := (· ≤ ·) }
@@ -242,40 +252,58 @@ protected def Icc : Box ι ↪o Set (ι → ℝ) :=
 #align box_integral.box.Icc BoxIntegral.Box.Icc
 -/
 
+#print BoxIntegral.Box.Icc_def /-
 theorem Icc_def : I.Icc = Icc I.lower I.upper :=
   rfl
 #align box_integral.box.Icc_def BoxIntegral.Box.Icc_def
+-/
 
+#print BoxIntegral.Box.upper_mem_Icc /-
 @[simp]
 theorem upper_mem_Icc (I : Box ι) : I.upper ∈ I.Icc :=
   right_mem_Icc.2 I.lower_le_upper
 #align box_integral.box.upper_mem_Icc BoxIntegral.Box.upper_mem_Icc
+-/
 
+#print BoxIntegral.Box.lower_mem_Icc /-
 @[simp]
 theorem lower_mem_Icc (I : Box ι) : I.lower ∈ I.Icc :=
   left_mem_Icc.2 I.lower_le_upper
 #align box_integral.box.lower_mem_Icc BoxIntegral.Box.lower_mem_Icc
+-/
 
+#print BoxIntegral.Box.isCompact_Icc /-
 protected theorem isCompact_Icc (I : Box ι) : IsCompact I.Icc :=
   isCompact_Icc
 #align box_integral.box.is_compact_Icc BoxIntegral.Box.isCompact_Icc
+-/
 
+#print BoxIntegral.Box.Icc_eq_pi /-
 theorem Icc_eq_pi : I.Icc = pi univ fun i => Icc (I.lower i) (I.upper i) :=
   (pi_univ_Icc _ _).symm
 #align box_integral.box.Icc_eq_pi BoxIntegral.Box.Icc_eq_pi
+-/
 
+#print BoxIntegral.Box.le_iff_Icc /-
 theorem le_iff_Icc : I ≤ J ↔ I.Icc ⊆ J.Icc :=
   (le_TFAE I J).out 0 2
 #align box_integral.box.le_iff_Icc BoxIntegral.Box.le_iff_Icc
+-/
 
+#print BoxIntegral.Box.antitone_lower /-
 theorem antitone_lower : Antitone fun I : Box ι => I.lower := fun I J H => (le_iff_bounds.1 H).1
 #align box_integral.box.antitone_lower BoxIntegral.Box.antitone_lower
+-/
 
+#print BoxIntegral.Box.monotone_upper /-
 theorem monotone_upper : Monotone fun I : Box ι => I.upper := fun I J H => (le_iff_bounds.1 H).2
 #align box_integral.box.monotone_upper BoxIntegral.Box.monotone_upper
+-/
 
+#print BoxIntegral.Box.coe_subset_Icc /-
 theorem coe_subset_Icc : ↑I ⊆ I.Icc := fun x hx => ⟨fun i => (hx i).1.le, fun i => (hx i).2⟩
 #align box_integral.box.coe_subset_Icc BoxIntegral.Box.coe_subset_Icc
+-/
 
 /-!
 ### Supremum of two boxes
@@ -306,9 +334,11 @@ In this section we define coercion from `with_bot (box ι)` to `set (ι → ℝ)
 -/
 
 
+#print BoxIntegral.Box.withBotCoe /-
 instance withBotCoe : CoeTC (WithBot (Box ι)) (Set (ι → ℝ)) :=
   ⟨fun o => o.elim ∅ coe⟩
 #align box_integral.box.with_bot_coe BoxIntegral.Box.withBotCoe
+-/
 
 #print BoxIntegral.Box.coe_bot /-
 @[simp, norm_cast]
@@ -338,6 +368,7 @@ theorem biUnion_coe_eq_coe (I : WithBot (Box ι)) :
 #align box_integral.box.bUnion_coe_eq_coe BoxIntegral.Box.biUnion_coe_eq_coe
 -/
 
+#print BoxIntegral.Box.withBotCoe_subset_iff /-
 @[simp, norm_cast]
 theorem withBotCoe_subset_iff {I J : WithBot (Box ι)} : (I : Set (ι → ℝ)) ⊆ J ↔ I ≤ J :=
   by
@@ -345,6 +376,7 @@ theorem withBotCoe_subset_iff {I J : WithBot (Box ι)} : (I : Set (ι → ℝ)) 
   induction J using WithBot.recBotCoe; · simp [subset_empty_iff]
   simp
 #align box_integral.box.with_bot_coe_subset_iff BoxIntegral.Box.withBotCoe_subset_iff
+-/
 
 #print BoxIntegral.Box.withBotCoe_inj /-
 @[simp, norm_cast]
@@ -362,10 +394,12 @@ def mk' (l u : ι → ℝ) : WithBot (Box ι) :=
 #align box_integral.box.mk' BoxIntegral.Box.mk'
 -/
 
+#print BoxIntegral.Box.mk'_eq_bot /-
 @[simp]
 theorem mk'_eq_bot {l u : ι → ℝ} : mk' l u = ⊥ ↔ ∃ i, u i ≤ l i := by rw [mk'];
   split_ifs <;> simpa using h
 #align box_integral.box.mk'_eq_bot BoxIntegral.Box.mk'_eq_bot
+-/
 
 #print BoxIntegral.Box.mk'_eq_coe /-
 @[simp]
@@ -394,6 +428,7 @@ instance : Inf (WithBot (Box ι)) :=
     WithBot.recBotCoe (fun J => ⊥)
       (fun I J => WithBot.recBotCoe ⊥ (fun J => mk' (I.lower ⊔ J.lower) (I.upper ⊓ J.upper)) J) I⟩
 
+#print BoxIntegral.Box.coe_inf /-
 @[simp]
 theorem coe_inf (I J : WithBot (Box ι)) : (↑(I ⊓ J) : Set (ι → ℝ)) = I ∩ J :=
   by
@@ -403,6 +438,7 @@ theorem coe_inf (I J : WithBot (Box ι)) : (↑(I ⊓ J) : Set (ι → ℝ)) = I
   simp only [coe_eq_pi, ← pi_inter_distrib, Ioc_inter_Ioc, Pi.sup_apply, Pi.inf_apply, coe_mk',
     coe_coe]
 #align box_integral.box.coe_inf BoxIntegral.Box.coe_inf
+-/
 
 instance : Lattice (WithBot (Box ι)) :=
   { WithBot.semilatticeSup,
@@ -418,19 +454,25 @@ instance : Lattice (WithBot (Box ι)) :=
       simp only [← with_bot_coe_subset_iff, coe_inf] at *
       exact subset_inter h₁ h₂ }
 
+#print BoxIntegral.Box.disjoint_withBotCoe /-
 @[simp, norm_cast]
 theorem disjoint_withBotCoe {I J : WithBot (Box ι)} : Disjoint (I : Set (ι → ℝ)) J ↔ Disjoint I J :=
   by simp only [disjoint_iff_inf_le, ← with_bot_coe_subset_iff, coe_inf]; rfl
 #align box_integral.box.disjoint_with_bot_coe BoxIntegral.Box.disjoint_withBotCoe
+-/
 
+#print BoxIntegral.Box.disjoint_coe /-
 theorem disjoint_coe : Disjoint (I : WithBot (Box ι)) J ↔ Disjoint (I : Set (ι → ℝ)) J :=
   disjoint_withBotCoe.symm
 #align box_integral.box.disjoint_coe BoxIntegral.Box.disjoint_coe
+-/
 
+#print BoxIntegral.Box.not_disjoint_coe_iff_nonempty_inter /-
 theorem not_disjoint_coe_iff_nonempty_inter :
     ¬Disjoint (I : WithBot (Box ι)) J ↔ (I ∩ J : Set (ι → ℝ)).Nonempty := by
   rw [disjoint_coe, Set.not_disjoint_iff_nonempty_inter]
 #align box_integral.box.not_disjoint_coe_iff_nonempty_inter BoxIntegral.Box.not_disjoint_coe_iff_nonempty_inter
+-/
 
 /-!
 ### Hyperface of a box in `ℝⁿ⁺¹ = fin (n + 1) → ℝ`
@@ -446,11 +488,13 @@ def face {n} (I : Box (Fin (n + 1))) (i : Fin (n + 1)) : Box (Fin n) :=
 #align box_integral.box.face BoxIntegral.Box.face
 -/
 
+#print BoxIntegral.Box.face_mk /-
 @[simp]
 theorem face_mk {n} (l u : Fin (n + 1) → ℝ) (h : ∀ i, l i < u i) (i : Fin (n + 1)) :
     face ⟨l, u, h⟩ i = ⟨l ∘ Fin.succAbove i, u ∘ Fin.succAbove i, fun j => h _⟩ :=
   rfl
 #align box_integral.box.face_mk BoxIntegral.Box.face_mk
+-/
 
 #print BoxIntegral.Box.face_mono /-
 @[mono]
@@ -460,14 +504,18 @@ theorem face_mono {n} {I J : Box (Fin (n + 1))} (h : I ≤ J) (i : Fin (n + 1)) 
 #align box_integral.box.face_mono BoxIntegral.Box.face_mono
 -/
 
+#print BoxIntegral.Box.monotone_face /-
 theorem monotone_face {n} (i : Fin (n + 1)) : Monotone fun I => face I i := fun I J h =>
   face_mono h i
 #align box_integral.box.monotone_face BoxIntegral.Box.monotone_face
+-/
 
+#print BoxIntegral.Box.mapsTo_insertNth_face_Icc /-
 theorem mapsTo_insertNth_face_Icc {n} (I : Box (Fin (n + 1))) {i : Fin (n + 1)} {x : ℝ}
     (hx : x ∈ Icc (I.lower i) (I.upper i)) : MapsTo (i.insertNth x) (I.face i).Icc I.Icc :=
   fun y hy => Fin.insertNth_mem_Icc.2 ⟨hx, hy⟩
 #align box_integral.box.maps_to_insert_nth_face_Icc BoxIntegral.Box.mapsTo_insertNth_face_Icc
+-/
 
 #print BoxIntegral.Box.mapsTo_insertNth_face /-
 theorem mapsTo_insertNth_face {n} (I : Box (Fin (n + 1))) {i : Fin (n + 1)} {x : ℝ}
@@ -477,17 +525,20 @@ theorem mapsTo_insertNth_face {n} (I : Box (Fin (n + 1))) {i : Fin (n + 1)} {x :
 #align box_integral.box.maps_to_insert_nth_face BoxIntegral.Box.mapsTo_insertNth_face
 -/
 
+#print BoxIntegral.Box.continuousOn_face_Icc /-
 theorem continuousOn_face_Icc {X} [TopologicalSpace X] {n} {f : (Fin (n + 1) → ℝ) → X}
     {I : Box (Fin (n + 1))} (h : ContinuousOn f I.Icc) {i : Fin (n + 1)} {x : ℝ}
     (hx : x ∈ Icc (I.lower i) (I.upper i)) : ContinuousOn (f ∘ i.insertNth x) (I.face i).Icc :=
   h.comp (continuousOn_const.fin_insertNth i continuousOn_id) (I.mapsTo_insertNth_face_Icc hx)
 #align box_integral.box.continuous_on_face_Icc BoxIntegral.Box.continuousOn_face_Icc
+-/
 
 /-!
 ### Covering of the interior of a box by a monotone sequence of smaller boxes
 -/
 
 
+#print BoxIntegral.Box.Ioo /-
 /-- The interior of a box. -/
 protected def Ioo : Box ι →o Set (ι → ℝ)
     where
@@ -495,16 +546,20 @@ protected def Ioo : Box ι →o Set (ι → ℝ)
   monotone' I J h :=
     pi_mono fun i hi => Ioo_subset_Ioo ((le_iff_bounds.1 h).1 i) ((le_iff_bounds.1 h).2 i)
 #align box_integral.box.Ioo BoxIntegral.Box.Ioo
+-/
 
 #print BoxIntegral.Box.Ioo_subset_coe /-
 theorem Ioo_subset_coe (I : Box ι) : I.Ioo ⊆ I := fun x hx i => Ioo_subset_Ioc_self (hx i trivial)
 #align box_integral.box.Ioo_subset_coe BoxIntegral.Box.Ioo_subset_coe
 -/
 
+#print BoxIntegral.Box.Ioo_subset_Icc /-
 protected theorem Ioo_subset_Icc (I : Box ι) : I.Ioo ⊆ I.Icc :=
   I.Ioo_subset_coe.trans coe_subset_Icc
 #align box_integral.box.Ioo_subset_Icc BoxIntegral.Box.Ioo_subset_Icc
+-/
 
+#print BoxIntegral.Box.iUnion_Ioo_of_tendsto /-
 theorem iUnion_Ioo_of_tendsto [Finite ι] {I : Box ι} {J : ℕ → Box ι} (hJ : Monotone J)
     (hl : Tendsto (lower ∘ J) atTop (𝓝 I.lower)) (hu : Tendsto (upper ∘ J) atTop (𝓝 I.upper)) :
     (⋃ n, (J n).Ioo) = I.Ioo :=
@@ -521,7 +576,9 @@ theorem iUnion_Ioo_of_tendsto [Finite ι] {I : Box ι} {J : ℕ → Box ι} (hJ 
           (isGLB_of_tendsto_atTop (hl' i) (tendsto_pi_nhds.1 hl _))
           (isLUB_of_tendsto_atTop (hu' i) (tendsto_pi_nhds.1 hu _))
 #align box_integral.box.Union_Ioo_of_tendsto BoxIntegral.Box.iUnion_Ioo_of_tendsto
+-/
 
+#print BoxIntegral.Box.exists_seq_mono_tendsto /-
 theorem exists_seq_mono_tendsto (I : Box ι) :
     ∃ J : ℕ →o Box ι,
       (∀ n, (J n).Icc ⊆ I.Ioo) ∧
@@ -535,6 +592,7 @@ theorem exists_seq_mono_tendsto (I : Box ι) :
       fun n x hx i hi => ⟨(ha_mem _ _).1.trans_le (hx.1 _), (hx.2 _).trans_lt (hb_mem _ _).2⟩,
       tendsto_pi_nhds.2 ha_tendsto, tendsto_pi_nhds.2 hb_tendsto⟩
 #align box_integral.box.exists_seq_mono_tendsto BoxIntegral.Box.exists_seq_mono_tendsto
+-/
 
 section Distortion
 
@@ -549,6 +607,7 @@ def distortion (I : Box ι) : ℝ≥0 :=
 #align box_integral.box.distortion BoxIntegral.Box.distortion
 -/
 
+#print BoxIntegral.Box.distortion_eq_of_sub_eq_div /-
 theorem distortion_eq_of_sub_eq_div {I J : Box ι} {r : ℝ}
     (h : ∀ i, I.upper i - I.lower i = (J.upper i - J.lower i) / r) : distortion I = distortion J :=
   by
@@ -561,7 +620,9 @@ theorem distortion_eq_of_sub_eq_div {I J : Box ι} {r : ℝ}
     exact this.not_lt (sub_pos.2 <| I.lower_lt_upper i)
   simp_rw [NNReal.finset_sup_div, div_div_div_cancel_right _ ((map_ne_zero Real.nnabs).2 this.ne')]
 #align box_integral.box.distortion_eq_of_sub_eq_div BoxIntegral.Box.distortion_eq_of_sub_eq_div
+-/
 
+#print BoxIntegral.Box.nndist_le_distortion_mul /-
 theorem nndist_le_distortion_mul (I : Box ι) (i : ι) :
     nndist I.lower I.upper ≤ I.distortion * nndist (I.lower i) (I.upper i) :=
   calc
@@ -571,7 +632,9 @@ theorem nndist_le_distortion_mul (I : Box ι) (i : ι) :
     _ ≤ I.distortion * nndist (I.lower i) (I.upper i) :=
       mul_le_mul_right' (Finset.le_sup <| Finset.mem_univ i) _
 #align box_integral.box.nndist_le_distortion_mul BoxIntegral.Box.nndist_le_distortion_mul
+-/
 
+#print BoxIntegral.Box.dist_le_distortion_mul /-
 theorem dist_le_distortion_mul (I : Box ι) (i : ι) :
     dist I.lower I.upper ≤ I.distortion * (I.upper i - I.lower i) :=
   by
@@ -579,7 +642,9 @@ theorem dist_le_distortion_mul (I : Box ι) (i : ι) :
   simpa only [← NNReal.coe_le_coe, ← dist_nndist, NNReal.coe_mul, Real.dist_eq, abs_of_neg A,
     neg_sub] using I.nndist_le_distortion_mul i
 #align box_integral.box.dist_le_distortion_mul BoxIntegral.Box.dist_le_distortion_mul
+-/
 
+#print BoxIntegral.Box.diam_Icc_le_of_distortion_le /-
 theorem diam_Icc_le_of_distortion_le (I : Box ι) (i : ι) {c : ℝ≥0} (h : I.distortion ≤ c) :
     diam I.Icc ≤ c * (I.upper i - I.lower i) :=
   have : (0 : ℝ) ≤ c * (I.upper i - I.lower i) :=
@@ -591,6 +656,7 @@ theorem diam_Icc_le_of_distortion_le (I : Box ι) (i : ι) {c : ℝ≥0} (h : I.
       _ ≤ c * (I.upper i - I.lower i) :=
         mul_le_mul_of_nonneg_right h (sub_nonneg.2 (I.lower_le_upper i))
 #align box_integral.box.diam_Icc_le_of_distortion_le BoxIntegral.Box.diam_Icc_le_of_distortion_le
+-/
 
 end Distortion
 

@@ -153,6 +153,7 @@ theorem Compares.inj [Preorder α] {o₁} :
 #align ordering.compares.inj Ordering.Compares.inj
 -/
 
+#print Ordering.compares_iff_of_compares_impl /-
 theorem compares_iff_of_compares_impl {β : Type _} [LinearOrder α] [Preorder β] {a b : α}
     {a' b' : β} (h : ∀ {o}, Compares o a b → Compares o a' b') (o) :
     Compares o a b ↔ Compares o a' b' :=
@@ -167,6 +168,7 @@ theorem compares_iff_of_compares_impl {β : Type _} [LinearOrder α] [Preorder �
     · change compares Ordering.gt a b at hab 
       rwa [ho.inj (h hab)]
 #align ordering.compares_iff_of_compares_impl Ordering.compares_iff_of_compares_impl
+-/
 
 #print Ordering.swap_orElse /-
 theorem swap_orElse (o₁ o₂) : (orElse o₁ o₂).symm = orElse o₁.symm o₂.symm := by
@@ -241,19 +243,23 @@ theorem cmpLE_ofDual [LE α] [@DecidableRel α (· ≤ ·)] (x y : αᵒᵈ) :
 
 /- warning: cmp_to_dual clashes with cmp_le_to_dual -> cmpLE_toDual
 Case conversion may be inaccurate. Consider using '#align cmp_to_dual cmpLE_toDualₓ'. -/
+#print cmpLE_toDual /-
 @[simp]
 theorem cmpLE_toDual [LT α] [@DecidableRel α (· < ·)] (x y : α) :
     cmp (toDual x) (toDual y) = cmp y x :=
   rfl
 #align cmp_to_dual cmpLE_toDual
+-/
 
 /- warning: cmp_of_dual clashes with cmp_le_of_dual -> cmpLE_ofDual
 Case conversion may be inaccurate. Consider using '#align cmp_of_dual cmpLE_ofDualₓ'. -/
+#print cmpLE_ofDual /-
 @[simp]
 theorem cmpLE_ofDual [LT α] [@DecidableRel α (· < ·)] (x y : αᵒᵈ) :
     cmp (ofDual x) (ofDual y) = cmp y x :=
   rfl
 #align cmp_of_dual cmpLE_ofDual
+-/
 
 #print linearOrderOfCompares /-
 /-- Generate a linear order structure from a preorder and `cmp` function. -/
@@ -299,24 +305,32 @@ theorem cmp_self_eq_eq : cmp x x = Ordering.eq := by rw [cmp_eq_eq_iff]
 
 variable {x y} {β : Type _} [LinearOrder β] {x' y' : β}
 
+#print cmp_eq_cmp_symm /-
 theorem cmp_eq_cmp_symm : cmp x y = cmp x' y' ↔ cmp y x = cmp y' x' := by
   rw [← cmp_swap x', ← cmp_swap x, swap_inj]
 #align cmp_eq_cmp_symm cmp_eq_cmp_symm
+-/
 
+#print lt_iff_lt_of_cmp_eq_cmp /-
 theorem lt_iff_lt_of_cmp_eq_cmp (h : cmp x y = cmp x' y') : x < y ↔ x' < y' := by
   rw [← cmp_eq_lt_iff, ← cmp_eq_lt_iff, h]
 #align lt_iff_lt_of_cmp_eq_cmp lt_iff_lt_of_cmp_eq_cmp
+-/
 
+#print le_iff_le_of_cmp_eq_cmp /-
 theorem le_iff_le_of_cmp_eq_cmp (h : cmp x y = cmp x' y') : x ≤ y ↔ x' ≤ y' :=
   by
   rw [← not_lt, ← not_lt]; apply not_congr
   apply lt_iff_lt_of_cmp_eq_cmp; rwa [cmp_eq_cmp_symm]
 #align le_iff_le_of_cmp_eq_cmp le_iff_le_of_cmp_eq_cmp
+-/
 
+#print eq_iff_eq_of_cmp_eq_cmp /-
 theorem eq_iff_eq_of_cmp_eq_cmp (h : cmp x y = cmp x' y') : x = y ↔ x' = y' := by
   rw [le_antisymm_iff, le_antisymm_iff, le_iff_le_of_cmp_eq_cmp h,
     le_iff_le_of_cmp_eq_cmp (cmp_eq_cmp_symm.1 h)]
 #align eq_iff_eq_of_cmp_eq_cmp eq_iff_eq_of_cmp_eq_cmp
+-/
 
 #print LT.lt.cmp_eq_lt /-
 theorem LT.lt.cmp_eq_lt (h : x < y) : cmp x y = Ordering.lt :=

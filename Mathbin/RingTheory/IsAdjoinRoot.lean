@@ -202,8 +202,6 @@ section lift
 
 variable {T : Type _} [CommRing T] {i : R →+* T} {x : T} (hx : f.eval₂ i x = 0)
 
-include hx
-
 /-- Auxiliary lemma for `is_adjoin_root.lift` -/
 theorem eval₂_repr_eq_eval₂_of_map_eq (h : IsAdjoinRoot S f) (z : S) (w : R[X])
     (hzw : h.map w = z) : (h.repr z).eval₂ i x = w.eval₂ i x :=
@@ -266,8 +264,6 @@ theorem eq_lift (h : IsAdjoinRoot S f) (g : S →+* T) (hmap : ∀ a, g (algebra
 #align is_adjoin_root.eq_lift IsAdjoinRoot.eq_lift
 
 variable [Algebra R T] (hx' : aeval x f = 0)
-
-omit hx
 
 variable (x)
 

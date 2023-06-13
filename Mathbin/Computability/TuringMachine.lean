@@ -423,6 +423,7 @@ def ListBlank.modifyNth {Γ} [Inhabited Γ] (f : Γ → Γ) : ℕ → ListBlank 
 #align turing.list_blank.modify_nth Turing.ListBlank.modifyNth
 -/
 
+#print Turing.ListBlank.nth_modifyNth /-
 theorem ListBlank.nth_modifyNth {Γ} [Inhabited Γ] (f : Γ → Γ) (n i) (L : ListBlank Γ) :
     (L.modifyNth f n).get? i = if i = n then f (L.get? i) else L.get? i :=
   by
@@ -436,6 +437,7 @@ theorem ListBlank.nth_modifyNth {Γ} [Inhabited Γ] (f : Γ → Γ) (n i) (L : L
       simp only [list_blank.nth_zero, list_blank.head_cons, list_blank.modify_nth]
     · simp only [IH, list_blank.modify_nth, list_blank.nth_succ, list_blank.tail_cons]
 #align turing.list_blank.nth_modify_nth Turing.ListBlank.nth_modifyNth
+-/
 
 #print Turing.PointedMap /-
 /-- A pointed map of `inhabited` types is a map that sends one default value to the other. -/
@@ -452,23 +454,29 @@ instance {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] : Inhabited (PointedMap Γ Γ')
 instance {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] : CoeFun (PointedMap Γ Γ') fun _ => Γ → Γ' :=
   ⟨PointedMap.f⟩
 
+#print Turing.PointedMap.mk_val /-
 @[simp]
 theorem PointedMap.mk_val {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] (f : Γ → Γ') (pt) :
     (PointedMap.mk f pt : Γ → Γ') = f :=
   rfl
 #align turing.pointed_map.mk_val Turing.PointedMap.mk_val
+-/
 
+#print Turing.PointedMap.map_pt /-
 @[simp]
 theorem PointedMap.map_pt {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] (f : PointedMap Γ Γ') :
     f default = default :=
   PointedMap.map_pt' _
 #align turing.pointed_map.map_pt Turing.PointedMap.map_pt
+-/
 
+#print Turing.PointedMap.headI_map /-
 @[simp]
 theorem PointedMap.headI_map {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] (f : PointedMap Γ Γ')
     (l : List Γ) : (l.map f).headI = f l.headI := by
   cases l <;> [exact (pointed_map.map_pt f).symm; rfl]
 #align turing.pointed_map.head_map Turing.PointedMap.headI_map
+-/
 
 #print Turing.ListBlank.map /-
 /-- The `map` function on lists is well defined on `list_blank`s provided that the map is
@@ -482,12 +490,15 @@ def ListBlank.map {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] (f : PointedMap Γ Γ'
 #align turing.list_blank.map Turing.ListBlank.map
 -/
 
+#print Turing.ListBlank.map_mk /-
 @[simp]
 theorem ListBlank.map_mk {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] (f : PointedMap Γ Γ') (l : List Γ) :
     (ListBlank.mk l).map f = ListBlank.mk (l.map f) :=
   rfl
 #align turing.list_blank.map_mk Turing.ListBlank.map_mk
+-/
 
+#print Turing.ListBlank.head_map /-
 @[simp]
 theorem ListBlank.head_map {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] (f : PointedMap Γ Γ')
     (l : ListBlank Γ) : (l.map f).headI = f l.headI :=
@@ -497,7 +508,9 @@ theorem ListBlank.head_map {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] (f : PointedM
     rw [← list_blank.cons_head_tail l]
   exact Quotient.inductionOn' l fun a => rfl
 #align turing.list_blank.head_map Turing.ListBlank.head_map
+-/
 
+#print Turing.ListBlank.tail_map /-
 @[simp]
 theorem ListBlank.tail_map {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] (f : PointedMap Γ Γ')
     (l : ListBlank Γ) : (l.map f).tail = l.tail.map f :=
@@ -507,7 +520,9 @@ theorem ListBlank.tail_map {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] (f : PointedM
     rw [← list_blank.cons_head_tail l]
   exact Quotient.inductionOn' l fun a => rfl
 #align turing.list_blank.tail_map Turing.ListBlank.tail_map
+-/
 
+#print Turing.ListBlank.map_cons /-
 @[simp]
 theorem ListBlank.map_cons {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] (f : PointedMap Γ Γ')
     (l : ListBlank Γ) (a : Γ) : (l.cons a).map f = (l.map f).cons (f a) :=
@@ -515,7 +530,9 @@ theorem ListBlank.map_cons {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] (f : PointedM
   refine' (list_blank.cons_head_tail _).symm.trans _
   simp only [list_blank.head_map, list_blank.head_cons, list_blank.tail_map, list_blank.tail_cons]
 #align turing.list_blank.map_cons Turing.ListBlank.map_cons
+-/
 
+#print Turing.ListBlank.nth_map /-
 @[simp]
 theorem ListBlank.nth_map {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] (f : PointedMap Γ Γ')
     (l : ListBlank Γ) (n : ℕ) : (l.map f).get? n = f (l.get? n) :=
@@ -525,6 +542,7 @@ theorem ListBlank.nth_map {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] (f : PointedMa
       simp only [List.get?_map, list_blank.map_mk, list_blank.nth_mk, List.getI_eq_iget_get?]
       cases l.nth n; · exact f.2.symm; · rfl)
 #align turing.list_blank.nth_map Turing.ListBlank.nth_map
+-/
 
 #print Turing.proj /-
 /-- The `i`-th projection as a pointed map. -/
@@ -534,10 +552,13 @@ def proj {ι : Type _} {Γ : ι → Type _} [∀ i, Inhabited (Γ i)] (i : ι) :
 #align turing.proj Turing.proj
 -/
 
+#print Turing.proj_map_nth /-
 theorem proj_map_nth {ι : Type _} {Γ : ι → Type _} [∀ i, Inhabited (Γ i)] (i : ι) (L n) :
     (ListBlank.map (@proj ι Γ _ i) L).get? n = L.get? n i := by rw [list_blank.nth_map] <;> rfl
 #align turing.proj_map_nth Turing.proj_map_nth
+-/
 
+#print Turing.ListBlank.map_modifyNth /-
 theorem ListBlank.map_modifyNth {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] (F : PointedMap Γ Γ')
     (f : Γ → Γ) (f' : Γ' → Γ') (H : ∀ x, F (f x) = f' (F x)) (n) (L : ListBlank Γ) :
     (L.modifyNth f n).map F = (L.map F).modifyNth f' n := by
@@ -545,6 +566,7 @@ theorem ListBlank.map_modifyNth {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] (F : Poi
     simp only [*, list_blank.head_map, list_blank.modify_nth, list_blank.map_cons,
       list_blank.tail_map]
 #align turing.list_blank.map_modify_nth Turing.ListBlank.map_modifyNth
+-/
 
 #print Turing.ListBlank.append /-
 /-- Append a list on the left side of a list_blank. -/
@@ -586,12 +608,15 @@ def ListBlank.bind {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] (l : ListBlank Γ) (f
 #align turing.list_blank.bind Turing.ListBlank.bind
 -/
 
+#print Turing.ListBlank.bind_mk /-
 @[simp]
 theorem ListBlank.bind_mk {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] (l : List Γ) (f : Γ → List Γ') (hf) :
     (ListBlank.mk l).bind f hf = ListBlank.mk (l.bind f) :=
   rfl
 #align turing.list_blank.bind_mk Turing.ListBlank.bind_mk
+-/
 
+#print Turing.ListBlank.cons_bind /-
 @[simp]
 theorem ListBlank.cons_bind {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] (a : Γ) (l : ListBlank Γ)
     (f : Γ → List Γ') (hf) : (l.cons a).bind f hf = (l.bind f hf).append (f a) :=
@@ -599,6 +624,7 @@ theorem ListBlank.cons_bind {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] (a : Γ) (l 
     intro <;>
       simp only [list_blank.append_mk, list_blank.bind_mk, list_blank.cons_mk, List.cons_bind]
 #align turing.list_blank.cons_bind Turing.ListBlank.cons_bind
+-/
 
 #print Turing.Tape /-
 /-- The tape of a Turing machine is composed of a head element (which we imagine to be the
@@ -827,6 +853,7 @@ theorem Tape.write_self {Γ} [Inhabited Γ] : ∀ T : Tape Γ, T.write T.1 = T :
 #align turing.tape.write_self Turing.Tape.write_self
 -/
 
+#print Turing.Tape.write_nth /-
 @[simp]
 theorem Tape.write_nth {Γ} [Inhabited Γ] (b : Γ) :
     ∀ (T : Tape Γ) {i : ℤ}, (T.write b).get? i = if i = 0 then b else T.get? i
@@ -834,6 +861,7 @@ theorem Tape.write_nth {Γ} [Inhabited Γ] (b : Γ) :
   | ⟨a, L, R⟩, (n + 1 : ℕ) => rfl
   | ⟨a, L, R⟩, -[n+1] => rfl
 #align turing.tape.write_nth Turing.Tape.write_nth
+-/
 
 #print Turing.Tape.write_mk' /-
 @[simp]
@@ -851,15 +879,19 @@ def Tape.map {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] (f : PointedMap Γ Γ') (T 
 #align turing.tape.map Turing.Tape.map
 -/
 
+#print Turing.Tape.map_fst /-
 @[simp]
 theorem Tape.map_fst {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] (f : PointedMap Γ Γ') :
     ∀ T : Tape Γ, (T.map f).1 = f T.1 := by rintro ⟨⟩ <;> rfl
 #align turing.tape.map_fst Turing.Tape.map_fst
+-/
 
+#print Turing.Tape.map_write /-
 @[simp]
 theorem Tape.map_write {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] (f : PointedMap Γ Γ') (b : Γ) :
     ∀ T : Tape Γ, (T.write b).map f = (T.map f).write (f b) := by rintro ⟨⟩ <;> rfl
 #align turing.tape.map_write Turing.Tape.map_write
+-/
 
 #print Turing.Tape.write_move_right_n /-
 @[simp]
@@ -875,28 +907,36 @@ theorem Tape.write_move_right_n {Γ} [Inhabited Γ] (f : Γ → Γ) (L R : ListB
 #align turing.tape.write_move_right_n Turing.Tape.write_move_right_n
 -/
 
+#print Turing.Tape.map_move /-
 theorem Tape.map_move {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] (f : PointedMap Γ Γ') (T : Tape Γ) (d) :
     (T.move d).map f = (T.map f).move d := by
   cases T <;> cases d <;>
     simp only [tape.move, tape.map, list_blank.head_map, eq_self_iff_true, list_blank.map_cons,
       and_self_iff, list_blank.tail_map]
 #align turing.tape.map_move Turing.Tape.map_move
+-/
 
+#print Turing.Tape.map_mk' /-
 theorem Tape.map_mk' {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] (f : PointedMap Γ Γ') (L R : ListBlank Γ) :
     (Tape.mk' L R).map f = Tape.mk' (L.map f) (R.map f) := by
   simp only [tape.mk', tape.map, list_blank.head_map, eq_self_iff_true, and_self_iff,
     list_blank.tail_map]
 #align turing.tape.map_mk' Turing.Tape.map_mk'
+-/
 
+#print Turing.Tape.map_mk₂ /-
 theorem Tape.map_mk₂ {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] (f : PointedMap Γ Γ') (L R : List Γ) :
     (Tape.mk₂ L R).map f = Tape.mk₂ (L.map f) (R.map f) := by
   simp only [tape.mk₂, tape.map_mk', list_blank.map_mk]
 #align turing.tape.map_mk₂ Turing.Tape.map_mk₂
+-/
 
+#print Turing.Tape.map_mk₁ /-
 theorem Tape.map_mk₁ {Γ Γ'} [Inhabited Γ] [Inhabited Γ'] (f : PointedMap Γ Γ') (l : List Γ) :
     (Tape.mk₁ l).map f = Tape.mk₁ (l.map f) :=
   Tape.map_mk₂ _ _ _
 #align turing.tape.map_mk₁ Turing.Tape.map_mk₁
+-/
 
 #print Turing.eval /-
 /-- Run a state transition function `σ → option σ` "to completion". The return value is the last
@@ -1097,6 +1137,7 @@ def Respects {σ₁ σ₂} (f₁ : σ₁ → Option σ₁) (f₂ : σ₂ → Opt
 #align turing.respects Turing.Respects
 -/
 
+#print Turing.tr_reaches₁ /-
 theorem tr_reaches₁ {σ₁ σ₂ f₁ f₂} {tr : σ₁ → σ₂ → Prop} (H : Respects f₁ f₂ tr) {a₁ a₂}
     (aa : tr a₁ a₂) {b₁} (ab : Reaches₁ f₁ a₁ b₁) : ∃ b₂, tr b₁ b₂ ∧ Reaches₁ f₂ a₂ b₂ :=
   by
@@ -1109,7 +1150,9 @@ theorem tr_reaches₁ {σ₁ σ₂ f₁ f₂} {tr : σ₁ → σ₂ → Prop} (H
     rcases this with ⟨d₂, dd, cd₂⟩
     exact ⟨_, dd, ac₂.trans cd₂⟩
 #align turing.tr_reaches₁ Turing.tr_reaches₁
+-/
 
+#print Turing.tr_reaches /-
 theorem tr_reaches {σ₁ σ₂ f₁ f₂} {tr : σ₁ → σ₂ → Prop} (H : Respects f₁ f₂ tr) {a₁ a₂}
     (aa : tr a₁ a₂) {b₁} (ab : Reaches f₁ a₁ b₁) : ∃ b₂, tr b₁ b₂ ∧ Reaches f₂ a₂ b₂ :=
   by
@@ -1120,7 +1163,9 @@ theorem tr_reaches {σ₁ σ₂ f₁ f₂} {tr : σ₁ → σ₂ → Prop} (H : 
       let ⟨b₂, bb, h⟩ := tr_reaches₁ H aa ab
       ⟨b₂, bb, h.to_reflTransGen⟩
 #align turing.tr_reaches Turing.tr_reaches
+-/
 
+#print Turing.tr_reaches_rev /-
 theorem tr_reaches_rev {σ₁ σ₂ f₁ f₂} {tr : σ₁ → σ₂ → Prop} (H : Respects f₁ f₂ tr) {a₁ a₂}
     (aa : tr a₁ a₂) {b₂} (ab : Reaches f₂ a₂ b₂) :
     ∃ c₁ c₂, Reaches f₂ b₂ c₂ ∧ tr c₁ c₂ ∧ Reaches f₁ a₁ c₁ :=
@@ -1139,7 +1184,9 @@ theorem tr_reaches_rev {σ₁ σ₂ f₁ f₂} {tr : σ₁ → σ₂ → Prop} (
     · cases Option.mem_unique cd cd'
       exact ⟨_, _, de, ee, ae⟩
 #align turing.tr_reaches_rev Turing.tr_reaches_rev
+-/
 
+#print Turing.tr_eval /-
 theorem tr_eval {σ₁ σ₂ f₁ f₂} {tr : σ₁ → σ₂ → Prop} (H : Respects f₁ f₂ tr) {a₁ b₁ a₂}
     (aa : tr a₁ a₂) (ab : b₁ ∈ eval f₁ a₁) : ∃ b₂, tr b₁ b₂ ∧ b₂ ∈ eval f₂ a₂ :=
   by
@@ -1148,7 +1195,9 @@ theorem tr_eval {σ₁ σ₂ f₁ f₂} {tr : σ₁ → σ₂ → Prop} (H : Res
   refine' ⟨_, bb, mem_eval.2 ⟨ab, _⟩⟩
   have := H bb; rwa [b0] at this 
 #align turing.tr_eval Turing.tr_eval
+-/
 
+#print Turing.tr_eval_rev /-
 theorem tr_eval_rev {σ₁ σ₂ f₁ f₂} {tr : σ₁ → σ₂ → Prop} (H : Respects f₁ f₂ tr) {a₁ b₂ a₂}
     (aa : tr a₁ a₂) (ab : b₂ ∈ eval f₂ a₂) : ∃ b₁, tr b₁ b₂ ∧ b₁ ∈ eval f₁ a₁ :=
   by
@@ -1161,7 +1210,9 @@ theorem tr_eval_rev {σ₁ σ₂ f₁ f₂} {tr : σ₁ → σ₂ → Prop} (H :
   rcases trans_gen.head'_iff.1 bd with ⟨e, h, _⟩
   cases b0.symm.trans h
 #align turing.tr_eval_rev Turing.tr_eval_rev
+-/
 
+#print Turing.tr_eval_dom /-
 theorem tr_eval_dom {σ₁ σ₂ f₁ f₂} {tr : σ₁ → σ₂ → Prop} (H : Respects f₁ f₂ tr) {a₁ a₂}
     (aa : tr a₁ a₂) : (eval f₂ a₂).Dom ↔ (eval f₁ a₁).Dom :=
   ⟨fun h =>
@@ -1171,6 +1222,7 @@ theorem tr_eval_dom {σ₁ σ₂ f₁ f₂} {tr : σ₁ → σ₂ → Prop} (H :
     let ⟨b₂, tr, h, _⟩ := tr_eval H aa ⟨h, rfl⟩
     h⟩
 #align turing.tr_eval_dom Turing.tr_eval_dom
+-/
 
 #print Turing.FRespects /-
 /-- A simpler version of `respects` when the state transition relation `tr` is a function. -/
@@ -1180,18 +1232,23 @@ def FRespects {σ₁ σ₂} (f₂ : σ₂ → Option σ₂) (tr : σ₁ → σ�
 #align turing.frespects Turing.FRespects
 -/
 
+#print Turing.frespects_eq /-
 theorem frespects_eq {σ₁ σ₂} {f₂ : σ₂ → Option σ₂} {tr : σ₁ → σ₂} {a₂ b₂} (h : f₂ a₂ = f₂ b₂) :
     ∀ {b₁}, FRespects f₂ tr a₂ b₁ ↔ FRespects f₂ tr b₂ b₁
   | some b₁ => reaches₁_eq h
   | none => by unfold frespects <;> rw [h]
 #align turing.frespects_eq Turing.frespects_eq
+-/
 
+#print Turing.fun_respects /-
 theorem fun_respects {σ₁ σ₂ f₁ f₂} {tr : σ₁ → σ₂} :
     (Respects f₁ f₂ fun a b => tr a = b) ↔ ∀ ⦃a₁⦄, FRespects f₂ tr (tr a₁) (f₁ a₁) :=
   forall_congr' fun a₁ => by
     cases f₁ a₁ <;> simp only [frespects, respects, exists_eq_left', forall_eq']
 #align turing.fun_respects Turing.fun_respects
+-/
 
+#print Turing.tr_eval' /-
 theorem tr_eval' {σ₁ σ₂} (f₁ : σ₁ → Option σ₁) (f₂ : σ₂ → Option σ₂) (tr : σ₁ → σ₂)
     (H : Respects f₁ f₂ fun a b => tr a = b) (a₁) : eval f₂ (tr a₁) = tr <$> eval f₁ a₁ :=
   Part.ext fun b₂ =>
@@ -1203,6 +1260,7 @@ theorem tr_eval' {σ₁ σ₂} (f₁ : σ₁ → Option σ₁) (f₂ : σ₂ →
       rcases tr_eval H rfl ab with ⟨_, rfl, h⟩
       rwa [bb] at h ⟩
 #align turing.tr_eval' Turing.tr_eval'
+-/
 
 /-!
 ## The TM0 model
@@ -1238,6 +1296,7 @@ parameter (Γ : Type _) [Inhabited Γ]
 -- type of tape symbols
 parameter (Λ : Type _) [Inhabited Λ]
 
+#print Turing.TM0.Stmt /-
 -- type of "labels" or TM states
 /-- A Turing machine "statement" is just a command to either move
   left or right, or write a symbol on the tape. -/
@@ -1245,6 +1304,7 @@ inductive Stmt
   | move : Dir → stmt
   | write : Γ → stmt
 #align turing.TM0.stmt Turing.TM0.Stmt
+-/
 
 #print Turing.TM0.Stmt.inhabited /-
 instance Stmt.inhabited : Inhabited stmt :=
@@ -1252,6 +1312,7 @@ instance Stmt.inhabited : Inhabited stmt :=
 #align turing.TM0.stmt.inhabited Turing.TM0.Stmt.inhabited
 -/
 
+#print Turing.TM0.Machine /-
 -- [inhabited Λ]: this is a deliberate addition, see comment
 /-- A Post-Turing machine with symbol type `Γ` and label type `Λ`
   is a function which, given the current state `q : Λ` and
@@ -1266,10 +1327,14 @@ instance Stmt.inhabited : Inhabited stmt :=
 def Machine :=
   Λ → Γ → Option (Λ × stmt)
 #align turing.TM0.machine Turing.TM0.Machine
+-/
 
+#print Turing.TM0.Machine.inhabited /-
 instance Machine.inhabited : Inhabited machine := by unfold machine <;> infer_instance
 #align turing.TM0.machine.inhabited Turing.TM0.Machine.inhabited
+-/
 
+#print Turing.TM0.Cfg /-
 /-- The configuration state of a Turing machine during operation
   consists of a label (machine state), and a tape, represented in
   the form `(a, L, R)` meaning the tape looks like `L.rev ++ [a] ++ R`
@@ -1279,6 +1344,7 @@ structure Cfg where
   q : Λ
   Tape : Tape Γ
 #align turing.TM0.cfg Turing.TM0.Cfg
+-/
 
 #print Turing.TM0.Cfg.inhabited /-
 instance Cfg.inhabited : Inhabited cfg :=
@@ -1323,6 +1389,7 @@ def eval (M : machine) (l : List Γ) : Part (ListBlank Γ) :=
 #align turing.TM0.eval Turing.TM0.eval
 -/
 
+#print Turing.TM0.Supports /-
 /-- The raw definition of a Turing machine does not require that
   `Γ` and `Λ` are finite, and in practice we will be interested
   in the infinite `Λ` case. We recover instead a notion of
@@ -1333,7 +1400,9 @@ def eval (M : machine) (l : List Γ) : Part (ListBlank Γ) :=
 def Supports (M : machine) (S : Set Λ) :=
   default ∈ S ∧ ∀ {q a q' s}, (q', s) ∈ M q a → q ∈ S → q' ∈ S
 #align turing.TM0.supports Turing.TM0.Supports
+-/
 
+#print Turing.TM0.step_supports /-
 theorem step_supports (M : machine) {S} (ss : supports M S) :
     ∀ {c c' : cfg}, c' ∈ step M c → c.q ∈ S → c'.q ∈ S
   | ⟨q, T⟩, c', h₁, h₂ =>
@@ -1341,10 +1410,13 @@ theorem step_supports (M : machine) {S} (ss : supports M S) :
     rcases Option.map_eq_some'.1 h₁ with ⟨⟨q', a⟩, h, rfl⟩
     exact ss.2 h h₂
 #align turing.TM0.step_supports Turing.TM0.step_supports
+-/
 
+#print Turing.TM0.univ_supports /-
 theorem univ_supports (M : machine) : supports M Set.univ :=
   ⟨trivial, fun q a q' s h₁ h₂ => trivial⟩
 #align turing.TM0.univ_supports Turing.TM0.univ_supports
+-/
 
 end
 
@@ -1367,11 +1439,13 @@ def Stmt.map (f : PointedMap Γ Γ') : Stmt Γ → Stmt Γ'
 #align turing.TM0.stmt.map Turing.TM0.Stmt.map
 -/
 
+#print Turing.TM0.Cfg.map /-
 /-- Map a configuration across a function, given `f : Γ → Γ'` a map of the alphabets and
 `g : Λ → Λ'` a map of the machine states. -/
 def Cfg.map (f : PointedMap Γ Γ') (g : Λ → Λ') : Cfg Γ Λ → Cfg Γ' Λ'
   | ⟨q, T⟩ => ⟨g q, T.map f⟩
 #align turing.TM0.cfg.map Turing.TM0.Cfg.map
+-/
 
 variable (M : Machine Γ Λ) (f₁ : PointedMap Γ Γ') (f₂ : PointedMap Γ' Γ) (g₁ : Λ → Λ') (g₂ : Λ' → Λ)
 
@@ -1384,6 +1458,7 @@ def Machine.map : Machine Γ' Λ'
 #align turing.TM0.machine.map Turing.TM0.Machine.map
 -/
 
+#print Turing.TM0.Machine.map_step /-
 theorem Machine.map_step {S : Set Λ} (f₂₁ : Function.RightInverse f₁ f₂)
     (g₂₁ : ∀ q ∈ S, g₂ (g₁ q) = q) :
     ∀ c : Cfg Γ Λ,
@@ -1395,11 +1470,15 @@ theorem Machine.map_step {S : Set Λ} (f₂₁ : Function.RightInverse f₁ f₂
     · simp only [step, cfg.map, Option.map_some', tape.map_move f₁]; rfl
     · simp only [step, cfg.map, Option.map_some', tape.map_write]; rfl
 #align turing.TM0.machine.map_step Turing.TM0.Machine.map_step
+-/
 
+#print Turing.TM0.map_init /-
 theorem map_init (g₁ : PointedMap Λ Λ') (l : List Γ) : (init l).map f₁ g₁ = init (l.map f₁) :=
   congr (congr_arg Cfg.mk g₁.map_pt) (Tape.map_mk₁ _ _)
 #align turing.TM0.map_init Turing.TM0.map_init
+-/
 
+#print Turing.TM0.Machine.map_respects /-
 theorem Machine.map_respects (g₁ : PointedMap Λ Λ') (g₂ : Λ' → Λ) {S} (ss : Supports M S)
     (f₂₁ : Function.RightInverse f₁ f₂) (g₂₁ : ∀ q ∈ S, g₂ (g₁ q) = q) :
     Respects (step M) (step (M.map f₁ f₂ g₁ g₂)) fun a b => a.q ∈ S ∧ Cfg.map f₁ g₁ a = b
@@ -1409,6 +1488,7 @@ theorem Machine.map_respects (g₁ : PointedMap Λ Λ') (g₂ : Λ' → Λ) {S} 
     · refine' ⟨_, ⟨step_supports M ss e cs, rfl⟩, trans_gen.single _⟩
       rw [← M.map_step f₁ f₂ g₁ g₂ f₂₁ g₂₁ _ cs, e]; exact rfl
 #align turing.TM0.machine.map_respects Turing.TM0.Machine.map_respects
+-/
 
 end
 
@@ -1456,6 +1536,7 @@ parameter (Λ : Type _)
 -- Type of function labels
 parameter (σ : Type _)
 
+#print Turing.TM1.Stmt /-
 -- Type of variable settings
 /-- The TM1 model is a simplification and extension of TM0
   (Post-Turing model) in the direction of Wang B-machines. The machine's
@@ -1477,12 +1558,15 @@ inductive Stmt
   | goto : (Γ → σ → Λ) → stmt
   | halt : stmt
 #align turing.TM1.stmt Turing.TM1.Stmt
+-/
 
 open Stmt
 
+#print Turing.TM1.Stmt.inhabited /-
 instance Stmt.inhabited : Inhabited stmt :=
   ⟨halt⟩
 #align turing.TM1.stmt.inhabited Turing.TM1.Stmt.inhabited
+-/
 
 #print Turing.TM1.Cfg /-
 /-- The configuration of a TM1 machine is given by the currently
@@ -1522,6 +1606,7 @@ def step (M : Λ → stmt) : cfg → Option cfg
 #align turing.TM1.step Turing.TM1.step
 -/
 
+#print Turing.TM1.SupportsStmt /-
 /-- A set `S` of labels supports the statement `q` if all the `goto`
   statements in `q` refer only to other functions in `S`. -/
 def SupportsStmt (S : Finset Λ) : stmt → Prop
@@ -1532,9 +1617,11 @@ def SupportsStmt (S : Finset Λ) : stmt → Prop
   | goto l => ∀ a v, l a v ∈ S
   | halt => True
 #align turing.TM1.supports_stmt Turing.TM1.SupportsStmt
+-/
 
 open scoped Classical
 
+#print Turing.TM1.stmts₁ /-
 /-- The subterm closure of a statement. -/
 noncomputable def stmts₁ : stmt → Finset stmt
   | Q@(move d q) => insert Q (stmts₁ q)
@@ -1543,11 +1630,15 @@ noncomputable def stmts₁ : stmt → Finset stmt
   | Q@(branch p q₁ q₂) => insert Q (stmts₁ q₁ ∪ stmts₁ q₂)
   | Q => {Q}
 #align turing.TM1.stmts₁ Turing.TM1.stmts₁
+-/
 
+#print Turing.TM1.stmts₁_self /-
 theorem stmts₁_self {q} : q ∈ stmts₁ q := by
   cases q <;> apply_rules [Finset.mem_insert_self, Finset.mem_singleton_self]
 #align turing.TM1.stmts₁_self Turing.TM1.stmts₁_self
+-/
 
+#print Turing.TM1.stmts₁_trans /-
 theorem stmts₁_trans {q₁ q₂} : q₁ ∈ stmts₁ q₂ → stmts₁ q₁ ⊆ stmts₁ q₂ :=
   by
   intro h₁₂ q₀ h₀₁
@@ -1565,7 +1656,9 @@ theorem stmts₁_trans {q₁ q₂} : q₁ ∈ stmts₁ q₂ → stmts₁ q₁ �
   case goto l => subst h₁₂; exact h₀₁
   case halt => subst h₁₂; exact h₀₁
 #align turing.TM1.stmts₁_trans Turing.TM1.stmts₁_trans
+-/
 
+#print Turing.TM1.stmts₁_supportsStmt_mono /-
 theorem stmts₁_supportsStmt_mono {S q₁ q₂} (h : q₁ ∈ stmts₁ q₂) (hs : supports_stmt S q₂) :
     supports_stmt S q₁ :=
   by
@@ -1577,36 +1670,46 @@ theorem stmts₁_supportsStmt_mono {S q₁ q₂} (h : q₁ ∈ stmts₁ q₂) (h
   case goto l => subst h; exact hs
   case halt => subst h; trivial
 #align turing.TM1.stmts₁_supports_stmt_mono Turing.TM1.stmts₁_supportsStmt_mono
+-/
 
+#print Turing.TM1.stmts /-
 /-- The set of all statements in a turing machine, plus one extra value `none` representing the
 halt state. This is used in the TM1 to TM0 reduction. -/
 noncomputable def stmts (M : Λ → stmt) (S : Finset Λ) : Finset (Option stmt) :=
   (S.biUnion fun q => stmts₁ (M q)).insertNone
 #align turing.TM1.stmts Turing.TM1.stmts
+-/
 
+#print Turing.TM1.stmts_trans /-
 theorem stmts_trans {M : Λ → stmt} {S q₁ q₂} (h₁ : q₁ ∈ stmts₁ q₂) :
     some q₂ ∈ stmts M S → some q₁ ∈ stmts M S := by
   simp only [stmts, Finset.mem_insertNone, Finset.mem_biUnion, Option.mem_def, forall_eq',
       exists_imp] <;>
     exact fun l ls h₂ => ⟨_, ls, stmts₁_trans h₂ h₁⟩
 #align turing.TM1.stmts_trans Turing.TM1.stmts_trans
+-/
 
 variable [Inhabited Λ]
 
+#print Turing.TM1.Supports /-
 /-- A set `S` of labels supports machine `M` if all the `goto`
   statements in the functions in `S` refer only to other functions
   in `S`. -/
 def Supports (M : Λ → stmt) (S : Finset Λ) :=
   default ∈ S ∧ ∀ q ∈ S, supports_stmt S (M q)
 #align turing.TM1.supports Turing.TM1.Supports
+-/
 
+#print Turing.TM1.stmts_supportsStmt /-
 theorem stmts_supportsStmt {M : Λ → stmt} {S q} (ss : supports M S) :
     some q ∈ stmts M S → supports_stmt S q := by
   simp only [stmts, Finset.mem_insertNone, Finset.mem_biUnion, Option.mem_def, forall_eq',
       exists_imp] <;>
     exact fun l ls h => stmts₁_supports_stmt_mono h (ss.2 _ ls)
 #align turing.TM1.stmts_supports_stmt Turing.TM1.stmts_supportsStmt
+-/
 
+#print Turing.TM1.step_supports /-
 theorem step_supports (M : Λ → stmt) {S} (ss : supports M S) :
     ∀ {c c' : cfg}, c' ∈ step M c → c.l ∈ S.insertNone → c'.l ∈ S.insertNone
   | ⟨some l₁, v, T⟩, c', h₁, h₂ =>
@@ -1622,6 +1725,7 @@ theorem step_supports (M : Λ → stmt) {S} (ss : supports M S) :
     case goto => exact Finset.some_mem_insertNone.2 (hs _ _)
     case halt => apply Multiset.mem_cons_self
 #align turing.TM1.step_supports Turing.TM1.step_supports
+-/
 
 variable [Inhabited σ]
 
@@ -1674,19 +1778,15 @@ parameter {Λ : Type _} [Inhabited Λ]
 
 parameter {σ : Type _} [Inhabited σ]
 
--- mathport name: exprstmt₁
 local notation "stmt₁" => TM1.Stmt Γ Λ σ
 
--- mathport name: exprcfg₁
 local notation "cfg₁" => TM1.Cfg Γ Λ σ
 
--- mathport name: exprstmt₀
 local notation "stmt₀" => TM0.Stmt Γ
 
 parameter (M : Λ → stmt₁)
 
-include M
-
+#print Turing.TM1to0.Λ' /-
 -- [inhabited Λ] [inhabited σ] (M : Λ → stmt₁): We need the M assumption
 -- because of the inhabited instance, but we could avoid the inhabited instances on Λ and σ here.
 -- But they are parameters so we cannot easily skip them for just this definition.
@@ -1699,12 +1799,14 @@ reachable. -/
 def Λ' :=
   Option stmt₁ × σ
 #align turing.TM1to0.Λ' Turing.TM1to0.Λ'
+-/
 
 instance : Inhabited Λ' :=
   ⟨(some (M default), default)⟩
 
 open TM0.Stmt
 
+#print Turing.TM1to0.trAux /-
 /-- The core TM1 → TM0 translation function. Here `s` is the current value on the tape, and the
 `stmt₁` is the TM1 statement to translate, with local state `v : σ`. We evaluate all regular
 instructions recursively until we reach either a `move` or `write` command, or a `goto`; in the
@@ -1717,20 +1819,24 @@ def trAux (s : Γ) : stmt₁ → σ → Λ' × stmt₀
   | TM1.stmt.goto l, v => ((some (M (l s v)), v), write s)
   | TM1.stmt.halt, v => ((none, v), write s)
 #align turing.TM1to0.tr_aux Turing.TM1to0.trAux
+-/
 
--- mathport name: exprcfg₀
 local notation "cfg₀" => TM0.Cfg Γ Λ'
 
+#print Turing.TM1to0.tr /-
 /-- The translated TM0 machine (given the TM1 machine input). -/
 def tr : TM0.Machine Γ Λ'
   | (none, v), s => none
   | (some q, v), s => some (tr_aux s q v)
 #align turing.TM1to0.tr Turing.TM1to0.tr
+-/
 
+#print Turing.TM1to0.trCfg /-
 /-- Translate configurations from TM1 to TM0. -/
 def trCfg : cfg₁ → cfg₀
   | ⟨l, v, T⟩ => ⟨(l.map M, v), T⟩
 #align turing.TM1to0.tr_cfg Turing.TM1to0.trCfg
+-/
 
 #print Turing.TM1to0.tr_respects /-
 theorem tr_respects : Respects (TM1.step M) (TM0.step tr) fun c₁ c₂ => tr_cfg c₁ = c₂ :=
@@ -1750,26 +1856,31 @@ theorem tr_respects : Respects (TM1.step M) (TM0.step tr) fun c₁ c₂ => tr_cf
 #align turing.TM1to0.tr_respects Turing.TM1to0.tr_respects
 -/
 
+#print Turing.TM1to0.tr_eval /-
 theorem tr_eval (l : List Γ) : TM0.eval tr l = TM1.eval M l :=
   (congr_arg _ (tr_eval' _ _ _ tr_respects ⟨some _, _, _⟩)).trans
     (by
       rw [Part.map_eq_map, Part.map_map, TM1.eval]
       congr with ⟨⟩; rfl)
 #align turing.TM1to0.tr_eval Turing.TM1to0.tr_eval
+-/
 
 variable [Fintype σ]
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print Turing.TM1to0.trStmts /-
 /-- Given a finite set of accessible `Λ` machine states, there is a finite set of accessible
 machine states in the target (even though the type `Λ'` is infinite). -/
 noncomputable def trStmts (S : Finset Λ) : Finset Λ' :=
   TM1.stmts M S ×ˢ Finset.univ
 #align turing.TM1to0.tr_stmts Turing.TM1to0.trStmts
+-/
 
 open scoped Classical
 
 attribute [local simp] TM1.stmts₁_self
 
+#print Turing.TM1to0.tr_supports /-
 theorem tr_supports {S : Finset Λ} (ss : TM1.Supports M S) : TM0.Supports tr ↑(tr_stmts S) :=
   ⟨Finset.mem_product.2
       ⟨Finset.some_mem_insertNone.2 (Finset.mem_biUnion.2 ⟨_, ss.1, TM1.stmts₁_self⟩),
@@ -1808,6 +1919,7 @@ theorem tr_supports {S : Finset Λ} (ss : TM1.Supports M S) : TM0.Supports tr �
       exact Finset.some_mem_insertNone.2 (Finset.mem_biUnion.2 ⟨_, hs _ _, TM1.stmts₁_self⟩)
     case halt => cases h₁⟩
 #align turing.TM1to0.tr_supports Turing.TM1to0.tr_supports
+-/
 
 end
 
@@ -1867,27 +1979,26 @@ parameter {Λ : Type _} [Inhabited Λ]
 
 parameter {σ : Type _} [Inhabited σ]
 
--- mathport name: exprstmt₁
 local notation "stmt₁" => Stmt Γ Λ σ
 
--- mathport name: exprcfg₁
 local notation "cfg₁" => Cfg Γ Λ σ
 
+#print Turing.TM1to1.Λ' /-
 /-- The configuration state of the TM. -/
 inductive Λ' : Type max u_1 u_2 u_3
   | Normal : Λ → Λ'
   | write : Γ → stmt₁ → Λ'
 #align turing.TM1to1.Λ' Turing.TM1to1.Λ'
+-/
 
 instance : Inhabited Λ' :=
   ⟨Λ'.normal default⟩
 
--- mathport name: exprstmt'
 local notation "stmt'" => Stmt Bool Λ' σ
 
--- mathport name: exprcfg'
 local notation "cfg'" => Cfg Bool Λ' σ
 
+#print Turing.TM1to1.readAux /-
 /-- Read a vector of length `n` from the tape. -/
 def readAux : ∀ n, (Vector Bool n → stmt') → stmt'
   | 0, f => f Vector.nil
@@ -1895,26 +2006,34 @@ def readAux : ∀ n, (Vector Bool n → stmt') → stmt'
     Stmt.branch (fun a s => a) (Stmt.move Dir.right <| read_aux i fun v => f (true ::ᵥ v))
       (Stmt.move Dir.right <| read_aux i fun v => f (false ::ᵥ v))
 #align turing.TM1to1.read_aux Turing.TM1to1.readAux
+-/
 
 parameter {n : ℕ} (enc : Γ → Vector Bool n) (dec : Vector Bool n → Γ)
 
+#print Turing.TM1to1.move /-
 /-- A move left or right corresponds to `n` moves across the super-cell. -/
 def move (d : Dir) (q : stmt') : stmt' :=
   (Stmt.move d^[n]) q
 #align turing.TM1to1.move Turing.TM1to1.move
+-/
 
+#print Turing.TM1to1.read /-
 /-- To read a symbol from the tape, we use `read_aux` to traverse the symbol,
 then return to the original position with `n` moves to the left. -/
 def read (f : Γ → stmt') : stmt' :=
   read_aux n fun v => move Dir.left <| f (dec v)
 #align turing.TM1to1.read Turing.TM1to1.read
+-/
 
+#print Turing.TM1to1.write /-
 /-- Write a list of bools on the tape. -/
 def write : List Bool → stmt' → stmt'
   | [], q => q
   | a :: l, q => (Stmt.write fun _ _ => a) <| Stmt.move Dir.right <| write l q
 #align turing.TM1to1.write Turing.TM1to1.write
+-/
 
+#print Turing.TM1to1.trNormal /-
 /-- Translate a normal instruction. For the `write` command, we use a `goto` indirection so that
 we can access the current value of the tape. -/
 def trNormal : stmt₁ → stmt'
@@ -1926,7 +2045,9 @@ def trNormal : stmt₁ → stmt'
   | stmt.goto l => read fun a => Stmt.goto fun _ s => Λ'.normal (l a s)
   | stmt.halt => Stmt.halt
 #align turing.TM1to1.tr_normal Turing.TM1to1.trNormal
+-/
 
+#print Turing.TM1to1.stepAux_move /-
 theorem stepAux_move (d q v T) : stepAux (move d q) v T = stepAux q v ((Tape.move d^[n]) T) :=
   by
   suffices : ∀ i, step_aux ((stmt.move d^[i]) q) v T = step_aux q v ((tape.move d^[i]) T)
@@ -1934,17 +2055,23 @@ theorem stepAux_move (d q v T) : stepAux (move d q) v T = stepAux q v ((Tape.mov
   intro; induction' i with i IH generalizing T; · rfl
   rw [iterate_succ', step_aux, IH, iterate_succ]
 #align turing.TM1to1.step_aux_move Turing.TM1to1.stepAux_move
+-/
 
+#print Turing.TM1to1.supportsStmt_move /-
 theorem supportsStmt_move {S d q} : SupportsStmt S (move d q) = SupportsStmt S q :=
   by
   suffices ∀ {i}, SupportsStmt S ((Stmt.move d^[i]) q) = _ from this
   intro <;> induction i generalizing q <;> simp only [*, iterate] <;> rfl
 #align turing.TM1to1.supports_stmt_move Turing.TM1to1.supportsStmt_move
+-/
 
+#print Turing.TM1to1.supportsStmt_write /-
 theorem supportsStmt_write {S l q} : SupportsStmt S (write l q) = SupportsStmt S q := by
   induction' l with a l IH <;> simp only [write, supports_stmt, *]
 #align turing.TM1to1.supports_stmt_write Turing.TM1to1.supportsStmt_write
+-/
 
+#print Turing.TM1to1.supportsStmt_read /-
 theorem supportsStmt_read {S} :
     ∀ {f : Γ → stmt'}, (∀ a, SupportsStmt S (f a)) → SupportsStmt S (read f) :=
   suffices
@@ -1954,14 +2081,13 @@ theorem supportsStmt_read {S} :
   induction' i with i IH; · exact hf _
   constructor <;> apply IH <;> intro <;> apply hf
 #align turing.TM1to1.supports_stmt_read Turing.TM1to1.supportsStmt_read
+-/
 
 parameter (enc0 : enc default = Vector.replicate n false)
 
 section
 
 parameter {enc}
-
-include enc0
 
 #print Turing.TM1to1.trTape' /-
 /-- The low level tape corresponding to the given tape over alphabet `Γ`. -/
@@ -1990,20 +2116,22 @@ end
 
 parameter (M : Λ → stmt₁)
 
+#print Turing.TM1to1.tr /-
 /-- The top level program. -/
 def tr : Λ' → stmt'
   | Λ'.normal l => tr_normal (M l)
   | Λ'.write a q => write (enc a).toList <| move Dir.left <| tr_normal q
 #align turing.TM1to1.tr Turing.TM1to1.tr
+-/
 
+#print Turing.TM1to1.trCfg /-
 /-- The machine configuration translation. -/
 def trCfg : cfg₁ → cfg'
   | ⟨l, v, T⟩ => ⟨l.map Λ'.normal, v, tr_tape T⟩
 #align turing.TM1to1.tr_cfg Turing.TM1to1.trCfg
+-/
 
 parameter {enc}
-
-include enc0
 
 #print Turing.TM1to1.trTape'_move_left /-
 theorem trTape'_move_left (L R) :
@@ -2040,6 +2168,7 @@ theorem trTape'_move_right (L R) :
 #align turing.TM1to1.tr_tape'_move_right Turing.TM1to1.trTape'_move_right
 -/
 
+#print Turing.TM1to1.stepAux_write /-
 theorem stepAux_write (q v a b L R) :
     stepAux (write (enc a).toList q) v (tr_tape' L (ListBlank.cons b R)) =
       stepAux q v (tr_tape' (ListBlank.cons a L) R) :=
@@ -2059,11 +2188,11 @@ theorem stepAux_write (q v a b L R) :
   simp only [list_blank.head_cons, list_blank.tail_cons, list_blank.append, tape.move_right_mk',
     tape.write_mk']
 #align turing.TM1to1.step_aux_write Turing.TM1to1.stepAux_write
+-/
 
 parameter (encdec : ∀ a, dec (enc a) = a)
 
-include encdec
-
+#print Turing.TM1to1.stepAux_read /-
 theorem stepAux_read (f v L R) :
     stepAux (read f) v (tr_tape' L R) = stepAux (f R.headI) v (tr_tape' L R) :=
   by
@@ -2090,7 +2219,9 @@ theorem stepAux_read (f v L R) :
   · dsimp [read_aux, step_aux]; simp; cases a <;> rfl
   rw [← list_blank.append, IH]; rfl
 #align turing.TM1to1.step_aux_read Turing.TM1to1.stepAux_read
+-/
 
+#print Turing.TM1to1.tr_respects /-
 theorem tr_respects : Respects (step M) (step tr) fun c₁ c₂ => tr_cfg c₁ = c₂ :=
   fun_respects.2 fun ⟨l₁, v, T⟩ =>
     by
@@ -2134,13 +2265,13 @@ theorem tr_respects : Respects (step M) (step tr) fun c₁ c₂ => tr_cfg c₁ =
         tr_tape'_move_right enc0, tr_tape_mk']
       apply refl_trans_gen.refl
 #align turing.TM1to1.tr_respects Turing.TM1to1.tr_respects
-
-omit enc0 encdec
+-/
 
 open scoped Classical
 
 parameter [Fintype Γ]
 
+#print Turing.TM1to1.writes /-
 /-- The set of accessible `Λ'.write` machine states. -/
 noncomputable def writes : stmt₁ → Finset Λ'
   | stmt.move d q => writes q
@@ -2150,13 +2281,17 @@ noncomputable def writes : stmt₁ → Finset Λ'
   | stmt.goto l => ∅
   | stmt.halt => ∅
 #align turing.TM1to1.writes Turing.TM1to1.writes
+-/
 
+#print Turing.TM1to1.trSupp /-
 /-- The set of accessible machine states, assuming that the input machine is supported on `S`,
 are the normal states embedded from `S`, plus all write states accessible from these states. -/
 noncomputable def trSupp (S : Finset Λ) : Finset Λ' :=
   S.biUnion fun l => insert (Λ'.normal l) (writes (M l))
 #align turing.TM1to1.tr_supp Turing.TM1to1.trSupp
+-/
 
+#print Turing.TM1to1.tr_supports /-
 theorem tr_supports {S} (ss : Supports M S) : Supports tr (tr_supp S) :=
   ⟨Finset.mem_biUnion.2 ⟨_, ss.1, Finset.mem_insert_self _ _⟩, fun q h =>
     by
@@ -2204,6 +2339,7 @@ theorem tr_supports {S} (ss : Supports M S) : Supports tr (tr_supp S) :=
       refine' ⟨_, fun _ => False.elim⟩
       simp only [supports_stmt, supports_stmt_move, tr_normal]⟩
 #align turing.TM1to1.tr_supports Turing.TM1to1.tr_supports
+-/
 
 end
 
@@ -2232,6 +2368,7 @@ parameter {Γ : Type _} [Inhabited Γ]
 
 parameter {Λ : Type _} [Inhabited Λ]
 
+#print Turing.TM0to1.Λ' /-
 /-- The machine states for a TM1 emulating a TM0 machine. States of the TM0 machine are embedded
 as `normal q` states, but the actual operation is split into two parts, a jump to `act s q`
 followed by the action and a jump to the next `normal` state.  -/
@@ -2239,23 +2376,22 @@ inductive Λ'
   | Normal : Λ → Λ'
   | act : TM0.Stmt Γ → Λ → Λ'
 #align turing.TM0to1.Λ' Turing.TM0to1.Λ'
+-/
 
 instance : Inhabited Λ' :=
   ⟨Λ'.normal default⟩
 
--- mathport name: exprcfg₀
 local notation "cfg₀" => TM0.Cfg Γ Λ
 
--- mathport name: exprstmt₁
 local notation "stmt₁" => TM1.Stmt Γ Λ' Unit
 
--- mathport name: exprcfg₁
 local notation "cfg₁" => TM1.Cfg Γ Λ' Unit
 
 parameter (M : TM0.Machine Γ Λ)
 
 open TM1.Stmt
 
+#print Turing.TM0to1.tr /-
 /-- The program.  -/
 def tr : Λ' → stmt₁
   | Λ'.normal q =>
@@ -2270,6 +2406,7 @@ def tr : Λ' → stmt₁
   | Λ'.act (TM0.stmt.move d) q => move d <| goto fun _ _ => Λ'.normal q
   | Λ'.act (TM0.stmt.write a) q => (write fun _ _ => a) <| goto fun _ _ => Λ'.normal q
 #align turing.TM0to1.tr Turing.TM0to1.tr
+-/
 
 #print Turing.TM0to1.trCfg /-
 /-- The configuration translation. -/
@@ -2347,6 +2484,7 @@ parameter (Λ : Type _)
 -- Type of function labels
 parameter (σ : Type _)
 
+#print Turing.TM2.Stmt /-
 -- Type of variable settings
 /-- The TM2 model removes the tape entirely from the TM1 model,
   replacing it with an arbitrary (finite) collection of stacks.
@@ -2363,13 +2501,17 @@ inductive Stmt
   | goto : (σ → Λ) → stmt
   | halt : stmt
 #align turing.TM2.stmt Turing.TM2.Stmt
+-/
 
 open Stmt
 
+#print Turing.TM2.Stmt.inhabited /-
 instance Stmt.inhabited : Inhabited stmt :=
   ⟨halt⟩
 #align turing.TM2.stmt.inhabited Turing.TM2.Stmt.inhabited
+-/
 
+#print Turing.TM2.Cfg /-
 /-- A configuration in the TM2 model is a label (or `none` for the halt state), the state of
 local variables, and the stacks. (Note that the stacks are not `list_blank`s, they have a definite
 size.) -/
@@ -2378,10 +2520,13 @@ structure Cfg where
   var : σ
   stk : ∀ k, List (Γ k)
 #align turing.TM2.cfg Turing.TM2.Cfg
+-/
 
+#print Turing.TM2.Cfg.inhabited /-
 instance Cfg.inhabited [Inhabited σ] : Inhabited cfg :=
   ⟨⟨default, default, default⟩⟩
 #align turing.TM2.cfg.inhabited Turing.TM2.Cfg.inhabited
+-/
 
 parameter {Γ Λ σ K}
 
@@ -2415,6 +2560,7 @@ def Reaches (M : Λ → stmt) : cfg → cfg → Prop :=
 #align turing.TM2.reaches Turing.TM2.Reaches
 -/
 
+#print Turing.TM2.SupportsStmt /-
 /-- Given a set `S` of states, `support_stmt S q` means that `q` only jumps to states in `S`. -/
 def SupportsStmt (S : Finset Λ) : stmt → Prop
   | push k f q => supports_stmt q
@@ -2425,9 +2571,11 @@ def SupportsStmt (S : Finset Λ) : stmt → Prop
   | goto l => ∀ v, l v ∈ S
   | halt => True
 #align turing.TM2.supports_stmt Turing.TM2.SupportsStmt
+-/
 
 open scoped Classical
 
+#print Turing.TM2.stmts₁ /-
 /-- The set of subtree statements in a statement. -/
 noncomputable def stmts₁ : stmt → Finset stmt
   | Q@(push k f q) => insert Q (stmts₁ q)
@@ -2438,11 +2586,15 @@ noncomputable def stmts₁ : stmt → Finset stmt
   | Q@(goto l) => {Q}
   | Q@halt => {Q}
 #align turing.TM2.stmts₁ Turing.TM2.stmts₁
+-/
 
+#print Turing.TM2.stmts₁_self /-
 theorem stmts₁_self {q} : q ∈ stmts₁ q := by
   cases q <;> apply_rules [Finset.mem_insert_self, Finset.mem_singleton_self]
 #align turing.TM2.stmts₁_self Turing.TM2.stmts₁_self
+-/
 
+#print Turing.TM2.stmts₁_trans /-
 theorem stmts₁_trans {q₁ q₂} : q₁ ∈ stmts₁ q₂ → stmts₁ q₁ ⊆ stmts₁ q₂ :=
   by
   intro h₁₂ q₀ h₀₁
@@ -2460,7 +2612,9 @@ theorem stmts₁_trans {q₁ q₂} : q₁ ∈ stmts₁ q₂ → stmts₁ q₁ �
   case goto l => subst h₁₂; exact h₀₁
   case halt => subst h₁₂; exact h₀₁
 #align turing.TM2.stmts₁_trans Turing.TM2.stmts₁_trans
+-/
 
+#print Turing.TM2.stmts₁_supportsStmt_mono /-
 theorem stmts₁_supportsStmt_mono {S q₁ q₂} (h : q₁ ∈ stmts₁ q₂) (hs : supports_stmt S q₂) :
     supports_stmt S q₁ :=
   by
@@ -2472,34 +2626,44 @@ theorem stmts₁_supportsStmt_mono {S q₁ q₂} (h : q₁ ∈ stmts₁ q₂) (h
   case goto l => subst h; exact hs
   case halt => subst h; trivial
 #align turing.TM2.stmts₁_supports_stmt_mono Turing.TM2.stmts₁_supportsStmt_mono
+-/
 
+#print Turing.TM2.stmts /-
 /-- The set of statements accessible from initial set `S` of labels. -/
 noncomputable def stmts (M : Λ → stmt) (S : Finset Λ) : Finset (Option stmt) :=
   (S.biUnion fun q => stmts₁ (M q)).insertNone
 #align turing.TM2.stmts Turing.TM2.stmts
+-/
 
+#print Turing.TM2.stmts_trans /-
 theorem stmts_trans {M : Λ → stmt} {S q₁ q₂} (h₁ : q₁ ∈ stmts₁ q₂) :
     some q₂ ∈ stmts M S → some q₁ ∈ stmts M S := by
   simp only [stmts, Finset.mem_insertNone, Finset.mem_biUnion, Option.mem_def, forall_eq',
       exists_imp] <;>
     exact fun l ls h₂ => ⟨_, ls, stmts₁_trans h₂ h₁⟩
 #align turing.TM2.stmts_trans Turing.TM2.stmts_trans
+-/
 
 variable [Inhabited Λ]
 
+#print Turing.TM2.Supports /-
 /-- Given a TM2 machine `M` and a set `S` of states, `supports M S` means that all states in
 `S` jump only to other states in `S`. -/
 def Supports (M : Λ → stmt) (S : Finset Λ) :=
   default ∈ S ∧ ∀ q ∈ S, supports_stmt S (M q)
 #align turing.TM2.supports Turing.TM2.Supports
+-/
 
+#print Turing.TM2.stmts_supportsStmt /-
 theorem stmts_supportsStmt {M : Λ → stmt} {S q} (ss : supports M S) :
     some q ∈ stmts M S → supports_stmt S q := by
   simp only [stmts, Finset.mem_insertNone, Finset.mem_biUnion, Option.mem_def, forall_eq',
       exists_imp] <;>
     exact fun l ls h => stmts₁_supports_stmt_mono h (ss.2 _ ls)
 #align turing.TM2.stmts_supports_stmt Turing.TM2.stmts_supportsStmt
+-/
 
+#print Turing.TM2.step_supports /-
 theorem step_supports (M : Λ → stmt) {S} (ss : supports M S) :
     ∀ {c c' : cfg}, c' ∈ step M c → c.l ∈ S.insertNone → c'.l ∈ S.insertNone
   | ⟨some l₁, v, T⟩, c', h₁, h₂ =>
@@ -2515,6 +2679,7 @@ theorem step_supports (M : Λ → stmt) {S} (ss : supports M S) :
     case goto => exact Finset.some_mem_insertNone.2 (hs _)
     case halt => apply Multiset.mem_cons_self
 #align turing.TM2.step_supports Turing.TM2.step_supports
+-/
 
 variable [Inhabited σ]
 
@@ -2577,6 +2742,7 @@ steps to run when emulated in TM1, where `m` is the length of the input.
 
 namespace TM2to1
 
+#print Turing.TM2to1.stk_nth_val /-
 -- A displaced lemma proved in unnecessary generality
 theorem stk_nth_val {K : Type _} {Γ : K → Type _} {L : ListBlank (∀ k, Option (Γ k))} {k S} (n)
     (hL : ListBlank.map (proj k) L = ListBlank.mk (List.map some S).reverse) :
@@ -2586,6 +2752,7 @@ theorem stk_nth_val {K : Type _} {Γ : K → Type _} {L : ListBlank (∀ k, Opti
     List.get?_map]
   cases S.reverse.nth n <;> rfl
 #align turing.TM2to1.stk_nth_val Turing.TM2to1.stk_nth_val
+-/
 
 section
 
@@ -2597,12 +2764,11 @@ parameter {Λ : Type _} [Inhabited Λ]
 
 parameter {σ : Type _} [Inhabited σ]
 
--- mathport name: exprstmt₂
 local notation "stmt₂" => TM2.Stmt Γ Λ σ
 
--- mathport name: exprcfg₂
 local notation "cfg₂" => TM2.Cfg Γ Λ σ
 
+#print Turing.TM2to1.Γ' /-
 -- [decidable_eq K]: Because K is a parameter, we cannot easily skip
 -- the decidable_eq assumption, and this is a local definition anyway so it's not important.
 /-- The alphabet of the TM2 simulator on TM1 is a marker for the stack bottom,
@@ -2611,10 +2777,13 @@ plus a vector of stack elements for each stack, or none if the stack does not ex
 def Γ' :=
   Bool × ∀ k, Option (Γ k)
 #align turing.TM2to1.Γ' Turing.TM2to1.Γ'
+-/
 
+#print Turing.TM2to1.Γ'.inhabited /-
 instance Γ'.inhabited : Inhabited Γ' :=
   ⟨⟨false, fun _ => none⟩⟩
 #align turing.TM2to1.Γ'.inhabited Turing.TM2to1.Γ'.inhabited
+-/
 
 #print Turing.TM2to1.Γ'.fintype /-
 instance Γ'.fintype [Fintype K] [∀ k, Fintype (Γ k)] : Fintype Γ' :=
@@ -2622,19 +2791,24 @@ instance Γ'.fintype [Fintype K] [∀ k, Fintype (Γ k)] : Fintype Γ' :=
 #align turing.TM2to1.Γ'.fintype Turing.TM2to1.Γ'.fintype
 -/
 
+#print Turing.TM2to1.addBottom /-
 /-- The bottom marker is fixed throughout the calculation, so we use the `add_bottom` function
 to express the program state in terms of a tape with only the stacks themselves. -/
 def addBottom (L : ListBlank (∀ k, Option (Γ k))) : ListBlank Γ' :=
   ListBlank.cons (true, L.headI) (L.tail.map ⟨Prod.mk false, rfl⟩)
 #align turing.TM2to1.add_bottom Turing.TM2to1.addBottom
+-/
 
+#print Turing.TM2to1.addBottom_map /-
 theorem addBottom_map (L) : (add_bottom L).map ⟨Prod.snd, rfl⟩ = L :=
   by
   simp only [add_bottom, list_blank.map_cons] <;> convert list_blank.cons_head_tail _
   generalize list_blank.tail L = L'
   refine' L'.induction_on fun l => _; simp
 #align turing.TM2to1.add_bottom_map Turing.TM2to1.addBottom_map
+-/
 
+#print Turing.TM2to1.addBottom_modifyNth /-
 theorem addBottom_modifyNth (f : (∀ k, Option (Γ k)) → ∀ k, Option (Γ k)) (L n) :
     (add_bottom L).modifyNth (fun a => (a.1, f a.2)) n = add_bottom (L.modifyNth f n) :=
   by
@@ -2642,22 +2816,30 @@ theorem addBottom_modifyNth (f : (∀ k, Option (Γ k)) → ∀ k, Option (Γ k)
     simp only [add_bottom, list_blank.head_cons, list_blank.modify_nth, list_blank.tail_cons]
   congr; symm; apply list_blank.map_modify_nth; intro; rfl
 #align turing.TM2to1.add_bottom_modify_nth Turing.TM2to1.addBottom_modifyNth
+-/
 
+#print Turing.TM2to1.addBottom_nth_snd /-
 theorem addBottom_nth_snd (L n) : ((add_bottom L).get? n).2 = L.get? n := by
   conv =>
       rhs
       rw [← add_bottom_map L, list_blank.nth_map] <;>
     rfl
 #align turing.TM2to1.add_bottom_nth_snd Turing.TM2to1.addBottom_nth_snd
+-/
 
+#print Turing.TM2to1.addBottom_nth_succ_fst /-
 theorem addBottom_nth_succ_fst (L n) : ((add_bottom L).get? (n + 1)).1 = false := by
   rw [list_blank.nth_succ, add_bottom, list_blank.tail_cons, list_blank.nth_map] <;> rfl
 #align turing.TM2to1.add_bottom_nth_succ_fst Turing.TM2to1.addBottom_nth_succ_fst
+-/
 
+#print Turing.TM2to1.addBottom_head_fst /-
 theorem addBottom_head_fst (L) : (add_bottom L).headI.1 = true := by
   rw [add_bottom, list_blank.head_cons] <;> rfl
 #align turing.TM2to1.add_bottom_head_fst Turing.TM2to1.addBottom_head_fst
+-/
 
+#print Turing.TM2to1.StAct /-
 /-- A stack action is a command that interacts with the top of a stack. Our default position
 is at the bottom of all the stacks, so we have to hold on to this action while going to the end
 to modify the stack. -/
@@ -2666,15 +2848,19 @@ inductive StAct (k : K)
   | peek : (σ → Option (Γ k) → σ) → st_act
   | pop : (σ → Option (Γ k) → σ) → st_act
 #align turing.TM2to1.st_act Turing.TM2to1.StAct
+-/
 
+#print Turing.TM2to1.StAct.inhabited /-
 instance StAct.inhabited {k} : Inhabited (st_act k) :=
   ⟨st_act.peek fun s _ => s⟩
 #align turing.TM2to1.st_act.inhabited Turing.TM2to1.StAct.inhabited
+-/
 
 section
 
 open StAct
 
+#print Turing.TM2to1.stRun /-
 -- [inhabited Λ]: as this is a local definition it is more trouble than
 -- it is worth to omit the typeclass assumption without breaking the parameters
 /-- The TM2 statement corresponding to a stack action. -/
@@ -2684,21 +2870,27 @@ def stRun {k : K} : st_act k → stmt₂ → stmt₂
   | peek f => TM2.Stmt.peek k f
   | pop f => TM2.Stmt.pop k f
 #align turing.TM2to1.st_run Turing.TM2to1.stRun
+-/
 
+#print Turing.TM2to1.stVar /-
 /-- The effect of a stack action on the local variables, given the value of the stack. -/
 def stVar {k : K} (v : σ) (l : List (Γ k)) : st_act k → σ
   | push f => v
   | peek f => f v l.head?
   | pop f => f v l.head?
 #align turing.TM2to1.st_var Turing.TM2to1.stVar
+-/
 
+#print Turing.TM2to1.stWrite /-
 /-- The effect of a stack action on the stack. -/
 def stWrite {k : K} (v : σ) (l : List (Γ k)) : st_act k → List (Γ k)
   | push f => f v :: l
   | peek f => l
   | pop f => l.tail
 #align turing.TM2to1.st_write Turing.TM2to1.stWrite
+-/
 
+#print Turing.TM2to1.stmtStRec /-
 /-- We have partitioned the TM2 statements into "stack actions", which require going to the end
 of the stack, and all other actions, which do not. This is a modified recursor which lumps the
 stack actions into one. -/
@@ -2715,13 +2907,17 @@ def stmtStRec.{l} {C : stmt₂ → Sort l} (H₁ : ∀ (k) (s : st_act k) (q) (I
   | TM2.stmt.goto l => H₄ _
   | TM2.stmt.halt => H₅
 #align turing.TM2to1.stmt_st_rec Turing.TM2to1.stmtStRec
+-/
 
+#print Turing.TM2to1.supports_run /-
 theorem supports_run (S : Finset Λ) {k} (s : st_act k) (q) :
     TM2.SupportsStmt S (st_run s q) ↔ TM2.SupportsStmt S q := by rcases s with (_ | _ | _) <;> rfl
 #align turing.TM2to1.supports_run Turing.TM2to1.supports_run
+-/
 
 end
 
+#print Turing.TM2to1.Λ' /-
 /-- The machine states of the TM2 emulator. We can either be in a normal state when waiting for the
 next TM2 action, or we can be in the "go" and "return" states to go to the top of the stack and
 return to the bottom, respectively. -/
@@ -2730,21 +2926,23 @@ inductive Λ' : Type max u_1 u_2 u_3 u_4
   | go (k) : st_act k → stmt₂ → Λ'
   | ret : stmt₂ → Λ'
 #align turing.TM2to1.Λ' Turing.TM2to1.Λ'
+-/
 
 open Λ'
 
+#print Turing.TM2to1.Λ'.inhabited /-
 instance Λ'.inhabited : Inhabited Λ' :=
   ⟨Normal default⟩
 #align turing.TM2to1.Λ'.inhabited Turing.TM2to1.Λ'.inhabited
+-/
 
--- mathport name: exprstmt₁
 local notation "stmt₁" => TM1.Stmt Γ' Λ' σ
 
--- mathport name: exprcfg₁
 local notation "cfg₁" => TM1.Cfg Γ' Λ' σ
 
 open TM1.Stmt
 
+#print Turing.TM2to1.trStAct /-
 /-- The program corresponding to state transitions at the end of a stack. Here we start out just
 after the top of the stack, and should end just after the new top of the stack. -/
 def trStAct {k} (q : stmt₁) : st_act k → stmt₁
@@ -2755,6 +2953,7 @@ def trStAct {k} (q : stmt₁) : st_act k → stmt₁
       (move Dir.left <|
         (load fun a s => f s (a.2 k)) <| write (fun a s => (a.1, update a.2 k none)) q)
 #align turing.TM2to1.tr_st_act Turing.TM2to1.trStAct
+-/
 
 #print Turing.TM2to1.trInit /-
 /-- The initial state for the TM2 emulator, given an initial TM2 state. All stacks start out empty
@@ -2765,6 +2964,7 @@ def trInit (k) (L : List (Γ k)) : List Γ' :=
 #align turing.TM2to1.tr_init Turing.TM2to1.trInit
 -/
 
+#print Turing.TM2to1.step_run /-
 theorem step_run {k : K} (q v S) :
     ∀ s : st_act k,
       TM2.stepAux (st_run s q) v S =
@@ -2773,7 +2973,9 @@ theorem step_run {k : K} (q v S) :
   | st_act.peek f => by unfold st_write <;> rw [Function.update_eq_self] <;> rfl
   | st_act.pop f => rfl
 #align turing.TM2to1.step_run Turing.TM2to1.step_run
+-/
 
+#print Turing.TM2to1.trNormal /-
 /-- The translation of TM2 statements to TM1 statements. regular actions have direct equivalents,
 but stack actions are deferred by going to the corresponding `go` state, so that we can find the
 appropriate stack top. -/
@@ -2786,13 +2988,17 @@ def trNormal : stmt₂ → stmt₁
   | TM2.stmt.goto l => goto fun a s => Normal (l s)
   | TM2.stmt.halt => halt
 #align turing.TM2to1.tr_normal Turing.TM2to1.trNormal
+-/
 
+#print Turing.TM2to1.trNormal_run /-
 theorem trNormal_run {k} (s q) : tr_normal (st_run s q) = goto fun _ _ => go k s q := by
   rcases s with (_ | _ | _) <;> rfl
 #align turing.TM2to1.tr_normal_run Turing.TM2to1.trNormal_run
+-/
 
 open scoped Classical
 
+#print Turing.TM2to1.trStmts₁ /-
 /-- The set of machine states accessible from an initial TM2 statement. -/
 noncomputable def trStmts₁ : stmt₂ → Finset Λ'
   | TM2.stmt.push k f q => {go k (st_act.push f) q, ret q} ∪ tr_stmts₁ q
@@ -2802,11 +3008,15 @@ noncomputable def trStmts₁ : stmt₂ → Finset Λ'
   | TM2.stmt.branch f q₁ q₂ => tr_stmts₁ q₁ ∪ tr_stmts₁ q₂
   | _ => ∅
 #align turing.TM2to1.tr_stmts₁ Turing.TM2to1.trStmts₁
+-/
 
+#print Turing.TM2to1.trStmts₁_run /-
 theorem trStmts₁_run {k s q} : tr_stmts₁ (st_run s q) = {go k s q, ret q} ∪ tr_stmts₁ q := by
   rcases s with (_ | _ | _) <;> unfold tr_stmts₁ st_run
 #align turing.TM2to1.tr_stmts₁_run Turing.TM2to1.trStmts₁_run
+-/
 
+#print Turing.TM2to1.tr_respects_aux₂ /-
 theorem tr_respects_aux₂ {k q v} {S : ∀ k, List (Γ k)} {L : ListBlank (∀ k, Option (Γ k))}
     (hL : ∀ k, L.map (proj k) = ListBlank.mk ((S k).map some).reverse) (o) :
     let v' := st_var v (S k) o
@@ -2883,11 +3093,11 @@ theorem tr_respects_aux₂ {k q v} {S : ∀ k, List (Γ k)} {L : ListBlank (∀ 
       · split_ifs <;> rw [Function.update_noteq h', ← proj_map_nth, hL]
         rw [Function.update_noteq h']
 #align turing.TM2to1.tr_respects_aux₂ Turing.TM2to1.tr_respects_aux₂
+-/
 
 parameter (M : Λ → stmt₂)
 
-include M
-
+#print Turing.TM2to1.tr /-
 /-- The TM2 emulator machine states written as a TM1 program.
 This handles the `go` and `ret` states, which shuttle to and from a stack top. -/
 def tr : Λ' → stmt₁
@@ -2897,9 +3107,11 @@ def tr : Λ' → stmt₁
       (move Dir.right <| goto fun _ _ => go k s q)
   | ret q => branch (fun a s => a.1) (tr_normal q) (move Dir.left <| goto fun _ _ => ret q)
 #align turing.TM2to1.tr Turing.TM2to1.tr
+-/
 
 attribute [local pp_using_anonymous_constructor] Turing.TM1.Cfg
 
+#print Turing.TM2to1.TrCfg /-
 /-- The relation between TM2 configurations and TM1 configurations of the TM2 emulator. -/
 inductive TrCfg : cfg₂ → cfg₁ → Prop
   |
@@ -2907,8 +3119,10 @@ inductive TrCfg : cfg₂ → cfg₁ → Prop
     (∀ k, L.map (proj k) = ListBlank.mk ((S k).map some).reverse) →
       tr_cfg ⟨q, v, S⟩ ⟨q.map Normal, v, Tape.mk' ∅ (add_bottom L)⟩
 #align turing.TM2to1.tr_cfg Turing.TM2to1.TrCfg
+-/
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (n «expr ≤ » S.length) -/
+#print Turing.TM2to1.tr_respects_aux₁ /-
 theorem tr_respects_aux₁ {k} (o q v) {S : List (Γ k)} {L : ListBlank (∀ k, Option (Γ k))}
     (hL : L.map (proj k) = ListBlank.mk (S.map some).reverse) (n) (_ : n ≤ S.length) :
     Reaches₀ (TM1.step tr) ⟨some (go k o q), v, Tape.mk' ∅ (add_bottom L)⟩
@@ -2921,7 +3135,9 @@ theorem tr_respects_aux₁ {k} (o q v) {S : List (Γ k)} {L : ListBlank (∀ k, 
     add_bottom_nth_snd, Option.mem_def]
   rw [stk_nth_val _ hL, List.nthLe_get?]; rfl; rwa [List.length_reverse]
 #align turing.TM2to1.tr_respects_aux₁ Turing.TM2to1.tr_respects_aux₁
+-/
 
+#print Turing.TM2to1.tr_respects_aux₃ /-
 theorem tr_respects_aux₃ {q v} {L : ListBlank (∀ k, Option (Γ k))} (n) :
     Reaches₀ (TM1.step tr) ⟨some (ret q), v, (Tape.move Dir.right^[n]) (Tape.mk' ∅ (add_bottom L))⟩
       ⟨some (ret q), v, Tape.mk' ∅ (add_bottom L)⟩ :=
@@ -2932,7 +3148,9 @@ theorem tr_respects_aux₃ {q v} {L : ListBlank (∀ k, Option (Γ k))} (n) :
     add_bottom_nth_succ_fst, TM1.step_aux, iterate_succ', tape.move_right_left]
   rfl
 #align turing.TM2to1.tr_respects_aux₃ Turing.TM2to1.tr_respects_aux₃
+-/
 
+#print Turing.TM2to1.tr_respects_aux /-
 theorem tr_respects_aux {q v T k} {S : ∀ k, List (Γ k)}
     (hT : ∀ k, ListBlank.map (proj k) T = ListBlank.mk ((S k).map some).reverse) (o : st_act k)
     (IH :
@@ -2959,9 +3177,11 @@ theorem tr_respects_aux {q v T k} {S : ∀ k, List (Γ k)}
   rw [tr, TM1.step_aux, tape.mk'_head, add_bottom_head_fst]
   exact rc
 #align turing.TM2to1.tr_respects_aux Turing.TM2to1.tr_respects_aux
+-/
 
 attribute [local simp] respects TM2.step TM2.step_aux tr_normal
 
+#print Turing.TM2to1.tr_respects /-
 theorem tr_respects : Respects (TM2.step M) (TM1.step tr) tr_cfg := fun c₁ c₂ h =>
   by
   cases' h with l v S L hT; clear h
@@ -2978,7 +3198,9 @@ theorem tr_respects : Respects (TM2.step M) (TM1.step tr) tr_cfg := fun c₁ c�
   · exact ⟨_, ⟨_, hT⟩, refl_trans_gen.refl⟩
   · exact ⟨_, ⟨_, hT⟩, refl_trans_gen.refl⟩
 #align turing.TM2to1.tr_respects Turing.TM2to1.tr_respects
+-/
 
+#print Turing.TM2to1.trCfg_init /-
 theorem trCfg_init (k) (L : List (Γ k)) : tr_cfg (TM2.init k L) (TM1.init (tr_init k L)) :=
   by
   rw [(_ : TM1.init _ = _)]
@@ -2995,11 +3217,15 @@ theorem trCfg_init (k) (L : List (Γ k)) : tr_cfg (TM2.init k L) (TM1.init (tr_i
   · rw [tr_init, TM1.init]; dsimp only; congr <;> cases L.reverse <;> try rfl
     simp only [List.map_map, List.tail_cons, List.map]; rfl
 #align turing.TM2to1.tr_cfg_init Turing.TM2to1.trCfg_init
+-/
 
+#print Turing.TM2to1.tr_eval_dom /-
 theorem tr_eval_dom (k) (L : List (Γ k)) : (TM1.eval tr (tr_init k L)).Dom ↔ (TM2.eval M k L).Dom :=
   tr_eval_dom tr_respects (tr_cfg_init _ _)
 #align turing.TM2to1.tr_eval_dom Turing.TM2to1.tr_eval_dom
+-/
 
+#print Turing.TM2to1.tr_eval /-
 theorem tr_eval (k) (L : List (Γ k)) {L₁ L₂} (H₁ : L₁ ∈ TM1.eval tr (tr_init k L))
     (H₂ : L₂ ∈ TM2.eval M k L) :
     ∃ (S : ∀ k, List (Γ k)) (L' : ListBlank (∀ k, Option (Γ k))),
@@ -3012,12 +3238,16 @@ theorem tr_eval (k) (L : List (Γ k)) {L₁ L₂} (H₁ : L₁ ∈ TM1.eval tr (
   cases Part.mem_unique h₁ h₃
   exact ⟨_, L', by simp only [tape.mk'_right₀], hT, rfl⟩
 #align turing.TM2to1.tr_eval Turing.TM2to1.tr_eval
+-/
 
+#print Turing.TM2to1.trSupp /-
 /-- The support of a set of TM2 states in the TM2 emulator. -/
 noncomputable def trSupp (S : Finset Λ) : Finset Λ' :=
   S.biUnion fun l => insert (Normal l) (tr_stmts₁ (M l))
 #align turing.TM2to1.tr_supp Turing.TM2to1.trSupp
+-/
 
+#print Turing.TM2to1.tr_supports /-
 theorem tr_supports {S} (ss : TM2.Supports M S) : TM1.Supports tr (tr_supp S) :=
   ⟨Finset.mem_biUnion.2 ⟨_, ss.1, Finset.mem_insert.2 <| Or.inl rfl⟩, fun l' h =>
     by
@@ -3070,6 +3300,7 @@ theorem tr_supports {S} (ss : TM2.Supports M S) : TM1.Supports tr (tr_supp S) :=
           False.elim⟩
     · exact ⟨trivial, fun _ => False.elim⟩⟩
 #align turing.TM2to1.tr_supports Turing.TM2to1.tr_supports
+-/
 
 -- halt
 end

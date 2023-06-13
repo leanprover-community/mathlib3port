@@ -68,6 +68,7 @@ abbrev IsInitial (X : C) :=
 #align category_theory.limits.is_initial CategoryTheory.Limits.IsInitial
 -/
 
+#print CategoryTheory.Limits.isTerminalEquivUnique /-
 /-- An object `Y` is terminal iff for every `X` there is a unique morphism `X ⟶ Y`. -/
 def isTerminalEquivUnique (F : Discrete.{0} PEmpty.{1} ⥤ C) (Y : C) :
     IsLimit (⟨Y, by tidy⟩ : Cone F) ≃ ∀ X : C, Unique (X ⟶ Y)
@@ -81,6 +82,7 @@ def isTerminalEquivUnique (F : Discrete.{0} PEmpty.{1} ⥤ C) (Y : C) :
   left_inv := by tidy
   right_inv := by tidy
 #align category_theory.limits.is_terminal_equiv_unique CategoryTheory.Limits.isTerminalEquivUnique
+-/
 
 #print CategoryTheory.Limits.IsTerminal.ofUnique /-
 /-- An object `Y` is terminal if for every `X` there is a unique morphism `X ⟶ Y`
@@ -90,10 +92,12 @@ def IsTerminal.ofUnique (Y : C) [h : ∀ X : C, Unique (X ⟶ Y)] : IsTerminal Y
 #align category_theory.limits.is_terminal.of_unique CategoryTheory.Limits.IsTerminal.ofUnique
 -/
 
+#print CategoryTheory.Limits.isTerminalTop /-
 /-- If `α` is a preorder with top, then `⊤` is a terminal object. -/
 def isTerminalTop {α : Type _} [Preorder α] [OrderTop α] : IsTerminal (⊤ : α) :=
   IsTerminal.ofUnique _
 #align category_theory.limits.is_terminal_top CategoryTheory.Limits.isTerminalTop
+-/
 
 #print CategoryTheory.Limits.IsTerminal.ofIso /-
 /-- Transport a term of type `is_terminal` across an isomorphism. -/
@@ -104,6 +108,7 @@ def IsTerminal.ofIso {Y Z : C} (hY : IsTerminal Y) (i : Y ≅ Z) : IsTerminal Z 
 #align category_theory.limits.is_terminal.of_iso CategoryTheory.Limits.IsTerminal.ofIso
 -/
 
+#print CategoryTheory.Limits.isInitialEquivUnique /-
 /-- An object `X` is initial iff for every `Y` there is a unique morphism `X ⟶ Y`. -/
 def isInitialEquivUnique (F : Discrete.{0} PEmpty.{1} ⥤ C) (X : C) :
     IsColimit (⟨X, by tidy⟩ : Cocone F) ≃ ∀ Y : C, Unique (X ⟶ Y)
@@ -117,6 +122,7 @@ def isInitialEquivUnique (F : Discrete.{0} PEmpty.{1} ⥤ C) (X : C) :
   left_inv := by tidy
   right_inv := by tidy
 #align category_theory.limits.is_initial_equiv_unique CategoryTheory.Limits.isInitialEquivUnique
+-/
 
 #print CategoryTheory.Limits.IsInitial.ofUnique /-
 /-- An object `X` is initial if for every `Y` there is a unique morphism `X ⟶ Y`
@@ -126,10 +132,12 @@ def IsInitial.ofUnique (X : C) [h : ∀ Y : C, Unique (X ⟶ Y)] : IsInitial X
 #align category_theory.limits.is_initial.of_unique CategoryTheory.Limits.IsInitial.ofUnique
 -/
 
+#print CategoryTheory.Limits.isInitialBot /-
 /-- If `α` is a preorder with bot, then `⊥` is an initial object. -/
 def isInitialBot {α : Type _} [Preorder α] [OrderBot α] : IsInitial (⊥ : α) :=
   IsInitial.ofUnique _
 #align category_theory.limits.is_initial_bot CategoryTheory.Limits.isInitialBot
+-/
 
 #print CategoryTheory.Limits.IsInitial.ofIso /-
 /-- Transport a term of type `is_initial` across an isomorphism. -/
@@ -374,10 +382,8 @@ abbrev initial [HasInitial C] : C :=
 #align category_theory.limits.initial CategoryTheory.Limits.initial
 -/
 
--- mathport name: «expr⊤_ »
 notation "⊤_ " C:20 => terminal C
 
--- mathport name: «expr⊥_ »
 notation "⊥_ " C:20 => initial C
 
 section
@@ -564,6 +570,7 @@ instance {J : Type _} [Category J] {C : Type _} [Category C] [HasTerminal C] :
           π := { app := fun _ => terminal.from _ } }
       IsLimit := { lift := fun s => terminal.from _ } }
 
+#print CategoryTheory.Limits.limitConstTerminal /-
 /-- The limit of the constant `⊤_ C` functor is `⊤_ C`. -/
 @[simps Hom]
 def limitConstTerminal {J : Type _} [Category J] {C : Type _} [Category C] [HasTerminal C] :
@@ -575,7 +582,9 @@ def limitConstTerminal {J : Type _} [Category J] {C : Type _} [Category C] [HasT
       { pt := ⊤_ C
         π := { app := fun j => terminal.from _ } }
 #align category_theory.limits.limit_const_terminal CategoryTheory.Limits.limitConstTerminal
+-/
 
+#print CategoryTheory.Limits.limitConstTerminal_inv_π /-
 @[simp, reassoc]
 theorem limitConstTerminal_inv_π {J : Type _} [Category J] {C : Type _} [Category C] [HasTerminal C]
     {j : J} :
@@ -583,6 +592,7 @@ theorem limitConstTerminal_inv_π {J : Type _} [Category J] {C : Type _} [Catego
       terminal.from _ :=
   by ext ⟨⟨⟩⟩
 #align category_theory.limits.limit_const_terminal_inv_π CategoryTheory.Limits.limitConstTerminal_inv_π
+-/
 
 instance {J : Type _} [Category J] {C : Type _} [Category C] [HasInitial C] :
     HasColimit ((CategoryTheory.Functor.const J).obj (⊥_ C)) :=
@@ -592,6 +602,7 @@ instance {J : Type _} [Category J] {C : Type _} [Category C] [HasInitial C] :
           ι := { app := fun _ => initial.to _ } }
       IsColimit := { desc := fun s => initial.to _ } }
 
+#print CategoryTheory.Limits.colimitConstInitial /-
 /-- The colimit of the constant `⊥_ C` functor is `⊥_ C`. -/
 @[simps inv]
 def colimitConstInitial {J : Type _} [Category J] {C : Type _} [Category C] [HasInitial C] :
@@ -603,7 +614,9 @@ def colimitConstInitial {J : Type _} [Category J] {C : Type _} [Category C] [Has
         ι := { app := fun j => initial.to _ } }
   inv := initial.to _
 #align category_theory.limits.colimit_const_initial CategoryTheory.Limits.colimitConstInitial
+-/
 
+#print CategoryTheory.Limits.ι_colimitConstInitial_hom /-
 @[simp, reassoc]
 theorem ι_colimitConstInitial_hom {J : Type _} [Category J] {C : Type _} [Category C] [HasInitial C]
     {j : J} :
@@ -611,6 +624,7 @@ theorem ι_colimitConstInitial_hom {J : Type _} [Category J] {C : Type _} [Categ
       initial.to _ :=
   by ext ⟨⟨⟩⟩
 #align category_theory.limits.ι_colimit_const_initial_hom CategoryTheory.Limits.ι_colimitConstInitial_hom
+-/
 
 #print CategoryTheory.Limits.InitialMonoClass /-
 /-- A category is a `initial_mono_class` if the canonical morphism of an initial object is a
@@ -685,6 +699,7 @@ section Comparison
 
 variable {D : Type u₂} [Category.{v₂} D] (G : C ⥤ D)
 
+#print CategoryTheory.Limits.terminalComparison /-
 /-- The comparison morphism from the image of a terminal object to the terminal object in the target
 category.
 This is an isomorphism iff `G` preserves terminal objects, see
@@ -693,7 +708,9 @@ This is an isomorphism iff `G` preserves terminal objects, see
 def terminalComparison [HasTerminal C] [HasTerminal D] : G.obj (⊤_ C) ⟶ ⊤_ D :=
   terminal.from _
 #align category_theory.limits.terminal_comparison CategoryTheory.Limits.terminalComparison
+-/
 
+#print CategoryTheory.Limits.initialComparison /-
 -- TODO: Show this is an isomorphism if and only if `G` preserves initial objects.
 /--
 The comparison morphism from the initial object in the target category to the image of the initial
@@ -702,6 +719,7 @@ object.
 def initialComparison [HasInitial C] [HasInitial D] : ⊥_ D ⟶ G.obj (⊥_ C) :=
   initial.to _
 #align category_theory.limits.initial_comparison CategoryTheory.Limits.initialComparison
+-/
 
 end Comparison
 
@@ -735,6 +753,7 @@ def limitOfDiagramInitial {X : J} (tX : IsInitial X) (F : J ⥤ C) :
 #align category_theory.limits.limit_of_diagram_initial CategoryTheory.Limits.limitOfDiagramInitial
 -/
 
+#print CategoryTheory.Limits.limitOfInitial /-
 -- See note [dsimp, simp]
 -- This is reducible to allow usage of lemmas about `cone_point_unique_up_to_iso`.
 /-- For a functor `F : J ⥤ C`, if `J` has an initial object then the image of it is isomorphic
@@ -743,7 +762,9 @@ to the limit of `F`. -/
 def limitOfInitial (F : J ⥤ C) [HasInitial J] [HasLimit F] : limit F ≅ F.obj (⊥_ J) :=
   IsLimit.conePointUniqueUpToIso (limit.isLimit _) (limitOfDiagramInitial initialIsInitial F)
 #align category_theory.limits.limit_of_initial CategoryTheory.Limits.limitOfInitial
+-/
 
+#print CategoryTheory.Limits.coneOfDiagramTerminal /-
 /-- From a functor `F : J ⥤ C`, given a terminal object of `J`, construct a cone for `J`,
 provided that the morphisms in the diagram are isomorphisms.
 In `limit_of_diagram_terminal` we show it is a limit cone. -/
@@ -760,14 +781,18 @@ def coneOfDiagramTerminal {X : J} (hX : IsTerminal X) (F : J ⥤ C)
         simp only [is_iso.eq_inv_comp, is_iso.comp_inv_eq, category.id_comp, ← F.map_comp,
           hX.hom_ext (hX.from i) (f ≫ hX.from j)] }
 #align category_theory.limits.cone_of_diagram_terminal CategoryTheory.Limits.coneOfDiagramTerminal
+-/
 
+#print CategoryTheory.Limits.limitOfDiagramTerminal /-
 /-- From a functor `F : J ⥤ C`, given a terminal object of `J` and that the morphisms in the
 diagram are isomorphisms, show the cone `cone_of_diagram_terminal` is a limit. -/
 def limitOfDiagramTerminal {X : J} (hX : IsTerminal X) (F : J ⥤ C)
     [∀ (i j : J) (f : i ⟶ j), IsIso (F.map f)] : IsLimit (coneOfDiagramTerminal hX F)
     where lift S := S.π.app _
 #align category_theory.limits.limit_of_diagram_terminal CategoryTheory.Limits.limitOfDiagramTerminal
+-/
 
+#print CategoryTheory.Limits.limitOfTerminal /-
 -- This is reducible to allow usage of lemmas about `cone_point_unique_up_to_iso`.
 /-- For a functor `F : J ⥤ C`, if `J` has a terminal object and all the morphisms in the diagram
 are isomorphisms, then the image of the terminal object is isomorphic to the limit of `F`. -/
@@ -776,6 +801,7 @@ def limitOfTerminal (F : J ⥤ C) [HasTerminal J] [HasLimit F]
     [∀ (i j : J) (f : i ⟶ j), IsIso (F.map f)] : limit F ≅ F.obj (⊤_ J) :=
   IsLimit.conePointUniqueUpToIso (limit.isLimit _) (limitOfDiagramTerminal terminalIsTerminal F)
 #align category_theory.limits.limit_of_terminal CategoryTheory.Limits.limitOfTerminal
+-/
 
 #print CategoryTheory.Limits.coconeOfDiagramTerminal /-
 /-- From a functor `F : J ⥤ C`, given a terminal object of `J`, construct a cocone for `J`.
@@ -803,6 +829,7 @@ def colimitOfDiagramTerminal {X : J} (tX : IsTerminal X) (F : J ⥤ C) :
 #align category_theory.limits.colimit_of_diagram_terminal CategoryTheory.Limits.colimitOfDiagramTerminal
 -/
 
+#print CategoryTheory.Limits.colimitOfTerminal /-
 -- This is reducible to allow usage of lemmas about `cocone_point_unique_up_to_iso`.
 /-- For a functor `F : J ⥤ C`, if `J` has a terminal object then the image of it is isomorphic
 to the colimit of `F`. -/
@@ -811,7 +838,9 @@ def colimitOfTerminal (F : J ⥤ C) [HasTerminal J] [HasColimit F] : colimit F �
   IsColimit.coconePointUniqueUpToIso (colimit.isColimit _)
     (colimitOfDiagramTerminal terminalIsTerminal F)
 #align category_theory.limits.colimit_of_terminal CategoryTheory.Limits.colimitOfTerminal
+-/
 
+#print CategoryTheory.Limits.coconeOfDiagramInitial /-
 /-- From a functor `F : J ⥤ C`, given an initial object of `J`, construct a cocone for `J`,
 provided that the morphisms in the diagram are isomorphisms.
 In `colimit_of_diagram_initial` we show it is a colimit cocone. -/
@@ -828,14 +857,18 @@ def coconeOfDiagramInitial {X : J} (hX : IsInitial X) (F : J ⥤ C)
         simp only [is_iso.eq_inv_comp, is_iso.comp_inv_eq, category.comp_id, ← F.map_comp,
           hX.hom_ext (hX.to i ≫ f) (hX.to j)] }
 #align category_theory.limits.cocone_of_diagram_initial CategoryTheory.Limits.coconeOfDiagramInitial
+-/
 
+#print CategoryTheory.Limits.colimitOfDiagramInitial /-
 /-- From a functor `F : J ⥤ C`, given an initial object of `J` and that the morphisms in the
 diagram are isomorphisms, show the cone `cocone_of_diagram_initial` is a colimit. -/
 def colimitOfDiagramInitial {X : J} (hX : IsInitial X) (F : J ⥤ C)
     [∀ (i j : J) (f : i ⟶ j), IsIso (F.map f)] : IsColimit (coconeOfDiagramInitial hX F)
     where desc S := S.ι.app _
 #align category_theory.limits.colimit_of_diagram_initial CategoryTheory.Limits.colimitOfDiagramInitial
+-/
 
+#print CategoryTheory.Limits.colimitOfInitial /-
 -- This is reducible to allow usage of lemmas about `cocone_point_unique_up_to_iso`.
 /-- For a functor `F : J ⥤ C`, if `J` has an initial object and all the morphisms in the diagram
 are isomorphisms, then the image of the initial object is isomorphic to the colimit of `F`. -/
@@ -845,48 +878,65 @@ def colimitOfInitial (F : J ⥤ C) [HasInitial J] [HasColimit F]
   IsColimit.coconePointUniqueUpToIso (colimit.isColimit _)
     (colimitOfDiagramInitial initialIsInitial _)
 #align category_theory.limits.colimit_of_initial CategoryTheory.Limits.colimitOfInitial
+-/
 
+#print CategoryTheory.Limits.isIso_π_of_isInitial /-
 /-- If `j` is initial in the index category, then the map `limit.π F j` is an isomorphism.
 -/
 theorem isIso_π_of_isInitial {j : J} (I : IsInitial j) (F : J ⥤ C) [HasLimit F] :
     IsIso (limit.π F j) :=
   ⟨⟨limit.lift _ (coneOfDiagramInitial I F), ⟨by ext; simp, by simp⟩⟩⟩
 #align category_theory.limits.is_iso_π_of_is_initial CategoryTheory.Limits.isIso_π_of_isInitial
+-/
 
+#print CategoryTheory.Limits.isIso_π_initial /-
 instance isIso_π_initial [HasInitial J] (F : J ⥤ C) [HasLimit F] : IsIso (limit.π F (⊥_ J)) :=
   isIso_π_of_isInitial initialIsInitial F
 #align category_theory.limits.is_iso_π_initial CategoryTheory.Limits.isIso_π_initial
+-/
 
+#print CategoryTheory.Limits.isIso_π_of_isTerminal /-
 theorem isIso_π_of_isTerminal {j : J} (I : IsTerminal j) (F : J ⥤ C) [HasLimit F]
     [∀ (i j : J) (f : i ⟶ j), IsIso (F.map f)] : IsIso (limit.π F j) :=
   ⟨⟨limit.lift _ (coneOfDiagramTerminal I F), by ext; simp, by simp⟩⟩
 #align category_theory.limits.is_iso_π_of_is_terminal CategoryTheory.Limits.isIso_π_of_isTerminal
+-/
 
+#print CategoryTheory.Limits.isIso_π_terminal /-
 instance isIso_π_terminal [HasTerminal J] (F : J ⥤ C) [HasLimit F]
     [∀ (i j : J) (f : i ⟶ j), IsIso (F.map f)] : IsIso (limit.π F (⊤_ J)) :=
   isIso_π_of_isTerminal terminalIsTerminal F
 #align category_theory.limits.is_iso_π_terminal CategoryTheory.Limits.isIso_π_terminal
+-/
 
+#print CategoryTheory.Limits.isIso_ι_of_isTerminal /-
 /-- If `j` is terminal in the index category, then the map `colimit.ι F j` is an isomorphism.
 -/
 theorem isIso_ι_of_isTerminal {j : J} (I : IsTerminal j) (F : J ⥤ C) [HasColimit F] :
     IsIso (colimit.ι F j) :=
   ⟨⟨colimit.desc _ (coconeOfDiagramTerminal I F), ⟨by simp, by ext; simp⟩⟩⟩
 #align category_theory.limits.is_iso_ι_of_is_terminal CategoryTheory.Limits.isIso_ι_of_isTerminal
+-/
 
+#print CategoryTheory.Limits.isIso_ι_terminal /-
 instance isIso_ι_terminal [HasTerminal J] (F : J ⥤ C) [HasColimit F] : IsIso (colimit.ι F (⊤_ J)) :=
   isIso_ι_of_isTerminal terminalIsTerminal F
 #align category_theory.limits.is_iso_ι_terminal CategoryTheory.Limits.isIso_ι_terminal
+-/
 
+#print CategoryTheory.Limits.isIso_ι_of_isInitial /-
 theorem isIso_ι_of_isInitial {j : J} (I : IsInitial j) (F : J ⥤ C) [HasColimit F]
     [∀ (i j : J) (f : i ⟶ j), IsIso (F.map f)] : IsIso (colimit.ι F j) :=
   ⟨⟨colimit.desc _ (coconeOfDiagramInitial I F), ⟨by tidy, by ext; simp⟩⟩⟩
 #align category_theory.limits.is_iso_ι_of_is_initial CategoryTheory.Limits.isIso_ι_of_isInitial
+-/
 
+#print CategoryTheory.Limits.isIso_ι_initial /-
 instance isIso_ι_initial [HasInitial J] (F : J ⥤ C) [HasColimit F]
     [∀ (i j : J) (f : i ⟶ j), IsIso (F.map f)] : IsIso (colimit.ι F (⊥_ J)) :=
   isIso_ι_of_isInitial initialIsInitial F
 #align category_theory.limits.is_iso_ι_initial CategoryTheory.Limits.isIso_ι_initial
+-/
 
 end
 

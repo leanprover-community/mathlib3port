@@ -98,10 +98,12 @@ def ofHom {X Y : Type u} [Monoid X] [Monoid Y] (f : X →* Y) : of X ⟶ of Y :=
 /-- Typecheck a `add_monoid_hom` as a morphism in `AddMon`. -/
 add_decl_doc AddMonCat.ofHom
 
+#print MonCat.ofHom_apply /-
 @[simp]
 theorem ofHom_apply {X Y : Type u} [Monoid X] [Monoid Y] (f : X →* Y) (x : X) : ofHom f x = f x :=
   rfl
 #align Mon.of_hom_apply MonCat.ofHom_apply
+-/
 
 @[to_additive]
 instance : Inhabited MonCat :=
@@ -186,11 +188,13 @@ theorem coe_of (R : Type u) [CommMonoid R] : (CommMonCat.of R : Type u) = R :=
 #align AddCommMon.coe_of AddCommMonCat.coe_of
 -/
 
+#print CommMonCat.hasForgetToMonCat /-
 @[to_additive has_forget_to_AddMon]
 instance hasForgetToMonCat : HasForget₂ CommMonCat MonCat :=
   BundledHom.forget₂ _ _
 #align CommMon.has_forget_to_Mon CommMonCat.hasForgetToMonCat
 #align AddCommMon.has_forget_to_AddMon AddCommMonCat.hasForgetToAddMonCat
+-/
 
 @[to_additive]
 instance : Coe CommMonCat.{u} MonCat.{u} where coe := (forget₂ CommMonCat MonCat).obj
@@ -222,6 +226,7 @@ section
 
 variable [Monoid X] [Monoid Y]
 
+#print MulEquiv.toMonCatIso /-
 /-- Build an isomorphism in the category `Mon` from a `mul_equiv` between `monoid`s. -/
 @[to_additive AddEquiv.toAddMonCatIso
       "Build an isomorphism in the category `AddMon` from\nan `add_equiv` between `add_monoid`s.",
@@ -232,6 +237,7 @@ def MulEquiv.toMonCatIso (e : X ≃* Y) : MonCat.of X ≅ MonCat.of Y
   inv := e.symm.toMonoidHom
 #align mul_equiv.to_Mon_iso MulEquiv.toMonCatIso
 #align add_equiv.to_AddMon_iso AddEquiv.toAddMonCatIso
+-/
 
 end
 
@@ -239,6 +245,7 @@ section
 
 variable [CommMonoid X] [CommMonoid Y]
 
+#print MulEquiv.toCommMonCatIso /-
 /-- Build an isomorphism in the category `CommMon` from a `mul_equiv` between `comm_monoid`s. -/
 @[to_additive AddEquiv.toAddCommMonCatIso
       "Build an isomorphism in the category `AddCommMon`\nfrom an `add_equiv` between `add_comm_monoid`s.",
@@ -249,11 +256,13 @@ def MulEquiv.toCommMonCatIso (e : X ≃* Y) : CommMonCat.of X ≅ CommMonCat.of 
   inv := e.symm.toMonoidHom
 #align mul_equiv.to_CommMon_iso MulEquiv.toCommMonCatIso
 #align add_equiv.to_AddCommMon_iso AddEquiv.toAddCommMonCatIso
+-/
 
 end
 
 namespace CategoryTheory.Iso
 
+#print CategoryTheory.Iso.monCatIsoToMulEquiv /-
 /-- Build a `mul_equiv` from an isomorphism in the category `Mon`. -/
 @[to_additive AddMon_iso_to_add_equiv
       "Build an `add_equiv` from an isomorphism in the category\n`AddMon`."]
@@ -261,16 +270,20 @@ def monCatIsoToMulEquiv {X Y : MonCat} (i : X ≅ Y) : X ≃* Y :=
   i.Hom.toMulEquiv i.inv i.hom_inv_id i.inv_hom_id
 #align category_theory.iso.Mon_iso_to_mul_equiv CategoryTheory.Iso.monCatIsoToMulEquiv
 #align category_theory.iso.AddMon_iso_to_add_equiv CategoryTheory.Iso.addMonCatIsoToAddEquiv
+-/
 
+#print CategoryTheory.Iso.commMonCatIsoToMulEquiv /-
 /-- Build a `mul_equiv` from an isomorphism in the category `CommMon`. -/
 @[to_additive "Build an `add_equiv` from an isomorphism in the category\n`AddCommMon`."]
 def commMonCatIsoToMulEquiv {X Y : CommMonCat} (i : X ≅ Y) : X ≃* Y :=
   i.Hom.toMulEquiv i.inv i.hom_inv_id i.inv_hom_id
 #align category_theory.iso.CommMon_iso_to_mul_equiv CategoryTheory.Iso.commMonCatIsoToMulEquiv
 #align category_theory.iso.CommMon_iso_to_add_equiv CategoryTheory.Iso.commMonCatIsoToAddEquiv
+-/
 
 end CategoryTheory.Iso
 
+#print mulEquivIsoMonCatIso /-
 /-- multiplicative equivalences between `monoid`s are the same as (isomorphic to) isomorphisms
 in `Mon` -/
 @[to_additive addEquivIsoAddMonCatIso
@@ -281,7 +294,9 @@ def mulEquivIsoMonCatIso {X Y : Type u} [Monoid X] [Monoid Y] : X ≃* Y ≅ Mon
   inv i := i.monCatIsoToMulEquiv
 #align mul_equiv_iso_Mon_iso mulEquivIsoMonCatIso
 #align add_equiv_iso_AddMon_iso addEquivIsoAddMonCatIso
+-/
 
+#print mulEquivIsoCommMonCatIso /-
 /-- multiplicative equivalences between `comm_monoid`s are the same as (isomorphic to) isomorphisms
 in `CommMon` -/
 @[to_additive addEquivIsoAddCommMonCatIso
@@ -293,6 +308,7 @@ def mulEquivIsoCommMonCatIso {X Y : Type u} [CommMonoid X] [CommMonoid Y] :
   inv i := i.commMonCatIsoToMulEquiv
 #align mul_equiv_iso_CommMon_iso mulEquivIsoCommMonCatIso
 #align add_equiv_iso_AddCommMon_iso addEquivIsoAddCommMonCatIso
+-/
 
 #print MonCat.forget_reflects_isos /-
 @[to_additive]

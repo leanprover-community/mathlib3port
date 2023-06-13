@@ -474,15 +474,19 @@ theorem lipschitz_infDist_set (x : α) : LipschitzWith 1 fun s : NonemptyCompact
 #align metric.lipschitz_inf_dist_set Metric.lipschitz_infDist_set
 -/
 
+#print Metric.lipschitz_infDist /-
 theorem lipschitz_infDist : LipschitzWith 2 fun p : α × NonemptyCompacts α => infDist p.1 p.2 :=
   @LipschitzWith.uncurry _ _ _ _ _ _ (fun (x : α) (s : NonemptyCompacts α) => infDist x s) 1 1
     (fun s => lipschitz_infDist_pt s) lipschitz_infDist_set
 #align metric.lipschitz_inf_dist Metric.lipschitz_infDist
+-/
 
+#print Metric.uniformContinuous_infDist_Hausdorff_dist /-
 theorem uniformContinuous_infDist_Hausdorff_dist :
     UniformContinuous fun p : α × NonemptyCompacts α => infDist p.1 p.2 :=
   lipschitz_infDist.UniformContinuous
 #align metric.uniform_continuous_inf_dist_Hausdorff_dist Metric.uniformContinuous_infDist_Hausdorff_dist
+-/
 
 end
 

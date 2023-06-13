@@ -63,13 +63,17 @@ variable {R : Type _} [NormedRing R] [CompleteSpace R]
 instance : ChartedSpace R Rˣ :=
   openEmbedding_val.singletonChartedSpace
 
+#print Units.chartAt_apply /-
 theorem chartAt_apply {a : Rˣ} {b : Rˣ} : chartAt R a b = b :=
   rfl
 #align units.chart_at_apply Units.chartAt_apply
+-/
 
+#print Units.chartAt_source /-
 theorem chartAt_source {a : Rˣ} : (chartAt R a).source = Set.univ :=
   rfl
 #align units.chart_at_source Units.chartAt_source
+-/
 
 variable {𝕜 : Type _} [NontriviallyNormedField 𝕜] [NormedAlgebra 𝕜 R]
 

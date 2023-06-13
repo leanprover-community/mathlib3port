@@ -239,20 +239,26 @@ theorem Pi.default_apply {β : α → Sort v} [∀ a, Inhabited (β a)] (a : α)
 #align pi.default_apply Pi.default_apply
 -/
 
+#print Pi.unique /-
 instance Pi.unique {β : α → Sort v} [∀ a, Unique (β a)] : Unique (∀ a, β a) :=
   { Pi.inhabited α with uniq := fun f => funext fun x => Unique.eq_default _ }
 #align pi.unique Pi.unique
+-/
 
+#print Pi.uniqueOfIsEmpty /-
 /-- There is a unique function on an empty domain. -/
 instance Pi.uniqueOfIsEmpty [IsEmpty α] (β : α → Sort v) : Unique (∀ a, β a)
     where
   default := isEmptyElim
   uniq f := funext isEmptyElim
 #align pi.unique_of_is_empty Pi.uniqueOfIsEmpty
+-/
 
+#print eq_const_of_unique /-
 theorem eq_const_of_unique [Unique α] (f : α → β) : f = Function.const α (f default) := by ext x;
   rw [Subsingleton.elim x default]
 #align eq_const_of_unique eq_const_of_unique
+-/
 
 #print heq_const_of_unique /-
 theorem heq_const_of_unique [Unique α] {β : α → Sort v} (f : ∀ a, β a) :
@@ -265,17 +271,21 @@ namespace Function
 
 variable {f : α → β}
 
+#print Function.Injective.subsingleton /-
 /-- If the codomain of an injective function is a subsingleton, then the domain
 is a subsingleton as well. -/
 protected theorem Injective.subsingleton (hf : Injective f) [Subsingleton β] : Subsingleton α :=
   ⟨fun x y => hf <| Subsingleton.elim _ _⟩
 #align function.injective.subsingleton Function.Injective.subsingleton
+-/
 
+#print Function.Surjective.subsingleton /-
 /-- If the domain of a surjective function is a subsingleton, then the codomain is a subsingleton as
 well. -/
 protected theorem Surjective.subsingleton [Subsingleton α] (hf : Surjective f) : Subsingleton β :=
   ⟨hf.Forall₂.2 fun x y => congr_arg f <| Subsingleton.elim x y⟩
 #align function.surjective.subsingleton Function.Surjective.subsingleton
+-/
 
 #print Function.Surjective.unique /-
 /-- If the domain of a surjective function is a singleton,
@@ -302,11 +312,13 @@ def Surjective.uniqueOfSurjectiveConst (α : Type _) {β : Type _} (b : β)
 
 end Function
 
+#print Unique.bijective /-
 theorem Unique.bijective {A B} [Unique A] [Unique B] {f : A → B} : Function.Bijective f :=
   by
   rw [Function.bijective_iff_has_inverse]
   refine' ⟨default, _, _⟩ <;> intro x <;> simp
 #align unique.bijective Unique.bijective
+-/
 
 namespace Option
 

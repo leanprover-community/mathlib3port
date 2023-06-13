@@ -181,6 +181,7 @@ theorem Iso.isZero_iff {X Y : C} (e : X ≅ Y) : IsZero X ↔ IsZero Y :=
 #align category_theory.iso.is_zero_iff CategoryTheory.Iso.isZero_iff
 -/
 
+#print CategoryTheory.Functor.isZero /-
 theorem Functor.isZero (F : C ⥤ D) (hF : ∀ X, IsZero (F.obj X)) : IsZero F :=
   by
   constructor <;> intro G <;> refine' ⟨⟨⟨_⟩, _⟩⟩
@@ -195,6 +196,7 @@ theorem Functor.isZero (F : C ⥤ D) (hF : ∀ X, IsZero (F.obj X)) : IsZero F :
     intros; exact (hF _).eq_of_tgt _ _
   · intro f; ext; apply (hF _).eq_of_tgt _ _
 #align category_theory.functor.is_zero CategoryTheory.Functor.isZero
+-/
 
 namespace Limits
 
@@ -263,6 +265,7 @@ def IsZero.isoZero [HasZeroObject C] {X : C} (hX : IsZero X) : X ≅ 0 :=
 #align category_theory.limits.is_zero.iso_zero CategoryTheory.Limits.IsZero.isoZero
 -/
 
+#print CategoryTheory.Limits.IsZero.obj /-
 theorem IsZero.obj [HasZeroObject D] {F : C ⥤ D} (hF : IsZero F) (X : C) : IsZero (F.obj X) :=
   by
   let G : C ⥤ D := (CategoryTheory.Functor.const C).obj 0
@@ -270,6 +273,7 @@ theorem IsZero.obj [HasZeroObject D] {F : C ⥤ D} (hF : IsZero F) (X : C) : IsZ
   let e : F ≅ G := hF.iso hG
   exact (is_zero_zero _).of_iso (e.app X)
 #align category_theory.limits.is_zero.obj CategoryTheory.Limits.IsZero.obj
+-/
 
 namespace HasZeroObject
 
@@ -389,9 +393,11 @@ open CategoryTheory.Limits
 
 open scoped ZeroObject
 
+#print CategoryTheory.Functor.isZero_iff /-
 theorem Functor.isZero_iff [HasZeroObject D] (F : C ⥤ D) : IsZero F ↔ ∀ X, IsZero (F.obj X) :=
   ⟨fun hF X => hF.obj X, Functor.isZero _⟩
 #align category_theory.functor.is_zero_iff CategoryTheory.Functor.isZero_iff
+-/
 
 end CategoryTheory
 

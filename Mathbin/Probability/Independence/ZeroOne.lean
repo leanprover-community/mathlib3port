@@ -35,6 +35,7 @@ namespace ProbabilityTheory
 
 variable {Ω ι : Type _} {m m0 : MeasurableSpace Ω} {μ : Measure Ω}
 
+#print ProbabilityTheory.measure_eq_zero_or_one_or_top_of_indepSet_self /-
 theorem measure_eq_zero_or_one_or_top_of_indepSet_self {t : Set Ω} (h_indep : IndepSet t t μ) :
     μ t = 0 ∨ μ t = 1 ∨ μ t = ∞ :=
   by
@@ -48,22 +49,27 @@ theorem measure_eq_zero_or_one_or_top_of_indepSet_self {t : Set Ω} (h_indep : I
   rw [← one_mul (μ (t ∩ t)), Set.inter_self, ENNReal.mul_eq_mul_right h0 h_top] at h_indep 
   exact Or.inr (Or.inl h_indep.symm)
 #align probability_theory.measure_eq_zero_or_one_or_top_of_indep_set_self ProbabilityTheory.measure_eq_zero_or_one_or_top_of_indepSet_self
+-/
 
+#print ProbabilityTheory.measure_eq_zero_or_one_of_indepSetCat_self /-
 theorem measure_eq_zero_or_one_of_indepSetCat_self [IsFiniteMeasure μ] {t : Set Ω}
     (h_indep : IndepSet t t μ) : μ t = 0 ∨ μ t = 1 :=
   by
   have h_0_1_top := measure_eq_zero_or_one_or_top_of_indep_set_self h_indep
   simpa [measure_ne_top μ] using h_0_1_top
 #align probability_theory.measure_eq_zero_or_one_of_indep_set_self ProbabilityTheory.measure_eq_zero_or_one_of_indepSetCat_self
+-/
 
 variable [IsProbabilityMeasure μ] {s : ι → MeasurableSpace Ω}
 
 open Filter
 
+#print ProbabilityTheory.indep_biSup_compl /-
 theorem indep_biSup_compl (h_le : ∀ n, s n ≤ m0) (h_indep : iIndep s μ) (t : Set ι) :
     Indep (⨆ n ∈ t, s n) (⨆ n ∈ tᶜ, s n) μ :=
   indep_iSup_of_disjoint h_le h_indep disjoint_compl_right
 #align probability_theory.indep_bsupr_compl ProbabilityTheory.indep_biSup_compl
+-/
 
 section Abstract
 
@@ -80,6 +86,7 @@ For the example of `f = at_top`, we can take `p = bdd_above` and `ns : ι → se
 
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic filter.is_bounded_default -/
+#print ProbabilityTheory.indep_biSup_limsup /-
 theorem indep_biSup_limsup (h_le : ∀ n, s n ≤ m0) (h_indep : iIndep s μ) (hf : ∀ t, p t → tᶜ ∈ f)
     {t : Set ι} (ht : p t) : Indep (⨆ n ∈ t, s n) (limsup s f) μ :=
   by
@@ -93,7 +100,9 @@ theorem indep_biSup_limsup (h_le : ∀ n, s n ≤ m0) (h_indep : iIndep s μ) (h
   simp only [Set.mem_compl_iff, eventually_map]
   exact eventually_of_mem (hf t ht) le_iSup₂
 #align probability_theory.indep_bsupr_limsup ProbabilityTheory.indep_biSup_limsup
+-/
 
+#print ProbabilityTheory.indep_iSup_directed_limsup /-
 theorem indep_iSup_directed_limsup (h_le : ∀ n, s n ≤ m0) (h_indep : iIndep s μ)
     (hf : ∀ t, p t → tᶜ ∈ f) (hns : Directed (· ≤ ·) ns) (hnsp : ∀ a, p (ns a)) :
     Indep (⨆ a, ⨆ n ∈ ns a, s n) (limsup s f) μ :=
@@ -108,7 +117,9 @@ theorem indep_iSup_directed_limsup (h_le : ∀ n, s n ≤ m0) (h_indep : iIndep 
     · exact hc.1 hn
     · exact hc.2 hn
 #align probability_theory.indep_supr_directed_limsup ProbabilityTheory.indep_iSup_directed_limsup
+-/
 
+#print ProbabilityTheory.indep_iSup_limsup /-
 theorem indep_iSup_limsup (h_le : ∀ n, s n ≤ m0) (h_indep : iIndep s μ) (hf : ∀ t, p t → tᶜ ∈ f)
     (hns : Directed (· ≤ ·) ns) (hnsp : ∀ a, p (ns a)) (hns_univ : ∀ n, ∃ a, n ∈ ns a) :
     Indep (⨆ n, s n) (limsup s f) μ :=
@@ -122,13 +133,17 @@ theorem indep_iSup_limsup (h_le : ∀ n, s n ≤ m0) (h_indep : iIndep s μ) (hf
   haveI : Nonempty (∃ i : α, n ∈ ns i) := ⟨hns_univ n⟩
   rw [this, iSup_const]
 #align probability_theory.indep_supr_limsup ProbabilityTheory.indep_iSup_limsup
+-/
 
+#print ProbabilityTheory.indep_limsup_self /-
 theorem indep_limsup_self (h_le : ∀ n, s n ≤ m0) (h_indep : iIndep s μ) (hf : ∀ t, p t → tᶜ ∈ f)
     (hns : Directed (· ≤ ·) ns) (hnsp : ∀ a, p (ns a)) (hns_univ : ∀ n, ∃ a, n ∈ ns a) :
     Indep (limsup s f) (limsup s f) μ :=
   indep_of_indep_of_le_left (indep_iSup_limsup h_le h_indep hf hns hnsp hns_univ) limsup_le_iSup
 #align probability_theory.indep_limsup_self ProbabilityTheory.indep_limsup_self
+-/
 
+#print ProbabilityTheory.measure_zero_or_one_of_measurableSet_limsup /-
 theorem measure_zero_or_one_of_measurableSet_limsup (h_le : ∀ n, s n ≤ m0) (h_indep : iIndep s μ)
     (hf : ∀ t, p t → tᶜ ∈ f) (hns : Directed (· ≤ ·) ns) (hnsp : ∀ a, p (ns a))
     (hns_univ : ∀ n, ∃ a, n ∈ ns a) {t : Set Ω} (ht_tail : measurable_set[limsup s f] t) :
@@ -137,6 +152,7 @@ theorem measure_zero_or_one_of_measurableSet_limsup (h_le : ∀ n, s n ≤ m0) (
     ((indep_limsup_self h_le h_indep hf hns hnsp hns_univ).indepSet_of_measurableSet ht_tail
       ht_tail)
 #align probability_theory.measure_zero_or_one_of_measurable_set_limsup ProbabilityTheory.measure_zero_or_one_of_measurableSet_limsup
+-/
 
 end Abstract
 
@@ -144,6 +160,7 @@ section AtTop
 
 variable [SemilatticeSup ι] [NoMaxOrder ι] [Nonempty ι]
 
+#print ProbabilityTheory.indep_limsup_atTop_self /-
 theorem indep_limsup_atTop_self (h_le : ∀ n, s n ≤ m0) (h_indep : iIndep s μ) :
     Indep (limsup s atTop) (limsup s atTop) μ :=
   by
@@ -159,7 +176,9 @@ theorem indep_limsup_atTop_self (h_le : ∀ n, s n ≤ m0) (h_indep : iIndep s �
   · exact Monotone.directed_le fun i j hij k hki => le_trans hki hij
   · exact fun n => ⟨n, le_rfl⟩
 #align probability_theory.indep_limsup_at_top_self ProbabilityTheory.indep_limsup_atTop_self
+-/
 
+#print ProbabilityTheory.measure_zero_or_one_of_measurableSet_limsup_atTop /-
 /-- **Kolmogorov's 0-1 law** : any event in the tail σ-algebra of an independent sequence of
 sub-σ-algebras has probability 0 or 1.
 The tail σ-algebra `limsup s at_top` is the same as `⋂ n, ⋃ i ≥ n, s i`. -/
@@ -169,6 +188,7 @@ theorem measure_zero_or_one_of_measurableSet_limsup_atTop (h_le : ∀ n, s n ≤
   measure_eq_zero_or_one_of_indepSetCat_self
     ((indep_limsup_atTop_self h_le h_indep).indepSet_of_measurableSet ht_tail ht_tail)
 #align probability_theory.measure_zero_or_one_of_measurable_set_limsup_at_top ProbabilityTheory.measure_zero_or_one_of_measurableSet_limsup_atTop
+-/
 
 end AtTop
 
@@ -176,6 +196,7 @@ section AtBot
 
 variable [SemilatticeInf ι] [NoMinOrder ι] [Nonempty ι]
 
+#print ProbabilityTheory.indep_limsup_atBot_self /-
 theorem indep_limsup_atBot_self (h_le : ∀ n, s n ≤ m0) (h_indep : iIndep s μ) :
     Indep (limsup s atBot) (limsup s atBot) μ :=
   by
@@ -191,7 +212,9 @@ theorem indep_limsup_atBot_self (h_le : ∀ n, s n ≤ m0) (h_indep : iIndep s �
   · exact directed_of_inf fun i j hij k hki => hij.trans hki
   · exact fun n => ⟨n, le_rfl⟩
 #align probability_theory.indep_limsup_at_bot_self ProbabilityTheory.indep_limsup_atBot_self
+-/
 
+#print ProbabilityTheory.measure_zero_or_one_of_measurableSet_limsup_atBot /-
 /-- **Kolmogorov's 0-1 law** : any event in the tail σ-algebra of an independent sequence of
 sub-σ-algebras has probability 0 or 1. -/
 theorem measure_zero_or_one_of_measurableSet_limsup_atBot (h_le : ∀ n, s n ≤ m0)
@@ -200,6 +223,7 @@ theorem measure_zero_or_one_of_measurableSet_limsup_atBot (h_le : ∀ n, s n ≤
   measure_eq_zero_or_one_of_indepSetCat_self
     ((indep_limsup_atBot_self h_le h_indep).indepSet_of_measurableSet ht_tail ht_tail)
 #align probability_theory.measure_zero_or_one_of_measurable_set_limsup_at_bot ProbabilityTheory.measure_zero_or_one_of_measurableSet_limsup_atBot
+-/
 
 end AtBot
 

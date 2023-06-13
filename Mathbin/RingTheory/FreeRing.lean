@@ -62,6 +62,7 @@ theorem of_injective : Function.Injective (of : α → FreeRing α) :=
 #align free_ring.of_injective FreeRing.of_injective
 -/
 
+#print FreeRing.induction_on /-
 @[elab_as_elim]
 protected theorem induction_on {C : FreeRing α → Prop} (z : FreeRing α) (hn1 : C (-1))
     (hb : ∀ b, C (of b)) (ha : ∀ x y, C x → C y → C (x + y)) (hm : ∀ x y, C x → C y → C (x * y)) :
@@ -71,6 +72,7 @@ protected theorem induction_on {C : FreeRing α → Prop} (z : FreeRing α) (hn1
   FreeAbelianGroup.induction_on z (add_left_neg (1 : FreeRing α) ▸ ha _ _ hn1 h1)
     (fun m => List.recOn m h1 fun a m ih => hm _ _ (hb a) ih) (fun m ih => hn _ ih) ha
 #align free_ring.induction_on FreeRing.induction_on
+-/
 
 section lift
 
@@ -83,10 +85,12 @@ def lift : (α → R) ≃ (FreeRing α →+* R) :=
 #align free_ring.lift FreeRing.lift
 -/
 
+#print FreeRing.lift_of /-
 @[simp]
 theorem lift_of (x : α) : lift f (of x) = f x :=
   congr_fun (lift.left_inv f) x
 #align free_ring.lift_of FreeRing.lift_of
+-/
 
 #print FreeRing.lift_comp_of /-
 @[simp]
@@ -113,10 +117,12 @@ def map : FreeRing α →+* FreeRing β :=
 #align free_ring.map FreeRing.map
 -/
 
+#print FreeRing.map_of /-
 @[simp]
 theorem map_of (x : α) : map f (of x) = of (f x) :=
   lift_of _ _
 #align free_ring.map_of FreeRing.map_of
+-/
 
 end FreeRing
 

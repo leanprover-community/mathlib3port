@@ -24,11 +24,14 @@ invertible elements in the ring of polynomials.
 
 open MvPolynomial
 
+#print MvPolynomial.invertibleC /-
 noncomputable instance MvPolynomial.invertibleC (σ : Type _) {R : Type _} [CommSemiring R] (r : R)
     [Invertible r] : Invertible (C r : MvPolynomial σ R) :=
   Invertible.map (C : R →+* MvPolynomial σ R) _
 #align mv_polynomial.invertible_C MvPolynomial.invertibleC
+-/
 
+#print MvPolynomial.invertibleCoeNat /-
 /-- A natural number that is invertible when coerced to a commutative semiring `R`
 is also invertible when coerced to any polynomial ring with rational coefficients.
 
@@ -37,4 +40,5 @@ noncomputable instance MvPolynomial.invertibleCoeNat (σ R : Type _) (p : ℕ) [
     [Invertible (p : R)] : Invertible (p : MvPolynomial σ R) :=
   IsScalarTower.invertibleAlgebraCoeNat R _ _
 #align mv_polynomial.invertible_coe_nat MvPolynomial.invertibleCoeNat
+-/
 

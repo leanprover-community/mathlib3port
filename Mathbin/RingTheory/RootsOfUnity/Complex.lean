@@ -35,6 +35,7 @@ open Polynomial Real
 
 open scoped Nat Real
 
+#print Complex.isPrimitiveRoot_exp_of_coprime /-
 theorem isPrimitiveRoot_exp_of_coprime (i n : ℕ) (h0 : n ≠ 0) (hi : i.coprime n) :
     IsPrimitiveRoot (exp (2 * π * I * (i / n))) n :=
   by
@@ -51,12 +52,16 @@ theorem isPrimitiveRoot_exp_of_coprime (i n : ℕ) (h0 : n ≠ 0) (hi : i.coprim
     have : n ∣ i * l := by rw [← Int.coe_nat_dvd, hk]; apply dvd_mul_left
     exact hi.symm.dvd_of_dvd_mul_left this
 #align complex.is_primitive_root_exp_of_coprime Complex.isPrimitiveRoot_exp_of_coprime
+-/
 
+#print Complex.isPrimitiveRoot_exp /-
 theorem isPrimitiveRoot_exp (n : ℕ) (h0 : n ≠ 0) : IsPrimitiveRoot (exp (2 * π * I / n)) n := by
   simpa only [Nat.cast_one, one_div] using
     is_primitive_root_exp_of_coprime 1 n h0 n.coprime_one_left
 #align complex.is_primitive_root_exp Complex.isPrimitiveRoot_exp
+-/
 
+#print Complex.isPrimitiveRoot_iff /-
 theorem isPrimitiveRoot_iff (ζ : ℂ) (n : ℕ) (hn : n ≠ 0) :
     IsPrimitiveRoot ζ n ↔ ∃ i < (n : ℕ), ∃ hi : i.coprime n, exp (2 * π * I * (i / n)) = ζ :=
   by
@@ -71,7 +76,9 @@ theorem isPrimitiveRoot_iff (ζ : ℂ) (n : ℕ) (hn : n ≠ 0) :
   congr 1
   field_simp [hn0, mul_comm (i : ℂ)]
 #align complex.is_primitive_root_iff Complex.isPrimitiveRoot_iff
+-/
 
+#print Complex.mem_rootsOfUnity /-
 /-- The complex `n`-th roots of unity are exactly the
 complex numbers of the form `e ^ (2 * real.pi * complex.I * (i / n))` for some `i < n`. -/
 theorem mem_rootsOfUnity (n : ℕ+) (x : Units ℂ) :
@@ -92,10 +99,13 @@ theorem mem_rootsOfUnity (n : ℕ+) (x : Units ℂ) :
     use i
     field_simp [hn0, mul_comm ((n : ℕ) : ℂ), mul_comm (i : ℂ)]
 #align complex.mem_roots_of_unity Complex.mem_rootsOfUnity
+-/
 
+#print Complex.card_rootsOfUnity /-
 theorem card_rootsOfUnity (n : ℕ+) : Fintype.card (rootsOfUnity n ℂ) = n :=
   (isPrimitiveRoot_exp n n.NeZero).card_rootsOfUnity
 #align complex.card_roots_of_unity Complex.card_rootsOfUnity
+-/
 
 #print Complex.card_primitiveRoots /-
 theorem card_primitiveRoots (k : ℕ) : (primitiveRoots k ℂ).card = φ k :=
@@ -108,15 +118,19 @@ theorem card_primitiveRoots (k : ℕ) : (primitiveRoots k ℂ).card = φ k :=
 
 end Complex
 
+#print IsPrimitiveRoot.norm'_eq_one /-
 theorem IsPrimitiveRoot.norm'_eq_one {ζ : ℂ} {n : ℕ} (h : IsPrimitiveRoot ζ n) (hn : n ≠ 0) :
     ‖ζ‖ = 1 :=
   Complex.norm_eq_one_of_pow_eq_one h.pow_eq_one hn
 #align is_primitive_root.norm'_eq_one IsPrimitiveRoot.norm'_eq_one
+-/
 
+#print IsPrimitiveRoot.nnnorm_eq_one /-
 theorem IsPrimitiveRoot.nnnorm_eq_one {ζ : ℂ} {n : ℕ} (h : IsPrimitiveRoot ζ n) (hn : n ≠ 0) :
     ‖ζ‖₊ = 1 :=
   Subtype.ext <| h.norm'_eq_one hn
 #align is_primitive_root.nnnorm_eq_one IsPrimitiveRoot.nnnorm_eq_one
+-/
 
 #print IsPrimitiveRoot.arg_ext /-
 theorem IsPrimitiveRoot.arg_ext {n m : ℕ} {ζ μ : ℂ} (hζ : IsPrimitiveRoot ζ n)
@@ -125,12 +139,15 @@ theorem IsPrimitiveRoot.arg_ext {n m : ℕ} {ζ μ : ℂ} (hζ : IsPrimitiveRoot
 #align is_primitive_root.arg_ext IsPrimitiveRoot.arg_ext
 -/
 
+#print IsPrimitiveRoot.arg_eq_zero_iff /-
 theorem IsPrimitiveRoot.arg_eq_zero_iff {n : ℕ} {ζ : ℂ} (hζ : IsPrimitiveRoot ζ n) (hn : n ≠ 0) :
     ζ.arg = 0 ↔ ζ = 1 :=
   ⟨fun h => hζ.arg_ext IsPrimitiveRoot.one hn one_ne_zero (h.trans Complex.arg_one.symm), fun h =>
     h.symm ▸ Complex.arg_one⟩
 #align is_primitive_root.arg_eq_zero_iff IsPrimitiveRoot.arg_eq_zero_iff
+-/
 
+#print IsPrimitiveRoot.arg_eq_pi_iff /-
 theorem IsPrimitiveRoot.arg_eq_pi_iff {n : ℕ} {ζ : ℂ} (hζ : IsPrimitiveRoot ζ n) (hn : n ≠ 0) :
     ζ.arg = Real.pi ↔ ζ = -1 :=
   ⟨fun h =>
@@ -138,7 +155,9 @@ theorem IsPrimitiveRoot.arg_eq_pi_iff {n : ℕ} {ζ : ℂ} (hζ : IsPrimitiveRoo
       (h.trans Complex.arg_neg_one.symm),
     fun h => h.symm ▸ Complex.arg_neg_one⟩
 #align is_primitive_root.arg_eq_pi_iff IsPrimitiveRoot.arg_eq_pi_iff
+-/
 
+#print IsPrimitiveRoot.arg /-
 theorem IsPrimitiveRoot.arg {n : ℕ} {ζ : ℂ} (h : IsPrimitiveRoot ζ n) (hn : n ≠ 0) :
     ∃ i : ℤ, ζ.arg = i / n * (2 * Real.pi) ∧ IsCoprime i n ∧ i.natAbs < n :=
   by
@@ -197,4 +216,5 @@ theorem IsPrimitiveRoot.arg {n : ℕ} {ζ : ℂ} (h : IsPrimitiveRoot ζ n) (hn 
   exact_mod_cast not_le.mp h₂
   · exact nat.cast_pos.mpr hn.bot_lt
 #align is_primitive_root.arg IsPrimitiveRoot.arg
+-/
 

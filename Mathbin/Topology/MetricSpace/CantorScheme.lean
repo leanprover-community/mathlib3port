@@ -95,6 +95,7 @@ protected def Disjoint : Prop :=
 
 variable {A}
 
+#print CantorScheme.map_mem /-
 /-- If `x` is in the domain of the induced map of a scheme `A`,
 its image under this map is in each set along the corresponding branch. -/
 theorem map_mem (x : (inducedMap A).1) (n : ℕ) : (inducedMap A).2 x ∈ A (res x n) :=
@@ -103,6 +104,7 @@ theorem map_mem (x : (inducedMap A).1) (n : ℕ) : (inducedMap A).2 x ∈ A (res
   rw [mem_Inter] at this 
   exact this n
 #align cantor_scheme.map_mem CantorScheme.map_mem
+-/
 
 #print CantorScheme.ClosureAntitone.antitone /-
 protected theorem ClosureAntitone.antitone [TopologicalSpace α] (hA : ClosureAntitone A) :
@@ -117,6 +119,7 @@ protected theorem Antitone.closureAntitone [TopologicalSpace α] (hanti : Cantor
 #align cantor_scheme.antitone.closure_antitone CantorScheme.Antitone.closureAntitone
 -/
 
+#print CantorScheme.Disjoint.map_injective /-
 /-- A scheme where the children of each set are pairwise disjoint induces an injective map. -/
 theorem Disjoint.map_injective (hA : CantorScheme.Disjoint A) : Injective (inducedMap A).2 :=
   by
@@ -137,6 +140,7 @@ theorem Disjoint.map_injective (hA : CantorScheme.Disjoint A) : Injective (induc
   rw [hxy, ih, ← res_succ]
   apply map_mem
 #align cantor_scheme.disjoint.map_injective CantorScheme.Disjoint.map_injective
+-/
 
 end Topology
 
@@ -156,6 +160,7 @@ def VanishingDiam : Prop :=
 variable {A}
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (y z «expr ∈ » A (res[pi_nat.res] x n)) -/
+#print CantorScheme.VanishingDiam.dist_lt /-
 theorem VanishingDiam.dist_lt (hA : VanishingDiam A) (ε : ℝ) (ε_pos : 0 < ε) (x : ℕ → β) :
     ∃ n : ℕ, ∀ (y) (_ : y ∈ A (res x n)) (z) (_ : z ∈ A (res x n)), dist y z < ε :=
   by
@@ -171,7 +176,9 @@ theorem VanishingDiam.dist_lt (hA : VanishingDiam A) (ε : ℝ) (ε_pos : 0 < ε
   rw [ENNReal.ofReal_lt_ofReal_iff ε_pos]
   linarith
 #align cantor_scheme.vanishing_diam.dist_lt CantorScheme.VanishingDiam.dist_lt
+-/
 
+#print CantorScheme.VanishingDiam.map_continuous /-
 /-- A scheme with vanishing diameter along each branch induces a continuous map. -/
 theorem VanishingDiam.map_continuous [TopologicalSpace β] [DiscreteTopology β]
     (hA : VanishingDiam A) : Continuous (inducedMap A).2 :=
@@ -190,6 +197,7 @@ theorem VanishingDiam.map_continuous [TopologicalSpace β] [DiscreteTopology β]
   apply continuous_subtype_coe.is_open_preimage
   apply is_open_cylinder
 #align cantor_scheme.vanishing_diam.map_continuous CantorScheme.VanishingDiam.map_continuous
+-/
 
 #print CantorScheme.ClosureAntitone.map_of_vanishingDiam /-
 /-- A scheme on a complete space with vanishing diameter

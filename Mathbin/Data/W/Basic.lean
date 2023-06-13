@@ -67,15 +67,19 @@ def ofSigma : (Σ a : α, β a → WType β) → WType β
 #align W_type.of_sigma WType.ofSigma
 -/
 
+#print WType.ofSigma_toSigma /-
 @[simp]
 theorem ofSigma_toSigma : ∀ w : WType β, ofSigma (toSigma w) = w
   | ⟨a, f⟩ => rfl
 #align W_type.of_sigma_to_sigma WType.ofSigma_toSigma
+-/
 
+#print WType.toSigma_ofSigma /-
 @[simp]
 theorem toSigma_ofSigma : ∀ s : Σ a : α, β a → WType β, toSigma (ofSigma s) = s
   | ⟨a, f⟩ => rfl
 #align W_type.to_sigma_of_sigma WType.toSigma_ofSigma
+-/
 
 variable (β)
 
@@ -101,6 +105,7 @@ def elim (γ : Type _) (fγ : (Σ a : α, β a → γ) → γ) : WType β → γ
 #align W_type.elim WType.elim
 -/
 
+#print WType.elim_injective /-
 theorem elim_injective (γ : Type _) (fγ : (Σ a : α, β a → γ) → γ)
     (fγ_injective : Function.Injective fγ) : Function.Injective (elim γ fγ)
   | ⟨a₁, f₁⟩, ⟨a₂, f₂⟩, h =>
@@ -109,6 +114,7 @@ theorem elim_injective (γ : Type _) (fγ : (Σ a : α, β a → γ) → γ)
     congr with x
     exact elim_injective (congr_fun (eq_of_hEq h) x : _)
 #align W_type.elim_injective WType.elim_injective
+-/
 
 instance [hα : IsEmpty α] : IsEmpty (WType β) :=
   ⟨fun w => WType.recOn w (IsEmpty.elim hα)⟩
@@ -143,12 +149,16 @@ def depth : WType β → ℕ
 #align W_type.depth WType.depth
 -/
 
+#print WType.depth_pos /-
 theorem depth_pos (t : WType β) : 0 < t.depth := by cases t; apply Nat.succ_pos
 #align W_type.depth_pos WType.depth_pos
+-/
 
+#print WType.depth_lt_depth_mk /-
 theorem depth_lt_depth_mk (a : α) (f : β a → WType β) (i : β a) : depth (f i) < depth ⟨a, f⟩ :=
   Nat.lt_succ_of_le (Finset.le_sup (Finset.mem_univ i))
 #align W_type.depth_lt_depth_mk WType.depth_lt_depth_mk
+-/
 
 /-
 Show that W types are encodable when `α` is an encodable fintype and for every `a : α`, `β a` is

@@ -49,10 +49,12 @@ def derivedSeries : ℕ → Subgroup G
 #align derived_series derivedSeries
 -/
 
+#print derivedSeries_zero /-
 @[simp]
 theorem derivedSeries_zero : derivedSeries G 0 = ⊤ :=
   rfl
 #align derived_series_zero derivedSeries_zero
+-/
 
 #print derivedSeries_succ /-
 @[simp]
@@ -86,6 +88,7 @@ section DerivedSeriesMap
 
 variable (f)
 
+#print map_derivedSeries_le_derivedSeries /-
 theorem map_derivedSeries_le_derivedSeries (n : ℕ) :
     (derivedSeries G n).map f ≤ derivedSeries G' n :=
   by
@@ -93,9 +96,11 @@ theorem map_derivedSeries_le_derivedSeries (n : ℕ) :
   · exact le_top
   · simp only [derivedSeries_succ, map_commutator, commutator_mono, ih]
 #align map_derived_series_le_derived_series map_derivedSeries_le_derivedSeries
+-/
 
 variable {f}
 
+#print derivedSeries_le_map_derivedSeries /-
 theorem derivedSeries_le_map_derivedSeries (hf : Function.Surjective f) (n : ℕ) :
     derivedSeries G' n ≤ (derivedSeries G n).map f :=
   by
@@ -103,11 +108,14 @@ theorem derivedSeries_le_map_derivedSeries (hf : Function.Surjective f) (n : ℕ
   · exact (map_top_of_surjective f hf).ge
   · exact commutator_le_map_commutator ih ih
 #align derived_series_le_map_derived_series derivedSeries_le_map_derivedSeries
+-/
 
+#print map_derivedSeries_eq /-
 theorem map_derivedSeries_eq (hf : Function.Surjective f) (n : ℕ) :
     (derivedSeries G n).map f = derivedSeries G' n :=
   le_antisymm (map_derivedSeries_le_derivedSeries f n) (derivedSeries_le_map_derivedSeries hf n)
 #align map_derived_series_eq map_derivedSeries_eq
+-/
 
 end DerivedSeriesMap
 
@@ -125,9 +133,11 @@ class IsSolvable : Prop where
 #align is_solvable IsSolvable
 -/
 
+#print isSolvable_def /-
 theorem isSolvable_def : IsSolvable G ↔ ∃ n : ℕ, derivedSeries G n = ⊥ :=
   ⟨fun h => h.solvable, fun h => ⟨h⟩⟩
 #align is_solvable_def isSolvable_def
+-/
 
 #print CommGroup.isSolvable /-
 instance (priority := 100) CommGroup.isSolvable {G : Type _} [CommGroup G] : IsSolvable G :=
@@ -135,16 +145,20 @@ instance (priority := 100) CommGroup.isSolvable {G : Type _} [CommGroup G] : IsS
 #align comm_group.is_solvable CommGroup.isSolvable
 -/
 
+#print isSolvable_of_comm /-
 theorem isSolvable_of_comm {G : Type _} [hG : Group G] (h : ∀ a b : G, a * b = b * a) :
     IsSolvable G := by
   letI hG' : CommGroup G := { hG with mul_comm := h }
   cases hG
   exact CommGroup.isSolvable
 #align is_solvable_of_comm isSolvable_of_comm
+-/
 
+#print isSolvable_of_top_eq_bot /-
 theorem isSolvable_of_top_eq_bot (h : (⊤ : Subgroup G) = ⊥) : IsSolvable G :=
   ⟨⟨0, h⟩⟩
 #align is_solvable_of_top_eq_bot isSolvable_of_top_eq_bot
+-/
 
 #print isSolvable_of_subsingleton /-
 instance (priority := 100) isSolvable_of_subsingleton [Subsingleton G] : IsSolvable G :=
@@ -154,6 +168,7 @@ instance (priority := 100) isSolvable_of_subsingleton [Subsingleton G] : IsSolva
 
 variable {G}
 
+#print solvable_of_ker_le_range /-
 theorem solvable_of_ker_le_range {G' G'' : Type _} [Group G'] [Group G''] (f : G' →* G)
     (g : G →* G'') (hfg : g.ker ≤ f.range) [hG' : IsSolvable G'] [hG'' : IsSolvable G''] :
     IsSolvable G := by
@@ -170,19 +185,26 @@ theorem solvable_of_ker_le_range {G' G'' : Type _} [Group G'] [Group G''] (f : G
           hfg
   · exact commutator_le_map_commutator hm hm
 #align solvable_of_ker_le_range solvable_of_ker_le_range
+-/
 
+#print solvable_of_solvable_injective /-
 theorem solvable_of_solvable_injective (hf : Function.Injective f) [h : IsSolvable G'] :
     IsSolvable G :=
   solvable_of_ker_le_range (1 : G' →* G) f ((f.ker_eq_bot_iff.mpr hf).symm ▸ bot_le)
 #align solvable_of_solvable_injective solvable_of_solvable_injective
+-/
 
+#print subgroup_solvable_of_solvable /-
 instance subgroup_solvable_of_solvable (H : Subgroup G) [h : IsSolvable G] : IsSolvable H :=
   solvable_of_solvable_injective H.subtype_injective
 #align subgroup_solvable_of_solvable subgroup_solvable_of_solvable
+-/
 
+#print solvable_of_surjective /-
 theorem solvable_of_surjective (hf : Function.Surjective f) [h : IsSolvable G] : IsSolvable G' :=
   solvable_of_ker_le_range f (1 : G' →* G) ((f.range_top_of_surjective hf).symm ▸ le_top)
 #align solvable_of_surjective solvable_of_surjective
+-/
 
 #print solvable_quotient_of_solvable /-
 instance solvable_quotient_of_solvable (H : Subgroup G) [H.Normal] [h : IsSolvable G] :
@@ -191,11 +213,13 @@ instance solvable_quotient_of_solvable (H : Subgroup G) [H.Normal] [h : IsSolvab
 #align solvable_quotient_of_solvable solvable_quotient_of_solvable
 -/
 
+#print solvable_prod /-
 instance solvable_prod {G' : Type _} [Group G'] [h : IsSolvable G] [h' : IsSolvable G'] :
     IsSolvable (G × G') :=
   solvable_of_ker_le_range (MonoidHom.inl G G') (MonoidHom.snd G G') fun x hx =>
     ⟨x.1, Prod.ext rfl hx.symm⟩
 #align solvable_prod solvable_prod
+-/
 
 end Solvable
 
@@ -215,6 +239,7 @@ theorem IsSimpleGroup.derivedSeries_succ {n : ℕ} : derivedSeries G n.succ = co
 #align is_simple_group.derived_series_succ IsSimpleGroup.derivedSeries_succ
 -/
 
+#print IsSimpleGroup.comm_iff_isSolvable /-
 theorem IsSimpleGroup.comm_iff_isSolvable : (∀ a b : G, a * b = b * a) ↔ IsSolvable G :=
   ⟨isSolvable_of_comm, fun ⟨⟨n, hn⟩⟩ => by
     cases n
@@ -227,17 +252,20 @@ theorem IsSimpleGroup.comm_iff_isSolvable : (∀ a b : G, a * b = b * a) ↔ IsS
       rw [← mul_inv_eq_one, mul_inv_rev, ← mul_assoc, ← mem_bot, ← hn, commutator_eq_closure]
       exact subset_closure ⟨a, b, rfl⟩⟩
 #align is_simple_group.comm_iff_is_solvable IsSimpleGroup.comm_iff_isSolvable
+-/
 
 end IsSimpleGroup
 
 section PermNotSolvable
 
+#print not_solvable_of_mem_derivedSeries /-
 theorem not_solvable_of_mem_derivedSeries {g : G} (h1 : g ≠ 1)
     (h2 : ∀ n : ℕ, g ∈ derivedSeries G n) : ¬IsSolvable G :=
   mt (isSolvable_def _).mp
     (not_exists_of_forall_not fun n h =>
       h1 (Subgroup.mem_bot.mp ((congr_arg (Membership.Mem g) h).mp (h2 n))))
 #align not_solvable_of_mem_derived_series not_solvable_of_mem_derivedSeries
+-/
 
 #print Equiv.Perm.fin_5_not_solvable /-
 theorem Equiv.Perm.fin_5_not_solvable : ¬IsSolvable (Equiv.Perm (Fin 5)) :=
@@ -254,6 +282,7 @@ theorem Equiv.Perm.fin_5_not_solvable : ¬IsSolvable (Equiv.Perm (Fin 5)) :=
 #align equiv.perm.fin_5_not_solvable Equiv.Perm.fin_5_not_solvable
 -/
 
+#print Equiv.Perm.not_solvable /-
 theorem Equiv.Perm.not_solvable (X : Type _) (hX : 5 ≤ Cardinal.mk X) :
     ¬IsSolvable (Equiv.Perm X) := by
   intro h
@@ -264,6 +293,7 @@ theorem Equiv.Perm.not_solvable (X : Type _) (hX : 5 ≤ Cardinal.mk X) :
     Equiv.Perm.fin_5_not_solvable
       (solvable_of_solvable_injective (Equiv.Perm.viaEmbeddingHom_injective (Nonempty.some key)))
 #align equiv.perm.not_solvable Equiv.Perm.not_solvable
+-/
 
 end PermNotSolvable
 

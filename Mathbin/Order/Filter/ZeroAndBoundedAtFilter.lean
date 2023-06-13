@@ -47,14 +47,18 @@ theorem zero_zeroAtFilter [Zero β] [TopologicalSpace β] (l : Filter α) :
 #align filter.zero_zero_at_filter Filter.zero_zeroAtFilter
 -/
 
+#print Filter.ZeroAtFilter.add /-
 theorem ZeroAtFilter.add [TopologicalSpace β] [AddZeroClass β] [ContinuousAdd β] {l : Filter α}
     {f g : α → β} (hf : ZeroAtFilter l f) (hg : ZeroAtFilter l g) : ZeroAtFilter l (f + g) := by
   simpa using hf.add hg
 #align filter.zero_at_filter.add Filter.ZeroAtFilter.add
+-/
 
+#print Filter.ZeroAtFilter.neg /-
 theorem ZeroAtFilter.neg [TopologicalSpace β] [AddGroup β] [ContinuousNeg β] {l : Filter α}
     {f : α → β} (hf : ZeroAtFilter l f) : ZeroAtFilter l (-f) := by simpa using hf.neg
 #align filter.zero_at_filter.neg Filter.ZeroAtFilter.neg
+-/
 
 #print Filter.ZeroAtFilter.smul /-
 theorem ZeroAtFilter.smul {𝕜 : Type _} [TopologicalSpace 𝕜] [TopologicalSpace β] [Zero 𝕜] [Zero β]
@@ -63,6 +67,7 @@ theorem ZeroAtFilter.smul {𝕜 : Type _} [TopologicalSpace 𝕜] [TopologicalSp
 #align filter.zero_at_filter.smul Filter.ZeroAtFilter.smul
 -/
 
+#print Filter.zeroAtFilterSubmodule /-
 /-- `zero_at_filter_submodule l` is the submodule of `f : α → β` which
 tend to zero along `l`. -/
 def zeroAtFilterSubmodule [TopologicalSpace β] [Semiring β] [ContinuousAdd β] [ContinuousMul β]
@@ -73,7 +78,9 @@ def zeroAtFilterSubmodule [TopologicalSpace β] [Semiring β] [ContinuousAdd β]
   add_mem' a b ha hb := ha.add hb
   smul_mem' c f hf := hf.smul c
 #align filter.zero_at_filter_submodule Filter.zeroAtFilterSubmodule
+-/
 
+#print Filter.zeroAtFilterAddSubmonoid /-
 /-- `zero_at_filter_add_submonoid l` is the additive submonoid of `f : α → β`
 which tend to zero along `l`. -/
 def zeroAtFilterAddSubmonoid [TopologicalSpace β] [AddZeroClass β] [ContinuousAdd β]
@@ -83,6 +90,7 @@ def zeroAtFilterAddSubmonoid [TopologicalSpace β] [AddZeroClass β] [Continuous
   add_mem' a b ha hb := ha.add hb
   zero_mem' := zero_zeroAtFilter l
 #align filter.zero_at_filter_add_submonoid Filter.zeroAtFilterAddSubmonoid
+-/
 
 #print Filter.BoundedAtFilter /-
 /-- If `l` is a filter on `α`, then a function `f: α → β` is `bounded_at_filter l`
@@ -92,12 +100,14 @@ def BoundedAtFilter [Norm β] (l : Filter α) (f : α → β) : Prop :=
 #align filter.bounded_at_filter Filter.BoundedAtFilter
 -/
 
+#print Filter.ZeroAtFilter.boundedAtFilter /-
 theorem ZeroAtFilter.boundedAtFilter [NormedAddCommGroup β] {l : Filter α} {f : α → β}
     (hf : ZeroAtFilter l f) : BoundedAtFilter l f :=
   by
   rw [zero_at_filter, ← Asymptotics.isLittleO_const_iff (one_ne_zero' ℝ)] at hf 
   exact hf.is_O
 #align filter.zero_at_filter.bounded_at_filter Filter.ZeroAtFilter.boundedAtFilter
+-/
 
 #print Filter.const_boundedAtFilter /-
 theorem const_boundedAtFilter [NormedField β] (l : Filter α) (c : β) :
@@ -106,15 +116,19 @@ theorem const_boundedAtFilter [NormedField β] (l : Filter α) (c : β) :
 #align filter.const_bounded_at_filter Filter.const_boundedAtFilter
 -/
 
+#print Filter.BoundedAtFilter.add /-
 theorem BoundedAtFilter.add [NormedAddCommGroup β] {l : Filter α} {f g : α → β}
     (hf : BoundedAtFilter l f) (hg : BoundedAtFilter l g) : BoundedAtFilter l (f + g) := by
   simpa using hf.add hg
 #align filter.bounded_at_filter.add Filter.BoundedAtFilter.add
+-/
 
+#print Filter.BoundedAtFilter.neg /-
 theorem BoundedAtFilter.neg [NormedAddCommGroup β] {l : Filter α} {f : α → β}
     (hf : BoundedAtFilter l f) : BoundedAtFilter l (-f) :=
   hf.neg_left
 #align filter.bounded_at_filter.neg Filter.BoundedAtFilter.neg
+-/
 
 #print Filter.BoundedAtFilter.smul /-
 theorem BoundedAtFilter.smul {𝕜 : Type _} [NormedField 𝕜] [NormedAddCommGroup β] [NormedSpace 𝕜 β]
@@ -123,6 +137,7 @@ theorem BoundedAtFilter.smul {𝕜 : Type _} [NormedField 𝕜] [NormedAddCommGr
 #align filter.bounded_at_filter.smul Filter.BoundedAtFilter.smul
 -/
 
+#print Filter.BoundedAtFilter.mul /-
 theorem BoundedAtFilter.mul [NormedField β] {l : Filter α} {f g : α → β} (hf : BoundedAtFilter l f)
     (hg : BoundedAtFilter l g) : BoundedAtFilter l (f * g) :=
   by
@@ -131,6 +146,7 @@ theorem BoundedAtFilter.mul [NormedField β] {l : Filter α} {f g : α → β} (
   ext x
   simp
 #align filter.bounded_at_filter.mul Filter.BoundedAtFilter.mul
+-/
 
 #print Filter.boundedFilterSubmodule /-
 /-- The submodule of functions that are bounded along a filter `l`. -/

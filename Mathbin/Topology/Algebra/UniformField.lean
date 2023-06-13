@@ -48,7 +48,6 @@ open Set UniformSpace UniformSpace.Completion Filter
 
 variable (K : Type _) [Field K] [UniformSpace K]
 
--- mathport name: exprhat
 local notation "hat" => Completion
 
 #print CompletableTopField /-
@@ -79,6 +78,7 @@ def hatInv : hat K → hat K :=
 #align uniform_space.completion.hat_inv UniformSpace.Completion.hatInv
 -/
 
+#print UniformSpace.Completion.continuous_hatInv /-
 theorem continuous_hatInv [CompletableTopField K] {x : hat K} (h : x ≠ 0) : ContinuousAt hatInv x :=
   by
   haveI : T3Space (hat K) := completion.t3_space K
@@ -100,6 +100,7 @@ theorem continuous_hatInv [CompletableTopField K] {x : hat K} (h : x ≠ 0) : Co
     erw [dense_inducing_coe.nhds_eq_comap (0 : K), ← Filter.comap_inf, eq_bot]
     exact comap_bot
 #align uniform_space.completion.continuous_hat_inv UniformSpace.Completion.continuous_hatInv
+-/
 
 /-
 The value of `hat_inv` at zero is not really specified, although it's probably zero.
@@ -110,12 +111,15 @@ instance : Inv (hat K) :=
 
 variable [TopologicalDivisionRing K]
 
+#print UniformSpace.Completion.hatInv_extends /-
 theorem hatInv_extends {x : K} (h : x ≠ 0) : hatInv (x : hat K) = coe (x⁻¹ : K) :=
   denseInducing_coe.extend_eq_at ((continuous_coe K).ContinuousAt.comp (continuousAt_inv₀ h))
 #align uniform_space.completion.hat_inv_extends UniformSpace.Completion.hatInv_extends
+-/
 
 variable [CompletableTopField K]
 
+#print UniformSpace.Completion.coe_inv /-
 @[norm_cast]
 theorem coe_inv (x : K) : (x : hat K)⁻¹ = ((x⁻¹ : K) : hat K) :=
   by
@@ -129,9 +133,11 @@ theorem coe_inv (x : K) : (x : hat K)⁻¹ = ((x⁻¹ : K) : hat K) :=
     · exact hat_inv_extends h
     · exact fun H => h (dense_embedding_coe.inj H)
 #align uniform_space.completion.coe_inv UniformSpace.Completion.coe_inv
+-/
 
 variable [UniformAddGroup K]
 
+#print UniformSpace.Completion.mul_hatInv_cancel /-
 theorem mul_hatInv_cancel {x : hat K} (x_ne : x ≠ 0) : x * hatInv x = 1 :=
   by
   haveI : T1Space (hat K) := T2Space.t1Space
@@ -165,6 +171,7 @@ theorem mul_hatInv_cancel {x : hat K} (x_ne : x ≠ 0) : x * hatInv x = 1 :=
   replace fxclo := closure_mono this fxclo
   rwa [closure_singleton, mem_singleton_iff] at fxclo 
 #align uniform_space.completion.mul_hat_inv_cancel UniformSpace.Completion.mul_hatInv_cancel
+-/
 
 instance : Field (hat K) :=
   { Completion.hasInv,
@@ -198,6 +205,7 @@ end UniformSpace
 
 variable (L : Type _) [Field L] [UniformSpace L] [CompletableTopField L]
 
+#print Subfield.completableTopField /-
 instance Subfield.completableTopField (K : Subfield L) : CompletableTopField K :=
   { Subtype.separatedSpace (K : Set L) with
     nice := by
@@ -209,6 +217,7 @@ instance Subfield.completableTopField (K : Subfield L) : CompletableTopField K :
       apply CompletableTopField.nice _ F_cau
       rw [← Filter.push_pull', ← map_zero i, ← hi.inducing.nhds_eq_comap, inf_F, Filter.map_bot] }
 #align subfield.completable_top_field Subfield.completableTopField
+-/
 
 #print completableTopField_of_complete /-
 instance (priority := 100) completableTopField_of_complete (L : Type _) [Field L] [UniformSpace L]

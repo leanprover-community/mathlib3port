@@ -54,13 +54,11 @@ class HasInfs (α : Type _) where
 #align has_infs HasInfs
 -/
 
--- mathport name: «expr ⊻ »
 infixl:74
   " ⊻ " =>-- This notation is meant to have higher precedence than `⊔` and `⊓`, but still within the realm of
   -- other binary operations
   HasSups.sups
 
--- mathport name: «expr ⊼ »
 infixl:75 " ⊼ " => HasInfs.infs
 
 namespace Set
@@ -80,13 +78,17 @@ scoped[SetFamily] attribute [instance] Set.hasSups
 
 variable {s s₁ s₂ t t₁ t₂ u} {a b c : α}
 
+#print Set.mem_sups /-
 @[simp]
 theorem mem_sups : c ∈ s ⊻ t ↔ ∃ a ∈ s, ∃ b ∈ t, a ⊔ b = c := by simp [(· ⊻ ·)]
 #align set.mem_sups Set.mem_sups
+-/
 
+#print Set.sup_mem_sups /-
 theorem sup_mem_sups : a ∈ s → b ∈ t → a ⊔ b ∈ s ⊻ t :=
   mem_image2_of_mem
 #align set.sup_mem_sups Set.sup_mem_sups
+-/
 
 #print Set.sups_subset /-
 theorem sups_subset : s₁ ⊆ s₂ → t₁ ⊆ t₂ → s₁ ⊻ t₁ ⊆ s₂ ⊻ t₂ :=
@@ -106,22 +108,30 @@ theorem sups_subset_right : s₁ ⊆ s₂ → s₁ ⊻ t ⊆ s₂ ⊻ t :=
 #align set.sups_subset_right Set.sups_subset_right
 -/
 
+#print Set.image_subset_sups_left /-
 theorem image_subset_sups_left : b ∈ t → (fun a => a ⊔ b) '' s ⊆ s ⊻ t :=
   image_subset_image2_left
 #align set.image_subset_sups_left Set.image_subset_sups_left
+-/
 
+#print Set.image_subset_sups_right /-
 theorem image_subset_sups_right : a ∈ s → (· ⊔ ·) a '' t ⊆ s ⊻ t :=
   image_subset_image2_right
 #align set.image_subset_sups_right Set.image_subset_sups_right
+-/
 
+#print Set.forall_sups_iff /-
 theorem forall_sups_iff {p : α → Prop} : (∀ c ∈ s ⊻ t, p c) ↔ ∀ a ∈ s, ∀ b ∈ t, p (a ⊔ b) :=
   forall_image2_iff
 #align set.forall_sups_iff Set.forall_sups_iff
+-/
 
+#print Set.sups_subset_iff /-
 @[simp]
 theorem sups_subset_iff : s ⊻ t ⊆ u ↔ ∀ a ∈ s, ∀ b ∈ t, a ⊔ b ∈ u :=
   image2_subset_iff
 #align set.sups_subset_iff Set.sups_subset_iff
+-/
 
 #print Set.sups_nonempty /-
 @[simp]
@@ -169,51 +179,71 @@ theorem sups_eq_empty : s ⊻ t = ∅ ↔ s = ∅ ∨ t = ∅ :=
 #align set.sups_eq_empty Set.sups_eq_empty
 -/
 
+#print Set.singleton_sups /-
 @[simp]
 theorem singleton_sups : {a} ⊻ t = t.image fun b => a ⊔ b :=
   image2_singleton_left
 #align set.singleton_sups Set.singleton_sups
+-/
 
+#print Set.sups_singleton /-
 @[simp]
 theorem sups_singleton : s ⊻ {b} = s.image fun a => a ⊔ b :=
   image2_singleton_right
 #align set.sups_singleton Set.sups_singleton
+-/
 
+#print Set.singleton_sups_singleton /-
 theorem singleton_sups_singleton : ({a} ⊻ {b} : Set α) = {a ⊔ b} :=
   image2_singleton
 #align set.singleton_sups_singleton Set.singleton_sups_singleton
+-/
 
+#print Set.sups_union_left /-
 theorem sups_union_left : (s₁ ∪ s₂) ⊻ t = s₁ ⊻ t ∪ s₂ ⊻ t :=
   image2_union_left
 #align set.sups_union_left Set.sups_union_left
+-/
 
+#print Set.sups_union_right /-
 theorem sups_union_right : s ⊻ (t₁ ∪ t₂) = s ⊻ t₁ ∪ s ⊻ t₂ :=
   image2_union_right
 #align set.sups_union_right Set.sups_union_right
+-/
 
+#print Set.sups_inter_subset_left /-
 theorem sups_inter_subset_left : (s₁ ∩ s₂) ⊻ t ⊆ s₁ ⊻ t ∩ s₂ ⊻ t :=
   image2_inter_subset_left
 #align set.sups_inter_subset_left Set.sups_inter_subset_left
+-/
 
+#print Set.sups_inter_subset_right /-
 theorem sups_inter_subset_right : s ⊻ (t₁ ∩ t₂) ⊆ s ⊻ t₁ ∩ s ⊻ t₂ :=
   image2_inter_subset_right
 #align set.sups_inter_subset_right Set.sups_inter_subset_right
+-/
 
 variable (s t u v)
 
+#print Set.iUnion_image_sup_left /-
 theorem iUnion_image_sup_left : (⋃ a ∈ s, (· ⊔ ·) a '' t) = s ⊻ t :=
   iUnion_image_left _
 #align set.Union_image_sup_left Set.iUnion_image_sup_left
+-/
 
+#print Set.iUnion_image_sup_right /-
 theorem iUnion_image_sup_right : (⋃ b ∈ t, (· ⊔ b) '' s) = s ⊻ t :=
   iUnion_image_right _
 #align set.Union_image_sup_right Set.iUnion_image_sup_right
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print Set.image_sup_prod /-
 @[simp]
 theorem image_sup_prod (s t : Set α) : (s ×ˢ t).image (uncurry (· ⊔ ·)) = s ⊻ t :=
   image_uncurry_prod _ _ _
 #align set.image_sup_prod Set.image_sup_prod
+-/
 
 #print Set.sups_assoc /-
 theorem sups_assoc : s ⊻ t ⊻ u = s ⊻ (t ⊻ u) :=
@@ -262,13 +292,17 @@ scoped[SetFamily] attribute [instance] Set.hasInfs
 
 variable {s s₁ s₂ t t₁ t₂ u} {a b c : α}
 
+#print Set.mem_infs /-
 @[simp]
 theorem mem_infs : c ∈ s ⊼ t ↔ ∃ a ∈ s, ∃ b ∈ t, a ⊓ b = c := by simp [(· ⊼ ·)]
 #align set.mem_infs Set.mem_infs
+-/
 
+#print Set.inf_mem_infs /-
 theorem inf_mem_infs : a ∈ s → b ∈ t → a ⊓ b ∈ s ⊼ t :=
   mem_image2_of_mem
 #align set.inf_mem_infs Set.inf_mem_infs
+-/
 
 #print Set.infs_subset /-
 theorem infs_subset : s₁ ⊆ s₂ → t₁ ⊆ t₂ → s₁ ⊼ t₁ ⊆ s₂ ⊼ t₂ :=
@@ -288,22 +322,30 @@ theorem infs_subset_right : s₁ ⊆ s₂ → s₁ ⊼ t ⊆ s₂ ⊼ t :=
 #align set.infs_subset_right Set.infs_subset_right
 -/
 
+#print Set.image_subset_infs_left /-
 theorem image_subset_infs_left : b ∈ t → (fun a => a ⊓ b) '' s ⊆ s ⊼ t :=
   image_subset_image2_left
 #align set.image_subset_infs_left Set.image_subset_infs_left
+-/
 
+#print Set.image_subset_infs_right /-
 theorem image_subset_infs_right : a ∈ s → (· ⊓ ·) a '' t ⊆ s ⊼ t :=
   image_subset_image2_right
 #align set.image_subset_infs_right Set.image_subset_infs_right
+-/
 
+#print Set.forall_infs_iff /-
 theorem forall_infs_iff {p : α → Prop} : (∀ c ∈ s ⊼ t, p c) ↔ ∀ a ∈ s, ∀ b ∈ t, p (a ⊓ b) :=
   forall_image2_iff
 #align set.forall_infs_iff Set.forall_infs_iff
+-/
 
+#print Set.infs_subset_iff /-
 @[simp]
 theorem infs_subset_iff : s ⊼ t ⊆ u ↔ ∀ a ∈ s, ∀ b ∈ t, a ⊓ b ∈ u :=
   image2_subset_iff
 #align set.infs_subset_iff Set.infs_subset_iff
+-/
 
 #print Set.infs_nonempty /-
 @[simp]
@@ -351,51 +393,71 @@ theorem infs_eq_empty : s ⊼ t = ∅ ↔ s = ∅ ∨ t = ∅ :=
 #align set.infs_eq_empty Set.infs_eq_empty
 -/
 
+#print Set.singleton_infs /-
 @[simp]
 theorem singleton_infs : {a} ⊼ t = t.image fun b => a ⊓ b :=
   image2_singleton_left
 #align set.singleton_infs Set.singleton_infs
+-/
 
+#print Set.infs_singleton /-
 @[simp]
 theorem infs_singleton : s ⊼ {b} = s.image fun a => a ⊓ b :=
   image2_singleton_right
 #align set.infs_singleton Set.infs_singleton
+-/
 
+#print Set.singleton_infs_singleton /-
 theorem singleton_infs_singleton : ({a} ⊼ {b} : Set α) = {a ⊓ b} :=
   image2_singleton
 #align set.singleton_infs_singleton Set.singleton_infs_singleton
+-/
 
+#print Set.infs_union_left /-
 theorem infs_union_left : (s₁ ∪ s₂) ⊼ t = s₁ ⊼ t ∪ s₂ ⊼ t :=
   image2_union_left
 #align set.infs_union_left Set.infs_union_left
+-/
 
+#print Set.infs_union_right /-
 theorem infs_union_right : s ⊼ (t₁ ∪ t₂) = s ⊼ t₁ ∪ s ⊼ t₂ :=
   image2_union_right
 #align set.infs_union_right Set.infs_union_right
+-/
 
+#print Set.infs_inter_subset_left /-
 theorem infs_inter_subset_left : (s₁ ∩ s₂) ⊼ t ⊆ s₁ ⊼ t ∩ s₂ ⊼ t :=
   image2_inter_subset_left
 #align set.infs_inter_subset_left Set.infs_inter_subset_left
+-/
 
+#print Set.infs_inter_subset_right /-
 theorem infs_inter_subset_right : s ⊼ (t₁ ∩ t₂) ⊆ s ⊼ t₁ ∩ s ⊼ t₂ :=
   image2_inter_subset_right
 #align set.infs_inter_subset_right Set.infs_inter_subset_right
+-/
 
 variable (s t u v)
 
+#print Set.iUnion_image_inf_left /-
 theorem iUnion_image_inf_left : (⋃ a ∈ s, (· ⊓ ·) a '' t) = s ⊼ t :=
   iUnion_image_left _
 #align set.Union_image_inf_left Set.iUnion_image_inf_left
+-/
 
+#print Set.iUnion_image_inf_right /-
 theorem iUnion_image_inf_right : (⋃ b ∈ t, (· ⊓ b) '' s) = s ⊼ t :=
   iUnion_image_right _
 #align set.Union_image_inf_right Set.iUnion_image_inf_right
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print Set.image_inf_prod /-
 @[simp]
 theorem image_inf_prod (s t : Set α) : (s ×ˢ t).image (uncurry (· ⊓ ·)) = s ⊼ t :=
   image_uncurry_prod _ _ _
 #align set.image_inf_prod Set.image_inf_prod
+-/
 
 #print Set.infs_assoc /-
 theorem infs_assoc : s ⊼ t ⊼ u = s ⊼ (t ⊼ u) :=
@@ -465,6 +527,7 @@ end Set
 
 open scoped SetFamily
 
+#print upperClosure_sups /-
 @[simp]
 theorem upperClosure_sups [SemilatticeSup α] (s t : Set α) :
     upperClosure (s ⊻ t) = upperClosure s ⊔ upperClosure t :=
@@ -478,7 +541,9 @@ theorem upperClosure_sups [SemilatticeSup α] (s t : Set α) :
   · rintro ⟨⟨b, hb, hab⟩, c, hc, hac⟩
     exact ⟨_, ⟨b, hb, c, hc, rfl⟩, sup_le hab hac⟩
 #align upper_closure_sups upperClosure_sups
+-/
 
+#print lowerClosure_infs /-
 @[simp]
 theorem lowerClosure_infs [SemilatticeInf α] (s t : Set α) :
     lowerClosure (s ⊼ t) = lowerClosure s ⊓ lowerClosure t :=
@@ -492,4 +557,5 @@ theorem lowerClosure_infs [SemilatticeInf α] (s t : Set α) :
   · rintro ⟨⟨b, hb, hab⟩, c, hc, hac⟩
     exact ⟨_, ⟨b, hb, c, hc, rfl⟩, le_inf hab hac⟩
 #align lower_closure_infs lowerClosure_infs
+-/
 

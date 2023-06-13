@@ -46,6 +46,5 @@ Some key definitions are not yet present.
  -/
 
 
--- mathport name: add_torsor
 scoped[Affine] notation "affine_space" => AddTorsor
 

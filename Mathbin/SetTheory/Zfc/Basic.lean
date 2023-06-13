@@ -184,19 +184,25 @@ def Equiv (x y : PSet) : Prop :=
 #align pSet.equiv PSet.Equiv
 -/
 
+#print PSet.equiv_iff /-
 theorem equiv_iff :
     ∀ {x y : PSet},
       Equiv x y ↔ (∀ i, ∃ j, Equiv (x.Func i) (y.Func j)) ∧ ∀ j, ∃ i, Equiv (x.Func i) (y.Func j)
   | ⟨α, A⟩, ⟨β, B⟩ => Iff.rfl
 #align pSet.equiv_iff PSet.equiv_iff
+-/
 
+#print PSet.Equiv.exists_left /-
 theorem Equiv.exists_left {x y : PSet} (h : Equiv x y) : ∀ i, ∃ j, Equiv (x.Func i) (y.Func j) :=
   (equiv_iff.1 h).1
 #align pSet.equiv.exists_left PSet.Equiv.exists_left
+-/
 
+#print PSet.Equiv.exists_right /-
 theorem Equiv.exists_right {x y : PSet} (h : Equiv x y) : ∀ j, ∃ i, Equiv (x.Func i) (y.Func j) :=
   (equiv_iff.1 h).2
 #align pSet.equiv.exists_right PSet.Equiv.exists_right
+-/
 
 #print PSet.Equiv.refl /-
 @[refl]
@@ -211,6 +217,7 @@ protected theorem Equiv.rfl : ∀ {x}, Equiv x x :=
 #align pSet.equiv.rfl PSet.Equiv.rfl
 -/
 
+#print PSet.Equiv.euc /-
 protected theorem Equiv.euc {x} : ∀ {y z}, Equiv x y → Equiv z y → Equiv x z :=
   PSet.recOn x fun α A IH y =>
     PSet.casesOn y fun β B ⟨γ, Γ⟩ ⟨αβ, βα⟩ ⟨γβ, βγ⟩ =>
@@ -223,24 +230,33 @@ protected theorem Equiv.euc {x} : ∀ {y z}, Equiv x y → Equiv z y → Equiv x
         let ⟨a, ba⟩ := βα b
         ⟨a, IH a ba cb⟩⟩
 #align pSet.equiv.euc PSet.Equiv.euc
+-/
 
+#print PSet.Equiv.symm /-
 @[symm]
 protected theorem Equiv.symm {x y} : Equiv x y → Equiv y x :=
   (Equiv.refl y).euc
 #align pSet.equiv.symm PSet.Equiv.symm
+-/
 
+#print PSet.Equiv.comm /-
 protected theorem Equiv.comm {x y} : Equiv x y ↔ Equiv y x :=
   ⟨Equiv.symm, Equiv.symm⟩
 #align pSet.equiv.comm PSet.Equiv.comm
+-/
 
+#print PSet.Equiv.trans /-
 @[trans]
 protected theorem Equiv.trans {x y z} (h1 : Equiv x y) (h2 : Equiv y z) : Equiv x z :=
   h1.euc h2.symm
 #align pSet.equiv.trans PSet.Equiv.trans
+-/
 
+#print PSet.equiv_of_isEmpty /-
 protected theorem equiv_of_isEmpty (x y : PSet) [IsEmpty x.type] [IsEmpty y.type] : Equiv x y :=
   equiv_iff.2 <| by simp
 #align pSet.equiv_of_is_empty PSet.equiv_of_isEmpty
+-/
 
 #print PSet.setoid /-
 instance setoid : Setoid PSet :=
@@ -505,9 +521,11 @@ theorem not_nonempty_empty : ¬PSet.Nonempty ∅ := by simp [PSet.Nonempty]
 #align pSet.not_nonempty_empty PSet.not_nonempty_empty
 -/
 
+#print PSet.equiv_empty /-
 protected theorem equiv_empty (x : PSet) [IsEmpty x.type] : Equiv x ∅ :=
   PSet.equiv_of_isEmpty x _
 #align pSet.equiv_empty PSet.equiv_empty
+-/
 
 #print PSet.insert /-
 /-- Insert an element into a pre-set -/
@@ -579,10 +597,10 @@ def sUnion (a : PSet) : PSet :=
 #align pSet.sUnion PSet.sUnion
 -/
 
--- mathport name: pSet.sUnion
 prefix:110 "⋃₀ " => PSet.sUnion
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print PSet.mem_sUnion /-
 @[simp]
 theorem mem_sUnion : ∀ {x y : PSet.{u}}, y ∈ ⋃₀ x ↔ ∃ z ∈ x, y ∈ z
   | ⟨α, A⟩, y =>
@@ -595,6 +613,7 @@ theorem mem_sUnion : ∀ {x y : PSet.{u}}, y ∈ ⋃₀ x ↔ ∃ z ∈ x, y ∈
         let ⟨c, bc⟩ := βt b
         ⟨⟨a, c⟩, yb.trans bc⟩⟩
 #align pSet.mem_sUnion PSet.mem_sUnion
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -611,11 +630,13 @@ def image (f : PSet.{u} → PSet.{u}) (x : PSet.{u}) : PSet :=
 #align pSet.image PSet.image
 -/
 
+#print PSet.mem_image /-
 theorem mem_image {f : PSet.{u} → PSet.{u}} (H : ∀ {x y}, Equiv x y → Equiv (f x) (f y)) :
     ∀ {x y : PSet.{u}}, y ∈ image f x ↔ ∃ z ∈ x, Equiv y (f z)
   | ⟨α, A⟩, y =>
     ⟨fun ⟨a, ya⟩ => ⟨A a, Mem.mk A a, ya⟩, fun ⟨z, ⟨a, za⟩, yz⟩ => ⟨a, yz.trans (H za)⟩⟩
 #align pSet.mem_image PSet.mem_image
+-/
 
 #print PSet.Lift /-
 /-- Universe lift operation -/
@@ -1287,7 +1308,6 @@ def sUnion : ZFSet → ZFSet :=
 #align Set.sUnion ZFSet.sUnion
 -/
 
--- mathport name: Set.sUnion
 prefix:110 "⋃₀ " => ZFSet.sUnion
 
 #print ZFSet.sInter /-
@@ -1298,16 +1318,17 @@ noncomputable def sInter (x : ZFSet) : ZFSet := by
 #align Set.sInter ZFSet.sInter
 -/
 
--- mathport name: Set.sInter
 prefix:110 "⋂₀ " => ZFSet.sInter
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print ZFSet.mem_sUnion /-
 @[simp]
 theorem mem_sUnion {x y : ZFSet.{u}} : y ∈ ⋃₀ x ↔ ∃ z ∈ x, y ∈ z :=
   Quotient.induction_on₂ x y fun x y =>
     Iff.trans mem_sUnion
       ⟨fun ⟨z, h⟩ => ⟨⟦z⟧, h⟩, fun ⟨z, h⟩ => Quotient.inductionOn z (fun z h => ⟨z, h⟩) h⟩
 #align Set.mem_sUnion ZFSet.mem_sUnion
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print ZFSet.mem_sInter /-
@@ -1436,20 +1457,26 @@ instance : Inter ZFSet :=
 instance : SDiff ZFSet :=
   ⟨ZFSet.diff⟩
 
+#print ZFSet.toSet_union /-
 @[simp]
 theorem toSet_union (x y : ZFSet.{u}) : (x ∪ y).toSet = x.toSet ∪ y.toSet := by unfold Union.union;
   rw [ZFSet.union]; simp
 #align Set.to_set_union ZFSet.toSet_union
+-/
 
+#print ZFSet.toSet_inter /-
 @[simp]
 theorem toSet_inter (x y : ZFSet.{u}) : (x ∩ y).toSet = x.toSet ∩ y.toSet := by unfold Inter.inter;
   rw [ZFSet.inter]; ext; simp
 #align Set.to_set_inter ZFSet.toSet_inter
+-/
 
+#print ZFSet.toSet_sdiff /-
 @[simp]
 theorem toSet_sdiff (x y : ZFSet.{u}) : (x \ y).toSet = x.toSet \ y.toSet := by
   change {z ∈ x | z ∉ y}.toSet = _; ext; simp
 #align Set.to_set_sdiff ZFSet.toSet_sdiff
+-/
 
 #print ZFSet.mem_union /-
 @[simp]
@@ -1520,6 +1547,7 @@ theorem mem_irrefl (x : ZFSet) : x ∉ x :=
 #align Set.mem_irrefl ZFSet.mem_irrefl
 -/
 
+#print ZFSet.regularity /-
 theorem regularity (x : ZFSet.{u}) (h : x ≠ ∅) : ∃ y ∈ x, x ∩ y = ∅ :=
   by_contradiction fun ne =>
     h <|
@@ -1532,6 +1560,7 @@ theorem regularity (x : ZFSet.{u}) (h : x ≠ ∅) : ∃ y ∈ x, x ∩ y = ∅ 
                   let ⟨wx, wz⟩ := mem_inter.1 wxz
                   IH w wz wx⟩
 #align Set.regularity ZFSet.regularity
+-/
 
 #print ZFSet.image /-
 /-- The image of a (definable) ZFC set function -/
@@ -1555,6 +1584,7 @@ theorem image.mk :
 #align Set.image.mk ZFSet.image.mk
 -/
 
+#print ZFSet.mem_image /-
 @[simp]
 theorem mem_image :
     ∀ {f : ZFSet.{u} → ZFSet.{u}} [H : Definable 1 f] {x y : ZFSet.{u}},
@@ -1564,6 +1594,7 @@ theorem mem_image :
       ⟨fun ⟨a, ya⟩ => ⟨⟦A a⟧, Mem.mk A a, Eq.symm <| Quotient.sound ya⟩, fun ⟨z, hz, e⟩ =>
         e ▸ image.mk _ _ hz⟩
 #align Set.mem_image ZFSet.mem_image
+-/
 
 #print ZFSet.toSet_image /-
 @[simp]
@@ -1621,6 +1652,7 @@ def pairSep (p : ZFSet.{u} → ZFSet.{u} → Prop) (x y : ZFSet.{u}) : ZFSet.{u}
 #align Set.pair_sep ZFSet.pairSep
 -/
 
+#print ZFSet.mem_pairSep /-
 @[simp]
 theorem mem_pairSep {p} {x y z : ZFSet.{u}} :
     z ∈ pairSep p x y ↔ ∃ a ∈ x, ∃ b ∈ y, z = pair a b ∧ p a b :=
@@ -1632,6 +1664,7 @@ theorem mem_pairSep {p} {x y z : ZFSet.{u}} :
   · rintro rfl; exact Or.inl ax
   · rintro (rfl | rfl) <;> [left; right] <;> assumption
 #align Set.mem_pair_sep ZFSet.mem_pairSep
+-/
 
 #print ZFSet.pair_injective /-
 theorem pair_injective : Function.Injective2 pair := fun x x' y y' H =>
@@ -1672,10 +1705,12 @@ def prod : ZFSet.{u} → ZFSet.{u} → ZFSet.{u} :=
 #align Set.prod ZFSet.prod
 -/
 
+#print ZFSet.mem_prod /-
 @[simp]
 theorem mem_prod {x y z : ZFSet.{u}} : z ∈ prod x y ↔ ∃ a ∈ x, ∃ b ∈ y, z = pair a b := by
   simp [Prod]
 #align Set.mem_prod ZFSet.mem_prod
+-/
 
 #print ZFSet.pair_mem_prod /-
 @[simp]
@@ -1724,11 +1759,13 @@ noncomputable def map (f : ZFSet → ZFSet) [H : Definable 1 f] : ZFSet → ZFSe
 #align Set.map ZFSet.map
 -/
 
+#print ZFSet.mem_map /-
 @[simp]
 theorem mem_map {f : ZFSet → ZFSet} [H : Definable 1 f] {x y : ZFSet} :
     y ∈ map f x ↔ ∃ z ∈ x, pair z (f z) = y :=
   mem_image
 #align Set.mem_map ZFSet.mem_map
+-/
 
 #print ZFSet.map_unique /-
 theorem map_unique {f : ZFSet.{u} → ZFSet.{u}} [H : Definable 1 f] {x z : ZFSet.{u}} (zx : z ∈ x) :
@@ -1999,7 +2036,6 @@ def sUnion (x : Class) : Class :=
 #align Class.sUnion Class.sUnion
 -/
 
--- mathport name: Class.sUnion
 prefix:110 "⋃₀ " => Class.sUnion
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -2010,7 +2046,6 @@ def sInter (x : Class) : Class :=
 #align Class.sInter Class.sInter
 -/
 
--- mathport name: Class.sInter
 prefix:110 "⋂₀ " => Class.sInter
 
 #print Class.ofSet.inj /-
@@ -2068,20 +2103,26 @@ theorem coe_insert (x y : ZFSet.{u}) : ↑(insert x y) = @insert ZFSet.{u} Class
 #align Class.coe_insert Class.coe_insert
 -/
 
+#print Class.coe_union /-
 @[simp, norm_cast]
 theorem coe_union (x y : ZFSet.{u}) : ↑(x ∪ y) = (x : Class.{u}) ∪ y :=
   ext fun z => ZFSet.mem_union
 #align Class.coe_union Class.coe_union
+-/
 
+#print Class.coe_inter /-
 @[simp, norm_cast]
 theorem coe_inter (x y : ZFSet.{u}) : ↑(x ∩ y) = (x : Class.{u}) ∩ y :=
   ext fun z => ZFSet.mem_inter
 #align Class.coe_inter Class.coe_inter
+-/
 
+#print Class.coe_diff /-
 @[simp, norm_cast]
 theorem coe_diff (x y : ZFSet.{u}) : ↑(x \ y) = (x : Class.{u}) \ y :=
   ext fun z => ZFSet.mem_diff
 #align Class.coe_diff Class.coe_diff
+-/
 
 #print Class.coe_powerset /-
 @[simp, norm_cast]
@@ -2238,7 +2279,6 @@ def fval (F A : Class.{u}) : Class.{u} :=
 #align Class.fval Class.fval
 -/
 
--- mathport name: «expr ′ »
 infixl:100 " ′ " => fval
 
 #print Class.fval_ex /-
@@ -2271,8 +2311,6 @@ noncomputable def choice : ZFSet :=
   @map (fun y => Classical.epsilon fun z => z ∈ y) (Classical.AllDefinable _) x
 #align Set.choice ZFSet.choice
 -/
-
-include h
 
 #print ZFSet.choice_mem_aux /-
 theorem choice_mem_aux (y : ZFSet.{u}) (yx : y ∈ x) :

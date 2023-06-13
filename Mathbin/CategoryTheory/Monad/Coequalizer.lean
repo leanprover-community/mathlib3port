@@ -46,12 +46,15 @@ Show that any algebra is a coequalizer of free algebras.
 -/
 
 
+#print CategoryTheory.Monad.FreeCoequalizer.topMap /-
 /-- The top map in the coequalizer diagram we will construct. -/
 @[simps]
 def FreeCoequalizer.topMap : (Monad.free T).obj (T.obj X.A) ⟶ (Monad.free T).obj X.A :=
   (Monad.free T).map X.a
 #align category_theory.monad.free_coequalizer.top_map CategoryTheory.Monad.FreeCoequalizer.topMap
+-/
 
+#print CategoryTheory.Monad.FreeCoequalizer.bottomMap /-
 /-- The bottom map in the coequalizer diagram we will construct. -/
 @[simps]
 def FreeCoequalizer.bottomMap : (Monad.free T).obj (T.obj X.A) ⟶ (Monad.free T).obj X.A
@@ -59,7 +62,9 @@ def FreeCoequalizer.bottomMap : (Monad.free T).obj (T.obj X.A) ⟶ (Monad.free T
   f := T.μ.app X.A
   h' := T.and_assoc X.A
 #align category_theory.monad.free_coequalizer.bottom_map CategoryTheory.Monad.FreeCoequalizer.bottomMap
+-/
 
+#print CategoryTheory.Monad.FreeCoequalizer.π /-
 /-- The cofork map in the coequalizer diagram we will construct. -/
 @[simps]
 def FreeCoequalizer.π : (Monad.free T).obj X.A ⟶ X
@@ -67,12 +72,15 @@ def FreeCoequalizer.π : (Monad.free T).obj X.A ⟶ X
   f := X.a
   h' := X.and_assoc.symm
 #align category_theory.monad.free_coequalizer.π CategoryTheory.Monad.FreeCoequalizer.π
+-/
 
+#print CategoryTheory.Monad.FreeCoequalizer.condition /-
 theorem FreeCoequalizer.condition :
     FreeCoequalizer.topMap X ≫ FreeCoequalizer.π X =
       FreeCoequalizer.bottomMap X ≫ FreeCoequalizer.π X :=
   Algebra.Hom.ext _ _ X.and_assoc.symm
 #align category_theory.monad.free_coequalizer.condition CategoryTheory.Monad.FreeCoequalizer.condition
+-/
 
 instance : IsReflexivePair (FreeCoequalizer.topMap X) (FreeCoequalizer.bottomMap X) :=
   by
@@ -84,6 +92,7 @@ instance : IsReflexivePair (FreeCoequalizer.topMap X) (FreeCoequalizer.bottomMap
   · ext
     apply monad.right_unit
 
+#print CategoryTheory.Monad.beckAlgebraCofork /-
 /-- Construct the Beck cofork in the category of algebras. This cofork is reflexive as well as a
 coequalizer.
 -/
@@ -91,7 +100,9 @@ coequalizer.
 def beckAlgebraCofork : Cofork (FreeCoequalizer.topMap X) (FreeCoequalizer.bottomMap X) :=
   Cofork.ofπ _ (FreeCoequalizer.condition X)
 #align category_theory.monad.beck_algebra_cofork CategoryTheory.Monad.beckAlgebraCofork
+-/
 
+#print CategoryTheory.Monad.beckAlgebraCoequalizer /-
 /-- The cofork constructed is a colimit. This shows that any algebra is a (reflexive) coequalizer of
 free algebras.
 -/
@@ -113,33 +124,44 @@ def beckAlgebraCoequalizer : IsColimit (beckAlgebraCofork X) :=
       rw [← hm]
       apply (X.unit_assoc _).symm
 #align category_theory.monad.beck_algebra_coequalizer CategoryTheory.Monad.beckAlgebraCoequalizer
+-/
 
+#print CategoryTheory.Monad.beckSplitCoequalizer /-
 /-- The Beck cofork is a split coequalizer. -/
 def beckSplitCoequalizer : IsSplitCoequalizer (T.map X.a) (T.μ.app _) X.a :=
   ⟨T.η.app _, T.η.app _, X.and_assoc.symm, X.Unit, T.left_unit _, (T.η.naturality _).symm⟩
 #align category_theory.monad.beck_split_coequalizer CategoryTheory.Monad.beckSplitCoequalizer
+-/
 
+#print CategoryTheory.Monad.beckCofork /-
 /-- This is the Beck cofork. It is a split coequalizer, in particular a coequalizer. -/
 @[simps pt]
 def beckCofork : Cofork (T.map X.a) (T.μ.app _) :=
   (beckSplitCoequalizer X).asCofork
 #align category_theory.monad.beck_cofork CategoryTheory.Monad.beckCofork
+-/
 
+#print CategoryTheory.Monad.beckCofork_π /-
 @[simp]
 theorem beckCofork_π : (beckCofork X).π = X.a :=
   rfl
 #align category_theory.monad.beck_cofork_π CategoryTheory.Monad.beckCofork_π
+-/
 
+#print CategoryTheory.Monad.beckCoequalizer /-
 /-- The Beck cofork is a coequalizer. -/
 def beckCoequalizer : IsColimit (beckCofork X) :=
   (beckSplitCoequalizer X).isCoequalizer
 #align category_theory.monad.beck_coequalizer CategoryTheory.Monad.beckCoequalizer
+-/
 
+#print CategoryTheory.Monad.beckCoequalizer_desc /-
 @[simp]
 theorem beckCoequalizer_desc (s : Cofork (T.toFunctor.map X.a) (T.μ.app X.A)) :
     (beckCoequalizer X).desc s = T.η.app _ ≫ s.π :=
   rfl
 #align category_theory.monad.beck_coequalizer_desc CategoryTheory.Monad.beckCoequalizer_desc
+-/
 
 end Monad
 

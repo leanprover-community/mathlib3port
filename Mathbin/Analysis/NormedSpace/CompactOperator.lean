@@ -73,10 +73,12 @@ def IsCompactOperator {M₁ M₂ : Type _} [Zero M₁] [TopologicalSpace M₁] [
 #align is_compact_operator IsCompactOperator
 -/
 
+#print isCompactOperator_zero /-
 theorem isCompactOperator_zero {M₁ M₂ : Type _} [Zero M₁] [TopologicalSpace M₁]
     [TopologicalSpace M₂] [Zero M₂] : IsCompactOperator (0 : M₁ → M₂) :=
   ⟨{0}, isCompact_singleton, mem_of_superset univ_mem fun x _ => rfl⟩
 #align is_compact_operator_zero isCompactOperator_zero
+-/
 
 section Characterizations
 
@@ -85,12 +87,15 @@ section
 variable {R₁ R₂ : Type _} [Semiring R₁] [Semiring R₂] {σ₁₂ : R₁ →+* R₂} {M₁ M₂ : Type _}
   [TopologicalSpace M₁] [AddCommMonoid M₁] [TopologicalSpace M₂]
 
+#print isCompactOperator_iff_exists_mem_nhds_image_subset_compact /-
 theorem isCompactOperator_iff_exists_mem_nhds_image_subset_compact (f : M₁ → M₂) :
     IsCompactOperator f ↔ ∃ V ∈ (𝓝 0 : Filter M₁), ∃ K : Set M₂, IsCompact K ∧ f '' V ⊆ K :=
   ⟨fun ⟨K, hK, hKf⟩ => ⟨f ⁻¹' K, hKf, K, hK, image_preimage_subset _ _⟩, fun ⟨V, hV, K, hK, hVK⟩ =>
     ⟨K, hK, mem_of_superset hV (image_subset_iff.mp hVK)⟩⟩
 #align is_compact_operator_iff_exists_mem_nhds_image_subset_compact isCompactOperator_iff_exists_mem_nhds_image_subset_compact
+-/
 
+#print isCompactOperator_iff_exists_mem_nhds_isCompact_closure_image /-
 theorem isCompactOperator_iff_exists_mem_nhds_isCompact_closure_image [T2Space M₂] (f : M₁ → M₂) :
     IsCompactOperator f ↔ ∃ V ∈ (𝓝 0 : Filter M₁), IsCompact (closure <| f '' V) :=
   by
@@ -99,6 +104,7 @@ theorem isCompactOperator_iff_exists_mem_nhds_isCompact_closure_image [T2Space M
     ⟨fun ⟨V, hV, K, hK, hKV⟩ => ⟨V, hV, isCompact_closure_of_subset_compact hK hKV⟩,
       fun ⟨V, hV, hVc⟩ => ⟨V, hV, closure (f '' V), hVc, subset_closure⟩⟩
 #align is_compact_operator_iff_exists_mem_nhds_is_compact_closure_image isCompactOperator_iff_exists_mem_nhds_isCompact_closure_image
+-/
 
 end
 
@@ -108,6 +114,7 @@ variable {𝕜₁ 𝕜₂ : Type _} [NontriviallyNormedField 𝕜₁] [Seminorme
   {M₁ M₂ : Type _} [TopologicalSpace M₁] [AddCommMonoid M₁] [TopologicalSpace M₂] [AddCommMonoid M₂]
   [Module 𝕜₁ M₁] [Module 𝕜₂ M₂] [ContinuousConstSMul 𝕜₂ M₂]
 
+#print IsCompactOperator.image_subset_compact_of_isVonNBounded /-
 theorem IsCompactOperator.image_subset_compact_of_isVonNBounded {f : M₁ →ₛₗ[σ₁₂] M₂}
     (hf : IsCompactOperator f) {S : Set M₁} (hS : IsVonNBounded 𝕜₁ S) :
     ∃ K : Set M₂, IsCompact K ∧ f '' S ⊆ K :=
@@ -118,13 +125,16 @@ theorem IsCompactOperator.image_subset_compact_of_isVonNBounded {f : M₁ →ₛ
   ⟨σ₁₂ c • K, hK.image <| continuous_id.const_smul (σ₁₂ c), by
     rw [image_subset_iff, preimage_smul_setₛₗ _ _ _ f this.is_unit] <;> exact hrS c hc.le⟩
 #align is_compact_operator.image_subset_compact_of_vonN_bounded IsCompactOperator.image_subset_compact_of_isVonNBounded
+-/
 
+#print IsCompactOperator.isCompact_closure_image_of_isVonNBounded /-
 theorem IsCompactOperator.isCompact_closure_image_of_isVonNBounded [T2Space M₂] {f : M₁ →ₛₗ[σ₁₂] M₂}
     (hf : IsCompactOperator f) {S : Set M₁} (hS : IsVonNBounded 𝕜₁ S) :
     IsCompact (closure <| f '' S) :=
   let ⟨K, hK, hKf⟩ := hf.image_subset_compact_of_isVonNBounded hS
   isCompact_closure_of_subset_compact hK hKf
 #align is_compact_operator.is_compact_closure_image_of_vonN_bounded IsCompactOperator.isCompact_closure_image_of_isVonNBounded
+-/
 
 end Bounded
 
@@ -134,43 +144,56 @@ variable {𝕜₁ 𝕜₂ : Type _} [NontriviallyNormedField 𝕜₁] [Seminorme
   {M₁ M₂ M₃ : Type _} [SeminormedAddCommGroup M₁] [TopologicalSpace M₂] [AddCommMonoid M₂]
   [NormedSpace 𝕜₁ M₁] [Module 𝕜₂ M₂]
 
+#print IsCompactOperator.image_subset_compact_of_bounded /-
 theorem IsCompactOperator.image_subset_compact_of_bounded [ContinuousConstSMul 𝕜₂ M₂]
     {f : M₁ →ₛₗ[σ₁₂] M₂} (hf : IsCompactOperator f) {S : Set M₁} (hS : Metric.Bounded S) :
     ∃ K : Set M₂, IsCompact K ∧ f '' S ⊆ K :=
   hf.image_subset_compact_of_isVonNBounded
     (by rwa [NormedSpace.isVonNBounded_iff, ← Metric.bounded_iff_isBounded])
 #align is_compact_operator.image_subset_compact_of_bounded IsCompactOperator.image_subset_compact_of_bounded
+-/
 
+#print IsCompactOperator.isCompact_closure_image_of_bounded /-
 theorem IsCompactOperator.isCompact_closure_image_of_bounded [ContinuousConstSMul 𝕜₂ M₂]
     [T2Space M₂] {f : M₁ →ₛₗ[σ₁₂] M₂} (hf : IsCompactOperator f) {S : Set M₁}
     (hS : Metric.Bounded S) : IsCompact (closure <| f '' S) :=
   hf.isCompact_closure_image_of_isVonNBounded
     (by rwa [NormedSpace.isVonNBounded_iff, ← Metric.bounded_iff_isBounded])
 #align is_compact_operator.is_compact_closure_image_of_bounded IsCompactOperator.isCompact_closure_image_of_bounded
+-/
 
+#print IsCompactOperator.image_ball_subset_compact /-
 theorem IsCompactOperator.image_ball_subset_compact [ContinuousConstSMul 𝕜₂ M₂] {f : M₁ →ₛₗ[σ₁₂] M₂}
     (hf : IsCompactOperator f) (r : ℝ) : ∃ K : Set M₂, IsCompact K ∧ f '' Metric.ball 0 r ⊆ K :=
   hf.image_subset_compact_of_isVonNBounded (NormedSpace.isVonNBounded_ball 𝕜₁ M₁ r)
 #align is_compact_operator.image_ball_subset_compact IsCompactOperator.image_ball_subset_compact
+-/
 
+#print IsCompactOperator.image_closedBall_subset_compact /-
 theorem IsCompactOperator.image_closedBall_subset_compact [ContinuousConstSMul 𝕜₂ M₂]
     {f : M₁ →ₛₗ[σ₁₂] M₂} (hf : IsCompactOperator f) (r : ℝ) :
     ∃ K : Set M₂, IsCompact K ∧ f '' Metric.closedBall 0 r ⊆ K :=
   hf.image_subset_compact_of_isVonNBounded (NormedSpace.isVonNBounded_closedBall 𝕜₁ M₁ r)
 #align is_compact_operator.image_closed_ball_subset_compact IsCompactOperator.image_closedBall_subset_compact
+-/
 
+#print IsCompactOperator.isCompact_closure_image_ball /-
 theorem IsCompactOperator.isCompact_closure_image_ball [ContinuousConstSMul 𝕜₂ M₂] [T2Space M₂]
     {f : M₁ →ₛₗ[σ₁₂] M₂} (hf : IsCompactOperator f) (r : ℝ) :
     IsCompact (closure <| f '' Metric.ball 0 r) :=
   hf.isCompact_closure_image_of_isVonNBounded (NormedSpace.isVonNBounded_ball 𝕜₁ M₁ r)
 #align is_compact_operator.is_compact_closure_image_ball IsCompactOperator.isCompact_closure_image_ball
+-/
 
+#print IsCompactOperator.isCompact_closure_image_closedBall /-
 theorem IsCompactOperator.isCompact_closure_image_closedBall [ContinuousConstSMul 𝕜₂ M₂]
     [T2Space M₂] {f : M₁ →ₛₗ[σ₁₂] M₂} (hf : IsCompactOperator f) (r : ℝ) :
     IsCompact (closure <| f '' Metric.closedBall 0 r) :=
   hf.isCompact_closure_image_of_isVonNBounded (NormedSpace.isVonNBounded_closedBall 𝕜₁ M₁ r)
 #align is_compact_operator.is_compact_closure_image_closed_ball IsCompactOperator.isCompact_closure_image_closedBall
+-/
 
+#print isCompactOperator_iff_image_ball_subset_compact /-
 theorem isCompactOperator_iff_image_ball_subset_compact [ContinuousConstSMul 𝕜₂ M₂]
     (f : M₁ →ₛₗ[σ₁₂] M₂) {r : ℝ} (hr : 0 < r) :
     IsCompactOperator f ↔ ∃ K : Set M₂, IsCompact K ∧ f '' Metric.ball 0 r ⊆ K :=
@@ -178,7 +201,9 @@ theorem isCompactOperator_iff_image_ball_subset_compact [ContinuousConstSMul �
     (isCompactOperator_iff_exists_mem_nhds_image_subset_compact f).mpr
       ⟨Metric.ball 0 r, ball_mem_nhds _ hr, K, hK, hKr⟩⟩
 #align is_compact_operator_iff_image_ball_subset_compact isCompactOperator_iff_image_ball_subset_compact
+-/
 
+#print isCompactOperator_iff_image_closedBall_subset_compact /-
 theorem isCompactOperator_iff_image_closedBall_subset_compact [ContinuousConstSMul 𝕜₂ M₂]
     (f : M₁ →ₛₗ[σ₁₂] M₂) {r : ℝ} (hr : 0 < r) :
     IsCompactOperator f ↔ ∃ K : Set M₂, IsCompact K ∧ f '' Metric.closedBall 0 r ⊆ K :=
@@ -186,7 +211,9 @@ theorem isCompactOperator_iff_image_closedBall_subset_compact [ContinuousConstSM
     (isCompactOperator_iff_exists_mem_nhds_image_subset_compact f).mpr
       ⟨Metric.closedBall 0 r, closedBall_mem_nhds _ hr, K, hK, hKr⟩⟩
 #align is_compact_operator_iff_image_closed_ball_subset_compact isCompactOperator_iff_image_closedBall_subset_compact
+-/
 
+#print isCompactOperator_iff_isCompact_closure_image_ball /-
 theorem isCompactOperator_iff_isCompact_closure_image_ball [ContinuousConstSMul 𝕜₂ M₂] [T2Space M₂]
     (f : M₁ →ₛₗ[σ₁₂] M₂) {r : ℝ} (hr : 0 < r) :
     IsCompactOperator f ↔ IsCompact (closure <| f '' Metric.ball 0 r) :=
@@ -194,7 +221,9 @@ theorem isCompactOperator_iff_isCompact_closure_image_ball [ContinuousConstSMul 
     (isCompactOperator_iff_exists_mem_nhds_isCompact_closure_image f).mpr
       ⟨Metric.ball 0 r, ball_mem_nhds _ hr, hf⟩⟩
 #align is_compact_operator_iff_is_compact_closure_image_ball isCompactOperator_iff_isCompact_closure_image_ball
+-/
 
+#print isCompactOperator_iff_isCompact_closure_image_closedBall /-
 theorem isCompactOperator_iff_isCompact_closure_image_closedBall [ContinuousConstSMul 𝕜₂ M₂]
     [T2Space M₂] (f : M₁ →ₛₗ[σ₁₂] M₂) {r : ℝ} (hr : 0 < r) :
     IsCompactOperator f ↔ IsCompact (closure <| f '' Metric.closedBall 0 r) :=
@@ -202,6 +231,7 @@ theorem isCompactOperator_iff_isCompact_closure_image_closedBall [ContinuousCons
     (isCompactOperator_iff_exists_mem_nhds_isCompact_closure_image f).mpr
       ⟨Metric.closedBall 0 r, closedBall_mem_nhds _ hr, hf⟩⟩
 #align is_compact_operator_iff_is_compact_closure_image_closed_ball isCompactOperator_iff_isCompact_closure_image_closedBall
+-/
 
 end NormedSpace
 
@@ -214,6 +244,7 @@ variable {R₁ R₂ R₃ R₄ : Type _} [Semiring R₁] [Semiring R₂] [CommSem
   [AddCommMonoid M₁] [TopologicalSpace M₂] [AddCommMonoid M₂] [TopologicalSpace M₃]
   [AddCommGroup M₃] [TopologicalSpace M₄] [AddCommGroup M₄]
 
+#print IsCompactOperator.smul /-
 theorem IsCompactOperator.smul {S : Type _} [Monoid S] [DistribMulAction S M₂]
     [ContinuousConstSMul S M₂] {f : M₁ → M₂} (hf : IsCompactOperator f) (c : S) :
     IsCompactOperator (c • f) :=
@@ -221,7 +252,9 @@ theorem IsCompactOperator.smul {S : Type _} [Monoid S] [DistribMulAction S M₂]
   ⟨c • K, hK.image <| continuous_id.const_smul c,
     mem_of_superset hKf fun x hx => smul_mem_smul_set hx⟩
 #align is_compact_operator.smul IsCompactOperator.smul
+-/
 
+#print IsCompactOperator.add /-
 theorem IsCompactOperator.add [ContinuousAdd M₂] {f g : M₁ → M₂} (hf : IsCompactOperator f)
     (hg : IsCompactOperator g) : IsCompactOperator (f + g) :=
   let ⟨A, hA, hAf⟩ := hf
@@ -229,17 +262,22 @@ theorem IsCompactOperator.add [ContinuousAdd M₂] {f g : M₁ → M₂} (hf : I
   ⟨A + B, hA.add hB,
     mem_of_superset (inter_mem hAf hBg) fun x ⟨hxA, hxB⟩ => Set.add_mem_add hxA hxB⟩
 #align is_compact_operator.add IsCompactOperator.add
+-/
 
+#print IsCompactOperator.neg /-
 theorem IsCompactOperator.neg [ContinuousNeg M₄] {f : M₁ → M₄} (hf : IsCompactOperator f) :
     IsCompactOperator (-f) :=
   let ⟨K, hK, hKf⟩ := hf
   ⟨-K, hK.neg, mem_of_superset hKf fun x (hx : f x ∈ K) => Set.neg_mem_neg.mpr hx⟩
 #align is_compact_operator.neg IsCompactOperator.neg
+-/
 
+#print IsCompactOperator.sub /-
 theorem IsCompactOperator.sub [TopologicalAddGroup M₄] {f g : M₁ → M₄} (hf : IsCompactOperator f)
     (hg : IsCompactOperator g) : IsCompactOperator (f - g) := by
   rw [sub_eq_add_neg] <;> exact hf.add hg.neg
 #align is_compact_operator.sub IsCompactOperator.sub
+-/
 
 variable (σ₁₄ M₁ M₄)
 
@@ -263,6 +301,7 @@ variable {R₁ R₂ R₃ : Type _} [Semiring R₁] [Semiring R₂] [Semiring R�
   {σ₂₃ : R₂ →+* R₃} {M₁ M₂ M₃ : Type _} [TopologicalSpace M₁] [TopologicalSpace M₂]
   [TopologicalSpace M₃] [AddCommMonoid M₁] [Module R₁ M₁]
 
+#print IsCompactOperator.comp_clm /-
 theorem IsCompactOperator.comp_clm [AddCommMonoid M₂] [Module R₂ M₂] {f : M₂ → M₃}
     (hf : IsCompactOperator f) (g : M₁ →SL[σ₁₂] M₂) : IsCompactOperator (f ∘ g) :=
   by
@@ -271,7 +310,9 @@ theorem IsCompactOperator.comp_clm [AddCommMonoid M₂] [Module R₂ M₂] {f : 
   rcases hf with ⟨K, hK, hKf⟩
   exact ⟨K, hK, this hKf⟩
 #align is_compact_operator.comp_clm IsCompactOperator.comp_clm
+-/
 
+#print IsCompactOperator.continuous_comp /-
 theorem IsCompactOperator.continuous_comp {f : M₁ → M₂} (hf : IsCompactOperator f) {g : M₂ → M₃}
     (hg : Continuous g) : IsCompactOperator (g ∘ f) :=
   by
@@ -280,12 +321,15 @@ theorem IsCompactOperator.continuous_comp {f : M₁ → M₂} (hf : IsCompactOpe
   nth_rw 2 [preimage_comp]
   exact preimage_mono (subset_preimage_image _ _)
 #align is_compact_operator.continuous_comp IsCompactOperator.continuous_comp
+-/
 
+#print IsCompactOperator.clm_comp /-
 theorem IsCompactOperator.clm_comp [AddCommMonoid M₂] [Module R₂ M₂] [AddCommMonoid M₃]
     [Module R₃ M₃] {f : M₁ → M₂} (hf : IsCompactOperator f) (g : M₂ →SL[σ₂₃] M₃) :
     IsCompactOperator (g ∘ f) :=
   hf.continuous_comp g.Continuous
 #align is_compact_operator.clm_comp IsCompactOperator.clm_comp
+-/
 
 end Comp
 
@@ -295,12 +339,14 @@ variable {R₁ R₂ : Type _} [Semiring R₁] [Semiring R₂] {σ₁₂ : R₁ �
   [TopologicalSpace M₁] [TopologicalSpace M₂] [AddCommMonoid M₁] [AddCommMonoid M₂] [Module R₁ M₁]
   [Module R₂ M₂]
 
+#print IsCompactOperator.codRestrict /-
 theorem IsCompactOperator.codRestrict {f : M₁ → M₂} (hf : IsCompactOperator f) {V : Submodule R₂ M₂}
     (hV : ∀ x, f x ∈ V) (h_closed : IsClosed (V : Set M₂)) :
     IsCompactOperator (Set.codRestrict f V hV) :=
   let ⟨K, hK, hKf⟩ := hf
   ⟨coe ⁻¹' K, (closedEmbedding_subtype_val h_closed).isCompact_preimage hK, hKf⟩
 #align is_compact_operator.cod_restrict IsCompactOperator.codRestrict
+-/
 
 end CodRestrict
 
@@ -311,6 +357,7 @@ variable {R₁ R₂ R₃ : Type _} [Semiring R₁] [Semiring R₂] [Semiring R�
   [TopologicalSpace M₃] [AddCommMonoid M₁] [AddCommMonoid M₂] [AddCommMonoid M₃] [Module R₁ M₁]
   [Module R₂ M₂] [Module R₃ M₃]
 
+#print IsCompactOperator.restrict /-
 /-- If a compact operator preserves a closed submodule, its restriction to that submodule is
 compact.
 
@@ -324,7 +371,9 @@ theorem IsCompactOperator.restrict {f : M₁ →ₗ[R₁] M₁} (hf : IsCompactO
     IsCompactOperator (f.restrict hV) :=
   (hf.comp_clm V.subtypeL).codRestrict (SetLike.forall.2 hV) h_closed
 #align is_compact_operator.restrict IsCompactOperator.restrict
+-/
 
+#print IsCompactOperator.restrict' /-
 /-- If a compact operator preserves a complete submodule, its restriction to that submodule is
 compact.
 
@@ -338,6 +387,7 @@ theorem IsCompactOperator.restrict' [SeparatedSpace M₂] {f : M₂ →ₗ[R₂]
     [hcomplete : CompleteSpace V] : IsCompactOperator (f.restrict hV) :=
   hf.restrict hV (completeSpace_coe_iff_isComplete.mp hcomplete).IsClosed
 #align is_compact_operator.restrict' IsCompactOperator.restrict'
+-/
 
 end Restrict
 
@@ -348,6 +398,7 @@ variable {𝕜₁ 𝕜₂ : Type _} [NontriviallyNormedField 𝕜₁] [Nontrivia
   [TopologicalSpace M₂] [AddCommGroup M₂] [Module 𝕜₁ M₁] [Module 𝕜₂ M₂] [TopologicalAddGroup M₁]
   [ContinuousConstSMul 𝕜₁ M₁] [TopologicalAddGroup M₂] [ContinuousSMul 𝕜₂ M₂]
 
+#print IsCompactOperator.continuous /-
 @[continuity]
 theorem IsCompactOperator.continuous {f : M₁ →ₛₗ[σ₁₂] M₂} (hf : IsCompactOperator f) :
     Continuous f :=
@@ -382,34 +433,44 @@ theorem IsCompactOperator.continuous {f : M₁ →ₛₗ[σ₁₂] M₂} (hf : I
   rw [RingHomIsometric.is_iso]
   exact hc.le
 #align is_compact_operator.continuous IsCompactOperator.continuous
+-/
 
+#print ContinuousLinearMap.mkOfIsCompactOperator /-
 /-- Upgrade a compact `linear_map` to a `continuous_linear_map`. -/
 def ContinuousLinearMap.mkOfIsCompactOperator {f : M₁ →ₛₗ[σ₁₂] M₂} (hf : IsCompactOperator f) :
     M₁ →SL[σ₁₂] M₂ :=
   ⟨f, hf.Continuous⟩
 #align continuous_linear_map.mk_of_is_compact_operator ContinuousLinearMap.mkOfIsCompactOperator
+-/
 
+#print ContinuousLinearMap.mkOfIsCompactOperator_to_linearMap /-
 @[simp]
 theorem ContinuousLinearMap.mkOfIsCompactOperator_to_linearMap {f : M₁ →ₛₗ[σ₁₂] M₂}
     (hf : IsCompactOperator f) :
     (ContinuousLinearMap.mkOfIsCompactOperator hf : M₁ →ₛₗ[σ₁₂] M₂) = f :=
   rfl
 #align continuous_linear_map.mk_of_is_compact_operator_to_linear_map ContinuousLinearMap.mkOfIsCompactOperator_to_linearMap
+-/
 
+#print ContinuousLinearMap.coe_mkOfIsCompactOperator /-
 @[simp]
 theorem ContinuousLinearMap.coe_mkOfIsCompactOperator {f : M₁ →ₛₗ[σ₁₂] M₂}
     (hf : IsCompactOperator f) : (ContinuousLinearMap.mkOfIsCompactOperator hf : M₁ → M₂) = f :=
   rfl
 #align continuous_linear_map.coe_mk_of_is_compact_operator ContinuousLinearMap.coe_mkOfIsCompactOperator
+-/
 
+#print ContinuousLinearMap.mkOfIsCompactOperator_mem_compactOperator /-
 theorem ContinuousLinearMap.mkOfIsCompactOperator_mem_compactOperator {f : M₁ →ₛₗ[σ₁₂] M₂}
     (hf : IsCompactOperator f) :
     ContinuousLinearMap.mkOfIsCompactOperator hf ∈ compactOperator σ₁₂ M₁ M₂ :=
   hf
 #align continuous_linear_map.mk_of_is_compact_operator_mem_compact_operator ContinuousLinearMap.mkOfIsCompactOperator_mem_compactOperator
+-/
 
 end Continuous
 
+#print isClosed_setOf_isCompactOperator /-
 /-- The set of compact operators from a normed space to a complete topological vector space is
 closed. -/
 theorem isClosed_setOf_isCompactOperator {𝕜₁ 𝕜₂ : Type _} [NontriviallyNormedField 𝕜₁]
@@ -450,7 +511,9 @@ theorem isClosed_setOf_isCompactOperator {𝕜₁ 𝕜₂ : Type _} [Nontriviall
   rw [ContinuousLinearMap.sub_apply]
   abel
 #align is_closed_set_of_is_compact_operator isClosed_setOf_isCompactOperator
+-/
 
+#print compactOperator_topologicalClosure /-
 theorem compactOperator_topologicalClosure {𝕜₁ 𝕜₂ : Type _} [NontriviallyNormedField 𝕜₁]
     [NormedField 𝕜₂] {σ₁₂ : 𝕜₁ →+* 𝕜₂} {M₁ M₂ : Type _} [SeminormedAddCommGroup M₁]
     [AddCommGroup M₂] [NormedSpace 𝕜₁ M₁] [Module 𝕜₂ M₂] [UniformSpace M₂] [UniformAddGroup M₂]
@@ -459,7 +522,9 @@ theorem compactOperator_topologicalClosure {𝕜₁ 𝕜₂ : Type _} [Nontrivia
     (compactOperator σ₁₂ M₁ M₂).topologicalClosure = compactOperator σ₁₂ M₁ M₂ :=
   SetLike.ext' isClosed_setOf_isCompactOperator.closure_eq
 #align compact_operator_topological_closure compactOperator_topologicalClosure
+-/
 
+#print isCompactOperator_of_tendsto /-
 theorem isCompactOperator_of_tendsto {ι 𝕜₁ 𝕜₂ : Type _} [NontriviallyNormedField 𝕜₁]
     [NormedField 𝕜₂] {σ₁₂ : 𝕜₁ →+* 𝕜₂} {M₁ M₂ : Type _} [SeminormedAddCommGroup M₁]
     [AddCommGroup M₂] [NormedSpace 𝕜₁ M₁] [Module 𝕜₂ M₂] [UniformSpace M₂] [UniformAddGroup M₂]
@@ -468,4 +533,5 @@ theorem isCompactOperator_of_tendsto {ι 𝕜₁ 𝕜₂ : Type _} [Nontrivially
     (hF : ∀ᶠ i in l, IsCompactOperator (F i)) : IsCompactOperator f :=
   isClosed_setOf_isCompactOperator.mem_of_tendsto hf hF
 #align is_compact_operator_of_tendsto isCompactOperator_of_tendsto
+-/
 

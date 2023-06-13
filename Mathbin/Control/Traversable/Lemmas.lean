@@ -78,9 +78,11 @@ theorem pureTransformation_apply {α} (x : id α) : PureTransformation F x = pur
 
 variable {F G} (x : t β)
 
+#print Traversable.map_eq_traverse_id /-
 theorem map_eq_traverse_id : map f = @traverse t _ _ _ _ _ (id.mk ∘ f) :=
   funext fun y => (traverse_eq_map_id f y).symm
 #align traversable.map_eq_traverse_id Traversable.map_eq_traverse_id
+-/
 
 #print Traversable.map_traverse /-
 theorem map_traverse (x : t α) : map f <$> traverse g x = traverse (map f ∘ g) x :=
@@ -109,14 +111,18 @@ theorem pure_traverse (x : t α) : traverse pure x = (pure x : F (t α)) := by
 #align traversable.pure_traverse Traversable.pure_traverse
 -/
 
+#print Traversable.id_sequence /-
 theorem id_sequence (x : t α) : sequence (id.mk <$> x) = id.mk x := by
   simp [sequence, traverse_map, id_traverse] <;> rfl
 #align traversable.id_sequence Traversable.id_sequence
+-/
 
+#print Traversable.comp_sequence /-
 theorem comp_sequence (x : t (F (G α))) :
     sequence (Comp.mk <$> x) = Comp.mk (sequence <$> sequence x) := by
   simp [sequence, traverse_map] <;> rw [← comp_traverse] <;> simp [map_id]
 #align traversable.comp_sequence Traversable.comp_sequence
+-/
 
 #print Traversable.naturality' /-
 theorem naturality' (η : ApplicativeTransformation F G) (x : t (F α)) :
@@ -124,20 +130,26 @@ theorem naturality' (η : ApplicativeTransformation F G) (x : t (F α)) :
 #align traversable.naturality' Traversable.naturality'
 -/
 
+#print Traversable.traverse_id /-
 @[functor_norm]
 theorem traverse_id : traverse id.mk = (id.mk : t α → id (t α)) := by ext; exact id_traverse _
 #align traversable.traverse_id Traversable.traverse_id
+-/
 
+#print Traversable.traverse_comp /-
 @[functor_norm]
 theorem traverse_comp (g : α → F β) (h : β → G γ) :
     traverse (Comp.mk ∘ map h ∘ g) =
       (Comp.mk ∘ map (traverse h) ∘ traverse g : t α → Comp F G (t γ)) :=
   by ext; exact comp_traverse _ _ _
 #align traversable.traverse_comp Traversable.traverse_comp
+-/
 
+#print Traversable.traverse_eq_map_id' /-
 theorem traverse_eq_map_id' (f : β → γ) : traverse (id.mk ∘ f) = id.mk ∘ (map f : t β → t γ) := by
   ext; exact traverse_eq_map_id _ _
 #align traversable.traverse_eq_map_id' Traversable.traverse_eq_map_id'
+-/
 
 #print Traversable.traverse_map' /-
 -- @[functor_norm]

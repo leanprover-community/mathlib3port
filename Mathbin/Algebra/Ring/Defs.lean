@@ -74,16 +74,20 @@ class RightDistribClass (R : Type _) [Mul R] [Add R] where
 #align right_distrib_class RightDistribClass
 -/
 
+#print Distrib.leftDistribClass /-
 -- see Note [lower instance priority]
 instance (priority := 100) Distrib.leftDistribClass (R : Type _) [Distrib R] : LeftDistribClass R :=
   ⟨Distrib.left_distrib⟩
 #align distrib.left_distrib_class Distrib.leftDistribClass
+-/
 
+#print Distrib.rightDistribClass /-
 -- see Note [lower instance priority]
 instance (priority := 100) Distrib.rightDistribClass (R : Type _) [Distrib R] :
     RightDistribClass R :=
   ⟨Distrib.right_distrib⟩
 #align distrib.right_distrib_class Distrib.rightDistribClass
+-/
 
 #print left_distrib /-
 theorem left_distrib [Mul R] [Add R] [LeftDistribClass R] (a b c : R) :
@@ -152,9 +156,11 @@ section HasOneHasAdd
 
 variable [One α] [Add α]
 
+#print one_add_one_eq_two /-
 theorem one_add_one_eq_two : 1 + 1 = (2 : α) :=
   rfl
 #align one_add_one_eq_two one_add_one_eq_two
+-/
 
 end HasOneHasAdd
 
@@ -162,33 +168,47 @@ section DistribMulOneClass
 
 variable [Add α] [MulOneClass α]
 
+#print add_one_mul /-
 theorem add_one_mul [RightDistribClass α] (a b : α) : (a + 1) * b = a * b + b := by
   rw [add_mul, one_mul]
 #align add_one_mul add_one_mul
+-/
 
+#print mul_add_one /-
 theorem mul_add_one [LeftDistribClass α] (a b : α) : a * (b + 1) = a * b + a := by
   rw [mul_add, mul_one]
 #align mul_add_one mul_add_one
+-/
 
+#print one_add_mul /-
 theorem one_add_mul [RightDistribClass α] (a b : α) : (1 + a) * b = b + a * b := by
   rw [add_mul, one_mul]
 #align one_add_mul one_add_mul
+-/
 
+#print mul_one_add /-
 theorem mul_one_add [LeftDistribClass α] (a b : α) : a * (1 + b) = a + a * b := by
   rw [mul_add, mul_one]
 #align mul_one_add mul_one_add
+-/
 
+#print two_mul /-
 theorem two_mul [RightDistribClass α] (n : α) : 2 * n = n + n :=
   Eq.trans (right_distrib 1 1 n) (by simp)
 #align two_mul two_mul
+-/
 
+#print bit0_eq_two_mul /-
 theorem bit0_eq_two_mul [RightDistribClass α] (n : α) : bit0 n = 2 * n :=
   (two_mul _).symm
 #align bit0_eq_two_mul bit0_eq_two_mul
+-/
 
+#print mul_two /-
 theorem mul_two [LeftDistribClass α] (n : α) : n * 2 = n + n :=
   (left_distrib n 1 1).trans (by simp)
 #align mul_two mul_two
+-/
 
 end DistribMulOneClass
 
@@ -222,28 +242,38 @@ theorem ite_mul {α} [Mul α] (P : Prop) [Decidable P] (a b c : α) :
 -- `mul_ite` and `ite_mul`.
 attribute [simp] mul_ite ite_mul
 
+#print mul_boole /-
 @[simp]
 theorem mul_boole {α} [MulZeroOneClass α] (P : Prop) [Decidable P] (a : α) :
     (a * if P then 1 else 0) = if P then a else 0 := by simp
 #align mul_boole mul_boole
+-/
 
+#print boole_mul /-
 @[simp]
 theorem boole_mul {α} [MulZeroOneClass α] (P : Prop) [Decidable P] (a : α) :
     (if P then 1 else 0) * a = if P then a else 0 := by simp
 #align boole_mul boole_mul
+-/
 
+#print ite_mul_zero_left /-
 theorem ite_mul_zero_left {α : Type _} [MulZeroClass α] (P : Prop) [Decidable P] (a b : α) :
     ite P (a * b) 0 = ite P a 0 * b := by by_cases h : P <;> simp [h]
 #align ite_mul_zero_left ite_mul_zero_left
+-/
 
+#print ite_mul_zero_right /-
 theorem ite_mul_zero_right {α : Type _} [MulZeroClass α] (P : Prop) [Decidable P] (a b : α) :
     ite P (a * b) 0 = a * ite P b 0 := by by_cases h : P <;> simp [h]
 #align ite_mul_zero_right ite_mul_zero_right
+-/
 
+#print ite_and_mul_zero /-
 theorem ite_and_mul_zero {α : Type _} [MulZeroClass α] (P Q : Prop) [Decidable P] [Decidable Q]
     (a b : α) : ite (P ∧ Q) (a * b) 0 = ite P a 0 * ite Q b 0 := by
   simp only [← ite_and, ite_mul, mul_ite, MulZeroClass.mul_zero, MulZeroClass.zero_mul, and_comm']
 #align ite_and_mul_zero ite_and_mul_zero
+-/
 
 end Semiring
 
@@ -287,9 +317,11 @@ section CommSemiring
 
 variable [CommSemiring α] {a b c : α}
 
+#print add_mul_self_eq /-
 theorem add_mul_self_eq (a b : α) : (a + b) * (a + b) = a * a + 2 * a * b + b * b := by
   simp only [two_mul, add_mul, mul_add, add_assoc, mul_comm b]
 #align add_mul_self_eq add_mul_self_eq
+-/
 
 end CommSemiring
 
@@ -310,29 +342,41 @@ section Mul
 
 variable [Mul α] [HasDistribNeg α]
 
+#print neg_mul /-
 @[simp]
 theorem neg_mul (a b : α) : -a * b = -(a * b) :=
   HasDistribNeg.neg_mul _ _
 #align neg_mul neg_mul
+-/
 
+#print mul_neg /-
 @[simp]
 theorem mul_neg (a b : α) : a * -b = -(a * b) :=
   HasDistribNeg.mul_neg _ _
 #align mul_neg mul_neg
+-/
 
+#print neg_mul_neg /-
 theorem neg_mul_neg (a b : α) : -a * -b = a * b := by simp
 #align neg_mul_neg neg_mul_neg
+-/
 
+#print neg_mul_eq_neg_mul /-
 theorem neg_mul_eq_neg_mul (a b : α) : -(a * b) = -a * b :=
   (neg_mul _ _).symm
 #align neg_mul_eq_neg_mul neg_mul_eq_neg_mul
+-/
 
+#print neg_mul_eq_mul_neg /-
 theorem neg_mul_eq_mul_neg (a b : α) : -(a * b) = a * -b :=
   (mul_neg _ _).symm
 #align neg_mul_eq_mul_neg neg_mul_eq_mul_neg
+-/
 
+#print neg_mul_comm /-
 theorem neg_mul_comm (a b : α) : -a * b = a * -b := by simp
 #align neg_mul_comm neg_mul_comm
+-/
 
 end Mul
 
@@ -340,18 +384,24 @@ section MulOneClass
 
 variable [MulOneClass α] [HasDistribNeg α]
 
+#print neg_eq_neg_one_mul /-
 theorem neg_eq_neg_one_mul (a : α) : -a = -1 * a := by simp
 #align neg_eq_neg_one_mul neg_eq_neg_one_mul
+-/
 
+#print mul_neg_one /-
 /-- An element of a ring multiplied by the additive inverse of one is the element's additive
   inverse. -/
 theorem mul_neg_one (a : α) : a * -1 = -a := by simp
 #align mul_neg_one mul_neg_one
+-/
 
+#print neg_one_mul /-
 /-- The additive inverse of one multiplied by an element of a ring is the element's additive
   inverse. -/
 theorem neg_one_mul (a : α) : -1 * a = -a := by simp
 #align neg_one_mul neg_one_mul
+-/
 
 end MulOneClass
 
@@ -359,12 +409,14 @@ section MulZeroClass
 
 variable [MulZeroClass α] [HasDistribNeg α]
 
+#print MulZeroClass.negZeroClass /-
 instance (priority := 100) MulZeroClass.negZeroClass : NegZeroClass α :=
   { MulZeroClass.toHasZero α, HasDistribNeg.toHasInvolutiveNeg α with
     neg_zero := by
       rw [← MulZeroClass.zero_mul (0 : α), ← neg_mul, MulZeroClass.mul_zero,
         MulZeroClass.mul_zero] }
 #align mul_zero_class.neg_zero_class MulZeroClass.negZeroClass
+-/
 
 end MulZeroClass
 
@@ -412,6 +464,7 @@ section NonUnitalNonAssocRing
 
 variable [NonUnitalNonAssocRing α]
 
+#print NonUnitalNonAssocRing.toHasDistribNeg /-
 instance (priority := 100) NonUnitalNonAssocRing.toHasDistribNeg : HasDistribNeg α
     where
   neg := Neg.neg
@@ -421,23 +474,29 @@ instance (priority := 100) NonUnitalNonAssocRing.toHasDistribNeg : HasDistribNeg
   mul_neg a b :=
     eq_neg_of_add_eq_zero_left <| by rw [← left_distrib, add_left_neg, MulZeroClass.mul_zero]
 #align non_unital_non_assoc_ring.to_has_distrib_neg NonUnitalNonAssocRing.toHasDistribNeg
+-/
 
+#print mul_sub_left_distrib /-
 theorem mul_sub_left_distrib (a b c : α) : a * (b - c) = a * b - a * c := by
   simpa only [sub_eq_add_neg, neg_mul_eq_mul_neg] using mul_add a b (-c)
 #align mul_sub_left_distrib mul_sub_left_distrib
+-/
 
 alias mul_sub_left_distrib ← mul_sub
 #align mul_sub mul_sub
 
+#print mul_sub_right_distrib /-
 theorem mul_sub_right_distrib (a b c : α) : (a - b) * c = a * c - b * c := by
   simpa only [sub_eq_add_neg, neg_mul_eq_neg_mul] using add_mul a (-b) c
 #align mul_sub_right_distrib mul_sub_right_distrib
+-/
 
 alias mul_sub_right_distrib ← sub_mul
 #align sub_mul sub_mul
 
 variable {a b c d e : α}
 
+#print mul_add_eq_mul_add_iff_sub_mul_add_eq /-
 /-- An iff statement following from right distributivity in rings and the definition
   of subtraction. -/
 theorem mul_add_eq_mul_add_iff_sub_mul_add_eq : a * e + c = b * e + d ↔ (a - b) * e + c = d :=
@@ -446,7 +505,9 @@ theorem mul_add_eq_mul_add_iff_sub_mul_add_eq : a * e + c = b * e + d ↔ (a - b
     _ ↔ a * e + c - b * e = d := (Iff.intro (fun h => by rw [h]; simp) fun h => by rw [← h]; simp)
     _ ↔ (a - b) * e + c = d := by simp [sub_mul, sub_add_eq_add_sub]
 #align mul_add_eq_mul_add_iff_sub_mul_add_eq mul_add_eq_mul_add_iff_sub_mul_add_eq
+-/
 
+#print sub_mul_add_eq_of_mul_add_eq_mul_add /-
 /-- A simplification of one side of an equation exploiting right distributivity in rings
   and the definition of subtraction. -/
 theorem sub_mul_add_eq_of_mul_add_eq_mul_add : a * e + c = b * e + d → (a - b) * e + c = d :=
@@ -455,6 +516,7 @@ theorem sub_mul_add_eq_of_mul_add_eq_mul_add : a * e + c = b * e + d → (a - b)
     (a - b) * e + c = a * e + c - b * e := by simp [sub_mul, sub_add_eq_add_sub]
     _ = d := by rw [h]; simp [@add_sub_cancel α]
 #align sub_mul_add_eq_of_mul_add_eq_mul_add sub_mul_add_eq_of_mul_add_eq_mul_add
+-/
 
 end NonUnitalNonAssocRing
 
@@ -462,17 +524,25 @@ section NonAssocRing
 
 variable [NonAssocRing α]
 
+#print sub_one_mul /-
 theorem sub_one_mul (a b : α) : (a - 1) * b = a * b - b := by rw [sub_mul, one_mul]
 #align sub_one_mul sub_one_mul
+-/
 
+#print mul_sub_one /-
 theorem mul_sub_one (a b : α) : a * (b - 1) = a * b - a := by rw [mul_sub, mul_one]
 #align mul_sub_one mul_sub_one
+-/
 
+#print one_sub_mul /-
 theorem one_sub_mul (a b : α) : (1 - a) * b = b - a * b := by rw [sub_mul, one_mul]
 #align one_sub_mul one_sub_mul
+-/
 
+#print mul_one_sub /-
 theorem mul_one_sub (a b : α) : a * (1 - b) = a - a * b := by rw [mul_sub, mul_one]
 #align mul_one_sub mul_one_sub
+-/
 
 end NonAssocRing
 

@@ -211,8 +211,6 @@ theorem norm_eq_neg_one_pow (hζ : IsPrimitiveRoot ζ 2) [IsDomain L] :
   rw [hζ.eq_neg_one_of_two_right, show -1 = algebraMap K L (-1) by simp, Algebra.norm_algebraMap]
 #align is_primitive_root.norm_eq_neg_one_pow IsPrimitiveRoot.norm_eq_neg_one_pow
 
-include hζ
-
 /-- If `irreducible (cyclotomic n K)` (in particular for `K = ℚ`), the norm of a primitive root is
 `1` if `n ≠ 2`. -/
 theorem norm_eq_one [IsDomain L] [IsCyclotomicExtension {n} K L] (hn : n ≠ 2)
@@ -258,8 +256,6 @@ section Field
 variable [Field L] {ζ : L} (hζ : IsPrimitiveRoot ζ n)
 
 variable {K} [Field K] [Algebra K L]
-
-include hζ
 
 /-- If `irreducible (cyclotomic n K)` (in particular for `K = ℚ`), then the norm of
 `ζ - 1` is `eval 1 (cyclotomic n ℤ)`. -/
@@ -310,8 +306,6 @@ theorem sub_one_norm_isPrimePow (hn : IsPrimePow (n : ℕ)) [IsCyclotomicExtensi
           (mem_factors (IsPrimePow.ne_zero hn)).2 ⟨hprime.out, min_fac_dvd _⟩)
   simp [hk, sub_one_norm_eq_eval_cyclotomic hζ this hirr]
 #align is_primitive_root.sub_one_norm_is_prime_pow IsPrimitiveRoot.sub_one_norm_isPrimePow
-
-omit hζ
 
 variable {A}
 

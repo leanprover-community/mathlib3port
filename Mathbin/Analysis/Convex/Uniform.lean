@@ -61,13 +61,16 @@ section SeminormedAddCommGroup
 
 variable (E) [SeminormedAddCommGroup E] [UniformConvexSpace E] {ε : ℝ}
 
+#print exists_forall_sphere_dist_add_le_two_sub /-
 theorem exists_forall_sphere_dist_add_le_two_sub (hε : 0 < ε) :
     ∃ δ, 0 < δ ∧ ∀ ⦃x : E⦄, ‖x‖ = 1 → ∀ ⦃y⦄, ‖y‖ = 1 → ε ≤ ‖x - y‖ → ‖x + y‖ ≤ 2 - δ :=
   UniformConvexSpace.uniform_convex hε
 #align exists_forall_sphere_dist_add_le_two_sub exists_forall_sphere_dist_add_le_two_sub
+-/
 
 variable [NormedSpace ℝ E]
 
+#print exists_forall_closed_ball_dist_add_le_two_sub /-
 theorem exists_forall_closed_ball_dist_add_le_two_sub (hε : 0 < ε) :
     ∃ δ, 0 < δ ∧ ∀ ⦃x : E⦄, ‖x‖ ≤ 1 → ∀ ⦃y⦄, ‖y‖ ≤ 1 → ε ≤ ‖x - y‖ → ‖x + y‖ ≤ 2 - δ :=
   by
@@ -118,7 +121,9 @@ theorem exists_forall_closed_ball_dist_add_le_two_sub (hε : 0 < ε) :
       rw [← mul_div_cancel' δ three_ne_zero]
       exact mul_le_mul_of_nonneg_left (min_le_of_right_le <| min_le_right _ _) three_pos.le
 #align exists_forall_closed_ball_dist_add_le_two_sub exists_forall_closed_ball_dist_add_le_two_sub
+-/
 
+#print exists_forall_closed_ball_dist_add_le_two_mul_sub /-
 theorem exists_forall_closed_ball_dist_add_le_two_mul_sub (hε : 0 < ε) (r : ℝ) :
     ∃ δ, 0 < δ ∧ ∀ ⦃x : E⦄, ‖x‖ ≤ r → ∀ ⦃y⦄, ‖y‖ ≤ r → ε ≤ ‖x - y‖ → ‖x + y‖ ≤ 2 * r - δ :=
   by
@@ -137,6 +142,7 @@ theorem exists_forall_closed_ball_dist_add_le_two_mul_sub (hε : 0 < ε) (r : �
     div_le_div_right hr, div_le_iff hr, sub_mul] at this 
   exact this hxy
 #align exists_forall_closed_ball_dist_add_le_two_mul_sub exists_forall_closed_ball_dist_add_le_two_mul_sub
+-/
 
 end SeminormedAddCommGroup
 

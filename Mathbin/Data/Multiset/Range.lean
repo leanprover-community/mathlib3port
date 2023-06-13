@@ -50,10 +50,12 @@ theorem range_succ (n : ℕ) : range (succ n) = n ::ₘ range n := by
 #align multiset.range_succ Multiset.range_succ
 -/
 
+#print Multiset.card_range /-
 @[simp]
 theorem card_range (n : ℕ) : card (range n) = n :=
   length_range _
 #align multiset.card_range Multiset.card_range
+-/
 
 #print Multiset.range_subset /-
 theorem range_subset {m n : ℕ} : range m ⊆ range n ↔ m ≤ n :=
@@ -98,9 +100,11 @@ theorem range_disjoint_map_add (a : ℕ) (m : Multiset ℕ) :
 #align multiset.range_disjoint_map_add Multiset.range_disjoint_map_add
 -/
 
+#print Multiset.range_add_eq_union /-
 theorem range_add_eq_union (a b : ℕ) : range (a + b) = range a ∪ (range b).map fun x => a + x := by
   rw [range_add, add_eq_union_iff_disjoint]; apply range_disjoint_map_add
 #align multiset.range_add_eq_union Multiset.range_add_eq_union
+-/
 
 end Multiset
 

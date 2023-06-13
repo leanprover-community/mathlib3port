@@ -86,15 +86,19 @@ def trivialization : Trivialization F (π (Bundle.Trivial B F))
 #align bundle.trivial.trivialization Bundle.Trivial.trivialization
 -/
 
+#print Bundle.Trivial.trivialization_source /-
 @[simp]
 theorem trivialization_source : (trivialization B F).source = univ :=
   rfl
 #align bundle.trivial.trivialization_source Bundle.Trivial.trivialization_source
+-/
 
+#print Bundle.Trivial.trivialization_target /-
 @[simp]
 theorem trivialization_target : (trivialization B F).target = univ :=
   rfl
 #align bundle.trivial.trivialization_target Bundle.Trivial.trivialization_target
+-/
 
 #print Bundle.Trivial.fiberBundle /-
 /-- Fiber bundle instance on the trivial bundle. -/
@@ -113,10 +117,12 @@ instance fiberBundle : FiberBundle F (Bundle.Trivial B F)
 #align bundle.trivial.fiber_bundle Bundle.Trivial.fiberBundle
 -/
 
+#print Bundle.Trivial.eq_trivialization /-
 theorem eq_trivialization (e : Trivialization F (π (Bundle.Trivial B F)))
     [i : MemTrivializationAtlas e] : e = trivialization B F :=
   i.out
 #align bundle.trivial.eq_trivialization Bundle.Trivial.eq_trivialization
+-/
 
 end trivial
 
@@ -145,6 +151,7 @@ instance FiberBundle.Prod.topologicalSpace : TopologicalSpace (TotalSpace (E₁ 
 #align fiber_bundle.prod.topological_space FiberBundle.Prod.topologicalSpace
 -/
 
+#print FiberBundle.Prod.inducing_diag /-
 /-- The diagonal map from the total space of the fiberwise product of two fiber bundles
 `E₁`, `E₂` into `total_space E₁ × total_space E₂` is `inducing`. -/
 theorem FiberBundle.Prod.inducing_diag :
@@ -153,6 +160,7 @@ theorem FiberBundle.Prod.inducing_diag :
         TotalSpace (E₁ ×ᵇ E₂) → TotalSpace E₁ × TotalSpace E₂) :=
   ⟨rfl⟩
 #align fiber_bundle.prod.inducing_diag FiberBundle.Prod.inducing_diag
+-/
 
 end Defs
 
@@ -178,6 +186,7 @@ def Prod.toFun' : TotalSpace (E₁ ×ᵇ E₂) → B × F₁ × F₂ := fun p =>
 variable {e₁ e₂}
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print Trivialization.Prod.continuous_to_fun /-
 theorem Prod.continuous_to_fun :
     ContinuousOn (Prod.toFun' e₁ e₂)
       (@TotalSpace.proj B (E₁ ×ᵇ E₂) ⁻¹' (e₁.baseSet ∩ e₂.baseSet)) :=
@@ -200,6 +209,7 @@ theorem Prod.continuous_to_fun :
   rw [e₁.source_eq, mem_preimage]
   exact hb₁
 #align trivialization.prod.continuous_to_fun Trivialization.Prod.continuous_to_fun
+-/
 
 variable (e₁ e₂) [∀ x, Zero (E₁ x)] [∀ x, Zero (E₂ x)]
 
@@ -214,6 +224,7 @@ noncomputable def Prod.invFun' (p : B × F₁ × F₂) : TotalSpace (E₁ ×ᵇ 
 
 variable {e₁ e₂}
 
+#print Trivialization.Prod.left_inv /-
 theorem Prod.left_inv {x : TotalSpace (E₁ ×ᵇ E₂)}
     (h : x ∈ @TotalSpace.proj B (E₁ ×ᵇ E₂) ⁻¹' (e₁.baseSet ∩ e₂.baseSet)) :
     Prod.invFun' e₁ e₂ (Prod.toFun' e₁ e₂ x) = x :=
@@ -222,8 +233,10 @@ theorem Prod.left_inv {x : TotalSpace (E₁ ×ᵇ E₂)}
   obtain ⟨h₁ : x ∈ e₁.base_set, h₂ : x ∈ e₂.base_set⟩ := h
   simp only [prod.to_fun', prod.inv_fun', symm_apply_apply_mk, h₁, h₂]
 #align trivialization.prod.left_inv Trivialization.Prod.left_inv
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print Trivialization.Prod.right_inv /-
 theorem Prod.right_inv {x : B × F₁ × F₂}
     (h : x ∈ (e₁.baseSet ∩ e₂.baseSet) ×ˢ (univ : Set (F₁ × F₂))) :
     Prod.toFun' e₁ e₂ (Prod.invFun' e₁ e₂ x) = x :=
@@ -232,8 +245,10 @@ theorem Prod.right_inv {x : B × F₁ × F₂}
   obtain ⟨⟨h₁ : x ∈ e₁.base_set, h₂ : x ∈ e₂.base_set⟩, -⟩ := h
   simp only [prod.to_fun', prod.inv_fun', apply_mk_symm, h₁, h₂]
 #align trivialization.prod.right_inv Trivialization.Prod.right_inv
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print Trivialization.Prod.continuous_inv_fun /-
 theorem Prod.continuous_inv_fun :
     ContinuousOn (Prod.invFun' e₁ e₂) ((e₁.baseSet ∩ e₂.baseSet) ×ˢ univ) :=
   by
@@ -243,10 +258,12 @@ theorem Prod.continuous_inv_fun :
   refine' (e₁.continuous_on_symm.prod_map e₂.continuous_on_symm).comp H₁.continuous_on _
   exact fun x h => ⟨⟨h.1.1, mem_univ _⟩, ⟨h.1.2, mem_univ _⟩⟩
 #align trivialization.prod.continuous_inv_fun Trivialization.Prod.continuous_inv_fun
+-/
 
 variable (e₁ e₂ e₁ e₂)
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print Trivialization.prod /-
 /-- Given trivializations `e₁`, `e₂` for bundle types `E₁`, `E₂` over a base `B`, the induced
 trivialization for the fiberwise product of `E₁` and `E₂`, whose base set is
 `e₁.base_set ∩ e₂.base_set`. -/
@@ -276,16 +293,21 @@ noncomputable def prod : Trivialization (F₁ × F₂) (π (E₁ ×ᵇ E₂))
   target_eq := rfl
   proj_toFun x h := rfl
 #align trivialization.prod Trivialization.prod
+-/
 
+#print Trivialization.baseSet_prod /-
 @[simp]
 theorem baseSet_prod : (prod e₁ e₂).baseSet = e₁.baseSet ∩ e₂.baseSet :=
   rfl
 #align trivialization.base_set_prod Trivialization.baseSet_prod
+-/
 
+#print Trivialization.prod_symm_apply /-
 theorem prod_symm_apply (x : B) (w₁ : F₁) (w₂ : F₂) :
     (prod e₁ e₂).toLocalEquiv.symm (x, w₁, w₂) = ⟨x, e₁.symm x w₁, e₂.symm x w₂⟩ :=
   rfl
 #align trivialization.prod_symm_apply Trivialization.prod_symm_apply
+-/
 
 end Trivialization
 
@@ -294,6 +316,7 @@ open Trivialization
 variable [∀ x, Zero (E₁ x)] [∀ x, Zero (E₂ x)] [∀ x : B, TopologicalSpace (E₁ x)]
   [∀ x : B, TopologicalSpace (E₂ x)] [FiberBundle F₁ E₁] [FiberBundle F₂ E₂]
 
+#print FiberBundle.prod /-
 /-- The product of two fiber bundles is a fiber bundle. -/
 noncomputable instance FiberBundle.prod : FiberBundle (F₁ × F₂) (E₁ ×ᵇ E₂)
     where
@@ -311,6 +334,7 @@ noncomputable instance FiberBundle.prod : FiberBundle (F₁ × F₂) (E₁ ×ᵇ
   trivialization_mem_atlas b :=
     ⟨trivializationAt F₁ E₁ b, trivializationAt F₂ E₂ b, by infer_instance, by infer_instance, rfl⟩
 #align fiber_bundle.prod FiberBundle.prod
+-/
 
 instance {e₁ : Trivialization F₁ (π E₁)} {e₂ : Trivialization F₂ (π E₂)} [MemTrivializationAtlas e₁]
     [MemTrivializationAtlas e₂] :
@@ -363,6 +387,7 @@ theorem Pullback.continuous_lift (f : B' → B) : Continuous (@Pullback.lift B E
 #align pullback.continuous_lift Pullback.continuous_lift
 -/
 
+#print inducing_pullbackTotalSpaceEmbedding /-
 theorem inducing_pullbackTotalSpaceEmbedding (f : B' → B) :
     Inducing (@pullbackTotalSpaceEmbedding B E B' f) :=
   by
@@ -371,6 +396,7 @@ theorem inducing_pullbackTotalSpaceEmbedding (f : B' → B) :
     Pullback.TotalSpace.topologicalSpace, pullbackTopology]
   rfl
 #align inducing_pullback_total_space_embedding inducing_pullbackTotalSpaceEmbedding
+-/
 
 section FiberBundle
 

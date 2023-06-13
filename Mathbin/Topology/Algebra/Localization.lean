@@ -32,11 +32,13 @@ to the equivalence class of `(x, 1)` in the localization of `R` at a `M`.
 
 variable {R : Type _} [CommRing R] [TopologicalSpace R] {M : Submonoid R}
 
+#print Localization.ringTopology /-
 /-- The ring topology on `localization M` coinduced from the natural homomorphism sending `x : R`
 to the equivalence class of `(x, 1)`. -/
 def Localization.ringTopology : RingTopology (Localization M) :=
   RingTopology.coinduced (Localization.monoidOf M).toFun
 #align localization.ring_topology Localization.ringTopology
+-/
 
 instance : TopologicalSpace (Localization M) :=
   Localization.ringTopology.toTopologicalSpace

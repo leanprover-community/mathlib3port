@@ -48,7 +48,6 @@ def Wcovby (a b : α) : Prop :=
 #align wcovby Wcovby
 -/
 
--- mathport name: «expr ⩿ »
 infixl:50 " ⩿ " => Wcovby
 
 #print Wcovby.le /-
@@ -151,10 +150,13 @@ theorem wcovby_iff_Ioo_eq : a ⩿ b ↔ a ≤ b ∧ Ioo a b = ∅ :=
 #align wcovby_iff_Ioo_eq wcovby_iff_Ioo_eq
 -/
 
+#print Wcovby.of_image /-
 theorem Wcovby.of_image (f : α ↪o β) (h : f a ⩿ f b) : a ⩿ b :=
   ⟨f.le_iff_le.mp h.le, fun c hac hcb => h.2 (f.lt_iff_lt.mpr hac) (f.lt_iff_lt.mpr hcb)⟩
 #align wcovby.of_image Wcovby.of_image
+-/
 
+#print Wcovby.image /-
 theorem Wcovby.image (f : α ↪o β) (hab : a ⩿ b) (h : (range f).OrdConnected) : f a ⩿ f b :=
   by
   refine' ⟨f.monotone hab.le, fun c ha hb => _⟩
@@ -162,16 +164,21 @@ theorem Wcovby.image (f : α ↪o β) (hab : a ⩿ b) (h : (range f).OrdConnecte
   rw [f.lt_iff_lt] at ha hb 
   exact hab.2 ha hb
 #align wcovby.image Wcovby.image
+-/
 
+#print Set.OrdConnected.apply_wcovby_apply_iff /-
 theorem Set.OrdConnected.apply_wcovby_apply_iff (f : α ↪o β) (h : (range f).OrdConnected) :
     f a ⩿ f b ↔ a ⩿ b :=
   ⟨fun h2 => h2.of_image f, fun hab => hab.image f h⟩
 #align set.ord_connected.apply_wcovby_apply_iff Set.OrdConnected.apply_wcovby_apply_iff
+-/
 
+#print apply_wcovby_apply_iff /-
 @[simp]
 theorem apply_wcovby_apply_iff {E : Type _} [OrderIsoClass E α β] (e : E) : e a ⩿ e b ↔ a ⩿ b :=
   (ordConnected_range (e : α ≃o β)).apply_wcovby_apply_iff ((e : α ≃o β) : α ↪o β)
 #align apply_wcovby_apply_iff apply_wcovby_apply_iff
+-/
 
 #print toDual_wcovby_toDual_iff /-
 @[simp]
@@ -245,10 +252,12 @@ section SemilatticeSup
 
 variable [SemilatticeSup α] {a b c : α}
 
+#print Wcovby.sup_eq /-
 theorem Wcovby.sup_eq (hac : a ⩿ c) (hbc : b ⩿ c) (hab : a ≠ b) : a ⊔ b = c :=
   (sup_le hac.le hbc.le).eq_of_not_lt fun h =>
     hab.lt_sup_or_lt_sup.elim (fun h' => hac.2 h' h) fun h' => hbc.2 h' h
 #align wcovby.sup_eq Wcovby.sup_eq
+-/
 
 end SemilatticeSup
 
@@ -256,9 +265,11 @@ section SemilatticeInf
 
 variable [SemilatticeInf α] {a b c : α}
 
+#print Wcovby.inf_eq /-
 theorem Wcovby.inf_eq (hca : c ⩿ a) (hcb : c ⩿ b) (hab : a ≠ b) : a ⊓ b = c :=
   (le_inf hca.le hcb.le).eq_of_not_gt fun h => hab.inf_lt_or_inf_lt.elim (hca.2 h) (hcb.2 h)
 #align wcovby.inf_eq Wcovby.inf_eq
+-/
 
 end SemilatticeInf
 
@@ -275,7 +286,6 @@ def Covby (a b : α) : Prop :=
 #align covby Covby
 -/
 
--- mathport name: «expr ⋖ »
 infixl:50 " ⋖ " => Covby
 
 #print Covby.lt /-
@@ -445,23 +455,31 @@ theorem covby_iff_Ioo_eq : a ⋖ b ↔ a < b ∧ Ioo a b = ∅ :=
 #align covby_iff_Ioo_eq covby_iff_Ioo_eq
 -/
 
+#print Covby.of_image /-
 theorem Covby.of_image (f : α ↪o β) (h : f a ⋖ f b) : a ⋖ b :=
   ⟨f.lt_iff_lt.mp h.lt, fun c hac hcb => h.2 (f.lt_iff_lt.mpr hac) (f.lt_iff_lt.mpr hcb)⟩
 #align covby.of_image Covby.of_image
+-/
 
+#print Covby.image /-
 theorem Covby.image (f : α ↪o β) (hab : a ⋖ b) (h : (range f).OrdConnected) : f a ⋖ f b :=
   (hab.Wcovby.image f h).covby_of_lt <| f.StrictMono hab.lt
 #align covby.image Covby.image
+-/
 
+#print Set.OrdConnected.apply_covby_apply_iff /-
 theorem Set.OrdConnected.apply_covby_apply_iff (f : α ↪o β) (h : (range f).OrdConnected) :
     f a ⋖ f b ↔ a ⋖ b :=
   ⟨Covby.of_image f, fun hab => hab.image f h⟩
 #align set.ord_connected.apply_covby_apply_iff Set.OrdConnected.apply_covby_apply_iff
+-/
 
+#print apply_covby_apply_iff /-
 @[simp]
 theorem apply_covby_apply_iff {E : Type _} [OrderIsoClass E α β] (e : E) : e a ⋖ e b ↔ a ⋖ b :=
   (ordConnected_range (e : α ≃o β)).apply_covby_apply_iff ((e : α ≃o β) : α ↪o β)
 #align apply_covby_apply_iff apply_covby_apply_iff
+-/
 
 #print covby_of_eq_or_eq /-
 theorem covby_of_eq_or_eq (hab : a < b) (h : ∀ c, a ≤ c → c ≤ b → c = a ∨ c = b) : a ⋖ b :=
@@ -602,6 +620,7 @@ end LinearOrder
 
 namespace Set
 
+#print Set.wcovby_insert /-
 theorem wcovby_insert (x : α) (s : Set α) : s ⩿ insert x s :=
   by
   refine' wcovby_of_eq_or_eq (subset_insert x s) fun t hst h2t => _
@@ -610,10 +629,13 @@ theorem wcovby_insert (x : α) (s : Set α) : s ⩿ insert x s :=
   · refine' Or.inl (subset_antisymm _ hst)
     rwa [← diff_singleton_eq_self h, diff_singleton_subset_iff]
 #align set.wcovby_insert Set.wcovby_insert
+-/
 
+#print Set.covby_insert /-
 theorem covby_insert {x : α} {s : Set α} (hx : x ∉ s) : s ⋖ insert x s :=
   (wcovby_insert x s).covby_of_lt <| ssubset_insert hx
 #align set.covby_insert Set.covby_insert
+-/
 
 end Set
 
@@ -621,16 +643,21 @@ namespace Prod
 
 variable [PartialOrder α] [PartialOrder β] {a a₁ a₂ : α} {b b₁ b₂ : β} {x y : α × β}
 
+#print Prod.swap_wcovby_swap /-
 @[simp]
 theorem swap_wcovby_swap : x.symm ⩿ y.symm ↔ x ⩿ y :=
   apply_wcovby_apply_iff (OrderIso.prodComm : α × β ≃o β × α)
 #align prod.swap_wcovby_swap Prod.swap_wcovby_swap
+-/
 
+#print Prod.swap_covby_swap /-
 @[simp]
 theorem swap_covby_swap : x.symm ⋖ y.symm ↔ x ⋖ y :=
   apply_covby_apply_iff (OrderIso.prodComm : α × β ≃o β × α)
 #align prod.swap_covby_swap Prod.swap_covby_swap
+-/
 
+#print Prod.fst_eq_or_snd_eq_of_wcovby /-
 theorem fst_eq_or_snd_eq_of_wcovby : x ⩿ y → x.1 = y.1 ∨ x.2 = y.2 :=
   by
   refine' fun h => of_not_not fun hab => _
@@ -639,15 +666,21 @@ theorem fst_eq_or_snd_eq_of_wcovby : x ⩿ y → x.1 = y.1 ∨ x.2 = y.2 :=
     h.2 (mk_lt_mk.2 <| Or.inl ⟨hab.1.lt_of_le h.1.1, le_rfl⟩)
       (mk_lt_mk.2 <| Or.inr ⟨le_rfl, hab.2.lt_of_le h.1.2⟩)
 #align prod.fst_eq_or_snd_eq_of_wcovby Prod.fst_eq_or_snd_eq_of_wcovby
+-/
 
+#print Wcovby.fst /-
 theorem Wcovby.fst (h : x ⩿ y) : x.1 ⩿ y.1 :=
   ⟨h.1.1, fun c h₁ h₂ => h.2 (mk_lt_mk_iff_left.2 h₁) ⟨⟨h₂.le, h.1.2⟩, fun hc => h₂.not_le hc.1⟩⟩
 #align wcovby.fst Wcovby.fst
+-/
 
+#print Wcovby.snd /-
 theorem Wcovby.snd (h : x ⩿ y) : x.2 ⩿ y.2 :=
   ⟨h.1.2, fun c h₁ h₂ => h.2 (mk_lt_mk_iff_right.2 h₁) ⟨⟨h.1.1, h₂.le⟩, fun hc => h₂.not_le hc.2⟩⟩
 #align wcovby.snd Wcovby.snd
+-/
 
+#print Prod.mk_wcovby_mk_iff_left /-
 theorem mk_wcovby_mk_iff_left : (a₁, b) ⩿ (a₂, b) ↔ a₁ ⩿ a₂ :=
   by
   refine' ⟨Wcovby.fst, And.imp mk_le_mk_iff_left.2 fun h c h₁ h₂ => _⟩
@@ -655,19 +688,27 @@ theorem mk_wcovby_mk_iff_left : (a₁, b) ⩿ (a₂, b) ↔ a₁ ⩿ a₂ :=
   rw [← @Prod.mk.eta _ _ c, this, mk_lt_mk_iff_left] at h₁ h₂ 
   exact h h₁ h₂
 #align prod.mk_wcovby_mk_iff_left Prod.mk_wcovby_mk_iff_left
+-/
 
+#print Prod.mk_wcovby_mk_iff_right /-
 theorem mk_wcovby_mk_iff_right : (a, b₁) ⩿ (a, b₂) ↔ b₁ ⩿ b₂ :=
   swap_wcovby_swap.trans mk_wcovby_mk_iff_left
 #align prod.mk_wcovby_mk_iff_right Prod.mk_wcovby_mk_iff_right
+-/
 
+#print Prod.mk_covby_mk_iff_left /-
 theorem mk_covby_mk_iff_left : (a₁, b) ⋖ (a₂, b) ↔ a₁ ⋖ a₂ := by
   simp_rw [covby_iff_wcovby_and_lt, mk_wcovby_mk_iff_left, mk_lt_mk_iff_left]
 #align prod.mk_covby_mk_iff_left Prod.mk_covby_mk_iff_left
+-/
 
+#print Prod.mk_covby_mk_iff_right /-
 theorem mk_covby_mk_iff_right : (a, b₁) ⋖ (a, b₂) ↔ b₁ ⋖ b₂ := by
   simp_rw [covby_iff_wcovby_and_lt, mk_wcovby_mk_iff_right, mk_lt_mk_iff_right]
 #align prod.mk_covby_mk_iff_right Prod.mk_covby_mk_iff_right
+-/
 
+#print Prod.mk_wcovby_mk_iff /-
 theorem mk_wcovby_mk_iff : (a₁, b₁) ⩿ (a₂, b₂) ↔ a₁ ⩿ a₂ ∧ b₁ = b₂ ∨ b₁ ⩿ b₂ ∧ a₁ = a₂ :=
   by
   refine' ⟨fun h => _, _⟩
@@ -678,7 +719,9 @@ theorem mk_wcovby_mk_iff : (a₁, b₁) ⩿ (a₂, b₂) ↔ a₁ ⩿ a₂ ∧ b
     · exact mk_wcovby_mk_iff_left.2 h
     · exact mk_wcovby_mk_iff_right.2 h
 #align prod.mk_wcovby_mk_iff Prod.mk_wcovby_mk_iff
+-/
 
+#print Prod.mk_covby_mk_iff /-
 theorem mk_covby_mk_iff : (a₁, b₁) ⋖ (a₂, b₂) ↔ a₁ ⋖ a₂ ∧ b₁ = b₂ ∨ b₁ ⋖ b₂ ∧ a₁ = a₂ :=
   by
   refine' ⟨fun h => _, _⟩
@@ -689,14 +732,19 @@ theorem mk_covby_mk_iff : (a₁, b₁) ⋖ (a₂, b₂) ↔ a₁ ⋖ a₂ ∧ b�
     · exact mk_covby_mk_iff_left.2 h
     · exact mk_covby_mk_iff_right.2 h
 #align prod.mk_covby_mk_iff Prod.mk_covby_mk_iff
+-/
 
+#print Prod.wcovby_iff /-
 theorem wcovby_iff : x ⩿ y ↔ x.1 ⩿ y.1 ∧ x.2 = y.2 ∨ x.2 ⩿ y.2 ∧ x.1 = y.1 := by cases x; cases y;
   exact mk_wcovby_mk_iff
 #align prod.wcovby_iff Prod.wcovby_iff
+-/
 
+#print Prod.covby_iff /-
 theorem covby_iff : x ⋖ y ↔ x.1 ⋖ y.1 ∧ x.2 = y.2 ∨ x.2 ⋖ y.2 ∧ x.1 = y.1 := by cases x; cases y;
   exact mk_covby_mk_iff
 #align prod.covby_iff Prod.covby_iff
+-/
 
 end Prod
 

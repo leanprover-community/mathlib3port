@@ -373,7 +373,6 @@ unsafe def tautology (cfg : tauto_cfg := { }) : tactic Unit :=
 
 namespace Interactive
 
--- mathport name: parser.optional
 local postfix:1024 "?" => optional
 
 /- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/

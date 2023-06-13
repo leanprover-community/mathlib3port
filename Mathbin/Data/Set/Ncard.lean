@@ -97,8 +97,10 @@ theorem ncard_le_of_subset (hst : s ⊆ t)
 #align set.ncard_le_of_subset Set.ncard_le_of_subset
 -/
 
+#print Set.ncard_mono /-
 theorem ncard_mono [Finite α] : @Monotone (Set α) _ _ _ ncard := fun _ _ => ncard_le_of_subset
 #align set.ncard_mono Set.ncard_mono
+-/
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic to_finite_tac -/
 #print Set.ncard_eq_zero /-
@@ -186,6 +188,7 @@ theorem ncard_singleton (a : α) : ({a} : Set α).ncard = 1 := by simp [ncard_eq
 #align set.ncard_singleton Set.ncard_singleton
 -/
 
+#print Set.ncard_singleton_inter /-
 theorem ncard_singleton_inter : ({a} ∩ s).ncard ≤ 1 := by
   classical
   rw [← inter_self {a}, inter_assoc, ncard_eq_to_finset_card, finite.to_finset_inter,
@@ -193,6 +196,7 @@ theorem ncard_singleton_inter : ({a} ∩ s).ncard ≤ 1 := by
   · apply Finset.card_singleton_inter
   all_goals apply to_finite
 #align set.ncard_singleton_inter Set.ncard_singleton_inter
+-/
 
 section InsertErase
 
@@ -265,6 +269,7 @@ theorem ncard_pair (h : a ≠ b) : ({a, b} : Set α).ncard = 2 := by
 -/
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic to_finite_tac -/
+#print Set.ncard_diff_singleton_add_one /-
 theorem ncard_diff_singleton_add_one (h : a ∈ s)
     (hs : s.Finite := by
       run_tac
@@ -276,8 +281,10 @@ theorem ncard_diff_singleton_add_one (h : a ∈ s)
   congr
   simpa
 #align set.ncard_diff_singleton_add_one Set.ncard_diff_singleton_add_one
+-/
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic to_finite_tac -/
+#print Set.ncard_diff_singleton_of_mem /-
 theorem ncard_diff_singleton_of_mem (h : a ∈ s)
     (hs : s.Finite := by
       run_tac
@@ -285,15 +292,19 @@ theorem ncard_diff_singleton_of_mem (h : a ∈ s)
     (s \ {a}).ncard = s.ncard - 1 :=
   eq_tsub_of_add_eq (ncard_diff_singleton_add_one h hs)
 #align set.ncard_diff_singleton_of_mem Set.ncard_diff_singleton_of_mem
+-/
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic to_finite_tac -/
+#print Set.ncard_diff_singleton_lt_of_mem /-
 theorem ncard_diff_singleton_lt_of_mem (h : a ∈ s)
     (hs : s.Finite := by
       run_tac
         to_finite_tac) :
     (s \ {a}).ncard < s.ncard := by rw [← ncard_diff_singleton_add_one h hs]; apply lt_add_one
 #align set.ncard_diff_singleton_lt_of_mem Set.ncard_diff_singleton_lt_of_mem
+-/
 
+#print Set.ncard_diff_singleton_le /-
 theorem ncard_diff_singleton_le (s : Set α) (a : α) : (s \ {a}).ncard ≤ s.ncard :=
   by
   obtain hs | hs := s.finite_or_infinite
@@ -301,7 +312,9 @@ theorem ncard_diff_singleton_le (s : Set α) (a : α) : (s \ {a}).ncard ≤ s.nc
   convert zero_le _
   exact (hs.diff (by simp : Set.Finite {a})).ncard
 #align set.ncard_diff_singleton_le Set.ncard_diff_singleton_le
+-/
 
+#print Set.pred_ncard_le_ncard_diff_singleton /-
 theorem pred_ncard_le_ncard_diff_singleton (s : Set α) (a : α) : s.ncard - 1 ≤ (s \ {a}).ncard :=
   by
   cases' s.finite_or_infinite with hs hs
@@ -312,7 +325,9 @@ theorem pred_ncard_le_ncard_diff_singleton (s : Set α) (a : α) : s.ncard - 1 �
   convert Nat.zero_le _
   rw [hs.ncard]
 #align set.pred_ncard_le_ncard_diff_singleton Set.pred_ncard_le_ncard_diff_singleton
+-/
 
+#print Set.ncard_exchange /-
 theorem ncard_exchange (ha : a ∉ s) (hb : b ∈ s) : (insert a (s \ {b})).ncard = s.ncard :=
   by
   cases' s.finite_or_infinite with h h
@@ -321,15 +336,19 @@ theorem ncard_exchange (ha : a ∉ s) (hb : b ∈ s) : (insert a (s \ {b})).ncar
     simpa only [mem_diff, not_and] using ha
   rw [((h.diff (Set.toFinite {b})).mono (subset_insert _ _)).ncard, h.ncard]
 #align set.ncard_exchange Set.ncard_exchange
+-/
 
+#print Set.ncard_exchange' /-
 theorem ncard_exchange' (ha : a ∉ s) (hb : b ∈ s) : (insert a s \ {b}).ncard = s.ncard := by
   rw [← ncard_exchange ha hb, ← singleton_union, ← singleton_union, union_diff_distrib,
     @diff_singleton_eq_self _ b {a} fun h => ha (by rwa [← mem_singleton_iff.mp h])]
 #align set.ncard_exchange' Set.ncard_exchange'
+-/
 
 end InsertErase
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic to_finite_tac -/
+#print Set.ncard_image_le /-
 theorem ncard_image_le
     (hs : s.Finite := by
       run_tac
@@ -344,7 +363,9 @@ theorem ncard_image_le
   · infer_instance
   rw [← Finset.coe_inj, finite.coe_to_finset, coe_to_finset]
 #align set.ncard_image_le Set.ncard_image_le
+-/
 
+#print Set.ncard_image_of_injOn /-
 theorem ncard_image_of_injOn (H : Set.InjOn f s) : (f '' s).ncard = s.ncard :=
   by
   cases s.finite_or_infinite
@@ -353,6 +374,7 @@ theorem ncard_image_of_injOn (H : Set.InjOn f s) : (f '' s).ncard = s.ncard :=
     convert card_image_of_inj_on H <;> simp [ncard_def]
   rw [h.ncard, ((infinite_image_iff H).mpr h).ncard]
 #align set.ncard_image_of_inj_on Set.ncard_image_of_injOn
+-/
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic to_finite_tac -/
 #print Set.injOn_of_ncard_image_eq /-
@@ -374,6 +396,7 @@ theorem injOn_of_ncard_image_eq (h : (f '' s).ncard = s.ncard)
 -/
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic to_finite_tac -/
+#print Set.ncard_image_iff /-
 theorem ncard_image_iff
     (hs : s.Finite := by
       run_tac
@@ -381,10 +404,13 @@ theorem ncard_image_iff
     (f '' s).ncard = s.ncard ↔ Set.InjOn f s :=
   ⟨fun h => injOn_of_ncard_image_eq h hs, ncard_image_of_injOn⟩
 #align set.ncard_image_iff Set.ncard_image_iff
+-/
 
+#print Set.ncard_image_ofInjective /-
 theorem ncard_image_ofInjective (s : Set α) (H : f.Injective) : (f '' s).ncard = s.ncard :=
   ncard_image_of_injOn fun x _ y _ h => H h
 #align set.ncard_image_of_injective Set.ncard_image_ofInjective
+-/
 
 #print Set.ncard_preimage_ofInjective_subset_range /-
 theorem ncard_preimage_ofInjective_subset_range {s : Set β} (H : f.Injective)
@@ -394,6 +420,7 @@ theorem ncard_preimage_ofInjective_subset_range {s : Set β} (H : f.Injective)
 -/
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic to_finite_tac -/
+#print Set.fiber_ncard_ne_zero_iff_mem_image /-
 theorem fiber_ncard_ne_zero_iff_mem_image {y : β}
     (hs : s.Finite := by
       run_tac
@@ -405,12 +432,16 @@ theorem fiber_ncard_ne_zero_iff_mem_image {y : β}
   exact
     @ncard_ne_zero_of_mem _ ({x ∈ s | f x = f z}) z (mem_sep hz rfl) (hs.subset (sep_subset _ _))
 #align set.fiber_ncard_ne_zero_iff_mem_image Set.fiber_ncard_ne_zero_iff_mem_image
+-/
 
+#print Set.ncard_map /-
 @[simp]
 theorem ncard_map (f : α ↪ β) : (f '' s).ncard = s.ncard :=
   ncard_image_ofInjective _ f.Injective
 #align set.ncard_map Set.ncard_map
+-/
 
+#print Set.ncard_subtype /-
 @[simp]
 theorem ncard_subtype (P : α → Prop) (s : Set α) :
     {x : Subtype P | (x : α) ∈ s}.ncard = (s ∩ setOf P).ncard :=
@@ -418,6 +449,7 @@ theorem ncard_subtype (P : α → Prop) (s : Set α) :
   convert (ncard_image_of_injective _ (@Subtype.coe_injective _ P)).symm
   ext; rw [inter_comm]; simp
 #align set.ncard_subtype Set.ncard_subtype
+-/
 
 #print Set.Nat.card_coe_set_eq /-
 @[simp]
@@ -430,6 +462,7 @@ theorem Nat.card_coe_set_eq (s : Set α) : Nat.card s = s.ncard :=
 -/
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic to_finite_tac -/
+#print Set.ncard_inter_le_ncard_left /-
 theorem ncard_inter_le_ncard_left (s t : Set α)
     (hs : s.Finite := by
       run_tac
@@ -437,8 +470,10 @@ theorem ncard_inter_le_ncard_left (s t : Set α)
     (s ∩ t).ncard ≤ s.ncard :=
   ncard_le_of_subset (inter_subset_left _ _) hs
 #align set.ncard_inter_le_ncard_left Set.ncard_inter_le_ncard_left
+-/
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic to_finite_tac -/
+#print Set.ncard_inter_le_ncard_right /-
 theorem ncard_inter_le_ncard_right (s t : Set α)
     (ht : t.Finite := by
       run_tac
@@ -446,6 +481,7 @@ theorem ncard_inter_le_ncard_right (s t : Set α)
     (s ∩ t).ncard ≤ t.ncard :=
   ncard_le_of_subset (inter_subset_right _ _) ht
 #align set.ncard_inter_le_ncard_right Set.ncard_inter_le_ncard_right
+-/
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic to_finite_tac -/
 #print Set.eq_of_subset_of_ncard_le /-
@@ -498,6 +534,7 @@ theorem sep_of_ncard_eq {P : α → Prop} (h : {x ∈ s | P x}.ncard = s.ncard) 
 -/
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic to_finite_tac -/
+#print Set.ncard_lt_ncard /-
 theorem ncard_lt_ncard (h : s ⊂ t)
     (ht : t.Finite := by
       run_tac
@@ -508,10 +545,13 @@ theorem ncard_lt_ncard (h : s ⊂ t)
   refine' Finset.card_lt_card _
   rwa [finite.to_finset_ssubset_to_finset]
 #align set.ncard_lt_ncard Set.ncard_lt_ncard
+-/
 
+#print Set.ncard_strictMono /-
 theorem ncard_strictMono [Finite α] : @StrictMono (Set α) _ _ _ ncard := fun _ _ h =>
   ncard_lt_ncard h
 #align set.ncard_strict_mono Set.ncard_strictMono
+-/
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic to_finite_tac -/
 #print Set.ncard_eq_ofBijective /-
@@ -573,6 +613,7 @@ theorem ncard_le_ncard_of_injOn {t : Set β} (f : α → β) (hf : ∀ a ∈ s, 
 -/
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic to_finite_tac -/
+#print Set.exists_ne_map_eq_of_ncard_lt_of_maps_to /-
 theorem exists_ne_map_eq_of_ncard_lt_of_maps_to {t : Set β} (hc : t.ncard < s.ncard) {f : α → β}
     (hf : ∀ a ∈ s, f a ∈ t)
     (ht : t.Finite := by
@@ -583,6 +624,7 @@ theorem exists_ne_map_eq_of_ncard_lt_of_maps_to {t : Set β} (hc : t.ncard < s.n
   simp only [Ne.def, exists_prop, not_exists, not_and, not_imp_not] at h' 
   exact (ncard_le_ncard_of_inj_on f hf h' ht).not_lt hc
 #align set.exists_ne_map_eq_of_ncard_lt_of_maps_to Set.exists_ne_map_eq_of_ncard_lt_of_maps_to
+-/
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic to_finite_tac -/
 #print Set.le_ncard_of_inj_on_range /-
@@ -651,6 +693,7 @@ section Lattice
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic to_finite_tac -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic to_finite_tac -/
+#print Set.ncard_union_add_ncard_inter /-
 theorem ncard_union_add_ncard_inter (s t : Set α)
     (hs : s.Finite := by
       run_tac
@@ -666,9 +709,11 @@ theorem ncard_union_add_ncard_inter (s t : Set α)
     ncard_eq_to_finset_card _ hi, finite.to_finset_union, finite.to_finset_inter]
   · exact Finset.card_union_add_card_inter _ _
 #align set.ncard_union_add_ncard_inter Set.ncard_union_add_ncard_inter
+-/
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic to_finite_tac -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic to_finite_tac -/
+#print Set.ncard_inter_add_ncard_union /-
 theorem ncard_inter_add_ncard_union (s t : Set α)
     (hs : s.Finite := by
       run_tac
@@ -679,7 +724,9 @@ theorem ncard_inter_add_ncard_union (s t : Set α)
     (s ∩ t).ncard + (s ∪ t).ncard = s.ncard + t.ncard := by
   rw [add_comm, ncard_union_add_ncard_inter _ _ hs ht]
 #align set.ncard_inter_add_ncard_union Set.ncard_inter_add_ncard_union
+-/
 
+#print Set.ncard_union_le /-
 theorem ncard_union_le (s t : Set α) : (s ∪ t).ncard ≤ s.ncard + t.ncard := by
   classical
   cases (s ∪ t).finite_or_infinite
@@ -691,9 +738,11 @@ theorem ncard_union_le (s t : Set α) : (s ∪ t).ncard ≤ s.ncard + t.ncard :=
   convert Nat.zero_le _
   rw [h.ncard]
 #align set.ncard_union_le Set.ncard_union_le
+-/
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic to_finite_tac -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic to_finite_tac -/
+#print Set.ncard_union_eq /-
 theorem ncard_union_eq (h : Disjoint s t)
     (hs : s.Finite := by
       run_tac
@@ -708,8 +757,10 @@ theorem ncard_union_eq (h : Disjoint s t)
   refine' Finset.card_union_eq _
   rwa [finite.disjoint_to_finset]
 #align set.ncard_union_eq Set.ncard_union_eq
+-/
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic to_finite_tac -/
+#print Set.ncard_diff_add_ncard_eq_ncard /-
 theorem ncard_diff_add_ncard_eq_ncard (h : s ⊆ t)
     (ht : t.Finite := by
       run_tac
@@ -721,8 +772,10 @@ theorem ncard_diff_add_ncard_eq_ncard (h : s ⊆ t)
   refine' Finset.card_sdiff_add_card_eq_card _
   rwa [finite.to_finset_subset_to_finset]
 #align set.ncard_diff_add_ncard_eq_ncard Set.ncard_diff_add_ncard_eq_ncard
+-/
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic to_finite_tac -/
+#print Set.ncard_diff /-
 theorem ncard_diff (h : s ⊆ t)
     (ht : t.Finite := by
       run_tac
@@ -730,8 +783,10 @@ theorem ncard_diff (h : s ⊆ t)
     (t \ s).ncard = t.ncard - s.ncard := by
   rw [← ncard_diff_add_ncard_eq_ncard h ht, add_tsub_cancel_right]
 #align set.ncard_diff Set.ncard_diff
+-/
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic to_finite_tac -/
+#print Set.ncard_le_ncard_diff_add_ncard /-
 theorem ncard_le_ncard_diff_add_ncard (s t : Set α)
     (ht : t.Finite := by
       run_tac
@@ -745,8 +800,10 @@ theorem ncard_le_ncard_diff_add_ncard (s t : Set α)
   convert Nat.zero_le _
   rw [h.ncard]
 #align set.ncard_le_ncard_diff_add_ncard Set.ncard_le_ncard_diff_add_ncard
+-/
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic to_finite_tac -/
+#print Set.le_ncard_diff /-
 theorem le_ncard_diff (s t : Set α)
     (hs : s.Finite := by
       run_tac
@@ -757,9 +814,11 @@ theorem le_ncard_diff (s t : Set α)
   rw [add_comm]
   apply ncard_le_ncard_diff_add_ncard _ _ hs
 #align set.le_ncard_diff Set.le_ncard_diff
+-/
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic to_finite_tac -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic to_finite_tac -/
+#print Set.ncard_diff_add_ncard /-
 theorem ncard_diff_add_ncard (s t : Set α)
     (hs : s.Finite := by
       run_tac
@@ -770,8 +829,10 @@ theorem ncard_diff_add_ncard (s t : Set α)
     (s \ t).ncard + t.ncard = (s ∪ t).ncard := by
   rw [← union_diff_right, ncard_diff_add_ncard_eq_ncard (subset_union_right s t) (hs.union ht)]
 #align set.ncard_diff_add_ncard Set.ncard_diff_add_ncard
+-/
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic to_finite_tac -/
+#print Set.diff_nonempty_of_ncard_lt_ncard /-
 theorem diff_nonempty_of_ncard_lt_ncard (h : s.ncard < t.ncard)
     (hs : s.Finite := by
       run_tac
@@ -781,6 +842,7 @@ theorem diff_nonempty_of_ncard_lt_ncard (h : s.ncard < t.ncard)
   rw [Set.nonempty_iff_ne_empty, Ne.def, diff_eq_empty]
   exact fun h' => h.not_le (ncard_le_of_subset h' hs)
 #align set.diff_nonempty_of_ncard_lt_ncard Set.diff_nonempty_of_ncard_lt_ncard
+-/
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic to_finite_tac -/
 #print Set.exists_mem_not_mem_of_ncard_lt_ncard /-
@@ -794,6 +856,7 @@ theorem exists_mem_not_mem_of_ncard_lt_ncard (h : s.ncard < t.ncard)
 -/
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic to_finite_tac -/
+#print Set.ncard_inter_add_ncard_diff_eq_ncard /-
 @[simp]
 theorem ncard_inter_add_ncard_diff_eq_ncard (s t : Set α)
     (hs : s.Finite := by
@@ -802,9 +865,11 @@ theorem ncard_inter_add_ncard_diff_eq_ncard (s t : Set α)
     (s ∩ t).ncard + (s \ t).ncard = s.ncard := by
   rw [← ncard_diff_add_ncard_eq_ncard (diff_subset s t) hs, sdiff_sdiff_right_self, inf_eq_inter]
 #align set.ncard_inter_add_ncard_diff_eq_ncard Set.ncard_inter_add_ncard_diff_eq_ncard
+-/
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic to_finite_tac -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic to_finite_tac -/
+#print Set.ncard_eq_ncard_iff_ncard_diff_eq_ncard_diff /-
 theorem ncard_eq_ncard_iff_ncard_diff_eq_ncard_diff
     (hs : s.Finite := by
       run_tac
@@ -816,9 +881,11 @@ theorem ncard_eq_ncard_iff_ncard_diff_eq_ncard_diff
   rw [← ncard_inter_add_ncard_diff_eq_ncard s t hs, ← ncard_inter_add_ncard_diff_eq_ncard t s ht,
     inter_comm, add_right_inj]
 #align set.ncard_eq_ncard_iff_ncard_diff_eq_ncard_diff Set.ncard_eq_ncard_iff_ncard_diff_eq_ncard_diff
+-/
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic to_finite_tac -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic to_finite_tac -/
+#print Set.ncard_le_ncard_iff_ncard_diff_le_ncard_diff /-
 theorem ncard_le_ncard_iff_ncard_diff_le_ncard_diff
     (hs : s.Finite := by
       run_tac
@@ -830,9 +897,11 @@ theorem ncard_le_ncard_iff_ncard_diff_le_ncard_diff
   rw [← ncard_inter_add_ncard_diff_eq_ncard s t hs, ← ncard_inter_add_ncard_diff_eq_ncard t s ht,
     inter_comm, add_le_add_iff_left]
 #align set.ncard_le_ncard_iff_ncard_diff_le_ncard_diff Set.ncard_le_ncard_iff_ncard_diff_le_ncard_diff
+-/
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic to_finite_tac -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic to_finite_tac -/
+#print Set.ncard_lt_ncard_iff_ncard_diff_lt_ncard_diff /-
 theorem ncard_lt_ncard_iff_ncard_diff_lt_ncard_diff
     (hs : s.Finite := by
       run_tac
@@ -844,9 +913,11 @@ theorem ncard_lt_ncard_iff_ncard_diff_lt_ncard_diff
   rw [← ncard_inter_add_ncard_diff_eq_ncard s t hs, ← ncard_inter_add_ncard_diff_eq_ncard t s ht,
     inter_comm, add_lt_add_iff_left]
 #align set.ncard_lt_ncard_iff_ncard_diff_lt_ncard_diff Set.ncard_lt_ncard_iff_ncard_diff_lt_ncard_diff
+-/
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic to_finite_tac -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic to_finite_tac -/
+#print Set.ncard_add_ncard_compl /-
 theorem ncard_add_ncard_compl (s : Set α)
     (hs : s.Finite := by
       run_tac
@@ -857,6 +928,7 @@ theorem ncard_add_ncard_compl (s : Set α)
     s.ncard + sᶜ.ncard = Nat.card α := by
   rw [← ncard_univ, ← ncard_union_eq (@disjoint_compl_right _ _ s) hs hsc, union_compl_self]
 #align set.ncard_add_ncard_compl Set.ncard_add_ncard_compl
+-/
 
 end Lattice
 
@@ -924,6 +996,7 @@ theorem Infinite.exists_supset_ncard_eq {s t : Set α} (ht : t.Infinite) (hst : 
 #align set.infinite.exists_supset_ncard_eq Set.Infinite.exists_supset_ncard_eq
 -/
 
+#print Set.exists_subset_or_subset_of_two_mul_lt_ncard /-
 theorem exists_subset_or_subset_of_two_mul_lt_ncard {n : ℕ} (hst : 2 * n < (s ∪ t).ncard) :
     ∃ r : Set α, n < r.ncard ∧ (r ⊆ s ∨ r ⊆ t) := by
   classical
@@ -935,6 +1008,7 @@ theorem exists_subset_or_subset_of_two_mul_lt_ncard {n : ℕ} (hst : 2 * n < (s 
   obtain ⟨r', hnr', hr'⟩ := Finset.exists_subset_or_subset_of_two_mul_lt_card hst
   exact ⟨r', by simpa, by simpa using hr'⟩
 #align set.exists_subset_or_subset_of_two_mul_lt_ncard Set.exists_subset_or_subset_of_two_mul_lt_ncard
+-/
 
 /-! ### Explicit description of a set from its cardinality -/
 
@@ -1038,6 +1112,7 @@ theorem ncard_le_one_of_subsingleton [Subsingleton α] (s : Set α) : s.ncard �
 -/
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic to_finite_tac -/
+#print Set.one_lt_ncard /-
 theorem one_lt_ncard
     (hs : s.Finite := by
       run_tac
@@ -1045,6 +1120,7 @@ theorem one_lt_ncard
     1 < s.ncard ↔ ∃ a ∈ s, ∃ b ∈ s, a ≠ b := by
   simp_rw [ncard_eq_to_finset_card _ hs, Finset.one_lt_card, finite.mem_to_finset]
 #align set.one_lt_ncard Set.one_lt_ncard
+-/
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic to_finite_tac -/
 #print Set.one_lt_ncard_iff /-
@@ -1069,6 +1145,7 @@ theorem two_lt_ncard_iff
 -/
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic to_finite_tac -/
+#print Set.two_lt_ncard /-
 theorem two_lt_ncard
     (hs : s.Finite := by
       run_tac
@@ -1076,6 +1153,7 @@ theorem two_lt_ncard
     2 < s.ncard ↔ ∃ a ∈ s, ∃ b ∈ s, ∃ c ∈ s, a ≠ b ∧ a ≠ c ∧ b ≠ c := by
   simp only [two_lt_ncard_iff hs, exists_and_left, exists_prop]
 #align set.two_lt_card Set.two_lt_ncard
+-/
 
 #print Set.exists_ne_of_one_lt_ncard /-
 theorem exists_ne_of_one_lt_ncard (hs : 1 < s.ncard) (a : α) : ∃ b, b ∈ s ∧ b ≠ a :=

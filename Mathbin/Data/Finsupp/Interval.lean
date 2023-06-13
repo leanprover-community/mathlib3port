@@ -87,10 +87,12 @@ def rangeIcc (f g : ι →₀ α) : ι →₀ Finset α
 #align finsupp.range_Icc Finsupp.rangeIcc
 -/
 
+#print Finsupp.rangeIcc_support /-
 @[simp]
 theorem rangeIcc_support [DecidableEq ι] (f g : ι →₀ α) :
     (rangeIcc f g).support = f.support ∪ g.support := by convert rfl
 #align finsupp.range_Icc_support Finsupp.rangeIcc_support
+-/
 
 #print Finsupp.mem_rangeIcc_apply_iff /-
 theorem mem_rangeIcc_apply_iff : a ∈ f.rangeIcc g i ↔ f i ≤ a ∧ a ≤ g i :=
@@ -116,29 +118,39 @@ instance : LocallyFiniteOrder (ι →₀ α) := by
         simp_rw [mem_range_Icc_apply_iff]
         exact forall_and
 
+#print Finsupp.icc_eq /-
 theorem icc_eq [DecidableEq ι] : Icc f g = (f.support ∪ g.support).Finsupp (f.rangeIcc g) := by
   convert rfl
 #align finsupp.Icc_eq Finsupp.icc_eq
+-/
 
+#print Finsupp.card_Icc /-
 theorem card_Icc [DecidableEq ι] :
     (Icc f g).card = ∏ i in f.support ∪ g.support, (Icc (f i) (g i)).card := by
   simp_rw [Icc_eq, card_finsupp, range_Icc_to_fun]
 #align finsupp.card_Icc Finsupp.card_Icc
+-/
 
+#print Finsupp.card_Ico /-
 theorem card_Ico [DecidableEq ι] :
     (Ico f g).card = ∏ i in f.support ∪ g.support, (Icc (f i) (g i)).card - 1 := by
   rw [card_Ico_eq_card_Icc_sub_one, card_Icc]
 #align finsupp.card_Ico Finsupp.card_Ico
+-/
 
+#print Finsupp.card_Ioc /-
 theorem card_Ioc [DecidableEq ι] :
     (Ioc f g).card = ∏ i in f.support ∪ g.support, (Icc (f i) (g i)).card - 1 := by
   rw [card_Ioc_eq_card_Icc_sub_one, card_Icc]
 #align finsupp.card_Ioc Finsupp.card_Ioc
+-/
 
+#print Finsupp.card_Ioo /-
 theorem card_Ioo [DecidableEq ι] :
     (Ioo f g).card = ∏ i in f.support ∪ g.support, (Icc (f i) (g i)).card - 2 := by
   rw [card_Ioo_eq_card_Icc_sub_two, card_Icc]
 #align finsupp.card_Ioo Finsupp.card_Ioo
+-/
 
 end PartialOrder
 
@@ -148,14 +160,18 @@ variable [CanonicallyOrderedAddMonoid α] [LocallyFiniteOrder α]
 
 variable (f : ι →₀ α)
 
+#print Finsupp.card_Iic /-
 theorem card_Iic : (Iic f).card = ∏ i in f.support, (Iic (f i)).card := by
   classical simp_rw [Iic_eq_Icc, card_Icc, Finsupp.bot_eq_zero, support_zero, empty_union,
     zero_apply, bot_eq_zero]
 #align finsupp.card_Iic Finsupp.card_Iic
+-/
 
+#print Finsupp.card_Iio /-
 theorem card_Iio : (Iio f).card = ∏ i in f.support, (Iic (f i)).card - 1 := by
   rw [card_Iio_eq_card_Iic_sub_one, card_Iic]
 #align finsupp.card_Iio Finsupp.card_Iio
+-/
 
 end CanonicallyOrdered
 

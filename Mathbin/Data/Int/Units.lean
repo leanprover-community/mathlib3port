@@ -25,6 +25,7 @@ namespace Int
 /-! ### units -/
 
 
+#print Int.units_natAbs /-
 @[simp]
 theorem units_natAbs (u : ℤˣ) : natAbs u = 1 :=
   Units.ext_iff.1 <|
@@ -32,15 +33,21 @@ theorem units_natAbs (u : ℤˣ) : natAbs u = 1 :=
       ⟨natAbs u, natAbs ↑u⁻¹, by rw [← nat_abs_mul, Units.mul_inv] <;> rfl, by
         rw [← nat_abs_mul, Units.inv_mul] <;> rfl⟩
 #align int.units_nat_abs Int.units_natAbs
+-/
 
+#print Int.units_eq_one_or /-
 theorem units_eq_one_or (u : ℤˣ) : u = 1 ∨ u = -1 := by
   simpa only [Units.ext_iff, units_nat_abs] using nat_abs_eq u
 #align int.units_eq_one_or Int.units_eq_one_or
+-/
 
+#print Int.isUnit_eq_one_or /-
 theorem isUnit_eq_one_or {a : ℤ} : IsUnit a → a = 1 ∨ a = -1
   | ⟨x, hx⟩ => hx ▸ (units_eq_one_or _).imp (congr_arg coe) (congr_arg coe)
 #align int.is_unit_eq_one_or Int.isUnit_eq_one_or
+-/
 
+#print Int.isUnit_iff /-
 theorem isUnit_iff {a : ℤ} : IsUnit a ↔ a = 1 ∨ a = -1 :=
   by
   refine' ⟨fun h => is_unit_eq_one_or h, fun h => _⟩
@@ -48,13 +55,16 @@ theorem isUnit_iff {a : ℤ} : IsUnit a ↔ a = 1 ∨ a = -1 :=
   · exact isUnit_one
   · exact is_unit_one.neg
 #align int.is_unit_iff Int.isUnit_iff
+-/
 
+#print Int.isUnit_eq_or_eq_neg /-
 theorem isUnit_eq_or_eq_neg {a b : ℤ} (ha : IsUnit a) (hb : IsUnit b) : a = b ∨ a = -b :=
   by
   rcases is_unit_eq_one_or hb with (rfl | rfl)
   · exact is_unit_eq_one_or ha
   · rwa [or_comm', neg_neg, ← is_unit_iff]
 #align int.is_unit_eq_or_eq_neg Int.isUnit_eq_or_eq_neg
+-/
 
 #print Int.eq_one_or_neg_one_of_mul_eq_one /-
 theorem eq_one_or_neg_one_of_mul_eq_one {z w : ℤ} (h : z * w = 1) : z = 1 ∨ z = -1 :=
@@ -108,22 +118,29 @@ theorem mul_eq_neg_one_iff_eq_one_or_neg_one {z w : ℤ} :
 #align int.mul_eq_neg_one_iff_eq_one_or_neg_one Int.mul_eq_neg_one_iff_eq_one_or_neg_one
 -/
 
+#print Int.isUnit_iff_natAbs_eq /-
 theorem isUnit_iff_natAbs_eq {n : ℤ} : IsUnit n ↔ n.natAbs = 1 := by
   simp [nat_abs_eq_iff, is_unit_iff, Nat.cast_zero]
 #align int.is_unit_iff_nat_abs_eq Int.isUnit_iff_natAbs_eq
+-/
 
 alias is_unit_iff_nat_abs_eq ↔ is_unit.nat_abs_eq _
 #align int.is_unit.nat_abs_eq Int.IsUnit.natAbs_eq
 
+#print Int.ofNat_isUnit /-
 @[norm_cast]
 theorem ofNat_isUnit {n : ℕ} : IsUnit (n : ℤ) ↔ IsUnit n := by
   rw [Nat.isUnit_iff, is_unit_iff_nat_abs_eq, nat_abs_of_nat]
 #align int.of_nat_is_unit Int.ofNat_isUnit
+-/
 
+#print Int.isUnit_mul_self /-
 theorem isUnit_mul_self {a : ℤ} (ha : IsUnit a) : a * a = 1 :=
   (isUnit_eq_one_or ha).elim (fun h => h.symm ▸ rfl) fun h => h.symm ▸ rfl
 #align int.is_unit_mul_self Int.isUnit_mul_self
+-/
 
+#print Int.isUnit_add_isUnit_eq_isUnit_add_isUnit /-
 theorem isUnit_add_isUnit_eq_isUnit_add_isUnit {a b c d : ℤ} (ha : IsUnit a) (hb : IsUnit b)
     (hc : IsUnit c) (hd : IsUnit d) : a + b = c + d ↔ a = c ∧ b = d ∨ a = d ∧ b = c :=
   by
@@ -132,6 +149,7 @@ theorem isUnit_add_isUnit_eq_isUnit_add_isUnit {a b c d : ℤ} (ha : IsUnit a) (
       subst hd <;>
     tidy
 #align int.is_unit_add_is_unit_eq_is_unit_add_is_unit Int.isUnit_add_isUnit_eq_isUnit_add_isUnit
+-/
 
 #print Int.eq_one_or_neg_one_of_mul_eq_neg_one /-
 theorem eq_one_or_neg_one_of_mul_eq_neg_one {z w : ℤ} (h : z * w = -1) : z = 1 ∨ z = -1 :=

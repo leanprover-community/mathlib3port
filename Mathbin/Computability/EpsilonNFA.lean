@@ -88,10 +88,12 @@ def stepSet (S : Set σ) (a : α) : Set σ :=
 
 variable {M}
 
+#print εNFA.mem_stepSet_iff /-
 @[simp]
 theorem mem_stepSet_iff : s ∈ M.stepSet S a ↔ ∃ t ∈ S, s ∈ M.εClosure (M.step t a) :=
   mem_iUnion₂
 #align ε_NFA.mem_step_set_iff εNFA.mem_stepSet_iff
+-/
 
 #print εNFA.stepSet_empty /-
 @[simp]
@@ -207,6 +209,7 @@ theorem toNFA_correct : M.toNFA.accepts = M.accepts :=
 #align ε_NFA.to_NFA_correct εNFA.toNFA_correct
 -/
 
+#print εNFA.pumping_lemma /-
 theorem pumping_lemma [Fintype σ] {x : List α} (hx : x ∈ M.accepts)
     (hlen : Fintype.card (Set σ) ≤ List.length x) :
     ∃ a b c,
@@ -216,6 +219,7 @@ theorem pumping_lemma [Fintype σ] {x : List α} (hx : x ∈ M.accepts)
   rw [← to_NFA_correct] at hx ⊢
   exact M.to_NFA.pumping_lemma hx hlen
 #align ε_NFA.pumping_lemma εNFA.pumping_lemma
+-/
 
 end εNFA
 

@@ -39,6 +39,7 @@ variable {ι : Type _} {α : ι → Type _} [Finite ι] [DecidableEq ι] [∀ i,
 
 namespace Finset
 
+#print Finset.induction_on_pi_of_choice /-
 /-- General theorem for `finset.induction_on_pi`-style induction principles. -/
 theorem induction_on_pi_of_choice (r : ∀ i, α i → Finset (α i) → Prop)
     (H_ex : ∀ (i) (s : Finset (α i)) (hs : s.Nonempty), ∃ x ∈ s, r i x (s.eraseₓ x))
@@ -63,6 +64,7 @@ theorem induction_on_pi_of_choice (r : ∀ i, α i → Finset (α i) → Prop)
     exacts [⟨⟨i, x⟩, mem_sigma.2 ⟨mem_univ _, by simp⟩, by simp [hx']⟩,
       (@le_update_iff _ _ _ _ g g i _).2 ⟨subset_insert _ _, fun _ _ => le_rfl⟩]
 #align finset.induction_on_pi_of_choice Finset.induction_on_pi_of_choice
+-/
 
 #print Finset.induction_on_pi /-
 /-- Given a predicate on functions `Π i, finset (α i)` defined on a finite type, it is true on all

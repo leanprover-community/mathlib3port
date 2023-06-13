@@ -63,19 +63,23 @@ abbrev M : Type max v u :=
 #align AddMon.filtered_colimits.M AddMonCat.FilteredColimits.M
 -/
 
+#print MonCat.FilteredColimits.M.mk /-
 /-- The canonical projection into the colimit, as a quotient type. -/
 @[to_additive "The canonical projection into the colimit, as a quotient type."]
 abbrev M.mk : (Σ j, F.obj j) → M :=
   Quot.mk (Types.Quot.Rel (F ⋙ forget MonCat))
 #align Mon.filtered_colimits.M.mk MonCat.FilteredColimits.M.mk
 #align AddMon.filtered_colimits.M.mk AddMonCat.FilteredColimits.M.mk
+-/
 
+#print MonCat.FilteredColimits.M.mk_eq /-
 @[to_additive]
 theorem M.mk_eq (x y : Σ j, F.obj j)
     (h : ∃ (k : J) (f : x.1 ⟶ k) (g : y.1 ⟶ k), F.map f x.2 = F.map g y.2) : M.mk x = M.mk y :=
   Quot.EqvGen_sound (Types.FilteredColimit.eqvGen_quot_rel_of_rel (F ⋙ forget MonCat) x y h)
 #align Mon.filtered_colimits.M.mk_eq MonCat.FilteredColimits.M.mk_eq
 #align AddMon.filtered_colimits.M.mk_eq AddMonCat.FilteredColimits.M.mk_eq
+-/
 
 variable [IsFiltered J]
 
@@ -90,6 +94,7 @@ instance colimitOne : One M where one := M.mk ⟨IsFiltered.nonempty.some, 1⟩
 #align AddMon.filtered_colimits.colimit_has_zero AddMonCat.FilteredColimits.colimitZero
 -/
 
+#print MonCat.FilteredColimits.colimit_one_eq /-
 /-- The definition of the "one" in the colimit is independent of the chosen object of `J`.
 In particular, this lemma allows us to "unfold" the definition of `colimit_one` at a custom chosen
 object `j`.
@@ -103,7 +108,9 @@ theorem colimit_one_eq (j : J) : (1 : M) = M.mk ⟨j, 1⟩ :=
   simp
 #align Mon.filtered_colimits.colimit_one_eq MonCat.FilteredColimits.colimit_one_eq
 #align AddMon.filtered_colimits.colimit_zero_eq AddMonCat.FilteredColimits.colimit_zero_eq
+-/
 
+#print MonCat.FilteredColimits.colimitMulAux /-
 /-- The "unlifted" version of multiplication in the colimit. To multiply two dependent pairs
 `⟨j₁, x⟩` and `⟨j₂, y⟩`, we pass to a common successor of `j₁` and `j₂` (given by `is_filtered.max`)
 and multiply them there.
@@ -114,7 +121,9 @@ def colimitMulAux (x y : Σ j, F.obj j) : M :=
   M.mk ⟨max x.1 y.1, F.map (leftToMax x.1 y.1) x.2 * F.map (rightToMax x.1 y.1) y.2⟩
 #align Mon.filtered_colimits.colimit_mul_aux MonCat.FilteredColimits.colimitMulAux
 #align AddMon.filtered_colimits.colimit_add_aux AddMonCat.FilteredColimits.colimitAddAux
+-/
 
+#print MonCat.FilteredColimits.colimitMulAux_eq_of_rel_left /-
 /-- Multiplication in the colimit is well-defined in the left argument. -/
 @[to_additive "Addition in the colimit is well-defined in the left argument."]
 theorem colimitMulAux_eq_of_rel_left {x x' y : Σ j, F.obj j}
@@ -132,7 +141,9 @@ theorem colimitMulAux_eq_of_rel_left {x x' y : Σ j, F.obj j}
   simp_rw [MonoidHom.map_mul, ← comp_apply, ← F.map_comp, h₁, h₂, h₃, F.map_comp, comp_apply, hfg]
 #align Mon.filtered_colimits.colimit_mul_aux_eq_of_rel_left MonCat.FilteredColimits.colimitMulAux_eq_of_rel_left
 #align AddMon.filtered_colimits.colimit_add_aux_eq_of_rel_left AddMonCat.FilteredColimits.colimitAddAux_eq_of_rel_left
+-/
 
+#print MonCat.FilteredColimits.colimitMulAux_eq_of_rel_right /-
 /-- Multiplication in the colimit is well-defined in the right argument. -/
 @[to_additive "Addition in the colimit is well-defined in the right argument."]
 theorem colimitMulAux_eq_of_rel_right {x y y' : Σ j, F.obj j}
@@ -150,6 +161,7 @@ theorem colimitMulAux_eq_of_rel_right {x y y' : Σ j, F.obj j}
   simp_rw [MonoidHom.map_mul, ← comp_apply, ← F.map_comp, h₁, h₂, h₃, F.map_comp, comp_apply, hfg]
 #align Mon.filtered_colimits.colimit_mul_aux_eq_of_rel_right MonCat.FilteredColimits.colimitMulAux_eq_of_rel_right
 #align AddMon.filtered_colimits.colimit_add_aux_eq_of_rel_right AddMonCat.FilteredColimits.colimitAddAux_eq_of_rel_right
+-/
 
 #print MonCat.FilteredColimits.colimitMul /-
 /-- Multiplication in the colimit. See also `colimit_mul_aux`. -/
@@ -169,6 +181,7 @@ instance colimitMul : Mul M
 #align AddMon.filtered_colimits.colimit_has_add AddMonCat.FilteredColimits.colimitAdd
 -/
 
+#print MonCat.FilteredColimits.colimit_mul_mk_eq /-
 /-- Multiplication in the colimit is independent of the chosen "maximum" in the filtered category.
 In particular, this lemma allows us to "unfold" the definition of the multiplication of `x` and `y`,
 using a custom object `k` and morphisms `f : x.1 ⟶ k` and `g : y.1 ⟶ k`.
@@ -186,6 +199,7 @@ theorem colimit_mul_mk_eq (x y : Σ j, F.obj j) (k : J) (f : x.1 ⟶ k) (g : y.1
   simp_rw [MonoidHom.map_mul, ← comp_apply, ← F.map_comp, h₁, h₂]
 #align Mon.filtered_colimits.colimit_mul_mk_eq MonCat.FilteredColimits.colimit_mul_mk_eq
 #align AddMon.filtered_colimits.colimit_add_mk_eq AddMonCat.FilteredColimits.colimit_add_mk_eq
+-/
 
 #print MonCat.FilteredColimits.colimitMonoid /-
 @[to_additive]
@@ -221,6 +235,7 @@ def colimit : MonCat :=
 #align AddMon.filtered_colimits.colimit AddMonCat.FilteredColimits.colimit
 -/
 
+#print MonCat.FilteredColimits.coconeMorphism /-
 /-- The monoid homomorphism from a given monoid in the diagram to the colimit monoid. -/
 @[to_additive
       "The additive monoid homomorphism from a given additive monoid in the diagram to the\ncolimit additive monoid."]
@@ -233,13 +248,16 @@ def coconeMorphism (j : J) : F.obj j ⟶ colimit
     rw [F.map_id, id_apply, id_apply]; rfl
 #align Mon.filtered_colimits.cocone_morphism MonCat.FilteredColimits.coconeMorphism
 #align AddMon.filtered_colimits.cocone_morphism AddMonCat.FilteredColimits.coconeMorphism
+-/
 
+#print MonCat.FilteredColimits.cocone_naturality /-
 @[simp, to_additive]
 theorem cocone_naturality {j j' : J} (f : j ⟶ j') :
     F.map f ≫ cocone_morphism j' = cocone_morphism j :=
   MonoidHom.coe_inj ((Types.colimitCocone (F ⋙ forget MonCat)).ι.naturality f)
 #align Mon.filtered_colimits.cocone_naturality MonCat.FilteredColimits.cocone_naturality
 #align AddMon.filtered_colimits.cocone_naturality AddMonCat.FilteredColimits.cocone_naturality
+-/
 
 #print MonCat.FilteredColimits.colimitCocone /-
 /-- The cocone over the proposed colimit monoid. -/

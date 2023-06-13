@@ -234,10 +234,12 @@ variable [AddZeroClass R] [Mul R] (c : RingCon R)
 instance : Zero c.Quotient :=
   c.toAddCon.Quotient.Zero
 
+#print RingCon.coe_zero /-
 @[simp, norm_cast]
 theorem coe_zero : (↑(0 : R) : c.Quotient) = 0 :=
   rfl
 #align ring_con.coe_zero RingCon.coe_zero
+-/
 
 end Zero
 
@@ -248,10 +250,12 @@ variable [Add R] [MulOneClass R] (c : RingCon R)
 instance : One c.Quotient :=
   c.toCon.Quotient.One
 
+#print RingCon.coe_one /-
 @[simp, norm_cast]
 theorem coe_one : (↑(1 : R) : c.Quotient) = 1 :=
   rfl
 #align ring_con.coe_one RingCon.coe_one
+-/
 
 end One
 
@@ -262,10 +266,12 @@ variable [Add R] [MulOneClass R] [SMul α R] [IsScalarTower α R R] (c : RingCon
 instance : SMul α c.Quotient :=
   c.toCon.SMul
 
+#print RingCon.coe_smul /-
 @[simp, norm_cast]
 theorem coe_smul (a : α) (x : R) : (↑(a • x) : c.Quotient) = a • x :=
   rfl
 #align ring_con.coe_smul RingCon.coe_smul
+-/
 
 end Smul
 
@@ -276,27 +282,35 @@ variable [AddGroup R] [Mul R] (c : RingCon R)
 instance : Neg c.Quotient :=
   c.toAddCon.Neg
 
+#print RingCon.coe_neg /-
 @[simp, norm_cast]
 theorem coe_neg (x : R) : (↑(-x) : c.Quotient) = -x :=
   rfl
 #align ring_con.coe_neg RingCon.coe_neg
+-/
 
 instance : Sub c.Quotient :=
   c.toAddCon.Sub
 
+#print RingCon.coe_sub /-
 @[simp, norm_cast]
 theorem coe_sub (x y : R) : (↑(x - y) : c.Quotient) = x - y :=
   rfl
 #align ring_con.coe_sub RingCon.coe_sub
+-/
 
+#print RingCon.hasZsmul /-
 instance hasZsmul : SMul ℤ c.Quotient :=
   c.toAddCon.Quotient.zsmul
 #align ring_con.has_zsmul RingCon.hasZsmul
+-/
 
+#print RingCon.coe_zsmul /-
 @[simp, norm_cast]
 theorem coe_zsmul (z : ℤ) (x : R) : (↑(z • x) : c.Quotient) = z • x :=
   rfl
 #align ring_con.coe_zsmul RingCon.coe_zsmul
+-/
 
 end NegSubZsmul
 
@@ -304,14 +318,18 @@ section Nsmul
 
 variable [AddMonoid R] [Mul R] (c : RingCon R)
 
+#print RingCon.hasNsmul /-
 instance hasNsmul : SMul ℕ c.Quotient :=
   c.toAddCon.Quotient.nSMul
 #align ring_con.has_nsmul RingCon.hasNsmul
+-/
 
+#print RingCon.coe_nsmul /-
 @[simp, norm_cast]
 theorem coe_nsmul (n : ℕ) (x : R) : (↑(n • x) : c.Quotient) = n • x :=
   rfl
 #align ring_con.coe_nsmul RingCon.coe_nsmul
+-/
 
 end Nsmul
 
@@ -322,10 +340,12 @@ variable [Add R] [Monoid R] (c : RingCon R)
 instance : Pow c.Quotient ℕ :=
   c.toCon.Nat.Pow
 
+#print RingCon.coe_pow /-
 @[simp, norm_cast]
 theorem coe_pow (x : R) (n : ℕ) : (↑(x ^ n) : c.Quotient) = x ^ n :=
   rfl
 #align ring_con.coe_pow RingCon.coe_pow
+-/
 
 end Pow
 
@@ -336,10 +356,12 @@ variable [AddMonoidWithOne R] [Mul R] (c : RingCon R)
 instance : NatCast c.Quotient :=
   ⟨fun n => ↑(n : R)⟩
 
+#print RingCon.coe_nat_cast /-
 @[simp, norm_cast]
 theorem coe_nat_cast (n : ℕ) : (↑(n : R) : c.Quotient) = n :=
   rfl
 #align ring_con.coe_nat_cast RingCon.coe_nat_cast
+-/
 
 end NatCast
 
@@ -350,10 +372,12 @@ variable [AddGroupWithOne R] [Mul R] (c : RingCon R)
 instance : IntCast c.Quotient :=
   ⟨fun z => ↑(z : R)⟩
 
+#print RingCon.coe_int_cast /-
 @[simp, norm_cast]
 theorem coe_int_cast (n : ℕ) : (↑(n : R) : c.Quotient) = n :=
   rfl
 #align ring_con.coe_int_cast RingCon.coe_int_cast
+-/
 
 end IntCast
 
@@ -413,23 +437,29 @@ instance [CommRing R] (c : RingCon R) : CommRing c.Quotient :=
     (fun _ _ => rfl) (fun _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl) (fun _ _ => rfl)
     (fun _ _ => rfl) (fun _ => rfl) fun _ => rfl
 
+#print RingCon.isScalarTower_right /-
 instance isScalarTower_right [Add R] [MulOneClass R] [SMul α R] [IsScalarTower α R R]
     (c : RingCon R) : IsScalarTower α c.Quotient c.Quotient
     where smul_assoc a :=
     Quotient.ind₂' fun m₁ m₂ => congr_arg Quotient.mk'' <| smul_mul_assoc _ _ _
 #align ring_con.is_scalar_tower_right RingCon.isScalarTower_right
+-/
 
+#print RingCon.smulCommClass /-
 instance smulCommClass [Add R] [MulOneClass R] [SMul α R] [IsScalarTower α R R]
     [SMulCommClass α R R] (c : RingCon R) : SMulCommClass α c.Quotient c.Quotient
     where smul_comm a :=
     Quotient.ind₂' fun m₁ m₂ => congr_arg Quotient.mk'' <| (mul_smul_comm _ _ _).symm
 #align ring_con.smul_comm_class RingCon.smulCommClass
+-/
 
+#print RingCon.smulCommClass' /-
 instance smulCommClass' [Add R] [MulOneClass R] [SMul α R] [IsScalarTower α R R]
     [SMulCommClass R α R] (c : RingCon R) : SMulCommClass c.Quotient α c.Quotient :=
   haveI := SMulCommClass.symm R α R
   SMulCommClass.symm _ _ _
 #align ring_con.smul_comm_class' RingCon.smulCommClass'
+-/
 
 instance [Monoid α] [NonAssocSemiring R] [DistribMulAction α R] [IsScalarTower α R R]
     (c : RingCon R) : DistribMulAction α c.Quotient :=
@@ -444,6 +474,7 @@ instance [Monoid α] [Semiring R] [MulSemiringAction α R] [IsScalarTower α R R
 
 end Algebraic
 
+#print RingCon.mk' /-
 /-- The natural homomorphism from a ring to its quotient by a congruence relation. -/
 def mk' [NonAssocSemiring R] (c : RingCon R) : R →+* c.Quotient
     where
@@ -453,6 +484,7 @@ def mk' [NonAssocSemiring R] (c : RingCon R) : R →+* c.Quotient
   map_add' _ _ := rfl
   map_mul' _ _ := rfl
 #align ring_con.mk' RingCon.mk'
+-/
 
 end Quotient
 

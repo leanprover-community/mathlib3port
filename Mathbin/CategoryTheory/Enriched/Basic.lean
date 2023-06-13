@@ -47,7 +47,7 @@ open MonoidalCategory
 
 variable (V : Type v) [Category.{w} V] [MonoidalCategory V]
 
-/- ./././Mathport/Syntax/Translate/Command.lean:407:24: unsupported: (notation) in structure -/
+/- ./././Mathport/Syntax/Translate/Command.lean:406:24: unsupported: (notation) in structure -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ⟶[] » -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ⟶[] » -/
@@ -76,7 +76,6 @@ class EnrichedCategory (C : Type u₁) where
     obviously
 #align category_theory.enriched_category CategoryTheory.EnrichedCategory
 
--- mathport name: enriched_category.hom
 notation X " ⟶[" V "] " Y:10 => (EnrichedCategory.hom X Y : V)
 
 variable (V) {C : Type u₁} [EnrichedCategory V C]

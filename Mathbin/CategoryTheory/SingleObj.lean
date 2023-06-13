@@ -80,13 +80,17 @@ instance category [Monoid α] : Category (SingleObj α)
 #align category_theory.single_obj.category CategoryTheory.SingleObj.category
 -/
 
+#print CategoryTheory.SingleObj.id_as_one /-
 theorem id_as_one [Monoid α] (x : SingleObj α) : 𝟙 x = 1 :=
   rfl
 #align category_theory.single_obj.id_as_one CategoryTheory.SingleObj.id_as_one
+-/
 
+#print CategoryTheory.SingleObj.comp_as_mul /-
 theorem comp_as_mul [Monoid α] {x y z : SingleObj α} (f : x ⟶ y) (g : y ⟶ z) : f ≫ g = g * f :=
   rfl
 #align category_theory.single_obj.comp_as_mul CategoryTheory.SingleObj.comp_as_mul
+-/
 
 #print CategoryTheory.SingleObj.groupoid /-
 /-- Groupoid structure on `single_obj α`.
@@ -101,9 +105,11 @@ instance groupoid [Group α] : Groupoid (SingleObj α)
 #align category_theory.single_obj.groupoid CategoryTheory.SingleObj.groupoid
 -/
 
+#print CategoryTheory.SingleObj.inv_as_inv /-
 theorem inv_as_inv [Group α] {x y : SingleObj α} (f : x ⟶ y) : inv f = f⁻¹ := by ext;
   rw [comp_as_mul, inv_mul_self, id_as_one]
 #align category_theory.single_obj.inv_as_inv CategoryTheory.SingleObj.inv_as_inv
+-/
 
 #print CategoryTheory.SingleObj.star /-
 /-- Abbreviation that allows writing `category_theory.single_obj.star` rather than
@@ -114,15 +120,19 @@ abbrev star : SingleObj α :=
 #align category_theory.single_obj.star CategoryTheory.SingleObj.star
 -/
 
+#print CategoryTheory.SingleObj.toEnd /-
 /-- The endomorphisms monoid of the only object in `single_obj α` is equivalent to the original
      monoid α. -/
 def toEnd [Monoid α] : α ≃* End (SingleObj.star α) :=
   { Equiv.refl α with map_mul' := fun x y => rfl }
 #align category_theory.single_obj.to_End CategoryTheory.SingleObj.toEnd
+-/
 
+#print CategoryTheory.SingleObj.toEnd_def /-
 theorem toEnd_def [Monoid α] (x : α) : toEnd α x = x :=
   rfl
 #align category_theory.single_obj.to_End_def CategoryTheory.SingleObj.toEnd_def
+-/
 
 #print CategoryTheory.SingleObj.mapHom /-
 /-- There is a 1-1 correspondence between monoid homomorphisms `α → β` and functors between the
@@ -214,21 +224,27 @@ namespace Units
 
 variable (α : Type u) [Monoid α]
 
+#print Units.toAut /-
 /-- The units in a monoid are (multiplicatively) equivalent to
 the automorphisms of `star` when we think of the monoid as a single-object category. -/
 def toAut : αˣ ≃* Aut (SingleObj.star α) :=
   (Units.mapEquiv (SingleObj.toEnd α)).trans <| Aut.unitsEndEquivAut _
 #align units.to_Aut Units.toAut
+-/
 
+#print Units.toAut_hom /-
 @[simp]
 theorem toAut_hom (x : αˣ) : (toAut α x).Hom = SingleObj.toEnd α x :=
   rfl
 #align units.to_Aut_hom Units.toAut_hom
+-/
 
+#print Units.toAut_inv /-
 @[simp]
 theorem toAut_inv (x : αˣ) : (toAut α x).inv = SingleObj.toEnd α (x⁻¹ : αˣ) :=
   rfl
 #align units.to_Aut_inv Units.toAut_inv
+-/
 
 end Units
 

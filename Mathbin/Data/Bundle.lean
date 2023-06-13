@@ -62,7 +62,6 @@ def TotalSpace.proj : TotalSpace E → B :=
 #align bundle.total_space.proj Bundle.TotalSpace.proj
 -/
 
--- mathport name: exprπ
 -- this notation won't be used in the pretty-printer
 scoped notation "π" => @Bundle.TotalSpace.proj _
 
@@ -74,29 +73,39 @@ def totalSpaceMk (b : B) (a : E b) : Bundle.TotalSpace E :=
 #align bundle.total_space_mk Bundle.totalSpaceMk
 -/
 
+#print Bundle.TotalSpace.proj_mk /-
 theorem TotalSpace.proj_mk {x : B} {y : E x} : (totalSpaceMk x y).proj = x :=
   rfl
 #align bundle.total_space.proj_mk Bundle.TotalSpace.proj_mk
+-/
 
+#print Bundle.sigma_mk_eq_totalSpaceMk /-
 theorem sigma_mk_eq_totalSpaceMk {x : B} {y : E x} : Sigma.mk x y = totalSpaceMk x y :=
   rfl
 #align bundle.sigma_mk_eq_total_space_mk Bundle.sigma_mk_eq_totalSpaceMk
+-/
 
+#print Bundle.TotalSpace.mk_cast /-
 theorem TotalSpace.mk_cast {x x' : B} (h : x = x') (b : E x) :
     totalSpaceMk x' (cast (congr_arg E h) b) = totalSpaceMk x b := by subst h; rfl
 #align bundle.total_space.mk_cast Bundle.TotalSpace.mk_cast
+-/
 
+#print Bundle.TotalSpace.eta /-
 theorem TotalSpace.eta (z : TotalSpace E) : totalSpaceMk z.proj z.2 = z :=
   Sigma.eta z
 #align bundle.total_space.eta Bundle.TotalSpace.eta
+-/
 
 instance {x : B} : CoeTC (E x) (TotalSpace E) :=
   ⟨totalSpaceMk x⟩
 
+#print Bundle.coe_fst /-
 @[simp]
 theorem coe_fst (x : B) (v : E x) : (v : TotalSpace E).fst = x :=
   rfl
 #align bundle.coe_fst Bundle.coe_fst
+-/
 
 #print Bundle.coe_snd /-
 @[simp]
@@ -109,7 +118,6 @@ theorem to_totalSpace_coe {x : B} (v : E x) : (v : TotalSpace E) = totalSpaceMk 
   rfl
 #align bundle.to_total_space_coe Bundle.to_totalSpace_coe
 
--- mathport name: «expr ×ᵇ »
 notation:100 -- notation for the direct sum of two bundles over the same base
 E₁ " ×ᵇ " E₂ => fun x => E₁ x × E₂ x
 
@@ -142,7 +150,6 @@ def Pullback (f : B' → B) (E : B → Type _) := fun x => E (f x)
 #align bundle.pullback Bundle.Pullback
 -/
 
--- mathport name: «expr *ᵖ »
 notation f " *ᵖ " E => Pullback f E
 
 #print Bundle.pullbackTotalSpaceEmbedding /-
@@ -168,11 +175,13 @@ theorem Pullback.proj_lift (f : B' → B) (x : TotalSpace (f *ᵖ E)) :
 #align bundle.pullback.proj_lift Bundle.Pullback.proj_lift
 -/
 
+#print Bundle.Pullback.lift_mk /-
 @[simp]
 theorem Pullback.lift_mk (f : B' → B) (x : B') (y : E (f x)) :
     Pullback.lift f (totalSpaceMk x y) = totalSpaceMk (f x) y :=
   rfl
 #align bundle.pullback.lift_mk Bundle.Pullback.lift_mk
+-/
 
 #print Bundle.pullbackTotalSpaceEmbedding_snd /-
 theorem pullbackTotalSpaceEmbedding_snd (f : B' → B) (x : TotalSpace (f *ᵖ E)) :
@@ -187,19 +196,23 @@ section FiberStructures
 
 variable [∀ x, AddCommMonoid (E x)]
 
+#print Bundle.coe_snd_map_apply /-
 @[simp]
 theorem coe_snd_map_apply (x : B) (v w : E x) :
     (↑(v + w) : TotalSpace E).snd = (v : TotalSpace E).snd + (w : TotalSpace E).snd :=
   rfl
 #align bundle.coe_snd_map_apply Bundle.coe_snd_map_apply
+-/
 
 variable (R : Type _) [Semiring R] [∀ x, Module R (E x)]
 
+#print Bundle.coe_snd_map_smul /-
 @[simp]
 theorem coe_snd_map_smul (x : B) (r : R) (v : E x) :
     (↑(r • v) : TotalSpace E).snd = r • (v : TotalSpace E).snd :=
   rfl
 #align bundle.coe_snd_map_smul Bundle.coe_snd_map_smul
+-/
 
 end FiberStructures
 

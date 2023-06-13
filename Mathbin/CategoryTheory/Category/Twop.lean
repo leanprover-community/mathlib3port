@@ -94,9 +94,11 @@ instance concreteCategory : ConcreteCategory TwoP :=
 #align Twop.concrete_category TwoP.concreteCategory
 -/
 
+#print TwoP.hasForgetToBipointed /-
 instance hasForgetToBipointed : HasForget₂ TwoP Bipointed :=
   InducedCategory.hasForget₂ toBipointed
 #align Twop.has_forget_to_Bipointed TwoP.hasForgetToBipointed
+-/
 
 #print TwoP.swap /-
 /-- Swaps the pointed elements of a two-pointed type. `two_pointing.swap` as a functor. -/
@@ -107,6 +109,7 @@ def swap : TwoP ⥤ TwoP where
 #align Twop.swap TwoP.swap
 -/
 
+#print TwoP.swapEquiv /-
 /-- The equivalence between `Twop` and itself induced by `prod.swap` both ways. -/
 @[simps]
 def swapEquiv : TwoP ≌ TwoP :=
@@ -122,11 +125,14 @@ def swapEquiv : TwoP ≌ TwoP :=
           inv := ⟨id, rfl, rfl⟩ })
       fun X Y f => rfl)
 #align Twop.swap_equiv TwoP.swapEquiv
+-/
 
+#print TwoP.swapEquiv_symm /-
 @[simp]
 theorem swapEquiv_symm : swapEquiv.symm = swapEquiv :=
   rfl
 #align Twop.swap_equiv_symm TwoP.swapEquiv_symm
+-/
 
 end TwoP
 

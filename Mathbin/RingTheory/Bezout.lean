@@ -102,9 +102,11 @@ theorem dvd_gcd {x y z : R} (hx : z ∣ x) (hy : z ∣ y) : z ∣ gcd x y :=
 #align is_bezout.dvd_gcd IsBezout.dvd_gcd
 -/
 
+#print IsBezout.gcd_eq_sum /-
 theorem gcd_eq_sum (x y : R) : ∃ a b : R, a * x + b * y = gcd x y :=
   Ideal.mem_span_pair.mp (by rw [← span_gcd]; apply Ideal.subset_span; simp)
 #align is_bezout.gcd_eq_sum IsBezout.gcd_eq_sum
+-/
 
 variable (R)
 
@@ -125,6 +127,7 @@ attribute [local instance] to_gcd_domain
 instance (priority := 100) [IsDomain R] [IsBezout R] : IsIntegrallyClosed R := by
   classical exact GCDMonoid.toIsIntegrallyClosed
 
+#print Function.Surjective.isBezout /-
 theorem Function.Surjective.isBezout {S : Type v} [CommRing S] (f : R →+* S)
     (hf : Function.Surjective f) [IsBezout R] : IsBezout S :=
   by
@@ -136,6 +139,7 @@ theorem Function.Surjective.isBezout {S : Type v} [CommRing S] (f : R →+* S)
   · rw [span_gcd, Ideal.map_span, Set.image_insert_eq, Set.image_singleton]
   · rw [Ideal.map_span, Set.image_singleton]; rfl
 #align function.surjective.is_bezout Function.Surjective.isBezout
+-/
 
 #print IsBezout.of_isPrincipalIdealRing /-
 instance (priority := 100) of_isPrincipalIdealRing [IsPrincipalIdealRing R] : IsBezout R :=

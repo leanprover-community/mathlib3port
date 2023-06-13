@@ -62,7 +62,6 @@ def uIcc (a b : α) : Set α :=
 #align set.uIcc Set.uIcc
 -/
 
--- mathport name: set.uIcc
 scoped[Interval] notation "[" a ", " b "]" => Set.uIcc a b
 
 #print Set.dual_uIcc /-
@@ -170,9 +169,11 @@ theorem uIcc_subset_uIcc_iff_mem : [a₁, b₁] ⊆ [a₂, b₂] ↔ a₁ ∈ [a
 #align set.uIcc_subset_uIcc_iff_mem Set.uIcc_subset_uIcc_iff_mem
 -/
 
+#print Set.uIcc_subset_uIcc_iff_le' /-
 theorem uIcc_subset_uIcc_iff_le' : [a₁, b₁] ⊆ [a₂, b₂] ↔ a₂ ⊓ b₂ ≤ a₁ ⊓ b₁ ∧ a₁ ⊔ b₁ ≤ a₂ ⊔ b₂ :=
   Icc_subset_Icc_iff inf_le_sup
 #align set.uIcc_subset_uIcc_iff_le' Set.uIcc_subset_uIcc_iff_le'
+-/
 
 #print Set.uIcc_subset_uIcc_right /-
 theorem uIcc_subset_uIcc_right (h : x ∈ [a, b]) : [x, b] ⊆ [a, b] :=
@@ -197,14 +198,18 @@ theorem bdd_below_bdd_above_iff_subset_uIcc (s : Set α) :
 section Prod
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print Set.uIcc_prod_uIcc /-
 @[simp]
 theorem uIcc_prod_uIcc (a₁ a₂ : α) (b₁ b₂ : β) : [a₁, a₂] ×ˢ [b₁, b₂] = [(a₁, b₁), (a₂, b₂)] :=
   Icc_prod_Icc _ _ _ _
 #align set.uIcc_prod_uIcc Set.uIcc_prod_uIcc
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print Set.uIcc_prod_eq /-
 theorem uIcc_prod_eq (a b : α × β) : [a, b] = [a.1, b.1] ×ˢ [a.2, b.2] := by simp
 #align set.uIcc_prod_eq Set.uIcc_prod_eq
+-/
 
 end Prod
 
@@ -248,9 +253,11 @@ section LinearOrder
 
 variable [LinearOrder α] [LinearOrder β] {f : α → β} {s : Set α} {a a₁ a₂ b b₁ b₂ c d x : α}
 
+#print Set.Icc_min_max /-
 theorem Icc_min_max : Icc (min a b) (max a b) = [a, b] :=
   rfl
 #align set.Icc_min_max Set.Icc_min_max
+-/
 
 #print Set.uIcc_of_not_le /-
 theorem uIcc_of_not_le (h : ¬a ≤ b) : [a, b] = Icc b a :=
@@ -264,8 +271,10 @@ theorem uIcc_of_not_ge (h : ¬b ≤ a) : [a, b] = Icc a b :=
 #align set.uIcc_of_not_ge Set.uIcc_of_not_ge
 -/
 
+#print Set.uIcc_eq_union /-
 theorem uIcc_eq_union : [a, b] = Icc a b ∪ Icc b a := by rw [Icc_union_Icc', max_comm] <;> rfl
 #align set.uIcc_eq_union Set.uIcc_eq_union
+-/
 
 #print Set.mem_uIcc /-
 theorem mem_uIcc : a ∈ [b, c] ↔ b ≤ a ∧ a ≤ c ∨ c ≤ a ∧ a ≤ b := by simp [uIcc_eq_union]
@@ -284,16 +293,21 @@ theorem not_mem_uIcc_of_gt (ha : a < c) (hb : b < c) : c ∉ [a, b] :=
 #align set.not_mem_uIcc_of_gt Set.not_mem_uIcc_of_gt
 -/
 
+#print Set.uIcc_subset_uIcc_iff_le /-
 theorem uIcc_subset_uIcc_iff_le :
     [a₁, b₁] ⊆ [a₂, b₂] ↔ min a₂ b₂ ≤ min a₁ b₁ ∧ max a₁ b₁ ≤ max a₂ b₂ :=
   uIcc_subset_uIcc_iff_le'
 #align set.uIcc_subset_uIcc_iff_le Set.uIcc_subset_uIcc_iff_le
+-/
 
+#print Set.uIcc_subset_uIcc_union_uIcc /-
 /-- A sort of triangle inequality. -/
 theorem uIcc_subset_uIcc_union_uIcc : [a, c] ⊆ [a, b] ∪ [b, c] := fun x => by
   simp only [mem_uIcc, mem_union] <;> cases le_total a c <;> cases le_total x b <;> tauto
 #align set.uIcc_subset_uIcc_union_uIcc Set.uIcc_subset_uIcc_union_uIcc
+-/
 
+#print Set.monotone_or_antitone_iff_uIcc /-
 theorem monotone_or_antitone_iff_uIcc :
     Monotone f ∨ Antitone f ↔ ∀ a b c, c ∈ [a, b] → f c ∈ [f a, f b] :=
   by
@@ -306,14 +320,17 @@ theorem monotone_or_antitone_iff_uIcc :
   · exact ⟨a, c, b, Icc_subset_uIcc ⟨hab, hbc⟩, fun h => h.2.not_lt <| max_lt hfab hfcb⟩
   · exact ⟨a, c, b, Icc_subset_uIcc ⟨hab, hbc⟩, fun h => h.1.not_lt <| lt_min hfba hfbc⟩
 #align set.monotone_or_antitone_iff_uIcc Set.monotone_or_antitone_iff_uIcc
+-/
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (a b c «expr ∈ » s) -/
+#print Set.monotoneOn_or_antitoneOn_iff_uIcc /-
 theorem monotoneOn_or_antitoneOn_iff_uIcc :
     MonotoneOn f s ∨ AntitoneOn f s ↔
       ∀ (a) (_ : a ∈ s) (b) (_ : b ∈ s) (c) (_ : c ∈ s), c ∈ [a, b] → f c ∈ [f a, f b] :=
   by
   simp [monotone_on_iff_monotone, antitone_on_iff_antitone, monotone_or_antitone_iff_uIcc, mem_uIcc]
 #align set.monotone_on_or_antitone_on_iff_uIcc Set.monotoneOn_or_antitoneOn_iff_uIcc
+-/
 
 #print Set.uIoc /-
 /-- The open-closed interval with unordered bounds. -/
@@ -321,7 +338,6 @@ def uIoc : α → α → Set α := fun a b => Ioc (min a b) (max a b)
 #align set.uIoc Set.uIoc
 -/
 
--- mathport name: exprΙ
 -- Below is a capital iota
 scoped[Interval] notation "Ι" => Set.uIoc
 
@@ -337,8 +353,10 @@ theorem uIoc_of_lt (h : b < a) : Ι a b = Ioc b a := by simp [uIoc, h.le]
 #align set.uIoc_of_lt Set.uIoc_of_lt
 -/
 
+#print Set.uIoc_eq_union /-
 theorem uIoc_eq_union : Ι a b = Ioc a b ∪ Ioc b a := by cases le_total a b <;> simp [uIoc, *]
 #align set.uIoc_eq_union Set.uIoc_eq_union
+-/
 
 #print Set.mem_uIoc /-
 theorem mem_uIoc : a ∈ Ι b c ↔ b < a ∧ a ≤ c ∨ c < a ∧ a ≤ b := by

@@ -91,11 +91,14 @@ class StrongRankCondition : Prop where
 #align strong_rank_condition StrongRankCondition
 -/
 
+#print le_of_fin_injective /-
 theorem le_of_fin_injective [StrongRankCondition R] {n m : ℕ} (f : (Fin n → R) →ₗ[R] Fin m → R) :
     Injective f → n ≤ m :=
   StrongRankCondition.le_of_fin_injective f
 #align le_of_fin_injective le_of_fin_injective
+-/
 
+#print strongRankCondition_iff_succ /-
 /-- A ring satisfies the strong rank condition if and only if, for all `n : ℕ`, any linear map
 `(fin (n + 1) → R) →ₗ[R] (fin n → R)` is not injective. -/
 theorem strongRankCondition_iff_succ :
@@ -110,7 +113,9 @@ theorem strongRankCondition_iff_succ :
       h m (f.comp (Function.ExtendByZero.linearMap R (Fin.castLE (not_le.1 H))))
         (hf.comp (Function.extend_injective (RelEmbedding.injective _) 0))
 #align strong_rank_condition_iff_succ strongRankCondition_iff_succ
+-/
 
+#print card_le_of_injective /-
 theorem card_le_of_injective [StrongRankCondition R] {α β : Type _} [Fintype α] [Fintype β]
     (f : (α → R) →ₗ[R] β → R) (i : Injective f) : Fintype.card α ≤ Fintype.card β :=
   by
@@ -120,7 +125,9 @@ theorem card_le_of_injective [StrongRankCondition R] {α β : Type _} [Fintype �
     le_of_fin_injective R ((Q.symm.to_linear_map.comp f).comp P.to_linear_map)
       (((LinearEquiv.symm Q).Injective.comp i).comp (LinearEquiv.injective P))
 #align card_le_of_injective card_le_of_injective
+-/
 
+#print card_le_of_injective' /-
 theorem card_le_of_injective' [StrongRankCondition R] {α β : Type _} [Fintype α] [Fintype β]
     (f : (α →₀ R) →ₗ[R] β →₀ R) (i : Injective f) : Fintype.card α ≤ Fintype.card β :=
   by
@@ -130,6 +137,7 @@ theorem card_le_of_injective' [StrongRankCondition R] {α β : Type _} [Fintype 
     card_le_of_injective R ((P.to_linear_map.comp f).comp Q.to_linear_map)
       ((P.injective.comp i).comp Q.injective)
 #align card_le_of_injective' card_le_of_injective'
+-/
 
 #print RankCondition /-
 /-- We say that `R` satisfies the rank condition if `(fin n → R) →ₗ[R] (fin m → R)` surjective
@@ -139,11 +147,14 @@ class RankCondition : Prop where
 #align rank_condition RankCondition
 -/
 
+#print le_of_fin_surjective /-
 theorem le_of_fin_surjective [RankCondition R] {n m : ℕ} (f : (Fin n → R) →ₗ[R] Fin m → R) :
     Surjective f → m ≤ n :=
   RankCondition.le_of_fin_surjective f
 #align le_of_fin_surjective le_of_fin_surjective
+-/
 
+#print card_le_of_surjective /-
 theorem card_le_of_surjective [RankCondition R] {α β : Type _} [Fintype α] [Fintype β]
     (f : (α → R) →ₗ[R] β → R) (i : Surjective f) : Fintype.card β ≤ Fintype.card α :=
   by
@@ -153,7 +164,9 @@ theorem card_le_of_surjective [RankCondition R] {α β : Type _} [Fintype α] [F
     le_of_fin_surjective R ((Q.symm.to_linear_map.comp f).comp P.to_linear_map)
       (((LinearEquiv.symm Q).Surjective.comp i).comp (LinearEquiv.surjective P))
 #align card_le_of_surjective card_le_of_surjective
+-/
 
+#print card_le_of_surjective' /-
 theorem card_le_of_surjective' [RankCondition R] {α β : Type _} [Fintype α] [Fintype β]
     (f : (α →₀ R) →ₗ[R] β →₀ R) (i : Surjective f) : Fintype.card β ≤ Fintype.card α :=
   by
@@ -163,6 +176,7 @@ theorem card_le_of_surjective' [RankCondition R] {α β : Type _} [Fintype α] [
     card_le_of_surjective R ((P.to_linear_map.comp f).comp Q.to_linear_map)
       ((P.surjective.comp i).comp Q.surjective)
 #align card_le_of_surjective' card_le_of_surjective'
+-/
 
 #print rankCondition_of_strongRankCondition /-
 /-- By the universal property for free modules, any surjective map `(fin n → R) →ₗ[R] (fin m → R)`
@@ -206,12 +220,14 @@ theorem eq_of_fin_equiv {n m : ℕ} : ((Fin n → R) ≃ₗ[R] Fin m → R) → 
 #align eq_of_fin_equiv eq_of_fin_equiv
 -/
 
+#print card_eq_of_linearEquiv /-
 theorem card_eq_of_linearEquiv {α β : Type _} [Fintype α] [Fintype β] (f : (α → R) ≃ₗ[R] β → R) :
     Fintype.card α = Fintype.card β :=
   eq_of_fin_equiv R
     ((LinearEquiv.funCongrLeft R R (Fintype.equivFin α)).trans f ≪≫ₗ
       (LinearEquiv.funCongrLeft R R (Fintype.equivFin β)).symm)
 #align card_eq_of_lequiv card_eq_of_linearEquiv
+-/
 
 #print nontrivial_of_invariantBasisNumber /-
 theorem nontrivial_of_invariantBasisNumber : Nontrivial R :=

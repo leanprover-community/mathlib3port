@@ -150,6 +150,7 @@ protected def comm : PartialIso α β → PartialIso β α :=
 
 variable (β)
 
+#print Order.PartialIso.definedAtLeft /-
 /-- The set of partial isomorphisms defined at `a : α`, together with a proof that any
     partial isomorphism can be extended to one defined at `a`. -/
 def definedAtLeft [DenselyOrdered β] [NoMinOrder β] [NoMaxOrder β] [Nonempty β] (a : α) :
@@ -168,9 +169,11 @@ def definedAtLeft [DenselyOrdered β] [NoMinOrder β] [NoMaxOrder β] [Nonempty 
     · exact a_b _ pf
     · exact f.prop _ pf _ qf
 #align order.partial_iso.defined_at_left Order.PartialIso.definedAtLeft
+-/
 
 variable (α) {β}
 
+#print Order.PartialIso.definedAtRight /-
 /-- The set of partial isomorphisms defined at `b : β`, together with a proof that any
     partial isomorphism can be extended to include `b`. We prove this by symmetry. -/
 def definedAtRight [DenselyOrdered α] [NoMinOrder α] [NoMaxOrder α] [Nonempty α] (b : β) :
@@ -186,9 +189,11 @@ def definedAtRight [DenselyOrdered α] [NoMinOrder α] [NoMaxOrder α] [Nonempty
       change f.val.image _ ⊆ _ at hl 
       rwa [← Finset.coe_subset, Finset.coe_image] at hl 
 #align order.partial_iso.defined_at_right Order.PartialIso.definedAtRight
+-/
 
 variable {α}
 
+#print Order.PartialIso.funOfIdeal /-
 /-- Given an ideal which intersects `defined_at_left β a`, pick `b : β` such that
     some partial function in the ideal maps `a` to `b`. -/
 def funOfIdeal [DenselyOrdered β] [NoMinOrder β] [NoMaxOrder β] [Nonempty β] (a : α)
@@ -196,7 +201,9 @@ def funOfIdeal [DenselyOrdered β] [NoMinOrder β] [NoMaxOrder β] [Nonempty β]
     (∃ f, f ∈ definedAtLeft β a ∧ f ∈ I) → { b // ∃ f ∈ I, (a, b) ∈ Subtype.val f } :=
   Classical.indefiniteDescription _ ∘ fun ⟨f, ⟨b, hb⟩, hf⟩ => ⟨b, f, hf, hb⟩
 #align order.partial_iso.fun_of_ideal Order.PartialIso.funOfIdeal
+-/
 
+#print Order.PartialIso.invOfIdeal /-
 /-- Given an ideal which intersects `defined_at_right α b`, pick `a : α` such that
     some partial function in the ideal maps `a` to `b`. -/
 def invOfIdeal [DenselyOrdered α] [NoMinOrder α] [NoMaxOrder α] [Nonempty α] (b : β)
@@ -204,6 +211,7 @@ def invOfIdeal [DenselyOrdered α] [NoMinOrder α] [NoMaxOrder α] [Nonempty α]
     (∃ f, f ∈ definedAtRight α b ∧ f ∈ I) → { a // ∃ f ∈ I, (a, b) ∈ Subtype.val f } :=
   Classical.indefiniteDescription _ ∘ fun ⟨f, ⟨a, ha⟩, hf⟩ => ⟨a, f, hf, ha⟩
 #align order.partial_iso.inv_of_ideal Order.PartialIso.invOfIdeal
+-/
 
 end PartialIso
 
@@ -211,6 +219,7 @@ open PartialIso
 
 variable (α β)
 
+#print Order.embedding_from_countable_to_dense /-
 /-- Any countable linear order embeds in any nontrivial dense linear order. -/
 theorem embedding_from_countable_to_dense [Encodable α] [DenselyOrdered β] [Nontrivial β] :
     Nonempty (α ↪o β) := by
@@ -228,7 +237,9 @@ theorem embedding_from_countable_to_dense [Encodable α] [DenselyOrdered β] [No
   rcases our_ideal.directed _ hf _ hg with ⟨m, hm, fm, gm⟩
   exact (lt_iff_lt_of_cmp_eq_cmp <| m.prop (a₁, _) (fm ha₁) (a₂, _) (gm ha₂)).mp
 #align order.embedding_from_countable_to_dense Order.embedding_from_countable_to_dense
+-/
 
+#print Order.iso_of_countable_dense /-
 /-- Any two countable dense, nonempty linear orders without endpoints are order isomorphic. -/
 theorem iso_of_countable_dense [Encodable α] [DenselyOrdered α] [NoMinOrder α] [NoMaxOrder α]
     [Nonempty α] [Encodable β] [DenselyOrdered β] [NoMinOrder β] [NoMaxOrder β] [Nonempty β] :
@@ -245,6 +256,7 @@ theorem iso_of_countable_dense [Encodable α] [DenselyOrdered α] [NoMinOrder α
       rcases our_ideal.directed _ hf _ hg with ⟨m, hm, fm, gm⟩
       exact m.prop (a, _) (fm ha) (_, b) (gm hb)⟩
 #align order.iso_of_countable_dense Order.iso_of_countable_dense
+-/
 
 end Order
 

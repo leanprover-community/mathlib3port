@@ -39,8 +39,7 @@ section CofilteredLimit
 variable {J : Type v} [SmallCategory J] [IsCofiltered J] (F : J ⥤ TopCat.{max v u}) (C : Cone F)
   (hC : IsLimit C)
 
-include hC
-
+#print TopCat.isTopologicalBasis_cofiltered_limit /-
 /-- Given a *compatible* collection of topological bases for the factors in a cofiltered limit
 which contain `set.univ` and are closed under intersections, the induced *naive* collection
 of sets in the limit is, in fact, a topological basis.
@@ -128,6 +127,7 @@ theorem isTopologicalBasis_cofiltered_limit (T : ∀ j, Set (Set (F.obj j)))
       change _ = ⇑(D.π.app j ≫ F.map (g e he))
       rw [D.w]
 #align Top.is_topological_basis_cofiltered_limit TopCat.isTopologicalBasis_cofiltered_limit
+-/
 
 end CofilteredLimit
 

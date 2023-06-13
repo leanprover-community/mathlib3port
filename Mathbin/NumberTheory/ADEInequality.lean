@@ -134,10 +134,12 @@ def sumInv (pqr : Multiset ℕ+) : ℚ :=
 #align ADE_inequality.sum_inv ADEInequality.sumInv
 -/
 
+#print ADEInequality.sumInv_pqr /-
 theorem sumInv_pqr (p q r : ℕ+) : sumInv {p, q, r} = p⁻¹ + q⁻¹ + r⁻¹ := by
   simp only [sum_inv, coe_coe, add_zero, insert_eq_cons, add_assoc, map_cons, sum_cons,
     map_singleton, sum_singleton]
 #align ADE_inequality.sum_inv_pqr ADEInequality.sumInv_pqr
+-/
 
 #print ADEInequality.Admissible /-
 /-- A multiset `pqr` of positive natural numbers is `admissible`
@@ -159,17 +161,23 @@ theorem admissible_D' (n : ℕ+) : Admissible (D' n) :=
 #align ADE_inequality.admissible_D' ADEInequality.admissible_D'
 -/
 
+#print ADEInequality.admissible_E'3 /-
 theorem admissible_E'3 : Admissible (E' 3) :=
   Or.inr <| Or.inr <| Or.inl rfl
 #align ADE_inequality.admissible_E'3 ADEInequality.admissible_E'3
+-/
 
+#print ADEInequality.admissible_E'4 /-
 theorem admissible_E'4 : Admissible (E' 4) :=
   Or.inr <| Or.inr <| Or.inr <| Or.inl rfl
 #align ADE_inequality.admissible_E'4 ADEInequality.admissible_E'4
+-/
 
+#print ADEInequality.admissible_E'5 /-
 theorem admissible_E'5 : Admissible (E' 5) :=
   Or.inr <| Or.inr <| Or.inr <| Or.inr rfl
 #align ADE_inequality.admissible_E'5 ADEInequality.admissible_E'5
+-/
 
 #print ADEInequality.admissible_E6 /-
 theorem admissible_E6 : Admissible E6 :=
@@ -205,6 +213,7 @@ theorem Admissible.one_lt_sumInv {pqr : Multiset ℕ+} : Admissible pqr → 1 < 
 #align ADE_inequality.admissible.one_lt_sum_inv ADEInequality.Admissible.one_lt_sumInv
 -/
 
+#print ADEInequality.lt_three /-
 theorem lt_three {p q r : ℕ+} (hpq : p ≤ q) (hqr : q ≤ r) (H : 1 < sumInv {p, q, r}) : p < 3 :=
   by
   have h3 : (0 : ℚ) < 3 := by norm_num
@@ -216,7 +225,9 @@ theorem lt_three {p q r : ℕ+} (hpq : p ≤ q) (hqr : q ≤ r) (H : 1 < sumInv 
     _ = 1 := by norm_num
   all_goals rw [inv_le_inv _ h3] <;> [assumption_mod_cast; norm_num]
 #align ADE_inequality.lt_three ADEInequality.lt_three
+-/
 
+#print ADEInequality.lt_four /-
 theorem lt_four {q r : ℕ+} (hqr : q ≤ r) (H : 1 < sumInv {2, q, r}) : q < 4 :=
   by
   have h4 : (0 : ℚ) < 4 := by norm_num
@@ -228,7 +239,9 @@ theorem lt_four {q r : ℕ+} (hqr : q ≤ r) (H : 1 < sumInv {2, q, r}) : q < 4 
     _ = 1 := by norm_num
   all_goals rw [inv_le_inv _ h4] <;> [assumption_mod_cast; norm_num]
 #align ADE_inequality.lt_four ADEInequality.lt_four
+-/
 
+#print ADEInequality.lt_six /-
 theorem lt_six {r : ℕ+} (H : 1 < sumInv {2, 3, r}) : r < 6 :=
   by
   have h6 : (0 : ℚ) < 6 := by norm_num
@@ -240,6 +253,7 @@ theorem lt_six {r : ℕ+} (H : 1 < sumInv {2, 3, r}) : r < 6 :=
     _ = 1 := by norm_num
   rw [inv_le_inv _ h6] <;> [assumption_mod_cast; norm_num]
 #align ADE_inequality.lt_six ADEInequality.lt_six
+-/
 
 #print ADEInequality.admissible_of_one_lt_sumInv_aux' /-
 theorem admissible_of_one_lt_sumInv_aux' {p q r : ℕ+} (hpq : p ≤ q) (hqr : q ≤ r)

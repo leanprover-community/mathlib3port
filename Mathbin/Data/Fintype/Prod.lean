@@ -37,9 +37,11 @@ variable {s t : Set α}
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print Set.toFinset_prod /-
 theorem toFinset_prod (s : Set α) (t : Set β) [Fintype s] [Fintype t] [Fintype (s ×ˢ t)] :
     (s ×ˢ t).toFinset = s.toFinset ×ˢ t.toFinset := by ext; simp
 #align set.to_finset_prod Set.toFinset_prod
+-/
 
 #print Set.toFinset_off_diag /-
 theorem toFinset_off_diag {s : Set α} [DecidableEq α] [Fintype s] [Fintype s.offDiag] :
@@ -55,17 +57,21 @@ instance (α β : Type _) [Fintype α] [Fintype β] : Fintype (α × β) :=
   ⟨univ ×ˢ univ, fun ⟨a, b⟩ => by simp⟩
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print Finset.univ_product_univ /-
 @[simp]
 theorem Finset.univ_product_univ {α β : Type _} [Fintype α] [Fintype β] :
     (univ : Finset α) ×ˢ (univ : Finset β) = univ :=
   rfl
 #align finset.univ_product_univ Finset.univ_product_univ
+-/
 
+#print Fintype.card_prod /-
 @[simp]
 theorem Fintype.card_prod (α β : Type _) [Fintype α] [Fintype β] :
     Fintype.card (α × β) = Fintype.card α * Fintype.card β :=
   card_product _ _
 #align fintype.card_prod Fintype.card_prod
+-/
 
 section
 
@@ -97,12 +103,14 @@ instance Pi.infinite_of_left {ι : Sort _} {π : ι → Sort _} [∀ i, Nontrivi
 #align pi.infinite_of_left Pi.infinite_of_left
 -/
 
+#print Pi.infinite_of_exists_right /-
 /-- If at least one `π i` is infinite and the rest nonempty, the pi type of all `π` is infinite. -/
 theorem Pi.infinite_of_exists_right {ι : Type _} {π : ι → Type _} (i : ι) [Infinite <| π i]
     [∀ i, Nonempty <| π i] : Infinite (∀ i : ι, π i) :=
   let ⟨m⟩ := @Pi.nonempty ι π _
   Infinite.of_injective _ (update_injective m i)
 #align pi.infinite_of_exists_right Pi.infinite_of_exists_right
+-/
 
 #print Pi.infinite_of_right /-
 /-- See `pi.infinite_of_exists_right` for the case that only one `π i` is infinite. -/

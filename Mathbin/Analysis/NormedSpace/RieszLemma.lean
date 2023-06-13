@@ -39,6 +39,7 @@ variable {E : Type _} [NormedAddCommGroup E] [NormedSpace 𝕜 E]
 
 variable {F : Type _} [SeminormedAddCommGroup F] [NormedSpace ℝ F]
 
+#print riesz_lemma /-
 /-- Riesz's lemma, which usually states that it is possible to find a
 vector with norm 1 whose distance to a closed proper subspace is
 arbitrarily close to 1. The statement here is in terms of multiples of
@@ -71,7 +72,9 @@ theorem riesz_lemma {F : Subspace 𝕜 E} (hFc : IsClosed (F : Set E)) (hF : ∃
     _ ≤ dist x (y₀ + y) := (Metric.infDist_le_dist_of_mem hy₀y)
     _ = ‖x - y₀ - y‖ := by rw [sub_sub, dist_eq_norm]
 #align riesz_lemma riesz_lemma
+-/
 
+#print riesz_lemma_of_norm_lt /-
 /--
 A version of Riesz lemma: given a strict closed subspace `F`, one may find an element of norm `≤ R`
 which is at distance  at least `1` of every element of `F`. Here, `R` is any given constant
@@ -105,6 +108,7 @@ theorem riesz_lemma_of_norm_lt {c : 𝕜} (hc : 1 < ‖c‖) {R : ℝ} (hR : ‖
       (mul_le_mul_of_nonneg_left (hx y' (by simp [hy', Submodule.smul_mem _ _ hy])) (norm_nonneg _))
     _ = ‖d • x - y‖ := by simp [yy', ← smul_sub, norm_smul]
 #align riesz_lemma_of_norm_lt riesz_lemma_of_norm_lt
+-/
 
 #print Metric.closedBall_infDist_compl_subset_closure /-
 theorem Metric.closedBall_infDist_compl_subset_closure {x : F} {s : Set F} (hx : x ∈ s) :

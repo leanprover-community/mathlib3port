@@ -162,18 +162,21 @@ def Comp (r : α → β → Prop) (p : β → γ → Prop) (a : α) (c : γ) : P
 #align relation.comp Relation.Comp
 -/
 
--- mathport name: «expr ∘r »
 local infixr:80 " ∘r " => Relation.Comp
 
+#print Relation.comp_eq /-
 theorem comp_eq : r ∘r (· = ·) = r :=
   funext fun a =>
     funext fun b => propext <| Iff.intro (fun ⟨c, h, Eq⟩ => Eq ▸ h) fun h => ⟨b, h, rfl⟩
 #align relation.comp_eq Relation.comp_eq
+-/
 
+#print Relation.eq_comp /-
 theorem eq_comp : (· = ·) ∘r r = r :=
   funext fun a =>
     funext fun b => propext <| Iff.intro (fun ⟨c, Eq, h⟩ => Eq.symm ▸ h) fun h => ⟨a, rfl, h⟩
 #align relation.eq_comp Relation.eq_comp
+-/
 
 #print Relation.iff_comp /-
 theorem iff_comp {r : Prop → α → Prop} : (· ↔ ·) ∘r r = r :=
@@ -191,6 +194,7 @@ theorem comp_iff {r : α → Prop → Prop} : r ∘r (· ↔ ·) = r :=
 #align relation.comp_iff Relation.comp_iff
 -/
 
+#print Relation.comp_assoc /-
 theorem comp_assoc : (r ∘r p) ∘r q = r ∘r p ∘r q :=
   by
   funext a d; apply propext
@@ -198,7 +202,9 @@ theorem comp_assoc : (r ∘r p) ∘r q = r ∘r p ∘r q :=
   exact fun ⟨c, ⟨b, hab, hbc⟩, hcd⟩ => ⟨b, hab, c, hbc, hcd⟩
   exact fun ⟨b, hab, c, hbc, hcd⟩ => ⟨c, ⟨b, hab, hbc⟩, hcd⟩
 #align relation.comp_assoc Relation.comp_assoc
+-/
 
+#print Relation.flip_comp /-
 theorem flip_comp : flip (r ∘r p) = flip p ∘r flip r :=
   by
   funext c a; apply propext
@@ -206,6 +212,7 @@ theorem flip_comp : flip (r ∘r p) = flip p ∘r flip r :=
   exact fun ⟨b, hab, hbc⟩ => ⟨b, hbc, hab⟩
   exact fun ⟨b, hbc, hab⟩ => ⟨b, hab, hbc⟩
 #align relation.flip_comp Relation.flip_comp
+-/
 
 end Comp
 
@@ -224,6 +231,7 @@ def Fibration :=
 
 variable {rα rβ}
 
+#print Acc.of_fibration /-
 /-- If `f : α → β` is a fibration between relations `rα` and `rβ`, and `a : α` is
   accessible under `rα`, then `f a` is accessible under `rβ`. -/
 theorem Acc.of_fibration (fib : Fibration rα rβ f) {a} (ha : Acc rα a) : Acc rβ (f a) :=
@@ -233,13 +241,16 @@ theorem Acc.of_fibration (fib : Fibration rα rβ f) {a} (ha : Acc rα a) : Acc 
   obtain ⟨a', hr', rfl⟩ := fib hr
   exact ih a' hr'
 #align acc.of_fibration Acc.of_fibration
+-/
 
+#print Acc.of_downward_closed /-
 theorem Acc.of_downward_closed (dc : ∀ {a b}, rβ b (f a) → ∃ c, f c = b) (a : α)
     (ha : Acc (InvImage rβ f) a) : Acc rβ (f a) :=
   ha.of_fibration f fun a b h =>
     let ⟨a', he⟩ := dc h
     ⟨a', he.substr h, he⟩
 #align acc.of_downward_closed Acc.of_downward_closed
+-/
 
 end Fibration
 
@@ -574,6 +585,7 @@ theorem transGen_idem : TransGen (TransGen r) = TransGen r :=
 #align relation.trans_gen_idem Relation.transGen_idem
 -/
 
+#print Relation.TransGen.lift /-
 theorem TransGen.lift {p : β → β → Prop} {a b : α} (f : α → β) (h : ∀ a b, r a b → p (f a) (f b))
     (hab : TransGen r a b) : TransGen p (f a) (f b) :=
   by
@@ -581,6 +593,7 @@ theorem TransGen.lift {p : β → β → Prop} {a b : α} (f : α → β) (h : �
   case single c hac => exact trans_gen.single (h a c hac)
   case tail c d hac hcd hac => exact trans_gen.tail hac (h c d hcd)
 #align relation.trans_gen.lift Relation.TransGen.lift
+-/
 
 #print Relation.TransGen.lift' /-
 theorem TransGen.lift' {p : β → β → Prop} {a b : α} (f : α → β)
@@ -638,11 +651,13 @@ theorem reflTransGen_iff_eq_or_transGen : ReflTransGen r a b ↔ b = a ∨ Trans
 #align relation.refl_trans_gen_iff_eq_or_trans_gen Relation.reflTransGen_iff_eq_or_transGen
 -/
 
+#print Relation.ReflTransGen.lift /-
 theorem ReflTransGen.lift {p : β → β → Prop} {a b : α} (f : α → β)
     (h : ∀ a b, r a b → p (f a) (f b)) (hab : ReflTransGen r a b) : ReflTransGen p (f a) (f b) :=
   ReflTransGen.trans_induction_on hab (fun a => refl) (fun a b => ReflTransGen.single ∘ h _ _)
     fun a b c _ _ => trans
 #align relation.refl_trans_gen.lift Relation.ReflTransGen.lift
+-/
 
 #print Relation.ReflTransGen.mono /-
 theorem ReflTransGen.mono {p : α → α → Prop} :

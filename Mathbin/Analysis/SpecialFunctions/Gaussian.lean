@@ -49,10 +49,8 @@ open scoped Real Topology FourierTransform
 
 open Complex hiding exp continuous_exp abs_of_nonneg sq_abs
 
--- mathport name: exprcexp
 notation "cexp" => Complex.exp
 
--- mathport name: exprrexp
 notation "rexp" => Real.exp
 
 theorem exp_neg_mul_sq_isLittleO_exp_neg {b : ℝ} (hb : 0 < b) :

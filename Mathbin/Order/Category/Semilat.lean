@@ -87,17 +87,21 @@ instance : ConcreteCategory SemilatSupCat
       map := fun X Y => coeFn }
   forget_faithful := ⟨fun X Y => FunLike.coe_injective⟩
 
+#print SemilatSupCat.hasForgetToPartOrd /-
 instance hasForgetToPartOrd : HasForget₂ SemilatSupCat PartOrdCat
     where forget₂ :=
     { obj := fun X => ⟨X⟩
       map := fun X Y f => f }
 #align SemilatSup.has_forget_to_PartOrd SemilatSupCat.hasForgetToPartOrd
+-/
 
+#print SemilatSupCat.coe_forget_to_partOrdCat /-
 @[simp]
 theorem coe_forget_to_partOrdCat (X : SemilatSupCat) :
     ↥((forget₂ SemilatSupCat PartOrdCat).obj X) = ↥X :=
   rfl
 #align SemilatSup.coe_forget_to_PartOrd SemilatSupCat.coe_forget_to_partOrdCat
+-/
 
 end SemilatSupCat
 
@@ -141,17 +145,21 @@ instance : ConcreteCategory SemilatInfCat
       map := fun X Y => coeFn }
   forget_faithful := ⟨fun X Y => FunLike.coe_injective⟩
 
+#print SemilatInfCat.hasForgetToPartOrd /-
 instance hasForgetToPartOrd : HasForget₂ SemilatInfCat PartOrdCat
     where forget₂ :=
     { obj := fun X => ⟨X⟩
       map := fun X Y f => f }
 #align SemilatInf.has_forget_to_PartOrd SemilatInfCat.hasForgetToPartOrd
+-/
 
+#print SemilatInfCat.coe_forget_to_partOrdCat /-
 @[simp]
 theorem coe_forget_to_partOrdCat (X : SemilatInfCat) :
     ↥((forget₂ SemilatInfCat PartOrdCat).obj X) = ↥X :=
   rfl
 #align SemilatInf.coe_forget_to_PartOrd SemilatInfCat.coe_forget_to_partOrdCat
+-/
 
 end SemilatInfCat
 
@@ -160,6 +168,7 @@ end SemilatInfCat
 
 namespace SemilatSupCat
 
+#print SemilatSupCat.Iso.mk /-
 /-- Constructs an isomorphism of lattices from an order isomorphism between them. -/
 @[simps]
 def Iso.mk {α β : SemilatSupCat.{u}} (e : α ≃o β) : α ≅ β
@@ -169,7 +178,9 @@ def Iso.mk {α β : SemilatSupCat.{u}} (e : α ≃o β) : α ≅ β
   hom_inv_id' := by ext; exact e.symm_apply_apply _
   inv_hom_id' := by ext; exact e.apply_symm_apply _
 #align SemilatSup.iso.mk SemilatSupCat.Iso.mk
+-/
 
+#print SemilatSupCat.dual /-
 /-- `order_dual` as a functor. -/
 @[simps]
 def dual : SemilatSupCat ⥤ SemilatInfCat
@@ -177,11 +188,13 @@ def dual : SemilatSupCat ⥤ SemilatInfCat
   obj X := SemilatInfCat.of Xᵒᵈ
   map X Y := SupBotHom.dual
 #align SemilatSup.dual SemilatSupCat.dual
+-/
 
 end SemilatSupCat
 
 namespace SemilatInfCat
 
+#print SemilatInfCat.Iso.mk /-
 /-- Constructs an isomorphism of lattices from an order isomorphism between them. -/
 @[simps]
 def Iso.mk {α β : SemilatInfCat.{u}} (e : α ≃o β) : α ≅ β
@@ -191,7 +204,9 @@ def Iso.mk {α β : SemilatInfCat.{u}} (e : α ≃o β) : α ≅ β
   hom_inv_id' := by ext; exact e.symm_apply_apply _
   inv_hom_id' := by ext; exact e.apply_symm_apply _
 #align SemilatInf.iso.mk SemilatInfCat.Iso.mk
+-/
 
+#print SemilatInfCat.dual /-
 /-- `order_dual` as a functor. -/
 @[simps]
 def dual : SemilatInfCat ⥤ SemilatSupCat
@@ -199,9 +214,11 @@ def dual : SemilatInfCat ⥤ SemilatSupCat
   obj X := SemilatSupCat.of Xᵒᵈ
   map X Y := InfTopHom.dual
 #align SemilatInf.dual SemilatInfCat.dual
+-/
 
 end SemilatInfCat
 
+#print SemilatSupCatEquivSemilatInfCat /-
 /-- The equivalence between `SemilatSup` and `SemilatInf` induced by `order_dual` both ways.
 -/
 @[simps Functor inverse]
@@ -210,16 +227,21 @@ def SemilatSupCatEquivSemilatInfCat : SemilatSupCat ≌ SemilatInfCat :=
     (NatIso.ofComponents (fun X => SemilatSupCat.Iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
     (NatIso.ofComponents (fun X => SemilatInfCat.Iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
 #align SemilatSup_equiv_SemilatInf SemilatSupCatEquivSemilatInfCat
+-/
 
+#print SemilatSupCat_dual_comp_forget_to_partOrdCat /-
 theorem SemilatSupCat_dual_comp_forget_to_partOrdCat :
     SemilatSupCat.dual ⋙ forget₂ SemilatInfCat PartOrdCat =
       forget₂ SemilatSupCat PartOrdCat ⋙ PartOrdCat.dual :=
   rfl
 #align SemilatSup_dual_comp_forget_to_PartOrd SemilatSupCat_dual_comp_forget_to_partOrdCat
+-/
 
+#print SemilatInfCat_dual_comp_forget_to_partOrdCat /-
 theorem SemilatInfCat_dual_comp_forget_to_partOrdCat :
     SemilatInfCat.dual ⋙ forget₂ SemilatSupCat PartOrdCat =
       forget₂ SemilatInfCat PartOrdCat ⋙ PartOrdCat.dual :=
   rfl
 #align SemilatInf_dual_comp_forget_to_PartOrd SemilatInfCat_dual_comp_forget_to_partOrdCat
+-/
 

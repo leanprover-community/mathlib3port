@@ -206,12 +206,14 @@ theorem projective_iff_injective_op {P : C} : Projective P ↔ Injective (op P) 
 #align category_theory.injective.projective_iff_injective_op CategoryTheory.Injective.projective_iff_injective_op
 -/
 
+#print CategoryTheory.Injective.injective_iff_preservesEpimorphisms_yoneda_obj /-
 theorem injective_iff_preservesEpimorphisms_yoneda_obj (J : C) :
     Injective J ↔ (yoneda.obj J).PreservesEpimorphisms :=
   by
   rw [injective_iff_projective_op, projective.projective_iff_preserves_epimorphisms_coyoneda_obj]
   exact functor.preserves_epimorphisms.iso_iff (coyoneda.obj_op_op _)
 #align category_theory.injective.injective_iff_preserves_epimorphisms_yoneda_obj CategoryTheory.Injective.injective_iff_preservesEpimorphisms_yoneda_obj
+-/
 
 section Adjunction
 
@@ -221,11 +223,13 @@ variable {D : Type u₂} [Category.{v₂} D]
 
 variable {L : C ⥤ D} {R : D ⥤ C} [PreservesMonomorphisms L]
 
+#print CategoryTheory.Injective.injective_of_adjoint /-
 theorem injective_of_adjoint (adj : L ⊣ R) (J : D) [Injective J] : Injective <| R.obj J :=
   ⟨fun A A' g f im =>
     ⟨adj.hom_equiv _ _ (factor_thru ((adj.hom_equiv A J).symm g) (L.map f)),
       (adj.hom_equiv _ _).symm.Injective (by simp)⟩⟩
 #align category_theory.injective.injective_of_adjoint CategoryTheory.Injective.injective_of_adjoint
+-/
 
 end Adjunction
 
@@ -351,6 +355,7 @@ namespace Adjunction
 
 variable {D : Type _} [Category D] {F : C ⥤ D} {G : D ⥤ C}
 
+#print CategoryTheory.Adjunction.map_injective /-
 theorem map_injective (adj : F ⊣ G) [F.PreservesMonomorphisms] (I : D) (hI : Injective I) :
     Injective (G.obj I) :=
   ⟨fun X Y f g => by
@@ -360,7 +365,9 @@ theorem map_injective (adj : F ⊣ G) [F.PreservesMonomorphisms] (I : D) (hI : I
     rw [← unit_naturality_assoc, ← G.map_comp, h]
     simp⟩
 #align category_theory.adjunction.map_injective CategoryTheory.Adjunction.map_injective
+-/
 
+#print CategoryTheory.Adjunction.injective_of_map_injective /-
 theorem injective_of_map_injective (adj : F ⊣ G) [Full G] [Faithful G] (I : D)
     (hI : Injective (G.obj I)) : Injective I :=
   ⟨fun X Y f g => by
@@ -371,7 +378,9 @@ theorem injective_of_map_injective (adj : F ⊣ G) [Full G] [Faithful G] (I : D)
     refine' faithful.map_injective G _
     simpa⟩
 #align category_theory.adjunction.injective_of_map_injective CategoryTheory.Adjunction.injective_of_map_injective
+-/
 
+#print CategoryTheory.Adjunction.mapInjectivePresentation /-
 /-- Given an adjunction `F ⊣ G` such that `F` preserves monos, `G` maps an injective presentation
 of `X` to an injective presentation of `G(X)`. -/
 def mapInjectivePresentation (adj : F ⊣ G) [F.PreservesMonomorphisms] (X : D)
@@ -383,6 +392,7 @@ def mapInjectivePresentation (adj : F ⊣ G) [F.PreservesMonomorphisms] (X : D)
   Mono := by
     haveI : PreservesLimitsOfSize.{0, 0} G := adj.right_adjoint_preserves_limits <;> infer_instance
 #align category_theory.adjunction.map_injective_presentation CategoryTheory.Adjunction.mapInjectivePresentation
+-/
 
 end Adjunction
 
@@ -390,6 +400,7 @@ namespace Equivalence
 
 variable {D : Type _} [Category D] (F : C ≌ D)
 
+#print CategoryTheory.Equivalence.injectivePresentationOfMapInjectivePresentation /-
 /-- Given an equivalence of categories `F`, an injective presentation of `F(X)` induces an
 injective presentation of `X.` -/
 def injectivePresentationOfMapInjectivePresentation (X : C)
@@ -400,7 +411,9 @@ def injectivePresentationOfMapInjectivePresentation (X : C)
   f := F.Unit.app _ ≫ F.inverse.map I.f
   Mono := mono_comp _ _
 #align category_theory.equivalence.injective_presentation_of_map_injective_presentation CategoryTheory.Equivalence.injectivePresentationOfMapInjectivePresentation
+-/
 
+#print CategoryTheory.Equivalence.enoughInjectives_iff /-
 theorem enoughInjectives_iff (F : C ≌ D) : EnoughInjectives C ↔ EnoughInjectives D :=
   by
   constructor
@@ -414,6 +427,7 @@ theorem enoughInjectives_iff (F : C ≌ D) : EnoughInjectives C ↔ EnoughInject
       F.injective_presentation_of_map_injective_presentation X
         (Nonempty.some (H.presentation (F.functor.obj X)))
 #align category_theory.equivalence.enough_injectives_iff CategoryTheory.Equivalence.enoughInjectives_iff
+-/
 
 end Equivalence
 

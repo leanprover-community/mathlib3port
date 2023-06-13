@@ -37,20 +37,26 @@ namespace Units
 @[to_additive]
 instance [Monoid M] [SMul M α] : SMul Mˣ α where smul m a := (m : M) • a
 
+#print Units.smul_def /-
 @[to_additive]
 theorem smul_def [Monoid M] [SMul M α] (m : Mˣ) (a : α) : m • a = (m : M) • a :=
   rfl
 #align units.smul_def Units.smul_def
 #align add_units.vadd_def AddUnits.vadd_def
+-/
 
+#print Units.smul_isUnit /-
 @[simp]
 theorem smul_isUnit [Monoid M] [SMul M α] {m : M} (hm : IsUnit m) (a : α) : hm.Unit • a = m • a :=
   rfl
 #align units.smul_is_unit Units.smul_isUnit
+-/
 
+#print IsUnit.inv_smul /-
 theorem IsUnit.inv_smul [Monoid α] {a : α} (h : IsUnit a) : h.Unit⁻¹ • a = 1 :=
   h.val_inv_mul
 #align is_unit.inv_smul IsUnit.inv_smul
+-/
 
 @[to_additive]
 instance [Monoid M] [SMul M α] [FaithfulSMul M α] : FaithfulSMul Mˣ α
@@ -96,6 +102,7 @@ instance [Monoid M] [SMul M N] [SMul M α] [SMul N α] [IsScalarTower M N α] : 
 /-! ### Action of a group `G` on units of `M` -/
 
 
+#print Units.mulAction' /-
 /-- If an action `G` associates and commutes with multiplication on `M`, then it lifts to an
 action on `Mˣ`. Notably, this provides `mul_action Mˣ Nˣ` under suitable
 conditions.
@@ -109,45 +116,57 @@ instance mulAction' [Group G] [Monoid M] [MulAction G M] [SMulCommClass G M M]
   one_smul m := Units.ext <| one_smul _ _
   mul_smul g₁ g₂ m := Units.ext <| mul_smul _ _ _
 #align units.mul_action' Units.mulAction'
+-/
 
+#print Units.val_smul /-
 @[simp]
 theorem val_smul [Group G] [Monoid M] [MulAction G M] [SMulCommClass G M M] [IsScalarTower G M M]
     (g : G) (m : Mˣ) : ↑(g • m) = g • (m : M) :=
   rfl
 #align units.coe_smul Units.val_smul
+-/
 
+#print Units.smul_inv /-
 /-- Note that this lemma exists more generally as the global `smul_inv` -/
 @[simp]
 theorem smul_inv [Group G] [Monoid M] [MulAction G M] [SMulCommClass G M M] [IsScalarTower G M M]
     (g : G) (m : Mˣ) : (g • m)⁻¹ = g⁻¹ • m⁻¹ :=
   ext rfl
 #align units.smul_inv Units.smul_inv
+-/
 
+#print Units.smulCommClass' /-
 /-- Transfer `smul_comm_class G H M` to `smul_comm_class G H Mˣ` -/
 instance smulCommClass' [Group G] [Group H] [Monoid M] [MulAction G M] [SMulCommClass G M M]
     [MulAction H M] [SMulCommClass H M M] [IsScalarTower G M M] [IsScalarTower H M M]
     [SMulCommClass G H M] : SMulCommClass G H Mˣ
     where smul_comm g h m := Units.ext <| smul_comm g h (m : M)
 #align units.smul_comm_class' Units.smulCommClass'
+-/
 
+#print Units.isScalarTower' /-
 /-- Transfer `is_scalar_tower G H M` to `is_scalar_tower G H Mˣ` -/
 instance isScalarTower' [SMul G H] [Group G] [Group H] [Monoid M] [MulAction G M]
     [SMulCommClass G M M] [MulAction H M] [SMulCommClass H M M] [IsScalarTower G M M]
     [IsScalarTower H M M] [IsScalarTower G H M] : IsScalarTower G H Mˣ
     where smul_assoc g h m := Units.ext <| smul_assoc g h (m : M)
 #align units.is_scalar_tower' Units.isScalarTower'
+-/
 
+#print Units.isScalarTower'_left /-
 /-- Transfer `is_scalar_tower G M α` to `is_scalar_tower G Mˣ α` -/
 instance isScalarTower'_left [Group G] [Monoid M] [MulAction G M] [SMul M α] [SMul G α]
     [SMulCommClass G M M] [IsScalarTower G M M] [IsScalarTower G M α] : IsScalarTower G Mˣ α
     where smul_assoc g m := (smul_assoc g (m : M) : _)
 #align units.is_scalar_tower'_left Units.isScalarTower'_left
+-/
 
 -- Just to prove this transfers a particularly useful instance.
 example [Monoid M] [Monoid N] [MulAction M N] [SMulCommClass M N N] [IsScalarTower M N N] :
     MulAction Mˣ Nˣ :=
   Units.mulAction'
 
+#print Units.mulDistribMulAction' /-
 /-- A stronger form of `units.mul_action'`. -/
 instance mulDistribMulAction' [Group G] [Monoid M] [MulDistribMulAction G M] [SMulCommClass G M M]
     [IsScalarTower G M M] : MulDistribMulAction G Mˣ :=
@@ -156,12 +175,15 @@ instance mulDistribMulAction' [Group G] [Monoid M] [MulDistribMulAction G M] [SM
     smul_one := fun m => Units.ext <| smul_one _
     smul_mul := fun g m₁ m₂ => Units.ext <| smul_mul' _ _ _ }
 #align units.mul_distrib_mul_action' Units.mulDistribMulAction'
+-/
 
 end Units
 
+#print IsUnit.smul /-
 theorem IsUnit.smul [Group G] [Monoid M] [MulAction G M] [SMulCommClass G M M] [IsScalarTower G M M]
     {m : M} (g : G) (h : IsUnit m) : IsUnit (g • m) :=
   let ⟨u, hu⟩ := h
   hu ▸ ⟨g • u, Units.val_smul _ _⟩
 #align is_unit.smul IsUnit.smul
+-/
 

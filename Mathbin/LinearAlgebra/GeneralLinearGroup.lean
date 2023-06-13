@@ -72,6 +72,7 @@ def ofLinearEquiv (f : M ≃ₗ[R] M) : GeneralLinearGroup R M
 
 variable (R M)
 
+#print LinearMap.GeneralLinearGroup.generalLinearEquiv /-
 /-- The general linear group on `R` and `M` is multiplicatively equivalent to the type of linear
 equivalences between `M` and itself. -/
 def generalLinearEquiv : GeneralLinearGroup R M ≃* M ≃ₗ[R] M
@@ -82,17 +83,22 @@ def generalLinearEquiv : GeneralLinearGroup R M ≃* M ≃ₗ[R] M
   right_inv f := by ext; rfl
   map_mul' x y := by ext; rfl
 #align linear_map.general_linear_group.general_linear_equiv LinearMap.GeneralLinearGroup.generalLinearEquiv
+-/
 
+#print LinearMap.GeneralLinearGroup.generalLinearEquiv_to_linearMap /-
 @[simp]
 theorem generalLinearEquiv_to_linearMap (f : GeneralLinearGroup R M) :
     (generalLinearEquiv R M f : M →ₗ[R] M) = f := by ext; rfl
 #align linear_map.general_linear_group.general_linear_equiv_to_linear_map LinearMap.GeneralLinearGroup.generalLinearEquiv_to_linearMap
+-/
 
+#print LinearMap.GeneralLinearGroup.coeFn_generalLinearEquiv /-
 @[simp]
 theorem coeFn_generalLinearEquiv (f : GeneralLinearGroup R M) :
     ⇑(generalLinearEquiv R M f) = (f : M → M) :=
   rfl
 #align linear_map.general_linear_group.coe_fn_general_linear_equiv LinearMap.GeneralLinearGroup.coeFn_generalLinearEquiv
+-/
 
 end GeneralLinearGroup
 

@@ -79,17 +79,23 @@ theorem one_ne_zero [NeZero (1 : α)] : (1 : α) ≠ 0 :=
 #align one_ne_zero one_ne_zero
 -/
 
+#print two_ne_zero /-
 theorem two_ne_zero [Add α] [NeZero (2 : α)] : (2 : α) ≠ 0 :=
   NeZero.ne (2 : α)
 #align two_ne_zero two_ne_zero
+-/
 
+#print three_ne_zero /-
 theorem three_ne_zero [Add α] [NeZero (3 : α)] : (3 : α) ≠ 0 :=
   NeZero.ne (3 : α)
 #align three_ne_zero three_ne_zero
+-/
 
+#print four_ne_zero /-
 theorem four_ne_zero [Add α] [NeZero (4 : α)] : (4 : α) ≠ 0 :=
   NeZero.ne (4 : α)
 #align four_ne_zero four_ne_zero
+-/
 
 #print ne_zero_of_eq_one /-
 theorem ne_zero_of_eq_one [NeZero (1 : α)] {a : α} (h : a = 1) : a ≠ 0 :=
@@ -113,17 +119,23 @@ theorem one_ne_zero' [NeZero (1 : α)] : (1 : α) ≠ 0 :=
 #align one_ne_zero' one_ne_zero'
 -/
 
+#print two_ne_zero' /-
 theorem two_ne_zero' [Add α] [NeZero (2 : α)] : (2 : α) ≠ 0 :=
   NeZero.ne (2 : α)
 #align two_ne_zero' two_ne_zero'
+-/
 
+#print three_ne_zero' /-
 theorem three_ne_zero' [Add α] [NeZero (3 : α)] : (3 : α) ≠ 0 :=
   NeZero.ne (3 : α)
 #align three_ne_zero' three_ne_zero'
+-/
 
+#print four_ne_zero' /-
 theorem four_ne_zero' [Add α] [NeZero (4 : α)] : (4 : α) ≠ 0 :=
   NeZero.ne (4 : α)
 #align four_ne_zero' four_ne_zero'
+-/
 
 end
 

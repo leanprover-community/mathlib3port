@@ -186,6 +186,7 @@ instance {ω : Type u} {m : Type u → Type v} [Monad m] [MonadWriter ω m] : Mo
   listen := fun α ⟨cmd⟩ => ⟨(uncurry fun x y => flip Prod.mk y <$> x) <$> listen cmd⟩
   pass := fun α ⟨cmd⟩ => ⟨pass (OptionT.passAux <$> cmd)⟩
 
+#print MonadWriterAdapter /-
 /-- Adapt a monad stack, changing the type of its top-most environment.
 
 This class is comparable to
@@ -203,6 +204,7 @@ class monad_reader_functor (ρ ρ' : out_param (Type u)) (n n' : Type u → Type
 class MonadWriterAdapter (ω ω' : outParam (Type u)) (m m' : Type u → Type v) where
   adaptWriter {α : Type u} : (ω → ω') → m α → m' α
 #align monad_writer_adapter MonadWriterAdapter
+-/
 
 export MonadWriterAdapter (adaptWriter)
 
@@ -210,6 +212,7 @@ section
 
 variable {ω ω' : Type u} {m m' : Type u → Type v}
 
+#print monadWriterAdapterTrans /-
 /-- Transitivity.
 
 This instance generates the type-class problem with a metavariable argument (which is why this
@@ -223,6 +226,7 @@ instance (priority := 100) monadWriterAdapterTrans {n n' : Type u → Type v}
     [MonadWriterAdapter ω ω' m m'] [MonadFunctor m m' n n'] : MonadWriterAdapter ω ω' n n' :=
   ⟨fun α f => monadMap fun α => (adaptWriter f : m α → m' α)⟩
 #align monad_writer_adapter_trans monadWriterAdapterTrans
+-/
 
 instance [Monad m] : MonadWriterAdapter ω ω' (WriterT ω m) (WriterT ω' m) :=
   ⟨fun α => WriterT.adapt⟩

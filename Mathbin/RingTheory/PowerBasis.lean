@@ -80,10 +80,12 @@ initialize_simps_projections PowerBasis (-Basis)
 
 namespace PowerBasis
 
+#print PowerBasis.coe_basis /-
 @[simp]
 theorem coe_basis (pb : PowerBasis R S) : ⇑pb.Basis = fun i : Fin pb.dim => pb.gen ^ (i : ℕ) :=
   funext pb.basis_eq_pow
 #align power_basis.coe_basis PowerBasis.coe_basis
+-/
 
 #print PowerBasis.finiteDimensional /-
 /-- Cannot be an instance because `power_basis` cannot be a class. -/
@@ -98,6 +100,7 @@ theorem finrank [Algebra K S] (pb : PowerBasis K S) : FiniteDimensional.finrank 
 #align power_basis.finrank PowerBasis.finrank
 -/
 
+#print PowerBasis.mem_span_pow' /-
 theorem mem_span_pow' {x y : S} {d : ℕ} :
     y ∈ Submodule.span R (Set.range fun i : Fin d => x ^ (i : ℕ)) ↔
       ∃ f : R[X], f.degree < d ∧ y = aeval x f :=
@@ -115,7 +118,9 @@ theorem mem_span_pow' {x y : S} {d : ℕ} :
   simp_rw [@eq_comm _ y]
   exact Iff.rfl
 #align power_basis.mem_span_pow' PowerBasis.mem_span_pow'
+-/
 
+#print PowerBasis.mem_span_pow /-
 theorem mem_span_pow {x y : S} {d : ℕ} (hd : d ≠ 0) :
     y ∈ Submodule.span R (Set.range fun i : Fin d => x ^ (i : ℕ)) ↔
       ∃ f : R[X], f.natDegree < d ∧ y = aeval x f :=
@@ -131,6 +136,7 @@ theorem mem_span_pow {x y : S} {d : ℕ} (hd : d ≠ 0) :
         | exact WithBot.bot_lt_coe d
       simpa only [degree_eq_nat_degree hf, WithBot.coe_lt_coe] using h
 #align power_basis.mem_span_pow PowerBasis.mem_span_pow
+-/
 
 #print PowerBasis.dim_ne_zero /-
 theorem dim_ne_zero [h : Nontrivial S] (pb : PowerBasis R S) : pb.dim ≠ 0 := fun h =>
@@ -144,18 +150,23 @@ theorem dim_pos [Nontrivial S] (pb : PowerBasis R S) : 0 < pb.dim :=
 #align power_basis.dim_pos PowerBasis.dim_pos
 -/
 
+#print PowerBasis.exists_eq_aeval /-
 theorem exists_eq_aeval [Nontrivial S] (pb : PowerBasis R S) (y : S) :
     ∃ f : R[X], f.natDegree < pb.dim ∧ y = aeval pb.gen f :=
   (mem_span_pow pb.dim_ne_zero).mp (by simpa using pb.basis.mem_span y)
 #align power_basis.exists_eq_aeval PowerBasis.exists_eq_aeval
+-/
 
+#print PowerBasis.exists_eq_aeval' /-
 theorem exists_eq_aeval' (pb : PowerBasis R S) (y : S) : ∃ f : R[X], y = aeval pb.gen f :=
   by
   nontriviality S
   obtain ⟨f, _, hf⟩ := exists_eq_aeval pb y
   exact ⟨f, hf⟩
 #align power_basis.exists_eq_aeval' PowerBasis.exists_eq_aeval'
+-/
 
+#print PowerBasis.algHom_ext /-
 theorem algHom_ext {S' : Type _} [Semiring S'] [Algebra R S'] (pb : PowerBasis R S)
     ⦃f g : S →ₐ[R] S'⦄ (h : f pb.gen = g pb.gen) : f = g :=
   by
@@ -163,6 +174,7 @@ theorem algHom_ext {S' : Type _} [Semiring S'] [Algebra R S'] (pb : PowerBasis R
   obtain ⟨f, rfl⟩ := pb.exists_eq_aeval' x
   rw [← Polynomial.aeval_algHom_apply, ← Polynomial.aeval_algHom_apply, h]
 #align power_basis.alg_hom_ext PowerBasis.algHom_ext
+-/
 
 section minpoly
 
@@ -177,6 +189,7 @@ noncomputable def minpolyGen (pb : PowerBasis A S) : A[X] :=
 #align power_basis.minpoly_gen PowerBasis.minpolyGen
 -/
 
+#print PowerBasis.aeval_minpolyGen /-
 theorem aeval_minpolyGen (pb : PowerBasis A S) : aeval pb.gen (minpolyGen pb) = 0 :=
   by
   simp_rw [minpoly_gen, AlgHom.map_sub, AlgHom.map_sum, AlgHom.map_mul, AlgHom.map_pow, aeval_C, ←
@@ -185,6 +198,7 @@ theorem aeval_minpolyGen (pb : PowerBasis A S) : aeval pb.gen (minpolyGen pb) = 
   rw [Finsupp.total_apply, Finsupp.sum_fintype] <;>
     simp only [pb.coe_basis, zero_smul, eq_self_iff_true, imp_true_iff]
 #align power_basis.aeval_minpoly_gen PowerBasis.aeval_minpolyGen
+-/
 
 #print PowerBasis.minpolyGen_monic /-
 theorem minpolyGen_monic (pb : PowerBasis A S) : Monic (minpolyGen pb) :=
@@ -196,6 +210,7 @@ theorem minpolyGen_monic (pb : PowerBasis A S) : Monic (minpolyGen pb) :=
 #align power_basis.minpoly_gen_monic PowerBasis.minpolyGen_monic
 -/
 
+#print PowerBasis.dim_le_natDegree_of_root /-
 theorem dim_le_natDegree_of_root (pb : PowerBasis A S) {p : A[X]} (ne_zero : p ≠ 0)
     (root : aeval pb.gen p = 0) : pb.dim ≤ p.natDegree :=
   by
@@ -207,13 +222,16 @@ theorem dim_le_natDegree_of_root (pb : PowerBasis A S) {p : A[X]} (ne_zero : p �
   dsimp only at this 
   rw [this, monomial_zero_right]
 #align power_basis.dim_le_nat_degree_of_root PowerBasis.dim_le_natDegree_of_root
+-/
 
+#print PowerBasis.dim_le_degree_of_root /-
 theorem dim_le_degree_of_root (h : PowerBasis A S) {p : A[X]} (ne_zero : p ≠ 0)
     (root : aeval h.gen p = 0) : ↑h.dim ≤ p.degree :=
   by
   rw [degree_eq_nat_degree NeZero, WithBot.coe_le_coe]
   exact h.dim_le_nat_degree_of_root NeZero root
 #align power_basis.dim_le_degree_of_root PowerBasis.dim_le_degree_of_root
+-/
 
 #print PowerBasis.degree_minpolyGen /-
 theorem degree_minpolyGen [Nontrivial A] (pb : PowerBasis A S) : degree (minpolyGen pb) = pb.dim :=
@@ -263,6 +281,7 @@ theorem natDegree_minpoly [Nontrivial A] (pb : PowerBasis A S) :
 #align power_basis.nat_degree_minpoly PowerBasis.natDegree_minpoly
 -/
 
+#print PowerBasis.leftMulMatrix /-
 protected theorem leftMulMatrix (pb : PowerBasis A S) :
     Algebra.leftMulMatrix pb.Basis pb.gen =
       Matrix.of fun i j =>
@@ -281,6 +300,7 @@ protected theorem leftMulMatrix (pb : PowerBasis A S) :
   · rw [Fintype.sum_eq_single (⟨↑k + 1, lt_of_le_of_ne k.2 h⟩ : Fin pb.dim), if_pos, one_smul]
     · rfl; · rfl; intro x hx; rw [if_neg, zero_smul]; apply mt Fin.ext hx
 #align power_basis.left_mul_matrix PowerBasis.leftMulMatrix
+-/
 
 end minpoly
 
@@ -288,6 +308,7 @@ section Equiv
 
 variable [Algebra A S] {S' : Type _} [Ring S'] [Algebra A S']
 
+#print PowerBasis.constr_pow_aeval /-
 theorem constr_pow_aeval (pb : PowerBasis A S) {y : S'} (hy : aeval y (minpoly A pb.gen) = 0)
     (f : A[X]) : pb.Basis.constr A (fun i => y ^ (i : ℕ)) (aeval pb.gen f) = aeval y f :=
   by
@@ -309,17 +330,23 @@ theorem constr_pow_aeval (pb : PowerBasis A S) {y : S'} (hy : aeval y (minpoly A
   congr
   rw [← Fin.val_mk hi, ← pb.basis_eq_pow ⟨i, hi⟩, Basis.constr_basis]
 #align power_basis.constr_pow_aeval PowerBasis.constr_pow_aeval
+-/
 
+#print PowerBasis.constr_pow_gen /-
 theorem constr_pow_gen (pb : PowerBasis A S) {y : S'} (hy : aeval y (minpoly A pb.gen) = 0) :
     pb.Basis.constr A (fun i => y ^ (i : ℕ)) pb.gen = y := by
   convert pb.constr_pow_aeval hy X <;> rw [aeval_X]
 #align power_basis.constr_pow_gen PowerBasis.constr_pow_gen
+-/
 
+#print PowerBasis.constr_pow_algebraMap /-
 theorem constr_pow_algebraMap (pb : PowerBasis A S) {y : S'} (hy : aeval y (minpoly A pb.gen) = 0)
     (x : A) : pb.Basis.constr A (fun i => y ^ (i : ℕ)) (algebraMap A S x) = algebraMap A S' x := by
   convert pb.constr_pow_aeval hy (C x) <;> rw [aeval_C]
 #align power_basis.constr_pow_algebra_map PowerBasis.constr_pow_algebraMap
+-/
 
+#print PowerBasis.constr_pow_mul /-
 theorem constr_pow_mul (pb : PowerBasis A S) {y : S'} (hy : aeval y (minpoly A pb.gen) = 0)
     (x x' : S) :
     pb.Basis.constr A (fun i => y ^ (i : ℕ)) (x * x') =
@@ -329,7 +356,9 @@ theorem constr_pow_mul (pb : PowerBasis A S) {y : S'} (hy : aeval y (minpoly A p
   obtain ⟨g, rfl⟩ := pb.exists_eq_aeval' x'
   simp only [← aeval_mul, pb.constr_pow_aeval hy]
 #align power_basis.constr_pow_mul PowerBasis.constr_pow_mul
+-/
 
+#print PowerBasis.lift /-
 /-- `pb.lift y hy` is the algebra map sending `pb.gen` to `y`,
 where `hy` states the higher powers of `y` are the same as the higher powers of `pb.gen`.
 
@@ -347,19 +376,25 @@ noncomputable def lift (pb : PowerBasis A S) (y : S') (hy : aeval y (minpoly A p
     map_mul' := pb.constr_pow_mul hy
     commutes' := pb.constr_pow_algebraMap hy }
 #align power_basis.lift PowerBasis.lift
+-/
 
+#print PowerBasis.lift_gen /-
 @[simp]
 theorem lift_gen (pb : PowerBasis A S) (y : S') (hy : aeval y (minpoly A pb.gen) = 0) :
     pb.lift y hy pb.gen = y :=
   pb.constr_pow_gen hy
 #align power_basis.lift_gen PowerBasis.lift_gen
+-/
 
+#print PowerBasis.lift_aeval /-
 @[simp]
 theorem lift_aeval (pb : PowerBasis A S) (y : S') (hy : aeval y (minpoly A pb.gen) = 0) (f : A[X]) :
     pb.lift y hy (aeval pb.gen f) = aeval y f :=
   pb.constr_pow_aeval hy f
 #align power_basis.lift_aeval PowerBasis.lift_aeval
+-/
 
+#print PowerBasis.liftEquiv /-
 /-- `pb.lift_equiv` states that roots of the minimal polynomial of `pb.gen` correspond to
 maps sending `pb.gen` to that root.
 
@@ -376,6 +411,7 @@ noncomputable def liftEquiv (pb : PowerBasis A S) :
   left_inv f := pb.algHom_ext <| lift_gen _ _ _
   right_inv y := Subtype.ext <| lift_gen _ _ y.Prop
 #align power_basis.lift_equiv PowerBasis.liftEquiv
+-/
 
 #print PowerBasis.liftEquiv' /-
 /-- `pb.lift_equiv'` states that elements of the root set of the minimal
@@ -400,6 +436,7 @@ noncomputable def AlgHom.fintype (pb : PowerBasis A S) : Fintype (S →ₐ[A] B)
 #align power_basis.alg_hom.fintype PowerBasis.AlgHom.fintype
 -/
 
+#print PowerBasis.equivOfRoot /-
 /-- `pb.equiv_of_root pb' h₁ h₂` is an equivalence of algebras with the same power basis,
 where "the same" means that `pb` is a root of `pb'`s minimal polynomial and vice versa.
 
@@ -414,27 +451,34 @@ noncomputable def equivOfRoot (pb : PowerBasis A S) (pb' : PowerBasis A S')
     (by ext x; obtain ⟨f, hf, rfl⟩ := pb'.exists_eq_aeval' x; simp)
     (by ext x; obtain ⟨f, hf, rfl⟩ := pb.exists_eq_aeval' x; simp)
 #align power_basis.equiv_of_root PowerBasis.equivOfRoot
+-/
 
+#print PowerBasis.equivOfRoot_aeval /-
 @[simp]
 theorem equivOfRoot_aeval (pb : PowerBasis A S) (pb' : PowerBasis A S')
     (h₁ : aeval pb.gen (minpoly A pb'.gen) = 0) (h₂ : aeval pb'.gen (minpoly A pb.gen) = 0)
     (f : A[X]) : pb.equivOfRoot pb' h₁ h₂ (aeval pb.gen f) = aeval pb'.gen f :=
   pb.lift_aeval _ h₂ _
 #align power_basis.equiv_of_root_aeval PowerBasis.equivOfRoot_aeval
+-/
 
+#print PowerBasis.equivOfRoot_gen /-
 @[simp]
 theorem equivOfRoot_gen (pb : PowerBasis A S) (pb' : PowerBasis A S')
     (h₁ : aeval pb.gen (minpoly A pb'.gen) = 0) (h₂ : aeval pb'.gen (minpoly A pb.gen) = 0) :
     pb.equivOfRoot pb' h₁ h₂ pb.gen = pb'.gen :=
   pb.lift_gen _ h₂
 #align power_basis.equiv_of_root_gen PowerBasis.equivOfRoot_gen
+-/
 
+#print PowerBasis.equivOfRoot_symm /-
 @[simp]
 theorem equivOfRoot_symm (pb : PowerBasis A S) (pb' : PowerBasis A S')
     (h₁ : aeval pb.gen (minpoly A pb'.gen) = 0) (h₂ : aeval pb'.gen (minpoly A pb.gen) = 0) :
     (pb.equivOfRoot pb' h₁ h₂).symm = pb'.equivOfRoot pb h₂ h₁ :=
   rfl
 #align power_basis.equiv_of_root_symm PowerBasis.equivOfRoot_symm
+-/
 
 #print PowerBasis.equivOfMinpoly /-
 /-- `pb.equiv_of_minpoly pb' h` is an equivalence of algebras with the same power basis,
@@ -450,25 +494,31 @@ noncomputable def equivOfMinpoly (pb : PowerBasis A S) (pb' : PowerBasis A S')
 #align power_basis.equiv_of_minpoly PowerBasis.equivOfMinpoly
 -/
 
+#print PowerBasis.equivOfMinpoly_aeval /-
 @[simp]
 theorem equivOfMinpoly_aeval (pb : PowerBasis A S) (pb' : PowerBasis A S')
     (h : minpoly A pb.gen = minpoly A pb'.gen) (f : A[X]) :
     pb.equivOfMinpoly pb' h (aeval pb.gen f) = aeval pb'.gen f :=
   pb.equivOfRoot_aeval pb' _ _ _
 #align power_basis.equiv_of_minpoly_aeval PowerBasis.equivOfMinpoly_aeval
+-/
 
+#print PowerBasis.equivOfMinpoly_gen /-
 @[simp]
 theorem equivOfMinpoly_gen (pb : PowerBasis A S) (pb' : PowerBasis A S')
     (h : minpoly A pb.gen = minpoly A pb'.gen) : pb.equivOfMinpoly pb' h pb.gen = pb'.gen :=
   pb.equivOfRoot_gen pb' _ _
 #align power_basis.equiv_of_minpoly_gen PowerBasis.equivOfMinpoly_gen
+-/
 
+#print PowerBasis.equivOfMinpoly_symm /-
 @[simp]
 theorem equivOfMinpoly_symm (pb : PowerBasis A S) (pb' : PowerBasis A S')
     (h : minpoly A pb.gen = minpoly A pb'.gen) :
     (pb.equivOfMinpoly pb' h).symm = pb'.equivOfMinpoly pb h.symm :=
   rfl
 #align power_basis.equiv_of_minpoly_symm PowerBasis.equivOfMinpoly_symm
+-/
 
 end Equiv
 
@@ -476,6 +526,7 @@ end PowerBasis
 
 open PowerBasis
 
+#print linearIndependent_pow /-
 /-- Useful lemma to show `x` generates a power basis:
 the powers of `x` less than the degree of `x`'s minimal polynomial are linearly independent. -/
 theorem linearIndependent_pow [Algebra K S] (x : S) :
@@ -493,7 +544,9 @@ theorem linearIndependent_pow [Algebra K S] (x : S) :
     simp_rw [map_sum, lcoeff_apply, coeff_monomial, Fin.val_eq_val, Finset.sum_ite_eq'] at h0 
     exact (if_pos <| Finset.mem_univ _).symm.trans h0
 #align linear_independent_pow linearIndependent_pow
+-/
 
+#print IsIntegral.mem_span_pow /-
 theorem IsIntegral.mem_span_pow [Nontrivial R] {x y : S} (hx : IsIntegral R x)
     (hy : ∃ f : R[X], y = aeval x f) :
     y ∈ Submodule.span R (Set.range fun i : Fin (minpoly R x).natDegree => x ^ (i : ℕ)) :=
@@ -505,6 +558,7 @@ theorem IsIntegral.mem_span_pow [Nontrivial R] {x y : S} (hx : IsIntegral R x)
   conv_lhs => rw [← mod_by_monic_add_div f this]
   simp only [add_zero, MulZeroClass.zero_mul, minpoly.aeval, aeval_add, AlgHom.map_mul]
 #align is_integral.mem_span_pow IsIntegral.mem_span_pow
+-/
 
 namespace PowerBasis
 
@@ -526,6 +580,7 @@ noncomputable def map (pb : PowerBasis R S) (e : S ≃ₐ[R] S') : PowerBasis R 
 
 variable [Algebra A S] [Algebra A S']
 
+#print PowerBasis.minpolyGen_map /-
 @[simp]
 theorem minpolyGen_map (pb : PowerBasis A S) (e : S ≃ₐ[A] S') :
     (pb.map e).minpolyGen = pb.minpolyGen :=
@@ -536,18 +591,23 @@ theorem minpolyGen_map (pb : PowerBasis A S) (e : S ≃ₐ[A] S') :
     AlgEquiv.toLinearEquiv_apply, e.to_linear_equiv_symm, AlgEquiv.map_pow,
     AlgEquiv.symm_apply_apply, sub_right_inj]
 #align power_basis.minpoly_gen_map PowerBasis.minpolyGen_map
+-/
 
+#print PowerBasis.equivOfRoot_map /-
 @[simp]
 theorem equivOfRoot_map (pb : PowerBasis A S) (e : S ≃ₐ[A] S') (h₁ h₂) :
     pb.equivOfRoot (pb.map e) h₁ h₂ = e := by ext x; obtain ⟨f, rfl⟩ := pb.exists_eq_aeval' x;
   simp [aeval_alg_equiv]
 #align power_basis.equiv_of_root_map PowerBasis.equivOfRoot_map
+-/
 
+#print PowerBasis.equivOfMinpoly_map /-
 @[simp]
 theorem equivOfMinpoly_map (pb : PowerBasis A S) (e : S ≃ₐ[A] S')
     (h : minpoly A pb.gen = minpoly A (pb.map e).gen) : pb.equivOfMinpoly (pb.map e) h = e :=
   pb.equivOfRoot_map _ _ _
 #align power_basis.equiv_of_minpoly_map PowerBasis.equivOfMinpoly_map
+-/
 
 end Map
 
@@ -555,6 +615,7 @@ section Adjoin
 
 open Algebra
 
+#print PowerBasis.adjoin_gen_eq_top /-
 theorem adjoin_gen_eq_top (B : PowerBasis R S) : adjoin R ({B.gen} : Set S) = ⊤ :=
   by
   rw [← to_submodule_eq_top, _root_.eq_top_iff, ← B.basis.span_eq, Submodule.span_le]
@@ -562,7 +623,9 @@ theorem adjoin_gen_eq_top (B : PowerBasis R S) : adjoin R ({B.gen} : Set S) = �
   rw [B.basis_eq_pow i]
   exact Subalgebra.pow_mem _ (subset_adjoin (Set.mem_singleton _)) _
 #align power_basis.adjoin_gen_eq_top PowerBasis.adjoin_gen_eq_top
+-/
 
+#print PowerBasis.adjoin_eq_top_of_gen_mem_adjoin /-
 theorem adjoin_eq_top_of_gen_mem_adjoin {B : PowerBasis R S} {x : S}
     (hx : B.gen ∈ adjoin R ({x} : Set S)) : adjoin R ({x} : Set S) = ⊤ :=
   by
@@ -570,6 +633,7 @@ theorem adjoin_eq_top_of_gen_mem_adjoin {B : PowerBasis R S} {x : S}
   refine' adjoin_le _
   simp [hx]
 #align power_basis.adjoin_eq_top_of_gen_mem_adjoin PowerBasis.adjoin_eq_top_of_gen_mem_adjoin
+-/
 
 end Adjoin
 

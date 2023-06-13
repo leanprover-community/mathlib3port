@@ -157,11 +157,13 @@ section
 -- but the appropriate structure has not been defined.
 variable [CompleteLattice α]
 
+#print CategoryTheory.Pairwise.coconeιApp /-
 /-- Auxiliary definition for `cocone`. -/
 def coconeιApp : ∀ o : Pairwise ι, diagramObj U o ⟶ iSup U
   | single i => homOfLE (le_iSup U i)
   | pair i j => homOfLE inf_le_left ≫ homOfLE (le_iSup U i)
 #align category_theory.pairwise.cocone_ι_app CategoryTheory.Pairwise.coconeιApp
+-/
 
 #print CategoryTheory.Pairwise.cocone /-
 /-- Given a function `U : ι → α` for `[complete_lattice α]`,

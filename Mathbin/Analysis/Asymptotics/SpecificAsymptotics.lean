@@ -28,6 +28,7 @@ open scoped Topology
 
 section NormedField
 
+#print Filter.IsBoundedUnder.isLittleO_sub_self_inv /-
 /-- If `f : 𝕜 → E` is bounded in a punctured neighborhood of `a`, then `f(x) = o((x - a)⁻¹)` as
 `x → a`, `x ≠ a`. -/
 theorem Filter.IsBoundedUnder.isLittleO_sub_self_inv {𝕜 E : Type _} [NormedField 𝕜] [Norm E] {a : 𝕜}
@@ -38,6 +39,7 @@ theorem Filter.IsBoundedUnder.isLittleO_sub_self_inv {𝕜 E : Type _} [NormedFi
   simp only [(· ∘ ·), norm_inv]
   exact (tendsto_norm_sub_self_punctured_nhds a).inv_tendsto_zero
 #align filter.is_bounded_under.is_o_sub_self_inv Filter.IsBoundedUnder.isLittleO_sub_self_inv
+-/
 
 end NormedField
 
@@ -45,19 +47,23 @@ section LinearOrderedField
 
 variable {𝕜 : Type _} [LinearOrderedField 𝕜]
 
+#print pow_div_pow_eventuallyEq_atTop /-
 theorem pow_div_pow_eventuallyEq_atTop {p q : ℕ} :
     (fun x : 𝕜 => x ^ p / x ^ q) =ᶠ[atTop] fun x => x ^ ((p : ℤ) - q) :=
   by
   apply (eventually_gt_at_top (0 : 𝕜)).mono fun x hx => _
   simp [zpow_sub₀ hx.ne']
 #align pow_div_pow_eventually_eq_at_top pow_div_pow_eventuallyEq_atTop
+-/
 
+#print pow_div_pow_eventuallyEq_atBot /-
 theorem pow_div_pow_eventuallyEq_atBot {p q : ℕ} :
     (fun x : 𝕜 => x ^ p / x ^ q) =ᶠ[atBot] fun x => x ^ ((p : ℤ) - q) :=
   by
   apply (eventually_lt_at_bot (0 : 𝕜)).mono fun x hx => _
   simp [zpow_sub₀ hx.ne]
 #align pow_div_pow_eventually_eq_at_bot pow_div_pow_eventuallyEq_atBot
+-/
 
 #print tendsto_zpow_atTop_atTop /-
 theorem tendsto_zpow_atTop_atTop {n : ℤ} (hn : 0 < n) : Tendsto (fun x : 𝕜 => x ^ n) atTop atTop :=
@@ -68,6 +74,7 @@ theorem tendsto_zpow_atTop_atTop {n : ℤ} (hn : 0 < n) : Tendsto (fun x : 𝕜 
 #align tendsto_zpow_at_top_at_top tendsto_zpow_atTop_atTop
 -/
 
+#print tendsto_pow_div_pow_atTop_atTop /-
 theorem tendsto_pow_div_pow_atTop_atTop {p q : ℕ} (hpq : q < p) :
     Tendsto (fun x : 𝕜 => x ^ p / x ^ q) atTop atTop :=
   by
@@ -75,7 +82,9 @@ theorem tendsto_pow_div_pow_atTop_atTop {p q : ℕ} (hpq : q < p) :
   apply tendsto_zpow_atTop_atTop
   linarith
 #align tendsto_pow_div_pow_at_top_at_top tendsto_pow_div_pow_atTop_atTop
+-/
 
+#print tendsto_pow_div_pow_atTop_zero /-
 theorem tendsto_pow_div_pow_atTop_zero [TopologicalSpace 𝕜] [OrderTopology 𝕜] {p q : ℕ}
     (hpq : p < q) : Tendsto (fun x : 𝕜 => x ^ p / x ^ q) atTop (𝓝 0) :=
   by
@@ -83,6 +92,7 @@ theorem tendsto_pow_div_pow_atTop_zero [TopologicalSpace 𝕜] [OrderTopology �
   apply tendsto_zpow_atTop_zero
   linarith
 #align tendsto_pow_div_pow_at_top_zero tendsto_pow_div_pow_atTop_zero
+-/
 
 end LinearOrderedField
 
@@ -90,12 +100,14 @@ section NormedLinearOrderedField
 
 variable {𝕜 : Type _} [NormedLinearOrderedField 𝕜]
 
+#print Asymptotics.isLittleO_pow_pow_atTop_of_lt /-
 theorem Asymptotics.isLittleO_pow_pow_atTop_of_lt [OrderTopology 𝕜] {p q : ℕ} (hpq : p < q) :
     (fun x : 𝕜 => x ^ p) =o[atTop] fun x => x ^ q :=
   by
   refine' (is_o_iff_tendsto' _).mpr (tendsto_pow_div_pow_atTop_zero hpq)
   exact (eventually_gt_at_top 0).mono fun x hx hxq => (pow_ne_zero q hx.ne' hxq).elim
 #align asymptotics.is_o_pow_pow_at_top_of_lt Asymptotics.isLittleO_pow_pow_atTop_of_lt
+-/
 
 #print Asymptotics.IsBigO.trans_tendsto_norm_atTop /-
 theorem Asymptotics.IsBigO.trans_tendsto_norm_atTop {α : Type _} {u v : α → 𝕜} {l : Filter α}
@@ -117,6 +129,7 @@ open scoped BigOperators
 
 open Finset
 
+#print Asymptotics.IsLittleO.sum_range /-
 theorem Asymptotics.IsLittleO.sum_range {α : Type _} [NormedAddCommGroup α] {f : ℕ → α} {g : ℕ → ℝ}
     (h : f =o[atTop] g) (hg : 0 ≤ g) (h'g : Tendsto (fun n => ∑ i in range n, g i) atTop atTop) :
     (fun n => ∑ i in range n, f i) =o[atTop] fun n => ∑ i in range n, g i :=
@@ -152,7 +165,9 @@ theorem Asymptotics.IsLittleO.sum_range {α : Type _} [NormedAddCommGroup α] {f
       exact add_le_add hn (mul_le_mul_of_nonneg_left le_rfl (half_pos εpos).le)
     _ = ε * ‖∑ i in range n, g i‖ := by simp [B]; ring
 #align asymptotics.is_o.sum_range Asymptotics.IsLittleO.sum_range
+-/
 
+#print Asymptotics.isLittleO_sum_range_of_tendsto_zero /-
 theorem Asymptotics.isLittleO_sum_range_of_tendsto_zero {α : Type _} [NormedAddCommGroup α]
     {f : ℕ → α} (h : Tendsto f atTop (𝓝 0)) :
     (fun n => ∑ i in range n, f i) =o[atTop] fun n => (n : ℝ) :=
@@ -161,7 +176,9 @@ theorem Asymptotics.isLittleO_sum_range_of_tendsto_zero {α : Type _} [NormedAdd
   simp only [sum_const, card_range, Nat.smul_one_eq_coe] at this 
   exact this tendsto_nat_cast_atTop_atTop
 #align asymptotics.is_o_sum_range_of_tendsto_zero Asymptotics.isLittleO_sum_range_of_tendsto_zero
+-/
 
+#print Filter.Tendsto.cesaro_smul /-
 /-- The Cesaro average of a converging sequence converges to the same limit. -/
 theorem Filter.Tendsto.cesaro_smul {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] {u : ℕ → E}
     {l : E} (h : Tendsto u atTop (𝓝 l)) :
@@ -178,12 +195,15 @@ theorem Filter.Tendsto.cesaro_smul {E : Type _} [NormedAddCommGroup E] [NormedSp
     have nposℝ : (0 : ℝ) < n := Nat.cast_pos.2 npos
     rw [Algebra.id.smul_eq_mul, inv_mul_cancel nposℝ.ne']
 #align filter.tendsto.cesaro_smul Filter.Tendsto.cesaro_smul
+-/
 
+#print Filter.Tendsto.cesaro /-
 /-- The Cesaro average of a converging sequence converges to the same limit. -/
 theorem Filter.Tendsto.cesaro {u : ℕ → ℝ} {l : ℝ} (h : Tendsto u atTop (𝓝 l)) :
     Tendsto (fun n : ℕ => (n⁻¹ : ℝ) * ∑ i in range n, u i) atTop (𝓝 l) :=
   h.cesaro_smul
 #align filter.tendsto.cesaro Filter.Tendsto.cesaro
+-/
 
 end Real
 

@@ -119,18 +119,23 @@ variable [TopologicalSpace M] [Monoid M] [TopologicalSpace X]
 instance : TopologicalSpace Mˣ :=
   Prod.topologicalSpace.induced (embedProduct M)
 
+#print Units.inducing_embedProduct /-
 @[to_additive]
 theorem inducing_embedProduct : Inducing (embedProduct M) :=
   ⟨rfl⟩
 #align units.inducing_embed_product Units.inducing_embedProduct
 #align add_units.inducing_embed_product AddUnits.inducing_embedProduct
+-/
 
+#print Units.embedding_embedProduct /-
 @[to_additive]
 theorem embedding_embedProduct : Embedding (embedProduct M) :=
   ⟨inducing_embedProduct, embedProduct_injective M⟩
 #align units.embedding_embed_product Units.embedding_embedProduct
 #align add_units.embedding_embed_product AddUnits.embedding_embedProduct
+-/
 
+#print Units.topology_eq_inf /-
 @[to_additive]
 theorem topology_eq_inf :
     Units.topologicalSpace =
@@ -142,7 +147,9 @@ theorem topology_eq_inf :
     rfl
 #align units.topology_eq_inf Units.topology_eq_inf
 #align add_units.topology_eq_inf AddUnits.topology_eq_inf
+-/
 
+#print Units.embedding_val_mk /-
 /-- An auxiliary lemma that can be used to prove that coercion `Mˣ → M` is a topological embedding.
 Use `units.coe_embedding₀`, `units.coe_embedding`, or `to_units_homeomorph` instead. -/
 @[to_additive
@@ -157,19 +164,25 @@ theorem embedding_val_mk {M : Type _} [DivisionMonoid M] [TopologicalSpace M]
   exact ⟨_, mem_inf_principal.1 (h u u.is_unit hs), fun u' hu' => hu' u'.IsUnit⟩
 #align units.embedding_coe_mk Units.embedding_val_mk
 #align add_units.embedding_coe_mk AddUnits.embedding_val_mk
+-/
 
+#print Units.continuous_embedProduct /-
 @[to_additive]
 theorem continuous_embedProduct : Continuous (embedProduct M) :=
   continuous_induced_dom
 #align units.continuous_embed_product Units.continuous_embedProduct
 #align add_units.continuous_embed_product AddUnits.continuous_embedProduct
+-/
 
+#print Units.continuous_val /-
 @[to_additive]
 theorem continuous_val : Continuous (coe : Mˣ → M) :=
   (@continuous_embedProduct M _ _).fst
 #align units.continuous_coe Units.continuous_val
 #align add_units.continuous_coe AddUnits.continuous_val
+-/
 
+#print Units.continuous_iff /-
 @[to_additive]
 protected theorem continuous_iff {f : X → Mˣ} :
     Continuous f ↔ Continuous (coe ∘ f : X → M) ∧ Continuous (fun x => ↑(f x)⁻¹ : X → M) := by
@@ -178,12 +191,15 @@ protected theorem continuous_iff {f : X → Mˣ} :
     unop_op]
 #align units.continuous_iff Units.continuous_iff
 #align add_units.continuous_iff AddUnits.continuous_iff
+-/
 
+#print Units.continuous_coe_inv /-
 @[to_additive]
 theorem continuous_coe_inv : Continuous (fun u => ↑u⁻¹ : Mˣ → M) :=
   (Units.continuous_iff.1 continuous_id).2
 #align units.continuous_coe_inv Units.continuous_coe_inv
 #align add_units.continuous_coe_neg AddUnits.continuous_coe_neg
+-/
 
 end Units
 

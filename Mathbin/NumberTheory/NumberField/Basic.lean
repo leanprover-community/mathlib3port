@@ -56,8 +56,6 @@ namespace NumberField
 
 variable (K L : Type _) [Field K] [Field L] [nf : NumberField K]
 
-include nf
-
 -- See note [lower instance priority]
 attribute [instance] NumberField.to_charZero NumberField.to_finiteDimensional
 
@@ -65,15 +63,12 @@ protected theorem isAlgebraic : Algebra.IsAlgebraic ℚ K :=
   Algebra.isAlgebraic_of_finite _ _
 #align number_field.is_algebraic NumberField.isAlgebraic
 
-omit nf
-
 /-- The ring of integers (or number ring) corresponding to a number field
 is the integral closure of ℤ in the number field. -/
 def ringOfIntegers :=
   integralClosure ℤ K
 #align number_field.ring_of_integers NumberField.ringOfIntegers
 
--- mathport name: ring_of_integers
 scoped notation "𝓞" => NumberField.ringOfIntegers
 
 theorem mem_ringOfIntegers (x : K) : x ∈ 𝓞 K ↔ IsIntegral ℤ x :=
@@ -134,8 +129,6 @@ protected noncomputable def equiv (R : Type _) [CommRing R] [Algebra R K]
 
 variable (K)
 
-include nf
-
 instance : CharZero (𝓞 K) :=
   CharZero.of_module _ K
 
@@ -167,8 +160,6 @@ noncomputable def basis : Basis (Free.ChooseBasisIndex ℤ (𝓞 K)) ℤ (𝓞 K
 #align number_field.ring_of_integers.basis NumberField.ringOfIntegers.basis
 
 end RingOfIntegers
-
-include nf
 
 /-- A basis of `K` over `ℚ` that is also a basis of `𝓞 K` over `ℤ`. -/
 noncomputable def integralBasis : Basis (Free.ChooseBasisIndex ℤ (𝓞 K)) ℚ K :=

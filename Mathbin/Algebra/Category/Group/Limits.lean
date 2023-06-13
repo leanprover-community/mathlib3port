@@ -38,12 +38,15 @@ variable {J : Type v} [SmallCategory J]
 
 namespace GroupCat
 
+#print GroupCat.groupObj /-
 @[to_additive]
 instance groupObj (F : J ⥤ GroupCat.{max v u}) (j) : Group ((F ⋙ forget GroupCat).obj j) := by
   change Group (F.obj j); infer_instance
 #align Group.group_obj GroupCat.groupObj
 #align AddGroup.add_group_obj AddGroupCat.addGroupObj
+-/
 
+#print GroupCat.sectionsSubgroup /-
 /-- The flat sections of a functor into `Group` form a subgroup of all sections.
 -/
 @[to_additive
@@ -61,6 +64,7 @@ def sectionsSubgroup (F : J ⥤ GroupCat) : Subgroup (∀ j, F.obj j) :=
       rw [ah f] }
 #align Group.sections_subgroup GroupCat.sectionsSubgroup
 #align AddGroup.sections_add_subgroup AddGroupCat.sectionsAddSubgroup
+-/
 
 #print GroupCat.limitGroup /-
 @[to_additive]
@@ -189,11 +193,13 @@ end GroupCat
 
 namespace CommGroupCat
 
+#print CommGroupCat.commGroupObj /-
 @[to_additive]
 instance commGroupObj (F : J ⥤ CommGroupCat.{max v u}) (j) :
     CommGroup ((F ⋙ forget CommGroupCat).obj j) := by change CommGroup (F.obj j); infer_instance
 #align CommGroup.comm_group_obj CommGroupCat.commGroupObj
 #align AddCommGroup.add_comm_group_obj AddCommGroupCat.addCommGroupObj
+-/
 
 #print CommGroupCat.limitCommGroup /-
 @[to_additive]
@@ -295,6 +301,7 @@ instance forget₂GroupPreservesLimits : PreservesLimits (forget₂ CommGroupCat
 #align AddCommGroup.forget₂_Group_preserves_limits AddCommGroupCat.forget₂AddGroupPreservesLimits
 -/
 
+#print CommGroupCat.forget₂CommMonPreservesLimitsAux /-
 /-- An auxiliary declaration to speed up typechecking.
 -/
 @[to_additive AddCommGroupCat.forget₂AddCommMonPreservesLimitsAux
@@ -304,6 +311,7 @@ def forget₂CommMonPreservesLimitsAux (F : J ⥤ CommGroupCat.{max v u}) :
   CommMonCat.limitConeIsLimit (F ⋙ forget₂ CommGroupCat CommMonCat)
 #align CommGroup.forget₂_CommMon_preserves_limits_aux CommGroupCat.forget₂CommMonPreservesLimitsAux
 #align AddCommGroup.forget₂_AddCommMon_preserves_limits_aux AddCommGroupCat.forget₂AddCommMonPreservesLimitsAux
+-/
 
 #print CommGroupCat.forget₂CommMonPreservesLimitsOfSize /-
 /-- The forgetful functor from commutative groups to commutative monoids preserves all limits.
@@ -345,6 +353,7 @@ end CommGroupCat
 
 namespace AddCommGroupCat
 
+#print AddCommGroupCat.kernelIsoKer /-
 /-- The categorical kernel of a morphism in `AddCommGroup`
 agrees with the usual group-theoretical kernel.
 -/
@@ -367,12 +376,16 @@ def kernelIsoKer {G H : AddCommGroupCat.{u}} (f : G ⟶ H) : kernel f ≅ AddCom
     rintro ⟨x, mem⟩
     simp
 #align AddCommGroup.kernel_iso_ker AddCommGroupCat.kernelIsoKer
+-/
 
+#print AddCommGroupCat.kernelIsoKer_hom_comp_subtype /-
 @[simp]
 theorem kernelIsoKer_hom_comp_subtype {G H : AddCommGroupCat} (f : G ⟶ H) :
     (kernelIsoKer f).Hom ≫ AddSubgroup.subtype f.ker = kernel.ι f := by ext <;> rfl
 #align AddCommGroup.kernel_iso_ker_hom_comp_subtype AddCommGroupCat.kernelIsoKer_hom_comp_subtype
+-/
 
+#print AddCommGroupCat.kernelIsoKer_inv_comp_ι /-
 @[simp]
 theorem kernelIsoKer_inv_comp_ι {G H : AddCommGroupCat} (f : G ⟶ H) :
     (kernelIsoKer f).inv ≫ kernel.ι f = AddSubgroup.subtype f.ker :=
@@ -380,7 +393,9 @@ theorem kernelIsoKer_inv_comp_ι {G H : AddCommGroupCat} (f : G ⟶ H) :
   ext
   simp [kernel_iso_ker]
 #align AddCommGroup.kernel_iso_ker_inv_comp_ι AddCommGroupCat.kernelIsoKer_inv_comp_ι
+-/
 
+#print AddCommGroupCat.kernelIsoKerOver /-
 /-- The categorical kernel inclusion for `f : G ⟶ H`, as an object over `G`,
 agrees with the `subtype` map.
 -/
@@ -389,6 +404,7 @@ def kernelIsoKerOver {G H : AddCommGroupCat.{u}} (f : G ⟶ H) :
     Over.mk (kernel.ι f) ≅ @Over.mk _ _ G (AddCommGroupCat.of f.ker) (AddSubgroup.subtype f.ker) :=
   Over.isoMk (kernelIsoKer f) (by simp)
 #align AddCommGroup.kernel_iso_ker_over AddCommGroupCat.kernelIsoKerOver
+-/
 
 end AddCommGroupCat
 

@@ -76,6 +76,7 @@ theorem ultrafilter_isClosed_basic (s : Set α) : IsClosed {u : Ultrafilter α |
 #align ultrafilter_is_closed_basic ultrafilter_isClosed_basic
 -/
 
+#print ultrafilter_converges_iff /-
 /-- Every ultrafilter `u` on `ultrafilter α` converges to a unique
   point of `ultrafilter α`, namely `mjoin u`. -/
 theorem ultrafilter_converges_iff {u : Ultrafilter (Ultrafilter α)} {x : Ultrafilter α} :
@@ -88,6 +89,7 @@ theorem ultrafilter_converges_iff {u : Ultrafilter (Ultrafilter α)} {x : Ultraf
   · intro h a ha; exact h _ ⟨ha, a, rfl⟩
   · rintro h a ⟨xi, a, rfl⟩; exact h _ xi
 #align ultrafilter_converges_iff ultrafilter_converges_iff
+-/
 
 #print ultrafilter_compact /-
 instance ultrafilter_compact : CompactSpace (Ultrafilter α) :=
@@ -118,6 +120,7 @@ instance : TotallyDisconnectedSpace (Ultrafilter α) :=
   have hZ : IsClopen Z := ⟨ultrafilter_isOpen_basic s, ultrafilter_isClosed_basic s⟩
   exact hB ⟨Z, hZ, hs⟩
 
+#print ultrafilter_comap_pure_nhds /-
 theorem ultrafilter_comap_pure_nhds (b : Ultrafilter α) : comap pure (𝓝 b) ≤ b :=
   by
   rw [TopologicalSpace.nhds_generateFrom]
@@ -128,9 +131,11 @@ theorem ultrafilter_comap_pure_nhds (b : Ultrafilter α) : comap pure (𝓝 b) �
   refine' iInf_le_of_le ⟨hs, ⟨s, rfl⟩⟩ _
   exact principal_mono.2 fun a => id
 #align ultrafilter_comap_pure_nhds ultrafilter_comap_pure_nhds
+-/
 
 section Embedding
 
+#print ultrafilter_pure_injective /-
 theorem ultrafilter_pure_injective : Function.Injective (pure : α → Ultrafilter α) :=
   by
   intro x y h
@@ -138,15 +143,19 @@ theorem ultrafilter_pure_injective : Function.Injective (pure : α → Ultrafilt
   rw [h] at this 
   exact (mem_singleton_iff.mp (mem_pure.mp this)).symm
 #align ultrafilter_pure_injective ultrafilter_pure_injective
+-/
 
 open TopologicalSpace
 
+#print denseRange_pure /-
 /-- The range of `pure : α → ultrafilter α` is dense in `ultrafilter α`. -/
 theorem denseRange_pure : DenseRange (pure : α → Ultrafilter α) := fun x =>
   mem_closure_iff_ultrafilter.mpr
     ⟨x.map pure, range_mem_map, ultrafilter_converges_iff.mpr (bind_pure x).symm⟩
 #align dense_range_pure denseRange_pure
+-/
 
+#print induced_topology_pure /-
 /-- The map `pure : α → ultra_filter α` induces on `α` the discrete topology. -/
 theorem induced_topology_pure :
     TopologicalSpace.induced (pure : α → Ultrafilter α) Ultrafilter.topologicalSpace = ⊥ :=
@@ -156,19 +165,24 @@ theorem induced_topology_pure :
   use {u : Ultrafilter α | {x} ∈ u}, ultrafilter_isOpen_basic _
   simp
 #align induced_topology_pure induced_topology_pure
+-/
 
+#print denseInducing_pure /-
 /-- `pure : α → ultrafilter α` defines a dense inducing of `α` in `ultrafilter α`. -/
 theorem denseInducing_pure : @DenseInducing _ _ ⊥ _ (pure : α → Ultrafilter α) :=
   letI : TopologicalSpace α := ⊥
   ⟨⟨induced_topology_pure.symm⟩, denseRange_pure⟩
 #align dense_inducing_pure denseInducing_pure
+-/
 
+#print denseEmbedding_pure /-
 -- The following refined version will never be used
 /-- `pure : α → ultrafilter α` defines a dense embedding of `α` in `ultrafilter α`. -/
 theorem denseEmbedding_pure : @DenseEmbedding _ _ ⊥ _ (pure : α → Ultrafilter α) :=
   letI : TopologicalSpace α := ⊥
   { denseInducing_pure with inj := ultrafilter_pure_injective }
 #align dense_embedding_pure denseEmbedding_pure
+-/
 
 end Embedding
 
@@ -192,15 +206,18 @@ def Ultrafilter.extend (f : α → γ) : Ultrafilter α → γ :=
 
 variable [T2Space γ]
 
+#print ultrafilter_extend_extends /-
 theorem ultrafilter_extend_extends (f : α → γ) : Ultrafilter.extend f ∘ pure = f :=
   by
   letI : TopologicalSpace α := ⊥
   haveI : DiscreteTopology α := ⟨rfl⟩
   exact funext (dense_inducing_pure.extend_eq continuous_of_discreteTopology)
 #align ultrafilter_extend_extends ultrafilter_extend_extends
+-/
 
 variable [CompactSpace γ]
 
+#print continuous_ultrafilter_extend /-
 theorem continuous_ultrafilter_extend (f : α → γ) : Continuous (Ultrafilter.extend f) :=
   by
   have : ∀ b : Ultrafilter α, ∃ c, Tendsto f (comap pure (𝓝 b)) (𝓝 c) := fun b =>
@@ -212,7 +229,9 @@ theorem continuous_ultrafilter_extend (f : α → γ) : Continuous (Ultrafilter.
   haveI : NormalSpace γ := normalOfCompactT2
   exact dense_inducing_pure.continuous_extend this
 #align continuous_ultrafilter_extend continuous_ultrafilter_extend
+-/
 
+#print ultrafilter_extend_eq_iff /-
 /-- The value of `ultrafilter.extend f` on an ultrafilter `b` is the
   unique limit of the ultrafilter `b.map f` in `γ`. -/
 theorem ultrafilter_extend_eq_iff {f : α → γ} {b : Ultrafilter α} {c : γ} :
@@ -233,6 +252,7 @@ theorem ultrafilter_extend_eq_iff {f : α → γ} {b : Ultrafilter α} {c : γ} 
     dense_inducing_pure.extend_eq_of_tendsto
       (le_trans (map_mono (ultrafilter_comap_pure_nhds _)) h)⟩
 #align ultrafilter_extend_eq_iff ultrafilter_extend_eq_iff
+-/
 
 end Extension
 
@@ -331,6 +351,7 @@ theorem stoneCech_hom_ext {g₁ g₂ : StoneCech α → γ'} (h₁ : Continuous 
 
 end Extension
 
+#print convergent_eqv_pure /-
 theorem convergent_eqv_pure {u : Ultrafilter α} {x : α} (ux : ↑u ≤ 𝓝 x) : u ≈ pure x :=
   fun γ tγ h₁ h₂ f hf => by
   skip
@@ -338,6 +359,7 @@ theorem convergent_eqv_pure {u : Ultrafilter α} {x : α} (ux : ↑u ≤ 𝓝 x)
   all_goals refine' ultrafilter_extend_eq_iff.mpr (le_trans (map_mono _) (hf.tendsto _))
   · apply pure_le_nhds; · exact ux
 #align convergent_eqv_pure convergent_eqv_pure
+-/
 
 #print continuous_stoneCechUnit /-
 theorem continuous_stoneCechUnit : Continuous (stoneCechUnit : α → StoneCech α) :=

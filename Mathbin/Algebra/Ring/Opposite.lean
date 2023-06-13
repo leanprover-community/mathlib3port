@@ -187,6 +187,7 @@ end AddOpposite
 
 open MulOpposite
 
+#print NonUnitalRingHom.toOpposite /-
 /-- A non-unital ring homomorphism `f : R →ₙ+* S` such that `f x` commutes with `f y` for all `x, y`
 defines a non-unital ring homomorphism to `Sᵐᵒᵖ`. -/
 @[simps (config := { fullyApplied := false })]
@@ -195,7 +196,9 @@ def NonUnitalRingHom.toOpposite {R S : Type _} [NonUnitalNonAssocSemiring R]
   { ((opAddEquiv : S ≃+ Sᵐᵒᵖ).toAddMonoidHom.comp ↑f : R →+ Sᵐᵒᵖ), f.toMulHom.toOpposite hf with
     toFun := MulOpposite.op ∘ f }
 #align non_unital_ring_hom.to_opposite NonUnitalRingHom.toOpposite
+-/
 
+#print NonUnitalRingHom.fromOpposite /-
 /-- A non-unital ring homomorphism `f : R →ₙ* S` such that `f x` commutes with `f y` for all `x, y`
 defines a non-unital ring homomorphism from `Rᵐᵒᵖ`. -/
 @[simps (config := { fullyApplied := false })]
@@ -204,6 +207,7 @@ def NonUnitalRingHom.fromOpposite {R S : Type _} [NonUnitalNonAssocSemiring R]
   { (f.toAddMonoidHom.comp (opAddEquiv : R ≃+ Rᵐᵒᵖ).symm.toAddMonoidHom : Rᵐᵒᵖ →+ S),
     f.toMulHom.fromOpposite hf with toFun := f ∘ MulOpposite.unop }
 #align non_unital_ring_hom.from_opposite NonUnitalRingHom.fromOpposite
+-/
 
 #print NonUnitalRingHom.op /-
 /-- A non-unital ring hom `α →ₙ+* β` can equivalently be viewed as a non-unital ring hom
@@ -229,6 +233,7 @@ def NonUnitalRingHom.unop {α β} [NonUnitalNonAssocSemiring α] [NonUnitalNonAs
 #align non_unital_ring_hom.unop NonUnitalRingHom.unop
 -/
 
+#print RingHom.toOpposite /-
 /-- A ring homomorphism `f : R →+* S` such that `f x` commutes with `f y` for all `x, y` defines
 a ring homomorphism to `Sᵐᵒᵖ`. -/
 @[simps (config := { fullyApplied := false })]
@@ -237,7 +242,9 @@ def RingHom.toOpposite {R S : Type _} [Semiring R] [Semiring S] (f : R →+* S)
   { ((opAddEquiv : S ≃+ Sᵐᵒᵖ).toAddMonoidHom.comp ↑f : R →+ Sᵐᵒᵖ), f.toMonoidHom.toOpposite hf with
     toFun := MulOpposite.op ∘ f }
 #align ring_hom.to_opposite RingHom.toOpposite
+-/
 
+#print RingHom.fromOpposite /-
 /-- A ring homomorphism `f : R →+* S` such that `f x` commutes with `f y` for all `x, y` defines
 a ring homomorphism from `Rᵐᵒᵖ`. -/
 @[simps (config := { fullyApplied := false })]
@@ -246,6 +253,7 @@ def RingHom.fromOpposite {R S : Type _} [Semiring R] [Semiring S] (f : R →+* S
   { (f.toAddMonoidHom.comp (opAddEquiv : R ≃+ Rᵐᵒᵖ).symm.toAddMonoidHom : Rᵐᵒᵖ →+ S),
     f.toMonoidHom.fromOpposite hf with toFun := f ∘ MulOpposite.unop }
 #align ring_hom.from_opposite RingHom.fromOpposite
+-/
 
 #print RingHom.op /-
 /-- A ring hom `α →+* β` can equivalently be viewed as a ring hom `αᵐᵒᵖ →+* βᵐᵒᵖ`. This is the

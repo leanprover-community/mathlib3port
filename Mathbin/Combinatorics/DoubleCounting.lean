@@ -71,14 +71,18 @@ theorem bipartiteBelow_swap : t.bipartiteBelow (swap r) a = t.bipartiteAbove r a
 #align finset.bipartite_below_swap Finset.bipartiteBelow_swap
 -/
 
+#print Finset.bipartiteAbove_swap /-
 theorem bipartiteAbove_swap : s.bipartiteAbove (swap r) b = s.bipartiteBelow r b :=
   rfl
 #align finset.bipartite_above_swap Finset.bipartiteAbove_swap
+-/
 
+#print Finset.coe_bipartiteBelow /-
 @[simp, norm_cast]
 theorem coe_bipartiteBelow : (s.bipartiteBelow r b : Set α) = {a ∈ s | r a b} :=
   coe_filter _ _
 #align finset.coe_bipartite_below Finset.coe_bipartiteBelow
+-/
 
 #print Finset.coe_bipartiteAbove /-
 @[simp, norm_cast]
@@ -89,10 +93,12 @@ theorem coe_bipartiteAbove : (t.bipartiteAbove r a : Set β) = {b ∈ t | r a b}
 
 variable {s t a a' b b'}
 
+#print Finset.mem_bipartiteBelow /-
 @[simp]
 theorem mem_bipartiteBelow {a : α} : a ∈ s.bipartiteBelow r b ↔ a ∈ s ∧ r a b :=
   mem_filter
 #align finset.mem_bipartite_below Finset.mem_bipartiteBelow
+-/
 
 #print Finset.mem_bipartiteAbove /-
 @[simp]
@@ -101,11 +107,14 @@ theorem mem_bipartiteAbove {b : β} : b ∈ t.bipartiteAbove r a ↔ b ∈ t ∧
 #align finset.mem_bipartite_above Finset.mem_bipartiteAbove
 -/
 
+#print Finset.sum_card_bipartiteAbove_eq_sum_card_bipartiteBelow /-
 theorem sum_card_bipartiteAbove_eq_sum_card_bipartiteBelow [∀ a b, Decidable (r a b)] :
     ∑ a in s, (t.bipartiteAbove r a).card = ∑ b in t, (s.bipartiteBelow r b).card := by
   simp_rw [card_eq_sum_ones, bipartite_above, bipartite_below, sum_filter]; exact sum_comm
 #align finset.sum_card_bipartite_above_eq_sum_card_bipartite_below Finset.sum_card_bipartiteAbove_eq_sum_card_bipartiteBelow
+-/
 
+#print Finset.card_mul_le_card_mul /-
 /-- Double counting argument. Considering `r` as a bipartite graph, the LHS is a lower bound on the
 number of edges while the RHS is an upper bound. -/
 theorem card_mul_le_card_mul [∀ a b, Decidable (r a b)]
@@ -117,6 +126,7 @@ theorem card_mul_le_card_mul [∀ a b, Decidable (r a b)]
       (sum_card_bipartiteAbove_eq_sum_card_bipartiteBelow _)
     _ ≤ _ := t.sum_le_card_nsmul _ _ hn
 #align finset.card_mul_le_card_mul Finset.card_mul_le_card_mul
+-/
 
 #print Finset.card_mul_le_card_mul' /-
 theorem card_mul_le_card_mul' [∀ a b, Decidable (r a b)]
@@ -126,13 +136,16 @@ theorem card_mul_le_card_mul' [∀ a b, Decidable (r a b)]
 #align finset.card_mul_le_card_mul' Finset.card_mul_le_card_mul'
 -/
 
+#print Finset.card_mul_eq_card_mul /-
 theorem card_mul_eq_card_mul [∀ a b, Decidable (r a b)]
     (hm : ∀ a ∈ s, (t.bipartiteAbove r a).card = m)
     (hn : ∀ b ∈ t, (s.bipartiteBelow r b).card = n) : s.card * m = t.card * n :=
   (card_mul_le_card_mul _ (fun a ha => (hm a ha).ge) fun b hb => (hn b hb).le).antisymm <|
     card_mul_le_card_mul' _ (fun a ha => (hn a ha).ge) fun b hb => (hm b hb).le
 #align finset.card_mul_eq_card_mul Finset.card_mul_eq_card_mul
+-/
 
+#print Finset.card_le_card_of_forall_subsingleton /-
 theorem card_le_card_of_forall_subsingleton (hs : ∀ a ∈ s, ∃ b, b ∈ t ∧ r a b)
     (ht : ∀ b ∈ t, ({a ∈ s | r a b} : Set α).Subsingleton) : s.card ≤ t.card := by
   classical simpa using
@@ -143,6 +156,7 @@ theorem card_le_card_of_forall_subsingleton (hs : ∀ a ∈ s, ∃ b, b ∈ t �
             (t.bipartite_above r a).Nonempty))
       fun b h => card_le_one.2 <| by simp_rw [mem_bipartite_below]; exact ht _ h
 #align finset.card_le_card_of_forall_subsingleton Finset.card_le_card_of_forall_subsingleton
+-/
 
 #print Finset.card_le_card_of_forall_subsingleton' /-
 theorem card_le_card_of_forall_subsingleton' (ht : ∀ b ∈ t, ∃ a, a ∈ s ∧ r a b)
@@ -161,15 +175,19 @@ namespace Fintype
 
 variable [Fintype α] [Fintype β] {r : α → β → Prop}
 
+#print Fintype.card_le_card_of_leftTotal_unique /-
 theorem card_le_card_of_leftTotal_unique (h₁ : LeftTotal r) (h₂ : LeftUnique r) :
     Fintype.card α ≤ Fintype.card β :=
   card_le_card_of_forall_subsingleton r (by simpa using h₁) fun b _ a₁ ha₁ a₂ ha₂ => h₂ ha₁.2 ha₂.2
 #align fintype.card_le_card_of_left_total_unique Fintype.card_le_card_of_leftTotal_unique
+-/
 
+#print Fintype.card_le_card_of_rightTotal_unique /-
 theorem card_le_card_of_rightTotal_unique (h₁ : RightTotal r) (h₂ : RightUnique r) :
     Fintype.card β ≤ Fintype.card α :=
   card_le_card_of_forall_subsingleton' r (by simpa using h₁) fun b _ a₁ ha₁ a₂ ha₂ => h₂ ha₁.2 ha₂.2
 #align fintype.card_le_card_of_right_total_unique Fintype.card_le_card_of_rightTotal_unique
+-/
 
 end Fintype
 

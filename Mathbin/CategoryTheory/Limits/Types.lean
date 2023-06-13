@@ -78,19 +78,24 @@ instance hasLimitsOfSize : HasLimitsOfSize.{v} (Type max v u)
 instance : HasLimits (Type u) :=
   Types.hasLimitsOfSize.{u, u}
 
+#print CategoryTheory.Limits.Types.isLimitEquivSections /-
 /-- The equivalence between a limiting cone of `F` in `Type u` and the "concrete" definition as the
 sections of `F`.
 -/
 def isLimitEquivSections {F : J ⥤ Type max v u} {c : Cone F} (t : IsLimit c) : c.pt ≃ F.sections :=
   (IsLimit.conePointUniqueUpToIso t (limitConeIsLimit F)).toEquiv
 #align category_theory.limits.types.is_limit_equiv_sections CategoryTheory.Limits.Types.isLimitEquivSections
+-/
 
+#print CategoryTheory.Limits.Types.isLimitEquivSections_apply /-
 @[simp]
 theorem isLimitEquivSections_apply {F : J ⥤ Type max v u} {c : Cone F} (t : IsLimit c) (j : J)
     (x : c.pt) : ((isLimitEquivSections t) x : ∀ j, F.obj j) j = c.π.app j x :=
   rfl
 #align category_theory.limits.types.is_limit_equiv_sections_apply CategoryTheory.Limits.Types.isLimitEquivSections_apply
+-/
 
+#print CategoryTheory.Limits.Types.isLimitEquivSections_symm_apply /-
 @[simp]
 theorem isLimitEquivSections_symm_apply {F : J ⥤ Type max v u} {c : Cone F} (t : IsLimit c)
     (x : F.sections) (j : J) : c.π.app j ((isLimitEquivSections t).symm x) = (x : ∀ j, F.obj j) j :=
@@ -98,7 +103,9 @@ theorem isLimitEquivSections_symm_apply {F : J ⥤ Type max v u} {c : Cone F} (t
   equiv_rw (is_limit_equiv_sections t).symm at x 
   simp
 #align category_theory.limits.types.is_limit_equiv_sections_symm_apply CategoryTheory.Limits.Types.isLimitEquivSections_symm_apply
+-/
 
+#print CategoryTheory.Limits.Types.limitEquivSections /-
 /-- The equivalence between the abstract limit of `F` in `Type u`
 and the "concrete" definition as the sections of `F`.
 -/
@@ -106,18 +113,23 @@ noncomputable def limitEquivSections (F : J ⥤ Type max v u) :
     (limit F : Type max v u) ≃ F.sections :=
   isLimitEquivSections (limit.isLimit _)
 #align category_theory.limits.types.limit_equiv_sections CategoryTheory.Limits.Types.limitEquivSections
+-/
 
+#print CategoryTheory.Limits.Types.limitEquivSections_apply /-
 @[simp]
 theorem limitEquivSections_apply (F : J ⥤ Type max v u) (x : limit F) (j : J) :
     ((limitEquivSections F) x : ∀ j, F.obj j) j = limit.π F j x :=
   rfl
 #align category_theory.limits.types.limit_equiv_sections_apply CategoryTheory.Limits.Types.limitEquivSections_apply
+-/
 
+#print CategoryTheory.Limits.Types.limitEquivSections_symm_apply /-
 @[simp]
 theorem limitEquivSections_symm_apply (F : J ⥤ Type max v u) (x : F.sections) (j : J) :
     limit.π F j ((limitEquivSections F).symm x) = (x : ∀ j, F.obj j) j :=
   isLimitEquivSections_symm_apply _ _ _
 #align category_theory.limits.types.limit_equiv_sections_symm_apply CategoryTheory.Limits.Types.limitEquivSections_symm_apply
+-/
 
 @[simp]
 theorem limitEquivSections_symm_apply' (F : J ⥤ Type v) (x : F.sections) (j : J) :
@@ -125,6 +137,7 @@ theorem limitEquivSections_symm_apply' (F : J ⥤ Type v) (x : F.sections) (j : 
   isLimitEquivSections_symm_apply _ _ _
 #align category_theory.limits.types.limit_equiv_sections_symm_apply' CategoryTheory.Limits.Types.limitEquivSections_symm_apply'
 
+#print CategoryTheory.Limits.Types.Limit.mk /-
 /-- Construct a term of `limit F : Type u` from a family of terms `x : Π j, F.obj j`
 which are "coherent": `∀ (j j') (f : j ⟶ j'), F.map f (x j) = x j'`.
 -/
@@ -133,12 +146,15 @@ noncomputable def Limit.mk (F : J ⥤ Type max v u) (x : ∀ j, F.obj j)
     (h : ∀ (j j') (f : j ⟶ j'), F.map f (x j) = x j') : (limit F : Type max v u) :=
   (limitEquivSections F).symm ⟨x, h⟩
 #align category_theory.limits.types.limit.mk CategoryTheory.Limits.Types.Limit.mk
+-/
 
+#print CategoryTheory.Limits.Types.Limit.π_mk /-
 @[simp]
 theorem Limit.π_mk (F : J ⥤ Type max v u) (x : ∀ j, F.obj j)
     (h : ∀ (j j') (f : j ⟶ j'), F.map f (x j) = x j') (j) : limit.π F j (Limit.mk F x h) = x j := by
   dsimp [limit.mk]; simp
 #align category_theory.limits.types.limit.π_mk CategoryTheory.Limits.Types.Limit.π_mk
+-/
 
 @[simp]
 theorem Limit.π_mk' (F : J ⥤ Type v) (x : ∀ j, F.obj j)
@@ -146,6 +162,7 @@ theorem Limit.π_mk' (F : J ⥤ Type v) (x : ∀ j, F.obj j)
     limit.π F j (Limit.mk.{v, v} F x h) = x j := by dsimp [limit.mk]; simp
 #align category_theory.limits.types.limit.π_mk' CategoryTheory.Limits.Types.Limit.π_mk'
 
+#print CategoryTheory.Limits.Types.limit_ext /-
 -- PROJECT: prove this for concrete categories where the forgetful functor preserves limits
 @[ext]
 theorem limit_ext (F : J ⥤ Type max v u) (x y : limit F) (w : ∀ j, limit.π F j x = limit.π F j y) :
@@ -154,7 +171,9 @@ theorem limit_ext (F : J ⥤ Type max v u) (x y : limit F) (w : ∀ j, limit.π 
   ext j
   simp [w j]
 #align category_theory.limits.types.limit_ext CategoryTheory.Limits.Types.limit_ext
+-/
 
+#print CategoryTheory.Limits.Types.limit_ext' /-
 @[ext]
 theorem limit_ext' (F : J ⥤ Type v) (x y : limit F) (w : ∀ j, limit.π F j x = limit.π F j y) :
     x = y := by
@@ -162,17 +181,23 @@ theorem limit_ext' (F : J ⥤ Type v) (x y : limit F) (w : ∀ j, limit.π F j x
   ext j
   simp [w j]
 #align category_theory.limits.types.limit_ext' CategoryTheory.Limits.Types.limit_ext'
+-/
 
+#print CategoryTheory.Limits.Types.limit_ext_iff /-
 theorem limit_ext_iff (F : J ⥤ Type max v u) (x y : limit F) :
     x = y ↔ ∀ j, limit.π F j x = limit.π F j y :=
   ⟨fun t _ => t ▸ rfl, limit_ext _ _ _⟩
 #align category_theory.limits.types.limit_ext_iff CategoryTheory.Limits.Types.limit_ext_iff
+-/
 
+#print CategoryTheory.Limits.Types.limit_ext_iff' /-
 theorem limit_ext_iff' (F : J ⥤ Type v) (x y : limit F) :
     x = y ↔ ∀ j, limit.π F j x = limit.π F j y :=
   ⟨fun t _ => t ▸ rfl, limit_ext _ _ _⟩
 #align category_theory.limits.types.limit_ext_iff' CategoryTheory.Limits.Types.limit_ext_iff'
+-/
 
+#print CategoryTheory.Limits.Types.Limit.w_apply /-
 -- TODO: are there other limits lemmas that should have `_apply` versions?
 -- Can we generate these like with `@[reassoc]`?
 -- PROJECT: prove these for any concrete category where the forgetful functor preserves limits?
@@ -181,37 +206,49 @@ theorem Limit.w_apply {F : J ⥤ Type max v u} {j j' : J} {x : limit F} (f : j �
     F.map f (limit.π F j x) = limit.π F j' x :=
   congr_fun (limit.w F f) x
 #align category_theory.limits.types.limit.w_apply CategoryTheory.Limits.Types.Limit.w_apply
+-/
 
+#print CategoryTheory.Limits.Types.Limit.lift_π_apply /-
 @[simp]
 theorem Limit.lift_π_apply (F : J ⥤ Type max v u) (s : Cone F) (j : J) (x : s.pt) :
     limit.π F j (limit.lift F s x) = s.π.app j x :=
   congr_fun (limit.lift_π s j) x
 #align category_theory.limits.types.limit.lift_π_apply CategoryTheory.Limits.Types.Limit.lift_π_apply
+-/
 
+#print CategoryTheory.Limits.Types.Limit.map_π_apply /-
 @[simp]
 theorem Limit.map_π_apply {F G : J ⥤ Type max v u} (α : F ⟶ G) (j : J) (x) :
     limit.π G j (limMap α x) = α.app j (limit.π F j x) :=
   congr_fun (limMap_π α j) x
 #align category_theory.limits.types.limit.map_π_apply CategoryTheory.Limits.Types.Limit.map_π_apply
+-/
 
+#print CategoryTheory.Limits.Types.Limit.w_apply' /-
 @[simp]
 theorem Limit.w_apply' {F : J ⥤ Type v} {j j' : J} {x : limit F} (f : j ⟶ j') :
     F.map f (limit.π F j x) = limit.π F j' x :=
   congr_fun (limit.w F f) x
 #align category_theory.limits.types.limit.w_apply' CategoryTheory.Limits.Types.Limit.w_apply'
+-/
 
+#print CategoryTheory.Limits.Types.Limit.lift_π_apply' /-
 @[simp]
 theorem Limit.lift_π_apply' (F : J ⥤ Type v) (s : Cone F) (j : J) (x : s.pt) :
     limit.π F j (limit.lift F s x) = s.π.app j x :=
   congr_fun (limit.lift_π s j) x
 #align category_theory.limits.types.limit.lift_π_apply' CategoryTheory.Limits.Types.Limit.lift_π_apply'
+-/
 
+#print CategoryTheory.Limits.Types.Limit.map_π_apply' /-
 @[simp]
 theorem Limit.map_π_apply' {F G : J ⥤ Type v} (α : F ⟶ G) (j : J) (x) :
     limit.π G j (limMap α x) = α.app j (limit.π F j x) :=
   congr_fun (limMap_π α j) x
 #align category_theory.limits.types.limit.map_π_apply' CategoryTheory.Limits.Types.Limit.map_π_apply'
+-/
 
+#print CategoryTheory.Limits.Types.Quot.Rel /-
 /--
 The relation defining the quotient type which implements the colimit of a functor `F : J ⥤ Type u`.
 See `category_theory.limits.types.quot`.
@@ -219,6 +256,7 @@ See `category_theory.limits.types.quot`.
 def Quot.Rel (F : J ⥤ Type max v u) : (Σ j, F.obj j) → (Σ j, F.obj j) → Prop := fun p p' =>
   ∃ f : p.1 ⟶ p'.1, p'.2 = F.map f p.2
 #align category_theory.limits.types.quot.rel CategoryTheory.Limits.Types.Quot.Rel
+-/
 
 #print CategoryTheory.Limits.Types.Quot /-
 /-- A quotient type implementing the colimit of a functor `F : J ⥤ Type u`,
@@ -282,12 +320,15 @@ noncomputable def colimitEquivQuot (F : J ⥤ Type max v u) : (colimit F : Type 
 #align category_theory.limits.types.colimit_equiv_quot CategoryTheory.Limits.Types.colimitEquivQuot
 -/
 
+#print CategoryTheory.Limits.Types.colimitEquivQuot_symm_apply /-
 @[simp]
 theorem colimitEquivQuot_symm_apply (F : J ⥤ Type max v u) (j : J) (x : F.obj j) :
     (colimitEquivQuot F).symm (Quot.mk _ ⟨j, x⟩) = colimit.ι F j x :=
   rfl
 #align category_theory.limits.types.colimit_equiv_quot_symm_apply CategoryTheory.Limits.Types.colimitEquivQuot_symm_apply
+-/
 
+#print CategoryTheory.Limits.Types.colimitEquivQuot_apply /-
 @[simp]
 theorem colimitEquivQuot_apply (F : J ⥤ Type max v u) (j : J) (x : F.obj j) :
     (colimitEquivQuot F) (colimit.ι F j x) = Quot.mk _ ⟨j, x⟩ :=
@@ -295,50 +336,66 @@ theorem colimitEquivQuot_apply (F : J ⥤ Type max v u) (j : J) (x : F.obj j) :
   apply (colimit_equiv_quot F).symm.Injective
   simp
 #align category_theory.limits.types.colimit_equiv_quot_apply CategoryTheory.Limits.Types.colimitEquivQuot_apply
+-/
 
+#print CategoryTheory.Limits.Types.Colimit.w_apply /-
 @[simp]
 theorem Colimit.w_apply {F : J ⥤ Type max v u} {j j' : J} {x : F.obj j} (f : j ⟶ j') :
     colimit.ι F j' (F.map f x) = colimit.ι F j x :=
   congr_fun (colimit.w F f) x
 #align category_theory.limits.types.colimit.w_apply CategoryTheory.Limits.Types.Colimit.w_apply
+-/
 
+#print CategoryTheory.Limits.Types.Colimit.ι_desc_apply /-
 @[simp]
 theorem Colimit.ι_desc_apply (F : J ⥤ Type max v u) (s : Cocone F) (j : J) (x : F.obj j) :
     colimit.desc F s (colimit.ι F j x) = s.ι.app j x :=
   congr_fun (colimit.ι_desc s j) x
 #align category_theory.limits.types.colimit.ι_desc_apply CategoryTheory.Limits.Types.Colimit.ι_desc_apply
+-/
 
+#print CategoryTheory.Limits.Types.Colimit.ι_map_apply /-
 @[simp]
 theorem Colimit.ι_map_apply {F G : J ⥤ Type max v u} (α : F ⟶ G) (j : J) (x) :
     colim.map α (colimit.ι F j x) = colimit.ι G j (α.app j x) :=
   congr_fun (colimit.ι_map α j) x
 #align category_theory.limits.types.colimit.ι_map_apply CategoryTheory.Limits.Types.Colimit.ι_map_apply
+-/
 
+#print CategoryTheory.Limits.Types.Colimit.w_apply' /-
 @[simp]
 theorem Colimit.w_apply' {F : J ⥤ Type v} {j j' : J} {x : F.obj j} (f : j ⟶ j') :
     colimit.ι F j' (F.map f x) = colimit.ι F j x :=
   congr_fun (colimit.w F f) x
 #align category_theory.limits.types.colimit.w_apply' CategoryTheory.Limits.Types.Colimit.w_apply'
+-/
 
+#print CategoryTheory.Limits.Types.Colimit.ι_desc_apply' /-
 @[simp]
 theorem Colimit.ι_desc_apply' (F : J ⥤ Type v) (s : Cocone F) (j : J) (x : F.obj j) :
     colimit.desc F s (colimit.ι F j x) = s.ι.app j x :=
   congr_fun (colimit.ι_desc s j) x
 #align category_theory.limits.types.colimit.ι_desc_apply' CategoryTheory.Limits.Types.Colimit.ι_desc_apply'
+-/
 
+#print CategoryTheory.Limits.Types.Colimit.ι_map_apply' /-
 @[simp]
 theorem Colimit.ι_map_apply' {F G : J ⥤ Type v} (α : F ⟶ G) (j : J) (x) :
     colim.map α (colimit.ι F j x) = colimit.ι G j (α.app j x) :=
   congr_fun (colimit.ι_map α j) x
 #align category_theory.limits.types.colimit.ι_map_apply' CategoryTheory.Limits.Types.Colimit.ι_map_apply'
+-/
 
+#print CategoryTheory.Limits.Types.colimit_sound /-
 theorem colimit_sound {F : J ⥤ Type max v u} {j j' : J} {x : F.obj j} {x' : F.obj j'} (f : j ⟶ j')
     (w : F.map f x = x') : colimit.ι F j x = colimit.ι F j' x' :=
   by
   rw [← w]
   simp
 #align category_theory.limits.types.colimit_sound CategoryTheory.Limits.Types.colimit_sound
+-/
 
+#print CategoryTheory.Limits.Types.colimit_sound' /-
 theorem colimit_sound' {F : J ⥤ Type max v u} {j j' : J} {x : F.obj j} {x' : F.obj j'} {j'' : J}
     (f : j ⟶ j'') (f' : j' ⟶ j'') (w : F.map f x = F.map f' x') :
     colimit.ι F j x = colimit.ι F j' x' :=
@@ -346,14 +403,18 @@ theorem colimit_sound' {F : J ⥤ Type max v u} {j j' : J} {x : F.obj j} {x' : F
   rw [← colimit.w _ f, ← colimit.w _ f']
   rw [types_comp_apply, types_comp_apply, w]
 #align category_theory.limits.types.colimit_sound' CategoryTheory.Limits.Types.colimit_sound'
+-/
 
+#print CategoryTheory.Limits.Types.colimit_eq /-
 theorem colimit_eq {F : J ⥤ Type max v u} {j j' : J} {x : F.obj j} {x' : F.obj j'}
     (w : colimit.ι F j x = colimit.ι F j' x') : EqvGen (Quot.Rel F) ⟨j, x⟩ ⟨j', x'⟩ :=
   by
   apply Quot.eq.1
   simpa using congr_arg (colimit_equiv_quot F) w
 #align category_theory.limits.types.colimit_eq CategoryTheory.Limits.Types.colimit_eq
+-/
 
+#print CategoryTheory.Limits.Types.jointly_surjective /-
 theorem jointly_surjective (F : J ⥤ Type max v u) {t : Cocone F} (h : IsColimit t) (x : t.pt) :
     ∃ j y, t.ι.app j y = x :=
   by
@@ -368,11 +429,14 @@ theorem jointly_surjective (F : J ⥤ Type max v u) {t : Cocone F} (h : IsColimi
   erw [iff_true_iff]
   exact ⟨j, y, rfl⟩
 #align category_theory.limits.types.jointly_surjective CategoryTheory.Limits.Types.jointly_surjective
+-/
 
+#print CategoryTheory.Limits.Types.jointly_surjective' /-
 /-- A variant of `jointly_surjective` for `x : colimit F`. -/
 theorem jointly_surjective' {F : J ⥤ Type max v u} (x : colimit F) : ∃ j y, colimit.ι F j y = x :=
   jointly_surjective F (colimit.isColimit _) x
 #align category_theory.limits.types.jointly_surjective' CategoryTheory.Limits.Types.jointly_surjective'
+-/
 
 namespace FilteredColimit
 
@@ -381,6 +445,7 @@ namespace FilteredColimit
   the colimit.  -/
 variable (F : J ⥤ Type max v u)
 
+#print CategoryTheory.Limits.Types.FilteredColimit.Rel /-
 /-- An alternative relation on `Σ j, F.obj j`,
 which generates the same equivalence relation as we use to define the colimit in `Type` above,
 but that is more convenient when working with filtered colimits.
@@ -391,19 +456,25 @@ where their images are equal.
 protected def Rel (x y : Σ j, F.obj j) : Prop :=
   ∃ (k : _) (f : x.1 ⟶ k) (g : y.1 ⟶ k), F.map f x.2 = F.map g y.2
 #align category_theory.limits.types.filtered_colimit.rel CategoryTheory.Limits.Types.FilteredColimit.Rel
+-/
 
+#print CategoryTheory.Limits.Types.FilteredColimit.rel_of_quot_rel /-
 theorem rel_of_quot_rel (x y : Σ j, F.obj j) : Quot.Rel F x y → FilteredColimit.Rel F x y :=
   fun ⟨f, h⟩ => ⟨y.1, f, 𝟙 y.1, by rw [← h, functor_to_types.map_id_apply]⟩
 #align category_theory.limits.types.filtered_colimit.rel_of_quot_rel CategoryTheory.Limits.Types.FilteredColimit.rel_of_quot_rel
+-/
 
+#print CategoryTheory.Limits.Types.FilteredColimit.eqvGen_quot_rel_of_rel /-
 theorem eqvGen_quot_rel_of_rel (x y : Σ j, F.obj j) :
     FilteredColimit.Rel F x y → EqvGen (Quot.Rel F) x y := fun ⟨k, f, g, h⟩ =>
   EqvGen.trans _ ⟨k, F.map f x.2⟩ _ (EqvGen.rel _ _ ⟨f, rfl⟩)
     (EqvGen.symm _ _ (EqvGen.rel _ _ ⟨g, h⟩))
 #align category_theory.limits.types.filtered_colimit.eqv_gen_quot_rel_of_rel CategoryTheory.Limits.Types.FilteredColimit.eqvGen_quot_rel_of_rel
+-/
 
 attribute [local elab_without_expected_type] nat_trans.app
 
+#print CategoryTheory.Limits.Types.FilteredColimit.isColimitOf /-
 /-- Recognizing filtered colimits of types. -/
 noncomputable def isColimitOf (t : Cocone F) (hsurj : ∀ x : t.pt, ∃ i xi, x = t.ι.app i xi)
     (hinj :
@@ -435,9 +506,11 @@ noncomputable def isColimitOf (t : Cocone F) (hsurj : ∀ x : t.pt, ∃ i xi, x 
       simp
   · intro j; apply colimit.ι_desc
 #align category_theory.limits.types.filtered_colimit.is_colimit_of CategoryTheory.Limits.Types.FilteredColimit.isColimitOf
+-/
 
 variable [IsFilteredOrEmpty J]
 
+#print CategoryTheory.Limits.Types.FilteredColimit.rel_equiv /-
 protected theorem rel_equiv : Equivalence (FilteredColimit.Rel F) :=
   ⟨fun x => ⟨x.1, 𝟙 x.1, 𝟙 x.1, rfl⟩, fun x y ⟨k, f, g, h⟩ => ⟨k, g, f, h.symm⟩,
     fun x y z ⟨k, f, g, h⟩ ⟨k', f', g', h'⟩ =>
@@ -453,7 +526,9 @@ protected theorem rel_equiv : Equivalence (FilteredColimit.Rel F) :=
         _ = F.map (gl ≫ n) (F.map g' z.2) := by rw [h']
         _ = F.map (g' ≫ gl ≫ n) z.2 := by simp⟩⟩
 #align category_theory.limits.types.filtered_colimit.rel_equiv CategoryTheory.Limits.Types.FilteredColimit.rel_equiv
+-/
 
+#print CategoryTheory.Limits.Types.FilteredColimit.rel_eq_eqvGen_quot_rel /-
 protected theorem rel_eq_eqvGen_quot_rel : FilteredColimit.Rel F = EqvGen (Quot.Rel F) :=
   by
   ext (⟨j, x⟩⟨j', y⟩)
@@ -462,7 +537,9 @@ protected theorem rel_eq_eqvGen_quot_rel : FilteredColimit.Rel F = EqvGen (Quot.
   · rw [← (filtered_colimit.rel_equiv F).eqvGen_iff]
     exact EqvGen.mono (rel_of_quot_rel F)
 #align category_theory.limits.types.filtered_colimit.rel_eq_eqv_gen_quot_rel CategoryTheory.Limits.Types.FilteredColimit.rel_eq_eqvGen_quot_rel
+-/
 
+#print CategoryTheory.Limits.Types.FilteredColimit.colimit_eq_iff_aux /-
 theorem colimit_eq_iff_aux {i j : J} {xi : F.obj i} {xj : F.obj j} :
     (colimitCocone F).ι.app i xi = (colimitCocone F).ι.app j xj ↔
       FilteredColimit.Rel F ⟨i, xi⟩ ⟨j, xj⟩ :=
@@ -470,7 +547,9 @@ theorem colimit_eq_iff_aux {i j : J} {xi : F.obj i} {xj : F.obj j} :
   change Quot.mk _ _ = Quot.mk _ _ ↔ _
   rw [Quot.eq, filtered_colimit.rel_eq_eqv_gen_quot_rel]
 #align category_theory.limits.types.filtered_colimit.colimit_eq_iff_aux CategoryTheory.Limits.Types.FilteredColimit.colimit_eq_iff_aux
+-/
 
+#print CategoryTheory.Limits.Types.FilteredColimit.isColimit_eq_iff /-
 theorem isColimit_eq_iff {t : Cocone F} (ht : IsColimit t) {i j : J} {xi : F.obj i} {xj : F.obj j} :
     t.ι.app i xi = t.ι.app j xj ↔ ∃ (k : _) (f : i ⟶ k) (g : j ⟶ k), F.map f xi = F.map g xj :=
   by
@@ -480,12 +559,15 @@ theorem isColimit_eq_iff {t : Cocone F} (ht : IsColimit t) {i j : J} {xi : F.obj
   refine' Iff.trans _ (colimit_eq_iff_aux F)
   convert e'.to_equiv.apply_eq_iff_eq <;> rw [← e.hom.w] <;> rfl
 #align category_theory.limits.types.filtered_colimit.is_colimit_eq_iff CategoryTheory.Limits.Types.FilteredColimit.isColimit_eq_iff
+-/
 
+#print CategoryTheory.Limits.Types.FilteredColimit.colimit_eq_iff /-
 theorem colimit_eq_iff {i j : J} {xi : F.obj i} {xj : F.obj j} :
     colimit.ι F i xi = colimit.ι F j xj ↔
       ∃ (k : _) (f : i ⟶ k) (g : j ⟶ k), F.map f xi = F.map g xj :=
   isColimit_eq_iff _ (colimit.isColimit F)
 #align category_theory.limits.types.filtered_colimit.colimit_eq_iff CategoryTheory.Limits.Types.FilteredColimit.colimit_eq_iff
+-/
 
 end FilteredColimit
 

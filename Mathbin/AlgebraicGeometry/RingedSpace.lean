@@ -145,11 +145,13 @@ theorem mem_basicOpen {U : Opens X} (f : X.Presheaf.obj (op U)) (x : U) :
 #align algebraic_geometry.RingedSpace.mem_basic_open AlgebraicGeometry.RingedSpace.mem_basicOpen
 -/
 
+#print AlgebraicGeometry.RingedSpace.mem_top_basicOpen /-
 @[simp]
 theorem mem_top_basicOpen (f : X.Presheaf.obj (op ⊤)) (x : X) :
     x ∈ X.basicOpen f ↔ IsUnit (X.Presheaf.germ ⟨x, show x ∈ (⊤ : Opens X) by trivial⟩ f) :=
   mem_basicOpen X f ⟨x, _⟩
 #align algebraic_geometry.RingedSpace.mem_top_basic_open AlgebraicGeometry.RingedSpace.mem_top_basicOpen
+-/
 
 #print AlgebraicGeometry.RingedSpace.basicOpen_le /-
 theorem basicOpen_le {U : Opens X} (f : X.Presheaf.obj (op U)) : X.basicOpen f ≤ U := by

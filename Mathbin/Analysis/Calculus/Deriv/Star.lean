@@ -58,33 +58,45 @@ variable [StarRing 𝕜] [TrivialStar 𝕜] [StarAddMonoid F] [ContinuousStar F]
 
 variable [StarModule 𝕜 F]
 
+#print HasDerivAtFilter.star /-
 protected theorem HasDerivAtFilter.star (h : HasDerivAtFilter f f' x L) :
     HasDerivAtFilter (fun x => star (f x)) (star f') x L := by
   simpa using h.star.has_deriv_at_filter
 #align has_deriv_at_filter.star HasDerivAtFilter.star
+-/
 
+#print HasDerivWithinAt.star /-
 protected theorem HasDerivWithinAt.star (h : HasDerivWithinAt f f' s x) :
     HasDerivWithinAt (fun x => star (f x)) (star f') s x :=
   h.unit
 #align has_deriv_within_at.star HasDerivWithinAt.star
+-/
 
+#print HasDerivAt.star /-
 protected theorem HasDerivAt.star (h : HasDerivAt f f' x) :
     HasDerivAt (fun x => star (f x)) (star f') x :=
   h.unit
 #align has_deriv_at.star HasDerivAt.star
+-/
 
+#print HasStrictDerivAt.star /-
 protected theorem HasStrictDerivAt.star (h : HasStrictDerivAt f f' x) :
     HasStrictDerivAt (fun x => star (f x)) (star f') x := by simpa using h.star.has_strict_deriv_at
 #align has_strict_deriv_at.star HasStrictDerivAt.star
+-/
 
+#print derivWithin.star /-
 protected theorem derivWithin.star (hxs : UniqueDiffWithinAt 𝕜 s x) :
     derivWithin (fun y => star (f y)) s x = star (derivWithin f s x) :=
   FunLike.congr_fun (fderivWithin_star hxs) _
 #align deriv_within.star derivWithin.star
+-/
 
+#print deriv.star /-
 protected theorem deriv.star : deriv (fun y => star (f y)) x = star (deriv f x) :=
   FunLike.congr_fun fderiv_star _
 #align deriv.star deriv.star
+-/
 
 #print deriv.star' /-
 @[simp]

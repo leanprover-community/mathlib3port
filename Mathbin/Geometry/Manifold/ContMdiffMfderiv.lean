@@ -119,8 +119,6 @@ theorem Smooth.mdifferentiableWithinAt (hf : Smooth I I' f) : MdifferentiableWit
 
 section mfderiv
 
-include Is I's Js
-
 /-- The function that sends `x` to the `y`-derivative of `f(x,y)` at `g(x)` is `C^m` at `x₀`,
 where the derivative is taken as a continuous linear map.
 We have to assume that `f` is `C^n` at `(x₀, g(x₀))` for `n ≥ m + 1` and `g` is `C^m` at `x₀`.
@@ -250,8 +248,6 @@ theorem ContMdiffAt.mfderiv {x₀ : N} (f : N → M → M') (g : N → M)
   · rwa [extChartAt_source] at h2x 
 #align cont_mdiff_at.mfderiv ContMdiffAt.mfderiv
 
-omit Js
-
 /-- The derivative `D_yf(y)` is `C^m` at `x₀`, where the derivative is taken as a continuous
 linear map. We have to assume that `f` is `C^n` at `x₀` for some `n ≥ m + 1`.
 We have to insert a coordinate change from `x₀` to `x` to make the derivative sensible.
@@ -265,8 +261,6 @@ theorem ContMdiffAt.mfderiv_const {x₀ : M} {f : M → M'} (hf : ContMdiffAt I 
     ContMdiffAt.comp (x₀, x₀) hf contMdiffAt_snd
   this.mfderiv (fun x => f) id contMdiffAt_id hmn
 #align cont_mdiff_at.mfderiv_const ContMdiffAt.mfderiv_const
-
-include Js
 
 /-- The function that sends `x` to the `y`-derivative of `f(x,y)` at `g(x)` applied to `g₂(x)` is
 `C^n` at `x₀`, where the derivative is taken as a continuous linear map.
@@ -437,8 +431,6 @@ theorem ContMdiffOn.contMdiffOn_tangentMapWithin_aux {f : H → H'} {s : Set H}
   have := ContDiffOn.prod this cont_diff_snd.cont_diff_on
   exact is_bounded_bilinear_map_apply.cont_diff.comp_cont_diff_on this
 #align cont_mdiff_on.cont_mdiff_on_tangent_map_within_aux ContMdiffOn.contMdiffOn_tangentMapWithin_aux
-
-include Is I's
 
 /-- If a function is `C^n` on a domain with unique derivatives, then its bundled derivative
 is `C^m` when `m+1 ≤ n`. -/
@@ -664,8 +656,6 @@ theorem ContMdiff.continuous_tangentMap (hf : ContMdiff I I' n f) (hmn : 1 ≤ n
 end tangentMap
 
 namespace TangentBundle
-
-include Is
 
 variable (I M)
 

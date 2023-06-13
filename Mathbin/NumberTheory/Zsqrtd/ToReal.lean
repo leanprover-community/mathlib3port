@@ -34,10 +34,12 @@ noncomputable def toReal {d : ℤ} (h : 0 ≤ d) : ℤ√d →+* ℝ :=
 #align zsqrtd.to_real Zsqrtd.toReal
 -/
 
+#print Zsqrtd.toReal_injective /-
 theorem toReal_injective {d : ℤ} (h0d : 0 ≤ d) (hd : ∀ n : ℤ, d ≠ n * n) :
     Function.Injective (toReal h0d) :=
   lift_injective _ hd
 #align zsqrtd.to_real_injective Zsqrtd.toReal_injective
+-/
 
 end Zsqrtd
 

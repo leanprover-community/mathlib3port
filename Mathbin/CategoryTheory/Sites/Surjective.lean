@@ -43,6 +43,7 @@ attribute [local instance] concrete_category.has_coe_to_sort concrete_category.h
 
 variable {A : Type u'} [Category.{v'} A] [ConcreteCategory.{w'} A]
 
+#print CategoryTheory.imageSieve /-
 /-- Given `f : F ⟶ G`, a morphism between presieves, and `s : G.obj (op U)`, this is the sieve
 of `U` consisting of the `i : V ⟶ U` such that `s` restricted along `i` is in the image of `f`. -/
 @[simps (config := lemmasOnly)]
@@ -54,17 +55,23 @@ def imageSieve {F G : Cᵒᵖ ⥤ A} (f : F ⟶ G) {U : C} (s : G.obj (op U)) : 
     refine' ⟨F.map j.op t, _⟩
     rw [op_comp, G.map_comp, comp_apply, ← ht, elementwise_of f.naturality]
 #align category_theory.image_sieve CategoryTheory.imageSieve
+-/
 
+#print CategoryTheory.imageSieve_eq_sieveOfSection /-
 theorem imageSieve_eq_sieveOfSection {F G : Cᵒᵖ ⥤ A} (f : F ⟶ G) {U : C} (s : G.obj (op U)) :
     imageSieve f s = (imagePresheaf (whiskerRight f (forget A))).sieveOfSection s :=
   rfl
 #align category_theory.image_sieve_eq_sieve_of_section CategoryTheory.imageSieve_eq_sieveOfSection
+-/
 
+#print CategoryTheory.imageSieve_whisker_forget /-
 theorem imageSieve_whisker_forget {F G : Cᵒᵖ ⥤ A} (f : F ⟶ G) {U : C} (s : G.obj (op U)) :
     imageSieve (whiskerRight f (forget A)) s = imageSieve f s :=
   rfl
 #align category_theory.image_sieve_whisker_forget CategoryTheory.imageSieve_whisker_forget
+-/
 
+#print CategoryTheory.imageSieve_app /-
 theorem imageSieve_app {F G : Cᵒᵖ ⥤ A} (f : F ⟶ G) {U : C} (s : F.obj (op U)) :
     imageSieve f (f.app _ s) = ⊤ := by
   ext (V i)
@@ -72,6 +79,7 @@ theorem imageSieve_app {F G : Cᵒᵖ ⥤ A} (f : F ⟶ G) {U : C} (s : F.obj (o
   have := elementwise_of (f.naturality i.op)
   exact ⟨F.map i.op s, this s⟩
 #align category_theory.image_sieve_app CategoryTheory.imageSieve_app
+-/
 
 #print CategoryTheory.IsLocallySurjective /-
 /-- A morphism of presheaves `f : F ⟶ G` is locally surjective with respect to a grothendieck
@@ -81,6 +89,7 @@ def IsLocallySurjective {F G : Cᵒᵖ ⥤ A} (f : F ⟶ G) : Prop :=
 #align category_theory.is_locally_surjective CategoryTheory.IsLocallySurjective
 -/
 
+#print CategoryTheory.isLocallySurjective_iff_imagePresheaf_sheafify_eq_top /-
 theorem isLocallySurjective_iff_imagePresheaf_sheafify_eq_top {F G : Cᵒᵖ ⥤ A} (f : F ⟶ G) :
     IsLocallySurjective J f ↔ (imagePresheaf (whiskerRight f (forget A))).sheafify J = ⊤ :=
   by
@@ -88,7 +97,9 @@ theorem isLocallySurjective_iff_imagePresheaf_sheafify_eq_top {F G : Cᵒᵖ ⥤
     Set.top_eq_univ, Set.mem_univ, iff_true_iff]
   exact ⟨fun H U => H (unop U), fun H U => H (op U)⟩
 #align category_theory.is_locally_surjective_iff_image_presheaf_sheafify_eq_top CategoryTheory.isLocallySurjective_iff_imagePresheaf_sheafify_eq_top
+-/
 
+#print CategoryTheory.isLocallySurjective_iff_imagePresheaf_sheafify_eq_top' /-
 theorem isLocallySurjective_iff_imagePresheaf_sheafify_eq_top' {F G : Cᵒᵖ ⥤ Type w} (f : F ⟶ G) :
     IsLocallySurjective J f ↔ (imagePresheaf f).sheafify J = ⊤ :=
   by
@@ -96,6 +107,7 @@ theorem isLocallySurjective_iff_imagePresheaf_sheafify_eq_top' {F G : Cᵒᵖ �
     Set.top_eq_univ, Set.mem_univ, iff_true_iff]
   exact ⟨fun H U => H (unop U), fun H U => H (op U)⟩
 #align category_theory.is_locally_surjective_iff_image_presheaf_sheafify_eq_top' CategoryTheory.isLocallySurjective_iff_imagePresheaf_sheafify_eq_top'
+-/
 
 #print CategoryTheory.isLocallySurjective_iff_isIso /-
 theorem isLocallySurjective_iff_isIso {F G : Sheaf J (Type w)} (f : F ⟶ G) :
@@ -116,6 +128,7 @@ theorem isLocallySurjective_iff_whisker_forget {F G : Cᵒᵖ ⥤ A} (f : F ⟶ 
 #align category_theory.is_locally_surjective_iff_whisker_forget CategoryTheory.isLocallySurjective_iff_whisker_forget
 -/
 
+#print CategoryTheory.isLocallySurjective_of_surjective /-
 theorem isLocallySurjective_of_surjective {F G : Cᵒᵖ ⥤ A} (f : F ⟶ G)
     (H : ∀ U, Function.Surjective (f.app U)) : IsLocallySurjective J f :=
   by
@@ -124,6 +137,7 @@ theorem isLocallySurjective_of_surjective {F G : Cᵒᵖ ⥤ A} (f : F ⟶ G)
   rw [image_sieve_app]
   exact J.top_mem _
 #align category_theory.is_locally_surjective_of_surjective CategoryTheory.isLocallySurjective_of_surjective
+-/
 
 #print CategoryTheory.isLocallySurjective_of_iso /-
 theorem isLocallySurjective_of_iso {F G : Cᵒᵖ ⥤ A} (f : F ⟶ G) [IsIso f] :
@@ -193,6 +207,7 @@ variable {B : Type w} [Category.{max u v} B] [ConcreteCategory.{max u v} B]
   [∀ (α β : Type max u v) (fst snd : β → α),
       Limits.HasLimitsOfShape (Limits.WalkingMulticospan fst snd) B]
 
+#print CategoryTheory.toSheafify_isLocallySurjective /-
 theorem toSheafify_isLocallySurjective (F : Cᵒᵖ ⥤ B) : IsLocallySurjective J (J.toSheafify F) :=
   by
   rw [is_locally_surjective_iff_whisker_forget, ← to_sheafify_comp_sheafify_comp_iso_inv]
@@ -201,6 +216,7 @@ theorem toSheafify_isLocallySurjective (F : Cᵒᵖ ⥤ B) : IsLocallySurjective
     exact is_iso.of_iso_inv (sheafification_iso_image_presheaf J (F ⋙ forget B))
   · exact is_locally_surjective_of_iso _ _
 #align category_theory.to_sheafify_is_locally_surjective CategoryTheory.toSheafify_isLocallySurjective
+-/
 
 end
 

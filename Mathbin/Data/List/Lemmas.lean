@@ -50,6 +50,7 @@ theorem injOn_insertNth_index_of_not_mem (l : List α) (x : α) (hx : x ∉ l) :
 #align list.inj_on_insert_nth_index_of_not_mem List.injOn_insertNth_index_of_not_mem
 -/
 
+#print List.foldr_range_subset_of_range_subset /-
 theorem foldr_range_subset_of_range_subset {f : β → α → α} {g : γ → α → α}
     (hfg : Set.range f ⊆ Set.range g) (a : α) : Set.range (foldr f a) ⊆ Set.range (foldr g a) :=
   by
@@ -61,7 +62,9 @@ theorem foldr_range_subset_of_range_subset {f : β → α → α} {g : γ → α
     rw [foldr_cons, ← hgf, ← hgf']
     exact ⟨c :: m, rfl⟩
 #align list.foldr_range_subset_of_range_subset List.foldr_range_subset_of_range_subset
+-/
 
+#print List.foldl_range_subset_of_range_subset /-
 theorem foldl_range_subset_of_range_subset {f : α → β → α} {g : α → γ → α}
     (hfg : (Set.range fun a c => f c a) ⊆ Set.range fun b c => g c b) (a : α) :
     Set.range (foldl f a) ⊆ Set.range (foldl g a) :=
@@ -72,19 +75,24 @@ theorem foldl_range_subset_of_range_subset {f : α → β → α} {g : α → γ
     Set.image_univ]
   exact foldr_range_subset_of_range_subset hfg a
 #align list.foldl_range_subset_of_range_subset List.foldl_range_subset_of_range_subset
+-/
 
+#print List.foldr_range_eq_of_range_eq /-
 theorem foldr_range_eq_of_range_eq {f : β → α → α} {g : γ → α → α} (hfg : Set.range f = Set.range g)
     (a : α) : Set.range (foldr f a) = Set.range (foldr g a) :=
   (foldr_range_subset_of_range_subset hfg.le a).antisymm
     (foldr_range_subset_of_range_subset hfg.ge a)
 #align list.foldr_range_eq_of_range_eq List.foldr_range_eq_of_range_eq
+-/
 
+#print List.foldl_range_eq_of_range_eq /-
 theorem foldl_range_eq_of_range_eq {f : α → β → α} {g : α → γ → α}
     (hfg : (Set.range fun a c => f c a) = Set.range fun b c => g c b) (a : α) :
     Set.range (foldl f a) = Set.range (foldl g a) :=
   (foldl_range_subset_of_range_subset hfg.le a).antisymm
     (foldl_range_subset_of_range_subset hfg.ge a)
 #align list.foldl_range_eq_of_range_eq List.foldl_range_eq_of_range_eq
+-/
 
 end List
 

@@ -65,6 +65,7 @@ variable {ι : Type w} (U : ι → Opens X)
 
 attribute [local reducible] diagram left_res right_res
 
+#print TopCat.Presheaf.SheafCondition.diagramCompPreservesLimits /-
 /-- When `G` preserves limits, the sheaf condition diagram for `F` composed with `G` is
 naturally isomorphic to the sheaf condition diagram for `F ⋙ G`.
 -/
@@ -87,9 +88,11 @@ def diagramCompPreservesLimits : diagram F U ⋙ G ≅ diagram.{w} (F ⋙ G) U :
     dsimp; simp
   · ext; simp; dsimp; simp
 #align Top.presheaf.sheaf_condition.diagram_comp_preserves_limits TopCat.Presheaf.SheafCondition.diagramCompPreservesLimits
+-/
 
 attribute [local reducible] res
 
+#print TopCat.Presheaf.SheafCondition.mapConeFork /-
 /-- When `G` preserves limits, the image under `G` of the sheaf condition fork for `F`
 is the sheaf condition fork for `F ⋙ G`,
 postcomposed with the inverse of the natural isomorphism `diagram_comp_preserves_limits`.
@@ -109,6 +112,7 @@ def mapConeFork :
       dsimp
       simp only [limit.lift_π, fan.mk_π_app, ← G.map_comp, limit.lift_π_assoc, fan.mk_π_app]
 #align Top.presheaf.sheaf_condition.map_cone_fork TopCat.Presheaf.SheafCondition.mapConeFork
+-/
 
 end SheafCondition
 
@@ -126,6 +130,7 @@ variable [HasLimitsOfSize.{w, w} C] [HasLimitsOfSize.{w, w} D] [PreservesLimitsO
 
 variable {X : TopCat.{w}} (F : Presheaf C X)
 
+#print TopCat.Presheaf.isSheaf_iff_isSheaf_comp /-
 /-- If `G : C ⥤ D` is a functor which reflects isomorphisms and preserves limits
 (we assume all limits exist in both `C` and `D`),
 then checking the sheaf condition for a presheaf `F : presheaf C X`
@@ -214,6 +219,7 @@ theorem isSheaf_iff_isSheaf_comp : Presheaf.IsSheaf F ↔ Presheaf.IsSheaf (F �
       -- so we're done!
       exact is_iso.of_iso ((cones.forget _).mapIso (as_iso f'))
 #align Top.presheaf.is_sheaf_iff_is_sheaf_comp TopCat.Presheaf.isSheaf_iff_isSheaf_comp
+-/
 
 /-!
 As an example, we now have everything we need to check the sheaf condition

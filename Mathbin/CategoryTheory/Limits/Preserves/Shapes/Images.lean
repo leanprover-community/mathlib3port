@@ -45,6 +45,7 @@ variable [∀ {X Y Z : A} (f : X ⟶ Z) (g : Y ⟶ Z), PreservesLimit (cospan f 
 
 variable [∀ {X Y Z : A} (f : X ⟶ Y) (g : X ⟶ Z), PreservesColimit (span f g) L]
 
+#print CategoryTheory.PreservesImage.iso /-
 /-- If a functor preserves span and cospan, then it preserves images.
 -/
 @[simps]
@@ -58,21 +59,28 @@ def iso {X Y : A} (f : X ⟶ Y) : image (L.map f) ≅ L.obj (image f) :=
       fac := by rw [← L.map_comp, limits.image.fac] }
   IsImage.isoExt (Image.isImage (L.map f)) aux1.toMonoIsImage
 #align category_theory.preserves_image.iso CategoryTheory.PreservesImage.iso
+-/
 
+#print CategoryTheory.PreservesImage.factorThruImage_comp_hom /-
 @[reassoc]
 theorem factorThruImage_comp_hom {X Y : A} (f : X ⟶ Y) :
     factorThruImage (L.map f) ≫ (iso L f).Hom = L.map (factorThruImage f) := by simp
 #align category_theory.preserves_image.factor_thru_image_comp_hom CategoryTheory.PreservesImage.factorThruImage_comp_hom
+-/
 
+#print CategoryTheory.PreservesImage.hom_comp_map_image_ι /-
 @[reassoc]
 theorem hom_comp_map_image_ι {X Y : A} (f : X ⟶ Y) :
     (iso L f).Hom ≫ L.map (image.ι f) = image.ι (L.map f) := by simp
 #align category_theory.preserves_image.hom_comp_map_image_ι CategoryTheory.PreservesImage.hom_comp_map_image_ι
+-/
 
+#print CategoryTheory.PreservesImage.inv_comp_image_ι_map /-
 @[reassoc]
 theorem inv_comp_image_ι_map {X Y : A} (f : X ⟶ Y) :
     (iso L f).inv ≫ image.ι (L.map f) = L.map (image.ι f) := by simp
 #align category_theory.preserves_image.inv_comp_image_ι_map CategoryTheory.PreservesImage.inv_comp_image_ι_map
+-/
 
 end PreservesImage
 

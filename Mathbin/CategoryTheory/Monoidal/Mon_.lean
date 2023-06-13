@@ -382,6 +382,7 @@ open EquivLaxMonoidalFunctorPunit
 
 attribute [local simp] eq_to_iso_map
 
+#print Mon_.equivLaxMonoidalFunctorPUnit /-
 /--
 Monoid objects in `C` are "just" lax monoidal functors from the trivial monoidal category to `C`.
 -/
@@ -393,6 +394,7 @@ def equivLaxMonoidalFunctorPUnit : LaxMonoidalFunctor (Discrete PUnit.{u + 1}) C
   unitIso := unitIso C
   counitIso := counitIso C
 #align Mon_.equiv_lax_monoidal_functor_punit Mon_.equivLaxMonoidalFunctorPUnit
+-/
 
 end Mon_
 
@@ -477,6 +479,7 @@ variable [BraidedCategory C]
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print Mon_.Mon_tensor_one_mul /-
 theorem Mon_tensor_one_mul (M N : Mon_ C) :
     ((λ_ (𝟙_ C)).inv ≫ (M.one ⊗ N.one) ⊗ 𝟙 (M.pt ⊗ N.pt)) ≫
         tensor_μ C (M.pt, N.pt) (M.pt, N.pt) ≫ (M.mul ⊗ N.mul) =
@@ -488,6 +491,7 @@ theorem Mon_tensor_one_mul (M N : Mon_ C) :
   symm
   exact tensor_left_unitality C M.X N.X
 #align Mon_.Mon_tensor_one_mul Mon_.Mon_tensor_one_mul
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -495,6 +499,7 @@ theorem Mon_tensor_one_mul (M N : Mon_ C) :
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print Mon_.Mon_tensor_mul_one /-
 theorem Mon_tensor_mul_one (M N : Mon_ C) :
     (𝟙 (M.pt ⊗ N.pt) ⊗ (λ_ (𝟙_ C)).inv ≫ (M.one ⊗ N.one)) ≫
         tensor_μ C (M.pt, N.pt) (M.pt, N.pt) ≫ (M.mul ⊗ N.mul) =
@@ -506,6 +511,7 @@ theorem Mon_tensor_mul_one (M N : Mon_ C) :
   symm
   exact tensor_right_unitality C M.X N.X
 #align Mon_.Mon_tensor_mul_one Mon_.Mon_tensor_mul_one
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -519,6 +525,7 @@ theorem Mon_tensor_mul_one (M N : Mon_ C) :
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print Mon_.Mon_tensor_mul_assoc /-
 theorem Mon_tensor_mul_assoc (M N : Mon_ C) :
     (tensor_μ C (M.pt, N.pt) (M.pt, N.pt) ≫ (M.mul ⊗ N.mul) ⊗ 𝟙 (M.pt ⊗ N.pt)) ≫
         tensor_μ C (M.pt, N.pt) (M.pt, N.pt) ≫ (M.mul ⊗ N.mul) =
@@ -534,6 +541,7 @@ theorem Mon_tensor_mul_assoc (M N : Mon_ C) :
   slice_lhs 2 3 => rw [← tensor_comp, tensor_id]
   simp only [category.assoc]
 #align Mon_.Mon_tensor_mul_assoc Mon_.Mon_tensor_mul_assoc
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -544,6 +552,7 @@ theorem Mon_tensor_mul_assoc (M N : Mon_ C) :
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print Mon_.mul_associator /-
 theorem mul_associator {M N P : Mon_ C} :
     (tensor_μ C (M.pt ⊗ N.pt, P.pt) (M.pt ⊗ N.pt, P.pt) ≫
           (tensor_μ C (M.pt, N.pt) (M.pt, N.pt) ≫ (M.mul ⊗ N.mul) ⊗ P.mul)) ≫
@@ -559,9 +568,11 @@ theorem mul_associator {M N P : Mon_ C} :
   slice_lhs 1 3 => rw [associator_monoidal]
   simp only [category.assoc]
 #align Mon_.mul_associator Mon_.mul_associator
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print Mon_.mul_leftUnitor /-
 theorem mul_leftUnitor {M : Mon_ C} :
     (tensor_μ C (𝟙_ C, M.pt) (𝟙_ C, M.pt) ≫ ((λ_ (𝟙_ C)).Hom ⊗ M.mul)) ≫ (λ_ M.pt).Hom =
       ((λ_ M.pt).Hom ⊗ (λ_ M.pt).Hom) ≫ M.mul :=
@@ -571,9 +582,11 @@ theorem mul_leftUnitor {M : Mon_ C} :
   slice_lhs 1 3 => rw [← left_unitor_monoidal]
   simp only [category.assoc, category.id_comp]
 #align Mon_.mul_left_unitor Mon_.mul_leftUnitor
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print Mon_.mul_rightUnitor /-
 theorem mul_rightUnitor {M : Mon_ C} :
     (tensor_μ C (M.pt, 𝟙_ C) (M.pt, 𝟙_ C) ≫ (M.mul ⊗ (λ_ (𝟙_ C)).Hom)) ≫ (ρ_ M.pt).Hom =
       ((ρ_ M.pt).Hom ⊗ (ρ_ M.pt).Hom) ≫ M.mul :=
@@ -583,6 +596,7 @@ theorem mul_rightUnitor {M : Mon_ C} :
   slice_lhs 1 3 => rw [← right_unitor_monoidal]
   simp only [category.assoc, category.id_comp]
 #align Mon_.mul_right_unitor Mon_.mul_rightUnitor
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/

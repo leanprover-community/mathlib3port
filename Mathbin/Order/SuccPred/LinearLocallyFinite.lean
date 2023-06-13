@@ -497,6 +497,7 @@ def orderIsoNatOfLinearSuccPredArch [NoMaxOrder ι] [OrderBot ι] : ι ≃o ℕ
 #align order_iso_nat_of_linear_succ_pred_arch orderIsoNatOfLinearSuccPredArch
 -/
 
+#print orderIsoRangeOfLinearSuccPredArch /-
 /-- If the order has both a bot and a top, `to_Z` gives an `order_iso` between `ι` and
 `finset.range n` for some `n`. -/
 def orderIsoRangeOfLinearSuccPredArch [OrderBot ι] [OrderTop ι] :
@@ -524,6 +525,7 @@ def orderIsoRangeOfLinearSuccPredArch [OrderBot ι] [OrderTop ι] :
     simp only [Equiv.coe_fn_mk, Subtype.mk_le_mk, Int.toNat_le]
     rw [← @toZ_le_iff ι _ _ _ _ ⊥, Int.toNat_of_nonneg (toZ_nonneg bot_le)]
 #align order_iso_range_of_linear_succ_pred_arch orderIsoRangeOfLinearSuccPredArch
+-/
 
 end OrderIso
 

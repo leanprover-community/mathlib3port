@@ -59,6 +59,7 @@ variable (K : Type) [Field K] [Algebra R[X] K] [IsFractionRing R[X] K]
 
 section TwoDenominators
 
+#print div_eq_quo_add_rem_div_add_rem_div /-
 /-- Let R be an integral domain and f, g₁, g₂ ∈ R[X]. Let g₁ and g₂ be monic and coprime.
 Then, ∃ q, r₁, r₂ ∈ R[X] such that f / g₁g₂ = q + r₁/g₁ + r₂/g₂ and deg(r₁) < deg(g₁) and
 deg(r₂) < deg(g₂).
@@ -81,6 +82,7 @@ theorem div_eq_quo_add_rem_div_add_rem_div (f : R[X]) {g₁ g₂ : R[X]} (hg₁ 
   norm_cast
   linear_combination -1 * f * hcd + -1 * g₁ * hfc + -1 * g₂ * hfd
 #align div_eq_quo_add_rem_div_add_rem_div div_eq_quo_add_rem_div_add_rem_div
+-/
 
 end TwoDenominators
 
@@ -88,6 +90,7 @@ section NDenominators
 
 open scoped BigOperators Classical
 
+#print div_eq_quo_add_sum_rem_div /-
 /-- Let R be an integral domain and f ∈ R[X]. Let s be a finite index set.
 Then, a fraction of the form f / ∏ (g i) can be rewritten as q + ∑ (r i) / (g i), where
 deg(r i) < deg(g i), provided that the g i are monic and pairwise coprime.
@@ -132,6 +135,7 @@ theorem div_eq_quo_add_sum_rem_div (f : R[X]) {ι : Type _} {g : ι → R[X]} {s
     rintro rfl
     exact hab hi
 #align div_eq_quo_add_sum_rem_div div_eq_quo_add_sum_rem_div
+-/
 
 end NDenominators
 

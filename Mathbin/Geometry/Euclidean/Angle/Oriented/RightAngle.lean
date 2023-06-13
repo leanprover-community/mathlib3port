@@ -36,8 +36,6 @@ variable {V : Type _} [NormedAddCommGroup V] [InnerProductSpace ℝ V]
 
 variable [hd2 : Fact (finrank ℝ V = 2)] (o : Orientation ℝ V (Fin 2))
 
-include hd2 o
-
 /-- An angle in a right-angled triangle expressed using `arccos`. -/
 theorem oangle_add_right_eq_arccos_of_oangle_eq_pi_div_two {x y : V} (h : o.oangle x y = ↑(π / 2)) :
     o.oangle x (x + y) = Real.arccos (‖x‖ / ‖x + y‖) :=
@@ -634,8 +632,6 @@ open FiniteDimensional
 
 variable {V : Type _} {P : Type _} [NormedAddCommGroup V] [InnerProductSpace ℝ V] [MetricSpace P]
   [NormedAddTorsor V P] [hd2 : Fact (finrank ℝ V = 2)] [Module.Oriented ℝ V (Fin 2)]
-
-include hd2
 
 /-- An angle in a right-angled triangle expressed using `arccos`. -/
 theorem oangle_right_eq_arccos_of_oangle_eq_pi_div_two {p₁ p₂ p₃ : P} (h : ∡ p₁ p₂ p₃ = ↑(π / 2)) :

@@ -35,8 +35,6 @@ variable {R : Type _} [CommSemiring R] (M : Submonoid R) (S : Type _) [CommSemir
 
 variable [Algebra R S] [IsLocalization M S]
 
-include M
-
 /-- Explicit characterization of the ideal given by `ideal.map (algebra_map R S) I`.
 In practice, this ideal differs only in that the carrier set is defined explicitly.
 This definition is only meant to be used in proving `mem_map_algebra_map_iff`,
@@ -61,6 +59,7 @@ private def map_ideal (I : Ideal R) : Ideal S
     simp only [← hx, ← hc, smul_eq_mul, Submodule.coe_mk, Submonoid.coe_mul, RingHom.map_mul]
     ring
 
+#print IsLocalization.mem_map_algebraMap_iff /-
 theorem mem_map_algebraMap_iff {I : Ideal R} {z} :
     z ∈ Ideal.map (algebraMap R S) I ↔ ∃ x : I × M, z * algebraMap R S x.2 = algebraMap R S x.1 :=
   by
@@ -73,6 +72,7 @@ theorem mem_map_algebraMap_iff {I : Ideal R} {z} :
     rw [← Ideal.unit_mul_mem_iff_mem _ (map_units S s), mul_comm]
     exact h.symm ▸ Ideal.mem_map_of_mem _ a.2
 #align is_localization.mem_map_algebra_map_iff IsLocalization.mem_map_algebraMap_iff
+-/
 
 #print IsLocalization.map_comap /-
 theorem map_comap (J : Ideal S) : Ideal.map (algebraMap R S) (Ideal.comap (algebraMap R S) J) = J :=
@@ -88,6 +88,7 @@ theorem map_comap (J : Ideal S) : Ideal.map (algebraMap R S) (Ideal.comap (algeb
 #align is_localization.map_comap IsLocalization.map_comap
 -/
 
+#print IsLocalization.comap_map_of_isPrime_disjoint /-
 theorem comap_map_of_isPrime_disjoint (I : Ideal R) (hI : I.IsPrime) (hM : Disjoint (M : Set R) I) :
     Ideal.comap (algebraMap R S) (Ideal.map (algebraMap R S) I) = I :=
   by
@@ -99,6 +100,7 @@ theorem comap_map_of_isPrime_disjoint (I : Ideal R) (hI : I.IsPrime) (hM : Disjo
   have : ↑c * ↑s * a ∈ I := by rw [mul_assoc, hc]; exact I.mul_mem_left c b.2
   exact (hI.mem_or_mem this).resolve_left fun hsc => hM.le_bot ⟨(c * s).2, hsc⟩
 #align is_localization.comap_map_of_is_prime_disjoint IsLocalization.comap_map_of_isPrime_disjoint
+-/
 
 #print IsLocalization.orderEmbedding /-
 /-- If `S` is the localization of `R` at a submonoid, the ordering of ideals of `S` is
@@ -112,6 +114,7 @@ def orderEmbedding : Ideal S ↪o Ideal R
 #align is_localization.order_embedding IsLocalization.orderEmbedding
 -/
 
+#print IsLocalization.isPrime_iff_isPrime_disjoint /-
 /-- If `R` is a ring, then prime ideals in the localization at `M`
 correspond to prime ideals in the original ring `R` that are disjoint from `M`.
 This lemma gives the particular case for an ideal and its comap,
@@ -143,7 +146,9 @@ theorem isPrime_iff_isPrime_disjoint (J : Ideal S) :
       rw [Ideal.mem_comap, Ideal.mem_comap] at this 
       rwa [← ha, ← hb, mk'_mem_iff, mk'_mem_iff]
 #align is_localization.is_prime_iff_is_prime_disjoint IsLocalization.isPrime_iff_isPrime_disjoint
+-/
 
+#print IsLocalization.isPrime_of_isPrime_disjoint /-
 /-- If `R` is a ring, then prime ideals in the localization at `M`
 correspond to prime ideals in the original ring `R` that are disjoint from `M`.
 This lemma gives the particular case for an ideal and its map,
@@ -154,7 +159,9 @@ theorem isPrime_of_isPrime_disjoint (I : Ideal R) (hp : I.IsPrime) (hd : Disjoin
   rw [is_prime_iff_is_prime_disjoint M S, comap_map_of_is_prime_disjoint M S I hp hd]
   exact ⟨hp, hd⟩
 #align is_localization.is_prime_of_is_prime_disjoint IsLocalization.isPrime_of_isPrime_disjoint
+-/
 
+#print IsLocalization.orderIsoOfPrime /-
 /-- If `R` is a ring, then prime ideals in the localization at `M`
 correspond to prime ideals in the original ring `R` that are disjoint from `M` -/
 def orderIsoOfPrime :
@@ -169,6 +176,7 @@ def orderIsoOfPrime :
       show I.val ≤ I'.val from map_comap M S I.val ▸ map_comap M S I'.val ▸ Ideal.map_mono h,
       fun h x hx => h hx⟩
 #align is_localization.order_iso_of_prime IsLocalization.orderIsoOfPrime
+-/
 
 end CommSemiring
 
@@ -178,8 +186,7 @@ variable {R : Type _} [CommRing R] (M : Submonoid R) (S : Type _) [CommRing S]
 
 variable [Algebra R S] [IsLocalization M S]
 
-include M
-
+#print IsLocalization.surjective_quotientMap_of_maximal_of_localization /-
 /-- `quotient_map` applied to maximal ideals of a localization is `surjective`.
   The quotient by a maximal ideal is a field, so inverses to elements already exist,
   and the localization necessarily maps the equivalence class of the inverse in the localization -/
@@ -217,9 +224,11 @@ theorem surjective_quotientMap_of_maximal_of_localization {I : Ideal S} [I.IsPri
                 (Ideal.mem_comap.2 (Ideal.Quotient.eq_zero_iff_mem.1 hn))))
           (trans hn (by rw [← RingHom.map_mul, ← mk'_eq_mul_mk'_one, mk'_self, RingHom.map_one])))
 #align is_localization.surjective_quotient_map_of_maximal_of_localization IsLocalization.surjective_quotientMap_of_maximal_of_localization
+-/
 
 open scoped nonZeroDivisors
 
+#print IsLocalization.bot_lt_comap_prime /-
 theorem bot_lt_comap_prime [IsDomain R] (hM : M ≤ R⁰) (p : Ideal S) [hpp : p.IsPrime]
     (hp0 : p ≠ ⊥) : ⊥ < Ideal.comap (algebraMap R S) p :=
   by
@@ -229,6 +238,7 @@ theorem bot_lt_comap_prime [IsDomain R] (hM : M ≤ R⁰) (p : Ideal S) [hpp : p
       (show (⟨⊥, Ideal.bot_prime⟩ : { p : Ideal S // p.IsPrime }) < ⟨p, hpp⟩ from hp0.bot_lt)
   exact (Ideal.comap_bot_of_injective (algebraMap R S) (IsLocalization.injective _ hM)).symm
 #align is_localization.bot_lt_comap_prime IsLocalization.bot_lt_comap_prime
+-/
 
 end CommRing
 

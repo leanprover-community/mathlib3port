@@ -79,12 +79,14 @@ theorem addLsb_div_two {x b} : addLsb x b / 2 = x := by
 #align bitvec.add_lsb_div_two Bitvec.addLsb_div_two
 -/
 
+#print Bitvec.decide_addLsb_mod_two /-
 theorem decide_addLsb_mod_two {x b} : decide (addLsb x b % 2 = 1) = b := by
   cases b <;>
       simp only [Bool.decide_iff, Nat.add_mul_mod_self_left, add_lsb, ← two_mul, add_comm,
         Bool.decide_False, Nat.mul_mod_right, zero_add, cond, zero_ne_one] <;>
     norm_num
 #align bitvec.to_bool_add_lsb_mod_two Bitvec.decide_addLsb_mod_two
+-/
 
 #print Bitvec.ofNat_toNat /-
 theorem ofNat_toNat {n : ℕ} (v : Bitvec n) : Bitvec.ofNat _ v.toNat = v :=

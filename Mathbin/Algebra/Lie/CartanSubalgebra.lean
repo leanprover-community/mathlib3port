@@ -114,6 +114,7 @@ theorem isCartanSubalgebra_iff_isUcsLimit : H.IsCartanSubalgebra ↔ H.toLieSubm
 
 end LieSubalgebra
 
+#print LieIdeal.normalizer_eq_top /-
 @[simp]
 theorem LieIdeal.normalizer_eq_top {R : Type u} {L : Type v} [CommRing R] [LieRing L]
     [LieAlgebra R L] (I : LieIdeal R L) : (I : LieSubalgebra R L).normalizer = ⊤ :=
@@ -122,9 +123,11 @@ theorem LieIdeal.normalizer_eq_top {R : Type u} {L : Type v} [CommRing R] [LieRi
   simpa only [LieSubalgebra.mem_normalizer_iff, LieSubalgebra.mem_top, iff_true_iff] using
     fun y hy => I.lie_mem hy
 #align lie_ideal.normalizer_eq_top LieIdeal.normalizer_eq_top
+-/
 
 open LieIdeal
 
+#print LieAlgebra.top_isCartanSubalgebra_of_nilpotent /-
 /-- A nilpotent Lie algebra is its own Cartan subalgebra. -/
 instance LieAlgebra.top_isCartanSubalgebra_of_nilpotent [LieAlgebra.IsNilpotent R L] :
     LieSubalgebra.IsCartanSubalgebra (⊤ : LieSubalgebra R L)
@@ -132,4 +135,5 @@ instance LieAlgebra.top_isCartanSubalgebra_of_nilpotent [LieAlgebra.IsNilpotent 
   nilpotent := inferInstance
   self_normalizing := by rw [← top_coe_lie_subalgebra, normalizer_eq_top, top_coe_lie_subalgebra]
 #align lie_algebra.top_is_cartan_subalgebra_of_nilpotent LieAlgebra.top_isCartanSubalgebra_of_nilpotent
+-/
 

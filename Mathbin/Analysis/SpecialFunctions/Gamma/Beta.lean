@@ -54,7 +54,6 @@ section BetaIntegral
 
 namespace Complex
 
--- mathport name: exprcexp
 notation "cexp" => Complex.exp
 
 /-- The Beta function `Β (u, v)`, defined as `∫ x:ℝ in 0..1, x ^ (u - 1) * (1 - x) ^ (v - 1)`. -/

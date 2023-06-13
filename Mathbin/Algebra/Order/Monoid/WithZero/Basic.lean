@@ -30,6 +30,7 @@ variable {α : Type u}
 
 namespace WithZero
 
+#print WithZero.contravariantClass_mul_lt /-
 instance contravariantClass_mul_lt {α : Type u} [Mul α] [PartialOrder α]
     [ContravariantClass α α (· * ·) (· < ·)] :
     ContravariantClass (WithZero α) (WithZero α) (· * ·) (· < ·) :=
@@ -41,6 +42,7 @@ instance contravariantClass_mul_lt {α : Type u} [Mul α] [PartialOrder α]
   induction b using WithZero.recZeroCoe
   exacts [zero_lt_coe _, coe_lt_coe.mpr (lt_of_mul_lt_mul_left' <| coe_lt_coe.mp h)]
 #align with_zero.contravariant_class_mul_lt WithZero.contravariantClass_mul_lt
+-/
 
 end WithZero
 

@@ -306,32 +306,42 @@ instance : CommRing (ColimitType F) :=
       rfl
       rfl }
 
+#print CommRingCat.Colimits.quot_zero /-
 @[simp]
 theorem quot_zero : Quot.mk Setoid.r zero = (0 : ColimitType F) :=
   rfl
 #align CommRing.colimits.quot_zero CommRingCat.Colimits.quot_zero
+-/
 
+#print CommRingCat.Colimits.quot_one /-
 @[simp]
 theorem quot_one : Quot.mk Setoid.r one = (1 : ColimitType F) :=
   rfl
 #align CommRing.colimits.quot_one CommRingCat.Colimits.quot_one
+-/
 
+#print CommRingCat.Colimits.quot_neg /-
 @[simp]
 theorem quot_neg (x) : Quot.mk Setoid.r (neg x) = (-Quot.mk Setoid.r x : ColimitType F) :=
   rfl
 #align CommRing.colimits.quot_neg CommRingCat.Colimits.quot_neg
+-/
 
+#print CommRingCat.Colimits.quot_add /-
 @[simp]
 theorem quot_add (x y) :
     Quot.mk Setoid.r (add x y) = (Quot.mk Setoid.r x + Quot.mk Setoid.r y : ColimitType F) :=
   rfl
 #align CommRing.colimits.quot_add CommRingCat.Colimits.quot_add
+-/
 
+#print CommRingCat.Colimits.quot_mul /-
 @[simp]
 theorem quot_mul (x y) :
     Quot.mk Setoid.r (mul x y) = (Quot.mk Setoid.r x * Quot.mk Setoid.r y : ColimitType F) :=
   rfl
 #align CommRing.colimits.quot_mul CommRingCat.Colimits.quot_mul
+-/
 
 #print CommRingCat.Colimits.colimit /-
 /-- The bundled commutative ring giving the colimit of a diagram. -/
@@ -340,11 +350,14 @@ def colimit : CommRingCat :=
 #align CommRing.colimits.colimit CommRingCat.Colimits.colimit
 -/
 
+#print CommRingCat.Colimits.coconeFun /-
 /-- The function from a given commutative ring in the diagram to the colimit commutative ring. -/
 def coconeFun (j : J) (x : F.obj j) : ColimitType F :=
   Quot.mk _ (of j x)
 #align CommRing.colimits.cocone_fun CommRingCat.Colimits.coconeFun
+-/
 
+#print CommRingCat.Colimits.coconeMorphism /-
 /-- The ring homomorphism from a given commutative ring in the diagram to the colimit commutative
 ring. -/
 def coconeMorphism (j : J) : F.obj j ⟶ colimit F
@@ -355,7 +368,9 @@ def coconeMorphism (j : J) : F.obj j ⟶ colimit F
   map_zero' := by apply Quot.sound <;> apply relation.zero
   map_add' := by intros <;> apply Quot.sound <;> apply relation.add
 #align CommRing.colimits.cocone_morphism CommRingCat.Colimits.coconeMorphism
+-/
 
+#print CommRingCat.Colimits.cocone_naturality /-
 @[simp]
 theorem cocone_naturality {j j' : J} (f : j ⟶ j') :
     F.map f ≫ coconeMorphism F j' = coconeMorphism F j :=
@@ -364,12 +379,15 @@ theorem cocone_naturality {j j' : J} (f : j ⟶ j') :
   apply Quot.sound
   apply Relation.Map
 #align CommRing.colimits.cocone_naturality CommRingCat.Colimits.cocone_naturality
+-/
 
+#print CommRingCat.Colimits.cocone_naturality_components /-
 @[simp]
 theorem cocone_naturality_components (j j' : J) (f : j ⟶ j') (x : F.obj j) :
     (coconeMorphism F j') (F.map f x) = (coconeMorphism F j) x := by rw [← cocone_naturality F f];
   rfl
 #align CommRing.colimits.cocone_naturality_components CommRingCat.Colimits.cocone_naturality_components
+-/
 
 #print CommRingCat.Colimits.colimitCocone /-
 /-- The cocone over the proposed colimit commutative ring. -/

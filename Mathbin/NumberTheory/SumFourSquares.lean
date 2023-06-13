@@ -35,6 +35,7 @@ open scoped BigOperators
 
 namespace Int
 
+#print Int.sq_add_sq_of_two_mul_sq_add_sq /-
 theorem sq_add_sq_of_two_mul_sq_add_sq {m x y : ℤ} (h : 2 * m = x ^ 2 + y ^ 2) :
     m = ((x - y) / 2) ^ 2 + ((x + y) / 2) ^ 2 :=
   have : Even (x ^ 2 + y ^ 2) := by simp [← h, even_mul]
@@ -50,7 +51,9 @@ theorem sq_add_sq_of_two_mul_sq_add_sq {m x y : ℤ} (h : 2 * m = x ^ 2 + y ^ 2)
       _ = 2 * 2 * (((x - y) / 2) ^ 2 + ((x + y) / 2) ^ 2) := by
         simp [mul_add, pow_succ, mul_comm, mul_assoc, mul_left_comm]
 #align int.sq_add_sq_of_two_mul_sq_add_sq Int.sq_add_sq_of_two_mul_sq_add_sq
+-/
 
+#print Int.exists_sq_add_sq_add_one_eq_k /-
 theorem exists_sq_add_sq_add_one_eq_k (p : ℕ) [hp : Fact p.Prime] :
     ∃ (a b : ℤ) (k : ℕ), a ^ 2 + b ^ 2 + 1 = k * p ∧ k < p :=
   hp.1.eq_two_or_odd.elim (fun hp2 => hp2.symm ▸ ⟨1, 0, 1, rfl, by decide⟩) fun hp1 =>
@@ -84,6 +87,7 @@ theorem exists_sq_add_sq_add_one_eq_k (p : ℕ) [hp : Fact p.Prime] :
           _ = p * p := by conv_rhs => rw [← Nat.mod_add_div p 2]; ring)
         (show 0 ≤ p from Nat.zero_le _)⟩
 #align int.exists_sq_add_sq_add_one_eq_k Int.exists_sq_add_sq_add_one_eq_k
+-/
 
 end Int
 

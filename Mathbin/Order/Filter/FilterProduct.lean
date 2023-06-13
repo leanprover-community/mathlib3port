@@ -35,14 +35,12 @@ open scoped Classical
 
 namespace Filter
 
--- mathport name: «expr∀* , »
 local notation3"∀* "(...)", "r:(scoped p => Filter.Eventually p φ) => r
 
 namespace Germ
 
 open Ultrafilter
 
--- mathport name: «exprβ*»
 local notation "β*" => Germ (φ : Filter α) β
 
 instance [DivisionSemiring β] : DivisionSemiring β* :=
@@ -225,38 +223,50 @@ noncomputable instance [LinearOrderedField β] : LinearOrderedField β* :=
 noncomputable instance [LinearOrderedCommRing β] : LinearOrderedCommRing β* :=
   { Germ.linearOrderedRing, Germ.commMonoid with }
 
+#print Filter.Germ.max_def /-
 theorem max_def [LinearOrder β] (x y : β*) : max x y = map₂ max x y :=
   inductionOn₂ x y fun a b => by
     cases le_total (a : β*) b
     · rw [max_eq_right h, map₂_coe, coe_eq]; exact h.mono fun i hi => (max_eq_right hi).symm
     · rw [max_eq_left h, map₂_coe, coe_eq]; exact h.mono fun i hi => (max_eq_left hi).symm
 #align filter.germ.max_def Filter.Germ.max_def
+-/
 
+#print Filter.Germ.min_def /-
 theorem min_def [K : LinearOrder β] (x y : β*) : min x y = map₂ min x y :=
   inductionOn₂ x y fun a b => by
     cases le_total (a : β*) b
     · rw [min_eq_left h, map₂_coe, coe_eq]; exact h.mono fun i hi => (min_eq_left hi).symm
     · rw [min_eq_right h, map₂_coe, coe_eq]; exact h.mono fun i hi => (min_eq_right hi).symm
 #align filter.germ.min_def Filter.Germ.min_def
+-/
 
+#print Filter.Germ.abs_def /-
 theorem abs_def [LinearOrderedAddCommGroup β] (x : β*) : |x| = map abs x :=
   inductionOn x fun a => rfl
 #align filter.germ.abs_def Filter.Germ.abs_def
+-/
 
+#print Filter.Germ.const_max /-
 @[simp]
 theorem const_max [LinearOrder β] (x y : β) : (↑(max x y : β) : β*) = max ↑x ↑y := by
   rw [max_def, map₂_const]
 #align filter.germ.const_max Filter.Germ.const_max
+-/
 
+#print Filter.Germ.const_min /-
 @[simp]
 theorem const_min [LinearOrder β] (x y : β) : (↑(min x y : β) : β*) = min ↑x ↑y := by
   rw [min_def, map₂_const]
 #align filter.germ.const_min Filter.Germ.const_min
+-/
 
+#print Filter.Germ.const_abs /-
 @[simp]
 theorem const_abs [LinearOrderedAddCommGroup β] (x : β) : (↑(|x|) : β*) = |↑x| := by
   rw [abs_def, map_const]
 #align filter.germ.const_abs Filter.Germ.const_abs
+-/
 
 end Germ
 

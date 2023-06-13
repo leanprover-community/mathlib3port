@@ -59,8 +59,6 @@ variable (G : D ⥤ C) [Functor.PreservesZeroMorphisms G]
 
 variable (i : F ⋙ G ≅ 𝟭 C) (adj : G ⊣ F)
 
-include i
-
 #print CategoryTheory.AbelianOfAdjunction.hasKernels /-
 /-- No point making this an instance, as it requires `i`. -/
 theorem hasKernels [PreservesFiniteLimits G] : HasKernels C :=
@@ -73,8 +71,6 @@ theorem hasKernels [PreservesFiniteLimits G] : HasKernels C :=
       apply limits.has_kernel_iso_comp }
 #align category_theory.abelian_of_adjunction.has_kernels CategoryTheory.AbelianOfAdjunction.hasKernels
 -/
-
-include adj
 
 #print CategoryTheory.AbelianOfAdjunction.hasCokernels /-
 /-- No point making this an instance, as it requires `i` and `adj`. -/
@@ -93,6 +89,7 @@ theorem hasCokernels : HasCokernels C :=
 
 variable [Limits.HasCokernels C]
 
+#print CategoryTheory.AbelianOfAdjunction.cokernelIso /-
 /-- Auxiliary construction for `coimage_iso_image` -/
 def cokernelIso {X Y : C} (f : X ⟶ Y) : G.obj (cokernel (F.map f)) ≅ cokernel f :=
   by
@@ -106,9 +103,11 @@ def cokernelIso {X Y : C} (f : X ⟶ Y) : G.obj (cokernel (F.map f)) ≅ cokerne
     _ ≅ cokernel (f ≫ _) := (cokernel_epi_comp _ _)
     _ ≅ cokernel f := cokernel_comp_is_iso _ _
 #align category_theory.abelian_of_adjunction.cokernel_iso CategoryTheory.AbelianOfAdjunction.cokernelIso
+-/
 
 variable [Limits.HasKernels C] [PreservesFiniteLimits G]
 
+#print CategoryTheory.AbelianOfAdjunction.coimageIsoImageAux /-
 /-- Auxiliary construction for `coimage_iso_image` -/
 def coimageIsoImageAux {X Y : C} (f : X ⟶ Y) :
     kernel (G.map (cokernel.π (F.map f))) ≅ kernel (cokernel.π f) :=
@@ -133,6 +132,7 @@ def coimageIsoImageAux {X Y : C} (f : X ⟶ Y) :
     _ ≅ kernel (cokernel.π f ≫ _) := (kernel_is_iso_comp _ _)
     _ ≅ kernel (cokernel.π f) := kernel_comp_mono _ _
 #align category_theory.abelian_of_adjunction.coimage_iso_image_aux CategoryTheory.AbelianOfAdjunction.coimageIsoImageAux
+-/
 
 variable [Functor.PreservesZeroMorphisms F]
 

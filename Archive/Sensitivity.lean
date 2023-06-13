@@ -53,7 +53,6 @@ open scoped Classical
 
 open scoped BigOperators
 
--- mathport name: «expr√»
 notation "√" => Real.sqrt
 
 open Function Bool LinearMap Fintype FiniteDimensional Module.DualBases
@@ -380,26 +379,22 @@ In this section, in order to enforce that `n` is positive, we write it as
 /-! `dim X` will denote the dimension of a subspace `X` as a cardinal. -/
 
 
--- mathport name: «exprdim »
 notation "dim " X:70 => Module.rank ℝ ↥X
 
 /-! `fdim X` will denote the (finite) dimension of a subspace `X` as a natural number. -/
 
 
--- mathport name: exprfdim
 notation "fdim" => finrank ℝ
 
 /-! `Span S` will denote the ℝ-subspace spanned by `S`. -/
 
 
--- mathport name: exprSpan
 notation "Span" => Submodule.span ℝ
 
 /-! `Card X` will denote the cardinal of a subset of a finite type, as a
 natural number. -/
 
 
--- mathport name: «exprCard »
 notation "Card " X:70 => X.toFinset.card
 
 /-! In the following, `⊓` and `⊔` will denote intersection and sums of ℝ-subspaces,

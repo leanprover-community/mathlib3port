@@ -50,6 +50,7 @@ private theorem funext_fin {n : ℕ} {p : MvPolynomial (Fin n) R}
       _ = _ := eval_polynomial_eval_fin_succ_equiv p _ _
       _ = 0 := h _
 
+#print MvPolynomial.funext /-
 /-- Two multivariate polynomials over an infinite integral domain are equal
 if they are equal upon evaluating them on an arbitrary assignment of the variables. -/
 theorem funext {σ : Type _} {p q : MvPolynomial σ R} (h : ∀ x : σ → R, eval x p = eval x q) :
@@ -67,11 +68,14 @@ theorem funext {σ : Type _} {p q : MvPolynomial σ R} (h : ∀ x : σ → R, ev
   convert h (Function.extend f x 0)
   simp only [eval, eval₂_hom_rename, Function.extend_comp hf]
 #align mv_polynomial.funext MvPolynomial.funext
+-/
 
+#print MvPolynomial.funext_iff /-
 theorem funext_iff {σ : Type _} {p q : MvPolynomial σ R} :
     p = q ↔ ∀ x : σ → R, eval x p = eval x q :=
   ⟨by rintro rfl <;> simp only [forall_const, eq_self_iff_true], funext⟩
 #align mv_polynomial.funext_iff MvPolynomial.funext_iff
+-/
 
 end MvPolynomial
 

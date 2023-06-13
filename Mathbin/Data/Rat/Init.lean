@@ -61,7 +61,6 @@ structure Rat where mk' ::
 #align rat Rat
 -/
 
--- mathport name: exprℚ
 notation "ℚ" => Rat
 
 namespace Rat

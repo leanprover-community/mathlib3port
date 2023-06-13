@@ -23,6 +23,7 @@ open scoped NNReal ENNReal
 
 variable {α β γ δ : Type _} {m : MeasurableSpace α} {μ : MeasureTheory.Measure α}
 
+#print aemeasurable_withDensity_iff /-
 theorem aemeasurable_withDensity_iff {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E]
     [TopologicalSpace.SecondCountableTopology E] [MeasurableSpace E] [BorelSpace E] {f : α → ℝ≥0}
     (hf : Measurable f) {g : α → E} :
@@ -53,4 +54,5 @@ theorem aemeasurable_withDensity_iff {E : Type _} [NormedAddCommGroup E] [Normed
     simp only [Ne.def, coe_eq_zero] at h'x 
     simpa only [NNReal.coe_eq_zero, Ne.def] using h'x
 #align ae_measurable_with_density_iff aemeasurable_withDensity_iff
+-/
 

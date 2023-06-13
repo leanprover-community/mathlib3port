@@ -31,15 +31,17 @@ open scoped Classical Topology BigOperators
 
 open Filter Finset
 
--- mathport name: exprd
 local notation "d" => dist
 
+#print pos_div_pow_pos /-
 @[simp]
 theorem pos_div_pow_pos {α : Type _} [LinearOrderedSemifield α] {a b : α} (ha : 0 < a) (hb : 0 < b)
     (k : ℕ) : 0 < a / b ^ k :=
   div_pos ha (pow_pos hb k)
 #align pos_div_pow_pos pos_div_pow_pos
+-/
 
+#print hofer /-
 theorem hofer {X : Type _} [MetricSpace X] [CompleteSpace X] (x : X) (ε : ℝ) (ε_pos : 0 < ε)
     {ϕ : X → ℝ} (cont : Continuous ϕ) (nonneg : ∀ y, 0 ≤ ϕ y) :
     ∃ ε' > 0,
@@ -123,4 +125,5 @@ theorem hofer {X : Type _} [MetricSpace X] [CompleteSpace X] (x : X) (ε : ℝ) 
   -- So we have our contradiction!
   exact not_tendsto_atTop_of_tendsto_nhds limUnder lim_top
 #align hofer hofer
+-/
 

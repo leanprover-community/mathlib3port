@@ -196,14 +196,19 @@ instance : Group (Aut X) := by
       ext <;>
     simp [flip, (· * ·), Monoid.mul, MulOneClass.mul, MulOneClass.one, One.one, Monoid.one, Inv.inv]
 
+#print CategoryTheory.Aut.Aut_mul_def /-
 theorem Aut_mul_def (f g : Aut X) : f * g = g.trans f :=
   rfl
 #align category_theory.Aut.Aut_mul_def CategoryTheory.Aut.Aut_mul_def
+-/
 
+#print CategoryTheory.Aut.Aut_inv_def /-
 theorem Aut_inv_def (f : Aut X) : f⁻¹ = f.symm :=
   rfl
 #align category_theory.Aut.Aut_inv_def CategoryTheory.Aut.Aut_inv_def
+-/
 
+#print CategoryTheory.Aut.unitsEndEquivAut /-
 /-- Units in the monoid of endomorphisms of an object
 are (multiplicatively) equivalent to automorphisms of that object.
 -/
@@ -215,7 +220,9 @@ def unitsEndEquivAut : (End X)ˣ ≃* Aut X
   right_inv := fun ⟨f₁, f₂, f₃, f₄⟩ => rfl
   map_mul' f g := by rcases f with ⟨⟩ <;> rcases g with ⟨⟩ <;> rfl
 #align category_theory.Aut.units_End_equiv_Aut CategoryTheory.Aut.unitsEndEquivAut
+-/
 
+#print CategoryTheory.Aut.autMulEquivOfIso /-
 /-- Isomorphisms induce isomorphisms of the automorphism group -/
 def autMulEquivOfIso {X Y : C} (h : X ≅ Y) : Aut X ≃* Aut Y
     where
@@ -225,6 +232,7 @@ def autMulEquivOfIso {X Y : C} (h : X ≅ Y) : Aut X ≃* Aut Y
   right_inv := by tidy
   map_mul' := by simp [Aut_mul_def]
 #align category_theory.Aut.Aut_mul_equiv_of_iso CategoryTheory.Aut.autMulEquivOfIso
+-/
 
 end Aut
 
@@ -232,6 +240,7 @@ namespace Functor
 
 variable {D : Type u'} [Category.{v'} D] (f : C ⥤ D) (X)
 
+#print CategoryTheory.Functor.mapEnd /-
 /-- `f.map` as a monoid hom between endomorphism monoids. -/
 @[simps]
 def mapEnd : End X →* End (f.obj X)
@@ -240,13 +249,16 @@ def mapEnd : End X →* End (f.obj X)
   map_mul' x y := f.map_comp y x
   map_one' := f.map_id X
 #align category_theory.functor.map_End CategoryTheory.Functor.mapEnd
+-/
 
+#print CategoryTheory.Functor.mapAut /-
 /-- `f.map_iso` as a group hom between automorphism groups. -/
 def mapAut : Aut X →* Aut (f.obj X) where
   toFun := f.mapIso
   map_mul' x y := f.mapIso_trans y x
   map_one' := f.mapIso_refl X
 #align category_theory.functor.map_Aut CategoryTheory.Functor.mapAut
+-/
 
 end Functor
 

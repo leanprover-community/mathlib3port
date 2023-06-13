@@ -29,37 +29,47 @@ section SemigroupWithZero
 
 variable [SemigroupWithZero α] {a : α}
 
+#print eq_zero_of_zero_dvd /-
 theorem eq_zero_of_zero_dvd (h : 0 ∣ a) : a = 0 :=
   Dvd.elim h fun c H' => H'.trans (MulZeroClass.zero_mul c)
 #align eq_zero_of_zero_dvd eq_zero_of_zero_dvd
+-/
 
+#print zero_dvd_iff /-
 /-- Given an element `a` of a commutative semigroup with zero, there exists another element whose
     product with zero equals `a` iff `a` equals zero. -/
 @[simp]
 theorem zero_dvd_iff : 0 ∣ a ↔ a = 0 :=
   ⟨eq_zero_of_zero_dvd, fun h => by rw [h]; use 0; simp⟩
 #align zero_dvd_iff zero_dvd_iff
+-/
 
+#print dvd_zero /-
 @[simp]
 theorem dvd_zero (a : α) : a ∣ 0 :=
   Dvd.intro 0 (by simp)
 #align dvd_zero dvd_zero
+-/
 
 end SemigroupWithZero
 
+#print mul_dvd_mul_iff_left /-
 /-- Given two elements `b`, `c` of a `cancel_monoid_with_zero` and a nonzero element `a`,
  `a*b` divides `a*c` iff `b` divides `c`. -/
 theorem mul_dvd_mul_iff_left [CancelMonoidWithZero α] {a b c : α} (ha : a ≠ 0) :
     a * b ∣ a * c ↔ b ∣ c :=
   exists_congr fun d => by rw [mul_assoc, mul_right_inj' ha]
 #align mul_dvd_mul_iff_left mul_dvd_mul_iff_left
+-/
 
+#print mul_dvd_mul_iff_right /-
 /-- Given two elements `a`, `b` of a commutative `cancel_monoid_with_zero` and a nonzero
   element `c`, `a*c` divides `b*c` iff `a` divides `b`. -/
 theorem mul_dvd_mul_iff_right [CancelCommMonoidWithZero α] {a b c : α} (hc : c ≠ 0) :
     a * c ∣ b * c ↔ a ∣ b :=
   exists_congr fun d => by rw [mul_right_comm, mul_left_inj' hc]
 #align mul_dvd_mul_iff_right mul_dvd_mul_iff_right
+-/
 
 section CommMonoidWithZero
 
@@ -111,11 +121,13 @@ section MonoidWithZero
 
 variable [MonoidWithZero α]
 
+#print ne_zero_of_dvd_ne_zero /-
 theorem ne_zero_of_dvd_ne_zero {p q : α} (h₁ : q ≠ 0) (h₂ : p ∣ q) : p ≠ 0 :=
   by
   rcases h₂ with ⟨u, rfl⟩
   exact left_ne_zero_of_mul h₁
 #align ne_zero_of_dvd_ne_zero ne_zero_of_dvd_ne_zero
+-/
 
 end MonoidWithZero
 

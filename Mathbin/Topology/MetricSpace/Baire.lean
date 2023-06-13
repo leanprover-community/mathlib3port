@@ -317,12 +317,14 @@ theorem dense_biInter_of_Gδ {S : Set β} {f : ∀ x ∈ S, Set α} (ho : ∀ s 
 #align dense_bInter_of_Gδ dense_biInter_of_Gδ
 -/
 
+#print Dense.inter_of_Gδ /-
 /-- Baire theorem: the intersection of two dense Gδ sets is dense. -/
 theorem Dense.inter_of_Gδ {s t : Set α} (hs : IsGδ s) (ht : IsGδ t) (hsc : Dense s)
     (htc : Dense t) : Dense (s ∩ t) := by
   rw [inter_eq_Inter]
   apply dense_iInter_of_Gδ <;> simp [Bool.forall_bool, *]
 #align dense.inter_of_Gδ Dense.inter_of_Gδ
+-/
 
 #print IsGδ.dense_iUnion_interior_of_closed /-
 /-- If a countable family of closed sets cover a dense `Gδ` set, then the union of their interiors
@@ -395,12 +397,14 @@ theorem dense_iUnion_interior_of_closed [Encodable β] {f : β → Set α} (hc :
 #align dense_Union_interior_of_closed dense_iUnion_interior_of_closed
 -/
 
+#print nonempty_interior_of_iUnion_of_closed /-
 /-- One of the most useful consequences of Baire theorem: if a countable union of closed sets
 covers the space, then one of the sets has nonempty interior. -/
 theorem nonempty_interior_of_iUnion_of_closed [Nonempty α] [Encodable β] {f : β → Set α}
     (hc : ∀ s, IsClosed (f s)) (hU : (⋃ s, f s) = univ) : ∃ s, (interior <| f s).Nonempty := by
   simpa using (dense_iUnion_interior_of_closed hc hU).Nonempty
 #align nonempty_interior_of_Union_of_closed nonempty_interior_of_iUnion_of_closed
+-/
 
 end BaireTheorem
 

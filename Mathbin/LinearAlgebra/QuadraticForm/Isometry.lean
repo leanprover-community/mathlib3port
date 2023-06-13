@@ -71,15 +71,19 @@ theorem toLinearEquiv_eq_coe (f : Q₁.Isometry Q₂) : f.toLinearEquiv = f :=
 instance : CoeFun (Q₁.Isometry Q₂) fun _ => M₁ → M₂ :=
   ⟨fun f => ⇑(f : M₁ ≃ₗ[R] M₂)⟩
 
+#print QuadraticForm.Isometry.coe_toLinearEquiv /-
 @[simp]
 theorem coe_toLinearEquiv (f : Q₁.Isometry Q₂) : ⇑(f : M₁ ≃ₗ[R] M₂) = f :=
   rfl
 #align quadratic_form.isometry.coe_to_linear_equiv QuadraticForm.Isometry.coe_toLinearEquiv
+-/
 
+#print QuadraticForm.Isometry.map_app /-
 @[simp]
 theorem map_app (f : Q₁.Isometry Q₂) (m : M₁) : Q₂ (f m) = Q₁ m :=
   f.map_app' m
 #align quadratic_form.isometry.map_app QuadraticForm.Isometry.map_app
+-/
 
 #print QuadraticForm.Isometry.refl /-
 /-- The identity isometry from a quadratic form to itself. -/
@@ -113,20 +117,26 @@ namespace Equivalent
 
 variable {Q₁ : QuadraticForm R M₁} {Q₂ : QuadraticForm R M₂} {Q₃ : QuadraticForm R M₃}
 
+#print QuadraticForm.Equivalent.refl /-
 @[refl]
 theorem refl (Q : QuadraticForm R M) : Q.Equivalent Q :=
   ⟨Isometry.refl Q⟩
 #align quadratic_form.equivalent.refl QuadraticForm.Equivalent.refl
+-/
 
+#print QuadraticForm.Equivalent.symm /-
 @[symm]
 theorem symm (h : Q₁.Equivalent Q₂) : Q₂.Equivalent Q₁ :=
   h.elim fun f => ⟨f.symm⟩
 #align quadratic_form.equivalent.symm QuadraticForm.Equivalent.symm
+-/
 
+#print QuadraticForm.Equivalent.trans /-
 @[trans]
 theorem trans (h : Q₁.Equivalent Q₂) (h' : Q₂.Equivalent Q₃) : Q₁.Equivalent Q₃ :=
   h'.elim <| h.elim fun f g => ⟨f.trans g⟩
 #align quadratic_form.equivalent.trans QuadraticForm.Equivalent.trans
+-/
 
 end Equivalent
 
@@ -154,6 +164,7 @@ noncomputable def isometryBasisRepr (Q : QuadraticForm R M) (v : Basis ι R M) :
 
 variable [Field K] [Invertible (2 : K)] [AddCommGroup V] [Module K V]
 
+#print QuadraticForm.isometryWeightedSumSquares /-
 /-- Given an orthogonal basis, a quadratic form is isometric with a weighted sum of squares. -/
 noncomputable def isometryWeightedSumSquares (Q : QuadraticForm K V)
     (v : Basis (Fin (FiniteDimensional.finrank K V)) K V) (hv₁ : (associated Q).IsOrthoᵢ v) :
@@ -164,17 +175,21 @@ noncomputable def isometryWeightedSumSquares (Q : QuadraticForm K V)
   convert iso.map_app m
   rw [basis_repr_eq_of_is_Ortho _ _ hv₁]
 #align quadratic_form.isometry_weighted_sum_squares QuadraticForm.isometryWeightedSumSquares
+-/
 
 variable [FiniteDimensional K V]
 
 open BilinForm
 
+#print QuadraticForm.equivalent_weightedSumSquares /-
 theorem equivalent_weightedSumSquares (Q : QuadraticForm K V) :
     ∃ w : Fin (FiniteDimensional.finrank K V) → K, Equivalent Q (weightedSumSquares K w) :=
   let ⟨v, hv₁⟩ := exists_orthogonal_basis (associated_isSymm _ Q)
   ⟨_, ⟨Q.isometryWeightedSumSquares v hv₁⟩⟩
 #align quadratic_form.equivalent_weighted_sum_squares QuadraticForm.equivalent_weightedSumSquares
+-/
 
+#print QuadraticForm.equivalent_weightedSumSquares_units_of_nondegenerate' /-
 theorem equivalent_weightedSumSquares_units_of_nondegenerate' (Q : QuadraticForm K V)
     (hQ : (associated Q).Nondegenerate) :
     ∃ w : Fin (FiniteDimensional.finrank K V) → Kˣ, Equivalent Q (weightedSumSquares K w) :=
@@ -184,6 +199,7 @@ theorem equivalent_weightedSumSquares_units_of_nondegenerate' (Q : QuadraticForm
   simp_rw [is_ortho, associated_eq_self_apply] at hv₂ 
   exact ⟨fun i => Units.mk0 _ (hv₂ i), ⟨Q.isometry_weighted_sum_squares v hv₁⟩⟩
 #align quadratic_form.equivalent_weighted_sum_squares_units_of_nondegenerate' QuadraticForm.equivalent_weightedSumSquares_units_of_nondegenerate'
+-/
 
 end QuadraticForm
 

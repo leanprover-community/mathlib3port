@@ -36,6 +36,7 @@ namespace ModuleCat
 
 variable {R : Type u} [Ring R] (M : ModuleCat.{v} R)
 
+#print ModuleCat.subobjectModule /-
 /-- The categorical subobjects of a module `M` are in one-to-one correspondence with its
     submodules.-/
 noncomputable def subobjectModule : Subobject M ≃o Submodule R M :=
@@ -77,6 +78,7 @@ noncomputable def subobjectModule : Subobject M ≃o Submodule R M :=
         · simpa only [← comp_def, of_mk_le_mk_comp] using (Submodule.range_subtype _).symm
         · exact (Submodule.range_subtype _).symm }
 #align Module.subobject_Module ModuleCat.subobjectModule
+-/
 
 #print ModuleCat.wellPowered_moduleCat /-
 instance wellPowered_moduleCat : WellPowered (ModuleCat.{v} R) :=
@@ -86,17 +88,22 @@ instance wellPowered_moduleCat : WellPowered (ModuleCat.{v} R) :=
 
 attribute [local instance] has_kernels_Module
 
+#print ModuleCat.toKernelSubobject /-
 /-- Bundle an element `m : M` such that `f m = 0` as a term of `kernel_subobject f`. -/
 noncomputable def toKernelSubobject {M N : ModuleCat R} {f : M ⟶ N} :
     LinearMap.ker f →ₗ[R] kernelSubobject f :=
   (kernelSubobjectIso f ≪≫ ModuleCat.kernelIsoKer f).inv
 #align Module.to_kernel_subobject ModuleCat.toKernelSubobject
+-/
 
+#print ModuleCat.toKernelSubobject_arrow /-
 @[simp]
 theorem toKernelSubobject_arrow {M N : ModuleCat R} {f : M ⟶ N} (x : LinearMap.ker f) :
     (kernelSubobject f).arrow (toKernelSubobject x) = x.1 := by simp [to_kernel_subobject]
 #align Module.to_kernel_subobject_arrow ModuleCat.toKernelSubobject_arrow
+-/
 
+#print ModuleCat.cokernel_π_imageSubobject_ext /-
 /-- An extensionality lemma showing that two elements of a cokernel by an image
 are equal if they differ by an element of the image.
 
@@ -109,6 +116,7 @@ theorem cokernel_π_imageSubobject_ext {L M N : ModuleCat.{v} R} (f : L ⟶ M) [
     (w : x = y + g (factorThruImageSubobject f l)) : cokernel.π g x = cokernel.π g y := by subst w;
   simp
 #align Module.cokernel_π_image_subobject_ext ModuleCat.cokernel_π_imageSubobject_ext
+-/
 
 end ModuleCat
 

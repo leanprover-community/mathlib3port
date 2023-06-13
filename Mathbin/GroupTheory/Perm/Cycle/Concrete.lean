@@ -172,6 +172,7 @@ theorem formPerm_coe (l : List α) (hl : l.Nodup) : formPerm (l : Cycle α) hl =
 #align cycle.form_perm_coe Cycle.formPerm_coe
 -/
 
+#print Cycle.formPerm_subsingleton /-
 theorem formPerm_subsingleton (s : Cycle α) (h : Subsingleton s) : formPerm s h.Nodup = 1 :=
   by
   induction s using Quot.inductionOn
@@ -182,6 +183,7 @@ theorem formPerm_subsingleton (s : Cycle α) (h : Subsingleton s) : formPerm s h
   · simp only [length_eq_zero, add_le_iff_nonpos_left, List.length, nonpos_iff_eq_zero] at h 
     simp [h]
 #align cycle.form_perm_subsingleton Cycle.formPerm_subsingleton
+-/
 
 #print Cycle.isCycle_formPerm /-
 theorem isCycle_formPerm (s : Cycle α) (h : Nodup s) (hn : Nontrivial s) : IsCycle (formPerm s h) :=
@@ -219,12 +221,14 @@ theorem formPerm_apply_mem_eq_next (s : Cycle α) (h : Nodup s) (x : α) (hx : x
 #align cycle.form_perm_apply_mem_eq_next Cycle.formPerm_apply_mem_eq_next
 -/
 
+#print Cycle.formPerm_reverse /-
 theorem formPerm_reverse (s : Cycle α) (h : Nodup s) :
     formPerm s.reverse (nodup_reverse_iff.mpr h) = (formPerm s h)⁻¹ :=
   by
   induction s using Quot.inductionOn
   simpa using form_perm_reverse _ h
 #align cycle.form_perm_reverse Cycle.formPerm_reverse
+-/
 
 #print Cycle.formPerm_eq_formPerm_iff /-
 theorem formPerm_eq_formPerm_iff {α : Type _} [DecidableEq α] {s s' : Cycle α} {hs : s.Nodup}
@@ -257,9 +261,11 @@ def toList : List α :=
 #align equiv.perm.to_list Equiv.Perm.toList
 -/
 
+#print Equiv.Perm.toList_one /-
 @[simp]
 theorem toList_one : toList (1 : Perm α) x = [] := by simp [to_list, cycle_of_one]
 #align equiv.perm.to_list_one Equiv.Perm.toList_one
+-/
 
 #print Equiv.Perm.toList_eq_nil_iff /-
 @[simp]
@@ -417,6 +423,7 @@ theorem toList_formPerm_singleton (x y : α) : toList (formPerm [x]) y = [] := b
 #align equiv.perm.to_list_form_perm_singleton Equiv.Perm.toList_formPerm_singleton
 -/
 
+#print Equiv.Perm.toList_formPerm_nontrivial /-
 theorem toList_formPerm_nontrivial (l : List α) (hl : 2 ≤ l.length) (hn : Nodup l) :
     toList (formPerm l) (l.nthLe 0 (zero_lt_two.trans_le hl)) = l :=
   by
@@ -431,6 +438,7 @@ theorem toList_formPerm_nontrivial (l : List α) (hl : 2 ≤ l.length) (hn : Nod
     simp [form_perm_pow_apply_nth_le _ hn, Nat.mod_eq_of_lt hk']
   · simpa [hs] using nth_le_mem _ _ _
 #align equiv.perm.to_list_form_perm_nontrivial Equiv.Perm.toList_formPerm_nontrivial
+-/
 
 #print Equiv.Perm.toList_formPerm_isRotated_self /-
 theorem toList_formPerm_isRotated_self (l : List α) (hl : 2 ≤ l.length) (hn : Nodup l) (x : α)
@@ -620,7 +628,6 @@ def isoCycle' : { f : Perm α // IsCycle f } ≃ { s : Cycle α // s.Nodup ∧ s
 #align equiv.perm.iso_cycle' Equiv.Perm.isoCycle'
 -/
 
--- mathport name: «exprc[ ,]»
 notation3"c["(l ", "* => foldr (h t => List.cons h t) List.nil)"]" =>
   Cycle.formPerm (↑l) (Cycle.nodup_coe_iff.mpr (by decide))
 

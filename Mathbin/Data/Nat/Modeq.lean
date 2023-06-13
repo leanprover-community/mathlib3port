@@ -41,7 +41,6 @@ deriving Decidable
 #align nat.modeq Nat.ModEq
 -/
 
--- mathport name: «expr ≡ [MOD ]»
 notation:50 a " ≡ " b " [MOD " n "]" => ModEq n a b
 
 variable {m n a b c d : ℕ}
@@ -103,10 +102,12 @@ theorem Dvd.dvd.zero_modEq_nat (h : n ∣ a) : 0 ≡ a [MOD n] :=
 #align has_dvd.dvd.zero_modeq_nat Dvd.dvd.zero_modEq_nat
 -/
 
+#print Nat.modEq_iff_dvd /-
 theorem modEq_iff_dvd : a ≡ b [MOD n] ↔ (n : ℤ) ∣ b - a := by
   rw [modeq, eq_comm, ← Int.coe_nat_inj', Int.coe_nat_mod, Int.coe_nat_mod,
     Int.emod_eq_emod_iff_emod_sub_eq_zero, Int.dvd_iff_emod_eq_zero]
 #align nat.modeq_iff_dvd Nat.modEq_iff_dvd
+-/
 
 alias modeq_iff_dvd ↔ modeq.dvd modeq_of_dvd
 #align nat.modeq.dvd Nat.ModEq.dvd
@@ -346,12 +347,14 @@ theorem gcd_eq (h : a ≡ b [MOD m]) : gcd a m = gcd b m :=
 #align nat.modeq.gcd_eq Nat.ModEq.gcd_eq
 -/
 
+#print Nat.ModEq.eq_of_abs_lt /-
 theorem eq_of_abs_lt (h : a ≡ b [MOD m]) (h2 : |(b - a : ℤ)| < m) : a = b :=
   by
   apply Int.ofNat.inj
   rw [eq_comm, ← sub_eq_zero]
   exact Int.eq_zero_of_abs_lt_dvd (modeq_iff_dvd.mp h) h2
 #align nat.modeq.eq_of_abs_lt Nat.ModEq.eq_of_abs_lt
+-/
 
 #print Nat.ModEq.eq_of_lt_of_lt /-
 theorem eq_of_lt_of_lt (h : a ≡ b [MOD m]) (ha : a < m) (hb : b < m) : a = b :=
@@ -538,6 +541,7 @@ theorem div_mod_eq_mod_mul_div (a b c : ℕ) : a / b % c = a % (b * c) / b :=
 #align nat.div_mod_eq_mod_mul_div Nat.div_mod_eq_mod_mul_div
 -/
 
+#print Nat.add_mod_add_ite /-
 theorem add_mod_add_ite (a b c : ℕ) :
     ((a + b) % c + if c ≤ a % c + b % c then c else 0) = a % c + b % c :=
   have : (a + b) % c = (a % c + b % c) % c := ((mod_modEq _ _).add <| mod_modEq _ _).symm
@@ -557,6 +561,7 @@ theorem add_mod_add_ite (a b c : ℕ) :
         mod_add_div, le_antisymm (le_of_lt_succ h2) h0, mul_one, add_comm]
     · rw [Nat.mod_eq_of_lt (lt_of_not_ge h), add_zero]
 #align nat.add_mod_add_ite Nat.add_mod_add_ite
+-/
 
 #print Nat.add_mod_of_add_mod_lt /-
 theorem add_mod_of_add_mod_lt {a b c : ℕ} (hc : a % c + b % c < c) : (a + b) % c = a % c + b % c :=
@@ -570,6 +575,7 @@ theorem add_mod_add_of_le_add_mod {a b c : ℕ} (hc : c ≤ a % c + b % c) :
 #align nat.add_mod_add_of_le_add_mod Nat.add_mod_add_of_le_add_mod
 -/
 
+#print Nat.add_div /-
 theorem add_div {a b c : ℕ} (hc0 : 0 < c) :
     (a + b) / c = a / c + b / c + if c ≤ a % c + b % c then 1 else 0 :=
   by
@@ -583,6 +589,7 @@ theorem add_div {a b c : ℕ} (hc0 : 0 < c) :
   conv_lhs => rw [← add_mod_add_ite]
   simp; ac_rfl
 #align nat.add_div Nat.add_div
+-/
 
 #print Nat.add_div_eq_of_add_mod_lt /-
 theorem add_div_eq_of_add_mod_lt {a b c : ℕ} (hc : a % c + b % c < c) :

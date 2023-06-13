@@ -66,10 +66,8 @@ open SzemerediRegularity
 variable {α : Type _} [DecidableEq α] [Fintype α] {P : Finpartition (univ : Finset α)}
   {u : Finset α} {ε : ℝ}
 
--- mathport name: exprm
 local notation "m" => (card α / stepBound P.parts.card : ℕ)
 
--- mathport name: expra
 local notation "a" => (card α / P.parts.card - m * 4 ^ P.parts.card : ℕ)
 
 namespace Tactic

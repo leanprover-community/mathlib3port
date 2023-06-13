@@ -131,6 +131,7 @@ theorem IsPushout.isVanKampen_iff (H : IsPushout f g h i) :
 #align category_theory.is_pushout.is_van_kampen_iff CategoryTheory.IsPushout.isVanKampen_iff
 -/
 
+#print CategoryTheory.is_coprod_iff_isPushout /-
 theorem is_coprod_iff_isPushout {X E Y YE : C} (c : BinaryCofan X E) (hc : IsColimit c) {f : X ⟶ Y}
     {iY : Y ⟶ YE} {fE : c.pt ⟶ YE} (H : CommSq f c.inl iY fE) :
     Nonempty (IsColimit (BinaryCofan.mk (c.inr ≫ fE) iY)) ↔ IsPushout f c.inl iY fE :=
@@ -166,7 +167,9 @@ theorem is_coprod_iff_isPushout {X E Y YE : C} (c : BinaryCofan X E) (hc : IsCol
         · dsimp; erw [hc.fac, ← H.w_assoc, e₂]; rfl
         · refine' ((category.assoc _ _ _).symm.trans e₁).trans _; symm; exact hc.fac _ _
 #align category_theory.is_coprod_iff_is_pushout CategoryTheory.is_coprod_iff_isPushout
+-/
 
+#print CategoryTheory.IsPushout.isVanKampen_inl /-
 theorem IsPushout.isVanKampen_inl {W E X Z : C} (c : BinaryCofan W E) [FinitaryExtensive C]
     [HasPullbacks C] (hc : IsColimit c) (f : W ⟶ X) (h : X ⟶ Z) (i : c.pt ⟶ Z)
     (H : IsPushout f c.inl h i) : H.IsVanKampen :=
@@ -212,6 +215,7 @@ theorem IsPushout.isVanKampen_inl {W E X Z : C} (c : BinaryCofan W E) [FinitaryE
   · rintro ⟨hc₃, hc₄⟩
     exact ⟨(is_pullback.of_has_pullback αY c.inr).paste_horiz hc₄, hc₃⟩
 #align category_theory.is_pushout.is_van_kampen_inl CategoryTheory.IsPushout.isVanKampen_inl
+-/
 
 #print CategoryTheory.IsPushout.IsVanKampen.isPullback_of_mono_left /-
 theorem IsPushout.IsVanKampen.isPullback_of_mono_left [Mono f] {H : IsPushout f g h i}

@@ -1348,26 +1348,35 @@ theorem Int.rel_of_forall_rel_succ_of_le (r : β → β → Prop) [IsRefl β r] 
 #align int.rel_of_forall_rel_succ_of_le Int.rel_of_forall_rel_succ_of_le
 -/
 
+#print monotone_int_of_le_succ /-
 theorem monotone_int_of_le_succ {f : ℤ → α} (hf : ∀ n, f n ≤ f (n + 1)) : Monotone f :=
   Int.rel_of_forall_rel_succ_of_le (· ≤ ·) hf
 #align monotone_int_of_le_succ monotone_int_of_le_succ
+-/
 
+#print antitone_int_of_succ_le /-
 theorem antitone_int_of_succ_le {f : ℤ → α} (hf : ∀ n, f (n + 1) ≤ f n) : Antitone f :=
   Int.rel_of_forall_rel_succ_of_le (· ≥ ·) hf
 #align antitone_int_of_succ_le antitone_int_of_succ_le
+-/
 
+#print strictMono_int_of_lt_succ /-
 theorem strictMono_int_of_lt_succ {f : ℤ → α} (hf : ∀ n, f n < f (n + 1)) : StrictMono f :=
   Int.rel_of_forall_rel_succ_of_lt (· < ·) hf
 #align strict_mono_int_of_lt_succ strictMono_int_of_lt_succ
+-/
 
+#print strictAnti_int_of_succ_lt /-
 theorem strictAnti_int_of_succ_lt {f : ℤ → α} (hf : ∀ n, f (n + 1) < f n) : StrictAnti f :=
   Int.rel_of_forall_rel_succ_of_lt (· > ·) hf
 #align strict_anti_int_of_succ_lt strictAnti_int_of_succ_lt
+-/
 
 namespace Int
 
 variable (α) [Nonempty α] [NoMinOrder α] [NoMaxOrder α]
 
+#print Int.exists_strictMono /-
 /-- If `α` is a nonempty preorder with no minimal or maximal elements, then there exists a strictly
 monotone function `f : ℤ → α`. -/
 theorem exists_strictMono : ∃ f : ℤ → α, StrictMono f :=
@@ -1383,12 +1392,15 @@ theorem exists_strictMono : ∃ f : ℤ → α, StrictMono f :=
     exact hg Nat.zero_lt_one
   · exact hg (Nat.lt_succ_self _)
 #align int.exists_strict_mono Int.exists_strictMono
+-/
 
+#print Int.exists_strictAnti /-
 /-- If `α` is a nonempty preorder with no minimal or maximal elements, then there exists a strictly
 antitone function `f : ℤ → α`. -/
 theorem exists_strictAnti : ∃ f : ℤ → α, StrictAnti f :=
   exists_strictMono αᵒᵈ
 #align int.exists_strict_anti Int.exists_strictAnti
+-/
 
 end Int
 
@@ -1411,19 +1423,23 @@ theorem Antitone.ne_of_lt_of_lt_nat {f : ℕ → α} (hf : Antitone f) (n : ℕ)
 #align antitone.ne_of_lt_of_lt_nat Antitone.ne_of_lt_of_lt_nat
 -/
 
+#print Monotone.ne_of_lt_of_lt_int /-
 /-- If `f` is a monotone function from `ℤ` to a preorder and `x` lies between `f n` and
   `f (n + 1)`, then `x` doesn't lie in the range of `f`. -/
 theorem Monotone.ne_of_lt_of_lt_int {f : ℤ → α} (hf : Monotone f) (n : ℤ) {x : α} (h1 : f n < x)
     (h2 : x < f (n + 1)) (a : ℤ) : f a ≠ x := by rintro rfl;
   exact (hf.reflect_lt h1).not_le (Int.le_of_lt_add_one <| hf.reflect_lt h2)
 #align monotone.ne_of_lt_of_lt_int Monotone.ne_of_lt_of_lt_int
+-/
 
+#print Antitone.ne_of_lt_of_lt_int /-
 /-- If `f` is an antitone function from `ℤ` to a preorder and `x` lies between `f (n + 1)` and
 `f n`, then `x` doesn't lie in the range of `f`. -/
 theorem Antitone.ne_of_lt_of_lt_int {f : ℤ → α} (hf : Antitone f) (n : ℤ) {x : α}
     (h1 : f (n + 1) < x) (h2 : x < f n) (a : ℤ) : f a ≠ x := by rintro rfl;
   exact (hf.reflect_lt h2).not_le (Int.le_of_lt_add_one <| hf.reflect_lt h1)
 #align antitone.ne_of_lt_of_lt_int Antitone.ne_of_lt_of_lt_int
+-/
 
 #print StrictMono.id_le /-
 theorem StrictMono.id_le {φ : ℕ → ℕ} (h : StrictMono φ) : ∀ n, n ≤ φ n := fun n =>
@@ -1448,19 +1464,27 @@ section Preorder
 
 variable [Preorder α] [Preorder β] [Preorder γ] [Preorder δ] {f : α → γ} {g : β → δ} {a b : α}
 
+#print monotone_fst /-
 theorem monotone_fst : Monotone (@Prod.fst α β) := fun a b => And.left
 #align monotone_fst monotone_fst
+-/
 
+#print monotone_snd /-
 theorem monotone_snd : Monotone (@Prod.snd α β) := fun a b => And.right
 #align monotone_snd monotone_snd
+-/
 
+#print Monotone.prod_map /-
 theorem Monotone.prod_map (hf : Monotone f) (hg : Monotone g) : Monotone (Prod.map f g) :=
   fun a b h => ⟨hf h.1, hg h.2⟩
 #align monotone.prod_map Monotone.prod_map
+-/
 
+#print Antitone.prod_map /-
 theorem Antitone.prod_map (hf : Antitone f) (hg : Antitone g) : Antitone (Prod.map f g) :=
   fun a b h => ⟨hf h.1, hg h.2⟩
 #align antitone.prod_map Antitone.prod_map
+-/
 
 end Preorder
 
@@ -1468,17 +1492,21 @@ section PartialOrder
 
 variable [PartialOrder α] [PartialOrder β] [Preorder γ] [Preorder δ] {f : α → γ} {g : β → δ}
 
+#print StrictMono.prod_map /-
 theorem StrictMono.prod_map (hf : StrictMono f) (hg : StrictMono g) : StrictMono (Prod.map f g) :=
   fun a b => by
   simp_rw [Prod.lt_iff]
   exact Or.imp (And.imp hf.imp hg.monotone.imp) (And.imp hf.monotone.imp hg.imp)
 #align strict_mono.prod_map StrictMono.prod_map
+-/
 
+#print StrictAnti.prod_map /-
 theorem StrictAnti.prod_map (hf : StrictAnti f) (hg : StrictAnti g) : StrictAnti (Prod.map f g) :=
   fun a b => by
   simp_rw [Prod.lt_iff]
   exact Or.imp (And.imp hf.imp hg.antitone.imp) (And.imp hf.antitone.imp hg.imp)
 #align strict_anti.prod_map StrictAnti.prod_map
+-/
 
 end PartialOrder
 

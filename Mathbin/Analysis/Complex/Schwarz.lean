@@ -66,6 +66,7 @@ section Space
 variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℂ E] {R R₁ R₂ : ℝ} {f : ℂ → E}
   {c z z₀ : ℂ}
 
+#print Complex.schwarz_aux /-
 /-- An auxiliary lemma for `complex.norm_dslope_le_div_of_maps_to_ball`. -/
 theorem schwarz_aux {f : ℂ → ℂ} (hd : DifferentiableOn ℂ f (ball c R₁))
     (h_maps : MapsTo f (ball c R₁) (ball (f c) R₂)) (hz : z ∈ ball c R₁) :
@@ -94,7 +95,9 @@ theorem schwarz_aux {f : ℂ → ℂ} (hd : DifferentiableOn ℂ f (ball c R₁)
   · rw [closure_ball c hr₀.ne', mem_closed_ball]
     exact hr.1.le
 #align complex.schwarz_aux Complex.schwarz_aux
+-/
 
+#print Complex.norm_dslope_le_div_of_mapsTo_ball /-
 /-- Two cases of the **Schwarz Lemma** (derivative and distance), merged together. -/
 theorem norm_dslope_le_div_of_mapsTo_ball (hd : DifferentiableOn ℂ f (ball c R₁))
     (h_maps : MapsTo f (ball c R₁) (ball (f c) R₂)) (hz : z ∈ ball c R₁) :
@@ -117,7 +120,9 @@ theorem norm_dslope_le_div_of_mapsTo_ball (hd : DifferentiableOn ℂ f (ball c R
       refine' schwarz_aux (g.differentiable.comp_differentiable_on hd) (maps_to.comp _ h_maps) hz
       simpa only [hg', NNReal.coe_one, one_mul] using g.lipschitz.maps_to_ball hg₀ (f c) R₂
 #align complex.norm_dslope_le_div_of_maps_to_ball Complex.norm_dslope_le_div_of_mapsTo_ball
+-/
 
+#print Complex.affine_of_mapsTo_ball_of_exists_norm_dslope_eq_div /-
 /-- Equality case in the **Schwarz Lemma**: in the setup of `norm_dslope_le_div_of_maps_to_ball`, if
 `‖dslope f c z₀‖ = R₂ / R₁` holds at a point in the ball then the map `f` is affine. -/
 theorem affine_of_mapsTo_ball_of_exists_norm_dslope_eq_div [CompleteSpace E] [StrictConvexSpace ℝ E]
@@ -140,7 +145,9 @@ theorem affine_of_mapsTo_ball_of_exists_norm_dslope_eq_div [CompleteSpace E] [St
       h_z₀ g_max hz
   simp [← this]
 #align complex.affine_of_maps_to_ball_of_exists_norm_dslope_eq_div Complex.affine_of_mapsTo_ball_of_exists_norm_dslope_eq_div
+-/
 
+#print Complex.affine_of_mapsTo_ball_of_exists_norm_dslope_eq_div' /-
 theorem affine_of_mapsTo_ball_of_exists_norm_dslope_eq_div' [CompleteSpace E]
     [StrictConvexSpace ℝ E] (hd : DifferentiableOn ℂ f (ball c R₁))
     (h_maps : Set.MapsTo f (ball c R₁) (ball (f c) R₂))
@@ -149,7 +156,9 @@ theorem affine_of_mapsTo_ball_of_exists_norm_dslope_eq_div' [CompleteSpace E]
   let ⟨z₀, h_z₀, h_eq⟩ := h_z₀
   ⟨dslope f c z₀, h_eq, affine_of_mapsTo_ball_of_exists_norm_dslope_eq_div hd h_maps h_z₀ h_eq⟩
 #align complex.affine_of_maps_to_ball_of_exists_norm_dslope_eq_div' Complex.affine_of_mapsTo_ball_of_exists_norm_dslope_eq_div'
+-/
 
+#print Complex.norm_deriv_le_div_of_mapsTo_ball /-
 /-- The **Schwarz Lemma**: if `f : ℂ → E` sends an open disk with center `c` and a positive radius
 `R₁` to an open ball with center `f c` and radius `R₂`, then the absolute value of the derivative of
 `f` at `c` is at most the ratio `R₂ / R₁`. -/
@@ -157,7 +166,9 @@ theorem norm_deriv_le_div_of_mapsTo_ball (hd : DifferentiableOn ℂ f (ball c R�
     (h_maps : MapsTo f (ball c R₁) (ball (f c) R₂)) (h₀ : 0 < R₁) : ‖deriv f c‖ ≤ R₂ / R₁ := by
   simpa only [dslope_same] using norm_dslope_le_div_of_maps_to_ball hd h_maps (mem_ball_self h₀)
 #align complex.norm_deriv_le_div_of_maps_to_ball Complex.norm_deriv_le_div_of_mapsTo_ball
+-/
 
+#print Complex.dist_le_div_mul_dist_of_mapsTo_ball /-
 /-- The **Schwarz Lemma**: if `f : ℂ → E` sends an open disk with center `c` and radius `R₁` to an
 open ball with center `f c` and radius `R₂`, then for any `z` in the former disk we have
 `dist (f z) (f c) ≤ (R₂ / R₁) * dist z c`. -/
@@ -169,11 +180,13 @@ theorem dist_le_div_mul_dist_of_mapsTo_ball (hd : DifferentiableOn ℂ f (ball c
   simpa only [dslope_of_ne _ hne, slope_def_module, norm_smul, norm_inv, ← div_eq_inv_mul, ←
     dist_eq_norm, div_le_iff (dist_pos.2 hne)] using norm_dslope_le_div_of_maps_to_ball hd h_maps hz
 #align complex.dist_le_div_mul_dist_of_maps_to_ball Complex.dist_le_div_mul_dist_of_mapsTo_ball
+-/
 
 end Space
 
 variable {f : ℂ → ℂ} {c z : ℂ} {R R₁ R₂ : ℝ}
 
+#print Complex.abs_deriv_le_div_of_mapsTo_ball /-
 /-- The **Schwarz Lemma**: if `f : ℂ → ℂ` sends an open disk with center `c` and a positive radius
 `R₁` to an open disk with center `f c` and radius `R₂`, then the absolute value of the derivative of
 `f` at `c` is at most the ratio `R₂ / R₁`. -/
@@ -181,7 +194,9 @@ theorem abs_deriv_le_div_of_mapsTo_ball (hd : DifferentiableOn ℂ f (ball c R�
     (h_maps : MapsTo f (ball c R₁) (ball (f c) R₂)) (h₀ : 0 < R₁) : abs (deriv f c) ≤ R₂ / R₁ :=
   norm_deriv_le_div_of_mapsTo_ball hd h_maps h₀
 #align complex.abs_deriv_le_div_of_maps_to_ball Complex.abs_deriv_le_div_of_mapsTo_ball
+-/
 
+#print Complex.abs_deriv_le_one_of_mapsTo_ball /-
 /-- The **Schwarz Lemma**: if `f : ℂ → ℂ` sends an open disk of positive radius to itself and the
 center of this disk to itself, then the absolute value of the derivative of `f` at the center of
 this disk is at most `1`. -/
@@ -189,7 +204,9 @@ theorem abs_deriv_le_one_of_mapsTo_ball (hd : DifferentiableOn ℂ f (ball c R))
     (h_maps : MapsTo f (ball c R) (ball c R)) (hc : f c = c) (h₀ : 0 < R) : abs (deriv f c) ≤ 1 :=
   (norm_deriv_le_div_of_mapsTo_ball hd (by rwa [hc]) h₀).trans_eq (div_self h₀.ne')
 #align complex.abs_deriv_le_one_of_maps_to_ball Complex.abs_deriv_le_one_of_mapsTo_ball
+-/
 
+#print Complex.dist_le_dist_of_mapsTo_ball_self /-
 /-- The **Schwarz Lemma**: if `f : ℂ → ℂ` sends an open disk to itself and the center `c` of this
 disk to itself, then for any point `z` of this disk we have `dist (f z) c ≤ dist z c`. -/
 theorem dist_le_dist_of_mapsTo_ball_self (hd : DifferentiableOn ℂ f (ball c R))
@@ -200,7 +217,9 @@ theorem dist_le_dist_of_mapsTo_ball_self (hd : DifferentiableOn ℂ f (ball c R)
   simpa only [hc, div_self hR.ne', one_mul] using
     dist_le_div_mul_dist_of_maps_to_ball hd (by rwa [hc]) hz
 #align complex.dist_le_dist_of_maps_to_ball_self Complex.dist_le_dist_of_mapsTo_ball_self
+-/
 
+#print Complex.abs_le_abs_of_mapsTo_ball_self /-
 /-- The **Schwarz Lemma**: if `f : ℂ → ℂ` sends an open disk with center `0` to itself, the for any
 point `z` of this disk we have `abs (f z) ≤ abs z`. -/
 theorem abs_le_abs_of_mapsTo_ball_self (hd : DifferentiableOn ℂ f (ball 0 R))
@@ -209,6 +228,7 @@ theorem abs_le_abs_of_mapsTo_ball_self (hd : DifferentiableOn ℂ f (ball 0 R))
   replace hz : z ∈ ball (0 : ℂ) R; exact mem_ball_zero_iff.2 hz
   simpa only [dist_zero_right] using dist_le_dist_of_maps_to_ball_self hd h_maps h₀ hz
 #align complex.abs_le_abs_of_maps_to_ball_self Complex.abs_le_abs_of_mapsTo_ball_self
+-/
 
 end Complex
 

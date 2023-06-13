@@ -58,6 +58,7 @@ variable [Module ℝ E] [SMulCommClass ℝ 𝕜 E]
 
 variable [TopologicalSpace E] [LocallyConvexSpace ℝ E] [ContinuousSMul 𝕜 E]
 
+#print nhds_basis_abs_convex /-
 theorem nhds_basis_abs_convex :
     (𝓝 (0 : E)).HasBasis (fun s : Set E => s ∈ 𝓝 (0 : E) ∧ Balanced 𝕜 s ∧ Convex ℝ s) id :=
   by
@@ -69,9 +70,11 @@ theorem nhds_basis_abs_convex :
   refine' ⟨balanced_convexHull_of_balanced (balancedCore_balanced s), _⟩
   exact convex_convexHull ℝ (balancedCore 𝕜 s)
 #align nhds_basis_abs_convex nhds_basis_abs_convex
+-/
 
 variable [ContinuousSMul ℝ E] [TopologicalAddGroup E]
 
+#print nhds_basis_abs_convex_open /-
 theorem nhds_basis_abs_convex_open :
     (𝓝 (0 : E)).HasBasis (fun s : Set E => (0 : E) ∈ s ∧ IsOpen s ∧ Balanced 𝕜 s ∧ Convex ℝ s) id :=
   by
@@ -84,6 +87,7 @@ theorem nhds_basis_abs_convex_open :
   rintro s ⟨hs_zero, hs_open, hs_balanced, hs_convex⟩
   exact ⟨s, ⟨hs_open.mem_nhds hs_zero, hs_balanced, hs_convex⟩, rfl.subset⟩
 #align nhds_basis_abs_convex_open nhds_basis_abs_convex_open
+-/
 
 end NontriviallyNormedField
 
@@ -102,33 +106,45 @@ def AbsConvexOpenSets :=
 #align abs_convex_open_sets AbsConvexOpenSets
 -/
 
+#print AbsConvexOpenSets.instCoeTC /-
 instance AbsConvexOpenSets.instCoeTC : Coe (AbsConvexOpenSets 𝕜 E) (Set E) :=
   ⟨Subtype.val⟩
 #align abs_convex_open_sets.has_coe AbsConvexOpenSets.instCoeTC
+-/
 
 namespace AbsConvexOpenSets
 
 variable {𝕜 E}
 
+#print AbsConvexOpenSets.coe_zero_mem /-
 theorem coe_zero_mem (s : AbsConvexOpenSets 𝕜 E) : (0 : E) ∈ (s : Set E) :=
   s.2.1
 #align abs_convex_open_sets.coe_zero_mem AbsConvexOpenSets.coe_zero_mem
+-/
 
+#print AbsConvexOpenSets.coe_isOpen /-
 theorem coe_isOpen (s : AbsConvexOpenSets 𝕜 E) : IsOpen (s : Set E) :=
   s.2.2.1
 #align abs_convex_open_sets.coe_is_open AbsConvexOpenSets.coe_isOpen
+-/
 
+#print AbsConvexOpenSets.coe_nhds /-
 theorem coe_nhds (s : AbsConvexOpenSets 𝕜 E) : (s : Set E) ∈ 𝓝 (0 : E) :=
   s.coe_isOpen.mem_nhds s.coe_zero_mem
 #align abs_convex_open_sets.coe_nhds AbsConvexOpenSets.coe_nhds
+-/
 
+#print AbsConvexOpenSets.coe_balanced /-
 theorem coe_balanced (s : AbsConvexOpenSets 𝕜 E) : Balanced 𝕜 (s : Set E) :=
   s.2.2.2.1
 #align abs_convex_open_sets.coe_balanced AbsConvexOpenSets.coe_balanced
+-/
 
+#print AbsConvexOpenSets.coe_convex /-
 theorem coe_convex (s : AbsConvexOpenSets 𝕜 E) : Convex ℝ (s : Set E) :=
   s.2.2.2.2
 #align abs_convex_open_sets.coe_convex AbsConvexOpenSets.coe_convex
+-/
 
 end AbsConvexOpenSets
 
@@ -151,13 +167,16 @@ variable [ContinuousSMul ℝ E]
 
 variable (𝕜 E)
 
+#print gaugeSeminormFamily /-
 /-- The family of seminorms defined by the gauges of absolute convex open sets. -/
 noncomputable def gaugeSeminormFamily : SeminormFamily 𝕜 E (AbsConvexOpenSets 𝕜 E) := fun s =>
   gaugeSeminorm s.coe_balanced s.coe_convex (absorbent_nhds_zero s.coe_nhds)
 #align gauge_seminorm_family gaugeSeminormFamily
+-/
 
 variable {𝕜 E}
 
+#print gaugeSeminormFamily_ball /-
 theorem gaugeSeminormFamily_ball (s : AbsConvexOpenSets 𝕜 E) :
     (gaugeSeminormFamily 𝕜 E s).ball 0 1 = (s : Set E) :=
   by
@@ -166,11 +185,13 @@ theorem gaugeSeminormFamily_ball (s : AbsConvexOpenSets 𝕜 E) :
   simp_rw [gaugeSeminorm_to_fun]
   exact gauge_lt_one_eq_self_of_open s.coe_convex s.coe_zero_mem s.coe_is_open
 #align gauge_seminorm_family_ball gaugeSeminormFamily_ball
+-/
 
 variable [TopologicalAddGroup E] [ContinuousSMul 𝕜 E]
 
 variable [SMulCommClass ℝ 𝕜 E] [LocallyConvexSpace ℝ E]
 
+#print with_gaugeSeminormFamily /-
 /-- The topology of a locally convex space is induced by the gauge seminorm family. -/
 theorem with_gaugeSeminormFamily : WithSeminorms (gaugeSeminormFamily 𝕜 E) :=
   by
@@ -195,4 +216,5 @@ theorem with_gaugeSeminormFamily : WithSeminorms (gaugeSeminormFamily 𝕜 E) :=
   rw [hr', ← Seminorm.smul_ball_zero hr'', gaugeSeminormFamily_ball]
   exact S.coe_is_open.smul₀ hr''
 #align with_gauge_seminorm_family with_gaugeSeminormFamily
+-/
 

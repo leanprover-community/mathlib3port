@@ -47,6 +47,7 @@ protected def Nonneg (r : ℚ) : Prop :=
 #align rat.nonneg Rat.Nonneg
 -/
 
+#print Rat.divInt_nonneg /-
 @[simp]
 theorem divInt_nonneg (a : ℤ) {b : ℤ} (h : 0 < b) : (a /. b).NonNeg ↔ 0 ≤ a :=
   by
@@ -60,6 +61,7 @@ theorem divInt_nonneg (a : ℤ) {b : ℤ} (h : 0 < b) : (a /. b).NonNeg ↔ 0 �
   · apply nonneg_of_mul_nonneg_left _ h
     rw [← this]; exact mul_nonneg h₂ (Int.ofNat_zero_le _)
 #align rat.mk_nonneg Rat.divInt_nonneg
+-/
 
 #print Rat.nonneg_add /-
 protected theorem nonneg_add {a b} : Rat.Nonneg a → Rat.Nonneg b → Rat.Nonneg (a + b) :=
@@ -126,32 +128,42 @@ instance decidableLe : DecidableRel ((· ≤ ·) : ℚ → ℚ → Prop)
   | a, b => show Decidable (Rat.Nonneg (b - a)) by infer_instance
 #align rat.decidable_le Rat.decidableLe
 
+#print Rat.le_def /-
 protected theorem le_def {a b c d : ℤ} (b0 : 0 < b) (d0 : 0 < d) :
     a /. b ≤ c /. d ↔ a * d ≤ c * b := by
   show Rat.Nonneg _ ↔ _
   rw [← sub_nonneg]
   simp [sub_eq_add_neg, ne_of_gt b0, ne_of_gt d0, mul_pos d0 b0]
 #align rat.le_def Rat.le_def
+-/
 
+#print Rat.le_refl /-
 protected theorem le_refl : a ≤ a :=
   show Rat.Nonneg (a - a) by rw [sub_self] <;> exact le_refl (0 : ℤ)
 #align rat.le_refl Rat.le_refl
+-/
 
+#print Rat.le_total /-
 protected theorem le_total : a ≤ b ∨ b ≤ a := by
   have := Rat.nonneg_total (b - a) <;> rwa [neg_sub] at this 
 #align rat.le_total Rat.le_total
+-/
 
+#print Rat.le_antisymm /-
 protected theorem le_antisymm {a b : ℚ} (hab : a ≤ b) (hba : b ≤ a) : a = b :=
   by
   have := eq_neg_of_add_eq_zero_left (Rat.nonneg_antisymm hba <| by rwa [← sub_eq_add_neg, neg_sub])
   rwa [neg_neg] at this 
 #align rat.le_antisymm Rat.le_antisymm
+-/
 
+#print Rat.le_trans /-
 protected theorem le_trans {a b c : ℚ} (hab : a ≤ b) (hbc : b ≤ c) : a ≤ c :=
   by
   have : Rat.Nonneg (b - a + (c - b)) := Rat.nonneg_add hab hbc
   simpa [sub_eq_add_neg, add_comm, add_left_comm]
 #align rat.le_trans Rat.le_trans
+-/
 
 instance : LinearOrder ℚ where
   le := Rat.le'
@@ -181,12 +193,14 @@ instance : PartialOrder ℚ := by infer_instance
 
 instance : Preorder ℚ := by infer_instance
 
+#print Rat.le_def' /-
 protected theorem le_def' {p q : ℚ} : p ≤ q ↔ p.num * q.den ≤ q.num * p.den :=
   by
   rw [← @num_denom q, ← @num_denom p]
   conv_rhs => simp only [num_denom]
   exact Rat.le_def (by exact_mod_cast p.pos) (by exact_mod_cast q.pos)
 #align rat.le_def' Rat.le_def'
+-/
 
 #print Rat.lt_def /-
 protected theorem lt_def {p q : ℚ} : p < q ↔ p.num * q.den < q.num * p.den :=
@@ -201,21 +215,29 @@ protected theorem lt_def {p q : ℚ} : p < q ↔ p.num * q.den < q.num * p.den :
 #align rat.lt_def Rat.lt_def
 -/
 
+#print Rat.nonneg_iff_zero_le /-
 theorem nonneg_iff_zero_le {a} : Rat.Nonneg a ↔ 0 ≤ a :=
   show Rat.Nonneg a ↔ Rat.Nonneg (a - 0) by simp
 #align rat.nonneg_iff_zero_le Rat.nonneg_iff_zero_le
+-/
 
+#print Rat.num_nonneg_iff_zero_le /-
 theorem num_nonneg_iff_zero_le : ∀ {a : ℚ}, 0 ≤ a.num ↔ 0 ≤ a
   | ⟨n, d, h, c⟩ => @nonneg_iff_zero_le ⟨n, d, h, c⟩
 #align rat.num_nonneg_iff_zero_le Rat.num_nonneg_iff_zero_le
+-/
 
+#print Rat.add_le_add_left /-
 protected theorem add_le_add_left {a b c : ℚ} : c + a ≤ c + b ↔ a ≤ b := by
   unfold LE.le Rat.le' <;> rw [add_sub_add_left_eq_sub]
 #align rat.add_le_add_left Rat.add_le_add_left
+-/
 
+#print Rat.mul_nonneg /-
 protected theorem mul_nonneg {a b : ℚ} (ha : 0 ≤ a) (hb : 0 ≤ b) : 0 ≤ a * b := by
   rw [← nonneg_iff_zero_le] at ha hb ⊢ <;> exact Rat.nonneg_mul ha hb
 #align rat.mul_nonneg Rat.mul_nonneg
+-/
 
 instance : LinearOrderedField ℚ :=
   { Rat.field, Rat.linearOrder,
@@ -268,6 +290,7 @@ theorem lt_one_iff_num_lt_denom {q : ℚ} : q < 1 ↔ q.num < q.den := by simp [
 #align rat.lt_one_iff_num_lt_denom Rat.lt_one_iff_num_lt_denom
 -/
 
+#print Rat.abs_def /-
 theorem abs_def (q : ℚ) : |q| = q.num.natAbs /. q.den :=
   by
   cases' le_total q 0 with hq hq
@@ -280,6 +303,7 @@ theorem abs_def (q : ℚ) : |q| = q.num.natAbs /. q.den :=
       MulZeroClass.zero_mul] at hq 
     rw [Int.natAbs_of_nonneg hq, num_denom]
 #align rat.abs_def Rat.abs_def
+-/
 
 end Rat
 

@@ -37,11 +37,13 @@ noncomputable def scaleRoots (p : R[X]) (s : R) : R[X] :=
 #align polynomial.scale_roots Polynomial.scaleRoots
 -/
 
+#print Polynomial.coeff_scaleRoots /-
 @[simp]
 theorem coeff_scaleRoots (p : R[X]) (s : R) (i : ℕ) :
     (scaleRoots p s).coeff i = coeff p i * s ^ (p.natDegree - i) := by
   simp (config := { contextual := true }) [scale_roots, coeff_monomial]
 #align polynomial.coeff_scale_roots Polynomial.coeff_scaleRoots
+-/
 
 #print Polynomial.coeff_scaleRoots_natDegree /-
 theorem coeff_scaleRoots_natDegree (p : R[X]) (s : R) :
@@ -74,6 +76,7 @@ theorem support_scaleRoots_le (p : R[X]) (s : R) : (scaleRoots p s).support ≤ 
 #align polynomial.support_scale_roots_le Polynomial.support_scaleRoots_le
 -/
 
+#print Polynomial.support_scaleRoots_eq /-
 theorem support_scaleRoots_eq (p : R[X]) {s : R} (hs : s ∈ nonZeroDivisors R) :
     (scaleRoots p s).support = p.support :=
   le_antisymm (support_scaleRoots_le p s)
@@ -84,6 +87,7 @@ theorem support_scaleRoots_eq (p : R[X]) {s : R} (hs : s ∈ nonZeroDivisors R) 
       have := pow_mem hs (p.nat_degree - i) _ ps_zero
       contradiction)
 #align polynomial.support_scale_roots_eq Polynomial.support_scaleRoots_eq
+-/
 
 #print Polynomial.degree_scaleRoots /-
 @[simp]
@@ -114,6 +118,7 @@ theorem monic_scaleRoots_iff {p : R[X]} (s : R) : Monic (scaleRoots p s) ↔ Mon
 #align polynomial.monic_scale_roots_iff Polynomial.monic_scaleRoots_iff
 -/
 
+#print Polynomial.scaleRoots_eval₂_mul /-
 theorem scaleRoots_eval₂_mul {p : S[X]} (f : S →+* R) (r : R) (s : S) :
     eval₂ f (f s * r) (scaleRoots p s) = f s ^ p.natDegree * eval₂ f r p :=
   calc
@@ -137,16 +142,22 @@ theorem scaleRoots_eval₂_mul {p : S[X]} (f : S →+* R) (r : R) (s : S) :
     _ = f s ^ p.natDegree * p.support.Sum fun i : ℕ => f (p.coeff i) * r ^ i := Finset.mul_sum.symm
     _ = f s ^ p.natDegree * eval₂ f r p := by simp [eval₂_eq_sum, sum_def]
 #align polynomial.scale_roots_eval₂_mul Polynomial.scaleRoots_eval₂_mul
+-/
 
+#print Polynomial.scaleRoots_eval₂_eq_zero /-
 theorem scaleRoots_eval₂_eq_zero {p : S[X]} (f : S →+* R) {r : R} {s : S} (hr : eval₂ f r p = 0) :
     eval₂ f (f s * r) (scaleRoots p s) = 0 := by rw [scale_roots_eval₂_mul, hr, _root_.mul_zero]
 #align polynomial.scale_roots_eval₂_eq_zero Polynomial.scaleRoots_eval₂_eq_zero
+-/
 
+#print Polynomial.scaleRoots_aeval_eq_zero /-
 theorem scaleRoots_aeval_eq_zero [Algebra S R] {p : S[X]} {r : R} {s : S} (hr : aeval r p = 0) :
     aeval (algebraMap S R s * r) (scaleRoots p s) = 0 :=
   scaleRoots_eval₂_eq_zero (algebraMap S R) hr
 #align polynomial.scale_roots_aeval_eq_zero Polynomial.scaleRoots_aeval_eq_zero
+-/
 
+#print Polynomial.scaleRoots_eval₂_eq_zero_of_eval₂_div_eq_zero /-
 theorem scaleRoots_eval₂_eq_zero_of_eval₂_div_eq_zero {p : A[X]} {f : A →+* K}
     (hf : Function.Injective f) {r s : A} (hr : eval₂ f (f r / f s) p = 0)
     (hs : s ∈ nonZeroDivisors A) : eval₂ f (f r) (scaleRoots p s) = 0 :=
@@ -155,20 +166,25 @@ theorem scaleRoots_eval₂_eq_zero_of_eval₂_div_eq_zero {p : A[X]} {f : A →+
   rw [← mul_div_assoc, mul_comm, mul_div_cancel]
   exact map_ne_zero_of_mem_nonZeroDivisors _ hf hs
 #align polynomial.scale_roots_eval₂_eq_zero_of_eval₂_div_eq_zero Polynomial.scaleRoots_eval₂_eq_zero_of_eval₂_div_eq_zero
+-/
 
+#print Polynomial.scaleRoots_aeval_eq_zero_of_aeval_div_eq_zero /-
 theorem scaleRoots_aeval_eq_zero_of_aeval_div_eq_zero [Algebra A K]
     (inj : Function.Injective (algebraMap A K)) {p : A[X]} {r s : A}
     (hr : aeval (algebraMap A K r / algebraMap A K s) p = 0) (hs : s ∈ nonZeroDivisors A) :
     aeval (algebraMap A K r) (scaleRoots p s) = 0 :=
   scaleRoots_eval₂_eq_zero_of_eval₂_div_eq_zero inj hr hs
 #align polynomial.scale_roots_aeval_eq_zero_of_aeval_div_eq_zero Polynomial.scaleRoots_aeval_eq_zero_of_aeval_div_eq_zero
+-/
 
+#print Polynomial.map_scaleRoots /-
 theorem map_scaleRoots (p : R[X]) (x : R) (f : R →+* S) (h : f p.leadingCoeff ≠ 0) :
     (p.scaleRoots x).map f = (p.map f).scaleRoots (f x) :=
   by
   ext
   simp [Polynomial.natDegree_map_of_leadingCoeff_ne_zero _ h]
 #align polynomial.map_scale_roots Polynomial.map_scaleRoots
+-/
 
 end Polynomial
 

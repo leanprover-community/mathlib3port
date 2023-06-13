@@ -30,12 +30,15 @@ namespace Finset
 
 variable {α M : Type _} [CommMonoid M]
 
+#print Finset.prod_insertNone /-
 @[simp, to_additive]
 theorem prod_insertNone (f : Option α → M) (s : Finset α) :
     ∏ x in s.insertNone, f x = f none * ∏ x in s, f (some x) := by simp [insert_none]
 #align finset.prod_insert_none Finset.prod_insertNone
 #align finset.sum_insert_none Finset.sum_insertNone
+-/
 
+#print Finset.prod_eraseNone /-
 @[to_additive]
 theorem prod_eraseNone (f : α → M) (s : Finset (Option α)) :
     ∏ x in s.eraseNone, f x = ∏ x in s, Option.elim' 1 f x := by
@@ -46,6 +49,7 @@ theorem prod_eraseNone (f : α → M) (s : Finset (Option α)) :
     _ = ∏ x in s, Option.elim' 1 f x := prod_erase _ rfl
 #align finset.prod_erase_none Finset.prod_eraseNone
 #align finset.sum_erase_none Finset.sum_eraseNone
+-/
 
 end Finset
 

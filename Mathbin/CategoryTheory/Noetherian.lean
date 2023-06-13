@@ -49,7 +49,7 @@ class NoetherianObject (X : C) : Prop where
 -/
 
 #print CategoryTheory.ArtinianObject /-
-/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`subobject_lt_wellFounded] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`subobject_lt_wellFounded] [] -/
 /-- An artinian object is an object
 which does not have infinite decreasing sequences of subobjects.
 
@@ -86,6 +86,7 @@ open Subobject
 
 variable [HasZeroMorphisms C] [HasZeroObject C]
 
+#print CategoryTheory.exists_simple_subobject /-
 theorem exists_simple_subobject {X : C} [ArtinianObject X] (h : ¬IsZero X) :
     ∃ Y : Subobject X, Simple (Y : C) :=
   by
@@ -95,6 +96,7 @@ theorem exists_simple_subobject {X : C} [ArtinianObject X] (h : ¬IsZero X) :
   obtain ⟨Y, s⟩ := (IsAtomic.eq_bot_or_exists_atom_le (⊤ : subobject X)).resolve_left top_ne_bot
   exact ⟨Y, (subobject_simple_iff_is_atom _).mpr s.1⟩
 #align category_theory.exists_simple_subobject CategoryTheory.exists_simple_subobject
+-/
 
 #print CategoryTheory.simpleSubobject /-
 /-- Choose an arbitrary simple subobject of a non-zero artinian object. -/

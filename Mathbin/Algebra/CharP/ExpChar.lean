@@ -116,6 +116,7 @@ section NoZeroDivisors
 
 variable [NoZeroDivisors R]
 
+#print char_prime_of_ne_zero /-
 /-- A helper lemma: the characteristic is prime if it is non-zero. -/
 theorem char_prime_of_ne_zero {p : ℕ} [hp : CharP R p] (p_ne_zero : p ≠ 0) : Nat.Prime p :=
   by
@@ -123,7 +124,9 @@ theorem char_prime_of_ne_zero {p : ℕ} [hp : CharP R p] (p_ne_zero : p ≠ 0) :
   · exact h
   · contradiction
 #align char_prime_of_ne_zero char_prime_of_ne_zero
+-/
 
+#print expChar_is_prime_or_one /-
 /-- The exponential characteristic is a prime number or one. -/
 theorem expChar_is_prime_or_one (q : ℕ) [hq : ExpChar R q] : Nat.Prime q ∨ q = 1 :=
   or_iff_not_imp_right.mpr fun h =>
@@ -139,6 +142,7 @@ theorem expChar_is_prime_or_one (q : ℕ) [hq : ExpChar R q] : Nat.Prime q ∨ q
     · rwa [p_eq_q] at pprime 
     · contradiction
 #align exp_char_is_prime_or_one expChar_is_prime_or_one
+-/
 
 end NoZeroDivisors
 

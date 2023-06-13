@@ -76,6 +76,7 @@ theorem isQuasiSeparated_univ {α : Type _} [TopologicalSpace α] [QuasiSeparate
 #align is_quasi_separated_univ isQuasiSeparated_univ
 -/
 
+#print IsQuasiSeparated.image_of_embedding /-
 theorem IsQuasiSeparated.image_of_embedding {s : Set α} (H : IsQuasiSeparated s) (h : Embedding f) :
     IsQuasiSeparated (f '' s) := by
   intro U V hU hU' hU'' hV hV' hV''
@@ -95,7 +96,9 @@ theorem IsQuasiSeparated.image_of_embedding {s : Set α} (H : IsQuasiSeparated s
     rw [Set.image_preimage_eq_inter_range, Set.inter_eq_left_iff_subset]
     exact hV.trans (Set.image_subset_range _ _)
 #align is_quasi_separated.image_of_embedding IsQuasiSeparated.image_of_embedding
+-/
 
+#print OpenEmbedding.isQuasiSeparated_iff /-
 theorem OpenEmbedding.isQuasiSeparated_iff (h : OpenEmbedding f) {s : Set α} :
     IsQuasiSeparated s ↔ IsQuasiSeparated (f '' s) :=
   by
@@ -106,6 +109,7 @@ theorem OpenEmbedding.isQuasiSeparated_iff (h : OpenEmbedding f) {s : Set α} :
     H (f '' U) (f '' V) (Set.image_subset _ hU) (h.is_open_map _ hU') (hU''.image h.continuous)
       (Set.image_subset _ hV) (h.is_open_map _ hV') (hV''.image h.continuous)
 #align open_embedding.is_quasi_separated_iff OpenEmbedding.isQuasiSeparated_iff
+-/
 
 #print isQuasiSeparated_iff_quasiSeparatedSpace /-
 theorem isQuasiSeparated_iff_quasiSeparatedSpace (s : Set α) (hs : IsOpen s) :
@@ -144,9 +148,11 @@ theorem IsQuasiSeparated.of_quasiSeparatedSpace (s : Set α) [QuasiSeparatedSpac
 #align is_quasi_separated.of_quasi_separated_space IsQuasiSeparated.of_quasiSeparatedSpace
 -/
 
+#print QuasiSeparatedSpace.of_openEmbedding /-
 theorem QuasiSeparatedSpace.of_openEmbedding (h : OpenEmbedding f) [QuasiSeparatedSpace β] :
     QuasiSeparatedSpace α :=
   isQuasiSeparated_univ_iff.mp
     (h.isQuasiSeparated_iff.mpr <| IsQuasiSeparated.of_quasiSeparatedSpace _)
 #align quasi_separated_space.of_open_embedding QuasiSeparatedSpace.of_openEmbedding
+-/
 

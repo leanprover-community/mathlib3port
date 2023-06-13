@@ -286,8 +286,6 @@ open scoped EuclideanGeometry
 variable {V : Type _} {P : Type _} [NormedAddCommGroup V] [InnerProductSpace ℝ V] [MetricSpace P]
   [NormedAddTorsor V P]
 
-include V
-
 /-- **Law of cosines** (cosine rule), angle-at-point form. -/
 theorem dist_sq_eq_dist_sq_add_dist_sq_sub_two_mul_dist_mul_dist_mul_cos_angle (p1 p2 p3 : P) :
     dist p1 p3 * dist p1 p3 =

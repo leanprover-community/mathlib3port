@@ -29,6 +29,7 @@ open scoped BigOperators
 
 open scoped Topology
 
+#print numDerangements_tendsto_inv_e /-
 theorem numDerangements_tendsto_inv_e :
     Tendsto (fun n => (numDerangements n : ℝ) / n.factorial) atTop (𝓝 (Real.exp (-1))) :=
   by
@@ -60,4 +61,5 @@ theorem numDerangements_tendsto_inv_e :
   field_simp [Nat.factorial_ne_zero]
   ring
 #align num_derangements_tendsto_inv_e numDerangements_tendsto_inv_e
+-/
 

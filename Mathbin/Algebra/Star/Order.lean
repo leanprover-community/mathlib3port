@@ -67,6 +67,7 @@ instance (priority := 100) toOrderedAddCommMonoid [NonUnitalSemiring R] [Partial
 #align star_ordered_ring.to_ordered_add_comm_monoid StarOrderedRing.toOrderedAddCommMonoid
 -/
 
+#print StarOrderedRing.toExistsAddOfLE /-
 -- see note [lower instance priority]
 instance (priority := 100) toExistsAddOfLE [NonUnitalSemiring R] [PartialOrder R]
     [StarOrderedRing R] : ExistsAddOfLE R
@@ -74,6 +75,7 @@ instance (priority := 100) toExistsAddOfLE [NonUnitalSemiring R] [PartialOrder R
     match (le_iff _ _).mp h with
     | ⟨p, _, hp⟩ => ⟨p, hp⟩
 #align star_ordered_ring.to_has_exists_add_of_le StarOrderedRing.toExistsAddOfLE
+-/
 
 #print StarOrderedRing.toOrderedAddCommGroup /-
 -- see note [lower instance priority]
@@ -84,6 +86,7 @@ instance (priority := 100) toOrderedAddCommGroup [NonUnitalRing R] [PartialOrder
 #align star_ordered_ring.to_ordered_add_comm_group StarOrderedRing.toOrderedAddCommGroup
 -/
 
+#print StarOrderedRing.ofLeIff /-
 -- set note [reducible non-instances]
 /-- To construct a `star_ordered_ring` instance it suffices to show that `x ≤ y` if and only if
 `y = x + star s * s` for some `s : R`.
@@ -114,7 +117,9 @@ def ofLeIff [NonUnitalSemiring R] [PartialOrder R] [StarRing R]
           nth_rw 1 [← add_zero x]
           refine' h_add ((ha 0 _ (zero_add a).symm).trans (hb a _ rfl)) x }
 #align star_ordered_ring.of_le_iff StarOrderedRing.ofLeIff
+-/
 
+#print StarOrderedRing.ofNonnegIff /-
 -- set note [reducible non-instances]
 /-- When `R` is a non-unital ring, to construct a `star_ordered_ring` instance it suffices to
 show that the nonnegative elements are precisely those elements in the `add_submonoid` generated
@@ -131,7 +136,9 @@ def ofNonnegIff [NonUnitalRing R] [PartialOrder R] [StarRing R]
       haveI : CovariantClass R R (· + ·) (· ≤ ·) := ⟨fun _ _ _ h => h_add h _⟩
       simpa only [← sub_eq_iff_eq_add', sub_nonneg, exists_eq_right'] using h_nonneg_iff (y - x) }
 #align star_ordered_ring.of_nonneg_iff StarOrderedRing.ofNonnegIff
+-/
 
+#print StarOrderedRing.ofNonnegIff' /-
 -- set note [reducible non-instances]
 /-- When `R` is a non-unital ring, to construct a `star_ordered_ring` instance it suffices to
 show that the nonnegative elements are precisely those elements of the form `star s * s`
@@ -149,11 +156,14 @@ def ofNonnegIff' [NonUnitalRing R] [PartialOrder R] [StarRing R]
       haveI : CovariantClass R R (· + ·) (· ≤ ·) := ⟨fun _ _ _ h => h_add h _⟩
       simpa [sub_eq_iff_eq_add', sub_nonneg] using fun x y => h_nonneg_iff (y - x))
 #align star_ordered_ring.of_nonneg_iff' StarOrderedRing.ofNonnegIff'
+-/
 
+#print StarOrderedRing.nonneg_iff /-
 theorem nonneg_iff [NonUnitalSemiring R] [PartialOrder R] [StarOrderedRing R] {x : R} :
     0 ≤ x ↔ x ∈ AddSubmonoid.closure (Set.range fun s : R => star s * s) := by
   simp only [le_iff, zero_add, exists_eq_right']
 #align star_ordered_ring.nonneg_iff StarOrderedRing.nonneg_iff
+-/
 
 end StarOrderedRing
 
@@ -161,14 +171,19 @@ section NonUnitalSemiring
 
 variable [NonUnitalSemiring R] [PartialOrder R] [StarOrderedRing R]
 
+#print star_mul_self_nonneg /-
 theorem star_mul_self_nonneg (r : R) : 0 ≤ star r * r :=
   StarOrderedRing.nonneg_iff.mpr <| AddSubmonoid.subset_closure ⟨r, rfl⟩
 #align star_mul_self_nonneg star_mul_self_nonneg
+-/
 
+#print star_mul_self_nonneg' /-
 theorem star_mul_self_nonneg' (r : R) : 0 ≤ r * star r := by nth_rw_rhs 1 [← star_star r];
   exact star_mul_self_nonneg (star r)
 #align star_mul_self_nonneg' star_mul_self_nonneg'
+-/
 
+#print conjugate_nonneg /-
 theorem conjugate_nonneg {a : R} (ha : 0 ≤ a) (c : R) : 0 ≤ star c * a * c :=
   by
   rw [StarOrderedRing.nonneg_iff] at ha 
@@ -184,11 +199,15 @@ theorem conjugate_nonneg {a : R} (ha : 0 ≤ a) (c : R) : 0 ≤ star c * a * c :
       _ ≤ star c * x * c + star c * y * c := (StarOrderedRing.add_le_add_left _ _ hy _)
       _ ≤ _ := by rw [mul_add, add_mul]
 #align conjugate_nonneg conjugate_nonneg
+-/
 
+#print conjugate_nonneg' /-
 theorem conjugate_nonneg' {a : R} (ha : 0 ≤ a) (c : R) : 0 ≤ c * a * star c := by
   simpa only [star_star] using conjugate_nonneg ha (star c)
 #align conjugate_nonneg' conjugate_nonneg'
+-/
 
+#print conjugate_le_conjugate /-
 theorem conjugate_le_conjugate {a b : R} (hab : a ≤ b) (c : R) : star c * a * c ≤ star c * b * c :=
   by
   rw [StarOrderedRing.le_iff] at hab ⊢
@@ -196,10 +215,13 @@ theorem conjugate_le_conjugate {a b : R} (hab : a ≤ b) (c : R) : star c * a * 
   simp_rw [← StarOrderedRing.nonneg_iff] at hp ⊢
   exact ⟨star c * p * c, conjugate_nonneg hp c, by simp only [add_mul, mul_add]⟩
 #align conjugate_le_conjugate conjugate_le_conjugate
+-/
 
+#print conjugate_le_conjugate' /-
 theorem conjugate_le_conjugate' {a b : R} (hab : a ≤ b) (c : R) : c * a * star c ≤ c * b * star c :=
   by simpa only [star_star] using conjugate_le_conjugate hab (star c)
 #align conjugate_le_conjugate' conjugate_le_conjugate'
+-/
 
 end NonUnitalSemiring
 

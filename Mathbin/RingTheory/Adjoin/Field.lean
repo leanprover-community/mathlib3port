@@ -36,6 +36,7 @@ section Embeddings
 
 variable (F : Type _) [Field F]
 
+#print AlgEquiv.adjoinSingletonEquivAdjoinRootMinpoly /-
 /-- If `p` is the minimal polynomial of `a` over `F` then `F[a] ≃ₐ[F] F[x]/(p)` -/
 def AlgEquiv.adjoinSingletonEquivAdjoinRootMinpoly {R : Type _} [CommRing R] [Algebra F R] (x : R) :
     Algebra.adjoin F ({x} : Set R) ≃ₐ[F] AdjoinRoot (minpoly F x) :=
@@ -54,9 +55,11 @@ def AlgEquiv.adjoinSingletonEquivAdjoinRootMinpoly {R : Type _} [CommRing R] [Al
           (SetLike.ext_iff.1 (Algebra.adjoin_singleton_eq_range_aeval F x) (y : R)).1 y.2
         ⟨AdjoinRoot.mk _ p, Subtype.eq hp⟩⟩
 #align alg_equiv.adjoin_singleton_equiv_adjoin_root_minpoly AlgEquiv.adjoinSingletonEquivAdjoinRootMinpoly
+-/
 
 open Finset
 
+#print lift_of_splits /-
 /-- If `K` and `L` are field extensions of `F` and we have `s : finset K` such that
 the minimal polynomial of each `x ∈ s` splits in `L` then `algebra.adjoin F s` embeds in `L`. -/
 theorem lift_of_splits {F K L : Type _} [Field F] [Field K] [Field L] [Algebra F K] [Algebra F L]
@@ -94,6 +97,7 @@ theorem lift_of_splits {F K L : Type _} [Field F] [Field K] [Field L] [Algebra F
   refine' (AdjoinRoot.liftHom (minpoly (Algebra.adjoin F (↑s : Set K)) a) y hy).comp _
   exact AlgEquiv.adjoinSingletonEquivAdjoinRootMinpoly (Algebra.adjoin F (↑s : Set K)) a
 #align lift_of_splits lift_of_splits
+-/
 
 end Embeddings
 

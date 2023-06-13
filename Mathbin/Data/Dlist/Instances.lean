@@ -28,6 +28,7 @@ namespace Dlist
 
 variable (α : Type _)
 
+#print Std.DList.listEquivDList /-
 /-- The natural equivalence between lists and difference lists, using
 `dlist.of_list` and `dlist.to_list`. -/
 def Std.DList.listEquivDList : List α ≃ Dlist α := by
@@ -36,6 +37,7 @@ def Std.DList.listEquivDList : List α ≃ Dlist α := by
         invFun := Dlist.toList .. } <;>
     simp [Function.RightInverse, left_inverse, to_list_of_list, of_list_to_list]
 #align dlist.list_equiv_dlist Std.DList.listEquivDList
+-/
 
 instance : Traversable Dlist :=
   Equiv.traversable Std.DList.listEquivDList

@@ -52,13 +52,16 @@ attribute [to_additive] OrderedCommMonoid
 
 section OrderedInstances
 
+#print OrderedCommMonoid.to_covariantClass_left /-
 @[to_additive]
 instance OrderedCommMonoid.to_covariantClass_left (M : Type _) [OrderedCommMonoid M] :
     CovariantClass M M (· * ·) (· ≤ ·)
     where elim a b c bc := OrderedCommMonoid.mul_le_mul_left _ _ bc a
 #align ordered_comm_monoid.to_covariant_class_left OrderedCommMonoid.to_covariantClass_left
 #align ordered_add_comm_monoid.to_covariant_class_left OrderedAddCommMonoid.to_covariantClass_left
+-/
 
+#print OrderedCommMonoid.to_covariantClass_right /-
 /- This instance can be proven with `by apply_instance`.  However, `with_bot ℕ` does not
 pick up a `covariant_class M M (function.swap (*)) (≤)` instance without it (see PR #7940). -/
 @[to_additive]
@@ -67,6 +70,7 @@ instance OrderedCommMonoid.to_covariantClass_right (M : Type _) [OrderedCommMono
   covariant_swap_mul_le_of_covariant_mul_le M
 #align ordered_comm_monoid.to_covariant_class_right OrderedCommMonoid.to_covariantClass_right
 #align ordered_add_comm_monoid.to_covariant_class_right OrderedAddCommMonoid.to_covariantClass_right
+-/
 
 #print Mul.to_covariantClass_left /-
 /- This is not an instance, to avoid creating a loop in the type-class system: in a
@@ -95,9 +99,11 @@ theorem Mul.to_covariantClass_right (M : Type _) [Mul M] [PartialOrder M]
 
 end OrderedInstances
 
+#print bit0_pos /-
 theorem bit0_pos [OrderedAddCommMonoid α] {a : α} (h : 0 < a) : 0 < bit0 a :=
   add_pos' h h
 #align bit0_pos bit0_pos
+-/
 
 #print LinearOrderedAddCommMonoid /-
 /-- A linearly ordered additive commutative monoid. -/
@@ -137,15 +143,19 @@ section LinearOrderedAddCommMonoidWithTop
 
 variable [LinearOrderedAddCommMonoidWithTop α] {a b : α}
 
+#print top_add /-
 @[simp]
 theorem top_add (a : α) : ⊤ + a = ⊤ :=
   LinearOrderedAddCommMonoidWithTop.top_add' a
 #align top_add top_add
+-/
 
+#print add_top /-
 @[simp]
 theorem add_top (a : α) : a + ⊤ = ⊤ :=
   trans (add_comm _ _) (top_add _)
 #align add_top add_top
+-/
 
 end LinearOrderedAddCommMonoidWithTop
 

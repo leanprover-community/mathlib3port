@@ -50,23 +50,30 @@ noncomputable def ACounit : MvPolynomial B A →ₐ[A] B :=
 
 variable {B}
 
+#print MvPolynomial.ACounit_X /-
 @[simp]
 theorem ACounit_X (b : B) : ACounit A B (X b) = b :=
   aeval_X _ b
 #align mv_polynomial.acounit_X MvPolynomial.ACounit_X
+-/
 
 variable {A} (B)
 
+#print MvPolynomial.ACounit_C /-
 @[simp]
 theorem ACounit_C (a : A) : ACounit A B (C a) = algebraMap A B a :=
   aeval_C _ a
 #align mv_polynomial.acounit_C MvPolynomial.ACounit_C
+-/
 
 variable (A)
 
+#print MvPolynomial.ACounit_surjective /-
 theorem ACounit_surjective : Surjective (ACounit A B) := fun b => ⟨X b, ACounit_X A b⟩
 #align mv_polynomial.acounit_surjective MvPolynomial.ACounit_surjective
+-/
 
+#print MvPolynomial.counit /-
 /-- `mv_polynomial.counit R` is the natural surjective ring homomorphism
 `mv_polynomial R ℤ →+* R` obtained by `X r ↦ r`.
 
@@ -75,6 +82,7 @@ and `mv_polynomial.counit_nat` for the “absolute” variant with `R = ℕ`. -/
 noncomputable def counit : MvPolynomial R ℤ →+* R :=
   ACounit ℤ R
 #align mv_polynomial.counit MvPolynomial.counit
+-/
 
 #print MvPolynomial.counitNat /-
 /-- `mv_polynomial.counit_nat A` is the natural surjective ring homomorphism
@@ -87,33 +95,45 @@ noncomputable def counitNat : MvPolynomial A ℕ →+* A :=
 #align mv_polynomial.counit_nat MvPolynomial.counitNat
 -/
 
+#print MvPolynomial.counit_surjective /-
 theorem counit_surjective : Surjective (counit R) :=
   ACounit_surjective ℤ R
 #align mv_polynomial.counit_surjective MvPolynomial.counit_surjective
+-/
 
+#print MvPolynomial.counitNat_surjective /-
 theorem counitNat_surjective : Surjective (counitNat A) :=
   ACounit_surjective ℕ A
 #align mv_polynomial.counit_nat_surjective MvPolynomial.counitNat_surjective
+-/
 
+#print MvPolynomial.counit_C /-
 theorem counit_C (n : ℤ) : counit R (C n) = n :=
   ACounit_C _ _
 #align mv_polynomial.counit_C MvPolynomial.counit_C
+-/
 
+#print MvPolynomial.counitNat_C /-
 theorem counitNat_C (n : ℕ) : counitNat A (C n) = n :=
   ACounit_C _ _
 #align mv_polynomial.counit_nat_C MvPolynomial.counitNat_C
+-/
 
 variable {R A}
 
+#print MvPolynomial.counit_X /-
 @[simp]
 theorem counit_X (r : R) : counit R (X r) = r :=
   ACounit_X _ _
 #align mv_polynomial.counit_X MvPolynomial.counit_X
+-/
 
+#print MvPolynomial.counitNat_X /-
 @[simp]
 theorem counitNat_X (a : A) : counitNat A (X a) = a :=
   ACounit_X _ _
 #align mv_polynomial.counit_nat_X MvPolynomial.counitNat_X
+-/
 
 end MvPolynomial
 

@@ -1526,8 +1526,6 @@ instance foldlCore_zero {f : β → α → β} {b : β} : (foldlCore f b p 0).Bo
 
 variable {reps : ℕ} [hpb : p.Bounded] (he : ∀ cb n n' err, p cb n = fail n' err → n ≠ n')
 
-include hpb he
-
 theorem foldrCore {f : α → β → β} : (foldrCore f p b reps).Bounded :=
   by
   cases reps
@@ -1570,14 +1568,10 @@ theorem many : p.anyM.Bounded :=
   foldr he
 #align parser.bounded.many Parser.Bounded.many
 
-omit hpb
-
 theorem manyChar {pc : Parser Char} [pc.Bounded]
     (he : ∀ cb n n' err, pc cb n = fail n' err → n ≠ n') : pc.manyChar.Bounded := by
   convert bounded.map; exact many he
 #align parser.bounded.many_char Parser.Bounded.manyChar
-
-include hpb
 
 theorem many' : p.many'.Bounded := by convert bounded.and_then; exact many he
 #align parser.bounded.many' Parser.Bounded.many'

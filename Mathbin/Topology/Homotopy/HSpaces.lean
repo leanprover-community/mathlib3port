@@ -77,10 +77,10 @@ class HSpace (X : Type u) [TopologicalSpace X] where
 #align H_space HSpace
 -/
 
--- mathport name: H_space.Hmul
 -- We use the notation `⋀`, typeset as \And, to denote the binary operation `Hmul` on a H-space
 scoped[HSpaces] notation x "⋀" y => HSpace.hmul (x, y)
 
+#print HSpace.prod /-
 instance HSpace.prod (X : Type u) (Y : Type v) [TopologicalSpace X] [TopologicalSpace Y] [HSpace X]
     [HSpace Y] : HSpace (X × Y)
     where
@@ -130,9 +130,11 @@ instance HSpace.prod (X : Type u) (Y : Type v) [TopologicalSpace X] [Topological
               homotopy_rel.eq_fst HSpace.hmulE t (set.mem_singleton_iff.mpr h.2)⟩,
           prod.mk.inj_iff.mpr ⟨(HSpace.hmulE.2 t x h.1).2, (HSpace.hmulE.2 t y h.2).2⟩⟩
 #align H_space.prod HSpace.prod
+-/
 
 namespace TopologicalGroup
 
+#print TopologicalGroup.toHSpace /-
 /-- The definition `to_H_space` is not an instance because its `@additive` version would
 lead to a diamond since a topological field would inherit two `H_space` structures, one from the
 `mul_one_class` and one from the `add_zero_class`. In the case of a group, we make
@@ -148,6 +150,7 @@ def toHSpace (M : Type u) [MulOneClass M] [TopologicalSpace M] [ContinuousMul M]
   hmulE := (HomotopyRel.refl _ _).cast rfl (by ext1; apply mul_one)
 #align topological_group.to_H_space TopologicalGroup.toHSpace
 #align topological_add_group.to_H_space TopologicalAddGroup.toHSpace
+-/
 
 #print TopologicalGroup.hSpace /-
 @[to_additive]
@@ -158,10 +161,12 @@ instance (priority := 600) hSpace (G : Type u) [TopologicalSpace G] [Group G] [T
 #align topological_add_group.H_space TopologicalAddGroup.hSpace
 -/
 
+#print TopologicalGroup.one_eq_hSpace_e /-
 theorem one_eq_hSpace_e {G : Type u} [TopologicalSpace G] [Group G] [TopologicalGroup G] :
     (1 : G) = HSpace.e :=
   rfl
 #align topological_group.one_eq_H_space_e TopologicalGroup.one_eq_hSpace_e
+-/
 
 /- In the following example we see that the `H-space` structure on the product of two topological
 groups is definitionally equally to the product `H-space`-structure of the two groups.-/
@@ -181,10 +186,12 @@ def qRight (p : I × I) : I :=
 #align unit_interval.Q_right unitInterval.qRight
 -/
 
+#print unitInterval.continuous_qRight /-
 theorem continuous_qRight : Continuous qRight :=
   continuous_projIcc.comp <|
     Continuous.div (by continuity) (by continuity) fun x => (add_pos zero_lt_one).ne'
 #align unit_interval.continuous_Q_right unitInterval.continuous_qRight
+-/
 
 #print unitInterval.qRight_zero_left /-
 theorem qRight_zero_left (θ : I) : qRight (0, θ) = 0 :=
@@ -200,6 +207,7 @@ theorem qRight_one_left (θ : I) : qRight (1, θ) = 1 :=
 #align unit_interval.Q_right_one_left unitInterval.qRight_one_left
 -/
 
+#print unitInterval.qRight_zero_right /-
 theorem qRight_zero_right (t : I) : (qRight (t, 0) : ℝ) = if (t : ℝ) ≤ 1 / 2 then 2 * t else 1 :=
   by
   simp only [Q_right, coe_zero, add_zero, div_one]
@@ -207,6 +215,7 @@ theorem qRight_zero_right (t : I) : (qRight (t, 0) : ℝ) = if (t : ℝ) ≤ 1 /
   · rw [Set.projIcc_of_mem _ ((mul_pos_mem_iff zero_lt_two).2 _)]; exacts [rfl, ⟨t.2.1, h⟩]
   · rw [(Set.projIcc_eq_right _).2]; · rfl; · linarith; · exact zero_lt_one
 #align unit_interval.Q_right_zero_right unitInterval.qRight_zero_right
+-/
 
 #print unitInterval.qRight_one_right /-
 theorem qRight_one_right (t : I) : qRight (t, 1) = t :=
@@ -235,11 +244,13 @@ def delayReflRight (θ : I) (γ : Path x y) : Path x y
 #align path.delay_refl_right Path.delayReflRight
 -/
 
+#print Path.continuous_delayReflRight /-
 theorem continuous_delayReflRight : Continuous fun p : I × Path x y => delayReflRight p.1 p.2 :=
   continuous_uncurry_iff.mp <|
     (continuous_snd.comp continuous_fst).path_eval <|
       continuous_qRight.comp <| continuous_snd.prod_mk <| continuous_fst.comp continuous_fst
 #align path.continuous_delay_refl_right Path.continuous_delayReflRight
+-/
 
 #print Path.delayReflRight_zero /-
 theorem delayReflRight_zero (γ : Path x y) : delayReflRight 0 γ = γ.trans (Path.refl y) :=
@@ -267,11 +278,13 @@ def delayReflLeft (θ : I) (γ : Path x y) : Path x y :=
 #align path.delay_refl_left Path.delayReflLeft
 -/
 
+#print Path.continuous_delayReflLeft /-
 theorem continuous_delayReflLeft : Continuous fun p : I × Path x y => delayReflLeft p.1 p.2 :=
   Path.continuous_symm.comp <|
     continuous_delayReflRight.comp <|
       continuous_fst.prod_mk <| Path.continuous_symm.comp continuous_snd
 #align path.continuous_delay_refl_left Path.continuous_delayReflLeft
+-/
 
 #print Path.delayReflLeft_zero /-
 theorem delayReflLeft_zero (γ : Path x y) : delayReflLeft 0 γ = (Path.refl x).trans γ := by

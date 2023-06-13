@@ -206,18 +206,25 @@ def restrict {α} {β : α → Type _} (p : α → Prop) (f : ∀ x, β x) (x : 
 #align subtype.restrict Subtype.restrict
 -/
 
+#print Subtype.restrict_apply /-
 theorem restrict_apply {α} {β : α → Type _} (f : ∀ x, β x) (p : α → Prop) (x : Subtype p) :
     restrict p f x = f x.1 := by rfl
 #align subtype.restrict_apply Subtype.restrict_apply
+-/
 
+#print Subtype.restrict_def /-
 theorem restrict_def {α β} (f : α → β) (p : α → Prop) : restrict p f = f ∘ coe := by rfl
 #align subtype.restrict_def Subtype.restrict_def
+-/
 
+#print Subtype.restrict_injective /-
 theorem restrict_injective {α β} {f : α → β} (p : α → Prop) (h : Injective f) :
     Injective (restrict p f) :=
   h.comp coe_injective
 #align subtype.restrict_injective Subtype.restrict_injective
+-/
 
+#print Subtype.surjective_restrict /-
 theorem surjective_restrict {α} {β : α → Type _} [ne : ∀ a, Nonempty (β a)] (p : α → Prop) :
     Surjective fun f : ∀ x, β x => restrict p f :=
   by
@@ -226,6 +233,7 @@ theorem surjective_restrict {α} {β : α → Type _} [ne : ∀ a, Nonempty (β 
   rintro ⟨x, hx⟩
   exact dif_pos hx
 #align subtype.surjective_restrict Subtype.surjective_restrict
+-/
 
 #print Subtype.coind /-
 /-- Defining a map into a subtype, this can be seen as an "coinduction principle" of `subtype`-/
@@ -234,20 +242,26 @@ def coind {α β} (f : α → β) {p : β → Prop} (h : ∀ a, p (f a)) : α �
 #align subtype.coind Subtype.coind
 -/
 
+#print Subtype.coind_injective /-
 theorem coind_injective {α β} {f : α → β} {p : β → Prop} (h : ∀ a, p (f a)) (hf : Injective f) :
     Injective (coind f h) := fun x y hxy => hf <| by apply congr_arg Subtype.val hxy
 #align subtype.coind_injective Subtype.coind_injective
+-/
 
+#print Subtype.coind_surjective /-
 theorem coind_surjective {α β} {f : α → β} {p : β → Prop} (h : ∀ a, p (f a)) (hf : Surjective f) :
     Surjective (coind f h) := fun x =>
   let ⟨a, ha⟩ := hf x
   ⟨a, coe_injective ha⟩
 #align subtype.coind_surjective Subtype.coind_surjective
+-/
 
+#print Subtype.coind_bijective /-
 theorem coind_bijective {α β} {f : α → β} {p : β → Prop} (h : ∀ a, p (f a)) (hf : Bijective f) :
     Bijective (coind f h) :=
   ⟨coind_injective h hf.1, coind_surjective h hf.2⟩
 #align subtype.coind_bijective Subtype.coind_bijective
+-/
 
 #print Subtype.map /-
 /-- Restriction of a function to a function on subtypes. -/
@@ -257,11 +271,13 @@ def map {p : α → Prop} {q : β → Prop} (f : α → β) (h : ∀ a, p a → 
 #align subtype.map Subtype.map
 -/
 
+#print Subtype.map_comp /-
 theorem map_comp {p : α → Prop} {q : β → Prop} {r : γ → Prop} {x : Subtype p} (f : α → β)
     (h : ∀ a, p a → q (f a)) (g : β → γ) (l : ∀ a, q a → r (g a)) :
     map g l (map f h x) = map (g ∘ f) (fun a ha => l (f a) <| h a ha) x :=
   rfl
 #align subtype.map_comp Subtype.map_comp
+-/
 
 #print Subtype.map_id /-
 theorem map_id {p : α → Prop} {h : ∀ a, p a → p (id a)} : map (@id α) h = id :=
@@ -269,10 +285,12 @@ theorem map_id {p : α → Prop} {h : ∀ a, p a → p (id a)} : map (@id α) h 
 #align subtype.map_id Subtype.map_id
 -/
 
+#print Subtype.map_injective /-
 theorem map_injective {p : α → Prop} {q : β → Prop} {f : α → β} (h : ∀ a, p a → q (f a))
     (hf : Injective f) : Injective (map f h) :=
   coind_injective _ <| hf.comp coe_injective
 #align subtype.map_injective Subtype.map_injective
+-/
 
 #print Subtype.map_involutive /-
 theorem map_involutive {p : α → Prop} {f : α → α} (h : ∀ a, p a → p (f a)) (hf : Involutive f) :
@@ -283,9 +301,11 @@ theorem map_involutive {p : α → Prop} {f : α → α} (h : ∀ a, p a → p (
 instance [HasEquiv α] (p : α → Prop) : HasEquiv (Subtype p) :=
   ⟨fun s t => (s : α) ≈ (t : α)⟩
 
+#print Subtype.equiv_iff /-
 theorem equiv_iff [HasEquiv α] {p : α → Prop} {s t : Subtype p} : s ≈ t ↔ (s : α) ≈ (t : α) :=
   Iff.rfl
 #align subtype.equiv_iff Subtype.equiv_iff
+-/
 
 variable [Setoid α]
 

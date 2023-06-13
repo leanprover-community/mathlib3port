@@ -24,6 +24,7 @@ open scoped Pointwise
 
 open Set Function
 
+#print smul_eq_self_of_preimage_zpow_eq_self /-
 /-- Let `n : ℤ` and `s` a subset of a commutative group `G` that is invariant under preimage for
 the map `x ↦ x^n`. Then `s` is invariant under the pointwise action of the subgroup of elements
 `g : G` such that `g^(n^j) = 1` for some `j : ℕ`. (This subgroup is called the Prüfer subgroup when
@@ -46,4 +47,5 @@ theorem smul_eq_self_of_preimage_zpow_eq_self {G : Type _} [CommGroup G] {n : �
   rwa [MonoidHom.iterate_map_mul, hg', one_mul]
 #align smul_eq_self_of_preimage_zpow_eq_self smul_eq_self_of_preimage_zpow_eq_self
 #align vadd_eq_self_of_preimage_zsmul_eq_self vadd_eq_self_of_preimage_zsmul_eq_self
+-/
 

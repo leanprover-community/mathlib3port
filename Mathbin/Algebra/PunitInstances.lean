@@ -43,31 +43,39 @@ instance : CommGroup PUnit := by
       intros <;>
     exact Subsingleton.elim _ _
 
+#print PUnit.one_eq /-
 @[simp, to_additive]
 theorem one_eq : (1 : PUnit) = unit :=
   rfl
 #align punit.one_eq PUnit.one_eq
 #align punit.zero_eq PUnit.zero_eq
+-/
 
+#print PUnit.mul_eq /-
 @[simp, to_additive]
 theorem mul_eq : x * y = unit :=
   rfl
 #align punit.mul_eq PUnit.mul_eq
 #align punit.add_eq PUnit.add_eq
+-/
 
+#print PUnit.div_eq /-
 -- `sub_eq` simplifies `punit.sub_eq`, but the latter is eligible for `dsimp`
 @[simp, nolint simp_nf, to_additive]
 theorem div_eq : x / y = unit :=
   rfl
 #align punit.div_eq PUnit.div_eq
 #align punit.sub_eq PUnit.sub_eq
+-/
 
+#print PUnit.inv_eq /-
 -- `neg_eq` simplifies `punit.neg_eq`, but the latter is eligible for `dsimp`
 @[simp, nolint simp_nf, to_additive]
 theorem inv_eq : x⁻¹ = unit :=
   rfl
 #align punit.inv_eq PUnit.inv_eq
 #align punit.neg_eq PUnit.neg_eq
+-/
 
 instance : CommRing PUnit := by
   refine' { PUnit.commGroup, PUnit.addCommGroup with natCast := fun _ => PUnit.unit .. } <;>
@@ -89,20 +97,26 @@ instance : NormalizedGCDMonoid PUnit := by
       intros <;>
     exact Subsingleton.elim _ _
 
+#print PUnit.gcd_eq /-
 @[simp]
 theorem gcd_eq : gcd x y = unit :=
   rfl
 #align punit.gcd_eq PUnit.gcd_eq
+-/
 
+#print PUnit.lcm_eq /-
 @[simp]
 theorem lcm_eq : lcm x y = unit :=
   rfl
 #align punit.lcm_eq PUnit.lcm_eq
+-/
 
+#print PUnit.norm_unit_eq /-
 @[simp]
 theorem norm_unit_eq : normUnit x = 1 :=
   rfl
 #align punit.norm_unit_eq PUnit.norm_unit_eq
+-/
 
 instance : CanonicallyOrderedAddMonoid PUnit := by
   refine'

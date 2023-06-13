@@ -173,6 +173,7 @@ theorem Nat.coprime.isPrimePow_dvd_mul {n a b : ℕ} (hab : Nat.coprime a b) (hn
 #align nat.coprime.is_prime_pow_dvd_mul Nat.coprime.isPrimePow_dvd_mul
 -/
 
+#print Nat.mul_divisors_filter_prime_pow /-
 theorem Nat.mul_divisors_filter_prime_pow {a b : ℕ} (hab : a.coprime b) :
     (a * b).divisors.filterₓ IsPrimePow = (a.divisors ∪ b.divisors).filterₓ IsPrimePow :=
   by
@@ -187,4 +188,5 @@ theorem Nat.mul_divisors_filter_prime_pow {a b : ℕ} (hab : a.coprime b) :
     and_congr_left_iff, not_false_iff, Nat.mem_divisors, or_self_iff]
   apply hab.is_prime_pow_dvd_mul
 #align nat.mul_divisors_filter_prime_pow Nat.mul_divisors_filter_prime_pow
+-/
 

@@ -48,11 +48,11 @@ def MutuallySingular {m0 : MeasurableSpace α} (μ ν : Measure α) : Prop :=
 #align measure_theory.measure.mutually_singular MeasureTheory.Measure.MutuallySingular
 -/
 
--- mathport name: measure.mutually_singular
 scoped[MeasureTheory] infixl:60 " ⟂ₘ " => MeasureTheory.Measure.MutuallySingular
 
 namespace MutuallySingular
 
+#print MeasureTheory.Measure.MutuallySingular.mk /-
 theorem mk {s t : Set α} (hs : μ s = 0) (ht : ν t = 0) (hst : univ ⊆ s ∪ t) :
     MutuallySingular μ ν :=
   by
@@ -60,6 +60,7 @@ theorem mk {s t : Set α} (hs : μ s = 0) (ht : ν t = 0) (hst : univ ⊆ s ∪ 
   refine' measure_mono_null (fun x hx => (hst trivial).resolve_left fun hxs => hx _) ht
   exact subset_to_measurable _ _ hxs
 #align measure_theory.measure.mutually_singular.mk MeasureTheory.Measure.MutuallySingular.mk
+-/
 
 #print MeasureTheory.Measure.MutuallySingular.zero_right /-
 @[simp]
@@ -148,13 +149,17 @@ theorem add_right (h₁ : μ ⟂ₘ ν₁) (h₂ : μ ⟂ₘ ν₂) : μ ⟂ₘ 
 #align measure_theory.measure.mutually_singular.add_right MeasureTheory.Measure.MutuallySingular.add_right
 -/
 
+#print MeasureTheory.Measure.MutuallySingular.smul /-
 theorem smul (r : ℝ≥0∞) (h : ν ⟂ₘ μ) : r • ν ⟂ₘ μ :=
   h.mono_ac (AbsolutelyContinuous.rfl.smul r) AbsolutelyContinuous.rfl
 #align measure_theory.measure.mutually_singular.smul MeasureTheory.Measure.MutuallySingular.smul
+-/
 
+#print MeasureTheory.Measure.MutuallySingular.smul_nnreal /-
 theorem smul_nnreal (r : ℝ≥0) (h : ν ⟂ₘ μ) : r • ν ⟂ₘ μ :=
   h.smul r
 #align measure_theory.measure.mutually_singular.smul_nnreal MeasureTheory.Measure.MutuallySingular.smul_nnreal
+-/
 
 end MutuallySingular
 

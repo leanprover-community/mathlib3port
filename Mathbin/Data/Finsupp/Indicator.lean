@@ -53,21 +53,28 @@ def indicator (s : Finset ι) (f : ∀ i ∈ s, α) : ι →₀ α
 #align finsupp.indicator Finsupp.indicator
 -/
 
+#print Finsupp.indicator_of_mem /-
 theorem indicator_of_mem (hi : i ∈ s) (f : ∀ i ∈ s, α) : indicator s f i = f i hi :=
   @dif_pos _ (id _) hi _ _ _
 #align finsupp.indicator_of_mem Finsupp.indicator_of_mem
+-/
 
+#print Finsupp.indicator_of_not_mem /-
 theorem indicator_of_not_mem (hi : i ∉ s) (f : ∀ i ∈ s, α) : indicator s f i = 0 :=
   @dif_neg _ (id _) hi _ _ _
 #align finsupp.indicator_of_not_mem Finsupp.indicator_of_not_mem
+-/
 
 variable (s i)
 
+#print Finsupp.indicator_apply /-
 @[simp]
 theorem indicator_apply [DecidableEq ι] : indicator s f i = if hi : i ∈ s then f i hi else 0 := by
   convert rfl
 #align finsupp.indicator_apply Finsupp.indicator_apply
+-/
 
+#print Finsupp.indicator_injective /-
 theorem indicator_injective : Injective fun f : ∀ i ∈ s, α => indicator s f :=
   by
   intro a b h
@@ -75,7 +82,9 @@ theorem indicator_injective : Injective fun f : ∀ i ∈ s, α => indicator s f
   rw [← indicator_of_mem hi a, ← indicator_of_mem hi b]
   exact congr_fun h i
 #align finsupp.indicator_injective Finsupp.indicator_injective
+-/
 
+#print Finsupp.support_indicator_subset /-
 theorem support_indicator_subset : ((indicator s f).support : Set ι) ⊆ s :=
   by
   intro i hi
@@ -83,12 +92,15 @@ theorem support_indicator_subset : ((indicator s f).support : Set ι) ⊆ s :=
   by_contra
   exact hi (indicator_of_not_mem h _)
 #align finsupp.support_indicator_subset Finsupp.support_indicator_subset
+-/
 
+#print Finsupp.single_eq_indicator /-
 theorem single_eq_indicator (i : ι) (b : α) : single i b = indicator {i} fun _ _ => b := by
   classical
   ext
   simp [single_apply, indicator_apply, @eq_comm _ a]
 #align finsupp.single_eq_indicator Finsupp.single_eq_indicator
+-/
 
 end Finsupp
 

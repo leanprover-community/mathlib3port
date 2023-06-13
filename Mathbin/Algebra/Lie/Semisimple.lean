@@ -112,6 +112,7 @@ instance (priority := 100) isSemisimpleOfIsSimple [h : IsSimple R L] : IsSemisim
 #align lie_algebra.is_semisimple_of_is_simple LieAlgebra.isSemisimpleOfIsSimple
 -/
 
+#print LieAlgebra.subsingleton_of_semisimple_lie_abelian /-
 /-- A semisimple Abelian Lie algebra is trivial. -/
 theorem subsingleton_of_semisimple_lie_abelian [IsSemisimple R L] [h : IsLieAbelian L] :
     Subsingleton L :=
@@ -119,6 +120,7 @@ theorem subsingleton_of_semisimple_lie_abelian [IsSemisimple R L] [h : IsLieAbel
   rw [is_lie_abelian_iff_center_eq_top R L, center_eq_bot_of_semisimple] at h 
   exact (LieSubmodule.subsingleton_iff R L L).mp (subsingleton_of_bot_eq_top h)
 #align lie_algebra.subsingleton_of_semisimple_lie_abelian LieAlgebra.subsingleton_of_semisimple_lie_abelian
+-/
 
 #print LieAlgebra.abelian_radical_of_semisimple /-
 theorem abelian_radical_of_semisimple [IsSemisimple R L] : IsLieAbelian (radical R L) := by

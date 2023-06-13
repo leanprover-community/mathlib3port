@@ -201,6 +201,7 @@ theorem next_cons_cons_eq (z : α) (h : x ∈ x :: z :: l) : next (x :: z :: l) 
 #align list.next_cons_cons_eq List.next_cons_cons_eq
 -/
 
+#print List.next_ne_head_ne_getLast /-
 theorem next_ne_head_ne_getLast (y : α) (h : x ∈ y :: l) (hy : x ≠ y)
     (hx : x ≠ getLast (y :: l) (cons_ne_nil _ _)) :
     next (y :: l) x h = next l x (by simpa [hy] using h) :=
@@ -209,6 +210,7 @@ theorem next_ne_head_ne_getLast (y : α) (h : x ∈ y :: l) (hy : x ≠ y)
   · rwa [last_cons] at hx 
   · simpa [hy] using h
 #align list.next_ne_head_ne_last List.next_ne_head_ne_getLast
+-/
 
 #print List.next_cons_concat /-
 theorem next_cons_concat (y : α) (hy : x ≠ y) (hx : x ∉ l)
@@ -220,6 +222,7 @@ theorem next_cons_concat (y : α) (hy : x ≠ y) (hx : x ∉ l)
 #align list.next_cons_concat List.next_cons_concat
 -/
 
+#print List.next_getLast_cons /-
 theorem next_getLast_cons (y : α) (h : x ∈ y :: l) (hy : x ≠ y)
     (hx : x = getLast (y :: l) (cons_ne_nil _ _)) (hl : Nodup l) : next (y :: l) x h = y :=
   by
@@ -236,6 +239,7 @@ theorem next_getLast_cons (y : α) (h : x ∈ y :: l) (hy : x ≠ y)
     apply hl
     simpa [init_eq_take, nth_le_take', last_eq_nth_le] using hk'
 #align list.next_last_cons List.next_getLast_cons
+-/
 
 #print List.prev_getLast_cons' /-
 theorem prev_getLast_cons' (y : α) (h : x ∈ y :: l) (hx : x = y) :
@@ -290,8 +294,6 @@ theorem prev_ne_cons_cons (y z : α) (h : x ∈ y :: z :: l) (hy : x ≠ y) (hz 
   · rw [prev, dif_neg hy, if_neg hz]
 #align list.prev_ne_cons_cons List.prev_ne_cons_cons
 -/
-
-include h
 
 #print List.next_mem /-
 theorem next_mem : l.next x h ∈ l :=
@@ -835,10 +837,12 @@ theorem nil_toMultiset : nil.toMultiset = (0 : Multiset α) :=
 #align cycle.nil_to_multiset Cycle.nil_toMultiset
 -/
 
+#print Cycle.card_toMultiset /-
 @[simp]
 theorem card_toMultiset (s : Cycle α) : s.toMultiset.card = s.length :=
   Quotient.inductionOn' s (by simp)
 #align cycle.card_to_multiset Cycle.card_toMultiset
+-/
 
 #print Cycle.toMultiset_eq_nil /-
 @[simp]

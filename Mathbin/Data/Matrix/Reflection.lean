@@ -139,6 +139,7 @@ def dotProductᵣ [Mul α] [Add α] [Zero α] {m} (a b : Fin m → α) : α :=
 #align matrix.dot_productᵣ Matrix.dotProductᵣ
 -/
 
+#print Matrix.dotProductᵣ_eq /-
 /-- This can be used to prove
 ```lean
 example (a b c d : α) [has_mul α] [add_comm_monoid α] :
@@ -151,6 +152,7 @@ theorem dotProductᵣ_eq [Mul α] [AddCommMonoid α] {m} (a b : Fin m → α) :
     dotProductᵣ a b = dotProduct a b := by
   simp_rw [dot_productᵣ, dot_product, FinVec.sum_eq, FinVec.seq_eq, FinVec.map_eq]
 #align matrix.dot_productᵣ_eq Matrix.dotProductᵣ_eq
+-/
 
 example (a b c d : α) [Mul α] [AddCommMonoid α] : dotProduct ![a, b] ![c, d] = a * c + b * d :=
   (dotProductᵣ_eq _ _).symm
@@ -163,6 +165,7 @@ def mulᵣ [Mul α] [Add α] [Zero α] (A : Matrix (Fin l) (Fin m) α) (B : Matr
 #align matrix.mulᵣ Matrix.mulᵣ
 -/
 
+#print Matrix.mulᵣ_eq /-
 /-- This can be used to prove
 ```lean
 example [add_comm_monoid α] [has_mul α] (a₁₁ a₁₂ a₂₁ a₂₂ b₁₁ b₁₂ b₂₁ b₂₂ : α) :
@@ -181,6 +184,7 @@ theorem mulᵣ_eq [Mul α] [AddCommMonoid α] (A : Matrix (Fin l) (Fin m) α)
   simp [mulᵣ, Function.comp, Matrix.mul, Matrix.transpose]
   rfl
 #align matrix.mulᵣ_eq Matrix.mulᵣ_eq
+-/
 
 example [AddCommMonoid α] [Mul α] (a₁₁ a₁₂ a₂₁ a₂₂ b₁₁ b₁₂ b₂₁ b₂₂ : α) :
     !![a₁₁, a₁₂; a₂₁, a₂₂].mul !![b₁₁, b₁₂; b₂₁, b₂₂] =
@@ -195,6 +199,7 @@ def mulVecᵣ [Mul α] [Add α] [Zero α] (A : Matrix (Fin l) (Fin m) α) (v : F
 #align matrix.mul_vecᵣ Matrix.mulVecᵣ
 -/
 
+#print Matrix.mulVecᵣ_eq /-
 /-- This can be used to prove
 ```lean
 example [non_unital_non_assoc_semiring α] (a₁₁ a₁₂ a₂₁ a₂₂ b₁ b₂ : α) :
@@ -209,6 +214,7 @@ theorem mulVecᵣ_eq [NonUnitalNonAssocSemiring α] (A : Matrix (Fin l) (Fin m) 
   simp [mul_vecᵣ, Function.comp]
   rfl
 #align matrix.mul_vecᵣ_eq Matrix.mulVecᵣ_eq
+-/
 
 example [NonUnitalNonAssocSemiring α] (a₁₁ a₁₂ a₂₁ a₂₂ b₁ b₂ : α) :
     !![a₁₁, a₁₂; a₂₁, a₂₂].mulVec ![b₁, b₂] = ![a₁₁ * b₁ + a₁₂ * b₂, a₂₁ * b₁ + a₂₂ * b₂] :=
@@ -221,6 +227,7 @@ def vecMulᵣ [Mul α] [Add α] [Zero α] (v : Fin l → α) (A : Matrix (Fin l)
 #align matrix.vec_mulᵣ Matrix.vecMulᵣ
 -/
 
+#print Matrix.vecMulᵣ_eq /-
 /-- This can be used to prove
 ```lean
 example [non_unital_non_assoc_semiring α] (a₁₁ a₁₂ a₂₁ a₂₂ b₁ b₂ : α) :
@@ -235,6 +242,7 @@ theorem vecMulᵣ_eq [NonUnitalNonAssocSemiring α] (v : Fin l → α) (A : Matr
   simp [vec_mulᵣ, Function.comp]
   rfl
 #align matrix.vec_mulᵣ_eq Matrix.vecMulᵣ_eq
+-/
 
 example [NonUnitalNonAssocSemiring α] (a₁₁ a₁₂ a₂₁ a₂₂ b₁ b₂ : α) :
     vecMul ![b₁, b₂] !![a₁₁, a₁₂; a₂₁, a₂₂] = ![b₁ * a₁₁ + b₂ * a₂₁, b₁ * a₁₂ + b₂ * a₂₂] :=

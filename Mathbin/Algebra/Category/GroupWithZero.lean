@@ -64,18 +64,23 @@ instance : ConcreteCategory GroupWithZeroCat
   forget := ⟨coeSort, fun X Y => coeFn, fun X => rfl, fun X Y Z f g => rfl⟩
   forget_faithful := ⟨fun X Y f g h => FunLike.coe_injective h⟩
 
+#print GroupWithZeroCat.hasForgetToBipointed /-
 instance hasForgetToBipointed : HasForget₂ GroupWithZeroCat Bipointed
     where forget₂ :=
     { obj := fun X => ⟨X, 0, 1⟩
       map := fun X Y f => ⟨f, f.map_zero', f.map_one'⟩ }
 #align GroupWithZero.has_forget_to_Bipointed GroupWithZeroCat.hasForgetToBipointed
+-/
 
+#print GroupWithZeroCat.hasForgetToMon /-
 instance hasForgetToMon : HasForget₂ GroupWithZeroCat MonCat
     where forget₂ :=
     { obj := fun X => ⟨X⟩
       map := fun X Y => MonoidWithZeroHom.toMonoidHom }
 #align GroupWithZero.has_forget_to_Mon GroupWithZeroCat.hasForgetToMon
+-/
 
+#print GroupWithZeroCat.Iso.mk /-
 /-- Constructs an isomorphism of groups with zero from a group isomorphism between them. -/
 @[simps]
 def Iso.mk {α β : GroupWithZeroCat.{u}} (e : α ≃* β) : α ≅ β
@@ -85,6 +90,7 @@ def Iso.mk {α β : GroupWithZeroCat.{u}} (e : α ≃* β) : α ≅ β
   hom_inv_id' := by ext; exact e.symm_apply_apply _
   inv_hom_id' := by ext; exact e.apply_symm_apply _
 #align GroupWithZero.iso.mk GroupWithZeroCat.Iso.mk
+-/
 
 end GroupWithZeroCat
 

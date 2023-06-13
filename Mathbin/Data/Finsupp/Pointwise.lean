@@ -46,15 +46,20 @@ variable [MulZeroClass β]
 instance : Mul (α →₀ β) :=
   ⟨zipWith (· * ·) (MulZeroClass.mul_zero 0)⟩
 
+#print Finsupp.coe_mul /-
 theorem coe_mul (g₁ g₂ : α →₀ β) : ⇑(g₁ * g₂) = g₁ * g₂ :=
   rfl
 #align finsupp.coe_mul Finsupp.coe_mul
+-/
 
+#print Finsupp.mul_apply /-
 @[simp]
 theorem mul_apply {g₁ g₂ : α →₀ β} {a : α} : (g₁ * g₂) a = g₁ a * g₂ a :=
   rfl
 #align finsupp.mul_apply Finsupp.mul_apply
+-/
 
+#print Finsupp.support_mul /-
 theorem support_mul [DecidableEq α] {g₁ g₂ : α →₀ β} :
     (g₁ * g₂).support ⊆ g₁.support ∩ g₂.support :=
   by
@@ -66,6 +71,7 @@ theorem support_mul [DecidableEq α] {g₁ g₂ : α →₀ β} :
   apply h
   cases w <;> · rw [w]; simp
 #align finsupp.support_mul Finsupp.support_mul
+-/
 
 instance : MulZeroClass (α →₀ β) :=
   Finsupp.coeFn_injective.MulZeroClass _ coe_zero coe_mul
@@ -96,6 +102,7 @@ instance [NonUnitalCommRing β] : NonUnitalCommRing (α →₀ β) :=
   Finsupp.coeFn_injective.NonUnitalCommRing _ coe_zero coe_add coe_mul coe_neg coe_sub
     (fun _ _ => rfl) fun _ _ => rfl
 
+#print Finsupp.pointwiseScalar /-
 -- TODO can this be generalized in the direction of `pi.has_smul'`
 -- (i.e. dependent functions and finsupps)
 -- TODO in theory this could be generalised, we only really need `smul_zero` for the definition
@@ -110,16 +117,21 @@ instance pointwiseScalar [Semiring β] : SMul (α → β) (α →₀ β)
         apply hx
         rw [h, smul_zero])
 #align finsupp.pointwise_scalar Finsupp.pointwiseScalar
+-/
 
+#print Finsupp.coe_pointwise_smul /-
 @[simp]
 theorem coe_pointwise_smul [Semiring β] (f : α → β) (g : α →₀ β) : ⇑(f • g) = f • g :=
   rfl
 #align finsupp.coe_pointwise_smul Finsupp.coe_pointwise_smul
+-/
 
+#print Finsupp.pointwiseModule /-
 /-- The pointwise multiplicative action of functions on finitely supported functions -/
 instance pointwiseModule [Semiring β] : Module (α → β) (α →₀ β) :=
   Function.Injective.module _ coeFnAddHom coeFn_injective coe_pointwise_smul
 #align finsupp.pointwise_module Finsupp.pointwiseModule
+-/
 
 end Finsupp
 

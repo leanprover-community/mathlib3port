@@ -40,6 +40,7 @@ open Polynomial Matrix Equiv.Perm
 
 namespace Polynomial
 
+#print Polynomial.natDegree_det_X_add_C_le /-
 theorem natDegree_det_X_add_C_le (A B : Matrix n n α) :
     natDegree (det ((X : α[X]) • A.map C + B.map C)) ≤ Fintype.card n :=
   by
@@ -71,7 +72,9 @@ theorem natDegree_det_X_add_C_le (A B : Matrix n n α) :
     _ ≤ nat_degree (X : α[X]) := (nat_degree_mul_C_le _ _)
     _ ≤ 1 := nat_degree_X_le
 #align polynomial.nat_degree_det_X_add_C_le Polynomial.natDegree_det_X_add_C_le
+-/
 
+#print Polynomial.coeff_det_X_add_C_zero /-
 theorem coeff_det_X_add_C_zero (A B : Matrix n n α) :
     coeff (det ((X : α[X]) • A.map C + B.map C)) 0 = det B :=
   by
@@ -83,7 +86,9 @@ theorem coeff_det_X_add_C_zero (A B : Matrix n n α) :
   refine' Finset.prod_congr rfl _
   simp
 #align polynomial.coeff_det_X_add_C_zero Polynomial.coeff_det_X_add_C_zero
+-/
 
+#print Polynomial.coeff_det_X_add_C_card /-
 theorem coeff_det_X_add_C_card (A B : Matrix n n α) :
     coeff (det ((X : α[X]) • A.map C + B.map C)) (Fintype.card n) = det A :=
   by
@@ -102,7 +107,9 @@ theorem coeff_det_X_add_C_card (A B : Matrix n n α) :
     simpa only [Pi.smul_apply, map_apply, Algebra.id.smul_eq_mul, X_mul_C, nat_degree_C,
       max_eq_left, zero_le'] using (nat_degree_C_mul_le _ _).trans nat_degree_X_le
 #align polynomial.coeff_det_X_add_C_card Polynomial.coeff_det_X_add_C_card
+-/
 
+#print Polynomial.leadingCoeff_det_X_one_add_C /-
 theorem leadingCoeff_det_X_one_add_C (A : Matrix n n α) :
     leadingCoeff (det ((X : α[X]) • (1 : Matrix n n α[X]) + A.map C)) = 1 :=
   by
@@ -119,6 +126,7 @@ theorem leadingCoeff_det_X_one_add_C (A : Matrix n n α) :
     rw [coeff_det_X_add_C_card] at H 
     simpa using H
 #align polynomial.leading_coeff_det_X_one_add_C Polynomial.leadingCoeff_det_X_one_add_C
+-/
 
 end Polynomial
 

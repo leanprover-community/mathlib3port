@@ -106,10 +106,12 @@ theorem measurable_im : Measurable im :=
 #align complex.measurable_im Complex.measurable_im
 -/
 
+#print Complex.measurable_ofReal /-
 @[measurability]
 theorem measurable_ofReal : Measurable (coe : ℝ → ℂ) :=
   continuous_ofReal.Measurable
 #align complex.measurable_of_real Complex.measurable_ofReal
+-/
 
 #print Complex.measurable_exp /-
 @[measurability]

@@ -30,13 +30,16 @@ theorem infinite_setOf_prime : {p | Prime p}.Infinite :=
 #align nat.infinite_set_of_prime Nat.infinite_setOf_prime
 -/
 
+#print Nat.factors_mul_toFinset /-
 /-- If `a`, `b` are positive, the prime divisors of `a * b` are the union of those of `a` and `b` -/
 theorem factors_mul_toFinset {a b : ℕ} (ha : a ≠ 0) (hb : b ≠ 0) :
     (a * b).factors.toFinset = a.factors.toFinset ∪ b.factors.toFinset :=
   (List.toFinset.ext fun x => (mem_factors_mul ha hb).trans List.mem_union.symm).trans <|
     List.toFinset_union _ _
 #align nat.factors_mul_to_finset Nat.factors_mul_toFinset
+-/
 
+#print Nat.pow_succ_factors_toFinset /-
 theorem pow_succ_factors_toFinset (n k : ℕ) : (n ^ (k + 1)).factors.toFinset = n.factors.toFinset :=
   by
   rcases eq_or_ne n 0 with (rfl | hn)
@@ -45,7 +48,9 @@ theorem pow_succ_factors_toFinset (n k : ℕ) : (n ^ (k + 1)).factors.toFinset =
   · simp
   rw [pow_succ, factors_mul_to_finset hn (pow_ne_zero _ hn), ih, Finset.union_idempotent]
 #align nat.pow_succ_factors_to_finset Nat.pow_succ_factors_toFinset
+-/
 
+#print Nat.pow_factors_toFinset /-
 theorem pow_factors_toFinset (n : ℕ) {k : ℕ} (hk : k ≠ 0) :
     (n ^ k).factors.toFinset = n.factors.toFinset :=
   by
@@ -53,16 +58,21 @@ theorem pow_factors_toFinset (n : ℕ) {k : ℕ} (hk : k ≠ 0) :
   · simpa using hk
   rw [pow_succ_factors_to_finset]
 #align nat.pow_factors_to_finset Nat.pow_factors_toFinset
+-/
 
+#print Nat.prime_pow_prime_divisor /-
 /-- The only prime divisor of positive prime power `p^k` is `p` itself -/
 theorem prime_pow_prime_divisor {p k : ℕ} (hk : k ≠ 0) (hp : Prime p) :
     (p ^ k).factors.toFinset = {p} := by simp [pow_factors_to_finset p hk, factors_prime hp]
 #align nat.prime_pow_prime_divisor Nat.prime_pow_prime_divisor
+-/
 
+#print Nat.factors_mul_toFinset_of_coprime /-
 theorem factors_mul_toFinset_of_coprime {a b : ℕ} (hab : coprime a b) :
     (a * b).factors.toFinset = a.factors.toFinset ∪ b.factors.toFinset :=
   (List.toFinset.ext <| mem_factors_mul_of_coprime hab).trans <| List.toFinset_union _ _
 #align nat.factors_mul_to_finset_of_coprime Nat.factors_mul_toFinset_of_coprime
+-/
 
 end Nat
 

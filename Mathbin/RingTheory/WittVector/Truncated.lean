@@ -46,7 +46,6 @@ noncomputable section
 
 variable {p : ℕ} [hp : Fact p.Prime] (n : ℕ) (R : Type _)
 
--- mathport name: expr𝕎
 local notation "𝕎" => WittVector p
 
 -- type as `\bbW`
@@ -178,8 +177,6 @@ open WittVector
 
 variable (p n R)
 
-include hp
-
 instance : Zero (TruncatedWittVector p n R) :=
   ⟨truncateFun n 0⟩
 
@@ -241,8 +238,6 @@ theorem truncateFun_surjective : Surjective (@truncateFun p n R) :=
   Function.RightInverse.surjective TruncatedWittVector.truncateFun_out
 #align witt_vector.truncate_fun_surjective WittVector.truncateFun_surjective
 
-include hp
-
 @[simp]
 theorem truncateFun_zero : truncateFun n (0 : 𝕎 R) = 0 :=
   rfl
@@ -303,8 +298,6 @@ variable (p n R)
 
 variable [CommRing R]
 
-include hp
-
 instance : CommRing (TruncatedWittVector p n R) :=
   (truncateFun_surjective p n R).CommRing _ (truncateFun_zero p n R) (truncateFun_one p n R)
     (truncateFun_add n) (truncateFun_mul n) (truncateFun_neg n) (truncateFun_sub n)
@@ -320,8 +313,6 @@ open TruncatedWittVector
 variable (n)
 
 variable [CommRing R]
-
-include hp
 
 /-- `truncate n` is a ring homomorphism that truncates `x` to its first `n` entries
 to obtain a `truncated_witt_vector`, which has the same base `p` as `x`. -/
@@ -370,8 +361,6 @@ end WittVector
 namespace TruncatedWittVector
 
 variable [CommRing R]
-
-include hp
 
 /-- A ring homomorphism that truncates a truncated Witt vector of length `m` to
 a truncated Witt vector of length `n`, for `n ≤ m`.
@@ -428,8 +417,6 @@ theorem coeff_truncate {m : ℕ} (hm : n ≤ m) (i : Fin n) (x : TruncatedWittVe
 
 section Fintype
 
-omit hp
-
 instance {R : Type _} [Fintype R] : Fintype (TruncatedWittVector p n R) :=
   Pi.fintype
 
@@ -481,8 +468,6 @@ def liftFun (s : S) : 𝕎 R :=
 
 variable {f}
 
-include f_compat
-
 @[simp]
 theorem truncate_liftFun (s : S) : WittVector.truncate n (liftFun f s) = f n s :=
   by
@@ -530,10 +515,6 @@ theorem lift_unique (g : S →+* 𝕎 R) (g_compat : ∀ k, (WittVector.truncate
   simp only [RingHom.mem_ker, g_compat, ← RingHom.comp_apply, truncate_comp_lift, RingHom.map_sub,
     sub_self]
 #align witt_vector.lift_unique WittVector.lift_unique
-
-omit f_compat
-
-include hp
 
 /-- The universal property of `𝕎 R` as projective limit of truncated Witt vector rings. -/
 @[simps]

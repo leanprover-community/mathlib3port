@@ -32,11 +32,13 @@ open Finset Function
 instance {α : Type _} (β : α → Type _) [Fintype α] [∀ a, Fintype (β a)] : Fintype (Sigma β) :=
   ⟨univ.Sigma fun _ => univ, fun ⟨a, b⟩ => by simp⟩
 
+#print Finset.univ_sigma_univ /-
 @[simp]
 theorem Finset.univ_sigma_univ {α : Type _} {β : α → Type _} [Fintype α] [∀ a, Fintype (β a)] :
     ((univ : Finset α).Sigma fun a => (univ : Finset (β a))) = univ :=
   rfl
 #align finset.univ_sigma_univ Finset.univ_sigma_univ
+-/
 
 #print PSigma.fintype /-
 instance PSigma.fintype {α : Type _} {β : α → Type _} [Fintype α] [∀ a, Fintype (β a)] :

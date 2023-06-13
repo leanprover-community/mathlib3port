@@ -25,6 +25,7 @@ over `ℝ` is `ℝ`-linear
 variable {E : Type _} [AddCommGroup E] [Module ℝ E] [TopologicalSpace E] [ContinuousSMul ℝ E]
   {F : Type _} [AddCommGroup F] [Module ℝ F] [TopologicalSpace F] [ContinuousSMul ℝ F] [T2Space F]
 
+#print map_real_smul /-
 /-- A continuous additive map between two vector spaces over `ℝ` is `ℝ`-linear. -/
 theorem map_real_smul {G} [AddMonoidHomClass G E F] (f : G) (hf : Continuous f) (c : ℝ) (x : E) :
     f (c • x) = c • f x :=
@@ -32,9 +33,11 @@ theorem map_real_smul {G} [AddMonoidHomClass G E F] (f : G) (hf : Continuous f) 
   Rat.denseEmbedding_coe_real.dense.equalizer (hf.comp <| continuous_id.smul continuous_const)
     (continuous_id.smul continuous_const) (funext fun r => map_rat_cast_smul f ℝ ℝ r x)
 #align map_real_smul map_real_smul
+-/
 
 namespace AddMonoidHom
 
+#print AddMonoidHom.toRealLinearMap /-
 /-- Reinterpret a continuous additive homomorphism between two real vector spaces
 as a continuous real-linear map. -/
 def toRealLinearMap (f : E →+ F) (hf : Continuous f) : E →L[ℝ] F :=
@@ -42,20 +45,25 @@ def toRealLinearMap (f : E →+ F) (hf : Continuous f) : E →L[ℝ] F :=
       map_add' := f.map_add
       map_smul' := map_real_smul f hf }, hf⟩
 #align add_monoid_hom.to_real_linear_map AddMonoidHom.toRealLinearMap
+-/
 
+#print AddMonoidHom.coe_toRealLinearMap /-
 @[simp]
 theorem coe_toRealLinearMap (f : E →+ F) (hf : Continuous f) : ⇑(f.toRealLinearMap hf) = f :=
   rfl
 #align add_monoid_hom.coe_to_real_linear_map AddMonoidHom.coe_toRealLinearMap
+-/
 
 end AddMonoidHom
 
+#print AddEquiv.toRealLinearEquiv /-
 /-- Reinterpret a continuous additive equivalence between two real vector spaces
 as a continuous real-linear map. -/
 def AddEquiv.toRealLinearEquiv (e : E ≃+ F) (h₁ : Continuous e) (h₂ : Continuous e.symm) :
     E ≃L[ℝ] F :=
   { e, e.toAddMonoidHom.toRealLinearMap h₁ with }
 #align add_equiv.to_real_linear_equiv AddEquiv.toRealLinearEquiv
+-/
 
 #print Real.isScalarTower /-
 /-- A topological group carries at most one structure of a topological `ℝ`-module, so for any

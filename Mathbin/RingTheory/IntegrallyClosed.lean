@@ -53,6 +53,7 @@ variable {R : Type _} [CommRing R] [IsDomain R]
 
 variable (K : Type _) [Field K] [Algebra R K] [IsFractionRing R K]
 
+#print isIntegrallyClosed_iff /-
 /-- `R` is integrally closed iff all integral elements of its fraction field `K`
 are also elements of `R`. -/
 theorem isIntegrallyClosed_iff :
@@ -69,7 +70,9 @@ theorem isIntegrallyClosed_iff :
     obtain ⟨y, hy⟩ := cl ((isIntegral_algEquiv e.symm).mpr hx)
     exact ⟨y, e.symm.algebra_map_eq_apply.mp hy⟩
 #align is_integrally_closed_iff isIntegrallyClosed_iff
+-/
 
+#print isIntegrallyClosed_iff_isIntegralClosure /-
 /-- `R` is integrally closed iff it is the integral closure of itself in its field of fractions. -/
 theorem isIntegrallyClosed_iff_isIntegralClosure : IsIntegrallyClosed R ↔ IsIntegralClosure R R K :=
   (isIntegrallyClosed_iff K).trans <|
@@ -84,6 +87,7 @@ theorem isIntegrallyClosed_iff_isIntegralClosure : IsIntegrallyClosed R ↔ IsIn
     · rintro ⟨-, cl⟩ x hx
       exact cl.mp hx
 #align is_integrally_closed_iff_is_integral_closure isIntegrallyClosed_iff_isIntegralClosure
+-/
 
 end Iff
 
@@ -93,32 +97,33 @@ variable {R : Type _} [CommRing R] [id : IsDomain R] [iic : IsIntegrallyClosed R
 
 variable {K : Type _} [Field K] [Algebra R K] [ifr : IsFractionRing R K]
 
-include iic ifr
-
 instance : IsIntegralClosure R R K :=
   (isIntegrallyClosed_iff_isIntegralClosure K).mp iic
 
+#print IsIntegrallyClosed.isIntegral_iff /-
 theorem isIntegral_iff {x : K} : IsIntegral R x ↔ ∃ y : R, algebraMap R K y = x :=
   IsIntegralClosure.isIntegral_iff
 #align is_integrally_closed.is_integral_iff IsIntegrallyClosed.isIntegral_iff
+-/
 
+#print IsIntegrallyClosed.exists_algebraMap_eq_of_isIntegral_pow /-
 theorem exists_algebraMap_eq_of_isIntegral_pow {x : K} {n : ℕ} (hn : 0 < n)
     (hx : IsIntegral R <| x ^ n) : ∃ y : R, algebraMap R K y = x :=
   isIntegral_iff.mp <| isIntegral_of_pow hn hx
 #align is_integrally_closed.exists_algebra_map_eq_of_is_integral_pow IsIntegrallyClosed.exists_algebraMap_eq_of_isIntegral_pow
+-/
 
-omit iic ifr
-
+#print IsIntegrallyClosed.exists_algebraMap_eq_of_pow_mem_subalgebra /-
 theorem exists_algebraMap_eq_of_pow_mem_subalgebra {K : Type _} [Field K] [Algebra R K]
     {S : Subalgebra R K} [IsIntegrallyClosed S] [IsFractionRing S K] {x : K} {n : ℕ} (hn : 0 < n)
     (hx : x ^ n ∈ S) : ∃ y : S, algebraMap S K y = x :=
   exists_algebraMap_eq_of_isIntegral_pow hn <| isIntegral_iff.mpr ⟨⟨x ^ n, hx⟩, rfl⟩
 #align is_integrally_closed.exists_algebra_map_eq_of_pow_mem_subalgebra IsIntegrallyClosed.exists_algebraMap_eq_of_pow_mem_subalgebra
-
-include id ifr
+-/
 
 variable {R} (K)
 
+#print IsIntegrallyClosed.integralClosure_eq_bot_iff /-
 theorem integralClosure_eq_bot_iff : integralClosure R K = ⊥ ↔ IsIntegrallyClosed R :=
   by
   refine' eq_bot_iff.trans _
@@ -131,15 +136,16 @@ theorem integralClosure_eq_bot_iff : integralClosure R K = ⊥ ↔ IsIntegrallyC
     rw [Algebra.mem_bot, Set.mem_range]
     exact is_integral_iff.mp hx
 #align is_integrally_closed.integral_closure_eq_bot_iff IsIntegrallyClosed.integralClosure_eq_bot_iff
-
-include iic
+-/
 
 variable (R K)
 
+#print IsIntegrallyClosed.integralClosure_eq_bot /-
 @[simp]
 theorem integralClosure_eq_bot : integralClosure R K = ⊥ :=
   (integralClosure_eq_bot_iff K).mpr ‹_›
 #align is_integrally_closed.integral_closure_eq_bot IsIntegrallyClosed.integralClosure_eq_bot
+-/
 
 end IsIntegrallyClosed
 
@@ -155,12 +161,14 @@ variable [IsDomain R] [IsFractionRing R K]
 
 variable {L : Type _} [Field L] [Algebra K L] [Algebra R L] [IsScalarTower R K L]
 
+#print integralClosure.isIntegrallyClosedOfFiniteExtension /-
 -- Can't be an instance because you need to supply `K`.
 theorem isIntegrallyClosedOfFiniteExtension [FiniteDimensional K L] :
     IsIntegrallyClosed (integralClosure R L) :=
   letI : IsFractionRing (integralClosure R L) L := is_fraction_ring_of_finite_extension K L
   (integral_closure_eq_bot_iff L).mp integralClosure_idem
 #align integral_closure.is_integrally_closed_of_finite_extension integralClosure.isIntegrallyClosedOfFiniteExtension
+-/
 
 end integralClosure
 

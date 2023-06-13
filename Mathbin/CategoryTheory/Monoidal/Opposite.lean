@@ -38,7 +38,6 @@ def MonoidalOpposite (C : Type u₁) :=
 
 namespace MonoidalOpposite
 
--- mathport name: «expr ᴹᵒᵖ»
 notation:max C "ᴹᵒᵖ" => MonoidalOpposite C
 
 #print CategoryTheory.MonoidalOpposite.mop /-

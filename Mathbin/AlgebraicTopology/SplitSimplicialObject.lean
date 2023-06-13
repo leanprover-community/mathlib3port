@@ -210,22 +210,27 @@ def epiComp {Δ₁ Δ₂ : SimplexCategoryᵒᵖ} (A : IndexSet Δ₁) (p : Δ�
 #align simplicial_object.splitting.index_set.epi_comp SimplicialObject.Splitting.IndexSet.epiComp
 -/
 
+#print SimplicialObject.Splitting.IndexSet.pull /-
 /-- When `A : index_set Δ` and `θ : Δ → Δ'` is a morphism in `simplex_categoryᵒᵖ`,
 an element in `index_set Δ'` can be defined by using the epi-mono factorisation
 of `θ.unop ≫ A.e`. -/
 def pull : IndexSet Δ' :=
   mk (factorThruImage (θ.unop ≫ A.e))
 #align simplicial_object.splitting.index_set.pull SimplicialObject.Splitting.IndexSet.pull
+-/
 
+#print SimplicialObject.Splitting.IndexSet.fac_pull /-
 @[reassoc]
 theorem fac_pull : (A.pull θ).e ≫ image.ι (θ.unop ≫ A.e) = θ.unop ≫ A.e :=
   image.fac _
 #align simplicial_object.splitting.index_set.fac_pull SimplicialObject.Splitting.IndexSet.fac_pull
+-/
 
 end IndexSet
 
 variable (N : ℕ → C) (Δ : SimplexCategoryᵒᵖ) (X : SimplicialObject C) (φ : ∀ n, N n ⟶ X _[n])
 
+#print SimplicialObject.Splitting.summand /-
 /-- Given a sequences of objects `N : ℕ → C` in a category `C`, this is
 a family of objects indexed by the elements `A : splitting.index_set Δ`.
 The `Δ`-simplices of a split simplicial objects shall identify to the
@@ -234,6 +239,7 @@ coproduct of objects in such a family. -/
 def summand (A : IndexSet Δ) : C :=
   N A.1.unop.len
 #align simplicial_object.splitting.summand SimplicialObject.Splitting.summand
+-/
 
 variable [HasFiniteCoproducts C]
 
@@ -257,12 +263,14 @@ def ιCoprod (A : IndexSet Δ) : N A.1.unop.len ⟶ coprod N Δ :=
 
 variable {N}
 
+#print SimplicialObject.Splitting.map /-
 /-- The canonical morphism `coprod N Δ ⟶ X.obj Δ` attached to a sequence
 of objects `N` and a sequence of morphisms `N n ⟶ X _[n]`. -/
 @[simp]
 def map (Δ : SimplexCategoryᵒᵖ) : coprod N Δ ⟶ X.obj Δ :=
   Sigma.desc fun A => φ A.1.unop.len ≫ X.map A.e.op
 #align simplicial_object.splitting.map SimplicialObject.Splitting.map
+-/
 
 end Splitting
 
@@ -285,22 +293,29 @@ namespace Splitting
 
 variable {X Y : SimplicialObject C} (s : Splitting X)
 
+#print SimplicialObject.Splitting.map_isIso /-
 instance map_isIso (Δ : SimplexCategoryᵒᵖ) : IsIso (Splitting.map X s.ι Δ) :=
   s.map_is_iso' Δ
 #align simplicial_object.splitting.map_is_iso SimplicialObject.Splitting.map_isIso
+-/
 
+#print SimplicialObject.Splitting.iso /-
 /-- The isomorphism on simplices given by the axiom `splitting.map_is_iso'` -/
 @[simps]
 def iso (Δ : SimplexCategoryᵒᵖ) : coprod s.n Δ ≅ X.obj Δ :=
   asIso (Splitting.map X s.ι Δ)
 #align simplicial_object.splitting.iso SimplicialObject.Splitting.iso
+-/
 
+#print SimplicialObject.Splitting.ιSummand /-
 /-- Via the isomorphism `s.iso Δ`, this is the inclusion of a summand
 in the direct sum decomposition given by the splitting `s : splitting X`. -/
 def ιSummand {Δ : SimplexCategoryᵒᵖ} (A : IndexSet Δ) : s.n A.1.unop.len ⟶ X.obj Δ :=
   Splitting.ιCoprod s.n A ≫ (s.Iso Δ).Hom
 #align simplicial_object.splitting.ι_summand SimplicialObject.Splitting.ιSummand
+-/
 
+#print SimplicialObject.Splitting.ιSummand_eq /-
 @[reassoc]
 theorem ιSummand_eq {Δ : SimplexCategoryᵒᵖ} (A : IndexSet Δ) :
     s.ιSummand A = s.ι A.1.unop.len ≫ X.map A.e.op :=
@@ -308,11 +323,15 @@ theorem ιSummand_eq {Δ : SimplexCategoryᵒᵖ} (A : IndexSet Δ) :
   dsimp only [ι_summand, iso.hom]
   erw [colimit.ι_desc, cofan.mk_ι_app]
 #align simplicial_object.splitting.ι_summand_eq SimplicialObject.Splitting.ιSummand_eq
+-/
 
+#print SimplicialObject.Splitting.ιSummand_id /-
 theorem ιSummand_id (n : ℕ) : s.ιSummand (IndexSet.id (op [n])) = s.ι n := by
   erw [ι_summand_eq, X.map_id, comp_id]; rfl
 #align simplicial_object.splitting.ι_summand_id SimplicialObject.Splitting.ιSummand_id
+-/
 
+#print SimplicialObject.Splitting.φ /-
 /-- As it is stated in `splitting.hom_ext`, a morphism `f : X ⟶ Y` from a split
 simplicial object to any simplicial object is determined by its restrictions
 `s.φ f n : s.N n ⟶ Y _[n]` to the distinguished summands in each degree `n`. -/
@@ -320,14 +339,18 @@ simplicial object to any simplicial object is determined by its restrictions
 def φ (f : X ⟶ Y) (n : ℕ) : s.n n ⟶ Y _[n] :=
   s.ι n ≫ f.app (op [n])
 #align simplicial_object.splitting.φ SimplicialObject.Splitting.φ
+-/
 
+#print SimplicialObject.Splitting.ιSummand_comp_app /-
 @[simp, reassoc]
 theorem ιSummand_comp_app (f : X ⟶ Y) {Δ : SimplexCategoryᵒᵖ} (A : IndexSet Δ) :
     s.ιSummand A ≫ f.app Δ = s.φ f A.1.unop.len ≫ Y.map A.e.op := by
   simp only [ι_summand_eq_assoc, φ, nat_trans.naturality, assoc]
 #align simplicial_object.splitting.ι_summand_comp_app SimplicialObject.Splitting.ιSummand_comp_app
+-/
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `discrete_cases #[] -/
+#print SimplicialObject.Splitting.hom_ext' /-
 theorem hom_ext' {Z : C} {Δ : SimplexCategoryᵒᵖ} (f g : X.obj Δ ⟶ Z)
     (h : ∀ A : IndexSet Δ, s.ιSummand A ≫ f = s.ιSummand A ≫ g) : f = g :=
   by
@@ -337,7 +360,9 @@ theorem hom_ext' {Z : C} {Δ : SimplexCategoryᵒᵖ} (f g : X.obj Δ ⟶ Z)
     "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `discrete_cases #[]"
   simpa only [ι_summand_eq, iso_hom, colimit.ι_desc_assoc, cofan.mk_ι_app, assoc] using h A
 #align simplicial_object.splitting.hom_ext' SimplicialObject.Splitting.hom_ext'
+-/
 
+#print SimplicialObject.Splitting.hom_ext /-
 theorem hom_ext (f g : X ⟶ Y) (h : ∀ n : ℕ, s.φ f n = s.φ g n) : f = g :=
   by
   ext Δ
@@ -348,14 +373,18 @@ theorem hom_ext (f g : X ⟶ Y) (h : ∀ n : ℕ, s.φ f n = s.φ g n) : f = g :
   dsimp
   simp only [s.ι_summand_comp_app, h]
 #align simplicial_object.splitting.hom_ext SimplicialObject.Splitting.hom_ext
+-/
 
+#print SimplicialObject.Splitting.desc /-
 /-- The map `X.obj Δ ⟶ Z` obtained by providing a family of morphisms on all the
 terms of decomposition given by a splitting `s : splitting X`  -/
 def desc {Z : C} (Δ : SimplexCategoryᵒᵖ) (F : ∀ A : IndexSet Δ, s.n A.1.unop.len ⟶ Z) :
     X.obj Δ ⟶ Z :=
   (s.Iso Δ).inv ≫ Sigma.desc F
 #align simplicial_object.splitting.desc SimplicialObject.Splitting.desc
+-/
 
+#print SimplicialObject.Splitting.ι_desc /-
 @[simp, reassoc]
 theorem ι_desc {Z : C} (Δ : SimplexCategoryᵒᵖ) (F : ∀ A : IndexSet Δ, s.n A.1.unop.len ⟶ Z)
     (A : IndexSet Δ) : s.ιSummand A ≫ s.desc Δ F = F A :=
@@ -364,6 +393,7 @@ theorem ι_desc {Z : C} (Δ : SimplexCategoryᵒᵖ) (F : ∀ A : IndexSet Δ, s
   simp only [assoc, iso.hom_inv_id_assoc, ι_coprod]
   erw [colimit.ι_desc, cofan.mk_ι_app]
 #align simplicial_object.splitting.ι_desc SimplicialObject.Splitting.ι_desc
+-/
 
 #print SimplicialObject.Splitting.ofIso /-
 /-- A simplicial object that is isomorphic to a split simplicial object is split. -/
@@ -377,6 +407,7 @@ def ofIso (e : X ≅ Y) : Splitting Y where
 #align simplicial_object.splitting.of_iso SimplicialObject.Splitting.ofIso
 -/
 
+#print SimplicialObject.Splitting.ιSummand_epi_naturality /-
 @[reassoc]
 theorem ιSummand_epi_naturality {Δ₁ Δ₂ : SimplexCategoryᵒᵖ} (A : IndexSet Δ₁) (p : Δ₁ ⟶ Δ₂)
     [Epi p.unop] : s.ιSummand A ≫ X.map p = s.ιSummand (A.epi_comp p) :=
@@ -386,6 +417,7 @@ theorem ιSummand_epi_naturality {Δ₁ Δ₂ : SimplexCategoryᵒᵖ} (A : Inde
   dsimp only [index_set.epi_comp, index_set.e]
   rw [op_comp, X.map_comp, assoc, Quiver.Hom.op_unop]
 #align simplicial_object.splitting.ι_summand_epi_naturality SimplicialObject.Splitting.ιSummand_epi_naturality
+-/
 
 end Splitting
 
@@ -426,6 +458,7 @@ structure Hom (S₁ S₂ : Split C) where
 #align simplicial_object.split.hom SimplicialObject.Split.Hom
 -/
 
+#print SimplicialObject.Split.Hom.ext /-
 @[ext]
 theorem Hom.ext {S₁ S₂ : Split C} (Φ₁ Φ₂ : Hom S₁ S₂) (h : ∀ n : ℕ, Φ₁.f n = Φ₂.f n) : Φ₁ = Φ₂ :=
   by
@@ -439,6 +472,7 @@ theorem Hom.ext {S₁ S₂ : Split C} (Φ₁ Φ₂ : Hom S₁ S₂) (h : ∀ n :
   dsimp
   rw [c₁, c₂]
 #align simplicial_object.split.hom.ext SimplicialObject.Split.Hom.ext
+-/
 
 restate_axiom hom.comm'
 
@@ -461,43 +495,58 @@ variable {C}
 
 namespace Split
 
+#print SimplicialObject.Split.congr_F /-
 theorem congr_F {S₁ S₂ : Split C} {Φ₁ Φ₂ : S₁ ⟶ S₂} (h : Φ₁ = Φ₂) : Φ₁.f = Φ₂.f := by rw [h]
 #align simplicial_object.split.congr_F SimplicialObject.Split.congr_F
+-/
 
+#print SimplicialObject.Split.congr_f /-
 theorem congr_f {S₁ S₂ : Split C} {Φ₁ Φ₂ : S₁ ⟶ S₂} (h : Φ₁ = Φ₂) (n : ℕ) : Φ₁.f n = Φ₂.f n := by
   rw [h]
 #align simplicial_object.split.congr_f SimplicialObject.Split.congr_f
+-/
 
+#print SimplicialObject.Split.id_F /-
 @[simp]
 theorem id_F (S : Split C) : (𝟙 S : S ⟶ S).f = 𝟙 S.pt :=
   rfl
 #align simplicial_object.split.id_F SimplicialObject.Split.id_F
+-/
 
+#print SimplicialObject.Split.id_f /-
 @[simp]
 theorem id_f (S : Split C) (n : ℕ) : (𝟙 S : S ⟶ S).f n = 𝟙 (S.s.n n) :=
   rfl
 #align simplicial_object.split.id_f SimplicialObject.Split.id_f
+-/
 
+#print SimplicialObject.Split.comp_F /-
 @[simp]
 theorem comp_F {S₁ S₂ S₃ : Split C} (Φ₁₂ : S₁ ⟶ S₂) (Φ₂₃ : S₂ ⟶ S₃) :
     (Φ₁₂ ≫ Φ₂₃).f = Φ₁₂.f ≫ Φ₂₃.f :=
   rfl
 #align simplicial_object.split.comp_F SimplicialObject.Split.comp_F
+-/
 
+#print SimplicialObject.Split.comp_f /-
 @[simp]
 theorem comp_f {S₁ S₂ S₃ : Split C} (Φ₁₂ : S₁ ⟶ S₂) (Φ₂₃ : S₂ ⟶ S₃) (n : ℕ) :
     (Φ₁₂ ≫ Φ₂₃).f n = Φ₁₂.f n ≫ Φ₂₃.f n :=
   rfl
 #align simplicial_object.split.comp_f SimplicialObject.Split.comp_f
+-/
 
+#print SimplicialObject.Split.ιSummand_naturality_symm /-
 @[simp, reassoc]
 theorem ιSummand_naturality_symm {S₁ S₂ : Split C} (Φ : S₁ ⟶ S₂) {Δ : SimplexCategoryᵒᵖ}
     (A : Splitting.IndexSet Δ) : S₁.s.ιSummand A ≫ Φ.f.app Δ = Φ.f A.1.unop.len ≫ S₂.s.ιSummand A :=
   by rw [S₁.s.ι_summand_eq, S₂.s.ι_summand_eq, assoc, Φ.F.naturality, ← Φ.comm_assoc]
 #align simplicial_object.split.ι_summand_naturality_symm SimplicialObject.Split.ιSummand_naturality_symm
+-/
 
 variable (C)
 
+#print SimplicialObject.Split.forget /-
 /-- The functor `simplicial_object.split C ⥤ simplicial_object C` which forgets
 the splitting. -/
 @[simps]
@@ -506,7 +555,9 @@ def forget : Split C ⥤ SimplicialObject C
   obj S := S.pt
   map S₁ S₂ Φ := Φ.f
 #align simplicial_object.split.forget SimplicialObject.Split.forget
+-/
 
+#print SimplicialObject.Split.evalN /-
 /-- The functor `simplicial_object.split C ⥤ C` which sends a simplicial object equipped
 with a splitting to its nondegenerate `n`-simplices. -/
 @[simps]
@@ -514,7 +565,9 @@ def evalN (n : ℕ) : Split C ⥤ C where
   obj S := S.s.n n
   map S₁ S₂ Φ := Φ.f n
 #align simplicial_object.split.eval_N SimplicialObject.Split.evalN
+-/
 
+#print SimplicialObject.Split.natTransιSummand /-
 /-- The inclusion of each summand in the coproduct decomposition of simplices
 in split simplicial objects is a natural transformation of functors
 `simplicial_object.split C ⥤ C` -/
@@ -525,6 +578,7 @@ def natTransιSummand {Δ : SimplexCategoryᵒᵖ} (A : Splitting.IndexSet Δ) :
   app S := S.s.ιSummand A
   naturality' S₁ S₂ Φ := (ιSummand_naturality_symm Φ A).symm
 #align simplicial_object.split.nat_trans_ι_summand SimplicialObject.Split.natTransιSummand
+-/
 
 end Split
 

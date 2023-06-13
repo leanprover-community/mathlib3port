@@ -51,7 +51,6 @@ def SorgenfreyLine : Type :=
 deriving ConditionallyCompleteLinearOrder, LinearOrderedField, Archimedean
 #align counterexample.sorgenfrey_line Counterexample.SorgenfreyLine
 
--- mathport name: sorgenfrey_line
 scoped[SorgenfreyLine] notation "ℝₗ" => SorgenfreyLine
 
 namespace SorgenfreyLine

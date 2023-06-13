@@ -111,6 +111,7 @@ variable {ι : Type _} {l : Filter ι} {E : Type _} [NormedAddCommGroup E] {𝕜
   [NormedSpace 𝕜 E] {G : Type _} [NormedAddCommGroup G] [NormedSpace 𝕜 G] {f : ι → E → G}
   {g : E → G} {f' : ι → E → E →L[𝕜] G} {g' : E → E →L[𝕜] G} {x : E}
 
+#print uniformCauchySeqOnFilter_of_fderiv /-
 /-- If a sequence of functions real or complex functions are eventually differentiable on a
 neighborhood of `x`, they are Cauchy _at_ `x`, and their derivatives
 are a uniform Cauchy sequence in a neighborhood of `x`, then the functions form a uniform Cauchy
@@ -170,7 +171,9 @@ theorem uniformCauchySeqOnFilter_of_fderiv (hf' : UniformCauchySeqOnFilter f' l 
           eventually_prod_iff.mpr ⟨_, ht, _, ht, fun n hn n' hn' => ⟨hn, hn'⟩⟩, fun y => True, by
           simp, fun n hn y hy => by simpa [norm_sub_rev, dist_eq_norm] using ht' _ hn.1 _ hn.2⟩
 #align uniform_cauchy_seq_on_filter_of_fderiv uniformCauchySeqOnFilter_of_fderiv
+-/
 
+#print uniformCauchySeqOn_ball_of_fderiv /-
 /-- A variant of the second fundamental theorem of calculus (FTC-2): If a sequence of functions
 between real or complex normed spaces are differentiable on a ball centered at `x`, they
 form a Cauchy sequence _at_ `x`, and their derivatives are Cauchy uniformly on the ball, then the
@@ -232,7 +235,9 @@ theorem uniformCauchySeqOn_ball_of_fderiv {r : ℝ} (hf' : UniformCauchySeqOn f'
     rw [dist_eq_norm, Pi.zero_apply, zero_sub, norm_neg, ← dist_eq_norm]
     exact ht' _ hn _ hn'
 #align uniform_cauchy_seq_on_ball_of_fderiv uniformCauchySeqOn_ball_of_fderiv
+-/
 
+#print cauchy_map_of_uniformCauchySeqOn_fderiv /-
 /-- If a sequence of functions between real or complex normed spaces are differentiable on a
 preconnected open set, they form a Cauchy sequence _at_ `x`, and their derivatives are Cauchy
 uniformly on the set, then the functions form a Cauchy sequence at any point in the set. -/
@@ -265,7 +270,9 @@ theorem cauchy_map_of_uniformCauchySeqOn_fderiv {s : Set E} (hs : IsOpen s) (h's
     rw [dist_comm]; linarith
   exact A y (ε / 2) yt (B.trans hε) (Metric.mem_ball.2 hxy)
 #align cauchy_map_of_uniform_cauchy_seq_on_fderiv cauchy_map_of_uniformCauchySeqOn_fderiv
+-/
 
+#print difference_quotients_converge_uniformly /-
 /-- If `f_n → g` pointwise and the derivatives `(f_n)' → h` _uniformly_ converge, then
 in fact for a fixed `y`, the difference quotients `‖z - y‖⁻¹ • (f_n z - f_n y)` converge
 _uniformly_ to `‖z - y‖⁻¹ • (g z - g y)` -/
@@ -310,7 +317,9 @@ theorem difference_quotients_converge_uniformly (hf' : TendstoUniformlyOnFilter 
       (fun y hy => ((e hn (hr' hy)).2.1.sub (e hn (hr' hy)).2.2).HasFDerivWithinAt)
       (fun y hy => (e hn (hr' hy)).1.le) (convex_ball x r) (Metric.mem_ball_self hr) hy
 #align difference_quotients_converge_uniformly difference_quotients_converge_uniformly
+-/
 
+#print hasFDerivAt_of_tendstoUniformlyOnFilter /-
 /-- `(d/dx) lim_{n → ∞} f n x = lim_{n → ∞} f' n x` when the `f' n` converge
 _uniformly_ to their limit at `x`.
 
@@ -410,8 +419,10 @@ theorem hasFDerivAt_of_tendstoUniformlyOnFilter [NeBot l]
     rw [norm_sub_rev]
     exact (f' n.1 x - g' x).le_op_norm (n.2 - x)
 #align has_fderiv_at_of_tendsto_uniformly_on_filter hasFDerivAt_of_tendstoUniformlyOnFilter
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print hasFDerivAt_of_tendstoLocallyUniformlyOn /-
 theorem hasFDerivAt_of_tendstoLocallyUniformlyOn [NeBot l] {s : Set E} (hs : IsOpen s)
     (hf' : TendstoLocallyUniformlyOn f' g' l s) (hf : ∀ n, ∀ x ∈ s, HasFDerivAt (f n) (f' n x) x)
     (hfg : ∀ x ∈ s, Tendsto (fun n => f n x) l (𝓝 (g x))) (hx : x ∈ s) : HasFDerivAt g (g' x) x :=
@@ -423,7 +434,9 @@ theorem hasFDerivAt_of_tendstoLocallyUniformlyOn [NeBot l] {s : Set E} (hs : IsO
   refine' hasFDerivAt_of_tendstoUniformlyOnFilter _ h4 (eventually_of_mem h1 hfg)
   simpa [IsOpen.nhdsWithin_eq hs hx] using tendsto_locally_uniformly_on_iff_filter.mp hf' x hx
 #align has_fderiv_at_of_tendsto_locally_uniformly_on hasFDerivAt_of_tendstoLocallyUniformlyOn
+-/
 
+#print hasFDerivAt_of_tendsto_locally_uniformly_on' /-
 /-- A slight variant of `has_fderiv_at_of_tendsto_locally_uniformly_on` with the assumption stated
 in terms of `differentiable_on` rather than `has_fderiv_at`. This makes a few proofs nicer in
 complex analysis where holomorphicity is assumed but the derivative is not known a priori. -/
@@ -434,7 +447,9 @@ theorem hasFDerivAt_of_tendsto_locally_uniformly_on' [NeBot l] {s : Set E} (hs :
   refine' hasFDerivAt_of_tendstoLocallyUniformlyOn hs hf' (fun n z hz => _) hfg hx
   exact ((hf n z hz).DifferentiableAt (hs.mem_nhds hz)).HasFDerivAt
 #align has_fderiv_at_of_tendsto_locally_uniformly_on' hasFDerivAt_of_tendsto_locally_uniformly_on'
+-/
 
+#print hasFDerivAt_of_tendstoUniformlyOn /-
 /-- `(d/dx) lim_{n → ∞} f n x = lim_{n → ∞} f' n x` when the `f' n` converge
 _uniformly_ to their limit on an open set containing `x`. -/
 theorem hasFDerivAt_of_tendstoUniformlyOn [NeBot l] {s : Set E} (hs : IsOpen s)
@@ -444,7 +459,9 @@ theorem hasFDerivAt_of_tendstoUniformlyOn [NeBot l] {s : Set E} (hs : IsOpen s)
     ∀ x : E, x ∈ s → HasFDerivAt g (g' x) x := fun x =>
   hasFDerivAt_of_tendstoLocallyUniformlyOn hs hf'.TendstoLocallyUniformlyOn hf hfg
 #align has_fderiv_at_of_tendsto_uniformly_on hasFDerivAt_of_tendstoUniformlyOn
+-/
 
+#print hasFDerivAt_of_tendstoUniformly /-
 /-- `(d/dx) lim_{n → ∞} f n x = lim_{n → ∞} f' n x` when the `f' n` converge
 _uniformly_ to their limit. -/
 theorem hasFDerivAt_of_tendstoUniformly [NeBot l] (hf' : TendstoUniformly f' g' l)
@@ -457,6 +474,7 @@ theorem hasFDerivAt_of_tendstoUniformly [NeBot l] (hf' : TendstoUniformly f' g' 
   have hf' : TendstoUniformlyOn f' g' l Set.univ := by rwa [tendstoUniformlyOn_univ]
   refine' hasFDerivAt_of_tendstoUniformlyOn isOpen_univ hf' hf hfg x (Set.mem_univ x)
 #align has_fderiv_at_of_tendsto_uniformly hasFDerivAt_of_tendstoUniformly
+-/
 
 end LimitsOfDerivatives
 
@@ -473,6 +491,7 @@ derivatives
 variable {ι : Type _} {l : Filter ι} {𝕜 : Type _} [IsROrC 𝕜] {G : Type _} [NormedAddCommGroup G]
   [NormedSpace 𝕜 G] {f : ι → 𝕜 → G} {g : 𝕜 → G} {f' : ι → 𝕜 → G} {g' : 𝕜 → G} {x : 𝕜}
 
+#print UniformCauchySeqOnFilter.one_smulRight /-
 /-- If our derivatives converge uniformly, then the Fréchet derivatives converge uniformly -/
 theorem UniformCauchySeqOnFilter.one_smulRight {l' : Filter 𝕜}
     (hf' : UniformCauchySeqOnFilter f' l l') :
@@ -496,7 +515,9 @@ theorem UniformCauchySeqOnFilter.one_smulRight {l' : Filter 𝕜}
   rw [← smul_sub, norm_smul, mul_comm]
   exact mul_le_mul hn.le rfl.le (norm_nonneg _) hq.le
 #align uniform_cauchy_seq_on_filter.one_smul_right UniformCauchySeqOnFilter.one_smulRight
+-/
 
+#print uniformCauchySeqOnFilter_of_deriv /-
 theorem uniformCauchySeqOnFilter_of_deriv (hf' : UniformCauchySeqOnFilter f' l (𝓝 x))
     (hf : ∀ᶠ n : ι × 𝕜 in l ×ᶠ 𝓝 x, HasDerivAt (f n.1) (f' n.1 n.2) n.2)
     (hfg : Cauchy (map (fun n => f n x) l)) : UniformCauchySeqOnFilter f l (𝓝 x) :=
@@ -504,7 +525,9 @@ theorem uniformCauchySeqOnFilter_of_deriv (hf' : UniformCauchySeqOnFilter f' l (
   simp_rw [hasDerivAt_iff_hasFDerivAt] at hf 
   exact uniformCauchySeqOnFilter_of_fderiv hf'.one_smul_right hf hfg
 #align uniform_cauchy_seq_on_filter_of_deriv uniformCauchySeqOnFilter_of_deriv
+-/
 
+#print uniformCauchySeqOn_ball_of_deriv /-
 theorem uniformCauchySeqOn_ball_of_deriv {r : ℝ} (hf' : UniformCauchySeqOn f' l (Metric.ball x r))
     (hf : ∀ n : ι, ∀ y : 𝕜, y ∈ Metric.ball x r → HasDerivAt (f n) (f' n y) y)
     (hfg : Cauchy (map (fun n => f n x) l)) : UniformCauchySeqOn f l (Metric.ball x r) :=
@@ -519,7 +542,9 @@ theorem uniformCauchySeqOn_ball_of_deriv {r : ℝ} (hf' : UniformCauchySeqOn f' 
     exact hf'.one_smul_right
   exact uniformCauchySeqOn_ball_of_fderiv hf' hf hfg
 #align uniform_cauchy_seq_on_ball_of_deriv uniformCauchySeqOn_ball_of_deriv
+-/
 
+#print hasDerivAt_of_tendstoUniformlyOnFilter /-
 theorem hasDerivAt_of_tendstoUniformlyOnFilter [NeBot l]
     (hf' : TendstoUniformlyOnFilter f' g' l (𝓝 x))
     (hf : ∀ᶠ n : ι × 𝕜 in l ×ᶠ 𝓝 x, HasDerivAt (f n.1) (f' n.1 n.2) n.2)
@@ -550,7 +575,9 @@ theorem hasDerivAt_of_tendstoUniformlyOnFilter [NeBot l]
     exact mul_le_mul hn.le rfl.le (norm_nonneg _) hq.le
   exact hasFDerivAt_of_tendstoUniformlyOnFilter hf' hf hfg
 #align has_deriv_at_of_tendsto_uniformly_on_filter hasDerivAt_of_tendstoUniformlyOnFilter
+-/
 
+#print hasDerivAt_of_tendstoLocallyUniformlyOn /-
 theorem hasDerivAt_of_tendstoLocallyUniformlyOn [NeBot l] {s : Set 𝕜} (hs : IsOpen s)
     (hf' : TendstoLocallyUniformlyOn f' g' l s)
     (hf : ∀ᶠ n in l, ∀ x ∈ s, HasDerivAt (f n) (f' n x) x)
@@ -562,7 +589,9 @@ theorem hasDerivAt_of_tendstoLocallyUniformlyOn [NeBot l] {s : Set 𝕜} (hs : I
   refine' hasDerivAt_of_tendstoUniformlyOnFilter _ h2 (eventually_of_mem h1 hfg)
   simpa [IsOpen.nhdsWithin_eq hs hx] using tendsto_locally_uniformly_on_iff_filter.mp hf' x hx
 #align has_deriv_at_of_tendsto_locally_uniformly_on hasDerivAt_of_tendstoLocallyUniformlyOn
+-/
 
+#print hasDerivAt_of_tendsto_locally_uniformly_on' /-
 /-- A slight variant of `has_deriv_at_of_tendsto_locally_uniformly_on` with the assumption stated in
 terms of `differentiable_on` rather than `has_deriv_at`. This makes a few proofs nicer in complex
 analysis where holomorphicity is assumed but the derivative is not known a priori. -/
@@ -574,7 +603,9 @@ theorem hasDerivAt_of_tendsto_locally_uniformly_on' [NeBot l] {s : Set 𝕜} (hs
   refine' hasDerivAt_of_tendstoLocallyUniformlyOn hs hf' _ hfg hx
   filter_upwards [hf] with n h z hz using ((h z hz).DifferentiableAt (hs.mem_nhds hz)).HasDerivAt
 #align has_deriv_at_of_tendsto_locally_uniformly_on' hasDerivAt_of_tendsto_locally_uniformly_on'
+-/
 
+#print hasDerivAt_of_tendstoUniformlyOn /-
 theorem hasDerivAt_of_tendstoUniformlyOn [NeBot l] {s : Set 𝕜} (hs : IsOpen s)
     (hf' : TendstoUniformlyOn f' g' l s)
     (hf : ∀ᶠ n in l, ∀ x : 𝕜, x ∈ s → HasDerivAt (f n) (f' n x) x)
@@ -582,7 +613,9 @@ theorem hasDerivAt_of_tendstoUniformlyOn [NeBot l] {s : Set 𝕜} (hs : IsOpen s
     ∀ x : 𝕜, x ∈ s → HasDerivAt g (g' x) x := fun x =>
   hasDerivAt_of_tendstoLocallyUniformlyOn hs hf'.TendstoLocallyUniformlyOn hf hfg
 #align has_deriv_at_of_tendsto_uniformly_on hasDerivAt_of_tendstoUniformlyOn
+-/
 
+#print hasDerivAt_of_tendstoUniformly /-
 theorem hasDerivAt_of_tendstoUniformly [NeBot l] (hf' : TendstoUniformly f' g' l)
     (hf : ∀ᶠ n in l, ∀ x : 𝕜, HasDerivAt (f n) (f' n x) x)
     (hfg : ∀ x : 𝕜, Tendsto (fun n => f n x) l (𝓝 (g x))) : ∀ x : 𝕜, HasDerivAt g (g' x) x :=
@@ -594,6 +627,7 @@ theorem hasDerivAt_of_tendstoUniformly [NeBot l] (hf' : TendstoUniformly f' g' l
   have hf' : TendstoUniformlyOn f' g' l Set.univ := by rwa [tendstoUniformlyOn_univ]
   exact hasDerivAt_of_tendstoUniformlyOn isOpen_univ hf' hf hfg x (Set.mem_univ x)
 #align has_deriv_at_of_tendsto_uniformly hasDerivAt_of_tendstoUniformly
+-/
 
 end deriv
 

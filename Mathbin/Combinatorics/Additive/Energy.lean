@@ -153,6 +153,7 @@ section CommMonoid
 
 variable [CommMonoid α]
 
+#print Finset.multiplicativeEnergy_comm /-
 @[to_additive additive_energy_comm]
 theorem multiplicativeEnergy_comm (s t : Finset α) :
     multiplicativeEnergy s t = multiplicativeEnergy t s :=
@@ -161,6 +162,7 @@ theorem multiplicativeEnergy_comm (s t : Finset α) :
   simp [-Finset.card_map, eq_comm, multiplicative_energy, mul_comm, map_eq_image, Function.comp]
 #align finset.multiplicative_energy_comm Finset.multiplicativeEnergy_comm
 #align finset.additive_energy_comm Finset.additiveEnergy_comm
+-/
 
 end CommMonoid
 
@@ -170,6 +172,7 @@ variable [CommGroup α] [Fintype α] (s t : Finset α)
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print Finset.multiplicativeEnergy_univ_left /-
 @[simp, to_additive additive_energy_univ_left]
 theorem multiplicativeEnergy_univ_left :
     multiplicativeEnergy univ t = Fintype.card α * t.card ^ 2 :=
@@ -191,13 +194,16 @@ theorem multiplicativeEnergy_univ_left :
   simpa [mul_right_comm]
 #align finset.multiplicative_energy_univ_left Finset.multiplicativeEnergy_univ_left
 #align finset.additive_energy_univ_left Finset.additiveEnergy_univ_left
+-/
 
+#print Finset.multiplicativeEnergy_univ_right /-
 @[simp, to_additive additive_energy_univ_right]
 theorem multiplicativeEnergy_univ_right :
     multiplicativeEnergy s univ = Fintype.card α * s.card ^ 2 := by
   rw [multiplicative_energy_comm, multiplicative_energy_univ_left]
 #align finset.multiplicative_energy_univ_right Finset.multiplicativeEnergy_univ_right
 #align finset.additive_energy_univ_right Finset.additiveEnergy_univ_right
+-/
 
 end CommGroup
 

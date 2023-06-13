@@ -89,6 +89,7 @@ def diagramToCone {X : D} (G : J ⥤ StructuredArrow X F) : Cone (G ⋙ proj X F
 #align category_theory.structured_arrow_cone.diagram_to_cone CategoryTheory.StructuredArrowCone.diagramToCone
 -/
 
+#print CategoryTheory.StructuredArrowCone.toCone /-
 /-- Given a cone `c : cone K` and a map `f : X ⟶ F.obj c.X`, we can construct a cone of structured
 arrows over `X` with `f` as the cone point.
 -/
@@ -100,6 +101,7 @@ def toCone {X : D} (f : X ⟶ F.obj c.pt) : Cone (toDiagram (F.mapCone c) ⋙ ma
     { app := fun j => homMk (c.π.app j) rfl
       naturality' := fun j k g => by ext; dsimp; simp }
 #align category_theory.structured_arrow_cone.to_cone CategoryTheory.StructuredArrowCone.toCone
+-/
 
 end StructuredArrowCone
 
@@ -229,8 +231,7 @@ variable {J : Type v₁} [SmallCategory J] [FinCategory J] {K : J ⥤ C}
 
 variable (F : C ⥤ D) [RepresentablyFlat F] {c : Cone K} (hc : IsLimit c) (s : Cone (K ⋙ F))
 
-include hc
-
+#print CategoryTheory.PreservesFiniteLimitsOfFlat.lift /-
 /-- (Implementation).
 Given a limit cone `c : cone K` and a cone `s : cone (K ⋙ F)` with `F` representably flat,
 `s` can factor through `F.map_cone c`.
@@ -245,13 +246,17 @@ noncomputable def lift : s.pt ⟶ F.obj c.pt :=
                   naturality' := by simp } : (toDiagram s ⋙ pre s.pt K F) ⋙ proj s.pt F ⟶ K)).obj <|
           (StructuredArrow.proj s.pt F).mapCone s')
 #align category_theory.preserves_finite_limits_of_flat.lift CategoryTheory.PreservesFiniteLimitsOfFlat.lift
+-/
 
+#print CategoryTheory.PreservesFiniteLimitsOfFlat.fac /-
 theorem fac (x : J) : lift F hc s ≫ (F.mapCone c).π.app x = s.π.app x := by
   simpa [lift, ← functor.map_comp]
 #align category_theory.preserves_finite_limits_of_flat.fac CategoryTheory.PreservesFiniteLimitsOfFlat.fac
+-/
 
 attribute [local simp] eq_to_hom_map
 
+#print CategoryTheory.PreservesFiniteLimitsOfFlat.uniq /-
 theorem uniq {K : J ⥤ C} {c : Cone K} (hc : IsLimit c) (s : Cone (K ⋙ F))
     (f₁ f₂ : s.pt ⟶ F.obj c.pt) (h₁ : ∀ j : J, f₁ ≫ (F.mapCone c).π.app j = s.π.app j)
     (h₂ : ∀ j : J, f₂ ≫ (F.mapCone c).π.app j = s.π.app j) : f₁ = f₂ :=
@@ -294,6 +299,7 @@ theorem uniq {K : J ⥤ C} {c : Cone K} (hc : IsLimit c) (s : Cone (K ⋙ F))
     _ = 𝟙 _ ≫ f₂ := g₂.w.symm
     _ = f₂ := by simp
 #align category_theory.preserves_finite_limits_of_flat.uniq CategoryTheory.PreservesFiniteLimitsOfFlat.uniq
+-/
 
 end PreservesFiniteLimitsOfFlat
 
@@ -338,6 +344,7 @@ section SmallCategory
 
 variable {C D : Type u₁} [SmallCategory C] [SmallCategory D] (E : Type u₂) [Category.{u₁} E]
 
+#print CategoryTheory.lanEvaluationIsoColim /-
 /-- (Implementation)
 The evaluation of `Lan F` at `X` is the colimit over the costructured arrows over `X`.
 -/
@@ -357,6 +364,7 @@ noncomputable def lanEvaluationIsoColim (F : C ⥤ D) (X : D)
       congr
       rw [costructured_arrow.map_mk, category.id_comp, costructured_arrow.mk])
 #align category_theory.Lan_evaluation_iso_colim CategoryTheory.lanEvaluationIsoColim
+-/
 
 variable [ConcreteCategory.{u₁} E] [HasLimits E] [HasColimits E]
 

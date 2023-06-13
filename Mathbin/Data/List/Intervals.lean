@@ -125,6 +125,7 @@ theorem append_consecutive {n m l : ℕ} (hnm : n ≤ m) (hml : m ≤ l) : Ico n
 #align list.Ico.append_consecutive List.Ico.append_consecutive
 -/
 
+#print List.Ico.inter_consecutive /-
 @[simp]
 theorem inter_consecutive (n m l : ℕ) : Ico n m ∩ Ico m l = [] :=
   by
@@ -135,11 +136,14 @@ theorem inter_consecutive (n m l : ℕ) : Ico n m ∩ Ico m l = [] :=
   exfalso
   exact not_lt_of_ge h₃ h₂
 #align list.Ico.inter_consecutive List.Ico.inter_consecutive
+-/
 
+#print List.Ico.bagInter_consecutive /-
 @[simp]
 theorem bagInter_consecutive (n m l : ℕ) : List.bagInter (Ico n m) (Ico m l) = [] :=
   (bagInter_nil_iff_inter_nil _ _).2 (inter_consecutive n m l)
 #align list.Ico.bag_inter_consecutive List.Ico.bagInter_consecutive
+-/
 
 #print List.Ico.succ_singleton /-
 @[simp]
@@ -181,15 +185,20 @@ theorem not_mem_top {n m : ℕ} : m ∉ Ico n m := by simp
 #align list.Ico.not_mem_top List.Ico.not_mem_top
 -/
 
+#print List.Ico.filter_lt_of_top_le /-
 theorem filter_lt_of_top_le {n m l : ℕ} (hml : m ≤ l) :
     ((Ico n m).filterₓ fun x => x < l) = Ico n m :=
   filter_eq_self.2 fun k hk => lt_of_lt_of_le (mem.1 hk).2 hml
 #align list.Ico.filter_lt_of_top_le List.Ico.filter_lt_of_top_le
+-/
 
+#print List.Ico.filter_lt_of_le_bot /-
 theorem filter_lt_of_le_bot {n m l : ℕ} (hln : l ≤ n) : ((Ico n m).filterₓ fun x => x < l) = [] :=
   filter_eq_nil.2 fun k hk => not_lt_of_le <| le_trans hln <| (mem.1 hk).1
 #align list.Ico.filter_lt_of_le_bot List.Ico.filter_lt_of_le_bot
+-/
 
+#print List.Ico.filter_lt_of_ge /-
 theorem filter_lt_of_ge {n m l : ℕ} (hlm : l ≤ m) : ((Ico n m).filterₓ fun x => x < l) = Ico n l :=
   by
   cases' le_total n l with hnl hln
@@ -198,7 +207,9 @@ theorem filter_lt_of_ge {n m l : ℕ} (hlm : l ≤ m) : ((Ico n m).filterₓ fun
       filter_lt_of_le_bot (le_refl l), append_nil]
   · rw [eq_nil_of_le hln, filter_lt_of_le_bot hln]
 #align list.Ico.filter_lt_of_ge List.Ico.filter_lt_of_ge
+-/
 
+#print List.Ico.filter_lt /-
 @[simp]
 theorem filter_lt (n m l : ℕ) : ((Ico n m).filterₓ fun x => x < l) = Ico n (min m l) :=
   by
@@ -206,16 +217,22 @@ theorem filter_lt (n m l : ℕ) : ((Ico n m).filterₓ fun x => x < l) = Ico n (
   · rw [min_eq_left hml, filter_lt_of_top_le hml]
   · rw [min_eq_right hlm, filter_lt_of_ge hlm]
 #align list.Ico.filter_lt List.Ico.filter_lt
+-/
 
+#print List.Ico.filter_le_of_le_bot /-
 theorem filter_le_of_le_bot {n m l : ℕ} (hln : l ≤ n) :
     ((Ico n m).filterₓ fun x => l ≤ x) = Ico n m :=
   filter_eq_self.2 fun k hk => le_trans hln (mem.1 hk).1
 #align list.Ico.filter_le_of_le_bot List.Ico.filter_le_of_le_bot
+-/
 
+#print List.Ico.filter_le_of_top_le /-
 theorem filter_le_of_top_le {n m l : ℕ} (hml : m ≤ l) : ((Ico n m).filterₓ fun x => l ≤ x) = [] :=
   filter_eq_nil.2 fun k hk => not_le_of_gt (lt_of_lt_of_le (mem.1 hk).2 hml)
 #align list.Ico.filter_le_of_top_le List.Ico.filter_le_of_top_le
+-/
 
+#print List.Ico.filter_le_of_le /-
 theorem filter_le_of_le {n m l : ℕ} (hnl : n ≤ l) : ((Ico n m).filterₓ fun x => l ≤ x) = Ico l m :=
   by
   cases' le_total l m with hlm hml
@@ -224,7 +241,9 @@ theorem filter_le_of_le {n m l : ℕ} (hnl : n ≤ l) : ((Ico n m).filterₓ fun
       filter_le_of_le_bot (le_refl l), nil_append]
   · rw [eq_nil_of_le hml, filter_le_of_top_le hml]
 #align list.Ico.filter_le_of_le List.Ico.filter_le_of_le
+-/
 
+#print List.Ico.filter_le /-
 @[simp]
 theorem filter_le (n m l : ℕ) : ((Ico n m).filterₓ fun x => l ≤ x) = Ico (max n l) m :=
   by
@@ -232,20 +251,25 @@ theorem filter_le (n m l : ℕ) : ((Ico n m).filterₓ fun x => l ≤ x) = Ico (
   · rw [max_eq_right hnl, filter_le_of_le hnl]
   · rw [max_eq_left hln, filter_le_of_le_bot hln]
 #align list.Ico.filter_le List.Ico.filter_le
+-/
 
+#print List.Ico.filter_lt_of_succ_bot /-
 theorem filter_lt_of_succ_bot {n m : ℕ} (hnm : n < m) :
     ((Ico n m).filterₓ fun x => x < n + 1) = [n] :=
   by
   have r : min m (n + 1) = n + 1 := (@inf_eq_right _ _ m (n + 1)).mpr hnm
   simp [filter_lt n m (n + 1), r]
 #align list.Ico.filter_lt_of_succ_bot List.Ico.filter_lt_of_succ_bot
+-/
 
+#print List.Ico.filter_le_of_bot /-
 @[simp]
 theorem filter_le_of_bot {n m : ℕ} (hnm : n < m) : ((Ico n m).filterₓ fun x => x ≤ n) = [n] :=
   by
   rw [← filter_lt_of_succ_bot hnm]
   exact filter_congr' fun _ _ => lt_succ_iff.symm
 #align list.Ico.filter_le_of_bot List.Ico.filter_le_of_bot
+-/
 
 #print List.Ico.trichotomy /-
 /-- For any natural numbers n, a, and b, one of the following holds:

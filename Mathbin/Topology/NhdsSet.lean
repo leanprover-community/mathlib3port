@@ -46,12 +46,13 @@ def nhdsSet (s : Set α) : Filter α :=
 #align nhds_set nhdsSet
 -/
 
--- mathport name: nhds_set
 scoped[Topology] notation "𝓝ˢ" => nhdsSet
 
+#print nhdsSet_diagonal /-
 theorem nhdsSet_diagonal (α) [TopologicalSpace (α × α)] : 𝓝ˢ (diagonal α) = ⨆ x, 𝓝 (x, x) := by
   rw [nhdsSet, ← range_diag, ← range_comp]; rfl
 #align nhds_set_diagonal nhdsSet_diagonal
+-/
 
 #print mem_nhdsSet_iff_forall /-
 theorem mem_nhdsSet_iff_forall : s ∈ 𝓝ˢ t ↔ ∀ x : α, x ∈ t → s ∈ 𝓝 x := by
@@ -89,9 +90,11 @@ theorem IsOpen.mem_nhdsSet (hU : IsOpen s) : s ∈ 𝓝ˢ t ↔ t ⊆ s := by
 #align is_open.mem_nhds_set IsOpen.mem_nhdsSet
 -/
 
+#print principal_le_nhdsSet /-
 theorem principal_le_nhdsSet : 𝓟 s ≤ 𝓝ˢ s := fun s hs =>
   (subset_interior_iff_mem_nhdsSet.mpr hs).trans interior_subset
 #align principal_le_nhds_set principal_le_nhdsSet
+-/
 
 #print nhdsSet_eq_principal_iff /-
 @[simp]
@@ -125,39 +128,53 @@ theorem mem_nhdsSet_interior : s ∈ 𝓝ˢ (interior s) :=
 #align mem_nhds_set_interior mem_nhdsSet_interior
 -/
 
+#print nhdsSet_empty /-
 @[simp]
 theorem nhdsSet_empty : 𝓝ˢ (∅ : Set α) = ⊥ := by rw [is_open_empty.nhds_set_eq, principal_empty]
 #align nhds_set_empty nhdsSet_empty
+-/
 
 #print mem_nhdsSet_empty /-
 theorem mem_nhdsSet_empty : s ∈ 𝓝ˢ (∅ : Set α) := by simp
 #align mem_nhds_set_empty mem_nhdsSet_empty
 -/
 
+#print nhdsSet_univ /-
 @[simp]
 theorem nhdsSet_univ : 𝓝ˢ (univ : Set α) = ⊤ := by rw [is_open_univ.nhds_set_eq, principal_univ]
 #align nhds_set_univ nhdsSet_univ
+-/
 
+#print nhdsSet_mono /-
 @[mono]
 theorem nhdsSet_mono (h : s ⊆ t) : 𝓝ˢ s ≤ 𝓝ˢ t :=
   sSup_le_sSup <| image_subset _ h
 #align nhds_set_mono nhdsSet_mono
+-/
 
+#print monotone_nhdsSet /-
 theorem monotone_nhdsSet : Monotone (𝓝ˢ : Set α → Filter α) := fun s t => nhdsSet_mono
 #align monotone_nhds_set monotone_nhdsSet
+-/
 
+#print nhds_le_nhdsSet /-
 theorem nhds_le_nhdsSet (h : x ∈ s) : 𝓝 x ≤ 𝓝ˢ s :=
   le_sSup <| mem_image_of_mem _ h
 #align nhds_le_nhds_set nhds_le_nhdsSet
+-/
 
+#print nhdsSet_union /-
 @[simp]
 theorem nhdsSet_union (s t : Set α) : 𝓝ˢ (s ∪ t) = 𝓝ˢ s ⊔ 𝓝ˢ t := by
   simp only [nhdsSet, image_union, sSup_union]
 #align nhds_set_union nhdsSet_union
+-/
 
+#print union_mem_nhdsSet /-
 theorem union_mem_nhdsSet (h₁ : s₁ ∈ 𝓝ˢ t₁) (h₂ : s₂ ∈ 𝓝ˢ t₂) : s₁ ∪ s₂ ∈ 𝓝ˢ (t₁ ∪ t₂) := by
   rw [nhdsSet_union]; exact union_mem_sup h₁ h₂
 #align union_mem_nhds_set union_mem_nhdsSet
+-/
 
 #print Continuous.tendsto_nhdsSet /-
 /-- Preimage of a set neighborhood of `t` under a continuous map `f` is a set neighborhood of `s`

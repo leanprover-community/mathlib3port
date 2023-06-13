@@ -48,36 +48,48 @@ instance : LocallyFiniteOrder (Multiset α) :=
       (Finset.Icc f.toDfinsupp g.toDfinsupp).map Multiset.equivDfinsupp.toEquiv.symm.toEmbedding)
     fun f g x => by simp
 
+#print Multiset.Icc_eq /-
 theorem Icc_eq :
     Finset.Icc f g =
       (Finset.Icc f.toDfinsupp g.toDfinsupp).map Multiset.equivDfinsupp.toEquiv.symm.toEmbedding :=
   rfl
 #align multiset.Icc_eq Multiset.Icc_eq
+-/
 
+#print Multiset.card_Icc /-
 theorem card_Icc :
     (Finset.Icc f g).card = ∏ i in f.toFinset ∪ g.toFinset, (g.count i + 1 - f.count i) := by
   simp_rw [Icc_eq, Finset.card_map, Dfinsupp.card_Icc, Nat.card_Icc, Multiset.toDfinsupp_apply,
     toDfinsupp_support]
 #align multiset.card_Icc Multiset.card_Icc
+-/
 
+#print Multiset.card_Ico /-
 theorem card_Ico :
     (Finset.Ico f g).card = ∏ i in f.toFinset ∪ g.toFinset, (g.count i + 1 - f.count i) - 1 := by
   rw [card_Ico_eq_card_Icc_sub_one, card_Icc]
 #align multiset.card_Ico Multiset.card_Ico
+-/
 
+#print Multiset.card_Ioc /-
 theorem card_Ioc :
     (Finset.Ioc f g).card = ∏ i in f.toFinset ∪ g.toFinset, (g.count i + 1 - f.count i) - 1 := by
   rw [card_Ioc_eq_card_Icc_sub_one, card_Icc]
 #align multiset.card_Ioc Multiset.card_Ioc
+-/
 
+#print Multiset.card_Ioo /-
 theorem card_Ioo :
     (Finset.Ioo f g).card = ∏ i in f.toFinset ∪ g.toFinset, (g.count i + 1 - f.count i) - 2 := by
   rw [card_Ioo_eq_card_Icc_sub_two, card_Icc]
 #align multiset.card_Ioo Multiset.card_Ioo
+-/
 
+#print Multiset.card_Iic /-
 theorem card_Iic : (Finset.Iic f).card = ∏ i in f.toFinset, (f.count i + 1) := by
   simp_rw [Iic_eq_Icc, card_Icc, bot_eq_zero, to_finset_zero, empty_union, count_zero, tsub_zero]
 #align multiset.card_Iic Multiset.card_Iic
+-/
 
 end Multiset
 

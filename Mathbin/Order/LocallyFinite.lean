@@ -512,13 +512,17 @@ instance (priority := 100) LocallyFiniteOrder.toLocallyFiniteOrderTop : LocallyF
 #align locally_finite_order.to_locally_finite_order_top LocallyFiniteOrder.toLocallyFiniteOrderTop
 -/
 
+#print Finset.Ici_eq_Icc /-
 theorem Ici_eq_Icc (a : α) : Ici a = Icc a ⊤ :=
   rfl
 #align finset.Ici_eq_Icc Finset.Ici_eq_Icc
+-/
 
+#print Finset.Ioi_eq_Ioc /-
 theorem Ioi_eq_Ioc (a : α) : Ioi a = Ioc a ⊤ :=
   rfl
 #align finset.Ioi_eq_Ioc Finset.Ioi_eq_Ioc
+-/
 
 end OrderTop
 
@@ -537,13 +541,17 @@ instance (priority := 100) LocallyFiniteOrder.toLocallyFiniteOrderBot : LocallyF
 #align finset.locally_finite_order.to_locally_finite_order_bot Finset.LocallyFiniteOrder.toLocallyFiniteOrderBot
 -/
 
+#print Finset.Iic_eq_Icc /-
 theorem Iic_eq_Icc : Iic = Icc (⊥ : α) :=
   rfl
 #align finset.Iic_eq_Icc Finset.Iic_eq_Icc
+-/
 
+#print Finset.Iio_eq_Ico /-
 theorem Iio_eq_Ico : Iio = Ico (⊥ : α) :=
   rfl
 #align finset.Iio_eq_Ico Finset.Iio_eq_Ico
+-/
 
 end OrderBot
 
@@ -562,13 +570,14 @@ def uIcc (a b : α) : Finset α :=
 #align finset.uIcc Finset.uIcc
 -/
 
--- mathport name: finset.uIcc
 scoped[FinsetInterval] notation "[" a ", " b "]" => Finset.uIcc a b
 
+#print Finset.mem_uIcc /-
 @[simp]
 theorem mem_uIcc : x ∈ uIcc a b ↔ a ⊓ b ≤ x ∧ x ≤ a ⊔ b :=
   mem_Icc
 #align finset.mem_uIcc Finset.mem_uIcc
+-/
 
 #print Finset.coe_uIcc /-
 @[simp, norm_cast]
@@ -1111,25 +1120,31 @@ instance [LocallyFiniteOrderBot α] [LocallyFiniteOrderBot β]
     rw [mem_product, mem_Iic, mem_Iic]; rfl
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print Prod.Icc_eq /-
 theorem Icc_eq [LocallyFiniteOrder α] [LocallyFiniteOrder β]
     [DecidableRel ((· ≤ ·) : α × β → α × β → Prop)] (p q : α × β) :
     Finset.Icc p q = Finset.Icc p.1 q.1 ×ˢ Finset.Icc p.2 q.2 :=
   rfl
 #align prod.Icc_eq Prod.Icc_eq
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print Prod.Icc_mk_mk /-
 @[simp]
 theorem Icc_mk_mk [LocallyFiniteOrder α] [LocallyFiniteOrder β]
     [DecidableRel ((· ≤ ·) : α × β → α × β → Prop)] (a₁ a₂ : α) (b₁ b₂ : β) :
     Finset.Icc (a₁, b₁) (a₂, b₂) = Finset.Icc a₁ a₂ ×ˢ Finset.Icc b₁ b₂ :=
   rfl
 #align prod.Icc_mk_mk Prod.Icc_mk_mk
+-/
 
+#print Prod.card_Icc /-
 theorem card_Icc [LocallyFiniteOrder α] [LocallyFiniteOrder β]
     [DecidableRel ((· ≤ ·) : α × β → α × β → Prop)] (p q : α × β) :
     (Finset.Icc p q).card = (Finset.Icc p.1 q.1).card * (Finset.Icc p.2 q.2).card :=
   Finset.card_product _ _
 #align prod.card_Icc Prod.card_Icc
+-/
 
 end Prod
 
@@ -1140,25 +1155,31 @@ namespace Prod
 variable [Lattice α] [Lattice β]
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print Prod.uIcc_eq /-
 theorem uIcc_eq [LocallyFiniteOrder α] [LocallyFiniteOrder β]
     [DecidableRel ((· ≤ ·) : α × β → α × β → Prop)] (p q : α × β) :
     Finset.uIcc p q = Finset.uIcc p.1 q.1 ×ˢ Finset.uIcc p.2 q.2 :=
   rfl
 #align prod.uIcc_eq Prod.uIcc_eq
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print Prod.uIcc_mk_mk /-
 @[simp]
 theorem uIcc_mk_mk [LocallyFiniteOrder α] [LocallyFiniteOrder β]
     [DecidableRel ((· ≤ ·) : α × β → α × β → Prop)] (a₁ a₂ : α) (b₁ b₂ : β) :
     Finset.uIcc (a₁, b₁) (a₂, b₂) = Finset.uIcc a₁ a₂ ×ˢ Finset.uIcc b₁ b₂ :=
   rfl
 #align prod.uIcc_mk_mk Prod.uIcc_mk_mk
+-/
 
+#print Prod.card_uIcc /-
 theorem card_uIcc [LocallyFiniteOrder α] [LocallyFiniteOrder β]
     [DecidableRel ((· ≤ ·) : α × β → α × β → Prop)] (p q : α × β) :
     (Finset.uIcc p q).card = (Finset.uIcc p.1 q.1).card * (Finset.uIcc p.2 q.2).card :=
   Prod.card_Icc _ _
 #align prod.card_uIcc Prod.card_uIcc
+-/
 
 end Prod
 
@@ -1238,9 +1259,11 @@ instance : LocallyFiniteOrder (WithTop α)
 
 variable (a b : α)
 
+#print WithTop.Icc_coe_top /-
 theorem Icc_coe_top : Icc (a : WithTop α) ⊤ = insertNone (Ici a) :=
   rfl
 #align with_top.Icc_coe_top WithTop.Icc_coe_top
+-/
 
 #print WithTop.Icc_coe_coe /-
 theorem Icc_coe_coe : Icc (a : WithTop α) b = (Icc a b).map Embedding.some :=
@@ -1260,9 +1283,11 @@ theorem Ico_coe_coe : Ico (a : WithTop α) b = (Ico a b).map Embedding.some :=
 #align with_top.Ico_coe_coe WithTop.Ico_coe_coe
 -/
 
+#print WithTop.Ioc_coe_top /-
 theorem Ioc_coe_top : Ioc (a : WithTop α) ⊤ = insertNone (Ioi a) :=
   rfl
 #align with_top.Ioc_coe_top WithTop.Ioc_coe_top
+-/
 
 #print WithTop.Ioc_coe_coe /-
 theorem Ioc_coe_coe : Ioc (a : WithTop α) b = (Ioc a b).map Embedding.some :=
@@ -1293,9 +1318,11 @@ instance : LocallyFiniteOrder (WithBot α) :=
 
 variable (a b : α)
 
+#print WithBot.Icc_bot_coe /-
 theorem Icc_bot_coe : Icc (⊥ : WithBot α) b = insertNone (Iic b) :=
   rfl
 #align with_bot.Icc_bot_coe WithBot.Icc_bot_coe
+-/
 
 #print WithBot.Icc_coe_coe /-
 theorem Icc_coe_coe : Icc (a : WithBot α) b = (Icc a b).map Embedding.some :=
@@ -1303,9 +1330,11 @@ theorem Icc_coe_coe : Icc (a : WithBot α) b = (Icc a b).map Embedding.some :=
 #align with_bot.Icc_coe_coe WithBot.Icc_coe_coe
 -/
 
+#print WithBot.Ico_bot_coe /-
 theorem Ico_bot_coe : Ico (⊥ : WithBot α) b = insertNone (Iio b) :=
   rfl
 #align with_bot.Ico_bot_coe WithBot.Ico_bot_coe
+-/
 
 #print WithBot.Ico_coe_coe /-
 theorem Ico_coe_coe : Ico (a : WithBot α) b = (Ico a b).map Embedding.some :=
@@ -1455,8 +1484,6 @@ theorem subtype_Ioo_eq : Ioo a b = (Ioo (a : α) b).Subtype p :=
 
 variable (hp : ∀ ⦃a b x⦄, a ≤ x → x ≤ b → p a → p b → p x)
 
-include hp
-
 #print Finset.map_subtype_embedding_Icc /-
 theorem map_subtype_embedding_Icc : (Icc a b).map (Embedding.subtype p) = Icc a b :=
   by
@@ -1517,8 +1544,6 @@ theorem subtype_Ioi_eq : Ioi a = (Ioi (a : α)).Subtype p :=
 
 variable (hp : ∀ ⦃a x⦄, a ≤ x → p a → p x)
 
-include hp
-
 #print Finset.map_subtype_embedding_Ici /-
 theorem map_subtype_embedding_Ici : (Ici a).map (Embedding.subtype p) = Ici a := by
   rw [subtype_Ici_eq]; exact Finset.subtype_map_of_mem fun x hx => hp (mem_Ici.1 hx) a.prop
@@ -1550,8 +1575,6 @@ theorem subtype_Iio_eq : Iio a = (Iio (a : α)).Subtype p :=
 -/
 
 variable (hp : ∀ ⦃a x⦄, x ≤ a → p a → p x)
-
-include hp
 
 #print Finset.map_subtype_embedding_Iic /-
 theorem map_subtype_embedding_Iic : (Iic a).map (Embedding.subtype p) = Iic a := by

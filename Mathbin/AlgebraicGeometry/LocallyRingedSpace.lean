@@ -109,6 +109,7 @@ noncomputable def stalk (X : LocallyRingedSpace) (x : X) : CommRingCat :=
 #align algebraic_geometry.LocallyRingedSpace.stalk AlgebraicGeometry.LocallyRingedSpace.stalk
 -/
 
+#print AlgebraicGeometry.LocallyRingedSpace.stalkMap /-
 /-- A morphism of locally ringed spaces `f : X ⟶ Y` induces
 a local ring homomorphism from `Y.stalk (f x)` to `X.stalk x` for any `x : X`.
 -/
@@ -116,6 +117,7 @@ noncomputable def stalkMap {X Y : LocallyRingedSpace} (f : X ⟶ Y) (x : X) :
     Y.stalk (f.1.1 x) ⟶ X.stalk x :=
   PresheafedSpace.stalkMap f.1 x
 #align algebraic_geometry.LocallyRingedSpace.stalk_map AlgebraicGeometry.LocallyRingedSpace.stalkMap
+-/
 
 instance {X Y : LocallyRingedSpace} (f : X ⟶ Y) (x : X) : IsLocalRingHom (stalkMap f x) :=
   f.2 x
@@ -153,6 +155,7 @@ instance : Category LocallyRingedSpace where
   id_comp' := by intros; ext1; simp [comp]
   assoc' := by intros; ext1; simp [comp]
 
+#print AlgebraicGeometry.LocallyRingedSpace.forgetToSheafedSpace /-
 /-- The forgetful functor from `LocallyRingedSpace` to `SheafedSpace CommRing`. -/
 @[simps]
 def forgetToSheafedSpace : LocallyRingedSpace ⥤ SheafedSpace CommRingCat
@@ -160,6 +163,7 @@ def forgetToSheafedSpace : LocallyRingedSpace ⥤ SheafedSpace CommRingCat
   obj X := X.toSheafedSpace
   map X Y f := f.1
 #align algebraic_geometry.LocallyRingedSpace.forget_to_SheafedSpace AlgebraicGeometry.LocallyRingedSpace.forgetToSheafedSpace
+-/
 
 instance : Faithful forgetToSheafedSpace where
 
@@ -171,23 +175,30 @@ def forgetToTop : LocallyRingedSpace ⥤ TopCat :=
 #align algebraic_geometry.LocallyRingedSpace.forget_to_Top AlgebraicGeometry.LocallyRingedSpace.forgetToTop
 -/
 
+#print AlgebraicGeometry.LocallyRingedSpace.comp_val /-
 @[simp]
 theorem comp_val {X Y Z : LocallyRingedSpace} (f : X ⟶ Y) (g : Y ⟶ Z) :
     (f ≫ g).val = f.val ≫ g.val :=
   rfl
 #align algebraic_geometry.LocallyRingedSpace.comp_val AlgebraicGeometry.LocallyRingedSpace.comp_val
+-/
 
+#print AlgebraicGeometry.LocallyRingedSpace.comp_val_c /-
 @[simp]
 theorem comp_val_c {X Y Z : LocallyRingedSpace.{u}} (f : X ⟶ Y) (g : Y ⟶ Z) :
     (f ≫ g).val.c = g.val.c ≫ (Presheaf.pushforward _ g.val.base).map f.val.c :=
   rfl
 #align algebraic_geometry.LocallyRingedSpace.comp_val_c AlgebraicGeometry.LocallyRingedSpace.comp_val_c
+-/
 
+#print AlgebraicGeometry.LocallyRingedSpace.comp_val_c_app /-
 theorem comp_val_c_app {X Y Z : LocallyRingedSpace} (f : X ⟶ Y) (g : Y ⟶ Z) (U : (Opens Z)ᵒᵖ) :
     (f ≫ g).val.c.app U = g.val.c.app U ≫ f.val.c.app (op <| (Opens.map g.val.base).obj U.unop) :=
   rfl
 #align algebraic_geometry.LocallyRingedSpace.comp_val_c_app AlgebraicGeometry.LocallyRingedSpace.comp_val_c_app
+-/
 
+#print AlgebraicGeometry.LocallyRingedSpace.homOfSheafedSpaceHomOfIsIso /-
 /-- Given two locally ringed spaces `X` and `Y`, an isomorphism between `X` and `Y` as _sheafed_
 spaces can be lifted to a morphism `X ⟶ Y` as locally ringed spaces.
 
@@ -203,7 +214,9 @@ def homOfSheafedSpaceHomOfIsIso {X Y : LocallyRingedSpace} (f : X.toSheafedSpace
     show IsLocalRingHom (PresheafedSpace.stalkMap (SheafedSpace.forgetToPresheafedSpace.map f) x) by
       infer_instance
 #align algebraic_geometry.LocallyRingedSpace.hom_of_SheafedSpace_hom_of_is_iso AlgebraicGeometry.LocallyRingedSpace.homOfSheafedSpaceHomOfIsIso
+-/
 
+#print AlgebraicGeometry.LocallyRingedSpace.isoOfSheafedSpaceIso /-
 /-- Given two locally ringed spaces `X` and `Y`, an isomorphism between `X` and `Y` as _sheafed_
 spaces can be lifted to an isomorphism `X ⟶ Y` as locally ringed spaces.
 
@@ -218,6 +231,7 @@ def isoOfSheafedSpaceIso {X Y : LocallyRingedSpace} (f : X.toSheafedSpace ≅ Y.
   hom_inv_id' := Hom.ext _ _ f.hom_inv_id
   inv_hom_id' := Hom.ext _ _ f.inv_hom_id
 #align algebraic_geometry.LocallyRingedSpace.iso_of_SheafedSpace_iso AlgebraicGeometry.LocallyRingedSpace.isoOfSheafedSpaceIso
+-/
 
 instance : ReflectsIsomorphisms forgetToSheafedSpace
     where reflects X Y f i :=
@@ -226,10 +240,13 @@ instance : ReflectsIsomorphisms forgetToSheafedSpace
         ⟨hom_of_SheafedSpace_hom_of_is_iso (CategoryTheory.inv (forget_to_SheafedSpace.map f)),
           hom.ext _ _ (is_iso.hom_inv_id _), hom.ext _ _ (is_iso.inv_hom_id _)⟩ }
 
+#print AlgebraicGeometry.LocallyRingedSpace.is_sheafedSpace_iso /-
 instance is_sheafedSpace_iso {X Y : LocallyRingedSpace} (f : X ⟶ Y) [IsIso f] : IsIso f.1 :=
   LocallyRingedSpace.forgetToSheafedSpace.map_isIso f
 #align algebraic_geometry.LocallyRingedSpace.is_SheafedSpace_iso AlgebraicGeometry.LocallyRingedSpace.is_sheafedSpace_iso
+-/
 
+#print AlgebraicGeometry.LocallyRingedSpace.restrict /-
 /-- The restriction of a locally ringed space along an open embedding.
 -/
 @[simps]
@@ -244,12 +261,15 @@ def restrict {U : TopCat} (X : LocallyRingedSpace) {f : U ⟶ X.toTopCat} (h : O
     exact (X.to_PresheafedSpace.restrict_stalk_iso h x).symm.commRingCatIsoToRingEquiv
   toSheafedSpace := X.toSheafedSpace.restrict h
 #align algebraic_geometry.LocallyRingedSpace.restrict AlgebraicGeometry.LocallyRingedSpace.restrict
+-/
 
+#print AlgebraicGeometry.LocallyRingedSpace.ofRestrict /-
 /-- The canonical map from the restriction to the supspace. -/
 def ofRestrict {U : TopCat} (X : LocallyRingedSpace) {f : U ⟶ X.toTopCat} (h : OpenEmbedding f) :
     X.restrict h ⟶ X :=
   ⟨X.toPresheafedSpace.of_restrict h, fun x => inferInstance⟩
 #align algebraic_geometry.LocallyRingedSpace.of_restrict AlgebraicGeometry.LocallyRingedSpace.ofRestrict
+-/
 
 #print AlgebraicGeometry.LocallyRingedSpace.restrictTopIso /-
 /-- The restriction of a locally ringed space `X` to the top subspace is isomorphic to `X` itself.
@@ -273,24 +293,33 @@ theorem Γ_def : Γ = forgetToSheafedSpace.op ⋙ SheafedSpace.Γ :=
 #align algebraic_geometry.LocallyRingedSpace.Γ_def AlgebraicGeometry.LocallyRingedSpace.Γ_def
 -/
 
+#print AlgebraicGeometry.LocallyRingedSpace.Γ_obj /-
 @[simp]
 theorem Γ_obj (X : LocallyRingedSpaceᵒᵖ) : Γ.obj X = (unop X).Presheaf.obj (op ⊤) :=
   rfl
 #align algebraic_geometry.LocallyRingedSpace.Γ_obj AlgebraicGeometry.LocallyRingedSpace.Γ_obj
+-/
 
+#print AlgebraicGeometry.LocallyRingedSpace.Γ_obj_op /-
 theorem Γ_obj_op (X : LocallyRingedSpace) : Γ.obj (op X) = X.Presheaf.obj (op ⊤) :=
   rfl
 #align algebraic_geometry.LocallyRingedSpace.Γ_obj_op AlgebraicGeometry.LocallyRingedSpace.Γ_obj_op
+-/
 
+#print AlgebraicGeometry.LocallyRingedSpace.Γ_map /-
 @[simp]
 theorem Γ_map {X Y : LocallyRingedSpaceᵒᵖ} (f : X ⟶ Y) : Γ.map f = f.unop.1.c.app (op ⊤) :=
   rfl
 #align algebraic_geometry.LocallyRingedSpace.Γ_map AlgebraicGeometry.LocallyRingedSpace.Γ_map
+-/
 
+#print AlgebraicGeometry.LocallyRingedSpace.Γ_map_op /-
 theorem Γ_map_op {X Y : LocallyRingedSpace} (f : X ⟶ Y) : Γ.map f.op = f.1.c.app (op ⊤) :=
   rfl
 #align algebraic_geometry.LocallyRingedSpace.Γ_map_op AlgebraicGeometry.LocallyRingedSpace.Γ_map_op
+-/
 
+#print AlgebraicGeometry.LocallyRingedSpace.preimage_basicOpen /-
 theorem preimage_basicOpen {X Y : LocallyRingedSpace} (f : X ⟶ Y) {U : Opens Y}
     (s : Y.Presheaf.obj (op U)) :
     (Opens.map f.1.base).obj (Y.toRingedSpace.basicOpen s) =
@@ -307,6 +336,7 @@ theorem preimage_basicOpen {X Y : LocallyRingedSpace} (f : X ⟶ Y) {U : Opens Y
     rw [← PresheafedSpace.stalk_map_germ_apply] at hy 
     exact (isUnit_map_iff (PresheafedSpace.stalk_map f.1 _) _).mp hy
 #align algebraic_geometry.LocallyRingedSpace.preimage_basic_open AlgebraicGeometry.LocallyRingedSpace.preimage_basicOpen
+-/
 
 #print AlgebraicGeometry.LocallyRingedSpace.basicOpen_zero /-
 -- This actually holds for all ringed spaces with nontrivial stalks.
@@ -320,10 +350,12 @@ theorem basicOpen_zero (X : LocallyRingedSpace) (U : Opens X.carrier) :
 #align algebraic_geometry.LocallyRingedSpace.basic_open_zero AlgebraicGeometry.LocallyRingedSpace.basicOpen_zero
 -/
 
+#print AlgebraicGeometry.LocallyRingedSpace.component_nontrivial /-
 instance component_nontrivial (X : LocallyRingedSpace) (U : Opens X.carrier) [hU : Nonempty U] :
     Nontrivial (X.Presheaf.obj <| op U) :=
   (X.toPresheafedSpace.Presheaf.germ hU.some).domain_nontrivial
 #align algebraic_geometry.LocallyRingedSpace.component_nontrivial AlgebraicGeometry.LocallyRingedSpace.component_nontrivial
+-/
 
 end LocallyRingedSpace
 

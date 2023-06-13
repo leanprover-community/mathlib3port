@@ -67,22 +67,22 @@ open CategoryTheory.Iso
 namespace CategoryTheory
 
 #print CategoryTheory.MonoidalCategory /-
-/- ./././Mathport/Syntax/Translate/Command.lean:407:24: unsupported: (notation) in structure -/
+/- ./././Mathport/Syntax/Translate/Command.lean:406:24: unsupported: (notation) in structure -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `tensor_obj -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `tensor_obj -/
-/- ./././Mathport/Syntax/Translate/Command.lean:407:24: unsupported: (notation) in structure -/
+/- ./././Mathport/Syntax/Translate/Command.lean:406:24: unsupported: (notation) in structure -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ⊗' » -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `tensor_obj -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ⊗' » -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ⊗' » -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ⊗' » -/
-/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`tensorUnit] [] -/
-/- ./././Mathport/Syntax/Translate/Command.lean:407:24: unsupported: (notation) in structure -/
+/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`tensorUnit] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:406:24: unsupported: (notation) in structure -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `tensor_obj -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `tensor_obj -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `tensor_obj -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `tensor_obj -/
-/- ./././Mathport/Syntax/Translate/Command.lean:407:24: unsupported: (notation) in structure -/
+/- ./././Mathport/Syntax/Translate/Command.lean:406:24: unsupported: (notation) in structure -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ⊗' » -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ⊗' » -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `exprα_ -/
@@ -91,14 +91,14 @@ namespace CategoryTheory
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ⊗' » -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `tensor_obj -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr𝟙_» -/
-/- ./././Mathport/Syntax/Translate/Command.lean:407:24: unsupported: (notation) in structure -/
+/- ./././Mathport/Syntax/Translate/Command.lean:406:24: unsupported: (notation) in structure -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ⊗' » -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr𝟙_» -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«exprλ_» -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«exprλ_» -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `tensor_obj -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr𝟙_» -/
-/- ./././Mathport/Syntax/Translate/Command.lean:407:24: unsupported: (notation) in structure -/
+/- ./././Mathport/Syntax/Translate/Command.lean:406:24: unsupported: (notation) in structure -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ⊗' » -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr𝟙_» -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `exprρ_ -/
@@ -211,22 +211,16 @@ attribute [simp, reassoc] monoidal_category.triangle
 
 open MonoidalCategory
 
--- mathport name: tensor_obj
 infixr:70 " ⊗ " => tensorObj
 
--- mathport name: tensor_hom
 infixr:70 " ⊗ " => tensorHom
 
--- mathport name: «expr𝟙_»
 notation "𝟙_" => tensorUnit
 
--- mathport name: exprα_
 notation "α_" => associator
 
--- mathport name: «exprλ_»
 notation "λ_" => leftUnitor
 
--- mathport name: exprρ_
 notation "ρ_" => rightUnitor
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -245,7 +239,6 @@ def tensorIso {C : Type u} {X Y X' Y' : C} [Category.{v} C] [MonoidalCategory.{v
 #align category_theory.tensor_iso CategoryTheory.tensorIso
 -/
 
--- mathport name: tensor_iso
 infixr:70 " ⊗ " => tensorIso
 
 namespace MonoidalCategory
@@ -638,17 +631,21 @@ def leftAssocTensor : C × C × C ⥤ C
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print CategoryTheory.MonoidalCategory.leftAssocTensor_obj /-
 @[simp]
 theorem leftAssocTensor_obj (X) : (leftAssocTensor C).obj X = (X.1 ⊗ X.2.1) ⊗ X.2.2 :=
   rfl
 #align category_theory.monoidal_category.left_assoc_tensor_obj CategoryTheory.MonoidalCategory.leftAssocTensor_obj
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print CategoryTheory.MonoidalCategory.leftAssocTensor_map /-
 @[simp]
 theorem leftAssocTensor_map {X Y} (f : X ⟶ Y) : (leftAssocTensor C).map f = (f.1 ⊗ f.2.1) ⊗ f.2.2 :=
   rfl
 #align category_theory.monoidal_category.left_assoc_tensor_map CategoryTheory.MonoidalCategory.leftAssocTensor_map
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -665,17 +662,21 @@ def rightAssocTensor : C × C × C ⥤ C
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print CategoryTheory.MonoidalCategory.rightAssocTensor_obj /-
 @[simp]
 theorem rightAssocTensor_obj (X) : (rightAssocTensor C).obj X = X.1 ⊗ X.2.1 ⊗ X.2.2 :=
   rfl
 #align category_theory.monoidal_category.right_assoc_tensor_obj CategoryTheory.MonoidalCategory.rightAssocTensor_obj
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print CategoryTheory.MonoidalCategory.rightAssocTensor_map /-
 @[simp]
 theorem rightAssocTensor_map {X Y} (f : X ⟶ Y) : (rightAssocTensor C).map f = f.1 ⊗ f.2.1 ⊗ f.2.2 :=
   rfl
 #align category_theory.monoidal_category.right_assoc_tensor_map CategoryTheory.MonoidalCategory.rightAssocTensor_map
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -752,16 +753,20 @@ def tensorLeftTensor (X Y : C) : tensorLeft (X ⊗ Y) ≅ tensorLeft Y ⋙ tenso
 #align category_theory.monoidal_category.tensor_left_tensor CategoryTheory.MonoidalCategory.tensorLeftTensor
 -/
 
+#print CategoryTheory.MonoidalCategory.tensorLeftTensor_hom_app /-
 @[simp]
 theorem tensorLeftTensor_hom_app (X Y Z : C) :
     (tensorLeftTensor X Y).Hom.app Z = (associator X Y Z).Hom :=
   rfl
 #align category_theory.monoidal_category.tensor_left_tensor_hom_app CategoryTheory.MonoidalCategory.tensorLeftTensor_hom_app
+-/
 
+#print CategoryTheory.MonoidalCategory.tensorLeftTensor_inv_app /-
 @[simp]
 theorem tensorLeftTensor_inv_app (X Y Z : C) :
     (tensorLeftTensor X Y).inv.app Z = (associator X Y Z).inv := by simp [tensor_left_tensor]
 #align category_theory.monoidal_category.tensor_left_tensor_inv_app CategoryTheory.MonoidalCategory.tensorLeftTensor_inv_app
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -827,16 +832,20 @@ def tensorRightTensor (X Y : C) : tensorRight (X ⊗ Y) ≅ tensorRight X ⋙ te
 #align category_theory.monoidal_category.tensor_right_tensor CategoryTheory.MonoidalCategory.tensorRightTensor
 -/
 
+#print CategoryTheory.MonoidalCategory.tensorRightTensor_hom_app /-
 @[simp]
 theorem tensorRightTensor_hom_app (X Y Z : C) :
     (tensorRightTensor X Y).Hom.app Z = (associator Z X Y).inv :=
   rfl
 #align category_theory.monoidal_category.tensor_right_tensor_hom_app CategoryTheory.MonoidalCategory.tensorRightTensor_hom_app
+-/
 
+#print CategoryTheory.MonoidalCategory.tensorRightTensor_inv_app /-
 @[simp]
 theorem tensorRightTensor_inv_app (X Y Z : C) :
     (tensorRightTensor X Y).inv.app Z = (associator Z X Y).Hom := by simp [tensor_right_tensor]
 #align category_theory.monoidal_category.tensor_right_tensor_inv_app CategoryTheory.MonoidalCategory.tensorRightTensor_inv_app
+-/
 
 end
 

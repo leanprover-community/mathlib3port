@@ -48,6 +48,7 @@ variable {R : Type u} {M : Type v} [CommRing R] [AddCommGroup M] [Module R M]
 
 variable (B : BilinForm R M)
 
+#print BilinForm.isSkewAdjoint_bracket /-
 theorem BilinForm.isSkewAdjoint_bracket (f g : Module.End R M) (hf : f ∈ B.skewAdjointSubmodule)
     (hg : g ∈ B.skewAdjointSubmodule) : ⁅f, g⁆ ∈ B.skewAdjointSubmodule :=
   by
@@ -57,15 +58,19 @@ theorem BilinForm.isSkewAdjoint_bracket (f g : Module.End R M) (hf : f ∈ B.ske
   change BilinForm.IsAdjointPair B B (f * g - g * f) (-(f * g - g * f)); rw [neg_sub]
   exact hfg.sub hgf
 #align bilin_form.is_skew_adjoint_bracket BilinForm.isSkewAdjoint_bracket
+-/
 
+#print skewAdjointLieSubalgebra /-
 /-- Given an `R`-module `M`, equipped with a bilinear form, the skew-adjoint endomorphisms form a
 Lie subalgebra of the Lie algebra of endomorphisms. -/
 def skewAdjointLieSubalgebra : LieSubalgebra R (Module.End R M) :=
   { B.skewAdjointSubmodule with lie_mem' := B.isSkewAdjoint_bracket }
 #align skew_adjoint_lie_subalgebra skewAdjointLieSubalgebra
+-/
 
 variable {N : Type w} [AddCommGroup N] [Module R N] (e : N ≃ₗ[R] M)
 
+#print skewAdjointLieSubalgebraEquiv /-
 /-- An equivalence of modules with bilinear forms gives equivalence of Lie algebras of skew-adjoint
 endomorphisms. -/
 def skewAdjointLieSubalgebraEquiv :
@@ -77,17 +82,22 @@ def skewAdjointLieSubalgebraEquiv :
     coe_coe]
   exact (BilinForm.isPairSelfAdjoint_equiv (-B) B e f).symm
 #align skew_adjoint_lie_subalgebra_equiv skewAdjointLieSubalgebraEquiv
+-/
 
+#print skewAdjointLieSubalgebraEquiv_apply /-
 @[simp]
 theorem skewAdjointLieSubalgebraEquiv_apply (f : skewAdjointLieSubalgebra (B.comp ↑e ↑e)) :
     ↑(skewAdjointLieSubalgebraEquiv B e f) = e.lieConj f := by simp [skewAdjointLieSubalgebraEquiv]
 #align skew_adjoint_lie_subalgebra_equiv_apply skewAdjointLieSubalgebraEquiv_apply
+-/
 
+#print skewAdjointLieSubalgebraEquiv_symm_apply /-
 @[simp]
 theorem skewAdjointLieSubalgebraEquiv_symm_apply (f : skewAdjointLieSubalgebra B) :
     ↑((skewAdjointLieSubalgebraEquiv B e).symm f) = e.symm.lieConj f := by
   simp [skewAdjointLieSubalgebraEquiv]
 #align skew_adjoint_lie_subalgebra_equiv_symm_apply skewAdjointLieSubalgebraEquiv_symm_apply
+-/
 
 end SkewAdjointEndomorphisms
 
@@ -99,10 +109,13 @@ variable {R : Type u} {n : Type w} [CommRing R] [DecidableEq n] [Fintype n]
 
 variable (J : Matrix n n R)
 
+#print Matrix.lie_transpose /-
 theorem Matrix.lie_transpose (A B : Matrix n n R) : ⁅A, B⁆ᵀ = ⁅Bᵀ, Aᵀ⁆ :=
   show (A * B - B * A)ᵀ = Bᵀ * Aᵀ - Aᵀ * Bᵀ by simp
 #align matrix.lie_transpose Matrix.lie_transpose
+-/
 
+#print Matrix.isSkewAdjoint_bracket /-
 theorem Matrix.isSkewAdjoint_bracket (A B : Matrix n n R) (hA : A ∈ skewAdjointMatricesSubmodule J)
     (hB : B ∈ skewAdjointMatricesSubmodule J) : ⁅A, B⁆ ∈ skewAdjointMatricesSubmodule J :=
   by
@@ -115,11 +128,14 @@ theorem Matrix.isSkewAdjoint_bracket (A B : Matrix n n R) (hA : A ∈ skewAdjoin
     mul_assoc, hA, hB]
   noncomm_ring
 #align matrix.is_skew_adjoint_bracket Matrix.isSkewAdjoint_bracket
+-/
 
+#print skewAdjointMatricesLieSubalgebra /-
 /-- The Lie subalgebra of skew-adjoint square matrices corresponding to a square matrix `J`. -/
 def skewAdjointMatricesLieSubalgebra : LieSubalgebra R (Matrix n n R) :=
   { skewAdjointMatricesSubmodule J with lie_mem' := J.isSkewAdjoint_bracket }
 #align skew_adjoint_matrices_lie_subalgebra skewAdjointMatricesLieSubalgebra
+-/
 
 #print mem_skewAdjointMatricesLieSubalgebra /-
 @[simp]
@@ -129,6 +145,7 @@ theorem mem_skewAdjointMatricesLieSubalgebra (A : Matrix n n R) :
 #align mem_skew_adjoint_matrices_lie_subalgebra mem_skewAdjointMatricesLieSubalgebra
 -/
 
+#print skewAdjointMatricesLieSubalgebraEquiv /-
 /-- An invertible matrix `P` gives a Lie algebra equivalence between those endomorphisms that are
 skew-adjoint with respect to a square matrix `J` and those with respect to `PᵀJP`. -/
 def skewAdjointMatricesLieSubalgebraEquiv (P : Matrix n n R) (h : Invertible P) :
@@ -145,13 +162,17 @@ def skewAdjointMatricesLieSubalgebraEquiv (P : Matrix n n R) (h : Invertible P) 
         exact this
       simp [Matrix.IsSkewAdjoint, J.is_adjoint_pair_equiv' _ _ P (isUnit_of_invertible P)])
 #align skew_adjoint_matrices_lie_subalgebra_equiv skewAdjointMatricesLieSubalgebraEquiv
+-/
 
+#print skewAdjointMatricesLieSubalgebraEquiv_apply /-
 theorem skewAdjointMatricesLieSubalgebraEquiv_apply (P : Matrix n n R) (h : Invertible P)
     (A : skewAdjointMatricesLieSubalgebra J) :
     ↑(skewAdjointMatricesLieSubalgebraEquiv J P h A) = P⁻¹ ⬝ ↑A ⬝ P := by
   simp [skewAdjointMatricesLieSubalgebraEquiv]
 #align skew_adjoint_matrices_lie_subalgebra_equiv_apply skewAdjointMatricesLieSubalgebraEquiv_apply
+-/
 
+#print skewAdjointMatricesLieSubalgebraEquivTranspose /-
 /-- An equivalence of matrix algebras commuting with the transpose endomorphisms restricts to an
 equivalence of Lie algebras of skew-adjoint matrices. -/
 def skewAdjointMatricesLieSubalgebraEquivTranspose {m : Type w} [DecidableEq m] [Fintype m]
@@ -164,7 +185,9 @@ def skewAdjointMatricesLieSubalgebraEquivTranspose {m : Type w} [DecidableEq m] 
       simp [Matrix.IsSkewAdjoint, Matrix.IsAdjointPair, ← Matrix.mul_eq_mul, ← h, ←
         Function.Injective.eq_iff e.injective])
 #align skew_adjoint_matrices_lie_subalgebra_equiv_transpose skewAdjointMatricesLieSubalgebraEquivTranspose
+-/
 
+#print skewAdjointMatricesLieSubalgebraEquivTranspose_apply /-
 @[simp]
 theorem skewAdjointMatricesLieSubalgebraEquivTranspose_apply {m : Type w} [DecidableEq m]
     [Fintype m] (e : Matrix n n R ≃ₐ[R] Matrix m m R) (h : ∀ A, (e A)ᵀ = e Aᵀ)
@@ -172,7 +195,9 @@ theorem skewAdjointMatricesLieSubalgebraEquivTranspose_apply {m : Type w} [Decid
     (skewAdjointMatricesLieSubalgebraEquivTranspose J e h A : Matrix m m R) = e A :=
   rfl
 #align skew_adjoint_matrices_lie_subalgebra_equiv_transpose_apply skewAdjointMatricesLieSubalgebraEquivTranspose_apply
+-/
 
+#print mem_skewAdjointMatricesLieSubalgebra_unit_smul /-
 theorem mem_skewAdjointMatricesLieSubalgebra_unit_smul (u : Rˣ) (J A : Matrix n n R) :
     A ∈ skewAdjointMatricesLieSubalgebra (u • J) ↔ A ∈ skewAdjointMatricesLieSubalgebra J :=
   by
@@ -182,6 +207,7 @@ theorem mem_skewAdjointMatricesLieSubalgebra_unit_smul (u : Rˣ) (J A : Matrix n
   · simpa using congr_arg (fun B => u⁻¹ • B) h
   · simp [h]
 #align mem_skew_adjoint_matrices_lie_subalgebra_unit_smul mem_skewAdjointMatricesLieSubalgebra_unit_smul
+-/
 
 end SkewAdjointMatrices
 

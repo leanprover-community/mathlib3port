@@ -291,21 +291,29 @@ theorem Ico_filter_le_left {a b : α} [DecidablePred (· ≤ a)] (hab : a < b) :
 #align multiset.Ico_filter_le_left Multiset.Ico_filter_le_left
 -/
 
+#print Multiset.card_Ico_eq_card_Icc_sub_one /-
 theorem card_Ico_eq_card_Icc_sub_one (a b : α) : (Ico a b).card = (Icc a b).card - 1 :=
   Finset.card_Ico_eq_card_Icc_sub_one _ _
 #align multiset.card_Ico_eq_card_Icc_sub_one Multiset.card_Ico_eq_card_Icc_sub_one
+-/
 
+#print Multiset.card_Ioc_eq_card_Icc_sub_one /-
 theorem card_Ioc_eq_card_Icc_sub_one (a b : α) : (Ioc a b).card = (Icc a b).card - 1 :=
   Finset.card_Ioc_eq_card_Icc_sub_one _ _
 #align multiset.card_Ioc_eq_card_Icc_sub_one Multiset.card_Ioc_eq_card_Icc_sub_one
+-/
 
+#print Multiset.card_Ioo_eq_card_Ico_sub_one /-
 theorem card_Ioo_eq_card_Ico_sub_one (a b : α) : (Ioo a b).card = (Ico a b).card - 1 :=
   Finset.card_Ioo_eq_card_Ico_sub_one _ _
 #align multiset.card_Ioo_eq_card_Ico_sub_one Multiset.card_Ioo_eq_card_Ico_sub_one
+-/
 
+#print Multiset.card_Ioo_eq_card_Icc_sub_two /-
 theorem card_Ioo_eq_card_Icc_sub_two (a b : α) : (Ioo a b).card = (Icc a b).card - 2 :=
   Finset.card_Ioo_eq_card_Icc_sub_two _ _
 #align multiset.card_Ioo_eq_card_Icc_sub_two Multiset.card_Ioo_eq_card_Icc_sub_two
+-/
 
 end PartialOrder
 
@@ -328,9 +336,11 @@ theorem Ico_add_Ico_eq_Ico {a b c : α} (hab : a ≤ b) (hbc : b ≤ c) : Ico a 
 #align multiset.Ico_add_Ico_eq_Ico Multiset.Ico_add_Ico_eq_Ico
 -/
 
+#print Multiset.Ico_inter_Ico /-
 theorem Ico_inter_Ico : Ico a b ∩ Ico c d = Ico (max a c) (min b d) := by
   rw [Ico, Ico, Ico, ← Finset.inter_val, Finset.Ico_inter_Ico]
 #align multiset.Ico_inter_Ico Multiset.Ico_inter_Ico
+-/
 
 #print Multiset.Ico_filter_lt /-
 @[simp]
@@ -346,15 +356,19 @@ theorem Ico_filter_le (a b c : α) : ((Ico a b).filterₓ fun x => c ≤ x) = Ic
 #align multiset.Ico_filter_le Multiset.Ico_filter_le
 -/
 
+#print Multiset.Ico_sub_Ico_left /-
 @[simp]
 theorem Ico_sub_Ico_left (a b c : α) : Ico a b - Ico a c = Ico (max a c) b := by
   rw [Ico, Ico, Ico, ← Finset.sdiff_val, Finset.Ico_diff_Ico_left]
 #align multiset.Ico_sub_Ico_left Multiset.Ico_sub_Ico_left
+-/
 
+#print Multiset.Ico_sub_Ico_right /-
 @[simp]
 theorem Ico_sub_Ico_right (a b c : α) : Ico a b - Ico c b = Ico a (min b c) := by
   rw [Ico, Ico, Ico, ← Finset.sdiff_val, Finset.Ico_diff_Ico_right]
 #align multiset.Ico_sub_Ico_right Multiset.Ico_sub_Ico_right
+-/
 
 end LinearOrder
 
@@ -362,41 +376,57 @@ section OrderedCancelAddCommMonoid
 
 variable [OrderedCancelAddCommMonoid α] [ExistsAddOfLE α] [LocallyFiniteOrder α]
 
+#print Multiset.map_add_left_Icc /-
 theorem map_add_left_Icc (a b c : α) : (Icc a b).map ((· + ·) c) = Icc (c + a) (c + b) := by
   classical rw [Icc, Icc, ← Finset.image_add_left_Icc, Finset.image_val,
     ((Finset.nodup _).map <| add_right_injective c).dedup]
 #align multiset.map_add_left_Icc Multiset.map_add_left_Icc
+-/
 
+#print Multiset.map_add_left_Ico /-
 theorem map_add_left_Ico (a b c : α) : (Ico a b).map ((· + ·) c) = Ico (c + a) (c + b) := by
   classical rw [Ico, Ico, ← Finset.image_add_left_Ico, Finset.image_val,
     ((Finset.nodup _).map <| add_right_injective c).dedup]
 #align multiset.map_add_left_Ico Multiset.map_add_left_Ico
+-/
 
+#print Multiset.map_add_left_Ioc /-
 theorem map_add_left_Ioc (a b c : α) : (Ioc a b).map ((· + ·) c) = Ioc (c + a) (c + b) := by
   classical rw [Ioc, Ioc, ← Finset.image_add_left_Ioc, Finset.image_val,
     ((Finset.nodup _).map <| add_right_injective c).dedup]
 #align multiset.map_add_left_Ioc Multiset.map_add_left_Ioc
+-/
 
+#print Multiset.map_add_left_Ioo /-
 theorem map_add_left_Ioo (a b c : α) : (Ioo a b).map ((· + ·) c) = Ioo (c + a) (c + b) := by
   classical rw [Ioo, Ioo, ← Finset.image_add_left_Ioo, Finset.image_val,
     ((Finset.nodup _).map <| add_right_injective c).dedup]
 #align multiset.map_add_left_Ioo Multiset.map_add_left_Ioo
+-/
 
+#print Multiset.map_add_right_Icc /-
 theorem map_add_right_Icc (a b c : α) : ((Icc a b).map fun x => x + c) = Icc (a + c) (b + c) := by
   simp_rw [add_comm _ c]; exact map_add_left_Icc _ _ _
 #align multiset.map_add_right_Icc Multiset.map_add_right_Icc
+-/
 
+#print Multiset.map_add_right_Ico /-
 theorem map_add_right_Ico (a b c : α) : ((Ico a b).map fun x => x + c) = Ico (a + c) (b + c) := by
   simp_rw [add_comm _ c]; exact map_add_left_Ico _ _ _
 #align multiset.map_add_right_Ico Multiset.map_add_right_Ico
+-/
 
+#print Multiset.map_add_right_Ioc /-
 theorem map_add_right_Ioc (a b c : α) : ((Ioc a b).map fun x => x + c) = Ioc (a + c) (b + c) := by
   simp_rw [add_comm _ c]; exact map_add_left_Ioc _ _ _
 #align multiset.map_add_right_Ioc Multiset.map_add_right_Ioc
+-/
 
+#print Multiset.map_add_right_Ioo /-
 theorem map_add_right_Ioo (a b c : α) : ((Ioo a b).map fun x => x + c) = Ioo (a + c) (b + c) := by
   simp_rw [add_comm _ c]; exact map_add_left_Ioo _ _ _
 #align multiset.map_add_right_Ioo Multiset.map_add_right_Ioo
+-/
 
 end OrderedCancelAddCommMonoid
 

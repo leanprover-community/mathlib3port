@@ -55,18 +55,22 @@ def tensorDistrib : BilinForm R M₁ ⊗[R] BilinForm R M₂ →ₗ[R] BilinForm
 #align bilin_form.tensor_distrib BilinForm.tensorDistrib
 -/
 
+#print BilinForm.tensorDistrib_tmul /-
 @[simp]
 theorem tensorDistrib_tmul (B₁ : BilinForm R M₁) (B₂ : BilinForm R M₂) (m₁ : M₁) (m₂ : M₂)
     (m₁' : M₁) (m₂' : M₂) :
     tensorDistrib (B₁ ⊗ₜ B₂) (m₁ ⊗ₜ m₂) (m₁' ⊗ₜ m₂') = B₁ m₁ m₁' * B₂ m₂ m₂' :=
   rfl
 #align bilin_form.tensor_distrib_tmul BilinForm.tensorDistrib_tmul
+-/
 
+#print BilinForm.tmul /-
 /-- The tensor product of two bilinear forms, a shorthand for dot notation. -/
 @[reducible]
 protected def tmul (B₁ : BilinForm R M₁) (B₂ : BilinForm R M₂) : BilinForm R (M₁ ⊗[R] M₂) :=
   tensorDistrib (B₁ ⊗ₜ[R] B₂)
 #align bilin_form.tmul BilinForm.tmul
+-/
 
 end CommSemiring
 
@@ -100,11 +104,13 @@ noncomputable def tensorDistribEquiv :
 #align bilin_form.tensor_distrib_equiv BilinForm.tensorDistribEquiv
 -/
 
+#print BilinForm.tensorDistribEquiv_apply /-
 @[simp]
 theorem tensorDistribEquiv_apply (B : BilinForm R M₁ ⊗ BilinForm R M₂) :
     tensorDistribEquiv B = tensorDistrib B :=
   rfl
 #align bilin_form.tensor_distrib_equiv_apply BilinForm.tensorDistribEquiv_apply
+-/
 
 end CommRing
 

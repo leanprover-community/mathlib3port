@@ -57,6 +57,7 @@ variable [Algebra F K] [Module K A] [Module F A] [IsScalarTower F K A]
 
 variable [StrongRankCondition F] [StrongRankCondition K] [Module.Free F K] [Module.Free K A]
 
+#print lift_rank_mul_lift_rank /-
 /-- Tower law: if `A` is a `K`-module and `K` is an extension of `F` then
 $\operatorname{rank}_F(A) = \operatorname{rank}_F(K) * \operatorname{rank}_K(A)$. -/
 theorem lift_rank_mul_lift_rank :
@@ -69,7 +70,9 @@ theorem lift_rank_mul_lift_rank :
     lift_umax.{w, v}, ← (b.smul c).mk_eq_rank, mk_prod, lift_mul, lift_lift, lift_lift, lift_lift,
     lift_lift, lift_umax]
 #align lift_rank_mul_lift_rank lift_rank_mul_lift_rank
+-/
 
+#print rank_mul_rank /-
 /-- Tower law: if `A` is a `K`-module and `K` is an extension of `F` then
 $\operatorname{rank}_F(A) = \operatorname{rank}_F(K) * \operatorname{rank}_K(A)$.
 
@@ -80,6 +83,7 @@ theorem rank_mul_rank (F : Type u) (K A : Type v) [CommRing F] [Ring K] [AddComm
     Module.rank F K * Module.rank K A = Module.rank F A := by
   convert lift_rank_mul_lift_rank F K A <;> rw [lift_id]
 #align rank_mul_rank rank_mul_rank
+-/
 
 #print FiniteDimensional.finrank_mul_finrank' /-
 /-- Tower law: if `A` is a `K`-module and `K` is an extension of `F` then
@@ -113,6 +117,7 @@ theorem trans [FiniteDimensional F K] [FiniteDimensional K A] : FiniteDimensiona
 #align finite_dimensional.trans FiniteDimensional.trans
 -/
 
+#print FiniteDimensional.left /-
 /-- In a tower of field extensions `L / K / F`, if `L / F` is finite, so is `K / F`.
 
 (In fact, it suffices that `L` is a nontrivial ring.)
@@ -123,6 +128,7 @@ theorem left (K L : Type _) [Field K] [Algebra F K] [Ring L] [Nontrivial L] [Alg
     [Algebra K L] [IsScalarTower F K L] [FiniteDimensional F L] : FiniteDimensional F K :=
   FiniteDimensional.of_injective (IsScalarTower.toAlgHom F K L).toLinearMap (RingHom.injective _)
 #align finite_dimensional.left FiniteDimensional.left
+-/
 
 #print FiniteDimensional.right /-
 theorem right [hf : FiniteDimensional F A] : FiniteDimensional K A :=
@@ -150,6 +156,7 @@ theorem finrank_mul_finrank [FiniteDimensional F K] : finrank F K * finrank K A 
 #align finite_dimensional.finrank_mul_finrank FiniteDimensional.finrank_mul_finrank
 -/
 
+#print FiniteDimensional.Subalgebra.isSimpleOrder_of_finrank_prime /-
 theorem Subalgebra.isSimpleOrder_of_finrank_prime (A) [Ring A] [IsDomain A] [Algebra F A]
     (hp : (finrank F A).Prime) : IsSimpleOrder (Subalgebra F A) :=
   { to_nontrivial :=
@@ -165,6 +172,7 @@ theorem Subalgebra.isSimpleOrder_of_finrank_prime (A) [Ring A] [IsDomain A] [Alg
         exact
           Algebra.toSubmodule_eq_top.1 (eq_top_of_finrank_eq <| K.finrank_to_submodule.trans h) }
 #align finite_dimensional.subalgebra.is_simple_order_of_finrank_prime FiniteDimensional.Subalgebra.isSimpleOrder_of_finrank_prime
+-/
 
 #print LinearMap.finite_dimensional'' /-
 -- TODO: `intermediate_field` version 

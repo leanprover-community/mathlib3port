@@ -60,6 +60,7 @@ open Finset
 
 variable {α : Type _}
 
+#print sup_sdiff_injOn /-
 /-- UV-compression is injective on the elements it moves. See `uv.compress`. -/
 theorem sup_sdiff_injOn [GeneralizedBooleanAlgebra α] (u v : α) :
     {x | Disjoint u x ∧ v ≤ x}.InjOn fun x => (x ⊔ u) \ v :=
@@ -72,6 +73,7 @@ theorem sup_sdiff_injOn [GeneralizedBooleanAlgebra α] (u v : α) :
   rwa [sdiff_sdiff_comm, ha.1.symm.sup_sdiff_cancel_right, sdiff_sdiff_comm,
     hb.1.symm.sup_sdiff_cancel_right, sdiff_sup_cancel ha.2, sdiff_sup_cancel hb.2] at h 
 #align sup_sdiff_inj_on sup_sdiff_injOn
+-/
 
 -- The namespace is here to distinguish from other compressions.
 namespace Uv
@@ -103,7 +105,6 @@ def compression (u v : α) (s : Finset α) :=
 #align uv.compression UV.compression
 -/
 
--- mathport name: uv.compression
 scoped[FinsetFamily] notation "𝓒 " => UV.compression
 
 #print UV.IsCompressed /-
@@ -113,24 +114,30 @@ def IsCompressed (u v : α) (s : Finset α) :=
 #align uv.is_compressed UV.IsCompressed
 -/
 
+#print UV.compress_of_disjoint_of_le /-
 theorem compress_of_disjoint_of_le (hua : Disjoint u a) (hva : v ≤ a) :
     compress u v a = (a ⊔ u) \ v :=
   if_pos ⟨hua, hva⟩
 #align uv.compress_of_disjoint_of_le UV.compress_of_disjoint_of_le
+-/
 
+#print UV.compress_of_disjoint_of_le' /-
 theorem compress_of_disjoint_of_le' (hva : Disjoint v a) (hua : u ≤ a) :
     compress u v ((a ⊔ v) \ u) = a := by
   rw [compress_of_disjoint_of_le disjoint_sdiff_self_right
       (le_sdiff.2 ⟨(le_sup_right : v ≤ a ⊔ v), hva.mono_right hua⟩),
     sdiff_sup_cancel (le_sup_of_le_left hua), hva.symm.sup_sdiff_cancel_right]
 #align uv.compress_of_disjoint_of_le' UV.compress_of_disjoint_of_le'
+-/
 
+#print UV.mem_compression /-
 /-- `a` is in the UV-compressed family iff it's in the original and its compression is in the
 original, or it's not in the original but it's the compression of something in the original. -/
 theorem mem_compression :
     a ∈ 𝓒 u v s ↔ a ∈ s ∧ compress u v a ∈ s ∨ a ∉ s ∧ ∃ b ∈ s, compress u v b = a := by
   simp_rw [compression, mem_union, mem_filter, mem_image, and_comm' (a ∉ s)]
 #align uv.mem_compression UV.mem_compression
+-/
 
 #print UV.IsCompressed.eq /-
 protected theorem IsCompressed.eq (h : IsCompressed u v s) : 𝓒 u v s = s :=
@@ -171,6 +178,7 @@ theorem is_compressed_self (u : α) (s : Finset α) : IsCompressed u u s :=
 #align uv.is_compressed_self UV.is_compressed_self
 -/
 
+#print UV.compress_sdiff_sdiff /-
 /-- An element can be compressed to any other element by removing/adding the differences. -/
 @[simp]
 theorem compress_sdiff_sdiff (a b : α) : compress (a \ b) (b \ a) b = a :=
@@ -179,12 +187,15 @@ theorem compress_sdiff_sdiff (a b : α) : compress (a \ b) (b \ a) b = a :=
   rw [sup_sdiff_self_right, sup_sdiff, disjoint_sdiff_self_right.sdiff_eq_left, sup_eq_right]
   exact sdiff_sdiff_le
 #align uv.compress_sdiff_sdiff UV.compress_sdiff_sdiff
+-/
 
+#print UV.compress_disjoint /-
 theorem compress_disjoint (u v : α) :
     Disjoint (s.filterₓ fun a => compress u v a ∈ s)
       ((s.image <| compress u v).filterₓ fun a => a ∉ s) :=
   disjoint_left.2 fun a ha₁ ha₂ => (mem_filter.1 ha₂).2 (mem_filter.1 ha₁).1
 #align uv.compress_disjoint UV.compress_disjoint
+-/
 
 #print UV.compress_idem /-
 /-- Compressing an element is idempotent. -/
@@ -284,6 +295,7 @@ theorem disjoint_of_mem_compression_of_not_mem (h : a ∈ 𝓒 u v s) (ha : a �
 #align uv.disjoint_of_mem_compression_of_not_mem UV.disjoint_of_mem_compression_of_not_mem
 -/
 
+#print UV.sup_sdiff_mem_of_mem_compression_of_not_mem /-
 theorem sup_sdiff_mem_of_mem_compression_of_not_mem (h : a ∈ 𝓒 u v s) (ha : a ∉ s) :
     (a ⊔ v) \ u ∈ s := by
   rw [mem_compression] at h 
@@ -296,7 +308,9 @@ theorem sup_sdiff_mem_of_mem_compression_of_not_mem (h : a ∈ 𝓒 u v s) (ha :
       h.1.symm.sdiff_eq_left]
   · cases ne_of_mem_of_not_mem hb ha hba
 #align uv.sup_sdiff_mem_of_mem_compression_of_not_mem UV.sup_sdiff_mem_of_mem_compression_of_not_mem
+-/
 
+#print UV.sup_sdiff_mem_of_mem_compression /-
 /-- If `a` is in the family compression and can be compressed, then its compression is in the
 original family. -/
 theorem sup_sdiff_mem_of_mem_compression (ha : a ∈ 𝓒 u v s) (hva : v ≤ a) (hua : Disjoint u a) :
@@ -318,7 +332,9 @@ theorem sup_sdiff_mem_of_mem_compression (ha : a ∈ 𝓒 u v s) (hva : v ≤ a)
     exact disjoint_sdiff_self_right
   rwa [hu, hv, compress_self, sup_bot_eq, sdiff_bot]
 #align uv.sup_sdiff_mem_of_mem_compression UV.sup_sdiff_mem_of_mem_compression
+-/
 
+#print UV.mem_of_mem_compression /-
 /-- If `a` is in the `u, v`-compression but `v ≤ a`, then `a` must have been in the original
 family. -/
 theorem mem_of_mem_compression (ha : a ∈ 𝓒 u v s) (hva : v ≤ a) (hvu : v = ⊥ → u = ⊥) : a ∈ s :=
@@ -332,6 +348,7 @@ theorem mem_of_mem_compression (ha : a ∈ 𝓒 u v s) (hva : v ≤ a) (hvu : v 
     rwa [← h, hvu hva, hva, sup_bot_eq, sdiff_bot]
   · rwa [← h]
 #align uv.mem_of_mem_compression UV.mem_of_mem_compression
+-/
 
 end GeneralizedBooleanAlgebra
 
@@ -342,6 +359,7 @@ open scoped FinsetFamily
 
 variable [DecidableEq α] {𝒜 : Finset (Finset α)} {u v a : Finset α}
 
+#print UV.card_compress /-
 /-- Compressing a finset doesn't change its size. -/
 theorem card_compress (hUV : u.card = v.card) (A : Finset α) : (compress u v A).card = A.card :=
   by
@@ -352,12 +370,14 @@ theorem card_compress (hUV : u.card = v.card) (A : Finset α) : (compress u v A)
       add_tsub_cancel_right]
   · rfl
 #align uv.card_compress UV.card_compress
+-/
 
 private theorem aux (huv : ∀ x ∈ u, ∃ y ∈ v, IsCompressed (u.eraseₓ x) (v.eraseₓ y) 𝒜) :
     v = ∅ → u = ∅ := by rintro rfl; refine' eq_empty_of_forall_not_mem fun a ha => _;
   obtain ⟨_, ⟨⟩, -⟩ := huv a ha
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (y «expr ∉ » s) -/
+#print UV.shadow_compression_subset_compression_shadow /-
 /-- UV-compression reduces the size of the shadow of `𝒜` if, for all `x ∈ u` there is `y ∈ v` such
 that `𝒜` is `(u.erase x, v.erase y)`-compressed. This is the key fact about compression for
 Kruskal-Katona. -/
@@ -467,7 +487,9 @@ theorem shadow_compression_subset_compression_shadow (u v : Finset α)
   rw [insert_union, sdiff_union_of_subset (hus.trans <| subset_union_left _ _),
     insert_sdiff_of_not_mem _ (hwu ∘ hwB ∘ mem_union_right _), union_sdiff_cancel_right hsv]
 #align uv.shadow_compression_subset_compression_shadow UV.shadow_compression_subset_compression_shadow
+-/
 
+#print UV.card_shadow_compression_le /-
 /-- UV-compression reduces the size of the shadow of `𝒜` if, for all `x ∈ u` there is `y ∈ v`
 such that `𝒜` is `(u.erase x, v.erase y)`-compressed. This is the key UV-compression fact needed for
 Kruskal-Katona. -/
@@ -477,6 +499,7 @@ theorem card_shadow_compression_le (u v : Finset α)
   (card_le_of_subset <| shadow_compression_subset_compression_shadow _ _ huv).trans
     (card_compression _ _ _).le
 #align uv.card_shadow_compression_le UV.card_shadow_compression_le
+-/
 
 end Uv
 

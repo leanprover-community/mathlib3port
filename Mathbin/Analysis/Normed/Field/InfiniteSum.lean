@@ -36,6 +36,7 @@ open Finset
 
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print Summable.mul_of_nonneg /-
 theorem Summable.mul_of_nonneg {f : ι → ℝ} {g : ι' → ℝ} (hf : Summable f) (hg : Summable g)
     (hf' : 0 ≤ f) (hg' : 0 ≤ g) : Summable fun x : ι × ι' => f x.1 * g x.2 :=
   let ⟨s, hf⟩ := hf
@@ -56,20 +57,26 @@ theorem Summable.mul_of_nonneg {f : ι → ℝ} {g : ι' → ℝ} (hf : Summable
     _ ≤ s * t :=
       mul_le_mul_of_nonneg_right (sum_le_hasSum _ (fun _ _ => hf' _) hf) (hg.NonNeg fun _ => hg' _)
 #align summable.mul_of_nonneg Summable.mul_of_nonneg
+-/
 
+#print Summable.mul_norm /-
 theorem Summable.mul_norm {f : ι → α} {g : ι' → α} (hf : Summable fun x => ‖f x‖)
     (hg : Summable fun x => ‖g x‖) : Summable fun x : ι × ι' => ‖f x.1 * g x.2‖ :=
   summable_of_nonneg_of_le (fun x => norm_nonneg (f x.1 * g x.2))
     (fun x => norm_mul_le (f x.1) (g x.2))
     (hf.mul_of_nonneg hg (fun x => norm_nonneg <| f x) fun x => norm_nonneg <| g x : _)
 #align summable.mul_norm Summable.mul_norm
+-/
 
+#print summable_mul_of_summable_norm /-
 theorem summable_mul_of_summable_norm [CompleteSpace α] {f : ι → α} {g : ι' → α}
     (hf : Summable fun x => ‖f x‖) (hg : Summable fun x => ‖g x‖) :
     Summable fun x : ι × ι' => f x.1 * g x.2 :=
   summable_of_summable_norm (hf.mul_norm hg)
 #align summable_mul_of_summable_norm summable_mul_of_summable_norm
+-/
 
+#print tsum_mul_tsum_of_summable_norm /-
 /-- Product of two infinites sums indexed by arbitrary types.
     See also `tsum_mul_tsum` if `f` and `g` are *not* absolutely summable. -/
 theorem tsum_mul_tsum_of_summable_norm [CompleteSpace α] {f : ι → α} {g : ι' → α}
@@ -78,6 +85,7 @@ theorem tsum_mul_tsum_of_summable_norm [CompleteSpace α] {f : ι → α} {g : �
   tsum_mul_tsum (summable_of_summable_norm hf) (summable_of_summable_norm hg)
     (summable_mul_of_summable_norm hf hg)
 #align tsum_mul_tsum_of_summable_norm tsum_mul_tsum_of_summable_norm
+-/
 
 /-! ### `ℕ`-indexed families (Cauchy product)
 
@@ -111,6 +119,7 @@ theorem summable_norm_sum_mul_antidiagonal_of_summable_norm {f g : ℕ → α}
 #align summable_norm_sum_mul_antidiagonal_of_summable_norm summable_norm_sum_mul_antidiagonal_of_summable_norm
 -/
 
+#print tsum_mul_tsum_eq_tsum_sum_antidiagonal_of_summable_norm /-
 /-- The Cauchy product formula for the product of two infinite sums indexed by `ℕ`,
     expressed by summing on `finset.nat.antidiagonal`.
     See also `tsum_mul_tsum_eq_tsum_sum_antidiagonal` if `f` and `g` are
@@ -121,14 +130,18 @@ theorem tsum_mul_tsum_eq_tsum_sum_antidiagonal_of_summable_norm [CompleteSpace �
   tsum_mul_tsum_eq_tsum_sum_antidiagonal (summable_of_summable_norm hf)
     (summable_of_summable_norm hg) (summable_mul_of_summable_norm hf hg)
 #align tsum_mul_tsum_eq_tsum_sum_antidiagonal_of_summable_norm tsum_mul_tsum_eq_tsum_sum_antidiagonal_of_summable_norm
+-/
 
+#print summable_norm_sum_mul_range_of_summable_norm /-
 theorem summable_norm_sum_mul_range_of_summable_norm {f g : ℕ → α} (hf : Summable fun x => ‖f x‖)
     (hg : Summable fun x => ‖g x‖) : Summable fun n => ‖∑ k in range (n + 1), f k * g (n - k)‖ :=
   by
   simp_rw [← sum_antidiagonal_eq_sum_range_succ fun k l => f k * g l]
   exact summable_norm_sum_mul_antidiagonal_of_summable_norm hf hg
 #align summable_norm_sum_mul_range_of_summable_norm summable_norm_sum_mul_range_of_summable_norm
+-/
 
+#print tsum_mul_tsum_eq_tsum_sum_range_of_summable_norm /-
 /-- The Cauchy product formula for the product of two infinite sums indexed by `ℕ`,
     expressed by summing on `finset.range`.
     See also `tsum_mul_tsum_eq_tsum_sum_range` if `f` and `g` are
@@ -140,6 +153,7 @@ theorem tsum_mul_tsum_eq_tsum_sum_range_of_summable_norm [CompleteSpace α] {f g
   simp_rw [← sum_antidiagonal_eq_sum_range_succ fun k l => f k * g l]
   exact tsum_mul_tsum_eq_tsum_sum_antidiagonal_of_summable_norm hf hg
 #align tsum_mul_tsum_eq_tsum_sum_range_of_summable_norm tsum_mul_tsum_eq_tsum_sum_range_of_summable_norm
+-/
 
 end Nat
 

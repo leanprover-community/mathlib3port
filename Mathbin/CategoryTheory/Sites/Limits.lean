@@ -57,6 +57,7 @@ noncomputable section
 
 section
 
+#print CategoryTheory.Sheaf.multiforkEvaluationCone /-
 /-- An auxiliary definition to be used below.
 
 Whenever `E` is a cone of shape `K` of sheaves, and `S` is the multifork associated to a
@@ -94,6 +95,7 @@ def multiforkEvaluationCone (F : K ⥤ Sheaf J D) (E : Cone (F ⋙ sheafToPreshe
         erw [category.assoc, ← E.w f]
         tidy }
 #align category_theory.Sheaf.multifork_evaluation_cone CategoryTheory.Sheaf.multiforkEvaluationCone
+-/
 
 variable [HasLimitsOfShape K D]
 
@@ -207,6 +209,7 @@ variable [∀ X : C, PreservesColimitsOfShape (J.cover X)ᵒᵖ (forget D)]
 
 variable [ReflectsIsomorphisms (forget D)]
 
+#print CategoryTheory.Sheaf.sheafifyCocone /-
 /-- Construct a cocone by sheafifying a cocone point of a cocone `E` of presheaves
 over a functor which factors through sheaves.
 In `is_colimit_sheafify_cocone`, we show that this is a colimit cocone when `E` is a colimit. -/
@@ -218,7 +221,9 @@ def sheafifyCocone {F : K ⥤ Sheaf J D} (E : Cocone (F ⋙ sheafToPresheaf J D)
     { app := fun k => ⟨E.ι.app k ≫ J.toSheafify E.pt⟩
       naturality' := fun i j f => by ext1; dsimp; erw [category.comp_id, ← category.assoc, E.w f] }
 #align category_theory.Sheaf.sheafify_cocone CategoryTheory.Sheaf.sheafifyCocone
+-/
 
+#print CategoryTheory.Sheaf.isColimitSheafifyCocone /-
 /-- If `E` is a colimit cocone of presheaves, over a diagram factoring through sheaves,
 then `sheafify_cocone E` is a colimit cocone. -/
 @[simps]
@@ -241,6 +246,7 @@ def isColimitSheafifyCocone {F : K ⥤ Sheaf J D} (E : Cocone (F ⋙ sheafToPres
     dsimp
     simpa only [← category.assoc, ← hm]
 #align category_theory.Sheaf.is_colimit_sheafify_cocone CategoryTheory.Sheaf.isColimitSheafifyCocone
+-/
 
 instance [HasColimitsOfShape K D] : HasColimitsOfShape K (Sheaf J D) :=
   ⟨fun F =>

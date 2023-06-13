@@ -70,7 +70,6 @@ restate_axiom iso.inv_hom_id'
 
 attribute [simp, reassoc] iso.hom_inv_id iso.inv_hom_id
 
--- mathport name: «expr ≅ »
 infixr:10 " ≅ " => Iso
 
 -- type as \cong or \iso
@@ -180,7 +179,6 @@ def trans (α : X ≅ Y) (β : Y ≅ Z) : X ≅ Z
 #align category_theory.iso.trans CategoryTheory.Iso.trans
 -/
 
--- mathport name: «expr ≪≫ »
 infixr:80 " ≪≫ " => Iso.trans
 
 #print CategoryTheory.Iso.trans_mk /-
@@ -693,6 +691,7 @@ variable {D : Type u₂}
 
 variable [Category.{v₂} D]
 
+#print CategoryTheory.Functor.mapIso /-
 /-- A functor `F : C ⥤ D` sends isomorphisms `i : X ≅ Y` to isomorphisms `F.obj X ≅ F.obj Y` -/
 @[simps]
 def mapIso (F : C ⥤ D) {X Y : C} (i : X ≅ Y) : F.obj X ≅ F.obj Y
@@ -702,38 +701,53 @@ def mapIso (F : C ⥤ D) {X Y : C} (i : X ≅ Y) : F.obj X ≅ F.obj Y
   hom_inv_id' := by rw [← map_comp, iso.hom_inv_id, ← map_id]
   inv_hom_id' := by rw [← map_comp, iso.inv_hom_id, ← map_id]
 #align category_theory.functor.map_iso CategoryTheory.Functor.mapIso
+-/
 
+#print CategoryTheory.Functor.mapIso_symm /-
 @[simp]
 theorem mapIso_symm (F : C ⥤ D) {X Y : C} (i : X ≅ Y) : F.mapIso i.symm = (F.mapIso i).symm :=
   rfl
 #align category_theory.functor.map_iso_symm CategoryTheory.Functor.mapIso_symm
+-/
 
+#print CategoryTheory.Functor.mapIso_trans /-
 @[simp]
 theorem mapIso_trans (F : C ⥤ D) {X Y Z : C} (i : X ≅ Y) (j : Y ≅ Z) :
     F.mapIso (i ≪≫ j) = F.mapIso i ≪≫ F.mapIso j := by ext <;> apply functor.map_comp
 #align category_theory.functor.map_iso_trans CategoryTheory.Functor.mapIso_trans
+-/
 
+#print CategoryTheory.Functor.mapIso_refl /-
 @[simp]
 theorem mapIso_refl (F : C ⥤ D) (X : C) : F.mapIso (Iso.refl X) = Iso.refl (F.obj X) :=
   Iso.ext <| F.map_id X
 #align category_theory.functor.map_iso_refl CategoryTheory.Functor.mapIso_refl
+-/
 
+#print CategoryTheory.Functor.map_isIso /-
 instance map_isIso (F : C ⥤ D) (f : X ⟶ Y) [IsIso f] : IsIso (F.map f) :=
   IsIso.of_iso <| F.mapIso (asIso f)
 #align category_theory.functor.map_is_iso CategoryTheory.Functor.map_isIso
+-/
 
+#print CategoryTheory.Functor.map_inv /-
 @[simp]
 theorem map_inv (F : C ⥤ D) {X Y : C} (f : X ⟶ Y) [IsIso f] : F.map (inv f) = inv (F.map f) := by
   ext; simp [← F.map_comp]
 #align category_theory.functor.map_inv CategoryTheory.Functor.map_inv
+-/
 
+#print CategoryTheory.Functor.map_hom_inv /-
 theorem map_hom_inv (F : C ⥤ D) {X Y : C} (f : X ⟶ Y) [IsIso f] :
     F.map f ≫ F.map (inv f) = 𝟙 (F.obj X) := by simp
 #align category_theory.functor.map_hom_inv CategoryTheory.Functor.map_hom_inv
+-/
 
+#print CategoryTheory.Functor.map_inv_hom /-
 theorem map_inv_hom (F : C ⥤ D) {X Y : C} (f : X ⟶ Y) [IsIso f] :
     F.map (inv f) ≫ F.map f = 𝟙 (F.obj Y) := by simp
 #align category_theory.functor.map_inv_hom CategoryTheory.Functor.map_inv_hom
+-/
 
 end Functor
 

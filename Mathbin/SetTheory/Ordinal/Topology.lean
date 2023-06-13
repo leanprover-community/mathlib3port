@@ -74,6 +74,7 @@ theorem isOpen_singleton_iff : IsOpen ({a} : Set Ordinal) ↔ ¬IsLimit a :=
 #align ordinal.is_open_singleton_iff Ordinal.isOpen_singleton_iff
 -/
 
+#print Ordinal.isOpen_iff /-
 theorem isOpen_iff : IsOpen s ↔ ∀ o ∈ s, IsLimit o → ∃ a < o, Set.Ioo a o ⊆ s := by
   classical
   refine' ⟨_, fun h => _⟩
@@ -120,6 +121,7 @@ theorem isOpen_iff : IsOpen s ↔ ∀ o ∈ s, IsLimit o → ∃ a < o, Set.Ioo 
         · exact a.prop
       · convert a.prop
 #align ordinal.is_open_iff Ordinal.isOpen_iff
+-/
 
 #print Ordinal.mem_closure_iff_sup /-
 theorem mem_closure_iff_sup :

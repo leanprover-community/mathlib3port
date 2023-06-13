@@ -69,6 +69,7 @@ section
 
 variable {R : Type u} [CommRing R] {D : Type v} [SmallCategory D]
 
+#print localCohomology.ringModIdeals /-
 /-- The directed system of `R`-modules of the form `R/J`, where `J` is an ideal of `R`,
 determined by the functor `I`  -/
 def ringModIdeals (I : D ⥤ Ideal R) : D ⥤ ModuleCat.{u} R
@@ -76,6 +77,7 @@ def ringModIdeals (I : D ⥤ Ideal R) : D ⥤ ModuleCat.{u} R
   obj t := ModuleCat.of R <| R ⧸ I.obj t
   map s t w := Submodule.mapQ _ _ LinearMap.id (I.map w).down.down
 #align local_cohomology.ring_mod_ideals localCohomology.ringModIdeals
+-/
 
 #print localCohomology.moduleCat_enough_projectives' /-
 -- TODO:  Once this file is ported, move this file to the right location.
@@ -84,11 +86,13 @@ instance moduleCat_enough_projectives' : EnoughProjectives (ModuleCat.{u} R) :=
 #align local_cohomology.Module_enough_projectives' localCohomology.moduleCat_enough_projectives'
 -/
 
+#print localCohomology.diagram /-
 /-- The diagram we will take the colimit of to define local cohomology, corresponding to the
 directed system determined by the functor `I` -/
 def diagram (I : D ⥤ Ideal R) (i : ℕ) : Dᵒᵖ ⥤ ModuleCat.{u} R ⥤ ModuleCat.{u} R :=
   (ringModIdeals I).op ⋙ Ext R (ModuleCat.{u} R) i
 #align local_cohomology.diagram localCohomology.diagram
+-/
 
 end
 
@@ -98,6 +102,7 @@ section
 -- along diagrams either in Type, or in the same universe as the ring, and we need to cover both.
 variable {R : Type max u v} [CommRing R] {D : Type v} [SmallCategory D]
 
+#print localCohomology.ofDiagram /-
 /-
 In this definition we do not assume any special property of the diagram `I`, but the relevant case
 will be where `I` is (cofinal with) the diagram of powers of a single given ideal.
@@ -113,6 +118,7 @@ of `R`, represented as a functor `I`. -/
 def ofDiagram (I : D ⥤ Ideal R) (i : ℕ) : ModuleCat.{max u v} R ⥤ ModuleCat.{max u v} R :=
   colimit (diagram.{max u v, v} I i)
 #align local_cohomology.of_diagram localCohomology.ofDiagram
+-/
 
 end
 
@@ -120,12 +126,14 @@ section Diagrams
 
 variable {R : Type u} [CommRing R]
 
+#print localCohomology.idealPowersDiagram /-
 /-- The functor sending a natural number `i` to the `i`-th power of the ideal `J` -/
 def idealPowersDiagram (J : Ideal R) : ℕᵒᵖ ⥤ Ideal R
     where
   obj t := J ^ unop t
   map s t w := ⟨⟨Ideal.pow_le_pow w.unop.down.down⟩⟩
 #align local_cohomology.ideal_powers_diagram localCohomology.idealPowersDiagram
+-/
 
 #print localCohomology.SelfLeRadical /-
 /-- The full subcategory of all ideals with radical containing `J` -/
@@ -141,11 +149,13 @@ instance SelfLeRadical.inhabited (J : Ideal R) : Inhabited (SelfLeRadical J)
 #align local_cohomology.self_le_radical.inhabited localCohomology.SelfLeRadical.inhabited
 -/
 
+#print localCohomology.selfLeRadicalDiagram /-
 /-- The diagram of all ideals with radical containing `J`, represented as a functor.
 This is the "largest" diagram that computes local cohomology with support in `J`. -/
 def selfLeRadicalDiagram (J : Ideal R) : SelfLeRadical J ⥤ Ideal R :=
   fullSubcategoryInclusion _
 #align local_cohomology.self_le_radical_diagram localCohomology.selfLeRadicalDiagram
+-/
 
 end Diagrams
 
@@ -189,6 +199,7 @@ open localCohomology
 
 variable {R : Type u} [CommRing R] (I J : Ideal R)
 
+#print localCohomology.idealPowersToSelfLeRadical /-
 /-- Lifting `ideal_powers_diagram J` from a diagram valued in `ideals R` to a diagram
 valued in `self_le_radical J`. -/
 def localCohomology.idealPowersToSelfLeRadical (J : Ideal R) : ℕᵒᵖ ⥤ SelfLeRadical J :=
@@ -199,13 +210,17 @@ def localCohomology.idealPowersToSelfLeRadical (J : Ideal R) : ℕᵒᵖ ⥤ Sel
     · simp only [Ideal.radical_top, pow_zero, Ideal.one_eq_top, le_top]
     · simp only [J.radical_pow _ n.succ_pos, Ideal.le_radical]
 #align local_cohomology.ideal_powers_to_self_le_radical localCohomology.idealPowersToSelfLeRadical
+-/
 
+#print localCohomology.idealPowersToSelfLeRadicalCompInclusion /-
 /-- The composition with the inclusion into `ideals R` is isomorphic to `ideal_powers_diagram J`. -/
 def localCohomology.idealPowersToSelfLeRadicalCompInclusion (J : Ideal R) :
     localCohomology.idealPowersToSelfLeRadical J ⋙ selfLeRadicalDiagram J ≅ idealPowersDiagram J :=
   FullSubcategory.lift_comp_inclusion _ _ _
 #align local_cohomology.ideal_powers_to_self_le_radical_comp_inclusion localCohomology.idealPowersToSelfLeRadicalCompInclusion
+-/
 
+#print Ideal.exists_pow_le_of_le_radical_of_fG /-
 /-- The lemma below essentially says that `ideal_powers_to_self_le_radical I` is initial in
 `self_le_radical_diagram I`.
 
@@ -220,6 +235,7 @@ theorem Ideal.exists_pow_le_of_le_radical_of_fG (hIJ : I ≤ J.radical) (hJ : J.
     I ^ k ≤ J.radical ^ k := Ideal.pow_mono hIJ _
     _ ≤ J := hk
 #align ideal.exists_pow_le_of_le_radical_of_fg Ideal.exists_pow_le_of_le_radical_of_fG
+-/
 
 end LocalCohomologyEquiv
 

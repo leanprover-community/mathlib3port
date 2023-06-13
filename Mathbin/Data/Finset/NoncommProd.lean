@@ -54,6 +54,7 @@ def noncommFoldr (s : Multiset α)
 #align multiset.noncomm_foldr Multiset.noncommFoldr
 -/
 
+#print Multiset.noncommFoldr_coe /-
 @[simp]
 theorem noncommFoldr_coe (l : List α) (comm) (b : β) :
     noncommFoldr f (l : Multiset α) comm b = l.foldr f b :=
@@ -62,29 +63,34 @@ theorem noncommFoldr_coe (l : List α) (comm) (b : β) :
   rw [← List.foldr_map]
   simp [List.map_pmap, List.pmap_eq_map]
 #align multiset.noncomm_foldr_coe Multiset.noncommFoldr_coe
+-/
 
+#print Multiset.noncommFoldr_empty /-
 @[simp]
 theorem noncommFoldr_empty (h) (b : β) : noncommFoldr f (0 : Multiset α) h b = b :=
   rfl
 #align multiset.noncomm_foldr_empty Multiset.noncommFoldr_empty
+-/
 
+#print Multiset.noncommFoldr_cons /-
 theorem noncommFoldr_cons (s : Multiset α) (a : α) (h h') (b : β) :
     noncommFoldr f (a ::ₘ s) h b = f a (noncommFoldr f s h' b) :=
   by
   induction s using Quotient.inductionOn
   simp
 #align multiset.noncomm_foldr_cons Multiset.noncommFoldr_cons
+-/
 
+#print Multiset.noncommFoldr_eq_foldr /-
 theorem noncommFoldr_eq_foldr (s : Multiset α) (h : LeftCommutative f) (b : β) :
     noncommFoldr f s (fun x _ y _ _ => h x y) b = foldr f h b s :=
   by
   induction s using Quotient.inductionOn
   simp
 #align multiset.noncomm_foldr_eq_foldr Multiset.noncommFoldr_eq_foldr
+-/
 
 variable [assoc : IsAssociative α op]
-
-include assoc
 
 #print Multiset.noncommFold /-
 /-- Fold of a `s : multiset α` with an associative `op : α → α → α`, given a proofs that `op`
@@ -126,10 +132,9 @@ theorem noncommFold_eq_fold (s : Multiset α) [IsCommutative α op] (a : α) :
 #align multiset.noncomm_fold_eq_fold Multiset.noncommFold_eq_fold
 -/
 
-omit assoc
-
 variable [Monoid α] [Monoid β]
 
+#print Multiset.noncommProd /-
 /-- Product of a `s : multiset α` with `[monoid α]`, given a proof that `*` commutes
 on all elements `x ∈ s`. -/
 @[to_additive
@@ -138,7 +143,9 @@ def noncommProd (s : Multiset α) (comm : {x | x ∈ s}.Pairwise Commute) : α :
   s.noncommFold (· * ·) comm 1
 #align multiset.noncomm_prod Multiset.noncommProd
 #align multiset.noncomm_sum Multiset.noncommSum
+-/
 
+#print Multiset.noncommProd_coe /-
 @[simp, to_additive]
 theorem noncommProd_coe (l : List α) (comm) : noncommProd (l : Multiset α) comm = l.Prod :=
   by
@@ -151,20 +158,26 @@ theorem noncommProd_coe (l : List α) (comm) : noncommProd (l : Multiset α) com
     exact comm (List.mem_cons_of_mem _ hx) (List.mem_cons_of_mem _ hy)
 #align multiset.noncomm_prod_coe Multiset.noncommProd_coe
 #align multiset.noncomm_sum_coe Multiset.noncommSum_coe
+-/
 
+#print Multiset.noncommProd_empty /-
 @[simp, to_additive]
 theorem noncommProd_empty (h) : noncommProd (0 : Multiset α) h = 1 :=
   rfl
 #align multiset.noncomm_prod_empty Multiset.noncommProd_empty
 #align multiset.noncomm_sum_empty Multiset.noncommSum_empty
+-/
 
+#print Multiset.noncommProd_cons /-
 @[simp, to_additive]
 theorem noncommProd_cons (s : Multiset α) (a : α) (comm) :
     noncommProd (a ::ₘ s) comm = a * noncommProd s (comm.mono fun _ => mem_cons_of_mem) := by
   induction s using Quotient.inductionOn; simp
 #align multiset.noncomm_prod_cons Multiset.noncommProd_cons
 #align multiset.noncomm_sum_cons Multiset.noncommSum_cons
+-/
 
+#print Multiset.noncommProd_cons' /-
 @[to_additive]
 theorem noncommProd_cons' (s : Multiset α) (a : α) (comm) :
     noncommProd (a ::ₘ s) comm = noncommProd s (comm.mono fun _ => mem_cons_of_mem) * a :=
@@ -183,7 +196,9 @@ theorem noncommProd_cons' (s : Multiset α) (a : α) (comm) :
       · cases hy <;> simp [hy]
 #align multiset.noncomm_prod_cons' Multiset.noncommProd_cons'
 #align multiset.noncomm_sum_cons' Multiset.noncommSum_cons'
+-/
 
+#print Multiset.noncommProd_add /-
 @[to_additive]
 theorem noncommProd_add (s t : Multiset α) (comm) :
     noncommProd (s + t) comm =
@@ -192,7 +207,9 @@ theorem noncommProd_add (s t : Multiset α) (comm) :
   by rcases s with ⟨⟩; rcases t with ⟨⟩; simp
 #align multiset.noncomm_prod_add Multiset.noncommProd_add
 #align multiset.noncomm_sum_add Multiset.noncommSum_add
+-/
 
+#print Multiset.noncommProd_map_aux /-
 @[protected, to_additive]
 theorem noncommProd_map_aux [MonoidHomClass F α β] (s : Multiset α)
     (comm : {x | x ∈ s}.Pairwise Commute) (f : F) : {x | x ∈ s.map f}.Pairwise Commute :=
@@ -202,7 +219,9 @@ theorem noncommProd_map_aux [MonoidHomClass F α β] (s : Multiset α)
   exact (comm.of_refl hx hy).map f
 #align multiset.noncomm_prod_map_aux Multiset.noncommProd_map_aux
 #align multiset.noncomm_sum_map_aux Multiset.noncommSum_map_aux
+-/
 
+#print Multiset.noncommProd_map /-
 @[to_additive]
 theorem noncommProd_map [MonoidHomClass F α β] (s : Multiset α) (comm) (f : F) :
     f (s.noncommProd comm) = (s.map f).noncommProd (noncommProd_map_aux s comm f) :=
@@ -211,7 +230,9 @@ theorem noncommProd_map [MonoidHomClass F α β] (s : Multiset α) (comm) (f : F
   simpa using map_list_prod f _
 #align multiset.noncomm_prod_map Multiset.noncommProd_map
 #align multiset.noncomm_sum_map Multiset.noncommSum_map
+-/
 
+#print Multiset.noncommProd_eq_pow_card /-
 @[to_additive noncomm_sum_eq_card_nsmul]
 theorem noncommProd_eq_pow_card (s : Multiset α) (comm) (m : α) (h : ∀ x ∈ s, x = m) :
     s.noncommProd comm = m ^ s.card :=
@@ -221,6 +242,7 @@ theorem noncommProd_eq_pow_card (s : Multiset α) (comm) (m : α) (h : ∀ x ∈
   exact List.prod_eq_pow_card _ m h
 #align multiset.noncomm_prod_eq_pow_card Multiset.noncommProd_eq_pow_card
 #align multiset.noncomm_sum_eq_card_nsmul Multiset.noncommSum_eq_card_nsmul
+-/
 
 #print Multiset.noncommProd_eq_prod /-
 @[to_additive]
@@ -233,6 +255,7 @@ theorem noncommProd_eq_prod {α : Type _} [CommMonoid α] (s : Multiset α) :
 #align multiset.noncomm_sum_eq_sum Multiset.noncommSum_eq_sum
 -/
 
+#print Multiset.noncommProd_commute /-
 @[to_additive noncomm_sum_add_commute]
 theorem noncommProd_commute (s : Multiset α) (comm) (y : α) (h : ∀ x ∈ s, Commute y x) :
     Commute y (s.noncommProd comm) :=
@@ -242,6 +265,7 @@ theorem noncommProd_commute (s : Multiset α) (comm) (y : α) (h : ∀ x ∈ s, 
   exact Commute.list_prod_right _ _ h
 #align multiset.noncomm_prod_commute Multiset.noncommProd_commute
 #align multiset.noncomm_sum_add_commute Multiset.noncommSum_addCommute
+-/
 
 end Multiset
 
@@ -249,6 +273,7 @@ namespace Finset
 
 variable [Monoid β] [Monoid γ]
 
+#print Finset.noncommProd /-
 /-- Product of a `s : finset α` mapped with `f : α → β` with `[monoid β]`,
 given a proof that `*` commutes on all elements `f x` for `x ∈ s`. -/
 @[to_additive
@@ -259,7 +284,9 @@ def noncommProd (s : Finset α) (f : α → β)
     exact comm.of_refl ha hb
 #align finset.noncomm_prod Finset.noncommProd
 #align finset.noncomm_sum Finset.noncommSum
+-/
 
+#print Finset.noncommProd_congr /-
 @[congr, to_additive]
 theorem noncommProd_congr {s₁ s₂ : Finset α} {f g : α → β} (h₁ : s₁ = s₂) (h₂ : ∀ x ∈ s₂, f x = g x)
     (comm) :
@@ -269,7 +296,9 @@ theorem noncommProd_congr {s₁ s₂ : Finset α} {f g : α → β} (h₁ : s₁
   by simp_rw [noncomm_prod, Multiset.map_congr (congr_arg _ h₁) h₂]
 #align finset.noncomm_prod_congr Finset.noncommProd_congr
 #align finset.noncomm_sum_congr Finset.noncommSum_congr
+-/
 
+#print Finset.noncommProd_toFinset /-
 @[simp, to_additive]
 theorem noncommProd_toFinset [DecidableEq α] (l : List α) (f : α → β) (comm) (hl : l.Nodup) :
     noncommProd l.toFinset f comm = (l.map f).Prod :=
@@ -278,13 +307,17 @@ theorem noncommProd_toFinset [DecidableEq α] (l : List α) (f : α → β) (com
   simp [noncomm_prod, hl]
 #align finset.noncomm_prod_to_finset Finset.noncommProd_toFinset
 #align finset.noncomm_sum_to_finset Finset.noncommSum_toFinset
+-/
 
+#print Finset.noncommProd_empty /-
 @[simp, to_additive]
 theorem noncommProd_empty (f : α → β) (h) : noncommProd (∅ : Finset α) f h = 1 :=
   rfl
 #align finset.noncomm_prod_empty Finset.noncommProd_empty
 #align finset.noncomm_sum_empty Finset.noncommSum_empty
+-/
 
+#print Finset.noncommProd_insert_of_not_mem /-
 @[simp, to_additive]
 theorem noncommProd_insert_of_not_mem [DecidableEq α] (s : Finset α) (a : α) (f : α → β) (comm)
     (ha : a ∉ s) :
@@ -293,7 +326,9 @@ theorem noncommProd_insert_of_not_mem [DecidableEq α] (s : Finset α) (a : α) 
   by simp [insert_val_of_not_mem ha, noncomm_prod]
 #align finset.noncomm_prod_insert_of_not_mem Finset.noncommProd_insert_of_not_mem
 #align finset.noncomm_sum_insert_of_not_mem Finset.noncommSum_insert_of_not_mem
+-/
 
+#print Finset.noncommProd_insert_of_not_mem' /-
 @[to_additive]
 theorem noncommProd_insert_of_not_mem' [DecidableEq α] (s : Finset α) (a : α) (f : α → β) (comm)
     (ha : a ∉ s) :
@@ -302,6 +337,7 @@ theorem noncommProd_insert_of_not_mem' [DecidableEq α] (s : Finset α) (a : α)
   by simp [noncomm_prod, insert_val_of_not_mem ha, Multiset.noncommProd_cons']
 #align finset.noncomm_prod_insert_of_not_mem' Finset.noncommProd_insert_of_not_mem'
 #align finset.noncomm_sum_insert_of_not_mem' Finset.noncommSum_insert_of_not_mem'
+-/
 
 #print Finset.noncommProd_singleton /-
 @[simp, to_additive]
@@ -312,6 +348,7 @@ theorem noncommProd_singleton (a : α) (f : α → β) :
 #align finset.noncomm_sum_singleton Finset.noncommSum_singleton
 -/
 
+#print Finset.noncommProd_map /-
 @[to_additive]
 theorem noncommProd_map [MonoidHomClass F β γ] (s : Finset α) (f : α → β) (comm) (g : F) :
     g (s.noncommProd f comm) =
@@ -319,7 +356,9 @@ theorem noncommProd_map [MonoidHomClass F β γ] (s : Finset α) (f : α → β)
   by simp [noncomm_prod, Multiset.noncommProd_map]
 #align finset.noncomm_prod_map Finset.noncommProd_map
 #align finset.noncomm_sum_map Finset.noncommSum_map
+-/
 
+#print Finset.noncommProd_eq_pow_card /-
 @[to_additive noncomm_sum_eq_card_nsmul]
 theorem noncommProd_eq_pow_card (s : Finset α) (f : α → β) (comm) (m : β) (h : ∀ x ∈ s, f x = m) :
     s.noncommProd f comm = m ^ s.card :=
@@ -329,7 +368,9 @@ theorem noncommProd_eq_pow_card (s : Finset α) (f : α → β) (comm) (m : β) 
   simpa using h
 #align finset.noncomm_prod_eq_pow_card Finset.noncommProd_eq_pow_card
 #align finset.noncomm_sum_eq_card_nsmul Finset.noncommSum_eq_card_nsmul
+-/
 
+#print Finset.noncommProd_commute /-
 @[to_additive noncomm_sum_add_commute]
 theorem noncommProd_commute (s : Finset α) (f : α → β) (comm) (y : β)
     (h : ∀ x ∈ s, Commute y (f x)) : Commute y (s.noncommProd f comm) :=
@@ -341,6 +382,7 @@ theorem noncommProd_commute (s : Finset α) (f : α → β) (comm) (y : β)
   exact h x hx
 #align finset.noncomm_prod_commute Finset.noncommProd_commute
 #align finset.noncomm_sum_add_commute Finset.noncommSum_addCommute
+-/
 
 #print Finset.noncommProd_eq_prod /-
 @[to_additive]
@@ -354,6 +396,7 @@ theorem noncommProd_eq_prod {β : Type _} [CommMonoid β] (s : Finset α) (f : �
 #align finset.noncomm_sum_eq_sum Finset.noncommSum_eq_sum
 -/
 
+#print Finset.noncommProd_union_of_disjoint /-
 /-- The non-commutative version of `finset.prod_union` -/
 @[to_additive "The non-commutative version of `finset.sum_union`"]
 theorem noncommProd_union_of_disjoint [DecidableEq α] {s t : Finset α} (h : Disjoint s t)
@@ -369,7 +412,9 @@ theorem noncommProd_union_of_disjoint [DecidableEq α] {s t : Finset α} (h : Di
     sl'.append tl' h]
 #align finset.noncomm_prod_union_of_disjoint Finset.noncommProd_union_of_disjoint
 #align finset.noncomm_sum_union_of_disjoint Finset.noncommSum_union_of_disjoint
+-/
 
+#print Finset.noncommProd_mul_distrib_aux /-
 @[protected, to_additive]
 theorem noncommProd_mul_distrib_aux {s : Finset α} {f : α → β} {g : α → β}
     (comm_ff : (s : Set α).Pairwise fun x y => Commute (f x) (f y))
@@ -385,7 +430,9 @@ theorem noncommProd_mul_distrib_aux {s : Finset α} {f : α → β} {g : α → 
   · exact comm_gg.of_refl hx hy
 #align finset.noncomm_prod_mul_distrib_aux Finset.noncommProd_mul_distrib_aux
 #align finset.noncomm_sum_add_distrib_aux Finset.noncommSum_add_distrib_aux
+-/
 
+#print Finset.noncommProd_mul_distrib /-
 /-- The non-commutative version of `finset.prod_mul_distrib` -/
 @[to_additive "The non-commutative version of `finset.sum_add_distrib`"]
 theorem noncommProd_mul_distrib {s : Finset α} (f : α → β) (g : α → β) (comm_ff comm_gg comm_gf) :
@@ -408,11 +455,13 @@ theorem noncommProd_mul_distrib {s : Finset α} (f : α → β) (g : α → β) 
   exact comm_gf (mem_insert_self x s) (mem_insert_of_mem hy) (ne_of_mem_of_not_mem hy hnmem).symm
 #align finset.noncomm_prod_mul_distrib Finset.noncommProd_mul_distrib
 #align finset.noncomm_sum_add_distrib Finset.noncommSum_add_distrib
+-/
 
 section FinitePi
 
 variable {M : ι → Type _} [∀ i, Monoid (M i)]
 
+#print Finset.noncommProd_mul_single /-
 @[to_additive]
 theorem noncommProd_mul_single [Fintype ι] [DecidableEq ι] (x : ∀ i, M i) :
     (univ.noncommProd (fun i => Pi.mulSingle i (x i)) fun i _ j _ _ =>
@@ -427,7 +476,9 @@ theorem noncommProd_mul_single [Fintype ι] [DecidableEq ι] (x : ∀ i, M i) :
   · intro i h; simp at h ; simp [h]
 #align finset.noncomm_prod_mul_single Finset.noncommProd_mul_single
 #align finset.noncomm_sum_single Finset.noncommSum_single
+-/
 
+#print MonoidHom.pi_ext /-
 @[to_additive]
 theorem MonoidHom.pi_ext [Finite ι] [DecidableEq ι] {f g : (∀ i, M i) →* γ}
     (h : ∀ i x, f (Pi.mulSingle i x) = g (Pi.mulSingle i x)) : f = g :=
@@ -438,6 +489,7 @@ theorem MonoidHom.pi_ext [Finite ι] [DecidableEq ι] {f g : (∀ i, M i) →* �
   congr 1 with i; exact h i (x i)
 #align monoid_hom.pi_ext MonoidHom.pi_ext
 #align add_monoid_hom.pi_ext AddMonoidHom.pi_ext
+-/
 
 end FinitePi
 

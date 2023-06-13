@@ -41,6 +41,7 @@ section Semiring
 
 variable [Semiring R] {p q r : R[X]}
 
+#print Polynomial.induction_on /-
 @[elab_as_elim]
 protected theorem induction_on {M : R[X] → Prop} (p : R[X]) (h_C : ∀ a, M (C a))
     (h_add : ∀ p q, M p → M q → M (p + q))
@@ -59,7 +60,9 @@ protected theorem induction_on {M : R[X] → Prop} (p : R[X]) (h_C : ∀ a, M (C
   rw [← sum_C_mul_X_pow_eq p, Polynomial.sum]
   exact B _
 #align polynomial.induction_on Polynomial.induction_on
+-/
 
+#print Polynomial.induction_on' /-
 /-- To prove something about polynomials,
 it suffices to show the condition is closed under taking sums,
 and it holds for monomials.
@@ -70,11 +73,13 @@ protected theorem induction_on' {M : R[X] → Prop} (p : R[X]) (h_add : ∀ p q,
   Polynomial.induction_on p (h_monomial 0) h_add fun n a h => by rw [C_mul_X_pow_eq_monomial];
     exact h_monomial _ _
 #align polynomial.induction_on' Polynomial.induction_on'
+-/
 
 open Submodule Polynomial Set
 
 variable {f : R[X]} {I : Ideal R[X]}
 
+#print Polynomial.span_le_of_C_coeff_mem /-
 /-- If the coefficients of a polynomial belong to an ideal, then that ideal contains
 the ideal spanned by the coefficients of the polynomial. -/
 theorem span_le_of_C_coeff_mem (cf : ∀ i : ℕ, C (f.coeff i) ∈ I) :
@@ -83,7 +88,9 @@ theorem span_le_of_C_coeff_mem (cf : ∀ i : ℕ, C (f.coeff i) ∈ I) :
   simp (config := { singlePass := true }) only [@eq_comm _ _ (C _)]
   exact (ideal.span_le.trans range_subset_iff).mpr cf
 #align polynomial.span_le_of_C_coeff_mem Polynomial.span_le_of_C_coeff_mem
+-/
 
+#print Polynomial.mem_span_C_coeff /-
 theorem mem_span_C_coeff : f ∈ Ideal.span {g : R[X] | ∃ i : ℕ, g = C (coeff f i)} :=
   by
   let p := Ideal.span {g : R[X] | ∃ i : ℕ, g = C (coeff f i)}
@@ -96,10 +103,13 @@ theorem mem_span_C_coeff : f ∈ Ideal.span {g : R[X] | ∃ i : ℕ, g = C (coef
   simp only [monomial_mul_C, one_mul, smul_eq_mul]
   rw [← C_mul_X_pow_eq_monomial]
 #align polynomial.mem_span_C_coeff Polynomial.mem_span_C_coeff
+-/
 
+#print Polynomial.exists_C_coeff_not_mem /-
 theorem exists_C_coeff_not_mem : f ∉ I → ∃ i : ℕ, C (coeff f i) ∉ I :=
   Not.imp_symm fun cf => span_le_of_C_coeff_mem (not_exists_not.mp cf) mem_span_C_coeff
 #align polynomial.exists_C_coeff_not_mem Polynomial.exists_C_coeff_not_mem
+-/
 
 end Semiring
 

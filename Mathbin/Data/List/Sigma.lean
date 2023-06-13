@@ -594,9 +594,11 @@ theorem mem_keys_kerase_of_ne {a₁ a₂} {l : List (Sigma β)} (h : a₁ ≠ a�
 #align list.mem_keys_kerase_of_ne List.mem_keys_kerase_of_ne
 -/
 
+#print List.keys_kerase /-
 theorem keys_kerase {a} {l : List (Sigma β)} : (kerase a l).keys = l.keys.eraseₓ a := by
   rw [keys, kerase, ← erasep_map Sigma.fst l, erase_eq_erasep]
 #align list.keys_kerase List.keys_kerase
+-/
 
 #print List.kerase_kerase /-
 theorem kerase_kerase {a a'} {l : List (Sigma β)} :
@@ -703,6 +705,7 @@ theorem kerase_comm (a₁ a₂) (l : List (Sigma β)) :
 #align list.kerase_comm List.kerase_comm
 -/
 
+#print List.sizeOf_kerase /-
 theorem sizeOf_kerase {α} {β : α → Type _} [DecidableEq α] [SizeOf (Sigma β)] (x : α)
     (xs : List (Sigma β)) : SizeOf.sizeOf (List.kerase x xs) ≤ SizeOf.sizeOf xs :=
   by
@@ -711,6 +714,7 @@ theorem sizeOf_kerase {α} {β : α → Type _} [DecidableEq α] [SizeOf (Sigma 
   · simp
   · by_cases x = y.1 <;> simp [*, List.sizeof]
 #align list.sizeof_kerase List.sizeOf_kerase
+-/
 
 /-! ### `kinsert` -/
 
@@ -831,6 +835,7 @@ theorem dlookup_dedupKeys (a : α) (l : List (Sigma β)) : dlookup a (dedupKeys 
 #align list.lookup_dedupkeys List.dlookup_dedupKeys
 -/
 
+#print List.sizeOf_dedupKeys /-
 theorem sizeOf_dedupKeys {α} {β : α → Type _} [DecidableEq α] [SizeOf (Sigma β)]
     (xs : List (Sigma β)) : SizeOf.sizeOf (List.dedupKeys xs) ≤ SizeOf.sizeOf xs :=
   by
@@ -841,6 +846,7 @@ theorem sizeOf_dedupKeys {α} {β : α → Type _} [DecidableEq α] [SizeOf (Sig
     trans; apply sizeof_kerase
     assumption
 #align list.sizeof_dedupkeys List.sizeOf_dedupKeys
+-/
 
 /-! ### `kunion` -/
 

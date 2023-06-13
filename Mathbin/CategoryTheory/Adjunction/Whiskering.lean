@@ -29,6 +29,7 @@ open CategoryTheory
 
 variable (C : Type _) {D E : Type _} [Category C] [Category D] [Category E] {F : D ⥤ E} {G : E ⥤ D}
 
+#print CategoryTheory.Adjunction.whiskerRight /-
 --  `tidy` works for all the proofs in this definition, but it's fairly slow.
 /-- Given an adjunction `F ⊣ G`, this provides the natural adjunction
   `(whiskering_right C _ _).obj F ⊣ (whiskering_right C _ _).obj G`. -/
@@ -47,7 +48,9 @@ protected def whiskerRight (adj : F ⊣ G) :
       left_triangle := by ext; dsimp; simp
       right_triangle := by ext; dsimp; simp }
 #align category_theory.adjunction.whisker_right CategoryTheory.Adjunction.whiskerRight
+-/
 
+#print CategoryTheory.Adjunction.whiskerLeft /-
 -- `tidy` gets stuck for `left_triangle'` and `right_triangle'`.
 /-- Given an adjunction `F ⊣ G`, this provides the natural adjunction
   `(whiskering_left _ _ C).obj G ⊣ (whiskering_left _ _ C).obj F`. -/
@@ -70,6 +73,7 @@ protected def whiskerLeft (adj : F ⊣ G) :
         ext x; dsimp
         simp only [category.id_comp, category.comp_id, ← x.map_comp]; simp }
 #align category_theory.adjunction.whisker_left CategoryTheory.Adjunction.whiskerLeft
+-/
 
 end CategoryTheory.Adjunction
 

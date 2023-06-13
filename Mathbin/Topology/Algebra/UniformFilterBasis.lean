@@ -51,6 +51,7 @@ protected theorem uniformAddGroup : @UniformAddGroup G B.UniformSpace _ :=
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (x y «expr ∈ » M) -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (x y «expr ∈ » M) -/
+#print AddGroupFilterBasis.cauchy_iff /-
 theorem cauchy_iff {F : Filter G} :
     @Cauchy G B.UniformSpace F ↔
       F.ne_bot ∧ ∀ U ∈ B, ∃ M ∈ F, ∀ (x) (_ : x ∈ M) (y) (_ : y ∈ M), y - x ∈ U :=
@@ -63,6 +64,7 @@ theorem cauchy_iff {F : Filter G} :
   change tendsto _ _ _ ↔ _
   simp [(basis_sets F).prod_self.tendsto_iffₓ B.nhds_zero_has_basis, @forall_swap (_ ∈ _) G]
 #align add_group_filter_basis.cauchy_iff AddGroupFilterBasis.cauchy_iff
+-/
 
 end AddGroupFilterBasis
 

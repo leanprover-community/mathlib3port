@@ -49,6 +49,7 @@ class CharZero (R : Type _) [AddMonoidWithOne R] : Prop where
 #align char_zero CharZero
 -/
 
+#print charZero_of_inj_zero /-
 theorem charZero_of_inj_zero {R : Type _} [AddGroupWithOne R] (H : ∀ n : ℕ, (n : R) = 0 → n = 0) :
     CharZero R :=
   ⟨fun m n h => by
@@ -56,6 +57,7 @@ theorem charZero_of_inj_zero {R : Type _} [AddGroupWithOne R] (H : ∀ n : ℕ, 
     cases' n with n; · apply H; rw [h, Nat.cast_zero]
     simp_rw [Nat.cast_succ, add_right_cancel_iff] at h ; rwa [ih]⟩
 #align char_zero_of_inj_zero charZero_of_inj_zero
+-/
 
 namespace Nat
 
@@ -74,17 +76,23 @@ theorem cast_inj {m n : ℕ} : (m : R) = n ↔ m = n :=
 #align nat.cast_inj Nat.cast_inj
 -/
 
+#print Nat.cast_eq_zero /-
 @[simp, norm_cast]
 theorem cast_eq_zero {n : ℕ} : (n : R) = 0 ↔ n = 0 := by rw [← cast_zero, cast_inj]
 #align nat.cast_eq_zero Nat.cast_eq_zero
+-/
 
+#print Nat.cast_ne_zero /-
 @[norm_cast]
 theorem cast_ne_zero {n : ℕ} : (n : R) ≠ 0 ↔ n ≠ 0 :=
   not_congr cast_eq_zero
 #align nat.cast_ne_zero Nat.cast_ne_zero
+-/
 
+#print Nat.cast_add_one_ne_zero /-
 theorem cast_add_one_ne_zero (n : ℕ) : (n + 1 : R) ≠ 0 := by exact_mod_cast n.succ_ne_zero
 #align nat.cast_add_one_ne_zero Nat.cast_add_one_ne_zero
+-/
 
 #print Nat.cast_eq_one /-
 @[simp, norm_cast]
@@ -103,9 +111,11 @@ end Nat
 
 namespace NeZero
 
+#print NeZero.charZero /-
 instance charZero {M} {n : ℕ} [NeZero n] [AddMonoidWithOne M] [CharZero M] : NeZero (n : M) :=
   ⟨Nat.cast_ne_zero.mpr out⟩
 #align ne_zero.char_zero NeZero.charZero
+-/
 
 end NeZero
 

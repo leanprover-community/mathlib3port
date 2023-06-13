@@ -40,27 +40,35 @@ namespace Idempotents
 
 variable {J C : Type _} [Category J] [Category C] (P Q : Karoubi (J ⥤ C)) (f : P ⟶ Q) (X : J)
 
+#print CategoryTheory.Idempotents.app_idem /-
 @[simp, reassoc]
 theorem app_idem : P.p.app X ≫ P.p.app X = P.p.app X :=
   congr_app P.idem X
 #align category_theory.idempotents.app_idem CategoryTheory.Idempotents.app_idem
+-/
 
 variable {P Q}
 
+#print CategoryTheory.Idempotents.app_p_comp /-
 @[simp, reassoc]
 theorem app_p_comp : P.p.app X ≫ f.f.app X = f.f.app X :=
   congr_app (p_comp f) X
 #align category_theory.idempotents.app_p_comp CategoryTheory.Idempotents.app_p_comp
+-/
 
+#print CategoryTheory.Idempotents.app_comp_p /-
 @[simp, reassoc]
 theorem app_comp_p : f.f.app X ≫ Q.p.app X = f.f.app X :=
   congr_app (comp_p f) X
 #align category_theory.idempotents.app_comp_p CategoryTheory.Idempotents.app_comp_p
+-/
 
+#print CategoryTheory.Idempotents.app_p_comm /-
 @[reassoc]
 theorem app_p_comm : P.p.app X ≫ f.f.app X = f.f.app X ≫ Q.p.app X :=
   congr_app (p_comm f) X
 #align category_theory.idempotents.app_p_comm CategoryTheory.Idempotents.app_p_comm
+-/
 
 variable (J C)
 
@@ -103,6 +111,7 @@ namespace KaroubiFunctorCategoryEmbedding
 
 variable {J C}
 
+#print CategoryTheory.Idempotents.KaroubiFunctorCategoryEmbedding.obj /-
 /-- On objects, the functor which sends a formal direct factor `P` of a
 functor `F : J ⥤ C` to the functor `J ⥤ karoubi C` which sends `(j : J)` to
 the corresponding direct factor of `F.obj j`. -/
@@ -118,17 +127,21 @@ def obj (P : Karoubi (J ⥤ C)) : J ⥤ Karoubi C
         rw [nat_trans.comp_app] at h 
         slice_rhs 1 3 => erw [h, h] }
 #align category_theory.idempotents.karoubi_functor_category_embedding.obj CategoryTheory.Idempotents.KaroubiFunctorCategoryEmbedding.obj
+-/
 
+#print CategoryTheory.Idempotents.KaroubiFunctorCategoryEmbedding.map /-
 /-- Tautological action on maps of the functor `karoubi (J ⥤ C) ⥤ (J ⥤ karoubi C)`. -/
 @[simps]
 def map {P Q : Karoubi (J ⥤ C)} (f : P ⟶ Q) : obj P ⟶ obj Q
     where app j := ⟨f.f.app j, congr_app f.comm j⟩
 #align category_theory.idempotents.karoubi_functor_category_embedding.map CategoryTheory.Idempotents.KaroubiFunctorCategoryEmbedding.map
+-/
 
 end KaroubiFunctorCategoryEmbedding
 
 variable (J C)
 
+#print CategoryTheory.Idempotents.karoubiFunctorCategoryEmbedding /-
 /-- The tautological fully faithful functor `karoubi (J ⥤ C) ⥤ (J ⥤ karoubi C)`. -/
 @[simps]
 def karoubiFunctorCategoryEmbedding : Karoubi (J ⥤ C) ⥤ J ⥤ Karoubi C
@@ -136,6 +149,7 @@ def karoubiFunctorCategoryEmbedding : Karoubi (J ⥤ C) ⥤ J ⥤ Karoubi C
   obj := KaroubiFunctorCategoryEmbedding.obj
   map P Q := KaroubiFunctorCategoryEmbedding.map
 #align category_theory.idempotents.karoubi_functor_category_embedding CategoryTheory.Idempotents.karoubiFunctorCategoryEmbedding
+-/
 
 instance : Full (karoubiFunctorCategoryEmbedding J C)
     where
@@ -154,6 +168,7 @@ instance : Full (karoubiFunctorCategoryEmbedding J C)
 instance : Faithful (karoubiFunctorCategoryEmbedding J C)
     where map_injective' P Q f f' h := by ext j; exact hom_ext.mp (congr_app h j)
 
+#print CategoryTheory.Idempotents.toKaroubi_comp_karoubiFunctorCategoryEmbedding /-
 /-- The composition of `(J ⥤ C) ⥤ karoubi (J ⥤ C)` and `karoubi (J ⥤ C) ⥤ (J ⥤ karoubi C)`
 equals the functor `(J ⥤ C) ⥤ (J ⥤ karoubi C)` given by the composition with
 `to_karoubi C : C ⥤ karoubi C`. -/
@@ -175,6 +190,7 @@ theorem toKaroubi_comp_karoubiFunctorCategoryEmbedding :
     · intro j
       rfl
 #align category_theory.idempotents.to_karoubi_comp_karoubi_functor_category_embedding CategoryTheory.Idempotents.toKaroubi_comp_karoubiFunctorCategoryEmbedding
+-/
 
 end Idempotents
 

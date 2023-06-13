@@ -73,6 +73,7 @@ def divisorsAntidiagonal : Finset (ℕ × ℕ) :=
 
 variable {n}
 
+#print Nat.filter_dvd_eq_divisors /-
 @[simp]
 theorem filter_dvd_eq_divisors (h : n ≠ 0) : (Finset.range n.succ).filterₓ (· ∣ n) = n.divisors :=
   by
@@ -80,7 +81,9 @@ theorem filter_dvd_eq_divisors (h : n ≠ 0) : (Finset.range n.succ).filterₓ (
   simp only [divisors, mem_filter, mem_range, mem_Ico, and_congr_left_iff, iff_and_self]
   exact fun ha _ => succ_le_iff.mpr (pos_of_dvd_of_pos ha h.bot_lt)
 #align nat.filter_dvd_eq_divisors Nat.filter_dvd_eq_divisors
+-/
 
+#print Nat.filter_dvd_eq_properDivisors /-
 @[simp]
 theorem filter_dvd_eq_properDivisors (h : n ≠ 0) :
     (Finset.range n).filterₓ (· ∣ n) = n.properDivisors :=
@@ -89,6 +92,7 @@ theorem filter_dvd_eq_properDivisors (h : n ≠ 0) :
   simp only [proper_divisors, mem_filter, mem_range, mem_Ico, and_congr_left_iff, iff_and_self]
   exact fun ha _ => succ_le_iff.mpr (pos_of_dvd_of_pos ha h.bot_lt)
 #align nat.filter_dvd_eq_proper_divisors Nat.filter_dvd_eq_properDivisors
+-/
 
 #print Nat.properDivisors.not_self_mem /-
 theorem properDivisors.not_self_mem : ¬n ∈ properDivisors n := by simp [proper_divisors]
@@ -104,10 +108,12 @@ theorem mem_properDivisors {m : ℕ} : n ∈ properDivisors m ↔ n ∣ m ∧ n 
 #align nat.mem_proper_divisors Nat.mem_properDivisors
 -/
 
+#print Nat.insert_self_properDivisors /-
 theorem insert_self_properDivisors (h : n ≠ 0) : insert n (properDivisors n) = divisors n := by
   rw [divisors, proper_divisors, Ico_succ_right_eq_insert_Ico (one_le_iff_ne_zero.2 h),
     Finset.filter_insert, if_pos (dvd_refl n)]
 #align nat.insert_self_proper_divisors Nat.insert_self_properDivisors
+-/
 
 #print Nat.cons_self_properDivisors /-
 theorem cons_self_properDivisors (h : n ≠ 0) :
@@ -298,17 +304,21 @@ theorem map_swap_divisorsAntidiagonal :
 #align nat.map_swap_divisors_antidiagonal Nat.map_swap_divisorsAntidiagonal
 -/
 
+#print Nat.image_fst_divisorsAntidiagonal /-
 @[simp]
 theorem image_fst_divisorsAntidiagonal : (divisorsAntidiagonal n).image Prod.fst = divisors n := by
   ext; simp [Dvd.Dvd, @eq_comm _ n (_ * _)]
 #align nat.image_fst_divisors_antidiagonal Nat.image_fst_divisorsAntidiagonal
+-/
 
+#print Nat.image_snd_divisorsAntidiagonal /-
 @[simp]
 theorem image_snd_divisorsAntidiagonal : (divisorsAntidiagonal n).image Prod.snd = divisors n :=
   by
   rw [← map_swap_divisors_antidiagonal, map_eq_image, image_image]
   exact image_fst_divisors_antidiagonal
 #align nat.image_snd_divisors_antidiagonal Nat.image_snd_divisorsAntidiagonal
+-/
 
 #print Nat.map_div_right_divisors /-
 theorem map_div_right_divisors :
@@ -380,11 +390,13 @@ theorem mem_divisors_prime_pow {p : ℕ} (pp : p.Prime) (k : ℕ) {x : ℕ} :
 #align nat.mem_divisors_prime_pow Nat.mem_divisors_prime_pow
 -/
 
+#print Nat.Prime.divisors /-
 theorem Prime.divisors {p : ℕ} (pp : p.Prime) : divisors p = {1, p} :=
   by
   ext
   rw [mem_divisors, dvd_prime pp, and_iff_left pp.ne_zero, Finset.mem_insert, Finset.mem_singleton]
 #align nat.prime.divisors Nat.Prime.divisors
+-/
 
 #print Nat.Prime.properDivisors /-
 theorem Prime.properDivisors {p : ℕ} (pp : p.Prime) : properDivisors p = {1} := by
@@ -453,12 +465,14 @@ theorem Prime.prod_properDivisors {α : Type _} [CommMonoid α] {p : ℕ} {f : �
 #align nat.prime.sum_proper_divisors Nat.Prime.sum_properDivisors
 -/
 
+#print Nat.Prime.prod_divisors /-
 @[simp, to_additive]
 theorem Prime.prod_divisors {α : Type _} [CommMonoid α] {p : ℕ} {f : ℕ → α} (h : p.Prime) :
     ∏ x in p.divisors, f x = f p * f 1 := by
   rw [← cons_self_proper_divisors h.ne_zero, prod_cons, h.prod_proper_divisors]
 #align nat.prime.prod_divisors Nat.Prime.prod_divisors
 #align nat.prime.sum_divisors Nat.Prime.sum_divisors
+-/
 
 #print Nat.properDivisors_eq_singleton_one_iff_prime /-
 theorem properDivisors_eq_singleton_one_iff_prime : n.properDivisors = {1} ↔ n.Prime :=
@@ -555,6 +569,7 @@ theorem prod_divisorsAntidiagonal' {M : Type _} [CommMonoid M] (f : ℕ → ℕ 
 #align nat.sum_divisors_antidiagonal' Nat.sum_divisorsAntidiagonal'
 -/
 
+#print Nat.prime_divisors_eq_to_filter_divisors_prime /-
 /-- The factors of `n` are the prime divisors -/
 theorem prime_divisors_eq_to_filter_divisors_prime (n : ℕ) :
     n.factors.toFinset = (divisors n).filterₓ Prime :=
@@ -564,7 +579,9 @@ theorem prime_divisors_eq_to_filter_divisors_prime (n : ℕ) :
   · ext q
     simpa [hn, hn.ne', mem_factors] using and_comm' (Prime q) (q ∣ n)
 #align nat.prime_divisors_eq_to_filter_divisors_prime Nat.prime_divisors_eq_to_filter_divisors_prime
+-/
 
+#print Nat.image_div_divisors_eq_divisors /-
 @[simp]
 theorem image_div_divisors_eq_divisors (n : ℕ) :
     image (fun x : ℕ => n / x) n.divisors = n.divisors :=
@@ -582,6 +599,7 @@ theorem image_div_divisors_eq_divisors (n : ℕ) :
     rintro ⟨h1, -⟩
     exact ⟨n / a, mem_divisors.mpr ⟨div_dvd_of_dvd h1, hn⟩, Nat.div_div_self h1 hn⟩
 #align nat.image_div_divisors_eq_divisors Nat.image_div_divisors_eq_divisors
+-/
 
 #print Nat.prod_div_divisors /-
 @[simp, to_additive sum_div_divisors]

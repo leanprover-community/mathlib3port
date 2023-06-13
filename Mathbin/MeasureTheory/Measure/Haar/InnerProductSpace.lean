@@ -36,8 +36,7 @@ section
 
 variable {m n : ℕ} [_i : Fact (finrank ℝ F = n)]
 
-include _i
-
+#print Orientation.measure_orthonormalBasis /-
 /-- The volume form coming from an orientation in an inner product space gives measure `1` to the
 parallelepiped associated to any orthonormal basis. This is a rephrasing of
 `abs_volume_form_apply_of_orthonormal` in terms of measures. -/
@@ -53,6 +52,7 @@ theorem Orientation.measure_orthonormalBasis (o : Orientation ℝ F (Fin n))
   rw [A, parallelepiped_comp_equiv, AlternatingMap.measure_parallelepiped,
     o.abs_volume_form_apply_of_orthonormal, ENNReal.ofReal_one]
 #align orientation.measure_orthonormal_basis Orientation.measure_orthonormalBasis
+-/
 
 #print Orientation.measure_eq_volume /-
 /-- In an oriented inner product space, the measure coming from the canonical volume form
@@ -71,6 +71,7 @@ theorem Orientation.measure_eq_volume (o : Orientation ℝ F (Fin n)) :
 
 end
 
+#print OrthonormalBasis.volume_parallelepiped /-
 /-- The volume measure in a finite-dimensional inner product space gives measure `1` to the
 parallelepiped spanned by any orthonormal basis. -/
 theorem OrthonormalBasis.volume_parallelepiped (b : OrthonormalBasis ι ℝ F) :
@@ -81,4 +82,5 @@ theorem OrthonormalBasis.volume_parallelepiped (b : OrthonormalBasis ι ℝ F) :
   rw [← o.measure_eq_volume]
   exact o.measure_orthonormal_basis b
 #align orthonormal_basis.volume_parallelepiped OrthonormalBasis.volume_parallelepiped
+-/
 

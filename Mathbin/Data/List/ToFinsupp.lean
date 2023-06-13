@@ -132,6 +132,7 @@ theorem toFinsupp_cons_apply_succ (x : M) (xs : List M) (n : ℕ)
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print List.toFinsupp_cons_eq_single_add_embDomain /-
 theorem toFinsupp_cons_eq_single_add_embDomain {R : Type _} [AddZeroClass R] (x : R) (xs : List R)
     [DecidablePred fun i => getD (x::xs) i 0 ≠ 0] [DecidablePred fun i => getD xs i 0 ≠ 0] :
     toFinsupp (x::xs) =
@@ -148,7 +149,9 @@ theorem toFinsupp_cons_eq_single_add_embDomain {R : Type _} [AddZeroClass R] (x 
     rw [finsupp.single_apply_eq_zero.mpr, zero_add, hi, Finsupp.embDomain_apply]
     simp
 #align list.to_finsupp_cons_eq_single_add_emb_domain List.toFinsupp_cons_eq_single_add_embDomain
+-/
 
+#print List.toFinsupp_concat_eq_toFinsupp_add_single /-
 theorem toFinsupp_concat_eq_toFinsupp_add_single {R : Type _} [AddZeroClass R] (x : R) (xs : List R)
     [DecidablePred fun i => getD (xs ++ [x]) i 0 ≠ 0] [DecidablePred fun i => getD xs i 0 ≠ 0] :
     toFinsupp (xs ++ [x]) = toFinsupp xs + Finsupp.single xs.length x :=
@@ -165,7 +168,9 @@ theorem toFinsupp_concat_eq_toFinsupp_add_single {R : Type _} [AddZeroClass R] (
   · rw [to_finsupp_apply_lt _ _ hi, to_finsupp_apply_lt, if_neg hi.ne', add_zero, nth_le_append]
     simpa using Nat.lt_succ_of_lt hi
 #align list.to_finsupp_concat_eq_to_finsupp_add_single List.toFinsupp_concat_eq_toFinsupp_add_single
+-/
 
+#print List.toFinsupp_eq_sum_map_enum_single /-
 theorem toFinsupp_eq_sum_map_enum_single {R : Type _} [AddMonoid R] (l : List R)
     [DecidablePred fun i => getD l i 0 ≠ 0] :
     toFinsupp l = (l.enum.map fun nr : ℕ × R => Finsupp.single nr.1 nr.2).Sum :=
@@ -178,6 +183,7 @@ theorem toFinsupp_eq_sum_map_enum_single {R : Type _} [AddMonoid R] (l : List R)
     convert to_finsupp_concat_eq_to_finsupp_add_single _ _
     exact IH.symm
 #align list.to_finsupp_eq_sum_map_enum_single List.toFinsupp_eq_sum_map_enum_single
+-/
 
 end List
 

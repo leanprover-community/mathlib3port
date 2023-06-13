@@ -38,8 +38,8 @@ universe v₁ u₁
 variable (C : Type u₁) [Category.{v₁} C]
 
 #print CategoryTheory.Monad /-
-/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`η'] [] -/
-/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`μ'] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`η'] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`μ'] [] -/
 /-- The data of a monad on C consists of an endofunctor T together with natural transformations
 η : 𝟭 C ⟶ T and μ : T ⋙ T ⟶ T satisfying three equations:
 - T μ_X ≫ μ_X = μ_(TX) ≫ μ_X (associativity)
@@ -56,8 +56,8 @@ structure Monad extends C ⥤ C where
 -/
 
 #print CategoryTheory.Comonad /-
-/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`ε'] [] -/
-/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`δ'] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`ε'] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`δ'] [] -/
 /-- The data of a comonad on C consists of an endofunctor G together with natural transformations
 ε : G ⟶ 𝟭 C and δ : G ⟶ G ⋙ G satisfying three equations:
 - δ_X ≫ G δ_X = δ_X ≫ δ_(GX) (coassociativity)
@@ -172,41 +172,53 @@ initialize_simps_projections category_theory.monad (toFunctor → coe, η' → �
 
 initialize_simps_projections category_theory.comonad (toFunctor → coe, ε' → ε, δ' → δ)
 
+#print CategoryTheory.Monad.assoc /-
 @[reassoc]
 theorem Monad.assoc (T : Monad C) (X : C) :
     (T : C ⥤ C).map (T.μ.app X) ≫ T.μ.app _ = T.μ.app _ ≫ T.μ.app _ :=
   T.assoc' X
 #align category_theory.monad.assoc CategoryTheory.Monad.assoc
+-/
 
+#print CategoryTheory.Monad.left_unit /-
 @[simp, reassoc]
 theorem Monad.left_unit (T : Monad C) (X : C) :
     T.η.app ((T : C ⥤ C).obj X) ≫ T.μ.app X = 𝟙 ((T : C ⥤ C).obj X) :=
   T.left_unit' X
 #align category_theory.monad.left_unit CategoryTheory.Monad.left_unit
+-/
 
+#print CategoryTheory.Monad.right_unit /-
 @[simp, reassoc]
 theorem Monad.right_unit (T : Monad C) (X : C) :
     (T : C ⥤ C).map (T.η.app X) ≫ T.μ.app X = 𝟙 ((T : C ⥤ C).obj X) :=
   T.right_unit' X
 #align category_theory.monad.right_unit CategoryTheory.Monad.right_unit
+-/
 
+#print CategoryTheory.Comonad.coassoc /-
 @[reassoc]
 theorem Comonad.coassoc (G : Comonad C) (X : C) :
     G.δ.app _ ≫ (G : C ⥤ C).map (G.δ.app X) = G.δ.app _ ≫ G.δ.app _ :=
   G.coassoc' X
 #align category_theory.comonad.coassoc CategoryTheory.Comonad.coassoc
+-/
 
+#print CategoryTheory.Comonad.left_counit /-
 @[simp, reassoc]
 theorem Comonad.left_counit (G : Comonad C) (X : C) :
     G.δ.app X ≫ G.ε.app ((G : C ⥤ C).obj X) = 𝟙 ((G : C ⥤ C).obj X) :=
   G.left_counit' X
 #align category_theory.comonad.left_counit CategoryTheory.Comonad.left_counit
+-/
 
+#print CategoryTheory.Comonad.right_counit /-
 @[simp, reassoc]
 theorem Comonad.right_counit (G : Comonad C) (X : C) :
     G.δ.app X ≫ (G : C ⥤ C).map (G.ε.app X) = 𝟙 ((G : C ⥤ C).obj X) :=
   G.right_counit' X
 #align category_theory.comonad.right_counit CategoryTheory.Comonad.right_counit
+-/
 
 #print CategoryTheory.MonadHom /-
 /-- A morphism of monads is a natural transformation compatible with η and μ. -/
@@ -272,11 +284,13 @@ theorem MonadHom.id_toNatTrans (T : Monad C) : (𝟙 T : T ⟶ T).toNatTrans = �
 #align category_theory.monad_hom.id_to_nat_trans CategoryTheory.MonadHom.id_toNatTrans
 -/
 
+#print CategoryTheory.MonadHom.comp_toNatTrans /-
 @[simp]
 theorem MonadHom.comp_toNatTrans {T₁ T₂ T₃ : Monad C} (f : T₁ ⟶ T₂) (g : T₂ ⟶ T₃) :
     (f ≫ g).toNatTrans = ((f.toNatTrans : _ ⟶ (T₂ : C ⥤ C)) ≫ g.toNatTrans : (T₁ : C ⥤ C) ⟶ T₃) :=
   rfl
 #align category_theory.monad_hom.comp_to_nat_trans CategoryTheory.MonadHom.comp_toNatTrans
+-/
 
 instance {G : Comonad C} : Inhabited (ComonadHom G G) :=
   ⟨𝟙 G⟩
@@ -288,12 +302,15 @@ theorem ComonadHom.id_toNatTrans (T : Comonad C) : (𝟙 T : T ⟶ T).toNatTrans
 #align category_theory.comonad_hom.id_to_nat_trans CategoryTheory.ComonadHom.id_toNatTrans
 -/
 
+#print CategoryTheory.comp_toNatTrans /-
 @[simp]
 theorem comp_toNatTrans {T₁ T₂ T₃ : Comonad C} (f : T₁ ⟶ T₂) (g : T₂ ⟶ T₃) :
     (f ≫ g).toNatTrans = ((f.toNatTrans : _ ⟶ (T₂ : C ⥤ C)) ≫ g.toNatTrans : (T₁ : C ⥤ C) ⟶ T₃) :=
   rfl
 #align category_theory.comp_to_nat_trans CategoryTheory.comp_toNatTrans
+-/
 
+#print CategoryTheory.MonadIso.mk /-
 /-- Construct a monad isomorphism from a natural isomorphism of functors where the forward
 direction is a monad morphism. -/
 @[simps]
@@ -312,7 +329,9 @@ def MonadIso.mk {M N : Monad C} (f : (M : C ⥤ C) ≅ N) (f_η f_μ) : M ≅ N
           nat_trans.naturality_assoc, iso.inv_hom_id_app_assoc, ← functor.map_comp_assoc]
         simp }
 #align category_theory.monad_iso.mk CategoryTheory.MonadIso.mk
+-/
 
+#print CategoryTheory.ComonadIso.mk /-
 /-- Construct a comonad isomorphism from a natural isomorphism of functors where the forward
 direction is a comonad morphism. -/
 @[simps]
@@ -331,9 +350,11 @@ def ComonadIso.mk {M N : Comonad C} (f : (M : C ⥤ C) ≅ N) (f_ε f_δ) : M �
         rw [← functor.map_comp, iso.hom_inv_id_app, Functor.map_id]
         apply (comp_id _).symm }
 #align category_theory.comonad_iso.mk CategoryTheory.ComonadIso.mk
+-/
 
 variable (C)
 
+#print CategoryTheory.monadToFunctor /-
 /-- The forgetful functor from the category of monads to the category of endofunctors.
 -/
 @[simps]
@@ -341,12 +362,15 @@ def monadToFunctor : Monad C ⥤ C ⥤ C where
   obj T := T
   map M N f := f.toNatTrans
 #align category_theory.monad_to_functor CategoryTheory.monadToFunctor
+-/
 
 instance : Faithful (monadToFunctor C) where
 
+#print CategoryTheory.monadToFunctor_mapIso_monad_iso_mk /-
 theorem monadToFunctor_mapIso_monad_iso_mk {M N : Monad C} (f : (M : C ⥤ C) ≅ N) (f_η f_μ) :
     (monadToFunctor _).mapIso (MonadIso.mk f f_η f_μ) = f := by ext; rfl
 #align category_theory.monad_to_functor_map_iso_monad_iso_mk CategoryTheory.monadToFunctor_mapIso_monad_iso_mk
+-/
 
 instance : ReflectsIsomorphisms (monadToFunctor C)
     where reflects M N f i := by
@@ -354,6 +378,7 @@ instance : ReflectsIsomorphisms (monadToFunctor C)
     convert is_iso.of_iso (monad_iso.mk (as_iso ((monad_to_functor C).map f)) f.app_η f.app_μ)
     ext <;> rfl
 
+#print CategoryTheory.comonadToFunctor /-
 /-- The forgetful functor from the category of comonads to the category of endofunctors.
 -/
 @[simps]
@@ -361,12 +386,15 @@ def comonadToFunctor : Comonad C ⥤ C ⥤ C where
   obj G := G
   map M N f := f.toNatTrans
 #align category_theory.comonad_to_functor CategoryTheory.comonadToFunctor
+-/
 
 instance : Faithful (comonadToFunctor C) where
 
+#print CategoryTheory.comonadToFunctor_mapIso_comonad_iso_mk /-
 theorem comonadToFunctor_mapIso_comonad_iso_mk {M N : Comonad C} (f : (M : C ⥤ C) ≅ N) (f_ε f_δ) :
     (comonadToFunctor _).mapIso (ComonadIso.mk f f_ε f_δ) = f := by ext; rfl
 #align category_theory.comonad_to_functor_map_iso_comonad_iso_mk CategoryTheory.comonadToFunctor_mapIso_comonad_iso_mk
+-/
 
 instance : ReflectsIsomorphisms (comonadToFunctor C)
     where reflects M N f i := by
@@ -376,19 +404,23 @@ instance : ReflectsIsomorphisms (comonadToFunctor C)
 
 variable {C}
 
+#print CategoryTheory.MonadIso.toNatIso /-
 /-- An isomorphism of monads gives a natural isomorphism of the underlying functors.
 -/
 @[simps (config := { rhsMd := semireducible })]
 def MonadIso.toNatIso {M N : Monad C} (h : M ≅ N) : (M : C ⥤ C) ≅ N :=
   (monadToFunctor C).mapIso h
 #align category_theory.monad_iso.to_nat_iso CategoryTheory.MonadIso.toNatIso
+-/
 
+#print CategoryTheory.ComonadIso.toNatIso /-
 /-- An isomorphism of comonads gives a natural isomorphism of the underlying functors.
 -/
 @[simps (config := { rhsMd := semireducible })]
 def ComonadIso.toNatIso {M N : Comonad C} (h : M ≅ N) : (M : C ⥤ C) ≅ N :=
   (comonadToFunctor C).mapIso h
 #align category_theory.comonad_iso.to_nat_iso CategoryTheory.ComonadIso.toNatIso
+-/
 
 variable (C)
 

@@ -83,6 +83,7 @@ instance : DenselyOrdered { x // Irrational x } :=
     let ⟨z, hz, hxz, hzy⟩ := exists_irrational_btwn hlt
     ⟨⟨z, hz⟩, hxz, hzy⟩⟩
 
+#print Irrational.eventually_forall_le_dist_cast_div /-
 theorem eventually_forall_le_dist_cast_div (hx : Irrational x) (n : ℕ) :
     ∀ᶠ ε : ℝ in 𝓝 0, ∀ m : ℤ, ε ≤ dist x (m / n) :=
   by
@@ -95,17 +96,22 @@ theorem eventually_forall_le_dist_cast_div (hx : Irrational x) (n : ℕ) :
   refine' hε (ball_subset_ball hδ hlt) ⟨m, _⟩
   simp [div_eq_inv_mul]
 #align irrational.eventually_forall_le_dist_cast_div Irrational.eventually_forall_le_dist_cast_div
+-/
 
+#print Irrational.eventually_forall_le_dist_cast_div_of_denom_le /-
 theorem eventually_forall_le_dist_cast_div_of_denom_le (hx : Irrational x) (n : ℕ) :
     ∀ᶠ ε : ℝ in 𝓝 0, ∀ k ≤ n, ∀ (m : ℤ), ε ≤ dist x (m / k) :=
   (finite_le_nat n).eventually_all.2 fun k hk => hx.eventually_forall_le_dist_cast_div k
 #align irrational.eventually_forall_le_dist_cast_div_of_denom_le Irrational.eventually_forall_le_dist_cast_div_of_denom_le
+-/
 
+#print Irrational.eventually_forall_le_dist_cast_rat_of_den_le /-
 theorem eventually_forall_le_dist_cast_rat_of_den_le (hx : Irrational x) (n : ℕ) :
     ∀ᶠ ε : ℝ in 𝓝 0, ∀ r : ℚ, r.den ≤ n → ε ≤ dist x r :=
   (hx.eventually_forall_le_dist_cast_div_of_denom_le n).mono fun ε H r hr => by
     simpa only [Rat.cast_def] using H r.denom hr r.num
 #align irrational.eventually_forall_le_dist_cast_rat_of_denom_le Irrational.eventually_forall_le_dist_cast_rat_of_den_le
+-/
 
 end Irrational
 

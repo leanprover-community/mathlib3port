@@ -27,7 +27,6 @@ open Set Metric TopologicalSpace
 
 open scoped ENNReal
 
--- mathport name: exprℓ_infty_ℝ
 local notation "ℓ_infty_ℝ" => lp (fun n : ℕ => ℝ) ∞
 
 universe u v w
@@ -41,6 +40,7 @@ namespace kuratowskiEmbedding
 
 variable {f g : ℓ_infty_ℝ} {n : ℕ} {C : ℝ} [MetricSpace α] (x : ℕ → α) (a b : α)
 
+#print KuratowskiEmbedding.embeddingOfSubset /-
 /-- A metric space can be embedded in `l^∞(ℝ)` via the distances to points in
 a fixed countable set, if this set is dense. This map is given in `Kuratowski_embedding`,
 without density assumptions. -/
@@ -52,11 +52,15 @@ def embeddingOfSubset : ℓ_infty_ℝ :=
     rintro - ⟨n, rfl⟩
     exact abs_dist_sub_le _ _ _⟩
 #align Kuratowski_embedding.embedding_of_subset KuratowskiEmbedding.embeddingOfSubset
+-/
 
+#print KuratowskiEmbedding.embeddingOfSubset_coe /-
 theorem embeddingOfSubset_coe : embeddingOfSubset x a n = dist a (x n) - dist (x 0) (x n) :=
   rfl
 #align Kuratowski_embedding.embedding_of_subset_coe KuratowskiEmbedding.embeddingOfSubset_coe
+-/
 
+#print KuratowskiEmbedding.embeddingOfSubset_dist_le /-
 /-- The embedding map is always a semi-contraction. -/
 theorem embeddingOfSubset_dist_le (a b : α) :
     dist (embeddingOfSubset x a) (embeddingOfSubset x b) ≤ dist a b :=
@@ -66,7 +70,9 @@ theorem embeddingOfSubset_dist_le (a b : α) :
   convert abs_dist_sub_le a b (x n) using 2
   ring
 #align Kuratowski_embedding.embedding_of_subset_dist_le KuratowskiEmbedding.embeddingOfSubset_dist_le
+-/
 
+#print KuratowskiEmbedding.embeddingOfSubset_isometry /-
 /-- When the reference set is dense, the embedding map is an isometry on its image. -/
 theorem embeddingOfSubset_isometry (H : DenseRange x) : Isometry (embeddingOfSubset x) :=
   by
@@ -98,7 +104,9 @@ theorem embeddingOfSubset_isometry (H : DenseRange x) : Isometry (embeddingOfSub
       _ = dist (embedding_of_subset x b) (embedding_of_subset x a) + e := by ring
   simpa [dist_comm] using this
 #align Kuratowski_embedding.embedding_of_subset_isometry KuratowskiEmbedding.embeddingOfSubset_isometry
+-/
 
+#print KuratowskiEmbedding.exists_isometric_embedding /-
 /-- Every separable metric space embeds isometrically in `ℓ_infty_ℝ`. -/
 theorem exists_isometric_embedding (α : Type u) [MetricSpace α] [SeparableSpace α] :
     ∃ f : α → ℓ_infty_ℝ, Isometry f :=
@@ -114,22 +122,28 @@ theorem exists_isometric_embedding (α : Type u) [MetricSpace α] [SeparableSpac
     -- Use embedding_of_subset to construct the desired isometry
     exact ⟨embedding_of_subset x, embedding_of_subset_isometry x (S_dense.mono x_range)⟩
 #align Kuratowski_embedding.exists_isometric_embedding KuratowskiEmbedding.exists_isometric_embedding
+-/
 
 end kuratowskiEmbedding
 
 open TopologicalSpace kuratowskiEmbedding
 
+#print kuratowskiEmbedding /-
 /-- The Kuratowski embedding is an isometric embedding of a separable metric space in `ℓ^∞(ℝ)`. -/
 def kuratowskiEmbedding (α : Type u) [MetricSpace α] [SeparableSpace α] : α → ℓ_infty_ℝ :=
   Classical.choose (KuratowskiEmbedding.exists_isometric_embedding α)
 #align Kuratowski_embedding kuratowskiEmbedding
+-/
 
+#print kuratowskiEmbedding.isometry /-
 /-- The Kuratowski embedding is an isometry. -/
 protected theorem kuratowskiEmbedding.isometry (α : Type u) [MetricSpace α] [SeparableSpace α] :
     Isometry (kuratowskiEmbedding α) :=
   Classical.choose_spec (exists_isometric_embedding α)
 #align Kuratowski_embedding.isometry kuratowskiEmbedding.isometry
+-/
 
+#print NonemptyCompacts.kuratowskiEmbedding /-
 /-- Version of the Kuratowski embedding for nonempty compacts -/
 def NonemptyCompacts.kuratowskiEmbedding (α : Type u) [MetricSpace α] [CompactSpace α]
     [Nonempty α] : NonemptyCompacts ℓ_infty_ℝ
@@ -138,4 +152,5 @@ def NonemptyCompacts.kuratowskiEmbedding (α : Type u) [MetricSpace α] [Compact
   is_compact' := isCompact_range (kuratowskiEmbedding.isometry α).Continuous
   nonempty' := range_nonempty _
 #align nonempty_compacts.Kuratowski_embedding NonemptyCompacts.kuratowskiEmbedding
+-/
 

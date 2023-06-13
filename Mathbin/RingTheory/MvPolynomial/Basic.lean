@@ -63,6 +63,7 @@ end CharP
 
 section Homomorphism
 
+#print MvPolynomial.mapRange_eq_map /-
 theorem mapRange_eq_map {R S : Type _} [CommRing R] [CommRing S] (p : MvPolynomial σ R)
     (f : R →+* S) : Finsupp.mapRange f f.map_zero p = map f p :=
   by
@@ -73,6 +74,7 @@ theorem mapRange_eq_map {R S : Type _} [CommRing R] [CommRing S] (p : MvPolynomi
   rw [map_monomial, ← single_eq_monomial, Finsupp.mapRange_single, single_eq_monomial,
     f.coe_add_monoid_hom]
 #align mv_polynomial.map_range_eq_map MvPolynomial.mapRange_eq_map
+-/
 
 end Homomorphism
 
@@ -132,11 +134,13 @@ def basisMonomials : Basis (σ →₀ ℕ) R (MvPolynomial σ R) :=
 #align mv_polynomial.basis_monomials MvPolynomial.basisMonomials
 -/
 
+#print MvPolynomial.coe_basisMonomials /-
 @[simp]
 theorem coe_basisMonomials :
     (basisMonomials σ R : (σ →₀ ℕ) → MvPolynomial σ R) = fun s => monomial s 1 :=
   rfl
 #align mv_polynomial.coe_basis_monomials MvPolynomial.coe_basisMonomials
+-/
 
 #print MvPolynomial.linearIndependent_X /-
 theorem linearIndependent_X : LinearIndependent R (X : σ → MvPolynomial σ R) :=
@@ -159,10 +163,12 @@ noncomputable def basisMonomials : Basis ℕ R R[X] :=
 #align polynomial.basis_monomials Polynomial.basisMonomials
 -/
 
+#print Polynomial.coe_basisMonomials /-
 @[simp]
 theorem coe_basisMonomials : (basisMonomials R : ℕ → R[X]) = fun s => monomial s 1 :=
   funext fun n => ofFinsupp_single _ _
 #align polynomial.coe_basis_monomials Polynomial.coe_basisMonomials
+-/
 
 end Polynomial
 

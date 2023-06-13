@@ -98,20 +98,24 @@ instance [Preorder α] {a : α} : OrderTop (Iic a)
   top := ⟨a, le_refl a⟩
   le_top x := x.Prop
 
+#print Set.Iic.coe_top /-
 @[simp]
 theorem coe_top [Preorder α] {a : α} : ↑(⊤ : Iic a) = a :=
   rfl
 #align set.Iic.coe_top Set.Iic.coe_top
+-/
 
 instance [Preorder α] [OrderBot α] {a : α} : OrderBot (Iic a)
     where
   bot := ⟨⊥, bot_le⟩
   bot_le := fun ⟨_, _⟩ => Subtype.mk_le_mk.2 bot_le
 
+#print Set.Iic.coe_bot /-
 @[simp]
 theorem coe_bot [Preorder α] [OrderBot α] {a : α} : ↑(⊥ : Iic a) = (⊥ : α) :=
   rfl
 #align set.Iic.coe_bot Set.Iic.coe_bot
+-/
 
 instance [Preorder α] [OrderBot α] {a : α} : BoundedOrder (Iic a) :=
   { Iic.orderTop, Iic.orderBot with }
@@ -137,20 +141,24 @@ instance [Preorder α] {a : α} : OrderBot (Ici a)
   bot := ⟨a, le_refl a⟩
   bot_le x := x.Prop
 
+#print Set.Ici.coe_bot /-
 @[simp]
 theorem coe_bot [Preorder α] {a : α} : ↑(⊥ : Ici a) = a :=
   rfl
 #align set.Ici.coe_bot Set.Ici.coe_bot
+-/
 
 instance [Preorder α] [OrderTop α] {a : α} : OrderTop (Ici a)
     where
   top := ⟨⊤, le_top⟩
   le_top := fun ⟨_, _⟩ => Subtype.mk_le_mk.2 le_top
 
+#print Set.Ici.coe_top /-
 @[simp]
 theorem coe_top [Preorder α] [OrderTop α] {a : α} : ↑(⊤ : Ici a) = (⊤ : α) :=
   rfl
 #align set.Ici.coe_top Set.Ici.coe_top
+-/
 
 instance [Preorder α] [OrderTop α] {a : α} : BoundedOrder (Ici a) :=
   { Ici.orderTop, Ici.orderBot with }

@@ -122,8 +122,6 @@ variable {S : Type _} [CommRing S] [IsDomain S]
 
 variable {φ : R →+* S} (hinj : Function.Injective φ) {f : R[X]} (hf : f.IsPrimitive)
 
-include hinj hf
-
 theorem IsPrimitive.isUnit_iff_isUnit_map_of_injective : IsUnit f ↔ IsUnit (map φ f) :=
   by
   refine' ⟨(map_ring_hom φ).isUnit_map, fun h => _⟩

@@ -46,25 +46,32 @@ noncomputable def comap (f : MvPolynomial σ R →ₐ[R] MvPolynomial τ R) : (�
 #align mv_polynomial.comap MvPolynomial.comap
 -/
 
+#print MvPolynomial.comap_apply /-
 @[simp]
 theorem comap_apply (f : MvPolynomial σ R →ₐ[R] MvPolynomial τ R) (x : τ → R) (i : σ) :
     comap f x i = aeval x (f (X i)) :=
   rfl
 #align mv_polynomial.comap_apply MvPolynomial.comap_apply
+-/
 
+#print MvPolynomial.comap_id_apply /-
 @[simp]
 theorem comap_id_apply (x : σ → R) : comap (AlgHom.id R (MvPolynomial σ R)) x = x := by funext i;
   simp only [comap, AlgHom.id_apply, id.def, aeval_X]
 #align mv_polynomial.comap_id_apply MvPolynomial.comap_id_apply
+-/
 
 variable (σ R)
 
+#print MvPolynomial.comap_id /-
 theorem comap_id : comap (AlgHom.id R (MvPolynomial σ R)) = id := by funext x;
   exact comap_id_apply x
 #align mv_polynomial.comap_id MvPolynomial.comap_id
+-/
 
 variable {σ R}
 
+#print MvPolynomial.comap_comp_apply /-
 theorem comap_comp_apply (f : MvPolynomial σ R →ₐ[R] MvPolynomial τ R)
     (g : MvPolynomial τ R →ₐ[R] MvPolynomial υ R) (x : υ → R) :
     comap (g.comp f) x = comap f (comap g x) :=
@@ -79,19 +86,26 @@ theorem comap_comp_apply (f : MvPolynomial σ R →ₐ[R] MvPolynomial τ R)
     refine' eval₂_hom_congr _ rfl rfl
     ext r; apply aeval_C
 #align mv_polynomial.comap_comp_apply MvPolynomial.comap_comp_apply
+-/
 
+#print MvPolynomial.comap_comp /-
 theorem comap_comp (f : MvPolynomial σ R →ₐ[R] MvPolynomial τ R)
     (g : MvPolynomial τ R →ₐ[R] MvPolynomial υ R) : comap (g.comp f) = comap f ∘ comap g := by
   funext x; exact comap_comp_apply _ _ _
 #align mv_polynomial.comap_comp MvPolynomial.comap_comp
+-/
 
+#print MvPolynomial.comap_eq_id_of_eq_id /-
 theorem comap_eq_id_of_eq_id (f : MvPolynomial σ R →ₐ[R] MvPolynomial σ R) (hf : ∀ φ, f φ = φ)
     (x : σ → R) : comap f x = x := by convert comap_id_apply x; ext1 φ; rw [hf, AlgHom.id_apply]
 #align mv_polynomial.comap_eq_id_of_eq_id MvPolynomial.comap_eq_id_of_eq_id
+-/
 
+#print MvPolynomial.comap_rename /-
 theorem comap_rename (f : σ → τ) (x : τ → R) : comap (rename f) x = x ∘ f := by ext i;
   simp only [rename_X, comap_apply, aeval_X]
 #align mv_polynomial.comap_rename MvPolynomial.comap_rename
+-/
 
 #print MvPolynomial.comapEquiv /-
 /-- If two polynomial types over the same coefficient ring `R` are equivalent,
@@ -110,17 +124,21 @@ noncomputable def comapEquiv (f : MvPolynomial σ R ≃ₐ[R] MvPolynomial τ R)
 #align mv_polynomial.comap_equiv MvPolynomial.comapEquiv
 -/
 
+#print MvPolynomial.comapEquiv_coe /-
 @[simp]
 theorem comapEquiv_coe (f : MvPolynomial σ R ≃ₐ[R] MvPolynomial τ R) :
     (comapEquiv f : (τ → R) → σ → R) = comap f :=
   rfl
 #align mv_polynomial.comap_equiv_coe MvPolynomial.comapEquiv_coe
+-/
 
+#print MvPolynomial.comapEquiv_symm_coe /-
 @[simp]
 theorem comapEquiv_symm_coe (f : MvPolynomial σ R ≃ₐ[R] MvPolynomial τ R) :
     ((comapEquiv f).symm : (σ → R) → τ → R) = comap f.symm :=
   rfl
 #align mv_polynomial.comap_equiv_symm_coe MvPolynomial.comapEquiv_symm_coe
+-/
 
 end MvPolynomial
 

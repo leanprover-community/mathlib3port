@@ -155,23 +155,29 @@ theorem subset_map_iff {f : α ↪ β} {s : Finset β} {t : Finset α} :
 #align finset.subset_map_iff Finset.subset_map_iff
 -/
 
+#print Finset.sigma_preimage_mk /-
 theorem sigma_preimage_mk {β : α → Type _} [DecidableEq α] (s : Finset (Σ a, β a)) (t : Finset α) :
     (t.Sigma fun a => s.Preimage (Sigma.mk a) <| sigma_mk_injective.InjOn _) =
       s.filterₓ fun a => a.1 ∈ t :=
   by ext x; simp [and_comm']
 #align finset.sigma_preimage_mk Finset.sigma_preimage_mk
+-/
 
+#print Finset.sigma_preimage_mk_of_subset /-
 theorem sigma_preimage_mk_of_subset {β : α → Type _} [DecidableEq α] (s : Finset (Σ a, β a))
     {t : Finset α} (ht : s.image Sigma.fst ⊆ t) :
     (t.Sigma fun a => s.Preimage (Sigma.mk a) <| sigma_mk_injective.InjOn _) = s := by
   rw [sigma_preimage_mk, filter_true_of_mem <| image_subset_iff.1 ht]
 #align finset.sigma_preimage_mk_of_subset Finset.sigma_preimage_mk_of_subset
+-/
 
+#print Finset.sigma_image_fst_preimage_mk /-
 theorem sigma_image_fst_preimage_mk {β : α → Type _} [DecidableEq α] (s : Finset (Σ a, β a)) :
     ((s.image Sigma.fst).Sigma fun a => s.Preimage (Sigma.mk a) <| sigma_mk_injective.InjOn _) =
       s :=
   s.sigma_preimage_mk_of_subset (Subset.refl _)
 #align finset.sigma_image_fst_preimage_mk Finset.sigma_image_fst_preimage_mk
+-/
 
 end Preimage
 
@@ -189,6 +195,7 @@ theorem prod_preimage' [CommMonoid β] (f : α → γ) [DecidablePred fun x => x
 #align finset.sum_preimage' Finset.sum_preimage'
 -/
 
+#print Finset.prod_preimage /-
 @[to_additive]
 theorem prod_preimage [CommMonoid β] (f : α → γ) (s : Finset γ) (hf : Set.InjOn f (f ⁻¹' ↑s))
     (g : γ → β) (hg : ∀ x ∈ s, x ∉ Set.range f → g x = 1) :
@@ -198,6 +205,7 @@ theorem prod_preimage [CommMonoid β] (f : α → γ) (s : Finset γ) (hf : Set.
   exact fun x hx => Not.imp_symm (hg x hx)
 #align finset.prod_preimage Finset.prod_preimage
 #align finset.sum_preimage Finset.sum_preimage
+-/
 
 #print Finset.prod_preimage_of_bij /-
 @[to_additive]

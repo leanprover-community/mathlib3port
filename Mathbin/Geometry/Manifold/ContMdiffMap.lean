@@ -44,10 +44,8 @@ def SmoothMap :=
   ContMdiffMap I I' M M' ⊤
 #align smooth_map SmoothMap
 
--- mathport name: cont_mdiff_map
 scoped[Manifold] notation "C^" n "⟮" I ", " M "; " I' ", " M' "⟯" => ContMdiffMap I I' M M' n
 
--- mathport name: cont_mdiff_map.self
 scoped[Manifold]
   notation "C^" n "⟮" I ", " M "; " k "⟯" => ContMdiffMap I (modelWithCornersSelf k k) M k n
 

@@ -115,15 +115,19 @@ instance [CompactSpace α] : BoundedOrder (Compacts α) :=
 instance : Inhabited (Compacts α) :=
   ⟨⊥⟩
 
+#print TopologicalSpace.Compacts.coe_sup /-
 @[simp]
 theorem coe_sup (s t : Compacts α) : (↑(s ⊔ t) : Set α) = s ∪ t :=
   rfl
 #align topological_space.compacts.coe_sup TopologicalSpace.Compacts.coe_sup
+-/
 
+#print TopologicalSpace.Compacts.coe_inf /-
 @[simp]
 theorem coe_inf [T2Space α] (s t : Compacts α) : (↑(s ⊓ t) : Set α) = s ∩ t :=
   rfl
 #align topological_space.compacts.coe_inf TopologicalSpace.Compacts.coe_inf
+-/
 
 #print TopologicalSpace.Compacts.coe_top /-
 @[simp]
@@ -139,6 +143,7 @@ theorem coe_bot : (↑(⊥ : Compacts α) : Set α) = ∅ :=
 #align topological_space.compacts.coe_bot TopologicalSpace.Compacts.coe_bot
 -/
 
+#print TopologicalSpace.Compacts.coe_finset_sup /-
 @[simp]
 theorem coe_finset_sup {ι : Type _} {s : Finset ι} {f : ι → Compacts α} :
     (↑(s.sup f) : Set α) = s.sup fun i => f i := by
@@ -147,6 +152,7 @@ theorem coe_finset_sup {ι : Type _} {s : Finset ι} {f : ι → Compacts α} :
   simp_rw [Finset.sup_insert, coe_sup, sup_eq_union]
   congr
 #align topological_space.compacts.coe_finset_sup TopologicalSpace.Compacts.coe_finset_sup
+-/
 
 #print TopologicalSpace.Compacts.map /-
 /-- The image of a compact set under a continuous function. -/
@@ -155,10 +161,12 @@ protected def map (f : α → β) (hf : Continuous f) (K : Compacts α) : Compac
 #align topological_space.compacts.map TopologicalSpace.Compacts.map
 -/
 
+#print TopologicalSpace.Compacts.coe_map /-
 @[simp, norm_cast]
 theorem coe_map {f : α → β} (hf : Continuous f) (s : Compacts α) : (s.map f hf : Set β) = f '' s :=
   rfl
 #align topological_space.compacts.coe_map TopologicalSpace.Compacts.coe_map
+-/
 
 #print TopologicalSpace.Compacts.map_id /-
 @[simp]
@@ -167,10 +175,12 @@ theorem map_id (K : Compacts α) : K.map id continuous_id = K :=
 #align topological_space.compacts.map_id TopologicalSpace.Compacts.map_id
 -/
 
+#print TopologicalSpace.Compacts.map_comp /-
 theorem map_comp (f : β → γ) (g : α → β) (hf : Continuous f) (hg : Continuous g) (K : Compacts α) :
     K.map (f ∘ g) (hf.comp hg) = (K.map g hg).map f hf :=
   Compacts.ext <| Set.image_comp _ _ _
 #align topological_space.compacts.map_comp TopologicalSpace.Compacts.map_comp
+-/
 
 #print TopologicalSpace.Compacts.equiv /-
 /-- A homeomorphism induces an equivalence on compact sets, by taking the image. -/
@@ -191,36 +201,46 @@ theorem equiv_refl : Compacts.equiv (Homeomorph.refl α) = Equiv.refl _ :=
 #align topological_space.compacts.equiv_refl TopologicalSpace.Compacts.equiv_refl
 -/
 
+#print TopologicalSpace.Compacts.equiv_trans /-
 @[simp]
 theorem equiv_trans (f : α ≃ₜ β) (g : β ≃ₜ γ) :
     Compacts.equiv (f.trans g) = (Compacts.equiv f).trans (Compacts.equiv g) :=
   Equiv.ext <| map_comp _ _ _ _
 #align topological_space.compacts.equiv_trans TopologicalSpace.Compacts.equiv_trans
+-/
 
+#print TopologicalSpace.Compacts.equiv_symm /-
 @[simp]
 theorem equiv_symm (f : α ≃ₜ β) : Compacts.equiv f.symm = (Compacts.equiv f).symm :=
   rfl
 #align topological_space.compacts.equiv_symm TopologicalSpace.Compacts.equiv_symm
+-/
 
+#print TopologicalSpace.Compacts.coe_equiv_apply_eq_preimage /-
 /-- The image of a compact set under a homeomorphism can also be expressed as a preimage. -/
 theorem coe_equiv_apply_eq_preimage (f : α ≃ₜ β) (K : Compacts α) :
     (Compacts.equiv f K : Set β) = f.symm ⁻¹' (K : Set α) :=
   f.toEquiv.image_eq_preimage K
 #align topological_space.compacts.coe_equiv_apply_eq_preimage TopologicalSpace.Compacts.coe_equiv_apply_eq_preimage
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print TopologicalSpace.Compacts.prod /-
 /-- The product of two `compacts`, as a `compacts` in the product space. -/
 protected def prod (K : Compacts α) (L : Compacts β) : Compacts (α × β)
     where
   carrier := K ×ˢ L
   is_compact' := IsCompact.prod K.2 L.2
 #align topological_space.compacts.prod TopologicalSpace.Compacts.prod
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print TopologicalSpace.Compacts.coe_prod /-
 @[simp]
 theorem coe_prod (K : Compacts α) (L : Compacts β) : (K.Prod L : Set (α × β)) = K ×ˢ L :=
   rfl
 #align topological_space.compacts.coe_prod TopologicalSpace.Compacts.coe_prod
+-/
 
 end Compacts
 
@@ -293,10 +313,12 @@ instance : SemilatticeSup (NonemptyCompacts α) :=
 instance [CompactSpace α] [Nonempty α] : OrderTop (NonemptyCompacts α) :=
   OrderTop.lift (coe : _ → Set α) (fun _ _ => id) rfl
 
+#print TopologicalSpace.NonemptyCompacts.coe_sup /-
 @[simp]
 theorem coe_sup (s t : NonemptyCompacts α) : (↑(s ⊔ t) : Set α) = s ∪ t :=
   rfl
 #align topological_space.nonempty_compacts.coe_sup TopologicalSpace.NonemptyCompacts.coe_sup
+-/
 
 #print TopologicalSpace.NonemptyCompacts.coe_top /-
 @[simp]
@@ -324,17 +346,21 @@ instance toNonempty {s : NonemptyCompacts α} : Nonempty s :=
 #align topological_space.nonempty_compacts.to_nonempty TopologicalSpace.NonemptyCompacts.toNonempty
 -/
 
+#print TopologicalSpace.NonemptyCompacts.prod /-
 /-- The product of two `nonempty_compacts`, as a `nonempty_compacts` in the product space. -/
 protected def prod (K : NonemptyCompacts α) (L : NonemptyCompacts β) : NonemptyCompacts (α × β) :=
   { K.toCompacts.Prod L.toCompacts with nonempty' := K.Nonempty.Prod L.Nonempty }
 #align topological_space.nonempty_compacts.prod TopologicalSpace.NonemptyCompacts.prod
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print TopologicalSpace.NonemptyCompacts.coe_prod /-
 @[simp]
 theorem coe_prod (K : NonemptyCompacts α) (L : NonemptyCompacts β) :
     (K.Prod L : Set (α × β)) = K ×ˢ L :=
   rfl
 #align topological_space.nonempty_compacts.coe_prod TopologicalSpace.NonemptyCompacts.coe_prod
+-/
 
 end NonemptyCompacts
 
@@ -416,10 +442,12 @@ instance : SemilatticeSup (PositiveCompacts α) :=
 instance [CompactSpace α] [Nonempty α] : OrderTop (PositiveCompacts α) :=
   OrderTop.lift (coe : _ → Set α) (fun _ _ => id) rfl
 
+#print TopologicalSpace.PositiveCompacts.coe_sup /-
 @[simp]
 theorem coe_sup (s t : PositiveCompacts α) : (↑(s ⊔ t) : Set α) = s ∪ t :=
   rfl
 #align topological_space.positive_compacts.coe_sup TopologicalSpace.PositiveCompacts.coe_sup
+-/
 
 #print TopologicalSpace.PositiveCompacts.coe_top /-
 @[simp]
@@ -438,11 +466,13 @@ protected def map (f : α → β) (hf : Continuous f) (hf' : IsOpenMap f) (K : P
 #align topological_space.positive_compacts.map TopologicalSpace.PositiveCompacts.map
 -/
 
+#print TopologicalSpace.PositiveCompacts.coe_map /-
 @[simp, norm_cast]
 theorem coe_map {f : α → β} (hf : Continuous f) (hf' : IsOpenMap f) (s : PositiveCompacts α) :
     (s.map f hf hf' : Set β) = f '' s :=
   rfl
 #align topological_space.positive_compacts.coe_map TopologicalSpace.PositiveCompacts.coe_map
+-/
 
 #print TopologicalSpace.PositiveCompacts.map_id /-
 @[simp]
@@ -451,11 +481,13 @@ theorem map_id (K : PositiveCompacts α) : K.map id continuous_id IsOpenMap.id =
 #align topological_space.positive_compacts.map_id TopologicalSpace.PositiveCompacts.map_id
 -/
 
+#print TopologicalSpace.PositiveCompacts.map_comp /-
 theorem map_comp (f : β → γ) (g : α → β) (hf : Continuous f) (hg : Continuous g) (hf' : IsOpenMap f)
     (hg' : IsOpenMap g) (K : PositiveCompacts α) :
     K.map (f ∘ g) (hf.comp hg) (hf'.comp hg') = (K.map g hg hg').map f hf hf' :=
   PositiveCompacts.ext <| Set.image_comp _ _ _
 #align topological_space.positive_compacts.map_comp TopologicalSpace.PositiveCompacts.map_comp
+-/
 
 #print exists_positiveCompacts_subset /-
 theorem exists_positiveCompacts_subset [LocallyCompactSpace α] {U : Set α} (ho : IsOpen U)
@@ -476,6 +508,7 @@ instance nonempty' [LocallyCompactSpace α] [Nonempty α] : Nonempty (PositiveCo
 #align topological_space.positive_compacts.nonempty' TopologicalSpace.PositiveCompacts.nonempty'
 -/
 
+#print TopologicalSpace.PositiveCompacts.prod /-
 /-- The product of two `positive_compacts`, as a `positive_compacts` in the product space. -/
 protected def prod (K : PositiveCompacts α) (L : PositiveCompacts β) : PositiveCompacts (α × β) :=
   { K.toCompacts.Prod L.toCompacts with
@@ -484,13 +517,16 @@ protected def prod (K : PositiveCompacts α) (L : PositiveCompacts β) : Positiv
       simp only [compacts.carrier_eq_coe, compacts.coe_prod, interior_prod_eq]
       exact K.interior_nonempty.prod L.interior_nonempty }
 #align topological_space.positive_compacts.prod TopologicalSpace.PositiveCompacts.prod
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print TopologicalSpace.PositiveCompacts.coe_prod /-
 @[simp]
 theorem coe_prod (K : PositiveCompacts α) (L : PositiveCompacts β) :
     (K.Prod L : Set (α × β)) = K ×ˢ L :=
   rfl
 #align topological_space.positive_compacts.coe_prod TopologicalSpace.PositiveCompacts.coe_prod
+-/
 
 end PositiveCompacts
 
@@ -595,15 +631,19 @@ instance [T2Space α] [CompactSpace α] : BooleanAlgebra (CompactOpens α) :=
   SetLike.coe_injective.BooleanAlgebra _ (fun _ _ => rfl) (fun _ _ => rfl) rfl rfl (fun _ => rfl)
     fun _ _ => rfl
 
+#print TopologicalSpace.CompactOpens.coe_sup /-
 @[simp]
 theorem coe_sup (s t : CompactOpens α) : (↑(s ⊔ t) : Set α) = s ∪ t :=
   rfl
 #align topological_space.compact_opens.coe_sup TopologicalSpace.CompactOpens.coe_sup
+-/
 
+#print TopologicalSpace.CompactOpens.coe_inf /-
 @[simp]
 theorem coe_inf [T2Space α] (s t : CompactOpens α) : (↑(s ⊓ t) : Set α) = s ∩ t :=
   rfl
 #align topological_space.compact_opens.coe_inf TopologicalSpace.CompactOpens.coe_inf
+-/
 
 #print TopologicalSpace.CompactOpens.coe_top /-
 @[simp]
@@ -619,15 +659,19 @@ theorem coe_bot : (↑(⊥ : CompactOpens α) : Set α) = ∅ :=
 #align topological_space.compact_opens.coe_bot TopologicalSpace.CompactOpens.coe_bot
 -/
 
+#print TopologicalSpace.CompactOpens.coe_sdiff /-
 @[simp]
 theorem coe_sdiff [T2Space α] (s t : CompactOpens α) : (↑(s \ t) : Set α) = s \ t :=
   rfl
 #align topological_space.compact_opens.coe_sdiff TopologicalSpace.CompactOpens.coe_sdiff
+-/
 
+#print TopologicalSpace.CompactOpens.coe_compl /-
 @[simp]
 theorem coe_compl [T2Space α] [CompactSpace α] (s : CompactOpens α) : (↑(sᶜ) : Set α) = sᶜ :=
   rfl
 #align topological_space.compact_opens.coe_compl TopologicalSpace.CompactOpens.coe_compl
+-/
 
 instance : Inhabited (CompactOpens α) :=
   ⟨⊥⟩
@@ -640,11 +684,13 @@ def map (f : α → β) (hf : Continuous f) (hf' : IsOpenMap f) (s : CompactOpen
 #align topological_space.compact_opens.map TopologicalSpace.CompactOpens.map
 -/
 
+#print TopologicalSpace.CompactOpens.coe_map /-
 @[simp, norm_cast]
 theorem coe_map {f : α → β} (hf : Continuous f) (hf' : IsOpenMap f) (s : CompactOpens α) :
     (s.map f hf hf' : Set β) = f '' s :=
   rfl
 #align topological_space.compact_opens.coe_map TopologicalSpace.CompactOpens.coe_map
+-/
 
 #print TopologicalSpace.CompactOpens.map_id /-
 @[simp]
@@ -653,22 +699,28 @@ theorem map_id (K : CompactOpens α) : K.map id continuous_id IsOpenMap.id = K :
 #align topological_space.compact_opens.map_id TopologicalSpace.CompactOpens.map_id
 -/
 
+#print TopologicalSpace.CompactOpens.map_comp /-
 theorem map_comp (f : β → γ) (g : α → β) (hf : Continuous f) (hg : Continuous g) (hf' : IsOpenMap f)
     (hg' : IsOpenMap g) (K : CompactOpens α) :
     K.map (f ∘ g) (hf.comp hg) (hf'.comp hg') = (K.map g hg hg').map f hf hf' :=
   CompactOpens.ext <| Set.image_comp _ _ _
 #align topological_space.compact_opens.map_comp TopologicalSpace.CompactOpens.map_comp
+-/
 
+#print TopologicalSpace.CompactOpens.prod /-
 /-- The product of two `compact_opens`, as a `compact_opens` in the product space. -/
 protected def prod (K : CompactOpens α) (L : CompactOpens β) : CompactOpens (α × β) :=
   { K.toCompacts.Prod L.toCompacts with is_open' := K.IsOpen.Prod L.IsOpen }
 #align topological_space.compact_opens.prod TopologicalSpace.CompactOpens.prod
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print TopologicalSpace.CompactOpens.coe_prod /-
 @[simp]
 theorem coe_prod (K : CompactOpens α) (L : CompactOpens β) : (K.Prod L : Set (α × β)) = K ×ˢ L :=
   rfl
 #align topological_space.compact_opens.coe_prod TopologicalSpace.CompactOpens.coe_prod
+-/
 
 end CompactOpens
 

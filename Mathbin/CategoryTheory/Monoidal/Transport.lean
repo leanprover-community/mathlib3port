@@ -47,6 +47,7 @@ variable {D : Type u₂} [Category.{v₂} D]
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print CategoryTheory.Monoidal.transport /-
 -- We just want these simp lemmas locally
 /-- Transport a monoidal structure along an equivalence of (plain) categories.
 -/
@@ -160,13 +161,16 @@ def transport (e : C ≌ D) : MonoidalCategory.{v₂} D
     slice_rhs 2 3 => rw [id_tensor_comp_tensor_id, ← tensor_id_comp_id_tensor]
     slice_rhs 1 2 => rw [id_tensor_comp_tensor_id]
 #align category_theory.monoidal.transport CategoryTheory.Monoidal.transport
+-/
 
+#print CategoryTheory.Monoidal.Transported /-
 /-- A type synonym for `D`, which will carry the transported monoidal structure. -/
 @[nolint unused_arguments]
 def Transported (e : C ≌ D) :=
   D
 deriving Category
 #align category_theory.monoidal.transported CategoryTheory.Monoidal.Transported
+-/
 
 instance (e : C ≌ D) : MonoidalCategory (Transported e) :=
   transport e
@@ -184,6 +188,7 @@ attribute [local simp] transport_tensor_hom transport_associator transport_left_
   transport_right_unitor
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print CategoryTheory.Monoidal.laxToTransported /-
 /--
 We can upgrade `e.functor` to a lax monoidal functor from `C` to `D` with the transported structure.
 -/
@@ -241,9 +246,11 @@ def laxToTransported (e : C ≌ D) : LaxMonoidalFunctor C (Transported e)
     congr 1
     simp only [← right_unitor_naturality, id_comp, ← tensor_comp_assoc, comp_id]
 #align category_theory.monoidal.lax_to_transported CategoryTheory.Monoidal.laxToTransported
+-/
 
 end
 
+#print CategoryTheory.Monoidal.toTransported /-
 /-- We can upgrade `e.functor` to a monoidal functor from `C` to `D` with the transported structure.
 -/
 @[simps]
@@ -253,27 +260,33 @@ def toTransported (e : C ≌ D) : MonoidalFunctor C (Transported e)
   ε_isIso := by dsimp; infer_instance
   μ_isIso X Y := by dsimp; infer_instance
 #align category_theory.monoidal.to_transported CategoryTheory.Monoidal.toTransported
+-/
 
 end
 
 instance (e : C ≌ D) : IsEquivalence (toTransported e).toFunctor := by dsimp; infer_instance
 
+#print CategoryTheory.Monoidal.fromTransported /-
 /-- We can upgrade `e.inverse` to a monoidal functor from `D` with the transported structure to `C`.
 -/
 @[simps]
 def fromTransported (e : C ≌ D) : MonoidalFunctor (Transported e) C :=
   monoidalInverse (toTransported e)
 #align category_theory.monoidal.from_transported CategoryTheory.Monoidal.fromTransported
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print CategoryTheory.Monoidal.transportedMonoidalUnitIso /-
 /-- The unit isomorphism upgrades to a monoidal isomorphism. -/
 @[simps]
 def transportedMonoidalUnitIso (e : C ≌ D) :
     LaxMonoidalFunctor.id C ≅ laxToTransported e ⊗⋙ (fromTransported e).toLaxMonoidalFunctor :=
   asIso (monoidalUnit (toTransported e))
 #align category_theory.monoidal.transported_monoidal_unit_iso CategoryTheory.Monoidal.transportedMonoidalUnitIso
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print CategoryTheory.Monoidal.transportedMonoidalCounitIso /-
 /-- The counit isomorphism upgrades to a monoidal isomorphism. -/
 @[simps]
 def transportedMonoidalCounitIso (e : C ≌ D) :
@@ -281,6 +294,7 @@ def transportedMonoidalCounitIso (e : C ≌ D) :
       LaxMonoidalFunctor.id (Transported e) :=
   asIso (monoidalCounit (toTransported e))
 #align category_theory.monoidal.transported_monoidal_counit_iso CategoryTheory.Monoidal.transportedMonoidalCounitIso
+-/
 
 end CategoryTheory.Monoidal
 

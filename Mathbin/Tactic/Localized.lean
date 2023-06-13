@@ -147,7 +147,6 @@ unsafe def print_localized_commands (ns : List Name) : tactic Unit := do
   cmds trace
 #align print_localized_commands print_localized_commands
 
--- mathport name: exprhole!
 notation
   "hole!" =>-- This should be used instead of `_` inside localized commands,
   -- because otherwise `open_locale` will fail if some of the notations are already available.
@@ -160,9 +159,7 @@ Classical] attribute [instance 9] Classical.propDecidable
 
 scoped[Classical] attribute [instance 8] Eq.decidable
 
--- mathport name: parser.optional
 scoped[Parser] postfix:1024 "?" => optional
 
--- mathport name: parser.many
 scoped[Parser] postfix:1024 "*" => lean.parser.many
 

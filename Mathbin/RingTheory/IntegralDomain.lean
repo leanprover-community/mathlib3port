@@ -46,13 +46,17 @@ section CancelMonoidWithZero
 -- There doesn't seem to be a better home for these right now
 variable {M : Type _} [CancelMonoidWithZero M] [Finite M]
 
+#print mul_right_bijective_of_finite₀ /-
 theorem mul_right_bijective_of_finite₀ {a : M} (ha : a ≠ 0) : Bijective fun b => a * b :=
   Finite.injective_iff_bijective.1 <| mul_right_injective₀ ha
 #align mul_right_bijective_of_finite₀ mul_right_bijective_of_finite₀
+-/
 
+#print mul_left_bijective_of_finite₀ /-
 theorem mul_left_bijective_of_finite₀ {a : M} (ha : a ≠ 0) : Bijective fun b => b * a :=
   Finite.injective_iff_bijective.1 <| mul_left_injective₀ ha
 #align mul_left_bijective_of_finite₀ mul_left_bijective_of_finite₀
+-/
 
 #print Fintype.groupWithZeroOfCancel /-
 /-- Every finite nontrivial cancel_monoid_with_zero is a group_with_zero. -/
@@ -68,6 +72,7 @@ def Fintype.groupWithZeroOfCancel (M : Type _) [CancelMonoidWithZero M] [Decidab
 #align fintype.group_with_zero_of_cancel Fintype.groupWithZeroOfCancel
 -/
 
+#print exists_eq_pow_of_mul_eq_pow_of_coprime /-
 theorem exists_eq_pow_of_mul_eq_pow_of_coprime {R : Type _} [CommSemiring R] [IsDomain R]
     [GCDMonoid R] [Unique Rˣ] {a b c : R} {n : ℕ} (cp : IsCoprime a b) (h : a * b = c ^ n) :
     ∃ d : R, a = d ^ n :=
@@ -78,8 +83,10 @@ theorem exists_eq_pow_of_mul_eq_pow_of_coprime {R : Type _} [CommSemiring R] [Is
   exact
     dvd_add (dvd_mul_of_dvd_right (gcd_dvd_left _ _) _) (dvd_mul_of_dvd_right (gcd_dvd_right _ _) _)
 #align exists_eq_pow_of_mul_eq_pow_of_coprime exists_eq_pow_of_mul_eq_pow_of_coprime
+-/
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (i j «expr ∈ » s) -/
+#print Finset.exists_eq_pow_of_mul_eq_pow_of_coprime /-
 theorem Finset.exists_eq_pow_of_mul_eq_pow_of_coprime {ι R : Type _} [CommSemiring R] [IsDomain R]
     [GCDMonoid R] [Unique Rˣ] {n : ℕ} {c : R} {s : Finset ι} {f : ι → R}
     (h : ∀ (i) (_ : i ∈ s) (j) (_ : j ∈ s), i ≠ j → IsCoprime (f i) (f j))
@@ -93,6 +100,7 @@ theorem Finset.exists_eq_pow_of_mul_eq_pow_of_coprime {ι R : Type _} [CommSemir
   rw [hij] at hj 
   exact (s.not_mem_erase _) hj
 #align finset.exists_eq_pow_of_mul_eq_pow_of_coprime Finset.exists_eq_pow_of_mul_eq_pow_of_coprime
+-/
 
 end CancelMonoidWithZero
 
@@ -135,6 +143,7 @@ end Ring
 
 variable [CommRing R] [IsDomain R] [Group G]
 
+#print card_nthRoots_subgroup_units /-
 theorem card_nthRoots_subgroup_units [Fintype G] (f : G →* R) (hf : Injective f) {n : ℕ}
     (hn : 0 < n) (g₀ : G) : ({g ∈ univ | g ^ n = g₀} : Finset G).card ≤ (nthRoots n (f g₀)).card :=
   by
@@ -146,7 +155,9 @@ theorem card_nthRoots_subgroup_units [Fintype G] (f : G →* R) (hf : Injective 
     rw [Multiset.mem_toFinset, mem_nth_roots hn, ← f.map_pow, hg.2]
   · intros; apply hf; assumption
 #align card_nth_roots_subgroup_units card_nthRoots_subgroup_units
+-/
 
+#print isCyclic_of_subgroup_isDomain /-
 /-- A finite subgroup of the unit group of an integral domain is cyclic. -/
 theorem isCyclic_of_subgroup_isDomain [Finite G] (f : G →* R) (hf : Injective f) : IsCyclic G := by
   classical
@@ -155,6 +166,7 @@ theorem isCyclic_of_subgroup_isDomain [Finite G] (f : G →* R) (hf : Injective 
   intro n hn
   convert le_trans (card_nthRoots_subgroup_units f hf hn 1) (card_nth_roots n (f 1))
 #align is_cyclic_of_subgroup_is_domain isCyclic_of_subgroup_isDomain
+-/
 
 /-- The unit group of a finite integral domain is cyclic.
 
@@ -167,6 +179,7 @@ section
 
 variable (S : Subgroup Rˣ) [Finite S]
 
+#print subgroup_units_cyclic /-
 /-- A finite subgroup of the units of an integral domain is cyclic. -/
 instance subgroup_units_cyclic : IsCyclic S :=
   by
@@ -174,6 +187,7 @@ instance subgroup_units_cyclic : IsCyclic S :=
   · simp
   · intros; simp
 #align subgroup_units_cyclic subgroup_units_cyclic
+-/
 
 end
 
@@ -185,6 +199,7 @@ open scoped Polynomial
 
 variable (K : Type) [Field K] [Algebra R[X] K] [IsFractionRing R[X] K]
 
+#print Polynomial.div_eq_quo_add_rem_div /-
 theorem div_eq_quo_add_rem_div (f : R[X]) {g : R[X]} (hg : g.Monic) :
     ∃ q r : R[X], r.degree < g.degree ∧ (↑f : K) / ↑g = ↑q + ↑r / ↑g :=
   by
@@ -195,6 +210,7 @@ theorem div_eq_quo_add_rem_div (f : R[X]) {g : R[X]} (hg : g.Monic) :
     norm_cast
     rw [add_comm, mul_comm, mod_by_monic_add_div f hg]
 #align polynomial.div_eq_quo_add_rem_div Polynomial.div_eq_quo_add_rem_div
+-/
 
 end Polynomial
 
@@ -202,6 +218,7 @@ end EuclideanDivision
 
 variable [Fintype G]
 
+#print card_fiber_eq_of_mem_range /-
 theorem card_fiber_eq_of_mem_range {H : Type _} [Group H] [DecidableEq H] (f : G →* H) {x y : H}
     (hx : x ∈ Set.range f) (hy : y ∈ Set.range f) :
     (univ.filterₓ fun g => f g = x).card = (univ.filterₓ fun g => f g = y).card :=
@@ -218,7 +235,9 @@ theorem card_fiber_eq_of_mem_range {H : Type _} [Group H] [DecidableEq H] (f : G
       eq_self_iff_true, exists_prop_of_true, MonoidHom.map_mul_inv, and_self_iff,
       mul_inv_cancel_right, inv_mul_cancel_right]
 #align card_fiber_eq_of_mem_range card_fiber_eq_of_mem_range
+-/
 
+#print sum_hom_units_eq_zero /-
 /-- In an integral domain, a sum indexed by a nontrivial homomorphism from a finite group is zero.
 -/
 theorem sum_hom_units_eq_zero (f : G →* R) (hf : f ≠ 1) : ∑ g : G, f g = 0 := by
@@ -282,7 +301,9 @@ theorem sum_hom_units_eq_zero (f : G →* R) (hf : f ≠ 1) : ∑ g : G, f g = 0
   norm_cast
   simp [pow_orderOf_eq_one]
 #align sum_hom_units_eq_zero sum_hom_units_eq_zero
+-/
 
+#print sum_hom_units /-
 /-- In an integral domain, a sum indexed by a homomorphism from a finite group is zero,
 unless the homomorphism is trivial, in which case the sum is equal to the cardinality of the group.
 -/
@@ -293,6 +314,7 @@ theorem sum_hom_units (f : G →* R) [Decidable (f = 1)] :
   · simp [h, card_univ]
   · exact sum_hom_units_eq_zero f h
 #align sum_hom_units sum_hom_units
+-/
 
 end
 

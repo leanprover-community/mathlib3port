@@ -66,10 +66,12 @@ theorem mem_sort {s : Multiset α} {a : α} : a ∈ sort r s ↔ a ∈ s := by r
 #align multiset.mem_sort Multiset.mem_sort
 -/
 
+#print Multiset.length_sort /-
 @[simp]
 theorem length_sort {s : Multiset α} : (sort r s).length = s.card :=
   Quot.inductionOn s <| length_mergeSort _
 #align multiset.length_sort Multiset.length_sort
+-/
 
 #print Multiset.sort_zero /-
 @[simp]

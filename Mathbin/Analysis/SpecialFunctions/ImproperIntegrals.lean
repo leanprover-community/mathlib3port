@@ -64,9 +64,11 @@ theorem integral_exp_Iic_zero : ∫ x : ℝ in Iic 0, exp x = 1 :=
 #align integral_exp_Iic_zero integral_exp_Iic_zero
 -/
 
+#print integral_exp_neg_Ioi /-
 theorem integral_exp_neg_Ioi (c : ℝ) : ∫ x : ℝ in Ioi c, exp (-x) = exp (-c) := by
   simpa only [integral_comp_neg_Ioi] using integral_exp_Iic (-c)
 #align integral_exp_neg_Ioi integral_exp_neg_Ioi
+-/
 
 #print integral_exp_neg_Ioi_zero /-
 theorem integral_exp_neg_Ioi_zero : ∫ x : ℝ in Ioi 0, exp (-x) = 1 := by
@@ -74,6 +76,7 @@ theorem integral_exp_neg_Ioi_zero : ∫ x : ℝ in Ioi 0, exp (-x) = 1 := by
 #align integral_exp_neg_Ioi_zero integral_exp_neg_Ioi_zero
 -/
 
+#print integrableOn_Ioi_rpow_of_lt /-
 /-- If `0 < c`, then `(λ t : ℝ, t ^ a)` is integrable on `(c, ∞)` for all `a < -1`. -/
 theorem integrableOn_Ioi_rpow_of_lt {a : ℝ} (ha : a < -1) {c : ℝ} (hc : 0 < c) :
     IntegrableOn (fun t : ℝ => t ^ a) (Ioi c) :=
@@ -90,7 +93,9 @@ theorem integrableOn_Ioi_rpow_of_lt {a : ℝ} (ha : a < -1) {c : ℝ} (hc : 0 < 
   exact
     integrable_on_Ioi_deriv_of_nonneg' hd (fun t ht => rpow_nonneg_of_nonneg (hc.trans ht).le a) ht
 #align integrable_on_Ioi_rpow_of_lt integrableOn_Ioi_rpow_of_lt
+-/
 
+#print integral_Ioi_rpow_of_lt /-
 theorem integral_Ioi_rpow_of_lt {a : ℝ} (ha : a < -1) {c : ℝ} (hc : 0 < c) :
     ∫ t : ℝ in Ioi c, t ^ a = -c ^ (a + 1) / (a + 1) :=
   by
@@ -106,7 +111,9 @@ theorem integral_Ioi_rpow_of_lt {a : ℝ} (ha : a < -1) {c : ℝ} (hc : 0 < c) :
   convert integral_Ioi_of_has_deriv_at_of_tendsto' hd (integrableOn_Ioi_rpow_of_lt ha hc) ht
   simp only [neg_div, zero_div, zero_sub]
 #align integral_Ioi_rpow_of_lt integral_Ioi_rpow_of_lt
+-/
 
+#print integrableOn_Ioi_cpow_of_lt /-
 theorem integrableOn_Ioi_cpow_of_lt {a : ℂ} (ha : a.re < -1) {c : ℝ} (hc : 0 < c) :
     IntegrableOn (fun t : ℝ => (t : ℂ) ^ a) (Ioi c) :=
   by
@@ -117,7 +124,9 @@ theorem integrableOn_Ioi_cpow_of_lt {a : ℂ} (ha : a.re < -1) {c : ℝ} (hc : 0
   · refine' ContinuousOn.aestronglyMeasurable (fun t ht => _) measurableSet_Ioi
     exact (Complex.continuousAt_ofReal_cpow_const _ _ (Or.inr (hc.trans ht).ne')).ContinuousWithinAt
 #align integrable_on_Ioi_cpow_of_lt integrableOn_Ioi_cpow_of_lt
+-/
 
+#print integral_Ioi_cpow_of_lt /-
 theorem integral_Ioi_cpow_of_lt {a : ℂ} (ha : a.re < -1) {c : ℝ} (hc : 0 < c) :
     ∫ t : ℝ in Ioi c, (t : ℂ) ^ a = -(c : ℂ) ^ (a + 1) / (a + 1) :=
   by
@@ -143,4 +152,5 @@ theorem integral_Ioi_cpow_of_lt {a : ℂ} (ha : a.re < -1) {c : ℝ} (hc : 0 < c
   simp_rw [neg_neg, Complex.norm_eq_abs, Complex.abs_cpow_eq_rpow_re_of_pos hx, Complex.add_re,
     Complex.one_re]
 #align integral_Ioi_cpow_of_lt integral_Ioi_cpow_of_lt
+-/
 

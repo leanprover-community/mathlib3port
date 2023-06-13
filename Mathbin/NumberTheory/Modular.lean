@@ -77,10 +77,8 @@ open Matrix.SpecialLinearGroup UpperHalfPlane
 
 noncomputable section
 
--- mathport name: «exprSL( , )»
 local notation "SL(" n ", " R ")" => SpecialLinearGroup (Fin n) R
 
--- mathport name: «expr↑ₘ »
 local prefix:1024 "↑ₘ" => @coe _ (Matrix (Fin 2) (Fin 2) ℤ) _
 
 open scoped UpperHalfPlane ComplexConjugate
@@ -421,10 +419,8 @@ def fdo : Set ℍ :=
   {z | 1 < (z : ℂ).normSq ∧ |z.re| < (1 : ℝ) / 2}
 #align modular_group.fdo ModularGroup.fdo
 
--- mathport name: modular_group.fd
 scoped[Modular] notation "𝒟" => ModularGroup.fd
 
--- mathport name: modular_group.fdo
 scoped[Modular] notation "𝒟ᵒ" => ModularGroup.fdo
 
 theorem abs_two_mul_re_lt_one_of_mem_fdo (h : z ∈ 𝒟ᵒ) : |2 * z.re| < 1 :=

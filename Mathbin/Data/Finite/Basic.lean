@@ -151,6 +151,7 @@ instance Quotient.finite {α : Sort _} [Finite α] (s : Setoid α) : Finite (Quo
 #align quotient.finite Quotient.finite
 -/
 
+#print Function.Embedding.finite /-
 instance Function.Embedding.finite {α β : Sort _} [Finite β] : Finite (α ↪ β) :=
   by
   cases' isEmpty_or_nonempty (α ↪ β) with _ h
@@ -159,14 +160,19 @@ instance Function.Embedding.finite {α β : Sort _} [Finite β] : Finite (α ↪
     haveI : Finite α := Finite.of_injective _ f.injective
     exact Finite.of_injective _ FunLike.coe_injective
 #align function.embedding.finite Function.Embedding.finite
+-/
 
+#print Equiv.finite_right /-
 instance Equiv.finite_right {α β : Sort _} [Finite β] : Finite (α ≃ β) :=
   Finite.of_injective Equiv.toEmbedding fun e₁ e₂ h => Equiv.ext <| by convert FunLike.congr_fun h
 #align equiv.finite_right Equiv.finite_right
+-/
 
+#print Equiv.finite_left /-
 instance Equiv.finite_left {α β : Sort _} [Finite α] : Finite (α ≃ β) :=
   Finite.of_equiv _ ⟨Equiv.symm, Equiv.symm, Equiv.symm_symm, Equiv.symm_symm⟩
 #align equiv.finite_left Equiv.finite_left
+-/
 
 instance [Finite α] {n : ℕ} : Finite (Sym α n) := by haveI := Fintype.ofFinite α; infer_instance
 

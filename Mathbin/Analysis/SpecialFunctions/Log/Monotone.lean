@@ -35,6 +35,7 @@ namespace Real
 
 variable {x y : ℝ}
 
+#print Real.log_mul_self_monotoneOn /-
 theorem log_mul_self_monotoneOn : MonotoneOn (fun x : ℝ => log x * x) {x | 1 ≤ x} :=
   by
   -- TODO: can be strengthened to exp (-1) ≤ x
@@ -45,7 +46,9 @@ theorem log_mul_self_monotoneOn : MonotoneOn (fun x : ℝ => log x * x) {x | 1 �
   refine' mul_le_mul ((log_le_log x_pos y_pos).mpr hxy) hxy (le_of_lt x_pos) _
   rwa [le_log_iff_exp_le y_pos, Real.exp_zero]
 #align real.log_mul_self_monotone_on Real.log_mul_self_monotoneOn
+-/
 
+#print Real.log_div_self_antitoneOn /-
 theorem log_div_self_antitoneOn : AntitoneOn (fun x : ℝ => log x / x) {x | exp 1 ≤ x} :=
   by
   simp only [AntitoneOn, mem_set_of_eq]
@@ -61,7 +64,9 @@ theorem log_div_self_antitoneOn : AntitoneOn (fun x : ℝ => log x / x) {x | exp
     _ ≤ log x * (y / x - 1) := (le_mul_of_one_le_left hyx hlogx)
     _ = log x / x * y - log x := by ring
 #align real.log_div_self_antitone_on Real.log_div_self_antitoneOn
+-/
 
+#print Real.log_div_self_rpow_antitoneOn /-
 theorem log_div_self_rpow_antitoneOn {a : ℝ} (ha : 0 < a) :
     AntitoneOn (fun x : ℝ => log x / x ^ a) {x | exp (1 / a) ≤ x} :=
   by
@@ -91,13 +96,16 @@ theorem log_div_self_rpow_antitoneOn {a : ℝ} (ha : 0 < a) :
       exact le_of_lt (exp_pos (1 / a))
     exact rpow_le_rpow x_nonneg hxy (le_of_lt ha)
 #align real.log_div_self_rpow_antitone_on Real.log_div_self_rpow_antitoneOn
+-/
 
+#print Real.log_div_sqrt_antitoneOn /-
 theorem log_div_sqrt_antitoneOn : AntitoneOn (fun x : ℝ => log x / sqrt x) {x | exp 2 ≤ x} :=
   by
   simp_rw [sqrt_eq_rpow]
   convert @log_div_self_rpow_antitone_on (1 / 2) (by norm_num)
   norm_num
 #align real.log_div_sqrt_antitone_on Real.log_div_sqrt_antitoneOn
+-/
 
 end Real
 

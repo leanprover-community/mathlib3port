@@ -29,6 +29,7 @@ open scoped Topology
 
 namespace Real
 
+#print Real.Icc_mem_vitaliFamily_at_right /-
 theorem Icc_mem_vitaliFamily_at_right {x y : ℝ} (hxy : x < y) :
     Icc x y ∈ (VitaliFamily (volume : Measure ℝ) 1).setsAt x :=
   by
@@ -36,6 +37,7 @@ theorem Icc_mem_vitaliFamily_at_right {x y : ℝ} (hxy : x < y) :
   refine' closed_ball_mem_vitali_family_of_dist_le_mul _ _ (by linarith)
   rw [dist_comm, Real.dist_eq, abs_of_nonneg] <;> linarith
 #align real.Icc_mem_vitali_family_at_right Real.Icc_mem_vitaliFamily_at_right
+-/
 
 #print Real.tendsto_Icc_vitaliFamily_right /-
 theorem tendsto_Icc_vitaliFamily_right (x : ℝ) :
@@ -51,6 +53,7 @@ theorem tendsto_Icc_vitaliFamily_right (x : ℝ) :
 #align real.tendsto_Icc_vitali_family_right Real.tendsto_Icc_vitaliFamily_right
 -/
 
+#print Real.Icc_mem_vitaliFamily_at_left /-
 theorem Icc_mem_vitaliFamily_at_left {x y : ℝ} (hxy : x < y) :
     Icc x y ∈ (VitaliFamily (volume : Measure ℝ) 1).setsAt y :=
   by
@@ -58,6 +61,7 @@ theorem Icc_mem_vitaliFamily_at_left {x y : ℝ} (hxy : x < y) :
   refine' closed_ball_mem_vitali_family_of_dist_le_mul _ _ (by linarith)
   rw [Real.dist_eq, abs_of_nonneg] <;> linarith
 #align real.Icc_mem_vitali_family_at_left Real.Icc_mem_vitaliFamily_at_left
+-/
 
 #print Real.tendsto_Icc_vitaliFamily_left /-
 theorem tendsto_Icc_vitaliFamily_left (x : ℝ) :

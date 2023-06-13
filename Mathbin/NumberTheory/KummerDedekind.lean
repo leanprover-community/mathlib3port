@@ -60,7 +60,6 @@ variable (R : Type _) {S : Type _} [CommRing R] [CommRing S] [Algebra R S]
 
 open Ideal Polynomial DoubleQuot UniqueFactorizationMonoid Algebra RingHom
 
--- mathport name: «expr < >»
 local notation:max R "<" x ">" => adjoin R ({x} : Set S)
 
 /-- Let `S / R` be a ring extension and `x : S`, then the conductor of `R<x>` is the

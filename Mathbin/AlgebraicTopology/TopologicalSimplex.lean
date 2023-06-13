@@ -33,20 +33,25 @@ open scoped Simplicial NNReal BigOperators Classical
 attribute [local instance] CategoryTheory.ConcreteCategory.hasCoeToSort
   CategoryTheory.ConcreteCategory.hasCoeToFun
 
+#print SimplexCategory.toTopObj /-
 /-- The topological simplex associated to `x : simplex_category`.
   This is the object part of the functor `simplex_category.to_Top`. -/
 def toTopObj (x : SimplexCategory) :=
   {f : x → ℝ≥0 | ∑ i, f i = 1}
 #align simplex_category.to_Top_obj SimplexCategory.toTopObj
+-/
 
 instance (x : SimplexCategory) : CoeFun x.toTopObj fun _ => x → ℝ≥0 :=
   ⟨fun f => (f : x → ℝ≥0)⟩
 
+#print SimplexCategory.toTopObj.ext /-
 @[ext]
 theorem toTopObj.ext {x : SimplexCategory} (f g : x.toTopObj) : (f : x → ℝ≥0) = g → f = g :=
   Subtype.ext
 #align simplex_category.to_Top_obj.ext SimplexCategory.toTopObj.ext
+-/
 
+#print SimplexCategory.toTopMap /-
 /-- A morphism in `simplex_category` induces a map on the associated topological spaces. -/
 def toTopMap {x y : SimplexCategory} (f : x ⟶ y) : x.toTopObj → y.toTopObj := fun g =>
   ⟨fun i => ∑ j in Finset.univ.filterₓ fun k => f k = i, g j,
@@ -66,13 +71,17 @@ def toTopMap {x y : SimplexCategory} (f : x ⟶ y) : x.toTopObj → y.toTopObj :
         Finset.mem_inter] at he 
       rw [← he.1, ← he.2]⟩
 #align simplex_category.to_Top_map SimplexCategory.toTopMap
+-/
 
+#print SimplexCategory.coe_toTopMap /-
 @[simp]
 theorem coe_toTopMap {x y : SimplexCategory} (f : x ⟶ y) (g : x.toTopObj) (i : y) :
     toTopMap f g i = ∑ j in Finset.univ.filterₓ fun k => f k = i, g j :=
   rfl
 #align simplex_category.coe_to_Top_map SimplexCategory.coe_toTopMap
+-/
 
+#print SimplexCategory.continuous_toTopMap /-
 @[continuity]
 theorem continuous_toTopMap {x y : SimplexCategory} (f : x ⟶ y) : Continuous (toTopMap f) :=
   Continuous.subtype_mk
@@ -80,6 +89,7 @@ theorem continuous_toTopMap {x y : SimplexCategory} (f : x ⟶ y) : Continuous (
       continuous_finset_sum _ fun j hj => (continuous_apply _).comp continuous_subtype_val)
     _
 #align simplex_category.continuous_to_Top_map SimplexCategory.continuous_toTopMap
+-/
 
 #print SimplexCategory.toTop /-
 /-- The functor associating the topological `n`-simplex to `[n] : simplex_category`. -/

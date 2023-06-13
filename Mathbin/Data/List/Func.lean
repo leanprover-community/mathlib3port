@@ -69,7 +69,6 @@ def set (a : α) : List α → ℕ → List α
 #align list.func.set List.Func.set
 -/
 
--- mathport name: list.func.set
 scoped notation as " {" m " ↦ " a "}" => List.Func.set a as m
 
 #print List.Func.get /-
@@ -116,6 +115,7 @@ def sub {α : Type u} [Zero α] [Sub α] : List α → List α → List α :=
 #align list.func.sub List.Func.sub
 -/
 
+#print List.Func.length_set /-
 -- set
 theorem length_set : ∀ {m : ℕ} {as : List α}, as {m ↦ a}.length = max as.length (m + 1)
   | 0, [] => rfl
@@ -123,6 +123,7 @@ theorem length_set : ∀ {m : ℕ} {as : List α}, as {m ↦ a}.length = max as.
   | m + 1, [] => by simp only [Set, Nat.zero_max, length, @length_set m]
   | m + 1, a :: as => by simp only [Set, Nat.max_succ_succ, length, @length_set m]
 #align list.func.length_set List.Func.length_set
+-/
 
 #print List.Func.get_nil /-
 @[simp]
@@ -149,6 +150,7 @@ theorem get_set {a : α} : ∀ {k : ℕ} {as : List α}, get k (as {k ↦ a}) = 
 #align list.func.get_set List.Func.get_set
 -/
 
+#print List.Func.eq_get_of_mem /-
 theorem eq_get_of_mem {a : α} : ∀ {as : List α}, a ∈ as → ∃ n : Nat, ∀ d : α, a = get n as
   | [], h => by cases h
   | b :: as, h => by
@@ -157,6 +159,7 @@ theorem eq_get_of_mem {a : α} : ∀ {as : List α}, a ∈ as → ∃ n : Nat, �
     · cases' eq_get_of_mem h with n h2
       exists n + 1; apply h2
 #align list.func.eq_get_of_mem List.Func.eq_get_of_mem
+-/
 
 #print List.Func.mem_get_of_le /-
 theorem mem_get_of_le : ∀ {n : ℕ} {as : List α}, n < as.length → get n as ∈ as
@@ -278,11 +281,13 @@ end Func
 -- so we close and open the namespace
 namespace Func
 
+#print List.Func.get_neg /-
 -- neg
 @[simp]
 theorem get_neg [AddGroup α] {k : ℕ} {as : List α} : @get α ⟨0⟩ k (neg as) = -@get α ⟨0⟩ k as := by
   unfold neg; rw [@get_map' α α ⟨0⟩]; apply neg_zero
 #align list.func.get_neg List.Func.get_neg
+-/
 
 #print List.Func.length_neg /-
 @[simp]
@@ -327,6 +332,7 @@ theorem get_pointwise [Inhabited γ] {f : α → β → γ} (h1 : f default defa
 #align list.func.get_pointwise List.Func.get_pointwise
 -/
 
+#print List.Func.length_pointwise /-
 theorem length_pointwise {f : α → β → γ} :
     ∀ {as : List α} {bs : List β}, (pointwise f as bs).length = max as.length bs.length
   | [], [] => rfl
@@ -336,24 +342,30 @@ theorem length_pointwise {f : α → β → γ} :
     simp only [pointwise, length, length_map, max_eq_left (Nat.zero_le (length as + 1))]
   | a :: as, b :: bs => by simp only [pointwise, length, Nat.max_succ_succ, @length_pointwise as bs]
 #align list.func.length_pointwise List.Func.length_pointwise
+-/
 
 end Func
 
 namespace Func
 
+#print List.Func.get_add /-
 -- add
 @[simp]
 theorem get_add {α : Type u} [AddMonoid α] {k : ℕ} {xs ys : List α} :
     @get α ⟨0⟩ k (add xs ys) = @get α ⟨0⟩ k xs + @get α ⟨0⟩ k ys := by apply get_pointwise;
   apply zero_add
 #align list.func.get_add List.Func.get_add
+-/
 
+#print List.Func.length_add /-
 @[simp]
 theorem length_add {α : Type u} [Zero α] [Add α] {xs ys : List α} :
     (add xs ys).length = max xs.length ys.length :=
   @length_pointwise α α α ⟨0⟩ ⟨0⟩ _ _ _
 #align list.func.length_add List.Func.length_add
+-/
 
+#print List.Func.nil_add /-
 @[simp]
 theorem nil_add {α : Type u} [AddMonoid α] (as : List α) : add [] as = as :=
   by
@@ -362,7 +374,9 @@ theorem nil_add {α : Type u} [AddMonoid α] (as : List α) : add [] as = as :=
   congr with x
   rw [zero_add, id]
 #align list.func.nil_add List.Func.nil_add
+-/
 
+#print List.Func.add_nil /-
 @[simp]
 theorem add_nil {α : Type u} [AddMonoid α] (as : List α) : add as [] = as :=
   by
@@ -371,7 +385,9 @@ theorem add_nil {α : Type u} [AddMonoid α] (as : List α) : add as [] = as :=
   congr with x
   rw [add_zero, id]
 #align list.func.add_nil List.Func.add_nil
+-/
 
+#print List.Func.map_add_map /-
 theorem map_add_map {α : Type u} [AddMonoid α] (f g : α → α) {as : List α} :
     add (as.map f) (as.map g) = as.map fun x => f x + g x :=
   by
@@ -387,20 +403,26 @@ theorem map_add_map {α : Type u} [AddMonoid α] (f g : α → α) {as : List α
   repeat' rw [get_eq_default_of_le m] <;> try rw [length_map]; apply h
   apply zero_add
 #align list.func.map_add_map List.Func.map_add_map
+-/
 
+#print List.Func.get_sub /-
 -- sub
 @[simp]
 theorem get_sub {α : Type u} [AddGroup α] {k : ℕ} {xs ys : List α} :
     @get α ⟨0⟩ k (sub xs ys) = @get α ⟨0⟩ k xs - @get α ⟨0⟩ k ys := by apply get_pointwise;
   apply sub_zero
 #align list.func.get_sub List.Func.get_sub
+-/
 
+#print List.Func.length_sub /-
 @[simp]
 theorem length_sub [Zero α] [Sub α] {xs ys : List α} :
     (sub xs ys).length = max xs.length ys.length :=
   @length_pointwise α α α ⟨0⟩ ⟨0⟩ _ _ _
 #align list.func.length_sub List.Func.length_sub
+-/
 
+#print List.Func.nil_sub /-
 @[simp]
 theorem nil_sub {α : Type _} [AddGroup α] (as : List α) : sub [] as = neg as :=
   by
@@ -408,7 +430,9 @@ theorem nil_sub {α : Type _} [AddGroup α] (as : List α) : sub [] as = neg as 
   congr with x
   rw [zero_sub]
 #align list.func.nil_sub List.Func.nil_sub
+-/
 
+#print List.Func.sub_nil /-
 @[simp]
 theorem sub_nil {α : Type _} [AddGroup α] (as : List α) : sub as [] = as :=
   by
@@ -417,6 +441,7 @@ theorem sub_nil {α : Type _} [AddGroup α] (as : List α) : sub as [] = as :=
   congr with x
   rw [sub_zero, id]
 #align list.func.sub_nil List.Func.sub_nil
+-/
 
 end Func
 

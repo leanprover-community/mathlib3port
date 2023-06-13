@@ -61,8 +61,7 @@ instance quotientStructure : L.Structure (Quotient s)
 
 variable (s)
 
-include s
-
+#print FirstOrder.Language.funMap_quotient_mk' /-
 theorem funMap_quotient_mk' {n : ℕ} (f : L.Functions n) (x : Fin n → M) :
     (funMap f fun i => ⟦x i⟧) = ⟦@funMap _ _ ps.toStructure _ f x⟧ :=
   by
@@ -71,7 +70,9 @@ theorem funMap_quotient_mk' {n : ℕ} (f : L.Functions n) (x : Fin n → M) :
       _
   rw [Quotient.finChoice_eq, Quotient.map_mk]
 #align first_order.language.fun_map_quotient_mk FirstOrder.Language.funMap_quotient_mk'
+-/
 
+#print FirstOrder.Language.relMap_quotient_mk' /-
 theorem relMap_quotient_mk' {n : ℕ} (r : L.Relations n) (x : Fin n → M) :
     (RelMap r fun i => ⟦x i⟧) ↔ @RelMap _ _ ps.toStructure _ r x :=
   by
@@ -80,7 +81,9 @@ theorem relMap_quotient_mk' {n : ℕ} (r : L.Relations n) (x : Fin n → M) :
       _
   rw [Quotient.finChoice_eq, Quotient.lift_mk]
 #align first_order.language.rel_map_quotient_mk FirstOrder.Language.relMap_quotient_mk'
+-/
 
+#print FirstOrder.Language.Term.realize_quotient_mk' /-
 theorem Term.realize_quotient_mk' {β : Type _} (t : L.term β) (x : β → M) :
     (t.realize fun i => ⟦x i⟧) = ⟦@Term.realize _ _ ps.toStructure _ x t⟧ :=
   by
@@ -88,6 +91,7 @@ theorem Term.realize_quotient_mk' {β : Type _} (t : L.term β) (x : β → M) :
   · rfl
   · simp only [ih, fun_map_quotient_mk, term.realize]
 #align first_order.language.term.realize_quotient_mk FirstOrder.Language.Term.realize_quotient_mk'
+-/
 
 end Language
 

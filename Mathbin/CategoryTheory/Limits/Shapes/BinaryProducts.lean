@@ -168,15 +168,19 @@ def pair (X Y : C) : Discrete WalkingPair ⥤ C :=
 #align category_theory.limits.pair CategoryTheory.Limits.pair
 -/
 
+#print CategoryTheory.Limits.pair_obj_left /-
 @[simp]
 theorem pair_obj_left (X Y : C) : (pair X Y).obj ⟨left⟩ = X :=
   rfl
 #align category_theory.limits.pair_obj_left CategoryTheory.Limits.pair_obj_left
+-/
 
+#print CategoryTheory.Limits.pair_obj_right /-
 @[simp]
 theorem pair_obj_right (X Y : C) : (pair X Y).obj ⟨right⟩ = Y :=
   rfl
 #align category_theory.limits.pair_obj_right CategoryTheory.Limits.pair_obj_right
+-/
 
 section
 
@@ -185,46 +189,58 @@ variable {F G : Discrete WalkingPair ⥤ C} (f : F.obj ⟨left⟩ ⟶ G.obj ⟨l
 
 attribute [local tidy] tactic.discrete_cases
 
+#print CategoryTheory.Limits.mapPair /-
 /-- The natural transformation between two functors out of the
  walking pair, specified by its
 components. -/
 def mapPair : F ⟶ G where app j := Discrete.recOn j fun j => WalkingPair.casesOn j f g
 #align category_theory.limits.map_pair CategoryTheory.Limits.mapPair
+-/
 
+#print CategoryTheory.Limits.mapPair_left /-
 @[simp]
 theorem mapPair_left : (mapPair f g).app ⟨left⟩ = f :=
   rfl
 #align category_theory.limits.map_pair_left CategoryTheory.Limits.mapPair_left
+-/
 
+#print CategoryTheory.Limits.mapPair_right /-
 @[simp]
 theorem mapPair_right : (mapPair f g).app ⟨right⟩ = g :=
   rfl
 #align category_theory.limits.map_pair_right CategoryTheory.Limits.mapPair_right
+-/
 
+#print CategoryTheory.Limits.mapPairIso /-
 /-- The natural isomorphism between two functors out of the walking pair, specified by its
 components. -/
 @[simps]
 def mapPairIso (f : F.obj ⟨left⟩ ≅ G.obj ⟨left⟩) (g : F.obj ⟨right⟩ ≅ G.obj ⟨right⟩) : F ≅ G :=
   NatIso.ofComponents (fun j => Discrete.recOn j fun j => WalkingPair.casesOn j f g) (by tidy)
 #align category_theory.limits.map_pair_iso CategoryTheory.Limits.mapPairIso
+-/
 
 end
 
+#print CategoryTheory.Limits.diagramIsoPair /-
 /-- Every functor out of the walking pair is naturally isomorphic (actually, equal) to a `pair` -/
 @[simps]
 def diagramIsoPair (F : Discrete WalkingPair ⥤ C) :
     F ≅ pair (F.obj ⟨WalkingPair.left⟩) (F.obj ⟨WalkingPair.right⟩) :=
   mapPairIso (Iso.refl _) (Iso.refl _)
 #align category_theory.limits.diagram_iso_pair CategoryTheory.Limits.diagramIsoPair
+-/
 
 section
 
 variable {D : Type u} [Category.{v} D]
 
+#print CategoryTheory.Limits.pairComp /-
 /-- The natural isomorphism between `pair X Y ⋙ F` and `pair (F.obj X) (F.obj Y)`. -/
 def pairComp (X Y : C) (F : C ⥤ D) : pair X Y ⋙ F ≅ pair (F.obj X) (F.obj Y) :=
   diagramIsoPair _
 #align category_theory.limits.pair_comp CategoryTheory.Limits.pairComp
+-/
 
 end
 
@@ -235,26 +251,35 @@ abbrev BinaryFan (X Y : C) :=
 #align category_theory.limits.binary_fan CategoryTheory.Limits.BinaryFan
 -/
 
+#print CategoryTheory.Limits.BinaryFan.fst /-
 /-- The first projection of a binary fan. -/
 abbrev BinaryFan.fst {X Y : C} (s : BinaryFan X Y) :=
   s.π.app ⟨WalkingPair.left⟩
 #align category_theory.limits.binary_fan.fst CategoryTheory.Limits.BinaryFan.fst
+-/
 
+#print CategoryTheory.Limits.BinaryFan.snd /-
 /-- The second projection of a binary fan. -/
 abbrev BinaryFan.snd {X Y : C} (s : BinaryFan X Y) :=
   s.π.app ⟨WalkingPair.right⟩
 #align category_theory.limits.binary_fan.snd CategoryTheory.Limits.BinaryFan.snd
+-/
 
+#print CategoryTheory.Limits.BinaryFan.π_app_left /-
 @[simp]
 theorem BinaryFan.π_app_left {X Y : C} (s : BinaryFan X Y) : s.π.app ⟨WalkingPair.left⟩ = s.fst :=
   rfl
 #align category_theory.limits.binary_fan.π_app_left CategoryTheory.Limits.BinaryFan.π_app_left
+-/
 
+#print CategoryTheory.Limits.BinaryFan.π_app_right /-
 @[simp]
 theorem BinaryFan.π_app_right {X Y : C} (s : BinaryFan X Y) : s.π.app ⟨WalkingPair.right⟩ = s.snd :=
   rfl
 #align category_theory.limits.binary_fan.π_app_right CategoryTheory.Limits.BinaryFan.π_app_right
+-/
 
+#print CategoryTheory.Limits.BinaryFan.IsLimit.mk /-
 /-- A convenient way to show that a binary fan is a limit. -/
 def BinaryFan.IsLimit.mk {X Y : C} (s : BinaryFan X Y)
     (lift : ∀ {T : C} (f : T ⟶ X) (g : T ⟶ Y), T ⟶ s.pt)
@@ -268,11 +293,14 @@ def BinaryFan.IsLimit.mk {X Y : C} (s : BinaryFan X Y)
     (by rintro t (rfl | rfl); · exact hl₁ _ _; · exact hl₂ _ _) fun t m h =>
     uniq _ _ _ (h ⟨WalkingPair.left⟩) (h ⟨WalkingPair.right⟩)
 #align category_theory.limits.binary_fan.is_limit.mk CategoryTheory.Limits.BinaryFan.IsLimit.mk
+-/
 
+#print CategoryTheory.Limits.BinaryFan.IsLimit.hom_ext /-
 theorem BinaryFan.IsLimit.hom_ext {W X Y : C} {s : BinaryFan X Y} (h : IsLimit s) {f g : W ⟶ s.pt}
     (h₁ : f ≫ s.fst = g ≫ s.fst) (h₂ : f ≫ s.snd = g ≫ s.snd) : f = g :=
   h.hom_ext fun j => Discrete.recOn j fun j => WalkingPair.casesOn j h₁ h₂
 #align category_theory.limits.binary_fan.is_limit.hom_ext CategoryTheory.Limits.BinaryFan.IsLimit.hom_ext
+-/
 
 #print CategoryTheory.Limits.BinaryCofan /-
 /-- A binary cofan is just a cocone on a diagram indexing a coproduct. -/
@@ -281,28 +309,37 @@ abbrev BinaryCofan (X Y : C) :=
 #align category_theory.limits.binary_cofan CategoryTheory.Limits.BinaryCofan
 -/
 
+#print CategoryTheory.Limits.BinaryCofan.inl /-
 /-- The first inclusion of a binary cofan. -/
 abbrev BinaryCofan.inl {X Y : C} (s : BinaryCofan X Y) :=
   s.ι.app ⟨WalkingPair.left⟩
 #align category_theory.limits.binary_cofan.inl CategoryTheory.Limits.BinaryCofan.inl
+-/
 
+#print CategoryTheory.Limits.BinaryCofan.inr /-
 /-- The second inclusion of a binary cofan. -/
 abbrev BinaryCofan.inr {X Y : C} (s : BinaryCofan X Y) :=
   s.ι.app ⟨WalkingPair.right⟩
 #align category_theory.limits.binary_cofan.inr CategoryTheory.Limits.BinaryCofan.inr
+-/
 
+#print CategoryTheory.Limits.BinaryCofan.ι_app_left /-
 @[simp]
 theorem BinaryCofan.ι_app_left {X Y : C} (s : BinaryCofan X Y) :
     s.ι.app ⟨WalkingPair.left⟩ = s.inl :=
   rfl
 #align category_theory.limits.binary_cofan.ι_app_left CategoryTheory.Limits.BinaryCofan.ι_app_left
+-/
 
+#print CategoryTheory.Limits.BinaryCofan.ι_app_right /-
 @[simp]
 theorem BinaryCofan.ι_app_right {X Y : C} (s : BinaryCofan X Y) :
     s.ι.app ⟨WalkingPair.right⟩ = s.inr :=
   rfl
 #align category_theory.limits.binary_cofan.ι_app_right CategoryTheory.Limits.BinaryCofan.ι_app_right
+-/
 
+#print CategoryTheory.Limits.BinaryCofan.IsColimit.mk /-
 /-- A convenient way to show that a binary cofan is a colimit. -/
 def BinaryCofan.IsColimit.mk {X Y : C} (s : BinaryCofan X Y)
     (desc : ∀ {T : C} (f : X ⟶ T) (g : Y ⟶ T), s.pt ⟶ T)
@@ -316,11 +353,14 @@ def BinaryCofan.IsColimit.mk {X Y : C} (s : BinaryCofan X Y)
     (by rintro t (rfl | rfl); · exact hd₁ _ _; · exact hd₂ _ _) fun t m h =>
     uniq _ _ _ (h ⟨WalkingPair.left⟩) (h ⟨WalkingPair.right⟩)
 #align category_theory.limits.binary_cofan.is_colimit.mk CategoryTheory.Limits.BinaryCofan.IsColimit.mk
+-/
 
+#print CategoryTheory.Limits.BinaryCofan.IsColimit.hom_ext /-
 theorem BinaryCofan.IsColimit.hom_ext {W X Y : C} {s : BinaryCofan X Y} (h : IsColimit s)
     {f g : s.pt ⟶ W} (h₁ : s.inl ≫ f = s.inl ≫ g) (h₂ : s.inr ≫ f = s.inr ≫ g) : f = g :=
   h.hom_ext fun j => Discrete.recOn j fun j => WalkingPair.casesOn j h₁ h₂
 #align category_theory.limits.binary_cofan.is_colimit.hom_ext CategoryTheory.Limits.BinaryCofan.IsColimit.hom_ext
+-/
 
 variable {X Y : C}
 
@@ -350,27 +390,36 @@ def BinaryCofan.mk {P : C} (ι₁ : X ⟶ P) (ι₂ : Y ⟶ P) : BinaryCofan X Y
 
 end
 
+#print CategoryTheory.Limits.BinaryFan.mk_fst /-
 @[simp]
 theorem BinaryFan.mk_fst {P : C} (π₁ : P ⟶ X) (π₂ : P ⟶ Y) : (BinaryFan.mk π₁ π₂).fst = π₁ :=
   rfl
 #align category_theory.limits.binary_fan.mk_fst CategoryTheory.Limits.BinaryFan.mk_fst
+-/
 
+#print CategoryTheory.Limits.BinaryFan.mk_snd /-
 @[simp]
 theorem BinaryFan.mk_snd {P : C} (π₁ : P ⟶ X) (π₂ : P ⟶ Y) : (BinaryFan.mk π₁ π₂).snd = π₂ :=
   rfl
 #align category_theory.limits.binary_fan.mk_snd CategoryTheory.Limits.BinaryFan.mk_snd
+-/
 
+#print CategoryTheory.Limits.BinaryCofan.mk_inl /-
 @[simp]
 theorem BinaryCofan.mk_inl {P : C} (ι₁ : X ⟶ P) (ι₂ : Y ⟶ P) : (BinaryCofan.mk ι₁ ι₂).inl = ι₁ :=
   rfl
 #align category_theory.limits.binary_cofan.mk_inl CategoryTheory.Limits.BinaryCofan.mk_inl
+-/
 
+#print CategoryTheory.Limits.BinaryCofan.mk_inr /-
 @[simp]
 theorem BinaryCofan.mk_inr {P : C} (ι₁ : X ⟶ P) (ι₂ : Y ⟶ P) : (BinaryCofan.mk ι₁ ι₂).inr = ι₂ :=
   rfl
 #align category_theory.limits.binary_cofan.mk_inr CategoryTheory.Limits.BinaryCofan.mk_inr
+-/
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `discrete_cases #[] -/
+#print CategoryTheory.Limits.isoBinaryFanMk /-
 /-- Every `binary_fan` is isomorphic to an application of `binary_fan.mk`. -/
 def isoBinaryFanMk {X Y : C} (c : BinaryFan X Y) : c ≅ BinaryFan.mk c.fst c.snd :=
   Cones.ext (Iso.refl _) fun j => by
@@ -379,8 +428,10 @@ def isoBinaryFanMk {X Y : C} (c : BinaryFan X Y) : c ≅ BinaryFan.mk c.fst c.sn
         cases j <;>
       tidy
 #align category_theory.limits.iso_binary_fan_mk CategoryTheory.Limits.isoBinaryFanMk
+-/
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `discrete_cases #[] -/
+#print CategoryTheory.Limits.isoBinaryCofanMk /-
 /-- Every `binary_fan` is isomorphic to an application of `binary_fan.mk`. -/
 def isoBinaryCofanMk {X Y : C} (c : BinaryCofan X Y) : c ≅ BinaryCofan.mk c.inl c.inr :=
   Cocones.ext (Iso.refl _) fun j => by
@@ -389,6 +440,7 @@ def isoBinaryCofanMk {X Y : C} (c : BinaryCofan X Y) : c ≅ BinaryCofan.mk c.in
         cases j <;>
       tidy
 #align category_theory.limits.iso_binary_cofan_mk CategoryTheory.Limits.isoBinaryCofanMk
+-/
 
 #print CategoryTheory.Limits.BinaryFan.isLimitMk /-
 /-- This is a more convenient formulation to show that a `binary_fan` constructed using
@@ -425,6 +477,7 @@ def BinaryCofan.isColimitMk {W : C} {inl : X ⟶ W} {inr : Y ⟶ W}
 #align category_theory.limits.binary_cofan.is_colimit_mk CategoryTheory.Limits.BinaryCofan.isColimitMk
 -/
 
+#print CategoryTheory.Limits.BinaryFan.IsLimit.lift' /-
 /-- If `s` is a limit binary fan over `X` and `Y`, then every pair of morphisms `f : W ⟶ X` and
     `g : W ⟶ Y` induces a morphism `l : W ⟶ s.X` satisfying `l ≫ s.fst = f` and `l ≫ s.snd = g`.
     -/
@@ -433,7 +486,9 @@ def BinaryFan.IsLimit.lift' {W X Y : C} {s : BinaryFan X Y} (h : IsLimit s) (f :
     (g : W ⟶ Y) : { l : W ⟶ s.pt // l ≫ s.fst = f ∧ l ≫ s.snd = g } :=
   ⟨h.lift <| BinaryFan.mk f g, h.fac _ _, h.fac _ _⟩
 #align category_theory.limits.binary_fan.is_limit.lift' CategoryTheory.Limits.BinaryFan.IsLimit.lift'
+-/
 
+#print CategoryTheory.Limits.BinaryCofan.IsColimit.desc' /-
 /-- If `s` is a colimit binary cofan over `X` and `Y`,, then every pair of morphisms `f : X ⟶ W` and
     `g : Y ⟶ W` induces a morphism `l : s.X ⟶ W` satisfying `s.inl ≫ l = f` and `s.inr ≫ l = g`.
     -/
@@ -442,7 +497,9 @@ def BinaryCofan.IsColimit.desc' {W X Y : C} {s : BinaryCofan X Y} (h : IsColimit
     (g : Y ⟶ W) : { l : s.pt ⟶ W // s.inl ≫ l = f ∧ s.inr ≫ l = g } :=
   ⟨h.desc <| BinaryCofan.mk f g, h.fac _ _, h.fac _ _⟩
 #align category_theory.limits.binary_cofan.is_colimit.desc' CategoryTheory.Limits.BinaryCofan.IsColimit.desc'
+-/
 
+#print CategoryTheory.Limits.BinaryFan.isLimitFlip /-
 /-- Binary products are symmetric. -/
 def BinaryFan.isLimitFlip {X Y : C} {c : BinaryFan X Y} (hc : IsLimit c) :
     IsLimit (BinaryFan.mk c.snd c.fst) :=
@@ -452,7 +509,9 @@ def BinaryFan.isLimitFlip {X Y : C} {c : BinaryFan X Y} (hc : IsLimit c) :
       (e₂.trans (hc.fac (BinaryFan.mk s.snd s.fst) ⟨WalkingPair.left⟩).symm)
       (e₁.trans (hc.fac (BinaryFan.mk s.snd s.fst) ⟨WalkingPair.right⟩).symm)
 #align category_theory.limits.binary_fan.is_limit_flip CategoryTheory.Limits.BinaryFan.isLimitFlip
+-/
 
+#print CategoryTheory.Limits.BinaryFan.isLimit_iff_isIso_fst /-
 theorem BinaryFan.isLimit_iff_isIso_fst {X Y : C} (h : IsTerminal Y) (c : BinaryFan X Y) :
     Nonempty (IsLimit c) ↔ IsIso c.fst := by
   constructor
@@ -468,7 +527,9 @@ theorem BinaryFan.isLimit_iff_isIso_fst {X Y : C} (h : IsTerminal Y) (c : Binary
       ⟨binary_fan.is_limit.mk _ (fun _ f _ => f ≫ inv c.fst) (fun _ _ _ => by simp)
           (fun _ _ _ => h.hom_ext _ _) fun _ _ _ _ e _ => by simp [← e]⟩
 #align category_theory.limits.binary_fan.is_limit_iff_is_iso_fst CategoryTheory.Limits.BinaryFan.isLimit_iff_isIso_fst
+-/
 
+#print CategoryTheory.Limits.BinaryFan.isLimit_iff_isIso_snd /-
 theorem BinaryFan.isLimit_iff_isIso_snd {X Y : C} (h : IsTerminal X) (c : BinaryFan X Y) :
     Nonempty (IsLimit c) ↔ IsIso c.snd :=
   by
@@ -477,7 +538,9 @@ theorem BinaryFan.isLimit_iff_isIso_snd {X Y : C} (h : IsTerminal X) (c : Binary
     ⟨fun h => ⟨binary_fan.is_limit_flip h.some⟩, fun h =>
       ⟨(binary_fan.is_limit_flip h.some).ofIsoLimit (iso_binary_fan_mk c).symm⟩⟩
 #align category_theory.limits.binary_fan.is_limit_iff_is_iso_snd CategoryTheory.Limits.BinaryFan.isLimit_iff_isIso_snd
+-/
 
+#print CategoryTheory.Limits.BinaryFan.isLimitCompLeftIso /-
 /-- If `X' ≅ X`, then `X × Y` also is the product of `X'` and `Y`. -/
 noncomputable def BinaryFan.isLimitCompLeftIso {X Y X' : C} (c : BinaryFan X Y) (f : X ⟶ X')
     [IsIso f] (h : IsLimit c) : IsLimit (BinaryFan.mk (c.fst ≫ f) c.snd) :=
@@ -488,13 +551,17 @@ noncomputable def BinaryFan.isLimitCompLeftIso {X Y X' : C} (c : BinaryFan X Y) 
   · intro s; simp
   · intro s m e₁ e₂; apply binary_fan.is_limit.hom_ext h <;> simpa
 #align category_theory.limits.binary_fan.is_limit_comp_left_iso CategoryTheory.Limits.BinaryFan.isLimitCompLeftIso
+-/
 
+#print CategoryTheory.Limits.BinaryFan.isLimitCompRightIso /-
 /-- If `Y' ≅ Y`, then `X x Y` also is the product of `X` and `Y'`. -/
 noncomputable def BinaryFan.isLimitCompRightIso {X Y Y' : C} (c : BinaryFan X Y) (f : Y ⟶ Y')
     [IsIso f] (h : IsLimit c) : IsLimit (BinaryFan.mk c.fst (c.snd ≫ f)) :=
   BinaryFan.isLimitFlip <| BinaryFan.isLimitCompLeftIso _ f (BinaryFan.isLimitFlip h)
 #align category_theory.limits.binary_fan.is_limit_comp_right_iso CategoryTheory.Limits.BinaryFan.isLimitCompRightIso
+-/
 
+#print CategoryTheory.Limits.BinaryCofan.isColimitFlip /-
 /-- Binary coproducts are symmetric. -/
 def BinaryCofan.isColimitFlip {X Y : C} {c : BinaryCofan X Y} (hc : IsColimit c) :
     IsColimit (BinaryCofan.mk c.inr c.inl) :=
@@ -504,7 +571,9 @@ def BinaryCofan.isColimitFlip {X Y : C} {c : BinaryCofan X Y} (hc : IsColimit c)
       (e₂.trans (hc.fac (BinaryCofan.mk s.inr s.inl) ⟨WalkingPair.left⟩).symm)
       (e₁.trans (hc.fac (BinaryCofan.mk s.inr s.inl) ⟨WalkingPair.right⟩).symm)
 #align category_theory.limits.binary_cofan.is_colimit_flip CategoryTheory.Limits.BinaryCofan.isColimitFlip
+-/
 
+#print CategoryTheory.Limits.BinaryCofan.isColimit_iff_isIso_inl /-
 theorem BinaryCofan.isColimit_iff_isIso_inl {X Y : C} (h : IsInitial Y) (c : BinaryCofan X Y) :
     Nonempty (IsColimit c) ↔ IsIso c.inl := by
   constructor
@@ -517,7 +586,9 @@ theorem BinaryCofan.isColimit_iff_isIso_inl {X Y : C} (h : IsInitial Y) (c : Bin
           (fun _ _ _ => is_iso.hom_inv_id_assoc _ _) (fun _ _ _ => h.hom_ext _ _) fun _ _ _ _ e _ =>
           (is_iso.eq_inv_comp _).mpr e⟩
 #align category_theory.limits.binary_cofan.is_colimit_iff_is_iso_inl CategoryTheory.Limits.BinaryCofan.isColimit_iff_isIso_inl
+-/
 
+#print CategoryTheory.Limits.BinaryCofan.isColimit_iff_isIso_inr /-
 theorem BinaryCofan.isColimit_iff_isIso_inr {X Y : C} (h : IsInitial X) (c : BinaryCofan X Y) :
     Nonempty (IsColimit c) ↔ IsIso c.inr :=
   by
@@ -526,7 +597,9 @@ theorem BinaryCofan.isColimit_iff_isIso_inr {X Y : C} (h : IsInitial X) (c : Bin
     ⟨fun h => ⟨binary_cofan.is_colimit_flip h.some⟩, fun h =>
       ⟨(binary_cofan.is_colimit_flip h.some).ofIsoColimit (iso_binary_cofan_mk c).symm⟩⟩
 #align category_theory.limits.binary_cofan.is_colimit_iff_is_iso_inr CategoryTheory.Limits.BinaryCofan.isColimit_iff_isIso_inr
+-/
 
+#print CategoryTheory.Limits.BinaryCofan.isColimitCompLeftIso /-
 /-- If `X' ≅ X`, then `X ⨿ Y` also is the coproduct of `X'` and `Y`. -/
 noncomputable def BinaryCofan.isColimitCompLeftIso {X Y X' : C} (c : BinaryCofan X Y) (f : X' ⟶ X)
     [IsIso f] (h : IsColimit c) : IsColimit (BinaryCofan.mk (f ≫ c.inl) c.inr) :=
@@ -540,12 +613,15 @@ noncomputable def BinaryCofan.isColimitCompLeftIso {X Y X' : C} (c : BinaryCofan
     · rw [← cancel_epi f]; simpa using e₁
     · simpa
 #align category_theory.limits.binary_cofan.is_colimit_comp_left_iso CategoryTheory.Limits.BinaryCofan.isColimitCompLeftIso
+-/
 
+#print CategoryTheory.Limits.BinaryCofan.isColimitCompRightIso /-
 /-- If `Y' ≅ Y`, then `X ⨿ Y` also is the coproduct of `X` and `Y'`. -/
 noncomputable def BinaryCofan.isColimitCompRightIso {X Y Y' : C} (c : BinaryCofan X Y) (f : Y' ⟶ Y)
     [IsIso f] (h : IsColimit c) : IsColimit (BinaryCofan.mk c.inl (f ≫ c.inr)) :=
   BinaryCofan.isColimitFlip <| BinaryCofan.isColimitCompLeftIso _ f (BinaryCofan.isColimitFlip h)
 #align category_theory.limits.binary_cofan.is_colimit_comp_right_iso CategoryTheory.Limits.BinaryCofan.isColimitCompRightIso
+-/
 
 #print CategoryTheory.Limits.HasBinaryProduct /-
 /-- An abbreviation for `has_limit (pair X Y)`. -/
@@ -577,10 +653,8 @@ abbrev coprod (X Y : C) [HasBinaryCoproduct X Y] :=
 #align category_theory.limits.coprod CategoryTheory.Limits.coprod
 -/
 
--- mathport name: «expr ⨯ »
 notation:20 X " ⨯ " Y:20 => prod X Y
 
--- mathport name: «expr ⨿ »
 notation:20 X " ⨿ " Y:20 => coprod X Y
 
 #print CategoryTheory.Limits.prod.fst /-
@@ -1356,11 +1430,13 @@ def prod.functor : C ⥤ C ⥤ C
 #align category_theory.limits.prod.functor CategoryTheory.Limits.prod.functor
 -/
 
+#print CategoryTheory.Limits.prod.functorLeftComp /-
 /-- The product functor can be decomposed. -/
 def prod.functorLeftComp (X Y : C) :
     prod.functor.obj (X ⨯ Y) ≅ prod.functor.obj Y ⋙ prod.functor.obj X :=
   NatIso.ofComponents (prod.associator _ _) (by tidy)
 #align category_theory.limits.prod.functor_left_comp CategoryTheory.Limits.prod.functorLeftComp
+-/
 
 end ProdFunctor
 
@@ -1380,11 +1456,13 @@ def coprod.functor : C ⥤ C ⥤ C
 #align category_theory.limits.coprod.functor CategoryTheory.Limits.coprod.functor
 -/
 
+#print CategoryTheory.Limits.coprod.functorLeftComp /-
 /-- The coproduct functor can be decomposed. -/
 def coprod.functorLeftComp (X Y : C) :
     coprod.functor.obj (X ⨿ Y) ≅ coprod.functor.obj Y ⋙ coprod.functor.obj X :=
   NatIso.ofComponents (coprod.associator _ _) (by tidy)
 #align category_theory.limits.coprod.functor_left_comp CategoryTheory.Limits.coprod.functorLeftComp
+-/
 
 end CoprodFunctor
 
@@ -1400,6 +1478,7 @@ variable [HasBinaryProduct A B] [HasBinaryProduct A' B']
 
 variable [HasBinaryProduct (F.obj A) (F.obj B)] [HasBinaryProduct (F.obj A') (F.obj B')]
 
+#print CategoryTheory.Limits.prodComparison /-
 /-- The product comparison morphism.
 
 In `category_theory/limits/preserves` we show this is always an iso iff F preserves binary products.
@@ -1408,17 +1487,23 @@ def prodComparison (F : C ⥤ D) (A B : C) [HasBinaryProduct A B]
     [HasBinaryProduct (F.obj A) (F.obj B)] : F.obj (A ⨯ B) ⟶ F.obj A ⨯ F.obj B :=
   prod.lift (F.map prod.fst) (F.map prod.snd)
 #align category_theory.limits.prod_comparison CategoryTheory.Limits.prodComparison
+-/
 
+#print CategoryTheory.Limits.prodComparison_fst /-
 @[simp, reassoc]
 theorem prodComparison_fst : prodComparison F A B ≫ prod.fst = F.map prod.fst :=
   prod.lift_fst _ _
 #align category_theory.limits.prod_comparison_fst CategoryTheory.Limits.prodComparison_fst
+-/
 
+#print CategoryTheory.Limits.prodComparison_snd /-
 @[simp, reassoc]
 theorem prodComparison_snd : prodComparison F A B ≫ prod.snd = F.map prod.snd :=
   prod.lift_snd _ _
 #align category_theory.limits.prod_comparison_snd CategoryTheory.Limits.prodComparison_snd
+-/
 
+#print CategoryTheory.Limits.prodComparison_natural /-
 /-- Naturality of the prod_comparison morphism in both arguments. -/
 @[reassoc]
 theorem prodComparison_natural (f : A ⟶ A') (g : B ⟶ B') :
@@ -1428,7 +1513,9 @@ theorem prodComparison_natural (f : A ⟶ A') (g : B ⟶ B') :
   rw [prod_comparison, prod_comparison, prod.lift_map, ← F.map_comp, ← F.map_comp, prod.comp_lift, ←
     F.map_comp, Prod.map_fst, ← F.map_comp, Prod.map_snd]
 #align category_theory.limits.prod_comparison_natural CategoryTheory.Limits.prodComparison_natural
+-/
 
+#print CategoryTheory.Limits.prodComparisonNatTrans /-
 /-- The product comparison morphism from `F(A ⨯ -)` to `FA ⨯ F-`, whose components are given by
 `prod_comparison`.
 -/
@@ -1439,17 +1526,23 @@ def prodComparisonNatTrans [HasBinaryProducts C] [HasBinaryProducts D] (F : C �
   app B := prodComparison F A B
   naturality' B B' f := by simp [prod_comparison_natural]
 #align category_theory.limits.prod_comparison_nat_trans CategoryTheory.Limits.prodComparisonNatTrans
+-/
 
+#print CategoryTheory.Limits.inv_prodComparison_map_fst /-
 @[reassoc]
 theorem inv_prodComparison_map_fst [IsIso (prodComparison F A B)] :
     inv (prodComparison F A B) ≫ F.map prod.fst = prod.fst := by simp [is_iso.inv_comp_eq]
 #align category_theory.limits.inv_prod_comparison_map_fst CategoryTheory.Limits.inv_prodComparison_map_fst
+-/
 
+#print CategoryTheory.Limits.inv_prodComparison_map_snd /-
 @[reassoc]
 theorem inv_prodComparison_map_snd [IsIso (prodComparison F A B)] :
     inv (prodComparison F A B) ≫ F.map prod.snd = prod.snd := by simp [is_iso.inv_comp_eq]
 #align category_theory.limits.inv_prod_comparison_map_snd CategoryTheory.Limits.inv_prodComparison_map_snd
+-/
 
+#print CategoryTheory.Limits.prodComparison_inv_natural /-
 /-- If the product comparison morphism is an iso, its inverse is natural. -/
 @[reassoc]
 theorem prodComparison_inv_natural (f : A ⟶ A') (g : B ⟶ B') [IsIso (prodComparison F A B)]
@@ -1458,7 +1551,9 @@ theorem prodComparison_inv_natural (f : A ⟶ A') (g : B ⟶ B') [IsIso (prodCom
       prod.map (F.map f) (F.map g) ≫ inv (prodComparison F A' B') :=
   by rw [is_iso.eq_comp_inv, category.assoc, is_iso.inv_comp_eq, prod_comparison_natural]
 #align category_theory.limits.prod_comparison_inv_natural CategoryTheory.Limits.prodComparison_inv_natural
+-/
 
+#print CategoryTheory.Limits.prodComparisonNatIso /-
 /-- The natural isomorphism `F(A ⨯ -) ≅ FA ⨯ F-`, provided each `prod_comparison F A B` is an
 isomorphism (as `B` changes).
 -/
@@ -1467,6 +1562,7 @@ def prodComparisonNatIso [HasBinaryProducts C] [HasBinaryProducts D] (A : C)
     [∀ B, IsIso (prodComparison F A B)] : prod.functor.obj A ⋙ F ≅ F ⋙ prod.functor.obj (F.obj A) :=
   { @asIso _ _ _ _ _ (NatIso.isIso_of_isIso_app ⟨_, _⟩) with Hom := prodComparisonNatTrans F A }
 #align category_theory.limits.prod_comparison_nat_iso CategoryTheory.Limits.prodComparisonNatIso
+-/
 
 end ProdComparison
 
@@ -1482,6 +1578,7 @@ variable [HasBinaryCoproduct A B] [HasBinaryCoproduct A' B']
 
 variable [HasBinaryCoproduct (F.obj A) (F.obj B)] [HasBinaryCoproduct (F.obj A') (F.obj B')]
 
+#print CategoryTheory.Limits.coprodComparison /-
 /-- The coproduct comparison morphism.
 
 In `category_theory/limits/preserves` we show
@@ -1491,17 +1588,23 @@ def coprodComparison (F : C ⥤ D) (A B : C) [HasBinaryCoproduct A B]
     [HasBinaryCoproduct (F.obj A) (F.obj B)] : F.obj A ⨿ F.obj B ⟶ F.obj (A ⨿ B) :=
   coprod.desc (F.map coprod.inl) (F.map coprod.inr)
 #align category_theory.limits.coprod_comparison CategoryTheory.Limits.coprodComparison
+-/
 
+#print CategoryTheory.Limits.coprodComparison_inl /-
 @[simp, reassoc]
 theorem coprodComparison_inl : coprod.inl ≫ coprodComparison F A B = F.map coprod.inl :=
   coprod.inl_desc _ _
 #align category_theory.limits.coprod_comparison_inl CategoryTheory.Limits.coprodComparison_inl
+-/
 
+#print CategoryTheory.Limits.coprodComparison_inr /-
 @[simp, reassoc]
 theorem coprodComparison_inr : coprod.inr ≫ coprodComparison F A B = F.map coprod.inr :=
   coprod.inr_desc _ _
 #align category_theory.limits.coprod_comparison_inr CategoryTheory.Limits.coprodComparison_inr
+-/
 
+#print CategoryTheory.Limits.coprodComparison_natural /-
 /-- Naturality of the coprod_comparison morphism in both arguments. -/
 @[reassoc]
 theorem coprodComparison_natural (f : A ⟶ A') (g : B ⟶ B') :
@@ -1511,7 +1614,9 @@ theorem coprodComparison_natural (f : A ⟶ A') (g : B ⟶ B') :
   rw [coprod_comparison, coprod_comparison, coprod.map_desc, ← F.map_comp, ← F.map_comp,
     coprod.desc_comp, ← F.map_comp, coprod.inl_map, ← F.map_comp, coprod.inr_map]
 #align category_theory.limits.coprod_comparison_natural CategoryTheory.Limits.coprodComparison_natural
+-/
 
+#print CategoryTheory.Limits.coprodComparisonNatTrans /-
 /-- The coproduct comparison morphism from `FA ⨿ F-` to `F(A ⨿ -)`, whose components are given by
 `coprod_comparison`.
 -/
@@ -1522,17 +1627,23 @@ def coprodComparisonNatTrans [HasBinaryCoproducts C] [HasBinaryCoproducts D] (F 
   app B := coprodComparison F A B
   naturality' B B' f := by simp [coprod_comparison_natural]
 #align category_theory.limits.coprod_comparison_nat_trans CategoryTheory.Limits.coprodComparisonNatTrans
+-/
 
+#print CategoryTheory.Limits.map_inl_inv_coprodComparison /-
 @[reassoc]
 theorem map_inl_inv_coprodComparison [IsIso (coprodComparison F A B)] :
     F.map coprod.inl ≫ inv (coprodComparison F A B) = coprod.inl := by simp [is_iso.inv_comp_eq]
 #align category_theory.limits.map_inl_inv_coprod_comparison CategoryTheory.Limits.map_inl_inv_coprodComparison
+-/
 
+#print CategoryTheory.Limits.map_inr_inv_coprodComparison /-
 @[reassoc]
 theorem map_inr_inv_coprodComparison [IsIso (coprodComparison F A B)] :
     F.map coprod.inr ≫ inv (coprodComparison F A B) = coprod.inr := by simp [is_iso.inv_comp_eq]
 #align category_theory.limits.map_inr_inv_coprod_comparison CategoryTheory.Limits.map_inr_inv_coprodComparison
+-/
 
+#print CategoryTheory.Limits.coprodComparison_inv_natural /-
 /-- If the coproduct comparison morphism is an iso, its inverse is natural. -/
 @[reassoc]
 theorem coprodComparison_inv_natural (f : A ⟶ A') (g : B ⟶ B') [IsIso (coprodComparison F A B)]
@@ -1541,7 +1652,9 @@ theorem coprodComparison_inv_natural (f : A ⟶ A') (g : B ⟶ B') [IsIso (copro
       F.map (coprod.map f g) ≫ inv (coprodComparison F A' B') :=
   by rw [is_iso.eq_comp_inv, category.assoc, is_iso.inv_comp_eq, coprod_comparison_natural]
 #align category_theory.limits.coprod_comparison_inv_natural CategoryTheory.Limits.coprodComparison_inv_natural
+-/
 
+#print CategoryTheory.Limits.coprodComparisonNatIso /-
 /-- The natural isomorphism `FA ⨿ F- ≅ F(A ⨿ -)`, provided each `coprod_comparison F A B` is an
 isomorphism (as `B` changes).
 -/
@@ -1551,6 +1664,7 @@ def coprodComparisonNatIso [HasBinaryCoproducts C] [HasBinaryCoproducts D] (A : 
     F ⋙ coprod.functor.obj (F.obj A) ≅ coprod.functor.obj A ⋙ F :=
   { @asIso _ _ _ _ _ (NatIso.isIso_of_isIso_app ⟨_, _⟩) with Hom := coprodComparisonNatTrans F A }
 #align category_theory.limits.coprod_comparison_nat_iso CategoryTheory.Limits.coprodComparisonNatIso
+-/
 
 end CoprodComparison
 

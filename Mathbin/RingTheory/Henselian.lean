@@ -70,6 +70,7 @@ open scoped BigOperators Polynomial
 
 open LocalRing Polynomial Function
 
+#print isLocalRingHom_of_le_jacobson_bot /-
 theorem isLocalRingHom_of_le_jacobson_bot {R : Type _} [CommRing R] (I : Ideal R)
     (h : I ≤ Ideal.jacobson ⊥) : IsLocalRingHom (Ideal.Quotient.mk I) :=
   by
@@ -91,6 +92,7 @@ theorem isLocalRingHom_of_le_jacobson_bot {R : Type _} [CommRing R] (I : Ideal R
   simp at h1 
   exact h1.1
 #align is_local_ring_hom_of_le_jacobson_bot isLocalRingHom_of_le_jacobson_bot
+-/
 
 #print HenselianRing /-
 /-- A ring `R` is *Henselian* at an ideal `I` if the following condition holds:
@@ -135,6 +137,7 @@ instance (priority := 100) Field.henselian (K : Type _) [Field K] : HenselianLoc
 #align field.henselian Field.henselian
 -/
 
+#print HenselianLocalRing.TFAE /-
 theorem HenselianLocalRing.TFAE (R : Type u) [CommRing R] [LocalRing R] :
     TFAE
       [HenselianLocalRing R,
@@ -168,6 +171,7 @@ theorem HenselianLocalRing.TFAE (R : Type u) [CommRing R] [LocalRing R] :
         φ.mem_ker] at h₂ 
   tfae_finish
 #align henselian_local_ring.tfae HenselianLocalRing.TFAE
+-/
 
 instance (R : Type _) [CommRing R] [hR : HenselianLocalRing R] : HenselianRing R (maximalIdeal R)
     where

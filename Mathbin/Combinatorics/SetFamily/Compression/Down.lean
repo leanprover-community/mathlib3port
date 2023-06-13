@@ -185,7 +185,6 @@ def compression (a : α) (𝒜 : Finset (Finset α)) : Finset (Finset α) :=
 #align down.compression Down.compression
 -/
 
--- mathport name: down.compression
 scoped[FinsetFamily] notation "𝓓 " => Down.compression
 
 #print Down.mem_compression /-

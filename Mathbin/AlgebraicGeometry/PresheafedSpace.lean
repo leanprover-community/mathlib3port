@@ -43,11 +43,13 @@ attribute [local tidy] tactic.op_induction' tactic.auto_cases_opens
 
 namespace AlgebraicGeometry
 
+#print AlgebraicGeometry.PresheafedSpace /-
 /-- A `PresheafedSpace C` is a topological space equipped with a presheaf of `C`s. -/
 structure PresheafedSpace where
   carrier : TopCat.{w}
   Presheaf : carrier.Presheaf C
 #align algebraic_geometry.PresheafedSpace AlgebraicGeometry.PresheafedSpace
+-/
 
 variable {C}
 
@@ -55,24 +57,29 @@ namespace PresheafedSpace
 
 attribute [protected] presheaf
 
+#print AlgebraicGeometry.PresheafedSpace.coeCarrier /-
 instance coeCarrier : Coe (PresheafedSpace.{w, v, u} C) TopCat.{w} where coe X := X.carrier
 #align algebraic_geometry.PresheafedSpace.coe_carrier AlgebraicGeometry.PresheafedSpace.coeCarrier
+-/
 
 @[simp]
 theorem as_coe (X : PresheafedSpace.{w, v, u} C) : X.carrier = (X : TopCat.{w}) :=
   rfl
 #align algebraic_geometry.PresheafedSpace.as_coe AlgebraicGeometry.PresheafedSpace.as_coe
 
+#print AlgebraicGeometry.PresheafedSpace.mk_coe /-
 @[simp]
 theorem mk_coe (carrier) (presheaf) :
     (({     carrier
             Presheaf } : PresheafedSpace.{v} C) : TopCat.{v}) = carrier :=
   rfl
 #align algebraic_geometry.PresheafedSpace.mk_coe AlgebraicGeometry.PresheafedSpace.mk_coe
+-/
 
 instance (X : PresheafedSpace.{v} C) : TopologicalSpace X :=
   X.carrier.str
 
+#print AlgebraicGeometry.PresheafedSpace.const /-
 /-- The constant presheaf on `X` with value `Z`. -/
 def const (X : TopCat) (Z : C) : PresheafedSpace C
     where
@@ -81,10 +88,12 @@ def const (X : TopCat) (Z : C) : PresheafedSpace C
     { obj := fun U => Z
       map := fun U V f => 𝟙 Z }
 #align algebraic_geometry.PresheafedSpace.const AlgebraicGeometry.PresheafedSpace.const
+-/
 
 instance [Inhabited C] : Inhabited (PresheafedSpace C) :=
   ⟨const (TopCat.of PEmpty) default⟩
 
+#print AlgebraicGeometry.PresheafedSpace.Hom /-
 /-- A morphism between presheafed spaces `X` and `Y` consists of a continuous map
     `f` between the underlying topological spaces, and a (notice contravariant!) map
     from the presheaf on `Y` to the pushforward of the presheaf on `X` via `f`. -/
@@ -92,7 +101,9 @@ structure Hom (X Y : PresheafedSpace.{w, v, u} C) where
   base : (X : TopCat.{w}) ⟶ (Y : TopCat.{w})
   c : Y.Presheaf ⟶ base _* X.Presheaf
 #align algebraic_geometry.PresheafedSpace.hom AlgebraicGeometry.PresheafedSpace.Hom
+-/
 
+#print AlgebraicGeometry.PresheafedSpace.Hom.ext /-
 @[ext]
 theorem AlgebraicGeometry.PresheafedSpace.Hom.ext {X Y : PresheafedSpace C} (α β : Hom X Y)
     (w : α.base = β.base) (h : α.c ≫ whiskerRight (eqToHom (by rw [w])) _ = β.c) : α = β :=
@@ -101,34 +112,45 @@ theorem AlgebraicGeometry.PresheafedSpace.Hom.ext {X Y : PresheafedSpace C} (α 
   dsimp [presheaf.pushforward_obj] at *
   tidy
 #align algebraic_geometry.PresheafedSpace.ext AlgebraicGeometry.PresheafedSpace.Hom.ext
+-/
 
+#print AlgebraicGeometry.PresheafedSpace.hext /-
 -- TODO including `injections` would make tidy work earlier.
 theorem hext {X Y : PresheafedSpace C} (α β : Hom X Y) (w : α.base = β.base) (h : HEq α.c β.c) :
     α = β := by cases α; cases β; congr; exacts [w, h]
 #align algebraic_geometry.PresheafedSpace.hext AlgebraicGeometry.PresheafedSpace.hext
+-/
 
+#print AlgebraicGeometry.PresheafedSpace.id /-
 /-- The identity morphism of a `PresheafedSpace`. -/
 def id (X : PresheafedSpace.{w, v, u} C) : Hom X X
     where
   base := 𝟙 (X : TopCat.{w})
   c := eqToHom (Presheaf.Pushforward.id_eq X.Presheaf).symm
 #align algebraic_geometry.PresheafedSpace.id AlgebraicGeometry.PresheafedSpace.id
+-/
 
+#print AlgebraicGeometry.PresheafedSpace.homInhabited /-
 instance homInhabited (X : PresheafedSpace C) : Inhabited (Hom X X) :=
   ⟨id X⟩
 #align algebraic_geometry.PresheafedSpace.hom_inhabited AlgebraicGeometry.PresheafedSpace.homInhabited
+-/
 
+#print AlgebraicGeometry.PresheafedSpace.comp /-
 /-- Composition of morphisms of `PresheafedSpace`s. -/
 def comp {X Y Z : PresheafedSpace C} (α : Hom X Y) (β : Hom Y Z) : Hom X Z
     where
   base := α.base ≫ β.base
   c := β.c ≫ (Presheaf.pushforward _ β.base).map α.c
 #align algebraic_geometry.PresheafedSpace.comp AlgebraicGeometry.PresheafedSpace.comp
+-/
 
+#print AlgebraicGeometry.PresheafedSpace.comp_c /-
 theorem comp_c {X Y Z : PresheafedSpace C} (α : Hom X Y) (β : Hom Y Z) :
     (comp α β).c = β.c ≫ (Presheaf.pushforward _ β.base).map α.c :=
   rfl
 #align algebraic_geometry.PresheafedSpace.comp_c AlgebraicGeometry.PresheafedSpace.comp_c
+-/
 
 variable (C)
 
@@ -136,6 +158,7 @@ section
 
 attribute [local simp] id comp
 
+#print AlgebraicGeometry.PresheafedSpace.categoryOfPresheafedSpaces /-
 /- The proofs below can be done by `tidy`, but it is too slow,
    and we don't have a tactic caching mechanism. -/
 /-- The category of PresheafedSpaces. Morphisms are pairs, a continuous map and a presheaf map
@@ -169,6 +192,7 @@ instance categoryOfPresheafedSpaces : Category (PresheafedSpace.{v, v, u} C)
     congr
     rfl
 #align algebraic_geometry.PresheafedSpace.category_of_PresheafedSpaces AlgebraicGeometry.PresheafedSpace.categoryOfPresheafedSpaces
+-/
 
 end
 
@@ -176,28 +200,36 @@ variable {C}
 
 attribute [local simp] eq_to_hom_map
 
+#print AlgebraicGeometry.PresheafedSpace.id_base /-
 @[simp]
 theorem id_base (X : PresheafedSpace.{v, v, u} C) : (𝟙 X : X ⟶ X).base = 𝟙 (X : TopCat.{v}) :=
   rfl
 #align algebraic_geometry.PresheafedSpace.id_base AlgebraicGeometry.PresheafedSpace.id_base
+-/
 
+#print AlgebraicGeometry.PresheafedSpace.id_c /-
 theorem id_c (X : PresheafedSpace.{v, v, u} C) :
     (𝟙 X : X ⟶ X).c = eqToHom (Presheaf.Pushforward.id_eq X.Presheaf).symm :=
   rfl
 #align algebraic_geometry.PresheafedSpace.id_c AlgebraicGeometry.PresheafedSpace.id_c
+-/
 
+#print AlgebraicGeometry.PresheafedSpace.id_c_app /-
 @[simp]
 theorem id_c_app (X : PresheafedSpace.{v, v, u} C) (U) :
     (𝟙 X : X ⟶ X).c.app U =
       X.Presheaf.map (eqToHom (by induction U using Opposite.rec'; cases U; rfl)) :=
   by induction U using Opposite.rec'; cases U; simp only [id_c]; dsimp; simp
 #align algebraic_geometry.PresheafedSpace.id_c_app AlgebraicGeometry.PresheafedSpace.id_c_app
+-/
 
+#print AlgebraicGeometry.PresheafedSpace.comp_base /-
 @[simp]
 theorem comp_base {X Y Z : PresheafedSpace.{v, v, u} C} (f : X ⟶ Y) (g : Y ⟶ Z) :
     (f ≫ g).base = f.base ≫ g.base :=
   rfl
 #align algebraic_geometry.PresheafedSpace.comp_base AlgebraicGeometry.PresheafedSpace.comp_base
+-/
 
 instance (X Y : PresheafedSpace.{v, v, u} C) : CoeFun (X ⟶ Y) fun _ => X → Y :=
   ⟨fun f => f.base⟩
@@ -206,6 +238,7 @@ theorem coe_to_fun_eq {X Y : PresheafedSpace.{v, v, u} C} (f : X ⟶ Y) : (f : X
   rfl
 #align algebraic_geometry.PresheafedSpace.coe_to_fun_eq AlgebraicGeometry.PresheafedSpace.coe_to_fun_eq
 
+#print AlgebraicGeometry.PresheafedSpace.comp_c_app /-
 -- The `reassoc` attribute was added despite the LHS not being a composition of two homs,
 -- for the reasons explained in the docstring.
 /-- Sometimes rewriting with `comp_c_app` doesn't work because of dependent type issues.
@@ -216,15 +249,19 @@ theorem comp_c_app {X Y Z : PresheafedSpace.{v, v, u} C} (α : X ⟶ Y) (β : Y 
     (α ≫ β).c.app U = β.c.app U ≫ α.c.app (op ((Opens.map β.base).obj (unop U))) :=
   rfl
 #align algebraic_geometry.PresheafedSpace.comp_c_app AlgebraicGeometry.PresheafedSpace.comp_c_app
+-/
 
+#print AlgebraicGeometry.PresheafedSpace.congr_app /-
 theorem congr_app {X Y : PresheafedSpace.{v, v, u} C} {α β : X ⟶ Y} (h : α = β) (U) :
     α.c.app U = β.c.app U ≫ X.Presheaf.map (eqToHom (by subst h)) := by subst h; dsimp; simp
 #align algebraic_geometry.PresheafedSpace.congr_app AlgebraicGeometry.PresheafedSpace.congr_app
+-/
 
 section
 
 variable (C)
 
+#print AlgebraicGeometry.PresheafedSpace.forget /-
 /-- The forgetful functor from `PresheafedSpace` to `Top`. -/
 @[simps]
 def forget : PresheafedSpace.{v, v, u} C ⥤ TopCat
@@ -232,6 +269,7 @@ def forget : PresheafedSpace.{v, v, u} C ⥤ TopCat
   obj X := (X : TopCat.{v})
   map X Y f := f.base
 #align algebraic_geometry.PresheafedSpace.forget AlgebraicGeometry.PresheafedSpace.forget
+-/
 
 end
 
@@ -239,6 +277,7 @@ section Iso
 
 variable {X Y : PresheafedSpace.{v, v, u} C}
 
+#print AlgebraicGeometry.PresheafedSpace.isoOfComponents /-
 /-- An isomorphism of PresheafedSpaces is a homeomorphism of the underlying space, and a
 natural transformation between the sheaves.
 -/
@@ -266,7 +305,9 @@ def isoOfComponents (H : X.1 ≅ Y.1) (α : H.Hom _* X.2 ≅ Y.2) : X ≅ Y
     · simp
     · simp
 #align algebraic_geometry.PresheafedSpace.iso_of_components AlgebraicGeometry.PresheafedSpace.isoOfComponents
+-/
 
+#print AlgebraicGeometry.PresheafedSpace.sheafIsoOfIso /-
 /-- Isomorphic PresheafedSpaces have natural isomorphic presheaves. -/
 @[simps]
 def sheafIsoOfIso (H : X ≅ Y) : Y.2 ≅ H.Hom.base _* X.2
@@ -287,26 +328,34 @@ def sheafIsoOfIso (H : X ≅ Y) : Y.2 ≅ H.Hom.base _* X.2
     generalize_proofs h at this 
     simpa using congr_arg (fun f => f ≫ X.presheaf.map (eq_to_hom h.symm)) this
 #align algebraic_geometry.PresheafedSpace.sheaf_iso_of_iso AlgebraicGeometry.PresheafedSpace.sheafIsoOfIso
+-/
 
+#print AlgebraicGeometry.PresheafedSpace.base_isIso_of_iso /-
 instance base_isIso_of_iso (f : X ⟶ Y) [IsIso f] : IsIso f.base :=
   IsIso.of_iso ((forget _).mapIso (asIso f))
 #align algebraic_geometry.PresheafedSpace.base_is_iso_of_iso AlgebraicGeometry.PresheafedSpace.base_isIso_of_iso
+-/
 
+#print AlgebraicGeometry.PresheafedSpace.c_isIso_of_iso /-
 instance c_isIso_of_iso (f : X ⟶ Y) [IsIso f] : IsIso f.c :=
   IsIso.of_iso (sheafIsoOfIso (asIso f))
 #align algebraic_geometry.PresheafedSpace.c_is_iso_of_iso AlgebraicGeometry.PresheafedSpace.c_isIso_of_iso
+-/
 
+#print AlgebraicGeometry.PresheafedSpace.isIso_of_components /-
 /-- This could be used in conjunction with `category_theory.nat_iso.is_iso_of_is_iso_app`. -/
 theorem isIso_of_components (f : X ⟶ Y) [IsIso f.base] [IsIso f.c] : IsIso f :=
   by
   convert is_iso.of_iso (iso_of_components (as_iso f.base) (as_iso f.c).symm)
   ext; · simpa; · simp
 #align algebraic_geometry.PresheafedSpace.is_iso_of_components AlgebraicGeometry.PresheafedSpace.isIso_of_components
+-/
 
 end Iso
 
 section Restrict
 
+#print AlgebraicGeometry.PresheafedSpace.restrict /-
 /-- The restriction of a presheafed space along an open embedding into the space.
 -/
 @[simps]
@@ -316,7 +365,9 @@ def restrict {U : TopCat} (X : PresheafedSpace.{v, v, u} C) {f : U ⟶ (X : TopC
   carrier := U
   Presheaf := h.IsOpenMap.Functor.op ⋙ X.Presheaf
 #align algebraic_geometry.PresheafedSpace.restrict AlgebraicGeometry.PresheafedSpace.restrict
+-/
 
+#print AlgebraicGeometry.PresheafedSpace.ofRestrict /-
 /-- The map from the restriction of a presheafed space.
 -/
 @[simps]
@@ -329,7 +380,9 @@ def ofRestrict {U : TopCat} (X : PresheafedSpace.{v, v, u} C) {f : U ⟶ (X : To
       naturality' := fun U V f =>
         show _ = _ ≫ X.Presheaf.map _ by rw [← map_comp, ← map_comp]; rfl }
 #align algebraic_geometry.PresheafedSpace.of_restrict AlgebraicGeometry.PresheafedSpace.ofRestrict
+-/
 
+#print AlgebraicGeometry.PresheafedSpace.ofRestrict_mono /-
 instance ofRestrict_mono {U : TopCat} (X : PresheafedSpace C) (f : U ⟶ X.1) (hf : OpenEmbedding f) :
     Mono (X.of_restrict hf) :=
   by
@@ -360,13 +413,17 @@ instance ofRestrict_mono {U : TopCat} (X : PresheafedSpace C) (f : U ⟶ X.1) (h
     rw [cancel_mono] at this 
     exact this
 #align algebraic_geometry.PresheafedSpace.of_restrict_mono AlgebraicGeometry.PresheafedSpace.ofRestrict_mono
+-/
 
+#print AlgebraicGeometry.PresheafedSpace.restrict_top_presheaf /-
 theorem restrict_top_presheaf (X : PresheafedSpace C) :
     (X.restrict (Opens.openEmbedding ⊤)).Presheaf =
       (Opens.inclusionTopIso X.carrier).inv _* X.Presheaf :=
   by dsimp; rw [opens.inclusion_top_functor X.carrier]; rfl
 #align algebraic_geometry.PresheafedSpace.restrict_top_presheaf AlgebraicGeometry.PresheafedSpace.restrict_top_presheaf
+-/
 
+#print AlgebraicGeometry.PresheafedSpace.ofRestrict_top_c /-
 theorem ofRestrict_top_c (X : PresheafedSpace C) :
     (X.of_restrict (Opens.openEmbedding ⊤)).c =
       eqToHom
@@ -383,7 +440,9 @@ theorem ofRestrict_top_c (X : PresheafedSpace C) :
   · induction U using Opposite.rec'; dsimp; congr; ext
     exact ⟨fun h => ⟨⟨x, trivial⟩, h, rfl⟩, fun ⟨⟨_, _⟩, h, rfl⟩ => h⟩
 #align algebraic_geometry.PresheafedSpace.of_restrict_top_c AlgebraicGeometry.PresheafedSpace.ofRestrict_top_c
+-/
 
+#print AlgebraicGeometry.PresheafedSpace.toRestrictTop /-
 /- or `rw [opens.inclusion_top_functor, ←comp_obj, ←opens.map_comp_eq],
          erw iso.inv_hom_id, cases U, refl` after `dsimp` -/
 /-- The map to the restriction of a presheafed space along the canonical inclusion from the top
@@ -395,7 +454,9 @@ def toRestrictTop (X : PresheafedSpace C) : X ⟶ X.restrict (Opens.openEmbeddin
   base := (Opens.inclusionTopIso X.carrier).inv
   c := eqToHom (restrict_top_presheaf X)
 #align algebraic_geometry.PresheafedSpace.to_restrict_top AlgebraicGeometry.PresheafedSpace.toRestrictTop
+-/
 
+#print AlgebraicGeometry.PresheafedSpace.restrictTopIso /-
 /-- The isomorphism from the restriction to the top subspace.
 -/
 @[simps]
@@ -411,9 +472,11 @@ def restrictTopIso (X : PresheafedSpace C) : X.restrict (Opens.openEmbedding ⊤
     AlgebraicGeometry.PresheafedSpace.Hom.ext _ _ rfl <| by erw [comp_c]; rw [X.of_restrict_top_c];
       ext; simpa [-eq_to_hom_refl]
 #align algebraic_geometry.PresheafedSpace.restrict_top_iso AlgebraicGeometry.PresheafedSpace.restrictTopIso
+-/
 
 end Restrict
 
+#print AlgebraicGeometry.PresheafedSpace.Γ /-
 /-- The global sections, notated Gamma.
 -/
 @[simps]
@@ -422,14 +485,19 @@ def Γ : (PresheafedSpace.{v, v, u} C)ᵒᵖ ⥤ C
   obj X := (unop X).Presheaf.obj (op ⊤)
   map X Y f := f.unop.c.app (op ⊤)
 #align algebraic_geometry.PresheafedSpace.Γ AlgebraicGeometry.PresheafedSpace.Γ
+-/
 
+#print AlgebraicGeometry.PresheafedSpace.Γ_obj_op /-
 theorem Γ_obj_op (X : PresheafedSpace C) : Γ.obj (op X) = X.Presheaf.obj (op ⊤) :=
   rfl
 #align algebraic_geometry.PresheafedSpace.Γ_obj_op AlgebraicGeometry.PresheafedSpace.Γ_obj_op
+-/
 
+#print AlgebraicGeometry.PresheafedSpace.Γ_map_op /-
 theorem Γ_map_op {X Y : PresheafedSpace.{v, v, u} C} (f : X ⟶ Y) : Γ.map f.op = f.c.app (op ⊤) :=
   rfl
 #align algebraic_geometry.PresheafedSpace.Γ_map_op AlgebraicGeometry.PresheafedSpace.Γ_map_op
+-/
 
 end PresheafedSpace
 
@@ -447,6 +515,7 @@ attribute [local simp] presheaf.pushforward_obj
 
 namespace Functor
 
+#print CategoryTheory.Functor.mapPresheaf /-
 /-- We can apply a functor `F : C ⥤ D` to the values of the presheaf in any `PresheafedSpace C`,
     giving a functor `PresheafedSpace C ⥤ PresheafedSpace D` -/
 def mapPresheaf (F : C ⥤ D) : PresheafedSpace.{v, v, u} C ⥤ PresheafedSpace.{v, v, u} D
@@ -458,35 +527,45 @@ def mapPresheaf (F : C ⥤ D) : PresheafedSpace.{v, v, u} C ⥤ PresheafedSpace.
     { base := f.base
       c := whiskerRight f.c F }
 #align category_theory.functor.map_presheaf CategoryTheory.Functor.mapPresheaf
+-/
 
+#print CategoryTheory.Functor.mapPresheaf_obj_X /-
 @[simp]
 theorem mapPresheaf_obj_X (F : C ⥤ D) (X : PresheafedSpace C) :
     (F.mapPresheaf.obj X : TopCat.{v}) = (X : TopCat.{v}) :=
   rfl
 #align category_theory.functor.map_presheaf_obj_X CategoryTheory.Functor.mapPresheaf_obj_X
+-/
 
+#print CategoryTheory.Functor.mapPresheaf_obj_presheaf /-
 @[simp]
 theorem mapPresheaf_obj_presheaf (F : C ⥤ D) (X : PresheafedSpace C) :
     (F.mapPresheaf.obj X).Presheaf = X.Presheaf ⋙ F :=
   rfl
 #align category_theory.functor.map_presheaf_obj_presheaf CategoryTheory.Functor.mapPresheaf_obj_presheaf
+-/
 
+#print CategoryTheory.Functor.mapPresheaf_map_f /-
 @[simp]
 theorem mapPresheaf_map_f (F : C ⥤ D) {X Y : PresheafedSpace.{v, v, u} C} (f : X ⟶ Y) :
     (F.mapPresheaf.map f).base = f.base :=
   rfl
 #align category_theory.functor.map_presheaf_map_f CategoryTheory.Functor.mapPresheaf_map_f
+-/
 
+#print CategoryTheory.Functor.mapPresheaf_map_c /-
 @[simp]
 theorem mapPresheaf_map_c (F : C ⥤ D) {X Y : PresheafedSpace.{v, v, u} C} (f : X ⟶ Y) :
     (F.mapPresheaf.map f).c = whiskerRight f.c F :=
   rfl
 #align category_theory.functor.map_presheaf_map_c CategoryTheory.Functor.mapPresheaf_map_c
+-/
 
 end Functor
 
 namespace NatTrans
 
+#print CategoryTheory.NatTrans.onPresheaf /-
 /-- A natural transformation induces a natural transformation between the `map_presheaf` functors.
 -/
 def onPresheaf {F G : C ⥤ D} (α : F ⟶ G) : G.mapPresheaf ⟶ F.mapPresheaf
@@ -494,6 +573,7 @@ def onPresheaf {F G : C ⥤ D} (α : F ⟶ G) : G.mapPresheaf ⟶ F.mapPresheaf
     { base := 𝟙 _
       c := whiskerLeft X.Presheaf α ≫ eqToHom (Presheaf.Pushforward.id_eq _).symm }
 #align category_theory.nat_trans.on_presheaf CategoryTheory.NatTrans.onPresheaf
+-/
 
 -- TODO Assemble the last two constructions into a functor
 --   `(C ⥤ D) ⥤ (PresheafedSpace C ⥤ PresheafedSpace D)`

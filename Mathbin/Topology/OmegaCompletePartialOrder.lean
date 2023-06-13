@@ -64,9 +64,11 @@ theorem isOpen_univ : IsOpen α univ :=
 #align Scott.is_open_univ Scott.isOpen_univ
 -/
 
+#print Scott.IsOpen.inter /-
 theorem IsOpen.inter (s t : Set α) : IsOpen α s → IsOpen α t → IsOpen α (s ∩ t) :=
   CompleteLattice.inf_continuous'
 #align Scott.is_open.inter Scott.IsOpen.inter
+-/
 
 #print Scott.isOpen_sUnion /-
 theorem isOpen_sUnion (s : Set (Set α)) (hs : ∀ t ∈ s, IsOpen α t) : IsOpen α (⋃₀ s) :=
@@ -146,6 +148,7 @@ theorem isωSup_ωSup {α} [OmegaCompletePartialOrder α] (c : Chain α) : IsωS
 -/
 
 /- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:568:11: unsupported: specialize non-hyp -/
+#print scottContinuous_of_continuous /-
 theorem scottContinuous_of_continuous {α β} [OmegaCompletePartialOrder α]
     [OmegaCompletePartialOrder β] (f : Scott α → Scott β) (hf : Continuous f) :
     OmegaCompletePartialOrder.Continuous' f :=
@@ -168,7 +171,9 @@ theorem scottContinuous_of_continuous {α β} [OmegaCompletePartialOrder α]
     not_forall]
   tauto
 #align Scott_continuous_of_continuous scottContinuous_of_continuous
+-/
 
+#print continuous_of_scottContinuous /-
 theorem continuous_of_scottContinuous {α β} [OmegaCompletePartialOrder α]
     [OmegaCompletePartialOrder β] (f : Scott α → Scott β)
     (hf : OmegaCompletePartialOrder.Continuous' f) : Continuous f :=
@@ -181,4 +186,5 @@ theorem continuous_of_scottContinuous {α β} [OmegaCompletePartialOrder α]
   apply continuous.of_bundled
   apply continuous_comp _ _ hf' hs'
 #align continuous_of_Scott_continuous continuous_of_scottContinuous
+-/
 

@@ -295,9 +295,11 @@ theorem powersetLen_empty (n : ℕ) {s : Finset α} (h : s.card < n) : powersetL
 #align finset.powerset_len_empty Finset.powersetLen_empty
 -/
 
+#print Finset.powersetLen_eq_filter /-
 theorem powersetLen_eq_filter {n} {s : Finset α} :
     powersetLen n s = (powerset s).filterₓ fun x => x.card = n := by ext; simp [mem_powerset_len]
 #align finset.powerset_len_eq_filter Finset.powersetLen_eq_filter
+-/
 
 #print Finset.powersetLen_succ_insert /-
 theorem powersetLen_succ_insert [DecidableEq α] {x : α} {s : Finset α} (h : x ∉ s) (n : ℕ) :
@@ -345,11 +347,13 @@ theorem powersetLen_self (s : Finset α) : powersetLen s.card s = {s} :=
 #align finset.powerset_len_self Finset.powersetLen_self
 -/
 
+#print Finset.pairwise_disjoint_powersetLen /-
 theorem pairwise_disjoint_powersetLen (s : Finset α) :
     Pairwise fun i j => Disjoint (s.powersetLen i) (s.powersetLen j) := fun i j hij =>
   Finset.disjoint_left.mpr fun x hi hj =>
     hij <| (mem_powersetLen.mp hi).2.symm.trans (mem_powersetLen.mp hj).2
 #align finset.pairwise_disjoint_powerset_len Finset.pairwise_disjoint_powersetLen
+-/
 
 #print Finset.powerset_card_disjiUnion /-
 theorem powerset_card_disjiUnion (s : Finset α) :
@@ -374,6 +378,7 @@ theorem powerset_card_biUnion [DecidableEq (Finset α)] (s : Finset α) :
 #align finset.powerset_card_bUnion Finset.powerset_card_biUnion
 -/
 
+#print Finset.powerset_len_sup /-
 theorem powerset_len_sup [DecidableEq α] (u : Finset α) (n : ℕ) (hn : n < u.card) :
     (powersetLen n.succ u).sup id = u := by
   apply le_antisymm
@@ -392,6 +397,7 @@ theorem powerset_len_sup [DecidableEq α] (u : Finset α) (n : ℕ) (hn : n < u.
       · rw [card_erase_of_mem hx]
         exact Nat.le_pred_of_lt hn
 #align finset.powerset_len_sup Finset.powerset_len_sup
+-/
 
 #print Finset.powersetLen_card_add /-
 @[simp]

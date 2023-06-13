@@ -40,12 +40,14 @@ namespace CategoryTheory.Over
 
 namespace CreatesConnected
 
+#print CategoryTheory.Over.CreatesConnected.natTransInOver /-
 /-- (Impl) Given a diagram in the over category, produce a natural transformation from the
 diagram legs to the specific object.
 -/
 def natTransInOver {B : C} (F : J ⥤ Over B) : F ⋙ forget B ⟶ (CategoryTheory.Functor.const J).obj B
     where app j := (F.obj j).Hom
 #align category_theory.over.creates_connected.nat_trans_in_over CategoryTheory.Over.CreatesConnected.natTransInOver
+-/
 
 attribute [local tidy] tactic.case_bash
 
@@ -64,9 +66,11 @@ def raiseCone [IsConnected J] {B : C} {F : J ⥤ Over B} (c : Cone (F ⋙ forget
 #align category_theory.over.creates_connected.raise_cone CategoryTheory.Over.CreatesConnected.raiseCone
 -/
 
+#print CategoryTheory.Over.CreatesConnected.raised_cone_lowers_to_original /-
 theorem raised_cone_lowers_to_original [IsConnected J] {B : C} {F : J ⥤ Over B}
     (c : Cone (F ⋙ forget B)) (t : IsLimit c) : (forget B).mapCone (raiseCone c) = c := by tidy
 #align category_theory.over.creates_connected.raised_cone_lowers_to_original CategoryTheory.Over.CreatesConnected.raised_cone_lowers_to_original
+-/
 
 #print CategoryTheory.Over.CreatesConnected.raisedConeIsLimit /-
 /-- (Impl) Show that the raised cone is a limit. -/

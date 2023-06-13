@@ -65,6 +65,7 @@ namespace PseudoMetricSpace
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print PseudoMetricSpace.ofPreNNDist /-
 /-- The maximal pseudo metric space structure on `X` such that `dist x y ≤ d x y` for all `x y`,
 where `d : X → X → ℝ≥0` is a function such that `d x x = 0` and `d x y = d y x` for all `x`, `y`. -/
 noncomputable def ofPreNNDist (d : X → X → ℝ≥0) (dist_self : ∀ x, d x x = 0)
@@ -93,8 +94,10 @@ noncomputable def ofPreNNDist (d : X → X → ℝ≥0) (dist_self : ∀ x, d x 
       append_assoc, append_assoc]
     rw [length_cons, length_append, length_singleton]
 #align pseudo_metric_space.of_prenndist PseudoMetricSpace.ofPreNNDist
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print PseudoMetricSpace.dist_ofPreNNDist /-
 theorem dist_ofPreNNDist (d : X → X → ℝ≥0) (dist_self : ∀ x, d x x = 0)
     (dist_comm : ∀ x y, d x y = d y x) (x y : X) :
     @dist X (@PseudoMetricSpace.toHasDist X (PseudoMetricSpace.ofPreNNDist d dist_self dist_comm)) x
@@ -102,7 +105,9 @@ theorem dist_ofPreNNDist (d : X → X → ℝ≥0) (dist_self : ∀ x, d x x = 0
       ↑(⨅ l : List X, ((x::l).zipWith d (l ++ [y])).Sum : ℝ≥0) :=
   rfl
 #align pseudo_metric_space.dist_of_prenndist PseudoMetricSpace.dist_ofPreNNDist
+-/
 
+#print PseudoMetricSpace.dist_ofPreNNDist_le /-
 theorem dist_ofPreNNDist_le (d : X → X → ℝ≥0) (dist_self : ∀ x, d x x = 0)
     (dist_comm : ∀ x y, d x y = d y x) (x y : X) :
     @dist X (@PseudoMetricSpace.toHasDist X (PseudoMetricSpace.ofPreNNDist d dist_self dist_comm)) x
@@ -110,10 +115,12 @@ theorem dist_ofPreNNDist_le (d : X → X → ℝ≥0) (dist_self : ∀ x, d x x 
       d x y :=
   NNReal.coe_le_coe.2 <| (ciInf_le (OrderBot.bddBelow _) []).trans_eq <| by simp
 #align pseudo_metric_space.dist_of_prenndist_le PseudoMetricSpace.dist_ofPreNNDist_le
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print PseudoMetricSpace.le_two_mul_dist_ofPreNNDist /-
 /-- Consider a function `d : X → X → ℝ≥0` such that `d x x = 0` and `d x y = d y x` for all `x`,
 `y`. Let `dist` be the largest pseudometric distance such that `dist x y ≤ d x y`, see
 `pseudo_metric_space.of_prenndist`. Suppose that `d` satisfies the following triangle-like
@@ -193,6 +200,7 @@ theorem le_two_mul_dist_ofPreNNDist (d : X → X → ℝ≥0) (dist_self : ∀ x
     convert hMs'
     rwa [zip_with_distrib_drop, drop, drop_append_of_le_length]
 #align pseudo_metric_space.le_two_mul_dist_of_prenndist PseudoMetricSpace.le_two_mul_dist_ofPreNNDist
+-/
 
 end PseudoMetricSpace
 

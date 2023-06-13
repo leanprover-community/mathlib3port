@@ -594,6 +594,7 @@ theorem ne_iff_lt_iff_le [PartialOrder α] {a b : α} : (a ≠ b ↔ a < b) ↔ 
 #align ne_iff_lt_iff_le ne_iff_lt_iff_le
 -/
 
+#print min_def' /-
 -- Variant of `min_def` with the branches reversed.
 theorem min_def' [LinearOrder α] (a b : α) : min a b = if b ≤ a then b else a :=
   by
@@ -603,7 +604,9 @@ theorem min_def' [LinearOrder α] (a b : α) : min a b = if b ≤ a then b else 
   · rw [if_pos Eq.le, if_pos Eq.ge, Eq]
   · rw [if_neg (not_le.mpr GT.gt), if_pos gt.le]
 #align min_def' min_def'
+-/
 
+#print max_def' /-
 -- Variant of `min_def` with the branches reversed.
 -- This is sometimes useful as it used to be the default.
 theorem max_def' [LinearOrder α] (a b : α) : max a b = if b ≤ a then a else b :=
@@ -614,6 +617,7 @@ theorem max_def' [LinearOrder α] (a b : α) : max a b = if b ≤ a then a else 
   · rw [if_pos Eq.le, if_pos Eq.ge, Eq]
   · rw [if_neg (not_le.mpr GT.gt), if_pos gt.le]
 #align max_def' max_def'
+-/
 
 #print lt_of_not_le /-
 theorem lt_of_not_le [LinearOrder α] {a b : α} (h : ¬b ≤ a) : a < b :=
@@ -655,30 +659,40 @@ theorem exists_ge_of_linear [LinearOrder α] (a b : α) : ∃ c, a ≤ c ∧ b �
 #align exists_ge_of_linear exists_ge_of_linear
 -/
 
+#print lt_imp_lt_of_le_imp_le /-
 theorem lt_imp_lt_of_le_imp_le {β} [LinearOrder α] [Preorder β] {a b : α} {c d : β}
     (H : a ≤ b → c ≤ d) (h : d < c) : b < a :=
   lt_of_not_le fun h' => (H h').not_lt h
 #align lt_imp_lt_of_le_imp_le lt_imp_lt_of_le_imp_le
+-/
 
+#print le_imp_le_iff_lt_imp_lt /-
 theorem le_imp_le_iff_lt_imp_lt {β} [LinearOrder α] [LinearOrder β] {a b : α} {c d : β} :
     a ≤ b → c ≤ d ↔ d < c → b < a :=
   ⟨lt_imp_lt_of_le_imp_le, le_imp_le_of_lt_imp_lt⟩
 #align le_imp_le_iff_lt_imp_lt le_imp_le_iff_lt_imp_lt
+-/
 
+#print lt_iff_lt_of_le_iff_le' /-
 theorem lt_iff_lt_of_le_iff_le' {β} [Preorder α] [Preorder β] {a b : α} {c d : β}
     (H : a ≤ b ↔ c ≤ d) (H' : b ≤ a ↔ d ≤ c) : b < a ↔ d < c :=
   lt_iff_le_not_le.trans <| (and_congr H' (not_congr H)).trans lt_iff_le_not_le.symm
 #align lt_iff_lt_of_le_iff_le' lt_iff_lt_of_le_iff_le'
+-/
 
+#print lt_iff_lt_of_le_iff_le /-
 theorem lt_iff_lt_of_le_iff_le {β} [LinearOrder α] [LinearOrder β] {a b : α} {c d : β}
     (H : a ≤ b ↔ c ≤ d) : b < a ↔ d < c :=
   not_le.symm.trans <| (not_congr H).trans <| not_le
 #align lt_iff_lt_of_le_iff_le lt_iff_lt_of_le_iff_le
+-/
 
+#print le_iff_le_iff_lt_iff_lt /-
 theorem le_iff_le_iff_lt_iff_lt {β} [LinearOrder α] [LinearOrder β] {a b : α} {c d : β} :
     (a ≤ b ↔ c ≤ d) ↔ (b < a ↔ d < c) :=
   ⟨lt_iff_lt_of_le_iff_le, fun H => not_lt.symm.trans <| (not_congr H).trans <| not_lt⟩
 #align le_iff_le_iff_lt_iff_lt le_iff_le_iff_lt_iff_lt
+-/
 
 #print eq_of_forall_le_iff /-
 theorem eq_of_forall_le_iff [PartialOrder α] {a b : α} (H : ∀ c, c ≤ a ↔ c ≤ b) : a = b :=
@@ -858,7 +872,6 @@ def Order.Preimage {α β} (f : α → β) (s : β → β → Prop) (x y : α) :
 #align order.preimage Order.Preimage
 -/
 
--- mathport name: «expr ⁻¹'o »
 infixl:80 " ⁻¹'o " => Order.Preimage
 
 #print Order.Preimage.decidable /-
@@ -879,7 +892,6 @@ def OrderDual (α : Type _) : Type _ :=
 #align order_dual OrderDual
 -/
 
--- mathport name: «expr ᵒᵈ»
 notation:max α "ᵒᵈ" => OrderDual α
 
 namespace OrderDual
@@ -952,8 +964,7 @@ class HasCompl (α : Type _) where
 
 export HasCompl (compl)
 
-/- ./././Mathport/Syntax/Translate/Command.lean:477:9: unsupported: advanced prec syntax «expr + »(max[std.prec.max], 1) -/
--- mathport name: «expr ᶜ»
+/- ./././Mathport/Syntax/Translate/Command.lean:476:9: unsupported: advanced prec syntax «expr + »(max[std.prec.max], 1) -/
 postfix:999 "ᶜ" => compl
 
 #print Prop.hasCompl /-
@@ -1041,25 +1052,32 @@ def StrongLT [∀ i, LT (π i)] (a b : ∀ i, π i) : Prop :=
 #align strong_lt StrongLT
 -/
 
--- mathport name: «expr ≺ »
 local infixl:50 " ≺ " => StrongLT
 
 variable [∀ i, Preorder (π i)] {a b c : ∀ i, π i}
 
+#print le_of_strongLT /-
 theorem le_of_strongLT (h : a ≺ b) : a ≤ b := fun i => (h _).le
 #align le_of_strong_lt le_of_strongLT
+-/
 
+#print lt_of_strongLT /-
 theorem lt_of_strongLT [Nonempty ι] (h : a ≺ b) : a < b := by inhabit ι;
   exact Pi.lt_def.2 ⟨le_of_strongLT h, default, h _⟩
 #align lt_of_strong_lt lt_of_strongLT
+-/
 
+#print strongLT_of_strongLT_of_le /-
 theorem strongLT_of_strongLT_of_le (hab : a ≺ b) (hbc : b ≤ c) : a ≺ c := fun i =>
   (hab _).trans_le <| hbc _
 #align strong_lt_of_strong_lt_of_le strongLT_of_strongLT_of_le
+-/
 
+#print strongLT_of_le_of_strongLT /-
 theorem strongLT_of_le_of_strongLT (hab : a ≤ b) (hbc : b ≺ c) : a ≺ c := fun i =>
   (hab _).trans_lt <| hbc _
 #align strong_lt_of_le_of_strong_lt strongLT_of_le_of_strongLT
+-/
 
 alias le_of_strongLT ← StrongLT.le
 #align strong_lt.le StrongLT.le
@@ -1080,46 +1098,64 @@ section Function
 variable [DecidableEq ι] [∀ i, Preorder (π i)] {x y : ∀ i, π i} {i : ι} {a b : π i}
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (j «expr ≠ » i) -/
+#print le_update_iff /-
 theorem le_update_iff : x ≤ Function.update y i a ↔ x i ≤ a ∧ ∀ (j) (_ : j ≠ i), x j ≤ y j :=
   Function.forall_update_iff _ fun j z => x j ≤ z
 #align le_update_iff le_update_iff
+-/
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (j «expr ≠ » i) -/
+#print update_le_iff /-
 theorem update_le_iff : Function.update x i a ≤ y ↔ a ≤ y i ∧ ∀ (j) (_ : j ≠ i), x j ≤ y j :=
   Function.forall_update_iff _ fun j z => z ≤ y j
 #align update_le_iff update_le_iff
+-/
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (j «expr ≠ » i) -/
+#print update_le_update_iff /-
 theorem update_le_update_iff :
     Function.update x i a ≤ Function.update y i b ↔ a ≤ b ∧ ∀ (j) (_ : j ≠ i), x j ≤ y j := by
   simp (config := { contextual := true }) [update_le_iff]
 #align update_le_update_iff update_le_update_iff
+-/
 
+#print update_le_update_iff' /-
 @[simp]
 theorem update_le_update_iff' : update x i a ≤ update x i b ↔ a ≤ b := by
   simp [update_le_update_iff]
 #align update_le_update_iff' update_le_update_iff'
+-/
 
+#print update_lt_update_iff /-
 @[simp]
 theorem update_lt_update_iff : update x i a < update x i b ↔ a < b :=
   lt_iff_lt_of_le_iff_le' update_le_update_iff' update_le_update_iff'
 #align update_lt_update_iff update_lt_update_iff
+-/
 
+#print le_update_self_iff /-
 @[simp]
 theorem le_update_self_iff : x ≤ update x i a ↔ x i ≤ a := by simp [le_update_iff]
 #align le_update_self_iff le_update_self_iff
+-/
 
+#print update_le_self_iff /-
 @[simp]
 theorem update_le_self_iff : update x i a ≤ x ↔ a ≤ x i := by simp [update_le_iff]
 #align update_le_self_iff update_le_self_iff
+-/
 
+#print lt_update_self_iff /-
 @[simp]
 theorem lt_update_self_iff : x < update x i a ↔ x i < a := by simp [lt_iff_le_not_le]
 #align lt_update_self_iff lt_update_self_iff
+-/
 
+#print update_lt_self_iff /-
 @[simp]
 theorem update_lt_self_iff : update x i a < x ↔ a < x i := by simp [lt_iff_le_not_le]
 #align update_lt_self_iff update_lt_self_iff
+-/
 
 end Function
 
@@ -1169,34 +1205,46 @@ section MinMaxRec
 
 variable [LinearOrder α] {p : α → Prop} {x y : α}
 
+#print min_rec /-
 theorem min_rec (hx : x ≤ y → p x) (hy : y ≤ x → p y) : p (min x y) :=
   (le_total x y).rec (fun h => (min_eq_left h).symm.subst (hx h)) fun h =>
     (min_eq_right h).symm.subst (hy h)
 #align min_rec min_rec
+-/
 
+#print max_rec /-
 theorem max_rec (hx : y ≤ x → p x) (hy : x ≤ y → p y) : p (max x y) :=
   @min_rec αᵒᵈ _ _ _ _ hx hy
 #align max_rec max_rec
+-/
 
+#print min_rec' /-
 theorem min_rec' (p : α → Prop) (hx : p x) (hy : p y) : p (min x y) :=
   min_rec (fun _ => hx) fun _ => hy
 #align min_rec' min_rec'
+-/
 
+#print max_rec' /-
 theorem max_rec' (p : α → Prop) (hx : p x) (hy : p y) : p (max x y) :=
   max_rec (fun _ => hx) fun _ => hy
 #align max_rec' max_rec'
+-/
 
+#print min_def_lt /-
 theorem min_def_lt (x y : α) : min x y = if x < y then x else y :=
   by
   rw [min_comm, min_def, ← ite_not]
   simp only [not_le]
 #align min_def_lt min_def_lt
+-/
 
+#print max_def_lt /-
 theorem max_def_lt (x y : α) : max x y = if x < y then y else x :=
   by
   rw [max_comm, max_def, ← ite_not]
   simp only [not_le]
 #align max_def_lt max_def_lt
+-/
 
 end MinMaxRec
 
@@ -1219,10 +1267,8 @@ class Inf (α : Type u) where
 #align has_inf Inf
 -/
 
--- mathport name: «expr ⊔ »
 infixl:68 " ⊔ " => Sup.sup
 
--- mathport name: «expr ⊓ »
 infixl:69 " ⊓ " => Inf.inf
 
 /-! ### Lifts of order instances -/
@@ -1251,6 +1297,7 @@ def PartialOrder.lift {α β} [PartialOrder β] (f : α → β) (inj : Injective
 #align partial_order.lift PartialOrder.lift
 -/
 
+#print LinearOrder.lift /-
 /-- Transfer a `linear_order` on `β` to a `linear_order` on `α` using an injective
 function `f : α → β`. This version takes `[has_sup α]` and `[has_inf α]` as arguments, then uses
 them for `max` and `min` fields. See `linear_order.lift'` for a version that autogenerates `min` and
@@ -1270,6 +1317,7 @@ def LinearOrder.lift {α β} [LinearOrder β] [Sup α] [Inf α] (f : α → β) 
     min_def := by ext (x y); apply inj; rw [hinf, min_def, minDefault, apply_ite f]; rfl
     max_def := by ext (x y); apply inj; rw [hsup, max_def, maxDefault, apply_ite f]; rfl }
 #align linear_order.lift LinearOrder.lift
+-/
 
 #print LinearOrder.lift' /-
 /-- Transfer a `linear_order` on `β` to a `linear_order` on `α` using an injective
@@ -1400,10 +1448,12 @@ instance (α : Type u) (β : Type v) [Preorder α] [Preorder β] : Preorder (α 
     le_trans := fun ⟨a, b⟩ ⟨c, d⟩ ⟨e, f⟩ ⟨hac, hbd⟩ ⟨hce, hdf⟩ =>
       ⟨le_trans hac hce, le_trans hbd hdf⟩ }
 
+#print Prod.swap_lt_swap /-
 @[simp]
 theorem swap_lt_swap : x.symm < y.symm ↔ x < y :=
   and_congr swap_le_swap (not_congr swap_le_swap)
 #align prod.swap_lt_swap Prod.swap_lt_swap
+-/
 
 #print Prod.mk_le_mk_iff_left /-
 theorem mk_le_mk_iff_left : (a₁, b) ≤ (a₂, b) ↔ a₁ ≤ a₂ :=
@@ -1417,14 +1467,19 @@ theorem mk_le_mk_iff_right : (a, b₁) ≤ (a, b₂) ↔ b₁ ≤ b₂ :=
 #align prod.mk_le_mk_iff_right Prod.mk_le_mk_iff_right
 -/
 
+#print Prod.mk_lt_mk_iff_left /-
 theorem mk_lt_mk_iff_left : (a₁, b) < (a₂, b) ↔ a₁ < a₂ :=
   lt_iff_lt_of_le_iff_le' mk_le_mk_iff_left mk_le_mk_iff_left
 #align prod.mk_lt_mk_iff_left Prod.mk_lt_mk_iff_left
+-/
 
+#print Prod.mk_lt_mk_iff_right /-
 theorem mk_lt_mk_iff_right : (a, b₁) < (a, b₂) ↔ b₁ < b₂ :=
   lt_iff_lt_of_le_iff_le' mk_le_mk_iff_right mk_le_mk_iff_right
 #align prod.mk_lt_mk_iff_right Prod.mk_lt_mk_iff_right
+-/
 
+#print Prod.lt_iff /-
 theorem lt_iff : x < y ↔ x.1 < y.1 ∧ x.2 ≤ y.2 ∨ x.1 ≤ y.1 ∧ x.2 < y.2 :=
   by
   refine' ⟨fun h => _, _⟩
@@ -1435,11 +1490,14 @@ theorem lt_iff : x < y ↔ x.1 < y.1 ∧ x.2 ≤ y.2 ∨ x.1 ≤ y.1 ∧ x.2 < y
     · exact ⟨⟨h₁.le, h₂⟩, fun h => h₁.not_le h.1⟩
     · exact ⟨⟨h₁, h₂.le⟩, fun h => h₂.not_le h.2⟩
 #align prod.lt_iff Prod.lt_iff
+-/
 
+#print Prod.mk_lt_mk /-
 @[simp]
 theorem mk_lt_mk : (a₁, b₁) < (a₂, b₂) ↔ a₁ < a₂ ∧ b₁ ≤ b₂ ∨ a₁ ≤ a₂ ∧ b₁ < b₂ :=
   lt_iff
 #align prod.mk_lt_mk Prod.mk_lt_mk
+-/
 
 end Preorder
 
@@ -1574,13 +1632,17 @@ instance : LinearOrder PUnit := by
     | simp only [eq_iff_true_of_subsingleton, not_true, and_false_iff]
     | exact Or.inl trivial
 
+#print PUnit.max_eq /-
 theorem max_eq : max a b = unit :=
   rfl
 #align punit.max_eq PUnit.max_eq
+-/
 
+#print PUnit.min_eq /-
 theorem min_eq : min a b = unit :=
   rfl
 #align punit.min_eq PUnit.min_eq
+-/
 
 #print PUnit.le /-
 @[simp]

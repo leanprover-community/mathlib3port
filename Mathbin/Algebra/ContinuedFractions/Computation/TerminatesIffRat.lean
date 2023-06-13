@@ -169,8 +169,6 @@ the computation first and then lift the results step-by-step.
 -- The lifting works for arbitrary linear ordered fields with a floor function.
 variable {v : K} {q : ℚ} (v_eq_q : v = (↑q : K)) (n : ℕ)
 
-include v_eq_q
-
 /-! First, we show the correspondence for the very basic functions in
 `generalized_continued_fraction.int_fract_pair`. -/
 

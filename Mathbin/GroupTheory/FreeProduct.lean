@@ -111,6 +111,7 @@ structure Word where
 
 variable {M}
 
+#print FreeProduct.of /-
 /-- The inclusion of a summand into the free product. -/
 def of {i : ι} : M i →* FreeProduct M
     where
@@ -118,13 +119,17 @@ def of {i : ι} : M i →* FreeProduct M
   map_one' := (Con.eq _).mpr (ConGen.Rel.of _ _ (FreeProduct.Rel.of_one i))
   map_mul' x y := Eq.symm <| (Con.eq _).mpr (ConGen.Rel.of _ _ (FreeProduct.Rel.of_mul x y))
 #align free_product.of FreeProduct.of
+-/
 
+#print FreeProduct.of_apply /-
 theorem of_apply {i} (m : M i) : of m = Con.mk' _ (FreeMonoid.of <| Sigma.mk i m) :=
   rfl
 #align free_product.of_apply FreeProduct.of_apply
+-/
 
 variable {N : Type _} [Monoid N]
 
+#print FreeProduct.ext_hom /-
 /-- See note [partially-applied ext lemmas]. -/
 @[ext]
 theorem ext_hom (f g : FreeProduct M →* N) (h : ∀ i, f.comp (of : M i →* _) = g.comp of) : f = g :=
@@ -133,7 +138,9 @@ theorem ext_hom (f g : FreeProduct M →* N) (h : ∀ i, f.comp (of : M i →* _
       rw [MonoidHom.comp_apply, MonoidHom.comp_apply, ← of_apply, ← MonoidHom.comp_apply, ←
         MonoidHom.comp_apply, h]
 #align free_product.ext_hom FreeProduct.ext_hom
+-/
 
+#print FreeProduct.lift /-
 /-- A map out of the free product corresponds to a family of maps out of the summands. This is the
 universal property of the free product, charaterizing it as a categorical coproduct. -/
 @[simps symm_apply]
@@ -159,12 +166,16 @@ def lift : (∀ i, M i →* N) ≃ (FreeProduct M →* N)
     intro f; ext (i x)
     simp only [MonoidHom.comp_apply, of_apply, Con.lift_mk', FreeMonoid.lift_eval_of]
 #align free_product.lift FreeProduct.lift
+-/
 
+#print FreeProduct.lift_of /-
 @[simp]
 theorem lift_of {N} [Monoid N] (fi : ∀ i, M i →* N) {i} (m : M i) : lift fi (of m) = fi i m := by
   conv_rhs => rw [← lift.symm_apply_apply fi, lift_symm_apply, MonoidHom.comp_apply]
 #align free_product.lift_of FreeProduct.lift_of
+-/
 
+#print FreeProduct.induction_on /-
 @[elab_as_elim]
 theorem induction_on {C : FreeProduct M → Prop} (m : FreeProduct M) (h_one : C 1)
     (h_of : ∀ (i) (m : M i), C (of m)) (h_mul : ∀ x y, C x → C y → C (x * y)) : C m :=
@@ -176,16 +187,22 @@ theorem induction_on {C : FreeProduct M → Prop} (m : FreeProduct M) (h_one : C
   ext
   simp [MonoidHom.codRestrict]
 #align free_product.induction_on FreeProduct.induction_on
+-/
 
+#print FreeProduct.of_leftInverse /-
 theorem of_leftInverse [DecidableEq ι] (i : ι) :
     Function.LeftInverse (lift <| Pi.mulSingle i (MonoidHom.id (M i))) of := fun x => by
   simp only [lift_of, Pi.mulSingle_eq_same, MonoidHom.id_apply]
 #align free_product.of_left_inverse FreeProduct.of_leftInverse
+-/
 
+#print FreeProduct.of_injective /-
 theorem of_injective (i : ι) : Function.Injective ⇑(of : M i →* _) := by
   classical exact (of_left_inverse i).Injective
 #align free_product.of_injective FreeProduct.of_injective
+-/
 
+#print FreeProduct.lift_mrange_le /-
 theorem lift_mrange_le {N} [Monoid N] (f : ∀ i, M i →* N) {s : Submonoid N}
     (h : ∀ i, (f i).mrange ≤ s) : (lift f).mrange ≤ s :=
   by
@@ -195,6 +212,7 @@ theorem lift_mrange_le {N} [Monoid N] (f : ∀ i, M i →* N) {s : Submonoid N}
   · simp only [lift_of, SetLike.mem_coe]; exact h i (Set.mem_range_self x)
   · simp only [map_mul, SetLike.mem_coe]; exact s.mul_mem hx hy
 #align free_product.lift_mrange_le FreeProduct.lift_mrange_le
+-/
 
 #print FreeProduct.mrange_eq_iSup /-
 theorem mrange_eq_iSup {N} [Monoid N] (f : ∀ i, M i →* N) : (lift f).mrange = ⨆ i, (f i).mrange :=
@@ -214,12 +232,14 @@ instance : Inv (FreeProduct G)
     where inv :=
     MulOpposite.unop ∘ lift fun i => (of : G i →* _).op.comp (MulEquiv.inv' (G i)).toMonoidHom
 
+#print FreeProduct.inv_def /-
 theorem inv_def (x : FreeProduct G) :
     x⁻¹ =
       MulOpposite.unop
         (lift (fun i => (of : G i →* _).op.comp (MulEquiv.inv' (G i)).toMonoidHom) x) :=
   rfl
 #align free_product.inv_def FreeProduct.inv_def
+-/
 
 instance : Group (FreeProduct G) :=
   { FreeProduct.hasInv G, FreeProduct.monoid G with
@@ -233,6 +253,7 @@ instance : Group (FreeProduct G) :=
         rw [MonoidHom.map_mul, MulOpposite.unop_mul, mul_assoc, ← mul_assoc _ x y, hx, one_mul,
           hy] }
 
+#print FreeProduct.lift_range_le /-
 theorem lift_range_le {N} [Group N] (f : ∀ i, G i →* N) {s : Subgroup N}
     (h : ∀ i, (f i).range ≤ s) : (lift f).range ≤ s :=
   by
@@ -242,6 +263,7 @@ theorem lift_range_le {N} [Group N] (f : ∀ i, G i →* N) {s : Subgroup N}
   · simp only [lift_of, SetLike.mem_coe]; exact h i (Set.mem_range_self x)
   · simp only [map_mul, SetLike.mem_coe]; exact s.mul_mem hx hy
 #align free_product.lift_range_le FreeProduct.lift_range_le
+-/
 
 #print FreeProduct.range_eq_iSup /-
 theorem range_eq_iSup {N} [Group N] (f : ∀ i, G i →* N) : (lift f).range = ⨆ i, (f i).range :=
@@ -276,10 +298,12 @@ def prod (w : Word M) : FreeProduct M :=
 #align free_product.word.prod FreeProduct.Word.prod
 -/
 
+#print FreeProduct.Word.prod_empty /-
 @[simp]
 theorem prod_empty : prod (empty : Word M) = 1 :=
   rfl
 #align free_product.word.prod_empty FreeProduct.Word.prod_empty
+-/
 
 #print FreeProduct.Word.fstIdx /-
 /-- `fst_idx w` is `some i` if the first letter of `w` is `⟨i, m⟩` with `m : M i`. If `w` is empty
@@ -289,10 +313,12 @@ def fstIdx (w : Word M) : Option ι :=
 #align free_product.word.fst_idx FreeProduct.Word.fstIdx
 -/
 
+#print FreeProduct.Word.fstIdx_ne_iff /-
 theorem fstIdx_ne_iff {w : Word M} {i} :
     fstIdx w ≠ some i ↔ ∀ l ∈ w.toList.head?, i ≠ Sigma.fst l :=
   not_iff_not.mp <| by simp [fst_idx]
 #align free_product.word.fst_idx_ne_iff FreeProduct.Word.fstIdx_ne_iff
+-/
 
 variable (M)
 
@@ -338,17 +364,22 @@ private def mk_aux {l} (ls : List (Σ i, M i)) (h1 : ∀ l' ∈ l::ls, Sigma.snd
   ⟨ls, fun l' hl => h1 _ (List.mem_cons_of_mem _ hl), h2.tail⟩
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print FreeProduct.Word.cons_eq_rcons /-
 theorem cons_eq_rcons {i} {m : M i} {ls h1 h2} :
     Word.mk (⟨i, m⟩::ls) h1 h2 = rcons ⟨m, mkAux ls h1 h2, fstIdx_ne_iff.mpr h2.rel_head?⟩ := by
   rw [rcons, dif_neg]; rfl; exact h1 ⟨i, m⟩ (ls.mem_cons_self _)
 #align free_product.word.cons_eq_rcons FreeProduct.Word.cons_eq_rcons
+-/
 
+#print FreeProduct.Word.prod_rcons /-
 @[simp]
 theorem prod_rcons {i} (p : Pair M i) : prod (rcons p) = of p.headI * prod p.tail :=
   if hm : p.headI = 1 then by rw [rcons, dif_pos hm, hm, MonoidHom.map_one, one_mul]
   else by rw [rcons, dif_neg hm, Prod, List.map_cons, List.prod_cons, Prod]
 #align free_product.word.prod_rcons FreeProduct.Word.prod_rcons
+-/
 
+#print FreeProduct.Word.rcons_inj /-
 theorem rcons_inj {i} : Function.Injective (rcons : Pair M i → Word M) :=
   by
   rintro ⟨m, w, h⟩ ⟨m', w', h'⟩ he
@@ -362,6 +393,7 @@ theorem rcons_inj {i} : Function.Injective (rcons : Pair M i → Word M) :=
     rcases this with ⟨rfl, h⟩
     congr; exact word.ext _ _ h
 #align free_product.word.rcons_inj FreeProduct.Word.rcons_inj
+-/
 
 variable [DecidableEq ι]
 
@@ -392,14 +424,18 @@ def equivPair (i) : Word M ≃ Pair M i
 #align free_product.word.equiv_pair FreeProduct.Word.equivPair
 -/
 
+#print FreeProduct.Word.equivPair_symm /-
 theorem equivPair_symm (i) (p : Pair M i) : (equivPair i).symm p = rcons p :=
   rfl
 #align free_product.word.equiv_pair_symm FreeProduct.Word.equivPair_symm
+-/
 
+#print FreeProduct.Word.equivPair_eq_of_fstIdx_ne /-
 theorem equivPair_eq_of_fstIdx_ne {i} {w : Word M} (h : fstIdx w ≠ some i) :
     equivPair i w = ⟨1, w, h⟩ :=
   (equivPair i).apply_eq_iff_eq_symm_apply.mpr <| Eq.symm (dif_pos rfl)
 #align free_product.word.equiv_pair_eq_of_fst_idx_ne FreeProduct.Word.equivPair_eq_of_fstIdx_ne
+-/
 
 #print FreeProduct.Word.summandAction /-
 instance summandAction (i) : MulAction (M i) (Word M)
@@ -413,17 +449,22 @@ instance summandAction (i) : MulAction (M i) (Word M)
 instance : MulAction (FreeProduct M) (Word M) :=
   MulAction.ofEndHom (lift fun i => MulAction.toEndHom)
 
+#print FreeProduct.Word.of_smul_def /-
 theorem of_smul_def (i) (w : Word M) (m : M i) :
     of m • w = rcons { equivPair i w with headI := m * (equivPair i w).headI } :=
   rfl
 #align free_product.word.of_smul_def FreeProduct.Word.of_smul_def
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print FreeProduct.Word.cons_eq_smul /-
 theorem cons_eq_smul {i} {m : M i} {ls h1 h2} :
     Word.mk (⟨i, m⟩::ls) h1 h2 = of m • mkAux ls h1 h2 := by
   rw [cons_eq_rcons, of_smul_def, equiv_pair_eq_of_fst_idx_ne _] <;> simp only [mul_one]
 #align free_product.word.cons_eq_smul FreeProduct.Word.cons_eq_smul
+-/
 
+#print FreeProduct.Word.smul_induction /-
 theorem smul_induction {C : Word M → Prop} (h_empty : C empty)
     (h_smul : ∀ (i) (m : M i) (w), C w → C (of m • w)) (w : Word M) : C w :=
   by
@@ -434,7 +475,9 @@ theorem smul_induction {C : Word M → Prop} (h_empty : C empty)
   rw [cons_eq_smul]
   exact h_smul _ _ _ (ih _ _)
 #align free_product.word.smul_induction FreeProduct.Word.smul_induction
+-/
 
+#print FreeProduct.Word.prod_smul /-
 @[simp]
 theorem prod_smul (m) : ∀ w : Word M, prod (m • w) = m * prod w :=
   by
@@ -445,6 +488,7 @@ theorem prod_smul (m) : ∀ w : Word M, prod (m • w) = m * prod w :=
       Equiv.symm_apply_apply]
   · intro x y hx hy w; rw [mul_smul, hx, hy, mul_assoc]
 #align free_product.word.prod_smul FreeProduct.Word.prod_smul
+-/
 
 #print FreeProduct.Word.equiv /-
 /-- Each element of the free product corresponds to a unique reduced word. -/
@@ -495,9 +539,11 @@ def toList : ∀ {i j} (w : NeWord M i j), List (Σ i, M i)
 #align free_product.neword.to_list FreeProduct.NeWord.toList
 -/
 
+#print FreeProduct.NeWord.toList_ne_nil /-
 theorem toList_ne_nil {i j} (w : NeWord M i j) : w.toList ≠ List.nil := by induction w;
   · rintro ⟨rfl⟩; · apply List.append_ne_nil_of_ne_nil_left; assumption
 #align free_product.neword.to_list_ne_nil FreeProduct.NeWord.toList_ne_nil
+-/
 
 #print FreeProduct.NeWord.head /-
 /-- The first letter of a `neword` -/
@@ -517,6 +563,7 @@ def last : ∀ {i j} (w : NeWord M i j), M j
 #align free_product.neword.last FreeProduct.NeWord.last
 -/
 
+#print FreeProduct.NeWord.toList_head? /-
 @[simp]
 theorem toList_head? {i j} (w : NeWord M i j) : w.toList.head? = Option.some ⟨i, w.headI⟩ :=
   by
@@ -525,7 +572,9 @@ theorem toList_head? {i j} (w : NeWord M i j) : w.toList.head? = Option.some ⟨
   · rw [Option.mem_def]; rfl
   · exact List.head?_append w_ih_w₁
 #align free_product.neword.to_list_head' FreeProduct.NeWord.toList_head?
+-/
 
+#print FreeProduct.NeWord.toList_getLast? /-
 @[simp]
 theorem toList_getLast? {i j} (w : NeWord M i j) : w.toList.getLast? = Option.some ⟨j, w.getLast⟩ :=
   by
@@ -534,6 +583,7 @@ theorem toList_getLast? {i j} (w : NeWord M i j) : w.toList.getLast? = Option.so
   · rw [Option.mem_def]; rfl
   · exact List.getLast?_append w_ih_w₂
 #align free_product.neword.to_list_last' FreeProduct.NeWord.toList_getLast?
+-/
 
 #print FreeProduct.NeWord.toWord /-
 /-- The `word M` represented by a `neword M i j` -/
@@ -563,6 +613,7 @@ def toWord {i j} (w : NeWord M i j) : Word M
 -/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print FreeProduct.NeWord.of_word /-
 /-- Every nonempty `word M` can be constructed as a `neword M i j` -/
 theorem of_word (w : Word M) (h : w ≠ Empty) : ∃ (i j : _) (w' : NeWord M i j), w'.toWord = w :=
   by
@@ -582,6 +633,7 @@ theorem of_word (w : Word M) (h : w ≠ Empty) : ∃ (i j : _) (w' : NeWord M i 
       refine' ⟨x.1, j, append (singleton x.2 hnot1.1) hchain.1 w', _⟩
       · simpa [to_word] using hw'
 #align free_product.neword.of_word FreeProduct.NeWord.of_word
+-/
 
 #print FreeProduct.NeWord.prod /-
 /-- A non-empty reduced word determines an element of the free product, given by multiplication. -/
@@ -590,61 +642,82 @@ def prod {i j} (w : NeWord M i j) :=
 #align free_product.neword.prod FreeProduct.NeWord.prod
 -/
 
+#print FreeProduct.NeWord.singleton_head /-
 @[simp]
 theorem singleton_head {i} (x : M i) (hne_one : x ≠ 1) : (singleton x hne_one).headI = x :=
   rfl
 #align free_product.neword.singleton_head FreeProduct.NeWord.singleton_head
+-/
 
+#print FreeProduct.NeWord.singleton_last /-
 @[simp]
 theorem singleton_last {i} (x : M i) (hne_one : x ≠ 1) : (singleton x hne_one).getLast = x :=
   rfl
 #align free_product.neword.singleton_last FreeProduct.NeWord.singleton_last
+-/
 
+#print FreeProduct.NeWord.prod_singleton /-
 @[simp]
 theorem prod_singleton {i} (x : M i) (hne_one : x ≠ 1) : (singleton x hne_one).Prod = of x := by
   simp [to_word, Prod, word.prod]
 #align free_product.neword.prod_singleton FreeProduct.NeWord.prod_singleton
+-/
 
+#print FreeProduct.NeWord.append_head /-
 @[simp]
 theorem append_head {i j k l} {w₁ : NeWord M i j} {hne : j ≠ k} {w₂ : NeWord M k l} :
     (append w₁ hne w₂).headI = w₁.headI :=
   rfl
 #align free_product.neword.append_head FreeProduct.NeWord.append_head
+-/
 
+#print FreeProduct.NeWord.append_last /-
 @[simp]
 theorem append_last {i j k l} {w₁ : NeWord M i j} {hne : j ≠ k} {w₂ : NeWord M k l} :
     (append w₁ hne w₂).getLast = w₂.getLast :=
   rfl
 #align free_product.neword.append_last FreeProduct.NeWord.append_last
+-/
 
+#print FreeProduct.NeWord.append_prod /-
 @[simp]
 theorem append_prod {i j k l} {w₁ : NeWord M i j} {hne : j ≠ k} {w₂ : NeWord M k l} :
     (append w₁ hne w₂).Prod = w₁.Prod * w₂.Prod := by simp [to_word, Prod, word.prod]
 #align free_product.neword.append_prod FreeProduct.NeWord.append_prod
+-/
 
+#print FreeProduct.NeWord.replaceHead /-
 /-- One can replace the first letter in a non-empty reduced word by an element of the same
 group -/
 def replaceHead : ∀ {i j : ι} (x : M i) (hnotone : x ≠ 1) (w : NeWord M i j), NeWord M i j
   | _, _, x, h, singleton _ _ => singleton x h
   | _, _, x, h, append w₁ hne w₂ => append (replace_head x h w₁) hne w₂
 #align free_product.neword.replace_head FreeProduct.NeWord.replaceHead
+-/
 
+#print FreeProduct.NeWord.replaceHead_head /-
 @[simp]
 theorem replaceHead_head {i j : ι} (x : M i) (hnotone : x ≠ 1) (w : NeWord M i j) :
     (replaceHead x hnotone w).headI = x := by induction w; rfl; exact w_ih_w₁ _ _
 #align free_product.neword.replace_head_head FreeProduct.NeWord.replaceHead_head
+-/
 
+#print FreeProduct.NeWord.mulHead /-
 /-- One can multiply an element from the left to a non-empty reduced word if it does not cancel
 with the first element in the word. -/
 def mulHead {i j : ι} (w : NeWord M i j) (x : M i) (hnotone : x * w.headI ≠ 1) : NeWord M i j :=
   replaceHead (x * w.headI) hnotone w
 #align free_product.neword.mul_head FreeProduct.NeWord.mulHead
+-/
 
+#print FreeProduct.NeWord.mulHead_head /-
 @[simp]
 theorem mulHead_head {i j : ι} (w : NeWord M i j) (x : M i) (hnotone : x * w.headI ≠ 1) :
     (mulHead w x hnotone).headI = x * w.headI := by induction w; rfl; exact w_ih_w₁ _ _
 #align free_product.neword.mul_head_head FreeProduct.NeWord.mulHead_head
+-/
 
+#print FreeProduct.NeWord.mulHead_prod /-
 @[simp]
 theorem mulHead_prod {i j : ι} (w : NeWord M i j) (x : M i) (hnotone : x * w.headI ≠ 1) :
     (mulHead w x hnotone).Prod = of x * w.Prod :=
@@ -656,6 +729,7 @@ theorem mulHead_prod {i j : ι} (w : NeWord M i j) (x : M i) (hnotone : x * w.he
     simp [replace_head, ← mul_assoc] at *
     congr 1
 #align free_product.neword.mul_head_prod FreeProduct.NeWord.mulHead_prod
+-/
 
 section Group
 
@@ -669,20 +743,26 @@ def inv : ∀ {i j} (w : NeWord G i j), NeWord G j i
 #align free_product.neword.inv FreeProduct.NeWord.inv
 -/
 
+#print FreeProduct.NeWord.inv_prod /-
 @[simp]
 theorem inv_prod {i j} (w : NeWord G i j) : w.inv.Prod = w.Prod⁻¹ := by
   induction w <;> simp [inv, *]
 #align free_product.neword.inv_prod FreeProduct.NeWord.inv_prod
+-/
 
+#print FreeProduct.NeWord.inv_head /-
 @[simp]
 theorem inv_head {i j} (w : NeWord G i j) : w.inv.headI = w.getLast⁻¹ := by
   induction w <;> simp [inv, *]
 #align free_product.neword.inv_head FreeProduct.NeWord.inv_head
+-/
 
+#print FreeProduct.NeWord.inv_last /-
 @[simp]
 theorem inv_last {i j} (w : NeWord G i j) : w.inv.getLast = w.headI⁻¹ := by
   induction w <;> simp [inv, *]
 #align free_product.neword.inv_last FreeProduct.NeWord.inv_last
+-/
 
 end Group
 
@@ -716,8 +796,7 @@ variable (hXdisj : Pairwise fun i j => Disjoint (X i) (X j))
 
 variable (hpp : Pairwise fun i j => ∀ h : H i, h ≠ 1 → f i h • X j ⊆ X i)
 
-include hpp
-
+#print FreeProduct.lift_word_ping_pong /-
 theorem lift_word_ping_pong {i j k} (w : NeWord H i j) (hk : j ≠ k) : lift f w.Prod • X k ⊆ X i :=
   by
   rename' i => i', j => j', k => m, hk => hm
@@ -730,9 +809,9 @@ theorem lift_word_ping_pong {i j k} (w : NeWord H i j) (hk : j ≠ k) : lift f w
       _ ⊆ lift f w₁.prod • X k := (set_smul_subset_set_smul_iff.mpr (hIw₂ hm))
       _ ⊆ X i := hIw₁ hne
 #align free_product.lift_word_ping_pong FreeProduct.lift_word_ping_pong
+-/
 
-include X hXnonempty hXdisj
-
+#print FreeProduct.lift_word_prod_nontrivial_of_other_i /-
 theorem lift_word_prod_nontrivial_of_other_i {i j k} (w : NeWord H i j) (hhead : k ≠ i)
     (hlast : k ≠ j) : lift f w.Prod ≠ 1 := by
   intro heq1
@@ -740,15 +819,17 @@ theorem lift_word_prod_nontrivial_of_other_i {i j k} (w : NeWord H i j) (hhead :
   obtain ⟨x, hx⟩ := hXnonempty k
   exact (hXdisj hhead).le_bot ⟨hx, this hx⟩
 #align free_product.lift_word_prod_nontrivial_of_other_i FreeProduct.lift_word_prod_nontrivial_of_other_i
+-/
 
-include hnontriv
-
+#print FreeProduct.lift_word_prod_nontrivial_of_head_eq_last /-
 theorem lift_word_prod_nontrivial_of_head_eq_last {i} (w : NeWord H i i) : lift f w.Prod ≠ 1 :=
   by
   obtain ⟨k, hk⟩ := exists_ne i
   exact lift_word_prod_nontrivial_of_other_i f X hXnonempty hXdisj hpp w hk hk
 #align free_product.lift_word_prod_nontrivial_of_head_eq_last FreeProduct.lift_word_prod_nontrivial_of_head_eq_last
+-/
 
+#print FreeProduct.lift_word_prod_nontrivial_of_head_card /-
 theorem lift_word_prod_nontrivial_of_head_card {i j} (w : NeWord H i j) (hcard : 3 ≤ (#H i))
     (hheadtail : i ≠ j) : lift f w.Prod ≠ 1 :=
   by
@@ -761,9 +842,9 @@ theorem lift_word_prod_nontrivial_of_head_card {i j} (w : NeWord H i j) (hcard :
     lift_word_prod_nontrivial_of_head_eq_last f X hXnonempty hXdisj hpp w'
   intro heq1; apply hw'; simp [w', heq1]
 #align free_product.lift_word_prod_nontrivial_of_head_card FreeProduct.lift_word_prod_nontrivial_of_head_card
+-/
 
-include hcard
-
+#print FreeProduct.lift_word_prod_nontrivial_of_not_empty /-
 theorem lift_word_prod_nontrivial_of_not_empty {i j} (w : NeWord H i j) : lift f w.Prod ≠ 1 := by
   classical
   cases hcard
@@ -791,14 +872,18 @@ theorem lift_word_prod_nontrivial_of_not_empty {i j} (w : NeWord H i j) : lift f
         lift_word_prod_nontrivial_of_head_eq_last f X hXnonempty hXdisj hpp w'
       intro heq1; apply hw'; simp [w', heq1]
 #align free_product.lift_word_prod_nontrivial_of_not_empty FreeProduct.lift_word_prod_nontrivial_of_not_empty
+-/
 
+#print FreeProduct.empty_of_word_prod_eq_one /-
 theorem empty_of_word_prod_eq_one {w : Word H} (h : lift f w.Prod = 1) : w = Word.empty :=
   by
   by_contra hnotempty
   obtain ⟨i, j, w, rfl⟩ := neword.of_word w hnotempty
   exact lift_word_prod_nontrivial_of_not_empty f hcard X hXnonempty hXdisj hpp w h
 #align free_product.empty_of_word_prod_eq_one FreeProduct.empty_of_word_prod_eq_one
+-/
 
+#print FreeProduct.lift_injective_of_ping_pong /-
 /-- The Ping-Pong-Lemma.
 
 Given a group action of `G` on `X` so that the `H i` acts in a specific way on disjoint subsets
@@ -821,6 +906,7 @@ theorem lift_injective_of_ping_pong : Function.Injective (lift f) := by
     · rw [empty_of_word_prod_eq_one f hcard X hXnonempty hXdisj hpp Heq]
       rfl
 #align free_product.lift_injective_of_ping_pong FreeProduct.lift_injective_of_ping_pong
+-/
 
 end PingPongLemma
 
@@ -840,6 +926,7 @@ instance {ι : Type _} (G : ι → Type _) [∀ i, Group (G i)] [hG : ∀ i, IsF
           G i →* FreeGroup (Σ i, IsFreeGroup.Generators (G i))))
       (by ext; simp) (by ext; simp)
 
+#print freeGroupEquivFreeProduct /-
 -- NB: One might expect this theorem to be phrased with ℤ, but ℤ is an additive group,
 -- and using `multiplicative ℤ` runs into diamond issues.
 /-- A free group is a free product of copies of the free_group over one generator. -/
@@ -853,6 +940,7 @@ def freeGroupEquivFreeProduct {ι : Type u_1} :
   · ext i; rfl
   · ext (i a); cases a; rfl
 #align free_group_equiv_free_product freeGroupEquivFreeProduct
+-/
 
 section PingPongLemma
 
@@ -879,8 +967,7 @@ variable (hX : ∀ i, a i • Y iᶜ ⊆ X i)
 
 variable (hY : ∀ i, a⁻¹ i • X iᶜ ⊆ Y i)
 
-include hXnonempty hXdisj hYdisj hXYdisj hX hY
-
+#print FreeGroup.injective_lift_of_ping_pong /-
 /-- The Ping-Pong-Lemma.
 
 Given a group action of `G` on `X` so that the generators of the free groups act in specific
@@ -968,6 +1055,7 @@ theorem FreeGroup.injective_lift_of_ping_pong : Function.Injective (FreeGroup.li
               _ ⊆ Y i := hi
         _ ⊆ X' i := Set.subset_union_right _ _
 #align free_group.injective_lift_of_ping_pong FreeGroup.injective_lift_of_ping_pong
+-/
 
 end PingPongLemma
 

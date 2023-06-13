@@ -33,8 +33,6 @@ open scoped Cyclotomic NumberField Nat
 
 variable {p : ℕ+} {k : ℕ} {K : Type u} [Field K] [CharZero K] {ζ : K} [hp : Fact (p : ℕ).Prime]
 
-include hp
-
 namespace IsCyclotomicExtension.Rat
 
 /-- The discriminant of the power basis given by `ζ - 1`. -/

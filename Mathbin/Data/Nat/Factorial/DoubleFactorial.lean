@@ -41,7 +41,6 @@ def doubleFactorial : ℕ → ℕ
 #align nat.double_factorial Nat.doubleFactorial
 -/
 
--- mathport name: nat.double_factorial
 -- This notation is `\!!` not two !'s
 scoped notation:10000 n "‼" => Nat.doubleFactorial n
 

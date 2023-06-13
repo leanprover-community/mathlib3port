@@ -137,6 +137,7 @@ theorem comp_f : (f ≫ g).1 = f.1 ≫ g.1 :=
 /-- Algebras of an endofunctor `F` form a category -/
 instance (F : C ⥤ C) : Category (Algebra F) where
 
+#print CategoryTheory.Endofunctor.Algebra.isoMk /-
 /-- To construct an isomorphism of algebras, it suffices to give an isomorphism of the As which
 commutes with the structure morphisms.
 -/
@@ -148,6 +149,7 @@ def isoMk (h : A₀.1 ≅ A₁.1) (w : F.map h.Hom ≫ A₁.str = A₀.str ≫ h
     { f := h.inv
       h' := by rw [h.eq_comp_inv, category.assoc, ← w, ← functor.map_comp_assoc]; simp }
 #align category_theory.endofunctor.algebra.iso_mk CategoryTheory.Endofunctor.Algebra.isoMk
+-/
 
 #print CategoryTheory.Endofunctor.Algebra.forget /-
 /-- The forgetful functor from the category of algebras, forgetting the algebraic structure. -/
@@ -238,6 +240,7 @@ def functorOfNatTransEq {F G : C ⥤ C} {α β : F ⟶ G} (h : α = β) :
 #align category_theory.endofunctor.algebra.functor_of_nat_trans_eq CategoryTheory.Endofunctor.Algebra.functorOfNatTransEq
 -/
 
+#print CategoryTheory.Endofunctor.Algebra.equivOfNatIso /-
 /-- Naturally isomorphic endofunctors give equivalent categories of algebras.
 Furthermore, they are equivalent as categories over `C`, that is,
 we have `equiv_of_nat_iso h ⋙ forget = forget`.
@@ -251,37 +254,48 @@ def equivOfNatIso {F G : C ⥤ C} (α : F ≅ G) : Algebra F ≌ Algebra G
   counitIso :=
     (functorOfNatTransComp _ _).symm ≪≫ functorOfNatTransEq (by simp) ≪≫ functorOfNatTransId
 #align category_theory.endofunctor.algebra.equiv_of_nat_iso CategoryTheory.Endofunctor.Algebra.equivOfNatIso
+-/
 
 namespace Initial
 
 variable {A} (h : Limits.IsInitial A)
 
+#print CategoryTheory.Endofunctor.Algebra.Initial.strInv /-
 /-- The inverse of the structure map of an initial algebra -/
 @[simp]
 def strInv : A.1 ⟶ F.obj A.1 :=
   (h.to ⟨F.obj A.1, F.map A.str⟩).1
 #align category_theory.endofunctor.algebra.initial.str_inv CategoryTheory.Endofunctor.Algebra.Initial.strInv
+-/
 
+#print CategoryTheory.Endofunctor.Algebra.Initial.left_inv' /-
 theorem left_inv' : (⟨strInv h ≫ A.str⟩ : A ⟶ A) = 𝟙 A :=
   Limits.IsInitial.hom_ext h _ (𝟙 A)
 #align category_theory.endofunctor.algebra.initial.left_inv' CategoryTheory.Endofunctor.Algebra.Initial.left_inv'
+-/
 
+#print CategoryTheory.Endofunctor.Algebra.Initial.left_inv /-
 theorem left_inv : strInv h ≫ A.str = 𝟙 _ :=
   congr_arg Hom.f (left_inv' h)
 #align category_theory.endofunctor.algebra.initial.left_inv CategoryTheory.Endofunctor.Algebra.Initial.left_inv
+-/
 
+#print CategoryTheory.Endofunctor.Algebra.Initial.right_inv /-
 theorem right_inv : A.str ≫ strInv h = 𝟙 _ :=
   by
   rw [str_inv, ← (h.to ⟨F.obj A.1, F.map A.str⟩).h, ← F.map_id, ← F.map_comp]
   congr; exact left_inv h
 #align category_theory.endofunctor.algebra.initial.right_inv CategoryTheory.Endofunctor.Algebra.Initial.right_inv
+-/
 
+#print CategoryTheory.Endofunctor.Algebra.Initial.str_isIso /-
 /-- The structure map of the inital algebra is an isomorphism,
 hence endofunctors preserve their initial algebras
 -/
 theorem str_isIso (h : Limits.IsInitial A) : IsIso A.str :=
   { out := ⟨strInv h, right_inv _, left_inv _⟩ }
 #align category_theory.endofunctor.algebra.initial.str_is_iso CategoryTheory.Endofunctor.Algebra.Initial.str_isIso
+-/
 
 end Initial
 
@@ -384,6 +398,7 @@ theorem comp_f : (f ≫ g).1 = f.1 ≫ g.1 :=
 /-- Coalgebras of an endofunctor `F` form a category -/
 instance (F : C ⥤ C) : Category (Coalgebra F) where
 
+#print CategoryTheory.Endofunctor.Coalgebra.isoMk /-
 /-- To construct an isomorphism of coalgebras, it suffices to give an isomorphism of the Vs which
 commutes with the structure morphisms.
 -/
@@ -397,6 +412,7 @@ def isoMk (h : V₀.1 ≅ V₁.1) (w : V₀.str ≫ F.map h.Hom = h.Hom ≫ V₁
         rw [h.eq_inv_comp, ← category.assoc, ← w, category.assoc, ← functor.map_comp]
         simp only [iso.hom_inv_id, Functor.map_id, category.comp_id] }
 #align category_theory.endofunctor.coalgebra.iso_mk CategoryTheory.Endofunctor.Coalgebra.isoMk
+-/
 
 #print CategoryTheory.Endofunctor.Coalgebra.forget /-
 /-- The forgetful functor from the category of coalgebras, forgetting the coalgebraic structure. -/
@@ -490,6 +506,7 @@ def functorOfNatTransEq {F G : C ⥤ C} {α β : F ⟶ G} (h : α = β) :
 #align category_theory.endofunctor.coalgebra.functor_of_nat_trans_eq CategoryTheory.Endofunctor.Coalgebra.functorOfNatTransEq
 -/
 
+#print CategoryTheory.Endofunctor.Coalgebra.equivOfNatIso /-
 /-- Naturally isomorphic endofunctors give equivalent categories of coalgebras.
 Furthermore, they are equivalent as categories over `C`, that is,
 we have `equiv_of_nat_iso h ⋙ forget = forget`.
@@ -503,6 +520,7 @@ def equivOfNatIso {F G : C ⥤ C} (α : F ≅ G) : Coalgebra F ≌ Coalgebra G
   counitIso :=
     (functorOfNatTransComp _ _).symm ≪≫ functorOfNatTransEq (by simp) ≪≫ functorOfNatTransId
 #align category_theory.endofunctor.coalgebra.equiv_of_nat_iso CategoryTheory.Endofunctor.Coalgebra.equivOfNatIso
+-/
 
 end Coalgebra
 
@@ -510,17 +528,21 @@ namespace Adjunction
 
 variable {F : C ⥤ C} {G : C ⥤ C}
 
+#print CategoryTheory.Endofunctor.Adjunction.Algebra.homEquiv_naturality_str /-
 theorem Algebra.homEquiv_naturality_str (adj : F ⊣ G) (A₁ A₂ : Algebra F) (f : A₁ ⟶ A₂) :
     (adj.homEquiv A₁.a A₁.a) A₁.str ≫ G.map f.f = f.f ≫ (adj.homEquiv A₂.a A₂.a) A₂.str := by
   rw [← adjunction.hom_equiv_naturality_right, ← adjunction.hom_equiv_naturality_left, f.h]
 #align category_theory.endofunctor.adjunction.algebra.hom_equiv_naturality_str CategoryTheory.Endofunctor.Adjunction.Algebra.homEquiv_naturality_str
+-/
 
+#print CategoryTheory.Endofunctor.Adjunction.Coalgebra.homEquiv_naturality_str_symm /-
 theorem Coalgebra.homEquiv_naturality_str_symm (adj : F ⊣ G) (V₁ V₂ : Coalgebra G) (f : V₁ ⟶ V₂) :
     F.map f.f ≫ (adj.homEquiv V₂.V V₂.V).symm V₂.str = (adj.homEquiv V₁.V V₁.V).symm V₁.str ≫ f.f :=
   by
   rw [← adjunction.hom_equiv_naturality_left_symm, ← adjunction.hom_equiv_naturality_right_symm,
     f.h]
 #align category_theory.endofunctor.adjunction.coalgebra.hom_equiv_naturality_str_symm CategoryTheory.Endofunctor.Adjunction.Coalgebra.homEquiv_naturality_str_symm
+-/
 
 #print CategoryTheory.Endofunctor.Adjunction.Algebra.toCoalgebraOf /-
 /-- Given an adjunction `F ⊣ G`, the functor that associates to an algebra over `F` a
@@ -600,6 +622,7 @@ def AlgCoalgEquiv.counitIso (adj : F ⊣ G) :
 #align category_theory.endofunctor.adjunction.alg_coalg_equiv.counit_iso CategoryTheory.Endofunctor.Adjunction.AlgCoalgEquiv.counitIso
 -/
 
+#print CategoryTheory.Endofunctor.Adjunction.algebraCoalgebraEquiv /-
 /-- If `F` is left adjoint to `G`, then the category of algebras over `F` is equivalent to the
 category of coalgebras over `G`. -/
 def algebraCoalgebraEquiv (adj : F ⊣ G) : Algebra F ≌ Coalgebra G
@@ -610,6 +633,7 @@ def algebraCoalgebraEquiv (adj : F ⊣ G) : Algebra F ≌ Coalgebra G
   counitIso := AlgCoalgEquiv.counitIso adj
   functor_unitIso_comp' A := by ext; exact category.comp_id _
 #align category_theory.endofunctor.adjunction.algebra_coalgebra_equiv CategoryTheory.Endofunctor.Adjunction.algebraCoalgebraEquiv
+-/
 
 end Adjunction
 

@@ -55,7 +55,6 @@ variable {𝕜 : Type _} [IsROrC 𝕜] [dec_𝕜 : DecidableEq 𝕜]
 
 variable {E : Type _} [NormedAddCommGroup E] [InnerProductSpace 𝕜 E]
 
--- mathport name: «expr⟪ , ⟫»
 local notation "⟪" x ", " y "⟫" => @inner 𝕜 E _ x y
 
 open scoped BigOperators ComplexConjugate
@@ -67,8 +66,6 @@ namespace LinearMap
 namespace IsSymmetric
 
 variable {T : E →ₗ[𝕜] E} (hT : T.IsSymmetric)
-
-include hT
 
 /-- A self-adjoint operator preserves orthogonal complements of its eigenspaces. -/
 theorem invariant_orthogonal_eigenspace (μ : 𝕜) (v : E) (hv : v ∈ (eigenspace T μ)ᗮ) :
@@ -145,10 +142,6 @@ theorem orthogonal_iSup_eigenspaces_eq_bot' : (⨆ μ : Eigenvalues T, eigenspac
     rw [iSup_ne_bot_subtype, hT.orthogonal_supr_eigenspaces_eq_bot]
 #align linear_map.is_symmetric.orthogonal_supr_eigenspaces_eq_bot' LinearMap.IsSymmetric.orthogonal_iSup_eigenspaces_eq_bot'
 
-include dec_𝕜
-
-omit hT
-
 /-- The eigenspaces of a self-adjoint operator on a finite-dimensional inner product space `E` gives
 an internal direct sum decomposition of `E`.
 
@@ -165,8 +158,6 @@ theorem directSum_decompose_apply [hT : Fact T.IsSymmetric] (x : E) (μ : Eigenv
       orthogonalProjection (eigenspace T μ) x :=
   rfl
 #align linear_map.is_symmetric.direct_sum_decompose_apply LinearMap.IsSymmetric.directSum_decompose_apply
-
-include hT
 
 /-- The eigenspaces of a self-adjoint operator on a finite-dimensional inner product space `E` gives
 an internal direct sum decomposition of `E`. -/

@@ -29,6 +29,7 @@ variable {R : Type u} {M : Type v} {N : Type w} [Ring R] [TopologicalSpace R] [T
   [AddCommGroup M] [AddCommGroup N] [Module R M] [ContinuousSMul R M] [Module R N] [ContinuousAdd M]
   [IsSimpleModule R N]
 
+#print LinearMap.isClosed_or_dense_ker /-
 /-- The kernel of a linear map taking values in a simple module over the base ring is closed or
 dense. Applies, e.g., to the case when `R = N` is a division ring. -/
 theorem LinearMap.isClosed_or_dense_ker (l : M →ₗ[R] N) :
@@ -40,4 +41,5 @@ theorem LinearMap.isClosed_or_dense_ker (l : M →ₗ[R] N) :
     left
     exact isClosed_univ
 #align linear_map.is_closed_or_dense_ker LinearMap.isClosed_or_dense_ker
+-/
 

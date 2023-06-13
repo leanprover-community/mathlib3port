@@ -81,10 +81,8 @@ namespace AbstractCompletion
 
 variable {α : Type _} [UniformSpace α] (pkg : AbstractCompletion α)
 
--- mathport name: exprhatα
 local notation "hatα" => pkg.Space
 
--- mathport name: exprι
 local notation "ι" => pkg.coe
 
 #print AbstractCompletion.ofComplete /-
@@ -148,9 +146,11 @@ protected def extend (f : α → β) : hatα → β :=
 
 variable {f : α → β}
 
+#print AbstractCompletion.extend_def /-
 theorem extend_def (hf : UniformContinuous f) : pkg.extend f = pkg.DenseInducing.extend f :=
   if_pos hf
 #align abstract_completion.extend_def AbstractCompletion.extend_def
+-/
 
 #print AbstractCompletion.extend_coe /-
 theorem extend_coe [T2Space β] (hf : UniformContinuous f) (a : α) : (pkg.extend f) (ι a) = f a :=
@@ -162,6 +162,7 @@ theorem extend_coe [T2Space β] (hf : UniformContinuous f) (a : α) : (pkg.exten
 
 variable [CompleteSpace β]
 
+#print AbstractCompletion.uniformContinuous_extend /-
 theorem uniformContinuous_extend : UniformContinuous (pkg.extend f) :=
   by
   by_cases hf : UniformContinuous f
@@ -171,26 +172,33 @@ theorem uniformContinuous_extend : UniformContinuous (pkg.extend f) :=
     rw [if_neg hf]
     exact uniformContinuous_of_const fun a b => by congr
 #align abstract_completion.uniform_continuous_extend AbstractCompletion.uniformContinuous_extend
+-/
 
+#print AbstractCompletion.continuous_extend /-
 theorem continuous_extend : Continuous (pkg.extend f) :=
   pkg.uniformContinuous_extend.Continuous
 #align abstract_completion.continuous_extend AbstractCompletion.continuous_extend
+-/
 
 variable [SeparatedSpace β]
 
+#print AbstractCompletion.extend_unique /-
 theorem extend_unique (hf : UniformContinuous f) {g : hatα → β} (hg : UniformContinuous g)
     (h : ∀ a : α, f a = g (ι a)) : pkg.extend f = g :=
   by
   apply pkg.funext pkg.continuous_extend hg.continuous
   simpa only [pkg.extend_coe hf] using h
 #align abstract_completion.extend_unique AbstractCompletion.extend_unique
+-/
 
+#print AbstractCompletion.extend_comp_coe /-
 @[simp]
 theorem extend_comp_coe {f : hatα → β} (hf : UniformContinuous f) : pkg.extend (f ∘ ι) = f :=
   funext fun x =>
     pkg.inductionOn x (isClosed_eq pkg.continuous_extend hf.Continuous) fun y =>
       pkg.extend_coe (hf.comp <| pkg.uniformContinuous_coe) y
 #align abstract_completion.extend_comp_coe AbstractCompletion.extend_comp_coe
+-/
 
 end Extend
 
@@ -198,10 +206,8 @@ section MapSec
 
 variable (pkg' : AbstractCompletion β)
 
--- mathport name: exprhatβ
 local notation "hatβ" => pkg'.Space
 
--- mathport name: exprι'
 local notation "ι'" => pkg'.coe
 
 #print AbstractCompletion.map /-
@@ -211,26 +217,32 @@ protected def map (f : α → β) : hatα → hatβ :=
 #align abstract_completion.map AbstractCompletion.map
 -/
 
--- mathport name: exprmap
 local notation "map" => pkg.map pkg'
 
 variable (f : α → β)
 
+#print AbstractCompletion.uniformContinuous_map /-
 theorem uniformContinuous_map : UniformContinuous (map f) :=
   pkg.uniformContinuous_extend
 #align abstract_completion.uniform_continuous_map AbstractCompletion.uniformContinuous_map
+-/
 
+#print AbstractCompletion.continuous_map /-
 theorem continuous_map : Continuous (map f) :=
   pkg.continuous_extend
 #align abstract_completion.continuous_map AbstractCompletion.continuous_map
+-/
 
 variable {f}
 
+#print AbstractCompletion.map_coe /-
 @[simp]
 theorem map_coe (hf : UniformContinuous f) (a : α) : map f (ι a) = ι' (f a) :=
   pkg.extend_coe (pkg'.uniformContinuous_coe.comp hf) a
 #align abstract_completion.map_coe AbstractCompletion.map_coe
+-/
 
+#print AbstractCompletion.map_unique /-
 theorem map_unique {f : α → β} {g : hatα → hatβ} (hg : UniformContinuous g)
     (h : ∀ a, ι' (f a) = g (ι a)) : map f = g :=
   pkg.funext (pkg.continuous_map _ _) hg.Continuous <|
@@ -240,6 +252,7 @@ theorem map_unique {f : α → β} {g : hatα → hatβ} (hg : UniformContinuous
     simp only [(· ∘ ·), h]
     rw [pkg.extend_coe (hg.comp pkg.uniform_continuous_coe)]
 #align abstract_completion.map_unique AbstractCompletion.map_unique
+-/
 
 #print AbstractCompletion.map_id /-
 @[simp]
@@ -261,10 +274,12 @@ theorem extend_map [CompleteSpace γ] [SeparatedSpace γ] {f : β → γ} {g : �
 
 variable (pkg'' : AbstractCompletion γ)
 
+#print AbstractCompletion.map_comp /-
 theorem map_comp {g : β → γ} {f : α → β} (hg : UniformContinuous g) (hf : UniformContinuous f) :
     pkg'.map pkg'' g ∘ pkg.map pkg' f = pkg.map pkg'' (g ∘ f) :=
   pkg.extend_map pkg' (pkg''.uniformContinuous_coe.comp hg) hf
 #align abstract_completion.map_comp AbstractCompletion.map_comp
+-/
 
 end MapSec
 
@@ -317,13 +332,17 @@ def compareEquiv : pkg.Space ≃ᵤ pkg'.Space
 #align abstract_completion.compare_equiv AbstractCompletion.compareEquiv
 -/
 
+#print AbstractCompletion.uniformContinuous_compareEquiv /-
 theorem uniformContinuous_compareEquiv : UniformContinuous (pkg.compareEquiv pkg') :=
   pkg.uniformContinuous_compare pkg'
 #align abstract_completion.uniform_continuous_compare_equiv AbstractCompletion.uniformContinuous_compareEquiv
+-/
 
+#print AbstractCompletion.uniformContinuous_compareEquiv_symm /-
 theorem uniformContinuous_compareEquiv_symm : UniformContinuous (pkg.compareEquiv pkg').symm :=
   pkg'.uniformContinuous_compare pkg
 #align abstract_completion.uniform_continuous_compare_equiv_symm AbstractCompletion.uniformContinuous_compareEquiv_symm
+-/
 
 end Compare
 
@@ -331,12 +350,11 @@ section Prod
 
 variable (pkg' : AbstractCompletion β)
 
--- mathport name: exprhatβ
 local notation "hatβ" => pkg'.Space
 
--- mathport name: exprι'
 local notation "ι'" => pkg'.coe
 
+#print AbstractCompletion.prod /-
 /-- Products of completions -/
 protected def prod : AbstractCompletion (α × β)
     where
@@ -348,6 +366,7 @@ protected def prod : AbstractCompletion (α × β)
   UniformInducing := UniformInducing.prod pkg.UniformInducing pkg'.UniformInducing
   dense := pkg.dense.Prod_map pkg'.dense
 #align abstract_completion.prod AbstractCompletion.prod
+-/
 
 end Prod
 
@@ -355,10 +374,8 @@ section Extension₂
 
 variable (pkg' : AbstractCompletion β)
 
--- mathport name: exprhatβ
 local notation "hatβ" => pkg'.Space
 
--- mathport name: exprι'
 local notation "ι'" => pkg'.coe
 
 variable {γ : Type _} [UniformSpace γ]
@@ -376,11 +393,13 @@ section SeparatedSpace
 
 variable [SeparatedSpace γ] {f : α → β → γ}
 
+#print AbstractCompletion.extension₂_coe_coe /-
 theorem extension₂_coe_coe (hf : UniformContinuous <| uncurry f) (a : α) (b : β) :
     pkg.extend₂ pkg' f (ι a) (ι' b) = f a b :=
   show (pkg.Prod pkg').extend (uncurry f) ((pkg.Prod pkg').coe (a, b)) = uncurry f (a, b) from
     (pkg.Prod pkg').extend_coe hf _
 #align abstract_completion.extension₂_coe_coe AbstractCompletion.extension₂_coe_coe
+-/
 
 end SeparatedSpace
 
@@ -388,11 +407,13 @@ variable {f : α → β → γ}
 
 variable [CompleteSpace γ] (f)
 
+#print AbstractCompletion.uniformContinuous_extension₂ /-
 theorem uniformContinuous_extension₂ : UniformContinuous₂ (pkg.extend₂ pkg' f) :=
   by
   rw [uniformContinuous₂_def, AbstractCompletion.extend₂, uncurry_curry]
   apply uniform_continuous_extend
 #align abstract_completion.uniform_continuous_extension₂ AbstractCompletion.uniformContinuous_extension₂
+-/
 
 end Extension₂
 
@@ -400,21 +421,16 @@ section Map₂
 
 variable (pkg' : AbstractCompletion β)
 
--- mathport name: exprhatβ
 local notation "hatβ" => pkg'.Space
 
--- mathport name: exprι'
 local notation "ι'" => pkg'.coe
 
 variable {γ : Type _} [UniformSpace γ] (pkg'' : AbstractCompletion γ)
 
--- mathport name: exprhatγ
 local notation "hatγ" => pkg''.Space
 
--- mathport name: exprι''
 local notation "ι''" => pkg''.coe
 
--- mathport name: «expr ∘₂ »
 local notation f " ∘₂ " g => bicompr f g
 
 #print AbstractCompletion.map₂ /-
@@ -424,20 +440,26 @@ protected def map₂ (f : α → β → γ) : hatα → hatβ → hatγ :=
 #align abstract_completion.map₂ AbstractCompletion.map₂
 -/
 
+#print AbstractCompletion.uniformContinuous_map₂ /-
 theorem uniformContinuous_map₂ (f : α → β → γ) : UniformContinuous₂ (pkg.zipWith pkg' pkg'' f) :=
   pkg.uniformContinuous_extension₂ pkg' _
 #align abstract_completion.uniform_continuous_map₂ AbstractCompletion.uniformContinuous_map₂
+-/
 
+#print AbstractCompletion.continuous_map₂ /-
 theorem continuous_map₂ {δ} [TopologicalSpace δ] {f : α → β → γ} {a : δ → hatα} {b : δ → hatβ}
     (ha : Continuous a) (hb : Continuous b) :
     Continuous fun d : δ => pkg.zipWith pkg' pkg'' f (a d) (b d) :=
   ((pkg.uniformContinuous_map₂ pkg' pkg'' f).Continuous.comp (Continuous.prod_mk ha hb) : _)
 #align abstract_completion.continuous_map₂ AbstractCompletion.continuous_map₂
+-/
 
+#print AbstractCompletion.map₂_coe_coe /-
 theorem map₂_coe_coe (a : α) (b : β) (f : α → β → γ) (hf : UniformContinuous₂ f) :
     pkg.zipWith pkg' pkg'' f (ι a) (ι' b) = ι'' (f a b) :=
   pkg.extension₂_coe_coe pkg' (pkg''.uniformContinuous_coe.comp hf) a b
 #align abstract_completion.map₂_coe_coe AbstractCompletion.map₂_coe_coe
+-/
 
 end Map₂
 

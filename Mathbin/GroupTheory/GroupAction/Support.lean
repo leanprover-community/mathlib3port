@@ -53,17 +53,20 @@ theorem supports_of_mem (ha : a ∈ s) : Supports G s a := fun g h => h ha
 
 variable {G}
 
+#print MulAction.Supports.mono /-
 @[to_additive]
 theorem Supports.mono (h : s ⊆ t) (hs : Supports G s b) : Supports G t b := fun g hg =>
   hs _ fun a ha => hg <| h ha
 #align mul_action.supports.mono MulAction.Supports.mono
 #align add_action.supports.mono AddAction.Supports.mono
+-/
 
 end SMul
 
 variable [Group H] [SMul G α] [SMul G β] [MulAction H α] [SMul H β] [SMulCommClass G H β]
   [SMulCommClass G H α] {s t : Set α} {b : β}
 
+#print MulAction.Supports.smul /-
 -- TODO: This should work without `smul_comm_class`
 @[to_additive]
 theorem Supports.smul (g : H) (h : Supports G s b) : Supports G (g • s) (g • b) :=
@@ -75,6 +78,7 @@ theorem Supports.smul (g : H) (h : Supports G s b) : Supports G (g • s) (g •
   rwa [smul_comm, smul_left_cancel_iff] at this 
 #align mul_action.supports.smul MulAction.Supports.smul
 #align add_action.supports.vadd AddAction.Supports.vadd
+-/
 
 end MulAction
 

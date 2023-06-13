@@ -60,6 +60,7 @@ def splitCenterBox (I : Box ι) (s : Set ι) : Box ι
 #align box_integral.box.split_center_box BoxIntegral.Box.splitCenterBox
 -/
 
+#print BoxIntegral.Box.mem_splitCenterBox /-
 theorem mem_splitCenterBox {s : Set ι} {y : ι → ℝ} :
     y ∈ I.splitCenterBox s ↔ y ∈ I ∧ ∀ i, (I.lower i + I.upper i) / 2 < y i ↔ i ∈ s :=
   by
@@ -73,6 +74,7 @@ theorem mem_splitCenterBox {s : Set ι} {y : ι → ℝ} :
     ⟨fun H => ⟨⟨H.1, H.2.trans (add_div_two_lt_right.2 (I.lower_lt_upper i)).le⟩, H.2⟩, fun H =>
       ⟨H.1.1, H.2⟩⟩]
 #align box_integral.box.mem_split_center_box BoxIntegral.Box.mem_splitCenterBox
+-/
 
 #print BoxIntegral.Box.splitCenterBox_le /-
 theorem splitCenterBox_le (I : Box ι) (s : Set ι) : I.splitCenterBox s ≤ I := fun x hx =>
@@ -80,6 +82,7 @@ theorem splitCenterBox_le (I : Box ι) (s : Set ι) : I.splitCenterBox s ≤ I :
 #align box_integral.box.split_center_box_le BoxIntegral.Box.splitCenterBox_le
 -/
 
+#print BoxIntegral.Box.disjoint_splitCenterBox /-
 theorem disjoint_splitCenterBox (I : Box ι) {s t : Set ι} (h : s ≠ t) :
     Disjoint (I.splitCenterBox s : Set (ι → ℝ)) (I.splitCenterBox t) :=
   by
@@ -89,6 +92,7 @@ theorem disjoint_splitCenterBox (I : Box ι) {s t : Set ι} (h : s ≠ t) :
   rw [mem_coe, mem_split_center_box] at hs ht 
   rw [← hs.2, ← ht.2]
 #align box_integral.box.disjoint_split_center_box BoxIntegral.Box.disjoint_splitCenterBox
+-/
 
 #print BoxIntegral.Box.injective_splitCenterBox /-
 theorem injective_splitCenterBox (I : Box ι) : Injective I.splitCenterBox := fun s t H =>
@@ -119,12 +123,15 @@ theorem iUnion_coe_splitCenterBox (I : Box ι) : (⋃ s, (I.splitCenterBox s : S
 #align box_integral.box.Union_coe_split_center_box BoxIntegral.Box.iUnion_coe_splitCenterBox
 -/
 
+#print BoxIntegral.Box.upper_sub_lower_splitCenterBox /-
 @[simp]
 theorem upper_sub_lower_splitCenterBox (I : Box ι) (s : Set ι) (i : ι) :
     (I.splitCenterBox s).upper i - (I.splitCenterBox s).lower i = (I.upper i - I.lower i) / 2 := by
   by_cases hs : i ∈ s <;> field_simp [split_center_box, hs, mul_two, two_mul]
 #align box_integral.box.upper_sub_lower_split_center_box BoxIntegral.Box.upper_sub_lower_splitCenterBox
+-/
 
+#print BoxIntegral.Box.subbox_induction_on' /-
 /-- Let `p` be a predicate on `box ι`, let `I` be a box. Suppose that the following two properties
 hold true.
 
@@ -199,6 +206,7 @@ theorem subbox_induction_on' {p : Box ι → Prop} (I : Box ι)
   rcases(tendsto_lift'.1 (hJlz.Icc hJuz) U hUz).exists with ⟨m, hUm⟩
   exact hJp m (hU (J m) (hJle m) m (hzJ m) hUm (hJsub m))
 #align box_integral.box.subbox_induction_on' BoxIntegral.Box.subbox_induction_on'
+-/
 
 end Box
 

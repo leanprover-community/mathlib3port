@@ -39,6 +39,7 @@ namespace Splitting
 variable {C : Type _} [Category C] [HasFiniteCoproducts C] {X : SimplicialObject C}
   (s : Splitting X)
 
+#print SimplicialObject.Splitting.πSummand /-
 /-- The projection on a summand of the coproduct decomposition given
 by a splitting of a simplicial object. -/
 def πSummand [HasZeroMorphisms C] {Δ : SimplexCategoryᵒᵖ} (A : IndexSet Δ) :
@@ -49,7 +50,9 @@ def πSummand [HasZeroMorphisms C] {Δ : SimplexCategoryᵒᵖ} (A : IndexSet Δ
   · exact eq_to_hom (by subst h; rfl)
   · exact 0
 #align simplicial_object.splitting.π_summand SimplicialObject.Splitting.πSummand
+-/
 
+#print SimplicialObject.Splitting.ι_πSummand_eq_id /-
 @[simp, reassoc]
 theorem ι_πSummand_eq_id [HasZeroMorphisms C] {Δ : SimplexCategoryᵒᵖ} (A : IndexSet Δ) :
     s.ιSummand A ≫ s.πSummand A = 𝟙 _ :=
@@ -60,7 +63,9 @@ theorem ι_πSummand_eq_id [HasZeroMorphisms C] {Δ : SimplexCategoryᵒᵖ} (A 
   dsimp
   simp only [eq_self_iff_true, if_true]
 #align simplicial_object.splitting.ι_π_summand_eq_id SimplicialObject.Splitting.ι_πSummand_eq_id
+-/
 
+#print SimplicialObject.Splitting.ι_πSummand_eq_zero /-
 @[simp, reassoc]
 theorem ι_πSummand_eq_zero [HasZeroMorphisms C] {Δ : SimplexCategoryᵒᵖ} (A B : IndexSet Δ)
     (h : B ≠ A) : s.ιSummand A ≫ s.πSummand B = 0 :=
@@ -71,9 +76,11 @@ theorem ι_πSummand_eq_zero [HasZeroMorphisms C] {Δ : SimplexCategoryᵒᵖ} (
   apply dif_neg
   exact h.symm
 #align simplicial_object.splitting.ι_π_summand_eq_zero SimplicialObject.Splitting.ι_πSummand_eq_zero
+-/
 
 variable [Preadditive C]
 
+#print SimplicialObject.Splitting.decomposition_id /-
 theorem decomposition_id (Δ : SimplexCategoryᵒᵖ) :
     𝟙 (X.obj Δ) = ∑ A : IndexSet Δ, s.πSummand A ≫ s.ιSummand A :=
   by
@@ -84,7 +91,9 @@ theorem decomposition_id (Δ : SimplexCategoryᵒᵖ) :
     rw [s.ι_π_summand_eq_zero_assoc _ _ h₂, zero_comp]
   · simp only [Finset.mem_univ, not_true, IsEmpty.forall_iff]
 #align simplicial_object.splitting.decomposition_id SimplicialObject.Splitting.decomposition_id
+-/
 
+#print SimplicialObject.Splitting.σ_comp_πSummand_id_eq_zero /-
 @[simp, reassoc]
 theorem σ_comp_πSummand_id_eq_zero {n : ℕ} (i : Fin (n + 1)) :
     X.σ i ≫ s.πSummand (IndexSet.id (op [n + 1])) = 0 :=
@@ -100,7 +109,9 @@ theorem σ_comp_πSummand_id_eq_zero {n : ℕ} (i : Fin (n + 1)) :
   dsimp at h ⊢
   linarith
 #align simplicial_object.splitting.σ_comp_π_summand_id_eq_zero SimplicialObject.Splitting.σ_comp_πSummand_id_eq_zero
+-/
 
+#print SimplicialObject.Splitting.ιSummand_comp_PInfty_eq_zero /-
 /-- If a simplicial object `X` in an additive category is split,
 then `P_infty` vanishes on all the summands of `X _[n]` which do
 not correspond to the identity of `[n]`. -/
@@ -111,7 +122,9 @@ theorem ιSummand_comp_PInfty_eq_zero {X : SimplicialObject C} (s : SimplicialOb
   rw [SimplicialObject.Splitting.IndexSet.eqId_iff_mono] at hA 
   rw [SimplicialObject.Splitting.ιSummand_eq, assoc, degeneracy_comp_P_infty X n A.e hA, comp_zero]
 #align simplicial_object.splitting.ι_summand_comp_P_infty_eq_zero SimplicialObject.Splitting.ιSummand_comp_PInfty_eq_zero
+-/
 
+#print SimplicialObject.Splitting.comp_PInfty_eq_zero_iff /-
 theorem comp_PInfty_eq_zero_iff {Z : C} {n : ℕ} (f : Z ⟶ X _[n]) :
     f ≫ PInfty.f n = 0 ↔ f ≫ s.πSummand (IndexSet.id (op [n])) = 0 :=
   by
@@ -138,6 +151,7 @@ theorem comp_PInfty_eq_zero_iff {Z : C} {n : ℕ} (f : Z ⟶ X _[n]) :
       rw [assoc, reassoc_of h, zero_comp]
     · simp only [assoc, s.ι_summand_comp_P_infty_eq_zero A hA, comp_zero]
 #align simplicial_object.splitting.comp_P_infty_eq_zero_iff SimplicialObject.Splitting.comp_PInfty_eq_zero_iff
+-/
 
 #print SimplicialObject.Splitting.PInfty_comp_πSummand_id /-
 @[simp, reassoc]
@@ -151,6 +165,7 @@ theorem PInfty_comp_πSummand_id (n : ℕ) :
 #align simplicial_object.splitting.P_infty_comp_π_summand_id SimplicialObject.Splitting.PInfty_comp_πSummand_id
 -/
 
+#print SimplicialObject.Splitting.πSummand_comp_ιSummand_comp_PInfty_eq_PInfty /-
 @[simp, reassoc]
 theorem πSummand_comp_ιSummand_comp_PInfty_eq_PInfty (n : ℕ) :
     s.πSummand (IndexSet.id (op [n])) ≫ s.ιSummand (IndexSet.id (op [n])) ≫ PInfty.f n =
@@ -162,6 +177,7 @@ theorem πSummand_comp_ιSummand_comp_PInfty_eq_PInfty (n : ℕ) :
   rintro A (hA : ¬A.eq_id)
   rw [assoc, s.ι_summand_comp_P_infty_eq_zero A hA, comp_zero]
 #align simplicial_object.splitting.π_summand_comp_ι_summand_comp_P_infty_eq_P_infty SimplicialObject.Splitting.πSummand_comp_ιSummand_comp_PInfty_eq_PInfty
+-/
 
 #print SimplicialObject.Splitting.d /-
 /-- The differentials `s.d i j : s.N i ⟶ s.N j` on nondegenerate simplices of a split
@@ -172,6 +188,7 @@ def d (i j : ℕ) : s.n i ⟶ s.n j :=
 #align simplicial_object.splitting.d SimplicialObject.Splitting.d
 -/
 
+#print SimplicialObject.Splitting.ιSummand_comp_d_comp_πSummand_eq_zero /-
 theorem ιSummand_comp_d_comp_πSummand_eq_zero (j k : ℕ) (A : IndexSet (op [j])) (hA : ¬A.EqId) :
     s.ιSummand A ≫ K[X].d j k ≫ s.πSummand (IndexSet.id (op [k])) = 0 :=
   by
@@ -179,6 +196,7 @@ theorem ιSummand_comp_d_comp_πSummand_eq_zero (j k : ℕ) (A : IndexSet (op [j
   rw [← assoc, ← s.comp_P_infty_eq_zero_iff, assoc, ← P_infty.comm j k, s.ι_summand_eq, assoc,
     degeneracy_comp_P_infty_assoc X j A.e hA, zero_comp, comp_zero]
 #align simplicial_object.splitting.ι_summand_comp_d_comp_π_summand_eq_zero SimplicialObject.Splitting.ιSummand_comp_d_comp_πSummand_eq_zero
+-/
 
 #print SimplicialObject.Splitting.nondegComplex /-
 /-- If `s` is a splitting of a simplicial object `X` in a preadditive category,
@@ -206,6 +224,7 @@ def nondegComplex : ChainComplex C ℕ where
 #align simplicial_object.splitting.nondeg_complex SimplicialObject.Splitting.nondegComplex
 -/
 
+#print SimplicialObject.Splitting.toKaroubiNondegComplexIsoN₁ /-
 /-- The chain complex `s.nondeg_complex` attached to a splitting of a simplicial object `X`
 becomes isomorphic to the normalized Moore complex `N₁.obj X` defined as a formal direct
 factor in the category `karoubi (chain_complex C ℕ)`. -/
@@ -241,6 +260,7 @@ def toKaroubiNondegComplexIsoN₁ : (toKaroubi _).obj s.nondegComplex ≅ N₁.o
     simp only [π_summand_comp_ι_summand_comp_P_infty_eq_P_infty, karoubi.comp_f,
       HomologicalComplex.comp_f, N₁_obj_p, karoubi.id_eq]
 #align simplicial_object.splitting.to_karoubi_nondeg_complex_iso_N₁ SimplicialObject.Splitting.toKaroubiNondegComplexIsoN₁
+-/
 
 end Splitting
 
@@ -248,6 +268,7 @@ namespace Split
 
 variable {C : Type _} [Category C] [Preadditive C] [HasFiniteCoproducts C]
 
+#print SimplicialObject.Split.nondegComplexFunctor /-
 /-- The functor which sends a split simplicial object in a preadditive category to
 the chain complex which consists of nondegenerate simplices. -/
 @[simps]
@@ -274,7 +295,9 @@ def nondegComplexFunctor : Split C ⥤ ChainComplex C ℕ
           rw [S₁.s.ι_π_summand_eq_zero_assoc _ _ h', S₂.s.ι_π_summand_eq_zero _ _ h', zero_comp,
             comp_zero] }
 #align simplicial_object.split.nondeg_complex_functor SimplicialObject.Split.nondegComplexFunctor
+-/
 
+#print SimplicialObject.Split.toKaroubiNondegComplexFunctorIsoN₁ /-
 /-- The natural isomorphism (in `karoubi (chain_complex C ℕ)`) between the chain complex
 of nondegenerate simplices of a split simplicial object and the normalized Moore complex
 defined as a formal direct factor of the alternating face map complex. -/
@@ -291,6 +314,7 @@ def toKaroubiNondegComplexFunctorIsoN₁ :
     erw [← split.ι_summand_naturality_symm_assoc Φ (splitting.index_set.id (op [n]))]
     rw [P_infty_f_naturality]
 #align simplicial_object.split.to_karoubi_nondeg_complex_functor_iso_N₁ SimplicialObject.Split.toKaroubiNondegComplexFunctorIsoN₁
+-/
 
 end Split
 

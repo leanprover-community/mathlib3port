@@ -149,6 +149,7 @@ theorem isSatisfiable_iff_isFinitelySatisfiable {T : L.Theory} :
 #align first_order.language.Theory.is_satisfiable_iff_is_finitely_satisfiable FirstOrder.Language.Theory.isSatisfiable_iff_isFinitelySatisfiable
 -/
 
+#print FirstOrder.Language.Theory.isSatisfiable_directed_union_iff /-
 theorem isSatisfiable_directed_union_iff {ι : Type _} [Nonempty ι] {T : ι → L.Theory}
     (h : Directed (· ⊆ ·) T) : Theory.IsSatisfiable (⋃ i, T i) ↔ ∀ i, (T i).IsSatisfiable :=
   by
@@ -158,9 +159,11 @@ theorem isSatisfiable_directed_union_iff {ι : Type _} [Nonempty ι] {T : ι →
   obtain ⟨i, hi⟩ := h.exists_mem_subset_of_finset_subset_bUnion hT0
   exact (h' i).mono hi
 #align first_order.language.Theory.is_satisfiable_directed_union_iff FirstOrder.Language.Theory.isSatisfiable_directed_union_iff
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print FirstOrder.Language.Theory.isSatisfiable_union_distinctConstantsTheory_of_card_le /-
 theorem isSatisfiable_union_distinctConstantsTheory_of_card_le (T : L.Theory) (s : Set α)
     (M : Type w') [Nonempty M] [L.Structure M] [M ⊨ T]
     (h : Cardinal.lift.{w'} (#s) ≤ Cardinal.lift.{w} (#M)) :
@@ -181,8 +184,10 @@ theorem isSatisfiable_union_distinctConstantsTheory_of_card_le (T : L.Theory) (s
           (ab.trans (subtype.coe_injective.extend_apply h.some default ⟨b, bs⟩)))
   exact model.is_satisfiable M
 #align first_order.language.Theory.is_satisfiable_union_distinct_constants_theory_of_card_le FirstOrder.Language.Theory.isSatisfiable_union_distinctConstantsTheory_of_card_le
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print FirstOrder.Language.Theory.isSatisfiable_union_distinctConstantsTheory_of_infinite /-
 theorem isSatisfiable_union_distinctConstantsTheory_of_infinite (T : L.Theory) (s : Set α)
     (M : Type w') [L.Structure M] [M ⊨ T] [Infinite M] :
     ((L.lhomWithConstants α).onTheory T ∪ L.distinctConstantsTheory s).IsSatisfiable := by
@@ -197,6 +202,7 @@ theorem isSatisfiable_union_distinctConstantsTheory_of_infinite (T : L.Theory) (
     simp only [Finset.coe_map, Function.Embedding.coe_subtype]
     exact set.monotone_image.comp fun _ _ => Finset.coe_subset.2
 #align first_order.language.Theory.is_satisfiable_union_distinct_constants_theory_of_infinite FirstOrder.Language.Theory.isSatisfiable_union_distinctConstantsTheory_of_infinite
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -218,6 +224,7 @@ theorem exists_large_model_of_infinite_model (T : L.Theory) (κ : Cardinal.{w}) 
 #align first_order.language.Theory.exists_large_model_of_infinite_model FirstOrder.Language.Theory.exists_large_model_of_infinite_model
 -/
 
+#print FirstOrder.Language.Theory.isSatisfiable_iUnion_iff_isSatisfiable_iUnion_finset /-
 theorem isSatisfiable_iUnion_iff_isSatisfiable_iUnion_finset {ι : Type _} (T : ι → L.Theory) :
     IsSatisfiable (⋃ i, T i) ↔ ∀ s : Finset ι, IsSatisfiable (⋃ i ∈ s, T i) := by
   classical
@@ -234,6 +241,7 @@ theorem isSatisfiable_iUnion_iff_isSatisfiable_iUnion_finset {ι : Type _} (T : 
       Monotone.directed_le fun t1 t2 h =>
         Set.iUnion_mono fun _ => Set.iUnion_mono' fun h1 => ⟨h h1, refl _⟩
 #align first_order.language.Theory.is_satisfiable_Union_iff_is_satisfiable_Union_finset FirstOrder.Language.Theory.isSatisfiable_iUnion_iff_isSatisfiable_iUnion_finset
+-/
 
 end Theory
 
@@ -346,7 +354,6 @@ def ModelsBoundedFormula (φ : L.BoundedFormula α n) : Prop :=
 #align first_order.language.Theory.models_bounded_formula FirstOrder.Language.Theory.ModelsBoundedFormula
 -/
 
--- mathport name: models_bounded_formula
 infixl:51
   " ⊨ " =>-- input using \|= or \vDash, but not using \models
   ModelsBoundedFormula
@@ -377,6 +384,7 @@ theorem models_sentence_of_mem {φ : L.Sentence} (h : φ ∈ T) : T ⊨ φ :=
 -/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print FirstOrder.Language.Theory.models_iff_not_satisfiable /-
 theorem models_iff_not_satisfiable (φ : L.Sentence) : T ⊨ φ ↔ ¬IsSatisfiable (T ∪ {φ.Not}) :=
   by
   rw [models_sentence_iff, is_satisfiable]
@@ -395,11 +403,13 @@ theorem models_iff_not_satisfiable (φ : L.Sentence) : T ⊨ φ ↔ ¬IsSatisfia
   rw [Set.mem_singleton_iff.1 h']
   exact h
 #align first_order.language.Theory.models_iff_not_satisfiable FirstOrder.Language.Theory.models_iff_not_satisfiable
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print FirstOrder.Language.Theory.ModelsBoundedFormula.realize_sentence /-
 theorem ModelsBoundedFormula.realize_sentence {φ : L.Sentence} (h : T ⊨ φ) (M : Type _)
     [L.Structure M] [M ⊨ T] [Nonempty M] : M ⊨ φ :=
   by
@@ -413,6 +423,7 @@ theorem ModelsBoundedFormula.realize_sentence {φ : L.Sentence} (h : T ⊨ φ) (
     exact ⟨h, inferInstance⟩
   exact model.is_satisfiable M
 #align first_order.language.Theory.models_bounded_formula.realize_sentence FirstOrder.Language.Theory.ModelsBoundedFormula.realize_sentence
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -446,6 +457,7 @@ theorem models_not_iff (h : T.IsComplete) (φ : L.Sentence) : T ⊨ φ.Not ↔ �
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print FirstOrder.Language.Theory.IsComplete.realize_sentence_iff /-
 theorem realize_sentence_iff (h : T.IsComplete) (φ : L.Sentence) (M : Type _) [L.Structure M]
     [M ⊨ T] [Nonempty M] : M ⊨ φ ↔ T ⊨ φ :=
   by
@@ -456,6 +468,7 @@ theorem realize_sentence_iff (h : T.IsComplete) (φ : L.Sentence) (M : Type _) [
       iff_of_false ((sentence.realize_not M).1 (hφn.realize_sentence M))
         ((h.models_not_iff φ).1 hφn)
 #align first_order.language.Theory.is_complete.realize_sentence_iff FirstOrder.Language.Theory.IsComplete.realize_sentence_iff
+-/
 
 end IsComplete
 

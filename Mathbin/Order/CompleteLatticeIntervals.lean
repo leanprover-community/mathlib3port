@@ -106,6 +106,7 @@ attribute [local instance] subsetSupSet
 
 attribute [local instance] subsetInfSet
 
+#print subsetConditionallyCompleteLinearOrder /-
 /-- For a nonempty subset of a conditionally complete linear order to be a conditionally complete
 linear order, it suffices that it contain the `Sup` of all its nonempty bounded-above subsets, and
 the `Inf` of all its nonempty bounded-below subsets.
@@ -141,9 +142,11 @@ noncomputable def subsetConditionallyCompleteLinearOrder [Inhabited s]
       have := (Subtype.mono_coe s).csInf_image_le hct h_bdd
       rwa [subset_sInf_of_within s (h_Inf ⟨c, hct⟩ h_bdd)] at this  }
 #align subset_conditionally_complete_linear_order subsetConditionallyCompleteLinearOrder
+-/
 
 section OrdConnected
 
+#print sSup_within_of_ordConnected /-
 /-- The `Sup` function on a nonempty `ord_connected` set `s` in a conditionally complete linear
 order takes values within `s`, for all nonempty bounded-above subsets of `s`. -/
 theorem sSup_within_of_ordConnected {s : Set α} [hs : OrdConnected s] ⦃t : Set s⦄ (ht : t.Nonempty)
@@ -155,7 +158,9 @@ theorem sSup_within_of_ordConnected {s : Set α} [hs : OrdConnected s] ⦃t : Se
   · exact (Subtype.mono_coe s).le_csSup_image hct ⟨B, hB⟩
   · exact (Subtype.mono_coe s).csSup_image_le ⟨c, hct⟩ hB
 #align Sup_within_of_ord_connected sSup_within_of_ordConnected
+-/
 
+#print sInf_within_of_ordConnected /-
 /-- The `Inf` function on a nonempty `ord_connected` set `s` in a conditionally complete linear
 order takes values within `s`, for all nonempty bounded-below subsets of `s`. -/
 theorem sInf_within_of_ordConnected {s : Set α} [hs : OrdConnected s] ⦃t : Set s⦄ (ht : t.Nonempty)
@@ -167,6 +172,7 @@ theorem sInf_within_of_ordConnected {s : Set α} [hs : OrdConnected s] ⦃t : Se
   · exact (Subtype.mono_coe s).le_csInf_image ⟨c, hct⟩ hB
   · exact (Subtype.mono_coe s).csInf_image_le hct ⟨B, hB⟩
 #align Inf_within_of_ord_connected sInf_within_of_ordConnected
+-/
 
 #print ordConnectedSubsetConditionallyCompleteLinearOrder /-
 /-- A nonempty `ord_connected` set in a conditionally complete linear order is naturally a

@@ -29,11 +29,13 @@ variable {V : Type _} [Quiver V] {W : Type _} (σ : V → W)
 
 namespace Quiver
 
+#print Quiver.Push /-
 /-- The `quiver` instance obtained by pushing arrows of `V` along the map `σ : V → W` -/
 @[nolint unused_arguments]
 def Push (σ : V → W) :=
   W
 #align quiver.push Quiver.Push
+-/
 
 instance [h : Nonempty W] : Nonempty (Push σ) :=
   h
@@ -59,14 +61,14 @@ def of : V ⥤q Push σ where
 #align quiver.push.of Quiver.Push.of
 -/
 
+#print Quiver.Push.of_obj /-
 @[simp]
 theorem of_obj : (of σ).obj = σ :=
   rfl
 #align quiver.push.of_obj Quiver.Push.of_obj
+-/
 
 variable {W' : Type _} [Quiver W'] (φ : V ⥤q W') (τ : W → W') (h : ∀ x, φ.obj x = τ (σ x))
-
-include φ h
 
 #print Quiver.Push.lift /-
 /-- Given a function `τ : W → W'` and a prefunctor `φ : V ⥤q W'`, one can extend `τ` to be
@@ -80,10 +82,13 @@ def lift : Push σ ⥤q W' where
 #align quiver.push.lift Quiver.Push.lift
 -/
 
+#print Quiver.Push.lift_obj /-
 theorem lift_obj : (lift σ φ τ h).obj = τ :=
   rfl
 #align quiver.push.lift_obj Quiver.Push.lift_obj
+-/
 
+#print Quiver.Push.lift_comp /-
 theorem lift_comp : of σ ⋙q lift σ φ τ h = φ :=
   by
   fapply Prefunctor.ext
@@ -95,7 +100,9 @@ theorem lift_comp : of σ ⋙q lift σ φ τ h = φ :=
     iterate 2 apply (eq_rec_hEq _ _).trans
     rfl
 #align quiver.push.lift_comp Quiver.Push.lift_comp
+-/
 
+#print Quiver.Push.lift_unique /-
 theorem lift_unique (Φ : Push σ ⥤q W') (Φ₀ : Φ.obj = τ) (Φcomp : of σ ⋙q Φ = φ) :
     Φ = lift σ φ τ h := by
   dsimp only [of, lift]
@@ -103,6 +110,7 @@ theorem lift_unique (Φ : Push σ ⥤q W') (Φ₀ : Φ.obj = τ) (Φcomp : of σ
   · rintro; simp_rw [← Φ₀]
   · rintro _ _ ⟨⟩; subst_vars; simp only [Prefunctor.comp_map, cast_eq]; rfl
 #align quiver.push.lift_unique Quiver.Push.lift_unique
+-/
 
 end Push
 

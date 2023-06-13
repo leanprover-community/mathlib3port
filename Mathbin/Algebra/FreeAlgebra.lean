@@ -60,6 +60,7 @@ variable (X : Type _)
 
 namespace FreeAlgebra
 
+#print FreeAlgebra.Pre /-
 /-- This inductive type is used to express representatives of the free algebra.
 -/
 inductive Pre
@@ -68,32 +69,41 @@ inductive Pre
   | add : pre → pre → pre
   | mul : pre → pre → pre
 #align free_algebra.pre FreeAlgebra.Pre
+-/
 
 namespace Pre
 
 instance : Inhabited (Pre R X) :=
   ⟨of_scalar 0⟩
 
+#print FreeAlgebra.Pre.hasCoeGenerator /-
 -- Note: These instances are only used to simplify the notation.
 /-- Coercion from `X` to `pre R X`. Note: Used for notation only. -/
 def hasCoeGenerator : Coe X (Pre R X) :=
   ⟨of⟩
 #align free_algebra.pre.has_coe_generator FreeAlgebra.Pre.hasCoeGenerator
+-/
 
+#print FreeAlgebra.Pre.hasCoeSemiring /-
 /-- Coercion from `R` to `pre R X`. Note: Used for notation only. -/
 def hasCoeSemiring : Coe R (Pre R X) :=
   ⟨of_scalar⟩
 #align free_algebra.pre.has_coe_semiring FreeAlgebra.Pre.hasCoeSemiring
+-/
 
+#print FreeAlgebra.Pre.hasMul /-
 /-- Multiplication in `pre R X` defined as `pre.mul`. Note: Used for notation only. -/
 def hasMul : Mul (Pre R X) :=
   ⟨mul⟩
 #align free_algebra.pre.has_mul FreeAlgebra.Pre.hasMul
+-/
 
+#print FreeAlgebra.Pre.hasAdd /-
 /-- Addition in `pre R X` defined as `pre.add`. Note: Used for notation only. -/
 def hasAdd : Add (Pre R X) :=
   ⟨add⟩
 #align free_algebra.pre.has_add FreeAlgebra.Pre.hasAdd
+-/
 
 #print FreeAlgebra.Pre.hasZero /-
 /-- Zero in `pre R X` defined as the image of `0` from `R`. Note: Used for notation only. -/
@@ -109,12 +119,14 @@ def hasOne : One (Pre R X) :=
 #align free_algebra.pre.has_one FreeAlgebra.Pre.hasOne
 -/
 
+#print FreeAlgebra.Pre.hasSmul /-
 /-- Scalar multiplication defined as multiplication by the image of elements from `R`.
 Note: Used for notation only.
 -/
 def hasSmul : SMul R (Pre R X) :=
   ⟨fun r m => mul (of_scalar r) m⟩
 #align free_algebra.pre.has_smul FreeAlgebra.Pre.hasSmul
+-/
 
 end Pre
 
@@ -227,9 +239,11 @@ irreducible_def ι : X → FreeAlgebra R X := fun m => Quot.mk _ m
 #align free_algebra.ι FreeAlgebra.ι
 -/
 
+#print FreeAlgebra.quot_mk_eq_ι /-
 @[simp]
 theorem quot_mk_eq_ι (m : X) : Quot.mk (FreeAlgebra.Rel R X) m = ι R m := by rw [ι]
 #align free_algebra.quot_mk_eq_ι FreeAlgebra.quot_mk_eq_ι
+-/
 
 variable {A : Type _} [Semiring A] [Algebra R A]
 
@@ -277,6 +291,7 @@ private def lift_aux (f : X → A) : FreeAlgebra R X →ₐ[R] A
   map_add' := by rintro ⟨⟩ ⟨⟩; rfl
   commutes' := by tauto
 
+#print FreeAlgebra.lift /-
 /-- Given a function `f : X → A` where `A` is an `R`-algebra, `lift R f` is the unique lift
 of `f` to a morphism of `R`-algebras `free_algebra R X → A`.
 -/
@@ -304,32 +319,43 @@ irreducible_def lift : (X → A) ≃ (FreeAlgebra R X →ₐ[R] A) :=
         change lift_aux R (F ∘ ι R) (Quot.mk _ _ * Quot.mk _ _) = F (Quot.mk _ _ * Quot.mk _ _)
         rw [AlgHom.map_mul, AlgHom.map_mul, ha, hb] }
 #align free_algebra.lift FreeAlgebra.lift
+-/
 
+#print FreeAlgebra.liftAux_eq /-
 @[simp]
 theorem liftAux_eq (f : X → A) : liftAux R f = lift R f := by rw [lift]; rfl
 #align free_algebra.lift_aux_eq FreeAlgebra.liftAux_eq
+-/
 
+#print FreeAlgebra.lift_symm_apply /-
 @[simp]
 theorem lift_symm_apply (F : FreeAlgebra R X →ₐ[R] A) : (lift R).symm F = F ∘ ι R := by rw [lift];
   rfl
 #align free_algebra.lift_symm_apply FreeAlgebra.lift_symm_apply
+-/
 
 variable {R X}
 
+#print FreeAlgebra.ι_comp_lift /-
 @[simp]
 theorem ι_comp_lift (f : X → A) : (lift R f : FreeAlgebra R X → A) ∘ ι R = f := by ext;
   rw [ι, lift]; rfl
 #align free_algebra.ι_comp_lift FreeAlgebra.ι_comp_lift
+-/
 
+#print FreeAlgebra.lift_ι_apply /-
 @[simp]
 theorem lift_ι_apply (f : X → A) (x) : lift R f (ι R x) = f x := by rw [ι, lift]; rfl
 #align free_algebra.lift_ι_apply FreeAlgebra.lift_ι_apply
+-/
 
+#print FreeAlgebra.lift_unique /-
 @[simp]
 theorem lift_unique (f : X → A) (g : FreeAlgebra R X →ₐ[R] A) :
     (g : FreeAlgebra R X → A) ∘ ι R = f ↔ g = lift R f := by rw [← (lift R).symm_apply_eq, lift];
   rfl
 #align free_algebra.lift_unique FreeAlgebra.lift_unique
+-/
 
 /-!
 Since we have set the basic definitions as `@[irreducible]`, from this point onwards one
@@ -337,6 +363,7 @@ should only use the universal properties of the free algebra, and consider the a
 as a quotient of an inductive type as completely hidden. -/
 
 
+#print FreeAlgebra.lift_comp_ι /-
 -- Marking `free_algebra` irreducible makes `ring` instances inaccessible on quotients.
 -- https://leanprover.zulipchat.com/#narrow/stream/113488-general/topic/algebra.2Esemiring_to_ring.20breaks.20semimodule.20typeclass.20lookup/near/212580241
 -- For now, we avoid this by not marking it irreducible.
@@ -344,7 +371,9 @@ as a quotient of an inductive type as completely hidden. -/
 theorem lift_comp_ι (g : FreeAlgebra R X →ₐ[R] A) : lift R ((g : FreeAlgebra R X → A) ∘ ι R) = g :=
   by rw [← lift_symm_apply]; exact (lift R).apply_symm_apply g
 #align free_algebra.lift_comp_ι FreeAlgebra.lift_comp_ι
+-/
 
+#print FreeAlgebra.hom_ext /-
 /-- See note [partially-applied ext lemmas]. -/
 @[ext]
 theorem hom_ext {f g : FreeAlgebra R X →ₐ[R] A}
@@ -353,7 +382,9 @@ theorem hom_ext {f g : FreeAlgebra R X →ₐ[R] A}
   rw [← lift_symm_apply, ← lift_symm_apply] at w 
   exact (lift R).symm.Injective w
 #align free_algebra.hom_ext FreeAlgebra.hom_ext
+-/
 
+#print FreeAlgebra.equivMonoidAlgebraFreeMonoid /-
 /-- The free algebra on `X` is "just" the monoid algebra on the free monoid on `X`.
 
 This would be useful when constructing linear maps out of a free algebra,
@@ -370,38 +401,50 @@ noncomputable def equivMonoidAlgebraFreeMonoid :
       · intro x y ih; simp at ih ; simp [ih])
     (by ext; simp)
 #align free_algebra.equiv_monoid_algebra_free_monoid FreeAlgebra.equivMonoidAlgebraFreeMonoid
+-/
 
 instance [Nontrivial R] : Nontrivial (FreeAlgebra R X) :=
   equivMonoidAlgebraFreeMonoid.Surjective.Nontrivial
 
 section
 
+#print FreeAlgebra.algebraMapInv /-
 /-- The left-inverse of `algebra_map`. -/
 def algebraMapInv : FreeAlgebra R X →ₐ[R] R :=
   lift R (0 : X → R)
 #align free_algebra.algebra_map_inv FreeAlgebra.algebraMapInv
+-/
 
+#print FreeAlgebra.algebraMap_leftInverse /-
 theorem algebraMap_leftInverse :
     Function.LeftInverse algebraMapInv (algebraMap R <| FreeAlgebra R X) := fun x => by
   simp [algebra_map_inv]
 #align free_algebra.algebra_map_left_inverse FreeAlgebra.algebraMap_leftInverse
+-/
 
+#print FreeAlgebra.algebraMap_inj /-
 @[simp]
 theorem algebraMap_inj (x y : R) :
     algebraMap R (FreeAlgebra R X) x = algebraMap R (FreeAlgebra R X) y ↔ x = y :=
   algebraMap_leftInverse.Injective.eq_iff
 #align free_algebra.algebra_map_inj FreeAlgebra.algebraMap_inj
+-/
 
+#print FreeAlgebra.algebraMap_eq_zero_iff /-
 @[simp]
 theorem algebraMap_eq_zero_iff (x : R) : algebraMap R (FreeAlgebra R X) x = 0 ↔ x = 0 :=
   map_eq_zero_iff (algebraMap _ _) algebraMap_leftInverse.Injective
 #align free_algebra.algebra_map_eq_zero_iff FreeAlgebra.algebraMap_eq_zero_iff
+-/
 
+#print FreeAlgebra.algebraMap_eq_one_iff /-
 @[simp]
 theorem algebraMap_eq_one_iff (x : R) : algebraMap R (FreeAlgebra R X) x = 1 ↔ x = 1 :=
   map_eq_one_iff (algebraMap _ _) algebraMap_leftInverse.Injective
 #align free_algebra.algebra_map_eq_one_iff FreeAlgebra.algebraMap_eq_one_iff
+-/
 
+#print FreeAlgebra.ι_injective /-
 -- this proof is copied from the approach in `free_abelian_group.of_injective`
 theorem ι_injective [Nontrivial R] : Function.Injective (ι R : X → FreeAlgebra R X) :=
   fun x y hoxy =>
@@ -413,12 +456,16 @@ theorem ι_injective [Nontrivial R] : Function.Injective (ι R : X → FreeAlgeb
       have hfy0 : f (ι R y) = 0 := (lift_ι_apply _ _).trans <| if_neg hxy
       one_ne_zero <| hfy1.symm.trans hfy0
 #align free_algebra.ι_injective FreeAlgebra.ι_injective
+-/
 
+#print FreeAlgebra.ι_inj /-
 @[simp]
 theorem ι_inj [Nontrivial R] (x y : X) : ι R x = ι R y ↔ x = y :=
   ι_injective.eq_iff
 #align free_algebra.ι_inj FreeAlgebra.ι_inj
+-/
 
+#print FreeAlgebra.ι_ne_algebraMap /-
 @[simp]
 theorem ι_ne_algebraMap [Nontrivial R] (x : X) (r : R) : ι R x ≠ algebraMap R _ r := fun h =>
   by
@@ -430,16 +477,21 @@ theorem ι_ne_algebraMap [Nontrivial R] (x : X) (r : R) : ι R x ≠ algebraMap 
   rw [h, f1.commutes, Algebra.id.map_eq_self] at hf1 
   exact zero_ne_one (hf0.symm.trans hf1)
 #align free_algebra.ι_ne_algebra_map FreeAlgebra.ι_ne_algebraMap
+-/
 
+#print FreeAlgebra.ι_ne_zero /-
 @[simp]
 theorem ι_ne_zero [Nontrivial R] (x : X) : ι R x ≠ 0 :=
   ι_ne_algebraMap x 0
 #align free_algebra.ι_ne_zero FreeAlgebra.ι_ne_zero
+-/
 
+#print FreeAlgebra.ι_ne_one /-
 @[simp]
 theorem ι_ne_one [Nontrivial R] (x : X) : ι R x ≠ 1 :=
   ι_ne_algebraMap x 1
 #align free_algebra.ι_ne_one FreeAlgebra.ι_ne_one
+-/
 
 end
 
@@ -449,6 +501,7 @@ end FreeAlgebra
 `has_coe_to_sort` below. Closing it and reopening it fixes it... -/
 namespace FreeAlgebra
 
+#print FreeAlgebra.induction /-
 /-- An induction principle for the free algebra.
 
 If `C` holds for the `algebra_map` of `r : R` into `free_algebra R X`, the `ι` of `x : X`, and is
@@ -477,6 +530,7 @@ theorem induction {C : FreeAlgebra R X → Prop}
   simp [AlgHom.ext_iff] at of_id 
   exact of_id a
 #align free_algebra.induction FreeAlgebra.induction
+-/
 
 end FreeAlgebra
 

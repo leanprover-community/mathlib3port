@@ -15,7 +15,6 @@ universe u v w
 
 variable {α β γ : Type u}
 
--- mathport name: «expr $< »
 notation:1 a " $< " f:1 => f a
 
 section Functor
@@ -63,13 +62,16 @@ variable [LawfulApplicative F]
 
 attribute [functor_norm] seq_assoc pure_seq_eq_map
 
+#print pure_id'_seq /-
 @[simp]
 theorem pure_id'_seq (x : F α) : (pure fun x => x) <*> x = x :=
   pure_id_seq x
 #align pure_id'_seq pure_id'_seq
+-/
 
 attribute [functor_norm] seq_assoc pure_seq_eq_map
 
+#print seq_map_assoc /-
 @[functor_norm]
 theorem seq_map_assoc (x : F (α → β)) (f : γ → α) (y : F γ) :
     x <*> f <$> y = (fun m : α → β => m ∘ f) <$> x <*> y :=
@@ -78,11 +80,14 @@ theorem seq_map_assoc (x : F (α → β)) (f : γ → α) (y : F γ) :
   simp [seq_assoc, (comp_map _ _ _).symm, (· ∘ ·)]
   simp [pure_seq_eq_map]
 #align seq_map_assoc seq_map_assoc
+-/
 
+#print map_seq /-
 @[functor_norm]
 theorem map_seq (f : β → γ) (x : F (α → β)) (y : F α) : f <$> (x <*> y) = (· ∘ ·) f <$> x <*> y :=
   by simp [(pure_seq_eq_map _ _).symm] <;> simp [seq_assoc]
 #align map_seq map_seq
+-/
 
 end Applicative
 
@@ -127,7 +132,6 @@ theorem seq_eq_bind_map {x : m α} {f : m (α → β)} : f <*> x = f >>= (· <$>
 def fish {m} [Monad m] {α β γ} (f : α → m β) (g : β → m γ) := fun x => f x >>= g
 #align fish fish
 
--- mathport name: «expr >=> »
 infixl:55
   " >=> " =>-- >=> is already defined in the core library but it is unusable
   -- because of its precedence (it is defined with precedence 2) and
@@ -135,9 +139,11 @@ infixl:55
   -- function
   fish
 
+#print fish_pure /-
 @[functor_norm]
 theorem fish_pure {α β} (f : α → m β) : f >=> pure = f := by simp only [(· >=> ·), functor_norm]
 #align fish_pure fish_pure
+-/
 
 #print fish_pipe /-
 @[functor_norm]
@@ -145,10 +151,12 @@ theorem fish_pipe {α β} (f : α → m β) : pure >=> f = f := by simp only [(�
 #align fish_pipe fish_pipe
 -/
 
+#print fish_assoc /-
 @[functor_norm]
 theorem fish_assoc {α β γ φ} (f : α → m β) (g : β → m γ) (h : γ → m φ) :
     f >=> g >=> h = f >=> (g >=> h) := by simp only [(· >=> ·), functor_norm]
 #align fish_assoc fish_assoc
+-/
 
 variable {β' γ' : Type v}
 
@@ -277,6 +285,7 @@ class CommApplicative (m : Type _ → Type _) [Applicative m] extends LawfulAppl
 
 open Functor
 
+#print CommApplicative.commutative_map /-
 theorem CommApplicative.commutative_map {m : Type _ → Type _} [Applicative m] [CommApplicative m]
     {α β γ} (a : m α) (b : m β) {f : α → β → γ} : f <$> a <*> b = flip f <$> b <*> a :=
   calc
@@ -286,4 +295,5 @@ theorem CommApplicative.commutative_map {m : Type _ → Type _} [Applicative m] 
       rw [CommApplicative.commutative_prod] <;>
         simp [seq_map_assoc, map_seq, seq_assoc, seq_pure, map_map]
 #align is_comm_applicative.commutative_map CommApplicative.commutative_map
+-/
 

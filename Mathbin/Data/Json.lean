@@ -45,7 +45,7 @@ unsafe instance : HasOrelse exceptional
     | success x => success x
     | exception msg => g
 
-/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`of_json] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`of_json] [] -/
 /-- A class to indicate that a type is json serializable -/
 unsafe class json_serializable (α : Type) where
   to_json : α → json

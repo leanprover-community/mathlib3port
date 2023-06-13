@@ -68,14 +68,18 @@ protected theorem up_down (s : SetSemiring α) : s.down.up = s :=
 #align set_semiring.up_down SetSemiring.up_down
 -/
 
+#print SetSemiring.up_le_up /-
 -- TODO: These lemmas are not tagged `simp` because `set.le_eq_subset` simplifies the LHS
 theorem up_le_up {s t : Set α} : s.up ≤ t.up ↔ s ⊆ t :=
   Iff.rfl
 #align set_semiring.up_le_up SetSemiring.up_le_up
+-/
 
+#print SetSemiring.up_lt_up /-
 theorem up_lt_up {s t : Set α} : s.up < t.up ↔ s ⊂ t :=
   Iff.rfl
 #align set_semiring.up_lt_up SetSemiring.up_lt_up
+-/
 
 #print SetSemiring.down_subset_down /-
 @[simp]
@@ -84,10 +88,12 @@ theorem down_subset_down {s t : SetSemiring α} : s.down ⊆ t.down ↔ s ≤ t 
 #align set_semiring.down_subset_down SetSemiring.down_subset_down
 -/
 
+#print SetSemiring.down_ssubset_down /-
 @[simp]
 theorem down_ssubset_down {s t : SetSemiring α} : s.down ⊂ t.down ↔ s < t :=
   Iff.rfl
 #align set_semiring.down_ssubset_down SetSemiring.down_ssubset_down
+-/
 
 instance : AddCommMonoid (SetSemiring α)
     where
@@ -98,9 +104,11 @@ instance : AddCommMonoid (SetSemiring α)
   add_zero := union_empty
   add_comm := union_comm
 
+#print SetSemiring.zero_def /-
 theorem zero_def : (0 : SetSemiring α) = Set.up ∅ :=
   rfl
 #align set_semiring.zero_def SetSemiring.zero_def
+-/
 
 #print SetSemiring.down_zero /-
 @[simp]
@@ -116,9 +124,11 @@ theorem Set.up_empty : (∅ : Set α).up = 0 :=
 #align set.up_empty Set.up_empty
 -/
 
+#print SetSemiring.add_def /-
 theorem add_def (s t : SetSemiring α) : s + t = (s.down ∪ t.down).up :=
   rfl
 #align set_semiring.add_def SetSemiring.add_def
+-/
 
 #print SetSemiring.down_add /-
 @[simp]
@@ -134,11 +144,13 @@ theorem Set.up_union (s t : Set α) : (s ∪ t).up = s.up + t.up :=
 #align set.up_union Set.up_union
 -/
 
+#print SetSemiring.covariantClass_add /-
 /- Since addition on `set_semiring` is commutative (it is set union), there is no need
 to also have the instance `covariant_class (set_semiring α) (set_semiring α) (swap (+)) (≤)`. -/
 instance covariantClass_add : CovariantClass (SetSemiring α) (SetSemiring α) (· + ·) (· ≤ ·) :=
   ⟨fun a b c => union_subset_union_right _⟩
 #align set_semiring.covariant_class_add SetSemiring.covariantClass_add
+-/
 
 section Mul
 
@@ -153,9 +165,11 @@ instance : NonUnitalNonAssocSemiring (SetSemiring α) :=
     left_distrib := fun _ _ _ => mul_union
     right_distrib := fun _ _ _ => union_mul }
 
+#print SetSemiring.mul_def /-
 theorem mul_def (s t : SetSemiring α) : s * t = (s.down * t.down).up :=
   rfl
 #align set_semiring.mul_def SetSemiring.mul_def
+-/
 
 #print SetSemiring.down_mul /-
 @[simp]
@@ -177,14 +191,18 @@ instance : NoZeroDivisors (SetSemiring α) :=
       b.eq_empty_or_nonempty.resolve_right fun hb =>
         Nonempty.ne_empty ⟨_, mul_mem_mul ha.some_mem hb.some_mem⟩ ab⟩
 
+#print SetSemiring.covariantClass_mul_left /-
 instance covariantClass_mul_left : CovariantClass (SetSemiring α) (SetSemiring α) (· * ·) (· ≤ ·) :=
   ⟨fun a b c => mul_subset_mul_left⟩
 #align set_semiring.covariant_class_mul_left SetSemiring.covariantClass_mul_left
+-/
 
+#print SetSemiring.covariantClass_mul_right /-
 instance covariantClass_mul_right :
     CovariantClass (SetSemiring α) (SetSemiring α) (swap (· * ·)) (· ≤ ·) :=
   ⟨fun a b c => mul_subset_mul_right⟩
 #align set_semiring.covariant_class_mul_right SetSemiring.covariantClass_mul_right
+-/
 
 end Mul
 
@@ -194,9 +212,11 @@ variable [One α]
 
 instance : One (SetSemiring α) where one := Set.up 1
 
+#print SetSemiring.one_def /-
 theorem one_def : (1 : SetSemiring α) = Set.up 1 :=
   rfl
 #align set_semiring.one_def SetSemiring.one_def
+-/
 
 #print SetSemiring.down_one /-
 @[simp]
@@ -239,6 +259,7 @@ instance [CommMonoid α] : CanonicallyOrderedCommSemiring (SetSemiring α) :=
     exists_add_of_le := fun a b ab => ⟨b, (union_eq_right_iff_subset.2 ab).symm⟩
     le_self_add := subset_union_left }
 
+#print SetSemiring.imageHom /-
 /-- The image of a set under a multiplicative homomorphism is a ring homomorphism
 with respect to the pointwise operations on sets. -/
 def imageHom [MulOneClass α] [MulOneClass β] (f : α →* β) : SetSemiring α →+* SetSemiring β
@@ -249,23 +270,30 @@ def imageHom [MulOneClass α] [MulOneClass β] (f : α →* β) : SetSemiring α
   map_add' := image_union _
   map_mul' _ _ := image_mul f
 #align set_semiring.image_hom SetSemiring.imageHom
+-/
 
+#print SetSemiring.imageHom_def /-
 theorem imageHom_def [MulOneClass α] [MulOneClass β] (f : α →* β) (s : SetSemiring α) :
     imageHom f s = (image f s.down).up :=
   rfl
 #align set_semiring.image_hom_def SetSemiring.imageHom_def
+-/
 
+#print SetSemiring.down_imageHom /-
 @[simp]
 theorem down_imageHom [MulOneClass α] [MulOneClass β] (f : α →* β) (s : SetSemiring α) :
     (imageHom f s).down = f '' s.down :=
   rfl
 #align set_semiring.down_image_hom SetSemiring.down_imageHom
+-/
 
+#print Set.up_image /-
 @[simp]
 theorem Set.up_image [MulOneClass α] [MulOneClass β] (f : α →* β) (s : Set α) :
     (f '' s).up = imageHom f s.up :=
   rfl
 #align set.up_image Set.up_image
+-/
 
 end SetSemiring
 

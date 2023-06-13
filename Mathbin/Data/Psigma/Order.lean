@@ -47,7 +47,6 @@ variable {ι : Type _} {α : ι → Type _}
 
 namespace PSigma
 
--- mathport name: «exprΣₗ' , »
 notation3"Σₗ' "(...)", "r:(scoped p => Lex PSigma p) => r
 
 namespace Lex
@@ -123,6 +122,7 @@ instance linearOrder [LinearOrder ι] [∀ i, LinearOrder (α i)] : LinearOrder 
 #align psigma.lex.linear_order PSigma.Lex.linearOrder
 -/
 
+#print PSigma.Lex.orderBot /-
 /-- The lexicographical linear order on a sigma type. -/
 instance orderBot [PartialOrder ι] [OrderBot ι] [∀ i, Preorder (α i)] [OrderBot (α ⊥)] :
     OrderBot (Σₗ' i, α i) where
@@ -132,7 +132,9 @@ instance orderBot [PartialOrder ι] [OrderBot ι] [∀ i, Preorder (α i)] [Orde
     · exact lex.right _ bot_le
     · exact lex.left _ _ ha
 #align psigma.lex.order_bot PSigma.Lex.orderBot
+-/
 
+#print PSigma.Lex.orderTop /-
 /-- The lexicographical linear order on a sigma type. -/
 instance orderTop [PartialOrder ι] [OrderTop ι] [∀ i, Preorder (α i)] [OrderTop (α ⊤)] :
     OrderTop (Σₗ' i, α i) where
@@ -142,12 +144,15 @@ instance orderTop [PartialOrder ι] [OrderTop ι] [∀ i, Preorder (α i)] [Orde
     · exact lex.right _ le_top
     · exact lex.left _ _ ha
 #align psigma.lex.order_top PSigma.Lex.orderTop
+-/
 
+#print PSigma.Lex.boundedOrder /-
 /-- The lexicographical linear order on a sigma type. -/
 instance boundedOrder [PartialOrder ι] [BoundedOrder ι] [∀ i, Preorder (α i)] [OrderBot (α ⊥)]
     [OrderTop (α ⊤)] : BoundedOrder (Σₗ' i, α i) :=
   { Lex.orderBot, Lex.orderTop with }
 #align psigma.lex.bounded_order PSigma.Lex.boundedOrder
+-/
 
 #print PSigma.Lex.denselyOrdered /-
 instance denselyOrdered [Preorder ι] [DenselyOrdered ι] [∀ i, Nonempty (α i)] [∀ i, Preorder (α i)]

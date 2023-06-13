@@ -41,10 +41,12 @@ We have three ways to construct terms of `ℙ K V`:
 
 variable (K V : Type _) [DivisionRing K] [AddCommGroup V] [Module K V]
 
+#print projectivizationSetoid /-
 /-- The setoid whose quotient is the projectivization of `V`. -/
 def projectivizationSetoid : Setoid { v : V // v ≠ 0 } :=
   (MulAction.orbitRel Kˣ V).comap coe
 #align projectivization_setoid projectivizationSetoid
+-/
 
 #print Projectivization /-
 /-- The projectivization of the `K`-vector space `V`.
@@ -55,27 +57,32 @@ def Projectivization :=
 #align projectivization Projectivization
 -/
 
--- mathport name: exprℙ
 notation "ℙ" => Projectivization
 
 namespace Projectivization
 
 variable {V}
 
+#print Projectivization.mk /-
 /-- Construct an element of the projectivization from a nonzero vector. -/
 def mk (v : V) (hv : v ≠ 0) : ℙ K V :=
   Quotient.mk'' ⟨v, hv⟩
 #align projectivization.mk Projectivization.mk
+-/
 
+#print Projectivization.mk' /-
 /-- A variant of `projectivization.mk` in terms of a subtype. `mk` is preferred. -/
 def mk' (v : { v : V // v ≠ 0 }) : ℙ K V :=
   Quotient.mk'' v
 #align projectivization.mk' Projectivization.mk'
+-/
 
+#print Projectivization.mk'_eq_mk /-
 @[simp]
 theorem mk'_eq_mk (v : { v : V // v ≠ 0 }) : mk' K v = mk K v v.2 := by dsimp [mk, mk']; congr 1;
   simp
 #align projectivization.mk'_eq_mk Projectivization.mk'_eq_mk
+-/
 
 instance [Nontrivial V] : Nonempty (ℙ K V) :=
   let ⟨v, hv⟩ := exists_ne (0 : V)
@@ -90,14 +97,18 @@ protected noncomputable def rep (v : ℙ K V) : V :=
 #align projectivization.rep Projectivization.rep
 -/
 
+#print Projectivization.rep_nonzero /-
 theorem rep_nonzero (v : ℙ K V) : v.rep ≠ 0 :=
   v.out'.2
 #align projectivization.rep_nonzero Projectivization.rep_nonzero
+-/
 
+#print Projectivization.mk_rep /-
 @[simp]
 theorem mk_rep (v : ℙ K V) : mk K v.rep v.rep_nonzero = v := by dsimp [mk, Projectivization.rep];
   simp
 #align projectivization.mk_rep Projectivization.mk_rep
+-/
 
 open FiniteDimensional
 
@@ -113,11 +124,14 @@ protected def submodule (v : ℙ K V) : Submodule K V :=
 
 variable (K)
 
+#print Projectivization.mk_eq_mk_iff /-
 theorem mk_eq_mk_iff (v w : V) (hv : v ≠ 0) (hw : w ≠ 0) :
     mk K v hv = mk K w hw ↔ ∃ a : Kˣ, a • w = v :=
   Quotient.eq''
 #align projectivization.mk_eq_mk_iff Projectivization.mk_eq_mk_iff
+-/
 
+#print Projectivization.mk_eq_mk_iff' /-
 /-- Two nonzero vectors go to the same point in projective space if and only if one is
 a scalar multiple of the other. -/
 theorem mk_eq_mk_iff' (v w : V) (hv : v ≠ 0) (hw : w ≠ 0) :
@@ -128,33 +142,44 @@ theorem mk_eq_mk_iff' (v w : V) (hv : v ≠ 0) (hw : w ≠ 0) :
   · rintro ⟨a, ha⟩; exact ⟨a, ha⟩
   · rintro ⟨a, ha⟩; refine' ⟨Units.mk0 a fun c => hv.symm _, ha⟩; rwa [c, zero_smul] at ha 
 #align projectivization.mk_eq_mk_iff' Projectivization.mk_eq_mk_iff'
+-/
 
+#print Projectivization.exists_smul_eq_mk_rep /-
 theorem exists_smul_eq_mk_rep (v : V) (hv : v ≠ 0) : ∃ a : Kˣ, a • v = (mk K v hv).rep :=
   show (projectivizationSetoid K V).Rel _ _ from Quotient.mk_out' ⟨v, hv⟩
 #align projectivization.exists_smul_eq_mk_rep Projectivization.exists_smul_eq_mk_rep
+-/
 
 variable {K}
 
+#print Projectivization.ind /-
 /-- An induction principle for `projectivization`.
 Use as `induction v using projectivization.ind`. -/
 @[elab_as_elim]
 theorem ind {P : ℙ K V → Prop} (h : ∀ (v : V) (h : v ≠ 0), P (mk K v h)) : ∀ p, P p :=
   Quotient.ind' <| Subtype.rec <| h
 #align projectivization.ind Projectivization.ind
+-/
 
+#print Projectivization.submodule_mk /-
 @[simp]
 theorem submodule_mk (v : V) (hv : v ≠ 0) : (mk K v hv).Submodule = K ∙ v :=
   rfl
 #align projectivization.submodule_mk Projectivization.submodule_mk
+-/
 
+#print Projectivization.submodule_eq /-
 theorem submodule_eq (v : ℙ K V) : v.Submodule = K ∙ v.rep := by conv_lhs => rw [← v.mk_rep]; rfl
 #align projectivization.submodule_eq Projectivization.submodule_eq
+-/
 
+#print Projectivization.finrank_submodule /-
 theorem finrank_submodule (v : ℙ K V) : finrank K v.Submodule = 1 :=
   by
   rw [submodule_eq]
   exact finrank_span_singleton v.rep_nonzero
 #align projectivization.finrank_submodule Projectivization.finrank_submodule
+-/
 
 instance (v : ℙ K V) : FiniteDimensional K v.Submodule := by rw [← v.mk_rep];
   change FiniteDimensional K (K ∙ v.rep); infer_instance
@@ -211,6 +236,7 @@ noncomputable def mk'' (H : Submodule K V) (h : finrank K H = 1) : ℙ K V :=
 #align projectivization.mk'' Projectivization.mk''
 -/
 
+#print Projectivization.submodule_mk'' /-
 @[simp]
 theorem submodule_mk'' (H : Submodule K V) (h : finrank K H = 1) : (mk'' H h).Submodule = H :=
   by
@@ -218,16 +244,20 @@ theorem submodule_mk'' (H : Submodule K V) (h : finrank K H = 1) : (mk'' H h).Su
   dsimp [mk'']
   simp
 #align projectivization.submodule_mk'' Projectivization.submodule_mk''
+-/
 
+#print Projectivization.mk''_submodule /-
 @[simp]
 theorem mk''_submodule (v : ℙ K V) : mk'' v.Submodule v.finrank_submodule = v :=
   show (equivSubmodule K V).symm (equivSubmodule K V _) = _ by simp
 #align projectivization.mk''_submodule Projectivization.mk''_submodule
+-/
 
 section Map
 
 variable {L W : Type _} [DivisionRing L] [AddCommGroup W] [Module L W]
 
+#print Projectivization.map /-
 /-- An injective semilinear map of vector spaces induces a map on projective spaces. -/
 def map {σ : K →+* L} (f : V →ₛₗ[σ] W) (hf : Function.Injective f) : ℙ K V → ℙ L W :=
   Quotient.map' (fun v => ⟨f v, fun c => v.2 (hf (by simp [c]))⟩)
@@ -237,7 +267,9 @@ def map {σ : K →+* L} (f : V →ₛₗ[σ] W) (hf : Function.Injective f) : �
       dsimp at ha ⊢
       erw [← f.map_smulₛₗ, ha])
 #align projectivization.map Projectivization.map
+-/
 
+#print Projectivization.map_injective /-
 /-- Mapping with respect to a semilinear map over an isomorphism of fields yields
 an injective map on projective spaces. -/
 theorem map_injective {σ : K →+* L} {τ : L →+* K} [RingHomInvPair σ τ] (f : V →ₛₗ[σ] W)
@@ -256,6 +288,7 @@ theorem map_injective {σ : K →+* L} {τ : L →+* K} [RingHomInvPair σ τ] (
   rw [this, ← f.map_smulₛₗ] at ha 
   exact hf ha
 #align projectivization.map_injective Projectivization.map_injective
+-/
 
 #print Projectivization.map_id /-
 @[simp]
@@ -264,6 +297,7 @@ theorem map_id : map (LinearMap.id : V →ₗ[K] V) (LinearEquiv.refl K V).Injec
 #align projectivization.map_id Projectivization.map_id
 -/
 
+#print Projectivization.map_comp /-
 @[simp]
 theorem map_comp {F U : Type _} [Field F] [AddCommGroup U] [Module F U] {σ : K →+* L} {τ : L →+* F}
     {γ : K →+* F} [RingHomCompTriple σ τ γ] (f : V →ₛₗ[σ] W) (hf : Function.Injective f)
@@ -271,6 +305,7 @@ theorem map_comp {F U : Type _} [Field F] [AddCommGroup U] [Module F U] {σ : K 
     map (g.comp f) (hg.comp hf) = map g hg ∘ map f hf := by ext v;
   induction v using Projectivization.ind; rfl
 #align projectivization.map_comp Projectivization.map_comp
+-/
 
 end Map
 

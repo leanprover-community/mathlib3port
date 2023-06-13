@@ -97,6 +97,7 @@ theorem cyclotomic'_one (R : Type _) [CommRing R] [IsDomain R] : cyclotomic' 1 R
 #align polynomial.cyclotomic'_one Polynomial.cyclotomic'_one
 -/
 
+#print Polynomial.cyclotomic'_two /-
 /-- The second modified cyclotomic polyomial is `X + 1` if the characteristic of `R` is not `2`. -/
 @[simp]
 theorem cyclotomic'_two (R : Type _) [CommRing R] [IsDomain R] (p : ℕ) [CharP R p] (hp : p ≠ 2) :
@@ -108,6 +109,7 @@ theorem cyclotomic'_two (R : Type _) [CommRing R] [IsDomain R] (p : ℕ) [CharP 
     exact ⟨IsPrimitiveRoot.neg_one p hp, fun x => IsPrimitiveRoot.eq_neg_one_of_two_right⟩
   simp only [prim_root_two, Finset.prod_singleton, RingHom.map_neg, RingHom.map_one, sub_neg_eq_add]
 #align polynomial.cyclotomic'_two Polynomial.cyclotomic'_two
+-/
 
 #print Polynomial.cyclotomic'.monic /-
 /-- `cyclotomic' n R` is monic. -/
@@ -155,6 +157,7 @@ theorem roots_of_cyclotomic (n : ℕ) (R : Type _) [CommRing R] [IsDomain R] :
 #align polynomial.roots_of_cyclotomic Polynomial.roots_of_cyclotomic
 -/
 
+#print Polynomial.X_pow_sub_one_eq_prod /-
 /-- If there is a primitive `n`th root of unity in `K`, then `X ^ n - 1 = ∏ (X - μ)`, where `μ`
 varies over the `n`-th roots of unity. -/
 theorem X_pow_sub_one_eq_prod {ζ : R} {n : ℕ} (hpos : 0 < n) (h : IsPrimitiveRoot ζ n) :
@@ -169,6 +172,7 @@ theorem X_pow_sub_one_eq_prod {ζ : R} {n : ℕ} (hpos : 0 < n) (h : IsPrimitive
   rw [@nat_degree_X_pow_sub_C R _ _ n 1, ← nth_roots]
   exact IsPrimitiveRoot.card_nthRoots h
 #align polynomial.X_pow_sub_one_eq_prod Polynomial.X_pow_sub_one_eq_prod
+-/
 
 end IsDomain
 
@@ -186,12 +190,15 @@ theorem cyclotomic'_splits (n : ℕ) : Splits (RingHom.id K) (cyclotomic' n K) :
 #align polynomial.cyclotomic'_splits Polynomial.cyclotomic'_splits
 -/
 
+#print Polynomial.X_pow_sub_one_splits /-
 /-- If there is a primitive `n`-th root of unity in `K`, then `X ^ n - 1`splits. -/
 theorem X_pow_sub_one_splits {ζ : K} {n : ℕ} (h : IsPrimitiveRoot ζ n) :
     Splits (RingHom.id K) (X ^ n - C (1 : K)) := by
   rw [splits_iff_card_roots, ← nth_roots, IsPrimitiveRoot.card_nthRoots h, nat_degree_X_pow_sub_C]
 #align polynomial.X_pow_sub_one_splits Polynomial.X_pow_sub_one_splits
+-/
 
+#print Polynomial.prod_cyclotomic'_eq_X_pow_sub_one /-
 /-- If there is a primitive `n`-th root of unity in `K`, then
 `∏ i in nat.divisors n, cyclotomic' i K = X ^ n - 1`. -/
 theorem prod_cyclotomic'_eq_X_pow_sub_one {K : Type _} [CommRing K] [IsDomain K] {ζ : K} {n : ℕ}
@@ -202,7 +209,9 @@ theorem prod_cyclotomic'_eq_X_pow_sub_one {K : Type _} [CommRing K] [IsDomain K]
   simp only [X_pow_sub_one_eq_prod hpos h, cyclotomic', ← Finset.prod_biUnion hd,
     h.nth_roots_one_eq_bUnion_primitive_roots]
 #align polynomial.prod_cyclotomic'_eq_X_pow_sub_one Polynomial.prod_cyclotomic'_eq_X_pow_sub_one
+-/
 
+#print Polynomial.cyclotomic'_eq_X_pow_sub_one_div /-
 /-- If there is a primitive `n`-th root of unity in `K`, then
 `cyclotomic' n K = (X ^ k - 1) /ₘ (∏ i in nat.proper_divisors k, cyclotomic' i K)`. -/
 theorem cyclotomic'_eq_X_pow_sub_one_div {K : Type _} [CommRing K] [IsDomain K] {ζ : K} {n : ℕ}
@@ -223,7 +232,9 @@ theorem cyclotomic'_eq_X_pow_sub_one_div {K : Type _} [CommRing K] [IsDomain K] 
   intro h
   exact monic.ne_zero prod_monic (degree_eq_bot.1 h)
 #align polynomial.cyclotomic'_eq_X_pow_sub_one_div Polynomial.cyclotomic'_eq_X_pow_sub_one_div
+-/
 
+#print Polynomial.int_coeff_of_cyclotomic' /-
 /-- If there is a primitive `n`-th root of unity in `K`, then `cyclotomic' n K` comes from a
 monic polynomial with integer coefficients. -/
 theorem int_coeff_of_cyclotomic' {K : Type _} [CommRing K] [IsDomain K] {ζ : K} {n : ℕ}
@@ -265,7 +276,9 @@ theorem int_coeff_of_cyclotomic' {K : Type _} [CommRing K] [IsDomain K] {ζ : K}
   rw [coe_map_ring_hom, map_div_by_monic (Int.castRingHom K) hB₁mo, hB₁, ← huniq.1]
   simp
 #align polynomial.int_coeff_of_cyclotomic' Polynomial.int_coeff_of_cyclotomic'
+-/
 
+#print Polynomial.unique_int_coeff_of_cycl /-
 /-- If `K` is of characteristic `0` and there is a primitive `n`-th root of unity in `K`,
 then `cyclotomic n K` comes from a unique polynomial with integer coefficients. -/
 theorem unique_int_coeff_of_cycl {K : Type _} [CommRing K] [IsDomain K] [CharZero K] {ζ : K}
@@ -276,6 +289,7 @@ theorem unique_int_coeff_of_cycl {K : Type _} [CommRing K] [IsDomain K] [CharZer
   apply map_injective (Int.castRingHom K) Int.cast_injective
   rw [hP.1, hQ]
 #align polynomial.unique_int_coeff_of_cycl Polynomial.unique_int_coeff_of_cycl
+-/
 
 end Field
 
@@ -291,6 +305,7 @@ def cyclotomic (n : ℕ) (R : Type _) [Ring R] : R[X] :=
 #align polynomial.cyclotomic Polynomial.cyclotomic
 -/
 
+#print Polynomial.int_cyclotomic_rw /-
 theorem int_cyclotomic_rw {n : ℕ} (h : n ≠ 0) :
     cyclotomic n ℤ = (int_coeff_of_cyclotomic' (Complex.isPrimitiveRoot_exp n h)).some :=
   by
@@ -298,7 +313,9 @@ theorem int_cyclotomic_rw {n : ℕ} (h : n ≠ 0) :
   ext i
   simp only [coeff_map, Int.cast_id, eq_intCast]
 #align polynomial.int_cyclotomic_rw Polynomial.int_cyclotomic_rw
+-/
 
+#print Polynomial.map_cyclotomic_int /-
 /-- `cyclotomic n R` comes from `cyclotomic n ℤ`. -/
 theorem map_cyclotomic_int (n : ℕ) (R : Type _) [Ring R] :
     map (Int.castRingHom R) (cyclotomic n ℤ) = cyclotomic n R :=
@@ -307,7 +324,9 @@ theorem map_cyclotomic_int (n : ℕ) (R : Type _) [Ring R] :
   · simp only [hzero, cyclotomic, dif_pos, Polynomial.map_one]
   simp only [cyclotomic, int_cyclotomic_rw, hzero, Ne.def, dif_neg, not_false_iff]
 #align polynomial.map_cyclotomic_int Polynomial.map_cyclotomic_int
+-/
 
+#print Polynomial.int_cyclotomic_spec /-
 theorem int_cyclotomic_spec (n : ℕ) :
     map (Int.castRingHom ℂ) (cyclotomic n ℤ) = cyclotomic' n ℂ ∧
       (cyclotomic n ℤ).degree = (cyclotomic' n ℂ).degree ∧ (cyclotomic n ℤ).Monic :=
@@ -319,14 +338,18 @@ theorem int_cyclotomic_spec (n : ℕ) :
   rw [int_cyclotomic_rw hzero]
   exact (int_coeff_of_cyclotomic' (Complex.isPrimitiveRoot_exp n hzero)).choose_spec
 #align polynomial.int_cyclotomic_spec Polynomial.int_cyclotomic_spec
+-/
 
+#print Polynomial.int_cyclotomic_unique /-
 theorem int_cyclotomic_unique {n : ℕ} {P : ℤ[X]} (h : map (Int.castRingHom ℂ) P = cyclotomic' n ℂ) :
     P = cyclotomic n ℤ :=
   by
   apply map_injective (Int.castRingHom ℂ) Int.cast_injective
   rw [h, (int_cyclotomic_spec n).1]
 #align polynomial.int_cyclotomic_unique Polynomial.int_cyclotomic_unique
+-/
 
+#print Polynomial.map_cyclotomic /-
 /-- The definition of `cyclotomic n R` commutes with any ring homomorphism. -/
 @[simp]
 theorem map_cyclotomic (n : ℕ) {R S : Type _} [Ring R] [Ring S] (f : R →+* S) :
@@ -335,11 +358,14 @@ theorem map_cyclotomic (n : ℕ) {R S : Type _} [Ring R] [Ring S] (f : R →+* S
   rw [← map_cyclotomic_int n R, ← map_cyclotomic_int n S, map_map]
   congr
 #align polynomial.map_cyclotomic Polynomial.map_cyclotomic
+-/
 
+#print Polynomial.cyclotomic.eval_apply /-
 theorem cyclotomic.eval_apply {R S : Type _} (q : R) (n : ℕ) [Ring R] [Ring S] (f : R →+* S) :
     eval (f q) (cyclotomic n S) = f (eval q (cyclotomic n R)) := by
   rw [← map_cyclotomic n f, eval_map, eval₂_at_apply]
 #align polynomial.cyclotomic.eval_apply Polynomial.cyclotomic.eval_apply
+-/
 
 #print Polynomial.cyclotomic_zero /-
 /-- The zeroth cyclotomic polyomial is `1`. -/
@@ -419,6 +445,7 @@ theorem degree_cyclotomic_pos (n : ℕ) (R : Type _) (hpos : 0 < n) [Ring R] [No
 
 open Finset
 
+#print Polynomial.prod_cyclotomic_eq_X_pow_sub_one /-
 /-- `∏ i in nat.divisors n, cyclotomic i R = X ^ n - 1`. -/
 theorem prod_cyclotomic_eq_X_pow_sub_one {n : ℕ} (hpos : 0 < n) (R : Type _) [CommRing R] :
     ∏ i in Nat.divisors n, cyclotomic i R = X ^ n - 1 :=
@@ -432,7 +459,9 @@ theorem prod_cyclotomic_eq_X_pow_sub_one {n : ℕ} (hpos : 0 < n) (R : Type _) [
   simpa only [Polynomial.map_prod, map_cyclotomic_int, Polynomial.map_sub, Polynomial.map_one,
     Polynomial.map_pow, Polynomial.map_X] using congr_arg (map (Int.castRingHom R)) integer
 #align polynomial.prod_cyclotomic_eq_X_pow_sub_one Polynomial.prod_cyclotomic_eq_X_pow_sub_one
+-/
 
+#print Polynomial.cyclotomic.dvd_X_pow_sub_one /-
 theorem cyclotomic.dvd_X_pow_sub_one (n : ℕ) (R : Type _) [Ring R] : cyclotomic n R ∣ X ^ n - 1 :=
   by
   suffices cyclotomic n ℤ ∣ X ^ n - 1 by
@@ -443,7 +472,9 @@ theorem cyclotomic.dvd_X_pow_sub_one (n : ℕ) (R : Type _) [Ring R] : cyclotomi
   rw [← prod_cyclotomic_eq_X_pow_sub_one hn]
   exact Finset.dvd_prod_of_mem _ (n.mem_divisors_self hn.ne')
 #align polynomial.cyclotomic.dvd_X_pow_sub_one Polynomial.cyclotomic.dvd_X_pow_sub_one
+-/
 
+#print Polynomial.prod_cyclotomic_eq_geom_sum /-
 theorem prod_cyclotomic_eq_geom_sum {n : ℕ} (h : 0 < n) (R) [CommRing R] :
     ∏ i in n.divisors.eraseₓ 1, cyclotomic i R = ∑ i in Finset.range n, X ^ i :=
   by
@@ -453,7 +484,9 @@ theorem prod_cyclotomic_eq_geom_sum {n : ℕ} (h : 0 < n) (R) [CommRing R] :
   rw [← mul_left_inj' (cyclotomic_ne_zero 1 ℤ), prod_erase_mul _ _ (Nat.one_mem_divisors.2 h.ne'),
     cyclotomic_one, geom_sum_mul, prod_cyclotomic_eq_X_pow_sub_one h]
 #align polynomial.prod_cyclotomic_eq_geom_sum Polynomial.prod_cyclotomic_eq_geom_sum
+-/
 
+#print Polynomial.cyclotomic_prime /-
 /-- If `p` is prime, then `cyclotomic p R = ∑ i in range p, X ^ i`. -/
 theorem cyclotomic_prime (R : Type _) [Ring R] (p : ℕ) [hp : Fact p.Prime] :
     cyclotomic p R = ∑ i in Finset.range p, X ^ i :=
@@ -464,10 +497,13 @@ theorem cyclotomic_prime (R : Type _) [Ring R] (p : ℕ) [hp : Fact p.Prime] :
   rw [← prod_cyclotomic_eq_geom_sum hp.out.pos, hp.out.divisors,
     erase_insert (mem_singleton.not.2 hp.out.ne_one.symm), prod_singleton]
 #align polynomial.cyclotomic_prime Polynomial.cyclotomic_prime
+-/
 
+#print Polynomial.cyclotomic_prime_mul_X_sub_one /-
 theorem cyclotomic_prime_mul_X_sub_one (R : Type _) [Ring R] (p : ℕ) [hn : Fact (Nat.Prime p)] :
     cyclotomic p R * (X - 1) = X ^ p - 1 := by rw [cyclotomic_prime, geom_sum_mul]
 #align polynomial.cyclotomic_prime_mul_X_sub_one Polynomial.cyclotomic_prime_mul_X_sub_one
+-/
 
 #print Polynomial.cyclotomic_two /-
 @[simp]
@@ -475,11 +511,14 @@ theorem cyclotomic_two (R : Type _) [Ring R] : cyclotomic 2 R = X + 1 := by simp
 #align polynomial.cyclotomic_two Polynomial.cyclotomic_two
 -/
 
+#print Polynomial.cyclotomic_three /-
 @[simp]
 theorem cyclotomic_three (R : Type _) [Ring R] : cyclotomic 3 R = X ^ 2 + X + 1 := by
   simp [cyclotomic_prime, sum_range_succ']
 #align polynomial.cyclotomic_three Polynomial.cyclotomic_three
+-/
 
+#print Polynomial.cyclotomic_dvd_geom_sum_of_dvd /-
 theorem cyclotomic_dvd_geom_sum_of_dvd (R) [Ring R] {d n : ℕ} (hdn : d ∣ n) (hd : d ≠ 1) :
     cyclotomic d R ∣ ∑ i in Finset.range n, X ^ i :=
   by
@@ -492,7 +531,9 @@ theorem cyclotomic_dvd_geom_sum_of_dvd (R) [Ring R] {d n : ℕ} (hdn : d ∣ n) 
   apply Finset.dvd_prod_of_mem
   simp [hd, hdn, hn.ne']
 #align polynomial.cyclotomic_dvd_geom_sum_of_dvd Polynomial.cyclotomic_dvd_geom_sum_of_dvd
+-/
 
+#print Polynomial.X_pow_sub_one_mul_prod_cyclotomic_eq_X_pow_sub_one_of_dvd /-
 theorem X_pow_sub_one_mul_prod_cyclotomic_eq_X_pow_sub_one_of_dvd (R) [CommRing R] {d n : ℕ}
     (h : d ∈ n.properDivisors) :
     (X ^ d - 1) * ∏ x in n.divisors \ d.divisors, cyclotomic x R = X ^ n - 1 :=
@@ -503,7 +544,9 @@ theorem X_pow_sub_one_mul_prod_cyclotomic_eq_X_pow_sub_one_of_dvd (R) [CommRing 
   rw [← prod_cyclotomic_eq_X_pow_sub_one h0d, ← prod_cyclotomic_eq_X_pow_sub_one h0n, mul_comm,
     Finset.prod_sdiff (Nat.divisors_subset_of_dvd h0n.ne' hd)]
 #align polynomial.X_pow_sub_one_mul_prod_cyclotomic_eq_X_pow_sub_one_of_dvd Polynomial.X_pow_sub_one_mul_prod_cyclotomic_eq_X_pow_sub_one_of_dvd
+-/
 
+#print Polynomial.X_pow_sub_one_mul_cyclotomic_dvd_X_pow_sub_one_of_dvd /-
 theorem X_pow_sub_one_mul_cyclotomic_dvd_X_pow_sub_one_of_dvd (R) [CommRing R] {d n : ℕ}
     (h : d ∈ n.properDivisors) : (X ^ d - 1) * cyclotomic n R ∣ X ^ n - 1 :=
   by
@@ -517,6 +560,7 @@ theorem X_pow_sub_one_mul_cyclotomic_dvd_X_pow_sub_one_of_dvd (R) [CommRing R] {
   · exact Finset.not_mem_sdiff_of_not_mem_left Nat.properDivisors.not_self_mem
   · exact fun hk => hdn.not_le <| Nat.divisor_le hk
 #align polynomial.X_pow_sub_one_mul_cyclotomic_dvd_X_pow_sub_one_of_dvd Polynomial.X_pow_sub_one_mul_cyclotomic_dvd_X_pow_sub_one_of_dvd
+-/
 
 section ArithmeticFunction
 
@@ -524,6 +568,7 @@ open Nat.ArithmeticFunction
 
 open scoped ArithmeticFunction
 
+#print Polynomial.cyclotomic_eq_prod_X_pow_sub_one_pow_moebius /-
 /-- `cyclotomic n R` can be expressed as a product in a fraction field of `R[X]`
   using Möbius inversion. -/
 theorem cyclotomic_eq_prod_X_pow_sub_one_pow_moebius {n : ℕ} (R : Type _) [CommRing R]
@@ -547,9 +592,11 @@ theorem cyclotomic_eq_prod_X_pow_sub_one_pow_moebius {n : ℕ} (R : Type _) [Com
   · apply monic.ne_zero
     apply monic_X_pow_sub_C _ (ne_of_gt hn)
 #align polynomial.cyclotomic_eq_prod_X_pow_sub_one_pow_moebius Polynomial.cyclotomic_eq_prod_X_pow_sub_one_pow_moebius
+-/
 
 end ArithmeticFunction
 
+#print Polynomial.cyclotomic_eq_X_pow_sub_one_div /-
 /-- We have
 `cyclotomic n R = (X ^ k - 1) /ₘ (∏ i in nat.proper_divisors k, cyclotomic i K)`. -/
 theorem cyclotomic_eq_X_pow_sub_one_div {R : Type _} [CommRing R] {n : ℕ} (hpos : 0 < n) :
@@ -571,7 +618,9 @@ theorem cyclotomic_eq_X_pow_sub_one_div {R : Type _} [CommRing R] {n : ℕ} (hpo
   intro h
   exact monic.ne_zero prod_monic (degree_eq_bot.1 h)
 #align polynomial.cyclotomic_eq_X_pow_sub_one_div Polynomial.cyclotomic_eq_X_pow_sub_one_div
+-/
 
+#print Polynomial.X_pow_sub_one_dvd_prod_cyclotomic /-
 /-- If `m` is a proper divisor of `n`, then `X ^ m - 1` divides
 `∏ i in nat.proper_divisors n, cyclotomic i R`. -/
 theorem X_pow_sub_one_dvd_prod_cyclotomic (R : Type _) [CommRing R] {n m : ℕ} (hpos : 0 < n)
@@ -588,7 +637,9 @@ theorem X_pow_sub_one_dvd_prod_cyclotomic (R : Type _) [CommRing R] {n m : ℕ} 
     prod_cyclotomic_eq_X_pow_sub_one (Nat.pos_of_mem_properDivisors hm)]
   exact ⟨∏ x : ℕ in n.proper_divisors \ m.divisors, cyclotomic x R, by rw [mul_comm]⟩
 #align polynomial.X_pow_sub_one_dvd_prod_cyclotomic Polynomial.X_pow_sub_one_dvd_prod_cyclotomic
+-/
 
+#print Polynomial.cyclotomic_eq_prod_X_sub_primitiveRoots /-
 /-- If there is a primitive `n`-th root of unity in `K`, then
 `cyclotomic n K = ∏ μ in primitive_roots n R, (X - C μ)`. In particular,
 `cyclotomic n K = cyclotomic' n K` -/
@@ -608,7 +659,9 @@ theorem cyclotomic_eq_prod_X_sub_primitiveRoots {K : Type _} [CommRing K] [IsDom
   rw [@cyclotomic_eq_X_pow_sub_one_div _ _ _ hpos, cyclotomic'_eq_X_pow_sub_one_div hpos hz,
     Finset.prod_congr (refl k.proper_divisors) h]
 #align polynomial.cyclotomic_eq_prod_X_sub_primitive_roots Polynomial.cyclotomic_eq_prod_X_sub_primitiveRoots
+-/
 
+#print Polynomial.eq_cyclotomic_iff /-
 theorem eq_cyclotomic_iff {R : Type _} [CommRing R] {n : ℕ} (hpos : 0 < n) (P : R[X]) :
     P = cyclotomic n R ↔ P * ∏ i in Nat.properDivisors n, Polynomial.cyclotomic i R = X ^ n - 1 :=
   by
@@ -628,7 +681,9 @@ theorem eq_cyclotomic_iff {R : Type _} [CommRing R] {n : ℕ} (hpos : 0 < n) (P 
     intro h
     exact monic.ne_zero prod_monic (degree_eq_bot.1 h)
 #align polynomial.eq_cyclotomic_iff Polynomial.eq_cyclotomic_iff
+-/
 
+#print Polynomial.cyclotomic_prime_pow_eq_geom_sum /-
 /-- If `p ^ k` is a prime power, then
 `cyclotomic (p ^ (n + 1)) R = ∑ i in range p, (X ^ (p ^ n)) ^ i`. -/
 theorem cyclotomic_prime_pow_eq_geom_sum {R : Type _} [CommRing R] {p n : ℕ} (hp : p.Prime) :
@@ -652,13 +707,17 @@ theorem cyclotomic_prime_pow_eq_geom_sum {R : Type _} [CommRing R] {p n : ℕ} (
   rw [this] at n_ih 
   rw [mul_comm _ (∑ i in _, _), n_ih, geom_sum_mul, sub_left_inj, ← pow_mul, pow_add, pow_one]
 #align polynomial.cyclotomic_prime_pow_eq_geom_sum Polynomial.cyclotomic_prime_pow_eq_geom_sum
+-/
 
+#print Polynomial.cyclotomic_prime_pow_mul_X_pow_sub_one /-
 theorem cyclotomic_prime_pow_mul_X_pow_sub_one (R : Type _) [CommRing R] (p k : ℕ)
     [hn : Fact (Nat.Prime p)] :
     cyclotomic (p ^ (k + 1)) R * (X ^ p ^ k - 1) = X ^ p ^ (k + 1) - 1 := by
   rw [cyclotomic_prime_pow_eq_geom_sum hn.out, geom_sum_mul, ← pow_mul, pow_succ, mul_comm]
 #align polynomial.cyclotomic_prime_pow_mul_X_pow_sub_one Polynomial.cyclotomic_prime_pow_mul_X_pow_sub_one
+-/
 
+#print Polynomial.cyclotomic_coeff_zero /-
 /-- The constant term of `cyclotomic n R` is `1` if `2 ≤ n`. -/
 theorem cyclotomic_coeff_zero (R : Type _) [CommRing R] {n : ℕ} (hn : 1 < n) :
     (cyclotomic n R).coeff 0 = 1 :=
@@ -697,7 +756,9 @@ theorem cyclotomic_coeff_zero (R : Type _) [CommRing R] {n : ℕ} (hn : 1 < n) :
   rw [hzero] at heq 
   exact neg_inj.mp (Eq.symm HEq)
 #align polynomial.cyclotomic_coeff_zero Polynomial.cyclotomic_coeff_zero
+-/
 
+#print Polynomial.coprime_of_root_cyclotomic /-
 /-- If `(a : ℕ)` is a root of `cyclotomic n (zmod p)`, where `p` is a prime, then `a` and `p` are
 coprime. -/
 theorem coprime_of_root_cyclotomic {n : ℕ} (hpos : 0 < n) {p : ℕ} [hprime : Fact p.Prime] {a : ℕ}
@@ -717,11 +778,13 @@ theorem coprime_of_root_cyclotomic {n : ℕ} (hpos : 0 < n) {p : ℕ} [hprime : 
     hroot 
   exact one_ne_zero hroot
 #align polynomial.coprime_of_root_cyclotomic Polynomial.coprime_of_root_cyclotomic
+-/
 
 end Cyclotomic
 
 section Order
 
+#print Polynomial.orderOf_root_cyclotomic_dvd /-
 /-- If `(a : ℕ)` is a root of `cyclotomic n (zmod p)`, then the multiplicative order of `a` modulo
 `p` divides `n`. -/
 theorem orderOf_root_cyclotomic_dvd {n : ℕ} (hpos : 0 < n) {p : ℕ} [Fact p.Prime] {a : ℕ}
@@ -737,6 +800,7 @@ theorem orderOf_root_cyclotomic_dvd {n : ℕ} (hpos : 0 < n) {p : ℕ} [Fact p.P
   rw [← prod_cyclotomic_eq_X_pow_sub_one hpos (ZMod p), ← Nat.cons_self_properDivisors hpos.ne',
     Finset.prod_cons, eval_mul, hroot, MulZeroClass.zero_mul]
 #align polynomial.order_of_root_cyclotomic_dvd Polynomial.orderOf_root_cyclotomic_dvd
+-/
 
 end Order
 

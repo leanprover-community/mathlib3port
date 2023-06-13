@@ -39,15 +39,20 @@ section GCDMonoid
 
 variable {R : Type _} [EuclideanDomain R] [GCDMonoid R]
 
+#print gcd_ne_zero_of_left /-
 theorem gcd_ne_zero_of_left (p q : R) (hp : p ≠ 0) : GCDMonoid.gcd p q ≠ 0 := fun h =>
   hp <| eq_zero_of_zero_dvd (h ▸ gcd_dvd_left p q)
 #align gcd_ne_zero_of_left gcd_ne_zero_of_left
+-/
 
+#print gcd_ne_zero_of_right /-
 theorem gcd_ne_zero_of_right (p q : R) (hp : q ≠ 0) : GCDMonoid.gcd p q ≠ 0 := fun h =>
   hp <| eq_zero_of_zero_dvd (h ▸ gcd_dvd_right p q)
 #align gcd_ne_zero_of_right gcd_ne_zero_of_right
+-/
 
 /- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:132:4: warning: unsupported: rw with cfg: { occs := occurrences.pos[occurrences.pos] «expr[ ,]»([1]) } -/
+#print left_div_gcd_ne_zero /-
 theorem left_div_gcd_ne_zero {p q : R} (hp : p ≠ 0) : p / GCDMonoid.gcd p q ≠ 0 :=
   by
   obtain ⟨r, hr⟩ := GCDMonoid.gcd_dvd_left p q
@@ -55,8 +60,10 @@ theorem left_div_gcd_ne_zero {p q : R} (hp : p ≠ 0) : p / GCDMonoid.gcd p q �
   rw [hr, mul_comm, mul_div_cancel _ pq0]
   exact r0
 #align left_div_gcd_ne_zero left_div_gcd_ne_zero
+-/
 
 /- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:132:4: warning: unsupported: rw with cfg: { occs := occurrences.pos[occurrences.pos] «expr[ ,]»([1]) } -/
+#print right_div_gcd_ne_zero /-
 theorem right_div_gcd_ne_zero {p q : R} (hq : q ≠ 0) : q / GCDMonoid.gcd p q ≠ 0 :=
   by
   obtain ⟨r, hr⟩ := GCDMonoid.gcd_dvd_right p q
@@ -64,6 +71,7 @@ theorem right_div_gcd_ne_zero {p q : R} (hq : q ≠ 0) : q / GCDMonoid.gcd p q �
   rw [hr, mul_comm, mul_div_cancel _ pq0]
   exact r0
 #align right_div_gcd_ne_zero right_div_gcd_ne_zero
+-/
 
 end GCDMonoid
 
@@ -94,24 +102,30 @@ theorem span_gcd {α} [EuclideanDomain α] (x y : α) :
 #align euclidean_domain.span_gcd EuclideanDomain.span_gcd
 -/
 
+#print EuclideanDomain.gcd_isUnit_iff /-
 theorem gcd_isUnit_iff {α} [EuclideanDomain α] {x y : α} : IsUnit (gcd x y) ↔ IsCoprime x y :=
   letI := EuclideanDomain.gcdMonoid α
   gcd_isUnit_iff x y
 #align euclidean_domain.gcd_is_unit_iff EuclideanDomain.gcd_isUnit_iff
+-/
 
+#print EuclideanDomain.isCoprime_of_dvd /-
 -- this should be proved for UFDs surely?
 theorem isCoprime_of_dvd {α} [EuclideanDomain α] {x y : α} (nonzero : ¬(x = 0 ∧ y = 0))
     (H : ∀ z ∈ nonunits α, z ≠ 0 → z ∣ x → ¬z ∣ y) : IsCoprime x y :=
   letI := EuclideanDomain.gcdMonoid α
   isCoprime_of_dvd x y nonzero H
 #align euclidean_domain.is_coprime_of_dvd EuclideanDomain.isCoprime_of_dvd
+-/
 
+#print EuclideanDomain.dvd_or_coprime /-
 -- this should be proved for UFDs surely?
 theorem dvd_or_coprime {α} [EuclideanDomain α] (x y : α) (h : Irreducible x) :
     x ∣ y ∨ IsCoprime x y :=
   letI := EuclideanDomain.gcdMonoid α
   dvd_or_coprime x y h
 #align euclidean_domain.dvd_or_coprime EuclideanDomain.dvd_or_coprime
+-/
 
 end EuclideanDomain
 

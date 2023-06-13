@@ -27,6 +27,7 @@ This file collects some basic results involving rings and the `fin` type
 -/
 
 
+#print RingEquiv.piFinTwo /-
 /-- The product over `fin 2` of some rings is just the cartesian product of these rings. -/
 @[simps]
 def RingEquiv.piFinTwo (R : Fin 2 → Type _) [∀ i, Semiring (R i)] :
@@ -36,4 +37,5 @@ def RingEquiv.piFinTwo (R : Fin 2 → Type _) [∀ i, Semiring (R i)] :
     map_add' := fun a b => rfl
     map_mul' := fun a b => rfl }
 #align ring_equiv.pi_fin_two RingEquiv.piFinTwo
+-/
 

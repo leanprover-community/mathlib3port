@@ -77,6 +77,7 @@ instance : LargeCategory.{u} LatCat :=
 instance : ConcreteCategory LatCat :=
   BundledHom.concreteCategory LatticeHom
 
+#print LatCat.hasForgetToPartOrd /-
 instance hasForgetToPartOrd : HasForget₂ LatCat PartOrdCat
     where
   forget₂ :=
@@ -84,7 +85,9 @@ instance hasForgetToPartOrd : HasForget₂ LatCat PartOrdCat
       map := fun X Y f => f }
   forget_comp := rfl
 #align Lat.has_forget_to_PartOrd LatCat.hasForgetToPartOrd
+-/
 
+#print LatCat.Iso.mk /-
 /-- Constructs an isomorphism of lattices from an order isomorphism between them. -/
 @[simps]
 def Iso.mk {α β : LatCat.{u}} (e : α ≃o β) : α ≅ β
@@ -94,14 +97,18 @@ def Iso.mk {α β : LatCat.{u}} (e : α ≃o β) : α ≅ β
   hom_inv_id' := by ext; exact e.symm_apply_apply _
   inv_hom_id' := by ext; exact e.apply_symm_apply _
 #align Lat.iso.mk LatCat.Iso.mk
+-/
 
+#print LatCat.dual /-
 /-- `order_dual` as a functor. -/
 @[simps]
 def dual : LatCat ⥤ LatCat where
   obj X := of Xᵒᵈ
   map X Y := LatticeHom.dual
 #align Lat.dual LatCat.dual
+-/
 
+#print LatCat.dualEquiv /-
 /-- The equivalence between `Lat` and itself induced by `order_dual` both ways. -/
 @[simps Functor inverse]
 def dualEquiv : LatCat ≌ LatCat :=
@@ -109,11 +116,14 @@ def dualEquiv : LatCat ≌ LatCat :=
     (NatIso.ofComponents (fun X => Iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
     (NatIso.ofComponents (fun X => Iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
 #align Lat.dual_equiv LatCat.dualEquiv
+-/
 
 end LatCat
 
+#print latCat_dual_comp_forget_to_partOrdCat /-
 theorem latCat_dual_comp_forget_to_partOrdCat :
     LatCat.dual ⋙ forget₂ LatCat PartOrdCat = forget₂ LatCat PartOrdCat ⋙ PartOrdCat.dual :=
   rfl
 #align Lat_dual_comp_forget_to_PartOrd latCat_dual_comp_forget_to_partOrdCat
+-/
 

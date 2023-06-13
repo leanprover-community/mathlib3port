@@ -53,6 +53,7 @@ variable [∀ i₂, AddCommGroup (M₂ i₂)] [AddCommGroup M₂']
 
 variable [∀ i₁, Module R (M₁ i₁)] [Module R M₁'] [∀ i₂, Module R (M₂ i₂)] [Module R M₂']
 
+#print TensorProduct.directSum /-
 /-- The linear equivalence `(⨁ i₁, M₁ i₁) ⊗ (⨁ i₂, M₂ i₂) ≃ (⨁ i₁, ⨁ i₂, M₁ i₁ ⊗ M₂ i₂)`, i.e.
 "tensor product distributes over direct sum". -/
 protected def directSum :
@@ -80,7 +81,9 @@ protected def directSum :
     | rw [flip_apply]
     | rw [curry_apply]
 #align tensor_product.direct_sum TensorProduct.directSum
+-/
 
+#print TensorProduct.directSumLeft /-
 /-- Tensor products distribute over a direct sum on the left . -/
 def directSumLeft : (⨁ i₁, M₁ i₁) ⊗[R] M₂' ≃ₗ[R] ⨁ i, M₁ i ⊗[R] M₂' :=
   LinearEquiv.ofLinear
@@ -103,22 +106,28 @@ def directSumLeft : (⨁ i₁, M₁ i₁) ⊗[R] M₂' ≃ₗ[R] ⨁ i, M₁ i �
           simp_rw [DirectSum.toModule_lof, lift.tmul, DirectSum.toModule_lof, compr₂_apply,
             mk_apply, DirectSum.toModule_lof, rtensor_tmul])
 #align tensor_product.direct_sum_left TensorProduct.directSumLeft
+-/
 
+#print TensorProduct.directSumRight /-
 /-- Tensor products distribute over a direct sum on the right. -/
 def directSumRight : (M₁' ⊗[R] ⨁ i, M₂ i) ≃ₗ[R] ⨁ i, M₁' ⊗[R] M₂ i :=
   TensorProduct.comm R _ _ ≪≫ₗ directSumLeft R M₂ M₁' ≪≫ₗ
     Dfinsupp.mapRange.linearEquiv fun i => TensorProduct.comm R _ _
 #align tensor_product.direct_sum_right TensorProduct.directSumRight
+-/
 
 variable {M₁ M₁' M₂ M₂'}
 
+#print TensorProduct.directSum_lof_tmul_lof /-
 @[simp]
 theorem directSum_lof_tmul_lof (i₁ : ι₁) (m₁ : M₁ i₁) (i₂ : ι₂) (m₂ : M₂ i₂) :
     TensorProduct.directSum R M₁ M₂ (DirectSum.lof R ι₁ M₁ i₁ m₁ ⊗ₜ DirectSum.lof R ι₂ M₂ i₂ m₂) =
       DirectSum.lof R (ι₁ × ι₂) (fun i => M₁ i.1 ⊗[R] M₂ i.2) (i₁, i₂) (m₁ ⊗ₜ m₂) :=
   by simp [TensorProduct.directSum]
 #align tensor_product.direct_sum_lof_tmul_lof TensorProduct.directSum_lof_tmul_lof
+-/
 
+#print TensorProduct.directSumLeft_tmul_lof /-
 @[simp]
 theorem directSumLeft_tmul_lof (i : ι₁) (x : M₁ i) (y : M₂') :
     directSumLeft R M₁ M₂' (DirectSum.lof R _ _ i x ⊗ₜ[R] y) = DirectSum.lof R _ _ i (x ⊗ₜ[R] y) :=
@@ -127,14 +136,18 @@ theorem directSumLeft_tmul_lof (i : ι₁) (x : M₁ i) (y : M₂') :
   rw [DirectSum.toModule_lof R i]
   rfl
 #align tensor_product.direct_sum_left_tmul_lof TensorProduct.directSumLeft_tmul_lof
+-/
 
+#print TensorProduct.directSumLeft_symm_lof_tmul /-
 @[simp]
 theorem directSumLeft_symm_lof_tmul (i : ι₁) (x : M₁ i) (y : M₂') :
     (directSumLeft R M₁ M₂').symm (DirectSum.lof R _ _ i (x ⊗ₜ[R] y)) =
       DirectSum.lof R _ _ i x ⊗ₜ[R] y :=
   by rw [LinearEquiv.symm_apply_eq, direct_sum_left_tmul_lof]
 #align tensor_product.direct_sum_left_symm_lof_tmul TensorProduct.directSumLeft_symm_lof_tmul
+-/
 
+#print TensorProduct.directSumRight_tmul_lof /-
 @[simp]
 theorem directSumRight_tmul_lof (x : M₁') (i : ι₂) (y : M₂ i) :
     directSumRight R M₁' M₂ (x ⊗ₜ[R] DirectSum.lof R _ _ i y) = DirectSum.lof R _ _ i (x ⊗ₜ[R] y) :=
@@ -143,13 +156,16 @@ theorem directSumRight_tmul_lof (x : M₁') (i : ι₂) (y : M₂ i) :
   rw [direct_sum_left_tmul_lof]
   exact Dfinsupp.mapRange_single
 #align tensor_product.direct_sum_right_tmul_lof TensorProduct.directSumRight_tmul_lof
+-/
 
+#print TensorProduct.directSumRight_symm_lof_tmul /-
 @[simp]
 theorem directSumRight_symm_lof_tmul (x : M₁') (i : ι₂) (y : M₂ i) :
     (directSumRight R M₁' M₂).symm (DirectSum.lof R _ _ i (x ⊗ₜ[R] y)) =
       x ⊗ₜ[R] DirectSum.lof R _ _ i y :=
   by rw [LinearEquiv.symm_apply_eq, direct_sum_right_tmul_lof]
 #align tensor_product.direct_sum_right_symm_lof_tmul TensorProduct.directSumRight_symm_lof_tmul
+-/
 
 end TensorProduct
 

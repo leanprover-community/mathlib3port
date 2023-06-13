@@ -138,35 +138,39 @@ instead of linearly increasing the work per `my_embedding`-related declaration.
 -/
 
 
+#print EmbeddingLike /-
 /-- The class `embedding_like F α β` expresses that terms of type `F` have an
 injective coercion to injective functions `α ↪ β`.
 -/
 class EmbeddingLike (F : Sort _) (α β : outParam (Sort _)) extends FunLike F α fun _ => β where
   injective' : ∀ f : F, @Function.Injective α β (coe f)
 #align embedding_like EmbeddingLike
+-/
 
 namespace EmbeddingLike
 
 variable {F α β γ : Sort _} [i : EmbeddingLike F α β]
 
-include i
-
+#print EmbeddingLike.injective /-
 protected theorem injective (f : F) : Function.Injective f :=
   injective' f
 #align embedding_like.injective EmbeddingLike.injective
+-/
 
+#print EmbeddingLike.apply_eq_iff_eq /-
 @[simp]
 theorem apply_eq_iff_eq (f : F) {x y : α} : f x = f y ↔ x = y :=
   (EmbeddingLike.injective f).eq_iff
 #align embedding_like.apply_eq_iff_eq EmbeddingLike.apply_eq_iff_eq
+-/
 
-omit i
-
+#print EmbeddingLike.comp_injective /-
 @[simp]
 theorem comp_injective {F : Sort _} [EmbeddingLike F β γ] (f : α → β) (e : F) :
     Function.Injective (e ∘ f) ↔ Function.Injective f :=
   (EmbeddingLike.injective e).of_comp_iff f
 #align embedding_like.comp_injective EmbeddingLike.comp_injective
+-/
 
 end EmbeddingLike
 

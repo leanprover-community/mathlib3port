@@ -171,6 +171,7 @@ instance subterminals_thin (X Y : Subterminals C) : Subsingleton (X ⟶ Y) :=
 #align category_theory.subterminals_thin CategoryTheory.subterminals_thin
 -/
 
+#print CategoryTheory.subterminalsEquivMonoOverTerminal /-
 /--
 The category of subterminal objects is equivalent to the category of monomorphisms to the terminal
 object (which is in turn equivalent to the subobjects of the terminal object).
@@ -192,6 +193,7 @@ def subterminalsEquivMonoOverTerminal [HasTerminal C] : Subterminals C ≌ MonoO
     { Hom := { app := fun X => Over.homMk (𝟙 _) }
       inv := { app := fun X => Over.homMk (𝟙 _) } }
 #align category_theory.subterminals_equiv_mono_over_terminal CategoryTheory.subterminalsEquivMonoOverTerminal
+-/
 
 #print CategoryTheory.subterminals_to_monoOver_terminal_comp_forget /-
 @[simp]

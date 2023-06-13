@@ -39,6 +39,7 @@ section
 
 variable (α)
 
+#print OrderIso.inv /-
 /-- `x ↦ x⁻¹` as an order-reversing equivalence. -/
 @[to_additive "`x ↦ -x` as an order-reversing equivalence.", simps]
 def OrderIso.inv : α ≃o αᵒᵈ
@@ -47,26 +48,32 @@ def OrderIso.inv : α ≃o αᵒᵈ
   map_rel_iff' a b := @inv_le_inv_iff α _ _ _ _ _ _
 #align order_iso.inv OrderIso.inv
 #align order_iso.neg OrderIso.neg
+-/
 
 end
 
+#print inv_le' /-
 @[to_additive neg_le]
 theorem inv_le' : a⁻¹ ≤ b ↔ b⁻¹ ≤ a :=
   (OrderIso.inv α).symm_apply_le
 #align inv_le' inv_le'
 #align neg_le neg_le
+-/
 
 alias inv_le' ↔ inv_le_of_inv_le' _
 #align inv_le_of_inv_le' inv_le_of_inv_le'
 
 attribute [to_additive neg_le_of_neg_le] inv_le_of_inv_le'
 
+#print le_inv' /-
 @[to_additive le_neg]
 theorem le_inv' : a ≤ b⁻¹ ↔ b ≤ a⁻¹ :=
   (OrderIso.inv α).le_symm_apply
 #align le_inv' le_inv'
 #align le_neg le_neg
+-/
 
+#print OrderIso.divLeft /-
 /-- `x ↦ a / x` as an order-reversing equivalence. -/
 @[to_additive "`x ↦ a - x` as an order-reversing equivalence.", simps]
 def OrderIso.divLeft (a : α) : α ≃o αᵒᵈ
@@ -75,6 +82,7 @@ def OrderIso.divLeft (a : α) : α ≃o αᵒᵈ
   map_rel_iff' x y := @div_le_div_iff_left α _ _ _ _ _ _ _
 #align order_iso.div_left OrderIso.divLeft
 #align order_iso.sub_left OrderIso.subLeft
+-/
 
 end TypeclassesLeftRightLe
 
@@ -93,6 +101,7 @@ section Right
 
 variable [CovariantClass α α (swap (· * ·)) (· ≤ ·)] {a b c d : α}
 
+#print OrderIso.mulRight /-
 /-- `equiv.mul_right` as an `order_iso`. See also `order_embedding.mul_right`. -/
 @[to_additive "`equiv.add_right` as an `order_iso`. See also `order_embedding.add_right`.",
   simps (config := { simpRhs := true }) toEquiv apply]
@@ -102,13 +111,17 @@ def OrderIso.mulRight (a : α) : α ≃o α
   toEquiv := Equiv.mulRight a
 #align order_iso.mul_right OrderIso.mulRight
 #align order_iso.add_right OrderIso.addRight
+-/
 
+#print OrderIso.mulRight_symm /-
 @[simp, to_additive]
 theorem OrderIso.mulRight_symm (a : α) : (OrderIso.mulRight a).symm = OrderIso.mulRight a⁻¹ := by
   ext x; rfl
 #align order_iso.mul_right_symm OrderIso.mulRight_symm
 #align order_iso.add_right_symm OrderIso.addRight_symm
+-/
 
+#print OrderIso.divRight /-
 /-- `x ↦ x / a` as an order isomorphism. -/
 @[to_additive "`x ↦ x - a` as an order isomorphism.", simps]
 def OrderIso.divRight (a : α) : α ≃o α
@@ -117,6 +130,7 @@ def OrderIso.divRight (a : α) : α ≃o α
   map_rel_iff' x y := div_le_div_iff_right a
 #align order_iso.div_right OrderIso.divRight
 #align order_iso.sub_right OrderIso.subRight
+-/
 
 end Right
 
@@ -124,6 +138,7 @@ section Left
 
 variable [CovariantClass α α (· * ·) (· ≤ ·)]
 
+#print OrderIso.mulLeft /-
 /-- `equiv.mul_left` as an `order_iso`. See also `order_embedding.mul_left`. -/
 @[to_additive "`equiv.add_left` as an `order_iso`. See also `order_embedding.add_left`.",
   simps (config := { simpRhs := true }) toEquiv apply]
@@ -133,12 +148,15 @@ def OrderIso.mulLeft (a : α) : α ≃o α
   toEquiv := Equiv.mulLeft a
 #align order_iso.mul_left OrderIso.mulLeft
 #align order_iso.add_left OrderIso.addLeft
+-/
 
+#print OrderIso.mulLeft_symm /-
 @[simp, to_additive]
 theorem OrderIso.mulLeft_symm (a : α) : (OrderIso.mulLeft a).symm = OrderIso.mulLeft a⁻¹ := by
   ext x; rfl
 #align order_iso.mul_left_symm OrderIso.mulLeft_symm
 #align order_iso.add_left_symm OrderIso.addLeft_symm
+-/
 
 end Left
 

@@ -151,6 +151,7 @@ theorem terminates_parallel {S : WSeq (Computation α)} {c} (h : c ∈ S) [T : T
 #align computation.terminates_parallel Computation.terminates_parallel
 -/
 
+#print Computation.exists_of_mem_parallel /-
 theorem exists_of_mem_parallel {S : WSeq (Computation α)} {a} (h : a ∈ parallel S) :
     ∃ c ∈ S, a ∈ c :=
   by
@@ -223,6 +224,7 @@ theorem exists_of_mem_parallel {S : WSeq (Computation α)} {a} (h : a ∈ parall
         rw [seq.destruct_eq_cons e]
         exact seq.mem_cons_of_mem _ dS'
 #align computation.exists_of_mem_parallel Computation.exists_of_mem_parallel
+-/
 
 #print Computation.map_parallel /-
 theorem map_parallel (f : α → β) (S) : map f (parallel S) = parallel (S.map (map f)) :=

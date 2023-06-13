@@ -43,39 +43,53 @@ namespace Semiconj
 
 variable {f fab : α → β} {fbc : β → γ} {ga ga' : α → α} {gb gb' : β → β} {gc gc' : γ → γ}
 
+#print Function.Semiconj.comp_eq /-
 protected theorem comp_eq (h : Semiconj f ga gb) : f ∘ ga = gb ∘ f :=
   funext h
 #align function.semiconj.comp_eq Function.Semiconj.comp_eq
+-/
 
+#print Function.Semiconj.eq /-
 protected theorem eq (h : Semiconj f ga gb) (x : α) : f (ga x) = gb (f x) :=
   h x
 #align function.semiconj.eq Function.Semiconj.eq
+-/
 
+#print Function.Semiconj.comp_right /-
 theorem comp_right (h : Semiconj f ga gb) (h' : Semiconj f ga' gb') :
     Semiconj f (ga ∘ ga') (gb ∘ gb') := fun x => by rw [comp_app, h.eq, h'.eq]
 #align function.semiconj.comp_right Function.Semiconj.comp_right
+-/
 
+#print Function.Semiconj.comp_left /-
 theorem comp_left (hab : Semiconj fab ga gb) (hbc : Semiconj fbc gb gc) :
     Semiconj (fbc ∘ fab) ga gc := fun x => by simp only [comp_app, hab.eq, hbc.eq]
 #align function.semiconj.comp_left Function.Semiconj.comp_left
+-/
 
+#print Function.Semiconj.id_right /-
 theorem id_right : Semiconj f id id := fun _ => rfl
 #align function.semiconj.id_right Function.Semiconj.id_right
+-/
 
 #print Function.Semiconj.id_left /-
 theorem id_left : Semiconj id ga ga := fun _ => rfl
 #align function.semiconj.id_left Function.Semiconj.id_left
 -/
 
+#print Function.Semiconj.inverses_right /-
 theorem inverses_right (h : Semiconj f ga gb) (ha : RightInverse ga' ga) (hb : LeftInverse gb' gb) :
     Semiconj f ga' gb' := fun x => by rw [← hb (f (ga' x)), ← h.eq, ha x]
 #align function.semiconj.inverses_right Function.Semiconj.inverses_right
+-/
 
+#print Function.Semiconj.option_map /-
 theorem option_map {f : α → β} {ga : α → α} {gb : β → β} (h : Semiconj f ga gb) :
     Semiconj (Option.map f) (Option.map ga) (Option.map gb)
   | none => rfl
   | some a => congr_arg some <| h _
 #align function.semiconj.option_map Function.Semiconj.option_map
+-/
 
 end Semiconj
 
@@ -155,27 +169,35 @@ namespace Semiconj₂
 
 variable {f : α → β} {ga : α → α → α} {gb : β → β → β}
 
+#print Function.Semiconj₂.eq /-
 protected theorem eq (h : Semiconj₂ f ga gb) (x y : α) : f (ga x y) = gb (f x) (f y) :=
   h x y
 #align function.semiconj₂.eq Function.Semiconj₂.eq
+-/
 
+#print Function.Semiconj₂.comp_eq /-
 protected theorem comp_eq (h : Semiconj₂ f ga gb) : bicompr f ga = bicompl gb f f :=
   funext fun x => funext <| h x
 #align function.semiconj₂.comp_eq Function.Semiconj₂.comp_eq
+-/
 
 #print Function.Semiconj₂.id_left /-
 theorem id_left (op : α → α → α) : Semiconj₂ id op op := fun _ _ => rfl
 #align function.semiconj₂.id_left Function.Semiconj₂.id_left
 -/
 
+#print Function.Semiconj₂.comp /-
 theorem comp {f' : β → γ} {gc : γ → γ → γ} (hf' : Semiconj₂ f' gb gc) (hf : Semiconj₂ f ga gb) :
     Semiconj₂ (f' ∘ f) ga gc := fun x y => by simp only [hf'.eq, hf.eq, comp_app]
 #align function.semiconj₂.comp Function.Semiconj₂.comp
+-/
 
+#print Function.Semiconj₂.isAssociative_right /-
 theorem isAssociative_right [IsAssociative α ga] (h : Semiconj₂ f ga gb) (h_surj : Surjective f) :
     IsAssociative β gb :=
   ⟨h_surj.forall₃.2 fun x₁ x₂ x₃ => by simp only [← h.eq, @IsAssociative.assoc _ ga]⟩
 #align function.semiconj₂.is_associative_right Function.Semiconj₂.isAssociative_right
+-/
 
 #print Function.Semiconj₂.isAssociative_left /-
 theorem isAssociative_left [IsAssociative β gb] (h : Semiconj₂ f ga gb) (h_inj : Injective f) :
@@ -184,10 +206,12 @@ theorem isAssociative_left [IsAssociative β gb] (h : Semiconj₂ f ga gb) (h_in
 #align function.semiconj₂.is_associative_left Function.Semiconj₂.isAssociative_left
 -/
 
+#print Function.Semiconj₂.isIdempotent_right /-
 theorem isIdempotent_right [IsIdempotent α ga] (h : Semiconj₂ f ga gb) (h_surj : Surjective f) :
     IsIdempotent β gb :=
   ⟨h_surj.forall.2 fun x => by simp only [← h.eq, @IsIdempotent.idempotent _ ga]⟩
 #align function.semiconj₂.is_idempotent_right Function.Semiconj₂.isIdempotent_right
+-/
 
 #print Function.Semiconj₂.isIdempotent_left /-
 theorem isIdempotent_left [IsIdempotent β gb] (h : Semiconj₂ f ga gb) (h_inj : Injective f) :

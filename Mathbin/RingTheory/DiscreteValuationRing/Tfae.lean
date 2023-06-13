@@ -41,6 +41,7 @@ open LocalRing
 
 open scoped BigOperators
 
+#print exists_maximalIdeal_pow_eq_of_principal /-
 theorem exists_maximalIdeal_pow_eq_of_principal [IsNoetherianRing R] [LocalRing R] [IsDomain R]
     (h : ¬IsField R) (h' : (maximalIdeal R).IsPrincipal) (I : Ideal R) (hI : I ≠ ⊥) :
     ∃ n : ℕ, I = maximalIdeal R ^ n := by
@@ -96,6 +97,7 @@ theorem exists_maximalIdeal_pow_eq_of_principal [IsNoetherianRing R] [LocalRing 
   · rw [hx, Ideal.span_singleton_pow, Ideal.span_le, Set.singleton_subset_iff]
     exact Nat.find_spec this
 #align exists_maximal_ideal_pow_eq_of_principal exists_maximalIdeal_pow_eq_of_principal
+-/
 
 #print maximalIdeal_isPrincipal_of_isDedekindDomain /-
 theorem maximalIdeal_isPrincipal_of_isDedekindDomain [LocalRing R] [IsDomain R]
@@ -166,6 +168,7 @@ theorem maximalIdeal_isPrincipal_of_isDedekindDomain [LocalRing R] [IsDomain R]
 -/
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (I «expr ≠ » «expr⊥»()) -/
+#print DiscreteValuationRing.TFAE /-
 theorem DiscreteValuationRing.TFAE [IsNoetherianRing R] [LocalRing R] [IsDomain R]
     (h : ¬IsField R) :
     TFAE
@@ -262,4 +265,5 @@ theorem DiscreteValuationRing.TFAE [IsNoetherianRing R] [LocalRing R] [IsDomain 
     · right; exact Ideal.pow_le_pow h'
   tfae_finish
 #align discrete_valuation_ring.tfae DiscreteValuationRing.TFAE
+-/
 

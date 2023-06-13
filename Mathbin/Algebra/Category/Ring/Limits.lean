@@ -45,10 +45,13 @@ namespace SemiRingCat
 
 variable {J : Type v} [SmallCategory J]
 
+#print SemiRingCat.semiringObj /-
 instance semiringObj (F : J ⥤ SemiRingCat.{max v u}) (j) :
     Semiring ((F ⋙ forget SemiRingCat).obj j) := by change Semiring (F.obj j); infer_instance
 #align SemiRing.semiring_obj SemiRingCat.semiringObj
+-/
 
+#print SemiRingCat.sectionsSubsemiring /-
 /-- The flat sections of a functor into `SemiRing` form a subsemiring of all sections.
 -/
 def sectionsSubsemiring (F : J ⥤ SemiRingCat.{max v u}) : Subsemiring (∀ j, F.obj j) :=
@@ -58,6 +61,7 @@ def sectionsSubsemiring (F : J ⥤ SemiRingCat.{max v u}) : Subsemiring (∀ j, 
     MonCat.sectionsSubmonoid (F ⋙ forget₂ SemiRingCat MonCat.{max v u}) with
     carrier := (F ⋙ forget SemiRingCat).sections }
 #align SemiRing.sections_subsemiring SemiRingCat.sectionsSubsemiring
+-/
 
 #print SemiRingCat.limitSemiring /-
 instance limitSemiring (F : J ⥤ SemiRingCat.{max v u}) :
@@ -66,6 +70,7 @@ instance limitSemiring (F : J ⥤ SemiRingCat.{max v u}) :
 #align SemiRing.limit_semiring SemiRingCat.limitSemiring
 -/
 
+#print SemiRingCat.limitπRingHom /-
 /-- `limit.π (F ⋙ forget SemiRing) j` as a `ring_hom`. -/
 def limitπRingHom (F : J ⥤ SemiRingCat.{max v u}) (j) :
     (Types.limitCone (F ⋙ forget SemiRingCat)).pt →+* (F ⋙ forget SemiRingCat).obj j :=
@@ -76,6 +81,7 @@ def limitπRingHom (F : J ⥤ SemiRingCat.{max v u}) (j) :
     MonCat.limitπMonoidHom (F ⋙ forget₂ SemiRingCat MonCat.{max v u}) j with
     toFun := (Types.limitCone (F ⋙ forget SemiRingCat)).π.app j }
 #align SemiRing.limit_π_ring_hom SemiRingCat.limitπRingHom
+-/
 
 namespace HasLimits
 
@@ -112,7 +118,7 @@ end HasLimits
 
 open HasLimits
 
-/- ./././Mathport/Syntax/Translate/Command.lean:323:38: unsupported irreducible non-definition -/
+/- ./././Mathport/Syntax/Translate/Command.lean:322:38: unsupported irreducible non-definition -/
 #print SemiRingCat.hasLimitsOfSize /-
 /-- The category of rings has all limits. -/
 irreducible_def hasLimitsOfSize : HasLimitsOfSize.{v} SemiRingCat.{max v u} :=
@@ -132,12 +138,14 @@ instance hasLimits : HasLimits SemiRingCat.{u} :=
 #align SemiRing.has_limits SemiRingCat.hasLimits
 -/
 
+#print SemiRingCat.forget₂AddCommMonPreservesLimitsAux /-
 /-- An auxiliary declaration to speed up typechecking.
 -/
 def forget₂AddCommMonPreservesLimitsAux (F : J ⥤ SemiRingCat.{max v u}) :
     IsLimit ((forget₂ SemiRingCat AddCommMonCat).mapCone (limitCone F)) := by
   apply AddCommMonCat.limitConeIsLimit (F ⋙ forget₂ SemiRingCat AddCommMonCat.{max v u})
 #align SemiRing.forget₂_AddCommMon_preserves_limits_aux SemiRingCat.forget₂AddCommMonPreservesLimitsAux
+-/
 
 #print SemiRingCat.forget₂AddCommMonPreservesLimitsOfSize /-
 /-- The forgetful functor from semirings to additive commutative monoids preserves all limits.
@@ -159,12 +167,14 @@ instance forget₂AddCommMonPreservesLimits :
 #align SemiRing.forget₂_AddCommMon_preserves_limits SemiRingCat.forget₂AddCommMonPreservesLimits
 -/
 
+#print SemiRingCat.forget₂MonPreservesLimitsAux /-
 /-- An auxiliary declaration to speed up typechecking.
 -/
 def forget₂MonPreservesLimitsAux (F : J ⥤ SemiRingCat.{max v u}) :
     IsLimit ((forget₂ SemiRingCat MonCat).mapCone (limitCone F)) := by
   apply MonCat.HasLimits.limitConeIsLimit (F ⋙ forget₂ SemiRingCat MonCat.{max v u})
 #align SemiRing.forget₂_Mon_preserves_limits_aux SemiRingCat.forget₂MonPreservesLimitsAux
+-/
 
 #print SemiRingCat.forget₂MonPreservesLimitsOfSize /-
 /-- The forgetful functor from semirings to monoids preserves all limits.
@@ -209,10 +219,12 @@ namespace CommSemiRingCat
 
 variable {J : Type v} [SmallCategory J]
 
+#print CommSemiRingCat.commSemiringObj /-
 instance commSemiringObj (F : J ⥤ CommSemiRingCat.{max v u}) (j) :
     CommSemiring ((F ⋙ forget CommSemiRingCat).obj j) := by change CommSemiring (F.obj j);
   infer_instance
 #align CommSemiRing.comm_semiring_obj CommSemiRingCat.commSemiringObj
+-/
 
 #print CommSemiRingCat.limitCommSemiring /-
 instance limitCommSemiring (F : J ⥤ CommSemiRingCat.{max v u}) :
@@ -264,7 +276,7 @@ def limitConeIsLimit (F : J ⥤ CommSemiRingCat.{max v u}) : IsLimit (limitCone 
 #align CommSemiRing.limit_cone_is_limit CommSemiRingCat.limitConeIsLimit
 -/
 
-/- ./././Mathport/Syntax/Translate/Command.lean:323:38: unsupported irreducible non-definition -/
+/- ./././Mathport/Syntax/Translate/Command.lean:322:38: unsupported irreducible non-definition -/
 #print CommSemiRingCat.hasLimitsOfSize /-
 /-- The category of rings has all limits. -/
 irreducible_def hasLimitsOfSize : HasLimitsOfSize.{v, v} CommSemiRingCat.{max v u} :=
@@ -323,10 +335,13 @@ namespace RingCat
 
 variable {J : Type v} [SmallCategory J]
 
+#print RingCat.ringObj /-
 instance ringObj (F : J ⥤ RingCat.{max v u}) (j) : Ring ((F ⋙ forget RingCat).obj j) := by
   change Ring (F.obj j); infer_instance
 #align Ring.ring_obj RingCat.ringObj
+-/
 
+#print RingCat.sectionsSubring /-
 /-- The flat sections of a functor into `Ring` form a subring of all sections.
 -/
 def sectionsSubring (F : J ⥤ RingCat.{max v u}) : Subring (∀ j, F.obj j) :=
@@ -337,6 +352,7 @@ def sectionsSubring (F : J ⥤ RingCat.{max v u}) : Subring (∀ j, F.obj j) :=
     SemiRingCat.sectionsSubsemiring (F ⋙ forget₂ RingCat SemiRingCat.{max v u}) with
     carrier := (F ⋙ forget RingCat).sections }
 #align Ring.sections_subring RingCat.sectionsSubring
+-/
 
 #print RingCat.limitRing /-
 instance limitRing (F : J ⥤ RingCat.{max v u}) :
@@ -382,7 +398,7 @@ def limitConeIsLimit (F : J ⥤ RingCat.{max v u}) : IsLimit (limitCone F) :=
 #align Ring.limit_cone_is_limit RingCat.limitConeIsLimit
 -/
 
-/- ./././Mathport/Syntax/Translate/Command.lean:323:38: unsupported irreducible non-definition -/
+/- ./././Mathport/Syntax/Translate/Command.lean:322:38: unsupported irreducible non-definition -/
 #print RingCat.hasLimitsOfSize /-
 /-- The category of rings has all limits. -/
 irreducible_def hasLimitsOfSize : HasLimitsOfSize.{v, v} RingCat.{max v u} :=
@@ -413,12 +429,14 @@ instance forget₂SemiRingPreservesLimits : PreservesLimits (forget₂ RingCat S
 #align Ring.forget₂_SemiRing_preserves_limits RingCat.forget₂SemiRingPreservesLimits
 -/
 
+#print RingCat.forget₂AddCommGroupPreservesLimitsAux /-
 /-- An auxiliary declaration to speed up typechecking.
 -/
 def forget₂AddCommGroupPreservesLimitsAux (F : J ⥤ RingCat.{max v u}) :
     IsLimit ((forget₂ RingCat AddCommGroupCat).mapCone (limitCone F)) := by
   apply AddCommGroupCat.limitConeIsLimit (F ⋙ forget₂ RingCat AddCommGroupCat.{max v u})
 #align Ring.forget₂_AddCommGroup_preserves_limits_aux RingCat.forget₂AddCommGroupPreservesLimitsAux
+-/
 
 #print RingCat.forget₂AddCommGroupPreservesLimitsOfSize /-
 /-- The forgetful functor from rings to additive commutative groups preserves all limits.
@@ -464,9 +482,11 @@ namespace CommRingCat
 
 variable {J : Type v} [SmallCategory J]
 
+#print CommRingCat.commRingObj /-
 instance commRingObj (F : J ⥤ CommRingCat.{max v u}) (j) :
     CommRing ((F ⋙ forget CommRingCat).obj j) := by change CommRing (F.obj j); infer_instance
 #align CommRing.comm_ring_obj CommRingCat.commRingObj
+-/
 
 #print CommRingCat.limitCommRing /-
 instance limitCommRing (F : J ⥤ CommRingCat.{max v u}) :
@@ -529,7 +549,7 @@ def limitConeIsLimit (F : J ⥤ CommRingCat.{max v u}) : IsLimit (limitCone F) :
 #align CommRing.limit_cone_is_limit CommRingCat.limitConeIsLimit
 -/
 
-/- ./././Mathport/Syntax/Translate/Command.lean:323:38: unsupported irreducible non-definition -/
+/- ./././Mathport/Syntax/Translate/Command.lean:322:38: unsupported irreducible non-definition -/
 #print CommRingCat.hasLimitsOfSize /-
 /-- The category of commutative rings has all limits. -/
 irreducible_def hasLimitsOfSize : HasLimitsOfSize.{v, v} CommRingCat.{max v u} :=
@@ -561,12 +581,14 @@ instance forget₂RingPreservesLimits : PreservesLimits (forget₂ CommRingCat R
 #align CommRing.forget₂_Ring_preserves_limits CommRingCat.forget₂RingPreservesLimits
 -/
 
+#print CommRingCat.forget₂CommSemiRingPreservesLimitsAux /-
 /-- An auxiliary declaration to speed up typechecking.
 -/
 def forget₂CommSemiRingPreservesLimitsAux (F : J ⥤ CommRingCat.{max v u}) :
     IsLimit ((forget₂ CommRingCat CommSemiRingCat).mapCone (limitCone F)) := by
   apply CommSemiRingCat.limitConeIsLimit (F ⋙ forget₂ CommRingCat CommSemiRingCat.{max v u})
 #align CommRing.forget₂_CommSemiRing_preserves_limits_aux CommRingCat.forget₂CommSemiRingPreservesLimitsAux
+-/
 
 #print CommRingCat.forget₂CommSemiRingPreservesLimitsOfSize /-
 /-- The forgetful functor from commutative rings to commutative semirings preserves all limits.

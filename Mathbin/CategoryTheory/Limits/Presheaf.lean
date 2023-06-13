@@ -94,6 +94,7 @@ def restrictedYonedaYoneda : restrictedYoneda (yoneda : C ⥤ Cᵒᵖ ⥤ Type u
 #align category_theory.colimit_adj.restricted_yoneda_yoneda CategoryTheory.ColimitAdj.restrictedYonedaYoneda
 -/
 
+#print CategoryTheory.ColimitAdj.restrictYonedaHomEquiv /-
 /-- (Implementation). The equivalence of homsets which helps construct the left adjoint to
 `colimit_adj.restricted_yoneda`.
 It is shown in `restrict_yoneda_hom_equiv_natural` that this is a natural bijection.
@@ -124,7 +125,9 @@ def restrictYonedaHomEquiv (P : Cᵒᵖ ⥤ Type u₁) (E : ℰ)
         rintro ⟨_, _⟩
         rfl }
 #align category_theory.colimit_adj.restrict_yoneda_hom_equiv CategoryTheory.ColimitAdj.restrictYonedaHomEquiv
+-/
 
+#print CategoryTheory.ColimitAdj.restrictYonedaHomEquiv_natural /-
 /--
 (Implementation). Show that the bijection in `restrict_yoneda_hom_equiv` is natural (on the right).
 -/
@@ -136,6 +139,7 @@ theorem restrictYonedaHomEquiv_natural (P : Cᵒᵖ ⥤ Type u₁) (E₁ E₂ : 
   ext (_ X p)
   apply (assoc _ _ _).symm
 #align category_theory.colimit_adj.restrict_yoneda_hom_equiv_natural CategoryTheory.ColimitAdj.restrictYonedaHomEquiv_natural
+-/
 
 variable [HasColimits ℰ]
 
@@ -151,12 +155,15 @@ def extendAlongYoneda : (Cᵒᵖ ⥤ Type u₁) ⥤ ℰ :=
 #align category_theory.colimit_adj.extend_along_yoneda CategoryTheory.ColimitAdj.extendAlongYoneda
 -/
 
+#print CategoryTheory.ColimitAdj.extendAlongYoneda_obj /-
 @[simp]
 theorem extendAlongYoneda_obj (P : Cᵒᵖ ⥤ Type u₁) :
     (extendAlongYoneda A).obj P = colimit ((CategoryOfElements.π P).leftOp ⋙ A) :=
   rfl
 #align category_theory.colimit_adj.extend_along_yoneda_obj CategoryTheory.ColimitAdj.extendAlongYoneda_obj
+-/
 
+#print CategoryTheory.ColimitAdj.extendAlongYoneda_map /-
 theorem extendAlongYoneda_map {X Y : Cᵒᵖ ⥤ Type u₁} (f : X ⟶ Y) :
     (extendAlongYoneda A).map f =
       colimit.pre ((CategoryOfElements.π Y).leftOp ⋙ A) (CategoryOfElements.map f).op :=
@@ -167,6 +174,7 @@ theorem extendAlongYoneda_map {X Y : Cᵒᵖ ⥤ Type u₁} (f : X ⟶ Y) :
     is_colimit.hom_iso, ulift_trivial]
   simpa
 #align category_theory.colimit_adj.extend_along_yoneda_map CategoryTheory.ColimitAdj.extendAlongYoneda_map
+-/
 
 #print CategoryTheory.ColimitAdj.yonedaAdjunction /-
 /-- Show `extend_along_yoneda` is left adjoint to `restricted_yoneda`.
@@ -178,6 +186,7 @@ def yonedaAdjunction : extendAlongYoneda A ⊣ restrictedYoneda A :=
 #align category_theory.colimit_adj.yoneda_adjunction CategoryTheory.ColimitAdj.yonedaAdjunction
 -/
 
+#print CategoryTheory.ColimitAdj.Elements.initial /-
 /--
 The initial object in the category of elements for a representable functor. In `is_initial` it is
 shown that this is initial.
@@ -185,7 +194,9 @@ shown that this is initial.
 def Elements.initial (A : C) : (yoneda.obj A).Elements :=
   ⟨Opposite.op A, 𝟙 _⟩
 #align category_theory.colimit_adj.elements.initial CategoryTheory.ColimitAdj.Elements.initial
+-/
 
+#print CategoryTheory.ColimitAdj.isInitial /-
 /-- Show that `elements.initial A` is initial in the category of elements for the `yoneda` functor.
 -/
 def isInitial (A : C) : IsInitial (Elements.initial A)
@@ -197,6 +208,7 @@ def isInitial (A : C) : IsInitial (Elements.initial A)
     simp
   fac := by rintro s ⟨⟨⟩⟩
 #align category_theory.colimit_adj.is_initial CategoryTheory.ColimitAdj.isInitial
+-/
 
 #print CategoryTheory.ColimitAdj.isExtensionAlongYoneda /-
 /--
@@ -230,6 +242,7 @@ def isExtensionAlongYoneda : (yoneda : C ⥤ Cᵒᵖ ⥤ Type u₁) ⋙ extendAl
 instance : PreservesColimits (extendAlongYoneda A) :=
   (yonedaAdjunction A).leftAdjointPreservesColimits
 
+#print CategoryTheory.ColimitAdj.extendAlongYonedaIsoKanApp /-
 /-- Show that the images of `X` after `extend_along_yoneda` and `Lan yoneda` are indeed isomorphic.
 This follows from `category_theory.category_of_elements.costructured_arrow_yoneda_equivalence`.
 -/
@@ -254,7 +267,9 @@ def extendAlongYonedaIsoKanApp (X) :
       · exact category_of_elements.to_from_costructured_arrow_eq X
       · ext; simp only [colimit.ι_pre]; erw [category.comp_id]; congr }
 #align category_theory.colimit_adj.extend_along_yoneda_iso_Kan_app CategoryTheory.ColimitAdj.extendAlongYonedaIsoKanApp
+-/
 
+#print CategoryTheory.ColimitAdj.extendAlongYonedaIsoKan /-
 /-- Verify that `extend_along_yoneda` is indeed the left Kan extension along the yoneda embedding.
 -/
 @[simps]
@@ -269,6 +284,7 @@ def extendAlongYonedaIsoKan : extendAlongYoneda A ≅ (lan yoneda : (_ ⥤ ℰ) 
       congr 1
       apply category_of_elements.costructured_arrow_yoneda_equivalence_naturality)
 #align category_theory.colimit_adj.extend_along_yoneda_iso_Kan CategoryTheory.ColimitAdj.extendAlongYonedaIsoKan
+-/
 
 #print CategoryTheory.ColimitAdj.extendOfCompYonedaIsoLan /-
 /-- extending `F ⋙ yoneda` along the yoneda embedding is isomorphic to `Lan F.op`. -/
@@ -333,13 +349,16 @@ theorem coconeOfRepresentable_pt (P : Cᵒᵖ ⥤ Type u₁) : (coconeOfRepresen
 #align category_theory.cocone_of_representable_X CategoryTheory.coconeOfRepresentable_pt
 -/
 
+#print CategoryTheory.coconeOfRepresentable_ι_app /-
 -- Marking this as a simp lemma seems to make things more awkward.
 /-- An explicit formula for the legs of the cocone `cocone_of_representable`. -/
 theorem coconeOfRepresentable_ι_app (P : Cᵒᵖ ⥤ Type u₁) (j : P.Elementsᵒᵖ) :
     (coconeOfRepresentable P).ι.app j = (yonedaSectionsSmall _ _).inv j.unop.2 :=
   colimit.ι_desc _ _
 #align category_theory.cocone_of_representable_ι_app CategoryTheory.coconeOfRepresentable_ι_app
+-/
 
+#print CategoryTheory.coconeOfRepresentable_naturality /-
 /-- The legs of the cocone `cocone_of_representable` are natural in the choice of presheaf. -/
 theorem coconeOfRepresentable_naturality {P₁ P₂ : Cᵒᵖ ⥤ Type u₁} (α : P₁ ⟶ P₂) (j : P₁.Elementsᵒᵖ) :
     (coconeOfRepresentable P₁).ι.app j ≫ α =
@@ -348,6 +367,7 @@ theorem coconeOfRepresentable_naturality {P₁ P₂ : Cᵒᵖ ⥤ Type u₁} (α
   ext (T f)
   simpa [cocone_of_representable_ι_app] using functor_to_types.naturality _ _ α f.op _
 #align category_theory.cocone_of_representable_naturality CategoryTheory.coconeOfRepresentable_naturality
+-/
 
 #print CategoryTheory.colimitOfRepresentable /-
 /-- The cocone with point `P` given by `the_cocone` is a colimit: that is, we have exhibited an

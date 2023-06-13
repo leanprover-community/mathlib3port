@@ -23,7 +23,6 @@ open scoped TensorProduct
 
 open TensorProduct Algebra.TensorProduct
 
--- mathport name: exprsurjective
 local notation "surjective" => fun {X Y : Type _} [CommRing X] [CommRing Y] => fun f : X →+* Y =>
   Function.Surjective f
 

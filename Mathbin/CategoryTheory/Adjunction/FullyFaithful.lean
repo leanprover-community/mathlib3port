@@ -90,6 +90,7 @@ instance counit_isIso_of_R_fully_faithful [Full R] [Faithful R] : IsIso (Adjunct
 #align category_theory.counit_is_iso_of_R_fully_faithful CategoryTheory.counit_isIso_of_R_fully_faithful
 -/
 
+#print CategoryTheory.inv_map_unit /-
 /-- If the unit of an adjunction is an isomorphism, then its inverse on the image of L is given
 by L whiskered with the counit. -/
 @[simp]
@@ -97,6 +98,7 @@ theorem inv_map_unit {X : C} [IsIso (h.Unit.app X)] :
     inv (L.map (h.Unit.app X)) = h.counit.app (L.obj X) :=
   IsIso.inv_eq_of_hom_inv_id h.left_triangle_components
 #align category_theory.inv_map_unit CategoryTheory.inv_map_unit
+-/
 
 #print CategoryTheory.whiskerLeftLCounitIsoOfIsIsoUnit /-
 /-- If the unit is an isomorphism, bundle one has an isomorphism `L ⋙ R ⋙ L ≅ L`. -/
@@ -106,6 +108,7 @@ noncomputable def whiskerLeftLCounitIsoOfIsIsoUnit [IsIso h.Unit] : L ⋙ R ⋙ 
 #align category_theory.whisker_left_L_counit_iso_of_is_iso_unit CategoryTheory.whiskerLeftLCounitIsoOfIsIsoUnit
 -/
 
+#print CategoryTheory.inv_counit_map /-
 /-- If the counit of an adjunction is an isomorphism, then its inverse on the image of R is given
 by R whiskered with the unit. -/
 @[simp]
@@ -113,6 +116,7 @@ theorem inv_counit_map {X : D} [IsIso (h.counit.app X)] :
     inv (R.map (h.counit.app X)) = h.Unit.app (R.obj X) :=
   IsIso.inv_eq_of_inv_hom_id h.right_triangle_components
 #align category_theory.inv_counit_map CategoryTheory.inv_counit_map
+-/
 
 #print CategoryTheory.whiskerLeftRUnitIsoOfIsIsoCounit /-
 /-- If the counit of an is an isomorphism, one has an isomorphism `(R ⋙ L ⋙ R) ≅ R`. -/

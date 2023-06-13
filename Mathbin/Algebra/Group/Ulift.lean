@@ -43,11 +43,13 @@ instance one [One α] : One (ULift α) :=
 #align ulift.has_zero ULift.zero
 -/
 
+#print ULift.one_down /-
 @[simp, to_additive]
 theorem one_down [One α] : (1 : ULift α).down = 1 :=
   rfl
 #align ulift.one_down ULift.one_down
 #align ulift.zero_down ULift.zero_down
+-/
 
 #print ULift.mul /-
 @[to_additive]
@@ -105,11 +107,13 @@ instance smul [SMul α β] : SMul α (ULift β) :=
 #align ulift.has_vadd ULift.vadd
 -/
 
+#print ULift.smul_down /-
 @[simp, to_additive]
 theorem smul_down [SMul α β] (a : α) (b : ULift.{v} β) : (a • b).down = a • b.down :=
   rfl
 #align ulift.smul_down ULift.smul_down
 #align ulift.vadd_down ULift.vadd_down
+-/
 
 #print ULift.pow /-
 @[to_additive SMul, to_additive_reorder 1]
@@ -119,11 +123,13 @@ instance pow [Pow α β] : Pow (ULift α) β :=
 #align ulift.has_smul ULift.smul
 -/
 
+#print ULift.pow_down /-
 @[simp, to_additive smul_down, to_additive_reorder 1]
 theorem pow_down [Pow α β] (a : ULift.{v} α) (b : β) : (a ^ b).down = a.down ^ b :=
   rfl
 #align ulift.pow_down ULift.pow_down
 #align ulift.smul_down ULift.smul_down
+-/
 
 #print MulEquiv.ulift /-
 /-- The multiplicative equivalence between `ulift α` and `α`.
@@ -187,25 +193,33 @@ instance [NatCast α] : NatCast (ULift α) :=
 instance [IntCast α] : IntCast (ULift α) :=
   ⟨fun n => up n⟩
 
+#print ULift.up_natCast /-
 @[simp, norm_cast]
 theorem up_natCast [NatCast α] (n : ℕ) : up (n : α) = n :=
   rfl
 #align ulift.up_nat_cast ULift.up_natCast
+-/
 
+#print ULift.up_intCast /-
 @[simp, norm_cast]
 theorem up_intCast [IntCast α] (n : ℤ) : up (n : α) = n :=
   rfl
 #align ulift.up_int_cast ULift.up_intCast
+-/
 
+#print ULift.down_natCast /-
 @[simp, norm_cast]
 theorem down_natCast [NatCast α] (n : ℕ) : down (n : ULift α) = n :=
   rfl
 #align ulift.down_nat_cast ULift.down_natCast
+-/
 
+#print ULift.down_intCast /-
 @[simp, norm_cast]
 theorem down_intCast [IntCast α] (n : ℤ) : down (n : ULift α) = n :=
   rfl
 #align ulift.down_int_cast ULift.down_intCast
+-/
 
 #print ULift.addMonoidWithOne /-
 instance addMonoidWithOne [AddMonoidWithOne α] : AddMonoidWithOne (ULift α) :=

@@ -55,6 +55,7 @@ namespace NatTrans
 
 variable {F G : C ⥤ D}
 
+#print CategoryTheory.NatTrans.appLinearMap /-
 /-- Application of a natural transformation at a fixed object,
 as group homomorphism -/
 @[simps]
@@ -64,11 +65,14 @@ def appLinearMap (X : C) : (F ⟶ G) →ₗ[R] F.obj X ⟶ G.obj X
   map_add' _ _ := rfl
   map_smul' _ _ := rfl
 #align category_theory.nat_trans.app_linear_map CategoryTheory.NatTrans.appLinearMap
+-/
 
+#print CategoryTheory.NatTrans.app_smul /-
 @[simp]
 theorem app_smul (X : C) (r : R) (α : F ⟶ G) : (r • α).app X = r • α.app X :=
   rfl
 #align category_theory.nat_trans.app_smul CategoryTheory.NatTrans.app_smul
+-/
 
 end NatTrans
 

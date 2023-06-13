@@ -45,6 +45,7 @@ theorem subtype_val_mono {α : Type u} (s : Set α) : Mono (↾(Subtype.val : s 
 
 attribute [local instance] subtype_val_mono
 
+#print Types.monoOverEquivalenceSet /-
 /-- The category of `mono_over α`, for `α : Type u`, is equivalent to the partial order `set α`.
 -/
 @[simps]
@@ -68,6 +69,7 @@ noncomputable def Types.monoOverEquivalenceSet (α : Type u) : MonoOver α ≌ S
       (by tidy)
   counitIso := NatIso.ofComponents (fun s => eqToIso Subtype.range_val) (by tidy)
 #align types.mono_over_equivalence_set Types.monoOverEquivalenceSet
+-/
 
 instance : WellPowered (Type u) :=
   wellPowered_of_essentiallySmall_monoOver fun α =>

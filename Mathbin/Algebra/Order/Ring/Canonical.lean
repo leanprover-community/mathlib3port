@@ -55,6 +55,7 @@ section ExistsAddOfLE
 
 variable [ExistsAddOfLE α]
 
+#print mul_add_mul_le_mul_add_mul /-
 /-- Binary **rearrangement inequality**. -/
 theorem mul_add_mul_le_mul_add_mul (hab : a ≤ b) (hcd : c ≤ d) : a * d + b * c ≤ a * c + b * d :=
   by
@@ -63,12 +64,16 @@ theorem mul_add_mul_le_mul_add_mul (hab : a ≤ b) (hcd : c ≤ d) : a * d + b *
   rw [mul_add, add_right_comm, mul_add, ← add_assoc]
   exact add_le_add_left (mul_le_mul_of_nonneg_right hab <| (le_add_iff_nonneg_right _).1 hcd) _
 #align mul_add_mul_le_mul_add_mul mul_add_mul_le_mul_add_mul
+-/
 
+#print mul_add_mul_le_mul_add_mul' /-
 /-- Binary **rearrangement inequality**. -/
 theorem mul_add_mul_le_mul_add_mul' (hba : b ≤ a) (hdc : d ≤ c) : a • d + b • c ≤ a • c + b • d :=
   by rw [add_comm (a • d), add_comm (a • c)]; exact mul_add_mul_le_mul_add_mul hba hdc
 #align mul_add_mul_le_mul_add_mul' mul_add_mul_le_mul_add_mul'
+-/
 
+#print mul_add_mul_lt_mul_add_mul /-
 /-- Binary strict **rearrangement inequality**. -/
 theorem mul_add_mul_lt_mul_add_mul (hab : a < b) (hcd : c < d) : a * d + b * c < a * c + b * d :=
   by
@@ -77,11 +82,14 @@ theorem mul_add_mul_lt_mul_add_mul (hab : a < b) (hcd : c < d) : a * d + b * c <
   rw [mul_add, add_right_comm, mul_add, ← add_assoc]
   exact add_lt_add_left (mul_lt_mul_of_pos_right hab <| (lt_add_iff_pos_right _).1 hcd) _
 #align mul_add_mul_lt_mul_add_mul mul_add_mul_lt_mul_add_mul
+-/
 
+#print mul_add_mul_lt_mul_add_mul' /-
 /-- Binary **rearrangement inequality**. -/
 theorem mul_add_mul_lt_mul_add_mul' (hba : b < a) (hdc : d < c) : a • d + b • c < a • c + b • d :=
   by rw [add_comm (a • d), add_comm (a • c)]; exact mul_add_mul_lt_mul_add_mul hba hdc
 #align mul_add_mul_lt_mul_add_mul' mul_add_mul_lt_mul_add_mul'
+-/
 
 end ExistsAddOfLE
 
@@ -91,11 +99,14 @@ namespace CanonicallyOrderedCommSemiring
 
 variable [CanonicallyOrderedCommSemiring α] {a b : α}
 
+#print CanonicallyOrderedCommSemiring.toNoZeroDivisors /-
 -- see Note [lower instance priority]
 instance (priority := 100) toNoZeroDivisors : NoZeroDivisors α :=
   ⟨fun a b h => CanonicallyOrderedCommSemiring.eq_zero_or_eq_zero_of_mul_eq_zero h⟩
 #align canonically_ordered_comm_semiring.to_no_zero_divisors CanonicallyOrderedCommSemiring.toNoZeroDivisors
+-/
 
+#print CanonicallyOrderedCommSemiring.toCovariantClassMulLE /-
 -- see Note [lower instance priority]
 instance (priority := 100) toCovariantClassMulLE : CovariantClass α α (· * ·) (· ≤ ·) :=
   by
@@ -104,6 +115,7 @@ instance (priority := 100) toCovariantClassMulLE : CovariantClass α α (· * ·
   rw [mul_add]
   apply self_le_add_right
 #align canonically_ordered_comm_semiring.to_covariant_mul_le CanonicallyOrderedCommSemiring.toCovariantClassMulLE
+-/
 
 #print CanonicallyOrderedCommSemiring.toOrderedCommMonoid /-
 -- see Note [lower instance priority]
@@ -124,10 +136,12 @@ instance (priority := 100) toOrderedCommSemiring : OrderedCommSemiring α :=
 #align canonically_ordered_comm_semiring.to_ordered_comm_semiring CanonicallyOrderedCommSemiring.toOrderedCommSemiring
 -/
 
+#print CanonicallyOrderedCommSemiring.mul_pos /-
 @[simp]
 theorem mul_pos : 0 < a * b ↔ 0 < a ∧ 0 < b := by
   simp only [pos_iff_ne_zero, Ne.def, mul_eq_zero, not_or]
 #align canonically_ordered_comm_semiring.mul_pos CanonicallyOrderedCommSemiring.mul_pos
+-/
 
 end CanonicallyOrderedCommSemiring
 
@@ -141,6 +155,7 @@ variable [IsTotal α (· ≤ ·)]
 
 namespace AddLECancellable
 
+#print AddLECancellable.mul_tsub /-
 protected theorem mul_tsub (h : AddLECancellable (a * c)) : a * (b - c) = a * b - a * c :=
   by
   cases' total_of (· ≤ ·) b c with hbc hcb
@@ -149,22 +164,29 @@ protected theorem mul_tsub (h : AddLECancellable (a * c)) : a * (b - c) = a * b 
       tsub_eq_zero_iff_le.2 (mul_le_mul_left' hbc a)]
   · apply h.eq_tsub_of_add_eq; rw [← mul_add, tsub_add_cancel_of_le hcb]
 #align add_le_cancellable.mul_tsub AddLECancellable.mul_tsub
+-/
 
+#print AddLECancellable.tsub_mul /-
 protected theorem tsub_mul (h : AddLECancellable (b * c)) : (a - b) * c = a * c - b * c := by
   simp only [mul_comm _ c] at *; exact h.mul_tsub
 #align add_le_cancellable.tsub_mul AddLECancellable.tsub_mul
+-/
 
 end AddLECancellable
 
 variable [ContravariantClass α α (· + ·) (· ≤ ·)]
 
+#print mul_tsub /-
 theorem mul_tsub (a b c : α) : a * (b - c) = a * b - a * c :=
   Contravariant.AddLECancellable.mul_tsub
 #align mul_tsub mul_tsub
+-/
 
+#print tsub_mul /-
 theorem tsub_mul (a b c : α) : (a - b) * c = a * c - b * c :=
   Contravariant.AddLECancellable.tsub_mul
 #align tsub_mul tsub_mul
+-/
 
 end Sub
 

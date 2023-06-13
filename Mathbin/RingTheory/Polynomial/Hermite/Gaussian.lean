@@ -39,6 +39,7 @@ open Polynomial
 
 namespace Polynomial
 
+#print Polynomial.deriv_gaussian_eq_hermite_mul_gaussian /-
 /-- `hermite n` is (up to sign) the factor appearing in `deriv^[n]` of a gaussian -/
 theorem deriv_gaussian_eq_hermite_mul_gaussian (n : ℕ) (x : ℝ) :
     (deriv^[n]) (fun y => Real.exp (-(y ^ 2 / 2))) x =
@@ -57,7 +58,9 @@ theorem deriv_gaussian_eq_hermite_mul_gaussian (n : ℕ) (x : ℝ) :
     · apply Polynomial.differentiable_aeval
     · simp
 #align polynomial.deriv_gaussian_eq_hermite_mul_gaussian Polynomial.deriv_gaussian_eq_hermite_mul_gaussian
+-/
 
+#print Polynomial.hermite_eq_deriv_gaussian /-
 theorem hermite_eq_deriv_gaussian (n : ℕ) (x : ℝ) :
     aeval x (hermite n) =
       (-1 : ℝ) ^ n * (deriv^[n]) (fun y => Real.exp (-(y ^ 2 / 2))) x / Real.exp (-(x ^ 2 / 2)) :=
@@ -68,7 +71,9 @@ theorem hermite_eq_deriv_gaussian (n : ℕ) (x : ℝ) :
     neg_inv, inv_one]
   exact pow_ne_zero _ (by norm_num)
 #align polynomial.hermite_eq_deriv_gaussian Polynomial.hermite_eq_deriv_gaussian
+-/
 
+#print Polynomial.hermite_eq_deriv_gaussian' /-
 theorem hermite_eq_deriv_gaussian' (n : ℕ) (x : ℝ) :
     aeval x (hermite n) =
       (-1 : ℝ) ^ n * (deriv^[n]) (fun y => Real.exp (-(y ^ 2 / 2))) x * Real.exp (x ^ 2 / 2) :=
@@ -76,6 +81,7 @@ theorem hermite_eq_deriv_gaussian' (n : ℕ) (x : ℝ) :
   rw [hermite_eq_deriv_gaussian, Real.exp_neg]
   field_simp [Real.exp_ne_zero]
 #align polynomial.hermite_eq_deriv_gaussian' Polynomial.hermite_eq_deriv_gaussian'
+-/
 
 end Polynomial
 

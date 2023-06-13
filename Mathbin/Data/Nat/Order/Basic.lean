@@ -107,9 +107,11 @@ theorem one_lt_iff_ne_zero_and_ne_one : ∀ {n : ℕ}, 1 < n ↔ n ≠ 0 ∧ n �
 #align nat.one_lt_iff_ne_zero_and_ne_one Nat.one_lt_iff_ne_zero_and_ne_one
 -/
 
+#print Nat.mul_ne_zero /-
 protected theorem mul_ne_zero (n0 : n ≠ 0) (m0 : m ≠ 0) : n * m ≠ 0
   | nm => (eq_zero_of_mul_eq_zero nm).elim n0 m0
 #align nat.mul_ne_zero Nat.mul_ne_zero
+-/
 
 #print Nat.mul_eq_zero /-
 @[simp]
@@ -136,10 +138,13 @@ theorem eq_zero_of_mul_le (hb : 2 ≤ n) (h : n * m ≤ m) : m = 0 :=
 #align nat.eq_zero_of_mul_le Nat.eq_zero_of_mul_le
 -/
 
+#print Nat.zero_max /-
 theorem zero_max : max 0 n = n :=
   max_eq_right (zero_le _)
 #align nat.zero_max Nat.zero_max
+-/
 
+#print Nat.min_eq_zero_iff /-
 @[simp]
 theorem min_eq_zero_iff : min m n = 0 ↔ m = 0 ∨ n = 0 :=
   by
@@ -150,7 +155,9 @@ theorem min_eq_zero_iff : min m n = 0 ↔ m = 0 ∨ n = 0 :=
     · simpa [H] using Or.inr h
   · rintro (rfl | rfl) <;> simp
 #align nat.min_eq_zero_iff Nat.min_eq_zero_iff
+-/
 
+#print Nat.max_eq_zero_iff /-
 @[simp]
 theorem max_eq_zero_iff : max m n = 0 ↔ m = 0 ∧ n = 0 :=
   by
@@ -164,18 +171,23 @@ theorem max_eq_zero_iff : max m n = 0 ↔ m = 0 ∧ n = 0 :=
   · rintro ⟨rfl, rfl⟩
     simp
 #align nat.max_eq_zero_iff Nat.max_eq_zero_iff
+-/
 
+#print Nat.add_eq_max_iff /-
 theorem add_eq_max_iff : m + n = max m n ↔ m = 0 ∨ n = 0 :=
   by
   rw [← min_eq_zero_iff]
   cases' le_total m n with H H <;> simp [H]
 #align nat.add_eq_max_iff Nat.add_eq_max_iff
+-/
 
+#print Nat.add_eq_min_iff /-
 theorem add_eq_min_iff : m + n = min m n ↔ m = 0 ∧ n = 0 :=
   by
   rw [← max_eq_zero_iff]
   cases' le_total m n with H H <;> simp [H]
 #align nat.add_eq_min_iff Nat.add_eq_min_iff
+-/
 
 #print Nat.one_le_of_lt /-
 theorem one_le_of_lt (h : n < m) : 1 ≤ m :=
@@ -225,9 +237,11 @@ theorem add_pos_left {m : ℕ} (h : 0 < m) (n : ℕ) : 0 < m + n :=
 #align nat.add_pos_left Nat.add_pos_left
 -/
 
+#print Nat.add_pos_right /-
 theorem add_pos_right (m : ℕ) {n : ℕ} (h : 0 < n) : 0 < m + n := by rw [add_comm];
   exact add_pos_left h m
 #align nat.add_pos_right Nat.add_pos_right
+-/
 
 #print Nat.add_pos_iff_pos_or_pos /-
 theorem add_pos_iff_pos_or_pos (m n : ℕ) : 0 < m + n ↔ 0 < m ∨ 0 < n :=
@@ -637,6 +651,7 @@ theorem dvd_sub_mod (k : ℕ) : n ∣ k - k % n :=
 #align nat.dvd_sub_mod Nat.dvd_sub_mod
 -/
 
+#print Nat.add_mod_eq_ite /-
 theorem add_mod_eq_ite :
     (m + n) % k = if k ≤ m % k + n % k then m % k + n % k - k else m % k + n % k :=
   by
@@ -648,6 +663,7 @@ theorem add_mod_eq_ite :
       (tsub_lt_iff_right h).mpr (Nat.add_lt_add (m.mod_lt k.zero_lt_succ) (n.mod_lt k.zero_lt_succ))
   · exact Nat.mod_eq_of_lt (lt_of_not_ge h)
 #align nat.add_mod_eq_ite Nat.add_mod_eq_ite
+-/
 
 #print Nat.div_mul_div_comm /-
 theorem div_mul_div_comm (hmn : n ∣ m) (hkl : l ∣ k) : m / n * (k / l) = m * k / (n * l) :=

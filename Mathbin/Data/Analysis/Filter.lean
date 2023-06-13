@@ -59,10 +59,12 @@ variable [PartialOrder α] (F : CFilter α σ)
 instance : CoeFun (CFilter α σ) fun _ => σ → α :=
   ⟨CFilter.f⟩
 
+#print CFilter.coe_mk /-
 @[simp]
 theorem coe_mk (f pt inf h₁ h₂ a) : (@CFilter.mk α σ _ f pt inf h₁ h₂) a = f a :=
   rfl
 #align cfilter.coe_mk CFilter.coe_mk
+-/
 
 #print CFilter.ofEquiv /-
 /-- Map a cfilter to an equivalent representation type. -/
@@ -76,13 +78,16 @@ def ofEquiv (E : σ ≃ τ) : CFilter α σ → CFilter α τ
 #align cfilter.of_equiv CFilter.ofEquiv
 -/
 
+#print CFilter.ofEquiv_val /-
 @[simp]
 theorem ofEquiv_val (E : σ ≃ τ) (F : CFilter α σ) (a : τ) : F.of_equiv E a = F (E.symm a) := by
   cases F <;> rfl
 #align cfilter.of_equiv_val CFilter.ofEquiv_val
+-/
 
 end
 
+#print CFilter.toFilter /-
 /-- The filter represented by a `cfilter` is the collection of supersets of
   elements of the filter base. -/
 def toFilter (F : CFilter (Set α) σ) : Filter α
@@ -94,11 +99,14 @@ def toFilter (F : CFilter (Set α) σ) : Filter α
     ⟨F.inf a b,
       subset_inter (Subset.trans (F.inf_le_left _ _) h₁) (Subset.trans (F.inf_le_right _ _) h₂)⟩
 #align cfilter.to_filter CFilter.toFilter
+-/
 
+#print CFilter.mem_toFilter_sets /-
 @[simp]
 theorem mem_toFilter_sets (F : CFilter (Set α) σ) {a : Set α} : a ∈ F.toFilter ↔ ∃ b, F b ⊆ a :=
   Iff.rfl
 #align cfilter.mem_to_filter_sets CFilter.mem_toFilter_sets
+-/
 
 end CFilter
 
@@ -111,16 +119,20 @@ structure Filter.Realizer (f : Filter α) where
 #align filter.realizer Filter.Realizer
 -/
 
+#print CFilter.toRealizer /-
 /-- A `cfilter` realizes the filter it generates. -/
 protected def CFilter.toRealizer (F : CFilter (Set α) σ) : F.toFilter.Realizer :=
   ⟨σ, F, rfl⟩
 #align cfilter.to_realizer CFilter.toRealizer
+-/
 
 namespace Filter.Realizer
 
+#print Filter.Realizer.mem_sets /-
 theorem mem_sets {f : Filter α} (F : f.Realizer) {a : Set α} : a ∈ f ↔ ∃ b, F.f b ⊆ a := by
   cases F <;> subst f <;> simp
 #align filter.realizer.mem_sets Filter.Realizer.mem_sets
+-/
 
 #print Filter.Realizer.ofEq /-
 /-- Transfer a realizer along an equality of filter. This has better definitional equalities than
@@ -155,15 +167,19 @@ def ofEquiv {f : Filter α} (F : f.Realizer) (E : F.σ ≃ τ) : f.Realizer :=
 #align filter.realizer.of_equiv Filter.Realizer.ofEquiv
 -/
 
+#print Filter.Realizer.ofEquiv_σ /-
 @[simp]
 theorem ofEquiv_σ {f : Filter α} (F : f.Realizer) (E : F.σ ≃ τ) : (F.of_equiv E).σ = τ :=
   rfl
 #align filter.realizer.of_equiv_σ Filter.Realizer.ofEquiv_σ
+-/
 
+#print Filter.Realizer.ofEquiv_F /-
 @[simp]
 theorem ofEquiv_F {f : Filter α} (F : f.Realizer) (E : F.σ ≃ τ) (s : τ) :
     (F.of_equiv E).f s = F.f (E.symm s) := by delta of_equiv <;> simp
 #align filter.realizer.of_equiv_F Filter.Realizer.ofEquiv_F
+-/
 
 #print Filter.Realizer.principal /-
 /-- `unit` is a realizer for the principal filter -/
@@ -185,18 +201,22 @@ theorem principal_σ (s : Set α) : (Realizer.principal s).σ = Unit :=
 #align filter.realizer.principal_σ Filter.Realizer.principal_σ
 -/
 
+#print Filter.Realizer.principal_F /-
 @[simp]
 theorem principal_F (s : Set α) (u : Unit) : (Realizer.principal s).f u = s :=
   rfl
 #align filter.realizer.principal_F Filter.Realizer.principal_F
+-/
 
 instance (s : Set α) : Inhabited (principal s).Realizer :=
   ⟨Realizer.principal s⟩
 
+#print Filter.Realizer.top /-
 /-- `unit` is a realizer for the top filter -/
 protected def top : (⊤ : Filter α).Realizer :=
   (Realizer.principal _).of_eq principal_univ
 #align filter.realizer.top Filter.Realizer.top
+-/
 
 #print Filter.Realizer.top_σ /-
 @[simp]
@@ -205,15 +225,19 @@ theorem top_σ : (@Realizer.top α).σ = Unit :=
 #align filter.realizer.top_σ Filter.Realizer.top_σ
 -/
 
+#print Filter.Realizer.top_F /-
 @[simp]
 theorem top_F (u : Unit) : (@Realizer.top α).f u = univ :=
   rfl
 #align filter.realizer.top_F Filter.Realizer.top_F
+-/
 
+#print Filter.Realizer.bot /-
 /-- `unit` is a realizer for the bottom filter -/
 protected def bot : (⊥ : Filter α).Realizer :=
   (Realizer.principal _).of_eq principal_empty
 #align filter.realizer.bot Filter.Realizer.bot
+-/
 
 #print Filter.Realizer.bot_σ /-
 @[simp]
@@ -222,10 +246,12 @@ theorem bot_σ : (@Realizer.bot α).σ = Unit :=
 #align filter.realizer.bot_σ Filter.Realizer.bot_σ
 -/
 
+#print Filter.Realizer.bot_F /-
 @[simp]
 theorem bot_F (u : Unit) : (@Realizer.bot α).f u = ∅ :=
   rfl
 #align filter.realizer.bot_F Filter.Realizer.bot_F
+-/
 
 #print Filter.Realizer.map /-
 /-- Construct a realizer for `map m f` given a realizer for `f` -/
@@ -240,15 +266,19 @@ protected def map (m : α → β) {f : Filter α} (F : f.Realizer) : (map m f).R
 #align filter.realizer.map Filter.Realizer.map
 -/
 
+#print Filter.Realizer.map_σ /-
 @[simp]
 theorem map_σ (m : α → β) {f : Filter α} (F : f.Realizer) : (F.map m).σ = F.σ :=
   rfl
 #align filter.realizer.map_σ Filter.Realizer.map_σ
+-/
 
+#print Filter.Realizer.map_F /-
 @[simp]
 theorem map_F (m : α → β) {f : Filter α} (F : f.Realizer) (s) : (F.map m).f s = image m (F.f s) :=
   rfl
 #align filter.realizer.map_F Filter.Realizer.map_F
+-/
 
 #print Filter.Realizer.comap /-
 /-- Construct a realizer for `comap m f` given a realizer for `f` -/
@@ -268,6 +298,7 @@ protected def comap (m : α → β) {f : Filter β} (F : f.Realizer) : (comap m 
 #align filter.realizer.comap Filter.Realizer.comap
 -/
 
+#print Filter.Realizer.sup /-
 /-- Construct a realizer for the sup of two filters -/
 protected def sup {f g : Filter α} (F : f.Realizer) (G : g.Realizer) : (f ⊔ g).Realizer :=
   ⟨F.σ × G.σ,
@@ -287,7 +318,9 @@ protected def sup {f g : Filter α} (F : f.Realizer) (G : g.Realizer) : (f ⊔ g
                 ⟨t, subset.trans (subset_union_right _ _) h⟩⟩,
               fun ⟨⟨s, h₁⟩, ⟨t, h₂⟩⟩ => ⟨s, t, union_subset h₁ h₂⟩⟩⟩
 #align filter.realizer.sup Filter.Realizer.sup
+-/
 
+#print Filter.Realizer.inf /-
 /-- Construct a realizer for the inf of two filters -/
 protected def inf {f g : Filter α} (F : f.Realizer) (G : g.Realizer) : (f ⊓ g).Realizer :=
   ⟨F.σ × G.σ,
@@ -309,6 +342,7 @@ protected def inf {f g : Filter α} (F : f.Realizer) (G : g.Realizer) : (f ⊓ g
     · rintro ⟨s, ⟨a, ha⟩, t, ⟨b, hb⟩, rfl⟩
       exact ⟨a, b, inter_subset_inter ha hb⟩⟩
 #align filter.realizer.inf Filter.Realizer.inf
+-/
 
 #print Filter.Realizer.cofinite /-
 /-- Construct a realizer for the cofinite filter -/
@@ -379,6 +413,7 @@ protected def prod {f g : Filter α} (F : f.Realizer) (G : g.Realizer) : (f.Prod
 #align filter.realizer.prod Filter.Realizer.prod
 -/
 
+#print Filter.Realizer.le_iff /-
 theorem le_iff {f g : Filter α} (F : f.Realizer) (G : g.Realizer) :
     f ≤ g ↔ ∀ b : G.σ, ∃ a : F.σ, F.f a ≤ G.f b :=
   ⟨fun H t => F.mem_sets.1 (H (G.mem_sets.2 ⟨t, Subset.refl _⟩)), fun H x h =>
@@ -387,12 +422,16 @@ theorem le_iff {f g : Filter α} (F : f.Realizer) (G : g.Realizer) :
       let ⟨t, h₂⟩ := H s
       ⟨t, Subset.trans h₂ h₁⟩⟩
 #align filter.realizer.le_iff Filter.Realizer.le_iff
+-/
 
+#print Filter.Realizer.tendsto_iff /-
 theorem tendsto_iff (f : α → β) {l₁ : Filter α} {l₂ : Filter β} (L₁ : l₁.Realizer)
     (L₂ : l₂.Realizer) : Tendsto f l₁ l₂ ↔ ∀ b, ∃ a, ∀ x ∈ L₁.f a, f x ∈ L₂.f b :=
   (le_iff (L₁.map f) L₂).trans <| forall_congr' fun b => exists_congr fun a => image_subset_iff
 #align filter.realizer.tendsto_iff Filter.Realizer.tendsto_iff
+-/
 
+#print Filter.Realizer.ne_bot_iff /-
 theorem ne_bot_iff {f : Filter α} (F : f.Realizer) : f ≠ ⊥ ↔ ∀ a : F.σ, (F.f a).Nonempty := by
   classical
   rw [not_iff_comm, ← le_bot_iff, F.le_iff realizer.bot, not_forall]
@@ -402,6 +441,7 @@ theorem ne_bot_iff {f : Filter α} (F : f.Realizer) : f ≠ ⊥ ↔ ∀ a : F.σ
       let ⟨x, h⟩ := h ()
       ⟨x, le_bot_iff.1 h⟩⟩
 #align filter.realizer.ne_bot_iff Filter.Realizer.ne_bot_iff
+-/
 
 end Filter.Realizer
 

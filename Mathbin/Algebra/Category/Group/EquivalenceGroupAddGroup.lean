@@ -87,6 +87,7 @@ def toCommGroupCat : AddCommGroupCat ⥤ CommGroupCat
 
 end AddCommGroupCat
 
+#print groupAddGroupEquivalence /-
 /-- The equivalence of categories between `Group` and `AddGroup`
 -/
 @[simps]
@@ -97,7 +98,9 @@ def groupAddGroupEquivalence : GroupCat ≌ AddGroupCat :=
     (NatIso.ofComponents (fun X => AddEquiv.toAddGroupCatIso (AddEquiv.additiveMultiplicative X))
       fun X Y f => rfl)
 #align Group_AddGroup_equivalence groupAddGroupEquivalence
+-/
 
+#print commGroupAddCommGroupEquivalence /-
 /-- The equivalence of categories between `CommGroup` and `AddCommGroup`.
 -/
 @[simps]
@@ -108,4 +111,5 @@ def commGroupAddCommGroupEquivalence : CommGroupCat ≌ AddCommGroupCat :=
     (NatIso.ofComponents
       (fun X => AddEquiv.toAddCommGroupCatIso (AddEquiv.additiveMultiplicative X)) fun X Y f => rfl)
 #align CommGroup_AddCommGroup_equivalence commGroupAddCommGroupEquivalence
+-/
 

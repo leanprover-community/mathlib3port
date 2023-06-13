@@ -52,7 +52,6 @@ def GaussianInt : Type :=
   Zsqrtd (-1)
 #align gaussian_int GaussianInt
 
--- mathport name: «exprℤ[i]»
 local notation "ℤ[i]" => GaussianInt
 
 namespace GaussianInt

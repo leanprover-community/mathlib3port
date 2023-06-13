@@ -44,6 +44,7 @@ variable {C : Type u} [Category.{v} C]
 
 variable {D : Type u'} [Category.{v'} D]
 
+#print CategoryTheory.extendFan /-
 /--
 Given `n+1` objects of `C`, a fan for the last `n` with point `c₁.X` and a binary fan on `c₁.X` and
 `f 0`, we can build a fan for all `n+1`.
@@ -60,7 +61,9 @@ def extendFan {n : ℕ} {f : Fin (n + 1) → C} (c₁ : Fan fun i : Fin n => f i
       · apply c₂.fst
       · intro i; apply c₂.snd ≫ c₁.π.app ⟨i⟩)
 #align category_theory.extend_fan CategoryTheory.extendFan
+-/
 
+#print CategoryTheory.extendFanIsLimit /-
 /-- Show that if the two given fans in `extend_fan` are limits, then the constructed fan is also a
 limit.
 -/
@@ -90,6 +93,7 @@ def extendFanIsLimit {n : ℕ} (f : Fin (n + 1) → C) {c₁ : Fan fun i : Fin n
       dsimp only [extend_fan_π_app]
       rw [Fin.cases_succ]
 #align category_theory.extend_fan_is_limit CategoryTheory.extendFanIsLimit
+-/
 
 section
 
@@ -194,6 +198,7 @@ def preservesFiniteProductsOfPreservesBinaryAndTerminal (J : Type) [Fintype J] :
 
 end Preserves
 
+#print CategoryTheory.extendCofan /-
 /-- Given `n+1` objects of `C`, a cofan for the last `n` with point `c₁.X`
 and a binary cofan on `c₁.X` and `f 0`, we can build a cofan for all `n+1`.
 
@@ -210,7 +215,9 @@ def extendCofan {n : ℕ} {f : Fin (n + 1) → C} (c₁ : Cofan fun i : Fin n =>
       · intro i
         apply c₁.ι.app ⟨i⟩ ≫ c₂.inr)
 #align category_theory.extend_cofan CategoryTheory.extendCofan
+-/
 
+#print CategoryTheory.extendCofanIsColimit /-
 /-- Show that if the two given cofans in `extend_cofan` are colimits,
 then the constructed cofan is also a colimit.
 -/
@@ -241,6 +248,7 @@ def extendCofanIsColimit {n : ℕ} (f : Fin (n + 1) → C) {c₁ : Cofan fun i :
       dsimp only [extend_cofan_ι_app]
       rw [Fin.cases_succ, assoc]
 #align category_theory.extend_cofan_is_colimit CategoryTheory.extendCofanIsColimit
+-/
 
 section
 

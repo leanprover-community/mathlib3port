@@ -61,10 +61,12 @@ instance : Bracket (A ⊗[R] L) (A ⊗[R] L) where bracket x y := bracket' R A L
 private theorem bracket_def (x y : A ⊗[R] L) : ⁅x, y⁆ = bracket' R A L x y :=
   rfl
 
+#print LieAlgebra.ExtendScalars.bracket_tmul /-
 @[simp]
 theorem bracket_tmul (s t : A) (x y : L) : ⁅s ⊗ₜ[R] x, t ⊗ₜ[R] y⁆ = (s * t) ⊗ₜ ⁅x, y⁆ := by
   rw [bracket_def, bracket'_tmul]
 #align lie_algebra.extend_scalars.bracket_tmul LieAlgebra.ExtendScalars.bracket_tmul
+-/
 
 private theorem bracket_lie_self (x : A ⊗[R] L) : ⁅x, x⁆ = 0 :=
   by
@@ -132,8 +134,10 @@ private theorem bracket_lie_smul (a : A) (x y : A ⊗[R] L) : ⁅x, a • y⁆ =
   · intro z₁ z₂ h₁ h₂
     simp only [h₁, h₂, smul_add, add_lie]
 
+#print LieAlgebra.ExtendScalars.lieAlgebra /-
 instance lieAlgebra : LieAlgebra A (A ⊗[R] L) where lie_smul := bracket_lie_smul R A L
 #align lie_algebra.extend_scalars.lie_algebra LieAlgebra.ExtendScalars.lieAlgebra
+-/
 
 end ExtendScalars
 
@@ -142,8 +146,6 @@ namespace RestrictScalars
 open RestrictScalars
 
 variable [h : LieRing L]
-
-include h
 
 instance : LieRing (RestrictScalars R A L) :=
   h

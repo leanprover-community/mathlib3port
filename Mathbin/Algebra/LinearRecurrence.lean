@@ -221,11 +221,13 @@ section StrongRankCondition
 -- `comm_ring_strong_rank_condition`, is in a much later file.
 variable {α : Type _} [CommRing α] [StrongRankCondition α] (E : LinearRecurrence α)
 
+#print LinearRecurrence.solSpace_rank /-
 /-- The dimension of `E.sol_space` is `E.order`. -/
 theorem solSpace_rank : Module.rank α E.solSpace = E.order :=
   letI := nontrivial_of_invariantBasisNumber α
   @rank_fin_fun α _ _ E.order ▸ E.to_init.rank_eq
 #align linear_recurrence.sol_space_rank LinearRecurrence.solSpace_rank
+-/
 
 end StrongRankCondition
 
@@ -241,6 +243,7 @@ def charPoly : α[X] :=
 #align linear_recurrence.char_poly LinearRecurrence.charPoly
 -/
 
+#print LinearRecurrence.geom_sol_iff_root_charPoly /-
 /-- The geometric sequence `q^n` is a solution of `E` iff
   `q` is a root of `E`'s characteristic polynomial. -/
 theorem geom_sol_iff_root_charPoly (q : α) : (E.IsSolution fun n => q ^ n) ↔ E.charPoly.IsRoot q :=
@@ -255,6 +258,7 @@ theorem geom_sol_iff_root_charPoly (q : α) : (E.IsSolution fun n => q ^ n) ↔ 
     simp only [pow_add, sub_eq_zero.mp h, mul_sum]
     exact sum_congr rfl fun _ _ => by ring
 #align linear_recurrence.geom_sol_iff_root_char_poly LinearRecurrence.geom_sol_iff_root_charPoly
+-/
 
 end CommRing
 

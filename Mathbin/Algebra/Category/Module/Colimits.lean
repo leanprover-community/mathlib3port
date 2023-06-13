@@ -245,26 +245,34 @@ instance : Module R (ColimitType F)
     apply relation.zero_smul
     rfl
 
+#print ModuleCat.Colimits.quot_zero /-
 @[simp]
 theorem quot_zero : Quot.mk Setoid.r zero = (0 : ColimitType F) :=
   rfl
 #align Module.colimits.quot_zero ModuleCat.Colimits.quot_zero
+-/
 
+#print ModuleCat.Colimits.quot_neg /-
 @[simp]
 theorem quot_neg (x) : Quot.mk Setoid.r (neg x) = (-Quot.mk Setoid.r x : ColimitType F) :=
   rfl
 #align Module.colimits.quot_neg ModuleCat.Colimits.quot_neg
+-/
 
+#print ModuleCat.Colimits.quot_add /-
 @[simp]
 theorem quot_add (x y) :
     Quot.mk Setoid.r (add x y) = (Quot.mk Setoid.r x + Quot.mk Setoid.r y : ColimitType F) :=
   rfl
 #align Module.colimits.quot_add ModuleCat.Colimits.quot_add
+-/
 
+#print ModuleCat.Colimits.quot_smul /-
 @[simp]
 theorem quot_smul (s x) : Quot.mk Setoid.r (smul s x) = (s • Quot.mk Setoid.r x : ColimitType F) :=
   rfl
 #align Module.colimits.quot_smul ModuleCat.Colimits.quot_smul
+-/
 
 #print ModuleCat.Colimits.colimit /-
 /-- The bundled module giving the colimit of a diagram. -/
@@ -273,11 +281,14 @@ def colimit : ModuleCat R :=
 #align Module.colimits.colimit ModuleCat.Colimits.colimit
 -/
 
+#print ModuleCat.Colimits.coconeFun /-
 /-- The function from a given module in the diagram to the colimit module. -/
 def coconeFun (j : J) (x : F.obj j) : ColimitType F :=
   Quot.mk _ (of j x)
 #align Module.colimits.cocone_fun ModuleCat.Colimits.coconeFun
+-/
 
+#print ModuleCat.Colimits.coconeMorphism /-
 /-- The group homomorphism from a given module in the diagram to the colimit module. -/
 def coconeMorphism (j : J) : F.obj j ⟶ colimit F
     where
@@ -285,7 +296,9 @@ def coconeMorphism (j : J) : F.obj j ⟶ colimit F
   map_smul' := by intros; apply Quot.sound; apply relation.smul
   map_add' := by intros <;> apply Quot.sound <;> apply relation.add
 #align Module.colimits.cocone_morphism ModuleCat.Colimits.coconeMorphism
+-/
 
+#print ModuleCat.Colimits.cocone_naturality /-
 @[simp]
 theorem cocone_naturality {j j' : J} (f : j ⟶ j') :
     F.map f ≫ coconeMorphism F j' = coconeMorphism F j :=
@@ -294,12 +307,15 @@ theorem cocone_naturality {j j' : J} (f : j ⟶ j') :
   apply Quot.sound
   apply Relation.Map
 #align Module.colimits.cocone_naturality ModuleCat.Colimits.cocone_naturality
+-/
 
+#print ModuleCat.Colimits.cocone_naturality_components /-
 @[simp]
 theorem cocone_naturality_components (j j' : J) (f : j ⟶ j') (x : F.obj j) :
     (coconeMorphism F j') (F.map f x) = (coconeMorphism F j) x := by rw [← cocone_naturality F f];
   rfl
 #align Module.colimits.cocone_naturality_components ModuleCat.Colimits.cocone_naturality_components
+-/
 
 #print ModuleCat.Colimits.colimitCocone /-
 /-- The cocone over the proposed colimit module. -/
@@ -426,9 +442,11 @@ instance hasColimitsOfSize_moduleCat : HasColimitsOfSize.{v} (ModuleCat.{max v u
 #align Module.colimits.has_colimits_of_size_Module ModuleCat.Colimits.hasColimitsOfSize_moduleCat
 -/
 
+#print ModuleCat.Colimits.hasColimitsOfSize_zero_moduleCat /-
 instance hasColimitsOfSize_zero_moduleCat : HasColimitsOfSize.{0} (ModuleCat.{max v u} R) :=
   @hasColimitsOfSize_shrink.{0} (ModuleCat.{max v u} R) _ ModuleCat.Colimits.hasColimits_moduleCat
 #align Module.colimits.has_colimits_of_size_zero_Module ModuleCat.Colimits.hasColimitsOfSize_zero_moduleCat
+-/
 
 -- We manually add a `has_colimits` instance with universe parameters swapped, for otherwise
 -- the instance is not found by typeclass search.

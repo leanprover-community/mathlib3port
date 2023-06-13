@@ -69,30 +69,40 @@ theorem tendsto_star (a : R) : Tendsto star (𝓝 a) (𝓝 (star a)) :=
 #align tendsto_star tendsto_star
 -/
 
+#print Filter.Tendsto.star /-
 theorem Filter.Tendsto.star {f : α → R} {l : Filter α} {y : R} (h : Tendsto f l (𝓝 y)) :
     Tendsto (fun x => star (f x)) l (𝓝 (star y)) :=
   (continuous_star.Tendsto y).comp h
 #align filter.tendsto.star Filter.Tendsto.star
+-/
 
 variable [TopologicalSpace α] {f : α → R} {s : Set α} {x : α}
 
+#print Continuous.star /-
 @[continuity]
 theorem Continuous.star (hf : Continuous f) : Continuous fun x => star (f x) :=
   continuous_star.comp hf
 #align continuous.star Continuous.star
+-/
 
+#print ContinuousAt.star /-
 theorem ContinuousAt.star (hf : ContinuousAt f x) : ContinuousAt (fun x => star (f x)) x :=
   continuousAt_star.comp hf
 #align continuous_at.star ContinuousAt.star
+-/
 
+#print ContinuousOn.star /-
 theorem ContinuousOn.star (hf : ContinuousOn f s) : ContinuousOn (fun x => star (f x)) s :=
   continuous_star.comp_continuousOn hf
 #align continuous_on.star ContinuousOn.star
+-/
 
+#print ContinuousWithinAt.star /-
 theorem ContinuousWithinAt.star (hf : ContinuousWithinAt f s x) :
     ContinuousWithinAt (fun x => star (f x)) s x :=
   hf.unit
 #align continuous_within_at.star ContinuousWithinAt.star
+-/
 
 #print starContinuousMap /-
 /-- The star operation bundled as a continuous map. -/

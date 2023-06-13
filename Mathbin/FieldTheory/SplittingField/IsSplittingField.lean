@@ -50,8 +50,8 @@ namespace Polynomial
 variable [Field K] [Field L] [Field F] [Algebra K L]
 
 #print Polynomial.IsSplittingField /-
-/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`Splits] [] -/
-/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`adjoin_rootSet] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`Splits] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`adjoin_rootSet] [] -/
 /-- Typeclass characterising splitting fields. -/
 class IsSplittingField (f : K[X]) : Prop where
   Splits : Splits (algebraMap K L) f
@@ -80,6 +80,7 @@ instance map (f : F[X]) [IsSplittingField F L f] : IsSplittingField K L (f.map <
 
 variable (L)
 
+#print Polynomial.IsSplittingField.splits_iff /-
 theorem splits_iff (f : K[X]) [IsSplittingField K L f] :
     Polynomial.Splits (RingHom.id K) f ↔ (⊤ : Subalgebra K L) = ⊥ :=
   ⟨fun h =>
@@ -94,6 +95,7 @@ theorem splits_iff (f : K[X]) [IsSplittingField K L f] :
       RingEquiv.self_trans_symm (RingEquiv.ofBijective _ <| Algebra.bijective_algebraMap_iff.2 h) ▸
         by rw [RingEquiv.toRingHom_trans]; exact splits_comp_of_splits _ _ (splits L f)⟩
 #align polynomial.is_splitting_field.splits_iff Polynomial.IsSplittingField.splits_iff
+-/
 
 #print Polynomial.IsSplittingField.mul /-
 theorem mul (f g : F[X]) (hf : f ≠ 0) (hg : g ≠ 0) [IsSplittingField F K f]
@@ -178,6 +180,7 @@ open Polynomial
 
 variable {K L} [Field K] [Field L] [Algebra K L] {p : K[X]}
 
+#print IntermediateField.splits_of_splits /-
 theorem splits_of_splits {F : IntermediateField K L} (h : p.Splits (algebraMap K L))
     (hF : ∀ x ∈ p.rootSet L, x ∈ F) : p.Splits (algebraMap K F) :=
   by
@@ -191,6 +194,7 @@ theorem splits_of_splits {F : IntermediateField K L} (h : p.Splits (algebraMap K
     map_C, map_X]
   rfl
 #align intermediate_field.splits_of_splits IntermediateField.splits_of_splits
+-/
 
 end IntermediateField
 

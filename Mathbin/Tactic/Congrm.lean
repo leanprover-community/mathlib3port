@@ -48,7 +48,6 @@ namespace Tactic
 def congrmFun1 {α ρ} {r : ρ} : α → ρ := fun _ => r
 #align tactic.congrm_fun_1 Tactic.congrmFun1
 
--- mathport name: expr_₁
 notation "_₁" => congrmFun1
 
 /-- A generic function with two arguments.  It is the "function underscore" input to `congrm`. -/
@@ -56,7 +55,6 @@ notation "_₁" => congrmFun1
 def congrmFun2 {α β ρ} {r : ρ} : α → β → ρ := fun _ _ => r
 #align tactic.congrm_fun_2 Tactic.congrmFun2
 
--- mathport name: expr_₂
 notation "_₂" => congrmFun2
 
 /-- A generic function with three arguments.  It is the "function underscore" input to `congrm`. -/
@@ -64,7 +62,6 @@ notation "_₂" => congrmFun2
 def congrmFun3 {α β γ ρ} {r : ρ} : α → β → γ → ρ := fun _ _ _ => r
 #align tactic.congrm_fun_3 Tactic.congrmFun3
 
--- mathport name: expr_₃
 notation "_₃" => congrmFun3
 
 /-- A generic function with four arguments.  It is the "function underscore" input to `congrm`. -/
@@ -72,7 +69,6 @@ notation "_₃" => congrmFun3
 def congrmFun4 {α β γ δ ρ} {r : ρ} : α → β → γ → δ → ρ := fun _ _ _ _ => r
 #align tactic.congrm_fun_4 Tactic.congrmFun4
 
--- mathport name: expr_₄
 notation "_₄" => congrmFun4
 
 /-- Replaces a "function underscore" input to `congrm` into the correct expression,

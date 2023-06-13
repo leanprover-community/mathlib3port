@@ -72,8 +72,6 @@ namespace Kernel
 
 variable {α β ι : Type _} {mα : MeasurableSpace α} {mβ : MeasurableSpace β}
 
-include mα mβ
-
 section CompositionProduct
 
 /-!
@@ -85,8 +83,6 @@ We define a kernel composition-product
 
 
 variable {γ : Type _} {mγ : MeasurableSpace γ} {s : Set (β × γ)}
-
-include mγ
 
 /-- Auxiliary function for the definition of the composition-product of two kernels.
 For all `a : α`, `comp_prod_fun κ η a` is a countably additive function with value zero on the empty
@@ -227,7 +223,6 @@ noncomputable def compProd (κ : kernel α β) [IsSFiniteKernel κ] (η : kernel
     exact measurable_comp_prod_fun κ η hs
 #align probability_theory.kernel.comp_prod ProbabilityTheory.kernel.compProd
 
--- mathport name: kernel.comp_prod
 scoped[ProbabilityTheory] infixl:100 " ⊗ₖ " => ProbabilityTheory.kernel.compProd
 
 theorem compProd_apply_eq_compProdFun (κ : kernel α β) [IsSFiniteKernel κ] (η : kernel (α × β) γ)
@@ -548,8 +543,6 @@ section MapComap
 
 variable {γ : Type _} {mγ : MeasurableSpace γ} {f : β → γ} {g : γ → α}
 
-include mγ
-
 /-- The pushforward of a kernel along a measurable function.
 We include measurability in the assumptions instead of using junk values
 to make sure that typeclass inference can infer that the `map` of a Markov kernel
@@ -663,8 +656,6 @@ def prodMkLeft (γ : Type _) [MeasurableSpace γ] (κ : kernel α β) : kernel (
 #align probability_theory.kernel.prod_mk_left ProbabilityTheory.kernel.prodMkLeft
 
 variable {γ : Type _} {mγ : MeasurableSpace γ} {f : β → γ} {g : γ → α}
-
-include mγ
 
 theorem prodMkLeft_apply (κ : kernel α β) (ca : γ × α) : prodMkLeft γ κ ca = κ ca.snd :=
   rfl
@@ -823,8 +814,6 @@ section Comp
 
 variable {γ : Type _} {mγ : MeasurableSpace γ} {f : β → γ} {g : γ → α}
 
-include mγ
-
 /-- Composition of two s-finite kernels. -/
 noncomputable def comp (η : kernel β γ) (κ : kernel α β) : kernel α γ
     where
@@ -832,7 +821,6 @@ noncomputable def comp (η : kernel β γ) (κ : kernel α β) : kernel α γ
   property := (Measure.measurable_bind' (kernel.measurable _)).comp (kernel.measurable _)
 #align probability_theory.kernel.comp ProbabilityTheory.kernel.comp
 
--- mathport name: kernel.comp
 scoped[ProbabilityTheory] infixl:100 " ∘ₖ " => ProbabilityTheory.kernel.comp
 
 theorem comp_apply (η : kernel β γ) (κ : kernel α β) (a : α) : (η ∘ₖ κ) a = (κ a).bind η :=
@@ -903,15 +891,12 @@ section Prod
 
 variable {γ : Type _} {mγ : MeasurableSpace γ}
 
-include mγ
-
 /-- Product of two s-finite kernels. -/
 noncomputable def prod (κ : kernel α β) [IsSFiniteKernel κ] (η : kernel α γ) [IsSFiniteKernel η] :
     kernel α (β × γ) :=
   κ ⊗ₖ swapLeft (prodMkLeft β η)
 #align probability_theory.kernel.prod ProbabilityTheory.kernel.prod
 
--- mathport name: kernel.prod
 scoped[ProbabilityTheory] infixl:100 " ×ₖ " => ProbabilityTheory.kernel.prod
 
 theorem prod_apply (κ : kernel α β) [IsSFiniteKernel κ] (η : kernel α γ) [IsSFiniteKernel η] (a : α)

@@ -121,10 +121,13 @@ theorem isGδ_sInter {S : Set (Set α)} (h : ∀ s ∈ S, IsGδ s) (hS : S.Count
 #align is_Gδ_sInter isGδ_sInter
 -/
 
+#print IsGδ.inter /-
 theorem IsGδ.inter {s t : Set α} (hs : IsGδ s) (ht : IsGδ t) : IsGδ (s ∩ t) := by
   rw [inter_eq_Inter]; exact isGδ_iInter (Bool.forall_bool.2 ⟨ht, hs⟩)
 #align is_Gδ.inter IsGδ.inter
+-/
 
+#print IsGδ.union /-
 /-- The union of two Gδ sets is a Gδ set. -/
 theorem IsGδ.union {s t : Set α} (hs : IsGδ s) (ht : IsGδ t) : IsGδ (s ∪ t) :=
   by
@@ -135,6 +138,7 @@ theorem IsGδ.union {s t : Set α} (hs : IsGδ s) (ht : IsGδ t) : IsGδ (s ∪ 
   rintro ⟨a, b⟩ ⟨ha, hb⟩
   exact (Sopen a ha).union (Topen b hb)
 #align is_Gδ.union IsGδ.union
+-/
 
 #print isGδ_biUnion /-
 /-- The union of finitely many Gδ sets is a Gδ set. -/
@@ -161,27 +165,37 @@ section T1Space
 
 variable [T1Space α]
 
+#print isGδ_compl_singleton /-
 theorem isGδ_compl_singleton (a : α) : IsGδ ({a}ᶜ : Set α) :=
   isOpen_compl_singleton.IsGδ
 #align is_Gδ_compl_singleton isGδ_compl_singleton
+-/
 
+#print Set.Countable.isGδ_compl /-
 theorem Set.Countable.isGδ_compl {s : Set α} (hs : s.Countable) : IsGδ (sᶜ) :=
   by
   rw [← bUnion_of_singleton s, compl_Union₂]
   exact isGδ_biInter hs fun x _ => isGδ_compl_singleton x
 #align set.countable.is_Gδ_compl Set.Countable.isGδ_compl
+-/
 
+#print Set.Finite.isGδ_compl /-
 theorem Set.Finite.isGδ_compl {s : Set α} (hs : s.Finite) : IsGδ (sᶜ) :=
   hs.Countable.isGδ_compl
 #align set.finite.is_Gδ_compl Set.Finite.isGδ_compl
+-/
 
+#print Set.Subsingleton.isGδ_compl /-
 theorem Set.Subsingleton.isGδ_compl {s : Set α} (hs : s.Subsingleton) : IsGδ (sᶜ) :=
   hs.Finite.isGδ_compl
 #align set.subsingleton.is_Gδ_compl Set.Subsingleton.isGδ_compl
+-/
 
+#print Finset.isGδ_compl /-
 theorem Finset.isGδ_compl (s : Finset α) : IsGδ (sᶜ : Set α) :=
   s.finite_toSet.isGδ_compl
 #align finset.is_Gδ_compl Finset.isGδ_compl
+-/
 
 open TopologicalSpace
 

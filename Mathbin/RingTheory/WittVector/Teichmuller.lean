@@ -40,7 +40,6 @@ open MvPolynomial
 
 variable (p : ℕ) {R S : Type _} [hp : Fact p.Prime] [CommRing R] [CommRing S]
 
--- mathport name: expr𝕎
 local notation "𝕎" => WittVector p
 
 #print WittVector.teichmullerFun /-
@@ -67,8 +66,6 @@ satisfy the ring axioms.
 3. and from that we can prove the result for arbitrary `R`.
 -/
 
-
-include hp
 
 private theorem ghost_component_teichmuller_fun (r : R) (n : ℕ) :
     ghostComponent n (teichmullerFun p r) = r ^ p ^ n :=
@@ -102,6 +99,7 @@ private theorem teichmuller_mul_aux₂ (x y : MvPolynomial R ℤ) :
       (MvPolynomial.map_injective _ Int.cast_injective) _
   simp only [teichmuller_mul_aux₁, map_teichmuller_fun, RingHom.map_mul]
 
+#print WittVector.teichmuller /-
 /-- The Teichmüller lift of an element of `R` to `𝕎 R`.
 The `0`-th coefficient of `teichmuller p r` is `r`, and all others are `0`.
 This is a monoid homomorphism. -/
@@ -117,33 +115,44 @@ def teichmuller : R →* 𝕎 R where
     rcases counit_surjective R y with ⟨y, rfl⟩
     simp only [← map_teichmuller_fun, ← RingHom.map_mul, teichmuller_mul_aux₂]
 #align witt_vector.teichmuller WittVector.teichmuller
+-/
 
+#print WittVector.teichmuller_coeff_zero /-
 @[simp]
 theorem teichmuller_coeff_zero (r : R) : (teichmuller p r).coeff 0 = r :=
   rfl
 #align witt_vector.teichmuller_coeff_zero WittVector.teichmuller_coeff_zero
+-/
 
+#print WittVector.teichmuller_coeff_pos /-
 @[simp]
 theorem teichmuller_coeff_pos (r : R) : ∀ (n : ℕ) (hn : 0 < n), (teichmuller p r).coeff n = 0
   | n + 1, _ => rfl
 #align witt_vector.teichmuller_coeff_pos WittVector.teichmuller_coeff_pos
+-/
 
+#print WittVector.teichmuller_zero /-
 @[simp]
 theorem teichmuller_zero : teichmuller p (0 : R) = 0 := by ext ⟨⟩ <;> · rw [zero_coeff]; rfl
 #align witt_vector.teichmuller_zero WittVector.teichmuller_zero
+-/
 
+#print WittVector.map_teichmuller /-
 /-- `teichmuller` is a natural transformation. -/
 @[simp]
 theorem map_teichmuller (f : R →+* S) (r : R) : map f (teichmuller p r) = teichmuller p (f r) :=
   map_teichmullerFun _ _ _
 #align witt_vector.map_teichmuller WittVector.map_teichmuller
+-/
 
+#print WittVector.ghostComponent_teichmuller /-
 /-- The `n`-th ghost component of `teichmuller p r` is `r ^ p ^ n`. -/
 @[simp]
 theorem ghostComponent_teichmuller (r : R) (n : ℕ) :
     ghostComponent n (teichmuller p r) = r ^ p ^ n :=
   ghostComponent_teichmullerFun _ _ _
 #align witt_vector.ghost_component_teichmuller WittVector.ghostComponent_teichmuller
+-/
 
 end WittVector
 

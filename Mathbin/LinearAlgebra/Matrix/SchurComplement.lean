@@ -324,7 +324,6 @@ open scoped Matrix
 
 variable {𝕜 : Type _} [IsROrC 𝕜]
 
--- mathport name: «expr ⊕ᵥ »
 scoped infixl:65 " ⊕ᵥ " => Sum.elim
 
 theorem schur_complement_eq₁₁ [Fintype m] [DecidableEq m] [Fintype n] {A : Matrix m m 𝕜}

@@ -424,8 +424,6 @@ private theorem aux₀ {v : ℤ} (hv : 0 < v) : (0 : ℝ) < v ∧ (0 : ℝ) < 2 
 -- In the following, we assume that `ass ξ u v` holds and `v ≥ 2`.
 variable {ξ : ℝ} {u v : ℤ} (hv : 2 ≤ v) (h : ContfracLegendre.Ass ξ u v)
 
-include hv h
-
 -- The fractional part of `ξ` is positive.
 private theorem aux₁ : 0 < fract ξ :=
   by
@@ -539,8 +537,6 @@ private theorem invariant : ContfracLegendre.Ass (fract ξ)⁻¹ v (u - ⌊ξ⌋
     rw [Huv, ← sub_sub, sub_lt_iff_lt_add, self_sub_floor, Hv] at h' 
     rwa [lt_sub_iff_add_lt', (by ring : (v : ℝ) + -(1 / 2) = (2 * v - 1) / 2),
       lt_inv (div_pos hv₀' zero_lt_two) (aux₁ hv h), inv_div]
-
-omit h hv
 
 /-!
 ### The main result

@@ -81,11 +81,13 @@ instance bundledHom : BundledHom Hom :=
 
 deriving instance LargeCategory, ConcreteCategory for FrmCat
 
+#print FrmCat.hasForgetToLat /-
 instance hasForgetToLat : HasForget₂ FrmCat LatCat
     where forget₂ :=
     { obj := fun X => ⟨X⟩
       map := fun X Y => FrameHom.toLatticeHom }
 #align Frm.has_forget_to_Lat FrmCat.hasForgetToLat
+-/
 
 #print FrmCat.Iso.mk /-
 /-- Constructs an isomorphism of frames from an order isomorphism between them. -/

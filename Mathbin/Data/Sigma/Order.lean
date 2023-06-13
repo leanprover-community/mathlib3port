@@ -145,7 +145,6 @@ instance [∀ i, Preorder (α i)] [∀ i, DenselyOrdered (α i)] : DenselyOrdere
 
 namespace Lex
 
--- mathport name: «exprΣₗ , »
 notation3"Σₗ "(...)", "r:(scoped p => Lex Sigma p) => r
 
 #print Sigma.Lex.LE /-
@@ -162,15 +161,19 @@ instance LT [LT ι] [∀ i, LT (α i)] : LT (Σₗ i, α i) :=
 #align sigma.lex.has_lt Sigma.Lex.LT
 -/
 
+#print Sigma.Lex.le_def /-
 theorem le_def [LT ι] [∀ i, LE (α i)] {a b : Σₗ i, α i} :
     a ≤ b ↔ a.1 < b.1 ∨ ∃ h : a.1 = b.1, h.rec a.2 ≤ b.2 :=
   Sigma.lex_iff
 #align sigma.lex.le_def Sigma.Lex.le_def
+-/
 
+#print Sigma.Lex.lt_def /-
 theorem lt_def [LT ι] [∀ i, LT (α i)] {a b : Σₗ i, α i} :
     a < b ↔ a.1 < b.1 ∨ ∃ h : a.1 = b.1, h.rec a.2 < b.2 :=
   Sigma.lex_iff
 #align sigma.lex.lt_def Sigma.Lex.lt_def
+-/
 
 #print Sigma.Lex.preorder /-
 /-- The lexicographical preorder on a sigma type. -/
@@ -209,6 +212,7 @@ instance linearOrder [LinearOrder ι] [∀ i, LinearOrder (α i)] : LinearOrder 
 #align sigma.lex.linear_order Sigma.Lex.linearOrder
 -/
 
+#print Sigma.Lex.orderBot /-
 /-- The lexicographical linear order on a sigma type. -/
 instance orderBot [PartialOrder ι] [OrderBot ι] [∀ i, Preorder (α i)] [OrderBot (α ⊥)] :
     OrderBot (Σₗ i, α i) where
@@ -218,7 +222,9 @@ instance orderBot [PartialOrder ι] [OrderBot ι] [∀ i, Preorder (α i)] [Orde
     · exact lex.right _ _ bot_le
     · exact lex.left _ _ ha
 #align sigma.lex.order_bot Sigma.Lex.orderBot
+-/
 
+#print Sigma.Lex.orderTop /-
 /-- The lexicographical linear order on a sigma type. -/
 instance orderTop [PartialOrder ι] [OrderTop ι] [∀ i, Preorder (α i)] [OrderTop (α ⊤)] :
     OrderTop (Σₗ i, α i) where
@@ -228,12 +234,15 @@ instance orderTop [PartialOrder ι] [OrderTop ι] [∀ i, Preorder (α i)] [Orde
     · exact lex.right _ _ le_top
     · exact lex.left _ _ ha
 #align sigma.lex.order_top Sigma.Lex.orderTop
+-/
 
+#print Sigma.Lex.boundedOrder /-
 /-- The lexicographical linear order on a sigma type. -/
 instance boundedOrder [PartialOrder ι] [BoundedOrder ι] [∀ i, Preorder (α i)] [OrderBot (α ⊥)]
     [OrderTop (α ⊤)] : BoundedOrder (Σₗ i, α i) :=
   { Lex.orderBot, Lex.orderTop with }
 #align sigma.lex.bounded_order Sigma.Lex.boundedOrder
+-/
 
 #print Sigma.Lex.denselyOrdered /-
 instance denselyOrdered [Preorder ι] [DenselyOrdered ι] [∀ i, Nonempty (α i)] [∀ i, Preorder (α i)]

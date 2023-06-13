@@ -79,8 +79,7 @@ variable {𝕜 : Type u} [hnorm : NontriviallyNormedField 𝕜] {E : Type v} [Ad
   [AddCommGroup F'] [Module 𝕜 F'] [TopologicalSpace F'] [TopologicalAddGroup F']
   [ContinuousSMul 𝕜 F']
 
-include hnorm
-
+#print unique_topology_of_t2 /-
 /-- If `𝕜` is a nontrivially normed field, any T2 topology on `𝕜` which makes it a topological
 vector space over itself (with the norm topology) is *equal* to the norm topology. -/
 theorem unique_topology_of_t2 {t : TopologicalSpace 𝕜} (h₁ : @TopologicalAddGroup 𝕜 t _)
@@ -137,7 +136,9 @@ theorem unique_topology_of_t2 {t : TopologicalSpace 𝕜} (h₁ : @TopologicalAd
           tendsto_id (1 : 𝕜))
       _ = @nhds 𝕜 t 0 := by rw [zero_smul]
 #align unique_topology_of_t2 unique_topology_of_t2
+-/
 
+#print LinearMap.continuous_of_isClosed_ker /-
 /-- Any linear form on a topological vector space over a nontrivially normed field is continuous if
     its kernel is closed. -/
 theorem LinearMap.continuous_of_isClosed_ker (l : E →ₗ[𝕜] 𝕜) (hl : IsClosed (l.ker : Set E)) :
@@ -185,14 +186,18 @@ theorem LinearMap.continuous_of_isClosed_ker (l : E →ₗ[𝕜] 𝕜) (hl : IsC
     rw [this.symm, Equiv.induced_symm]
     exact continuous_coinduced_rng
 #align linear_map.continuous_of_is_closed_ker LinearMap.continuous_of_isClosed_ker
+-/
 
+#print LinearMap.continuous_iff_isClosed_ker /-
 /-- Any linear form on a topological vector space over a nontrivially normed field is continuous if
     and only if its kernel is closed. -/
 theorem LinearMap.continuous_iff_isClosed_ker (l : E →ₗ[𝕜] 𝕜) :
     Continuous l ↔ IsClosed (l.ker : Set E) :=
   ⟨fun h => isClosed_singleton.Preimage h, l.continuous_of_isClosed_ker⟩
 #align linear_map.continuous_iff_is_closed_ker LinearMap.continuous_iff_isClosed_ker
+-/
 
+#print LinearMap.continuous_of_nonzero_on_open /-
 /-- Over a nontrivially normed field, any linear form which is nonzero on a nonempty open set is
     automatically continuous. -/
 theorem LinearMap.continuous_of_nonzero_on_open (l : E →ₗ[𝕜] 𝕜) (s : Set E) (hs₁ : IsOpen s)
@@ -206,6 +211,7 @@ theorem LinearMap.continuous_of_nonzero_on_open (l : E →ₗ[𝕜] 𝕜) (s : S
     exact mem_of_superset (hs₁.mem_nhds hx) hs₃
   rwa [hl.interior_compl] at this 
 #align linear_map.continuous_of_nonzero_on_open LinearMap.continuous_of_nonzero_on_open
+-/
 
 variable [CompleteSpace 𝕜]
 
@@ -260,6 +266,7 @@ private theorem continuous_equiv_fun_basis_aux [ht2 : T2Space E] {ι : Type v} [
     change Continuous (ξ.coord i)
     exact H₂ (ξ.coord i)
 
+#print LinearMap.continuous_of_finiteDimensional /-
 /-- Any linear map on a finite dimensional space over a complete field is continuous. -/
 theorem LinearMap.continuous_of_finiteDimensional [T2Space E] [FiniteDimensional 𝕜 E]
     (f : E →ₗ[𝕜] F') : Continuous f :=
@@ -279,6 +286,7 @@ theorem LinearMap.continuous_of_finiteDimensional [T2Space E] [FiniteDimensional
   dsimp
   rw [Basis.equivFun_symm_apply, Basis.sum_repr]
 #align linear_map.continuous_of_finite_dimensional LinearMap.continuous_of_finiteDimensional
+-/
 
 #print LinearMap.continuousLinearMapClassOfFiniteDimensional /-
 instance LinearMap.continuousLinearMapClassOfFiniteDimensional [T2Space E] [FiniteDimensional 𝕜 E] :
@@ -287,6 +295,7 @@ instance LinearMap.continuousLinearMapClassOfFiniteDimensional [T2Space E] [Fini
 #align linear_map.continuous_linear_map_class_of_finite_dimensional LinearMap.continuousLinearMapClassOfFiniteDimensional
 -/
 
+#print continuous_equivFun_basis /-
 /-- In finite dimensions over a non-discrete complete normed field, the canonical identification
 (in terms of a basis) with `𝕜^n` (endowed with the product topology) is continuous.
 This is the key fact wich makes all linear maps from a T2 finite dimensional TVS over such a field
@@ -297,6 +306,7 @@ theorem continuous_equivFun_basis [T2Space E] {ι : Type _} [Fintype ι] (ξ : B
   haveI : FiniteDimensional 𝕜 E := of_fintype_basis ξ
   ξ.equiv_fun.to_linear_map.continuous_of_finite_dimensional
 #align continuous_equiv_fun_basis continuous_equivFun_basis
+-/
 
 namespace LinearMap
 
@@ -315,37 +325,50 @@ def toContinuousLinearMap : (E →ₗ[𝕜] F') ≃ₗ[𝕜] E →L[𝕜] F'
 #align linear_map.to_continuous_linear_map LinearMap.toContinuousLinearMap
 -/
 
+#print LinearMap.coe_toContinuousLinearMap' /-
 @[simp]
 theorem coe_toContinuousLinearMap' (f : E →ₗ[𝕜] F') : ⇑f.toContinuousLinearMap = f :=
   rfl
 #align linear_map.coe_to_continuous_linear_map' LinearMap.coe_toContinuousLinearMap'
+-/
 
+#print LinearMap.coe_toContinuousLinearMap /-
 @[simp]
 theorem coe_toContinuousLinearMap (f : E →ₗ[𝕜] F') : (f.toContinuousLinearMap : E →ₗ[𝕜] F') = f :=
   rfl
 #align linear_map.coe_to_continuous_linear_map LinearMap.coe_toContinuousLinearMap
+-/
 
+#print LinearMap.coe_toContinuousLinearMap_symm /-
 @[simp]
 theorem coe_toContinuousLinearMap_symm :
     ⇑(toContinuousLinearMap : (E →ₗ[𝕜] F') ≃ₗ[𝕜] E →L[𝕜] F').symm = coe :=
   rfl
 #align linear_map.coe_to_continuous_linear_map_symm LinearMap.coe_toContinuousLinearMap_symm
+-/
 
+#print LinearMap.det_toContinuousLinearMap /-
 @[simp]
 theorem det_toContinuousLinearMap (f : E →ₗ[𝕜] E) : f.toContinuousLinearMap.det = f.det :=
   rfl
 #align linear_map.det_to_continuous_linear_map LinearMap.det_toContinuousLinearMap
+-/
 
+#print LinearMap.ker_toContinuousLinearMap /-
 @[simp]
 theorem ker_toContinuousLinearMap (f : E →ₗ[𝕜] F') : ker f.toContinuousLinearMap = ker f :=
   rfl
 #align linear_map.ker_to_continuous_linear_map LinearMap.ker_toContinuousLinearMap
+-/
 
+#print LinearMap.range_toContinuousLinearMap /-
 @[simp]
 theorem range_toContinuousLinearMap (f : E →ₗ[𝕜] F') : range f.toContinuousLinearMap = range f :=
   rfl
 #align linear_map.range_to_continuous_linear_map LinearMap.range_toContinuousLinearMap
+-/
 
+#print LinearMap.isOpenMap_of_finiteDimensional /-
 /-- A surjective linear map `f` with finite dimensional codomain is an open map. -/
 theorem isOpenMap_of_finiteDimensional (f : F →ₗ[𝕜] E) (hf : Function.Surjective f) : IsOpenMap f :=
   by
@@ -358,6 +381,7 @@ theorem isOpenMap_of_finiteDimensional (f : F →ₗ[𝕜] E) (hf : Function.Sur
   · rw [sub_self, map_zero, zero_add]
   · simp only [map_sub, map_add, ← comp_apply f g, hg, id_apply, sub_add_cancel]
 #align linear_map.is_open_map_of_finite_dimensional LinearMap.isOpenMap_of_finiteDimensional
+-/
 
 #print LinearMap.canLiftContinuousLinearMap /-
 instance canLiftContinuousLinearMap : CanLift (E →ₗ[𝕜] F) (E →L[𝕜] F) coe fun _ => True :=
@@ -392,10 +416,12 @@ theorem coe_toContinuousLinearEquiv (e : E ≃ₗ[𝕜] F) : (e.toContinuousLine
 #align linear_equiv.coe_to_continuous_linear_equiv LinearEquiv.coe_toContinuousLinearEquiv
 -/
 
+#print LinearEquiv.coe_toContinuousLinearEquiv' /-
 @[simp]
 theorem coe_toContinuousLinearEquiv' (e : E ≃ₗ[𝕜] F) : (e.toContinuousLinearEquiv : E → F) = e :=
   rfl
 #align linear_equiv.coe_to_continuous_linear_equiv' LinearEquiv.coe_toContinuousLinearEquiv'
+-/
 
 #print LinearEquiv.coe_toContinuousLinearEquiv_symm /-
 @[simp]
@@ -405,11 +431,13 @@ theorem coe_toContinuousLinearEquiv_symm (e : E ≃ₗ[𝕜] F) :
 #align linear_equiv.coe_to_continuous_linear_equiv_symm LinearEquiv.coe_toContinuousLinearEquiv_symm
 -/
 
+#print LinearEquiv.coe_toContinuousLinearEquiv_symm' /-
 @[simp]
 theorem coe_toContinuousLinearEquiv_symm' (e : E ≃ₗ[𝕜] F) :
     (e.toContinuousLinearEquiv.symm : F → E) = e.symm :=
   rfl
 #align linear_equiv.coe_to_continuous_linear_equiv_symm' LinearEquiv.coe_toContinuousLinearEquiv_symm'
+-/
 
 #print LinearEquiv.toLinearEquiv_toContinuousLinearEquiv /-
 @[simp]
@@ -477,10 +505,12 @@ def constrL (v : Basis ι 𝕜 E) (f : ι → F) : E →L[𝕜] F :=
 #align basis.constrL Basis.constrL
 -/
 
+#print Basis.coe_constrL /-
 @[simp, norm_cast]
 theorem coe_constrL (v : Basis ι 𝕜 E) (f : ι → F) : (v.constrL f : E →ₗ[𝕜] F) = v.constr 𝕜 f :=
   rfl
 #align basis.coe_constrL Basis.coe_constrL
+-/
 
 #print Basis.equivFunL /-
 /-- The continuous linear equivalence between a vector space over `𝕜` with a finite basis and
@@ -497,16 +527,20 @@ def equivFunL (v : Basis ι 𝕜 E) : E ≃L[𝕜] ι → 𝕜 :=
 #align basis.equiv_funL Basis.equivFunL
 -/
 
+#print Basis.constrL_apply /-
 @[simp]
 theorem constrL_apply (v : Basis ι 𝕜 E) (f : ι → F) (e : E) :
     (v.constrL f) e = ∑ i, v.equivFun e i • f i :=
   v.constr_apply_fintype 𝕜 _ _
 #align basis.constrL_apply Basis.constrL_apply
+-/
 
+#print Basis.constrL_basis /-
 @[simp]
 theorem constrL_basis (v : Basis ι 𝕜 E) (f : ι → F) (i : ι) : (v.constrL f) (v i) = f i :=
   v.constr_basis 𝕜 _ _
 #align basis.constrL_basis Basis.constrL_basis
+-/
 
 end Basis
 
@@ -514,29 +548,37 @@ namespace ContinuousLinearMap
 
 variable [T2Space E] [FiniteDimensional 𝕜 E]
 
+#print ContinuousLinearMap.toContinuousLinearEquivOfDetNeZero /-
 /-- Builds a continuous linear equivalence from a continuous linear map on a finite-dimensional
 vector space whose determinant is nonzero. -/
 def toContinuousLinearEquivOfDetNeZero (f : E →L[𝕜] E) (hf : f.det ≠ 0) : E ≃L[𝕜] E :=
   ((f : E →ₗ[𝕜] E).equivOfDetNeZero hf).toContinuousLinearEquiv
 #align continuous_linear_map.to_continuous_linear_equiv_of_det_ne_zero ContinuousLinearMap.toContinuousLinearEquivOfDetNeZero
+-/
 
+#print ContinuousLinearMap.coe_toContinuousLinearEquivOfDetNeZero /-
 @[simp]
 theorem coe_toContinuousLinearEquivOfDetNeZero (f : E →L[𝕜] E) (hf : f.det ≠ 0) :
     (f.toContinuousLinearEquivOfDetNeZero hf : E →L[𝕜] E) = f := by ext x; rfl
 #align continuous_linear_map.coe_to_continuous_linear_equiv_of_det_ne_zero ContinuousLinearMap.coe_toContinuousLinearEquivOfDetNeZero
+-/
 
+#print ContinuousLinearMap.toContinuousLinearEquivOfDetNeZero_apply /-
 @[simp]
 theorem toContinuousLinearEquivOfDetNeZero_apply (f : E →L[𝕜] E) (hf : f.det ≠ 0) (x : E) :
     f.toContinuousLinearEquivOfDetNeZero hf x = f x :=
   rfl
 #align continuous_linear_map.to_continuous_linear_equiv_of_det_ne_zero_apply ContinuousLinearMap.toContinuousLinearEquivOfDetNeZero_apply
+-/
 
+#print Matrix.toLin_finTwoProd_toContinuousLinearMap /-
 theorem Matrix.toLin_finTwoProd_toContinuousLinearMap (a b c d : 𝕜) :
     (Matrix.toLin (Basis.finTwoProd 𝕜) (Basis.finTwoProd 𝕜) !![a, b; c, d]).toContinuousLinearMap =
       (a • ContinuousLinearMap.fst 𝕜 𝕜 𝕜 + b • ContinuousLinearMap.snd 𝕜 𝕜 𝕜).Prod
         (c • ContinuousLinearMap.fst 𝕜 𝕜 𝕜 + d • ContinuousLinearMap.snd 𝕜 𝕜 𝕜) :=
   ContinuousLinearMap.ext <| Matrix.toLin_finTwoProd_apply _ _ _ _
 #align matrix.to_lin_fin_two_prod_to_continuous_linear_map Matrix.toLin_finTwoProd_toContinuousLinearMap
+-/
 
 end ContinuousLinearMap
 

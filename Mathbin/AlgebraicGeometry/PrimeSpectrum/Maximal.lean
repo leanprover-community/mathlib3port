@@ -106,6 +106,7 @@ theorem toPrimeSpectrum_continuous : Continuous <| @toPrimeSpectrum R _ :=
 
 variable (R) [IsDomain R] (K : Type v) [Field K] [Algebra R K] [IsFractionRing R K]
 
+#print MaximalSpectrum.iInf_localization_eq_bot /-
 /-- An integral domain is equal to the intersection of its localizations at all its maximal ideals
 viewed as subalgebras of its field of fractions. -/
 theorem iInf_localization_eq_bot :
@@ -140,6 +141,7 @@ theorem iInf_localization_eq_bot :
   · rintro ⟨y, rfl⟩ ⟨v, hv⟩
     exact ⟨y, 1, v.ne_top_iff_one.mp hv.ne_top, by rw [map_one, inv_one, mul_one]⟩
 #align maximal_spectrum.infi_localization_eq_bot MaximalSpectrum.iInf_localization_eq_bot
+-/
 
 end MaximalSpectrum
 
@@ -147,6 +149,7 @@ namespace PrimeSpectrum
 
 variable (R) [IsDomain R] (K : Type v) [Field K] [Algebra R K] [IsFractionRing R K]
 
+#print PrimeSpectrum.iInf_localization_eq_bot /-
 /-- An integral domain is equal to the intersection of its localizations at all its prime ideals
 viewed as subalgebras of its field of fractions. -/
 theorem iInf_localization_eq_bot :
@@ -163,6 +166,7 @@ theorem iInf_localization_eq_bot :
     rintro ⟨y, rfl⟩ ⟨v, hv⟩
     exact ⟨y, 1, v.ne_top_iff_one.mp hv.ne_top, by rw [map_one, inv_one, mul_one]⟩
 #align prime_spectrum.infi_localization_eq_bot PrimeSpectrum.iInf_localization_eq_bot
+-/
 
 end PrimeSpectrum
 

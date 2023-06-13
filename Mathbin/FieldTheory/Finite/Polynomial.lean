@@ -26,17 +26,20 @@ namespace MvPolynomial
 
 variable {σ : Type _}
 
+#print MvPolynomial.C_dvd_iff_zmod /-
 /-- A polynomial over the integers is divisible by `n : ℕ`
 if and only if it is zero over `zmod n`. -/
 theorem C_dvd_iff_zmod (n : ℕ) (φ : MvPolynomial σ ℤ) :
     C (n : ℤ) ∣ φ ↔ map (Int.castRingHom (ZMod n)) φ = 0 :=
   C_dvd_iff_map_hom_eq_zero _ _ (CharP.int_cast_eq_zero_iff (ZMod n) n) _
 #align mv_polynomial.C_dvd_iff_zmod MvPolynomial.C_dvd_iff_zmod
+-/
 
 section frobenius
 
 variable {p : ℕ} [Fact p.Prime]
 
+#print MvPolynomial.frobenius_zmod /-
 theorem frobenius_zmod (f : MvPolynomial σ (ZMod p)) : frobenius _ p f = expand p f :=
   by
   apply induction_on f
@@ -45,10 +48,13 @@ theorem frobenius_zmod (f : MvPolynomial σ (ZMod p)) : frobenius _ p f = expand
   · simp only [expand_X, RingHom.map_mul, AlgHom.map_mul]
     intro _ _ hf; rw [hf, frobenius_def]
 #align mv_polynomial.frobenius_zmod MvPolynomial.frobenius_zmod
+-/
 
+#print MvPolynomial.expand_zmod /-
 theorem expand_zmod (f : MvPolynomial σ (ZMod p)) : expand p f = f ^ p :=
   (frobenius_zmod _).symm
 #align mv_polynomial.expand_zmod MvPolynomial.expand_zmod
+-/
 
 end frobenius
 
@@ -79,6 +85,7 @@ section CommRing
 
 variable [CommRing K]
 
+#print MvPolynomial.eval_indicator_apply_eq_one /-
 theorem eval_indicator_apply_eq_one (a : σ → K) : eval a (indicator a) = 1 :=
   by
   nontriviality
@@ -86,7 +93,9 @@ theorem eval_indicator_apply_eq_one (a : σ → K) : eval a (indicator a) = 1 :=
   simp only [indicator, map_prod, map_sub, map_one, map_pow, eval_X, eval_C, sub_self,
     zero_pow this, sub_zero, Finset.prod_const_one]
 #align mv_polynomial.eval_indicator_apply_eq_one MvPolynomial.eval_indicator_apply_eq_one
+-/
 
+#print MvPolynomial.degrees_indicator /-
 theorem degrees_indicator (c : σ → K) :
     degrees (indicator c) ≤ ∑ s : σ, (Fintype.card K - 1) • {s} :=
   by
@@ -99,6 +108,7 @@ theorem degrees_indicator (c : σ → K) :
   rw [degrees_C, ← bot_eq_zero, sup_bot_eq]
   exact degrees_X' _
 #align mv_polynomial.degrees_indicator MvPolynomial.degrees_indicator
+-/
 
 #print MvPolynomial.indicator_mem_restrictDegree /-
 theorem indicator_mem_restrictDegree (c : σ → K) :
@@ -121,6 +131,7 @@ end CommRing
 
 variable [Field K]
 
+#print MvPolynomial.eval_indicator_apply_eq_zero /-
 theorem eval_indicator_apply_eq_zero (a b : σ → K) (h : a ≠ b) : eval a (indicator b) = 0 :=
   by
   obtain ⟨i, hi⟩ : ∃ i, a i ≠ b i := by rwa [(· ≠ ·), Function.funext_iff, not_forall] at h 
@@ -130,6 +141,7 @@ theorem eval_indicator_apply_eq_zero (a b : σ → K) (h : a ≠ b) : eval a (in
   rw [FiniteField.pow_card_sub_one_eq_one, sub_self]
   rwa [(· ≠ ·), sub_eq_zero]
 #align mv_polynomial.eval_indicator_apply_eq_zero MvPolynomial.eval_indicator_apply_eq_zero
+-/
 
 end Indicator
 
@@ -152,6 +164,7 @@ end
 
 variable [Field K] [Fintype K] [Finite σ]
 
+#print MvPolynomial.map_restrict_dom_evalₗ /-
 theorem map_restrict_dom_evalₗ : (restrictDegree σ K (Fintype.card K - 1)).map (evalₗ K σ) = ⊤ :=
   by
   cases nonempty_fintype σ
@@ -168,6 +181,7 @@ theorem map_restrict_dom_evalₗ : (restrictDegree σ K (Fintype.card K - 1)).ma
     · exact fun h => (h <| Finset.mem_univ n).elim
     · rw [eval_indicator_apply_eq_one, smul_eq_mul, mul_one]
 #align mv_polynomial.map_restrict_dom_evalₗ MvPolynomial.map_restrict_dom_evalₗ
+-/
 
 end MvPolynomial
 
@@ -215,6 +229,7 @@ end CommRing
 
 variable [Field K]
 
+#print MvPolynomial.rank_R /-
 theorem rank_R [Fintype σ] : Module.rank K (R σ K) = Fintype.card (σ → K) :=
   calc
     Module.rank K (R σ K) =
@@ -234,6 +249,7 @@ theorem rank_R [Fintype σ] : Module.rank K (R σ K) = Fintype.card (σ → K) :
     _ = (#σ → K) := (Equiv.arrowCongr (Equiv.refl σ) (Fintype.equivFin K).symm).cardinal_eq
     _ = Fintype.card (σ → K) := Cardinal.mk_fintype _
 #align mv_polynomial.rank_R MvPolynomial.rank_R
+-/
 
 instance [Finite σ] : FiniteDimensional K (R σ K) :=
   by
@@ -249,25 +265,31 @@ theorem finrank_R [Fintype σ] : FiniteDimensional.finrank K (R σ K) = Fintype.
 #align mv_polynomial.finrank_R MvPolynomial.finrank_R
 -/
 
+#print MvPolynomial.range_evalᵢ /-
 theorem range_evalᵢ [Finite σ] : (evalᵢ σ K).range = ⊤ :=
   by
   rw [evalᵢ, LinearMap.range_comp, range_subtype]
   exact map_restrict_dom_evalₗ
 #align mv_polynomial.range_evalᵢ MvPolynomial.range_evalᵢ
+-/
 
+#print MvPolynomial.ker_evalₗ /-
 theorem ker_evalₗ [Finite σ] : (evalᵢ σ K).ker = ⊥ :=
   by
   cases nonempty_fintype σ
   refine' (ker_eq_bot_iff_range_eq_top_of_finrank_eq_finrank _).mpr (range_evalᵢ _ _)
   rw [FiniteDimensional.finrank_fintype_fun_eq_card, finrank_R]
 #align mv_polynomial.ker_evalₗ MvPolynomial.ker_evalₗ
+-/
 
+#print MvPolynomial.eq_zero_of_eval_eq_zero /-
 theorem eq_zero_of_eval_eq_zero [Finite σ] (p : MvPolynomial σ K) (h : ∀ v : σ → K, eval v p = 0)
     (hp : p ∈ restrictDegree σ K (Fintype.card K - 1)) : p = 0 :=
   let p' : R σ K := ⟨p, hp⟩
   have : p' ∈ (evalᵢ σ K).ker := funext h
   show p'.1 = (0 : R σ K).1 from congr_arg _ <| by rwa [ker_evalₗ, mem_bot] at this 
 #align mv_polynomial.eq_zero_of_eval_eq_zero MvPolynomial.eq_zero_of_eval_eq_zero
+-/
 
 end MvPolynomial
 

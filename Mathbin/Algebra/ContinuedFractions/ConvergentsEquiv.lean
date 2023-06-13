@@ -122,6 +122,7 @@ theorem squashSeq_eq_self_of_terminated (terminated_at_succ_n : s.TerminatedAt (
 #align generalized_continued_fraction.squash_seq_eq_self_of_terminated GeneralizedContinuedFraction.squashSeq_eq_self_of_terminated
 -/
 
+#print GeneralizedContinuedFraction.squashSeq_nth_of_not_terminated /-
 /-- If the sequence has not terminated before position `n + 1`, the value at `n + 1` gets
 squashed into position `n`. -/
 theorem squashSeq_nth_of_not_terminated {gp_n gp_succ_n : Pair K} (s_nth_eq : s.get? n = some gp_n)
@@ -129,6 +130,7 @@ theorem squashSeq_nth_of_not_terminated {gp_n gp_succ_n : Pair K} (s_nth_eq : s.
     (squashSeq s n).get? n = some ⟨gp_n.a, gp_n.b + gp_succ_n.a / gp_succ_n.b⟩ := by
   simp [*, squash_seq]
 #align generalized_continued_fraction.squash_seq_nth_of_not_terminated GeneralizedContinuedFraction.squashSeq_nth_of_not_terminated
+-/
 
 #print GeneralizedContinuedFraction.squashSeq_nth_of_lt /-
 /-- The values before the squashed position stay the same. -/
@@ -293,6 +295,7 @@ theorem continuantsAux_eq_continuantsAux_squashGCF_of_le {m : ℕ} :
 
 end WithDivisionRing
 
+#print GeneralizedContinuedFraction.succ_nth_convergent_eq_squashGCF_nth_convergent /-
 /-- The convergents coincide in the expected way at the squashed position if the partial denominator
 at the squashed position is not zero. -/
 theorem succ_nth_convergent_eq_squashGCF_nth_convergent [Field K]
@@ -367,9 +370,11 @@ theorem succ_nth_convergent_eq_squashGCF_nth_convergent [Field K]
       field_simp
       congr 1 <;> ring
 #align generalized_continued_fraction.succ_nth_convergent_eq_squash_gcf_nth_convergent GeneralizedContinuedFraction.succ_nth_convergent_eq_squashGCF_nth_convergent
+-/
 
 end Squash
 
+#print GeneralizedContinuedFraction.convergents_eq_convergents' /-
 /-- Shows that the recurrence relation (`convergents`) and direct evaluation (`convergents'`) of the
 gcf coincide at position `n` if the sequence of fractions contains strictly positive values only.
 Requiring positivity of all values is just one possible condition to obtain this result.
@@ -431,6 +436,7 @@ theorem convergents_eq_convergents' [LinearOrderedField K]
         exact (ne_of_lt (s_pos (lt_add_one n) s_nth_eq).right).symm
       exact succ_nth_convergent_eq_squash_gcf_nth_convergent this
 #align generalized_continued_fraction.convergents_eq_convergents' GeneralizedContinuedFraction.convergents_eq_convergents'
+-/
 
 end GeneralizedContinuedFraction
 
@@ -438,6 +444,7 @@ open GeneralizedContinuedFraction
 
 namespace ContinuedFraction
 
+#print ContinuedFraction.convergents_eq_convergents' /-
 /-- Shows that the recurrence relation (`convergents`) and direct evaluation (`convergents'`) of a
 (regular) continued fraction coincide. -/
 theorem convergents_eq_convergents' [LinearOrderedField K] {c : ContinuedFraction K} :
@@ -452,6 +459,7 @@ theorem convergents_eq_convergents' [LinearOrderedField K] {c : ContinuedFractio
         ((c : SimpleContinuedFraction K).property m gp.a (part_num_eq_s_a s_nth_eq)).symm.le,
       c.property m gp.b <| part_denom_eq_s_b s_nth_eq⟩
 #align continued_fraction.convergents_eq_convergents' ContinuedFraction.convergents_eq_convergents'
+-/
 
 end ContinuedFraction
 

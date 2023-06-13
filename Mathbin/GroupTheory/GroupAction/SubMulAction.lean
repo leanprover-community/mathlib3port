@@ -74,8 +74,6 @@ namespace SetLike
 
 variable [SMul R M] [SetLike S M] [hS : SMulMemClass S R M] (s : S)
 
-include hS
-
 open SMulMemClass
 
 #print SetLike.smul /-
@@ -114,13 +112,13 @@ theorem smul_def (r : R) (x : s) : r • x = ⟨r • x, smul_mem r x.2⟩ :=
 #align set_like.vadd_def SetLike.vadd_def
 -/
 
-omit hS
-
+#print SetLike.forall_smul_mem_iff /-
 @[simp]
 theorem forall_smul_mem_iff {R M S : Type _} [Monoid R] [MulAction R M] [SetLike S M]
     [SMulMemClass S R M] {N : S} {x : M} : (∀ a : R, a • x ∈ N) ↔ x ∈ N :=
   ⟨fun h => by simpa using h 1, fun h a => SMulMemClass.smul_mem a h⟩
 #align set_like.forall_smul_mem_iff SetLike.forall_smul_mem_iff
+-/
 
 end SetLike
 
@@ -248,8 +246,6 @@ variable [Monoid R] [MulAction R M] {A : Type _} [SetLike A M]
 
 variable [hA : SMulMemClass A R M] (S' : A)
 
-include hA
-
 #print SubMulAction.SMulMemClass.toMulAction /-
 -- Prefer subclasses of `mul_action` over `smul_mem_class`.
 /-- A `sub_mul_action` of a `mul_action` is a `mul_action`.  -/
@@ -265,10 +261,12 @@ protected def subtype : S' →[R] M :=
 #align sub_mul_action.smul_mem_class.subtype SubMulAction.SMulMemClass.subtype
 -/
 
+#print SubMulAction.SMulMemClass.coeSubtype /-
 @[simp]
 protected theorem coeSubtype : (SMulMemClass.subtype S' : S' → M) = coe :=
   rfl
 #align sub_mul_action.smul_mem_class.coe_subtype SubMulAction.SMulMemClass.coeSubtype
+-/
 
 end SMulMemClass
 
@@ -309,11 +307,13 @@ theorem val_smul_of_tower (s : S) (x : p) : ((s • x : p) : M) = s • ↑x :=
 #align sub_mul_action.coe_smul_of_tower SubMulAction.val_smul_of_tower
 -/
 
+#print SubMulAction.smul_mem_iff' /-
 @[simp]
 theorem smul_mem_iff' {G} [Group G] [SMul G R] [MulAction G M] [IsScalarTower G R M] (g : G)
     {x : M} : g • x ∈ p ↔ x ∈ p :=
   ⟨fun h => inv_smul_smul g x ▸ p.smul_of_tower_mem g⁻¹ h, p.smul_of_tower_mem g⟩
 #align sub_mul_action.smul_mem_iff' SubMulAction.smul_mem_iff'
+-/
 
 instance [SMul Sᵐᵒᵖ R] [SMul Sᵐᵒᵖ M] [IsScalarTower Sᵐᵒᵖ R M] [IsCentralScalar S M] :
     IsCentralScalar S p where op_smul_eq_smul r x := Subtype.ext <| op_smul_eq_smul r x
@@ -388,10 +388,12 @@ variable [Module R M]
 
 variable (p : SubMulAction R M)
 
+#print SubMulAction.zero_mem /-
 theorem zero_mem (h : (p : Set M).Nonempty) : (0 : M) ∈ p :=
   let ⟨x, hx⟩ := h
   zero_smul R (x : M) ▸ p.smul_mem 0 hx
 #align sub_mul_action.zero_mem SubMulAction.zero_mem
+-/
 
 /-- If the scalar product forms a `module`, and the `sub_mul_action` is not `⊥`, then the
 subset inherits the zero. -/
@@ -410,21 +412,27 @@ variable (p p' : SubMulAction R M)
 
 variable {r : R} {x y : M}
 
+#print SubMulAction.neg_mem /-
 theorem neg_mem (hx : x ∈ p) : -x ∈ p := by rw [← neg_one_smul R]; exact p.smul_mem _ hx
 #align sub_mul_action.neg_mem SubMulAction.neg_mem
+-/
 
+#print SubMulAction.neg_mem_iff /-
 @[simp]
 theorem neg_mem_iff : -x ∈ p ↔ x ∈ p :=
   ⟨fun h => by rw [← neg_neg x]; exact neg_mem _ h, neg_mem _⟩
 #align sub_mul_action.neg_mem_iff SubMulAction.neg_mem_iff
+-/
 
 instance : Neg p :=
   ⟨fun x => ⟨-x.1, neg_mem _ x.2⟩⟩
 
+#print SubMulAction.val_neg /-
 @[simp, norm_cast]
 theorem val_neg (x : p) : ((-x : p) : M) = -x :=
   rfl
 #align sub_mul_action.coe_neg SubMulAction.val_neg
+-/
 
 end AddCommGroup
 
@@ -438,9 +446,11 @@ variable [SMul S R] [MulAction S M] [IsScalarTower S R M]
 
 variable (p : SubMulAction R M) {s : S} {x y : M}
 
+#print SubMulAction.smul_mem_iff /-
 theorem smul_mem_iff (s0 : s ≠ 0) : s • x ∈ p ↔ x ∈ p :=
   p.smul_mem_iff' (Units.mk0 s s0)
 #align sub_mul_action.smul_mem_iff SubMulAction.smul_mem_iff
+-/
 
 end SubMulAction
 

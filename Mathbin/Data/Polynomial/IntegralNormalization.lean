@@ -55,6 +55,7 @@ theorem integralNormalization_zero : integralNormalization (0 : R[X]) = 0 := by
 #align polynomial.integral_normalization_zero Polynomial.integralNormalization_zero
 -/
 
+#print Polynomial.integralNormalization_coeff /-
 theorem integralNormalization_coeff {f : R[X]} {i : ℕ} :
     (integralNormalization f).coeff i =
       if f.degree = i then 1 else coeff f i * f.leadingCoeff ^ (f.natDegree - 1 - i) :=
@@ -63,6 +64,7 @@ theorem integralNormalization_coeff {f : R[X]} {i : ℕ} :
   simp (config := { contextual := true }) [integral_normalization, coeff_monomial, this,
     mem_support_iff]
 #align polynomial.integral_normalization_coeff Polynomial.integralNormalization_coeff
+-/
 
 #print Polynomial.integralNormalization_support /-
 theorem integralNormalization_support {f : R[X]} : (integralNormalization f).support ⊆ f.support :=
@@ -84,15 +86,19 @@ theorem integralNormalization_coeff_natDegree {f : R[X]} (hf : f ≠ 0) :
 #align polynomial.integral_normalization_coeff_nat_degree Polynomial.integralNormalization_coeff_natDegree
 -/
 
+#print Polynomial.integralNormalization_coeff_ne_degree /-
 theorem integralNormalization_coeff_ne_degree {f : R[X]} {i : ℕ} (hi : f.degree ≠ i) :
     coeff (integralNormalization f) i = coeff f i * f.leadingCoeff ^ (f.natDegree - 1 - i) := by
   rw [integral_normalization_coeff, if_neg hi]
 #align polynomial.integral_normalization_coeff_ne_degree Polynomial.integralNormalization_coeff_ne_degree
+-/
 
+#print Polynomial.integralNormalization_coeff_ne_natDegree /-
 theorem integralNormalization_coeff_ne_natDegree {f : R[X]} {i : ℕ} (hi : i ≠ natDegree f) :
     coeff (integralNormalization f) i = coeff f i * f.leadingCoeff ^ (f.natDegree - 1 - i) :=
   integralNormalization_coeff_ne_degree (degree_ne_of_natDegree_ne hi.symm)
 #align polynomial.integral_normalization_coeff_ne_nat_degree Polynomial.integralNormalization_coeff_ne_natDegree
+-/
 
 #print Polynomial.monic_integralNormalization /-
 theorem monic_integralNormalization {f : R[X]} (hf : f ≠ 0) : Monic (integralNormalization f) :=
@@ -130,6 +136,7 @@ variable [CommRing R] [IsDomain R]
 
 variable [CommSemiring S]
 
+#print Polynomial.integralNormalization_eval₂_eq_zero /-
 theorem integralNormalization_eval₂_eq_zero {p : R[X]} (f : R →+* S) {z : S} (hz : eval₂ f z p = 0)
     (inj : ∀ x : R, f x = 0 → x = 0) :
     eval₂ f (z * f p.leadingCoeff) (integralNormalization p) = 0 :=
@@ -166,12 +173,15 @@ theorem integralNormalization_eval₂_eq_zero {p : R[X]} (f : R →+* S) {z : S}
       exact @Finset.sum_attach _ _ p.support _ fun i => f (p.coeff i) * z ^ i
     _ = 0 := by rw [hz, _root_.mul_zero]
 #align polynomial.integral_normalization_eval₂_eq_zero Polynomial.integralNormalization_eval₂_eq_zero
+-/
 
+#print Polynomial.integralNormalization_aeval_eq_zero /-
 theorem integralNormalization_aeval_eq_zero [Algebra R S] {f : R[X]} {z : S} (hz : aeval z f = 0)
     (inj : ∀ x : R, algebraMap R S x = 0 → x = 0) :
     aeval (z * algebraMap R S f.leadingCoeff) (integralNormalization f) = 0 :=
   integralNormalization_eval₂_eq_zero (algebraMap R S) hz inj
 #align polynomial.integral_normalization_aeval_eq_zero Polynomial.integralNormalization_aeval_eq_zero
+-/
 
 end IsDomain
 

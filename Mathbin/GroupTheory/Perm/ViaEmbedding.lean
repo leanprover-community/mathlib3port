@@ -55,13 +55,17 @@ noncomputable def viaEmbeddingHom : Perm α →* Perm β :=
 #align equiv.perm.via_embedding_hom Equiv.Perm.viaEmbeddingHom
 -/
 
+#print Equiv.Perm.viaEmbeddingHom_apply /-
 theorem viaEmbeddingHom_apply : viaEmbeddingHom ι e = viaEmbedding e ι :=
   rfl
 #align equiv.perm.via_embedding_hom_apply Equiv.Perm.viaEmbeddingHom_apply
+-/
 
+#print Equiv.Perm.viaEmbeddingHom_injective /-
 theorem viaEmbeddingHom_injective : Function.Injective (viaEmbeddingHom ι) :=
   extendDomainHom_injective (ofInjective ι.1 ι.2)
 #align equiv.perm.via_embedding_hom_injective Equiv.Perm.viaEmbeddingHom_injective
+-/
 
 end Perm
 

@@ -99,6 +99,7 @@ instance semiring [Semiring α] : Semiring (ULift α) := by
 #align ulift.semiring ULift.semiring
 -/
 
+#print ULift.ringEquiv /-
 /-- The ring equivalence between `ulift α` and `α`.
 -/
 def ringEquiv [NonUnitalNonAssocSemiring α] : ULift α ≃+* α
@@ -110,6 +111,7 @@ def ringEquiv [NonUnitalNonAssocSemiring α] : ULift α ≃+* α
   left_inv := by tidy
   right_inv := by tidy
 #align ulift.ring_equiv ULift.ringEquiv
+-/
 
 #print ULift.nonUnitalCommSemiring /-
 instance nonUnitalCommSemiring [NonUnitalCommSemiring α] : NonUnitalCommSemiring (ULift α) := by

@@ -79,9 +79,11 @@ def pimage (f : α →. β) [∀ x, Decidable (f x).Dom] (s : Finset α) : Finse
 #align finset.pimage Finset.pimage
 -/
 
+#print Finset.mem_pimage /-
 @[simp]
 theorem mem_pimage : b ∈ s.pimage f ↔ ∃ a ∈ s, b ∈ f a := by simp [pimage]
 #align finset.mem_pimage Finset.mem_pimage
+-/
 
 #print Finset.coe_pimage /-
 @[simp, norm_cast]
@@ -90,14 +92,18 @@ theorem coe_pimage : (s.pimage f : Set β) = f.image s :=
 #align finset.coe_pimage Finset.coe_pimage
 -/
 
+#print Finset.pimage_some /-
 @[simp]
 theorem pimage_some (s : Finset α) (f : α → β) [∀ x, Decidable (Part.some <| f x).Dom] :
     (s.pimage fun x => Part.some (f x)) = s.image f := by ext; simp [eq_comm]
 #align finset.pimage_some Finset.pimage_some
+-/
 
+#print Finset.pimage_congr /-
 theorem pimage_congr (h₁ : s = t) (h₂ : ∀ x ∈ t, f x = g x) : s.pimage f = t.pimage g := by subst s;
   ext y; simp (config := { contextual := true }) [h₂]
 #align finset.pimage_congr Finset.pimage_congr
+-/
 
 #print Finset.pimage_eq_image_filter /-
 /-- Rewrite `s.pimage f` in terms of `finset.filter`, `finset.attach`, and `finset.image`. -/
@@ -108,9 +114,11 @@ theorem pimage_eq_image_filter :
 #align finset.pimage_eq_image_filter Finset.pimage_eq_image_filter
 -/
 
+#print Finset.pimage_union /-
 theorem pimage_union [DecidableEq α] : (s ∪ t).pimage f = s.pimage f ∪ t.pimage f :=
   coe_inj.1 <| by simp only [coe_pimage, PFun.image_union, coe_union]
 #align finset.pimage_union Finset.pimage_union
+-/
 
 #print Finset.pimage_empty /-
 @[simp]
@@ -124,14 +132,18 @@ theorem pimage_subset {t : Finset β} : s.pimage f ⊆ t ↔ ∀ x ∈ s, ∀ y 
 #align finset.pimage_subset Finset.pimage_subset
 -/
 
+#print Finset.pimage_mono /-
 @[mono]
 theorem pimage_mono (h : s ⊆ t) : s.pimage f ⊆ t.pimage f :=
   pimage_subset.2 fun x hx y hy => mem_pimage.2 ⟨x, h hx, hy⟩
 #align finset.pimage_mono Finset.pimage_mono
+-/
 
+#print Finset.pimage_inter /-
 theorem pimage_inter [DecidableEq α] : (s ∩ t).pimage f ⊆ s.pimage f ∩ t.pimage f := by
   simp only [← coe_subset, coe_pimage, coe_inter, PFun.image_inter]
 #align finset.pimage_inter Finset.pimage_inter
+-/
 
 end Finset
 

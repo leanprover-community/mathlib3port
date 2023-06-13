@@ -40,8 +40,7 @@ namespace Commute
 
 variable [Semiring R] {x y : R} (h : Commute x y) (n : ℕ)
 
-include h
-
+#print Commute.add_pow /-
 /-- A version of the **binomial theorem** for commuting elements in noncommutative semirings. -/
 theorem add_pow : (x + y) ^ n = ∑ m in range (n + 1), x ^ m * y ^ (n - m) * choose n m :=
   by
@@ -74,7 +73,9 @@ theorem add_pow : (x + y) ^ n = ∑ m in range (n + 1), x ^ m * y ^ (n - m) * ch
     congr 1
     rw [sum_range_succ', sum_range_succ, h_first, h_last, MulZeroClass.mul_zero, add_zero, pow_succ]
 #align commute.add_pow Commute.add_pow
+-/
 
+#print Commute.add_pow' /-
 /-- A version of `commute.add_pow` that avoids ℕ-subtraction by summing over the antidiagonal and
 also with the binomial coefficient applied via scalar action of ℕ. -/
 theorem add_pow' :
@@ -82,14 +83,17 @@ theorem add_pow' :
   simp_rw [Finset.Nat.sum_antidiagonal_eq_sum_range_succ fun m p => choose n m • (x ^ m * y ^ p),
     _root_.nsmul_eq_mul, cast_comm, h.add_pow]
 #align commute.add_pow' Commute.add_pow'
+-/
 
 end Commute
 
+#print add_pow /-
 /-- The **binomial theorem** -/
 theorem add_pow [CommSemiring R] (x y : R) (n : ℕ) :
     (x + y) ^ n = ∑ m in range (n + 1), x ^ m * y ^ (n - m) * choose n m :=
   (Commute.all x y).add_pow n
 #align add_pow add_pow
+-/
 
 namespace Nat
 
@@ -153,6 +157,7 @@ theorem four_pow_le_two_mul_add_one_mul_central_binom (n : ℕ) :
 
 end Nat
 
+#print Int.alternating_sum_range_choose /-
 theorem Int.alternating_sum_range_choose {n : ℕ} :
     ∑ m in range (n + 1), ((-1) ^ m * ↑(choose n m) : ℤ) = if n = 0 then 1 else 0 :=
   by
@@ -161,14 +166,18 @@ theorem Int.alternating_sum_range_choose {n : ℕ} :
   simp only [one_pow, mul_one, add_left_neg] at h 
   rw [← h, zero_pow (Nat.succ_pos n), if_neg (Nat.succ_ne_zero n)]
 #align int.alternating_sum_range_choose Int.alternating_sum_range_choose
+-/
 
+#print Int.alternating_sum_range_choose_of_ne /-
 theorem Int.alternating_sum_range_choose_of_ne {n : ℕ} (h0 : n ≠ 0) :
     ∑ m in range (n + 1), ((-1) ^ m * ↑(choose n m) : ℤ) = 0 := by
   rw [Int.alternating_sum_range_choose, if_neg h0]
 #align int.alternating_sum_range_choose_of_ne Int.alternating_sum_range_choose_of_ne
+-/
 
 namespace Finset
 
+#print Finset.sum_powerset_apply_card /-
 theorem sum_powerset_apply_card {α β : Type _} [AddCommMonoid α] (f : ℕ → α) {x : Finset β} :
     ∑ m in x.powerset, f m.card = ∑ m in range (x.card + 1), x.card.choose m • f m :=
   by
@@ -183,14 +192,18 @@ theorem sum_powerset_apply_card {α β : Type _} [AddCommMonoid α] (f : ℕ →
     refine' sum_congr powerset_len_eq_filter.symm fun z hz => _
     rw [(mem_powerset_len.1 hz).2]
 #align finset.sum_powerset_apply_card Finset.sum_powerset_apply_card
+-/
 
+#print Finset.sum_powerset_neg_one_pow_card /-
 theorem sum_powerset_neg_one_pow_card {α : Type _} [DecidableEq α] {x : Finset α} :
     ∑ m in x.powerset, (-1 : ℤ) ^ m.card = if x = ∅ then 1 else 0 :=
   by
   rw [sum_powerset_apply_card]
   simp only [nsmul_eq_mul', ← card_eq_zero, Int.alternating_sum_range_choose]
 #align finset.sum_powerset_neg_one_pow_card Finset.sum_powerset_neg_one_pow_card
+-/
 
+#print Finset.sum_powerset_neg_one_pow_card_of_nonempty /-
 theorem sum_powerset_neg_one_pow_card_of_nonempty {α : Type _} {x : Finset α} (h0 : x.Nonempty) :
     ∑ m in x.powerset, (-1 : ℤ) ^ m.card = 0 := by
   classical
@@ -198,6 +211,7 @@ theorem sum_powerset_neg_one_pow_card_of_nonempty {α : Type _} {x : Finset α} 
   rw [← Ne.def, ← nonempty_iff_ne_empty]
   apply h0
 #align finset.sum_powerset_neg_one_pow_card_of_nonempty Finset.sum_powerset_neg_one_pow_card_of_nonempty
+-/
 
 end Finset
 

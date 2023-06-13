@@ -92,6 +92,7 @@ theorem card_mul_le_card_shadow_mul (h𝒜 : (𝒜 : Set (Finset α)).Sized r) :
 #align finset.card_mul_le_card_shadow_mul Finset.card_mul_le_card_shadow_mul
 -/
 
+#print Finset.card_div_choose_le_card_shadow_div_choose /-
 /-- The downward **local LYM inequality**. `𝒜` takes up less of `α^(r)` (the finsets of card `r`)
 than `∂𝒜` takes up of `α^(r - 1)`. -/
 theorem card_div_choose_le_card_shadow_div_choose (hr : r ≠ 0) (h𝒜 : (𝒜 : Set (Finset α)).Sized r) :
@@ -115,6 +116,7 @@ theorem card_div_choose_le_card_shadow_div_choose (hr : r ≠ 0) (h𝒜 : (𝒜 
   · exact Nat.choose_pos hr'
   · exact Nat.choose_pos (r.pred_le.trans hr')
 #align finset.card_div_choose_le_card_shadow_div_choose Finset.card_div_choose_le_card_shadow_div_choose
+-/
 
 end LocalLym
 
@@ -136,9 +138,11 @@ def falling : Finset (Finset α) :=
 
 variable {𝒜 k} {s : Finset α}
 
+#print Finset.mem_falling /-
 theorem mem_falling : s ∈ falling k 𝒜 ↔ (∃ t ∈ 𝒜, s ⊆ t) ∧ s.card = k := by
   simp_rw [falling, mem_sup, mem_powerset_len, exists_and_right]
 #align finset.mem_falling Finset.mem_falling
+-/
 
 variable (𝒜 k)
 
@@ -194,6 +198,7 @@ theorem IsAntichain.disjoint_slice_shadow_falling {m n : ℕ}
     exact not_mem_erase _ _ (hst ha)
 #align is_antichain.disjoint_slice_shadow_falling IsAntichain.disjoint_slice_shadow_falling
 
+#print Finset.le_card_falling_div_choose /-
 /-- A bound on any top part of the sum in LYM in terms of the size of `falling k 𝒜`. -/
 theorem le_card_falling_div_choose [Fintype α] (hk : k ≤ Fintype.card α)
     (h𝒜 : IsAntichain (· ⊆ ·) (𝒜 : Set (Finset α))) :
@@ -215,11 +220,13 @@ theorem le_card_falling_div_choose [Fintype α] (hk : k ≤ Fintype.card α)
           sized_falling _ _)
       _
 #align finset.le_card_falling_div_choose Finset.le_card_falling_div_choose
+-/
 
 end Falling
 
 variable {𝒜 : Finset (Finset α)} {s : Finset α} {k : ℕ}
 
+#print Finset.sum_card_slice_div_choose_le_one /-
 /-- The **Lubell-Yamamoto-Meshalkin inequality**. If `𝒜` is an antichain, then the sum of the
 proportion of elements it takes from each layer is less than `1`. -/
 theorem sum_card_slice_div_choose_le_one [Fintype α]
@@ -235,6 +242,7 @@ theorem sum_card_slice_div_choose_le_one [Fintype α]
   · rw [tsub_self, choose_zero_right]
     exact zero_lt_one
 #align finset.sum_card_slice_div_choose_le_one Finset.sum_card_slice_div_choose_le_one
+-/
 
 end Lym
 

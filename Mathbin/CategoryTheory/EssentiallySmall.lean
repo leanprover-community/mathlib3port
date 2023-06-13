@@ -44,11 +44,13 @@ class EssentiallySmall (C : Type u) [Category.{v} C] : Prop where
 #align category_theory.essentially_small CategoryTheory.EssentiallySmall
 -/
 
+#print CategoryTheory.EssentiallySmall.mk' /-
 /-- Constructor for `essentially_small C` from an explicit small category witness. -/
 theorem EssentiallySmall.mk' {C : Type u} [Category.{v} C] {S : Type w} [SmallCategory S]
     (e : C ≌ S) : EssentiallySmall.{w} C :=
   ⟨⟨S, _, ⟨e⟩⟩⟩
 #align category_theory.essentially_small.mk' CategoryTheory.EssentiallySmall.mk'
+-/
 
 #print CategoryTheory.SmallModel /-
 /-- An arbitrarily chosen small model for an essentially small category.
@@ -66,6 +68,7 @@ noncomputable instance smallCategorySmallModel (C : Type u) [Category.{v} C]
 #align category_theory.small_category_small_model CategoryTheory.smallCategorySmallModel
 -/
 
+#print CategoryTheory.equivSmallModel /-
 /-- The (noncomputable) categorical equivalence between
 an essentially small category and its small model.
 -/
@@ -74,7 +77,9 @@ noncomputable def equivSmallModel (C : Type u) [Category.{v} C] [EssentiallySmal
   Nonempty.some
     (Classical.choose_spec (Classical.choose_spec (@EssentiallySmall.equiv_smallCategory C _ _)))
 #align category_theory.equiv_small_model CategoryTheory.equivSmallModel
+-/
 
+#print CategoryTheory.essentiallySmall_congr /-
 theorem essentiallySmall_congr {C : Type u} [Category.{v} C] {D : Type u'} [Category.{v'} D]
     (e : C ≌ D) : EssentiallySmall.{w} C ↔ EssentiallySmall.{w} D :=
   by
@@ -86,6 +91,7 @@ theorem essentiallySmall_congr {C : Type u} [Category.{v} C] {D : Type u'} [Cate
     skip
     exact essentially_small.mk' (e.trans f)
 #align category_theory.essentially_small_congr CategoryTheory.essentiallySmall_congr
+-/
 
 #print CategoryTheory.Discrete.essentiallySmallOfSmall /-
 theorem Discrete.essentiallySmallOfSmall {α : Type u} [Small.{w} α] :
@@ -113,6 +119,7 @@ class LocallySmall (C : Type u) [Category.{v} C] : Prop where
 instance (C : Type u) [Category.{v} C] [LocallySmall.{w} C] (X Y : C) : Small (X ⟶ Y) :=
   LocallySmall.hom_small X Y
 
+#print CategoryTheory.locallySmall_congr /-
 theorem locallySmall_congr {C : Type u} [Category.{v} C] {D : Type u'} [Category.{v'} D]
     (e : C ≌ D) : LocallySmall.{w} C ↔ LocallySmall.{w} D :=
   by
@@ -130,6 +137,7 @@ theorem locallySmall_congr {C : Type u} [Category.{v} C] {D : Type u'} [Category
     refine' (small_congr _).mpr L
     exact equiv_of_fully_faithful e.functor
 #align category_theory.locally_small_congr CategoryTheory.locallySmall_congr
+-/
 
 #print CategoryTheory.locallySmall_self /-
 instance (priority := 100) locallySmall_self (C : Type u) [Category.{v} C] : LocallySmall.{v} C
@@ -200,6 +208,7 @@ noncomputable instance : Category.{w} (ShrinkHoms C)
   id X := equivShrink _ (𝟙 (fromShrinkHoms X))
   comp X Y Z f g := equivShrink _ ((equivShrink _).symm f ≫ (equivShrink _).symm g)
 
+#print CategoryTheory.ShrinkHoms.functor /-
 /-- Implementation of `shrink_homs.equivalence`. -/
 @[simps]
 noncomputable def functor : C ⥤ ShrinkHoms C
@@ -207,7 +216,9 @@ noncomputable def functor : C ⥤ ShrinkHoms C
   obj X := toShrinkHoms X
   map X Y f := equivShrink (X ⟶ Y) f
 #align category_theory.shrink_homs.functor CategoryTheory.ShrinkHoms.functor
+-/
 
+#print CategoryTheory.ShrinkHoms.inverse /-
 /-- Implementation of `shrink_homs.equivalence`. -/
 @[simps]
 noncomputable def inverse : ShrinkHoms C ⥤ C
@@ -215,7 +226,9 @@ noncomputable def inverse : ShrinkHoms C ⥤ C
   obj X := fromShrinkHoms X
   map X Y f := (equivShrink (fromShrinkHoms X ⟶ fromShrinkHoms Y)).symm f
 #align category_theory.shrink_homs.inverse CategoryTheory.ShrinkHoms.inverse
+-/
 
+#print CategoryTheory.ShrinkHoms.equivalence /-
 /-- The categorical equivalence between `C` and `shrink_homs C`, when `C` is locally small.
 -/
 @[simps]
@@ -223,6 +236,7 @@ noncomputable def equivalence : C ≌ ShrinkHoms C :=
   Equivalence.mk (functor C) (inverse C) (NatIso.ofComponents (fun X => Iso.refl X) (by tidy))
     (NatIso.ofComponents (fun X => Iso.refl X) (by tidy))
 #align category_theory.shrink_homs.equivalence CategoryTheory.ShrinkHoms.equivalence
+-/
 
 end ShrinkHoms
 

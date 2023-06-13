@@ -57,6 +57,7 @@ variable {c : 𝕜 → 𝕜} {c' : 𝕜}
 
 variable (n : ℕ)
 
+#print hasStrictDerivAt_pow /-
 theorem hasStrictDerivAt_pow :
     ∀ (n : ℕ) (x : 𝕜), HasStrictDerivAt (fun x => x ^ n) ((n : 𝕜) * x ^ (n - 1)) x
   | 0, x => by simp [hasStrictDerivAt_const]
@@ -65,63 +66,90 @@ theorem hasStrictDerivAt_pow :
     simpa [pow_succ', add_mul, mul_assoc] using
       (hasStrictDerivAt_pow (n + 1) x).mul (hasStrictDerivAt_id x)
 #align has_strict_deriv_at_pow hasStrictDerivAt_pow
+-/
 
+#print hasDerivAt_pow /-
 theorem hasDerivAt_pow (n : ℕ) (x : 𝕜) : HasDerivAt (fun x => x ^ n) ((n : 𝕜) * x ^ (n - 1)) x :=
   (hasStrictDerivAt_pow n x).HasDerivAt
 #align has_deriv_at_pow hasDerivAt_pow
+-/
 
+#print hasDerivWithinAt_pow /-
 theorem hasDerivWithinAt_pow (n : ℕ) (x : 𝕜) (s : Set 𝕜) :
     HasDerivWithinAt (fun x => x ^ n) ((n : 𝕜) * x ^ (n - 1)) s x :=
   (hasDerivAt_pow n x).HasDerivWithinAt
 #align has_deriv_within_at_pow hasDerivWithinAt_pow
+-/
 
+#print differentiableAt_pow /-
 theorem differentiableAt_pow : DifferentiableAt 𝕜 (fun x => x ^ n) x :=
   (hasDerivAt_pow n x).DifferentiableAt
 #align differentiable_at_pow differentiableAt_pow
+-/
 
+#print differentiableWithinAt_pow /-
 theorem differentiableWithinAt_pow : DifferentiableWithinAt 𝕜 (fun x => x ^ n) s x :=
   (differentiableAt_pow n).DifferentiableWithinAt
 #align differentiable_within_at_pow differentiableWithinAt_pow
+-/
 
+#print differentiable_pow /-
 theorem differentiable_pow : Differentiable 𝕜 fun x : 𝕜 => x ^ n := fun x => differentiableAt_pow n
 #align differentiable_pow differentiable_pow
+-/
 
+#print differentiableOn_pow /-
 theorem differentiableOn_pow : DifferentiableOn 𝕜 (fun x => x ^ n) s :=
   (differentiable_pow n).DifferentiableOn
 #align differentiable_on_pow differentiableOn_pow
+-/
 
+#print deriv_pow /-
 theorem deriv_pow : deriv (fun x => x ^ n) x = (n : 𝕜) * x ^ (n - 1) :=
   (hasDerivAt_pow n x).deriv
 #align deriv_pow deriv_pow
+-/
 
+#print deriv_pow' /-
 @[simp]
 theorem deriv_pow' : (deriv fun x => x ^ n) = fun x => (n : 𝕜) * x ^ (n - 1) :=
   funext fun x => deriv_pow n
 #align deriv_pow' deriv_pow'
+-/
 
+#print derivWithin_pow /-
 theorem derivWithin_pow (hxs : UniqueDiffWithinAt 𝕜 s x) :
     derivWithin (fun x => x ^ n) s x = (n : 𝕜) * x ^ (n - 1) :=
   (hasDerivWithinAt_pow n x s).derivWithin hxs
 #align deriv_within_pow derivWithin_pow
+-/
 
+#print HasDerivWithinAt.pow /-
 theorem HasDerivWithinAt.pow (hc : HasDerivWithinAt c c' s x) :
     HasDerivWithinAt (fun y => c y ^ n) ((n : 𝕜) * c x ^ (n - 1) * c') s x :=
   (hasDerivAt_pow n (c x)).comp_hasDerivWithinAt x hc
 #align has_deriv_within_at.pow HasDerivWithinAt.pow
+-/
 
+#print HasDerivAt.pow /-
 theorem HasDerivAt.pow (hc : HasDerivAt c c' x) :
     HasDerivAt (fun y => c y ^ n) ((n : 𝕜) * c x ^ (n - 1) * c') x := by
   rw [← hasDerivWithinAt_univ] at *; exact hc.pow n
 #align has_deriv_at.pow HasDerivAt.pow
+-/
 
+#print derivWithin_pow' /-
 theorem derivWithin_pow' (hc : DifferentiableWithinAt 𝕜 c s x) (hxs : UniqueDiffWithinAt 𝕜 s x) :
     derivWithin (fun x => c x ^ n) s x = (n : 𝕜) * c x ^ (n - 1) * derivWithin c s x :=
   (hc.HasDerivWithinAt.pow n).derivWithin hxs
 #align deriv_within_pow' derivWithin_pow'
+-/
 
+#print deriv_pow'' /-
 @[simp]
 theorem deriv_pow'' (hc : DifferentiableAt 𝕜 c x) :
     deriv (fun x => c x ^ n) x = (n : 𝕜) * c x ^ (n - 1) * deriv c x :=
   (hc.HasDerivAt.pow n).deriv
 #align deriv_pow'' deriv_pow''
+-/
 

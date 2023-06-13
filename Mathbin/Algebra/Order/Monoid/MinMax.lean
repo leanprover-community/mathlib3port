@@ -27,17 +27,21 @@ variable {α β : Type _}
   rules relating them. -/
 
 
+#print fn_min_mul_fn_max /-
 @[to_additive]
 theorem fn_min_mul_fn_max [LinearOrder α] [CommSemigroup β] (f : α → β) (n m : α) :
     f (min n m) * f (max n m) = f n * f m := by cases' le_total n m with h h <;> simp [h, mul_comm]
 #align fn_min_mul_fn_max fn_min_mul_fn_max
 #align fn_min_add_fn_max fn_min_add_fn_max
+-/
 
+#print min_mul_max /-
 @[to_additive]
 theorem min_mul_max [LinearOrder α] [CommSemigroup α] (n m : α) : min n m * max n m = n * m :=
   fn_min_mul_fn_max id n m
 #align min_mul_max min_mul_max
 #align min_add_max min_add_max
+-/
 
 section CovariantClassMulLe
 
@@ -51,17 +55,21 @@ section Left
 
 variable [CovariantClass α α (· * ·) (· ≤ ·)]
 
+#print min_mul_mul_left /-
 @[to_additive]
 theorem min_mul_mul_left (a b c : α) : min (a * b) (a * c) = a * min b c :=
   (monotone_id.const_mul' a).map_min.symm
 #align min_mul_mul_left min_mul_mul_left
 #align min_add_add_left min_add_add_left
+-/
 
+#print max_mul_mul_left /-
 @[to_additive]
 theorem max_mul_mul_left (a b c : α) : max (a * b) (a * c) = a * max b c :=
   (monotone_id.const_mul' a).map_max.symm
 #align max_mul_mul_left max_mul_mul_left
 #align max_add_add_left max_add_add_left
+-/
 
 end Left
 
@@ -69,17 +77,21 @@ section Right
 
 variable [CovariantClass α α (Function.swap (· * ·)) (· ≤ ·)]
 
+#print min_mul_mul_right /-
 @[to_additive]
 theorem min_mul_mul_right (a b c : α) : min (a * c) (b * c) = min a b * c :=
   (monotone_id.mul_const' c).map_min.symm
 #align min_mul_mul_right min_mul_mul_right
 #align min_add_add_right min_add_add_right
+-/
 
+#print max_mul_mul_right /-
 @[to_additive]
 theorem max_mul_mul_right (a b c : α) : max (a * c) (b * c) = max a b * c :=
   (monotone_id.mul_const' c).map_max.symm
 #align max_mul_mul_right max_mul_mul_right
 #align max_add_add_right max_add_add_right
+-/
 
 end Right
 
@@ -141,20 +153,25 @@ end Mul
 
 variable [MulOneClass α]
 
+#print min_le_mul_of_one_le_right /-
 @[to_additive]
 theorem min_le_mul_of_one_le_right [CovariantClass α α (· * ·) (· ≤ ·)] {a b : α} (hb : 1 ≤ b) :
     min a b ≤ a * b :=
   min_le_iff.2 <| Or.inl <| le_mul_of_one_le_right' hb
 #align min_le_mul_of_one_le_right min_le_mul_of_one_le_right
 #align min_le_add_of_nonneg_right min_le_add_of_nonneg_right
+-/
 
+#print min_le_mul_of_one_le_left /-
 @[to_additive]
 theorem min_le_mul_of_one_le_left [CovariantClass α α (Function.swap (· * ·)) (· ≤ ·)] {a b : α}
     (ha : 1 ≤ a) : min a b ≤ a * b :=
   min_le_iff.2 <| Or.inr <| le_mul_of_one_le_left' ha
 #align min_le_mul_of_one_le_left min_le_mul_of_one_le_left
 #align min_le_add_of_nonneg_left min_le_add_of_nonneg_left
+-/
 
+#print max_le_mul_of_one_le /-
 @[to_additive]
 theorem max_le_mul_of_one_le [CovariantClass α α (· * ·) (· ≤ ·)]
     [CovariantClass α α (Function.swap (· * ·)) (· ≤ ·)] {a b : α} (ha : 1 ≤ a) (hb : 1 ≤ b) :
@@ -162,6 +179,7 @@ theorem max_le_mul_of_one_le [CovariantClass α α (· * ·) (· ≤ ·)]
   max_le_iff.2 ⟨le_mul_of_one_le_right' hb, le_mul_of_one_le_left' ha⟩
 #align max_le_mul_of_one_le max_le_mul_of_one_le
 #align max_le_add_of_nonneg max_le_add_of_nonneg
+-/
 
 end CovariantClassMulLe
 

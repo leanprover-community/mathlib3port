@@ -97,7 +97,6 @@ variable {R : Type u}
 
 variable [EuclideanDomain R]
 
--- mathport name: «expr ≺ »
 local infixl:50 " ≺ " => EuclideanDomain.r
 
 -- see Note [lower instance priority]
@@ -108,57 +107,80 @@ instance (priority := 70) : Div R :=
 instance (priority := 70) : Mod R :=
   ⟨EuclideanDomain.remainder⟩
 
+#print EuclideanDomain.div_add_mod /-
 theorem div_add_mod (a b : R) : b * (a / b) + a % b = a :=
   EuclideanDomain.quotient_mul_add_remainder_eq _ _
 #align euclidean_domain.div_add_mod EuclideanDomain.div_add_mod
+-/
 
+#print EuclideanDomain.mod_add_div /-
 theorem mod_add_div (a b : R) : a % b + b * (a / b) = a :=
   (add_comm _ _).trans (div_add_mod _ _)
 #align euclidean_domain.mod_add_div EuclideanDomain.mod_add_div
+-/
 
+#print EuclideanDomain.mod_add_div' /-
 theorem mod_add_div' (m k : R) : m % k + m / k * k = m := by rw [mul_comm]; exact mod_add_div _ _
 #align euclidean_domain.mod_add_div' EuclideanDomain.mod_add_div'
+-/
 
+#print EuclideanDomain.div_add_mod' /-
 theorem div_add_mod' (m k : R) : m / k * k + m % k = m := by rw [mul_comm]; exact div_add_mod _ _
 #align euclidean_domain.div_add_mod' EuclideanDomain.div_add_mod'
+-/
 
+#print EuclideanDomain.mod_eq_sub_mul_div /-
 theorem mod_eq_sub_mul_div {R : Type _} [EuclideanDomain R] (a b : R) : a % b = a - b * (a / b) :=
   calc
     a % b = b * (a / b) + a % b - b * (a / b) := (add_sub_cancel' _ _).symm
     _ = a - b * (a / b) := by rw [div_add_mod]
 #align euclidean_domain.mod_eq_sub_mul_div EuclideanDomain.mod_eq_sub_mul_div
+-/
 
+#print EuclideanDomain.mod_lt /-
 theorem mod_lt : ∀ (a) {b : R}, b ≠ 0 → a % b ≺ b :=
   EuclideanDomain.remainder_lt
 #align euclidean_domain.mod_lt EuclideanDomain.mod_lt
+-/
 
+#print EuclideanDomain.mul_right_not_lt /-
 theorem mul_right_not_lt {a : R} (b) (h : a ≠ 0) : ¬a * b ≺ b := by rw [mul_comm];
   exact mul_left_not_lt b h
 #align euclidean_domain.mul_right_not_lt EuclideanDomain.mul_right_not_lt
+-/
 
+#print EuclideanDomain.mod_zero /-
 @[simp]
 theorem mod_zero (a : R) : a % 0 = a := by
   simpa only [MulZeroClass.zero_mul, zero_add] using div_add_mod a 0
 #align euclidean_domain.mod_zero EuclideanDomain.mod_zero
+-/
 
+#print EuclideanDomain.lt_one /-
 theorem lt_one (a : R) : a ≺ (1 : R) → a = 0 :=
   haveI := Classical.dec
   not_imp_not.1 fun h => by simpa only [one_mul] using mul_left_not_lt 1 h
 #align euclidean_domain.lt_one EuclideanDomain.lt_one
+-/
 
+#print EuclideanDomain.val_dvd_le /-
 theorem val_dvd_le : ∀ a b : R, b ∣ a → a ≠ 0 → ¬a ≺ b
   | _, b, ⟨d, rfl⟩, ha => mul_left_not_lt b (mt (by rintro rfl; exact MulZeroClass.mul_zero _) ha)
 #align euclidean_domain.val_dvd_le EuclideanDomain.val_dvd_le
+-/
 
+#print EuclideanDomain.div_zero /-
 @[simp]
 theorem div_zero (a : R) : a / 0 = 0 :=
   EuclideanDomain.quotient_zero a
 #align euclidean_domain.div_zero EuclideanDomain.div_zero
+-/
 
 section
 
 open scoped Classical
 
+#print EuclideanDomain.GCD.induction /-
 @[elab_as_elim]
 theorem GCD.induction {P : R → R → Prop} :
     ∀ a b : R, (∀ x, P 0 x) → (∀ a b, a ≠ 0 → P (b % a) a → P a b) → P a b
@@ -169,6 +191,7 @@ theorem GCD.induction {P : R → R → Prop} :
       H1 _ _ a0 (gcd.induction (b % a) a H0 H1)
 termination_by' ⟨_, r_well_founded⟩
 #align euclidean_domain.gcd.induction EuclideanDomain.GCD.induction
+-/
 
 end
 
@@ -189,9 +212,11 @@ termination_by' ⟨_, r_well_founded⟩
 #align euclidean_domain.gcd EuclideanDomain.gcd
 -/
 
+#print EuclideanDomain.gcd_zero_left /-
 @[simp]
 theorem gcd_zero_left (a : R) : gcd 0 a = a := by rw [gcd]; exact if_pos rfl
 #align euclidean_domain.gcd_zero_left EuclideanDomain.gcd_zero_left
+-/
 
 #print EuclideanDomain.xgcdAux /-
 /-- An implementation of the extended GCD algorithm.
@@ -214,11 +239,14 @@ termination_by' ⟨_, r_well_founded⟩
 #align euclidean_domain.xgcd_aux EuclideanDomain.xgcdAux
 -/
 
+#print EuclideanDomain.xgcd_zero_left /-
 @[simp]
 theorem xgcd_zero_left {s t r' s' t' : R} : xgcdAux 0 s t r' s' t' = (r', s', t') := by
   unfold xgcd_aux; exact if_pos rfl
 #align euclidean_domain.xgcd_zero_left EuclideanDomain.xgcd_zero_left
+-/
 
+#print EuclideanDomain.xgcdAux_rec /-
 theorem xgcdAux_rec {r s t r' s' t' : R} (h : r ≠ 0) :
     xgcdAux r s t r' s' t' = xgcdAux (r' % r) (s' - r' / r * s) (t' - r' / r * t) r s t := by
   conv =>
@@ -226,6 +254,7 @@ theorem xgcdAux_rec {r s t r' s' t' : R} (h : r ≠ 0) :
     rw [xgcd_aux];
   exact if_neg h
 #align euclidean_domain.xgcd_aux_rec EuclideanDomain.xgcdAux_rec
+-/
 
 #print EuclideanDomain.xgcd /-
 /-- Use the extended GCD algorithm to generate the `a` and `b` values
@@ -249,13 +278,17 @@ def gcdB (x y : R) : R :=
 #align euclidean_domain.gcd_b EuclideanDomain.gcdB
 -/
 
+#print EuclideanDomain.gcdA_zero_left /-
 @[simp]
 theorem gcdA_zero_left {s : R} : gcdA 0 s = 0 := by unfold gcd_a; rw [xgcd, xgcd_zero_left]
 #align euclidean_domain.gcd_a_zero_left EuclideanDomain.gcdA_zero_left
+-/
 
+#print EuclideanDomain.gcdB_zero_left /-
 @[simp]
 theorem gcdB_zero_left {s : R} : gcdB 0 s = 1 := by unfold gcd_b; rw [xgcd, xgcd_zero_left]
 #align euclidean_domain.gcd_b_zero_left EuclideanDomain.gcdB_zero_left
+-/
 
 #print EuclideanDomain.xgcd_val /-
 theorem xgcd_val (x y : R) : xgcd x y = (gcdA x y, gcdB x y) :=

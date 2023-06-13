@@ -32,12 +32,15 @@ namespace Nonneg
 
 variable {α : Type _}
 
+#print Nonneg.archimedean /-
 instance archimedean [OrderedAddCommMonoid α] [Archimedean α] : Archimedean { x : α // 0 ≤ x } :=
   ⟨fun x y hy =>
     let ⟨n, hr⟩ := Archimedean.arch (x : α) (hy : (0 : α) < y)
     ⟨n, show (x : α) ≤ (n • y : { x : α // 0 ≤ x }) by simp [*, -nsmul_eq_mul, nsmul_coe]⟩⟩
 #align nonneg.archimedean Nonneg.archimedean
+-/
 
+#print Nonneg.floorSemiring /-
 instance floorSemiring [OrderedSemiring α] [FloorSemiring α] : FloorSemiring { r : α // 0 ≤ r }
     where
   floor a := ⌊(a : α)⌋₊
@@ -51,18 +54,23 @@ instance floorSemiring [OrderedSemiring α] [FloorSemiring α] : FloorSemiring {
     refine' (FloorSemiring.gc_ceil (a : α) n).trans _
     rw [← Subtype.coe_le_coe, Nonneg.coe_nat_cast]
 #align nonneg.floor_semiring Nonneg.floorSemiring
+-/
 
+#print Nonneg.nat_floor_coe /-
 @[norm_cast]
 theorem nat_floor_coe [OrderedSemiring α] [FloorSemiring α] (a : { r : α // 0 ≤ r }) :
     ⌊(a : α)⌋₊ = ⌊a⌋₊ :=
   rfl
 #align nonneg.nat_floor_coe Nonneg.nat_floor_coe
+-/
 
+#print Nonneg.nat_ceil_coe /-
 @[norm_cast]
 theorem nat_ceil_coe [OrderedSemiring α] [FloorSemiring α] (a : { r : α // 0 ≤ r }) :
     ⌈(a : α)⌉₊ = ⌈a⌉₊ :=
   rfl
 #align nonneg.nat_ceil_coe Nonneg.nat_ceil_coe
+-/
 
 end Nonneg
 

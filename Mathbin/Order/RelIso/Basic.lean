@@ -57,7 +57,6 @@ structure RelHom {α β : Type _} (r : α → α → Prop) (s : β → β → Pr
 #align rel_hom RelHom
 -/
 
--- mathport name: «expr →r »
 infixl:25 " →r " => RelHom
 
 section
@@ -86,24 +85,32 @@ namespace RelHomClass
 
 variable {F : Type _}
 
+#print RelHomClass.isIrrefl /-
 protected theorem isIrrefl [RelHomClass F r s] (f : F) : ∀ [IsIrrefl β s], IsIrrefl α r
   | ⟨H⟩ => ⟨fun a h => H _ (map_rel f h)⟩
 #align rel_hom_class.is_irrefl RelHomClass.isIrrefl
+-/
 
+#print RelHomClass.isAsymm /-
 protected theorem isAsymm [RelHomClass F r s] (f : F) : ∀ [IsAsymm β s], IsAsymm α r
   | ⟨H⟩ => ⟨fun a b h₁ h₂ => H _ _ (map_rel f h₁) (map_rel f h₂)⟩
 #align rel_hom_class.is_asymm RelHomClass.isAsymm
+-/
 
+#print RelHomClass.acc /-
 protected theorem acc [RelHomClass F r s] (f : F) (a : α) : Acc s (f a) → Acc r a :=
   by
   generalize h : f a = b; intro ac
   induction' ac with _ H IH generalizing a; subst h
   exact ⟨_, fun a' h => IH (f a') (map_rel f h) _ rfl⟩
 #align rel_hom_class.acc RelHomClass.acc
+-/
 
+#print RelHomClass.wellFounded /-
 protected theorem wellFounded [RelHomClass F r s] (f : F) : ∀ h : WellFounded s, WellFounded r
   | ⟨H⟩ => ⟨fun a => RelHomClass.acc f _ (H _)⟩
 #align rel_hom_class.well_founded RelHomClass.wellFounded
+-/
 
 end RelHomClass
 
@@ -120,33 +127,43 @@ instance : CoeFun (r →r s) fun _ => α → β :=
 
 initialize_simps_projections RelHom (toFun → apply)
 
+#print RelHom.map_rel /-
 protected theorem map_rel (f : r →r s) {a b} : r a b → s (f a) (f b) :=
   f.map_rel'
 #align rel_hom.map_rel RelHom.map_rel
+-/
 
 @[simp]
 theorem coeFn_mk (f : α → β) (o) : (@RelHom.mk _ _ r s f o : α → β) = f :=
   rfl
 #align rel_hom.coe_fn_mk RelHom.coeFn_mk
 
+#print RelHom.coe_fn_toFun /-
 @[simp]
 theorem coe_fn_toFun (f : r →r s) : (f.toFun : α → β) = f :=
   rfl
 #align rel_hom.coe_fn_to_fun RelHom.coe_fn_toFun
+-/
 
+#print RelHom.coe_fn_injective /-
 /-- The map `coe_fn : (r →r s) → (α → β)` is injective. -/
 theorem coe_fn_injective : @Function.Injective (r →r s) (α → β) coeFn :=
   FunLike.coe_injective
 #align rel_hom.coe_fn_injective RelHom.coe_fn_injective
+-/
 
+#print RelHom.ext /-
 @[ext]
 theorem ext ⦃f g : r →r s⦄ (h : ∀ x, f x = g x) : f = g :=
   FunLike.ext f g h
 #align rel_hom.ext RelHom.ext
+-/
 
+#print RelHom.ext_iff /-
 theorem ext_iff {f g : r →r s} : f = g ↔ ∀ x, f x = g x :=
   FunLike.ext_iff
 #align rel_hom.ext_iff RelHom.ext_iff
+-/
 
 #print RelHom.id /-
 /-- Identity map is a relation homomorphism. -/
@@ -180,6 +197,7 @@ def preimage (f : α → β) (s : β → β → Prop) : f ⁻¹'o s →r s :=
 
 end RelHom
 
+#print injective_of_increasing /-
 /-- An increasing function is injective -/
 theorem injective_of_increasing (r : α → α → Prop) (s : β → β → Prop) [IsTrichotomous α r]
     [IsIrrefl β s] (f : α → β) (hf : ∀ {x y}, r x y → s (f x) (f y)) : Injective f :=
@@ -190,13 +208,17 @@ theorem injective_of_increasing (r : α → α → Prop) (s : β → β → Prop
   exact h
   have := hf h; rw [hxy] at this ; exfalso; exact irrefl_of s (f y) this
 #align injective_of_increasing injective_of_increasing
+-/
 
+#print RelHom.injective_of_increasing /-
 /-- An increasing function is injective -/
 theorem RelHom.injective_of_increasing [IsTrichotomous α r] [IsIrrefl β s] (f : r →r s) :
     Injective f :=
   injective_of_increasing r s f fun x y => f.map_rel
 #align rel_hom.injective_of_increasing RelHom.injective_of_increasing
+-/
 
+#print Surjective.wellFounded_iff /-
 -- TODO: define a `rel_iff_class` so we don't have to do all the `convert` trickery?
 theorem Surjective.wellFounded_iff {f : α → β} (hf : Surjective f)
     (o : ∀ {a b}, r a b ↔ s (f a) (f b)) : WellFounded r ↔ WellFounded s :=
@@ -208,6 +230,7 @@ theorem Surjective.wellFounded_iff {f : α → β} (hf : Surjective f)
       iterate 2 apply Classical.choose_spec hf.has_right_inverse)
     (RelHomClass.wellFounded (⟨f, fun _ _ => o.1⟩ : r →r s))
 #align surjective.well_founded_iff Surjective.wellFounded_iff
+-/
 
 #print RelEmbedding /-
 /-- A relation embedding with respect to a given pair of relations `r` and `s`
@@ -217,7 +240,6 @@ structure RelEmbedding {α β : Type _} (r : α → α → Prop) (s : β → β 
 #align rel_embedding RelEmbedding
 -/
 
--- mathport name: «expr ↪r »
 infixl:25 " ↪r " => RelEmbedding
 
 #print Subtype.relEmbedding /-
@@ -228,10 +250,12 @@ def Subtype.relEmbedding {X : Type _} (r : X → X → Prop) (p : X → Prop) :
 #align subtype.rel_embedding Subtype.relEmbedding
 -/
 
+#print preimage_equivalence /-
 theorem preimage_equivalence {α β} (f : α → β) {s : β → β → Prop} (hs : Equivalence s) :
     Equivalence (f ⁻¹'o s) :=
   ⟨fun a => hs.1 _, fun a b h => hs.2.1 h, fun a b c h₁ h₂ => hs.2.2 h₁ h₂⟩
 #align preimage_equivalence preimage_equivalence
+-/
 
 namespace RelEmbedding
 
@@ -277,42 +301,58 @@ theorem coe_coeFn (f : r ↪r s) : ((f : r →r s) : α → β) = f :=
   rfl
 #align rel_embedding.coe_coe_fn RelEmbedding.coe_coeFn
 
+#print RelEmbedding.injective /-
 theorem injective (f : r ↪r s) : Injective f :=
   f.inj'
 #align rel_embedding.injective RelEmbedding.injective
+-/
 
+#print RelEmbedding.inj /-
 @[simp]
 theorem inj (f : r ↪r s) {a b} : f a = f b ↔ a = b :=
   f.Injective.eq_iff
 #align rel_embedding.inj RelEmbedding.inj
+-/
 
+#print RelEmbedding.map_rel_iff /-
 theorem map_rel_iff (f : r ↪r s) {a b} : s (f a) (f b) ↔ r a b :=
   f.map_rel_iff'
 #align rel_embedding.map_rel_iff RelEmbedding.map_rel_iff
+-/
 
+#print RelEmbedding.coe_mk /-
 @[simp]
 theorem coe_mk (f : α ↪ β) (o) : (@RelEmbedding.mk _ _ r s f o : α → β) = f :=
   rfl
 #align rel_embedding.coe_fn_mk RelEmbedding.coe_mk
+-/
 
+#print RelEmbedding.coe_toEmbedding /-
 @[simp]
 theorem coe_toEmbedding (f : r ↪r s) : (f.toEmbedding : α → β) = f :=
   rfl
 #align rel_embedding.coe_fn_to_embedding RelEmbedding.coe_toEmbedding
+-/
 
+#print RelEmbedding.coe_fn_injective /-
 /-- The map `coe_fn : (r ↪r s) → (α → β)` is injective. -/
 theorem coe_fn_injective : @Function.Injective (r ↪r s) (α → β) coeFn :=
   FunLike.coe_injective
 #align rel_embedding.coe_fn_injective RelEmbedding.coe_fn_injective
+-/
 
+#print RelEmbedding.ext /-
 @[ext]
 theorem ext ⦃f g : r ↪r s⦄ (h : ∀ x, f x = g x) : f = g :=
   FunLike.ext _ _ h
 #align rel_embedding.ext RelEmbedding.ext
+-/
 
+#print RelEmbedding.ext_iff /-
 theorem ext_iff {f g : r ↪r s} : f = g ↔ ∀ x, f x = g x :=
   FunLike.ext_iff
 #align rel_embedding.ext_iff RelEmbedding.ext_iff
+-/
 
 #print RelEmbedding.refl /-
 /-- Identity map is a relation embedding. -/
@@ -333,14 +373,18 @@ protected def trans (f : r ↪r s) (g : s ↪r t) : r ↪r t :=
 instance (r : α → α → Prop) : Inhabited (r ↪r r) :=
   ⟨RelEmbedding.refl _⟩
 
+#print RelEmbedding.trans_apply /-
 theorem trans_apply (f : r ↪r s) (g : s ↪r t) (a : α) : (f.trans g) a = g (f a) :=
   rfl
 #align rel_embedding.trans_apply RelEmbedding.trans_apply
+-/
 
+#print RelEmbedding.coe_trans /-
 @[simp]
 theorem coe_trans (f : r ↪r s) (g : s ↪r t) : ⇑(f.trans g) = g ∘ f :=
   rfl
 #align rel_embedding.coe_trans RelEmbedding.coe_trans
+-/
 
 #print RelEmbedding.swap /-
 /-- A relation embedding is also a relation embedding between dual relations. -/
@@ -357,80 +401,116 @@ def preimage (f : α ↪ β) (s : β → β → Prop) : f ⁻¹'o s ↪r s :=
 #align rel_embedding.preimage RelEmbedding.preimage
 -/
 
+#print RelEmbedding.eq_preimage /-
 theorem eq_preimage (f : r ↪r s) : r = f ⁻¹'o s := by ext (a b); exact f.map_rel_iff.symm
 #align rel_embedding.eq_preimage RelEmbedding.eq_preimage
+-/
 
+#print RelEmbedding.isIrrefl /-
 protected theorem isIrrefl (f : r ↪r s) [IsIrrefl β s] : IsIrrefl α r :=
   ⟨fun a => mt f.map_rel_iff.2 (irrefl (f a))⟩
 #align rel_embedding.is_irrefl RelEmbedding.isIrrefl
+-/
 
+#print RelEmbedding.isRefl /-
 protected theorem isRefl (f : r ↪r s) [IsRefl β s] : IsRefl α r :=
   ⟨fun a => f.map_rel_iff.1 <| refl _⟩
 #align rel_embedding.is_refl RelEmbedding.isRefl
+-/
 
+#print RelEmbedding.isSymm /-
 protected theorem isSymm (f : r ↪r s) [IsSymm β s] : IsSymm α r :=
   ⟨fun a b => imp_imp_imp f.map_rel_iff.2 f.map_rel_iff.1 symm⟩
 #align rel_embedding.is_symm RelEmbedding.isSymm
+-/
 
+#print RelEmbedding.isAsymm /-
 protected theorem isAsymm (f : r ↪r s) [IsAsymm β s] : IsAsymm α r :=
   ⟨fun a b h₁ h₂ => asymm (f.map_rel_iff.2 h₁) (f.map_rel_iff.2 h₂)⟩
 #align rel_embedding.is_asymm RelEmbedding.isAsymm
+-/
 
+#print RelEmbedding.isAntisymm /-
 protected theorem isAntisymm : ∀ (f : r ↪r s) [IsAntisymm β s], IsAntisymm α r
   | ⟨f, o⟩, ⟨H⟩ => ⟨fun a b h₁ h₂ => f.inj' (H _ _ (o.2 h₁) (o.2 h₂))⟩
 #align rel_embedding.is_antisymm RelEmbedding.isAntisymm
+-/
 
+#print RelEmbedding.isTrans /-
 protected theorem isTrans : ∀ (f : r ↪r s) [IsTrans β s], IsTrans α r
   | ⟨f, o⟩, ⟨H⟩ => ⟨fun a b c h₁ h₂ => o.1 (H _ _ _ (o.2 h₁) (o.2 h₂))⟩
 #align rel_embedding.is_trans RelEmbedding.isTrans
+-/
 
+#print RelEmbedding.isTotal /-
 protected theorem isTotal : ∀ (f : r ↪r s) [IsTotal β s], IsTotal α r
   | ⟨f, o⟩, ⟨H⟩ => ⟨fun a b => (or_congr o o).1 (H _ _)⟩
 #align rel_embedding.is_total RelEmbedding.isTotal
+-/
 
+#print RelEmbedding.isPreorder /-
 protected theorem isPreorder : ∀ (f : r ↪r s) [IsPreorder β s], IsPreorder α r
   | f, H => { f.is_refl, f.is_trans with }
 #align rel_embedding.is_preorder RelEmbedding.isPreorder
+-/
 
+#print RelEmbedding.isPartialOrder /-
 protected theorem isPartialOrder : ∀ (f : r ↪r s) [IsPartialOrder β s], IsPartialOrder α r
   | f, H => { f.is_preorder, f.is_antisymm with }
 #align rel_embedding.is_partial_order RelEmbedding.isPartialOrder
+-/
 
+#print RelEmbedding.isLinearOrder /-
 protected theorem isLinearOrder : ∀ (f : r ↪r s) [IsLinearOrder β s], IsLinearOrder α r
   | f, H => { f.is_partial_order, f.is_total with }
 #align rel_embedding.is_linear_order RelEmbedding.isLinearOrder
+-/
 
+#print RelEmbedding.isStrictOrder /-
 protected theorem isStrictOrder : ∀ (f : r ↪r s) [IsStrictOrder β s], IsStrictOrder α r
   | f, H => { f.is_irrefl, f.is_trans with }
 #align rel_embedding.is_strict_order RelEmbedding.isStrictOrder
+-/
 
+#print RelEmbedding.isTrichotomous /-
 protected theorem isTrichotomous : ∀ (f : r ↪r s) [IsTrichotomous β s], IsTrichotomous α r
   | ⟨f, o⟩, ⟨H⟩ => ⟨fun a b => (or_congr o (or_congr f.inj'.eq_iff o)).1 (H _ _)⟩
 #align rel_embedding.is_trichotomous RelEmbedding.isTrichotomous
+-/
 
+#print RelEmbedding.isStrictTotalOrder /-
 protected theorem isStrictTotalOrder :
     ∀ (f : r ↪r s) [IsStrictTotalOrder β s], IsStrictTotalOrder α r
   | f, H => { f.is_trichotomous, f.is_strict_order with }
 #align rel_embedding.is_strict_total_order RelEmbedding.isStrictTotalOrder
+-/
 
+#print RelEmbedding.acc /-
 protected theorem acc (f : r ↪r s) (a : α) : Acc s (f a) → Acc r a :=
   by
   generalize h : f a = b; intro ac
   induction' ac with _ H IH generalizing a; subst h
   exact ⟨_, fun a' h => IH (f a') (f.map_rel_iff.2 h) _ rfl⟩
 #align rel_embedding.acc RelEmbedding.acc
+-/
 
+#print RelEmbedding.wellFounded /-
 protected theorem wellFounded : ∀ (f : r ↪r s) (h : WellFounded s), WellFounded r
   | f, ⟨H⟩ => ⟨fun a => f.Acc _ (H _)⟩
 #align rel_embedding.well_founded RelEmbedding.wellFounded
+-/
 
+#print RelEmbedding.isWellFounded /-
 protected theorem isWellFounded (f : r ↪r s) [IsWellFounded β s] : IsWellFounded α r :=
   ⟨f.WellFounded IsWellFounded.wf⟩
 #align rel_embedding.is_well_founded RelEmbedding.isWellFounded
+-/
 
+#print RelEmbedding.isWellOrder /-
 protected theorem isWellOrder : ∀ (f : r ↪r s) [IsWellOrder β s], IsWellOrder α r
   | f, H => { f.is_strict_total_order with wf := f.well_founded H.wf }
 #align rel_embedding.is_well_order RelEmbedding.isWellOrder
+-/
 
 end RelEmbedding
 
@@ -546,11 +626,13 @@ def ofMapRelIff (f : α → β) [IsAntisymm α r] [IsRefl β s] (hf : ∀ a b, s
 #align rel_embedding.of_map_rel_iff RelEmbedding.ofMapRelIff
 -/
 
+#print RelEmbedding.ofMapRelIff_coe /-
 @[simp]
 theorem ofMapRelIff_coe (f : α → β) [IsAntisymm α r] [IsRefl β s]
     (hf : ∀ a b, s (f a) (f b) ↔ r a b) : ⇑(ofMapRelIff f hf : r ↪r s) = f :=
   rfl
 #align rel_embedding.of_map_rel_iff_coe RelEmbedding.ofMapRelIff_coe
+-/
 
 #print RelEmbedding.ofMonotone /-
 /-- It suffices to prove `f` is monotone between strict relations
@@ -568,11 +650,13 @@ def ofMonotone [IsTrichotomous α r] [IsAsymm β s] (f : α → β) (H : ∀ a b
 #align rel_embedding.of_monotone RelEmbedding.ofMonotone
 -/
 
+#print RelEmbedding.ofMonotone_coe /-
 @[simp]
 theorem ofMonotone_coe [IsTrichotomous α r] [IsAsymm β s] (f : α → β) (H) :
     (@ofMonotone _ _ r s _ _ f H : α → β) = f :=
   rfl
 #align rel_embedding.of_monotone_coe RelEmbedding.ofMonotone_coe
+-/
 
 #print RelEmbedding.ofIsEmpty /-
 /-- A relation embedding from an empty type. -/
@@ -689,7 +773,6 @@ structure RelIso {α β : Type _} (r : α → α → Prop) (s : β → β → Pr
 #align rel_iso RelIso
 -/
 
--- mathport name: «expr ≃r »
 infixl:25 " ≃r " => RelIso
 
 namespace RelIso
@@ -703,9 +786,11 @@ def toRelEmbedding (f : r ≃r s) : r ↪r s :=
 #align rel_iso.to_rel_embedding RelIso.toRelEmbedding
 -/
 
+#print RelIso.toEquiv_injective /-
 theorem toEquiv_injective : Injective (toEquiv : r ≃r s → α ≃ β)
   | ⟨e₁, o₁⟩, ⟨e₂, o₂⟩, h => by congr; exact h
 #align rel_iso.to_equiv_injective RelIso.toEquiv_injective
+-/
 
 instance : Coe (r ≃r s) (r ↪r s) :=
   ⟨toRelEmbedding⟩
@@ -730,34 +815,46 @@ theorem coe_coeFn (f : r ≃r s) : ((f : r ↪r s) : α → β) = f :=
   rfl
 #align rel_iso.coe_coe_fn RelIso.coe_coeFn
 
+#print RelIso.map_rel_iff /-
 theorem map_rel_iff (f : r ≃r s) {a b} : s (f a) (f b) ↔ r a b :=
   f.map_rel_iff'
 #align rel_iso.map_rel_iff RelIso.map_rel_iff
+-/
 
+#print RelIso.coe_fn_mk /-
 @[simp]
 theorem coe_fn_mk (f : α ≃ β) (o : ∀ ⦃a b⦄, s (f a) (f b) ↔ r a b) : (RelIso.mk f o : α → β) = f :=
   rfl
 #align rel_iso.coe_fn_mk RelIso.coe_fn_mk
+-/
 
+#print RelIso.coe_fn_toEquiv /-
 @[simp]
 theorem coe_fn_toEquiv (f : r ≃r s) : (f.toEquiv : α → β) = f :=
   rfl
 #align rel_iso.coe_fn_to_equiv RelIso.coe_fn_toEquiv
+-/
 
+#print RelIso.coe_fn_injective /-
 /-- The map `coe_fn : (r ≃r s) → (α → β)` is injective. Lean fails to parse
 `function.injective (λ e : r ≃r s, (e : α → β))`, so we use a trick to say the same. -/
 theorem coe_fn_injective : @Function.Injective (r ≃r s) (α → β) coeFn :=
   FunLike.coe_injective
 #align rel_iso.coe_fn_injective RelIso.coe_fn_injective
+-/
 
+#print RelIso.ext /-
 @[ext]
 theorem ext ⦃f g : r ≃r s⦄ (h : ∀ x, f x = g x) : f = g :=
   FunLike.ext f g h
 #align rel_iso.ext RelIso.ext
+-/
 
+#print RelIso.ext_iff /-
 theorem ext_iff {f g : r ≃r s} : f = g ↔ ∀ x, f x = g x :=
   FunLike.ext_iff
 #align rel_iso.ext_iff RelIso.ext_iff
+-/
 
 #print RelIso.symm /-
 /-- Inverse map of a relation isomorphism is a relation isomorphism. -/
@@ -852,45 +949,63 @@ protected def swap (f : r ≃r s) : swap r ≃r swap s :=
 #align rel_iso.swap RelIso.swap
 -/
 
+#print RelIso.coe_fn_symm_mk /-
 @[simp]
 theorem coe_fn_symm_mk (f o) : ((@RelIso.mk _ _ r s f o).symm : β → α) = f.symm :=
   rfl
 #align rel_iso.coe_fn_symm_mk RelIso.coe_fn_symm_mk
+-/
 
+#print RelIso.apply_symm_apply /-
 @[simp]
 theorem apply_symm_apply (e : r ≃r s) (x : β) : e (e.symm x) = x :=
   e.toEquiv.apply_symm_apply x
 #align rel_iso.apply_symm_apply RelIso.apply_symm_apply
+-/
 
+#print RelIso.symm_apply_apply /-
 @[simp]
 theorem symm_apply_apply (e : r ≃r s) (x : α) : e.symm (e x) = x :=
   e.toEquiv.symm_apply_apply x
 #align rel_iso.symm_apply_apply RelIso.symm_apply_apply
+-/
 
+#print RelIso.rel_symm_apply /-
 theorem rel_symm_apply (e : r ≃r s) {x y} : r x (e.symm y) ↔ s (e x) y := by
   rw [← e.map_rel_iff, e.apply_symm_apply]
 #align rel_iso.rel_symm_apply RelIso.rel_symm_apply
+-/
 
+#print RelIso.symm_apply_rel /-
 theorem symm_apply_rel (e : r ≃r s) {x y} : r (e.symm x) y ↔ s x (e y) := by
   rw [← e.map_rel_iff, e.apply_symm_apply]
 #align rel_iso.symm_apply_rel RelIso.symm_apply_rel
+-/
 
+#print RelIso.bijective /-
 protected theorem bijective (e : r ≃r s) : Bijective e :=
   e.toEquiv.Bijective
 #align rel_iso.bijective RelIso.bijective
+-/
 
+#print RelIso.injective /-
 protected theorem injective (e : r ≃r s) : Injective e :=
   e.toEquiv.Injective
 #align rel_iso.injective RelIso.injective
+-/
 
+#print RelIso.surjective /-
 protected theorem surjective (e : r ≃r s) : Surjective e :=
   e.toEquiv.Surjective
 #align rel_iso.surjective RelIso.surjective
+-/
 
+#print RelIso.eq_iff_eq /-
 @[simp]
 theorem eq_iff_eq (f : r ≃r s) {a b} : f a = f b ↔ a = b :=
   f.Injective.eq_iff
 #align rel_iso.eq_iff_eq RelIso.eq_iff_eq
+-/
 
 #print RelIso.preimage /-
 /-- Any equivalence lifts to a relation isomorphism between `s` and its preimage. -/
@@ -913,11 +1028,13 @@ instance IsWellOrder.ulift {α : Type u} (r : α → α → Prop) [IsWellOrder �
 #align rel_iso.is_well_order.ulift RelIso.IsWellOrder.ulift
 -/
 
+#print RelIso.ofSurjective /-
 /-- A surjective relation embedding is a relation isomorphism. -/
 @[simps apply]
 noncomputable def ofSurjective (f : r ↪r s) (H : Surjective f) : r ≃r s :=
   ⟨Equiv.ofBijective f ⟨f.Injective, H⟩, fun a b => f.map_rel_iff⟩
 #align rel_iso.of_surjective RelIso.ofSurjective
+-/
 
 #print RelIso.sumLexCongr /-
 /-- Given relation isomorphisms `r₁ ≃r s₁` and `r₂ ≃r s₂`, construct a relation isomorphism for the

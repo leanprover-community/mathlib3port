@@ -57,8 +57,6 @@ namespace ProbabilityTheory
 
 variable {α : Type _} {mα : MeasurableSpace α}
 
-include mα
-
 section Real
 
 /-! ### Disintegration of measures on `α × ℝ` -/
@@ -561,8 +559,6 @@ open ProbabilityTheory
 variable {α Ω E F : Type _} {mα : MeasurableSpace α} [MeasurableSpace Ω] [TopologicalSpace Ω]
   [BorelSpace Ω] [PolishSpace Ω] [Nonempty Ω] [NormedAddCommGroup E] [NormedSpace ℝ E]
   [CompleteSpace E] [NormedAddCommGroup F] {ρ : Measure (α × Ω)} [IsFiniteMeasure ρ]
-
-include mα
 
 theorem AEStronglyMeasurable.ae_integrable_condKernel_iff {f : α × Ω → F}
     (hf : AEStronglyMeasurable f ρ) :

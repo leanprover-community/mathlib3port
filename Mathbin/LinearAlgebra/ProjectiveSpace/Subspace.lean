@@ -63,16 +63,20 @@ instance : SetLike (Subspace K V) (ℙ K V)
   coe := carrier
   coe_injective' A B := by cases A; cases B; simp
 
+#print Projectivization.Subspace.mem_carrier_iff /-
 @[simp]
 theorem mem_carrier_iff (A : Subspace K V) (x : ℙ K V) : x ∈ A.carrier ↔ x ∈ A :=
   Iff.refl _
 #align projectivization.subspace.mem_carrier_iff Projectivization.Subspace.mem_carrier_iff
+-/
 
+#print Projectivization.Subspace.mem_add /-
 theorem mem_add (T : Subspace K V) (v w : V) (hv : v ≠ 0) (hw : w ≠ 0) (hvw : v + w ≠ 0) :
     Projectivization.mk K v hv ∈ T →
       Projectivization.mk K w hw ∈ T → Projectivization.mk K (v + w) hvw ∈ T :=
   T.mem_add' v w hv hw hvw
 #align projectivization.subspace.mem_add Projectivization.Subspace.mem_add
+-/
 
 #print Projectivization.Subspace.spanCarrier /-
 /-- The span of a set of points in a projective space is defined inductively to be the set of points
@@ -102,6 +106,7 @@ theorem subset_span (S : Set (ℙ K V)) : S ⊆ span S := fun x hx => spanCarrie
 #align projectivization.subspace.subset_span Projectivization.Subspace.subset_span
 -/
 
+#print Projectivization.Subspace.gi /-
 /-- The span of a set of points is a Galois insertion between sets of points of a projective space
 and subspaces of the projective space. -/
 def gi : GaloisInsertion (span : Set (ℙ K V) → Subspace K V) coe
@@ -116,12 +121,15 @@ def gi : GaloisInsertion (span : Set (ℙ K V) → Subspace K V) coe
   le_l_u S := subset_span _
   choice_eq _ _ := rfl
 #align projectivization.subspace.gi Projectivization.Subspace.gi
+-/
 
+#print Projectivization.Subspace.span_coe /-
 /-- The span of a subspace is the subspace. -/
 @[simp]
 theorem span_coe (W : Subspace K V) : span ↑W = W :=
   GaloisInsertion.l_u_eq gi W
 #align projectivization.subspace.span_coe Projectivization.Subspace.span_coe
+-/
 
 #print Projectivization.Subspace.instInf /-
 /-- The infimum of two subspaces exists. -/
@@ -160,30 +168,38 @@ instance subspaceInhabited : Inhabited (Subspace K V) where default := ⊤
 #align projectivization.subspace.subspace_inhabited Projectivization.Subspace.subspaceInhabited
 -/
 
+#print Projectivization.Subspace.span_empty /-
 /-- The span of the empty set is the bottom of the lattice of subspaces. -/
 @[simp]
 theorem span_empty : span (∅ : Set (ℙ K V)) = ⊥ :=
   gi.gc.l_bot
 #align projectivization.subspace.span_empty Projectivization.Subspace.span_empty
+-/
 
+#print Projectivization.Subspace.span_univ /-
 /-- The span of the entire projective space is the top of the lattice of subspaces. -/
 @[simp]
 theorem span_univ : span (Set.univ : Set (ℙ K V)) = ⊤ := by rw [eq_top_iff, SetLike.le_def];
   intro x hx; exact subset_span _ (Set.mem_univ x)
 #align projectivization.subspace.span_univ Projectivization.Subspace.span_univ
+-/
 
+#print Projectivization.Subspace.span_le_subspace_iff /-
 /-- The span of a set of points is contained in a subspace if and only if the set of points is
 contained in the subspace. -/
 theorem span_le_subspace_iff {S : Set (ℙ K V)} {W : Subspace K V} : span S ≤ W ↔ S ⊆ W :=
   gi.gc S W
 #align projectivization.subspace.span_le_subspace_iff Projectivization.Subspace.span_le_subspace_iff
+-/
 
+#print Projectivization.Subspace.monotone_span /-
 /-- If a set of points is a subset of another set of points, then its span will be contained in the
 span of that set. -/
 @[mono]
 theorem monotone_span : Monotone (span : Set (ℙ K V) → Subspace K V) :=
   gi.gc.monotone_l
 #align projectivization.subspace.monotone_span Projectivization.Subspace.monotone_span
+-/
 
 #print Projectivization.Subspace.subset_span_trans /-
 theorem subset_span_trans {S T U : Set (ℙ K V)} (hST : S ⊆ span T) (hTU : T ⊆ span U) :
@@ -192,26 +208,34 @@ theorem subset_span_trans {S T U : Set (ℙ K V)} (hST : S ⊆ span T) (hTU : T 
 #align projectivization.subspace.subset_span_trans Projectivization.Subspace.subset_span_trans
 -/
 
+#print Projectivization.Subspace.span_union /-
 /-- The supremum of two subspaces is equal to the span of their union. -/
 theorem span_union (S T : Set (ℙ K V)) : span (S ∪ T) = span S ⊔ span T :=
   (@gi K V _ _ _).gc.l_sup
 #align projectivization.subspace.span_union Projectivization.Subspace.span_union
+-/
 
+#print Projectivization.Subspace.span_iUnion /-
 /-- The supremum of a collection of subspaces is equal to the span of the union of the
 collection. -/
 theorem span_iUnion {ι} (s : ι → Set (ℙ K V)) : span (⋃ i, s i) = ⨆ i, span (s i) :=
   (@gi K V _ _ _).gc.l_iSup
 #align projectivization.subspace.span_Union Projectivization.Subspace.span_iUnion
+-/
 
+#print Projectivization.Subspace.sup_span /-
 /-- The supremum of a subspace and the span of a set of points is equal to the span of the union of
 the subspace and the set of points. -/
 theorem sup_span {S : Set (ℙ K V)} {W : Subspace K V} : W ⊔ span S = span (W ∪ S) := by
   rw [span_union, span_coe]
 #align projectivization.subspace.sup_span Projectivization.Subspace.sup_span
+-/
 
+#print Projectivization.Subspace.span_sup /-
 theorem span_sup {S : Set (ℙ K V)} {W : Subspace K V} : span S ⊔ W = span (S ∪ W) := by
   rw [span_union, span_coe]
 #align projectivization.subspace.span_sup Projectivization.Subspace.span_sup
+-/
 
 #print Projectivization.Subspace.mem_span /-
 /-- A point in a projective space is contained in the span of a set of points if and only if the
@@ -234,6 +258,7 @@ theorem span_eq_sInf {S : Set (ℙ K V)} : span S = sInf {W | S ⊆ W} :=
 #align projectivization.subspace.span_eq_Inf Projectivization.Subspace.span_eq_sInf
 -/
 
+#print Projectivization.Subspace.span_eq_of_le /-
 /-- If a set of points in projective space is contained in a subspace, and that subspace is
 contained in the span of the set of points, then the span of the set of points is equal to
 the subspace. -/
@@ -241,6 +266,7 @@ theorem span_eq_of_le {S : Set (ℙ K V)} {W : Subspace K V} (hS : S ⊆ W) (hW 
     span S = W :=
   le_antisymm (span_le_subspace_iff.mpr hS) hW
 #align projectivization.subspace.span_eq_of_le Projectivization.Subspace.span_eq_of_le
+-/
 
 #print Projectivization.Subspace.span_eq_span_iff /-
 /-- The spans of two sets of points in a projective space are equal if and only if each set of

@@ -113,21 +113,29 @@ instance OrderDual.noMaxOrder (α : Type _) [LT α] [NoMinOrder α] : NoMaxOrder
 #align order_dual.no_max_order OrderDual.noMaxOrder
 -/
 
+#print noMaxOrder_of_left /-
 instance noMaxOrder_of_left [Preorder α] [Preorder β] [NoMaxOrder α] : NoMaxOrder (α × β) :=
   ⟨fun ⟨a, b⟩ => by obtain ⟨c, h⟩ := exists_gt a; exact ⟨(c, b), Prod.mk_lt_mk_iff_left.2 h⟩⟩
 #align no_max_order_of_left noMaxOrder_of_left
+-/
 
+#print noMaxOrder_of_right /-
 instance noMaxOrder_of_right [Preorder α] [Preorder β] [NoMaxOrder β] : NoMaxOrder (α × β) :=
   ⟨fun ⟨a, b⟩ => by obtain ⟨c, h⟩ := exists_gt b; exact ⟨(a, c), Prod.mk_lt_mk_iff_right.2 h⟩⟩
 #align no_max_order_of_right noMaxOrder_of_right
+-/
 
+#print noMinOrder_of_left /-
 instance noMinOrder_of_left [Preorder α] [Preorder β] [NoMinOrder α] : NoMinOrder (α × β) :=
   ⟨fun ⟨a, b⟩ => by obtain ⟨c, h⟩ := exists_lt a; exact ⟨(c, b), Prod.mk_lt_mk_iff_left.2 h⟩⟩
 #align no_min_order_of_left noMinOrder_of_left
+-/
 
+#print noMinOrder_of_right /-
 instance noMinOrder_of_right [Preorder α] [Preorder β] [NoMinOrder β] : NoMinOrder (α × β) :=
   ⟨fun ⟨a, b⟩ => by obtain ⟨c, h⟩ := exists_lt b; exact ⟨(a, c), Prod.mk_lt_mk_iff_right.2 h⟩⟩
 #align no_min_order_of_right noMinOrder_of_right
+-/
 
 instance [Nonempty ι] [∀ i, Preorder (π i)] [∀ i, NoMaxOrder (π i)] : NoMaxOrder (∀ i, π i) :=
   ⟨fun a => by
@@ -505,61 +513,93 @@ section Prod
 
 variable [Preorder α] [Preorder β] {a a₁ a₂ : α} {b b₁ b₂ : β} {x y : α × β}
 
+#print IsBot.prod_mk /-
 theorem IsBot.prod_mk (ha : IsBot a) (hb : IsBot b) : IsBot (a, b) := fun c => ⟨ha _, hb _⟩
 #align is_bot.prod_mk IsBot.prod_mk
+-/
 
+#print IsTop.prod_mk /-
 theorem IsTop.prod_mk (ha : IsTop a) (hb : IsTop b) : IsTop (a, b) := fun c => ⟨ha _, hb _⟩
 #align is_top.prod_mk IsTop.prod_mk
+-/
 
+#print IsMin.prod_mk /-
 theorem IsMin.prod_mk (ha : IsMin a) (hb : IsMin b) : IsMin (a, b) := fun c hc => ⟨ha hc.1, hb hc.2⟩
 #align is_min.prod_mk IsMin.prod_mk
+-/
 
+#print IsMax.prod_mk /-
 theorem IsMax.prod_mk (ha : IsMax a) (hb : IsMax b) : IsMax (a, b) := fun c hc => ⟨ha hc.1, hb hc.2⟩
 #align is_max.prod_mk IsMax.prod_mk
+-/
 
+#print IsBot.fst /-
 theorem IsBot.fst (hx : IsBot x) : IsBot x.1 := fun c => (hx (c, x.2)).1
 #align is_bot.fst IsBot.fst
+-/
 
+#print IsBot.snd /-
 theorem IsBot.snd (hx : IsBot x) : IsBot x.2 := fun c => (hx (x.1, c)).2
 #align is_bot.snd IsBot.snd
+-/
 
+#print IsTop.fst /-
 theorem IsTop.fst (hx : IsTop x) : IsTop x.1 := fun c => (hx (c, x.2)).1
 #align is_top.fst IsTop.fst
+-/
 
+#print IsTop.snd /-
 theorem IsTop.snd (hx : IsTop x) : IsTop x.2 := fun c => (hx (x.1, c)).2
 #align is_top.snd IsTop.snd
+-/
 
+#print IsMin.fst /-
 theorem IsMin.fst (hx : IsMin x) : IsMin x.1 := fun c hc =>
   (hx <| show (c, x.2) ≤ x from (and_iff_left le_rfl).2 hc).1
 #align is_min.fst IsMin.fst
+-/
 
+#print IsMin.snd /-
 theorem IsMin.snd (hx : IsMin x) : IsMin x.2 := fun c hc =>
   (hx <| show (x.1, c) ≤ x from (and_iff_right le_rfl).2 hc).2
 #align is_min.snd IsMin.snd
+-/
 
+#print IsMax.fst /-
 theorem IsMax.fst (hx : IsMax x) : IsMax x.1 := fun c hc =>
   (hx <| show x ≤ (c, x.2) from (and_iff_left le_rfl).2 hc).1
 #align is_max.fst IsMax.fst
+-/
 
+#print IsMax.snd /-
 theorem IsMax.snd (hx : IsMax x) : IsMax x.2 := fun c hc =>
   (hx <| show x ≤ (x.1, c) from (and_iff_right le_rfl).2 hc).2
 #align is_max.snd IsMax.snd
+-/
 
+#print Prod.isBot_iff /-
 theorem Prod.isBot_iff : IsBot x ↔ IsBot x.1 ∧ IsBot x.2 :=
   ⟨fun hx => ⟨hx.fst, hx.snd⟩, fun h => h.1.prod_mk h.2⟩
 #align prod.is_bot_iff Prod.isBot_iff
+-/
 
+#print Prod.isTop_iff /-
 theorem Prod.isTop_iff : IsTop x ↔ IsTop x.1 ∧ IsTop x.2 :=
   ⟨fun hx => ⟨hx.fst, hx.snd⟩, fun h => h.1.prod_mk h.2⟩
 #align prod.is_top_iff Prod.isTop_iff
+-/
 
+#print Prod.isMin_iff /-
 theorem Prod.isMin_iff : IsMin x ↔ IsMin x.1 ∧ IsMin x.2 :=
   ⟨fun hx => ⟨hx.fst, hx.snd⟩, fun h => h.1.prod_mk h.2⟩
 #align prod.is_min_iff Prod.isMin_iff
+-/
 
+#print Prod.isMax_iff /-
 theorem Prod.isMax_iff : IsMax x ↔ IsMax x.1 ∧ IsMax x.2 :=
   ⟨fun hx => ⟨hx.fst, hx.snd⟩, fun h => h.1.prod_mk h.2⟩
 #align prod.is_max_iff Prod.isMax_iff
+-/
 
 end Prod
 

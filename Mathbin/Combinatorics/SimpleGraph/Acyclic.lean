@@ -88,10 +88,12 @@ theorem isAcyclic_iff_forall_adj_isBridge :
 #align simple_graph.is_acyclic_iff_forall_adj_is_bridge SimpleGraph.isAcyclic_iff_forall_adj_isBridge
 -/
 
+#print SimpleGraph.isAcyclic_iff_forall_edge_isBridge /-
 theorem isAcyclic_iff_forall_edge_isBridge :
     G.IsAcyclic ↔ ∀ ⦃e⦄, e ∈ G.edgeSetEmbedding → G.IsBridge e := by
   simp [is_acyclic_iff_forall_adj_is_bridge, Sym2.forall]
 #align simple_graph.is_acyclic_iff_forall_edge_is_bridge SimpleGraph.isAcyclic_iff_forall_edge_isBridge
+-/
 
 #print SimpleGraph.IsAcyclic.path_unique /-
 theorem IsAcyclic.path_unique {G : SimpleGraph V} (h : G.IsAcyclic) {v w : V} (p q : G.Path v w) :

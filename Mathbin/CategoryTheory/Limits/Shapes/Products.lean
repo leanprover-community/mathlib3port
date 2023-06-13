@@ -171,10 +171,8 @@ abbrev sigmaObj (f : β → C) [HasCoproduct f] :=
 #align category_theory.limits.sigma_obj CategoryTheory.Limits.sigmaObj
 -/
 
--- mathport name: «expr∏ »
 notation "∏ " f:20 => piObj f
 
--- mathport name: «expr∐ »
 notation "∐ " f:20 => sigmaObj f
 
 #print CategoryTheory.Limits.Pi.π /-
@@ -276,20 +274,25 @@ variable {D : Type u₂} [Category.{v₂} D] (G : C ⥤ D)
 
 variable (f : β → C)
 
+#print CategoryTheory.Limits.piComparison /-
 /-- The comparison morphism for the product of `f`. This is an iso iff `G` preserves the product
 of `f`, see `preserves_product.of_iso_comparison`. -/
 def piComparison [HasProduct f] [HasProduct fun b => G.obj (f b)] :
     G.obj (∏ f) ⟶ ∏ fun b => G.obj (f b) :=
   Pi.lift fun b => G.map (Pi.π f b)
 #align category_theory.limits.pi_comparison CategoryTheory.Limits.piComparison
+-/
 
+#print CategoryTheory.Limits.piComparison_comp_π /-
 @[simp, reassoc]
 theorem piComparison_comp_π [HasProduct f] [HasProduct fun b => G.obj (f b)] (b : β) :
     piComparison G f ≫ Pi.π _ b = G.map (Pi.π f b) :=
   limit.lift_π _ (Discrete.mk b)
 #align category_theory.limits.pi_comparison_comp_π CategoryTheory.Limits.piComparison_comp_π
+-/
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `discrete_cases #[] -/
+#print CategoryTheory.Limits.map_lift_piComparison /-
 @[simp, reassoc]
 theorem map_lift_piComparison [HasProduct f] [HasProduct fun b => G.obj (f b)] (P : C)
     (g : ∀ j, P ⟶ f j) : G.map (Pi.lift g) ≫ piComparison G f = Pi.lift fun j => G.map (g j) := by
@@ -298,21 +301,27 @@ theorem map_lift_piComparison [HasProduct f] [HasProduct fun b => G.obj (f b)] (
     "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `discrete_cases #[]";
   simp [← G.map_comp]
 #align category_theory.limits.map_lift_pi_comparison CategoryTheory.Limits.map_lift_piComparison
+-/
 
+#print CategoryTheory.Limits.sigmaComparison /-
 /-- The comparison morphism for the coproduct of `f`. This is an iso iff `G` preserves the coproduct
 of `f`, see `preserves_coproduct.of_iso_comparison`. -/
 def sigmaComparison [HasCoproduct f] [HasCoproduct fun b => G.obj (f b)] :
     (∐ fun b => G.obj (f b)) ⟶ G.obj (∐ f) :=
   Sigma.desc fun b => G.map (Sigma.ι f b)
 #align category_theory.limits.sigma_comparison CategoryTheory.Limits.sigmaComparison
+-/
 
+#print CategoryTheory.Limits.ι_comp_sigmaComparison /-
 @[simp, reassoc]
 theorem ι_comp_sigmaComparison [HasCoproduct f] [HasCoproduct fun b => G.obj (f b)] (b : β) :
     Sigma.ι _ b ≫ sigmaComparison G f = G.map (Sigma.ι f b) :=
   colimit.ι_desc _ (Discrete.mk b)
 #align category_theory.limits.ι_comp_sigma_comparison CategoryTheory.Limits.ι_comp_sigmaComparison
+-/
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `discrete_cases #[] -/
+#print CategoryTheory.Limits.sigmaComparison_map_desc /-
 @[simp, reassoc]
 theorem sigmaComparison_map_desc [HasCoproduct f] [HasCoproduct fun b => G.obj (f b)] (P : C)
     (g : ∀ j, f j ⟶ P) :
@@ -321,6 +330,7 @@ theorem sigmaComparison_map_desc [HasCoproduct f] [HasCoproduct fun b => G.obj (
     "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `discrete_cases #[]";
   simp [← G.map_comp]
 #align category_theory.limits.sigma_comparison_map_desc CategoryTheory.Limits.sigmaComparison_map_desc
+-/
 
 end Comparison
 

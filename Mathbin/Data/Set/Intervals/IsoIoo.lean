@@ -24,6 +24,7 @@ In this file we provide an order isomorphism `order_iso_Ioo_neg_one_one` between
 
 open Set
 
+#print orderIsoIooNegOneOne /-
 /-- In a linear ordered field, the whole field is order isomorphic to the open interval `(-1, 1)`.
 We consider the actual implementation to be a "black box", so it is irreducible.
 -/
@@ -44,4 +45,5 @@ irreducible_def orderIsoIooNegOneOne (k : Type _) [LinearOrderedField k] : k ≃
     have : 0 < 1 - |(x : k)| := sub_pos.2 (abs_lt.2 x.2)
     field_simp [abs_div, this.ne', abs_of_pos this]
 #align order_iso_Ioo_neg_one_one orderIsoIooNegOneOne
+-/
 

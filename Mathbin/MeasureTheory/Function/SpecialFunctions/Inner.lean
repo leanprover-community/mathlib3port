@@ -23,16 +23,18 @@ variable {α : Type _} {𝕜 : Type _} {E : Type _}
 
 variable [IsROrC 𝕜] [NormedAddCommGroup E] [InnerProductSpace 𝕜 E]
 
--- mathport name: «expr⟪ , ⟫»
 local notation "⟪" x ", " y "⟫" => @inner 𝕜 _ _ x y
 
+#print Measurable.inner /-
 @[measurability]
 theorem Measurable.inner {m : MeasurableSpace α} [MeasurableSpace E] [OpensMeasurableSpace E]
     [TopologicalSpace.SecondCountableTopology E] {f g : α → E} (hf : Measurable f)
     (hg : Measurable g) : Measurable fun t => ⟪f t, g t⟫ :=
   Continuous.measurable2 continuous_inner hf hg
 #align measurable.inner Measurable.inner
+-/
 
+#print AEMeasurable.inner /-
 @[measurability]
 theorem AEMeasurable.inner {m : MeasurableSpace α} [MeasurableSpace E] [OpensMeasurableSpace E]
     [TopologicalSpace.SecondCountableTopology E] {μ : MeasureTheory.Measure α} {f g : α → E}
@@ -44,4 +46,5 @@ theorem AEMeasurable.inner {m : MeasurableSpace α} [MeasurableSpace E] [OpensMe
   congr
   exacts [hxf, hxg]
 #align ae_measurable.inner AEMeasurable.inner
+-/
 

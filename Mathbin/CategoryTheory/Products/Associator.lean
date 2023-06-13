@@ -49,6 +49,7 @@ def inverseAssociator : C × D × E ⥤ (C × D) × E
 #align category_theory.prod.inverse_associator CategoryTheory.prod.inverseAssociator
 -/
 
+#print CategoryTheory.prod.associativity /-
 /-- The equivalence of categories expressing associativity of products of categories.
 -/
 def associativity : (C × D) × E ≌ C × D × E :=
@@ -56,6 +57,7 @@ def associativity : (C × D) × E ≌ C × D × E :=
     (NatIso.ofComponents (fun X => eqToIso (by simp)) (by tidy))
     (NatIso.ofComponents (fun X => eqToIso (by simp)) (by tidy))
 #align category_theory.prod.associativity CategoryTheory.prod.associativity
+-/
 
 #print CategoryTheory.prod.associatorIsEquivalence /-
 instance associatorIsEquivalence : IsEquivalence (associator C D E) :=

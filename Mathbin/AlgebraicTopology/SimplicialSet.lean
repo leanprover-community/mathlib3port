@@ -65,7 +65,6 @@ def standardSimplex : SimplexCategory ⥤ SSet :=
 #align sSet.standard_simplex SSet.standardSimplex
 -/
 
--- mathport name: standard_simplex
 scoped[Simplicial] notation "Δ[" n "]" => SSet.standardSimplex.obj (SimplexCategory.mk n)
 
 instance : Inhabited SSet :=
@@ -73,11 +72,13 @@ instance : Inhabited SSet :=
 
 section
 
+#print SSet.asOrderHom /-
 /-- The `m`-simplices of the `n`-th standard simplex are
 the monotone maps from `fin (m+1)` to `fin (n+1)`. -/
 def asOrderHom {n} {m} (α : Δ[n].obj m) : OrderHom (Fin (m.unop.len + 1)) (Fin (n + 1)) :=
   α.toOrderHom
 #align sSet.as_order_hom SSet.asOrderHom
+-/
 
 end
 
@@ -93,12 +94,13 @@ def boundary (n : ℕ) : SSet
 #align sSet.boundary SSet.boundary
 -/
 
--- mathport name: sSet.boundary
 scoped[Simplicial] notation "∂Δ[" n "]" => SSet.boundary n
 
+#print SSet.boundaryInclusion /-
 /-- The inclusion of the boundary of the `n`-th standard simplex into that standard simplex. -/
 def boundaryInclusion (n : ℕ) : ∂Δ[n] ⟶ Δ[n] where app m (α : { α : Δ[n].obj m // _ }) := α
 #align sSet.boundary_inclusion SSet.boundaryInclusion
+-/
 
 #print SSet.horn /-
 /-- `horn n i` (or `Λ[n, i]`) is the `i`-th horn of the `n`-th standard simplex, where `i : n`.
@@ -118,13 +120,14 @@ def horn (n : ℕ) (i : Fin (n + 1)) : SSet
 #align sSet.horn SSet.horn
 -/
 
--- mathport name: sSet.horn
 scoped[Simplicial] notation "Λ[" n ", " i "]" => SSet.horn (n : ℕ) i
 
+#print SSet.hornInclusion /-
 /-- The inclusion of the `i`-th horn of the `n`-th standard simplex into that standard simplex. -/
 def hornInclusion (n : ℕ) (i : Fin (n + 1)) : Λ[n, i] ⟶ Δ[n]
     where app m (α : { α : Δ[n].obj m // _ }) := α
 #align sSet.horn_inclusion SSet.hornInclusion
+-/
 
 section Examples
 

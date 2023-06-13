@@ -36,11 +36,13 @@ end ContinuousLinearMap
 
 namespace ContinuousLinearEquiv
 
+#print ContinuousLinearEquiv.det_coe_symm /-
 @[simp]
 theorem det_coe_symm {R : Type _} [Field R] {M : Type _} [TopologicalSpace M] [AddCommGroup M]
     [Module R M] (A : M ≃L[R] M) : (A.symm : M →L[R] M).det = (A : M →L[R] M).det⁻¹ :=
   LinearEquiv.det_coe_symm A.toLinearEquiv
 #align continuous_linear_equiv.det_coe_symm ContinuousLinearEquiv.det_coe_symm
+-/
 
 end ContinuousLinearEquiv
 

@@ -30,6 +30,7 @@ open TopCat
 
 namespace TopCat
 
+#print TopCat.epi_iff_surjective /-
 theorem epi_iff_surjective {X Y : TopCat.{u}} (f : X ⟶ Y) : Epi f ↔ Function.Surjective f :=
   by
   suffices epi f ↔ epi ((forget TopCat).map f) by rw [this, CategoryTheory.epi_iff_surjective]; rfl
@@ -37,7 +38,9 @@ theorem epi_iff_surjective {X Y : TopCat.{u}} (f : X ⟶ Y) : Epi f ↔ Function
   · intro; infer_instance
   · apply functor.epi_of_epi_map
 #align Top.epi_iff_surjective TopCat.epi_iff_surjective
+-/
 
+#print TopCat.mono_iff_injective /-
 theorem mono_iff_injective {X Y : TopCat.{u}} (f : X ⟶ Y) : Mono f ↔ Function.Injective f :=
   by
   suffices mono f ↔ mono ((forget TopCat).map f) by rw [this, CategoryTheory.mono_iff_injective];
@@ -46,6 +49,7 @@ theorem mono_iff_injective {X Y : TopCat.{u}} (f : X ⟶ Y) : Mono f ↔ Functio
   · intro; infer_instance
   · apply functor.mono_of_mono_map
 #align Top.mono_iff_injective TopCat.mono_iff_injective
+-/
 
 end TopCat
 

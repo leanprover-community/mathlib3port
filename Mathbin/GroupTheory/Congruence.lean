@@ -352,6 +352,7 @@ protected def hrecOn₂ {cM : Con M} {cN : Con N} {φ : cM.Quotient → cN.Quoti
 #align add_con.hrec_on₂ AddCon.hrecOn₂
 -/
 
+#print Con.hrec_on₂_coe /-
 @[simp, to_additive]
 theorem hrec_on₂_coe {cM : Con M} {cN : Con N} {φ : cM.Quotient → cN.Quotient → Sort _} (a : M)
     (b : N) (f : ∀ (x : M) (y : N), φ x y)
@@ -360,6 +361,7 @@ theorem hrec_on₂_coe {cM : Con M} {cN : Con N} {φ : cM.Quotient → cN.Quotie
   rfl
 #align con.hrec_on₂_coe Con.hrec_on₂_coe
 #align add_con.hrec_on₂_coe AddCon.hrec_on₂_coe
+-/
 
 variable {c}
 
@@ -488,6 +490,7 @@ instance : InfSet (Con M) :=
           c.trans (h1 c hc) <| h2 c hc⟩⟩,
       fun _ _ _ _ h1 h2 c hc => c.mul (h1 c hc) <| h2 c hc⟩⟩
 
+#print Con.sInf_toSetoid /-
 /-- The infimum of a set of congruence relations is the same as the infimum of the set's image
     under the map to the underlying equivalence relation. -/
 @[to_additive
@@ -497,7 +500,9 @@ theorem sInf_toSetoid (S : Set (Con M)) : (sInf S).toSetoid = sInf (toSetoid '' 
     ⟨fun h r ⟨c, hS, hr⟩ => by rw [← hr] <;> exact h c hS, fun h c hS => h c.toSetoid ⟨c, hS, rfl⟩⟩
 #align con.Inf_to_setoid Con.sInf_toSetoid
 #align add_con.Inf_to_setoid AddCon.sInf_toSetoid
+-/
 
+#print Con.sInf_def /-
 /-- The infimum of a set of congruence relations is the same as the infimum of the set's image
     under the map to the underlying binary relation. -/
 @[to_additive
@@ -506,6 +511,7 @@ theorem sInf_def (S : Set (Con M)) : ⇑(sInf S) = sInf (@Set.image (Con M) (M �
   by ext; simp only [sInf_image, iInf_apply, iInf_Prop_eq]; rfl
 #align con.Inf_def Con.sInf_def
 #align add_con.Inf_def AddCon.sInf_def
+-/
 
 @[to_additive]
 instance : PartialOrder (Con M) where
@@ -535,6 +541,7 @@ instance : CompleteLattice (Con M) :=
     bot := { Setoid.completeLattice.bot with mul' := fun _ _ _ _ h1 h2 => h1 ▸ h2 ▸ rfl }
     bot_le := fun c x y h => h ▸ c.refl x }
 
+#print Con.inf_def /-
 /-- The infimum of two congruence relations equals the infimum of the underlying binary
     operations. -/
 @[to_additive
@@ -543,14 +550,18 @@ theorem inf_def {c d : Con M} : (c ⊓ d).R = c.R ⊓ d.R :=
   rfl
 #align con.inf_def Con.inf_def
 #align add_con.inf_def AddCon.inf_def
+-/
 
+#print Con.inf_iff_and /-
 /-- Definition of the infimum of two congruence relations. -/
 @[to_additive "Definition of the infimum of two additive congruence relations."]
 theorem inf_iff_and {c d : Con M} {x y} : (c ⊓ d) x y ↔ c x y ∧ d x y :=
   Iff.rfl
 #align con.inf_iff_and Con.inf_iff_and
 #align add_con.inf_iff_and AddCon.inf_iff_and
+-/
 
+#print Con.conGen_eq /-
 /-- The inductively defined smallest congruence relation containing a binary relation `r` equals
     the infimum of the set of congruence relations containing `r`. -/
 @[to_additive add_con_gen_eq
@@ -563,6 +574,7 @@ theorem conGen_eq (r : M → M → Prop) : conGen r = sInf {s : Con M | ∀ x y,
     (sInf_le fun _ _ => ConGen.Rel.of _ _)
 #align con.con_gen_eq Con.conGen_eq
 #align add_con.add_con_gen_eq AddCon.addConGen_eq
+-/
 
 #print Con.conGen_le /-
 /-- The smallest congruence relation containing a binary relation `r` is contained in any
@@ -609,6 +621,7 @@ theorem conGen_idem (r : M → M → Prop) : conGen (conGen r) = conGen r :=
 #align add_con.add_con_gen_idem AddCon.addConGen_idem
 -/
 
+#print Con.sup_eq_conGen /-
 /-- The supremum of congruence relations `c, d` equals the smallest congruence relation containing
     the binary relation '`x` is related to `y` by `c` or `d`'. -/
 @[to_additive sup_eq_add_con_gen
@@ -620,7 +633,9 @@ theorem sup_eq_conGen (c d : Con M) : c ⊔ d = conGen fun x y => c x y ∨ d x 
   simp only [le_def, or_imp, ← forall_and]
 #align con.sup_eq_con_gen Con.sup_eq_conGen
 #align add_con.sup_eq_add_con_gen AddCon.sup_eq_addConGen
+-/
 
+#print Con.sup_def /-
 /-- The supremum of two congruence relations equals the smallest congruence relation containing
     the supremum of the underlying binary operations. -/
 @[to_additive
@@ -628,7 +643,9 @@ theorem sup_eq_conGen (c d : Con M) : c ⊔ d = conGen fun x y => c x y ∨ d x 
 theorem sup_def {c d : Con M} : c ⊔ d = conGen (c.R ⊔ d.R) := by rw [sup_eq_con_gen] <;> rfl
 #align con.sup_def Con.sup_def
 #align add_con.sup_def AddCon.sup_def
+-/
 
+#print Con.sSup_eq_conGen /-
 /-- The supremum of a set of congruence relations `S` equals the smallest congruence relation
     containing the binary relation 'there exists `c ∈ S` such that `x` is related to `y` by
     `c`'. -/
@@ -642,7 +659,9 @@ theorem sSup_eq_conGen (S : Set (Con M)) : sSup S = conGen fun x y => ∃ c : Co
   exact ⟨fun h _ _ ⟨r, hr⟩ => h hr.1 hr.2, fun h r hS _ _ hr => h _ _ ⟨r, hS, hr⟩⟩
 #align con.Sup_eq_con_gen Con.sSup_eq_conGen
 #align add_con.Sup_eq_add_con_gen AddCon.sSup_eq_addConGen
+-/
 
+#print Con.sSup_def /-
 /-- The supremum of a set of congruence relations is the same as the smallest congruence relation
     containing the supremum of the set's image under the map to the underlying binary relation. -/
 @[to_additive
@@ -655,9 +674,11 @@ theorem sSup_def {S : Set (Con M)} :
   simp only [sSup_image, iSup_apply, iSup_Prop_eq, exists_prop, rel_eq_coe]
 #align con.Sup_def Con.sSup_def
 #align add_con.Sup_def AddCon.sSup_def
+-/
 
 variable (M)
 
+#print Con.gi /-
 /-- There is a Galois insertion of congruence relations on a type with a multiplication `M` into
     binary relations on `M`. -/
 @[to_additive
@@ -670,6 +691,7 @@ protected def gi : @GaloisInsertion (M → M → Prop) (Con M) _ _ conGen coeFn
   choice_eq _ _ := rfl
 #align con.gi Con.gi
 #align add_con.gi AddCon.gi
+-/
 
 variable {M} (c)
 
@@ -700,6 +722,7 @@ def mapOfSurjective (f : M → N) (H : ∀ x y, f (x * y) = f x * f y) (h : mulK
 #align add_con.map_of_surjective AddCon.mapOfSurjective
 -/
 
+#print Con.mapOfSurjective_eq_mapGen /-
 /-- A specialization of 'the smallest congruence relation containing a congruence relation `c`
     equals `c`'. -/
 @[to_additive
@@ -709,6 +732,7 @@ theorem mapOfSurjective_eq_mapGen {c : Con M} {f : M → N} (H : ∀ x y, f (x *
   rw [← con_gen_of_con (c.map_of_surjective f H h hf)] <;> rfl
 #align con.map_of_surjective_eq_map_gen Con.mapOfSurjective_eq_mapGen
 #align add_con.map_of_surjective_eq_map_gen AddCon.mapOfSurjective_eq_mapGen
+-/
 
 #print Con.comap /-
 /-- Given types with multiplications `M, N` and a congruence relation `c` on `N`, a
@@ -785,6 +809,7 @@ section MulOneClass
 
 variable {M} [MulOneClass M] [MulOneClass N] [MulOneClass P] (c : Con M)
 
+#print Con.mulOneClass /-
 /-- The quotient of a monoid by a congruence relation is a monoid. -/
 @[to_additive
       "The quotient of an `add_monoid` by an additive congruence relation is\nan `add_monoid`."]
@@ -796,9 +821,11 @@ instance mulOneClass : MulOneClass c.Quotient
   one_mul x := Quotient.inductionOn' x fun _ => congr_arg (coe : M → c.Quotient) <| one_mul _
 #align con.mul_one_class Con.mulOneClass
 #align add_con.add_zero_class AddCon.addZeroClass
+-/
 
 variable {c}
 
+#print Con.coe_one /-
 /-- The 1 of the quotient of a monoid by a congruence relation is the equivalence class of the
     monoid's 1. -/
 @[simp,
@@ -808,9 +835,11 @@ theorem coe_one : ((1 : M) : c.Quotient) = 1 :=
   rfl
 #align con.coe_one Con.coe_one
 #align add_con.coe_zero AddCon.coe_zero
+-/
 
 variable (M c)
 
+#print Con.submonoid /-
 /-- The submonoid of `M × M` defined by a congruence relation on a monoid `M`. -/
 @[to_additive
       "The `add_submonoid` of `M × M` defined by an additive congruence\nrelation on an `add_monoid` `M`."]
@@ -821,9 +850,11 @@ protected def submonoid : Submonoid (M × M)
   mul_mem' _ _ := c.mul
 #align con.submonoid Con.submonoid
 #align add_con.add_submonoid AddCon.addSubmonoid
+-/
 
 variable {M c}
 
+#print Con.ofSubmonoid /-
 /-- The congruence relation on a monoid `M` from a submonoid of `M × M` for which membership
     is an equivalence relation. -/
 @[to_additive
@@ -835,7 +866,9 @@ def ofSubmonoid (N : Submonoid (M × M)) (H : Equivalence fun x y => (x, y) ∈ 
   mul' _ _ _ _ := N.mul_mem
 #align con.of_submonoid Con.ofSubmonoid
 #align add_con.of_add_submonoid AddCon.ofAddSubmonoid
+-/
 
+#print Con.toSubmonoid /-
 /-- Coercion from a congruence relation `c` on a monoid `M` to the submonoid of `M × M` whose
     elements are `(x, y)` such that `x` is related to `y` by `c`. -/
 @[to_additive
@@ -844,32 +877,42 @@ instance toSubmonoid : Coe (Con M) (Submonoid (M × M)) :=
   ⟨fun c => c.Submonoid M⟩
 #align con.to_submonoid Con.toSubmonoid
 #align add_con.to_add_submonoid AddCon.toAddSubmonoid
+-/
 
+#print Con.mem_coe /-
 @[to_additive]
 theorem mem_coe {c : Con M} {x y} : (x, y) ∈ (↑c : Submonoid (M × M)) ↔ (x, y) ∈ c :=
   Iff.rfl
 #align con.mem_coe Con.mem_coe
 #align add_con.mem_coe AddCon.mem_coe
+-/
 
+#print Con.to_submonoid_inj /-
 @[to_additive]
 theorem to_submonoid_inj (c d : Con M) (H : (c : Submonoid (M × M)) = d) : c = d :=
   ext fun x y => show (x, y) ∈ (c : Submonoid (M × M)) ↔ (x, y) ∈ ↑d by rw [H]
 #align con.to_submonoid_inj Con.to_submonoid_inj
 #align add_con.to_add_submonoid_inj AddCon.to_addSubmonoid_inj
+-/
 
+#print Con.le_iff /-
 @[to_additive]
 theorem le_iff {c d : Con M} : c ≤ d ↔ (c : Submonoid (M × M)) ≤ d :=
   ⟨fun h x H => h H, fun h x y hc => h <| show (x, y) ∈ c from hc⟩
 #align con.le_iff Con.le_iff
 #align add_con.le_iff AddCon.le_iff
+-/
 
+#print Con.ker /-
 /-- The kernel of a monoid homomorphism as a congruence relation. -/
 @[to_additive "The kernel of an `add_monoid` homomorphism as an additive congruence relation."]
 def ker (f : M →* P) : Con M :=
   mulKer f f.3
 #align con.ker Con.ker
 #align add_con.ker AddCon.ker
+-/
 
+#print Con.ker_rel /-
 /-- The definition of the congruence relation defined by a monoid homomorphism's kernel. -/
 @[simp,
   to_additive
@@ -878,7 +921,9 @@ theorem ker_rel (f : M →* P) {x y} : ker f x y ↔ f x = f y :=
   Iff.rfl
 #align con.ker_rel Con.ker_rel
 #align add_con.ker_rel AddCon.ker_rel
+-/
 
+#print Con.Quotient.inhabited /-
 /-- There exists an element of the quotient of a monoid by a congruence relation (namely 1). -/
 @[to_additive
       "There exists an element of the quotient of an `add_monoid` by a congruence relation\n(namely 0)."]
@@ -886,9 +931,11 @@ instance Quotient.inhabited : Inhabited c.Quotient :=
   ⟨((1 : M) : c.Quotient)⟩
 #align con.quotient.inhabited Con.Quotient.inhabited
 #align add_con.quotient.inhabited AddCon.Quotient.inhabited
+-/
 
 variable (c)
 
+#print Con.mk' /-
 /-- The natural homomorphism from a monoid to its quotient by a congruence relation. -/
 @[to_additive
       "The natural homomorphism from an `add_monoid` to its quotient by an additive\ncongruence relation."]
@@ -896,9 +943,11 @@ def mk' : M →* c.Quotient :=
   ⟨coe, rfl, fun _ _ => rfl⟩
 #align con.mk' Con.mk'
 #align add_con.mk' AddCon.mk'
+-/
 
 variable (x y : M)
 
+#print Con.mk'_ker /-
 /-- The kernel of the natural homomorphism from a monoid to its quotient by a congruence
     relation `c` equals `c`. -/
 @[simp,
@@ -908,9 +957,11 @@ theorem mk'_ker : ker c.mk' = c :=
   ext fun _ _ => c.Eq
 #align con.mk'_ker Con.mk'_ker
 #align add_con.mk'_ker AddCon.mk'_ker
+-/
 
 variable {c}
 
+#print Con.mk'_surjective /-
 /-- The natural homomorphism from a monoid to its quotient by a congruence relation is
     surjective. -/
 @[to_additive
@@ -919,19 +970,25 @@ theorem mk'_surjective : Surjective c.mk' :=
   Quotient.surjective_Quotient_mk''
 #align con.mk'_surjective Con.mk'_surjective
 #align add_con.mk'_surjective AddCon.mk'_surjective
+-/
 
+#print Con.coe_mk' /-
 @[simp, to_additive]
 theorem coe_mk' : (c.mk' : M → c.Quotient) = coe :=
   rfl
 #align con.coe_mk' Con.coe_mk'
 #align add_con.coe_mk' AddCon.coe_mk'
+-/
 
+#print Con.mrange_mk' /-
 @[simp, to_additive]
 theorem mrange_mk' : c.mk'.mrange = ⊤ :=
   MonoidHom.mrange_top_iff_surjective.2 mk'_surjective
 #align con.mrange_mk' Con.mrange_mk'
 #align add_con.mrange_mk' AddCon.mrange_mk'
+-/
 
+#print Con.ker_apply_eq_preimage /-
 /-- The elements related to `x ∈ M`, `M` a monoid, by the kernel of a monoid homomorphism are
     those in the preimage of `f(x)` under `f`. -/
 @[to_additive
@@ -942,7 +999,9 @@ theorem ker_apply_eq_preimage {f : M →* P} (x) : (ker f) x = f ⁻¹' {f x} :=
       (Set.mem_singleton_iff.1 <| Set.mem_preimage.1 h).symm⟩
 #align con.ker_apply_eq_preimage Con.ker_apply_eq_preimage
 #align add_con.ker_apply_eq_preimage AddCon.ker_apply_eq_preimage
+-/
 
+#print Con.comap_eq /-
 /-- Given a monoid homomorphism `f : N → M` and a congruence relation `c` on `M`, the congruence
     relation induced on `N` by `f` equals the kernel of `c`'s quotient homomorphism composed with
     `f`. -/
@@ -952,9 +1011,11 @@ theorem comap_eq {f : N →* M} : comap f f.map_mul c = ker (c.mk'.comp f) :=
   ext fun x y => show c _ _ ↔ c.mk' _ = c.mk' _ by rw [← c.eq] <;> rfl
 #align con.comap_eq Con.comap_eq
 #align add_con.comap_eq AddCon.comap_eq
+-/
 
 variable (c) (f : M →* P)
 
+#print Con.lift /-
 /-- The homomorphism on the quotient of a monoid by a congruence relation `c` induced by a
     homomorphism constant on `c`'s equivalence classes. -/
 @[to_additive
@@ -966,9 +1027,11 @@ def lift (H : c ≤ ker f) : c.Quotient →* P
   map_mul' x y := Con.induction_on₂ x y fun m n => f.map_mul m n ▸ rfl
 #align con.lift Con.lift
 #align add_con.lift AddCon.lift
+-/
 
 variable {c f}
 
+#print Con.lift_mk' /-
 /-- The diagram describing the universal property for quotients of monoids commutes. -/
 @[to_additive
       "The diagram describing the universal property for quotients of `add_monoid`s\ncommutes."]
@@ -976,7 +1039,9 @@ theorem lift_mk' (H : c ≤ ker f) (x) : c.lift f H (c.mk' x) = f x :=
   rfl
 #align con.lift_mk' Con.lift_mk'
 #align add_con.lift_mk' AddCon.lift_mk'
+-/
 
+#print Con.lift_coe /-
 /-- The diagram describing the universal property for quotients of monoids commutes. -/
 @[simp,
   to_additive
@@ -985,7 +1050,9 @@ theorem lift_coe (H : c ≤ ker f) (x : M) : c.lift f H x = f x :=
   rfl
 #align con.lift_coe Con.lift_coe
 #align add_con.lift_coe AddCon.lift_coe
+-/
 
+#print Con.lift_comp_mk' /-
 /-- The diagram describing the universal property for quotients of monoids commutes. -/
 @[simp,
   to_additive
@@ -993,7 +1060,9 @@ theorem lift_coe (H : c ≤ ker f) (x : M) : c.lift f H x = f x :=
 theorem lift_comp_mk' (H : c ≤ ker f) : (c.lift f H).comp c.mk' = f := by ext <;> rfl
 #align con.lift_comp_mk' Con.lift_comp_mk'
 #align add_con.lift_comp_mk' AddCon.lift_comp_mk'
+-/
 
+#print Con.lift_apply_mk' /-
 /-- Given a homomorphism `f` from the quotient of a monoid by a congruence relation, `f` equals the
     homomorphism on the quotient induced by `f` composed with the natural map from the monoid to
     the quotient. -/
@@ -1005,7 +1074,9 @@ theorem lift_apply_mk' (f : c.Quotient →* P) :
   ext <;> rcases x with ⟨⟩ <;> rfl
 #align con.lift_apply_mk' Con.lift_apply_mk'
 #align add_con.lift_apply_mk' AddCon.lift_apply_mk'
+-/
 
+#print Con.lift_funext /-
 /-- Homomorphisms on the quotient of a monoid by a congruence relation are equal if they
     are equal on elements that are coercions from the monoid. -/
 @[to_additive
@@ -1017,7 +1088,9 @@ theorem lift_funext (f g : c.Quotient →* P) (h : ∀ a : M, f a = g a) : f = g
   exact MonoidHom.ext_iff.2 h
 #align con.lift_funext Con.lift_funext
 #align add_con.lift_funext AddCon.lift_funext
+-/
 
+#print Con.lift_unique /-
 /-- The uniqueness part of the universal property for quotients of monoids. -/
 @[to_additive "The uniqueness part of the universal property for quotients of `add_monoid`s."]
 theorem lift_unique (H : c ≤ ker f) (g : c.Quotient →* P) (Hg : g.comp c.mk' = f) :
@@ -1025,7 +1098,9 @@ theorem lift_unique (H : c ≤ ker f) (g : c.Quotient →* P) (Hg : g.comp c.mk'
   lift_funext g (c.lift f H) fun x => by subst f; rfl
 #align con.lift_unique Con.lift_unique
 #align add_con.lift_unique AddCon.lift_unique
+-/
 
+#print Con.lift_range /-
 /-- Given a congruence relation `c` on a monoid and a homomorphism `f` constant on `c`'s
     equivalence classes, `f` has the same image as the homomorphism that `f` induces on the
     quotient. -/
@@ -1035,7 +1110,9 @@ theorem lift_range (H : c ≤ ker f) : (c.lift f H).mrange = f.mrange :=
   Submonoid.ext fun x => ⟨by rintro ⟨⟨y⟩, hy⟩ <;> exact ⟨y, hy⟩, fun ⟨y, hy⟩ => ⟨↑y, hy⟩⟩
 #align con.lift_range Con.lift_range
 #align add_con.lift_range AddCon.lift_range
+-/
 
+#print Con.lift_surjective_of_surjective /-
 /-- Surjective monoid homomorphisms constant on a congruence relation `c`'s equivalence classes
     induce a surjective homomorphism on `c`'s quotient. -/
 @[to_additive
@@ -1044,9 +1121,11 @@ theorem lift_surjective_of_surjective (h : c ≤ ker f) (hf : Surjective f) :
     Surjective (c.lift f h) := fun y => Exists.elim (hf y) fun w hw => ⟨w, (lift_mk' h w).symm ▸ hw⟩
 #align con.lift_surjective_of_surjective Con.lift_surjective_of_surjective
 #align add_con.lift_surjective_of_surjective AddCon.lift_surjective_of_surjective
+-/
 
 variable (c f)
 
+#print Con.ker_eq_lift_of_injective /-
 /-- Given a monoid homomorphism `f` from `M` to `P`, the kernel of `f` is the unique congruence
     relation on `M` whose induced map from the quotient of `M` to `P` is injective. -/
 @[to_additive
@@ -1055,6 +1134,7 @@ theorem ker_eq_lift_of_injective (H : c ≤ ker f) (h : Injective (c.lift f H)) 
   toSetoid_inj <| ker_eq_lift_of_injective f H h
 #align con.ker_eq_lift_of_injective Con.ker_eq_lift_of_injective
 #align add_con.ker_eq_lift_of_injective AddCon.ker_eq_lift_of_injective
+-/
 
 variable {c}
 
@@ -1070,6 +1150,7 @@ def kerLift : (ker f).Quotient →* P :=
 
 variable {f}
 
+#print Con.kerLift_mk /-
 /-- The diagram described by the universal property for quotients of monoids, when the congruence
     relation is the kernel of the homomorphism, commutes. -/
 @[simp,
@@ -1079,6 +1160,7 @@ theorem kerLift_mk (x : M) : kerLift f x = f x :=
   rfl
 #align con.ker_lift_mk Con.kerLift_mk
 #align add_con.ker_lift_mk AddCon.kerLift_mk
+-/
 
 #print Con.kerLift_range_eq /-
 /-- Given a monoid homomorphism `f`, the induced homomorphism on the quotient by `f`'s kernel has
@@ -1092,6 +1174,7 @@ theorem kerLift_range_eq : (kerLift f).mrange = f.mrange :=
 #align add_con.ker_lift_range_eq AddCon.kerLift_range_eq
 -/
 
+#print Con.kerLift_injective /-
 /-- A monoid homomorphism `f` induces an injective homomorphism on the quotient by `f`'s kernel. -/
 @[to_additive
       "An `add_monoid` homomorphism `f` induces an injective homomorphism on the quotient\nby `f`'s kernel."]
@@ -1099,7 +1182,9 @@ theorem kerLift_injective (f : M →* P) : Injective (kerLift f) := fun x y =>
   Quotient.inductionOn₂' x y fun _ _ => (ker f).Eq.2
 #align con.ker_lift_injective Con.kerLift_injective
 #align add_con.ker_lift_injective AddCon.kerLift_injective
+-/
 
+#print Con.map /-
 /-- Given congruence relations `c, d` on a monoid such that `d` contains `c`, `d`'s quotient
     map induces a homomorphism from the quotient by `c` to the quotient by `d`. -/
 @[to_additive
@@ -1108,7 +1193,9 @@ def map (c d : Con M) (h : c ≤ d) : c.Quotient →* d.Quotient :=
   c.lift d.mk' fun x y hc => show (ker d.mk') x y from (mk'_ker d).symm ▸ h hc
 #align con.map Con.map
 #align add_con.map AddCon.map
+-/
 
+#print Con.map_apply /-
 /-- Given congruence relations `c, d` on a monoid such that `d` contains `c`, the definition of
     the homomorphism from the quotient by `c` to the quotient by `d` induced by `d`'s quotient
     map. -/
@@ -1119,9 +1206,11 @@ theorem map_apply {c d : Con M} (h : c ≤ d) (x) :
   rfl
 #align con.map_apply Con.map_apply
 #align add_con.map_apply AddCon.map_apply
+-/
 
 variable (c)
 
+#print Con.quotientKerEquivRange /-
 /-- The first isomorphism theorem for monoids. -/
 @[to_additive "The first isomorphism theorem for `add_monoid`s."]
 noncomputable def quotientKerEquivRange (f : M →* P) : (ker f).Quotient ≃* f.mrange :=
@@ -1137,7 +1226,9 @@ noncomputable def quotientKerEquivRange (f : M →* P) : (ker f).Quotient ≃* f
     map_mul' := MonoidHom.map_mul _ }
 #align con.quotient_ker_equiv_range Con.quotientKerEquivRange
 #align add_con.quotient_ker_equiv_range AddCon.quotientKerEquivRange
+-/
 
+#print Con.quotientKerEquivOfRightInverse /-
 /-- The first isomorphism theorem for monoids in the case of a homomorphism with right inverse. -/
 @[to_additive
       "The first isomorphism theorem for `add_monoid`s in the case of a homomorphism\nwith right inverse.",
@@ -1151,7 +1242,9 @@ def quotientKerEquivOfRightInverse (f : M →* P) (g : P → M) (hf : Function.R
     right_inv := hf }
 #align con.quotient_ker_equiv_of_right_inverse Con.quotientKerEquivOfRightInverse
 #align add_con.quotient_ker_equiv_of_right_inverse AddCon.quotientKerEquivOfRightInverse
+-/
 
+#print Con.quotientKerEquivOfSurjective /-
 /-- The first isomorphism theorem for monoids in the case of a surjective homomorphism.
 
 For a `computable` version, see `con.quotient_ker_equiv_of_right_inverse`.
@@ -1163,7 +1256,9 @@ noncomputable def quotientKerEquivOfSurjective (f : M →* P) (hf : Surjective f
   quotientKerEquivOfRightInverse _ _ hf.HasRightInverse.choose_spec
 #align con.quotient_ker_equiv_of_surjective Con.quotientKerEquivOfSurjective
 #align add_con.quotient_ker_equiv_of_surjective AddCon.quotientKerEquivOfSurjective
+-/
 
+#print Con.comapQuotientEquiv /-
 /-- The second isomorphism theorem for monoids. -/
 @[to_additive "The second isomorphism theorem for `add_monoid`s."]
 noncomputable def comapQuotientEquiv (f : N →* M) :
@@ -1171,7 +1266,9 @@ noncomputable def comapQuotientEquiv (f : N →* M) :
   (Con.congr comap_eq).trans <| quotientKerEquivRange <| c.mk'.comp f
 #align con.comap_quotient_equiv Con.comapQuotientEquiv
 #align add_con.comap_quotient_equiv AddCon.comapQuotientEquiv
+-/
 
+#print Con.quotientQuotientEquivQuotient /-
 /-- The third isomorphism theorem for monoids. -/
 @[to_additive "The third isomorphism theorem for `add_monoid`s."]
 def quotientQuotientEquivQuotient (c d : Con M) (h : c ≤ d) :
@@ -1183,11 +1280,13 @@ def quotientQuotientEquivQuotient (c d : Con M) (h : c ≤ d) :
           show _ = d.mk' a * d.mk' b by rw [← d.mk'.map_mul] <;> rfl }
 #align con.quotient_quotient_equiv_quotient Con.quotientQuotientEquivQuotient
 #align add_con.quotient_quotient_equiv_quotient AddCon.quotientQuotientEquivQuotient
+-/
 
 end MulOneClass
 
 section Monoids
 
+#print Con.pow /-
 /-- Multiplicative congruence relations preserve natural powers. -/
 @[to_additive AddCon.nsmul "Additive congruence relations preserve natural scaling."]
 protected theorem pow {M : Type _} [Monoid M] (c : Con M) :
@@ -1196,26 +1295,32 @@ protected theorem pow {M : Type _} [Monoid M] (c : Con M) :
   | Nat.succ n, w, x, h => by simpa [pow_succ] using c.mul h (pow n h)
 #align con.pow Con.pow
 #align add_con.nsmul AddCon.nsmul
+-/
 
 @[to_additive]
 instance {M : Type _} [MulOneClass M] (c : Con M) : One c.Quotient
     where one := ((1 : M) : c.Quotient)
 
+#print Con.smul /-
 @[to_additive]
 theorem smul {α M : Type _} [MulOneClass M] [SMul α M] [IsScalarTower α M M] (c : Con M) (a : α)
     {w x : M} (h : c w x) : c (a • w) (a • x) := by
   simpa only [smul_one_mul] using c.mul (c.refl' (a • 1 : M)) h
 #align con.smul Con.smul
 #align add_con.vadd AddCon.vadd
+-/
 
+#print AddCon.Quotient.nsmul /-
 instance AddCon.Quotient.nsmul {M : Type _} [AddMonoid M] (c : AddCon M) : SMul ℕ c.Quotient
     where smul n := Quotient.map' ((· • ·) n) fun x y => c.nsmul n
 #align add_con.quotient.has_nsmul AddCon.Quotient.nsmul
+-/
 
 @[to_additive AddCon.Quotient.nsmul]
 instance {M : Type _} [Monoid M] (c : Con M) : Pow c.Quotient ℕ
     where pow x n := Quotient.map' (fun x => x ^ n) (fun x y => c.pow n) x
 
+#print Con.semigroup /-
 /-- The quotient of a semigroup by a congruence relation is a semigroup. -/
 @[to_additive
       "The quotient of an `add_semigroup` by an additive congruence relation is\nan `add_semigroup`."]
@@ -1223,7 +1328,9 @@ instance semigroup {M : Type _} [Semigroup M] (c : Con M) : Semigroup c.Quotient
   Function.Surjective.semigroup _ Quotient.surjective_Quotient_mk'' fun _ _ => rfl
 #align con.semigroup Con.semigroup
 #align add_con.add_semigroup AddCon.addSemigroup
+-/
 
+#print Con.commSemigroup /-
 /-- The quotient of a commutative semigroup by a congruence relation is a semigroup. -/
 @[to_additive
       "The quotient of an `add_comm_semigroup` by an additive congruence relation is\nan `add_semigroup`."]
@@ -1231,7 +1338,9 @@ instance commSemigroup {M : Type _} [CommSemigroup M] (c : Con M) : CommSemigrou
   Function.Surjective.commSemigroup _ Quotient.surjective_Quotient_mk'' fun _ _ => rfl
 #align con.comm_semigroup Con.commSemigroup
 #align add_con.add_comm_semigroup AddCon.addCommSemigroup
+-/
 
+#print Con.monoid /-
 /-- The quotient of a monoid by a congruence relation is a monoid. -/
 @[to_additive
       "The quotient of an `add_monoid` by an additive congruence relation is\nan `add_monoid`."]
@@ -1239,7 +1348,9 @@ instance monoid {M : Type _} [Monoid M] (c : Con M) : Monoid c.Quotient :=
   Function.Surjective.monoid _ Quotient.surjective_Quotient_mk'' rfl (fun _ _ => rfl) fun _ _ => rfl
 #align con.monoid Con.monoid
 #align add_con.add_monoid AddCon.addMonoid
+-/
 
+#print Con.commMonoid /-
 /-- The quotient of a `comm_monoid` by a congruence relation is a `comm_monoid`. -/
 @[to_additive
       "The quotient of an `add_comm_monoid` by an additive congruence\nrelation is an `add_comm_monoid`."]
@@ -1248,6 +1359,7 @@ instance commMonoid {M : Type _} [CommMonoid M] (c : Con M) : CommMonoid c.Quoti
     rfl
 #align con.comm_monoid Con.commMonoid
 #align add_con.add_comm_monoid AddCon.addCommMonoid
+-/
 
 end Monoids
 
@@ -1255,20 +1367,25 @@ section Groups
 
 variable {M} [Group M] [Group N] [Group P] (c : Con M)
 
+#print Con.inv /-
 /-- Multiplicative congruence relations preserve inversion. -/
 @[to_additive "Additive congruence relations preserve negation."]
 protected theorem inv : ∀ {w x}, c w x → c w⁻¹ x⁻¹ := fun x y h => by
   simpa using c.symm (c.mul (c.mul (c.refl x⁻¹) h) (c.refl y⁻¹))
 #align con.inv Con.inv
 #align add_con.neg AddCon.neg
+-/
 
+#print Con.div /-
 /-- Multiplicative congruence relations preserve division. -/
 @[to_additive "Additive congruence relations preserve subtraction."]
 protected theorem div : ∀ {w x y z}, c w x → c y z → c (w / y) (x / z) := fun w x y z h1 h2 => by
   simpa only [div_eq_mul_inv] using c.mul h1 (c.inv h2)
 #align con.div Con.div
 #align add_con.sub AddCon.sub
+-/
 
+#print Con.zpow /-
 /-- Multiplicative congruence relations preserve integer powers. -/
 @[to_additive AddCon.zsmul "Additive congruence relations preserve integer scaling."]
 protected theorem zpow : ∀ (n : ℤ) {w x}, c w x → c (w ^ n) (x ^ n)
@@ -1276,7 +1393,9 @@ protected theorem zpow : ∀ (n : ℤ) {w x}, c w x → c (w ^ n) (x ^ n)
   | -[n+1], w, x, h => by simpa only [zpow_negSucc] using c.inv (c.pow _ h)
 #align con.zpow Con.zpow
 #align add_con.zsmul AddCon.zsmul
+-/
 
+#print Con.hasInv /-
 /-- The inversion induced on the quotient by a congruence relation on a type with a
     inversion. -/
 @[to_additive
@@ -1285,7 +1404,9 @@ instance hasInv : Inv c.Quotient :=
   ⟨Quotient.map' Inv.inv fun a b => c.inv⟩
 #align con.has_inv Con.hasInv
 #align add_con.has_neg AddCon.hasNeg
+-/
 
+#print Con.hasDiv /-
 /-- The division induced on the quotient by a congruence relation on a type with a
     division. -/
 @[to_additive
@@ -1294,13 +1415,17 @@ instance hasDiv : Div c.Quotient :=
   ⟨Quotient.map₂' (· / ·) fun _ _ h₁ _ _ h₂ => c.div h₁ h₂⟩
 #align con.has_div Con.hasDiv
 #align add_con.has_sub AddCon.hasSub
+-/
 
+#print AddCon.Quotient.zsmul /-
 /-- The integer scaling induced on the quotient by a congruence relation on a type with a
     subtraction. -/
 instance AddCon.Quotient.zsmul {M : Type _} [AddGroup M] (c : AddCon M) : SMul ℤ c.Quotient :=
   ⟨fun z => Quotient.map' ((· • ·) z) fun x y => c.zsmul z⟩
 #align add_con.quotient.has_zsmul AddCon.Quotient.zsmul
+-/
 
+#print Con.zpowinst /-
 /-- The integer power induced on the quotient by a congruence relation on a type with a
     division. -/
 @[to_additive AddCon.Quotient.zsmul]
@@ -1308,7 +1433,9 @@ instance zpowinst : Pow c.Quotient ℤ :=
   ⟨fun x z => Quotient.map' (fun x => x ^ z) (fun x y h => c.zpow z h) x⟩
 #align con.has_zpow Con.zpowinst
 #align add_con.quotient.has_zsmul AddCon.Quotient.zsmul
+-/
 
+#print Con.group /-
 /-- The quotient of a group by a congruence relation is a group. -/
 @[to_additive
       "The quotient of an `add_group` by an additive congruence relation is\nan `add_group`."]
@@ -1317,6 +1444,7 @@ instance group : Group c.Quotient :=
     (fun _ _ => rfl) (fun _ _ => rfl) fun _ _ => rfl
 #align con.group Con.group
 #align add_con.add_group AddCon.addGroup
+-/
 
 end Groups
 
@@ -1324,6 +1452,7 @@ section Units
 
 variable {α : Type _} [Monoid M] {c : Con M}
 
+#print Con.liftOnUnits /-
 /-- In order to define a function `(con.quotient c)ˣ → α` on the units of `con.quotient c`,
 where `c : con M` is a multiplicative congruence on a monoid, it suffices to define a function `f`
 that takes elements `x y : M` with proofs of `c (x * y) 1` and `c (y * x) 1`, and returns an element
@@ -1345,6 +1474,7 @@ def liftOnUnits (u : Units c.Quotient) (f : ∀ x y : M, c (x * y) 1 → c (y * 
   exact hEq_of_eq (Hf _ _ _ _ _ _ _ _ hx hy)
 #align con.lift_on_units Con.liftOnUnits
 #align add_con.lift_on_add_units AddCon.liftOnAddUnits
+-/
 
 /-- In order to define a function `(con.quotient c)ˣ → α` on the units of `con.quotient c`,
 where `c : con M` is a multiplicative congruence on a monoid, it suffices to define a function `f`
@@ -1352,6 +1482,7 @@ that takes elements `x y : M` with proofs of `c (x * y) 1` and `c (y * x) 1`, an
 of `α` provided that `f x y _ _ = f x' y' _ _` whenever `c x x'` and `c y y'`. -/
 add_decl_doc AddCon.liftOnAddUnits
 
+#print Con.liftOnUnits_mk /-
 @[simp, to_additive]
 theorem liftOnUnits_mk (f : ∀ x y : M, c (x * y) 1 → c (y * x) 1 → α)
     (Hf : ∀ x y hxy hyx x' y' hxy' hyx', c x x' → c y y' → f x y hxy hyx = f x' y' hxy' hyx')
@@ -1360,7 +1491,9 @@ theorem liftOnUnits_mk (f : ∀ x y : M, c (x * y) 1 → c (y * x) 1 → α)
   rfl
 #align con.lift_on_units_mk Con.liftOnUnits_mk
 #align add_con.lift_on_add_units_mk AddCon.liftOnAddUnits_mk
+-/
 
+#print Con.induction_on_units /-
 @[elab_as_elim, to_additive]
 theorem induction_on_units {p : Units c.Quotient → Prop} (u : Units c.Quotient)
     (H : ∀ (x y : M) (hxy : c (x * y) 1) (hyx : c (y * x) 1), p ⟨x, y, c.Eq.2 hxy, c.Eq.2 hyx⟩) :
@@ -1369,24 +1502,30 @@ theorem induction_on_units {p : Units c.Quotient → Prop} (u : Units c.Quotient
   exact H x y (c.eq.1 h₁) (c.eq.1 h₂)
 #align con.induction_on_units Con.induction_on_units
 #align add_con.induction_on_add_units AddCon.induction_on_addUnits
+-/
 
 end Units
 
 section Actions
 
+#print Con.smulinst /-
 @[to_additive]
 instance smulinst {α M : Type _} [MulOneClass M] [SMul α M] [IsScalarTower α M M] (c : Con M) :
     SMul α c.Quotient where smul a := Quotient.map' ((· • ·) a) fun x y => c.smul a
 #align con.has_smul Con.smulinst
 #align add_con.has_vadd AddCon.smulinst
+-/
 
+#print Con.coe_smul /-
 @[to_additive]
 theorem coe_smul {α M : Type _} [MulOneClass M] [SMul α M] [IsScalarTower α M M] (c : Con M) (a : α)
     (x : M) : (↑(a • x) : c.Quotient) = a • ↑x :=
   rfl
 #align con.coe_smul Con.coe_smul
 #align add_con.coe_vadd AddCon.coe_vadd
+-/
 
+#print Con.mulAction /-
 @[to_additive]
 instance mulAction {α M : Type _} [Monoid α] [MulOneClass M] [MulAction α M] [IsScalarTower α M M]
     (c : Con M) : MulAction α c.Quotient
@@ -1396,7 +1535,9 @@ instance mulAction {α M : Type _} [Monoid α] [MulOneClass M] [MulAction α M] 
   mul_smul a₁ a₂ := Quotient.ind' fun x => congr_arg Quotient.mk'' <| mul_smul _ _ _
 #align con.mul_action Con.mulAction
 #align add_con.add_action AddCon.addAction
+-/
 
+#print Con.mulDistribMulAction /-
 instance mulDistribMulAction {α M : Type _} [Monoid α] [Monoid M] [MulDistribMulAction α M]
     [IsScalarTower α M M] (c : Con M) : MulDistribMulAction α c.Quotient :=
   { c.MulAction with
@@ -1404,6 +1545,7 @@ instance mulDistribMulAction {α M : Type _} [Monoid α] [Monoid M] [MulDistribM
     smul_one := fun r => congr_arg Quotient.mk'' <| smul_one _
     smul_mul := fun r => Quotient.ind₂' fun m₁ m₂ => congr_arg Quotient.mk'' <| smul_mul' _ _ _ }
 #align con.mul_distrib_mul_action Con.mulDistribMulAction
+-/
 
 end Actions
 

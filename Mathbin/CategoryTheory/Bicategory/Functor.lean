@@ -265,6 +265,7 @@ theorem to_prelaxFunctor_map₂ : @PrelaxFunctor.map₂ B _ _ C _ _ F = @map₂ 
   rfl
 #align category_theory.oplax_functor.to_prelax_functor_map₂ CategoryTheory.OplaxFunctor.to_prelaxFunctor_map₂
 
+#print CategoryTheory.OplaxFunctor.mapFunctor /-
 /-- Function between 1-morphisms as a functor. -/
 @[simps]
 def mapFunctor (a b : B) : (a ⟶ b) ⥤ (F.obj a ⟶ F.obj b)
@@ -272,6 +273,7 @@ def mapFunctor (a b : B) : (a ⟶ b) ⥤ (F.obj a ⟶ F.obj b)
   obj f := F.map f
   map f g η := F.zipWith η
 #align category_theory.oplax_functor.map_functor CategoryTheory.OplaxFunctor.mapFunctor
+-/
 
 #print CategoryTheory.OplaxFunctor.id /-
 /-- The identity oplax functor. -/
@@ -486,10 +488,12 @@ theorem toOplax_eq_coe : F.toOplax = F :=
   rfl
 #align category_theory.pseudofunctor.to_oplax_eq_coe CategoryTheory.Pseudofunctor.toOplax_eq_coe
 
+#print CategoryTheory.Pseudofunctor.to_oplax_obj /-
 @[simp]
 theorem to_oplax_obj : (F : OplaxFunctor B C).obj = F.obj :=
   rfl
 #align category_theory.pseudofunctor.to_oplax_obj CategoryTheory.Pseudofunctor.to_oplax_obj
+-/
 
 @[simp]
 theorem to_oplax_map : @OplaxFunctor.map B _ C _ F = @map _ _ _ _ F :=
@@ -501,22 +505,28 @@ theorem to_oplax_map₂ : @OplaxFunctor.map₂ B _ C _ F = @map₂ _ _ _ _ F :=
   rfl
 #align category_theory.pseudofunctor.to_oplax_map₂ CategoryTheory.Pseudofunctor.to_oplax_map₂
 
+#print CategoryTheory.Pseudofunctor.to_oplax_mapId /-
 @[simp]
 theorem to_oplax_mapId (a : B) : (F : OplaxFunctor B C).map_id a = (F.map_id a).Hom :=
   rfl
 #align category_theory.pseudofunctor.to_oplax_map_id CategoryTheory.Pseudofunctor.to_oplax_mapId
+-/
 
+#print CategoryTheory.Pseudofunctor.to_oplax_mapComp /-
 @[simp]
 theorem to_oplax_mapComp {a b c : B} (f : a ⟶ b) (g : b ⟶ c) :
     (F : OplaxFunctor B C).map_comp f g = (F.map_comp f g).Hom :=
   rfl
 #align category_theory.pseudofunctor.to_oplax_map_comp CategoryTheory.Pseudofunctor.to_oplax_mapComp
+-/
 
+#print CategoryTheory.Pseudofunctor.mapFunctor /-
 /-- Function on 1-morphisms as a functor. -/
 @[simps]
 def mapFunctor (a b : B) : (a ⟶ b) ⥤ (F.obj a ⟶ F.obj b) :=
   (F : OplaxFunctor B C).mapFunctor a b
 #align category_theory.pseudofunctor.map_functor CategoryTheory.Pseudofunctor.mapFunctor
+-/
 
 #print CategoryTheory.Pseudofunctor.id /-
 /-- The identity pseudofunctor. -/
@@ -568,6 +578,7 @@ def mkOfOplax (F : OplaxFunctor B C) (F' : F.PseudoCore) : Pseudofunctor B C :=
 #align category_theory.pseudofunctor.mk_of_oplax CategoryTheory.Pseudofunctor.mkOfOplax
 -/
 
+#print CategoryTheory.Pseudofunctor.mkOfOplax' /-
 /-- Construct a pseudofunctor from an oplax functor whose `map_id` and `map_comp` are isomorphisms.
 -/
 @[simps]
@@ -588,6 +599,7 @@ noncomputable def mkOfOplax' (F : OplaxFunctor B C) [∀ a, IsIso (F.map_id a)]
       rw [is_iso.eq_comp_inv, ← inv_whisker_left, is_iso.eq_comp_inv]
       simp only [assoc, F.map₂_associator] }
 #align category_theory.pseudofunctor.mk_of_oplax' CategoryTheory.Pseudofunctor.mkOfOplax'
+-/
 
 end
 

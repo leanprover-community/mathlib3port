@@ -80,6 +80,7 @@ theorem pushoutCocone_inr :
 #align CommRing.pushout_cocone_inr CommRingCat.pushoutCocone_inr
 -/
 
+#print CommRingCat.pushoutCocone_pt /-
 @[simp]
 theorem pushoutCocone_pt :
     (pushoutCocone f g).pt = by
@@ -87,6 +88,7 @@ theorem pushoutCocone_pt :
       exact CommRingCat.of (A ⊗[R] B) :=
   rfl
 #align CommRing.pushout_cocone_X CommRingCat.pushoutCocone_pt
+-/
 
 #print CommRingCat.pushoutCoconeIsColimit /-
 /-- Verify that the `pushout_cocone` is indeed the colimit. -/
@@ -162,12 +164,14 @@ theorem subsingleton_of_isTerminal {X : CommRingCat} (hX : IsTerminal X) : Subsi
 #align CommRing.subsingleton_of_is_terminal CommRingCat.subsingleton_of_isTerminal
 -/
 
+#print CommRingCat.zIsInitial /-
 /-- `ℤ` is the initial object of `CommRing`. -/
 def zIsInitial : IsInitial (CommRingCat.of ℤ) :=
   by
   apply (config := { instances := false }) is_initial.of_unique
   exact fun R => ⟨⟨Int.castRingHom R⟩, fun a => a.ext_int _⟩
 #align CommRing.Z_is_initial CommRingCat.zIsInitial
+-/
 
 end Terminal
 
@@ -235,6 +239,7 @@ instance : IsLocalRingHom (equalizerFork f g).ι :=
   rw [isUnit_iff_exists_inv]
   exact ⟨⟨y, this⟩, Subtype.eq h₃⟩
 
+#print CommRingCat.equalizer_ι_isLocalRingHom /-
 instance equalizer_ι_isLocalRingHom (F : WalkingParallelPair ⥤ CommRingCat.{u}) :
     IsLocalRingHom (limit.π F WalkingParallelPair.zero) :=
   by
@@ -250,11 +255,13 @@ instance equalizer_ι_isLocalRingHom (F : WalkingParallelPair ⥤ CommRingCat.{u
   change IsLocalRingHom ((lim.map _ ≫ _ ≫ (equalizer_fork _ _).ι) ≫ _)
   infer_instance
 #align CommRing.equalizer_ι_is_local_ring_hom CommRingCat.equalizer_ι_isLocalRingHom
+-/
 
 open CategoryTheory.Limits.WalkingParallelPair Opposite
 
 open CategoryTheory.Limits.WalkingParallelPairHom
 
+#print CommRingCat.equalizer_ι_is_local_ring_hom' /-
 instance equalizer_ι_is_local_ring_hom' (F : WalkingParallelPairᵒᵖ ⥤ CommRingCat.{u}) :
     IsLocalRingHom (limit.π F (Opposite.op WalkingParallelPair.one)) :=
   by
@@ -266,6 +273,7 @@ instance equalizer_ι_is_local_ring_hom' (F : WalkingParallelPairᵒᵖ ⥤ Comm
   erw [← this]
   infer_instance
 #align CommRing.equalizer_ι_is_local_ring_hom' CommRingCat.equalizer_ι_is_local_ring_hom'
+-/
 
 end Equalizer
 

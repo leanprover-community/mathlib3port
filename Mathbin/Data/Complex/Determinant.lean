@@ -25,6 +25,7 @@ space over `ℝ`.
 
 namespace Complex
 
+#print Complex.det_conjAe /-
 /-- The determinant of `conj_ae`, as a linear map. -/
 @[simp]
 theorem det_conjAe : conjAe.toLinearMap.det = -1 :=
@@ -32,13 +33,16 @@ theorem det_conjAe : conjAe.toLinearMap.det = -1 :=
   rw [← LinearMap.det_toMatrix basis_one_I, to_matrix_conj_ae, Matrix.det_fin_two_of]
   simp
 #align complex.det_conj_ae Complex.det_conjAe
+-/
 
+#print Complex.linearEquiv_det_conjAe /-
 /-- The determinant of `conj_ae`, as a linear equiv. -/
 @[simp]
 theorem linearEquiv_det_conjAe : conjAe.toLinearEquiv.det = -1 := by
   rw [← Units.eq_iff, LinearEquiv.coe_det, ← LinearEquiv.toLinearMap_eq_coe,
     AlgEquiv.toLinearEquiv_toLinearMap, det_conj_ae, Units.coe_neg_one]
 #align complex.linear_equiv_det_conj_ae Complex.linearEquiv_det_conjAe
+-/
 
 end Complex
 

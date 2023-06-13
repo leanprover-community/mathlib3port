@@ -81,12 +81,15 @@ theorem Equiv.Perm.decomposeFin_symm_apply_one {n : ℕ} (e : Perm (Fin (n + 1))
 #align equiv.perm.decompose_fin_symm_apply_one Equiv.Perm.decomposeFin_symm_apply_one
 -/
 
+#print Equiv.Perm.decomposeFin.symm_sign /-
 @[simp]
 theorem Equiv.Perm.decomposeFin.symm_sign {n : ℕ} (p : Fin (n + 1)) (e : Perm (Fin n)) :
     Perm.sign (Equiv.Perm.decomposeFin.symm (p, e)) = ite (p = 0) 1 (-1) * Perm.sign e := by
   refine' Fin.cases _ _ p <;> simp [Equiv.Perm.decomposeFin, Fin.succ_ne_zero]
 #align equiv.perm.decompose_fin.symm_sign Equiv.Perm.decomposeFin.symm_sign
+-/
 
+#print Finset.univ_perm_fin_succ /-
 /-- The set of all permutations of `fin (n + 1)` can be constructed by augmenting the set of
 permutations of `fin n` by each element of `fin (n + 1)` in turn. -/
 theorem Finset.univ_perm_fin_succ {n : ℕ} :
@@ -95,6 +98,7 @@ theorem Finset.univ_perm_fin_succ {n : ℕ} :
         Equiv.Perm.decomposeFin.symm.toEmbedding :=
   (Finset.univ_map_equiv_to_embedding _).symm
 #align finset.univ_perm_fin_succ Finset.univ_perm_fin_succ
+-/
 
 section CycleRange
 
@@ -124,6 +128,7 @@ theorem finRotate_succ_eq_decomposeFin {n : ℕ} :
 #align fin_rotate_succ finRotate_succ_eq_decomposeFin
 -/
 
+#print sign_finRotate /-
 @[simp]
 theorem sign_finRotate (n : ℕ) : Perm.sign (finRotate (n + 1)) = (-1) ^ n :=
   by
@@ -131,16 +136,21 @@ theorem sign_finRotate (n : ℕ) : Perm.sign (finRotate (n + 1)) = (-1) ^ n :=
   · simp
   · rw [finRotate_succ_eq_decomposeFin]; simp [ih, pow_succ]
 #align sign_fin_rotate sign_finRotate
+-/
 
+#print support_finRotate /-
 @[simp]
 theorem support_finRotate {n : ℕ} : support (finRotate (n + 2)) = Finset.univ := by ext; simp
 #align support_fin_rotate support_finRotate
+-/
 
+#print support_finRotate_of_le /-
 theorem support_finRotate_of_le {n : ℕ} (h : 2 ≤ n) : support (finRotate n) = Finset.univ :=
   by
   obtain ⟨m, rfl⟩ := exists_add_of_le h
   rw [add_comm, support_finRotate]
 #align support_fin_rotate_of_le support_finRotate_of_le
+-/
 
 #print isCycle_finRotate /-
 theorem isCycle_finRotate {n : ℕ} : IsCycle (finRotate (n + 2)) :=
@@ -276,6 +286,7 @@ theorem cycleRange_apply {n : ℕ} (i j : Fin n.succ) :
 #align fin.cycle_range_apply Fin.cycleRange_apply
 -/
 
+#print Fin.cycleRange_zero /-
 @[simp]
 theorem cycleRange_zero (n : ℕ) : cycleRange (0 : Fin n.succ) = 1 :=
   by
@@ -284,6 +295,7 @@ theorem cycleRange_zero (n : ℕ) : cycleRange (0 : Fin n.succ) = 1 :=
   · simp
   · rw [cycle_range_of_gt (Fin.succ_pos j), one_apply]
 #align fin.cycle_range_zero Fin.cycleRange_zero
+-/
 
 #print Fin.cycleRange_last /-
 @[simp]
@@ -292,6 +304,7 @@ theorem cycleRange_last (n : ℕ) : cycleRange (last n) = finRotate (n + 1) := b
 #align fin.cycle_range_last Fin.cycleRange_last
 -/
 
+#print Fin.cycleRange_zero' /-
 @[simp]
 theorem cycleRange_zero' {n : ℕ} (h : 0 < n) : cycleRange ⟨0, h⟩ = 1 :=
   by
@@ -299,12 +312,16 @@ theorem cycleRange_zero' {n : ℕ} (h : 0 < n) : cycleRange ⟨0, h⟩ = 1 :=
   · cases h
   exact cycle_range_zero n
 #align fin.cycle_range_zero' Fin.cycleRange_zero'
+-/
 
+#print Fin.sign_cycleRange /-
 @[simp]
 theorem sign_cycleRange {n : ℕ} (i : Fin n) : Perm.sign (cycleRange i) = (-1) ^ (i : ℕ) := by
   simp [cycle_range]
 #align fin.sign_cycle_range Fin.sign_cycleRange
+-/
 
+#print Fin.succAbove_cycleRange /-
 @[simp]
 theorem succAbove_cycleRange {n : ℕ} (i j : Fin n) :
     i.succ.succAbove (i.cycleRange j) = swap 0 i.succ j.succ :=
@@ -326,6 +343,7 @@ theorem succAbove_cycleRange {n : ℕ} (i j : Fin n) :
     · apply (Fin.succ_injective _).Ne hgt.ne.symm
     · simpa [Fin.le_iff_val_le_val] using hgt
 #align fin.succ_above_cycle_range Fin.succAbove_cycleRange
+-/
 
 #print Fin.cycleRange_succAbove /-
 @[simp]
@@ -353,6 +371,7 @@ theorem cycleRange_symm_succ {n : ℕ} (i : Fin (n + 1)) (j : Fin n) :
 #align fin.cycle_range_symm_succ Fin.cycleRange_symm_succ
 -/
 
+#print Fin.isCycle_cycleRange /-
 theorem isCycle_cycleRange {n : ℕ} {i : Fin (n + 1)} (h0 : i ≠ 0) : IsCycle (cycleRange i) :=
   by
   cases' i with i hi
@@ -360,7 +379,9 @@ theorem isCycle_cycleRange {n : ℕ} {i : Fin (n + 1)} (h0 : i ≠ 0) : IsCycle 
   · exact (h0 rfl).elim
   exact is_cycle_fin_rotate.extend_domain _
 #align fin.is_cycle_cycle_range Fin.isCycle_cycleRange
+-/
 
+#print Fin.cycleType_cycleRange /-
 @[simp]
 theorem cycleType_cycleRange {n : ℕ} {i : Fin (n + 1)} (h0 : i ≠ 0) :
     cycleType (cycleRange i) = {i + 1} :=
@@ -371,6 +392,7 @@ theorem cycleType_cycleRange {n : ℕ} {i : Fin (n + 1)} (h0 : i ≠ 0) :
   rw [cycle_range, cycle_type_extend_domain]
   exact cycleType_finRotate
 #align fin.cycle_type_cycle_range Fin.cycleType_cycleRange
+-/
 
 #print Fin.isThreeCycle_cycleRange_two /-
 theorem isThreeCycle_cycleRange_two {n : ℕ} : IsThreeCycle (cycleRange 2 : Perm (Fin (n + 3))) := by

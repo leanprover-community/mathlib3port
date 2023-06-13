@@ -55,19 +55,24 @@ def discrim [Ring R] (a b c : R) : R :=
 #align discrim discrim
 -/
 
+#print discrim_neg /-
 @[simp]
 theorem discrim_neg [Ring R] (a b c : R) : discrim (-a) (-b) (-c) = discrim a b c := by
   simp [discrim]
 #align discrim_neg discrim_neg
+-/
 
 variable [CommRing R] {a b c : R}
 
+#print discrim_eq_sq_of_quadratic_eq_zero /-
 theorem discrim_eq_sq_of_quadratic_eq_zero {x : R} (h : a * x * x + b * x + c = 0) :
     discrim a b c = (2 * a * x + b) ^ 2 := by
   rw [discrim]
   linear_combination -4 * a * h
 #align discrim_eq_sq_of_quadratic_eq_zero discrim_eq_sq_of_quadratic_eq_zero
+-/
 
+#print quadratic_eq_zero_iff_discrim_eq_sq /-
 /-- A quadratic has roots if and only if its discriminant equals some square.
 -/
 theorem quadratic_eq_zero_iff_discrim_eq_sq [NeZero (2 : R)] [NoZeroDivisors R] (ha : a ≠ 0)
@@ -79,12 +84,15 @@ theorem quadratic_eq_zero_iff_discrim_eq_sq [NeZero (2 : R)] [NoZeroDivisors R] 
   apply mul_left_cancel₀ ha
   linear_combination -h
 #align quadratic_eq_zero_iff_discrim_eq_sq quadratic_eq_zero_iff_discrim_eq_sq
+-/
 
+#print quadratic_ne_zero_of_discrim_ne_sq /-
 /-- A quadratic has no root if its discriminant has no square root. -/
 theorem quadratic_ne_zero_of_discrim_ne_sq (h : ∀ s : R, discrim a b c ≠ s ^ 2) (x : R) :
     a * x * x + b * x + c ≠ 0 :=
   mt discrim_eq_sq_of_quadratic_eq_zero <| h _
 #align quadratic_ne_zero_of_discrim_ne_sq quadratic_ne_zero_of_discrim_ne_sq
+-/
 
 end Ring
 
@@ -92,6 +100,7 @@ section Field
 
 variable {K : Type _} [Field K] [NeZero (2 : K)] {a b c x : K}
 
+#print quadratic_eq_zero_iff /-
 /-- Roots of a quadratic equation. -/
 theorem quadratic_eq_zero_iff (ha : a ≠ 0) {s : K} (h : discrim a b c = s * s) (x : K) :
     a * x * x + b * x + c = 0 ↔ x = (-b + s) / (2 * a) ∨ x = (-b - s) / (2 * a) :=
@@ -102,7 +111,9 @@ theorem quadratic_eq_zero_iff (ha : a ≠ 0) {s : K} (h : discrim a b c = s * s)
   · constructor <;> intro h' <;> linear_combination -h'
   · constructor <;> intro h' <;> linear_combination h'
 #align quadratic_eq_zero_iff quadratic_eq_zero_iff
+-/
 
+#print exists_quadratic_eq_zero /-
 /-- A quadratic has roots if its discriminant has square roots -/
 theorem exists_quadratic_eq_zero (ha : a ≠ 0) (h : ∃ s, discrim a b c = s * s) :
     ∃ x, a * x * x + b * x + c = 0 := by
@@ -111,7 +122,9 @@ theorem exists_quadratic_eq_zero (ha : a ≠ 0) (h : ∃ s, discrim a b c = s * 
   rw [quadratic_eq_zero_iff ha hs]
   simp
 #align exists_quadratic_eq_zero exists_quadratic_eq_zero
+-/
 
+#print quadratic_eq_zero_iff_of_discrim_eq_zero /-
 /-- Root of a quadratic when its discriminant equals zero -/
 theorem quadratic_eq_zero_iff_of_discrim_eq_zero (ha : a ≠ 0) (h : discrim a b c = 0) (x : K) :
     a * x * x + b * x + c = 0 ↔ x = -b / (2 * a) :=
@@ -119,6 +132,7 @@ theorem quadratic_eq_zero_iff_of_discrim_eq_zero (ha : a ≠ 0) (h : discrim a b
   have : discrim a b c = 0 * 0 := by rw [h, MulZeroClass.mul_zero]
   rw [quadratic_eq_zero_iff ha this, add_zero, sub_zero, or_self_iff]
 #align quadratic_eq_zero_iff_of_discrim_eq_zero quadratic_eq_zero_iff_of_discrim_eq_zero
+-/
 
 end Field
 
@@ -126,6 +140,7 @@ section LinearOrderedField
 
 variable {K : Type _} [LinearOrderedField K] {a b c : K}
 
+#print discrim_le_zero /-
 /-- If a polynomial of degree 2 is always nonnegative, then its discriminant is nonpositive. -/
 theorem discrim_le_zero (h : ∀ x : K, 0 ≤ a * x * x + b * x + c) : discrim a b c ≤ 0 :=
   by
@@ -149,11 +164,15 @@ theorem discrim_le_zero (h : ∀ x : K, 0 ≤ a * x * x + b * x + c) : discrim a
     field_simp [ha.ne']
     ring
 #align discrim_le_zero discrim_le_zero
+-/
 
+#print discrim_le_zero_of_nonpos /-
 theorem discrim_le_zero_of_nonpos (h : ∀ x : K, a * x * x + b * x + c ≤ 0) : discrim a b c ≤ 0 :=
   discrim_neg a b c ▸ discrim_le_zero (by simpa only [neg_mul, ← neg_add, neg_nonneg])
 #align discrim_le_zero_of_nonpos discrim_le_zero_of_nonpos
+-/
 
+#print discrim_lt_zero /-
 /-- If a polynomial of degree 2 is always positive, then its discriminant is negative,
 at least when the coefficient of the quadratic term is nonzero.
 -/
@@ -167,12 +186,15 @@ theorem discrim_lt_zero (ha : a ≠ 0) (h : ∀ x : K, 0 < a * x * x + b * x + c
     rw [quadratic_eq_zero_iff_of_discrim_eq_zero ha h' (-b / (2 * a))]
   linarith
 #align discrim_lt_zero discrim_lt_zero
+-/
 
+#print discrim_lt_zero_of_neg /-
 theorem discrim_lt_zero_of_neg (ha : a ≠ 0) (h : ∀ x : K, a * x * x + b * x + c < 0) :
     discrim a b c < 0 :=
   discrim_neg a b c ▸
     discrim_lt_zero (neg_ne_zero.2 ha) (by simpa only [neg_mul, ← neg_add, neg_pos])
 #align discrim_lt_zero_of_neg discrim_lt_zero_of_neg
+-/
 
 end LinearOrderedField
 

@@ -68,18 +68,23 @@ def binaryProductLimitCone (M N : ModuleCat.{v} R) : Limits.LimitCone (pair M N)
 #align Module.binary_product_limit_cone ModuleCat.binaryProductLimitCone
 -/
 
+#print ModuleCat.binaryProductLimitCone_cone_π_app_left /-
 @[simp]
 theorem binaryProductLimitCone_cone_π_app_left (M N : ModuleCat.{v} R) :
     (binaryProductLimitCone M N).Cone.π.app ⟨WalkingPair.left⟩ = LinearMap.fst R M N :=
   rfl
 #align Module.binary_product_limit_cone_cone_π_app_left ModuleCat.binaryProductLimitCone_cone_π_app_left
+-/
 
+#print ModuleCat.binaryProductLimitCone_cone_π_app_right /-
 @[simp]
 theorem binaryProductLimitCone_cone_π_app_right (M N : ModuleCat.{v} R) :
     (binaryProductLimitCone M N).Cone.π.app ⟨WalkingPair.right⟩ = LinearMap.snd R M N :=
   rfl
 #align Module.binary_product_limit_cone_cone_π_app_right ModuleCat.binaryProductLimitCone_cone_π_app_right
+-/
 
+#print ModuleCat.biprodIsoProd /-
 /-- We verify that the biproduct in `Module R` is isomorphic to
 the cartesian product of the underlying types:
 -/
@@ -88,18 +93,23 @@ noncomputable def biprodIsoProd (M N : ModuleCat.{v} R) :
     (M ⊞ N : ModuleCat.{v} R) ≅ ModuleCat.of R (M × N) :=
   IsLimit.conePointUniqueUpToIso (BinaryBiproduct.isLimit M N) (binaryProductLimitCone M N).IsLimit
 #align Module.biprod_iso_prod ModuleCat.biprodIsoProd
+-/
 
+#print ModuleCat.biprodIsoProd_inv_comp_fst /-
 @[simp, elementwise]
 theorem biprodIsoProd_inv_comp_fst (M N : ModuleCat.{v} R) :
     (biprodIsoProd M N).inv ≫ biprod.fst = LinearMap.fst R M N :=
   IsLimit.conePointUniqueUpToIso_inv_comp _ _ (Discrete.mk WalkingPair.left)
 #align Module.biprod_iso_prod_inv_comp_fst ModuleCat.biprodIsoProd_inv_comp_fst
+-/
 
+#print ModuleCat.biprodIsoProd_inv_comp_snd /-
 @[simp, elementwise]
 theorem biprodIsoProd_inv_comp_snd (M N : ModuleCat.{v} R) :
     (biprodIsoProd M N).inv ≫ biprod.snd = LinearMap.snd R M N :=
   IsLimit.conePointUniqueUpToIso_inv_comp _ _ (Discrete.mk WalkingPair.right)
 #align Module.biprod_iso_prod_inv_comp_snd ModuleCat.biprodIsoProd_inv_comp_snd
+-/
 
 namespace HasLimit
 
@@ -144,6 +154,7 @@ open HasLimit
 
 variable {J : Type} (f : J → ModuleCat.{v} R)
 
+#print ModuleCat.biproductIsoPi /-
 /-- We verify that the biproduct we've just defined is isomorphic to the `Module R` structure
 on the dependent function type
 -/
@@ -152,12 +163,15 @@ noncomputable def biproductIsoPi [Fintype J] (f : J → ModuleCat.{v} R) :
     (⨁ f : ModuleCat.{v} R) ≅ ModuleCat.of R (∀ j, f j) :=
   IsLimit.conePointUniqueUpToIso (biproduct.isLimit f) (productLimitCone f).IsLimit
 #align Module.biproduct_iso_pi ModuleCat.biproductIsoPi
+-/
 
+#print ModuleCat.biproductIsoPi_inv_comp_π /-
 @[simp, elementwise]
 theorem biproductIsoPi_inv_comp_π [Fintype J] (f : J → ModuleCat.{v} R) (j : J) :
     (biproductIsoPi f).inv ≫ biproduct.π f j = (LinearMap.proj j : (∀ j, f j) →ₗ[R] f j) :=
   IsLimit.conePointUniqueUpToIso_inv_comp _ _ (Discrete.mk j)
 #align Module.biproduct_iso_pi_inv_comp_π ModuleCat.biproductIsoPi_inv_comp_π
+-/
 
 end ModuleCat
 
@@ -170,6 +184,7 @@ variable {j : A →ₗ[R] M} {g : M →ₗ[R] B}
 
 open ModuleCat
 
+#print lequivProdOfRightSplitExact /-
 /-- The isomorphism `A × B ≃ₗ[R] M` coming from a right split exact sequence `0 ⟶ A ⟶ M ⟶ B ⟶ 0`
 of modules.-/
 noncomputable def lequivProdOfRightSplitExact {f : B →ₗ[R] M} (hj : Function.Injective j)
@@ -179,7 +194,9 @@ noncomputable def lequivProdOfRightSplitExact {f : B →ₗ[R] M} (hj : Function
                   exact := (exact_iff _ _).mpr exac } : RightSplit _ _).Splitting.Iso.trans <|
         biprodIsoProd _ _).toLinearEquiv.symm
 #align lequiv_prod_of_right_split_exact lequivProdOfRightSplitExact
+-/
 
+#print lequivProdOfLeftSplitExact /-
 /-- The isomorphism `A × B ≃ₗ[R] M` coming from a left split exact sequence `0 ⟶ A ⟶ M ⟶ B ⟶ 0`
 of modules.-/
 noncomputable def lequivProdOfLeftSplitExact {f : M →ₗ[R] A} (hg : Function.Surjective g)
@@ -189,6 +206,7 @@ noncomputable def lequivProdOfLeftSplitExact {f : M →ₗ[R] A} (hg : Function.
                   exact := (exact_iff _ _).mpr exac } : LeftSplit _ _).Splitting.Iso.trans <|
         biprodIsoProd _ _).toLinearEquiv.symm
 #align lequiv_prod_of_left_split_exact lequivProdOfLeftSplitExact
+-/
 
 end SplitExact
 

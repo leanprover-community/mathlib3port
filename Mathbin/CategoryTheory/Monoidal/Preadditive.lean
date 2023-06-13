@@ -82,12 +82,17 @@ instance tensorRight_additive (X : C) : (tensorRight X).Additive where
 #align category_theory.tensor_right_additive CategoryTheory.tensorRight_additive
 -/
 
+#print CategoryTheory.tensoringLeft_additive /-
 instance tensoringLeft_additive (X : C) : ((tensoringLeft C).obj X).Additive where
 #align category_theory.tensoring_left_additive CategoryTheory.tensoringLeft_additive
+-/
 
+#print CategoryTheory.tensoringRight_additive /-
 instance tensoringRight_additive (X : C) : ((tensoringRight C).obj X).Additive where
 #align category_theory.tensoring_right_additive CategoryTheory.tensoringRight_additive
+-/
 
+#print CategoryTheory.monoidalPreadditive_of_faithful /-
 /-- A faithful additive monoidal functor to a monoidal preadditive category
 ensures that the domain is monoidal preadditive. -/
 theorem monoidalPreadditive_of_faithful {D} [Category D] [Preadditive D] [MonoidalCategory D]
@@ -106,6 +111,7 @@ theorem monoidalPreadditive_of_faithful {D} [Category D] [Preadditive D] [Monoid
       simp only [F.map_tensor, F.to_functor.map_add, preadditive.comp_add, preadditive.add_comp,
         monoidal_preadditive.add_tensor] }
 #align category_theory.monoidal_preadditive_of_faithful CategoryTheory.monoidalPreadditive_of_faithful
+-/
 
 open scoped BigOperators
 

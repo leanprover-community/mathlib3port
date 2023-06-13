@@ -57,41 +57,53 @@ def HasOrthogonalCols [Fintype m] : Prop :=
 #align matrix.has_orthogonal_cols Matrix.HasOrthogonalCols
 -/
 
+#print Matrix.transpose_hasOrthogonalRows_iff_hasOrthogonalCols /-
 /-- `Aᵀ` has orthogonal rows iff `A` has orthogonal columns. -/
 @[simp]
 theorem transpose_hasOrthogonalRows_iff_hasOrthogonalCols [Fintype m] :
     Aᵀ.HasOrthogonalRows ↔ A.HasOrthogonalCols :=
   Iff.rfl
 #align matrix.transpose_has_orthogonal_rows_iff_has_orthogonal_cols Matrix.transpose_hasOrthogonalRows_iff_hasOrthogonalCols
+-/
 
+#print Matrix.transpose_hasOrthogonalCols_iff_hasOrthogonalRows /-
 /-- `Aᵀ` has orthogonal columns iff `A` has orthogonal rows. -/
 @[simp]
 theorem transpose_hasOrthogonalCols_iff_hasOrthogonalRows [Fintype n] :
     Aᵀ.HasOrthogonalCols ↔ A.HasOrthogonalRows :=
   Iff.rfl
 #align matrix.transpose_has_orthogonal_cols_iff_has_orthogonal_rows Matrix.transpose_hasOrthogonalCols_iff_hasOrthogonalRows
+-/
 
 variable {A}
 
+#print Matrix.HasOrthogonalRows.hasOrthogonalCols /-
 theorem HasOrthogonalRows.hasOrthogonalCols [Fintype m] (h : Aᵀ.HasOrthogonalRows) :
     A.HasOrthogonalCols :=
   h
 #align matrix.has_orthogonal_rows.has_orthogonal_cols Matrix.HasOrthogonalRows.hasOrthogonalCols
+-/
 
+#print Matrix.HasOrthogonalCols.transpose_hasOrthogonalRows /-
 theorem HasOrthogonalCols.transpose_hasOrthogonalRows [Fintype m] (h : A.HasOrthogonalCols) :
     Aᵀ.HasOrthogonalRows :=
   h
 #align matrix.has_orthogonal_cols.transpose_has_orthogonal_rows Matrix.HasOrthogonalCols.transpose_hasOrthogonalRows
+-/
 
+#print Matrix.HasOrthogonalCols.hasOrthogonalRows /-
 theorem HasOrthogonalCols.hasOrthogonalRows [Fintype n] (h : Aᵀ.HasOrthogonalCols) :
     A.HasOrthogonalRows :=
   h
 #align matrix.has_orthogonal_cols.has_orthogonal_rows Matrix.HasOrthogonalCols.hasOrthogonalRows
+-/
 
+#print Matrix.HasOrthogonalRows.transpose_hasOrthogonalCols /-
 theorem HasOrthogonalRows.transpose_hasOrthogonalCols [Fintype n] (h : A.HasOrthogonalRows) :
     Aᵀ.HasOrthogonalCols :=
   h
 #align matrix.has_orthogonal_rows.transpose_has_orthogonal_cols Matrix.HasOrthogonalRows.transpose_hasOrthogonalCols
+-/
 
 end Matrix
 

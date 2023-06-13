@@ -30,15 +30,19 @@ variable {M G R : Type _}
 
 variable [Monoid M] [Group G] [Semiring R]
 
+#print Submonoid.mulSemiringAction /-
 /-- A stronger version of `submonoid.distrib_mul_action`. -/
 instance Submonoid.mulSemiringAction [MulSemiringAction M R] (H : Submonoid M) :
     MulSemiringAction H R :=
   { H.MulDistribMulAction, H.DistribMulAction with smul := (· • ·) }
 #align submonoid.mul_semiring_action Submonoid.mulSemiringAction
+-/
 
+#print Subgroup.mulSemiringAction /-
 /-- A stronger version of `subgroup.distrib_mul_action`. -/
 instance Subgroup.mulSemiringAction [MulSemiringAction G R] (H : Subgroup G) :
     MulSemiringAction H R :=
   H.toSubmonoid.MulSemiringAction
 #align subgroup.mul_semiring_action Subgroup.mulSemiringAction
+-/
 

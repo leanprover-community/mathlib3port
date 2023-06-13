@@ -64,7 +64,7 @@ variable {α : Type _} {β : Type _}
 
 
 #print PolishSpace /-
-/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`second_countable] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`second_countable] [] -/
 /-- A Polish space is a topological space with second countable topology, that can be endowed
 with a metric for which it is complete.
 We register an instance from complete second countable metric space to polish space, and not the
@@ -149,6 +149,7 @@ instance nat_fun [TopologicalSpace α] [PolishSpace α] : PolishSpace (ℕ → �
 #align polish_space.nat_fun PolishSpace.nat_fun
 -/
 
+#print PolishSpace.sigma /-
 /-- A countable disjoint union of Polish spaces is Polish. -/
 instance sigma {ι : Type _} [Countable ι] {E : ι → Type _} [∀ n, TopologicalSpace (E n)]
     [∀ n, PolishSpace (E n)] : PolishSpace (Σ n, E n) :=
@@ -158,7 +159,9 @@ instance sigma {ι : Type _} [Countable ι] {E : ι → Type _} [∀ n, Topologi
   haveI : CompleteSpace (Σ n, E n) := sigma.complete_space
   infer_instance
 #align polish_space.sigma PolishSpace.sigma
+-/
 
+#print PolishSpace.sum /-
 /-- The disjoint union of two Polish spaces is Polish. -/
 instance sum [TopologicalSpace α] [PolishSpace α] [TopologicalSpace β] [PolishSpace β] :
     PolishSpace (Sum α β) := by
@@ -167,14 +170,18 @@ instance sum [TopologicalSpace α] [PolishSpace α] [TopologicalSpace β] [Polis
   letI : MetricSpace (Sum α β) := metric_space_sum
   infer_instance
 #align polish_space.sum PolishSpace.sum
+-/
 
+#print PolishSpace.exists_nat_nat_continuous_surjective /-
 /-- Any nonempty Polish space is the continuous image of the fundamental space `ℕ → ℕ`. -/
 theorem exists_nat_nat_continuous_surjective (α : Type _) [TopologicalSpace α] [PolishSpace α]
     [Nonempty α] : ∃ f : (ℕ → ℕ) → α, Continuous f ∧ Surjective f :=
   letI := upgradePolishSpace α
   exists_nat_nat_continuous_surjective_of_completeSpace α
 #align polish_space.exists_nat_nat_continuous_surjective PolishSpace.exists_nat_nat_continuous_surjective
+-/
 
+#print ClosedEmbedding.polishSpace /-
 /-- Given a closed embedding into a Polish space, the source space is also Polish. -/
 theorem ClosedEmbedding.polishSpace [TopologicalSpace α] [TopologicalSpace β] [PolishSpace β]
     {f : α → β} (hf : ClosedEmbedding f) : PolishSpace α :=
@@ -189,6 +196,7 @@ theorem ClosedEmbedding.polishSpace [TopologicalSpace α] [TopologicalSpace β] 
     exact hf.closed_range
   infer_instance
 #align closed_embedding.polish_space ClosedEmbedding.polishSpace
+-/
 
 #print Equiv.polishSpace_induced /-
 /-- Pulling back a Polish topology under an equiv gives again a Polish topology. -/
@@ -216,6 +224,7 @@ def AuxCopy (α : Type _) {ι : Type _} (i : ι) : Type _ :=
 #align polish_space.aux_copy PolishSpace.AuxCopy
 -/
 
+#print PolishSpace.exists_polishSpace_forall_le /-
 /-- Given a Polish space, and countably many finer Polish topologies, there exists another Polish
 topology which is finer than all of them. -/
 theorem exists_polishSpace_forall_le {ι : Type _} [Countable ι] [t : TopologicalSpace α]
@@ -280,6 +289,7 @@ theorem exists_polishSpace_forall_le {ι : Type _} [Countable ι] [t : Topologic
     · exact f_closed
   exact @ClosedEmbedding.polishSpace _ _ (T.induced f) T (by infer_instance) _ L
 #align polish_space.exists_polish_space_forall_le PolishSpace.exists_polishSpace_forall_le
+-/
 
 /-!
 ### An open subset of a Polish space is Polish
@@ -530,11 +540,13 @@ theorem IsClosed.isClopenable [TopologicalSpace α] [PolishSpace α] {s : Set α
 #align is_closed.is_clopenable IsClosed.isClopenable
 -/
 
+#print PolishSpace.IsClopenable.compl /-
 theorem IsClopenable.compl [TopologicalSpace α] {s : Set α} (hs : IsClopenable s) :
     IsClopenable (sᶜ) := by
   rcases hs with ⟨t, t_le, t_polish, h, h'⟩
   exact ⟨t, t_le, t_polish, @IsOpen.isClosed_compl α t s h', @IsClosed.isOpen_compl α t s h⟩
 #align polish_space.is_clopenable.compl PolishSpace.IsClopenable.compl
+-/
 
 #print IsOpen.isClopenable /-
 theorem IsOpen.isClopenable [TopologicalSpace α] [PolishSpace α] {s : Set α} (hs : IsOpen s) :

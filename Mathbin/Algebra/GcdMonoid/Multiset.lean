@@ -49,10 +49,12 @@ def lcm (s : Multiset α) : α :=
 #align multiset.lcm Multiset.lcm
 -/
 
+#print Multiset.lcm_zero /-
 @[simp]
 theorem lcm_zero : (0 : Multiset α).lcm = 1 :=
   fold_zero _ _
 #align multiset.lcm_zero Multiset.lcm_zero
+-/
 
 #print Multiset.lcm_cons /-
 @[simp]
@@ -61,10 +63,12 @@ theorem lcm_cons (a : α) (s : Multiset α) : (a ::ₘ s).lcm = GCDMonoid.lcm a 
 #align multiset.lcm_cons Multiset.lcm_cons
 -/
 
+#print Multiset.lcm_singleton /-
 @[simp]
 theorem lcm_singleton {a : α} : ({a} : Multiset α).lcm = normalize a :=
   (fold_singleton _ _ _).trans <| lcm_one_right _
 #align multiset.lcm_singleton Multiset.lcm_singleton
+-/
 
 #print Multiset.lcm_add /-
 @[simp]
@@ -92,11 +96,14 @@ theorem lcm_mono {s₁ s₂ : Multiset α} (h : s₁ ⊆ s₂) : s₁.lcm ∣ s�
 #align multiset.lcm_mono Multiset.lcm_mono
 -/
 
+#print Multiset.normalize_lcm /-
 @[simp]
 theorem normalize_lcm (s : Multiset α) : normalize s.lcm = s.lcm :=
   Multiset.induction_on s (by simp) fun a s IH => by simp
 #align multiset.normalize_lcm Multiset.normalize_lcm
+-/
 
+#print Multiset.lcm_eq_zero_iff /-
 @[simp]
 theorem lcm_eq_zero_iff [Nontrivial α] (s : Multiset α) : s.lcm = 0 ↔ (0 : α) ∈ s :=
   by
@@ -104,6 +111,7 @@ theorem lcm_eq_zero_iff [Nontrivial α] (s : Multiset α) : s.lcm = 0 ↔ (0 : �
   · simp only [lcm_zero, one_ne_zero, not_mem_zero]
   · simp only [mem_cons, lcm_cons, lcm_eq_zero_iff, ihs, @eq_comm _ a]
 #align multiset.lcm_eq_zero_iff Multiset.lcm_eq_zero_iff
+-/
 
 variable [DecidableEq α]
 
@@ -154,10 +162,12 @@ def gcd (s : Multiset α) : α :=
 #align multiset.gcd Multiset.gcd
 -/
 
+#print Multiset.gcd_zero /-
 @[simp]
 theorem gcd_zero : (0 : Multiset α).gcd = 0 :=
   fold_zero _ _
 #align multiset.gcd_zero Multiset.gcd_zero
+-/
 
 #print Multiset.gcd_cons /-
 @[simp]
@@ -166,10 +176,12 @@ theorem gcd_cons (a : α) (s : Multiset α) : (a ::ₘ s).gcd = GCDMonoid.gcd a 
 #align multiset.gcd_cons Multiset.gcd_cons
 -/
 
+#print Multiset.gcd_singleton /-
 @[simp]
 theorem gcd_singleton {a : α} : ({a} : Multiset α).gcd = normalize a :=
   (fold_singleton _ _ _).trans <| gcd_zero_right _
 #align multiset.gcd_singleton Multiset.gcd_singleton
+-/
 
 #print Multiset.gcd_add /-
 @[simp]
@@ -197,11 +209,14 @@ theorem gcd_mono {s₁ s₂ : Multiset α} (h : s₁ ⊆ s₂) : s₂.gcd ∣ s�
 #align multiset.gcd_mono Multiset.gcd_mono
 -/
 
+#print Multiset.normalize_gcd /-
 @[simp]
 theorem normalize_gcd (s : Multiset α) : normalize s.gcd = s.gcd :=
   Multiset.induction_on s (by simp) fun a s IH => by simp
 #align multiset.normalize_gcd Multiset.normalize_gcd
+-/
 
+#print Multiset.gcd_eq_zero_iff /-
 theorem gcd_eq_zero_iff (s : Multiset α) : s.gcd = 0 ↔ ∀ x : α, x ∈ s → x = 0 :=
   by
   constructor
@@ -214,7 +229,9 @@ theorem gcd_eq_zero_iff (s : Multiset α) : s.gcd = 0 ↔ ∀ x : α, x ∈ s �
     intro a s sgcd h
     simp [h a (mem_cons_self a s), sgcd fun x hx => h x (mem_cons_of_mem hx)]
 #align multiset.gcd_eq_zero_iff Multiset.gcd_eq_zero_iff
+-/
 
+#print Multiset.gcd_map_mul /-
 theorem gcd_map_mul (a : α) (s : Multiset α) : (s.map ((· * ·) a)).gcd = normalize a * s.gcd :=
   by
   refine' s.induction_on _ fun b s ih => _
@@ -222,6 +239,7 @@ theorem gcd_map_mul (a : α) (s : Multiset α) : (s.map ((· * ·) a)).gcd = nor
   · simp_rw [map_cons, gcd_cons, ← gcd_mul_left]; rw [ih]
     apply ((normalize_associated a).mul_right _).gcd_eq_right
 #align multiset.gcd_map_mul Multiset.gcd_map_mul
+-/
 
 section
 
@@ -262,13 +280,16 @@ theorem gcd_ndinsert (a : α) (s : Multiset α) : (ndinsert a s).gcd = GCDMonoid
 
 end
 
+#print Multiset.extract_gcd' /-
 theorem extract_gcd' (s t : Multiset α) (hs : ∃ x, x ∈ s ∧ x ≠ (0 : α))
     (ht : s = t.map ((· * ·) s.gcd)) : t.gcd = 1 :=
   ((@mul_right_eq_self₀ _ _ s.gcd _).1 <| by
         conv_lhs => rw [← normalize_gcd, ← gcd_map_mul, ← ht]).resolve_right <|
     by contrapose! hs; exact s.gcd_eq_zero_iff.1 hs
 #align multiset.extract_gcd' Multiset.extract_gcd'
+-/
 
+#print Multiset.extract_gcd /-
 theorem extract_gcd (s : Multiset α) (hs : s ≠ 0) :
     ∃ t : Multiset α, s = t.map ((· * ·) s.gcd) ∧ t.gcd = 1 := by
   classical
@@ -283,6 +304,7 @@ theorem extract_gcd (s : Multiset α) (hs : s ≠ 0) :
     rw [map_pmap]; conv_lhs => rw [← s.map_id, ← s.pmap_eq_map _ _ fun _ => id]
     congr with (x hx); rw [id, ← hf hx]
 #align multiset.extract_gcd Multiset.extract_gcd
+-/
 
 end Gcd
 

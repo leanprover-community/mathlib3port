@@ -46,6 +46,7 @@ class HasUpperLowerClosure (α : Type _) [TopologicalSpace α] [Preorder α] : P
 
 variable {α : Type _} [TopologicalSpace α]
 
+#print OrderedCommGroup.to_hasUpperLowerClosure /-
 -- See note [lower instance priority]
 @[to_additive]
 instance (priority := 100) OrderedCommGroup.to_hasUpperLowerClosure [OrderedCommGroup α]
@@ -61,6 +62,7 @@ instance (priority := 100) OrderedCommGroup.to_hasUpperLowerClosure [OrderedComm
   isOpen_lowerClosure s hs := by rw [← mul_one s, ← mul_lowerClosure]; exact hs.mul_right
 #align ordered_comm_group.to_has_upper_lower_closure OrderedCommGroup.to_hasUpperLowerClosure
 #align ordered_add_comm_group.to_has_upper_lower_closure OrderedAddCommGroup.to_hasUpperLowerClosure
+-/
 
 variable [Preorder α] [HasUpperLowerClosure α] {s : Set α}
 

@@ -32,7 +32,6 @@ deriving DecidableEq, LinearOrder
 #align pnat PNat
 -/
 
--- mathport name: «exprℕ+»
 notation "ℕ+" => PNat
 
 instance : One ℕ+ :=
@@ -118,11 +117,13 @@ def toPNat' (n : ℕ) : ℕ+ :=
 #align nat.to_pnat' Nat.toPNat'
 -/
 
+#print Nat.toPNat'_coe /-
 @[simp]
 theorem toPNat'_coe : ∀ n : ℕ, (toPNat' n : ℕ) = ite (0 < n) n 1
   | 0 => rfl
   | m + 1 => by rw [if_pos (succ_pos m)]; rfl
 #align nat.to_pnat'_coe Nat.toPNat'_coe
+-/
 
 end Nat
 
@@ -304,6 +305,7 @@ def div (m k : ℕ+) : ℕ :=
 #align pnat.div PNat.div
 -/
 
+#print PNat.mod_coe /-
 theorem mod_coe (m k : ℕ+) :
     (mod m k : ℕ) = ite ((m : ℕ) % (k : ℕ) = 0) (k : ℕ) ((m : ℕ) % (k : ℕ)) :=
   by
@@ -312,7 +314,9 @@ theorem mod_coe (m k : ℕ+) :
   · rw [if_pos rfl]; rfl
   · rw [if_neg n.succ_ne_zero]; rfl
 #align pnat.mod_coe PNat.mod_coe
+-/
 
+#print PNat.div_coe /-
 theorem div_coe (m k : ℕ+) :
     (div m k : ℕ) = ite ((m : ℕ) % (k : ℕ) = 0) ((m : ℕ) / (k : ℕ)).pred ((m : ℕ) / (k : ℕ)) :=
   by
@@ -321,6 +325,7 @@ theorem div_coe (m k : ℕ+) :
   · rw [if_pos rfl]; rfl
   · rw [if_neg n.succ_ne_zero]; rfl
 #align pnat.div_coe PNat.div_coe
+-/
 
 #print PNat.divExact /-
 /-- If `h : k | m`, then `k * (div_exact m k) = m`. Note that this is not equal to `m / k`. -/

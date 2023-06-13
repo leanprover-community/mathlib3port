@@ -45,6 +45,7 @@ variable [∀ (P : Cᵒᵖ ⥤ D) (X : C) (S : J.cover X), HasMultiequalizer (S.
 
 variable (P : Cᵒᵖ ⥤ D)
 
+#print CategoryTheory.GrothendieckTopology.diagram /-
 /-- The diagram whose colimit defines the values of `plus`. -/
 @[simps]
 def diagram (X : C) : (J.cover X)ᵒᵖ ⥤ D
@@ -56,7 +57,9 @@ def diagram (X : C) : (J.cover X)ᵒᵖ ⥤ D
   map_id' S := by ext I; cases I; simpa
   map_comp' S T W f g := by ext I; simpa
 #align category_theory.grothendieck_topology.diagram CategoryTheory.GrothendieckTopology.diagram
+-/
 
+#print CategoryTheory.GrothendieckTopology.diagramPullback /-
 /-- A helper definition used to define the morphisms for `plus`. -/
 @[simps]
 def diagramPullback {X Y : C} (f : X ⟶ Y) : J.diagram P Y ⟶ (J.pullback f).op ⋙ J.diagram P X
@@ -66,7 +69,9 @@ def diagramPullback {X Y : C} (f : X ⟶ Y) : J.diagram P Y ⟶ (J.pullback f).o
       Multiequalizer.condition (S.unop.index P) I.base
   naturality' S T f := by ext; dsimp; simpa
 #align category_theory.grothendieck_topology.diagram_pullback CategoryTheory.GrothendieckTopology.diagramPullback
+-/
 
+#print CategoryTheory.GrothendieckTopology.diagramNatTrans /-
 /-- A natural transformation `P ⟶ Q` induces a natural transformation
 between diagrams whose colimits define the values of `plus`. -/
 @[simps]
@@ -81,7 +86,9 @@ def diagramNatTrans {P Q : Cᵒᵖ ⥤ D} (η : P ⟶ Q) (X : C) : J.diagram P X
         rfl)
   naturality' _ _ _ := by dsimp; ext; simpa
 #align category_theory.grothendieck_topology.diagram_nat_trans CategoryTheory.GrothendieckTopology.diagramNatTrans
+-/
 
+#print CategoryTheory.GrothendieckTopology.diagramNatTrans_id /-
 @[simp]
 theorem diagramNatTrans_id (X : C) (P : Cᵒᵖ ⥤ D) : J.diagramNatTrans (𝟙 P) X = 𝟙 (J.diagram P X) :=
   by
@@ -90,21 +97,27 @@ theorem diagramNatTrans_id (X : C) (P : Cᵒᵖ ⥤ D) : J.diagramNatTrans (𝟙
   simp only [multiequalizer.lift_ι, category.id_comp]
   erw [category.comp_id]
 #align category_theory.grothendieck_topology.diagram_nat_trans_id CategoryTheory.GrothendieckTopology.diagramNatTrans_id
+-/
 
+#print CategoryTheory.GrothendieckTopology.diagramNatTrans_zero /-
 @[simp]
 theorem diagramNatTrans_zero [Preadditive D] (X : C) (P Q : Cᵒᵖ ⥤ D) :
     J.diagramNatTrans (0 : P ⟶ Q) X = 0 := by ext (j x); dsimp;
   rw [zero_comp, multiequalizer.lift_ι, comp_zero]
 #align category_theory.grothendieck_topology.diagram_nat_trans_zero CategoryTheory.GrothendieckTopology.diagramNatTrans_zero
+-/
 
+#print CategoryTheory.GrothendieckTopology.diagramNatTrans_comp /-
 @[simp]
 theorem diagramNatTrans_comp {P Q R : Cᵒᵖ ⥤ D} (η : P ⟶ Q) (γ : Q ⟶ R) (X : C) :
     J.diagramNatTrans (η ≫ γ) X = J.diagramNatTrans η X ≫ J.diagramNatTrans γ X := by ext; dsimp;
   simp
 #align category_theory.grothendieck_topology.diagram_nat_trans_comp CategoryTheory.GrothendieckTopology.diagramNatTrans_comp
+-/
 
 variable (D)
 
+#print CategoryTheory.GrothendieckTopology.diagramFunctor /-
 /-- `J.diagram P`, as a functor in `P`. -/
 @[simps]
 def diagramFunctor (X : C) : (Cᵒᵖ ⥤ D) ⥤ (J.cover X)ᵒᵖ ⥤ D
@@ -114,11 +127,13 @@ def diagramFunctor (X : C) : (Cᵒᵖ ⥤ D) ⥤ (J.cover X)ᵒᵖ ⥤ D
   map_id' P := J.diagramNatTrans_id _ _
   map_comp' P Q R η γ := J.diagramNatTrans_comp _ _ _
 #align category_theory.grothendieck_topology.diagram_functor CategoryTheory.GrothendieckTopology.diagramFunctor
+-/
 
 variable {D}
 
 variable [∀ X : C, HasColimitsOfShape (J.cover X)ᵒᵖ D]
 
+#print CategoryTheory.GrothendieckTopology.plusObj /-
 /-- The plus construction, associating a presheaf to any presheaf.
 See `plus_functor` below for a functorial version. -/
 def plusObj : Cᵒᵖ ⥤ D where
@@ -158,7 +173,9 @@ def plusObj : Cᵒᵖ ⥤ D where
     congr 2
     simp
 #align category_theory.grothendieck_topology.plus_obj CategoryTheory.GrothendieckTopology.plusObj
+-/
 
+#print CategoryTheory.GrothendieckTopology.plusMap /-
 /-- An auxiliary definition used in `plus` below. -/
 def plusMap {P Q : Cᵒᵖ ⥤ D} (η : P ⟶ Q) : J.plusObj P ⟶ J.plusObj Q
     where
@@ -175,7 +192,9 @@ def plusMap {P Q : Cᵒᵖ ⥤ D} (η : P ⟶ Q) : J.plusObj P ⟶ J.plusObj Q
     dsimp
     simpa
 #align category_theory.grothendieck_topology.plus_map CategoryTheory.GrothendieckTopology.plusMap
+-/
 
+#print CategoryTheory.GrothendieckTopology.plusMap_id /-
 @[simp]
 theorem plusMap_id (P : Cᵒᵖ ⥤ D) : J.plusMap (𝟙 P) = 𝟙 _ :=
   by
@@ -186,12 +205,16 @@ theorem plusMap_id (P : Cᵒᵖ ⥤ D) : J.plusMap (𝟙 P) = 𝟙 _ :=
   dsimp
   simp
 #align category_theory.grothendieck_topology.plus_map_id CategoryTheory.GrothendieckTopology.plusMap_id
+-/
 
+#print CategoryTheory.GrothendieckTopology.plusMap_zero /-
 @[simp]
 theorem plusMap_zero [Preadditive D] (P Q : Cᵒᵖ ⥤ D) : J.plusMap (0 : P ⟶ Q) = 0 := by ext;
   erw [comp_zero, colimit.ι_map, J.diagram_nat_trans_zero, zero_comp]
 #align category_theory.grothendieck_topology.plus_map_zero CategoryTheory.GrothendieckTopology.plusMap_zero
+-/
 
+#print CategoryTheory.GrothendieckTopology.plusMap_comp /-
 @[simp]
 theorem plusMap_comp {P Q R : Cᵒᵖ ⥤ D} (η : P ⟶ Q) (γ : Q ⟶ R) :
     J.plusMap (η ≫ γ) = J.plusMap η ≫ J.plusMap γ :=
@@ -203,9 +226,11 @@ theorem plusMap_comp {P Q R : Cᵒᵖ ⥤ D} (η : P ⟶ Q) (γ : Q ⟶ R) :
   dsimp
   simp
 #align category_theory.grothendieck_topology.plus_map_comp CategoryTheory.GrothendieckTopology.plusMap_comp
+-/
 
 variable (D)
 
+#print CategoryTheory.GrothendieckTopology.plusFunctor /-
 /-- The plus construction, a functor sending `P` to `J.plus_obj P`. -/
 @[simps]
 def plusFunctor : (Cᵒᵖ ⥤ D) ⥤ Cᵒᵖ ⥤ D
@@ -215,9 +240,11 @@ def plusFunctor : (Cᵒᵖ ⥤ D) ⥤ Cᵒᵖ ⥤ D
   map_id' _ := plusMap_id _ _
   map_comp' _ _ _ _ _ := plusMap_comp _ _ _
 #align category_theory.grothendieck_topology.plus_functor CategoryTheory.GrothendieckTopology.plusFunctor
+-/
 
 variable {D}
 
+#print CategoryTheory.GrothendieckTopology.toPlus /-
 /-- The canonical map from `P` to `J.plus.obj P`.
 See `to_plus` for a functorial version. -/
 def toPlus : P ⟶ J.plusObj P
@@ -238,7 +265,9 @@ def toPlus : P ⟶ J.plusObj P
     dsimp [cover.arrow.base]
     simp
 #align category_theory.grothendieck_topology.to_plus CategoryTheory.GrothendieckTopology.toPlus
+-/
 
+#print CategoryTheory.GrothendieckTopology.toPlus_naturality /-
 @[simp, reassoc]
 theorem toPlus_naturality {P Q : Cᵒᵖ ⥤ D} (η : P ⟶ Q) : η ≫ J.toPlus Q = J.toPlus _ ≫ J.plusMap η :=
   by
@@ -252,9 +281,11 @@ theorem toPlus_naturality {P Q : Cᵒᵖ ⥤ D} (η : P ⟶ Q) : η ≫ J.toPlus
   dsimp
   simp
 #align category_theory.grothendieck_topology.to_plus_naturality CategoryTheory.GrothendieckTopology.toPlus_naturality
+-/
 
 variable (D)
 
+#print CategoryTheory.GrothendieckTopology.toPlusNatTrans /-
 /-- The natural transformation from the identity functor to `plus`. -/
 @[simps]
 def toPlusNatTrans : 𝟭 (Cᵒᵖ ⥤ D) ⟶ J.plusFunctor D
@@ -262,9 +293,11 @@ def toPlusNatTrans : 𝟭 (Cᵒᵖ ⥤ D) ⟶ J.plusFunctor D
   app P := J.toPlus P
   naturality' _ _ _ := toPlus_naturality _ _
 #align category_theory.grothendieck_topology.to_plus_nat_trans CategoryTheory.GrothendieckTopology.toPlusNatTrans
+-/
 
 variable {D}
 
+#print CategoryTheory.GrothendieckTopology.plusMap_toPlus /-
 /-- `(P ⟶ P⁺)⁺ = P⁺ ⟶ P⁺⁺` -/
 @[simp]
 theorem plusMap_toPlus : J.plusMap (J.toPlus P) = J.toPlus (J.plusObj P) :=
@@ -296,7 +329,9 @@ theorem plusMap_toPlus : J.plusMap (J.toPlus P) = J.toPlus (J.plusObj P) :=
     erw [P.map_id, category.comp_id]
     rfl
 #align category_theory.grothendieck_topology.plus_map_to_plus CategoryTheory.GrothendieckTopology.plusMap_toPlus
+-/
 
+#print CategoryTheory.GrothendieckTopology.isIso_toPlus_of_isSheaf /-
 theorem isIso_toPlus_of_isSheaf (hP : Presheaf.IsSheaf J P) : IsIso (J.toPlus P) :=
   by
   rw [presheaf.is_sheaf_iff_multiequalizer] at hP 
@@ -315,23 +350,31 @@ theorem isIso_toPlus_of_isSheaf (hP : Presheaf.IsSheaf J P) : IsIso (J.toPlus P)
     simp [← this]
   rw [this]; infer_instance
 #align category_theory.grothendieck_topology.is_iso_to_plus_of_is_sheaf CategoryTheory.GrothendieckTopology.isIso_toPlus_of_isSheaf
+-/
 
+#print CategoryTheory.GrothendieckTopology.isoToPlus /-
 /-- The natural isomorphism between `P` and `P⁺` when `P` is a sheaf. -/
 def isoToPlus (hP : Presheaf.IsSheaf J P) : P ≅ J.plusObj P :=
   letI := is_iso_to_plus_of_is_sheaf J P hP
   as_iso (J.to_plus P)
 #align category_theory.grothendieck_topology.iso_to_plus CategoryTheory.GrothendieckTopology.isoToPlus
+-/
 
+#print CategoryTheory.GrothendieckTopology.isoToPlus_hom /-
 @[simp]
 theorem isoToPlus_hom (hP : Presheaf.IsSheaf J P) : (J.isoToPlus P hP).Hom = J.toPlus P :=
   rfl
 #align category_theory.grothendieck_topology.iso_to_plus_hom CategoryTheory.GrothendieckTopology.isoToPlus_hom
+-/
 
+#print CategoryTheory.GrothendieckTopology.plusLift /-
 /-- Lift a morphism `P ⟶ Q` to `P⁺ ⟶ Q` when `Q` is a sheaf. -/
 def plusLift {P Q : Cᵒᵖ ⥤ D} (η : P ⟶ Q) (hQ : Presheaf.IsSheaf J Q) : J.plusObj P ⟶ Q :=
   J.plusMap η ≫ (J.isoToPlus Q hQ).inv
 #align category_theory.grothendieck_topology.plus_lift CategoryTheory.GrothendieckTopology.plusLift
+-/
 
+#print CategoryTheory.GrothendieckTopology.toPlus_plusLift /-
 @[simp, reassoc]
 theorem toPlus_plusLift {P Q : Cᵒᵖ ⥤ D} (η : P ⟶ Q) (hQ : Presheaf.IsSheaf J Q) :
     J.toPlus P ≫ J.plusLift η hQ = η := by
@@ -341,7 +384,9 @@ theorem toPlus_plusLift {P Q : Cᵒᵖ ⥤ D} (η : P ⟶ Q) (hQ : Presheaf.IsSh
   dsimp only [iso_to_plus, as_iso]
   rw [to_plus_naturality]
 #align category_theory.grothendieck_topology.to_plus_plus_lift CategoryTheory.GrothendieckTopology.toPlus_plusLift
+-/
 
+#print CategoryTheory.GrothendieckTopology.plusLift_unique /-
 theorem plusLift_unique {P Q : Cᵒᵖ ⥤ D} (η : P ⟶ Q) (hQ : Presheaf.IsSheaf J Q)
     (γ : J.plusObj P ⟶ Q) (hγ : J.toPlus P ≫ γ = η) : γ = J.plusLift η hQ :=
   by
@@ -350,7 +395,9 @@ theorem plusLift_unique {P Q : Cᵒᵖ ⥤ D} (η : P ⟶ Q) (hQ : Presheaf.IsSh
   dsimp
   simp
 #align category_theory.grothendieck_topology.plus_lift_unique CategoryTheory.GrothendieckTopology.plusLift_unique
+-/
 
+#print CategoryTheory.GrothendieckTopology.plus_hom_ext /-
 theorem plus_hom_ext {P Q : Cᵒᵖ ⥤ D} (η γ : J.plusObj P ⟶ Q) (hQ : Presheaf.IsSheaf J Q)
     (h : J.toPlus P ≫ η = J.toPlus P ≫ γ) : η = γ :=
   by
@@ -358,7 +405,9 @@ theorem plus_hom_ext {P Q : Cᵒᵖ ⥤ D} (η γ : J.plusObj P ⟶ Q) (hQ : Pre
   rw [this]
   apply plus_lift_unique; exact h
 #align category_theory.grothendieck_topology.plus_hom_ext CategoryTheory.GrothendieckTopology.plus_hom_ext
+-/
 
+#print CategoryTheory.GrothendieckTopology.isoToPlus_inv /-
 @[simp]
 theorem isoToPlus_inv (hP : Presheaf.IsSheaf J P) : (J.isoToPlus P hP).inv = J.plusLift (𝟙 _) hP :=
   by
@@ -366,7 +415,9 @@ theorem isoToPlus_inv (hP : Presheaf.IsSheaf J P) : (J.isoToPlus P hP).inv = J.p
   rw [iso.comp_inv_eq, category.id_comp]
   rfl
 #align category_theory.grothendieck_topology.iso_to_plus_inv CategoryTheory.GrothendieckTopology.isoToPlus_inv
+-/
 
+#print CategoryTheory.GrothendieckTopology.plusMap_plusLift /-
 @[simp]
 theorem plusMap_plusLift {P Q R : Cᵒᵖ ⥤ D} (η : P ⟶ Q) (γ : Q ⟶ R) (hR : Presheaf.IsSheaf J R) :
     J.plusMap η ≫ J.plusLift γ hR = J.plusLift (η ≫ γ) hR :=
@@ -374,11 +425,14 @@ theorem plusMap_plusLift {P Q R : Cᵒᵖ ⥤ D} (η : P ⟶ Q) (γ : Q ⟶ R) (
   apply J.plus_lift_unique
   rw [← category.assoc, ← J.to_plus_naturality, category.assoc, J.to_plus_plus_lift]
 #align category_theory.grothendieck_topology.plus_map_plus_lift CategoryTheory.GrothendieckTopology.plusMap_plusLift
+-/
 
+#print CategoryTheory.GrothendieckTopology.plusFunctor_preservesZeroMorphisms /-
 instance plusFunctor_preservesZeroMorphisms [Preadditive D] :
     (plusFunctor J D).PreservesZeroMorphisms
     where map_zero' F G := by ext; dsimp; rw [J.plus_map_zero, nat_trans.app_zero]
 #align category_theory.grothendieck_topology.plus_functor_preserves_zero_morphisms CategoryTheory.GrothendieckTopology.plusFunctor_preservesZeroMorphisms
+-/
 
 end CategoryTheory.GrothendieckTopology
 

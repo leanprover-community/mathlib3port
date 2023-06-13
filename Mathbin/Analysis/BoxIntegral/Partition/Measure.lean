@@ -48,13 +48,17 @@ namespace Box
 
 variable (I : Box ι)
 
+#print BoxIntegral.Box.measure_Icc_lt_top /-
 theorem measure_Icc_lt_top (μ : Measure (ι → ℝ)) [IsLocallyFiniteMeasure μ] : μ I.Icc < ∞ :=
   show μ (Icc I.lower I.upper) < ∞ from I.isCompact_Icc.measure_lt_top
 #align box_integral.box.measure_Icc_lt_top BoxIntegral.Box.measure_Icc_lt_top
+-/
 
+#print BoxIntegral.Box.measure_coe_lt_top /-
 theorem measure_coe_lt_top (μ : Measure (ι → ℝ)) [IsLocallyFiniteMeasure μ] : μ I < ∞ :=
   (measure_mono <| coe_subset_Icc).trans_lt (I.measure_Icc_lt_top μ)
 #align box_integral.box.measure_coe_lt_top BoxIntegral.Box.measure_coe_lt_top
+-/
 
 section Countable
 
@@ -66,9 +70,11 @@ theorem measurableSet_coe : MeasurableSet (I : Set (ι → ℝ)) := by rw [coe_e
 #align box_integral.box.measurable_set_coe BoxIntegral.Box.measurableSet_coe
 -/
 
+#print BoxIntegral.Box.measurableSet_Icc /-
 theorem measurableSet_Icc : MeasurableSet I.Icc :=
   measurableSet_Icc
 #align box_integral.box.measurable_set_Icc BoxIntegral.Box.measurableSet_Icc
+-/
 
 #print BoxIntegral.Box.measurableSet_Ioo /-
 theorem measurableSet_Ioo : MeasurableSet I.Ioo :=
@@ -143,11 +149,13 @@ theorem volume_apply (I : Box ι) :
 #align box_integral.box.volume_apply BoxIntegral.Box.volume_apply
 -/
 
+#print BoxIntegral.Box.volume_face_mul /-
 theorem volume_face_mul {n} (i : Fin (n + 1)) (I : Box (Fin (n + 1))) :
     (∏ j, ((I.face i).upper j - (I.face i).lower j)) * (I.upper i - I.lower i) =
       ∏ j, (I.upper j - I.lower j) :=
   by simp only [face_lower, face_upper, (· ∘ ·), Fin.prod_univ_succAbove _ i, mul_comm]
 #align box_integral.box.volume_face_mul BoxIntegral.Box.volume_face_mul
+-/
 
 end Box
 
@@ -161,10 +169,12 @@ protected def volume {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] : �
 #align box_integral.box_additive_map.volume BoxIntegral.BoxAdditiveMap.volume
 -/
 
+#print BoxIntegral.BoxAdditiveMap.volume_apply /-
 theorem volume_apply {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] (I : Box ι) (x : E) :
     BoxAdditiveMap.volume I x = (∏ j, (I.upper j - I.lower j)) • x :=
   congr_arg₂ (· • ·) I.volume_apply rfl
 #align box_integral.box_additive_map.volume_apply BoxIntegral.BoxAdditiveMap.volume_apply
+-/
 
 end BoxAdditiveMap
 

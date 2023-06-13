@@ -58,20 +58,26 @@ section
 variable {C D : Type _} [Category C] [Category D] [Preadditive C] [Preadditive D] (F : C ⥤ D)
   [Functor.Additive F]
 
+#print CategoryTheory.Functor.map_add /-
 @[simp]
 theorem map_add {X Y : C} {f g : X ⟶ Y} : F.map (f + g) = F.map f + F.map g :=
   Functor.Additive.map_add'
 #align category_theory.functor.map_add CategoryTheory.Functor.map_add
+-/
 
+#print CategoryTheory.Functor.mapAddHom /-
 /-- `F.map_add_hom` is an additive homomorphism whose underlying function is `F.map`. -/
 @[simps (config := { fullyApplied := false })]
 def mapAddHom {X Y : C} : (X ⟶ Y) →+ (F.obj X ⟶ F.obj Y) :=
   AddMonoidHom.mk' (fun f => F.map f) fun f g => F.map_add
 #align category_theory.functor.map_add_hom CategoryTheory.Functor.mapAddHom
+-/
 
+#print CategoryTheory.Functor.coe_mapAddHom /-
 theorem coe_mapAddHom {X Y : C} : ⇑(F.mapAddHom : (X ⟶ Y) →+ _) = @map C _ D _ F X Y :=
   rfl
 #align category_theory.functor.coe_map_add_hom CategoryTheory.Functor.coe_mapAddHom
+-/
 
 #print CategoryTheory.Functor.preservesZeroMorphisms_of_additive /-
 instance (priority := 100) preservesZeroMorphisms_of_additive : PreservesZeroMorphisms F
@@ -84,32 +90,42 @@ instance : Additive (𝟭 C) where
 instance {E : Type _} [Category E] [Preadditive E] (G : D ⥤ E) [Functor.Additive G] :
     Additive (F ⋙ G) where
 
+#print CategoryTheory.Functor.map_neg /-
 @[simp]
 theorem map_neg {X Y : C} {f : X ⟶ Y} : F.map (-f) = -F.map f :=
   (F.mapAddHom : (X ⟶ Y) →+ (F.obj X ⟶ F.obj Y)).map_neg _
 #align category_theory.functor.map_neg CategoryTheory.Functor.map_neg
+-/
 
+#print CategoryTheory.Functor.map_sub /-
 @[simp]
 theorem map_sub {X Y : C} {f g : X ⟶ Y} : F.map (f - g) = F.map f - F.map g :=
   (F.mapAddHom : (X ⟶ Y) →+ (F.obj X ⟶ F.obj Y)).map_sub _ _
 #align category_theory.functor.map_sub CategoryTheory.Functor.map_sub
+-/
 
+#print CategoryTheory.Functor.map_nsmul /-
 theorem map_nsmul {X Y : C} {f : X ⟶ Y} {n : ℕ} : F.map (n • f) = n • F.map f :=
   (F.mapAddHom : (X ⟶ Y) →+ (F.obj X ⟶ F.obj Y)).map_nsmul _ _
 #align category_theory.functor.map_nsmul CategoryTheory.Functor.map_nsmul
+-/
 
+#print CategoryTheory.Functor.map_zsmul /-
 -- You can alternatively just use `functor.map_smul` here, with an explicit `(r : ℤ)` argument.
 theorem map_zsmul {X Y : C} {f : X ⟶ Y} {r : ℤ} : F.map (r • f) = r • F.map f :=
   (F.mapAddHom : (X ⟶ Y) →+ (F.obj X ⟶ F.obj Y)).map_zsmul _ _
 #align category_theory.functor.map_zsmul CategoryTheory.Functor.map_zsmul
+-/
 
 open scoped BigOperators
 
+#print CategoryTheory.Functor.map_sum /-
 @[simp]
 theorem map_sum {X Y : C} {α : Type _} (f : α → (X ⟶ Y)) (s : Finset α) :
     F.map (∑ a in s, f a) = ∑ a in s, F.map (f a) :=
   (F.mapAddHom : (X ⟶ Y) →+ _).map_sum f s
 #align category_theory.functor.map_sum CategoryTheory.Functor.map_sum
+-/
 
 end
 
@@ -124,9 +140,11 @@ instance inducedFunctor_additive : Functor.Additive (inducedFunctor F) where
 
 end InducedCategory
 
+#print CategoryTheory.Functor.fullSubcategoryInclusion_additive /-
 instance fullSubcategoryInclusion_additive {C : Type _} [Category C] [Preadditive C]
     (Z : C → Prop) : (fullSubcategoryInclusion Z).Additive where
 #align category_theory.functor.full_subcategory_inclusion_additive CategoryTheory.Functor.fullSubcategoryInclusion_additive
+-/
 
 section
 
@@ -179,9 +197,11 @@ namespace Equivalence
 
 variable {C D : Type _} [Category C] [Category D] [Preadditive C] [Preadditive D]
 
+#print CategoryTheory.Equivalence.inverse_additive /-
 instance inverse_additive (e : C ≌ D) [e.Functor.Additive] : e.inverse.Additive
     where map_add' X Y f g := by apply e.functor.map_injective; simp
 #align category_theory.equivalence.inverse_additive CategoryTheory.Equivalence.inverse_additive
+-/
 
 end Equivalence
 
@@ -198,7 +218,6 @@ deriving Category
 #align category_theory.AdditiveFunctor CategoryTheory.AdditiveFunctor
 -/
 
--- mathport name: «expr ⥤+ »
 infixr:26 " ⥤+ " => AdditiveFunctor
 
 instance : Preadditive (C ⥤+ D) :=
@@ -221,26 +240,34 @@ def AdditiveFunctor.of (F : C ⥤ D) [F.Additive] : C ⥤+ D :=
 #align category_theory.AdditiveFunctor.of CategoryTheory.AdditiveFunctor.of
 -/
 
+#print CategoryTheory.AdditiveFunctor.of_fst /-
 @[simp]
 theorem AdditiveFunctor.of_fst (F : C ⥤ D) [F.Additive] : (AdditiveFunctor.of F).1 = F :=
   rfl
 #align category_theory.AdditiveFunctor.of_fst CategoryTheory.AdditiveFunctor.of_fst
+-/
 
+#print CategoryTheory.AdditiveFunctor.forget_obj /-
 @[simp]
 theorem AdditiveFunctor.forget_obj (F : C ⥤+ D) : (AdditiveFunctor.forget C D).obj F = F.1 :=
   rfl
 #align category_theory.AdditiveFunctor.forget_obj CategoryTheory.AdditiveFunctor.forget_obj
+-/
 
+#print CategoryTheory.AdditiveFunctor.forget_obj_of /-
 theorem AdditiveFunctor.forget_obj_of (F : C ⥤ D) [F.Additive] :
     (AdditiveFunctor.forget C D).obj (AdditiveFunctor.of F) = F :=
   rfl
 #align category_theory.AdditiveFunctor.forget_obj_of CategoryTheory.AdditiveFunctor.forget_obj_of
+-/
 
+#print CategoryTheory.AdditiveFunctor.forget_map /-
 @[simp]
 theorem AdditiveFunctor.forget_map (F G : C ⥤+ D) (α : F ⟶ G) :
     (AdditiveFunctor.forget C D).map α = α :=
   rfl
 #align category_theory.AdditiveFunctor.forget_map CategoryTheory.AdditiveFunctor.forget_map
+-/
 
 instance : Functor.Additive (AdditiveFunctor.forget C D) where map_add' F G α β := rfl
 
@@ -321,23 +348,29 @@ theorem AdditiveFunctor.ofExact_obj_fst (F : C ⥤ₑ D) :
 #align category_theory.AdditiveFunctor.of_exact_obj_fst CategoryTheory.AdditiveFunctor.ofExact_obj_fst
 -/
 
+#print CategoryTheory.AdditiveFunctor.ofLeftExact_map /-
 @[simp]
 theorem AdditiveFunctor.ofLeftExact_map {F G : C ⥤ₗ D} (α : F ⟶ G) :
     (AdditiveFunctor.ofLeftExact C D).map α = α :=
   rfl
 #align category_theory.Additive_Functor.of_left_exact_map CategoryTheory.AdditiveFunctor.ofLeftExact_map
+-/
 
+#print CategoryTheory.AdditiveFunctor.ofRightExact_map /-
 @[simp]
 theorem AdditiveFunctor.ofRightExact_map {F G : C ⥤ᵣ D} (α : F ⟶ G) :
     (AdditiveFunctor.ofRightExact C D).map α = α :=
   rfl
 #align category_theory.Additive_Functor.of_right_exact_map CategoryTheory.AdditiveFunctor.ofRightExact_map
+-/
 
+#print CategoryTheory.AdditiveFunctor.ofExact_map /-
 @[simp]
 theorem AdditiveFunctor.ofExact_map {F G : C ⥤ₑ D} (α : F ⟶ G) :
     (AdditiveFunctor.ofExact C D).map α = α :=
   rfl
 #align category_theory.Additive_Functor.of_exact_map CategoryTheory.AdditiveFunctor.ofExact_map
+-/
 
 end Exact
 

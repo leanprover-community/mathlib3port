@@ -128,11 +128,15 @@ theorem le_of_op_hom {x y : Xᵒᵖ} (h : x ⟶ y) : unop y ≤ unop x :=
 #align category_theory.le_of_op_hom CategoryTheory.le_of_op_hom
 -/
 
+#print CategoryTheory.uniqueToTop /-
 instance uniqueToTop [OrderTop X] {x : X} : Unique (x ⟶ ⊤) := by tidy
 #align category_theory.unique_to_top CategoryTheory.uniqueToTop
+-/
 
+#print CategoryTheory.uniqueFromBot /-
 instance uniqueFromBot [OrderBot X] {x : X} : Unique (⊥ ⟶ x) := by tidy
 #align category_theory.unique_from_bot CategoryTheory.uniqueFromBot
+-/
 
 end CategoryTheory
 
@@ -150,10 +154,12 @@ def Monotone.functor {f : X → Y} (h : Monotone f) : X ⥤ Y
 #align monotone.functor Monotone.functor
 -/
 
+#print Monotone.functor_obj /-
 @[simp]
 theorem Monotone.functor_obj {f : X → Y} (h : Monotone f) : h.Functor.obj = f :=
   rfl
 #align monotone.functor_obj Monotone.functor_obj
+-/
 
 end
 
@@ -163,11 +169,13 @@ section Preorder
 
 variable {X : Type u} {Y : Type v} [Preorder X] [Preorder Y]
 
+#print CategoryTheory.Functor.monotone /-
 /-- A functor between preorder categories is monotone.
 -/
 @[mono]
 theorem Functor.monotone (f : X ⥤ Y) : Monotone f.obj := fun x y hxy => (f.map hxy.Hom).le
 #align category_theory.functor.monotone CategoryTheory.Functor.monotone
+-/
 
 end Preorder
 
@@ -181,6 +189,7 @@ theorem Iso.to_eq {x y : X} (f : x ≅ y) : x = y :=
 #align category_theory.iso.to_eq CategoryTheory.Iso.to_eq
 -/
 
+#print CategoryTheory.Equivalence.toOrderIso /-
 /-- A categorical equivalence between partial orders is just an order isomorphism.
 -/
 def Equivalence.toOrderIso (e : X ≌ Y) : X ≃o Y
@@ -194,19 +203,24 @@ def Equivalence.toOrderIso (e : X ≌ Y) : X ≃o Y
       ((Equivalence.unit e).app a ≫ e.inverse.map h.Hom ≫ (Equivalence.unitInv e).app a').le,
       fun h : a ≤ a' => (e.Functor.map h.Hom).le⟩
 #align category_theory.equivalence.to_order_iso CategoryTheory.Equivalence.toOrderIso
+-/
 
+#print CategoryTheory.Equivalence.toOrderIso_apply /-
 -- `@[simps]` on `equivalence.to_order_iso` produces lemmas that fail the `simp_nf` linter,
 -- so we provide them by hand:
 @[simp]
 theorem Equivalence.toOrderIso_apply (e : X ≌ Y) (x : X) : e.toOrderIso x = e.Functor.obj x :=
   rfl
 #align category_theory.equivalence.to_order_iso_apply CategoryTheory.Equivalence.toOrderIso_apply
+-/
 
+#print CategoryTheory.Equivalence.toOrderIso_symm_apply /-
 @[simp]
 theorem Equivalence.toOrderIso_symm_apply (e : X ≌ Y) (y : Y) :
     e.toOrderIso.symm y = e.inverse.obj y :=
   rfl
 #align category_theory.equivalence.to_order_iso_symm_apply CategoryTheory.Equivalence.toOrderIso_symm_apply
+-/
 
 end PartialOrder
 

@@ -63,6 +63,7 @@ section Basic
 
 variable {α : Type _} [TopologicalSpace α] {C : Set α}
 
+#print AccPt.nhds_inter /-
 /-- If `x` is an accumulation point of a set `C` and `U` is a neighborhood of `x`,
 then `x` is an accumulation point of `U ∩ C`. -/
 theorem AccPt.nhds_inter {x : α} {U : Set α} (h_acc : AccPt x (𝓟 C)) (hU : U ∈ 𝓝 x) :
@@ -74,6 +75,7 @@ theorem AccPt.nhds_inter {x : α} {U : Set α} (h_acc : AccPt x (𝓟 C)) (hU : 
   rw [AccPt, ← inf_principal, ← inf_assoc, inf_of_le_left this]
   exact h_acc
 #align acc_pt.nhds_inter AccPt.nhds_inter
+-/
 
 #print Preperfect /-
 /-- A set `C` is preperfect if all of its points are accumulation points of itself.
@@ -94,10 +96,13 @@ structure Perfect (C : Set α) : Prop where
 #align perfect Perfect
 -/
 
+#print preperfect_iff_nhds /-
 theorem preperfect_iff_nhds : Preperfect C ↔ ∀ x ∈ C, ∀ U ∈ 𝓝 x, ∃ y ∈ U ∩ C, y ≠ x := by
   simp only [Preperfect, accPt_iff_nhds]
 #align preperfect_iff_nhds preperfect_iff_nhds
+-/
 
+#print Preperfect.open_inter /-
 /-- The intersection of a preperfect set and an open set is preperfect-/
 theorem Preperfect.open_inter {U : Set α} (hC : Preperfect C) (hU : IsOpen U) :
     Preperfect (U ∩ C) := by
@@ -105,6 +110,7 @@ theorem Preperfect.open_inter {U : Set α} (hC : Preperfect C) (hU : IsOpen U) :
   apply (hC _ xC).nhds_inter
   exact hU.mem_nhds xU
 #align preperfect.open_inter Preperfect.open_inter
+-/
 
 #print Preperfect.perfect_closure /-
 /-- The closure of a preperfect set is perfect.
@@ -141,6 +147,7 @@ theorem preperfect_iff_perfect_closure [T1Space α] : Preperfect C ↔ Perfect (
 #align preperfect_iff_perfect_closure preperfect_iff_perfect_closure
 -/
 
+#print Perfect.closure_nhds_inter /-
 theorem Perfect.closure_nhds_inter {U : Set α} (hC : Perfect C) (x : α) (xC : x ∈ C) (xU : x ∈ U)
     (Uop : IsOpen U) : Perfect (closure (U ∩ C)) ∧ (closure (U ∩ C)).Nonempty :=
   by
@@ -150,7 +157,9 @@ theorem Perfect.closure_nhds_inter {U : Set α} (hC : Perfect C) (x : α) (xC : 
   apply nonempty.closure
   exact ⟨x, ⟨xU, xC⟩⟩
 #align perfect.closure_nhds_inter Perfect.closure_nhds_inter
+-/
 
+#print Perfect.splitting /-
 /-- Given a perfect nonempty set in a T2.5 space, we can find two disjoint perfect subsets
 This is the main inductive step in the proof of the Cantor-Bendixson Theorem-/
 theorem Perfect.splitting [T25Space α] (hC : Perfect C) (hnonempty : C.Nonempty) :
@@ -176,9 +185,11 @@ theorem Perfect.splitting [T25Space α] (hC : Perfect C) (hnonempty : C.Nonempty
     exact inter_subset_right _ _
   apply Disjoint.mono _ _ hUV <;> apply closure_mono <;> exact inter_subset_left _ _
 #align perfect.splitting Perfect.splitting
+-/
 
 section Kernel
 
+#print exists_countable_union_perfect_of_isClosed /-
 /-- The **Cantor-Bendixson Theorem**: Any closed subset of a second countable space
 can be written as the union of a countable set and a perfect set.-/
 theorem exists_countable_union_perfect_of_isClosed [SecondCountableTopology α]
@@ -219,6 +230,7 @@ theorem exists_countable_union_perfect_of_isClosed [SecondCountableTopology α]
     exact absurd (countable.mono h (Set.countable_singleton _)) this
   · rw [inter_comm, inter_union_diff]
 #align exists_countable_union_perfect_of_is_closed exists_countable_union_perfect_of_isClosed
+-/
 
 #print exists_perfect_nonempty_of_isClosed_of_not_countable /-
 /-- Any uncountable closed set in a second countable space contains a nonempty perfect subset.-/
@@ -250,8 +262,6 @@ open scoped ENNReal
 
 variable {α : Type _} [MetricSpace α] {C : Set α} (hC : Perfect C) {ε : ℝ≥0∞}
 
-include hC
-
 private theorem perfect.small_diam_aux (ε_pos : 0 < ε) {x : α} (xC : x ∈ C) :
     let D := closure (EMetric.ball x (ε / 2) ∩ C)
     Perfect D ∧ D.Nonempty ∧ D ⊆ C ∧ EMetric.diam D ≤ ε :=
@@ -272,8 +282,7 @@ private theorem perfect.small_diam_aux (ε_pos : 0 < ε) {x : α} (xC : x ∈ C)
 
 variable (hnonempty : C.Nonempty)
 
-include hnonempty
-
+#print Perfect.small_diam_splitting /-
 /-- A refinement of `perfect.splitting` for metric spaces, where we also control
 the diameter of the new perfect sets. -/
 theorem Perfect.small_diam_splitting (ε_pos : 0 < ε) :
@@ -291,9 +300,11 @@ theorem Perfect.small_diam_splitting (ε_pos : 0 < ε) :
       ⟨perf0', non0', sub0'.trans sub0, diam0⟩, ⟨perf1', non1', sub1'.trans sub1, diam1⟩, _⟩
   apply Disjoint.mono _ _ hdisj <;> assumption
 #align perfect.small_diam_splitting Perfect.small_diam_splitting
+-/
 
 open CantorScheme
 
+#print Perfect.exists_nat_bool_injection /-
 /-- Any nonempty perfect set in a complete metric space admits a continuous injection
 from the cantor space, `ℕ → bool`. -/
 theorem Perfect.exists_nat_bool_injection [CompleteSpace α] :
@@ -349,9 +360,11 @@ theorem Perfect.exists_nat_bool_injection [CompleteSpace α] :
   intro x y hxy
   simpa only [← Subtype.val_inj] using hdisj'.map_injective hxy
 #align perfect.exists_nat_bool_injection Perfect.exists_nat_bool_injection
+-/
 
 end CantorInjMetric
 
+#print IsClosed.exists_nat_bool_injection_of_not_countable /-
 /-- Any closed uncountable subset of a Polish space admits a continuous injection
 from the Cantor space `ℕ → bool`.-/
 theorem IsClosed.exists_nat_bool_injection_of_not_countable {α : Type _} [TopologicalSpace α]
@@ -363,4 +376,5 @@ theorem IsClosed.exists_nat_bool_injection_of_not_countable {α : Type _} [Topol
   obtain ⟨f, hfD, hf⟩ := hD.exists_nat_bool_injection Dnonempty
   exact ⟨f, hfD.trans hDC, hf⟩
 #align is_closed.exists_nat_bool_injection_of_not_countable IsClosed.exists_nat_bool_injection_of_not_countable
+-/
 

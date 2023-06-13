@@ -79,18 +79,14 @@ structure Diffeomorph extends M ≃ M' where
 
 end Defs
 
--- mathport name: diffeomorph
 scoped[Manifold] notation M " ≃ₘ^" n:1000 "⟮" I ", " J "⟯ " N => Diffeomorph I J M N n
 
--- mathport name: diffeomorph.top
 scoped[Manifold] notation M " ≃ₘ⟮" I ", " J "⟯ " N => Diffeomorph I J M N ⊤
 
--- mathport name: diffeomorph.self
 scoped[Manifold]
   notation E " ≃ₘ^" n:1000 "[" 𝕜 "] " E' =>
     Diffeomorph (modelWithCornersSelf 𝕜 E) (modelWithCornersSelf 𝕜 E') E E' n
 
--- mathport name: diffeomorph.self.top
 scoped[Manifold]
   notation E " ≃ₘ[" 𝕜 "] " E' =>
     Diffeomorph (modelWithCornersSelf 𝕜 E) (modelWithCornersSelf 𝕜 E') E E' ⊤

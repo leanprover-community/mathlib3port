@@ -26,11 +26,13 @@ section Equiv
 
 variable {α : Sort u} {β : Sort v} (f : α ≃ β)
 
+#print Equiv.asEmbedding_range /-
 @[simp]
 theorem Equiv.asEmbedding_range {α β : Sort _} {p : β → Prop} (e : α ≃ Subtype p) :
     Set.range e.asEmbedding = setOf p :=
   Set.ext fun x => ⟨fun ⟨y, h⟩ => h ▸ Subtype.coe_prop (e y), fun hs => ⟨e.symm ⟨x, hs⟩, by simp⟩⟩
 #align equiv.as_embedding_range Equiv.asEmbedding_range
+-/
 
 end Equiv
 
@@ -55,6 +57,7 @@ def optionElim {α β} (f : α ↪ β) (x : β) (h : x ∉ Set.range f) : Option
 #align function.embedding.option_elim Function.Embedding.optionElim
 -/
 
+#print Function.Embedding.optionEmbeddingEquiv /-
 /-- Equivalence between embeddings of `option α` and a sigma type over the embeddings of `α`. -/
 @[simps]
 def optionEmbeddingEquiv (α β) : (Option α ↪ β) ≃ Σ f : α ↪ β, ↥(Set.range fᶜ)
@@ -64,6 +67,7 @@ def optionEmbeddingEquiv (α β) : (Option α ↪ β) ≃ Σ f : α ↪ β, ↥(
   left_inv f := ext <| by rintro (_ | _) <;> simp [Option.coe_def]
   right_inv := fun ⟨f, y, hy⟩ => by ext <;> simp [Option.coe_def]
 #align function.embedding.option_embedding_equiv Function.Embedding.optionEmbeddingEquiv
+-/
 
 #print Function.Embedding.codRestrict /-
 /-- Restrict the codomain of an embedding. -/
@@ -72,10 +76,12 @@ def codRestrict {α β} (p : Set β) (f : α ↪ β) (H : ∀ a, f a ∈ p) : α
 #align function.embedding.cod_restrict Function.Embedding.codRestrict
 -/
 
+#print Function.Embedding.codRestrict_apply /-
 @[simp]
 theorem codRestrict_apply {α β} (p) (f : α ↪ β) (H a) : codRestrict p f H a = ⟨f a, H a⟩ :=
   rfl
 #align function.embedding.cod_restrict_apply Function.Embedding.codRestrict_apply
+-/
 
 open Set
 

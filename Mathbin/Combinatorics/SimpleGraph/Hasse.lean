@@ -63,15 +63,19 @@ def hasseDualIso : hasse αᵒᵈ ≃g hasse α :=
 #align simple_graph.hasse_dual_iso SimpleGraph.hasseDualIso
 -/
 
+#print SimpleGraph.hasseDualIso_apply /-
 @[simp]
 theorem hasseDualIso_apply (a : αᵒᵈ) : hasseDualIso a = ofDual a :=
   rfl
 #align simple_graph.hasse_dual_iso_apply SimpleGraph.hasseDualIso_apply
+-/
 
+#print SimpleGraph.hasseDualIso_symm_apply /-
 @[simp]
 theorem hasseDualIso_symm_apply (a : α) : hasseDualIso.symm a = toDual a :=
   rfl
 #align simple_graph.hasse_dual_iso_symm_apply SimpleGraph.hasseDualIso_symm_apply
+-/
 
 end Preorder
 
@@ -79,11 +83,13 @@ section PartialOrder
 
 variable [PartialOrder α] [PartialOrder β]
 
+#print SimpleGraph.hasse_prod /-
 @[simp]
 theorem hasse_prod : hasse (α × β) = hasse α □ hasse β := by ext (x y);
   simp_rw [box_prod_adj, hasse_adj, Prod.covby_iff, or_and_right, @eq_comm _ y.1, @eq_comm _ y.2,
     or_or_or_comm]
 #align simple_graph.hasse_prod SimpleGraph.hasse_prod
+-/
 
 end PartialOrder
 

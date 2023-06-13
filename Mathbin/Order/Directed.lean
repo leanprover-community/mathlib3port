@@ -42,7 +42,6 @@ universe u v w
 
 variable {α : Type u} {β : Type v} {ι : Sort w} (r r' s : α → α → Prop)
 
--- mathport name: «expr ≼ »
 local infixl:50 " ≼ " => r
 
 #print Directed /-
@@ -99,20 +98,26 @@ theorem DirectedOn.mono {s : Set α} (h : DirectedOn r s) (H : ∀ {a b}, r a b 
 #align directed_on.mono DirectedOn.mono
 -/
 
+#print directed_comp /-
 theorem directed_comp {ι} {f : ι → β} {g : β → α} : Directed r (g ∘ f) ↔ Directed (g ⁻¹'o r) f :=
   Iff.rfl
 #align directed_comp directed_comp
+-/
 
+#print Directed.mono /-
 theorem Directed.mono {s : α → α → Prop} {ι} {f : ι → α} (H : ∀ a b, r a b → s a b)
     (h : Directed r f) : Directed s f := fun a b =>
   let ⟨c, h₁, h₂⟩ := h a b
   ⟨c, H _ _ h₁, H _ _ h₂⟩
 #align directed.mono Directed.mono
+-/
 
+#print Directed.mono_comp /-
 theorem Directed.mono_comp {ι} {rb : β → β → Prop} {g : α → β} {f : ι → α}
     (hg : ∀ ⦃x y⦄, x ≼ y → rb (g x) (g y)) (hf : Directed r f) : Directed rb (g ∘ f) :=
   directed_comp.2 <| hf.mono hg
 #align directed.mono_comp Directed.mono_comp
+-/
 
 #print directed_of_sup /-
 /-- A monotone function on a sup-semilattice is directed. -/
@@ -136,12 +141,15 @@ theorem Antitone.directed_ge [SemilatticeSup α] [Preorder β] {f : α → β} (
 #align antitone.directed_ge Antitone.directed_ge
 -/
 
+#print directedOn_of_sup_mem /-
 /-- A set stable by supremum is `≤`-directed. -/
 theorem directedOn_of_sup_mem [SemilatticeSup α] {S : Set α}
     (H : ∀ ⦃i j⦄, i ∈ S → j ∈ S → i ⊔ j ∈ S) : DirectedOn (· ≤ ·) S := fun a ha b hb =>
   ⟨a ⊔ b, H ha hb, le_sup_left, le_sup_right⟩
 #align directed_on_of_sup_mem directedOn_of_sup_mem
+-/
 
+#print Directed.extend_bot /-
 theorem Directed.extend_bot [Preorder α] [OrderBot α] {e : ι → β} {f : ι → α}
     (hf : Directed (· ≤ ·) f) (he : Function.Injective e) :
     Directed (· ≤ ·) (Function.extend e f ⊥) :=
@@ -155,6 +163,7 @@ theorem Directed.extend_bot [Preorder α] [OrderBot α] {e : ι → β} {f : ι 
   use e k
   simp only [he.extend_apply, *, true_and_iff]
 #align directed.extend_bot Directed.extend_bot
+-/
 
 #print directed_of_inf /-
 /-- An antitone function on an inf-semilattice is directed. -/
@@ -178,11 +187,13 @@ theorem Antitone.directed_le [SemilatticeInf α] [Preorder β] {f : α → β} (
 #align antitone.directed_le Antitone.directed_le
 -/
 
+#print directedOn_of_inf_mem /-
 /-- A set stable by infimum is `≥`-directed. -/
 theorem directedOn_of_inf_mem [SemilatticeInf α] {S : Set α}
     (H : ∀ ⦃i j⦄, i ∈ S → j ∈ S → i ⊓ j ∈ S) : DirectedOn (· ≥ ·) S := fun a ha b hb =>
   ⟨a ⊓ b, H ha hb, inf_le_left, inf_le_right⟩
 #align directed_on_of_inf_mem directedOn_of_inf_mem
+-/
 
 #print IsDirected /-
 /-- `is_directed α r` states that for any elements `a`, `b` there exists an element `c` such that
@@ -267,6 +278,7 @@ instance OrderDual.isDirected_le [LE α] [IsDirected α (· ≥ ·)] : IsDirecte
 
 section Reflexive
 
+#print DirectedOn.insert /-
 theorem DirectedOn.insert (h : Reflexive r) (a : α) {s : Set α} (hd : DirectedOn r s)
     (ha : ∀ b ∈ s, ∃ c ∈ s, a ≼ c ∧ b ≼ c) : DirectedOn r (insert a s) :=
   by
@@ -279,6 +291,7 @@ theorem DirectedOn.insert (h : Reflexive r) (a : α) {s : Set α} (hd : Directed
   · obtain ⟨w, hws, hwr⟩ := hd x hx y hy
     exact ⟨w, Set.mem_insert_of_mem _ hws, hwr⟩
 #align directed_on.insert DirectedOn.insert
+-/
 
 #print directedOn_singleton /-
 theorem directedOn_singleton (h : Reflexive r) (a : α) : DirectedOn r ({a} : Set α) :=

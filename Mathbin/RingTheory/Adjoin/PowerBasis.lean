@@ -33,6 +33,7 @@ open PowerBasis
 
 open scoped BigOperators
 
+#print Algebra.adjoin.powerBasisAux /-
 /-- The elements `1, x, ..., x ^ (d - 1)` for a basis for the `K`-module `K[x]`,
 where `d` is the degree of the minimal polynomial of `x`. -/
 noncomputable def adjoin.powerBasisAux {x : S} (hx : IsIntegral K x) :
@@ -61,7 +62,9 @@ noncomputable def adjoin.powerBasisAux {x : S} (hx : IsIntegral K x) :
       ext
       exact aeval_algebra_map_apply S (⟨x, _⟩ : adjoin K {x}) _
 #align algebra.adjoin.power_basis_aux Algebra.adjoin.powerBasisAux
+-/
 
+#print Algebra.adjoin.powerBasis /-
 /-- The power basis `1, x, ..., x ^ (d - 1)` for `K[x]`,
 where `d` is the degree of the minimal polynomial of `x`. See `algebra.adjoin.power_basis'` for
 a version over a more general base ring. -/
@@ -74,11 +77,13 @@ noncomputable def adjoin.powerBasis {x : S} (hx : IsIntegral K x) :
   Basis := adjoin.powerBasisAux hx
   basis_eq_pow := Basis.mk_apply _ _
 #align algebra.adjoin.power_basis Algebra.adjoin.powerBasis
+-/
 
 end Algebra
 
 open Algebra
 
+#print PowerBasis.ofGenMemAdjoin /-
 /-- The power basis given by `x` if `B.gen ∈ adjoin K {x}`. See `power_basis.of_gen_mem_adjoin'`
 for a version over a more general base ring. -/
 @[simps]
@@ -88,6 +93,7 @@ noncomputable def PowerBasis.ofGenMemAdjoin {x : S} (B : PowerBasis K S) (hint :
     (Subalgebra.equivOfEq _ _ <| PowerBasis.adjoin_eq_top_of_gen_mem_adjoin hx).trans
       Subalgebra.topEquiv
 #align power_basis.of_gen_mem_adjoin PowerBasis.ofGenMemAdjoin
+-/
 
 section IsIntegral
 
@@ -103,8 +109,7 @@ variable {A : Type _} [CommRing A] [Algebra R A] [Algebra S A]
 
 variable [IsScalarTower R S A] {B : PowerBasis S A} (hB : IsIntegral R B.gen)
 
-include hB
-
+#print PowerBasis.repr_gen_pow_isIntegral /-
 /-- If `B : power_basis S A` is such that `is_integral R B.gen`, then
 `is_integral R (B.basis.repr (B.gen ^ n) i)` for all `i` if
 `minpoly S B.gen = (minpoly R B.gen).map (algebra_map R S)`. This is the case if `R` is a GCD domain
@@ -141,9 +146,11 @@ theorem repr_gen_pow_isIntegral [IsDomain S]
     exact isIntegral_algebraMap
   · simp [hij, isIntegral_zero]
 #align power_basis.repr_gen_pow_is_integral PowerBasis.repr_gen_pow_isIntegral
+-/
 
 variable {B}
 
+#print PowerBasis.repr_mul_isIntegral /-
 /-- Let `B : power_basis S A` be such that `is_integral R B.gen`, and let `x y : A` be elements with
 integral coordinates in the base `B.basis`. Then `is_integral R ((B.basis.repr (x * y) i)` for all
 `i` if `minpoly S B.gen = (minpoly R B.gen).map (algebra_map R S)`. This is the case if `R` is a GCD
@@ -163,7 +170,9 @@ theorem repr_mul_isIntegral [IsDomain S] {x y : A} (hx : ∀ i, IsIntegral R (B.
   simp only [coe_basis, ← pow_add]
   refine' repr_gen_pow_is_integral hB hmin _ _
 #align power_basis.repr_mul_is_integral PowerBasis.repr_mul_isIntegral
+-/
 
+#print PowerBasis.repr_pow_isIntegral /-
 /-- Let `B : power_basis S A` be such that `is_integral R B.gen`, and let `x : A` be and element
 with integral coordinates in the base `B.basis`. Then `is_integral R ((B.basis.repr (x ^ n) i)` for
 all `i` and all `n` if `minpoly S B.gen = (minpoly R B.gen).map (algebra_map R S)`. This is the case
@@ -185,7 +194,9 @@ theorem repr_pow_isIntegral [IsDomain S] {x : A} (hx : ∀ i, IsIntegral R (B.Ba
     rw [pow_succ]
     exact repr_mul_is_integral hB hx (fun _ => hn _ le_rfl (fun _ => hx _) _) hmin
 #align power_basis.repr_pow_is_integral PowerBasis.repr_pow_isIntegral
+-/
 
+#print PowerBasis.toMatrix_isIntegral /-
 /-- Let `B B' : power_basis K S` be such that `is_integral R B.gen`, and let `P : R[X]` be such that
 `aeval B.gen P = B'.gen`. Then `is_integral R (B.basis.to_matrix B'.basis i j)` for all `i` and `j`
 if `minpoly K B.gen = (minpoly R B.gen).map (algebra_map R L)`. This is the case
@@ -203,6 +214,7 @@ theorem toMatrix_isIntegral {B B' : PowerBasis K S} {P : R[X]} (h : aeval B.gen 
     LinearEquiv.map_smul, algebraMap_smul]
   exact isIntegral_smul _ (repr_gen_pow_is_integral hB hmin _ _)
 #align power_basis.to_matrix_is_integral PowerBasis.toMatrix_isIntegral
+-/
 
 end PowerBasis
 

@@ -78,9 +78,11 @@ theorem odd_iff_not_even : Odd n ↔ ¬Even n := by rw [not_even_iff, odd_iff]
 #align nat.odd_iff_not_even Nat.odd_iff_not_even
 -/
 
+#print Nat.isCompl_even_odd /-
 theorem isCompl_even_odd : IsCompl {n : ℕ | Even n} {n | Odd n} := by
   simp only [← Set.compl_setOf, isCompl_compl, odd_iff_not_even]
 #align nat.is_compl_even_odd Nat.isCompl_even_odd
+-/
 
 #print Nat.even_or_odd /-
 theorem even_or_odd (n : ℕ) : Even n ∨ Odd n :=
@@ -465,10 +467,12 @@ end Function
 
 variable {R : Type _} [Monoid R] [HasDistribNeg R] {n : ℕ}
 
+#print neg_one_pow_eq_one_iff_even /-
 theorem neg_one_pow_eq_one_iff_even (h : (-1 : R) ≠ 1) : (-1 : R) ^ n = 1 ↔ Even n :=
   ⟨fun h' => of_not_not fun hn => h <| (Odd.neg_one_pow <| odd_iff_not_even.mpr hn).symm.trans h',
     Even.neg_one_pow⟩
 #align neg_one_pow_eq_one_iff_even neg_one_pow_eq_one_iff_even
+-/
 
 #print Odd.mod_even_iff /-
 /-- If `a` is even, then `n` is odd iff `n % a` is odd. -/

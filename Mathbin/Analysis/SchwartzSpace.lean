@@ -82,7 +82,6 @@ structure SchwartzMap where
   decay' : ∀ k n : ℕ, ∃ C : ℝ, ∀ x, ‖x‖ ^ k * ‖iteratedFDeriv ℝ n to_fun x‖ ≤ C
 #align schwartz_map SchwartzMap
 
--- mathport name: «expr𝓢( , )»
 scoped[SchwartzSpace] notation "𝓢(" E ", " F ")" => SchwartzMap E F
 
 variable {E F}

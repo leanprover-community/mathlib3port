@@ -27,6 +27,7 @@ universe v u
 -- morphism levels before object levels. See note [category_theory universes].
 variable (α : Sort u)
 
+#print Opposite /-
 /-- The type of objects of the opposite of `α`; used to define the opposite category.
 
   In order to avoid confusion between `α` and its opposite type, we
@@ -52,8 +53,8 @@ variable (α : Sort u)
 def Opposite : Sort u :=
   α
 #align opposite Opposite
+-/
 
--- mathport name: «expr ᵒᵖ»
 notation:max -- Use a high right binding power (like that of postfix ⁻¹) so that, for example,
 -- `presheaf Cᵒᵖ` parses as `presheaf (Cᵒᵖ)` and not `(presheaf C)ᵒᵖ`.
 α "ᵒᵖ" => Opposite α
@@ -78,16 +79,22 @@ def unop : αᵒᵖ → α :=
 #align opposite.unop Opposite.unop
 -/
 
+#print Opposite.op_injective /-
 theorem op_injective : Function.Injective (op : α → αᵒᵖ) := fun _ _ => id
 #align opposite.op_injective Opposite.op_injective
+-/
 
+#print Opposite.unop_injective /-
 theorem unop_injective : Function.Injective (unop : αᵒᵖ → α) := fun _ _ => id
 #align opposite.unop_injective Opposite.unop_injective
+-/
 
+#print Opposite.op_unop /-
 @[simp]
 theorem op_unop (x : αᵒᵖ) : op (unop x) = x :=
   rfl
 #align opposite.op_unop Opposite.op_unop
+-/
 
 #print Opposite.unop_op /-
 @[simp]
@@ -96,18 +103,23 @@ theorem unop_op (x : α) : unop (op x) = x :=
 #align opposite.unop_op Opposite.unop_op
 -/
 
+#print Opposite.op_inj_iff /-
 -- We could prove these by `iff.rfl`, but that would make these eligible for `dsimp`. That would be
 -- a bad idea because `opposite` is irreducible.
 @[simp]
 theorem op_inj_iff (x y : α) : op x = op y ↔ x = y :=
   op_injective.eq_iff
 #align opposite.op_inj_iff Opposite.op_inj_iff
+-/
 
+#print Opposite.unop_inj_iff /-
 @[simp]
 theorem unop_inj_iff (x y : αᵒᵖ) : unop x = unop y ↔ x = y :=
   unop_injective.eq_iff
 #align opposite.unop_inj_iff Opposite.unop_inj_iff
+-/
 
+#print Opposite.equivToOpposite /-
 /-- The type-level equivalence between a type and its opposite. -/
 def equivToOpposite : α ≃ αᵒᵖ where
   toFun := op
@@ -115,24 +127,33 @@ def equivToOpposite : α ≃ αᵒᵖ where
   left_inv := unop_op
   right_inv := op_unop
 #align opposite.equiv_to_opposite Opposite.equivToOpposite
+-/
 
+#print Opposite.equivToOpposite_coe /-
 @[simp]
 theorem equivToOpposite_coe : (equivToOpposite : α → αᵒᵖ) = op :=
   rfl
 #align opposite.equiv_to_opposite_coe Opposite.equivToOpposite_coe
+-/
 
+#print Opposite.equivToOpposite_symm_coe /-
 @[simp]
 theorem equivToOpposite_symm_coe : (equivToOpposite.symm : αᵒᵖ → α) = unop :=
   rfl
 #align opposite.equiv_to_opposite_symm_coe Opposite.equivToOpposite_symm_coe
+-/
 
+#print Opposite.op_eq_iff_eq_unop /-
 theorem op_eq_iff_eq_unop {x : α} {y} : op x = y ↔ x = unop y :=
   equivToOpposite.apply_eq_iff_eq_symm_apply
 #align opposite.op_eq_iff_eq_unop Opposite.op_eq_iff_eq_unop
+-/
 
+#print Opposite.unop_eq_iff_eq_op /-
 theorem unop_eq_iff_eq_op {x} {y : α} : unop x = y ↔ x = op y :=
   equivToOpposite.symm.apply_eq_iff_eq_symm_apply
 #align opposite.unop_eq_iff_eq_op Opposite.unop_eq_iff_eq_op
+-/
 
 instance [Inhabited α] : Inhabited αᵒᵖ :=
   ⟨op default⟩

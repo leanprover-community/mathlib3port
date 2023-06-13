@@ -59,21 +59,27 @@ def Set.innerDualCone (s : Set H) : ConvexCone ℝ H
 #align set.inner_dual_cone Set.innerDualCone
 -/
 
+#print mem_innerDualCone /-
 @[simp]
 theorem mem_innerDualCone (y : H) (s : Set H) : y ∈ s.innerDualCone ↔ ∀ x ∈ s, 0 ≤ ⟪x, y⟫ :=
   Iff.rfl
 #align mem_inner_dual_cone mem_innerDualCone
+-/
 
+#print innerDualCone_empty /-
 @[simp]
 theorem innerDualCone_empty : (∅ : Set H).innerDualCone = ⊤ :=
   eq_top_iff.mpr fun x hy y => False.elim
 #align inner_dual_cone_empty innerDualCone_empty
+-/
 
+#print innerDualCone_zero /-
 /-- Dual cone of the convex cone {0} is the total space. -/
 @[simp]
 theorem innerDualCone_zero : (0 : Set H).innerDualCone = ⊤ :=
   eq_top_iff.mpr fun x hy y (hy : y = 0) => hy.symm ▸ (inner_zero_left _).ge
 #align inner_dual_cone_zero innerDualCone_zero
+-/
 
 #print innerDualCone_univ /-
 /-- Dual cone of the total space is the convex cone {0}. -/
@@ -88,32 +94,40 @@ theorem innerDualCone_univ : (univ : Set H).innerDualCone = 0 :=
 #align inner_dual_cone_univ innerDualCone_univ
 -/
 
+#print innerDualCone_le_innerDualCone /-
 theorem innerDualCone_le_innerDualCone (h : t ⊆ s) : s.innerDualCone ≤ t.innerDualCone :=
   fun y hy x hx => hy x (h hx)
 #align inner_dual_cone_le_inner_dual_cone innerDualCone_le_innerDualCone
+-/
 
 #print pointed_innerDualCone /-
 theorem pointed_innerDualCone : s.innerDualCone.Pointed := fun x hx => by rw [inner_zero_right]
 #align pointed_inner_dual_cone pointed_innerDualCone
 -/
 
+#print innerDualCone_singleton /-
 /-- The inner dual cone of a singleton is given by the preimage of the positive cone under the
 linear map `λ y, ⟪x, y⟫`. -/
 theorem innerDualCone_singleton (x : H) :
     ({x} : Set H).innerDualCone = (ConvexCone.positive ℝ ℝ).comap (innerₛₗ ℝ x) :=
   ConvexCone.ext fun i => forall_eq
 #align inner_dual_cone_singleton innerDualCone_singleton
+-/
 
+#print innerDualCone_union /-
 theorem innerDualCone_union (s t : Set H) :
     (s ∪ t).innerDualCone = s.innerDualCone ⊓ t.innerDualCone :=
   le_antisymm (le_inf (fun x hx y hy => hx _ <| Or.inl hy) fun x hx y hy => hx _ <| Or.inr hy)
     fun x hx y => Or.ndrec (hx.1 _) (hx.2 _)
 #align inner_dual_cone_union innerDualCone_union
+-/
 
+#print innerDualCone_insert /-
 theorem innerDualCone_insert (x : H) (s : Set H) :
     (insert x s).innerDualCone = Set.innerDualCone {x} ⊓ s.innerDualCone := by
   rw [insert_eq, innerDualCone_union]
 #align inner_dual_cone_insert innerDualCone_insert
+-/
 
 #print innerDualCone_iUnion /-
 theorem innerDualCone_iUnion {ι : Sort _} (f : ι → Set H) :
@@ -186,6 +200,7 @@ section CompleteSpace
 
 variable [CompleteSpace H]
 
+#print ConvexCone.hyperplane_separation_of_nonempty_of_isClosed_of_nmem /-
 /-- This is a stronger version of the Hahn-Banach separation theorem for closed convex cones. This
 is also the geometric interpretation of Farkas' lemma. -/
 theorem ConvexCone.hyperplane_separation_of_nonempty_of_isClosed_of_nmem (K : ConvexCone ℝ H)
@@ -218,6 +233,7 @@ theorem ConvexCone.hyperplane_separation_of_nonempty_of_isClosed_of_nmem (K : Co
       _ = ⟪b - z, b - z + z⟫_ℝ := (inner_add_right _ _ _).symm
       _ = ⟪b - z, b⟫_ℝ := by rw [sub_add_cancel]
 #align convex_cone.hyperplane_separation_of_nonempty_of_is_closed_of_nmem ConvexCone.hyperplane_separation_of_nonempty_of_isClosed_of_nmem
+-/
 
 #print ConvexCone.innerDualCone_of_innerDualCone_eq_self /-
 /-- The inner dual of inner dual of a non-empty, closed convex cone is itself.  -/

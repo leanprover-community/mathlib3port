@@ -30,6 +30,7 @@ variable (C : Type (u + 1)) [Category C] [ConcreteCategory.{u} C]
 
 variable (D : Type (u + 1)) [Category D] [ConcreteCategory.{u} D]
 
+#print CategoryTheory.reflectsIsomorphisms_forget₂ /-
 -- This should not be an instance, as it causes a typeclass loop
 -- with `category_theory.has_forget_to_Type`
 /-- A `forget₂ C D` forgetful functor between concrete categories `C` and `D`
@@ -49,6 +50,7 @@ theorem reflectsIsomorphisms_forget₂ [HasForget₂ C D] [ReflectsIsomorphisms 
         exact i'
       apply is_iso_of_reflects_iso f (forget C) }
 #align category_theory.reflects_isomorphisms_forget₂ CategoryTheory.reflectsIsomorphisms_forget₂
+-/
 
 end CategoryTheory
 

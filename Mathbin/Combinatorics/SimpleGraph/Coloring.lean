@@ -277,10 +277,12 @@ noncomputable def Colorable.toColoring [Fintype α] {n : ℕ} (hc : G.Colorable 
 #align simple_graph.colorable.to_coloring SimpleGraph.Colorable.toColoring
 -/
 
+#print SimpleGraph.Colorable.of_embedding /-
 theorem Colorable.of_embedding {V' : Type _} {G' : SimpleGraph V'} (f : G ↪g G') {n : ℕ}
     (h : G'.Colorable n) : G.Colorable n :=
   ⟨(h.toColoring (by simp)).comp f⟩
 #align simple_graph.colorable.of_embedding SimpleGraph.Colorable.of_embedding
+-/
 
 #print SimpleGraph.colorable_iff_exists_bdd_nat_coloring /-
 theorem colorable_iff_exists_bdd_nat_coloring (n : ℕ) :
@@ -411,6 +413,7 @@ theorem Colorable.mono_left {G' : SimpleGraph V} (h : G ≤ G') {n : ℕ} (hc : 
 #align simple_graph.colorable.mono_left SimpleGraph.Colorable.mono_left
 -/
 
+#print SimpleGraph.Colorable.chromaticNumber_le_of_forall_imp /-
 theorem Colorable.chromaticNumber_le_of_forall_imp {V' : Type _} {G' : SimpleGraph V'} {m : ℕ}
     (hc : G'.Colorable m) (h : ∀ n, G'.Colorable n → G.Colorable n) :
     G.chromaticNumber ≤ G'.chromaticNumber :=
@@ -419,6 +422,7 @@ theorem Colorable.chromaticNumber_le_of_forall_imp {V' : Type _} {G' : SimpleGra
   apply h
   apply colorable_chromatic_number hc
 #align simple_graph.colorable.chromatic_number_le_of_forall_imp SimpleGraph.Colorable.chromaticNumber_le_of_forall_imp
+-/
 
 #print SimpleGraph.Colorable.chromaticNumber_mono /-
 theorem Colorable.chromaticNumber_mono (G' : SimpleGraph V) {m : ℕ} (hc : G'.Colorable m)
@@ -427,10 +431,12 @@ theorem Colorable.chromaticNumber_mono (G' : SimpleGraph V) {m : ℕ} (hc : G'.C
 #align simple_graph.colorable.chromatic_number_mono SimpleGraph.Colorable.chromaticNumber_mono
 -/
 
+#print SimpleGraph.Colorable.chromaticNumber_mono_of_embedding /-
 theorem Colorable.chromaticNumber_mono_of_embedding {V' : Type _} {G' : SimpleGraph V'} {n : ℕ}
     (h : G'.Colorable n) (f : G ↪g G') : G.chromaticNumber ≤ G'.chromaticNumber :=
   h.chromaticNumber_le_of_forall_imp fun _ => Colorable.of_embedding f
 #align simple_graph.colorable.chromatic_number_mono_of_embedding SimpleGraph.Colorable.chromaticNumber_mono_of_embedding
+-/
 
 #print SimpleGraph.chromaticNumber_eq_card_of_forall_surj /-
 theorem chromaticNumber_eq_card_of_forall_surj [Fintype α] (C : G.Coloring α)
@@ -453,6 +459,7 @@ theorem chromaticNumber_eq_card_of_forall_surj [Fintype α] (C : G.Coloring α)
 #align simple_graph.chromatic_number_eq_card_of_forall_surj SimpleGraph.chromaticNumber_eq_card_of_forall_surj
 -/
 
+#print SimpleGraph.chromaticNumber_bot /-
 theorem chromaticNumber_bot [Nonempty V] : (⊥ : SimpleGraph V).chromaticNumber = 1 :=
   by
   let C : (⊥ : SimpleGraph V).Coloring (Fin 1) := coloring.mk (fun _ => 0) fun v w h => False.elim h
@@ -460,7 +467,9 @@ theorem chromaticNumber_bot [Nonempty V] : (⊥ : SimpleGraph V).chromaticNumber
   · exact chromatic_number_le_card C
   · exact chromatic_number_pos C.to_colorable
 #align simple_graph.chromatic_number_bot SimpleGraph.chromaticNumber_bot
+-/
 
+#print SimpleGraph.chromaticNumber_top /-
 @[simp]
 theorem chromaticNumber_top [Fintype V] : (⊤ : SimpleGraph V).chromaticNumber = Fintype.card V :=
   by
@@ -472,7 +481,9 @@ theorem chromaticNumber_top [Fintype V] : (⊤ : SimpleGraph V).chromaticNumber 
   intro h
   exact C.valid h
 #align simple_graph.chromatic_number_top SimpleGraph.chromaticNumber_top
+-/
 
+#print SimpleGraph.chromaticNumber_top_eq_zero_of_infinite /-
 theorem chromaticNumber_top_eq_zero_of_infinite (V : Type _) [Infinite V] :
     (⊤ : SimpleGraph V).chromaticNumber = 0 :=
   by
@@ -486,6 +497,7 @@ theorem chromaticNumber_top_eq_zero_of_infinite (V : Type _) [Infinite V] :
   apply embedding.complete_graph
   exact (Function.Embedding.subtype _).trans (Infinite.natEmbedding V)
 #align simple_graph.chromatic_number_top_eq_zero_of_infinite SimpleGraph.chromaticNumber_top_eq_zero_of_infinite
+-/
 
 #print SimpleGraph.CompleteBipartiteGraph.bicoloring /-
 /-- The bicoloring of a complete bipartite graph using whether a vertex
@@ -498,6 +510,7 @@ def CompleteBipartiteGraph.bicoloring (V W : Type _) : (completeBipartiteGraph V
 #align simple_graph.complete_bipartite_graph.bicoloring SimpleGraph.CompleteBipartiteGraph.bicoloring
 -/
 
+#print SimpleGraph.CompleteBipartiteGraph.chromaticNumber /-
 theorem CompleteBipartiteGraph.chromaticNumber {V W : Type _} [Nonempty V] [Nonempty W] :
     (completeBipartiteGraph V W).chromaticNumber = 2 :=
   by
@@ -516,6 +529,7 @@ theorem CompleteBipartiteGraph.chromaticNumber {V W : Type _} [Nonempty V] [None
           rw [he, he'] at hn  <;>
         contradiction
 #align simple_graph.complete_bipartite_graph.chromatic_number SimpleGraph.CompleteBipartiteGraph.chromaticNumber
+-/
 
 /-! ### Cliques -/
 

@@ -346,10 +346,8 @@ theorem twoTorsionPolynomial_disc_ne_zero [Nontrivial R] [Invertible (2 : R)] (h
 
 end TorsionPolynomial
 
--- mathport name: outer_variable
 scoped[PolynomialPolynomial] notation "Y" => Polynomial.X
 
--- mathport name: polynomial_polynomial
 scoped[PolynomialPolynomial] notation R "[X][Y]" => Polynomial (Polynomial R)
 
 section Polynomial

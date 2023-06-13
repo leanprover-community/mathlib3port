@@ -29,6 +29,7 @@ variable {α : Type u} {β : Type _}
 
 namespace Function.Injective
 
+#print Function.Injective.orderedSemiring /-
 -- See note [reducible non-instances]
 /-- Pullback an `ordered_semiring` under an injective map. -/
 @[reducible]
@@ -48,7 +49,9 @@ protected def orderedSemiring [OrderedSemiring α] [Zero β] [One β] [Add β] [
       show f (a * c) ≤ f (b * c) by rw [mul, mul]; refine' mul_le_mul_of_nonneg_right h _;
         rwa [← zero] }
 #align function.injective.ordered_semiring Function.Injective.orderedSemiring
+-/
 
+#print Function.Injective.orderedCommSemiring /-
 -- See note [reducible non-instances]
 /-- Pullback an `ordered_comm_semiring` under an injective map. -/
 @[reducible]
@@ -60,7 +63,9 @@ protected def orderedCommSemiring [OrderedCommSemiring α] [Zero β] [One β] [A
   { hf.CommSemiring f zero one add mul nsmul npow nat_cast,
     hf.OrderedSemiring f zero one add mul nsmul npow nat_cast with }
 #align function.injective.ordered_comm_semiring Function.Injective.orderedCommSemiring
+-/
 
+#print Function.Injective.orderedRing /-
 -- See note [reducible non-instances]
 /-- Pullback an `ordered_ring` under an injective map. -/
 @[reducible]
@@ -76,7 +81,9 @@ protected def orderedRing [OrderedRing α] [Zero β] [One β] [Add β] [Mul β] 
     mul_nonneg := fun a b ha hb =>
       show f 0 ≤ f (a * b) by rw [zero, mul]; apply mul_nonneg <;> rwa [← zero] }
 #align function.injective.ordered_ring Function.Injective.orderedRing
+-/
 
+#print Function.Injective.orderedCommRing /-
 -- See note [reducible non-instances]
 /-- Pullback an `ordered_comm_ring` under an injective map. -/
 @[reducible]
@@ -90,7 +97,9 @@ protected def orderedCommRing [OrderedCommRing α] [Zero β] [One β] [Add β] [
   { hf.OrderedRing f zero one add mul neg sub nsmul zsmul npow nat_cast int_cast,
     hf.CommRing f zero one add mul neg sub nsmul zsmul npow nat_cast int_cast with }
 #align function.injective.ordered_comm_ring Function.Injective.orderedCommRing
+-/
 
+#print Function.Injective.strictOrderedSemiring /-
 -- See note [reducible non-instances]
 /-- Pullback a `strict_ordered_semiring` under an injective map. -/
 @[reducible]
@@ -110,7 +119,9 @@ protected def strictOrderedSemiring [StrictOrderedSemiring α] [Zero β] [One β
       show f (a * c) < f (b * c) by
         simpa only [mul, zero] using mul_lt_mul_of_pos_right ‹f a < f b› (by rwa [← zero]) }
 #align function.injective.strict_ordered_semiring Function.Injective.strictOrderedSemiring
+-/
 
+#print Function.Injective.strictOrderedCommSemiring /-
 -- See note [reducible non-instances]
 /-- Pullback a `strict_ordered_comm_semiring` under an injective map. -/
 @[reducible]
@@ -122,7 +133,9 @@ protected def strictOrderedCommSemiring [StrictOrderedCommSemiring α] [Zero β]
   { hf.CommSemiring f zero one add mul nsmul npow nat_cast,
     hf.StrictOrderedSemiring f zero one add mul nsmul npow nat_cast with }
 #align function.injective.strict_ordered_comm_semiring Function.Injective.strictOrderedCommSemiring
+-/
 
+#print Function.Injective.strictOrderedRing /-
 -- See note [reducible non-instances]
 /-- Pullback a `strict_ordered_ring` under an injective map. -/
 @[reducible]
@@ -138,7 +151,9 @@ protected def strictOrderedRing [StrictOrderedRing α] [Zero β] [One β] [Add �
     mul_pos := fun a b a0 b0 =>
       show f 0 < f (a * b) by rw [zero, mul]; apply mul_pos <;> rwa [← zero] }
 #align function.injective.strict_ordered_ring Function.Injective.strictOrderedRing
+-/
 
+#print Function.Injective.strictOrderedCommRing /-
 -- See note [reducible non-instances]
 /-- Pullback a `strict_ordered_comm_ring` under an injective map. -/
 @[reducible]
@@ -152,7 +167,9 @@ protected def strictOrderedCommRing [StrictOrderedCommRing α] [Zero β] [One β
   { hf.StrictOrderedRing f zero one add mul neg sub nsmul zsmul npow nat_cast int_cast,
     hf.CommRing f zero one add mul neg sub nsmul zsmul npow nat_cast int_cast with }
 #align function.injective.strict_ordered_comm_ring Function.Injective.strictOrderedCommRing
+-/
 
+#print Function.Injective.linearOrderedSemiring /-
 -- See note [reducible non-instances]
 /-- Pullback a `linear_ordered_semiring` under an injective map. -/
 @[reducible]
@@ -165,7 +182,9 @@ protected def linearOrderedSemiring [LinearOrderedSemiring α] [Zero β] [One β
   { LinearOrder.lift f hf hsup hinf,
     hf.StrictOrderedSemiring f zero one add mul nsmul npow nat_cast with }
 #align function.injective.linear_ordered_semiring Function.Injective.linearOrderedSemiring
+-/
 
+#print Function.Injective.linearOrderedCommSemiring /-
 -- See note [reducible non-instances]
 /-- Pullback a `linear_ordered_semiring` under an injective map. -/
 @[reducible]
@@ -179,7 +198,9 @@ protected def linearOrderedCommSemiring [LinearOrderedCommSemiring α] [Zero β]
   { hf.LinearOrderedSemiring f zero one add mul nsmul npow nat_cast hsup hinf,
     hf.StrictOrderedCommSemiring f zero one add mul nsmul npow nat_cast with }
 #align function.injective.linear_ordered_comm_semiring Function.Injective.linearOrderedCommSemiring
+-/
 
+#print Function.Injective.linearOrderedRing /-
 -- See note [reducible non-instances]
 /-- Pullback a `linear_ordered_ring` under an injective map. -/
 @[reducible]
@@ -195,7 +216,9 @@ def linearOrderedRing [LinearOrderedRing α] [Zero β] [One β] [Add β] [Mul β
   { LinearOrder.lift f hf hsup hinf,
     hf.StrictOrderedRing f zero one add mul neg sub nsmul zsmul npow nat_cast int_cast with }
 #align function.injective.linear_ordered_ring Function.Injective.linearOrderedRing
+-/
 
+#print Function.Injective.linearOrderedCommRing /-
 -- See note [reducible non-instances]
 /-- Pullback a `linear_ordered_comm_ring` under an injective map. -/
 @[reducible]
@@ -211,6 +234,7 @@ protected def linearOrderedCommRing [LinearOrderedCommRing α] [Zero β] [One β
   { LinearOrder.lift f hf hsup hinf,
     hf.StrictOrderedCommRing f zero one add mul neg sub nsmul zsmul npow nat_cast int_cast with }
 #align function.injective.linear_ordered_comm_ring Function.Injective.linearOrderedCommRing
+-/
 
 end Function.Injective
 

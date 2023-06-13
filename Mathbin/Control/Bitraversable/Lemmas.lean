@@ -71,39 +71,51 @@ def tsnd {α α'} (f : α → F α') : t β α → F (t β α') :=
 
 variable [IsLawfulBitraversable t] [LawfulApplicative F] [LawfulApplicative G]
 
+#print Bitraversable.id_tfst /-
 @[higher_order tfst_id]
 theorem id_tfst : ∀ {α β} (x : t α β), tfst id.mk x = id.mk x :=
   @id_bitraverse _ _ _
 #align bitraversable.id_tfst Bitraversable.id_tfst
+-/
 
+#print Bitraversable.id_tsnd /-
 @[higher_order tsnd_id]
 theorem id_tsnd : ∀ {α β} (x : t α β), tsnd id.mk x = id.mk x :=
   @id_bitraverse _ _ _
 #align bitraversable.id_tsnd Bitraversable.id_tsnd
+-/
 
+#print Bitraversable.comp_tfst /-
 @[higher_order tfst_comp_tfst]
 theorem comp_tfst {α₀ α₁ α₂ β} (f : α₀ → F α₁) (f' : α₁ → G α₂) (x : t α₀ β) :
     Comp.mk (tfst f' <$> tfst f x) = tfst (Comp.mk ∘ map f' ∘ f) x := by
   rw [← comp_bitraverse] <;> simp [tfst, map_comp_pure, Pure.pure]
 #align bitraversable.comp_tfst Bitraversable.comp_tfst
+-/
 
+#print Bitraversable.tfst_tsnd /-
 @[higher_order tfst_comp_tsnd]
 theorem tfst_tsnd {α₀ α₁ β₀ β₁} (f : α₀ → F α₁) (f' : β₀ → G β₁) (x : t α₀ β₀) :
     Comp.mk (tfst f <$> tsnd f' x) = bitraverse (Comp.mk ∘ pure ∘ f) (Comp.mk ∘ map pure ∘ f') x :=
   by rw [← comp_bitraverse] <;> simp [tfst, tsnd]
 #align bitraversable.tfst_tsnd Bitraversable.tfst_tsnd
+-/
 
+#print Bitraversable.tsnd_tfst /-
 @[higher_order tsnd_comp_tfst]
 theorem tsnd_tfst {α₀ α₁ β₀ β₁} (f : α₀ → F α₁) (f' : β₀ → G β₁) (x : t α₀ β₀) :
     Comp.mk (tsnd f' <$> tfst f x) = bitraverse (Comp.mk ∘ map pure ∘ f) (Comp.mk ∘ pure ∘ f') x :=
   by rw [← comp_bitraverse] <;> simp [tfst, tsnd]
 #align bitraversable.tsnd_tfst Bitraversable.tsnd_tfst
+-/
 
+#print Bitraversable.comp_tsnd /-
 @[higher_order tsnd_comp_tsnd]
 theorem comp_tsnd {α β₀ β₁ β₂} (g : β₀ → F β₁) (g' : β₁ → G β₂) (x : t α β₀) :
     Comp.mk (tsnd g' <$> tsnd g x) = tsnd (Comp.mk ∘ map g' ∘ g) x := by
   rw [← comp_bitraverse] <;> simp [tsnd] <;> rfl
 #align bitraversable.comp_tsnd Bitraversable.comp_tsnd
+-/
 
 open Bifunctor
 
@@ -112,15 +124,19 @@ private theorem pure_eq_id_mk_comp_id {α} : pure = id.mk ∘ @id α :=
 
 open Function
 
+#print Bitraversable.tfst_eq_fst_id /-
 @[higher_order]
 theorem tfst_eq_fst_id {α α' β} (f : α → α') (x : t α β) : tfst (id.mk ∘ f) x = id.mk (fst f x) :=
   by simp [tfst, fst, pure_eq_id_mk_comp_id, -comp.right_id, bitraverse_eq_bimap_id]
 #align bitraversable.tfst_eq_fst_id Bitraversable.tfst_eq_fst_id
+-/
 
+#print Bitraversable.tsnd_eq_snd_id /-
 @[higher_order]
 theorem tsnd_eq_snd_id {α β β'} (f : β → β') (x : t α β) : tsnd (id.mk ∘ f) x = id.mk (snd f x) :=
   by simp [tsnd, snd, pure_eq_id_mk_comp_id, -comp.right_id, bitraverse_eq_bimap_id]
 #align bitraversable.tsnd_eq_snd_id Bitraversable.tsnd_eq_snd_id
+-/
 
 attribute [functor_norm] comp_bitraverse comp_tsnd comp_tfst tsnd_comp_tsnd tsnd_comp_tfst
   tfst_comp_tsnd tfst_comp_tfst bitraverse_comp bitraverse_id_id tfst_id tsnd_id

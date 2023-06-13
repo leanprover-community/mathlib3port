@@ -55,6 +55,7 @@ namespace DoldKan
 
 variable {C : Type _} [Category C] [Preadditive C]
 
+#print AlgebraicTopology.DoldKan.N₁ /-
 /-- The functor `simplicial_object C ⥤ karoubi (chain_complex C ℕ)` which maps
 `X` to the formal direct factor of `K[X]` defined by `P_infty`. -/
 @[simps]
@@ -70,12 +71,15 @@ def N₁ : SimplicialObject C ⥤ Karoubi (ChainComplex C ℕ)
   map_id' X := by ext; dsimp; simp
   map_comp' X Y Z f g := by ext; simp
 #align algebraic_topology.dold_kan.N₁ AlgebraicTopology.DoldKan.N₁
+-/
 
+#print AlgebraicTopology.DoldKan.N₂ /-
 /-- The extension of `N₁` to the Karoubi envelope of `simplicial_object C`. -/
 @[simps]
 def N₂ : Karoubi (SimplicialObject C) ⥤ Karoubi (ChainComplex C ℕ) :=
   (functorExtension₁ _ _).obj N₁
 #align algebraic_topology.dold_kan.N₂ AlgebraicTopology.DoldKan.N₂
+-/
 
 end DoldKan
 

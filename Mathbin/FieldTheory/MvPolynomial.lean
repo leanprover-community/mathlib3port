@@ -41,6 +41,7 @@ variable {σ : Type u} {K : Type v}
 
 variable (σ K) [Field K]
 
+#print MvPolynomial.quotient_mk_comp_C_injective /-
 theorem quotient_mk_comp_C_injective (I : Ideal (MvPolynomial σ K)) (hI : I ≠ ⊤) :
     Function.Injective ((Ideal.Quotient.mk I).comp MvPolynomial.C) :=
   by
@@ -50,6 +51,7 @@ theorem quotient_mk_comp_C_injective (I : Ideal (MvPolynomial σ K)) (hI : I ≠
   have := I.mul_mem_left (MvPolynomial.C x⁻¹) hx
   rwa [← mv_polynomial.C.map_mul, inv_mul_cancel hx0, MvPolynomial.C_1] at this 
 #align mv_polynomial.quotient_mk_comp_C_injective MvPolynomial.quotient_mk_comp_C_injective
+-/
 
 end MvPolynomial
 

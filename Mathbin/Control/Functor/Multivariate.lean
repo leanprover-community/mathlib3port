@@ -38,7 +38,6 @@ class MvFunctor {n : ℕ} (F : TypeVec n → Type _) where
 #align mvfunctor MvFunctor
 -/
 
--- mathport name: mvfunctor.map
 scoped[MvFunctor] infixr:100 " <$$> " => MvFunctor.map
 
 variable {n : ℕ}
@@ -213,6 +212,7 @@ private def g :
   | _, α, Fin2.fz, x => ⟨x.val, x.property⟩
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print MvFunctor.LiftP_PredLast_iff /-
 theorem LiftP_PredLast_iff {β} (p : β → Prop) (x : F (α ::: β)) :
     LiftP' (PredLast' _ p) x ↔ LiftP (PredLast _ p) x :=
   by
@@ -222,6 +222,7 @@ theorem LiftP_PredLast_iff {β} (p : β → Prop) (x : F (α ::: β)) :
   · intros; rw [MvFunctor.map_map, (· ⊚ ·)]
     congr <;> ext (i⟨x, _⟩) <;> cases i <;> rfl
 #align mvfunctor.liftp_last_pred_iff MvFunctor.LiftP_PredLast_iff
+-/
 
 open Function
 
@@ -248,6 +249,7 @@ private def g :
   | _, α, Fin2.fz, x => ⟨x.val, x.property⟩
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print MvFunctor.LiftR_RelLast_iff /-
 theorem LiftR_RelLast_iff (x y : F (α ::: β)) :
     LiftR' (RelLast' _ rr) x y ↔ LiftR (RelLast _ rr) x y :=
   by
@@ -257,6 +259,7 @@ theorem LiftR_RelLast_iff (x y : F (α ::: β)) :
   · intros; rw [MvFunctor.map_map, MvFunctor.map_map, (· ⊚ ·), (· ⊚ ·)]
     congr <;> ext (i⟨x, _⟩) <;> cases i <;> rfl
 #align mvfunctor.liftr_last_rel_iff MvFunctor.LiftR_RelLast_iff
+-/
 
 end LiftpLastPredIff
 

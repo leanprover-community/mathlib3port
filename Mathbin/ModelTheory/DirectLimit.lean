@@ -316,8 +316,6 @@ variable {P : Type u₁} [L.Structure P] (g : ∀ i, G i ↪[L] P)
 
 variable (Hg : ∀ i j hij x, g j (f i j hij x) = g i x)
 
-include Hg
-
 variable (L ι G f)
 
 /-- The universal property of the direct limit: maps from the components to another module
@@ -350,8 +348,6 @@ def lift : DirectLimit G f ↪[L] P
 #align first_order.language.direct_limit.lift FirstOrder.Language.DirectLimit.lift
 
 variable {L ι G f}
-
-omit Hg
 
 @[simp]
 theorem lift_quotient_mk'_sigma_mk' {i} (x : G i) : lift L ι G f g Hg ⟦⟨i, x⟩⟧ = (g i) x :=

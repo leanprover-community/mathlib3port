@@ -23,10 +23,12 @@ open Matrix
 
 variable {n : Type _} [Fintype n] {R : Type _} [Ring R]
 
+#print Matrix.charP /-
 instance Matrix.charP [DecidableEq n] [Nonempty n] (p : ℕ) [CharP R p] : CharP (Matrix n n R) p :=
   ⟨by
     intro k
     rw [← CharP.cast_eq_zero_iff R p k, ← Nat.cast_zero, ← map_natCast <| scalar n]
     convert scalar_inj; · simp; · assumption⟩
 #align matrix.char_p Matrix.charP
+-/
 

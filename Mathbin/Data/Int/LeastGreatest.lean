@@ -61,6 +61,7 @@ def leastOfBdd {P : ℤ → Prop} [DecidablePred P] (b : ℤ) (Hb : ∀ z : ℤ,
 #align int.least_of_bdd Int.leastOfBdd
 -/
 
+#print Int.exists_least_of_bdd /-
 /-- If `P : ℤ → Prop` is a predicate such that the set `{m : P m}` is bounded below and nonempty,
 then this set has the least element. This lemma uses classical logic to avoid assumption
 `[decidable_pred P]`. See `int.least_of_bdd` for a constructive counterpart. -/
@@ -71,6 +72,7 @@ theorem exists_least_of_bdd {P : ℤ → Prop} (Hbdd : ∃ b : ℤ, ∀ z : ℤ,
     let ⟨lb, H⟩ := least_of_bdd b Hb Hinh
     ⟨lb, H⟩
 #align int.exists_least_of_bdd Int.exists_least_of_bdd
+-/
 
 #print Int.coe_leastOfBdd_eq /-
 theorem coe_leastOfBdd_eq {P : ℤ → Prop} [DecidablePred P] {b b' : ℤ} (Hb : ∀ z : ℤ, P z → b ≤ z)
@@ -98,6 +100,7 @@ def greatestOfBdd {P : ℤ → Prop} [DecidablePred P] (b : ℤ) (Hb : ∀ z : �
 #align int.greatest_of_bdd Int.greatestOfBdd
 -/
 
+#print Int.exists_greatest_of_bdd /-
 /-- If `P : ℤ → Prop` is a predicate such that the set `{m : P m}` is bounded above and nonempty,
 then this set has the greatest element. This lemma uses classical logic to avoid assumption
 `[decidable_pred P]`. See `int.greatest_of_bdd` for a constructive counterpart. -/
@@ -108,6 +111,7 @@ theorem exists_greatest_of_bdd {P : ℤ → Prop} (Hbdd : ∃ b : ℤ, ∀ z : �
     let ⟨lb, H⟩ := greatest_of_bdd b Hb Hinh
     ⟨lb, H⟩
 #align int.exists_greatest_of_bdd Int.exists_greatest_of_bdd
+-/
 
 #print Int.coe_greatestOfBdd_eq /-
 theorem coe_greatestOfBdd_eq {P : ℤ → Prop} [DecidablePred P] {b b' : ℤ} (Hb : ∀ z : ℤ, P z → z ≤ b)

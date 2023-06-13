@@ -62,8 +62,6 @@ class ExtremallyDisconnected : Prop where
 
 section
 
-include X
-
 #print CompactT2.Projective /-
 /-- The assertion `compact_t2.projective` states that given continuous maps
 `f : X → Z` and `g : Y → Z` with `g` surjective between `t_2`, compact topological spaces,

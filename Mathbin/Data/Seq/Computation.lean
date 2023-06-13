@@ -298,7 +298,6 @@ section Bisim
 
 variable (R : Computation α → Computation α → Prop)
 
--- mathport name: «expr ~ »
 local infixl:50 " ~ " => R
 
 #print Computation.BisimO /-
@@ -490,7 +489,6 @@ def Promises (s : Computation α) (a : α) : Prop :=
 #align computation.promises Computation.Promises
 -/
 
--- mathport name: «expr ~> »
 infixl:50 " ~> " => Promises
 
 #print Computation.mem_promises /-
@@ -506,8 +504,6 @@ theorem empty_promises (a : α) : empty α ~> a := fun a' h => absurd h (not_mem
 section get
 
 variable (s : Computation α) [h : Terminates s]
-
-include s h
 
 #print Computation.length /-
 /-- `length s` gets the number of steps of a terminating computation -/
@@ -980,12 +976,14 @@ theorem of_results_bind {s : Computation α} {f : α → Computation β} {b k} :
 #align computation.of_results_bind Computation.of_results_bind
 -/
 
+#print Computation.exists_of_mem_bind /-
 theorem exists_of_mem_bind {s : Computation α} {f : α → Computation β} {b} (h : b ∈ bind s f) :
     ∃ a ∈ s, b ∈ f a :=
   let ⟨k, h⟩ := exists_results_of_mem h
   let ⟨a, m, n, h1, h2, e⟩ := of_results_bind h
   ⟨a, h1.Mem, h2.Mem⟩
 #align computation.exists_of_mem_bind Computation.exists_of_mem_bind
+-/
 
 #print Computation.bind_promises /-
 theorem bind_promises {s : Computation α} {f : α → Computation β} {a b} (h1 : s ~> a)
@@ -1065,6 +1063,7 @@ theorem terminates_map_iff (f : α → β) (s : Computation α) : Terminates (ma
 #align computation.terminates_map_iff Computation.terminates_map_iff
 -/
 
+#print Computation.orElse /-
 -- Parallel computation
 /-- `c₁ <|> c₂` calculates `c₁` and `c₂` simultaneously, returning
   the first one that gives a result. -/
@@ -1079,27 +1078,35 @@ def orElse (c₁ c₂ : Computation α) : Computation α :=
         | Sum.inr c₂' => Sum.inr (c₁', c₂'))
     (c₁, c₂)
 #align computation.orelse Computation.orElse
+-/
 
 instance : Alternative Computation :=
   { Computation.monad with
     orelse := @orElse
     failure := @empty }
 
+#print Computation.ret_orElse /-
 @[simp]
 theorem ret_orElse (a : α) (c₂ : Computation α) : (pure a <|> c₂) = pure a :=
   destruct_eq_pure <| by unfold HasOrelse.orelse <;> simp [orelse]
 #align computation.ret_orelse Computation.ret_orElse
+-/
 
+#print Computation.orelse_pure /-
 @[simp]
 theorem orelse_pure (c₁ : Computation α) (a : α) : (think c₁ <|> pure a) = pure a :=
   destruct_eq_pure <| by unfold HasOrelse.orelse <;> simp [orelse]
 #align computation.orelse_ret Computation.orelse_pure
+-/
 
+#print Computation.orelse_think /-
 @[simp]
 theorem orelse_think (c₁ c₂ : Computation α) : (think c₁ <|> think c₂) = think (c₁ <|> c₂) :=
   destruct_eq_think <| by unfold HasOrelse.orelse <;> simp [orelse]
 #align computation.orelse_think Computation.orelse_think
+-/
 
+#print Computation.empty_orelse /-
 @[simp]
 theorem empty_orelse (c) : (empty α <|> c) = c :=
   by
@@ -1108,7 +1115,9 @@ theorem empty_orelse (c) : (empty α <|> c) = c :=
   apply rec_on s <;> intro s <;> rw [think_empty] <;> simp
   rw [← think_empty]
 #align computation.empty_orelse Computation.empty_orelse
+-/
 
+#print Computation.orelse_empty /-
 @[simp]
 theorem orelse_empty (c : Computation α) : (c <|> empty α) = c :=
   by
@@ -1117,6 +1126,7 @@ theorem orelse_empty (c : Computation α) : (c <|> empty α) = c :=
   apply rec_on s <;> intro s <;> rw [think_empty] <;> simp
   rw [← think_empty]
 #align computation.orelse_empty Computation.orelse_empty
+-/
 
 #print Computation.Equiv /-
 /-- `c₁ ~ c₂` asserts that `c₁` and `c₂` either both terminate with the same result,
@@ -1126,7 +1136,6 @@ def Equiv (c₁ c₂ : Computation α) : Prop :=
 #align computation.equiv Computation.Equiv
 -/
 
--- mathport name: «expr ~ »
 infixl:50 " ~ " => Equiv
 
 #print Computation.Equiv.refl /-
@@ -1349,6 +1358,7 @@ theorem liftRel_def {R : α → β → Prop} {ca cb} :
 #align computation.lift_rel_def Computation.liftRel_def
 -/
 
+#print Computation.liftRel_bind /-
 theorem liftRel_bind {δ} (R : α → β → Prop) (S : γ → δ → Prop) {s1 : Computation α}
     {s2 : Computation β} {f1 : α → Computation γ} {f2 : β → Computation δ} (h1 : LiftRel R s1 s2)
     (h2 : ∀ {a b}, R a b → LiftRel S (f1 a) (f2 b)) : LiftRel S (bind s1 f1) (bind s2 f2) :=
@@ -1366,6 +1376,7 @@ theorem liftRel_bind {δ} (R : α → β → Prop) (S : γ → δ → Prop) {s1 
     let ⟨c, c₂, cd⟩ := r2 d1
     ⟨_, mem_bind a2 c₂, cd⟩⟩
 #align computation.lift_rel_bind Computation.liftRel_bind
+-/
 
 #print Computation.liftRel_pure_left /-
 @[simp]
@@ -1428,17 +1439,21 @@ theorem liftRel_congr {R : α → β → Prop} {ca ca' : Computation α} {cb cb'
 #align computation.lift_rel_congr Computation.liftRel_congr
 -/
 
+#print Computation.liftRel_map /-
 theorem liftRel_map {δ} (R : α → β → Prop) (S : γ → δ → Prop) {s1 : Computation α}
     {s2 : Computation β} {f1 : α → γ} {f2 : β → δ} (h1 : LiftRel R s1 s2)
     (h2 : ∀ {a b}, R a b → S (f1 a) (f2 b)) : LiftRel S (map f1 s1) (map f2 s2) := by
   rw [← bind_ret, ← bind_ret] <;> apply lift_rel_bind _ _ h1 <;> simp <;> exact @h2
 #align computation.lift_rel_map Computation.liftRel_map
+-/
 
+#print Computation.map_congr /-
 theorem map_congr (R : α → α → Prop) (S : β → β → Prop) {s1 s2 : Computation α} {f : α → β}
     (h1 : s1 ~ s2) : map f s1 ~ map f s2 := by
   rw [← lift_eq_iff_equiv] <;>
     exact lift_rel_map Eq _ ((lift_eq_iff_equiv _ _).2 h1) fun a b => congr_arg _
 #align computation.map_congr Computation.map_congr
+-/
 
 #print Computation.LiftRelAux /-
 def LiftRelAux (R : α → β → Prop) (C : Computation α → Computation β → Prop) :

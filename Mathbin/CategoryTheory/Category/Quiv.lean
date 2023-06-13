@@ -112,6 +112,7 @@ def lift {V : Type u} [Quiver.{v + 1} V] {C : Type _} [Category C] (F : Prefunct
 #align category_theory.Quiv.lift CategoryTheory.QuivCat.lift
 -/
 
+#print CategoryTheory.QuivCat.adj /-
 -- We might construct `of_lift_iso_self : paths.of ⋙ lift F ≅ F`
 -- (and then show that `lift F` is initial amongst such functors)
 -- but it would require lifting quite a bit of machinery to quivers!
@@ -134,6 +135,7 @@ def adj : Cat.free ⊣ QuivCat.forget :=
       homEquiv_naturality_left_symm := fun V W C f g => by change (show paths V ⥤ _ from _) = _;
         ext; apply eq_conj_eq_to_hom; rfl }
 #align category_theory.Quiv.adj CategoryTheory.QuivCat.adj
+-/
 
 end Quiv
 

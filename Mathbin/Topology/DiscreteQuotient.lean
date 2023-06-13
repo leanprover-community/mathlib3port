@@ -230,14 +230,18 @@ theorem comap_id : S.comap (ContinuousMap.id X) = S := by ext; rfl
 #align discrete_quotient.comap_id DiscreteQuotient.comap_id
 -/
 
+#print DiscreteQuotient.comap_comp /-
 @[simp]
 theorem comap_comp (S : DiscreteQuotient Z) : S.comap (g.comp f) = (S.comap g).comap f :=
   rfl
 #align discrete_quotient.comap_comp DiscreteQuotient.comap_comp
+-/
 
+#print DiscreteQuotient.comap_mono /-
 @[mono]
 theorem comap_mono {A B : DiscreteQuotient Y} (h : A ≤ B) : A.comap f ≤ B.comap f := by tauto
 #align discrete_quotient.comap_mono DiscreteQuotient.comap_mono
+-/
 
 end Comap
 
@@ -245,10 +249,12 @@ section OfLe
 
 variable {A B C : DiscreteQuotient X}
 
+#print DiscreteQuotient.ofLE /-
 /-- The map induced by a refinement of a discrete quotient. -/
 def ofLE (h : A ≤ B) : A → B :=
   Quotient.map' (fun x => x) h
 #align discrete_quotient.of_le DiscreteQuotient.ofLE
+-/
 
 #print DiscreteQuotient.ofLE_refl /-
 @[simp]
@@ -261,29 +267,39 @@ theorem ofLE_refl_apply (a : A) : ofLE (le_refl A) a = a := by simp
 #align discrete_quotient.of_le_refl_apply DiscreteQuotient.ofLE_refl_apply
 -/
 
+#print DiscreteQuotient.ofLE_ofLE /-
 @[simp]
 theorem ofLE_ofLE (h₁ : A ≤ B) (h₂ : B ≤ C) (x : A) : ofLE h₂ (ofLE h₁ x) = ofLE (h₁.trans h₂) x :=
   by rcases x with ⟨⟩; rfl
 #align discrete_quotient.of_le_of_le DiscreteQuotient.ofLE_ofLE
+-/
 
+#print DiscreteQuotient.ofLE_comp_ofLE /-
 @[simp]
 theorem ofLE_comp_ofLE (h₁ : A ≤ B) (h₂ : B ≤ C) : ofLE h₂ ∘ ofLE h₁ = ofLE (le_trans h₁ h₂) :=
   funext <| ofLE_ofLE _ _
 #align discrete_quotient.of_le_comp_of_le DiscreteQuotient.ofLE_comp_ofLE
+-/
 
+#print DiscreteQuotient.ofLE_continuous /-
 theorem ofLE_continuous (h : A ≤ B) : Continuous (ofLE h) :=
   continuous_of_discreteTopology
 #align discrete_quotient.of_le_continuous DiscreteQuotient.ofLE_continuous
+-/
 
+#print DiscreteQuotient.ofLE_proj /-
 @[simp]
 theorem ofLE_proj (h : A ≤ B) (x : X) : ofLE h (A.proj x) = B.proj x :=
   Quotient.sound' (B.refl _)
 #align discrete_quotient.of_le_proj DiscreteQuotient.ofLE_proj
+-/
 
+#print DiscreteQuotient.ofLE_comp_proj /-
 @[simp]
 theorem ofLE_comp_proj (h : A ≤ B) : ofLE h ∘ A.proj = B.proj :=
   funext <| ofLE_proj _
 #align discrete_quotient.of_le_comp_proj DiscreteQuotient.ofLE_comp_proj
+-/
 
 end OfLe
 
@@ -305,22 +321,30 @@ instance [LocallyConnectedSpace X] : OrderBot (DiscreteQuotient X)
   bot_le S x y (h : connectedComponent x = connectedComponent y) :=
     (S.isClopen_setOf_rel x).connectedComponent_subset (S.refl _) <| h.symm ▸ mem_connectedComponent
 
+#print DiscreteQuotient.proj_bot_eq /-
 @[simp]
 theorem proj_bot_eq [LocallyConnectedSpace X] {x y : X} :
     proj ⊥ x = proj ⊥ y ↔ connectedComponent x = connectedComponent y :=
   Quotient.eq''
 #align discrete_quotient.proj_bot_eq DiscreteQuotient.proj_bot_eq
+-/
 
+#print DiscreteQuotient.proj_bot_inj /-
 theorem proj_bot_inj [DiscreteTopology X] {x y : X} : proj ⊥ x = proj ⊥ y ↔ x = y := by simp
 #align discrete_quotient.proj_bot_inj DiscreteQuotient.proj_bot_inj
+-/
 
+#print DiscreteQuotient.proj_bot_injective /-
 theorem proj_bot_injective [DiscreteTopology X] : Injective (⊥ : DiscreteQuotient X).proj :=
   fun _ _ => proj_bot_inj.1
 #align discrete_quotient.proj_bot_injective DiscreteQuotient.proj_bot_injective
+-/
 
+#print DiscreteQuotient.proj_bot_bijective /-
 theorem proj_bot_bijective [DiscreteTopology X] : Bijective (⊥ : DiscreteQuotient X).proj :=
   ⟨proj_bot_injective, proj_surjective _⟩
 #align discrete_quotient.proj_bot_bijective DiscreteQuotient.proj_bot_bijective
+-/
 
 section Map
 
@@ -341,17 +365,23 @@ theorem leComap_id : LEComap (ContinuousMap.id X) A A := fun _ _ => id
 
 variable {A A' B B'} {f} {g : C(Y, Z)} {C : DiscreteQuotient Z}
 
+#print DiscreteQuotient.leComap_id_iff /-
 @[simp]
 theorem leComap_id_iff : LEComap (ContinuousMap.id X) A A' ↔ A ≤ A' :=
   Iff.rfl
 #align discrete_quotient.le_comap_id_iff DiscreteQuotient.leComap_id_iff
+-/
 
+#print DiscreteQuotient.LEComap.comp /-
 theorem LEComap.comp : LEComap g B C → LEComap f A B → LEComap (g.comp f) A C := by tauto
 #align discrete_quotient.le_comap.comp DiscreteQuotient.LEComap.comp
+-/
 
+#print DiscreteQuotient.LEComap.mono /-
 theorem LEComap.mono (h : LEComap f A B) (hA : A' ≤ A) (hB : B ≤ B') : LEComap f A' B' :=
   hA.trans <| le_trans h <| comap_mono _ hB
 #align discrete_quotient.le_comap.mono DiscreteQuotient.LEComap.mono
+-/
 
 #print DiscreteQuotient.map /-
 /-- Map a discrete quotient along a continuous map. -/
@@ -360,19 +390,25 @@ def map (f : C(X, Y)) (cond : LEComap f A B) : A → B :=
 #align discrete_quotient.map DiscreteQuotient.map
 -/
 
+#print DiscreteQuotient.map_continuous /-
 theorem map_continuous (cond : LEComap f A B) : Continuous (map f cond) :=
   continuous_of_discreteTopology
 #align discrete_quotient.map_continuous DiscreteQuotient.map_continuous
+-/
 
+#print DiscreteQuotient.map_comp_proj /-
 @[simp]
 theorem map_comp_proj (cond : LEComap f A B) : map f cond ∘ A.proj = B.proj ∘ f :=
   rfl
 #align discrete_quotient.map_comp_proj DiscreteQuotient.map_comp_proj
+-/
 
+#print DiscreteQuotient.map_proj /-
 @[simp]
 theorem map_proj (cond : LEComap f A B) (x : X) : map f cond (A.proj x) = B.proj (f x) :=
   rfl
 #align discrete_quotient.map_proj DiscreteQuotient.map_proj
+-/
 
 #print DiscreteQuotient.map_id /-
 @[simp]
@@ -380,32 +416,42 @@ theorem map_id : map _ (leComap_id A) = id := by ext ⟨⟩ <;> rfl
 #align discrete_quotient.map_id DiscreteQuotient.map_id
 -/
 
+#print DiscreteQuotient.map_comp /-
 @[simp]
 theorem map_comp (h1 : LEComap g B C) (h2 : LEComap f A B) :
     map (g.comp f) (h1.comp h2) = map g h1 ∘ map f h2 := by ext ⟨⟩; rfl
 #align discrete_quotient.map_comp DiscreteQuotient.map_comp
+-/
 
+#print DiscreteQuotient.ofLE_map /-
 @[simp]
 theorem ofLE_map (cond : LEComap f A B) (h : B ≤ B') (a : A) :
     ofLE h (map f cond a) = map f (cond.mono le_rfl h) a := by rcases a with ⟨⟩; rfl
 #align discrete_quotient.of_le_map DiscreteQuotient.ofLE_map
+-/
 
+#print DiscreteQuotient.ofLE_comp_map /-
 @[simp]
 theorem ofLE_comp_map (cond : LEComap f A B) (h : B ≤ B') :
     ofLE h ∘ map f cond = map f (cond.mono le_rfl h) :=
   funext <| ofLE_map cond h
 #align discrete_quotient.of_le_comp_map DiscreteQuotient.ofLE_comp_map
+-/
 
+#print DiscreteQuotient.map_ofLE /-
 @[simp]
 theorem map_ofLE (cond : LEComap f A B) (h : A' ≤ A) (c : A') :
     map f cond (ofLE h c) = map f (cond.mono h le_rfl) c := by rcases c with ⟨⟩; rfl
 #align discrete_quotient.map_of_le DiscreteQuotient.map_ofLE
+-/
 
+#print DiscreteQuotient.map_comp_ofLE /-
 @[simp]
 theorem map_comp_ofLE (cond : LEComap f A B) (h : A' ≤ A) :
     map f cond ∘ ofLE h = map f (cond.mono h le_rfl) :=
   funext <| map_ofLE cond h
 #align discrete_quotient.map_comp_of_le DiscreteQuotient.map_comp_ofLE
+-/
 
 end Map
 
@@ -420,6 +466,7 @@ theorem eq_of_forall_proj_eq [T2Space X] [CompactSpace X] [disc : TotallyDisconn
 #align discrete_quotient.eq_of_forall_proj_eq DiscreteQuotient.eq_of_forall_proj_eq
 -/
 
+#print DiscreteQuotient.fiber_subset_ofLE /-
 theorem fiber_subset_ofLE {A B : DiscreteQuotient X} (h : A ≤ B) (a : A) :
     A.proj ⁻¹' {a} ⊆ B.proj ⁻¹' {ofLE h a} :=
   by
@@ -427,7 +474,9 @@ theorem fiber_subset_ofLE {A B : DiscreteQuotient X} (h : A ≤ B) (a : A) :
   rw [fiber_eq, of_le_proj, fiber_eq]
   exact fun _ h' => h h'
 #align discrete_quotient.fiber_subset_of_le DiscreteQuotient.fiber_subset_ofLE
+-/
 
+#print DiscreteQuotient.exists_of_compat /-
 theorem exists_of_compat [CompactSpace X] (Qs : ∀ Q : DiscreteQuotient X, Q)
     (compat : ∀ (A B : DiscreteQuotient X) (h : A ≤ B), ofLE h (Qs _) = Qs _) :
     ∃ x : X, ∀ Q : DiscreteQuotient X, Q.proj x = Qs _ :=
@@ -442,6 +491,7 @@ theorem exists_of_compat [CompactSpace X] (Qs : ∀ Q : DiscreteQuotient X, Q)
   · rw [← compat _ _ h]
     exact fiber_subset_of_le _ _
 #align discrete_quotient.exists_of_compat DiscreteQuotient.exists_of_compat
+-/
 
 instance [CompactSpace X] : Finite S :=
   by
@@ -471,9 +521,11 @@ def lift : LocallyConstant f.DiscreteQuotient α :=
 #align locally_constant.lift LocallyConstant.lift
 -/
 
+#print LocallyConstant.lift_comp_proj /-
 @[simp]
 theorem lift_comp_proj : f.lift ∘ f.DiscreteQuotient.proj = f := by ext; rfl
 #align locally_constant.lift_comp_proj LocallyConstant.lift_comp_proj
+-/
 
 end LocallyConstant
 

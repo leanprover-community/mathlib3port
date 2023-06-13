@@ -45,9 +45,11 @@ noncomputable instance instSub {α : Type _} [MeasurableSpace α] : Sub (Measure
 
 variable {α : Type _} {m : MeasurableSpace α} {μ ν : Measure α} {s : Set α}
 
+#print MeasureTheory.Measure.sub_def /-
 theorem sub_def : μ - ν = sInf {d | μ ≤ d + ν} :=
   rfl
 #align measure_theory.measure.sub_def MeasureTheory.Measure.sub_def
+-/
 
 #print MeasureTheory.Measure.sub_le_of_le_add /-
 theorem sub_le_of_le_add {d} (h : μ ≤ d + ν) : μ - ν ≤ d :=
@@ -88,6 +90,7 @@ theorem sub_self : μ - μ = 0 :=
 #align measure_theory.measure.sub_self MeasureTheory.Measure.sub_self
 -/
 
+#print MeasureTheory.Measure.sub_apply /-
 /-- This application lemma only works in special circumstances. Given knowledge of
 when `μ ≤ ν` and `ν ≤ μ`, a more general application lemma can be written. -/
 theorem sub_apply [IsFiniteMeasure ν] (h₁ : MeasurableSet s) (h₂ : ν ≤ μ) : (μ - ν) s = μ s - ν s :=
@@ -118,6 +121,7 @@ theorem sub_apply [IsFiniteMeasure ν] (h₁ : MeasurableSet s) (h₂ : ν ≤ �
     rw [h_measure_sub_eq]
     apply measure.of_measurable_apply _ h₁
 #align measure_theory.measure.sub_apply MeasureTheory.Measure.sub_apply
+-/
 
 #print MeasureTheory.Measure.sub_add_cancel_of_le /-
 theorem sub_add_cancel_of_le [IsFiniteMeasure ν] (h₁ : ν ≤ μ) : μ - ν + ν = μ :=
@@ -161,10 +165,12 @@ theorem restrict_sub_eq_restrict_sub_restrict (h_meas_s : MeasurableSet s) :
 #align measure_theory.measure.restrict_sub_eq_restrict_sub_restrict MeasureTheory.Measure.restrict_sub_eq_restrict_sub_restrict
 -/
 
+#print MeasureTheory.Measure.sub_apply_eq_zero_of_restrict_le_restrict /-
 theorem sub_apply_eq_zero_of_restrict_le_restrict (h_le : μ.restrict s ≤ ν.restrict s)
     (h_meas_s : MeasurableSet s) : (μ - ν) s = 0 := by
   rw [← restrict_apply_self, restrict_sub_eq_restrict_sub_restrict, sub_eq_zero_of_le] <;> simp [*]
 #align measure_theory.measure.sub_apply_eq_zero_of_restrict_le_restrict MeasureTheory.Measure.sub_apply_eq_zero_of_restrict_le_restrict
+-/
 
 #print MeasureTheory.Measure.isFiniteMeasure_sub /-
 instance isFiniteMeasure_sub [IsFiniteMeasure μ] : IsFiniteMeasure (μ - ν) :=

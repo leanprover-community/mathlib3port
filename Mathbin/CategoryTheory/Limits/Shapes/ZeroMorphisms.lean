@@ -181,10 +181,12 @@ variable [HasZeroMorphisms D]
 
 instance : HasZeroMorphisms (C ⥤ D) where Zero F G := ⟨{ app := fun X => 0 }⟩
 
+#print CategoryTheory.Limits.zero_app /-
 @[simp]
 theorem zero_app (F G : C ⥤ D) (j : C) : (0 : F ⟶ G).app j = 0 :=
   rfl
 #align category_theory.limits.zero_app CategoryTheory.Limits.zero_app
+-/
 
 end
 
@@ -379,22 +381,28 @@ open scoped ZeroObject
 
 variable {D}
 
+#print CategoryTheory.Limits.IsZero.map /-
 @[simp]
 theorem IsZero.map [HasZeroObject D] [HasZeroMorphisms D] {F : C ⥤ D} (hF : IsZero F) {X Y : C}
     (f : X ⟶ Y) : F.map f = 0 :=
   (hF.obj _).eq_of_src _ _
 #align category_theory.limits.is_zero.map CategoryTheory.Limits.IsZero.map
+-/
 
+#print CategoryTheory.Functor.zero_obj /-
 @[simp]
 theorem CategoryTheory.Functor.zero_obj [HasZeroObject D] (X : C) : IsZero ((0 : C ⥤ D).obj X) :=
   (isZero_zero _).obj _
 #align category_theory.functor.zero_obj CategoryTheory.Functor.zero_obj
+-/
 
+#print CategoryTheory.zero_map /-
 @[simp]
 theorem CategoryTheory.zero_map [HasZeroObject D] [HasZeroMorphisms D] {X Y : C} (f : X ⟶ Y) :
     (0 : C ⥤ D).map f = 0 :=
   (isZero_zero _).map _
 #align category_theory.zero_map CategoryTheory.zero_map
+-/
 
 section
 

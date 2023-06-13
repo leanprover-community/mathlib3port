@@ -94,10 +94,12 @@ instance hasCoeToGeneralizedContinuedFractionPair : Coe (Pair α) (Pair β) :=
   ⟨map coe⟩
 #align generalized_continued_fraction.pair.has_coe_to_generalized_continued_fraction_pair GeneralizedContinuedFraction.Pair.hasCoeToGeneralizedContinuedFractionPair
 
+#print GeneralizedContinuedFraction.Pair.coe_toPair /-
 @[simp, norm_cast]
 theorem coe_toPair {a b : α} : (↑(Pair.mk a b) : Pair β) = Pair.mk (a : β) (b : β) :=
   rfl
 #align generalized_continued_fraction.pair.coe_to_generalized_continued_fraction_pair GeneralizedContinuedFraction.Pair.coe_toPair
+-/
 
 end coe
 
@@ -189,12 +191,14 @@ instance hasCoeToGeneralizedContinuedFraction :
   ⟨fun g => ⟨(g.h : β), (g.s.map coe : Seq <| Pair β)⟩⟩
 #align generalized_continued_fraction.has_coe_to_generalized_continued_fraction GeneralizedContinuedFraction.hasCoeToGeneralizedContinuedFraction
 
+#print GeneralizedContinuedFraction.coe_toGeneralizedContinuedFraction /-
 @[simp, norm_cast]
 theorem coe_toGeneralizedContinuedFraction {g : GeneralizedContinuedFraction α} :
     (↑(g : GeneralizedContinuedFraction α) : GeneralizedContinuedFraction β) =
       ⟨(g.h : β), (g.s.map coe : Seq <| Pair β)⟩ :=
   rfl
 #align generalized_continued_fraction.coe_to_generalized_continued_fraction GeneralizedContinuedFraction.coe_toGeneralizedContinuedFraction
+-/
 
 end coe
 
@@ -464,11 +468,13 @@ protected theorem ext_iff {g g' : GeneralizedContinuedFraction α} :
 #align generalized_continued_fraction.ext_iff GeneralizedContinuedFraction.ext_iff
 -/
 
+#print GeneralizedContinuedFraction.ext /-
 @[ext]
 protected theorem ext {g g' : GeneralizedContinuedFraction α} (hyp : g.h = g'.h ∧ g.s = g'.s) :
     g = g' :=
   GeneralizedContinuedFraction.ext_iff.right hyp
 #align generalized_continued_fraction.ext GeneralizedContinuedFraction.ext
+-/
 
 end GeneralizedContinuedFraction
 

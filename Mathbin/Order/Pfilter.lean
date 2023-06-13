@@ -136,10 +136,12 @@ theorem ext (h : (s : Set P) = t) : s = t := by cases s; cases t; exact congr_ar
 instance : PartialOrder (PFilter P) :=
   PartialOrder.lift coe ext
 
+#print Order.PFilter.mem_of_mem_of_le /-
 @[trans]
 theorem mem_of_mem_of_le {F G : PFilter P} : x ∈ F → F ≤ G → x ∈ G :=
   Ideal.mem_of_mem_of_le
 #align order.pfilter.mem_of_mem_of_le Order.PFilter.mem_of_mem_of_le
+-/
 
 #print Order.PFilter.principal /-
 /-- The smallest filter containing a given element. -/
@@ -155,10 +157,12 @@ theorem mem_mk (x : P) (I : Ideal Pᵒᵈ) : x ∈ (⟨I⟩ : PFilter P) ↔ Ord
 #align order.pfilter.mem_def Order.PFilter.mem_mk
 -/
 
+#print Order.PFilter.principal_le_iff /-
 @[simp]
 theorem principal_le_iff {F : PFilter P} : principal x ≤ F ↔ x ∈ F :=
   Ideal.principal_le_iff
 #align order.pfilter.principal_le_iff Order.PFilter.principal_le_iff
+-/
 
 #print Order.PFilter.mem_principal /-
 @[simp]
@@ -167,12 +171,16 @@ theorem mem_principal : x ∈ principal y ↔ y ≤ x :=
 #align order.pfilter.mem_principal Order.PFilter.mem_principal
 -/
 
+#print Order.PFilter.antitone_principal /-
 -- defeq abuse
 theorem antitone_principal : Antitone (principal : P → PFilter P) := by delta Antitone <;> simp
 #align order.pfilter.antitone_principal Order.PFilter.antitone_principal
+-/
 
+#print Order.PFilter.principal_le_principal_iff /-
 theorem principal_le_principal_iff {p q : P} : principal q ≤ principal p ↔ p ≤ q := by simp
 #align order.pfilter.principal_le_principal_iff Order.PFilter.principal_le_principal_iff
+-/
 
 end Preorder
 
@@ -180,11 +188,13 @@ section OrderTop
 
 variable [Preorder P] [OrderTop P] {F : PFilter P}
 
+#print Order.PFilter.top_mem /-
 /-- A specific witness of `pfilter.nonempty` when `P` has a top element. -/
 @[simp]
 theorem top_mem : ⊤ ∈ F :=
   Ideal.bot_mem _
 #align order.pfilter.top_mem Order.PFilter.top_mem
+-/
 
 /-- There is a bottom filter when `P` has a top element. -/
 instance : OrderBot (PFilter P) where
@@ -203,15 +213,19 @@ section SemilatticeInf
 
 variable [SemilatticeInf P] {x y : P} {F : PFilter P}
 
+#print Order.PFilter.inf_mem /-
 /-- A specific witness of `pfilter.directed` when `P` has meets. -/
 theorem inf_mem (hx : x ∈ F) (hy : y ∈ F) : x ⊓ y ∈ F :=
   Ideal.sup_mem hx hy
 #align order.pfilter.inf_mem Order.PFilter.inf_mem
+-/
 
+#print Order.PFilter.inf_mem_iff /-
 @[simp]
 theorem inf_mem_iff : x ⊓ y ∈ F ↔ x ∈ F ∧ y ∈ F :=
   Ideal.sup_mem_iff
 #align order.pfilter.inf_mem_iff Order.PFilter.inf_mem_iff
+-/
 
 end SemilatticeInf
 
@@ -219,12 +233,15 @@ section CompleteSemilatticeInf
 
 variable [CompleteSemilatticeInf P] {F : PFilter P}
 
+#print Order.PFilter.sInf_gc /-
 theorem sInf_gc :
     GaloisConnection (fun x => OrderDual.toDual (principal x)) fun F =>
       sInf (OrderDual.ofDual F : PFilter P) :=
   fun x F => by simp; rfl
 #align order.pfilter.Inf_gc Order.PFilter.sInf_gc
+-/
 
+#print Order.PFilter.infGi /-
 /-- If a poset `P` admits arbitrary `Inf`s, then `principal` and `Inf` form a Galois coinsertion. -/
 def infGi :
     GaloisCoinsertion (fun x => OrderDual.toDual (principal x)) fun F =>
@@ -235,6 +252,7 @@ def infGi :
   u_l_le s := sInf_le <| mem_principal.2 <| le_refl s
   choice_eq _ _ := rfl
 #align order.pfilter.Inf_gi Order.PFilter.infGi
+-/
 
 end CompleteSemilatticeInf
 

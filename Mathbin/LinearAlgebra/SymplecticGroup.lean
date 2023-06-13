@@ -46,6 +46,7 @@ def J : Matrix (Sum l l) (Sum l l) R :=
 #align matrix.J Matrix.J
 -/
 
+#print Matrix.J_transpose /-
 @[simp]
 theorem J_transpose : (J l R)ᵀ = -J l R :=
   by
@@ -53,23 +54,29 @@ theorem J_transpose : (J l R)ᵀ = -J l R :=
     Matrix.transpose_zero, Matrix.transpose_one, transpose_neg]
   simp [from_blocks]
 #align matrix.J_transpose Matrix.J_transpose
+-/
 
 variable [Fintype l]
 
+#print Matrix.J_squared /-
 theorem J_squared : J l R ⬝ J l R = -1 :=
   by
   rw [J, from_blocks_multiply]
   simp only [Matrix.zero_mul, Matrix.neg_mul, zero_add, neg_zero, Matrix.one_mul, add_zero]
   rw [← neg_zero, ← Matrix.fromBlocks_neg, ← from_blocks_one]
 #align matrix.J_squared Matrix.J_squared
+-/
 
+#print Matrix.J_inv /-
 theorem J_inv : (J l R)⁻¹ = -J l R :=
   by
   refine' Matrix.inv_eq_right_inv _
   rw [Matrix.mul_neg, J_squared]
   exact neg_neg 1
 #align matrix.J_inv Matrix.J_inv
+-/
 
+#print Matrix.J_det_mul_J_det /-
 theorem J_det_mul_J_det : det (J l R) * det (J l R) = 1 :=
   by
   rw [← det_mul, J_squared]
@@ -79,6 +86,7 @@ theorem J_det_mul_J_det : det (J l R) * det (J l R) = 1 :=
   apply Even.neg_one_pow
   exact even_add_self _
 #align matrix.J_det_mul_J_det Matrix.J_det_mul_J_det
+-/
 
 #print Matrix.isUnit_det_J /-
 theorem isUnit_det_J : IsUnit (det (J l R)) :=
@@ -90,6 +98,7 @@ end JMatrixLemmas
 
 variable [Fintype l]
 
+#print Matrix.symplecticGroup /-
 /-- The group of symplectic matrices over a ring `R`. -/
 def symplecticGroup : Submonoid (Matrix (Sum l l) (Sum l l) R)
     where
@@ -101,6 +110,7 @@ def symplecticGroup : Submonoid (Matrix (Sum l l) (Sum l l) R)
     exact ha
   one_mem' := by simp
 #align matrix.symplectic_group Matrix.symplecticGroup
+-/
 
 end Matrix
 
@@ -110,45 +120,58 @@ variable {l} {R} [DecidableEq l] [Fintype l] [CommRing R]
 
 open Matrix
 
+#print SymplecticGroup.mem_iff /-
 theorem mem_iff {A : Matrix (Sum l l) (Sum l l) R} :
     A ∈ symplecticGroup l R ↔ A ⬝ J l R ⬝ Aᵀ = J l R := by simp [symplectic_group]
 #align symplectic_group.mem_iff SymplecticGroup.mem_iff
+-/
 
+#print SymplecticGroup.coeMatrix /-
 instance coeMatrix : Coe (symplecticGroup l R) (Matrix (Sum l l) (Sum l l) R) := by infer_instance
 #align symplectic_group.coe_matrix SymplecticGroup.coeMatrix
+-/
 
 section SymplecticJ
 
 variable (l) (R)
 
+#print SymplecticGroup.J_mem /-
 theorem J_mem : J l R ∈ symplecticGroup l R :=
   by
   rw [mem_iff, J, from_blocks_multiply, from_blocks_transpose, from_blocks_multiply]
   simp
 #align symplectic_group.J_mem SymplecticGroup.J_mem
+-/
 
+#print SymplecticGroup.symJ /-
 /-- The canonical skew-symmetric matrix as an element in the symplectic group. -/
 def symJ : symplecticGroup l R :=
   ⟨J l R, J_mem l R⟩
 #align symplectic_group.sym_J SymplecticGroup.symJ
+-/
 
 variable {l} {R}
 
+#print SymplecticGroup.coe_J /-
 @[simp]
 theorem coe_J : ↑(symJ l R) = J l R :=
   rfl
 #align symplectic_group.coe_J SymplecticGroup.coe_J
+-/
 
 end SymplecticJ
 
 variable {R} {A : Matrix (Sum l l) (Sum l l) R}
 
+#print SymplecticGroup.neg_mem /-
 theorem neg_mem (h : A ∈ symplecticGroup l R) : -A ∈ symplecticGroup l R :=
   by
   rw [mem_iff] at h ⊢
   simp [h]
 #align symplectic_group.neg_mem SymplecticGroup.neg_mem
+-/
 
+#print SymplecticGroup.symplectic_det /-
 theorem symplectic_det (hA : A ∈ symplecticGroup l R) : IsUnit <| det A :=
   by
   rw [isUnit_iff_exists_inv]
@@ -161,7 +184,9 @@ theorem symplectic_det (hA : A ∈ symplecticGroup l R) : IsUnit <| det A :=
   rw [mul_comm A.det, mul_assoc] at hA 
   exact hA
 #align symplectic_group.symplectic_det SymplecticGroup.symplectic_det
+-/
 
+#print SymplecticGroup.transpose_mem /-
 theorem transpose_mem (hA : A ∈ symplecticGroup l R) : Aᵀ ∈ symplecticGroup l R :=
   by
   rw [mem_iff] at hA ⊢
@@ -179,25 +204,33 @@ theorem transpose_mem (hA : A ∈ symplecticGroup l R) : Aᵀ ∈ symplecticGrou
       rw [mul_nonsing_inv_cancel_left _ _ huAT, nonsing_inv_mul_cancel_right _ _ huA]
     _ = J l R := by simp [J_inv]
 #align symplectic_group.transpose_mem SymplecticGroup.transpose_mem
+-/
 
+#print SymplecticGroup.transpose_mem_iff /-
 @[simp]
 theorem transpose_mem_iff : Aᵀ ∈ symplecticGroup l R ↔ A ∈ symplecticGroup l R :=
   ⟨fun hA => by simpa using transpose_mem hA, transpose_mem⟩
 #align symplectic_group.transpose_mem_iff SymplecticGroup.transpose_mem_iff
+-/
 
+#print SymplecticGroup.mem_iff' /-
 theorem mem_iff' : A ∈ symplecticGroup l R ↔ Aᵀ ⬝ J l R ⬝ A = J l R := by
   rw [← transpose_mem_iff, mem_iff, transpose_transpose]
 #align symplectic_group.mem_iff' SymplecticGroup.mem_iff'
+-/
 
 instance : Inv (symplecticGroup l R)
     where inv A :=
     ⟨(-J l R) ⬝ (A : Matrix (Sum l l) (Sum l l) R)ᵀ ⬝ J l R,
       mul_mem (mul_mem (neg_mem <| J_mem _ _) <| transpose_mem A.2) <| J_mem _ _⟩
 
+#print SymplecticGroup.coe_inv /-
 theorem coe_inv (A : symplecticGroup l R) : (↑A⁻¹ : Matrix _ _ _) = (-J l R) ⬝ (↑A)ᵀ ⬝ J l R :=
   rfl
 #align symplectic_group.coe_inv SymplecticGroup.coe_inv
+-/
 
+#print SymplecticGroup.inv_left_mul_aux /-
 theorem inv_left_mul_aux (hA : A ∈ symplecticGroup l R) : -J l R ⬝ Aᵀ ⬝ J l R ⬝ A = 1 :=
   calc
     -J l R ⬝ Aᵀ ⬝ J l R ⬝ A = (-J l R) ⬝ (Aᵀ ⬝ J l R ⬝ A) := by
@@ -207,17 +240,22 @@ theorem inv_left_mul_aux (hA : A ∈ symplecticGroup l R) : -J l R ⬝ Aᵀ ⬝ 
     _ = (-1 : R) • -1 := by rw [J_squared]
     _ = 1 := by simp only [neg_smul_neg, one_smul]
 #align symplectic_group.inv_left_mul_aux SymplecticGroup.inv_left_mul_aux
+-/
 
+#print SymplecticGroup.coe_inv' /-
 theorem coe_inv' (A : symplecticGroup l R) : (↑A⁻¹ : Matrix (Sum l l) (Sum l l) R) = A⁻¹ :=
   by
   refine' (coe_inv A).trans (inv_eq_left_inv _).symm
   simp [inv_left_mul_aux, coe_inv]
 #align symplectic_group.coe_inv' SymplecticGroup.coe_inv'
+-/
 
+#print SymplecticGroup.inv_eq_symplectic_inv /-
 theorem inv_eq_symplectic_inv (A : Matrix (Sum l l) (Sum l l) R) (hA : A ∈ symplecticGroup l R) :
     A⁻¹ = (-J l R) ⬝ Aᵀ ⬝ J l R :=
   inv_eq_left_inv (by simp only [Matrix.neg_mul, inv_left_mul_aux hA])
 #align symplectic_group.inv_eq_symplectic_inv SymplecticGroup.inv_eq_symplectic_inv
+-/
 
 instance : Group (symplecticGroup l R) :=
   { SymplecticGroup.hasInv, Submonoid.toMonoid _ with

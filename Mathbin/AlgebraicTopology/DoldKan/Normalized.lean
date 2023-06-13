@@ -49,6 +49,7 @@ universe v
 
 variable {A : Type _} [Category A] [Abelian A] {X : SimplicialObject A}
 
+#print AlgebraicTopology.DoldKan.HigherFacesVanish.inclusionOfMooreComplexMap /-
 theorem HigherFacesVanish.inclusionOfMooreComplexMap (n : ℕ) :
     HigherFacesVanish (n + 1) ((inclusionOfMooreComplexMap X).f (n + 1)) := fun j hj =>
   by
@@ -58,7 +59,9 @@ theorem HigherFacesVanish.inclusionOfMooreComplexMap (n : ℕ) :
       (finset_inf_arrow_factors Finset.univ _ j (by simp only [Finset.mem_univ])),
     assoc, kernel_subobject_arrow_comp, comp_zero]
 #align algebraic_topology.dold_kan.higher_faces_vanish.inclusion_of_Moore_complex_map AlgebraicTopology.DoldKan.HigherFacesVanish.inclusionOfMooreComplexMap
+-/
 
+#print AlgebraicTopology.DoldKan.factors_normalizedMooreComplex_PInfty /-
 theorem factors_normalizedMooreComplex_PInfty (n : ℕ) :
     Subobject.Factors (NormalizedMooreComplex.objX X n) (PInfty.f n) :=
   by
@@ -69,6 +72,7 @@ theorem factors_normalizedMooreComplex_PInfty (n : ℕ) :
     apply kernel_subobject_factors
     exact (higher_faces_vanish.of_P (n + 1) n) i le_add_self
 #align algebraic_topology.dold_kan.factors_normalized_Moore_complex_P_infty AlgebraicTopology.DoldKan.factors_normalizedMooreComplex_PInfty
+-/
 
 #print AlgebraicTopology.DoldKan.PInftyToNormalizedMooreComplex /-
 /-- P_infty factors through the normalized Moore complex -/
@@ -85,10 +89,12 @@ def PInftyToNormalizedMooreComplex (X : SimplicialObject A) : K[X] ⟶ N[X] :=
 #align algebraic_topology.dold_kan.P_infty_to_normalized_Moore_complex AlgebraicTopology.DoldKan.PInftyToNormalizedMooreComplex
 -/
 
+#print AlgebraicTopology.DoldKan.PInftyToNormalizedMooreComplex_comp_inclusionOfMooreComplexMap /-
 @[simp, reassoc]
 theorem PInftyToNormalizedMooreComplex_comp_inclusionOfMooreComplexMap (X : SimplicialObject A) :
     PInftyToNormalizedMooreComplex X ≫ inclusionOfMooreComplexMap X = PInfty := by tidy
 #align algebraic_topology.dold_kan.P_infty_to_normalized_Moore_complex_comp_inclusion_of_Moore_complex_map AlgebraicTopology.DoldKan.PInftyToNormalizedMooreComplex_comp_inclusionOfMooreComplexMap
+-/
 
 #print AlgebraicTopology.DoldKan.PInftyToNormalizedMooreComplex_naturality /-
 @[simp, reassoc]
@@ -106,6 +112,7 @@ theorem PInfty_comp_PInftyToNormalizedMooreComplex (X : SimplicialObject A) :
 #align algebraic_topology.dold_kan.P_infty_comp_P_infty_to_normalized_Moore_complex AlgebraicTopology.DoldKan.PInfty_comp_PInftyToNormalizedMooreComplex
 -/
 
+#print AlgebraicTopology.DoldKan.inclusionOfMooreComplexMap_comp_PInfty /-
 @[simp, reassoc]
 theorem inclusionOfMooreComplexMap_comp_PInfty (X : SimplicialObject A) :
     inclusionOfMooreComplexMap X ≫ PInfty = inclusionOfMooreComplexMap X :=
@@ -115,10 +122,12 @@ theorem inclusionOfMooreComplexMap_comp_PInfty (X : SimplicialObject A) :
   · dsimp; simp only [comp_id]
   · exact (higher_faces_vanish.inclusion_of_Moore_complex_map n).comp_P_eq_self
 #align algebraic_topology.dold_kan.inclusion_of_Moore_complex_map_comp_P_infty AlgebraicTopology.DoldKan.inclusionOfMooreComplexMap_comp_PInfty
+-/
 
 instance : Mono (inclusionOfMooreComplexMap X) :=
   ⟨fun Y f₁ f₂ hf => by ext n; exact HomologicalComplex.congr_hom hf n⟩
 
+#print AlgebraicTopology.DoldKan.splitMonoInclusionOfMooreComplexMap /-
 /-- `inclusion_of_Moore_complex_map X` is a split mono. -/
 def splitMonoInclusionOfMooreComplexMap (X : SimplicialObject A) :
     SplitMono (inclusionOfMooreComplexMap X)
@@ -129,9 +138,11 @@ def splitMonoInclusionOfMooreComplexMap (X : SimplicialObject A) :
       P_infty_to_normalized_Moore_complex_comp_inclusion_of_Moore_complex_map,
       inclusion_of_Moore_complex_map_comp_P_infty]
 #align algebraic_topology.dold_kan.split_mono_inclusion_of_Moore_complex_map AlgebraicTopology.DoldKan.splitMonoInclusionOfMooreComplexMap
+-/
 
 variable (A)
 
+#print AlgebraicTopology.DoldKan.N₁_iso_normalizedMooreComplex_comp_toKaroubi /-
 /-- When the category `A` is abelian,
 the functor `N₁ : simplicial_object A ⥤ karoubi (chain_complex A ℕ)` defined
 using `P_infty` identifies to the composition of the normalized Moore complex functor
@@ -168,6 +179,7 @@ def N₁_iso_normalizedMooreComplex_comp_toKaroubi : N₁ ≅ normalizedMooreCom
     dsimp only [functor.comp_obj, to_karoubi]
     rw [id_comp]
 #align algebraic_topology.dold_kan.N₁_iso_normalized_Moore_complex_comp_to_karoubi AlgebraicTopology.DoldKan.N₁_iso_normalizedMooreComplex_comp_toKaroubi
+-/
 
 end DoldKan
 

@@ -352,10 +352,12 @@ theorem of_isRightAdjoint (R : C ⥤ D) [IsRightAdjoint R] : IsFiltered D :=
 #align category_theory.is_filtered.of_is_right_adjoint CategoryTheory.IsFiltered.of_isRightAdjoint
 -/
 
+#print CategoryTheory.IsFiltered.of_equivalence /-
 /-- Being filtered is preserved by equivalence of categories. -/
 theorem of_equivalence (h : C ≌ D) : IsFiltered D :=
   of_right_adjoint h.symm.toAdjunction
 #align category_theory.is_filtered.of_equivalence CategoryTheory.IsFiltered.of_equivalence
+-/
 
 end Nonempty
 
@@ -669,12 +671,14 @@ theorem cospan {i j j' : C} (f : j ⟶ i) (f' : j' ⟶ i) :
 #align category_theory.is_cofiltered.cospan CategoryTheory.IsCofiltered.cospan
 -/
 
+#print CategoryTheory.Functor.ranges_directed /-
 theorem CategoryTheory.Functor.ranges_directed (F : C ⥤ Type _) (j : C) :
     Directed (· ⊇ ·) fun f : Σ' i, i ⟶ j => Set.range (F.map f.2) := fun ⟨i, ij⟩ ⟨k, kj⟩ =>
   by
   let ⟨l, li, lk, e⟩ := cospan ij kj
   refine' ⟨⟨l, lk ≫ kj⟩, e ▸ _, _⟩ <;> simp_rw [F.map_comp] <;> apply Set.range_comp_subset_range
 #align category_theory.functor.ranges_directed CategoryTheory.Functor.ranges_directed
+-/
 
 end AllowEmpty
 
@@ -823,10 +827,12 @@ theorem of_isLeftAdjoint (L : C ⥤ D) [IsLeftAdjoint L] : IsCofiltered D :=
 #align category_theory.is_cofiltered.of_is_left_adjoint CategoryTheory.IsCofiltered.of_isLeftAdjoint
 -/
 
+#print CategoryTheory.IsCofiltered.of_equivalence /-
 /-- Being cofiltered is preserved by equivalence of categories. -/
 theorem of_equivalence (h : C ≌ D) : IsCofiltered D :=
   of_left_adjoint h.toAdjunction
 #align category_theory.is_cofiltered.of_equivalence CategoryTheory.IsCofiltered.of_equivalence
+-/
 
 end Nonempty
 

@@ -32,10 +32,12 @@ section SemilatticeSup
 
 variable [SemilatticeSup α]
 
+#print UpperSet.iciSupHom /-
 /-- `upper_set.Ici` as a `sup_hom`. -/
 def iciSupHom : SupHom α (UpperSet α) :=
   ⟨Ici, Ici_sup⟩
 #align upper_set.Ici_sup_hom UpperSet.iciSupHom
+-/
 
 #print UpperSet.coe_iciSupHom /-
 @[simp]
@@ -78,10 +80,12 @@ section SemilatticeInf
 
 variable [SemilatticeInf α]
 
+#print LowerSet.iicInfHom /-
 /-- `lower_set.Iic` as an `inf_hom`. -/
 def iicInfHom : InfHom α (LowerSet α) :=
   ⟨Iic, Iic_inf⟩
 #align lower_set.Iic_inf_hom LowerSet.iicInfHom
+-/
 
 #print LowerSet.coe_iicInfHom /-
 @[simp]

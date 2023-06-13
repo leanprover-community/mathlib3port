@@ -105,7 +105,6 @@ unsafe def ee_commit (t1 : eqelim α) (t2 : eqelim β) (t3 : α → eqelim β) :
     | some a => t3 a
 #align omega.ee_commit omega.ee_commit
 
--- mathport name: «expr !>>= ; »
 local notation t1 " !>>= " t2 "; " t3 => ee_commit t1 t2 t3
 
 private unsafe def of_tactic {α : Type} : tactic α → eqelim α :=

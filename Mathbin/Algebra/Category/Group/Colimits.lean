@@ -194,21 +194,27 @@ instance : AddCommGroup (ColimitType F)
     rfl
     rfl
 
+#print AddCommGroupCat.Colimits.quot_zero /-
 @[simp]
 theorem quot_zero : Quot.mk Setoid.r zero = (0 : ColimitType F) :=
   rfl
 #align AddCommGroup.colimits.quot_zero AddCommGroupCat.Colimits.quot_zero
+-/
 
+#print AddCommGroupCat.Colimits.quot_neg /-
 @[simp]
 theorem quot_neg (x) : Quot.mk Setoid.r (neg x) = (-Quot.mk Setoid.r x : ColimitType F) :=
   rfl
 #align AddCommGroup.colimits.quot_neg AddCommGroupCat.Colimits.quot_neg
+-/
 
+#print AddCommGroupCat.Colimits.quot_add /-
 @[simp]
 theorem quot_add (x y) :
     Quot.mk Setoid.r (add x y) = (Quot.mk Setoid.r x + Quot.mk Setoid.r y : ColimitType F) :=
   rfl
 #align AddCommGroup.colimits.quot_add AddCommGroupCat.Colimits.quot_add
+-/
 
 #print AddCommGroupCat.Colimits.colimit /-
 /-- The bundled abelian group giving the colimit of a diagram. -/
@@ -217,11 +223,14 @@ def colimit : AddCommGroupCat :=
 #align AddCommGroup.colimits.colimit AddCommGroupCat.Colimits.colimit
 -/
 
+#print AddCommGroupCat.Colimits.coconeFun /-
 /-- The function from a given abelian group in the diagram to the colimit abelian group. -/
 def coconeFun (j : J) (x : F.obj j) : ColimitType F :=
   Quot.mk _ (of j x)
 #align AddCommGroup.colimits.cocone_fun AddCommGroupCat.Colimits.coconeFun
+-/
 
+#print AddCommGroupCat.Colimits.coconeMorphism /-
 /-- The group homomorphism from a given abelian group in the diagram to the colimit abelian
 group. -/
 def coconeMorphism (j : J) : F.obj j ⟶ colimit F
@@ -230,7 +239,9 @@ def coconeMorphism (j : J) : F.obj j ⟶ colimit F
   map_zero' := by apply Quot.sound <;> apply relation.zero
   map_add' := by intros <;> apply Quot.sound <;> apply relation.add
 #align AddCommGroup.colimits.cocone_morphism AddCommGroupCat.Colimits.coconeMorphism
+-/
 
+#print AddCommGroupCat.Colimits.cocone_naturality /-
 @[simp]
 theorem cocone_naturality {j j' : J} (f : j ⟶ j') :
     F.map f ≫ coconeMorphism F j' = coconeMorphism F j :=
@@ -239,12 +250,15 @@ theorem cocone_naturality {j j' : J} (f : j ⟶ j') :
   apply Quot.sound
   apply Relation.Map
 #align AddCommGroup.colimits.cocone_naturality AddCommGroupCat.Colimits.cocone_naturality
+-/
 
+#print AddCommGroupCat.Colimits.cocone_naturality_components /-
 @[simp]
 theorem cocone_naturality_components (j j' : J) (f : j ⟶ j') (x : F.obj j) :
     (coconeMorphism F j') (F.map f x) = (coconeMorphism F j) x := by rw [← cocone_naturality F f];
   rfl
 #align AddCommGroup.colimits.cocone_naturality_components AddCommGroupCat.Colimits.cocone_naturality_components
+-/
 
 #print AddCommGroupCat.Colimits.colimitCocone /-
 /-- The cocone over the proposed colimit abelian group. -/
@@ -354,6 +368,7 @@ namespace AddCommGroupCat
 
 open quotientAddGroup
 
+#print AddCommGroupCat.cokernelIsoQuotient /-
 /-- The categorical cokernel of a morphism in `AddCommGroup`
 agrees with the usual group-theoretical quotient.
 -/
@@ -378,6 +393,7 @@ noncomputable def cokernelIsoQuotient {G H : AddCommGroupCat.{u}} (f : G ⟶ H) 
     simp only [AddMonoidHom.coe_comp, Function.comp_apply, comp_apply, lift_mk,
       cokernel.π_desc_apply, mk'_apply, id_apply]
 #align AddCommGroup.cokernel_iso_quotient AddCommGroupCat.cokernelIsoQuotient
+-/
 
 end AddCommGroupCat
 

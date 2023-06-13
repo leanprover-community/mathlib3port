@@ -224,6 +224,7 @@ theorem rotate_length_mul (l : List α) (n : ℕ) : l.rotate (l.length * n) = l 
 #align list.rotate_length_mul List.rotate_length_mul
 -/
 
+#print List.prod_rotate_eq_one_of_prod_eq_one /-
 theorem prod_rotate_eq_one_of_prod_eq_one [Group α] :
     ∀ {l : List α} (hl : l.Prod = 1) (n : ℕ), (l.rotate n).Prod = 1
   | [], _, _ => by simp
@@ -234,6 +235,7 @@ theorem prod_rotate_eq_one_of_prod_eq_one [Group α] :
       rw [← rotate_mod, rotate_eq_drop_append_take this, List.prod_append, mul_eq_one_iff_inv_eq, ←
         one_mul (List.prod _)⁻¹, ← hl, List.prod_append, mul_assoc, mul_inv_self, mul_one]
 #align list.prod_rotate_eq_one_of_prod_eq_one List.prod_rotate_eq_one_of_prod_eq_one
+-/
 
 #print List.rotate_perm /-
 theorem rotate_perm (l : List α) (n : ℕ) : l.rotate n ~ l :=
@@ -281,6 +283,7 @@ theorem rotate_singleton (x : α) (n : ℕ) : [x].rotate n = [x] :=
 #align list.rotate_singleton List.rotate_singleton
 -/
 
+#print List.zipWith_rotate_distrib /-
 theorem zipWith_rotate_distrib {α β γ : Type _} (f : α → β → γ) (l : List α) (l' : List β) (n : ℕ)
     (h : l.length = l'.length) : (zipWith f l l').rotate n = zipWith f (l.rotate n) (l'.rotate n) :=
   by
@@ -289,14 +292,17 @@ theorem zipWith_rotate_distrib {α β γ : Type _} (f : α → β → γ) (l : L
     zip_with_distrib_take, List.length_zipWith, h, min_self]
   rw [length_drop, length_drop, h]
 #align list.zip_with_rotate_distrib List.zipWith_rotate_distrib
+-/
 
 attribute [local simp] rotate_cons_succ
 
+#print List.zipWith_rotate_one /-
 @[simp]
 theorem zipWith_rotate_one {β : Type _} (f : α → α → β) (x y : α) (l : List α) :
     zipWith f (x :: y :: l) ((x :: y :: l).rotate 1) = f x y :: zipWith f (y :: l) (l ++ [x]) := by
   simp
 #align list.zip_with_rotate_one List.zipWith_rotate_one
+-/
 
 #print List.nthLe_rotate_one /-
 theorem nthLe_rotate_one (l : List α) (k : ℕ) (hk : k < (l.rotate 1).length) :
@@ -466,6 +472,7 @@ theorem rotate_reverse (l : List α) (n : ℕ) :
 #align list.rotate_reverse List.rotate_reverse
 -/
 
+#print List.map_rotate /-
 theorem map_rotate {β : Type _} (f : α → β) (l : List α) (n : ℕ) :
     map f (l.rotate n) = (map f l).rotate n :=
   by
@@ -475,6 +482,7 @@ theorem map_rotate {β : Type _} (f : α → β) (l : List α) (n : ℕ) :
     · simp
     · simp [hn]
 #align list.map_rotate List.map_rotate
+-/
 
 #print List.Nodup.rotate_eq_self_iff /-
 theorem Nodup.rotate_eq_self_iff {l : List α} (hl : l.Nodup) {n : ℕ} :
@@ -520,7 +528,6 @@ def IsRotated : Prop :=
 #align list.is_rotated List.IsRotated
 -/
 
--- mathport name: «expr ~r »
 infixr:1000 " ~r " => IsRotated
 
 variable {l l'}
@@ -661,6 +668,7 @@ theorem isRotated_reverse_iff : l.reverse ~r l'.reverse ↔ l ~r l' := by
 #align list.is_rotated_reverse_iff List.isRotated_reverse_iff
 -/
 
+#print List.isRotated_iff_mod /-
 theorem isRotated_iff_mod : l ~r l' ↔ ∃ n ≤ l.length, l.rotate n = l' :=
   by
   refine' ⟨fun h => _, fun ⟨n, _, h⟩ => ⟨n, h⟩⟩
@@ -671,6 +679,7 @@ theorem isRotated_iff_mod : l ~r l' ↔ ∃ n ≤ l.length, l.rotate n = l' :=
     refine' (Nat.mod_lt _ _).le
     simp
 #align list.is_rotated_iff_mod List.isRotated_iff_mod
+-/
 
 #print List.isRotated_iff_mem_map_range /-
 theorem isRotated_iff_mem_map_range : l ~r l' ↔ l' ∈ (List.range (l.length + 1)).map l.rotate :=
@@ -681,6 +690,7 @@ theorem isRotated_iff_mem_map_range : l ~r l' ↔ l' ∈ (List.range (l.length +
 #align list.is_rotated_iff_mem_map_range List.isRotated_iff_mem_map_range
 -/
 
+#print List.IsRotated.map /-
 @[congr]
 theorem IsRotated.map {β : Type _} {l₁ l₂ : List α} (h : l₁ ~r l₂) (f : α → β) :
     map f l₁ ~r map f l₂ := by
@@ -688,6 +698,7 @@ theorem IsRotated.map {β : Type _} {l₁ l₂ : List α} (h : l₁ ~r l₂) (f 
   rw [map_rotate]
   use n
 #align list.is_rotated.map List.IsRotated.map
+-/
 
 #print List.cyclicPermutations /-
 /-- List of all cyclic permutations of `l`.

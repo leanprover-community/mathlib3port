@@ -52,8 +52,6 @@ variable {C : Type u₁} [Category.{v₁} C] {D : Type u₂} [Category.{v₂} D]
 
 variable {F : C ⥤ D} {G : D ⥤ C} (adj : F ⊣ G)
 
-include adj
-
 section PreservationColimits
 
 variable {J : Type u} [Category.{v} J] (K : J ⥤ C)
@@ -122,8 +120,6 @@ def leftAdjointPreservesColimits : PreservesColimitsOfSize.{v, u} F
                 ((adj.functoriality_is_left_adjoint _).adj.homEquiv _ _) } }
 #align category_theory.adjunction.left_adjoint_preserves_colimits CategoryTheory.Adjunction.leftAdjointPreservesColimits
 -/
-
-omit adj
 
 #print CategoryTheory.Adjunction.isEquivalencePreservesColimits /-
 -- see Note [lower instance priority]
@@ -273,8 +269,6 @@ def rightAdjointPreservesLimits : PreservesLimitsOfSize.{v, u} G
 #align category_theory.adjunction.right_adjoint_preserves_limits CategoryTheory.Adjunction.rightAdjointPreservesLimits
 -/
 
-omit adj
-
 #print CategoryTheory.Adjunction.isEquivalencePreservesLimits /-
 -- see Note [lower instance priority]
 instance (priority := 100) isEquivalencePreservesLimits (E : D ⥤ C) [IsEquivalence E] :
@@ -352,6 +346,7 @@ theorem has_limits_of_equivalence (E : D ⥤ C) [IsEquivalence E] [HasLimitsOfSi
 
 end PreservationLimits
 
+#print CategoryTheory.Adjunction.coconesIsoComponentHom /-
 /-- auxiliary construction for `cocones_iso` -/
 @[simps]
 def coconesIsoComponentHom {J : Type u} [Category.{v} J] {K : J ⥤ C} (Y : D)
@@ -360,7 +355,9 @@ def coconesIsoComponentHom {J : Type u} [Category.{v} J] {K : J ⥤ C} (Y : D)
   app j := (adj.homEquiv (K.obj j) Y) (t.app j)
   naturality' j j' f := by erw [← adj.hom_equiv_naturality_left, t.naturality]; dsimp; simp
 #align category_theory.adjunction.cocones_iso_component_hom CategoryTheory.Adjunction.coconesIsoComponentHom
+-/
 
+#print CategoryTheory.Adjunction.coconesIsoComponentInv /-
 /-- auxiliary construction for `cocones_iso` -/
 @[simps]
 def coconesIsoComponentInv {J : Type u} [Category.{v} J] {K : J ⥤ C} (Y : D)
@@ -372,7 +369,9 @@ def coconesIsoComponentInv {J : Type u} [Category.{v} J] {K : J ⥤ C} (Y : D)
     erw [← adj.hom_equiv_naturality_left_symm, ← adj.hom_equiv_naturality_right_symm, t.naturality]
     dsimp; simp
 #align category_theory.adjunction.cocones_iso_component_inv CategoryTheory.Adjunction.coconesIsoComponentInv
+-/
 
+#print CategoryTheory.Adjunction.conesIsoComponentHom /-
 /-- auxiliary construction for `cones_iso` -/
 @[simps]
 def conesIsoComponentHom {J : Type u} [Category.{v} J] {K : J ⥤ D} (X : Cᵒᵖ)
@@ -384,7 +383,9 @@ def conesIsoComponentHom {J : Type u} [Category.{v} J] {K : J ⥤ D} (X : Cᵒ�
     erw [← adj.hom_equiv_naturality_right, ← t.naturality, category.id_comp, category.id_comp]
     rfl
 #align category_theory.adjunction.cones_iso_component_hom CategoryTheory.Adjunction.conesIsoComponentHom
+-/
 
+#print CategoryTheory.Adjunction.conesIsoComponentInv /-
 /-- auxiliary construction for `cones_iso` -/
 @[simps]
 def conesIsoComponentInv {J : Type u} [Category.{v} J] {K : J ⥤ D} (X : Cᵒᵖ)
@@ -394,12 +395,14 @@ def conesIsoComponentInv {J : Type u} [Category.{v} J] {K : J ⥤ D} (X : Cᵒ�
   naturality' j j' f := by
     erw [← adj.hom_equiv_naturality_right_symm, ← t.naturality, category.id_comp, category.id_comp]
 #align category_theory.adjunction.cones_iso_component_inv CategoryTheory.Adjunction.conesIsoComponentInv
+-/
 
 end ArbitraryUniverse
 
 variable {C : Type u₁} [Category.{v₀} C] {D : Type u₂} [Category.{v₀} D] {F : C ⥤ D} {G : D ⥤ C}
   (adj : F ⊣ G)
 
+#print CategoryTheory.Adjunction.coconesIso /-
 -- Note: this is natural in K, but we do not yet have the tools to formulate that.
 /-- When `F ⊣ G`,
 the functor associating to each `Y` the cocones over `K ⋙ F` with cone point `Y`
@@ -414,7 +417,9 @@ def coconesIso {J : Type u} [Category.{v} J] {K : J ⥤ C} :
         inv := coconesIsoComponentInv adj Y })
     (by tidy)
 #align category_theory.adjunction.cocones_iso CategoryTheory.Adjunction.coconesIso
+-/
 
+#print CategoryTheory.Adjunction.conesIso /-
 -- Note: this is natural in K, but we do not yet have the tools to formulate that.
 /-- When `F ⊣ G`,
 the functor associating to each `X` the cones over `K` with cone point `F.op.obj X`
@@ -429,6 +434,7 @@ def conesIso {J : Type u} [Category.{v} J] {K : J ⥤ D} :
         inv := conesIsoComponentInv adj X })
     (by tidy)
 #align category_theory.adjunction.cones_iso CategoryTheory.Adjunction.conesIso
+-/
 
 end CategoryTheory.Adjunction
 

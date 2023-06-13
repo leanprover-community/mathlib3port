@@ -280,10 +280,12 @@ def erase (a : α) (s : AList β) : AList β :=
 #align alist.erase AList.erase
 -/
 
+#print AList.keys_erase /-
 @[simp]
 theorem keys_erase (a : α) (s : AList β) : (erase a s).keys = s.keys.eraseₓ a :=
   keys_kerase
 #align alist.keys_erase AList.keys_erase
+-/
 
 #print AList.mem_erase /-
 @[simp]
@@ -366,10 +368,12 @@ theorem mem_insert {a a'} {b' : β a'} (s : AList β) : a ∈ insert a' b' s ↔
 #align alist.mem_insert AList.mem_insert
 -/
 
+#print AList.keys_insert /-
 @[simp]
 theorem keys_insert {a} {b : β a} (s : AList β) : (insert a b s).keys = a :: s.keys.eraseₓ a := by
   simp [insert, keys, keys_kerase]
 #align alist.keys_insert AList.keys_insert
+-/
 
 #print AList.perm_insert /-
 theorem perm_insert {a} {b : β a} {s₁ s₂ : AList β} (p : s₁.entries ~ s₂.entries) :
@@ -463,13 +467,16 @@ def insertRec {C : AList β → Sort _} (H0 : C ∅)
 -- Test that the `induction` tactic works on `insert_rec`.
 example (l : AList β) : True := by induction l using AList.insertRec <;> trivial
 
+#print AList.insertRec_empty /-
 @[simp]
 theorem insertRec_empty {C : AList β → Sort _} (H0 : C ∅)
     (IH : ∀ (a : α) (b : β a) (l : AList β) (h : a ∉ l), C l → C (l.insert a b)) :
     @insertRec α β _ C H0 IH ∅ = H0 := by change @insert_rec α β _ C H0 IH ⟨[], _⟩ = H0;
   rw [insert_rec]
 #align alist.insert_rec_empty AList.insertRec_empty
+-/
 
+#print AList.insertRec_insert /-
 theorem insertRec_insert {C : AList β → Sort _} (H0 : C ∅)
     (IH : ∀ (a : α) (b : β a) (l : AList β) (h : a ∉ l), C l → C (l.insert a b)) {c : Sigma β}
     {l : AList β} (h : c.1 ∉ l) :
@@ -486,13 +493,16 @@ theorem insertRec_insert {C : AList β → Sort _} (H0 : C ∅)
   rw [insert_rec]
   apply cast_hEq
 #align alist.insert_rec_insert AList.insertRec_insert
+-/
 
+#print AList.insertRec_insert_mk /-
 theorem insertRec_insert_mk {C : AList β → Sort _} (H0 : C ∅)
     (IH : ∀ (a : α) (b : β a) (l : AList β) (h : a ∉ l), C l → C (l.insert a b)) {a : α} (b : β a)
     {l : AList β} (h : a ∉ l) :
     @insertRec α β _ C H0 IH (l.insert a b) = IH a b l h (@insertRec α β _ C H0 IH l) :=
   @insertRec_insert α β _ C H0 IH ⟨a, b⟩ l h
 #align alist.recursion_insert_mk AList.insertRec_insert_mk
+-/
 
 /-! ### extract -/
 

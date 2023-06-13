@@ -130,48 +130,64 @@ theorem bddBelow_def : BddBelow s ↔ ∃ x, ∀ y ∈ s, x ≤ y :=
 #align bdd_below_def bddBelow_def
 -/
 
+#print bot_mem_lowerBounds /-
 theorem bot_mem_lowerBounds [OrderBot α] (s : Set α) : ⊥ ∈ lowerBounds s := fun _ _ => bot_le
 #align bot_mem_lower_bounds bot_mem_lowerBounds
+-/
 
+#print top_mem_upperBounds /-
 theorem top_mem_upperBounds [OrderTop α] (s : Set α) : ⊤ ∈ upperBounds s := fun _ _ => le_top
 #align top_mem_upper_bounds top_mem_upperBounds
+-/
 
+#print isLeast_bot_iff /-
 @[simp]
 theorem isLeast_bot_iff [OrderBot α] : IsLeast s ⊥ ↔ ⊥ ∈ s :=
   and_iff_left <| bot_mem_lowerBounds _
 #align is_least_bot_iff isLeast_bot_iff
+-/
 
+#print isGreatest_top_iff /-
 @[simp]
 theorem isGreatest_top_iff [OrderTop α] : IsGreatest s ⊤ ↔ ⊤ ∈ s :=
   and_iff_left <| top_mem_upperBounds _
 #align is_greatest_top_iff isGreatest_top_iff
+-/
 
+#print not_bddAbove_iff' /-
 /-- A set `s` is not bounded above if and only if for each `x` there exists `y ∈ s` such that `x`
 is not greater than or equal to `y`. This version only assumes `preorder` structure and uses
 `¬(y ≤ x)`. A version for linear orders is called `not_bdd_above_iff`. -/
 theorem not_bddAbove_iff' : ¬BddAbove s ↔ ∀ x, ∃ y ∈ s, ¬y ≤ x := by
   simp [BddAbove, upperBounds, Set.Nonempty]
 #align not_bdd_above_iff' not_bddAbove_iff'
+-/
 
+#print not_bddBelow_iff' /-
 /-- A set `s` is not bounded below if and only if for each `x` there exists `y ∈ s` such that `x`
 is not less than or equal to `y`. This version only assumes `preorder` structure and uses
 `¬(x ≤ y)`. A version for linear orders is called `not_bdd_below_iff`. -/
 theorem not_bddBelow_iff' : ¬BddBelow s ↔ ∀ x, ∃ y ∈ s, ¬x ≤ y :=
   @not_bddAbove_iff' αᵒᵈ _ _
 #align not_bdd_below_iff' not_bddBelow_iff'
+-/
 
+#print not_bddAbove_iff /-
 /-- A set `s` is not bounded above if and only if for each `x` there exists `y ∈ s` that is greater
 than `x`. A version for preorders is called `not_bdd_above_iff'`. -/
 theorem not_bddAbove_iff {α : Type _} [LinearOrder α] {s : Set α} :
     ¬BddAbove s ↔ ∀ x, ∃ y ∈ s, x < y := by simp only [not_bddAbove_iff', not_le]
 #align not_bdd_above_iff not_bddAbove_iff
+-/
 
+#print not_bddBelow_iff /-
 /-- A set `s` is not bounded below if and only if for each `x` there exists `y ∈ s` that is less
 than `x`. A version for preorders is called `not_bdd_below_iff'`. -/
 theorem not_bddBelow_iff {α : Type _} [LinearOrder α] {s : Set α} :
     ¬BddBelow s ↔ ∀ x, ∃ y ∈ s, y < x :=
   @not_bddAbove_iff αᵒᵈ _ _
 #align not_bdd_below_iff not_bddBelow_iff
+-/
 
 #print BddAbove.dual /-
 theorem BddAbove.dual (h : BddAbove s) : BddBelow (ofDual ⁻¹' s) :=
@@ -460,59 +476,80 @@ theorem IsGreatest.nonempty (h : IsGreatest s a) : s.Nonempty :=
 -/
 
 
+#print upperBounds_union /-
 @[simp]
 theorem upperBounds_union : upperBounds (s ∪ t) = upperBounds s ∩ upperBounds t :=
   Subset.antisymm (fun b hb => ⟨fun x hx => hb (Or.inl hx), fun x hx => hb (Or.inr hx)⟩)
     fun b hb x hx => hx.elim (fun hs => hb.1 hs) fun ht => hb.2 ht
 #align upper_bounds_union upperBounds_union
+-/
 
+#print lowerBounds_union /-
 @[simp]
 theorem lowerBounds_union : lowerBounds (s ∪ t) = lowerBounds s ∩ lowerBounds t :=
   @upperBounds_union αᵒᵈ _ s t
 #align lower_bounds_union lowerBounds_union
+-/
 
+#print union_upperBounds_subset_upperBounds_inter /-
 theorem union_upperBounds_subset_upperBounds_inter :
     upperBounds s ∪ upperBounds t ⊆ upperBounds (s ∩ t) :=
   union_subset (upperBounds_mono_set <| inter_subset_left _ _)
     (upperBounds_mono_set <| inter_subset_right _ _)
 #align union_upper_bounds_subset_upper_bounds_inter union_upperBounds_subset_upperBounds_inter
+-/
 
+#print union_lowerBounds_subset_lowerBounds_inter /-
 theorem union_lowerBounds_subset_lowerBounds_inter :
     lowerBounds s ∪ lowerBounds t ⊆ lowerBounds (s ∩ t) :=
   @union_upperBounds_subset_upperBounds_inter αᵒᵈ _ s t
 #align union_lower_bounds_subset_lower_bounds_inter union_lowerBounds_subset_lowerBounds_inter
+-/
 
+#print isLeast_union_iff /-
 theorem isLeast_union_iff {a : α} {s t : Set α} :
     IsLeast (s ∪ t) a ↔ IsLeast s a ∧ a ∈ lowerBounds t ∨ a ∈ lowerBounds s ∧ IsLeast t a := by
   simp [IsLeast, lowerBounds_union, or_and_right, and_comm' (a ∈ t), and_assoc']
 #align is_least_union_iff isLeast_union_iff
+-/
 
+#print isGreatest_union_iff /-
 theorem isGreatest_union_iff :
     IsGreatest (s ∪ t) a ↔
       IsGreatest s a ∧ a ∈ upperBounds t ∨ a ∈ upperBounds s ∧ IsGreatest t a :=
   @isLeast_union_iff αᵒᵈ _ a s t
 #align is_greatest_union_iff isGreatest_union_iff
+-/
 
+#print BddAbove.inter_of_left /-
 /-- If `s` is bounded, then so is `s ∩ t` -/
 theorem BddAbove.inter_of_left (h : BddAbove s) : BddAbove (s ∩ t) :=
   h.mono <| inter_subset_left s t
 #align bdd_above.inter_of_left BddAbove.inter_of_left
+-/
 
+#print BddAbove.inter_of_right /-
 /-- If `t` is bounded, then so is `s ∩ t` -/
 theorem BddAbove.inter_of_right (h : BddAbove t) : BddAbove (s ∩ t) :=
   h.mono <| inter_subset_right s t
 #align bdd_above.inter_of_right BddAbove.inter_of_right
+-/
 
+#print BddBelow.inter_of_left /-
 /-- If `s` is bounded, then so is `s ∩ t` -/
 theorem BddBelow.inter_of_left (h : BddBelow s) : BddBelow (s ∩ t) :=
   h.mono <| inter_subset_left s t
 #align bdd_below.inter_of_left BddBelow.inter_of_left
+-/
 
+#print BddBelow.inter_of_right /-
 /-- If `t` is bounded, then so is `s ∩ t` -/
 theorem BddBelow.inter_of_right (h : BddBelow t) : BddBelow (s ∩ t) :=
   h.mono <| inter_subset_right s t
 #align bdd_below.inter_of_right BddBelow.inter_of_right
+-/
 
+#print BddAbove.union /-
 /-- If `s` and `t` are bounded above sets in a `semilattice_sup`, then so is `s ∪ t`. -/
 theorem BddAbove.union [SemilatticeSup γ] {s t : Set γ} :
     BddAbove s → BddAbove t → BddAbove (s ∪ t) :=
@@ -522,25 +559,33 @@ theorem BddAbove.union [SemilatticeSup γ] {s t : Set γ} :
   rw [upperBounds_union]
   exact ⟨upperBounds_mono_mem le_sup_left hs, upperBounds_mono_mem le_sup_right ht⟩
 #align bdd_above.union BddAbove.union
+-/
 
+#print bddAbove_union /-
 /-- The union of two sets is bounded above if and only if each of the sets is. -/
 theorem bddAbove_union [SemilatticeSup γ] {s t : Set γ} :
     BddAbove (s ∪ t) ↔ BddAbove s ∧ BddAbove t :=
   ⟨fun h => ⟨h.mono <| subset_union_left s t, h.mono <| subset_union_right s t⟩, fun h =>
     h.1.union h.2⟩
 #align bdd_above_union bddAbove_union
+-/
 
+#print BddBelow.union /-
 theorem BddBelow.union [SemilatticeInf γ] {s t : Set γ} :
     BddBelow s → BddBelow t → BddBelow (s ∪ t) :=
   @BddAbove.union γᵒᵈ _ s t
 #align bdd_below.union BddBelow.union
+-/
 
+#print bddBelow_union /-
 /-- The union of two sets is bounded above if and only if each of the sets is.-/
 theorem bddBelow_union [SemilatticeInf γ] {s t : Set γ} :
     BddBelow (s ∪ t) ↔ BddBelow s ∧ BddBelow t :=
   @bddAbove_union γᵒᵈ _ s t
 #align bdd_below_union bddBelow_union
+-/
 
+#print IsLUB.union /-
 /-- If `a` is the least upper bound of `s` and `b` is the least upper bound of `t`,
 then `a ⊔ b` is the least upper bound of `s ∪ t`. -/
 theorem IsLUB.union [SemilatticeSup γ] {a b : γ} {s t : Set γ} (hs : IsLUB s a) (ht : IsLUB t b) :
@@ -550,39 +595,50 @@ theorem IsLUB.union [SemilatticeSup γ] {a b : γ} {s t : Set γ} (hs : IsLUB s 
     fun c hc =>
     sup_le (hs.right fun d hd => hc <| Or.inl hd) (ht.right fun d hd => hc <| Or.inr hd)⟩
 #align is_lub.union IsLUB.union
+-/
 
+#print IsGLB.union /-
 /-- If `a` is the greatest lower bound of `s` and `b` is the greatest lower bound of `t`,
 then `a ⊓ b` is the greatest lower bound of `s ∪ t`. -/
 theorem IsGLB.union [SemilatticeInf γ] {a₁ a₂ : γ} {s t : Set γ} (hs : IsGLB s a₁)
     (ht : IsGLB t a₂) : IsGLB (s ∪ t) (a₁ ⊓ a₂) :=
   hs.dual.union ht
 #align is_glb.union IsGLB.union
+-/
 
+#print IsLeast.union /-
 /-- If `a` is the least element of `s` and `b` is the least element of `t`,
 then `min a b` is the least element of `s ∪ t`. -/
 theorem IsLeast.union [LinearOrder γ] {a b : γ} {s t : Set γ} (ha : IsLeast s a)
     (hb : IsLeast t b) : IsLeast (s ∪ t) (min a b) :=
   ⟨by cases' le_total a b with h h <;> simp [h, ha.1, hb.1], (ha.IsGLB.union hb.IsGLB).1⟩
 #align is_least.union IsLeast.union
+-/
 
+#print IsGreatest.union /-
 /-- If `a` is the greatest element of `s` and `b` is the greatest element of `t`,
 then `max a b` is the greatest element of `s ∪ t`. -/
 theorem IsGreatest.union [LinearOrder γ] {a b : γ} {s t : Set γ} (ha : IsGreatest s a)
     (hb : IsGreatest t b) : IsGreatest (s ∪ t) (max a b) :=
   ⟨by cases' le_total a b with h h <;> simp [h, ha.1, hb.1], (ha.IsLUB.union hb.IsLUB).1⟩
 #align is_greatest.union IsGreatest.union
+-/
 
+#print IsLUB.inter_Ici_of_mem /-
 theorem IsLUB.inter_Ici_of_mem [LinearOrder γ] {s : Set γ} {a b : γ} (ha : IsLUB s a) (hb : b ∈ s) :
     IsLUB (s ∩ Ici b) a :=
   ⟨fun x hx => ha.1 hx.1, fun c hc =>
     have hbc : b ≤ c := hc ⟨hb, le_rfl⟩
     ha.2 fun x hx => (le_total x b).elim (fun hxb => hxb.trans hbc) fun hbx => hc ⟨hx, hbx⟩⟩
 #align is_lub.inter_Ici_of_mem IsLUB.inter_Ici_of_mem
+-/
 
+#print IsGLB.inter_Iic_of_mem /-
 theorem IsGLB.inter_Iic_of_mem [LinearOrder γ] {s : Set γ} {a b : γ} (ha : IsGLB s a) (hb : b ∈ s) :
     IsGLB (s ∩ Iic b) a :=
   ha.dual.inter_Ici_of_mem hb
 #align is_glb.inter_Iic_of_mem IsGLB.inter_Iic_of_mem
+-/
 
 #print bddAbove_iff_exists_ge /-
 theorem bddAbove_iff_exists_ge [SemilatticeSup γ] {s : Set γ} (x₀ : γ) :
@@ -1040,24 +1096,32 @@ theorem isGreatest_univ_iff : IsGreatest univ a ↔ IsTop a := by
 #align is_greatest_univ_iff isGreatest_univ_iff
 -/
 
+#print isGreatest_univ /-
 theorem isGreatest_univ [OrderTop α] : IsGreatest (univ : Set α) ⊤ :=
   isGreatest_univ_iff.2 isTop_top
 #align is_greatest_univ isGreatest_univ
+-/
 
+#print OrderTop.upperBounds_univ /-
 @[simp]
 theorem OrderTop.upperBounds_univ [PartialOrder γ] [OrderTop γ] :
     upperBounds (univ : Set γ) = {⊤} := by rw [is_greatest_univ.upper_bounds_eq, Ici_top]
 #align order_top.upper_bounds_univ OrderTop.upperBounds_univ
+-/
 
+#print isLUB_univ /-
 theorem isLUB_univ [OrderTop α] : IsLUB (univ : Set α) ⊤ :=
   isGreatest_univ.IsLUB
 #align is_lub_univ isLUB_univ
+-/
 
+#print OrderBot.lowerBounds_univ /-
 @[simp]
 theorem OrderBot.lowerBounds_univ [PartialOrder γ] [OrderBot γ] :
     lowerBounds (univ : Set γ) = {⊥} :=
   @OrderTop.upperBounds_univ γᵒᵈ _ _
 #align order_bot.lower_bounds_univ OrderBot.lowerBounds_univ
+-/
 
 #print isLeast_univ_iff /-
 @[simp]
@@ -1066,13 +1130,17 @@ theorem isLeast_univ_iff : IsLeast univ a ↔ IsBot a :=
 #align is_least_univ_iff isLeast_univ_iff
 -/
 
+#print isLeast_univ /-
 theorem isLeast_univ [OrderBot α] : IsLeast (univ : Set α) ⊥ :=
   @isGreatest_univ αᵒᵈ _ _
 #align is_least_univ isLeast_univ
+-/
 
+#print isGLB_univ /-
 theorem isGLB_univ [OrderBot α] : IsGLB (univ : Set α) ⊥ :=
   isLeast_univ.IsGLB
 #align is_glb_univ isGLB_univ
+-/
 
 #print NoMaxOrder.upperBounds_univ /-
 @[simp]
@@ -1149,13 +1217,17 @@ theorem isLUB_empty_iff : IsLUB ∅ a ↔ IsBot a :=
 #align is_lub_empty_iff isLUB_empty_iff
 -/
 
+#print isGLB_empty /-
 theorem isGLB_empty [OrderTop α] : IsGLB ∅ (⊤ : α) :=
   isGLB_empty_iff.2 isTop_top
 #align is_glb_empty isGLB_empty
+-/
 
+#print isLUB_empty /-
 theorem isLUB_empty [OrderBot α] : IsLUB ∅ (⊥ : α) :=
   @isGLB_empty αᵒᵈ _ _
 #align is_lub_empty isLUB_empty
+-/
 
 #print IsLUB.nonempty /-
 theorem IsLUB.nonempty [NoMinOrder α] (hs : IsLUB s a) : s.Nonempty :=
@@ -1220,31 +1292,43 @@ theorem BddBelow.insert [SemilatticeInf γ] (a : γ) {s : Set γ} (hs : BddBelow
 #align bdd_below.insert BddBelow.insert
 -/
 
+#print IsLUB.insert /-
 theorem IsLUB.insert [SemilatticeSup γ] (a) {b} {s : Set γ} (hs : IsLUB s b) :
     IsLUB (insert a s) (a ⊔ b) := by rw [insert_eq]; exact is_lub_singleton.union hs
 #align is_lub.insert IsLUB.insert
+-/
 
+#print IsGLB.insert /-
 theorem IsGLB.insert [SemilatticeInf γ] (a) {b} {s : Set γ} (hs : IsGLB s b) :
     IsGLB (insert a s) (a ⊓ b) := by rw [insert_eq]; exact is_glb_singleton.union hs
 #align is_glb.insert IsGLB.insert
+-/
 
+#print IsGreatest.insert /-
 theorem IsGreatest.insert [LinearOrder γ] (a) {b} {s : Set γ} (hs : IsGreatest s b) :
     IsGreatest (insert a s) (max a b) := by rw [insert_eq]; exact is_greatest_singleton.union hs
 #align is_greatest.insert IsGreatest.insert
+-/
 
+#print IsLeast.insert /-
 theorem IsLeast.insert [LinearOrder γ] (a) {b} {s : Set γ} (hs : IsLeast s b) :
     IsLeast (insert a s) (min a b) := by rw [insert_eq]; exact is_least_singleton.union hs
 #align is_least.insert IsLeast.insert
+-/
 
+#print upperBounds_insert /-
 @[simp]
 theorem upperBounds_insert (a : α) (s : Set α) : upperBounds (insert a s) = Ici a ∩ upperBounds s :=
   by rw [insert_eq, upperBounds_union, upperBounds_singleton]
 #align upper_bounds_insert upperBounds_insert
+-/
 
+#print lowerBounds_insert /-
 @[simp]
 theorem lowerBounds_insert (a : α) (s : Set α) : lowerBounds (insert a s) = Iic a ∩ lowerBounds s :=
   by rw [insert_eq, lowerBounds_union, lowerBounds_singleton]
 #align lower_bounds_insert lowerBounds_insert
+-/
 
 #print OrderTop.bddAbove /-
 /-- When there is a global maximum, every set is bounded above. -/
@@ -1267,21 +1351,29 @@ protected theorem OrderBot.bddBelow [OrderBot α] (s : Set α) : BddBelow s :=
 -/
 
 
+#print isLUB_pair /-
 theorem isLUB_pair [SemilatticeSup γ] {a b : γ} : IsLUB {a, b} (a ⊔ b) :=
   isLUB_singleton.insert _
 #align is_lub_pair isLUB_pair
+-/
 
+#print isGLB_pair /-
 theorem isGLB_pair [SemilatticeInf γ] {a b : γ} : IsGLB {a, b} (a ⊓ b) :=
   isGLB_singleton.insert _
 #align is_glb_pair isGLB_pair
+-/
 
+#print isLeast_pair /-
 theorem isLeast_pair [LinearOrder γ] {a b : γ} : IsLeast {a, b} (min a b) :=
   isLeast_singleton.insert _
 #align is_least_pair isLeast_pair
+-/
 
+#print isGreatest_pair /-
 theorem isGreatest_pair [LinearOrder γ] {a b : γ} : IsGreatest {a, b} (max a b) :=
   isGreatest_singleton.insert _
 #align is_greatest_pair isGreatest_pair
+-/
 
 /-!
 #### Lower/upper bounds
@@ -1326,13 +1418,17 @@ theorem isGLB_le_isLUB (ha : IsGLB s a) (hb : IsLUB s b) (hs : s.Nonempty) : a �
 #align is_glb_le_is_lub isGLB_le_isLUB
 -/
 
+#print isLUB_lt_iff /-
 theorem isLUB_lt_iff (ha : IsLUB s a) : a < b ↔ ∃ c ∈ upperBounds s, c < b :=
   ⟨fun hb => ⟨a, ha.1, hb⟩, fun ⟨c, hcs, hcb⟩ => lt_of_le_of_lt (ha.2 hcs) hcb⟩
 #align is_lub_lt_iff isLUB_lt_iff
+-/
 
+#print lt_isGLB_iff /-
 theorem lt_isGLB_iff (ha : IsGLB s a) : b < a ↔ ∃ c ∈ lowerBounds s, b < c :=
   isLUB_lt_iff ha.dual
 #align lt_is_glb_iff lt_isGLB_iff
+-/
 
 #print le_of_isLUB_le_isGLB /-
 theorem le_of_isLUB_le_isGLB {x y} (ha : IsGLB s a) (hb : IsLUB s b) (hab : b ≤ a) (hx : x ∈ s)
@@ -1408,33 +1504,45 @@ section LinearOrder
 
 variable [LinearOrder α] {s : Set α} {a b : α}
 
+#print lt_isLUB_iff /-
 theorem lt_isLUB_iff (h : IsLUB s a) : b < a ↔ ∃ c ∈ s, b < c := by
   simp only [← not_le, isLUB_le_iff h, mem_upperBounds, not_forall]
 #align lt_is_lub_iff lt_isLUB_iff
+-/
 
+#print isGLB_lt_iff /-
 theorem isGLB_lt_iff (h : IsGLB s a) : a < b ↔ ∃ c ∈ s, c < b :=
   lt_isLUB_iff h.dual
 #align is_glb_lt_iff isGLB_lt_iff
+-/
 
+#print IsLUB.exists_between /-
 theorem IsLUB.exists_between (h : IsLUB s a) (hb : b < a) : ∃ c ∈ s, b < c ∧ c ≤ a :=
   let ⟨c, hcs, hbc⟩ := (lt_isLUB_iff h).1 hb
   ⟨c, hcs, hbc, h.1 hcs⟩
 #align is_lub.exists_between IsLUB.exists_between
+-/
 
+#print IsLUB.exists_between' /-
 theorem IsLUB.exists_between' (h : IsLUB s a) (h' : a ∉ s) (hb : b < a) : ∃ c ∈ s, b < c ∧ c < a :=
   let ⟨c, hcs, hbc, hca⟩ := h.exists_between hb
   ⟨c, hcs, hbc, hca.lt_of_ne fun hac => h' <| hac ▸ hcs⟩
 #align is_lub.exists_between' IsLUB.exists_between'
+-/
 
+#print IsGLB.exists_between /-
 theorem IsGLB.exists_between (h : IsGLB s a) (hb : a < b) : ∃ c ∈ s, a ≤ c ∧ c < b :=
   let ⟨c, hcs, hbc⟩ := (isGLB_lt_iff h).1 hb
   ⟨c, hcs, h.1 hcs, hbc⟩
 #align is_glb.exists_between IsGLB.exists_between
+-/
 
+#print IsGLB.exists_between' /-
 theorem IsGLB.exists_between' (h : IsGLB s a) (h' : a ∉ s) (hb : a < b) : ∃ c ∈ s, a < c ∧ c < b :=
   let ⟨c, hcs, hac, hcb⟩ := h.exists_between hb
   ⟨c, hcs, hac.lt_of_ne fun hac => h' <| hac.symm ▸ hcs, hcb⟩
 #align is_glb.exists_between' IsGLB.exists_between'
+-/
 
 end LinearOrder
 
@@ -1447,8 +1555,6 @@ namespace MonotoneOn
 
 variable [Preorder α] [Preorder β] {f : α → β} {s t : Set α} (Hf : MonotoneOn f t) {a : α}
   (Hst : s ⊆ t)
-
-include Hf
 
 #print MonotoneOn.mem_upperBounds_image /-
 theorem mem_upperBounds_image (Has : a ∈ upperBounds s) (Hat : a ∈ t) :
@@ -1476,27 +1582,35 @@ theorem mem_lowerBounds_image_self : a ∈ lowerBounds t → a ∈ t → f a ∈
 #align monotone_on.mem_lower_bounds_image_self MonotoneOn.mem_lowerBounds_image_self
 -/
 
+#print MonotoneOn.image_upperBounds_subset_upperBounds_image /-
 theorem image_upperBounds_subset_upperBounds_image (Hst : s ⊆ t) :
     f '' (upperBounds s ∩ t) ⊆ upperBounds (f '' s) := by rintro _ ⟨a, ha, rfl⟩;
   exact Hf.mem_upper_bounds_image Hst ha.1 ha.2
 #align monotone_on.image_upper_bounds_subset_upper_bounds_image MonotoneOn.image_upperBounds_subset_upperBounds_image
+-/
 
+#print MonotoneOn.image_lowerBounds_subset_lowerBounds_image /-
 theorem image_lowerBounds_subset_lowerBounds_image :
     f '' (lowerBounds s ∩ t) ⊆ lowerBounds (f '' s) :=
   Hf.dual.image_upperBounds_subset_upperBounds_image Hst
 #align monotone_on.image_lower_bounds_subset_lower_bounds_image MonotoneOn.image_lowerBounds_subset_lowerBounds_image
+-/
 
+#print MonotoneOn.map_bddAbove /-
 /-- The image under a monotone function on a set `t` of a subset which has an upper bound in `t`
   is bounded above. -/
 theorem map_bddAbove : (upperBounds s ∩ t).Nonempty → BddAbove (f '' s) := fun ⟨C, hs, ht⟩ =>
   ⟨f C, Hf.mem_upperBounds_image Hst hs ht⟩
 #align monotone_on.map_bdd_above MonotoneOn.map_bddAbove
+-/
 
+#print MonotoneOn.map_bddBelow /-
 /-- The image under a monotone function on a set `t` of a subset which has a lower bound in `t`
   is bounded below. -/
 theorem map_bddBelow : (lowerBounds s ∩ t).Nonempty → BddBelow (f '' s) := fun ⟨C, hs, ht⟩ =>
   ⟨f C, Hf.mem_lowerBounds_image Hst hs ht⟩
 #align monotone_on.map_bdd_below MonotoneOn.map_bddBelow
+-/
 
 #print MonotoneOn.map_isLeast /-
 /-- A monotone map sends a least element of a set to a least element of its image. -/
@@ -1518,8 +1632,6 @@ namespace AntitoneOn
 
 variable [Preorder α] [Preorder β] {f : α → β} {s t : Set α} (Hf : AntitoneOn f t) {a : α}
   (Hst : s ⊆ t)
-
-include Hf
 
 #print AntitoneOn.mem_upperBounds_image /-
 theorem mem_upperBounds_image (Has : a ∈ lowerBounds s) : a ∈ t → f a ∈ upperBounds (f '' s) :=
@@ -1545,25 +1657,33 @@ theorem mem_lowerBounds_image_self : a ∈ upperBounds t → a ∈ t → f a ∈
 #align antitone_on.mem_lower_bounds_image_self AntitoneOn.mem_lowerBounds_image_self
 -/
 
+#print AntitoneOn.image_lowerBounds_subset_upperBounds_image /-
 theorem image_lowerBounds_subset_upperBounds_image :
     f '' (lowerBounds s ∩ t) ⊆ upperBounds (f '' s) :=
   Hf.dual_right.image_lowerBounds_subset_lowerBounds_image Hst
 #align antitone_on.image_lower_bounds_subset_upper_bounds_image AntitoneOn.image_lowerBounds_subset_upperBounds_image
+-/
 
+#print AntitoneOn.image_upperBounds_subset_lowerBounds_image /-
 theorem image_upperBounds_subset_lowerBounds_image :
     f '' (upperBounds s ∩ t) ⊆ lowerBounds (f '' s) :=
   Hf.dual_right.image_upperBounds_subset_upperBounds_image Hst
 #align antitone_on.image_upper_bounds_subset_lower_bounds_image AntitoneOn.image_upperBounds_subset_lowerBounds_image
+-/
 
+#print AntitoneOn.map_bddAbove /-
 /-- The image under an antitone function of a set which is bounded above is bounded below. -/
 theorem map_bddAbove : (upperBounds s ∩ t).Nonempty → BddBelow (f '' s) :=
   Hf.dual_right.map_bddAbove Hst
 #align antitone_on.map_bdd_above AntitoneOn.map_bddAbove
+-/
 
+#print AntitoneOn.map_bddBelow /-
 /-- The image under an antitone function of a set which is bounded below is bounded above. -/
 theorem map_bddBelow : (lowerBounds s ∩ t).Nonempty → BddAbove (f '' s) :=
   Hf.dual_right.map_bddBelow Hst
 #align antitone_on.map_bdd_below AntitoneOn.map_bddBelow
+-/
 
 #print AntitoneOn.map_isGreatest /-
 /-- An antitone map sends a greatest element of a set to a least element of its image. -/
@@ -1584,8 +1704,6 @@ end AntitoneOn
 namespace Monotone
 
 variable [Preorder α] [Preorder β] {f : α → β} (Hf : Monotone f) {a : α} {s : Set α}
-
-include Hf
 
 #print Monotone.mem_upperBounds_image /-
 theorem mem_upperBounds_image (Ha : a ∈ upperBounds s) : f a ∈ upperBounds (f '' s) :=
@@ -1710,8 +1828,6 @@ section MonotoneMonotone
 
 variable (h₀ : ∀ b, Monotone (swap f b)) (h₁ : ∀ a, Monotone (f a))
 
-include h₀ h₁
-
 #print mem_upperBounds_image2 /-
 theorem mem_upperBounds_image2 (ha : a ∈ upperBounds s) (hb : b ∈ upperBounds t) :
     f a b ∈ upperBounds (image2 f s t) :=
@@ -1772,8 +1888,6 @@ end MonotoneMonotone
 section MonotoneAntitone
 
 variable (h₀ : ∀ b, Monotone (swap f b)) (h₁ : ∀ a, Antitone (f a))
-
-include h₀ h₁
 
 #print mem_upperBounds_image2_of_mem_upperBounds_of_mem_lowerBounds /-
 theorem mem_upperBounds_image2_of_mem_upperBounds_of_mem_lowerBounds (ha : a ∈ upperBounds s)
@@ -1845,8 +1959,6 @@ section AntitoneAntitone
 
 variable (h₀ : ∀ b, Antitone (swap f b)) (h₁ : ∀ a, Antitone (f a))
 
-include h₀ h₁
-
 #print mem_upperBounds_image2_of_mem_lowerBounds /-
 theorem mem_upperBounds_image2_of_mem_lowerBounds (ha : a ∈ lowerBounds s)
     (hb : b ∈ lowerBounds t) : f a b ∈ upperBounds (image2 f s t) :=
@@ -1910,8 +2022,6 @@ end AntitoneAntitone
 section AntitoneMonotone
 
 variable (h₀ : ∀ b, Antitone (swap f b)) (h₁ : ∀ a, Monotone (f a))
-
-include h₀ h₁
 
 #print mem_upperBounds_image2_of_mem_upperBounds_of_mem_upperBounds /-
 theorem mem_upperBounds_image2_of_mem_upperBounds_of_mem_upperBounds (ha : a ∈ lowerBounds s)
@@ -1996,6 +2106,7 @@ theorem IsLUB.of_image [Preorder α] [Preorder β] {f : α → β} (hf : ∀ {x 
 #align is_lub.of_image IsLUB.of_image
 -/
 
+#print isLUB_pi /-
 theorem isLUB_pi {π : α → Type _} [∀ a, Preorder (π a)] {s : Set (∀ a, π a)} {f : ∀ a, π a} :
     IsLUB s f ↔ ∀ a, IsLUB (Function.eval a '' s) (f a) := by
   classical
@@ -2008,12 +2119,16 @@ theorem isLUB_pi {π : α → Type _} [∀ a, Preorder (π a)] {s : Set (∀ a, 
   · exact fun g hg a => (H a).1 (mem_image_of_mem _ hg)
   · exact fun g hg a => (H a).2 ((Function.monotone_eval a).mem_upperBounds_image hg)
 #align is_lub_pi isLUB_pi
+-/
 
+#print isGLB_pi /-
 theorem isGLB_pi {π : α → Type _} [∀ a, Preorder (π a)] {s : Set (∀ a, π a)} {f : ∀ a, π a} :
     IsGLB s f ↔ ∀ a, IsGLB (Function.eval a '' s) (f a) :=
   @isLUB_pi α (fun a => (π a)ᵒᵈ) _ s f
 #align is_glb_pi isGLB_pi
+-/
 
+#print isLUB_prod /-
 theorem isLUB_prod [Preorder α] [Preorder β] {s : Set (α × β)} (p : α × β) :
     IsLUB s p ↔ IsLUB (Prod.fst '' s) p.1 ∧ IsLUB (Prod.snd '' s) p.2 :=
   by
@@ -2032,9 +2147,12 @@ theorem isLUB_prod [Preorder α] [Preorder β] {s : Set (α × β)} (p : α × �
       ⟨H.1.2 <| monotone_fst.mem_upper_bounds_image hq,
         H.2.2 <| monotone_snd.mem_upper_bounds_image hq⟩
 #align is_lub_prod isLUB_prod
+-/
 
+#print isGLB_prod /-
 theorem isGLB_prod [Preorder α] [Preorder β] {s : Set (α × β)} (p : α × β) :
     IsGLB s p ↔ IsGLB (Prod.fst '' s) p.1 ∧ IsGLB (Prod.snd '' s) p.2 :=
   @isLUB_prod αᵒᵈ βᵒᵈ _ _ _ _
 #align is_glb_prod isGLB_prod
+-/
 

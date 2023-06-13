@@ -37,6 +37,7 @@ section
 
 open scoped Classical
 
+#print Nat.isCoprime_iff_coprime /-
 theorem Nat.isCoprime_iff_coprime {m n : ℕ} : IsCoprime (m : ℤ) n ↔ Nat.coprime m n :=
   ⟨fun ⟨a, b, H⟩ =>
     Nat.eq_one_of_dvd_one <|
@@ -50,6 +51,7 @@ theorem Nat.isCoprime_iff_coprime {m n : ℕ} : IsCoprime (m : ℤ) n ↔ Nat.co
       rw [mul_comm _ (m : ℤ), mul_comm _ (n : ℤ), ← Nat.gcd_eq_gcd_ab, show _ = _ from H,
         Int.ofNat_one]⟩⟩
 #align nat.is_coprime_iff_coprime Nat.isCoprime_iff_coprime
+-/
 
 alias Nat.isCoprime_iff_coprime ↔ IsCoprime.nat_coprime Nat.coprime.isCoprime
 #align is_coprime.nat_coprime IsCoprime.nat_coprime
@@ -122,6 +124,7 @@ end
 
 open Finset
 
+#print exists_sum_eq_one_iff_pairwise_coprime /-
 theorem exists_sum_eq_one_iff_pairwise_coprime [DecidableEq I] (h : t.Nonempty) :
     (∃ μ : I → R, ∑ i in t, μ i * ∏ j in t \ {i}, s j = 1) ↔
       Pairwise (IsCoprime on fun i : t => s i) :=
@@ -168,7 +171,9 @@ theorem exists_sum_eq_one_iff_pairwise_coprime [DecidableEq I] (h : t.Nonempty) 
     convert mul_assoc _ _ _; convert (prod_eq_prod_diff_singleton_mul (mem x hx) _).symm using 3
     convert sdiff_sdiff_comm; rw [sdiff_singleton_eq_erase, erase_insert hat]
 #align exists_sum_eq_one_iff_pairwise_coprime exists_sum_eq_one_iff_pairwise_coprime
+-/
 
+#print exists_sum_eq_one_iff_pairwise_coprime' /-
 theorem exists_sum_eq_one_iff_pairwise_coprime' [Fintype I] [Nonempty I] [DecidableEq I] :
     (∃ μ : I → R, ∑ i : I, μ i * ∏ j in {i}ᶜ, s j = 1) ↔ Pairwise (IsCoprime on s) :=
   by
@@ -176,6 +181,7 @@ theorem exists_sum_eq_one_iff_pairwise_coprime' [Fintype I] [Nonempty I] [Decida
   simp only [Function.onFun, pairwise_subtype_iff_pairwise_finset', coe_univ, Set.pairwise_univ]
   assumption
 #align exists_sum_eq_one_iff_pairwise_coprime' exists_sum_eq_one_iff_pairwise_coprime'
+-/
 
 #print pairwise_coprime_iff_coprime_prod /-
 theorem pairwise_coprime_iff_coprime_prod [DecidableEq I] :

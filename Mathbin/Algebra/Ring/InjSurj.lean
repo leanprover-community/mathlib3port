@@ -31,6 +31,7 @@ open Function
 -/
 
 
+#print Function.Injective.distrib /-
 /-- Pullback a `distrib` instance along an injective function.
 See note [reducible non-instances]. -/
 @[reducible]
@@ -42,7 +43,9 @@ protected def Function.Injective.distrib {S} [Mul R] [Add R] [Distrib S] (f : R 
   left_distrib x y z := hf <| by simp only [*, left_distrib]
   right_distrib x y z := hf <| by simp only [*, right_distrib]
 #align function.injective.distrib Function.Injective.distrib
+-/
 
+#print Function.Surjective.distrib /-
 /-- Pushforward a `distrib` instance along a surjective function.
 See note [reducible non-instances]. -/
 @[reducible]
@@ -54,6 +57,7 @@ protected def Function.Surjective.distrib {S} [Distrib R] [Add S] [Mul S] (f : R
   left_distrib := hf.forall₃.2 fun x y z => by simp only [← add, ← mul, left_distrib]
   right_distrib := hf.forall₃.2 fun x y z => by simp only [← add, ← mul, right_distrib]
 #align function.surjective.distrib Function.Surjective.distrib
+-/
 
 section InjectiveSurjectiveMaps
 
@@ -64,6 +68,7 @@ section InjectiveSurjectiveMaps
 
 variable [Zero β] [Add β] [Mul β] [SMul ℕ β]
 
+#print Function.Injective.nonUnitalNonAssocSemiring /-
 /-- Pullback a `non_unital_non_assoc_semiring` instance along an injective function.
 See note [reducible non-instances]. -/
 @[reducible]
@@ -73,7 +78,9 @@ protected def Function.Injective.nonUnitalNonAssocSemiring {α : Type u}
     (nsmul : ∀ (x) (n : ℕ), f (n • x) = n • f x) : NonUnitalNonAssocSemiring β :=
   { hf.MulZeroClass f zero mul, hf.AddCommMonoid f zero add nsmul, hf.Distrib f add mul with }
 #align function.injective.non_unital_non_assoc_semiring Function.Injective.nonUnitalNonAssocSemiring
+-/
 
+#print Function.Injective.nonUnitalSemiring /-
 /-- Pullback a `non_unital_semiring` instance along an injective function.
 See note [reducible non-instances]. -/
 @[reducible]
@@ -83,7 +90,9 @@ protected def Function.Injective.nonUnitalSemiring {α : Type u} [NonUnitalSemir
     NonUnitalSemiring β :=
   { hf.NonUnitalNonAssocSemiring f zero add mul nsmul, hf.SemigroupWithZero f zero mul with }
 #align function.injective.non_unital_semiring Function.Injective.nonUnitalSemiring
+-/
 
+#print Function.Injective.nonAssocSemiring /-
 /-- Pullback a `non_assoc_semiring` instance along an injective function.
 See note [reducible non-instances]. -/
 @[reducible]
@@ -95,7 +104,9 @@ protected def Function.Injective.nonAssocSemiring {α : Type u} [NonAssocSemirin
   { hf.AddMonoidWithOne f zero one add nsmul nat_cast,
     hf.NonUnitalNonAssocSemiring f zero add mul nsmul, hf.MulOneClass f one mul with }
 #align function.injective.non_assoc_semiring Function.Injective.nonAssocSemiring
+-/
 
+#print Function.Injective.semiring /-
 /-- Pullback a `semiring` instance along an injective function.
 See note [reducible non-instances]. -/
 @[reducible]
@@ -107,7 +118,9 @@ protected def Function.Injective.semiring {α : Type u} [Semiring α] {β : Type
   { hf.NonAssocSemiring f zero one add mul nsmul nat_cast, hf.MonoidWithZero f zero one mul npow,
     hf.Distrib f add mul with }
 #align function.injective.semiring Function.Injective.semiring
+-/
 
+#print Function.Surjective.nonUnitalNonAssocSemiring /-
 /-- Pushforward a `non_unital_non_assoc_semiring` instance along a surjective function.
 See note [reducible non-instances]. -/
 @[reducible]
@@ -117,7 +130,9 @@ protected def Function.Surjective.nonUnitalNonAssocSemiring {α : Type u}
     (nsmul : ∀ (x) (n : ℕ), f (n • x) = n • f x) : NonUnitalNonAssocSemiring β :=
   { hf.MulZeroClass f zero mul, hf.AddCommMonoid f zero add nsmul, hf.Distrib f add mul with }
 #align function.surjective.non_unital_non_assoc_semiring Function.Surjective.nonUnitalNonAssocSemiring
+-/
 
+#print Function.Surjective.nonUnitalSemiring /-
 /-- Pushforward a `non_unital_semiring` instance along a surjective function.
 See note [reducible non-instances]. -/
 @[reducible]
@@ -127,7 +142,9 @@ protected def Function.Surjective.nonUnitalSemiring {α : Type u} [NonUnitalSemi
     NonUnitalSemiring β :=
   { hf.NonUnitalNonAssocSemiring f zero add mul nsmul, hf.SemigroupWithZero f zero mul with }
 #align function.surjective.non_unital_semiring Function.Surjective.nonUnitalSemiring
+-/
 
+#print Function.Surjective.nonAssocSemiring /-
 /-- Pushforward a `non_assoc_semiring` instance along a surjective function.
 See note [reducible non-instances]. -/
 @[reducible]
@@ -139,7 +156,9 @@ protected def Function.Surjective.nonAssocSemiring {α : Type u} [NonAssocSemiri
   { hf.AddMonoidWithOne f zero one add nsmul nat_cast,
     hf.NonUnitalNonAssocSemiring f zero add mul nsmul, hf.MulOneClass f one mul with }
 #align function.surjective.non_assoc_semiring Function.Surjective.nonAssocSemiring
+-/
 
+#print Function.Surjective.semiring /-
 /-- Pushforward a `semiring` instance along a surjective function.
 See note [reducible non-instances]. -/
 @[reducible]
@@ -151,6 +170,7 @@ protected def Function.Surjective.semiring {α : Type u} [Semiring α] {β : Typ
   { hf.NonAssocSemiring f zero one add mul nsmul nat_cast, hf.MonoidWithZero f zero one mul npow,
     hf.AddCommMonoid f zero add nsmul, hf.Distrib f add mul with }
 #align function.surjective.semiring Function.Surjective.semiring
+-/
 
 end InjectiveSurjectiveMaps
 
@@ -158,6 +178,7 @@ section NonUnitalCommSemiring
 
 variable [NonUnitalCommSemiring α] [NonUnitalCommSemiring β] {a b c : α}
 
+#print Function.Injective.nonUnitalCommSemiring /-
 /-- Pullback a `non_unital_semiring` instance along an injective function.
 See note [reducible non-instances]. -/
 @[reducible]
@@ -167,7 +188,9 @@ protected def Function.Injective.nonUnitalCommSemiring [Zero γ] [Add γ] [Mul �
     NonUnitalCommSemiring γ :=
   { hf.NonUnitalSemiring f zero add mul nsmul, hf.CommSemigroup f mul with }
 #align function.injective.non_unital_comm_semiring Function.Injective.nonUnitalCommSemiring
+-/
 
+#print Function.Surjective.nonUnitalCommSemiring /-
 /-- Pushforward a `non_unital_semiring` instance along a surjective function.
 See note [reducible non-instances]. -/
 @[reducible]
@@ -177,6 +200,7 @@ protected def Function.Surjective.nonUnitalCommSemiring [Zero γ] [Add γ] [Mul 
     NonUnitalCommSemiring γ :=
   { hf.NonUnitalSemiring f zero add mul nsmul, hf.CommSemigroup f mul with }
 #align function.surjective.non_unital_comm_semiring Function.Surjective.nonUnitalCommSemiring
+-/
 
 end NonUnitalCommSemiring
 
@@ -184,6 +208,7 @@ section CommSemiring
 
 variable [CommSemiring α] [CommSemiring β] {a b c : α}
 
+#print Function.Injective.commSemiring /-
 /-- Pullback a `semiring` instance along an injective function.
 See note [reducible non-instances]. -/
 @[reducible]
@@ -194,7 +219,9 @@ protected def Function.Injective.commSemiring [Zero γ] [One γ] [Add γ] [Mul �
     (nat_cast : ∀ n : ℕ, f n = n) : CommSemiring γ :=
   { hf.Semiring f zero one add mul nsmul npow nat_cast, hf.CommSemigroup f mul with }
 #align function.injective.comm_semiring Function.Injective.commSemiring
+-/
 
+#print Function.Surjective.commSemiring /-
 /-- Pushforward a `semiring` instance along a surjective function.
 See note [reducible non-instances]. -/
 @[reducible]
@@ -205,6 +232,7 @@ protected def Function.Surjective.commSemiring [Zero γ] [One γ] [Add γ] [Mul 
     (nat_cast : ∀ n : ℕ, f n = n) : CommSemiring γ :=
   { hf.Semiring f zero one add mul nsmul npow nat_cast, hf.CommSemigroup f mul with }
 #align function.surjective.comm_semiring Function.Surjective.commSemiring
+-/
 
 end CommSemiring
 
@@ -214,6 +242,7 @@ section Mul
 
 variable [Mul α] [HasDistribNeg α]
 
+#print Function.Injective.hasDistribNeg /-
 -- See note [reducible non-instances]
 /-- A type endowed with `-` and `*` has distributive negation, if it admits an injective map that
 preserves `-` and `*` to a type which has distributive negation. -/
@@ -225,7 +254,9 @@ protected def Function.Injective.hasDistribNeg [Neg β] [Mul β] (f : β → α)
     neg_mul := fun x y => hf <| by erw [neg, mul, neg, neg_mul, mul]
     mul_neg := fun x y => hf <| by erw [neg, mul, neg, mul_neg, mul] }
 #align function.injective.has_distrib_neg Function.Injective.hasDistribNeg
+-/
 
+#print Function.Surjective.hasDistribNeg /-
 -- See note [reducible non-instances]
 /-- A type endowed with `-` and `*` has distributive negation, if it admits a surjective map that
 preserves `-` and `*` from a type which has distributive negation. -/
@@ -238,6 +269,7 @@ protected def Function.Surjective.hasDistribNeg [Neg β] [Mul β] (f : α → β
     neg_mul := hf.Forall₂.2 fun x y => by erw [← neg, ← mul, neg_mul, neg, mul]; rfl
     mul_neg := hf.Forall₂.2 fun x y => by erw [← neg, ← mul, mul_neg, neg, mul]; rfl }
 #align function.surjective.has_distrib_neg Function.Surjective.hasDistribNeg
+-/
 
 namespace AddOpposite
 
@@ -259,6 +291,7 @@ section NonUnitalNonAssocRing
 
 variable [NonUnitalNonAssocRing α]
 
+#print Function.Injective.nonUnitalNonAssocRing /-
 /-- Pullback a `non_unital_non_assoc_ring` instance along an injective function.
 See note [reducible non-instances]. -/
 @[reducible]
@@ -271,7 +304,9 @@ protected def Function.Injective.nonUnitalNonAssocRing [Zero β] [Add β] [Mul �
   { hf.AddCommGroup f zero add neg sub nsmul zsmul, hf.MulZeroClass f zero mul,
     hf.Distrib f add mul with }
 #align function.injective.non_unital_non_assoc_ring Function.Injective.nonUnitalNonAssocRing
+-/
 
+#print Function.Surjective.nonUnitalNonAssocRing /-
 /-- Pushforward a `non_unital_non_assoc_ring` instance along a surjective function.
 See note [reducible non-instances]. -/
 @[reducible]
@@ -284,6 +319,7 @@ protected def Function.Surjective.nonUnitalNonAssocRing [Zero β] [Add β] [Mul 
   { hf.AddCommGroup f zero add neg sub nsmul zsmul, hf.MulZeroClass f zero mul,
     hf.Distrib f add mul with }
 #align function.surjective.non_unital_non_assoc_ring Function.Surjective.nonUnitalNonAssocRing
+-/
 
 end NonUnitalNonAssocRing
 
@@ -291,6 +327,7 @@ section NonUnitalRing
 
 variable [NonUnitalRing α]
 
+#print Function.Injective.nonUnitalRing /-
 /-- Pullback a `non_unital_ring` instance along an injective function.
 See note [reducible non-instances]. -/
 @[reducible]
@@ -302,7 +339,9 @@ protected def Function.Injective.nonUnitalRing [Zero β] [Add β] [Mul β] [Neg 
   { hf.AddCommGroup f zero add neg sub nsmul gsmul, hf.MulZeroClass f zero mul,
     hf.Distrib f add mul, hf.Semigroup f mul with }
 #align function.injective.non_unital_ring Function.Injective.nonUnitalRing
+-/
 
+#print Function.Surjective.nonUnitalRing /-
 /-- Pushforward a `non_unital_ring` instance along a surjective function.
 See note [reducible non-instances]. -/
 @[reducible]
@@ -314,6 +353,7 @@ protected def Function.Surjective.nonUnitalRing [Zero β] [Add β] [Mul β] [Neg
   { hf.AddCommGroup f zero add neg sub nsmul gsmul, hf.MulZeroClass f zero mul,
     hf.Distrib f add mul, hf.Semigroup f mul with }
 #align function.surjective.non_unital_ring Function.Surjective.nonUnitalRing
+-/
 
 end NonUnitalRing
 
@@ -321,6 +361,7 @@ section NonAssocRing
 
 variable [NonAssocRing α]
 
+#print Function.Injective.nonAssocRing /-
 /-- Pullback a `non_assoc_ring` instance along an injective function.
 See note [reducible non-instances]. -/
 @[reducible]
@@ -334,7 +375,9 @@ protected def Function.Injective.nonAssocRing [Zero β] [One β] [Add β] [Mul �
     hf.AddGroupWithOne f zero one add neg sub nsmul gsmul nat_cast int_cast,
     hf.MulZeroClass f zero mul, hf.Distrib f add mul, hf.MulOneClass f one mul with }
 #align function.injective.non_assoc_ring Function.Injective.nonAssocRing
+-/
 
+#print Function.Surjective.nonAssocRing /-
 /-- Pushforward a `non_unital_ring` instance along a surjective function.
 See note [reducible non-instances]. -/
 @[reducible]
@@ -348,6 +391,7 @@ protected def Function.Surjective.nonAssocRing [Zero β] [One β] [Add β] [Mul 
     hf.AddGroupWithOne f zero one add neg sub nsmul gsmul nat_cast int_cast, hf.Distrib f add mul,
     hf.MulOneClass f one mul with }
 #align function.surjective.non_assoc_ring Function.Surjective.nonAssocRing
+-/
 
 end NonAssocRing
 
@@ -355,6 +399,7 @@ section Ring
 
 variable [Ring α] {a b c d e : α}
 
+#print Function.Injective.ring /-
 /-- Pullback a `ring` instance along an injective function.
 See note [reducible non-instances]. -/
 @[reducible]
@@ -369,7 +414,9 @@ protected def Function.Injective.ring [Zero β] [One β] [Add β] [Mul β] [Neg 
     hf.AddCommGroup f zero add neg sub nsmul zsmul, hf.Monoid f one mul npow,
     hf.Distrib f add mul with }
 #align function.injective.ring Function.Injective.ring
+-/
 
+#print Function.Surjective.ring /-
 /-- Pushforward a `ring` instance along a surjective function.
 See note [reducible non-instances]. -/
 @[reducible]
@@ -384,6 +431,7 @@ protected def Function.Surjective.ring [Zero β] [One β] [Add β] [Mul β] [Neg
     hf.AddCommGroup f zero add neg sub nsmul zsmul, hf.Monoid f one mul npow,
     hf.Distrib f add mul with }
 #align function.surjective.ring Function.Surjective.ring
+-/
 
 end Ring
 
@@ -391,6 +439,7 @@ section NonUnitalCommRing
 
 variable [NonUnitalCommRing α] {a b c : α}
 
+#print Function.Injective.nonUnitalCommRing /-
 /-- Pullback a `comm_ring` instance along an injective function.
 See note [reducible non-instances]. -/
 @[reducible]
@@ -402,7 +451,9 @@ protected def Function.Injective.nonUnitalCommRing [Zero β] [Add β] [Mul β] [
     NonUnitalCommRing β :=
   { hf.NonUnitalRing f zero add mul neg sub nsmul zsmul, hf.CommSemigroup f mul with }
 #align function.injective.non_unital_comm_ring Function.Injective.nonUnitalCommRing
+-/
 
+#print Function.Surjective.nonUnitalCommRing /-
 /-- Pushforward a `non_unital_comm_ring` instance along a surjective function.
 See note [reducible non-instances]. -/
 @[reducible]
@@ -414,6 +465,7 @@ protected def Function.Surjective.nonUnitalCommRing [Zero β] [Add β] [Mul β] 
     NonUnitalCommRing β :=
   { hf.NonUnitalRing f zero add mul neg sub nsmul zsmul, hf.CommSemigroup f mul with }
 #align function.surjective.non_unital_comm_ring Function.Surjective.nonUnitalCommRing
+-/
 
 end NonUnitalCommRing
 
@@ -421,6 +473,7 @@ section CommRing
 
 variable [CommRing α] {a b c : α}
 
+#print Function.Injective.commRing /-
 /-- Pullback a `comm_ring` instance along an injective function.
 See note [reducible non-instances]. -/
 @[reducible]
@@ -434,7 +487,9 @@ protected def Function.Injective.commRing [Zero β] [One β] [Add β] [Mul β] [
   { hf.Ring f zero one add mul neg sub nsmul zsmul npow nat_cast int_cast,
     hf.CommSemigroup f mul with }
 #align function.injective.comm_ring Function.Injective.commRing
+-/
 
+#print Function.Surjective.commRing /-
 /-- Pushforward a `comm_ring` instance along a surjective function.
 See note [reducible non-instances]. -/
 @[reducible]
@@ -448,6 +503,7 @@ protected def Function.Surjective.commRing [Zero β] [One β] [Add β] [Mul β] 
   { hf.Ring f zero one add mul neg sub nsmul zsmul npow nat_cast int_cast,
     hf.CommSemigroup f mul with }
 #align function.surjective.comm_ring Function.Surjective.commRing
+-/
 
 end CommRing
 

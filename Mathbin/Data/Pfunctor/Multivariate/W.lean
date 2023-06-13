@@ -107,28 +107,36 @@ def wPathDestRight {α : TypeVec n} {a : P.A} {f : P.getLast.B a → P.getLast.W
 #align mvpfunctor.W_path_dest_right MvPFunctor.wPathDestRight
 -/
 
+#print MvPFunctor.wPathDestLeft_wPathCasesOn /-
 theorem wPathDestLeft_wPathCasesOn {α : TypeVec n} {a : P.A} {f : P.getLast.B a → P.getLast.W}
     (g' : P.drop.B a ⟹ α) (g : ∀ j : P.getLast.B a, P.WPath (f j) ⟹ α) :
     P.wPathDestLeft (P.wPathCasesOn g' g) = g' :=
   rfl
 #align mvpfunctor.W_path_dest_left_W_path_cases_on MvPFunctor.wPathDestLeft_wPathCasesOn
+-/
 
+#print MvPFunctor.wPathDestRight_wPathCasesOn /-
 theorem wPathDestRight_wPathCasesOn {α : TypeVec n} {a : P.A} {f : P.getLast.B a → P.getLast.W}
     (g' : P.drop.B a ⟹ α) (g : ∀ j : P.getLast.B a, P.WPath (f j) ⟹ α) :
     P.wPathDestRight (P.wPathCasesOn g' g) = g :=
   rfl
 #align mvpfunctor.W_path_dest_right_W_path_cases_on MvPFunctor.wPathDestRight_wPathCasesOn
+-/
 
+#print MvPFunctor.wPathCasesOn_eta /-
 theorem wPathCasesOn_eta {α : TypeVec n} {a : P.A} {f : P.getLast.B a → P.getLast.W}
     (h : P.WPath ⟨a, f⟩ ⟹ α) : P.wPathCasesOn (P.wPathDestLeft h) (P.wPathDestRight h) = h := by
   ext (i x) <;> cases x <;> rfl
 #align mvpfunctor.W_path_cases_on_eta MvPFunctor.wPathCasesOn_eta
+-/
 
+#print MvPFunctor.comp_wPathCasesOn /-
 theorem comp_wPathCasesOn {α β : TypeVec n} (h : α ⟹ β) {a : P.A} {f : P.getLast.B a → P.getLast.W}
     (g' : P.drop.B a ⟹ α) (g : ∀ j : P.getLast.B a, P.WPath (f j) ⟹ α) :
     h ⊚ P.wPathCasesOn g' g = P.wPathCasesOn (h ⊚ g') fun i => h ⊚ g i := by
   ext (i x) <;> cases x <;> rfl
 #align mvpfunctor.comp_W_path_cases_on MvPFunctor.comp_wPathCasesOn
+-/
 
 #print MvPFunctor.wp /-
 /-- Polynomial functor for the W-type of `P`. `A` is a data-less well-founded
@@ -177,6 +185,7 @@ def wpRec {α : TypeVec n} {C : Type _}
 #align mvpfunctor.Wp_rec MvPFunctor.wpRec
 -/
 
+#print MvPFunctor.wpRec_eq /-
 theorem wpRec_eq {α : TypeVec n} {C : Type _}
     (g :
       ∀ (a : P.A) (f : P.getLast.B a → P.getLast.W), P.WPath ⟨a, f⟩ ⟹ α → (P.getLast.B a → C) → C)
@@ -184,7 +193,9 @@ theorem wpRec_eq {α : TypeVec n} {C : Type _}
     P.wpRec g ⟨a, f⟩ f' = g a f f' fun i => P.wpRec g (f i) (P.wPathDestRight f' i) :=
   rfl
 #align mvpfunctor.Wp_rec_eq MvPFunctor.wpRec_eq
+-/
 
+#print MvPFunctor.wp_ind /-
 -- Note: we could replace Prop by Type* and obtain a dependent recursor
 theorem wp_ind {α : TypeVec n} {C : ∀ x : P.getLast.W, P.WPath x ⟹ α → Prop}
     (ih :
@@ -193,6 +204,7 @@ theorem wp_ind {α : TypeVec n} {C : ∀ x : P.getLast.W, P.WPath x ⟹ α → P
     ∀ (x : P.getLast.W) (f' : P.WPath x ⟹ α), C x f'
   | ⟨a, f⟩, f' => ih a f f' fun i => Wp_ind _ _
 #align mvpfunctor.Wp_ind MvPFunctor.wp_ind
+-/
 
 /-!
 Now think of W as defined inductively by the data ⟨a, f', f⟩ where
@@ -223,6 +235,7 @@ def wRec {α : TypeVec n} {C : Type _}
 #align mvpfunctor.W_rec MvPFunctor.wRec
 -/
 
+#print MvPFunctor.wRec_eq /-
 /-- Defining equation for the recursor of `W` -/
 theorem wRec_eq {α : TypeVec n} {C : Type _}
     (g : ∀ a : P.A, P.drop.B a ⟹ α → (P.getLast.B a → P.W α) → (P.getLast.B a → C) → C) (a : P.A)
@@ -233,6 +246,7 @@ theorem wRec_eq {α : TypeVec n} {C : Type _}
   dsimp only [W_path_dest_left_W_path_cases_on, W_path_dest_right_W_path_cases_on]
   congr <;> ext1 i <;> cases f i <;> rfl
 #align mvpfunctor.W_rec_eq MvPFunctor.wRec_eq
+-/
 
 #print MvPFunctor.w_ind /-
 /-- Induction principle for `W` -/

@@ -147,8 +147,6 @@ section PPrime
 
 variable {P : Ideal S} [P_prime : P.IsPrime] (hP : P ≠ ⊥)
 
-include P_prime hP
-
 /-- If `a ∈ P^i \ P^(i+1)` and `c ∈ P^i`, then `a * d + e = c` for `e ∈ P^(i+1)`.
 `ideal.mul_add_mem_pow_succ_unique` shows the choice of `d` is unique, up to `P`.
 Inspired by [Neukirch], proposition 6.1 -/

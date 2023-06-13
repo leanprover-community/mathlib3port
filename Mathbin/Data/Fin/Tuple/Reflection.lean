@@ -167,6 +167,7 @@ def sum [Add α] [Zero α] : ∀ {m} (v : Fin m → α), α
 
 open scoped BigOperators
 
+#print FinVec.sum_eq /-
 /-- This can be used to prove
 ```lean
 example [add_comm_monoid α] (a : fin 3 → α) : ∑ i, a i = a 0 + a 1 + a 2 :=
@@ -179,6 +180,7 @@ theorem sum_eq [AddCommMonoid α] : ∀ {m} (a : Fin m → α), sum a = ∑ i, a
   | 1, a => (Fintype.sum_unique a).symm
   | n + 2, a => by rw [Fin.sum_univ_castSucc, Sum, sum_eq]
 #align fin_vec.sum_eq FinVec.sum_eq
+-/
 
 example [AddCommMonoid α] (a : Fin 3 → α) : ∑ i, a i = a 0 + a 1 + a 2 :=
   (sum_eq _).symm

@@ -95,10 +95,12 @@ protected theorem isFixedPt (hf : IsPeriodicPt f n x) : IsFixedPt (f^[n]) x :=
 #align function.is_periodic_pt.is_fixed_pt Function.IsPeriodicPt.isFixedPt
 -/
 
+#print Function.IsPeriodicPt.map /-
 protected theorem map (hx : IsPeriodicPt fa n x) {g : α → β} (hg : Semiconj g fa fb) :
     IsPeriodicPt fb n (g x) :=
   hx.map (hg.iterate_right n)
 #align function.is_periodic_pt.map Function.IsPeriodicPt.map
+-/
 
 #print Function.IsPeriodicPt.apply_iterate /-
 theorem apply_iterate (hx : IsPeriodicPt f n x) (m : ℕ) : IsPeriodicPt f n ((f^[m]) x) :=
@@ -248,10 +250,12 @@ theorem mem_ptsOfPeriod : x ∈ ptsOfPeriod f n ↔ IsPeriodicPt f n x :=
 #align function.mem_pts_of_period Function.mem_ptsOfPeriod
 -/
 
+#print Function.Semiconj.mapsTo_ptsOfPeriod /-
 theorem Semiconj.mapsTo_ptsOfPeriod {g : α → β} (h : Semiconj g fa fb) (n : ℕ) :
     MapsTo g (ptsOfPeriod fa n) (ptsOfPeriod fb n) :=
   (h.iterate_right n).mapsTo_fixedPoints
 #align function.semiconj.maps_to_pts_of_period Function.Semiconj.mapsTo_ptsOfPeriod
+-/
 
 #print Function.bijOn_ptsOfPeriod /-
 theorem bijOn_ptsOfPeriod (f : α → α) {n : ℕ} (hn : 0 < n) :
@@ -282,9 +286,11 @@ theorem mk_mem_periodicPts (hn : 0 < n) (hx : IsPeriodicPt f n x) : x ∈ period
 #align function.mk_mem_periodic_pts Function.mk_mem_periodicPts
 -/
 
+#print Function.mem_periodicPts /-
 theorem mem_periodicPts : x ∈ periodicPts f ↔ ∃ n > 0, IsPeriodicPt f n x :=
   Iff.rfl
 #align function.mem_periodic_pts Function.mem_periodicPts
+-/
 
 #print Function.isPeriodicPt_of_mem_periodicPts_of_isPeriodicPt_iterate /-
 theorem isPeriodicPt_of_mem_periodicPts_of_isPeriodicPt_iterate (hx : x ∈ periodicPts f)
@@ -322,9 +328,11 @@ theorem bijOn_periodicPts : BijOn f (periodicPts f) (periodicPts f) :=
 
 variable {f}
 
+#print Function.Semiconj.mapsTo_periodicPts /-
 theorem Semiconj.mapsTo_periodicPts {g : α → β} (h : Semiconj g fa fb) :
     MapsTo g (periodicPts fa) (periodicPts fb) := fun x ⟨n, hn, hx⟩ => ⟨n, hn, hx.map h⟩
 #align function.semiconj.maps_to_periodic_pts Function.Semiconj.mapsTo_periodicPts
+-/
 
 open scoped Classical
 
@@ -516,10 +524,12 @@ theorem isPeriodicPt_iff_minimalPeriod_dvd : IsPeriodicPt f n x ↔ minimalPerio
 
 open Nat
 
+#print Function.minimalPeriod_eq_minimalPeriod_iff /-
 theorem minimalPeriod_eq_minimalPeriod_iff {g : β → β} {y : β} :
     minimalPeriod f x = minimalPeriod g y ↔ ∀ n, IsPeriodicPt f n x ↔ IsPeriodicPt g n y := by
   simp_rw [is_periodic_pt_iff_minimal_period_dvd, dvd_right_iff_eq]
 #align function.minimal_period_eq_minimal_period_iff Function.minimalPeriod_eq_minimalPeriod_iff
+-/
 
 #print Function.minimalPeriod_eq_prime /-
 theorem minimalPeriod_eq_prime {p : ℕ} [hp : Fact p.Prime] (hper : IsPeriodicPt f p x)
@@ -762,6 +772,7 @@ theorem pow_smul_eq_iff_minimalPeriod_dvd {n : ℕ} :
 #align add_action.nsmul_vadd_eq_iff_minimal_period_dvd AddAction.nsmul_vadd_eq_iff_minimalPeriod_dvd
 -/
 
+#print MulAction.zpow_smul_eq_iff_minimalPeriod_dvd /-
 @[to_additive]
 theorem zpow_smul_eq_iff_minimalPeriod_dvd {n : ℤ} :
     a ^ n • b = b ↔ (Function.minimalPeriod ((· • ·) a) b : ℤ) ∣ n :=
@@ -773,6 +784,7 @@ theorem zpow_smul_eq_iff_minimalPeriod_dvd {n : ℤ} :
       pow_smul_eq_iff_minimal_period_dvd]
 #align mul_action.zpow_smul_eq_iff_minimal_period_dvd MulAction.zpow_smul_eq_iff_minimalPeriod_dvd
 #align add_action.zsmul_vadd_eq_iff_minimal_period_dvd AddAction.zsmul_vadd_eq_iff_minimalPeriod_dvd
+-/
 
 variable (a b)
 

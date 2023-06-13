@@ -271,7 +271,6 @@ and the negation of the MSB is sign-extended to all higher bits.
 
 namespace NzsNum
 
--- mathport name: nznum.bit
 notation a "::" b => bit a b
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -294,7 +293,6 @@ def not : NzsNum → NzsNum
 #align nzsnum.not NzsNum.not
 -/
 
--- mathport name: «expr~ »
 prefix:100 "~" => not
 
 #print NzsNum.bit0 /-
@@ -353,7 +351,6 @@ def not : SNum → SNum
 #align snum.not SNum.not
 -/
 
--- mathport name: snum.not
 prefix:0 "~" => not
 
 #print SNum.bit /-
@@ -365,7 +362,6 @@ def bit : Bool → SNum → SNum
 #align snum.bit SNum.bit
 -/
 
--- mathport name: snum.bit
 notation a "::" b => bit a b
 
 #print SNum.bit0 /-
@@ -389,8 +385,10 @@ theorem bit_zero (b) : (b::zero b) = zero b := by cases b <;> rfl
 -/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print SNum.bit_one /-
 theorem bit_one (b) : (b::zero (not b)) = msb b := by cases b <;> rfl
 #align snum.bit_one SNum.bit_one
+-/
 
 end SNum
 

@@ -47,25 +47,35 @@ namespace Path
 
 variable {V : Type u} [Quiver V] {a b c d : V}
 
+#print Quiver.Path.nil_ne_cons /-
 theorem nil_ne_cons (p : Path a b) (e : b ⟶ a) : Path.nil ≠ p.cons e :=
   fun.
 #align quiver.path.nil_ne_cons Quiver.Path.nil_ne_cons
+-/
 
+#print Quiver.Path.cons_ne_nil /-
 theorem cons_ne_nil (p : Path a b) (e : b ⟶ a) : p.cons e ≠ Path.nil :=
   fun.
 #align quiver.path.cons_ne_nil Quiver.Path.cons_ne_nil
+-/
 
+#print Quiver.Path.obj_eq_of_cons_eq_cons /-
 theorem obj_eq_of_cons_eq_cons {p : Path a b} {p' : Path a c} {e : b ⟶ d} {e' : c ⟶ d}
     (h : p.cons e = p'.cons e') : b = c := by injection h
 #align quiver.path.obj_eq_of_cons_eq_cons Quiver.Path.obj_eq_of_cons_eq_cons
+-/
 
+#print Quiver.Path.heq_of_cons_eq_cons /-
 theorem heq_of_cons_eq_cons {p : Path a b} {p' : Path a c} {e : b ⟶ d} {e' : c ⟶ d}
     (h : p.cons e = p'.cons e') : HEq p p' := by injection h
 #align quiver.path.heq_of_cons_eq_cons Quiver.Path.heq_of_cons_eq_cons
+-/
 
+#print Quiver.Path.hom_heq_of_cons_eq_cons /-
 theorem hom_heq_of_cons_eq_cons {p : Path a b} {p' : Path a c} {e : b ⟶ d} {e' : c ⟶ d}
     (h : p.cons e = p'.cons e') : HEq e e' := by injection h
 #align quiver.path.hom_heq_of_cons_eq_cons Quiver.Path.hom_heq_of_cons_eq_cons
+-/
 
 #print Quiver.Path.length /-
 /-- The length of a path is the number of arrows it uses. -/
@@ -78,19 +88,25 @@ def length {a : V} : ∀ {b : V}, Path a b → ℕ
 instance {a : V} : Inhabited (Path a a) :=
   ⟨Path.nil⟩
 
+#print Quiver.Path.length_nil /-
 @[simp]
 theorem length_nil {a : V} : (Path.nil : Path a a).length = 0 :=
   rfl
 #align quiver.path.length_nil Quiver.Path.length_nil
+-/
 
+#print Quiver.Path.length_cons /-
 @[simp]
 theorem length_cons (a b c : V) (p : Path a b) (e : b ⟶ c) : (p.cons e).length = p.length + 1 :=
   rfl
 #align quiver.path.length_cons Quiver.Path.length_cons
+-/
 
+#print Quiver.Path.eq_of_length_zero /-
 theorem eq_of_length_zero (p : Path a b) (hzero : p.length = 0) : a = b := by cases p; · rfl;
   · cases Nat.succ_ne_zero _ hzero
 #align quiver.path.eq_of_length_zero Quiver.Path.eq_of_length_zero
+-/
 
 #print Quiver.Path.comp /-
 /-- Composition of paths. -/
@@ -100,36 +116,47 @@ def comp {a b : V} : ∀ {c}, Path a b → Path b c → Path a c
 #align quiver.path.comp Quiver.Path.comp
 -/
 
+#print Quiver.Path.comp_cons /-
 @[simp]
 theorem comp_cons {a b c d : V} (p : Path a b) (q : Path b c) (e : c ⟶ d) :
     p.comp (q.cons e) = (p.comp q).cons e :=
   rfl
 #align quiver.path.comp_cons Quiver.Path.comp_cons
+-/
 
+#print Quiver.Path.comp_nil /-
 @[simp]
 theorem comp_nil {a b : V} (p : Path a b) : p.comp Path.nil = p :=
   rfl
 #align quiver.path.comp_nil Quiver.Path.comp_nil
+-/
 
+#print Quiver.Path.nil_comp /-
 @[simp]
 theorem nil_comp {a : V} : ∀ {b} (p : Path a b), Path.nil.comp p = p
   | a, path.nil => rfl
   | b, path.cons p e => by rw [comp_cons, nil_comp]
 #align quiver.path.nil_comp Quiver.Path.nil_comp
+-/
 
+#print Quiver.Path.comp_assoc /-
 @[simp]
 theorem comp_assoc {a b c : V} :
     ∀ {d} (p : Path a b) (q : Path b c) (r : Path c d), (p.comp q).comp r = p.comp (q.comp r)
   | c, p, q, path.nil => rfl
   | d, p, q, path.cons r e => by rw [comp_cons, comp_cons, comp_cons, comp_assoc]
 #align quiver.path.comp_assoc Quiver.Path.comp_assoc
+-/
 
+#print Quiver.Path.length_comp /-
 @[simp]
 theorem length_comp (p : Path a b) : ∀ {c} (q : Path b c), (p.comp q).length = p.length + q.length
   | c, nil => rfl
   | c, cons q h => congr_arg Nat.succ q.length_comp
 #align quiver.path.length_comp Quiver.Path.length_comp
+-/
 
+#print Quiver.Path.comp_inj /-
 theorem comp_inj {p₁ p₂ : Path a b} {q₁ q₂ : Path b c} (hq : q₁.length = q₂.length) :
     p₁.comp q₁ = p₂.comp q₂ ↔ p₁ = p₂ ∧ q₁ = q₂ :=
   by
@@ -144,30 +171,41 @@ theorem comp_inj {p₁ p₂ : Path a b} {q₁ q₂ : Path b c} (hq : q₁.length
   rw [h.2.2.Eq]
   exact ⟨rfl, rfl⟩
 #align quiver.path.comp_inj Quiver.Path.comp_inj
+-/
 
+#print Quiver.Path.comp_inj' /-
 theorem comp_inj' {p₁ p₂ : Path a b} {q₁ q₂ : Path b c} (h : p₁.length = p₂.length) :
     p₁.comp q₁ = p₂.comp q₂ ↔ p₁ = p₂ ∧ q₁ = q₂ :=
   ⟨fun h_eq => (comp_inj <| Nat.add_left_cancel <| by simpa [h] using congr_arg length h_eq).1 h_eq,
     by rintro ⟨rfl, rfl⟩; rfl⟩
 #align quiver.path.comp_inj' Quiver.Path.comp_inj'
+-/
 
+#print Quiver.Path.comp_injective_left /-
 theorem comp_injective_left (q : Path b c) : Injective fun p : Path a b => p.comp q :=
   fun p₁ p₂ h => ((comp_inj rfl).1 h).1
 #align quiver.path.comp_injective_left Quiver.Path.comp_injective_left
+-/
 
+#print Quiver.Path.comp_injective_right /-
 theorem comp_injective_right (p : Path a b) : Injective (p.comp : Path b c → Path a c) :=
   fun q₁ q₂ h => ((comp_inj' rfl).1 h).2
 #align quiver.path.comp_injective_right Quiver.Path.comp_injective_right
+-/
 
+#print Quiver.Path.comp_inj_left /-
 @[simp]
 theorem comp_inj_left {p₁ p₂ : Path a b} {q : Path b c} : p₁.comp q = p₂.comp q ↔ p₁ = p₂ :=
   q.comp_injective_left.eq_iff
 #align quiver.path.comp_inj_left Quiver.Path.comp_inj_left
+-/
 
+#print Quiver.Path.comp_inj_right /-
 @[simp]
 theorem comp_inj_right {p : Path a b} {q₁ q₂ : Path b c} : p.comp q₁ = p.comp q₂ ↔ q₁ = q₂ :=
   p.comp_injective_right.eq_iff
 #align quiver.path.comp_inj_right Quiver.Path.comp_inj_right
+-/
 
 #print Quiver.Path.toList /-
 /-- Turn a path into a list. The list contains `a` at its head, but not `b` a priori. -/
@@ -178,6 +216,7 @@ def toList : ∀ {b : V}, Path a b → List V
 #align quiver.path.to_list Quiver.Path.toList
 -/
 
+#print Quiver.Path.toList_comp /-
 /-- `quiver.path.to_list` is a contravariant functor. The inversion comes from `quiver.path` and
 `list` having different preferred directions for adding elements. -/
 @[simp]
@@ -185,14 +224,18 @@ theorem toList_comp (p : Path a b) : ∀ {c} (q : Path b c), (p.comp q).toList =
   | c, nil => by simp
   | c, @cons _ _ _ d _ q f => by simp [to_list_comp]
 #align quiver.path.to_list_comp Quiver.Path.toList_comp
+-/
 
+#print Quiver.Path.toList_chain_nonempty /-
 theorem toList_chain_nonempty : ∀ {b} (p : Path a b), p.toList.Chain (fun x y => Nonempty (y ⟶ x)) b
   | b, nil => List.Chain.nil
   | b, cons p f => p.toList_chain_nonempty.cons ⟨f⟩
 #align quiver.path.to_list_chain_nonempty Quiver.Path.toList_chain_nonempty
+-/
 
 variable [∀ a b : V, Subsingleton (a ⟶ b)]
 
+#print Quiver.Path.toList_injective /-
 theorem toList_injective (a : V) : ∀ b, Injective (toList : Path a b → List V)
   | b, nil, nil, h => rfl
   | b, nil, @cons _ _ _ c _ p f, h => by cases h
@@ -203,11 +246,14 @@ theorem toList_injective (a : V) : ∀ b, Injective (toList : Path a b → List 
     obtain ⟨rfl, hAC⟩ := h
     simp [to_list_injective _ hAC]
 #align quiver.path.to_list_injective Quiver.Path.toList_injective
+-/
 
+#print Quiver.Path.toList_inj /-
 @[simp]
 theorem toList_inj {p q : Path a b} : p.toList = q.toList ↔ p = q :=
   (toList_injective _ _).eq_iff
 #align quiver.path.to_list_inj Quiver.Path.toList_inj
+-/
 
 end Path
 

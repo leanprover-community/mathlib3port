@@ -64,12 +64,15 @@ namespace Sheaf
 
 noncomputable section
 
+#print CategoryTheory.Sheaf.composeAndSheafify /-
 /-- This is the functor sending a sheaf `X : Sheaf J E` to the sheafification
 of `X ⋙ G`. -/
 abbrev composeAndSheafify (G : E ⥤ D) : Sheaf J E ⥤ Sheaf J D :=
   sheafToPresheaf J E ⋙ (whiskeringRight _ _ _).obj G ⋙ presheafToSheaf J D
 #align category_theory.Sheaf.compose_and_sheafify CategoryTheory.Sheaf.composeAndSheafify
+-/
 
+#print CategoryTheory.Sheaf.composeEquiv /-
 /-- An auxiliary definition to be used in defining `category_theory.Sheaf.adjunction` below. -/
 @[simps]
 def composeEquiv (adj : G ⊣ F) (X : Sheaf J E) (Y : Sheaf J D) :
@@ -90,7 +93,9 @@ def composeEquiv (adj : G ⊣ F) (X : Sheaf J E) (Y : Sheaf J D) :
       dsimp
       rw [J.to_sheafify_sheafify_lift, Equiv.apply_symm_apply] }
 #align category_theory.Sheaf.compose_equiv CategoryTheory.Sheaf.composeEquiv
+-/
 
+#print CategoryTheory.Sheaf.adjunction /-
 /-- An adjunction `adj : G ⊣ F` with `F : D ⥤ E` and `G : E ⥤ D` induces an adjunction
 between `Sheaf J D` and `Sheaf J E`, in contexts where one can sheafify `D`-valued presheaves,
 and `F` preserves the correct limits. -/
@@ -101,24 +106,30 @@ def adjunction (adj : G ⊣ F) : composeAndSheafify J G ⊣ sheafCompose J F :=
       homEquiv_naturality_left_symm := fun X' X Y f g => by ext1; dsimp; simp
       homEquiv_naturality_right := fun X Y Y' f g => by ext1; dsimp; simp }
 #align category_theory.Sheaf.adjunction CategoryTheory.Sheaf.adjunction
+-/
 
 instance [IsRightAdjoint F] : IsRightAdjoint (sheafCompose J F) :=
   ⟨_, adjunction J (Adjunction.ofRightAdjoint F)⟩
 
 section ForgetToType
 
+#print CategoryTheory.Sheaf.composeAndSheafifyFromTypes /-
 /-- This is the functor sending a sheaf of types `X` to the sheafification of `X ⋙ G`. -/
 abbrev composeAndSheafifyFromTypes (G : Type max v u ⥤ D) : SheafOfTypes J ⥤ Sheaf J D :=
   (sheafEquivSheafOfTypes J).inverse ⋙ composeAndSheafify _ G
 #align category_theory.Sheaf.compose_and_sheafify_from_types CategoryTheory.Sheaf.composeAndSheafifyFromTypes
+-/
 
+#print CategoryTheory.Sheaf.adjunctionToTypes /-
 /-- A variant of the adjunction between sheaf categories, in the case where the right adjoint
 is the forgetful functor to sheaves of types. -/
 def adjunctionToTypes {G : Type max v u ⥤ D} (adj : G ⊣ forget D) :
     composeAndSheafifyFromTypes J G ⊣ sheafForget J :=
   (sheafEquivSheafOfTypes J).symm.toAdjunction.comp (adjunction J adj)
 #align category_theory.Sheaf.adjunction_to_types CategoryTheory.Sheaf.adjunctionToTypes
+-/
 
+#print CategoryTheory.Sheaf.adjunctionToTypes_unit_app_val /-
 @[simp]
 theorem adjunctionToTypes_unit_app_val {G : Type max v u ⥤ D} (adj : G ⊣ forget D)
     (Y : SheafOfTypes J) :
@@ -129,7 +140,9 @@ theorem adjunctionToTypes_unit_app_val {G : Type max v u ⥤ D} (adj : G ⊣ for
   dsimp [adjunction_to_types, adjunction.comp]
   simpa
 #align category_theory.Sheaf.adjunction_to_types_unit_app_val CategoryTheory.Sheaf.adjunctionToTypes_unit_app_val
+-/
 
+#print CategoryTheory.Sheaf.adjunctionToTypes_counit_app_val /-
 @[simp]
 theorem adjunctionToTypes_counit_app_val {G : Type max v u ⥤ D} (adj : G ⊣ forget D)
     (X : Sheaf J D) :
@@ -145,6 +158,7 @@ theorem adjunctionToTypes_counit_app_val {G : Type max v u ⥤ D} (adj : G ⊣ f
     nat_iso.of_components]
   simp
 #align category_theory.Sheaf.adjunction_to_types_counit_app_val CategoryTheory.Sheaf.adjunctionToTypes_counit_app_val
+-/
 
 instance [IsRightAdjoint (forget D)] : IsRightAdjoint (sheafForget J) :=
   ⟨_, adjunctionToTypes J (Adjunction.ofRightAdjoint (forget D))⟩

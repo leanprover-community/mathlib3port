@@ -624,7 +624,6 @@ theorem liftRel_destruct_iff {R : α → β → Prop} {s : WSeq α} {t : WSeq β
 #align stream.wseq.lift_rel_destruct_iff Stream'.WSeq.liftRel_destruct_iff
 -/
 
--- mathport name: equiv
 infixl:50 " ~ " => Equiv
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -752,7 +751,6 @@ theorem Equiv.equivalence : Equivalence (@Equiv α) :=
 
 open Computation
 
--- mathport name: exprreturn
 local notation "return" => Computation.pure
 
 #print Stream'.WSeq.destruct_nil /-
@@ -1736,12 +1734,14 @@ theorem exists_of_mem_join {a : α} : ∀ {S : WSeq (WSeq α)}, a ∈ join S →
 #align stream.wseq.exists_of_mem_join Stream'.WSeq.exists_of_mem_join
 -/
 
+#print Stream'.WSeq.exists_of_mem_bind /-
 theorem exists_of_mem_bind {s : WSeq α} {f : α → WSeq β} {b} (h : b ∈ bind s f) :
     ∃ a ∈ s, b ∈ f a :=
   let ⟨t, tm, bt⟩ := exists_of_mem_join h
   let ⟨a, as, e⟩ := exists_of_mem_map tm
   ⟨a, as, by rwa [e]⟩
 #align stream.wseq.exists_of_mem_bind Stream'.WSeq.exists_of_mem_bind
+-/
 
 #print Stream'.WSeq.destruct_map /-
 theorem destruct_map (f : α → β) (s : WSeq α) :
@@ -1759,6 +1759,7 @@ theorem destruct_map (f : α → β) (s : WSeq α) :
 #align stream.wseq.destruct_map Stream'.WSeq.destruct_map
 -/
 
+#print Stream'.WSeq.liftRel_map /-
 theorem liftRel_map {δ} (R : α → β → Prop) (S : γ → δ → Prop) {s1 : WSeq α} {s2 : WSeq β}
     {f1 : α → γ} {f2 : β → δ} (h1 : LiftRel R s1 s2) (h2 : ∀ {a b}, R a b → S (f1 a) (f2 b)) :
     LiftRel S (map f1 s1) (map f2 s2) :=
@@ -1774,6 +1775,7 @@ theorem liftRel_map {δ} (R : α → β → Prop) (S : γ → δ → Prop) {s1 :
       · cases' a with a s <;> cases' b with b t; cases' h with r h
         exact ⟨h2 r, s, rfl, t, rfl, h⟩⟩
 #align stream.wseq.lift_rel_map Stream'.WSeq.liftRel_map
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -1947,11 +1949,13 @@ theorem join_congr {S T : WSeq (WSeq α)} (h : LiftRel Equiv S T) : join S ~ joi
 #align stream.wseq.join_congr Stream'.WSeq.join_congr
 -/
 
+#print Stream'.WSeq.liftRel_bind /-
 theorem liftRel_bind {δ} (R : α → β → Prop) (S : γ → δ → Prop) {s1 : WSeq α} {s2 : WSeq β}
     {f1 : α → WSeq γ} {f2 : β → WSeq δ} (h1 : LiftRel R s1 s2)
     (h2 : ∀ {a b}, R a b → LiftRel S (f1 a) (f2 b)) : LiftRel S (bind s1 f1) (bind s2 f2) :=
   liftRel_join _ (liftRel_map _ _ h1 @h2)
 #align stream.wseq.lift_rel_bind Stream'.WSeq.liftRel_bind
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/

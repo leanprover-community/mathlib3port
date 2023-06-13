@@ -50,8 +50,6 @@ namespace ProbabilityTheory
 
 variable {Ω ι : Type _} {m : MeasurableSpace Ω} {X : Ω → ℝ} {p : ℕ} {μ : Measure Ω}
 
-include m
-
 /-- Moment of a real random variable, `μ[X ^ p]`. -/
 def moment (X : Ω → ℝ) (p : ℕ) (μ : Measure Ω) : ℝ :=
   μ[X ^ p]

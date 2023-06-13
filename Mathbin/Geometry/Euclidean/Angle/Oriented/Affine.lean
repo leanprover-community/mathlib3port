@@ -36,9 +36,6 @@ namespace EuclideanGeometry
 variable {V : Type _} {P : Type _} [NormedAddCommGroup V] [InnerProductSpace ℝ V] [MetricSpace P]
   [NormedAddTorsor V P] [hd2 : Fact (finrank ℝ V = 2)] [Module.Oriented ℝ V (Fin 2)]
 
-include hd2
-
--- mathport name: expro
 local notation "o" => Module.Oriented.positiveOrientation
 
 /-- The oriented angle at `p₂` between the line segments to `p₁` and `p₃`, modulo `2 * π`. If
@@ -48,7 +45,6 @@ def oangle (p₁ p₂ p₃ : P) : Real.Angle :=
   o.oangle (p₁ -ᵥ p₂) (p₃ -ᵥ p₂)
 #align euclidean_geometry.oangle EuclideanGeometry.oangle
 
--- mathport name: oangle
 scoped notation "∡" => EuclideanGeometry.oangle
 
 /-- Oriented angles are continuous when neither end point equals the middle point. -/

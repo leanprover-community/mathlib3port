@@ -67,22 +67,29 @@ class IsAdicComplete extends IsHausdorff I M, IsPrecomplete I M : Prop
 
 variable {I M}
 
+#print IsHausdorff.haus /-
 theorem IsHausdorff.haus (h : IsHausdorff I M) :
     ∀ x : M, (∀ n : ℕ, x ≡ 0 [SMOD (I ^ n • ⊤ : Submodule R M)]) → x = 0 :=
   IsHausdorff.haus'
 #align is_Hausdorff.haus IsHausdorff.haus
+-/
 
+#print isHausdorff_iff /-
 theorem isHausdorff_iff :
     IsHausdorff I M ↔ ∀ x : M, (∀ n : ℕ, x ≡ 0 [SMOD (I ^ n • ⊤ : Submodule R M)]) → x = 0 :=
   ⟨IsHausdorff.haus, fun h => ⟨h⟩⟩
 #align is_Hausdorff_iff isHausdorff_iff
+-/
 
+#print IsPrecomplete.prec /-
 theorem IsPrecomplete.prec (h : IsPrecomplete I M) {f : ℕ → M} :
     (∀ {m n}, m ≤ n → f m ≡ f n [SMOD (I ^ m • ⊤ : Submodule R M)]) →
       ∃ L : M, ∀ n, f n ≡ L [SMOD (I ^ n • ⊤ : Submodule R M)] :=
   IsPrecomplete.prec' _
 #align is_precomplete.prec IsPrecomplete.prec
+-/
 
+#print isPrecomplete_iff /-
 theorem isPrecomplete_iff :
     IsPrecomplete I M ↔
       ∀ f : ℕ → M,
@@ -90,6 +97,7 @@ theorem isPrecomplete_iff :
           ∃ L : M, ∀ n, f n ≡ L [SMOD (I ^ n • ⊤ : Submodule R M)] :=
   ⟨fun h => h.1, fun h => ⟨h⟩⟩
 #align is_precomplete_iff isPrecomplete_iff
+-/
 
 variable (I M)
 
@@ -119,16 +127,20 @@ def adicCompletion : Submodule R (∀ n : ℕ, M ⧸ (I ^ n • ⊤ : Submodule 
 
 namespace IsHausdorff
 
+#print IsHausdorff.bot /-
 instance bot : IsHausdorff (⊥ : Ideal R) M :=
   ⟨fun x hx => by simpa only [pow_one ⊥, bot_smul, SModEq.bot] using hx 1⟩
 #align is_Hausdorff.bot IsHausdorff.bot
+-/
 
 variable {M}
 
+#print IsHausdorff.subsingleton /-
 protected theorem subsingleton (h : IsHausdorff (⊤ : Ideal R) M) : Subsingleton M :=
   ⟨fun x y =>
     eq_of_sub_eq_zero <| h.haus (x - y) fun n => by rw [Ideal.top_pow, top_smul]; exact SModEq.top⟩
 #align is_Hausdorff.subsingleton IsHausdorff.subsingleton
+-/
 
 variable (M)
 
@@ -140,10 +152,12 @@ instance (priority := 100) of_subsingleton [Subsingleton M] : IsHausdorff I M :=
 
 variable {I M}
 
+#print IsHausdorff.iInf_pow_smul /-
 theorem iInf_pow_smul (h : IsHausdorff I M) : (⨅ n : ℕ, I ^ n • ⊤ : Submodule R M) = ⊥ :=
   eq_bot_iff.2 fun x hx =>
     (mem_bot _).2 <| h.haus x fun n => SModEq.zero.2 <| (mem_iInf fun n : ℕ => I ^ n • ⊤).1 hx n
 #align is_Hausdorff.infi_pow_smul IsHausdorff.iInf_pow_smul
+-/
 
 end IsHausdorff
 
@@ -158,11 +172,13 @@ def of : M →ₗ[R] Hausdorffification I M :=
 
 variable {I M}
 
+#print Hausdorffification.induction_on /-
 @[elab_as_elim]
 theorem induction_on {C : Hausdorffification I M → Prop} (x : Hausdorffification I M)
     (ih : ∀ x, C (of I M x)) : C x :=
   Quotient.inductionOn' x ih
 #align Hausdorffification.induction_on Hausdorffification.induction_on
+-/
 
 variable (I M)
 
@@ -179,8 +195,6 @@ instance : IsHausdorff I (Hausdorffification I M) :=
 
 variable {M} [h : IsHausdorff I N]
 
-include h
-
 #print Hausdorffification.lift /-
 /-- universal property of Hausdorffification: any linear map to a Hausdorff module extends to a
 unique map from the Hausdorffification. -/
@@ -193,24 +207,31 @@ def lift (f : M →ₗ[R] N) : Hausdorffification I M →ₗ[R] N :=
 #align Hausdorffification.lift Hausdorffification.lift
 -/
 
+#print Hausdorffification.lift_of /-
 theorem lift_of (f : M →ₗ[R] N) (x : M) : lift I f (of I M x) = f x :=
   rfl
 #align Hausdorffification.lift_of Hausdorffification.lift_of
+-/
 
+#print Hausdorffification.lift_comp_of /-
 theorem lift_comp_of (f : M →ₗ[R] N) : (lift I f).comp (of I M) = f :=
   LinearMap.ext fun _ => rfl
 #align Hausdorffification.lift_comp_of Hausdorffification.lift_comp_of
+-/
 
+#print Hausdorffification.lift_eq /-
 /-- Uniqueness of lift. -/
 theorem lift_eq (f : M →ₗ[R] N) (g : Hausdorffification I M →ₗ[R] N) (hg : g.comp (of I M) = f) :
     g = lift I f :=
   LinearMap.ext fun x => induction_on x fun x => by rw [lift_of, ← hg, LinearMap.comp_apply]
 #align Hausdorffification.lift_eq Hausdorffification.lift_eq
+-/
 
 end Hausdorffification
 
 namespace IsPrecomplete
 
+#print IsPrecomplete.bot /-
 instance bot : IsPrecomplete (⊥ : Ideal R) M :=
   by
   refine' ⟨fun f hf => ⟨f 1, fun n => _⟩⟩; cases n
@@ -218,10 +239,13 @@ instance bot : IsPrecomplete (⊥ : Ideal R) M :=
   specialize hf (Nat.le_add_left 1 n)
   rw [pow_one, bot_smul, SModEq.bot] at hf ; rw [hf]
 #align is_precomplete.bot IsPrecomplete.bot
+-/
 
+#print IsPrecomplete.top /-
 instance top : IsPrecomplete (⊤ : Ideal R) M :=
   ⟨fun f hf => ⟨0, fun n => by rw [Ideal.top_pow, top_smul]; exact SModEq.top⟩⟩
 #align is_precomplete.top IsPrecomplete.top
+-/
 
 #print IsPrecomplete.of_subsingleton /-
 instance (priority := 100) of_subsingleton [Subsingleton M] : IsPrecomplete I M :=
@@ -318,12 +342,16 @@ end adicCompletion
 
 namespace IsAdicComplete
 
+#print IsAdicComplete.bot /-
 instance bot : IsAdicComplete (⊥ : Ideal R) M where
 #align is_adic_complete.bot IsAdicComplete.bot
+-/
 
+#print IsAdicComplete.subsingleton /-
 protected theorem subsingleton (h : IsAdicComplete (⊤ : Ideal R) M) : Subsingleton M :=
   h.1.Subsingleton
 #align is_adic_complete.subsingleton IsAdicComplete.subsingleton
+-/
 
 #print IsAdicComplete.of_subsingleton /-
 instance (priority := 100) of_subsingleton [Subsingleton M] : IsAdicComplete I M where
@@ -334,6 +362,7 @@ open scoped BigOperators
 
 open Finset
 
+#print IsAdicComplete.le_jacobson_bot /-
 theorem le_jacobson_bot [IsAdicComplete I R] : I ≤ (⊥ : Ideal R).jacobson :=
   by
   intro x hx
@@ -370,6 +399,7 @@ theorem le_jacobson_bot [IsAdicComplete I R] : I ≤ (⊥ : Ideal R).jacobson :=
         sub_self, zero_sub, neg_mem_iff, mul_pow]
       exact Ideal.mul_mem_right _ (I ^ _) (Ideal.pow_mem_pow hx _)
 #align is_adic_complete.le_jacobson_bot IsAdicComplete.le_jacobson_bot
+-/
 
 end IsAdicComplete
 

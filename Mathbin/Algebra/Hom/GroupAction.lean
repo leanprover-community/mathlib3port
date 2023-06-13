@@ -84,7 +84,6 @@ structure MulActionHom where
 #align mul_action_hom MulActionHom
 -/
 
--- mathport name: mul_action_hom
 notation:25 X " →[" M:25 "] " Y:0 => MulActionHom M X Y
 
 #print SMulHomClass /-
@@ -118,22 +117,30 @@ instance : SMulHomClass (X →[M'] Y) M' X Y
 
 variable {M M' X Y}
 
+#print MulActionHom.map_smul /-
 protected theorem map_smul (f : X →[M'] Y) (m : M') (x : X) : f (m • x) = m • f x :=
   map_smul _ _ _
 #align mul_action_hom.map_smul MulActionHom.map_smul
+-/
 
+#print MulActionHom.ext /-
 @[ext]
 theorem ext : ∀ {f g : X →[M'] Y}, (∀ x, f x = g x) → f = g :=
   FunLike.ext
 #align mul_action_hom.ext MulActionHom.ext
+-/
 
+#print MulActionHom.ext_iff /-
 theorem ext_iff {f g : X →[M'] Y} : f = g ↔ ∀ x, f x = g x :=
   FunLike.ext_iff
 #align mul_action_hom.ext_iff MulActionHom.ext_iff
+-/
 
+#print MulActionHom.congr_fun /-
 protected theorem congr_fun {f g : X →[M'] Y} (h : f = g) (x : X) : f x = g x :=
   FunLike.congr_fun h _
 #align mul_action_hom.congr_fun MulActionHom.congr_fun
+-/
 
 variable (M M') {X}
 
@@ -163,23 +170,30 @@ def comp (g : Y →[M'] Z) (f : X →[M'] Y) : X →[M'] Z :=
 #align mul_action_hom.comp MulActionHom.comp
 -/
 
+#print MulActionHom.comp_apply /-
 @[simp]
 theorem comp_apply (g : Y →[M'] Z) (f : X →[M'] Y) (x : X) : g.comp f x = g (f x) :=
   rfl
 #align mul_action_hom.comp_apply MulActionHom.comp_apply
+-/
 
+#print MulActionHom.id_comp /-
 @[simp]
 theorem id_comp (f : X →[M'] Y) : (MulActionHom.id M').comp f = f :=
   ext fun x => by rw [comp_apply, id_apply]
 #align mul_action_hom.id_comp MulActionHom.id_comp
+-/
 
+#print MulActionHom.comp_id /-
 @[simp]
 theorem comp_id (f : X →[M'] Y) : f.comp (MulActionHom.id M') = f :=
   ext fun x => by rw [comp_apply, id_apply]
 #align mul_action_hom.comp_id MulActionHom.comp_id
+-/
 
 variable {A B}
 
+#print MulActionHom.inverse /-
 /-- The inverse of a bijective equivariant map is equivariant. -/
 @[simps]
 def inverse (f : A →[M] B) (g : B → A) (h₁ : Function.LeftInverse g f)
@@ -192,6 +206,7 @@ def inverse (f : A →[M] B) (g : B → A) (h₁ : Function.LeftInverse g f)
       _ = g (f (m • g x)) := by rw [f.map_smul]
       _ = m • g x := by rw [h₁]
 #align mul_action_hom.inverse MulActionHom.inverse
+-/
 
 end MulActionHom
 
@@ -207,7 +222,6 @@ add_decl_doc DistribMulActionHom.toAddMonoidHom
 /-- Reinterpret an equivariant additive monoid homomorphism as an equivariant function. -/
 add_decl_doc DistribMulActionHom.toMulActionHom
 
--- mathport name: «expr →+[ ] »
 notation:25 A " →+[" M:25 "] " B:0 => DistribMulActionHom M A B
 
 #print DistribMulActionHomClass /-
@@ -247,61 +261,87 @@ instance : DistribMulActionHomClass (A →+[M] B) M A B
 
 variable {M A B}
 
+#print DistribMulActionHom.toFun_eq_coe /-
 @[simp]
 theorem toFun_eq_coe (f : A →+[M] B) : f.toFun = ⇑f :=
   rfl
 #align distrib_mul_action_hom.to_fun_eq_coe DistribMulActionHom.toFun_eq_coe
+-/
 
+#print DistribMulActionHom.coe_fn_coe /-
 @[norm_cast]
 theorem coe_fn_coe (f : A →+[M] B) : ((f : A →+ B) : A → B) = f :=
   rfl
 #align distrib_mul_action_hom.coe_fn_coe DistribMulActionHom.coe_fn_coe
+-/
 
+#print DistribMulActionHom.coe_fn_coe' /-
 @[norm_cast]
 theorem coe_fn_coe' (f : A →+[M] B) : ((f : A →[M] B) : A → B) = f :=
   rfl
 #align distrib_mul_action_hom.coe_fn_coe' DistribMulActionHom.coe_fn_coe'
+-/
 
+#print DistribMulActionHom.ext /-
 @[ext]
 theorem ext : ∀ {f g : A →+[M] B}, (∀ x, f x = g x) → f = g :=
   FunLike.ext
 #align distrib_mul_action_hom.ext DistribMulActionHom.ext
+-/
 
+#print DistribMulActionHom.ext_iff /-
 theorem ext_iff {f g : A →+[M] B} : f = g ↔ ∀ x, f x = g x :=
   FunLike.ext_iff
 #align distrib_mul_action_hom.ext_iff DistribMulActionHom.ext_iff
+-/
 
+#print DistribMulActionHom.congr_fun /-
 protected theorem congr_fun {f g : A →+[M] B} (h : f = g) (x : A) : f x = g x :=
   FunLike.congr_fun h _
 #align distrib_mul_action_hom.congr_fun DistribMulActionHom.congr_fun
+-/
 
+#print DistribMulActionHom.toMulActionHom_injective /-
 theorem toMulActionHom_injective {f g : A →+[M] B} (h : (f : A →[M] B) = (g : A →[M] B)) : f = g :=
   by ext a; exact MulActionHom.congr_fun h a
 #align distrib_mul_action_hom.to_mul_action_hom_injective DistribMulActionHom.toMulActionHom_injective
+-/
 
+#print DistribMulActionHom.toAddMonoidHom_injective /-
 theorem toAddMonoidHom_injective {f g : A →+[M] B} (h : (f : A →+ B) = (g : A →+ B)) : f = g := by
   ext a; exact AddMonoidHom.congr_fun h a
 #align distrib_mul_action_hom.to_add_monoid_hom_injective DistribMulActionHom.toAddMonoidHom_injective
+-/
 
+#print DistribMulActionHom.map_zero /-
 protected theorem map_zero (f : A →+[M] B) : f 0 = 0 :=
   map_zero _
 #align distrib_mul_action_hom.map_zero DistribMulActionHom.map_zero
+-/
 
+#print DistribMulActionHom.map_add /-
 protected theorem map_add (f : A →+[M] B) (x y : A) : f (x + y) = f x + f y :=
   map_add _ _ _
 #align distrib_mul_action_hom.map_add DistribMulActionHom.map_add
+-/
 
+#print DistribMulActionHom.map_neg /-
 protected theorem map_neg (f : A' →+[M] B') (x : A') : f (-x) = -f x :=
   map_neg _ _
 #align distrib_mul_action_hom.map_neg DistribMulActionHom.map_neg
+-/
 
+#print DistribMulActionHom.map_sub /-
 protected theorem map_sub (f : A' →+[M] B') (x y : A') : f (x - y) = f x - f y :=
   map_sub _ _ _
 #align distrib_mul_action_hom.map_sub DistribMulActionHom.map_sub
+-/
 
+#print DistribMulActionHom.map_smul /-
 protected theorem map_smul (f : A →+[M] B) (m : M) (x : A) : f (m • x) = m • f x :=
   map_smul _ _ _
 #align distrib_mul_action_hom.map_smul DistribMulActionHom.map_smul
+-/
 
 variable (M) {A}
 
@@ -312,10 +352,12 @@ protected def id : A →+[M] A :=
 #align distrib_mul_action_hom.id DistribMulActionHom.id
 -/
 
+#print DistribMulActionHom.id_apply /-
 @[simp]
 theorem id_apply (x : A) : DistribMulActionHom.id M x = x :=
   rfl
 #align distrib_mul_action_hom.id_apply DistribMulActionHom.id_apply
+-/
 
 variable {M A B C}
 
@@ -325,23 +367,31 @@ instance : Zero (A →+[M] B) :=
 instance : One (A →+[M] A) :=
   ⟨DistribMulActionHom.id M⟩
 
+#print DistribMulActionHom.coe_zero /-
 @[simp]
 theorem coe_zero : ((0 : A →+[M] B) : A → B) = 0 :=
   rfl
 #align distrib_mul_action_hom.coe_zero DistribMulActionHom.coe_zero
+-/
 
+#print DistribMulActionHom.coe_one /-
 @[simp]
 theorem coe_one : ((1 : A →+[M] A) : A → A) = id :=
   rfl
 #align distrib_mul_action_hom.coe_one DistribMulActionHom.coe_one
+-/
 
+#print DistribMulActionHom.zero_apply /-
 theorem zero_apply (a : A) : (0 : A →+[M] B) a = 0 :=
   rfl
 #align distrib_mul_action_hom.zero_apply DistribMulActionHom.zero_apply
+-/
 
+#print DistribMulActionHom.one_apply /-
 theorem one_apply (a : A) : (1 : A →+[M] A) a = a :=
   rfl
 #align distrib_mul_action_hom.one_apply DistribMulActionHom.one_apply
+-/
 
 instance : Inhabited (A →+[M] B) :=
   ⟨0⟩
@@ -354,40 +404,52 @@ def comp (g : B →+[M] C) (f : A →+[M] B) : A →+[M] C :=
 #align distrib_mul_action_hom.comp DistribMulActionHom.comp
 -/
 
+#print DistribMulActionHom.comp_apply /-
 @[simp]
 theorem comp_apply (g : B →+[M] C) (f : A →+[M] B) (x : A) : g.comp f x = g (f x) :=
   rfl
 #align distrib_mul_action_hom.comp_apply DistribMulActionHom.comp_apply
+-/
 
+#print DistribMulActionHom.id_comp /-
 @[simp]
 theorem id_comp (f : A →+[M] B) : (DistribMulActionHom.id M).comp f = f :=
   ext fun x => by rw [comp_apply, id_apply]
 #align distrib_mul_action_hom.id_comp DistribMulActionHom.id_comp
+-/
 
+#print DistribMulActionHom.comp_id /-
 @[simp]
 theorem comp_id (f : A →+[M] B) : f.comp (DistribMulActionHom.id M) = f :=
   ext fun x => by rw [comp_apply, id_apply]
 #align distrib_mul_action_hom.comp_id DistribMulActionHom.comp_id
+-/
 
+#print DistribMulActionHom.inverse /-
 /-- The inverse of a bijective `distrib_mul_action_hom` is a `distrib_mul_action_hom`. -/
 @[simps]
 def inverse (f : A →+[M] B) (g : B → A) (h₁ : Function.LeftInverse g f)
     (h₂ : Function.RightInverse g f) : B →+[M] A :=
   { (f : A →+ B).inverse g h₁ h₂, (f : A →[M] B).inverse g h₁ h₂ with toFun := g }
 #align distrib_mul_action_hom.inverse DistribMulActionHom.inverse
+-/
 
 section Semiring
 
 variable {R M'} [AddMonoid M'] [DistribMulAction R M']
 
+#print DistribMulActionHom.ext_ring /-
 @[ext]
 theorem ext_ring {f g : R →+[R] M'} (h : f 1 = g 1) : f = g := by ext x;
   rw [← mul_one x, ← smul_eq_mul R, f.map_smul, g.map_smul, h]
 #align distrib_mul_action_hom.ext_ring DistribMulActionHom.ext_ring
+-/
 
+#print DistribMulActionHom.ext_ring_iff /-
 theorem ext_ring_iff {f g : R →+[R] M'} : f = g ↔ f 1 = g 1 :=
   ⟨fun h => h ▸ rfl, ext_ring⟩
 #align distrib_mul_action_hom.ext_ring_iff DistribMulActionHom.ext_ring_iff
+-/
 
 end Semiring
 
@@ -406,7 +468,6 @@ add_decl_doc MulSemiringActionHom.toRingHom
 /-- Reinterpret an equivariant ring homomorphism as an equivariant additive monoid homomorphism. -/
 add_decl_doc MulSemiringActionHom.toDistribMulActionHom
 
--- mathport name: «expr →+*[ ] »
 notation:25 R " →+*[" M:25 "] " S:0 => MulSemiringActionHom M R S
 
 #print MulSemiringActionHomClass /-
@@ -448,52 +509,74 @@ instance : MulSemiringActionHomClass (R →+*[M] S) M R S
 
 variable {M R S}
 
+#print MulSemiringActionHom.coe_fn_coe /-
 @[norm_cast]
 theorem coe_fn_coe (f : R →+*[M] S) : ((f : R →+* S) : R → S) = f :=
   rfl
 #align mul_semiring_action_hom.coe_fn_coe MulSemiringActionHom.coe_fn_coe
+-/
 
+#print MulSemiringActionHom.coe_fn_coe' /-
 @[norm_cast]
 theorem coe_fn_coe' (f : R →+*[M] S) : ((f : R →+[M] S) : R → S) = f :=
   rfl
 #align mul_semiring_action_hom.coe_fn_coe' MulSemiringActionHom.coe_fn_coe'
+-/
 
+#print MulSemiringActionHom.ext /-
 @[ext]
 theorem ext : ∀ {f g : R →+*[M] S}, (∀ x, f x = g x) → f = g :=
   FunLike.ext
 #align mul_semiring_action_hom.ext MulSemiringActionHom.ext
+-/
 
+#print MulSemiringActionHom.ext_iff /-
 theorem ext_iff {f g : R →+*[M] S} : f = g ↔ ∀ x, f x = g x :=
   FunLike.ext_iff
 #align mul_semiring_action_hom.ext_iff MulSemiringActionHom.ext_iff
+-/
 
+#print MulSemiringActionHom.map_zero /-
 protected theorem map_zero (f : R →+*[M] S) : f 0 = 0 :=
   map_zero _
 #align mul_semiring_action_hom.map_zero MulSemiringActionHom.map_zero
+-/
 
+#print MulSemiringActionHom.map_add /-
 protected theorem map_add (f : R →+*[M] S) (x y : R) : f (x + y) = f x + f y :=
   map_add _ _ _
 #align mul_semiring_action_hom.map_add MulSemiringActionHom.map_add
+-/
 
+#print MulSemiringActionHom.map_neg /-
 protected theorem map_neg (f : R' →+*[M] S') (x : R') : f (-x) = -f x :=
   map_neg _ _
 #align mul_semiring_action_hom.map_neg MulSemiringActionHom.map_neg
+-/
 
+#print MulSemiringActionHom.map_sub /-
 protected theorem map_sub (f : R' →+*[M] S') (x y : R') : f (x - y) = f x - f y :=
   map_sub _ _ _
 #align mul_semiring_action_hom.map_sub MulSemiringActionHom.map_sub
+-/
 
+#print MulSemiringActionHom.map_one /-
 protected theorem map_one (f : R →+*[M] S) : f 1 = 1 :=
   map_one _
 #align mul_semiring_action_hom.map_one MulSemiringActionHom.map_one
+-/
 
+#print MulSemiringActionHom.map_mul /-
 protected theorem map_mul (f : R →+*[M] S) (x y : R) : f (x * y) = f x * f y :=
   map_mul _ _ _
 #align mul_semiring_action_hom.map_mul MulSemiringActionHom.map_mul
+-/
 
+#print MulSemiringActionHom.map_smul /-
 protected theorem map_smul (f : R →+*[M] S) (m : M) (x : R) : f (m • x) = m • f x :=
   map_smul _ _ _
 #align mul_semiring_action_hom.map_smul MulSemiringActionHom.map_smul
+-/
 
 variable (M) {R}
 
@@ -504,10 +587,12 @@ protected def id : R →+*[M] R :=
 #align mul_semiring_action_hom.id MulSemiringActionHom.id
 -/
 
+#print MulSemiringActionHom.id_apply /-
 @[simp]
 theorem id_apply (x : R) : MulSemiringActionHom.id M x = x :=
   rfl
 #align mul_semiring_action_hom.id_apply MulSemiringActionHom.id_apply
+-/
 
 variable {M R S T}
 
@@ -519,20 +604,26 @@ def comp (g : S →+*[M] T) (f : R →+*[M] S) : R →+*[M] T :=
 #align mul_semiring_action_hom.comp MulSemiringActionHom.comp
 -/
 
+#print MulSemiringActionHom.comp_apply /-
 @[simp]
 theorem comp_apply (g : S →+*[M] T) (f : R →+*[M] S) (x : R) : g.comp f x = g (f x) :=
   rfl
 #align mul_semiring_action_hom.comp_apply MulSemiringActionHom.comp_apply
+-/
 
+#print MulSemiringActionHom.id_comp /-
 @[simp]
 theorem id_comp (f : R →+*[M] S) : (MulSemiringActionHom.id M).comp f = f :=
   ext fun x => by rw [comp_apply, id_apply]
 #align mul_semiring_action_hom.id_comp MulSemiringActionHom.id_comp
+-/
 
+#print MulSemiringActionHom.comp_id /-
 @[simp]
 theorem comp_id (f : R →+*[M] S) : f.comp (MulSemiringActionHom.id M) = f :=
   ext fun x => by rw [comp_apply, id_apply]
 #align mul_semiring_action_hom.comp_id MulSemiringActionHom.comp_id
+-/
 
 end MulSemiringActionHom
 

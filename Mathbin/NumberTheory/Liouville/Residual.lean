@@ -28,6 +28,7 @@ open scoped Filter
 open Filter Set Metric
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
+#print setOf_liouville_eq_iInter_iUnion /-
 theorem setOf_liouville_eq_iInter_iUnion :
     {x | Liouville x} =
       ⋂ n : ℕ, ⋃ (a : ℤ) (b : ℤ) (hb : 1 < b), ball (a / b) (1 / b ^ n) \ {a / b} :=
@@ -36,6 +37,7 @@ theorem setOf_liouville_eq_iInter_iUnion :
   simp only [mem_Inter, mem_Union, Liouville, mem_set_of_eq, exists_prop, mem_diff,
     mem_singleton_iff, mem_ball, Real.dist_eq, and_comm']
 #align set_of_liouville_eq_Inter_Union setOf_liouville_eq_iInter_iUnion
+-/
 
 #print isGδ_setOf_liouville /-
 theorem isGδ_setOf_liouville : IsGδ {x | Liouville x} :=
@@ -48,6 +50,7 @@ theorem isGδ_setOf_liouville : IsGδ {x | Liouville x} :=
 -/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (a b) -/
+#print setOf_liouville_eq_irrational_inter_iInter_iUnion /-
 theorem setOf_liouville_eq_irrational_inter_iInter_iUnion :
     {x | Liouville x} =
       {x | Irrational x} ∩ ⋂ n : ℕ, ⋃ (a : ℤ) (b : ℤ) (hb : 1 < b), ball (a / b) (1 / b ^ n) :=
@@ -62,6 +65,7 @@ theorem setOf_liouville_eq_irrational_inter_iInter_iUnion :
     refine' diff_subset_diff subset.rfl (singleton_subset_iff.2 ⟨a / b, _⟩)
     norm_cast
 #align set_of_liouville_eq_irrational_inter_Inter_Union setOf_liouville_eq_irrational_inter_iInter_iUnion
+-/
 
 #print eventually_residual_liouville /-
 /-- The set of Liouville numbers is a residual set. -/

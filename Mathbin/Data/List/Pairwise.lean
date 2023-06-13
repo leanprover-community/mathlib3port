@@ -256,11 +256,14 @@ theorem Pairwise.of_map {S : β → β → Prop} (f : α → β) (H : ∀ a b : 
 #align list.pairwise.of_map List.Pairwise.of_map
 -/
 
+#print List.Pairwise.map /-
 theorem Pairwise.map {S : β → β → Prop} (f : α → β) (H : ∀ a b : α, R a b → S (f a) (f b))
     (p : Pairwise R l) : Pairwise S (map f l) :=
   (pairwise_map' f).2 <| p.imp H
 #align list.pairwise.map List.Pairwise.map
+-/
 
+#print List.pairwise_filterMap /-
 theorem pairwise_filterMap (f : β → Option α) {l : List β} :
     Pairwise R (filterMap f l) ↔ Pairwise (fun a a' : β => ∀ b ∈ f a, ∀ b' ∈ f a', R b b') l :=
   by
@@ -277,6 +280,7 @@ theorem pairwise_filterMap (f : β → Option α) {l : List β} :
       (∀ a' : β, a' ∈ l → ∀ b' : α, f a' = some b' → R b b') ∧ Pairwise S l
   exact and_congr ⟨fun h b mb a ma => h a b mb ma, fun h a b mb ma => h b mb a ma⟩ Iff.rfl
 #align list.pairwise_filter_map List.pairwise_filterMap
+-/
 
 #print List.Pairwise.filter_map /-
 theorem Pairwise.filter_map {S : β → β → Prop} (f : α → Option β)
@@ -286,12 +290,14 @@ theorem Pairwise.filter_map {S : β → β → Prop} (f : α → Option β)
 #align list.pairwise.filter_map List.Pairwise.filter_map
 -/
 
+#print List.pairwise_filter /-
 theorem pairwise_filter (p : α → Prop) [DecidablePred p] {l : List α} :
     Pairwise R (filter p l) ↔ Pairwise (fun x y => p x → p y → R x y) l :=
   by
   rw [← filter_map_eq_filter, pairwise_filter_map]
   apply pairwise.iff; intros; simp only [Option.mem_def, Option.guard_eq_some, and_imp, forall_eq']
 #align list.pairwise_filter List.pairwise_filter
+-/
 
 theorem Pairwise.filter (p : α → Prop) [DecidablePred p] : Pairwise R l → Pairwise R (filter p l) :=
   Pairwise.sublist (filter_sublist _)
@@ -311,6 +317,7 @@ theorem pairwise_pmap {p : β → Prop} {f : ∀ b, p b → α} {l : List β} (h
 #align list.pairwise_pmap List.pairwise_pmap
 -/
 
+#print List.Pairwise.pmap /-
 theorem Pairwise.pmap {l : List α} (hl : Pairwise R l) {p : α → Prop} {f : ∀ a, p a → β}
     (h : ∀ x ∈ l, p x) {S : β → β → Prop}
     (hS : ∀ ⦃x⦄ (hx : p x) ⦃y⦄ (hy : p y), R x y → S (f x hx) (f y hy)) : Pairwise S (l.pmap f h) :=
@@ -318,6 +325,7 @@ theorem Pairwise.pmap {l : List α} (hl : Pairwise R l) {p : α → Prop} {f : �
   refine' (pairwise_pmap h).2 (pairwise.imp_of_mem _ hl)
   intros; apply hS; assumption
 #align list.pairwise.pmap List.Pairwise.pmap
+-/
 
 #print List.pairwise_join /-
 theorem pairwise_join {L : List (List α)} :
@@ -336,11 +344,13 @@ theorem pairwise_join {L : List (List α)} :
 #align list.pairwise_join List.pairwise_join
 -/
 
+#print List.pairwise_bind /-
 theorem pairwise_bind {R : β → β → Prop} {l : List α} {f : α → List β} :
     List.Pairwise R (l.bind f) ↔
       (∀ a ∈ l, Pairwise R (f a)) ∧ Pairwise (fun a₁ a₂ => ∀ x ∈ f a₁, ∀ y ∈ f a₂, R x y) l :=
   by simp [List.bind, List.pairwise_join, List.mem_map, List.pairwise_map']
 #align list.pairwise_bind List.pairwise_bind
+-/
 
 #print List.pairwise_reverse /-
 @[simp]

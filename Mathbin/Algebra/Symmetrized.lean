@@ -46,7 +46,6 @@ def SymAlg (α : Type _) : Type _ :=
 #align sym_alg SymAlg
 -/
 
--- mathport name: «expr ˢʸᵐ»
 postfix:max "ˢʸᵐ" => SymAlg
 
 namespace SymAlg
@@ -252,18 +251,24 @@ theorem unsym_neg [Neg α] (a : αˢʸᵐ) : unsym (-a) = -unsym a :=
 #align sym_alg.unsym_neg SymAlg.unsym_neg
 -/
 
+#print SymAlg.mul_def /-
 theorem mul_def [Add α] [Mul α] [One α] [Invertible (2 : α)] (a b : αˢʸᵐ) :
     a * b = sym (⅟ 2 * (unsym a * unsym b + unsym b * unsym a)) := by rfl
 #align sym_alg.mul_def SymAlg.mul_def
+-/
 
+#print SymAlg.unsym_mul /-
 theorem unsym_mul [Mul α] [Add α] [One α] [Invertible (2 : α)] (a b : αˢʸᵐ) :
     unsym (a * b) = ⅟ 2 * (unsym a * unsym b + unsym b * unsym a) := by rfl
 #align sym_alg.unsym_mul SymAlg.unsym_mul
+-/
 
+#print SymAlg.sym_mul_sym /-
 theorem sym_mul_sym [Mul α] [Add α] [One α] [Invertible (2 : α)] (a b : α) :
     sym a * sym b = sym (⅟ 2 * (a * b + b * a)) :=
   rfl
 #align sym_alg.sym_mul_sym SymAlg.sym_mul_sym
+-/
 
 #print SymAlg.sym_inv /-
 @[simp, to_additive]
@@ -354,11 +359,13 @@ instance [Mul α] [Add α] [One α] [Invertible (2 : α)] (a : α) [Invertible a
   mul_invOf_self := by
     rw [sym_mul_sym, mul_invOf_self, invOf_mul_self, ← bit0, invOf_mul_self, sym_one]
 
+#print SymAlg.invOf_sym /-
 @[simp]
 theorem invOf_sym [Mul α] [Add α] [One α] [Invertible (2 : α)] (a : α) [Invertible a] :
     ⅟ (sym a) = sym (⅟ a) :=
   rfl
 #align sym_alg.inv_of_sym SymAlg.invOf_sym
+-/
 
 instance [Semiring α] [Invertible (2 : α)] : NonAssocSemiring αˢʸᵐ :=
   { SymAlg.addCommMonoid with
@@ -393,17 +400,23 @@ instance [Ring α] [Invertible (2 : α)] : NonAssocRing αˢʸᵐ :=
 /-! The squaring operation coincides for both multiplications -/
 
 
+#print SymAlg.unsym_mul_self /-
 theorem unsym_mul_self [Semiring α] [Invertible (2 : α)] (a : αˢʸᵐ) :
     unsym (a * a) = unsym a * unsym a := by rw [mul_def, unsym_sym, ← two_mul, invOf_mul_self_assoc]
 #align sym_alg.unsym_mul_self SymAlg.unsym_mul_self
+-/
 
+#print SymAlg.sym_mul_self /-
 theorem sym_mul_self [Semiring α] [Invertible (2 : α)] (a : α) : sym (a * a) = sym a * sym a := by
   rw [sym_mul_sym, ← two_mul, invOf_mul_self_assoc]
 #align sym_alg.sym_mul_self SymAlg.sym_mul_self
+-/
 
+#print SymAlg.mul_comm /-
 theorem mul_comm [Mul α] [AddCommSemigroup α] [One α] [Invertible (2 : α)] (a b : αˢʸᵐ) :
     a * b = b * a := by rw [mul_def, mul_def, add_comm]
 #align sym_alg.mul_comm SymAlg.mul_comm
+-/
 
 instance [Ring α] [Invertible (2 : α)] : IsCommJordan αˢʸᵐ
     where

@@ -37,6 +37,7 @@ variable {V : Type u} [Category.{v} V] [HasZeroMorphisms V]
 
 variable {ι : Type _} {c : ComplexShape ι}
 
+#print HomologicalComplex.asFunctor /-
 /-- A complex of functors gives a functor to complexes. -/
 @[simps obj map]
 def asFunctor {T : Type _} [Category T] (C : HomologicalComplex (T ⥤ V) c) :
@@ -59,7 +60,9 @@ def asFunctor {T : Type _} [Category T] (C : HomologicalComplex (T ⥤ V) c) :
   map_id' t := by ext i; dsimp; rw [(C.X i).map_id]
   map_comp' t₁ t₂ t₃ h₁ h₂ := by ext i; dsimp; rw [functor.map_comp]
 #align homological_complex.as_functor HomologicalComplex.asFunctor
+-/
 
+#print HomologicalComplex.complexOfFunctorsToFunctorToComplex /-
 -- TODO in fact, this is an equivalence of categories.
 /-- The functorial version of `homological_complex.as_functor`. -/
 @[simps]
@@ -73,6 +76,7 @@ def complexOfFunctorsToFunctorToComplex {T : Type _} [Category T] :
           comm' := fun i j w => NatTrans.congr_app (f.comm i j) t }
       naturality' := fun t t' g => by ext i; exact (f.f i).naturality g }
 #align homological_complex.complex_of_functors_to_functor_to_complex HomologicalComplex.complexOfFunctorsToFunctorToComplex
+-/
 
 end HomologicalComplex
 

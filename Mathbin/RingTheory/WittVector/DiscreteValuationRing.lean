@@ -38,9 +38,6 @@ namespace WittVector
 
 variable {p : ℕ} [hp : Fact p.Prime]
 
-include hp
-
--- mathport name: expr𝕎
 local notation "𝕎" => WittVector p
 
 section CommRing

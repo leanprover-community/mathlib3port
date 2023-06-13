@@ -145,6 +145,7 @@ instance sumElimCategory : ∀ s : Sum I J, Category.{v₁} (Sum.elim C D s)
   | Sum.inr j => by dsimp; infer_instance
 #align category_theory.pi.sum_elim_category CategoryTheory.Pi.sumElimCategoryₓ
 
+#print CategoryTheory.Pi.sum /-
 /-- The bifunctor combining an `I`-indexed family of objects with a `J`-indexed family of objects
 to obtain an `I ⊕ J`-indexed family of objects.
 -/
@@ -156,6 +157,7 @@ def sum : (∀ i, C i) ⥤ (∀ j, D j) ⥤ ∀ s : Sum I J, Sum.elim C D s
       map := fun g g' α s => Sum.rec (fun i => 𝟙 (f i)) α s }
   map f f' α := { app := fun g s => Sum.rec α (fun j => 𝟙 (g j)) s }
 #align category_theory.pi.sum CategoryTheory.Pi.sum
+-/
 
 end
 

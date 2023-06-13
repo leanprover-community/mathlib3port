@@ -32,15 +32,19 @@ open Finset Function
 instance {α : Type _} [Fintype α] : Fintype (Option α) :=
   ⟨univ.insertNone, fun a => by simp⟩
 
+#print univ_option /-
 theorem univ_option (α : Type _) [Fintype α] : (univ : Finset (Option α)) = insertNone univ :=
   rfl
 #align univ_option univ_option
+-/
 
+#print Fintype.card_option /-
 @[simp]
 theorem Fintype.card_option {α : Type _} [Fintype α] :
     Fintype.card (Option α) = Fintype.card α + 1 :=
   (Finset.card_cons _).trans <| congr_arg₂ _ (card_map _) rfl
 #align fintype.card_option Fintype.card_option
+-/
 
 #print fintypeOfOption /-
 /-- If `option α` is a `fintype` then so is `α` -/
@@ -91,6 +95,7 @@ def truncRecEmptyOption {P : Type u → Sort v} (of_equiv : ∀ {α β}, α ≃ 
 #align fintype.trunc_rec_empty_option Fintype.truncRecEmptyOption
 -/
 
+#print Fintype.induction_empty_option /-
 /-- An induction principle for finite types, analogous to `nat.rec`. It effectively says
 that every `fintype` is either `empty` or `option α`, up to an `equiv`. -/
 @[elab_as_elim]
@@ -105,6 +110,7 @@ theorem induction_empty_option {P : ∀ (α : Type u) [Fintype α], Prop}
   · exact p _
   · rintro α hα - Pα hα'; skip; convert h_option α (Pα _)
 #align fintype.induction_empty_option Fintype.induction_empty_option
+-/
 
 end Fintype
 

@@ -40,35 +40,45 @@ section SmulLemmas
 
 variable {R M : Type _}
 
+#print star_nat_cast_smul /-
 @[simp]
 theorem star_nat_cast_smul [Semiring R] [AddCommMonoid M] [Module R M] [StarAddMonoid M] (n : ℕ)
     (x : M) : star ((n : R) • x) = (n : R) • star x :=
   map_nat_cast_smul (starAddEquiv : M ≃+ M) R R n x
 #align star_nat_cast_smul star_nat_cast_smul
+-/
 
+#print star_int_cast_smul /-
 @[simp]
 theorem star_int_cast_smul [Ring R] [AddCommGroup M] [Module R M] [StarAddMonoid M] (n : ℤ)
     (x : M) : star ((n : R) • x) = (n : R) • star x :=
   map_int_cast_smul (starAddEquiv : M ≃+ M) R R n x
 #align star_int_cast_smul star_int_cast_smul
+-/
 
+#print star_inv_nat_cast_smul /-
 @[simp]
 theorem star_inv_nat_cast_smul [DivisionSemiring R] [AddCommMonoid M] [Module R M] [StarAddMonoid M]
     (n : ℕ) (x : M) : star ((n⁻¹ : R) • x) = (n⁻¹ : R) • star x :=
   map_inv_nat_cast_smul (starAddEquiv : M ≃+ M) R R n x
 #align star_inv_nat_cast_smul star_inv_nat_cast_smul
+-/
 
+#print star_inv_int_cast_smul /-
 @[simp]
 theorem star_inv_int_cast_smul [DivisionRing R] [AddCommGroup M] [Module R M] [StarAddMonoid M]
     (n : ℤ) (x : M) : star ((n⁻¹ : R) • x) = (n⁻¹ : R) • star x :=
   map_inv_int_cast_smul (starAddEquiv : M ≃+ M) R R n x
 #align star_inv_int_cast_smul star_inv_int_cast_smul
+-/
 
+#print star_rat_cast_smul /-
 @[simp]
 theorem star_rat_cast_smul [DivisionRing R] [AddCommGroup M] [Module R M] [StarAddMonoid M] (n : ℚ)
     (x : M) : star ((n : R) • x) = (n : R) • star x :=
   map_rat_cast_smul (starAddEquiv : M ≃+ M) _ _ _ x
 #align star_rat_cast_smul star_rat_cast_smul
+-/
 
 #print star_rat_smul /-
 @[simp]
@@ -111,6 +121,7 @@ def skewAdjoint.submodule : Submodule R A :=
 
 variable {A} [Invertible (2 : R)]
 
+#print selfAdjointPart /-
 /-- The self-adjoint part of an element of a star module, as a linear map. -/
 @[simps]
 def selfAdjointPart : A →ₗ[R] selfAdjoint A
@@ -123,7 +134,9 @@ def selfAdjointPart : A →ₗ[R] selfAdjoint A
   map_smul' r x := by ext;
     simp [← mul_smul, show ⅟ 2 * r = r * ⅟ 2 from Commute.invOf_left (Commute.one_left r).bit0_left]
 #align self_adjoint_part selfAdjointPart
+-/
 
+#print skewAdjointPart /-
 /-- The skew-adjoint part of an element of a star module, as a linear map. -/
 @[simps]
 def skewAdjointPart : A →ₗ[R] skewAdjoint A
@@ -139,15 +152,19 @@ def skewAdjointPart : A →ₗ[R] skewAdjoint A
     simp [← mul_smul, ← smul_sub,
       show r * ⅟ 2 = ⅟ 2 * r from Commute.invOf_right (Commute.one_right r).bit0_right]
 #align skew_adjoint_part skewAdjointPart
+-/
 
+#print StarModule.selfAdjointPart_add_skewAdjointPart /-
 theorem StarModule.selfAdjointPart_add_skewAdjointPart (x : A) :
     (selfAdjointPart R x : A) + skewAdjointPart R x = x := by
   simp only [smul_sub, selfAdjointPart_apply_coe, smul_add, skewAdjointPart_apply_coe,
     add_add_sub_cancel, invOf_two_smul_add_invOf_two_smul]
 #align star_module.self_adjoint_part_add_skew_adjoint_part StarModule.selfAdjointPart_add_skewAdjointPart
+-/
 
 variable (A)
 
+#print StarModule.decomposeProdAdjoint /-
 /-- The decomposition of elements of a star module into their self- and skew-adjoint parts,
 as a linear equivalence. -/
 @[simps]
@@ -156,11 +173,14 @@ def StarModule.decomposeProdAdjoint : A ≃ₗ[R] selfAdjoint A × skewAdjoint A
     ((selfAdjoint.submodule R A).Subtype.coprod (skewAdjoint.submodule R A).Subtype)
     (by ext <;> simp) (LinearMap.ext <| StarModule.selfAdjointPart_add_skewAdjointPart R)
 #align star_module.decompose_prod_adjoint StarModule.decomposeProdAdjoint
+-/
 
+#print algebraMap_star_comm /-
 @[simp]
 theorem algebraMap_star_comm {R A : Type _} [CommSemiring R] [StarRing R] [Semiring A]
     [StarSemigroup A] [Algebra R A] [StarModule R A] (r : R) :
     algebraMap R A (star r) = star (algebraMap R A r) := by
   simp only [Algebra.algebraMap_eq_smul_one, star_smul, star_one]
 #align algebra_map_star_comm algebraMap_star_comm
+-/
 

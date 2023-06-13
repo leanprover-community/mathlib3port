@@ -39,7 +39,6 @@ def factorial : ℕ → ℕ
 #align nat.factorial Nat.factorial
 -/
 
--- mathport name: nat.factorial
 scoped notation:10000 n "!" => Nat.factorial n
 
 section Factorial

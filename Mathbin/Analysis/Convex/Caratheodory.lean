@@ -55,6 +55,7 @@ variable {𝕜 : Type _} {E : Type u} [LinearOrderedField 𝕜] [AddCommGroup E]
 
 namespace Caratheodory
 
+#print Caratheodory.mem_convexHull_erase /-
 /-- If `x` is in the convex hull of some finset `t` whose elements are not affine-independent,
 then it is in the convex hull of a strict subset of `t`. -/
 theorem mem_convexHull_erase [DecidableEq E] {t : Finset E} (h : ¬AffineIndependent 𝕜 (coe : t → E))
@@ -105,10 +106,9 @@ theorem mem_convexHull_erase [DecidableEq E] {t : Finset E} (h : ¬AffineIndepen
     simp only [sub_smul, mul_smul, sum_sub_distrib, ← smul_sum, gcombo, smul_zero, sub_zero,
       center_mass, fsum, inv_one, one_smul, id.def]
 #align caratheodory.mem_convex_hull_erase Caratheodory.mem_convexHull_erase
+-/
 
 variable {s : Set E} {x : E} (hx : x ∈ convexHull 𝕜 s)
-
-include hx
 
 #print Caratheodory.minCardFinsetOfMemConvexHull /-
 /-- Given a point `x` in the convex hull of a set `s`, this is a finite subset of `s` of minimum
@@ -120,26 +120,35 @@ noncomputable def minCardFinsetOfMemConvexHull : Finset E :=
 #align caratheodory.min_card_finset_of_mem_convex_hull Caratheodory.minCardFinsetOfMemConvexHull
 -/
 
+#print Caratheodory.minCardFinsetOfMemConvexHull_subseteq /-
 theorem minCardFinsetOfMemConvexHull_subseteq : ↑(minCardFinsetOfMemConvexHull hx) ⊆ s :=
   (Function.argminOn_mem _ _ {t : Finset E | ↑t ⊆ s ∧ x ∈ convexHull 𝕜 (t : Set E)} _).1
 #align caratheodory.min_card_finset_of_mem_convex_hull_subseteq Caratheodory.minCardFinsetOfMemConvexHull_subseteq
+-/
 
+#print Caratheodory.mem_minCardFinsetOfMemConvexHull /-
 theorem mem_minCardFinsetOfMemConvexHull :
     x ∈ convexHull 𝕜 (minCardFinsetOfMemConvexHull hx : Set E) :=
   (Function.argminOn_mem _ _ {t : Finset E | ↑t ⊆ s ∧ x ∈ convexHull 𝕜 (t : Set E)} _).2
 #align caratheodory.mem_min_card_finset_of_mem_convex_hull Caratheodory.mem_minCardFinsetOfMemConvexHull
+-/
 
+#print Caratheodory.minCardFinsetOfMemConvexHull_nonempty /-
 theorem minCardFinsetOfMemConvexHull_nonempty : (minCardFinsetOfMemConvexHull hx).Nonempty :=
   by
   rw [← Finset.coe_nonempty, ← @convexHull_nonempty_iff 𝕜]
   exact ⟨x, mem_min_card_finset_of_mem_convex_hull hx⟩
 #align caratheodory.min_card_finset_of_mem_convex_hull_nonempty Caratheodory.minCardFinsetOfMemConvexHull_nonempty
+-/
 
+#print Caratheodory.minCardFinsetOfMemConvexHull_card_le_card /-
 theorem minCardFinsetOfMemConvexHull_card_le_card {t : Finset E} (ht₁ : ↑t ⊆ s)
     (ht₂ : x ∈ convexHull 𝕜 (t : Set E)) : (minCardFinsetOfMemConvexHull hx).card ≤ t.card :=
   Function.argminOn_le _ _ _ ⟨ht₁, ht₂⟩
 #align caratheodory.min_card_finset_of_mem_convex_hull_card_le_card Caratheodory.minCardFinsetOfMemConvexHull_card_le_card
+-/
 
+#print Caratheodory.affineIndependent_minCardFinsetOfMemConvexHull /-
 theorem affineIndependent_minCardFinsetOfMemConvexHull :
     AffineIndependent 𝕜 (coe : minCardFinsetOfMemConvexHull hx → E) :=
   by
@@ -160,11 +169,13 @@ theorem affineIndependent_minCardFinsetOfMemConvexHull :
   erw [card_erase_of_mem p.2, hk]
   exact lt_add_one _
 #align caratheodory.affine_independent_min_card_finset_of_mem_convex_hull Caratheodory.affineIndependent_minCardFinsetOfMemConvexHull
+-/
 
 end Caratheodory
 
 variable {s : Set E}
 
+#print convexHull_eq_union /-
 /-- **Carathéodory's convexity theorem** -/
 theorem convexHull_eq_union :
     convexHull 𝕜 s =
@@ -181,7 +192,9 @@ theorem convexHull_eq_union :
   · iterate 3 convert Set.iUnion_subset _; intro
     exact convexHull_mono ‹_›
 #align convex_hull_eq_union convexHull_eq_union
+-/
 
+#print eq_pos_convex_span_of_mem_convexHull /-
 /-- A more explicit version of `convex_hull_eq_union`. -/
 theorem eq_pos_convex_span_of_mem_convexHull {x : E} (hx : x ∈ convexHull 𝕜 s) :
     ∃ (ι : Sort (u + 1)) (_ : Fintype ι),
@@ -206,4 +219,5 @@ theorem eq_pos_convex_span_of_mem_convexHull {x : E} (hx : x ∈ convexHull 𝕜
     · rw [t.center_mass_eq_of_sum_1 id hw₂] at hw₃ ; exact hw₃
     · intro e he hwe contra; apply hwe; rw [contra, zero_smul]
 #align eq_pos_convex_span_of_mem_convex_hull eq_pos_convex_span_of_mem_convexHull
+-/
 

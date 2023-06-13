@@ -58,13 +58,11 @@ def cons (a : α) (v : Vector3 α n) : Vector3 α (succ n) := fun i => by refine
 #align vector3.cons Vector3.cons
 -/
 
--- mathport name: vector.list
 /- We do not want to make the following notation global, because then these expressions will be
 overloaded, and only the expected type will be able to disambiguate the meaning. Worse: Lean will
 try to insert a coercion from `vector3 α _` to `list α`, if a list is expected. -/
 scoped notation3"["(l ", "* => foldr (h t => Vector3.cons h t) Vector3.nil)"]" => l
 
--- mathport name: vector.cons
 notation a "::" b => cons a b
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -141,10 +139,12 @@ def consElim {C : Vector3 α (succ n) → Sort u} (H : ∀ (a : α) (t : Vector3
 -/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print Vector3.consElim_cons /-
 @[simp]
 theorem consElim_cons {C H a t} : @consElim α n C H (a::t) = H a t :=
   rfl
 #align vector3.cons_elim_cons Vector3.consElim_cons
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Vector3.recOn /-
@@ -156,17 +156,21 @@ protected def recOn {C : ∀ {n}, Vector3 α n → Sort u} {n} (v : Vector3 α n
 #align vector3.rec_on Vector3.recOn
 -/
 
+#print Vector3.recOn_nil /-
 @[simp]
 theorem recOn_nil {C H0 Hs} : @Vector3.recOn α (@C) 0 [] H0 @Hs = H0 :=
   rfl
 #align vector3.rec_on_nil Vector3.recOn_nil
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print Vector3.recOn_cons /-
 @[simp]
 theorem recOn_cons {C H0 Hs n a v} :
     @Vector3.recOn α (@C) (succ n) (a::v) H0 @Hs = Hs a v (@Vector3.recOn α (@C) n v H0 @Hs) :=
   rfl
 #align vector3.rec_on_cons Vector3.recOn_cons
+-/
 
 #print Vector3.append /-
 /-- Append two vectors -/
@@ -176,7 +180,6 @@ def append (v : Vector3 α m) (w : Vector3 α n) : Vector3 α (n + m) :=
 #align vector3.append Vector3.append
 -/
 
--- mathport name: «expr +-+ »
 local infixl:65 " +-+ " => Vector3.append
 
 #print Vector3.append_nil /-

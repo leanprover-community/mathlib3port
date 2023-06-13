@@ -120,6 +120,7 @@ theorem exists_iff_exists_existsUnique :
 #align unique_add.exists_iff_exists_exists_unique UniqueAdd.exists_iff_exists_existsUnique
 -/
 
+#print UniqueMul.mulHom_preimage /-
 /-- `unique_mul` is preserved by inverse images under injective, multiplicative maps. -/
 @[to_additive "`unique_add` is preserved by inverse images under injective, additive maps."]
 theorem mulHom_preimage (f : G →ₙ* H) (hf : Function.Injective f) (a0 b0 : G) {A B : Finset H}
@@ -133,6 +134,7 @@ theorem mulHom_preimage (f : G →ₙ* H) (hf : Function.Injective f) (a0 b0 : G
   exact u (finset.mem_preimage.mp ha) (finset.mem_preimage.mp hb) ab
 #align unique_mul.mul_hom_preimage UniqueMul.mulHom_preimage
 #align unique_add.add_hom_preimage UniqueAdd.addHom_preimage
+-/
 
 #print UniqueMul.mulHom_image_iff /-
 /-- `unique_mul` is preserved under multiplicative maps that are injective.
@@ -158,6 +160,7 @@ theorem mulHom_image_iff [DecidableEq H] (f : G →ₙ* H) (hf : Function.Inject
 #align unique_add.add_hom_image_iff UniqueAdd.addHom_image_iff
 -/
 
+#print UniqueMul.mulHom_map_iff /-
 /-- `unique_mul` is preserved under embeddings that are multiplicative.
 
 See `unique_mul.mul_hom_image_iff` for a version with swapped bundling. -/
@@ -170,6 +173,7 @@ theorem mulHom_map_iff (f : G ↪ H) (mul : ∀ x y, f (x * y) = f x * f y) :
       simp only [Finset.mem_map, MulHom.coe_mk, Finset.mem_image]
 #align unique_mul.mul_hom_map_iff UniqueMul.mulHom_map_iff
 #align unique_add.add_hom_map_iff UniqueAdd.addHom_map_iff
+-/
 
 end UniqueMul
 

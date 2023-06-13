@@ -105,7 +105,7 @@ instance liftHomTensor {W X Y Z : C} [LiftObj W] [LiftObj X] [LiftObj Y] [LiftOb
     where lift := LiftHom.lift f ⊗ LiftHom.lift g
 #align category_theory.monoidal_category.lift_hom_tensor CategoryTheory.MonoidalCategory.liftHomTensor
 
-/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`Hom] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`Hom] [] -/
 -- We could likely turn this into a `Prop` valued existential if that proves useful.
 /-- A typeclass carrying a choice of monoidal structural isomorphism between two objects.
 Used by the `⊗≫` monoidal composition operator, and the `coherence` tactic.
@@ -244,7 +244,6 @@ def monoidalComp {W X Y Z : C} [LiftObj X] [LiftObj Y] [MonoidalCoherence X Y] (
   f ≫ MonoidalCoherence.hom X Y ≫ g
 #align category_theory.monoidal_category.monoidal_comp CategoryTheory.MonoidalCategory.monoidalComp
 
--- mathport name: «expr ⊗≫ »
 infixr:80 " ⊗≫ " => monoidalComp
 
 -- type as \ot \gg
@@ -255,7 +254,6 @@ def monoidalIsoComp {W X Y Z : C} [LiftObj X] [LiftObj Y] [MonoidalCoherence X Y
   f ≪≫ asIso (MonoidalCoherence.hom X Y) ≪≫ g
 #align category_theory.monoidal_category.monoidal_iso_comp CategoryTheory.MonoidalCategory.monoidalIsoComp
 
--- mathport name: «expr ≪⊗≫ »
 infixr:80 " ≪⊗≫ " => monoidalIsoComp
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/

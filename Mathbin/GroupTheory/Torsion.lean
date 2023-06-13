@@ -97,13 +97,16 @@ section Group
 
 variable [Group G] {N : Subgroup G} [Group H]
 
+#print IsTorsion.subgroup /-
 /-- Subgroups of torsion groups are torsion groups. -/
 @[to_additive "Subgroups of additive torsion groups are additive torsion groups."]
 theorem IsTorsion.subgroup (tG : IsTorsion G) (H : Subgroup G) : IsTorsion H := fun h =>
   (isOfFinOrder_iff_coe H.toSubmonoid h).mpr <| tG h
 #align is_torsion.subgroup IsTorsion.subgroup
 #align is_torsion.add_subgroup IsTorsion.addSubgroup
+-/
 
+#print IsTorsion.of_surjective /-
 /-- The image of a surjective torsion group homomorphism is torsion. -/
 @[to_additive AddIsTorsion.of_surjective
       "The image of a surjective additive torsion group homomorphism is torsion."]
@@ -114,7 +117,9 @@ theorem IsTorsion.of_surjective {f : G →* H} (hf : Function.Surjective f) (tG 
   exact f.is_of_fin_order (tG g)
 #align is_torsion.of_surjective IsTorsion.of_surjective
 #align add_is_torsion.of_surjective AddIsTorsion.of_surjective
+-/
 
+#print IsTorsion.extension_closed /-
 /-- Torsion groups are closed under extensions. -/
 @[to_additive AddIsTorsion.extension_closed "Additive torsion groups are closed under extensions."]
 theorem IsTorsion.extension_closed {f : G →* H} (hN : N = f.ker) (tH : IsTorsion H)
@@ -130,7 +135,9 @@ theorem IsTorsion.extension_closed {f : G →* H} (hN : N = f.ker) (tH : IsTorsi
         rw [pow_mul, ← h, ← Subgroup.coe_pow, hnn, Subgroup.coe_one]⟩
 #align is_torsion.extension_closed IsTorsion.extension_closed
 #align add_is_torsion.extension_closed AddIsTorsion.extension_closed
+-/
 
+#print IsTorsion.quotient_iff /-
 /-- The image of a quotient is torsion iff the group is torsion. -/
 @[to_additive AddIsTorsion.quotient_iff
       "The image of a quotient is additively torsion iff the group is torsion."]
@@ -139,6 +146,7 @@ theorem IsTorsion.quotient_iff {f : G →* H} (hf : Function.Surjective f) (hN :
   ⟨fun tH => IsTorsion.extension_closed hN tH tN, fun tG => IsTorsion.of_surjective hf tG⟩
 #align is_torsion.quotient_iff IsTorsion.quotient_iff
 #align add_is_torsion.quotient_iff AddIsTorsion.quotient_iff
+-/
 
 #print ExponentExists.isTorsion /-
 /-- If a group exponent exists, the group is torsion. -/
@@ -182,6 +190,7 @@ variable (R M : Type _) [AddCommMonoid M]
 
 namespace AddMonoid
 
+#print AddMonoid.IsTorsion.module_of_torsion /-
 /-- A module whose scalars are additively torsion is additively torsion. -/
 theorem IsTorsion.module_of_torsion [Semiring R] [Module R M] (tR : IsTorsion R) : IsTorsion M :=
   fun f =>
@@ -190,11 +199,14 @@ theorem IsTorsion.module_of_torsion [Semiring R] [Module R M] (tR : IsTorsion R)
     obtain ⟨n, npos, hn⟩ := (isOfFinAddOrder_iff_nsmul_eq_zero _).mp (tR 1)
     exact ⟨n, npos, by simp only [nsmul_eq_smul_cast R _ f, ← nsmul_one, hn, zero_smul]⟩
 #align add_monoid.is_torsion.module_of_torsion AddMonoid.IsTorsion.module_of_torsion
+-/
 
+#print AddMonoid.IsTorsion.module_of_finite /-
 /-- A module with a finite ring of scalars is additively torsion. -/
 theorem IsTorsion.module_of_finite [Ring R] [Finite R] [Module R M] : IsTorsion M :=
   (is_add_torsion_of_finite : IsTorsion R).module_of_torsion _ _
 #align add_monoid.is_torsion.module_of_finite AddMonoid.IsTorsion.module_of_finite
+-/
 
 end AddMonoid
 
@@ -222,6 +234,7 @@ def torsion : Submonoid G where
 
 variable {G}
 
+#print CommMonoid.torsion.isTorsion /-
 /-- Torsion submonoids are torsion. -/
 @[to_additive "Additive torsion submonoids are additively torsion."]
 theorem torsion.isTorsion : IsTorsion <| torsion G := fun ⟨_, n, npos, hn⟩ =>
@@ -231,10 +244,9 @@ theorem torsion.isTorsion : IsTorsion <| torsion G := fun ⟨_, n, npos, hn⟩ =
         (isPeriodicPt_mul_iff_pow_eq_one _).mp hn]⟩
 #align comm_monoid.torsion.is_torsion CommMonoid.torsion.isTorsion
 #align add_comm_monoid.add_torsion.is_torsion AddCommMonoid.addTorsion.isTorsion
+-/
 
 variable (G) (p : ℕ) [hp : Fact p.Prime]
-
-include hp
 
 #print CommMonoid.primaryComponent /-
 /-- The `p`-primary component is the submonoid of elements with order prime-power of `p`. -/
@@ -260,13 +272,16 @@ def primaryComponent : Submonoid G
 
 variable {G} {p}
 
+#print CommMonoid.primaryComponent.exists_orderOf_eq_prime_pow /-
 /-- Elements of the `p`-primary component have order `p^n` for some `n`. -/
 @[to_additive "Elements of the `p`-primary component have additive order `p^n` for some `n`"]
 theorem primaryComponent.exists_orderOf_eq_prime_pow (g : CommMonoid.primaryComponent G p) :
     ∃ n : ℕ, orderOf g = p ^ n := by simpa [primary_component] using g.property
 #align comm_monoid.primary_component.exists_order_of_eq_prime_pow CommMonoid.primaryComponent.exists_orderOf_eq_prime_pow
 #align add_comm_monoid.primary_component.exists_order_of_eq_prime_nsmul AddCommMonoid.primaryComponent.exists_orderOf_eq_prime_nsmul
+-/
 
+#print CommMonoid.primaryComponent.disjoint /-
 /-- The `p`- and `q`-primary components are disjoint for `p ≠ q`. -/
 @[to_additive "The `p`- and `q`-primary components are disjoint for `p ≠ q`."]
 theorem primaryComponent.disjoint {p' : ℕ} [hp' : Fact p'.Prime] (hne : p ≠ p') :
@@ -279,6 +294,7 @@ theorem primaryComponent.disjoint {p' : ℕ} [hp' : Fact p'.Prime] (hne : p ≠ 
         absurd (eq_of_prime_pow_eq hp.out.prime hp'.out.prime n.succ_pos (hn.symm.trans hn')) hne
 #align comm_monoid.primary_component.disjoint CommMonoid.primaryComponent.disjoint
 #align add_comm_monoid.primary_component.disjoint AddCommMonoid.primaryComponent.disjoint
+-/
 
 end CommMonoid
 
@@ -288,35 +304,44 @@ namespace Monoid.IsTorsion
 
 variable {G}
 
+#print Monoid.IsTorsion.torsion_eq_top /-
 /-- The torsion submonoid of a torsion monoid is `⊤`. -/
 @[simp, to_additive "The additive torsion submonoid of an additive torsion monoid is `⊤`."]
 theorem torsion_eq_top (tG : IsTorsion G) : torsion G = ⊤ := by ext <;> tauto
 #align monoid.is_torsion.torsion_eq_top Monoid.IsTorsion.torsion_eq_top
 #align add_monoid.is_torsion.torsion_eq_top AddMonoid.IsTorsion.torsion_eq_top
+-/
 
+#print Monoid.IsTorsion.torsionMulEquiv /-
 /-- A torsion monoid is isomorphic to its torsion submonoid. -/
 @[to_additive "An additive torsion monoid is isomorphic to its torsion submonoid."]
 def torsionMulEquiv (tG : IsTorsion G) : torsion G ≃* G :=
   (MulEquiv.submonoidCongr tG.torsion_eq_top).trans Submonoid.topEquiv
 #align monoid.is_torsion.torsion_mul_equiv Monoid.IsTorsion.torsionMulEquiv
 #align add_monoid.is_torsion.torsion_add_equiv AddMonoid.IsTorsion.torsionAddEquiv
+-/
 
+#print Monoid.IsTorsion.torsionMulEquiv_apply /-
 @[to_additive]
 theorem torsionMulEquiv_apply (tG : IsTorsion G) (a : torsion G) :
     tG.torsionMulEquiv a = MulEquiv.submonoidCongr tG.torsion_eq_top a :=
   rfl
 #align monoid.is_torsion.torsion_mul_equiv_apply Monoid.IsTorsion.torsionMulEquiv_apply
 #align add_monoid.is_torsion.torsion_add_equiv_apply AddMonoid.IsTorsion.torsionAddEquiv_apply
+-/
 
+#print Monoid.IsTorsion.torsionMulEquiv_symm_apply_coe /-
 @[to_additive]
 theorem torsionMulEquiv_symm_apply_coe (tG : IsTorsion G) (a : G) :
     tG.torsionMulEquiv.symm a = ⟨Submonoid.topEquiv.symm a, tG _⟩ :=
   rfl
 #align monoid.is_torsion.torsion_mul_equiv_symm_apply_coe Monoid.IsTorsion.torsionMulEquiv_symm_apply_coe
 #align add_monoid.is_torsion.torsion_add_equiv_symm_apply_coe AddMonoid.IsTorsion.torsionAddEquiv_symm_apply_coe
+-/
 
 end Monoid.IsTorsion
 
+#print Torsion.ofTorsion /-
 /-- Torsion submonoids of a torsion submonoid are isomorphic to the submonoid. -/
 @[simp,
   to_additive AddCommMonoid.Torsion.ofTorsion
@@ -325,6 +350,7 @@ def Torsion.ofTorsion : torsion (torsion G) ≃* torsion G :=
   Monoid.IsTorsion.torsionMulEquiv CommMonoid.torsion.isTorsion
 #align torsion.of_torsion Torsion.ofTorsion
 #align add_comm_monoid.torsion.of_torsion AddCommMonoid.Torsion.ofTorsion
+-/
 
 end CommMonoid
 
@@ -355,8 +381,6 @@ theorem torsion_eq_torsion_submonoid : CommMonoid.torsion G = (torsion G).toSubm
 
 variable (p : ℕ) [hp : Fact p.Prime]
 
-include hp
-
 #print CommGroup.primaryComponent /-
 /-- The `p`-primary component is the subgroup of elements with order prime-power of `p`. -/
 @[to_additive
@@ -371,11 +395,13 @@ def primaryComponent : Subgroup G :=
 
 variable {G} {p}
 
+#print CommGroup.primaryComponent.isPGroup /-
 /-- The `p`-primary component is a `p` group. -/
 theorem primaryComponent.isPGroup : IsPGroup p <| primaryComponent G p := fun g =>
   (propext exists_orderOf_eq_prime_pow_iff.symm).mpr
     (CommMonoid.primaryComponent.exists_orderOf_eq_prime_pow g)
 #align comm_group.primary_component.is_p_group CommGroup.primaryComponent.isPGroup
+-/
 
 end CommGroup
 
@@ -394,6 +420,7 @@ def IsTorsionFree :=
 #align add_monoid.is_torsion_free AddMonoid.IsTorsionFree
 -/
 
+#print Monoid.not_isTorsionFree_iff /-
 /-- A nontrivial monoid is not torsion-free if any nontrivial element has finite order. -/
 @[simp,
   to_additive "An additive monoid is not torsion free if any nontrivial element has finite order."]
@@ -401,6 +428,7 @@ theorem not_isTorsionFree_iff : ¬IsTorsionFree G ↔ ∃ g : G, g ≠ 1 ∧ IsO
   simp_rw [is_torsion_free, Ne.def, not_forall, Classical.not_not, exists_prop]
 #align monoid.not_is_torsion_free_iff Monoid.not_isTorsionFree_iff
 #align add_monoid.not_is_torsion_free_iff AddMonoid.not_isTorsionFree_iff
+-/
 
 end Monoid
 
@@ -436,6 +464,7 @@ theorem IsTorsionFree.not_torsion [hN : Nontrivial G] : IsTorsionFree G → ¬Is
 #align add_monoid.is_torsion_free.not_torsion AddMonoid.IsTorsionFree.not_torsion
 -/
 
+#print IsTorsionFree.subgroup /-
 /-- Subgroups of torsion-free groups are torsion-free. -/
 @[to_additive "Subgroups of additive torsion-free groups are additively torsion-free."]
 theorem IsTorsionFree.subgroup (tG : IsTorsionFree G) (H : Subgroup G) : IsTorsionFree H :=
@@ -444,7 +473,9 @@ theorem IsTorsionFree.subgroup (tG : IsTorsionFree G) (H : Subgroup G) : IsTorsi
     tG h <| by norm_cast <;> simp [hne, not_false_iff]
 #align is_torsion_free.subgroup IsTorsionFree.subgroup
 #align is_torsion_free.add_subgroup IsTorsionFree.addSubgroup
+-/
 
+#print IsTorsionFree.prod /-
 /-- Direct products of torsion free groups are torsion free. -/
 @[to_additive AddMonoid.IsTorsionFree.prod
       "Direct products of additive torsion free groups are torsion free."]
@@ -454,6 +485,7 @@ theorem IsTorsionFree.prod {η : Type _} {Gs : η → Type _} [∀ i, Group (Gs 
     funext fun i => Classical.not_not.mp <| mt (tfGs i (w i)) <| Classical.not_not.mpr <| h.apply i
 #align is_torsion_free.prod IsTorsionFree.prod
 #align add_monoid.is_torsion_free.prod AddMonoid.IsTorsionFree.prod
+-/
 
 end Group
 

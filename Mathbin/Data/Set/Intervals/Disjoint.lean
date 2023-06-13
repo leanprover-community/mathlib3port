@@ -36,35 +36,47 @@ section Preorder
 
 variable [Preorder α] {a b c : α}
 
+#print Set.Iic_disjoint_Ioi /-
 @[simp]
 theorem Iic_disjoint_Ioi (h : a ≤ b) : Disjoint (Iic a) (Ioi b) :=
   disjoint_left.mpr fun x ha hb => (h.trans_lt hb).not_le ha
 #align set.Iic_disjoint_Ioi Set.Iic_disjoint_Ioi
+-/
 
+#print Set.Iic_disjoint_Ioc /-
 @[simp]
 theorem Iic_disjoint_Ioc (h : a ≤ b) : Disjoint (Iic a) (Ioc b c) :=
   (Iic_disjoint_Ioi h).mono le_rfl fun _ => And.left
 #align set.Iic_disjoint_Ioc Set.Iic_disjoint_Ioc
+-/
 
+#print Set.Ioc_disjoint_Ioc_same /-
 @[simp]
 theorem Ioc_disjoint_Ioc_same {a b c : α} : Disjoint (Ioc a b) (Ioc b c) :=
   (Iic_disjoint_Ioc (le_refl b)).mono (fun _ => And.right) le_rfl
 #align set.Ioc_disjoint_Ioc_same Set.Ioc_disjoint_Ioc_same
+-/
 
+#print Set.Ico_disjoint_Ico_same /-
 @[simp]
 theorem Ico_disjoint_Ico_same {a b c : α} : Disjoint (Ico a b) (Ico b c) :=
   disjoint_left.mpr fun x hab hbc => hab.2.not_le hbc.1
 #align set.Ico_disjoint_Ico_same Set.Ico_disjoint_Ico_same
+-/
 
+#print Set.Ici_disjoint_Iic /-
 @[simp]
 theorem Ici_disjoint_Iic : Disjoint (Ici a) (Iic b) ↔ ¬a ≤ b := by
   rw [Set.disjoint_iff_inter_eq_empty, Ici_inter_Iic, Icc_eq_empty_iff]
 #align set.Ici_disjoint_Iic Set.Ici_disjoint_Iic
+-/
 
+#print Set.Iic_disjoint_Ici /-
 @[simp]
 theorem Iic_disjoint_Ici : Disjoint (Iic a) (Ici b) ↔ ¬b ≤ a :=
   disjoint_comm.trans Ici_disjoint_Iic
 #align set.Iic_disjoint_Ici Set.Iic_disjoint_Ici
+-/
 
 #print Set.iUnion_Iic /-
 @[simp]
@@ -156,19 +168,24 @@ section LinearOrder
 
 variable [LinearOrder α] {a₁ a₂ b₁ b₂ : α}
 
+#print Set.Ico_disjoint_Ico /-
 @[simp]
 theorem Ico_disjoint_Ico : Disjoint (Ico a₁ a₂) (Ico b₁ b₂) ↔ min a₂ b₂ ≤ max a₁ b₁ := by
   simp_rw [Set.disjoint_iff_inter_eq_empty, Ico_inter_Ico, Ico_eq_empty_iff, inf_eq_min, sup_eq_max,
     not_lt]
 #align set.Ico_disjoint_Ico Set.Ico_disjoint_Ico
+-/
 
+#print Set.Ioc_disjoint_Ioc /-
 @[simp]
 theorem Ioc_disjoint_Ioc : Disjoint (Ioc a₁ a₂) (Ioc b₁ b₂) ↔ min a₂ b₂ ≤ max a₁ b₁ :=
   by
   have h : _ ↔ min (toDual a₁) (toDual b₁) ≤ max (toDual a₂) (toDual b₂) := Ico_disjoint_Ico
   simpa only [dual_Ico] using h
 #align set.Ioc_disjoint_Ioc Set.Ioc_disjoint_Ioc
+-/
 
+#print Set.eq_of_Ico_disjoint /-
 /-- If two half-open intervals are disjoint and the endpoint of one lies in the other,
   then it must be equal to the endpoint of the other. -/
 theorem eq_of_Ico_disjoint {x₁ x₂ y₁ y₂ : α} (h : Disjoint (Ico x₁ x₂) (Ico y₁ y₂)) (hx : x₁ < x₂)
@@ -178,6 +195,7 @@ theorem eq_of_Ico_disjoint {x₁ x₂ y₁ y₂ : α} (h : Disjoint (Ico x₁ x�
   apply le_antisymm h2.1
   exact h.elim (fun h => absurd hx (not_lt_of_le h)) id
 #align set.eq_of_Ico_disjoint Set.eq_of_Ico_disjoint
+-/
 
 #print Set.iUnion_Ico_eq_Iio_self_iff /-
 @[simp]
@@ -282,27 +300,35 @@ theorem IsLUB.biUnion_Iic_eq_Iic (a_lub : IsLUB s a) (a_mem : a ∈ s) : (⋃ x 
 #align is_lub.bUnion_Iic_eq_Iic IsLUB.biUnion_Iic_eq_Iic
 -/
 
+#print iUnion_Ici_eq_Ioi_iInf /-
 theorem iUnion_Ici_eq_Ioi_iInf {R : Type _} [CompleteLinearOrder R] {f : ι → R}
     (no_least_elem : (⨅ i, f i) ∉ range f) : (⋃ i : ι, Ici (f i)) = Ioi (⨅ i, f i) := by
   simp only [← IsGLB.biUnion_Ici_eq_Ioi (@isGLB_iInf _ _ _ f) no_least_elem, mem_range,
     Union_exists, Union_Union_eq']
 #align Union_Ici_eq_Ioi_infi iUnion_Ici_eq_Ioi_iInf
+-/
 
+#print iUnion_Iic_eq_Iio_iSup /-
 theorem iUnion_Iic_eq_Iio_iSup {R : Type _} [CompleteLinearOrder R] {f : ι → R}
     (no_greatest_elem : (⨆ i, f i) ∉ range f) : (⋃ i : ι, Iic (f i)) = Iio (⨆ i, f i) :=
   @iUnion_Ici_eq_Ioi_iInf ι (OrderDual R) _ f no_greatest_elem
 #align Union_Iic_eq_Iio_supr iUnion_Iic_eq_Iio_iSup
+-/
 
+#print iUnion_Ici_eq_Ici_iInf /-
 theorem iUnion_Ici_eq_Ici_iInf {R : Type _} [CompleteLinearOrder R] {f : ι → R}
     (has_least_elem : (⨅ i, f i) ∈ range f) : (⋃ i : ι, Ici (f i)) = Ici (⨅ i, f i) := by
   simp only [← IsGLB.biUnion_Ici_eq_Ici (@isGLB_iInf _ _ _ f) has_least_elem, mem_range,
     Union_exists, Union_Union_eq']
 #align Union_Ici_eq_Ici_infi iUnion_Ici_eq_Ici_iInf
+-/
 
+#print iUnion_Iic_eq_Iic_iSup /-
 theorem iUnion_Iic_eq_Iic_iSup {R : Type _} [CompleteLinearOrder R] {f : ι → R}
     (has_greatest_elem : (⨆ i, f i) ∈ range f) : (⋃ i : ι, Iic (f i)) = Iic (⨆ i, f i) :=
   @iUnion_Ici_eq_Ici_iInf ι (OrderDual R) _ f has_greatest_elem
 #align Union_Iic_eq_Iic_supr iUnion_Iic_eq_Iic_iSup
+-/
 
 end UnionIxx
 

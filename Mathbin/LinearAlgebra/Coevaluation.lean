@@ -45,6 +45,7 @@ variable (K : Type u) [Field K]
 
 variable (V : Type v) [AddCommGroup V] [Module K V] [FiniteDimensional K V]
 
+#print coevaluation /-
 /-- The coevaluation map is a linear map from a field `K` to a finite dimensional
   vector space `V`. -/
 def coevaluation : K →ₗ[K] V ⊗[K] Module.Dual K V :=
@@ -52,7 +53,9 @@ def coevaluation : K →ₗ[K] V ⊗[K] Module.Dual K V :=
   (Basis.singleton Unit K).constr K fun _ =>
     ∑ i : Basis.ofVectorSpaceIndex K V, bV i ⊗ₜ[K] bV.Coord i
 #align coevaluation coevaluation
+-/
 
+#print coevaluation_apply_one /-
 theorem coevaluation_apply_one :
     (coevaluation K V) (1 : K) =
       let bV := Basis.ofVectorSpace K V
@@ -63,9 +66,11 @@ theorem coevaluation_apply_one :
   simp only [Fintype.univ_punit, Finset.sum_const, one_smul, Basis.singleton_repr,
     Basis.equivFun_apply, Basis.coe_ofVectorSpace, one_nsmul, Finset.card_singleton]
 #align coevaluation_apply_one coevaluation_apply_one
+-/
 
 open TensorProduct
 
+#print contractLeft_assoc_coevaluation /-
 /-- This lemma corresponds to one of the coherence laws for duals in rigid categories, see
   `category_theory.monoidal.rigid`. -/
 theorem contractLeft_assoc_coevaluation :
@@ -86,7 +91,9 @@ theorem contractLeft_assoc_coevaluation :
   simp only [Basis.coe_dualBasis, Basis.coord_apply, Basis.repr_self_apply, TensorProduct.ite_tmul]
   rw [Finset.sum_ite_eq']; simp only [Finset.mem_univ, if_true]
 #align contract_left_assoc_coevaluation contractLeft_assoc_coevaluation
+-/
 
+#print contractLeft_assoc_coevaluation' /-
 /-- This lemma corresponds to one of the coherence laws for duals in rigid categories, see
   `category_theory.monoidal.rigid`. -/
 theorem contractLeft_assoc_coevaluation' :
@@ -106,6 +113,7 @@ theorem contractLeft_assoc_coevaluation' :
   simp only [Basis.coord_apply, Basis.repr_self_apply, TensorProduct.tmul_ite]
   rw [Finset.sum_ite_eq]; simp only [Finset.mem_univ, if_true]
 #align contract_left_assoc_coevaluation' contractLeft_assoc_coevaluation'
+-/
 
 end coevaluation
 

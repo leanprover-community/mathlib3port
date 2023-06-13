@@ -61,16 +61,20 @@ variable [∀ X : C, PreservesColimitsOfShape (J.cover X)ᵒᵖ (forget D)]
 
 variable [ReflectsIsomorphisms (forget D)]
 
+#print CategoryTheory.sheafIsAbelian /-
 instance sheafIsAbelian [HasFiniteLimits D] : Abelian (Sheaf J D) :=
   let adj := sheafificationAdjunction J D
   abelianOfAdjunction _ _ (asIso adj.counit) adj
 #align category_theory.Sheaf_is_abelian CategoryTheory.sheafIsAbelian
+-/
 
 attribute [local instance] preserves_binary_biproducts_of_preserves_binary_products
 
+#print CategoryTheory.presheafToSheaf_additive /-
 instance presheafToSheaf_additive : (presheafToSheaf J D).Additive :=
   (presheafToSheaf J D).additive_of_preservesBinaryBiproducts
 #align category_theory.presheaf_to_Sheaf_additive CategoryTheory.presheafToSheaf_additive
+-/
 
 end Abelian
 

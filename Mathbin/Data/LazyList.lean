@@ -87,11 +87,13 @@ def tail : LazyList α → LazyList α
 #align lazy_list.tail LazyList.tail
 -/
 
+#print LazyList.append /-
 /-- Appends two lazy lists.  -/
 def append : LazyList α → Thunk (LazyList α) → LazyList α
   | nil, l => l ()
   | cons h t, l => cons h (@append (t ()) l)
 #align lazy_list.append LazyList.append
+-/
 
 #print LazyList.map /-
 /-- Maps a function over a lazy list. -/

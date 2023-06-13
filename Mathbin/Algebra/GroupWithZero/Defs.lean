@@ -48,15 +48,19 @@ section MulZeroClass
 
 variable [MulZeroClass M₀] {a b : M₀}
 
+#print MulZeroClass.zero_mul /-
 @[ematch, simp]
 theorem MulZeroClass.zero_mul (a : M₀) : 0 * a = 0 :=
   MulZeroClass.zero_mul a
 #align zero_mul MulZeroClass.zero_mul
+-/
 
+#print MulZeroClass.mul_zero /-
 @[ematch, simp]
 theorem MulZeroClass.mul_zero (a : M₀) : a * 0 = 0 :=
   MulZeroClass.mul_zero a
 #align mul_zero MulZeroClass.mul_zero
+-/
 
 end MulZeroClass
 
@@ -124,23 +128,31 @@ section CommSemigroupWithZero
 
 variable [CommSemigroup M₀] [Zero M₀]
 
+#print IsLeftCancelMulZero.to_isRightCancelMulZero /-
 theorem IsLeftCancelMulZero.to_isRightCancelMulZero [IsLeftCancelMulZero M₀] :
     IsRightCancelMulZero M₀ :=
   ⟨fun a b c ha h => mul_left_cancel₀ ha <| (mul_comm _ _).trans <| h.trans (mul_comm _ _)⟩
 #align is_left_cancel_mul_zero.to_is_right_cancel_mul_zero IsLeftCancelMulZero.to_isRightCancelMulZero
+-/
 
+#print IsRightCancelMulZero.to_isLeftCancelMulZero /-
 theorem IsRightCancelMulZero.to_isLeftCancelMulZero [IsRightCancelMulZero M₀] :
     IsLeftCancelMulZero M₀ :=
   ⟨fun a b c ha h => mul_right_cancel₀ ha <| (mul_comm _ _).trans <| h.trans (mul_comm _ _)⟩
 #align is_right_cancel_mul_zero.to_is_left_cancel_mul_zero IsRightCancelMulZero.to_isLeftCancelMulZero
+-/
 
+#print IsLeftCancelMulZero.to_isCancelMulZero /-
 theorem IsLeftCancelMulZero.to_isCancelMulZero [IsLeftCancelMulZero M₀] : IsCancelMulZero M₀ :=
   { ‹IsLeftCancelMulZero M₀›, IsLeftCancelMulZero.to_isRightCancelMulZero with }
 #align is_left_cancel_mul_zero.to_is_cancel_mul_zero IsLeftCancelMulZero.to_isCancelMulZero
+-/
 
+#print IsRightCancelMulZero.to_isCancelMulZero /-
 theorem IsRightCancelMulZero.to_isCancelMulZero [IsRightCancelMulZero M₀] : IsCancelMulZero M₀ :=
   { ‹IsRightCancelMulZero M₀›, IsRightCancelMulZero.to_isLeftCancelMulZero with }
 #align is_right_cancel_mul_zero.to_is_cancel_mul_zero IsRightCancelMulZero.to_isCancelMulZero
+-/
 
 end CommSemigroupWithZero
 
@@ -251,10 +263,12 @@ theorem inv_zero : (0 : G₀)⁻¹ = 0 :=
   GroupWithZero.inv_zero
 #align inv_zero inv_zero
 
+#print mul_inv_cancel /-
 @[simp]
 theorem mul_inv_cancel {a : G₀} (h : a ≠ 0) : a * a⁻¹ = 1 :=
   GroupWithZero.mul_inv_cancel a h
 #align mul_inv_cancel mul_inv_cancel
+-/
 
 end GroupWithZero
 
@@ -276,6 +290,7 @@ variable [MulZeroOneClass M₀] [Nontrivial M₀] {a b : M₀}
 
 variable (M₀)
 
+#print NeZero.one /-
 /-- In a nontrivial monoid with zero, zero and one are different. -/
 instance NeZero.one : NeZero (1 : M₀) :=
   ⟨by
@@ -288,14 +303,17 @@ instance NeZero.one : NeZero (1 : M₀) :=
       _ = 1 * y := by rw [h, MulZeroClass.zero_mul]
       _ = y := by rw [one_mul]⟩
 #align ne_zero.one NeZero.one
+-/
 
 variable {M₀}
 
+#print pullback_nonzero /-
 /-- Pullback a `nontrivial` instance along a function sending `0` to `0` and `1` to `1`. -/
 theorem pullback_nonzero [Zero M₀'] [One M₀'] (f : M₀' → M₀) (zero : f 0 = 0) (one : f 1 = 1) :
     Nontrivial M₀' :=
   ⟨⟨0, 1, mt (congr_arg f) <| by rw [zero, one]; exact zero_ne_one⟩⟩
 #align pullback_nonzero pullback_nonzero
+-/
 
 end NeZero
 
@@ -303,16 +321,21 @@ section MulZeroClass
 
 variable [MulZeroClass M₀]
 
+#print mul_eq_zero_of_left /-
 theorem mul_eq_zero_of_left {a : M₀} (h : a = 0) (b : M₀) : a * b = 0 :=
   h.symm ▸ MulZeroClass.zero_mul b
 #align mul_eq_zero_of_left mul_eq_zero_of_left
+-/
 
+#print mul_eq_zero_of_right /-
 theorem mul_eq_zero_of_right (a : M₀) {b : M₀} (h : b = 0) : a * b = 0 :=
   h.symm ▸ MulZeroClass.mul_zero a
 #align mul_eq_zero_of_right mul_eq_zero_of_right
+-/
 
 variable [NoZeroDivisors M₀] {a b : M₀}
 
+#print mul_eq_zero /-
 /-- If `α` has no zero divisors, then the product of two elements equals zero iff one of them
 equals zero. -/
 @[simp]
@@ -320,44 +343,61 @@ theorem mul_eq_zero : a * b = 0 ↔ a = 0 ∨ b = 0 :=
   ⟨eq_zero_or_eq_zero_of_mul_eq_zero, fun o =>
     o.elim (fun h => mul_eq_zero_of_left h b) (mul_eq_zero_of_right a)⟩
 #align mul_eq_zero mul_eq_zero
+-/
 
+#print zero_eq_mul /-
 /-- If `α` has no zero divisors, then the product of two elements equals zero iff one of them
 equals zero. -/
 @[simp]
 theorem zero_eq_mul : 0 = a * b ↔ a = 0 ∨ b = 0 := by rw [eq_comm, mul_eq_zero]
 #align zero_eq_mul zero_eq_mul
+-/
 
+#print mul_ne_zero_iff /-
 /-- If `α` has no zero divisors, then the product of two elements is nonzero iff both of them
 are nonzero. -/
 theorem mul_ne_zero_iff : a * b ≠ 0 ↔ a ≠ 0 ∧ b ≠ 0 :=
   mul_eq_zero.Not.trans not_or
 #align mul_ne_zero_iff mul_ne_zero_iff
+-/
 
+#print mul_eq_zero_comm /-
 /-- If `α` has no zero divisors, then for elements `a, b : α`, `a * b` equals zero iff so is
 `b * a`. -/
 theorem mul_eq_zero_comm : a * b = 0 ↔ b * a = 0 :=
   mul_eq_zero.trans <| (or_comm' _ _).trans mul_eq_zero.symm
 #align mul_eq_zero_comm mul_eq_zero_comm
+-/
 
+#print mul_ne_zero_comm /-
 /-- If `α` has no zero divisors, then for elements `a, b : α`, `a * b` is nonzero iff so is
 `b * a`. -/
 theorem mul_ne_zero_comm : a * b ≠ 0 ↔ b * a ≠ 0 :=
   mul_eq_zero_comm.Not
 #align mul_ne_zero_comm mul_ne_zero_comm
+-/
 
+#print mul_self_eq_zero /-
 theorem mul_self_eq_zero : a * a = 0 ↔ a = 0 := by simp
 #align mul_self_eq_zero mul_self_eq_zero
+-/
 
+#print zero_eq_mul_self /-
 theorem zero_eq_mul_self : 0 = a * a ↔ a = 0 := by simp
 #align zero_eq_mul_self zero_eq_mul_self
+-/
 
+#print mul_self_ne_zero /-
 theorem mul_self_ne_zero : a * a ≠ 0 ↔ a ≠ 0 :=
   mul_self_eq_zero.Not
 #align mul_self_ne_zero mul_self_ne_zero
+-/
 
+#print zero_ne_mul_self /-
 theorem zero_ne_mul_self : 0 ≠ a * a ↔ a ≠ 0 :=
   zero_eq_mul_self.Not
 #align zero_ne_mul_self zero_ne_mul_self
+-/
 
 end MulZeroClass
 

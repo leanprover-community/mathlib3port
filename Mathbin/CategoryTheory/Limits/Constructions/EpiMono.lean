@@ -35,6 +35,7 @@ variable {C : Type u₁} {D : Type u₂} [Category.{v₁} C] [Category.{v₂} D]
 
 variable (F : C ⥤ D)
 
+#print CategoryTheory.preserves_mono_of_preservesLimit /-
 /-- If `F` preserves pullbacks, then it preserves monomorphisms. -/
 theorem preserves_mono_of_preservesLimit {X Y : C} (f : X ⟶ Y) [PreservesLimit (cospan f f) F]
     [Mono f] : Mono (F.map f) :=
@@ -43,6 +44,7 @@ theorem preserves_mono_of_preservesLimit {X Y : C} (f : X ⟶ Y) [PreservesLimit
   simp_rw [F.map_id] at this 
   apply pullback_cone.mono_of_is_limit_mk_id_id _ this
 #align category_theory.preserves_mono_of_preserves_limit CategoryTheory.preserves_mono_of_preservesLimit
+-/
 
 #print CategoryTheory.preservesMonomorphisms_of_preservesLimitsOfShape /-
 instance (priority := 100) preservesMonomorphisms_of_preservesLimitsOfShape
@@ -51,6 +53,7 @@ instance (priority := 100) preservesMonomorphisms_of_preservesLimitsOfShape
 #align category_theory.preserves_monomorphisms_of_preserves_limits_of_shape CategoryTheory.preservesMonomorphisms_of_preservesLimitsOfShape
 -/
 
+#print CategoryTheory.reflects_mono_of_reflectsLimit /-
 /-- If `F` reflects pullbacks, then it reflects monomorphisms. -/
 theorem reflects_mono_of_reflectsLimit {X Y : C} (f : X ⟶ Y) [ReflectsLimit (cospan f f) F]
     [Mono (F.map f)] : Mono f :=
@@ -59,6 +62,7 @@ theorem reflects_mono_of_reflectsLimit {X Y : C} (f : X ⟶ Y) [ReflectsLimit (c
   simp_rw [← F.map_id] at this 
   apply pullback_cone.mono_of_is_limit_mk_id_id _ (is_limit_of_is_limit_pullback_cone_map F _ this)
 #align category_theory.reflects_mono_of_reflects_limit CategoryTheory.reflects_mono_of_reflectsLimit
+-/
 
 #print CategoryTheory.reflectsMonomorphisms_of_reflectsLimitsOfShape /-
 instance (priority := 100) reflectsMonomorphisms_of_reflectsLimitsOfShape
@@ -67,6 +71,7 @@ instance (priority := 100) reflectsMonomorphisms_of_reflectsLimitsOfShape
 #align category_theory.reflects_monomorphisms_of_reflects_limits_of_shape CategoryTheory.reflectsMonomorphisms_of_reflectsLimitsOfShape
 -/
 
+#print CategoryTheory.preserves_epi_of_preservesColimit /-
 /-- If `F` preserves pushouts, then it preserves epimorphisms. -/
 theorem preserves_epi_of_preservesColimit {X Y : C} (f : X ⟶ Y) [PreservesColimit (span f f) F]
     [Epi f] : Epi (F.map f) :=
@@ -75,6 +80,7 @@ theorem preserves_epi_of_preservesColimit {X Y : C} (f : X ⟶ Y) [PreservesColi
   simp_rw [F.map_id] at this 
   apply pushout_cocone.epi_of_is_colimit_mk_id_id _ this
 #align category_theory.preserves_epi_of_preserves_colimit CategoryTheory.preserves_epi_of_preservesColimit
+-/
 
 #print CategoryTheory.preservesEpimorphisms_of_preservesColimitsOfShape /-
 instance (priority := 100) preservesEpimorphisms_of_preservesColimitsOfShape
@@ -83,6 +89,7 @@ instance (priority := 100) preservesEpimorphisms_of_preservesColimitsOfShape
 #align category_theory.preserves_epimorphisms_of_preserves_colimits_of_shape CategoryTheory.preservesEpimorphisms_of_preservesColimitsOfShape
 -/
 
+#print CategoryTheory.reflects_epi_of_reflectsColimit /-
 /-- If `F` reflects pushouts, then it reflects epimorphisms. -/
 theorem reflects_epi_of_reflectsColimit {X Y : C} (f : X ⟶ Y) [ReflectsColimit (span f f) F]
     [Epi (F.map f)] : Epi f :=
@@ -93,6 +100,7 @@ theorem reflects_epi_of_reflectsColimit {X Y : C} (f : X ⟶ Y) [ReflectsColimit
     pushout_cocone.epi_of_is_colimit_mk_id_id _
       (is_colimit_of_is_colimit_pushout_cocone_map F _ this)
 #align category_theory.reflects_epi_of_reflects_colimit CategoryTheory.reflects_epi_of_reflectsColimit
+-/
 
 #print CategoryTheory.reflectsEpimorphisms_of_reflectsColimitsOfShape /-
 instance (priority := 100) reflectsEpimorphisms_of_reflectsColimitsOfShape

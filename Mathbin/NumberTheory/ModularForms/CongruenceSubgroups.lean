@@ -27,38 +27,42 @@ It also contains basic results about congruence subgroups.
 -/
 
 
--- mathport name: «exprSL( , )»
 local notation "SL(" n ", " R ")" => Matrix.SpecialLinearGroup (Fin n) R
 
 attribute [-instance] Matrix.SpecialLinearGroup.hasCoeToFun
 
--- mathport name: «expr↑ₘ »
 local prefix:1024 "↑ₘ" => @coe _ (Matrix (Fin 2) (Fin 2) _) _
 
 open Matrix.SpecialLinearGroup Matrix
 
 variable (N : ℕ)
 
--- mathport name: «exprSLMOD( )»
 local notation "SLMOD(" N ")" =>
   @Matrix.SpecialLinearGroup.map (Fin 2) _ _ _ _ _ _ (Int.castRingHom (ZMod N))
 
+#print SL_reduction_mod_hom_val /-
 @[simp]
 theorem SL_reduction_mod_hom_val (N : ℕ) (γ : SL(2, ℤ)) :
     ∀ i j : Fin 2, (SLMOD(N) γ : Matrix (Fin 2) (Fin 2) (ZMod N)) i j = ((↑ₘγ i j : ℤ) : ZMod N) :=
   fun i j => rfl
 #align SL_reduction_mod_hom_val SL_reduction_mod_hom_val
+-/
 
+#print Gamma /-
 /-- The full level `N` congruence subgroup of `SL(2, ℤ)` of matrices that reduce to the identity
 modulo `N`.-/
 def Gamma (N : ℕ) : Subgroup SL(2, ℤ) :=
   SLMOD(N).ker
 #align Gamma Gamma
+-/
 
+#print Gamma_mem' /-
 theorem Gamma_mem' (N : ℕ) (γ : SL(2, ℤ)) : γ ∈ Gamma N ↔ SLMOD(N) γ = 1 :=
   Iff.rfl
 #align Gamma_mem' Gamma_mem'
+-/
 
+#print Gamma_mem /-
 @[simp]
 theorem Gamma_mem (N : ℕ) (γ : SL(2, ℤ)) :
     γ ∈ Gamma N ↔
@@ -76,16 +80,22 @@ theorem Gamma_mem (N : ℕ) (γ : SL(2, ℤ)) :
     fin_cases i <;> fin_cases j
     all_goals simp_rw [h]; rfl
 #align Gamma_mem Gamma_mem
+-/
 
+#print Gamma_normal /-
 theorem Gamma_normal (N : ℕ) : Subgroup.Normal (Gamma N) :=
   SLMOD(N).normal_ker
 #align Gamma_normal Gamma_normal
+-/
 
+#print Gamma_one_top /-
 theorem Gamma_one_top : Gamma 1 = ⊤ := by
   ext
   simp
 #align Gamma_one_top Gamma_one_top
+-/
 
+#print Gamma_zero_bot /-
 theorem Gamma_zero_bot : Gamma 0 = ⊥ := by
   ext
   simp only [Gamma_mem, coe_coe, coe_matrix_coe, Int.coe_castRingHom, map_apply, Int.cast_id,
@@ -98,7 +108,9 @@ theorem Gamma_zero_bot : Gamma 0 = ⊥ := by
   · intro h
     simp [h]
 #align Gamma_zero_bot Gamma_zero_bot
+-/
 
+#print Gamma0 /-
 /-- The congruence subgroup of `SL(2, ℤ)` of matrices whose lower left-hand entry reduces to zero
 modulo `N`. -/
 def Gamma0 (N : ℕ) : Subgroup SL(2, ℤ)
@@ -121,15 +133,21 @@ def Gamma0 (N : ℕ) : Subgroup SL(2, ℤ)
       coe_mk, Int.coe_castRingHom, map_apply, Int.cast_neg, neg_eq_zero, Set.mem_setOf_eq] at *
     exact ha
 #align Gamma0 Gamma0
+-/
 
+#print Gamma0_mem /-
 @[simp]
 theorem Gamma0_mem (N : ℕ) (A : SL(2, ℤ)) : A ∈ Gamma0 N ↔ ((↑ₘA 1 0 : ℤ) : ZMod N) = 0 :=
   Iff.rfl
 #align Gamma0_mem Gamma0_mem
+-/
 
+#print Gamma0_det /-
 theorem Gamma0_det (N : ℕ) (A : Gamma0 N) : (A.1.1.det : ZMod N) = 1 := by simp [A.1.property]
 #align Gamma0_det Gamma0_det
+-/
 
+#print Gamma0Map /-
 /-- The group homomorphism from `Gamma0` to `zmod N` given by mapping a matrix to its lower
 right-hand entry. -/
 def Gamma0Map (N : ℕ) : Gamma0 N →* ZMod N
@@ -148,18 +166,24 @@ def Gamma0Map (N : ℕ) : Gamma0 N →* ZMod N
     rw [ha]
     simp
 #align Gamma_0_map Gamma0Map
+-/
 
+#print Gamma1' /-
 /-- The congruence subgroup `Gamma1` (as a subgroup of `Gamma0`) of matrices whose bottom
 row is congruent to `(0,1)` modulo `N`.-/
 def Gamma1' (N : ℕ) : Subgroup (Gamma0 N) :=
   (Gamma0Map N).ker
 #align Gamma1' Gamma1'
+-/
 
+#print Gamma1_mem' /-
 @[simp]
 theorem Gamma1_mem' (N : ℕ) (γ : Gamma0 N) : γ ∈ Gamma1' N ↔ (Gamma0Map N) γ = 1 :=
   Iff.rfl
 #align Gamma1_mem' Gamma1_mem'
+-/
 
+#print Gamma1_to_Gamma0_mem /-
 theorem Gamma1_to_Gamma0_mem (N : ℕ) (A : Gamma0 N) :
     A ∈ Gamma1' N ↔
       ((↑ₘA 0 0 : ℤ) : ZMod N) = 1 ∧ ((↑ₘA 1 1 : ℤ) : ZMod N) = 1 ∧ ((↑ₘA 1 0 : ℤ) : ZMod N) = 0 :=
@@ -180,13 +204,17 @@ theorem Gamma1_to_Gamma0_mem (N : ℕ) (A : Gamma0 N) :
       Int.coe_castRingHom, map_apply]
     exact ha.2.1
 #align Gamma1_to_Gamma0_mem Gamma1_to_Gamma0_mem
+-/
 
+#print Gamma1 /-
 /-- The congruence subgroup `Gamma1` of `SL(2, ℤ)` consisting of matrices whose bottom
 row is congruent to `(0,1)` modulo `N`. -/
 def Gamma1 (N : ℕ) : Subgroup SL(2, ℤ) :=
   Subgroup.map ((Gamma0 N).Subtype.comp (Gamma1' N).Subtype) ⊤
 #align Gamma1 Gamma1
+-/
 
+#print Gamma1_mem /-
 @[simp]
 theorem Gamma1_mem (N : ℕ) (A : SL(2, ℤ)) :
     A ∈ Gamma1 N ↔
@@ -211,28 +239,35 @@ theorem Gamma1_mem (N : ℕ) (A : SL(2, ℤ)) :
     refine' ⟨(⟨(⟨A, hA⟩ : Gamma0 N), HA⟩ : (Gamma1' N : Subgroup (Gamma0 N))), _⟩
     simp
 #align Gamma1_mem Gamma1_mem
+-/
 
+#print Gamma1_in_Gamma0 /-
 theorem Gamma1_in_Gamma0 (N : ℕ) : Gamma1 N ≤ Gamma0 N :=
   by
   intro x HA
   simp only [Gamma0_mem, Gamma1_mem, coe_coe, coe_matrix_coe, Int.coe_castRingHom, map_apply] at *
   exact HA.2.2
 #align Gamma1_in_Gamma0 Gamma1_in_Gamma0
+-/
 
 section CongruenceSubgroup
 
+#print IsCongruenceSubgroup /-
 /-- A congruence subgroup is a subgroup of `SL(2, ℤ)` which contains some `Gamma N` for some
 `(N : ℕ+)`. -/
 def IsCongruenceSubgroup (Γ : Subgroup SL(2, ℤ)) : Prop :=
   ∃ N : ℕ+, Gamma N ≤ Γ
 #align is_congruence_subgroup IsCongruenceSubgroup
+-/
 
+#print isCongruenceSubgroup_trans /-
 theorem isCongruenceSubgroup_trans (H K : Subgroup SL(2, ℤ)) (h : H ≤ K)
     (h2 : IsCongruenceSubgroup H) : IsCongruenceSubgroup K :=
   by
   obtain ⟨N, hN⟩ := h2
   refine' ⟨N, le_trans hN h⟩
 #align is_congruence_subgroup_trans isCongruenceSubgroup_trans
+-/
 
 #print Gamma_is_cong_sub /-
 theorem Gamma_is_cong_sub (N : ℕ+) : IsCongruenceSubgroup (Gamma N) :=
@@ -262,10 +297,13 @@ section Conjugation
 
 open scoped Pointwise
 
+#print Gamma_cong_eq_self /-
 theorem Gamma_cong_eq_self (N : ℕ) (g : ConjAct SL(2, ℤ)) : g • Gamma N = Gamma N := by
   apply Subgroup.Normal.conjAct (Gamma_normal N)
 #align Gamma_cong_eq_self Gamma_cong_eq_self
+-/
 
+#print conj_cong_is_cong /-
 theorem conj_cong_is_cong (g : ConjAct SL(2, ℤ)) (Γ : Subgroup SL(2, ℤ))
     (h : IsCongruenceSubgroup Γ) : IsCongruenceSubgroup (g • Γ) :=
   by
@@ -274,6 +312,7 @@ theorem conj_cong_is_cong (g : ConjAct SL(2, ℤ)) (Γ : Subgroup SL(2, ℤ))
   rw [← Gamma_cong_eq_self N g, Subgroup.pointwise_smul_le_pointwise_smul_iff]
   exact HN
 #align conj_cong_is_cong conj_cong_is_cong
+-/
 
 end Conjugation
 

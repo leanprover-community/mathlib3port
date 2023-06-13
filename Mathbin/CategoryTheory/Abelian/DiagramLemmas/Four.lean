@@ -82,8 +82,6 @@ variable {α : A ⟶ A'} {β : B ⟶ B'} {γ : C ⟶ C'} {δ : D ⟶ D'}
 
 variable (comm₁ : α ≫ f' = f ≫ β) (comm₂ : β ≫ g' = g ≫ γ) (comm₃ : γ ≫ h' = h ≫ δ)
 
-include comm₁ comm₂ comm₃
-
 section
 
 variable (hfg : Exact f g) (hgh : Exact g h) (hf'g' : Exact f' g')
@@ -200,8 +198,6 @@ variable (hfg : Exact f g) (hgh : Exact g h) (hhi : Exact h i)
 variable (hf'g' : Exact f' g') (hg'h' : Exact g' h') (hh'i' : Exact h' i')
 
 variable [IsIso α] [IsIso β] [IsIso δ] [IsIso ε]
-
-include comm₄ hfg hgh hhi hf'g' hg'h' hh'i'
 
 #print CategoryTheory.Abelian.isIso_of_isIso_of_isIso_of_isIso_of_isIso /-
 /-- The five lemma. For names of objects and morphisms, refer to the following diagram:

@@ -118,12 +118,15 @@ theorem not_mem_iff (p : T.CompleteType α) (φ : L[[α]].Sentence) : φ.Not ∈
 #align first_order.language.Theory.complete_type.not_mem_iff FirstOrder.Language.Theory.CompleteType.not_mem_iff
 -/
 
+#print FirstOrder.Language.Theory.CompleteType.compl_setOf_mem /-
 @[simp]
 theorem compl_setOf_mem {φ : L[[α]].Sentence} :
     {p : T.CompleteType α | φ ∈ p}ᶜ = {p : T.CompleteType α | φ.Not ∈ p} :=
   ext fun _ => (not_mem_iff _ _).symm
 #align first_order.language.Theory.complete_type.compl_set_of_mem FirstOrder.Language.Theory.CompleteType.compl_setOf_mem
+-/
 
+#print FirstOrder.Language.Theory.CompleteType.setOf_subset_eq_empty_iff /-
 theorem setOf_subset_eq_empty_iff (S : L[[α]].Theory) :
     {p : T.CompleteType α | S ⊆ ↑p} = ∅ ↔ ¬((L.lhomWithConstants α).onTheory T ∪ S).IsSatisfiable :=
   by
@@ -137,6 +140,7 @@ theorem setOf_subset_eq_empty_iff (S : L[[α]].Theory) :
   rintro ⟨p, hp⟩
   exact p.is_maximal.1.mono (union_subset p.subset hp)
 #align first_order.language.Theory.complete_type.set_of_subset_eq_empty_iff FirstOrder.Language.Theory.CompleteType.setOf_subset_eq_empty_iff
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print FirstOrder.Language.Theory.CompleteType.setOf_mem_eq_univ_iff /-
@@ -177,12 +181,14 @@ theorem nonempty_iff : Nonempty (T.CompleteType α) ↔ T.IsSatisfiable :=
 instance : Nonempty (CompleteType ∅ α) :=
   nonempty_iff.2 (isSatisfiable_empty L)
 
+#print FirstOrder.Language.Theory.CompleteType.iInter_setOf_subset /-
 theorem iInter_setOf_subset {ι : Type _} (S : ι → L[[α]].Theory) :
     (⋂ i : ι, {p : T.CompleteType α | S i ⊆ p}) = {p | (⋃ i : ι, S i) ⊆ p} :=
   by
   ext
   simp only [mem_Inter, mem_set_of_eq, Union_subset_iff]
 #align first_order.language.Theory.complete_type.Inter_set_of_subset FirstOrder.Language.Theory.CompleteType.iInter_setOf_subset
+-/
 
 #print FirstOrder.Language.Theory.CompleteType.toList_foldr_inf_mem /-
 theorem toList_foldr_inf_mem {p : T.CompleteType α} {t : Finset L[[α]].Sentence} :

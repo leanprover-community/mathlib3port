@@ -99,11 +99,14 @@ theorem coe_of : (CompHaus.of X : Type _) = X :=
 #align CompHaus.coe_of CompHaus.coe_of
 -/
 
+#print CompHaus.isClosedMap /-
 /-- Any continuous function on compact Hausdorff spaces is a closed map. -/
 theorem isClosedMap {X Y : CompHaus.{u}} (f : X ⟶ Y) : IsClosedMap f := fun C hC =>
   (hC.IsCompact.image f.Continuous).IsClosed
 #align CompHaus.is_closed_map CompHaus.isClosedMap
+-/
 
+#print CompHaus.isIso_of_bijective /-
 /-- Any continuous bijection of compact Hausdorff spaces is an isomorphism. -/
 theorem isIso_of_bijective {X Y : CompHaus.{u}} (f : X ⟶ Y) (bij : Function.Bijective f) :
     IsIso f := by
@@ -119,13 +122,16 @@ theorem isIso_of_bijective {X Y : CompHaus.{u}} (f : X ⟶ Y) (bij : Function.Bi
   · ext x
     apply E.apply_symm_apply
 #align CompHaus.is_iso_of_bijective CompHaus.isIso_of_bijective
+-/
 
+#print CompHaus.isoOfBijective /-
 /-- Any continuous bijection of compact Hausdorff spaces induces an isomorphism. -/
 noncomputable def isoOfBijective {X Y : CompHaus.{u}} (f : X ⟶ Y) (bij : Function.Bijective f) :
     X ≅ Y :=
   letI := is_iso_of_bijective _ bij
   as_iso f
 #align CompHaus.iso_of_bijective CompHaus.isoOfBijective
+-/
 
 end CompHaus
 
@@ -154,6 +160,7 @@ def stoneCechObj (X : TopCat) : CompHaus :=
 #align StoneCech_obj stoneCechObj
 -/
 
+#print stoneCechEquivalence /-
 /-- (Implementation) The bijection of homsets to establish the reflective adjunction of compact
 Hausdorff spaces in topological spaces.
 -/
@@ -178,6 +185,7 @@ noncomputable def stoneCechEquivalence (X : TopCat.{u}) (Y : CompHaus.{u}) :
     ext
     exact congr_fun (stoneCechExtend_extends hf) _
 #align stone_cech_equivalence stoneCechEquivalence
+-/
 
 #print topToCompHaus /-
 /-- The Stone-Cech compactification functor from topological spaces to compact Hausdorff spaces,
@@ -188,9 +196,11 @@ noncomputable def topToCompHaus : TopCat.{u} ⥤ CompHaus.{u} :=
 #align Top_to_CompHaus topToCompHaus
 -/
 
+#print topToCompHaus_obj /-
 theorem topToCompHaus_obj (X : TopCat) : ↥(topToCompHaus.obj X) = StoneCech X :=
   rfl
 #align Top_to_CompHaus_obj topToCompHaus_obj
+-/
 
 #print compHausToTop.reflective /-
 /-- The category of compact Hausdorff spaces is reflective in the category of topological spaces.
@@ -265,6 +275,7 @@ def limitConeIsLimit {J : Type v} [SmallCategory J] (F : J ⥤ CompHaus.{max v u
 #align CompHaus.limit_cone_is_limit CompHaus.limitConeIsLimit
 -/
 
+#print CompHaus.epi_iff_surjective /-
 theorem epi_iff_surjective {X Y : CompHaus.{u}} (f : X ⟶ Y) : Epi f ↔ Function.Surjective f :=
   by
   constructor
@@ -297,7 +308,9 @@ theorem epi_iff_surjective {X Y : CompHaus.{u}} (f : X ⟶ Y) : Epi f ↔ Functi
   · rw [← CategoryTheory.epi_iff_surjective]
     apply (forget CompHaus).epi_of_epi_map
 #align CompHaus.epi_iff_surjective CompHaus.epi_iff_surjective
+-/
 
+#print CompHaus.mono_iff_injective /-
 theorem mono_iff_injective {X Y : CompHaus.{u}} (f : X ⟶ Y) : Mono f ↔ Function.Injective f :=
   by
   constructor
@@ -311,6 +324,7 @@ theorem mono_iff_injective {X Y : CompHaus.{u}} (f : X ⟶ Y) : Mono f ↔ Funct
   · rw [← CategoryTheory.mono_iff_injective]
     apply (forget CompHaus).mono_of_mono_map
 #align CompHaus.mono_iff_injective CompHaus.mono_iff_injective
+-/
 
 end CompHaus
 

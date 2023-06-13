@@ -79,9 +79,11 @@ theorem mem_sections {s : Multiset (Multiset α)} :
 #align multiset.mem_sections Multiset.mem_sections
 -/
 
+#print Multiset.card_sections /-
 theorem card_sections {s : Multiset (Multiset α)} : card (Sections s) = prod (s.map card) :=
   Multiset.induction_on s (by simp) (by simp (config := { contextual := true }))
 #align multiset.card_sections Multiset.card_sections
+-/
 
 #print Multiset.prod_map_sum /-
 theorem prod_map_sum [CommSemiring α] {s : Multiset (Multiset α)} :

@@ -51,6 +51,7 @@ inductive Lex (r : ι → ι → Prop) (s : ∀ i, α i → α i → Prop) : ∀
 #align sigma.lex Sigma.Lex
 -/
 
+#print Sigma.lex_iff /-
 theorem lex_iff : Lex r s a b ↔ r a.1 b.1 ∨ ∃ h : a.1 = b.1, s _ (h.rec a.2) b.2 :=
   by
   constructor
@@ -64,6 +65,7 @@ theorem lex_iff : Lex r s a b ↔ r a.1 b.1 ∨ ∃ h : a.1 = b.1, s _ (h.rec a.
     · exact lex.left _ _ h
     · exact lex.right _ _ h
 #align sigma.lex_iff Sigma.lex_iff
+-/
 
 #print Sigma.Lex.decidable /-
 instance Lex.decidable (r : ι → ι → Prop) (s : ∀ i, α i → α i → Prop) [DecidableEq ι]
@@ -72,6 +74,7 @@ instance Lex.decidable (r : ι → ι → Prop) (s : ∀ i, α i → α i → Pr
 #align sigma.lex.decidable Sigma.Lex.decidable
 -/
 
+#print Sigma.Lex.mono /-
 theorem Lex.mono (hr : ∀ a b, r₁ a b → r₂ a b) (hs : ∀ i a b, s₁ i a b → s₂ i a b) {a b : Σ i, α i}
     (h : Lex r₁ s₁ a b) : Lex r₂ s₂ a b :=
   by
@@ -79,20 +82,27 @@ theorem Lex.mono (hr : ∀ a b, r₁ a b → r₂ a b) (hs : ∀ i a b, s₁ i a
   · exact lex.left _ _ (hr _ _ hij)
   · exact lex.right _ _ (hs _ _ _ hab)
 #align sigma.lex.mono Sigma.Lex.mono
+-/
 
+#print Sigma.Lex.mono_left /-
 theorem Lex.mono_left (hr : ∀ a b, r₁ a b → r₂ a b) {a b : Σ i, α i} (h : Lex r₁ s a b) :
     Lex r₂ s a b :=
   h.mono hr fun _ _ _ => id
 #align sigma.lex.mono_left Sigma.Lex.mono_left
+-/
 
+#print Sigma.Lex.mono_right /-
 theorem Lex.mono_right (hs : ∀ i a b, s₁ i a b → s₂ i a b) {a b : Σ i, α i} (h : Lex r s₁ a b) :
     Lex r s₂ a b :=
   h.mono (fun _ _ => id) hs
 #align sigma.lex.mono_right Sigma.Lex.mono_right
+-/
 
+#print Sigma.lex_swap /-
 theorem lex_swap : Lex r.symm s a b ↔ Lex r (fun i => (s i).symm) b a := by
   constructor <;> · rintro (⟨a, b, h⟩ | ⟨a, b, h⟩); exacts [lex.left _ _ h, lex.right _ _ h]
 #align sigma.lex_swap Sigma.lex_swap
+-/
 
 instance [∀ i, IsRefl (α i) (s i)] : IsRefl _ (Lex r s) :=
   ⟨fun ⟨i, a⟩ => Lex.right _ _ <| refl _⟩
@@ -157,6 +167,7 @@ namespace PSigma
 
 variable {ι : Sort _} {α : ι → Sort _} {r r₁ r₂ : ι → ι → Prop} {s s₁ s₂ : ∀ i, α i → α i → Prop}
 
+#print PSigma.lex_iff /-
 theorem lex_iff {a b : Σ' i, α i} :
     Lex r s a b ↔ r a.1 b.1 ∨ ∃ h : a.1 = b.1, s _ (h.rec a.2) b.2 :=
   by
@@ -171,6 +182,7 @@ theorem lex_iff {a b : Σ' i, α i} :
     · exact lex.left _ _ h
     · exact lex.right _ h
 #align psigma.lex_iff PSigma.lex_iff
+-/
 
 #print PSigma.Lex.decidable /-
 instance Lex.decidable (r : ι → ι → Prop) (s : ∀ i, α i → α i → Prop) [DecidableEq ι]
@@ -179,6 +191,7 @@ instance Lex.decidable (r : ι → ι → Prop) (s : ∀ i, α i → α i → Pr
 #align psigma.lex.decidable PSigma.Lex.decidable
 -/
 
+#print PSigma.Lex.mono /-
 theorem Lex.mono {r₁ r₂ : ι → ι → Prop} {s₁ s₂ : ∀ i, α i → α i → Prop}
     (hr : ∀ a b, r₁ a b → r₂ a b) (hs : ∀ i a b, s₁ i a b → s₂ i a b) {a b : Σ' i, α i}
     (h : Lex r₁ s₁ a b) : Lex r₂ s₂ a b :=
@@ -187,16 +200,21 @@ theorem Lex.mono {r₁ r₂ : ι → ι → Prop} {s₁ s₂ : ∀ i, α i → �
   · exact lex.left _ _ (hr _ _ hij)
   · exact lex.right _ (hs _ _ _ hab)
 #align psigma.lex.mono PSigma.Lex.mono
+-/
 
+#print PSigma.Lex.mono_left /-
 theorem Lex.mono_left {r₁ r₂ : ι → ι → Prop} {s : ∀ i, α i → α i → Prop}
     (hr : ∀ a b, r₁ a b → r₂ a b) {a b : Σ' i, α i} (h : Lex r₁ s a b) : Lex r₂ s a b :=
   h.mono hr fun _ _ _ => id
 #align psigma.lex.mono_left PSigma.Lex.mono_left
+-/
 
+#print PSigma.Lex.mono_right /-
 theorem Lex.mono_right {r : ι → ι → Prop} {s₁ s₂ : ∀ i, α i → α i → Prop}
     (hs : ∀ i a b, s₁ i a b → s₂ i a b) {a b : Σ' i, α i} (h : Lex r s₁ a b) : Lex r s₂ a b :=
   h.mono (fun _ _ => id) hs
 #align psigma.lex.mono_right PSigma.Lex.mono_right
+-/
 
 end PSigma
 

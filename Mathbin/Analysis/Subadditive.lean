@@ -42,8 +42,6 @@ namespace Subadditive
 
 variable {u : ℕ → ℝ} (h : Subadditive u)
 
-include h
-
 #print Subadditive.lim /-
 /-- The limit of a bounded-below subadditive sequence. The fact that the sequence indeed tends to
 this limit is given in `subadditive.tendsto_lim` -/
@@ -53,6 +51,7 @@ protected irreducible_def lim :=
 #align subadditive.lim Subadditive.lim
 -/
 
+#print Subadditive.lim_le_div /-
 theorem lim_le_div (hbdd : BddBelow (range fun n => u n / n)) {n : ℕ} (hn : n ≠ 0) :
     h.limUnder ≤ u n / n := by
   rw [Subadditive.lim]
@@ -62,7 +61,9 @@ theorem lim_le_div (hbdd : BddBelow (range fun n => u n / n)) {n : ℕ} (hn : n 
   · apply mem_image_of_mem
     exact zero_lt_iff.2 hn
 #align subadditive.lim_le_div Subadditive.lim_le_div
+-/
 
+#print Subadditive.apply_mul_add_le /-
 theorem apply_mul_add_le (k n r) : u (k * n + r) ≤ k * u n + u r :=
   by
   induction' k with k IH; · simp only [Nat.cast_zero, MulZeroClass.zero_mul, zero_add]
@@ -72,7 +73,9 @@ theorem apply_mul_add_le (k n r) : u (k * n + r) ≤ k * u n + u r :=
     _ ≤ u n + (k * u n + u r) := (add_le_add_left IH _)
     _ = (k + 1 : ℕ) * u n + u r := by simp <;> ring
 #align subadditive.apply_mul_add_le Subadditive.apply_mul_add_le
+-/
 
+#print Subadditive.eventually_div_lt_of_div_lt /-
 theorem eventually_div_lt_of_div_lt {L : ℝ} {n : ℕ} (hn : n ≠ 0) (hL : u n / n < L) :
     ∀ᶠ p in atTop, u p / p < L :=
   by
@@ -117,7 +120,9 @@ theorem eventually_div_lt_of_div_lt {L : ℝ} {n : ℕ} (hn : n ≠ 0) (hL : u n
     exact (tendsto_order.1 this).2 _ wL
   filter_upwards [B, C] with _ hp h'p using hp.trans_lt h'p
 #align subadditive.eventually_div_lt_of_div_lt Subadditive.eventually_div_lt_of_div_lt
+-/
 
+#print Subadditive.tendsto_lim /-
 /-- Fekete's lemma: a subadditive sequence which is bounded below converges. -/
 theorem tendsto_lim (hbdd : BddBelow (range fun n => u n / n)) :
     Tendsto (fun n => u n / n) atTop (𝓝 h.limUnder) :=
@@ -135,6 +140,7 @@ theorem tendsto_lim (hbdd : BddBelow (range fun n => u n / n)) :
       exact ⟨n, zero_lt_one.trans_le hn, xL⟩
     exact h.eventually_div_lt_of_div_lt npos.ne' hn
 #align subadditive.tendsto_lim Subadditive.tendsto_lim
+-/
 
 end Subadditive
 

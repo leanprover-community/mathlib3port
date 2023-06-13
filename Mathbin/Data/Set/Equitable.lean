@@ -85,13 +85,17 @@ section OrderedSemiring
 
 variable [OrderedSemiring β]
 
+#print Set.Subsingleton.equitableOn /-
 theorem Subsingleton.equitableOn {s : Set α} (hs : s.Subsingleton) (f : α → β) : s.EquitableOn f :=
   fun i j hi hj => by rw [hs hi hj]; exact le_add_of_nonneg_right zero_le_one
 #align set.subsingleton.equitable_on Set.Subsingleton.equitableOn
+-/
 
+#print Set.equitableOn_singleton /-
 theorem equitableOn_singleton (a : α) (f : α → β) : Set.EquitableOn {a} f :=
   Set.subsingleton_singleton.EquitableOn f
 #align set.equitable_on_singleton Set.equitableOn_singleton
+-/
 
 end OrderedSemiring
 

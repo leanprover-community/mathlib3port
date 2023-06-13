@@ -58,8 +58,6 @@ section CommRing
 
 variable (P : ∀ (R : Type u) [CommRing R], Prop)
 
-include P
-
 /-- A property `P` of comm rings is said to be preserved by localization
   if `P` holds for `M⁻¹R` whenever `P` holds for `R`. -/
 def LocalizationPreserves : Prop :=
@@ -79,8 +77,6 @@ end CommRing
 section RingHom
 
 variable (P : ∀ {R S : Type u} [CommRing R] [CommRing S] (f : R →+* S), Prop)
-
-include P
 
 /-- A property `P` of ring homs is said to be preserved by localization
  if `P` holds for `M⁻¹R →+* M⁻¹S` whenever `P` holds for `R →+* S`. -/

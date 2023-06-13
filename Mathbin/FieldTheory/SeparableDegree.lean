@@ -84,6 +84,7 @@ def HasSeparableContraction.degree : ℕ :=
 #align polynomial.has_separable_contraction.degree Polynomial.HasSeparableContraction.degree
 -/
 
+#print Polynomial.IsSeparableContraction.dvd_degree' /-
 /-- The separable degree divides the degree, in function of the exponential characteristic of F. -/
 theorem IsSeparableContraction.dvd_degree' {g} (hf : IsSeparableContraction q f g) :
     ∃ m : ℕ, g.natDegree * q ^ m = f.natDegree :=
@@ -92,6 +93,7 @@ theorem IsSeparableContraction.dvd_degree' {g} (hf : IsSeparableContraction q f 
   use m
   rw [nat_degree_expand]
 #align polynomial.is_separable_contraction.dvd_degree' Polynomial.IsSeparableContraction.dvd_degree'
+-/
 
 #print Polynomial.HasSeparableContraction.dvd_degree' /-
 theorem HasSeparableContraction.dvd_degree' : ∃ m : ℕ, hf.degree * q ^ m = f.natDegree :=
@@ -124,6 +126,7 @@ variable {F : Type _} [Field F]
 
 variable (q : ℕ) {f : F[X]} (hf : HasSeparableContraction q f)
 
+#print Polynomial.Irreducible.hasSeparableContraction /-
 /-- Every irreducible polynomial can be contracted to a separable polynomial.
 https://stacks.math.columbia.edu/tag/09H0 -/
 theorem Polynomial.Irreducible.hasSeparableContraction (q : ℕ) [hF : ExpChar F q] (f : F[X])
@@ -134,7 +137,9 @@ theorem Polynomial.Irreducible.hasSeparableContraction (q : ℕ) [hF : ExpChar F
   · rcases exists_separable_of_irreducible q irred ‹q.prime›.NeZero with ⟨n, g, hgs, hge⟩
     exact ⟨g, hgs, n, hge⟩
 #align irreducible.has_separable_contraction Polynomial.Irreducible.hasSeparableContraction
+-/
 
+#print Polynomial.contraction_degree_eq_or_insep /-
 /-- If two expansions (along the positive characteristic) of two separable polynomials `g` and `g'`
 agree, then they have the same degree. -/
 theorem contraction_degree_eq_or_insep [hq : NeZero q] [CharP F q] (g g' : F[X]) (m m' : ℕ)
@@ -149,6 +154,7 @@ theorem contraction_degree_eq_or_insep [hq : NeZero q] [CharP F q] (g g' : F[X])
   · rw [nat_degree_expand, nat_degree_eq_zero_of_is_unit h, MulZeroClass.zero_mul]
   · rw [nat_degree_expand, pow_zero, mul_one]
 #align polynomial.contraction_degree_eq_or_insep Polynomial.contraction_degree_eq_or_insep
+-/
 
 #print Polynomial.IsSeparableContraction.degree_eq /-
 /-- The separable degree equals the degree of any separable contraction, i.e., it is unique. -/

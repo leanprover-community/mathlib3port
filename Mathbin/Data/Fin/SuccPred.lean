@@ -40,15 +40,19 @@ instance : ∀ {n : ℕ}, SuccOrder (Fin n)
         rw [isMax_iff_eq_top, top_eq_last] at ha 
         rw [if_neg ha.not_lt])
 
+#print Fin.succ_eq /-
 @[simp]
 theorem succ_eq {n : ℕ} : SuccOrder.succ = fun a => if a < Fin.last n then a + 1 else a :=
   rfl
 #align fin.succ_eq Fin.succ_eq
+-/
 
+#print Fin.succ_apply /-
 @[simp]
 theorem succ_apply {n : ℕ} (a) : SuccOrder.succ a = if a < Fin.last n then a + 1 else a :=
   rfl
 #align fin.succ_apply Fin.succ_apply
+-/
 
 instance : ∀ {n : ℕ}, PredOrder (Fin n)
   | 0 => by constructor <;> exact elim0
@@ -66,15 +70,19 @@ instance : ∀ {n : ℕ}, PredOrder (Fin n)
         rw [isMin_iff_eq_bot, bot_eq_zero] at ha 
         rwa [if_pos ha, eq_comm])
 
+#print Fin.pred_eq /-
 @[simp]
 theorem pred_eq {n} : PredOrder.pred = fun a : Fin (n + 1) => if a = 0 then 0 else a - 1 :=
   rfl
 #align fin.pred_eq Fin.pred_eq
+-/
 
+#print Fin.pred_apply /-
 @[simp]
 theorem pred_apply {n : ℕ} (a : Fin (n + 1)) : PredOrder.pred a = if a = 0 then 0 else a - 1 :=
   rfl
 #align fin.pred_apply Fin.pred_apply
+-/
 
 end Fin
 

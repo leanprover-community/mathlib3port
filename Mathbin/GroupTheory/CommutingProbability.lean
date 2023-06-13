@@ -46,10 +46,12 @@ def commProb : ℚ :=
 #align comm_prob commProb
 -/
 
+#print commProb_def /-
 theorem commProb_def :
     commProb M = Nat.card { p : M × M // p.1 * p.2 = p.2 * p.1 } / Nat.card M ^ 2 :=
   rfl
 #align comm_prob_def commProb_def
+-/
 
 variable [Finite M]
 
@@ -61,12 +63,14 @@ theorem commProb_pos [h : Nonempty M] : 0 < commProb M :=
 #align comm_prob_pos commProb_pos
 -/
 
+#print commProb_le_one /-
 theorem commProb_le_one : commProb M ≤ 1 :=
   by
   refine' div_le_one_of_le _ (sq_nonneg (Nat.card M))
   rw [← Nat.cast_pow, Nat.cast_le, sq, ← Nat.card_prod]
   apply Finite.card_subtype_le
 #align comm_prob_le_one commProb_le_one
+-/
 
 variable {M}
 
@@ -84,6 +88,7 @@ theorem commProb_eq_one_iff [h : Nonempty M] : commProb M = 1 ↔ Commutative ((
 
 variable (G : Type _) [Group G] [Finite G]
 
+#print card_comm_eq_card_conjClasses_mul_card /-
 theorem card_comm_eq_card_conjClasses_mul_card :
     Nat.card { p : G × G // p.1 * p.2 = p.2 * p.1 } = Nat.card (ConjClasses G) * Nat.card G :=
   by
@@ -105,15 +110,19 @@ theorem card_comm_eq_card_conjClasses_mul_card :
           Setoid.ext fun g h => (Setoid.comm' _).trans is_conj_iff.symm
         cc
 #align card_comm_eq_card_conj_classes_mul_card card_comm_eq_card_conjClasses_mul_card
+-/
 
+#print commProb_def' /-
 theorem commProb_def' : commProb G = Nat.card (ConjClasses G) / Nat.card G :=
   by
   rw [commProb, card_comm_eq_card_conjClasses_mul_card, Nat.cast_mul, sq]
   exact mul_div_mul_right _ _ (nat.cast_ne_zero.mpr finite.card_pos.ne')
 #align comm_prob_def' commProb_def'
+-/
 
 variable {G} (H : Subgroup G)
 
+#print Subgroup.commProb_subgroup_le /-
 theorem Subgroup.commProb_subgroup_le : commProb H ≤ commProb G * H.index ^ 2 :=
   by
   /- After rewriting with `comm_prob_def`, we reduce to showing that `G` has at least as many
@@ -125,7 +134,9 @@ theorem Subgroup.commProb_subgroup_le : commProb H ≤ commProb G * H.index ^ 2 
   · exact pow_ne_zero 2 (nat.cast_ne_zero.mpr finite.card_pos.ne')
   · exact pow_pos (nat.cast_pos.mpr Finite.card_pos) 2
 #align subgroup.comm_prob_subgroup_le Subgroup.commProb_subgroup_le
+-/
 
+#print Subgroup.commProb_quotient_le /-
 theorem Subgroup.commProb_quotient_le [H.Normal] : commProb (G ⧸ H) ≤ commProb G * Nat.card H :=
   by
   /- After rewriting with `comm_prob_def'`, we reduce to showing that `G` has at least as many
@@ -138,12 +149,15 @@ theorem Subgroup.commProb_quotient_le [H.Normal] : commProb (G ⧸ H) ≤ commPr
   · exact nat.cast_ne_zero.mpr finite.card_pos.ne'
   · exact nat.cast_pos.mpr Finite.card_pos
 #align subgroup.comm_prob_quotient_le Subgroup.commProb_quotient_le
+-/
 
 variable (G)
 
+#print inv_card_commutator_le_commProb /-
 theorem inv_card_commutator_le_commProb : (↑(Nat.card (commutator G)))⁻¹ ≤ commProb G :=
   (inv_pos_le_iff_one_le_mul (nat.cast_pos.mpr Finite.card_pos)).mpr
     (le_trans (ge_of_eq (commProb_eq_one_iff.mpr (Abelianization.commGroup G).mul_comm))
       (commutator G).commProb_quotient_le)
 #align inv_card_commutator_le_comm_prob inv_card_commutator_le_commProb
+-/
 

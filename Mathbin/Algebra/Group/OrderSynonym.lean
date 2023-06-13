@@ -203,53 +203,69 @@ theorem ofDual_div [Div α] (a b : αᵒᵈ) : ofDual (a / b) = ofDual a / ofDua
 #align of_dual_sub ofDual_sub
 -/
 
+#print toDual_smul /-
 @[simp, to_additive]
 theorem toDual_smul [SMul α β] (a : α) (b : β) : toDual (a • b) = a • toDual b :=
   rfl
 #align to_dual_smul toDual_smul
 #align to_dual_vadd toDual_vadd
+-/
 
+#print ofDual_smul /-
 @[simp, to_additive]
 theorem ofDual_smul [SMul α β] (a : α) (b : βᵒᵈ) : ofDual (a • b) = a • ofDual b :=
   rfl
 #align of_dual_smul ofDual_smul
 #align of_dual_vadd ofDual_vadd
+-/
 
+#print toDual_smul' /-
 @[simp, to_additive]
 theorem toDual_smul' [SMul α β] (a : α) (b : β) : toDual a • b = a • b :=
   rfl
 #align to_dual_smul' toDual_smul'
 #align to_dual_vadd' toDual_vadd'
+-/
 
+#print ofDual_smul' /-
 @[simp, to_additive]
 theorem ofDual_smul' [SMul α β] (a : αᵒᵈ) (b : β) : ofDual a • b = a • b :=
   rfl
 #align of_dual_smul' ofDual_smul'
 #align of_dual_vadd' ofDual_vadd'
+-/
 
+#print toDual_pow /-
 @[simp, to_additive toDual_smul, to_additive_reorder 1 4]
 theorem toDual_pow [Pow α β] (a : α) (b : β) : toDual (a ^ b) = toDual a ^ b :=
   rfl
 #align to_dual_pow toDual_pow
 #align to_dual_smul toDual_smul
+-/
 
+#print ofDual_pow /-
 @[simp, to_additive ofDual_smul, to_additive_reorder 1 4]
 theorem ofDual_pow [Pow α β] (a : αᵒᵈ) (b : β) : ofDual (a ^ b) = ofDual a ^ b :=
   rfl
 #align of_dual_pow ofDual_pow
 #align of_dual_smul ofDual_smul
+-/
 
+#print pow_toDual /-
 @[simp, to_additive toDual_smul', to_additive_reorder 1 4]
 theorem pow_toDual [Pow α β] (a : α) (b : β) : a ^ toDual b = a ^ b :=
   rfl
 #align pow_to_dual pow_toDual
 #align to_dual_smul' toDual_smul'
+-/
 
+#print pow_ofDual /-
 @[simp, to_additive ofDual_smul', to_additive_reorder 1 4]
 theorem pow_ofDual [Pow α β] (a : α) (b : βᵒᵈ) : a ^ ofDual b = a ^ b :=
   rfl
 #align pow_of_dual pow_ofDual
 #align of_dual_smul' ofDual_smul'
+-/
 
 /-! ### Lexicographical order -/
 
@@ -429,51 +445,67 @@ theorem ofLex_div [Div α] (a b : Lex α) : ofLex (a / b) = ofLex a / ofLex b :=
 #align of_lex_sub ofLex_sub
 -/
 
+#print toLex_smul /-
 @[simp, to_additive]
 theorem toLex_smul [SMul α β] (a : α) (b : β) : toLex (a • b) = a • toLex b :=
   rfl
 #align to_lex_smul toLex_smul
 #align to_lex_vadd toLex_vadd
+-/
 
+#print ofLex_smul /-
 @[simp, to_additive]
 theorem ofLex_smul [SMul α β] (a : α) (b : Lex β) : ofLex (a • b) = a • ofLex b :=
   rfl
 #align of_lex_smul ofLex_smul
 #align of_lex_vadd ofLex_vadd
+-/
 
+#print toLex_smul' /-
 @[simp, to_additive]
 theorem toLex_smul' [SMul α β] (a : α) (b : β) : toLex a • b = a • b :=
   rfl
 #align to_lex_smul' toLex_smul'
 #align to_lex_vadd' toLex_vadd'
+-/
 
+#print ofLex_smul' /-
 @[simp, to_additive]
 theorem ofLex_smul' [SMul α β] (a : Lex α) (b : β) : ofLex a • b = a • b :=
   rfl
 #align of_lex_smul' ofLex_smul'
 #align of_lex_vadd' ofLex_vadd'
+-/
 
+#print toLex_pow /-
 @[simp, to_additive toLex_smul, to_additive_reorder 1 4]
 theorem toLex_pow [Pow α β] (a : α) (b : β) : toLex (a ^ b) = toLex a ^ b :=
   rfl
 #align to_lex_pow toLex_pow
 #align to_lex_smul toLex_smul
+-/
 
+#print ofLex_pow /-
 @[simp, to_additive ofLex_smul, to_additive_reorder 1 4]
 theorem ofLex_pow [Pow α β] (a : Lex α) (b : β) : ofLex (a ^ b) = ofLex a ^ b :=
   rfl
 #align of_lex_pow ofLex_pow
 #align of_lex_smul ofLex_smul
+-/
 
+#print pow_toLex /-
 @[simp, to_additive toLex_smul, to_additive_reorder 1 4]
 theorem pow_toLex [Pow α β] (a : α) (b : β) : a ^ toLex b = a ^ b :=
   rfl
 #align pow_to_lex pow_toLex
 #align to_lex_smul' toLex_smul'
+-/
 
+#print pow_ofLex /-
 @[simp, to_additive ofLex_smul, to_additive_reorder 1 4]
 theorem pow_ofLex [Pow α β] (a : α) (b : Lex β) : a ^ ofLex b = a ^ b :=
   rfl
 #align pow_of_lex pow_ofLex
 #align of_lex_smul' ofLex_smul'
+-/
 

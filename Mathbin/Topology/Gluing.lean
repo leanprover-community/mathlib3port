@@ -95,7 +95,6 @@ namespace GlueData
 
 variable (D : GlueData.{u})
 
--- mathport name: «expr𝖣»
 local notation "𝖣" => D.toGlueData
 
 theorem π_surjective : Function.Surjective 𝖣.π :=
@@ -371,8 +370,6 @@ def mk' (h : MkCore.{u}) : TopCat.GlueData
 #align Top.glue_data.mk' TopCat.GlueData.mk'
 
 variable {α : Type u} [TopologicalSpace α] {J : Type u} (U : J → Opens α)
-
-include U
 
 /-- We may construct a glue data from a family of open sets. -/
 @[simps to_glue_data_J to_glue_data_U to_glue_data_V to_glue_data_t to_glue_data_f]

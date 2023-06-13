@@ -38,7 +38,6 @@ open Nat
 
 open Vector
 
--- mathport name: «expr ++ₜ »
 local infixl:65 "++ₜ" => Vector.append
 
 #print Bitvec.zero /-
@@ -346,11 +345,13 @@ protected def ofNat : ∀ n : ℕ, Nat → Bitvec n
 #align bitvec.of_nat Bitvec.ofNat
 -/
 
+#print Bitvec.ofInt /-
 /-- Create a bitvector in the two's complement representation from an `int` -/
 protected def ofInt : ∀ n : ℕ, Int → Bitvec (succ n)
   | n, Int.ofNat m => false ::ᵥ Bitvec.ofNat n m
   | n, Int.negSucc m => true ::ᵥ not (Bitvec.ofNat n m)
 #align bitvec.of_int Bitvec.ofInt
+-/
 
 #print Bitvec.addLsb /-
 /-- `add_lsb r b` is `r + r + 1` if `b` is `tt` and `r + r` otherwise. -/
@@ -401,17 +402,21 @@ theorem toNat_append {m : ℕ} (xs : Bitvec m) (b : Bool) :
 #align bitvec.to_nat_append Bitvec.toNat_append
 -/
 
+#print Bitvec.bits_toNat_decide /-
 theorem bits_toNat_decide (n : ℕ) : Bitvec.toNat (decide (n % 2 = 1) ::ᵥ nil) = n % 2 :=
   by
   simp [bits_to_nat_to_list]
   unfold bits_to_nat add_lsb List.foldl cond
   simp [cond_to_bool_mod_two]
 #align bitvec.bits_to_nat_to_bool Bitvec.bits_toNat_decide
+-/
 
+#print Bitvec.ofNat_succ /-
 theorem ofNat_succ {k n : ℕ} :
     Bitvec.ofNat (succ k) n = Bitvec.ofNat k (n / 2)++ₜdecide (n % 2 = 1) ::ᵥ nil :=
   rfl
 #align bitvec.of_nat_succ Bitvec.ofNat_succ
+-/
 
 #print Bitvec.toNat_ofNat /-
 theorem toNat_ofNat {k n : ℕ} : Bitvec.toNat (Bitvec.ofNat k n) = n % 2 ^ k :=

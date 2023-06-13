@@ -136,8 +136,6 @@ theorem integralClosure_le_span_dualBasis [IsSeparable K L] {ι : Type _} [Finty
 
 variable (A) (K)
 
-include K
-
 /- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (y «expr ≠ » (0 : A)) -/
 /-- Send a set of `x`'es in a finite extension `L` of the fraction field of `R`
 to `(y : R) • x ∈ integral_closure R L`. -/
@@ -202,8 +200,6 @@ theorem FiniteDimensional.exists_is_basis_integral :
 #align finite_dimensional.exists_is_basis_integral FiniteDimensional.exists_is_basis_integral
 
 variable (A K L) [IsSeparable K L]
-
-include L
 
 /- If `L` is a finite separable extension of `K = Frac(A)`, where `A` is
 integrally closed and Noetherian, the integral closure `C` of `A` in `L` is
@@ -292,8 +288,6 @@ theorem integralClosure.isDedekindDomain [h : IsDedekindDomain A] :
     IsDedekindDomain (integralClosure A L) :=
   IsIntegralClosure.isDedekindDomain A K L (integralClosure A L)
 #align integral_closure.is_dedekind_domain integralClosure.isDedekindDomain
-
-omit K
 
 variable [Algebra (FractionRing A) L] [IsScalarTower A (FractionRing A) L]
 

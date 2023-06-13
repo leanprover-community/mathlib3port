@@ -38,8 +38,6 @@ variable (hx : AntitoneOn x (Finset.Icc 1 n))
 
 variable (hy : AntitoneOn y (Finset.Icc 1 n))
 
-include hx hy hσ
-
 theorem imo1975_q1 :
     ∑ i in Finset.Icc 1 n, (x i - y i) ^ 2 ≤ ∑ i in Finset.Icc 1 n, (x i - y (σ i)) ^ 2 :=
   by

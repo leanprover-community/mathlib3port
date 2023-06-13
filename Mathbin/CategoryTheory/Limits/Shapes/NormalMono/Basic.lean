@@ -64,6 +64,7 @@ attribute [local instance] fully_faithful_reflects_limits
 
 attribute [local instance] equivalence.ess_surj_of_equivalence
 
+#print CategoryTheory.equivalenceReflectsNormalMono /-
 /-- If `F` is an equivalence and `F.map f` is a normal mono, then `f` is a normal mono. -/
 def equivalenceReflectsNormalMono {D : Type u₂} [Category.{v₁} D] [HasZeroMorphisms D] (F : C ⥤ D)
     [IsEquivalence F] {X Y : C} {f : X ⟶ Y} (hf : NormalMono (F.map f)) : NormalMono f
@@ -80,6 +81,7 @@ def equivalenceReflectsNormalMono {D : Type u₂} [Category.{v₁} D] [HasZeroMo
             (of_ι_congr (category.comp_id _).symm))
           (isoOfι _).symm
 #align category_theory.equivalence_reflects_normal_mono CategoryTheory.equivalenceReflectsNormalMono
+-/
 
 end
 
@@ -186,6 +188,7 @@ attribute [local instance] fully_faithful_reflects_colimits
 
 attribute [local instance] equivalence.ess_surj_of_equivalence
 
+#print CategoryTheory.equivalenceReflectsNormalEpi /-
 /-- If `F` is an equivalence and `F.map f` is a normal epi, then `f` is a normal epi. -/
 def equivalenceReflectsNormalEpi {D : Type u₂} [Category.{v₁} D] [HasZeroMorphisms D] (F : C ⥤ D)
     [IsEquivalence F] {X Y : C} {f : X ⟶ Y} (hf : NormalEpi (F.map f)) : NormalEpi f
@@ -202,6 +205,7 @@ def equivalenceReflectsNormalEpi {D : Type u₂} [Category.{v₁} D] [HasZeroMor
             (of_π_congr (category.id_comp _).symm))
           (isoOfπ _).symm
 #align category_theory.equivalence_reflects_normal_epi CategoryTheory.equivalenceReflectsNormalEpi
+-/
 
 end
 
@@ -215,12 +219,14 @@ instance (priority := 100) NormalEpi.regularEpi (f : X ⟶ Y) [I : NormalEpi f] 
 #align category_theory.normal_epi.regular_epi CategoryTheory.NormalEpi.regularEpi
 -/
 
+#print CategoryTheory.NormalEpi.desc' /-
 /-- If `f` is a normal epi, then every morphism `k : X ⟶ W` satisfying `normal_epi.g ≫ k = 0`
     induces `l : Y ⟶ W` such that `f ≫ l = k`. -/
 def NormalEpi.desc' {W : C} (f : X ⟶ Y) [NormalEpi f] (k : X ⟶ W) (h : NormalEpi.g ≫ k = 0) :
     { l : Y ⟶ W // f ≫ l = k } :=
   CokernelCofork.IsColimit.desc' NormalEpi.isColimit _ h
 #align category_theory.normal_epi.desc' CategoryTheory.NormalEpi.desc'
+-/
 
 #print CategoryTheory.normalOfIsPushoutSndOfNormal /-
 /-- The second leg of a pushout cocone is a normal epimorphism if the right component is too.

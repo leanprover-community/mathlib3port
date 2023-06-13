@@ -70,16 +70,12 @@ section
 
 variable {n : ℕ}
 
--- mathport name: «exprℝⁿ»
 local notation "ℝⁿ" => Fin n → ℝ
 
--- mathport name: «exprℝⁿ⁺¹»
 local notation "ℝⁿ⁺¹" => Fin (n + 1) → ℝ
 
--- mathport name: «exprEⁿ⁺¹»
 local notation "Eⁿ⁺¹" => Fin (n + 1) → E
 
--- mathport name: «expre »
 local notation "e " i => Pi.single i 1
 
 section
@@ -111,6 +107,7 @@ in several aspects.
 -/
 
 
+#print MeasureTheory.integral_divergence_of_hasFDerivWithinAt_off_countable_aux₁ /-
 /-- An auxiliary lemma for
 `measure_theory.integral_divergence_of_has_fderiv_within_at_off_countable`. This is exactly
 `box_integral.has_integral_GP_divergence_of_forall_has_deriv_within_at` reformulated for the
@@ -140,7 +137,9 @@ theorem integral_divergence_of_hasFDerivWithinAt_off_countable_aux₁ (I : Box (
     have := (this.integrable_on_compact (box.is_compact_Icc _)).mono_set box.coe_subset_Icc
     exact (this.has_box_integral ⊥ rfl).integral_eq; infer_instance
 #align measure_theory.integral_divergence_of_has_fderiv_within_at_off_countable_aux₁ MeasureTheory.integral_divergence_of_hasFDerivWithinAt_off_countable_aux₁
+-/
 
+#print MeasureTheory.integral_divergence_of_hasFDerivWithinAt_off_countable_aux₂ /-
 /-- An auxiliary lemma for
 `measure_theory.integral_divergence_of_has_fderiv_within_at_off_countable`. Compared to the previous
 lemma, here we drop the assumption of differentiability on the boundary of the box. -/
@@ -257,18 +256,17 @@ theorem integral_divergence_of_hasFDerivWithinAt_off_countable_aux₂ (I : Box (
       exacts [sub_nonneg.2 (box.lower_le_upper _ _),
         sub_le_sub ((hJ_sub' _ (J _).upper_mem_Icc).2 _) ((hJ_sub' _ (J _).lower_mem_Icc).1 _)]
 #align measure_theory.integral_divergence_of_has_fderiv_within_at_off_countable_aux₂ MeasureTheory.integral_divergence_of_hasFDerivWithinAt_off_countable_aux₂
+-/
 
 variable (a b : ℝⁿ⁺¹)
 
--- mathport name: «exprface »
 local notation "face " i => Set.Icc (a ∘ Fin.succAbove i) (b ∘ Fin.succAbove i)
 
--- mathport name: «exprfront_face »
 local notation "front_face " i:2000 => Fin.insertNth i (b i)
 
--- mathport name: «exprback_face »
 local notation "back_face " i:2000 => Fin.insertNth i (a i)
 
+#print MeasureTheory.integral_divergence_of_hasFDerivWithinAt_off_countable /-
 /-- **Divergence theorem** for Bochner integral. If `f : ℝⁿ⁺¹ → Eⁿ⁺¹` is continuous on a rectangular
 box `[a, b] : set ℝⁿ⁺¹`, `a ≤ b`, is differentiable on its interior with derivative
 `f' : ℝⁿ⁺¹ → ℝⁿ⁺¹ →L[ℝ] Eⁿ⁺¹` and the divergence `λ x, ∑ i, f' x eᵢ i` is integrable on `[a, b]`,
@@ -310,7 +308,9 @@ theorem integral_divergence_of_hasFDerivWithinAt_off_countable (hle : a ≤ b) (
     convert
       integral_divergence_of_has_fderiv_within_at_off_countable_aux₂ ⟨a, b, hlt⟩ f f' s hs Hc Hd Hi
 #align measure_theory.integral_divergence_of_has_fderiv_within_at_off_countable MeasureTheory.integral_divergence_of_hasFDerivWithinAt_off_countable
+-/
 
+#print MeasureTheory.integral_divergence_of_hasFDerivWithinAt_off_countable' /-
 /-- **Divergence theorem** for a family of functions `f : fin (n + 1) → ℝⁿ⁺¹ → E`. See also
 `measure_theory.integral_divergence_of_has_fderiv_within_at_off_countable'` for a version formulated
 in terms of a vector-valued function `f : ℝⁿ⁺¹ → Eⁿ⁺¹`. -/
@@ -326,9 +326,11 @@ theorem integral_divergence_of_hasFDerivWithinAt_off_countable' (hle : a ≤ b)
     (fun x => ContinuousLinearMap.pi fun i => f' i x) s hs (continuousOn_pi.2 Hc)
     (fun x hx => hasFDerivAt_pi.2 (Hd x hx)) Hi
 #align measure_theory.integral_divergence_of_has_fderiv_within_at_off_countable' MeasureTheory.integral_divergence_of_hasFDerivWithinAt_off_countable'
+-/
 
 end
 
+#print MeasureTheory.integral_divergence_of_hasFDerivWithinAt_off_countable_of_equiv /-
 /-- An auxiliary lemma that is used to specialize the general divergence theorem to spaces that do
 not have the form `fin n → ℝ`. -/
 theorem integral_divergence_of_hasFDerivWithinAt_off_countable_of_equiv {F : Type _}
@@ -376,6 +378,7 @@ theorem integral_divergence_of_hasFDerivWithinAt_off_countable_of_equiv {F : Typ
       · rw [← he_vol.integrable_on_comp_preimage he_emb, hIcc]
         simp [← hDF, (· ∘ ·), Hi]
 #align measure_theory.integral_divergence_of_has_fderiv_within_at_off_countable_of_equiv MeasureTheory.integral_divergence_of_hasFDerivWithinAt_off_countable_of_equiv
+-/
 
 end
 
@@ -383,18 +386,15 @@ open scoped Interval
 
 open ContinuousLinearMap (smul_right)
 
--- mathport name: «exprℝ¹»
 local notation "ℝ¹" => Fin 1 → ℝ
 
--- mathport name: «exprℝ²»
 local notation "ℝ²" => Fin 2 → ℝ
 
--- mathport name: «exprE¹»
 local notation "E¹" => Fin 1 → E
 
--- mathport name: «exprE²»
 local notation "E²" => Fin 2 → E
 
+#print MeasureTheory.integral_eq_of_hasDerivWithinAt_off_countable_of_le /-
 /-- **Fundamental theorem of calculus, part 2**. This version assumes that `f` is continuous on the
 interval and is differentiable off a countable set `s`.
 
@@ -438,7 +438,9 @@ theorem integral_eq_of_hasDerivWithinAt_off_countable_of_le (f f' : ℝ → E) {
       have : ∀ c : ℝ, const (Fin 0) c = isEmptyElim := fun c => Subsingleton.elim _ _
       simp [this, volume_pi, measure.pi_of_empty fun _ : Fin 0 => volume]
 #align measure_theory.integral_eq_of_has_deriv_within_at_off_countable_of_le MeasureTheory.integral_eq_of_hasDerivWithinAt_off_countable_of_le
+-/
 
+#print MeasureTheory.integral_eq_of_has_deriv_within_at_off_countable /-
 /-- **Fundamental theorem of calculus, part 2**. This version assumes that `f` is continuous on the
 interval and is differentiable off a countable set `s`.
 
@@ -457,9 +459,11 @@ theorem integral_eq_of_has_deriv_within_at_off_countable (f f' : ℝ → E) {a b
     rw [intervalIntegral.integral_symm, neg_eq_iff_eq_neg, neg_sub]
     exact integral_eq_of_has_deriv_within_at_off_countable_of_le f f' hab hs Hc Hd Hi.symm
 #align measure_theory.integral_eq_of_has_deriv_within_at_off_countable MeasureTheory.integral_eq_of_has_deriv_within_at_off_countable
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print MeasureTheory.integral_divergence_prod_Icc_of_hasFDerivWithinAt_off_countable_of_le /-
 /-- **Divergence theorem** for functions on the plane along rectangles. It is formulated in terms of
 two functions `f g : ℝ × ℝ → E` and an integral over `Icc a b = [a.1, b.1] × [a.2, b.2]`, where
 `a b : ℝ × ℝ`, `a ≤ b`. When thinking of `f` and `g` as the two coordinates of a single function
@@ -521,6 +525,7 @@ theorem integral_divergence_prod_Icc_of_hasFDerivWithinAt_off_countable_of_le (f
         set_integral_congr_set_ae Ioc_ae_eq_Icc]
       abel
 #align measure_theory.integral_divergence_prod_Icc_of_has_fderiv_within_at_off_countable_of_le MeasureTheory.integral_divergence_prod_Icc_of_hasFDerivWithinAt_off_countable_of_le
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -528,6 +533,7 @@ theorem integral_divergence_prod_Icc_of_hasFDerivWithinAt_off_countable_of_le (f
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print MeasureTheory.integral2_divergence_prod_of_hasFDerivWithinAt_off_countable /-
 /-- **Divergence theorem** for functions on the plane. It is formulated in terms of two functions
 `f g : ℝ × ℝ → E` and iterated integral `∫ x in a₁..b₁, ∫ y in a₂..b₂, _`, where
 `a₁ a₂ b₁ b₂ : ℝ`. When thinking of `f` and `g` as the two coordinates of a single function
@@ -576,6 +582,7 @@ theorem integral2_divergence_prod_of_hasFDerivWithinAt_off_countable (f g : ℝ 
             (a₁, a₂) (b₁, b₂) ⟨h₁, h₂⟩ s <;>
         assumption
 #align measure_theory.integral2_divergence_prod_of_has_fderiv_within_at_off_countable MeasureTheory.integral2_divergence_prod_of_hasFDerivWithinAt_off_countable
+-/
 
 end MeasureTheory
 

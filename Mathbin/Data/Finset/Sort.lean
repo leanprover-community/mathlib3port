@@ -204,28 +204,37 @@ def orderEmbOfFin (s : Finset α) {k : ℕ} (h : s.card = k) : Fin k ↪o α :=
 #align finset.order_emb_of_fin Finset.orderEmbOfFin
 -/
 
+#print Finset.coe_orderIsoOfFin_apply /-
 @[simp]
 theorem coe_orderIsoOfFin_apply (s : Finset α) {k : ℕ} (h : s.card = k) (i : Fin k) :
     ↑(orderIsoOfFin s h i) = orderEmbOfFin s h i :=
   rfl
 #align finset.coe_order_iso_of_fin_apply Finset.coe_orderIsoOfFin_apply
+-/
 
+#print Finset.orderIsoOfFin_symm_apply /-
 theorem orderIsoOfFin_symm_apply (s : Finset α) {k : ℕ} (h : s.card = k) (x : s) :
     ↑((s.orderIsoOfFin h).symm x) = (s.sort (· ≤ ·)).indexOfₓ x :=
   rfl
 #align finset.order_iso_of_fin_symm_apply Finset.orderIsoOfFin_symm_apply
+-/
 
+#print Finset.orderEmbOfFin_apply /-
 theorem orderEmbOfFin_apply (s : Finset α) {k : ℕ} (h : s.card = k) (i : Fin k) :
     s.orderEmbOfFin h i = (s.sort (· ≤ ·)).nthLe i (by rw [length_sort, h]; exact i.2) :=
   rfl
 #align finset.order_emb_of_fin_apply Finset.orderEmbOfFin_apply
+-/
 
+#print Finset.orderEmbOfFin_mem /-
 @[simp]
 theorem orderEmbOfFin_mem (s : Finset α) {k : ℕ} (h : s.card = k) (i : Fin k) :
     s.orderEmbOfFin h i ∈ s :=
   (s.orderIsoOfFin h i).2
 #align finset.order_emb_of_fin_mem Finset.orderEmbOfFin_mem
+-/
 
+#print Finset.range_orderEmbOfFin /-
 @[simp]
 theorem range_orderEmbOfFin (s : Finset α) {k : ℕ} (h : s.card = k) :
     Set.range (s.orderEmbOfFin h) = s := by
@@ -234,25 +243,33 @@ theorem range_orderEmbOfFin (s : Finset α) {k : ℕ} (h : s.card = k) :
     OrderEmbedding.subtype_apply, OrderIso.coe_toOrderEmbedding, eq_self_iff_true,
     Subtype.range_coe_subtype, Finset.setOf_mem, Finset.coe_inj]
 #align finset.range_order_emb_of_fin Finset.range_orderEmbOfFin
+-/
 
+#print Finset.orderEmbOfFin_zero /-
 /-- The bijection `order_emb_of_fin s h` sends `0` to the minimum of `s`. -/
 theorem orderEmbOfFin_zero {s : Finset α} {k : ℕ} (h : s.card = k) (hz : 0 < k) :
     orderEmbOfFin s h ⟨0, hz⟩ = s.min' (card_pos.mp (h.symm ▸ hz)) := by
   simp only [order_emb_of_fin_apply, Fin.val_mk, sorted_zero_eq_min']
 #align finset.order_emb_of_fin_zero Finset.orderEmbOfFin_zero
+-/
 
+#print Finset.orderEmbOfFin_last /-
 /-- The bijection `order_emb_of_fin s h` sends `k-1` to the maximum of `s`. -/
 theorem orderEmbOfFin_last {s : Finset α} {k : ℕ} (h : s.card = k) (hz : 0 < k) :
     orderEmbOfFin s h ⟨k - 1, Buffer.lt_aux_2 hz⟩ = s.max' (card_pos.mp (h.symm ▸ hz)) := by
   simp [order_emb_of_fin_apply, max'_eq_sorted_last, h]
 #align finset.order_emb_of_fin_last Finset.orderEmbOfFin_last
+-/
 
+#print Finset.orderEmbOfFin_singleton /-
 /-- `order_emb_of_fin {a} h` sends any argument to `a`. -/
 @[simp]
 theorem orderEmbOfFin_singleton (a : α) (i : Fin 1) : orderEmbOfFin {a} (card_singleton a) i = a :=
   by rw [Subsingleton.elim i ⟨0, zero_lt_one⟩, order_emb_of_fin_zero _ zero_lt_one, min'_singleton]
 #align finset.order_emb_of_fin_singleton Finset.orderEmbOfFin_singleton
+-/
 
+#print Finset.orderEmbOfFin_unique /-
 /-- Any increasing map `f` from `fin k` to a finset of cardinality `k` has to coincide with
 the increasing bijection `order_emb_of_fin s h`. -/
 theorem orderEmbOfFin_unique {s : Finset α} {k : ℕ} (h : s.card = k) {f : Fin k → α}
@@ -264,14 +281,18 @@ theorem orderEmbOfFin_unique {s : Finset α} {k : ℕ} (h : s.card = k) {f : Fin
   · rcases mem_image.1 hx with ⟨x, hx, rfl⟩; exact hfs x
   · rw [h, card_image_of_injective _ hmono.injective, card_univ, Fintype.card_fin]
 #align finset.order_emb_of_fin_unique Finset.orderEmbOfFin_unique
+-/
 
+#print Finset.orderEmbOfFin_unique' /-
 /-- An order embedding `f` from `fin k` to a finset of cardinality `k` has to coincide with
 the increasing bijection `order_emb_of_fin s h`. -/
 theorem orderEmbOfFin_unique' {s : Finset α} {k : ℕ} (h : s.card = k) {f : Fin k ↪o α}
     (hfs : ∀ x, f x ∈ s) : f = s.orderEmbOfFin h :=
   RelEmbedding.ext <| Function.funext_iff.1 <| orderEmbOfFin_unique h hfs f.StrictMono
 #align finset.order_emb_of_fin_unique' Finset.orderEmbOfFin_unique'
+-/
 
+#print Finset.orderEmbOfFin_eq_orderEmbOfFin_iff /-
 /-- Two parametrizations `order_emb_of_fin` of the same set take the same value on `i` and `j` if
 and only if `i = j`. Since they can be defined on a priori not defeq types `fin k` and `fin l`
 (although necessarily `k = l`), the conclusion is rather written `(i : ℕ) = (j : ℕ)`. -/
@@ -283,6 +304,7 @@ theorem orderEmbOfFin_eq_orderEmbOfFin_iff {k l : ℕ} {s : Finset α} {i : Fin 
   substs k l
   exact (s.order_emb_of_fin rfl).eq_iff_eq.trans Fin.ext_iff
 #align finset.order_emb_of_fin_eq_order_emb_of_fin_iff Finset.orderEmbOfFin_eq_orderEmbOfFin_iff
+-/
 
 #print Finset.orderEmbOfCardLe /-
 /-- Given a finset `s` of size at least `k` in a linear order `α`, the map `order_emb_of_card_le`
@@ -293,10 +315,12 @@ def orderEmbOfCardLe (s : Finset α) {k : ℕ} (h : k ≤ s.card) : Fin k ↪o �
 #align finset.order_emb_of_card_le Finset.orderEmbOfCardLe
 -/
 
+#print Finset.orderEmbOfCardLe_mem /-
 theorem orderEmbOfCardLe_mem (s : Finset α) {k : ℕ} (h : k ≤ s.card) (a) :
     orderEmbOfCardLe s h a ∈ s := by
   simp only [order_emb_of_card_le, RelEmbedding.coe_trans, Finset.orderEmbOfFin_mem]
 #align finset.order_emb_of_card_le_mem Finset.orderEmbOfCardLe_mem
+-/
 
 end SortLinearOrder
 

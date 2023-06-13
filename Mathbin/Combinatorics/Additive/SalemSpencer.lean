@@ -113,13 +113,16 @@ theorem mulSalemSpencer_singleton (a : α) : MulSalemSpencer ({a} : Set α) :=
 -/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print MulSalemSpencer.prod /-
 @[to_additive AddSalemSpencer.prod]
 theorem MulSalemSpencer.prod {t : Set β} (hs : MulSalemSpencer s) (ht : MulSalemSpencer t) :
     MulSalemSpencer (s ×ˢ t) := fun a b c ha hb hc h =>
   Prod.ext (hs ha.1 hb.1 hc.1 (Prod.ext_iff.1 h).1) (ht ha.2 hb.2 hc.2 (Prod.ext_iff.1 h).2)
 #align mul_salem_spencer.prod MulSalemSpencer.prod
 #align add_salem_spencer.prod AddSalemSpencer.prod
+-/
 
+#print mulSalemSpencer_pi /-
 @[to_additive]
 theorem mulSalemSpencer_pi {ι : Type _} {α : ι → Type _} [∀ i, Monoid (α i)] {s : ∀ i, Set (α i)}
     (hs : ∀ i, MulSalemSpencer (s i)) : MulSalemSpencer ((univ : Set ι).pi s) :=
@@ -127,6 +130,7 @@ theorem mulSalemSpencer_pi {ι : Type _} {α : ι → Type _} [∀ i, Monoid (α
   funext fun i => hs i (ha i trivial) (hb i trivial) (hc i trivial) <| congr_fun h i
 #align mul_salem_spencer_pi mulSalemSpencer_pi
 #align add_salem_spencer_pi addSalemSpencer_pi
+-/
 
 end Monoid
 
@@ -134,6 +138,7 @@ section CommMonoid
 
 variable [CommMonoid α] [CommMonoid β] {s : Set α} {a : α}
 
+#print MulSalemSpencer.of_image /-
 @[to_additive]
 theorem MulSalemSpencer.of_image [FunLike F α fun _ => β] [FreimanHomClass F s β 2] (f : F)
     (hf : s.InjOn f) (h : MulSalemSpencer (f '' s)) : MulSalemSpencer s :=
@@ -143,7 +148,9 @@ theorem MulSalemSpencer.of_image [FunLike F α fun _ => β] [FreimanHomClass F s
       map_mul_map_eq_map_mul_map f ha hb hc hc habc
 #align mul_salem_spencer.of_image MulSalemSpencer.of_image
 #align add_salem_spencer.of_image AddSalemSpencer.of_image
+-/
 
+#print MulSalemSpencer.image /-
 -- TODO: Generalize to Freiman homs
 @[to_additive]
 theorem MulSalemSpencer.image [MulHomClass F α β] (f : F) (hf : (s * s).InjOn f)
@@ -153,6 +160,7 @@ theorem MulSalemSpencer.image [MulHomClass F α β] (f : F) (hf : (s * s).InjOn 
   rw [h ha hb hc (hf (mul_mem_mul ha hb) (mul_mem_mul hc hc) <| by rwa [map_mul, map_mul])]
 #align mul_salem_spencer.image MulSalemSpencer.image
 #align add_salem_spencer.image AddSalemSpencer.image
+-/
 
 end CommMonoid
 
@@ -160,6 +168,7 @@ section CancelCommMonoid
 
 variable [CancelCommMonoid α] {s : Set α} {a : α}
 
+#print mulSalemSpencer_insert /-
 @[to_additive]
 theorem mulSalemSpencer_insert :
     MulSalemSpencer (insert a s) ↔
@@ -185,6 +194,7 @@ theorem mulSalemSpencer_insert :
   · exact hs hb hc hd h
 #align mul_salem_spencer_insert mulSalemSpencer_insert
 #align add_salem_spencer_insert addSalemSpencer_insert
+-/
 
 #print mulSalemSpencer_pair /-
 @[simp, to_additive]
@@ -200,6 +210,7 @@ theorem mulSalemSpencer_pair (a b : α) : MulSalemSpencer ({a, b} : Set α) :=
 #align add_salem_spencer_pair addSalemSpencer_pair
 -/
 
+#print MulSalemSpencer.mul_left /-
 @[to_additive]
 theorem MulSalemSpencer.mul_left (hs : MulSalemSpencer s) : MulSalemSpencer ((· * ·) a '' s) :=
   by
@@ -208,7 +219,9 @@ theorem MulSalemSpencer.mul_left (hs : MulSalemSpencer s) : MulSalemSpencer ((·
   rw [hs hb hc hd (mul_left_cancel h)]
 #align mul_salem_spencer.mul_left MulSalemSpencer.mul_left
 #align add_salem_spencer.add_left AddSalemSpencer.add_left
+-/
 
+#print MulSalemSpencer.mul_right /-
 @[to_additive]
 theorem MulSalemSpencer.mul_right (hs : MulSalemSpencer s) : MulSalemSpencer ((· * a) '' s) :=
   by
@@ -217,7 +230,9 @@ theorem MulSalemSpencer.mul_right (hs : MulSalemSpencer s) : MulSalemSpencer ((�
   rw [hs hb hc hd (mul_right_cancel h)]
 #align mul_salem_spencer.mul_right MulSalemSpencer.mul_right
 #align add_salem_spencer.add_right AddSalemSpencer.add_right
+-/
 
+#print mulSalemSpencer_mul_left_iff /-
 @[to_additive]
 theorem mulSalemSpencer_mul_left_iff : MulSalemSpencer ((· * ·) a '' s) ↔ MulSalemSpencer s :=
   ⟨fun hs b c d hb hc hd h =>
@@ -227,7 +242,9 @@ theorem mulSalemSpencer_mul_left_iff : MulSalemSpencer ((· * ·) a '' s) ↔ Mu
     MulSalemSpencer.mul_left⟩
 #align mul_salem_spencer_mul_left_iff mulSalemSpencer_mul_left_iff
 #align add_salem_spencer_add_left_iff addSalemSpencer_add_left_iff
+-/
 
+#print mulSalemSpencer_mul_right_iff /-
 @[to_additive]
 theorem mulSalemSpencer_mul_right_iff : MulSalemSpencer ((· * a) '' s) ↔ MulSalemSpencer s :=
   ⟨fun hs b c d hb hc hd h =>
@@ -237,6 +254,7 @@ theorem mulSalemSpencer_mul_right_iff : MulSalemSpencer ((· * a) '' s) ↔ MulS
     MulSalemSpencer.mul_right⟩
 #align mul_salem_spencer_mul_right_iff mulSalemSpencer_mul_right_iff
 #align add_salem_spencer_add_right_iff addSalemSpencer_add_right_iff
+-/
 
 end CancelCommMonoid
 
@@ -244,6 +262,7 @@ section OrderedCancelCommMonoid
 
 variable [OrderedCancelCommMonoid α] {s : Set α} {a : α}
 
+#print mulSalemSpencer_insert_of_lt /-
 @[to_additive]
 theorem mulSalemSpencer_insert_of_lt (hs : ∀ i ∈ s, i < a) :
     MulSalemSpencer (insert a s) ↔
@@ -254,6 +273,7 @@ theorem mulSalemSpencer_insert_of_lt (hs : ∀ i ∈ s, i < a) :
   exact and_iff_left fun b c hb hc h => ((mul_lt_mul_of_lt_of_lt (hs _ hb) (hs _ hc)).Ne h).elim
 #align mul_salem_spencer_insert_of_lt mulSalemSpencer_insert_of_lt
 #align add_salem_spencer_insert_of_lt addSalemSpencer_insert_of_lt
+-/
 
 end OrderedCancelCommMonoid
 
@@ -261,6 +281,7 @@ section CancelCommMonoidWithZero
 
 variable [CancelCommMonoidWithZero α] [NoZeroDivisors α] {s : Set α} {a : α}
 
+#print MulSalemSpencer.mul_left₀ /-
 theorem MulSalemSpencer.mul_left₀ (hs : MulSalemSpencer s) (ha : a ≠ 0) :
     MulSalemSpencer ((· * ·) a '' s) :=
   by
@@ -268,7 +289,9 @@ theorem MulSalemSpencer.mul_left₀ (hs : MulSalemSpencer s) (ha : a ≠ 0) :
   rw [mul_mul_mul_comm, mul_mul_mul_comm a d] at h 
   rw [hs hb hc hd (mul_left_cancel₀ (mul_ne_zero ha ha) h)]
 #align mul_salem_spencer.mul_left₀ MulSalemSpencer.mul_left₀
+-/
 
+#print MulSalemSpencer.mul_right₀ /-
 theorem MulSalemSpencer.mul_right₀ (hs : MulSalemSpencer s) (ha : a ≠ 0) :
     MulSalemSpencer ((· * a) '' s) :=
   by
@@ -276,7 +299,9 @@ theorem MulSalemSpencer.mul_right₀ (hs : MulSalemSpencer s) (ha : a ≠ 0) :
   rw [mul_mul_mul_comm, mul_mul_mul_comm d] at h 
   rw [hs hb hc hd (mul_right_cancel₀ (mul_ne_zero ha ha) h)]
 #align mul_salem_spencer.mul_right₀ MulSalemSpencer.mul_right₀
+-/
 
+#print mulSalemSpencer_mul_left_iff₀ /-
 theorem mulSalemSpencer_mul_left_iff₀ (ha : a ≠ 0) :
     MulSalemSpencer ((· * ·) a '' s) ↔ MulSalemSpencer s :=
   ⟨fun hs b c d hb hc hd h =>
@@ -285,7 +310,9 @@ theorem mulSalemSpencer_mul_left_iff₀ (ha : a ≠ 0) :
         rw [mul_mul_mul_comm, h, mul_mul_mul_comm]),
     fun hs => hs.mulLeft₀ ha⟩
 #align mul_salem_spencer_mul_left_iff₀ mulSalemSpencer_mul_left_iff₀
+-/
 
+#print mulSalemSpencer_mul_right_iff₀ /-
 theorem mulSalemSpencer_mul_right_iff₀ (ha : a ≠ 0) :
     MulSalemSpencer ((· * a) '' s) ↔ MulSalemSpencer s :=
   ⟨fun hs b c d hb hc hd h =>
@@ -294,6 +321,7 @@ theorem mulSalemSpencer_mul_right_iff₀ (ha : a ≠ 0) :
         rw [mul_mul_mul_comm, h, mul_mul_mul_comm]),
     fun hs => hs.mulRight₀ ha⟩
 #align mul_salem_spencer_mul_right_iff₀ mulSalemSpencer_mul_right_iff₀
+-/
 
 end CancelCommMonoidWithZero
 
@@ -314,6 +342,7 @@ theorem addSalemSpencer_iff_eq_right {s : Set ℕ} :
 
 end Nat
 
+#print addSalemSpencer_frontier /-
 /-- The frontier of a closed strictly convex set only contains trivial arithmetic progressions.
 The idea is that an arithmetic progression is contained on a line and the frontier of a strictly
 convex set does not contain lines. -/
@@ -327,6 +356,7 @@ theorem addSalemSpencer_frontier [LinearOrderedField 𝕜] [TopologicalSpace E] 
     hs₁.eq (hs₀.frontier_subset ha) (hs₀.frontier_subset hb) one_half_pos one_half_pos
       (add_halves _) hc.2
 #align add_salem_spencer_frontier addSalemSpencer_frontier
+-/
 
 #print addSalemSpencer_sphere /-
 theorem addSalemSpencer_sphere [NormedAddCommGroup E] [NormedSpace ℝ E] [StrictConvexSpace ℝ E]
@@ -447,6 +477,7 @@ theorem mulRothNumber_union_le (s t : Finset α) :
 -/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print le_mulRothNumber_product /-
 @[to_additive]
 theorem le_mulRothNumber_product (s : Finset α) (t : Finset β) :
     mulRothNumber s * mulRothNumber t ≤ mulRothNumber (s ×ˢ t) :=
@@ -459,6 +490,7 @@ theorem le_mulRothNumber_product (s : Finset α) (t : Finset β) :
   exact hu.prod hv
 #align le_mul_roth_number_product le_mulRothNumber_product
 #align le_add_roth_number_product le_addRothNumber_product
+-/
 
 #print mulRothNumber_lt_of_forall_not_mulSalemSpencer /-
 @[to_additive]
@@ -582,6 +614,7 @@ theorem rothNumberNat_zero : rothNumberNat 0 = 0 :=
 #align roth_number_nat_zero rothNumberNat_zero
 -/
 
+#print addRothNumber_Ico /-
 theorem addRothNumber_Ico (a b : ℕ) : addRothNumber (Ico a b) = rothNumberNat (b - a) :=
   by
   obtain h | h := le_total b a
@@ -591,18 +624,23 @@ theorem addRothNumber_Ico (a b : ℕ) : addRothNumber (Ico a b) = rothNumberNat 
   convert (image_add_left_Ico 0 (b - a) _).symm
   exact (add_tsub_cancel_of_le h).symm
 #align add_roth_number_Ico addRothNumber_Ico
+-/
 
 open Asymptotics Filter
 
+#print rothNumberNat_isBigOWith_id /-
 theorem rothNumberNat_isBigOWith_id :
     IsBigOWith 1 atTop (fun N => (rothNumberNat N : ℝ)) fun N => (N : ℝ) :=
   isBigOWith_of_le _ <| by simpa only [Real.norm_coe_nat, Nat.cast_le] using rothNumberNat_le
 #align roth_number_nat_is_O_with_id rothNumberNat_isBigOWith_id
+-/
 
+#print rothNumberNat_isBigO_id /-
 /-- The Roth number has the trivial bound `roth_number_nat N = O(N)`. -/
 theorem rothNumberNat_isBigO_id : (fun N => (rothNumberNat N : ℝ)) =O[atTop] fun N => (N : ℝ) :=
   rothNumberNat_isBigOWith_id.IsBigO
 #align roth_number_nat_is_O_id rothNumberNat_isBigO_id
+-/
 
 end rothNumberNat
 

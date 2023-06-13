@@ -151,9 +151,11 @@ theorem coeFn_univ (ν : ProbabilityMeasure Ω) : ν univ = 1 :=
 #align measure_theory.probability_measure.coe_fn_univ MeasureTheory.ProbabilityMeasure.coeFn_univ
 -/
 
+#print MeasureTheory.ProbabilityMeasure.coeFn_univ_ne_zero /-
 theorem coeFn_univ_ne_zero (ν : ProbabilityMeasure Ω) : ν univ ≠ 0 := by
   simp only [coe_fn_univ, Ne.def, one_ne_zero, not_false_iff]
 #align measure_theory.probability_measure.coe_fn_univ_ne_zero MeasureTheory.ProbabilityMeasure.coeFn_univ_ne_zero
+-/
 
 #print MeasureTheory.ProbabilityMeasure.toFiniteMeasure /-
 /-- A probability measure can be interpreted as a finite measure. -/
@@ -240,10 +242,12 @@ theorem toFiniteMeasure_nonzero (μ : ProbabilityMeasure Ω) : μ.toFiniteMeasur
 
 variable [TopologicalSpace Ω] [OpensMeasurableSpace Ω]
 
+#print MeasureTheory.ProbabilityMeasure.testAgainstNN_lipschitz /-
 theorem testAgainstNN_lipschitz (μ : ProbabilityMeasure Ω) :
     LipschitzWith 1 fun f : Ω →ᵇ ℝ≥0 => μ.toFiniteMeasure.testAgainstNN f :=
   μ.mass_toFiniteMeasure ▸ μ.toFiniteMeasure.testAgainstNN_lipschitz
 #align measure_theory.probability_measure.test_against_nn_lipschitz MeasureTheory.ProbabilityMeasure.testAgainstNN_lipschitz
+-/
 
 /-- The topology of weak convergence on `measure_theory.probability_measure Ω`. This is inherited
 (induced) from the topology of weak convergence of finite measures via the inclusion
@@ -251,40 +255,53 @@ theorem testAgainstNN_lipschitz (μ : ProbabilityMeasure Ω) :
 instance : TopologicalSpace (ProbabilityMeasure Ω) :=
   TopologicalSpace.induced toFiniteMeasure inferInstance
 
+#print MeasureTheory.ProbabilityMeasure.toFiniteMeasure_continuous /-
 theorem toFiniteMeasure_continuous :
     Continuous (toFiniteMeasure : ProbabilityMeasure Ω → FiniteMeasure Ω) :=
   continuous_induced_dom
 #align measure_theory.probability_measure.to_finite_measure_continuous MeasureTheory.ProbabilityMeasure.toFiniteMeasure_continuous
+-/
 
+#print MeasureTheory.ProbabilityMeasure.toWeakDualBCNN /-
 /-- Probability measures yield elements of the `weak_dual` of bounded continuous nonnegative
 functions via `measure_theory.finite_measure.test_against_nn`, i.e., integration. -/
 def toWeakDualBCNN : ProbabilityMeasure Ω → WeakDual ℝ≥0 (Ω →ᵇ ℝ≥0) :=
   FiniteMeasure.toWeakDualBCNN ∘ toFiniteMeasure
 #align measure_theory.probability_measure.to_weak_dual_bcnn MeasureTheory.ProbabilityMeasure.toWeakDualBCNN
+-/
 
+#print MeasureTheory.ProbabilityMeasure.coe_toWeakDualBCNN /-
 @[simp]
 theorem coe_toWeakDualBCNN (μ : ProbabilityMeasure Ω) :
     ⇑μ.toWeakDualBCNN = μ.toFiniteMeasure.testAgainstNN :=
   rfl
 #align measure_theory.probability_measure.coe_to_weak_dual_bcnn MeasureTheory.ProbabilityMeasure.coe_toWeakDualBCNN
+-/
 
+#print MeasureTheory.ProbabilityMeasure.toWeakDualBCNN_apply /-
 @[simp]
 theorem toWeakDualBCNN_apply (μ : ProbabilityMeasure Ω) (f : Ω →ᵇ ℝ≥0) :
     μ.toWeakDualBCNN f = (∫⁻ ω, f ω ∂(μ : Measure Ω)).toNNReal :=
   rfl
 #align measure_theory.probability_measure.to_weak_dual_bcnn_apply MeasureTheory.ProbabilityMeasure.toWeakDualBCNN_apply
+-/
 
+#print MeasureTheory.ProbabilityMeasure.toWeakDualBCNN_continuous /-
 theorem toWeakDualBCNN_continuous : Continuous fun μ : ProbabilityMeasure Ω => μ.toWeakDualBCNN :=
   FiniteMeasure.toWeakDualBCNN_continuous.comp toFiniteMeasure_continuous
 #align measure_theory.probability_measure.to_weak_dual_bcnn_continuous MeasureTheory.ProbabilityMeasure.toWeakDualBCNN_continuous
+-/
 
+#print MeasureTheory.ProbabilityMeasure.continuous_testAgainstNN_eval /-
 /- Integration of (nonnegative bounded continuous) test functions against Borel probability
 measures depends continuously on the measure. -/
 theorem continuous_testAgainstNN_eval (f : Ω →ᵇ ℝ≥0) :
     Continuous fun μ : ProbabilityMeasure Ω => μ.toFiniteMeasure.testAgainstNN f :=
   (FiniteMeasure.continuous_testAgainstNN_eval f).comp toFiniteMeasure_continuous
 #align measure_theory.probability_measure.continuous_test_against_nn_eval MeasureTheory.ProbabilityMeasure.continuous_testAgainstNN_eval
+-/
 
+#print MeasureTheory.ProbabilityMeasure.toFiniteMeasure_embedding /-
 -- The canonical mapping from probability measures to finite measures is an embedding.
 theorem toFiniteMeasure_embedding (Ω : Type _) [MeasurableSpace Ω] [TopologicalSpace Ω]
     [OpensMeasurableSpace Ω] :
@@ -292,13 +309,17 @@ theorem toFiniteMeasure_embedding (Ω : Type _) [MeasurableSpace Ω] [Topologica
   { induced := rfl
     inj := fun μ ν h => Subtype.eq (by convert congr_arg coe h) }
 #align measure_theory.probability_measure.to_finite_measure_embedding MeasureTheory.ProbabilityMeasure.toFiniteMeasure_embedding
+-/
 
+#print MeasureTheory.ProbabilityMeasure.tendsto_nhds_iff_toFiniteMeasure_tendsto_nhds /-
 theorem tendsto_nhds_iff_toFiniteMeasure_tendsto_nhds {δ : Type _} (F : Filter δ)
     {μs : δ → ProbabilityMeasure Ω} {μ₀ : ProbabilityMeasure Ω} :
     Tendsto μs F (𝓝 μ₀) ↔ Tendsto (toFiniteMeasure ∘ μs) F (𝓝 μ₀.toFiniteMeasure) :=
   Embedding.tendsto_nhds_iff (toFiniteMeasure_embedding Ω)
 #align measure_theory.probability_measure.tendsto_nhds_iff_to_finite_measures_tendsto_nhds MeasureTheory.ProbabilityMeasure.tendsto_nhds_iff_toFiniteMeasure_tendsto_nhds
+-/
 
+#print MeasureTheory.ProbabilityMeasure.tendsto_iff_forall_lintegral_tendsto /-
 /-- A characterization of weak convergence of probability measures by the condition that the
 integrals of every continuous bounded nonnegative function converge to the integral of the function
 against the limit measure. -/
@@ -311,7 +332,9 @@ theorem tendsto_iff_forall_lintegral_tendsto {γ : Type _} {F : Filter γ}
   rw [tendsto_nhds_iff_to_finite_measures_tendsto_nhds]
   exact finite_measure.tendsto_iff_forall_lintegral_tendsto
 #align measure_theory.probability_measure.tendsto_iff_forall_lintegral_tendsto MeasureTheory.ProbabilityMeasure.tendsto_iff_forall_lintegral_tendsto
+-/
 
+#print MeasureTheory.ProbabilityMeasure.tendsto_iff_forall_integral_tendsto /-
 /-- The characterization of weak convergence of probability measures by the usual (defining)
 condition that the integrals of every continuous bounded function converge to the integral of the
 function against the limit measure. -/
@@ -325,6 +348,7 @@ theorem tendsto_iff_forall_integral_tendsto {γ : Type _} {F : Filter γ}
   rw [finite_measure.tendsto_iff_forall_integral_tendsto]
   simp only [coe_comp_to_finite_measure_eq_coe]
 #align measure_theory.probability_measure.tendsto_iff_forall_integral_tendsto MeasureTheory.ProbabilityMeasure.tendsto_iff_forall_integral_tendsto
+-/
 
 end ProbabilityMeasure
 
@@ -364,6 +388,7 @@ def normalize : ProbabilityMeasure Ω :=
 #align measure_theory.finite_measure.normalize MeasureTheory.FiniteMeasure.normalize
 -/
 
+#print MeasureTheory.FiniteMeasure.self_eq_mass_mul_normalize /-
 @[simp]
 theorem self_eq_mass_mul_normalize (s : Set Ω) : μ s = μ.mass * μ.normalize s :=
   by
@@ -375,6 +400,7 @@ theorem self_eq_mass_mul_normalize (s : Set Ω) : μ s = μ.mass * μ.normalize 
     MeasureTheory.Measure.coe_nnreal_smul_apply, mul_inv_cancel_left₀ mass_nonzero,
     finite_measure.coe_fn_eq_to_nnreal_coe_fn_to_measure]
 #align measure_theory.finite_measure.self_eq_mass_mul_normalize MeasureTheory.FiniteMeasure.self_eq_mass_mul_normalize
+-/
 
 #print MeasureTheory.FiniteMeasure.self_eq_mass_smul_normalize /-
 theorem self_eq_mass_smul_normalize : μ = μ.mass • μ.normalize.toFiniteMeasure :=
@@ -386,10 +412,12 @@ theorem self_eq_mass_smul_normalize : μ = μ.mass • μ.normalize.toFiniteMeas
 #align measure_theory.finite_measure.self_eq_mass_smul_normalize MeasureTheory.FiniteMeasure.self_eq_mass_smul_normalize
 -/
 
+#print MeasureTheory.FiniteMeasure.normalize_eq_of_nonzero /-
 theorem normalize_eq_of_nonzero (nonzero : μ ≠ 0) (s : Set Ω) : μ.normalize s = μ.mass⁻¹ * μ s := by
   simp only [μ.self_eq_mass_mul_normalize, μ.mass_nonzero_iff.mpr nonzero, inv_mul_cancel_left₀,
     Ne.def, not_false_iff]
 #align measure_theory.finite_measure.normalize_eq_of_nonzero MeasureTheory.FiniteMeasure.normalize_eq_of_nonzero
+-/
 
 #print MeasureTheory.FiniteMeasure.normalize_eq_inv_mass_smul_of_nonzero /-
 theorem normalize_eq_inv_mass_smul_of_nonzero (nonzero : μ ≠ 0) :
@@ -402,6 +430,7 @@ theorem normalize_eq_inv_mass_smul_of_nonzero (nonzero : μ ≠ 0) :
 #align measure_theory.finite_measure.normalize_eq_inv_mass_smul_of_nonzero MeasureTheory.FiniteMeasure.normalize_eq_inv_mass_smul_of_nonzero
 -/
 
+#print MeasureTheory.FiniteMeasure.toMeasure_normalize_eq_of_nonzero /-
 theorem toMeasure_normalize_eq_of_nonzero (nonzero : μ ≠ 0) :
     (μ.normalize : Measure Ω) = μ.mass⁻¹ • μ :=
   by
@@ -410,6 +439,7 @@ theorem toMeasure_normalize_eq_of_nonzero (nonzero : μ ≠ 0) :
     μ.normalize_eq_of_nonzero nonzero s, ENNReal.coe_mul, ennreal_coe_fn_eq_coe_fn_to_measure,
     measure.coe_nnreal_smul_apply]
 #align measure_theory.finite_measure.coe_normalize_eq_of_nonzero MeasureTheory.FiniteMeasure.toMeasure_normalize_eq_of_nonzero
+-/
 
 #print ProbabilityMeasure.toFiniteMeasure_normalize_eq_self /-
 @[simp]
@@ -440,22 +470,27 @@ theorem average_eq_integral_normalize {E : Type _} [NormedAddCommGroup E] [Norme
 
 variable [TopologicalSpace Ω]
 
+#print MeasureTheory.FiniteMeasure.testAgainstNN_eq_mass_mul /-
 theorem testAgainstNN_eq_mass_mul (f : Ω →ᵇ ℝ≥0) :
     μ.testAgainstNN f = μ.mass * μ.normalize.toFiniteMeasure.testAgainstNN f :=
   by
   nth_rw 1 [μ.self_eq_mass_smul_normalize]
   rw [μ.normalize.to_finite_measure.smul_test_against_nn_apply μ.mass f, smul_eq_mul]
 #align measure_theory.finite_measure.test_against_nn_eq_mass_mul MeasureTheory.FiniteMeasure.testAgainstNN_eq_mass_mul
+-/
 
+#print MeasureTheory.FiniteMeasure.normalize_testAgainstNN /-
 theorem normalize_testAgainstNN (nonzero : μ ≠ 0) (f : Ω →ᵇ ℝ≥0) :
     μ.normalize.toFiniteMeasure.testAgainstNN f = μ.mass⁻¹ * μ.testAgainstNN f := by
   simp [μ.test_against_nn_eq_mass_mul, μ.mass_nonzero_iff.mpr nonzero]
 #align measure_theory.finite_measure.normalize_test_against_nn MeasureTheory.FiniteMeasure.normalize_testAgainstNN
+-/
 
 variable [OpensMeasurableSpace Ω]
 
 variable {μ}
 
+#print MeasureTheory.FiniteMeasure.tendsto_testAgainstNN_of_tendsto_normalize_testAgainstNN_of_tendsto_mass /-
 theorem tendsto_testAgainstNN_of_tendsto_normalize_testAgainstNN_of_tendsto_mass {γ : Type _}
     {F : Filter γ} {μs : γ → FiniteMeasure Ω}
     (μs_lim : Tendsto (fun i => (μs i).normalize) F (𝓝 μ.normalize))
@@ -475,7 +510,9 @@ theorem tendsto_testAgainstNN_of_tendsto_normalize_testAgainstNN_of_tendsto_mass
     (Prod.tendsto_iff _ _).mpr ⟨mass_lim, μs_lim f⟩
   exact tendsto_mul.comp lim_pair
 #align measure_theory.finite_measure.tendsto_test_against_nn_of_tendsto_normalize_test_against_nn_of_tendsto_mass MeasureTheory.FiniteMeasure.tendsto_testAgainstNN_of_tendsto_normalize_testAgainstNN_of_tendsto_mass
+-/
 
+#print MeasureTheory.FiniteMeasure.tendsto_normalize_testAgainstNN_of_tendsto /-
 theorem tendsto_normalize_testAgainstNN_of_tendsto {γ : Type _} {F : Filter γ}
     {μs : γ → FiniteMeasure Ω} (μs_lim : Tendsto μs F (𝓝 μ)) (nonzero : μ ≠ 0) (f : Ω →ᵇ ℝ≥0) :
     Tendsto (fun i => (μs i).normalize.toFiniteMeasure.testAgainstNN f) F
@@ -505,7 +542,9 @@ theorem tendsto_normalize_testAgainstNN_of_tendsto {γ : Type _} {F : Filter γ}
     · exact tendsto_iff_forall_test_against_nn_tendsto.mp μs_lim f
   exact tendsto_mul.comp lim_pair
 #align measure_theory.finite_measure.tendsto_normalize_test_against_nn_of_tendsto MeasureTheory.FiniteMeasure.tendsto_normalize_testAgainstNN_of_tendsto
+-/
 
+#print MeasureTheory.FiniteMeasure.tendsto_of_tendsto_normalize_testAgainstNN_of_tendsto_mass /-
 /-- If the normalized versions of finite measures converge weakly and their total masses
 also converge, then the finite measures themselves converge weakly. -/
 theorem tendsto_of_tendsto_normalize_testAgainstNN_of_tendsto_mass {γ : Type _} {F : Filter γ}
@@ -516,7 +555,9 @@ theorem tendsto_of_tendsto_normalize_testAgainstNN_of_tendsto_mass {γ : Type _}
   exact fun f =>
     tendsto_test_against_nn_of_tendsto_normalize_test_against_nn_of_tendsto_mass μs_lim mass_lim f
 #align measure_theory.finite_measure.tendsto_of_tendsto_normalize_test_against_nn_of_tendsto_mass MeasureTheory.FiniteMeasure.tendsto_of_tendsto_normalize_testAgainstNN_of_tendsto_mass
+-/
 
+#print MeasureTheory.FiniteMeasure.tendsto_normalize_of_tendsto /-
 /-- If finite measures themselves converge weakly to a nonzero limit measure, then their
 normalized versions also converge weakly. -/
 theorem tendsto_normalize_of_tendsto {γ : Type _} {F : Filter γ} {μs : γ → FiniteMeasure Ω}
@@ -527,7 +568,9 @@ theorem tendsto_normalize_of_tendsto {γ : Type _} {F : Filter γ} {μs : γ →
     tendsto_iff_forall_test_against_nn_tendsto]
   exact fun f => tendsto_normalize_test_against_nn_of_tendsto μs_lim nonzero f
 #align measure_theory.finite_measure.tendsto_normalize_of_tendsto MeasureTheory.FiniteMeasure.tendsto_normalize_of_tendsto
+-/
 
+#print MeasureTheory.FiniteMeasure.tendsto_normalize_iff_tendsto /-
 /-- The weak convergence of finite measures to a nonzero limit can be characterized by the weak
 convergence of both their normalized versions (probability measures) and their total masses. -/
 theorem tendsto_normalize_iff_tendsto {γ : Type _} {F : Filter γ} {μs : γ → FiniteMeasure Ω}
@@ -542,6 +585,7 @@ theorem tendsto_normalize_iff_tendsto {γ : Type _} {F : Filter γ} {μs : γ �
   · intro μs_lim
     refine' ⟨tendsto_normalize_of_tendsto μs_lim nonzero, μs_lim.mass⟩
 #align measure_theory.finite_measure.tendsto_normalize_iff_tendsto MeasureTheory.FiniteMeasure.tendsto_normalize_iff_tendsto
+-/
 
 end FiniteMeasure
 

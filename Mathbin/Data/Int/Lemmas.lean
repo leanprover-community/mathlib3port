@@ -54,17 +54,23 @@ theorem succ_coe_nat_pos (n : ℕ) : 0 < (n : ℤ) + 1 :=
 
 variable {a b : ℤ} {n : ℕ}
 
+#print Int.natAbs_eq_iff_sq_eq /-
 theorem natAbs_eq_iff_sq_eq {a b : ℤ} : a.natAbs = b.natAbs ↔ a ^ 2 = b ^ 2 := by rw [sq, sq];
   exact nat_abs_eq_iff_mul_self_eq
 #align int.nat_abs_eq_iff_sq_eq Int.natAbs_eq_iff_sq_eq
+-/
 
+#print Int.natAbs_lt_iff_sq_lt /-
 theorem natAbs_lt_iff_sq_lt {a b : ℤ} : a.natAbs < b.natAbs ↔ a ^ 2 < b ^ 2 := by rw [sq, sq];
   exact nat_abs_lt_iff_mul_self_lt
 #align int.nat_abs_lt_iff_sq_lt Int.natAbs_lt_iff_sq_lt
+-/
 
+#print Int.natAbs_le_iff_sq_le /-
 theorem natAbs_le_iff_sq_le {a b : ℤ} : a.natAbs ≤ b.natAbs ↔ a ^ 2 ≤ b ^ 2 := by rw [sq, sq];
   exact nat_abs_le_iff_mul_self_le
 #align int.nat_abs_le_iff_sq_le Int.natAbs_le_iff_sq_le
+-/
 
 #print Int.natAbs_inj_of_nonneg_of_nonneg /-
 theorem natAbs_inj_of_nonneg_of_nonneg {a b : ℤ} (ha : 0 ≤ a) (hb : 0 ≤ b) :

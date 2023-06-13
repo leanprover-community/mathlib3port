@@ -65,6 +65,7 @@ instance (priority := 100) monoCoprodOfHasZeroMorphisms [HasZeroMorphisms C] : M
 
 namespace MonoCoprod
 
+#print CategoryTheory.Limits.MonoCoprod.binaryCofan_inr /-
 theorem binaryCofan_inr {A B : C} [MonoCoprod C] (c : BinaryCofan A B) (hc : IsColimit c) :
     Mono c.inr :=
   haveI hc' : is_colimit (binary_cofan.mk c.inr c.inl) :=
@@ -75,6 +76,7 @@ theorem binaryCofan_inr {A B : C} [MonoCoprod C] (c : BinaryCofan A B) (hc : IsC
         (by simp only [h₁, is_colimit.fac, binary_cofan.ι_app_right, binary_cofan.mk_inr])
   binary_cofan_inl _ hc'
 #align category_theory.limits.mono_coprod.binary_cofan_inr CategoryTheory.Limits.MonoCoprod.binaryCofan_inr
+-/
 
 instance {A B : C} [MonoCoprod C] [HasBinaryCoproduct A B] : Mono (coprod.inl : A ⟶ A ⨿ B) :=
   binaryCofan_inl _ (colimit.isColimit _)
@@ -82,6 +84,7 @@ instance {A B : C} [MonoCoprod C] [HasBinaryCoproduct A B] : Mono (coprod.inl : 
 instance {A B : C} [MonoCoprod C] [HasBinaryCoproduct A B] : Mono (coprod.inr : B ⟶ A ⨿ B) :=
   binaryCofan_inr _ (colimit.isColimit _)
 
+#print CategoryTheory.Limits.MonoCoprod.mono_inl_iff /-
 theorem mono_inl_iff {A B : C} {c₁ c₂ : BinaryCofan A B} (hc₁ : IsColimit c₁) (hc₂ : IsColimit c₂) :
     Mono c₁.inl ↔ Mono c₂.inl :=
   by
@@ -94,13 +97,16 @@ theorem mono_inl_iff {A B : C} {c₁ c₂ : BinaryCofan A B} (hc₁ : IsColimit 
   simpa only [is_colimit.comp_cocone_point_unique_up_to_iso_hom] using
     mono_comp c₁.inl (hc₁.cocone_point_unique_up_to_iso hc₂).Hom
 #align category_theory.limits.mono_coprod.mono_inl_iff CategoryTheory.Limits.MonoCoprod.mono_inl_iff
+-/
 
+#print CategoryTheory.Limits.MonoCoprod.mk' /-
 theorem mk' (h : ∀ A B : C, ∃ (c : BinaryCofan A B) (hc : IsColimit c), Mono c.inl) :
     MonoCoprod C :=
   ⟨fun A B c' hc' => by
     obtain ⟨c, hc₁, hc₂⟩ := h A B
     simpa only [mono_inl_iff hc' hc₁] using hc₂⟩
 #align category_theory.limits.mono_coprod.mk' CategoryTheory.Limits.MonoCoprod.mk'
+-/
 
 #print CategoryTheory.Limits.MonoCoprod.monoCoprodType /-
 instance monoCoprodType : MonoCoprod (Type u) :=

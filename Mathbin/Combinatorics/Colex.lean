@@ -154,6 +154,7 @@ theorem hom_lt_iff {β : Type _} [LinearOrder α] [DecidableEq β] [Preorder β]
 #align colex.hom_lt_iff Colex.hom_lt_iff
 -/
 
+#print Colex.hom_fin_lt_iff /-
 /-- A special case of `colex.hom_lt_iff` which is sometimes useful. -/
 @[simp]
 theorem hom_fin_lt_iff {n : ℕ} (A B : Finset (Fin n)) :
@@ -161,6 +162,7 @@ theorem hom_fin_lt_iff {n : ℕ} (A B : Finset (Fin n)) :
       A.toColex < B.toColex :=
   Colex.hom_lt_iff (fun x y k => k) _ _
 #align colex.hom_fin_lt_iff Colex.hom_fin_lt_iff
+-/
 
 instance [LT α] : IsIrrefl (Finset.Colex α) (· < ·) :=
   ⟨fun A h => Exists.elim h fun _ ⟨_, a, b⟩ => a b⟩
@@ -272,6 +274,7 @@ theorem hom_le_iff {β : Type _} [LinearOrder α] [LinearOrder β] {f : α → �
 #align colex.hom_le_iff Colex.hom_le_iff
 -/
 
+#print Colex.hom_fin_le_iff /-
 /-- A special case of `colex_hom` which is sometimes useful. -/
 @[simp]
 theorem hom_fin_le_iff {n : ℕ} (A B : Finset (Fin n)) :
@@ -279,6 +282,7 @@ theorem hom_fin_le_iff {n : ℕ} (A B : Finset (Fin n)) :
       A.toColex ≤ B.toColex :=
   Colex.hom_le_iff (fun x y k => k) _ _
 #align colex.hom_fin_le_iff Colex.hom_fin_le_iff
+-/
 
 #print Colex.forall_lt_of_colex_lt_of_forall_lt /-
 /-- If `A` is before `B` in colex, and everything in `B` is small, then everything in `A` is small.
@@ -316,12 +320,14 @@ theorem lt_singleton_iff_mem_lt [LinearOrder α] {r : α} {s : Finset α} :
 #align colex.lt_singleton_iff_mem_lt Colex.lt_singleton_iff_mem_lt
 -/
 
+#print Colex.mem_le_of_singleton_le /-
 /-- If {r} is less than or equal to s in the colexicographical sense,
   then s contains an element greater than or equal to r. -/
 theorem mem_le_of_singleton_le [LinearOrder α] {r : α} {s : Finset α} :
     ({r} : Finset α).toColex ≤ s.toColex ↔ ∃ x ∈ s, r ≤ x := by rw [← not_lt];
   simp [lt_singleton_iff_mem_lt]
 #align colex.mem_le_of_singleton_le Colex.mem_le_of_singleton_le
+-/
 
 #print Colex.singleton_lt_iff_lt /-
 /-- Colex is an extension of the base ordering on α. -/

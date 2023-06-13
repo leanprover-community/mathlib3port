@@ -28,8 +28,8 @@ universe v u
 namespace CategoryTheory
 
 #print CategoryTheory.UnbundledHom /-
-/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`hom_id] [] -/
-/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`hom_comp] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`hom_id] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`hom_comp] [] -/
 /-- A class for unbundled homs used to define a category. `hom` must
 take two types `α`, `β` and instances of the corresponding structures,
 and return a predicate on `α → β`. -/
@@ -44,8 +44,6 @@ class UnbundledHom {c : Type u → Type u} (hom : ∀ {α β}, c α → c β →
 namespace UnbundledHom
 
 variable (c : Type u → Type u) (hom : ∀ ⦃α β⦄, c α → c β → (α → β) → Prop) [𝒞 : UnbundledHom hom]
-
-include 𝒞
 
 #print CategoryTheory.UnbundledHom.bundledHom /-
 instance bundledHom : BundledHom fun α β (Iα : c α) (Iβ : c β) => Subtype (hom Iα Iβ)
@@ -64,16 +62,16 @@ section HasForget₂
 variable {c hom} {c' : Type u → Type u} {hom' : ∀ ⦃α β⦄, c' α → c' β → (α → β) → Prop}
   [𝒞' : UnbundledHom hom']
 
-include 𝒞'
-
 variable (obj : ∀ ⦃α⦄, c α → c' α)
   (map : ∀ ⦃α β Iα Iβ f⦄, @hom α β Iα Iβ f → hom' (obj Iα) (obj Iβ) f)
 
+#print CategoryTheory.UnbundledHom.mkHasForget₂ /-
 /-- A custom constructor for forgetful functor
 between concrete categories defined using `unbundled_hom`. -/
 def mkHasForget₂ : HasForget₂ (Bundled c) (Bundled c') :=
   BundledHom.mkHasForget₂ obj (fun X Y f => ⟨f.val, map f.property⟩) fun _ _ _ => rfl
 #align category_theory.unbundled_hom.mk_has_forget₂ CategoryTheory.UnbundledHom.mkHasForget₂
+-/
 
 end HasForget₂
 

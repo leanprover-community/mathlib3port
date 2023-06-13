@@ -43,6 +43,7 @@ section Kernels
 
 variable {X Y Z : C} {f : X ⟶ Y} {h : Z ⟶ X} (w : h ≫ f = 0)
 
+#print CategoryTheory.Limits.isLimitMapConeForkEquiv' /-
 /-- The map of a kernel fork is a limit iff
 the kernel fork consisting of the mapped morphisms is a limit.
 This essentially lets us commute `kernel_fork.of_ι` with `functor.map_cone`.
@@ -61,7 +62,9 @@ def isLimitMapConeForkEquiv' :
   refine' fork.ext (iso.refl _) _
   simp [fork.ι]
 #align category_theory.limits.is_limit_map_cone_fork_equiv' CategoryTheory.Limits.isLimitMapConeForkEquiv'
+-/
 
+#print CategoryTheory.Limits.isLimitForkMapOfIsLimit' /-
 /-- The property of preserving kernels expressed in terms of kernel forks.
 
 This is a variant of `is_limit_fork_map_of_is_limit` for equalizers,
@@ -74,9 +77,11 @@ def isLimitForkMapOfIsLimit' [PreservesLimit (parallelPair f 0) G]
         Fork (G.map f) 0) :=
   isLimitMapConeForkEquiv' G w (PreservesLimit.preserves l)
 #align category_theory.limits.is_limit_fork_map_of_is_limit' CategoryTheory.Limits.isLimitForkMapOfIsLimit'
+-/
 
 variable (f) [HasKernel f]
 
+#print CategoryTheory.Limits.isLimitOfHasKernelOfPreservesLimit /-
 /-- If `G` preserves kernels and `C` has them, then the fork constructed of the mapped morphisms of
 a kernel fork is a limit.
 -/
@@ -87,12 +92,14 @@ def isLimitOfHasKernelOfPreservesLimit [PreservesLimit (parallelPair f 0) G] :
         Fork (G.map f) 0) :=
   isLimitForkMapOfIsLimit' G (kernel.condition f) (kernelIsKernel f)
 #align category_theory.limits.is_limit_of_has_kernel_of_preserves_limit CategoryTheory.Limits.isLimitOfHasKernelOfPreservesLimit
+-/
 
 instance [PreservesLimit (parallelPair f 0) G] : HasKernel (G.map f)
     where exists_limit := ⟨⟨_, isLimitOfHasKernelOfPreservesLimit G f⟩⟩
 
 variable [HasKernel (G.map f)]
 
+#print CategoryTheory.Limits.PreservesKernel.ofIsoComparison /-
 /-- If the kernel comparison map for `G` at `f` is an isomorphism, then `G` preserves the
 kernel of `f`.
 -/
@@ -104,26 +111,32 @@ def PreservesKernel.ofIsoComparison [i : IsIso (kernelComparison f G)] :
   apply is_limit.of_point_iso (kernel_is_kernel (G.map f))
   exact i
 #align category_theory.limits.preserves_kernel.of_iso_comparison CategoryTheory.Limits.PreservesKernel.ofIsoComparison
+-/
 
 variable [PreservesLimit (parallelPair f 0) G]
 
+#print CategoryTheory.Limits.PreservesKernel.iso /-
 /-- If `G` preserves the kernel of `f`, then the kernel comparison map for `G` at `f` is
 an isomorphism.
 -/
 def PreservesKernel.iso : G.obj (kernel f) ≅ kernel (G.map f) :=
   IsLimit.conePointUniqueUpToIso (isLimitOfHasKernelOfPreservesLimit G f) (kernelIsKernel _)
 #align category_theory.limits.preserves_kernel.iso CategoryTheory.Limits.PreservesKernel.iso
+-/
 
+#print CategoryTheory.Limits.PreservesKernel.iso_hom /-
 @[simp]
 theorem PreservesKernel.iso_hom : (PreservesKernel.iso G f).Hom = kernelComparison f G :=
   rfl
 #align category_theory.limits.preserves_kernel.iso_hom CategoryTheory.Limits.PreservesKernel.iso_hom
+-/
 
 instance : IsIso (kernelComparison f G) :=
   by
   rw [← preserves_kernel.iso_hom]
   infer_instance
 
+#print CategoryTheory.Limits.kernel_map_comp_preserves_kernel_iso_inv /-
 @[reassoc]
 theorem kernel_map_comp_preserves_kernel_iso_inv {X' Y' : C} (g : X' ⟶ Y') [HasKernel g]
     [HasKernel (G.map g)] [PreservesLimit (parallelPair g 0) G] (p : X ⟶ X') (q : Y ⟶ Y')
@@ -135,6 +148,7 @@ theorem kernel_map_comp_preserves_kernel_iso_inv {X' Y' : C} (g : X' ⟶ Y') [Ha
   rw [iso.comp_inv_eq, category.assoc, preserves_kernel.iso_hom, iso.eq_inv_comp]
   exact kernel_comparison_comp_kernel_map _ _ _ _ _ _
 #align category_theory.limits.kernel_map_comp_preserves_kernel_iso_inv CategoryTheory.Limits.kernel_map_comp_preserves_kernel_iso_inv
+-/
 
 end Kernels
 
@@ -142,6 +156,7 @@ section Cokernels
 
 variable {X Y Z : C} {f : X ⟶ Y} {h : Y ⟶ Z} (w : f ≫ h = 0)
 
+#print CategoryTheory.Limits.isColimitMapCoconeCoforkEquiv' /-
 /-- The map of a cokernel cofork is a colimit iff
 the cokernel cofork consisting of the mapped morphisms is a colimit.
 This essentially lets us commute `cokernel_cofork.of_π` with `functor.map_cocone`.
@@ -162,7 +177,9 @@ def isColimitMapCoconeCoforkEquiv' :
     parallel_pair.ext_hom_app, functor.map_cocone_ι_app, cofork.of_π_ι_app]
   apply category.comp_id
 #align category_theory.limits.is_colimit_map_cocone_cofork_equiv' CategoryTheory.Limits.isColimitMapCoconeCoforkEquiv'
+-/
 
+#print CategoryTheory.Limits.isColimitCoforkMapOfIsColimit' /-
 /-- The property of preserving cokernels expressed in terms of cokernel coforks.
 
 This is a variant of `is_colimit_cofork_map_of_is_colimit` for equalizers,
@@ -175,9 +192,11 @@ def isColimitCoforkMapOfIsColimit' [PreservesColimit (parallelPair f 0) G]
         Cofork (G.map f) 0) :=
   isColimitMapCoconeCoforkEquiv' G w (PreservesColimit.preserves l)
 #align category_theory.limits.is_colimit_cofork_map_of_is_colimit' CategoryTheory.Limits.isColimitCoforkMapOfIsColimit'
+-/
 
 variable (f) [HasCokernel f]
 
+#print CategoryTheory.Limits.isColimitOfHasCokernelOfPreservesColimit /-
 /--
 If `G` preserves cokernels and `C` has them, then the cofork constructed of the mapped morphisms of
 a cokernel cofork is a colimit.
@@ -189,12 +208,14 @@ def isColimitOfHasCokernelOfPreservesColimit [PreservesColimit (parallelPair f 0
         Cofork (G.map f) 0) :=
   isColimitCoforkMapOfIsColimit' G (cokernel.condition f) (cokernelIsCokernel f)
 #align category_theory.limits.is_colimit_of_has_cokernel_of_preserves_colimit CategoryTheory.Limits.isColimitOfHasCokernelOfPreservesColimit
+-/
 
 instance [PreservesColimit (parallelPair f 0) G] : HasCokernel (G.map f)
     where exists_colimit := ⟨⟨_, isColimitOfHasCokernelOfPreservesColimit G f⟩⟩
 
 variable [HasCokernel (G.map f)]
 
+#print CategoryTheory.Limits.PreservesCokernel.ofIsoComparison /-
 /-- If the cokernel comparison map for `G` at `f` is an isomorphism, then `G` preserves the
 cokernel of `f`.
 -/
@@ -206,9 +227,11 @@ def PreservesCokernel.ofIsoComparison [i : IsIso (cokernelComparison f G)] :
   apply is_colimit.of_point_iso (cokernel_is_cokernel (G.map f))
   exact i
 #align category_theory.limits.preserves_cokernel.of_iso_comparison CategoryTheory.Limits.PreservesCokernel.ofIsoComparison
+-/
 
 variable [PreservesColimit (parallelPair f 0) G]
 
+#print CategoryTheory.Limits.PreservesCokernel.iso /-
 /-- If `G` preserves the cokernel of `f`, then the cokernel comparison map for `G` at `f` is
 an isomorphism.
 -/
@@ -216,17 +239,21 @@ def PreservesCokernel.iso : G.obj (cokernel f) ≅ cokernel (G.map f) :=
   IsColimit.coconePointUniqueUpToIso (isColimitOfHasCokernelOfPreservesColimit G f)
     (cokernelIsCokernel _)
 #align category_theory.limits.preserves_cokernel.iso CategoryTheory.Limits.PreservesCokernel.iso
+-/
 
+#print CategoryTheory.Limits.PreservesCokernel.iso_inv /-
 @[simp]
 theorem PreservesCokernel.iso_inv : (PreservesCokernel.iso G f).inv = cokernelComparison f G :=
   rfl
 #align category_theory.limits.preserves_cokernel.iso_inv CategoryTheory.Limits.PreservesCokernel.iso_inv
+-/
 
 instance : IsIso (cokernelComparison f G) :=
   by
   rw [← preserves_cokernel.iso_inv]
   infer_instance
 
+#print CategoryTheory.Limits.preserves_cokernel_iso_comp_cokernel_map /-
 @[reassoc]
 theorem preserves_cokernel_iso_comp_cokernel_map {X' Y' : C} (g : X' ⟶ Y') [HasCokernel g]
     [HasCokernel (G.map g)] [PreservesColimit (parallelPair g 0) G] (p : X ⟶ X') (q : Y ⟶ Y')
@@ -239,6 +266,7 @@ theorem preserves_cokernel_iso_comp_cokernel_map {X' Y' : C} (g : X' ⟶ Y') [Ha
   rw [← iso.comp_inv_eq, category.assoc, ← iso.eq_inv_comp]
   exact cokernel_map_comp_cokernel_comparison _ _ _ _ _ _
 #align category_theory.limits.preserves_cokernel_iso_comp_cokernel_map CategoryTheory.Limits.preserves_cokernel_iso_comp_cokernel_map
+-/
 
 end Cokernels
 

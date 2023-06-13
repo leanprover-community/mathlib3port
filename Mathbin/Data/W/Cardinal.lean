@@ -62,6 +62,7 @@ theorem cardinal_mk_le_of_le {κ : Cardinal.{u}} (hκ : (Sum fun a : α => κ ^ 
 #align W_type.cardinal_mk_le_of_le WType.cardinal_mk_le_of_le
 -/
 
+#print WType.cardinal_mk_le_max_aleph0_of_finite /-
 /-- If, for any `a : α`, `β a` is finite, then the cardinality of `W_type β`
   is at most the maximum of the cardinality of `α` and `ℵ₀`  -/
 theorem cardinal_mk_le_max_aleph0_of_finite [∀ a, Finite (β a)] : (#WType β) ≤ max (#α) ℵ₀ :=
@@ -90,6 +91,7 @@ theorem cardinal_mk_le_max_aleph0_of_finite [∀ a, Finite (β a)] : (#WType β)
                     power_le_power_left
                       (pos_iff_ne_zero.1 (aleph_0_pos.trans_le (le_max_right _ _))) (zero_le _))
 #align W_type.cardinal_mk_le_max_aleph_0_of_finite WType.cardinal_mk_le_max_aleph0_of_finite
+-/
 
 end WType
 

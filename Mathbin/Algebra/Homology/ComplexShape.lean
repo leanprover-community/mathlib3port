@@ -207,10 +207,12 @@ def down' {α : Type _} [AddRightCancelSemigroup α] (a : α) : ComplexShape α
 #align complex_shape.down' ComplexShape.down'
 -/
 
+#print ComplexShape.down'_mk /-
 theorem down'_mk {α : Type _} [AddRightCancelSemigroup α] (a : α) (i j : α) (h : j + a = i) :
     (down' a).Rel i j :=
   h
 #align complex_shape.down'_mk ComplexShape.down'_mk
+-/
 
 #print ComplexShape.up /-
 /-- The `complex_shape` appropriate for cohomology, so `d : X i ⟶ X j` only when `j = i + 1`.
@@ -230,10 +232,12 @@ def down (α : Type _) [AddRightCancelSemigroup α] [One α] : ComplexShape α :
 #align complex_shape.down ComplexShape.down
 -/
 
+#print ComplexShape.down_mk /-
 theorem down_mk {α : Type _} [AddRightCancelSemigroup α] [One α] (i j : α) (h : j + 1 = i) :
     (down α).Rel i j :=
   down'_mk (1 : α) i j h
 #align complex_shape.down_mk ComplexShape.down_mk
+-/
 
 end ComplexShape
 

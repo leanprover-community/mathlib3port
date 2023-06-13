@@ -43,8 +43,6 @@ open scoped ENNReal
 
 variable {α : Type _} {m : MeasurableSpace α} (f : α → α) {s : Set α}
 
-include m
-
 #print PreErgodic /-
 /-- A map `f : α → α` is said to be pre-ergodic with respect to a measure `μ` if any measurable
 strictly invariant set is either almost empty or full. -/
@@ -75,15 +73,19 @@ variable {f} {μ : Measure α}
 
 namespace PreErgodic
 
+#print PreErgodic.measure_self_or_compl_eq_zero /-
 theorem measure_self_or_compl_eq_zero (hf : PreErgodic f μ) (hs : MeasurableSet s)
     (hs' : f ⁻¹' s = s) : μ s = 0 ∨ μ (sᶜ) = 0 := by simpa using hf.ae_empty_or_univ hs hs'
 #align pre_ergodic.measure_self_or_compl_eq_zero PreErgodic.measure_self_or_compl_eq_zero
+-/
 
+#print PreErgodic.prob_eq_zero_or_one /-
 /-- On a probability space, the (pre)ergodicity condition is a zero one law. -/
 theorem prob_eq_zero_or_one [IsProbabilityMeasure μ] (hf : PreErgodic f μ) (hs : MeasurableSet s)
     (hs' : f ⁻¹' s = s) : μ s = 0 ∨ μ s = 1 := by
   simpa [hs] using hf.measure_self_or_compl_eq_zero hs hs'
 #align pre_ergodic.prob_eq_zero_or_one PreErgodic.prob_eq_zero_or_one
+-/
 
 #print PreErgodic.of_iterate /-
 theorem of_iterate (n : ℕ) (hf : PreErgodic (f^[n]) μ) : PreErgodic f μ :=
@@ -97,6 +99,7 @@ namespace MeasureTheory.MeasurePreserving
 
 variable {β : Type _} {m' : MeasurableSpace β} {μ' : Measure β} {s' : Set β} {g : α → β}
 
+#print MeasureTheory.MeasurePreserving.preErgodic_of_preErgodic_conjugate /-
 theorem preErgodic_of_preErgodic_conjugate (hg : MeasurePreserving g μ μ') (hf : PreErgodic f μ)
     {f' : β → β} (h_comm : g ∘ f = f' ∘ g) : PreErgodic f' μ' :=
   ⟨by
@@ -106,7 +109,9 @@ theorem preErgodic_of_preErgodic_conjugate (hg : MeasurePreserving g μ μ') (hf
     · simpa only [ae_eq_empty, hg.measure_preimage hs₀] using hs₂
     · simpa only [ae_eq_univ, ← preimage_compl, hg.measure_preimage hs₀.compl] using hs₂⟩
 #align measure_theory.measure_preserving.pre_ergodic_of_pre_ergodic_conjugate MeasureTheory.MeasurePreserving.preErgodic_of_preErgodic_conjugate
+-/
 
+#print MeasureTheory.MeasurePreserving.preErgodic_conjugate_iff /-
 theorem preErgodic_conjugate_iff {e : α ≃ᵐ β} (h : MeasurePreserving e μ μ') :
     PreErgodic (e ∘ f ∘ e.symm) μ' ↔ PreErgodic f μ :=
   by
@@ -118,7 +123,9 @@ theorem preErgodic_conjugate_iff {e : α ≃ᵐ β} (h : MeasurePreserving e μ 
   · change e ∘ f = e ∘ f ∘ e.symm ∘ e
     rw [MeasurableEquiv.symm_comp_self, comp.right_id]
 #align measure_theory.measure_preserving.pre_ergodic_conjugate_iff MeasureTheory.MeasurePreserving.preErgodic_conjugate_iff
+-/
 
+#print MeasureTheory.MeasurePreserving.ergodic_conjugate_iff /-
 theorem ergodic_conjugate_iff {e : α ≃ᵐ β} (h : MeasurePreserving e μ μ') :
     Ergodic (e ∘ f ∘ e.symm) μ' ↔ Ergodic f μ :=
   by
@@ -129,6 +136,7 @@ theorem ergodic_conjugate_iff {e : α ≃ᵐ β} (h : MeasurePreserving e μ μ'
     ⟨fun hf => { this.mp hf.to_measurePreserving, h.mp hf.to_preErgodic with }, fun hf =>
       { this.mpr hf.to_measurePreserving, h.mpr hf.to_preErgodic with }⟩
 #align measure_theory.measure_preserving.ergodic_conjugate_iff MeasureTheory.MeasurePreserving.ergodic_conjugate_iff
+-/
 
 end MeasureTheory.MeasurePreserving
 
@@ -156,6 +164,7 @@ theorem quasiErgodic (hf : Ergodic f μ) : QuasiErgodic f μ :=
 #align ergodic.quasi_ergodic Ergodic.quasiErgodic
 -/
 
+#print Ergodic.ae_empty_or_univ_of_preimage_ae_le' /-
 /-- See also `ergodic.ae_empty_or_univ_of_preimage_ae_le`. -/
 theorem ae_empty_or_univ_of_preimage_ae_le' (hf : Ergodic f μ) (hs : MeasurableSet s)
     (hs' : f ⁻¹' s ≤ᵐ[μ] s) (h_fin : μ s ≠ ∞) : s =ᵐ[μ] (∅ : Set α) ∨ s =ᵐ[μ] univ :=
@@ -164,7 +173,9 @@ theorem ae_empty_or_univ_of_preimage_ae_le' (hf : Ergodic f μ) (hs : Measurable
   refine' ae_eq_of_ae_subset_of_measure_ge hs' (hf.measure_preimage hs).symm.le _ h_fin
   exact measurableSet_preimage hf.measurable hs
 #align ergodic.ae_empty_or_univ_of_preimage_ae_le' Ergodic.ae_empty_or_univ_of_preimage_ae_le'
+-/
 
+#print Ergodic.ae_empty_or_univ_of_ae_le_preimage' /-
 /-- See also `ergodic.ae_empty_or_univ_of_ae_le_preimage`. -/
 theorem ae_empty_or_univ_of_ae_le_preimage' (hf : Ergodic f μ) (hs : MeasurableSet s)
     (hs' : s ≤ᵐ[μ] f ⁻¹' s) (h_fin : μ s ≠ ∞) : s =ᵐ[μ] (∅ : Set α) ∨ s =ᵐ[μ] univ :=
@@ -173,7 +184,9 @@ theorem ae_empty_or_univ_of_ae_le_preimage' (hf : Ergodic f μ) (hs : Measurable
   refine' hf.quasi_ergodic.ae_empty_or_univ' hs _
   exact (ae_eq_of_ae_subset_of_measure_ge hs' (hf.measure_preimage hs).le hs h_fin).symm
 #align ergodic.ae_empty_or_univ_of_ae_le_preimage' Ergodic.ae_empty_or_univ_of_ae_le_preimage'
+-/
 
+#print Ergodic.ae_empty_or_univ_of_image_ae_le' /-
 /-- See also `ergodic.ae_empty_or_univ_of_image_ae_le`. -/
 theorem ae_empty_or_univ_of_image_ae_le' (hf : Ergodic f μ) (hs : MeasurableSet s)
     (hs' : f '' s ≤ᵐ[μ] s) (h_fin : μ s ≠ ∞) : s =ᵐ[μ] (∅ : Set α) ∨ s =ᵐ[μ] univ :=
@@ -183,6 +196,7 @@ theorem ae_empty_or_univ_of_image_ae_le' (hf : Ergodic f μ) (hs : MeasurableSet
       (hf.quasi_measure_preserving.preimage_mono_ae hs')
   exact ae_empty_or_univ_of_ae_le_preimage' hf hs hs' h_fin
 #align ergodic.ae_empty_or_univ_of_image_ae_le' Ergodic.ae_empty_or_univ_of_image_ae_le'
+-/
 
 section IsFiniteMeasure
 

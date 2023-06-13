@@ -49,6 +49,7 @@ variable {C : Type u₁} [Category.{v₁} C] [Preadditive C] {D : Type u₂} [Ca
 
 section FiniteLimits
 
+#print CategoryTheory.Functor.isLimitMapConeBinaryFanOfPreservesKernels /-
 /-- A functor between preadditive categories which preserves kernels preserves that an
 arbitrary binary fan is a limit.
 -/
@@ -64,6 +65,7 @@ def isLimitMapConeBinaryFanOfPreservesKernels {X Y Z : C} (π₁ : Z ⟶ X) (π�
       (binary_bicone.is_bilimit_of_kernel_inl (F.map_binary_bicone bc)
           (is_limit_map_cone_fork_equiv' F _ (is_limit_of_preserves F hf))).IsLimit
 #align category_theory.functor.is_limit_map_cone_binary_fan_of_preserves_kernels CategoryTheory.Functor.isLimitMapConeBinaryFanOfPreservesKernels
+-/
 
 #print CategoryTheory.Functor.preservesBinaryProductOfPreservesKernels /-
 /-- A kernel preserving functor between preadditive categories preserves any pair being a limit. -/
@@ -152,6 +154,7 @@ end FiniteLimits
 
 section FiniteColimits
 
+#print CategoryTheory.Functor.isColimitMapCoconeBinaryCofanOfPreservesCokernels /-
 /-- A functor between preadditive categories which preserves cokernels preserves finite coproducts.
 -/
 def isColimitMapCoconeBinaryCofanOfPreservesCokernels {X Y Z : C} (ι₁ : X ⟶ Z) (ι₂ : Y ⟶ Z)
@@ -166,6 +169,7 @@ def isColimitMapCoconeBinaryCofanOfPreservesCokernels {X Y Z : C} (ι₁ : X ⟶
       (binary_bicone.is_bilimit_of_cokernel_fst (F.map_binary_bicone bc)
           (is_colimit_map_cocone_cofork_equiv' F _ (is_colimit_of_preserves F hf))).IsColimit
 #align category_theory.functor.is_colimit_map_cocone_binary_cofan_of_preserves_cokernels CategoryTheory.Functor.isColimitMapCoconeBinaryCofanOfPreservesCokernels
+-/
 
 #print CategoryTheory.Functor.preservesCoproductOfPreservesCokernels /-
 /-- A cokernel preserving functor between preadditive categories preserves any pair being

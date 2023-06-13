@@ -168,6 +168,7 @@ instance {β : Type v} (g : β → C) [HasZeroMorphisms C] [HasBiproduct g] [∀
     where Factors E X' f e epi :=
     ⟨biproduct.desc fun b => factor_thru (biproduct.ι g b ≫ f) e, by tidy⟩
 
+#print CategoryTheory.Projective.projective_iff_preservesEpimorphisms_coyoneda_obj /-
 theorem projective_iff_preservesEpimorphisms_coyoneda_obj (P : C) :
     Projective P ↔ (coyoneda.obj (op P)).PreservesEpimorphisms :=
   ⟨fun hP =>
@@ -179,6 +180,7 @@ theorem projective_iff_preservesEpimorphisms_coyoneda_obj (P : C) :
     ⟨fun E X f e he =>
       (epi_iff_surjective _).1 (inferInstance : epi ((coyoneda.obj (op P)).map e)) f⟩⟩
 #align category_theory.projective.projective_iff_preserves_epimorphisms_coyoneda_obj CategoryTheory.Projective.projective_iff_preservesEpimorphisms_coyoneda_obj
+-/
 
 section EnoughProjectives
 
@@ -250,6 +252,7 @@ namespace Adjunction
 
 variable {D : Type _} [Category D] {F : C ⥤ D} {G : D ⥤ C}
 
+#print CategoryTheory.Adjunction.map_projective /-
 theorem map_projective (adj : F ⊣ G) [G.PreservesEpimorphisms] (P : C) (hP : Projective P) :
     Projective (F.obj P) :=
   ⟨fun X Y f g => by
@@ -259,7 +262,9 @@ theorem map_projective (adj : F ⊣ G) [G.PreservesEpimorphisms] (P : C) (hP : P
     rw [category.assoc, ← adjunction.counit_naturality, ← category.assoc, ← F.map_comp, h]
     simp⟩
 #align category_theory.adjunction.map_projective CategoryTheory.Adjunction.map_projective
+-/
 
+#print CategoryTheory.Adjunction.projective_of_map_projective /-
 theorem projective_of_map_projective (adj : F ⊣ G) [Full F] [Faithful F] (P : C)
     (hP : Projective (F.obj P)) : Projective P :=
   ⟨fun X Y f g => by
@@ -270,7 +275,9 @@ theorem projective_of_map_projective (adj : F ⊣ G) [Full F] [Faithful F] (P : 
     refine' faithful.map_injective F _
     simpa⟩
 #align category_theory.adjunction.projective_of_map_projective CategoryTheory.Adjunction.projective_of_map_projective
+-/
 
+#print CategoryTheory.Adjunction.mapProjectivePresentation /-
 /-- Given an adjunction `F ⊣ G` such that `G` preserves epis, `F` maps a projective presentation of
 `X` to a projective presentation of `F(X)`. -/
 def mapProjectivePresentation (adj : F ⊣ G) [G.PreservesEpimorphisms] (X : C)
@@ -283,6 +290,7 @@ def mapProjectivePresentation (adj : F ⊣ G) [G.PreservesEpimorphisms] (X : C)
     haveI : PreservesColimitsOfSize.{0, 0} F := adj.left_adjoint_preserves_colimits <;>
       infer_instance
 #align category_theory.adjunction.map_projective_presentation CategoryTheory.Adjunction.mapProjectivePresentation
+-/
 
 end Adjunction
 
@@ -290,6 +298,7 @@ namespace Equivalence
 
 variable {D : Type _} [Category D] (F : C ≌ D)
 
+#print CategoryTheory.Equivalence.projectivePresentationOfMapProjectivePresentation /-
 /-- Given an equivalence of categories `F`, a projective presentation of `F(X)` induces a
 projective presentation of `X.` -/
 def projectivePresentationOfMapProjectivePresentation (X : C)
@@ -300,7 +309,9 @@ def projectivePresentationOfMapProjectivePresentation (X : C)
   f := F.inverse.map Y.f ≫ F.unitInv.app _
   Epi := epi_comp _ _
 #align category_theory.equivalence.projective_presentation_of_map_projective_presentation CategoryTheory.Equivalence.projectivePresentationOfMapProjectivePresentation
+-/
 
+#print CategoryTheory.Equivalence.enoughProjectives_iff /-
 theorem enoughProjectives_iff (F : C ≌ D) : EnoughProjectives C ↔ EnoughProjectives D :=
   by
   constructor
@@ -314,6 +325,7 @@ theorem enoughProjectives_iff (F : C ≌ D) : EnoughProjectives C ↔ EnoughProj
       F.projective_presentation_of_map_projective_presentation X
         (Nonempty.some (H.presentation (F.functor.obj X)))
 #align category_theory.equivalence.enough_projectives_iff CategoryTheory.Equivalence.enoughProjectives_iff
+-/
 
 end Equivalence
 

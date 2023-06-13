@@ -60,12 +60,14 @@ theorem measurable_coe {s : Set α} (hs : MeasurableSet s) : Measurable fun μ :
 #align measure_theory.measure.measurable_coe MeasureTheory.Measure.measurable_coe
 -/
 
+#print MeasureTheory.Measure.measurable_of_measurable_coe /-
 theorem measurable_of_measurable_coe (f : β → Measure α)
     (h : ∀ (s : Set α) (hs : MeasurableSet s), Measurable fun b => f b s) : Measurable f :=
   Measurable.of_le_map <|
     iSup₂_le fun s hs =>
       MeasurableSpace.comap_le_iff_le_map.2 <| by rw [MeasurableSpace.map_comp] <;> exact h s hs
 #align measure_theory.measure.measurable_of_measurable_coe MeasureTheory.Measure.measurable_of_measurable_coe
+-/
 
 instance {α : Type _} {m : MeasurableSpace α} : MeasurableAdd₂ (Measure α) :=
   by
@@ -82,12 +84,14 @@ theorem measurable_measure {μ : α → Measure β} :
 #align measure_theory.measure.measurable_measure MeasureTheory.Measure.measurable_measure
 -/
 
+#print MeasureTheory.Measure.measurable_map /-
 theorem measurable_map (f : α → β) (hf : Measurable f) : Measurable fun μ : Measure α => map f μ :=
   by
   refine' measurable_of_measurable_coe _ fun s hs => _
   simp_rw [map_apply hf hs]
   exact measurable_coe (hf hs)
 #align measure_theory.measure.measurable_map MeasureTheory.Measure.measurable_map
+-/
 
 #print MeasureTheory.Measure.measurable_dirac /-
 theorem measurable_dirac : Measurable (Measure.dirac : α → Measure α) :=
@@ -186,6 +190,7 @@ theorem bind_zero_left (f : α → Measure β) : bind 0 f = 0 := by simp [bind]
 #align measure_theory.measure.bind_zero_left MeasureTheory.Measure.bind_zero_left
 -/
 
+#print MeasureTheory.Measure.bind_zero_right /-
 @[simp]
 theorem bind_zero_right (m : Measure α) : bind m (0 : α → Measure β) = 0 :=
   by
@@ -194,17 +199,22 @@ theorem bind_zero_right (m : Measure α) : bind m (0 : α → Measure β) = 0 :=
   rw [lintegral_map (measurable_coe hs) measurable_zero]
   simp only [Pi.zero_apply, coe_zero, lintegral_const, MulZeroClass.zero_mul]
 #align measure_theory.measure.bind_zero_right MeasureTheory.Measure.bind_zero_right
+-/
 
+#print MeasureTheory.Measure.bind_zero_right' /-
 @[simp]
 theorem bind_zero_right' (m : Measure α) : bind m (fun _ => 0 : α → Measure β) = 0 :=
   bind_zero_right m
 #align measure_theory.measure.bind_zero_right' MeasureTheory.Measure.bind_zero_right'
+-/
 
+#print MeasureTheory.Measure.bind_apply /-
 @[simp]
 theorem bind_apply {m : Measure α} {f : α → Measure β} {s : Set β} (hs : MeasurableSet s)
     (hf : Measurable f) : bind m f s = ∫⁻ a, f a s ∂m := by
   rw [bind, join_apply hs, lintegral_map (measurable_coe hs) hf]
 #align measure_theory.measure.bind_apply MeasureTheory.Measure.bind_apply
+-/
 
 #print MeasureTheory.Measure.measurable_bind' /-
 theorem measurable_bind' {g : α → Measure β} (hg : Measurable g) : Measurable fun m => bind m g :=
@@ -212,11 +222,14 @@ theorem measurable_bind' {g : α → Measure β} (hg : Measurable g) : Measurabl
 #align measure_theory.measure.measurable_bind' MeasureTheory.Measure.measurable_bind'
 -/
 
+#print MeasureTheory.Measure.lintegral_bind /-
 theorem lintegral_bind {m : Measure α} {μ : α → Measure β} {f : β → ℝ≥0∞} (hμ : Measurable μ)
     (hf : Measurable f) : ∫⁻ x, f x ∂bind m μ = ∫⁻ a, ∫⁻ x, f x ∂μ a ∂m :=
   (lintegral_join hf).trans (lintegral_map (measurable_lintegral hf) hμ)
 #align measure_theory.measure.lintegral_bind MeasureTheory.Measure.lintegral_bind
+-/
 
+#print MeasureTheory.Measure.bind_bind /-
 theorem bind_bind {γ} [MeasurableSpace γ] {m : Measure α} {f : α → Measure β} {g : β → Measure γ}
     (hf : Measurable f) (hg : Measurable g) : bind (bind m f) g = bind m fun a => bind (f a) g :=
   by
@@ -224,6 +237,7 @@ theorem bind_bind {γ} [MeasurableSpace γ] {m : Measure α} {f : α → Measure
   simp_rw [bind_apply hs hg, bind_apply hs ((measurable_bind' hg).comp hf),
     lintegral_bind hf ((measurable_coe hs).comp hg), bind_apply hs hg]
 #align measure_theory.measure.bind_bind MeasureTheory.Measure.bind_bind
+-/
 
 #print MeasureTheory.Measure.bind_dirac /-
 theorem bind_dirac {f : α → Measure β} (hf : Measurable f) (a : α) : bind (dirac a) f = f a := by
@@ -245,6 +259,7 @@ theorem join_eq_bind (μ : Measure (Measure α)) : join μ = bind μ id := by rw
 #align measure_theory.measure.join_eq_bind MeasureTheory.Measure.join_eq_bind
 -/
 
+#print MeasureTheory.Measure.join_map_map /-
 theorem join_map_map {f : α → β} (hf : Measurable f) (μ : Measure (Measure α)) :
     join (map (map f) μ) = map f (join μ) := by
   ext1 s hs
@@ -252,6 +267,7 @@ theorem join_map_map {f : α → β} (hf : Measurable f) (μ : Measure (Measure 
     lintegral_map (measurable_coe hs) (measurable_map f hf)]
   simp_rw [map_apply hf hs]
 #align measure_theory.measure.join_map_map MeasureTheory.Measure.join_map_map
+-/
 
 #print MeasureTheory.Measure.join_map_join /-
 theorem join_map_join (μ : Measure (Measure (Measure α))) : join (map join μ) = join (join μ) :=

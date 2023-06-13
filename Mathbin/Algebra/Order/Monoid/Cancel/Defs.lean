@@ -51,6 +51,7 @@ section OrderedCancelCommMonoid
 
 variable [OrderedCancelCommMonoid α] {a b c d : α}
 
+#print OrderedCancelCommMonoid.to_contravariantClass_le_left /-
 -- see Note [lower instance priority]
 @[to_additive]
 instance (priority := 200) OrderedCancelCommMonoid.to_contravariantClass_le_left :
@@ -58,7 +59,9 @@ instance (priority := 200) OrderedCancelCommMonoid.to_contravariantClass_le_left
   ⟨OrderedCancelCommMonoid.le_of_mul_le_mul_left⟩
 #align ordered_cancel_comm_monoid.to_contravariant_class_le_left OrderedCancelCommMonoid.to_contravariantClass_le_left
 #align ordered_cancel_add_comm_monoid.to_contravariant_class_le_left OrderedCancelAddCommMonoid.to_contravariantClass_le_left
+-/
 
+#print OrderedCancelCommMonoid.lt_of_mul_lt_mul_left /-
 @[to_additive]
 theorem OrderedCancelCommMonoid.lt_of_mul_lt_mul_left : ∀ a b c : α, a * b < a * c → b < c :=
   fun a b c h =>
@@ -66,14 +69,18 @@ theorem OrderedCancelCommMonoid.lt_of_mul_lt_mul_left : ∀ a b c : α, a * b < 
     mt (fun h => OrderedCancelCommMonoid.mul_le_mul_left _ _ h _) (not_le_of_gt h)
 #align ordered_cancel_comm_monoid.lt_of_mul_lt_mul_left OrderedCancelCommMonoid.lt_of_mul_lt_mul_left
 #align ordered_cancel_add_comm_monoid.lt_of_add_lt_add_left OrderedCancelAddCommMonoid.lt_of_add_lt_add_left
+-/
 
+#print OrderedCancelCommMonoid.to_contravariantClass_left /-
 @[to_additive]
 instance OrderedCancelCommMonoid.to_contravariantClass_left (M : Type _)
     [OrderedCancelCommMonoid M] : ContravariantClass M M (· * ·) (· < ·)
     where elim a b c := OrderedCancelCommMonoid.lt_of_mul_lt_mul_left _ _ _
 #align ordered_cancel_comm_monoid.to_contravariant_class_left OrderedCancelCommMonoid.to_contravariantClass_left
 #align ordered_cancel_add_comm_monoid.to_contravariant_class_left OrderedCancelAddCommMonoid.to_contravariantClass_left
+-/
 
+#print OrderedCancelCommMonoid.to_contravariantClass_right /-
 /- This instance can be proven with `by apply_instance`.  However, by analogy with the
 instance `ordered_cancel_comm_monoid.to_covariant_class_right` above, I imagine that without
 this instance, some Type would not have a `contravariant_class M M (function.swap (*)) (<)`
@@ -84,6 +91,7 @@ instance OrderedCancelCommMonoid.to_contravariantClass_right (M : Type _)
   contravariant_swap_mul_lt_of_contravariant_mul_lt M
 #align ordered_cancel_comm_monoid.to_contravariant_class_right OrderedCancelCommMonoid.to_contravariantClass_right
 #align ordered_cancel_add_comm_monoid.to_contravariant_class_right OrderedCancelAddCommMonoid.to_contravariantClass_right
+-/
 
 #print OrderedCancelCommMonoid.toOrderedCommMonoid /-
 -- see Note [lower instance priority]

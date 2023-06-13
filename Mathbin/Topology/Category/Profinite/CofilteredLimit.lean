@@ -44,8 +44,7 @@ universe u
 variable {J : Type u} [SmallCategory J] [IsCofiltered J] {F : J ⥤ Profinite.{u}} (C : Cone F)
   (hC : IsLimit C)
 
-include hC
-
+#print Profinite.exists_clopen_of_cofiltered /-
 /-- If `X` is a cofiltered limit of profinite sets, then any clopen subset of `X` arises from
 a clopen set in one of the terms in the limit.
 -/
@@ -119,7 +118,9 @@ theorem exists_clopen_of_cofiltered {U : Set C.pt} (hU : IsClopen U) :
       dsimp only [W] at hx 
       rwa [dif_pos hs, ← Set.preimage_comp, ← Profinite.coe_comp, C.w] at hx 
 #align Profinite.exists_clopen_of_cofiltered Profinite.exists_clopen_of_cofiltered
+-/
 
+#print Profinite.exists_locallyConstant_fin_two /-
 theorem exists_locallyConstant_fin_two (f : LocallyConstant C.pt (Fin 2)) :
     ∃ (j : J) (g : LocallyConstant (F.obj j) (Fin 2)), f = g.comap (C.π.app _) :=
   by
@@ -132,7 +133,9 @@ theorem exists_locallyConstant_fin_two (f : LocallyConstant C.pt (Fin 2)) :
   conv_rhs => rw [Set.preimage_comp]
   rw [LocallyConstant.ofClopen_fiber_zero hV, ← h]
 #align Profinite.exists_locally_constant_fin_two Profinite.exists_locallyConstant_fin_two
+-/
 
+#print Profinite.exists_locallyConstant_finite_aux /-
 theorem exists_locallyConstant_finite_aux {α : Type _} [Finite α] (f : LocallyConstant C.pt α) :
     ∃ (j : J) (g : LocallyConstant (F.obj j) (α → Fin 2)),
       (f.map fun a b => if a = b then (0 : Fin 2) else 1) = g.comap (C.π.app _) :=
@@ -172,7 +175,9 @@ theorem exists_locallyConstant_finite_aux {α : Type _} [Finite α] (f : Locally
     rw [C.w]
   all_goals continuity
 #align Profinite.exists_locally_constant_finite_aux Profinite.exists_locallyConstant_finite_aux
+-/
 
+#print Profinite.exists_locallyConstant_finite_nonempty /-
 theorem exists_locallyConstant_finite_nonempty {α : Type _} [Finite α] [Nonempty α]
     (f : LocallyConstant C.pt α) :
     ∃ (j : J) (g : LocallyConstant (F.obj j) α), f = g.comap (C.π.app _) :=
@@ -202,7 +207,9 @@ theorem exists_locallyConstant_finite_nonempty {α : Type _} [Finite α] [Nonemp
     · exact hh1.symm
     · exact False.elim (bot_ne_top hh)
 #align Profinite.exists_locally_constant_finite_nonempty Profinite.exists_locallyConstant_finite_nonempty
+-/
 
+#print Profinite.exists_locallyConstant /-
 /-- Any locally constant function from a cofiltered limit of profinite sets factors through
 one of the components. -/
 theorem exists_locallyConstant {α : Type _} (f : LocallyConstant C.pt α) :
@@ -241,6 +248,7 @@ theorem exists_locallyConstant {α : Type _} (f : LocallyConstant C.pt α) :
     rw [← hj]
     rfl
 #align Profinite.exists_locally_constant Profinite.exists_locallyConstant
+-/
 
 end Profinite
 

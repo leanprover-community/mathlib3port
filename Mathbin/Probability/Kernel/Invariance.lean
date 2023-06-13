@@ -37,8 +37,6 @@ namespace ProbabilityTheory
 
 variable {α β γ : Type _} {mα : MeasurableSpace α} {mβ : MeasurableSpace β} {mγ : MeasurableSpace γ}
 
-include mα mβ
-
 namespace Kernel
 
 /-! ### Push-forward of measures along a kernel -/
@@ -72,8 +70,6 @@ theorem comp_const_apply_eq_bind (κ : kernel α β) (μ : Measure α) (a : α) 
     (κ ∘ₖ const α μ) a = μ.bind κ := by
   rw [← const_apply (μ.bind κ) a, const_bind_eq_comp_const κ μ]
 #align probability_theory.kernel.comp_const_apply_eq_bind ProbabilityTheory.kernel.comp_const_apply_eq_bind
-
-omit mβ
 
 /-! ### Invariant measures of kernels -/
 

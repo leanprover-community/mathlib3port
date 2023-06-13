@@ -240,6 +240,7 @@ instance (priority := 100) RegularEpi.ofSplitEpi (f : X ⟶ Y) [IsSplitEpi f] : 
 #align category_theory.regular_epi.of_split_epi CategoryTheory.RegularEpi.ofSplitEpi
 -/
 
+#print CategoryTheory.RegularEpi.desc' /-
 /-- If `f` is a regular epi, then every morphism `k : X ⟶ W` coequalizing `regular_epi.left` and
     `regular_epi.right` induces `l : Y ⟶ W` such that `f ≫ l = k`. -/
 def RegularEpi.desc' {W : C} (f : X ⟶ Y) [RegularEpi f] (k : X ⟶ W)
@@ -247,6 +248,7 @@ def RegularEpi.desc' {W : C} (f : X ⟶ Y) [RegularEpi f] (k : X ⟶ W)
     { l : Y ⟶ W // f ≫ l = k } :=
   Cofork.IsColimit.desc' RegularEpi.isColimit _ h
 #align category_theory.regular_epi.desc' CategoryTheory.RegularEpi.desc'
+-/
 
 #print CategoryTheory.regularOfIsPushoutSndOfRegular /-
 /-- The second leg of a pushout cocone is a regular epimorphism if the right component is too.

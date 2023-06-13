@@ -110,8 +110,6 @@ namespace SetLike
 
 variable {A : Type _} {B : Type _} [i : SetLike A B]
 
-include i
-
 instance : CoeTC A (Set B) :=
   ⟨SetLike.coe⟩
 
@@ -146,9 +144,11 @@ protected theorem forall {q : p → Prop} : (∀ x, q x) ↔ ∀ x ∈ p, q ⟨x
 #align set_like.forall SetLike.forall
 -/
 
+#print SetLike.coe_injective /-
 theorem coe_injective : Function.Injective (coe : A → Set B) := fun x y h =>
   SetLike.coe_injective' h
 #align set_like.coe_injective SetLike.coe_injective
+-/
 
 #print SetLike.coe_set_eq /-
 @[simp, norm_cast]
@@ -163,9 +163,11 @@ theorem ext' (h : (p : Set B) = q) : p = q :=
 #align set_like.ext' SetLike.ext'
 -/
 
+#print SetLike.ext'_iff /-
 theorem ext'_iff : p = q ↔ (p : Set B) = q :=
   coe_set_eq.symm
 #align set_like.ext'_iff SetLike.ext'_iff
+-/
 
 #print SetLike.ext /-
 /-- Note: implementers of `set_like` must copy this lemma in order to tag it with `@[ext]`. -/
@@ -174,9 +176,11 @@ theorem ext (h : ∀ x, x ∈ p ↔ x ∈ q) : p = q :=
 #align set_like.ext SetLike.ext
 -/
 
+#print SetLike.ext_iff /-
 theorem ext_iff : p = q ↔ ∀ x, x ∈ p ↔ x ∈ q :=
   coe_injective.eq_iff.symm.trans Set.ext_iff
 #align set_like.ext_iff SetLike.ext_iff
+-/
 
 #print SetLike.mem_coe /-
 @[simp]
@@ -216,39 +220,55 @@ protected theorem eta (x : p) (hx : (x : B) ∈ p) : (⟨x, hx⟩ : p) = x :=
 instance (priority := 100) : PartialOrder A :=
   { PartialOrder.lift (coe : A → Set B) coe_injective with le := fun H K => ∀ ⦃x⦄, x ∈ H → x ∈ K }
 
+#print SetLike.le_def /-
 theorem le_def {S T : A} : S ≤ T ↔ ∀ ⦃x : B⦄, x ∈ S → x ∈ T :=
   Iff.rfl
 #align set_like.le_def SetLike.le_def
+-/
 
+#print SetLike.coe_subset_coe /-
 @[simp, norm_cast]
 theorem coe_subset_coe {S T : A} : (S : Set B) ⊆ T ↔ S ≤ T :=
   Iff.rfl
 #align set_like.coe_subset_coe SetLike.coe_subset_coe
+-/
 
+#print SetLike.coe_mono /-
 @[mono]
 theorem coe_mono : Monotone (coe : A → Set B) := fun a b => coe_subset_coe.mpr
 #align set_like.coe_mono SetLike.coe_mono
+-/
 
+#print SetLike.coe_ssubset_coe /-
 @[simp, norm_cast]
 theorem coe_ssubset_coe {S T : A} : (S : Set B) ⊂ T ↔ S < T :=
   Iff.rfl
 #align set_like.coe_ssubset_coe SetLike.coe_ssubset_coe
+-/
 
+#print SetLike.coe_strictMono /-
 @[mono]
 theorem coe_strictMono : StrictMono (coe : A → Set B) := fun a b => coe_ssubset_coe.mpr
 #align set_like.coe_strict_mono SetLike.coe_strictMono
+-/
 
+#print SetLike.not_le_iff_exists /-
 theorem not_le_iff_exists : ¬p ≤ q ↔ ∃ x ∈ p, x ∉ q :=
   Set.not_subset
 #align set_like.not_le_iff_exists SetLike.not_le_iff_exists
+-/
 
+#print SetLike.exists_of_lt /-
 theorem exists_of_lt : p < q → ∃ x ∈ q, x ∉ p :=
   Set.exists_of_ssubset
 #align set_like.exists_of_lt SetLike.exists_of_lt
+-/
 
+#print SetLike.lt_iff_le_and_exists /-
 theorem lt_iff_le_and_exists : p < q ↔ p ≤ q ∧ ∃ x ∈ q, x ∉ p := by
   rw [lt_iff_le_not_le, not_le_iff_exists]
 #align set_like.lt_iff_le_and_exists SetLike.lt_iff_le_and_exists
+-/
 
 end SetLike
 

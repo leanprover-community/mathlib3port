@@ -83,6 +83,7 @@ noncomputable def taylorWithinEval (f : ℝ → E) (n : ℕ) (s : Set ℝ) (x₀
 #align taylor_within_eval taylorWithinEval
 -/
 
+#print taylorWithin_succ /-
 theorem taylorWithin_succ (f : ℝ → E) (n : ℕ) (s : Set ℝ) (x₀ : ℝ) :
     taylorWithin f (n + 1) s x₀ =
       taylorWithin f n s x₀ +
@@ -92,7 +93,9 @@ theorem taylorWithin_succ (f : ℝ → E) (n : ℕ) (s : Set ℝ) (x₀ : ℝ) :
   dsimp only [taylorWithin]
   rw [Finset.sum_range_succ]
 #align taylor_within_succ taylorWithin_succ
+-/
 
+#print taylorWithinEval_succ /-
 @[simp]
 theorem taylorWithinEval_succ (f : ℝ → E) (n : ℕ) (s : Set ℝ) (x₀ x : ℝ) :
     taylorWithinEval f (n + 1) s x₀ x =
@@ -107,6 +110,7 @@ theorem taylorWithinEval_succ (f : ℝ → E) (n : ℕ) (s : Set ℝ) (x₀ x : 
   rw [← mul_smul, mul_comm, Nat.factorial_succ, Nat.cast_mul, Nat.cast_add, Nat.cast_one,
     mul_inv_rev]
 #align taylor_within_eval_succ taylorWithinEval_succ
+-/
 
 #print taylor_within_zero_eval /-
 /-- The Taylor polynomial of order zero evaluates to `f x`. -/
@@ -133,6 +137,7 @@ theorem taylorWithinEval_self (f : ℝ → E) (n : ℕ) (s : Set ℝ) (x₀ : �
 #align taylor_within_eval_self taylorWithinEval_self
 -/
 
+#print taylor_within_apply /-
 theorem taylor_within_apply (f : ℝ → E) (n : ℕ) (s : Set ℝ) (x₀ x : ℝ) :
     taylorWithinEval f n s x₀ x =
       ∑ k in Finset.range (n + 1), ((k ! : ℝ)⁻¹ * (x - x₀) ^ k) • iteratedDerivWithin k f s x₀ :=
@@ -142,6 +147,7 @@ theorem taylor_within_apply (f : ℝ → E) (n : ℕ) (s : Set ℝ) (x₀ x : �
   rw [taylorWithinEval_succ, Finset.sum_range_succ, hk]
   simp
 #align taylor_within_apply taylor_within_apply
+-/
 
 #print continuousOn_taylorWithinEval /-
 /-- If `f` is `n` times continuous differentiable on a set `s`, then the Taylor polynomial
@@ -163,6 +169,7 @@ theorem continuousOn_taylorWithinEval {f : ℝ → E} {x : ℝ} {n : ℕ} {s : S
 #align continuous_on_taylor_within_eval continuousOn_taylorWithinEval
 -/
 
+#print monomial_has_deriv_aux /-
 /-- Helper lemma for calculating the derivative of the monomial that appears in Taylor expansions.-/
 theorem monomial_has_deriv_aux (t x : ℝ) (n : ℕ) :
     HasDerivAt (fun y => (x - y) ^ (n + 1)) (-(n + 1) * (x - t) ^ n) t :=
@@ -172,7 +179,9 @@ theorem monomial_has_deriv_aux (t x : ℝ) (n : ℕ) :
   convert @HasDerivAt.pow _ _ _ _ _ (n + 1) ((hasDerivAt_id t).neg.AddConst x)
   simp only [Nat.cast_add, Nat.cast_one]
 #align monomial_has_deriv_aux monomial_has_deriv_aux
+-/
 
+#print hasDerivWithinAt_taylor_coeff_within /-
 theorem hasDerivWithinAt_taylor_coeff_within {f : ℝ → E} {x y : ℝ} {k : ℕ} {s t : Set ℝ}
     (ht : UniqueDiffWithinAt ℝ t y) (hs : s ∈ 𝓝[t] y)
     (hf : DifferentiableWithinAt ℝ (iteratedDerivWithin (k + 1) f s) s y) :
@@ -201,7 +210,9 @@ theorem hasDerivWithinAt_taylor_coeff_within {f : ℝ → E} {x y : ℝ} {k : �
   field_simp [Nat.cast_add_one_ne_zero k, Nat.factorial_ne_zero k]
   rw [neg_div, neg_smul, sub_eq_add_neg]
 #align has_deriv_within_at_taylor_coeff_within hasDerivWithinAt_taylor_coeff_within
+-/
 
+#print hasDerivWithinAt_taylorWithinEval /-
 /-- Calculate the derivative of the Taylor polynomial with respect to `x₀`.
 
 Version for arbitrary sets -/
@@ -232,7 +243,9 @@ theorem hasDerivWithinAt_taylorWithinEval {f : ℝ → E} {x y : ℝ} {n : ℕ} 
         hf')
   exact (add_sub_cancel'_right _ _).symm
 #align has_deriv_within_at_taylor_within_eval hasDerivWithinAt_taylorWithinEval
+-/
 
+#print taylorWithinEval_hasDerivAt_Ioo /-
 /-- Calculate the derivative of the Taylor polynomial with respect to `x₀`.
 
 Version for open intervals -/
@@ -248,7 +261,9 @@ theorem taylorWithinEval_hasDerivAt_Ioo {f : ℝ → E} {a b t : ℝ} (x : ℝ) 
         (hf' t ht).mono_of_mem h_nhds').HasDerivAt
     h_nhds
 #align taylor_within_eval_has_deriv_at_Ioo taylorWithinEval_hasDerivAt_Ioo
+-/
 
+#print has_deriv_within_taylorWithinEval_at_Icc /-
 /-- Calculate the derivative of the Taylor polynomial with respect to `x₀`.
 
 Version for closed intervals -/
@@ -260,10 +275,12 @@ theorem has_deriv_within_taylorWithinEval_at_Icc {f : ℝ → E} {a b t : ℝ} (
   hasDerivWithinAt_taylorWithinEval (uniqueDiffOn_Icc hx t ht) (uniqueDiffOn_Icc hx)
     self_mem_nhdsWithin ht rfl.Subset hf (hf' t ht)
 #align has_deriv_within_taylor_within_eval_at_Icc has_deriv_within_taylorWithinEval_at_Icc
+-/
 
 /-! ### Taylor's theorem with mean value type remainder estimate -/
 
 
+#print taylor_mean_remainder /-
 /-- **Taylor's theorem** with the general mean value form of the remainder.
 
 We assume that `f` is `n+1`-times continuously differentiable in the closed set `Icc x₀ x` and
@@ -295,7 +312,9 @@ theorem taylor_mean_remainder {f : ℝ → ℝ} {g g' : ℝ → ℝ} {x x₀ : �
   field_simp [g'_ne y hy, n.factorial_ne_zero]
   ring
 #align taylor_mean_remainder taylor_mean_remainder
+-/
 
+#print taylor_mean_remainder_lagrange /-
 /-- **Taylor's theorem** with the Lagrange form of the remainder.
 
 We assume that `f` is `n+1`-times continuously differentiable in the closed set `Icc x₀ x` and
@@ -330,7 +349,9 @@ theorem taylor_mean_remainder_lagrange {f : ℝ → ℝ} {x x₀ : ℝ} {n : ℕ
   field_simp [n.cast_add_one_ne_zero, n.factorial_ne_zero, xy_ne y hy]
   ring
 #align taylor_mean_remainder_lagrange taylor_mean_remainder_lagrange
+-/
 
+#print taylor_mean_remainder_cauchy /-
 /-- **Taylor's theorem** with the Cauchy form of the remainder.
 
 We assume that `f` is `n+1`-times continuously differentiable on the closed set `Icc x₀ x` and
@@ -355,7 +376,9 @@ theorem taylor_mean_remainder_cauchy {f : ℝ → ℝ} {x x₀ : ℝ} {n : ℕ} 
   field_simp [n.factorial_ne_zero]
   ring
 #align taylor_mean_remainder_cauchy taylor_mean_remainder_cauchy
+-/
 
+#print taylor_mean_remainder_bound /-
 /-- **Taylor's theorem** with a polynomial bound on the remainder
 
 We assume that `f` is `n+1`-times continuously differentiable on the closed set `Icc a b`.
@@ -404,7 +427,9 @@ theorem taylor_mean_remainder_bound {f : ℝ → E} {a b C x : ℝ} {n : ℕ} (h
   rw [abs_of_nonneg (sub_nonneg.mpr hx.1)]
   ring
 #align taylor_mean_remainder_bound taylor_mean_remainder_bound
+-/
 
+#print exists_taylor_mean_remainder_bound /-
 /-- **Taylor's theorem** with a polynomial bound on the remainder
 
 We assume that `f` is `n+1`-times continuously differentiable on the closed set `Icc a b`.
@@ -426,4 +451,5 @@ theorem exists_taylor_mean_remainder_bound {f : ℝ → E} {a b : ℝ} {n : ℕ}
   refine' taylor_mean_remainder_bound hab hf hx fun y => _
   exact (hf.continuous_on_iterated_deriv_within rfl.le <| uniqueDiffOn_Icc h).norm.le_sSup_image_Icc
 #align exists_taylor_mean_remainder_bound exists_taylor_mean_remainder_bound
+-/
 

@@ -208,11 +208,13 @@ protected def nonUnitalRingHom {γ : Type w} [∀ i, NonUnitalNonAssocSemiring (
 #align pi.non_unital_ring_hom Pi.nonUnitalRingHom
 -/
 
+#print Pi.nonUnitalRingHom_injective /-
 theorem nonUnitalRingHom_injective {γ : Type w} [Nonempty I] [∀ i, NonUnitalNonAssocSemiring (f i)]
     [NonUnitalNonAssocSemiring γ] (g : ∀ i, γ →ₙ+* f i) (hg : ∀ i, Function.Injective (g i)) :
     Function.Injective (Pi.nonUnitalRingHom g) :=
   mulHom_injective (fun i => (g i).toMulHom) hg
 #align pi.non_unital_ring_hom_injective Pi.nonUnitalRingHom_injective
+-/
 
 #print Pi.ringHom /-
 /-- A family of ring homomorphisms `f a : γ →+* β a` defines a ring homomorphism
@@ -225,11 +227,13 @@ protected def ringHom {γ : Type w} [∀ i, NonAssocSemiring (f i)] [NonAssocSem
 #align pi.ring_hom Pi.ringHom
 -/
 
+#print Pi.ringHom_injective /-
 theorem ringHom_injective {γ : Type w} [Nonempty I] [∀ i, NonAssocSemiring (f i)]
     [NonAssocSemiring γ] (g : ∀ i, γ →+* f i) (hg : ∀ i, Function.Injective (g i)) :
     Function.Injective (Pi.ringHom g) :=
   monoidHom_injective (fun i => (g i).toMonoidHom) hg
 #align pi.ring_hom_injective Pi.ringHom_injective
+-/
 
 end Pi
 

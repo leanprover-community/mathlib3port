@@ -33,17 +33,21 @@ instance (α : Type u) (β : Type v) [Fintype α] [Fintype β] : Fintype (Sum α
   elems := univ.disjSum univ
   complete := by rintro (_ | _) <;> simp
 
+#print Finset.univ_disjSum_univ /-
 @[simp]
 theorem Finset.univ_disjSum_univ {α β : Type _} [Fintype α] [Fintype β] :
     univ.disjSum univ = (univ : Finset (Sum α β)) :=
   rfl
 #align finset.univ_disj_sum_univ Finset.univ_disjSum_univ
+-/
 
+#print Fintype.card_sum /-
 @[simp]
 theorem Fintype.card_sum [Fintype α] [Fintype β] :
     Fintype.card (Sum α β) = Fintype.card α + Fintype.card β :=
   card_disjSum _ _
 #align fintype.card_sum Fintype.card_sum
+-/
 
 #print fintypeOfFintypeNe /-
 /-- If the subtype of all-but-one elements is a `fintype` then the type itself is a `fintype`. -/
@@ -53,6 +57,7 @@ def fintypeOfFintypeNe (a : α) (h : Fintype { b // b ≠ a }) : Fintype α :=
 #align fintype_of_fintype_ne fintypeOfFintypeNe
 -/
 
+#print image_subtype_ne_univ_eq_image_erase /-
 theorem image_subtype_ne_univ_eq_image_erase [Fintype α] [DecidableEq β] (k : β) (b : α → β) :
     image (fun i : { a // b a ≠ k } => b ↑i) univ = (image b univ).eraseₓ k :=
   by
@@ -66,7 +71,9 @@ theorem image_subtype_ne_univ_eq_image_erase [Fintype α] [DecidableEq β] (k : 
     subst ha
     exact ⟨⟨a, ne_of_mem_erase hi⟩, mem_univ _, rfl⟩
 #align image_subtype_ne_univ_eq_image_erase image_subtype_ne_univ_eq_image_erase
+-/
 
+#print image_subtype_univ_ssubset_image_univ /-
 theorem image_subtype_univ_ssubset_image_univ [Fintype α] [DecidableEq β] (k : β) (b : α → β)
     (hk : k ∈ image b univ) (p : β → Prop) [DecidablePred p] (hp : ¬p k) :
     image (fun i : { a // p (b a) } => b ↑i) univ ⊂ image b univ :=
@@ -83,7 +90,9 @@ theorem image_subtype_univ_ssubset_image_univ [Fintype α] [DecidableEq β] (k :
     rcases this with ⟨j, hj, hj'⟩
     exact hp (hj' ▸ j.2)
 #align image_subtype_univ_ssubset_image_univ image_subtype_univ_ssubset_image_univ
+-/
 
+#print Finset.exists_equiv_extend_of_card_eq /-
 /-- Any injection from a finset `s` in a fintype `α` to a finset `t` of the same cardinality as `α`
 can be extended to a bijection between `α` and `t`. -/
 theorem Finset.exists_equiv_extend_of_card_eq [Fintype α] [DecidableEq β] {t : Finset β}
@@ -110,7 +119,9 @@ theorem Finset.exists_equiv_extend_of_card_eq [Fintype α] [DecidableEq β] {t :
           hfs.ne (subset_insert _ _ hi) (mem_insert_self _ _) <| ne_of_mem_of_not_mem hi has)
   · exact g'.injective.ne (ne_of_mem_of_not_mem hi has)
 #align finset.exists_equiv_extend_of_card_eq Finset.exists_equiv_extend_of_card_eq
+-/
 
+#print Set.MapsTo.exists_equiv_extend_of_card_eq /-
 /-- Any injection from a set `s` in a fintype `α` to a finset `t` of the same cardinality as `α`
 can be extended to a bijection between `α` and `t`. -/
 theorem Set.MapsTo.exists_equiv_extend_of_card_eq [Fintype α] {t : Finset β}
@@ -125,6 +136,7 @@ theorem Set.MapsTo.exists_equiv_extend_of_card_eq [Fintype α] {t : Finset β}
   apply hg
   simpa using hi
 #align set.maps_to.exists_equiv_extend_of_card_eq Set.MapsTo.exists_equiv_extend_of_card_eq
+-/
 
 #print Fintype.card_subtype_or /-
 theorem Fintype.card_subtype_or (p q : α → Prop) [Fintype { x // p x }] [Fintype { x // q x }]

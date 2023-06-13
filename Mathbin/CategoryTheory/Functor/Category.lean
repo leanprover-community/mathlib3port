@@ -69,43 +69,59 @@ theorem vcomp_eq_comp (α : F ⟶ G) (β : G ⟶ H) : vcomp α β = α ≫ β :=
 #align category_theory.nat_trans.vcomp_eq_comp CategoryTheory.NatTrans.vcomp_eq_comp
 -/
 
+#print CategoryTheory.NatTrans.vcomp_app' /-
 theorem vcomp_app' (α : F ⟶ G) (β : G ⟶ H) (X : C) : (α ≫ β).app X = α.app X ≫ β.app X :=
   rfl
 #align category_theory.nat_trans.vcomp_app' CategoryTheory.NatTrans.vcomp_app'
+-/
 
+#print CategoryTheory.NatTrans.congr_app /-
 theorem congr_app {α β : F ⟶ G} (h : α = β) (X : C) : α.app X = β.app X := by rw [h]
 #align category_theory.nat_trans.congr_app CategoryTheory.NatTrans.congr_app
+-/
 
+#print CategoryTheory.NatTrans.id_app /-
 @[simp]
 theorem id_app (F : C ⥤ D) (X : C) : (𝟙 F : F ⟶ F).app X = 𝟙 (F.obj X) :=
   rfl
 #align category_theory.nat_trans.id_app CategoryTheory.NatTrans.id_app
+-/
 
+#print CategoryTheory.NatTrans.comp_app /-
 @[simp]
 theorem comp_app {F G H : C ⥤ D} (α : F ⟶ G) (β : G ⟶ H) (X : C) :
     (α ≫ β).app X = α.app X ≫ β.app X :=
   rfl
 #align category_theory.nat_trans.comp_app CategoryTheory.NatTrans.comp_app
+-/
 
+#print CategoryTheory.NatTrans.app_naturality /-
 theorem app_naturality {F G : C ⥤ D ⥤ E} (T : F ⟶ G) (X : C) {Y Z : D} (f : Y ⟶ Z) :
     (F.obj X).map f ≫ (T.app X).app Z = (T.app X).app Y ≫ (G.obj X).map f :=
   (T.app X).naturality f
 #align category_theory.nat_trans.app_naturality CategoryTheory.NatTrans.app_naturality
+-/
 
+#print CategoryTheory.NatTrans.naturality_app /-
 theorem naturality_app {F G : C ⥤ D ⥤ E} (T : F ⟶ G) (Z : D) {X Y : C} (f : X ⟶ Y) :
     (F.map f).app Z ≫ (T.app Y).app Z = (T.app X).app Z ≫ (G.map f).app Z :=
   congr_fun (congr_arg app (T.naturality f)) Z
 #align category_theory.nat_trans.naturality_app CategoryTheory.NatTrans.naturality_app
+-/
 
+#print CategoryTheory.NatTrans.mono_of_mono_app /-
 /-- A natural transformation is a monomorphism if each component is. -/
 theorem mono_of_mono_app (α : F ⟶ G) [∀ X : C, Mono (α.app X)] : Mono α :=
   ⟨fun H g h eq => by ext X; rw [← cancel_mono (α.app X), ← comp_app, Eq, comp_app]⟩
 #align category_theory.nat_trans.mono_of_mono_app CategoryTheory.NatTrans.mono_of_mono_app
+-/
 
+#print CategoryTheory.NatTrans.epi_of_epi_app /-
 /-- A natural transformation is an epimorphism if each component is. -/
 theorem epi_of_epi_app (α : F ⟶ G) [∀ X : C, Epi (α.app X)] : Epi α :=
   ⟨fun H g h eq => by ext X; rw [← cancel_epi (α.app X), ← comp_app, Eq, comp_app]⟩
 #align category_theory.nat_trans.epi_of_epi_app CategoryTheory.NatTrans.epi_of_epi_app
+-/
 
 #print CategoryTheory.NatTrans.hcomp /-
 /-- `hcomp α β` is the horizontal composition of natural transformations. -/
@@ -119,17 +135,20 @@ def hcomp {H I : D ⥤ E} (α : F ⟶ G) (β : H ⟶ I) : F ⋙ H ⟶ G ⋙ I
 #align category_theory.nat_trans.hcomp CategoryTheory.NatTrans.hcomp
 -/
 
--- mathport name: «expr ◫ »
 infixl:80 " ◫ " => hcomp
 
+#print CategoryTheory.NatTrans.hcomp_id_app /-
 @[simp]
 theorem hcomp_id_app {H : D ⥤ E} (α : F ⟶ G) (X : C) : (α ◫ 𝟙 H).app X = H.map (α.app X) := by
   dsimp; simp
 #align category_theory.nat_trans.hcomp_id_app CategoryTheory.NatTrans.hcomp_id_app
+-/
 
+#print CategoryTheory.NatTrans.id_hcomp_app /-
 -- See note [dsimp, simp].
 theorem id_hcomp_app {H : E ⥤ C} (α : F ⟶ G) (X : E) : (𝟙 H ◫ α).app X = α.app _ := by simp
 #align category_theory.nat_trans.id_hcomp_app CategoryTheory.NatTrans.id_hcomp_app
+-/
 
 #print CategoryTheory.NatTrans.exchange /-
 -- Note that we don't yet prove a `hcomp_assoc` lemma here: even stating it is painful, because we
@@ -163,17 +182,21 @@ protected def flip (F : C ⥤ D ⥤ E) : D ⥤ C ⥤ E
 
 end Functor
 
+#print CategoryTheory.map_hom_inv_app /-
 @[simp, reassoc]
 theorem map_hom_inv_app (F : C ⥤ D ⥤ E) {X Y : C} (e : X ≅ Y) (Z : D) :
     (F.map e.Hom).app Z ≫ (F.map e.inv).app Z = 𝟙 _ := by
   simp [← nat_trans.comp_app, ← functor.map_comp]
 #align category_theory.map_hom_inv_app CategoryTheory.map_hom_inv_app
+-/
 
+#print CategoryTheory.map_inv_hom_app /-
 @[simp, reassoc]
 theorem map_inv_hom_app (F : C ⥤ D ⥤ E) {X Y : C} (e : X ≅ Y) (Z : D) :
     (F.map e.inv).app Z ≫ (F.map e.Hom).app Z = 𝟙 _ := by
   simp [← nat_trans.comp_app, ← functor.map_comp]
 #align category_theory.map_inv_hom_app CategoryTheory.map_inv_hom_app
+-/
 
 end CategoryTheory
 

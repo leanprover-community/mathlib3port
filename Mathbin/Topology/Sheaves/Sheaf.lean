@@ -109,15 +109,19 @@ theorem isSheaf_unit (F : Presheaf (CategoryTheory.Discrete Unit) X) : F.IsSheaf
 #align Top.presheaf.is_sheaf_unit TopCat.Presheaf.isSheaf_unit
 -/
 
+#print TopCat.Presheaf.isSheaf_iso_iff /-
 theorem isSheaf_iso_iff {F G : Presheaf C X} (α : F ≅ G) : F.IsSheaf ↔ G.IsSheaf :=
   Presheaf.isSheaf_of_iso_iff α
 #align Top.presheaf.is_sheaf_iso_iff TopCat.Presheaf.isSheaf_iso_iff
+-/
 
+#print TopCat.Presheaf.isSheaf_of_iso /-
 /-- Transfer the sheaf condition across an isomorphism of presheaves.
 -/
 theorem isSheaf_of_iso {F G : Presheaf C X} (α : F ≅ G) (h : F.IsSheaf) : G.IsSheaf :=
   (isSheaf_iso_iff α).1 h
 #align Top.presheaf.is_sheaf_of_iso TopCat.Presheaf.isSheaf_of_iso
+-/
 
 end Presheaf
 
@@ -153,22 +157,28 @@ instance sheafInhabited : Inhabited (Sheaf (CategoryTheory.Discrete PUnit) X) :=
 
 namespace Sheaf
 
+#print TopCat.Sheaf.forget /-
 /-- The forgetful functor from sheaves to presheaves.
 -/
 def forget : TopCat.Sheaf C X ⥤ TopCat.Presheaf C X :=
   sheafToPresheaf _ _
 deriving Full, Faithful
 #align Top.sheaf.forget TopCat.Sheaf.forget
+-/
 
+#print TopCat.Sheaf.id_app /-
 -- Note: These can be proved by simp.
 theorem id_app (F : Sheaf C X) (t) : (𝟙 F : F ⟶ F).1.app t = 𝟙 _ :=
   rfl
 #align Top.sheaf.id_app TopCat.Sheaf.id_app
+-/
 
+#print TopCat.Sheaf.comp_app /-
 theorem comp_app {F G H : Sheaf C X} (f : F ⟶ G) (g : G ⟶ H) (t) :
     (f ≫ g).1.app t = f.1.app t ≫ g.1.app t :=
   rfl
 #align Top.sheaf.comp_app TopCat.Sheaf.comp_app
+-/
 
 end Sheaf
 

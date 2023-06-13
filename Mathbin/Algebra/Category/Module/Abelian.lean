@@ -35,6 +35,7 @@ namespace ModuleCat
 
 variable {R : Type u} [Ring R] {M N : ModuleCat.{v} R} (f : M ⟶ N)
 
+#print ModuleCat.normalMono /-
 /-- In the category of modules, every monomorphism is normal. -/
 def normalMono (hf : Mono f) : NormalMono f
     where
@@ -57,7 +58,9 @@ def normalMono (hf : Mono f) : NormalMono f
             (LinearMap.quotKerEquivRange f ≪≫ₗ LinearEquiv.ofEq _ _ (Submodule.ker_mkQ _).symm))) <|
       by ext; rfl
 #align Module.normal_mono ModuleCat.normalMono
+-/
 
+#print ModuleCat.normalEpi /-
 /-- In the category of modules, every epimorphism is normal. -/
 def normalEpi (hf : Epi f) : NormalEpi f
     where
@@ -80,7 +83,9 @@ def normalEpi (hf : Epi f) : NormalEpi f
             LinearEquiv.ofTop _ (range_eq_top_of_epi _))) <|
       by ext; rfl
 #align Module.normal_epi ModuleCat.normalEpi
+-/
 
+#print ModuleCat.abelian /-
 /-- The category of R-modules is abelian. -/
 instance abelian : Abelian (ModuleCat R)
     where
@@ -90,6 +95,7 @@ instance abelian : Abelian (ModuleCat R)
   normalMonoOfMono X Y := normalMono
   normalEpiOfEpi X Y := normalEpi
 #align Module.abelian ModuleCat.abelian
+-/
 
 section ReflectsLimits
 
@@ -129,6 +135,7 @@ open LinearMap
 
 attribute [local instance] preadditive.has_equalizers_of_has_kernels
 
+#print ModuleCat.exact_iff /-
 theorem exact_iff : Exact f g ↔ f.range = g.ker :=
   by
   rw [abelian.exact_iff' f g (kernel_is_limit _) (cokernel_is_colimit _)]
@@ -136,6 +143,7 @@ theorem exact_iff : Exact f g ↔ f.range = g.ker :=
     ⟨fun h => le_antisymm (range_le_ker_iff.2 h.1) (ker_le_range_iff.2 h.2), fun h =>
       ⟨range_le_ker_iff.1 <| le_of_eq h, ker_le_range_iff.1 <| le_of_eq h.symm⟩⟩
 #align Module.exact_iff ModuleCat.exact_iff
+-/
 
 end ModuleCat
 

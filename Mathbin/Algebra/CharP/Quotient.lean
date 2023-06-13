@@ -23,6 +23,7 @@ universe u v
 
 namespace CharP
 
+#print CharP.quotient /-
 theorem quotient (R : Type u) [CommRing R] (p : ℕ) [hp1 : Fact p.Prime] (hp2 : ↑p ∈ nonunits R) :
     CharP (R ⧸ (Ideal.span {p} : Ideal R)) p :=
   have hp0 : (p : R ⧸ (Ideal.span {p} : Ideal R)) = 0 :=
@@ -36,7 +37,9 @@ theorem quotient (R : Type u) [CommRing R] (p : ℕ) [hp1 : Fact p.Prime] (hp2 :
             Ideal.Quotient.eq_zero_iff_mem.1 <|
               @Subsingleton.elim (@CharP.subsingleton _ <| ringChar.of_eq h1) _ _
 #align char_p.quotient CharP.quotient
+-/
 
+#print CharP.quotient' /-
 /-- If an ideal does not contain any coercions of natural numbers other than zero, then its quotient
 inherits the characteristic of the underlying ring. -/
 theorem quotient' {R : Type _} [CommRing R] (p : ℕ) [CharP R p] (I : Ideal R)
@@ -47,9 +50,11 @@ theorem quotient' {R : Type _} [CommRing R] (p : ℕ) [CharP R p] (I : Ideal R)
     rw [sub_zero]
     exact ⟨h x, fun h' => h'.symm ▸ I.zero_mem⟩⟩
 #align char_p.quotient' CharP.quotient'
+-/
 
 end CharP
 
+#print Ideal.Quotient.index_eq_zero /-
 theorem Ideal.Quotient.index_eq_zero {R : Type _} [CommRing R] (I : Ideal R) :
     (I.toAddSubgroup.index : R ⧸ I) = 0 :=
   by
@@ -61,4 +66,5 @@ theorem Ideal.Quotient.index_eq_zero {R : Type _} [CommRing R] (I : Ideal R) :
   have h : (Fintype.card (R ⧸ I) : R ⧸ I) ≠ 0 := h
   simpa using h
 #align ideal.quotient.index_eq_zero Ideal.Quotient.index_eq_zero
+-/
 

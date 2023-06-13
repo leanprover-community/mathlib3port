@@ -32,6 +32,7 @@ open Nat
 
 variable {α : Type _}
 
+#print Int.cast_neg_natCast /-
 /-- Auxiliary lemma for norm_cast to move the cast `-↑n` upwards to `↑-↑n`.
 
 (The restriction to `division_ring` is necessary, otherwise this would also apply in the case where
@@ -40,7 +41,9 @@ variable {α : Type _}
 @[norm_cast]
 theorem cast_neg_natCast {R} [DivisionRing R] (n : ℕ) : ((-n : ℤ) : R) = -n := by simp
 #align int.cast_neg_nat_cast Int.cast_neg_natCast
+-/
 
+#print Int.cast_div /-
 @[simp]
 theorem cast_div [DivisionRing α] {m n : ℤ} (n_dvd : n ∣ m) (n_nonzero : (n : α) ≠ 0) :
     ((m / n : ℤ) : α) = m / n := by
@@ -48,6 +51,7 @@ theorem cast_div [DivisionRing α] {m n : ℤ} (n_dvd : n ∣ m) (n_nonzero : (n
   have : n ≠ 0 := by rintro rfl; simpa using n_nonzero
   rw [Int.mul_ediv_cancel_left _ this, mul_comm n k, Int.cast_mul, mul_div_cancel _ n_nonzero]
 #align int.cast_div Int.cast_div
+-/
 
 end Int
 

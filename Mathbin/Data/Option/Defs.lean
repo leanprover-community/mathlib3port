@@ -90,11 +90,13 @@ instance decidableForallMem {p : α → Prop} [DecidablePred p] :
 #align option.decidable_forall_mem Option.decidableForallMem
 -/
 
+#print Option.decidableExistsMem /-
 instance decidableExistsMem {p : α → Prop} [DecidablePred p] :
     ∀ o : Option α, Decidable (∃ a ∈ o, p a)
   | none => isFalse fun ⟨a, ⟨h, _⟩⟩ => by cases h
   | some a => if h : p a then isTrue <| ⟨_, rfl, h⟩ else isFalse fun ⟨_, ⟨rfl, hn⟩⟩ => h hn
 #align option.decidable_exists_mem Option.decidableExistsMem
+-/
 
 #print Option.iget /-
 /-- Inhabited `get` function. Returns `a` if the input is `some a`, otherwise returns `default`. -/
@@ -119,10 +121,12 @@ def guard (p : α → Prop) [DecidablePred p] (a : α) : Option α :=
 #align option.guard Option.guard
 -/
 
+#print Option.filter /-
 /-- `filter p o` returns `some a` if `o` is `some a` and `p a` holds, otherwise `none`. -/
 def filter (p : α → Prop) [DecidablePred p] (o : Option α) : Option α :=
   o.bind (guard p)
 #align option.filter Option.filter
+-/
 
 #print Option.toList /-
 /-- Cast of `option` to `list `. Returns `[a]` if the input is `some a`, and `[]` if it is
@@ -251,22 +255,28 @@ def maybe.{u, v} {m : Type u → Type v} [Monad m] {α : Type u} : Option (m α)
 #align option.maybe Option.maybe
 -/
 
+#print Option.mapM /-
 /-- Map a monadic function `f : α → m β` over an `o : option α`, maybe producing a result. -/
 def mapM.{u, v, w} {m : Type u → Type v} [Monad m] {α : Type w} {β : Type u} (f : α → m β)
     (o : Option α) : m (Option β) :=
   (o.map f).maybe
 #align option.mmap Option.mapM
+-/
 
+#print Option.elimM /-
 /-- A monadic analogue of `option.elim`. -/
 def elimM {α β : Type _} {m : Type _ → Type _} [Monad m] (y : m β) (z : α → m β)
     (x : m (Option α)) : m β :=
   x >>= Option.elim' y z
 #align option.melim Option.elimM
+-/
 
+#print Option.getDM' /-
 /-- A monadic analogue of `option.get_or_else`. -/
 def getDM' {α : Type _} {m : Type _ → Type _} [Monad m] (x : m (Option α)) (y : m α) : m α :=
   elimM y pure x
 #align option.mget_or_else Option.getDM'
+-/
 
 end Option
 

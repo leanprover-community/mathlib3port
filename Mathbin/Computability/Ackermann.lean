@@ -204,9 +204,11 @@ theorem ack_inj_right {m n₁ n₂ : ℕ} : ack m n₁ = ack m n₂ ↔ n₁ = n
 #align ack_inj_right ack_inj_right
 -/
 
+#print max_ack_right /-
 theorem max_ack_right (m n₁ n₂ : ℕ) : ack m (max n₁ n₂) = max (ack m n₁) (ack m n₂) :=
   (ack_mono_right m).map_max
 #align max_ack_right max_ack_right
+-/
 
 #print add_lt_ack /-
 theorem add_lt_ack : ∀ m n, m + n < ack m n
@@ -296,9 +298,11 @@ theorem ack_inj_left {m₁ m₂ n : ℕ} : ack m₁ n = ack m₂ n ↔ m₁ = m�
 #align ack_inj_left ack_inj_left
 -/
 
+#print max_ack_left /-
 theorem max_ack_left (m₁ m₂ n : ℕ) : ack (max m₁ m₂) n = max (ack m₁ n) (ack m₂ n) :=
   (ack_mono_left n).map_max
 #align max_ack_left max_ack_left
+-/
 
 #print ack_le_ack /-
 theorem ack_le_ack {m₁ m₂ n₁ n₂ : ℕ} (hm : m₁ ≤ m₂) (hn : n₁ ≤ n₂) : ack m₁ n₁ ≤ ack m₂ n₂ :=
@@ -345,6 +349,7 @@ theorem ack_add_one_sq_lt_ack_add_three : ∀ m n, (ack m n + 1) ^ 2 ≤ ack (m 
 #align ack_add_one_sq_lt_ack_add_three ack_add_one_sq_lt_ack_add_three
 -/
 
+#print ack_ack_lt_ack_max_add_two /-
 theorem ack_ack_lt_ack_max_add_two (m n k : ℕ) : ack m (ack n k) < ack (max m n + 2) k :=
   calc
     ack m (ack n k) ≤ ack (max m n) (ack n k) := ack_mono_left _ (le_max_left _ _)
@@ -353,6 +358,7 @@ theorem ack_ack_lt_ack_max_add_two (m n k : ℕ) : ack m (ack n k) < ack (max m 
     _ = ack (max m n + 1) (k + 1) := (ack_succ_succ _ _).symm
     _ ≤ ack (max m n + 2) k := ack_succ_right_le_ack_succ_left _ _
 #align ack_ack_lt_ack_max_add_two ack_ack_lt_ack_max_add_two
+-/
 
 #print ack_add_one_sq_lt_ack_add_four /-
 theorem ack_add_one_sq_lt_ack_add_four (m n : ℕ) : ack m ((n + 1) ^ 2) < ack (m + 4) n :=
@@ -366,9 +372,11 @@ theorem ack_add_one_sq_lt_ack_add_four (m n : ℕ) : ack m ((n + 1) ^ 2) < ack (
 #align ack_add_one_sq_lt_ack_add_four ack_add_one_sq_lt_ack_add_four
 -/
 
+#print ack_pair_lt /-
 theorem ack_pair_lt (m n k : ℕ) : ack m (pair n k) < ack (m + 4) (max n k) :=
   (ack_strictMono_right m <| pair_lt_max_add_one_sq n k).trans <| ack_add_one_sq_lt_ack_add_four _ _
 #align ack_mkpair_lt ack_pair_lt
+-/
 
 #print exists_lt_ack_of_nat_primrec /-
 /-- If `f` is primitive recursive, there exists `m` such that `f n < ack m n` for all `n`. -/

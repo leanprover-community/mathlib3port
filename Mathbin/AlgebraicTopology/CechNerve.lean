@@ -142,6 +142,7 @@ def augmentedCechNerve : Arrow C ⥤ SimplicialObject.Augmented C
 #align category_theory.simplicial_object.augmented_cech_nerve CategoryTheory.SimplicialObject.augmentedCechNerve
 -/
 
+#print CategoryTheory.SimplicialObject.equivalenceRightToLeft /-
 /-- A helper function used in defining the Čech adjunction. -/
 @[simps]
 def equivalenceRightToLeft (X : SimplicialObject.Augmented C) (F : Arrow C)
@@ -154,7 +155,9 @@ def equivalenceRightToLeft (X : SimplicialObject.Augmented C) (F : Arrow C)
     apply_fun fun e => e.app (Opposite.op <| SimplexCategory.mk 0) at this 
     simpa using this
 #align category_theory.simplicial_object.equivalence_right_to_left CategoryTheory.SimplicialObject.equivalenceRightToLeft
+-/
 
+#print CategoryTheory.SimplicialObject.equivalenceLeftToRight /-
 /-- A helper function used in defining the Čech adjunction. -/
 @[simps]
 def equivalenceLeftToRight (X : SimplicialObject.Augmented C) (F : Arrow C)
@@ -180,7 +183,9 @@ def equivalenceLeftToRight (X : SimplicialObject.Augmented C) (F : Arrow C)
   right := G.right
   w' := by ext; dsimp; simp
 #align category_theory.simplicial_object.equivalence_left_to_right CategoryTheory.SimplicialObject.equivalenceLeftToRight
+-/
 
+#print CategoryTheory.SimplicialObject.cechNerveEquiv /-
 /-- A helper function used in defining the Čech adjunction. -/
 @[simps]
 def cechNerveEquiv (X : SimplicialObject.Augmented C) (F : Arrow C) :
@@ -219,6 +224,7 @@ def cechNerveEquiv (X : SimplicialObject.Augmented C) (F : Arrow C) :
       rfl
     · rfl
 #align category_theory.simplicial_object.cech_nerve_equiv CategoryTheory.SimplicialObject.cechNerveEquiv
+-/
 
 #print CategoryTheory.SimplicialObject.cechNerveAdjunction /-
 /-- The augmented Čech nerve construction is right adjoint to the `to_arrow` functor. -/
@@ -330,6 +336,7 @@ def augmentedCechConerve : Arrow C ⥤ CosimplicialObject.Augmented C
 #align category_theory.cosimplicial_object.augmented_cech_conerve CategoryTheory.CosimplicialObject.augmentedCechConerve
 -/
 
+#print CategoryTheory.CosimplicialObject.equivalenceLeftToRight /-
 /-- A helper function used in defining the Čech conerve adjunction. -/
 @[simps]
 def equivalenceLeftToRight (F : Arrow C) (X : CosimplicialObject.Augmented C)
@@ -343,7 +350,9 @@ def equivalenceLeftToRight (F : Arrow C) (X : CosimplicialObject.Augmented C)
     simpa only [CategoryTheory.Functor.id_map, augmented.to_arrow_obj_hom,
       wide_pushout.arrow_ι_assoc fun i => F.hom]
 #align category_theory.cosimplicial_object.equivalence_left_to_right CategoryTheory.CosimplicialObject.equivalenceLeftToRight
+-/
 
+#print CategoryTheory.CosimplicialObject.equivalenceRightToLeft /-
 /-- A helper function used in defining the Čech conerve adjunction. -/
 @[simps]
 def equivalenceRightToLeft (F : Arrow C) (X : CosimplicialObject.Augmented C)
@@ -374,7 +383,9 @@ def equivalenceRightToLeft (F : Arrow C) (X : CosimplicialObject.Augmented C)
           erw [category.id_comp] }
   w' := by ext; simp
 #align category_theory.cosimplicial_object.equivalence_right_to_left CategoryTheory.CosimplicialObject.equivalenceRightToLeft
+-/
 
+#print CategoryTheory.CosimplicialObject.cechConerveEquiv /-
 /-- A helper function used in defining the Čech conerve adjunction. -/
 @[simps]
 def cechConerveEquiv (F : Arrow C) (X : CosimplicialObject.Augmented C) :
@@ -411,6 +422,7 @@ def cechConerveEquiv (F : Arrow C) (X : CosimplicialObject.Augmented C) :
       change 0 = a
       linarith
 #align category_theory.cosimplicial_object.cech_conerve_equiv CategoryTheory.CosimplicialObject.cechConerveEquiv
+-/
 
 #print CategoryTheory.CosimplicialObject.cechConerveAdjunction /-
 /-- The augmented Čech conerve construction is left adjoint to the `to_arrow` functor. -/
@@ -456,12 +468,15 @@ def wideCospan (X : C) : WidePullbackShape ι ⥤ C :=
 #align category_theory.cech_nerve_terminal_from.wide_cospan CategoryTheory.CechNerveTerminalFrom.wideCospan
 -/
 
+#print CategoryTheory.CechNerveTerminalFrom.uniqueToWideCospanNone /-
 instance uniqueToWideCospanNone (X Y : C) : Unique (Y ⟶ (wideCospan ι X).obj none) := by
   unfold wide_cospan <;> dsimp <;> infer_instance
 #align category_theory.cech_nerve_terminal_from.unique_to_wide_cospan_none CategoryTheory.CechNerveTerminalFrom.uniqueToWideCospanNone
+-/
 
 variable [HasFiniteProducts C]
 
+#print CategoryTheory.CechNerveTerminalFrom.wideCospan.limitCone /-
 /-- The product `Xᶥ` is the vertex of a limit cone on `wide_cospan ι X`. -/
 def wideCospan.limitCone [Fintype ι] (X : C) : LimitCone (wideCospan ι X)
     where
@@ -489,6 +504,7 @@ def wideCospan.limitCone [Fintype ι] (X : C) : LimitCone (wideCospan ι X)
         ext
         rfl }
 #align category_theory.cech_nerve_terminal_from.wide_cospan.limit_cone CategoryTheory.CechNerveTerminalFrom.wideCospan.limitCone
+-/
 
 #print CategoryTheory.CechNerveTerminalFrom.hasWidePullback /-
 instance hasWidePullback [Finite ι] (X : C) :

@@ -176,6 +176,7 @@ def ofIsoComp {X' : C} (g : X' ⟶ X) [IsIso g] (F : MonoFactorisation (g ≫ f)
 #align category_theory.limits.mono_factorisation.of_iso_comp CategoryTheory.Limits.MonoFactorisation.ofIsoComp
 -/
 
+#print CategoryTheory.Limits.MonoFactorisation.ofArrowIso /-
 /-- If `f` and `g` are isomorphic arrows, then a mono factorisation of `f`
 gives a mono factorisation of `g` -/
 @[simps]
@@ -187,6 +188,7 @@ def ofArrowIso {f g : Arrow C} (F : MonoFactorisation f.Hom) (sq : f ⟶ g) [IsI
   m_mono := mono_comp _ _
   fac := by simp only [fac_assoc, arrow.w, is_iso.inv_comp_eq, category.assoc]
 #align category_theory.limits.mono_factorisation.of_arrow_iso CategoryTheory.Limits.MonoFactorisation.ofArrowIso
+-/
 
 end MonoFactorisation
 
@@ -264,6 +266,7 @@ theorem e_isoExt_inv : F'.e ≫ (isoExt hF hF').inv = F.e := by simp
 #align category_theory.limits.is_image.e_iso_ext_inv CategoryTheory.Limits.IsImage.e_isoExt_inv
 -/
 
+#print CategoryTheory.Limits.IsImage.ofArrowIso /-
 /-- If `f` and `g` are isomorphic arrows, then a mono factorisation of `f` that is an image
 gives a mono factorisation of `g` that is an image -/
 @[simps]
@@ -275,6 +278,7 @@ def ofArrowIso {f g : Arrow C} {F : MonoFactorisation f.Hom} (hF : IsImage F) (s
     simpa only [mono_factorisation.of_arrow_iso_m, arrow.inv_right, ← category.assoc,
       is_iso.comp_inv_eq] using hF.lift_fac (F'.of_arrow_iso (inv sq))
 #align category_theory.limits.is_image.of_arrow_iso CategoryTheory.Limits.IsImage.ofArrowIso
+-/
 
 end IsImage
 
@@ -293,6 +297,7 @@ namespace ImageFactorisation
 instance [Mono f] : Inhabited (ImageFactorisation f) :=
   ⟨⟨_, IsImage.self f⟩⟩
 
+#print CategoryTheory.Limits.ImageFactorisation.ofArrowIso /-
 /-- If `f` and `g` are isomorphic arrows, then an image factorisation of `f`
 gives an image factorisation of `g` -/
 @[simps]
@@ -301,6 +306,7 @@ def ofArrowIso {f g : Arrow C} (F : ImageFactorisation f.Hom) (sq : f ⟶ g) [Is
   f := F.f.of_arrow_iso sq
   IsImage := F.IsImage.of_arrow_iso sq
 #align category_theory.limits.image_factorisation.of_arrow_iso CategoryTheory.Limits.ImageFactorisation.ofArrowIso
+-/
 
 end ImageFactorisation
 
@@ -317,10 +323,12 @@ theorem HasImage.mk {f : X ⟶ Y} (F : ImageFactorisation f) : HasImage f :=
 #align category_theory.limits.has_image.mk CategoryTheory.Limits.HasImage.mk
 -/
 
+#print CategoryTheory.Limits.HasImage.of_arrow_iso /-
 theorem HasImage.of_arrow_iso {f g : Arrow C} [h : HasImage f.Hom] (sq : f ⟶ g) [IsIso sq] :
     HasImage g.Hom :=
   ⟨⟨h.exists_image.some.of_arrow_iso sq⟩⟩
 #align category_theory.limits.has_image.of_arrow_iso CategoryTheory.Limits.HasImage.of_arrow_iso
+-/
 
 #print CategoryTheory.Limits.mono_hasImage /-
 instance (priority := 100) mono_hasImage (f : X ⟶ Y) [Mono f] : HasImage f :=
@@ -674,11 +682,13 @@ instance image.preComp_epi_of_epi [HasImage g] [HasImage (f ≫ g)] [Epi f] :
 #align category_theory.limits.image.pre_comp_epi_of_epi CategoryTheory.Limits.image.preComp_epi_of_epi
 -/
 
+#print CategoryTheory.Limits.hasImage_iso_comp /-
 instance hasImage_iso_comp [IsIso f] [HasImage g] : HasImage (f ≫ g) :=
   HasImage.mk
     { f := (Image.monoFactorisation g).isoComp f
       IsImage := { lift := fun F' => image.lift (F'.ofIsoComp f) } }
 #align category_theory.limits.has_image_iso_comp CategoryTheory.Limits.hasImage_iso_comp
+-/
 
 #print CategoryTheory.Limits.image.isIso_precomp_iso /-
 /-- `image.pre_comp f g` is an isomorphism when `f` is an isomorphism
@@ -693,6 +703,7 @@ instance image.isIso_precomp_iso (f : X ⟶ Y) [IsIso f] [HasImage g] : IsIso (i
 #align category_theory.limits.image.is_iso_precomp_iso CategoryTheory.Limits.image.isIso_precomp_iso
 -/
 
+#print CategoryTheory.Limits.hasImage_comp_iso /-
 -- Note that in general we don't have the other comparison map you might expect
 -- `image f ⟶ image (f ≫ g)`.
 instance hasImage_comp_iso [HasImage f] [IsIso g] : HasImage (f ≫ g) :=
@@ -700,6 +711,7 @@ instance hasImage_comp_iso [HasImage f] [IsIso g] : HasImage (f ≫ g) :=
     { f := (Image.monoFactorisation f).comp_mono g
       IsImage := { lift := fun F' => image.lift F'.of_comp_iso } }
 #align category_theory.limits.has_image_comp_iso CategoryTheory.Limits.hasImage_comp_iso
+-/
 
 #print CategoryTheory.Limits.image.compIso /-
 /-- Postcomposing by an isomorphism induces an isomorphism on the image. -/
@@ -741,27 +753,34 @@ end
 
 section HasImageMap
 
+#print CategoryTheory.Limits.ImageMap /-
 /-- An image map is a morphism `image f → image g` fitting into a commutative square and satisfying
     the obvious commutativity conditions. -/
 structure ImageMap {f g : Arrow C} [HasImage f.Hom] [HasImage g.Hom] (sq : f ⟶ g) where
   map : image f.Hom ⟶ image g.Hom
   map_ι : map ≫ image.ι g.Hom = image.ι f.Hom ≫ sq.right := by obviously
 #align category_theory.limits.image_map CategoryTheory.Limits.ImageMap
+-/
 
+#print CategoryTheory.Limits.inhabitedImageMap /-
 instance inhabitedImageMap {f : Arrow C} [HasImage f.Hom] : Inhabited (ImageMap (𝟙 f)) :=
   ⟨⟨𝟙 _, by tidy⟩⟩
 #align category_theory.limits.inhabited_image_map CategoryTheory.Limits.inhabitedImageMap
+-/
 
 restate_axiom image_map.map_ι'
 
 attribute [simp, reassoc] image_map.map_ι
 
+#print CategoryTheory.Limits.ImageMap.factor_map /-
 @[simp, reassoc]
 theorem ImageMap.factor_map {f g : Arrow C} [HasImage f.Hom] [HasImage g.Hom] (sq : f ⟶ g)
     (m : ImageMap sq) : factorThruImage f.Hom ≫ m.map = sq.left ≫ factorThruImage g.Hom :=
   (cancel_mono (image.ι g.Hom)).1 <| by simp
 #align category_theory.limits.image_map.factor_map CategoryTheory.Limits.ImageMap.factor_map
+-/
 
+#print CategoryTheory.Limits.ImageMap.transport /-
 /-- To give an image map for a commutative square with `f` at the top and `g` at the bottom, it
     suffices to give a map between any mono factorisation of `f` and any image factorisation of
     `g`. -/
@@ -772,29 +791,39 @@ def ImageMap.transport {f g : Arrow C} [HasImage f.Hom] [HasImage g.Hom] (sq : f
   map := image.lift F ≫ map ≫ hF'.lift (Image.monoFactorisation g.Hom)
   map_ι := by simp [map_ι]
 #align category_theory.limits.image_map.transport CategoryTheory.Limits.ImageMap.transport
+-/
 
+#print CategoryTheory.Limits.HasImageMap /-
 /-- `has_image_map sq` means that there is an `image_map` for the square `sq`. -/
 class HasImageMap {f g : Arrow C} [HasImage f.Hom] [HasImage g.Hom] (sq : f ⟶ g) : Prop where mk' ::
   HasImageMap : Nonempty (ImageMap sq)
 #align category_theory.limits.has_image_map CategoryTheory.Limits.HasImageMap
+-/
 
+#print CategoryTheory.Limits.HasImageMap.mk /-
 theorem HasImageMap.mk {f g : Arrow C} [HasImage f.Hom] [HasImage g.Hom] {sq : f ⟶ g}
     (m : ImageMap sq) : HasImageMap sq :=
   ⟨Nonempty.intro m⟩
 #align category_theory.limits.has_image_map.mk CategoryTheory.Limits.HasImageMap.mk
+-/
 
+#print CategoryTheory.Limits.HasImageMap.transport /-
 theorem HasImageMap.transport {f g : Arrow C} [HasImage f.Hom] [HasImage g.Hom] (sq : f ⟶ g)
     (F : MonoFactorisation f.Hom) {F' : MonoFactorisation g.Hom} (hF' : IsImage F')
     (map : F.i ⟶ F'.i) (map_ι : map ≫ F'.m = F.m ≫ sq.right) : HasImageMap sq :=
   HasImageMap.mk <| ImageMap.transport sq F hF' map_ι
 #align category_theory.limits.has_image_map.transport CategoryTheory.Limits.HasImageMap.transport
+-/
 
+#print CategoryTheory.Limits.HasImageMap.imageMap /-
 /-- Obtain an `image_map` from a `has_image_map` instance. -/
 def HasImageMap.imageMap {f g : Arrow C} [HasImage f.Hom] [HasImage g.Hom] (sq : f ⟶ g)
     [HasImageMap sq] : ImageMap sq :=
   Classical.choice <| @HasImageMap.hasImageMap _ _ _ _ _ _ sq _
 #align category_theory.limits.has_image_map.image_map CategoryTheory.Limits.HasImageMap.imageMap
+-/
 
+#print CategoryTheory.Limits.hasImageMapOfIsIso /-
 -- see Note [lower instance priority]
 instance (priority := 100) hasImageMapOfIsIso {f g : Arrow C} [HasImage f.Hom] [HasImage g.Hom]
     (sq : f ⟶ g) [IsIso sq] : HasImageMap sq :=
@@ -805,7 +834,9 @@ instance (priority := 100) hasImageMapOfIsIso {f g : Arrow C} [HasImage f.Hom] [
           image.lift_fac, category.assoc, ← comma.comp_right, is_iso.hom_inv_id, comma.id_right,
           category.comp_id] }
 #align category_theory.limits.has_image_map_of_is_iso CategoryTheory.Limits.hasImageMapOfIsIso
+-/
 
+#print CategoryTheory.Limits.HasImageMap.comp /-
 instance HasImageMap.comp {f g h : Arrow C} [HasImage f.Hom] [HasImage g.Hom] [HasImage h.Hom]
     (sq1 : f ⟶ g) (sq2 : g ⟶ h) [HasImageMap sq1] [HasImageMap sq2] : HasImageMap (sq1 ≫ sq2) :=
   HasImageMap.mk
@@ -813,6 +844,7 @@ instance HasImageMap.comp {f g h : Arrow C} [HasImage f.Hom] [HasImage g.Hom] [H
       map_ι := by
         simp only [image_map.map_ι, image_map.map_ι_assoc, comma.comp_right, category.assoc] }
 #align category_theory.limits.has_image_map.comp CategoryTheory.Limits.HasImageMap.comp
+-/
 
 variable {f g : Arrow C} [HasImage f.Hom] [HasImage g.Hom] (sq : f ⟶ g)
 
@@ -828,17 +860,23 @@ end
 
 variable [HasImageMap sq]
 
+#print CategoryTheory.Limits.image.map /-
 /-- The map on images induced by a commutative square. -/
 abbrev image.map : image f.Hom ⟶ image g.Hom :=
   (HasImageMap.imageMap sq).map
 #align category_theory.limits.image.map CategoryTheory.Limits.image.map
+-/
 
+#print CategoryTheory.Limits.image.factor_map /-
 theorem image.factor_map : factorThruImage f.Hom ≫ image.map sq = sq.left ≫ factorThruImage g.Hom :=
   by simp
 #align category_theory.limits.image.factor_map CategoryTheory.Limits.image.factor_map
+-/
 
+#print CategoryTheory.Limits.image.map_ι /-
 theorem image.map_ι : image.map sq ≫ image.ι g.Hom = image.ι f.Hom ≫ sq.right := by simp
 #align category_theory.limits.image.map_ι CategoryTheory.Limits.image.map_ι
+-/
 
 #print CategoryTheory.Limits.image.map_homMk'_ι /-
 theorem image.map_homMk'_ι {X Y P Q : C} {k : X ⟶ Y} [HasImage k] {l : P ⟶ Q} [HasImage l]
@@ -854,15 +892,19 @@ variable {h : Arrow C} [HasImage h.Hom] (sq' : g ⟶ h)
 
 variable [HasImageMap sq']
 
+#print CategoryTheory.Limits.imageMapComp /-
 /-- Image maps for composable commutative squares induce an image map in the composite square. -/
 def imageMapComp : ImageMap (sq ≫ sq') where map := image.map sq ≫ image.map sq'
 #align category_theory.limits.image_map_comp CategoryTheory.Limits.imageMapComp
+-/
 
+#print CategoryTheory.Limits.image.map_comp /-
 @[simp]
 theorem image.map_comp [HasImageMap (sq ≫ sq')] :
     image.map (sq ≫ sq') = image.map sq ≫ image.map sq' :=
   show (HasImageMap.imageMap (sq ≫ sq')).map = (imageMapComp sq sq').map by congr
 #align category_theory.limits.image.map_comp CategoryTheory.Limits.image.map_comp
+-/
 
 end
 
@@ -870,15 +912,19 @@ section
 
 variable (f)
 
+#print CategoryTheory.Limits.imageMapId /-
 /-- The identity `image f ⟶ image f` fits into the commutative square represented by the identity
     morphism `𝟙 f` in the arrow category. -/
 def imageMapId : ImageMap (𝟙 f) where map := 𝟙 (image f.Hom)
 #align category_theory.limits.image_map_id CategoryTheory.Limits.imageMapId
+-/
 
+#print CategoryTheory.Limits.image.map_id /-
 @[simp]
 theorem image.map_id [HasImageMap (𝟙 f)] : image.map (𝟙 f) = 𝟙 (image f.Hom) :=
   show (HasImageMap.imageMap (𝟙 f)).map = (imageMapId f).map by congr
 #align category_theory.limits.image.map_id CategoryTheory.Limits.image.map_id
+-/
 
 end
 
@@ -1111,6 +1157,7 @@ open CategoryTheory.Limits
 
 variable {C D : Type _} [Category C] [Category D]
 
+#print CategoryTheory.Functor.hasStrongEpiMonoFactorisations_imp_of_isEquivalence /-
 theorem hasStrongEpiMonoFactorisations_imp_of_isEquivalence (F : C ⥤ D) [IsEquivalence F]
     [h : HasStrongEpiMonoFactorisations C] : HasStrongEpiMonoFactorisations D :=
   ⟨fun X Y f =>
@@ -1128,6 +1175,7 @@ theorem hasStrongEpiMonoFactorisations_imp_of_isEquivalence (F : C ⥤ D) [IsEqu
             simpa only [category.assoc, ← F.map_comp_assoc, em.fac', is_equivalence.fun_inv_map,
               iso.inv_hom_id_app, iso.inv_hom_id_app_assoc] using category.comp_id _ }⟩
 #align category_theory.functor.has_strong_epi_mono_factorisations_imp_of_is_equivalence CategoryTheory.Functor.hasStrongEpiMonoFactorisations_imp_of_isEquivalence
+-/
 
 end CategoryTheory.Functor
 

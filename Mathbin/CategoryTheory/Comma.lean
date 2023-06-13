@@ -206,6 +206,7 @@ section
 
 variable {L₁ L₂ L₃ : A ⥤ T} {R₁ R₂ R₃ : B ⥤ T}
 
+#print CategoryTheory.Comma.isoMk /-
 /-- Construct an isomorphism in the comma category given isomorphisms of the objects whose forward
 directions give a commutative square.
 -/
@@ -224,6 +225,7 @@ def isoMk {X Y : Comma L₁ R₁} (l : X.left ≅ Y.left) (r : X.right ≅ Y.rig
         rw [← L₁.map_iso_inv l, iso.inv_comp_eq, L₁.map_iso_hom, reassoc_of h, ← R₁.map_comp]
         simp }
 #align category_theory.comma.iso_mk CategoryTheory.Comma.isoMk
+-/
 
 #print CategoryTheory.Comma.mapLeft /-
 /-- A natural transformation `L₁ ⟶ L₂` induces a functor `comma L₂ R ⥤ comma L₁ R`. -/

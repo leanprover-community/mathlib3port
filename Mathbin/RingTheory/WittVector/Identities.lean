@@ -35,12 +35,9 @@ namespace WittVector
 
 variable {p : ℕ} {R : Type _} [hp : Fact p.Prime] [CommRing R]
 
--- mathport name: expr𝕎
 local notation "𝕎" => WittVector p
 
 -- type as `\bbW`
-include hp
-
 noncomputable section
 
 /-- The composition of Frobenius and Verschiebung is multiplication by `p`. -/

@@ -59,12 +59,14 @@ instance [Repr α] : Repr (Tree α) :=
 instance : Inhabited (Tree α) :=
   ⟨nil⟩
 
+#print Tree.ofRBNode /-
 /-- Makes a `tree α` out of a red-black tree. -/
 def ofRBNode : Rbnode α → Tree α
   | Rbnode.leaf => nil
   | Rbnode.red_node l a r => node a (of_rbnode l) (of_rbnode r)
   | Rbnode.black_node l a r => node a (of_rbnode l) (of_rbnode r)
 #align tree.of_rbnode Tree.ofRBNode
+-/
 
 #print Tree.indexOf /-
 /-- Finds the index of an element in the tree assuming the tree has been
@@ -179,7 +181,6 @@ def right : Tree α → Tree α
 #align tree.right Tree.right
 -/
 
--- mathport name: «expr △ »
 -- Notation for making a node with `unit` data
 scoped infixr:65 " △ " => Tree.node ()
 

@@ -40,6 +40,7 @@ variable {R : Type _} {M : Type _} {ι : Type _}
 
 variable [Ring R] [AddCommGroup M] [Module R M]
 
+#print Finsupp.linearIndependent_single /-
 theorem linearIndependent_single {φ : ι → Type _} {f : ∀ ι, φ ι → M}
     (hf : ∀ i, LinearIndependent R (f i)) :
     LinearIndependent R fun ix : Σ i, φ i => single ix.1 (f ix.1 ix.2) :=
@@ -61,6 +62,7 @@ theorem linearIndependent_single {φ : ι → Type _} {f : ∀ ι, φ ι → M}
       rw [span_le, range_coe]
       apply range_comp_subset_range
 #align finsupp.linear_independent_single Finsupp.linearIndependent_single
+-/
 
 end Ring
 
@@ -72,6 +74,7 @@ variable [Semiring R] [AddCommMonoid M] [Module R M]
 
 open LinearMap Submodule
 
+#print Finsupp.basis /-
 /-- The basis on `ι →₀ M` with basis vectors `λ ⟨i, x⟩, single i (b i x)`. -/
 protected def basis {φ : ι → Type _} (b : ∀ i, Basis (φ i) R M) : Basis (Σ i, φ i) R (ι →₀ M) :=
   Basis.ofRepr
@@ -103,13 +106,17 @@ protected def basis {φ : ι → Type _} (b : ∀ i, Basis (φ i) R M) : Basis (
       map_smul' := fun c h => by ext ⟨i, x⟩;
         simp only [coe_mk, smul_apply, LinearEquiv.map_smul, RingHom.id_apply] }
 #align finsupp.basis Finsupp.basis
+-/
 
+#print Finsupp.basis_repr /-
 @[simp]
 theorem basis_repr {φ : ι → Type _} (b : ∀ i, Basis (φ i) R M) (g : ι →₀ M) (ix) :
     (Finsupp.basis b).repr g ix = (b ix.1).repr (g ix.1) ix.2 :=
   rfl
 #align finsupp.basis_repr Finsupp.basis_repr
+-/
 
+#print Finsupp.coe_basis /-
 @[simp]
 theorem coe_basis {φ : ι → Type _} (b : ∀ i, Basis (φ i) R M) :
     ⇑(Finsupp.basis b) = fun ix : Σ i, φ i => single ix.1 (b ix.1 ix.2) :=
@@ -123,17 +130,22 @@ theorem coe_basis {φ : ι → Type _} (b : ∀ i, Basis (φ i) R M) :
       simp only [basis_repr, single_apply, h, false_and_iff, if_false, LinearEquiv.map_zero,
         zero_apply]
 #align finsupp.coe_basis Finsupp.coe_basis
+-/
 
+#print Finsupp.basisSingleOne /-
 /-- The basis on `ι →₀ M` with basis vectors `λ i, single i 1`. -/
 @[simps]
 protected def basisSingleOne : Basis ι R (ι →₀ R) :=
   Basis.ofRepr (LinearEquiv.refl _ _)
 #align finsupp.basis_single_one Finsupp.basisSingleOne
+-/
 
+#print Finsupp.coe_basisSingleOne /-
 @[simp]
 theorem coe_basisSingleOne : (Finsupp.basisSingleOne : ι → ι →₀ R) = fun i => Finsupp.single i 1 :=
   funext fun i => Basis.apply_eq_iff.mpr rfl
 #align finsupp.coe_basis_single_one Finsupp.coe_basisSingleOne
+-/
 
 end Semiring
 
@@ -150,6 +162,7 @@ variable [DecidableEq n] [Fintype n]
 
 variable [Semiring R] [AddCommMonoid M] [Module R M]
 
+#print Finset.sum_single_ite /-
 theorem Finset.sum_single_ite (a : R) (i : n) :
     (Finset.univ.Sum fun x : n => Finsupp.single x (ite (i = x) a 0)) = Finsupp.single i a :=
   by
@@ -165,7 +178,9 @@ theorem Finset.sum_single_ite (a : R) (i : n) :
     rwa [mem_singleton_iff] at hx 
   simp [hx']
 #align finset.sum_single_ite Finset.sum_single_ite
+-/
 
+#print Basis.equivFun_symm_stdBasis /-
 @[simp]
 theorem equivFun_symm_stdBasis (b : Basis n R M) (i : n) :
     b.equivFun.symm (LinearMap.stdBasis R (fun _ => R) i 1) = b i :=
@@ -176,6 +191,7 @@ theorem equivFun_symm_stdBasis (b : Basis n R M) (i : n) :
     RingHom.id_apply, repr_self, Finsupp.smul_single', boole_mul]
   exact Finset.sum_single_ite 1 i
 #align basis.equiv_fun_symm_std_basis Basis.equivFun_symm_stdBasis
+-/
 
 end Basis
 

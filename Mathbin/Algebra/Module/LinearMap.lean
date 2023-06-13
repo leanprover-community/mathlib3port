@@ -108,13 +108,10 @@ structure LinearMap {R : Type _} {S : Type _} [Semiring R] [Semiring S] (σ : R 
 /-- The `add_hom` underlying a `linear_map`. -/
 add_decl_doc LinearMap.toAddHom
 
--- mathport name: «expr →ₛₗ[ ] »
 notation:25 M " →ₛₗ[" σ:25 "] " M₂:0 => LinearMap σ M M₂
 
--- mathport name: «expr →ₗ[ ] »
 notation:25 M " →ₗ[" R:25 "] " M₂:0 => LinearMap (RingHom.id R) M M₂
 
--- mathport name: «expr →ₗ⋆[ ] »
 notation:25 M " →ₗ⋆[" R:25 "] " M₂:0 => LinearMap (starRingEnd R) M M₂
 
 #print SemilinearMapClass /-
@@ -186,11 +183,11 @@ instance (priority := 100) [LinearMapClass F R M M₂] : DistribMulActionHomClas
 
 variable {F} (f : F) [i : SemilinearMapClass F σ M M₃]
 
-include i
-
+#print SemilinearMapClass.map_smul_inv /-
 theorem map_smul_inv {σ' : S →+* R} [RingHomInvPair σ σ'] (c : S) (x : M) :
     c • f x = f (σ' c • x) := by simp
 #align semilinear_map_class.map_smul_inv SemilinearMapClass.map_smul_inv
+-/
 
 end SemilinearMapClass
 
@@ -230,16 +227,21 @@ def toDistribMulActionHom (f : M →ₗ[R] M₂) : DistribMulActionHom R M M₂ 
 #align linear_map.to_distrib_mul_action_hom LinearMap.toDistribMulActionHom
 -/
 
+#print LinearMap.toFun_eq_coe /-
 @[simp]
 theorem toFun_eq_coe {f : M →ₛₗ[σ] M₃} : f.toFun = (f : M → M₃) :=
   rfl
 #align linear_map.to_fun_eq_coe LinearMap.toFun_eq_coe
+-/
 
+#print LinearMap.ext /-
 @[ext]
 theorem ext {f g : M →ₛₗ[σ] M₃} (h : ∀ x, f x = g x) : f = g :=
   FunLike.ext f g h
 #align linear_map.ext LinearMap.ext
+-/
 
+#print LinearMap.copy /-
 /-- Copy of a `linear_map` with a new `to_fun` equal to the old one. Useful to fix definitional
 equalities. -/
 protected def copy (f : M →ₛₗ[σ] M₃) (f' : M → M₃) (h : f' = ⇑f) : M →ₛₗ[σ] M₃
@@ -248,15 +250,20 @@ protected def copy (f : M →ₛₗ[σ] M₃) (f' : M → M₃) (h : f' = ⇑f) 
   map_add' := h.symm ▸ f.map_add'
   map_smul' := h.symm ▸ f.map_smul'
 #align linear_map.copy LinearMap.copy
+-/
 
+#print LinearMap.coe_copy /-
 @[simp]
 theorem coe_copy (f : M →ₛₗ[σ] M₃) (f' : M → M₃) (h : f' = ⇑f) : ⇑(f.copy f' h) = f' :=
   rfl
 #align linear_map.coe_copy LinearMap.coe_copy
+-/
 
+#print LinearMap.copy_eq /-
 theorem copy_eq (f : M →ₛₗ[σ] M₃) (f' : M → M₃) (h : f' = ⇑f) : f.copy f' h = f :=
   FunLike.ext' h
 #align linear_map.copy_eq LinearMap.copy_eq
+-/
 
 /-- See Note [custom simps projection]. -/
 protected def Simps.apply {R S : Type _} [Semiring R] [Semiring S] (σ : R →+* S) (M M₃ : Type _)
@@ -266,11 +273,13 @@ protected def Simps.apply {R S : Type _} [Semiring R] [Semiring S] (σ : R →+*
 
 initialize_simps_projections LinearMap (toFun → apply)
 
+#print LinearMap.coe_mk /-
 @[simp]
 theorem coe_mk {σ : R →+* S} (f : M → M₃) (h₁ h₂) :
     ((LinearMap.mk f h₁ h₂ : M →ₛₗ[σ] M₃) : M → M₃) = f :=
   rfl
 #align linear_map.coe_mk LinearMap.coe_mk
+-/
 
 #print LinearMap.id /-
 /-- Identity map as a `linear_map` -/
@@ -279,14 +288,18 @@ def id : M →ₗ[R] M :=
 #align linear_map.id LinearMap.id
 -/
 
+#print LinearMap.id_apply /-
 theorem id_apply (x : M) : @id R M _ _ _ x = x :=
   rfl
 #align linear_map.id_apply LinearMap.id_apply
+-/
 
+#print LinearMap.id_coe /-
 @[simp, norm_cast]
 theorem id_coe : ((LinearMap.id : M →ₗ[R] M) : M → M) = id :=
   rfl
 #align linear_map.id_coe LinearMap.id_coe
+-/
 
 end
 
@@ -302,63 +315,87 @@ variable (σ : R →+* S)
 
 variable (fₗ gₗ : M →ₗ[R] M₂) (f g : M →ₛₗ[σ] M₃)
 
+#print LinearMap.isLinear /-
 theorem isLinear : IsLinearMap R fₗ :=
   ⟨fₗ.map_add', fₗ.map_smul'⟩
 #align linear_map.is_linear LinearMap.isLinear
+-/
 
 variable {fₗ gₗ f g σ}
 
+#print LinearMap.coe_injective /-
 theorem coe_injective : @Injective (M →ₛₗ[σ] M₃) (M → M₃) coeFn :=
   FunLike.coe_injective
 #align linear_map.coe_injective LinearMap.coe_injective
+-/
 
+#print LinearMap.congr_arg /-
 protected theorem congr_arg {x x' : M} : x = x' → f x = f x' :=
   FunLike.congr_arg f
 #align linear_map.congr_arg LinearMap.congr_arg
+-/
 
+#print LinearMap.congr_fun /-
 /-- If two linear maps are equal, they are equal at each point. -/
 protected theorem congr_fun (h : f = g) (x : M) : f x = g x :=
   FunLike.congr_fun h x
 #align linear_map.congr_fun LinearMap.congr_fun
+-/
 
+#print LinearMap.ext_iff /-
 theorem ext_iff : f = g ↔ ∀ x, f x = g x :=
   FunLike.ext_iff
 #align linear_map.ext_iff LinearMap.ext_iff
+-/
 
+#print LinearMap.mk_coe /-
 @[simp]
 theorem mk_coe (f : M →ₛₗ[σ] M₃) (h₁ h₂) : (LinearMap.mk f h₁ h₂ : M →ₛₗ[σ] M₃) = f :=
   ext fun _ => rfl
 #align linear_map.mk_coe LinearMap.mk_coe
+-/
 
 variable (fₗ gₗ f g)
 
+#print LinearMap.map_add /-
 protected theorem map_add (x y : M) : f (x + y) = f x + f y :=
   map_add f x y
 #align linear_map.map_add LinearMap.map_add
+-/
 
+#print LinearMap.map_zero /-
 protected theorem map_zero : f 0 = 0 :=
   map_zero f
 #align linear_map.map_zero LinearMap.map_zero
+-/
 
+#print LinearMap.map_smulₛₗ /-
 -- TODO: `simp` isn't picking up `map_smulₛₗ` for `linear_map`s without specifying `map_smulₛₗ f`
 @[simp]
 protected theorem map_smulₛₗ (c : R) (x : M) : f (c • x) = σ c • f x :=
   map_smulₛₗ f c x
 #align linear_map.map_smulₛₗ LinearMap.map_smulₛₗ
+-/
 
+#print LinearMap.map_smul /-
 protected theorem map_smul (c : R) (x : M) : fₗ (c • x) = c • fₗ x :=
   map_smul fₗ c x
 #align linear_map.map_smul LinearMap.map_smul
+-/
 
+#print LinearMap.map_smul_inv /-
 protected theorem map_smul_inv {σ' : S →+* R} [RingHomInvPair σ σ'] (c : S) (x : M) :
     c • f x = f (σ' c • x) := by simp
 #align linear_map.map_smul_inv LinearMap.map_smul_inv
+-/
 
+#print LinearMap.map_eq_zero_iff /-
 -- TODO: generalize to `zero_hom_class`
 @[simp]
 theorem map_eq_zero_iff (h : Function.Injective f) {x : M} : f x = 0 ↔ x = 0 :=
   ⟨fun w => by apply h; simp [w], fun w => by subst w; simp⟩
 #align linear_map.map_eq_zero_iff LinearMap.map_eq_zero_iff
+-/
 
 section Pointwise
 
@@ -366,6 +403,7 @@ open scoped Pointwise
 
 variable (M M₃ σ) {F : Type _} (h : F)
 
+#print image_smul_setₛₗ /-
 @[simp]
 theorem image_smul_setₛₗ [SemilinearMapClass F σ M M₃] (c : R) (s : Set M) :
     h '' (c • s) = σ c • h '' s := by
@@ -375,7 +413,9 @@ theorem image_smul_setₛₗ [SemilinearMapClass F σ M M₃] (c : R) (s : Set M
   · rintro x ⟨y, ⟨z, hz, rfl⟩, rfl⟩
     exact (Set.mem_image _ _ _).2 ⟨c • z, Set.smul_mem_smul_set hz, map_smulₛₗ _ _ _⟩
 #align image_smul_setₛₗ image_smul_setₛₗ
+-/
 
+#print preimage_smul_setₛₗ /-
 theorem preimage_smul_setₛₗ [SemilinearMapClass F σ M M₃] {c : R} (hc : IsUnit c) (s : Set M₃) :
     h ⁻¹' (σ c • s) = c • h ⁻¹' s := by
   apply Set.Subset.antisymm
@@ -388,17 +428,22 @@ theorem preimage_smul_setₛₗ [SemilinearMapClass F σ M M₃] {c : R} (hc : I
   · rintro x ⟨y, hy, rfl⟩
     refine' ⟨h y, hy, by simp only [RingHom.id_apply, map_smulₛₗ h]⟩
 #align preimage_smul_setₛₗ preimage_smul_setₛₗ
+-/
 
 variable (R M₂)
 
+#print image_smul_set /-
 theorem image_smul_set [LinearMapClass F R M M₂] (c : R) (s : Set M) : h '' (c • s) = c • h '' s :=
   image_smul_setₛₗ _ _ _ h c s
 #align image_smul_set image_smul_set
+-/
 
+#print preimage_smul_set /-
 theorem preimage_smul_set [LinearMapClass F R M M₂] {c : R} (hc : IsUnit c) (s : Set M₂) :
     h ⁻¹' (c • s) = c • h ⁻¹' s :=
   preimage_smul_setₛₗ _ _ _ h hc s
 #align preimage_smul_set preimage_smul_set
+-/
 
 end Pointwise
 
@@ -426,12 +471,14 @@ instance (priority := 100) IsScalarTower.compatibleSMul {R S : Type _} [Semiring
 #align linear_map.is_scalar_tower.compatible_smul LinearMap.IsScalarTower.compatibleSMul
 -/
 
+#print LinearMap.map_smul_of_tower /-
 @[simp]
 theorem map_smul_of_tower {R S : Type _} [Semiring S] [SMul R M] [Module S M] [SMul R M₂]
     [Module S M₂] [CompatibleSMul M M₂ R S] (fₗ : M →ₗ[S] M₂) (c : R) (x : M) :
     fₗ (c • x) = c • fₗ x :=
   CompatibleSMul.map_smul fₗ c x
 #align linear_map.map_smul_of_tower LinearMap.map_smul_of_tower
+-/
 
 #print LinearMap.toAddMonoidHom /-
 /-- convert a linear map to an additive map -/
@@ -442,10 +489,12 @@ def toAddMonoidHom : M →+ M₃ where
 #align linear_map.to_add_monoid_hom LinearMap.toAddMonoidHom
 -/
 
+#print LinearMap.toAddMonoidHom_coe /-
 @[simp]
 theorem toAddMonoidHom_coe : ⇑f.toAddMonoidHom = f :=
   rfl
 #align linear_map.to_add_monoid_hom_coe LinearMap.toAddMonoidHom_coe
+-/
 
 section RestrictScalars
 
@@ -465,48 +514,64 @@ def restrictScalars (fₗ : M →ₗ[S] M₂) : M →ₗ[R] M₂
 #align linear_map.restrict_scalars LinearMap.restrictScalars
 -/
 
+#print LinearMap.coe_restrictScalars /-
 @[simp]
 theorem coe_restrictScalars (fₗ : M →ₗ[S] M₂) : ⇑(restrictScalars R fₗ) = fₗ :=
   rfl
 #align linear_map.coe_restrict_scalars LinearMap.coe_restrictScalars
+-/
 
+#print LinearMap.restrictScalars_apply /-
 theorem restrictScalars_apply (fₗ : M →ₗ[S] M₂) (x) : restrictScalars R fₗ x = fₗ x :=
   rfl
 #align linear_map.restrict_scalars_apply LinearMap.restrictScalars_apply
+-/
 
+#print LinearMap.restrictScalars_injective /-
 theorem restrictScalars_injective :
     Function.Injective (restrictScalars R : (M →ₗ[S] M₂) → M →ₗ[R] M₂) := fun fₗ gₗ h =>
   ext (LinearMap.congr_fun h : _)
 #align linear_map.restrict_scalars_injective LinearMap.restrictScalars_injective
+-/
 
+#print LinearMap.restrictScalars_inj /-
 @[simp]
 theorem restrictScalars_inj (fₗ gₗ : M →ₗ[S] M₂) :
     fₗ.restrictScalars R = gₗ.restrictScalars R ↔ fₗ = gₗ :=
   (restrictScalars_injective R).eq_iff
 #align linear_map.restrict_scalars_inj LinearMap.restrictScalars_inj
+-/
 
 end RestrictScalars
 
 variable {R}
 
+#print LinearMap.toAddMonoidHom_injective /-
 theorem toAddMonoidHom_injective : Function.Injective (toAddMonoidHom : (M →ₛₗ[σ] M₃) → M →+ M₃) :=
   fun f g h => ext <| AddMonoidHom.congr_fun h
 #align linear_map.to_add_monoid_hom_injective LinearMap.toAddMonoidHom_injective
+-/
 
+#print LinearMap.ext_ring /-
 /-- If two `σ`-linear maps from `R` are equal on `1`, then they are equal. -/
 @[ext]
 theorem ext_ring {f g : R →ₛₗ[σ] M₃} (h : f 1 = g 1) : f = g :=
   ext fun x => by rw [← mul_one x, ← smul_eq_mul, f.map_smulₛₗ, g.map_smulₛₗ, h]
 #align linear_map.ext_ring LinearMap.ext_ring
+-/
 
+#print LinearMap.ext_ring_iff /-
 theorem ext_ring_iff {σ : R →+* R} {f g : R →ₛₗ[σ] M} : f = g ↔ f 1 = g 1 :=
   ⟨fun h => h ▸ rfl, ext_ring⟩
 #align linear_map.ext_ring_iff LinearMap.ext_ring_iff
+-/
 
+#print LinearMap.ext_ring_op /-
 @[ext]
 theorem ext_ring_op {σ : Rᵐᵒᵖ →+* S} {f g : R →ₛₗ[σ] M₃} (h : f 1 = g 1) : f = g :=
   ext fun x => by rw [← one_mul x, ← op_smul_eq_mul, f.map_smulₛₗ, g.map_smulₛₗ, h]
 #align linear_map.ext_ring_op LinearMap.ext_ring_op
+-/
 
 end
 
@@ -534,8 +599,6 @@ variable [RingHomCompTriple σ₁₂ σ₂₃ σ₁₃]
 
 variable (f : M₂ →ₛₗ[σ₂₃] M₃) (g : M₁ →ₛₗ[σ₁₂] M₂)
 
-include module_M₁ module_M₂ module_M₃
-
 #print LinearMap.comp /-
 /-- Composition of two linear maps is a linear map -/
 def comp : M₁ →ₛₗ[σ₁₃] M₃ where
@@ -545,58 +608,56 @@ def comp : M₁ →ₛₗ[σ₁₃] M₃ where
 #align linear_map.comp LinearMap.comp
 -/
 
-omit module_M₁ module_M₂ module_M₃
-
--- mathport name: «expr ∘ₗ »
 infixr:80 " ∘ₗ " =>
   @LinearMap.comp _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ (RingHom.id _) (RingHom.id _) (RingHom.id _)
     RingHomCompTriple.ids
 
-include σ₁₃
-
+#print LinearMap.comp_apply /-
 theorem comp_apply (x : M₁) : f.comp g x = f (g x) :=
   rfl
 #align linear_map.comp_apply LinearMap.comp_apply
+-/
 
-omit σ₁₃
-
-include σ₁₃
-
+#print LinearMap.coe_comp /-
 @[simp, norm_cast]
 theorem coe_comp : (f.comp g : M₁ → M₃) = f ∘ g :=
   rfl
 #align linear_map.coe_comp LinearMap.coe_comp
+-/
 
-omit σ₁₃
-
+#print LinearMap.comp_id /-
 @[simp]
 theorem comp_id : f.comp id = f :=
   LinearMap.ext fun x => rfl
 #align linear_map.comp_id LinearMap.comp_id
+-/
 
+#print LinearMap.id_comp /-
 @[simp]
 theorem id_comp : id.comp f = f :=
   LinearMap.ext fun x => rfl
 #align linear_map.id_comp LinearMap.id_comp
+-/
 
 variable {f g} {f' : M₂ →ₛₗ[σ₂₃] M₃} {g' : M₁ →ₛₗ[σ₁₂] M₂}
 
-include σ₁₃
-
+#print LinearMap.cancel_right /-
 theorem cancel_right (hg : Function.Surjective g) : f.comp g = f'.comp g ↔ f = f' :=
   ⟨fun h => ext <| hg.forall.2 (ext_iff.1 h), fun h => h ▸ rfl⟩
 #align linear_map.cancel_right LinearMap.cancel_right
+-/
 
+#print LinearMap.cancel_left /-
 theorem cancel_left (hf : Function.Injective f) : f.comp g = f.comp g' ↔ g = g' :=
   ⟨fun h => ext fun x => hf <| by rw [← comp_apply, h, comp_apply], fun h => h ▸ rfl⟩
 #align linear_map.cancel_left LinearMap.cancel_left
-
-omit σ₁₃
+-/
 
 end
 
 variable [AddCommMonoid M] [AddCommMonoid M₁] [AddCommMonoid M₂] [AddCommMonoid M₃]
 
+#print LinearMap.inverse /-
 /-- If a function `g` is a left and right inverse of a linear map `f`, then `g` is linear itself. -/
 def inverse [Module R M] [Module S M₂] {σ : R →+* S} {σ' : S →+* R} [RingHomInvPair σ σ']
     (f : M →ₛₗ[σ] M₂) (g : M₂ → M) (h₁ : LeftInverse g f) (h₂ : RightInverse g f) : M₂ →ₛₗ[σ'] M :=
@@ -607,6 +668,7 @@ def inverse [Module R M] [Module S M₂] {σ : R →+* S} {σ' : S →+* R} [Rin
         map_add' := fun x y => by rw [← h₁ (g (x + y)), ← h₁ (g x + g y)] <;> simp [h₂]
         map_smul' := fun a b => by rw [← h₁ (g (a • b)), ← h₁ (σ' a • g b)]; simp [h₂] }
 #align linear_map.inverse LinearMap.inverse
+-/
 
 end AddCommMonoid
 
@@ -618,13 +680,17 @@ variable {module_M : Module R M} {module_M₂ : Module S M₂} {σ : R →+* S}
 
 variable (f : M →ₛₗ[σ] M₂)
 
+#print LinearMap.map_neg /-
 protected theorem map_neg (x : M) : f (-x) = -f x :=
   map_neg f x
 #align linear_map.map_neg LinearMap.map_neg
+-/
 
+#print LinearMap.map_sub /-
 protected theorem map_sub (x y : M) : f (x - y) = f x - f y :=
   map_sub f x y
 #align linear_map.map_sub LinearMap.map_sub
+-/
 
 #print LinearMap.CompatibleSMul.intModule /-
 instance CompatibleSMul.intModule {S : Type _} [Semiring S] [Module S M] [Module S M₂] :
@@ -684,14 +750,18 @@ theorem toLinearMap_eq_coe (f : M →+[R] M₂) : f.toLinearMap = ↑f :=
   rfl
 #align distrib_mul_action_hom.to_linear_map_eq_coe DistribMulActionHom.toLinearMap_eq_coe
 
+#print DistribMulActionHom.coe_toLinearMap /-
 @[simp, norm_cast]
 theorem coe_toLinearMap (f : M →+[R] M₂) : ((f : M →ₗ[R] M₂) : M → M₂) = f :=
   rfl
 #align distrib_mul_action_hom.coe_to_linear_map DistribMulActionHom.coe_toLinearMap
+-/
 
+#print DistribMulActionHom.toLinearMap_injective /-
 theorem toLinearMap_injective {f g : M →+[R] M₂} (h : (f : M →ₗ[R] M₂) = (g : M →ₗ[R] M₂)) :
     f = g := by ext m; exact LinearMap.congr_fun h m
 #align distrib_mul_action_hom.to_linear_map_injective DistribMulActionHom.toLinearMap_injective
+-/
 
 end DistribMulActionHom
 
@@ -703,8 +773,6 @@ variable [Semiring R] [AddCommMonoid M] [AddCommMonoid M₂]
 
 variable [Module R M] [Module R M₂]
 
-include R
-
 #print IsLinearMap.mk' /-
 /-- Convert an `is_linear_map` predicate to a `linear_map` -/
 def mk' (f : M → M₂) (H : IsLinearMap R f) : M →ₗ[R] M₂
@@ -715,11 +783,14 @@ def mk' (f : M → M₂) (H : IsLinearMap R f) : M →ₗ[R] M₂
 #align is_linear_map.mk' IsLinearMap.mk'
 -/
 
+#print IsLinearMap.mk'_apply /-
 @[simp]
 theorem mk'_apply {f : M → M₂} (H : IsLinearMap R f) (x : M) : mk' f H x = f x :=
   rfl
 #align is_linear_map.mk'_apply IsLinearMap.mk'_apply
+-/
 
+#print IsLinearMap.isLinearMap_smul /-
 theorem isLinearMap_smul {R M : Type _} [CommSemiring R] [AddCommMonoid M] [Module R M] (c : R) :
     IsLinearMap R fun z : M => c • z :=
   by
@@ -727,19 +798,22 @@ theorem isLinearMap_smul {R M : Type _} [CommSemiring R] [AddCommMonoid M] [Modu
   intro _ _
   simp only [smul_smul, mul_comm]
 #align is_linear_map.is_linear_map_smul IsLinearMap.isLinearMap_smul
+-/
 
+#print IsLinearMap.isLinearMap_smul' /-
 theorem isLinearMap_smul' {R M : Type _} [Semiring R] [AddCommMonoid M] [Module R M] (a : M) :
     IsLinearMap R fun c : R => c • a :=
   IsLinearMap.mk (fun x y => add_smul x y a) fun x y => mul_smul x y a
 #align is_linear_map.is_linear_map_smul' IsLinearMap.isLinearMap_smul'
+-/
 
 variable {f : M → M₂} (lin : IsLinearMap R f)
 
-include M M₂ lin
-
+#print IsLinearMap.map_zero /-
 theorem map_zero : f (0 : M) = (0 : M₂) :=
   (lin.mk' f).map_zero
 #align is_linear_map.map_zero IsLinearMap.map_zero
+-/
 
 end AddCommMonoid
 
@@ -749,23 +823,25 @@ variable [Semiring R] [AddCommGroup M] [AddCommGroup M₂]
 
 variable [Module R M] [Module R M₂]
 
-include R
-
+#print IsLinearMap.isLinearMap_neg /-
 theorem isLinearMap_neg : IsLinearMap R fun z : M => -z :=
   IsLinearMap.mk neg_add fun x y => (smul_neg x y).symm
 #align is_linear_map.is_linear_map_neg IsLinearMap.isLinearMap_neg
+-/
 
 variable {f : M → M₂} (lin : IsLinearMap R f)
 
-include M M₂ lin
-
+#print IsLinearMap.map_neg /-
 theorem map_neg (x : M) : f (-x) = -f x :=
   (lin.mk' f).map_neg x
 #align is_linear_map.map_neg IsLinearMap.map_neg
+-/
 
+#print IsLinearMap.map_sub /-
 theorem map_sub (x y) : f (x - y) = f x - f y :=
   (lin.mk' f).map_sub x y
 #align is_linear_map.map_sub IsLinearMap.map_sub
+-/
 
 end AddCommGroup
 
@@ -789,11 +865,14 @@ def AddMonoidHom.toNatLinearMap [AddCommMonoid M] [AddCommMonoid M₂] (f : M �
 #align add_monoid_hom.to_nat_linear_map AddMonoidHom.toNatLinearMap
 -/
 
+#print AddMonoidHom.toNatLinearMap_injective /-
 theorem AddMonoidHom.toNatLinearMap_injective [AddCommMonoid M] [AddCommMonoid M₂] :
     Function.Injective (@AddMonoidHom.toNatLinearMap M M₂ _ _) := by intro f g h; ext;
   exact LinearMap.congr_fun h x
 #align add_monoid_hom.to_nat_linear_map_injective AddMonoidHom.toNatLinearMap_injective
+-/
 
+#print AddMonoidHom.toIntLinearMap /-
 /-- Reinterpret an additive homomorphism as a `ℤ`-linear map. -/
 def AddMonoidHom.toIntLinearMap [AddCommGroup M] [AddCommGroup M₂] (f : M →+ M₂) : M →ₗ[ℤ] M₂
     where
@@ -801,17 +880,22 @@ def AddMonoidHom.toIntLinearMap [AddCommGroup M] [AddCommGroup M₂] (f : M →+
   map_add' := f.map_add
   map_smul' := map_zsmul f
 #align add_monoid_hom.to_int_linear_map AddMonoidHom.toIntLinearMap
+-/
 
+#print AddMonoidHom.toIntLinearMap_injective /-
 theorem AddMonoidHom.toIntLinearMap_injective [AddCommGroup M] [AddCommGroup M₂] :
     Function.Injective (@AddMonoidHom.toIntLinearMap M M₂ _ _) := by intro f g h; ext;
   exact LinearMap.congr_fun h x
 #align add_monoid_hom.to_int_linear_map_injective AddMonoidHom.toIntLinearMap_injective
+-/
 
+#print AddMonoidHom.coe_toIntLinearMap /-
 @[simp]
 theorem AddMonoidHom.coe_toIntLinearMap [AddCommGroup M] [AddCommGroup M₂] (f : M →+ M₂) :
     ⇑f.toIntLinearMap = f :=
   rfl
 #align add_monoid_hom.coe_to_int_linear_map AddMonoidHom.coe_toIntLinearMap
+-/
 
 #print AddMonoidHom.toRatLinearMap /-
 /-- Reinterpret an additive homomorphism as a `ℚ`-linear map. -/
@@ -821,16 +905,20 @@ def AddMonoidHom.toRatLinearMap [AddCommGroup M] [Module ℚ M] [AddCommGroup M�
 #align add_monoid_hom.to_rat_linear_map AddMonoidHom.toRatLinearMap
 -/
 
+#print AddMonoidHom.toRatLinearMap_injective /-
 theorem AddMonoidHom.toRatLinearMap_injective [AddCommGroup M] [Module ℚ M] [AddCommGroup M₂]
     [Module ℚ M₂] : Function.Injective (@AddMonoidHom.toRatLinearMap M M₂ _ _ _ _) := by
   intro f g h; ext; exact LinearMap.congr_fun h x
 #align add_monoid_hom.to_rat_linear_map_injective AddMonoidHom.toRatLinearMap_injective
+-/
 
+#print AddMonoidHom.coe_toRatLinearMap /-
 @[simp]
 theorem AddMonoidHom.coe_toRatLinearMap [AddCommGroup M] [Module ℚ M] [AddCommGroup M₂]
     [Module ℚ M₂] (f : M →+ M₂) : ⇑f.toRatLinearMap = f :=
   rfl
 #align add_monoid_hom.coe_to_rat_linear_map AddMonoidHom.coe_toRatLinearMap
+-/
 
 namespace LinearMap
 
@@ -856,14 +944,18 @@ instance : SMul S (M →ₛₗ[σ₁₂] M₂) :=
       map_add' := fun x y => by simp only [Pi.smul_apply, f.map_add, smul_add]
       map_smul' := fun c x => by simp [Pi.smul_apply, smul_comm (σ₁₂ c)] }⟩
 
+#print LinearMap.smul_apply /-
 @[simp]
 theorem smul_apply (a : S) (f : M →ₛₗ[σ₁₂] M₂) (x : M) : (a • f) x = a • f x :=
   rfl
 #align linear_map.smul_apply LinearMap.smul_apply
+-/
 
+#print LinearMap.coe_smul /-
 theorem coe_smul (a : S) (f : M →ₛₗ[σ₁₂] M₂) : ⇑(a • f) = a • f :=
   rfl
 #align linear_map.coe_smul LinearMap.coe_smul
+-/
 
 instance [SMulCommClass S T M₂] : SMulCommClass S T (M →ₛₗ[σ₁₂] M₂) :=
   ⟨fun a b f => ext fun x => smul_comm _ _ _⟩
@@ -901,28 +993,36 @@ instance : Zero (M →ₛₗ[σ₁₂] M₂) :=
       map_add' := by simp
       map_smul' := by simp }⟩
 
+#print LinearMap.zero_apply /-
 @[simp]
 theorem zero_apply (x : M) : (0 : M →ₛₗ[σ₁₂] M₂) x = 0 :=
   rfl
 #align linear_map.zero_apply LinearMap.zero_apply
+-/
 
+#print LinearMap.comp_zero /-
 @[simp]
 theorem comp_zero (g : M₂ →ₛₗ[σ₂₃] M₃) : (g.comp (0 : M →ₛₗ[σ₁₂] M₂) : M →ₛₗ[σ₁₃] M₃) = 0 :=
   ext fun c => by rw [comp_apply, zero_apply, zero_apply, g.map_zero]
 #align linear_map.comp_zero LinearMap.comp_zero
+-/
 
+#print LinearMap.zero_comp /-
 @[simp]
 theorem zero_comp (f : M →ₛₗ[σ₁₂] M₂) : ((0 : M₂ →ₛₗ[σ₂₃] M₃).comp f : M →ₛₗ[σ₁₃] M₃) = 0 :=
   rfl
 #align linear_map.zero_comp LinearMap.zero_comp
+-/
 
 instance : Inhabited (M →ₛₗ[σ₁₂] M₂) :=
   ⟨0⟩
 
+#print LinearMap.default_def /-
 @[simp]
 theorem default_def : (default : M →ₛₗ[σ₁₂] M₂) = 0 :=
   rfl
 #align linear_map.default_def LinearMap.default_def
+-/
 
 /-- The sum of two linear maps is linear. -/
 instance : Add (M →ₛₗ[σ₁₂] M₂) :=
@@ -931,20 +1031,26 @@ instance : Add (M →ₛₗ[σ₁₂] M₂) :=
       map_add' := by simp [add_comm, add_left_comm]
       map_smul' := by simp [smul_add] }⟩
 
+#print LinearMap.add_apply /-
 @[simp]
 theorem add_apply (f g : M →ₛₗ[σ₁₂] M₂) (x : M) : (f + g) x = f x + g x :=
   rfl
 #align linear_map.add_apply LinearMap.add_apply
+-/
 
+#print LinearMap.add_comp /-
 theorem add_comp (f : M →ₛₗ[σ₁₂] M₂) (g h : M₂ →ₛₗ[σ₂₃] M₃) :
     ((h + g).comp f : M →ₛₗ[σ₁₃] M₃) = h.comp f + g.comp f :=
   rfl
 #align linear_map.add_comp LinearMap.add_comp
+-/
 
+#print LinearMap.comp_add /-
 theorem comp_add (f g : M →ₛₗ[σ₁₂] M₂) (h : M₂ →ₛₗ[σ₂₃] M₃) :
     (h.comp (f + g) : M →ₛₗ[σ₁₃] M₃) = h.comp f + h.comp g :=
   ext fun _ => h.map_add _ _
 #align linear_map.comp_add LinearMap.comp_add
+-/
 
 /-- The type of linear maps is an additive monoid. -/
 instance : AddCommMonoid (M →ₛₗ[σ₁₂] M₂) :=
@@ -957,24 +1063,26 @@ instance : Neg (M →ₛₗ[σ₁₂] N₂) :=
       map_add' := by simp [add_comm]
       map_smul' := by simp }⟩
 
+#print LinearMap.neg_apply /-
 @[simp]
 theorem neg_apply (f : M →ₛₗ[σ₁₂] N₂) (x : M) : (-f) x = -f x :=
   rfl
 #align linear_map.neg_apply LinearMap.neg_apply
+-/
 
-include σ₁₃
-
+#print LinearMap.neg_comp /-
 @[simp]
 theorem neg_comp (f : M →ₛₗ[σ₁₂] M₂) (g : M₂ →ₛₗ[σ₂₃] N₃) : (-g).comp f = -g.comp f :=
   rfl
 #align linear_map.neg_comp LinearMap.neg_comp
+-/
 
+#print LinearMap.comp_neg /-
 @[simp]
 theorem comp_neg (f : M →ₛₗ[σ₁₂] N₂) (g : N₂ →ₛₗ[σ₂₃] N₃) : g.comp (-f) = -g.comp f :=
   ext fun _ => g.map_neg _
 #align linear_map.comp_neg LinearMap.comp_neg
-
-omit σ₁₃
+-/
 
 /-- The subtraction of two linear maps is linear. -/
 instance : Sub (M →ₛₗ[σ₁₂] N₂) :=
@@ -983,24 +1091,26 @@ instance : Sub (M →ₛₗ[σ₁₂] N₂) :=
       map_add' := fun x y => by simp only [Pi.sub_apply, map_add, add_sub_add_comm]
       map_smul' := fun r x => by simp [Pi.sub_apply, map_smul, smul_sub] }⟩
 
+#print LinearMap.sub_apply /-
 @[simp]
 theorem sub_apply (f g : M →ₛₗ[σ₁₂] N₂) (x : M) : (f - g) x = f x - g x :=
   rfl
 #align linear_map.sub_apply LinearMap.sub_apply
+-/
 
-include σ₁₃
-
+#print LinearMap.sub_comp /-
 theorem sub_comp (f : M →ₛₗ[σ₁₂] M₂) (g h : M₂ →ₛₗ[σ₂₃] N₃) :
     (g - h).comp f = g.comp f - h.comp f :=
   rfl
 #align linear_map.sub_comp LinearMap.sub_comp
+-/
 
+#print LinearMap.comp_sub /-
 theorem comp_sub (f g : M →ₛₗ[σ₁₂] N₂) (h : N₂ →ₛₗ[σ₂₃] N₃) :
     h.comp (g - f) = h.comp g - h.comp f :=
   ext fun _ => h.map_sub _ _
 #align linear_map.comp_sub LinearMap.comp_sub
-
-omit σ₁₃
+-/
 
 /-- The type of linear maps is an additive group. -/
 instance : AddCommGroup (M →ₛₗ[σ₁₂] N₂) :=
@@ -1034,21 +1144,21 @@ instance : DistribMulAction S (M →ₛₗ[σ₁₂] M₂)
   smul_add c f g := ext fun x => smul_add _ _ _
   smul_zero c := ext fun x => smul_zero _
 
-include σ₁₃
-
+#print LinearMap.smul_comp /-
 theorem smul_comp (a : S₃) (g : M₂ →ₛₗ[σ₂₃] M₃) (f : M →ₛₗ[σ₁₂] M₂) :
     (a • g).comp f = a • g.comp f :=
   rfl
 #align linear_map.smul_comp LinearMap.smul_comp
+-/
 
-omit σ₁₃
-
+#print LinearMap.comp_smul /-
 -- TODO: generalize this to semilinear maps
 theorem comp_smul [Module R M₂] [Module R M₃] [SMulCommClass R S M₂] [DistribMulAction S M₃]
     [SMulCommClass R S M₃] [CompatibleSMul M₃ M₂ S R] (g : M₃ →ₗ[R] M₂) (a : S) (f : M →ₗ[R] M₃) :
     g.comp (a • f) = a • g.comp f :=
   ext fun x => g.map_smul_of_tower _ _
 #align linear_map.comp_smul LinearMap.comp_smul
+-/
 
 end SMul
 
@@ -1091,27 +1201,37 @@ theorem one_eq_id : (1 : Module.End R M) = id :=
 #align linear_map.one_eq_id LinearMap.one_eq_id
 -/
 
+#print LinearMap.mul_eq_comp /-
 theorem mul_eq_comp (f g : Module.End R M) : f * g = f.comp g :=
   rfl
 #align linear_map.mul_eq_comp LinearMap.mul_eq_comp
+-/
 
+#print LinearMap.one_apply /-
 @[simp]
 theorem one_apply (x : M) : (1 : Module.End R M) x = x :=
   rfl
 #align linear_map.one_apply LinearMap.one_apply
+-/
 
+#print LinearMap.mul_apply /-
 @[simp]
 theorem mul_apply (f g : Module.End R M) (x : M) : (f * g) x = f (g x) :=
   rfl
 #align linear_map.mul_apply LinearMap.mul_apply
+-/
 
+#print LinearMap.coe_one /-
 theorem coe_one : ⇑(1 : Module.End R M) = id :=
   rfl
 #align linear_map.coe_one LinearMap.coe_one
+-/
 
+#print LinearMap.coe_mul /-
 theorem coe_mul (f g : Module.End R M) : ⇑(f * g) = f ∘ g :=
   rfl
 #align linear_map.coe_mul LinearMap.coe_mul
+-/
 
 #print Module.End.monoid /-
 instance Module.End.monoid : Monoid (Module.End R M)
@@ -1142,11 +1262,13 @@ instance Module.End.semiring : Semiring (Module.End R M) :=
 #align module.End.semiring Module.End.semiring
 -/
 
+#print Module.End.natCast_apply /-
 /-- See also `module.End.nat_cast_def`. -/
 @[simp]
 theorem Module.End.natCast_apply (n : ℕ) (m : M) : (↑n : Module.End R M) m = n • m :=
   rfl
 #align module.End.nat_cast_apply Module.End.natCast_apply
+-/
 
 #print Module.End.ring /-
 instance Module.End.ring : Ring (Module.End R N₁) :=
@@ -1158,29 +1280,37 @@ instance Module.End.ring : Ring (Module.End R N₁) :=
 #align module.End.ring Module.End.ring
 -/
 
+#print Module.End.intCast_apply /-
 /-- See also `module.End.int_cast_def`. -/
 @[simp]
 theorem Module.End.intCast_apply (z : ℤ) (m : N₁) : (↑z : Module.End R N₁) m = z • m :=
   rfl
 #align module.End.int_cast_apply Module.End.intCast_apply
+-/
 
 section
 
 variable [Monoid S] [DistribMulAction S M] [SMulCommClass R S M]
 
+#print Module.End.isScalarTower /-
 instance Module.End.isScalarTower : IsScalarTower S (Module.End R M) (Module.End R M) :=
   ⟨smul_comp⟩
 #align module.End.is_scalar_tower Module.End.isScalarTower
+-/
 
+#print Module.End.smulCommClass /-
 instance Module.End.smulCommClass [SMul S R] [IsScalarTower S R M] :
     SMulCommClass S (Module.End R M) (Module.End R M) :=
   ⟨fun s _ _ => (comp_smul _ s _).symm⟩
 #align module.End.smul_comm_class Module.End.smulCommClass
+-/
 
+#print Module.End.smulCommClass' /-
 instance Module.End.smulCommClass' [SMul S R] [IsScalarTower S R M] :
     SMulCommClass (Module.End R M) S (Module.End R M) :=
   SMulCommClass.symm _ _ _
 #align module.End.smul_comm_class' Module.End.smulCommClass'
+-/
 
 end
 
@@ -1203,10 +1333,12 @@ instance applyModule : Module (Module.End R M) M
 #align linear_map.apply_module LinearMap.applyModule
 -/
 
+#print LinearMap.smul_def /-
 @[simp]
 protected theorem smul_def (f : Module.End R M) (a : M) : f • a = f a :=
   rfl
 #align linear_map.smul_def LinearMap.smul_def
+-/
 
 #print LinearMap.apply_faithfulSMul /-
 /-- `linear_map.apply_module` is faithful. -/
@@ -1247,6 +1379,7 @@ variable (R M) [Semiring R] [AddCommMonoid M] [Module R M]
 
 variable [Monoid S] [DistribMulAction S M] [SMulCommClass S R M]
 
+#print DistribMulAction.toLinearMap /-
 /-- Each element of the monoid defines a linear map.
 
 This is a stronger version of `distrib_mul_action.to_add_monoid_hom`. -/
@@ -1256,7 +1389,9 @@ def toLinearMap (s : S) : M →ₗ[R] M where
   map_add' := smul_add s
   map_smul' a b := smul_comm _ _ _
 #align distrib_mul_action.to_linear_map DistribMulAction.toLinearMap
+-/
 
+#print DistribMulAction.toModuleEnd /-
 /-- Each element of the monoid defines a module endomorphism.
 
 This is a stronger version of `distrib_mul_action.to_add_monoid_End`. -/
@@ -1267,6 +1402,7 @@ def toModuleEnd : S →* Module.End R M
   map_one' := LinearMap.ext <| one_smul _
   map_mul' a b := LinearMap.ext <| mul_smul _ _
 #align distrib_mul_action.to_module_End DistribMulAction.toModuleEnd
+-/
 
 end DistribMulAction
 
@@ -1291,6 +1427,7 @@ def toModuleEnd : S →+* Module.End R M :=
 #align module.to_module_End Module.toModuleEnd
 -/
 
+#print Module.moduleEndSelf /-
 /-- The canonical (semi)ring isomorphism from `Rᵐᵒᵖ` to `module.End R R` induced by the right
 multiplication. -/
 @[simps]
@@ -1301,7 +1438,9 @@ def moduleEndSelf : Rᵐᵒᵖ ≃+* Module.End R R :=
     left_inv := mul_one
     right_inv := fun f => LinearMap.ext_ring <| one_mul _ }
 #align module.module_End_self Module.moduleEndSelf
+-/
 
+#print Module.moduleEndSelfOp /-
 /-- The canonical (semi)ring isomorphism from `R` to `module.End Rᵐᵒᵖ R` induced by the left
 multiplication. -/
 @[simps]
@@ -1312,16 +1451,21 @@ def moduleEndSelfOp : R ≃+* Module.End Rᵐᵒᵖ R :=
     left_inv := mul_one
     right_inv := fun f => LinearMap.ext_ring_op <| mul_one _ }
 #align module.module_End_self_op Module.moduleEndSelfOp
+-/
 
+#print Module.End.natCast_def /-
 theorem End.natCast_def (n : ℕ) [AddCommMonoid N₁] [Module R N₁] :
     (↑n : Module.End R N₁) = Module.toModuleEnd R N₁ n :=
   rfl
 #align module.End.nat_cast_def Module.End.natCast_def
+-/
 
+#print Module.End.intCast_def /-
 theorem End.intCast_def (z : ℤ) [AddCommGroup N₁] [Module R N₁] :
     (↑z : Module.End R N₁) = Module.toModuleEnd R N₁ z :=
   rfl
 #align module.End.int_cast_def Module.End.intCast_def
+-/
 
 end Module
 

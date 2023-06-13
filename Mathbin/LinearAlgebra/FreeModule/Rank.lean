@@ -40,6 +40,7 @@ variable [AddCommGroup N] [Module R N] [Module.Free R N]
 
 open Module.Free
 
+#print rank_finsupp /-
 @[simp]
 theorem rank_finsupp (ι : Type w) :
     Module.rank R (ι →₀ M) = Cardinal.lift.{v} (#ι) * Cardinal.lift.{w} (Module.rank R M) :=
@@ -48,20 +49,27 @@ theorem rank_finsupp (ι : Type w) :
   rw [← bs.mk_eq_rank'', ← (Finsupp.basis fun a : ι => bs).mk_eq_rank'', Cardinal.mk_sigma,
     Cardinal.sum_const]
 #align rank_finsupp rank_finsupp
+-/
 
+#print rank_finsupp' /-
 theorem rank_finsupp' (ι : Type v) : Module.rank R (ι →₀ M) = (#ι) * Module.rank R M := by
   simp [rank_finsupp]
 #align rank_finsupp' rank_finsupp'
+-/
 
+#print rank_finsupp_self /-
 /-- The rank of `(ι →₀ R)` is `(# ι).lift`. -/
 @[simp]
 theorem rank_finsupp_self (ι : Type w) : Module.rank R (ι →₀ R) = (#ι).lift := by
   simp [rank_finsupp]
 #align rank_finsupp_self rank_finsupp_self
+-/
 
+#print rank_finsupp_self' /-
 /-- If `R` and `ι` lie in the same universe, the rank of `(ι →₀ R)` is `# ι`. -/
 theorem rank_finsupp_self' {ι : Type u} : Module.rank R (ι →₀ R) = (#ι) := by simp
 #align rank_finsupp_self' rank_finsupp_self'
+-/
 
 #print rank_directSum /-
 /-- The rank of the direct sum is the sum of the ranks. -/
@@ -76,6 +84,7 @@ theorem rank_directSum {ι : Type v} (M : ι → Type w) [∀ i : ι, AddCommGro
 #align rank_direct_sum rank_directSum
 -/
 
+#print rank_matrix /-
 /-- If `m` and `n` are `fintype`, the rank of `m × n` matrices is `(# m).lift * (# n).lift`. -/
 @[simp]
 theorem rank_matrix (m : Type v) (n : Type w) [Finite m] [Finite n] :
@@ -87,20 +96,25 @@ theorem rank_matrix (m : Type v) (n : Type w) [Finite m] [Finite n] :
   rw [← lift_lift.{max v w u, max v w}, lift_inj] at h 
   simpa using h.symm
 #align rank_matrix rank_matrix
+-/
 
+#print rank_matrix' /-
 /-- If `m` and `n` are `fintype` that lie in the same universe, the rank of `m × n` matrices is
   `(# n * # m).lift`. -/
 @[simp]
 theorem rank_matrix' (m n : Type v) [Finite m] [Finite n] :
     Module.rank R (Matrix m n R) = ((#m) * (#n)).lift := by rw [rank_matrix, lift_mul, lift_umax]
 #align rank_matrix' rank_matrix'
+-/
 
+#print rank_matrix'' /-
 /-- If `m` and `n` are `fintype` that lie in the same universe as `R`, the rank of `m × n` matrices
   is `# m * # n`. -/
 @[simp]
 theorem rank_matrix'' (m n : Type u) [Finite m] [Finite n] :
     Module.rank R (Matrix m n R) = (#m) * (#n) := by simp
 #align rank_matrix'' rank_matrix''
+-/
 
 end Ring
 
@@ -114,6 +128,7 @@ variable [AddCommGroup N] [Module R N] [Module.Free R N]
 
 open Module.Free
 
+#print rank_tensorProduct /-
 /-- The rank of `M ⊗[R] N` is `(module.rank R M).lift * (module.rank R N).lift`. -/
 @[simp]
 theorem rank_tensorProduct :
@@ -123,12 +138,15 @@ theorem rank_tensorProduct :
   obtain ⟨⟨_, bN⟩⟩ := Module.Free.exists_basis R N
   rw [← bM.mk_eq_rank'', ← bN.mk_eq_rank'', ← (bM.tensor_product bN).mk_eq_rank'', Cardinal.mk_prod]
 #align rank_tensor_product rank_tensorProduct
+-/
 
+#print rank_tensorProduct' /-
 /-- If `M` and `N` lie in the same universe, the rank of `M ⊗[R] N` is
   `(module.rank R M) * (module.rank R N)`. -/
 theorem rank_tensorProduct' (N : Type v) [AddCommGroup N] [Module R N] [Module.Free R N] :
     Module.rank R (M ⊗[R] N) = Module.rank R M * Module.rank R N := by simp
 #align rank_tensor_product' rank_tensorProduct'
+-/
 
 end CommRing
 

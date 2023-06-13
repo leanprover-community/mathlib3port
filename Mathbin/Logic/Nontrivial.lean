@@ -186,12 +186,14 @@ instance Option.nontrivial [Nonempty α] : Nontrivial (Option α) := by inhabit 
 #align option.nontrivial Option.nontrivial
 -/
 
+#print Function.Injective.nontrivial /-
 /-- Pushforward a `nontrivial` instance along an injective function. -/
 protected theorem Function.Injective.nontrivial [Nontrivial α] {f : α → β}
     (hf : Function.Injective f) : Nontrivial β :=
   let ⟨x, y, h⟩ := exists_pair_ne α
   ⟨⟨f x, f y, hf.Ne h⟩⟩
 #align function.injective.nontrivial Function.Injective.nontrivial
+-/
 
 #print Function.Surjective.nontrivial /-
 /-- Pullback a `nontrivial` instance along a surjective function. -/
@@ -206,6 +208,7 @@ protected theorem Function.Surjective.nontrivial [Nontrivial β] {f : α → β}
 #align function.surjective.nontrivial Function.Surjective.nontrivial
 -/
 
+#print Function.Injective.exists_ne /-
 /-- An injective function from a nontrivial type has an argument at
 which it does not take a given value. -/
 protected theorem Function.Injective.exists_ne [Nontrivial α] {f : α → β}
@@ -216,6 +219,7 @@ protected theorem Function.Injective.exists_ne [Nontrivial α] {f : α → β}
   · exact ⟨x₁, (hf.ne_iff' h).2 hx⟩
   · exact ⟨x₂, h⟩
 #align function.injective.exists_ne Function.Injective.exists_ne
+-/
 
 #print nontrivial_prod_right /-
 instance nontrivial_prod_right [Nonempty α] [Nontrivial β] : Nontrivial (α × β) :=

@@ -42,39 +42,51 @@ open scoped Matrix
 
 variable (M : Matrix n n R)
 
+#print Matrix.minpoly_toLin' /-
 @[simp]
 theorem minpoly_toLin' : minpoly R M.toLin' = minpoly R M :=
   minpoly.minpoly_algEquiv (toLinAlgEquiv' : Matrix n n R ≃ₐ[R] _) M
 #align matrix.minpoly_to_lin' Matrix.minpoly_toLin'
+-/
 
+#print Matrix.minpoly_toLin /-
 @[simp]
 theorem minpoly_toLin (b : Basis n R N) (M : Matrix n n R) :
     minpoly R (toLin b b M) = minpoly R M :=
   minpoly.minpoly_algEquiv (toLinAlgEquiv b : Matrix n n R ≃ₐ[R] _) M
 #align matrix.minpoly_to_lin Matrix.minpoly_toLin
+-/
 
+#print Matrix.isIntegral /-
 theorem isIntegral : IsIntegral R M :=
   ⟨M.charpoly, ⟨charpoly_monic M, aeval_self_charpoly M⟩⟩
 #align matrix.is_integral Matrix.isIntegral
+-/
 
+#print Matrix.minpoly_dvd_charpoly /-
 theorem minpoly_dvd_charpoly {K : Type _} [Field K] (M : Matrix n n K) : minpoly K M ∣ M.charpoly :=
   minpoly.dvd _ _ (aeval_self_charpoly M)
 #align matrix.minpoly_dvd_charpoly Matrix.minpoly_dvd_charpoly
+-/
 
 end Matrix
 
 namespace LinearMap
 
+#print LinearMap.minpoly_toMatrix' /-
 @[simp]
 theorem minpoly_toMatrix' (f : (n → R) →ₗ[R] n → R) : minpoly R f.toMatrix' = minpoly R f :=
   minpoly.minpoly_algEquiv (toMatrixAlgEquiv' : _ ≃ₐ[R] Matrix n n R) f
 #align linear_map.minpoly_to_matrix' LinearMap.minpoly_toMatrix'
+-/
 
+#print LinearMap.minpoly_toMatrix /-
 @[simp]
 theorem minpoly_toMatrix (b : Basis n R N) (f : N →ₗ[R] N) :
     minpoly R (toMatrix b b f) = minpoly R f :=
   minpoly.minpoly_algEquiv (toMatrixAlgEquiv b : _ ≃ₐ[R] Matrix n n R) f
 #align linear_map.minpoly_to_matrix LinearMap.minpoly_toMatrix
+-/
 
 end LinearMap
 
@@ -82,6 +94,7 @@ section PowerBasis
 
 open Algebra
 
+#print charpoly_leftMulMatrix /-
 /-- The characteristic polynomial of the map `λ x, a * x` is the minimal polynomial of `a`.
 
 In combination with `det_eq_sign_charpoly_coeff` or `trace_eq_neg_charpoly_coeff`
@@ -99,6 +112,7 @@ theorem charpoly_leftMulMatrix {S : Type _} [Ring S] [Algebra R S] (h : PowerBas
   rw [Matrix.charpoly_degree_eq_dim, Fintype.card_fin] at hq 
   contrapose! hq; exact h.dim_le_degree_of_root h0 hq
 #align charpoly_left_mul_matrix charpoly_leftMulMatrix
+-/
 
 end PowerBasis
 

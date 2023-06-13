@@ -36,19 +36,14 @@ inductive Preform
   deriving has_reflect, Inhabited
 #align omega.int.preform Omega.Int.Preform
 
--- mathport name: preform.eq
 scoped notation x " =* " y => Omega.Int.Preform.eq x y
 
--- mathport name: preform.le
 scoped notation x " ≤* " y => Omega.Int.Preform.le x y
 
--- mathport name: preform.not
 scoped notation "¬* " p => Omega.Int.Preform.not p
 
--- mathport name: preform.or
 scoped notation p " ∨* " q => Omega.Int.Preform.or p q
 
--- mathport name: preform.and
 scoped notation p " ∧* " q => Omega.Int.Preform.and p q
 
 namespace Preform

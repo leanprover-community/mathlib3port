@@ -94,8 +94,7 @@ theorem Set.restrictPreimage_isClosedMap (s : Set β) (H : IsClosedMap f) :
 #align set.restrict_preimage_is_closed_map Set.restrictPreimage_isClosedMap
 -/
 
-include hU
-
+#print isOpen_iff_inter_of_iSup_eq_top /-
 theorem isOpen_iff_inter_of_iSup_eq_top (s : Set β) : IsOpen s ↔ ∀ i, IsOpen (s ∩ U i) :=
   by
   constructor
@@ -105,7 +104,9 @@ theorem isOpen_iff_inter_of_iSup_eq_top (s : Set β) : IsOpen s ↔ ∀ i, IsOpe
     rw [← s.inter_univ, ← this, Set.inter_iUnion]
     exact isOpen_iUnion H
 #align is_open_iff_inter_of_supr_eq_top isOpen_iff_inter_of_iSup_eq_top
+-/
 
+#print isOpen_iff_coe_preimage_of_iSup_eq_top /-
 theorem isOpen_iff_coe_preimage_of_iSup_eq_top (s : Set β) :
     IsOpen s ↔ ∀ i, IsOpen (coe ⁻¹' s : Set (U i)) :=
   by
@@ -114,12 +115,16 @@ theorem isOpen_iff_coe_preimage_of_iSup_eq_top (s : Set β) :
   apply isOpen_iff_inter_of_iSup_eq_top
   assumption
 #align is_open_iff_coe_preimage_of_supr_eq_top isOpen_iff_coe_preimage_of_iSup_eq_top
+-/
 
+#print isClosed_iff_coe_preimage_of_iSup_eq_top /-
 theorem isClosed_iff_coe_preimage_of_iSup_eq_top (s : Set β) :
     IsClosed s ↔ ∀ i, IsClosed (coe ⁻¹' s : Set (U i)) := by
   simpa using isOpen_iff_coe_preimage_of_iSup_eq_top hU (sᶜ)
 #align is_closed_iff_coe_preimage_of_supr_eq_top isClosed_iff_coe_preimage_of_iSup_eq_top
+-/
 
+#print isClosedMap_iff_isClosedMap_of_iSup_eq_top /-
 theorem isClosedMap_iff_isClosedMap_of_iSup_eq_top :
     IsClosedMap f ↔ ∀ i, IsClosedMap ((U i).1.restrictPreimage f) :=
   by
@@ -133,7 +138,9 @@ theorem isClosedMap_iff_isClosedMap_of_iSup_eq_top :
     simpa [Set.restrictPreimage, ← Subtype.coe_inj]
   exact ⟨fun ⟨a, b, c⟩ => ⟨a, c.symm ▸ hx, b, c⟩, fun ⟨a, _, b, c⟩ => ⟨a, b, c⟩⟩
 #align is_closed_map_iff_is_closed_map_of_supr_eq_top isClosedMap_iff_isClosedMap_of_iSup_eq_top
+-/
 
+#print inducing_iff_inducing_of_iSup_eq_top /-
 theorem inducing_iff_inducing_of_iSup_eq_top (h : Continuous f) :
     Inducing f ↔ ∀ i, Inducing ((U i).1.restrictPreimage f) :=
   by
@@ -148,7 +155,9 @@ theorem inducing_iff_inducing_of_iSup_eq_top (h : Continuous f) :
       inf_eq_left, Filter.le_principal_iff]
     exact Filter.preimage_mem_comap ((U i).2.mem_nhds hi)
 #align inducing_iff_inducing_of_supr_eq_top inducing_iff_inducing_of_iSup_eq_top
+-/
 
+#print embedding_iff_embedding_of_iSup_eq_top /-
 theorem embedding_iff_embedding_of_iSup_eq_top (h : Continuous f) :
     Embedding f ↔ ∀ i, Embedding ((U i).1.restrictPreimage f) :=
   by
@@ -158,7 +167,9 @@ theorem embedding_iff_embedding_of_iSup_eq_top (h : Continuous f) :
   · apply inducing_iff_inducing_of_iSup_eq_top <;> assumption
   · apply Set.injective_iff_injective_of_iUnion_eq_univ; convert congr_arg coe hU; simp
 #align embedding_iff_embedding_of_supr_eq_top embedding_iff_embedding_of_iSup_eq_top
+-/
 
+#print openEmbedding_iff_openEmbedding_of_iSup_eq_top /-
 theorem openEmbedding_iff_openEmbedding_of_iSup_eq_top (h : Continuous f) :
     OpenEmbedding f ↔ ∀ i, OpenEmbedding ((U i).1.restrictPreimage f) :=
   by
@@ -168,7 +179,9 @@ theorem openEmbedding_iff_openEmbedding_of_iSup_eq_top (h : Continuous f) :
   · apply embedding_iff_embedding_of_iSup_eq_top <;> assumption
   · simp_rw [Set.range_restrictPreimage]; apply isOpen_iff_coe_preimage_of_iSup_eq_top hU
 #align open_embedding_iff_open_embedding_of_supr_eq_top openEmbedding_iff_openEmbedding_of_iSup_eq_top
+-/
 
+#print closedEmbedding_iff_closedEmbedding_of_iSup_eq_top /-
 theorem closedEmbedding_iff_closedEmbedding_of_iSup_eq_top (h : Continuous f) :
     ClosedEmbedding f ↔ ∀ i, ClosedEmbedding ((U i).1.restrictPreimage f) :=
   by
@@ -178,4 +191,5 @@ theorem closedEmbedding_iff_closedEmbedding_of_iSup_eq_top (h : Continuous f) :
   · apply embedding_iff_embedding_of_iSup_eq_top <;> assumption
   · simp_rw [Set.range_restrictPreimage]; apply isClosed_iff_coe_preimage_of_iSup_eq_top hU
 #align closed_embedding_iff_closed_embedding_of_supr_eq_top closedEmbedding_iff_closedEmbedding_of_iSup_eq_top
+-/
 

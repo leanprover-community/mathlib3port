@@ -50,11 +50,13 @@ class ReflectsIsomorphisms (F : C ⥤ D) : Prop where
 #align category_theory.reflects_isomorphisms CategoryTheory.ReflectsIsomorphisms
 -/
 
+#print CategoryTheory.isIso_of_reflects_iso /-
 /-- If `F` reflects isos and `F.map f` is an iso, then `f` is an iso. -/
 theorem isIso_of_reflects_iso {A B : C} (f : A ⟶ B) (F : C ⥤ D) [IsIso (F.map f)]
     [ReflectsIsomorphisms F] : IsIso f :=
   ReflectsIsomorphisms.reflects F f
 #align category_theory.is_iso_of_reflects_iso CategoryTheory.isIso_of_reflects_iso
+-/
 
 #print CategoryTheory.reflectsIsomorphisms_of_full_and_faithful /-
 instance (priority := 100) reflectsIsomorphisms_of_full_and_faithful (F : C ⥤ D) [Full F]

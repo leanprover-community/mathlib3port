@@ -337,7 +337,7 @@ namespace VectorBundleCore
 
 variable {ι : Type _} {F} (Z : VectorBundleCore 𝕜 B F ι)
 
-/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`smoothOn_coord_change] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`smoothOn_coord_change] [] -/
 /-- Mixin for a `vector_bundle_core` stating smoothness (of transition functions). -/
 class IsSmooth (IB : ModelWithCorners 𝕜 EB HB) : Prop where
   smoothOn_coord_change :
@@ -429,8 +429,6 @@ class IsSmooth (a : VectorPrebundle 𝕜 F E) : Prop where
 #align vector_prebundle.is_smooth VectorPrebundle.IsSmooth
 
 variable (a : VectorPrebundle 𝕜 F E) [ha : a.IsSmooth IB] {e e' : Pretrivialization F (π E)}
-
-include ha
 
 /-- A randomly chosen coordinate change on a `smooth_vector_prebundle`, given by
   the field `exists_coord_change`. Note that `a.smooth_coord_change` need not be the same as

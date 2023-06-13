@@ -149,20 +149,26 @@ variable {α β γ : Type u}
 
 open IsLawfulTraversable Functor
 
+#print Equiv.id_traverse /-
 protected theorem id_traverse (x : t' α) : Equiv.traverse eqv id.mk x = x := by
   simp! [Equiv.traverse, idBind, id_traverse, Functor.map, functor_norm]
 #align equiv.id_traverse Equiv.id_traverse
+-/
 
+#print Equiv.traverse_eq_map_id /-
 protected theorem traverse_eq_map_id (f : α → β) (x : t' α) :
     Equiv.traverse eqv (id.mk ∘ f) x = id.mk (Equiv.map eqv f x) := by
   simp [Equiv.traverse, traverse_eq_map_id, functor_norm] <;> rfl
 #align equiv.traverse_eq_map_id Equiv.traverse_eq_map_id
+-/
 
+#print Equiv.comp_traverse /-
 protected theorem comp_traverse (f : β → F γ) (g : α → G β) (x : t' α) :
     Equiv.traverse eqv (Comp.mk ∘ Functor.map f ∘ g) x =
       Comp.mk (Equiv.traverse eqv f <$> Equiv.traverse eqv g x) :=
   by simp [Equiv.traverse, comp_traverse, functor_norm] <;> congr <;> ext <;> simp
 #align equiv.comp_traverse Equiv.comp_traverse
+-/
 
 #print Equiv.naturality /-
 protected theorem naturality (f : α → F β) (x : t' α) :

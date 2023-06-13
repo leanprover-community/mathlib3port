@@ -266,8 +266,6 @@ namespace Filtration
 variable [TopologicalSpace β] [MetrizableSpace β] [mβ : MeasurableSpace β] [BorelSpace β]
   [Preorder ι]
 
-include mβ
-
 /-- Given a sequence of functions, the natural filtration is the smallest sequence
 of σ-algebras such that that sequence of functions is measurable with respect to
 the filtration. -/
@@ -320,8 +318,6 @@ theorem filtrationOfSet_eq_natural [MulZeroOneClass β] [Nontrivial β] {s : ι 
 end
 
 section Limit
-
-omit mβ
 
 variable {E : Type _} [Zero E] [TopologicalSpace E] {ℱ : Filtration ι m} {f : ι → Ω → E}
   {μ : Measure Ω}

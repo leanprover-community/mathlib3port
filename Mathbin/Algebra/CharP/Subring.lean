@@ -23,6 +23,7 @@ universe u v
 
 namespace CharP
 
+#print CharP.subsemiring /-
 instance subsemiring (R : Type u) [Semiring R] (p : ℕ) [CharP R p] (S : Subsemiring R) :
     CharP S p :=
   ⟨fun x =>
@@ -31,7 +32,9 @@ instance subsemiring (R : Type u) [Semiring R] (p : ℕ) [CharP R p] (S : Subsem
         ⟨fun h => Subtype.eq <| show S.Subtype x = 0 by rw [map_natCast, h], fun h =>
           map_natCast S.Subtype x ▸ by rw [h, RingHom.map_zero]⟩⟩
 #align char_p.subsemiring CharP.subsemiring
+-/
 
+#print CharP.subring /-
 instance subring (R : Type u) [Ring R] (p : ℕ) [CharP R p] (S : Subring R) : CharP S p :=
   ⟨fun x =>
     Iff.symm <|
@@ -39,10 +42,13 @@ instance subring (R : Type u) [Ring R] (p : ℕ) [CharP R p] (S : Subring R) : C
         ⟨fun h => Subtype.eq <| show S.Subtype x = 0 by rw [map_natCast, h], fun h =>
           map_natCast S.Subtype x ▸ by rw [h, RingHom.map_zero]⟩⟩
 #align char_p.subring CharP.subring
+-/
 
+#print CharP.subring' /-
 instance subring' (R : Type u) [CommRing R] (p : ℕ) [CharP R p] (S : Subring R) : CharP S p :=
   CharP.subring R p S
 #align char_p.subring' CharP.subring'
+-/
 
 end CharP
 

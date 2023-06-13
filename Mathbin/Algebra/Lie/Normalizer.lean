@@ -65,21 +65,28 @@ def normalizer : LieSubmodule R L M
 #align lie_submodule.normalizer LieSubmodule.normalizer
 -/
 
+#print LieSubmodule.mem_normalizer /-
 @[simp]
 theorem mem_normalizer (m : M) : m ∈ N.normalizer ↔ ∀ x : L, ⁅x, m⁆ ∈ N :=
   Iff.rfl
 #align lie_submodule.mem_normalizer LieSubmodule.mem_normalizer
+-/
 
+#print LieSubmodule.le_normalizer /-
 theorem le_normalizer : N ≤ N.normalizer := by
   intro m hm
   rw [mem_normalizer]
   exact fun x => N.lie_mem hm
 #align lie_submodule.le_normalizer LieSubmodule.le_normalizer
+-/
 
+#print LieSubmodule.normalizer_inf /-
 theorem normalizer_inf : (N₁ ⊓ N₂).normalizer = N₁.normalizer ⊓ N₂.normalizer := by ext;
   simp [← forall_and]
 #align lie_submodule.normalizer_inf LieSubmodule.normalizer_inf
+-/
 
+#print LieSubmodule.monotone_normalizer /-
 @[mono]
 theorem monotone_normalizer : Monotone (normalizer : LieSubmodule R L M → LieSubmodule R L M) :=
   by
@@ -87,27 +94,36 @@ theorem monotone_normalizer : Monotone (normalizer : LieSubmodule R L M → LieS
   rw [mem_normalizer] at hm ⊢
   exact fun x => h (hm x)
 #align lie_submodule.monotone_normalizer LieSubmodule.monotone_normalizer
+-/
 
+#print LieSubmodule.comap_normalizer /-
 @[simp]
 theorem comap_normalizer (f : M' →ₗ⁅R,L⁆ M) : N.normalizer.comap f = (N.comap f).normalizer := by
   ext; simp
 #align lie_submodule.comap_normalizer LieSubmodule.comap_normalizer
+-/
 
+#print LieSubmodule.top_lie_le_iff_le_normalizer /-
 theorem top_lie_le_iff_le_normalizer (N' : LieSubmodule R L M) :
     ⁅(⊤ : LieIdeal R L), N⁆ ≤ N' ↔ N ≤ N'.normalizer := by rw [lie_le_iff]; tauto
 #align lie_submodule.top_lie_le_iff_le_normalizer LieSubmodule.top_lie_le_iff_le_normalizer
+-/
 
+#print LieSubmodule.gc_top_lie_normalizer /-
 theorem gc_top_lie_normalizer :
     GaloisConnection (fun N : LieSubmodule R L M => ⁅(⊤ : LieIdeal R L), N⁆) normalizer :=
   top_lie_le_iff_le_normalizer
 #align lie_submodule.gc_top_lie_normalizer LieSubmodule.gc_top_lie_normalizer
+-/
 
 variable (R L M)
 
+#print LieSubmodule.normalizer_bot_eq_maxTrivSubmodule /-
 theorem normalizer_bot_eq_maxTrivSubmodule :
     (⊥ : LieSubmodule R L M).normalizer = LieModule.maxTrivSubmodule R L M :=
   rfl
 #align lie_submodule.normalizer_bot_eq_max_triv_submodule LieSubmodule.normalizer_bot_eq_maxTrivSubmodule
+-/
 
 end LieSubmodule
 
@@ -142,9 +158,11 @@ theorem mem_normalizer_iff (x : L) : x ∈ H.normalizer ↔ ∀ y : L, y ∈ H �
 #align lie_subalgebra.mem_normalizer_iff LieSubalgebra.mem_normalizer_iff
 -/
 
+#print LieSubalgebra.le_normalizer /-
 theorem le_normalizer : H ≤ H.normalizer :=
   H.toLieSubmodule.le_normalizer
 #align lie_subalgebra.le_normalizer LieSubalgebra.le_normalizer
+-/
 
 #print LieSubalgebra.coe_normalizer_eq_normalizer /-
 theorem coe_normalizer_eq_normalizer :
@@ -155,6 +173,7 @@ theorem coe_normalizer_eq_normalizer :
 
 variable {H}
 
+#print LieSubalgebra.lie_mem_sup_of_mem_normalizer /-
 theorem lie_mem_sup_of_mem_normalizer {x y z : L} (hx : x ∈ H.normalizer) (hy : y ∈ (R ∙ x) ⊔ ↑H)
     (hz : z ∈ (R ∙ x) ⊔ ↑H) : ⁅y, z⁆ ∈ (R ∙ x) ⊔ ↑H :=
   by
@@ -169,6 +188,7 @@ theorem lie_mem_sup_of_mem_normalizer {x y z : L} (hx : x ∈ H.normalizer) (hy 
   refine' H.add_mem (H.smul_mem s _) (H.add_mem (H.smul_mem t _) (H.lie_mem hv hw))
   exacts [(H.mem_normalizer_iff' x).mp hx v hv, (H.mem_normalizer_iff x).mp hx w hw]
 #align lie_subalgebra.lie_mem_sup_of_mem_normalizer LieSubalgebra.lie_mem_sup_of_mem_normalizer
+-/
 
 #print LieSubalgebra.ideal_in_normalizer /-
 /-- A Lie subalgebra is an ideal of its normalizer. -/
@@ -179,6 +199,7 @@ theorem ideal_in_normalizer {x y : L} (hx : x ∈ H.normalizer) (hy : y ∈ H) :
 #align lie_subalgebra.ideal_in_normalizer LieSubalgebra.ideal_in_normalizer
 -/
 
+#print LieSubalgebra.exists_nested_lieIdeal_ofLe_normalizer /-
 /-- A Lie subalgebra `H` is an ideal of any Lie subalgebra `K` containing `H` and contained in the
 normalizer of `H`. -/
 theorem exists_nested_lieIdeal_ofLe_normalizer {K : LieSubalgebra R L} (h₁ : H ≤ K)
@@ -187,6 +208,7 @@ theorem exists_nested_lieIdeal_ofLe_normalizer {K : LieSubalgebra R L} (h₁ : H
   rw [exists_nested_lie_ideal_coe_eq_iff]
   exact fun x y hx hy => ideal_in_normalizer (h₂ hx) hy
 #align lie_subalgebra.exists_nested_lie_ideal_of_le_normalizer LieSubalgebra.exists_nested_lieIdeal_ofLe_normalizer
+-/
 
 variable (H)
 

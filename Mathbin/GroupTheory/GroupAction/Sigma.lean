@@ -38,17 +38,21 @@ variable [∀ i, SMul M (α i)] [∀ i, SMul N (α i)] (a : M) (i : ι) (b : α 
 instance : SMul M (Σ i, α i) :=
   ⟨fun a => Sigma.map id fun i => (· • ·) a⟩
 
+#print Sigma.smul_def /-
 @[to_additive]
 theorem smul_def : a • x = x.map id fun i => (· • ·) a :=
   rfl
 #align sigma.smul_def Sigma.smul_def
 #align sigma.vadd_def Sigma.vadd_def
+-/
 
+#print Sigma.smul_mk /-
 @[simp, to_additive]
 theorem smul_mk : a • mk i b = ⟨i, a • b⟩ :=
   rfl
 #align sigma.smul_mk Sigma.smul_mk
 #align sigma.vadd_mk Sigma.vadd_mk
+-/
 
 @[to_additive]
 instance [SMul M N] [∀ i, IsScalarTower M N (α i)] : IsScalarTower M N (Σ i, α i) :=
@@ -62,12 +66,14 @@ instance [∀ i, SMulCommClass M N (α i)] : SMulCommClass M N (Σ i, α i) :=
 instance [∀ i, SMul Mᵐᵒᵖ (α i)] [∀ i, IsCentralScalar M (α i)] : IsCentralScalar M (Σ i, α i) :=
   ⟨fun a x => by cases x; rw [smul_mk, smul_mk, op_smul_eq_smul]⟩
 
+#print Sigma.FaithfulSMul' /-
 /-- This is not an instance because `i` becomes a metavariable. -/
 @[to_additive "This is not an instance because `i` becomes a metavariable."]
 protected theorem FaithfulSMul' [FaithfulSMul M (α i)] : FaithfulSMul M (Σ i, α i) :=
   ⟨fun x y h => eq_of_smul_eq_smul fun a : α i => heq_iff_eq.1 (ext_iff.1 <| h <| mk i a).2⟩
 #align sigma.has_faithful_smul' Sigma.FaithfulSMul'
 #align sigma.has_faithful_vadd' Sigma.FaithfulVAdd'
+-/
 
 @[to_additive]
 instance [Nonempty ι] [∀ i, FaithfulSMul M (α i)] : FaithfulSMul M (Σ i, α i) :=

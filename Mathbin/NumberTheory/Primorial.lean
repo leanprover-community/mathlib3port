@@ -44,7 +44,6 @@ def primorial (n : ℕ) : ℕ :=
 #align primorial primorial
 -/
 
--- mathport name: «expr #»
 local notation x "#" => primorial x
 
 #print primorial_pos /-
@@ -62,6 +61,7 @@ theorem primorial_succ {n : ℕ} (hn1 : n ≠ 1) (hn : Odd n) : (n + 1)# = n# :=
 #align primorial_succ primorial_succ
 -/
 
+#print primorial_add /-
 theorem primorial_add (m n : ℕ) :
     (m + n)# = m# * ∏ p in filter Nat.Prime (Ico (m + 1) (m + n + 1)), p :=
   by
@@ -69,6 +69,7 @@ theorem primorial_add (m n : ℕ) :
   exacts [zero_le _, add_le_add_right (Nat.le_add_right _ _) _,
     disjoint_filter_filter <| Ico_disjoint_Ico_consecutive _ _ _]
 #align primorial_add primorial_add
+-/
 
 #print primorial_add_dvd /-
 theorem primorial_add_dvd {m n : ℕ} (h : n ≤ m) : (m + n)# ∣ m# * choose (m + n) m :=

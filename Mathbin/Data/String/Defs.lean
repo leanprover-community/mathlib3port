@@ -22,10 +22,12 @@ This file defines a bunch of functions for the `string` datatype.
 
 namespace String
 
+#print String.splitOn /-
 /-- `s.split_on c` tokenizes `s : string` on `c : char`. -/
 def splitOn (s : String) (c : Char) : List String :=
   split (· = c) s
 #align string.split_on String.splitOn
+-/
 
 #print String.mapTokens /-
 /-- `string.map_tokens c f s` tokenizes `s : string` on `c : char`, maps `f` over each token, and

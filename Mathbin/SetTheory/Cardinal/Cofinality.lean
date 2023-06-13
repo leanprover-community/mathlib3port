@@ -74,16 +74,21 @@ def cof (r : α → α → Prop) : Cardinal :=
 #align order.cof Order.cof
 -/
 
+#print Order.cof_nonempty /-
 /-- The set in the definition of `order.cof` is nonempty. -/
 theorem cof_nonempty (r : α → α → Prop) [IsRefl α r] :
     {c | ∃ S : Set α, (∀ a, ∃ b ∈ S, r a b) ∧ (#S) = c}.Nonempty :=
   ⟨_, Set.univ, fun a => ⟨a, ⟨⟩, refl _⟩, rfl⟩
 #align order.cof_nonempty Order.cof_nonempty
+-/
 
+#print Order.cof_le /-
 theorem cof_le (r : α → α → Prop) {S : Set α} (h : ∀ a, ∃ b ∈ S, r a b) : cof r ≤ (#S) :=
   csInf_le' ⟨S, h, rfl⟩
 #align order.cof_le Order.cof_le
+-/
 
+#print Order.le_cof /-
 theorem le_cof {r : α → α → Prop} [IsRefl α r] (c : Cardinal) :
     c ≤ cof r ↔ ∀ {S : Set α}, (∀ a, ∃ b ∈ S, r a b) → c ≤ (#S) :=
   by
@@ -92,6 +97,7 @@ theorem le_cof {r : α → α → Prop} [IsRefl α r] (c : Cardinal) :
   rintro H d ⟨S, h, rfl⟩
   exact H h
 #align order.le_cof Order.le_cof
+-/
 
 end Order
 
@@ -253,6 +259,7 @@ theorem cof_lsub_def_nonempty (o) :
 #align ordinal.cof_lsub_def_nonempty Ordinal.cof_lsub_def_nonempty
 -/
 
+#print Ordinal.cof_eq_sInf_lsub /-
 theorem cof_eq_sInf_lsub (o : Ordinal.{u}) :
     cof o = sInf {a : Cardinal | ∃ (ι : Type u) (f : ι → Ordinal), lsub.{u, u} f = o ∧ (#ι) = a} :=
   by
@@ -285,7 +292,9 @@ theorem cof_eq_sInf_lsub (o : Ordinal.{u}) :
     rw [← typein_le_typein, typein_enum] at hb' 
     exact hb'.trans_lt (lt_lsub.{u, u} f ⟨b, hb⟩)
 #align ordinal.cof_eq_Inf_lsub Ordinal.cof_eq_sInf_lsub
+-/
 
+#print Ordinal.lift_cof /-
 @[simp]
 theorem lift_cof (o) : (cof o).lift = cof o.lift :=
   by
@@ -311,6 +320,7 @@ theorem lift_cof (o) : (cof o).lift = cof o.lift :=
       let ⟨b, bs, br⟩ := H a
       ⟨⟨b⟩, bs, br⟩
 #align ordinal.lift_cof Ordinal.lift_cof
+-/
 
 #print Ordinal.cof_le_card /-
 theorem cof_le_card (o) : cof o ≤ card o := by rw [cof_eq_Inf_lsub]; exact csInf_le' card_mem_cof
@@ -403,6 +413,7 @@ theorem sup_lt_ord {ι} {f : ι → Ordinal} {c : Ordinal} (hι : (#ι) < c.cof)
 #align ordinal.sup_lt_ord Ordinal.sup_lt_ord
 -/
 
+#print Ordinal.iSup_lt_lift /-
 theorem iSup_lt_lift {ι} {f : ι → Cardinal} {c : Cardinal} (hι : Cardinal.lift (#ι) < c.ord.cof)
     (hf : ∀ i, f i < c) : iSup f < c :=
   by
@@ -411,11 +422,14 @@ theorem iSup_lt_lift {ι} {f : ι → Cardinal} {c : Cardinal} (hι : Cardinal.l
   rw [ord_lt_ord]
   apply hf
 #align ordinal.supr_lt_lift Ordinal.iSup_lt_lift
+-/
 
+#print Ordinal.iSup_lt /-
 theorem iSup_lt {ι} {f : ι → Cardinal} {c : Cardinal} (hι : (#ι) < c.ord.cof) :
     (∀ i, f i < c) → iSup f < c :=
   iSup_lt_lift (by rwa [(#ι).lift_id])
 #align ordinal.supr_lt Ordinal.iSup_lt
+-/
 
 #print Ordinal.nfpFamily_lt_ord_lift /-
 theorem nfpFamily_lt_ord_lift {ι} {f : ι → Ordinal → Ordinal} {c} (hc : ℵ₀ < cof c)
@@ -666,6 +680,7 @@ protected theorem zero {f : ∀ b < (0 : Ordinal), Ordinal} : IsFundamentalSeque
 #align ordinal.is_fundamental_sequence.zero Ordinal.IsFundamentalSequence.zero
 -/
 
+#print Ordinal.IsFundamentalSequence.succ /-
 protected theorem succ : IsFundamentalSequence (succ o) 1 fun _ _ => o :=
   by
   refine' ⟨_, fun i j hi hj h => _, blsub_const Ordinal.one_ne_zero o⟩
@@ -674,6 +689,7 @@ protected theorem succ : IsFundamentalSequence (succ o) 1 fun _ _ => o :=
     rw [hi, hj] at h 
     exact h.false.elim
 #align ordinal.is_fundamental_sequence.succ Ordinal.IsFundamentalSequence.succ
+-/
 
 #print Ordinal.IsFundamentalSequence.monotone /-
 protected theorem monotone (hf : IsFundamentalSequence a o f) {i j : Ordinal} (hi : i < o)
@@ -847,6 +863,7 @@ theorem cof_omega : cof ω = ℵ₀ :=
 #align ordinal.cof_omega Ordinal.cof_omega
 -/
 
+#print Ordinal.cof_eq' /-
 theorem cof_eq' (r : α → α → Prop) [IsWellOrder α r] (h : IsLimit (type r)) :
     ∃ S : Set α, (∀ a, ∃ b ∈ S, r a b) ∧ (#S) = cof (type r) :=
   let ⟨S, H, e⟩ := cof_eq r
@@ -859,6 +876,7 @@ theorem cof_eq' (r : α → α → Prop) [IsWellOrder α r] (h : IsLimit (type r
         ab⟩,
     e⟩
 #align ordinal.cof_eq' Ordinal.cof_eq'
+-/
 
 #print Ordinal.cof_univ /-
 @[simp]
@@ -886,6 +904,7 @@ theorem cof_univ : cof univ.{u, v} = Cardinal.univ :=
 /-! ### Infinite pigeonhole principle -/
 
 
+#print Ordinal.unbounded_of_unbounded_sUnion /-
 /-- If the union of s is unbounded and s is smaller than the cofinality,
   then s has an unbounded member -/
 theorem unbounded_of_unbounded_sUnion (r : α → α → Prop) [wo : IsWellOrder α r] {s : Set (Set α)}
@@ -898,6 +917,7 @@ theorem unbounded_of_unbounded_sUnion (r : α → α → Prop) [wo : IsWellOrder
   rcases h₁ x with ⟨y, ⟨c, hc, hy⟩, hxy⟩
   exact ⟨f ⟨c, hc⟩, mem_range_self _, fun hxz => hxy (trans (wo.wf.lt_sup _ hy) hxz)⟩
 #align ordinal.unbounded_of_unbounded_sUnion Ordinal.unbounded_of_unbounded_sUnion
+-/
 
 #print Ordinal.unbounded_of_unbounded_iUnion /-
 /-- If the union of s is unbounded and s is smaller than the cofinality,
@@ -968,7 +988,6 @@ namespace Cardinal
 
 open Ordinal
 
--- mathport name: cardinal.pow
 local infixr:0 "^" => @pow Cardinal.{u} Cardinal Cardinal.hasPow
 
 #print Cardinal.IsStrongLimit /-
@@ -985,9 +1004,11 @@ theorem IsStrongLimit.ne_zero {c} (h : IsStrongLimit c) : c ≠ 0 :=
 #align cardinal.is_strong_limit.ne_zero Cardinal.IsStrongLimit.ne_zero
 -/
 
+#print Cardinal.IsStrongLimit.two_power_lt /-
 theorem IsStrongLimit.two_power_lt {x c} (h : IsStrongLimit c) : x < c → (2^x) < c :=
   h.2 x
 #align cardinal.is_strong_limit.two_power_lt Cardinal.IsStrongLimit.two_power_lt
+-/
 
 #print Cardinal.isStrongLimit_aleph0 /-
 theorem isStrongLimit_aleph0 : IsStrongLimit ℵ₀ :=
@@ -1024,6 +1045,7 @@ theorem isStrongLimit_beth {o : Ordinal} (H : IsSuccLimit o) : IsStrongLimit (be
 #align cardinal.is_strong_limit_beth Cardinal.isStrongLimit_beth
 -/
 
+#print Cardinal.mk_bounded_subset /-
 theorem mk_bounded_subset {α : Type _} (h : ∀ x < #α, (2^x) < (#α)) {r : α → α → Prop}
     [IsWellOrder α r] (hr : (#α).ord = type r) : (#{ s : Set α // Bounded r s }) = (#α) :=
   by
@@ -1052,7 +1074,9 @@ theorem mk_bounded_subset {α : Type _} (h : ∀ x < #α, (2^x) < (#α)) {r : α
     · intro a b hab
       simpa only [singleton_eq_singleton_iff] using hab
 #align cardinal.mk_bounded_subset Cardinal.mk_bounded_subset
+-/
 
+#print Cardinal.mk_subset_mk_lt_cof /-
 theorem mk_subset_mk_lt_cof {α : Type _} (h : ∀ x < #α, (2^x) < (#α)) :
     (#{ s : Set α // (#s) < cof (#α).ord }) = (#α) :=
   by
@@ -1073,6 +1097,7 @@ theorem mk_subset_mk_lt_cof {α : Type _} (h : ∀ x < #α, (2^x) < (#α)) :
     · intro a b hab
       simpa only [singleton_eq_singleton_iff] using hab
 #align cardinal.mk_subset_mk_lt_cof Cardinal.mk_subset_mk_lt_cof
+-/
 
 #print Cardinal.IsRegular /-
 /-- A cardinal is regular if it is infinite and it equals its own cofinality. -/
@@ -1117,6 +1142,7 @@ theorem isRegular_aleph0 : IsRegular ℵ₀ :=
 #align cardinal.is_regular_aleph_0 Cardinal.isRegular_aleph0
 -/
 
+#print Cardinal.isRegular_succ /-
 theorem isRegular_succ {c : Cardinal.{u}} (h : ℵ₀ ≤ c) : IsRegular (succ c) :=
   ⟨h.trans (le_succ c),
     succ_le_of_lt
@@ -1138,10 +1164,13 @@ theorem isRegular_succ {c : Cardinal.{u}} (h : ℵ₀ ≤ c) : IsRegular (succ c
         · rw [← lt_succ_iff, ← lt_ord, ← αe, re]
           apply typein_lt_type)⟩
 #align cardinal.is_regular_succ Cardinal.isRegular_succ
+-/
 
+#print Cardinal.isRegular_aleph_one /-
 theorem isRegular_aleph_one : IsRegular (aleph 1) := by rw [← succ_aleph_0];
   exact is_regular_succ le_rfl
 #align cardinal.is_regular_aleph_one Cardinal.isRegular_aleph_one
+-/
 
 #print Cardinal.isRegular_aleph'_succ /-
 theorem isRegular_aleph'_succ {o : Ordinal} (h : ω ≤ o) : IsRegular (aleph' (succ o)) := by
@@ -1181,6 +1210,7 @@ theorem exists_infinite_fiber {β α : Type _} (f : β → α) (w : (#α) < (#β
 #align cardinal.exists_infinite_fiber Cardinal.exists_infinite_fiber
 -/
 
+#print Cardinal.le_range_of_union_finset_eq_top /-
 /-- If an infinite type `β` can be expressed as a union of finite sets,
 then the cardinality of the collection of those finite sets
 must be at least the cardinality of `β`.
@@ -1206,6 +1236,7 @@ theorem le_range_of_union_finset_eq_top {α β : Type _} [Infinite β] (f : α �
   obtain ⟨⟨-, ⟨a, rfl⟩⟩, p⟩ := exists_infinite_fiber u' h k
   exact (@Infinite.of_injective _ _ p (inclusion (v' a)) (inclusion_injective _)).False
 #align cardinal.le_range_of_union_finset_eq_top Cardinal.le_range_of_union_finset_eq_top
+-/
 
 #print Cardinal.lsub_lt_ord_lift_of_isRegular /-
 theorem lsub_lt_ord_lift_of_isRegular {ι} {f : ι → Ordinal} {c} (hc : IsRegular c)
@@ -1263,15 +1294,19 @@ theorem bsup_lt_ord_of_isRegular {o : Ordinal} {f : ∀ a < o, Ordinal} {c} (hc 
 #align cardinal.bsup_lt_ord_of_is_regular Cardinal.bsup_lt_ord_of_isRegular
 -/
 
+#print Cardinal.iSup_lt_lift_of_isRegular /-
 theorem iSup_lt_lift_of_isRegular {ι} {f : ι → Cardinal} {c} (hc : IsRegular c)
     (hι : Cardinal.lift (#ι) < c) : (∀ i, f i < c) → iSup f < c :=
   iSup_lt_lift (by rwa [hc.cof_eq])
 #align cardinal.supr_lt_lift_of_is_regular Cardinal.iSup_lt_lift_of_isRegular
+-/
 
+#print Cardinal.iSup_lt_of_isRegular /-
 theorem iSup_lt_of_isRegular {ι} {f : ι → Cardinal} {c} (hc : IsRegular c) (hι : (#ι) < c) :
     (∀ i, f i < c) → iSup f < c :=
   iSup_lt (by rwa [hc.cof_eq])
 #align cardinal.supr_lt_of_is_regular Cardinal.iSup_lt_of_isRegular
+-/
 
 #print Cardinal.sum_lt_lift_of_isRegular /-
 theorem sum_lt_lift_of_isRegular {ι : Type u} {f : ι → Cardinal} {c : Cardinal} (hc : IsRegular c)
@@ -1390,10 +1425,12 @@ def IsInaccessible (c : Cardinal) :=
 #align cardinal.is_inaccessible Cardinal.IsInaccessible
 -/
 
+#print Cardinal.IsInaccessible.mk /-
 theorem IsInaccessible.mk {c} (h₁ : ℵ₀ < c) (h₂ : c ≤ c.ord.cof) (h₃ : ∀ x < c, (2^x) < c) :
     IsInaccessible c :=
   ⟨h₁, ⟨h₁.le, h₂⟩, (aleph0_pos.trans h₁).ne', h₃⟩
 #align cardinal.is_inaccessible.mk Cardinal.IsInaccessible.mk
+-/
 
 #print Cardinal.univ_inaccessible /-
 -- Lean's foundations prove the existence of ℵ₀ many inaccessible cardinals

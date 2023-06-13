@@ -111,7 +111,6 @@ abbrev asHom {α β : Type u} (f : α → β) : α ⟶ β :=
 #align category_theory.as_hom CategoryTheory.asHom
 -/
 
--- mathport name: category_theory.as_hom
 -- If you don't mind some notation you can use fewer keystrokes:
 scoped[CategoryTheory.Type] notation "↾" f:200 => CategoryTheory.asHom f
 
@@ -134,6 +133,7 @@ namespace Functor
 
 variable {J : Type u} [Category.{v} J]
 
+#print CategoryTheory.Functor.sections /-
 /-- The sections of a functor `J ⥤ Type` are
 the choices of a point `u j : F.obj j` for each `j`,
 such that `F.map f (u j) = u j` for every morphism `f : j ⟶ j'`.
@@ -143,6 +143,7 @@ We later use these to define limits in `Type` and in many concrete categories.
 def sections (F : J ⥤ Type w) : Set (∀ j, F.obj j) :=
   {u | ∀ {j j'} (f : j ⟶ j'), F.map f (u j) = u j'}
 #align category_theory.functor.sections CategoryTheory.Functor.sections
+-/
 
 end Functor
 
@@ -152,50 +153,68 @@ variable {C : Type u} [Category.{v} C] (F G H : C ⥤ Type w) {X Y Z : C}
 
 variable (σ : F ⟶ G) (τ : G ⟶ H)
 
+#print CategoryTheory.FunctorToTypes.map_comp_apply /-
 @[simp]
 theorem map_comp_apply (f : X ⟶ Y) (g : Y ⟶ Z) (a : F.obj X) :
     (F.map (f ≫ g)) a = (F.map g) ((F.map f) a) := by simp [types_comp]
 #align category_theory.functor_to_types.map_comp_apply CategoryTheory.FunctorToTypes.map_comp_apply
+-/
 
+#print CategoryTheory.FunctorToTypes.map_id_apply /-
 @[simp]
 theorem map_id_apply (a : F.obj X) : (F.map (𝟙 X)) a = a := by simp [types_id]
 #align category_theory.functor_to_types.map_id_apply CategoryTheory.FunctorToTypes.map_id_apply
+-/
 
+#print CategoryTheory.FunctorToTypes.naturality /-
 theorem naturality (f : X ⟶ Y) (x : F.obj X) : σ.app Y ((F.map f) x) = (G.map f) (σ.app X x) :=
   congr_fun (σ.naturality f) x
 #align category_theory.functor_to_types.naturality CategoryTheory.FunctorToTypes.naturality
+-/
 
+#print CategoryTheory.FunctorToTypes.comp /-
 @[simp]
 theorem comp (x : F.obj X) : (σ ≫ τ).app X x = τ.app X (σ.app X x) :=
   rfl
 #align category_theory.functor_to_types.comp CategoryTheory.FunctorToTypes.comp
+-/
 
 variable {D : Type u'} [𝒟 : Category.{u'} D] (I J : D ⥤ C) (ρ : I ⟶ J) {W : D}
 
+#print CategoryTheory.FunctorToTypes.hcomp /-
 @[simp]
 theorem hcomp (x : (I ⋙ F).obj W) : (ρ ◫ σ).app W x = (G.map (ρ.app W)) (σ.app (I.obj W) x) :=
   rfl
 #align category_theory.functor_to_types.hcomp CategoryTheory.FunctorToTypes.hcomp
+-/
 
+#print CategoryTheory.FunctorToTypes.map_inv_map_hom_apply /-
 @[simp]
 theorem map_inv_map_hom_apply (f : X ≅ Y) (x : F.obj X) : F.map f.inv (F.map f.Hom x) = x :=
   congr_fun (F.mapIso f).hom_inv_id x
 #align category_theory.functor_to_types.map_inv_map_hom_apply CategoryTheory.FunctorToTypes.map_inv_map_hom_apply
+-/
 
+#print CategoryTheory.FunctorToTypes.map_hom_map_inv_apply /-
 @[simp]
 theorem map_hom_map_inv_apply (f : X ≅ Y) (y : F.obj Y) : F.map f.Hom (F.map f.inv y) = y :=
   congr_fun (F.mapIso f).inv_hom_id y
 #align category_theory.functor_to_types.map_hom_map_inv_apply CategoryTheory.FunctorToTypes.map_hom_map_inv_apply
+-/
 
+#print CategoryTheory.FunctorToTypes.hom_inv_id_app_apply /-
 @[simp]
 theorem hom_inv_id_app_apply (α : F ≅ G) (X) (x) : α.inv.app X (α.Hom.app X x) = x :=
   congr_fun (α.hom_inv_id_app X) x
 #align category_theory.functor_to_types.hom_inv_id_app_apply CategoryTheory.FunctorToTypes.hom_inv_id_app_apply
+-/
 
+#print CategoryTheory.FunctorToTypes.inv_hom_id_app_apply /-
 @[simp]
 theorem inv_hom_id_app_apply (α : F ≅ G) (X) (x) : α.Hom.app X (α.inv.app X x) = x :=
   congr_fun (α.inv_hom_id_app X) x
 #align category_theory.functor_to_types.inv_hom_id_app_apply CategoryTheory.FunctorToTypes.inv_hom_id_app_apply
+-/
 
 end FunctorToTypes
 
@@ -218,11 +237,13 @@ def uliftFunctor : Type u ⥤ Type max u v
 #align category_theory.ulift_functor CategoryTheory.uliftFunctor
 -/
 
+#print CategoryTheory.uliftFunctor_map /-
 @[simp]
 theorem uliftFunctor_map {X Y : Type u} (f : X ⟶ Y) (x : ULift.{v} X) :
     uliftFunctor.map f x = ULift.up (f x.down) :=
   rfl
 #align category_theory.ulift_functor_map CategoryTheory.uliftFunctor_map
+-/
 
 #print CategoryTheory.uliftFunctorFull /-
 instance uliftFunctorFull : Full.{u} uliftFunctor where preimage X Y f x := (f (ULift.up x)).down
@@ -321,16 +342,20 @@ def ofTypeFunctor (m : Type u → Type v) [Functor m] [LawfulFunctor m] : Type u
 
 variable (m : Type u → Type v) [Functor m] [LawfulFunctor m]
 
+#print CategoryTheory.ofTypeFunctor_obj /-
 @[simp]
 theorem ofTypeFunctor_obj : (ofTypeFunctor m).obj = m :=
   rfl
 #align category_theory.of_type_functor_obj CategoryTheory.ofTypeFunctor_obj
+-/
 
+#print CategoryTheory.ofTypeFunctor_map /-
 @[simp]
 theorem ofTypeFunctor_map {α β} (f : α → β) :
     (ofTypeFunctor m).map f = (Functor.map f : m α → m β) :=
   rfl
 #align category_theory.of_type_functor_map CategoryTheory.ofTypeFunctor_map
+-/
 
 end
 

@@ -25,6 +25,7 @@ This file contains some results on equality up to units in the integers.
 -/
 
 
+#print Int.natAbs_eq_iff_associated /-
 theorem Int.natAbs_eq_iff_associated {a b : ℤ} : a.natAbs = b.natAbs ↔ Associated a b :=
   by
   refine' int.nat_abs_eq_nat_abs_iff.trans _
@@ -37,4 +38,5 @@ theorem Int.natAbs_eq_iff_associated {a b : ℤ} : a.natAbs = b.natAbs ↔ Assoc
     · exact Or.inl (by simp)
     · exact Or.inr (by simp)
 #align int.nat_abs_eq_iff_associated Int.natAbs_eq_iff_associated
+-/
 

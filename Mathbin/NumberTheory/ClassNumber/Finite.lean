@@ -159,8 +159,6 @@ section IsAdmissible
 
 variable (L) {abv} (adm : abv.IsAdmissible)
 
-include adm
-
 /-- If we have a large enough set of elements in `R^ι`, then there will be a pair
 whose remainders are close together. We'll show that all sets of cardinality
 at least `cardM bS adm` elements satisfy this condition.
@@ -273,8 +271,6 @@ theorem exists_mem_finsetApprox (a : S) {b} (hb : b ≠ (0 : R)) :
   · exact_mod_cast ε_le
 #align class_group.exists_mem_finset_approx ClassGroup.exists_mem_finsetApprox
 
-include ist iic
-
 /-- We can approximate `a / b : L` with `q / r`, where `r` has finitely many options for `L`. -/
 theorem exists_mem_finset_approx' (h : Algebra.IsAlgebraic R L) (a : S) {b : S} (hb : b ≠ 0) :
     ∃ q : S,
@@ -312,8 +308,6 @@ theorem ne_bot_of_prod_finsetApprox_mem (J : Ideal S)
     (h : algebraMap _ _ (∏ m in finsetApprox bS adm, m) ∈ J) : J ≠ ⊥ :=
   (Submodule.ne_bot_iff _).mpr ⟨_, h, prod_finsetApprox_ne_zero _ _⟩
 #align class_group.ne_bot_of_prod_finset_approx_mem ClassGroup.ne_bot_of_prod_finsetApprox_mem
-
-include ist iic
 
 /-- Each class in the class group contains an ideal `J`
 such that `M := Π m ∈ finset_approx` is in `J`. -/
@@ -354,8 +348,6 @@ theorem exists_mk0_eq_mk0 [IsDedekindDomain S] (h : Algebra.IsAlgebraic R L) (I 
   exact Multiset.dvd_prod (multiset.mem_map.mpr ⟨_, r_mem, rfl⟩)
 #align class_group.exists_mk0_eq_mk0 ClassGroup.exists_mk0_eq_mk0
 
-omit iic ist
-
 /-- `class_group.mk_M_mem` is a specialization of `class_group.mk0` to (the finite set of)
 ideals that contain `M := ∏ m in finset_approx L f abs, m`.
 By showing this function is surjective, we prove that the class group is finite. -/
@@ -364,8 +356,6 @@ noncomputable def mkMMem [IsDedekindDomain S]
   ClassGroup.mk0
     ⟨J.1, mem_nonZeroDivisors_iff_ne_zero.mpr (ne_bot_of_prod_finsetApprox_mem bS adm J.1 J.2)⟩
 #align class_group.mk_M_mem ClassGroup.mkMMem
-
-include iic ist
 
 theorem mkMMem_surjective [IsDedekindDomain S] (h : Algebra.IsAlgebraic R L) :
     Function.Surjective (ClassGroup.mkMMem bS adm) :=
@@ -397,8 +387,6 @@ noncomputable def fintypeOfAdmissibleOfAlgebraic [IsDedekindDomain S]
         Ideal.dvd_iff_le.trans (by rw [Equiv.refl_apply, Ideal.span_le, Set.singleton_subset_iff])))
     (ClassGroup.mkMMem bS adm) (ClassGroup.mkMMem_surjective L bS adm h)
 #align class_group.fintype_of_admissible_of_algebraic ClassGroup.fintypeOfAdmissibleOfAlgebraic
-
-include K
 
 /-- The main theorem: the class group of an integral closure `S` of `R` in a
 finite extension `L` of `K = Frac(R)` is finite if there is an admissible

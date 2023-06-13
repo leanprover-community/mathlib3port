@@ -95,6 +95,7 @@ def homotopyPInftyToId : Homotopy (PInfty : K[X] ⟶ _) (𝟙 _)
 #align algebraic_topology.dold_kan.homotopy_P_infty_to_id AlgebraicTopology.DoldKan.homotopyPInftyToId
 -/
 
+#print AlgebraicTopology.DoldKan.homotopyEquivNormalizedMooreComplexAlternatingFaceMapComplex /-
 /-- The inclusion of the Moore complex in the alternating face map complex
 is an homotopy equivalence -/
 @[simps]
@@ -110,6 +111,7 @@ def homotopyEquivNormalizedMooreComplexAlternatingFaceMapComplex {A : Type _} [C
       (Homotopy.ofEq (PInftyToNormalizedMooreComplex_comp_inclusionOfMooreComplexMap Y))
       (homotopyPInftyToId Y)
 #align algebraic_topology.dold_kan.homotopy_equiv_normalized_Moore_complex_alternating_face_map_complex AlgebraicTopology.DoldKan.homotopyEquivNormalizedMooreComplexAlternatingFaceMapComplex
+-/
 
 end DoldKan
 

@@ -60,10 +60,8 @@ Matiyasevic's theorem, Hilbert's tenth problem
 
 open Fin2 Function Nat Sum
 
--- mathport name: «expr ::ₒ »
 local infixr:67 " ::ₒ " => Option.elim'
 
--- mathport name: «expr ⊗ »
 local infixr:65 " ⊗ " => Sum.elim
 
 universe u
@@ -370,10 +368,12 @@ def map {α β} (f : α → β) (g : Poly α) : Poly β :=
 #align poly.map Poly.map
 -/
 
+#print Poly.map_apply /-
 @[simp]
 theorem map_apply {α β} (f : α → β) (g : Poly α) (v) : map f g v = g (v ∘ f) :=
   rfl
 #align poly.map_apply Poly.map_apply
+-/
 
 end Poly
 
@@ -493,10 +493,13 @@ theorem DiophList.all₂ (l : List (Set <| α → ℕ)) (d : l.All₂ Dioph) :
 #align dioph.dioph_list.all₂ Dioph.DiophList.all₂
 -/
 
+#print Dioph.inter /-
 theorem inter (d : Dioph S) (d' : Dioph S') : Dioph (S ∩ S') :=
   DiophList.all₂ [S, S'] ⟨d, d'⟩
 #align dioph.inter Dioph.inter
+-/
 
+#print Dioph.union /-
 theorem union : ∀ (d : Dioph S) (d' : Dioph S'), Dioph (S ∪ S')
   | ⟨β, p, pe⟩, ⟨γ, q, qe⟩ =>
     ⟨Sum β γ, p.map (inl ⊗ inr ∘ inl) * q.map (inl ⊗ inr ∘ inr), fun v =>
@@ -510,6 +513,7 @@ theorem union : ∀ (d : Dioph S) (d' : Dioph S'), Dioph (S ∪ S')
       exact inject_dummies_lem _ (some ⊗ fun _ => none) (fun x => rfl) _ _
       exact inject_dummies_lem _ ((fun _ => none) ⊗ some) (fun x => rfl) _ _⟩
 #align dioph.union Dioph.union
+-/
 
 #print Dioph.DiophPfun /-
 /-- A partial function is Diophantine if its graph is Diophantine. -/
@@ -720,16 +724,12 @@ theorem diophFn_comp {f : Vector3 ℕ n → ℕ} (df : DiophFn f) (g : Vector3 (
 #align dioph.dioph_fn_comp Dioph.diophFn_comp
 -/
 
--- mathport name: dioph.inter
 scoped notation:35 x " D∧ " y => Dioph.inter x y
 
--- mathport name: dioph.union
 scoped notation:35 x " D∨ " y => Dioph.union x y
 
--- mathport name: dioph.vec_ex1_dioph
 scoped notation:30 "D∃" => Dioph.vec_ex1_dioph
 
--- mathport name: fin2.of_nat'
 scoped prefix:arg "&" => Fin2.ofNat'
 
 #print Dioph.proj_dioph_of_nat /-
@@ -738,7 +738,6 @@ theorem proj_dioph_of_nat {n : ℕ} (m : ℕ) [IsLT m n] : DiophFn fun v : Vecto
 #align dioph.proj_dioph_of_nat Dioph.proj_dioph_of_nat
 -/
 
--- mathport name: proj_dioph_of_nat
 scoped prefix:100 "D&" => Dioph.proj_dioph_of_nat
 
 #print Dioph.const_dioph /-
@@ -747,12 +746,9 @@ theorem const_dioph (n : ℕ) : DiophFn (const (α → ℕ) n) :=
 #align dioph.const_dioph Dioph.const_dioph
 -/
 
--- mathport name: const_dioph
 scoped prefix:100 "D." => Dioph.const_dioph
 
 variable {f g : (α → ℕ) → ℕ} (df : DiophFn f) (dg : DiophFn g)
-
-include df dg
 
 #print Dioph.dioph_comp2 /-
 theorem dioph_comp2 {S : ℕ → ℕ → Prop} (d : Dioph fun v : Vector3 ℕ 2 => S (v &0) (v &1)) :
@@ -776,7 +772,6 @@ theorem eq_dioph : Dioph fun v => f v = g v :=
 #align dioph.eq_dioph Dioph.eq_dioph
 -/
 
--- mathport name: eq_dioph
 scoped infixl:50 " D= " => Dioph.eq_dioph
 
 #print Dioph.add_dioph /-
@@ -785,7 +780,6 @@ theorem add_dioph : DiophFn fun v => f v + g v :=
 #align dioph.add_dioph Dioph.add_dioph
 -/
 
--- mathport name: add_dioph
 scoped infixl:80 " D+ " => Dioph.add_dioph
 
 #print Dioph.mul_dioph /-
@@ -794,7 +788,6 @@ theorem mul_dioph : DiophFn fun v => f v * g v :=
 #align dioph.mul_dioph Dioph.mul_dioph
 -/
 
--- mathport name: mul_dioph
 scoped infixl:90 " D* " => Dioph.mul_dioph
 
 #print Dioph.le_dioph /-
@@ -804,7 +797,6 @@ theorem le_dioph : Dioph {v | f v ≤ g v} :=
 #align dioph.le_dioph Dioph.le_dioph
 -/
 
--- mathport name: le_dioph
 scoped infixl:50 " D≤ " => Dioph.le_dioph
 
 #print Dioph.lt_dioph /-
@@ -813,7 +805,6 @@ theorem lt_dioph : Dioph {v | f v < g v} :=
 #align dioph.lt_dioph Dioph.lt_dioph
 -/
 
--- mathport name: lt_dioph
 scoped infixl:50 " D< " => Dioph.lt_dioph
 
 #print Dioph.ne_dioph /-
@@ -822,7 +813,6 @@ theorem ne_dioph : Dioph {v | f v ≠ g v} :=
 #align dioph.ne_dioph Dioph.ne_dioph
 -/
 
--- mathport name: ne_dioph
 scoped infixl:50 " D≠ " => Dioph.ne_dioph
 
 #print Dioph.sub_dioph /-
@@ -844,7 +834,6 @@ theorem sub_dioph : DiophFn fun v => f v - g v :=
 #align dioph.sub_dioph Dioph.sub_dioph
 -/
 
--- mathport name: sub_dioph
 scoped infixl:80 " D- " => Dioph.sub_dioph
 
 #print Dioph.dvd_dioph /-
@@ -853,7 +842,6 @@ theorem dvd_dioph : Dioph fun v => f v ∣ g v :=
 #align dioph.dvd_dioph Dioph.dvd_dioph
 -/
 
--- mathport name: dvd_dioph
 scoped infixl:50 " D∣ " => Dioph.dvd_dioph
 
 #print Dioph.mod_dioph /-
@@ -875,7 +863,6 @@ theorem mod_dioph : DiophFn fun v => f v % g v :=
 #align dioph.mod_dioph Dioph.mod_dioph
 -/
 
--- mathport name: mod_dioph
 scoped infixl:80 " D% " => Dioph.mod_dioph
 
 #print Dioph.modEq_dioph /-
@@ -884,7 +871,6 @@ theorem modEq_dioph {h : (α → ℕ) → ℕ} (dh : DiophFn h) : Dioph fun v =>
 #align dioph.modeq_dioph Dioph.modEq_dioph
 -/
 
--- mathport name: modeq_dioph
 scoped notation " D≡ " => Dioph.modEq_dioph
 
 #print Dioph.div_dioph /-
@@ -914,10 +900,7 @@ theorem div_dioph : DiophFn fun v => f v / g v :=
 #align dioph.div_dioph Dioph.div_dioph
 -/
 
--- mathport name: div_dioph
 scoped infixl:80 " D/ " => Dioph.div_dioph
-
-omit df dg
 
 open Pell
 
@@ -970,8 +953,6 @@ theorem xn_dioph : DiophPfun fun v : Vector3 ℕ 2 => ⟨1 < v &0, fun h => xn h
     Dioph.ext this fun v => ⟨fun ⟨y, h, xe, ye⟩ => ⟨h, xe⟩, fun ⟨h, xe⟩ => ⟨_, h, xe, rfl⟩⟩
 #align dioph.xn_dioph Dioph.xn_dioph
 -/
-
-include df dg
 
 #print Dioph.pow_dioph /-
 /-- A version of **Matiyasevic's theorem** -/

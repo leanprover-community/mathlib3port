@@ -33,7 +33,6 @@ deriving LinearOrderedField, Inhabited
 
 namespace Hyperreal
 
--- mathport name: «exprℝ*»
 notation "ℝ*" => Hyperreal
 
 noncomputable instance : CoeTC ℝ ℝ* :=
@@ -52,50 +51,68 @@ theorem coe_ne_coe {x y : ℝ} : (x : ℝ*) ≠ y ↔ x ≠ y :=
 #align hyperreal.coe_ne_coe Hyperreal.coe_ne_coe
 -/
 
+#print Hyperreal.coe_eq_zero /-
 @[simp, norm_cast]
 theorem coe_eq_zero {x : ℝ} : (x : ℝ*) = 0 ↔ x = 0 :=
   coe_eq_coe
 #align hyperreal.coe_eq_zero Hyperreal.coe_eq_zero
+-/
 
+#print Hyperreal.coe_eq_one /-
 @[simp, norm_cast]
 theorem coe_eq_one {x : ℝ} : (x : ℝ*) = 1 ↔ x = 1 :=
   coe_eq_coe
 #align hyperreal.coe_eq_one Hyperreal.coe_eq_one
+-/
 
+#print Hyperreal.coe_ne_zero /-
 @[norm_cast]
 theorem coe_ne_zero {x : ℝ} : (x : ℝ*) ≠ 0 ↔ x ≠ 0 :=
   coe_ne_coe
 #align hyperreal.coe_ne_zero Hyperreal.coe_ne_zero
+-/
 
+#print Hyperreal.coe_ne_one /-
 @[norm_cast]
 theorem coe_ne_one {x : ℝ} : (x : ℝ*) ≠ 1 ↔ x ≠ 1 :=
   coe_ne_coe
 #align hyperreal.coe_ne_one Hyperreal.coe_ne_one
+-/
 
+#print Hyperreal.coe_one /-
 @[simp, norm_cast]
 theorem coe_one : ↑(1 : ℝ) = (1 : ℝ*) :=
   rfl
 #align hyperreal.coe_one Hyperreal.coe_one
+-/
 
+#print Hyperreal.coe_zero /-
 @[simp, norm_cast]
 theorem coe_zero : ↑(0 : ℝ) = (0 : ℝ*) :=
   rfl
 #align hyperreal.coe_zero Hyperreal.coe_zero
+-/
 
+#print Hyperreal.coe_inv /-
 @[simp, norm_cast]
 theorem coe_inv (x : ℝ) : ↑x⁻¹ = (x⁻¹ : ℝ*) :=
   rfl
 #align hyperreal.coe_inv Hyperreal.coe_inv
+-/
 
+#print Hyperreal.coe_neg /-
 @[simp, norm_cast]
 theorem coe_neg (x : ℝ) : ↑(-x) = (-x : ℝ*) :=
   rfl
 #align hyperreal.coe_neg Hyperreal.coe_neg
+-/
 
+#print Hyperreal.coe_add /-
 @[simp, norm_cast]
 theorem coe_add (x y : ℝ) : ↑(x + y) = (x + y : ℝ*) :=
   rfl
 #align hyperreal.coe_add Hyperreal.coe_add
+-/
 
 @[simp, norm_cast]
 theorem coe_bit0 (x : ℝ) : ↑(bit0 x) = (bit0 x : ℝ*) :=
@@ -107,55 +124,75 @@ theorem coe_bit1 (x : ℝ) : ↑(bit1 x) = (bit1 x : ℝ*) :=
   rfl
 #align hyperreal.coe_bit1 Hyperreal.coe_bit1
 
+#print Hyperreal.coe_mul /-
 @[simp, norm_cast]
 theorem coe_mul (x y : ℝ) : ↑(x * y) = (x * y : ℝ*) :=
   rfl
 #align hyperreal.coe_mul Hyperreal.coe_mul
+-/
 
+#print Hyperreal.coe_div /-
 @[simp, norm_cast]
 theorem coe_div (x y : ℝ) : ↑(x / y) = (x / y : ℝ*) :=
   rfl
 #align hyperreal.coe_div Hyperreal.coe_div
+-/
 
+#print Hyperreal.coe_sub /-
 @[simp, norm_cast]
 theorem coe_sub (x y : ℝ) : ↑(x - y) = (x - y : ℝ*) :=
   rfl
 #align hyperreal.coe_sub Hyperreal.coe_sub
+-/
 
+#print Hyperreal.coe_le_coe /-
 @[simp, norm_cast]
 theorem coe_le_coe {x y : ℝ} : (x : ℝ*) ≤ y ↔ x ≤ y :=
   Germ.const_le_iff
 #align hyperreal.coe_le_coe Hyperreal.coe_le_coe
+-/
 
+#print Hyperreal.coe_lt_coe /-
 @[simp, norm_cast]
 theorem coe_lt_coe {x y : ℝ} : (x : ℝ*) < y ↔ x < y :=
   Germ.const_lt_iff
 #align hyperreal.coe_lt_coe Hyperreal.coe_lt_coe
+-/
 
+#print Hyperreal.coe_nonneg /-
 @[simp, norm_cast]
 theorem coe_nonneg {x : ℝ} : 0 ≤ (x : ℝ*) ↔ 0 ≤ x :=
   coe_le_coe
 #align hyperreal.coe_nonneg Hyperreal.coe_nonneg
+-/
 
+#print Hyperreal.coe_pos /-
 @[simp, norm_cast]
 theorem coe_pos {x : ℝ} : 0 < (x : ℝ*) ↔ 0 < x :=
   coe_lt_coe
 #align hyperreal.coe_pos Hyperreal.coe_pos
+-/
 
+#print Hyperreal.coe_abs /-
 @[simp, norm_cast]
 theorem coe_abs (x : ℝ) : ((|x| : ℝ) : ℝ*) = |x| :=
   const_abs x
 #align hyperreal.coe_abs Hyperreal.coe_abs
+-/
 
+#print Hyperreal.coe_max /-
 @[simp, norm_cast]
 theorem coe_max (x y : ℝ) : ((max x y : ℝ) : ℝ*) = max x y :=
   Germ.const_max _ _
 #align hyperreal.coe_max Hyperreal.coe_max
+-/
 
+#print Hyperreal.coe_min /-
 @[simp, norm_cast]
 theorem coe_min (x y : ℝ) : ((min x y : ℝ) : ℝ*) = min x y :=
   Germ.const_min _ _
 #align hyperreal.coe_min Hyperreal.coe_min
+-/
 
 #print Hyperreal.ofSeq /-
 /-- Construct a hyperreal number from a sequence of real numbers. -/
@@ -178,22 +215,25 @@ noncomputable def omega : ℝ* :=
 #align hyperreal.omega Hyperreal.omega
 -/
 
--- mathport name: hyperreal.epsilon
 scoped notation "ε" => Hyperreal.epsilon
 
--- mathport name: hyperreal.omega
 scoped notation "ω" => Hyperreal.omega
 
+#print Hyperreal.inv_omega /-
 @[simp]
 theorem inv_omega : ω⁻¹ = ε :=
   rfl
 #align hyperreal.inv_omega Hyperreal.inv_omega
+-/
 
+#print Hyperreal.inv_epsilon /-
 @[simp]
 theorem inv_epsilon : ε⁻¹ = ω :=
   @inv_inv _ _ ω
 #align hyperreal.inv_epsilon Hyperreal.inv_epsilon
+-/
 
+#print Hyperreal.omega_pos /-
 theorem omega_pos : 0 < ω :=
   Germ.coe_pos.2 <|
     mem_hyperfilter_of_finite_compl <|
@@ -201,23 +241,33 @@ theorem omega_pos : 0 < ω :=
       convert Set.finite_singleton 0
       simp [Set.eq_singleton_iff_unique_mem]
 #align hyperreal.omega_pos Hyperreal.omega_pos
+-/
 
+#print Hyperreal.epsilon_pos /-
 theorem epsilon_pos : 0 < ε :=
   inv_pos_of_pos omega_pos
 #align hyperreal.epsilon_pos Hyperreal.epsilon_pos
+-/
 
+#print Hyperreal.epsilon_ne_zero /-
 theorem epsilon_ne_zero : ε ≠ 0 :=
   epsilon_pos.ne'
 #align hyperreal.epsilon_ne_zero Hyperreal.epsilon_ne_zero
+-/
 
+#print Hyperreal.omega_ne_zero /-
 theorem omega_ne_zero : ω ≠ 0 :=
   omega_pos.ne'
 #align hyperreal.omega_ne_zero Hyperreal.omega_ne_zero
+-/
 
+#print Hyperreal.epsilon_mul_omega /-
 theorem epsilon_mul_omega : ε * ω = 1 :=
   @inv_mul_cancel _ _ ω omega_ne_zero
 #align hyperreal.epsilon_mul_omega Hyperreal.epsilon_mul_omega
+-/
 
+#print Hyperreal.lt_of_tendsto_zero_of_pos /-
 theorem lt_of_tendsto_zero_of_pos {f : ℕ → ℝ} (hf : Tendsto f atTop (𝓝 0)) :
     ∀ {r : ℝ}, 0 < r → ofSeq f < (r : ℝ*) :=
   by
@@ -231,21 +281,28 @@ theorem lt_of_tendsto_zero_of_pos {f : ℕ → ℝ} (hf : Tendsto f atTop (𝓝 
         i < N)
   exact mem_hyperfilter_of_finite_compl ((Set.finite_le_nat N).Subset hs)
 #align hyperreal.lt_of_tendsto_zero_of_pos Hyperreal.lt_of_tendsto_zero_of_pos
+-/
 
+#print Hyperreal.neg_lt_of_tendsto_zero_of_pos /-
 theorem neg_lt_of_tendsto_zero_of_pos {f : ℕ → ℝ} (hf : Tendsto f atTop (𝓝 0)) :
     ∀ {r : ℝ}, 0 < r → (-r : ℝ*) < ofSeq f := fun r hr =>
   have hg := hf.neg
   neg_lt_of_neg_lt (by rw [neg_zero] at hg  <;> exact lt_of_tendsto_zero_of_pos hg hr)
 #align hyperreal.neg_lt_of_tendsto_zero_of_pos Hyperreal.neg_lt_of_tendsto_zero_of_pos
+-/
 
+#print Hyperreal.gt_of_tendsto_zero_of_neg /-
 theorem gt_of_tendsto_zero_of_neg {f : ℕ → ℝ} (hf : Tendsto f atTop (𝓝 0)) :
     ∀ {r : ℝ}, r < 0 → (r : ℝ*) < ofSeq f := fun r hr => by
   rw [← neg_neg r, coe_neg] <;> exact neg_lt_of_tendsto_zero_of_pos hf (neg_pos.mpr hr)
 #align hyperreal.gt_of_tendsto_zero_of_neg Hyperreal.gt_of_tendsto_zero_of_neg
+-/
 
+#print Hyperreal.epsilon_lt_pos /-
 theorem epsilon_lt_pos (x : ℝ) : 0 < x → ε < x :=
   lt_of_tendsto_zero_of_pos tendsto_inverse_atTop_nhds_0_nat
 #align hyperreal.epsilon_lt_pos Hyperreal.epsilon_lt_pos
+-/
 
 #print Hyperreal.IsSt /-
 /-- Standard part predicate -/
@@ -321,6 +378,7 @@ theorem not_infinite_of_exists_st {x : ℝ*} : (∃ r : ℝ, IsSt x r) → ¬Inf
 #align hyperreal.not_infinite_of_exists_st Hyperreal.not_infinite_of_exists_st
 -/
 
+#print Hyperreal.isSt_sSup /-
 theorem isSt_sSup {x : ℝ*} (hni : ¬Infinite x) : IsSt x (sSup {y : ℝ | (y : ℝ*) < x}) :=
   let S : Set ℝ := {y : ℝ | (y : ℝ*) < x}
   let R : _ := sSup S
@@ -342,6 +400,7 @@ theorem isSt_sSup {x : ℝ*} (hni : ¬Infinite x) : IsSt x (sSup {y : ℝ | (y :
             lt_of_lt_of_le (add_lt_add_left (coe_lt_coe.2 (half_lt_self hδ)) R) c
           not_lt_of_le (le_csSup HR₂ hc) <| (lt_add_iff_pos_right _).mpr <| half_pos hδ⟩
 #align hyperreal.is_st_Sup Hyperreal.isSt_sSup
+-/
 
 #print Hyperreal.exists_st_of_not_infinite /-
 theorem exists_st_of_not_infinite {x : ℝ*} (hni : ¬Infinite x) : ∃ r : ℝ, IsSt x r :=
@@ -349,6 +408,7 @@ theorem exists_st_of_not_infinite {x : ℝ*} (hni : ¬Infinite x) : ∃ r : ℝ,
 #align hyperreal.exists_st_of_not_infinite Hyperreal.exists_st_of_not_infinite
 -/
 
+#print Hyperreal.st_eq_sSup /-
 theorem st_eq_sSup {x : ℝ*} : st x = sSup {y : ℝ | (y : ℝ*) < x} :=
   by
   unfold st; split_ifs
@@ -363,6 +423,7 @@ theorem st_eq_sSup {x : ℝ*} : st x = sSup {y : ℝ | (y : ℝ*) < x} :=
           {y : ℝ | (y : ℝ*) < x} = ∅)]
       exact real.Sup_empty.symm
 #align hyperreal.st_eq_Sup Hyperreal.st_eq_sSup
+-/
 
 #print Hyperreal.exists_st_iff_not_infinite /-
 theorem exists_st_iff_not_infinite {x : ℝ*} : (∃ r : ℝ, IsSt x r) ↔ ¬Infinite x :=
@@ -376,12 +437,14 @@ theorem infinite_iff_not_exists_st {x : ℝ*} : Infinite x ↔ ¬∃ r : ℝ, Is
 #align hyperreal.infinite_iff_not_exists_st Hyperreal.infinite_iff_not_exists_st
 -/
 
+#print Hyperreal.Infinite.st_eq /-
 theorem Hyperreal.Infinite.st_eq {x : ℝ*} (hi : Infinite x) : st x = 0 :=
   by
   unfold st; split_ifs
   · exact False.elim ((infinite_iff_not_exists_st.mp hi) h)
   · rfl
 #align hyperreal.st_infinite Hyperreal.Infinite.st_eq
+-/
 
 #print Hyperreal.IsSt.st_eq /-
 theorem Hyperreal.IsSt.st_eq {x : ℝ*} {r : ℝ} (hxr : IsSt x r) : st x = r :=
@@ -404,12 +467,14 @@ theorem isSt_st_of_exists_st {x : ℝ*} (hx : ∃ r : ℝ, IsSt x r) : IsSt x (s
 #align hyperreal.is_st_st_of_exists_st Hyperreal.isSt_st_of_exists_st
 -/
 
+#print Hyperreal.isSt_st /-
 theorem isSt_st {x : ℝ*} (hx : st x ≠ 0) : IsSt x (st x) :=
   by
   unfold st; split_ifs
   · exact Classical.choose_spec h
   · exact False.elim (hx (by unfold st <;> split_ifs <;> rfl))
 #align hyperreal.is_st_st Hyperreal.isSt_st
+-/
 
 #print Hyperreal.isSt_st' /-
 theorem isSt_st' {x : ℝ*} (hx : ¬Infinite x) : IsSt x (st x) :=
@@ -459,10 +524,13 @@ theorem isSt_inj_real {r₁ r₂ s : ℝ} (h1 : IsSt r₁ s) (h2 : IsSt r₂ s) 
 #align hyperreal.is_st_inj_real Hyperreal.isSt_inj_real
 -/
 
+#print Hyperreal.isSt_iff_abs_sub_lt_delta /-
 theorem isSt_iff_abs_sub_lt_delta {x : ℝ*} {r : ℝ} : IsSt x r ↔ ∀ δ : ℝ, 0 < δ → |x - r| < δ := by
   simp only [abs_sub_lt_iff, sub_lt_iff_lt_add, is_st, and_comm', add_comm]
 #align hyperreal.is_st_iff_abs_sub_lt_delta Hyperreal.isSt_iff_abs_sub_lt_delta
+-/
 
+#print Hyperreal.IsSt.add /-
 theorem Hyperreal.IsSt.add {x y : ℝ*} {r s : ℝ} : IsSt x r → IsSt y s → IsSt (x + y) (r + s) :=
   fun hxr hys d hd =>
   have hxr' := hxr (d / 2) (half_pos hd)
@@ -470,15 +538,21 @@ theorem Hyperreal.IsSt.add {x y : ℝ*} {r s : ℝ} : IsSt x r → IsSt y s → 
   ⟨by convert add_lt_add hxr'.1 hys'.1 using 1 <;> norm_cast <;> linarith, by
     convert add_lt_add hxr'.2 hys'.2 using 1 <;> norm_cast <;> linarith⟩
 #align hyperreal.is_st_add Hyperreal.IsSt.add
+-/
 
+#print Hyperreal.IsSt.neg /-
 theorem Hyperreal.IsSt.neg {x : ℝ*} {r : ℝ} (hxr : IsSt x r) : IsSt (-x) (-r) := fun d hd =>
   show -(r : ℝ*) - d < -x ∧ -x < -r + d by cases hxr d hd <;> constructor <;> linarith
 #align hyperreal.is_st_neg Hyperreal.IsSt.neg
+-/
 
+#print Hyperreal.IsSt.sub /-
 theorem Hyperreal.IsSt.sub {x y : ℝ*} {r s : ℝ} : IsSt x r → IsSt y s → IsSt (x - y) (r - s) :=
   fun hxr hys => by rw [sub_eq_add_neg, sub_eq_add_neg] <;> exact is_st_add hxr (is_st_neg hys)
 #align hyperreal.is_st_sub Hyperreal.IsSt.sub
+-/
 
+#print Hyperreal.IsSt.lt /-
 -- (st x < st y) → (x < y) → (x ≤ y) → (st x ≤ st y)
 theorem Hyperreal.IsSt.lt {x y : ℝ*} {r s : ℝ} (hxr : IsSt x r) (hys : IsSt y s) : r < s → x < y :=
   fun hrs => by
@@ -492,47 +566,66 @@ theorem Hyperreal.IsSt.lt {x y : ℝ*} {r s : ℝ} (hxr : IsSt x r) (hys : IsSt 
   rw [H2] at hys' 
   exact lt_trans hxr' hys'
 #align hyperreal.lt_of_is_st_lt Hyperreal.IsSt.lt
+-/
 
+#print Hyperreal.IsSt.le /-
 theorem Hyperreal.IsSt.le {x y : ℝ*} {r s : ℝ} (hrx : IsSt x r) (hsy : IsSt y s) : x ≤ y → r ≤ s :=
   by rw [← not_lt, ← not_lt, not_imp_not] <;> exact lt_of_is_st_lt hsy hrx
 #align hyperreal.is_st_le_of_le Hyperreal.IsSt.le
+-/
 
+#print Hyperreal.st_le_of_le /-
 theorem st_le_of_le {x y : ℝ*} (hix : ¬Infinite x) (hiy : ¬Infinite y) : x ≤ y → st x ≤ st y :=
   have hx' := isSt_st' hix
   have hy' := isSt_st' hiy
   Hyperreal.IsSt.le hx' hy'
 #align hyperreal.st_le_of_le Hyperreal.st_le_of_le
+-/
 
+#print Hyperreal.lt_of_st_lt /-
 theorem lt_of_st_lt {x y : ℝ*} (hix : ¬Infinite x) (hiy : ¬Infinite y) : st x < st y → x < y :=
   have hx' := isSt_st' hix
   have hy' := isSt_st' hiy
   Hyperreal.IsSt.lt hx' hy'
 #align hyperreal.lt_of_st_lt Hyperreal.lt_of_st_lt
+-/
 
 /-!
 ### Basic lemmas about infinite
 -/
 
 
+#print Hyperreal.infinitePos_def /-
 theorem infinitePos_def {x : ℝ*} : InfinitePos x ↔ ∀ r : ℝ, ↑r < x := by rw [iff_eq_eq] <;> rfl
 #align hyperreal.infinite_pos_def Hyperreal.infinitePos_def
+-/
 
+#print Hyperreal.infiniteNeg_def /-
 theorem infiniteNeg_def {x : ℝ*} : InfiniteNeg x ↔ ∀ r : ℝ, x < r := by rw [iff_eq_eq] <;> rfl
 #align hyperreal.infinite_neg_def Hyperreal.infiniteNeg_def
+-/
 
+#print Hyperreal.Infinite.ne_zero /-
 theorem Hyperreal.Infinite.ne_zero {x : ℝ*} : Infinite x → x ≠ 0 := fun hI h0 =>
   Or.cases_on hI (fun hip => lt_irrefl (0 : ℝ*) ((by rwa [← h0] : InfinitePos 0) 0)) fun hin =>
     lt_irrefl (0 : ℝ*) ((by rwa [← h0] : InfiniteNeg 0) 0)
 #align hyperreal.ne_zero_of_infinite Hyperreal.Infinite.ne_zero
+-/
 
+#print Hyperreal.not_infinite_zero /-
 theorem not_infinite_zero : ¬Infinite 0 := fun hI => Hyperreal.Infinite.ne_zero hI rfl
 #align hyperreal.not_infinite_zero Hyperreal.not_infinite_zero
+-/
 
+#print Hyperreal.InfinitePos.pos /-
 theorem Hyperreal.InfinitePos.pos {x : ℝ*} : InfinitePos x → 0 < x := fun hip => hip 0
 #align hyperreal.pos_of_infinite_pos Hyperreal.InfinitePos.pos
+-/
 
+#print Hyperreal.InfiniteNeg.lt_zero /-
 theorem Hyperreal.InfiniteNeg.lt_zero {x : ℝ*} : InfiniteNeg x → x < 0 := fun hin => hin 0
 #align hyperreal.neg_of_infinite_neg Hyperreal.InfiniteNeg.lt_zero
+-/
 
 #print Hyperreal.InfiniteNeg.not_infinitePos /-
 theorem Hyperreal.InfiniteNeg.not_infinitePos {x : ℝ*} : InfiniteNeg x → ¬InfinitePos x :=
@@ -546,13 +639,17 @@ theorem Hyperreal.InfinitePos.not_infiniteNeg {x : ℝ*} : InfinitePos x → ¬I
 #align hyperreal.not_infinite_neg_of_infinite_pos Hyperreal.InfinitePos.not_infiniteNeg
 -/
 
+#print Hyperreal.InfinitePos.neg /-
 theorem Hyperreal.InfinitePos.neg {x : ℝ*} : InfinitePos x → InfiniteNeg (-x) := fun hp r =>
   neg_lt.mp (hp (-r))
 #align hyperreal.infinite_neg_neg_of_infinite_pos Hyperreal.InfinitePos.neg
+-/
 
+#print Hyperreal.InfiniteNeg.neg /-
 theorem Hyperreal.InfiniteNeg.neg {x : ℝ*} : InfiniteNeg x → InfinitePos (-x) := fun hp r =>
   lt_neg.mp (hp (-r))
 #align hyperreal.infinite_pos_neg_of_infinite_neg Hyperreal.InfiniteNeg.neg
+-/
 
 theorem infiniteNeg_neg {x : ℝ*} : InfinitePos x ↔ InfiniteNeg (-x) :=
   ⟨Hyperreal.InfinitePos.neg, fun hin => neg_neg x ▸ Hyperreal.InfiniteNeg.neg hin⟩
@@ -603,20 +700,27 @@ theorem Hyperreal.InfiniteNeg.not_infinitesimal {x : ℝ*} : InfiniteNeg x → �
 #align hyperreal.not_infinitesimal_of_infinite_neg Hyperreal.InfiniteNeg.not_infinitesimal
 -/
 
+#print Hyperreal.infinitePos_iff_infinite_and_pos /-
 theorem infinitePos_iff_infinite_and_pos {x : ℝ*} : InfinitePos x ↔ Infinite x ∧ 0 < x :=
   ⟨fun hip => ⟨Or.inl hip, hip 0⟩, fun ⟨hi, hp⟩ =>
     hi.casesOn (fun hip => hip) fun hin => False.elim (not_lt_of_lt hp (hin 0))⟩
 #align hyperreal.infinite_pos_iff_infinite_and_pos Hyperreal.infinitePos_iff_infinite_and_pos
+-/
 
+#print Hyperreal.infiniteNeg_iff_infinite_and_neg /-
 theorem infiniteNeg_iff_infinite_and_neg {x : ℝ*} : InfiniteNeg x ↔ Infinite x ∧ x < 0 :=
   ⟨fun hip => ⟨Or.inr hip, hip 0⟩, fun ⟨hi, hp⟩ =>
     hi.casesOn (fun hin => False.elim (not_lt_of_lt hp (hin 0))) fun hip => hip⟩
 #align hyperreal.infinite_neg_iff_infinite_and_neg Hyperreal.infiniteNeg_iff_infinite_and_neg
+-/
 
+#print Hyperreal.infinitePos_iff_infinite_of_pos /-
 theorem infinitePos_iff_infinite_of_pos {x : ℝ*} (hp : 0 < x) : InfinitePos x ↔ Infinite x := by
   rw [infinite_pos_iff_infinite_and_pos] <;> exact ⟨fun hI => hI.1, fun hI => ⟨hI, hp⟩⟩
 #align hyperreal.infinite_pos_iff_infinite_of_pos Hyperreal.infinitePos_iff_infinite_of_pos
+-/
 
+#print Hyperreal.infinitePos_iff_infinite_of_nonneg /-
 theorem infinitePos_iff_infinite_of_nonneg {x : ℝ*} (hp : 0 ≤ x) : InfinitePos x ↔ Infinite x :=
   Or.cases_on (lt_or_eq_of_le hp) infinitePos_iff_infinite_of_pos fun h => by
     rw [h.symm] <;>
@@ -624,14 +728,19 @@ theorem infinitePos_iff_infinite_of_nonneg {x : ℝ*} (hp : 0 ≤ x) : InfiniteP
         ⟨fun hIP => False.elim (not_infinite_zero (Or.inl hIP)), fun hI =>
           False.elim (not_infinite_zero hI)⟩
 #align hyperreal.infinite_pos_iff_infinite_of_nonneg Hyperreal.infinitePos_iff_infinite_of_nonneg
+-/
 
+#print Hyperreal.infiniteNeg_iff_infinite_of_neg /-
 theorem infiniteNeg_iff_infinite_of_neg {x : ℝ*} (hn : x < 0) : InfiniteNeg x ↔ Infinite x := by
   rw [infinite_neg_iff_infinite_and_neg] <;> exact ⟨fun hI => hI.1, fun hI => ⟨hI, hn⟩⟩
 #align hyperreal.infinite_neg_iff_infinite_of_neg Hyperreal.infiniteNeg_iff_infinite_of_neg
+-/
 
+#print Hyperreal.infinitePos_abs_iff_infinite_abs /-
 theorem infinitePos_abs_iff_infinite_abs {x : ℝ*} : InfinitePos (|x|) ↔ Infinite (|x|) :=
   infinitePos_iff_infinite_of_nonneg (abs_nonneg _)
 #align hyperreal.infinite_pos_abs_iff_infinite_abs Hyperreal.infinitePos_abs_iff_infinite_abs
+-/
 
 theorem infinitePos_abs_iff_infinite {x : ℝ*} : Infinite x ↔ InfinitePos (|x|) :=
   ⟨fun hi d =>
@@ -648,13 +757,16 @@ theorem infinite_abs_iff {x : ℝ*} : Infinite x ↔ Infinite (|x|) := by
   rw [← infinite_pos_iff_infinite_of_nonneg (abs_nonneg _), infinite_iff_infinite_pos_abs]
 #align hyperreal.infinite_iff_infinite_abs Hyperreal.infinite_abs_iffₓ
 
+#print Hyperreal.infinite_iff_abs_lt_abs /-
 theorem infinite_iff_abs_lt_abs {x : ℝ*} : Infinite x ↔ ∀ r : ℝ, (|r| : ℝ*) < |x| :=
   ⟨fun hI r => coe_abs r ▸ infinitePos_abs_iff_infinite.mp hI (|r|), fun hR =>
     Or.cases_on (max_choice x (-x))
       (fun h => Or.inl fun r => lt_of_le_of_lt (le_abs_self _) (h ▸ hR r)) fun h =>
       Or.inr fun r => neg_lt_neg_iff.mp <| lt_of_le_of_lt (neg_le_abs_self _) (h ▸ hR r)⟩
 #align hyperreal.infinite_iff_abs_lt_abs Hyperreal.infinite_iff_abs_lt_abs
+-/
 
+#print Hyperreal.infinitePos_add_not_infiniteNeg /-
 theorem infinitePos_add_not_infiniteNeg {x y : ℝ*} :
     InfinitePos x → ¬InfiniteNeg y → InfinitePos (x + y) :=
   by
@@ -663,43 +775,58 @@ theorem infinitePos_add_not_infiniteNeg {x y : ℝ*} :
   convert add_lt_add_of_lt_of_le (hip (r + -r₂)) (not_lt.mp hr₂) using 1
   simp
 #align hyperreal.infinite_pos_add_not_infinite_neg Hyperreal.infinitePos_add_not_infiniteNeg
+-/
 
+#print Hyperreal.not_infiniteNeg_add_infinitePos /-
 theorem not_infiniteNeg_add_infinitePos {x y : ℝ*} :
     ¬InfiniteNeg x → InfinitePos y → InfinitePos (x + y) := fun hx hy => by
   rw [add_comm] <;> exact infinite_pos_add_not_infinite_neg hy hx
 #align hyperreal.not_infinite_neg_add_infinite_pos Hyperreal.not_infiniteNeg_add_infinitePos
+-/
 
+#print Hyperreal.infiniteNeg_add_not_infinitePos /-
 theorem infiniteNeg_add_not_infinitePos {x y : ℝ*} :
     InfiniteNeg x → ¬InfinitePos y → InfiniteNeg (x + y) := by
   rw [@infinite_neg_iff_infinite_pos_neg x, @infinite_pos_iff_infinite_neg_neg y,
       @infinite_neg_iff_infinite_pos_neg (x + y), neg_add] <;>
     exact infinite_pos_add_not_infinite_neg
 #align hyperreal.infinite_neg_add_not_infinite_pos Hyperreal.infiniteNeg_add_not_infinitePos
+-/
 
+#print Hyperreal.not_infinitePos_add_infiniteNeg /-
 theorem not_infinitePos_add_infiniteNeg {x y : ℝ*} :
     ¬InfinitePos x → InfiniteNeg y → InfiniteNeg (x + y) := fun hx hy => by
   rw [add_comm] <;> exact infinite_neg_add_not_infinite_pos hy hx
 #align hyperreal.not_infinite_pos_add_infinite_neg Hyperreal.not_infinitePos_add_infiniteNeg
+-/
 
+#print Hyperreal.infinitePos_add_infinitePos /-
 theorem infinitePos_add_infinitePos {x y : ℝ*} :
     InfinitePos x → InfinitePos y → InfinitePos (x + y) := fun hx hy =>
   infinitePos_add_not_infiniteNeg hx (Hyperreal.InfinitePos.not_infiniteNeg hy)
 #align hyperreal.infinite_pos_add_infinite_pos Hyperreal.infinitePos_add_infinitePos
+-/
 
+#print Hyperreal.infiniteNeg_add_infiniteNeg /-
 theorem infiniteNeg_add_infiniteNeg {x y : ℝ*} :
     InfiniteNeg x → InfiniteNeg y → InfiniteNeg (x + y) := fun hx hy =>
   infiniteNeg_add_not_infinitePos hx (Hyperreal.InfiniteNeg.not_infinitePos hy)
 #align hyperreal.infinite_neg_add_infinite_neg Hyperreal.infiniteNeg_add_infiniteNeg
+-/
 
+#print Hyperreal.infinitePos_add_not_infinite /-
 theorem infinitePos_add_not_infinite {x y : ℝ*} :
     InfinitePos x → ¬Infinite y → InfinitePos (x + y) := fun hx hy =>
   infinitePos_add_not_infiniteNeg hx (not_or.mp hy).2
 #align hyperreal.infinite_pos_add_not_infinite Hyperreal.infinitePos_add_not_infinite
+-/
 
+#print Hyperreal.infiniteNeg_add_not_infinite /-
 theorem infiniteNeg_add_not_infinite {x y : ℝ*} :
     InfiniteNeg x → ¬Infinite y → InfiniteNeg (x + y) := fun hx hy =>
   infiniteNeg_add_not_infinitePos hx (not_or.mp hy).1
 #align hyperreal.infinite_neg_add_not_infinite Hyperreal.infiniteNeg_add_not_infinite
+-/
 
 #print Hyperreal.infinitePos_of_tendsto_top /-
 theorem infinitePos_of_tendsto_top {f : ℕ → ℝ} (hf : Tendsto f atTop atTop) :
@@ -729,10 +856,13 @@ theorem infiniteNeg_of_tendsto_bot {f : ℕ → ℝ} (hf : Tendsto f atTop atBot
 #align hyperreal.infinite_neg_of_tendsto_bot Hyperreal.infiniteNeg_of_tendsto_bot
 -/
 
+#print Hyperreal.not_infinite_neg /-
 theorem not_infinite_neg {x : ℝ*} : ¬Infinite x → ¬Infinite (-x) :=
   not_imp_not.mpr infinite_neg.mpr
 #align hyperreal.not_infinite_neg Hyperreal.not_infinite_neg
+-/
 
+#print Hyperreal.not_infinite_add /-
 theorem not_infinite_add {x y : ℝ*} (hx : ¬Infinite x) (hy : ¬Infinite y) : ¬Infinite (x + y) :=
   have hx' := exists_st_of_not_infinite hx
   have hy' := exists_st_of_not_infinite hy
@@ -740,7 +870,9 @@ theorem not_infinite_add {x y : ℝ*} (hx : ¬Infinite x) (hy : ¬Infinite y) : 
     Exists.cases_on hy' fun r hr s hs =>
       not_infinite_of_exists_st <| ⟨s + r, Hyperreal.IsSt.add hs hr⟩
 #align hyperreal.not_infinite_add Hyperreal.not_infinite_add
+-/
 
+#print Hyperreal.not_infinite_iff_exist_lt_gt /-
 theorem not_infinite_iff_exist_lt_gt {x : ℝ*} : ¬Infinite x ↔ ∃ r s : ℝ, (r : ℝ*) < x ∧ x < s :=
   ⟨fun hni =>
     Exists.dcases_on (not_forall.mp (not_or.mp hni).1) <|
@@ -755,6 +887,7 @@ theorem not_infinite_iff_exist_lt_gt {x : ℝ*} : ¬Infinite x ↔ ∃ r s : ℝ
       Exists.dcases_on hr fun s hs =>
         not_or.mpr ⟨not_forall.mpr ⟨s, lt_asymm hs.2⟩, not_forall.mpr ⟨r, lt_asymm hs.1⟩⟩⟩
 #align hyperreal.not_infinite_iff_exist_lt_gt Hyperreal.not_infinite_iff_exist_lt_gt
+-/
 
 #print Hyperreal.not_infinite_real /-
 theorem not_infinite_real (r : ℝ) : ¬Infinite r := by
@@ -813,6 +946,7 @@ private theorem is_st_mul' {x y : ℝ*} {r s : ℝ} (hxr : IsSt x r) (hys : IsSt
               _)
           _ = (d : ℝ*) := by rw [mul_one, add_halves]
 
+#print Hyperreal.IsSt.mul /-
 theorem Hyperreal.IsSt.mul {x y : ℝ*} {r s : ℝ} (hxr : IsSt x r) (hys : IsSt y s) :
     IsSt (x * y) (r * s) :=
   have h :=
@@ -831,7 +965,9 @@ theorem Hyperreal.IsSt.mul {x y : ℝ*} {r s : ℝ} (hxr : IsSt x r) (hys : IsSt
         exact mul_lt_mul'' hys' ht (abs_nonneg _) (abs_nonneg _)
       exact is_st_mul' hxr hys hs
 #align hyperreal.is_st_mul Hyperreal.IsSt.mul
+-/
 
+#print Hyperreal.not_infinite_mul /-
 --AN INFINITE LEMMA THAT REQUIRES SOME MORE ST MACHINERY
 theorem not_infinite_mul {x y : ℝ*} (hx : ¬Infinite x) (hy : ¬Infinite y) : ¬Infinite (x * y) :=
   have hx' := exists_st_of_not_infinite hx
@@ -840,7 +976,9 @@ theorem not_infinite_mul {x y : ℝ*} (hx : ¬Infinite x) (hy : ¬Infinite y) : 
     Exists.cases_on hy' fun r hr s hs =>
       not_infinite_of_exists_st <| ⟨s * r, Hyperreal.IsSt.mul hs hr⟩
 #align hyperreal.not_infinite_mul Hyperreal.not_infinite_mul
+-/
 
+#print Hyperreal.st_add /-
 ---
 theorem st_add {x y : ℝ*} (hx : ¬Infinite x) (hy : ¬Infinite y) : st (x + y) = st x + st y :=
   have hx' := isSt_st' hx
@@ -849,13 +987,17 @@ theorem st_add {x y : ℝ*} (hx : ¬Infinite x) (hy : ¬Infinite y) : st (x + y)
   have hxy' := Hyperreal.IsSt.add hx' hy'
   Hyperreal.IsSt.unique hxy hxy'
 #align hyperreal.st_add Hyperreal.st_add
+-/
 
+#print Hyperreal.st_neg /-
 theorem st_neg (x : ℝ*) : st (-x) = -st x :=
   if h : Infinite x then by
     rw [st_infinite h, st_infinite (infinite_iff_infinite_neg.mp h), neg_zero]
   else Hyperreal.IsSt.unique (isSt_st' (not_infinite_neg h)) (Hyperreal.IsSt.neg (isSt_st' h))
 #align hyperreal.st_neg Hyperreal.st_neg
+-/
 
+#print Hyperreal.st_mul /-
 theorem st_mul {x y : ℝ*} (hx : ¬Infinite x) (hy : ¬Infinite y) : st (x * y) = st x * st y :=
   have hx' := isSt_st' hx
   have hy' := isSt_st' hy
@@ -863,69 +1005,94 @@ theorem st_mul {x y : ℝ*} (hx : ¬Infinite x) (hy : ¬Infinite y) : st (x * y)
   have hxy' := Hyperreal.IsSt.mul hx' hy'
   Hyperreal.IsSt.unique hxy hxy'
 #align hyperreal.st_mul Hyperreal.st_mul
+-/
 
 /-!
 ### Basic lemmas about infinitesimal
 -/
 
 
+#print Hyperreal.infinitesimal_def /-
 theorem infinitesimal_def {x : ℝ*} : Infinitesimal x ↔ ∀ r : ℝ, 0 < r → -(r : ℝ*) < x ∧ x < r :=
   ⟨fun hi r hr => by convert hi r hr <;> simp, fun hi d hd => by convert hi d hd <;> simp⟩
 #align hyperreal.infinitesimal_def Hyperreal.infinitesimal_def
+-/
 
+#print Hyperreal.lt_of_pos_of_infinitesimal /-
 theorem lt_of_pos_of_infinitesimal {x : ℝ*} : Infinitesimal x → ∀ r : ℝ, 0 < r → x < r :=
   fun hi r hr => ((infinitesimal_def.mp hi) r hr).2
 #align hyperreal.lt_of_pos_of_infinitesimal Hyperreal.lt_of_pos_of_infinitesimal
+-/
 
+#print Hyperreal.lt_neg_of_pos_of_infinitesimal /-
 theorem lt_neg_of_pos_of_infinitesimal {x : ℝ*} : Infinitesimal x → ∀ r : ℝ, 0 < r → -↑r < x :=
   fun hi r hr => ((infinitesimal_def.mp hi) r hr).1
 #align hyperreal.lt_neg_of_pos_of_infinitesimal Hyperreal.lt_neg_of_pos_of_infinitesimal
+-/
 
+#print Hyperreal.gt_of_neg_of_infinitesimal /-
 theorem gt_of_neg_of_infinitesimal {x : ℝ*} : Infinitesimal x → ∀ r : ℝ, r < 0 → ↑r < x :=
   fun hi r hr => by
   convert ((infinitesimal_def.mp hi) (-r) (neg_pos.mpr hr)).1 <;> exact (neg_neg ↑r).symm
 #align hyperreal.gt_of_neg_of_infinitesimal Hyperreal.gt_of_neg_of_infinitesimal
+-/
 
+#print Hyperreal.abs_lt_real_iff_infinitesimal /-
 theorem abs_lt_real_iff_infinitesimal {x : ℝ*} : Infinitesimal x ↔ ∀ r : ℝ, r ≠ 0 → |x| < |r| :=
   ⟨fun hi r hr =>
     abs_lt.mpr (by rw [← coe_abs] <;> exact infinitesimal_def.mp hi (|r|) (abs_pos.2 hr)), fun hR =>
     infinitesimal_def.mpr fun r hr =>
       abs_lt.mp <| (abs_of_pos <| coe_pos.2 hr) ▸ hR r <| ne_of_gt hr⟩
 #align hyperreal.abs_lt_real_iff_infinitesimal Hyperreal.abs_lt_real_iff_infinitesimal
+-/
 
+#print Hyperreal.infinitesimal_zero /-
 theorem infinitesimal_zero : Infinitesimal 0 :=
   isSt_refl_real 0
 #align hyperreal.infinitesimal_zero Hyperreal.infinitesimal_zero
+-/
 
+#print Hyperreal.Infinitesimal.eq_zero /-
 theorem Hyperreal.Infinitesimal.eq_zero {r : ℝ} : Infinitesimal r → r = 0 :=
   eq_of_isSt_real
 #align hyperreal.zero_of_infinitesimal_real Hyperreal.Infinitesimal.eq_zero
+-/
 
+#print Hyperreal.infinitesimal_real_iff /-
 theorem infinitesimal_real_iff {r : ℝ} : Infinitesimal r ↔ r = 0 :=
   ⟨Hyperreal.Infinitesimal.eq_zero, fun hr => by rw [hr] <;> exact infinitesimal_zero⟩
 #align hyperreal.zero_iff_infinitesimal_real Hyperreal.infinitesimal_real_iff
+-/
 
+#print Hyperreal.Infinitesimal.add /-
 theorem Hyperreal.Infinitesimal.add {x y : ℝ*} (hx : Infinitesimal x) (hy : Infinitesimal y) :
     Infinitesimal (x + y) := by simpa only [add_zero] using is_st_add hx hy
 #align hyperreal.infinitesimal_add Hyperreal.Infinitesimal.add
+-/
 
+#print Hyperreal.Infinitesimal.neg /-
 theorem Hyperreal.Infinitesimal.neg {x : ℝ*} (hx : Infinitesimal x) : Infinitesimal (-x) := by
   simpa only [neg_zero] using is_st_neg hx
 #align hyperreal.infinitesimal_neg Hyperreal.Infinitesimal.neg
+-/
 
 theorem infinitesimal_neg {x : ℝ*} : Infinitesimal x ↔ Infinitesimal (-x) :=
   ⟨Hyperreal.Infinitesimal.neg, fun h => neg_neg x ▸ @Hyperreal.Infinitesimal.neg (-x) h⟩
 #align hyperreal.infinitesimal_neg_iff Hyperreal.infinitesimal_negₓ
 
+#print Hyperreal.Infinitesimal.mul /-
 theorem Hyperreal.Infinitesimal.mul {x y : ℝ*} (hx : Infinitesimal x) (hy : Infinitesimal y) :
     Infinitesimal (x * y) := by simpa only [MulZeroClass.mul_zero] using is_st_mul hx hy
 #align hyperreal.infinitesimal_mul Hyperreal.Infinitesimal.mul
+-/
 
+#print Hyperreal.infinitesimal_of_tendsto_zero /-
 theorem infinitesimal_of_tendsto_zero {f : ℕ → ℝ} :
     Tendsto f atTop (𝓝 0) → Infinitesimal (ofSeq f) := fun hf d hd => by
   rw [sub_eq_add_neg, ← coe_neg, ← coe_add, ← coe_add, zero_add, zero_add] <;>
     exact ⟨neg_lt_of_tendsto_zero_of_pos hf hd, lt_of_tendsto_zero_of_pos hf hd⟩
 #align hyperreal.infinitesimal_of_tendsto_zero Hyperreal.infinitesimal_of_tendsto_zero
+-/
 
 #print Hyperreal.infinitesimal_epsilon /-
 theorem infinitesimal_epsilon : Infinitesimal ε :=
@@ -933,22 +1100,29 @@ theorem infinitesimal_epsilon : Infinitesimal ε :=
 #align hyperreal.infinitesimal_epsilon Hyperreal.infinitesimal_epsilon
 -/
 
+#print Hyperreal.not_real_of_infinitesimal_ne_zero /-
 theorem not_real_of_infinitesimal_ne_zero (x : ℝ*) : Infinitesimal x → x ≠ 0 → ∀ r : ℝ, x ≠ r :=
   fun hi hx r hr =>
   hx <|
     hr.trans <| coe_eq_zero.2 <| Hyperreal.IsSt.unique (hr.symm ▸ isSt_refl_real r : IsSt x r) hi
 #align hyperreal.not_real_of_infinitesimal_ne_zero Hyperreal.not_real_of_infinitesimal_ne_zero
+-/
 
+#print Hyperreal.IsSt.infinitesimal_sub /-
 theorem Hyperreal.IsSt.infinitesimal_sub {x : ℝ*} {r : ℝ} (hxr : IsSt x r) :
     Infinitesimal (x - r) :=
   show IsSt (x - r) 0 by rw [sub_eq_add_neg, ← add_neg_self r];
     exact is_st_add hxr (is_st_refl_real (-r))
 #align hyperreal.infinitesimal_sub_is_st Hyperreal.IsSt.infinitesimal_sub
+-/
 
+#print Hyperreal.infinitesimal_sub_st /-
 theorem infinitesimal_sub_st {x : ℝ*} (hx : ¬Infinite x) : Infinitesimal (x - st x) :=
   Hyperreal.IsSt.infinitesimal_sub <| isSt_st' hx
 #align hyperreal.infinitesimal_sub_st Hyperreal.infinitesimal_sub_st
+-/
 
+#print Hyperreal.infinitePos_iff_infinitesimal_inv_pos /-
 theorem infinitePos_iff_infinitesimal_inv_pos {x : ℝ*} :
     InfinitePos x ↔ Infinitesimal x⁻¹ ∧ 0 < x⁻¹ :=
   ⟨fun hip =>
@@ -962,7 +1136,9 @@ theorem infinitePos_iff_infinitesimal_inv_pos {x : ℝ*} :
         ((inv_lt_inv (inv_pos.mp hp) (coe_lt_coe.2 (abs_pos.2 h))).mp
           ((infinitesimal_def.mp hi) (|r|)⁻¹ (inv_pos.2 (abs_pos.2 h))).2)⟩
 #align hyperreal.infinite_pos_iff_infinitesimal_inv_pos Hyperreal.infinitePos_iff_infinitesimal_inv_pos
+-/
 
+#print Hyperreal.infiniteNeg_iff_infinitesimal_inv_neg /-
 theorem infiniteNeg_iff_infinitesimal_inv_neg {x : ℝ*} :
     InfiniteNeg x ↔ Infinitesimal x⁻¹ ∧ x⁻¹ < 0 :=
   ⟨fun hin =>
@@ -972,36 +1148,49 @@ theorem infiniteNeg_iff_infinitesimal_inv_neg {x : ℝ*} :
     rwa [← neg_pos, infinitesimal_neg_iff, neg_inv, ← infinite_pos_iff_infinitesimal_inv_pos, ←
       infinite_neg_iff_infinite_pos_neg] at hin ⟩
 #align hyperreal.infinite_neg_iff_infinitesimal_inv_neg Hyperreal.infiniteNeg_iff_infinitesimal_inv_neg
+-/
 
+#print Hyperreal.infinitesimal_inv_of_infinite /-
 theorem infinitesimal_inv_of_infinite {x : ℝ*} : Infinite x → Infinitesimal x⁻¹ := fun hi =>
   Or.cases_on hi (fun hip => (infinitePos_iff_infinitesimal_inv_pos.mp hip).1) fun hin =>
     (infiniteNeg_iff_infinitesimal_inv_neg.mp hin).1
 #align hyperreal.infinitesimal_inv_of_infinite Hyperreal.infinitesimal_inv_of_infinite
+-/
 
+#print Hyperreal.infinite_of_infinitesimal_inv /-
 theorem infinite_of_infinitesimal_inv {x : ℝ*} (h0 : x ≠ 0) (hi : Infinitesimal x⁻¹) : Infinite x :=
   by
   cases' lt_or_gt_of_ne h0 with hn hp
   · exact Or.inr (infinite_neg_iff_infinitesimal_inv_neg.mpr ⟨hi, inv_lt_zero.mpr hn⟩)
   · exact Or.inl (infinite_pos_iff_infinitesimal_inv_pos.mpr ⟨hi, inv_pos.mpr hp⟩)
 #align hyperreal.infinite_of_infinitesimal_inv Hyperreal.infinite_of_infinitesimal_inv
+-/
 
+#print Hyperreal.infinite_iff_infinitesimal_inv /-
 theorem infinite_iff_infinitesimal_inv {x : ℝ*} (h0 : x ≠ 0) : Infinite x ↔ Infinitesimal x⁻¹ :=
   ⟨infinitesimal_inv_of_infinite, infinite_of_infinitesimal_inv h0⟩
 #align hyperreal.infinite_iff_infinitesimal_inv Hyperreal.infinite_iff_infinitesimal_inv
+-/
 
+#print Hyperreal.infinitesimal_pos_iff_infinitePos_inv /-
 theorem infinitesimal_pos_iff_infinitePos_inv {x : ℝ*} :
     InfinitePos x⁻¹ ↔ Infinitesimal x ∧ 0 < x := by
   convert infinite_pos_iff_infinitesimal_inv_pos <;> simp only [inv_inv]
 #align hyperreal.infinitesimal_pos_iff_infinite_pos_inv Hyperreal.infinitesimal_pos_iff_infinitePos_inv
+-/
 
+#print Hyperreal.infinitesimal_neg_iff_infiniteNeg_inv /-
 theorem infinitesimal_neg_iff_infiniteNeg_inv {x : ℝ*} :
     InfiniteNeg x⁻¹ ↔ Infinitesimal x ∧ x < 0 := by
   convert infinite_neg_iff_infinitesimal_inv_neg <;> simp only [inv_inv]
 #align hyperreal.infinitesimal_neg_iff_infinite_neg_inv Hyperreal.infinitesimal_neg_iff_infiniteNeg_inv
+-/
 
+#print Hyperreal.infinitesimal_iff_infinite_inv /-
 theorem infinitesimal_iff_infinite_inv {x : ℝ*} (h : x ≠ 0) : Infinitesimal x ↔ Infinite x⁻¹ := by
   convert (infinite_iff_infinitesimal_inv (inv_ne_zero h)).symm <;> simp only [inv_inv]
 #align hyperreal.infinitesimal_iff_infinite_inv Hyperreal.infinitesimal_iff_infinite_inv
+-/
 
 /-!
 ### `st` stuff that requires infinitesimal machinery
@@ -1017,6 +1206,7 @@ theorem isSt_of_tendsto {f : ℕ → ℝ} {r : ℝ} (hf : Tendsto f atTop (𝓝 
 #align hyperreal.is_st_of_tendsto Hyperreal.isSt_of_tendsto
 -/
 
+#print Hyperreal.IsSt.inv /-
 theorem Hyperreal.IsSt.inv {x : ℝ*} {r : ℝ} (hi : ¬Infinitesimal x) : IsSt x r → IsSt x⁻¹ r⁻¹ :=
   fun hxr =>
   have h : x ≠ 0 := fun h => hi (h.symm ▸ infinitesimal_zero)
@@ -1026,7 +1216,9 @@ theorem Hyperreal.IsSt.inv {x : ℝ*} {r : ℝ} (hi : ¬Infinitesimal x) : IsSt 
     have H'' : s = r⁻¹ := one_div r ▸ eq_one_div_of_mul_eq_one_right (eq_of_isSt_real H').symm
     H'' ▸ hs
 #align hyperreal.is_st_inv Hyperreal.IsSt.inv
+-/
 
+#print Hyperreal.st_inv /-
 theorem st_inv (x : ℝ*) : st x⁻¹ = (st x)⁻¹ :=
   by
   by_cases h0 : x = 0
@@ -1037,6 +1229,7 @@ theorem st_inv (x : ℝ*) : st x⁻¹ = (st x)⁻¹ :=
   rw [st_of_is_st (infinitesimal_inv_of_infinite h2), st_infinite h2, inv_zero]
   exact st_of_is_st (is_st_inv h1 (is_st_st' h2))
 #align hyperreal.st_inv Hyperreal.st_inv
+-/
 
 /-!
 ### Infinite stuff that requires infinitesimal machinery
@@ -1055,6 +1248,7 @@ theorem infinite_omega : Infinite ω :=
 #align hyperreal.infinite_omega Hyperreal.infinite_omega
 -/
 
+#print Hyperreal.infinitePos_mul_of_infinitePos_not_infinitesimal_pos /-
 theorem infinitePos_mul_of_infinitePos_not_infinitesimal_pos {x y : ℝ*} :
     InfinitePos x → ¬Infinitesimal y → 0 < y → InfinitePos (x * y) := fun hx hy₁ hy₂ r =>
   have hy₁' := not_forall.mp (by rw [infinitesimal_def] at hy₁  <;> exact hy₁)
@@ -1064,69 +1258,93 @@ theorem infinitePos_mul_of_infinitePos_not_infinitesimal_pos {x y : ℝ*} :
     rw [← div_mul_cancel r (ne_of_gt hyr.1), coe_mul] <;>
       exact mul_lt_mul (hx (r / r₁)) hyr.2 (coe_lt_coe.2 hyr.1) (le_of_lt (hx 0))
 #align hyperreal.infinite_pos_mul_of_infinite_pos_not_infinitesimal_pos Hyperreal.infinitePos_mul_of_infinitePos_not_infinitesimal_pos
+-/
 
+#print Hyperreal.infinitePos_mul_of_not_infinitesimal_pos_infinitePos /-
 theorem infinitePos_mul_of_not_infinitesimal_pos_infinitePos {x y : ℝ*} :
     ¬Infinitesimal x → 0 < x → InfinitePos y → InfinitePos (x * y) := fun hx hp hy => by
   rw [mul_comm] <;> exact infinite_pos_mul_of_infinite_pos_not_infinitesimal_pos hy hx hp
 #align hyperreal.infinite_pos_mul_of_not_infinitesimal_pos_infinite_pos Hyperreal.infinitePos_mul_of_not_infinitesimal_pos_infinitePos
+-/
 
+#print Hyperreal.infinitePos_mul_of_infiniteNeg_not_infinitesimal_neg /-
 theorem infinitePos_mul_of_infiniteNeg_not_infinitesimal_neg {x y : ℝ*} :
     InfiniteNeg x → ¬Infinitesimal y → y < 0 → InfinitePos (x * y) := by
   rw [infinite_neg_iff_infinite_pos_neg, ← neg_pos, ← neg_mul_neg, infinitesimal_neg_iff] <;>
     exact infinite_pos_mul_of_infinite_pos_not_infinitesimal_pos
 #align hyperreal.infinite_pos_mul_of_infinite_neg_not_infinitesimal_neg Hyperreal.infinitePos_mul_of_infiniteNeg_not_infinitesimal_neg
+-/
 
+#print Hyperreal.infinitePos_mul_of_not_infinitesimal_neg_infiniteNeg /-
 theorem infinitePos_mul_of_not_infinitesimal_neg_infiniteNeg {x y : ℝ*} :
     ¬Infinitesimal x → x < 0 → InfiniteNeg y → InfinitePos (x * y) := fun hx hp hy => by
   rw [mul_comm] <;> exact infinite_pos_mul_of_infinite_neg_not_infinitesimal_neg hy hx hp
 #align hyperreal.infinite_pos_mul_of_not_infinitesimal_neg_infinite_neg Hyperreal.infinitePos_mul_of_not_infinitesimal_neg_infiniteNeg
+-/
 
+#print Hyperreal.infiniteNeg_mul_of_infinitePos_not_infinitesimal_neg /-
 theorem infiniteNeg_mul_of_infinitePos_not_infinitesimal_neg {x y : ℝ*} :
     InfinitePos x → ¬Infinitesimal y → y < 0 → InfiniteNeg (x * y) := by
   rw [infinite_neg_iff_infinite_pos_neg, ← neg_pos, neg_mul_eq_mul_neg, infinitesimal_neg_iff] <;>
     exact infinite_pos_mul_of_infinite_pos_not_infinitesimal_pos
 #align hyperreal.infinite_neg_mul_of_infinite_pos_not_infinitesimal_neg Hyperreal.infiniteNeg_mul_of_infinitePos_not_infinitesimal_neg
+-/
 
+#print Hyperreal.infiniteNeg_mul_of_not_infinitesimal_neg_infinitePos /-
 theorem infiniteNeg_mul_of_not_infinitesimal_neg_infinitePos {x y : ℝ*} :
     ¬Infinitesimal x → x < 0 → InfinitePos y → InfiniteNeg (x * y) := fun hx hp hy => by
   rw [mul_comm] <;> exact infinite_neg_mul_of_infinite_pos_not_infinitesimal_neg hy hx hp
 #align hyperreal.infinite_neg_mul_of_not_infinitesimal_neg_infinite_pos Hyperreal.infiniteNeg_mul_of_not_infinitesimal_neg_infinitePos
+-/
 
+#print Hyperreal.infiniteNeg_mul_of_infiniteNeg_not_infinitesimal_pos /-
 theorem infiniteNeg_mul_of_infiniteNeg_not_infinitesimal_pos {x y : ℝ*} :
     InfiniteNeg x → ¬Infinitesimal y → 0 < y → InfiniteNeg (x * y) := by
   rw [infinite_neg_iff_infinite_pos_neg, infinite_neg_iff_infinite_pos_neg, neg_mul_eq_neg_mul] <;>
     exact infinite_pos_mul_of_infinite_pos_not_infinitesimal_pos
 #align hyperreal.infinite_neg_mul_of_infinite_neg_not_infinitesimal_pos Hyperreal.infiniteNeg_mul_of_infiniteNeg_not_infinitesimal_pos
+-/
 
+#print Hyperreal.infiniteNeg_mul_of_not_infinitesimal_pos_infiniteNeg /-
 theorem infiniteNeg_mul_of_not_infinitesimal_pos_infiniteNeg {x y : ℝ*} :
     ¬Infinitesimal x → 0 < x → InfiniteNeg y → InfiniteNeg (x * y) := fun hx hp hy => by
   rw [mul_comm] <;> exact infinite_neg_mul_of_infinite_neg_not_infinitesimal_pos hy hx hp
 #align hyperreal.infinite_neg_mul_of_not_infinitesimal_pos_infinite_neg Hyperreal.infiniteNeg_mul_of_not_infinitesimal_pos_infiniteNeg
+-/
 
+#print Hyperreal.infinitePos_mul_infinitePos /-
 theorem infinitePos_mul_infinitePos {x y : ℝ*} :
     InfinitePos x → InfinitePos y → InfinitePos (x * y) := fun hx hy =>
   infinitePos_mul_of_infinitePos_not_infinitesimal_pos hx
     (Hyperreal.InfinitePos.not_infinitesimal hy) (hy 0)
 #align hyperreal.infinite_pos_mul_infinite_pos Hyperreal.infinitePos_mul_infinitePos
+-/
 
+#print Hyperreal.infiniteNeg_mul_infiniteNeg /-
 theorem infiniteNeg_mul_infiniteNeg {x y : ℝ*} :
     InfiniteNeg x → InfiniteNeg y → InfinitePos (x * y) := fun hx hy =>
   infinitePos_mul_of_infiniteNeg_not_infinitesimal_neg hx
     (Hyperreal.InfiniteNeg.not_infinitesimal hy) (hy 0)
 #align hyperreal.infinite_neg_mul_infinite_neg Hyperreal.infiniteNeg_mul_infiniteNeg
+-/
 
+#print Hyperreal.infinitePos_mul_infiniteNeg /-
 theorem infinitePos_mul_infiniteNeg {x y : ℝ*} :
     InfinitePos x → InfiniteNeg y → InfiniteNeg (x * y) := fun hx hy =>
   infiniteNeg_mul_of_infinitePos_not_infinitesimal_neg hx
     (Hyperreal.InfiniteNeg.not_infinitesimal hy) (hy 0)
 #align hyperreal.infinite_pos_mul_infinite_neg Hyperreal.infinitePos_mul_infiniteNeg
+-/
 
+#print Hyperreal.infiniteNeg_mul_infinitePos /-
 theorem infiniteNeg_mul_infinitePos {x y : ℝ*} :
     InfiniteNeg x → InfinitePos y → InfiniteNeg (x * y) := fun hx hy =>
   infiniteNeg_mul_of_infiniteNeg_not_infinitesimal_pos hx
     (Hyperreal.InfinitePos.not_infinitesimal hy) (hy 0)
 #align hyperreal.infinite_neg_mul_infinite_pos Hyperreal.infiniteNeg_mul_infinitePos
+-/
 
+#print Hyperreal.infinite_mul_of_infinite_not_infinitesimal /-
 theorem infinite_mul_of_infinite_not_infinitesimal {x y : ℝ*} :
     Infinite x → ¬Infinitesimal y → Infinite (x * y) := fun hx hy =>
   have h0 : y < 0 ∨ 0 < y := lt_or_gt_of_ne fun H0 => hy (Eq.substr H0 (isSt_refl_real 0))
@@ -1138,15 +1356,20 @@ theorem infinite_mul_of_infinite_not_infinitesimal {x y : ℝ*} :
       (fun H0 Hx => Or.inl (infinitePos_mul_of_infiniteNeg_not_infinitesimal_neg Hx hy H0))
       fun H0 Hx => Or.inr (infiniteNeg_mul_of_infiniteNeg_not_infinitesimal_pos Hx hy H0))
 #align hyperreal.infinite_mul_of_infinite_not_infinitesimal Hyperreal.infinite_mul_of_infinite_not_infinitesimal
+-/
 
+#print Hyperreal.infinite_mul_of_not_infinitesimal_infinite /-
 theorem infinite_mul_of_not_infinitesimal_infinite {x y : ℝ*} :
     ¬Infinitesimal x → Infinite y → Infinite (x * y) := fun hx hy => by
   rw [mul_comm] <;> exact infinite_mul_of_infinite_not_infinitesimal hy hx
 #align hyperreal.infinite_mul_of_not_infinitesimal_infinite Hyperreal.infinite_mul_of_not_infinitesimal_infinite
+-/
 
+#print Hyperreal.Infinite.mul /-
 theorem Infinite.mul {x y : ℝ*} : Infinite x → Infinite y → Infinite (x * y) := fun hx hy =>
   infinite_mul_of_infinite_not_infinitesimal hx (Hyperreal.Infinite.not_infinitesimal hy)
 #align hyperreal.infinite.mul Hyperreal.Infinite.mul
+-/
 
 end Hyperreal
 

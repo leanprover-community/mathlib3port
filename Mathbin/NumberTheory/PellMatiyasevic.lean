@@ -79,9 +79,11 @@ theorem isPell_norm : ∀ {b : ℤ√d}, IsPell b ↔ b * star b = 1
 #align pell.is_pell_norm Pell.isPell_norm
 -/
 
+#print Pell.isPell_iff_mem_unitary /-
 theorem isPell_iff_mem_unitary : ∀ {b : ℤ√d}, IsPell b ↔ b ∈ unitary (ℤ√d)
   | ⟨x, y⟩ => by rw [unitary.mem_iff, is_pell_norm, mul_comm (star _), and_self_iff]
 #align pell.is_pell_iff_mem_unitary Pell.isPell_iff_mem_unitary
+-/
 
 #print Pell.isPell_mul /-
 theorem isPell_mul {b c : ℤ√d} (hb : IsPell b) (hc : IsPell c) : IsPell (b * c) :=
@@ -100,8 +102,6 @@ end
 section
 
 parameter {a : ℕ} (a1 : 1 < a)
-
-include a1
 
 private def d :=
   a * a - 1
@@ -201,8 +201,6 @@ def yz (n : ℕ) : ℤ :=
 -/
 
 section
-
-omit a1
 
 #print Pell.az /-
 /-- The element `a` such that `d = a ^ 2 - 1`, considered as an integer.-/
@@ -357,6 +355,7 @@ theorem x_pos (n) : 0 < xn n :=
 #align pell.x_pos Pell.x_pos
 -/
 
+#print Pell.eq_pell_lem /-
 theorem eq_pell_lem : ∀ (n) (b : ℤ√d), 1 ≤ b → IsPell b → b ≤ pell_zd n → ∃ n, b = pell_zd n
   | 0, b => fun h1 hp hl => ⟨0, @Zsqrtd.le_antisymm _ dnsq _ _ hl h1⟩
   | n + 1, b => fun h1 hp h =>
@@ -403,7 +402,9 @@ theorem eq_pell_lem : ∀ (n) (b : ℤ√d), 1 ≤ b → IsPell b → b ≤ pell
                     add_le_add t t))
               | -[y+1], y0l, yl2 => y0l trivial
 #align pell.eq_pell_lem Pell.eq_pell_lem
+-/
 
+#print Pell.eq_pellZd /-
 theorem eq_pellZd (b : ℤ√d) (b1 : 1 ≤ b) (hp : IsPell b) : ∃ n, b = pell_zd n :=
   let ⟨n, h⟩ := @Zsqrtd.le_arch d b
   eq_pell_lem n b b1 hp <|
@@ -413,6 +414,7 @@ theorem eq_pellZd (b : ℤ√d) (b1 : 1 ≤ b) (hp : IsPell b) : ∃ n, b = pell
           Zsqrtd.le_of_le_le (Int.ofNat_le_ofNat_of_le <| le_of_lt <| n_lt_xn _ _)
             (Int.ofNat_zero_le _)
 #align pell.eq_pell_zd Pell.eq_pellZd
+-/
 
 #print Pell.eq_pell /-
 /-- Every solution to **Pell's equation** is recursively obtained from the initial solution
@@ -687,8 +689,6 @@ theorem yn_modEq_two : ∀ n, yn n ≡ n [MOD 2]
 
 section
 
-omit a1
-
 #print Pell.x_sub_y_dvd_pow_lem /-
 theorem x_sub_y_dvd_pow_lem (y2 y1 y0 yn1 yn0 xn1 xn0 ay a2 : ℤ) :
     (a2 * yn1 - yn0) * ay + y2 - (a2 * xn1 - xn0) =
@@ -699,6 +699,7 @@ theorem x_sub_y_dvd_pow_lem (y2 y1 y0 yn1 yn0 xn1 xn0 ay a2 : ℤ) :
 
 end
 
+#print Pell.x_sub_y_dvd_pow /-
 theorem x_sub_y_dvd_pow (y : ℕ) :
     ∀ n, (2 * a * y - y * y - 1 : ℤ) ∣ yz n * (a - y) + ↑(y ^ n) - xz n
   | 0 => by simp [xz, yz, Int.ofNat_zero, Int.ofNat_one]
@@ -714,6 +715,7 @@ theorem x_sub_y_dvd_pow (y : ℕ) :
     rw [xz_succ_succ, yz_succ_succ, x_sub_y_dvd_pow_lem ↑(y ^ (n + 2)) ↑(y ^ (n + 1)) ↑(y ^ n)]
     exact dvd_sub (dvd_add this <| (x_sub_y_dvd_pow (n + 1)).mul_left _) (x_sub_y_dvd_pow n)
 #align pell.x_sub_y_dvd_pow Pell.x_sub_y_dvd_pow
+-/
 
 #print Pell.xn_modEq_x2n_add_lem /-
 theorem xn_modEq_x2n_add_lem (n j) : xn n ∣ d * yn n * (yn n * xn j) + xn j :=

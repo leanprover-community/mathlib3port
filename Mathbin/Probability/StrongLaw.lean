@@ -446,8 +446,6 @@ variable (X : ℕ → Ω → ℝ) (hint : Integrable (X 0))
   (hindep : Pairwise fun i j => IndepFun (X i) (X j)) (hident : ∀ i, IdentDistrib (X i) (X 0))
   (hnonneg : ∀ i ω, 0 ≤ X i ω)
 
-include X hint hindep hident hnonneg
-
 /- The truncation of `Xᵢ` up to `i` satisfies the strong law of large numbers (with respect to
 the truncated expectation) along the sequence `c^n`, for any `c > 1`, up to a given `ε > 0`.
 This follows from a variance control. -/
@@ -600,8 +598,6 @@ theorem strong_law_aux2 {c : ℝ} (c_one : 1 < c) :
   exact hn.le.trans (mul_le_mul_of_nonneg_right hi.le (Nat.cast_nonneg _))
 #align probability_theory.strong_law_aux2 ProbabilityTheory.strong_law_aux2
 
-omit hindep hnonneg
-
 /-- The expectation of the truncated version of `Xᵢ` behaves asymptotically like the whole
 expectation. This follows from convergence and Cesaro averaging. -/
 theorem strong_law_aux3 :
@@ -619,8 +615,6 @@ theorem strong_law_aux3 :
   exact ((hident i).symm.integrable_snd hint).1.integrable_truncation
 #align probability_theory.strong_law_aux3 ProbabilityTheory.strong_law_aux3
 
-include hindep hnonneg
-
 /- The truncation of `Xᵢ` up to `i` satisfies the strong law of large numbers
 (with respect to the original expectation) along the sequence
 `c^n`, for any `c > 1`. This follows from the version from the truncated expectation, and the
@@ -637,8 +631,6 @@ theorem strong_law_aux4 {c : ℝ} (c_one : 1 < c) :
   ext1 n
   simp
 #align probability_theory.strong_law_aux4 ProbabilityTheory.strong_law_aux4
-
-omit hindep
 
 /-- The truncated and non-truncated versions of `Xᵢ` have the same asymptotic behavior, as they
 almost surely coincide at all but finitely many steps. This follows from a probability computation
@@ -671,8 +663,6 @@ theorem strong_law_aux5 :
   ext n
   rw [sum_sub_distrib]
 #align probability_theory.strong_law_aux5 ProbabilityTheory.strong_law_aux5
-
-include hindep
 
 /- `Xᵢ` satisfies the strong law of large numbers along the sequence
 `c^n`, for any `c > 1`. This follows from the version for the truncated `Xᵢ`, and the fact that

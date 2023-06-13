@@ -88,6 +88,7 @@ def dual : PreordCat ⥤ PreordCat where
 #align Preord.dual PreordCat.dual
 -/
 
+#print PreordCat.dualEquiv /-
 /-- The equivalence between `Preord` and itself induced by `order_dual` both ways. -/
 @[simps Functor inverse]
 def dualEquiv : PreordCat ≌ PreordCat :=
@@ -95,6 +96,7 @@ def dualEquiv : PreordCat ≌ PreordCat :=
     (NatIso.ofComponents (fun X => Iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
     (NatIso.ofComponents (fun X => Iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
 #align Preord.dual_equiv PreordCat.dualEquiv
+-/
 
 end PreordCat
 

@@ -92,6 +92,7 @@ instance [MulOneClass Y] : MulOneClass (LocallyConstant X Y) :=
     one_mul := by intros; ext; simp only [mul_apply, one_apply, one_mul]
     mul_one := by intros; ext; simp only [mul_apply, one_apply, mul_one] }
 
+#print LocallyConstant.coeFnMonoidHom /-
 /-- `coe_fn` is a `monoid_hom`. -/
 @[to_additive "`coe_fn` is an `add_monoid_hom`.", simps]
 def coeFnMonoidHom [MulOneClass Y] : LocallyConstant X Y →* X → Y
@@ -101,7 +102,9 @@ def coeFnMonoidHom [MulOneClass Y] : LocallyConstant X Y →* X → Y
   map_mul' _ _ := rfl
 #align locally_constant.coe_fn_monoid_hom LocallyConstant.coeFnMonoidHom
 #align locally_constant.coe_fn_add_monoid_hom LocallyConstant.coeFnAddMonoidHom
+-/
 
+#print LocallyConstant.constMonoidHom /-
 /-- The constant-function embedding, as a multiplicative monoid hom. -/
 @[to_additive "The constant-function embedding, as an additive monoid hom.", simps]
 def constMonoidHom [MulOneClass Y] : Y →* LocallyConstant X Y
@@ -111,6 +114,7 @@ def constMonoidHom [MulOneClass Y] : Y →* LocallyConstant X Y
   map_mul' _ _ := rfl
 #align locally_constant.const_monoid_hom LocallyConstant.constMonoidHom
 #align locally_constant.const_add_monoid_hom LocallyConstant.constAddMonoidHom
+-/
 
 instance [MulZeroClass Y] : MulZeroClass (LocallyConstant X Y) :=
   { LocallyConstant.hasZero,
@@ -133,17 +137,23 @@ noncomputable def charFn (hU : IsClopen U) : LocallyConstant X Y :=
 #align locally_constant.char_fn LocallyConstant.charFn
 -/
 
+#print LocallyConstant.coe_charFn /-
 theorem coe_charFn (hU : IsClopen U) : (charFn Y hU : X → Y) = Set.indicator U 1 :=
   rfl
 #align locally_constant.coe_char_fn LocallyConstant.coe_charFn
+-/
 
+#print LocallyConstant.charFn_eq_one /-
 theorem charFn_eq_one [Nontrivial Y] (x : X) (hU : IsClopen U) : charFn Y hU x = (1 : Y) ↔ x ∈ U :=
   Set.indicator_eq_one_iff_mem _
 #align locally_constant.char_fn_eq_one LocallyConstant.charFn_eq_one
+-/
 
+#print LocallyConstant.charFn_eq_zero /-
 theorem charFn_eq_zero [Nontrivial Y] (x : X) (hU : IsClopen U) : charFn Y hU x = (0 : Y) ↔ x ∉ U :=
   Set.indicator_eq_zero_iff_not_mem _
 #align locally_constant.char_fn_eq_zero LocallyConstant.charFn_eq_zero
+-/
 
 #print LocallyConstant.charFn_inj /-
 theorem charFn_inj [Nontrivial Y] (hU : IsClopen U) (hV : IsClopen V)
@@ -228,11 +238,13 @@ instance [NonAssocSemiring Y] : NonAssocSemiring (LocallyConstant X Y) :=
   { LocallyConstant.mulOneClass, LocallyConstant.addMonoidWithOne,
     LocallyConstant.nonUnitalNonAssocSemiring with }
 
+#print LocallyConstant.constRingHom /-
 /-- The constant-function embedding, as a ring hom.  -/
 @[simps]
 def constRingHom [NonAssocSemiring Y] : Y →+* LocallyConstant X Y :=
   { constMonoidHom, constAddMonoidHom with toFun := const X }
 #align locally_constant.const_ring_hom LocallyConstant.constRingHom
+-/
 
 instance [Semiring Y] : Semiring (LocallyConstant X Y) :=
   { LocallyConstant.nonAssocSemiring, LocallyConstant.monoid with }
@@ -302,10 +314,12 @@ instance : Algebra R (LocallyConstant X Y)
   commutes' := by intros; ext; exact Algebra.commutes' _ _
   smul_def' := by intros; ext; exact Algebra.smul_def' _ _
 
+#print LocallyConstant.coe_algebraMap /-
 @[simp]
 theorem coe_algebraMap (r : R) : ⇑(algebraMap R (LocallyConstant X Y) r) = algebraMap R (X → Y) r :=
   rfl
 #align locally_constant.coe_algebra_map LocallyConstant.coe_algebraMap
+-/
 
 end Algebra
 

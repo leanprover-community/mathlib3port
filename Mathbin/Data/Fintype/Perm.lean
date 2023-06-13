@@ -177,12 +177,16 @@ instance [Fintype α] [Fintype β] : Fintype (α ≃ β) :=
           (equivCongr (Equiv.refl α) (eα.trans (Eq.recOn h eβ.symm)) : α ≃ α ≃ (α ≃ β))
   else ⟨∅, fun x => False.elim (h (Fintype.card_eq.2 ⟨x.symm⟩))⟩
 
+#print Fintype.card_perm /-
 theorem Fintype.card_perm [Fintype α] : Fintype.card (Perm α) = (Fintype.card α)! :=
   Subsingleton.elim (@fintypePerm α _ _) (@Equiv.fintype α α _ _ _ _) ▸ card_perms_of_finset _
 #align fintype.card_perm Fintype.card_perm
+-/
 
+#print Fintype.card_equiv /-
 theorem Fintype.card_equiv [Fintype α] [Fintype β] (e : α ≃ β) :
     Fintype.card (α ≃ β) = (Fintype.card α)! :=
   Fintype.card_congr (equivCongr (Equiv.refl α) e) ▸ Fintype.card_perm
 #align fintype.card_equiv Fintype.card_equiv
+-/
 

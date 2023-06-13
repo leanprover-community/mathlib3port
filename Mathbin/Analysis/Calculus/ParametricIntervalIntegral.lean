@@ -31,6 +31,7 @@ variable {𝕜 : Type _} [IsROrC 𝕜] {μ : Measure ℝ} {E : Type _} [NormedAd
 
 namespace intervalIntegral
 
+#print intervalIntegral.hasFDerivAt_integral_of_dominated_loc_of_lip /-
 /-- Differentiation under integral of `x ↦ ∫ t in a..b, F x t` at a given point `x₀`, assuming
 `F x₀` is integrable, `x ↦ F x a` is locally Lipschitz on a ball around `x₀` for ae `a`
 (with a ball radius independent of `a`) with integrable Lipschitz bound, and `F x` is ae-measurable
@@ -53,7 +54,9 @@ theorem hasFDerivAt_integral_of_dominated_loc_of_lip {F : H → ℝ → E} {F' :
       bound_integrable h_diff
   exact ⟨this.1, this.2.const_smul _⟩
 #align interval_integral.has_fderiv_at_integral_of_dominated_loc_of_lip intervalIntegral.hasFDerivAt_integral_of_dominated_loc_of_lip
+-/
 
+#print intervalIntegral.hasFDerivAt_integral_of_dominated_of_fderiv_le /-
 /-- Differentiation under integral of `x ↦ ∫ F x a` at a given point `x₀`, assuming
 `F x₀` is integrable, `x ↦ F x a` is differentiable on a ball around `x₀` for ae `a` with
 derivative norm uniformly bounded by an integrable function (the ball radius is independent of `a`),
@@ -75,7 +78,9 @@ theorem hasFDerivAt_integral_of_dominated_of_fderiv_le {F : H → ℝ → E} {F'
           bound_integrable h_diff).const_smul
       _
 #align interval_integral.has_fderiv_at_integral_of_dominated_of_fderiv_le intervalIntegral.hasFDerivAt_integral_of_dominated_of_fderiv_le
+-/
 
+#print intervalIntegral.hasDerivAt_integral_of_dominated_loc_of_lip /-
 /-- Derivative under integral of `x ↦ ∫ F x a` at a given point `x₀ : 𝕜`, `𝕜 = ℝ` or `𝕜 = ℂ`,
 assuming `F x₀` is integrable, `x ↦ F x a` is locally Lipschitz on a ball around `x₀` for ae `a`
 (with ball radius independent of `a`) with integrable Lipschitz bound, and `F x` is
@@ -98,7 +103,9 @@ theorem hasDerivAt_integral_of_dominated_loc_of_lip {F : 𝕜 → ℝ → E} {F'
       bound_integrable h_diff
   exact ⟨this.1, this.2.const_smul _⟩
 #align interval_integral.has_deriv_at_integral_of_dominated_loc_of_lip intervalIntegral.hasDerivAt_integral_of_dominated_loc_of_lip
+-/
 
+#print intervalIntegral.hasDerivAt_integral_of_dominated_loc_of_deriv_le /-
 /-- Derivative under integral of `x ↦ ∫ F x a` at a given point `x₀ : 𝕜`, `𝕜 = ℝ` or `𝕜 = ℂ`,
 assuming `F x₀` is integrable, `x ↦ F x a` is differentiable on an interval around `x₀` for ae `a`
 (with interval radius independent of `a`) with derivative uniformly bounded by an integrable
@@ -120,6 +127,7 @@ theorem hasDerivAt_integral_of_dominated_loc_of_deriv_le {F : 𝕜 → ℝ → E
       bound_integrable h_diff
   exact ⟨this.1, this.2.const_smul _⟩
 #align interval_integral.has_deriv_at_integral_of_dominated_loc_of_deriv_le intervalIntegral.hasDerivAt_integral_of_dominated_loc_of_deriv_le
+-/
 
 end intervalIntegral
 

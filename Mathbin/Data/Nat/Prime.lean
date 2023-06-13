@@ -344,6 +344,7 @@ theorem minFac_one : minFac 1 = 1 :=
 #align nat.min_fac_one Nat.minFac_one
 -/
 
+#print Nat.minFac_eq /-
 theorem minFac_eq : ∀ n, minFac n = if 2 ∣ n then 2 else minFacAux n 3
   | 0 => by simp
   | 1 => by simp [show 2 ≠ 1 by decide] <;> rw [min_fac_aux] <;> rfl
@@ -351,6 +352,7 @@ theorem minFac_eq : ∀ n, minFac n = if 2 ∣ n then 2 else minFacAux n 3
     have : 2 ∣ n + 2 ↔ 2 ∣ n := (Nat.dvd_add_iff_left (by rfl)).symm
     simp [min_fac, this] <;> congr
 #align nat.min_fac_eq Nat.minFac_eq
+-/
 
 private def min_fac_prop (n k : ℕ) :=
   2 ≤ k ∧ k ∣ n ∧ ∀ m, 2 ≤ m → m ∣ n → k ≤ m
@@ -866,9 +868,11 @@ theorem eq_or_coprime_of_le_prime {n p} (n_pos : 0 < n) (hle : n ≤ p) (pp : Pr
 #align nat.eq_or_coprime_of_le_prime Nat.eq_or_coprime_of_le_prime
 -/
 
+#print Nat.dvd_prime_pow /-
 theorem dvd_prime_pow {p : ℕ} (pp : Prime p) {m i : ℕ} : i ∣ p ^ m ↔ ∃ k ≤ m, i = p ^ k := by
   simp_rw [dvd_prime_pow (prime_iff.mp pp) m, associated_eq_eq]
 #align nat.dvd_prime_pow Nat.dvd_prime_pow
+-/
 
 #print Nat.Prime.dvd_mul_of_dvd_ne /-
 theorem Prime.dvd_mul_of_dvd_ne {p1 p2 n : ℕ} (h_neq : p1 ≠ p2) (pp1 : Prime p1) (pp2 : Prime p2)
@@ -924,6 +928,7 @@ theorem succ_dvd_or_succ_dvd_of_succ_sum_dvd_mul {p : ℕ} (p_prime : Prime p) {
 #align nat.succ_dvd_or_succ_dvd_of_succ_sum_dvd_mul Nat.succ_dvd_or_succ_dvd_of_succ_sum_dvd_mul
 -/
 
+#print Nat.prime_iff_prime_int /-
 theorem prime_iff_prime_int {p : ℕ} : p.Prime ↔ Prime (p : ℤ) :=
   ⟨fun hp =>
     ⟨Int.coe_nat_ne_zero_iff_pos.2 hp.Pos, mt Int.isUnit_iff_natAbs_eq.1 hp.ne_one, fun a b h => by
@@ -935,6 +940,7 @@ theorem prime_iff_prime_int {p : ℕ} : p.Prime ↔ Prime (p : ℤ) :=
         mt Nat.isUnit_iff.1 fun h => by simpa [h, not_prime_one] using hp, fun a b => by
         simpa only [Int.coe_nat_dvd, (Int.ofNat_mul _ _).symm] using hp.2.2 a b⟩⟩
 #align nat.prime_iff_prime_int Nat.prime_iff_prime_int
+-/
 
 #print Nat.Primes /-
 /-- The type of prime numbers -/
@@ -1000,13 +1006,17 @@ end Nat
 
 namespace Int
 
+#print Int.prime_two /-
 theorem prime_two : Prime (2 : ℤ) :=
   Nat.prime_iff_prime_int.mp Nat.prime_two
 #align int.prime_two Int.prime_two
+-/
 
+#print Int.prime_three /-
 theorem prime_three : Prime (3 : ℤ) :=
   Nat.prime_iff_prime_int.mp Nat.prime_three
 #align int.prime_three Int.prime_three
+-/
 
 end Int
 

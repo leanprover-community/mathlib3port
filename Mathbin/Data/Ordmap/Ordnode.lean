@@ -71,7 +71,7 @@ ordered map, ordered set, data structure
 
 universe u
 
-/- ./././Mathport/Syntax/Translate/Command.lean:370:30: infer kinds are unsupported in Lean 4: nil {} -/
+/- ./././Mathport/Syntax/Translate/Command.lean:369:30: infer kinds are unsupported in Lean 4: nil {} -/
 #print Ordnode /-
 /-- An `ordnode α` is a finite set of values, represented as a tree.
   The operations on this type maintain that the tree is balanced
@@ -131,7 +131,6 @@ protected def singleton (a : α) : Ordnode α :=
 #align ordnode.singleton Ordnode.singleton
 -/
 
--- mathport name: «exprι »
 local prefix:arg "ι" => Ordnode.singleton
 
 instance : Singleton α (Ordnode α) :=
@@ -183,6 +182,7 @@ def node' (l : Ordnode α) (x : α) (r : Ordnode α) : Ordnode α :=
 #align ordnode.node' Ordnode.node'
 -/
 
+#print Ordnode.repr /-
 /-- Basic pretty printing for `ordnode α` that shows the structure of the tree.
 
      repr {3, 1, 2, 4} = ((∅ 1 ∅) 2 ((∅ 3 ∅) 4 ∅)) -/
@@ -190,6 +190,7 @@ def repr {α} [Repr α] : Ordnode α → String
   | nil => "∅"
   | node _ l x r => "(" ++ repr l ++ " " ++ repr x ++ " " ++ repr r ++ ")"
 #align ordnode.repr Ordnode.repr
+-/
 
 instance {α} [Repr α] : Repr (Ordnode α) :=
   ⟨repr⟩
@@ -342,9 +343,11 @@ def All (P : α → Prop) : Ordnode α → Prop
 #align ordnode.all Ordnode.All
 -/
 
+#print Ordnode.All.decidable /-
 instance All.decidable {P : α → Prop} [DecidablePred P] (t) : Decidable (All P t) := by
   induction t <;> dsimp only [all] <;> skip <;> infer_instance
 #align ordnode.all.decidable Ordnode.All.decidable
+-/
 
 #print Ordnode.Any /-
 /-- O(n). Does any element of the map satisfy property `P`?
@@ -357,9 +360,11 @@ def Any (P : α → Prop) : Ordnode α → Prop
 #align ordnode.any Ordnode.Any
 -/
 
+#print Ordnode.Any.decidable /-
 instance Any.decidable {P : α → Prop} [DecidablePred P] (t) : Decidable (Any P t) := by
   induction t <;> dsimp only [any] <;> skip <;> infer_instance
 #align ordnode.any.decidable Ordnode.Any.decidable
+-/
 
 #print Ordnode.Emem /-
 /-- O(n). Exact membership in the set. This is useful primarily for stating
@@ -373,9 +378,11 @@ def Emem (x : α) : Ordnode α → Prop :=
 #align ordnode.emem Ordnode.Emem
 -/
 
+#print Ordnode.Emem.decidable /-
 instance Emem.decidable [DecidableEq α] (x : α) : ∀ t, Decidable (Emem x t) :=
   Any.decidable
 #align ordnode.emem.decidable Ordnode.Emem.decidable
+-/
 
 #print Ordnode.Amem /-
 /-- O(n). Approximate membership in the set, that is, whether some element in the

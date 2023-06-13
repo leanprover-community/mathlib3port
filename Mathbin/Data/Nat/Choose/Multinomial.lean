@@ -249,6 +249,7 @@ noncomputable def multinomial (m : Multiset α) : ℕ :=
 #align multiset.multinomial Multiset.multinomial
 -/
 
+#print Multiset.multinomial_filter_ne /-
 theorem multinomial_filter_ne [DecidableEq α] (a : α) (m : Multiset α) :
     m.multinomial = m.card.choose (m.count a) * (m.filterₓ ((· ≠ ·) a)).multinomial :=
   by
@@ -260,6 +261,7 @@ theorem multinomial_filter_ne [DecidableEq α] (a : α) (m : Multiset α) :
     · rw [Function.update_noteq h.symm, to_finsupp_apply]
     · rw [not_ne_iff.1 h, Function.update_same]
 #align multiset.multinomial_filter_ne Multiset.multinomial_filter_ne
+-/
 
 end Multiset
 
@@ -270,6 +272,7 @@ namespace Finset
 
 variable {α : Type _} [DecidableEq α] (s : Finset α) {R : Type _}
 
+#print Finset.sum_pow_of_commute /-
 /-- The multinomial theorem
 
   Proof is by induction on the number of summands.
@@ -304,7 +307,9 @@ theorem sum_pow_of_commute [Semiring R] (x : α → R)
   rw [Multiset.card_replicate, Nat.cast_mul, mul_assoc, Nat.cast_comm]
   congr 1; simp_rw [← mul_assoc, Nat.cast_comm]; rfl
 #align finset.sum_pow_of_commute Finset.sum_pow_of_commute
+-/
 
+#print Finset.sum_pow /-
 theorem sum_pow [CommSemiring R] (x : α → R) (n : ℕ) :
     s.Sum x ^ n = ∑ k in s.Sym n, k.val.multinomial * (k.val.map x).Prod :=
   by
@@ -312,6 +317,7 @@ theorem sum_pow [CommSemiring R] (x : α → R) (n : ℕ) :
   convert sum_pow_of_commute s x (fun _ _ _ _ _ => mul_comm _ _) n
   ext1; rw [Multiset.noncommProd_eq_prod]; rfl
 #align finset.sum_pow Finset.sum_pow
+-/
 
 end Finset
 

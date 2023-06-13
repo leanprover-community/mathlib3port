@@ -110,7 +110,6 @@ protected def separationRel (α : Type u) [u : UniformSpace α] :=
 #align separation_rel separationRel
 -/
 
--- mathport name: separation_rel
 scoped[uniformity] notation "𝓢" => separationRel
 
 #print separated_equiv /-
@@ -124,10 +123,12 @@ theorem separated_equiv : Equivalence fun x y => (x, y) ∈ 𝓢 α :=
 #align separated_equiv separated_equiv
 -/
 
+#print Filter.HasBasis.mem_separationRel /-
 theorem Filter.HasBasis.mem_separationRel {ι : Sort _} {p : ι → Prop} {s : ι → Set (α × α)}
     (h : (𝓤 α).HasBasis p s) {a : α × α} : a ∈ 𝓢 α ↔ ∀ i, p i → a ∈ s i :=
   h.forall_mem_mem
 #align filter.has_basis.mem_separation_rel Filter.HasBasis.mem_separationRel
+-/
 
 #print separationRel_iff_specializes /-
 theorem separationRel_iff_specializes {a b : α} : (a, b) ∈ 𝓢 α ↔ a ⤳ b := by
@@ -164,10 +165,12 @@ theorem separated_def {α : Type u} [UniformSpace α] :
 #align separated_def separated_def
 -/
 
+#print separated_def' /-
 theorem separated_def' {α : Type u} [UniformSpace α] :
     SeparatedSpace α ↔ ∀ x y, x ≠ y → ∃ r ∈ 𝓤 α, (x, y) ∉ r :=
   separated_def.trans <| forall₂_congr fun x y => by rw [← not_imp_not] <;> simp [not_forall]
 #align separated_def' separated_def'
+-/
 
 #print eq_of_uniformity /-
 theorem eq_of_uniformity {α : Type _} [UniformSpace α] [SeparatedSpace α] {x y : α}
@@ -176,6 +179,7 @@ theorem eq_of_uniformity {α : Type _} [UniformSpace α] [SeparatedSpace α] {x 
 #align eq_of_uniformity eq_of_uniformity
 -/
 
+#print eq_of_uniformity_basis /-
 theorem eq_of_uniformity_basis {α : Type _} [UniformSpace α] [SeparatedSpace α] {ι : Type _}
     {p : ι → Prop} {s : ι → Set (α × α)} (hs : (𝓤 α).HasBasis p s) {x y : α}
     (h : ∀ {i}, p i → (x, y) ∈ s i) : x = y :=
@@ -183,6 +187,7 @@ theorem eq_of_uniformity_basis {α : Type _} [UniformSpace α] [SeparatedSpace �
     let ⟨i, hi, H⟩ := hs.mem_iff.mp V_in
     H (h hi)
 #align eq_of_uniformity_basis eq_of_uniformity_basis
+-/
 
 #print eq_of_forall_symmetric /-
 theorem eq_of_forall_symmetric {α : Type _} [UniformSpace α] [SeparatedSpace α] {x y : α}
@@ -191,11 +196,13 @@ theorem eq_of_forall_symmetric {α : Type _} [UniformSpace α] [SeparatedSpace �
 #align eq_of_forall_symmetric eq_of_forall_symmetric
 -/
 
+#print eq_of_clusterPt_uniformity /-
 theorem eq_of_clusterPt_uniformity [SeparatedSpace α] {x y : α} (h : ClusterPt (x, y) (𝓤 α)) :
     x = y :=
   eq_of_uniformity_basis uniformity_hasBasis_closed fun V ⟨hV, hVc⟩ =>
     isClosed_iff_clusterPt.1 hVc _ <| h.mono <| le_principal_iff.2 hV
 #align eq_of_cluster_pt_uniformity eq_of_clusterPt_uniformity
+-/
 
 #print idRel_sub_separationRel /-
 theorem idRel_sub_separationRel (α : Type _) [UniformSpace α] : idRel ⊆ 𝓢 α :=
@@ -220,15 +227,20 @@ theorem separationRel_comap {f : α → β}
 #align separation_rel_comap separationRel_comap
 -/
 
+#print Filter.HasBasis.separationRel /-
 protected theorem Filter.HasBasis.separationRel {ι : Sort _} {p : ι → Prop} {s : ι → Set (α × α)}
     (h : HasBasis (𝓤 α) p s) : 𝓢 α = ⋂ (i) (hi : p i), s i := by unfold separationRel;
   rw [h.sInter_sets]
 #align filter.has_basis.separation_rel Filter.HasBasis.separationRel
+-/
 
+#print separationRel_eq_inter_closure /-
 theorem separationRel_eq_inter_closure : 𝓢 α = ⋂₀ (closure '' (𝓤 α).sets) := by
   simp [uniformity_has_basis_closure.separation_rel]
 #align separation_rel_eq_inter_closure separationRel_eq_inter_closure
+-/
 
+#print isClosed_separationRel /-
 theorem isClosed_separationRel : IsClosed (𝓢 α) :=
   by
   rw [separationRel_eq_inter_closure]
@@ -236,6 +248,7 @@ theorem isClosed_separationRel : IsClosed (𝓢 α) :=
   rintro _ ⟨t, t_in, rfl⟩
   exact isClosed_closure
 #align is_closed_separation_rel isClosed_separationRel
+-/
 
 #print separated_iff_t2 /-
 theorem separated_iff_t2 : SeparatedSpace α ↔ T2Space α := by
@@ -285,10 +298,12 @@ theorem isClosed_of_spaced_out [SeparatedSpace α] {V₀ : Set (α × α)} (V₀
 #align is_closed_of_spaced_out isClosed_of_spaced_out
 -/
 
+#print isClosed_range_of_spaced_out /-
 theorem isClosed_range_of_spaced_out {ι} [SeparatedSpace α] {V₀ : Set (α × α)} (V₀_in : V₀ ∈ 𝓤 α)
     {f : ι → α} (hf : Pairwise fun x y => (f x, f y) ∉ V₀) : IsClosed (range f) :=
   isClosed_of_spaced_out V₀_in <| by rintro _ ⟨x, rfl⟩ _ ⟨y, rfl⟩ h; exact hf (ne_of_apply_ne f h)
 #align is_closed_range_of_spaced_out isClosed_range_of_spaced_out
+-/
 
 /-!
 ### Separation quotient
@@ -385,6 +400,7 @@ theorem uniformContinuous_quotient_lift {f : α → β} {h : ∀ a b, (a, b) ∈
 #align uniform_space.uniform_continuous_quotient_lift UniformSpace.uniformContinuous_quotient_lift
 -/
 
+#print UniformSpace.uniformContinuous_quotient_lift₂ /-
 theorem uniformContinuous_quotient_lift₂ {f : α → β → γ}
     {h : ∀ a c b d, (a, b) ∈ 𝓢 α → (c, d) ∈ 𝓢 β → f a c = f b d}
     (hf : UniformContinuous fun p : α × β => f p.1 p.2) :
@@ -394,7 +410,9 @@ theorem uniformContinuous_quotient_lift₂ {f : α → β → γ}
     Filter.prod_map_map_eq, Filter.tendsto_map'_iff, Filter.tendsto_map'_iff]
   rwa [UniformContinuous, uniformity_prod_eq_prod, Filter.tendsto_map'_iff] at hf 
 #align uniform_space.uniform_continuous_quotient_lift₂ UniformSpace.uniformContinuous_quotient_lift₂
+-/
 
+#print UniformSpace.comap_quotient_le_uniformity /-
 theorem comap_quotient_le_uniformity :
     ((𝓤 <| Quotient <| separationSetoid α).comap fun p : α × α => (⟦p.fst⟧, ⟦p.snd⟧)) ≤ 𝓤 α :=
   fun t' ht' =>
@@ -409,6 +427,7 @@ theorem comap_quotient_le_uniformity :
     tt_t'
       ⟨b₁, show ((a₁, a₂).1, b₁) ∈ t from ab₁, ss_t ⟨b₂, show ((b₁, a₂).1, b₂) ∈ s from hb, ba₂⟩⟩⟩
 #align uniform_space.comap_quotient_le_uniformity UniformSpace.comap_quotient_le_uniformity
+-/
 
 #print UniformSpace.comap_quotient_eq_uniformity /-
 theorem comap_quotient_eq_uniformity :
@@ -538,6 +557,7 @@ theorem map_comp {f : α → β} {g : β → γ} (hf : UniformContinuous f) (hg 
 
 end SeparationQuotient
 
+#print UniformSpace.separation_prod /-
 theorem separation_prod {a₁ a₂ : α} {b₁ b₂ : β} : (a₁, b₁) ≈ (a₂, b₂) ↔ a₁ ≈ a₂ ∧ b₁ ≈ b₂ :=
   by
   constructor
@@ -554,12 +574,15 @@ theorem separation_prod {a₁ a₂ : α} {b₁ b₂ : β} : (a₁, b₁) ≈ (a�
     have key_β : p_β ((a₁, b₁), (a₂, b₂)) ∈ r_β := by simp [p_β, eqv_β r_β r_β_in]
     exact ⟨h_α key_α, h_β key_β⟩
 #align uniform_space.separation_prod UniformSpace.separation_prod
+-/
 
+#print UniformSpace.Separated.prod /-
 instance Separated.prod [SeparatedSpace α] [SeparatedSpace β] : SeparatedSpace (α × β) :=
   separated_def.2 fun x y H =>
     Prod.ext (eq_of_separated_of_uniformContinuous uniformContinuous_fst H)
       (eq_of_separated_of_uniformContinuous uniformContinuous_snd H)
 #align uniform_space.separated.prod UniformSpace.Separated.prod
+-/
 
 end UniformSpace
 

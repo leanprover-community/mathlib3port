@@ -136,6 +136,7 @@ instead of linearly increasing the work per `my_hom`-related declaration.
 -- `fun_like → has_coe_to_fun`
 attribute [instance 10] coeFnTrans
 
+#print FunLike /-
 /-- The class `fun_like F α β` expresses that terms of type `F` have an
 injective coercion to functions from `α` to `β`.
 
@@ -146,6 +147,7 @@ class FunLike (F : Sort _) (α : outParam (Sort _)) (β : outParam <| α → Sor
   coe : F → ∀ a : α, β a
   coe_injective' : Function.Injective coe
 #align fun_like FunLike
+-/
 
 section Dependent
 
@@ -158,59 +160,79 @@ namespace FunLike
 
 variable {F α β} [i : FunLike F α β]
 
-include i
-
 -- Give this a priority between `coe_fn_trans` and the default priority
 -- `α` and `β` are out_params, so this instance should not be dangerous
 @[nolint dangerous_instance]
 instance (priority := 100) : CoeFun F fun _ => ∀ a : α, β a where coe := FunLike.coe
 
+#print FunLike.coe_eq_coe_fn /-
 @[simp]
 theorem coe_eq_coe_fn : (FunLike.coe : F → ∀ a : α, β a) = coeFn :=
   rfl
 #align fun_like.coe_eq_coe_fn FunLike.coe_eq_coe_fn
+-/
 
+#print FunLike.coe_injective /-
 theorem coe_injective : Function.Injective (coeFn : F → ∀ a : α, β a) :=
   FunLike.coe_injective'
 #align fun_like.coe_injective FunLike.coe_injective
+-/
 
+#print FunLike.coe_fn_eq /-
 @[simp, norm_cast]
 theorem coe_fn_eq {f g : F} : (f : ∀ a : α, β a) = (g : ∀ a : α, β a) ↔ f = g :=
   ⟨fun h => @coe_injective _ _ _ i _ _ h, fun h => by cases h <;> rfl⟩
 #align fun_like.coe_fn_eq FunLike.coe_fn_eq
+-/
 
+#print FunLike.ext' /-
 theorem ext' {f g : F} (h : (f : ∀ a : α, β a) = (g : ∀ a : α, β a)) : f = g :=
   coe_injective h
 #align fun_like.ext' FunLike.ext'
+-/
 
+#print FunLike.ext'_iff /-
 theorem ext'_iff {f g : F} : f = g ↔ (f : ∀ a : α, β a) = (g : ∀ a : α, β a) :=
   coe_fn_eq.symm
 #align fun_like.ext'_iff FunLike.ext'_iff
+-/
 
+#print FunLike.ext /-
 theorem ext (f g : F) (h : ∀ x : α, f x = g x) : f = g :=
   coe_injective (funext h)
 #align fun_like.ext FunLike.ext
+-/
 
+#print FunLike.ext_iff /-
 theorem ext_iff {f g : F} : f = g ↔ ∀ x, f x = g x :=
   coe_fn_eq.symm.trans Function.funext_iff
 #align fun_like.ext_iff FunLike.ext_iff
+-/
 
+#print FunLike.congr_fun /-
 protected theorem congr_fun {f g : F} (h₁ : f = g) (x : α) : f x = g x :=
   congr_fun (congr_arg _ h₁) x
 #align fun_like.congr_fun FunLike.congr_fun
+-/
 
+#print FunLike.ne_iff /-
 theorem ne_iff {f g : F} : f ≠ g ↔ ∃ a, f a ≠ g a :=
   ext_iff.Not.trans not_forall
 #align fun_like.ne_iff FunLike.ne_iff
+-/
 
+#print FunLike.exists_ne /-
 theorem exists_ne {f g : F} (h : f ≠ g) : ∃ x, f x ≠ g x :=
   ne_iff.mp h
 #align fun_like.exists_ne FunLike.exists_ne
+-/
 
+#print FunLike.subsingleton_cod /-
 /-- This is not an instance to avoid slowing down every single `subsingleton` typeclass search.-/
 theorem subsingleton_cod [∀ a, Subsingleton (β a)] : Subsingleton F :=
   ⟨fun f g => coe_injective <| Subsingleton.elim _ _⟩
 #align fun_like.subsingleton_cod FunLike.subsingleton_cod
+-/
 
 end FunLike
 
@@ -223,17 +245,19 @@ section NonDependent
 
 variable {F α β : Sort _} [i : FunLike F α fun _ => β]
 
-include i
-
 namespace FunLike
 
+#print FunLike.congr /-
 protected theorem congr {f g : F} {x y : α} (h₁ : f = g) (h₂ : x = y) : f x = g y :=
   congr (congr_arg _ h₁) h₂
 #align fun_like.congr FunLike.congr
+-/
 
+#print FunLike.congr_arg /-
 protected theorem congr_arg (f : F) {x y : α} (h₂ : x = y) : f x = f y :=
   congr_arg _ h₂
 #align fun_like.congr_arg FunLike.congr_arg
+-/
 
 end FunLike
 

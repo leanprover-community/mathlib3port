@@ -48,6 +48,7 @@ open scoped Kronecker
 
 open Matrix LinearMap
 
+#print TensorProduct.toMatrix_map /-
 /-- The linear map built from `tensor_product.map` corresponds to the matrix built from
 `matrix.kronecker`. -/
 theorem TensorProduct.toMatrix_map (f : M →ₗ[R] M') (g : N →ₗ[R] N') :
@@ -58,7 +59,9 @@ theorem TensorProduct.toMatrix_map (f : M →ₗ[R] M') (g : N →ₗ[R] N') :
   simp_rw [Matrix.kroneckerMap_apply, to_matrix_apply, Basis.tensorProduct_apply,
     TensorProduct.map_tmul, Basis.tensorProduct_repr_tmul_apply]
 #align tensor_product.to_matrix_map TensorProduct.toMatrix_map
+-/
 
+#print Matrix.toLin_kronecker /-
 /-- The matrix built from `matrix.kronecker` corresponds to the linear map built from
 `tensor_product.map`. -/
 theorem Matrix.toLin_kronecker (A : Matrix ι' ι R) (B : Matrix κ' κ R) :
@@ -68,7 +71,9 @@ theorem Matrix.toLin_kronecker (A : Matrix ι' ι R) (B : Matrix κ' κ R) :
   rw [← LinearEquiv.eq_symm_apply, to_lin_symm, TensorProduct.toMatrix_map, to_matrix_to_lin,
     to_matrix_to_lin]
 #align matrix.to_lin_kronecker Matrix.toLin_kronecker
+-/
 
+#print TensorProduct.toMatrix_comm /-
 /-- `tensor_product.comm` corresponds to a permutation of the identity matrix. -/
 theorem TensorProduct.toMatrix_comm :
     toMatrix (bM.TensorProduct bN) (bN.TensorProduct bM) (TensorProduct.comm R M N) =
@@ -80,7 +85,9 @@ theorem TensorProduct.toMatrix_comm :
     Basis.repr_self_apply, Matrix.one_apply, Prod.ext_iff, ite_and, @eq_comm _ i', @eq_comm _ j']
   split_ifs <;> simp
 #align tensor_product.to_matrix_comm TensorProduct.toMatrix_comm
+-/
 
+#print TensorProduct.toMatrix_assoc /-
 /-- `tensor_product.assoc` corresponds to a permutation of the identity matrix. -/
 theorem TensorProduct.toMatrix_assoc :
     toMatrix ((bM.TensorProduct bN).TensorProduct bP) (bM.TensorProduct (bN.TensorProduct bP))
@@ -94,4 +101,5 @@ theorem TensorProduct.toMatrix_assoc :
     @eq_comm _ i', @eq_comm _ j', @eq_comm _ k']
   split_ifs <;> simp
 #align tensor_product.to_matrix_assoc TensorProduct.toMatrix_assoc
+-/
 

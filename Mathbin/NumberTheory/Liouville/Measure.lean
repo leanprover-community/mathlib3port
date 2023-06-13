@@ -38,6 +38,7 @@ open scoped Filter BigOperators ENNReal Topology NNReal
 
 open Filter Set Metric MeasureTheory Real
 
+#print setOf_liouvilleWith_subset_aux /-
 theorem setOf_liouvilleWith_subset_aux :
     {x : ℝ | ∃ p > 2, LiouvilleWith p x} ⊆
       ⋃ m : ℤ,
@@ -87,7 +88,9 @@ theorem setOf_liouvilleWith_subset_aux :
       x * b ≤ 1 * b := mul_le_mul_of_nonneg_right hx01.2.le hb0.le
       _ = b := one_mul b
 #align set_of_liouville_with_subset_aux setOf_liouvilleWith_subset_aux
+-/
 
+#print volume_iUnion_setOf_liouvilleWith /-
 /-- The set of numbers satisfying the Liouville condition with some exponent `p > 2` has Lebesgue
 measure zero. -/
 @[simp]
@@ -125,11 +128,14 @@ theorem volume_iUnion_setOf_liouvilleWith :
   refine' ne_top_of_le_ne_top (ENNReal.tsum_coe_ne_top_iff_summable.2 _) (ENNReal.tsum_le_tsum this)
   refine' (Summable.add _ _).mul_left _ <;> simp only [NNReal.summable_rpow] <;> linarith
 #align volume_Union_set_of_liouville_with volume_iUnion_setOf_liouvilleWith
+-/
 
+#print ae_not_liouvilleWith /-
 theorem ae_not_liouvilleWith : ∀ᵐ x, ∀ p > (2 : ℝ), ¬LiouvilleWith p x := by
   simpa only [ae_iff, not_forall, Classical.not_not, set_of_exists] using
     volume_iUnion_setOf_liouvilleWith
 #align ae_not_liouville_with ae_not_liouvilleWith
+-/
 
 #print ae_not_liouville /-
 theorem ae_not_liouville : ∀ᵐ x, ¬Liouville x :=
@@ -137,15 +143,19 @@ theorem ae_not_liouville : ∀ᵐ x, ¬Liouville x :=
 #align ae_not_liouville ae_not_liouville
 -/
 
+#print volume_setOf_liouville /-
 /-- The set of Liouville numbers has Lebesgue measure zero. -/
 @[simp]
 theorem volume_setOf_liouville : volume {x : ℝ | Liouville x} = 0 := by
   simpa only [ae_iff, Classical.not_not] using ae_not_liouville
 #align volume_set_of_liouville volume_setOf_liouville
+-/
 
+#print Real.disjoint_residual_ae /-
 /-- The filters `residual ℝ` and `volume.ae` are disjoint. This means that there exists a residual
 set of Lebesgue measure zero (e.g., the set of Liouville numbers). -/
 theorem Real.disjoint_residual_ae : Disjoint (residual ℝ) volume.ae :=
   disjoint_of_disjoint_of_mem disjoint_compl_right eventually_residual_liouville ae_not_liouville
 #align real.disjoint_residual_ae Real.disjoint_residual_ae
+-/
 

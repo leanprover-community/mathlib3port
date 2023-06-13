@@ -96,8 +96,6 @@ noncomputable def Aut.commGroup : CommGroup (L ≃ₐ[K] L) :=
 
 variable (h : Irreducible (cyclotomic n K)) {K} (L)
 
-include h
-
 /- ./././Mathport/Syntax/Translate/Tactic/Lean3.lean:132:4: warning: unsupported: rw with cfg: { occs := occurrences.pos[occurrences.pos] «expr[ ,]»([1, 5]) } -/
 /-- The `mul_equiv` that takes an automorphism `f` to the element `k : (zmod n)ˣ` such that
   `f μ = μ ^ k` for any root of unity `μ`. A  strengthening of `is_primitive_root.aut_to_pow`. -/
@@ -139,8 +137,6 @@ noncomputable def autEquivPow : (L ≃ₐ[K] L) ≃* (ZMod n)ˣ :=
       simp only [ZMod.nat_cast_val, ZMod.cast_id', id.def] at key 
       exact Units.ext key }
 #align is_cyclotomic_extension.aut_equiv_pow IsCyclotomicExtension.autEquivPow
-
-include hμ
 
 variable {L}
 

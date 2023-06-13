@@ -22,14 +22,18 @@ import Mathbin.Data.Int.Units
 
 variable {α : Type _}
 
+#print UnitsInt.fintype /-
 instance UnitsInt.fintype : Fintype ℤˣ :=
   ⟨{1, -1}, fun x => by cases Int.units_eq_one_or x <;> simp [*]⟩
 #align units_int.fintype UnitsInt.fintype
+-/
 
+#print UnitsInt.univ /-
 @[simp]
 theorem UnitsInt.univ : (Finset.univ : Finset ℤˣ) = {1, -1} :=
   rfl
 #align units_int.univ UnitsInt.univ
+-/
 
 #print Fintype.card_units_int /-
 @[simp]

@@ -63,6 +63,7 @@ only that there are finitely many objects.
 
 variable [Finite J]
 
+#print CategoryTheory.Limits.colimitLimitToLimitColimit_injective /-
 /-- This follows this proof from
 * Borceux, Handbook of categorical algebra 1, Theorem 2.13.4
 -/
@@ -133,11 +134,13 @@ theorem colimitLimitToLimitColimit_injective : Function.Injective (colimitLimitT
   rw [← W _ _ (gH j)]
   simp [w]
 #align category_theory.limits.colimit_limit_to_limit_colimit_injective CategoryTheory.Limits.colimitLimitToLimitColimit_injective
+-/
 
 end
 
 variable [FinCategory J]
 
+#print CategoryTheory.Limits.colimitLimitToLimitColimit_surjective /-
 /-- This follows this proof from
 * Borceux, Handbook of categorical algebra 1, Theorem 2.13.4
 although with different names.
@@ -303,12 +306,16 @@ theorem colimitLimitToLimitColimit_surjective :
     refine' ⟨k'', 𝟙 k'', g j ≫ gf (𝟙 j) ≫ i (𝟙 j), _⟩
     simp only [bifunctor.map_id_comp, types_comp_apply, bifunctor.map_id, types_id_apply]
 #align category_theory.limits.colimit_limit_to_limit_colimit_surjective CategoryTheory.Limits.colimitLimitToLimitColimit_surjective
+-/
 
+#print CategoryTheory.Limits.colimitLimitToLimitColimit_isIso /-
 instance colimitLimitToLimitColimit_isIso : IsIso (colimitLimitToLimitColimit F) :=
   (isIso_iff_bijective _).mpr
     ⟨colimitLimitToLimitColimit_injective F, colimitLimitToLimitColimit_surjective F⟩
 #align category_theory.limits.colimit_limit_to_limit_colimit_is_iso CategoryTheory.Limits.colimitLimitToLimitColimit_isIso
+-/
 
+#print CategoryTheory.Limits.colimitLimitToLimitColimitCone_iso /-
 instance colimitLimitToLimitColimitCone_iso (F : J ⥤ K ⥤ Type v) :
     IsIso (colimitLimitToLimitColimitCone F) :=
   by
@@ -316,6 +323,7 @@ instance colimitLimitToLimitColimitCone_iso (F : J ⥤ K ⥤ Type v) :
     dsimp only [colimit_limit_to_limit_colimit_cone]; infer_instance
   apply cones.cone_iso_of_hom_iso
 #align category_theory.limits.colimit_limit_to_limit_colimit_cone_iso CategoryTheory.Limits.colimitLimitToLimitColimitCone_iso
+-/
 
 #print CategoryTheory.Limits.filteredColimPreservesFiniteLimitsOfTypes /-
 noncomputable instance filteredColimPreservesFiniteLimitsOfTypes :
@@ -378,6 +386,7 @@ noncomputable def colimitLimitIso (F : J ⥤ K ⥤ C) : colimit (limit F) ≅ li
 #align category_theory.limits.colimit_limit_iso CategoryTheory.Limits.colimitLimitIso
 -/
 
+#print CategoryTheory.Limits.ι_colimitLimitIso_limit_π /-
 @[simp, reassoc]
 theorem ι_colimitLimitIso_limit_π (F : J ⥤ K ⥤ C) (a) (b) :
     colimit.ι (limit F) a ≫ (colimitLimitIso F).Hom ≫ limit.π (colimit F.flip) b =
@@ -395,6 +404,7 @@ theorem ι_colimitLimitIso_limit_π (F : J ⥤ K ⥤ C) (a) (b) :
   dsimp
   simp
 #align category_theory.limits.ι_colimit_limit_iso_limit_π CategoryTheory.Limits.ι_colimitLimitIso_limit_π
+-/
 
 end
 

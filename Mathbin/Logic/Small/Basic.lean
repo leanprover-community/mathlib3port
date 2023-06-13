@@ -67,10 +67,12 @@ instance (priority := 100) small_self (α : Type v) : Small.{v} α :=
 #align small_self small_self
 -/
 
+#print small_map /-
 theorem small_map {α : Type _} {β : Type _} [hβ : Small.{w} β] (e : α ≃ β) : Small.{w} α :=
   let ⟨γ, ⟨f⟩⟩ := hβ.equiv_small
   Small.mk' (e.trans f)
 #align small_map small_map
+-/
 
 #print small_lift /-
 theorem small_lift (α : Type u) [hα : Small.{v} α] : Small.{max v w} α :=
@@ -101,9 +103,11 @@ section
 
 open scoped Classical
 
+#print small_congr /-
 theorem small_congr {α : Type _} {β : Type _} (e : α ≃ β) : Small.{w} α ↔ Small.{w} β :=
   ⟨fun h => @small_map _ _ h e.symm, fun h => @small_map _ _ h e⟩
 #align small_congr small_congr
+-/
 
 #print small_subtype /-
 instance small_subtype (α : Type v) [Small.{w} α] (P : α → Prop) : Small.{w} { x // P x } :=

@@ -636,20 +636,26 @@ section OrderTop
 
 variable [OrderTop α]
 
+#print Order.succ_top /-
 @[simp]
 theorem succ_top : succ (⊤ : α) = ⊤ :=
   isMax_top.succ_eq
 #align order.succ_top Order.succ_top
+-/
 
+#print Order.succ_le_iff_eq_top /-
 @[simp]
 theorem succ_le_iff_eq_top : succ a ≤ a ↔ a = ⊤ :=
   succ_le_iff_isMax.trans isMax_iff_eq_top
 #align order.succ_le_iff_eq_top Order.succ_le_iff_eq_top
+-/
 
+#print Order.lt_succ_iff_ne_top /-
 @[simp]
 theorem lt_succ_iff_ne_top : a < succ a ↔ a ≠ ⊤ :=
   lt_succ_iff_not_isMax.trans not_isMax_iff_ne_top
 #align order.lt_succ_iff_ne_top Order.lt_succ_iff_ne_top
+-/
 
 end OrderTop
 
@@ -657,23 +663,31 @@ section OrderBot
 
 variable [OrderBot α]
 
+#print Order.lt_succ_bot_iff /-
 @[simp]
 theorem lt_succ_bot_iff [NoMaxOrder α] : a < succ ⊥ ↔ a = ⊥ := by rw [lt_succ_iff, le_bot_iff]
 #align order.lt_succ_bot_iff Order.lt_succ_bot_iff
+-/
 
+#print Order.le_succ_bot_iff /-
 theorem le_succ_bot_iff : a ≤ succ ⊥ ↔ a = ⊥ ∨ a = succ ⊥ := by
   rw [le_succ_iff_eq_or_le, le_bot_iff, or_comm']
 #align order.le_succ_bot_iff Order.le_succ_bot_iff
+-/
 
 variable [Nontrivial α]
 
+#print Order.bot_lt_succ /-
 theorem bot_lt_succ (a : α) : ⊥ < succ a :=
   (lt_succ_of_not_isMax not_isMax_bot).trans_le <| succ_mono bot_le
 #align order.bot_lt_succ Order.bot_lt_succ
+-/
 
+#print Order.succ_ne_bot /-
 theorem succ_ne_bot (a : α) : succ a ≠ ⊥ :=
   (bot_lt_succ a).ne'
 #align order.succ_ne_bot Order.succ_ne_bot
+-/
 
 end OrderBot
 
@@ -692,6 +706,7 @@ section CompleteLattice
 
 variable [CompleteLattice α] [SuccOrder α]
 
+#print Order.succ_eq_iInf /-
 theorem succ_eq_iInf (a : α) : succ a = ⨅ (b) (h : a < b), b :=
   by
   refine' le_antisymm (le_iInf fun b => le_iInf succ_le_of_lt) _
@@ -700,6 +715,7 @@ theorem succ_eq_iInf (a : α) : succ a = ⨅ (b) (h : a < b), b :=
     exact le_top
   exact iInf₂_le _ (lt_succ_iff_ne_top.2 ha)
 #align order.succ_eq_infi Order.succ_eq_iInf
+-/
 
 end CompleteLattice
 
@@ -1094,20 +1110,26 @@ section OrderBot
 
 variable [OrderBot α]
 
+#print Order.pred_bot /-
 @[simp]
 theorem pred_bot : pred (⊥ : α) = ⊥ :=
   isMin_bot.pred_eq
 #align order.pred_bot Order.pred_bot
+-/
 
+#print Order.le_pred_iff_eq_bot /-
 @[simp]
 theorem le_pred_iff_eq_bot : a ≤ pred a ↔ a = ⊥ :=
   @succ_le_iff_eq_top αᵒᵈ _ _ _ _
 #align order.le_pred_iff_eq_bot Order.le_pred_iff_eq_bot
+-/
 
+#print Order.pred_lt_iff_ne_bot /-
 @[simp]
 theorem pred_lt_iff_ne_bot : pred a < a ↔ a ≠ ⊥ :=
   @lt_succ_iff_ne_top αᵒᵈ _ _ _ _
 #align order.pred_lt_iff_ne_bot Order.pred_lt_iff_ne_bot
+-/
 
 end OrderBot
 
@@ -1115,24 +1137,32 @@ section OrderTop
 
 variable [OrderTop α]
 
+#print Order.pred_top_lt_iff /-
 @[simp]
 theorem pred_top_lt_iff [NoMinOrder α] : pred ⊤ < a ↔ a = ⊤ :=
   @lt_succ_bot_iff αᵒᵈ _ _ _ _ _
 #align order.pred_top_lt_iff Order.pred_top_lt_iff
+-/
 
+#print Order.pred_top_le_iff /-
 theorem pred_top_le_iff : pred ⊤ ≤ a ↔ a = ⊤ ∨ a = pred ⊤ :=
   @le_succ_bot_iff αᵒᵈ _ _ _ _
 #align order.pred_top_le_iff Order.pred_top_le_iff
+-/
 
 variable [Nontrivial α]
 
+#print Order.pred_lt_top /-
 theorem pred_lt_top (a : α) : pred a < ⊤ :=
   (pred_mono le_top).trans_lt <| pred_lt_of_not_isMin not_isMin_top
 #align order.pred_lt_top Order.pred_lt_top
+-/
 
+#print Order.pred_ne_top /-
 theorem pred_ne_top (a : α) : pred a ≠ ⊤ :=
   (pred_lt_top a).Ne
 #align order.pred_ne_top Order.pred_ne_top
+-/
 
 end OrderTop
 
@@ -1151,6 +1181,7 @@ section CompleteLattice
 
 variable [CompleteLattice α] [PredOrder α]
 
+#print Order.pred_eq_iSup /-
 theorem pred_eq_iSup (a : α) : pred a = ⨆ (b) (h : b < a), b :=
   by
   refine' le_antisymm _ (iSup_le fun b => iSup_le le_pred_of_lt)
@@ -1159,6 +1190,7 @@ theorem pred_eq_iSup (a : α) : pred a = ⨆ (b) (h : b < a), b :=
     exact bot_le
   · exact @le_iSup₂ _ _ (fun b => b < a) _ (fun a _ => a) (pred a) (pred_lt_iff_ne_bot.2 ha)
 #align order.pred_eq_supr Order.pred_eq_iSup
+-/
 
 end CompleteLattice
 
@@ -1302,14 +1334,18 @@ instance : SuccOrder (WithTop α)
       exact le_top
     · exact le_of_lt_succ (some_lt_some.1 h)
 
+#print WithTop.succ_coe_top /-
 @[simp]
 theorem succ_coe_top : succ ↑(⊤ : α) = (⊤ : WithTop α) :=
   dif_pos rfl
 #align with_top.succ_coe_top WithTop.succ_coe_top
+-/
 
+#print WithTop.succ_coe_of_ne_top /-
 theorem succ_coe_of_ne_top {a : α} (h : a ≠ ⊤) : succ (↑a : WithTop α) = ↑(succ a) :=
   dif_neg h
 #align with_top.succ_coe_of_ne_top WithTop.succ_coe_of_ne_top
+-/
 
 end Succ
 
@@ -1344,10 +1380,12 @@ instance : PredOrder (WithTop α)
     · exact (not_top_lt <| some_lt_some.1 h).elim
     · exact some_le_some.2 (le_of_pred_lt <| some_lt_some.1 h)
 
+#print WithTop.pred_top /-
 @[simp]
 theorem pred_top : pred (⊤ : WithTop α) = ↑(⊤ : α) :=
   rfl
 #align with_top.pred_top WithTop.pred_top
+-/
 
 #print WithTop.pred_coe /-
 @[simp]
@@ -1356,6 +1394,7 @@ theorem pred_coe (a : α) : pred (↑a : WithTop α) = ↑(pred a) :=
 #align with_top.pred_coe WithTop.pred_coe
 -/
 
+#print WithTop.pred_untop /-
 @[simp]
 theorem pred_untop :
     ∀ (a : WithTop α) (ha : a ≠ ⊤),
@@ -1363,6 +1402,7 @@ theorem pred_untop :
   | ⊤, ha => (ha rfl).elim
   | (a : α), ha => rfl
 #align with_top.pred_untop WithTop.pred_untop
+-/
 
 end Pred
 
@@ -1465,10 +1505,12 @@ instance : SuccOrder (WithBot α)
     · exact (not_lt_bot <| some_lt_some.1 h).elim
     · exact some_le_some.2 (le_of_lt_succ <| some_lt_some.1 h)
 
+#print WithBot.succ_bot /-
 @[simp]
 theorem succ_bot : succ (⊥ : WithBot α) = ↑(⊥ : α) :=
   rfl
 #align with_bot.succ_bot WithBot.succ_bot
+-/
 
 #print WithBot.succ_coe /-
 @[simp]
@@ -1477,6 +1519,7 @@ theorem succ_coe (a : α) : succ (↑a : WithBot α) = ↑(succ a) :=
 #align with_bot.succ_coe WithBot.succ_coe
 -/
 
+#print WithBot.succ_unbot /-
 @[simp]
 theorem succ_unbot :
     ∀ (a : WithBot α) (ha : a ≠ ⊥),
@@ -1484,6 +1527,7 @@ theorem succ_unbot :
   | ⊥, ha => (ha rfl).elim
   | (a : α), ha => rfl
 #align with_bot.succ_unbot WithBot.succ_unbot
+-/
 
 end Succ
 
@@ -1535,14 +1579,18 @@ instance : PredOrder (WithBot α)
       exact bot_le
     · exact le_of_pred_lt (some_lt_some.1 h)
 
+#print WithBot.pred_coe_bot /-
 @[simp]
 theorem pred_coe_bot : pred ↑(⊥ : α) = (⊥ : WithBot α) :=
   dif_pos rfl
 #align with_bot.pred_coe_bot WithBot.pred_coe_bot
+-/
 
+#print WithBot.pred_coe_of_ne_bot /-
 theorem pred_coe_of_ne_bot {a : α} (h : a ≠ ⊥) : pred (↑a : WithBot α) = ↑(pred a) :=
   dif_neg h
 #align with_bot.pred_coe_of_ne_bot WithBot.pred_coe_of_ne_bot
+-/
 
 end Pred
 
@@ -1793,9 +1841,11 @@ section OrderBot
 
 variable [Preorder α] [OrderBot α] [SuccOrder α] [IsSuccArchimedean α]
 
+#print Succ.rec_bot /-
 theorem Succ.rec_bot (p : α → Prop) (hbot : p ⊥) (hsucc : ∀ a, p a → p (succ a)) (a : α) : p a :=
   Succ.rec hbot (fun x _ h => hsucc x h) (bot_le : ⊥ ≤ a)
 #align succ.rec_bot Succ.rec_bot
+-/
 
 end OrderBot
 
@@ -1803,9 +1853,11 @@ section OrderTop
 
 variable [Preorder α] [OrderTop α] [PredOrder α] [IsPredArchimedean α]
 
+#print Pred.rec_top /-
 theorem Pred.rec_top (p : α → Prop) (htop : p ⊤) (hpred : ∀ a, p a → p (pred a)) (a : α) : p a :=
   Pred.rec htop (fun x _ h => hpred x h) (le_top : a ≤ ⊤)
 #align pred.rec_top Pred.rec_top
+-/
 
 end OrderTop
 

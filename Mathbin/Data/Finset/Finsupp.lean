@@ -66,6 +66,7 @@ theorem mem_finsupp_iff {t : ι → Finset α} : f ∈ s.Finsupp t ↔ f.support
 #align finset.mem_finsupp_iff Finset.mem_finsupp_iff
 -/
 
+#print Finset.mem_finsupp_iff_of_support_subset /-
 /-- When `t` is supported on `s`, `f ∈ s.finsupp t` precisely means that `f` is pointwise in `t`. -/
 @[simp]
 theorem mem_finsupp_iff_of_support_subset {t : ι →₀ Finset α} (ht : t.support ⊆ s) :
@@ -83,12 +84,15 @@ theorem mem_finsupp_iff_of_support_subset {t : ι →₀ Finset α} (ht : t.supp
       exact zero_mem_zero
   · rwa [H, mem_zero] at h 
 #align finset.mem_finsupp_iff_of_support_subset Finset.mem_finsupp_iff_of_support_subset
+-/
 
+#print Finset.card_finsupp /-
 @[simp]
 theorem card_finsupp (s : Finset ι) (t : ι → Finset α) :
     (s.Finsupp t).card = ∏ i in s, (t i).card :=
   (card_map _).trans <| card_pi _ _
 #align finset.card_finsupp Finset.card_finsupp
+-/
 
 end Finset
 
@@ -104,17 +108,21 @@ def pi (f : ι →₀ Finset α) : Finset (ι →₀ α) :=
 #align finsupp.pi Finsupp.pi
 -/
 
+#print Finsupp.mem_pi /-
 @[simp]
 theorem mem_pi {f : ι →₀ Finset α} {g : ι →₀ α} : g ∈ f.pi ↔ ∀ i, g i ∈ f i :=
   mem_finsupp_iff_of_support_subset <| Subset.refl _
 #align finsupp.mem_pi Finsupp.mem_pi
+-/
 
+#print Finsupp.card_pi /-
 @[simp]
 theorem card_pi (f : ι →₀ Finset α) : f.pi.card = f.Prod fun i => (f i).card :=
   by
   rw [pi, card_finsupp]
   exact Finset.prod_congr rfl fun i _ => by simp only [Pi.nat_apply, Nat.cast_id]
 #align finsupp.card_pi Finsupp.card_pi
+-/
 
 end Finsupp
 

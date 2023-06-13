@@ -44,7 +44,7 @@ open CategoryTheory
 
 open CategoryTheory.Limits
 
-/- ./././Mathport/Syntax/Translate/Command.lean:329:31: unsupported: @[derive] abbrev -/
+/- ./././Mathport/Syntax/Translate/Command.lean:328:31: unsupported: @[derive] abbrev -/
 /-- The category of finite dimensional `k`-linear representations of a monoid `G`. -/
 abbrev FdRep (k G : Type u) [Field k] [Monoid G] :=
   Action (FgModule.{u} k) (MonCat.of G)

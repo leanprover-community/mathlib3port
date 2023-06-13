@@ -71,20 +71,26 @@ instance : Group (RingAut R) := by
 instance : Inhabited (RingAut R) :=
   ⟨1⟩
 
+#print RingAut.toAddAut /-
 /-- Monoid homomorphism from ring automorphisms to additive automorphisms. -/
 def toAddAut : RingAut R →* AddAut R := by
   refine_struct { toFun := RingEquiv.toAddEquiv } <;> intros <;> rfl
 #align ring_aut.to_add_aut RingAut.toAddAut
+-/
 
+#print RingAut.toMulAut /-
 /-- Monoid homomorphism from ring automorphisms to multiplicative automorphisms. -/
 def toMulAut : RingAut R →* MulAut R := by
   refine_struct { toFun := RingEquiv.toMulEquiv } <;> intros <;> rfl
 #align ring_aut.to_mul_aut RingAut.toMulAut
+-/
 
+#print RingAut.toPerm /-
 /-- Monoid homomorphism from ring automorphisms to permutations. -/
 def toPerm : RingAut R →* Equiv.Perm R := by
   refine_struct { toFun := RingEquiv.toEquiv } <;> intros <;> rfl
 #align ring_aut.to_perm RingAut.toPerm
+-/
 
 end mul_add
 
@@ -92,6 +98,7 @@ section Semiring
 
 variable {G R : Type _} [Group G] [Semiring R]
 
+#print RingAut.applyMulSemiringAction /-
 /-- The tautological action by the group of automorphism of a ring `R` on `R`.-/
 instance applyMulSemiringAction : MulSemiringAction (RingAut R) R
     where
@@ -103,18 +110,24 @@ instance applyMulSemiringAction : MulSemiringAction (RingAut R) R
   one_smul _ := rfl
   mul_smul _ _ _ := rfl
 #align ring_aut.apply_mul_semiring_action RingAut.applyMulSemiringAction
+-/
 
+#print RingAut.smul_def /-
 @[simp]
 protected theorem smul_def (f : RingAut R) (r : R) : f • r = f r :=
   rfl
 #align ring_aut.smul_def RingAut.smul_def
+-/
 
+#print RingAut.apply_faithfulSMul /-
 instance apply_faithfulSMul : FaithfulSMul (RingAut R) R :=
   ⟨fun _ _ => RingEquiv.ext⟩
 #align ring_aut.apply_has_faithful_smul RingAut.apply_faithfulSMul
+-/
 
 variable (G R)
 
+#print MulSemiringAction.toRingAut /-
 /-- Each element of the group defines a ring automorphism.
 
 This is a stronger version of `distrib_mul_action.to_add_aut` and
@@ -126,6 +139,7 @@ def MulSemiringAction.toRingAut [MulSemiringAction G R] : G →* RingAut R
   map_mul' g h := RingEquiv.ext <| mul_smul g h
   map_one' := RingEquiv.ext <| one_smul _
 #align mul_semiring_action.to_ring_aut MulSemiringAction.toRingAut
+-/
 
 end Semiring
 

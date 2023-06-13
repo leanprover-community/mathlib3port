@@ -46,15 +46,19 @@ def castAddMonoidHom (α : Type _) [AddMonoidWithOne α] : ℕ →+ α
 #align nat.cast_add_monoid_hom Nat.castAddMonoidHom
 -/
 
+#print Nat.coe_castAddMonoidHom /-
 @[simp]
 theorem coe_castAddMonoidHom [AddMonoidWithOne α] : (castAddMonoidHom α : ℕ → α) = coe :=
   rfl
 #align nat.coe_cast_add_monoid_hom Nat.coe_castAddMonoidHom
+-/
 
+#print Nat.cast_mul /-
 @[simp, norm_cast]
 theorem cast_mul [NonAssocSemiring α] (m n : ℕ) : ((m * n : ℕ) : α) = m * n := by
   induction n <;> simp [mul_succ, mul_add, *]
 #align nat.cast_mul Nat.cast_mul
+-/
 
 #print Nat.castRingHom /-
 /-- `coe : ℕ → α` as a `ring_hom` -/
@@ -66,23 +70,31 @@ def castRingHom (α : Type _) [NonAssocSemiring α] : ℕ →+* α :=
 #align nat.cast_ring_hom Nat.castRingHom
 -/
 
+#print Nat.coe_castRingHom /-
 @[simp]
 theorem coe_castRingHom [NonAssocSemiring α] : (castRingHom α : ℕ → α) = coe :=
   rfl
 #align nat.coe_cast_ring_hom Nat.coe_castRingHom
+-/
 
+#print Nat.cast_commute /-
 theorem cast_commute [NonAssocSemiring α] (n : ℕ) (x : α) : Commute (↑n) x :=
   Nat.recOn n (by rw [cast_zero] <;> exact Commute.zero_left x) fun n ihn => by
     rw [cast_succ] <;> exact ihn.add_left (Commute.one_left x)
 #align nat.cast_commute Nat.cast_commute
+-/
 
+#print Nat.cast_comm /-
 theorem cast_comm [NonAssocSemiring α] (n : ℕ) (x : α) : (n : α) * x = x * n :=
   (cast_commute n x).Eq
 #align nat.cast_comm Nat.cast_comm
+-/
 
+#print Nat.commute_cast /-
 theorem commute_cast [NonAssocSemiring α] (x : α) (n : ℕ) : Commute x n :=
   (n.cast_commute x).symm
 #align nat.commute_cast Nat.commute_cast
+-/
 
 section OrderedSemiring
 
@@ -96,22 +108,28 @@ theorem mono_cast : Monotone (coe : ℕ → α) :=
 #align nat.mono_cast Nat.mono_cast
 -/
 
+#print Nat.cast_nonneg /-
 @[simp]
 theorem cast_nonneg (n : ℕ) : 0 ≤ (n : α) :=
   @Nat.cast_zero α _ ▸ mono_cast (Nat.zero_le n)
 #align nat.cast_nonneg Nat.cast_nonneg
+-/
 
 section Nontrivial
 
 variable [Nontrivial α]
 
+#print Nat.cast_add_one_pos /-
 theorem cast_add_one_pos (n : ℕ) : 0 < (n : α) + 1 :=
   zero_lt_one.trans_le <| le_add_of_nonneg_left n.cast_nonneg
 #align nat.cast_add_one_pos Nat.cast_add_one_pos
+-/
 
+#print Nat.cast_pos /-
 @[simp]
 theorem cast_pos {n : ℕ} : (0 : α) < n ↔ 0 < n := by cases n <;> simp [cast_add_one_pos]
 #align nat.cast_pos Nat.cast_pos
+-/
 
 end Nontrivial
 
@@ -172,6 +190,7 @@ theorem cast_le_one : (n : α) ≤ 1 ↔ n ≤ 1 := by rw [← cast_one, cast_le
 
 end OrderedSemiring
 
+#print Nat.cast_tsub /-
 /-- A version of `nat.cast_sub` that works for `ℝ≥0` and `ℚ≥0`. Note that this proof doesn't work
 for `ℕ∞` and `ℝ≥0∞`, so we use type-specific lemmas for these types. -/
 @[simp, norm_cast]
@@ -184,21 +203,28 @@ theorem cast_tsub [CanonicallyOrderedCommSemiring α] [Sub α] [OrderedSub α]
   · rcases le_iff_exists_add'.mp h with ⟨m, rfl⟩
     rw [add_tsub_cancel_right, cast_add, add_tsub_cancel_right]
 #align nat.cast_tsub Nat.cast_tsub
+-/
 
+#print Nat.cast_min /-
 @[simp, norm_cast]
 theorem cast_min [LinearOrderedSemiring α] {a b : ℕ} : (↑(min a b) : α) = min a b :=
   (@mono_cast α _).map_min
 #align nat.cast_min Nat.cast_min
+-/
 
+#print Nat.cast_max /-
 @[simp, norm_cast]
 theorem cast_max [LinearOrderedSemiring α] {a b : ℕ} : (↑(max a b) : α) = max a b :=
   (@mono_cast α _).map_max
 #align nat.cast_max Nat.cast_max
+-/
 
+#print Nat.abs_cast /-
 @[simp, norm_cast]
 theorem abs_cast [LinearOrderedRing α] (a : ℕ) : |(a : α)| = a :=
   abs_of_nonneg (cast_nonneg a)
 #align nat.abs_cast Nat.abs_cast
+-/
 
 #print Nat.coe_nat_dvd /-
 theorem coe_nat_dvd [Semiring α] {m n : ℕ} (h : m ∣ n) : (m : α) ∣ (n : α) :=
@@ -215,17 +241,21 @@ section AddMonoidHomClass
 
 variable {A B F : Type _} [AddMonoidWithOne B]
 
+#print ext_nat' /-
 theorem ext_nat' [AddMonoid A] [AddMonoidHomClass F ℕ A] (f g : F) (h : f 1 = g 1) : f = g :=
   FunLike.ext f g <| by
     apply Nat.rec
     · simp only [Nat.zero_eq, map_zero]
     simp (config := { contextual := true }) [Nat.succ_eq_add_one, h]
 #align ext_nat' ext_nat'
+-/
 
+#print AddMonoidHom.ext_nat /-
 @[ext]
 theorem AddMonoidHom.ext_nat [AddMonoid A] : ∀ {f g : ℕ →+ A}, ∀ h : f 1 = g 1, f = g :=
   ext_nat'
 #align add_monoid_hom.ext_nat AddMonoidHom.ext_nat
+-/
 
 variable [AddMonoidWithOne A]
 
@@ -263,10 +293,12 @@ theorem ext_nat'' [MonoidWithZeroHomClass F ℕ A] (f g : F) (h_pos : ∀ {n : �
 #align ext_nat'' ext_nat''
 -/
 
+#print MonoidWithZeroHom.ext_nat /-
 @[ext]
 theorem MonoidWithZeroHom.ext_nat : ∀ {f g : ℕ →*₀ A}, (∀ {n : ℕ}, 0 < n → f n = g n) → f = g :=
   ext_nat''
 #align monoid_with_zero_hom.ext_nat MonoidWithZeroHom.ext_nat
+-/
 
 end MonoidWithZeroHomClass
 
@@ -281,10 +313,12 @@ theorem eq_natCast [RingHomClass F ℕ R] (f : F) : ∀ n, f n = n :=
 #align eq_nat_cast eq_natCast
 -/
 
+#print map_natCast /-
 @[simp]
 theorem map_natCast [RingHomClass F R S] (f : F) : ∀ n : ℕ, f (n : R) = n :=
   map_natCast' f <| map_one f
 #align map_nat_cast map_natCast
+-/
 
 #print ext_nat /-
 theorem ext_nat [RingHomClass F ℕ R] (f g : F) : f = g :=
@@ -292,15 +326,19 @@ theorem ext_nat [RingHomClass F ℕ R] (f g : F) : f = g :=
 #align ext_nat ext_nat
 -/
 
+#print NeZero.nat_of_injective /-
 theorem NeZero.nat_of_injective {n : ℕ} [h : NeZero (n : R)] [RingHomClass F R S] {f : F}
     (hf : Function.Injective f) : NeZero (n : S) :=
   ⟨fun h => NeZero.natCast_ne n R <| hf <| by simpa only [map_natCast, map_zero]⟩
 #align ne_zero.nat_of_injective NeZero.nat_of_injective
+-/
 
+#print NeZero.nat_of_neZero /-
 theorem NeZero.nat_of_neZero {R S} [Semiring R] [Semiring S] {F} [RingHomClass F R S] (f : F)
     {n : ℕ} [hn : NeZero (n : S)] : NeZero (n : R) := by apply NeZero.of_map f;
   simp only [map_natCast, hn]
 #align ne_zero.nat_of_ne_zero NeZero.nat_of_neZero
+-/
 
 end RingHomClass
 
@@ -350,17 +388,21 @@ theorem nat_apply (n : ℕ) (a : α) : (n : ∀ a, π a) a = n :=
 #align pi.nat_apply Pi.nat_apply
 -/
 
+#print Pi.coe_nat /-
 @[simp]
 theorem coe_nat (n : ℕ) : (n : ∀ a, π a) = fun _ => n :=
   rfl
 #align pi.coe_nat Pi.coe_nat
+-/
 
 end Pi
 
+#print Sum.elim_natCast_natCast /-
 theorem Sum.elim_natCast_natCast {α β γ : Type _} [NatCast γ] (n : ℕ) :
     Sum.elim (n : α → γ) (n : β → γ) = n :=
   @Sum.elim_lam_const_lam_const α β γ n
 #align sum.elim_nat_cast_nat_cast Sum.elim_natCast_natCast
+-/
 
 namespace Pi
 

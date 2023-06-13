@@ -76,37 +76,49 @@ def mk' {X A : C} (f : A ⟶ X) [hf : Mono f] : MonoOver X
 #align category_theory.mono_over.mk' CategoryTheory.MonoOver.mk'
 -/
 
+#print CategoryTheory.MonoOver.forget /-
 /-- The inclusion from monomorphisms over X to morphisms over X. -/
 def forget (X : C) : MonoOver X ⥤ Over X :=
   fullSubcategoryInclusion _
 #align category_theory.mono_over.forget CategoryTheory.MonoOver.forget
+-/
 
 instance : Coe (MonoOver X) C where coe Y := Y.obj.left
 
+#print CategoryTheory.MonoOver.forget_obj_left /-
 @[simp]
 theorem forget_obj_left {f} : ((forget X).obj f).left = (f : C) :=
   rfl
 #align category_theory.mono_over.forget_obj_left CategoryTheory.MonoOver.forget_obj_left
+-/
 
+#print CategoryTheory.MonoOver.mk'_coe' /-
 @[simp]
 theorem mk'_coe' {X A : C} (f : A ⟶ X) [hf : Mono f] : (mk' f : C) = A :=
   rfl
 #align category_theory.mono_over.mk'_coe' CategoryTheory.MonoOver.mk'_coe'
+-/
 
+#print CategoryTheory.MonoOver.arrow /-
 /-- Convenience notation for the underlying arrow of a monomorphism over X. -/
 abbrev arrow (f : MonoOver X) : (f : C) ⟶ X :=
   ((forget X).obj f).Hom
 #align category_theory.mono_over.arrow CategoryTheory.MonoOver.arrow
+-/
 
+#print CategoryTheory.MonoOver.mk'_arrow /-
 @[simp]
 theorem mk'_arrow {X A : C} (f : A ⟶ X) [hf : Mono f] : (mk' f).arrow = f :=
   rfl
 #align category_theory.mono_over.mk'_arrow CategoryTheory.MonoOver.mk'_arrow
+-/
 
+#print CategoryTheory.MonoOver.forget_obj_hom /-
 @[simp]
 theorem forget_obj_hom {f} : ((forget X).obj f).Hom = f.arrow :=
   rfl
 #align category_theory.mono_over.forget_obj_hom CategoryTheory.MonoOver.forget_obj_hom
+-/
 
 instance : Full (forget X) :=
   FullSubcategory.full _
@@ -114,9 +126,11 @@ instance : Full (forget X) :=
 instance : Faithful (forget X) :=
   FullSubcategory.faithful _
 
+#print CategoryTheory.MonoOver.mono /-
 instance mono (f : MonoOver X) : Mono f.arrow :=
   f.property
 #align category_theory.mono_over.mono CategoryTheory.MonoOver.mono
+-/
 
 #print CategoryTheory.MonoOver.isThin /-
 /-- The category of monomorphisms over X is a thin category,
@@ -153,13 +167,16 @@ def isoMk {f g : MonoOver X} (h : f.obj.left ≅ g.obj.left) (w : h.Hom ≫ g.ar
 #align category_theory.mono_over.iso_mk CategoryTheory.MonoOver.isoMk
 -/
 
+#print CategoryTheory.MonoOver.mk'ArrowIso /-
 /-- If `f : mono_over X`, then `mk' f.arrow` is of course just `f`, but not definitionally, so we
     package it as an isomorphism. -/
 @[simp]
 def mk'ArrowIso {X : C} (f : MonoOver X) : mk' f.arrow ≅ f :=
   isoMk (Iso.refl _) (by simp)
 #align category_theory.mono_over.mk'_arrow_iso CategoryTheory.MonoOver.mk'ArrowIso
+-/
 
+#print CategoryTheory.MonoOver.lift /-
 /-- Lift a functor between over categories to a functor between `mono_over` categories,
 given suitable evidence that morphisms are taken to monomorphisms.
 -/
@@ -170,18 +187,23 @@ def lift {Y : D} (F : Over Y ⥤ Over X)
   obj f := ⟨_, h f⟩
   map _ _ k := (MonoOver.forget X).preimage ((MonoOver.forget Y ⋙ F).map k)
 #align category_theory.mono_over.lift CategoryTheory.MonoOver.lift
+-/
 
+#print CategoryTheory.MonoOver.liftIso /-
 /-- Isomorphic functors `over Y ⥤ over X` lift to isomorphic functors `mono_over Y ⥤ mono_over X`.
 -/
 def liftIso {Y : D} {F₁ F₂ : Over Y ⥤ Over X} (h₁ h₂) (i : F₁ ≅ F₂) : lift F₁ h₁ ≅ lift F₂ h₂ :=
   fullyFaithfulCancelRight (MonoOver.forget X) (isoWhiskerLeft (MonoOver.forget Y) i)
 #align category_theory.mono_over.lift_iso CategoryTheory.MonoOver.liftIso
+-/
 
+#print CategoryTheory.MonoOver.liftComp /-
 /-- `mono_over.lift` commutes with composition of functors. -/
 def liftComp {X Z : C} {Y : D} (F : Over X ⥤ Over Y) (G : Over Y ⥤ Over Z) (h₁ h₂) :
     lift F h₁ ⋙ lift G h₂ ≅ lift (F ⋙ G) fun f => h₂ ⟨_, h₁ f⟩ :=
   fullyFaithfulCancelRight (MonoOver.forget _) (Iso.refl _)
 #align category_theory.mono_over.lift_comp CategoryTheory.MonoOver.liftComp
+-/
 
 #print CategoryTheory.MonoOver.liftId /-
 /-- `mono_over.lift` preserves the identity functor. -/
@@ -190,20 +212,25 @@ def liftId : (lift (𝟭 (Over X)) fun f => f.2) ≅ 𝟭 _ :=
 #align category_theory.mono_over.lift_id CategoryTheory.MonoOver.liftId
 -/
 
+#print CategoryTheory.MonoOver.lift_comm /-
 @[simp]
 theorem lift_comm (F : Over Y ⥤ Over X)
     (h : ∀ f : MonoOver Y, Mono (F.obj ((MonoOver.forget Y).obj f)).Hom) :
     lift F h ⋙ MonoOver.forget X = MonoOver.forget Y ⋙ F :=
   rfl
 #align category_theory.mono_over.lift_comm CategoryTheory.MonoOver.lift_comm
+-/
 
+#print CategoryTheory.MonoOver.lift_obj_arrow /-
 @[simp]
 theorem lift_obj_arrow {Y : D} (F : Over Y ⥤ Over X)
     (h : ∀ f : MonoOver Y, Mono (F.obj ((MonoOver.forget Y).obj f)).Hom) (f : MonoOver Y) :
     ((lift F h).obj f).arrow = (F.obj ((forget Y).obj f)).Hom :=
   rfl
 #align category_theory.mono_over.lift_obj_arrow CategoryTheory.MonoOver.lift_obj_arrow
+-/
 
+#print CategoryTheory.MonoOver.slice /-
 /-- Monomorphisms over an object `f : over A` in an over category
 are equivalent to monomorphisms over the source of `f`.
 -/
@@ -218,6 +245,7 @@ def slice {A : C} {f : Over A} (h₁ h₂) : MonoOver f ≌ MonoOver f.left
     MonoOver.liftComp _ _ _ _ ≪≫
       MonoOver.liftIso _ _ f.iteratedSliceEquiv.counitIso ≪≫ MonoOver.liftId
 #align category_theory.mono_over.slice CategoryTheory.MonoOver.slice
+-/
 
 section Pullback
 
@@ -250,17 +278,21 @@ def pullbackId : pullback (𝟙 X) ≅ 𝟭 _ :=
 #align category_theory.mono_over.pullback_id CategoryTheory.MonoOver.pullbackId
 -/
 
+#print CategoryTheory.MonoOver.pullback_obj_left /-
 @[simp]
 theorem pullback_obj_left (f : X ⟶ Y) (g : MonoOver Y) :
     ((pullback f).obj g : C) = Limits.pullback g.arrow f :=
   rfl
 #align category_theory.mono_over.pullback_obj_left CategoryTheory.MonoOver.pullback_obj_left
+-/
 
+#print CategoryTheory.MonoOver.pullback_obj_arrow /-
 @[simp]
 theorem pullback_obj_arrow (f : X ⟶ Y) (g : MonoOver Y) :
     ((pullback f).obj g).arrow = pullback.snd :=
   rfl
 #align category_theory.mono_over.pullback_obj_arrow CategoryTheory.MonoOver.pullback_obj_arrow
+-/
 
 end Pullback
 
@@ -291,15 +323,19 @@ def mapId : map (𝟙 X) ≅ 𝟭 _ :=
 #align category_theory.mono_over.map_id CategoryTheory.MonoOver.mapId
 -/
 
+#print CategoryTheory.MonoOver.map_obj_left /-
 @[simp]
 theorem map_obj_left (f : X ⟶ Y) [Mono f] (g : MonoOver X) : ((map f).obj g : C) = g.obj.left :=
   rfl
 #align category_theory.mono_over.map_obj_left CategoryTheory.MonoOver.map_obj_left
+-/
 
+#print CategoryTheory.MonoOver.map_obj_arrow /-
 @[simp]
 theorem map_obj_arrow (f : X ⟶ Y) [Mono f] (g : MonoOver X) : ((map f).obj g).arrow = g.arrow ≫ f :=
   rfl
 #align category_theory.mono_over.map_obj_arrow CategoryTheory.MonoOver.map_obj_arrow
+-/
 
 #print CategoryTheory.MonoOver.fullMap /-
 instance fullMap (f : X ⟶ Y) [Mono f] : Full (map f)
@@ -315,6 +351,7 @@ instance faithful_map (f : X ⟶ Y) [Mono f] : Faithful (map f) where
 #align category_theory.mono_over.faithful_map CategoryTheory.MonoOver.faithful_map
 -/
 
+#print CategoryTheory.MonoOver.mapIso /-
 /-- Isomorphic objects have equivalent `mono_over` categories.
 -/
 @[simps]
@@ -325,11 +362,13 @@ def mapIso {A B : C} (e : A ≅ B) : MonoOver A ≌ MonoOver B
   unitIso := ((mapComp _ _).symm ≪≫ eqToIso (by simp) ≪≫ mapId).symm
   counitIso := (mapComp _ _).symm ≪≫ eqToIso (by simp) ≪≫ mapId
 #align category_theory.mono_over.map_iso CategoryTheory.MonoOver.mapIso
+-/
 
 section
 
 variable (X)
 
+#print CategoryTheory.MonoOver.congr /-
 /-- An equivalence of categories `e` between `C` and `D` induces an equivalence between
     `mono_over X` and `mono_over (e.functor.obj X)` whenever `X` is an object of `C`. -/
 @[simps]
@@ -342,6 +381,7 @@ def congr (e : C ≌ D) : MonoOver X ≌ MonoOver (e.Functor.obj X)
   unitIso := NatIso.ofComponents (fun Y => isoMk (e.unitIso.app Y) (by tidy)) (by tidy)
   counitIso := NatIso.ofComponents (fun Y => isoMk (e.counitIso.app Y) (by tidy)) (by tidy)
 #align category_theory.mono_over.congr CategoryTheory.MonoOver.congr
+-/
 
 end
 
@@ -380,10 +420,12 @@ def imageMonoOver (f : X ⟶ Y) [HasImage f] : MonoOver Y :=
 #align category_theory.mono_over.image_mono_over CategoryTheory.MonoOver.imageMonoOver
 -/
 
+#print CategoryTheory.MonoOver.imageMonoOver_arrow /-
 @[simp]
 theorem imageMonoOver_arrow (f : X ⟶ Y) [HasImage f] : (imageMonoOver f).arrow = image.ι f :=
   rfl
 #align category_theory.mono_over.image_mono_over_arrow CategoryTheory.MonoOver.imageMonoOver_arrow
+-/
 
 end Image
 
@@ -445,15 +487,19 @@ instance : IsRightAdjoint (forget X) where
   left := image
   adj := imageForgetAdj
 
+#print CategoryTheory.MonoOver.reflective /-
 instance reflective : Reflective (forget X) where
 #align category_theory.mono_over.reflective CategoryTheory.MonoOver.reflective
+-/
 
+#print CategoryTheory.MonoOver.forgetImage /-
 /-- Forgetting that a monomorphism over `X` is a monomorphism, then taking its image,
 is the identity functor.
 -/
 def forgetImage : forget X ⋙ image ≅ 𝟭 (MonoOver X) :=
   asIso (Adjunction.counit imageForgetAdj)
 #align category_theory.mono_over.forget_image CategoryTheory.MonoOver.forgetImage
+-/
 
 end Image
 
@@ -461,16 +507,21 @@ section Exists
 
 variable [HasImages C]
 
+#print CategoryTheory.MonoOver.exists /-
 /-- In the case where `f` is not a monomorphism but `C` has images,
 we can still take the "forward map" under it, which agrees with `mono_over.map f`.
 -/
 def exists (f : X ⟶ Y) : MonoOver X ⥤ MonoOver Y :=
   forget _ ⋙ Over.map f ⋙ image
 #align category_theory.mono_over.exists CategoryTheory.MonoOver.exists
+-/
 
+#print CategoryTheory.MonoOver.faithful_exists /-
 instance faithful_exists (f : X ⟶ Y) : Faithful (exists f) where
 #align category_theory.mono_over.faithful_exists CategoryTheory.MonoOver.faithful_exists
+-/
 
+#print CategoryTheory.MonoOver.existsIsoMap /-
 /-- When `f : X ⟶ Y` is a monomorphism, `exists f` agrees with `map f`.
 -/
 def existsIsoMap (f : X ⟶ Y) [Mono f] : exists f ≅ map f :=
@@ -492,12 +543,15 @@ def existsIsoMap (f : X ⟶ Y) [Mono f] : exists f ≅ map f :=
         image_mono_iso_source_hom_self]
       apply image.lift_fac)
 #align category_theory.mono_over.exists_iso_map CategoryTheory.MonoOver.existsIsoMap
+-/
 
+#print CategoryTheory.MonoOver.existsPullbackAdj /-
 /-- `exists` is adjoint to `pullback` when images exist -/
 def existsPullbackAdj (f : X ⟶ Y) [HasPullbacks C] : exists f ⊣ pullback f :=
   Adjunction.restrictFullyFaithful (forget X) (𝟭 _) ((Over.mapPullbackAdj f).comp imageForgetAdj)
     (Iso.refl _) (Iso.refl _)
 #align category_theory.mono_over.exists_pullback_adj CategoryTheory.MonoOver.existsPullbackAdj
+-/
 
 end Exists
 

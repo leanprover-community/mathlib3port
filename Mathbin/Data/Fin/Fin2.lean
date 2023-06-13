@@ -158,7 +158,6 @@ def ofNat' : ∀ {n} (m) [IsLT m n], Fin2 n
 #align fin2.of_nat' Fin2.ofNat'
 -/
 
--- mathport name: «expr& »
 local prefix:arg "&" => ofNat'
 
 instance : Inhabited (Fin2 1) :=

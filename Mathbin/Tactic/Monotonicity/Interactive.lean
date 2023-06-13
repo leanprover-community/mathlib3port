@@ -23,10 +23,8 @@ open Interactive.Types
 
 open Tactic
 
--- mathport name: parser.optional
 local postfix:1024 "?" => optional
 
--- mathport name: parser.many
 local postfix:1024 "*" => many
 
 unsafe inductive mono_function (elab : Bool := true)

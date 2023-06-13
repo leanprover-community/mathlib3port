@@ -389,8 +389,6 @@ theorem smoothAt_iff_target {x : M} :
   contMdiffAt_iff_target
 #align smooth_at_iff_target smoothAt_iff_target
 
-include Is I's
-
 theorem contMdiffWithinAt_iff_of_mem_maximalAtlas {x : M} (he : e ∈ maximalAtlas I M)
     (he' : e' ∈ maximalAtlas I' M') (hx : x ∈ e.source) (hy : f x ∈ e'.source) :
     ContMdiffWithinAt I I' n f s x ↔
@@ -455,8 +453,6 @@ theorem contMdiffAt_iff_of_mem_source {x' : M} {y : M'} (hx : x' ∈ (chartAt H 
     rw [continuousWithinAt_univ, preimage_univ, univ_inter]
 #align cont_mdiff_at_iff_of_mem_source contMdiffAt_iff_of_mem_source
 
-omit Is
-
 theorem contMdiffWithinAt_iff_target_of_mem_source {x : M} {y : M'}
     (hy : f x ∈ (chartAt H' y).source) :
     ContMdiffWithinAt I I' n f s x ↔
@@ -481,10 +477,6 @@ theorem contMdiffAt_iff_target_of_mem_source {x : M} {y : M'} (hy : f x ∈ (cha
     ContMdiffAt]
   infer_instance
 #align cont_mdiff_at_iff_target_of_mem_source contMdiffAt_iff_target_of_mem_source
-
-omit I's
-
-include Is
 
 theorem contMdiffWithinAt_iff_source_of_mem_maximalAtlas (he : e ∈ maximalAtlas I M)
     (hx : x ∈ e.source) :
@@ -514,8 +506,6 @@ theorem contMdiffAt_iff_source_of_mem_source {x' : M} (hx' : x' ∈ (chartAt H x
   by
   simp_rw [ContMdiffAt, contMdiffWithinAt_iff_source_of_mem_source hx', preimage_univ, univ_inter]
 #align cont_mdiff_at_iff_source_of_mem_source contMdiffAt_iff_source_of_mem_source
-
-include I's
 
 theorem contMdiffOn_iff_of_mem_maximalAtlas (he : e ∈ maximalAtlas I M)
     (he' : e' ∈ maximalAtlas I' M') (hs : s ⊆ e.source) (h2s : MapsTo f s e'.source) :
@@ -646,8 +636,6 @@ theorem smooth_iff_target :
         ∀ y : M', SmoothOn I 𝓘(𝕜, E') (extChartAt I' y ∘ f) (f ⁻¹' (extChartAt I' y).source) :=
   contMdiff_iff_target
 #align smooth_iff_target smooth_iff_target
-
-omit Is I's
 
 /-! ### Deducing smoothness from higher smoothness -/
 
@@ -809,8 +797,6 @@ theorem SmoothOn.smoothAt (h : SmoothOn I I' f s) (hx : s ∈ 𝓝 x) : SmoothAt
   h.ContMdiffAt hx
 #align smooth_on.smooth_at SmoothOn.smoothAt
 
-include Is
-
 theorem contMdiffOn_iff_source_of_mem_maximalAtlas (he : e ∈ maximalAtlas I M) (hs : s ⊆ e.source) :
     ContMdiffOn I I' n f s ↔ ContMdiffOn 𝓘(𝕜, E) I' n (f ∘ (e.extend I).symm) (e.extend I '' s) :=
   by
@@ -821,8 +807,6 @@ theorem contMdiffOn_iff_source_of_mem_maximalAtlas (he : e ∈ maximalAtlas I M)
   simp_rw [nhdsWithin_eq_iff_eventuallyEq,
     e.extend_symm_preimage_inter_range_eventually_eq I hs (hs hx)]
 #align cont_mdiff_on_iff_source_of_mem_maximal_atlas contMdiffOn_iff_source_of_mem_maximalAtlas
-
-include I's
 
 /-- A function is `C^n` within a set at a point, for `n : ℕ`, if and only if it is `C^n` on
 a neighborhood of this point. -/
@@ -919,8 +903,6 @@ theorem contMdiffAt_iff_contMdiffAt_nhds {n : ℕ} :
   refine' (eventually_mem_nhds.mpr hu).mono fun x' hx' => _
   exact (h x' <| mem_of_mem_nhds hx').ContMdiffAt hx'
 #align cont_mdiff_at_iff_cont_mdiff_at_nhds contMdiffAt_iff_contMdiffAt_nhds
-
-omit Is I's
 
 /-! ### Congruence lemmas -/
 
@@ -1165,8 +1147,6 @@ theorem contMdiffOn_model_symm : ContMdiffOn 𝓘(𝕜, E) I n I.symm (range I) 
   exact cont_diff_on_id.congr fun x' => I.right_inv
 #align cont_mdiff_on_model_symm contMdiffOn_model_symm
 
-include Is
-
 /-- An atlas member is `C^n` for any `n`. -/
 theorem contMdiffOn_of_mem_maximalAtlas (h : e ∈ maximalAtlas I M) : ContMdiffOn I I n e e.source :=
   ContMdiffOn.of_le
@@ -1235,8 +1215,6 @@ theorem contMdiffOn_extChartAt_symm (x : M) :
   convert contMdiffOn_extend_symm (chart_mem_maximal_atlas I x)
   rw [extChartAt_target, I.image_eq]
 #align cont_mdiff_on_ext_chart_at_symm contMdiffOn_extChartAt_symm
-
-omit Is
 
 /-- An element of `cont_diff_groupoid ⊤ I` is `C^n` for any `n`. -/
 theorem contMdiffOn_of_mem_contDiffGroupoid {e' : LocalHomeomorph H H}
@@ -1994,8 +1972,6 @@ theorem Smooth.smul {f : M → 𝕜} {g : M → V} (hf : Smooth I 𝓘(𝕜) f) 
 section
 
 variable [ChartedSpace H M'] [IsM' : SmoothManifoldWithCorners I M']
-
-include Is IsM'
 
 theorem is_local_structomorph_on_contDiffGroupoid_iff_aux {f : LocalHomeomorph M M'}
     (hf : LiftPropOn (contDiffGroupoid ⊤ I).IsLocalStructomorphWithinAt f f.source) :

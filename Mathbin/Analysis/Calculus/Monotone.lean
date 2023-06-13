@@ -42,6 +42,7 @@ open Set Filter Function Metric MeasureTheory MeasureTheory.Measure IsUnifLocDou
 
 open scoped Topology
 
+#print tendsto_apply_add_mul_sq_div_sub /-
 /-- If `(f y - f x) / (y - x)` converges to a limit as `y` tends to `x`, then the same goes if
 `y` is shifted a little bit, i.e., `f (y + (y-x)^2) - f x) / (y - x)` converges to the same limit.
 This lemma contains a slightly more general version of this statement (where one considers
@@ -70,6 +71,7 @@ theorem tendsto_apply_add_mul_sq_div_sub {f : ℝ → ℝ} {x a c d : ℝ} {l : 
   filter_upwards [this] with y hy
   field_simp [sub_ne_zero.2 hy]
 #align tendsto_apply_add_mul_sq_div_sub tendsto_apply_add_mul_sq_div_sub
+-/
 
 #print StieltjesFunction.ae_hasDerivAt /-
 /-- A Stieltjes function is almost everywhere differentiable, with derivative equal to the

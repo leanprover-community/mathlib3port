@@ -115,41 +115,53 @@ namespace Function
 
 variable (β) [One α] [Preorder α] {a : α}
 
+#print Function.one_le_const_of_one_le /-
 @[to_additive const_nonneg_of_nonneg]
 theorem one_le_const_of_one_le (ha : 1 ≤ a) : 1 ≤ const β a := fun _ => ha
 #align function.one_le_const_of_one_le Function.one_le_const_of_one_le
 #align function.const_nonneg_of_nonneg Function.const_nonneg_of_nonneg
+-/
 
+#print Function.const_le_one_of_le_one /-
 @[to_additive]
 theorem const_le_one_of_le_one (ha : a ≤ 1) : const β a ≤ 1 := fun _ => ha
 #align function.const_le_one_of_le_one Function.const_le_one_of_le_one
 #align function.const_nonpos_of_nonpos Function.const_nonpos_of_nonpos
+-/
 
 variable {β} [Nonempty β]
 
+#print Function.one_le_const /-
 @[simp, to_additive const_nonneg]
 theorem one_le_const : 1 ≤ const β a ↔ 1 ≤ a :=
   @const_le_const _ _ _ _ 1 _
 #align function.one_le_const Function.one_le_const
 #align function.const_nonneg Function.const_nonneg
+-/
 
+#print Function.one_lt_const /-
 @[simp, to_additive const_pos]
 theorem one_lt_const : 1 < const β a ↔ 1 < a :=
   @const_lt_const _ _ _ _ 1 a
 #align function.one_lt_const Function.one_lt_const
 #align function.const_pos Function.const_pos
+-/
 
+#print Function.const_le_one /-
 @[simp, to_additive]
 theorem const_le_one : const β a ≤ 1 ↔ a ≤ 1 :=
   @const_le_const _ _ _ _ _ 1
 #align function.const_le_one Function.const_le_one
 #align function.const_nonpos Function.const_nonpos
+-/
 
+#print Function.const_lt_one /-
 @[simp, to_additive]
 theorem const_lt_one : const β a < 1 ↔ a < 1 :=
   @const_lt_const _ _ _ _ _ 1
 #align function.const_lt_one Function.const_lt_one
 #align function.const_neg Function.const_neg
+-/
 
 end Function
 

@@ -46,8 +46,6 @@ class FloatCfg where
 
 variable [C : FloatCfg]
 
-include C
-
 #print FP.prec /-
 def prec :=
   C.prec
@@ -130,11 +128,13 @@ def Float.zero (s : Bool) : Float :=
 instance : Inhabited Float :=
   ⟨Float.zero true⟩
 
+#print FP.Float.sign' /-
 protected def Float.sign' : Float → Semiquot Bool
   | float.inf s => pure s
   | float.nan => ⊤
   | float.finite s e m f => pure s
 #align fp.float.sign' FP.Float.sign'
+-/
 
 #print FP.Float.sign /-
 protected def Float.sign : Float → Bool

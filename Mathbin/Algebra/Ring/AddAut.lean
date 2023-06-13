@@ -29,26 +29,34 @@ namespace AddAut
 
 variable {R : Type _} [Semiring R]
 
+#print AddAut.mulLeft /-
 /-- Left multiplication by a unit of a semiring as an additive automorphism. -/
 @[simps (config := { simpRhs := true })]
 def mulLeft : Rˣ →* AddAut R :=
   DistribMulAction.toAddAut _ _
 #align add_aut.mul_left AddAut.mulLeft
+-/
 
+#print AddAut.mulRight /-
 /-- Right multiplication by a unit of a semiring as an additive automorphism. -/
 def mulRight (u : Rˣ) : AddAut R :=
   DistribMulAction.toAddAut Rᵐᵒᵖˣ R (Units.opEquiv.symm <| MulOpposite.op u)
 #align add_aut.mul_right AddAut.mulRight
+-/
 
+#print AddAut.mulRight_apply /-
 @[simp]
 theorem mulRight_apply (u : Rˣ) (x : R) : mulRight u x = x * u :=
   rfl
 #align add_aut.mul_right_apply AddAut.mulRight_apply
+-/
 
+#print AddAut.mulRight_symm_apply /-
 @[simp]
 theorem mulRight_symm_apply (u : Rˣ) (x : R) : (mulRight u).symm x = x * ↑u⁻¹ :=
   rfl
 #align add_aut.mul_right_symm_apply AddAut.mulRight_symm_apply
+-/
 
 end AddAut
 

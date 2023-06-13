@@ -70,38 +70,49 @@ theorem measurableEmbedding_const_smul (c : G) : MeasurableEmbedding ((· • ·
 #align measurable_embedding_const_vadd measurableEmbedding_const_vadd
 -/
 
+#print MeasurableEquiv.symm_smul /-
 @[simp, to_additive]
 theorem symm_smul (c : G) : (smul c : α ≃ᵐ α).symm = smul c⁻¹ :=
   ext rfl
 #align measurable_equiv.symm_smul MeasurableEquiv.symm_smul
 #align measurable_equiv.symm_vadd MeasurableEquiv.symm_vadd
+-/
 
+#print MeasurableEquiv.smul₀ /-
 /-- If a group with zero `G₀` acts on `α` by measurable maps, then each nonzero element `c : G₀`
 defines a measurable automorphism of `α` -/
 def smul₀ (c : G₀) (hc : c ≠ 0) : α ≃ᵐ α :=
   MeasurableEquiv.smul (Units.mk0 c hc)
 #align measurable_equiv.smul₀ MeasurableEquiv.smul₀
+-/
 
+#print MeasurableEquiv.coe_smul₀ /-
 @[simp]
 theorem coe_smul₀ {c : G₀} (hc : c ≠ 0) : ⇑(smul₀ c hc : α ≃ᵐ α) = (· • ·) c :=
   rfl
 #align measurable_equiv.coe_smul₀ MeasurableEquiv.coe_smul₀
+-/
 
+#print MeasurableEquiv.symm_smul₀ /-
 @[simp]
 theorem symm_smul₀ {c : G₀} (hc : c ≠ 0) :
     (smul₀ c hc : α ≃ᵐ α).symm = smul₀ c⁻¹ (inv_ne_zero hc) :=
   ext rfl
 #align measurable_equiv.symm_smul₀ MeasurableEquiv.symm_smul₀
+-/
 
+#print measurableEmbedding_const_smul₀ /-
 theorem measurableEmbedding_const_smul₀ {c : G₀} (hc : c ≠ 0) :
     MeasurableEmbedding ((· • ·) c : α → α) :=
   (smul₀ c hc).MeasurableEmbedding
 #align measurable_embedding_const_smul₀ measurableEmbedding_const_smul₀
+-/
 
 section Mul
 
 variable [MeasurableMul G] [MeasurableMul G₀]
 
+#print MeasurableEquiv.mulLeft /-
 /-- If `G` is a group with measurable multiplication, then left multiplication by `g : G` is a
 measurable automorphism of `G`. -/
 @[to_additive
@@ -110,31 +121,41 @@ def mulLeft (g : G) : G ≃ᵐ G :=
   smul g
 #align measurable_equiv.mul_left MeasurableEquiv.mulLeft
 #align measurable_equiv.add_left MeasurableEquiv.addLeft
+-/
 
+#print MeasurableEquiv.coe_mulLeft /-
 @[simp, to_additive]
 theorem coe_mulLeft (g : G) : ⇑(mulLeft g) = (· * ·) g :=
   rfl
 #align measurable_equiv.coe_mul_left MeasurableEquiv.coe_mulLeft
 #align measurable_equiv.coe_add_left MeasurableEquiv.coe_addLeft
+-/
 
+#print MeasurableEquiv.symm_mulLeft /-
 @[simp, to_additive]
 theorem symm_mulLeft (g : G) : (mulLeft g).symm = mulLeft g⁻¹ :=
   ext rfl
 #align measurable_equiv.symm_mul_left MeasurableEquiv.symm_mulLeft
 #align measurable_equiv.symm_add_left MeasurableEquiv.symm_addLeft
+-/
 
+#print MeasurableEquiv.toEquiv_mulLeft /-
 @[simp, to_additive]
 theorem toEquiv_mulLeft (g : G) : (mulLeft g).toEquiv = Equiv.mulLeft g :=
   rfl
 #align measurable_equiv.to_equiv_mul_left MeasurableEquiv.toEquiv_mulLeft
 #align measurable_equiv.to_equiv_add_left MeasurableEquiv.toEquiv_addLeft
+-/
 
+#print measurableEmbedding_mulLeft /-
 @[to_additive]
 theorem measurableEmbedding_mulLeft (g : G) : MeasurableEmbedding ((· * ·) g) :=
   (mulLeft g).MeasurableEmbedding
 #align measurable_embedding_mul_left measurableEmbedding_mulLeft
 #align measurable_embedding_add_left measurableEmbedding_addLeft
+-/
 
+#print MeasurableEquiv.mulRight /-
 /-- If `G` is a group with measurable multiplication, then right multiplication by `g : G` is a
 measurable automorphism of `G`. -/
 @[to_additive
@@ -145,57 +166,77 @@ def mulRight (g : G) : G ≃ᵐ G where
   measurable_inv_fun := measurable_mul_const g⁻¹
 #align measurable_equiv.mul_right MeasurableEquiv.mulRight
 #align measurable_equiv.add_right MeasurableEquiv.addRight
+-/
 
+#print measurableEmbedding_mulRight /-
 @[to_additive]
 theorem measurableEmbedding_mulRight (g : G) : MeasurableEmbedding fun x => x * g :=
   (mulRight g).MeasurableEmbedding
 #align measurable_embedding_mul_right measurableEmbedding_mulRight
 #align measurable_embedding_add_right measurableEmbedding_addRight
+-/
 
+#print MeasurableEquiv.coe_mulRight /-
 @[simp, to_additive]
 theorem coe_mulRight (g : G) : ⇑(mulRight g) = fun x => x * g :=
   rfl
 #align measurable_equiv.coe_mul_right MeasurableEquiv.coe_mulRight
 #align measurable_equiv.coe_add_right MeasurableEquiv.coe_addRight
+-/
 
+#print MeasurableEquiv.symm_mulRight /-
 @[simp, to_additive]
 theorem symm_mulRight (g : G) : (mulRight g).symm = mulRight g⁻¹ :=
   ext rfl
 #align measurable_equiv.symm_mul_right MeasurableEquiv.symm_mulRight
 #align measurable_equiv.symm_add_right MeasurableEquiv.symm_addRight
+-/
 
+#print MeasurableEquiv.toEquiv_mulRight /-
 @[simp, to_additive]
 theorem toEquiv_mulRight (g : G) : (mulRight g).toEquiv = Equiv.mulRight g :=
   rfl
 #align measurable_equiv.to_equiv_mul_right MeasurableEquiv.toEquiv_mulRight
 #align measurable_equiv.to_equiv_add_right MeasurableEquiv.toEquiv_addRight
+-/
 
+#print MeasurableEquiv.mulLeft₀ /-
 /-- If `G₀` is a group with zero with measurable multiplication, then left multiplication by a
 nonzero element `g : G₀` is a measurable automorphism of `G₀`. -/
 def mulLeft₀ (g : G₀) (hg : g ≠ 0) : G₀ ≃ᵐ G₀ :=
   smul₀ g hg
 #align measurable_equiv.mul_left₀ MeasurableEquiv.mulLeft₀
+-/
 
+#print measurableEmbedding_mulLeft₀ /-
 theorem measurableEmbedding_mulLeft₀ {g : G₀} (hg : g ≠ 0) : MeasurableEmbedding ((· * ·) g) :=
   (mulLeft₀ g hg).MeasurableEmbedding
 #align measurable_embedding_mul_left₀ measurableEmbedding_mulLeft₀
+-/
 
+#print MeasurableEquiv.coe_mulLeft₀ /-
 @[simp]
 theorem coe_mulLeft₀ {g : G₀} (hg : g ≠ 0) : ⇑(mulLeft₀ g hg) = (· * ·) g :=
   rfl
 #align measurable_equiv.coe_mul_left₀ MeasurableEquiv.coe_mulLeft₀
+-/
 
+#print MeasurableEquiv.symm_mulLeft₀ /-
 @[simp]
 theorem symm_mulLeft₀ {g : G₀} (hg : g ≠ 0) :
     (mulLeft₀ g hg).symm = mulLeft₀ g⁻¹ (inv_ne_zero hg) :=
   ext rfl
 #align measurable_equiv.symm_mul_left₀ MeasurableEquiv.symm_mulLeft₀
+-/
 
+#print MeasurableEquiv.toEquiv_mulLeft₀ /-
 @[simp]
 theorem toEquiv_mulLeft₀ {g : G₀} (hg : g ≠ 0) : (mulLeft₀ g hg).toEquiv = Equiv.mulLeft₀ g hg :=
   rfl
 #align measurable_equiv.to_equiv_mul_left₀ MeasurableEquiv.toEquiv_mulLeft₀
+-/
 
+#print MeasurableEquiv.mulRight₀ /-
 /-- If `G₀` is a group with zero with measurable multiplication, then right multiplication by a
 nonzero element `g : G₀` is a measurable automorphism of `G₀`. -/
 def mulRight₀ (g : G₀) (hg : g ≠ 0) : G₀ ≃ᵐ G₀
@@ -204,29 +245,39 @@ def mulRight₀ (g : G₀) (hg : g ≠ 0) : G₀ ≃ᵐ G₀
   measurable_to_fun := measurable_mul_const g
   measurable_inv_fun := measurable_mul_const g⁻¹
 #align measurable_equiv.mul_right₀ MeasurableEquiv.mulRight₀
+-/
 
+#print measurableEmbedding_mulRight₀ /-
 theorem measurableEmbedding_mulRight₀ {g : G₀} (hg : g ≠ 0) : MeasurableEmbedding fun x => x * g :=
   (mulRight₀ g hg).MeasurableEmbedding
 #align measurable_embedding_mul_right₀ measurableEmbedding_mulRight₀
+-/
 
+#print MeasurableEquiv.coe_mulRight₀ /-
 @[simp]
 theorem coe_mulRight₀ {g : G₀} (hg : g ≠ 0) : ⇑(mulRight₀ g hg) = fun x => x * g :=
   rfl
 #align measurable_equiv.coe_mul_right₀ MeasurableEquiv.coe_mulRight₀
+-/
 
+#print MeasurableEquiv.symm_mulRight₀ /-
 @[simp]
 theorem symm_mulRight₀ {g : G₀} (hg : g ≠ 0) :
     (mulRight₀ g hg).symm = mulRight₀ g⁻¹ (inv_ne_zero hg) :=
   ext rfl
 #align measurable_equiv.symm_mul_right₀ MeasurableEquiv.symm_mulRight₀
+-/
 
+#print MeasurableEquiv.toEquiv_mulRight₀ /-
 @[simp]
 theorem toEquiv_mulRight₀ {g : G₀} (hg : g ≠ 0) : (mulRight₀ g hg).toEquiv = Equiv.mulRight₀ g hg :=
   rfl
 #align measurable_equiv.to_equiv_mul_right₀ MeasurableEquiv.toEquiv_mulRight₀
+-/
 
 end Mul
 
+#print MeasurableEquiv.inv /-
 /-- Inversion as a measurable automorphism of a group or group with zero. -/
 @[to_additive "Negation as a measurable automorphism of an additive group.",
   simps (config := { fullyApplied := false }) toEquiv apply]
@@ -237,14 +288,18 @@ def inv (G) [MeasurableSpace G] [InvolutiveInv G] [MeasurableInv G] : G ≃ᵐ G
   measurable_inv_fun := measurable_inv
 #align measurable_equiv.inv MeasurableEquiv.inv
 #align measurable_equiv.neg MeasurableEquiv.neg
+-/
 
+#print MeasurableEquiv.symm_inv /-
 @[simp, to_additive]
 theorem symm_inv {G} [MeasurableSpace G] [InvolutiveInv G] [MeasurableInv G] :
     (inv G).symm = inv G :=
   rfl
 #align measurable_equiv.symm_inv MeasurableEquiv.symm_inv
 #align measurable_equiv.symm_neg MeasurableEquiv.symm_neg
+-/
 
+#print MeasurableEquiv.divRight /-
 /-- `equiv.div_right` as a `measurable_equiv`. -/
 @[to_additive " `equiv.sub_right` as a `measurable_equiv` "]
 def divRight [MeasurableMul G] (g : G) : G ≃ᵐ G
@@ -254,7 +309,9 @@ def divRight [MeasurableMul G] (g : G) : G ≃ᵐ G
   measurable_inv_fun := measurable_mul_const g
 #align measurable_equiv.div_right MeasurableEquiv.divRight
 #align measurable_equiv.sub_right MeasurableEquiv.subRight
+-/
 
+#print MeasurableEquiv.divLeft /-
 /-- `equiv.div_left` as a `measurable_equiv` -/
 @[to_additive " `equiv.sub_left` as a `measurable_equiv` "]
 def divLeft [MeasurableMul G] [MeasurableInv G] (g : G) : G ≃ᵐ G
@@ -264,6 +321,7 @@ def divLeft [MeasurableMul G] [MeasurableInv G] (g : G) : G ≃ᵐ G
   measurable_inv_fun := measurable_inv.mul_const g
 #align measurable_equiv.div_left MeasurableEquiv.divLeft
 #align measurable_equiv.sub_left MeasurableEquiv.subLeft
+-/
 
 end MeasurableEquiv
 

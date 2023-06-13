@@ -150,20 +150,26 @@ instance : Top (I.Filtration M) :=
 instance : Bot (I.Filtration M) :=
   ⟨I.trivialFiltration ⊥⟩
 
+#print Ideal.Filtration.sup_N /-
 @[simp]
 theorem sup_N : (F ⊔ F').n = F.n ⊔ F'.n :=
   rfl
 #align ideal.filtration.sup_N Ideal.Filtration.sup_N
+-/
 
+#print Ideal.Filtration.sSup_N /-
 @[simp]
 theorem sSup_N (S : Set (I.Filtration M)) : (sSup S).n = sSup (Ideal.Filtration.n '' S) :=
   rfl
 #align ideal.filtration.Sup_N Ideal.Filtration.sSup_N
+-/
 
+#print Ideal.Filtration.inf_N /-
 @[simp]
 theorem inf_N : (F ⊓ F').n = F.n ⊓ F'.n :=
   rfl
 #align ideal.filtration.inf_N Ideal.Filtration.inf_N
+-/
 
 #print Ideal.Filtration.sInf_N /-
 @[simp]
@@ -172,25 +178,33 @@ theorem sInf_N (S : Set (I.Filtration M)) : (sInf S).n = sInf (Ideal.Filtration.
 #align ideal.filtration.Inf_N Ideal.Filtration.sInf_N
 -/
 
+#print Ideal.Filtration.top_N /-
 @[simp]
 theorem top_N : (⊤ : I.Filtration M).n = ⊤ :=
   rfl
 #align ideal.filtration.top_N Ideal.Filtration.top_N
+-/
 
+#print Ideal.Filtration.bot_N /-
 @[simp]
 theorem bot_N : (⊥ : I.Filtration M).n = ⊥ :=
   rfl
 #align ideal.filtration.bot_N Ideal.Filtration.bot_N
+-/
 
+#print Ideal.Filtration.iSup_N /-
 @[simp]
 theorem iSup_N {ι : Sort _} (f : ι → I.Filtration M) : (iSup f).n = ⨆ i, (f i).n :=
   congr_arg sSup (Set.range_comp _ _).symm
 #align ideal.filtration.supr_N Ideal.Filtration.iSup_N
+-/
 
+#print Ideal.Filtration.iInf_N /-
 @[simp]
 theorem iInf_N {ι : Sort _} (f : ι → I.Filtration M) : (iInf f).n = ⨅ i, (f i).n :=
   congr_arg sInf (Set.range_comp _ _).symm
 #align ideal.filtration.infi_N Ideal.Filtration.iInf_N
+-/
 
 instance : CompleteLattice (I.Filtration M) :=
   Function.Injective.completeLattice Ideal.Filtration.n Ideal.Filtration.ext sup_N inf_N
@@ -226,8 +240,6 @@ theorem Ideal.stableFiltration_stable (I : Ideal R) (N : Submodule R M) :
 
 variable {F F'} (h : F.Stable)
 
-include h
-
 #print Ideal.Filtration.Stable.exists_pow_smul_eq /-
 theorem Stable.exists_pow_smul_eq : ∃ n₀, ∀ k, F.n (n₀ + k) = I ^ k • F.n n₀ :=
   by
@@ -251,8 +263,6 @@ theorem Stable.exists_pow_smul_eq_of_ge : ∃ n₀, ∀ n ≥ n₀, F.n n = I ^ 
   rw [add_comm, tsub_add_cancel_of_le hn]
 #align ideal.filtration.stable.exists_pow_smul_eq_of_ge Ideal.Filtration.Stable.exists_pow_smul_eq_of_ge
 -/
-
-omit h
 
 #print Ideal.Filtration.stable_iff_exists_pow_smul_eq_of_ge /-
 theorem stable_iff_exists_pow_smul_eq_of_ge :
@@ -295,6 +305,7 @@ open PolynomialModule
 
 variable (F F')
 
+#print Ideal.Filtration.submodule /-
 /-- The `R[IX]`-submodule of `M[X]` associated with an `I`-filtration. -/
 protected def submodule : Submodule (reesAlgebra I) (PolynomialModule R M)
     where
@@ -309,26 +320,34 @@ protected def submodule : Submodule (reesAlgebra I) (PolynomialModule R M)
     subst e
     exact F.pow_smul_le j k (Submodule.smul_mem_smul (r.2 j) (hf k))
 #align ideal.filtration.submodule Ideal.Filtration.submodule
+-/
 
+#print Ideal.Filtration.mem_submodule /-
 @[simp]
 theorem mem_submodule (f : PolynomialModule R M) : f ∈ F.Submodule ↔ ∀ i, f i ∈ F.n i :=
   Iff.rfl
 #align ideal.filtration.mem_submodule Ideal.Filtration.mem_submodule
+-/
 
+#print Ideal.Filtration.inf_submodule /-
 theorem inf_submodule : (F ⊓ F').Submodule = F.Submodule ⊓ F'.Submodule := by ext; exact forall_and
 #align ideal.filtration.inf_submodule Ideal.Filtration.inf_submodule
+-/
 
 variable (I M)
 
+#print Ideal.Filtration.submoduleInfHom /-
 /-- `ideal.filtration.submodule` as an `inf_hom` -/
 def submoduleInfHom : InfHom (I.Filtration M) (Submodule (reesAlgebra I) (PolynomialModule R M))
     where
   toFun := Ideal.Filtration.submodule
   map_inf' := inf_submodule
 #align ideal.filtration.submodule_inf_hom Ideal.Filtration.submoduleInfHom
+-/
 
 variable {I M}
 
+#print Ideal.Filtration.submodule_closure_single /-
 theorem submodule_closure_single :
     AddSubmonoid.closure (⋃ i, single R i '' (F.n i : Set M)) = F.Submodule.toAddSubmonoid :=
   by
@@ -345,14 +364,18 @@ theorem submodule_closure_single :
     rintro c -
     exact AddSubmonoid.subset_closure (Set.subset_iUnion _ c <| Set.mem_image_of_mem _ (hf c))
 #align ideal.filtration.submodule_closure_single Ideal.Filtration.submodule_closure_single
+-/
 
+#print Ideal.Filtration.submodule_span_single /-
 theorem submodule_span_single :
     Submodule.span (reesAlgebra I) (⋃ i, single R i '' (F.n i : Set M)) = F.Submodule :=
   by
   rw [← Submodule.span_closure, submodule_closure_single]
   simp
 #align ideal.filtration.submodule_span_single Ideal.Filtration.submodule_span_single
+-/
 
+#print Ideal.Filtration.submodule_eq_span_le_iff_stable_ge /-
 theorem submodule_eq_span_le_iff_stable_ge (n₀ : ℕ) :
     F.Submodule = Submodule.span _ (⋃ i ≤ n₀, single R i '' (F.n i : Set M)) ↔
       ∀ n ≥ n₀, I • F.n n = F.n (n + 1) :=
@@ -395,7 +418,9 @@ theorem submodule_eq_span_le_iff_stable_ge (n₀ : ℕ) :
           (hj <| Set.mem_image_of_mem _ hm')
     · intro x y hx hy; rw [map_add]; exact F'.add_mem hx hy
 #align ideal.filtration.submodule_eq_span_le_iff_stable_ge Ideal.Filtration.submodule_eq_span_le_iff_stable_ge
+-/
 
+#print Ideal.Filtration.submodule_fg_iff_stable /-
 /-- If the components of a filtration are finitely generated, then the filtration is stable iff
 its associated submodule of is finitely generated.  -/
 theorem submodule_fg_iff_stable (hF' : ∀ i, (F.n i).FG) : F.Submodule.FG ↔ F.Stable := by
@@ -434,9 +459,11 @@ theorem submodule_fg_iff_stable (hF' : ∀ i, (F.n i).FG) : F.Submodule.FG ↔ F
     rw [Subtype.coe_mk, ← this]
     exact ⟨_, rfl⟩
 #align ideal.filtration.submodule_fg_iff_stable Ideal.Filtration.submodule_fg_iff_stable
+-/
 
 variable {F}
 
+#print Ideal.Filtration.Stable.of_le /-
 theorem Stable.of_le [IsNoetherianRing R] [h : Module.Finite R M] (hF : F.Stable)
     {F' : I.Filtration M} (hf : F' ≤ F) : F'.Stable :=
   by
@@ -447,6 +474,7 @@ theorem Stable.of_le [IsNoetherianRing R] [h : Module.Finite R M] (hF : F.Stable
   rw [isNoetherian_submodule] at this 
   exact this _ (OrderHomClass.mono (submodule_inf_hom M I) hf)
 #align ideal.filtration.stable.of_le Ideal.Filtration.Stable.of_le
+-/
 
 #print Ideal.Filtration.Stable.inter_right /-
 theorem Stable.inter_right [IsNoetherianRing R] [h : Module.Finite R M] (hF : F.Stable) :
@@ -474,6 +502,7 @@ theorem Ideal.exists_pow_inf_eq_pow_smul [IsNoetherianRing R] [h : Module.Finite
 #align ideal.exists_pow_inf_eq_pow_smul Ideal.exists_pow_inf_eq_pow_smul
 -/
 
+#print Ideal.mem_iInf_smul_pow_eq_bot_iff /-
 theorem Ideal.mem_iInf_smul_pow_eq_bot_iff [IsNoetherianRing R] [hM : Module.Finite R M] (x : M) :
     x ∈ (⨅ i : ℕ, I ^ i • ⊤ : Submodule R M) ↔ ∃ r : I, (r : R) • x = x :=
   by
@@ -497,7 +526,9 @@ theorem Ideal.mem_iInf_smul_pow_eq_bot_iff [IsNoetherianRing R] [hM : Module.Fin
     · rw [Nat.succ_eq_one_add, pow_add, ← smul_smul, pow_one, ← Eq]
       exact Submodule.smul_mem_smul r.prop hi
 #align ideal.mem_infi_smul_pow_eq_bot_iff Ideal.mem_iInf_smul_pow_eq_bot_iff
+-/
 
+#print Ideal.iInf_pow_smul_eq_bot_of_localRing /-
 theorem Ideal.iInf_pow_smul_eq_bot_of_localRing [IsNoetherianRing R] [LocalRing R]
     [Module.Finite R M] (h : I ≠ ⊤) : (⨅ i : ℕ, I ^ i • ⊤ : Submodule R M) = ⊥ :=
   by
@@ -509,7 +540,9 @@ theorem Ideal.iInf_pow_smul_eq_bot_of_localRing [IsNoetherianRing R] [LocalRing 
   swap; · infer_instance
   simp [sub_smul, hr]
 #align ideal.infi_pow_smul_eq_bot_of_local_ring Ideal.iInf_pow_smul_eq_bot_of_localRing
+-/
 
+#print Ideal.iInf_pow_eq_bot_of_localRing /-
 /-- **Krull's intersection theorem** for noetherian local rings. -/
 theorem Ideal.iInf_pow_eq_bot_of_localRing [IsNoetherianRing R] [LocalRing R] (h : I ≠ ⊤) :
     (⨅ i : ℕ, I ^ i) = ⊥ :=
@@ -519,7 +552,9 @@ theorem Ideal.iInf_pow_eq_bot_of_localRing [IsNoetherianRing R] [LocalRing R] (h
   rw [smul_eq_mul, ← Ideal.one_eq_top, mul_one]
   infer_instance
 #align ideal.infi_pow_eq_bot_of_local_ring Ideal.iInf_pow_eq_bot_of_localRing
+-/
 
+#print Ideal.iInf_pow_eq_bot_of_isDomain /-
 /-- **Krull's intersection theorem** for noetherian domains. -/
 theorem Ideal.iInf_pow_eq_bot_of_isDomain [IsNoetherianRing R] [IsDomain R] (h : I ≠ ⊤) :
     (⨅ i : ℕ, I ^ i) = ⊥ := by
@@ -532,4 +567,5 @@ theorem Ideal.iInf_pow_eq_bot_of_isDomain [IsNoetherianRing R] [IsDomain R] (h :
   have := mul_right_cancel₀ hx' (hr.trans (one_mul x).symm)
   exact I.eq_top_iff_one.not.mp h (this ▸ r.prop)
 #align ideal.infi_pow_eq_bot_of_is_domain Ideal.iInf_pow_eq_bot_of_isDomain
+-/
 

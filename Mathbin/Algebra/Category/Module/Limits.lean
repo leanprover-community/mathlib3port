@@ -38,15 +38,20 @@ variable {R : Type u} [Ring R]
 
 variable {J : Type v} [SmallCategory J]
 
+#print ModuleCat.addCommGroupObj /-
 instance addCommGroupObj (F : J ⥤ ModuleCat.{max v w} R) (j) :
     AddCommGroup ((F ⋙ forget (ModuleCat R)).obj j) := by change AddCommGroup (F.obj j);
   infer_instance
 #align Module.add_comm_group_obj ModuleCat.addCommGroupObj
+-/
 
+#print ModuleCat.moduleObj /-
 instance moduleObj (F : J ⥤ ModuleCat.{max v w} R) (j) :
     Module R ((F ⋙ forget (ModuleCat R)).obj j) := by change Module R (F.obj j); infer_instance
 #align Module.module_obj ModuleCat.moduleObj
+-/
 
+#print ModuleCat.sectionsSubmodule /-
 /-- The flat sections of a functor into `Module R` form a submodule of all sections.
 -/
 def sectionsSubmodule (F : J ⥤ ModuleCat.{max v w} R) : Submodule R (∀ j, F.obj j) :=
@@ -64,6 +69,7 @@ def sectionsSubmodule (F : J ⥤ ModuleCat.{max v w} R) : Submodule R (∀ j, F.
       dsimp [functor.sections] at sh 
       rw [sh f] }
 #align Module.sections_submodule ModuleCat.sectionsSubmodule
+-/
 
 #print ModuleCat.limitAddCommMonoid /-
 -- Adding the following instance speeds up `limit_module` noticeably,
@@ -88,6 +94,7 @@ instance limitModule (F : J ⥤ ModuleCat R) :
 #align Module.limit_module ModuleCat.limitModule
 -/
 
+#print ModuleCat.limitπLinearMap /-
 /-- `limit.π (F ⋙ forget Ring) j` as a `ring_hom`. -/
 def limitπLinearMap (F : J ⥤ ModuleCat R) (j) :
     (Types.limitCone (F ⋙ forget (ModuleCat.{max v w} R))).pt →ₗ[R] (F ⋙ forget (ModuleCat R)).obj j
@@ -96,6 +103,7 @@ def limitπLinearMap (F : J ⥤ ModuleCat R) (j) :
   map_smul' x y := rfl
   map_add' x y := rfl
 #align Module.limit_π_linear_map ModuleCat.limitπLinearMap
+-/
 
 namespace HasLimits
 
@@ -136,7 +144,7 @@ end HasLimits
 
 open HasLimits
 
-/- ./././Mathport/Syntax/Translate/Command.lean:323:38: unsupported irreducible non-definition -/
+/- ./././Mathport/Syntax/Translate/Command.lean:322:38: unsupported irreducible non-definition -/
 #print ModuleCat.hasLimitsOfSize /-
 /-- The category of R-modules has all limits. -/
 irreducible_def hasLimitsOfSize : HasLimitsOfSize.{v, v} (ModuleCat.{max v w} R) :=
@@ -156,12 +164,14 @@ instance hasLimits : HasLimits (ModuleCat.{w} R) :=
 #align Module.has_limits ModuleCat.hasLimits
 -/
 
+#print ModuleCat.forget₂AddCommGroupPreservesLimitsAux /-
 /-- An auxiliary declaration to speed up typechecking.
 -/
 def forget₂AddCommGroupPreservesLimitsAux (F : J ⥤ ModuleCat.{max v w} R) :
     IsLimit ((forget₂ (ModuleCat R) AddCommGroupCat).mapCone (limitCone F)) :=
   AddCommGroupCat.limitConeIsLimit (F ⋙ forget₂ (ModuleCat R) AddCommGroupCat.{max v w})
 #align Module.forget₂_AddCommGroup_preserves_limits_aux ModuleCat.forget₂AddCommGroupPreservesLimitsAux
+-/
 
 #print ModuleCat.forget₂AddCommGroupPreservesLimitsOfSize /-
 /-- The forgetful functor from R-modules to abelian groups preserves all limits.
@@ -215,6 +225,7 @@ variable [∀ i, AddCommGroup (G i)] [∀ i, Module R (G i)]
 
 variable (f : ∀ i j, i ≤ j → G i →ₗ[R] G j) [DirectedSystem G fun i j h => f i j h]
 
+#print ModuleCat.directLimitDiagram /-
 /-- The diagram (in the sense of `category_theory`)
  of an unbundled `direct_limit` of modules. -/
 @[simps]
@@ -229,9 +240,11 @@ def directLimitDiagram : ι ⥤ ModuleCat R
     symm
     apply Module.DirectedSystem.map_map
 #align Module.direct_limit_diagram ModuleCat.directLimitDiagram
+-/
 
 variable [DecidableEq ι]
 
+#print ModuleCat.directLimitCocone /-
 /-- The `cocone` on `direct_limit_diagram` corresponding to
 the unbundled `direct_limit` of modules.
 
@@ -244,7 +257,9 @@ def directLimitCocone : Cocone (directLimitDiagram G f)
     { app := Module.DirectLimit.of R ι G f
       naturality' := fun i j hij => by apply LinearMap.ext; intro x; exact direct_limit.of_f }
 #align Module.direct_limit_cocone ModuleCat.directLimitCocone
+-/
 
+#print ModuleCat.directLimitIsColimit /-
 /-- The unbundled `direct_limit` of modules is a colimit
 in the sense of `category_theory`. -/
 @[simps]
@@ -267,6 +282,7 @@ def directLimitIsColimit [Nonempty ι] [IsDirected ι (· ≤ ·)] : IsColimit (
     simp only [this]
     apply Module.DirectLimit.lift_unique
 #align Module.direct_limit_is_colimit ModuleCat.directLimitIsColimit
+-/
 
 end DirectLimit
 

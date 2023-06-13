@@ -170,10 +170,13 @@ def Obj.iget [DecidableEq P.A] {α} [Inhabited α] (x : P.Obj α) (i : P.IdxCat)
 #align pfunctor.obj.iget PFunctor.Obj.iget
 -/
 
+#print PFunctor.fst_map /-
 @[simp]
 theorem fst_map {α β : Type u} (x : P.Obj α) (f : α → β) : (f <$> x).1 = x.1 := by cases x <;> rfl
 #align pfunctor.fst_map PFunctor.fst_map
+-/
 
+#print PFunctor.iget_map /-
 @[simp]
 theorem iget_map [DecidableEq P.A] {α β : Type u} [Inhabited α] [Inhabited β] (x : P.Obj α)
     (f : α → β) (i : P.IdxCat) (h : i.1 = x.1) : (f <$> x).iget i = f (x.iget i) :=
@@ -181,6 +184,7 @@ theorem iget_map [DecidableEq P.A] {α β : Type u} [Inhabited α] [Inhabited β
   simp only [obj.iget, fst_map, *, dif_pos, eq_self_iff_true]
   cases x; rfl
 #align pfunctor.iget_map PFunctor.iget_map
+-/
 
 end PFunctor
 

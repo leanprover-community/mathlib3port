@@ -36,33 +36,46 @@ namespace CancelFactors
 /-! ### Lemmas used in the procedure -/
 
 
+#print CancelDenoms.mul_subst /-
 theorem mul_subst {α} [CommRing α] {n1 n2 k e1 e2 t1 t2 : α} (h1 : n1 * e1 = t1) (h2 : n2 * e2 = t2)
     (h3 : n1 * n2 = k) : k * (e1 * e2) = t1 * t2 := by
   rw [← h3, mul_comm n1, mul_assoc n2, ← mul_assoc n1, h1, ← mul_assoc n2, mul_comm n2, mul_assoc,
     h2]
 #align cancel_factors.mul_subst CancelDenoms.mul_subst
+-/
 
+#print CancelDenoms.div_subst /-
 theorem div_subst {α} [Field α] {n1 n2 k e1 e2 t1 : α} (h1 : n1 * e1 = t1) (h2 : n2 / e2 = 1)
     (h3 : n1 * n2 = k) : k * (e1 / e2) = t1 := by
   rw [← h3, mul_assoc, mul_div_left_comm, h2, ← mul_assoc, h1, mul_comm, one_mul]
 #align cancel_factors.div_subst CancelDenoms.div_subst
+-/
 
+#print CancelDenoms.cancel_factors_eq_div /-
 theorem cancel_factors_eq_div {α} [Field α] {n e e' : α} (h : n * e = e') (h2 : n ≠ 0) :
     e = e' / n :=
   eq_div_of_mul_eq h2 <| by rwa [mul_comm] at h 
 #align cancel_factors.cancel_factors_eq_div CancelDenoms.cancel_factors_eq_div
+-/
 
+#print CancelDenoms.add_subst /-
 theorem add_subst {α} [Ring α] {n e1 e2 t1 t2 : α} (h1 : n * e1 = t1) (h2 : n * e2 = t2) :
     n * (e1 + e2) = t1 + t2 := by simp [left_distrib, *]
 #align cancel_factors.add_subst CancelDenoms.add_subst
+-/
 
+#print CancelDenoms.sub_subst /-
 theorem sub_subst {α} [Ring α] {n e1 e2 t1 t2 : α} (h1 : n * e1 = t1) (h2 : n * e2 = t2) :
     n * (e1 - e2) = t1 - t2 := by simp [left_distrib, *, sub_eq_add_neg]
 #align cancel_factors.sub_subst CancelDenoms.sub_subst
+-/
 
+#print CancelDenoms.neg_subst /-
 theorem neg_subst {α} [Ring α] {n e t : α} (h1 : n * e = t) : n * -e = -t := by simp [*]
 #align cancel_factors.neg_subst CancelDenoms.neg_subst
+-/
 
+#print CancelDenoms.cancel_factors_lt /-
 theorem cancel_factors_lt {α} [LinearOrderedField α] {a b ad bd a' b' gcd : α} (ha : ad * a = a')
     (hb : bd * b = b') (had : 0 < ad) (hbd : 0 < bd) (hgcd : 0 < gcd) :
     (a < b) = (1 / gcd * (bd * a') < 1 / gcd * (ad * b')) :=
@@ -71,7 +84,9 @@ theorem cancel_factors_lt {α} [LinearOrderedField α] {a b ad bd a' b' gcd : α
   exact mul_pos had hbd
   exact one_div_pos.2 hgcd
 #align cancel_factors.cancel_factors_lt CancelDenoms.cancel_factors_lt
+-/
 
+#print CancelDenoms.cancel_factors_le /-
 theorem cancel_factors_le {α} [LinearOrderedField α] {a b ad bd a' b' gcd : α} (ha : ad * a = a')
     (hb : bd * b = b') (had : 0 < ad) (hbd : 0 < bd) (hgcd : 0 < gcd) :
     (a ≤ b) = (1 / gcd * (bd * a') ≤ 1 / gcd * (ad * b')) :=
@@ -80,7 +95,9 @@ theorem cancel_factors_le {α} [LinearOrderedField α] {a b ad bd a' b' gcd : α
   exact mul_pos had hbd
   exact one_div_pos.2 hgcd
 #align cancel_factors.cancel_factors_le CancelDenoms.cancel_factors_le
+-/
 
+#print CancelDenoms.cancel_factors_eq /-
 theorem cancel_factors_eq {α} [LinearOrderedField α] {a b ad bd a' b' gcd : α} (ha : ad * a = a')
     (hb : bd * b = b') (had : 0 < ad) (hbd : 0 < bd) (hgcd : 0 < gcd) :
     (a = b) = (1 / gcd * (bd * a') = 1 / gcd * (ad * b')) :=
@@ -98,6 +115,7 @@ theorem cancel_factors_eq {α} [LinearOrderedField α] {a b ad bd a' b' gcd : α
         | assumption
         | exact zero_lt_one
 #align cancel_factors.cancel_factors_eq CancelDenoms.cancel_factors_eq
+-/
 
 open Tactic Expr
 

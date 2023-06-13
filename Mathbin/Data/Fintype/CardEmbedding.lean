@@ -21,10 +21,8 @@ This file establishes the cardinality of `α ↪ β` in full generality.
 -/
 
 
--- mathport name: finset.card
 local notation "|" x "|" => Finset.card x
 
--- mathport name: fintype.card
 local notation "‖" x "‖" => Fintype.card x
 
 open Function
@@ -33,11 +31,14 @@ open scoped Nat BigOperators
 
 namespace Fintype
 
+#print Fintype.card_embedding_eq_of_unique /-
 theorem card_embedding_eq_of_unique {α β : Type _} [Unique α] [Fintype β] [Fintype (α ↪ β)] :
     ‖α ↪ β‖ = ‖β‖ :=
   card_congr Equiv.uniqueEmbeddingEquivResult
 #align fintype.card_embedding_eq_of_unique Fintype.card_embedding_eq_of_unique
+-/
 
+#print Fintype.card_embedding_eq /-
 -- Establishes the cardinality of the type of all injections between two finite types.
 @[simp]
 theorem card_embedding_eq {α β} [Fintype α] [Fintype β] [Fintype (α ↪ β)] :
@@ -53,7 +54,9 @@ theorem card_embedding_eq {α β} [Fintype α] [Fintype β] [Fintype (α ↪ β)
     simp only [Fintype.card_compl_set, Fintype.card_range, Finset.sum_const, Finset.card_univ,
       smul_eq_mul, mul_comm]
 #align fintype.card_embedding_eq Fintype.card_embedding_eq
+-/
 
+#print Fintype.card_embedding_eq_of_infinite /-
 /- The cardinality of embeddings from an infinite type to a finite type is zero.
 This is a re-statement of the pigeonhole principle. -/
 @[simp]
@@ -61,6 +64,7 @@ theorem card_embedding_eq_of_infinite {α β : Type _} [Infinite α] [Fintype β
     ‖α ↪ β‖ = 0 :=
   card_eq_zero
 #align fintype.card_embedding_eq_of_infinite Fintype.card_embedding_eq_of_infinite
+-/
 
 end Fintype
 

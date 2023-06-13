@@ -396,11 +396,13 @@ def fix {C : α → Sort _} : (∀ x : α, (∀ y : α, r y x → C y) → C x) 
 #align is_well_founded.fix IsWellFounded.fix
 -/
 
+#print IsWellFounded.fix_eq /-
 /-- The value from `is_well_founded.fix` is built from the previous ones as specified. -/
 theorem fix_eq {C : α → Sort _} (F : ∀ x : α, (∀ y : α, r y x → C y) → C x) :
     ∀ x, fix r F x = F x fun y h => fix r F y :=
   wf.fix_eq F
 #align is_well_founded.fix_eq IsWellFounded.fix_eq
+-/
 
 /-- Derive a `has_well_founded` instance from an `is_well_founded` instance. -/
 def toHasWellFounded : WellFoundedRelation α :=
@@ -526,11 +528,13 @@ def fix {C : α → Sort _} : (∀ x : α, (∀ y : α, y < x → C y) → C x) 
 #align well_founded_lt.fix WellFoundedLT.fix
 -/
 
+#print WellFoundedLT.fix_eq /-
 /-- The value from `well_founded_lt.fix` is built from the previous ones as specified. -/
 theorem fix_eq {C : α → Sort _} (F : ∀ x : α, (∀ y : α, y < x → C y) → C x) :
     ∀ x, fix F x = F x fun y h => fix F y :=
   IsWellFounded.fix_eq _ F
 #align well_founded_lt.fix_eq WellFoundedLT.fix_eq
+-/
 
 /-- Derive a `has_well_founded` instance from a `well_founded_lt` instance. -/
 def toHasWellFounded : WellFoundedRelation α :=
@@ -565,11 +569,13 @@ def fix {C : α → Sort _} : (∀ x : α, (∀ y : α, x < y → C y) → C x) 
 #align well_founded_gt.fix WellFoundedGT.fix
 -/
 
+#print WellFoundedGT.fix_eq /-
 /-- The value from `well_founded_gt.fix` is built from the successive ones as specified. -/
 theorem fix_eq {C : α → Sort _} (F : ∀ x : α, (∀ y : α, x < y → C y) → C x) :
     ∀ x, fix F x = F x fun y h => fix F y :=
   IsWellFounded.fix_eq _ F
 #align well_founded_gt.fix_eq WellFoundedGT.fix_eq
+-/
 
 /-- Derive a `has_well_founded` instance from a `well_founded_gt` instance. -/
 def toHasWellFounded : WellFoundedRelation α :=

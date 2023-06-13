@@ -56,6 +56,7 @@ namespace Subgroup
 
 variable {G : Type _} [Group G]
 
+#print Subgroup.eq_one_of_noncommProd_eq_one_of_independent /-
 /-- `finset.noncomm_prod` is “injective” in `f` if `f` maps into independent subgroups.  This
 generalizes (one direction of) `subgroup.disjoint_iff_mul_eq_one`. -/
 @[to_additive
@@ -87,6 +88,7 @@ theorem eq_one_of_noncommProd_eq_one_of_independent {ι : Type _} (s : Finset ι
     · exact ih hcomm hmem.2 heq1S _ h
 #align subgroup.eq_one_of_noncomm_prod_eq_one_of_independent Subgroup.eq_one_of_noncommProd_eq_one_of_independent
 #align add_subgroup.eq_zero_of_noncomm_sum_eq_zero_of_independent AddSubgroup.eq_zero_of_noncommSum_eq_zero_of_independent
+-/
 
 end Subgroup
 
@@ -106,13 +108,12 @@ variable (ϕ : ∀ i : ι, N i →* M)
 -- We assume that the elements of different morphism commute
 variable (hcomm : Pairwise fun i j => ∀ x y, Commute (ϕ i x) (ϕ j y))
 
-include hcomm
-
 -- We use `f` and `g` to denote elements of `Π (i : ι), N i`
 variable (f g : ∀ i : ι, N i)
 
 namespace MonoidHom
 
+#print MonoidHom.noncommPiCoprod /-
 /-- The canonical homomorphism from a family of monoids. -/
 @[to_additive
       "The canonical homomorphism from a family of additive monoids.\n\nSee also `linear_map.lsum` for a linear version without the commutativity assumption."]
@@ -127,11 +128,11 @@ def noncommPiCoprod : (∀ i : ι, N i) →* M
     · rintro i - j - h; exact hcomm h _ _
 #align monoid_hom.noncomm_pi_coprod MonoidHom.noncommPiCoprod
 #align add_monoid_hom.noncomm_pi_coprod AddMonoidHom.noncommPiCoprod
+-/
 
 variable {hcomm}
 
-include hdec
-
+#print MonoidHom.noncommPiCoprod_mulSingle /-
 @[simp, to_additive]
 theorem noncommPiCoprod_mulSingle (i : ι) (y : N i) :
     noncommPiCoprod ϕ hcomm (Pi.mulSingle i y) = ϕ i y :=
@@ -145,9 +146,9 @@ theorem noncommPiCoprod_mulSingle (i : ι) (y : N i) :
   · intro j hj; simp only [Finset.mem_erase] at hj ; simp [hj]
 #align monoid_hom.noncomm_pi_coprod_mul_single MonoidHom.noncommPiCoprod_mulSingle
 #align add_monoid_hom.noncomm_pi_coprod_single AddMonoidHom.noncommPiCoprod_single
+-/
 
-omit hcomm
-
+#print MonoidHom.noncommPiCoprodEquiv /-
 /-- The universal property of `noncomm_pi_coprod` -/
 @[to_additive "The universal property of `noncomm_pi_coprod`"]
 def noncommPiCoprodEquiv :
@@ -161,11 +162,9 @@ def noncommPiCoprodEquiv :
   right_inv f := pi_ext fun i x => by simp
 #align monoid_hom.noncomm_pi_coprod_equiv MonoidHom.noncommPiCoprodEquiv
 #align add_monoid_hom.noncomm_pi_coprod_equiv AddMonoidHom.noncommPiCoprodEquiv
+-/
 
-omit hdec
-
-include hcomm
-
+#print MonoidHom.noncommPiCoprod_mrange /-
 @[to_additive]
 theorem noncommPiCoprod_mrange : (noncommPiCoprod ϕ hcomm).mrange = ⨆ i : ι, (ϕ i).mrange := by
   classical
@@ -180,6 +179,7 @@ theorem noncommPiCoprod_mrange : (noncommPiCoprod ϕ hcomm).mrange = ⨆ i : ι,
     refine' ⟨Pi.mulSingle i y, noncomm_pi_coprod_mul_single _ _ _⟩
 #align monoid_hom.noncomm_pi_coprod_mrange MonoidHom.noncommPiCoprod_mrange
 #align add_monoid_hom.noncomm_pi_coprod_mrange AddMonoidHom.noncommPiCoprod_mrange
+-/
 
 end MonoidHom
 
@@ -197,15 +197,12 @@ variable (ϕ : ∀ i : ι, H i →* G)
 
 variable {hcomm : ∀ i j : ι, i ≠ j → ∀ (x : H i) (y : H j), Commute (ϕ i x) (ϕ j y)}
 
-include hcomm
-
 -- We use `f` and `g` to denote elements of `Π (i : ι), H i`
 variable (f g : ∀ i : ι, H i)
 
-include hfin
-
 namespace MonoidHom
 
+#print MonoidHom.noncommPiCoprod_range /-
 -- The subgroup version of `noncomm_pi_coprod_mrange`
 @[to_additive]
 theorem noncommPiCoprod_range : (noncommPiCoprod ϕ hcomm).range = ⨆ i : ι, (ϕ i).range := by
@@ -221,7 +218,9 @@ theorem noncommPiCoprod_range : (noncommPiCoprod ϕ hcomm).range = ⨆ i : ι, (
     refine' ⟨Pi.mulSingle i y, noncomm_pi_coprod_mul_single _ _ _⟩
 #align monoid_hom.noncomm_pi_coprod_range MonoidHom.noncommPiCoprod_range
 #align add_monoid_hom.noncomm_pi_coprod_range AddMonoidHom.noncommPiCoprod_range
+-/
 
+#print MonoidHom.injective_noncommPiCoprod_of_independent /-
 @[to_additive]
 theorem injective_noncommPiCoprod_of_independent
     (hind : CompleteLattice.Independent fun i => (ϕ i).range)
@@ -239,11 +238,11 @@ theorem injective_noncommPiCoprod_of_independent
   simp [this i (Finset.mem_univ i)]
 #align monoid_hom.injective_noncomm_pi_coprod_of_independent MonoidHom.injective_noncommPiCoprod_of_independent
 #align add_monoid_hom.injective_noncomm_pi_coprod_of_independent AddMonoidHom.injective_noncommPiCoprod_of_independent
+-/
 
 variable (hcomm)
 
-omit hfin
-
+#print MonoidHom.independent_range_of_coprime_order /-
 @[to_additive]
 theorem independent_range_of_coprime_order [Finite ι] [∀ i, Fintype (H i)]
     (hcoprime : ∀ i j, i ≠ j → Nat.coprime (Fintype.card (H i)) (Fintype.card (H j))) :
@@ -274,6 +273,7 @@ theorem independent_range_of_coprime_order [Finite ι] [∀ i, Fintype (H i)]
   exact j.2
 #align monoid_hom.independent_range_of_coprime_order MonoidHom.independent_range_of_coprime_order
 #align add_monoid_hom.independent_range_of_coprime_order AddMonoidHom.independent_range_of_coprime_order
+-/
 
 end MonoidHom
 
@@ -294,17 +294,16 @@ section CommutingSubgroups
 -- We assume that the elements of different subgroups commute
 variable (hcomm : ∀ i j : ι, i ≠ j → ∀ x y : G, x ∈ H i → y ∈ H j → Commute x y)
 
-include hcomm
-
+#print Subgroup.commute_subtype_of_commute /-
 @[to_additive]
 theorem commute_subtype_of_commute (i j : ι) (hne : i ≠ j) :
     ∀ (x : H i) (y : H j), Commute ((H i).Subtype x) ((H j).Subtype y) := by rintro ⟨x, hx⟩ ⟨y, hy⟩;
   exact hcomm i j hne x y hx hy
 #align subgroup.commute_subtype_of_commute Subgroup.commute_subtype_of_commute
 #align add_subgroup.commute_subtype_of_commute AddSubgroup.commute_subtype_of_commute
+-/
 
-include hfin
-
+#print Subgroup.noncommPiCoprod /-
 /-- The canonical homomorphism from a family of subgroups where elements from different subgroups
 commute -/
 @[to_additive
@@ -313,25 +312,27 @@ def noncommPiCoprod : (∀ i : ι, H i) →* G :=
   MonoidHom.noncommPiCoprod (fun i => (H i).Subtype) (commute_subtype_of_commute hcomm)
 #align subgroup.noncomm_pi_coprod Subgroup.noncommPiCoprod
 #align add_subgroup.noncomm_pi_coprod AddSubgroup.noncommPiCoprod
+-/
 
 variable {hcomm}
 
-include hdec
-
+#print Subgroup.noncommPiCoprod_mulSingle /-
 @[simp, to_additive]
 theorem noncommPiCoprod_mulSingle (i : ι) (y : H i) :
     noncommPiCoprod hcomm (Pi.mulSingle i y) = y := by apply MonoidHom.noncommPiCoprod_mulSingle
 #align subgroup.noncomm_pi_coprod_mul_single Subgroup.noncommPiCoprod_mulSingle
 #align add_subgroup.noncomm_pi_coprod_single AddSubgroup.noncommPiCoprod_single
+-/
 
-omit hdec
-
+#print Subgroup.noncommPiCoprod_range /-
 @[to_additive]
 theorem noncommPiCoprod_range : (noncommPiCoprod hcomm).range = ⨆ i : ι, H i := by
   simp [noncomm_pi_coprod, MonoidHom.noncommPiCoprod_range]
 #align subgroup.noncomm_pi_coprod_range Subgroup.noncommPiCoprod_range
 #align add_subgroup.noncomm_pi_coprod_range AddSubgroup.noncommPiCoprod_range
+-/
 
+#print Subgroup.injective_noncommPiCoprod_of_independent /-
 @[to_additive]
 theorem injective_noncommPiCoprod_of_independent (hind : CompleteLattice.Independent H) :
     Function.Injective (noncommPiCoprod hcomm) :=
@@ -341,11 +342,11 @@ theorem injective_noncommPiCoprod_of_independent (hind : CompleteLattice.Indepen
   · intro i; exact Subtype.coe_injective
 #align subgroup.injective_noncomm_pi_coprod_of_independent Subgroup.injective_noncommPiCoprod_of_independent
 #align add_subgroup.injective_noncomm_pi_coprod_of_independent AddSubgroup.injective_noncommPiCoprod_of_independent
+-/
 
 variable (hcomm)
 
-omit hfin
-
+#print Subgroup.independent_of_coprime_order /-
 @[to_additive]
 theorem independent_of_coprime_order [Finite ι] [∀ i, Fintype (H i)]
     (hcoprime : ∀ i j, i ≠ j → Nat.coprime (Fintype.card (H i)) (Fintype.card (H j))) :
@@ -355,6 +356,7 @@ theorem independent_of_coprime_order [Finite ι] [∀ i, Fintype (H i)]
       (commute_subtype_of_commute hcomm) hcoprime
 #align subgroup.independent_of_coprime_order Subgroup.independent_of_coprime_order
 #align add_subgroup.independent_of_coprime_order AddSubgroup.independent_of_coprime_order
+-/
 
 end CommutingSubgroups
 

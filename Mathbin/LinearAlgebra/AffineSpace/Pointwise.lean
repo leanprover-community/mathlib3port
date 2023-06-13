@@ -37,8 +37,6 @@ variable [AddCommGroup V₁] [Module k V₁] [AddTorsor V₁ P₁]
 
 variable [AddCommGroup V₂] [Module k V₂] [AddTorsor V₂ P₂]
 
-include V
-
 #print AffineSubspace.pointwiseAddAction /-
 /-- The additive action on an affine subspace corresponding to applying the action to every element.
 
@@ -56,35 +54,42 @@ scoped[Pointwise] attribute [instance] AffineSubspace.pointwiseAddAction
 
 open scoped Pointwise
 
+#print AffineSubspace.coe_pointwise_vadd /-
 @[simp]
 theorem coe_pointwise_vadd (v : V) (s : AffineSubspace k P) :
     ((v +ᵥ s : AffineSubspace k P) : Set P) = v +ᵥ s :=
   rfl
 #align affine_subspace.coe_pointwise_vadd AffineSubspace.coe_pointwise_vadd
+-/
 
+#print AffineSubspace.vadd_mem_pointwise_vadd_iff /-
 theorem vadd_mem_pointwise_vadd_iff {v : V} {s : AffineSubspace k P} {p : P} :
     v +ᵥ p ∈ v +ᵥ s ↔ p ∈ s :=
   vadd_mem_vadd_set_iff
 #align affine_subspace.vadd_mem_pointwise_vadd_iff AffineSubspace.vadd_mem_pointwise_vadd_iff
+-/
 
+#print AffineSubspace.pointwise_vadd_bot /-
 theorem pointwise_vadd_bot (v : V) : v +ᵥ (⊥ : AffineSubspace k P) = ⊥ := by simp [SetLike.ext'_iff]
 #align affine_subspace.pointwise_vadd_bot AffineSubspace.pointwise_vadd_bot
+-/
 
+#print AffineSubspace.pointwise_vadd_direction /-
 theorem pointwise_vadd_direction (v : V) (s : AffineSubspace k P) :
     (v +ᵥ s).direction = s.direction := by
   unfold VAdd.vadd
   rw [map_direction]
   exact Submodule.map_id _
 #align affine_subspace.pointwise_vadd_direction AffineSubspace.pointwise_vadd_direction
+-/
 
+#print AffineSubspace.pointwise_vadd_span /-
 theorem pointwise_vadd_span (v : V) (s : Set P) : v +ᵥ affineSpan k s = affineSpan k (v +ᵥ s) :=
   map_span _ s
 #align affine_subspace.pointwise_vadd_span AffineSubspace.pointwise_vadd_span
+-/
 
-omit V
-
-include V₁ V₂
-
+#print AffineSubspace.map_pointwise_vadd /-
 theorem map_pointwise_vadd (f : P₁ →ᵃ[k] P₂) (v : V₁) (s : AffineSubspace k P₁) :
     (v +ᵥ s).map f = f.linear v +ᵥ s.map f :=
   by
@@ -94,6 +99,7 @@ theorem map_pointwise_vadd (f : P₁ →ᵃ[k] P₂) (v : V₁) (s : AffineSubsp
   ext
   exact f.map_vadd _ _
 #align affine_subspace.map_pointwise_vadd AffineSubspace.map_pointwise_vadd
+-/
 
 end AffineSubspace
 

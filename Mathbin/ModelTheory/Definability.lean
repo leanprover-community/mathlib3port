@@ -58,6 +58,7 @@ def Definable (s : Set (α → M)) : Prop :=
 
 variable {L} {A} {B : Set M} {s : Set (α → M)}
 
+#print Set.Definable.map_expansion /-
 theorem Definable.map_expansion {L' : FirstOrder.Language} [L'.Structure M] (h : A.Definable L s)
     (φ : L →ᴸ L') [φ.IsExpansionOn M] : A.Definable L' s :=
   by
@@ -66,6 +67,7 @@ theorem Definable.map_expansion {L' : FirstOrder.Language} [L'.Structure M] (h :
   ext x
   simp only [mem_set_of_eq, Lhom.realize_on_formula]
 #align set.definable.map_expansion Set.Definable.map_expansion
+-/
 
 #print Set.empty_definable_iff /-
 theorem empty_definable_iff : (∅ : Set M).Definable L s ↔ ∃ φ : L.Formula α, s = setOf φ.realize :=
@@ -104,6 +106,7 @@ theorem definable_univ : A.Definable L (univ : Set (α → M)) :=
 #align set.definable_univ Set.definable_univ
 -/
 
+#print Set.Definable.inter /-
 @[simp]
 theorem Definable.inter {f g : Set (α → M)} (hf : A.Definable L f) (hg : A.Definable L g) :
     A.Definable L (f ∩ g) := by
@@ -113,7 +116,9 @@ theorem Definable.inter {f g : Set (α → M)} (hf : A.Definable L f) (hg : A.De
   ext
   simp
 #align set.definable.inter Set.Definable.inter
+-/
 
+#print Set.Definable.union /-
 @[simp]
 theorem Definable.union {f g : Set (α → M)} (hf : A.Definable L f) (hg : A.Definable L g) :
     A.Definable L (f ∪ g) := by
@@ -123,7 +128,9 @@ theorem Definable.union {f g : Set (α → M)} (hf : A.Definable L f) (hg : A.De
   ext
   rw [hφ, hθ, mem_set_of_eq, formula.realize_sup, mem_union, mem_set_of_eq, mem_set_of_eq]
 #align set.definable.union Set.Definable.union
+-/
 
+#print Set.definable_finset_inf /-
 theorem definable_finset_inf {ι : Type _} {f : ∀ i : ι, Set (α → M)} (hf : ∀ i, A.Definable L (f i))
     (s : Finset ι) : A.Definable L (s.inf f) := by
   classical
@@ -131,7 +138,9 @@ theorem definable_finset_inf {ι : Type _} {f : ∀ i : ι, Set (α → M)} (hf 
   rw [Finset.inf_insert]
   exact (hf i).inter h
 #align set.definable_finset_inf Set.definable_finset_inf
+-/
 
+#print Set.definable_finset_sup /-
 theorem definable_finset_sup {ι : Type _} {f : ∀ i : ι, Set (α → M)} (hf : ∀ i, A.Definable L (f i))
     (s : Finset ι) : A.Definable L (s.sup f) := by
   classical
@@ -139,21 +148,27 @@ theorem definable_finset_sup {ι : Type _} {f : ∀ i : ι, Set (α → M)} (hf 
   rw [Finset.sup_insert]
   exact (hf i).union h
 #align set.definable_finset_sup Set.definable_finset_sup
+-/
 
+#print Set.definable_finset_biInter /-
 theorem definable_finset_biInter {ι : Type _} {f : ∀ i : ι, Set (α → M)}
     (hf : ∀ i, A.Definable L (f i)) (s : Finset ι) : A.Definable L (⋂ i ∈ s, f i) :=
   by
   rw [← Finset.inf_set_eq_iInter]
   exact definable_finset_inf hf s
 #align set.definable_finset_bInter Set.definable_finset_biInter
+-/
 
+#print Set.definable_finset_biUnion /-
 theorem definable_finset_biUnion {ι : Type _} {f : ∀ i : ι, Set (α → M)}
     (hf : ∀ i, A.Definable L (f i)) (s : Finset ι) : A.Definable L (⋃ i ∈ s, f i) :=
   by
   rw [← Finset.sup_set_eq_biUnion]
   exact definable_finset_sup hf s
 #align set.definable_finset_bUnion Set.definable_finset_biUnion
+-/
 
+#print Set.Definable.compl /-
 @[simp]
 theorem Definable.compl {s : Set (α → M)} (hf : A.Definable L s) : A.Definable L (sᶜ) :=
   by
@@ -162,13 +177,17 @@ theorem Definable.compl {s : Set (α → M)} (hf : A.Definable L s) : A.Definabl
   rw [hφ]
   rfl
 #align set.definable.compl Set.Definable.compl
+-/
 
+#print Set.Definable.sdiff /-
 @[simp]
 theorem Definable.sdiff {s t : Set (α → M)} (hs : A.Definable L s) (ht : A.Definable L t) :
     A.Definable L (s \ t) :=
   hs.inter ht.compl
 #align set.definable.sdiff Set.Definable.sdiff
+-/
 
+#print Set.Definable.preimage_comp /-
 theorem Definable.preimage_comp (f : α → β) {s : Set (α → M)} (h : A.Definable L s) :
     A.Definable L ((fun g : β → M => g ∘ f) ⁻¹' s) :=
   by
@@ -177,7 +196,9 @@ theorem Definable.preimage_comp (f : α → β) {s : Set (α → M)} (h : A.Defi
   ext
   simp only [Set.preimage_setOf_eq, mem_set_of_eq, formula.realize_relabel]
 #align set.definable.preimage_comp Set.Definable.preimage_comp
+-/
 
+#print Set.Definable.image_comp_equiv /-
 theorem Definable.image_comp_equiv {s : Set (β → M)} (h : A.Definable L s) (f : α ≃ β) :
     A.Definable L ((fun g : β → M => g ∘ f) '' s) :=
   by
@@ -190,6 +211,7 @@ theorem Definable.image_comp_equiv {s : Set (β → M)} (h : A.Definable L s) (f
     ext a
     simp
 #align set.definable.image_comp_equiv Set.Definable.image_comp_equiv
+-/
 
 #print Set.Definable.image_comp_sum_inl_fin /-
 /-- This lemma is only intended as a helper for `definable.image_comp. -/
@@ -210,6 +232,7 @@ theorem Definable.image_comp_sum_inl_fin (m : ℕ) {s : Set (Sum α (Fin m) → 
 #align set.definable.image_comp_sum_inl_fin Set.Definable.image_comp_sum_inl_fin
 -/
 
+#print Set.Definable.image_comp_embedding /-
 /-- Shows that definability is closed under finite projections. -/
 theorem Definable.image_comp_embedding {s : Set (β → M)} (h : A.Definable L s) (f : α ↪ β)
     [Finite β] : A.Definable L ((fun g : β → M => g ∘ f) '' s) := by
@@ -225,7 +248,9 @@ theorem Definable.image_comp_embedding {s : Set (β → M)} (h : A.Definable L s
   refine' exists_congr fun y => and_congr_right fun ys => Eq.congr_left (funext fun a => _)
   simp
 #align set.definable.image_comp_embedding Set.Definable.image_comp_embedding
+-/
 
+#print Set.Definable.image_comp /-
 /-- Shows that definability is closed under finite projections. -/
 theorem Definable.image_comp {s : Set (β → M)} (h : A.Definable L s) (f : α → β) [Finite α]
     [Finite β] : A.Definable L ((fun g : β → M => g ∘ f) '' s) := by
@@ -265,6 +290,7 @@ theorem Definable.image_comp {s : Set (β → M)} (h : A.Definable L s) (f : α 
       rw [Function.comp_apply, Function.comp_apply, apply_range_splitting f,
         range_factorization_coe]
 #align set.definable.image_comp Set.Definable.image_comp
+-/
 
 variable (L) {M} (A)
 
@@ -330,9 +356,11 @@ instance : SDiff (L.DefinableSet A α) :=
 instance : Inhabited (L.DefinableSet A α) :=
   ⟨⊥⟩
 
+#print FirstOrder.Language.DefinableSet.le_iff /-
 theorem le_iff : s ≤ t ↔ (s : Set (α → M)) ≤ (t : Set (α → M)) :=
   Iff.rfl
 #align first_order.language.definable_set.le_iff FirstOrder.Language.DefinableSet.le_iff
+-/
 
 #print FirstOrder.Language.DefinableSet.mem_top /-
 @[simp]
@@ -390,25 +418,33 @@ theorem coe_bot : ((⊥ : L.DefinableSet A α) : Set (α → M)) = ∅ :=
 #align first_order.language.definable_set.coe_bot FirstOrder.Language.DefinableSet.coe_bot
 -/
 
+#print FirstOrder.Language.DefinableSet.coe_sup /-
 @[simp, norm_cast]
 theorem coe_sup (s t : L.DefinableSet A α) : (↑(s ⊔ t) : Set (α → M)) = s ∪ t :=
   rfl
 #align first_order.language.definable_set.coe_sup FirstOrder.Language.DefinableSet.coe_sup
+-/
 
+#print FirstOrder.Language.DefinableSet.coe_inf /-
 @[simp, norm_cast]
 theorem coe_inf (s t : L.DefinableSet A α) : (↑(s ⊓ t) : Set (α → M)) = s ∩ t :=
   rfl
 #align first_order.language.definable_set.coe_inf FirstOrder.Language.DefinableSet.coe_inf
+-/
 
+#print FirstOrder.Language.DefinableSet.coe_compl /-
 @[simp, norm_cast]
 theorem coe_compl (s : L.DefinableSet A α) : (↑(sᶜ) : Set (α → M)) = sᶜ :=
   rfl
 #align first_order.language.definable_set.coe_compl FirstOrder.Language.DefinableSet.coe_compl
+-/
 
+#print FirstOrder.Language.DefinableSet.coe_sdiff /-
 @[simp, norm_cast]
 theorem coe_sdiff (s t : L.DefinableSet A α) : (↑(s \ t) : Set (α → M)) = s \ t :=
   rfl
 #align first_order.language.definable_set.coe_sdiff FirstOrder.Language.DefinableSet.coe_sdiff
+-/
 
 instance : BooleanAlgebra (L.DefinableSet A α) :=
   Subtype.coe_injective.BooleanAlgebra _ coe_sup coe_inf coe_top coe_bot coe_compl coe_sdiff

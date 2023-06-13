@@ -25,6 +25,7 @@ vector space is metrizable.
 
 open TopologicalSpace
 
+#print ManifoldWithCorners.metrizableSpace /-
 /-- A σ-compact Hausdorff topological manifold over a finite dimensional real vector space is
 metrizable. -/
 theorem ManifoldWithCorners.metrizableSpace {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E]
@@ -37,4 +38,5 @@ theorem ManifoldWithCorners.metrizableSpace {E : Type _} [NormedAddCommGroup E] 
   haveI := ChartedSpace.secondCountable_of_sigma_compact H M
   exact metrizable_space_of_t3_second_countable M
 #align manifold_with_corners.metrizable_space ManifoldWithCorners.metrizableSpace
+-/
 

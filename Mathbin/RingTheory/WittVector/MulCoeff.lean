@@ -39,7 +39,6 @@ variable (p : ℕ) [hp : Fact p.Prime]
 
 variable {k : Type _} [CommRing k]
 
--- mathport name: expr𝕎
 local notation "𝕎" => WittVector p
 
 open Finset MvPolynomial
@@ -55,8 +54,6 @@ def wittPolyProd (n : ℕ) : MvPolynomial (Fin 2 × ℕ) ℤ :=
   rename (Prod.mk (0 : Fin 2)) (wittPolynomial p ℤ n) *
     rename (Prod.mk (1 : Fin 2)) (wittPolynomial p ℤ n)
 #align witt_vector.witt_poly_prod WittVector.wittPolyProd
-
-include hp
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem wittPolyProd_vars (n : ℕ) : (wittPolyProd p n).vars ⊆ univ ×ˢ range (n + 1) :=
@@ -93,8 +90,6 @@ theorem wittPolyProdRemainder_vars (n : ℕ) : (wittPolyProdRemainder p n).vars 
     exact hx
 #align witt_vector.witt_poly_prod_remainder_vars WittVector.wittPolyProdRemainder_vars
 
-omit hp
-
 /-- `remainder p n` represents the remainder term from `mul_poly_of_interest_aux3`.
 `witt_poly_prod p (n+1)` will have variables up to `n+1`,
 but `remainder` will only have variables up to `n`.
@@ -105,8 +100,6 @@ def remainder (n : ℕ) : MvPolynomial (Fin 2 × ℕ) ℤ :=
     ∑ x : ℕ in range (n + 1),
       (rename (Prod.mk 1)) ((monomial (Finsupp.single x (p ^ (n + 1 - x)))) (↑p ^ x))
 #align witt_vector.remainder WittVector.remainder
-
-include hp
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 theorem remainder_vars (n : ℕ) : (remainder p n).vars ⊆ univ ×ˢ range (n + 1) :=
@@ -160,8 +153,6 @@ theorem mul_poly_of_interest_aux2 (n : ℕ) :
   rfl
 #align witt_vector.mul_poly_of_interest_aux2 WittVector.mul_poly_of_interest_aux2
 
-omit hp
-
 theorem mul_poly_of_interest_aux3 (n : ℕ) :
     wittPolyProd p (n + 1) =
       -(p ^ (n + 1) * X (0, n + 1)) * (p ^ (n + 1) * X (1, n + 1)) +
@@ -190,8 +181,6 @@ theorem mul_poly_of_interest_aux3 (n : ℕ) :
   simp only [mvpz, Int.cast_ofNat, map_pow, eq_intCast, rename_X, pow_one, tsub_self, pow_zero]
   ring1
 #align witt_vector.mul_poly_of_interest_aux3 WittVector.mul_poly_of_interest_aux3
-
-include hp
 
 theorem mul_poly_of_interest_aux4 (n : ℕ) :
     (p ^ (n + 1) * wittMul p (n + 1) : MvPolynomial (Fin 2 × ℕ) ℤ) =

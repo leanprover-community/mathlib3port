@@ -32,7 +32,6 @@ rational numbers to construct an ordered field embedding of ℝ into `surreal`.
 
 universe u
 
--- mathport name: pgame.equiv
 local infixl:0 " ≈ " => PGame.Equiv
 
 namespace PGame

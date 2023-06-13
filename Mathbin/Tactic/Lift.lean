@@ -44,6 +44,7 @@ instance Pi.canLift (ι : Sort _) (α β : ι → Sort _) (coe : ∀ i, β i →
 #align pi.can_lift Pi.canLift
 -/
 
+#print Subtype.exists_pi_extension /-
 theorem Subtype.exists_pi_extension {ι : Sort _} {α : ι → Sort _} [ne : ∀ i, Nonempty (α i)]
     {p : ι → Prop} (f : ∀ i : Subtype p, α i) :
     ∃ g : ∀ i : ι, α i, (fun i : Subtype p => g i) = f := by
@@ -52,6 +53,7 @@ theorem Subtype.exists_pi_extension {ι : Sort _} {α : ι → Sort _} [ne : ∀
   rintro ⟨i, hi⟩
   exact dif_pos hi
 #align subtype.exists_pi_extension Subtype.exists_pi_extension
+-/
 
 #print PiSubtype.canLift /-
 instance PiSubtype.canLift (ι : Sort _) (α : ι → Sort _) [ne : ∀ i, Nonempty (α i)] (p : ι → Prop) :

@@ -36,12 +36,14 @@ variable {f : I → Type v}
 -- The family of types already equipped with instances
 variable (x y : ∀ i, f i) (i j : I)
 
+#print Set.preimage_one /-
 @[to_additive]
 theorem Set.preimage_one {α β : Type _} [One β] (s : Set β) [Decidable ((1 : β) ∈ s)] :
     (1 : α → β) ⁻¹' s = if (1 : β) ∈ s then Set.univ else ∅ :=
   Set.preimage_const 1 s
 #align set.preimage_one Set.preimage_one
 #align set.preimage_zero Set.preimage_zero
+-/
 
 namespace Pi
 
@@ -277,12 +279,14 @@ end Pi
 
 namespace MulHom
 
+#print MulHom.coe_mul /-
 @[to_additive]
 theorem coe_mul {M N} {mM : Mul M} {mN : CommSemigroup N} (f g : M →ₙ* N) :
     (f * g : M → N) = fun x => f x * g x :=
   rfl
 #align mul_hom.coe_mul MulHom.coe_mul
 #align add_hom.coe_add AddHom.coe_add
+-/
 
 end MulHom
 
@@ -328,6 +332,7 @@ def Pi.monoidHom {γ : Type w} [∀ i, MulOneClass (f i)] [MulOneClass γ] (g : 
 #align pi.add_monoid_hom Pi.addMonoidHom
 -/
 
+#print Pi.monoidHom_injective /-
 @[to_additive]
 theorem Pi.monoidHom_injective {γ : Type w} [Nonempty I] [∀ i, MulOneClass (f i)] [MulOneClass γ]
     (g : ∀ i, γ →* f i) (hg : ∀ i, Function.Injective (g i)) :
@@ -335,6 +340,7 @@ theorem Pi.monoidHom_injective {γ : Type w} [Nonempty I] [∀ i, MulOneClass (f
   Pi.mulHom_injective (fun i => (g i).toMulHom) hg
 #align pi.monoid_hom_injective Pi.monoidHom_injective
 #align pi.add_monoid_hom_injective Pi.addMonoidHom_injective
+-/
 
 variable (f) [∀ i, Mul (f i)]
 
@@ -364,6 +370,7 @@ def Pi.constMulHom (α β : Type _) [Mul β] : β →ₙ* α → β
 #align pi.const_add_hom Pi.constAddHom
 -/
 
+#print MulHom.coeFn /-
 /-- Coercion of a `mul_hom` into a function is itself a `mul_hom`.
 See also `mul_hom.eval`. -/
 @[to_additive
@@ -375,6 +382,7 @@ def MulHom.coeFn (α β : Type _) [Mul α] [CommSemigroup β] : (α →ₙ* β) 
   map_mul' x y := rfl
 #align mul_hom.coe_fn MulHom.coeFn
 #align add_hom.coe_fn AddHom.coeFn
+-/
 
 #print MulHom.compLeft /-
 /-- Semigroup homomorphism between the function spaces `I → α` and `I → β`, induced by a semigroup
@@ -502,13 +510,16 @@ def MonoidHom.single [∀ i, MulOneClass <| f i] (i : I) : f i →* ∀ i, f i :
 #align add_monoid_hom.single AddMonoidHom.single
 -/
 
+#print MonoidHom.single_apply /-
 @[simp, to_additive]
 theorem MonoidHom.single_apply [∀ i, MulOneClass <| f i] (i : I) (x : f i) :
     MonoidHom.single f i x = mulSingle i x :=
   rfl
 #align monoid_hom.single_apply MonoidHom.single_apply
 #align add_monoid_hom.single_apply AddMonoidHom.single_apply
+-/
 
+#print MulHom.single /-
 /-- The multiplicative homomorphism including a single `mul_zero_class`
 into a dependent family of `mul_zero_class`es, as functions supported at a point.
 
@@ -519,69 +530,91 @@ def MulHom.single [∀ i, MulZeroClass <| f i] (i : I) : f i →ₙ* ∀ i, f i
   toFun := single i
   map_mul' := Pi.single_op₂ (fun _ => (· * ·)) (fun _ => MulZeroClass.zero_mul _) _
 #align mul_hom.single MulHom.single
+-/
 
 variable {f}
 
+#print Pi.mulSingle_sup /-
 @[to_additive]
 theorem Pi.mulSingle_sup [∀ i, SemilatticeSup (f i)] [∀ i, One (f i)] (i : I) (x y : f i) :
     Pi.mulSingle i (x ⊔ y) = Pi.mulSingle i x ⊔ Pi.mulSingle i y :=
   Function.update_sup _ _ _ _
 #align pi.mul_single_sup Pi.mulSingle_sup
 #align pi.single_sup Pi.single_sup
+-/
 
+#print Pi.mulSingle_inf /-
 @[to_additive]
 theorem Pi.mulSingle_inf [∀ i, SemilatticeInf (f i)] [∀ i, One (f i)] (i : I) (x y : f i) :
     Pi.mulSingle i (x ⊓ y) = Pi.mulSingle i x ⊓ Pi.mulSingle i y :=
   Function.update_inf _ _ _ _
 #align pi.mul_single_inf Pi.mulSingle_inf
 #align pi.single_inf Pi.single_inf
+-/
 
+#print Pi.mulSingle_mul /-
 @[to_additive]
 theorem Pi.mulSingle_mul [∀ i, MulOneClass <| f i] (i : I) (x y : f i) :
     mulSingle i (x * y) = mulSingle i x * mulSingle i y :=
   (MonoidHom.single f i).map_mul x y
 #align pi.mul_single_mul Pi.mulSingle_mul
 #align pi.single_add Pi.single_add
+-/
 
+#print Pi.mulSingle_inv /-
 @[to_additive]
 theorem Pi.mulSingle_inv [∀ i, Group <| f i] (i : I) (x : f i) :
     mulSingle i x⁻¹ = (mulSingle i x)⁻¹ :=
   (MonoidHom.single f i).map_inv x
 #align pi.mul_single_inv Pi.mulSingle_inv
 #align pi.single_neg Pi.single_neg
+-/
 
+#print Pi.single_div /-
 @[to_additive]
 theorem Pi.single_div [∀ i, Group <| f i] (i : I) (x y : f i) :
     mulSingle i (x / y) = mulSingle i x / mulSingle i y :=
   (MonoidHom.single f i).map_div x y
 #align pi.single_div Pi.single_div
 #align pi.single_sub Pi.single_sub
+-/
 
+#print Pi.single_mul /-
 theorem Pi.single_mul [∀ i, MulZeroClass <| f i] (i : I) (x y : f i) :
     single i (x * y) = single i x * single i y :=
   (MulHom.single f i).map_mul x y
 #align pi.single_mul Pi.single_mul
+-/
 
+#print Pi.single_mul_left_apply /-
 theorem Pi.single_mul_left_apply [∀ i, MulZeroClass <| f i] (a : f i) :
     Pi.single i (a * x i) j = Pi.single i a j * x j :=
   (Pi.apply_single (fun i => (· * x i)) (fun i => MulZeroClass.zero_mul _) _ _ _).symm
 #align pi.single_mul_left_apply Pi.single_mul_left_apply
+-/
 
+#print Pi.single_mul_right_apply /-
 theorem Pi.single_mul_right_apply [∀ i, MulZeroClass <| f i] (a : f i) :
     Pi.single i (x i * a) j = x j * Pi.single i a j :=
   (Pi.apply_single (fun i => (· * ·) (x i)) (fun i => MulZeroClass.mul_zero _) _ _ _).symm
 #align pi.single_mul_right_apply Pi.single_mul_right_apply
+-/
 
+#print Pi.single_mul_left /-
 theorem Pi.single_mul_left [∀ i, MulZeroClass <| f i] (a : f i) :
     Pi.single i (a * x i) = Pi.single i a * x :=
   funext fun j => Pi.single_mul_left_apply _ _ _ _
 #align pi.single_mul_left Pi.single_mul_left
+-/
 
+#print Pi.single_mul_right /-
 theorem Pi.single_mul_right [∀ i, MulZeroClass <| f i] (a : f i) :
     Pi.single i (x i * a) = x * Pi.single i a :=
   funext fun j => Pi.single_mul_right_apply _ _ _ _
 #align pi.single_mul_right Pi.single_mul_right
+-/
 
+#print Pi.mulSingle_commute /-
 /-- The injection into a pi group at different indices commutes.
 
 For injections of commuting elements at the same index, see `commute.map` -/
@@ -596,7 +629,9 @@ theorem Pi.mulSingle_commute [∀ i, MulOneClass <| f i] :
   simp [h1, h2]
 #align pi.mul_single_commute Pi.mulSingle_commute
 #align pi.single_commute Pi.single_commute
+-/
 
+#print Pi.mulSingle_apply_commute /-
 /-- The injection into a pi group with the same values commutes. -/
 @[to_additive "The injection into an additive pi group with the same values commutes."]
 theorem Pi.mulSingle_apply_commute [∀ i, MulOneClass <| f i] (x : ∀ i, f i) (i j : I) :
@@ -607,7 +642,9 @@ theorem Pi.mulSingle_apply_commute [∀ i, MulOneClass <| f i] (x : ∀ i, f i) 
   · exact Pi.mulSingle_commute hij _ _
 #align pi.mul_single_apply_commute Pi.mulSingle_apply_commute
 #align pi.single_apply_commute Pi.single_apply_commute
+-/
 
+#print Pi.update_eq_div_mul_mulSingle /-
 @[to_additive update_eq_sub_add_single]
 theorem Pi.update_eq_div_mul_mulSingle [∀ i, Group <| f i] (g : ∀ i : I, f i) (x : f i) :
     Function.update g i x = g / mulSingle i (g i) * mulSingle i x :=
@@ -617,7 +654,9 @@ theorem Pi.update_eq_div_mul_mulSingle [∀ i, Group <| f i] (g : ∀ i : I, f i
   · simp
   · simp [Function.update_noteq h.symm, h]
 #align pi.update_eq_div_mul_single Pi.update_eq_div_mul_mulSingle
+-/
 
+#print Pi.mulSingle_mul_mulSingle_eq_mulSingle_mul_mulSingle /-
 @[to_additive Pi.single_add_single_eq_single_add_single]
 theorem Pi.mulSingle_mul_mulSingle_eq_mulSingle_mul_mulSingle {M : Type _} [CommMonoid M]
     {k l m n : I} {u v : M} (hu : u ≠ 1) (hv : v ≠ 1) :
@@ -651,6 +690,7 @@ theorem Pi.mulSingle_mul_mulSingle_eq_mulSingle_mul_mulSingle {M : Type _} [Comm
     · simp_rw [← Pi.mulSingle_mul, h, mul_single_one]
 #align pi.mul_single_mul_mul_single_eq_mul_single_mul_mul_single Pi.mulSingle_mul_mulSingle_eq_mulSingle_mul_mulSingle
 #align pi.single_add_single_eq_single_add_single Pi.single_add_single_eq_single_add_single
+-/
 
 end Single
 
@@ -693,17 +733,21 @@ theorem update_div [∀ i, Div (f i)] [DecidableEq I] (f₁ f₂ : ∀ i, f i) (
 
 variable [One α] [Nonempty ι] {a : α}
 
+#print Function.const_eq_one /-
 @[simp, to_additive]
 theorem const_eq_one : const ι a = 1 ↔ a = 1 :=
   @const_inj _ _ _ _ 1
 #align function.const_eq_one Function.const_eq_one
 #align function.const_eq_zero Function.const_eq_zero
+-/
 
+#print Function.const_ne_one /-
 @[to_additive]
 theorem const_ne_one : const ι a ≠ 1 ↔ a ≠ 1 :=
   const_eq_one.Not
 #align function.const_ne_one Function.const_ne_one
 #align function.const_ne_zero Function.const_ne_zero
+-/
 
 end Function
 

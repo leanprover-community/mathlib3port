@@ -98,40 +98,31 @@ open CategoryTheory Opposite
 
 open ProjectiveSpectrum.StructureSheaf
 
--- mathport name: exprProj
 local notation "Proj" => Proj.toLocallyRingedSpace 𝒜
 
--- mathport name: «exprProj.T»
 -- `Proj` as a locally ringed space
 local notation "Proj.T" => Proj.1.1.1
 
--- mathport name: «exprProj| »
 -- the underlying topological space of `Proj`
 local notation "Proj| " U => Proj.restrict (Opens.openEmbedding (U : Opens Proj.T))
 
--- mathport name: «exprProj.T| »
 -- `Proj` restrict to some open set
 local notation "Proj.T| " U =>
   (Proj.restrict (Opens.openEmbedding (U : Opens Proj.T))).toSheafedSpace.toPresheafedSpace.1
 
--- mathport name: «exprpbo »
 -- the underlying topological space of `Proj` restricted to some open set
 local notation "pbo " x => ProjectiveSpectrum.basicOpen 𝒜 x
 
--- mathport name: «exprsbo »
 -- basic open sets in `Proj`
 local notation "sbo " f => PrimeSpectrum.basicOpen f
 
--- mathport name: «exprSpec »
 -- basic open sets in `Spec`
 local notation "Spec " ring => Spec.locallyRingedSpaceObj (CommRingCat.of Ring)
 
--- mathport name: «exprSpec.T »
 -- `Spec` as a locally ringed space
 local notation "Spec.T " ring =>
   (Spec.locallyRingedSpaceObj (CommRingCat.of Ring)).toSheafedSpace.toPresheafedSpace.1
 
--- mathport name: «exprA⁰_ »
 -- the underlying topological space of `Spec`
 local notation "A⁰_ " f => HomogeneousLocalization.Away 𝒜 f
 
@@ -360,8 +351,6 @@ private unsafe def mem_tac : tactic Unit :=
   let b : tactic Unit := sorry
   b <|> sorry
 
-include f_deg
-
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.1624094475.mem_tac -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.1624094475.mem_tac -/
 /-- The function from `Spec A⁰_f` to `Proj|D(f)` is defined by `q ↦ {a | aᵢᵐ/fⁱ ∈ q}`, i.e. sending
@@ -506,8 +495,6 @@ theorem carrier.add_mem (q : Spec.T A⁰_ f) {a b : A} (ha : a ∈ carrier f_deg
 #align algebraic_geometry.Proj_iso_Spec_Top_component.from_Spec.carrier.add_mem AlgebraicGeometry.ProjIsoSpecTopComponent.FromSpec.carrier.add_mem
 
 variable (hm : 0 < m) (q : Spec.T A⁰_ f)
-
-include hm
 
 theorem carrier.zero_mem : (0 : A) ∈ carrier f_deg q := fun i =>
   by

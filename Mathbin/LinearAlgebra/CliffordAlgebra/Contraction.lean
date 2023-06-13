@@ -121,10 +121,8 @@ theorem contractRight_eq (x : CliffordAlgebra Q) :
   rfl
 #align clifford_algebra.contract_right_eq CliffordAlgebra.contractRight_eq
 
--- mathport name: «expr ⌋ »
 local infixl:70 "⌋" => contractLeft
 
--- mathport name: «expr ⌊ »
 local infixl:70 "⌊" => contractRight
 
 /-- This is [grinberg_clifford_2016][] Theorem 6  -/
@@ -233,10 +231,8 @@ lemma contract_right_contract_left (x : clifford_algebra Q) : (d ⌋ x) ⌊ d' =
 -/
 end contractLeft
 
--- mathport name: «expr ⌋ »
 local infixl:70 "⌋" => contractLeft
 
--- mathport name: «expr ⌊ »
 local infixl:70 "⌊" => contractRight
 
 /-- Auxiliary construction for `clifford_algebra.change_form` -/

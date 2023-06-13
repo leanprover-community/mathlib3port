@@ -62,9 +62,11 @@ instance : Inhabited PartOrdCat :=
 instance (α : PartOrdCat) : PartialOrder α :=
   α.str
 
+#print PartOrdCat.hasForgetToPreordCat /-
 instance hasForgetToPreordCat : HasForget₂ PartOrdCat PreordCat :=
   BundledHom.forget₂ _ _
 #align PartOrd.has_forget_to_Preord PartOrdCat.hasForgetToPreordCat
+-/
 
 #print PartOrdCat.Iso.mk /-
 /-- Constructs an equivalence between partial orders from an order isomorphism between them. -/
@@ -87,6 +89,7 @@ def dual : PartOrdCat ⥤ PartOrdCat where
 #align PartOrd.dual PartOrdCat.dual
 -/
 
+#print PartOrdCat.dualEquiv /-
 /-- The equivalence between `PartOrd` and itself induced by `order_dual` both ways. -/
 @[simps Functor inverse]
 def dualEquiv : PartOrdCat ≌ PartOrdCat :=
@@ -94,6 +97,7 @@ def dualEquiv : PartOrdCat ≌ PartOrdCat :=
     (NatIso.ofComponents (fun X => Iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
     (NatIso.ofComponents (fun X => Iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
 #align PartOrd.dual_equiv PartOrdCat.dualEquiv
+-/
 
 end PartOrdCat
 

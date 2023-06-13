@@ -66,8 +66,6 @@ theorem lpMeas.ae_eq_zero_of_forall_set_integral_eq_zero (hm : m ≤ m0) (f : lp
     exact hf_zero s hs hμs
 #align measure_theory.Lp_meas.ae_eq_zero_of_forall_set_integral_eq_zero MeasureTheory.lpMeas.ae_eq_zero_of_forall_set_integral_eq_zero
 
-include 𝕜
-
 variable (𝕜)
 
 theorem Lp.ae_eq_zero_of_forall_set_integral_eq_zero' (hm : m ≤ m0) (f : Lp E' p μ)
@@ -118,8 +116,6 @@ theorem Lp.ae_eq_of_forall_set_integral_eq' (hm : m ≤ m0) (f g : Lp E' p μ) (
 #align measure_theory.Lp.ae_eq_of_forall_set_integral_eq' MeasureTheory.Lp.ae_eq_of_forall_set_integral_eq'
 
 variable {𝕜}
-
-omit 𝕜
 
 theorem ae_eq_of_forall_set_integral_eq_of_sigma_finite' (hm : m ≤ m0) [SigmaFinite (μ.trim hm)]
     {f g : α → F'} (hf_int_finite : ∀ s, measurable_set[m] s → μ s < ∞ → IntegrableOn f s μ)

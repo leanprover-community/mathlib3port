@@ -119,12 +119,14 @@ theorem lift_mk {i : ℕ} :
 #align first_order.sequence₂.lift_mk FirstOrder.Sequence₂.lift_mk
 -/
 
+#print FirstOrder.Sequence₂.sum_card /-
 @[simp]
 theorem sum_card : (Cardinal.sum fun i => #Sequence₂ a₀ a₁ a₂ i) = (#a₀) + (#a₁) + (#a₂) :=
   by
   rw [sum_nat_eq_add_sum_succ, sum_nat_eq_add_sum_succ, sum_nat_eq_add_sum_succ]
   simp [add_assoc]
 #align first_order.sequence₂.sum_card FirstOrder.Sequence₂.sum_card
+-/
 
 end Sequence₂
 
@@ -205,12 +207,14 @@ class IsAlgebraic : Prop where
 
 variable {L} {L' : Language.{u', v'}}
 
+#print FirstOrder.Language.card_eq_card_functions_add_card_relations /-
 theorem card_eq_card_functions_add_card_relations :
     L.card =
       (Cardinal.sum fun l => Cardinal.lift.{v} (#L.Functions l)) +
         Cardinal.sum fun l => Cardinal.lift.{u} (#L.Relations l) :=
   by simp [card, symbols]
 #align first_order.language.card_eq_card_functions_add_card_relations FirstOrder.Language.card_eq_card_functions_add_card_relations
+-/
 
 instance [L.IsRelational] {n : ℕ} : IsEmpty (L.Functions n) :=
   IsRelational.empty_functions n
@@ -309,18 +313,23 @@ instance Countable.countable_functions [h : Countable L.Symbols] : Countable (Σ
 #align first_order.language.countable.countable_functions FirstOrder.Language.Countable.countable_functions
 -/
 
+#print FirstOrder.Language.card_functions_sum /-
 @[simp]
 theorem card_functions_sum (i : ℕ) :
     (#(L.Sum L').Functions i) = (#L.Functions i).lift + Cardinal.lift.{u} (#L'.Functions i) := by
   simp [language.sum]
 #align first_order.language.card_functions_sum FirstOrder.Language.card_functions_sum
+-/
 
+#print FirstOrder.Language.card_relations_sum /-
 @[simp]
 theorem card_relations_sum (i : ℕ) :
     (#(L.Sum L').Relations i) = (#L.Relations i).lift + Cardinal.lift.{v} (#L'.Relations i) := by
   simp [language.sum]
 #align first_order.language.card_relations_sum FirstOrder.Language.card_relations_sum
+-/
 
+#print FirstOrder.Language.card_sum /-
 @[simp]
 theorem card_sum :
     (L.Sum L').card = Cardinal.lift.{max u' v'} L.card + Cardinal.lift.{max u v} L'.card :=
@@ -330,7 +339,9 @@ theorem card_sum :
   rw [add_assoc, ← add_assoc (Cardinal.sum fun i => (#L'.functions i).lift),
     add_comm (Cardinal.sum fun i => (#L'.functions i).lift), add_assoc, add_assoc]
 #align first_order.language.card_sum FirstOrder.Language.card_sum
+-/
 
+#print FirstOrder.Language.card_mk₂ /-
 @[simp]
 theorem card_mk₂ (c f₁ f₂ : Type u) (r₁ r₂ : Type v) :
     (Language.mk₂ c f₁ f₂ r₁ r₂).card =
@@ -339,6 +350,7 @@ theorem card_mk₂ (c f₁ f₂ : Type u) (r₁ r₂ : Type v) :
         Cardinal.lift.{u} (#r₂) :=
   by simp [card_eq_card_functions_add_card_relations, add_assoc]
 #align first_order.language.card_mk₂ FirstOrder.Language.card_mk₂
+-/
 
 variable (L) (M : Type w)
 
@@ -380,7 +392,6 @@ structure Hom where
 #align first_order.language.hom FirstOrder.Language.Hom
 -/
 
--- mathport name: language.hom
 scoped[FirstOrder] notation:25 A " →[" L "] " B => FirstOrder.Language.Hom L A B
 
 #print FirstOrder.Language.Embedding /-
@@ -393,7 +404,6 @@ structure Embedding extends M ↪ N where
 #align first_order.language.embedding FirstOrder.Language.Embedding
 -/
 
--- mathport name: language.embedding
 scoped[FirstOrder] notation:25 A " ↪[" L "] " B => FirstOrder.Language.Embedding L A B
 
 #print FirstOrder.Language.Equiv /-
@@ -406,7 +416,6 @@ structure Equiv extends M ≃ N where
 #align first_order.language.equiv FirstOrder.Language.Equiv
 -/
 
--- mathport name: language.equiv
 scoped[FirstOrder] notation:25 A " ≃[" L "] " B => FirstOrder.Language.Equiv L A B
 
 variable {L M N} {P : Type _} [L.Structure P] {Q : Type _} [L.Structure Q]
@@ -414,9 +423,11 @@ variable {L M N} {P : Type _} [L.Structure P] {Q : Type _} [L.Structure Q]
 instance : CoeTC L.Constants M :=
   ⟨fun c => funMap c default⟩
 
+#print FirstOrder.Language.funMap_eq_coe_constants /-
 theorem funMap_eq_coe_constants {c : L.Constants} {x : Fin 0 → M} : funMap c x = c :=
   congr rfl (funext Fin.elim0)
 #align first_order.language.fun_map_eq_coe_constants FirstOrder.Language.funMap_eq_coe_constants
+-/
 
 #print FirstOrder.Language.nonempty_of_nonempty_constants /-
 /-- Given a language with a nonempty type of constants, any structure will be nonempty. This cannot
@@ -507,6 +518,7 @@ theorem relMap_apply₂ (r : r₂) (x y : M) :
 
 end Structure
 
+#print FirstOrder.Language.HomClass /-
 /-- `hom_class L F M N` states that `F` is a type of `L`-homomorphisms. You should extend this
   typeclass when you extend `first_order.language.hom`. -/
 class HomClass (L : outParam Language) (F : Type _) (M N : outParam <| Type _)
@@ -514,7 +526,9 @@ class HomClass (L : outParam Language) (F : Type _) (M N : outParam <| Type _)
   map_fun : ∀ (φ : F) {n} (f : L.Functions n) (x), φ (funMap f x) = funMap f (φ ∘ x)
   map_rel : ∀ (φ : F) {n} (r : L.Relations n) (x), RelMap r x → RelMap r (φ ∘ x)
 #align first_order.language.hom_class FirstOrder.Language.HomClass
+-/
 
+#print FirstOrder.Language.StrongHomClass /-
 /-- `strong_hom_class L F M N` states that `F` is a type of `L`-homomorphisms which preserve
   relations in both directions. -/
 class StrongHomClass (L : outParam Language) (F : Type _) (M N : outParam <| Type _)
@@ -522,14 +536,18 @@ class StrongHomClass (L : outParam Language) (F : Type _) (M N : outParam <| Typ
   map_fun : ∀ (φ : F) {n} (f : L.Functions n) (x), φ (funMap f x) = funMap f (φ ∘ x)
   map_rel : ∀ (φ : F) {n} (r : L.Relations n) (x), RelMap r (φ ∘ x) ↔ RelMap r x
 #align first_order.language.strong_hom_class FirstOrder.Language.StrongHomClass
+-/
 
+#print FirstOrder.Language.StrongHomClass.homClass /-
 instance (priority := 100) StrongHomClass.homClass {F M N} [L.Structure M] [L.Structure N]
     [FunLike F M fun _ => N] [StrongHomClass L F M N] : HomClass L F M N
     where
   map_fun := StrongHomClass.map_fun
   map_rel φ n R x := (StrongHomClass.map_rel φ R x).2
 #align first_order.language.strong_hom_class.hom_class FirstOrder.Language.StrongHomClass.homClass
+-/
 
+#print FirstOrder.Language.HomClass.strongHomClassOfIsAlgebraic /-
 /-- Not an instance to avoid a loop. -/
 def HomClass.strongHomClassOfIsAlgebraic [L.IsAlgebraic] {F M N} [L.Structure M] [L.Structure N]
     [FunLike F M fun _ => N] [HomClass L F M N] : StrongHomClass L F M N
@@ -537,11 +555,14 @@ def HomClass.strongHomClassOfIsAlgebraic [L.IsAlgebraic] {F M N} [L.Structure M]
   map_fun := HomClass.map_fun
   map_rel φ n R x := (IsAlgebraic.empty_relations n).elim R
 #align first_order.language.hom_class.strong_hom_class_of_is_algebraic FirstOrder.Language.HomClass.strongHomClassOfIsAlgebraic
+-/
 
+#print FirstOrder.Language.HomClass.map_constants /-
 theorem HomClass.map_constants {F M N} [L.Structure M] [L.Structure N] [FunLike F M fun _ => N]
     [HomClass L F M N] (φ : F) (c : L.Constants) : φ c = c :=
   (HomClass.map_fun φ c default).trans (congr rfl (funext default))
 #align first_order.language.hom_class.map_constants FirstOrder.Language.HomClass.map_constants
+-/
 
 namespace Hom
 
@@ -553,11 +574,13 @@ instance funLike : FunLike (M →[L] N) M fun _ => N
 #align first_order.language.hom.fun_like FirstOrder.Language.Hom.funLike
 -/
 
+#print FirstOrder.Language.Hom.homClass /-
 instance homClass : HomClass L (M →[L] N) M N
     where
   map_fun := map_fun'
   map_rel := map_rel'
 #align first_order.language.hom.hom_class FirstOrder.Language.Hom.homClass
+-/
 
 instance [L.IsAlgebraic] : StrongHomClass L (M →[L] N) M N :=
   HomClass.strongHomClassOfIsAlgebraic
@@ -596,10 +619,12 @@ theorem map_fun (φ : M →[L] N) {n : ℕ} (f : L.Functions n) (x : Fin n → M
 #align first_order.language.hom.map_fun FirstOrder.Language.Hom.map_fun
 -/
 
+#print FirstOrder.Language.Hom.map_constants /-
 @[simp]
 theorem map_constants (φ : M →[L] N) (c : L.Constants) : φ c = c :=
   HomClass.map_constants φ c
 #align first_order.language.hom.map_constants FirstOrder.Language.Hom.map_constants
+-/
 
 #print FirstOrder.Language.Hom.map_rel /-
 @[simp]
@@ -640,24 +665,30 @@ def comp (hnp : N →[L] P) (hmn : M →[L] N) : M →[L] P
 #align first_order.language.hom.comp FirstOrder.Language.Hom.comp
 -/
 
+#print FirstOrder.Language.Hom.comp_apply /-
 @[simp]
 theorem comp_apply (g : N →[L] P) (f : M →[L] N) (x : M) : g.comp f x = g (f x) :=
   rfl
 #align first_order.language.hom.comp_apply FirstOrder.Language.Hom.comp_apply
+-/
 
+#print FirstOrder.Language.Hom.comp_assoc /-
 /-- Composition of first-order homomorphisms is associative. -/
 theorem comp_assoc (f : M →[L] N) (g : N →[L] P) (h : P →[L] Q) :
     (h.comp g).comp f = h.comp (g.comp f) :=
   rfl
 #align first_order.language.hom.comp_assoc FirstOrder.Language.Hom.comp_assoc
+-/
 
 end Hom
 
+#print FirstOrder.Language.HomClass.toHom /-
 /-- Any element of a `hom_class` can be realized as a first_order homomorphism. -/
 def HomClass.toHom {F M N} [L.Structure M] [L.Structure N] [FunLike F M fun _ => N]
     [HomClass L F M N] : F → M →[L] N := fun φ =>
   ⟨φ, fun _ => HomClass.map_fun φ, fun _ => HomClass.map_rel φ⟩
 #align first_order.language.hom_class.to_hom FirstOrder.Language.HomClass.toHom
+-/
 
 namespace Embedding
 
@@ -675,11 +706,13 @@ instance embeddingLike : EmbeddingLike (M ↪[L] N) M N
 #align first_order.language.embedding.embedding_like FirstOrder.Language.Embedding.embeddingLike
 -/
 
+#print FirstOrder.Language.Embedding.strongHomClass /-
 instance strongHomClass : StrongHomClass L (M ↪[L] N) M N
     where
   map_fun := map_fun'
   map_rel := map_rel'
 #align first_order.language.embedding.strong_hom_class FirstOrder.Language.Embedding.strongHomClass
+-/
 
 #print FirstOrder.Language.Embedding.hasCoeToFun /-
 instance hasCoeToFun : CoeFun (M ↪[L] N) fun _ => M → N :=
@@ -695,10 +728,12 @@ theorem map_fun (φ : M ↪[L] N) {n : ℕ} (f : L.Functions n) (x : Fin n → M
 #align first_order.language.embedding.map_fun FirstOrder.Language.Embedding.map_fun
 -/
 
+#print FirstOrder.Language.Embedding.map_constants /-
 @[simp]
 theorem map_constants (φ : M ↪[L] N) (c : L.Constants) : φ c = c :=
   HomClass.map_constants φ c
 #align first_order.language.embedding.map_constants FirstOrder.Language.Embedding.map_constants
+-/
 
 #print FirstOrder.Language.Embedding.map_rel /-
 @[simp]
@@ -808,31 +843,39 @@ def comp (hnp : N ↪[L] P) (hmn : M ↪[L] N) : M ↪[L] P
 #align first_order.language.embedding.comp FirstOrder.Language.Embedding.comp
 -/
 
+#print FirstOrder.Language.Embedding.comp_apply /-
 @[simp]
 theorem comp_apply (g : N ↪[L] P) (f : M ↪[L] N) (x : M) : g.comp f x = g (f x) :=
   rfl
 #align first_order.language.embedding.comp_apply FirstOrder.Language.Embedding.comp_apply
+-/
 
+#print FirstOrder.Language.Embedding.comp_assoc /-
 /-- Composition of first-order embeddings is associative. -/
 theorem comp_assoc (f : M ↪[L] N) (g : N ↪[L] P) (h : P ↪[L] Q) :
     (h.comp g).comp f = h.comp (g.comp f) :=
   rfl
 #align first_order.language.embedding.comp_assoc FirstOrder.Language.Embedding.comp_assoc
+-/
 
+#print FirstOrder.Language.Embedding.comp_toHom /-
 @[simp]
 theorem comp_toHom (hnp : N ↪[L] P) (hmn : M ↪[L] N) :
     (hnp.comp hmn).toHom = hnp.toHom.comp hmn.toHom := by ext;
   simp only [coe_to_hom, comp_apply, hom.comp_apply]
 #align first_order.language.embedding.comp_to_hom FirstOrder.Language.Embedding.comp_toHom
+-/
 
 end Embedding
 
+#print FirstOrder.Language.StrongHomClass.toEmbedding /-
 /-- Any element of an injective `strong_hom_class` can be realized as a first_order embedding. -/
 def StrongHomClass.toEmbedding {F M N} [L.Structure M] [L.Structure N] [EmbeddingLike F M N]
     [StrongHomClass L F M N] : F → M ↪[L] N := fun φ =>
   ⟨⟨φ, EmbeddingLike.injective φ⟩, fun _ => StrongHomClass.map_fun φ, fun _ =>
     StrongHomClass.map_rel φ⟩
 #align first_order.language.strong_hom_class.to_embedding FirstOrder.Language.StrongHomClass.toEmbedding
+-/
 
 namespace Equiv
 
@@ -899,10 +942,12 @@ theorem map_fun (φ : M ≃[L] N) {n : ℕ} (f : L.Functions n) (x : Fin n → M
 #align first_order.language.equiv.map_fun FirstOrder.Language.Equiv.map_fun
 -/
 
+#print FirstOrder.Language.Equiv.map_constants /-
 @[simp]
 theorem map_constants (φ : M ≃[L] N) (c : L.Constants) : φ c = c :=
   HomClass.map_constants φ c
 #align first_order.language.equiv.map_constants FirstOrder.Language.Equiv.map_constants
+-/
 
 #print FirstOrder.Language.Equiv.map_rel /-
 @[simp]
@@ -1013,25 +1058,31 @@ def comp (hnp : N ≃[L] P) (hmn : M ≃[L] N) : M ≃[L] P :=
 #align first_order.language.equiv.comp FirstOrder.Language.Equiv.comp
 -/
 
+#print FirstOrder.Language.Equiv.comp_apply /-
 @[simp]
 theorem comp_apply (g : N ≃[L] P) (f : M ≃[L] N) (x : M) : g.comp f x = g (f x) :=
   rfl
 #align first_order.language.equiv.comp_apply FirstOrder.Language.Equiv.comp_apply
+-/
 
+#print FirstOrder.Language.Equiv.comp_assoc /-
 /-- Composition of first-order homomorphisms is associative. -/
 theorem comp_assoc (f : M ≃[L] N) (g : N ≃[L] P) (h : P ≃[L] Q) :
     (h.comp g).comp f = h.comp (g.comp f) :=
   rfl
 #align first_order.language.equiv.comp_assoc FirstOrder.Language.Equiv.comp_assoc
+-/
 
 end Equiv
 
+#print FirstOrder.Language.StrongHomClass.toEquiv /-
 /-- Any element of a bijective `strong_hom_class` can be realized as a first_order isomorphism. -/
 def StrongHomClass.toEquiv {F M N} [L.Structure M] [L.Structure N] [EquivLike F M N]
     [StrongHomClass L F M N] : F → M ≃[L] N := fun φ =>
   ⟨⟨φ, EquivLike.inv φ, EquivLike.left_inv φ, EquivLike.right_inv φ⟩, fun _ => HomClass.map_fun φ,
     fun _ => StrongHomClass.map_rel φ⟩
 #align first_order.language.strong_hom_class.to_equiv FirstOrder.Language.StrongHomClass.toEquiv
+-/
 
 section SumStructure
 
@@ -1047,29 +1098,37 @@ instance sumStructure : (L₁.Sum L₂).Structure S
 
 variable {L₁ L₂ S}
 
+#print FirstOrder.Language.funMap_sum_inl /-
 @[simp]
 theorem funMap_sum_inl {n : ℕ} (f : L₁.Functions n) :
     @funMap (L₁.Sum L₂) S _ n (Sum.inl f) = funMap f :=
   rfl
 #align first_order.language.fun_map_sum_inl FirstOrder.Language.funMap_sum_inl
+-/
 
+#print FirstOrder.Language.funMap_sum_inr /-
 @[simp]
 theorem funMap_sum_inr {n : ℕ} (f : L₂.Functions n) :
     @funMap (L₁.Sum L₂) S _ n (Sum.inr f) = funMap f :=
   rfl
 #align first_order.language.fun_map_sum_inr FirstOrder.Language.funMap_sum_inr
+-/
 
+#print FirstOrder.Language.relMap_sum_inl /-
 @[simp]
 theorem relMap_sum_inl {n : ℕ} (R : L₁.Relations n) :
     @RelMap (L₁.Sum L₂) S _ n (Sum.inl R) = RelMap R :=
   rfl
 #align first_order.language.rel_map_sum_inl FirstOrder.Language.relMap_sum_inl
+-/
 
+#print FirstOrder.Language.relMap_sum_inr /-
 @[simp]
 theorem relMap_sum_inr {n : ℕ} (R : L₂.Relations n) :
     @RelMap (L₁.Sum L₂) S _ n (Sum.inr R) = RelMap R :=
   rfl
 #align first_order.language.rel_map_sum_inr FirstOrder.Language.relMap_sum_inr
+-/
 
 end SumStructure
 

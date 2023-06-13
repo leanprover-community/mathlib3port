@@ -56,10 +56,8 @@ variable {R : Type u} {A : Type v}
 
 variable [CommRing R] [Ring A] [Algebra R A]
 
--- mathport name: exprσ
 local notation "σ" => spectrum R
 
--- mathport name: «expr↑ₐ»
 local notation "↑ₐ" => algebraMap R A
 
 theorem exists_mem_of_not_isUnit_aeval_prod [IsDomain R] {p : R[X]} {a : A} (hp : p ≠ 0)
@@ -82,14 +80,13 @@ variable {𝕜 : Type u} {A : Type v}
 
 variable [Field 𝕜] [Ring A] [Algebra 𝕜 A]
 
--- mathport name: exprσ
 local notation "σ" => spectrum 𝕜
 
--- mathport name: «expr↑ₐ»
 local notation "↑ₐ" => algebraMap 𝕜 A
 
 open Polynomial
 
+#print spectrum.subset_polynomial_aeval /-
 /-- Half of the spectral mapping theorem for polynomials. We prove it separately
 because it holds over any field, whereas `spectrum.map_polynomial_aeval_of_degree_pos` and
 `spectrum.map_polynomial_aeval_of_nonempty` need the field to be algebraically closed. -/
@@ -106,7 +103,9 @@ theorem subset_polynomial_aeval (a : A) (p : 𝕜[X]) : (fun k => eval k p) '' �
   apply mt fun h => (hcomm.is_unit_mul_iff.mp h).1
   simpa only [aeval_X, aeval_C, AlgHom.map_sub] using hk
 #align spectrum.subset_polynomial_aeval spectrum.subset_polynomial_aeval
+-/
 
+#print spectrum.map_polynomial_aeval_of_degree_pos /-
 /-- The *spectral mapping theorem* for polynomials.  Note: the assumption `degree p > 0`
 is necessary in case `σ a = ∅`, for then the left-hand side is `∅` and the right-hand side,
 assuming `[nontrivial A]`, is `{k}` where `p = polynomial.C k`. -/
@@ -132,7 +131,9 @@ theorem map_polynomial_aeval_of_degree_pos [IsAlgClosed 𝕜] (a : A) (p : 𝕜[
   rcases hk with ⟨r, r_mem, r_ev⟩
   exact ⟨r, r_mem, symm (by simpa [eval_sub, eval_C, sub_eq_zero] using r_ev)⟩
 #align spectrum.map_polynomial_aeval_of_degree_pos spectrum.map_polynomial_aeval_of_degree_pos
+-/
 
+#print spectrum.map_polynomial_aeval_of_nonempty /-
 /-- In this version of the spectral mapping theorem, we assume the spectrum
 is nonempty instead of assuming the degree of the polynomial is positive. -/
 theorem map_polynomial_aeval_of_nonempty [IsAlgClosed 𝕜] (a : A) (p : 𝕜[X])
@@ -143,12 +144,16 @@ theorem map_polynomial_aeval_of_nonempty [IsAlgClosed 𝕜] (a : A) (p : 𝕜[X]
   · rw [eq_C_of_degree_le_zero h]
     simp only [Set.image_congr, eval_C, aeval_C, scalar_eq, Set.Nonempty.image_const hnon]
 #align spectrum.map_polynomial_aeval_of_nonempty spectrum.map_polynomial_aeval_of_nonempty
+-/
 
+#print spectrum.pow_image_subset /-
 /-- A specialization of `spectrum.subset_polynomial_aeval` to monic monomials for convenience. -/
 theorem pow_image_subset (a : A) (n : ℕ) : (fun x => x ^ n) '' σ a ⊆ σ (a ^ n) := by
   simpa only [eval_pow, eval_X, aeval_X_pow] using subset_polynomial_aeval a (X ^ n : 𝕜[X])
 #align spectrum.pow_image_subset spectrum.pow_image_subset
+-/
 
+#print spectrum.map_pow_of_pos /-
 /-- A specialization of `spectrum.map_polynomial_aeval_of_nonempty` to monic monomials for
 convenience. -/
 theorem map_pow_of_pos [IsAlgClosed 𝕜] (a : A) {n : ℕ} (hn : 0 < n) :
@@ -156,13 +161,16 @@ theorem map_pow_of_pos [IsAlgClosed 𝕜] (a : A) {n : ℕ} (hn : 0 < n) :
   simpa only [aeval_X_pow, eval_pow, eval_X] using
     map_polynomial_aeval_of_degree_pos a (X ^ n : 𝕜[X]) (by rw_mod_cast [degree_X_pow]; exact hn)
 #align spectrum.map_pow_of_pos spectrum.map_pow_of_pos
+-/
 
+#print spectrum.map_pow_of_nonempty /-
 /-- A specialization of `spectrum.map_polynomial_aeval_of_nonempty` to monic monomials for
 convenience. -/
 theorem map_pow_of_nonempty [IsAlgClosed 𝕜] {a : A} (ha : (σ a).Nonempty) (n : ℕ) :
     σ (a ^ n) = (fun x => x ^ n) '' σ a := by
   simpa only [aeval_X_pow, eval_pow, eval_X] using map_polynomial_aeval_of_nonempty a (X ^ n) ha
 #align spectrum.map_pow_of_nonempty spectrum.map_pow_of_nonempty
+-/
 
 variable (𝕜)
 

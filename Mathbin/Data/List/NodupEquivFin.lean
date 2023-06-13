@@ -91,13 +91,17 @@ namespace Sorted
 
 variable [Preorder α] {l : List α}
 
+#print List.Sorted.get_mono /-
 theorem get_mono (h : l.Sorted (· ≤ ·)) : Monotone fun i : Fin l.length => l.nthLe i i.2 :=
   fun i j => h.rel_nthLe_of_le _ _
 #align list.sorted.nth_le_mono List.Sorted.get_mono
+-/
 
+#print List.Sorted.get_strictMono /-
 theorem get_strictMono (h : l.Sorted (· < ·)) : StrictMono fun i : Fin l.length => l.nthLe i i.2 :=
   fun i j => h.rel_nthLe_of_lt _ _
 #align list.sorted.nth_le_strict_mono List.Sorted.get_strictMono
+-/
 
 variable [DecidableEq α]
 
@@ -113,20 +117,25 @@ def getIso (l : List α) (H : Sorted (· < ·) l) : Fin (length l) ≃o { x // x
 
 variable (H : Sorted (· < ·) l) {x : { x // x ∈ l }} {i : Fin l.length}
 
+#print List.Sorted.coe_getIso_apply /-
 @[simp]
 theorem coe_getIso_apply : (H.getIso l i : α) = nthLe l i i.2 :=
   rfl
 #align list.sorted.coe_nth_le_iso_apply List.Sorted.coe_getIso_apply
+-/
 
+#print List.Sorted.coe_getIso_symm_apply /-
 @[simp]
 theorem coe_getIso_symm_apply : ((H.getIso l).symm x : ℕ) = indexOf (↑x) l :=
   rfl
 #align list.sorted.coe_nth_le_iso_symm_apply List.Sorted.coe_getIso_symm_apply
+-/
 
 end Sorted
 
 section Sublist
 
+#print List.sublist_of_orderEmbedding_get?_eq /-
 /-- If there is `f`, an order-preserving embedding of `ℕ` into `ℕ` such that
 any element of `l` found at index `ix` can be found at index `f ix` in `l'`,
 then `sublist l l'`.
@@ -151,7 +160,9 @@ theorem sublist_of_orderEmbedding_get?_eq {l l' : List α} (f : ℕ ↪o ℕ)
   rw [List.singleton_sublist, ← h, l'.nth_le_take _ (Nat.lt_succ_self _)]
   apply List.nthLe_mem
 #align list.sublist_of_order_embedding_nth_eq List.sublist_of_orderEmbedding_get?_eq
+-/
 
+#print List.sublist_iff_exists_orderEmbedding_get?_eq /-
 /-- A `l : list α` is `sublist l l'` for `l' : list α` iff
 there is `f`, an order-preserving embedding of `ℕ` into `ℕ` such that
 any element of `l` found at index `ix` can be found at index `f ix` in `l'`.
@@ -176,7 +187,9 @@ theorem sublist_iff_exists_orderEmbedding_get?_eq {l l' : List α} :
   · rintro ⟨f, hf⟩
     exact sublist_of_order_embedding_nth_eq f hf
 #align list.sublist_iff_exists_order_embedding_nth_eq List.sublist_iff_exists_orderEmbedding_get?_eq
+-/
 
+#print List.sublist_iff_exists_fin_orderEmbedding_get_eq /-
 /-- A `l : list α` is `sublist l l'` for `l' : list α` iff
 there is `f`, an order-preserving embedding of `fin l.length` into `fin l'.length` such that
 any element of `l` found at index `ix` can be found at index `f ix` in `l'`.
@@ -223,6 +236,7 @@ theorem sublist_iff_exists_fin_orderEmbedding_get_eq {l l' : List α} :
         · simp
         · simpa using hi
 #align list.sublist_iff_exists_fin_order_embedding_nth_le_eq List.sublist_iff_exists_fin_orderEmbedding_get_eq
+-/
 
 #print List.duplicate_iff_exists_distinct_nthLe /-
 /-- An element `x : α` of `l : list α` is a duplicate iff it can be found

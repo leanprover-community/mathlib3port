@@ -45,6 +45,7 @@ open Real Set
 
 open scoped BigOperators NNReal
 
+#print strictConvexOn_exp /-
 /-- `exp` is strictly convex on the whole real line.
 
 We give an elementary proof rather than using the second derivative test, since this lemma is
@@ -71,12 +72,16 @@ theorem strictConvexOn_exp : StrictConvexOn ℝ univ exp :=
       _ ≤ exp z - exp y := by rw [← exp_add] <;> ring_nf
     linarith [add_one_lt_exp_of_nonzero h1.ne']
 #align strict_convex_on_exp strictConvexOn_exp
+-/
 
+#print convexOn_exp /-
 /-- `exp` is convex on the whole real line. -/
 theorem convexOn_exp : ConvexOn ℝ univ exp :=
   strictConvexOn_exp.ConvexOn
 #align convex_on_exp convexOn_exp
+-/
 
+#print convexOn_pow /-
 /-- `x^n`, `n : ℕ` is convex on `[0, +∞)` for all `n`.
 
 We give an elementary proof rather than using the second derivative test, since this lemma is
@@ -104,7 +109,9 @@ theorem convexOn_pow (n : ℕ) : ConvexOn ℝ (Ici 0) fun x : ℝ => x ^ n :=
     _ = (μ + ν) * (μ * a ^ k.succ + ν * b ^ k.succ) := by ring
     _ = μ * a ^ k.succ + ν * b ^ k.succ := by rw [h] <;> ring
 #align convex_on_pow convexOn_pow
+-/
 
+#print Even.convexOn_pow /-
 /-- `x^n`, `n : ℕ` is convex on the whole real line whenever `n` is even.
 
 We give an elementary proof rather than using the second derivative test, since this lemma is
@@ -124,7 +131,9 @@ theorem Even.convexOn_pow {n : ℕ} (hn : Even n) : ConvexOn ℝ Set.univ fun x 
   · linarith
   · refine' (convexOn_pow k).2 _ _ hμ hν h <;> dsimp <;> positivity
 #align even.convex_on_pow Even.convexOn_pow
+-/
 
+#print convexOn_zpow /-
 /-- `x^m`, `m : ℤ` is convex on `(0, +∞)` for all `m`.
 
 We give an elementary proof rather than using the second derivative test, since this lemma is
@@ -155,7 +164,9 @@ theorem convexOn_zpow : ∀ m : ℤ, ConvexOn ℝ (Ioi 0) fun x : ℝ => x ^ m
       positivity
     · positivity
 #align convex_on_zpow convexOn_zpow
+-/
 
+#print strictConcaveOn_log_Ioi /-
 /- `real.log` is strictly concave on $(0, +∞)$.
 
 We give an elementary proof rather than using the second derivative test, since this lemma is
@@ -190,7 +201,9 @@ theorem strictConcaveOn_log_Ioi : StrictConcaveOn ℝ (Ioi 0) log :=
       _ = -(log x - log y) := by rw [log_div hx.ne' hy.ne']
       _ = log y - log x := by ring
 #align strict_concave_on_log_Ioi strictConcaveOn_log_Ioi
+-/
 
+#print one_add_mul_self_lt_rpow_one_add /-
 /-- **Bernoulli's inequality** for real exponents, strict version: for `1 < p` and `-1 ≤ s`, with
 `s ≠ 0`, we have `1 + p * s < (1 + s) ^ p`. -/
 theorem one_add_mul_self_lt_rpow_one_add {s : ℝ} (hs : -1 ≤ s) (hs' : s ≠ 0) {p : ℝ} (hp : 1 < p) :
@@ -219,7 +232,9 @@ theorem one_add_mul_self_lt_rpow_one_add {s : ℝ} (hs : -1 ≤ s) (hs' : s ≠ 
     · field_simp [log_one]
     · nlinarith
 #align one_add_mul_self_lt_rpow_one_add one_add_mul_self_lt_rpow_one_add
+-/
 
+#print one_add_mul_self_le_rpow_one_add /-
 /-- **Bernoulli's inequality** for real exponents, non-strict version: for `1 ≤ p` and `-1 ≤ s`
 we have `1 + p * s ≤ (1 + s) ^ p`. -/
 theorem one_add_mul_self_le_rpow_one_add {s : ℝ} (hs : -1 ≤ s) {p : ℝ} (hp : 1 ≤ p) :
@@ -231,7 +246,9 @@ theorem one_add_mul_self_le_rpow_one_add {s : ℝ} (hs : -1 ≤ s) {p : ℝ} (hp
   · simp [hs']
   exact (one_add_mul_self_lt_rpow_one_add hs hs' hp).le
 #align one_add_mul_self_le_rpow_one_add one_add_mul_self_le_rpow_one_add
+-/
 
+#print strictConvexOn_rpow /-
 /- For `p : ℝ` with `1 < p`, `λ x, x ^ p` is strictly convex on $[0, +∞)$.
 
 We give an elementary proof rather than using the second derivative test, since this lemma is
@@ -276,14 +293,18 @@ theorem strictConvexOn_rpow {p : ℝ} (hp : 1 < p) : StrictConvexOn ℝ (Ici 0) 
       field_simp [hy.ne', hy'.ne'] at H ⊢
       linear_combination -H
 #align strict_convex_on_rpow strictConvexOn_rpow
+-/
 
+#print convexOn_rpow /-
 theorem convexOn_rpow {p : ℝ} (hp : 1 ≤ p) : ConvexOn ℝ (Ici 0) fun x : ℝ => x ^ p :=
   by
   rcases eq_or_lt_of_le hp with (rfl | hp)
   · simpa using convexOn_id (convex_Ici _)
   exact (strictConvexOn_rpow hp).ConvexOn
 #align convex_on_rpow convexOn_rpow
+-/
 
+#print strictConcaveOn_log_Iio /-
 theorem strictConcaveOn_log_Iio : StrictConcaveOn ℝ (Iio 0) log :=
   by
   refine' ⟨convex_Iio _, _⟩
@@ -297,4 +318,5 @@ theorem strictConcaveOn_log_Iio : StrictConcaveOn ℝ (Iio 0) log :=
     _ = log (-(a • x + b • y)) := by congr 1 <;> simp only [Algebra.id.smul_eq_mul] <;> ring
     _ = _ := by rw [log_neg_eq_log]
 #align strict_concave_on_log_Iio strictConcaveOn_log_Iio
+-/
 

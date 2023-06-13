@@ -35,6 +35,7 @@ variable {N₂ : Type _} [AddCommMonoid N₂] [Module R N₂]
 
 variable {N : Type _} [AddCommMonoid N] [Module R N]
 
+#print MultilinearMap.domCoprod /-
 /-- Given two multilinear maps `(ι₁ → N) → N₁` and `(ι₂ → N) → N₂`, this produces the map
 `(ι₁ ⊕ ι₂ → N) → N₁ ⊗ N₂` by taking the coproduct of the domain and the tensor product
 of the codomain.
@@ -65,6 +66,7 @@ def domCoprod (a : MultilinearMap R (fun _ : ι₁ => N) N₁)
     letI := (@Sum.inr_injective ι₁ ι₂).DecidableEq
     cases i <;> simp [TensorProduct.smul_tmul', TensorProduct.tmul_smul]
 #align multilinear_map.dom_coprod MultilinearMap.domCoprod
+-/
 
 #print MultilinearMap.domCoprod' /-
 /-- A more bundled version of `multilinear_map.dom_coprod` that maps
@@ -81,12 +83,15 @@ def domCoprod' :
 #align multilinear_map.dom_coprod' MultilinearMap.domCoprod'
 -/
 
+#print MultilinearMap.domCoprod'_apply /-
 @[simp]
 theorem domCoprod'_apply (a : MultilinearMap R (fun _ : ι₁ => N) N₁)
     (b : MultilinearMap R (fun _ : ι₂ => N) N₂) : domCoprod' (a ⊗ₜ[R] b) = domCoprod a b :=
   rfl
 #align multilinear_map.dom_coprod'_apply MultilinearMap.domCoprod'_apply
+-/
 
+#print MultilinearMap.domCoprod_domDomCongr_sumCongr /-
 /-- When passed an `equiv.sum_congr`, `multilinear_map.dom_dom_congr` distributes over
 `multilinear_map.dom_coprod`. -/
 theorem domCoprod_domDomCongr_sumCongr (a : MultilinearMap R (fun _ : ι₁ => N) N₁)
@@ -95,6 +100,7 @@ theorem domCoprod_domDomCongr_sumCongr (a : MultilinearMap R (fun _ : ι₁ => N
       (a.domDomCongr σa).domCoprod (b.domDomCongr σb) :=
   rfl
 #align multilinear_map.dom_coprod_dom_dom_congr_sum_congr MultilinearMap.domCoprod_domDomCongr_sumCongr
+-/
 
 end DomCoprod
 

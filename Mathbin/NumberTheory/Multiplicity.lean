@@ -44,6 +44,7 @@ section CommRing
 
 variable [CommRing R] {a b x y : R}
 
+#print dvd_geom_sum₂_iff_of_dvd_sub /-
 theorem dvd_geom_sum₂_iff_of_dvd_sub {x y p : R} (h : p ∣ x - y) :
     p ∣ ∑ i in range n, x ^ i * y ^ (n - 1 - i) ↔ p ∣ n * y ^ (n - 1) :=
   by
@@ -51,17 +52,23 @@ theorem dvd_geom_sum₂_iff_of_dvd_sub {x y p : R} (h : p ∣ x - y) :
   simp only [← mem_span_singleton, ← eq_zero_iff_mem, RingHom.map_geom_sum₂, h, geom_sum₂_self,
     _root_.map_mul, map_pow, map_natCast]
 #align dvd_geom_sum₂_iff_of_dvd_sub dvd_geom_sum₂_iff_of_dvd_sub
+-/
 
+#print dvd_geom_sum₂_iff_of_dvd_sub' /-
 theorem dvd_geom_sum₂_iff_of_dvd_sub' {x y p : R} (h : p ∣ x - y) :
     p ∣ ∑ i in range n, x ^ i * y ^ (n - 1 - i) ↔ p ∣ n * x ^ (n - 1) := by
   rw [geom_sum₂_comm, dvd_geom_sum₂_iff_of_dvd_sub] <;> simpa using h.neg_right
 #align dvd_geom_sum₂_iff_of_dvd_sub' dvd_geom_sum₂_iff_of_dvd_sub'
+-/
 
+#print dvd_geom_sum₂_self /-
 theorem dvd_geom_sum₂_self {x y : R} (h : ↑n ∣ x - y) :
     ↑n ∣ ∑ i in range n, x ^ i * y ^ (n - 1 - i) :=
   (dvd_geom_sum₂_iff_of_dvd_sub h).mpr (dvd_mul_right _ _)
 #align dvd_geom_sum₂_self dvd_geom_sum₂_self
+-/
 
+#print sq_dvd_add_pow_sub_sub /-
 theorem sq_dvd_add_pow_sub_sub (p x : R) (n : ℕ) :
     p ^ 2 ∣ (x + p) ^ n - x ^ (n - 1) * p * n - x ^ n :=
   by
@@ -80,15 +87,19 @@ theorem sq_dvd_add_pow_sub_sub (p x : R) (n : ℕ) :
         _ ∣ x ^ y * p ^ (n + 1 - y) * ↑((n + 1).choose y) :=
           dvd_mul_of_dvd_left (dvd_mul_left _ _) ((n + 1).choose y)
 #align sq_dvd_add_pow_sub_sub sq_dvd_add_pow_sub_sub
+-/
 
+#print not_dvd_geom_sum₂ /-
 theorem not_dvd_geom_sum₂ {p : R} (hp : Prime p) (hxy : p ∣ x - y) (hx : ¬p ∣ x) (hn : ¬p ∣ n) :
     ¬p ∣ ∑ i in range n, x ^ i * y ^ (n - 1 - i) := fun h =>
   hx <|
     hp.dvd_of_dvd_pow <| (hp.dvd_or_dvd <| (dvd_geom_sum₂_iff_of_dvd_sub' hxy).mp h).resolve_left hn
 #align not_dvd_geom_sum₂ not_dvd_geom_sum₂
+-/
 
 variable {p : ℕ} (a b)
 
+#print odd_sq_dvd_geom_sum₂_sub /-
 theorem odd_sq_dvd_geom_sum₂_sub (hp : Odd p) :
     ↑p ^ 2 ∣ ∑ i in range p, (a + p * b) ^ i * a ^ (p - 1 - i) - p * a ^ (p - 1) :=
   by
@@ -149,6 +160,7 @@ theorem odd_sq_dvd_geom_sum₂_sub (hp : Odd p) :
       ring
       simp only [← map_pow, mul_eq_zero_of_left, Ideal.Quotient.eq_zero_iff_mem, mem_span_singleton]
 #align odd_sq_dvd_geom_sum₂_sub odd_sq_dvd_geom_sum₂_sub
+-/
 
 namespace multiplicity
 
@@ -156,16 +168,17 @@ section IntegralDomain
 
 variable [IsDomain R] [@DecidableRel R (· ∣ ·)]
 
+#print multiplicity.pow_sub_pow_of_prime /-
 theorem pow_sub_pow_of_prime {p : R} (hp : Prime p) {x y : R} (hxy : p ∣ x - y) (hx : ¬p ∣ x)
     {n : ℕ} (hn : ¬p ∣ n) : multiplicity p (x ^ n - y ^ n) = multiplicity p (x - y) := by
   rw [← geom_sum₂_mul, multiplicity.mul hp, multiplicity_eq_zero.2 (not_dvd_geom_sum₂ hp hxy hx hn),
     zero_add]
 #align multiplicity.pow_sub_pow_of_prime multiplicity.pow_sub_pow_of_prime
+-/
 
 variable (hp : Prime (p : R)) (hp1 : Odd p) (hxy : ↑p ∣ x - y) (hx : ¬↑p ∣ x)
 
-include hp hp1 hxy hx
-
+#print multiplicity.geom_sum₂_eq_one /-
 theorem geom_sum₂_eq_one : multiplicity (↑p) (∑ i in range p, x ^ i * y ^ (p - 1 - i)) = 1 :=
   by
   rw [← Nat.cast_one]
@@ -179,12 +192,16 @@ theorem geom_sum₂_eq_one : multiplicity (↑p) (∑ i in range p, x ^ i * y ^ 
   rw [pow_two, mul_dvd_mul_iff_left hp.ne_zero]
   exact mt hp.dvd_of_dvd_pow hx
 #align multiplicity.geom_sum₂_eq_one multiplicity.geom_sum₂_eq_one
+-/
 
+#print multiplicity.pow_prime_sub_pow_prime /-
 theorem pow_prime_sub_pow_prime :
     multiplicity (↑p) (x ^ p - y ^ p) = multiplicity (↑p) (x - y) + 1 := by
   rw [← geom_sum₂_mul, multiplicity.mul hp, geom_sum₂_eq_one hp hp1 hxy hx, add_comm]
 #align multiplicity.pow_prime_sub_pow_prime multiplicity.pow_prime_sub_pow_prime
+-/
 
+#print multiplicity.pow_prime_pow_sub_pow_prime_pow /-
 theorem pow_prime_pow_sub_pow_prime_pow (a : ℕ) :
     multiplicity (↑p) (x ^ p ^ a - y ^ p ^ a) = multiplicity (↑p) (x - y) + a :=
   by
@@ -196,6 +213,7 @@ theorem pow_prime_pow_sub_pow_prime_pow (a : ℕ) :
     exact dvd_mul_of_dvd_right hxy _
   · exact fun h => hx (hp.dvd_of_dvd_pow h)
 #align multiplicity.pow_prime_pow_sub_pow_prime_pow multiplicity.pow_prime_pow_sub_pow_prime_pow
+-/
 
 end IntegralDomain
 
@@ -203,8 +221,7 @@ section LiftingTheExponent
 
 variable (hp : Nat.Prime p) (hp1 : Odd p)
 
-include hp hp1
-
+#print multiplicity.Int.pow_sub_pow /-
 /-- **Lifting the exponent lemma** for odd primes. -/
 theorem Int.pow_sub_pow {x y : ℤ} (hxy : ↑p ∣ x - y) (hx : ¬↑p ∣ x) (n : ℕ) :
     multiplicity (↑p) (x ^ n - y ^ n) = multiplicity (↑p) (x - y) + multiplicity p n :=
@@ -224,7 +241,9 @@ theorem Int.pow_sub_pow {x y : ℤ} (hxy : ↑p ∣ x - y) (hx : ¬↑p ∣ x) (
     refine' hpn ⟨c, _⟩
     rwa [pow_succ', mul_assoc]
 #align multiplicity.int.pow_sub_pow multiplicity.Int.pow_sub_pow
+-/
 
+#print multiplicity.Int.pow_add_pow /-
 theorem Int.pow_add_pow {x y : ℤ} (hxy : ↑p ∣ x + y) (hx : ¬↑p ∣ x) {n : ℕ} (hn : Odd n) :
     multiplicity (↑p) (x ^ n + y ^ n) = multiplicity (↑p) (x + y) + multiplicity p n :=
   by
@@ -232,7 +251,9 @@ theorem Int.pow_add_pow {x y : ℤ} (hxy : ↑p ∣ x + y) (hx : ¬↑p ∣ x) {
   rw [← sub_neg_eq_add, ← sub_neg_eq_add, ← Odd.neg_pow hn]
   exact int.pow_sub_pow hp hp1 hxy hx n
 #align multiplicity.int.pow_add_pow multiplicity.Int.pow_add_pow
+-/
 
+#print multiplicity.Nat.pow_sub_pow /-
 theorem Nat.pow_sub_pow {x y : ℕ} (hxy : p ∣ x - y) (hx : ¬p ∣ x) (n : ℕ) :
     multiplicity p (x ^ n - y ^ n) = multiplicity p (x - y) + multiplicity p n :=
   by
@@ -247,7 +268,9 @@ theorem Nat.pow_sub_pow {x y : ℕ} (hxy : p ∣ x - y) (hx : ¬p ∣ x) (n : �
       nat.sub_eq_zero_iff_le.mpr (Nat.pow_le_pow_of_le_left hyx n), multiplicity.zero,
       PartENat.top_add]
 #align multiplicity.nat.pow_sub_pow multiplicity.Nat.pow_sub_pow
+-/
 
+#print multiplicity.Nat.pow_add_pow /-
 theorem Nat.pow_add_pow {x y : ℕ} (hxy : p ∣ x + y) (hx : ¬p ∣ x) {n : ℕ} (hn : Odd n) :
     multiplicity p (x ^ n + y ^ n) = multiplicity p (x + y) + multiplicity p n :=
   by
@@ -256,6 +279,7 @@ theorem Nat.pow_add_pow {x y : ℕ} (hxy : p ∣ x + y) (hx : ¬p ∣ x) {n : �
   push_cast at *
   exact int.pow_add_pow hp hp1 hxy hx hn
 #align multiplicity.nat.pow_add_pow multiplicity.Nat.pow_add_pow
+-/
 
 end LiftingTheExponent
 
@@ -263,6 +287,7 @@ end multiplicity
 
 end CommRing
 
+#print pow_two_pow_sub_pow_two_pow /-
 theorem pow_two_pow_sub_pow_two_pow [CommRing R] {x y : R} (n : ℕ) :
     x ^ 2 ^ n - y ^ 2 ^ n = (∏ i in Finset.range n, (x ^ 2 ^ i + y ^ 2 ^ i)) * (x - y) :=
   by
@@ -272,8 +297,10 @@ theorem pow_two_pow_sub_pow_two_pow [CommRing R] {x y : R} (n : ℕ) :
       rw [this, hd, Finset.prod_range_succ, ← mul_assoc, mul_comm (x ^ 2 ^ d + y ^ 2 ^ d)]
     · ring1
 #align pow_two_pow_sub_pow_two_pow pow_two_pow_sub_pow_two_pow
+-/
 
 /- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Misc2.lean:80:4: warning: unsupported fin_cases 'using hy' clause -/
+#print Int.sq_mod_four_eq_one_of_odd /-
 theorem Int.sq_mod_four_eq_one_of_odd {x : ℤ} : Odd x → x ^ 2 % 4 = 1 :=
   by
   intro hx
@@ -294,7 +321,9 @@ theorem Int.sq_mod_four_eq_one_of_odd {x : ℤ} : Odd x → x ^ 2 % 4 = 1 :=
       revert hx <;>
     decide
 #align int.sq_mod_four_eq_one_of_odd Int.sq_mod_four_eq_one_of_odd
+-/
 
+#print Int.two_pow_two_pow_add_two_pow_two_pow /-
 theorem Int.two_pow_two_pow_add_two_pow_two_pow {x y : ℤ} (hx : ¬2 ∣ x) (hxy : 4 ∣ x - y) (i : ℕ) :
     multiplicity 2 (x ^ 2 ^ i + y ^ 2 ^ i) = ↑(1 : ℕ) :=
   by
@@ -317,14 +346,18 @@ theorem Int.two_pow_two_pow_add_two_pow_two_pow {x y : ℤ} (hx : ¬2 ∣ x) (hx
   intro x hx
   rw [pow_succ, mul_comm, pow_mul, Int.sq_mod_four_eq_one_of_odd hx.pow]
 #align int.two_pow_two_pow_add_two_pow_two_pow Int.two_pow_two_pow_add_two_pow_two_pow
+-/
 
+#print Int.two_pow_two_pow_sub_pow_two_pow /-
 theorem Int.two_pow_two_pow_sub_pow_two_pow {x y : ℤ} (n : ℕ) (hxy : 4 ∣ x - y) (hx : ¬2 ∣ x) :
     multiplicity 2 (x ^ 2 ^ n - y ^ 2 ^ n) = multiplicity 2 (x - y) + n := by
   simp only [pow_two_pow_sub_pow_two_pow n, multiplicity.mul Int.prime_two,
     multiplicity.Finset.prod Int.prime_two, add_comm, Nat.cast_one, Finset.sum_const,
     Finset.card_range, nsmul_one, Int.two_pow_two_pow_add_two_pow_two_pow hx hxy]
 #align int.two_pow_two_pow_sub_pow_two_pow Int.two_pow_two_pow_sub_pow_two_pow
+-/
 
+#print Int.two_pow_sub_pow' /-
 theorem Int.two_pow_sub_pow' {x y : ℤ} (n : ℕ) (hxy : 4 ∣ x - y) (hx : ¬2 ∣ x) :
     multiplicity 2 (x ^ n - y ^ n) = multiplicity 2 (x - y) + multiplicity (2 : ℤ) n :=
   by
@@ -348,7 +381,9 @@ theorem Int.two_pow_sub_pow' {x y : ℤ} (n : ℕ) (hxy : 4 ∣ x - y) (hx : ¬2
   conv_rhs => rw [hk]
   exact mul_dvd_mul_left _ hpn
 #align int.two_pow_sub_pow' Int.two_pow_sub_pow'
+-/
 
+#print Int.two_pow_sub_pow /-
 /-- **Lifting the exponent lemma** for `p = 2` -/
 theorem Int.two_pow_sub_pow {x y : ℤ} {n : ℕ} (hxy : 2 ∣ x - y) (hx : ¬2 ∣ x) (hn : Even n) :
     multiplicity 2 (x ^ n - y ^ n) + 1 =
@@ -380,7 +415,9 @@ theorem Int.two_pow_sub_pow {x y : ℤ} {n : ℕ} (hxy : 2 ∣ x - y) (hx : ¬2 
     apply Odd.pow
     simp only [Int.odd_iff_not_even, even_iff_two_dvd, hx, not_false_iff]
 #align int.two_pow_sub_pow Int.two_pow_sub_pow
+-/
 
+#print Nat.two_pow_sub_pow /-
 theorem Nat.two_pow_sub_pow {x y : ℕ} (hxy : 2 ∣ x - y) (hx : ¬2 ∣ x) {n : ℕ} (hn : Even n) :
     multiplicity 2 (x ^ n - y ^ n) + 1 =
       multiplicity 2 (x + y) + multiplicity 2 (x - y) + multiplicity 2 n :=
@@ -400,6 +437,7 @@ theorem Nat.two_pow_sub_pow {x y : ℕ} (hxy : 2 ∣ x - y) (hx : ¬2 ∣ x) {n 
       nat.sub_eq_zero_iff_le.mpr (pow_le_pow_of_le_left' hyx n), multiplicity.zero,
       PartENat.top_add, PartENat.add_top]
 #align nat.two_pow_sub_pow Nat.two_pow_sub_pow
+-/
 
 namespace padicValNat
 
@@ -422,8 +460,6 @@ theorem pow_two_sub_pow (hyx : y < x) (hxy : 2 ∣ x - y) (hx : ¬2 ∣ x) {n : 
 -/
 
 variable {p : ℕ} [hp : Fact p.Prime] (hp1 : Odd p)
-
-include hp hp1
 
 #print padicValNat.pow_sub_pow /-
 theorem pow_sub_pow (hyx : y < x) (hxy : p ∣ x - y) (hx : ¬p ∣ x) {n : ℕ} (hn : 0 < n) :

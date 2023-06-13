@@ -55,26 +55,35 @@ def starL' (R : Type _) {A : Type _} [CommSemiring R] [StarRing R] [TrivialStar 
 variable (R : Type _) (A : Type _) [Semiring R] [StarSemigroup R] [TrivialStar R] [AddCommGroup A]
   [Module R A] [StarAddMonoid A] [StarModule R A] [Invertible (2 : R)] [TopologicalSpace A]
 
+#print continuous_selfAdjointPart /-
 theorem continuous_selfAdjointPart [ContinuousAdd A] [ContinuousStar A] [ContinuousConstSMul R A] :
     Continuous (@selfAdjointPart R A _ _ _ _ _ _ _ _) :=
   ((continuous_const_smul _).comp <| continuous_id.add continuous_star).subtype_mk _
 #align continuous_self_adjoint_part continuous_selfAdjointPart
+-/
 
+#print continuous_skewAdjointPart /-
 theorem continuous_skewAdjointPart [ContinuousSub A] [ContinuousStar A] [ContinuousConstSMul R A] :
     Continuous (@skewAdjointPart R A _ _ _ _ _ _ _ _) :=
   ((continuous_const_smul _).comp <| continuous_id.sub continuous_star).subtype_mk _
 #align continuous_skew_adjoint_part continuous_skewAdjointPart
+-/
 
+#print continuous_decomposeProdAdjoint /-
 theorem continuous_decomposeProdAdjoint [TopologicalAddGroup A] [ContinuousStar A]
     [ContinuousConstSMul R A] : Continuous (@StarModule.decomposeProdAdjoint R A _ _ _ _ _ _ _ _) :=
   (continuous_selfAdjointPart R A).prod_mk (continuous_skewAdjointPart R A)
 #align continuous_decompose_prod_adjoint continuous_decomposeProdAdjoint
+-/
 
+#print continuous_decomposeProdAdjoint_symm /-
 theorem continuous_decomposeProdAdjoint_symm [TopologicalAddGroup A] :
     Continuous (@StarModule.decomposeProdAdjoint R A _ _ _ _ _ _ _ _).symm :=
   (continuous_subtype_val.comp continuous_fst).add (continuous_subtype_val.comp continuous_snd)
 #align continuous_decompose_prod_adjoint_symm continuous_decomposeProdAdjoint_symm
+-/
 
+#print selfAdjointPartL /-
 /-- The self-adjoint part of an element of a star module, as a continuous linear map. -/
 @[simps]
 def selfAdjointPartL [ContinuousAdd A] [ContinuousStar A] [ContinuousConstSMul R A] :
@@ -82,7 +91,9 @@ def selfAdjointPartL [ContinuousAdd A] [ContinuousStar A] [ContinuousConstSMul R
   toLinearMap := selfAdjointPart R
   cont := continuous_selfAdjointPart _ _
 #align self_adjoint_partL selfAdjointPartL
+-/
 
+#print skewAdjointPartL /-
 /-- The skew-adjoint part of an element of a star module, as a continuous linear map. -/
 @[simps]
 def skewAdjointPartL [ContinuousSub A] [ContinuousStar A] [ContinuousConstSMul R A] :
@@ -90,7 +101,9 @@ def skewAdjointPartL [ContinuousSub A] [ContinuousStar A] [ContinuousConstSMul R
   toLinearMap := skewAdjointPart R
   cont := continuous_skewAdjointPart _ _
 #align skew_adjoint_partL skewAdjointPartL
+-/
 
+#print StarModule.decomposeProdAdjointL /-
 /-- The decomposition of elements of a star module into their self- and skew-adjoint parts,
 as a continuous linear equivalence. -/
 @[simps]
@@ -101,4 +114,5 @@ def StarModule.decomposeProdAdjointL [TopologicalAddGroup A] [ContinuousStar A]
   continuous_toFun := continuous_decomposeProdAdjoint _ _
   continuous_invFun := continuous_decomposeProdAdjoint_symm _ _
 #align star_module.decompose_prod_adjointL StarModule.decomposeProdAdjointL
+-/
 

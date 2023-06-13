@@ -33,14 +33,19 @@ namespace Encodable
 
 variable {α : Type _} {β : Type _} [Encodable β]
 
+#print Encodable.iSup_decode₂ /-
 theorem iSup_decode₂ [CompleteLattice α] (f : β → α) :
     (⨆ (i : ℕ) (b ∈ decode₂ β i), f b) = ⨆ b, f b := by rw [iSup_comm]; simp [mem_decode₂]
 #align encodable.supr_decode₂ Encodable.iSup_decode₂
+-/
 
+#print Encodable.iUnion_decode₂ /-
 theorem iUnion_decode₂ (f : β → Set α) : (⋃ (i : ℕ) (b ∈ decode₂ β i), f b) = ⋃ b, f b :=
   iSup_decode₂ f
 #align encodable.Union_decode₂ Encodable.iUnion_decode₂
+-/
 
+#print Encodable.iUnion_decode₂_cases /-
 @[elab_as_elim]
 theorem iUnion_decode₂_cases {f : β → Set α} {C : Set α → Prop} (H0 : C ∅) (H1 : ∀ b, C (f b)) {n} :
     C (⋃ b ∈ decode₂ β n, f b) :=
@@ -48,7 +53,9 @@ theorem iUnion_decode₂_cases {f : β → Set α} {C : Set α → Prop} (H0 : C
   | none => by simp; apply H0
   | some b => by convert H1 b; simp [ext_iff]
 #align encodable.Union_decode₂_cases Encodable.iUnion_decode₂_cases
+-/
 
+#print Encodable.iUnion_decode₂_disjoint_on /-
 theorem iUnion_decode₂_disjoint_on {f : β → Set α} (hd : Pairwise (Disjoint on f)) :
     Pairwise (Disjoint on fun i => ⋃ b ∈ decode₂ β i, f b) :=
   by
@@ -58,6 +65,7 @@ theorem iUnion_decode₂_disjoint_on {f : β → Set α} (hd : Pairwise (Disjoin
   rintro a rfl ha b rfl hb
   exact (hd (mt (congr_arg encode) ij)).le_bot ⟨ha, hb⟩
 #align encodable.Union_decode₂_disjoint_on Encodable.iUnion_decode₂_disjoint_on
+-/
 
 end Encodable
 

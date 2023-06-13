@@ -198,13 +198,16 @@ def lift (φ : V ⥤q V') : FreeGroupoid V ⥤ V' :=
 #align category_theory.groupoid.free.lift CategoryTheory.Groupoid.Free.lift
 -/
 
+#print CategoryTheory.Groupoid.Free.lift_spec /-
 theorem lift_spec (φ : V ⥤q V') : of V ⋙q (lift φ).toPrefunctor = φ :=
   by
   rw [of_eq, Prefunctor.comp_assoc, Prefunctor.comp_assoc, functor.to_prefunctor_comp]
   dsimp [lift]
   rw [quotient.lift_spec, paths.lift_spec, Quiver.Symmetrify.lift_spec]
 #align category_theory.groupoid.free.lift_spec CategoryTheory.Groupoid.Free.lift_spec
+-/
 
+#print CategoryTheory.Groupoid.Free.lift_unique /-
 theorem lift_unique (φ : V ⥤q V') (Φ : FreeGroupoid V ⥤ V') (hΦ : of V ⋙q Φ.toPrefunctor = φ) :
     Φ = lift φ := by
   apply quotient.lift_unique
@@ -219,6 +222,7 @@ theorem lift_unique (φ : V ⥤q V') (Φ : FreeGroupoid V ⥤ V') (hΦ : of V �
     have := functor.map_inv Φ ((quotient.functor red_step).toPrefunctor.map f.to_path)
     convert this <;> simp only [inv_eq_inv]
 #align category_theory.groupoid.free.lift_unique CategoryTheory.Groupoid.Free.lift_unique
+-/
 
 end UniversalProperty
 

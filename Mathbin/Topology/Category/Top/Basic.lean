@@ -57,16 +57,20 @@ instance topologicalSpaceUnbundled (x : TopCat) : TopologicalSpace x :=
 #align Top.topological_space_unbundled TopCat.topologicalSpaceUnbundled
 -/
 
+#print TopCat.id_app /-
 @[simp]
 theorem id_app (X : TopCat.{u}) (x : X) : (𝟙 X : X → X) x = x :=
   rfl
 #align Top.id_app TopCat.id_app
+-/
 
+#print TopCat.comp_app /-
 @[simp]
 theorem comp_app {X Y Z : TopCat.{u}} (f : X ⟶ Y) (g : Y ⟶ Z) (x : X) :
     (f ≫ g : X → Z) x = g (f x) :=
   rfl
 #align Top.comp_app TopCat.comp_app
+-/
 
 #print TopCat.of /-
 /-- Construct a bundled `Top` from the underlying type and the typeclass. -/
@@ -147,12 +151,15 @@ theorem of_homeoOfIso {X Y : TopCat.{u}} (f : X ≅ Y) : isoOfHomeo (homeoOfIso 
 #align Top.of_homeo_of_iso TopCat.of_homeoOfIso
 -/
 
+#print TopCat.openEmbedding_iff_comp_isIso /-
 @[simp]
 theorem openEmbedding_iff_comp_isIso {X Y Z : TopCat} (f : X ⟶ Y) (g : Y ⟶ Z) [IsIso g] :
     OpenEmbedding (f ≫ g) ↔ OpenEmbedding f :=
   (TopCat.homeoOfIso (asIso g)).OpenEmbedding.of_comp_iff f
 #align Top.open_embedding_iff_comp_is_iso TopCat.openEmbedding_iff_comp_isIso
+-/
 
+#print TopCat.openEmbedding_iff_isIso_comp /-
 @[simp]
 theorem openEmbedding_iff_isIso_comp {X Y Z : TopCat} (f : X ⟶ Y) (g : Y ⟶ Z) [IsIso f] :
     OpenEmbedding (f ≫ g) ↔ OpenEmbedding g :=
@@ -163,6 +170,7 @@ theorem openEmbedding_iff_isIso_comp {X Y Z : TopCat} (f : X ⟶ Y) (g : Y ⟶ Z
     exact congr_arg _ (is_iso.inv_hom_id_assoc f g).symm
   · exact fun h => h.comp (TopCat.homeoOfIso (as_iso f)).OpenEmbedding
 #align Top.open_embedding_iff_is_iso_comp TopCat.openEmbedding_iff_isIso_comp
+-/
 
 end TopCat
 

@@ -81,6 +81,7 @@ theorem equivalence : Equivalence (@Commensurable G _) :=
 #align commensurable.equivalence Commensurable.equivalence
 -/
 
+#print Commensurable.quotConjEquiv /-
 /-- Equivalence of `K/H ⊓ K` with `gKg⁻¹/gHg⁻¹ ⊓ gKg⁻¹`-/
 def quotConjEquiv (H K : Subgroup G) (g : ConjAct G) :
     K ⧸ H.subgroupOf K ≃ (g • K).1 ⧸ (g • H).subgroupOf (g • K) :=
@@ -92,16 +93,21 @@ def quotConjEquiv (H K : Subgroup G) (g : ConjAct G) :
       Subgroup.equivSMul_apply_coe]
     exact subgroup.smul_mem_pointwise_smul_iff.symm
 #align commensurable.quot_conj_equiv Commensurable.quotConjEquiv
+-/
 
+#print Commensurable.commensurable_conj /-
 theorem commensurable_conj {H K : Subgroup G} (g : ConjAct G) :
     Commensurable H K ↔ Commensurable (g • H) (g • K) :=
   and_congr (not_iff_not.mpr (Eq.congr_left (Cardinal.toNat_congr (quotConjEquiv H K g))))
     (not_iff_not.mpr (Eq.congr_left (Cardinal.toNat_congr (quotConjEquiv K H g))))
 #align commensurable.commensurable_conj Commensurable.commensurable_conj
+-/
 
+#print Commensurable.commensurable_inv /-
 theorem commensurable_inv (H : Subgroup G) (g : ConjAct G) :
     Commensurable (g • H) H ↔ Commensurable H (g⁻¹ • H) := by rw [commensurable_conj, inv_smul_smul]
 #align commensurable.commensurable_inv Commensurable.commensurable_inv
+-/
 
 #print Commensurable.commensurator' /-
 /-- For `H` a subgroup of `G`, this is the subgroup of all elements `g : conj_aut G`
@@ -125,17 +131,21 @@ def commensurator (H : Subgroup G) : Subgroup G :=
 #align commensurable.commensurator Commensurable.commensurator
 -/
 
+#print Commensurable.commensurator'_mem_iff /-
 @[simp]
 theorem commensurator'_mem_iff (H : Subgroup G) (g : ConjAct G) :
     g ∈ commensurator' H ↔ Commensurable (g • H) H :=
   Iff.rfl
 #align commensurable.commensurator'_mem_iff Commensurable.commensurator'_mem_iff
+-/
 
+#print Commensurable.commensurator_mem_iff /-
 @[simp]
 theorem commensurator_mem_iff (H : Subgroup G) (g : G) :
     g ∈ commensurator H ↔ Commensurable (ConjAct.toConjAct g • H) H :=
   Iff.rfl
 #align commensurable.commensurator_mem_iff Commensurable.commensurator_mem_iff
+-/
 
 #print Commensurable.eq /-
 theorem eq {H K : Subgroup G} (hk : Commensurable H K) : commensurator H = commensurator K :=

@@ -68,21 +68,28 @@ namespace IsAdjMatrix
 
 variable {A : Matrix V V α}
 
+#print Matrix.IsAdjMatrix.apply_diag_ne /-
 @[simp]
 theorem apply_diag_ne [MulZeroOneClass α] [Nontrivial α] (h : IsAdjMatrix A) (i : V) : ¬A i i = 1 :=
   by simp [h.apply_diag i]
 #align matrix.is_adj_matrix.apply_diag_ne Matrix.IsAdjMatrix.apply_diag_ne
+-/
 
+#print Matrix.IsAdjMatrix.apply_ne_one_iff /-
 @[simp]
 theorem apply_ne_one_iff [MulZeroOneClass α] [Nontrivial α] (h : IsAdjMatrix A) (i j : V) :
     ¬A i j = 1 ↔ A i j = 0 := by obtain h | h := h.zero_or_one i j <;> simp [h]
 #align matrix.is_adj_matrix.apply_ne_one_iff Matrix.IsAdjMatrix.apply_ne_one_iff
+-/
 
+#print Matrix.IsAdjMatrix.apply_ne_zero_iff /-
 @[simp]
 theorem apply_ne_zero_iff [MulZeroOneClass α] [Nontrivial α] (h : IsAdjMatrix A) (i j : V) :
     ¬A i j = 0 ↔ A i j = 1 := by rw [← apply_ne_one_iff h, Classical.not_not]
 #align matrix.is_adj_matrix.apply_ne_zero_iff Matrix.IsAdjMatrix.apply_ne_zero_iff
+-/
 
+#print Matrix.IsAdjMatrix.toGraph /-
 /-- For `A : matrix V V α` and `h : is_adj_matrix A`,
     `h.to_graph` is the simple graph whose adjacency matrix is `A`. -/
 @[simps]
@@ -92,6 +99,7 @@ def toGraph [MulZeroOneClass α] [Nontrivial α] (h : IsAdjMatrix A) : SimpleGra
   symm i j hij := by rwa [h.symm.apply i j]
   loopless i := by simp [h]
 #align matrix.is_adj_matrix.to_graph Matrix.IsAdjMatrix.toGraph
+-/
 
 instance [MulZeroOneClass α] [Nontrivial α] [DecidableEq α] (h : IsAdjMatrix A) :
     DecidableRel h.toGraph.Adj := by simp only [to_graph]; infer_instance
@@ -148,11 +156,13 @@ theorem compl [Zero α] [One α] (h : IsAdjMatrix A) : IsAdjMatrix A.compl :=
 #align matrix.is_adj_matrix.compl Matrix.IsAdjMatrix.compl
 -/
 
+#print Matrix.IsAdjMatrix.toGraph_compl_eq /-
 theorem toGraph_compl_eq [MulZeroOneClass α] [Nontrivial α] (h : IsAdjMatrix A) :
     h.compl.toGraph = h.toGraphᶜ := by
   ext (v w)
   cases' h.zero_or_one v w with h h <;> by_cases hvw : v = w <;> simp [Matrix.compl, h, hvw]
 #align matrix.is_adj_matrix.to_graph_compl_eq Matrix.IsAdjMatrix.toGraph_compl_eq
+-/
 
 end IsAdjMatrix
 
@@ -211,6 +221,7 @@ theorem isAdjMatrix_adjMatrix [Zero α] [One α] : (G.adjMatrix α).IsAdjMatrix 
 #align simple_graph.is_adj_matrix_adj_matrix SimpleGraph.isAdjMatrix_adjMatrix
 -/
 
+#print SimpleGraph.toGraph_adjMatrix_eq /-
 /-- The graph induced by the adjacency matrix of `G` is `G` itself. -/
 theorem toGraph_adjMatrix_eq [MulZeroOneClass α] [Nontrivial α] :
     (G.isAdjMatrix_adjMatrix α).toGraph = G := by
@@ -218,27 +229,35 @@ theorem toGraph_adjMatrix_eq [MulZeroOneClass α] [Nontrivial α] :
   simp only [is_adj_matrix.to_graph_adj, adj_matrix_apply, ite_eq_left_iff, zero_ne_one]
   apply Classical.not_not
 #align simple_graph.to_graph_adj_matrix_eq SimpleGraph.toGraph_adjMatrix_eq
+-/
 
 variable {α} [Fintype V]
 
+#print SimpleGraph.adjMatrix_dotProduct /-
 @[simp]
 theorem adjMatrix_dotProduct [NonAssocSemiring α] (v : V) (vec : V → α) :
     dotProduct (G.adjMatrix α v) vec = ∑ u in G.neighborFinset v, vec u := by
   simp [neighbor_finset_eq_filter, dot_product, sum_filter]
 #align simple_graph.adj_matrix_dot_product SimpleGraph.adjMatrix_dotProduct
+-/
 
+#print SimpleGraph.dotProduct_adjMatrix /-
 @[simp]
 theorem dotProduct_adjMatrix [NonAssocSemiring α] (v : V) (vec : V → α) :
     dotProduct vec (G.adjMatrix α v) = ∑ u in G.neighborFinset v, vec u := by
   simp [neighbor_finset_eq_filter, dot_product, sum_filter, Finset.sum_apply]
 #align simple_graph.dot_product_adj_matrix SimpleGraph.dotProduct_adjMatrix
+-/
 
+#print SimpleGraph.adjMatrix_mulVec_apply /-
 @[simp]
 theorem adjMatrix_mulVec_apply [NonAssocSemiring α] (v : V) (vec : V → α) :
     ((G.adjMatrix α).mulVec vec) v = ∑ u in G.neighborFinset v, vec u := by
   rw [mul_vec, adj_matrix_dot_product]
 #align simple_graph.adj_matrix_mul_vec_apply SimpleGraph.adjMatrix_mulVec_apply
+-/
 
+#print SimpleGraph.adjMatrix_vecMul_apply /-
 @[simp]
 theorem adjMatrix_vecMul_apply [NonAssocSemiring α] (v : V) (vec : V → α) :
     ((G.adjMatrix α).vecMul vec) v = ∑ u in G.neighborFinset v, vec u :=
@@ -247,44 +266,58 @@ theorem adjMatrix_vecMul_apply [NonAssocSemiring α] (v : V) (vec : V → α) :
   refine' congr rfl _; ext
   rw [← transpose_apply (adj_matrix α G) x v, transpose_adj_matrix]
 #align simple_graph.adj_matrix_vec_mul_apply SimpleGraph.adjMatrix_vecMul_apply
+-/
 
+#print SimpleGraph.adjMatrix_mul_apply /-
 @[simp]
 theorem adjMatrix_mul_apply [NonAssocSemiring α] (M : Matrix V V α) (v w : V) :
     (G.adjMatrix α ⬝ M) v w = ∑ u in G.neighborFinset v, M u w := by
   simp [mul_apply, neighbor_finset_eq_filter, sum_filter]
 #align simple_graph.adj_matrix_mul_apply SimpleGraph.adjMatrix_mul_apply
+-/
 
+#print SimpleGraph.mul_adjMatrix_apply /-
 @[simp]
 theorem mul_adjMatrix_apply [NonAssocSemiring α] (M : Matrix V V α) (v w : V) :
     (M ⬝ G.adjMatrix α) v w = ∑ u in G.neighborFinset w, M v u := by
   simp [mul_apply, neighbor_finset_eq_filter, sum_filter, adj_comm]
 #align simple_graph.mul_adj_matrix_apply SimpleGraph.mul_adjMatrix_apply
+-/
 
 variable (α)
 
+#print SimpleGraph.trace_adjMatrix /-
 @[simp]
 theorem trace_adjMatrix [AddCommMonoid α] [One α] : Matrix.trace (G.adjMatrix α) = 0 := by
   simp [Matrix.trace]
 #align simple_graph.trace_adj_matrix SimpleGraph.trace_adjMatrix
+-/
 
 variable {α}
 
+#print SimpleGraph.adjMatrix_mul_self_apply_self /-
 theorem adjMatrix_mul_self_apply_self [NonAssocSemiring α] (i : V) :
     (G.adjMatrix α ⬝ G.adjMatrix α) i i = degree G i := by simp [degree]
 #align simple_graph.adj_matrix_mul_self_apply_self SimpleGraph.adjMatrix_mul_self_apply_self
+-/
 
 variable {G}
 
+#print SimpleGraph.adjMatrix_mulVec_const_apply /-
 @[simp]
 theorem adjMatrix_mulVec_const_apply [Semiring α] {a : α} {v : V} :
     (G.adjMatrix α).mulVec (Function.const _ a) v = G.degree v * a := by simp [degree]
 #align simple_graph.adj_matrix_mul_vec_const_apply SimpleGraph.adjMatrix_mulVec_const_apply
+-/
 
+#print SimpleGraph.adjMatrix_mulVec_const_apply_of_regular /-
 theorem adjMatrix_mulVec_const_apply_of_regular [Semiring α] {d : ℕ} {a : α}
     (hd : G.IsRegularOfDegree d) {v : V} : (G.adjMatrix α).mulVec (Function.const _ a) v = d * a :=
   by simp [hd v]
 #align simple_graph.adj_matrix_mul_vec_const_apply_of_regular SimpleGraph.adjMatrix_mulVec_const_apply_of_regular
+-/
 
+#print SimpleGraph.adjMatrix_pow_apply_eq_card_walk /-
 theorem adjMatrix_pow_apply_eq_card_walk [DecidableEq V] [Semiring α] (n : ℕ) (u v : V) :
     (G.adjMatrix α ^ n) u v = Fintype.card {p : G.Walk u v | p.length = n} :=
   by
@@ -307,6 +340,7 @@ theorem adjMatrix_pow_apply_eq_card_walk [DecidableEq V] [Semiring α] (n : ℕ)
       cases hp
       simpa using hxy
 #align simple_graph.adj_matrix_pow_apply_eq_card_walk SimpleGraph.adjMatrix_pow_apply_eq_card_walk
+-/
 
 end SimpleGraph
 
@@ -316,6 +350,7 @@ variable [MulZeroOneClass α] [Nontrivial α]
 
 variable {A : Matrix V V α} (h : IsAdjMatrix A)
 
+#print Matrix.IsAdjMatrix.adjMatrix_toGraph_eq /-
 /-- If `A` is qualified as an adjacency matrix,
     then the adjacency matrix of the graph induced by `A` is itself. -/
 theorem adjMatrix_toGraph_eq [DecidableEq α] : h.toGraph.adjMatrix α = A :=
@@ -323,6 +358,7 @@ theorem adjMatrix_toGraph_eq [DecidableEq α] : h.toGraph.adjMatrix α = A :=
   ext (i j)
   obtain h' | h' := h.zero_or_one i j <;> simp [h']
 #align matrix.is_adj_matrix.adj_matrix_to_graph_eq Matrix.IsAdjMatrix.adjMatrix_toGraph_eq
+-/
 
 end Matrix.IsAdjMatrix
 

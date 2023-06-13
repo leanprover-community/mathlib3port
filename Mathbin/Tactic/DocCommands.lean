@@ -34,10 +34,12 @@ information.
 -/
 
 
+#print String.hash /-
 /-- A rudimentary hash function on strings. -/
 def String.hash (s : String) : ℕ :=
   s.fold 1 fun h c => (33 * h + c.val) % unsignedSz
 #align string.hash String.hash
+-/
 
 /-- Get the last component of a name, and convert it to a string. -/
 unsafe def name.last : Name → String

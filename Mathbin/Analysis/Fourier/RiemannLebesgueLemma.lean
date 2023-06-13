@@ -56,7 +56,6 @@ open scoped Filter Topology Real ENNReal FourierTransform RealInnerProductSpace 
 
 variable {E V : Type _} [NormedAddCommGroup E] [NormedSpace ℂ E] {f : V → E}
 
--- mathport name: expre
 local notation "e" => Real.fourierChar
 
 section InnerProductSpace
@@ -76,7 +75,6 @@ theorem fourier_integrand_integrable (w : V) :
 
 variable [CompleteSpace E]
 
--- mathport name: expri
 local notation "i" => fun w => (1 / (2 * ‖w‖ ^ 2)) • w
 
 /-- Shifting `f` by `(1 / (2 * ‖w‖ ^ 2)) • w` negates the integral in the Riemann-Lebesgue lemma. -/

@@ -28,6 +28,7 @@ variable (F : MonoidalFunctor C D)
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print CategoryTheory.exactPairingOfFaithful /-
 /-- Given candidate data for an exact pairing,
 which is sent by a faithful monoidal functor to an exact pairing,
 the equations holds automatically. -/
@@ -43,7 +44,9 @@ def exactPairingOfFaithful [Faithful F.toFunctor] {X Y : C} (eval : Y ⊗ X ⟶ 
   coevaluation_evaluation' :=
     F.toFunctor.map_injective (by simp [map_eval, map_coeval, monoidal_functor.map_tensor])
 #align category_theory.exact_pairing_of_faithful CategoryTheory.exactPairingOfFaithful
+-/
 
+#print CategoryTheory.exactPairingOfFullyFaithful /-
 /-- Given a pair of objects which are sent by a fully faithful functor to a pair of objects
 with an exact pairing, we get an exact pairing.
 -/
@@ -52,8 +55,10 @@ def exactPairingOfFullyFaithful [Full F.toFunctor] [Faithful F.toFunctor] (X Y :
   exactPairingOfFaithful F (F.toFunctor.preimage (inv (F.μ _ _) ≫ ε_ _ _ ≫ F.ε))
     (F.toFunctor.preimage (inv F.ε ≫ η_ _ _ ≫ F.μ _ _)) (by simp) (by simp)
 #align category_theory.exact_pairing_of_fully_faithful CategoryTheory.exactPairingOfFullyFaithful
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print CategoryTheory.hasLeftDualOfEquivalence /-
 /-- Pull back a left dual along an equivalence. -/
 def hasLeftDualOfEquivalence [IsEquivalence F.toFunctor] (X : C) [HasLeftDual (F.obj X)] :
     HasLeftDual X where
@@ -64,8 +69,10 @@ def hasLeftDualOfEquivalence [IsEquivalence F.toFunctor] (X : C) [HasLeftDual (F
     dsimp
     infer_instance
 #align category_theory.has_left_dual_of_equivalence CategoryTheory.hasLeftDualOfEquivalence
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print CategoryTheory.hasRightDualOfEquivalence /-
 /-- Pull back a right dual along an equivalence. -/
 def hasRightDualOfEquivalence [IsEquivalence F.toFunctor] (X : C) [HasRightDual (F.obj X)] :
     HasRightDual X where
@@ -76,6 +83,7 @@ def hasRightDualOfEquivalence [IsEquivalence F.toFunctor] (X : C) [HasRightDual 
     dsimp
     infer_instance
 #align category_theory.has_right_dual_of_equivalence CategoryTheory.hasRightDualOfEquivalence
+-/
 
 #print CategoryTheory.leftRigidCategoryOfEquivalence /-
 /-- Pull back a left rigid structure along an equivalence. -/

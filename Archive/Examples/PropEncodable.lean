@@ -76,16 +76,12 @@ namespace PropForm
 private def constructors (α : Type _) :=
   Sum α (Sum Unit (Sum Unit Unit))
 
--- mathport name: «exprcvar »
 local notation "cvar " a => Sum.inl a
 
--- mathport name: exprcnot
 local notation "cnot" => Sum.inr (Sum.inl Unit.unit)
 
--- mathport name: exprcand
 local notation "cand" => Sum.inr (Sum.inr (Sum.inr Unit.unit))
 
--- mathport name: exprcor
 local notation "cor" => Sum.inr (Sum.inr (Sum.inl Unit.unit))
 
 @[simp]

@@ -41,6 +41,7 @@ namespace DoldKan
 
 variable {C : Type _} [Category C] [Preadditive C]
 
+#print AlgebraicTopology.DoldKan.PInfty_comp_map_mono_eq_zero /-
 theorem PInfty_comp_map_mono_eq_zero (X : SimplicialObject C) {n : ℕ} {Δ' : SimplexCategory}
     (i : Δ' ⟶ [n]) [hi : Mono i] (h₁ : Δ'.len ≠ n) (h₂ : ¬Isδ₀ i) : PInfty.f n ≫ X.map i.op = 0 :=
   by
@@ -83,7 +84,9 @@ theorem PInfty_comp_map_mono_eq_zero (X : SimplicialObject C) {n : ℕ} {Δ' : S
       by_contra
       exact hj₁ (by simp only [Fin.ext_iff, Fin.val_zero]; linarith)
 #align algebraic_topology.dold_kan.P_infty_comp_map_mono_eq_zero AlgebraicTopology.DoldKan.PInfty_comp_map_mono_eq_zero
+-/
 
+#print AlgebraicTopology.DoldKan.Γ₀_obj_termwise_mapMono_comp_PInfty /-
 @[reassoc]
 theorem Γ₀_obj_termwise_mapMono_comp_PInfty (X : SimplicialObject C) {Δ Δ' : SimplexCategory}
     (i : Δ ⟶ Δ') [Mono i] :
@@ -123,11 +126,13 @@ theorem Γ₀_obj_termwise_mapMono_comp_PInfty (X : SimplicialObject C) {Δ Δ' 
     · by_contra h'
       exact hi h'
 #align algebraic_topology.dold_kan.Γ₀_obj_termwise_map_mono_comp_P_infty AlgebraicTopology.DoldKan.Γ₀_obj_termwise_mapMono_comp_PInfty
+-/
 
 variable [HasFiniteCoproducts C]
 
 namespace Γ₂N₁
 
+#print AlgebraicTopology.DoldKan.Γ₂N₁.natTrans /-
 /-- The natural transformation `N₁ ⋙ Γ₂ ⟶ to_karoubi (simplicial_object C)`. -/
 @[simps]
 def natTrans : (N₁ : SimplicialObject C ⥤ _) ⋙ Γ₂ ⟶ toKaroubi _
@@ -164,31 +169,39 @@ def natTrans : (N₁ : SimplicialObject C ⥤ _) ⋙ Γ₂ ⟶ toKaroubi _
       HomologicalComplex.comp_f, alternating_face_map_complex.map_f, P_infty_f_naturality_assoc,
       nat_trans.naturality]
 #align algebraic_topology.dold_kan.Γ₂N₁.nat_trans AlgebraicTopology.DoldKan.Γ₂N₁.natTrans
+-/
 
 end Γ₂N₁
 
+#print AlgebraicTopology.DoldKan.compatibility_Γ₂N₁_Γ₂N₂ /-
 /-- The compatibility isomorphism relating `N₂ ⋙ Γ₂` and `N₁ ⋙ Γ₂`. -/
 @[simps]
 def compatibility_Γ₂N₁_Γ₂N₂ : toKaroubi (SimplicialObject C) ⋙ N₂ ⋙ Γ₂ ≅ N₁ ⋙ Γ₂ :=
   eqToIso (Functor.congr_obj (functorExtension₁_comp_whiskeringLeft_toKaroubi _ _) (N₁ ⋙ Γ₂))
 #align algebraic_topology.dold_kan.compatibility_Γ₂N₁_Γ₂N₂ AlgebraicTopology.DoldKan.compatibility_Γ₂N₁_Γ₂N₂
+-/
 
 namespace Γ₂N₂
 
+#print AlgebraicTopology.DoldKan.Γ₂N₂.natTrans /-
 /-- The natural transformation `N₂ ⋙ Γ₂ ⟶ 𝟭 (simplicial_object C)`. -/
 def natTrans : (N₂ : Karoubi (SimplicialObject C) ⥤ _) ⋙ Γ₂ ⟶ 𝟭 _ :=
   ((whiskeringLeft _ _ _).obj _).Preimage (compatibility_Γ₂N₁_Γ₂N₂.Hom ≫ Γ₂N₁.natTrans)
 #align algebraic_topology.dold_kan.Γ₂N₂.nat_trans AlgebraicTopology.DoldKan.Γ₂N₂.natTrans
+-/
 
+#print AlgebraicTopology.DoldKan.Γ₂N₂.natTrans_app_f_app /-
 theorem natTrans_app_f_app (P : Karoubi (SimplicialObject C)) :
     Γ₂N₂.natTrans.app P =
       (N₂ ⋙ Γ₂).map P.decompId_i ≫
         (compatibility_Γ₂N₁_Γ₂N₂.Hom ≫ Γ₂N₁.natTrans).app P.pt ≫ P.decompId_p :=
   whiskeringLeft_obj_preimage_app (compatibility_Γ₂N₁_Γ₂N₂.Hom ≫ Γ₂N₁.natTrans) P
 #align algebraic_topology.dold_kan.Γ₂N₂.nat_trans_app_f_app AlgebraicTopology.DoldKan.Γ₂N₂.natTrans_app_f_app
+-/
 
 end Γ₂N₂
 
+#print AlgebraicTopology.DoldKan.compatibility_Γ₂N₁_Γ₂N₂_natTrans /-
 theorem compatibility_Γ₂N₁_Γ₂N₂_natTrans (X : SimplicialObject C) :
     Γ₂N₁.natTrans.app X =
       (compatibility_Γ₂N₁_Γ₂N₂.app X).inv ≫ Γ₂N₂.natTrans.app ((toKaroubi _).obj X) :=
@@ -200,7 +213,9 @@ theorem compatibility_Γ₂N₁_Γ₂N₂_natTrans (X : SimplicialObject C) :
           (compatibility_Γ₂N₁_Γ₂N₂.hom ≫ Γ₂N₁.nat_trans : _ ⟶ to_karoubi _ ⋙ 𝟭 _)).symm
       X
 #align algebraic_topology.dold_kan.compatibility_Γ₂N₁_Γ₂N₂_nat_trans AlgebraicTopology.DoldKan.compatibility_Γ₂N₁_Γ₂N₂_natTrans
+-/
 
+#print AlgebraicTopology.DoldKan.identity_N₂_objectwise /-
 theorem identity_N₂_objectwise (P : Karoubi (SimplicialObject C)) :
     N₂Γ₂.inv.app (N₂.obj P) ≫ N₂.map (Γ₂N₂.natTrans.app P) = 𝟙 (N₂.obj P) :=
   by
@@ -230,12 +245,15 @@ theorem identity_N₂_objectwise (P : Karoubi (SimplicialObject C)) :
   simp only [karoubi.comp_f, HomologicalComplex.comp_f, karoubi.id_eq, N₂_obj_p_f, assoc, eq₁, eq₂,
     P_infty_f_naturality_assoc, app_idem, P_infty_f_idem_assoc]
 #align algebraic_topology.dold_kan.identity_N₂_objectwise AlgebraicTopology.DoldKan.identity_N₂_objectwise
+-/
 
+#print AlgebraicTopology.DoldKan.identity_N₂ /-
 theorem identity_N₂ :
     ((𝟙 (N₂ : Karoubi (SimplicialObject C) ⥤ _) ◫ N₂Γ₂.inv) ≫ Γ₂N₂.natTrans ◫ 𝟙 N₂ : N₂ ⟶ N₂) =
       𝟙 N₂ :=
   by ext P : 2; dsimp; rw [Γ₂.map_id, N₂.map_id, comp_id, id_comp, identity_N₂_objectwise P]
 #align algebraic_topology.dold_kan.identity_N₂ AlgebraicTopology.DoldKan.identity_N₂
+-/
 
 instance : IsIso (Γ₂N₂.natTrans : (N₂ : Karoubi (SimplicialObject C) ⥤ _) ⋙ _ ⟶ _) :=
   by
@@ -260,17 +278,21 @@ instance : IsIso (Γ₂N₁.natTrans : (N₁ : SimplicialObject C ⥤ _) ⋙ _ �
     infer_instance
   apply nat_iso.is_iso_of_is_iso_app
 
+#print AlgebraicTopology.DoldKan.Γ₂N₂ /-
 /-- The unit isomorphism of the Dold-Kan equivalence. -/
 @[simp]
 def Γ₂N₂ : 𝟭 _ ≅ (N₂ : Karoubi (SimplicialObject C) ⥤ _) ⋙ Γ₂ :=
   (asIso Γ₂N₂.natTrans).symm
 #align algebraic_topology.dold_kan.Γ₂N₂ AlgebraicTopology.DoldKan.Γ₂N₂
+-/
 
+#print AlgebraicTopology.DoldKan.Γ₂N₁ /-
 /-- The natural isomorphism `to_karoubi (simplicial_object C) ≅ N₁ ⋙ Γ₂`. -/
 @[simps]
 def Γ₂N₁ : toKaroubi _ ≅ (N₁ : SimplicialObject C ⥤ _) ⋙ Γ₂ :=
   (asIso Γ₂N₁.natTrans).symm
 #align algebraic_topology.dold_kan.Γ₂N₁ AlgebraicTopology.DoldKan.Γ₂N₁
+-/
 
 end DoldKan
 

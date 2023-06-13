@@ -31,6 +31,7 @@ universe u
 
 namespace ModuleCat
 
+#print ModuleCat.forget₂AddCommGroupFull /-
 /-- The forgetful functor from `ℤ` modules to `AddCommGroup` is full. -/
 instance forget₂AddCommGroupFull : Full (forget₂ (ModuleCat ℤ) AddCommGroupCat.{u})
     where preimage A B
@@ -41,7 +42,9 @@ instance forget₂AddCommGroupFull : Full (forget₂ (ModuleCat ℤ) AddCommGrou
       map_smul' := fun n x => by
         rw [int_smul_eq_zsmul, int_smul_eq_zsmul, map_zsmul, RingHom.id_apply] }
 #align Module.forget₂_AddCommGroup_full ModuleCat.forget₂AddCommGroupFull
+-/
 
+#print ModuleCat.forget₂_addCommGroupCat_essSurj /-
 /-- The forgetful functor from `ℤ` modules to `AddCommGroup` is essentially surjective. -/
 instance forget₂_addCommGroupCat_essSurj : EssSurj (forget₂ (ModuleCat ℤ) AddCommGroupCat.{u})
     where mem_essImage A :=
@@ -49,11 +52,14 @@ instance forget₂_addCommGroupCat_essSurj : EssSurj (forget₂ (ModuleCat ℤ) 
       ⟨{  Hom := 𝟙 A
           inv := 𝟙 A }⟩⟩
 #align Module.forget₂_AddCommGroup_ess_surj ModuleCat.forget₂_addCommGroupCat_essSurj
+-/
 
+#print ModuleCat.forget₂AddCommGroupIsEquivalence /-
 noncomputable instance forget₂AddCommGroupIsEquivalence :
     IsEquivalence (forget₂ (ModuleCat ℤ) AddCommGroupCat.{u}) :=
   Equivalence.ofFullyFaithfullyEssSurj (forget₂ (ModuleCat ℤ) AddCommGroupCat)
 #align Module.forget₂_AddCommGroup_is_equivalence ModuleCat.forget₂AddCommGroupIsEquivalence
+-/
 
 end ModuleCat
 

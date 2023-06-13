@@ -203,17 +203,21 @@ instance : EssSurj incl :=
 noncomputable instance : IsEquivalence incl :=
   Equivalence.ofFullyFaithfullyEssSurj _
 
+#print FintypeCat.Skeleton.equivalence /-
 /-- The equivalence between `Fintype.skeleton` and `Fintype`. -/
 noncomputable def equivalence : Skeleton ≌ FintypeCat :=
   incl.asEquivalence
 #align Fintype.skeleton.equivalence FintypeCat.Skeleton.equivalence
+-/
 
+#print FintypeCat.Skeleton.incl_mk_nat_card /-
 @[simp]
 theorem incl_mk_nat_card (n : ℕ) : Fintype.card (incl.obj (mk n)) = n :=
   by
   convert Finset.card_fin n
   apply Fintype.ofEquiv_card
 #align Fintype.skeleton.incl_mk_nat_card FintypeCat.Skeleton.incl_mk_nat_card
+-/
 
 end Skeleton
 

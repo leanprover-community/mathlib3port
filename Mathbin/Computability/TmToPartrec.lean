@@ -146,9 +146,11 @@ def nil : Code :=
 #align turing.to_partrec.code.nil Turing.ToPartrec.Code.nil
 -/
 
+#print Turing.ToPartrec.Code.nil_eval /-
 @[simp]
 theorem nil_eval (v) : nil.eval v = pure [] := by simp [nil]
 #align turing.to_partrec.code.nil_eval Turing.ToPartrec.Code.nil_eval
+-/
 
 #print Turing.ToPartrec.Code.id /-
 /-- `id` is the identity function: `id v = v`. -/
@@ -157,9 +159,11 @@ def id : Code :=
 #align turing.to_partrec.code.id Turing.ToPartrec.Code.id
 -/
 
+#print Turing.ToPartrec.Code.id_eval /-
 @[simp]
 theorem id_eval (v) : id.eval v = pure v := by simp [id]
 #align turing.to_partrec.code.id_eval Turing.ToPartrec.Code.id_eval
+-/
 
 #print Turing.ToPartrec.Code.head /-
 /-- `head` gets the head of the input list: `head [] = [0]`, `head (n :: v) = [n]`. -/
@@ -168,9 +172,11 @@ def head : Code :=
 #align turing.to_partrec.code.head Turing.ToPartrec.Code.head
 -/
 
+#print Turing.ToPartrec.Code.head_eval /-
 @[simp]
 theorem head_eval (v) : head.eval v = pure [v.headI] := by simp [head]
 #align turing.to_partrec.code.head_eval Turing.ToPartrec.Code.head_eval
+-/
 
 #print Turing.ToPartrec.Code.zero /-
 /-- `zero` is the constant zero function: `zero v = [0]`. -/
@@ -179,9 +185,11 @@ def zero : Code :=
 #align turing.to_partrec.code.zero Turing.ToPartrec.Code.zero
 -/
 
+#print Turing.ToPartrec.Code.zero_eval /-
 @[simp]
 theorem zero_eval (v) : zero.eval v = pure [0] := by simp [zero]
 #align turing.to_partrec.code.zero_eval Turing.ToPartrec.Code.zero_eval
+-/
 
 #print Turing.ToPartrec.Code.pred /-
 /-- `pred` returns the predecessor of the head of the input:
@@ -191,10 +199,12 @@ def pred : Code :=
 #align turing.to_partrec.code.pred Turing.ToPartrec.Code.pred
 -/
 
+#print Turing.ToPartrec.Code.pred_eval /-
 @[simp]
 theorem pred_eval (v) : pred.eval v = pure [v.headI.pred] := by
   simp [pred] <;> cases v.head <;> simp
 #align turing.to_partrec.code.pred_eval Turing.ToPartrec.Code.pred_eval
+-/
 
 #print Turing.ToPartrec.Code.rfind /-
 /-- `rfind f` performs the function of the `rfind` primitive of partial recursive functions.
@@ -249,6 +259,7 @@ def prec (f g : Code) : Code :=
 
 attribute [-simp] Part.bind_eq_bind Part.map_eq_map Part.pure_eq_some
 
+#print Turing.ToPartrec.Code.exists_code.comp /-
 theorem exists_code.comp {m n} {f : Vector ℕ n →. ℕ} {g : Fin n → Vector ℕ m →. ℕ}
     (hf : ∃ c : Code, ∀ v : Vector ℕ n, c.eval v.1 = pure <$> f v)
     (hg : ∀ i, ∃ c : Code, ∀ v : Vector ℕ m, c.eval v.1 = pure <$> g i v) :
@@ -270,6 +281,7 @@ theorem exists_code.comp {m n} {f : Vector ℕ n →. ℕ} {g : Fin n → Vector
           -Subtype.val_eq_coe]
         rfl⟩
 #align turing.to_partrec.code.exists_code.comp Turing.ToPartrec.Code.exists_code.comp
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -294,6 +306,7 @@ theorem exists_code.comp {m n} {f : Vector ℕ n →. ℕ} {g : Fin n → Vector
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print Turing.ToPartrec.Code.exists_code /-
 theorem exists_code {n} {f : Vector ℕ n →. ℕ} (hf : Nat.Partrec' f) :
     ∃ c : Code, ∀ v : Vector ℕ n, c.eval v.1 = pure <$> f v :=
   by
@@ -400,6 +413,7 @@ theorem exists_code {n} {f : Vector ℕ n →. ℕ} (hf : Nat.Partrec' f) :
       simp only [hf, hm n.lt_succ_self, Part.bind_some, List.headI, eq_self_iff_true, if_false,
         Part.mem_some_iff, and_self_iff, List.tail_cons]
 #align turing.to_partrec.code.exists_code Turing.ToPartrec.Code.exists_code
+-/
 
 end Code
 
@@ -569,12 +583,14 @@ def Cont.then : Cont → Cont → Cont
 #align turing.to_partrec.cont.then Turing.ToPartrec.Cont.then
 -/
 
+#print Turing.ToPartrec.Cont.then_eval /-
 theorem Cont.then_eval {k k' : Cont} {v} : (k.then k').eval v = k.eval v >>= k'.eval :=
   by
   induction k generalizing v <;> simp only [cont.eval, cont.then, bind_assoc, pure_bind, *]
   · simp only [← k_ih]
   · split_ifs <;> [rfl; simp only [← k_ih, bind_assoc]]
 #align turing.to_partrec.cont.then_eval Turing.ToPartrec.Cont.then_eval
+-/
 
 #print Turing.ToPartrec.Cfg.then /-
 /-- The `then k` function is a "configuration homomorphism". Its operation on states is to append
@@ -628,12 +644,14 @@ def Code.Ok (c : Code) :=
 #align turing.to_partrec.code.ok Turing.ToPartrec.Code.Ok
 -/
 
+#print Turing.ToPartrec.Code.Ok.zero /-
 theorem Code.Ok.zero {c} (h : Code.Ok c) {v} :
     eval step (stepNormal c Cont.halt v) = Cfg.halt <$> Code.eval c v :=
   by
   rw [h, ← bind_pure_comp_eq_map]; congr; funext v
   exact Part.eq_some_iff.2 (mem_eval.2 ⟨refl_trans_gen.single rfl, rfl⟩)
 #align turing.to_partrec.code.ok.zero Turing.ToPartrec.Code.Ok.zero
+-/
 
 #print Turing.ToPartrec.stepNormal.is_ret /-
 theorem stepNormal.is_ret (c k v) : ∃ k' v', stepNormal c k v = Cfg.ret k' v' :=
@@ -648,6 +666,7 @@ theorem stepNormal.is_ret (c k v) : ∃ k' v', stepNormal c k v = Cfg.ret k' v' 
 #align turing.to_partrec.step_normal.is_ret Turing.ToPartrec.stepNormal.is_ret
 -/
 
+#print Turing.ToPartrec.cont_eval_fix /-
 theorem cont_eval_fix {f k v} (fok : Code.Ok f) :
     eval step (stepNormal f (Cont.fix f k) v) = f.fix.eval v >>= fun v => eval step (Cfg.ret k v) :=
   by
@@ -712,6 +731,7 @@ theorem cont_eval_fix {f k v} (fok : Code.Ok f) :
       rwa [step_ret, if_neg h]
       exact IH v₁.tail ((Part.mem_map_iff _).2 ⟨_, he₁, if_neg h⟩)
 #align turing.to_partrec.cont_eval_fix Turing.ToPartrec.cont_eval_fix
+-/
 
 #print Turing.ToPartrec.code_is_ok /-
 theorem code_is_ok (c) : Code.Ok c :=
@@ -735,10 +755,13 @@ theorem code_is_ok (c) : Code.Ok c :=
 #align turing.to_partrec.code_is_ok Turing.ToPartrec.code_is_ok
 -/
 
+#print Turing.ToPartrec.stepNormal_eval /-
 theorem stepNormal_eval (c v) : eval step (stepNormal c Cont.halt v) = Cfg.halt <$> c.eval v :=
   (code_is_ok c).zero
 #align turing.to_partrec.step_normal_eval Turing.ToPartrec.stepNormal_eval
+-/
 
+#print Turing.ToPartrec.stepRet_eval /-
 theorem stepRet_eval {k v} : eval step (stepRet k v) = Cfg.halt <$> k.eval v :=
   by
   induction k generalizing v
@@ -763,6 +786,7 @@ theorem stepRet_eval {k v} : eval step (stepRet k v) = Cfg.halt <$> k.eval v :=
     congr; funext; rw [bind_pure_comp_eq_map, ← IH]
     exact reaches_eval (refl_trans_gen.single rfl)
 #align turing.to_partrec.step_ret_eval Turing.ToPartrec.stepRet_eval
+-/
 
 end ToPartrec
 
@@ -1244,25 +1268,33 @@ def K'.elim (a b c d : List Γ') : K' → List Γ'
 #align turing.partrec_to_TM2.K'.elim Turing.PartrecToTM2.K'.elim
 -/
 
+#print Turing.PartrecToTM2.K'.elim_update_main /-
 @[simp]
 theorem K'.elim_update_main {a b c d a'} : update (K'.elim a b c d) main a' = K'.elim a' b c d := by
   funext x <;> cases x <;> rfl
 #align turing.partrec_to_TM2.K'.elim_update_main Turing.PartrecToTM2.K'.elim_update_main
+-/
 
+#print Turing.PartrecToTM2.K'.elim_update_rev /-
 @[simp]
 theorem K'.elim_update_rev {a b c d b'} : update (K'.elim a b c d) rev b' = K'.elim a b' c d := by
   funext x <;> cases x <;> rfl
 #align turing.partrec_to_TM2.K'.elim_update_rev Turing.PartrecToTM2.K'.elim_update_rev
+-/
 
+#print Turing.PartrecToTM2.K'.elim_update_aux /-
 @[simp]
 theorem K'.elim_update_aux {a b c d c'} : update (K'.elim a b c d) aux c' = K'.elim a b c' d := by
   funext x <;> cases x <;> rfl
 #align turing.partrec_to_TM2.K'.elim_update_aux Turing.PartrecToTM2.K'.elim_update_aux
+-/
 
+#print Turing.PartrecToTM2.K'.elim_update_stack /-
 @[simp]
 theorem K'.elim_update_stack {a b c d d'} : update (K'.elim a b c d) stack d' = K'.elim a b c d' :=
   by funext x <;> cases x <;> rfl
 #align turing.partrec_to_TM2.K'.elim_update_stack Turing.PartrecToTM2.K'.elim_update_stack
+-/
 
 #print Turing.PartrecToTM2.halt /-
 /-- The halting state corresponding to a `list ℕ` output value. -/
@@ -1881,6 +1913,7 @@ theorem codeSupp_fix (f k) :
 #align turing.partrec_to_TM2.code_supp_fix Turing.PartrecToTM2.codeSupp_fix
 -/
 
+#print Turing.PartrecToTM2.contSupp_cons₁ /-
 @[simp]
 theorem contSupp_cons₁ (fs k) :
     contSupp (Cont'.cons₁ fs k) =
@@ -1891,6 +1924,7 @@ theorem contSupp_cons₁ (fs k) :
         codeSupp fs (Cont'.cons₂ k) :=
   by simp [code_supp, code_supp', cont_supp, Finset.union_assoc]
 #align turing.partrec_to_TM2.cont_supp_cons₁ Turing.PartrecToTM2.contSupp_cons₁
+-/
 
 #print Turing.PartrecToTM2.contSupp_cons₂ /-
 @[simp]
@@ -1966,10 +2000,12 @@ theorem supports_union {K₁ K₂ S} : Supports (K₁ ∪ K₂) S ↔ Supports K
 #align turing.partrec_to_TM2.supports_union Turing.PartrecToTM2.supports_union
 -/
 
+#print Turing.PartrecToTM2.supports_biUnion /-
 theorem supports_biUnion {K : Option Γ' → Finset Λ'} {S} :
     Supports (Finset.univ.biUnion K) S ↔ ∀ a, Supports (K a) S := by
   simp [supports] <;> apply forall_swap
 #align turing.partrec_to_TM2.supports_bUnion Turing.PartrecToTM2.supports_biUnion
+-/
 
 #print Turing.PartrecToTM2.head_supports /-
 theorem head_supports {S k q} (H : (q : Λ').Supports S) : (head k q).Supports S := fun _ => by

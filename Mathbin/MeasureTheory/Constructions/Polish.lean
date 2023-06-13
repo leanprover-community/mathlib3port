@@ -278,6 +278,7 @@ theorem MeasurableSet.analyticSet {α : Type _} [t : TopologicalSpace α] [Polis
 #align measurable_set.analytic_set MeasurableSet.analyticSet
 -/
 
+#print Measurable.exists_continuous /-
 /-- Given a Borel-measurable function from a Polish space to a second-countable space, there exists
 a finer Polish topology on the source space for which the function is continuous. -/
 theorem Measurable.exists_continuous {α β : Type _} [t : TopologicalSpace α] [PolishSpace α]
@@ -300,6 +301,7 @@ theorem Measurable.exists_continuous {α β : Type _} [t : TopologicalSpace α] 
   apply hb.continuous _ fun s hs => _
   exact t'T ⟨s, hs⟩ _ (Topen ⟨s, hs⟩)
 #align measurable.exists_continuous Measurable.exists_continuous
+-/
 
 /-! ### Separating sets with measurable sets -/
 
@@ -313,6 +315,7 @@ def MeasurablySeparable {α : Type _} [MeasurableSpace α] (s t : Set α) : Prop
 #align measure_theory.measurably_separable MeasureTheory.MeasurablySeparable
 -/
 
+#print MeasureTheory.MeasurablySeparable.iUnion /-
 theorem MeasurablySeparable.iUnion [Countable ι] {α : Type _} [MeasurableSpace α] {s t : ι → Set α}
     (h : ∀ m n, MeasurablySeparable (s m) (t n)) : MeasurablySeparable (⋃ n, s n) (⋃ m, t m) :=
   by
@@ -327,7 +330,9 @@ theorem MeasurablySeparable.iUnion [Countable ι] {α : Type _} [MeasurableSpace
   · refine' MeasurableSet.iUnion fun m => _
     exact MeasurableSet.iInter fun n => hu m n
 #align measure_theory.measurably_separable.Union MeasureTheory.MeasurablySeparable.iUnion
+-/
 
+#print MeasureTheory.measurablySeparable_range_of_disjoint /-
 /-- The hard part of the Lusin separation theorem saying that two disjoint analytic sets are
 contained in disjoint Borel sets (see the full statement in `analytic_set.measurably_separable`).
 Here, we prove this when our analytic sets are the ranges of functions from `ℕ → ℕ`.
@@ -461,7 +466,9 @@ theorem measurablySeparable_range_of_disjoint [T2Space α] [MeasurableSpace α] 
   -- this is a contradiction.
   exact M n B
 #align measure_theory.measurably_separable_range_of_disjoint MeasureTheory.measurablySeparable_range_of_disjoint
+-/
 
+#print MeasureTheory.AnalyticSet.measurablySeparable /-
 /-- The Lusin separation theorem: if two analytic sets are disjoint, then they are contained in
 disjoint Borel sets. -/
 theorem AnalyticSet.measurablySeparable [T2Space α] [MeasurableSpace α] [BorelSpace α] {s t : Set α}
@@ -474,13 +481,12 @@ theorem AnalyticSet.measurablySeparable [T2Space α] [MeasurableSpace α] [Borel
   · exact ⟨univ, subset_univ _, by simp, MeasurableSet.univ⟩
   exact measurably_separable_range_of_disjoint f_cont g_cont h
 #align measure_theory.analytic_set.measurably_separable MeasureTheory.AnalyticSet.measurablySeparable
+-/
 
 /-! ### Injective images of Borel sets -/
 
 
 variable {γ : Type _} [tγ : TopologicalSpace γ] [PolishSpace γ]
-
-include tγ
 
 #print MeasureTheory.measurableSet_range_of_continuous_injective /-
 /-- The Lusin-Souslin theorem: the range of a continuous injective function defined on a Polish
@@ -660,8 +666,7 @@ theorem IsClosed.measurableSet_image_of_continuousOn_injOn {β : Type _} [Topolo
 variable [MeasurableSpace γ] [hγb : BorelSpace γ] {β : Type _} [tβ : TopologicalSpace β] [T2Space β]
   [MeasurableSpace β] [BorelSpace β] {s : Set γ} {f : γ → β}
 
-include tβ hγb
-
+#print MeasurableSet.image_of_continuousOn_injOn /-
 /-- The Lusin-Souslin theorem: if `s` is Borel-measurable in a Polish space, then its image under
 a continuous injective map is also Borel-measurable. -/
 theorem MeasurableSet.image_of_continuousOn_injOn (hs : MeasurableSet s) (f_cont : ContinuousOn f s)
@@ -674,6 +679,7 @@ theorem MeasurableSet.image_of_continuousOn_injOn (hs : MeasurableSet s) (f_cont
     @IsClosed.measurableSet_image_of_continuousOn_injOn γ t' t'_polish β _ _ _ _ s s_closed f
       (f_cont.mono_dom t't) f_inj
 #align measurable_set.image_of_continuous_on_inj_on MeasurableSet.image_of_continuousOn_injOn
+-/
 
 #print MeasurableSet.image_of_measurable_injOn /-
 /-- The Lusin-Souslin theorem: if `s` is Borel-measurable in a Polish space, then its image under
@@ -697,6 +703,7 @@ theorem MeasurableSet.image_of_measurable_injOn [SecondCountableTopology β] (hs
 #align measurable_set.image_of_measurable_inj_on MeasurableSet.image_of_measurable_injOn
 -/
 
+#print Continuous.measurableEmbedding /-
 /-- An injective continuous function on a Polish space is a measurable embedding. -/
 theorem Continuous.measurableEmbedding (f_cont : Continuous f) (f_inj : Injective f) :
     MeasurableEmbedding f :=
@@ -705,7 +712,9 @@ theorem Continuous.measurableEmbedding (f_cont : Continuous f) (f_inj : Injectiv
     measurableSet_image' := fun u hu =>
       hu.image_of_continuousOn_injOn f_cont.ContinuousOn (f_inj.InjOn _) }
 #align continuous.measurable_embedding Continuous.measurableEmbedding
+-/
 
+#print ContinuousOn.measurableEmbedding /-
 /-- If `s` is Borel-measurable in a Polish space and `f` is continuous injective on `s`, then
 the restriction of `f` to `s` is a measurable embedding. -/
 theorem ContinuousOn.measurableEmbedding (hs : MeasurableSet s) (f_cont : ContinuousOn f s)
@@ -721,6 +730,7 @@ theorem ContinuousOn.measurableEmbedding (hs : MeasurableSet s) (f_cont : Contin
           (f_inj.mono (Subtype.coe_image_subset s u))
       rwa [← image_comp] at B  }
 #align continuous_on.measurable_embedding ContinuousOn.measurableEmbedding
+-/
 
 #print Measurable.measurableEmbedding /-
 /-- An injective measurable function from a Polish space to a second-countable topological space
@@ -732,8 +742,6 @@ theorem Measurable.measurableEmbedding [SecondCountableTopology β] (f_meas : Me
     measurableSet_image' := fun u hu => hu.image_of_measurable_injOn f_meas (f_inj.InjOn _) }
 #align measurable.measurable_embedding Measurable.measurableEmbedding
 -/
-
-omit tβ
 
 #print MeasureTheory.isClopenable_iff_measurableSet /-
 /-- In a Polish space, a set is clopenable if and only if it is Borel-measurable. -/
@@ -760,9 +768,8 @@ theorem isClopenable_iff_measurableSet : IsClopenable s ↔ MeasurableSet s :=
 #align measure_theory.is_clopenable_iff_measurable_set MeasureTheory.isClopenable_iff_measurableSet
 -/
 
-omit hγb
-
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print MeasureTheory.measurableSet_exists_tendsto /-
 /-- The set of points for which a measurable sequence of functions converges is measurable. -/
 @[measurability]
 theorem measurableSet_exists_tendsto [hγ : OpensMeasurableSpace γ] [Countable ι] {l : Filter ι}
@@ -792,6 +799,7 @@ theorem measurableSet_exists_tendsto [hγ : OpensMeasurableSpace γ] [Countable 
       MeasurableSet.biInter (to_countable (u N)) fun j _ =>
         measurableSet_lt (Measurable.dist (hf i) (hf j)) measurable_const
 #align measure_theory.measurable_set_exists_tendsto MeasureTheory.measurableSet_exists_tendsto
+-/
 
 end MeasureTheory
 
@@ -880,6 +888,7 @@ instance [PolishSpace α] : PolishSpace (univ : Set α) :=
 
 variable (α) [MeasurableSpace α] [PolishSpace α] [BorelSpace α]
 
+#print MeasureTheory.exists_nat_measurableEquiv_range_coe_fin_of_finite /-
 theorem exists_nat_measurableEquiv_range_coe_fin_of_finite [Finite α] :
     ∃ n : ℕ, Nonempty (α ≃ᵐ range (coe : Fin n → ℝ)) :=
   by
@@ -887,7 +896,9 @@ theorem exists_nat_measurableEquiv_range_coe_fin_of_finite [Finite α] :
   refine' ⟨n, ⟨PolishSpace.Equiv.measurableEquiv (n_equiv.trans _)⟩⟩
   exact Equiv.ofInjective _ (nat.cast_injective.comp Fin.val_injective)
 #align measure_theory.exists_nat_measurable_equiv_range_coe_fin_of_finite MeasureTheory.exists_nat_measurableEquiv_range_coe_fin_of_finite
+-/
 
+#print MeasureTheory.measurableEquiv_range_coe_nat_of_infinite_of_countable /-
 theorem measurableEquiv_range_coe_nat_of_infinite_of_countable [Infinite α] [Countable α] :
     Nonempty (α ≃ᵐ range (coe : ℕ → ℝ)) :=
   by
@@ -897,6 +908,7 @@ theorem measurableEquiv_range_coe_nat_of_infinite_of_countable [Infinite α] [Co
   refine' (nonempty_equiv_of_countable.some : α ≃ ℕ).trans _
   exact Equiv.ofInjective coe Nat.cast_injective
 #align measure_theory.measurable_equiv_range_coe_nat_of_infinite_of_countable MeasureTheory.measurableEquiv_range_coe_nat_of_infinite_of_countable
+-/
 
 #print MeasureTheory.exists_subset_real_measurableEquiv /-
 /-- Any Polish Borel space is measurably equivalent to a subset of the reals. -/

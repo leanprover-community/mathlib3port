@@ -56,7 +56,6 @@ deriving Monad, LawfulMonad
 
 variable (α : Type u)
 
--- mathport name: «expr .. »
 local infixl:41 " .. " => Set.Icc
 
 /-- Execute a `gen` inside the `io` monad using `i` as the example
@@ -134,6 +133,7 @@ def vectorOf : ∀ (n : ℕ) (cmd : Gen α), Gen (Vector α n)
   | succ n, cmd => Vector.cons <$> cmd <*> vector_of n cmd
 #align slim_check.gen.vector_of SlimCheck.Gen.vectorOf
 
+#print SlimCheck.Gen.listOf /-
 /-- Create a list of examples using `cmd`. The size is controlled
 by the size parameter of `gen`. -/
 def listOf (cmd : Gen α) : Gen (List α) :=
@@ -143,20 +143,25 @@ def listOf (cmd : Gen α) : Gen (List α) :=
       let v ← vector_of n cmd
       return v
 #align slim_check.gen.list_of SlimCheck.Gen.listOf
+-/
 
 open ULift
 
+#print SlimCheck.Gen.oneOf /-
 /-- Given a list of example generators, choose one to create an example. -/
 def oneOf (xs : List (Gen α)) (pos : 0 < xs.length) : Gen α := do
   let ⟨⟨n, h, h'⟩⟩ ← Uliftable.up <| chooseNat' 0 xs.length Pos
   List.nthLe xs n h'
 #align slim_check.gen.one_of SlimCheck.Gen.oneOf
+-/
 
+#print SlimCheck.Gen.elements /-
 /-- Given a list of example generators, choose one to create an example. -/
 def elements (xs : List α) (pos : 0 < xs.length) : Gen α := do
   let ⟨⟨n, h₀, h₁⟩⟩ ← Uliftable.up <| chooseNat' 0 xs.length Pos
   pure <| List.nthLe xs n h₁
 #align slim_check.gen.elements SlimCheck.Gen.elements
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- `freq_aux xs i _` takes a weighted list of generator and a number meant to select one of the
@@ -194,6 +199,7 @@ def freq (xs : List (ℕ+ × Gen α)) (pos : 0 < xs.length) : Gen α :=
 #align slim_check.gen.freq SlimCheck.Gen.freq
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print SlimCheck.Gen.permutationOf /-
 /-- Generate a random permutation of a given list. -/
 def permutationOf {α : Type u} : ∀ xs : List α, Gen (Subtype <| List.Perm xs)
   | [] => pure ⟨[], List.Perm.nil⟩
@@ -204,6 +210,7 @@ def permutationOf {α : Type u} : ∀ xs : List α, Gen (Subtype <| List.Perm xs
         ⟨List.insertNth n x xs',
           List.Perm.trans (List.Perm.cons _ h) (List.perm_insertNth _ _ h').symm⟩
 #align slim_check.gen.permutation_of SlimCheck.Gen.permutationOf
+-/
 
 end Gen
 

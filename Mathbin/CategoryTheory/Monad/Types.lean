@@ -48,6 +48,7 @@ def ofTypeMonad : Monad (Type u)
 #align category_theory.of_type_monad CategoryTheory.ofTypeMonad
 -/
 
+#print CategoryTheory.eq /-
 /-- The `Kleisli` category of a `control.monad` is equivalent to the `kleisli` category of its
 category-theoretic version, provided the monad is lawful.
 -/
@@ -78,6 +79,7 @@ def eq : KleisliCat m ≌ Kleisli (of_type_monad m)
     simp [functor_norm]
   counitIso := NatIso.ofComponents (fun X => Iso.refl X) fun X Y f => by tidy
 #align category_theory.eq CategoryTheory.eq
+-/
 
 end
 

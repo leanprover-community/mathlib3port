@@ -44,6 +44,7 @@ noncomputable section
 
 open scoped Classical Topology
 
+#print padic_polynomial_dist /-
 -- We begin with some general lemmas that are used below in the computation.
 theorem padic_polynomial_dist {p : ℕ} [Fact p.Prime] (F : Polynomial ℤ_[p]) (x y : ℤ_[p]) :
     ‖F.eval x - F.eval y‖ ≤ ‖x - y‖ :=
@@ -53,6 +54,7 @@ theorem padic_polynomial_dist {p : ℕ} [Fact p.Prime] (F : Polynomial ℤ_[p]) 
     _ ≤ 1 * ‖x - y‖ := (mul_le_mul_of_nonneg_right (PadicInt.norm_le_one _) (norm_nonneg _))
     _ = ‖x - y‖ := by simp
 #align padic_polynomial_dist padic_polynomial_dist
+-/
 
 open Filter Metric
 
@@ -64,8 +66,6 @@ section
 
 parameter {p : ℕ} [Fact p.Prime] {ncs : CauSeq ℤ_[p] norm} {F : Polynomial ℤ_[p]} {a : ℤ_[p]}
   (ncs_der_val : ∀ n, ‖F.derivative.eval (ncs n)‖ = ‖F.derivative.eval a‖)
-
-include ncs_der_val
 
 private theorem ncs_tendsto_const :
     Tendsto (fun i => ‖F.derivative.eval (ncs i)‖) atTop (𝓝 ‖F.derivative.eval a‖) := by
@@ -85,14 +85,14 @@ section
 parameter {p : ℕ} [Fact p.Prime] {ncs : CauSeq ℤ_[p] norm} {F : Polynomial ℤ_[p]}
   (hnorm : Tendsto (fun i => ‖F.eval (ncs i)‖) atTop (𝓝 0))
 
-include hnorm
-
 private theorem tendsto_zero_of_norm_tendsto_zero : Tendsto (fun i => F.eval (ncs i)) atTop (𝓝 0) :=
   tendsto_iff_norm_tendsto_zero.2 (by simpa using hnorm)
 
+#print limit_zero_of_norm_tendsto_zero /-
 theorem limit_zero_of_norm_tendsto_zero : F.eval ncs.limUnder = 0 :=
   tendsto_nhds_unique (comp_tendsto_lim _) tendsto_zero_of_norm_tendsto_zero
 #align limit_zero_of_norm_tendsto_zero limit_zero_of_norm_tendsto_zero
+-/
 
 end
 
@@ -102,8 +102,6 @@ open Nat
 
 parameter {p : ℕ} [Fact p.Prime] {F : Polynomial ℤ_[p]} {a : ℤ_[p]}
   (hnorm : ‖F.eval a‖ < ‖F.derivative.eval a‖ ^ 2) (hnsol : F.eval a ≠ 0)
-
-include hnorm
 
 /-- `T` is an auxiliary value that is used to control the behavior of the polynomial `F`. -/
 private def T : ℝ :=
@@ -267,8 +265,6 @@ private theorem newton_seq_succ_dist (n : ℕ) :
     _ ≤ ‖F.derivative.eval a‖ ^ 2 * T ^ 2 ^ n / ‖F.derivative.eval a‖ :=
       ((div_le_div_right deriv_norm_pos).2 (newton_seq_norm_le _))
     _ = ‖F.derivative.eval a‖ * T ^ 2 ^ n := div_sq_cancel _ _
-
-include hnsol
 
 private theorem T_pos : T > 0 := by
   rw [T_def]
@@ -470,8 +466,6 @@ private theorem a_soln_is_unique (ha : F.eval a = 0) (z' : ℤ_[p]) (hz' : F.eva
 
 variable (hnorm : ‖F.eval a‖ < ‖F.derivative.eval a‖ ^ 2)
 
-include hnorm
-
 private theorem a_is_soln (ha : F.eval a = 0) :
     F.eval a = 0 ∧
       ‖a - a‖ < ‖F.derivative.eval a‖ ∧
@@ -479,6 +473,7 @@ private theorem a_is_soln (ha : F.eval a = 0) :
           ∀ z', F.eval z' = 0 → ‖z' - a‖ < ‖F.derivative.eval a‖ → z' = a :=
   ⟨ha, by simp [deriv_ne_zero hnorm], rfl, a_soln_is_unique ha⟩
 
+#print hensels_lemma /-
 theorem hensels_lemma :
     ∃ z : ℤ_[p],
       F.eval z = 0 ∧
@@ -492,4 +487,5 @@ theorem hensels_lemma :
           soln_unique _ _⟩ <;>
       assumption
 #align hensels_lemma hensels_lemma
+-/
 

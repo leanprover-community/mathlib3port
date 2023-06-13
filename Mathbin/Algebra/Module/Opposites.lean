@@ -43,37 +43,49 @@ def opLinearEquiv : M ≃ₗ[R] Mᵐᵒᵖ :=
 #align mul_opposite.op_linear_equiv MulOpposite.opLinearEquiv
 -/
 
+#print MulOpposite.coe_opLinearEquiv /-
 @[simp]
 theorem coe_opLinearEquiv : (opLinearEquiv R : M → Mᵐᵒᵖ) = op :=
   rfl
 #align mul_opposite.coe_op_linear_equiv MulOpposite.coe_opLinearEquiv
+-/
 
+#print MulOpposite.coe_opLinearEquiv_symm /-
 @[simp]
 theorem coe_opLinearEquiv_symm : ((opLinearEquiv R).symm : Mᵐᵒᵖ → M) = unop :=
   rfl
 #align mul_opposite.coe_op_linear_equiv_symm MulOpposite.coe_opLinearEquiv_symm
+-/
 
+#print MulOpposite.coe_opLinearEquiv_toLinearMap /-
 @[simp]
 theorem coe_opLinearEquiv_toLinearMap : ((opLinearEquiv R).toLinearMap : M → Mᵐᵒᵖ) = op :=
   rfl
 #align mul_opposite.coe_op_linear_equiv_to_linear_map MulOpposite.coe_opLinearEquiv_toLinearMap
+-/
 
+#print MulOpposite.coe_opLinearEquiv_symm_toLinearMap /-
 @[simp]
 theorem coe_opLinearEquiv_symm_toLinearMap :
     ((opLinearEquiv R).symm.toLinearMap : Mᵐᵒᵖ → M) = unop :=
   rfl
 #align mul_opposite.coe_op_linear_equiv_symm_to_linear_map MulOpposite.coe_opLinearEquiv_symm_toLinearMap
+-/
 
+#print MulOpposite.opLinearEquiv_toAddEquiv /-
 @[simp]
 theorem opLinearEquiv_toAddEquiv : (opLinearEquiv R : M ≃ₗ[R] Mᵐᵒᵖ).toAddEquiv = opAddEquiv :=
   rfl
 #align mul_opposite.op_linear_equiv_to_add_equiv MulOpposite.opLinearEquiv_toAddEquiv
+-/
 
+#print MulOpposite.opLinearEquiv_symm_toAddEquiv /-
 @[simp]
 theorem opLinearEquiv_symm_toAddEquiv :
     (opLinearEquiv R : M ≃ₗ[R] Mᵐᵒᵖ).symm.toAddEquiv = opAddEquiv.symm :=
   rfl
 #align mul_opposite.op_linear_equiv_symm_to_add_equiv MulOpposite.opLinearEquiv_symm_toAddEquiv
+-/
 
 end MulOpposite
 

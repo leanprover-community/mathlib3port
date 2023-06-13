@@ -74,12 +74,14 @@ noncomputable def fintypeBasisIndex {ι : Type _} [IsNoetherian K V] (b : Basis 
 noncomputable instance [IsNoetherian K V] : Fintype (Basis.ofVectorSpaceIndex K V) :=
   fintypeBasisIndex (Basis.ofVectorSpace K V)
 
+#print IsNoetherian.finite_basis_index /-
 /-- In a noetherian module over a division ring,
 if a basis is indexed by a set, that set is finite. -/
 theorem finite_basis_index {ι : Type _} {s : Set ι} [IsNoetherian K V] (b : Basis s K V) :
     s.Finite :=
   b.finite_index_of_rank_lt_aleph0 (rank_lt_aleph0 K V)
 #align is_noetherian.finite_basis_index IsNoetherian.finite_basis_index
+-/
 
 variable (K V)
 

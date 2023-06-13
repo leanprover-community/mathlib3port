@@ -96,43 +96,60 @@ theorem Iio_mem_atBot [Preorder α] [NoMinOrder α] (x : α) : Iio x ∈ (atBot 
 #align filter.Iio_mem_at_bot Filter.Iio_mem_atBot
 -/
 
+#print Filter.disjoint_atBot_principal_Ioi /-
 theorem disjoint_atBot_principal_Ioi [Preorder α] (x : α) : Disjoint atBot (𝓟 (Ioi x)) :=
   disjoint_of_disjoint_of_mem (Iic_disjoint_Ioi le_rfl) (Iic_mem_atBot x) (mem_principal_self _)
 #align filter.disjoint_at_bot_principal_Ioi Filter.disjoint_atBot_principal_Ioi
+-/
 
+#print Filter.disjoint_atTop_principal_Iio /-
 theorem disjoint_atTop_principal_Iio [Preorder α] (x : α) : Disjoint atTop (𝓟 (Iio x)) :=
   @disjoint_atBot_principal_Ioi αᵒᵈ _ _
 #align filter.disjoint_at_top_principal_Iio Filter.disjoint_atTop_principal_Iio
+-/
 
+#print Filter.disjoint_atTop_principal_Iic /-
 theorem disjoint_atTop_principal_Iic [Preorder α] [NoMaxOrder α] (x : α) :
     Disjoint atTop (𝓟 (Iic x)) :=
   disjoint_of_disjoint_of_mem (Iic_disjoint_Ioi le_rfl).symm (Ioi_mem_atTop x)
     (mem_principal_self _)
 #align filter.disjoint_at_top_principal_Iic Filter.disjoint_atTop_principal_Iic
+-/
 
+#print Filter.disjoint_atBot_principal_Ici /-
 theorem disjoint_atBot_principal_Ici [Preorder α] [NoMinOrder α] (x : α) :
     Disjoint atBot (𝓟 (Ici x)) :=
   @disjoint_atTop_principal_Iic αᵒᵈ _ _ _
 #align filter.disjoint_at_bot_principal_Ici Filter.disjoint_atBot_principal_Ici
+-/
 
+#print Filter.disjoint_pure_atTop /-
 theorem disjoint_pure_atTop [Preorder α] [NoMaxOrder α] (x : α) : Disjoint (pure x) atTop :=
   Disjoint.symm ((disjoint_atTop_principal_Iic x).mono_right <| le_principal_iff.2 le_rfl)
 #align filter.disjoint_pure_at_top Filter.disjoint_pure_atTop
+-/
 
+#print Filter.disjoint_pure_atBot /-
 theorem disjoint_pure_atBot [Preorder α] [NoMinOrder α] (x : α) : Disjoint (pure x) atBot :=
   @disjoint_pure_atTop αᵒᵈ _ _ _
 #align filter.disjoint_pure_at_bot Filter.disjoint_pure_atBot
+-/
 
+#print Filter.not_tendsto_const_atTop /-
 theorem not_tendsto_const_atTop [Preorder α] [NoMaxOrder α] (x : α) (l : Filter β) [l.ne_bot] :
     ¬Tendsto (fun _ => x) l atTop :=
   tendsto_const_pure.not_tendsto (disjoint_pure_atTop x)
 #align filter.not_tendsto_const_at_top Filter.not_tendsto_const_atTop
+-/
 
+#print Filter.not_tendsto_const_atBot /-
 theorem not_tendsto_const_atBot [Preorder α] [NoMinOrder α] (x : α) (l : Filter β) [l.ne_bot] :
     ¬Tendsto (fun _ => x) l atBot :=
   tendsto_const_pure.not_tendsto (disjoint_pure_atBot x)
 #align filter.not_tendsto_const_at_bot Filter.not_tendsto_const_atBot
+-/
 
+#print Filter.disjoint_atBot_atTop /-
 theorem disjoint_atBot_atTop [PartialOrder α] [Nontrivial α] : Disjoint (atBot : Filter α) atTop :=
   by
   rcases exists_pair_ne α with ⟨x, y, hne⟩
@@ -142,10 +159,13 @@ theorem disjoint_atBot_atTop [PartialOrder α] [Nontrivial α] : Disjoint (atBot
   · refine' disjoint_of_disjoint_of_mem _ (Iic_mem_at_bot y) (Ici_mem_at_top x)
     exact Iic_disjoint_Ici.2 hle
 #align filter.disjoint_at_bot_at_top Filter.disjoint_atBot_atTop
+-/
 
+#print Filter.disjoint_atTop_atBot /-
 theorem disjoint_atTop_atBot [PartialOrder α] [Nontrivial α] : Disjoint (atTop : Filter α) atBot :=
   disjoint_atBot_atTop.symm
 #align filter.disjoint_at_top_at_bot Filter.disjoint_atTop_atBot
+-/
 
 #print Filter.atTop_basis /-
 theorem atTop_basis [Nonempty α] [SemilatticeSup α] : (@atTop α _).HasBasis (fun _ => True) Ici :=
@@ -341,15 +361,20 @@ instance (priority := 200) atBot.isCountablyGenerated [Preorder α] [Countable �
 #align filter.at_bot.is_countably_generated Filter.atBot.isCountablyGenerated
 -/
 
+#print Filter.OrderTop.atTop_eq /-
 theorem OrderTop.atTop_eq (α) [PartialOrder α] [OrderTop α] : (atTop : Filter α) = pure ⊤ :=
   le_antisymm (le_pure_iff.2 <| (eventually_ge_atTop ⊤).mono fun b => top_unique)
     (le_iInf fun b => le_principal_iff.2 le_top)
 #align filter.order_top.at_top_eq Filter.OrderTop.atTop_eq
+-/
 
+#print Filter.OrderBot.atBot_eq /-
 theorem OrderBot.atBot_eq (α) [PartialOrder α] [OrderBot α] : (atBot : Filter α) = pure ⊥ :=
   @OrderTop.atTop_eq αᵒᵈ _ _
 #align filter.order_bot.at_bot_eq Filter.OrderBot.atBot_eq
+-/
 
+#print Filter.Subsingleton.atTop_eq /-
 @[nontriviality]
 theorem Subsingleton.atTop_eq (α) [Subsingleton α] [Preorder α] : (atTop : Filter α) = ⊤ :=
   by
@@ -358,21 +383,28 @@ theorem Subsingleton.atTop_eq (α) [Subsingleton α] [Preorder α] : (atTop : Fi
   rw [at_top, ciInf_unique, Unique.default_eq x, mem_principal] at hs 
   exact hs left_mem_Ici
 #align filter.subsingleton.at_top_eq Filter.Subsingleton.atTop_eq
+-/
 
+#print Filter.Subsingleton.atBot_eq /-
 @[nontriviality]
 theorem Subsingleton.atBot_eq (α) [Subsingleton α] [Preorder α] : (atBot : Filter α) = ⊤ :=
   @Subsingleton.atTop_eq αᵒᵈ _ _
 #align filter.subsingleton.at_bot_eq Filter.Subsingleton.atBot_eq
+-/
 
+#print Filter.tendsto_atTop_pure /-
 theorem tendsto_atTop_pure [PartialOrder α] [OrderTop α] (f : α → β) :
     Tendsto f atTop (pure <| f ⊤) :=
   (OrderTop.atTop_eq α).symm ▸ tendsto_pure_pure _ _
 #align filter.tendsto_at_top_pure Filter.tendsto_atTop_pure
+-/
 
+#print Filter.tendsto_atBot_pure /-
 theorem tendsto_atBot_pure [PartialOrder α] [OrderBot α] (f : α → β) :
     Tendsto f atBot (pure <| f ⊥) :=
   @tendsto_atTop_pure αᵒᵈ _ _ _ _
 #align filter.tendsto_at_bot_pure Filter.tendsto_atBot_pure
+-/
 
 #print Filter.Eventually.exists_forall_of_atTop /-
 theorem Eventually.exists_forall_of_atTop [SemilatticeSup α] [Nonempty α] {p : α → Prop}
@@ -388,43 +420,59 @@ theorem Eventually.exists_forall_of_atBot [SemilatticeInf α] [Nonempty α] {p :
 #align filter.eventually.exists_forall_of_at_bot Filter.Eventually.exists_forall_of_atBot
 -/
 
+#print Filter.frequently_atTop /-
 theorem frequently_atTop [SemilatticeSup α] [Nonempty α] {p : α → Prop} :
     (∃ᶠ x in atTop, p x) ↔ ∀ a, ∃ b ≥ a, p b := by simp [at_top_basis.frequently_iff]
 #align filter.frequently_at_top Filter.frequently_atTop
+-/
 
+#print Filter.frequently_atBot /-
 theorem frequently_atBot [SemilatticeInf α] [Nonempty α] {p : α → Prop} :
     (∃ᶠ x in atBot, p x) ↔ ∀ a, ∃ b ≤ a, p b :=
   @frequently_atTop αᵒᵈ _ _ _
 #align filter.frequently_at_bot Filter.frequently_atBot
+-/
 
+#print Filter.frequently_atTop' /-
 theorem frequently_atTop' [SemilatticeSup α] [Nonempty α] [NoMaxOrder α] {p : α → Prop} :
     (∃ᶠ x in atTop, p x) ↔ ∀ a, ∃ b > a, p b := by simp [at_top_basis_Ioi.frequently_iff]
 #align filter.frequently_at_top' Filter.frequently_atTop'
+-/
 
+#print Filter.frequently_atBot' /-
 theorem frequently_atBot' [SemilatticeInf α] [Nonempty α] [NoMinOrder α] {p : α → Prop} :
     (∃ᶠ x in atBot, p x) ↔ ∀ a, ∃ b < a, p b :=
   @frequently_atTop' αᵒᵈ _ _ _ _
 #align filter.frequently_at_bot' Filter.frequently_atBot'
+-/
 
+#print Filter.Frequently.forall_exists_of_atTop /-
 theorem Frequently.forall_exists_of_atTop [SemilatticeSup α] [Nonempty α] {p : α → Prop}
     (h : ∃ᶠ x in atTop, p x) : ∀ a, ∃ b ≥ a, p b :=
   frequently_atTop.mp h
 #align filter.frequently.forall_exists_of_at_top Filter.Frequently.forall_exists_of_atTop
+-/
 
+#print Filter.Frequently.forall_exists_of_atBot /-
 theorem Frequently.forall_exists_of_atBot [SemilatticeInf α] [Nonempty α] {p : α → Prop}
     (h : ∃ᶠ x in atBot, p x) : ∀ a, ∃ b ≤ a, p b :=
   frequently_atBot.mp h
 #align filter.frequently.forall_exists_of_at_bot Filter.Frequently.forall_exists_of_atBot
+-/
 
+#print Filter.map_atTop_eq /-
 theorem map_atTop_eq [Nonempty α] [SemilatticeSup α] {f : α → β} :
     atTop.map f = ⨅ a, 𝓟 <| f '' {a' | a ≤ a'} :=
   (atTop_basis.map _).eq_iInf
 #align filter.map_at_top_eq Filter.map_atTop_eq
+-/
 
+#print Filter.map_atBot_eq /-
 theorem map_atBot_eq [Nonempty α] [SemilatticeInf α] {f : α → β} :
     atBot.map f = ⨅ a, 𝓟 <| f '' {a' | a' ≤ a} :=
   @map_atTop_eq αᵒᵈ _ _ _ _
 #align filter.map_at_bot_eq Filter.map_atBot_eq
+-/
 
 #print Filter.tendsto_atTop /-
 theorem tendsto_atTop [Preorder β] {m : α → β} {f : Filter α} :
@@ -477,45 +525,61 @@ open Filter
 
 variable [Preorder α] [Preorder β]
 
+#print OrderIso.comap_atTop /-
 @[simp]
 theorem comap_atTop (e : α ≃o β) : comap e atTop = atTop := by
   simp [at_top, ← e.surjective.infi_comp]
 #align order_iso.comap_at_top OrderIso.comap_atTop
+-/
 
+#print OrderIso.comap_atBot /-
 @[simp]
 theorem comap_atBot (e : α ≃o β) : comap e atBot = atBot :=
   e.dual.comap_atTop
 #align order_iso.comap_at_bot OrderIso.comap_atBot
+-/
 
+#print OrderIso.map_atTop /-
 @[simp]
 theorem map_atTop (e : α ≃o β) : map (e : α → β) atTop = atTop := by
   rw [← e.comap_at_top, map_comap_of_surjective e.surjective]
 #align order_iso.map_at_top OrderIso.map_atTop
+-/
 
+#print OrderIso.map_atBot /-
 @[simp]
 theorem map_atBot (e : α ≃o β) : map (e : α → β) atBot = atBot :=
   e.dual.map_atTop
 #align order_iso.map_at_bot OrderIso.map_atBot
+-/
 
+#print OrderIso.tendsto_atTop /-
 theorem tendsto_atTop (e : α ≃o β) : Tendsto e atTop atTop :=
   e.map_atTop.le
 #align order_iso.tendsto_at_top OrderIso.tendsto_atTop
+-/
 
+#print OrderIso.tendsto_atBot /-
 theorem tendsto_atBot (e : α ≃o β) : Tendsto e atBot atBot :=
   e.map_atBot.le
 #align order_iso.tendsto_at_bot OrderIso.tendsto_atBot
+-/
 
+#print OrderIso.tendsto_atTop_iff /-
 @[simp]
 theorem tendsto_atTop_iff {l : Filter γ} {f : γ → α} (e : α ≃o β) :
     Tendsto (fun x => e (f x)) l atTop ↔ Tendsto f l atTop := by
   rw [← e.comap_at_top, tendsto_comap_iff]
 #align order_iso.tendsto_at_top_iff OrderIso.tendsto_atTop_iff
+-/
 
+#print OrderIso.tendsto_atBot_iff /-
 @[simp]
 theorem tendsto_atBot_iff {l : Filter γ} {f : γ → α} (e : α ≃o β) :
     Tendsto (fun x => e (f x)) l atBot ↔ Tendsto f l atBot :=
   e.dual.tendsto_atTop_iff
 #align order_iso.tendsto_at_bot_iff OrderIso.tendsto_atBot_iff
+-/
 
 end OrderIso
 
@@ -526,16 +590,21 @@ namespace Filter
 -/
 
 
+#print Filter.inf_map_atTop_neBot_iff /-
 theorem inf_map_atTop_neBot_iff [SemilatticeSup α] [Nonempty α] {F : Filter β} {u : α → β} :
     NeBot (F ⊓ map u atTop) ↔ ∀ U ∈ F, ∀ N, ∃ n ≥ N, u n ∈ U := by
   simp_rw [inf_ne_bot_iff_frequently_left, frequently_map, frequently_at_top] <;> rfl
 #align filter.inf_map_at_top_ne_bot_iff Filter.inf_map_atTop_neBot_iff
+-/
 
+#print Filter.inf_map_atBot_neBot_iff /-
 theorem inf_map_atBot_neBot_iff [SemilatticeInf α] [Nonempty α] {F : Filter β} {u : α → β} :
     NeBot (F ⊓ map u atBot) ↔ ∀ U ∈ F, ∀ N, ∃ n ≤ N, u n ∈ U :=
   @inf_map_atTop_neBot_iff αᵒᵈ _ _ _ _ _
 #align filter.inf_map_at_bot_ne_bot_iff Filter.inf_map_atBot_neBot_iff
+-/
 
+#print Filter.extraction_of_frequently_atTop' /-
 theorem extraction_of_frequently_atTop' {P : ℕ → Prop} (h : ∀ N, ∃ n > N, P n) :
     ∃ φ : ℕ → ℕ, StrictMono φ ∧ ∀ n, P (φ n) :=
   by
@@ -543,6 +612,7 @@ theorem extraction_of_frequently_atTop' {P : ℕ → Prop} (h : ∀ N, ∃ n > N
   cases' forall_and_distrib.mp hu with hu hu'
   exact ⟨u ∘ Nat.rec 0 fun n v => u v, strictMono_nat_of_lt_succ fun n => hu _, fun n => hu' _⟩
 #align filter.extraction_of_frequently_at_top' Filter.extraction_of_frequently_atTop'
+-/
 
 #print Filter.extraction_of_frequently_atTop /-
 theorem extraction_of_frequently_atTop {P : ℕ → Prop} (h : ∃ᶠ n in atTop, P n) :
@@ -590,6 +660,7 @@ theorem extraction_forall_of_eventually' {P : ℕ → ℕ → Prop} (h : ∀ n, 
 #align filter.extraction_forall_of_eventually' Filter.extraction_forall_of_eventually'
 -/
 
+#print Filter.exists_le_of_tendsto_atTop /-
 theorem exists_le_of_tendsto_atTop [SemilatticeSup α] [Preorder β] {u : α → β}
     (h : Tendsto u atTop atTop) (a : α) (b : β) : ∃ a' ≥ a, b ≤ u a' :=
   by
@@ -599,14 +670,18 @@ theorem exists_le_of_tendsto_atTop [SemilatticeSup α] [Preorder β] {u : α →
   rcases this.exists with ⟨a', ha, hb⟩
   exact ⟨a', ha, hb⟩
 #align filter.exists_le_of_tendsto_at_top Filter.exists_le_of_tendsto_atTop
+-/
 
+#print Filter.exists_le_of_tendsto_atBot /-
 -- see Note [nolint_ge]
 @[nolint ge_or_gt]
 theorem exists_le_of_tendsto_atBot [SemilatticeSup α] [Preorder β] {u : α → β}
     (h : Tendsto u atTop atBot) : ∀ a b, ∃ a' ≥ a, u a' ≤ b :=
   @exists_le_of_tendsto_atTop _ βᵒᵈ _ _ _ h
 #align filter.exists_le_of_tendsto_at_bot Filter.exists_le_of_tendsto_atBot
+-/
 
+#print Filter.exists_lt_of_tendsto_atTop /-
 theorem exists_lt_of_tendsto_atTop [SemilatticeSup α] [Preorder β] [NoMaxOrder β] {u : α → β}
     (h : Tendsto u atTop atTop) (a : α) (b : β) : ∃ a' ≥ a, b < u a' :=
   by
@@ -614,14 +689,18 @@ theorem exists_lt_of_tendsto_atTop [SemilatticeSup α] [Preorder β] [NoMaxOrder
   rcases exists_le_of_tendsto_at_top h a b' with ⟨a', ha', ha''⟩
   exact ⟨a', ha', lt_of_lt_of_le hb' ha''⟩
 #align filter.exists_lt_of_tendsto_at_top Filter.exists_lt_of_tendsto_atTop
+-/
 
+#print Filter.exists_lt_of_tendsto_atBot /-
 -- see Note [nolint_ge]
 @[nolint ge_or_gt]
 theorem exists_lt_of_tendsto_atBot [SemilatticeSup α] [Preorder β] [NoMinOrder β] {u : α → β}
     (h : Tendsto u atTop atBot) : ∀ a b, ∃ a' ≥ a, u a' < b :=
   @exists_lt_of_tendsto_atTop _ βᵒᵈ _ _ _ _ h
 #align filter.exists_lt_of_tendsto_at_bot Filter.exists_lt_of_tendsto_atBot
+-/
 
+#print Filter.high_scores /-
 /-- If `u` is a sequence which is unbounded above,
 then after any point, it reaches a value strictly greater than all previous values.
 -/
@@ -647,7 +726,9 @@ theorem high_scores [LinearOrder β] [NoMaxOrder β] {u : ℕ → β} (hu : Tend
     u l ≤ u k := hlk
     _ < u n := hnk
 #align filter.high_scores Filter.high_scores
+-/
 
+#print Filter.low_scores /-
 -- see Note [nolint_ge]
 /-- If `u` is a sequence which is unbounded below,
 then after any point, it reaches a value strictly smaller than all previous values.
@@ -657,6 +738,7 @@ theorem low_scores [LinearOrder β] [NoMinOrder β] {u : ℕ → β} (hu : Tends
     ∀ N, ∃ n ≥ N, ∀ k < n, u n < u k :=
   @high_scores βᵒᵈ _ _ _ hu
 #align filter.low_scores Filter.low_scores
+-/
 
 #print Filter.frequently_high_scores /-
 /-- If `u` is a sequence which is unbounded above,
@@ -703,56 +785,77 @@ section OrderedAddCommMonoid
 
 variable [OrderedAddCommMonoid β] {l : Filter α} {f g : α → β}
 
+#print Filter.tendsto_atTop_add_nonneg_left' /-
 theorem tendsto_atTop_add_nonneg_left' (hf : ∀ᶠ x in l, 0 ≤ f x) (hg : Tendsto g l atTop) :
     Tendsto (fun x => f x + g x) l atTop :=
   tendsto_atTop_mono' l (hf.mono fun x => le_add_of_nonneg_left) hg
 #align filter.tendsto_at_top_add_nonneg_left' Filter.tendsto_atTop_add_nonneg_left'
+-/
 
+#print Filter.tendsto_atBot_add_nonpos_left' /-
 theorem tendsto_atBot_add_nonpos_left' (hf : ∀ᶠ x in l, f x ≤ 0) (hg : Tendsto g l atBot) :
     Tendsto (fun x => f x + g x) l atBot :=
   @tendsto_atTop_add_nonneg_left' _ βᵒᵈ _ _ _ _ hf hg
 #align filter.tendsto_at_bot_add_nonpos_left' Filter.tendsto_atBot_add_nonpos_left'
+-/
 
+#print Filter.tendsto_atTop_add_nonneg_left /-
 theorem tendsto_atTop_add_nonneg_left (hf : ∀ x, 0 ≤ f x) (hg : Tendsto g l atTop) :
     Tendsto (fun x => f x + g x) l atTop :=
   tendsto_atTop_add_nonneg_left' (eventually_of_forall hf) hg
 #align filter.tendsto_at_top_add_nonneg_left Filter.tendsto_atTop_add_nonneg_left
+-/
 
+#print Filter.tendsto_atBot_add_nonpos_left /-
 theorem tendsto_atBot_add_nonpos_left (hf : ∀ x, f x ≤ 0) (hg : Tendsto g l atBot) :
     Tendsto (fun x => f x + g x) l atBot :=
   @tendsto_atTop_add_nonneg_left _ βᵒᵈ _ _ _ _ hf hg
 #align filter.tendsto_at_bot_add_nonpos_left Filter.tendsto_atBot_add_nonpos_left
+-/
 
+#print Filter.tendsto_atTop_add_nonneg_right' /-
 theorem tendsto_atTop_add_nonneg_right' (hf : Tendsto f l atTop) (hg : ∀ᶠ x in l, 0 ≤ g x) :
     Tendsto (fun x => f x + g x) l atTop :=
   tendsto_atTop_mono' l (monotone_mem (fun x => le_add_of_nonneg_right) hg) hf
 #align filter.tendsto_at_top_add_nonneg_right' Filter.tendsto_atTop_add_nonneg_right'
+-/
 
+#print Filter.tendsto_atBot_add_nonpos_right' /-
 theorem tendsto_atBot_add_nonpos_right' (hf : Tendsto f l atBot) (hg : ∀ᶠ x in l, g x ≤ 0) :
     Tendsto (fun x => f x + g x) l atBot :=
   @tendsto_atTop_add_nonneg_right' _ βᵒᵈ _ _ _ _ hf hg
 #align filter.tendsto_at_bot_add_nonpos_right' Filter.tendsto_atBot_add_nonpos_right'
+-/
 
+#print Filter.tendsto_atTop_add_nonneg_right /-
 theorem tendsto_atTop_add_nonneg_right (hf : Tendsto f l atTop) (hg : ∀ x, 0 ≤ g x) :
     Tendsto (fun x => f x + g x) l atTop :=
   tendsto_atTop_add_nonneg_right' hf (eventually_of_forall hg)
 #align filter.tendsto_at_top_add_nonneg_right Filter.tendsto_atTop_add_nonneg_right
+-/
 
+#print Filter.tendsto_atBot_add_nonpos_right /-
 theorem tendsto_atBot_add_nonpos_right (hf : Tendsto f l atBot) (hg : ∀ x, g x ≤ 0) :
     Tendsto (fun x => f x + g x) l atBot :=
   @tendsto_atTop_add_nonneg_right _ βᵒᵈ _ _ _ _ hf hg
 #align filter.tendsto_at_bot_add_nonpos_right Filter.tendsto_atBot_add_nonpos_right
+-/
 
+#print Filter.tendsto_atTop_add /-
 theorem tendsto_atTop_add (hf : Tendsto f l atTop) (hg : Tendsto g l atTop) :
     Tendsto (fun x => f x + g x) l atTop :=
   tendsto_atTop_add_nonneg_left' (tendsto_atTop.mp hf 0) hg
 #align filter.tendsto_at_top_add Filter.tendsto_atTop_add
+-/
 
+#print Filter.tendsto_atBot_add /-
 theorem tendsto_atBot_add (hf : Tendsto f l atBot) (hg : Tendsto g l atBot) :
     Tendsto (fun x => f x + g x) l atBot :=
   @tendsto_atTop_add _ βᵒᵈ _ _ _ _ hf hg
 #align filter.tendsto_at_bot_add Filter.tendsto_atBot_add
+-/
 
+#print Filter.Tendsto.nsmul_atTop /-
 theorem Tendsto.nsmul_atTop (hf : Tendsto f l atTop) {n : ℕ} (hn : 0 < n) :
     Tendsto (fun x => n • f x) l atTop :=
   tendsto_atTop.2 fun y =>
@@ -763,19 +866,26 @@ theorem Tendsto.nsmul_atTop (hf : Tendsto f l atTop) {n : ℕ} (hn : 0 < n) :
           _ = 1 • f x := (one_nsmul _).symm
           _ ≤ n • f x := nsmul_le_nsmul h₀ hn
 #align filter.tendsto.nsmul_at_top Filter.Tendsto.nsmul_atTop
+-/
 
+#print Filter.Tendsto.nsmul_atBot /-
 theorem Tendsto.nsmul_atBot (hf : Tendsto f l atBot) {n : ℕ} (hn : 0 < n) :
     Tendsto (fun x => n • f x) l atBot :=
   @Tendsto.nsmul_atTop α βᵒᵈ _ l f hf n hn
 #align filter.tendsto.nsmul_at_bot Filter.Tendsto.nsmul_atBot
+-/
 
+#print Filter.tendsto_bit0_atTop /-
 theorem tendsto_bit0_atTop : Tendsto bit0 (atTop : Filter β) atTop :=
   tendsto_atTop_add tendsto_id tendsto_id
 #align filter.tendsto_bit0_at_top Filter.tendsto_bit0_atTop
+-/
 
+#print Filter.tendsto_bit0_atBot /-
 theorem tendsto_bit0_atBot : Tendsto bit0 (atBot : Filter β) atBot :=
   tendsto_atBot_add tendsto_id tendsto_id
 #align filter.tendsto_bit0_at_bot Filter.tendsto_bit0_atBot
+-/
 
 end OrderedAddCommMonoid
 
@@ -783,67 +893,91 @@ section OrderedCancelAddCommMonoid
 
 variable [OrderedCancelAddCommMonoid β] {l : Filter α} {f g : α → β}
 
+#print Filter.tendsto_atTop_of_add_const_left /-
 theorem tendsto_atTop_of_add_const_left (C : β) (hf : Tendsto (fun x => C + f x) l atTop) :
     Tendsto f l atTop :=
   tendsto_atTop.2 fun b => (tendsto_atTop.1 hf (C + b)).mono fun x => le_of_add_le_add_left
 #align filter.tendsto_at_top_of_add_const_left Filter.tendsto_atTop_of_add_const_left
+-/
 
+#print Filter.tendsto_atBot_of_add_const_left /-
 theorem tendsto_atBot_of_add_const_left (C : β) (hf : Tendsto (fun x => C + f x) l atBot) :
     Tendsto f l atBot :=
   @tendsto_atTop_of_add_const_left _ βᵒᵈ _ _ _ C hf
 #align filter.tendsto_at_bot_of_add_const_left Filter.tendsto_atBot_of_add_const_left
+-/
 
+#print Filter.tendsto_atTop_of_add_const_right /-
 theorem tendsto_atTop_of_add_const_right (C : β) (hf : Tendsto (fun x => f x + C) l atTop) :
     Tendsto f l atTop :=
   tendsto_atTop.2 fun b => (tendsto_atTop.1 hf (b + C)).mono fun x => le_of_add_le_add_right
 #align filter.tendsto_at_top_of_add_const_right Filter.tendsto_atTop_of_add_const_right
+-/
 
+#print Filter.tendsto_atBot_of_add_const_right /-
 theorem tendsto_atBot_of_add_const_right (C : β) (hf : Tendsto (fun x => f x + C) l atBot) :
     Tendsto f l atBot :=
   @tendsto_atTop_of_add_const_right _ βᵒᵈ _ _ _ C hf
 #align filter.tendsto_at_bot_of_add_const_right Filter.tendsto_atBot_of_add_const_right
+-/
 
+#print Filter.tendsto_atTop_of_add_bdd_above_left' /-
 theorem tendsto_atTop_of_add_bdd_above_left' (C) (hC : ∀ᶠ x in l, f x ≤ C)
     (h : Tendsto (fun x => f x + g x) l atTop) : Tendsto g l atTop :=
   tendsto_atTop_of_add_const_left C
     (tendsto_atTop_mono' l (hC.mono fun x hx => add_le_add_right hx (g x)) h)
 #align filter.tendsto_at_top_of_add_bdd_above_left' Filter.tendsto_atTop_of_add_bdd_above_left'
+-/
 
+#print Filter.tendsto_atBot_of_add_bdd_below_left' /-
 theorem tendsto_atBot_of_add_bdd_below_left' (C) (hC : ∀ᶠ x in l, C ≤ f x)
     (h : Tendsto (fun x => f x + g x) l atBot) : Tendsto g l atBot :=
   @tendsto_atTop_of_add_bdd_above_left' _ βᵒᵈ _ _ _ _ C hC h
 #align filter.tendsto_at_bot_of_add_bdd_below_left' Filter.tendsto_atBot_of_add_bdd_below_left'
+-/
 
+#print Filter.tendsto_atTop_of_add_bdd_above_left /-
 theorem tendsto_atTop_of_add_bdd_above_left (C) (hC : ∀ x, f x ≤ C) :
     Tendsto (fun x => f x + g x) l atTop → Tendsto g l atTop :=
   tendsto_atTop_of_add_bdd_above_left' C (univ_mem' hC)
 #align filter.tendsto_at_top_of_add_bdd_above_left Filter.tendsto_atTop_of_add_bdd_above_left
+-/
 
+#print Filter.tendsto_atBot_of_add_bdd_below_left /-
 theorem tendsto_atBot_of_add_bdd_below_left (C) (hC : ∀ x, C ≤ f x) :
     Tendsto (fun x => f x + g x) l atBot → Tendsto g l atBot :=
   @tendsto_atTop_of_add_bdd_above_left _ βᵒᵈ _ _ _ _ C hC
 #align filter.tendsto_at_bot_of_add_bdd_below_left Filter.tendsto_atBot_of_add_bdd_below_left
+-/
 
+#print Filter.tendsto_atTop_of_add_bdd_above_right' /-
 theorem tendsto_atTop_of_add_bdd_above_right' (C) (hC : ∀ᶠ x in l, g x ≤ C)
     (h : Tendsto (fun x => f x + g x) l atTop) : Tendsto f l atTop :=
   tendsto_atTop_of_add_const_right C
     (tendsto_atTop_mono' l (hC.mono fun x hx => add_le_add_left hx (f x)) h)
 #align filter.tendsto_at_top_of_add_bdd_above_right' Filter.tendsto_atTop_of_add_bdd_above_right'
+-/
 
+#print Filter.tendsto_atBot_of_add_bdd_below_right' /-
 theorem tendsto_atBot_of_add_bdd_below_right' (C) (hC : ∀ᶠ x in l, C ≤ g x)
     (h : Tendsto (fun x => f x + g x) l atBot) : Tendsto f l atBot :=
   @tendsto_atTop_of_add_bdd_above_right' _ βᵒᵈ _ _ _ _ C hC h
 #align filter.tendsto_at_bot_of_add_bdd_below_right' Filter.tendsto_atBot_of_add_bdd_below_right'
+-/
 
+#print Filter.tendsto_atTop_of_add_bdd_above_right /-
 theorem tendsto_atTop_of_add_bdd_above_right (C) (hC : ∀ x, g x ≤ C) :
     Tendsto (fun x => f x + g x) l atTop → Tendsto f l atTop :=
   tendsto_atTop_of_add_bdd_above_right' C (univ_mem' hC)
 #align filter.tendsto_at_top_of_add_bdd_above_right Filter.tendsto_atTop_of_add_bdd_above_right
+-/
 
+#print Filter.tendsto_atBot_of_add_bdd_below_right /-
 theorem tendsto_atBot_of_add_bdd_below_right (C) (hC : ∀ x, C ≤ g x) :
     Tendsto (fun x => f x + g x) l atBot → Tendsto f l atBot :=
   @tendsto_atTop_of_add_bdd_above_right _ βᵒᵈ _ _ _ _ C hC
 #align filter.tendsto_at_bot_of_add_bdd_below_right Filter.tendsto_atBot_of_add_bdd_below_right
+-/
 
 end OrderedCancelAddCommMonoid
 
@@ -851,105 +985,145 @@ section OrderedGroup
 
 variable [OrderedAddCommGroup β] (l : Filter α) {f g : α → β}
 
+#print Filter.tendsto_atTop_add_left_of_le' /-
 theorem tendsto_atTop_add_left_of_le' (C : β) (hf : ∀ᶠ x in l, C ≤ f x) (hg : Tendsto g l atTop) :
     Tendsto (fun x => f x + g x) l atTop :=
   @tendsto_atTop_of_add_bdd_above_left' _ _ _ l (fun x => -f x) (fun x => f x + g x) (-C) (by simpa)
     (by simpa)
 #align filter.tendsto_at_top_add_left_of_le' Filter.tendsto_atTop_add_left_of_le'
+-/
 
+#print Filter.tendsto_atBot_add_left_of_ge' /-
 theorem tendsto_atBot_add_left_of_ge' (C : β) (hf : ∀ᶠ x in l, f x ≤ C) (hg : Tendsto g l atBot) :
     Tendsto (fun x => f x + g x) l atBot :=
   @tendsto_atTop_add_left_of_le' _ βᵒᵈ _ _ _ _ C hf hg
 #align filter.tendsto_at_bot_add_left_of_ge' Filter.tendsto_atBot_add_left_of_ge'
+-/
 
+#print Filter.tendsto_atTop_add_left_of_le /-
 theorem tendsto_atTop_add_left_of_le (C : β) (hf : ∀ x, C ≤ f x) (hg : Tendsto g l atTop) :
     Tendsto (fun x => f x + g x) l atTop :=
   tendsto_atTop_add_left_of_le' l C (univ_mem' hf) hg
 #align filter.tendsto_at_top_add_left_of_le Filter.tendsto_atTop_add_left_of_le
+-/
 
+#print Filter.tendsto_atBot_add_left_of_ge /-
 theorem tendsto_atBot_add_left_of_ge (C : β) (hf : ∀ x, f x ≤ C) (hg : Tendsto g l atBot) :
     Tendsto (fun x => f x + g x) l atBot :=
   @tendsto_atTop_add_left_of_le _ βᵒᵈ _ _ _ _ C hf hg
 #align filter.tendsto_at_bot_add_left_of_ge Filter.tendsto_atBot_add_left_of_ge
+-/
 
+#print Filter.tendsto_atTop_add_right_of_le' /-
 theorem tendsto_atTop_add_right_of_le' (C : β) (hf : Tendsto f l atTop) (hg : ∀ᶠ x in l, C ≤ g x) :
     Tendsto (fun x => f x + g x) l atTop :=
   @tendsto_atTop_of_add_bdd_above_right' _ _ _ l (fun x => f x + g x) (fun x => -g x) (-C)
     (by simp [hg]) (by simp [hf])
 #align filter.tendsto_at_top_add_right_of_le' Filter.tendsto_atTop_add_right_of_le'
+-/
 
+#print Filter.tendsto_atBot_add_right_of_ge' /-
 theorem tendsto_atBot_add_right_of_ge' (C : β) (hf : Tendsto f l atBot) (hg : ∀ᶠ x in l, g x ≤ C) :
     Tendsto (fun x => f x + g x) l atBot :=
   @tendsto_atTop_add_right_of_le' _ βᵒᵈ _ _ _ _ C hf hg
 #align filter.tendsto_at_bot_add_right_of_ge' Filter.tendsto_atBot_add_right_of_ge'
+-/
 
+#print Filter.tendsto_atTop_add_right_of_le /-
 theorem tendsto_atTop_add_right_of_le (C : β) (hf : Tendsto f l atTop) (hg : ∀ x, C ≤ g x) :
     Tendsto (fun x => f x + g x) l atTop :=
   tendsto_atTop_add_right_of_le' l C hf (univ_mem' hg)
 #align filter.tendsto_at_top_add_right_of_le Filter.tendsto_atTop_add_right_of_le
+-/
 
+#print Filter.tendsto_atBot_add_right_of_ge /-
 theorem tendsto_atBot_add_right_of_ge (C : β) (hf : Tendsto f l atBot) (hg : ∀ x, g x ≤ C) :
     Tendsto (fun x => f x + g x) l atBot :=
   @tendsto_atTop_add_right_of_le _ βᵒᵈ _ _ _ _ C hf hg
 #align filter.tendsto_at_bot_add_right_of_ge Filter.tendsto_atBot_add_right_of_ge
+-/
 
+#print Filter.tendsto_atTop_add_const_left /-
 theorem tendsto_atTop_add_const_left (C : β) (hf : Tendsto f l atTop) :
     Tendsto (fun x => C + f x) l atTop :=
   tendsto_atTop_add_left_of_le' l C (univ_mem' fun _ => le_refl C) hf
 #align filter.tendsto_at_top_add_const_left Filter.tendsto_atTop_add_const_left
+-/
 
+#print Filter.tendsto_atBot_add_const_left /-
 theorem tendsto_atBot_add_const_left (C : β) (hf : Tendsto f l atBot) :
     Tendsto (fun x => C + f x) l atBot :=
   @tendsto_atTop_add_const_left _ βᵒᵈ _ _ _ C hf
 #align filter.tendsto_at_bot_add_const_left Filter.tendsto_atBot_add_const_left
+-/
 
+#print Filter.tendsto_atTop_add_const_right /-
 theorem tendsto_atTop_add_const_right (C : β) (hf : Tendsto f l atTop) :
     Tendsto (fun x => f x + C) l atTop :=
   tendsto_atTop_add_right_of_le' l C hf (univ_mem' fun _ => le_refl C)
 #align filter.tendsto_at_top_add_const_right Filter.tendsto_atTop_add_const_right
+-/
 
+#print Filter.tendsto_atBot_add_const_right /-
 theorem tendsto_atBot_add_const_right (C : β) (hf : Tendsto f l atBot) :
     Tendsto (fun x => f x + C) l atBot :=
   @tendsto_atTop_add_const_right _ βᵒᵈ _ _ _ C hf
 #align filter.tendsto_at_bot_add_const_right Filter.tendsto_atBot_add_const_right
+-/
 
+#print Filter.map_neg_atBot /-
 theorem map_neg_atBot : map (Neg.neg : β → β) atBot = atTop :=
   (OrderIso.neg β).map_atBot
 #align filter.map_neg_at_bot Filter.map_neg_atBot
+-/
 
+#print Filter.map_neg_atTop /-
 theorem map_neg_atTop : map (Neg.neg : β → β) atTop = atBot :=
   (OrderIso.neg β).map_atTop
 #align filter.map_neg_at_top Filter.map_neg_atTop
+-/
 
+#print Filter.comap_neg_atBot /-
 @[simp]
 theorem comap_neg_atBot : comap (Neg.neg : β → β) atBot = atTop :=
   (OrderIso.neg β).comap_atTop
 #align filter.comap_neg_at_bot Filter.comap_neg_atBot
+-/
 
+#print Filter.comap_neg_atTop /-
 @[simp]
 theorem comap_neg_atTop : comap (Neg.neg : β → β) atTop = atBot :=
   (OrderIso.neg β).comap_atBot
 #align filter.comap_neg_at_top Filter.comap_neg_atTop
+-/
 
+#print Filter.tendsto_neg_atTop_atBot /-
 theorem tendsto_neg_atTop_atBot : Tendsto (Neg.neg : β → β) atTop atBot :=
   (OrderIso.neg β).tendsto_atTop
 #align filter.tendsto_neg_at_top_at_bot Filter.tendsto_neg_atTop_atBot
+-/
 
+#print Filter.tendsto_neg_atBot_atTop /-
 theorem tendsto_neg_atBot_atTop : Tendsto (Neg.neg : β → β) atBot atTop :=
   @tendsto_neg_atTop_atBot βᵒᵈ _
 #align filter.tendsto_neg_at_bot_at_top Filter.tendsto_neg_atBot_atTop
+-/
 
 variable {l}
 
+#print Filter.tendsto_neg_atTop_iff /-
 @[simp]
 theorem tendsto_neg_atTop_iff : Tendsto (fun x => -f x) l atTop ↔ Tendsto f l atBot :=
   (OrderIso.neg β).tendsto_atBot_iff
 #align filter.tendsto_neg_at_top_iff Filter.tendsto_neg_atTop_iff
+-/
 
+#print Filter.tendsto_neg_atBot_iff /-
 @[simp]
 theorem tendsto_neg_atBot_iff : Tendsto (fun x => -f x) l atBot ↔ Tendsto f l atTop :=
   (OrderIso.neg β).tendsto_atTop_iff
 #align filter.tendsto_neg_at_bot_iff Filter.tendsto_neg_atBot_iff
+-/
 
 end OrderedGroup
 
@@ -957,10 +1131,13 @@ section StrictOrderedSemiring
 
 variable [StrictOrderedSemiring α] {l : Filter β} {f g : β → α}
 
+#print Filter.tendsto_bit1_atTop /-
 theorem tendsto_bit1_atTop : Tendsto bit1 (atTop : Filter α) atTop :=
   tendsto_atTop_add_nonneg_right tendsto_bit0_atTop fun _ => zero_le_one
 #align filter.tendsto_bit1_at_top Filter.tendsto_bit1_atTop
+-/
 
+#print Filter.Tendsto.atTop_mul_atTop /-
 theorem Tendsto.atTop_mul_atTop (hf : Tendsto f l atTop) (hg : Tendsto g l atTop) :
     Tendsto (fun x => f x * g x) l atTop :=
   by
@@ -968,10 +1145,13 @@ theorem Tendsto.atTop_mul_atTop (hf : Tendsto f l atTop) (hg : Tendsto g l atTop
   filter_upwards [hg.eventually (eventually_ge_at_top 0),
     hf.eventually (eventually_ge_at_top 1)] with _ using le_mul_of_one_le_left
 #align filter.tendsto.at_top_mul_at_top Filter.Tendsto.atTop_mul_atTop
+-/
 
+#print Filter.tendsto_mul_self_atTop /-
 theorem tendsto_mul_self_atTop : Tendsto (fun x : α => x * x) atTop atTop :=
   tendsto_id.atTop_mul_atTop tendsto_id
 #align filter.tendsto_mul_self_at_top Filter.tendsto_mul_self_atTop
+-/
 
 #print Filter.tendsto_pow_atTop /-
 /-- The monomial function `x^n` tends to `+∞` at `+∞` for any positive natural `n`.
@@ -983,22 +1163,27 @@ theorem tendsto_pow_atTop {n : ℕ} (hn : n ≠ 0) : Tendsto (fun x : α => x ^ 
 
 end StrictOrderedSemiring
 
+#print Filter.zero_pow_eventuallyEq /-
 theorem zero_pow_eventuallyEq [MonoidWithZero α] :
     (fun n : ℕ => (0 : α) ^ n) =ᶠ[atTop] fun n => 0 :=
   eventually_atTop.2 ⟨1, fun n hn => zero_pow (zero_lt_one.trans_le hn)⟩
 #align filter.zero_pow_eventually_eq Filter.zero_pow_eventuallyEq
+-/
 
 section StrictOrderedRing
 
 variable [StrictOrderedRing α] {l : Filter β} {f g : β → α}
 
+#print Filter.Tendsto.atTop_mul_atBot /-
 theorem Tendsto.atTop_mul_atBot (hf : Tendsto f l atTop) (hg : Tendsto g l atBot) :
     Tendsto (fun x => f x * g x) l atBot :=
   by
   have := hf.atTop_mul_atTop <| tendsto_neg_atBot_atTop.comp hg
   simpa only [(· ∘ ·), neg_mul_eq_mul_neg, neg_neg] using tendsto_neg_at_top_at_bot.comp this
 #align filter.tendsto.at_top_mul_at_bot Filter.Tendsto.atTop_mul_atBot
+-/
 
+#print Filter.Tendsto.atBot_mul_atTop /-
 theorem Tendsto.atBot_mul_atTop (hf : Tendsto f l atBot) (hg : Tendsto g l atTop) :
     Tendsto (fun x => f x * g x) l atBot :=
   by
@@ -1006,7 +1191,9 @@ theorem Tendsto.atBot_mul_atTop (hf : Tendsto f l atBot) (hg : Tendsto g l atTop
     (tendsto_neg_atBot_atTop.comp hf).atTop_mul_atTop hg
   simpa only [(· ∘ ·), neg_mul_eq_neg_mul, neg_neg] using tendsto_neg_at_top_at_bot.comp this
 #align filter.tendsto.at_bot_mul_at_top Filter.Tendsto.atBot_mul_atTop
+-/
 
+#print Filter.Tendsto.atBot_mul_atBot /-
 theorem Tendsto.atBot_mul_atBot (hf : Tendsto f l atBot) (hg : Tendsto g l atBot) :
     Tendsto (fun x => f x * g x) l atTop :=
   by
@@ -1014,6 +1201,7 @@ theorem Tendsto.atBot_mul_atBot (hf : Tendsto f l atBot) (hg : Tendsto g l atBot
     (tendsto_neg_atBot_atTop.comp hf).atTop_mul_atTop (tendsto_neg_atBot_atTop.comp hg)
   simpa only [neg_mul_neg] using this
 #align filter.tendsto.at_bot_mul_at_bot Filter.Tendsto.atBot_mul_atBot
+-/
 
 end StrictOrderedRing
 
@@ -1021,16 +1209,21 @@ section LinearOrderedAddCommGroup
 
 variable [LinearOrderedAddCommGroup α]
 
+#print Filter.tendsto_abs_atTop_atTop /-
 /-- $\lim_{x\to+\infty}|x|=+\infty$ -/
 theorem tendsto_abs_atTop_atTop : Tendsto (abs : α → α) atTop atTop :=
   tendsto_atTop_mono le_abs_self tendsto_id
 #align filter.tendsto_abs_at_top_at_top Filter.tendsto_abs_atTop_atTop
+-/
 
+#print Filter.tendsto_abs_atBot_atTop /-
 /-- $\lim_{x\to-\infty}|x|=+\infty$ -/
 theorem tendsto_abs_atBot_atTop : Tendsto (abs : α → α) atBot atTop :=
   tendsto_atTop_mono neg_le_abs_self tendsto_neg_atBot_atTop
 #align filter.tendsto_abs_at_bot_at_top Filter.tendsto_abs_atBot_atTop
+-/
 
+#print Filter.comap_abs_atTop /-
 @[simp]
 theorem comap_abs_atTop : comap (abs : α → α) atTop = atBot ⊔ atTop :=
   by
@@ -1042,6 +1235,7 @@ theorem comap_abs_atTop : comap (abs : α → α) atTop = atBot ⊔ atTop :=
   rw [mem_preimage, mem_Ici, le_abs', max_le_iff, ← min_neg_neg, le_min_iff, neg_neg] at hx 
   exact hx.imp And.left And.right
 #align filter.comap_abs_at_top Filter.comap_abs_atTop
+-/
 
 end LinearOrderedAddCommGroup
 
@@ -1049,16 +1243,20 @@ section LinearOrderedSemiring
 
 variable [LinearOrderedSemiring α] {l : Filter β} {f : β → α}
 
+#print Filter.Tendsto.atTop_of_const_mul /-
 theorem Tendsto.atTop_of_const_mul {c : α} (hc : 0 < c) (hf : Tendsto (fun x => c * f x) l atTop) :
     Tendsto f l atTop :=
   tendsto_atTop.2 fun b => (tendsto_atTop.1 hf (c * b)).mono fun x hx => le_of_mul_le_mul_left hx hc
 #align filter.tendsto.at_top_of_const_mul Filter.Tendsto.atTop_of_const_mul
+-/
 
+#print Filter.Tendsto.atTop_of_mul_const /-
 theorem Tendsto.atTop_of_mul_const {c : α} (hc : 0 < c) (hf : Tendsto (fun x => f x * c) l atTop) :
     Tendsto f l atTop :=
   tendsto_atTop.2 fun b =>
     (tendsto_atTop.1 hf (b * c)).mono fun x hx => le_of_mul_le_mul_right hx hc
 #align filter.tendsto.at_top_of_mul_const Filter.Tendsto.atTop_of_mul_const
+-/
 
 #print Filter.tendsto_pow_atTop_iff /-
 @[simp]
@@ -1069,17 +1267,21 @@ theorem tendsto_pow_atTop_iff {n : ℕ} : Tendsto (fun x : α => x ^ n) atTop at
 
 end LinearOrderedSemiring
 
+#print Filter.nonneg_of_eventually_pow_nonneg /-
 theorem nonneg_of_eventually_pow_nonneg [LinearOrderedRing α] {a : α}
     (h : ∀ᶠ n in atTop, 0 ≤ a ^ (n : ℕ)) : 0 ≤ a :=
   let ⟨n, hn⟩ := (tendsto_bit1_atTop.Eventually h).exists
   pow_bit1_nonneg_iff.1 hn
 #align filter.nonneg_of_eventually_pow_nonneg Filter.nonneg_of_eventually_pow_nonneg
+-/
 
+#print Filter.not_tendsto_pow_atTop_atBot /-
 theorem not_tendsto_pow_atTop_atBot [LinearOrderedRing α] :
     ∀ {n : ℕ}, ¬Tendsto (fun x : α => x ^ n) atTop atBot
   | 0 => by simp [not_tendsto_const_at_bot]
   | n + 1 => (tendsto_pow_atTop n.succ_ne_zero).not_tendsto disjoint_atTop_atBot
 #align filter.not_tendsto_pow_at_top_at_bot Filter.not_tendsto_pow_atTop_atBot
+-/
 
 section LinearOrderedSemifield
 
@@ -1090,6 +1292,7 @@ variable [LinearOrderedSemifield α] {l : Filter β} {f : β → α} {r c : α} 
 -/
 
 
+#print Filter.tendsto_const_mul_atTop_of_pos /-
 /-- If `r` is a positive constant, then `λ x, r * f x` tends to infinity along a filter if and only
 if `f` tends to infinity along the same filter. -/
 theorem tendsto_const_mul_atTop_of_pos (hr : 0 < r) :
@@ -1097,14 +1300,18 @@ theorem tendsto_const_mul_atTop_of_pos (hr : 0 < r) :
   ⟨fun h => h.atTop_of_const_mul hr, fun h =>
     Tendsto.atTop_of_const_mul (inv_pos.2 hr) <| by simpa only [inv_mul_cancel_left₀ hr.ne']⟩
 #align filter.tendsto_const_mul_at_top_of_pos Filter.tendsto_const_mul_atTop_of_pos
+-/
 
+#print Filter.tendsto_mul_const_atTop_of_pos /-
 /-- If `r` is a positive constant, then `λ x, f x * r` tends to infinity along a filter if and only
 if `f` tends to infinity along the same filter. -/
 theorem tendsto_mul_const_atTop_of_pos (hr : 0 < r) :
     Tendsto (fun x => f x * r) l atTop ↔ Tendsto f l atTop := by
   simpa only [mul_comm] using tendsto_const_mul_at_top_of_pos hr
 #align filter.tendsto_mul_const_at_top_of_pos Filter.tendsto_mul_const_atTop_of_pos
+-/
 
+#print Filter.tendsto_const_mul_atTop_iff_pos /-
 /-- If `f` tends to infinity along a nontrivial filter `l`, then `λ x, r * f x` tends to infinity
 if and only if `0 < r. `-/
 theorem tendsto_const_mul_atTop_iff_pos [NeBot l] (h : Tendsto f l atTop) :
@@ -1114,14 +1321,18 @@ theorem tendsto_const_mul_atTop_iff_pos [NeBot l] (h : Tendsto f l atTop) :
   rcases((h.eventually_ge_at_top 0).And (hrf.eventually_gt_at_top 0)).exists with ⟨x, hx, hrx⟩
   exact (mul_nonpos_of_nonpos_of_nonneg hr hx).not_lt hrx
 #align filter.tendsto_const_mul_at_top_iff_pos Filter.tendsto_const_mul_atTop_iff_pos
+-/
 
+#print Filter.tendsto_mul_const_atTop_iff_pos /-
 /-- If `f` tends to infinity along a nontrivial filter `l`, then `λ x, f x * r` tends to infinity
 if and only if `0 < r. `-/
 theorem tendsto_mul_const_atTop_iff_pos [NeBot l] (h : Tendsto f l atTop) :
     Tendsto (fun x => f x * r) l atTop ↔ 0 < r := by
   simp only [mul_comm _ r, tendsto_const_mul_at_top_iff_pos h]
 #align filter.tendsto_mul_const_at_top_iff_pos Filter.tendsto_mul_const_atTop_iff_pos
+-/
 
+#print Filter.Tendsto.const_mul_atTop /-
 /-- If a function tends to infinity along a filter, then this function multiplied by a positive
 constant (on the left) also tends to infinity. For a version working in `ℕ` or `ℤ`, use
 `filter.tendsto.const_mul_at_top'` instead. -/
@@ -1129,7 +1340,9 @@ theorem Tendsto.const_mul_atTop (hr : 0 < r) (hf : Tendsto f l atTop) :
     Tendsto (fun x => r * f x) l atTop :=
   (tendsto_const_mul_atTop_of_pos hr).2 hf
 #align filter.tendsto.const_mul_at_top Filter.Tendsto.const_mul_atTop
+-/
 
+#print Filter.Tendsto.atTop_mul_const /-
 /-- If a function tends to infinity along a filter, then this function multiplied by a positive
 constant (on the right) also tends to infinity. For a version working in `ℕ` or `ℤ`, use
 `filter.tendsto.at_top_mul_const'` instead. -/
@@ -1137,19 +1350,25 @@ theorem Tendsto.atTop_mul_const (hr : 0 < r) (hf : Tendsto f l atTop) :
     Tendsto (fun x => f x * r) l atTop :=
   (tendsto_mul_const_atTop_of_pos hr).2 hf
 #align filter.tendsto.at_top_mul_const Filter.Tendsto.atTop_mul_const
+-/
 
+#print Filter.Tendsto.atTop_div_const /-
 /-- If a function tends to infinity along a filter, then this function divided by a positive
 constant also tends to infinity. -/
 theorem Tendsto.atTop_div_const (hr : 0 < r) (hf : Tendsto f l atTop) :
     Tendsto (fun x => f x / r) l atTop := by
   simpa only [div_eq_mul_inv] using hf.at_top_mul_const (inv_pos.2 hr)
 #align filter.tendsto.at_top_div_const Filter.Tendsto.atTop_div_const
+-/
 
+#print Filter.tendsto_const_mul_pow_atTop /-
 theorem tendsto_const_mul_pow_atTop (hn : n ≠ 0) (hc : 0 < c) :
     Tendsto (fun x => c * x ^ n) atTop atTop :=
   Tendsto.const_mul_atTop hc (tendsto_pow_atTop hn)
 #align filter.tendsto_const_mul_pow_at_top Filter.tendsto_const_mul_pow_atTop
+-/
 
+#print Filter.tendsto_const_mul_pow_atTop_iff /-
 theorem tendsto_const_mul_pow_atTop_iff :
     Tendsto (fun x => c * x ^ n) atTop atTop ↔ n ≠ 0 ∧ 0 < c :=
   by
@@ -1159,6 +1378,7 @@ theorem tendsto_const_mul_pow_atTop_iff :
   · rcases((h.eventually_gt_at_top 0).And (eventually_ge_at_top 0)).exists with ⟨k, hck, hk⟩
     exact pos_of_mul_pos_left hck (pow_nonneg hk _)
 #align filter.tendsto_const_mul_pow_at_top_iff Filter.tendsto_const_mul_pow_atTop_iff
+-/
 
 end LinearOrderedSemifield
 
@@ -1166,48 +1386,61 @@ section LinearOrderedField
 
 variable [LinearOrderedField α] {l : Filter β} {f : β → α} {r : α}
 
+#print Filter.tendsto_const_mul_atBot_of_pos /-
 /-- If `r` is a positive constant, then `λ x, r * f x` tends to negative infinity along a filter if
 and only if `f` tends to negative infinity along the same filter. -/
 theorem tendsto_const_mul_atBot_of_pos (hr : 0 < r) :
     Tendsto (fun x => r * f x) l atBot ↔ Tendsto f l atBot := by
   simpa only [← mul_neg, ← tendsto_neg_at_top_iff] using tendsto_const_mul_at_top_of_pos hr
 #align filter.tendsto_const_mul_at_bot_of_pos Filter.tendsto_const_mul_atBot_of_pos
+-/
 
+#print Filter.tendsto_mul_const_atBot_of_pos /-
 /-- If `r` is a positive constant, then `λ x, f x * r` tends to negative infinity along a filter if
 and only if `f` tends to negative infinity along the same filter. -/
 theorem tendsto_mul_const_atBot_of_pos (hr : 0 < r) :
     Tendsto (fun x => f x * r) l atBot ↔ Tendsto f l atBot := by
   simpa only [mul_comm] using tendsto_const_mul_at_bot_of_pos hr
 #align filter.tendsto_mul_const_at_bot_of_pos Filter.tendsto_mul_const_atBot_of_pos
+-/
 
+#print Filter.tendsto_const_mul_atTop_of_neg /-
 /-- If `r` is a negative constant, then `λ x, r * f x` tends to infinity along a filter if and only
 if `f` tends to negative infinity along the same filter. -/
 theorem tendsto_const_mul_atTop_of_neg (hr : r < 0) :
     Tendsto (fun x => r * f x) l atTop ↔ Tendsto f l atBot := by
   simpa only [neg_mul, tendsto_neg_at_bot_iff] using tendsto_const_mul_at_bot_of_pos (neg_pos.2 hr)
 #align filter.tendsto_const_mul_at_top_of_neg Filter.tendsto_const_mul_atTop_of_neg
+-/
 
+#print Filter.tendsto_mul_const_atTop_of_neg /-
 /-- If `r` is a negative constant, then `λ x, f x * r` tends to infinity along a filter if and only
 if `f` tends to negative infinity along the same filter. -/
 theorem tendsto_mul_const_atTop_of_neg (hr : r < 0) :
     Tendsto (fun x => f x * r) l atTop ↔ Tendsto f l atBot := by
   simpa only [mul_comm] using tendsto_const_mul_at_top_of_neg hr
 #align filter.tendsto_mul_const_at_top_of_neg Filter.tendsto_mul_const_atTop_of_neg
+-/
 
+#print Filter.tendsto_const_mul_atBot_of_neg /-
 /-- If `r` is a negative constant, then `λ x, r * f x` tends to negative infinity along a filter if
 and only if `f` tends to infinity along the same filter. -/
 theorem tendsto_const_mul_atBot_of_neg (hr : r < 0) :
     Tendsto (fun x => r * f x) l atBot ↔ Tendsto f l atTop := by
   simpa only [neg_mul, tendsto_neg_at_top_iff] using tendsto_const_mul_at_top_of_pos (neg_pos.2 hr)
 #align filter.tendsto_const_mul_at_bot_of_neg Filter.tendsto_const_mul_atBot_of_neg
+-/
 
+#print Filter.tendsto_mul_const_atBot_of_neg /-
 /-- If `r` is a negative constant, then `λ x, f x * r` tends to negative infinity along a filter if
 and only if `f` tends to infinity along the same filter. -/
 theorem tendsto_mul_const_atBot_of_neg (hr : r < 0) :
     Tendsto (fun x => f x * r) l atBot ↔ Tendsto f l atTop := by
   simpa only [mul_comm] using tendsto_const_mul_at_bot_of_neg hr
 #align filter.tendsto_mul_const_at_bot_of_neg Filter.tendsto_mul_const_atBot_of_neg
+-/
 
+#print Filter.tendsto_const_mul_atTop_iff /-
 /-- The function `λ x, r * f x` tends to infinity along a nontrivial filter if and only if `r > 0`
 and `f` tends to infinity or `r < 0` and `f` tends to negative infinity. -/
 theorem tendsto_const_mul_atTop_iff [NeBot l] :
@@ -1218,142 +1451,183 @@ theorem tendsto_const_mul_atTop_iff [NeBot l] :
   · simp [not_tendsto_const_at_top]
   · simp [hr, hr.not_lt, tendsto_const_mul_at_top_of_pos]
 #align filter.tendsto_const_mul_at_top_iff Filter.tendsto_const_mul_atTop_iff
+-/
 
+#print Filter.tendsto_mul_const_atTop_iff /-
 /-- The function `λ x, f x * r` tends to infinity along a nontrivial filter if and only if `r > 0`
 and `f` tends to infinity or `r < 0` and `f` tends to negative infinity. -/
 theorem tendsto_mul_const_atTop_iff [NeBot l] :
     Tendsto (fun x => f x * r) l atTop ↔ 0 < r ∧ Tendsto f l atTop ∨ r < 0 ∧ Tendsto f l atBot := by
   simp only [mul_comm _ r, tendsto_const_mul_at_top_iff]
 #align filter.tendsto_mul_const_at_top_iff Filter.tendsto_mul_const_atTop_iff
+-/
 
+#print Filter.tendsto_const_mul_atBot_iff /-
 /-- The function `λ x, r * f x` tends to negative infinity along a nontrivial filter if and only if
 `r > 0` and `f` tends to negative infinity or `r < 0` and `f` tends to infinity. -/
 theorem tendsto_const_mul_atBot_iff [NeBot l] :
     Tendsto (fun x => r * f x) l atBot ↔ 0 < r ∧ Tendsto f l atBot ∨ r < 0 ∧ Tendsto f l atTop := by
   simp only [← tendsto_neg_at_top_iff, ← mul_neg, tendsto_const_mul_at_top_iff, neg_neg]
 #align filter.tendsto_const_mul_at_bot_iff Filter.tendsto_const_mul_atBot_iff
+-/
 
+#print Filter.tendsto_mul_const_atBot_iff /-
 /-- The function `λ x, f x * r` tends to negative infinity along a nontrivial filter if and only if
 `r > 0` and `f` tends to negative infinity or `r < 0` and `f` tends to infinity. -/
 theorem tendsto_mul_const_atBot_iff [NeBot l] :
     Tendsto (fun x => f x * r) l atBot ↔ 0 < r ∧ Tendsto f l atBot ∨ r < 0 ∧ Tendsto f l atTop := by
   simp only [mul_comm _ r, tendsto_const_mul_at_bot_iff]
 #align filter.tendsto_mul_const_at_bot_iff Filter.tendsto_mul_const_atBot_iff
+-/
 
+#print Filter.tendsto_const_mul_atTop_iff_neg /-
 /-- If `f` tends to negative infinity along a nontrivial filter `l`, then `λ x, r * f x` tends to
 infinity if and only if `r < 0. `-/
 theorem tendsto_const_mul_atTop_iff_neg [NeBot l] (h : Tendsto f l atBot) :
     Tendsto (fun x => r * f x) l atTop ↔ r < 0 := by
   simp [tendsto_const_mul_at_top_iff, h, h.not_tendsto disjoint_at_bot_at_top]
 #align filter.tendsto_const_mul_at_top_iff_neg Filter.tendsto_const_mul_atTop_iff_neg
+-/
 
+#print Filter.tendsto_mul_const_atTop_iff_neg /-
 /-- If `f` tends to negative infinity along a nontrivial filter `l`, then `λ x, f x * r` tends to
 infinity if and only if `r < 0. `-/
 theorem tendsto_mul_const_atTop_iff_neg [NeBot l] (h : Tendsto f l atBot) :
     Tendsto (fun x => f x * r) l atTop ↔ r < 0 := by
   simp only [mul_comm _ r, tendsto_const_mul_at_top_iff_neg h]
 #align filter.tendsto_mul_const_at_top_iff_neg Filter.tendsto_mul_const_atTop_iff_neg
+-/
 
+#print Filter.tendsto_const_mul_atBot_iff_pos /-
 /-- If `f` tends to negative infinity along a nontrivial filter `l`, then `λ x, r * f x` tends to
 negative infinity if and only if `0 < r. `-/
 theorem tendsto_const_mul_atBot_iff_pos [NeBot l] (h : Tendsto f l atBot) :
     Tendsto (fun x => r * f x) l atBot ↔ 0 < r := by
   simp [tendsto_const_mul_at_bot_iff, h, h.not_tendsto disjoint_at_bot_at_top]
 #align filter.tendsto_const_mul_at_bot_iff_pos Filter.tendsto_const_mul_atBot_iff_pos
+-/
 
+#print Filter.tendsto_mul_const_atBot_iff_pos /-
 /-- If `f` tends to negative infinity along a nontrivial filter `l`, then `λ x, f x * r` tends to
 negative infinity if and only if `0 < r. `-/
 theorem tendsto_mul_const_atBot_iff_pos [NeBot l] (h : Tendsto f l atBot) :
     Tendsto (fun x => f x * r) l atBot ↔ 0 < r := by
   simp only [mul_comm _ r, tendsto_const_mul_at_bot_iff_pos h]
 #align filter.tendsto_mul_const_at_bot_iff_pos Filter.tendsto_mul_const_atBot_iff_pos
+-/
 
+#print Filter.tendsto_const_mul_atBot_iff_neg /-
 /-- If `f` tends to infinity along a nontrivial filter `l`, then `λ x, r * f x` tends to negative
 infinity if and only if `r < 0. `-/
 theorem tendsto_const_mul_atBot_iff_neg [NeBot l] (h : Tendsto f l atTop) :
     Tendsto (fun x => r * f x) l atBot ↔ r < 0 := by
   simp [tendsto_const_mul_at_bot_iff, h, h.not_tendsto disjoint_at_top_at_bot]
 #align filter.tendsto_const_mul_at_bot_iff_neg Filter.tendsto_const_mul_atBot_iff_neg
+-/
 
+#print Filter.tendsto_mul_const_atBot_iff_neg /-
 /-- If `f` tends to infinity along a nontrivial filter `l`, then `λ x, f x * r` tends to negative
 infinity if and only if `r < 0. `-/
 theorem tendsto_mul_const_atBot_iff_neg [NeBot l] (h : Tendsto f l atTop) :
     Tendsto (fun x => f x * r) l atBot ↔ r < 0 := by
   simp only [mul_comm _ r, tendsto_const_mul_at_bot_iff_neg h]
 #align filter.tendsto_mul_const_at_bot_iff_neg Filter.tendsto_mul_const_atBot_iff_neg
+-/
 
+#print Filter.Tendsto.neg_const_mul_atTop /-
 /-- If a function tends to infinity along a filter, then this function multiplied by a negative
 constant (on the left) tends to negative infinity. -/
 theorem Tendsto.neg_const_mul_atTop (hr : r < 0) (hf : Tendsto f l atTop) :
     Tendsto (fun x => r * f x) l atBot :=
   (tendsto_const_mul_atBot_of_neg hr).2 hf
 #align filter.tendsto.neg_const_mul_at_top Filter.Tendsto.neg_const_mul_atTop
+-/
 
+#print Filter.Tendsto.atTop_mul_neg_const /-
 /-- If a function tends to infinity along a filter, then this function multiplied by a negative
 constant (on the right) tends to negative infinity. -/
 theorem Tendsto.atTop_mul_neg_const (hr : r < 0) (hf : Tendsto f l atTop) :
     Tendsto (fun x => f x * r) l atBot :=
   (tendsto_mul_const_atBot_of_neg hr).2 hf
 #align filter.tendsto.at_top_mul_neg_const Filter.Tendsto.atTop_mul_neg_const
+-/
 
+#print Filter.Tendsto.const_mul_atBot /-
 /-- If a function tends to negative infinity along a filter, then this function multiplied by
 a positive constant (on the left) also tends to negative infinity. -/
 theorem Tendsto.const_mul_atBot (hr : 0 < r) (hf : Tendsto f l atBot) :
     Tendsto (fun x => r * f x) l atBot :=
   (tendsto_const_mul_atBot_of_pos hr).2 hf
 #align filter.tendsto.const_mul_at_bot Filter.Tendsto.const_mul_atBot
+-/
 
+#print Filter.Tendsto.atBot_mul_const /-
 /-- If a function tends to negative infinity along a filter, then this function multiplied by
 a positive constant (on the right) also tends to negative infinity. -/
 theorem Tendsto.atBot_mul_const (hr : 0 < r) (hf : Tendsto f l atBot) :
     Tendsto (fun x => f x * r) l atBot :=
   (tendsto_mul_const_atBot_of_pos hr).2 hf
 #align filter.tendsto.at_bot_mul_const Filter.Tendsto.atBot_mul_const
+-/
 
+#print Filter.Tendsto.atBot_div_const /-
 /-- If a function tends to negative infinity along a filter, then this function divided by
 a positive constant also tends to negative infinity. -/
 theorem Tendsto.atBot_div_const (hr : 0 < r) (hf : Tendsto f l atBot) :
     Tendsto (fun x => f x / r) l atBot := by
   simpa only [div_eq_mul_inv] using hf.at_bot_mul_const (inv_pos.2 hr)
 #align filter.tendsto.at_bot_div_const Filter.Tendsto.atBot_div_const
+-/
 
+#print Filter.Tendsto.neg_const_mul_atBot /-
 /-- If a function tends to negative infinity along a filter, then this function multiplied by
 a negative constant (on the left) tends to positive infinity. -/
 theorem Tendsto.neg_const_mul_atBot (hr : r < 0) (hf : Tendsto f l atBot) :
     Tendsto (fun x => r * f x) l atTop :=
   (tendsto_const_mul_atTop_of_neg hr).2 hf
 #align filter.tendsto.neg_const_mul_at_bot Filter.Tendsto.neg_const_mul_atBot
+-/
 
+#print Filter.Tendsto.atBot_mul_neg_const /-
 /-- If a function tends to negative infinity along a filter, then this function multiplied by
 a negative constant (on the right) tends to positive infinity. -/
 theorem Tendsto.atBot_mul_neg_const (hr : r < 0) (hf : Tendsto f l atBot) :
     Tendsto (fun x => f x * r) l atTop :=
   (tendsto_mul_const_atTop_of_neg hr).2 hf
 #align filter.tendsto.at_bot_mul_neg_const Filter.Tendsto.atBot_mul_neg_const
+-/
 
+#print Filter.tendsto_neg_const_mul_pow_atTop /-
 theorem tendsto_neg_const_mul_pow_atTop {c : α} {n : ℕ} (hn : n ≠ 0) (hc : c < 0) :
     Tendsto (fun x => c * x ^ n) atTop atBot :=
   Tendsto.neg_const_mul_atTop hc (tendsto_pow_atTop hn)
 #align filter.tendsto_neg_const_mul_pow_at_top Filter.tendsto_neg_const_mul_pow_atTop
+-/
 
+#print Filter.tendsto_const_mul_pow_atBot_iff /-
 theorem tendsto_const_mul_pow_atBot_iff {c : α} {n : ℕ} :
     Tendsto (fun x => c * x ^ n) atTop atBot ↔ n ≠ 0 ∧ c < 0 := by
   simp only [← tendsto_neg_at_top_iff, ← neg_mul, tendsto_const_mul_pow_at_top_iff, neg_pos]
 #align filter.tendsto_const_mul_pow_at_bot_iff Filter.tendsto_const_mul_pow_atBot_iff
+-/
 
 end LinearOrderedField
 
 open scoped Filter
 
+#print Filter.tendsto_atTop' /-
 theorem tendsto_atTop' [Nonempty α] [SemilatticeSup α] {f : α → β} {l : Filter β} :
     Tendsto f atTop l ↔ ∀ s ∈ l, ∃ a, ∀ b ≥ a, f b ∈ s := by
   simp only [tendsto_def, mem_at_top_sets] <;> rfl
 #align filter.tendsto_at_top' Filter.tendsto_atTop'
+-/
 
+#print Filter.tendsto_atBot' /-
 theorem tendsto_atBot' [Nonempty α] [SemilatticeInf α] {f : α → β} {l : Filter β} :
     Tendsto f atBot l ↔ ∀ s ∈ l, ∃ a, ∀ b ≤ a, f b ∈ s :=
   @tendsto_atTop' αᵒᵈ _ _ _ _ _
 #align filter.tendsto_at_bot' Filter.tendsto_atBot'
+-/
 
 #print Filter.tendsto_atTop_principal /-
 theorem tendsto_atTop_principal [Nonempty β] [SemilatticeSup β] {f : β → α} {s : Set α} :
@@ -1369,27 +1643,36 @@ theorem tendsto_atBot_principal [Nonempty β] [SemilatticeInf β] {f : β → α
 #align filter.tendsto_at_bot_principal Filter.tendsto_atBot_principal
 -/
 
+#print Filter.tendsto_atTop_atTop /-
 /-- A function `f` grows to `+∞` independent of an order-preserving embedding `e`. -/
 theorem tendsto_atTop_atTop [Nonempty α] [SemilatticeSup α] [Preorder β] {f : α → β} :
     Tendsto f atTop atTop ↔ ∀ b : β, ∃ i : α, ∀ a : α, i ≤ a → b ≤ f a :=
   Iff.trans tendsto_iInf <| forall_congr' fun b => tendsto_atTop_principal
 #align filter.tendsto_at_top_at_top Filter.tendsto_atTop_atTop
+-/
 
+#print Filter.tendsto_atTop_atBot /-
 theorem tendsto_atTop_atBot [Nonempty α] [SemilatticeSup α] [Preorder β] {f : α → β} :
     Tendsto f atTop atBot ↔ ∀ b : β, ∃ i : α, ∀ a : α, i ≤ a → f a ≤ b :=
   @tendsto_atTop_atTop α βᵒᵈ _ _ _ f
 #align filter.tendsto_at_top_at_bot Filter.tendsto_atTop_atBot
+-/
 
+#print Filter.tendsto_atBot_atTop /-
 theorem tendsto_atBot_atTop [Nonempty α] [SemilatticeInf α] [Preorder β] {f : α → β} :
     Tendsto f atBot atTop ↔ ∀ b : β, ∃ i : α, ∀ a : α, a ≤ i → b ≤ f a :=
   @tendsto_atTop_atTop αᵒᵈ β _ _ _ f
 #align filter.tendsto_at_bot_at_top Filter.tendsto_atBot_atTop
+-/
 
+#print Filter.tendsto_atBot_atBot /-
 theorem tendsto_atBot_atBot [Nonempty α] [SemilatticeInf α] [Preorder β] {f : α → β} :
     Tendsto f atBot atBot ↔ ∀ b : β, ∃ i : α, ∀ a : α, a ≤ i → f a ≤ b :=
   @tendsto_atTop_atTop αᵒᵈ βᵒᵈ _ _ _ f
 #align filter.tendsto_at_bot_at_bot Filter.tendsto_atBot_atBot
+-/
 
+#print Filter.tendsto_atTop_atTop_of_monotone /-
 theorem tendsto_atTop_atTop_of_monotone [Preorder α] [Preorder β] {f : α → β} (hf : Monotone f)
     (h : ∀ b, ∃ a, b ≤ f a) : Tendsto f atTop atTop :=
   tendsto_iInf.2 fun b =>
@@ -1397,7 +1680,9 @@ theorem tendsto_atTop_atTop_of_monotone [Preorder α] [Preorder β] {f : α → 
       let ⟨a, ha⟩ := h b
       mem_of_superset (mem_atTop a) fun a' ha' => le_trans ha (hf ha')
 #align filter.tendsto_at_top_at_top_of_monotone Filter.tendsto_atTop_atTop_of_monotone
+-/
 
+#print Filter.tendsto_atBot_atBot_of_monotone /-
 theorem tendsto_atBot_atBot_of_monotone [Preorder α] [Preorder β] {f : α → β} (hf : Monotone f)
     (h : ∀ b, ∃ a, f a ≤ b) : Tendsto f atBot atBot :=
   tendsto_iInf.2 fun b =>
@@ -1405,20 +1690,25 @@ theorem tendsto_atBot_atBot_of_monotone [Preorder α] [Preorder β] {f : α → 
       let ⟨a, ha⟩ := h b
       mem_of_superset (mem_atBot a) fun a' ha' => le_trans (hf ha') ha
 #align filter.tendsto_at_bot_at_bot_of_monotone Filter.tendsto_atBot_atBot_of_monotone
+-/
 
+#print Filter.tendsto_atTop_atTop_iff_of_monotone /-
 theorem tendsto_atTop_atTop_iff_of_monotone [Nonempty α] [SemilatticeSup α] [Preorder β] {f : α → β}
     (hf : Monotone f) : Tendsto f atTop atTop ↔ ∀ b : β, ∃ a : α, b ≤ f a :=
   tendsto_atTop_atTop.trans <|
     forall_congr' fun b =>
       exists_congr fun a => ⟨fun h => h a (le_refl a), fun h a' ha' => le_trans h <| hf ha'⟩
 #align filter.tendsto_at_top_at_top_iff_of_monotone Filter.tendsto_atTop_atTop_iff_of_monotone
+-/
 
+#print Filter.tendsto_atBot_atBot_iff_of_monotone /-
 theorem tendsto_atBot_atBot_iff_of_monotone [Nonempty α] [SemilatticeInf α] [Preorder β] {f : α → β}
     (hf : Monotone f) : Tendsto f atBot atBot ↔ ∀ b : β, ∃ a : α, f a ≤ b :=
   tendsto_atBot_atBot.trans <|
     forall_congr' fun b =>
       exists_congr fun a => ⟨fun h => h a (le_refl a), fun h a' ha' => le_trans (hf ha') h⟩
 #align filter.tendsto_at_bot_at_bot_iff_of_monotone Filter.tendsto_atBot_atBot_iff_of_monotone
+-/
 
 alias tendsto_at_top_at_top_of_monotone ← _root_.monotone.tendsto_at_top_at_top
 #align monotone.tendsto_at_top_at_top Monotone.tendsto_atTop_atTop
@@ -1432,6 +1722,7 @@ alias tendsto_at_top_at_top_iff_of_monotone ← _root_.monotone.tendsto_at_top_a
 alias tendsto_at_bot_at_bot_iff_of_monotone ← _root_.monotone.tendsto_at_bot_at_bot_iff
 #align monotone.tendsto_at_bot_at_bot_iff Monotone.tendsto_atBot_atBot_iff
 
+#print Filter.comap_embedding_atTop /-
 theorem comap_embedding_atTop [Preorder β] [Preorder γ] {e : β → γ}
     (hm : ∀ b₁ b₂, e b₁ ≤ e b₂ ↔ b₁ ≤ b₂) (hu : ∀ c, ∃ b, c ≤ e b) : comap e atTop = atTop :=
   le_antisymm
@@ -1439,24 +1730,31 @@ theorem comap_embedding_atTop [Preorder β] [Preorder γ] {e : β → γ}
       le_principal_iff.2 <| mem_comap.2 ⟨Ici (e b), mem_atTop _, fun x => (hm _ _).1⟩)
     (tendsto_atTop_atTop_of_monotone (fun _ _ => (hm _ _).2) hu).le_comap
 #align filter.comap_embedding_at_top Filter.comap_embedding_atTop
+-/
 
+#print Filter.comap_embedding_atBot /-
 theorem comap_embedding_atBot [Preorder β] [Preorder γ] {e : β → γ}
     (hm : ∀ b₁ b₂, e b₁ ≤ e b₂ ↔ b₁ ≤ b₂) (hu : ∀ c, ∃ b, e b ≤ c) : comap e atBot = atBot :=
   @comap_embedding_atTop βᵒᵈ γᵒᵈ _ _ e (Function.swap hm) hu
 #align filter.comap_embedding_at_bot Filter.comap_embedding_atBot
+-/
 
+#print Filter.tendsto_atTop_embedding /-
 theorem tendsto_atTop_embedding [Preorder β] [Preorder γ] {f : α → β} {e : β → γ} {l : Filter α}
     (hm : ∀ b₁ b₂, e b₁ ≤ e b₂ ↔ b₁ ≤ b₂) (hu : ∀ c, ∃ b, c ≤ e b) :
     Tendsto (e ∘ f) l atTop ↔ Tendsto f l atTop := by
   rw [← comap_embedding_at_top hm hu, tendsto_comap_iff]
 #align filter.tendsto_at_top_embedding Filter.tendsto_atTop_embedding
+-/
 
+#print Filter.tendsto_atBot_embedding /-
 /-- A function `f` goes to `-∞` independent of an order-preserving embedding `e`. -/
 theorem tendsto_atBot_embedding [Preorder β] [Preorder γ] {f : α → β} {e : β → γ} {l : Filter α}
     (hm : ∀ b₁ b₂, e b₁ ≤ e b₂ ↔ b₁ ≤ b₂) (hu : ∀ c, ∃ b, e b ≤ c) :
     Tendsto (e ∘ f) l atBot ↔ Tendsto f l atBot :=
   @tendsto_atTop_embedding α βᵒᵈ γᵒᵈ _ _ f e l (Function.swap hm) hu
 #align filter.tendsto_at_bot_embedding Filter.tendsto_atBot_embedding
+-/
 
 #print Filter.tendsto_finset_range /-
 theorem tendsto_finset_range : Tendsto Finset.range atTop atTop :=
@@ -1464,6 +1762,7 @@ theorem tendsto_finset_range : Tendsto Finset.range atTop atTop :=
 #align filter.tendsto_finset_range Filter.tendsto_finset_range
 -/
 
+#print Filter.atTop_finset_eq_iInf /-
 theorem atTop_finset_eq_iInf : (atTop : Filter <| Finset α) = ⨅ x : α, 𝓟 (Ici {x}) :=
   by
   refine' le_antisymm (le_iInf fun i => le_principal_iff.2 <| mem_at_top {i}) _
@@ -1475,6 +1774,7 @@ theorem atTop_finset_eq_iInf : (atTop : Filter <| Finset α) = ⨅ x : α, 𝓟 
   dsimp
   exact fun t => id
 #align filter.at_top_finset_eq_infi Filter.atTop_finset_eq_iInf
+-/
 
 #print Filter.tendsto_atTop_finset_of_monotone /-
 /-- If `f` is a monotone sequence of `finset`s and each `x` belongs to one of `f n`, then
@@ -1493,18 +1793,23 @@ theorem tendsto_atTop_finset_of_monotone [Preorder β] {f : β → Finset α} (h
 alias tendsto_at_top_finset_of_monotone ← _root_.monotone.tendsto_at_top_finset
 #align monotone.tendsto_at_top_finset Monotone.tendsto_atTop_finset
 
+#print Filter.tendsto_finset_image_atTop_atTop /-
 theorem tendsto_finset_image_atTop_atTop {i : β → γ} {j : γ → β} (h : Function.LeftInverse j i) :
     Tendsto (Finset.image j) atTop atTop :=
   (Finset.image_mono j).tendsto_atTop_finset fun a =>
     ⟨{i a}, by simp only [Finset.image_singleton, h a, Finset.mem_singleton]⟩
 #align filter.tendsto_finset_image_at_top_at_top Filter.tendsto_finset_image_atTop_atTop
+-/
 
+#print Filter.tendsto_finset_preimage_atTop_atTop /-
 theorem tendsto_finset_preimage_atTop_atTop {f : α → β} (hf : Function.Injective f) :
     Tendsto (fun s : Finset β => s.Preimage f (hf.InjOn _)) atTop atTop :=
   (Finset.monotone_preimage hf).tendsto_atTop_finset fun x =>
     ⟨{f x}, Finset.mem_preimage.2 <| Finset.mem_singleton_self _⟩
 #align filter.tendsto_finset_preimage_at_top_at_top Filter.tendsto_finset_preimage_atTop_atTop
+-/
 
+#print Filter.prod_atTop_atTop_eq /-
 theorem prod_atTop_atTop_eq {β₁ β₂ : Type _} [SemilatticeSup β₁] [SemilatticeSup β₂] :
     (atTop : Filter β₁) ×ᶠ (atTop : Filter β₂) = (atTop : Filter (β₁ × β₂)) :=
   by
@@ -1515,21 +1820,28 @@ theorem prod_atTop_atTop_eq {β₁ β₂ : Type _} [SemilatticeSup β₁] [Semil
   · simp only [at_top.filter_eq_bot_of_is_empty, prod_bot]
   · simp only [at_top.filter_eq_bot_of_is_empty, bot_prod]
 #align filter.prod_at_top_at_top_eq Filter.prod_atTop_atTop_eq
+-/
 
+#print Filter.prod_atBot_atBot_eq /-
 theorem prod_atBot_atBot_eq {β₁ β₂ : Type _} [SemilatticeInf β₁] [SemilatticeInf β₂] :
     (atBot : Filter β₁) ×ᶠ (atBot : Filter β₂) = (atBot : Filter (β₁ × β₂)) :=
   @prod_atTop_atTop_eq β₁ᵒᵈ β₂ᵒᵈ _ _
 #align filter.prod_at_bot_at_bot_eq Filter.prod_atBot_atBot_eq
+-/
 
+#print Filter.prod_map_atTop_eq /-
 theorem prod_map_atTop_eq {α₁ α₂ β₁ β₂ : Type _} [SemilatticeSup β₁] [SemilatticeSup β₂]
     (u₁ : β₁ → α₁) (u₂ : β₂ → α₂) : map u₁ atTop ×ᶠ map u₂ atTop = map (Prod.map u₁ u₂) atTop := by
   rw [prod_map_map_eq, prod_at_top_at_top_eq, Prod.map_def]
 #align filter.prod_map_at_top_eq Filter.prod_map_atTop_eq
+-/
 
+#print Filter.prod_map_atBot_eq /-
 theorem prod_map_atBot_eq {α₁ α₂ β₁ β₂ : Type _} [SemilatticeInf β₁] [SemilatticeInf β₂]
     (u₁ : β₁ → α₁) (u₂ : β₂ → α₂) : map u₁ atBot ×ᶠ map u₂ atBot = map (Prod.map u₁ u₂) atBot :=
   @prod_map_atTop_eq _ _ β₁ᵒᵈ β₂ᵒᵈ _ _ _ _
 #align filter.prod_map_at_bot_eq Filter.prod_map_atBot_eq
+-/
 
 #print Filter.Tendsto.subseq_mem /-
 theorem Tendsto.subseq_mem {F : Filter α} {V : ℕ → Set α} (h : ∀ n, V n ∈ F) {u : ℕ → α}
@@ -1539,46 +1851,63 @@ theorem Tendsto.subseq_mem {F : Filter α} {V : ℕ → Set α} (h : ∀ n, V n 
 #align filter.tendsto.subseq_mem Filter.Tendsto.subseq_mem
 -/
 
+#print Filter.tendsto_atBot_diagonal /-
 theorem tendsto_atBot_diagonal [SemilatticeInf α] : Tendsto (fun a : α => (a, a)) atBot atBot := by
   rw [← prod_at_bot_at_bot_eq]; exact tendsto_id.prod_mk tendsto_id
 #align filter.tendsto_at_bot_diagonal Filter.tendsto_atBot_diagonal
+-/
 
+#print Filter.tendsto_atTop_diagonal /-
 theorem tendsto_atTop_diagonal [SemilatticeSup α] : Tendsto (fun a : α => (a, a)) atTop atTop := by
   rw [← prod_at_top_at_top_eq]; exact tendsto_id.prod_mk tendsto_id
 #align filter.tendsto_at_top_diagonal Filter.tendsto_atTop_diagonal
+-/
 
+#print Filter.Tendsto.prod_map_prod_atBot /-
 theorem Tendsto.prod_map_prod_atBot [SemilatticeInf γ] {F : Filter α} {G : Filter β} {f : α → γ}
     {g : β → γ} (hf : Tendsto f F atBot) (hg : Tendsto g G atBot) :
     Tendsto (Prod.map f g) (F ×ᶠ G) atBot := by rw [← prod_at_bot_at_bot_eq]; exact hf.prod_map hg
 #align filter.tendsto.prod_map_prod_at_bot Filter.Tendsto.prod_map_prod_atBot
+-/
 
+#print Filter.Tendsto.prod_map_prod_atTop /-
 theorem Tendsto.prod_map_prod_atTop [SemilatticeSup γ] {F : Filter α} {G : Filter β} {f : α → γ}
     {g : β → γ} (hf : Tendsto f F atTop) (hg : Tendsto g G atTop) :
     Tendsto (Prod.map f g) (F ×ᶠ G) atTop := by rw [← prod_at_top_at_top_eq]; exact hf.prod_map hg
 #align filter.tendsto.prod_map_prod_at_top Filter.Tendsto.prod_map_prod_atTop
+-/
 
+#print Filter.Tendsto.prod_atBot /-
 theorem Tendsto.prod_atBot [SemilatticeInf α] [SemilatticeInf γ] {f g : α → γ}
     (hf : Tendsto f atBot atBot) (hg : Tendsto g atBot atBot) :
     Tendsto (Prod.map f g) atBot atBot := by rw [← prod_at_bot_at_bot_eq];
   exact hf.prod_map_prod_at_bot hg
 #align filter.tendsto.prod_at_bot Filter.Tendsto.prod_atBot
+-/
 
+#print Filter.Tendsto.prod_atTop /-
 theorem Tendsto.prod_atTop [SemilatticeSup α] [SemilatticeSup γ] {f g : α → γ}
     (hf : Tendsto f atTop atTop) (hg : Tendsto g atTop atTop) :
     Tendsto (Prod.map f g) atTop atTop := by rw [← prod_at_top_at_top_eq];
   exact hf.prod_map_prod_at_top hg
 #align filter.tendsto.prod_at_top Filter.Tendsto.prod_atTop
+-/
 
+#print Filter.eventually_atBot_prod_self /-
 theorem eventually_atBot_prod_self [SemilatticeInf α] [Nonempty α] {p : α × α → Prop} :
     (∀ᶠ x in atBot, p x) ↔ ∃ a, ∀ k l, k ≤ a → l ≤ a → p (k, l) := by
   simp [← prod_at_bot_at_bot_eq, at_bot_basis.prod_self.eventually_iff]
 #align filter.eventually_at_bot_prod_self Filter.eventually_atBot_prod_self
+-/
 
+#print Filter.eventually_atTop_prod_self /-
 theorem eventually_atTop_prod_self [SemilatticeSup α] [Nonempty α] {p : α × α → Prop} :
     (∀ᶠ x in atTop, p x) ↔ ∃ a, ∀ k l, a ≤ k → a ≤ l → p (k, l) := by
   simp [← prod_at_top_at_top_eq, at_top_basis.prod_self.eventually_iff]
 #align filter.eventually_at_top_prod_self Filter.eventually_atTop_prod_self
+-/
 
+#print Filter.eventually_atBot_prod_self' /-
 theorem eventually_atBot_prod_self' [SemilatticeInf α] [Nonempty α] {p : α × α → Prop} :
     (∀ᶠ x in atBot, p x) ↔ ∃ a, ∀ k ≤ a, ∀ l ≤ a, p (k, l) :=
   by
@@ -1586,7 +1915,9 @@ theorem eventually_atBot_prod_self' [SemilatticeInf α] [Nonempty α] {p : α ×
   apply exists_congr
   tauto
 #align filter.eventually_at_bot_prod_self' Filter.eventually_atBot_prod_self'
+-/
 
+#print Filter.eventually_atTop_prod_self' /-
 theorem eventually_atTop_prod_self' [SemilatticeSup α] [Nonempty α] {p : α × α → Prop} :
     (∀ᶠ x in atTop, p x) ↔ ∃ a, ∀ k ≥ a, ∀ l ≥ a, p (k, l) :=
   by
@@ -1594,19 +1925,25 @@ theorem eventually_atTop_prod_self' [SemilatticeSup α] [Nonempty α] {p : α ×
   apply exists_congr
   tauto
 #align filter.eventually_at_top_prod_self' Filter.eventually_atTop_prod_self'
+-/
 
+#print Filter.eventually_atTop_curry /-
 theorem eventually_atTop_curry [SemilatticeSup α] [SemilatticeSup β] {p : α × β → Prop}
     (hp : ∀ᶠ x : α × β in Filter.atTop, p x) : ∀ᶠ k in atTop, ∀ᶠ l in atTop, p (k, l) :=
   by
   rw [← prod_at_top_at_top_eq] at hp 
   exact hp.curry
 #align filter.eventually_at_top_curry Filter.eventually_atTop_curry
+-/
 
+#print Filter.eventually_atBot_curry /-
 theorem eventually_atBot_curry [SemilatticeInf α] [SemilatticeInf β] {p : α × β → Prop}
     (hp : ∀ᶠ x : α × β in Filter.atBot, p x) : ∀ᶠ k in atBot, ∀ᶠ l in atBot, p (k, l) :=
   @eventually_atTop_curry αᵒᵈ βᵒᵈ _ _ _ hp
 #align filter.eventually_at_bot_curry Filter.eventually_atBot_curry
+-/
 
+#print Filter.map_atTop_eq_of_gc /-
 /-- A function `f` maps upwards closed sets (at_top sets) to upwards closed sets when it is a
 Galois insertion. The Galois "insertion" and "connection" is weakened to only require it to be an
 insertion and a connetion above `b'`. -/
@@ -1622,12 +1959,15 @@ theorem map_atTop_eq_of_gc [SemilatticeSup α] [SemilatticeSup β] {f : α → �
   rw [mem_Ici, sup_le_iff] at hb 
   exact ⟨g b, (gc _ _ hb.2).1 hb.1, le_antisymm ((gc _ _ hb.2).2 le_rfl) (hgi _ hb.2)⟩
 #align filter.map_at_top_eq_of_gc Filter.map_atTop_eq_of_gc
+-/
 
+#print Filter.map_atBot_eq_of_gc /-
 theorem map_atBot_eq_of_gc [SemilatticeInf α] [SemilatticeInf β] {f : α → β} (g : β → α) (b' : β)
     (hf : Monotone f) (gc : ∀ a, ∀ b ≤ b', b ≤ f a ↔ g b ≤ a) (hgi : ∀ b ≤ b', f (g b) ≤ b) :
     map f atBot = atBot :=
   @map_atTop_eq_of_gc αᵒᵈ βᵒᵈ _ _ _ _ _ hf.dual gc hgi
 #align filter.map_at_bot_eq_of_gc Filter.map_atBot_eq_of_gc
+-/
 
 #print Filter.map_val_atTop_of_Ici_subset /-
 theorem map_val_atTop_of_Ici_subset [SemilatticeSup α] {a : α} {s : Set α} (h : Ici a ⊆ s) :
@@ -1725,49 +2065,65 @@ theorem atBot_Iic_eq [SemilatticeInf α] (a : α) : atBot = comap (coe : Iic a �
 #align filter.at_bot_Iic_eq Filter.atBot_Iic_eq
 -/
 
+#print Filter.tendsto_Ioi_atTop /-
 theorem tendsto_Ioi_atTop [SemilatticeSup α] {a : α} {f : β → Ioi a} {l : Filter β} :
     Tendsto f l atTop ↔ Tendsto (fun x => (f x : α)) l atTop := by
   rw [at_top_Ioi_eq, tendsto_comap_iff]
 #align filter.tendsto_Ioi_at_top Filter.tendsto_Ioi_atTop
+-/
 
+#print Filter.tendsto_Iio_atBot /-
 theorem tendsto_Iio_atBot [SemilatticeInf α] {a : α} {f : β → Iio a} {l : Filter β} :
     Tendsto f l atBot ↔ Tendsto (fun x => (f x : α)) l atBot := by
   rw [at_bot_Iio_eq, tendsto_comap_iff]
 #align filter.tendsto_Iio_at_bot Filter.tendsto_Iio_atBot
+-/
 
+#print Filter.tendsto_Ici_atTop /-
 theorem tendsto_Ici_atTop [SemilatticeSup α] {a : α} {f : β → Ici a} {l : Filter β} :
     Tendsto f l atTop ↔ Tendsto (fun x => (f x : α)) l atTop := by
   rw [at_top_Ici_eq, tendsto_comap_iff]
 #align filter.tendsto_Ici_at_top Filter.tendsto_Ici_atTop
+-/
 
+#print Filter.tendsto_Iic_atBot /-
 theorem tendsto_Iic_atBot [SemilatticeInf α] {a : α} {f : β → Iic a} {l : Filter β} :
     Tendsto f l atBot ↔ Tendsto (fun x => (f x : α)) l atBot := by
   rw [at_bot_Iic_eq, tendsto_comap_iff]
 #align filter.tendsto_Iic_at_bot Filter.tendsto_Iic_atBot
+-/
 
+#print Filter.tendsto_comp_val_Ioi_atTop /-
 @[simp]
 theorem tendsto_comp_val_Ioi_atTop [SemilatticeSup α] [NoMaxOrder α] {a : α} {f : α → β}
     {l : Filter β} : Tendsto (fun x : Ioi a => f x) atTop l ↔ Tendsto f atTop l := by
   rw [← map_coe_Ioi_at_top a, tendsto_map'_iff]
 #align filter.tendsto_comp_coe_Ioi_at_top Filter.tendsto_comp_val_Ioi_atTop
+-/
 
+#print Filter.tendsto_comp_val_Ici_atTop /-
 @[simp]
 theorem tendsto_comp_val_Ici_atTop [SemilatticeSup α] {a : α} {f : α → β} {l : Filter β} :
     Tendsto (fun x : Ici a => f x) atTop l ↔ Tendsto f atTop l := by
   rw [← map_coe_Ici_at_top a, tendsto_map'_iff]
 #align filter.tendsto_comp_coe_Ici_at_top Filter.tendsto_comp_val_Ici_atTop
+-/
 
+#print Filter.tendsto_comp_val_Iio_atBot /-
 @[simp]
 theorem tendsto_comp_val_Iio_atBot [SemilatticeInf α] [NoMinOrder α] {a : α} {f : α → β}
     {l : Filter β} : Tendsto (fun x : Iio a => f x) atBot l ↔ Tendsto f atBot l := by
   rw [← map_coe_Iio_at_bot a, tendsto_map'_iff]
 #align filter.tendsto_comp_coe_Iio_at_bot Filter.tendsto_comp_val_Iio_atBot
+-/
 
+#print Filter.tendsto_comp_val_Iic_atBot /-
 @[simp]
 theorem tendsto_comp_val_Iic_atBot [SemilatticeInf α] {a : α} {f : α → β} {l : Filter β} :
     Tendsto (fun x : Iic a => f x) atBot l ↔ Tendsto f atBot l := by
   rw [← map_coe_Iic_at_bot a, tendsto_map'_iff]
 #align filter.tendsto_comp_coe_Iic_at_bot Filter.tendsto_comp_val_Iic_atBot
+-/
 
 #print Filter.map_add_atTop_eq_nat /-
 theorem map_add_atTop_eq_nat (k : ℕ) : map (fun a => a + k) atTop = atTop :=
@@ -1821,6 +2177,7 @@ theorem map_div_atTop_eq_nat (k : ℕ) (hk : 0 < k) : map (fun a => a / k) atTop
 #align filter.map_div_at_top_eq_nat Filter.map_div_atTop_eq_nat
 -/
 
+#print Filter.tendsto_atTop_atTop_of_monotone' /-
 /-- If `u` is a monotone function with linear ordered codomain and the range of `u` is not bounded
 above, then `tendsto u at_top at_top`. -/
 theorem tendsto_atTop_atTop_of_monotone' [Preorder ι] [LinearOrder α] {u : ι → α} (h : Monotone u)
@@ -1831,14 +2188,18 @@ theorem tendsto_atTop_atTop_of_monotone' [Preorder ι] [LinearOrder α] {u : ι 
   rcases not_bddAbove_iff.1 H b with ⟨_, ⟨N, rfl⟩, hN⟩
   exact ⟨N, le_of_lt hN⟩
 #align filter.tendsto_at_top_at_top_of_monotone' Filter.tendsto_atTop_atTop_of_monotone'
+-/
 
+#print Filter.tendsto_atBot_atBot_of_monotone' /-
 /-- If `u` is a monotone function with linear ordered codomain and the range of `u` is not bounded
 below, then `tendsto u at_bot at_bot`. -/
 theorem tendsto_atBot_atBot_of_monotone' [Preorder ι] [LinearOrder α] {u : ι → α} (h : Monotone u)
     (H : ¬BddBelow (range u)) : Tendsto u atBot atBot :=
   @tendsto_atTop_atTop_of_monotone' ιᵒᵈ αᵒᵈ _ _ _ h.dual H
 #align filter.tendsto_at_bot_at_bot_of_monotone' Filter.tendsto_atBot_atBot_of_monotone'
+-/
 
+#print Filter.unbounded_of_tendsto_atTop /-
 theorem unbounded_of_tendsto_atTop [Nonempty α] [SemilatticeSup α] [Preorder β] [NoMaxOrder β]
     {f : α → β} (h : Tendsto f atTop atTop) : ¬BddAbove (range f) :=
   by
@@ -1849,48 +2210,64 @@ theorem unbounded_of_tendsto_atTop [Nonempty α] [SemilatticeSup α] [Preorder �
     M < f a := ha a le_rfl
     _ ≤ M := hM (Set.mem_range_self a)
 #align filter.unbounded_of_tendsto_at_top Filter.unbounded_of_tendsto_atTop
+-/
 
+#print Filter.unbounded_of_tendsto_atBot /-
 theorem unbounded_of_tendsto_atBot [Nonempty α] [SemilatticeSup α] [Preorder β] [NoMinOrder β]
     {f : α → β} (h : Tendsto f atTop atBot) : ¬BddBelow (range f) :=
   @unbounded_of_tendsto_atTop _ βᵒᵈ _ _ _ _ _ h
 #align filter.unbounded_of_tendsto_at_bot Filter.unbounded_of_tendsto_atBot
+-/
 
+#print Filter.unbounded_of_tendsto_atTop' /-
 theorem unbounded_of_tendsto_atTop' [Nonempty α] [SemilatticeInf α] [Preorder β] [NoMaxOrder β]
     {f : α → β} (h : Tendsto f atBot atTop) : ¬BddAbove (range f) :=
   @unbounded_of_tendsto_atTop αᵒᵈ _ _ _ _ _ _ h
 #align filter.unbounded_of_tendsto_at_top' Filter.unbounded_of_tendsto_atTop'
+-/
 
+#print Filter.unbounded_of_tendsto_atBot' /-
 theorem unbounded_of_tendsto_atBot' [Nonempty α] [SemilatticeInf α] [Preorder β] [NoMinOrder β]
     {f : α → β} (h : Tendsto f atBot atBot) : ¬BddBelow (range f) :=
   @unbounded_of_tendsto_atTop αᵒᵈ βᵒᵈ _ _ _ _ _ h
 #align filter.unbounded_of_tendsto_at_bot' Filter.unbounded_of_tendsto_atBot'
+-/
 
+#print Filter.tendsto_atTop_of_monotone_of_filter /-
 /-- If a monotone function `u : ι → α` tends to `at_top` along *some* non-trivial filter `l`, then
 it tends to `at_top` along `at_top`. -/
 theorem tendsto_atTop_of_monotone_of_filter [Preorder ι] [Preorder α] {l : Filter ι} {u : ι → α}
     (h : Monotone u) [NeBot l] (hu : Tendsto u l atTop) : Tendsto u atTop atTop :=
   h.tendsto_atTop_atTop fun b => (hu.Eventually (mem_atTop b)).exists
 #align filter.tendsto_at_top_of_monotone_of_filter Filter.tendsto_atTop_of_monotone_of_filter
+-/
 
+#print Filter.tendsto_atBot_of_monotone_of_filter /-
 /-- If a monotone function `u : ι → α` tends to `at_bot` along *some* non-trivial filter `l`, then
 it tends to `at_bot` along `at_bot`. -/
 theorem tendsto_atBot_of_monotone_of_filter [Preorder ι] [Preorder α] {l : Filter ι} {u : ι → α}
     (h : Monotone u) [NeBot l] (hu : Tendsto u l atBot) : Tendsto u atBot atBot :=
   @tendsto_atTop_of_monotone_of_filter ιᵒᵈ αᵒᵈ _ _ _ _ h.dual _ hu
 #align filter.tendsto_at_bot_of_monotone_of_filter Filter.tendsto_atBot_of_monotone_of_filter
+-/
 
+#print Filter.tendsto_atTop_of_monotone_of_subseq /-
 theorem tendsto_atTop_of_monotone_of_subseq [Preorder ι] [Preorder α] {u : ι → α} {φ : ι' → ι}
     (h : Monotone u) {l : Filter ι'} [NeBot l] (H : Tendsto (u ∘ φ) l atTop) :
     Tendsto u atTop atTop :=
   tendsto_atTop_of_monotone_of_filter h (tendsto_map' H)
 #align filter.tendsto_at_top_of_monotone_of_subseq Filter.tendsto_atTop_of_monotone_of_subseq
+-/
 
+#print Filter.tendsto_atBot_of_monotone_of_subseq /-
 theorem tendsto_atBot_of_monotone_of_subseq [Preorder ι] [Preorder α] {u : ι → α} {φ : ι' → ι}
     (h : Monotone u) {l : Filter ι'} [NeBot l] (H : Tendsto (u ∘ φ) l atBot) :
     Tendsto u atBot atBot :=
   tendsto_atBot_of_monotone_of_filter h (tendsto_map' H)
 #align filter.tendsto_at_bot_of_monotone_of_subseq Filter.tendsto_atBot_of_monotone_of_subseq
+-/
 
+#print Filter.map_atTop_finset_prod_le_of_prod_eq /-
 /-- Let `f` and `g` be two maps to the same commutative monoid. This lemma gives a sufficient
 condition for comparison of the filter `at_top.map (λ s, ∏ b in s, f b)` with
 `at_top.map (λ s, ∏ b in s, g b)`. This is useful to compare the set of limit points of
@@ -1910,18 +2287,24 @@ theorem map_atTop_finset_prod_le_of_prod_eq [CommMonoid α] {f : β → α} {g :
         iInf_le_of_le v <| by simp [Set.image_subset_iff] <;> exact hv
 #align filter.map_at_top_finset_prod_le_of_prod_eq Filter.map_atTop_finset_prod_le_of_prod_eq
 #align filter.map_at_top_finset_sum_le_of_sum_eq Filter.map_atTop_finset_sum_le_of_sum_eq
+-/
 
+#print Filter.HasAntitoneBasis.eventually_subset /-
 theorem HasAntitoneBasis.eventually_subset [Preorder ι] {l : Filter α} {s : ι → Set α}
     (hl : l.HasAntitoneBasis s) {t : Set α} (ht : t ∈ l) : ∀ᶠ i in atTop, s i ⊆ t :=
   let ⟨i, _, hi⟩ := hl.to_hasBasis.mem_iff.1 ht
   (eventually_ge_atTop i).mono fun j hj => (hl.Antitone hj).trans hi
 #align filter.has_antitone_basis.eventually_subset Filter.HasAntitoneBasis.eventually_subset
+-/
 
+#print Filter.HasAntitoneBasis.tendsto /-
 protected theorem HasAntitoneBasis.tendsto [Preorder ι] {l : Filter α} {s : ι → Set α}
     (hl : l.HasAntitoneBasis s) {φ : ι → α} (h : ∀ i : ι, φ i ∈ s i) : Tendsto φ atTop l :=
   fun t ht => mem_map.2 <| (hl.eventually_subset ht).mono fun i hi => hi (h i)
 #align filter.has_antitone_basis.tendsto Filter.HasAntitoneBasis.tendsto
+-/
 
+#print Filter.HasAntitoneBasis.comp_mono /-
 theorem HasAntitoneBasis.comp_mono [SemilatticeSup ι] [Nonempty ι] [Preorder ι'] {l : Filter α}
     {s : ι' → Set α} (hs : l.HasAntitoneBasis s) {φ : ι → ι'} (φ_mono : Monotone φ)
     (hφ : Tendsto φ atTop atTop) : l.HasAntitoneBasis (s ∘ φ) :=
@@ -1931,6 +2314,7 @@ theorem HasAntitoneBasis.comp_mono [SemilatticeSup ι] [Nonempty ι] [Preorder �
       fun n hn => ⟨φ n, trivial, Subset.rfl⟩,
     hs.Antitone.comp_monotone φ_mono⟩
 #align filter.has_antitone_basis.comp_mono Filter.HasAntitoneBasis.comp_mono
+-/
 
 #print Filter.HasAntitoneBasis.comp_strictMono /-
 theorem HasAntitoneBasis.comp_strictMono {l : Filter α} {s : ℕ → Set α} (hs : l.HasAntitoneBasis s)
@@ -1969,6 +2353,7 @@ theorem exists_seq_tendsto (f : Filter α) [IsCountablyGenerated f] [NeBot f] :
 #align filter.exists_seq_tendsto Filter.exists_seq_tendsto
 -/
 
+#print Filter.tendsto_iff_seq_tendsto /-
 /-- An abstract version of continuity of sequentially continuous functions on metric spaces:
 if a filter `k` is countably generated then `tendsto f k l` iff for every sequence `u`
 converging to `k`, `f ∘ u` tends to `l`. -/
@@ -1984,17 +2369,23 @@ theorem tendsto_iff_seq_tendsto {f : α → β} {k : Filter α} {l : Filter β} 
   rcases(hx.2.And (h hs)).exists with ⟨N, hnmem, hmem⟩
   exact hnmem hmem
 #align filter.tendsto_iff_seq_tendsto Filter.tendsto_iff_seq_tendsto
+-/
 
+#print Filter.tendsto_of_seq_tendsto /-
 theorem tendsto_of_seq_tendsto {f : α → β} {k : Filter α} {l : Filter β} [k.IsCountablyGenerated] :
     (∀ x : ℕ → α, Tendsto x atTop k → Tendsto (f ∘ x) atTop l) → Tendsto f k l :=
   tendsto_iff_seq_tendsto.2
 #align filter.tendsto_of_seq_tendsto Filter.tendsto_of_seq_tendsto
+-/
 
+#print Filter.tendsto_iff_forall_eventually_mem /-
 theorem tendsto_iff_forall_eventually_mem {α ι : Type _} {x : ι → α} {f : Filter α} {l : Filter ι} :
     Tendsto x l f ↔ ∀ s ∈ f, ∀ᶠ n in l, x n ∈ s := by rw [tendsto_def];
   refine' forall_congr' fun s => imp_congr_right fun hsf => _; rfl
 #align filter.tendsto_iff_forall_eventually_mem Filter.tendsto_iff_forall_eventually_mem
+-/
 
+#print Filter.not_tendsto_iff_exists_frequently_nmem /-
 theorem not_tendsto_iff_exists_frequently_nmem {α ι : Type _} {x : ι → α} {f : Filter α}
     {l : Filter ι} : ¬Tendsto x l f ↔ ∃ s ∈ f, ∃ᶠ n in l, x n ∉ s :=
   by
@@ -2003,6 +2394,7 @@ theorem not_tendsto_iff_exists_frequently_nmem {α ι : Type _} {x : ι → α} 
   refine' exists_congr fun s => _
   rw [not_eventually, exists_prop]
 #align filter.not_tendsto_iff_exists_frequently_nmem Filter.not_tendsto_iff_exists_frequently_nmem
+-/
 
 #print Filter.frequently_iff_seq_frequently /-
 theorem frequently_iff_seq_frequently {ι : Type _} {l : Filter ι} {p : ι → Prop}
@@ -2061,6 +2453,7 @@ theorem exists_seq_forall_of_frequently {ι : Type _} {l : Filter ι} {p : ι �
 #align filter.exists_seq_forall_of_frequently Filter.exists_seq_forall_of_frequently
 -/
 
+#print Filter.tendsto_of_subseq_tendsto /-
 /-- A sequence converges if every subsequence has a convergent subsequence. -/
 theorem tendsto_of_subseq_tendsto {α ι : Type _} {x : ι → α} {f : Filter α} {l : Filter ι}
     [l.IsCountablyGenerated]
@@ -2084,7 +2477,9 @@ theorem tendsto_of_subseq_tendsto {α ι : Type _} {x : ι → α} {f : Filter �
   rw [h_empty] at hms_tendsto 
   exact empty_not_mem at_top hms_tendsto
 #align filter.tendsto_of_subseq_tendsto Filter.tendsto_of_subseq_tendsto
+-/
 
+#print Filter.subseq_tendsto_of_neBot /-
 theorem subseq_tendsto_of_neBot {f : Filter α} [IsCountablyGenerated f] {u : ℕ → α}
     (hx : NeBot (f ⊓ map u atTop)) : ∃ θ : ℕ → ℕ, StrictMono θ ∧ Tendsto (u ∘ θ) atTop f :=
   by
@@ -2099,6 +2494,7 @@ theorem subseq_tendsto_of_neBot {f : Filter α} [IsCountablyGenerated f] {u : �
   exact strict_mono_subseq_of_tendsto_at_top lim_φ
   exact ⟨φ ∘ ψ, hψφ, lim_uφ.comp hψ.tendsto_at_top⟩
 #align filter.subseq_tendsto_of_ne_bot Filter.subseq_tendsto_of_neBot
+-/
 
 end Filter
 
@@ -2108,20 +2504,25 @@ section
 
 variable {R : Type _} [LinearOrderedSemiring R]
 
+#print exists_lt_mul_self /-
 theorem exists_lt_mul_self (a : R) : ∃ x ≥ 0, a < x * x :=
   let ⟨x, hxa, hx0⟩ :=
     ((tendsto_mul_self_atTop.Eventually (eventually_gt_atTop a)).And (eventually_ge_atTop 0)).exists
   ⟨x, hx0, hxa⟩
 #align exists_lt_mul_self exists_lt_mul_self
+-/
 
+#print exists_le_mul_self /-
 theorem exists_le_mul_self (a : R) : ∃ x ≥ 0, a ≤ x * x :=
   let ⟨x, hx0, hxa⟩ := exists_lt_mul_self a
   ⟨x, hx0, hxa.le⟩
 #align exists_le_mul_self exists_le_mul_self
+-/
 
 end
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (x «expr ∉ » set.range[set.range] g) -/
+#print Function.Injective.map_atTop_finset_prod_eq /-
 /-- Let `g : γ → β` be an injective function and `f : β → α` be a function from the codomain of `g`
 to a commutative monoid. Suppose that `f x = 1` outside of the range of `g`. Then the filters
 `at_top.map (λ s, ∏ i in s, f (g i))` and `at_top.map (λ s, ∏ i in s, f i)` coincide.
@@ -2147,6 +2548,7 @@ theorem Function.Injective.map_atTop_finset_prod_eq [CommMonoid α] {g : γ → 
     exact ⟨_, (image_subset_iff_subset_preimage _).1 ht, rfl⟩
 #align function.injective.map_at_top_finset_prod_eq Function.Injective.map_atTop_finset_prod_eq
 #align function.injective.map_at_top_finset_sum_eq Function.Injective.map_atTop_finset_sum_eq
+-/
 
 /-- Let `g : γ → β` be an injective function and `f : β → α` be a function from the codomain of `g`
 to an additive commutative monoid. Suppose that `f x = 0` outside of the range of `g`. Then the

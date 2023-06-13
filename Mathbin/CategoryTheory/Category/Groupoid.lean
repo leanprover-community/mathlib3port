@@ -67,10 +67,12 @@ def of (C : Type u) [Groupoid.{v} C] : Grpd.{v, u} :=
 #align category_theory.Groupoid.of CategoryTheory.Grpd.of
 -/
 
+#print CategoryTheory.Grpd.coe_of /-
 @[simp]
 theorem coe_of (C : Type u) [Groupoid C] : (of C : Type u) = C :=
   rfl
 #align category_theory.Groupoid.coe_of CategoryTheory.Grpd.coe_of
+-/
 
 #print CategoryTheory.Grpd.category /-
 /-- Category structure on `Groupoid` -/
@@ -103,11 +105,15 @@ def forgetToCat : Grpd.{v, u} ⥤ Cat.{v, u}
 #align category_theory.Groupoid.forget_to_Cat CategoryTheory.Grpd.forgetToCat
 -/
 
+#print CategoryTheory.Grpd.forgetToCatFull /-
 instance forgetToCatFull : Full forgetToCat where preimage C D := id
 #align category_theory.Groupoid.forget_to_Cat_full CategoryTheory.Grpd.forgetToCatFull
+-/
 
+#print CategoryTheory.Grpd.forgetToCat_faithful /-
 instance forgetToCat_faithful : Faithful forgetToCat where
 #align category_theory.Groupoid.forget_to_Cat_faithful CategoryTheory.Grpd.forgetToCat_faithful
+-/
 
 #print CategoryTheory.Grpd.hom_to_functor /-
 /-- Convert arrows in the category of groupoids to functors,

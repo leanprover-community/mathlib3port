@@ -47,6 +47,5 @@ class Bracket (L M : Type _) where
 #align has_bracket Bracket
 -/
 
--- mathport name: «expr⁅ , ⁆»
 notation "⁅" x ", " y "⁆" => Bracket.bracket x y
 

@@ -160,6 +160,7 @@ theorem chain_of_chain_pmap {S : β → β → Prop} {p : α → Prop} (f : ∀ 
 #align list.chain_of_chain_pmap List.chain_of_chain_pmap
 -/
 
+#print List.Pairwise.chain /-
 protected theorem Pairwise.chain (p : Pairwise R (a :: l)) : Chain R a l :=
   by
   cases' pairwise_cons.1 p with r p'; clear p
@@ -167,6 +168,7 @@ protected theorem Pairwise.chain (p : Pairwise R (a :: l)) : Chain R a l :=
   simp only [chain_cons, forall_mem_cons] at r 
   exact chain_cons.2 ⟨r.1, IH r'⟩
 #align list.pairwise.chain List.Pairwise.chain
+-/
 
 #print List.Chain.pairwise /-
 protected theorem Chain.pairwise [IsTrans α R] :

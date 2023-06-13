@@ -130,6 +130,7 @@ def swap : Bipointed ⥤ Bipointed where
 #align Bipointed.swap Bipointed.swap
 -/
 
+#print Bipointed.swapEquiv /-
 /-- The equivalence between `Bipointed` and itself induced by `prod.swap` both ways. -/
 @[simps]
 def swapEquiv : Bipointed ≌ Bipointed :=
@@ -145,11 +146,14 @@ def swapEquiv : Bipointed ≌ Bipointed :=
           inv := ⟨id, rfl, rfl⟩ })
       fun X Y f => rfl)
 #align Bipointed.swap_equiv Bipointed.swapEquiv
+-/
 
+#print Bipointed.swapEquiv_symm /-
 @[simp]
 theorem swapEquiv_symm : swapEquiv.symm = swapEquiv :=
   rfl
 #align Bipointed.swap_equiv_symm Bipointed.swapEquiv_symm
+-/
 
 end Bipointed
 

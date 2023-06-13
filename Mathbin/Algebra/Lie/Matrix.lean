@@ -44,6 +44,7 @@ variable {R : Type u} [CommRing R]
 
 variable {n : Type w} [DecidableEq n] [Fintype n]
 
+#print lieEquivMatrix' /-
 /-- The natural equivalence between linear endomorphisms of finite free modules and square matrices
 is compatible with the Lie algebra structures. -/
 def lieEquivMatrix' : Module.End R (n → R) ≃ₗ⁅R⁆ Matrix n n R :=
@@ -54,39 +55,51 @@ def lieEquivMatrix' : Module.End R (n → R) ≃ₗ⁅R⁆ Matrix n n R :=
       have h : ∀ T S : Module.End R _, f (T.comp S) = f T ⬝ f S := LinearMap.toMatrix'_comp
       rw [LinearEquiv.map_sub, h, h, Matrix.mul_eq_mul, Matrix.mul_eq_mul] }
 #align lie_equiv_matrix' lieEquivMatrix'
+-/
 
+#print lieEquivMatrix'_apply /-
 @[simp]
 theorem lieEquivMatrix'_apply (f : Module.End R (n → R)) : lieEquivMatrix' f = f.toMatrix' :=
   rfl
 #align lie_equiv_matrix'_apply lieEquivMatrix'_apply
+-/
 
+#print lieEquivMatrix'_symm_apply /-
 @[simp]
 theorem lieEquivMatrix'_symm_apply (A : Matrix n n R) :
     (@lieEquivMatrix' R _ n _ _).symm A = A.toLin' :=
   rfl
 #align lie_equiv_matrix'_symm_apply lieEquivMatrix'_symm_apply
+-/
 
+#print Matrix.lieConj /-
 /-- An invertible matrix induces a Lie algebra equivalence from the space of matrices to itself. -/
 def Matrix.lieConj (P : Matrix n n R) (h : Invertible P) : Matrix n n R ≃ₗ⁅R⁆ Matrix n n R :=
   ((@lieEquivMatrix' R _ n _ _).symm.trans (P.toLinearEquiv' h).lieConj).trans lieEquivMatrix'
 #align matrix.lie_conj Matrix.lieConj
+-/
 
+#print Matrix.lieConj_apply /-
 @[simp]
 theorem Matrix.lieConj_apply (P A : Matrix n n R) (h : Invertible P) :
     P.lieConj h A = P ⬝ A ⬝ P⁻¹ := by
   simp [LinearEquiv.conj_apply, Matrix.lieConj, LinearMap.toMatrix'_comp,
     LinearMap.toMatrix'_toLin']
 #align matrix.lie_conj_apply Matrix.lieConj_apply
+-/
 
+#print Matrix.lieConj_symm_apply /-
 @[simp]
 theorem Matrix.lieConj_symm_apply (P A : Matrix n n R) (h : Invertible P) :
     (P.lieConj h).symm A = P⁻¹ ⬝ A ⬝ P := by
   simp [LinearEquiv.symm_conj_apply, Matrix.lieConj, LinearMap.toMatrix'_comp,
     LinearMap.toMatrix'_toLin']
 #align matrix.lie_conj_symm_apply Matrix.lieConj_symm_apply
+-/
 
 variable {m : Type w₁} [DecidableEq m] [Fintype m] (e : n ≃ m)
 
+#print Matrix.reindexLieEquiv /-
 /-- For square matrices, the natural map that reindexes a matrix's rows and columns with equivalent
 types, `matrix.reindex`, is an equivalence of Lie algebras. -/
 def Matrix.reindexLieEquiv : Matrix n n R ≃ₗ⁅R⁆ Matrix m m R :=
@@ -98,18 +111,23 @@ def Matrix.reindexLieEquiv : Matrix n n R ≃ₗ⁅R⁆ Matrix m m R :=
       simp only [LieRing.of_associative_ring_bracket, Matrix.reindex_apply,
         Matrix.submatrix_mul_equiv, Matrix.mul_eq_mul, Matrix.submatrix_sub, Pi.sub_apply] }
 #align matrix.reindex_lie_equiv Matrix.reindexLieEquiv
+-/
 
+#print Matrix.reindexLieEquiv_apply /-
 @[simp]
 theorem Matrix.reindexLieEquiv_apply (M : Matrix n n R) :
     Matrix.reindexLieEquiv e M = Matrix.reindex e e M :=
   rfl
 #align matrix.reindex_lie_equiv_apply Matrix.reindexLieEquiv_apply
+-/
 
+#print Matrix.reindexLieEquiv_symm /-
 @[simp]
 theorem Matrix.reindexLieEquiv_symm :
     (Matrix.reindexLieEquiv e : _ ≃ₗ⁅R⁆ _).symm = Matrix.reindexLieEquiv e.symm :=
   rfl
 #align matrix.reindex_lie_equiv_symm Matrix.reindexLieEquiv_symm
+-/
 
 end Matrices
 

@@ -92,8 +92,6 @@ def counitCoequalises [∀ X : B, RegularEpi (adj₁.counit.app X)] (X : B) :
       apply hm.trans (regular_epi.desc' (adj₁.counit.app X) s.π _).2.symm
 #align category_theory.lift_adjoint.counit_coequalises CategoryTheory.LiftAdjoint.counitCoequalises
 
-include adj₁ adj₂
-
 /-- (Implementation)
 To construct the left adjoint, we use the coequalizer of `F' U ε_Y` with the composite
 

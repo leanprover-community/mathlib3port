@@ -84,18 +84,22 @@ structure CoverLifting (G : C ⥤ D) : Prop where
 #align category_theory.cover_lifting CategoryTheory.CoverLifting
 -/
 
+#print CategoryTheory.idCoverLifting /-
 /-- The identity functor on a site is cover-lifting. -/
 theorem idCoverLifting : CoverLifting J J (𝟭 _) :=
   ⟨fun _ _ h => by simpa using h⟩
 #align category_theory.id_cover_lifting CategoryTheory.idCoverLifting
+-/
 
 variable {J K}
 
+#print CategoryTheory.compCoverLifting /-
 /-- The composition of two cover-lifting functors are cover-lifting -/
 theorem compCoverLifting {F : C ⥤ D} (hu : CoverLifting J K F) {G : D ⥤ E}
     (hv : CoverLifting K L G) : CoverLifting J L (F ⋙ G) :=
   ⟨fun _ S h => hu.cover_lift (hv.cover_lift h)⟩
 #align category_theory.comp_cover_lifting CategoryTheory.compCoverLifting
+-/
 
 end CoverLifting
 
@@ -141,23 +145,26 @@ variable (x : S.arrows.FamilyOfElements ((ran G.op).obj ℱ.val ⋙ coyoneda.obj
 
 variable (hx : x.Compatible)
 
+#print CategoryTheory.RanIsSheafOfCoverLifting.pulledbackFamily /-
 /-- The family of morphisms `X ⟶ 𝒢(G(Y')) ⟶ ℱ(Y')` defined on `{ Y' ⊆ Y : G(Y') ⊆ U ∈ S}`. -/
 def pulledbackFamily (Y : StructuredArrow (op U) G.op) :=
   ((x.pullback Y.Hom.unop).functorPullback G).compPresheafMap
     (show _ ⟶ _ from whiskerRight ((Ran.adjunction A G.op).counit.app ℱ.val) (coyoneda.obj (op X)))
 #align category_theory.Ran_is_sheaf_of_cover_lifting.pulledback_family CategoryTheory.RanIsSheafOfCoverLifting.pulledbackFamily
+-/
 
+#print CategoryTheory.RanIsSheafOfCoverLifting.pulledbackFamily_apply /-
 @[simp]
 theorem pulledbackFamily_apply (Y : StructuredArrow (op U) G.op) {W} {f : W ⟶ _} (Hf) :
     pulledbackFamily ℱ S x Y f Hf =
       x (G.map f ≫ Y.Hom.unop) Hf ≫ ((Ran.adjunction A G.op).counit.app ℱ.val).app (op W) :=
   rfl
 #align category_theory.Ran_is_sheaf_of_cover_lifting.pulledback_family_apply CategoryTheory.RanIsSheafOfCoverLifting.pulledbackFamily_apply
+-/
 
 variable {x} {S}
 
-include hu hS hx
-
+#print CategoryTheory.RanIsSheafOfCoverLifting.getSection /-
 /-- Given a `G(Y) ⊆ U`, we can find a unique section `X ⟶ ℱ(Y)` that agrees with `x`. -/
 def getSection (Y : StructuredArrow (op U) G.op) : X ⟶ ℱ.val.obj Y.right :=
   by
@@ -166,12 +173,16 @@ def getSection (Y : StructuredArrow (op U) G.op) : X ⟶ ℱ.val.obj Y.right :=
   have hs' := ((hx.pullback Y.3.unop).functorPullback G).compPresheafMap hom_sh
   exact (ℱ.2 X _ (hu.cover_lift S')).amalgamate _ hs'
 #align category_theory.Ran_is_sheaf_of_cover_lifting.get_section CategoryTheory.RanIsSheafOfCoverLifting.getSection
+-/
 
+#print CategoryTheory.RanIsSheafOfCoverLifting.getSection_isAmalgamation /-
 theorem getSection_isAmalgamation (Y : StructuredArrow (op U) G.op) :
     (pulledbackFamily ℱ S x Y).IsAmalgamation (getSection hu ℱ hS hx Y) :=
   IsSheafFor.isAmalgamation _ _
 #align category_theory.Ran_is_sheaf_of_cover_lifting.get_section_is_amalgamation CategoryTheory.RanIsSheafOfCoverLifting.getSection_isAmalgamation
+-/
 
+#print CategoryTheory.RanIsSheafOfCoverLifting.getSection_is_unique /-
 theorem getSection_is_unique (Y : StructuredArrow (op U) G.op) {y}
     (H : (pulledbackFamily ℱ S x Y).IsAmalgamation y) : y = getSection hu ℱ hS hx Y :=
   by
@@ -180,7 +191,9 @@ theorem getSection_is_unique (Y : StructuredArrow (op U) G.op) {y}
   · apply get_section_is_amalgamation
   · exact ℱ.2 X _ (hu.cover_lift (K.pullback_stable Y.hom.unop hS))
 #align category_theory.Ran_is_sheaf_of_cover_lifting.get_section_is_unique CategoryTheory.RanIsSheafOfCoverLifting.getSection_is_unique
+-/
 
+#print CategoryTheory.RanIsSheafOfCoverLifting.getSection_commute /-
 @[simp]
 theorem getSection_commute {Y Z : StructuredArrow (op U) G.op} (f : Y ⟶ Z) :
     getSection hu ℱ hS hx Y ≫ ℱ.val.map f.right = getSection hu ℱ hS hx Z :=
@@ -197,7 +210,9 @@ theorem getSection_commute {Y Z : StructuredArrow (op U) G.op} (f : Y ⟶ Z) :
   · change S (G.map _ ≫ Y.hom.unop)
     simpa only [functor.map_comp, category.assoc] using hV'
 #align category_theory.Ran_is_sheaf_of_cover_lifting.get_section_commute CategoryTheory.RanIsSheafOfCoverLifting.getSection_commute
+-/
 
+#print CategoryTheory.RanIsSheafOfCoverLifting.gluedLimitCone /-
 /-- The limit cone in order to glue the sections obtained via `get_section`. -/
 def gluedLimitCone : Limits.Cone (Ran.diagram G.op ℱ.val (op U)) :=
   { pt
@@ -205,17 +220,23 @@ def gluedLimitCone : Limits.Cone (Ran.diagram G.op ℱ.val (op U)) :=
       { app := fun Y => getSection hu ℱ hS hx Y
         naturality' := fun Y Z f => by tidy } }
 #align category_theory.Ran_is_sheaf_of_cover_lifting.glued_limit_cone CategoryTheory.RanIsSheafOfCoverLifting.gluedLimitCone
+-/
 
+#print CategoryTheory.RanIsSheafOfCoverLifting.gluedLimitCone_π_app /-
 @[simp]
 theorem gluedLimitCone_π_app (W) : (gluedLimitCone hu ℱ hS hx).π.app W = getSection hu ℱ hS hx W :=
   rfl
 #align category_theory.Ran_is_sheaf_of_cover_lifting.glued_limit_cone_π_app CategoryTheory.RanIsSheafOfCoverLifting.gluedLimitCone_π_app
+-/
 
+#print CategoryTheory.RanIsSheafOfCoverLifting.gluedSection /-
 /-- The section obtained by passing `glued_limit_cone` into `category_theory.limits.limit.lift`. -/
 def gluedSection : X ⟶ ((ran G.op).obj ℱ.val).obj (op U) :=
   limit.lift _ (gluedLimitCone hu ℱ hS hx)
 #align category_theory.Ran_is_sheaf_of_cover_lifting.glued_section CategoryTheory.RanIsSheafOfCoverLifting.gluedSection
+-/
 
+#print CategoryTheory.RanIsSheafOfCoverLifting.helper /-
 /--
 A helper lemma for the following two lemmas. Basically stating that if the section `y : X ⟶ 𝒢(V)`
 coincides with `x` on `G(V')` for all `G(V') ⊆ V ∈ S`, then `X ⟶ 𝒢(V) ⟶ ℱ(W)` is indeed the
@@ -249,7 +270,9 @@ theorem helper {V} (f : V ⟶ U) (y : X ⟶ ((ran G.op).obj ℱ.val).obj (op V))
   erw [category.comp_id]
   simp only [Quiver.Hom.unop_op, functor.op_map, Quiver.Hom.op_unop]
 #align category_theory.Ran_is_sheaf_of_cover_lifting.helper CategoryTheory.RanIsSheafOfCoverLifting.helper
+-/
 
+#print CategoryTheory.RanIsSheafOfCoverLifting.gluedSection_isAmalgamation /-
 /-- Verify that the `glued_section` is an amalgamation of `x`. -/
 theorem gluedSection_isAmalgamation : x.IsAmalgamation (gluedSection hu ℱ hS hx) :=
   by
@@ -263,7 +286,9 @@ theorem gluedSection_isAmalgamation : x.IsAmalgamation (gluedSection hu ℱ hS h
   convert hx fV' (𝟙 _) hV hV' (by rw [category.id_comp])
   simp only [op_id, functor_to_types.map_id_apply]
 #align category_theory.Ran_is_sheaf_of_cover_lifting.glued_section_is_amalgamation CategoryTheory.RanIsSheafOfCoverLifting.gluedSection_isAmalgamation
+-/
 
+#print CategoryTheory.RanIsSheafOfCoverLifting.gluedSection_is_unique /-
 /-- Verify that the amalgamation is indeed unique. -/
 theorem gluedSection_is_unique (y) (hy : x.IsAmalgamation y) : y = gluedSection hu ℱ hS hx :=
   by
@@ -276,9 +301,11 @@ theorem gluedSection_is_unique (y) (hy : x.IsAmalgamation y) : y = gluedSection 
     convert hy fV' (by simpa only [category.comp_id] using hV')
     erw [category.comp_id]
 #align category_theory.Ran_is_sheaf_of_cover_lifting.glued_section_is_unique CategoryTheory.RanIsSheafOfCoverLifting.gluedSection_is_unique
+-/
 
 end RanIsSheafOfCoverLifting
 
+#print CategoryTheory.ran_isSheaf_of_coverLifting /-
 /-- If `G` is cover_lifting, then `Ran G.op` pushes sheaves to sheaves.
 
 This result is basically https://stacks.math.columbia.edu/tag/00XK,
@@ -294,6 +321,7 @@ theorem ran_isSheaf_of_coverLifting {G : C ⥤ D} (hG : CoverLifting J K G) (ℱ
   · apply Ran_is_sheaf_of_cover_lifting.glued_section_is_amalgamation
   · apply Ran_is_sheaf_of_cover_lifting.glued_section_is_unique
 #align category_theory.Ran_is_sheaf_of_cover_lifting CategoryTheory.ran_isSheaf_of_coverLifting
+-/
 
 variable (A)
 

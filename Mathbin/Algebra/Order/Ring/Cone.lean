@@ -53,9 +53,11 @@ add_decl_doc total_positive_cone.to_positive_cone
 /-- Forget that a `total_positive_cone` in a ring respects the multiplicative structure. -/
 add_decl_doc total_positive_cone.to_total_positive_cone
 
+#print Ring.PositiveCone.one_pos /-
 theorem PositiveCone.one_pos (C : PositiveCone α) : C.Pos 1 :=
   (C.pos_iff _).2 ⟨C.one_nonneg, fun h => one_ne_zero <| C.nonneg_antisymm C.one_nonneg h⟩
 #align ring.positive_cone.one_pos Ring.PositiveCone.one_pos
+-/
 
 end Ring
 

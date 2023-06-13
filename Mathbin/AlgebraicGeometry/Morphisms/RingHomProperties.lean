@@ -46,8 +46,6 @@ variable (P : ∀ {R S : Type u} [CommRing R] [CommRing S] (f : R →+* S), Prop
 
 namespace RingHom
 
-include P
-
 variable {P}
 
 theorem RespectsIso.basicOpen_iff (hP : RespectsIso @P) {X Y : Scheme} [IsAffine X] [IsAffine Y]
@@ -329,8 +327,6 @@ open AlgebraicGeometry
 namespace RingHom.PropertyIsLocal
 
 variable {P} (hP : RingHom.PropertyIsLocal @P)
-
-include hP
 
 theorem sourceAffineLocallyOfSourceOpenCover {X Y : Scheme} (f : X ⟶ Y) [IsAffine Y]
     (𝒰 : X.OpenCover) [∀ i, IsAffine (𝒰.obj i)] (H : ∀ i, P (Scheme.Γ.map (𝒰.map i ≫ f).op)) :

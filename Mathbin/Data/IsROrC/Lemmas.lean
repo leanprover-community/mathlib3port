@@ -24,9 +24,11 @@ namespace Polynomial
 
 open scoped Polynomial
 
+#print Polynomial.ofReal_eval /-
 theorem ofReal_eval (p : ℝ[X]) (x : ℝ) : (p.eval x : K) = aeval (↑x) p :=
   (@aeval_algebraMap_apply_eq_algebraMap_eval ℝ K _ _ _ x p).symm
 #align polynomial.of_real_eval Polynomial.ofReal_eval
+-/
 
 end Polynomial
 
@@ -58,6 +60,7 @@ instance isROrC_to_real : FiniteDimensional ℝ K :=
 
 variable (K E) [NormedAddCommGroup E] [NormedSpace K E]
 
+#print FiniteDimensional.proper_isROrC /-
 /-- A finite dimensional vector space over an `is_R_or_C` is a proper metric space.
 
 This is not an instance because it would cause a search for `finite_dimensional ?x E` before
@@ -68,6 +71,7 @@ theorem proper_isROrC [FiniteDimensional K E] : ProperSpace E :=
   letI : FiniteDimensional ℝ E := FiniteDimensional.trans ℝ K E
   infer_instance
 #align finite_dimensional.proper_is_R_or_C FiniteDimensional.proper_isROrC
+-/
 
 variable {E}
 
@@ -82,6 +86,7 @@ end FiniteDimensional
 
 namespace IsROrC
 
+#print IsROrC.reClm_norm /-
 @[simp, is_R_or_C_simps]
 theorem reClm_norm : ‖(reClm : K →L[ℝ] ℝ)‖ = 1 :=
   by
@@ -90,16 +95,21 @@ theorem reClm_norm : ‖(reClm : K →L[ℝ] ℝ)‖ = 1 :=
   · simp
   · infer_instance
 #align is_R_or_C.re_clm_norm IsROrC.reClm_norm
+-/
 
+#print IsROrC.conjCle_norm /-
 @[simp, is_R_or_C_simps]
 theorem conjCle_norm : ‖(@conjCle K _ : K →L[ℝ] K)‖ = 1 :=
   (@conjLie K _).toLinearIsometry.norm_toContinuousLinearMap
 #align is_R_or_C.conj_cle_norm IsROrC.conjCle_norm
+-/
 
+#print IsROrC.ofRealClm_norm /-
 @[simp, is_R_or_C_simps]
 theorem ofRealClm_norm : ‖(ofRealClm : ℝ →L[ℝ] K)‖ = 1 :=
   LinearIsometry.norm_toContinuousLinearMap ofRealLi
 #align is_R_or_C.of_real_clm_norm IsROrC.ofRealClm_norm
+-/
 
 end IsROrC
 

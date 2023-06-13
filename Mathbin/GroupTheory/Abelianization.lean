@@ -47,9 +47,11 @@ deriving Subgroup.Normal
 #align commutator commutator
 -/
 
+#print commutator_def /-
 theorem commutator_def : commutator G = ⁅(⊤ : Subgroup G), ⊤⁆ :=
   rfl
 #align commutator_def commutator_def
+-/
 
 #print commutator_eq_closure /-
 theorem commutator_eq_closure : commutator G = Subgroup.closure (commutatorSet G) := by
@@ -83,6 +85,7 @@ theorem rank_commutator_le_card [Finite (commutatorSet G)] :
 #align rank_commutator_le_card rank_commutator_le_card
 -/
 
+#print commutator_centralizer_commutator_le_center /-
 theorem commutator_centralizer_commutator_le_center :
     ⁅(commutator G).centralizer, (commutator G).centralizer⁆ ≤ Subgroup.center G :=
   by
@@ -94,6 +97,7 @@ theorem commutator_centralizer_commutator_le_center :
   rw [Subgroup.commutator_comm, Subgroup.commutator_eq_bot_iff_le_centralizer]
   exact Set.centralizer_subset (Subgroup.commutator_mono le_top le_top)
 #align commutator_centralizer_commutator_le_center commutator_centralizer_commutator_le_center
+-/
 
 #print Abelianization /-
 /-- The abelianization of G is the quotient of G by its commutator subgroup. -/
@@ -135,10 +139,12 @@ def of : G →* Abelianization G where
 #align abelianization.of Abelianization.of
 -/
 
+#print Abelianization.mk_eq_of /-
 @[simp]
 theorem mk_eq_of (a : G) : Quot.mk _ a = of a :=
   rfl
 #align abelianization.mk_eq_of Abelianization.mk_eq_of
+-/
 
 section lift
 
@@ -147,12 +153,14 @@ section lift
 -- Let `A` be an abelian group and let `f` be a group homomorphism from `G` to `A`.
 variable {A : Type v} [CommGroup A] (f : G →* A)
 
+#print Abelianization.commutator_subset_ker /-
 theorem commutator_subset_ker : commutator G ≤ f.ker :=
   by
   rw [commutator_eq_closure, Subgroup.closure_le]
   rintro x ⟨p, q, rfl⟩
   simp [MonoidHom.mem_ker, mul_right_comm (f p) (f q), commutatorElement_def]
 #align abelianization.commutator_subset_ker Abelianization.commutator_subset_ker
+-/
 
 #print Abelianization.lift /-
 /-- If `f : G → A` is a group homomorphism to an abelian group, then `lift f` is the unique map from
@@ -166,17 +174,21 @@ def lift : (G →* A) ≃ (Abelianization G →* A)
 #align abelianization.lift Abelianization.lift
 -/
 
+#print Abelianization.lift.of /-
 @[simp]
 theorem lift.of (x : G) : lift f (of x) = f x :=
   rfl
 #align abelianization.lift.of Abelianization.lift.of
+-/
 
+#print Abelianization.lift.unique /-
 theorem lift.unique (φ : Abelianization G →* A)
     -- hφ : φ agrees with f on the image of G in Gᵃᵇ
     (hφ : ∀ x : G, φ (of x) = f x)
     {x : Abelianization G} : φ x = lift f x :=
   QuotientGroup.induction_on x hφ
 #align abelianization.lift.unique Abelianization.lift.unique
+-/
 
 #print Abelianization.lift_of /-
 @[simp]
@@ -208,10 +220,12 @@ def map : Abelianization G →* Abelianization H :=
 #align abelianization.map Abelianization.map
 -/
 
+#print Abelianization.map_of /-
 @[simp]
 theorem map_of (x : G) : map f (of x) = of (f x) :=
   rfl
 #align abelianization.map_of Abelianization.map_of
+-/
 
 #print Abelianization.map_id /-
 @[simp]
@@ -227,11 +241,13 @@ theorem map_comp {I : Type w} [Group I] (g : H →* I) : (map g).comp (map f) = 
 #align abelianization.map_comp Abelianization.map_comp
 -/
 
+#print Abelianization.map_map_apply /-
 @[simp]
 theorem map_map_apply {I : Type w} [Group I] {g : H →* I} {x : Abelianization G} :
     map g (map f x) = map (g.comp f) x :=
   MonoidHom.congr_fun (map_comp _ _) x
 #align abelianization.map_map_apply Abelianization.map_map_apply
+-/
 
 end Map
 
@@ -241,6 +257,7 @@ section AbelianizationCongr
 
 variable {G} {H : Type v} [Group H] (e : G ≃* H)
 
+#print MulEquiv.abelianizationCongr /-
 /-- Equivalent groups have equivalent abelianizations -/
 def MulEquiv.abelianizationCongr : Abelianization G ≃* Abelianization H
     where
@@ -250,32 +267,42 @@ def MulEquiv.abelianizationCongr : Abelianization G ≃* Abelianization H
   right_inv := by rintro ⟨a⟩; simp
   map_mul' := MonoidHom.map_mul _
 #align mul_equiv.abelianization_congr MulEquiv.abelianizationCongr
+-/
 
+#print abelianizationCongr_of /-
 @[simp]
 theorem abelianizationCongr_of (x : G) :
     e.abelianizationCongr (Abelianization.of x) = Abelianization.of (e x) :=
   rfl
 #align abelianization_congr_of abelianizationCongr_of
+-/
 
+#print abelianizationCongr_refl /-
 @[simp]
 theorem abelianizationCongr_refl :
     (MulEquiv.refl G).abelianizationCongr = MulEquiv.refl (Abelianization G) :=
   MulEquiv.toMonoidHom_injective Abelianization.lift_of
 #align abelianization_congr_refl abelianizationCongr_refl
+-/
 
+#print abelianizationCongr_symm /-
 @[simp]
 theorem abelianizationCongr_symm : e.abelianizationCongr.symm = e.symm.abelianizationCongr :=
   rfl
 #align abelianization_congr_symm abelianizationCongr_symm
+-/
 
+#print abelianizationCongr_trans /-
 @[simp]
 theorem abelianizationCongr_trans {I : Type v} [Group I] (e₂ : H ≃* I) :
     e.abelianizationCongr.trans e₂.abelianizationCongr = (e.trans e₂).abelianizationCongr :=
   MulEquiv.toMonoidHom_injective (Abelianization.hom_ext _ _ rfl)
 #align abelianization_congr_trans abelianizationCongr_trans
+-/
 
 end AbelianizationCongr
 
+#print Abelianization.equivOfComm /-
 /-- An Abelian group is equivalent to its own abelianization. -/
 @[simps]
 def Abelianization.equivOfComm {H : Type _} [CommGroup H] : H ≃* Abelianization H :=
@@ -285,6 +312,7 @@ def Abelianization.equivOfComm {H : Type _} [CommGroup H] : H ≃* Abelianizatio
     left_inv := fun a => rfl
     right_inv := by rintro ⟨a⟩; rfl }
 #align abelianization.equiv_of_comm Abelianization.equivOfComm
+-/
 
 section commutatorRepresentatives
 
@@ -307,11 +335,14 @@ def closureCommutatorRepresentatives : Subgroup G :=
 #align closure_commutator_representatives closureCommutatorRepresentatives
 -/
 
+#print closureCommutatorRepresentatives_fg /-
 instance closureCommutatorRepresentatives_fg [Finite (commutatorSet G)] :
     Group.FG (closureCommutatorRepresentatives G) :=
   Group.closure_finite_fg _
 #align closure_commutator_representatives_fg closureCommutatorRepresentatives_fg
+-/
 
+#print rank_closureCommutatorRepresentatives_le /-
 theorem rank_closureCommutatorRepresentatives_le [Finite (commutatorSet G)] :
     Group.rank (closureCommutatorRepresentatives G) ≤ 2 * Nat.card (commutatorSet G) :=
   by
@@ -322,7 +353,9 @@ theorem rank_closureCommutatorRepresentatives_le [Finite (commutatorSet G)] :
         (add_le_add ((Finite.card_image_le _).trans (Finite.card_range_le _))
           ((Finite.card_image_le _).trans (Finite.card_range_le _))))
 #align rank_closure_commutator_representations_le rank_closureCommutatorRepresentatives_le
+-/
 
+#print image_commutatorSet_closureCommutatorRepresentatives /-
 theorem image_commutatorSet_closureCommutatorRepresentatives :
     (closureCommutatorRepresentatives G).Subtype ''
         commutatorSet (closureCommutatorRepresentatives G) =
@@ -338,14 +371,18 @@ theorem image_commutatorSet_closureCommutatorRepresentatives :
           ⟨_, subset_closure (Or.inr ⟨_, ⟨⟨g, hg⟩, rfl⟩, rfl⟩)⟩, rfl⟩,
         hg.some_spec.some_spec⟩
 #align image_commutator_set_closure_commutator_representatives image_commutatorSet_closureCommutatorRepresentatives
+-/
 
+#print card_commutatorSet_closureCommutatorRepresentatives /-
 theorem card_commutatorSet_closureCommutatorRepresentatives :
     Nat.card (commutatorSet (closureCommutatorRepresentatives G)) = Nat.card (commutatorSet G) :=
   by
   rw [← image_commutatorSet_closureCommutatorRepresentatives G]
   exact Nat.card_congr (Equiv.Set.image _ _ (subtype_injective _))
 #align card_commutator_set_closure_commutator_representatives card_commutatorSet_closureCommutatorRepresentatives
+-/
 
+#print card_commutator_closureCommutatorRepresentatives /-
 theorem card_commutator_closureCommutatorRepresentatives :
     Nat.card (commutator (closureCommutatorRepresentatives G)) = Nat.card (commutator G) :=
   by
@@ -353,6 +390,7 @@ theorem card_commutator_closureCommutatorRepresentatives :
     MonoidHom.map_closure, ← commutator_eq_closure]
   exact Nat.card_congr (Equiv.Set.image _ _ (subtype_injective _))
 #align card_commutator_closure_commutator_representatives card_commutator_closureCommutatorRepresentatives
+-/
 
 instance [Finite (commutatorSet G)] : Finite (commutatorSet (closureCommutatorRepresentatives G)) :=
   by

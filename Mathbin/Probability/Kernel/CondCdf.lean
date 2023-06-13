@@ -190,8 +190,6 @@ namespace MeasureTheory.Measure
 
 variable {α β : Type _} {mα : MeasurableSpace α} (ρ : Measure (α × ℝ))
 
-include mα
-
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- Measure on `α` such that for a measurable set `s`, `ρ.Iic_snd r s = ρ (s ×ˢ Iic r)`. -/
 noncomputable def iicSnd (r : ℝ) : Measure α :=
@@ -307,8 +305,6 @@ open MeasureTheory
 namespace ProbabilityTheory
 
 variable {α β ι : Type _} {mα : MeasurableSpace α}
-
-include mα
 
 attribute [local instance] MeasureTheory.Measure.IsFiniteMeasure.iicSnd
 

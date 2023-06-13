@@ -91,9 +91,11 @@ theorem comp_left (a b c : Over X) (f : a ⟶ b) (g : b ⟶ c) : (f ≫ g).left 
 #align category_theory.over.comp_left CategoryTheory.Over.comp_left
 -/
 
+#print CategoryTheory.Over.w /-
 @[simp, reassoc]
 theorem w {A B : Over X} (f : A ⟶ B) : f.left ≫ B.Hom = A.Hom := by have := f.w <;> tidy
 #align category_theory.over.w CategoryTheory.Over.w
+-/
 
 #print CategoryTheory.Over.mk /-
 /-- To give an object in the over category, it suffices to give a morphism with codomain `X`. -/
@@ -103,29 +105,36 @@ def mk {X Y : T} (f : Y ⟶ X) : Over X :=
 #align category_theory.over.mk CategoryTheory.Over.mk
 -/
 
+#print CategoryTheory.Over.coeFromHom /-
 /-- We can set up a coercion from arrows with codomain `X` to `over X`. This most likely should not
     be a global instance, but it is sometimes useful. -/
 def coeFromHom {X Y : T} : Coe (Y ⟶ X) (Over X) where coe := mk
 #align category_theory.over.coe_from_hom CategoryTheory.Over.coeFromHom
+-/
 
 section
 
 attribute [local instance] coe_from_hom
 
+#print CategoryTheory.Over.coe_hom /-
 @[simp]
 theorem coe_hom {X Y : T} (f : Y ⟶ X) : (f : Over X).Hom = f :=
   rfl
 #align category_theory.over.coe_hom CategoryTheory.Over.coe_hom
+-/
 
 end
 
+#print CategoryTheory.Over.homMk /-
 /-- To give a morphism in the over category, it suffices to give an arrow fitting in a commutative
     triangle. -/
 @[simps]
 def homMk {U V : Over X} (f : U.left ⟶ V.left) (w : f ≫ V.Hom = U.Hom := by obviously) : U ⟶ V :=
   CostructuredArrow.homMk f w
 #align category_theory.over.hom_mk CategoryTheory.Over.homMk
+-/
 
+#print CategoryTheory.Over.isoMk /-
 /-- Construct an isomorphism in the over category given isomorphisms of the objects whose forward
 direction gives a commutative triangle.
 -/
@@ -134,6 +143,7 @@ def isoMk {f g : Over X} (hl : f.left ≅ g.left) (hw : hl.Hom ≫ g.Hom = f.Hom
     f ≅ g :=
   CostructuredArrow.isoMk hl hw
 #align category_theory.over.iso_mk CategoryTheory.Over.isoMk
+-/
 
 section
 
@@ -151,15 +161,19 @@ def forget : Over X ⥤ T :=
 
 end
 
+#print CategoryTheory.Over.forget_obj /-
 @[simp]
 theorem forget_obj {U : Over X} : (forget X).obj U = U.left :=
   rfl
 #align category_theory.over.forget_obj CategoryTheory.Over.forget_obj
+-/
 
+#print CategoryTheory.Over.forget_map /-
 @[simp]
 theorem forget_map {U V : Over X} {f : U ⟶ V} : (forget X).map f = f.left :=
   rfl
 #align category_theory.over.forget_map CategoryTheory.Over.forget_map
+-/
 
 #print CategoryTheory.Over.forgetCocone /-
 /-- The natural cocone over the forgetful functor `over X ⥤ T` with cocone point `X`. -/
@@ -184,20 +198,26 @@ section
 
 variable {Y : T} {f : X ⟶ Y} {U V : Over X} {g : U ⟶ V}
 
+#print CategoryTheory.Over.map_obj_left /-
 @[simp]
 theorem map_obj_left : ((map f).obj U).left = U.left :=
   rfl
 #align category_theory.over.map_obj_left CategoryTheory.Over.map_obj_left
+-/
 
+#print CategoryTheory.Over.map_obj_hom /-
 @[simp]
 theorem map_obj_hom : ((map f).obj U).Hom = U.Hom ≫ f :=
   rfl
 #align category_theory.over.map_obj_hom CategoryTheory.Over.map_obj_hom
+-/
 
+#print CategoryTheory.Over.map_map_left /-
 @[simp]
 theorem map_map_left : ((map f).map g).left = g.left :=
   rfl
 #align category_theory.over.map_map_left CategoryTheory.Over.map_map_left
+-/
 
 #print CategoryTheory.Over.mapId /-
 /-- Mapping by the identity morphism is just the identity functor. -/
@@ -296,6 +316,7 @@ def iteratedSliceBackward : Over f.left ⥤ Over f
 #align category_theory.over.iterated_slice_backward CategoryTheory.Over.iteratedSliceBackward
 -/
 
+#print CategoryTheory.Over.iteratedSliceEquiv /-
 /-- Given f : Y ⟶ X, we have an equivalence between (T/X)/f and T/Y -/
 @[simps]
 def iteratedSliceEquiv : Over f ≌ Over f.left
@@ -309,6 +330,7 @@ def iteratedSliceEquiv : Over f ≌ Over f.left
     NatIso.ofComponents (fun g => Over.isoMk (Iso.refl _) (by tidy)) fun X Y g => by ext; dsimp;
       simp
 #align category_theory.over.iterated_slice_equiv CategoryTheory.Over.iteratedSliceEquiv
+-/
 
 #print CategoryTheory.Over.iteratedSliceForward_forget /-
 theorem iteratedSliceForward_forget :
@@ -330,6 +352,7 @@ section
 
 variable {D : Type u₂} [Category.{v₂} D]
 
+#print CategoryTheory.Over.post /-
 /-- A functor `F : T ⥤ D` induces a functor `over X ⥤ over (F.obj X)` in the obvious way. -/
 @[simps]
 def post (F : T ⥤ D) : Over X ⥤ Over (F.obj X)
@@ -337,6 +360,7 @@ def post (F : T ⥤ D) : Over X ⥤ Over (F.obj X)
   obj Y := mk <| F.map Y.Hom
   map Y₁ Y₂ f := Over.homMk (F.map f.left) (by tidy <;> erw [← F.map_comp, w])
 #align category_theory.over.post CategoryTheory.Over.post
+-/
 
 end
 
@@ -392,9 +416,11 @@ theorem comp_right (a b c : Under X) (f : a ⟶ b) (g : b ⟶ c) : (f ≫ g).rig
 #align category_theory.under.comp_right CategoryTheory.Under.comp_right
 -/
 
+#print CategoryTheory.Under.w /-
 @[simp, reassoc]
 theorem w {A B : Under X} (f : A ⟶ B) : A.Hom ≫ f.right = B.Hom := by have := f.w <;> tidy
 #align category_theory.under.w CategoryTheory.Under.w
+-/
 
 #print CategoryTheory.Under.mk /-
 /-- To give an object in the under category, it suffices to give an arrow with domain `X`. -/
@@ -404,31 +430,39 @@ def mk {X Y : T} (f : X ⟶ Y) : Under X :=
 #align category_theory.under.mk CategoryTheory.Under.mk
 -/
 
+#print CategoryTheory.Under.homMk /-
 /-- To give a morphism in the under category, it suffices to give a morphism fitting in a
     commutative triangle. -/
 @[simps]
 def homMk {U V : Under X} (f : U.right ⟶ V.right) (w : U.Hom ≫ f = V.Hom := by obviously) : U ⟶ V :=
   StructuredArrow.homMk f w
 #align category_theory.under.hom_mk CategoryTheory.Under.homMk
+-/
 
+#print CategoryTheory.Under.isoMk /-
 /-- Construct an isomorphism in the over category given isomorphisms of the objects whose forward
 direction gives a commutative triangle.
 -/
 def isoMk {f g : Under X} (hr : f.right ≅ g.right) (hw : f.Hom ≫ hr.Hom = g.Hom) : f ≅ g :=
   StructuredArrow.isoMk hr hw
 #align category_theory.under.iso_mk CategoryTheory.Under.isoMk
+-/
 
+#print CategoryTheory.Under.isoMk_hom_right /-
 @[simp]
 theorem isoMk_hom_right {f g : Under X} (hr : f.right ≅ g.right) (hw : f.Hom ≫ hr.Hom = g.Hom) :
     (isoMk hr hw).Hom.right = hr.Hom :=
   rfl
 #align category_theory.under.iso_mk_hom_right CategoryTheory.Under.isoMk_hom_right
+-/
 
+#print CategoryTheory.Under.isoMk_inv_right /-
 @[simp]
 theorem isoMk_inv_right {f g : Under X} (hr : f.right ≅ g.right) (hw : f.Hom ≫ hr.Hom = g.Hom) :
     (isoMk hr hw).inv.right = hr.inv :=
   rfl
 #align category_theory.under.iso_mk_inv_right CategoryTheory.Under.isoMk_inv_right
+-/
 
 section
 
@@ -443,15 +477,19 @@ def forget : Under X ⥤ T :=
 
 end
 
+#print CategoryTheory.Under.forget_obj /-
 @[simp]
 theorem forget_obj {U : Under X} : (forget X).obj U = U.right :=
   rfl
 #align category_theory.under.forget_obj CategoryTheory.Under.forget_obj
+-/
 
+#print CategoryTheory.Under.forget_map /-
 @[simp]
 theorem forget_map {U V : Under X} {f : U ⟶ V} : (forget X).map f = f.right :=
   rfl
 #align category_theory.under.forget_map CategoryTheory.Under.forget_map
+-/
 
 #print CategoryTheory.Under.forgetCone /-
 /-- The natural cone over the forgetful functor `under X ⥤ T` with cone point `X`. -/
@@ -473,20 +511,26 @@ section
 
 variable {Y : T} {f : X ⟶ Y} {U V : Under Y} {g : U ⟶ V}
 
+#print CategoryTheory.Under.map_obj_right /-
 @[simp]
 theorem map_obj_right : ((map f).obj U).right = U.right :=
   rfl
 #align category_theory.under.map_obj_right CategoryTheory.Under.map_obj_right
+-/
 
+#print CategoryTheory.Under.map_obj_hom /-
 @[simp]
 theorem map_obj_hom : ((map f).obj U).Hom = f ≫ U.Hom :=
   rfl
 #align category_theory.under.map_obj_hom CategoryTheory.Under.map_obj_hom
+-/
 
+#print CategoryTheory.Under.map_map_right /-
 @[simp]
 theorem map_map_right : ((map f).map g).right = g.right :=
   rfl
 #align category_theory.under.map_map_right CategoryTheory.Under.map_map_right
+-/
 
 #print CategoryTheory.Under.mapId /-
 /-- Mapping by the identity morphism is just the identity functor. -/
@@ -564,6 +608,7 @@ section
 
 variable {D : Type u₂} [Category.{v₂} D]
 
+#print CategoryTheory.Under.post /-
 /-- A functor `F : T ⥤ D` induces a functor `under X ⥤ under (F.obj X)` in the obvious way. -/
 @[simps]
 def post {X : T} (F : T ⥤ D) : Under X ⥤ Under (F.obj X)
@@ -571,6 +616,7 @@ def post {X : T} (F : T ⥤ D) : Under X ⥤ Under (F.obj X)
   obj Y := mk <| F.map Y.Hom
   map Y₁ Y₂ f := Under.homMk (F.map f.right) (by tidy <;> erw [← F.map_comp, w])
 #align category_theory.under.post CategoryTheory.Under.post
+-/
 
 end
 

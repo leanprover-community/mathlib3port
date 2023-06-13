@@ -69,6 +69,7 @@ open NNReal ContinuousLinearMap MulOpposite
 
 universe u v
 
+#print DoubleCentralizer /-
 /-- The type of *double centralizers*, also known as the *multiplier algebra* and denoted by
 `𝓜(𝕜, A)`, of a non-unital normed algebra.
 
@@ -79,8 +80,8 @@ structure DoubleCentralizer (𝕜 : Type u) (A : Type v) [NontriviallyNormedFiel
     (A →L[𝕜] A) × (A →L[𝕜] A) where
   central : ∀ x y : A, snd x * y = x * fst y
 #align double_centralizer DoubleCentralizer
+-/
 
--- mathport name: «expr𝓜( , )»
 scoped[MultiplierAlgebra] notation "𝓜(" 𝕜 ", " A ")" => DoubleCentralizer 𝕜 A
 
 namespace DoubleCentralizer
@@ -102,9 +103,11 @@ algebra structure from `(A →L[𝕜] A) × (A →L[𝕜] A)ᵐᵒᵖ` to `𝓜(
 
 variable {𝕜 A}
 
+#print DoubleCentralizer.range_toProd /-
 theorem range_toProd : Set.range toProd = {lr : (A →L[𝕜] A) × _ | ∀ x y, lr.2 x * y = x * lr.1 y} :=
   Set.ext fun x => ⟨by rintro ⟨a, rfl⟩; exact a.central, fun hx => ⟨⟨x, hx⟩, rfl⟩⟩
 #align double_centralizer.range_to_prod DoubleCentralizer.range_toProd
+-/
 
 instance : Add 𝓜(𝕜, A)
     where add a b :=
@@ -144,18 +147,24 @@ instance : SMul S 𝓜(𝕜, A)
         show (s • a.snd) x * y = x * (s • a.fst) y by
           simp only [ContinuousLinearMap.smul_apply, mul_smul_comm, smul_mul_assoc, central] }
 
+#print DoubleCentralizer.smul_toProd /-
 @[simp]
 theorem smul_toProd (s : S) (a : 𝓜(𝕜, A)) : (s • a).toProd = s • a.toProd :=
   rfl
 #align double_centralizer.smul_to_prod DoubleCentralizer.smul_toProd
+-/
 
+#print DoubleCentralizer.smul_fst /-
 theorem smul_fst (s : S) (a : 𝓜(𝕜, A)) : (s • a).fst = s • a.fst :=
   rfl
 #align double_centralizer.smul_fst DoubleCentralizer.smul_fst
+-/
 
+#print DoubleCentralizer.smul_snd /-
 theorem smul_snd (s : S) (a : 𝓜(𝕜, A)) : (s • a).snd = s • a.snd :=
   rfl
 #align double_centralizer.smul_snd DoubleCentralizer.smul_snd
+-/
 
 variable {T : Type _} [Monoid T] [DistribMulAction T A] [SMulCommClass 𝕜 T A]
   [ContinuousConstSMul T A] [IsScalarTower T A A] [SMulCommClass T A A]
@@ -203,137 +212,195 @@ instance : Pow 𝓜(𝕜, A) ℕ
 instance : Inhabited 𝓜(𝕜, A) :=
   ⟨0⟩
 
+#print DoubleCentralizer.add_toProd /-
 @[simp]
 theorem add_toProd (a b : 𝓜(𝕜, A)) : (a + b).toProd = a.toProd + b.toProd :=
   rfl
 #align double_centralizer.add_to_prod DoubleCentralizer.add_toProd
+-/
 
+#print DoubleCentralizer.zero_toProd /-
 @[simp]
 theorem zero_toProd : (0 : 𝓜(𝕜, A)).toProd = 0 :=
   rfl
 #align double_centralizer.zero_to_prod DoubleCentralizer.zero_toProd
+-/
 
+#print DoubleCentralizer.neg_toProd /-
 @[simp]
 theorem neg_toProd (a : 𝓜(𝕜, A)) : (-a).toProd = -a.toProd :=
   rfl
 #align double_centralizer.neg_to_prod DoubleCentralizer.neg_toProd
+-/
 
+#print DoubleCentralizer.sub_toProd /-
 @[simp]
 theorem sub_toProd (a b : 𝓜(𝕜, A)) : (a - b).toProd = a.toProd - b.toProd :=
   rfl
 #align double_centralizer.sub_to_prod DoubleCentralizer.sub_toProd
+-/
 
+#print DoubleCentralizer.one_toProd /-
 @[simp]
 theorem one_toProd : (1 : 𝓜(𝕜, A)).toProd = 1 :=
   rfl
 #align double_centralizer.one_to_prod DoubleCentralizer.one_toProd
+-/
 
+#print DoubleCentralizer.nat_cast_toProd /-
 @[simp]
 theorem nat_cast_toProd (n : ℕ) : (n : 𝓜(𝕜, A)).toProd = n :=
   rfl
 #align double_centralizer.nat_cast_to_prod DoubleCentralizer.nat_cast_toProd
+-/
 
+#print DoubleCentralizer.int_cast_toProd /-
 @[simp]
 theorem int_cast_toProd (n : ℤ) : (n : 𝓜(𝕜, A)).toProd = n :=
   rfl
 #align double_centralizer.int_cast_to_prod DoubleCentralizer.int_cast_toProd
+-/
 
+#print DoubleCentralizer.pow_toProd /-
 @[simp]
 theorem pow_toProd (n : ℕ) (a : 𝓜(𝕜, A)) : (a ^ n).toProd = a.toProd ^ n :=
   rfl
 #align double_centralizer.pow_to_prod DoubleCentralizer.pow_toProd
+-/
 
+#print DoubleCentralizer.add_fst /-
 theorem add_fst (a b : 𝓜(𝕜, A)) : (a + b).fst = a.fst + b.fst :=
   rfl
 #align double_centralizer.add_fst DoubleCentralizer.add_fst
+-/
 
+#print DoubleCentralizer.add_snd /-
 theorem add_snd (a b : 𝓜(𝕜, A)) : (a + b).snd = a.snd + b.snd :=
   rfl
 #align double_centralizer.add_snd DoubleCentralizer.add_snd
+-/
 
+#print DoubleCentralizer.zero_fst /-
 theorem zero_fst : (0 : 𝓜(𝕜, A)).fst = 0 :=
   rfl
 #align double_centralizer.zero_fst DoubleCentralizer.zero_fst
+-/
 
+#print DoubleCentralizer.zero_snd /-
 theorem zero_snd : (0 : 𝓜(𝕜, A)).snd = 0 :=
   rfl
 #align double_centralizer.zero_snd DoubleCentralizer.zero_snd
+-/
 
+#print DoubleCentralizer.neg_fst /-
 theorem neg_fst (a : 𝓜(𝕜, A)) : (-a).fst = -a.fst :=
   rfl
 #align double_centralizer.neg_fst DoubleCentralizer.neg_fst
+-/
 
+#print DoubleCentralizer.neg_snd /-
 theorem neg_snd (a : 𝓜(𝕜, A)) : (-a).snd = -a.snd :=
   rfl
 #align double_centralizer.neg_snd DoubleCentralizer.neg_snd
+-/
 
+#print DoubleCentralizer.sub_fst /-
 theorem sub_fst (a b : 𝓜(𝕜, A)) : (a - b).fst = a.fst - b.fst :=
   rfl
 #align double_centralizer.sub_fst DoubleCentralizer.sub_fst
+-/
 
+#print DoubleCentralizer.sub_snd /-
 theorem sub_snd (a b : 𝓜(𝕜, A)) : (a - b).snd = a.snd - b.snd :=
   rfl
 #align double_centralizer.sub_snd DoubleCentralizer.sub_snd
+-/
 
+#print DoubleCentralizer.one_fst /-
 theorem one_fst : (1 : 𝓜(𝕜, A)).fst = 1 :=
   rfl
 #align double_centralizer.one_fst DoubleCentralizer.one_fst
+-/
 
+#print DoubleCentralizer.one_snd /-
 theorem one_snd : (1 : 𝓜(𝕜, A)).snd = 1 :=
   rfl
 #align double_centralizer.one_snd DoubleCentralizer.one_snd
+-/
 
+#print DoubleCentralizer.mul_fst /-
 @[simp]
 theorem mul_fst (a b : 𝓜(𝕜, A)) : (a * b).fst = a.fst * b.fst :=
   rfl
 #align double_centralizer.mul_fst DoubleCentralizer.mul_fst
+-/
 
+#print DoubleCentralizer.mul_snd /-
 @[simp]
 theorem mul_snd (a b : 𝓜(𝕜, A)) : (a * b).snd = b.snd * a.snd :=
   rfl
 #align double_centralizer.mul_snd DoubleCentralizer.mul_snd
+-/
 
+#print DoubleCentralizer.nat_cast_fst /-
 theorem nat_cast_fst (n : ℕ) : (n : 𝓜(𝕜, A)).fst = n :=
   rfl
 #align double_centralizer.nat_cast_fst DoubleCentralizer.nat_cast_fst
+-/
 
+#print DoubleCentralizer.nat_cast_snd /-
 theorem nat_cast_snd (n : ℕ) : (n : 𝓜(𝕜, A)).snd = n :=
   rfl
 #align double_centralizer.nat_cast_snd DoubleCentralizer.nat_cast_snd
+-/
 
+#print DoubleCentralizer.int_cast_fst /-
 theorem int_cast_fst (n : ℤ) : (n : 𝓜(𝕜, A)).fst = n :=
   rfl
 #align double_centralizer.int_cast_fst DoubleCentralizer.int_cast_fst
+-/
 
+#print DoubleCentralizer.int_cast_snd /-
 theorem int_cast_snd (n : ℤ) : (n : 𝓜(𝕜, A)).snd = n :=
   rfl
 #align double_centralizer.int_cast_snd DoubleCentralizer.int_cast_snd
+-/
 
+#print DoubleCentralizer.pow_fst /-
 theorem pow_fst (n : ℕ) (a : 𝓜(𝕜, A)) : (a ^ n).fst = a.fst ^ n :=
   rfl
 #align double_centralizer.pow_fst DoubleCentralizer.pow_fst
+-/
 
+#print DoubleCentralizer.pow_snd /-
 theorem pow_snd (n : ℕ) (a : 𝓜(𝕜, A)) : (a ^ n).snd = a.snd ^ n :=
   rfl
 #align double_centralizer.pow_snd DoubleCentralizer.pow_snd
+-/
 
+#print DoubleCentralizer.toProdMulOpposite /-
 /-- The natural injection from `double_centralizer.to_prod` except the second coordinate inherits
 `mul_opposite.op`. The ring structure on `𝓜(𝕜, A)` is the pullback under this map. -/
 def toProdMulOpposite : 𝓜(𝕜, A) → (A →L[𝕜] A) × (A →L[𝕜] A)ᵐᵒᵖ := fun a =>
   (a.fst, MulOpposite.op a.snd)
 #align double_centralizer.to_prod_mul_opposite DoubleCentralizer.toProdMulOpposite
+-/
 
+#print DoubleCentralizer.toProdMulOpposite_injective /-
 theorem toProdMulOpposite_injective :
     Function.Injective (toProdMulOpposite : 𝓜(𝕜, A) → (A →L[𝕜] A) × (A →L[𝕜] A)ᵐᵒᵖ) := fun a b h =>
   let h' := Prod.ext_iff.mp h
   ext _ _ <| Prod.ext h'.1 <| MulOpposite.op_injective h'.2
 #align double_centralizer.to_prod_mul_opposite_injective DoubleCentralizer.toProdMulOpposite_injective
+-/
 
+#print DoubleCentralizer.range_toProdMulOpposite /-
 theorem range_toProdMulOpposite :
     Set.range toProdMulOpposite = {lr : (A →L[𝕜] A) × _ | ∀ x y, unop lr.2 x * y = x * lr.1 y} :=
   Set.ext fun x =>
     ⟨by rintro ⟨a, rfl⟩; exact a.central, fun hx => ⟨⟨(x.1, unop x.2), hx⟩, Prod.ext rfl rfl⟩⟩
 #align double_centralizer.range_to_prod_mul_opposite DoubleCentralizer.range_toProdMulOpposite
+-/
 
 /-- The ring structure is inherited as the pullback under the injective map
 `double_centralizer.to_prod_mul_opposite : 𝓜(𝕜, A) → (A →L[𝕜] A) × (A →L[𝕜] A)ᵐᵒᵖ` -/
@@ -343,6 +410,7 @@ instance : Ring 𝓜(𝕜, A) :=
     (fun x n => Prod.ext rfl <| MulOpposite.op_smul _ _)
     (fun x n => Prod.ext rfl <| MulOpposite.op_pow _ _) (fun _ => rfl) fun _ => rfl
 
+#print DoubleCentralizer.toProdHom /-
 /-- The canonical map `double_centralizer.to_prod` as an additive group homomorphism. -/
 @[simps]
 def toProdHom : 𝓜(𝕜, A) →+ (A →L[𝕜] A) × (A →L[𝕜] A)
@@ -351,7 +419,9 @@ def toProdHom : 𝓜(𝕜, A) →+ (A →L[𝕜] A) × (A →L[𝕜] A)
   map_zero' := rfl
   map_add' x y := rfl
 #align double_centralizer.to_prod_hom DoubleCentralizer.toProdHom
+-/
 
+#print DoubleCentralizer.toProdMulOppositeHom /-
 /-- The canonical map `double_centralizer.to_prod_mul_opposite` as a ring homomorphism. -/
 @[simps]
 def toProdMulOppositeHom : 𝓜(𝕜, A) →+* (A →L[𝕜] A) × (A →L[𝕜] A)ᵐᵒᵖ
@@ -362,6 +432,7 @@ def toProdMulOppositeHom : 𝓜(𝕜, A) →+* (A →L[𝕜] A) × (A →L[𝕜]
   map_add' x y := rfl
   map_mul' x y := rfl
 #align double_centralizer.to_prod_mul_opposite_hom DoubleCentralizer.toProdMulOppositeHom
+-/
 
 /-- The module structure is inherited as the pullback under the additive group monomorphism
 `double_centralizer.to_prod : 𝓜(𝕜, A) →+ (A →L[𝕜] A) × (A →L[𝕜] A)` -/
@@ -389,18 +460,24 @@ instance : Algebra 𝕜 𝓜(𝕜, A)
     ext _ _ <|
       Prod.ext (Algebra.smul_def _ _) ((Algebra.smul_def _ _).trans <| Algebra.commutes _ _)
 
+#print DoubleCentralizer.algebraMap_toProd /-
 @[simp]
 theorem algebraMap_toProd (k : 𝕜) : (algebraMap 𝕜 𝓜(𝕜, A) k).toProd = algebraMap 𝕜 _ k :=
   rfl
 #align double_centralizer.algebra_map_to_prod DoubleCentralizer.algebraMap_toProd
+-/
 
+#print DoubleCentralizer.algebraMap_fst /-
 theorem algebraMap_fst (k : 𝕜) : (algebraMap 𝕜 𝓜(𝕜, A) k).fst = algebraMap 𝕜 _ k :=
   rfl
 #align double_centralizer.algebra_map_fst DoubleCentralizer.algebraMap_fst
+-/
 
+#print DoubleCentralizer.algebraMap_snd /-
 theorem algebraMap_snd (k : 𝕜) : (algebraMap 𝕜 𝓜(𝕜, A) k).snd = algebraMap 𝕜 _ k :=
   rfl
 #align double_centralizer.algebra_map_snd DoubleCentralizer.algebraMap_snd
+-/
 
 /-!
 ### Star structure
@@ -424,15 +501,19 @@ instance : Star 𝓜(𝕜, A)
       central := fun x y => by
         simpa only [star_mul, star_star] using (congr_arg star (a.central (star y) (star x))).symm }
 
+#print DoubleCentralizer.star_fst /-
 @[simp]
 theorem star_fst (a : 𝓜(𝕜, A)) (b : A) : (star a).fst b = star (a.snd (star b)) :=
   rfl
 #align double_centralizer.star_fst DoubleCentralizer.star_fst
+-/
 
+#print DoubleCentralizer.star_snd /-
 @[simp]
 theorem star_snd (a : 𝓜(𝕜, A)) (b : A) : (star a).snd b = star (a.fst (star b)) :=
   rfl
 #align double_centralizer.star_snd DoubleCentralizer.star_snd
+-/
 
 instance : StarAddMonoid 𝓜(𝕜, A) :=
   {
@@ -471,15 +552,19 @@ noncomputable instance : CoeTC A 𝓜(𝕜, A)
       snd := (ContinuousLinearMap.mul 𝕜 A).flip a
       central := fun x y => mul_assoc _ _ _ }
 
+#print DoubleCentralizer.coe_fst /-
 @[simp, norm_cast]
 theorem coe_fst (a : A) : (a : 𝓜(𝕜, A)).fst = ContinuousLinearMap.mul 𝕜 A a :=
   rfl
 #align double_centralizer.coe_fst DoubleCentralizer.coe_fst
+-/
 
+#print DoubleCentralizer.coe_snd /-
 @[simp, norm_cast]
 theorem coe_snd (a : A) : (a : 𝓜(𝕜, A)).snd = (ContinuousLinearMap.mul 𝕜 A).flip a :=
   rfl
 #align double_centralizer.coe_snd DoubleCentralizer.coe_snd
+-/
 
 #print DoubleCentralizer.coe_eq_algebraMap /-
 theorem coe_eq_algebraMap : (coe : 𝕜 → 𝓜(𝕜, 𝕜)) = algebraMap 𝕜 𝓜(𝕜, 𝕜) := by
@@ -490,6 +575,7 @@ theorem coe_eq_algebraMap : (coe : 𝕜 → 𝓜(𝕜, 𝕜)) = algebraMap 𝕜 
 #align double_centralizer.coe_eq_algebra_map DoubleCentralizer.coe_eq_algebraMap
 -/
 
+#print DoubleCentralizer.coeHom /-
 /-- The coercion of an algebra into its multiplier algebra as a non-unital star algebra
 homomorphism. -/
 @[simps]
@@ -508,6 +594,7 @@ noncomputable def coeHom [StarRing 𝕜] [StarRing A] [StarModule 𝕜 A] [Norme
     ext <;>
       simp only [coe_fst, coe_snd, mul_apply', star_fst, star_snd, flip_apply, star_mul, star_star]
 #align double_centralizer.coe_hom DoubleCentralizer.coeHom
+-/
 
 /-!
 ### Norm structures
@@ -527,23 +614,31 @@ noncomputable instance : NormedRing 𝓜(𝕜, A) :=
   NormedRing.induced _ _ (toProdMulOppositeHom : 𝓜(𝕜, A) →+* (A →L[𝕜] A) × (A →L[𝕜] A)ᵐᵒᵖ)
     toProdMulOpposite_injective
 
+#print DoubleCentralizer.norm_def /-
 -- even though the definition is actually in terms of `double_centralizer.to_prod_mul_opposite`, we
 -- choose to see through that here to avoid `mul_opposite.op` appearing.
 theorem norm_def (a : 𝓜(𝕜, A)) : ‖a‖ = ‖a.toProdHom‖ :=
   rfl
 #align double_centralizer.norm_def DoubleCentralizer.norm_def
+-/
 
+#print DoubleCentralizer.nnnorm_def /-
 theorem nnnorm_def (a : 𝓜(𝕜, A)) : ‖a‖₊ = ‖a.toProdHom‖₊ :=
   rfl
 #align double_centralizer.nnnorm_def DoubleCentralizer.nnnorm_def
+-/
 
+#print DoubleCentralizer.norm_def' /-
 theorem norm_def' (a : 𝓜(𝕜, A)) : ‖a‖ = ‖a.toProdMulOppositeHom‖ :=
   rfl
 #align double_centralizer.norm_def' DoubleCentralizer.norm_def'
+-/
 
+#print DoubleCentralizer.nnnorm_def' /-
 theorem nnnorm_def' (a : 𝓜(𝕜, A)) : ‖a‖₊ = ‖a.toProdMulOppositeHom‖₊ :=
   rfl
 #align double_centralizer.nnnorm_def' DoubleCentralizer.nnnorm_def'
+-/
 
 instance : NormedSpace 𝕜 𝓜(𝕜, A) :=
   { DoubleCentralizer.module with
@@ -552,9 +647,11 @@ instance : NormedSpace 𝕜 𝓜(𝕜, A) :=
 instance : NormedAlgebra 𝕜 𝓜(𝕜, A) :=
   { DoubleCentralizer.algebra, DoubleCentralizer.normedSpace with }
 
+#print DoubleCentralizer.uniformEmbedding_toProdMulOpposite /-
 theorem uniformEmbedding_toProdMulOpposite : UniformEmbedding (@toProdMulOpposite 𝕜 A _ _ _ _ _) :=
   uniformEmbedding_comap toProdMulOpposite_injective
 #align double_centralizer.uniform_embedding_to_prod_mul_opposite DoubleCentralizer.uniformEmbedding_toProdMulOpposite
+-/
 
 instance [CompleteSpace A] : CompleteSpace 𝓜(𝕜, A) :=
   by
@@ -569,6 +666,7 @@ instance [CompleteSpace A] : CompleteSpace 𝓜(𝕜, A) :=
 
 variable [StarRing A] [CstarRing A]
 
+#print DoubleCentralizer.norm_fst_eq_snd /-
 /-- For `a : 𝓜(𝕜, A)`, the norms of `a.fst` and `a.snd` coincide, and hence these
 also coincide with `‖a‖` which is `max (‖a.fst‖) (‖a.snd‖)`. -/
 theorem norm_fst_eq_snd (a : 𝓜(𝕜, A)) : ‖a.fst‖ = ‖a.snd‖ :=
@@ -613,30 +711,41 @@ theorem norm_fst_eq_snd (a : 𝓜(𝕜, A)) : ‖a.fst‖ = ‖a.snd‖ :=
         nnnorm_star (a.snd b) ▸ mul_le_mul_right' (a.fst.le_op_nnnorm _) _
   exact le_antisymm (h0 _ _ h1) (h0 _ _ h2)
 #align double_centralizer.norm_fst_eq_snd DoubleCentralizer.norm_fst_eq_snd
+-/
 
+#print DoubleCentralizer.nnnorm_fst_eq_snd /-
 theorem nnnorm_fst_eq_snd (a : 𝓜(𝕜, A)) : ‖a.fst‖₊ = ‖a.snd‖₊ :=
   Subtype.ext <| norm_fst_eq_snd a
 #align double_centralizer.nnnorm_fst_eq_snd DoubleCentralizer.nnnorm_fst_eq_snd
+-/
 
+#print DoubleCentralizer.norm_fst /-
 @[simp]
 theorem norm_fst (a : 𝓜(𝕜, A)) : ‖a.fst‖ = ‖a‖ := by
   simp only [norm_def, to_prod_hom_apply, Prod.norm_def, norm_fst_eq_snd, max_eq_right,
     eq_self_iff_true]
 #align double_centralizer.norm_fst DoubleCentralizer.norm_fst
+-/
 
+#print DoubleCentralizer.norm_snd /-
 @[simp]
 theorem norm_snd (a : 𝓜(𝕜, A)) : ‖a.snd‖ = ‖a‖ := by rw [← norm_fst, norm_fst_eq_snd]
 #align double_centralizer.norm_snd DoubleCentralizer.norm_snd
+-/
 
+#print DoubleCentralizer.nnnorm_fst /-
 @[simp]
 theorem nnnorm_fst (a : 𝓜(𝕜, A)) : ‖a.fst‖₊ = ‖a‖₊ :=
   Subtype.ext (norm_fst a)
 #align double_centralizer.nnnorm_fst DoubleCentralizer.nnnorm_fst
+-/
 
+#print DoubleCentralizer.nnnorm_snd /-
 @[simp]
 theorem nnnorm_snd (a : 𝓜(𝕜, A)) : ‖a.snd‖₊ = ‖a‖₊ :=
   Subtype.ext (norm_snd a)
 #align double_centralizer.nnnorm_snd DoubleCentralizer.nnnorm_snd
+-/
 
 end NontriviallyNormed
 

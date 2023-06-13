@@ -59,6 +59,7 @@ private abbrev finite_diagram_arrow {J : Type u} [SmallCategory J] (G : Finset J
 private abbrev finite_diagram (J : Type u) [SmallCategory J] :=
   Σ G : Finset J, Finset (FiniteDiagramArrow G)
 
+#print TopCat.partialSections /-
 /-- Partial sections of a cofiltered limit are sections when restricted to
 a finite subset of objects and morphisms of `J`.
 -/
@@ -66,7 +67,9 @@ def partialSections {J : Type u} [SmallCategory J] (F : J ⥤ TopCat.{u}) {G : F
     (H : Finset (FiniteDiagramArrow G)) : Set (∀ j, F.obj j) :=
   {u | ∀ {f : FiniteDiagramArrow G} (hf : f ∈ H), F.map f.2.2.2.2 (u f.1) = u f.2.1}
 #align Top.partial_sections TopCat.partialSections
+-/
 
+#print TopCat.partialSections.nonempty /-
 theorem partialSections.nonempty [IsCofilteredOrEmpty J] [h : ∀ j : J, Nonempty (F.obj j)]
     {G : Finset J} (H : Finset (FiniteDiagramArrow G)) : (partialSections F H).Nonempty := by
   classical
@@ -80,7 +83,9 @@ theorem partialSections.nonempty [IsCofilteredOrEmpty J] [h : ∀ j : J, Nonempt
   dsimp only
   rwa [dif_pos hX, dif_pos hY, ← comp_app, ← F.map_comp, @is_cofiltered.inf_to_commutes _ _ _ G H]
 #align Top.partial_sections.nonempty TopCat.partialSections.nonempty
+-/
 
+#print TopCat.partialSections.directed /-
 theorem partialSections.directed :
     Directed Superset fun G : FiniteDiagram J => partialSections F G.2 := by
   classical
@@ -105,7 +110,9 @@ theorem partialSections.directed :
       refine' ⟨f, hf, rfl⟩
     exact hu this
 #align Top.partial_sections.directed TopCat.partialSections.directed
+-/
 
+#print TopCat.partialSections.closed /-
 theorem partialSections.closed [∀ j : J, T2Space (F.obj j)] {G : Finset J}
     (H : Finset (FiniteDiagramArrow G)) : IsClosed (partialSections F H) :=
   by
@@ -122,7 +129,9 @@ theorem partialSections.closed [∀ j : J, T2Space (F.obj j)] {G : Finset J}
   apply isClosed_eq
   continuity
 #align Top.partial_sections.closed TopCat.partialSections.closed
+-/
 
+#print TopCat.nonempty_limitCone_of_compact_t2_cofiltered_system /-
 /-- Cofiltered limits of nonempty compact Hausdorff spaces are nonempty topological spaces.
 -/
 theorem nonempty_limitCone_of_compact_t2_cofiltered_system [IsCofilteredOrEmpty J]
@@ -142,6 +151,7 @@ theorem nonempty_limitCone_of_compact_t2_cofiltered_system [IsCofilteredOrEmpty 
           simp only [eq_self_iff_true, or_true_iff, Finset.mem_insert, Finset.mem_singleton], f⟩}⟩
   exact hu _ ⟨G, rfl⟩ (Finset.mem_singleton_self _)
 #align Top.nonempty_limit_cone_of_compact_t2_cofiltered_system TopCat.nonempty_limitCone_of_compact_t2_cofiltered_system
+-/
 
 end TopologicalKonig
 

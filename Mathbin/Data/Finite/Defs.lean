@@ -67,13 +67,17 @@ class inductive Finite (α : Sort _) : Prop
 #align finite Finite
 -/
 
+#print finite_iff_exists_equiv_fin /-
 theorem finite_iff_exists_equiv_fin {α : Sort _} : Finite α ↔ ∃ n, Nonempty (α ≃ Fin n) :=
   ⟨fun ⟨e⟩ => ⟨_, ⟨e⟩⟩, fun ⟨n, ⟨e⟩⟩ => ⟨e⟩⟩
 #align finite_iff_exists_equiv_fin finite_iff_exists_equiv_fin
+-/
 
+#print Finite.exists_equiv_fin /-
 theorem Finite.exists_equiv_fin (α : Sort _) [h : Finite α] : ∃ n : ℕ, Nonempty (α ≃ Fin n) :=
   finite_iff_exists_equiv_fin.mp h
 #align finite.exists_equiv_fin Finite.exists_equiv_fin
+-/
 
 #print Finite.of_equiv /-
 theorem Finite.of_equiv (α : Sort _) [h : Finite α] (f : α ≃ β) : Finite β := by cases' h with n e;
@@ -81,17 +85,23 @@ theorem Finite.of_equiv (α : Sort _) [h : Finite α] (f : α ≃ β) : Finite �
 #align finite.of_equiv Finite.of_equiv
 -/
 
+#print Equiv.finite_iff /-
 theorem Equiv.finite_iff (f : α ≃ β) : Finite α ↔ Finite β :=
   ⟨fun _ => Finite.of_equiv _ f, fun _ => Finite.of_equiv _ f.symm⟩
 #align equiv.finite_iff Equiv.finite_iff
+-/
 
+#print Function.Bijective.finite_iff /-
 theorem Function.Bijective.finite_iff {f : α → β} (h : Bijective f) : Finite α ↔ Finite β :=
   (Equiv.ofBijective f h).finite_iff
 #align function.bijective.finite_iff Function.Bijective.finite_iff
+-/
 
+#print Finite.ofBijective /-
 theorem Finite.ofBijective [Finite α] {f : α → β} (h : Bijective f) : Finite β :=
   h.finite_iff.mp ‹_›
 #align finite.of_bijective Finite.ofBijective
+-/
 
 instance [Finite α] : Finite (PLift α) :=
   Finite.of_equiv α Equiv.plift.symm
@@ -121,9 +131,11 @@ theorem not_infinite_iff_finite : ¬Infinite α ↔ Finite α :=
 #align not_infinite_iff_finite not_infinite_iff_finite
 -/
 
+#print Equiv.infinite_iff /-
 theorem Equiv.infinite_iff (e : α ≃ β) : Infinite α ↔ Infinite β :=
   not_finite_iff_infinite.symm.trans <| e.finite_iff.Not.trans not_finite_iff_infinite
 #align equiv.infinite_iff Equiv.infinite_iff
+-/
 
 instance [Infinite α] : Infinite (PLift α) :=
   Equiv.plift.infinite_iff.2 ‹_›

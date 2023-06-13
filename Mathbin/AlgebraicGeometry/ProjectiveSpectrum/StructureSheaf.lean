@@ -65,7 +65,6 @@ variable [CommRing R] [CommRing A] [Algebra R A]
 
 variable (𝒜 : ℕ → Submodule R A) [GradedAlgebra 𝒜]
 
--- mathport name: «exprat »
 local notation "at " x => HomogeneousLocalization.AtPrime 𝒜 x.asHomogeneousIdeal.toIdeal
 
 namespace ProjectiveSpectrum.StructureSheaf

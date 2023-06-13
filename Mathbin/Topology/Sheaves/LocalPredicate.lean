@@ -77,6 +77,7 @@ structure PrelocalPredicate where
 
 variable (X)
 
+#print TopCat.continuousPrelocal /-
 /-- Continuity is a "prelocal" predicate on functions to a fixed topological space `T`.
 -/
 @[simps]
@@ -85,12 +86,15 @@ def continuousPrelocal (T : TopCat.{w}) : PrelocalPredicate fun x : X => T
   pred U f := Continuous f
   res U V i f h := Continuous.comp h (Opens.openEmbedding_of_le i.le).Continuous
 #align Top.continuous_prelocal TopCat.continuousPrelocal
+-/
 
+#print TopCat.inhabitedPrelocalPredicate /-
 /-- Satisfying the inhabited linter. -/
 instance inhabitedPrelocalPredicate (T : TopCat.{w}) :
     Inhabited (PrelocalPredicate fun x : X => T) :=
   ⟨continuousPrelocal X T⟩
 #align Top.inhabited_prelocal_predicate TopCat.inhabitedPrelocalPredicate
+-/
 
 variable {X}
 
@@ -167,6 +171,7 @@ theorem PrelocalPredicate.sheafifyOf {T : X → Type v} {P : PrelocalPredicate T
 #align Top.prelocal_predicate.sheafify_of TopCat.PrelocalPredicate.sheafifyOf
 -/
 
+#print TopCat.subpresheafToTypes /-
 /-- The subpresheaf of dependent functions on `X` satisfying the "pre-local" predicate `P`.
 -/
 @[simps]
@@ -175,19 +180,23 @@ def subpresheafToTypes (P : PrelocalPredicate T) : Presheaf (Type max v w) X
   obj U := { f : ∀ x : unop U, T x // P.pred f }
   map U V i f := ⟨fun x => f.1 (i.unop x), P.res i.unop f.1 f.2⟩
 #align Top.subpresheaf_to_Types TopCat.subpresheafToTypes
+-/
 
 namespace SubpresheafToTypes
 
 variable (P : PrelocalPredicate T)
 
+#print TopCat.subpresheafToTypes.subtype /-
 /-- The natural transformation including the subpresheaf of functions satisfying a local predicate
 into the presheaf of all functions.
 -/
 def subtype : subpresheafToTypes P ⟶ presheafToTypes X T where app U f := f.1
 #align Top.subpresheaf_to_Types.subtype TopCat.subpresheafToTypes.subtype
+-/
 
 open TopCat.Presheaf
 
+#print TopCat.subpresheafToTypes.isSheaf /-
 /-- The functions satisfying a local predicate satisfy the sheaf condition.
 -/
 theorem isSheaf (P : LocalPredicate T) : (subpresheafToTypes P.toPrelocalPredicate).IsSheaf :=
@@ -224,15 +233,18 @@ theorem isSheaf (P : LocalPredicate T) : (subpresheafToTypes P.toPrelocalPredica
       ext1
       exact gl_uniq gl'.1 fun i => congr_arg Subtype.val (hgl' i)
 #align Top.subpresheaf_to_Types.is_sheaf TopCat.subpresheafToTypes.isSheaf
+-/
 
 end SubpresheafToTypes
 
+#print TopCat.subsheafToTypes /-
 /-- The subsheaf of the sheaf of all dependently typed functions satisfying the local predicate `P`.
 -/
 @[simps]
 def subsheafToTypes (P : LocalPredicate T) : Sheaf (Type max v w) X :=
   ⟨subpresheafToTypes P.toPrelocalPredicate, subpresheafToTypes.isSheaf P⟩
 #align Top.subsheaf_to_Types TopCat.subsheafToTypes
+-/
 
 -- TODO There is further universe generalization to do here,
 -- but it depends on more difficult universe generalization in `topology.sheaves.stalks`.
@@ -317,6 +329,7 @@ theorem stalkToFiber_injective (P : LocalPredicate T') (x : X)
 #align Top.stalk_to_fiber_injective TopCat.stalkToFiber_injective
 -/
 
+#print TopCat.subpresheafContinuousPrelocalIsoPresheafToTop /-
 -- TODO to continue generalizing universes here, we will need to deal with the issue noted
 -- at `presheaf_to_Top` (universe generalization for the Yoneda embedding).
 /-- Some repackaging:
@@ -333,6 +346,7 @@ def subpresheafContinuousPrelocalIsoPresheafToTop (T : TopCat.{v}) :
         inv_hom_id' := by ext (⟨f, p⟩x); rfl })
     (by tidy)
 #align Top.subpresheaf_continuous_prelocal_iso_presheaf_to_Top TopCat.subpresheafContinuousPrelocalIsoPresheafToTop
+-/
 
 #print TopCat.sheafToTop /-
 /-- The sheaf of continuous functions on `X` with values in a space `T`.

@@ -152,7 +152,6 @@ deriving AddCommGroup,
   «./././Mathport/Syntax/Translate/Command.lean:43:9: unsupported derive handler module[module] tensor_product(S, R, S)»
 #align kaehler_differential KaehlerDifferential
 
--- mathport name: «exprΩ[ ⁄ ]»
 notation:100 "Ω[" S "⁄" R "]" => KaehlerDifferential R S
 
 instance : Nonempty (Ω[S⁄R]) :=
@@ -467,7 +466,6 @@ noncomputable def KaehlerDifferential.kerTotal : Submodule S (S →₀ S) :=
       Set.range fun x : R => single (algebraMap R S x) 1)
 #align kaehler_differential.ker_total KaehlerDifferential.kerTotal
 
--- mathport name: «expr 𝖣 »
 local notation x "𝖣" y => (KaehlerDifferential.kerTotal R S).mkQ (single y x)
 
 theorem KaehlerDifferential.kerTotal_mkQ_single_add (x y z) : (z𝖣x + y) = (z𝖣x) + z𝖣y :=
@@ -583,7 +581,6 @@ variable (A B : Type _) [CommRing A] [CommRing B] [Algebra R A] [Algebra S B] [A
 
 variable [Algebra A B] [IsScalarTower R S B] [IsScalarTower R A B]
 
--- mathport name: exprfinsupp_map
 -- The map `(A →₀ A) →ₗ[A] (B →₀ B)`
 local notation "finsupp_map" =>
   (Finsupp.mapRange.linearMap (Algebra.ofId A B).toLinearMap).comp

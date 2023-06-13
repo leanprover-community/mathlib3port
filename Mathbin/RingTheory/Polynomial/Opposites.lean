@@ -30,11 +30,13 @@ noncomputable section
 
 namespace Polynomial
 
+#print Polynomial.opRingEquiv /-
 /-- Ring isomorphism between `R[X]ᵐᵒᵖ` and `Rᵐᵒᵖ[X]` sending each coefficient of a polynomial
 to the corresponding element of the opposite ring. -/
 def opRingEquiv (R : Type _) [Semiring R] : R[X]ᵐᵒᵖ ≃+* Rᵐᵒᵖ[X] :=
   ((toFinsuppIso R).op.trans AddMonoidAlgebra.opRingEquiv).trans (toFinsuppIso _).symm
 #align polynomial.op_ring_equiv Polynomial.opRingEquiv
+-/
 
 /-!  Lemmas to get started, using `op_ring_equiv R` on the various expressions of
 `finsupp.single`: `monomial`, `C a`, `X`, `C a * X ^ n`. -/

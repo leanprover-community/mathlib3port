@@ -134,8 +134,6 @@ theorem tangentBundleCore_coordChange_achart (x x' z : M) :
   rfl
 #align tangent_bundle_core_coord_change_achart tangentBundleCore_coordChange_achart
 
-include I
-
 /-- The tangent space at a point of the manifold `M`. It is just `E`. We could use instead
 `(tangent_bundle_core I M).to_topological_vector_bundle_core.fiber x`, but we use `E` to help the
 kernel.
@@ -145,8 +143,6 @@ def TangentSpace (x : M) : Type _ :=
   E
 deriving TopologicalSpace, AddCommGroup, TopologicalAddGroup
 #align tangent_space TangentSpace
-
-omit I
 
 variable (M)
 
@@ -158,7 +154,6 @@ def TangentBundle :=
   Bundle.TotalSpace (TangentSpace I : M → Type _)
 #align tangent_bundle TangentBundle
 
--- mathport name: exprTM
 local notation "TM" => TangentBundle I M
 
 section TangentBundleInstances

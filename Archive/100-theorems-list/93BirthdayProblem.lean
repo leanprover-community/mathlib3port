@@ -25,10 +25,8 @@ uses is `fintype.card_embedding_eq`.
 
 namespace Theorems100
 
--- mathport name: finset.card
 local notation "|" x "|" => Finset.card x
 
--- mathport name: fintype.card
 local notation "‖" x "‖" => Fintype.card x
 
 /-- **Birthday Problem**: set cardinality interpretation. -/

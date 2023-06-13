@@ -47,15 +47,19 @@ def free : Type u ⥤ CommRingCat.{u}
 #align CommRing.free CommRingCat.free
 -/
 
+#print CommRingCat.free_obj_coe /-
 @[simp]
 theorem free_obj_coe {α : Type u} : (free.obj α : Type u) = MvPolynomial α ℤ :=
   rfl
 #align CommRing.free_obj_coe CommRingCat.free_obj_coe
+-/
 
+#print CommRingCat.free_map_coe /-
 @[simp]
 theorem free_map_coe {α β : Type u} {f : α → β} : ⇑(free.map f) = rename f :=
   rfl
 #align CommRing.free_map_coe CommRingCat.free_map_coe
+-/
 
 #print CommRingCat.adj /-
 /-- The free-forgetful adjunction for commutative rings.

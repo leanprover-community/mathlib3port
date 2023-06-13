@@ -74,8 +74,6 @@ namespace AddCircle
 
 variable (T : ℝ) [hT : Fact (0 < T)]
 
-include hT
-
 /-- Equip the "additive circle" `ℝ ⧸ (ℤ ∙ T)` with, as a standard measure, the Haar measure of total
 mass `T` -/
 noncomputable instance measureSpace : MeasureSpace (AddCircle T) :=
@@ -346,8 +344,6 @@ open Filter
 variable {g : ℝ → ℝ}
 
 variable (hg : Periodic g T) (h_int : ∀ t₁ t₂, IntervalIntegrable g MeasureSpace.volume t₁ t₂)
-
-include hg h_int
 
 /-- If `g : ℝ → ℝ` is periodic with period `T > 0`, then for any `t : ℝ`, the function
 `t ↦ ∫ x in 0..t, g x` is bounded below by `t ↦ X + ⌊t/T⌋ • Y` for appropriate constants `X` and

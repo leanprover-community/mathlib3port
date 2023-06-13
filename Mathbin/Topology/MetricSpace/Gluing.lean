@@ -256,6 +256,7 @@ private theorem glue_eq_of_dist_eq_zero (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ)
     linarith
   | inr x, inr y, h => by rw [eq_of_dist_eq_zero h]
 
+#print Metric.glueMetricApprox /-
 /-- Given two maps `Φ` and `Ψ` intro metric spaces `X` and `Y` such that the distances between
 `Φ p` and `Φ q`, and between `Ψ p` and `Ψ q`, coincide up to `2 ε` where `ε > 0`, one can almost
 glue the two spaces `X` and `Y` along the images of `Φ` and `Ψ`, so that `Φ p` and `Ψ p` are
@@ -269,6 +270,7 @@ def glueMetricApprox (Φ : Z → X) (Ψ : Z → Y) (ε : ℝ) (ε0 : 0 < ε)
   dist_triangle := glueDist_triangle Φ Ψ ε H
   eq_of_dist_eq_zero := glue_eq_of_dist_eq_zero Φ Ψ ε ε0
 #align metric.glue_metric_approx Metric.glueMetricApprox
+-/
 
 end ApproxGluing
 
@@ -303,6 +305,7 @@ def Sum.dist : Sum X Y → Sum X Y → ℝ
 #align metric.sum.dist Metric.Sum.dist
 -/
 
+#print Metric.Sum.dist_eq_glueDist /-
 theorem Sum.dist_eq_glueDist {p q : Sum X Y} (x : X) (y : Y) :
     Sum.dist p q =
       glueDist (fun _ : Unit => Nonempty.some ⟨x⟩) (fun _ : Unit => Nonempty.some ⟨y⟩) 1 p q :=
@@ -312,18 +315,23 @@ theorem Sum.dist_eq_glueDist {p q : Sum X Y} (x : X) (y : Y) :
     | rfl
     | simp [sum.dist, glue_dist, dist_comm, add_comm, add_left_comm]
 #align metric.sum.dist_eq_glue_dist Metric.Sum.dist_eq_glueDist
+-/
 
 private theorem sum.dist_comm (x y : Sum X Y) : Sum.dist x y = Sum.dist y x := by
   cases x <;> cases y <;> simp only [sum.dist, dist_comm, add_comm, add_left_comm]
 
+#print Metric.Sum.one_le_dist_inl_inr /-
 theorem Sum.one_le_dist_inl_inr {x : X} {y : Y} : 1 ≤ Sum.dist (inl x) (inr y) :=
   le_trans (le_add_of_nonneg_right dist_nonneg) <|
     add_le_add_right (le_add_of_nonneg_left dist_nonneg) _
 #align metric.sum.one_dist_le Metric.Sum.one_le_dist_inl_inr
+-/
 
+#print Metric.Sum.one_le_dist_inr_inl /-
 theorem Sum.one_le_dist_inr_inl {x : X} {y : Y} : 1 ≤ Sum.dist (inr y) (inl x) := by
   rw [sum.dist_comm] <;> exact sum.one_dist_le
 #align metric.sum.one_dist_le' Metric.Sum.one_le_dist_inr_inl
+-/
 
 private theorem sum.mem_uniformity (s : Set (Sum X Y × Sum X Y)) :
     s ∈ 𝓤 (Sum X Y) ↔ ∃ ε > 0, ∀ a b, Sum.dist a b < ε → (a, b) ∈ s :=
@@ -452,26 +460,33 @@ theorem dist_same (i : ι) (x : E i) (y : E i) : dist (⟨i, x⟩ : Σ j, E j) �
 #align metric.sigma.dist_same Metric.Sigma.dist_same
 -/
 
+#print Metric.Sigma.dist_ne /-
 @[simp]
 theorem dist_ne {i j : ι} (h : i ≠ j) (x : E i) (y : E j) :
     dist (⟨i, x⟩ : Σ k, E k) ⟨j, y⟩ = dist x (Nonempty.some ⟨x⟩) + 1 + dist (Nonempty.some ⟨y⟩) y :=
   by simp [Dist.dist, sigma.dist, h]
 #align metric.sigma.dist_ne Metric.Sigma.dist_ne
+-/
 
+#print Metric.Sigma.one_le_dist_of_ne /-
 theorem one_le_dist_of_ne {i j : ι} (h : i ≠ j) (x : E i) (y : E j) :
     1 ≤ dist (⟨i, x⟩ : Σ k, E k) ⟨j, y⟩ :=
   by
   rw [sigma.dist_ne h x y]
   linarith [@dist_nonneg _ _ x (Nonempty.some ⟨x⟩), @dist_nonneg _ _ (Nonempty.some ⟨y⟩) y]
 #align metric.sigma.one_le_dist_of_ne Metric.Sigma.one_le_dist_of_ne
+-/
 
+#print Metric.Sigma.fst_eq_of_dist_lt_one /-
 theorem fst_eq_of_dist_lt_one (x y : Σ i, E i) (h : dist x y < 1) : x.1 = y.1 :=
   by
   cases x; cases y
   contrapose! h
   apply one_le_dist_of_ne h
 #align metric.sigma.fst_eq_of_dist_lt_one Metric.Sigma.fst_eq_of_dist_lt_one
+-/
 
+#print Metric.Sigma.dist_triangle /-
 protected theorem dist_triangle (x y z : Σ i, E i) : dist x z ≤ dist x y + dist y z :=
   by
   rcases x with ⟨i, x⟩; rcases y with ⟨j, y⟩; rcases z with ⟨k, z⟩
@@ -504,7 +519,9 @@ protected theorem dist_triangle (x y z : Σ i, E i) : dist x z ≤ dist x y + di
             by simp only [add_zero, zero_add]
           _ ≤ _ := by apply_rules [add_le_add, zero_le_one, dist_nonneg, le_rfl]
 #align metric.sigma.dist_triangle Metric.Sigma.dist_triangle
+-/
 
+#print Metric.Sigma.isOpen_iff /-
 protected theorem isOpen_iff (s : Set (Σ i, E i)) :
     IsOpen s ↔ ∀ x ∈ s, ∃ ε > 0, ∀ y, dist x y < ε → y ∈ s :=
   by
@@ -531,6 +548,7 @@ protected theorem isOpen_iff (s : Set (Σ i, E i)) :
     rw [sigma.dist_same]
     exact mem_ball'.1 hy
 #align metric.sigma.is_open_iff Metric.Sigma.isOpen_iff
+-/
 
 #print Metric.Sigma.metricSpace /-
 /-- A metric space structure on the disjoint union `Σ i, E i`.
@@ -664,13 +682,17 @@ theorem toGlue_commute (hΦ : Isometry Φ) (hΨ : Isometry Ψ) :
 #align metric.to_glue_commute Metric.toGlue_commute
 -/
 
+#print Metric.toGlueL_isometry /-
 theorem toGlueL_isometry (hΦ : Isometry Φ) (hΨ : Isometry Ψ) : Isometry (toGlueL hΦ hΨ) :=
   Isometry.of_dist_eq fun _ _ => rfl
 #align metric.to_glue_l_isometry Metric.toGlueL_isometry
+-/
 
+#print Metric.toGlueR_isometry /-
 theorem toGlueR_isometry (hΦ : Isometry Φ) (hΨ : Isometry Ψ) : Isometry (toGlueR hΦ hΨ) :=
   Isometry.of_dist_eq fun _ _ => rfl
 #align metric.to_glue_r_isometry Metric.toGlueR_isometry
+-/
 
 end Gluing
 
@@ -773,6 +795,7 @@ def toInductiveLimit (I : ∀ n, Isometry (f n)) (n : ℕ) (x : X n) : Metric.In
 instance (I : ∀ n, Isometry (f n)) [Inhabited (X 0)] : Inhabited (InductiveLimit I) :=
   ⟨toInductiveLimit _ 0 default⟩
 
+#print Metric.toInductiveLimit_isometry /-
 /-- The map `to_inductive_limit n` mapping `X n` to the inductive limit is an isometry. -/
 theorem toInductiveLimit_isometry (I : ∀ n, Isometry (f n)) (n : ℕ) :
     Isometry (toInductiveLimit I n) :=
@@ -782,6 +805,7 @@ theorem toInductiveLimit_isometry (I : ∀ n, Isometry (f n)) (n : ℕ) :
     rw [inductive_limit_dist_eq_dist I ⟨n, x⟩ ⟨n, y⟩ n (le_refl n) (le_refl n), le_rec_on_self,
       le_rec_on_self]
 #align metric.to_inductive_limit_isometry Metric.toInductiveLimit_isometry
+-/
 
 #print Metric.toInductiveLimit_commute /-
 /-- The maps `to_inductive_limit n` are compatible with the maps `f n`. -/

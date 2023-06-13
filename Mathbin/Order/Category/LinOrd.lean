@@ -61,11 +61,13 @@ instance : Inhabited LinOrdCat :=
 instance (α : LinOrdCat) : LinearOrder α :=
   α.str
 
+#print LinOrdCat.hasForgetToLatCat /-
 instance hasForgetToLatCat : HasForget₂ LinOrdCat LatCat
     where forget₂ :=
     { obj := fun X => LatCat.of X
       map := fun X Y f => (OrderHomClass.toLatticeHom X Y f : LatticeHom X Y) }
 #align LinOrd.has_forget_to_Lat LinOrdCat.hasForgetToLatCat
+-/
 
 #print LinOrdCat.Iso.mk /-
 /-- Constructs an equivalence between linear orders from an order isomorphism between them. -/
@@ -88,6 +90,7 @@ def dual : LinOrdCat ⥤ LinOrdCat where
 #align LinOrd.dual LinOrdCat.dual
 -/
 
+#print LinOrdCat.dualEquiv /-
 /-- The equivalence between `LinOrd` and itself induced by `order_dual` both ways. -/
 @[simps Functor inverse]
 def dualEquiv : LinOrdCat ≌ LinOrdCat :=
@@ -95,11 +98,14 @@ def dualEquiv : LinOrdCat ≌ LinOrdCat :=
     (NatIso.ofComponents (fun X => Iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
     (NatIso.ofComponents (fun X => Iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
 #align LinOrd.dual_equiv LinOrdCat.dualEquiv
+-/
 
 end LinOrdCat
 
+#print linOrdCat_dual_comp_forget_to_latCat /-
 theorem linOrdCat_dual_comp_forget_to_latCat :
     LinOrdCat.dual ⋙ forget₂ LinOrdCat LatCat = forget₂ LinOrdCat LatCat ⋙ LatCat.dual :=
   rfl
 #align LinOrd_dual_comp_forget_to_Lat linOrdCat_dual_comp_forget_to_latCat
+-/
 

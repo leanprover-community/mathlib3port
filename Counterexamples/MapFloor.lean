@@ -53,10 +53,8 @@ def IntWithEpsilon :=
 deriving CommRing, Nontrivial, Inhabited
 #align counterexample.int_with_epsilon Counterexample.IntWithEpsilon
 
--- mathport name: «exprℤ[ε]»
 local notation "ℤ[ε]" => IntWithEpsilon
 
--- mathport name: exprε
 local notation "ε" => (X : ℤ[ε])
 
 namespace IntWithEpsilon

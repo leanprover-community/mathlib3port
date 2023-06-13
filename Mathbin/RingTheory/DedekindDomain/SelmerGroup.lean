@@ -67,7 +67,6 @@ class group, selmer group, unit group
 -/
 
 
--- mathport name: quot
 local notation K "/" n => Kˣ ⧸ (powMonoidHom n : Kˣ →* Kˣ).range
 
 namespace IsDedekindDomain
@@ -176,7 +175,6 @@ def selmerGroup : Subgroup <| K/n
   inv_mem' _ hx v hv := by rw [map_inv, hx v hv, inv_one]
 #align is_dedekind_domain.selmer_group IsDedekindDomain.selmerGroup
 
--- mathport name: «expr ⟮ , ⟯»
 scoped[SelmerGroup] notation K "⟮" S "," n "⟯" => @selmerGroup _ _ _ _ K _ _ _ S n
 
 namespace SelmerGroup

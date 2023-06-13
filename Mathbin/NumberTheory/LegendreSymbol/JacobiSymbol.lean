@@ -84,7 +84,6 @@ def jacobiSym (a : ℤ) (b : ℕ) : ℤ :=
   (b.factors.pmap (fun p pp => @legendreSym p ⟨pp⟩ a) fun p pf => prime_of_mem_factors pf).Prod
 #align jacobi_sym jacobiSym
 
--- mathport name: «exprJ( | )»
 -- Notation for the Jacobi symbol.
 scoped[NumberTheorySymbols] notation "J(" a " | " b ")" => jacobiSym a b
 

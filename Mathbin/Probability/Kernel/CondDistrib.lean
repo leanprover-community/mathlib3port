@@ -72,8 +72,6 @@ instance [MeasurableSpace β] : IsMarkovKernel (condDistrib Y X μ) := by rw [co
 
 variable {mβ : MeasurableSpace β} {s : Set Ω} {t : Set β} {f : β × Ω → F}
 
-include mβ
-
 section Measurability
 
 theorem measurable_condDistrib (hs : MeasurableSet s) :

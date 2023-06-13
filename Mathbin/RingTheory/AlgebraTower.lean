@@ -52,6 +52,7 @@ variable [IsScalarTower R S A] [IsScalarTower R S B]
 
 variable (R S A B)
 
+#print IsScalarTower.Invertible.algebraTower /-
 /-- Suppose that `R -> S -> A` is a tower of algebras.
 If an element `r : R` is invertible in `S`, then it is invertible in `A`. -/
 def Invertible.algebraTower (r : R) [Invertible (algebraMap R S r)] :
@@ -59,13 +60,16 @@ def Invertible.algebraTower (r : R) [Invertible (algebraMap R S r)] :
   Invertible.copy (Invertible.map (algebraMap S A) (algebraMap R S r)) (algebraMap R A r)
     (IsScalarTower.algebraMap_apply R S A r)
 #align is_scalar_tower.invertible.algebra_tower IsScalarTower.Invertible.algebraTower
+-/
 
+#print IsScalarTower.invertibleAlgebraCoeNat /-
 /-- A natural number that is invertible when coerced to `R` is also invertible
 when coerced to any `R`-algebra. -/
 def invertibleAlgebraCoeNat (n : ℕ) [inv : Invertible (n : R)] : Invertible (n : A) :=
   haveI : Invertible (algebraMap ℕ R n) := inv
   invertible.algebra_tower ℕ R A n
 #align is_scalar_tower.invertible_algebra_coe_nat IsScalarTower.invertibleAlgebraCoeNat
+-/
 
 end Semiring
 
@@ -87,21 +91,27 @@ variable [Algebra R A] [Module A M] [Module R M] [IsScalarTower R A M]
 
 variable (b : Basis ι R M) (h : Function.Bijective (algebraMap R A))
 
+#print Basis.algebraMapCoeffs /-
 /-- If `R` and `A` have a bijective `algebra_map R A` and act identically on `M`,
 then a basis for `M` as `R`-module is also a basis for `M` as `R'`-module. -/
 @[simps]
 noncomputable def Basis.algebraMapCoeffs : Basis ι A M :=
   b.mapCoeffs (RingEquiv.ofBijective _ h) fun c x => by simp
 #align basis.algebra_map_coeffs Basis.algebraMapCoeffs
+-/
 
+#print Basis.algebraMapCoeffs_apply /-
 theorem Basis.algebraMapCoeffs_apply (i : ι) : b.algebraMapCoeffs A h i = b i :=
   b.mapCoeffs_apply _ _ _
 #align basis.algebra_map_coeffs_apply Basis.algebraMapCoeffs_apply
+-/
 
+#print Basis.coe_algebraMapCoeffs /-
 @[simp]
 theorem Basis.coe_algebraMapCoeffs : (b.algebraMapCoeffs A h : ι → M) = b :=
   b.coe_mapCoeffs _ _
 #align basis.coe_algebra_map_coeffs Basis.coe_algebraMapCoeffs
+-/
 
 end AlgebraMapCoeffs
 
@@ -151,15 +161,19 @@ noncomputable def Basis.smul {ι : Type v₁} {ι' : Type w₁} (b : Basis ι R 
 #align basis.smul Basis.smul
 -/
 
+#print Basis.smul_repr /-
 @[simp]
 theorem Basis.smul_repr {ι : Type v₁} {ι' : Type w₁} (b : Basis ι R S) (c : Basis ι' S A) (x ij) :
     (b.smul c).repr x ij = b.repr (c.repr x ij.2) ij.1 := by simp [Basis.smul]
 #align basis.smul_repr Basis.smul_repr
+-/
 
+#print Basis.smul_repr_mk /-
 theorem Basis.smul_repr_mk {ι : Type v₁} {ι' : Type w₁} (b : Basis ι R S) (c : Basis ι' S A)
     (x i j) : (b.smul c).repr x (i, j) = b.repr (c.repr x j) i :=
   b.smul_repr c x (i, j)
 #align basis.smul_repr_mk Basis.smul_repr_mk
+-/
 
 #print Basis.smul_apply /-
 @[simp]
@@ -185,11 +199,13 @@ variable {R S}
 
 variable [CommRing R] [Ring S] [Algebra R S]
 
+#print Basis.algebraMap_injective /-
 theorem Basis.algebraMap_injective {ι : Type _} [NoZeroDivisors R] [Nontrivial S]
     (b : Basis ι R S) : Function.Injective (algebraMap R S) :=
   have : NoZeroSMulDivisors R S := b.NoZeroSMulDivisors
   NoZeroSMulDivisors.algebraMap_injective R S
 #align basis.algebra_map_injective Basis.algebraMap_injective
+-/
 
 end Ring
 

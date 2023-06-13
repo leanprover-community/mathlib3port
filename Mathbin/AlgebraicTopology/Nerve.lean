@@ -49,6 +49,7 @@ def nerve (C : Type u) [Category.{v} C] : SSet.{max u v}
 instance {C : Type _} [Category C] {Δ : SimplexCategoryᵒᵖ} : Category ((nerve C).obj Δ) :=
   (inferInstance : Category (SimplexCategory.toCat.obj Δ.unop ⥤ C))
 
+#print CategoryTheory.nerveFunctor /-
 /-- The nerve of a category, as a functor `Cat ⥤ sSet` -/
 @[simps]
 def nerveFunctor : Cat ⥤ SSet where
@@ -58,6 +59,7 @@ def nerveFunctor : Cat ⥤ SSet where
     ext (Δ x)
     apply functor.comp_id
 #align category_theory.nerve_functor CategoryTheory.nerveFunctor
+-/
 
 end CategoryTheory
 

@@ -213,6 +213,7 @@ section CokernelOfKernel
 
 variable {X Y : C} {f : X ⟶ Y}
 
+#print CategoryTheory.NonPreadditiveAbelian.epiIsCokernelOfKernel /-
 /-- In a `non_preadditive_abelian` category, an epi is the cokernel of its kernel. More precisely:
     If `f` is an epimorphism and `s` is some limit kernel cone on `f`, then `f` is a cokernel
     of `fork.ι s`. -/
@@ -223,7 +224,9 @@ def epiIsCokernelOfKernel [Epi f] (s : Fork f 0) (h : IsLimit s) :
       (ConeMorphism.w (Limits.IsLimit.uniqueUpToIso (limit.isLimit _) h).hom _))
     (asIso <| Abelian.factorThruCoimage f) (Abelian.coimage.fac f)
 #align category_theory.non_preadditive_abelian.epi_is_cokernel_of_kernel CategoryTheory.NonPreadditiveAbelian.epiIsCokernelOfKernel
+-/
 
+#print CategoryTheory.NonPreadditiveAbelian.monoIsKernelOfCokernel /-
 /-- In a `non_preadditive_abelian` category, a mono is the kernel of its cokernel. More precisely:
     If `f` is a monomorphism and `s` is some colimit cokernel cocone on `f`, then `f` is a kernel
     of `cofork.π s`. -/
@@ -234,6 +237,7 @@ def monoIsKernelOfCokernel [Mono f] (s : Cofork f 0) (h : IsColimit s) :
       (CoconeMorphism.w (Limits.IsColimit.uniqueUpToIso h <| colimit.isColimit _).hom _))
     (asIso <| Abelian.factorThruImage f) (Abelian.image.fac f)
 #align category_theory.non_preadditive_abelian.mono_is_kernel_of_cokernel CategoryTheory.NonPreadditiveAbelian.monoIsKernelOfCokernel
+-/
 
 end CokernelOfKernel
 

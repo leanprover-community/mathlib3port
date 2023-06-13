@@ -91,15 +91,20 @@ section Semiring
 variable {R : Type _} [Semiring R] {P : Type _} [AddCommMonoid P] [Module R P] {M : Type _}
   [AddCommMonoid M] [Module R M] {N : Type _} [AddCommMonoid N] [Module R N]
 
+#print Module.projective_def /-
 theorem projective_def :
     Projective R P ↔ ∃ s : P →ₗ[R] P →₀ R, Function.LeftInverse (Finsupp.total P P R id) s :=
   ⟨fun h => h.1, fun h => ⟨h⟩⟩
 #align module.projective_def Module.projective_def
+-/
 
+#print Module.projective_def' /-
 theorem projective_def' : Projective R P ↔ ∃ s : P →ₗ[R] P →₀ R, Finsupp.total P P R id ∘ₗ s = id :=
   by simp_rw [projective_def, FunLike.ext_iff, Function.LeftInverse, coe_comp, id_coe, id.def]
 #align module.projective_def' Module.projective_def'
+-/
 
+#print Module.projective_lifting_property /-
 /-- A projective R-module has the property that maps from it lift along surjections. -/
 theorem projective_lifting_property [h : Projective R P] (f : M →ₗ[R] N) (g : P →ₗ[R] N)
     (hf : Function.Surjective f) : ∃ h : P →ₗ[R] M, f.comp h = g :=
@@ -122,6 +127,7 @@ theorem projective_lifting_property [h : Projective R P] (f : M →ₗ[R] N) (g 
   conv_rhs => rw [← hs p]
   simp [φ, Finsupp.total_apply, Function.surjInv_eq hf]
 #align module.projective_lifting_property Module.projective_lifting_property
+-/
 
 variable {Q : Type _} [AddCommMonoid Q] [Module R Q]
 
@@ -174,6 +180,7 @@ section Ring
 
 variable {R : Type _} [Ring R] {P : Type _} [AddCommGroup P] [Module R P]
 
+#print Module.Projective.of_basis /-
 /-- Free modules are projective. -/
 theorem Module.Projective.of_basis {ι : Type _} (b : Basis ι R P) : Projective R P :=
   by
@@ -185,6 +192,7 @@ theorem Module.Projective.of_basis {ι : Type _} (b : Basis ι R P) : Projective
     LinearMap.map_finsupp_sum]
   exact b.total_repr m
 #align module.projective_of_basis Module.Projective.of_basis
+-/
 
 #print Module.Projective.of_free /-
 instance (priority := 100) Module.Projective.of_free [Module.Free R P] : Module.Projective R P :=
@@ -197,6 +205,7 @@ end Ring
 --This is in a different section because special universe restrictions are required.
 section OfLiftingProperty
 
+#print Module.Projective.of_lifting_property' /-
 /-- A module which satisfies the universal property is projective. Note that the universe variables
 in `huniv` are somewhat restricted. -/
 theorem Module.Projective.of_lifting_property' {R : Type u} [Semiring R] {P : Type max u v}
@@ -220,7 +229,9 @@ theorem Module.Projective.of_lifting_property' {R : Type u} [Semiring R] {P : Ty
     use Finsupp.single p 1
     simp
 #align module.projective_of_lifting_property' Module.Projective.of_lifting_property'
+-/
 
+#print Module.Projective.of_lifting_property /-
 /-- A variant of `of_lifting_property'` when we're working over a `[ring R]`,
 which only requires quantifying over modules with an `add_comm_group` instance. -/
 theorem Module.Projective.of_lifting_property {R : Type u} [Ring R] {P : Type max u v}
@@ -247,6 +258,7 @@ theorem Module.Projective.of_lifting_property {R : Type u} [Ring R] {P : Type ma
     use Finsupp.single p 1
     simp
 #align module.projective_of_lifting_property Module.Projective.of_lifting_property
+-/
 
 end OfLiftingProperty
 

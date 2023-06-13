@@ -54,6 +54,7 @@ theorem mirror_zero : (0 : R[X]).mirror = 0 := by simp [mirror]
 #align polynomial.mirror_zero Polynomial.mirror_zero
 -/
 
+#print Polynomial.mirror_monomial /-
 theorem mirror_monomial (n : ℕ) (a : R) : (monomial n a).mirror = monomial n a := by
   classical
   by_cases ha : a = 0
@@ -63,10 +64,13 @@ theorem mirror_monomial (n : ℕ) (a : R) : (monomial n a).mirror = monomial n a
       C_mul_X_pow_eq_monomial, reflect_C_mul_X_pow, rev_at_le (le_refl n), tsub_self, pow_zero,
       mul_one]
 #align polynomial.mirror_monomial Polynomial.mirror_monomial
+-/
 
+#print Polynomial.mirror_C /-
 theorem mirror_C (a : R) : (C a).mirror = C a :=
   mirror_monomial 0 a
 #align polynomial.mirror_C Polynomial.mirror_C
+-/
 
 #print Polynomial.mirror_X /-
 theorem mirror_X : X.mirror = (X : R[X]) :=
@@ -213,19 +217,23 @@ theorem coeff_mul_mirror :
 
 variable [NoZeroDivisors R]
 
+#print Polynomial.natDegree_mul_mirror /-
 theorem natDegree_mul_mirror : (p * p.mirror).natDegree = 2 * p.natDegree :=
   by
   by_cases hp : p = 0
   · rw [hp, MulZeroClass.zero_mul, nat_degree_zero, MulZeroClass.mul_zero]
   rw [nat_degree_mul hp (mt mirror_eq_zero.mp hp), mirror_nat_degree, two_mul]
 #align polynomial.nat_degree_mul_mirror Polynomial.natDegree_mul_mirror
+-/
 
+#print Polynomial.natTrailingDegree_mul_mirror /-
 theorem natTrailingDegree_mul_mirror : (p * p.mirror).natTrailingDegree = 2 * p.natTrailingDegree :=
   by
   by_cases hp : p = 0
   · rw [hp, MulZeroClass.zero_mul, nat_trailing_degree_zero, MulZeroClass.mul_zero]
   rw [nat_trailing_degree_mul hp (mt mirror_eq_zero.mp hp), mirror_nat_trailing_degree, two_mul]
 #align polynomial.nat_trailing_degree_mul_mirror Polynomial.natTrailingDegree_mul_mirror
+-/
 
 end Semiring
 
@@ -241,6 +249,7 @@ theorem mirror_neg : (-p).mirror = -p.mirror := by
 
 variable [NoZeroDivisors R]
 
+#print Polynomial.mirror_mul_of_domain /-
 theorem mirror_mul_of_domain : (p * q).mirror = p.mirror * q.mirror :=
   by
   by_cases hp : p = 0
@@ -256,10 +265,13 @@ theorem mirror_mul_of_domain : (p * q).mirror = p.mirror * q.mirror :=
     rw [← X_pow_mul]
   repeat' rw [mul_assoc]
 #align polynomial.mirror_mul_of_domain Polynomial.mirror_mul_of_domain
+-/
 
+#print Polynomial.mirror_smul /-
 theorem mirror_smul (a : R) : (a • p).mirror = a • p.mirror := by
   rw [← C_mul', ← C_mul', mirror_mul_of_domain, mirror_C]
 #align polynomial.mirror_smul Polynomial.mirror_smul
+-/
 
 end Ring
 
@@ -267,6 +279,7 @@ section CommRing
 
 variable {R : Type _} [CommRing R] [NoZeroDivisors R] {f : R[X]}
 
+#print Polynomial.irreducible_of_mirror /-
 theorem irreducible_of_mirror (h1 : ¬IsUnit f)
     (h2 : ∀ k, f * f.mirror = k * k.mirror → k = f ∨ k = -f ∨ k = f.mirror ∨ k = -f.mirror)
     (h3 : ∀ g, g ∣ f → g ∣ f.mirror → IsUnit g) : Irreducible f :=
@@ -296,6 +309,7 @@ theorem irreducible_of_mirror (h1 : ¬IsUnit f)
     · exact Or.inl (h3 g g_dvd_f (by rwa [← hk]))
     · exact Or.inl (h3 g g_dvd_f (by rwa [← neg_eq_iff_eq_neg.mpr hk, dvd_neg]))
 #align polynomial.irreducible_of_mirror Polynomial.irreducible_of_mirror
+-/
 
 end CommRing
 

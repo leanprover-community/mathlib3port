@@ -51,10 +51,12 @@ theorem smallSets_eq_generate {f : Filter α} : f.smallSets = generate (powerset
 #align filter.small_sets_eq_generate Filter.smallSets_eq_generate
 -/
 
+#print Filter.HasBasis.smallSets /-
 theorem HasBasis.smallSets {p : ι → Prop} {s : ι → Set α} (h : HasBasis l p s) :
     HasBasis l.smallSets p fun i => 𝒫 s i :=
   h.lift' monotone_powerset
 #align filter.has_basis.small_sets Filter.HasBasis.smallSets
+-/
 
 #print Filter.hasBasis_smallSets /-
 theorem hasBasis_smallSets (l : Filter α) :
@@ -72,22 +74,28 @@ theorem tendsto_smallSets_iff {f : α → Set β} :
 -/
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+#print Filter.eventually_smallSets /-
 theorem eventually_smallSets {p : Set α → Prop} :
     (∀ᶠ s in l.smallSets, p s) ↔ ∃ s ∈ l, ∀ (t) (_ : t ⊆ s), p t :=
   eventually_lift'_iff monotone_powerset
 #align filter.eventually_small_sets Filter.eventually_smallSets
+-/
 
+#print Filter.eventually_small_sets' /-
 theorem eventually_small_sets' {p : Set α → Prop} (hp : ∀ ⦃s t⦄, s ⊆ t → p t → p s) :
     (∀ᶠ s in l.smallSets, p s) ↔ ∃ s ∈ l, p s :=
   eventually_smallSets.trans <|
     exists₂_congr fun s hsf => ⟨fun H => H s Subset.rfl, fun hs t ht => hp ht hs⟩
 #align filter.eventually_small_sets' Filter.eventually_small_sets'
+-/
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (s «expr ⊆ » t) -/
+#print Filter.frequently_smallSets /-
 theorem frequently_smallSets {p : Set α → Prop} :
     (∃ᶠ s in l.smallSets, p s) ↔ ∀ t ∈ l, ∃ (s : _) (_ : s ⊆ t), p s :=
   l.hasBasis_smallSets.frequently_iff
 #align filter.frequently_small_sets Filter.frequently_smallSets
+-/
 
 #print Filter.frequently_smallSets_mem /-
 theorem frequently_smallSets_mem (l : Filter α) : ∃ᶠ s in l.smallSets, s ∈ l :=
@@ -102,20 +110,26 @@ theorem HasAntitoneBasis.tendsto_smallSets {ι} [Preorder ι] {s : ι → Set α
 #align filter.has_antitone_basis.tendsto_small_sets Filter.HasAntitoneBasis.tendsto_smallSets
 -/
 
+#print Filter.monotone_smallSets /-
 @[mono]
 theorem monotone_smallSets : Monotone (@smallSets α) :=
   monotone_lift' monotone_id monotone_const
 #align filter.monotone_small_sets Filter.monotone_smallSets
+-/
 
+#print Filter.smallSets_bot /-
 @[simp]
 theorem smallSets_bot : (⊥ : Filter α).smallSets = pure ∅ := by
   rw [small_sets, lift'_bot monotone_powerset, powerset_empty, principal_singleton]
 #align filter.small_sets_bot Filter.smallSets_bot
+-/
 
+#print Filter.smallSets_top /-
 @[simp]
 theorem smallSets_top : (⊤ : Filter α).smallSets = ⊤ := by
   rw [small_sets, lift'_top, powerset_univ, principal_univ]
 #align filter.small_sets_top Filter.smallSets_top
+-/
 
 #print Filter.smallSets_principal /-
 @[simp]
@@ -138,13 +152,17 @@ theorem comap_smallSets (l : Filter β) (f : α → Set β) :
 #align filter.comap_small_sets Filter.comap_smallSets
 -/
 
+#print Filter.smallSets_iInf /-
 theorem smallSets_iInf {f : ι → Filter α} : (iInf f).smallSets = ⨅ i, (f i).smallSets :=
   lift'_iInf_of_map_univ powerset_inter powerset_univ
 #align filter.small_sets_infi Filter.smallSets_iInf
+-/
 
+#print Filter.smallSets_inf /-
 theorem smallSets_inf (l₁ l₂ : Filter α) : (l₁ ⊓ l₂).smallSets = l₁.smallSets ⊓ l₂.smallSets :=
   lift'_inf _ _ powerset_inter
 #align filter.small_sets_inf Filter.smallSets_inf
+-/
 
 #print Filter.smallSets_neBot /-
 instance smallSets_neBot (l : Filter α) : NeBot l.smallSets :=
@@ -175,6 +193,7 @@ theorem Tendsto.of_smallSets {s : α → Set β} {f : α → β} (hs : Tendsto s
 #align filter.tendsto.of_small_sets Filter.Tendsto.of_smallSets
 -/
 
+#print Filter.eventually_smallSets_eventually /-
 @[simp]
 theorem eventually_smallSets_eventually {p : α → Prop} :
     (∀ᶠ s in l.smallSets, ∀ᶠ x in l', x ∈ s → p x) ↔ ∀ᶠ x in l ⊓ l', p x :=
@@ -184,6 +203,7 @@ theorem eventually_smallSets_eventually {p : α → Prop} :
     _ ↔ ∃ s ∈ l, ∃ t ∈ l', ∀ x, x ∈ t → x ∈ s → p x := by simp only [eventually_iff_exists_mem]
     _ ↔ ∀ᶠ x in l ⊓ l', p x := by simp only [eventually_inf, and_comm', mem_inter_iff, ← and_imp]
 #align filter.eventually_small_sets_eventually Filter.eventually_smallSets_eventually
+-/
 
 #print Filter.eventually_smallSets_forall /-
 @[simp]

@@ -55,56 +55,79 @@ variable [IsScalarTower 𝕜 𝕜' F]
 
 variable {f : E → F} {f' : E →L[𝕜'] F} {s : Set E} {x : E}
 
+#print HasStrictFDerivAt.restrictScalars /-
 theorem HasStrictFDerivAt.restrictScalars (h : HasStrictFDerivAt f f' x) :
     HasStrictFDerivAt f (f'.restrictScalars 𝕜) x :=
   h
 #align has_strict_fderiv_at.restrict_scalars HasStrictFDerivAt.restrictScalars
+-/
 
+#print HasFDerivAtFilter.restrictScalars /-
 theorem HasFDerivAtFilter.restrictScalars {L} (h : HasFDerivAtFilter f f' x L) :
     HasFDerivAtFilter f (f'.restrictScalars 𝕜) x L :=
   h
 #align has_fderiv_at_filter.restrict_scalars HasFDerivAtFilter.restrictScalars
+-/
 
+#print HasFDerivAt.restrictScalars /-
 theorem HasFDerivAt.restrictScalars (h : HasFDerivAt f f' x) :
     HasFDerivAt f (f'.restrictScalars 𝕜) x :=
   h
 #align has_fderiv_at.restrict_scalars HasFDerivAt.restrictScalars
+-/
 
+#print HasFDerivWithinAt.restrictScalars /-
 theorem HasFDerivWithinAt.restrictScalars (h : HasFDerivWithinAt f f' s x) :
     HasFDerivWithinAt f (f'.restrictScalars 𝕜) s x :=
   h
 #align has_fderiv_within_at.restrict_scalars HasFDerivWithinAt.restrictScalars
+-/
 
+#print DifferentiableAt.restrictScalars /-
 theorem DifferentiableAt.restrictScalars (h : DifferentiableAt 𝕜' f x) : DifferentiableAt 𝕜 f x :=
   (h.HasFDerivAt.restrictScalars 𝕜).DifferentiableAt
 #align differentiable_at.restrict_scalars DifferentiableAt.restrictScalars
+-/
 
+#print DifferentiableWithinAt.restrictScalars /-
 theorem DifferentiableWithinAt.restrictScalars (h : DifferentiableWithinAt 𝕜' f s x) :
     DifferentiableWithinAt 𝕜 f s x :=
   (h.HasFDerivWithinAt.restrictScalars 𝕜).DifferentiableWithinAt
 #align differentiable_within_at.restrict_scalars DifferentiableWithinAt.restrictScalars
+-/
 
+#print DifferentiableOn.restrictScalars /-
 theorem DifferentiableOn.restrictScalars (h : DifferentiableOn 𝕜' f s) : DifferentiableOn 𝕜 f s :=
   fun x hx => (h x hx).restrictScalars 𝕜
 #align differentiable_on.restrict_scalars DifferentiableOn.restrictScalars
+-/
 
+#print Differentiable.restrictScalars /-
 theorem Differentiable.restrictScalars (h : Differentiable 𝕜' f) : Differentiable 𝕜 f := fun x =>
   (h x).restrictScalars 𝕜
 #align differentiable.restrict_scalars Differentiable.restrictScalars
+-/
 
+#print hasFDerivWithinAt_of_restrictScalars /-
 theorem hasFDerivWithinAt_of_restrictScalars {g' : E →L[𝕜] F} (h : HasFDerivWithinAt f g' s x)
     (H : f'.restrictScalars 𝕜 = g') : HasFDerivWithinAt f f' s x := by rw [← H] at h ; exact h
 #align has_fderiv_within_at_of_restrict_scalars hasFDerivWithinAt_of_restrictScalars
+-/
 
+#print hasFDerivAt_of_restrictScalars /-
 theorem hasFDerivAt_of_restrictScalars {g' : E →L[𝕜] F} (h : HasFDerivAt f g' x)
     (H : f'.restrictScalars 𝕜 = g') : HasFDerivAt f f' x := by rw [← H] at h ; exact h
 #align has_fderiv_at_of_restrict_scalars hasFDerivAt_of_restrictScalars
+-/
 
+#print DifferentiableAt.fderiv_restrictScalars /-
 theorem DifferentiableAt.fderiv_restrictScalars (h : DifferentiableAt 𝕜' f x) :
     fderiv 𝕜 f x = (fderiv 𝕜' f x).restrictScalars 𝕜 :=
   (h.HasFDerivAt.restrictScalars 𝕜).fderiv
 #align differentiable_at.fderiv_restrict_scalars DifferentiableAt.fderiv_restrictScalars
+-/
 
+#print differentiableWithinAt_iff_restrictScalars /-
 theorem differentiableWithinAt_iff_restrictScalars (hf : DifferentiableWithinAt 𝕜 f s x)
     (hs : UniqueDiffWithinAt 𝕜 s x) :
     DifferentiableWithinAt 𝕜' f s x ↔
@@ -116,7 +139,9 @@ theorem differentiableWithinAt_iff_restrictScalars (hf : DifferentiableWithinAt 
   · rintro ⟨f', hf'⟩
     exact ⟨f', hasFDerivWithinAt_of_restrictScalars 𝕜 hf.has_fderiv_within_at hf'⟩
 #align differentiable_within_at_iff_restrict_scalars differentiableWithinAt_iff_restrictScalars
+-/
 
+#print differentiableAt_iff_restrictScalars /-
 theorem differentiableAt_iff_restrictScalars (hf : DifferentiableAt 𝕜 f x) :
     DifferentiableAt 𝕜' f x ↔ ∃ g' : E →L[𝕜'] F, g'.restrictScalars 𝕜 = fderiv 𝕜 f x :=
   by
@@ -124,6 +149,7 @@ theorem differentiableAt_iff_restrictScalars (hf : DifferentiableAt 𝕜 f x) :
   exact
     differentiableWithinAt_iff_restrictScalars 𝕜 hf.differentiable_within_at uniqueDiffWithinAt_univ
 #align differentiable_at_iff_restrict_scalars differentiableAt_iff_restrictScalars
+-/
 
 end RestrictScalars
 

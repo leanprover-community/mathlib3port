@@ -137,6 +137,7 @@ def conesEquivCounitIso (B : C) (F : Discrete J ⥤ Over B) :
 #align category_theory.over.construct_products.cones_equiv_counit_iso CategoryTheory.Over.ConstructProducts.conesEquivCounitIso
 -/
 
+#print CategoryTheory.Over.ConstructProducts.conesEquiv /-
 -- TODO: Can we add `. obviously` to the second arguments of `nat_iso.of_components` and
 --       `cones.ext`?
 /-- (Impl) Establish an equivalence between the category of cones for `F` and for the "grown" `F`.
@@ -150,6 +151,7 @@ def conesEquiv (B : C) (F : Discrete J ⥤ Over B) :
   unitIso := conesEquivUnitIso B F
   counitIso := conesEquivCounitIso B F
 #align category_theory.over.construct_products.cones_equiv CategoryTheory.Over.ConstructProducts.conesEquiv
+-/
 
 #print CategoryTheory.Over.ConstructProducts.has_over_limit_discrete_of_widePullback_limit /-
 /-- Use the above equivalence to prove we have a limit. -/

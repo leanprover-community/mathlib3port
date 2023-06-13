@@ -50,13 +50,17 @@ instance Prop.boundedOrder : BoundedOrder Prop
 #align Prop.bounded_order Prop.boundedOrder
 -/
 
+#print Prop.bot_eq_false /-
 theorem Prop.bot_eq_false : (⊥ : Prop) = False :=
   rfl
 #align Prop.bot_eq_false Prop.bot_eq_false
+-/
 
+#print Prop.top_eq_true /-
 theorem Prop.top_eq_true : (⊤ : Prop) = True :=
   rfl
 #align Prop.top_eq_true Prop.top_eq_true
+-/
 
 #print Prop.le_isTotal /-
 instance Prop.le_isTotal : IsTotal Prop (· ≤ ·) :=
@@ -70,15 +74,19 @@ noncomputable instance Prop.linearOrder : LinearOrder Prop := by
 #align Prop.linear_order Prop.linearOrder
 -/
 
+#print sup_Prop_eq /-
 @[simp]
 theorem sup_Prop_eq : (· ⊔ ·) = (· ∨ ·) :=
   rfl
 #align sup_Prop_eq sup_Prop_eq
+-/
 
+#print inf_Prop_eq /-
 @[simp]
 theorem inf_Prop_eq : (· ⊓ ·) = (· ∧ ·) :=
   rfl
 #align inf_Prop_eq inf_Prop_eq
+-/
 
 namespace Pi
 

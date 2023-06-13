@@ -105,8 +105,6 @@ namespace PosDef
 
 variable {M : Matrix n n ℝ} (hM : M.PosDef)
 
-include hM
-
 theorem det_pos [DecidableEq n] : 0 < det M :=
   by
   rw [hM.is_hermitian.det_eq_prod_eigenvalues]

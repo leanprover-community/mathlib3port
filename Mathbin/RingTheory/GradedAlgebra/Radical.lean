@@ -54,9 +54,8 @@ variable [LinearOrderedCancelAddCommMonoid ι]
 
 variable [SetLike σ A] [AddSubmonoidClass σ A] {𝒜 : ι → σ} [GradedRing 𝒜]
 
-include A
-
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print Ideal.IsHomogeneous.isPrime_of_homogeneous_mem_or_mem /-
 theorem Ideal.IsHomogeneous.isPrime_of_homogeneous_mem_or_mem {I : Ideal A} (hI : I.Homogeneous 𝒜)
     (I_ne_top : I ≠ ⊤)
     (homogeneous_mem_or_mem :
@@ -154,7 +153,9 @@ theorem Ideal.IsHomogeneous.isPrime_of_homogeneous_mem_or_mem {I : Ideal A} (hI 
       · apply neither_mem.2 h
     exact not_mem_I mem_I⟩
 #align ideal.is_homogeneous.is_prime_of_homogeneous_mem_or_mem Ideal.IsHomogeneous.isPrime_of_homogeneous_mem_or_mem
+-/
 
+#print Ideal.IsHomogeneous.isPrime_iff /-
 theorem Ideal.IsHomogeneous.isPrime_iff {I : Ideal A} (h : I.Homogeneous 𝒜) :
     I.IsPrime ↔
       I ≠ ⊤ ∧
@@ -164,7 +165,9 @@ theorem Ideal.IsHomogeneous.isPrime_iff {I : Ideal A} (h : I.Homogeneous 𝒜) :
     fun ⟨I_ne_top, homogeneous_mem_or_mem⟩ =>
     h.isPrime_of_homogeneous_mem_or_mem I_ne_top @homogeneous_mem_or_mem⟩
 #align ideal.is_homogeneous.is_prime_iff Ideal.IsHomogeneous.isPrime_iff
+-/
 
+#print Ideal.IsPrime.homogeneousCore /-
 theorem Ideal.IsPrime.homogeneousCore {I : Ideal A} (h : I.IsPrime) :
     (I.homogeneousCore 𝒜).toIdeal.IsPrime :=
   by
@@ -176,7 +179,9 @@ theorem Ideal.IsPrime.homogeneousCore {I : Ideal A} (h : I.IsPrime) :
   · exact Ideal.mem_homogeneousCore_of_homogeneous_of_mem hx
   · exact Ideal.mem_homogeneousCore_of_homogeneous_of_mem hy
 #align ideal.is_prime.homogeneous_core Ideal.IsPrime.homogeneousCore
+-/
 
+#print Ideal.IsHomogeneous.radical_eq /-
 theorem Ideal.IsHomogeneous.radical_eq {I : Ideal A} (hI : I.Homogeneous 𝒜) :
     I.radical = sInf {J | J.Homogeneous 𝒜 ∧ I ≤ J ∧ J.IsPrime} :=
   by
@@ -189,19 +194,26 @@ theorem Ideal.IsHomogeneous.radical_eq {I : Ideal A} (hI : I.Homogeneous 𝒜) :
     refine' ⟨HomogeneousIdeal.isHomogeneous _, _, HJ₂.homogeneous_core⟩
     refine' hI.to_ideal_homogeneous_core_eq_self.symm.trans_le (Ideal.homogeneousCore_mono _ HJ₁)
 #align ideal.is_homogeneous.radical_eq Ideal.IsHomogeneous.radical_eq
+-/
 
+#print Ideal.IsHomogeneous.radical /-
 theorem Ideal.IsHomogeneous.radical {I : Ideal A} (h : I.Homogeneous 𝒜) : I.radical.Homogeneous 𝒜 :=
   by rw [h.radical_eq]; exact Ideal.IsHomogeneous.sInf fun _ => And.left
 #align ideal.is_homogeneous.radical Ideal.IsHomogeneous.radical
+-/
 
+#print HomogeneousIdeal.radical /-
 /-- The radical of a homogenous ideal, as another homogenous ideal. -/
 def HomogeneousIdeal.radical (I : HomogeneousIdeal 𝒜) : HomogeneousIdeal 𝒜 :=
   ⟨I.toIdeal.radical, I.Homogeneous.radical⟩
 #align homogeneous_ideal.radical HomogeneousIdeal.radical
+-/
 
+#print HomogeneousIdeal.coe_radical /-
 @[simp]
 theorem HomogeneousIdeal.coe_radical (I : HomogeneousIdeal 𝒜) :
     I.radical.toIdeal = I.toIdeal.radical :=
   rfl
 #align homogeneous_ideal.coe_radical HomogeneousIdeal.coe_radical
+-/
 

@@ -66,15 +66,19 @@ theorem piFinset_subset (t₁ t₂ : ∀ a, Finset (δ a)) (h : ∀ a, t₁ a �
 #align fintype.pi_finset_subset Fintype.piFinset_subset
 -/
 
+#print Fintype.piFinset_empty /-
 @[simp]
 theorem piFinset_empty [Nonempty α] : piFinset (fun _ => ∅ : ∀ i, Finset (δ i)) = ∅ :=
   eq_empty_of_forall_not_mem fun _ => by simp
 #align fintype.pi_finset_empty Fintype.piFinset_empty
+-/
 
+#print Fintype.piFinset_singleton /-
 @[simp]
 theorem piFinset_singleton (f : ∀ i, δ i) : piFinset (fun i => {f i} : ∀ i, Finset (δ i)) = {f} :=
   ext fun _ => by simp only [Function.funext_iff, Fintype.mem_piFinset, mem_singleton]
 #align fintype.pi_finset_singleton Fintype.piFinset_singleton
+-/
 
 #print Fintype.piFinset_subsingleton /-
 theorem piFinset_subsingleton {f : ∀ i, Finset (δ i)} (hf : ∀ i, (f i : Set (δ i)).Subsingleton) :
@@ -83,12 +87,14 @@ theorem piFinset_subsingleton {f : ∀ i, Finset (δ i)} (hf : ∀ i, (f i : Set
 #align fintype.pi_finset_subsingleton Fintype.piFinset_subsingleton
 -/
 
+#print Fintype.piFinset_disjoint_of_disjoint /-
 theorem piFinset_disjoint_of_disjoint (t₁ t₂ : ∀ a, Finset (δ a)) {a : α}
     (h : Disjoint (t₁ a) (t₂ a)) : Disjoint (piFinset t₁) (piFinset t₂) :=
   disjoint_iff_ne.2 fun f₁ hf₁ f₂ hf₂ eq₁₂ =>
     disjoint_iff_ne.1 h (f₁ a) (mem_piFinset.1 hf₁ a) (f₂ a) (mem_piFinset.1 hf₂ a)
       (congr_fun eq₁₂ a)
 #align fintype.pi_finset_disjoint_of_disjoint Fintype.piFinset_disjoint_of_disjoint
+-/
 
 end Fintype
 
@@ -103,6 +109,7 @@ instance Pi.fintype {α : Type _} {β : α → Type _} [DecidableEq α] [Fintype
 #align pi.fintype Pi.fintype
 -/
 
+#print Fintype.piFinset_univ /-
 @[simp]
 theorem Fintype.piFinset_univ {α : Type _} {β : α → Type _} [DecidableEq α] [Fintype α]
     [∀ a, Fintype (β a)] :
@@ -110,15 +117,20 @@ theorem Fintype.piFinset_univ {α : Type _} {β : α → Type _} [DecidableEq α
       (Finset.univ : Finset (∀ a, β a)) :=
   rfl
 #align fintype.pi_finset_univ Fintype.piFinset_univ
+-/
 
+#print Function.Embedding.fintype /-
 instance Function.Embedding.fintype {α β} [Fintype α] [Fintype β] [DecidableEq α] [DecidableEq β] :
     Fintype (α ↪ β) :=
   Fintype.ofEquiv _ (Equiv.subtypeInjectiveEquivEmbedding α β)
 #align function.embedding.fintype Function.Embedding.fintype
+-/
 
+#print Finset.univ_pi_univ /-
 @[simp]
 theorem Finset.univ_pi_univ {α : Type _} {β : α → Type _} [DecidableEq α] [Fintype α]
     [∀ a, Fintype (β a)] :
     (Finset.univ.pi fun a : α => (Finset.univ : Finset (β a))) = Finset.univ := by ext; simp
 #align finset.univ_pi_univ Finset.univ_pi_univ
+-/
 

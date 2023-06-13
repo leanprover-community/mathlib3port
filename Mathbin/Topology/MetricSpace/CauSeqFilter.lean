@@ -30,6 +30,7 @@ open scoped Topology Classical
 
 variable {β : Type v}
 
+#print CauSeq.tendsto_limit /-
 theorem CauSeq.tendsto_limit [NormedRing β] [hn : IsAbsoluteValue (norm : β → ℝ)]
     (f : CauSeq β norm) [CauSeq.IsComplete β norm] : Tendsto f atTop (𝓝 f.lim) :=
   tendsto_nhds.mpr
@@ -44,6 +45,7 @@ theorem CauSeq.tendsto_limit [NormedRing β] [hn : IsAbsoluteValue (norm : β �
       dsimp [Metric.ball]; rw [dist_comm, dist_eq_norm]
       solve_by_elim)
 #align cau_seq.tendsto_limit CauSeq.tendsto_limit
+-/
 
 variable [NormedField β]
 
@@ -56,6 +58,7 @@ variable [NormedField β]
 -/
 open Metric
 
+#print CauchySeq.isCauSeq /-
 theorem CauchySeq.isCauSeq {f : ℕ → β} (hf : CauchySeq f) : IsCauSeq norm f :=
   by
   cases' cauchy_iff.1 hf with hf1 hf2
@@ -68,7 +71,9 @@ theorem CauchySeq.isCauSeq {f : ℕ → β} (hf : CauchySeq f) : IsCauSeq norm f
   apply @htsub (f j, f N)
   apply Set.mk_mem_prod <;> solve_by_elim [le_refl]
 #align cauchy_seq.is_cau_seq CauchySeq.isCauSeq
+-/
 
+#print CauSeq.cauchySeq /-
 theorem CauSeq.cauchySeq (f : CauSeq β norm) : CauchySeq f :=
   by
   refine' cauchy_iff.2 ⟨by infer_instance, fun s hs => _⟩
@@ -85,13 +90,17 @@ theorem CauSeq.cauchySeq (f : CauSeq β norm) : CauchySeq f :=
     rw [dist_eq_norm]
     apply hN <;> assumption
 #align cau_seq.cauchy_seq CauSeq.cauchySeq
+-/
 
+#print isCauSeq_iff_cauchySeq /-
 /-- In a normed field, `cau_seq` coincides with the usual notion of Cauchy sequences. -/
 theorem isCauSeq_iff_cauchySeq {α : Type u} [NormedField α] {u : ℕ → α} :
     IsCauSeq norm u ↔ CauchySeq u :=
   ⟨fun h => CauSeq.cauchySeq ⟨u, h⟩, fun h => h.IsCauSeq⟩
 #align cau_seq_iff_cauchy_seq isCauSeq_iff_cauchySeq
+-/
 
+#print completeSpace_of_cauSeq_isComplete /-
 -- see Note [lower instance priority]
 /-- A complete normed field is complete as a metric space, as Cauchy sequences converge by
 assumption and this suffices to characterize completeness. -/
@@ -107,4 +116,5 @@ instance (priority := 100) completeSpace_of_cauSeq_isComplete [CauSeq.IsComplete
   exists N
   simpa [dist_eq_norm] using hN
 #align complete_space_of_cau_seq_complete completeSpace_of_cauSeq_isComplete
+-/
 

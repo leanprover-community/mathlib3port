@@ -47,7 +47,6 @@ open Function
 
 variable {p : ℕ} {R : Type _}
 
--- mathport name: expr𝕎
 local notation "𝕎" => WittVector p
 
 /-!
@@ -70,8 +69,6 @@ theorem shift_coeff (x : 𝕎 R) (n k : ℕ) : (x.shift n).coeff k = x.coeff (n 
 #align witt_vector.shift_coeff WittVector.shift_coeff
 
 variable [hp : Fact p.Prime] [CommRing R]
-
-include hp
 
 theorem verschiebung_shift (x : 𝕎 R) (k : ℕ) (h : ∀ i < k + 1, x.coeff i = 0) :
     verschiebung (x.shift k.succ) = x.shift k :=

@@ -334,6 +334,7 @@ theorem coprime_factors_disjoint {a b : ℕ} (hab : a.coprime b) :
 #align nat.coprime_factors_disjoint Nat.coprime_factors_disjoint
 -/
 
+#print Nat.mem_factors_mul_of_coprime /-
 theorem mem_factors_mul_of_coprime {a b : ℕ} (hab : coprime a b) (p : ℕ) :
     p ∈ (a * b).factors ↔ p ∈ a.factors ∪ b.factors :=
   by
@@ -343,6 +344,7 @@ theorem mem_factors_mul_of_coprime {a b : ℕ} (hab : coprime a b) (p : ℕ) :
   · simp [(coprime_zero_right _).mp hab]
   rw [mem_factors_mul ha.ne' hb.ne', List.mem_union]
 #align nat.mem_factors_mul_of_coprime Nat.mem_factors_mul_of_coprime
+-/
 
 open List
 

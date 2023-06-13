@@ -50,6 +50,7 @@ variable {D : Type u₂} [Category.{u} D]
 
 variable {E : Type u} [Category.{v₂} E]
 
+#print CategoryTheory.FunctorCategory.prodPreservesColimits /-
 /-- If `X × -` preserves colimits in `D` for any `X : D`, then the product functor `F ⨯ -` for
 `F : C ⥤ D` also preserves colimits.
 
@@ -80,7 +81,9 @@ def FunctorCategory.prodPreservesColimits [HasBinaryProducts D] [HasColimits D]
             · intro G G'
               apply prod_comparison_natural ((evaluation C D).obj k) (𝟙 F) } }
 #align category_theory.functor_category.prod_preserves_colimits CategoryTheory.FunctorCategory.prodPreservesColimits
+-/
 
+#print CategoryTheory.whiskeringLeftPreservesLimits /-
 instance whiskeringLeftPreservesLimits [HasLimits D] (F : C ⥤ E) :
     PreservesLimits ((whiskeringLeft C E D).obj F) :=
   ⟨fun J hJ =>
@@ -91,7 +94,9 @@ instance whiskeringLeftPreservesLimits [HasLimits D] (F : C ⥤ E) :
         change is_limit (((evaluation E D).obj (F.obj Y)).mapCone c)
         exact preserves_limit.preserves hc⟩⟩⟩
 #align category_theory.whiskering_left_preserves_limits CategoryTheory.whiskeringLeftPreservesLimits
+-/
 
+#print CategoryTheory.whiskeringRightPreservesLimitsOfShape /-
 instance whiskeringRightPreservesLimitsOfShape {C : Type u} [Category C] {D : Type _}
     [Category.{u} D] {E : Type _} [Category.{u} E] {J : Type u} [SmallCategory J]
     [HasLimitsOfShape J D] (F : D ⥤ E) [PreservesLimitsOfShape J F] :
@@ -103,12 +108,15 @@ instance whiskeringRightPreservesLimitsOfShape {C : Type u} [Category C] {D : Ty
       change is_limit (((evaluation _ _).obj k ⋙ F).mapCone c)
       exact preserves_limit.preserves hc⟩⟩
 #align category_theory.whiskering_right_preserves_limits_of_shape CategoryTheory.whiskeringRightPreservesLimitsOfShape
+-/
 
+#print CategoryTheory.whiskeringRightPreservesLimits /-
 instance whiskeringRightPreservesLimits {C : Type u} [Category C] {D : Type _} [Category.{u} D]
     {E : Type _} [Category.{u} E] (F : D ⥤ E) [HasLimits D] [PreservesLimits F] :
     PreservesLimits ((whiskeringRight C D E).obj F) :=
   ⟨⟩
 #align category_theory.whiskering_right_preserves_limits CategoryTheory.whiskeringRightPreservesLimits
+-/
 
 #print CategoryTheory.preservesLimitOfLanPreservesLimit /-
 /-- If `Lan F.op : (Cᵒᵖ ⥤ Type*) ⥤ (Dᵒᵖ ⥤ Type*)` preserves limits of shape `J`, so will `F`. -/

@@ -41,7 +41,7 @@ For the explicit construction of free groups, see `group_theory/free_group`.
 universe u
 
 #print IsFreeGroup /-
-/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`MulEquiv] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`MulEquiv] [] -/
 /-- `is_free_group G` means that `G` isomorphic to a free group. -/
 class IsFreeGroup (G : Type u) [Group G] where
   Generators : Type u
@@ -58,11 +58,13 @@ namespace IsFreeGroup
 
 variable (G : Type _) [Group G] [IsFreeGroup G]
 
+#print IsFreeGroup.toFreeGroup /-
 /-- Any free group is isomorphic to "the" free group. -/
 @[simps]
 def toFreeGroup : G ≃* FreeGroup (Generators G) :=
   (mulEquiv G).symm
 #align is_free_group.to_free_group IsFreeGroup.toFreeGroup
+-/
 
 variable {G}
 
@@ -73,10 +75,12 @@ def of : Generators G → G :=
 #align is_free_group.of IsFreeGroup.of
 -/
 
+#print IsFreeGroup.of_eq_freeGroup_of /-
 @[simp]
 theorem of_eq_freeGroup_of {A : Type u} : @of (FreeGroup A) _ _ = FreeGroup.of :=
   rfl
 #align is_free_group.of_eq_free_group_of IsFreeGroup.of_eq_freeGroup_of
+-/
 
 variable {H : Type _} [Group H]
 
@@ -92,26 +96,35 @@ def lift : (Generators G → H) ≃ (G →* H) :=
 #align is_free_group.lift IsFreeGroup.lift
 -/
 
+#print IsFreeGroup.lift'_eq_freeGroup_lift /-
 @[simp]
 theorem lift'_eq_freeGroup_lift {A : Type u} : @lift (FreeGroup A) _ _ H _ = FreeGroup.lift :=
   rfl
 #align is_free_group.lift'_eq_free_group_lift IsFreeGroup.lift'_eq_freeGroup_lift
+-/
 
+#print IsFreeGroup.lift_of /-
 @[simp]
 theorem lift_of (f : Generators G → H) (a : Generators G) : lift f (of a) = f a :=
   congr_fun (lift.symm_apply_apply f) a
 #align is_free_group.lift_of IsFreeGroup.lift_of
+-/
 
+#print IsFreeGroup.lift_symm_apply /-
 @[simp]
 theorem lift_symm_apply (f : G →* H) (a : Generators G) : (lift.symm f) a = f (of a) :=
   rfl
 #align is_free_group.lift_symm_apply IsFreeGroup.lift_symm_apply
+-/
 
+#print IsFreeGroup.ext_hom /-
 @[ext]
 theorem ext_hom ⦃f g : G →* H⦄ (h : ∀ a : Generators G, f (of a) = g (of a)) : f = g :=
   lift.symm.Injective (funext h)
 #align is_free_group.ext_hom IsFreeGroup.ext_hom
+-/
 
+#print IsFreeGroup.unique_lift /-
 /-- The universal property of a free group: A functions from the generators of `G` to another
 group extends in a unique way to a homomorphism from `G`.
 
@@ -120,7 +133,9 @@ expresses the universal property.  -/
 theorem unique_lift (f : Generators G → H) : ∃! F : G →* H, ∀ a, F (of a) = f a := by
   simpa only [Function.funext_iff] using lift.symm.bijective.exists_unique f
 #align is_free_group.unique_lift IsFreeGroup.unique_lift
+-/
 
+#print IsFreeGroup.ofLift /-
 /-- If a group satisfies the universal property of a free group, then it is a free group, where
 the universal property is expressed as in `is_free_group.lift` and its properties. -/
 def ofLift {G : Type u} [Group G] (X : Type u) (of : X → G)
@@ -141,7 +156,9 @@ def ofLift {G : Type u} [Group G] (X : Type u) (of : X → G)
         simp only [MonoidHom.coe_comp, Function.comp_apply, MonoidHom.id_apply, FreeGroup.lift.of,
           lift_of, lift_symm_of])
 #align is_free_group.of_lift IsFreeGroup.ofLift
+-/
 
+#print IsFreeGroup.ofUniqueLift /-
 /-- If a group satisfies the universal property of a free group, then it is a free group, where
 the universal property is expressed as in `is_free_group.unique_lift`.  -/
 noncomputable def ofUniqueLift {G : Type u} [Group G] (X : Type u) (of : X → G)
@@ -156,13 +173,16 @@ noncomputable def ofUniqueLift {G : Type u} [Group G] (X : Type u) (of : X → G
     congr_fun (lift.symm_apply_apply f) a
   ofLift X of @lift @lift_of
 #align is_free_group.of_unique_lift IsFreeGroup.ofUniqueLift
+-/
 
+#print IsFreeGroup.ofMulEquiv /-
 /-- Being a free group transports across group isomorphisms. -/
 def ofMulEquiv {H : Type _} [Group H] (h : G ≃* H) : IsFreeGroup H
     where
   Generators := Generators G
   MulEquiv := (mulEquiv G).trans h
 #align is_free_group.of_mul_equiv IsFreeGroup.ofMulEquiv
+-/
 
 end IsFreeGroup
 

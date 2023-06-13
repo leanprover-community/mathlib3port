@@ -46,6 +46,7 @@ namespace TopCat
 
 variable (X : TopCat.{v})
 
+#print TopCat.presheafToTypes /-
 /-- The presheaf of dependently typed functions on `X`, with fibres given by a type family `T`.
 There is no requirement that the functions are continuous, here.
 -/
@@ -56,19 +57,25 @@ def presheafToTypes (T : X → Type w) : X.Presheaf (Type max v w)
   map_id' U := by ext (g⟨x, hx⟩); rfl
   map_comp' U V W i j := rfl
 #align Top.presheaf_to_Types TopCat.presheafToTypes
+-/
 
+#print TopCat.presheafToTypes_obj /-
 @[simp]
 theorem presheafToTypes_obj {T : X → Type v} {U : (Opens X)ᵒᵖ} :
     (presheafToTypes X T).obj U = ∀ x : unop U, T x :=
   rfl
 #align Top.presheaf_to_Types_obj TopCat.presheafToTypes_obj
+-/
 
+#print TopCat.presheafToTypes_map /-
 @[simp]
 theorem presheafToTypes_map {T : X → Type v} {U V : (Opens X)ᵒᵖ} {i : U ⟶ V} {f} :
     (presheafToTypes X T).map i f = fun x => f (i.unop x) :=
   rfl
 #align Top.presheaf_to_Types_map TopCat.presheafToTypes_map
+-/
 
+#print TopCat.presheafToType /-
 -- We don't just define this in terms of `presheaf_to_Types`,
 -- as it's helpful later to see (at a syntactic level) that `(presheaf_to_Type X T).obj U`
 -- is a non-dependent function.
@@ -85,18 +92,23 @@ def presheafToType (T : Type w) : X.Presheaf (Type max v w)
   map_id' U := by ext (g⟨x, hx⟩); rfl
   map_comp' U V W i j := rfl
 #align Top.presheaf_to_Type TopCat.presheafToType
+-/
 
+#print TopCat.presheafToType_obj /-
 @[simp]
 theorem presheafToType_obj {T : Type v} {U : (Opens X)ᵒᵖ} :
     (presheafToType X T).obj U = (unop U → T) :=
   rfl
 #align Top.presheaf_to_Type_obj TopCat.presheafToType_obj
+-/
 
+#print TopCat.presheafToType_map /-
 @[simp]
 theorem presheafToType_map {T : Type v} {U V : (Opens X)ᵒᵖ} {i : U ⟶ V} {f} :
     (presheafToType X T).map i f = f ∘ i.unop :=
   rfl
 #align Top.presheaf_to_Type_map TopCat.presheafToType_map
+-/
 
 #print TopCat.presheafToTop /-
 -- TODO it may prove useful to generalize the universes here,
@@ -108,11 +120,13 @@ def presheafToTop (T : TopCat.{v}) : X.Presheaf (Type v) :=
 #align Top.presheaf_to_Top TopCat.presheafToTop
 -/
 
+#print TopCat.presheafToTop_obj /-
 @[simp]
 theorem presheafToTop_obj (T : TopCat.{v}) (U : (Opens X)ᵒᵖ) :
     (presheafToTop X T).obj U = ((Opens.toTopCat X).obj (unop U) ⟶ T) :=
   rfl
 #align Top.presheaf_to_Top_obj TopCat.presheafToTop_obj
+-/
 
 #print TopCat.continuousFunctions /-
 -- TODO upgrade the result to TopCommRing?
@@ -138,6 +152,7 @@ def pullback {X Y : TopCatᵒᵖ} (f : X ⟶ Y) (R : TopCommRingCat) :
 #align Top.continuous_functions.pullback TopCat.continuousFunctions.pullback
 -/
 
+#print TopCat.continuousFunctions.map /-
 /-- A homomorphism of topological rings can be postcomposed with functions from a source space `X`;
 this is a ring homomorphism (with respect to the pointwise ring operations on functions). -/
 def map (X : TopCat.{u}ᵒᵖ) {R S : TopCommRingCat.{u}} (φ : R ⟶ S) :
@@ -149,9 +164,11 @@ def map (X : TopCat.{u}ᵒᵖ) {R S : TopCommRingCat.{u}} (φ : R ⟶ S) :
   map_add' := by intros <;> ext <;> apply φ.1.map_add
   map_mul' := by intros <;> ext <;> apply φ.1.map_mul
 #align Top.continuous_functions.map TopCat.continuousFunctions.map
+-/
 
 end ContinuousFunctions
 
+#print TopCat.commRingYoneda /-
 /-- An upgraded version of the Yoneda embedding, observing that the continuous maps
 from `X : Top` to `R : TopCommRing` form a commutative ring, functorial in both `X` and `R`. -/
 def commRingYoneda : TopCommRingCat.{u} ⥤ TopCat.{u}ᵒᵖ ⥤ CommRingCat.{u}
@@ -167,6 +184,7 @@ def commRingYoneda : TopCommRingCat.{u} ⥤ TopCat.{u}ᵒᵖ ⥤ CommRingCat.{u}
   map_id' X := by ext; rfl
   map_comp' X Y Z f g := rfl
 #align Top.CommRing_yoneda TopCat.commRingYoneda
+-/
 
 #print TopCat.presheafToTopCommRing /-
 /-- The presheaf (of commutative rings), consisting of functions on an open set `U ⊆ X` with

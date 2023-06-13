@@ -83,10 +83,12 @@ end Functor
 instance (F : C ⥤ D) : Functorial.{v₁, v₂} F.obj :=
   { F with }
 
+#print CategoryTheory.map_functorial_obj /-
 @[simp]
 theorem map_functorial_obj (F : C ⥤ D) {X Y : C} (f : X ⟶ Y) : map F.obj f = F.map f :=
   rfl
 #align category_theory.map_functorial_obj CategoryTheory.map_functorial_obj
+-/
 
 #print CategoryTheory.functorial_id /-
 instance functorial_id : Functorial.{v₁, v₁} (id : C → C) where map X Y f := f

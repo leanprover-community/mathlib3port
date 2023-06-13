@@ -161,6 +161,7 @@ theorem comp_eq_zero_of_image_eq_kernel {A B C : V} (f : A ⟶ B) (g : B ⟶ C)
 #align category_theory.comp_eq_zero_of_image_eq_kernel CategoryTheory.comp_eq_zero_of_image_eq_kernel
 -/
 
+#print CategoryTheory.imageToKernel_isIso_of_image_eq_kernel /-
 theorem imageToKernel_isIso_of_image_eq_kernel {A B C : V} (f : A ⟶ B) (g : B ⟶ C)
     (p : imageSubobject f = kernelSubobject g) :
     IsIso (imageToKernel f g (comp_eq_zero_of_image_eq_kernel f g p)) :=
@@ -170,6 +171,7 @@ theorem imageToKernel_isIso_of_image_eq_kernel {A B C : V} (f : A ⟶ B) (g : B 
   simp only [subobject.of_le_comp_of_le, subobject.of_le_refl]
   simp
 #align category_theory.image_to_kernel_is_iso_of_image_eq_kernel CategoryTheory.imageToKernel_isIso_of_image_eq_kernel
+-/
 
 #print CategoryTheory.exact_of_image_eq_kernel /-
 -- We'll prove the converse later, when `V` is abelian.
@@ -259,12 +261,14 @@ theorem exact_comp_iso [IsIso h] : Exact f (g ≫ h) ↔ Exact f g :=
 #align category_theory.exact_comp_iso CategoryTheory.exact_comp_iso
 -/
 
+#print CategoryTheory.exact_kernelSubobject_arrow /-
 theorem exact_kernelSubobject_arrow : Exact (kernelSubobject f).arrow f :=
   by
   refine' ⟨by simp, _⟩
   apply @is_iso.epi_of_iso _ _ _ _ _ _
   exact ⟨⟨factor_thru_image_subobject _, by ext; simp, by ext; simp⟩⟩
 #align category_theory.exact_kernel_subobject_arrow CategoryTheory.exact_kernelSubobject_arrow
+-/
 
 #print CategoryTheory.exact_kernel_ι /-
 theorem exact_kernel_ι : Exact (kernel.ι f) f := by rw [← kernel_subobject_arrow', exact_iso_comp];
@@ -284,6 +288,7 @@ instance (h : Exact f g) : Epi (kernel.lift g f h.w) :=
 
 variable (A)
 
+#print CategoryTheory.kernelSubobject_arrow_eq_zero_of_exact_zero_left /-
 theorem kernelSubobject_arrow_eq_zero_of_exact_zero_left (h : Exact (0 : A ⟶ B) g) :
     (kernelSubobject g).arrow = 0 :=
   by
@@ -291,6 +296,7 @@ theorem kernelSubobject_arrow_eq_zero_of_exact_zero_left (h : Exact (0 : A ⟶ B
     cancel_epi (factor_thru_image_subobject (0 : A ⟶ B))]
   simp
 #align category_theory.kernel_subobject_arrow_eq_zero_of_exact_zero_left CategoryTheory.kernelSubobject_arrow_eq_zero_of_exact_zero_left
+-/
 
 #print CategoryTheory.kernel_ι_eq_zero_of_exact_zero_left /-
 theorem kernel_ι_eq_zero_of_exact_zero_left (h : Exact (0 : A ⟶ B) g) : kernel.ι g = 0 := by
@@ -331,11 +337,13 @@ theorem comp_eq_zero_of_exact (h : Exact f g) {X Y : V} {ι : X ⟶ B} (hι : ι
 #align category_theory.comp_eq_zero_of_exact CategoryTheory.comp_eq_zero_of_exact
 -/
 
+#print CategoryTheory.fork_ι_comp_cofork_π /-
 @[simp, reassoc]
 theorem fork_ι_comp_cofork_π (h : Exact f g) (s : KernelFork g) (t : CokernelCofork f) :
     Fork.ι s ≫ Cofork.π t = 0 :=
   comp_eq_zero_of_exact f g h (KernelFork.condition s) (CokernelCofork.condition t)
 #align category_theory.fork_ι_comp_cofork_π CategoryTheory.fork_ι_comp_cofork_π
+-/
 
 end HasCokernels
 
@@ -424,10 +432,12 @@ class ReflectsExactSequences (F : V ⥤ W) where
 #align category_theory.functor.reflects_exact_sequences CategoryTheory.Functor.ReflectsExactSequences
 -/
 
+#print CategoryTheory.Functor.exact_of_exact_map /-
 theorem exact_of_exact_map (F : V ⥤ W) [ReflectsExactSequences F] {A B C : V} {f : A ⟶ B}
     {g : B ⟶ C} (hfg : Exact (F.map f) (F.map g)) : Exact f g :=
   ReflectsExactSequences.reflects f g hfg
 #align category_theory.functor.exact_of_exact_map CategoryTheory.Functor.exact_of_exact_map
+-/
 
 end Functor
 

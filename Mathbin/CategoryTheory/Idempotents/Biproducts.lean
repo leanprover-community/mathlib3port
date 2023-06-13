@@ -48,6 +48,7 @@ variable {C : Type _} [Category.{v} C] [Preadditive C]
 
 namespace Biproducts
 
+#print CategoryTheory.Idempotents.Karoubi.Biproducts.bicone /-
 /-- The `bicone` used in order to obtain the existence of
 the biproduct of a functor `J ⥤ karoubi C` when the category `C` is additive. -/
 @[simps]
@@ -78,9 +79,11 @@ def bicone [HasFiniteBiproducts C] {J : Type} [Fintype J] (F : J → Karoubi C) 
       simp only [biproduct.ι_π_ne_assoc _ h, assoc, biproduct.map_π, biproduct.map_π_assoc, hom_ext,
         comp_f, zero_comp, quiver.hom.add_comm_group_zero_f]
 #align category_theory.idempotents.karoubi.biproducts.bicone CategoryTheory.Idempotents.Karoubi.Biproducts.bicone
+-/
 
 end Biproducts
 
+#print CategoryTheory.Idempotents.Karoubi.karoubi_hasFiniteBiproducts /-
 theorem karoubi_hasFiniteBiproducts [HasFiniteBiproducts C] : HasFiniteBiproducts (Karoubi C) :=
   {
     out := fun n =>
@@ -109,6 +112,7 @@ theorem karoubi_hasFiniteBiproducts [HasFiniteBiproducts C] : HasFiniteBiproduct
             split_ifs; swap; · exfalso; exact h rfl
             simp only [eq_to_hom_refl, id_comp, (F j).idem] } }
 #align category_theory.idempotents.karoubi.karoubi_has_finite_biproducts CategoryTheory.Idempotents.Karoubi.karoubi_hasFiniteBiproducts
+-/
 
 attribute [instance] karoubi_has_finite_biproducts
 
@@ -147,6 +151,7 @@ instance (P : Karoubi C) : HasBinaryBiproduct P P.complement :=
       simp only [hom_ext, ← decomp_p, quiver.hom.add_comm_group_add_f, to_karoubi_map_f, id_eq,
         coe_p, complement_p, add_sub_cancel'_right])
 
+#print CategoryTheory.Idempotents.Karoubi.decomposition /-
 /-- A formal direct factor `P : karoubi C` of an object `P.X : C` in a
 preadditive category is actually a direct factor of the image `(to_karoubi C).obj P.X`
 of `P.X` in the category `karoubi C` -/
@@ -177,6 +182,7 @@ def decomposition (P : Karoubi C) : P ⊞ P.complement ≅ (toKaroubi _).obj P.p
     dsimp only [complement, to_karoubi]
     simp only [quiver.hom.add_comm_group_add_f, add_sub_cancel'_right, id_eq]
 #align category_theory.idempotents.karoubi.decomposition CategoryTheory.Idempotents.Karoubi.decomposition
+-/
 
 end Karoubi
 

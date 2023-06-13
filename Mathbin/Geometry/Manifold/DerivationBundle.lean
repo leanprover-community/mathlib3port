@@ -45,7 +45,6 @@ def PointedSmoothMap (x : M) :=
   C^n⟮I, M; 𝕜⟯
 #align pointed_smooth_map PointedSmoothMap
 
--- mathport name: pointed_smooth_map
 scoped[Derivation] notation "C^" n "⟮" I ", " M "; " 𝕜 "⟯⟨" x "⟩" => PointedSmoothMap 𝕜 I M n x
 
 variable {𝕜 M}
@@ -155,11 +154,9 @@ def fdifferential (f : C^∞⟮I, M; I', M'⟯) (x : M) :
   hfdifferential (rfl : f x = f x)
 #align fdifferential fdifferential
 
--- mathport name: fdifferential
 -- Standard notation for the differential. The abbreviation is `MId`.
 scoped[Manifold] notation "𝒅" => fdifferential
 
--- mathport name: hfdifferential
 -- Standard notation for the differential. The abbreviation is `MId`.
 scoped[Manifold] notation "𝒅ₕ" => hfdifferential
 

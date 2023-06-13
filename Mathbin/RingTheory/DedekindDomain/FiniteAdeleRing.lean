@@ -49,7 +49,6 @@ def FiniteIntegralAdeles : Type _ :=
 deriving CommRing, TopologicalSpace, Inhabited
 #align dedekind_domain.finite_integral_adeles DedekindDomain.FiniteIntegralAdeles
 
--- mathport name: exprR_hat
 local notation "R_hat" => FiniteIntegralAdeles
 
 /-- The product of all `adic_completion`, where `v` runs over the maximal ideals of `R`. -/
@@ -58,7 +57,6 @@ def ProdAdicCompletions :=
 deriving NonUnitalNonAssocRing, TopologicalSpace, TopologicalRing, CommRing, Inhabited
 #align dedekind_domain.prod_adic_completions DedekindDomain.ProdAdicCompletions
 
--- mathport name: exprK_hat
 local notation "K_hat" => ProdAdicCompletions
 
 namespace FiniteIntegralAdeles

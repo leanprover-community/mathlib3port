@@ -61,6 +61,7 @@ instance : ConditionallyCompleteLinearOrder ℤ :=
 
 namespace Int
 
+#print Int.csSup_eq_greatest_of_bdd /-
 theorem csSup_eq_greatest_of_bdd {s : Set ℤ} [DecidablePred (· ∈ s)] (b : ℤ) (Hb : ∀ z ∈ s, z ≤ b)
     (Hinh : ∃ z : ℤ, z ∈ s) : sSup s = greatestOfBdd b Hb Hinh :=
   by
@@ -68,16 +69,22 @@ theorem csSup_eq_greatest_of_bdd {s : Set ℤ} [DecidablePred (· ∈ s)] (b : �
   · convert coe_greatest_of_bdd_eq _ (Classical.choose_spec (⟨b, Hb⟩ : BddAbove s)) _
   · exact ⟨Hinh, b, Hb⟩
 #align int.cSup_eq_greatest_of_bdd Int.csSup_eq_greatest_of_bdd
+-/
 
+#print Int.csSup_empty /-
 @[simp]
 theorem csSup_empty : sSup (∅ : Set ℤ) = 0 :=
   dif_neg (by simp)
 #align int.cSup_empty Int.csSup_empty
+-/
 
+#print Int.csSup_of_not_bdd_above /-
 theorem csSup_of_not_bdd_above {s : Set ℤ} (h : ¬BddAbove s) : sSup s = 0 :=
   dif_neg (by simp [h])
 #align int.cSup_of_not_bdd_above Int.csSup_of_not_bdd_above
+-/
 
+#print Int.csInf_eq_least_of_bdd /-
 theorem csInf_eq_least_of_bdd {s : Set ℤ} [DecidablePred (· ∈ s)] (b : ℤ) (Hb : ∀ z ∈ s, b ≤ z)
     (Hinh : ∃ z : ℤ, z ∈ s) : sInf s = leastOfBdd b Hb Hinh :=
   by
@@ -85,27 +92,36 @@ theorem csInf_eq_least_of_bdd {s : Set ℤ} [DecidablePred (· ∈ s)] (b : ℤ)
   · convert coe_least_of_bdd_eq _ (Classical.choose_spec (⟨b, Hb⟩ : BddBelow s)) _
   · exact ⟨Hinh, b, Hb⟩
 #align int.cInf_eq_least_of_bdd Int.csInf_eq_least_of_bdd
+-/
 
+#print Int.csInf_empty /-
 @[simp]
 theorem csInf_empty : sInf (∅ : Set ℤ) = 0 :=
   dif_neg (by simp)
 #align int.cInf_empty Int.csInf_empty
+-/
 
+#print Int.csInf_of_not_bdd_below /-
 theorem csInf_of_not_bdd_below {s : Set ℤ} (h : ¬BddBelow s) : sInf s = 0 :=
   dif_neg (by simp [h])
 #align int.cInf_of_not_bdd_below Int.csInf_of_not_bdd_below
+-/
 
+#print Int.csSup_mem /-
 theorem csSup_mem {s : Set ℤ} (h1 : s.Nonempty) (h2 : BddAbove s) : sSup s ∈ s :=
   by
   convert (greatest_of_bdd _ (Classical.choose_spec h2) h1).2.1
   exact dif_pos ⟨h1, h2⟩
 #align int.cSup_mem Int.csSup_mem
+-/
 
+#print Int.csInf_mem /-
 theorem csInf_mem {s : Set ℤ} (h1 : s.Nonempty) (h2 : BddBelow s) : sInf s ∈ s :=
   by
   convert (least_of_bdd _ (Classical.choose_spec h2) h1).2.1
   exact dif_pos ⟨h1, h2⟩
 #align int.cInf_mem Int.csInf_mem
+-/
 
 end Int
 

@@ -34,8 +34,6 @@ instance decidablePredExistsNat : DecidablePred fun n' : ℕ => ∃ (n : ℕ+) (
 #align pnat.decidable_pred_exists_nat PNat.decidablePredExistsNat
 -/
 
-include h
-
 #print PNat.findX /-
 /-- The `pnat` version of `nat.find_x` -/
 protected def findX : { n // p n ∧ ∀ m : ℕ+, m < n → ¬p m } :=
@@ -99,16 +97,20 @@ theorem find_eq_iff : PNat.find h = m ↔ p m ∧ ∀ n < m, ¬p n :=
 #align pnat.find_eq_iff PNat.find_eq_iff
 -/
 
+#print PNat.find_lt_iff /-
 @[simp]
 theorem find_lt_iff (n : ℕ+) : PNat.find h < n ↔ ∃ m < n, p m :=
   ⟨fun h2 => ⟨PNat.find h, h2, PNat.find_spec h⟩, fun ⟨m, hmn, hm⟩ =>
     (PNat.find_min' h hm).trans_lt hmn⟩
 #align pnat.find_lt_iff PNat.find_lt_iff
+-/
 
+#print PNat.find_le_iff /-
 @[simp]
 theorem find_le_iff (n : ℕ+) : PNat.find h ≤ n ↔ ∃ m ≤ n, p m := by
   simp only [exists_prop, ← lt_add_one_iff, find_lt_iff]
 #align pnat.find_le_iff PNat.find_le_iff
+-/
 
 #print PNat.le_find_iff /-
 @[simp]
@@ -150,6 +152,7 @@ theorem find_le {h : ∃ n, p n} (hn : p n) : PNat.find h ≤ n :=
 #align pnat.find_le PNat.find_le
 -/
 
+#print PNat.find_comp_succ /-
 theorem find_comp_succ (h : ∃ n, p n) (h₂ : ∃ n, p (n + 1)) (h1 : ¬p 1) :
     PNat.find h = PNat.find h₂ + 1 :=
   by
@@ -159,6 +162,7 @@ theorem find_comp_succ (h : ∃ n, p n) (h₂ : ∃ n, p (n + 1)) (h1 : ¬p 1) :
   simp only [add_lt_add_iff_right, lt_find_iff] at hm 
   exact hm _ le_rfl
 #align pnat.find_comp_succ PNat.find_comp_succ
+-/
 
 end PNat
 

@@ -31,6 +31,7 @@ open scoped BigOperators
 
 variable {𝕜 E ι : Type _} [LinearOrderedField 𝕜] [AddCommGroup E] [Module 𝕜 E] {s t : Set E}
 
+#print not_disjoint_segment_convexHull_triple /-
 /-- In a tetrahedron with vertices `x`, `y`, `p`, `q`, any segment `[u, v]` joining the opposite
 edges `[x, p]` and `[y, q]` passes through any triangle of vertices `p`, `q`, `z` where
 `z ∈ [x, y]`. -/
@@ -93,7 +94,9 @@ theorem not_disjoint_segment_convexHull_triple {p q u v x y z : E} (hz : z ∈ s
     List.foldr_nil]
   rfl
 #align not_disjoint_segment_convex_hull_triple not_disjoint_segment_convexHull_triple
+-/
 
+#print exists_convex_convex_compl_subset /-
 /-- **Stone's Separation Theorem** -/
 theorem exists_convex_convex_compl_subset (hs : Convex 𝕜 s) (ht : Convex 𝕜 t) (hst : Disjoint s t) :
     ∃ C : Set E, Convex 𝕜 C ∧ Convex 𝕜 (Cᶜ) ∧ s ⊆ C ∧ t ⊆ Cᶜ :=
@@ -126,4 +129,5 @@ theorem exists_convex_convex_compl_subset (hs : Convex 𝕜 s) (ht : Convex 𝕜
   refine' disjoint_Union₂_left.2 fun a ha => disjoint_iff_inf_le.mpr fun b hb => h a _ ⟨b, hb⟩
   rwa [← hC.1.convexHull_eq]
 #align exists_convex_convex_compl_subset exists_convex_convex_compl_subset
+-/
 

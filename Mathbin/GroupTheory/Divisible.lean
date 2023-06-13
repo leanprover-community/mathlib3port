@@ -115,12 +115,14 @@ class RootableBy where
 #align divisible_by DivisibleBy
 -/
 
+#print pow_left_surj_of_rootableBy /-
 @[to_additive smul_right_surj_of_divisibleBy]
 theorem pow_left_surj_of_rootableBy [RootableBy A α] {n : α} (hn : n ≠ 0) :
     Function.Surjective (fun a => pow a n : A → A) := fun x =>
   ⟨RootableBy.root x n, RootableBy.root_cancel _ hn⟩
 #align pow_left_surj_of_rootable_by pow_left_surj_of_rootableBy
 #align smul_right_surj_of_divisible_by smul_right_surj_of_divisibleBy
+-/
 
 #print rootableByOfPowLeftSurj /-
 /--
@@ -167,6 +169,7 @@ variable {β B B' : Type _} [Pow B β] [Pow B' β]
 
 variable [Zero β] [Monoid B] [Monoid B'] [RootableBy B β] [RootableBy B' β]
 
+#print Prod.rootableBy /-
 @[to_additive]
 instance Prod.rootableBy : RootableBy (B × B') β
     where
@@ -175,6 +178,7 @@ instance Prod.rootableBy : RootableBy (B × B') β
   root_cancel n p hn := Prod.ext (RootableBy.root_cancel _ hn) (RootableBy.root_cancel _ hn)
 #align prod.rootable_by Prod.rootableBy
 #align prod.divisible_by Prod.divisibleBy
+-/
 
 end Prod
 
@@ -184,11 +188,14 @@ namespace AddCommGroup
 
 variable (A : Type _) [AddCommGroup A]
 
+#print AddCommGroup.smul_top_eq_top_of_divisibleBy_int /-
 theorem smul_top_eq_top_of_divisibleBy_int [DivisibleBy A ℤ] {n : ℤ} (hn : n ≠ 0) :
     n • (⊤ : AddSubgroup A) = ⊤ :=
   AddSubgroup.map_top_of_surjective _ fun a => ⟨DivisibleBy.div a n, DivisibleBy.div_cancel _ hn⟩
 #align add_comm_group.smul_top_eq_top_of_divisible_by_int AddCommGroup.smul_top_eq_top_of_divisibleBy_int
+-/
 
+#print AddCommGroup.divisibleByIntOfSmulTopEqTop /-
 /-- If for all `n ≠ 0 ∈ ℤ`, `n • A = A`, then `A` is divisible.
 -/
 noncomputable def divisibleByIntOfSmulTopEqTop
@@ -202,9 +209,11 @@ noncomputable def divisibleByIntOfSmulTopEqTop
     generalize_proofs h1
     exact h1.some_spec.2
 #align add_comm_group.divisible_by_int_of_smul_top_eq_top AddCommGroup.divisibleByIntOfSmulTopEqTop
+-/
 
 end AddCommGroup
 
+#print divisibleByIntOfCharZero /-
 instance (priority := 100) divisibleByIntOfCharZero {𝕜} [DivisionRing 𝕜] [CharZero 𝕜] :
     DivisibleBy 𝕜 ℤ where
   div q n := q / n
@@ -212,6 +221,7 @@ instance (priority := 100) divisibleByIntOfCharZero {𝕜} [DivisionRing 𝕜] [
   div_cancel n q hn := by
     rw [zsmul_eq_mul, (Int.cast_commute n _).Eq, div_mul_cancel q (int.cast_ne_zero.mpr hn)]
 #align divisible_by_int_of_char_zero divisibleByIntOfCharZero
+-/
 
 namespace Group
 
@@ -286,12 +296,14 @@ noncomputable def Function.Surjective.rootableBy (hf : Function.Surjective f)
 #align function.surjective.rootable_by Function.Surjective.rootableByₓ
 #align function.surjective.divisible_by Function.Surjective.divisibleByₓ
 
+#print RootableBy.surjective_pow /-
 @[to_additive DivisibleBy.surjective_smul]
 theorem RootableBy.surjective_pow (A α : Type _) [Monoid A] [Pow A α] [Zero α] [RootableBy A α]
     {n : α} (hn : n ≠ 0) : Function.Surjective fun a : A => a ^ n := fun a =>
   ⟨RootableBy.root a n, RootableBy.root_cancel a hn⟩
 #align rootable_by.surjective_pow RootableBy.surjective_pow
 #align divisible_by.surjective_smul DivisibleBy.surjective_smul
+-/
 
 end Hom
 

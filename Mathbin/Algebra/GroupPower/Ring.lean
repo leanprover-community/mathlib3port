@@ -34,27 +34,36 @@ section MonoidWithZero
 
 variable [MonoidWithZero M]
 
+#print zero_pow /-
 theorem zero_pow : ∀ {n : ℕ}, 0 < n → (0 : M) ^ n = 0
   | n + 1, _ => by rw [pow_succ, MulZeroClass.zero_mul]
 #align zero_pow zero_pow
+-/
 
+#print zero_pow' /-
 @[simp]
 theorem zero_pow' : ∀ n : ℕ, n ≠ 0 → (0 : M) ^ n = 0
   | 0, h => absurd rfl h
   | k + 1, h => by rw [pow_succ]; exact MulZeroClass.zero_mul _
 #align zero_pow' zero_pow'
+-/
 
+#print zero_pow_eq /-
 theorem zero_pow_eq (n : ℕ) : (0 : M) ^ n = if n = 0 then 1 else 0 :=
   by
   split_ifs with h
   · rw [h, pow_zero]
   · rw [zero_pow (Nat.pos_of_ne_zero h)]
 #align zero_pow_eq zero_pow_eq
+-/
 
+#print pow_eq_zero_of_le /-
 theorem pow_eq_zero_of_le {x : M} {n m : ℕ} (hn : n ≤ m) (hx : x ^ n = 0) : x ^ m = 0 := by
   rw [← tsub_add_cancel_of_le hn, pow_add, hx, MulZeroClass.mul_zero]
 #align pow_eq_zero_of_le pow_eq_zero_of_le
+-/
 
+#print pow_eq_zero /-
 theorem pow_eq_zero [NoZeroDivisors M] {x : M} {n : ℕ} (H : x ^ n = 0) : x = 0 :=
   by
   induction' n with n ih
@@ -63,7 +72,9 @@ theorem pow_eq_zero [NoZeroDivisors M] {x : M} {n : ℕ} (H : x ^ n = 0) : x = 0
   · rw [pow_succ] at H 
     exact Or.cases_on (mul_eq_zero.1 H) id ih
 #align pow_eq_zero pow_eq_zero
+-/
 
+#print pow_eq_zero_iff /-
 @[simp]
 theorem pow_eq_zero_iff [NoZeroDivisors M] {a : M} {n : ℕ} (hn : 0 < n) : a ^ n = 0 ↔ a = 0 :=
   by
@@ -71,32 +82,46 @@ theorem pow_eq_zero_iff [NoZeroDivisors M] {a : M} {n : ℕ} (hn : 0 < n) : a ^ 
   rintro rfl
   exact zero_pow hn
 #align pow_eq_zero_iff pow_eq_zero_iff
+-/
 
+#print pow_eq_zero_iff' /-
 theorem pow_eq_zero_iff' [NoZeroDivisors M] [Nontrivial M] {a : M} {n : ℕ} :
     a ^ n = 0 ↔ a = 0 ∧ n ≠ 0 := by cases (zero_le n).eq_or_gt <;> simp [*, ne_of_gt]
 #align pow_eq_zero_iff' pow_eq_zero_iff'
+-/
 
+#print pow_ne_zero_iff /-
 theorem pow_ne_zero_iff [NoZeroDivisors M] {a : M} {n : ℕ} (hn : 0 < n) : a ^ n ≠ 0 ↔ a ≠ 0 :=
   (pow_eq_zero_iff hn).Not
 #align pow_ne_zero_iff pow_ne_zero_iff
+-/
 
+#print ne_zero_pow /-
 theorem ne_zero_pow {a : M} {n : ℕ} (hn : n ≠ 0) : a ^ n ≠ 0 → a ≠ 0 := by contrapose!; rintro rfl;
   exact zero_pow' n hn
 #align ne_zero_pow ne_zero_pow
+-/
 
+#print pow_ne_zero /-
 @[field_simps]
 theorem pow_ne_zero [NoZeroDivisors M] {a : M} (n : ℕ) (h : a ≠ 0) : a ^ n ≠ 0 :=
   mt pow_eq_zero h
 #align pow_ne_zero pow_ne_zero
+-/
 
+#print NeZero.pow /-
 instance NeZero.pow [NoZeroDivisors M] {x : M} [NeZero x] {n : ℕ} : NeZero (x ^ n) :=
   ⟨pow_ne_zero n NeZero.out⟩
 #align ne_zero.pow NeZero.pow
+-/
 
+#print sq_eq_zero_iff /-
 theorem sq_eq_zero_iff [NoZeroDivisors M] {a : M} : a ^ 2 = 0 ↔ a = 0 :=
   pow_eq_zero_iff two_pos
 #align sq_eq_zero_iff sq_eq_zero_iff
+-/
 
+#print zero_pow_eq_zero /-
 @[simp]
 theorem zero_pow_eq_zero [Nontrivial M] {n : ℕ} : (0 : M) ^ n = 0 ↔ 0 < n :=
   by
@@ -104,6 +129,7 @@ theorem zero_pow_eq_zero [Nontrivial M] {n : ℕ} : (0 : M) ^ n = 0 ↔ 0 < n :=
   · rw [pos_iff_ne_zero]; rintro rfl; simpa using h
   · exact zero_pow' n h.ne.symm
 #align zero_pow_eq_zero zero_pow_eq_zero
+-/
 
 #print Ring.inverse_pow /-
 theorem Ring.inverse_pow (r : M) : ∀ n : ℕ, Ring.inverse r ^ n = Ring.inverse (r ^ n)
@@ -119,8 +145,6 @@ section CommMonoidWithZero
 
 variable [CommMonoidWithZero M] {n : ℕ} (hn : 0 < n)
 
-include M hn
-
 #print powMonoidWithZeroHom /-
 /-- We define `x ↦ x^n` (for positive `n : ℕ`) as a `monoid_with_zero_hom` -/
 def powMonoidWithZeroHom : M →*₀ M :=
@@ -128,18 +152,23 @@ def powMonoidWithZeroHom : M →*₀ M :=
 #align pow_monoid_with_zero_hom powMonoidWithZeroHom
 -/
 
+#print coe_powMonoidWithZeroHom /-
 @[simp]
 theorem coe_powMonoidWithZeroHom : (powMonoidWithZeroHom hn : M → M) = (· ^ n) :=
   rfl
 #align coe_pow_monoid_with_zero_hom coe_powMonoidWithZeroHom
+-/
 
+#print powMonoidWithZeroHom_apply /-
 @[simp]
 theorem powMonoidWithZeroHom_apply (a : M) : powMonoidWithZeroHom hn a = a ^ n :=
   rfl
 #align pow_monoid_with_zero_hom_apply powMonoidWithZeroHom_apply
+-/
 
 end CommMonoidWithZero
 
+#print pow_dvd_pow_iff /-
 theorem pow_dvd_pow_iff [CancelCommMonoidWithZero R] {x : R} {n m : ℕ} (h0 : x ≠ 0)
     (h1 : ¬IsUnit x) : x ^ n ∣ x ^ m ↔ n ≤ m :=
   by
@@ -150,15 +179,19 @@ theorem pow_dvd_pow_iff [CancelCommMonoidWithZero R] {x : R} {n m : ℕ} (h0 : x
     rwa [mul_dvd_mul_iff_left, ← isUnit_iff_dvd_one] at this ; apply pow_ne_zero m h0
   · apply pow_dvd_pow
 #align pow_dvd_pow_iff pow_dvd_pow_iff
+-/
 
 section Semiring
 
 variable [Semiring R] [Semiring S]
 
+#print RingHom.map_pow /-
 protected theorem RingHom.map_pow (f : R →+* S) (a) : ∀ n : ℕ, f (a ^ n) = f a ^ n :=
   map_pow f a
 #align ring_hom.map_pow RingHom.map_pow
+-/
 
+#print min_pow_dvd_add /-
 theorem min_pow_dvd_add {n m : ℕ} {a b c : R} (ha : c ^ n ∣ a) (hb : c ^ m ∣ b) :
     c ^ min n m ∣ a + b :=
   by
@@ -166,6 +199,7 @@ theorem min_pow_dvd_add {n m : ℕ} {a b c : R} (ha : c ^ n ∣ a) (hb : c ^ m �
   replace hb := (pow_dvd_pow c (min_le_right n m)).trans hb
   exact dvd_add ha hb
 #align min_pow_dvd_add min_pow_dvd_add
+-/
 
 end Semiring
 
@@ -173,13 +207,17 @@ section CommSemiring
 
 variable [CommSemiring R]
 
+#print add_sq /-
 theorem add_sq (a b : R) : (a + b) ^ 2 = a ^ 2 + 2 * a * b + b ^ 2 := by
   simp only [sq, add_mul_self_eq]
 #align add_sq add_sq
+-/
 
+#print add_sq' /-
 theorem add_sq' (a b : R) : (a + b) ^ 2 = a ^ 2 + b ^ 2 + 2 * a * b := by
   rw [add_sq, add_assoc, add_comm _ (b ^ 2), add_assoc]
 #align add_sq' add_sq'
+-/
 
 alias add_sq ← add_pow_two
 #align add_pow_two add_pow_two
@@ -192,36 +230,48 @@ variable [Monoid R] [HasDistribNeg R]
 
 variable (R)
 
+#print neg_one_pow_eq_or /-
 theorem neg_one_pow_eq_or : ∀ n : ℕ, (-1 : R) ^ n = 1 ∨ (-1 : R) ^ n = -1
   | 0 => Or.inl (pow_zero _)
   | n + 1 =>
     (neg_one_pow_eq_or n).symm.imp (fun h => by rw [pow_succ, h, neg_one_mul, neg_neg]) fun h => by
       rw [pow_succ, h, mul_one]
 #align neg_one_pow_eq_or neg_one_pow_eq_or
+-/
 
 variable {R}
 
+#print neg_pow /-
 theorem neg_pow (a : R) (n : ℕ) : (-a) ^ n = (-1) ^ n * a ^ n :=
   neg_one_mul a ▸ (Commute.neg_one_left a).mul_pow n
 #align neg_pow neg_pow
+-/
 
+#print neg_pow_bit0 /-
 @[simp]
 theorem neg_pow_bit0 (a : R) (n : ℕ) : (-a) ^ bit0 n = a ^ bit0 n := by
   rw [pow_bit0', neg_mul_neg, pow_bit0']
 #align neg_pow_bit0 neg_pow_bit0
+-/
 
+#print neg_pow_bit1 /-
 @[simp]
 theorem neg_pow_bit1 (a : R) (n : ℕ) : (-a) ^ bit1 n = -a ^ bit1 n := by
   simp only [bit1, pow_succ, neg_pow_bit0, neg_mul_eq_neg_mul]
 #align neg_pow_bit1 neg_pow_bit1
+-/
 
+#print neg_sq /-
 @[simp]
 theorem neg_sq (a : R) : (-a) ^ 2 = a ^ 2 := by simp [sq]
 #align neg_sq neg_sq
+-/
 
+#print neg_one_sq /-
 @[simp]
 theorem neg_one_sq : (-1 : R) ^ 2 = 1 := by rw [neg_sq, one_pow]
 #align neg_one_sq neg_one_sq
+-/
 
 alias neg_sq ← neg_pow_two
 #align neg_pow_two neg_pow_two
@@ -235,35 +285,47 @@ section Ring
 
 variable [Ring R] {a b : R}
 
+#print Commute.sq_sub_sq /-
 protected theorem Commute.sq_sub_sq (h : Commute a b) : a ^ 2 - b ^ 2 = (a + b) * (a - b) := by
   rw [sq, sq, h.mul_self_sub_mul_self_eq]
 #align commute.sq_sub_sq Commute.sq_sub_sq
+-/
 
+#print neg_one_pow_mul_eq_zero_iff /-
 @[simp]
 theorem neg_one_pow_mul_eq_zero_iff {n : ℕ} {r : R} : (-1) ^ n * r = 0 ↔ r = 0 := by
   rcases neg_one_pow_eq_or R n with ⟨⟩ <;> simp [h]
 #align neg_one_pow_mul_eq_zero_iff neg_one_pow_mul_eq_zero_iff
+-/
 
+#print mul_neg_one_pow_eq_zero_iff /-
 @[simp]
 theorem mul_neg_one_pow_eq_zero_iff {n : ℕ} {r : R} : r * (-1) ^ n = 0 ↔ r = 0 := by
   rcases neg_one_pow_eq_or R n with ⟨⟩ <;> simp [h]
 #align mul_neg_one_pow_eq_zero_iff mul_neg_one_pow_eq_zero_iff
+-/
 
 variable [NoZeroDivisors R]
 
+#print Commute.sq_eq_sq_iff_eq_or_eq_neg /-
 protected theorem Commute.sq_eq_sq_iff_eq_or_eq_neg (h : Commute a b) :
     a ^ 2 = b ^ 2 ↔ a = b ∨ a = -b := by
   rw [← sub_eq_zero, h.sq_sub_sq, mul_eq_zero, add_eq_zero_iff_eq_neg, sub_eq_zero, or_comm']
 #align commute.sq_eq_sq_iff_eq_or_eq_neg Commute.sq_eq_sq_iff_eq_or_eq_neg
+-/
 
+#print sq_eq_one_iff /-
 @[simp]
 theorem sq_eq_one_iff : a ^ 2 = 1 ↔ a = 1 ∨ a = -1 := by
   rw [← (Commute.one_right a).sq_eq_sq_iff_eq_or_eq_neg, one_pow]
 #align sq_eq_one_iff sq_eq_one_iff
+-/
 
+#print sq_ne_one_iff /-
 theorem sq_ne_one_iff : a ^ 2 ≠ 1 ↔ a ≠ 1 ∧ a ≠ -1 :=
   sq_eq_one_iff.Not.trans not_or
 #align sq_ne_one_iff sq_ne_one_iff
+-/
 
 end Ring
 
@@ -271,44 +333,58 @@ section CommRing
 
 variable [CommRing R]
 
+#print sq_sub_sq /-
 theorem sq_sub_sq (a b : R) : a ^ 2 - b ^ 2 = (a + b) * (a - b) :=
   (Commute.all a b).sq_sub_sq
 #align sq_sub_sq sq_sub_sq
+-/
 
 alias sq_sub_sq ← pow_two_sub_pow_two
 #align pow_two_sub_pow_two pow_two_sub_pow_two
 
+#print sub_sq /-
 theorem sub_sq (a b : R) : (a - b) ^ 2 = a ^ 2 - 2 * a * b + b ^ 2 := by
   rw [sub_eq_add_neg, add_sq, neg_sq, mul_neg, ← sub_eq_add_neg]
 #align sub_sq sub_sq
+-/
 
 alias sub_sq ← sub_pow_two
 #align sub_pow_two sub_pow_two
 
+#print sub_sq' /-
 theorem sub_sq' (a b : R) : (a - b) ^ 2 = a ^ 2 + b ^ 2 - 2 * a * b := by
   rw [sub_eq_add_neg, add_sq', neg_sq, mul_neg, ← sub_eq_add_neg]
 #align sub_sq' sub_sq'
+-/
 
 variable [NoZeroDivisors R] {a b : R}
 
+#print sq_eq_sq_iff_eq_or_eq_neg /-
 theorem sq_eq_sq_iff_eq_or_eq_neg : a ^ 2 = b ^ 2 ↔ a = b ∨ a = -b :=
   (Commute.all a b).sq_eq_sq_iff_eq_or_eq_neg
 #align sq_eq_sq_iff_eq_or_eq_neg sq_eq_sq_iff_eq_or_eq_neg
+-/
 
+#print eq_or_eq_neg_of_sq_eq_sq /-
 theorem eq_or_eq_neg_of_sq_eq_sq (a b : R) : a ^ 2 = b ^ 2 → a = b ∨ a = -b :=
   sq_eq_sq_iff_eq_or_eq_neg.1
 #align eq_or_eq_neg_of_sq_eq_sq eq_or_eq_neg_of_sq_eq_sq
+-/
 
 -- Copies of the above comm_ring lemmas for `units R`.
 namespace Units
 
+#print Units.sq_eq_sq_iff_eq_or_eq_neg /-
 protected theorem sq_eq_sq_iff_eq_or_eq_neg {a b : Rˣ} : a ^ 2 = b ^ 2 ↔ a = b ∨ a = -b := by
   simp_rw [ext_iff, coe_pow, sq_eq_sq_iff_eq_or_eq_neg, Units.val_neg]
 #align units.sq_eq_sq_iff_eq_or_eq_neg Units.sq_eq_sq_iff_eq_or_eq_neg
+-/
 
+#print Units.eq_or_eq_neg_of_sq_eq_sq /-
 protected theorem eq_or_eq_neg_of_sq_eq_sq (a b : Rˣ) (h : a ^ 2 = b ^ 2) : a = b ∨ a = -b :=
   Units.sq_eq_sq_iff_eq_or_eq_neg.1 h
 #align units.eq_or_eq_neg_of_sq_eq_sq Units.eq_or_eq_neg_of_sq_eq_sq
+-/
 
 end Units
 

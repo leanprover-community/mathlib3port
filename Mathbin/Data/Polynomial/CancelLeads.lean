@@ -59,6 +59,7 @@ theorem neg_cancelLeads : -p.cancelLeads q = q.cancelLeads p :=
 #align polynomial.neg_cancel_leads Polynomial.neg_cancelLeads
 -/
 
+#print Polynomial.natDegree_cancelLeads_lt_of_natDegree_le_natDegree_of_comm /-
 theorem natDegree_cancelLeads_lt_of_natDegree_le_natDegree_of_comm
     (comm : p.leadingCoeff * q.leadingCoeff = q.leadingCoeff * p.leadingCoeff)
     (h : p.natDegree ≤ q.natDegree) (hq : 0 < q.natDegree) :
@@ -81,6 +82,7 @@ theorem natDegree_cancelLeads_lt_of_natDegree_le_natDegree_of_comm
     rw [add_comm p.nat_degree, tsub_add_cancel_of_le h, ← leading_coeff, ← leading_coeff, comm,
       add_right_neg]
 #align polynomial.nat_degree_cancel_leads_lt_of_nat_degree_le_nat_degree_of_comm Polynomial.natDegree_cancelLeads_lt_of_natDegree_le_natDegree_of_comm
+-/
 
 end Ring
 

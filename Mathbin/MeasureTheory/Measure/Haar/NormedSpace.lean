@@ -54,9 +54,11 @@ instance MapContinuousLinearEquiv.isAddHaarMeasure (e : G ≃L[𝕜] H) : IsAddH
 variable [CompleteSpace 𝕜] [T2Space G] [FiniteDimensional 𝕜 G] [ContinuousSMul 𝕜 G]
   [ContinuousSMul 𝕜 H]
 
+#print MeasureTheory.Measure.MapLinearEquiv.isAddHaarMeasure /-
 instance MapLinearEquiv.isAddHaarMeasure (e : G ≃ₗ[𝕜] H) : IsAddHaarMeasure (μ.map e) :=
   MapContinuousLinearEquiv.isAddHaarMeasure _ e.toContinuousLinearEquiv
 #align measure_theory.measure.map_linear_equiv.is_add_haar_measure MeasureTheory.Measure.MapLinearEquiv.isAddHaarMeasure
+-/
 
 end ContinuousLinearEquiv
 
@@ -66,6 +68,7 @@ variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] [MeasurableSpac
 
 variable (μ) {s : Set E}
 
+#print MeasureTheory.Measure.integral_comp_smul /-
 /-- The integral of `f (R • x)` with respect to an additive Haar measure is a multiple of the
 integral of `f`. The formula we give works even when `f` is not integrable or `R = 0`
 thanks to the convention that a non-integrable function has integral zero. -/
@@ -90,7 +93,9 @@ theorem integral_comp_smul (f : E → F) (R : ℝ) :
       _ = |(R ^ finrank ℝ E)⁻¹| • ∫ x, f x ∂μ := by
         simp only [map_add_haar_smul μ hR, integral_smul_measure, ENNReal.toReal_ofReal, abs_nonneg]
 #align measure_theory.measure.integral_comp_smul MeasureTheory.Measure.integral_comp_smul
+-/
 
+#print MeasureTheory.Measure.integral_comp_smul_of_nonneg /-
 /-- The integral of `f (R • x)` with respect to an additive Haar measure is a multiple of the
 integral of `f`. The formula we give works even when `f` is not integrable or `R = 0`
 thanks to the convention that a non-integrable function has integral zero. -/
@@ -98,7 +103,9 @@ theorem integral_comp_smul_of_nonneg (f : E → F) (R : ℝ) {hR : 0 ≤ R} :
     ∫ x, f (R • x) ∂μ = (R ^ finrank ℝ E)⁻¹ • ∫ x, f x ∂μ := by
   rw [integral_comp_smul μ f R, abs_of_nonneg (inv_nonneg.2 (pow_nonneg hR _))]
 #align measure_theory.measure.integral_comp_smul_of_nonneg MeasureTheory.Measure.integral_comp_smul_of_nonneg
+-/
 
+#print MeasureTheory.Measure.integral_comp_inv_smul /-
 /-- The integral of `f (R⁻¹ • x)` with respect to an additive Haar measure is a multiple of the
 integral of `f`. The formula we give works even when `f` is not integrable or `R = 0`
 thanks to the convention that a non-integrable function has integral zero. -/
@@ -106,7 +113,9 @@ theorem integral_comp_inv_smul (f : E → F) (R : ℝ) :
     ∫ x, f (R⁻¹ • x) ∂μ = |R ^ finrank ℝ E| • ∫ x, f x ∂μ := by
   rw [integral_comp_smul μ f R⁻¹, inv_pow, inv_inv]
 #align measure_theory.measure.integral_comp_inv_smul MeasureTheory.Measure.integral_comp_inv_smul
+-/
 
+#print MeasureTheory.Measure.integral_comp_inv_smul_of_nonneg /-
 /-- The integral of `f (R⁻¹ • x)` with respect to an additive Haar measure is a multiple of the
 integral of `f`. The formula we give works even when `f` is not integrable or `R = 0`
 thanks to the convention that a non-integrable function has integral zero. -/
@@ -114,33 +123,45 @@ theorem integral_comp_inv_smul_of_nonneg (f : E → F) {R : ℝ} (hR : 0 ≤ R) 
     ∫ x, f (R⁻¹ • x) ∂μ = R ^ finrank ℝ E • ∫ x, f x ∂μ := by
   rw [integral_comp_inv_smul μ f R, abs_of_nonneg (pow_nonneg hR _)]
 #align measure_theory.measure.integral_comp_inv_smul_of_nonneg MeasureTheory.Measure.integral_comp_inv_smul_of_nonneg
+-/
 
+#print MeasureTheory.Measure.integral_comp_mul_left /-
 theorem integral_comp_mul_left (g : ℝ → F) (a : ℝ) : ∫ x : ℝ, g (a * x) = |a⁻¹| • ∫ y : ℝ, g y := by
   simp_rw [← smul_eq_mul, measure.integral_comp_smul, FiniteDimensional.finrank_self, pow_one]
 #align measure_theory.measure.integral_comp_mul_left MeasureTheory.Measure.integral_comp_mul_left
+-/
 
+#print MeasureTheory.Measure.integral_comp_inv_mul_left /-
 theorem integral_comp_inv_mul_left (g : ℝ → F) (a : ℝ) :
     ∫ x : ℝ, g (a⁻¹ * x) = |a| • ∫ y : ℝ, g y := by
   simp_rw [← smul_eq_mul, measure.integral_comp_inv_smul, FiniteDimensional.finrank_self, pow_one]
 #align measure_theory.measure.integral_comp_inv_mul_left MeasureTheory.Measure.integral_comp_inv_mul_left
+-/
 
+#print MeasureTheory.Measure.integral_comp_mul_right /-
 theorem integral_comp_mul_right (g : ℝ → F) (a : ℝ) : ∫ x : ℝ, g (x * a) = |a⁻¹| • ∫ y : ℝ, g y :=
   by simpa only [mul_comm] using integral_comp_mul_left g a
 #align measure_theory.measure.integral_comp_mul_right MeasureTheory.Measure.integral_comp_mul_right
+-/
 
+#print MeasureTheory.Measure.integral_comp_inv_mul_right /-
 theorem integral_comp_inv_mul_right (g : ℝ → F) (a : ℝ) :
     ∫ x : ℝ, g (x * a⁻¹) = |a| • ∫ y : ℝ, g y := by
   simpa only [mul_comm] using integral_comp_inv_mul_left g a
 #align measure_theory.measure.integral_comp_inv_mul_right MeasureTheory.Measure.integral_comp_inv_mul_right
+-/
 
+#print MeasureTheory.Measure.integral_comp_div /-
 theorem integral_comp_div (g : ℝ → F) (a : ℝ) : ∫ x : ℝ, g (x / a) = |a| • ∫ y : ℝ, g y :=
   integral_comp_inv_mul_right g a
 #align measure_theory.measure.integral_comp_div MeasureTheory.Measure.integral_comp_div
+-/
 
 end Measure
 
 variable {F : Type _} [NormedAddCommGroup F]
 
+#print MeasureTheory.integrable_comp_smul_iff /-
 theorem integrable_comp_smul_iff {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E]
     [MeasurableSpace E] [BorelSpace E] [FiniteDimensional ℝ E] (μ : Measure E) [IsAddHaarMeasure μ]
     (f : E → F) {R : ℝ} (hR : R ≠ 0) : Integrable (fun x => f (R • x)) μ ↔ Integrable f μ :=
@@ -160,42 +181,57 @@ theorem integrable_comp_smul_iff {E : Type _} [NormedAddCommGroup E] [NormedSpac
   rwa [map_add_haar_smul μ hS, integrable_smul_measure _ ENNReal.ofReal_ne_top]
   simpa only [Ne.def, ENNReal.ofReal_eq_zero, not_le, abs_pos] using inv_ne_zero (pow_ne_zero _ hS)
 #align measure_theory.integrable_comp_smul_iff MeasureTheory.integrable_comp_smul_iff
+-/
 
+#print MeasureTheory.Integrable.comp_smul /-
 theorem Integrable.comp_smul {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E]
     [MeasurableSpace E] [BorelSpace E] [FiniteDimensional ℝ E] {μ : Measure E} [IsAddHaarMeasure μ]
     {f : E → F} (hf : Integrable f μ) {R : ℝ} (hR : R ≠ 0) : Integrable (fun x => f (R • x)) μ :=
   (integrable_comp_smul_iff μ f hR).2 hf
 #align measure_theory.integrable.comp_smul MeasureTheory.Integrable.comp_smul
+-/
 
+#print MeasureTheory.integrable_comp_mul_left_iff /-
 theorem integrable_comp_mul_left_iff (g : ℝ → F) {R : ℝ} (hR : R ≠ 0) :
     (Integrable fun x => g (R * x)) ↔ Integrable g := by
   simpa only [smul_eq_mul] using integrable_comp_smul_iff volume g hR
 #align measure_theory.integrable_comp_mul_left_iff MeasureTheory.integrable_comp_mul_left_iff
+-/
 
+#print MeasureTheory.Integrable.comp_mul_left' /-
 theorem Integrable.comp_mul_left' {g : ℝ → F} (hg : Integrable g) {R : ℝ} (hR : R ≠ 0) :
     Integrable fun x => g (R * x) :=
   (integrable_comp_mul_left_iff g hR).2 hg
 #align measure_theory.integrable.comp_mul_left' MeasureTheory.Integrable.comp_mul_left'
+-/
 
+#print MeasureTheory.integrable_comp_mul_right_iff /-
 theorem integrable_comp_mul_right_iff (g : ℝ → F) {R : ℝ} (hR : R ≠ 0) :
     (Integrable fun x => g (x * R)) ↔ Integrable g := by
   simpa only [mul_comm] using integrable_comp_mul_left_iff g hR
 #align measure_theory.integrable_comp_mul_right_iff MeasureTheory.integrable_comp_mul_right_iff
+-/
 
+#print MeasureTheory.Integrable.comp_mul_right' /-
 theorem Integrable.comp_mul_right' {g : ℝ → F} (hg : Integrable g) {R : ℝ} (hR : R ≠ 0) :
     Integrable fun x => g (x * R) :=
   (integrable_comp_mul_right_iff g hR).2 hg
 #align measure_theory.integrable.comp_mul_right' MeasureTheory.Integrable.comp_mul_right'
+-/
 
+#print MeasureTheory.integrable_comp_div_iff /-
 theorem integrable_comp_div_iff (g : ℝ → F) {R : ℝ} (hR : R ≠ 0) :
     (Integrable fun x => g (x / R)) ↔ Integrable g :=
   integrable_comp_mul_right_iff g (inv_ne_zero hR)
 #align measure_theory.integrable_comp_div_iff MeasureTheory.integrable_comp_div_iff
+-/
 
+#print MeasureTheory.Integrable.comp_div /-
 theorem Integrable.comp_div {g : ℝ → F} (hg : Integrable g) {R : ℝ} (hR : R ≠ 0) :
     Integrable fun x => g (x / R) :=
   (integrable_comp_div_iff g hR).2 hg
 #align measure_theory.integrable.comp_div MeasureTheory.Integrable.comp_div
+-/
 
 end MeasureTheory
 

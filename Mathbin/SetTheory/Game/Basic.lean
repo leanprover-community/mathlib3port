@@ -83,7 +83,6 @@ def Lf : Game → Game → Prop :=
   Quotient.lift₂ Lf fun x₁ y₁ x₂ y₂ hx hy => propext (lf_congr hx hy)
 #align game.lf Game.Lf
 
--- mathport name: «expr ⧏ »
 local infixl:50 " ⧏ " => Lf
 
 /-- On `game`, simp-normal inequalities should use as few negations as possible. -/
@@ -126,7 +125,6 @@ def Fuzzy : Game → Game → Prop :=
   Quotient.lift₂ Fuzzy fun x₁ y₁ x₂ y₂ hx hy => propext (fuzzy_congr hx hy)
 #align game.fuzzy Game.Fuzzy
 
--- mathport name: «expr ‖ »
 local infixl:50 " ‖ " => Fuzzy
 
 theorem PGame.fuzzy_iff_game_fuzzy {x y : PGame} : PGame.Fuzzy x y ↔ ⟦x⟧ ‖ ⟦y⟧ :=

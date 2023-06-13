@@ -65,9 +65,11 @@ restate_axiom nat_trans.naturality'
 -- components of natural transfomations moving earlier.
 attribute [simp, reassoc] nat_trans.naturality
 
+#print CategoryTheory.congr_app /-
 theorem congr_app {F G : C ⥤ D} {α β : NatTrans F G} (h : α = β) (X : C) : α.app X = β.app X :=
   congr_fun (congr_arg NatTrans.app h) X
 #align category_theory.congr_app CategoryTheory.congr_app
+-/
 
 namespace NatTrans
 
@@ -77,10 +79,12 @@ protected def id (F : C ⥤ D) : NatTrans F F where app X := 𝟙 (F.obj X)
 #align category_theory.nat_trans.id CategoryTheory.NatTrans.id
 -/
 
+#print CategoryTheory.NatTrans.id_app' /-
 @[simp]
 theorem id_app' (F : C ⥤ D) (X : C) : (NatTrans.id F).app X = 𝟙 (F.obj X) :=
   rfl
 #align category_theory.nat_trans.id_app' CategoryTheory.NatTrans.id_app'
+-/
 
 instance (F : C ⥤ D) : Inhabited (NatTrans F F) :=
   ⟨NatTrans.id F⟩
@@ -99,12 +103,14 @@ def vcomp (α : NatTrans F G) (β : NatTrans G H) : NatTrans F H where app X := 
 #align category_theory.nat_trans.vcomp CategoryTheory.NatTrans.vcomp
 -/
 
+#print CategoryTheory.NatTrans.vcomp_app /-
 -- functor_category will rewrite (vcomp α β) to (α ≫ β), so this is not a
 -- suitable simp lemma.  We will declare the variant vcomp_app' there.
 theorem vcomp_app (α : NatTrans F G) (β : NatTrans G H) (X : C) :
     (vcomp α β).app X = α.app X ≫ β.app X :=
   rfl
 #align category_theory.nat_trans.vcomp_app CategoryTheory.NatTrans.vcomp_app
+-/
 
 end
 

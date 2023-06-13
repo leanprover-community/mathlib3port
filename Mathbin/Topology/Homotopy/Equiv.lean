@@ -55,7 +55,6 @@ structure HomotopyEquiv (X : Type u) (Y : Type v) [TopologicalSpace X] [Topologi
 #align continuous_map.homotopy_equiv ContinuousMap.HomotopyEquiv
 -/
 
--- mathport name: continuous_map.homotopy_equiv
 scoped infixl:25 " ≃ₕ " => ContinuousMap.HomotopyEquiv
 
 namespace HomotopyEquiv
@@ -63,15 +62,19 @@ namespace HomotopyEquiv
 instance : CoeFun (HomotopyEquiv X Y) fun _ => X → Y :=
   ⟨fun h => h.toFun⟩
 
+#print ContinuousMap.HomotopyEquiv.toFun_eq_coe /-
 @[simp]
 theorem toFun_eq_coe (h : HomotopyEquiv X Y) : (h.toFun : X → Y) = h :=
   rfl
 #align continuous_map.homotopy_equiv.to_fun_eq_coe ContinuousMap.HomotopyEquiv.toFun_eq_coe
+-/
 
+#print ContinuousMap.HomotopyEquiv.continuous /-
 @[continuity]
 theorem continuous (h : HomotopyEquiv X Y) : Continuous h :=
   h.toFun.Continuous
 #align continuous_map.homotopy_equiv.continuous ContinuousMap.HomotopyEquiv.continuous
+-/
 
 end HomotopyEquiv
 
@@ -93,10 +96,12 @@ def toHomotopyEquiv (h : X ≃ₜ Y) : X ≃ₕ Y
 #align homeomorph.to_homotopy_equiv Homeomorph.toHomotopyEquiv
 -/
 
+#print Homeomorph.coe_toHomotopyEquiv /-
 @[simp]
 theorem coe_toHomotopyEquiv (h : X ≃ₜ Y) : ⇑h.toHomotopyEquiv = h :=
   rfl
 #align homeomorph.coe_to_homotopy_equiv Homeomorph.coe_toHomotopyEquiv
+-/
 
 end Homeomorph
 
@@ -115,10 +120,12 @@ def symm (h : X ≃ₕ Y) : Y ≃ₕ X where
 #align continuous_map.homotopy_equiv.symm ContinuousMap.HomotopyEquiv.symm
 -/
 
+#print ContinuousMap.HomotopyEquiv.coe_invFun /-
 @[simp]
 theorem coe_invFun (h : HomotopyEquiv X Y) : (⇑h.invFun : Y → X) = ⇑h.symm :=
   rfl
 #align continuous_map.homotopy_equiv.coe_inv_fun ContinuousMap.HomotopyEquiv.coe_invFun
+-/
 
 #print ContinuousMap.HomotopyEquiv.Simps.apply /-
 /-- See Note [custom simps projection]. We need to specify this projection explicitly in this case,

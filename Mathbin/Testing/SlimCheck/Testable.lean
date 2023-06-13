@@ -187,7 +187,7 @@ variable (f : Type → Prop)
 
 namespace SlimCheck
 
-/- ./././Mathport/Syntax/Translate/Command.lean:370:30: infer kinds are unsupported in Lean 4: gave_up {} -/
+/- ./././Mathport/Syntax/Translate/Command.lean:369:30: infer kinds are unsupported in Lean 4: gave_up {} -/
 #print SlimCheck.TestResult /-
 /-- Result of trying to disprove `p`
 
@@ -267,7 +267,7 @@ instance (priority := 100) defaultPrintableProp {p} : PrintableProp p :=
 #align slim_check.default_printable_prop SlimCheck.defaultPrintableProp
 
 #print SlimCheck.Testable /-
-/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`run] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`run] [] -/
 /-- `testable p` uses random examples to try to disprove `p`. -/
 class Testable (p : Prop) where
   run (cfg : SlimCheckCfg) (minimize : Bool) : Gen (TestResult p)
@@ -755,6 +755,7 @@ variable (p)
 
 variable [Testable p]
 
+#print SlimCheck.Testable.runSuiteAux /-
 /-- Try `n` times to find a counter-example for `p`. -/
 def Testable.runSuiteAux (cfg : SlimCheckCfg) : TestResult p → ℕ → Rand (TestResult p)
   | r, 0 => return r
@@ -768,11 +769,14 @@ def Testable.runSuiteAux (cfg : SlimCheckCfg) : TestResult p → ℕ → Rand (T
       | failure Hce xs n => return (failure Hce xs n)
       | gave_up g => testable.run_suite_aux (give_up g r) n
 #align slim_check.testable.run_suite_aux SlimCheck.Testable.runSuiteAux
+-/
 
+#print SlimCheck.Testable.runSuite /-
 /-- Try to find a counter-example of `p`. -/
 def Testable.runSuite (cfg : SlimCheckCfg := { }) : Rand (TestResult p) :=
   Testable.runSuiteAux p cfg (success <| PSum.inl ()) cfg.numInst
 #align slim_check.testable.run_suite SlimCheck.Testable.runSuite
+-/
 
 /-- Run a test suite for `p` in `io`. -/
 def Testable.check' (cfg : SlimCheckCfg := { }) : Io (TestResult p) :=
@@ -852,6 +856,7 @@ unsafe def mk_decorations : tactic Unit := do
 end Tactic
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic tactic.mk_decorations -/
+#print SlimCheck.Testable.check /-
 /-- Run a test suite for `p` and return true or false: should we believe that `p` holds? -/
 def Testable.check (p : Prop) (cfg : SlimCheckCfg := { })
     (p' : Tactic.DecorationsOf p := by
@@ -868,6 +873,7 @@ def Testable.check (p : Prop) (cfg : SlimCheckCfg := { })
     | failure _ xs n => do
       Io.fail <| format_failure "Found problems!" xs n
 #align slim_check.testable.check SlimCheck.Testable.check
+-/
 
 end Io
 

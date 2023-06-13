@@ -43,6 +43,7 @@ variable [CommRing R] [AddCommGroup M] [Module R M] [Module.Free R M]
 
 variable [AddCommGroup N] [Module R N] [Module.Free R N]
 
+#print Module.Free.linearMap /-
 instance Module.Free.linearMap [Module.Finite R M] [Module.Finite R N] :
     Module.Free R (M →ₗ[R] N) :=
   by
@@ -51,6 +52,7 @@ instance Module.Free.linearMap [Module.Finite R M] [Module.Finite R N] :
   classical exact
     Module.Free.of_equiv (LinearMap.toMatrix (choose_basis R M) (choose_basis R N)).symm
 #align module.free.linear_map Module.Free.linearMap
+-/
 
 variable {R}
 
@@ -74,14 +76,18 @@ variable [AddCommGroup M] [Module.Finite ℤ M] [Module.Free ℤ M]
 
 variable [AddCommGroup N] [Module.Finite ℤ N] [Module.Free ℤ N]
 
+#print Module.Finite.addMonoidHom /-
 instance Module.Finite.addMonoidHom : Module.Finite ℤ (M →+ N) :=
   Module.Finite.equiv (addMonoidHomLequivInt ℤ).symm
 #align module.finite.add_monoid_hom Module.Finite.addMonoidHom
+-/
 
+#print Module.Free.addMonoidHom /-
 instance Module.Free.addMonoidHom : Module.Free ℤ (M →+ N) :=
   letI : Module.Free ℤ (M →ₗ[ℤ] N) := Module.Free.linearMap _ _ _
   Module.Free.of_equiv (addMonoidHomLequivInt ℤ).symm
 #align module.free.add_monoid_hom Module.Free.addMonoidHom
+-/
 
 end Integer
 
@@ -107,6 +113,7 @@ theorem FiniteDimensional.finrank_linearMap : finrank R (M →ₗ[R] N) = finran
 
 end CommRing
 
+#print Matrix.rank_vecMulVec /-
 theorem Matrix.rank_vecMulVec {K m n : Type u} [CommRing K] [StrongRankCondition K] [Fintype n]
     [DecidableEq n] (w : m → K) (v : n → K) : (Matrix.vecMulVec w v).toLin'.rank ≤ 1 :=
   by
@@ -115,4 +122,5 @@ theorem Matrix.rank_vecMulVec {K m n : Type u} [CommRing K] [StrongRankCondition
   refine' (LinearMap.rank_le_domain _).trans_eq _
   rw [rank_fun', Fintype.card_unit, Nat.cast_one]
 #align matrix.rank_vec_mul_vec Matrix.rank_vecMulVec
+-/
 

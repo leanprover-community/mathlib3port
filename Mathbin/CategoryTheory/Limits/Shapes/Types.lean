@@ -55,12 +55,14 @@ namespace CategoryTheory.Limits.Types
 
 attribute [local tidy] tactic.discrete_cases
 
+#print CategoryTheory.Limits.Types.pi_lift_π_apply /-
 /-- A restatement of `types.lift_π_apply` that uses `pi.π` and `pi.lift`. -/
 @[simp]
 theorem pi_lift_π_apply {β : Type v} (f : β → Type max v u) {P : Type max v u} (s : ∀ b, P ⟶ f b)
     (b : β) (x : P) : (Pi.π f b : (∏ f) → f b) (@Pi.lift β _ _ f _ P s x) = s b x :=
   congr_fun (limit.lift_π (Fan.mk P s) ⟨b⟩) x
 #align category_theory.limits.types.pi_lift_π_apply CategoryTheory.Limits.Types.pi_lift_π_apply
+-/
 
 /-- A restatement of `types.lift_π_apply` that uses `pi.π` and `pi.lift`,
 with specialized universes. -/
@@ -70,12 +72,14 @@ theorem pi_lift_π_apply' {β : Type v} (f : β → Type v) {P : Type v} (s : �
   congr_fun (limit.lift_π (Fan.mk P s) ⟨b⟩) x
 #align category_theory.limits.types.pi_lift_π_apply' CategoryTheory.Limits.Types.pi_lift_π_apply'
 
+#print CategoryTheory.Limits.Types.pi_map_π_apply /-
 /-- A restatement of `types.map_π_apply` that uses `pi.π` and `pi.map`. -/
 @[simp]
 theorem pi_map_π_apply {β : Type v} {f g : β → Type max v u} (α : ∀ j, f j ⟶ g j) (b : β) (x) :
     (Pi.π g b : (∏ g) → g b) (Pi.map α x) = α b ((Pi.π f b : (∏ f) → f b) x) :=
   Limit.map_π_apply _ _ _
 #align category_theory.limits.types.pi_map_π_apply CategoryTheory.Limits.Types.pi_map_π_apply
+-/
 
 /-- A restatement of `types.map_π_apply` that uses `pi.π` and `pi.map`,
 with specialized universes. -/
@@ -147,15 +151,19 @@ def binaryProductCone (X Y : Type u) : BinaryFan X Y :=
 #align category_theory.limits.types.binary_product_cone CategoryTheory.Limits.Types.binaryProductCone
 -/
 
+#print CategoryTheory.Limits.Types.binaryProductCone_fst /-
 @[simp]
 theorem binaryProductCone_fst (X Y : Type u) : (binaryProductCone X Y).fst = Prod.fst :=
   rfl
 #align category_theory.limits.types.binary_product_cone_fst CategoryTheory.Limits.Types.binaryProductCone_fst
+-/
 
+#print CategoryTheory.Limits.Types.binaryProductCone_snd /-
 @[simp]
 theorem binaryProductCone_snd (X Y : Type u) : (binaryProductCone X Y).snd = Prod.snd :=
   rfl
 #align category_theory.limits.types.binary_product_cone_snd CategoryTheory.Limits.Types.binaryProductCone_snd
+-/
 
 #print CategoryTheory.Limits.Types.binaryProductLimit /-
 /-- The product type `X × Y` is a binary product for `X` and `Y`. -/
@@ -319,6 +327,7 @@ theorem binaryCoproductIso_inr_comp_inv (X Y : Type u) :
 
 open Function (Injective)
 
+#print CategoryTheory.Limits.Types.binaryCofan_isColimit_iff /-
 theorem binaryCofan_isColimit_iff {X Y : Type u} (c : BinaryCofan X Y) :
     Nonempty (IsColimit c) ↔
       Injective c.inl ∧ Injective c.inr ∧ IsCompl (Set.range c.inl) (Set.range c.inr) :=
@@ -364,7 +373,9 @@ theorem binaryCofan_isColimit_iff {X Y : Type u} (c : BinaryCofan X Y) :
     · rintro T _ _ m rfl rfl; ext x; dsimp
       split_ifs <;> exact congr_arg _ (Equiv.apply_ofInjective_symm _ ⟨_, _⟩).symm
 #align category_theory.limits.types.binary_cofan_is_colimit_iff CategoryTheory.Limits.Types.binaryCofan_isColimit_iff
+-/
 
+#print CategoryTheory.Limits.Types.isCoprodOfMono /-
 /-- Any monomorphism in `Type` is an coproduct injection. -/
 noncomputable def isCoprodOfMono {X Y : Type u} (f : X ⟶ Y) [Mono f] :
     IsColimit (BinaryCofan.mk f (Subtype.val : Set.range fᶜ → Y)) :=
@@ -373,6 +384,7 @@ noncomputable def isCoprodOfMono {X Y : Type u} (f : X ⟶ Y) [Mono f] :
       ⟨(mono_iff_injective f).mp inferInstance, Subtype.val_injective,
         (eq_compl_iff_isCompl.mp <| Subtype.range_val).symm⟩
 #align category_theory.limits.types.is_coprod_of_mono CategoryTheory.Limits.Types.isCoprodOfMono
+-/
 
 #print CategoryTheory.Limits.Types.productLimitCone /-
 /-- The category of types has `Π j, f j` as the product of a type family `f : J → Type`.

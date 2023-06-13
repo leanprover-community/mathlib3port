@@ -141,6 +141,7 @@ class AddSubmonoidClass (S M : Type _) [AddZeroClass M] [SetLike S M] extends Ad
 
 attribute [to_additive] Submonoid SubmonoidClass
 
+#print pow_mem /-
 @[to_additive]
 theorem pow_mem {M} [Monoid M] {A : Type _} [SetLike A M] [SubmonoidClass A M] {S : A} {x : M}
     (hx : x ∈ S) : ∀ n : ℕ, x ^ n ∈ S
@@ -148,6 +149,7 @@ theorem pow_mem {M} [Monoid M] {A : Type _} [SetLike A M] [SubmonoidClass A M] {
   | n + 1 => by rw [pow_succ]; exact MulMemClass.mul_mem hx (pow_mem n)
 #align pow_mem pow_mem
 #align nsmul_mem nsmul_mem
+-/
 
 namespace Submonoid
 
@@ -174,38 +176,49 @@ initialize_simps_projections Submonoid (carrier → coe)
 
 initialize_simps_projections AddSubmonoid (carrier → coe)
 
+#print Submonoid.mem_carrier /-
 @[simp, to_additive]
 theorem mem_carrier {s : Submonoid M} {x : M} : x ∈ s.carrier ↔ x ∈ s :=
   Iff.rfl
 #align submonoid.mem_carrier Submonoid.mem_carrier
 #align add_submonoid.mem_carrier AddSubmonoid.mem_carrier
+-/
 
+#print Submonoid.mem_mk /-
 @[simp, to_additive]
 theorem mem_mk {s : Set M} {x : M} (h_one) (h_mul) : x ∈ mk s h_one h_mul ↔ x ∈ s :=
   Iff.rfl
 #align submonoid.mem_mk Submonoid.mem_mk
 #align add_submonoid.mem_mk AddSubmonoid.mem_mk
+-/
 
+#print Submonoid.coe_set_mk /-
 @[simp, to_additive]
 theorem coe_set_mk {s : Set M} (h_one) (h_mul) : (mk s h_one h_mul : Set M) = s :=
   rfl
 #align submonoid.coe_set_mk Submonoid.coe_set_mk
 #align add_submonoid.coe_set_mk AddSubmonoid.coe_set_mk
+-/
 
+#print Submonoid.mk_le_mk /-
 @[simp, to_additive]
 theorem mk_le_mk {s t : Set M} (h_one) (h_mul) (h_one') (h_mul') :
     mk s h_one h_mul ≤ mk t h_one' h_mul' ↔ s ⊆ t :=
   Iff.rfl
 #align submonoid.mk_le_mk Submonoid.mk_le_mk
 #align add_submonoid.mk_le_mk AddSubmonoid.mk_le_mk
+-/
 
+#print Submonoid.ext /-
 /-- Two submonoids are equal if they have the same elements. -/
 @[ext, to_additive "Two `add_submonoid`s are equal if they have the same elements."]
 theorem ext {S T : Submonoid M} (h : ∀ x, x ∈ S ↔ x ∈ T) : S = T :=
   SetLike.ext h
 #align submonoid.ext Submonoid.ext
 #align add_submonoid.ext AddSubmonoid.ext
+-/
 
+#print Submonoid.copy /-
 /-- Copy a submonoid replacing `carrier` with a set that is equal to it. -/
 @[to_additive "Copy an additive submonoid replacing `carrier` with a set that is equal to it."]
 protected def copy (S : Submonoid M) (s : Set M) (hs : s = S) : Submonoid M
@@ -215,36 +228,45 @@ protected def copy (S : Submonoid M) (s : Set M) (hs : s = S) : Submonoid M
   mul_mem' _ _ := hs.symm ▸ S.mul_mem'
 #align submonoid.copy Submonoid.copy
 #align add_submonoid.copy AddSubmonoid.copy
+-/
 
 variable {S : Submonoid M}
 
+#print Submonoid.coe_copy /-
 @[simp, to_additive]
 theorem coe_copy {s : Set M} (hs : s = S) : (S.copy s hs : Set M) = s :=
   rfl
 #align submonoid.coe_copy Submonoid.coe_copy
 #align add_submonoid.coe_copy AddSubmonoid.coe_copy
+-/
 
+#print Submonoid.copy_eq /-
 @[to_additive]
 theorem copy_eq {s : Set M} (hs : s = S) : S.copy s hs = S :=
   SetLike.coe_injective hs
 #align submonoid.copy_eq Submonoid.copy_eq
 #align add_submonoid.copy_eq AddSubmonoid.copy_eq
+-/
 
 variable (S)
 
+#print Submonoid.one_mem /-
 /-- A submonoid contains the monoid's 1. -/
 @[to_additive "An `add_submonoid` contains the monoid's 0."]
 protected theorem one_mem : (1 : M) ∈ S :=
   one_mem S
 #align submonoid.one_mem Submonoid.one_mem
 #align add_submonoid.zero_mem AddSubmonoid.zero_mem
+-/
 
+#print Submonoid.mul_mem /-
 /-- A submonoid is closed under multiplication. -/
 @[to_additive "An `add_submonoid` is closed under addition."]
 protected theorem mul_mem {x y : M} : x ∈ S → y ∈ S → x * y ∈ S :=
   mul_mem
 #align submonoid.mul_mem Submonoid.mul_mem
 #align add_submonoid.add_mem AddSubmonoid.add_mem
+-/
 
 /-- The submonoid `M` of the monoid `M`. -/
 @[to_additive "The additive submonoid `M` of the `add_monoid M`."]
@@ -265,29 +287,37 @@ instance : Bot (Submonoid M) :=
 instance : Inhabited (Submonoid M) :=
   ⟨⊥⟩
 
+#print Submonoid.mem_bot /-
 @[simp, to_additive]
 theorem mem_bot {x : M} : x ∈ (⊥ : Submonoid M) ↔ x = 1 :=
   Set.mem_singleton_iff
 #align submonoid.mem_bot Submonoid.mem_bot
 #align add_submonoid.mem_bot AddSubmonoid.mem_bot
+-/
 
+#print Submonoid.mem_top /-
 @[simp, to_additive]
 theorem mem_top (x : M) : x ∈ (⊤ : Submonoid M) :=
   Set.mem_univ x
 #align submonoid.mem_top Submonoid.mem_top
 #align add_submonoid.mem_top AddSubmonoid.mem_top
+-/
 
+#print Submonoid.coe_top /-
 @[simp, to_additive]
 theorem coe_top : ((⊤ : Submonoid M) : Set M) = Set.univ :=
   rfl
 #align submonoid.coe_top Submonoid.coe_top
 #align add_submonoid.coe_top AddSubmonoid.coe_top
+-/
 
+#print Submonoid.coe_bot /-
 @[simp, to_additive]
 theorem coe_bot : ((⊥ : Submonoid M) : Set M) = {1} :=
   rfl
 #align submonoid.coe_bot Submonoid.coe_bot
 #align add_submonoid.coe_bot AddSubmonoid.coe_bot
+-/
 
 /-- The inf of two submonoids is their intersection. -/
 @[to_additive "The inf of two `add_submonoid`s is their intersection."]
@@ -297,17 +327,21 @@ instance : Inf (Submonoid M) :=
       one_mem' := ⟨S₁.one_mem, S₂.one_mem⟩
       mul_mem' := fun _ _ ⟨hx, hx'⟩ ⟨hy, hy'⟩ => ⟨S₁.mul_mem hx hy, S₂.mul_mem hx' hy'⟩ }⟩
 
+#print Submonoid.coe_inf /-
 @[simp, to_additive]
 theorem coe_inf (p p' : Submonoid M) : ((p ⊓ p' : Submonoid M) : Set M) = p ∩ p' :=
   rfl
 #align submonoid.coe_inf Submonoid.coe_inf
 #align add_submonoid.coe_inf AddSubmonoid.coe_inf
+-/
 
+#print Submonoid.mem_inf /-
 @[simp, to_additive]
 theorem mem_inf {p p' : Submonoid M} {x : M} : x ∈ p ⊓ p' ↔ x ∈ p ∧ x ∈ p' :=
   Iff.rfl
 #align submonoid.mem_inf Submonoid.mem_inf
 #align add_submonoid.mem_inf AddSubmonoid.mem_inf
+-/
 
 @[to_additive]
 instance : InfSet (Submonoid M) :=
@@ -318,29 +352,37 @@ instance : InfSet (Submonoid M) :=
         Set.mem_biInter fun i h =>
           i.mul_mem (by apply Set.mem_iInter₂.1 hx i h) (by apply Set.mem_iInter₂.1 hy i h) }⟩
 
+#print Submonoid.coe_sInf /-
 @[simp, norm_cast, to_additive]
 theorem coe_sInf (S : Set (Submonoid M)) : ((sInf S : Submonoid M) : Set M) = ⋂ s ∈ S, ↑s :=
   rfl
 #align submonoid.coe_Inf Submonoid.coe_sInf
 #align add_submonoid.coe_Inf AddSubmonoid.coe_sInf
+-/
 
+#print Submonoid.mem_sInf /-
 @[to_additive]
 theorem mem_sInf {S : Set (Submonoid M)} {x : M} : x ∈ sInf S ↔ ∀ p ∈ S, x ∈ p :=
   Set.mem_iInter₂
 #align submonoid.mem_Inf Submonoid.mem_sInf
 #align add_submonoid.mem_Inf AddSubmonoid.mem_sInf
+-/
 
+#print Submonoid.mem_iInf /-
 @[to_additive]
 theorem mem_iInf {ι : Sort _} {S : ι → Submonoid M} {x : M} : (x ∈ ⨅ i, S i) ↔ ∀ i, x ∈ S i := by
   simp only [iInf, mem_Inf, Set.forall_range_iff]
 #align submonoid.mem_infi Submonoid.mem_iInf
 #align add_submonoid.mem_infi AddSubmonoid.mem_iInf
+-/
 
+#print Submonoid.coe_iInf /-
 @[simp, norm_cast, to_additive]
 theorem coe_iInf {ι : Sort _} {S : ι → Submonoid M} : (↑(⨅ i, S i) : Set M) = ⋂ i, S i := by
   simp only [iInf, coe_Inf, Set.biInter_range]
 #align submonoid.coe_infi Submonoid.coe_iInf
 #align add_submonoid.coe_infi AddSubmonoid.coe_iInf
+-/
 
 /-- Submonoids of a monoid form a complete lattice. -/
 @[to_additive "The `add_submonoid`s of an `add_monoid` form a complete lattice."]
@@ -402,35 +444,44 @@ def closure (s : Set M) : Submonoid M :=
 #align add_submonoid.closure AddSubmonoid.closure
 -/
 
+#print Submonoid.mem_closure /-
 @[to_additive]
 theorem mem_closure {x : M} : x ∈ closure s ↔ ∀ S : Submonoid M, s ⊆ S → x ∈ S :=
   mem_sInf
 #align submonoid.mem_closure Submonoid.mem_closure
 #align add_submonoid.mem_closure AddSubmonoid.mem_closure
+-/
 
+#print Submonoid.subset_closure /-
 /-- The submonoid generated by a set includes the set. -/
 @[simp, to_additive "The `add_submonoid` generated by a set includes the set."]
 theorem subset_closure : s ⊆ closure s := fun x hx => mem_closure.2 fun S hS => hS hx
 #align submonoid.subset_closure Submonoid.subset_closure
 #align add_submonoid.subset_closure AddSubmonoid.subset_closure
+-/
 
+#print Submonoid.not_mem_of_not_mem_closure /-
 @[to_additive]
 theorem not_mem_of_not_mem_closure {P : M} (hP : P ∉ closure s) : P ∉ s := fun h =>
   hP (subset_closure h)
 #align submonoid.not_mem_of_not_mem_closure Submonoid.not_mem_of_not_mem_closure
 #align add_submonoid.not_mem_of_not_mem_closure AddSubmonoid.not_mem_of_not_mem_closure
+-/
 
 variable {S}
 
 open Set
 
+#print Submonoid.closure_le /-
 /-- A submonoid `S` includes `closure s` if and only if it includes `s`. -/
 @[simp, to_additive "An additive submonoid `S` includes `closure s` if and only if it includes `s`"]
 theorem closure_le : closure s ≤ S ↔ s ⊆ S :=
   ⟨Subset.trans subset_closure, fun h => sInf_le h⟩
 #align submonoid.closure_le Submonoid.closure_le
 #align add_submonoid.closure_le AddSubmonoid.closure_le
+-/
 
+#print Submonoid.closure_mono /-
 /-- Submonoid closure of a set is monotone in its argument: if `s ⊆ t`,
 then `closure s ≤ closure t`. -/
 @[to_additive
@@ -439,15 +490,19 @@ theorem closure_mono ⦃s t : Set M⦄ (h : s ⊆ t) : closure s ≤ closure t :
   closure_le.2 <| Subset.trans h subset_closure
 #align submonoid.closure_mono Submonoid.closure_mono
 #align add_submonoid.closure_mono AddSubmonoid.closure_mono
+-/
 
+#print Submonoid.closure_eq_of_le /-
 @[to_additive]
 theorem closure_eq_of_le (h₁ : s ⊆ S) (h₂ : S ≤ closure s) : closure s = S :=
   le_antisymm (closure_le.2 h₁) h₂
 #align submonoid.closure_eq_of_le Submonoid.closure_eq_of_le
 #align add_submonoid.closure_eq_of_le AddSubmonoid.closure_eq_of_le
+-/
 
 variable (S)
 
+#print Submonoid.closure_induction /-
 /-- An induction principle for closure membership. If `p` holds for `1` and all elements of `s`, and
 is preserved under multiplication, then `p` holds for all elements of the closure of `s`. -/
 @[elab_as_elim,
@@ -458,7 +513,9 @@ theorem closure_induction {p : M → Prop} {x} (h : x ∈ closure s) (Hs : ∀ x
   (@closure_le _ _ _ ⟨p, Hmul, H1⟩).2 Hs h
 #align submonoid.closure_induction Submonoid.closure_induction
 #align add_submonoid.closure_induction AddSubmonoid.closure_induction
+-/
 
+#print Submonoid.closure_induction' /-
 /-- A dependent version of `submonoid.closure_induction`.  -/
 @[elab_as_elim, to_additive "A dependent version of `add_submonoid.closure_induction`. "]
 theorem closure_induction' (s : Set M) {p : ∀ x, x ∈ closure s → Prop}
@@ -471,7 +528,9 @@ theorem closure_induction' (s : Set M) {p : ∀ x, x ∈ closure s → Prop}
       ⟨_, Hmul _ _ _ _ hx hy⟩
 #align submonoid.closure_induction' Submonoid.closure_induction'
 #align add_submonoid.closure_induction' AddSubmonoid.closure_induction'
+-/
 
+#print Submonoid.closure_induction₂ /-
 /-- An induction principle for closure membership for predicates with two arguments.  -/
 @[elab_as_elim,
   to_additive
@@ -486,7 +545,9 @@ theorem closure_induction₂ {p : M → M → Prop} {x} {y : M} (hx : x ∈ clos
     (H1_left y) fun x z h₁ h₂ => Hmul_left _ _ _ h₁ h₂
 #align submonoid.closure_induction₂ Submonoid.closure_induction₂
 #align add_submonoid.closure_induction₂ AddSubmonoid.closure_induction₂
+-/
 
+#print Submonoid.dense_induction /-
 /-- If `s` is a dense set in a monoid `M`, `submonoid.closure s = ⊤`, then in order to prove that
 some predicate `p` holds for all `x : M` it suffices to verify `p x` for `x ∈ s`, verify `p 1`,
 and verify that `p x` and `p y` imply `p (x * y)`. -/
@@ -500,9 +561,11 @@ theorem dense_induction {p : M → Prop} (x : M) {s : Set M} (hs : closure s = �
   simpa [hs] using this x
 #align submonoid.dense_induction Submonoid.dense_induction
 #align add_submonoid.dense_induction AddSubmonoid.dense_induction
+-/
 
 variable (M)
 
+#print Submonoid.gi /-
 /-- `closure` forms a Galois insertion with the coercion to set. -/
 @[to_additive "`closure` forms a Galois insertion with the coercion to set."]
 protected def gi : GaloisInsertion (@closure M _) coe
@@ -513,46 +576,60 @@ protected def gi : GaloisInsertion (@closure M _) coe
   choice_eq s h := rfl
 #align submonoid.gi Submonoid.gi
 #align add_submonoid.gi AddSubmonoid.gi
+-/
 
 variable {M}
 
+#print Submonoid.closure_eq /-
 /-- Closure of a submonoid `S` equals `S`. -/
 @[simp, to_additive "Additive closure of an additive submonoid `S` equals `S`"]
 theorem closure_eq : closure (S : Set M) = S :=
   (Submonoid.gi M).l_u_eq S
 #align submonoid.closure_eq Submonoid.closure_eq
 #align add_submonoid.closure_eq AddSubmonoid.closure_eq
+-/
 
+#print Submonoid.closure_empty /-
 @[simp, to_additive]
 theorem closure_empty : closure (∅ : Set M) = ⊥ :=
   (Submonoid.gi M).gc.l_bot
 #align submonoid.closure_empty Submonoid.closure_empty
 #align add_submonoid.closure_empty AddSubmonoid.closure_empty
+-/
 
+#print Submonoid.closure_univ /-
 @[simp, to_additive]
 theorem closure_univ : closure (univ : Set M) = ⊤ :=
   @coe_top M _ ▸ closure_eq ⊤
 #align submonoid.closure_univ Submonoid.closure_univ
 #align add_submonoid.closure_univ AddSubmonoid.closure_univ
+-/
 
+#print Submonoid.closure_union /-
 @[to_additive]
 theorem closure_union (s t : Set M) : closure (s ∪ t) = closure s ⊔ closure t :=
   (Submonoid.gi M).gc.l_sup
 #align submonoid.closure_union Submonoid.closure_union
 #align add_submonoid.closure_union AddSubmonoid.closure_union
+-/
 
+#print Submonoid.closure_iUnion /-
 @[to_additive]
 theorem closure_iUnion {ι} (s : ι → Set M) : closure (⋃ i, s i) = ⨆ i, closure (s i) :=
   (Submonoid.gi M).gc.l_iSup
 #align submonoid.closure_Union Submonoid.closure_iUnion
 #align add_submonoid.closure_Union AddSubmonoid.closure_iUnion
+-/
 
+#print Submonoid.closure_singleton_le_iff_mem /-
 @[simp, to_additive]
 theorem closure_singleton_le_iff_mem (m : M) (p : Submonoid M) : closure {m} ≤ p ↔ m ∈ p := by
   rw [closure_le, singleton_subset_iff, SetLike.mem_coe]
 #align submonoid.closure_singleton_le_iff_mem Submonoid.closure_singleton_le_iff_mem
 #align add_submonoid.closure_singleton_le_iff_mem AddSubmonoid.closure_singleton_le_iff_mem
+-/
 
+#print Submonoid.mem_iSup /-
 @[to_additive]
 theorem mem_iSup {ι : Sort _} (p : ι → Submonoid M) {m : M} :
     (m ∈ ⨆ i, p i) ↔ ∀ N, (∀ i, p i ≤ N) → m ∈ N :=
@@ -561,26 +638,33 @@ theorem mem_iSup {ι : Sort _} (p : ι → Submonoid M) {m : M} :
   simp only [closure_singleton_le_iff_mem]
 #align submonoid.mem_supr Submonoid.mem_iSup
 #align add_submonoid.mem_supr AddSubmonoid.mem_iSup
+-/
 
+#print Submonoid.iSup_eq_closure /-
 @[to_additive]
 theorem iSup_eq_closure {ι : Sort _} (p : ι → Submonoid M) :
     (⨆ i, p i) = Submonoid.closure (⋃ i, (p i : Set M)) := by
   simp_rw [Submonoid.closure_iUnion, Submonoid.closure_eq]
 #align submonoid.supr_eq_closure Submonoid.iSup_eq_closure
 #align add_submonoid.supr_eq_closure AddSubmonoid.iSup_eq_closure
+-/
 
+#print Submonoid.disjoint_def /-
 @[to_additive]
 theorem disjoint_def {p₁ p₂ : Submonoid M} : Disjoint p₁ p₂ ↔ ∀ {x : M}, x ∈ p₁ → x ∈ p₂ → x = 1 :=
   by simp_rw [disjoint_iff_inf_le, SetLike.le_def, mem_inf, and_imp, mem_bot]
 #align submonoid.disjoint_def Submonoid.disjoint_def
 #align add_submonoid.disjoint_def AddSubmonoid.disjoint_def
+-/
 
+#print Submonoid.disjoint_def' /-
 @[to_additive]
 theorem disjoint_def' {p₁ p₂ : Submonoid M} :
     Disjoint p₁ p₂ ↔ ∀ {x y : M}, x ∈ p₁ → y ∈ p₂ → x = y → x = 1 :=
   disjoint_def.trans ⟨fun h x y hx hy hxy => h hx <| hxy.symm ▸ hy, fun h x hx hx' => h hx hx' rfl⟩
 #align submonoid.disjoint_def' Submonoid.disjoint_def'
 #align add_submonoid.disjoint_def' AddSubmonoid.disjoint_def'
+-/
 
 end Submonoid
 
@@ -602,12 +686,15 @@ def eqLocusM (f g : M →* N) : Submonoid M
 #align add_monoid_hom.eq_mlocus AddMonoidHom.eqLocusM
 -/
 
+#print MonoidHom.eqLocusM_same /-
 @[simp, to_additive]
 theorem eqLocusM_same (f : M →* N) : f.eqLocus f = ⊤ :=
   SetLike.ext fun _ => eq_self_iff_true _
 #align monoid_hom.eq_mlocus_same MonoidHom.eqLocusM_same
 #align add_monoid_hom.eq_mlocus_same AddMonoidHom.eqLocusM_same
+-/
 
+#print MonoidHom.eqOn_closureM /-
 /-- If two monoid homomorphisms are equal on a set, then they are equal on its submonoid closure. -/
 @[to_additive
       "If two monoid homomorphisms are equal on a set, then they are equal on its submonoid\nclosure."]
@@ -615,19 +702,24 @@ theorem eqOn_closureM {f g : M →* N} {s : Set M} (h : Set.EqOn f g s) : Set.Eq
   show closure s ≤ f.eqLocus g from closure_le.2 h
 #align monoid_hom.eq_on_mclosure MonoidHom.eqOn_closureM
 #align add_monoid_hom.eq_on_mclosure AddMonoidHom.eqOn_closureM
+-/
 
+#print MonoidHom.eq_of_eqOn_topM /-
 @[to_additive]
 theorem eq_of_eqOn_topM {f g : M →* N} (h : Set.EqOn f g (⊤ : Submonoid M)) : f = g :=
   ext fun x => h trivial
 #align monoid_hom.eq_of_eq_on_mtop MonoidHom.eq_of_eqOn_topM
 #align add_monoid_hom.eq_of_eq_on_mtop AddMonoidHom.eq_of_eqOn_topM
+-/
 
+#print MonoidHom.eq_of_eqOn_denseM /-
 @[to_additive]
 theorem eq_of_eqOn_denseM {s : Set M} (hs : closure s = ⊤) {f g : M →* N} (h : s.EqOn f g) :
     f = g :=
   eq_of_eqOn_topM <| hs ▸ eqOn_closureM h
 #align monoid_hom.eq_of_eq_on_mdense MonoidHom.eq_of_eqOn_denseM
 #align add_monoid_hom.eq_of_eq_on_mdense AddMonoidHom.eq_of_eqOn_denseM
+-/
 
 end MonoidHom
 
@@ -651,6 +743,7 @@ def IsUnit.submonoid (M : Type _) [Monoid M] : Submonoid M
 #align is_add_unit.add_submonoid IsAddUnit.addSubmonoid
 -/
 
+#print IsUnit.mem_submonoid_iff /-
 @[to_additive]
 theorem IsUnit.mem_submonoid_iff {M : Type _} [Monoid M] (a : M) :
     a ∈ IsUnit.submonoid M ↔ IsUnit a :=
@@ -659,6 +752,7 @@ theorem IsUnit.mem_submonoid_iff {M : Type _} [Monoid M] (a : M) :
   rw [Set.mem_setOf_eq]
 #align is_unit.mem_submonoid_iff IsUnit.mem_submonoid_iff
 #align is_add_unit.mem_add_submonoid_iff IsAddUnit.mem_addSubmonoid_iff
+-/
 
 end IsUnit
 
@@ -666,6 +760,7 @@ namespace MonoidHom
 
 open Submonoid
 
+#print MonoidHom.ofClosureMEqTopLeft /-
 /-- Let `s` be a subset of a monoid `M` such that the closure of `s` is the whole monoid.
 Then `monoid_hom.of_mclosure_eq_top_left` defines a monoid homomorphism from `M` asking for
 a proof of `f (x * y) = f x * f y` only for `x ∈ s`. -/
@@ -681,14 +776,18 @@ def ofClosureMEqTopLeft {M N} [Monoid M] [Monoid N] {s : Set M} (f : M → N) (h
       rw [mul_assoc, ha, ha, hb, mul_assoc]
 #align monoid_hom.of_mclosure_eq_top_left MonoidHom.ofClosureMEqTopLeft
 #align add_monoid_hom.of_mclosure_eq_top_left AddMonoidHom.ofClosureMEqTopLeft
+-/
 
+#print MonoidHom.coe_ofClosureMEqTopLeft /-
 @[simp, norm_cast, to_additive]
 theorem coe_ofClosureMEqTopLeft (f : M → N) (hs : closure s = ⊤) (h1 hmul) :
     ⇑(ofClosureMEqTopLeft f hs h1 hmul) = f :=
   rfl
 #align monoid_hom.coe_of_mclosure_eq_top_left MonoidHom.coe_ofClosureMEqTopLeft
 #align add_monoid_hom.coe_of_mclosure_eq_top_left AddMonoidHom.coe_ofClosureMEqTopLeft
+-/
 
+#print MonoidHom.ofClosureMEqTopRight /-
 /-- Let `s` be a subset of a monoid `M` such that the closure of `s` is the whole monoid.
 Then `monoid_hom.of_mclosure_eq_top_right` defines a monoid homomorphism from `M` asking for
 a proof of `f (x * y) = f x * f y` only for `y ∈ s`. -/
@@ -704,13 +803,16 @@ def ofClosureMEqTopRight {M N} [Monoid M] [Monoid N] {s : Set M} (f : M → N) (
       (fun y₁ y₂ h₁ h₂ x => by simp only [← mul_assoc, h₁, h₂]) x
 #align monoid_hom.of_mclosure_eq_top_right MonoidHom.ofClosureMEqTopRight
 #align add_monoid_hom.of_mclosure_eq_top_right AddMonoidHom.ofClosureMEqTopRight
+-/
 
+#print MonoidHom.coe_ofClosureMEqTopRight /-
 @[simp, norm_cast, to_additive]
 theorem coe_ofClosureMEqTopRight (f : M → N) (hs : closure s = ⊤) (h1 hmul) :
     ⇑(ofClosureMEqTopRight f hs h1 hmul) = f :=
   rfl
 #align monoid_hom.coe_of_mclosure_eq_top_right MonoidHom.coe_ofClosureMEqTopRight
 #align add_monoid_hom.coe_of_mclosure_eq_top_right AddMonoidHom.coe_ofClosureMEqTopRight
+-/
 
 end MonoidHom
 

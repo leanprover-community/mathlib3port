@@ -77,6 +77,7 @@ attribute [simp] shape
 
 variable {V} {c : ComplexShape ι}
 
+#print HomologicalComplex.d_comp_d /-
 @[simp, reassoc]
 theorem d_comp_d (C : HomologicalComplex V c) (i j k : ι) : C.d i j ≫ C.d j k = 0 :=
   by
@@ -86,7 +87,9 @@ theorem d_comp_d (C : HomologicalComplex V c) (i j k : ι) : C.d i j ≫ C.d j k
     · rw [C.shape j k hjk, comp_zero]
   · rw [C.shape i j hij, zero_comp]
 #align homological_complex.d_comp_d HomologicalComplex.d_comp_d
+-/
 
+#print HomologicalComplex.ext /-
 theorem ext {C₁ C₂ : HomologicalComplex V c} (h_X : C₁.pt = C₂.pt)
     (h_d :
       ∀ i j : ι,
@@ -102,6 +105,7 @@ theorem ext {C₁ C₂ : HomologicalComplex V c} (h_X : C₁.pt = C₂.pt)
   · simpa only [id_comp, eq_to_hom_refl, comp_id] using h_d i j hij
   · rw [C₁_shape' i j hij, C₂_shape' i j hij]
 #align homological_complex.ext HomologicalComplex.ext
+-/
 
 end HomologicalComplex
 
@@ -125,16 +129,20 @@ abbrev CochainComplex (α : Type _) [AddRightCancelSemigroup α] [One α] : Type
 
 namespace ChainComplex
 
+#print ChainComplex.prev /-
 @[simp]
 theorem prev (α : Type _) [AddRightCancelSemigroup α] [One α] (i : α) :
     (ComplexShape.down α).prev i = i + 1 :=
   (ComplexShape.down α).prev_eq' rfl
 #align chain_complex.prev ChainComplex.prev
+-/
 
+#print ChainComplex.next /-
 @[simp]
 theorem next (α : Type _) [AddGroup α] [One α] (i : α) : (ComplexShape.down α).next i = i - 1 :=
   (ComplexShape.down α).next_eq' <| sub_add_cancel _ _
 #align chain_complex.next ChainComplex.next
+-/
 
 #print ChainComplex.next_nat_zero /-
 @[simp]
@@ -158,16 +166,20 @@ end ChainComplex
 
 namespace CochainComplex
 
+#print CochainComplex.prev /-
 @[simp]
 theorem prev (α : Type _) [AddGroup α] [One α] (i : α) : (ComplexShape.up α).prev i = i - 1 :=
   (ComplexShape.up α).prev_eq' <| sub_add_cancel _ _
 #align cochain_complex.prev CochainComplex.prev
+-/
 
+#print CochainComplex.next /-
 @[simp]
 theorem next (α : Type _) [AddRightCancelSemigroup α] [One α] (i : α) :
     (ComplexShape.up α).next i = i + 1 :=
   (ComplexShape.up α).next_eq' rfl
 #align cochain_complex.next CochainComplex.next
+-/
 
 #print CochainComplex.prev_nat_zero /-
 @[simp]
@@ -204,6 +216,7 @@ structure Hom (A B : HomologicalComplex V c) where
 #align homological_complex.hom HomologicalComplex.Hom
 -/
 
+#print HomologicalComplex.Hom.comm /-
 @[simp, reassoc]
 theorem Hom.comm {A B : HomologicalComplex V c} (f : A.Hom B) (i j : ι) :
     f.f i ≫ B.d i j = A.d i j ≫ f.f j :=
@@ -212,6 +225,7 @@ theorem Hom.comm {A B : HomologicalComplex V c} (f : A.Hom B) (i j : ι) :
   · exact f.comm' i j hij
   rw [A.shape i j hij, B.shape i j hij, comp_zero, zero_comp]
 #align homological_complex.hom.comm HomologicalComplex.Hom.comm
+-/
 
 instance (A B : HomologicalComplex V c) : Inhabited (Hom A B) :=
   ⟨{ f := fun i => 0 }⟩
@@ -241,35 +255,45 @@ instance : Category (HomologicalComplex V c)
 
 end
 
+#print HomologicalComplex.id_f /-
 @[simp]
 theorem id_f (C : HomologicalComplex V c) (i : ι) : Hom.f (𝟙 C) i = 𝟙 (C.pt i) :=
   rfl
 #align homological_complex.id_f HomologicalComplex.id_f
+-/
 
+#print HomologicalComplex.comp_f /-
 @[simp]
 theorem comp_f {C₁ C₂ C₃ : HomologicalComplex V c} (f : C₁ ⟶ C₂) (g : C₂ ⟶ C₃) (i : ι) :
     (f ≫ g).f i = f.f i ≫ g.f i :=
   rfl
 #align homological_complex.comp_f HomologicalComplex.comp_f
+-/
 
+#print HomologicalComplex.eqToHom_f /-
 @[simp]
 theorem eqToHom_f {C₁ C₂ : HomologicalComplex V c} (h : C₁ = C₂) (n : ι) :
     HomologicalComplex.Hom.f (eqToHom h) n =
       eqToHom (congr_fun (congr_arg HomologicalComplex.x h) n) :=
   by subst h; rfl
 #align homological_complex.eq_to_hom_f HomologicalComplex.eqToHom_f
+-/
 
+#print HomologicalComplex.hom_f_injective /-
 -- We'll use this later to show that `homological_complex V c` is preadditive when `V` is.
 theorem hom_f_injective {C₁ C₂ : HomologicalComplex V c} :
     Function.Injective fun f : Hom C₁ C₂ => f.f := by tidy
 #align homological_complex.hom_f_injective HomologicalComplex.hom_f_injective
+-/
 
 instance : HasZeroMorphisms (HomologicalComplex V c) where Zero C D := ⟨{ f := fun i => 0 }⟩
 
+#print HomologicalComplex.zero_f /-
 @[simp]
 theorem zero_f (C D : HomologicalComplex V c) (i : ι) : (0 : C ⟶ D).f i = 0 :=
   rfl
 #align homological_complex.zero_apply HomologicalComplex.zero_f
+-/
 
 open scoped ZeroObject
 
@@ -282,9 +306,11 @@ noncomputable def zero [HasZeroObject V] : HomologicalComplex V c
 #align homological_complex.zero HomologicalComplex.zero
 -/
 
+#print HomologicalComplex.isZero_zero /-
 theorem isZero_zero [HasZeroObject V] : IsZero (zero : HomologicalComplex V c) := by
   refine' ⟨fun X => ⟨⟨⟨0⟩, fun f => _⟩⟩, fun X => ⟨⟨⟨0⟩, fun f => _⟩⟩⟩ <;> ext
 #align homological_complex.is_zero_zero HomologicalComplex.isZero_zero
+-/
 
 instance [HasZeroObject V] : HasZeroObject (HomologicalComplex V c) :=
   ⟨⟨zero, isZero_zero⟩⟩
@@ -292,10 +318,12 @@ instance [HasZeroObject V] : HasZeroObject (HomologicalComplex V c) :=
 noncomputable instance [HasZeroObject V] : Inhabited (HomologicalComplex V c) :=
   ⟨zero⟩
 
+#print HomologicalComplex.congr_hom /-
 theorem congr_hom {C D : HomologicalComplex V c} {f g : C ⟶ D} (w : f = g) (i : ι) :
     f.f i = g.f i :=
   congr_fun (congr_arg Hom.f w) i
 #align homological_complex.congr_hom HomologicalComplex.congr_hom
+-/
 
 section
 
@@ -336,6 +364,7 @@ open scoped Classical
 
 noncomputable section
 
+#print HomologicalComplex.d_comp_eqToHom /-
 /-- If `C.d i j` and `C.d i j'` are both allowed, then we must have `j = j'`,
 and so the differentials only differ by an `eq_to_hom`.
 -/
@@ -346,7 +375,9 @@ theorem d_comp_eqToHom {i j j' : ι} (rij : c.Rel i j) (rij' : c.Rel i j') :
   have P : ∀ h : j' = j, C.d i j' ≫ eq_to_hom (congr_arg C.X h) = C.d i j := by rintro rfl; simp
   apply P
 #align homological_complex.d_comp_eq_to_hom HomologicalComplex.d_comp_eqToHom
+-/
 
+#print HomologicalComplex.eqToHom_comp_d /-
 /-- If `C.d i j` and `C.d i' j` are both allowed, then we must have `i = i'`,
 and so the differentials only differ by an `eq_to_hom`.
 -/
@@ -357,20 +388,25 @@ theorem eqToHom_comp_d {i i' j : ι} (rij : c.Rel i j) (rij' : c.Rel i' j) :
   have P : ∀ h : i = i', eq_to_hom (congr_arg C.X h) ≫ C.d i' j = C.d i j := by rintro rfl; simp
   apply P
 #align homological_complex.eq_to_hom_comp_d HomologicalComplex.eqToHom_comp_d
+-/
 
+#print HomologicalComplex.kernel_eq_kernel /-
 theorem kernel_eq_kernel [HasKernels V] {i j j' : ι} (r : c.Rel i j) (r' : c.Rel i j') :
     kernelSubobject (C.d i j) = kernelSubobject (C.d i j') :=
   by
   rw [← d_comp_eq_to_hom C r r']
   apply kernel_subobject_comp_mono
 #align homological_complex.kernel_eq_kernel HomologicalComplex.kernel_eq_kernel
+-/
 
+#print HomologicalComplex.image_eq_image /-
 theorem image_eq_image [HasImages V] [HasEqualizers V] {i i' j : ι} (r : c.Rel i j)
     (r' : c.Rel i' j) : imageSubobject (C.d i j) = imageSubobject (C.d i' j) :=
   by
   rw [← eq_to_hom_comp_d C r r']
   apply image_subobject_iso_comp
 #align homological_complex.image_eq_image HomologicalComplex.image_eq_image
+-/
 
 section
 
@@ -444,66 +480,88 @@ abbrev dFrom (i : ι) : C.pt i ⟶ C.xNext i :=
 #align homological_complex.d_from HomologicalComplex.dFrom
 -/
 
+#print HomologicalComplex.dTo_eq /-
 theorem dTo_eq {i j : ι} (r : c.Rel i j) : C.dTo j = (C.xPrevIso r).Hom ≫ C.d i j :=
   by
   obtain rfl := c.prev_eq' r
   exact (category.id_comp _).symm
 #align homological_complex.d_to_eq HomologicalComplex.dTo_eq
+-/
 
+#print HomologicalComplex.dTo_eq_zero /-
 @[simp]
 theorem dTo_eq_zero {j : ι} (h : ¬c.Rel (c.prev j) j) : C.dTo j = 0 :=
   C.shape _ _ h
 #align homological_complex.d_to_eq_zero HomologicalComplex.dTo_eq_zero
+-/
 
+#print HomologicalComplex.dFrom_eq /-
 theorem dFrom_eq {i j : ι} (r : c.Rel i j) : C.dFrom i = C.d i j ≫ (C.xNextIso r).inv :=
   by
   obtain rfl := c.next_eq' r
   exact (category.comp_id _).symm
 #align homological_complex.d_from_eq HomologicalComplex.dFrom_eq
+-/
 
+#print HomologicalComplex.dFrom_eq_zero /-
 @[simp]
 theorem dFrom_eq_zero {i : ι} (h : ¬c.Rel i (c.next i)) : C.dFrom i = 0 :=
   C.shape _ _ h
 #align homological_complex.d_from_eq_zero HomologicalComplex.dFrom_eq_zero
+-/
 
+#print HomologicalComplex.xPrevIso_comp_dTo /-
 @[simp, reassoc]
 theorem xPrevIso_comp_dTo {i j : ι} (r : c.Rel i j) : (C.xPrevIso r).inv ≫ C.dTo j = C.d i j := by
   simp [C.d_to_eq r]
 #align homological_complex.X_prev_iso_comp_d_to HomologicalComplex.xPrevIso_comp_dTo
+-/
 
+#print HomologicalComplex.xPrevIsoSelf_comp_dTo /-
 @[simp, reassoc]
 theorem xPrevIsoSelf_comp_dTo {j : ι} (h : ¬c.Rel (c.prev j) j) :
     (C.xPrevIsoSelf h).inv ≫ C.dTo j = 0 := by simp [h]
 #align homological_complex.X_prev_iso_self_comp_d_to HomologicalComplex.xPrevIsoSelf_comp_dTo
+-/
 
+#print HomologicalComplex.dFrom_comp_xNextIso /-
 @[simp, reassoc]
 theorem dFrom_comp_xNextIso {i j : ι} (r : c.Rel i j) : C.dFrom i ≫ (C.xNextIso r).Hom = C.d i j :=
   by simp [C.d_from_eq r]
 #align homological_complex.d_from_comp_X_next_iso HomologicalComplex.dFrom_comp_xNextIso
+-/
 
+#print HomologicalComplex.dFrom_comp_xNextIsoSelf /-
 @[simp, reassoc]
 theorem dFrom_comp_xNextIsoSelf {i : ι} (h : ¬c.Rel i (c.next i)) :
     C.dFrom i ≫ (C.xNextIsoSelf h).Hom = 0 := by simp [h]
 #align homological_complex.d_from_comp_X_next_iso_self HomologicalComplex.dFrom_comp_xNextIsoSelf
+-/
 
+#print HomologicalComplex.dTo_comp_dFrom /-
 @[simp]
 theorem dTo_comp_dFrom (j : ι) : C.dTo j ≫ C.dFrom j = 0 :=
   C.d_comp_d _ _ _
 #align homological_complex.d_to_comp_d_from HomologicalComplex.dTo_comp_dFrom
+-/
 
+#print HomologicalComplex.kernel_from_eq_kernel /-
 theorem kernel_from_eq_kernel [HasKernels V] {i j : ι} (r : c.Rel i j) :
     kernelSubobject (C.dFrom i) = kernelSubobject (C.d i j) :=
   by
   rw [C.d_from_eq r]
   apply kernel_subobject_comp_mono
 #align homological_complex.kernel_from_eq_kernel HomologicalComplex.kernel_from_eq_kernel
+-/
 
+#print HomologicalComplex.image_to_eq_image /-
 theorem image_to_eq_image [HasImages V] [HasEqualizers V] {i j : ι} (r : c.Rel i j) :
     imageSubobject (C.dTo j) = imageSubobject (C.d i j) :=
   by
   rw [C.d_to_eq r]
   apply image_subobject_iso_comp
 #align homological_complex.image_to_eq_image HomologicalComplex.image_to_eq_image
+-/
 
 end
 
@@ -541,18 +599,22 @@ def isoOfComponents (f : ∀ i, C₁.pt i ≅ C₂.pt i)
 #align homological_complex.hom.iso_of_components HomologicalComplex.Hom.isoOfComponents
 -/
 
+#print HomologicalComplex.Hom.isoOfComponents_app /-
 @[simp]
 theorem isoOfComponents_app (f : ∀ i, C₁.pt i ≅ C₂.pt i)
     (hf : ∀ i j, c.Rel i j → (f i).Hom ≫ C₂.d i j = C₁.d i j ≫ (f j).Hom) (i : ι) :
     isoApp (isoOfComponents f hf) i = f i := by ext; simp
 #align homological_complex.hom.iso_of_components_app HomologicalComplex.Hom.isoOfComponents_app
+-/
 
+#print HomologicalComplex.Hom.isIso_of_components /-
 theorem isIso_of_components (f : C₁ ⟶ C₂) [∀ n : ι, IsIso (f.f n)] : IsIso f :=
   by
   convert is_iso.of_iso (HomologicalComplex.Hom.isoOfComponents (fun n => as_iso (f.f n)) (by tidy))
   ext n
   rfl
 #align homological_complex.hom.is_iso_of_components HomologicalComplex.Hom.isIso_of_components
+-/
 
 /-! Lemmas relating chain maps and `d_to`/`d_from`. -/
 
@@ -564,12 +626,14 @@ abbrev prev (f : Hom C₁ C₂) (j : ι) : C₁.xPrev j ⟶ C₂.xPrev j :=
 #align homological_complex.hom.prev HomologicalComplex.Hom.prev
 -/
 
+#print HomologicalComplex.Hom.prev_eq /-
 theorem prev_eq (f : Hom C₁ C₂) {i j : ι} (w : c.Rel i j) :
     f.prev j = (C₁.xPrevIso w).Hom ≫ f.f i ≫ (C₂.xPrevIso w).inv :=
   by
   obtain rfl := c.prev_eq' w
   simp only [X_prev_iso, eq_to_iso_refl, iso.refl_hom, iso.refl_inv, id_comp, comp_id]
 #align homological_complex.hom.prev_eq HomologicalComplex.Hom.prev_eq
+-/
 
 #print HomologicalComplex.Hom.next /-
 /-- `f.next i` is `f.f j` if there is some `r i j`, and `f.f j` otherwise. -/
@@ -578,22 +642,28 @@ abbrev next (f : Hom C₁ C₂) (i : ι) : C₁.xNext i ⟶ C₂.xNext i :=
 #align homological_complex.hom.next HomologicalComplex.Hom.next
 -/
 
+#print HomologicalComplex.Hom.next_eq /-
 theorem next_eq (f : Hom C₁ C₂) {i j : ι} (w : c.Rel i j) :
     f.next i = (C₁.xNextIso w).Hom ≫ f.f j ≫ (C₂.xNextIso w).inv :=
   by
   obtain rfl := c.next_eq' w
   simp only [X_next_iso, eq_to_iso_refl, iso.refl_hom, iso.refl_inv, id_comp, comp_id]
 #align homological_complex.hom.next_eq HomologicalComplex.Hom.next_eq
+-/
 
+#print HomologicalComplex.Hom.comm_from /-
 @[simp, reassoc, elementwise]
 theorem comm_from (f : Hom C₁ C₂) (i : ι) : f.f i ≫ C₂.dFrom i = C₁.dFrom i ≫ f.next i :=
   f.comm _ _
 #align homological_complex.hom.comm_from HomologicalComplex.Hom.comm_from
+-/
 
+#print HomologicalComplex.Hom.comm_to /-
 @[simp, reassoc, elementwise]
 theorem comm_to (f : Hom C₁ C₂) (j : ι) : f.prev j ≫ C₂.dTo j = C₁.dTo j ≫ f.f j :=
   f.comm _ _
 #align homological_complex.hom.comm_to HomologicalComplex.Hom.comm_to
+-/
 
 #print HomologicalComplex.Hom.sqFrom /-
 /-- A morphism of chain complexes
@@ -604,26 +674,34 @@ def sqFrom (f : Hom C₁ C₂) (i : ι) : Arrow.mk (C₁.dFrom i) ⟶ Arrow.mk (
 #align homological_complex.hom.sq_from HomologicalComplex.Hom.sqFrom
 -/
 
+#print HomologicalComplex.Hom.sqFrom_left /-
 @[simp]
 theorem sqFrom_left (f : Hom C₁ C₂) (i : ι) : (f.sqFrom i).left = f.f i :=
   rfl
 #align homological_complex.hom.sq_from_left HomologicalComplex.Hom.sqFrom_left
+-/
 
+#print HomologicalComplex.Hom.sqFrom_right /-
 @[simp]
 theorem sqFrom_right (f : Hom C₁ C₂) (i : ι) : (f.sqFrom i).right = f.next i :=
   rfl
 #align homological_complex.hom.sq_from_right HomologicalComplex.Hom.sqFrom_right
+-/
 
+#print HomologicalComplex.Hom.sqFrom_id /-
 @[simp]
 theorem sqFrom_id (C₁ : HomologicalComplex V c) (i : ι) : sqFrom (𝟙 C₁) i = 𝟙 _ :=
   rfl
 #align homological_complex.hom.sq_from_id HomologicalComplex.Hom.sqFrom_id
+-/
 
+#print HomologicalComplex.Hom.sqFrom_comp /-
 @[simp]
 theorem sqFrom_comp (f : C₁ ⟶ C₂) (g : C₂ ⟶ C₃) (i : ι) :
     sqFrom (f ≫ g) i = sqFrom f i ≫ sqFrom g i :=
   rfl
 #align homological_complex.hom.sq_from_comp HomologicalComplex.Hom.sqFrom_comp
+-/
 
 #print HomologicalComplex.Hom.sqTo /-
 /-- A morphism of chain complexes
@@ -634,15 +712,19 @@ def sqTo (f : Hom C₁ C₂) (j : ι) : Arrow.mk (C₁.dTo j) ⟶ Arrow.mk (C₂
 #align homological_complex.hom.sq_to HomologicalComplex.Hom.sqTo
 -/
 
+#print HomologicalComplex.Hom.sqTo_left /-
 @[simp]
 theorem sqTo_left (f : Hom C₁ C₂) (j : ι) : (f.sqTo j).left = f.prev j :=
   rfl
 #align homological_complex.hom.sq_to_left HomologicalComplex.Hom.sqTo_left
+-/
 
+#print HomologicalComplex.Hom.sqTo_right /-
 @[simp]
 theorem sqTo_right (f : Hom C₁ C₂) (j : ι) : (f.sqTo j).right = f.f j :=
   rfl
 #align homological_complex.hom.sq_to_right HomologicalComplex.Hom.sqTo_right
+-/
 
 end Hom
 
@@ -654,6 +736,7 @@ section Of
 
 variable {V} {α : Type _} [AddRightCancelSemigroup α] [One α] [DecidableEq α]
 
+#print ChainComplex.of /-
 /-- Construct an `α`-indexed chain complex from a dependently-typed differential.
 -/
 def of (X : α → V) (d : ∀ n, X (n + 1) ⟶ X n) (sq : ∀ n, d (n + 1) ≫ d n = 0) : ChainComplex V α :=
@@ -665,21 +748,28 @@ def of (X : α → V) (d : ∀ n, X (n + 1) ⟶ X n) (sq : ∀ n, d (n + 1) ≫ 
       simp only [category.id_comp, dif_pos rfl, eq_to_hom_refl]
       exact sq k }
 #align chain_complex.of ChainComplex.of
+-/
 
 variable (X : α → V) (d : ∀ n, X (n + 1) ⟶ X n) (sq : ∀ n, d (n + 1) ≫ d n = 0)
 
+#print ChainComplex.of_x /-
 @[simp]
 theorem of_x (n : α) : (of X d sq).pt n = X n :=
   rfl
 #align chain_complex.of_X ChainComplex.of_x
+-/
 
+#print ChainComplex.of_d /-
 @[simp]
 theorem of_d (j : α) : (of X d sq).d (j + 1) j = d j := by dsimp [of];
   rw [if_pos rfl, category.id_comp]
 #align chain_complex.of_d ChainComplex.of_d
+-/
 
+#print ChainComplex.of_d_ne /-
 theorem of_d_ne {i j : α} (h : i ≠ j + 1) : (of X d sq).d i j = 0 := by dsimp [of]; rw [dif_neg h]
 #align chain_complex.of_d_ne ChainComplex.of_d_ne
+-/
 
 end Of
 
@@ -690,6 +780,7 @@ variable {V} {α : Type _} [AddRightCancelSemigroup α] [One α] [DecidableEq α
 variable (X : α → V) (d_X : ∀ n, X (n + 1) ⟶ X n) (sq_X : ∀ n, d_X (n + 1) ≫ d_X n = 0) (Y : α → V)
   (d_Y : ∀ n, Y (n + 1) ⟶ Y n) (sq_Y : ∀ n, d_Y (n + 1) ≫ d_Y n = 0)
 
+#print ChainComplex.ofHom /-
 /-- A constructor for chain maps between `α`-indexed chain complexes built using `chain_complex.of`,
 from a dependently typed collection of morphisms.
 -/
@@ -703,6 +794,7 @@ def ofHom (f : ∀ i : α, X i ⟶ Y i) (comm : ∀ i : α, f (i + 1) ≫ d_Y i 
         simpa using comm m
       · rw [of_d_ne X _ _ h, of_d_ne Y _ _ h]; simp }
 #align chain_complex.of_hom ChainComplex.ofHom
+-/
 
 end OfHom
 
@@ -898,6 +990,7 @@ theorem mkHom_f_1 : (mkHom P Q zero one one_zero_comm succ).f 1 = one :=
 #align chain_complex.mk_hom_f_1 ChainComplex.mkHom_f_1
 -/
 
+#print ChainComplex.mkHom_f_succ_succ /-
 @[simp]
 theorem mkHom_f_succ_succ (n : ℕ) :
     (mkHom P Q zero one one_zero_comm succ).f (n + 2) =
@@ -909,6 +1002,7 @@ theorem mkHom_f_succ_succ (n : ℕ) :
   dsimp [mk_hom, mk_hom_aux]
   induction n <;> congr
 #align chain_complex.mk_hom_f_succ_succ ChainComplex.mkHom_f_succ_succ
+-/
 
 end MkHom
 
@@ -920,6 +1014,7 @@ section Of
 
 variable {V} {α : Type _} [AddRightCancelSemigroup α] [One α] [DecidableEq α]
 
+#print CochainComplex.of /-
 /-- Construct an `α`-indexed cochain complex from a dependently-typed differential.
 -/
 def of (X : α → V) (d : ∀ n, X n ⟶ X (n + 1)) (sq : ∀ n, d n ≫ d (n + 1) = 0) :
@@ -933,21 +1028,28 @@ def of (X : α → V) (d : ∀ n, X n ⟶ X (n + 1)) (sq : ∀ n, d n ≫ d (n +
         simp [sq]
       all_goals simp }
 #align cochain_complex.of CochainComplex.of
+-/
 
 variable (X : α → V) (d : ∀ n, X n ⟶ X (n + 1)) (sq : ∀ n, d n ≫ d (n + 1) = 0)
 
+#print CochainComplex.of_x /-
 @[simp]
 theorem of_x (n : α) : (of X d sq).pt n = X n :=
   rfl
 #align cochain_complex.of_X CochainComplex.of_x
+-/
 
+#print CochainComplex.of_d /-
 @[simp]
 theorem of_d (j : α) : (of X d sq).d j (j + 1) = d j := by dsimp [of];
   rw [if_pos rfl, category.comp_id]
 #align cochain_complex.of_d CochainComplex.of_d
+-/
 
+#print CochainComplex.of_d_ne /-
 theorem of_d_ne {i j : α} (h : i + 1 ≠ j) : (of X d sq).d i j = 0 := by dsimp [of]; rw [dif_neg h]
 #align cochain_complex.of_d_ne CochainComplex.of_d_ne
+-/
 
 end Of
 
@@ -958,6 +1060,7 @@ variable {V} {α : Type _} [AddRightCancelSemigroup α] [One α] [DecidableEq α
 variable (X : α → V) (d_X : ∀ n, X n ⟶ X (n + 1)) (sq_X : ∀ n, d_X n ≫ d_X (n + 1) = 0) (Y : α → V)
   (d_Y : ∀ n, Y n ⟶ Y (n + 1)) (sq_Y : ∀ n, d_Y n ≫ d_Y (n + 1) = 0)
 
+#print CochainComplex.ofHom /-
 /--
 A constructor for chain maps between `α`-indexed cochain complexes built using `cochain_complex.of`,
 from a dependently typed collection of morphisms.
@@ -972,6 +1075,7 @@ def ofHom (f : ∀ i : α, X i ⟶ Y i) (comm : ∀ i : α, f i ≫ d_Y i = d_X 
         simpa using comm n
       · rw [of_d_ne X _ _ h, of_d_ne Y _ _ h]; simp }
 #align cochain_complex.of_hom CochainComplex.ofHom
+-/
 
 end OfHom
 
@@ -1167,6 +1271,7 @@ theorem mkHom_f_1 : (mkHom P Q zero one one_zero_comm succ).f 1 = one :=
 #align cochain_complex.mk_hom_f_1 CochainComplex.mkHom_f_1
 -/
 
+#print CochainComplex.mkHom_f_succ_succ /-
 @[simp]
 theorem mkHom_f_succ_succ (n : ℕ) :
     (mkHom P Q zero one one_zero_comm succ).f (n + 2) =
@@ -1178,6 +1283,7 @@ theorem mkHom_f_succ_succ (n : ℕ) :
   dsimp [mk_hom, mk_hom_aux]
   induction n <;> congr
 #align cochain_complex.mk_hom_f_succ_succ CochainComplex.mkHom_f_succ_succ
+-/
 
 end MkHom
 

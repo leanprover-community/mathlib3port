@@ -53,6 +53,7 @@ theorem join_concat (L : List (List α)) (l : List α) : join (L.concat l) = joi
 #align list.join_concat List.join_concat
 -/
 
+#print List.join_filter_isEmpty_eq_false /-
 @[simp]
 theorem join_filter_isEmpty_eq_false [DecidablePred fun l : List α => l.Empty = false] :
     ∀ {L : List (List α)}, join (L.filterₓ fun l => l.Empty = false) = L.join
@@ -60,12 +61,15 @@ theorem join_filter_isEmpty_eq_false [DecidablePred fun l : List α => l.Empty =
   | [] :: L => by simp [@join_filter_empty_eq_ff L]
   | (a :: l) :: L => by simp [@join_filter_empty_eq_ff L]
 #align list.join_filter_empty_eq_ff List.join_filter_isEmpty_eq_false
+-/
 
+#print List.join_filter_ne_nil /-
 @[simp]
 theorem join_filter_ne_nil [DecidablePred fun l : List α => l ≠ []] {L : List (List α)} :
     join (L.filterₓ fun l => l ≠ []) = L.join := by
   simp [join_filter_empty_eq_ff, ← empty_iff_eq_nil]
 #align list.join_filter_ne_nil List.join_filter_ne_nil
+-/
 
 #print List.join_join /-
 theorem join_join (l : List (List (List α))) : l.join.join = (l.map join).join := by induction l;
@@ -80,16 +84,20 @@ theorem length_join (L : List (List α)) : length (join L) = sum (map length L) 
 #align list.length_join List.length_join
 -/
 
+#print List.length_bind /-
 @[simp]
 theorem length_bind (l : List α) (f : α → List β) :
     length (List.bind l f) = sum (map (length ∘ f) l) := by rw [List.bind, length_join, map_map]
 #align list.length_bind List.length_bind
+-/
 
+#print List.bind_eq_nil /-
 @[simp]
 theorem bind_eq_nil {l : List α} {f : α → List β} : List.bind l f = [] ↔ ∀ x ∈ l, f x = [] :=
   join_eq_nil.trans <| by
     simp only [mem_map, forall_exists_index, and_imp, forall_apply_eq_imp_iff₂]
 #align list.bind_eq_nil List.bind_eq_nil
+-/
 
 #print List.take_sum_join /-
 /-- In a join, taking the first elements up to an index which is the sum of the lengths of the

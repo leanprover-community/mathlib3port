@@ -79,7 +79,6 @@ def infty : OnePoint X :=
 #align alexandroff.infty OnePoint.infty
 -/
 
--- mathport name: alexandroff.infty
 scoped notation "∞" => OnePoint.infty
 
 instance : CoeTC X (OnePoint X) :=
@@ -133,32 +132,44 @@ protected def rec (C : OnePoint X → Sort _) (h₁ : C ∞) (h₂ : ∀ x : X, 
 #align alexandroff.rec OnePoint.rec
 -/
 
+#print OnePoint.isCompl_range_coe_infty /-
 theorem isCompl_range_coe_infty : IsCompl (range (coe : X → OnePoint X)) {∞} :=
   isCompl_range_some_none X
 #align alexandroff.is_compl_range_coe_infty OnePoint.isCompl_range_coe_infty
+-/
 
+#print OnePoint.range_coe_union_infty /-
 @[simp]
 theorem range_coe_union_infty : range (coe : X → OnePoint X) ∪ {∞} = univ :=
   range_some_union_none X
 #align alexandroff.range_coe_union_infty OnePoint.range_coe_union_infty
+-/
 
+#print OnePoint.range_coe_inter_infty /-
 @[simp]
 theorem range_coe_inter_infty : range (coe : X → OnePoint X) ∩ {∞} = ∅ :=
   range_some_inter_none X
 #align alexandroff.range_coe_inter_infty OnePoint.range_coe_inter_infty
+-/
 
+#print OnePoint.compl_range_coe /-
 @[simp]
 theorem compl_range_coe : range (coe : X → OnePoint X)ᶜ = {∞} :=
   compl_range_some X
 #align alexandroff.compl_range_coe OnePoint.compl_range_coe
+-/
 
+#print OnePoint.compl_infty /-
 theorem compl_infty : ({∞}ᶜ : Set (OnePoint X)) = range (coe : X → OnePoint X) :=
   (@isCompl_range_coe_infty X).symm.compl_eq
 #align alexandroff.compl_infty OnePoint.compl_infty
+-/
 
+#print OnePoint.compl_image_coe /-
 theorem compl_image_coe (s : Set X) : (coe '' s : Set (OnePoint X))ᶜ = coe '' sᶜ ∪ {∞} := by
   rw [coe_injective.compl_image_eq, compl_range_coe]
 #align alexandroff.compl_image_coe OnePoint.compl_image_coe
+-/
 
 #print OnePoint.ne_infty_iff_exists /-
 theorem ne_infty_iff_exists {x : OnePoint X} : x ≠ ∞ ↔ ∃ y : X, (y : OnePoint X) = x := by
@@ -234,59 +245,79 @@ instance : TopologicalSpace (OnePoint X)
 
 variable {s : Set (OnePoint X)} {t : Set X}
 
+#print OnePoint.isOpen_def /-
 theorem isOpen_def :
     IsOpen s ↔ (∞ ∈ s → IsCompact ((coe ⁻¹' s : Set X)ᶜ)) ∧ IsOpen (coe ⁻¹' s : Set X) :=
   Iff.rfl
 #align alexandroff.is_open_def OnePoint.isOpen_def
+-/
 
+#print OnePoint.isOpen_iff_of_mem' /-
 theorem isOpen_iff_of_mem' (h : ∞ ∈ s) :
     IsOpen s ↔ IsCompact ((coe ⁻¹' s : Set X)ᶜ) ∧ IsOpen (coe ⁻¹' s : Set X) := by
   simp [is_open_def, h]
 #align alexandroff.is_open_iff_of_mem' OnePoint.isOpen_iff_of_mem'
+-/
 
+#print OnePoint.isOpen_iff_of_mem /-
 theorem isOpen_iff_of_mem (h : ∞ ∈ s) :
     IsOpen s ↔ IsClosed ((coe ⁻¹' s : Set X)ᶜ) ∧ IsCompact ((coe ⁻¹' s : Set X)ᶜ) := by
   simp only [is_open_iff_of_mem' h, isClosed_compl_iff, and_comm]
 #align alexandroff.is_open_iff_of_mem OnePoint.isOpen_iff_of_mem
+-/
 
+#print OnePoint.isOpen_iff_of_not_mem /-
 theorem isOpen_iff_of_not_mem (h : ∞ ∉ s) : IsOpen s ↔ IsOpen (coe ⁻¹' s : Set X) := by
   simp [is_open_def, h]
 #align alexandroff.is_open_iff_of_not_mem OnePoint.isOpen_iff_of_not_mem
+-/
 
+#print OnePoint.isClosed_iff_of_mem /-
 theorem isClosed_iff_of_mem (h : ∞ ∈ s) : IsClosed s ↔ IsClosed (coe ⁻¹' s : Set X) :=
   by
   have : ∞ ∉ sᶜ := fun H => H h
   rw [← isOpen_compl_iff, is_open_iff_of_not_mem this, ← isOpen_compl_iff, preimage_compl]
 #align alexandroff.is_closed_iff_of_mem OnePoint.isClosed_iff_of_mem
+-/
 
+#print OnePoint.isClosed_iff_of_not_mem /-
 theorem isClosed_iff_of_not_mem (h : ∞ ∉ s) :
     IsClosed s ↔ IsClosed (coe ⁻¹' s : Set X) ∧ IsCompact (coe ⁻¹' s : Set X) := by
   rw [← isOpen_compl_iff, is_open_iff_of_mem (mem_compl h), ← preimage_compl, compl_compl]
 #align alexandroff.is_closed_iff_of_not_mem OnePoint.isClosed_iff_of_not_mem
+-/
 
+#print OnePoint.isOpen_image_coe /-
 @[simp]
 theorem isOpen_image_coe {s : Set X} : IsOpen (coe '' s : Set (OnePoint X)) ↔ IsOpen s := by
   rw [is_open_iff_of_not_mem infty_not_mem_image_coe, preimage_image_eq _ coe_injective]
 #align alexandroff.is_open_image_coe OnePoint.isOpen_image_coe
+-/
 
+#print OnePoint.isOpen_compl_image_coe /-
 theorem isOpen_compl_image_coe {s : Set X} :
     IsOpen ((coe '' s : Set (OnePoint X))ᶜ) ↔ IsClosed s ∧ IsCompact s :=
   by
   rw [is_open_iff_of_mem, ← preimage_compl, compl_compl, preimage_image_eq _ coe_injective]
   exact infty_not_mem_image_coe
 #align alexandroff.is_open_compl_image_coe OnePoint.isOpen_compl_image_coe
+-/
 
+#print OnePoint.isClosed_image_coe /-
 @[simp]
 theorem isClosed_image_coe {s : Set X} :
     IsClosed (coe '' s : Set (OnePoint X)) ↔ IsClosed s ∧ IsCompact s := by
   rw [← isOpen_compl_iff, is_open_compl_image_coe]
 #align alexandroff.is_closed_image_coe OnePoint.isClosed_image_coe
+-/
 
+#print OnePoint.opensOfCompl /-
 /-- An open set in `alexandroff X` constructed from a closed compact set in `X` -/
 def opensOfCompl (s : Set X) (h₁ : IsClosed s) (h₂ : IsCompact s) :
     TopologicalSpace.Opens (OnePoint X) :=
   ⟨(coe '' s)ᶜ, isOpen_compl_image_coe.2 ⟨h₁, h₂⟩⟩
 #align alexandroff.opens_of_compl OnePoint.opensOfCompl
+-/
 
 #print OnePoint.infty_mem_opensOfCompl /-
 theorem infty_mem_opensOfCompl {s : Set X} (h₁ : IsClosed s) (h₂ : IsCompact s) :
@@ -295,49 +326,70 @@ theorem infty_mem_opensOfCompl {s : Set X} (h₁ : IsClosed s) (h₂ : IsCompact
 #align alexandroff.infty_mem_opens_of_compl OnePoint.infty_mem_opensOfCompl
 -/
 
+#print OnePoint.continuous_coe /-
 @[continuity]
 theorem continuous_coe : Continuous (coe : X → OnePoint X) :=
   continuous_def.mpr fun s hs => hs.right
 #align alexandroff.continuous_coe OnePoint.continuous_coe
+-/
 
+#print OnePoint.isOpenMap_coe /-
 theorem isOpenMap_coe : IsOpenMap (coe : X → OnePoint X) := fun s => isOpen_image_coe.2
 #align alexandroff.is_open_map_coe OnePoint.isOpenMap_coe
+-/
 
+#print OnePoint.openEmbedding_coe /-
 theorem openEmbedding_coe : OpenEmbedding (coe : X → OnePoint X) :=
   openEmbedding_of_continuous_injective_open continuous_coe coe_injective isOpenMap_coe
 #align alexandroff.open_embedding_coe OnePoint.openEmbedding_coe
+-/
 
+#print OnePoint.isOpen_range_coe /-
 theorem isOpen_range_coe : IsOpen (range (coe : X → OnePoint X)) :=
   openEmbedding_coe.open_range
 #align alexandroff.is_open_range_coe OnePoint.isOpen_range_coe
+-/
 
+#print OnePoint.isClosed_infty /-
 theorem isClosed_infty : IsClosed ({∞} : Set (OnePoint X)) := by
   rw [← compl_range_coe, isClosed_compl_iff]; exact is_open_range_coe
 #align alexandroff.is_closed_infty OnePoint.isClosed_infty
+-/
 
+#print OnePoint.nhds_coe_eq /-
 theorem nhds_coe_eq (x : X) : 𝓝 ↑x = map (coe : X → OnePoint X) (𝓝 x) :=
   (openEmbedding_coe.map_nhds_eq x).symm
 #align alexandroff.nhds_coe_eq OnePoint.nhds_coe_eq
+-/
 
+#print OnePoint.nhdsWithin_coe_image /-
 theorem nhdsWithin_coe_image (s : Set X) (x : X) :
     𝓝[coe '' s] (x : OnePoint X) = map coe (𝓝[s] x) :=
   (openEmbedding_coe.toEmbedding.map_nhdsWithin_eq _ _).symm
 #align alexandroff.nhds_within_coe_image OnePoint.nhdsWithin_coe_image
+-/
 
+#print OnePoint.nhdsWithin_coe /-
 theorem nhdsWithin_coe (s : Set (OnePoint X)) (x : X) : 𝓝[s] ↑x = map coe (𝓝[coe ⁻¹' s] x) :=
   (openEmbedding_coe.map_nhdsWithin_preimage_eq _ _).symm
 #align alexandroff.nhds_within_coe OnePoint.nhdsWithin_coe
+-/
 
+#print OnePoint.comap_coe_nhds /-
 theorem comap_coe_nhds (x : X) : comap (coe : X → OnePoint X) (𝓝 x) = 𝓝 x :=
   (openEmbedding_coe.to_inducing.nhds_eq_comap x).symm
 #align alexandroff.comap_coe_nhds OnePoint.comap_coe_nhds
+-/
 
+#print OnePoint.nhdsWithin_compl_coe_neBot /-
 /-- If `x` is not an isolated point of `X`, then `x : alexandroff X` is not an isolated point
 of `alexandroff X`. -/
 instance nhdsWithin_compl_coe_neBot (x : X) [h : NeBot (𝓝[≠] x)] : NeBot (𝓝[≠] (x : OnePoint X)) :=
   by simpa [nhds_within_coe, preimage, coe_eq_coe] using h.map coe
 #align alexandroff.nhds_within_compl_coe_ne_bot OnePoint.nhdsWithin_compl_coe_neBot
+-/
 
+#print OnePoint.nhdsWithin_compl_infty_eq /-
 theorem nhdsWithin_compl_infty_eq : 𝓝[≠] (∞ : OnePoint X) = map coe (coclosedCompact X) :=
   by
   refine' (nhdsWithin_basis_open ∞ _).ext (has_basis_coclosed_compact.map _) _ _
@@ -348,22 +400,30 @@ theorem nhdsWithin_compl_infty_eq : 𝓝[≠] (∞ : OnePoint X) = map coe (cocl
     refine' ⟨_, ⟨mem_compl infty_not_mem_image_coe, is_open_compl_image_coe.2 ⟨h₁, h₂⟩⟩, _⟩
     simp [compl_image_coe, ← diff_eq, subset_preimage_image]
 #align alexandroff.nhds_within_compl_infty_eq OnePoint.nhdsWithin_compl_infty_eq
+-/
 
+#print OnePoint.nhdsWithin_compl_infty_neBot /-
 /-- If `X` is a non-compact space, then `∞` is not an isolated point of `alexandroff X`. -/
 instance nhdsWithin_compl_infty_neBot [NoncompactSpace X] : NeBot (𝓝[≠] (∞ : OnePoint X)) := by
   rw [nhds_within_compl_infty_eq]; infer_instance
 #align alexandroff.nhds_within_compl_infty_ne_bot OnePoint.nhdsWithin_compl_infty_neBot
+-/
 
+#print OnePoint.nhdsWithin_compl_neBot /-
 instance (priority := 900) nhdsWithin_compl_neBot [∀ x : X, NeBot (𝓝[≠] x)] [NoncompactSpace X]
     (x : OnePoint X) : NeBot (𝓝[≠] x) :=
   OnePoint.rec _ OnePoint.nhdsWithin_compl_infty_neBot
     (fun y => OnePoint.nhdsWithin_compl_coe_neBot y) x
 #align alexandroff.nhds_within_compl_ne_bot OnePoint.nhdsWithin_compl_neBot
+-/
 
+#print OnePoint.nhds_infty_eq /-
 theorem nhds_infty_eq : 𝓝 (∞ : OnePoint X) = map coe (coclosedCompact X) ⊔ pure ∞ := by
   rw [← nhds_within_compl_infty_eq, nhdsWithin_compl_singleton_sup_pure]
 #align alexandroff.nhds_infty_eq OnePoint.nhds_infty_eq
+-/
 
+#print OnePoint.hasBasis_nhds_infty /-
 theorem hasBasis_nhds_infty :
     (𝓝 (∞ : OnePoint X)).HasBasis (fun s : Set X => IsClosed s ∧ IsCompact s) fun s =>
       coe '' sᶜ ∪ {∞} :=
@@ -371,28 +431,38 @@ theorem hasBasis_nhds_infty :
   rw [nhds_infty_eq]
   exact (has_basis_coclosed_compact.map _).sup_pure _
 #align alexandroff.has_basis_nhds_infty OnePoint.hasBasis_nhds_infty
+-/
 
+#print OnePoint.comap_coe_nhds_infty /-
 @[simp]
 theorem comap_coe_nhds_infty : comap (coe : X → OnePoint X) (𝓝 ∞) = coclosedCompact X := by
   simp [nhds_infty_eq, comap_sup, comap_map coe_injective]
 #align alexandroff.comap_coe_nhds_infty OnePoint.comap_coe_nhds_infty
+-/
 
+#print OnePoint.le_nhds_infty /-
 theorem le_nhds_infty {f : Filter (OnePoint X)} :
     f ≤ 𝓝 ∞ ↔ ∀ s : Set X, IsClosed s → IsCompact s → coe '' sᶜ ∪ {∞} ∈ f := by
   simp only [has_basis_nhds_infty.ge_iff, and_imp]
 #align alexandroff.le_nhds_infty OnePoint.le_nhds_infty
+-/
 
+#print OnePoint.ultrafilter_le_nhds_infty /-
 theorem ultrafilter_le_nhds_infty {f : Ultrafilter (OnePoint X)} :
     (f : Filter (OnePoint X)) ≤ 𝓝 ∞ ↔ ∀ s : Set X, IsClosed s → IsCompact s → coe '' s ∉ f := by
   simp only [le_nhds_infty, ← compl_image_coe, Ultrafilter.mem_coe,
     Ultrafilter.compl_mem_iff_not_mem]
 #align alexandroff.ultrafilter_le_nhds_infty OnePoint.ultrafilter_le_nhds_infty
+-/
 
+#print OnePoint.tendsto_nhds_infty' /-
 theorem tendsto_nhds_infty' {α : Type _} {f : OnePoint X → α} {l : Filter α} :
     Tendsto f (𝓝 ∞) l ↔ Tendsto f (pure ∞) l ∧ Tendsto (f ∘ coe) (coclosedCompact X) l := by
   simp [nhds_infty_eq, and_comm']
 #align alexandroff.tendsto_nhds_infty' OnePoint.tendsto_nhds_infty'
+-/
 
+#print OnePoint.tendsto_nhds_infty /-
 theorem tendsto_nhds_infty {α : Type _} {f : OnePoint X → α} {l : Filter α} :
     Tendsto f (𝓝 ∞) l ↔
       ∀ s ∈ l, f ∞ ∈ s ∧ ∃ t : Set X, IsClosed t ∧ IsCompact t ∧ MapsTo (f ∘ coe) (tᶜ) s :=
@@ -400,24 +470,32 @@ theorem tendsto_nhds_infty {α : Type _} {f : OnePoint X → α} {l : Filter α}
     simp only [tendsto_pure_left, has_basis_coclosed_compact.tendsto_left_iff, forall_and,
       and_assoc', exists_prop]
 #align alexandroff.tendsto_nhds_infty OnePoint.tendsto_nhds_infty
+-/
 
+#print OnePoint.continuousAt_infty' /-
 theorem continuousAt_infty' {Y : Type _} [TopologicalSpace Y] {f : OnePoint X → Y} :
     ContinuousAt f ∞ ↔ Tendsto (f ∘ coe) (coclosedCompact X) (𝓝 (f ∞)) :=
   tendsto_nhds_infty'.trans <| and_iff_right (tendsto_pure_nhds _ _)
 #align alexandroff.continuous_at_infty' OnePoint.continuousAt_infty'
+-/
 
+#print OnePoint.continuousAt_infty /-
 theorem continuousAt_infty {Y : Type _} [TopologicalSpace Y] {f : OnePoint X → Y} :
     ContinuousAt f ∞ ↔
       ∀ s ∈ 𝓝 (f ∞), ∃ t : Set X, IsClosed t ∧ IsCompact t ∧ MapsTo (f ∘ coe) (tᶜ) s :=
   continuousAt_infty'.trans <| by
     simp only [has_basis_coclosed_compact.tendsto_left_iff, exists_prop, and_assoc']
 #align alexandroff.continuous_at_infty OnePoint.continuousAt_infty
+-/
 
+#print OnePoint.continuousAt_coe /-
 theorem continuousAt_coe {Y : Type _} [TopologicalSpace Y] {f : OnePoint X → Y} {x : X} :
     ContinuousAt f x ↔ ContinuousAt (f ∘ coe) x := by
   rw [ContinuousAt, nhds_coe_eq, tendsto_map'_iff, ContinuousAt]
 #align alexandroff.continuous_at_coe OnePoint.continuousAt_coe
+-/
 
+#print OnePoint.denseRange_coe /-
 /-- If `X` is not a compact space, then the natural embedding `X → alexandroff X` has dense range.
 -/
 theorem denseRange_coe [NoncompactSpace X] : DenseRange (coe : X → OnePoint X) :=
@@ -425,38 +503,53 @@ theorem denseRange_coe [NoncompactSpace X] : DenseRange (coe : X → OnePoint X)
   rw [DenseRange, ← compl_infty]
   exact dense_compl_singleton _
 #align alexandroff.dense_range_coe OnePoint.denseRange_coe
+-/
 
+#print OnePoint.denseEmbedding_coe /-
 theorem denseEmbedding_coe [NoncompactSpace X] : DenseEmbedding (coe : X → OnePoint X) :=
   { openEmbedding_coe with dense := denseRange_coe }
 #align alexandroff.dense_embedding_coe OnePoint.denseEmbedding_coe
+-/
 
+#print OnePoint.specializes_coe /-
 @[simp]
 theorem specializes_coe {x y : X} : (x : OnePoint X) ⤳ y ↔ x ⤳ y :=
   openEmbedding_coe.to_inducing.specializes_iff
 #align alexandroff.specializes_coe OnePoint.specializes_coe
+-/
 
+#print OnePoint.inseparable_coe /-
 @[simp]
 theorem inseparable_coe {x y : X} : Inseparable (x : OnePoint X) y ↔ Inseparable x y :=
   openEmbedding_coe.to_inducing.inseparable_iff
 #align alexandroff.inseparable_coe OnePoint.inseparable_coe
+-/
 
+#print OnePoint.not_specializes_infty_coe /-
 theorem not_specializes_infty_coe {x : X} : ¬Specializes ∞ (x : OnePoint X) :=
   isClosed_infty.not_specializes rfl (coe_ne_infty x)
 #align alexandroff.not_specializes_infty_coe OnePoint.not_specializes_infty_coe
+-/
 
+#print OnePoint.not_inseparable_infty_coe /-
 theorem not_inseparable_infty_coe {x : X} : ¬Inseparable ∞ (x : OnePoint X) := fun h =>
   not_specializes_infty_coe h.Specializes
 #align alexandroff.not_inseparable_infty_coe OnePoint.not_inseparable_infty_coe
+-/
 
+#print OnePoint.not_inseparable_coe_infty /-
 theorem not_inseparable_coe_infty {x : X} : ¬Inseparable (x : OnePoint X) ∞ := fun h =>
   not_specializes_infty_coe h.specializes'
 #align alexandroff.not_inseparable_coe_infty OnePoint.not_inseparable_coe_infty
+-/
 
+#print OnePoint.inseparable_iff /-
 theorem inseparable_iff {x y : OnePoint X} :
     Inseparable x y ↔ x = ∞ ∧ y = ∞ ∨ ∃ x' : X, x = x' ∧ ∃ y' : X, y = y' ∧ Inseparable x' y' := by
   induction x using OnePoint.rec <;> induction y using OnePoint.rec <;>
     simp [not_inseparable_infty_coe, not_inseparable_coe_infty, coe_eq_coe]
 #align alexandroff.inseparable_iff OnePoint.inseparable_iff
+-/
 
 /-!
 ### Compactness and separation properties
@@ -523,6 +616,7 @@ instance [PreconnectedSpace X] [NoncompactSpace X] : ConnectedSpace (OnePoint X)
   to_preconnectedSpace := denseEmbedding_coe.to_denseInducing.PreconnectedSpace
   to_nonempty := inferInstance
 
+#print OnePoint.not_continuous_cofiniteTopology_of_symm /-
 /-- If `X` is an infinite type with discrete topology (e.g., `ℕ`), then the identity map from
 `cofinite_topology (alexandroff X)` to `alexandroff X` is not continuous. -/
 theorem not_continuous_cofiniteTopology_of_symm [Infinite X] [DiscreteTopology X] :
@@ -534,6 +628,7 @@ theorem not_continuous_cofiniteTopology_of_symm [Infinite X] [DiscreteTopology X
   simpa [nhds_coe_eq, nhds_discrete, CofiniteTopology.nhds_eq] using
     (finite_singleton ((default : X) : OnePoint X)).infinite_compl
 #align alexandroff.not_continuous_cofinite_topology_of_symm OnePoint.not_continuous_cofiniteTopology_of_symm
+-/
 
 end OnePoint
 

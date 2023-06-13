@@ -55,12 +55,15 @@ theorem preimage_boolIndicator_true : s.boolIndicator ⁻¹' {true} = s :=
 
 /- warning: set.preimage_bool_indicator_ff clashes with set.preimage_bool_indicator_false -> Set.preimage_boolIndicator_false
 Case conversion may be inaccurate. Consider using '#align set.preimage_bool_indicator_ff Set.preimage_boolIndicator_falseₓ'. -/
+#print Set.preimage_boolIndicator_false /-
 theorem preimage_boolIndicator_false : s.boolIndicator ⁻¹' {false} = sᶜ :=
   ext fun x => (s.not_mem_iff_boolIndicator x).symm
 #align set.preimage_bool_indicator_ff Set.preimage_boolIndicator_false
+-/
 
 open scoped Classical
 
+#print Set.preimage_boolIndicator_eq_union /-
 theorem preimage_boolIndicator_eq_union (t : Set Bool) :
     s.boolIndicator ⁻¹' t = (if true ∈ t then s else ∅) ∪ if false ∈ t then sᶜ else ∅ :=
   by
@@ -68,7 +71,9 @@ theorem preimage_boolIndicator_eq_union (t : Set Bool) :
   dsimp [bool_indicator]
   split_ifs <;> tauto
 #align set.preimage_bool_indicator_eq_union Set.preimage_boolIndicator_eq_union
+-/
 
+#print Set.preimage_boolIndicator /-
 theorem preimage_boolIndicator (t : Set Bool) :
     s.boolIndicator ⁻¹' t = univ ∨
       s.boolIndicator ⁻¹' t = s ∨ s.boolIndicator ⁻¹' t = sᶜ ∨ s.boolIndicator ⁻¹' t = ∅ :=
@@ -76,6 +81,7 @@ theorem preimage_boolIndicator (t : Set Bool) :
   simp only [preimage_bool_indicator_eq_union]
   split_ifs <;> simp [s.union_compl_self]
 #align set.preimage_bool_indicator Set.preimage_boolIndicator
+-/
 
 end Set
 

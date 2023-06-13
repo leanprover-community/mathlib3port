@@ -59,10 +59,8 @@ def DualNumber.eps [Zero R] [One R] : DualNumber R :=
 #align dual_number.eps DualNumber.eps
 -/
 
--- mathport name: dual_number.eps
 scoped[DualNumber] notation "ε" => DualNumber.eps
 
--- mathport name: dual_number
 scoped[DualNumber] postfix:1024 "[ε]" => DualNumber
 
 open scoped DualNumber
@@ -85,21 +83,27 @@ theorem snd_eps [Zero R] [One R] : snd ε = (1 : R) :=
 #align dual_number.snd_eps DualNumber.snd_eps
 -/
 
+#print DualNumber.snd_mul /-
 /-- A version of `triv_sq_zero_ext.snd_mul` with `*` instead of `•`. -/
 @[simp]
 theorem snd_mul [Semiring R] (x y : R[ε]) : snd (x * y) = fst x * snd y + snd x * fst y :=
   snd_mul _ _
 #align dual_number.snd_mul DualNumber.snd_mul
+-/
 
+#print DualNumber.eps_mul_eps /-
 @[simp]
 theorem eps_mul_eps [Semiring R] : (ε * ε : R[ε]) = 0 :=
   inr_mul_inr _ _ _
 #align dual_number.eps_mul_eps DualNumber.eps_mul_eps
+-/
 
+#print DualNumber.inr_eq_smul_eps /-
 @[simp]
 theorem inr_eq_smul_eps [MulZeroOneClass R] (r : R) : inr r = (r • ε : R[ε]) :=
   ext (MulZeroClass.mul_zero r).symm (mul_one r).symm
 #align dual_number.inr_eq_smul_eps DualNumber.inr_eq_smul_eps
+-/
 
 #print DualNumber.algHom_ext /-
 /-- For two algebra morphisms out of `R[ε]` to agree, it suffices for them to agree on `ε`. -/
@@ -112,6 +116,7 @@ theorem algHom_ext {A} [CommSemiring R] [Semiring A] [Algebra R A] ⦃f g : R[ε
 
 variable {A : Type _} [CommSemiring R] [Semiring A] [Algebra R A]
 
+#print DualNumber.lift /-
 /-- A universal property of the dual numbers, providing a unique `R[ε] →ₐ[R] A` for every element
 of `A` which squares to `0`.
 
@@ -127,12 +132,15 @@ def lift : { e : A // e * e = 0 } ≃ (R[ε] →ₐ[R] A) :=
         refine' ⟨fun h x y => h.symm ▸ smul_zero _, fun h => by simpa using h 1 1⟩)
     TrivSqZeroExt.lift
 #align dual_number.lift DualNumber.lift
+-/
 
+#print DualNumber.lift_apply_eps /-
 -- When applied to `ε`, `dual_number.lift` produces the element of `A` that squares to 0.
 @[simp]
 theorem lift_apply_eps (e : { e : A // e * e = 0 }) : lift e (ε : R[ε]) = e :=
   (TrivSqZeroExt.liftAux_apply_inr _ _ _).trans <| one_smul _ _
 #align dual_number.lift_apply_eps DualNumber.lift_apply_eps
+-/
 
 #print DualNumber.lift_eps /-
 -- Lifting `dual_number.eps` itself gives the identity.

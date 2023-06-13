@@ -107,32 +107,40 @@ theorem map_mul_right_eq_self (μ : Measure G) [IsMulRightInvariant μ] (g : G) 
 #align measure_theory.map_add_right_eq_self MeasureTheory.map_add_right_eq_self
 -/
 
+#print MeasureTheory.isMulLeftInvariant_smul /-
 @[to_additive MeasureTheory.isAddLeftInvariant_smul]
 instance isMulLeftInvariant_smul [IsMulLeftInvariant μ] (c : ℝ≥0∞) : IsMulLeftInvariant (c • μ) :=
   ⟨fun g => by rw [measure.map_smul, map_mul_left_eq_self]⟩
 #align measure_theory.is_mul_left_invariant_smul MeasureTheory.isMulLeftInvariant_smul
 #align measure_theory.is_add_left_invariant_smul MeasureTheory.isAddLeftInvariant_smul
+-/
 
+#print MeasureTheory.isMulRightInvariant_smul /-
 @[to_additive MeasureTheory.isAddRightInvariant_smul]
 instance isMulRightInvariant_smul [IsMulRightInvariant μ] (c : ℝ≥0∞) :
     IsMulRightInvariant (c • μ) :=
   ⟨fun g => by rw [measure.map_smul, map_mul_right_eq_self]⟩
 #align measure_theory.is_mul_right_invariant_smul MeasureTheory.isMulRightInvariant_smul
 #align measure_theory.is_add_right_invariant_smul MeasureTheory.isAddRightInvariant_smul
+-/
 
+#print MeasureTheory.isMulLeftInvariant_smul_nnreal /-
 @[to_additive MeasureTheory.isAddLeftInvariant_smul_nnreal]
 instance isMulLeftInvariant_smul_nnreal [IsMulLeftInvariant μ] (c : ℝ≥0) :
     IsMulLeftInvariant (c • μ) :=
   MeasureTheory.isMulLeftInvariant_smul (c : ℝ≥0∞)
 #align measure_theory.is_mul_left_invariant_smul_nnreal MeasureTheory.isMulLeftInvariant_smul_nnreal
 #align measure_theory.is_add_left_invariant_smul_nnreal MeasureTheory.isAddLeftInvariant_smul_nnreal
+-/
 
+#print MeasureTheory.isMulRightInvariant_smul_nnreal /-
 @[to_additive MeasureTheory.isAddRightInvariant_smul_nnreal]
 instance isMulRightInvariant_smul_nnreal [IsMulRightInvariant μ] (c : ℝ≥0) :
     IsMulRightInvariant (c • μ) :=
   MeasureTheory.isMulRightInvariant_smul (c : ℝ≥0∞)
 #align measure_theory.is_mul_right_invariant_smul_nnreal MeasureTheory.isMulRightInvariant_smul_nnreal
 #align measure_theory.is_add_right_invariant_smul_nnreal MeasureTheory.isAddRightInvariant_smul_nnreal
+-/
 
 section MeasurableMul
 
@@ -147,6 +155,7 @@ theorem measurePreserving_mul_left (μ : Measure G) [IsMulLeftInvariant μ] (g :
 #align measure_theory.measure_preserving_add_left MeasureTheory.measurePreserving_add_left
 -/
 
+#print MeasureTheory.MeasurePreserving.mul_left /-
 @[to_additive]
 theorem MeasurePreserving.mul_left (μ : Measure G) [IsMulLeftInvariant μ] (g : G) {X : Type _}
     [MeasurableSpace X] {μ' : Measure X} {f : X → G} (hf : MeasurePreserving f μ' μ) :
@@ -154,6 +163,7 @@ theorem MeasurePreserving.mul_left (μ : Measure G) [IsMulLeftInvariant μ] (g :
   (measurePreserving_mul_left μ g).comp hf
 #align measure_theory.measure_preserving.mul_left MeasureTheory.MeasurePreserving.mul_left
 #align measure_theory.measure_preserving.add_left MeasureTheory.MeasurePreserving.add_left
+-/
 
 #print MeasureTheory.measurePreserving_mul_right /-
 @[to_additive]
@@ -164,6 +174,7 @@ theorem measurePreserving_mul_right (μ : Measure G) [IsMulRightInvariant μ] (g
 #align measure_theory.measure_preserving_add_right MeasureTheory.measurePreserving_add_right
 -/
 
+#print MeasureTheory.MeasurePreserving.mul_right /-
 @[to_additive]
 theorem MeasurePreserving.mul_right (μ : Measure G) [IsMulRightInvariant μ] (g : G) {X : Type _}
     [MeasurableSpace X] {μ' : Measure X} {f : X → G} (hf : MeasurePreserving f μ' μ) :
@@ -171,6 +182,7 @@ theorem MeasurePreserving.mul_right (μ : Measure G) [IsMulRightInvariant μ] (g
   (measurePreserving_mul_right μ g).comp hf
 #align measure_theory.measure_preserving.mul_right MeasureTheory.MeasurePreserving.mul_right
 #align measure_theory.measure_preserving.add_right MeasureTheory.MeasurePreserving.add_right
+-/
 
 #print MeasureTheory.IsMulLeftInvariant.smulInvariantMeasure /-
 @[to_additive]
@@ -190,12 +202,14 @@ instance IsMulRightInvariant.toSMulInvariantMeasure_op [μ.IsMulRightInvariant] 
 #align measure_theory.is_mul_right_invariant.to_vadd_invariant_measure_op MeasureTheory.IsMulRightInvariant.toVAddInvariantMeasure_op
 -/
 
+#print MeasureTheory.Subgroup.smulInvariantMeasure /-
 @[to_additive]
 instance Subgroup.smulInvariantMeasure {G α : Type _} [Group G] [MulAction G α] [MeasurableSpace α]
     {μ : Measure α} [SMulInvariantMeasure G α μ] (H : Subgroup G) : SMulInvariantMeasure H α μ :=
   ⟨fun y s hs => by convert smul_invariant_measure.measure_preimage_smul μ (y : G) hs⟩
 #align measure_theory.subgroup.smul_invariant_measure MeasureTheory.Subgroup.smulInvariantMeasure
 #align measure_theory.subgroup.vadd_invariant_measure MeasureTheory.Subgroup.vaddInvariantMeasure
+-/
 
 #print MeasureTheory.forall_measure_preimage_mul_iff /-
 /-- An alternative way to prove that `μ` is left invariant under multiplication. -/
@@ -279,11 +293,13 @@ section DivInvMonoid
 
 variable [DivInvMonoid G]
 
+#print MeasureTheory.map_div_right_eq_self /-
 @[to_additive]
 theorem map_div_right_eq_self (μ : Measure G) [IsMulRightInvariant μ] (g : G) : map (· / g) μ = μ :=
   by simp_rw [div_eq_mul_inv, map_mul_right_eq_self μ g⁻¹]
 #align measure_theory.map_div_right_eq_self MeasureTheory.map_div_right_eq_self
 #align measure_theory.map_sub_right_eq_self MeasureTheory.map_sub_right_eq_self
+-/
 
 end DivInvMonoid
 
@@ -291,12 +307,15 @@ section Group
 
 variable [Group G] [MeasurableMul G]
 
+#print MeasureTheory.measurePreserving_div_right /-
 @[to_additive]
 theorem measurePreserving_div_right (μ : Measure G) [IsMulRightInvariant μ] (g : G) :
     MeasurePreserving (· / g) μ μ := by simp_rw [div_eq_mul_inv, measure_preserving_mul_right μ g⁻¹]
 #align measure_theory.measure_preserving_div_right MeasureTheory.measurePreserving_div_right
 #align measure_theory.measure_preserving_sub_right MeasureTheory.measurePreserving_sub_right
+-/
 
+#print MeasureTheory.measure_preimage_mul /-
 /-- We shorten this from `measure_preimage_mul_left`, since left invariant is the preferred option
   for measures in this formalization. -/
 @[simp,
@@ -310,7 +329,9 @@ theorem measure_preimage_mul (μ : Measure G) [IsMulLeftInvariant μ] (g : G) (A
     _ = μ A := by rw [map_mul_left_eq_self μ g]
 #align measure_theory.measure_preimage_mul MeasureTheory.measure_preimage_mul
 #align measure_theory.measure_preimage_add MeasureTheory.measure_preimage_add
+-/
 
+#print MeasureTheory.measure_preimage_mul_right /-
 @[simp, to_additive]
 theorem measure_preimage_mul_right (μ : Measure G) [IsMulRightInvariant μ] (g : G) (A : Set G) :
     μ ((fun h => h * g) ⁻¹' A) = μ A :=
@@ -320,48 +341,61 @@ theorem measure_preimage_mul_right (μ : Measure G) [IsMulRightInvariant μ] (g 
     _ = μ A := by rw [map_mul_right_eq_self μ g]
 #align measure_theory.measure_preimage_mul_right MeasureTheory.measure_preimage_mul_right
 #align measure_theory.measure_preimage_add_right MeasureTheory.measure_preimage_add_right
+-/
 
+#print MeasureTheory.map_mul_left_ae /-
 @[to_additive]
 theorem map_mul_left_ae (μ : Measure G) [IsMulLeftInvariant μ] (x : G) :
     Filter.map (fun h => x * h) μ.ae = μ.ae :=
   ((MeasurableEquiv.mulLeft x).map_ae μ).trans <| congr_arg ae <| map_mul_left_eq_self μ x
 #align measure_theory.map_mul_left_ae MeasureTheory.map_mul_left_ae
 #align measure_theory.map_add_left_ae MeasureTheory.map_add_left_ae
+-/
 
+#print MeasureTheory.map_mul_right_ae /-
 @[to_additive]
 theorem map_mul_right_ae (μ : Measure G) [IsMulRightInvariant μ] (x : G) :
     Filter.map (fun h => h * x) μ.ae = μ.ae :=
   ((MeasurableEquiv.mulRight x).map_ae μ).trans <| congr_arg ae <| map_mul_right_eq_self μ x
 #align measure_theory.map_mul_right_ae MeasureTheory.map_mul_right_ae
 #align measure_theory.map_add_right_ae MeasureTheory.map_add_right_ae
+-/
 
+#print MeasureTheory.map_div_right_ae /-
 @[to_additive]
 theorem map_div_right_ae (μ : Measure G) [IsMulRightInvariant μ] (x : G) :
     Filter.map (fun t => t / x) μ.ae = μ.ae :=
   ((MeasurableEquiv.divRight x).map_ae μ).trans <| congr_arg ae <| map_div_right_eq_self μ x
 #align measure_theory.map_div_right_ae MeasureTheory.map_div_right_ae
 #align measure_theory.map_sub_right_ae MeasureTheory.map_sub_right_ae
+-/
 
+#print MeasureTheory.eventually_mul_left_iff /-
 @[to_additive]
 theorem eventually_mul_left_iff (μ : Measure G) [IsMulLeftInvariant μ] (t : G) {p : G → Prop} :
     (∀ᵐ x ∂μ, p (t * x)) ↔ ∀ᵐ x ∂μ, p x := by
   conv_rhs => rw [Filter.Eventually, ← map_mul_left_ae μ t]; rfl
 #align measure_theory.eventually_mul_left_iff MeasureTheory.eventually_mul_left_iff
 #align measure_theory.eventually_add_left_iff MeasureTheory.eventually_add_left_iff
+-/
 
+#print MeasureTheory.eventually_mul_right_iff /-
 @[to_additive]
 theorem eventually_mul_right_iff (μ : Measure G) [IsMulRightInvariant μ] (t : G) {p : G → Prop} :
     (∀ᵐ x ∂μ, p (x * t)) ↔ ∀ᵐ x ∂μ, p x := by
   conv_rhs => rw [Filter.Eventually, ← map_mul_right_ae μ t]; rfl
 #align measure_theory.eventually_mul_right_iff MeasureTheory.eventually_mul_right_iff
 #align measure_theory.eventually_add_right_iff MeasureTheory.eventually_add_right_iff
+-/
 
+#print MeasureTheory.eventually_div_right_iff /-
 @[to_additive]
 theorem eventually_div_right_iff (μ : Measure G) [IsMulRightInvariant μ] (t : G) {p : G → Prop} :
     (∀ᵐ x ∂μ, p (x / t)) ↔ ∀ᵐ x ∂μ, p x := by
   conv_rhs => rw [Filter.Eventually, ← map_div_right_ae μ t]; rfl
 #align measure_theory.eventually_div_right_iff MeasureTheory.eventually_div_right_iff
 #align measure_theory.eventually_sub_right_iff MeasureTheory.eventually_sub_right_iff
+-/
 
 end Group
 
@@ -430,30 +464,38 @@ section InvolutiveInv
 
 variable [InvolutiveInv G] [MeasurableInv G]
 
+#print MeasureTheory.Measure.inv_apply /-
 @[simp, to_additive]
 theorem inv_apply (μ : Measure G) (s : Set G) : μ.inv s = μ s⁻¹ :=
   (MeasurableEquiv.inv G).map_apply s
 #align measure_theory.measure.inv_apply MeasureTheory.Measure.inv_apply
 #align measure_theory.measure.neg_apply MeasureTheory.Measure.neg_apply
+-/
 
+#print MeasureTheory.Measure.inv_inv /-
 @[simp, to_additive]
 protected theorem inv_inv (μ : Measure G) : μ.inv.inv = μ :=
   (MeasurableEquiv.inv G).map_symm_map
 #align measure_theory.measure.inv_inv MeasureTheory.Measure.inv_inv
 #align measure_theory.measure.neg_neg MeasureTheory.Measure.neg_neg
+-/
 
+#print MeasureTheory.Measure.measure_inv /-
 @[simp, to_additive]
 theorem measure_inv (μ : Measure G) [IsInvInvariant μ] (A : Set G) : μ A⁻¹ = μ A := by
   rw [← inv_apply, inv_eq_self]
 #align measure_theory.measure.measure_inv MeasureTheory.Measure.measure_inv
 #align measure_theory.measure.measure_neg MeasureTheory.Measure.measure_neg
+-/
 
+#print MeasureTheory.Measure.measure_preimage_inv /-
 @[to_additive]
 theorem measure_preimage_inv (μ : Measure G) [IsInvInvariant μ] (A : Set G) :
     μ (Inv.inv ⁻¹' A) = μ A :=
   μ.measure_inv A
 #align measure_theory.measure.measure_preimage_inv MeasureTheory.Measure.measure_preimage_inv
 #align measure_theory.measure.measure_preimage_neg MeasureTheory.Measure.measure_preimage_neg
+-/
 
 @[to_additive]
 instance (μ : Measure G) [SigmaFinite μ] : SigmaFinite μ.inv :=
@@ -483,6 +525,7 @@ instance [IsMulRightInvariant μ] : IsMulLeftInvariant μ.inv :=
   simp_rw [measure.inv, map_map (measurable_const_mul g) measurable_inv,
     map_map measurable_inv (measurable_mul_const g⁻¹), Function.comp, mul_inv_rev, inv_inv]
 
+#print MeasureTheory.Measure.measurePreserving_div_left /-
 @[to_additive]
 theorem measurePreserving_div_left (μ : Measure G) [IsInvInvariant μ] [IsMulLeftInvariant μ]
     (g : G) : MeasurePreserving (fun t => g / t) μ μ :=
@@ -491,27 +534,34 @@ theorem measurePreserving_div_left (μ : Measure G) [IsInvInvariant μ] [IsMulLe
   exact (measure_preserving_mul_left μ g).comp (measure_preserving_inv μ)
 #align measure_theory.measure.measure_preserving_div_left MeasureTheory.Measure.measurePreserving_div_left
 #align measure_theory.measure.measure_preserving_sub_left MeasureTheory.Measure.measurePreserving_sub_left
+-/
 
+#print MeasureTheory.Measure.map_div_left_eq_self /-
 @[to_additive]
 theorem map_div_left_eq_self (μ : Measure G) [IsInvInvariant μ] [IsMulLeftInvariant μ] (g : G) :
     map (fun t => g / t) μ = μ :=
   (measurePreserving_div_left μ g).map_eq
 #align measure_theory.measure.map_div_left_eq_self MeasureTheory.Measure.map_div_left_eq_self
 #align measure_theory.measure.map_sub_left_eq_self MeasureTheory.Measure.map_sub_left_eq_self
+-/
 
+#print MeasureTheory.Measure.measurePreserving_mul_right_inv /-
 @[to_additive]
 theorem measurePreserving_mul_right_inv (μ : Measure G) [IsInvInvariant μ] [IsMulLeftInvariant μ]
     (g : G) : MeasurePreserving (fun t => (g * t)⁻¹) μ μ :=
   (measurePreserving_inv μ).comp <| measurePreserving_mul_left μ g
 #align measure_theory.measure.measure_preserving_mul_right_inv MeasureTheory.Measure.measurePreserving_mul_right_inv
 #align measure_theory.measure.measure_preserving_add_right_neg MeasureTheory.Measure.measurePreserving_add_right_neg
+-/
 
+#print MeasureTheory.Measure.map_mul_right_inv_eq_self /-
 @[to_additive]
 theorem map_mul_right_inv_eq_self (μ : Measure G) [IsInvInvariant μ] [IsMulLeftInvariant μ]
     (g : G) : map (fun t => (g * t)⁻¹) μ = μ :=
   (measurePreserving_mul_right_inv μ g).map_eq
 #align measure_theory.measure.map_mul_right_inv_eq_self MeasureTheory.Measure.map_mul_right_inv_eq_self
 #align measure_theory.measure.map_add_right_neg_eq_self MeasureTheory.Measure.map_add_right_neg_eq_self
+-/
 
 end DivisionMonoid
 
@@ -519,12 +569,14 @@ section Group
 
 variable [Group G] [MeasurableMul G] [MeasurableInv G] {μ : Measure G}
 
+#print MeasureTheory.Measure.map_div_left_ae /-
 @[to_additive]
 theorem map_div_left_ae (μ : Measure G) [IsMulLeftInvariant μ] [IsInvInvariant μ] (x : G) :
     Filter.map (fun t => x / t) μ.ae = μ.ae :=
   ((MeasurableEquiv.divLeft x).map_ae μ).trans <| congr_arg ae <| map_div_left_eq_self μ x
 #align measure_theory.measure.map_div_left_ae MeasureTheory.Measure.map_div_left_ae
 #align measure_theory.measure.map_sub_left_ae MeasureTheory.Measure.map_sub_left_ae
+-/
 
 end Group
 
@@ -534,14 +586,17 @@ section TopologicalGroup
 
 variable [TopologicalSpace G] [BorelSpace G] {μ : Measure G} [Group G]
 
+#print MeasureTheory.Measure.Regular.inv /-
 @[to_additive]
 instance Measure.Regular.inv [ContinuousInv G] [T2Space G] [Regular μ] : Regular μ.inv :=
   Regular.map (Homeomorph.inv G)
 #align measure_theory.measure.regular.inv MeasureTheory.Measure.Regular.inv
 #align measure_theory.measure.regular.neg MeasureTheory.Measure.Regular.neg
+-/
 
 variable [TopologicalGroup G]
 
+#print MeasureTheory.regular_inv_iff /-
 @[to_additive]
 theorem regular_inv_iff [T2Space G] : μ.inv.regular ↔ μ.regular :=
   by
@@ -550,9 +605,11 @@ theorem regular_inv_iff [T2Space G] : μ.inv.regular ↔ μ.regular :=
   · intro h; exact measure.regular.inv
 #align measure_theory.regular_inv_iff MeasureTheory.regular_inv_iff
 #align measure_theory.regular_neg_iff MeasureTheory.regular_neg_iff
+-/
 
 variable [IsMulLeftInvariant μ]
 
+#print MeasureTheory.isOpenPosMeasure_of_mulLeftInvariant_of_compact /-
 /-- If a left-invariant measure gives positive mass to a compact set, then it gives positive mass to
 any open set. -/
 @[to_additive
@@ -572,7 +629,9 @@ theorem isOpenPosMeasure_of_mulLeftInvariant_of_compact (K : Set G) (hK : IsComp
     _ = 0 := by simp [measure_preimage_mul, h]
 #align measure_theory.is_open_pos_measure_of_mul_left_invariant_of_compact MeasureTheory.isOpenPosMeasure_of_mulLeftInvariant_of_compact
 #align measure_theory.is_open_pos_measure_of_add_left_invariant_of_compact MeasureTheory.isOpenPosMeasure_of_addLeftInvariant_of_compact
+-/
 
+#print MeasureTheory.isOpenPosMeasure_of_mulLeftInvariant_of_regular /-
 /-- A nonzero left-invariant regular measure gives positive mass to any open set. -/
 @[to_additive "A nonzero left-invariant regular measure gives positive mass to any open set."]
 theorem isOpenPosMeasure_of_mulLeftInvariant_of_regular [Regular μ] (h₀ : μ ≠ 0) :
@@ -581,7 +640,9 @@ theorem isOpenPosMeasure_of_mulLeftInvariant_of_regular [Regular μ] (h₀ : μ 
   isOpenPosMeasure_of_mulLeftInvariant_of_compact K hK h2K
 #align measure_theory.is_open_pos_measure_of_mul_left_invariant_of_regular MeasureTheory.isOpenPosMeasure_of_mulLeftInvariant_of_regular
 #align measure_theory.is_open_pos_measure_of_add_left_invariant_of_regular MeasureTheory.isOpenPosMeasure_of_addLeftInvariant_of_regular
+-/
 
+#print MeasureTheory.null_iff_of_isMulLeftInvariant /-
 @[to_additive]
 theorem null_iff_of_isMulLeftInvariant [Regular μ] {s : Set G} (hs : IsOpen s) :
     μ s = 0 ↔ s = ∅ ∨ μ = 0 := by
@@ -590,21 +651,27 @@ theorem null_iff_of_isMulLeftInvariant [Regular μ] {s : Set G} (hs : IsOpen s) 
     simp only [h3μ, or_false_iff, hs.measure_eq_zero_iff μ]
 #align measure_theory.null_iff_of_is_mul_left_invariant MeasureTheory.null_iff_of_isMulLeftInvariant
 #align measure_theory.null_iff_of_is_add_left_invariant MeasureTheory.null_iff_of_isAddLeftInvariant
+-/
 
+#print MeasureTheory.measure_ne_zero_iff_nonempty_of_isMulLeftInvariant /-
 @[to_additive]
 theorem measure_ne_zero_iff_nonempty_of_isMulLeftInvariant [Regular μ] (hμ : μ ≠ 0) {s : Set G}
     (hs : IsOpen s) : μ s ≠ 0 ↔ s.Nonempty := by
   simpa [null_iff_of_is_mul_left_invariant hs, hμ] using nonempty_iff_ne_empty.symm
 #align measure_theory.measure_ne_zero_iff_nonempty_of_is_mul_left_invariant MeasureTheory.measure_ne_zero_iff_nonempty_of_isMulLeftInvariant
 #align measure_theory.measure_ne_zero_iff_nonempty_of_is_add_left_invariant MeasureTheory.measure_ne_zero_iff_nonempty_of_isAddLeftInvariant
+-/
 
+#print MeasureTheory.measure_pos_iff_nonempty_of_isMulLeftInvariant /-
 @[to_additive]
 theorem measure_pos_iff_nonempty_of_isMulLeftInvariant [Regular μ] (h3μ : μ ≠ 0) {s : Set G}
     (hs : IsOpen s) : 0 < μ s ↔ s.Nonempty :=
   pos_iff_ne_zero.trans <| measure_ne_zero_iff_nonempty_of_isMulLeftInvariant h3μ hs
 #align measure_theory.measure_pos_iff_nonempty_of_is_mul_left_invariant MeasureTheory.measure_pos_iff_nonempty_of_isMulLeftInvariant
 #align measure_theory.measure_pos_iff_nonempty_of_is_add_left_invariant MeasureTheory.measure_pos_iff_nonempty_of_isAddLeftInvariant
+-/
 
+#print MeasureTheory.measure_lt_top_of_isCompact_of_isMulLeftInvariant /-
 /-- If a left-invariant measure gives finite mass to a nonempty open set, then it gives finite mass
 to any compact set. -/
 @[to_additive
@@ -622,7 +689,9 @@ theorem measure_lt_top_of_isCompact_of_isMulLeftInvariant (U : Set G) (hU : IsOp
     _ < ∞ := ENNReal.mul_lt_top (ENNReal.nat_ne_top _) h
 #align measure_theory.measure_lt_top_of_is_compact_of_is_mul_left_invariant MeasureTheory.measure_lt_top_of_isCompact_of_isMulLeftInvariant
 #align measure_theory.measure_lt_top_of_is_compact_of_is_add_left_invariant MeasureTheory.measure_lt_top_of_isCompact_of_isAddLeftInvariant
+-/
 
+#print MeasureTheory.measure_lt_top_of_isCompact_of_isMulLeftInvariant' /-
 /-- If a left-invariant measure gives finite mass to a set with nonempty interior, then
 it gives finite mass to any compact set. -/
 @[to_additive
@@ -633,7 +702,9 @@ theorem measure_lt_top_of_isCompact_of_isMulLeftInvariant' {U : Set G} (hU : (in
     ((measure_mono interior_subset).trans_lt (lt_top_iff_ne_top.2 h)).Ne hK
 #align measure_theory.measure_lt_top_of_is_compact_of_is_mul_left_invariant' MeasureTheory.measure_lt_top_of_isCompact_of_isMulLeftInvariant'
 #align measure_theory.measure_lt_top_of_is_compact_of_is_add_left_invariant' MeasureTheory.measure_lt_top_of_isCompact_of_isAddLeftInvariant'
+-/
 
+#print MeasureTheory.measure_univ_of_isMulLeftInvariant /-
 /-- In a noncompact locally compact group, a left-invariant measure which is positive
 on open sets has infinite mass. -/
 @[simp,
@@ -690,6 +761,7 @@ theorem measure_univ_of_isMulLeftInvariant [LocallyCompactSpace G] [NoncompactSp
   exact le_of_tendsto' N fun n => measure_mono (subset_univ _)
 #align measure_theory.measure_univ_of_is_mul_left_invariant MeasureTheory.measure_univ_of_isMulLeftInvariant
 #align measure_theory.measure_univ_of_is_add_left_invariant MeasureTheory.measure_univ_of_isAddLeftInvariant
+-/
 
 end TopologicalGroup
 
@@ -697,6 +769,7 @@ section CommSemigroup
 
 variable [CommSemigroup G]
 
+#print MeasureTheory.IsMulLeftInvariant.isMulRightInvariant /-
 /-- In an abelian group every left invariant measure is also right-invariant.
   We don't declare the converse as an instance, since that would loop type-class inference, and
   we use `is_mul_left_invariant` as the default hypothesis in abelian groups. -/
@@ -707,6 +780,7 @@ instance (priority := 100) IsMulLeftInvariant.isMulRightInvariant {μ : Measure 
   ⟨fun g => by simp_rw [mul_comm, map_mul_left_eq_self]⟩
 #align measure_theory.is_mul_left_invariant.is_mul_right_invariant MeasureTheory.IsMulLeftInvariant.isMulRightInvariant
 #align is_add_left_invariant.is_add_right_invariant MeasureTheory.IsAddLeftInvariant.isAddRightInvariant
+-/
 
 end CommSemigroup
 
@@ -754,6 +828,7 @@ section
 
 variable [Group G] [TopologicalSpace G] (μ : Measure G) [IsHaarMeasure μ]
 
+#print MeasureTheory.Measure.haar_singleton /-
 @[simp, to_additive]
 theorem haar_singleton [TopologicalGroup G] [BorelSpace G] (g : G) : μ {g} = μ {(1 : G)} :=
   by
@@ -761,14 +836,18 @@ theorem haar_singleton [TopologicalGroup G] [BorelSpace G] (g : G) : μ {g} = μ
   simp only [mul_one, preimage_mul_left_singleton, inv_inv]
 #align measure_theory.measure.haar_singleton MeasureTheory.Measure.haar_singleton
 #align measure_theory.measure.add_haar_singleton MeasureTheory.Measure.addHaar_singleton
+-/
 
+#print MeasureTheory.Measure.IsHaarMeasure.smul /-
 @[to_additive MeasureTheory.Measure.IsAddHaarMeasure.smul]
 theorem IsHaarMeasure.smul {c : ℝ≥0∞} (cpos : c ≠ 0) (ctop : c ≠ ∞) : IsHaarMeasure (c • μ) :=
   { lt_top_of_isCompact := fun K hK => ENNReal.mul_lt_top Ctop hK.measure_lt_top.Ne
     to_isOpenPosMeasure := isOpenPosMeasure_smul μ cpos }
 #align measure_theory.measure.is_haar_measure.smul MeasureTheory.Measure.IsHaarMeasure.smul
 #align measure_theory.measure.is_add_haar_measure.smul MeasureTheory.Measure.IsAddHaarMeasure.smul
+-/
 
+#print MeasureTheory.Measure.isHaarMeasure_of_isCompact_nonempty_interior /-
 /-- If a left-invariant measure gives positive mass to some compact set with nonempty interior, then
 it is a Haar measure. -/
 @[to_additive
@@ -780,7 +859,9 @@ theorem isHaarMeasure_of_isCompact_nonempty_interior [TopologicalGroup G] [Borel
     to_isOpenPosMeasure := isOpenPosMeasure_of_mulLeftInvariant_of_compact K hK h }
 #align measure_theory.measure.is_haar_measure_of_is_compact_nonempty_interior MeasureTheory.Measure.isHaarMeasure_of_isCompact_nonempty_interior
 #align measure_theory.measure.is_add_haar_measure_of_is_compact_nonempty_interior MeasureTheory.Measure.isAddHaarMeasure_of_isCompact_nonempty_interior
+-/
 
+#print MeasureTheory.Measure.isHaarMeasure_map /-
 /-- The image of a Haar measure under a continuous surjective proper group homomorphism is again
 a Haar measure. See also `mul_equiv.is_haar_measure_map`. -/
 @[to_additive
@@ -797,7 +878,9 @@ theorem isHaarMeasure_map [BorelSpace G] [TopologicalGroup G] {H : Type _} [Grou
     to_isOpenPosMeasure := hf.isOpenPosMeasure_map h_surj }
 #align measure_theory.measure.is_haar_measure_map MeasureTheory.Measure.isHaarMeasure_map
 #align measure_theory.measure.is_add_haar_measure_map MeasureTheory.Measure.isAddHaarMeasure_map
+-/
 
+#print MulEquiv.isHaarMeasure_map /-
 /-- A convenience wrapper for `measure_theory.measure.is_haar_measure_map`. -/
 @[to_additive "A convenience wrapper for `measure_theory.measure.is_add_haar_measure_map`."]
 theorem MulEquiv.isHaarMeasure_map [BorelSpace G] [TopologicalGroup G] {H : Type _} [Group H]
@@ -808,6 +891,7 @@ theorem MulEquiv.isHaarMeasure_map [BorelSpace G] [TopologicalGroup G] {H : Type
     ({ e with } : G ≃ₜ H).toCocompactMap.cocompact_tendsto'
 #align mul_equiv.is_haar_measure_map MulEquiv.isHaarMeasure_map
 #align add_equiv.is_add_haar_measure_map AddEquiv.isAddHaarMeasure_map
+-/
 
 #print MeasureTheory.Measure.IsHaarMeasure.sigmaFinite /-
 /-- A Haar measure on a σ-compact space is σ-finite.
@@ -830,6 +914,7 @@ instance {G : Type _} [Group G] [TopologicalSpace G] {mG : MeasurableSpace G} {H
     [IsHaarMeasure ν] [SigmaFinite μ] [SigmaFinite ν] [MeasurableMul G] [MeasurableMul H] :
     IsHaarMeasure (μ.Prod ν) where
 
+#print MeasureTheory.Measure.IsHaarMeasure.noAtoms /-
 /-- If the neutral element of a group is not isolated, then a Haar measure on this group has
 no atoms.
 
@@ -870,6 +955,7 @@ instance (priority := 100) IsHaarMeasure.noAtoms [TopologicalGroup G] [BorelSpac
   exact ge_of_tendsto' J I
 #align measure_theory.measure.is_haar_measure.has_no_atoms MeasureTheory.Measure.IsHaarMeasure.noAtoms
 #align measure_theory.measure.is_add_haar_measure.has_no_atoms MeasureTheory.Measure.IsAddHaarMeasure.noAtoms
+-/
 
 end
 

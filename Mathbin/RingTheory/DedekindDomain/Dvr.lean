@@ -72,6 +72,7 @@ structure IsDedekindDomainDvr : Prop where
 #align is_dedekind_domain_dvr IsDedekindDomainDvr
 -/
 
+#print Ring.DimensionLEOne.localization /-
 /-- Localizing a domain of Krull dimension `≤ 1` gives another ring of Krull dimension `≤ 1`.
 
 Note that the same proof can/should be generalized to preserving any Krull dimension,
@@ -93,7 +94,9 @@ theorem Ring.DimensionLEOne.localization {R : Type _} (Rₘ : Type _) [CommRing 
   refine' h.not_lt_lt ⊥ (Ideal.comap _ _) (Ideal.comap _ _) ⟨_, hpP'⟩
   exact IsLocalization.bot_lt_comap_prime _ _ hM _ hp0
 #align ring.dimension_le_one.localization Ring.DimensionLEOne.localization
+-/
 
+#print IsLocalization.isDedekindDomain /-
 /-- The localization of a Dedekind domain is a Dedekind domain. -/
 theorem IsLocalization.isDedekindDomain [IsDedekindDomain A] {M : Submonoid A} (hM : M ≤ A⁰)
     (Aₘ : Type _) [CommRing Aₘ] [IsDomain Aₘ] [Algebra A Aₘ] [IsLocalization M Aₘ] :
@@ -118,14 +121,18 @@ theorem IsLocalization.isDedekindDomain [IsDedekindDomain A] {M : Submonoid A} (
     rw [hz, SetLike.coe_mk, ← Algebra.smul_def]
     rfl
 #align is_localization.is_dedekind_domain IsLocalization.isDedekindDomain
+-/
 
+#print IsLocalization.AtPrime.isDedekindDomain /-
 /-- The localization of a Dedekind domain at every nonzero prime ideal is a Dedekind domain. -/
 theorem IsLocalization.AtPrime.isDedekindDomain [IsDedekindDomain A] (P : Ideal A) [P.IsPrime]
     (Aₘ : Type _) [CommRing Aₘ] [IsDomain Aₘ] [Algebra A Aₘ] [IsLocalization.AtPrime Aₘ P] :
     IsDedekindDomain Aₘ :=
   IsLocalization.isDedekindDomain A P.primeCompl_le_nonZeroDivisors Aₘ
 #align is_localization.at_prime.is_dedekind_domain IsLocalization.AtPrime.isDedekindDomain
+-/
 
+#print IsLocalization.AtPrime.not_isField /-
 theorem IsLocalization.AtPrime.not_isField {P : Ideal A} (hP : P ≠ ⊥) [pP : P.IsPrime] (Aₘ : Type _)
     [CommRing Aₘ] [Algebra A Aₘ] [IsLocalization.AtPrime Aₘ P] : ¬IsField Aₘ :=
   by
@@ -141,7 +148,9 @@ theorem IsLocalization.AtPrime.not_isField {P : Ideal A} (hP : P ≠ ⊥) [pP : 
                 (IsLocalization.injective Aₘ P.prime_compl_le_non_zero_divisors)).mpr
             x_ne)))
 #align is_localization.at_prime.not_is_field IsLocalization.AtPrime.not_isField
+-/
 
+#print IsLocalization.AtPrime.discreteValuationRing_of_dedekind_domain /-
 /-- In a Dedekind domain, the localization at every nonzero prime ideal is a DVR. -/
 theorem IsLocalization.AtPrime.discreteValuationRing_of_dedekind_domain [IsDedekindDomain A]
     {P : Ideal A} (hP : P ≠ ⊥) [pP : P.IsPrime] (Aₘ : Type _) [CommRing Aₘ] [IsDomain Aₘ]
@@ -155,6 +164,7 @@ theorem IsLocalization.AtPrime.discreteValuationRing_of_dedekind_domain [IsDedek
     ((DiscreteValuationRing.TFAE Aₘ hnf).out 0 2).mpr
       (IsLocalization.AtPrime.isDedekindDomain A P _)
 #align is_localization.at_prime.discrete_valuation_ring_of_dedekind_domain IsLocalization.AtPrime.discreteValuationRing_of_dedekind_domain
+-/
 
 #print IsDedekindDomain.isDedekindDomainDvr /-
 /-- Dedekind domains, in the sense of Noetherian integrally closed domains of Krull dimension ≤ 1,

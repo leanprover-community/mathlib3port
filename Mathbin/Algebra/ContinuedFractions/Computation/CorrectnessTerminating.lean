@@ -82,12 +82,14 @@ protected def compExactValue (pconts conts : Pair K) (fr : K) : K :=
 
 variable [FloorRing K]
 
+#print GeneralizedContinuedFraction.compExactValue_correctness_of_stream_eq_some_aux_comp /-
 /-- Just a computational lemma we need for the next main proof. -/
 protected theorem compExactValue_correctness_of_stream_eq_some_aux_comp {a : K} (b c : K)
     (fract_a_ne_zero : Int.fract a ≠ 0) :
     ((⌊a⌋ : K) * b + c) / Int.fract a + b = (b * a + c) / Int.fract a := by
   field_simp [fract_a_ne_zero]; rw [Int.fract]; ring
 #align generalized_continued_fraction.comp_exact_value_correctness_of_stream_eq_some_aux_comp GeneralizedContinuedFraction.compExactValue_correctness_of_stream_eq_some_aux_comp
+-/
 
 open
   GeneralizedContinuedFraction (compExactValue compExactValue_correctness_of_stream_eq_some_aux_comp)

@@ -90,10 +90,12 @@ theorem nthLe_ofFn' {n} (f : Fin n → α) {i : ℕ} (h : i < (ofFn f).length) :
 #align list.nth_le_of_fn' List.nthLe_ofFn'
 -/
 
+#print List.map_ofFn /-
 @[simp]
 theorem map_ofFn {β : Type _} {n : ℕ} (f : Fin n → α) (g : α → β) : map g (ofFn f) = ofFn (g ∘ f) :=
   ext_nthLe (by simp) fun i h h' => by simp
 #align list.map_of_fn List.map_ofFn
+-/
 
 /-- Arrays converted to lists are the same as `of_fn` on the indexing function of the array. -/
 theorem array'_eq_ofFn {n} (a : Array' n α) : a.toList = ofFn a.read :=
@@ -104,6 +106,7 @@ theorem array'_eq_ofFn {n} (a : Array' n α) : a.toList = ofFn a.read :=
   simp only [DArray.revIterateAux, of_fn_aux, IH]
 #align list.array_eq_of_fn List.array'_eq_ofFn
 
+#print List.ofFn_congr /-
 @[congr]
 theorem ofFn_congr {m n : ℕ} (h : m = n) (f : Fin m → α) :
     ofFn f = ofFn fun i : Fin n => f (Fin.cast h.symm i) :=
@@ -111,6 +114,7 @@ theorem ofFn_congr {m n : ℕ} (h : m = n) (f : Fin m → α) :
   subst h
   simp_rw [Fin.cast_refl, OrderIso.refl_apply]
 #align list.of_fn_congr List.ofFn_congr
+-/
 
 #print List.ofFn_zero /-
 /-- `of_fn` on an empty domain is the empty list. -/
@@ -120,6 +124,7 @@ theorem ofFn_zero (f : Fin 0 → α) : ofFn f = [] :=
 #align list.of_fn_zero List.ofFn_zero
 -/
 
+#print List.ofFn_succ /-
 @[simp]
 theorem ofFn_succ {n} (f : Fin (succ n) → α) : ofFn f = f 0 :: ofFn fun i => f i.succ :=
   by
@@ -129,7 +134,9 @@ theorem ofFn_succ {n} (f : Fin (succ n) → α) : ofFn f = f 0 :: ofFn fun i => 
   intros; induction' m with m IH generalizing l; · rfl
   rw [of_fn_aux, IH]; rfl
 #align list.of_fn_succ List.ofFn_succ
+-/
 
+#print List.ofFn_succ' /-
 theorem ofFn_succ' {n} (f : Fin (succ n) → α) :
     ofFn f = (ofFn fun i => f i.cast_succ).concat (f (Fin.last _)) :=
   by
@@ -139,6 +146,7 @@ theorem ofFn_succ' {n} (f : Fin (succ n) → α) :
     congr 3
     simp_rw [Fin.castSucc_fin_succ]
 #align list.of_fn_succ' List.ofFn_succ'
+-/
 
 #print List.ofFn_eq_nil_iff /-
 @[simp]
@@ -162,6 +170,7 @@ theorem last_ofFn_succ {n : ℕ} (f : Fin n.succ → α)
 #align list.last_of_fn_succ List.last_ofFn_succ
 -/
 
+#print List.ofFn_add /-
 /-- Note this matches the convention of `list.of_fn_succ'`, putting the `fin m` elements first. -/
 theorem ofFn_add {m n} (f : Fin (m + n) → α) :
     List.ofFn f =
@@ -171,6 +180,7 @@ theorem ofFn_add {m n} (f : Fin (m + n) → α) :
   · rw [of_fn_zero, append_nil, Fin.castAdd_zero, Fin.cast_refl]; rfl
   · rw [of_fn_succ', of_fn_succ', IH, append_concat]; rfl
 #align list.of_fn_add List.ofFn_add
+-/
 
 #print List.ofFn_fin_append /-
 @[simp]
@@ -291,11 +301,13 @@ def ofFnRec {C : List α → Sort _} (h : ∀ (n) (f : Fin n → α), C (List.of
 #align list.of_fn_rec List.ofFnRec
 -/
 
+#print List.ofFnRec_ofFn /-
 @[simp]
 theorem ofFnRec_ofFn {C : List α → Sort _} (h : ∀ (n) (f : Fin n → α), C (List.ofFn f)) {n : ℕ}
     (f : Fin n → α) : @ofFnRec _ C h (List.ofFn f) = h _ f :=
   equivSigmaTuple.rightInverse_symm.cast_eq (fun s => h s.1 s.2) ⟨n, f⟩
 #align list.of_fn_rec_of_fn List.ofFnRec_ofFn
+-/
 
 #print List.exists_iff_exists_tuple /-
 theorem exists_iff_exists_tuple {P : List α → Prop} :

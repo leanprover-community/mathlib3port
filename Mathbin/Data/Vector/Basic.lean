@@ -32,7 +32,6 @@ namespace Vector
 
 variable {α : Type _}
 
--- mathport name: «expr ::ᵥ »
 infixr:67 " ::ᵥ " => Vector.cons
 
 attribute [simp] head_cons tail_cons
@@ -78,17 +77,21 @@ theorem cons_val (a : α) : ∀ v : Vector α n, (a ::ᵥ v).val = a :: v.val
 
 /- warning: vector.cons_head clashes with vector.head_cons -> Vector.head_cons
 Case conversion may be inaccurate. Consider using '#align vector.cons_head Vector.head_consₓ'. -/
+#print Vector.head_cons /-
 @[simp]
 theorem head_cons (a : α) : ∀ v : Vector α n, (a ::ᵥ v).headI = a
   | ⟨_, _⟩ => rfl
 #align vector.cons_head Vector.head_cons
+-/
 
 /- warning: vector.cons_tail clashes with vector.tail_cons -> Vector.tail_cons
 Case conversion may be inaccurate. Consider using '#align vector.cons_tail Vector.tail_consₓ'. -/
+#print Vector.tail_cons /-
 @[simp]
 theorem tail_cons (a : α) : ∀ v : Vector α n, (a ::ᵥ v).tail = v
   | ⟨_, _⟩ => rfl
 #align vector.cons_tail Vector.tail_cons
+-/
 
 #print Vector.eq_cons_iff /-
 theorem eq_cons_iff (a : α) (v : Vector α n.succ) (v' : Vector α n) :
@@ -330,19 +333,25 @@ theorem reverse_reverse {v : Vector α n} : v.reverse.reverse = v := by cases v;
 #align vector.reverse_reverse Vector.reverse_reverse
 -/
 
+#print Vector.get_zero /-
 @[simp]
 theorem get_zero : ∀ v : Vector α n.succ, get v 0 = head v
   | ⟨a :: l, e⟩ => rfl
 #align vector.nth_zero Vector.get_zero
+-/
 
+#print Vector.head_ofFn /-
 @[simp]
 theorem head_ofFn {n : ℕ} (f : Fin n.succ → α) : head (ofFn f) = f 0 := by
   rw [← nth_zero, nth_of_fn]
 #align vector.head_of_fn Vector.head_ofFn
+-/
 
+#print Vector.get_cons_zero /-
 @[simp]
 theorem get_cons_zero (a : α) (v : Vector α n) : get (a ::ᵥ v) 0 = a := by simp [nth_zero]
 #align vector.nth_cons_zero Vector.get_cons_zero
+-/
 
 #print Vector.get_cons_nil /-
 /-- Accessing the `nth` element of a vector made up
@@ -423,6 +432,7 @@ theorem scanl_cons (x : α) : scanl f b (x ::ᵥ v) = b ::ᵥ scanl f (f b x) v 
 #align vector.scanl_cons Vector.scanl_cons
 -/
 
+#print Vector.scanl_val /-
 /-- The underlying `list` of a `vector` after a `scanl` is the `list.scanl`
 of the underlying `list` of the original `vector`.
 -/
@@ -430,6 +440,7 @@ of the underlying `list` of the original `vector`.
 theorem scanl_val : ∀ {v : Vector α n}, (scanl f b v).val = List.scanl f b v.val
   | ⟨l, hl⟩ => rfl
 #align vector.scanl_val Vector.scanl_val
+-/
 
 #print Vector.toList_scanl /-
 /-- The `to_list` of a `vector` after a `scanl` is the `list.scanl`
@@ -441,6 +452,7 @@ theorem toList_scanl : (scanl f b v).toList = List.scanl f b v.toList :=
 #align vector.to_list_scanl Vector.toList_scanl
 -/
 
+#print Vector.scanl_singleton /-
 /-- The recursive step of `scanl` splits a vector made up of a single element
 `x ::ᵥ nil : vector α 1` into a `vector` of the provided starting value `b : β`
 and the mapped `f b x : β` as the last value.
@@ -451,6 +463,7 @@ theorem scanl_singleton (v : Vector α 1) : scanl f b v = b ::ᵥ f b v.headI ::
   rw [← cons_head_tail v]
   simp only [scanl_cons, scanl_nil, cons_head, singleton_tail]
 #align vector.scanl_singleton Vector.scanl_singleton
+-/
 
 #print Vector.scanl_head /-
 /-- The first element of `scanl` of a vector `v : vector α n`,
@@ -468,6 +481,7 @@ theorem scanl_head : (scanl f b v).headI = b :=
 #align vector.scanl_head Vector.scanl_head
 -/
 
+#print Vector.scanl_get /-
 /-- For an index `i : fin n`, the `nth` element of `scanl` of a
 vector `v : vector α n` at `i.succ`, is equal to the application
 function `f : β → α → β` of the `i.cast_succ` element of
@@ -490,6 +504,7 @@ theorem scanl_get (i : Fin n) :
     · intro i'
       simp only [hn, Fin.castSucc_fin_succ, nth_cons_succ]
 #align vector.scanl_nth Vector.scanl_get
+-/
 
 end Scan
 
@@ -505,11 +520,13 @@ def mOfFn {m} [Monad m] {α : Type u} : ∀ {n}, (Fin n → m α) → m (Vector 
 #align vector.m_of_fn Vector.mOfFn
 -/
 
+#print Vector.mOfFn_pure /-
 theorem mOfFn_pure {m} [Monad m] [LawfulMonad m] {α} :
     ∀ {n} (f : Fin n → α), (@mOfFn m _ _ _ fun i => pure (f i)) = pure (ofFn f)
   | 0, f => rfl
   | n + 1, f => by simp [m_of_fn, @m_of_fn_pure n, of_fn]
 #align vector.m_of_fn_pure Vector.mOfFn_pure
+-/
 
 #print Vector.mmap /-
 /-- Apply a monadic function to each component of a vector,
@@ -523,11 +540,14 @@ def mmap {m} [Monad m] {α} {β : Type u} (f : α → m β) : ∀ {n}, Vector α
 #align vector.mmap Vector.mmap
 -/
 
+#print Vector.mmap_nil /-
 @[simp]
 theorem mmap_nil {m} [Monad m] {α β} (f : α → m β) : mmap f nil = pure nil :=
   rfl
 #align vector.mmap_nil Vector.mmap_nil
+-/
 
+#print Vector.mmap_cons /-
 @[simp]
 theorem mmap_cons {m} [Monad m] {α β} (f : α → m β) (a) :
     ∀ {n} (v : Vector α n),
@@ -537,6 +557,7 @@ theorem mmap_cons {m} [Monad m] {α β} (f : α → m β) (a) :
         pure (h' ::ᵥ t')
   | _, ⟨l, rfl⟩ => rfl
 #align vector.mmap_cons Vector.mmap_cons
+-/
 
 #print Vector.inductionOn /-
 /-- Define `C v` by induction on `v : vector α n`.
@@ -607,10 +628,12 @@ def inductionOn₃ {C : ∀ {n}, Vector α n → Vector β n → Vector γ n →
 #align vector.induction_on₃ Vector.inductionOn₃
 -/
 
+#print Vector.toArray /-
 /-- Cast a vector to an array. -/
 def toArray : Vector α n → Array' n α
   | ⟨xs, h⟩ => cast (by rw [h]) xs.toArray
 #align vector.to_array Vector.toArray
+-/
 
 section InsertNth
 
@@ -648,6 +671,7 @@ theorem removeNth_insertNth {v : Vector α n} {i : Fin (n + 1)} :
 #align vector.remove_nth_insert_nth Vector.removeNth_insertNth
 -/
 
+#print Vector.removeNth_insertNth' /-
 theorem removeNth_insertNth' {v : Vector α (n + 1)} :
     ∀ {i : Fin (n + 1)} {j : Fin (n + 2)},
       removeNth (j.succAbove i) (insertNth a j v) = insertNth a (i.predAbove j) (removeNth i v)
@@ -666,7 +690,9 @@ theorem removeNth_insertNth' {v : Vector α (n + 1)} :
       · convert hi; exact v.2
       · simpa using h
 #align vector.remove_nth_insert_nth' Vector.removeNth_insertNth'
+-/
 
+#print Vector.insertNth_comm /-
 theorem insertNth_comm (a b : α) (i j : Fin (n + 1)) (h : i ≤ j) :
     ∀ v : Vector α n,
       (v.insertNth a i).insertNth b j.succ = (v.insertNth b j).insertNth a i.cast_succ
@@ -677,6 +703,7 @@ theorem insertNth_comm (a b : α) (i j : Fin (n + 1)) (h : i ≤ j) :
     · assumption
     · rw [hl]; exact Nat.le_of_succ_le_succ j.2
 #align vector.insert_nth_comm Vector.insertNth_comm
+-/
 
 end InsertNth
 
@@ -711,11 +738,14 @@ theorem get_set_of_ne {v : Vector α n} {i j : Fin n} (h : i ≠ j) (a : α) :
 #align vector.nth_update_nth_of_ne Vector.get_set_of_ne
 -/
 
+#print Vector.get_set_eq_if /-
 theorem get_set_eq_if {v : Vector α n} {i j : Fin n} (a : α) :
     (v.set i a).get? j = if i = j then a else v.get? j := by
   split_ifs <;> try simp [*] <;> try rw [nth_update_nth_of_ne] <;> assumption
 #align vector.nth_update_nth_eq_if Vector.get_set_eq_if
+-/
 
+#print Vector.prod_set /-
 @[to_additive]
 theorem prod_set [Monoid α] (v : Vector α n) (i : Fin n) (a : α) :
     (v.set i a).toList.Prod = (v.take i).toList.Prod * a * (v.drop (i + 1)).toList.Prod :=
@@ -725,7 +755,9 @@ theorem prod_set [Monoid α] (v : Vector α n) (i : Fin n) (a : α) :
   simp_all
 #align vector.prod_update_nth Vector.prod_set
 #align vector.sum_update_nth Vector.sum_set
+-/
 
+#print Vector.prod_set' /-
 @[to_additive]
 theorem prod_set' [CommGroup α] (v : Vector α n) (i : Fin n) (a : α) :
     (v.set i a).toList.Prod = v.toList.Prod * (v.get? i)⁻¹ * a :=
@@ -734,6 +766,7 @@ theorem prod_set' [CommGroup α] (v : Vector α n) (i : Fin n) (a : α) :
   have : ↑i < v.to_list.length := lt_of_lt_of_le i.2 (le_of_eq v.2.symm)
   simp [this, nth_eq_nth_le, mul_assoc]
 #align vector.prod_update_nth' Vector.prod_set'
+-/
 
 end UpdateNth
 
@@ -768,18 +801,22 @@ section
 
 variable {α β : Type u}
 
+#print Vector.traverse_def /-
 @[simp]
 protected theorem traverse_def (f : α → F β) (x : α) :
     ∀ xs : Vector α n, (x ::ᵥ xs).traverse f = cons <$> f x <*> xs.traverse f := by
   rintro ⟨xs, rfl⟩ <;> rfl
 #align vector.traverse_def Vector.traverse_def
+-/
 
+#print Vector.id_traverse /-
 protected theorem id_traverse : ∀ x : Vector α n, x.traverse id.mk = x :=
   by
   rintro ⟨x, rfl⟩; dsimp [Vector.traverse, cast]
   induction' x with x xs IH; · rfl
   simp! [IH]; rfl
 #align vector.id_traverse Vector.id_traverse
+-/
 
 end
 
@@ -789,6 +826,7 @@ variable [LawfulApplicative F] [LawfulApplicative G]
 
 variable {α β γ : Type u}
 
+#print Vector.comp_traverse /-
 -- We need to turn off the linter here as
 -- the `is_lawful_traversable` instance below expects a particular signature.
 @[nolint unused_arguments]
@@ -801,11 +839,14 @@ protected theorem comp_traverse (f : β → F γ) (g : α → G β) :
       simp! [cast, *, functor_norm] <;>
     [rfl; simp [(· ∘ ·)]]
 #align vector.comp_traverse Vector.comp_traverse
+-/
 
+#print Vector.traverse_eq_map_id /-
 protected theorem traverse_eq_map_id {α β} (f : α → β) :
     ∀ x : Vector α n, x.traverse (id.mk ∘ f) = id.mk (map f x) := by
   rintro ⟨x, rfl⟩ <;> simp! <;> induction x <;> simp! [*, functor_norm] <;> rfl
 #align vector.traverse_eq_map_id Vector.traverse_eq_map_id
+-/
 
 variable (η : ApplicativeTransformation F G)
 

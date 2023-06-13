@@ -51,6 +51,7 @@ noncomputable def sqLocalHomeomorph : LocalHomeomorph ℝ ℝ
 #align real.sq_local_homeomorph Real.sqLocalHomeomorph
 -/
 
+#print Real.deriv_sqrt_aux /-
 theorem deriv_sqrt_aux {x : ℝ} (hx : x ≠ 0) :
     HasStrictDerivAt sqrt (1 / (2 * sqrt x)) x ∧ ∀ n, ContDiffAt ℝ n sqrt x :=
   by
@@ -68,18 +69,25 @@ theorem deriv_sqrt_aux {x : ℝ} (hx : x ≠ 0) :
         sq_local_homeomorph.cont_diff_at_symm_deriv this hx (hasDerivAt_pow 2 (sqrt x))
           (cont_diff_at_id.pow 2)
 #align real.deriv_sqrt_aux Real.deriv_sqrt_aux
+-/
 
+#print Real.hasStrictDerivAt_sqrt /-
 theorem hasStrictDerivAt_sqrt {x : ℝ} (hx : x ≠ 0) : HasStrictDerivAt sqrt (1 / (2 * sqrt x)) x :=
   (deriv_sqrt_aux hx).1
 #align real.has_strict_deriv_at_sqrt Real.hasStrictDerivAt_sqrt
+-/
 
+#print Real.contDiffAt_sqrt /-
 theorem contDiffAt_sqrt {x : ℝ} {n : ℕ∞} (hx : x ≠ 0) : ContDiffAt ℝ n sqrt x :=
   (deriv_sqrt_aux hx).2 n
 #align real.cont_diff_at_sqrt Real.contDiffAt_sqrt
+-/
 
+#print Real.hasDerivAt_sqrt /-
 theorem hasDerivAt_sqrt {x : ℝ} (hx : x ≠ 0) : HasDerivAt sqrt (1 / (2 * sqrt x)) x :=
   (hasStrictDerivAt_sqrt hx).HasDerivAt
 #align real.has_deriv_at_sqrt Real.hasDerivAt_sqrt
+-/
 
 end Real
 
@@ -89,33 +97,43 @@ section deriv
 
 variable {f : ℝ → ℝ} {s : Set ℝ} {f' x : ℝ}
 
+#print HasDerivWithinAt.sqrt /-
 theorem HasDerivWithinAt.sqrt (hf : HasDerivWithinAt f f' s x) (hx : f x ≠ 0) :
     HasDerivWithinAt (fun y => sqrt (f y)) (f' / (2 * sqrt (f x))) s x := by
   simpa only [(· ∘ ·), div_eq_inv_mul, mul_one] using
     (has_deriv_at_sqrt hx).comp_hasDerivWithinAt x hf
 #align has_deriv_within_at.sqrt HasDerivWithinAt.sqrt
+-/
 
+#print HasDerivAt.sqrt /-
 theorem HasDerivAt.sqrt (hf : HasDerivAt f f' x) (hx : f x ≠ 0) :
     HasDerivAt (fun y => sqrt (f y)) (f' / (2 * sqrt (f x))) x := by
   simpa only [(· ∘ ·), div_eq_inv_mul, mul_one] using (has_deriv_at_sqrt hx).comp x hf
 #align has_deriv_at.sqrt HasDerivAt.sqrt
+-/
 
+#print HasStrictDerivAt.sqrt /-
 theorem HasStrictDerivAt.sqrt (hf : HasStrictDerivAt f f' x) (hx : f x ≠ 0) :
     HasStrictDerivAt (fun t => sqrt (f t)) (f' / (2 * sqrt (f x))) x := by
   simpa only [(· ∘ ·), div_eq_inv_mul, mul_one] using (has_strict_deriv_at_sqrt hx).comp x hf
 #align has_strict_deriv_at.sqrt HasStrictDerivAt.sqrt
+-/
 
+#print derivWithin_sqrt /-
 theorem derivWithin_sqrt (hf : DifferentiableWithinAt ℝ f s x) (hx : f x ≠ 0)
     (hxs : UniqueDiffWithinAt ℝ s x) :
     derivWithin (fun x => sqrt (f x)) s x = derivWithin f s x / (2 * sqrt (f x)) :=
   (hf.HasDerivWithinAt.sqrt hx).derivWithin hxs
 #align deriv_within_sqrt derivWithin_sqrt
+-/
 
+#print deriv_sqrt /-
 @[simp]
 theorem deriv_sqrt (hf : DifferentiableAt ℝ f x) (hx : f x ≠ 0) :
     deriv (fun x => sqrt (f x)) x = deriv f x / (2 * sqrt (f x)) :=
   (hf.HasDerivAt.sqrt hx).deriv
 #align deriv_sqrt deriv_sqrt
+-/
 
 end deriv
 
@@ -124,68 +142,94 @@ section fderiv
 variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] {f : E → ℝ} {n : ℕ∞} {s : Set E}
   {x : E} {f' : E →L[ℝ] ℝ}
 
+#print HasFDerivAt.sqrt /-
 theorem HasFDerivAt.sqrt (hf : HasFDerivAt f f' x) (hx : f x ≠ 0) :
     HasFDerivAt (fun y => sqrt (f y)) ((1 / (2 * sqrt (f x))) • f') x :=
   (hasDerivAt_sqrt hx).comp_hasFDerivAt x hf
 #align has_fderiv_at.sqrt HasFDerivAt.sqrt
+-/
 
+#print HasStrictFDerivAt.sqrt /-
 theorem HasStrictFDerivAt.sqrt (hf : HasStrictFDerivAt f f' x) (hx : f x ≠ 0) :
     HasStrictFDerivAt (fun y => sqrt (f y)) ((1 / (2 * sqrt (f x))) • f') x :=
   (hasStrictDerivAt_sqrt hx).comp_hasStrictFDerivAt x hf
 #align has_strict_fderiv_at.sqrt HasStrictFDerivAt.sqrt
+-/
 
+#print HasFDerivWithinAt.sqrt /-
 theorem HasFDerivWithinAt.sqrt (hf : HasFDerivWithinAt f f' s x) (hx : f x ≠ 0) :
     HasFDerivWithinAt (fun y => sqrt (f y)) ((1 / (2 * sqrt (f x))) • f') s x :=
   (hasDerivAt_sqrt hx).comp_hasFDerivWithinAt x hf
 #align has_fderiv_within_at.sqrt HasFDerivWithinAt.sqrt
+-/
 
+#print DifferentiableWithinAt.sqrt /-
 theorem DifferentiableWithinAt.sqrt (hf : DifferentiableWithinAt ℝ f s x) (hx : f x ≠ 0) :
     DifferentiableWithinAt ℝ (fun y => sqrt (f y)) s x :=
   (hf.HasFDerivWithinAt.sqrt hx).DifferentiableWithinAt
 #align differentiable_within_at.sqrt DifferentiableWithinAt.sqrt
+-/
 
+#print DifferentiableAt.sqrt /-
 theorem DifferentiableAt.sqrt (hf : DifferentiableAt ℝ f x) (hx : f x ≠ 0) :
     DifferentiableAt ℝ (fun y => sqrt (f y)) x :=
   (hf.HasFDerivAt.sqrt hx).DifferentiableAt
 #align differentiable_at.sqrt DifferentiableAt.sqrt
+-/
 
+#print DifferentiableOn.sqrt /-
 theorem DifferentiableOn.sqrt (hf : DifferentiableOn ℝ f s) (hs : ∀ x ∈ s, f x ≠ 0) :
     DifferentiableOn ℝ (fun y => sqrt (f y)) s := fun x hx => (hf x hx).sqrt (hs x hx)
 #align differentiable_on.sqrt DifferentiableOn.sqrt
+-/
 
+#print Differentiable.sqrt /-
 theorem Differentiable.sqrt (hf : Differentiable ℝ f) (hs : ∀ x, f x ≠ 0) :
     Differentiable ℝ fun y => sqrt (f y) := fun x => (hf x).sqrt (hs x)
 #align differentiable.sqrt Differentiable.sqrt
+-/
 
+#print fderivWithin_sqrt /-
 theorem fderivWithin_sqrt (hf : DifferentiableWithinAt ℝ f s x) (hx : f x ≠ 0)
     (hxs : UniqueDiffWithinAt ℝ s x) :
     fderivWithin ℝ (fun x => sqrt (f x)) s x = (1 / (2 * sqrt (f x))) • fderivWithin ℝ f s x :=
   (hf.HasFDerivWithinAt.sqrt hx).fderivWithin hxs
 #align fderiv_within_sqrt fderivWithin_sqrt
+-/
 
+#print fderiv_sqrt /-
 @[simp]
 theorem fderiv_sqrt (hf : DifferentiableAt ℝ f x) (hx : f x ≠ 0) :
     fderiv ℝ (fun x => sqrt (f x)) x = (1 / (2 * sqrt (f x))) • fderiv ℝ f x :=
   (hf.HasFDerivAt.sqrt hx).fderiv
 #align fderiv_sqrt fderiv_sqrt
+-/
 
+#print ContDiffAt.sqrt /-
 theorem ContDiffAt.sqrt (hf : ContDiffAt ℝ n f x) (hx : f x ≠ 0) :
     ContDiffAt ℝ n (fun y => sqrt (f y)) x :=
   (contDiffAt_sqrt hx).comp x hf
 #align cont_diff_at.sqrt ContDiffAt.sqrt
+-/
 
+#print ContDiffWithinAt.sqrt /-
 theorem ContDiffWithinAt.sqrt (hf : ContDiffWithinAt ℝ n f s x) (hx : f x ≠ 0) :
     ContDiffWithinAt ℝ n (fun y => sqrt (f y)) s x :=
   (contDiffAt_sqrt hx).comp_contDiffWithinAt x hf
 #align cont_diff_within_at.sqrt ContDiffWithinAt.sqrt
+-/
 
+#print ContDiffOn.sqrt /-
 theorem ContDiffOn.sqrt (hf : ContDiffOn ℝ n f s) (hs : ∀ x ∈ s, f x ≠ 0) :
     ContDiffOn ℝ n (fun y => sqrt (f y)) s := fun x hx => (hf x hx).sqrt (hs x hx)
 #align cont_diff_on.sqrt ContDiffOn.sqrt
+-/
 
+#print ContDiff.sqrt /-
 theorem ContDiff.sqrt (hf : ContDiff ℝ n f) (h : ∀ x, f x ≠ 0) : ContDiff ℝ n fun y => sqrt (f y) :=
   contDiff_iff_contDiffAt.2 fun x => hf.ContDiffAt.sqrt (h x)
 #align cont_diff.sqrt ContDiff.sqrt
+-/
 
 end fderiv
 

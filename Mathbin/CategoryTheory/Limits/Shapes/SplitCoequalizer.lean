@@ -87,6 +87,7 @@ attribute [simp, reassoc] right_section_π left_section_bottom left_section_top
 
 variable {f g}
 
+#print CategoryTheory.IsSplitCoequalizer.map /-
 /-- Split coequalizers are absolute: they are preserved by any functor. -/
 @[simps]
 def IsSplitCoequalizer.map {Z : C} {π : Y ⟶ Z} (q : IsSplitCoequalizer f g π) (F : C ⥤ D) :
@@ -99,6 +100,7 @@ def IsSplitCoequalizer.map {Z : C} {π : Y ⟶ Z} (q : IsSplitCoequalizer f g π
   leftSection_bottom := by rw [← F.map_comp, q.left_section_bottom, F.map_id]
   leftSection_top := by rw [← F.map_comp, q.left_section_top, F.map_comp]
 #align category_theory.is_split_coequalizer.map CategoryTheory.IsSplitCoequalizer.map
+-/
 
 section
 
@@ -112,11 +114,13 @@ def IsSplitCoequalizer.asCofork {Z : C} {h : Y ⟶ Z} (t : IsSplitCoequalizer f 
 #align category_theory.is_split_coequalizer.as_cofork CategoryTheory.IsSplitCoequalizer.asCofork
 -/
 
+#print CategoryTheory.IsSplitCoequalizer.asCofork_π /-
 @[simp]
 theorem IsSplitCoequalizer.asCofork_π {Z : C} {h : Y ⟶ Z} (t : IsSplitCoequalizer f g h) :
     t.asCofork.π = h :=
   rfl
 #align category_theory.is_split_coequalizer.as_cofork_π CategoryTheory.IsSplitCoequalizer.asCofork_π
+-/
 
 #print CategoryTheory.IsSplitCoequalizer.isCoequalizer /-
 /--
@@ -137,7 +141,7 @@ end
 variable (f g)
 
 #print CategoryTheory.HasSplitCoequalizer /-
-/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`splittable] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`splittable] [] -/
 /--
 The pair `f,g` is a split pair if there is a `h : Y ⟶ Z` so that `f, g, h` forms a split coequalizer
 in `C`.
@@ -180,11 +184,13 @@ noncomputable def HasSplitCoequalizer.isSplitCoequalizer [HasSplitCoequalizer f 
 #align category_theory.has_split_coequalizer.is_split_coequalizer CategoryTheory.HasSplitCoequalizer.isSplitCoequalizer
 -/
 
+#print CategoryTheory.map_is_split_pair /-
 /-- If `f, g` is split, then `G f, G g` is split. -/
 instance map_is_split_pair [HasSplitCoequalizer f g] : HasSplitCoequalizer (G.map f) (G.map g)
     where splittable :=
     ⟨_, _, ⟨IsSplitCoequalizer.map (HasSplitCoequalizer.isSplitCoequalizer f g) _⟩⟩
 #align category_theory.map_is_split_pair CategoryTheory.map_is_split_pair
+-/
 
 namespace Limits
 

@@ -69,8 +69,10 @@ attribute [scoped instance] ModuleCat.isScalarTower_of_algebra_moduleCat
 -- We verify that the morphism spaces become `k`-modules.
 example (M N : ModuleCat.{v} A) : Module k (M ⟶ N) := by infer_instance
 
+#print ModuleCat.linearOverField /-
 instance linearOverField : Linear k (ModuleCat.{v} A) where homModule M N := by infer_instance
 #align Module.linear_over_field ModuleCat.linearOverField
+-/
 
 end ModuleCat
 

@@ -75,7 +75,7 @@ structure InjectiveResolution (Z : C) where
 attribute [instance] InjectiveResolution.injective InjectiveResolution.mono
 
 #print CategoryTheory.HasInjectiveResolution /-
-/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`out] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`out] [] -/
 /-- An object admits a injective resolution. -/
 class HasInjectiveResolution (Z : C) : Prop where
   out : Nonempty (InjectiveResolution Z)
@@ -100,18 +100,22 @@ end
 
 namespace InjectiveResolution
 
+#print CategoryTheory.InjectiveResolution.ι_f_succ /-
 @[simp]
 theorem ι_f_succ {Z : C} (I : InjectiveResolution Z) (n : ℕ) : I.ι.f (n + 1) = 0 :=
   by
   apply zero_of_source_iso_zero
   dsimp; rfl
 #align category_theory.InjectiveResolution.ι_f_succ CategoryTheory.InjectiveResolution.ι_f_succ
+-/
 
+#print CategoryTheory.InjectiveResolution.ι_f_zero_comp_complex_d /-
 @[simp]
 theorem ι_f_zero_comp_complex_d {Z : C} (I : InjectiveResolution Z) :
     I.ι.f 0 ≫ I.cocomplex.d 0 1 = 0 :=
   I.exact₀.w
 #align category_theory.InjectiveResolution.ι_f_zero_comp_complex_d CategoryTheory.InjectiveResolution.ι_f_zero_comp_complex_d
+-/
 
 #print CategoryTheory.InjectiveResolution.complex_d_comp /-
 @[simp]

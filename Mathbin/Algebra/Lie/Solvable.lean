@@ -95,7 +95,6 @@ theorem derivedSeries_def (k : ℕ) : derivedSeries R L k = derivedSeriesOfIdeal
 
 variable {R L}
 
--- mathport name: exprD
 local notation "D" => derivedSeriesOfIdeal R L
 
 #print LieAlgebra.derivedSeriesOfIdeal_add /-
@@ -107,6 +106,7 @@ theorem derivedSeriesOfIdeal_add (k l : ℕ) : D (k + l) I = D k (D l I) :=
 #align lie_algebra.derived_series_of_ideal_add LieAlgebra.derivedSeriesOfIdeal_add
 -/
 
+#print LieAlgebra.derivedSeriesOfIdeal_le /-
 @[mono]
 theorem derivedSeriesOfIdeal_le {I J : LieIdeal R L} {k l : ℕ} (h₁ : I ≤ J) (h₂ : l ≤ k) :
     D k I ≤ D l J := by
@@ -118,23 +118,33 @@ theorem derivedSeriesOfIdeal_le {I J : LieIdeal R L} {k l : ℕ} (h₁ : I ≤ J
       exact LieSubmodule.mono_lie _ _ _ _ (ih (le_refl k)) (ih (le_refl k))
     · rw [derived_series_of_ideal_succ]; exact le_trans (LieSubmodule.lie_le_left _ _) (ih h)
 #align lie_algebra.derived_series_of_ideal_le LieAlgebra.derivedSeriesOfIdeal_le
+-/
 
+#print LieAlgebra.derivedSeriesOfIdeal_succ_le /-
 theorem derivedSeriesOfIdeal_succ_le (k : ℕ) : D (k + 1) I ≤ D k I :=
   derivedSeriesOfIdeal_le (le_refl I) k.le_succ
 #align lie_algebra.derived_series_of_ideal_succ_le LieAlgebra.derivedSeriesOfIdeal_succ_le
+-/
 
+#print LieAlgebra.derivedSeriesOfIdeal_le_self /-
 theorem derivedSeriesOfIdeal_le_self (k : ℕ) : D k I ≤ I :=
   derivedSeriesOfIdeal_le (le_refl I) (zero_le k)
 #align lie_algebra.derived_series_of_ideal_le_self LieAlgebra.derivedSeriesOfIdeal_le_self
+-/
 
+#print LieAlgebra.derivedSeriesOfIdeal_mono /-
 theorem derivedSeriesOfIdeal_mono {I J : LieIdeal R L} (h : I ≤ J) (k : ℕ) : D k I ≤ D k J :=
   derivedSeriesOfIdeal_le h (le_refl k)
 #align lie_algebra.derived_series_of_ideal_mono LieAlgebra.derivedSeriesOfIdeal_mono
+-/
 
+#print LieAlgebra.derivedSeriesOfIdeal_antitone /-
 theorem derivedSeriesOfIdeal_antitone {k l : ℕ} (h : l ≤ k) : D k I ≤ D l I :=
   derivedSeriesOfIdeal_le (le_refl I) h
 #align lie_algebra.derived_series_of_ideal_antitone LieAlgebra.derivedSeriesOfIdeal_antitone
+-/
 
+#print LieAlgebra.derivedSeriesOfIdeal_add_le_add /-
 theorem derivedSeriesOfIdeal_add_le_add (J : LieIdeal R L) (k l : ℕ) :
     D (k + l) (I + J) ≤ D k I + D l J :=
   by
@@ -146,6 +156,7 @@ theorem derivedSeriesOfIdeal_add_le_add (J : LieIdeal R L) (k l : ℕ) :
   rw [← D₁.iterate_sup_le_sup_iff] at h₁ 
   exact h₁ k l I J
 #align lie_algebra.derived_series_of_ideal_add_le_add LieAlgebra.derivedSeriesOfIdeal_add_le_add
+-/
 
 #print LieAlgebra.derivedSeries_of_bot_eq_bot /-
 theorem derivedSeries_of_bot_eq_bot (k : ℕ) : derivedSeriesOfIdeal R L k ⊥ = ⊥ := by
@@ -217,6 +228,7 @@ theorem derivedSeries_add_eq_bot {k l : ℕ} {I J : LieIdeal R L} (hI : derivedS
 #align lie_ideal.derived_series_add_eq_bot LieIdeal.derivedSeries_add_eq_bot
 -/
 
+#print LieIdeal.derivedSeries_map_le /-
 theorem derivedSeries_map_le (k : ℕ) : (derivedSeries R L' k).map f ≤ derivedSeries R L k :=
   by
   induction' k with k ih
@@ -224,7 +236,9 @@ theorem derivedSeries_map_le (k : ℕ) : (derivedSeries R L' k).map f ≤ derive
   · simp only [derived_series_def, derived_series_of_ideal_succ] at ih ⊢
     exact le_trans (map_bracket_le f) (LieSubmodule.mono_lie _ _ _ _ ih ih)
 #align lie_ideal.derived_series_map_le LieIdeal.derivedSeries_map_le
+-/
 
+#print LieIdeal.derivedSeries_map_eq /-
 theorem derivedSeries_map_eq (k : ℕ) (h : Function.Surjective f) :
     (derivedSeries R L' k).map f = derivedSeries R L k :=
   by
@@ -234,6 +248,7 @@ theorem derivedSeries_map_eq (k : ℕ) (h : Function.Surjective f) :
     exact f.ideal_range_eq_top_of_surjective h
   · simp only [derived_series_def, map_bracket_eq f h, ih, derived_series_of_ideal_succ]
 #align lie_ideal.derived_series_map_eq LieIdeal.derivedSeries_map_eq
+-/
 
 end LieIdeal
 
@@ -268,6 +283,7 @@ namespace Function
 
 open LieAlgebra
 
+#print Function.Injective.lieAlgebra_isSolvable /-
 theorem Injective.lieAlgebra_isSolvable [h₁ : IsSolvable R L] (h₂ : Injective f) :
     IsSolvable R L' := by
   obtain ⟨k, hk⟩ := id h₁
@@ -275,7 +291,9 @@ theorem Injective.lieAlgebra_isSolvable [h₁ : IsSolvable R L] (h₂ : Injectiv
   apply LieIdeal.bot_of_map_eq_bot h₂; rw [eq_bot_iff, ← hk]
   apply LieIdeal.derivedSeries_map_le
 #align function.injective.lie_algebra_is_solvable Function.Injective.lieAlgebra_isSolvable
+-/
 
+#print Function.Surjective.lieAlgebra_isSolvable /-
 theorem Surjective.lieAlgebra_isSolvable [h₁ : IsSolvable R L'] (h₂ : Surjective f) :
     IsSolvable R L := by
   obtain ⟨k, hk⟩ := id h₁
@@ -283,6 +301,7 @@ theorem Surjective.lieAlgebra_isSolvable [h₁ : IsSolvable R L'] (h₂ : Surjec
   rw [← LieIdeal.derivedSeries_map_eq k h₂, hk]
   simp only [LieIdeal.map_eq_bot_iff, bot_le]
 #align function.surjective.lie_algebra_is_solvable Function.Surjective.lieAlgebra_isSolvable
+-/
 
 end Function
 
@@ -304,19 +323,23 @@ theorem solvable_iff_equiv_solvable (e : L' ≃ₗ⁅R⁆ L) : IsSolvable R L' �
 #align lie_algebra.solvable_iff_equiv_solvable LieAlgebra.solvable_iff_equiv_solvable
 -/
 
+#print LieAlgebra.le_solvable_ideal_solvable /-
 theorem le_solvable_ideal_solvable {I J : LieIdeal R L} (h₁ : I ≤ J) (h₂ : IsSolvable R J) :
     IsSolvable R I :=
   (LieIdeal.homOfLe_injective h₁).lieAlgebra_isSolvable
 #align lie_algebra.le_solvable_ideal_solvable LieAlgebra.le_solvable_ideal_solvable
+-/
 
 variable (R L)
 
+#print LieAlgebra.ofAbelianIsSolvable /-
 instance (priority := 100) ofAbelianIsSolvable [IsLieAbelian L] : IsSolvable R L :=
   by
   use 1
   rw [← abelian_iff_derived_one_eq_bot, lie_abelian_iff_equiv_lie_abelian LieIdeal.topEquiv]
   infer_instance
 #align lie_algebra.of_abelian_is_solvable LieAlgebra.ofAbelianIsSolvable
+-/
 
 #print LieAlgebra.radical /-
 /-- The (solvable) radical of Lie algebra is the `Sup` of all solvable ideals. -/
@@ -345,10 +368,12 @@ theorem LieIdeal.solvable_iff_le_radical [IsNoetherian R L] (I : LieIdeal R L) :
 #align lie_algebra.lie_ideal.solvable_iff_le_radical LieAlgebra.LieIdeal.solvable_iff_le_radical
 -/
 
+#print LieAlgebra.center_le_radical /-
 theorem center_le_radical : center R L ≤ radical R L :=
   have h : IsSolvable R (center R L) := by infer_instance
   le_sSup h
 #align lie_algebra.center_le_radical LieAlgebra.center_le_radical
+-/
 
 #print LieAlgebra.derivedLengthOfIdeal /-
 /-- Given a solvable Lie ideal `I` with derived series `I = D₀ ≥ D₁ ≥ ⋯ ≥ Dₖ = ⊥`, this is the

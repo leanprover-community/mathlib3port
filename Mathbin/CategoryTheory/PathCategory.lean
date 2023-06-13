@@ -88,23 +88,30 @@ def lift {C} [Category C] (φ : V ⥤q C) : Paths V ⥤ C
 #align category_theory.paths.lift CategoryTheory.Paths.lift
 -/
 
+#print CategoryTheory.Paths.lift_nil /-
 @[simp]
 theorem lift_nil {C} [Category C] (φ : V ⥤q C) (X : V) :
     (lift φ).map Quiver.Path.nil = 𝟙 (φ.obj X) :=
   rfl
 #align category_theory.paths.lift_nil CategoryTheory.Paths.lift_nil
+-/
 
+#print CategoryTheory.Paths.lift_cons /-
 @[simp]
 theorem lift_cons {C} [Category C] (φ : V ⥤q C) {X Y Z : V} (p : Quiver.Path X Y) (f : Y ⟶ Z) :
     (lift φ).map (p.cons f) = (lift φ).map p ≫ φ.map f :=
   rfl
 #align category_theory.paths.lift_cons CategoryTheory.Paths.lift_cons
+-/
 
+#print CategoryTheory.Paths.lift_toPath /-
 @[simp]
 theorem lift_toPath {C} [Category C] (φ : V ⥤q C) {X Y : V} (f : X ⟶ Y) :
     (lift φ).map f.toPath = φ.map f := by dsimp [Quiver.Hom.toPath, lift]; simp
 #align category_theory.paths.lift_to_path CategoryTheory.Paths.lift_toPath
+-/
 
+#print CategoryTheory.Paths.lift_spec /-
 theorem lift_spec {C} [Category C] (φ : V ⥤q C) : of ⋙q (lift φ).toPrefunctor = φ :=
   by
   apply Prefunctor.ext; rotate_left
@@ -113,7 +120,9 @@ theorem lift_spec {C} [Category C] (φ : V ⥤q C) : of ⋙q (lift φ).toPrefunc
     dsimp [lift, Quiver.Hom.toPath]
     simp only [category.id_comp]
 #align category_theory.paths.lift_spec CategoryTheory.Paths.lift_spec
+-/
 
+#print CategoryTheory.Paths.lift_unique /-
 theorem lift_unique {C} [Category C] (φ : V ⥤q C) (Φ : Paths V ⥤ C)
     (hΦ : of ⋙q Φ.toPrefunctor = φ) : Φ = lift φ :=
   by
@@ -129,7 +138,9 @@ theorem lift_unique {C} [Category C] (φ : V ⥤q C) (Φ : Paths V ⥤ C)
         convert functor.map_comp Φ p f'.to_path
       rw [this, ih]
 #align category_theory.paths.lift_unique CategoryTheory.Paths.lift_unique
+-/
 
+#print CategoryTheory.Paths.ext_functor /-
 /-- Two functors out of a path category are equal when they agree on singleton paths. -/
 @[ext]
 theorem ext_functor {C} [Category C] {F G : Paths V ⥤ C} (h_obj : F.obj = G.obj)
@@ -145,6 +156,7 @@ theorem ext_functor {C} [Category C] {F G : Paths V ⥤ C} (h_obj : F.obj = G.ob
       simp only [category.id_comp, eq_to_hom_refl, eq_to_hom_trans_assoc, category.assoc]
   · intro X; rw [h_obj]
 #align category_theory.paths.ext_functor CategoryTheory.Paths.ext_functor
+-/
 
 end Paths
 
@@ -254,6 +266,7 @@ def quotientPathsTo : Quotient (pathsHomRel C) ⥤ C :=
 #align category_theory.quotient_paths_to CategoryTheory.quotientPathsTo
 -/
 
+#print CategoryTheory.quotientPathsEquiv /-
 /-- The canonical quotient of the path category of a category
 is equivalent to the original category. -/
 def quotientPathsEquiv : Quotient (pathsHomRel C) ≌ C
@@ -274,6 +287,7 @@ def quotientPathsEquiv : Quotient (pathsHomRel C) ≌ C
   counitIso := NatIso.ofComponents (fun X => Iso.refl _) (by tidy)
   functor_unitIso_comp' := by intros; cases X; dsimp; simp; rfl
 #align category_theory.quotient_paths_equiv CategoryTheory.quotientPathsEquiv
+-/
 
 end
 

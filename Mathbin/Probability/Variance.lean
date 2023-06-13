@@ -101,8 +101,6 @@ theorem MeasureTheory.Memℒp.ofReal_variance_eq [IsFiniteMeasure μ] (hX : Mem�
   exact hX.evariance_lt_top.ne
 #align measure_theory.mem_ℒp.of_real_variance_eq MeasureTheory.Memℒp.ofReal_variance_eq
 
-include m
-
 theorem evariance_eq_lintegral_ofReal (X : Ω → ℝ) (μ : Measure Ω) :
     evariance X μ = ∫⁻ ω, ENNReal.ofReal ((X ω - μ[X]) ^ 2) ∂μ :=
   by
@@ -175,7 +173,6 @@ theorem evariance_mul (c : ℝ) (X : Ω → ℝ) (μ : Measure Ω) :
   simp_rw [← smul_eq_mul, ← integral_smul_const, smul_eq_mul, mul_comm]
 #align probability_theory.evariance_mul ProbabilityTheory.evariance_mul
 
--- mathport name: probability_theory.evariance
 scoped notation "eVar[" X "]" => ProbabilityTheory.evariance X MeasureTheory.MeasureSpace.volume
 
 @[simp]
@@ -207,10 +204,7 @@ theorem variance_smul' {A : Type _} [CommSemiring A] [Algebra A ℝ] (c : A) (X 
   · simp only [Algebra.smul_def, map_pow]
 #align probability_theory.variance_smul' ProbabilityTheory.variance_smul'
 
--- mathport name: probability_theory.variance
 scoped notation "Var[" X "]" => ProbabilityTheory.variance X MeasureTheory.MeasureSpace.volume
-
-omit m
 
 variable [MeasureSpace Ω]
 

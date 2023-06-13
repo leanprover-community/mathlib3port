@@ -132,6 +132,7 @@ attribute [instance 100] preserves_limits_of_shape.preserves_limit
   preserves_limits_of_size.preserves_limits_of_shape preserves_colimits_of_shape.preserves_colimit
   preserves_colimits_of_size.preserves_colimits_of_shape
 
+#print CategoryTheory.Limits.isLimitOfPreserves /-
 -- see Note [lower instance priority]
 /-- A convenience function for `preserves_limit`, which takes the functor as an explicit argument to
 guide typeclass resolution.
@@ -140,7 +141,9 @@ def isLimitOfPreserves (F : C ⥤ D) {c : Cone K} (t : IsLimit c) [PreservesLimi
     IsLimit (F.mapCone c) :=
   PreservesLimit.preserves t
 #align category_theory.limits.is_limit_of_preserves CategoryTheory.Limits.isLimitOfPreserves
+-/
 
+#print CategoryTheory.Limits.isColimitOfPreserves /-
 /--
 A convenience function for `preserves_colimit`, which takes the functor as an explicit argument to
 guide typeclass resolution.
@@ -149,6 +152,7 @@ def isColimitOfPreserves (F : C ⥤ D) {c : Cocone K} (t : IsColimit c) [Preserv
     IsColimit (F.mapCocone c) :=
   PreservesColimit.preserves t
 #align category_theory.limits.is_colimit_of_preserves CategoryTheory.Limits.isColimitOfPreserves
+-/
 
 #print CategoryTheory.Limits.preservesLimit_subsingleton /-
 instance preservesLimit_subsingleton (K : J ⥤ C) (F : C ⥤ D) : Subsingleton (PreservesLimit K F) :=
@@ -260,12 +264,14 @@ instance compPreservesColimits [PreservesColimitsOfSize.{w', w} F]
 
 end
 
+#print CategoryTheory.Limits.preservesLimitOfPreservesLimitCone /-
 /-- If F preserves one limit cone for the diagram K,
   then it preserves any limit cone for K. -/
 def preservesLimitOfPreservesLimitCone {F : C ⥤ D} {t : Cone K} (h : IsLimit t)
     (hF : IsLimit (F.mapCone t)) : PreservesLimit K F :=
   ⟨fun t' h' => IsLimit.ofIsoLimit hF (Functor.mapIso _ (IsLimit.uniqueUpToIso h h'))⟩
 #align category_theory.limits.preserves_limit_of_preserves_limit_cone CategoryTheory.Limits.preservesLimitOfPreservesLimitCone
+-/
 
 #print CategoryTheory.Limits.preservesLimitOfIsoDiagram /-
 /-- Transfer preservation of limits along a natural isomorphism in the diagram. -/
@@ -302,6 +308,7 @@ def preservesLimitsOfNatIso {F G : C ⥤ D} (h : F ≅ G) [PreservesLimitsOfSize
 #align category_theory.limits.preserves_limits_of_nat_iso CategoryTheory.Limits.preservesLimitsOfNatIso
 -/
 
+#print CategoryTheory.Limits.preservesLimitsOfShapeOfEquiv /-
 /-- Transfer preservation of limits along a equivalence in the shape. -/
 def preservesLimitsOfShapeOfEquiv {J' : Type w₂} [Category.{w₂'} J'] (e : J ≌ J') (F : C ⥤ D)
     [PreservesLimitsOfShape J F] : PreservesLimitsOfShape J' F
@@ -314,6 +321,7 @@ def preservesLimitsOfShapeOfEquiv {J' : Type w₂} [Category.{w₂'} J'] (e : J 
         refine' cones.ext (iso.refl _) fun j => _
         · dsimp; simp [← functor.map_comp] }
 #align category_theory.limits.preserves_limits_of_shape_of_equiv CategoryTheory.Limits.preservesLimitsOfShapeOfEquiv
+-/
 
 #print CategoryTheory.Limits.preservesLimitsOfSizeShrink /-
 -- See library note [dsimp, simp].
@@ -334,12 +342,14 @@ def preservesSmallestLimitsOfPreservesLimits (F : C ⥤ D) [PreservesLimitsOfSiz
 #align category_theory.limits.preserves_smallest_limits_of_preserves_limits CategoryTheory.Limits.preservesSmallestLimitsOfPreservesLimits
 -/
 
+#print CategoryTheory.Limits.preservesColimitOfPreservesColimitCocone /-
 /-- If F preserves one colimit cocone for the diagram K,
   then it preserves any colimit cocone for K. -/
 def preservesColimitOfPreservesColimitCocone {F : C ⥤ D} {t : Cocone K} (h : IsColimit t)
     (hF : IsColimit (F.mapCocone t)) : PreservesColimit K F :=
   ⟨fun t' h' => IsColimit.ofIsoColimit hF (Functor.mapIso _ (IsColimit.uniqueUpToIso h h'))⟩
 #align category_theory.limits.preserves_colimit_of_preserves_colimit_cocone CategoryTheory.Limits.preservesColimitOfPreservesColimitCocone
+-/
 
 #print CategoryTheory.Limits.preservesColimitOfIsoDiagram /-
 /-- Transfer preservation of colimits along a natural isomorphism in the shape. -/
@@ -377,6 +387,7 @@ def preservesColimitsOfNatIso {F G : C ⥤ D} (h : F ≅ G) [PreservesColimitsOf
 #align category_theory.limits.preserves_colimits_of_nat_iso CategoryTheory.Limits.preservesColimitsOfNatIso
 -/
 
+#print CategoryTheory.Limits.preservesColimitsOfShapeOfEquiv /-
 /-- Transfer preservation of colimits along a equivalence in the shape. -/
 def preservesColimitsOfShapeOfEquiv {J' : Type w₂} [Category.{w₂'} J'] (e : J ≌ J') (F : C ⥤ D)
     [PreservesColimitsOfShape J F] : PreservesColimitsOfShape J' F
@@ -389,6 +400,7 @@ def preservesColimitsOfShapeOfEquiv {J' : Type w₂} [Category.{w₂'} J'] (e : 
         refine' cocones.ext (iso.refl _) fun j => _
         · dsimp; simp [← functor.map_comp] }
 #align category_theory.limits.preserves_colimits_of_shape_of_equiv CategoryTheory.Limits.preservesColimitsOfShapeOfEquiv
+-/
 
 #print CategoryTheory.Limits.preservesColimitsOfSizeShrink /-
 -- See library note [dsimp, simp].
@@ -505,6 +517,7 @@ abbrev ReflectsColimits (F : C ⥤ D) :=
 #align category_theory.limits.reflects_colimits CategoryTheory.Limits.ReflectsColimits
 -/
 
+#print CategoryTheory.Limits.isLimitOfReflects /-
 /-- A convenience function for `reflects_limit`, which takes the functor as an explicit argument to
 guide typeclass resolution.
 -/
@@ -512,7 +525,9 @@ def isLimitOfReflects (F : C ⥤ D) {c : Cone K} (t : IsLimit (F.mapCone c)) [Re
     IsLimit c :=
   ReflectsLimit.reflects t
 #align category_theory.limits.is_limit_of_reflects CategoryTheory.Limits.isLimitOfReflects
+-/
 
+#print CategoryTheory.Limits.isColimitOfReflects /-
 /--
 A convenience function for `reflects_colimit`, which takes the functor as an explicit argument to
 guide typeclass resolution.
@@ -521,6 +536,7 @@ def isColimitOfReflects (F : C ⥤ D) {c : Cocone K} (t : IsColimit (F.mapCocone
     [ReflectsColimit K F] : IsColimit c :=
   ReflectsColimit.reflects t
 #align category_theory.limits.is_colimit_of_reflects CategoryTheory.Limits.isColimitOfReflects
+-/
 
 #print CategoryTheory.Limits.reflectsLimit_subsingleton /-
 instance reflectsLimit_subsingleton (K : J ⥤ C) (F : C ⥤ D) : Subsingleton (ReflectsLimit K F) := by
@@ -724,6 +740,7 @@ def reflectsLimitsOfNatIso {F G : C ⥤ D} (h : F ≅ G) [ReflectsLimitsOfSize.{
 #align category_theory.limits.reflects_limits_of_nat_iso CategoryTheory.Limits.reflectsLimitsOfNatIso
 -/
 
+#print CategoryTheory.Limits.reflectsLimitsOfShapeOfEquiv /-
 /-- Transfer reflection of limits along a equivalence in the shape. -/
 def reflectsLimitsOfShapeOfEquiv {J' : Type w₂} [Category.{w₂'} J'] (e : J ≌ J') (F : C ⥤ D)
     [ReflectsLimitsOfShape J F] : ReflectsLimitsOfShape J' F
@@ -735,6 +752,7 @@ def reflectsLimitsOfShapeOfEquiv {J' : Type w₂} [Category.{w₂'} J'] (e : J �
         apply is_limit.of_iso_limit _ (functor.map_cone_whisker _).symm
         exact is_limit.whisker_equivalence t _ }
 #align category_theory.limits.reflects_limits_of_shape_of_equiv CategoryTheory.Limits.reflectsLimitsOfShapeOfEquiv
+-/
 
 #print CategoryTheory.Limits.reflectsLimitsOfSizeShrink /-
 /-- `reflects_limits_of_size_shrink.{w w'} F` tries to obtain `reflects_limits_of_size.{w w'} F`
@@ -853,6 +871,7 @@ def reflectsColimitsOfNatIso {F G : C ⥤ D} (h : F ≅ G) [ReflectsColimitsOfSi
 #align category_theory.limits.reflects_colimits_of_nat_iso CategoryTheory.Limits.reflectsColimitsOfNatIso
 -/
 
+#print CategoryTheory.Limits.reflectsColimitsOfShapeOfEquiv /-
 /-- Transfer reflection of colimits along a equivalence in the shape. -/
 def reflectsColimitsOfShapeOfEquiv {J' : Type w₂} [Category.{w₂'} J'] (e : J ≌ J') (F : C ⥤ D)
     [ReflectsColimitsOfShape J F] : ReflectsColimitsOfShape J' F
@@ -864,6 +883,7 @@ def reflectsColimitsOfShapeOfEquiv {J' : Type w₂} [Category.{w₂'} J'] (e : J
         apply is_colimit.of_iso_colimit _ (functor.map_cocone_whisker _).symm
         exact is_colimit.whisker_equivalence t _ }
 #align category_theory.limits.reflects_colimits_of_shape_of_equiv CategoryTheory.Limits.reflectsColimitsOfShapeOfEquiv
+-/
 
 #print CategoryTheory.Limits.reflectsColimitsOfSizeShrink /-
 /-- `reflects_colimits_of_size_shrink.{w w'} F` tries to obtain `reflects_colimits_of_size.{w w'} F`

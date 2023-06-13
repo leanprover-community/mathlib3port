@@ -68,10 +68,13 @@ def reesAlgebra : Subalgebra R R[X]
 #align rees_algebra reesAlgebra
 -/
 
+#print mem_reesAlgebra_iff /-
 theorem mem_reesAlgebra_iff (f : R[X]) : f ∈ reesAlgebra I ↔ ∀ i, f.coeff i ∈ I ^ i :=
   Iff.rfl
 #align mem_rees_algebra_iff mem_reesAlgebra_iff
+-/
 
+#print mem_reesAlgebra_iff_support /-
 theorem mem_reesAlgebra_iff_support (f : R[X]) :
     f ∈ reesAlgebra I ↔ ∀ i ∈ f.support, f.coeff i ∈ I ^ i :=
   by
@@ -80,13 +83,17 @@ theorem mem_reesAlgebra_iff_support (f : R[X]) :
   rw [mem_support_iff, Iff.comm, imp_iff_right_iff, Ne.def, ← imp_iff_not_or]
   exact fun e => e.symm ▸ (I ^ a).zero_mem
 #align mem_rees_algebra_iff_support mem_reesAlgebra_iff_support
+-/
 
+#print reesAlgebra.monomial_mem /-
 theorem reesAlgebra.monomial_mem {I : Ideal R} {i : ℕ} {r : R} :
     monomial i r ∈ reesAlgebra I ↔ r ∈ I ^ i := by
   simp (config := { contextual := true }) [mem_reesAlgebra_iff_support, coeff_monomial, ←
     imp_iff_not_or]
 #align rees_algebra.monomial_mem reesAlgebra.monomial_mem
+-/
 
+#print monomial_mem_adjoin_monomial /-
 theorem monomial_mem_adjoin_monomial {I : Ideal R} {n : ℕ} {r : R} (hr : r ∈ I ^ n) :
     monomial n r ∈ Algebra.adjoin R (Submodule.map (monomial 1 : R →ₗ[R] R[X]) I : Set R[X]) :=
   by
@@ -99,6 +106,7 @@ theorem monomial_mem_adjoin_monomial {I : Ideal R} {n : ℕ} {r : R} (hr : r ∈
       exact Subalgebra.mul_mem _ (Algebra.subset_adjoin (Set.mem_image_of_mem _ hr)) (hn hs)
     · intro x y hx hy; rw [monomial_add]; exact Subalgebra.add_mem _ hx hy
 #align monomial_mem_adjoin_monomial monomial_mem_adjoin_monomial
+-/
 
 #print adjoin_monomial_eq_reesAlgebra /-
 theorem adjoin_monomial_eq_reesAlgebra :

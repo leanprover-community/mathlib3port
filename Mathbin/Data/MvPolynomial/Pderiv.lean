@@ -77,6 +77,7 @@ theorem pderiv_def [DecidableEq σ] (i : σ) : pderiv i = mkDerivation R (Pi.sin
 #align mv_polynomial.pderiv_def MvPolynomial.pderiv_def
 -/
 
+#print MvPolynomial.pderiv_monomial /-
 @[simp]
 theorem pderiv_monomial {i : σ} : pderiv i (monomial s a) = monomial (s - single i 1) (a * s i) :=
   by
@@ -88,48 +89,67 @@ theorem pderiv_monomial {i : σ} : pderiv i (monomial s a) = monomial (s - singl
   · rw [Finsupp.not_mem_support_iff] at hi ; simp [hi]
   · simp
 #align mv_polynomial.pderiv_monomial MvPolynomial.pderiv_monomial
+-/
 
+#print MvPolynomial.pderiv_C /-
 theorem pderiv_C {i : σ} : pderiv i (C a) = 0 :=
   derivation_C _ _
 #align mv_polynomial.pderiv_C MvPolynomial.pderiv_C
+-/
 
+#print MvPolynomial.pderiv_one /-
 theorem pderiv_one {i : σ} : pderiv i (1 : MvPolynomial σ R) = 0 :=
   pderiv_C
 #align mv_polynomial.pderiv_one MvPolynomial.pderiv_one
+-/
 
+#print MvPolynomial.pderiv_X /-
 @[simp]
 theorem pderiv_X [DecidableEq σ] (i j : σ) :
     pderiv i (X j : MvPolynomial σ R) = @Pi.single _ _ _ _ i 1 j := by
   rw [pderiv_def, mk_derivation_X]
 #align mv_polynomial.pderiv_X MvPolynomial.pderiv_X
+-/
 
+#print MvPolynomial.pderiv_X_self /-
 @[simp]
 theorem pderiv_X_self (i : σ) : pderiv i (X i : MvPolynomial σ R) = 1 := by classical simp
 #align mv_polynomial.pderiv_X_self MvPolynomial.pderiv_X_self
+-/
 
+#print MvPolynomial.pderiv_X_of_ne /-
 @[simp]
 theorem pderiv_X_of_ne {i j : σ} (h : j ≠ i) : pderiv i (X j : MvPolynomial σ R) = 0 := by
   classical simp [h]
 #align mv_polynomial.pderiv_X_of_ne MvPolynomial.pderiv_X_of_ne
+-/
 
+#print MvPolynomial.pderiv_eq_zero_of_not_mem_vars /-
 theorem pderiv_eq_zero_of_not_mem_vars {i : σ} {f : MvPolynomial σ R} (h : i ∉ f.vars) :
     pderiv i f = 0 :=
   derivation_eq_zero_of_forall_mem_vars fun j hj => pderiv_X_of_ne <| ne_of_mem_of_not_mem hj h
 #align mv_polynomial.pderiv_eq_zero_of_not_mem_vars MvPolynomial.pderiv_eq_zero_of_not_mem_vars
+-/
 
+#print MvPolynomial.pderiv_monomial_single /-
 theorem pderiv_monomial_single {i : σ} {n : ℕ} :
     pderiv i (monomial (single i n) a) = monomial (single i (n - 1)) (a * n) := by simp
 #align mv_polynomial.pderiv_monomial_single MvPolynomial.pderiv_monomial_single
+-/
 
+#print MvPolynomial.pderiv_mul /-
 theorem pderiv_mul {i : σ} {f g : MvPolynomial σ R} :
     pderiv i (f * g) = pderiv i f * g + f * pderiv i g := by
   simp only [(pderiv i).leibniz f g, smul_eq_mul, mul_comm, add_comm]
 #align mv_polynomial.pderiv_mul MvPolynomial.pderiv_mul
+-/
 
+#print MvPolynomial.pderiv_C_mul /-
 @[simp]
 theorem pderiv_C_mul {f : MvPolynomial σ R} {i : σ} : pderiv i (C a * f) = C a * pderiv i f :=
   (derivation_C_mul _ _ _).trans C_mul'.symm
 #align mv_polynomial.pderiv_C_mul MvPolynomial.pderiv_C_mul
+-/
 
 end Pderiv
 

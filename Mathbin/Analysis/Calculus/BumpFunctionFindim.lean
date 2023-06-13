@@ -301,7 +301,6 @@ theorem u_neg (x : E) : u (-x) = u x :=
 
 variable [MeasurableSpace E] [BorelSpace E]
 
--- mathport name: exprμ
 local notation "μ" => MeasureTheory.Measure.addHaar
 
 variable (E)

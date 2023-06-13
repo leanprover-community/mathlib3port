@@ -121,8 +121,7 @@ variable {J K} {G : C ⥤ D} (hG : CompatiblePreserving.{w} K G) (ℱ : SheafOfT
 
 variable {T : Presieve Z} {x : FamilyOfElements (G.op ⋙ ℱ.val) T} (h : x.Compatible)
 
-include h hG
-
+#print CategoryTheory.Presieve.FamilyOfElements.Compatible.functorPushforward /-
 /-- `compatible_preserving` functors indeed preserve compatible families. -/
 theorem Presieve.FamilyOfElements.Compatible.functorPushforward :
     (x.functorPushforward G).Compatible :=
@@ -136,7 +135,9 @@ theorem Presieve.FamilyOfElements.Compatible.functorPushforward :
   apply hG.compatible ℱ h _ _ hf₁ hf₂
   simpa using Eq
 #align category_theory.presieve.family_of_elements.compatible.functor_pushforward CategoryTheory.Presieve.FamilyOfElements.Compatible.functorPushforward
+-/
 
+#print CategoryTheory.CompatiblePreserving.apply_map /-
 @[simp]
 theorem CompatiblePreserving.apply_map {Y : C} {f : Y ⟶ Z} (hf : T f) :
     x.functorPushforward G (G.map f) (image_mem_functorPushforward G T hf) = x f hf :=
@@ -146,11 +147,11 @@ theorem CompatiblePreserving.apply_map {Y : C} {f : Y ⟶ Z} (hf : T f) :
     ⟨X, g, f', hg, eq⟩
   simpa using hG.compatible ℱ h f' (𝟙 _) hg hf (by simp [Eq])
 #align category_theory.compatible_preserving.apply_map CategoryTheory.CompatiblePreserving.apply_map
-
-omit h hG
+-/
 
 open Limits.WalkingCospan
 
+#print CategoryTheory.compatiblePreservingOfFlat /-
 theorem compatiblePreservingOfFlat {C : Type u₁} [Category.{v₁} C] {D : Type u₁} [Category.{v₁} D]
     (K : GrothendieckTopology D) (G : C ⥤ D) [RepresentablyFlat G] : CompatiblePreserving K G :=
   by
@@ -181,7 +182,9 @@ theorem compatiblePreservingOfFlat {C : Type u₁} [Category.{v₁} C] {D : Type
   injection c'.π.naturality walking_cospan.hom.inr with _ e₂
   exact hx (c'.π.app left).right (c'.π.app right).right hg₁ hg₂ (e₁.symm.trans e₂)
 #align category_theory.compatible_preserving_of_flat CategoryTheory.compatiblePreservingOfFlat
+-/
 
+#print CategoryTheory.compatiblePreservingOfDownwardsClosed /-
 theorem compatiblePreservingOfDownwardsClosed (F : C ⥤ D) [Full F] [Faithful F]
     (hF : ∀ {c : C} {d : D} (f : d ⟶ F.obj c), Σ c', F.obj c' ≅ d) : CompatiblePreserving K F :=
   by
@@ -194,6 +197,7 @@ theorem compatiblePreservingOfDownwardsClosed (F : C ⥤ D) [Full F] [Faithful F
     hx (F.preimage <| e.hom ≫ f₁) (F.preimage <| e.hom ≫ f₂) hg₁ hg₂
       (F.map_injective <| by simpa using he)
 #align category_theory.compatible_preserving_of_downwards_closed CategoryTheory.compatiblePreservingOfDownwardsClosed
+-/
 
 #print CategoryTheory.pullback_isSheaf_of_coverPreserving /-
 /-- If `G` is cover-preserving and compatible-preserving,

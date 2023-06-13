@@ -39,6 +39,7 @@ theorem volume_regionBetween_eq_integral' [SigmaFinite μ] (f_int : IntegrableOn
 #align volume_region_between_eq_integral' volume_regionBetween_eq_integral'
 -/
 
+#print volume_regionBetween_eq_integral /-
 /-- If two functions are integrable on a measurable set, and one function is less than
     or equal to the other on that set, then the volume of the region
     between the two functions can be represented as an integral. -/
@@ -48,6 +49,7 @@ theorem volume_regionBetween_eq_integral [SigmaFinite μ] (f_int : IntegrableOn 
   volume_regionBetween_eq_integral' f_int g_int hs
     ((ae_restrict_iff' hs).mpr (eventually_of_forall hfg))
 #align volume_region_between_eq_integral volume_regionBetween_eq_integral
+-/
 
 end regionBetween
 
@@ -95,6 +97,7 @@ of finite integrals, see `interval_integral.integral_comp_neg`.
 -/
 
 
+#print integral_comp_neg_Iic /-
 @[simp]
 theorem integral_comp_neg_Iic {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E]
     [CompleteSpace E] (c : ℝ) (f : ℝ → E) : ∫ x in Iic c, f (-x) = ∫ x in Ioi (-c), f x :=
@@ -105,7 +108,9 @@ theorem integral_comp_neg_Iic {E : Type _} [NormedAddCommGroup E] [NormedSpace �
   rw [measure.map_neg_eq_self (volume : Measure ℝ)] at this 
   simp_rw [← integral_Ici_eq_integral_Ioi, this, neg_preimage, preimage_neg_Ici, neg_neg]
 #align integral_comp_neg_Iic integral_comp_neg_Iic
+-/
 
+#print integral_comp_neg_Ioi /-
 @[simp]
 theorem integral_comp_neg_Ioi {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E]
     [CompleteSpace E] (c : ℝ) (f : ℝ → E) : ∫ x in Ioi c, f (-x) = ∫ x in Iic (-c), f x :=
@@ -113,4 +118,5 @@ theorem integral_comp_neg_Ioi {E : Type _} [NormedAddCommGroup E] [NormedSpace �
   rw [← neg_neg c, ← integral_comp_neg_Iic]
   simp only [neg_neg]
 #align integral_comp_neg_Ioi integral_comp_neg_Ioi
+-/
 

@@ -29,18 +29,22 @@ namespace Positive
 instance : Inv { x : K // 0 < x } :=
   ⟨fun x => ⟨x⁻¹, inv_pos.2 x.2⟩⟩
 
+#print Positive.coe_inv /-
 @[simp]
 theorem coe_inv (x : { x : K // 0 < x }) : ↑x⁻¹ = (x⁻¹ : K) :=
   rfl
 #align positive.coe_inv Positive.coe_inv
+-/
 
 instance : Pow { x : K // 0 < x } ℤ :=
   ⟨fun x n => ⟨x ^ n, zpow_pos_of_pos x.2 _⟩⟩
 
+#print Positive.coe_zpow /-
 @[simp]
 theorem coe_zpow (x : { x : K // 0 < x }) (n : ℤ) : ↑(x ^ n) = (x ^ n : K) :=
   rfl
 #align positive.coe_zpow Positive.coe_zpow
+-/
 
 instance : LinearOrderedCommGroup { x : K // 0 < x } :=
   { Positive.Subtype.hasInv, Positive.linearOrderedCancelCommMonoid with

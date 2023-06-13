@@ -37,8 +37,6 @@ variable (A : Type u) [Semiring A] [Algebra R A]
 
 variable {B : Type u} [CommRing B] [Algebra R B] (I : Ideal B)
 
-include R A
-
 /-- An `R`-algebra `A` is formally unramified if for every `R`-algebra, every square-zero ideal
 `I : ideal B` and `f : A →ₐ[R] B ⧸ I`, there exists at most one lift `A →ₐ[R] B`. -/
 @[mk_iff]
@@ -92,8 +90,6 @@ theorem FormallyEtale.of_unramified_and_smooth [h₁ : FormallyUnramified R A]
     [h₂ : FormallySmooth R A] : FormallyEtale R A :=
   FormallyEtale.iff_unramified_and_smooth.mpr ⟨h₁, h₂⟩
 #align algebra.formally_etale.of_unramified_and_smooth Algebra.FormallyEtale.of_unramified_and_smooth
-
-omit R A
 
 theorem FormallyUnramified.lift_unique {B : Type u} [CommRing B] [_RB : Algebra R B]
     [FormallyUnramified R A] (I : Ideal B) (hI : IsNilpotent I) (g₁ g₂ : A →ₐ[R] B)
@@ -363,8 +359,6 @@ theorem FormallySmooth.of_split [FormallySmooth R P] (g : A →ₐ[R] P ⧸ f.to
   exact ⟨l.comp g, by rw [← AlgHom.comp_assoc, ← this, AlgHom.comp_assoc, hg, AlgHom.comp_id]⟩
 #align algebra.formally_smooth.of_split Algebra.FormallySmooth.of_split
 
-include hf
-
 /-- Let `P →ₐ[R] A` be a surjection with kernel `J`, and `P` a formally smooth `R`-algebra,
 then `A` is formally smooth over `R` iff the surjection `P ⧸ J ^ 2 →ₐ[R] A` has a section.
 
@@ -505,8 +499,6 @@ variable [IsScalarTower R Rₘ Sₘ] [IsScalarTower R S Sₘ]
 variable [IsLocalization M Rₘ] [IsLocalization (M.map (algebraMap R S)) Sₘ]
 
 attribute [local elab_as_elim] Ideal.IsNilpotent.induction_on
-
-include M
 
 theorem FormallySmooth.of_isLocalization : FormallySmooth R Rₘ :=
   by

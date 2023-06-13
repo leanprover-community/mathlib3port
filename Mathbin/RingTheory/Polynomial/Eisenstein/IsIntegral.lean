@@ -40,7 +40,6 @@ section Cyclotomic
 
 variable (p : ℕ)
 
--- mathport name: expr𝓟
 local notation "𝓟" => Submodule.span ℤ {p}
 
 open Polynomial
@@ -138,7 +137,6 @@ variable [Algebra K L] [Algebra R L] [Algebra R K] [IsScalarTower R K L] [IsSepa
 
 variable [IsDomain R] [IsFractionRing R K] [IsIntegrallyClosed R]
 
--- mathport name: expr𝓟
 local notation "𝓟" => Submodule.span R {p}
 
 open IsIntegrallyClosed PowerBasis Nat Polynomial IsScalarTower

@@ -114,17 +114,21 @@ theorem QInfty_f (n : ℕ) : (QInfty.f n : X _[n] ⟶ X _[n]) = (Q n).f n :=
 #align algebraic_topology.dold_kan.Q_infty_f AlgebraicTopology.DoldKan.QInfty_f
 -/
 
+#print AlgebraicTopology.DoldKan.PInfty_f_naturality /-
 @[simp, reassoc]
 theorem PInfty_f_naturality (n : ℕ) {X Y : SimplicialObject C} (f : X ⟶ Y) :
     f.app (op [n]) ≫ PInfty.f n = PInfty.f n ≫ f.app (op [n]) :=
   P_f_naturality n n f
 #align algebraic_topology.dold_kan.P_infty_f_naturality AlgebraicTopology.DoldKan.PInfty_f_naturality
+-/
 
+#print AlgebraicTopology.DoldKan.QInfty_f_naturality /-
 @[simp, reassoc]
 theorem QInfty_f_naturality (n : ℕ) {X Y : SimplicialObject C} (f : X ⟶ Y) :
     f.app (op [n]) ≫ QInfty.f n = QInfty.f n ≫ f.app (op [n]) :=
   Q_f_naturality n n f
 #align algebraic_topology.dold_kan.Q_infty_f_naturality AlgebraicTopology.DoldKan.QInfty_f_naturality
+-/
 
 #print AlgebraicTopology.DoldKan.PInfty_f_idem /-
 @[simp, reassoc]
@@ -186,14 +190,18 @@ theorem QInfty_comp_PInfty : (QInfty : K[X] ⟶ _) ≫ PInfty = 0 := by ext n;
 #align algebraic_topology.dold_kan.Q_infty_comp_P_infty AlgebraicTopology.DoldKan.QInfty_comp_PInfty
 -/
 
+#print AlgebraicTopology.DoldKan.PInfty_add_QInfty /-
 @[simp]
 theorem PInfty_add_QInfty : (PInfty : K[X] ⟶ _) + QInfty = 𝟙 _ := by dsimp only [Q_infty];
   simp only [add_sub_cancel'_right]
 #align algebraic_topology.dold_kan.P_infty_add_Q_infty AlgebraicTopology.DoldKan.PInfty_add_QInfty
+-/
 
+#print AlgebraicTopology.DoldKan.PInfty_f_add_QInfty_f /-
 theorem PInfty_f_add_QInfty_f (n : ℕ) : (PInfty.f n : X _[n] ⟶ _) + QInfty.f n = 𝟙 _ :=
   HomologicalComplex.congr_hom PInfty_add_QInfty n
 #align algebraic_topology.dold_kan.P_infty_f_add_Q_infty_f AlgebraicTopology.DoldKan.PInfty_f_add_QInfty_f
+-/
 
 variable (C)
 
@@ -218,6 +226,7 @@ def natTransPInfty_f (n : ℕ) :=
 
 variable {C}
 
+#print AlgebraicTopology.DoldKan.map_PInfty_f /-
 @[simp]
 theorem map_PInfty_f {D : Type _} [Category D] [Preadditive D] (G : C ⥤ D) [G.Additive]
     (X : SimplicialObject C) (n : ℕ) :
@@ -225,7 +234,9 @@ theorem map_PInfty_f {D : Type _} [Category D] [Preadditive D] (G : C ⥤ D) [G.
       G.map ((PInfty : AlternatingFaceMapComplex.obj X ⟶ _).f n) :=
   by simp only [P_infty_f, map_P]
 #align algebraic_topology.dold_kan.map_P_infty_f AlgebraicTopology.DoldKan.map_PInfty_f
+-/
 
+#print AlgebraicTopology.DoldKan.karoubi_PInfty_f /-
 /-- Given an object `Y : karoubi (simplicial_object C)`, this lemma
 computes `P_infty` for the associated object in `simplicial_object (karoubi C)`
 in terms of `P_infty` for `Y.X : simplicial_object C` and `Y.p`. -/
@@ -267,6 +278,7 @@ theorem karoubi_PInfty_f {Y : Karoubi (SimplicialObject C)} (n : ℕ) :
   dsimp [π] at eq 
   rw [← Eq, reassoc_of (app_idem Y (op [n]))]
 #align algebraic_topology.dold_kan.karoubi_P_infty_f AlgebraicTopology.DoldKan.karoubi_PInfty_f
+-/
 
 end DoldKan
 

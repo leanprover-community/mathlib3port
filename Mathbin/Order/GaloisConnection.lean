@@ -69,10 +69,12 @@ def GaloisConnection [Preorder α] [Preorder β] (l : α → β) (u : β → α)
 #align galois_connection GaloisConnection
 -/
 
+#print OrderIso.to_galoisConnection /-
 /-- Makes a Galois connection from an order-preserving bijection. -/
 theorem OrderIso.to_galoisConnection [Preorder α] [Preorder β] (oi : α ≃o β) :
     GaloisConnection oi oi.symm := fun b g => oi.rel_symm_apply.symm
 #align order_iso.to_galois_connection OrderIso.to_galoisConnection
+-/
 
 namespace GaloisConnection
 
@@ -86,8 +88,6 @@ theorem monotone_intro (hu : Monotone u) (hl : Monotone l) (hul : ∀ a, a ≤ u
   ⟨fun h => (hul _).trans (hu h), fun h => (hl h).trans (hlu _)⟩
 #align galois_connection.monotone_intro GaloisConnection.monotone_intro
 -/
-
-include gc
 
 #print GaloisConnection.dual /-
 protected theorem dual {l : α → β} {u : β → α} (gc : GaloisConnection l u) :
@@ -221,8 +221,6 @@ section PartialOrder
 
 variable [PartialOrder α] [Preorder β] {l : α → β} {u : β → α} (gc : GaloisConnection l u)
 
-include gc
-
 #print GaloisConnection.u_l_u_eq_u /-
 theorem u_l_u_eq_u (b : β) : u (l (u b)) = u b :=
   (gc.monotone_u (gc.l_u_le _)).antisymm (gc.le_u_l _)
@@ -265,8 +263,6 @@ end PartialOrder
 section PartialOrder
 
 variable [Preorder α] [PartialOrder β] {l : α → β} {u : β → α} (gc : GaloisConnection l u)
-
-include gc
 
 #print GaloisConnection.l_u_l_eq_l /-
 theorem l_u_l_eq_l (a : α) : l (u (l a)) = l a :=
@@ -311,13 +307,17 @@ section OrderTop
 
 variable [PartialOrder α] [Preorder β] [OrderTop α]
 
+#print GaloisConnection.u_eq_top /-
 theorem u_eq_top {l : α → β} {u : β → α} (gc : GaloisConnection l u) {x} : u x = ⊤ ↔ l ⊤ ≤ x :=
   top_le_iff.symm.trans gc.le_iff_le.symm
 #align galois_connection.u_eq_top GaloisConnection.u_eq_top
+-/
 
+#print GaloisConnection.u_top /-
 theorem u_top [OrderTop β] {l : α → β} {u : β → α} (gc : GaloisConnection l u) : u ⊤ = ⊤ :=
   gc.u_eq_top.2 le_top
 #align galois_connection.u_top GaloisConnection.u_top
+-/
 
 end OrderTop
 
@@ -325,13 +325,17 @@ section OrderBot
 
 variable [Preorder α] [PartialOrder β] [OrderBot β]
 
+#print GaloisConnection.l_eq_bot /-
 theorem l_eq_bot {l : α → β} {u : β → α} (gc : GaloisConnection l u) {x} : l x = ⊥ ↔ x ≤ u ⊥ :=
   gc.dual.u_eq_top
 #align galois_connection.l_eq_bot GaloisConnection.l_eq_bot
+-/
 
+#print GaloisConnection.l_bot /-
 theorem l_bot [OrderBot α] {l : α → β} {u : β → α} (gc : GaloisConnection l u) : l ⊥ = ⊥ :=
   gc.dual.u_top
 #align galois_connection.l_bot GaloisConnection.l_bot
+-/
 
 end OrderBot
 
@@ -339,11 +343,11 @@ section SemilatticeSup
 
 variable [SemilatticeSup α] [SemilatticeSup β] {l : α → β} {u : β → α} (gc : GaloisConnection l u)
 
-include gc
-
+#print GaloisConnection.l_sup /-
 theorem l_sup : l (a₁ ⊔ a₂) = l a₁ ⊔ l a₂ :=
   (gc.isLUB_l_image isLUB_pair).unique <| by simp only [image_pair, isLUB_pair]
 #align galois_connection.l_sup GaloisConnection.l_sup
+-/
 
 end SemilatticeSup
 
@@ -351,11 +355,11 @@ section SemilatticeInf
 
 variable [SemilatticeInf α] [SemilatticeInf β] {l : α → β} {u : β → α} (gc : GaloisConnection l u)
 
-include gc
-
+#print GaloisConnection.u_inf /-
 theorem u_inf : u (b₁ ⊓ b₂) = u b₁ ⊓ u b₂ :=
   gc.dual.l_sup
 #align galois_connection.u_inf GaloisConnection.u_inf
+-/
 
 end SemilatticeInf
 
@@ -363,37 +367,47 @@ section CompleteLattice
 
 variable [CompleteLattice α] [CompleteLattice β] {l : α → β} {u : β → α} (gc : GaloisConnection l u)
 
-include gc
-
+#print GaloisConnection.l_iSup /-
 theorem l_iSup {f : ι → α} : l (iSup f) = ⨆ i, l (f i) :=
   Eq.symm <|
     IsLUB.iSup_eq <|
       show IsLUB (range (l ∘ f)) (l (iSup f)) by
         rw [range_comp, ← sSup_range] <;> exact gc.is_lub_l_image (isLUB_sSup _)
 #align galois_connection.l_supr GaloisConnection.l_iSup
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
+#print GaloisConnection.l_iSup₂ /-
 theorem l_iSup₂ {f : ∀ i, κ i → α} : l (⨆ (i) (j), f i j) = ⨆ (i) (j), l (f i j) := by
   simp_rw [gc.l_supr]
 #align galois_connection.l_supr₂ GaloisConnection.l_iSup₂
+-/
 
+#print GaloisConnection.u_iInf /-
 theorem u_iInf {f : ι → β} : u (iInf f) = ⨅ i, u (f i) :=
   gc.dual.l_iSup
 #align galois_connection.u_infi GaloisConnection.u_iInf
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
+#print GaloisConnection.u_iInf₂ /-
 theorem u_iInf₂ {f : ∀ i, κ i → β} : u (⨅ (i) (j), f i j) = ⨅ (i) (j), u (f i j) :=
   gc.dual.l_iSup₂
 #align galois_connection.u_infi₂ GaloisConnection.u_iInf₂
+-/
 
+#print GaloisConnection.l_sSup /-
 theorem l_sSup {s : Set α} : l (sSup s) = ⨆ a ∈ s, l a := by simp only [sSup_eq_iSup, gc.l_supr]
 #align galois_connection.l_Sup GaloisConnection.l_sSup
+-/
 
+#print GaloisConnection.u_sInf /-
 theorem u_sInf {s : Set β} : u (sInf s) = ⨅ a ∈ s, u a :=
   gc.dual.l_sSup
 #align galois_connection.u_Inf GaloisConnection.u_sInf
+-/
 
 end CompleteLattice
 
@@ -436,6 +450,7 @@ protected theorem dfun {ι : Type u} {α : ι → Type v} {β : ι → Type w} [
 
 end Constructions
 
+#print GaloisConnection.l_comm_of_u_comm /-
 theorem l_comm_of_u_comm {X : Type _} [Preorder X] {Y : Type _} [Preorder Y] {Z : Type _}
     [Preorder Z] {W : Type _} [PartialOrder W] {lYX : X → Y} {uXY : Y → X}
     (hXY : GaloisConnection lYX uXY) {lWZ : Z → W} {uZW : W → Z} (hZW : GaloisConnection lWZ uZW)
@@ -444,7 +459,9 @@ theorem l_comm_of_u_comm {X : Type _} [Preorder X] {Y : Type _} [Preorder Y] {Z 
     lWZ (lZX x) = lWY (lYX x) :=
   (hXZ.compose hZW).l_unique (hXY.compose hWY) h
 #align galois_connection.l_comm_of_u_comm GaloisConnection.l_comm_of_u_comm
+-/
 
+#print GaloisConnection.u_comm_of_l_comm /-
 theorem u_comm_of_l_comm {X : Type _} [PartialOrder X] {Y : Type _} [Preorder Y] {Z : Type _}
     [Preorder Z] {W : Type _} [Preorder W] {lYX : X → Y} {uXY : Y → X}
     (hXY : GaloisConnection lYX uXY) {lWZ : Z → W} {uZW : W → Z} (hZW : GaloisConnection lWZ uZW)
@@ -453,7 +470,9 @@ theorem u_comm_of_l_comm {X : Type _} [PartialOrder X] {Y : Type _} [Preorder Y]
     uXZ (uZW w) = uXY (uYW w) :=
   (hXZ.compose hZW).u_unique (hXY.compose hWY) h
 #align galois_connection.u_comm_of_l_comm GaloisConnection.u_comm_of_l_comm
+-/
 
+#print GaloisConnection.l_comm_iff_u_comm /-
 theorem l_comm_iff_u_comm {X : Type _} [PartialOrder X] {Y : Type _} [Preorder Y] {Z : Type _}
     [Preorder Z] {W : Type _} [PartialOrder W] {lYX : X → Y} {uXY : Y → X}
     (hXY : GaloisConnection lYX uXY) {lWZ : Z → W} {uZW : W → Z} (hZW : GaloisConnection lWZ uZW)
@@ -462,6 +481,7 @@ theorem l_comm_iff_u_comm {X : Type _} [PartialOrder X] {Y : Type _} [Preorder Y
     (∀ w : W, uXZ (uZW w) = uXY (uYW w)) ↔ ∀ x : X, lWZ (lZX x) = lWY (lYX x) :=
   ⟨hXY.l_comm_of_u_comm hZW hWY hXZ, hXY.u_comm_of_l_comm hZW hWY hXZ⟩
 #align galois_connection.l_comm_iff_u_comm GaloisConnection.l_comm_iff_u_comm
+-/
 
 end GaloisConnection
 
@@ -470,10 +490,12 @@ section
 variable [CompleteLattice α] [CompleteLattice β] [CompleteLattice γ] {f : α → β → γ} {s : Set α}
   {t : Set β} {l u : α → β → γ} {l₁ u₁ : β → γ → α} {l₂ u₂ : α → γ → β}
 
+#print sSup_image2_eq_sSup_sSup /-
 theorem sSup_image2_eq_sSup_sSup (h₁ : ∀ b, GaloisConnection (swap l b) (u₁ b))
     (h₂ : ∀ a, GaloisConnection (l a) (u₂ a)) : sSup (image2 l s t) = l (sSup s) (sSup t) := by
   simp_rw [sSup_image2, ← (h₂ _).l_sSup, ← (h₁ _).l_sSup]
 #align Sup_image2_eq_Sup_Sup sSup_image2_eq_sSup_sSup
+-/
 
 #print sSup_image2_eq_sSup_sInf /-
 theorem sSup_image2_eq_sSup_sInf (h₁ : ∀ b, GaloisConnection (swap l b) (u₁ b))
@@ -498,10 +520,12 @@ theorem sSup_image2_eq_sInf_sInf (h₁ : ∀ b, GaloisConnection (swap l b ∘ o
 #align Sup_image2_eq_Inf_Inf sSup_image2_eq_sInf_sInf
 -/
 
+#print sInf_image2_eq_sInf_sInf /-
 theorem sInf_image2_eq_sInf_sInf (h₁ : ∀ b, GaloisConnection (l₁ b) (swap u b))
     (h₂ : ∀ a, GaloisConnection (l₂ a) (u a)) : sInf (image2 u s t) = u (sInf s) (sInf t) := by
   simp_rw [sInf_image2, ← (h₂ _).u_sInf, ← (h₁ _).u_sInf]
 #align Inf_image2_eq_Inf_Inf sInf_image2_eq_sInf_sInf
+-/
 
 #print sInf_image2_eq_sInf_sSup /-
 theorem sInf_image2_eq_sInf_sSup (h₁ : ∀ b, GaloisConnection (l₁ b) (swap u b))
@@ -532,25 +556,33 @@ namespace OrderIso
 
 variable [Preorder α] [Preorder β]
 
+#print OrderIso.bddAbove_image /-
 @[simp]
 theorem bddAbove_image (e : α ≃o β) {s : Set α} : BddAbove (e '' s) ↔ BddAbove s :=
   e.to_galoisConnection.bddAbove_l_image
 #align order_iso.bdd_above_image OrderIso.bddAbove_image
+-/
 
+#print OrderIso.bddBelow_image /-
 @[simp]
 theorem bddBelow_image (e : α ≃o β) {s : Set α} : BddBelow (e '' s) ↔ BddBelow s :=
   e.dual.bddAbove_image
 #align order_iso.bdd_below_image OrderIso.bddBelow_image
+-/
 
+#print OrderIso.bddAbove_preimage /-
 @[simp]
 theorem bddAbove_preimage (e : α ≃o β) {s : Set β} : BddAbove (e ⁻¹' s) ↔ BddAbove s := by
   rw [← e.bdd_above_image, e.image_preimage]
 #align order_iso.bdd_above_preimage OrderIso.bddAbove_preimage
+-/
 
+#print OrderIso.bddBelow_preimage /-
 @[simp]
 theorem bddBelow_preimage (e : α ≃o β) {s : Set β} : BddBelow (e ⁻¹' s) ↔ BddBelow s := by
   rw [← e.bdd_below_image, e.image_preimage]
 #align order_iso.bdd_below_preimage OrderIso.bddBelow_preimage
+-/
 
 end OrderIso
 
@@ -589,6 +621,7 @@ def GaloisInsertion.monotoneIntro {α β : Type _} [Preorder α] [Preorder β] {
 #align galois_insertion.monotone_intro GaloisInsertion.monotoneIntro
 -/
 
+#print OrderIso.toGaloisInsertion /-
 /-- Makes a Galois insertion from an order-preserving bijection. -/
 protected def OrderIso.toGaloisInsertion [Preorder α] [Preorder β] (oi : α ≃o β) :
     GaloisInsertion oi oi.symm where
@@ -597,6 +630,7 @@ protected def OrderIso.toGaloisInsertion [Preorder α] [Preorder β] (oi : α �
   le_l_u g := le_of_eq (oi.right_inv g).symm
   choice_eq b h := rfl
 #align order_iso.to_galois_insertion OrderIso.toGaloisInsertion
+-/
 
 #print GaloisConnection.toGaloisInsertion /-
 /-- Make a `galois_insertion l u` from a `galois_connection l u` such that `∀ b, b ≤ l (u b)` -/
@@ -648,70 +682,90 @@ theorem u_injective [Preorder α] [PartialOrder β] (gi : GaloisInsertion l u) :
 #align galois_insertion.u_injective GaloisInsertion.u_injective
 -/
 
+#print GaloisInsertion.l_sup_u /-
 theorem l_sup_u [SemilatticeSup α] [SemilatticeSup β] (gi : GaloisInsertion l u) (a b : β) :
     l (u a ⊔ u b) = a ⊔ b :=
   calc
     l (u a ⊔ u b) = l (u a) ⊔ l (u b) := gi.gc.l_sup
     _ = a ⊔ b := by simp only [gi.l_u_eq]
 #align galois_insertion.l_sup_u GaloisInsertion.l_sup_u
+-/
 
+#print GaloisInsertion.l_iSup_u /-
 theorem l_iSup_u [CompleteLattice α] [CompleteLattice β] (gi : GaloisInsertion l u) {ι : Sort x}
     (f : ι → β) : l (⨆ i, u (f i)) = ⨆ i, f i :=
   calc
     l (⨆ i : ι, u (f i)) = ⨆ i : ι, l (u (f i)) := gi.gc.l_iSup
     _ = ⨆ i : ι, f i := congr_arg _ <| funext fun i => gi.l_u_eq (f i)
 #align galois_insertion.l_supr_u GaloisInsertion.l_iSup_u
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i hi) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i hi) -/
+#print GaloisInsertion.l_biSup_u /-
 theorem l_biSup_u [CompleteLattice α] [CompleteLattice β] (gi : GaloisInsertion l u) {ι : Sort x}
     {p : ι → Prop} (f : ∀ (i) (hi : p i), β) : l (⨆ (i) (hi), u (f i hi)) = ⨆ (i) (hi), f i hi := by
   simp only [iSup_subtype', gi.l_supr_u]
 #align galois_insertion.l_bsupr_u GaloisInsertion.l_biSup_u
+-/
 
+#print GaloisInsertion.l_sSup_u_image /-
 theorem l_sSup_u_image [CompleteLattice α] [CompleteLattice β] (gi : GaloisInsertion l u)
     (s : Set β) : l (sSup (u '' s)) = sSup s := by rw [sSup_image, gi.l_bsupr_u, sSup_eq_iSup]
 #align galois_insertion.l_Sup_u_image GaloisInsertion.l_sSup_u_image
+-/
 
+#print GaloisInsertion.l_inf_u /-
 theorem l_inf_u [SemilatticeInf α] [SemilatticeInf β] (gi : GaloisInsertion l u) (a b : β) :
     l (u a ⊓ u b) = a ⊓ b :=
   calc
     l (u a ⊓ u b) = l (u (a ⊓ b)) := congr_arg l gi.gc.u_inf.symm
     _ = a ⊓ b := by simp only [gi.l_u_eq]
 #align galois_insertion.l_inf_u GaloisInsertion.l_inf_u
+-/
 
+#print GaloisInsertion.l_iInf_u /-
 theorem l_iInf_u [CompleteLattice α] [CompleteLattice β] (gi : GaloisInsertion l u) {ι : Sort x}
     (f : ι → β) : l (⨅ i, u (f i)) = ⨅ i, f i :=
   calc
     l (⨅ i : ι, u (f i)) = l (u (⨅ i : ι, f i)) := congr_arg l gi.gc.u_iInf.symm
     _ = ⨅ i : ι, f i := gi.l_u_eq _
 #align galois_insertion.l_infi_u GaloisInsertion.l_iInf_u
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i hi) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i hi) -/
+#print GaloisInsertion.l_biInf_u /-
 theorem l_biInf_u [CompleteLattice α] [CompleteLattice β] (gi : GaloisInsertion l u) {ι : Sort x}
     {p : ι → Prop} (f : ∀ (i) (hi : p i), β) : l (⨅ (i) (hi), u (f i hi)) = ⨅ (i) (hi), f i hi := by
   simp only [iInf_subtype', gi.l_infi_u]
 #align galois_insertion.l_binfi_u GaloisInsertion.l_biInf_u
+-/
 
+#print GaloisInsertion.l_sInf_u_image /-
 theorem l_sInf_u_image [CompleteLattice α] [CompleteLattice β] (gi : GaloisInsertion l u)
     (s : Set β) : l (sInf (u '' s)) = sInf s := by rw [sInf_image, gi.l_binfi_u, sInf_eq_iInf]
 #align galois_insertion.l_Inf_u_image GaloisInsertion.l_sInf_u_image
+-/
 
+#print GaloisInsertion.l_iInf_of_ul_eq_self /-
 theorem l_iInf_of_ul_eq_self [CompleteLattice α] [CompleteLattice β] (gi : GaloisInsertion l u)
     {ι : Sort x} (f : ι → α) (hf : ∀ i, u (l (f i)) = f i) : l (⨅ i, f i) = ⨅ i, l (f i) :=
   calc
     l (⨅ i, f i) = l (⨅ i : ι, u (l (f i))) := by simp [hf]
     _ = ⨅ i, l (f i) := gi.l_iInf_u _
 #align galois_insertion.l_infi_of_ul_eq_self GaloisInsertion.l_iInf_of_ul_eq_self
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i hi) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i hi) -/
+#print GaloisInsertion.l_biInf_of_ul_eq_self /-
 theorem l_biInf_of_ul_eq_self [CompleteLattice α] [CompleteLattice β] (gi : GaloisInsertion l u)
     {ι : Sort x} {p : ι → Prop} (f : ∀ (i) (hi : p i), α) (hf : ∀ i hi, u (l (f i hi)) = f i hi) :
     l (⨅ (i) (hi), f i hi) = ⨅ (i) (hi), l (f i hi) := by rw [iInf_subtype', iInf_subtype'];
   exact gi.l_infi_of_ul_eq_self _ fun _ => hf _ _
 #align galois_insertion.l_binfi_of_ul_eq_self GaloisInsertion.l_biInf_of_ul_eq_self
+-/
 
 #print GaloisInsertion.u_le_u_iff /-
 theorem u_le_u_iff [Preorder α] [Preorder β] (gi : GaloisInsertion l u) {a b} : u a ≤ u b ↔ a ≤ b :=
@@ -883,6 +937,7 @@ def GaloisInsertion.ofDual [Preorder α] [Preorder β] {l : αᵒᵈ → βᵒ�
 #align galois_insertion.of_dual GaloisInsertion.ofDual
 -/
 
+#print OrderIso.toGaloisCoinsertion /-
 /-- Makes a Galois coinsertion from an order-preserving bijection. -/
 protected def OrderIso.toGaloisCoinsertion [Preorder α] [Preorder β] (oi : α ≃o β) :
     GaloisCoinsertion oi oi.symm where
@@ -891,6 +946,7 @@ protected def OrderIso.toGaloisCoinsertion [Preorder α] [Preorder β] (oi : α 
   u_l_le g := le_of_eq (oi.left_inv g)
   choice_eq b h := rfl
 #align order_iso.to_galois_coinsertion OrderIso.toGaloisCoinsertion
+-/
 
 #print GaloisCoinsertion.monotoneIntro /-
 /-- A constructor for a Galois coinsertion with the trivial `choice` function. -/
@@ -951,55 +1007,73 @@ theorem l_injective [PartialOrder α] [Preorder β] (gi : GaloisCoinsertion l u)
 #align galois_coinsertion.l_injective GaloisCoinsertion.l_injective
 -/
 
+#print GaloisCoinsertion.u_inf_l /-
 theorem u_inf_l [SemilatticeInf α] [SemilatticeInf β] (gi : GaloisCoinsertion l u) (a b : α) :
     u (l a ⊓ l b) = a ⊓ b :=
   gi.dual.l_sup_u a b
 #align galois_coinsertion.u_inf_l GaloisCoinsertion.u_inf_l
+-/
 
+#print GaloisCoinsertion.u_iInf_l /-
 theorem u_iInf_l [CompleteLattice α] [CompleteLattice β] (gi : GaloisCoinsertion l u) {ι : Sort x}
     (f : ι → α) : u (⨅ i, l (f i)) = ⨅ i, f i :=
   gi.dual.l_iSup_u _
 #align galois_coinsertion.u_infi_l GaloisCoinsertion.u_iInf_l
+-/
 
+#print GaloisCoinsertion.u_sInf_l_image /-
 theorem u_sInf_l_image [CompleteLattice α] [CompleteLattice β] (gi : GaloisCoinsertion l u)
     (s : Set α) : u (sInf (l '' s)) = sInf s :=
   gi.dual.l_sSup_u_image _
 #align galois_coinsertion.u_Inf_l_image GaloisCoinsertion.u_sInf_l_image
+-/
 
+#print GaloisCoinsertion.u_sup_l /-
 theorem u_sup_l [SemilatticeSup α] [SemilatticeSup β] (gi : GaloisCoinsertion l u) (a b : α) :
     u (l a ⊔ l b) = a ⊔ b :=
   gi.dual.l_inf_u _ _
 #align galois_coinsertion.u_sup_l GaloisCoinsertion.u_sup_l
+-/
 
+#print GaloisCoinsertion.u_iSup_l /-
 theorem u_iSup_l [CompleteLattice α] [CompleteLattice β] (gi : GaloisCoinsertion l u) {ι : Sort x}
     (f : ι → α) : u (⨆ i, l (f i)) = ⨆ i, f i :=
   gi.dual.l_iInf_u _
 #align galois_coinsertion.u_supr_l GaloisCoinsertion.u_iSup_l
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i hi) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i hi) -/
+#print GaloisCoinsertion.u_biSup_l /-
 theorem u_biSup_l [CompleteLattice α] [CompleteLattice β] (gi : GaloisCoinsertion l u) {ι : Sort x}
     {p : ι → Prop} (f : ∀ (i) (hi : p i), α) : u (⨆ (i) (hi), l (f i hi)) = ⨆ (i) (hi), f i hi :=
   gi.dual.l_biInf_u _
 #align galois_coinsertion.u_bsupr_l GaloisCoinsertion.u_biSup_l
+-/
 
+#print GaloisCoinsertion.u_sSup_l_image /-
 theorem u_sSup_l_image [CompleteLattice α] [CompleteLattice β] (gi : GaloisCoinsertion l u)
     (s : Set α) : u (sSup (l '' s)) = sSup s :=
   gi.dual.l_sInf_u_image _
 #align galois_coinsertion.u_Sup_l_image GaloisCoinsertion.u_sSup_l_image
+-/
 
+#print GaloisCoinsertion.u_iSup_of_lu_eq_self /-
 theorem u_iSup_of_lu_eq_self [CompleteLattice α] [CompleteLattice β] (gi : GaloisCoinsertion l u)
     {ι : Sort x} (f : ι → β) (hf : ∀ i, l (u (f i)) = f i) : u (⨆ i, f i) = ⨆ i, u (f i) :=
   gi.dual.l_iInf_of_ul_eq_self _ hf
 #align galois_coinsertion.u_supr_of_lu_eq_self GaloisCoinsertion.u_iSup_of_lu_eq_self
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i hi) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i hi) -/
+#print GaloisCoinsertion.u_biSup_of_lu_eq_self /-
 theorem u_biSup_of_lu_eq_self [CompleteLattice α] [CompleteLattice β] (gi : GaloisCoinsertion l u)
     {ι : Sort x} {p : ι → Prop} (f : ∀ (i) (hi : p i), β) (hf : ∀ i hi, l (u (f i hi)) = f i hi) :
     u (⨆ (i) (hi), f i hi) = ⨆ (i) (hi), u (f i hi) :=
   gi.dual.l_biInf_of_ul_eq_self _ hf
 #align galois_coinsertion.u_bsupr_of_lu_eq_self GaloisCoinsertion.u_biSup_of_lu_eq_self
+-/
 
 #print GaloisCoinsertion.l_le_l_iff /-
 theorem l_le_l_iff [Preorder α] [Preorder β] (gi : GaloisCoinsertion l u) {a b} :
@@ -1099,6 +1173,7 @@ end lift
 
 end GaloisCoinsertion
 
+#print WithBot.giUnbot'Bot /-
 /-- If `α` is a partial order with bottom element (e.g., `ℕ`, `ℝ≥0`), then `with_bot.unbot' ⊥` and
 coercion form a Galois insertion. -/
 def WithBot.giUnbot'Bot [Preorder α] [OrderBot α] :
@@ -1109,4 +1184,5 @@ def WithBot.giUnbot'Bot [Preorder α] [OrderBot α] :
   choice o ho := o.unbot' ⊥
   choice_eq _ _ := rfl
 #align with_bot.gi_unbot'_bot WithBot.giUnbot'Bot
+-/
 

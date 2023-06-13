@@ -155,6 +155,7 @@ theorem nodup_iff_get?_ne_get? {l : List α} :
 #align list.nodup_iff_nth_ne_nth List.nodup_iff_get?_ne_get?
 -/
 
+#print List.Nodup.ne_singleton_iff /-
 theorem Nodup.ne_singleton_iff {l : List α} (h : Nodup l) (x : α) :
     l ≠ [x] ↔ l = [] ∨ ∃ y ∈ l, y ≠ x :=
   by
@@ -170,6 +171,7 @@ theorem Nodup.ne_singleton_iff {l : List α} (h : Nodup l) (x : α) :
         suffices ∃ (y : α) (H : y ∈ hd :: tl), y ≠ x by simpa [ne_nil_of_mem hy]
         exact ⟨y, mem_cons_of_mem _ hy, hx⟩
 #align list.nodup.ne_singleton_iff List.Nodup.ne_singleton_iff
+-/
 
 #print List.nthLe_eq_of_ne_imp_not_nodup /-
 theorem nthLe_eq_of_ne_imp_not_nodup (xs : List α) (n m : ℕ) (hn : n < xs.length)
@@ -336,9 +338,11 @@ theorem Nodup.pmap {p : α → Prop} {f : ∀ a, p a → β} {l : List α} {H}
 #align list.nodup.pmap List.Nodup.pmap
 -/
 
+#print List.Nodup.filter /-
 theorem Nodup.filter (p : α → Prop) [DecidablePred p] {l} : Nodup l → Nodup (filter p l) :=
   Pairwise.filter p
 #align list.nodup.filter List.Nodup.filter
+-/
 
 #print List.nodup_reverse /-
 @[simp]
@@ -347,6 +351,7 @@ theorem nodup_reverse {l : List α} : Nodup (reverse l) ↔ Nodup l :=
 #align list.nodup_reverse List.nodup_reverse
 -/
 
+#print List.Nodup.erase_eq_filter /-
 theorem Nodup.erase_eq_filter [DecidableEq α] {l} (d : Nodup l) (a : α) :
     l.eraseₓ a = filter (· ≠ a) l :=
   by
@@ -356,22 +361,31 @@ theorem Nodup.erase_eq_filter [DecidableEq α] {l} (d : Nodup l) (a : α) :
     symm; rw [filter_eq_self]; simpa only [Ne.def, eq_comm] using m; exact not_not_intro rfl
   · rw [erase_cons_tail _ h, filter_cons_of_pos, IH]; exact h
 #align list.nodup.erase_eq_filter List.Nodup.erase_eq_filter
+-/
 
+#print List.Nodup.erase /-
 theorem Nodup.erase [DecidableEq α] (a : α) : Nodup l → Nodup (l.eraseₓ a) :=
   Nodup.sublist <| erase_sublist _ _
 #align list.nodup.erase List.Nodup.erase
+-/
 
+#print List.Nodup.diff /-
 theorem Nodup.diff [DecidableEq α] : l₁.Nodup → (l₁.diffₓ l₂).Nodup :=
   Nodup.sublist <| diff_sublist _ _
 #align list.nodup.diff List.Nodup.diff
+-/
 
+#print List.Nodup.mem_erase_iff /-
 theorem Nodup.mem_erase_iff [DecidableEq α] (d : Nodup l) : a ∈ l.eraseₓ b ↔ a ≠ b ∧ a ∈ l := by
   rw [d.erase_eq_filter, mem_filter, and_comm']
 #align list.nodup.mem_erase_iff List.Nodup.mem_erase_iff
+-/
 
+#print List.Nodup.not_mem_erase /-
 theorem Nodup.not_mem_erase [DecidableEq α] (h : Nodup l) : a ∉ l.eraseₓ a := fun H =>
   (h.mem_erase_iff.1 H).1 rfl
 #align list.nodup.not_mem_erase List.Nodup.not_mem_erase
+-/
 
 #print List.nodup_join /-
 theorem nodup_join {L : List (List α)} :
@@ -405,6 +419,7 @@ protected theorem Nodup.product {l₂ : List β} (d₁ : l₁.Nodup) (d₂ : l�
 #align list.nodup.product List.Nodup.product
 -/
 
+#print List.Nodup.sigma /-
 theorem Nodup.sigma {σ : α → Type _} {l₂ : ∀ a, List (σ a)} (d₁ : Nodup l₁)
     (d₂ : ∀ a, Nodup (l₂ a)) : (l₁.Sigma l₂).Nodup :=
   nodup_bind.2
@@ -415,6 +430,7 @@ theorem Nodup.sigma {σ : α → Type _} {l₂ : ∀ a, List (σ a)} (d₁ : Nod
         rcases mem_map.1 h₂ with ⟨b₂, mb₂, ⟨⟩⟩
         exact n rfl⟩
 #align list.nodup.sigma List.Nodup.sigma
+-/
 
 #print List.Nodup.filterMap /-
 protected theorem Nodup.filterMap {f : α → Option β} (h : ∀ a a' b, b ∈ f a → b ∈ f a' → a = a') :
@@ -451,6 +467,7 @@ theorem Nodup.inter [DecidableEq α] (l₂ : List α) : Nodup l₁ → Nodup (l�
 #align list.nodup.inter List.Nodup.inter
 -/
 
+#print List.Nodup.diff_eq_filter /-
 theorem Nodup.diff_eq_filter [DecidableEq α] :
     ∀ {l₁ l₂ : List α} (hl₁ : l₁.Nodup), l₁.diffₓ l₂ = l₁.filterₓ (· ∉ l₂)
   | l₁, [], hl₁ => by simp
@@ -459,10 +476,13 @@ theorem Nodup.diff_eq_filter [DecidableEq α] :
     rw [diff_cons, (hl₁.erase _).diff_eq_filter, hl₁.erase_eq_filter, filter_filter]
     simp only [mem_cons_iff, not_or, and_comm]
 #align list.nodup.diff_eq_filter List.Nodup.diff_eq_filter
+-/
 
+#print List.Nodup.mem_diff_iff /-
 theorem Nodup.mem_diff_iff [DecidableEq α] (hl₁ : l₁.Nodup) : a ∈ l₁.diffₓ l₂ ↔ a ∈ l₁ ∧ a ∉ l₂ :=
   by rw [hl₁.diff_eq_filter, mem_filter]
 #align list.nodup.mem_diff_iff List.Nodup.mem_diff_iff
+-/
 
 #print List.Nodup.set /-
 protected theorem Nodup.set :
@@ -477,6 +497,7 @@ protected theorem Nodup.set :
 #align list.nodup.update_nth List.Nodup.set
 -/
 
+#print List.Nodup.map_update /-
 theorem Nodup.map_update [DecidableEq α] {l : List α} (hl : l.Nodup) (f : α → β) (x : α) (y : β) :
     l.map (Function.update f x y) = if x ∈ l then (l.map f).set (l.indexOfₓ x) y else l.map f :=
   by
@@ -488,6 +509,7 @@ theorem Nodup.map_update [DecidableEq α] {l : List α} (hl : l.Nodup) (f : α �
     simp [update_nth, hl.1]
   · simp [Ne.symm H, H, update_nth, ← apply_ite (cons (f hd))]
 #align list.nodup.map_update List.Nodup.map_update
+-/
 
 #print List.Nodup.pairwise_of_forall_ne /-
 theorem Nodup.pairwise_of_forall_ne {l : List α} {r : α → α → Prop} (hl : l.Nodup)

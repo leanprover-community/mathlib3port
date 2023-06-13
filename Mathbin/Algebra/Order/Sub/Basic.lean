@@ -35,18 +35,23 @@ theorem AddHom.le_map_tsub [Preorder β] [Add β] [Sub β] [OrderedSub β] (f : 
 #align add_hom.le_map_tsub AddHom.le_map_tsub
 -/
 
+#print le_mul_tsub /-
 theorem le_mul_tsub {R : Type _} [Distrib R] [Preorder R] [Sub R] [OrderedSub R]
     [CovariantClass R R (· * ·) (· ≤ ·)] {a b c : R} : a * b - a * c ≤ a * (b - c) :=
   (AddHom.mulLeft a).le_map_tsub (monotone_id.const_mul' a) _ _
 #align le_mul_tsub le_mul_tsub
+-/
 
+#print le_tsub_mul /-
 theorem le_tsub_mul {R : Type _} [CommSemiring R] [Preorder R] [Sub R] [OrderedSub R]
     [CovariantClass R R (· * ·) (· ≤ ·)] {a b c : R} : a * c - b * c ≤ (a - b) * c := by
   simpa only [mul_comm _ c] using le_mul_tsub
 #align le_tsub_mul le_tsub_mul
+-/
 
 end Add
 
+#print OrderIso.map_tsub /-
 /-- An order isomorphism between types with ordered subtraction preserves subtraction provided that
 it preserves addition. -/
 theorem OrderIso.map_tsub {M N : Type _} [Preorder M] [Add M] [Sub M] [OrderedSub M]
@@ -58,6 +63,7 @@ theorem OrderIso.map_tsub {M N : Type _} [Preorder M] [Add M] [Sub M] [OrderedSu
   suffices e (e.symm (e a) - e.symm (e b)) ≤ e (e.symm (e a - e b)) by simpa
   exact e.monotone (e_add.symm.to_add_hom.le_map_tsub e.symm.monotone _ _)
 #align order_iso.map_tsub OrderIso.map_tsub
+-/
 
 /-! ### Preorder -/
 
@@ -68,10 +74,12 @@ variable [Preorder α]
 
 variable [AddCommMonoid α] [Sub α] [OrderedSub α] {a b c d : α}
 
+#print AddMonoidHom.le_map_tsub /-
 theorem AddMonoidHom.le_map_tsub [Preorder β] [AddCommMonoid β] [Sub β] [OrderedSub β] (f : α →+ β)
     (hf : Monotone f) (a b : α) : f a - f b ≤ f (a - b) :=
   f.toAddHom.le_map_tsub hf a b
 #align add_monoid_hom.le_map_tsub AddMonoidHom.le_map_tsub
+-/
 
 end Preorder
 

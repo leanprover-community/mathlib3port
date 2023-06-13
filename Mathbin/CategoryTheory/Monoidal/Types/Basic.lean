@@ -108,6 +108,7 @@ theorem associator_inv_apply {X Y Z : Type u} {x : X} {y : Y} {z : Z} :
 -/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print CategoryTheory.MonoidalFunctor.mapPi /-
 -- We don't yet have an API for tensor products indexed by finite ordered types,
 -- but it would be nice to state how monoidal functors preserve these.
 /-- If `F` is a monoidal functor out of `Type`, it takes the (n+1)st cartesian power
@@ -117,6 +118,7 @@ noncomputable def MonoidalFunctor.mapPi {C : Type _} [Category C] [MonoidalCateg
     F.obj (Fin (n + 1) → β) ≅ F.obj β ⊗ F.obj (Fin n → β) :=
   Functor.mapIso _ (Equiv.piFinSucc n β).toIso ≪≫ (asIso (F.μ β (Fin n → β))).symm
 #align category_theory.monoidal_functor.map_pi CategoryTheory.MonoidalFunctor.mapPi
+-/
 
 end CategoryTheory
 

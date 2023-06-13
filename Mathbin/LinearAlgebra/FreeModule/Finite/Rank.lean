@@ -75,11 +75,13 @@ theorem rank_lt_aleph0 : Module.rank R M < ℵ₀ :=
 #align finite_dimensional.rank_lt_aleph_0 FiniteDimensional.rank_lt_aleph0
 -/
 
+#print FiniteDimensional.finrank_eq_rank /-
 /-- If `M` is finite, `finrank M = rank M`. -/
 @[simp]
 theorem finrank_eq_rank : ↑(finrank R M) = Module.rank R M := by
   rw [finrank, cast_to_nat_of_lt_aleph_0 (rank_lt_aleph_0 R M)]
 #align finite_dimensional.finrank_eq_rank FiniteDimensional.finrank_eq_rank
+-/
 
 end RingFinite
 
@@ -103,11 +105,13 @@ theorem finrank_eq_card_chooseBasisIndex :
 #align finite_dimensional.finrank_eq_card_choose_basis_index FiniteDimensional.finrank_eq_card_chooseBasisIndex
 -/
 
+#print FiniteDimensional.finrank_finsupp /-
 /-- The finrank of `(ι →₀ R)` is `fintype.card ι`. -/
 @[simp]
 theorem finrank_finsupp {ι : Type v} [Fintype ι] : finrank R (ι →₀ R) = card ι := by
   rw [finrank, rank_finsupp_self, ← mk_to_nat_eq_card, to_nat_lift]
 #align finite_dimensional.finrank_finsupp FiniteDimensional.finrank_finsupp
+-/
 
 #print FiniteDimensional.finrank_pi /-
 /-- The finrank of `(ι → R)` is `fintype.card ι`. -/
@@ -128,11 +132,13 @@ theorem finrank_directSum {ι : Type v} [Fintype ι] (M : ι → Type w) [∀ i 
 #align finite_dimensional.finrank_direct_sum FiniteDimensional.finrank_directSum
 -/
 
+#print FiniteDimensional.finrank_prod /-
 /-- The finrank of `M × N` is `(finrank R M) + (finrank R N)`. -/
 @[simp]
 theorem finrank_prod : finrank R (M × N) = finrank R M + finrank R N := by
   simp [finrank, rank_lt_aleph_0 R M, rank_lt_aleph_0 R N]
 #align finite_dimensional.finrank_prod FiniteDimensional.finrank_prod
+-/
 
 #print FiniteDimensional.finrank_pi_fintype /-
 --TODO: this should follow from `linear_equiv.finrank_eq`, that is over a field.
@@ -147,11 +153,13 @@ theorem finrank_pi_fintype {ι : Type v} [Fintype ι] {M : ι → Type w} [∀ i
 #align finite_dimensional.finrank_pi_fintype FiniteDimensional.finrank_pi_fintype
 -/
 
+#print FiniteDimensional.finrank_matrix /-
 /-- If `m` and `n` are `fintype`, the finrank of `m × n` matrices is
   `(fintype.card m) * (fintype.card n)`. -/
 theorem finrank_matrix (m n : Type _) [Fintype m] [Fintype n] :
     finrank R (Matrix m n R) = card m * card n := by simp [finrank]
 #align finite_dimensional.finrank_matrix FiniteDimensional.finrank_matrix
+-/
 
 variable {R M N}
 
@@ -189,12 +197,14 @@ variable [AddCommGroup M] [Module R M] [Module.Free R M] [Module.Finite R M]
 
 variable [AddCommGroup N] [Module R N] [Module.Free R N] [Module.Finite R N]
 
+#print FiniteDimensional.finrank_tensorProduct /-
 /-- The finrank of `M ⊗[R] N` is `(finrank R M) * (finrank R N)`. -/
 @[simp]
 theorem finrank_tensorProduct (M : Type v) (N : Type w) [AddCommGroup M] [Module R M]
     [Module.Free R M] [AddCommGroup N] [Module R N] [Module.Free R N] :
     finrank R (M ⊗[R] N) = finrank R M * finrank R N := by simp [finrank]
 #align finite_dimensional.finrank_tensor_product FiniteDimensional.finrank_tensorProduct
+-/
 
 end CommRing
 
@@ -212,10 +222,12 @@ variable [AddCommGroup M] [Module R M]
 
 variable [AddCommGroup N] [Module R N]
 
+#print LinearMap.finrank_le_finrank_of_injective /-
 theorem LinearMap.finrank_le_finrank_of_injective [Module.Finite R N] {f : M →ₗ[R] N}
     (hf : Function.Injective f) : finrank R M ≤ finrank R N :=
   finrank_le_finrank_of_rank_le_rank (LinearMap.lift_rank_le_of_injective _ hf) (rank_lt_aleph0 _ _)
 #align linear_map.finrank_le_finrank_of_injective LinearMap.finrank_le_finrank_of_injective
+-/
 
 #print LinearMap.finrank_range_le /-
 theorem LinearMap.finrank_range_le [Module.Finite R M] (f : M →ₗ[R] N) :
@@ -251,6 +263,7 @@ theorem Submodule.finrank_map_le (f : M →ₗ[R] N) (p : Submodule R M) [Module
 #align submodule.finrank_map_le Submodule.finrank_map_le
 -/
 
+#print Submodule.finrank_le_finrank_of_le /-
 theorem Submodule.finrank_le_finrank_of_le {s t : Submodule R M} [Module.Finite R t] (hst : s ≤ t) :
     finrank R s ≤ finrank R t :=
   calc
@@ -258,6 +271,7 @@ theorem Submodule.finrank_le_finrank_of_le {s t : Submodule R M} [Module.Finite 
       (Submodule.comapSubtypeEquivOfLe hst).finrank_eq.symm
     _ ≤ finrank R t := Submodule.finrank_le _
 #align submodule.finrank_le_finrank_of_le Submodule.finrank_le_finrank_of_le
+-/
 
 end
 

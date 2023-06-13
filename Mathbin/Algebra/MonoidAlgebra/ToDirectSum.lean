@@ -83,36 +83,46 @@ section
 
 variable [DecidableEq ι] [Semiring M]
 
+#print AddMonoidAlgebra.toDirectSum_single /-
 @[simp]
 theorem AddMonoidAlgebra.toDirectSum_single (i : ι) (m : M) :
     AddMonoidAlgebra.toDirectSum (Finsupp.single i m) = DirectSum.of _ i m :=
   Finsupp.toDfinsupp_single i m
 #align add_monoid_algebra.to_direct_sum_single AddMonoidAlgebra.toDirectSum_single
+-/
 
 variable [∀ m : M, Decidable (m ≠ 0)]
 
+#print DirectSum.toAddMonoidAlgebra /-
 /-- Interpret a homogenous `direct_sum` as a `add_monoid_algebra`. -/
 def DirectSum.toAddMonoidAlgebra (f : ⨁ i : ι, M) : AddMonoidAlgebra M ι :=
   Dfinsupp.toFinsupp f
 #align direct_sum.to_add_monoid_algebra DirectSum.toAddMonoidAlgebra
+-/
 
+#print DirectSum.toAddMonoidAlgebra_of /-
 @[simp]
 theorem DirectSum.toAddMonoidAlgebra_of (i : ι) (m : M) :
     (DirectSum.of _ i m : ⨁ i : ι, M).toAddMonoidAlgebra = Finsupp.single i m :=
   Dfinsupp.toFinsupp_single i m
 #align direct_sum.to_add_monoid_algebra_of DirectSum.toAddMonoidAlgebra_of
+-/
 
+#print AddMonoidAlgebra.toDirectSum_toAddMonoidAlgebra /-
 @[simp]
 theorem AddMonoidAlgebra.toDirectSum_toAddMonoidAlgebra (f : AddMonoidAlgebra M ι) :
     f.toDirectSum.toAddMonoidAlgebra = f :=
   Finsupp.toDfinsupp_toFinsupp f
 #align add_monoid_algebra.to_direct_sum_to_add_monoid_algebra AddMonoidAlgebra.toDirectSum_toAddMonoidAlgebra
+-/
 
+#print DirectSum.toAddMonoidAlgebra_toDirectSum /-
 @[simp]
 theorem DirectSum.toAddMonoidAlgebra_toDirectSum (f : ⨁ i : ι, M) :
     f.toAddMonoidAlgebra.toDirectSum = f :=
   Dfinsupp.toFinsupp_toDfinsupp f
 #align direct_sum.to_add_monoid_algebra_to_direct_sum DirectSum.toAddMonoidAlgebra_toDirectSum
+-/
 
 end
 
@@ -125,17 +135,22 @@ section Lemmas
 
 namespace AddMonoidAlgebra
 
+#print AddMonoidAlgebra.toDirectSum_zero /-
 @[simp]
 theorem toDirectSum_zero [Semiring M] : (0 : AddMonoidAlgebra M ι).toDirectSum = 0 :=
   Finsupp.toDfinsupp_zero
 #align add_monoid_algebra.to_direct_sum_zero AddMonoidAlgebra.toDirectSum_zero
+-/
 
+#print AddMonoidAlgebra.toDirectSum_add /-
 @[simp]
 theorem toDirectSum_add [Semiring M] (f g : AddMonoidAlgebra M ι) :
     (f + g).toDirectSum = f.toDirectSum + g.toDirectSum :=
   Finsupp.toDfinsupp_add _ _
 #align add_monoid_algebra.to_direct_sum_add AddMonoidAlgebra.toDirectSum_add
+-/
 
+#print AddMonoidAlgebra.toDirectSum_mul /-
 @[simp]
 theorem toDirectSum_mul [DecidableEq ι] [AddMonoid ι] [Semiring M] (f g : AddMonoidAlgebra M ι) :
     (f * g).toDirectSum = f.toDirectSum * g.toDirectSum :=
@@ -151,6 +166,7 @@ theorem toDirectSum_mul [DecidableEq ι] [AddMonoid ι] [Semiring M] (f g : AddM
   simp only [AddMonoidAlgebra.single_mul_single, to_hom, AddMonoidHom.coe_mk,
     AddMonoidAlgebra.toDirectSum_single, DirectSum.of_mul_of, Mul.gMul_mul]
 #align add_monoid_algebra.to_direct_sum_mul AddMonoidAlgebra.toDirectSum_mul
+-/
 
 end AddMonoidAlgebra
 
@@ -158,18 +174,23 @@ namespace DirectSum
 
 variable [DecidableEq ι]
 
+#print DirectSum.toAddMonoidAlgebra_zero /-
 @[simp]
 theorem toAddMonoidAlgebra_zero [Semiring M] [∀ m : M, Decidable (m ≠ 0)] :
     toAddMonoidAlgebra 0 = (0 : AddMonoidAlgebra M ι) :=
   Dfinsupp.toFinsupp_zero
 #align direct_sum.to_add_monoid_algebra_zero DirectSum.toAddMonoidAlgebra_zero
+-/
 
+#print DirectSum.toAddMonoidAlgebra_add /-
 @[simp]
 theorem toAddMonoidAlgebra_add [Semiring M] [∀ m : M, Decidable (m ≠ 0)] (f g : ⨁ i : ι, M) :
     (f + g).toAddMonoidAlgebra = toAddMonoidAlgebra f + toAddMonoidAlgebra g :=
   Dfinsupp.toFinsupp_add _ _
 #align direct_sum.to_add_monoid_algebra_add DirectSum.toAddMonoidAlgebra_add
+-/
 
+#print DirectSum.toAddMonoidAlgebra_mul /-
 @[simp]
 theorem toAddMonoidAlgebra_mul [AddMonoid ι] [Semiring M] [∀ m : M, Decidable (m ≠ 0)]
     (f g : ⨁ i : ι, M) : (f * g).toAddMonoidAlgebra = toAddMonoidAlgebra f * toAddMonoidAlgebra g :=
@@ -179,6 +200,7 @@ theorem toAddMonoidAlgebra_mul [AddMonoid ι] [Semiring M] [∀ m : M, Decidable
   · apply Function.LeftInverse.injective
     apply AddMonoidAlgebra.toDirectSum_toAddMonoidAlgebra
 #align direct_sum.to_add_monoid_algebra_mul DirectSum.toAddMonoidAlgebra_mul
+-/
 
 end DirectSum
 
@@ -189,6 +211,7 @@ end Lemmas
 
 section Equivs
 
+#print addMonoidAlgebraEquivDirectSum /-
 /-- `add_monoid_algebra.to_direct_sum` and `direct_sum.to_add_monoid_algebra` together form an
 equiv. -/
 @[simps (config := { fullyApplied := false })]
@@ -198,7 +221,9 @@ def addMonoidAlgebraEquivDirectSum [DecidableEq ι] [Semiring M] [∀ m : M, Dec
     toFun := AddMonoidAlgebra.toDirectSum
     invFun := DirectSum.toAddMonoidAlgebra }
 #align add_monoid_algebra_equiv_direct_sum addMonoidAlgebraEquivDirectSum
+-/
 
+#print addMonoidAlgebraAddEquivDirectSum /-
 /-- The additive version of `add_monoid_algebra.to_add_monoid_algebra`. Note that this is
 `noncomputable` because `add_monoid_algebra.has_add` is noncomputable. -/
 @[simps (config := { fullyApplied := false })]
@@ -210,7 +235,9 @@ def addMonoidAlgebraAddEquivDirectSum [DecidableEq ι] [Semiring M] [∀ m : M, 
     invFun := DirectSum.toAddMonoidAlgebra
     map_add' := AddMonoidAlgebra.toDirectSum_add }
 #align add_monoid_algebra_add_equiv_direct_sum addMonoidAlgebraAddEquivDirectSum
+-/
 
+#print addMonoidAlgebraRingEquivDirectSum /-
 /-- The ring version of `add_monoid_algebra.to_add_monoid_algebra`. Note that this is
 `noncomputable` because `add_monoid_algebra.has_add` is noncomputable. -/
 @[simps (config := { fullyApplied := false })]
@@ -224,7 +251,9 @@ def addMonoidAlgebraRingEquivDirectSum [DecidableEq ι] [AddMonoid ι] [Semiring
     invFun := DirectSum.toAddMonoidAlgebra
     map_mul' := AddMonoidAlgebra.toDirectSum_mul }
 #align add_monoid_algebra_ring_equiv_direct_sum addMonoidAlgebraRingEquivDirectSum
+-/
 
+#print addMonoidAlgebraAlgEquivDirectSum /-
 /-- The algebra version of `add_monoid_algebra.to_add_monoid_algebra`. Note that this is
 `noncomputable` because `add_monoid_algebra.has_add` is noncomputable. -/
 @[simps (config := { fullyApplied := false })]
@@ -238,6 +267,7 @@ def addMonoidAlgebraAlgEquivDirectSum [DecidableEq ι] [AddMonoid ι] [CommSemir
     invFun := DirectSum.toAddMonoidAlgebra
     commutes' := fun r => AddMonoidAlgebra.toDirectSum_single _ _ }
 #align add_monoid_algebra_alg_equiv_direct_sum addMonoidAlgebraAlgEquivDirectSum
+-/
 
 end Equivs
 

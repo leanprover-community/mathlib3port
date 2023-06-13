@@ -62,18 +62,23 @@ attribute [monad_norm] seq_eq_bind_map
 
 universe u v
 
+#print map_eq_bind_pure_comp /-
 @[monad_norm]
 theorem map_eq_bind_pure_comp (m : Type u → Type v) [Monad m] [LawfulMonad m] {α β : Type u}
     (f : α → β) (x : m α) : f <$> x = x >>= pure ∘ f := by rw [bind_pure_comp_eq_map]
 #align map_eq_bind_pure_comp map_eq_bind_pure_comp
+-/
 
+#print StateT.eval /-
 /-- run a `state_t` program and discard the final state -/
 def StateT.eval {m : Type u → Type v} [Functor m] {σ α} (cmd : StateT σ m α) (s : σ) : m α :=
   Prod.fst <$> cmd.run s
 #align state_t.eval StateT.eval
+-/
 
 universe u₀ u₁ v₀ v₁
 
+#print StateT.equiv /-
 /-- reduce the equivalence between two state monads to the equivalence between
 their respective function spaces -/
 def StateT.equiv {m₁ : Type u₀ → Type v₀} {m₂ : Type u₁ → Type v₁} {α₁ σ₁ : Type u₀}
@@ -85,7 +90,9 @@ def StateT.equiv {m₁ : Type u₀ → Type v₀} {m₂ : Type u₁ → Type v�
   left_inv := fun ⟨f⟩ => congr_arg StateT.mk <| F.left_inv _
   right_inv := fun ⟨f⟩ => congr_arg StateT.mk <| F.right_inv _
 #align state_t.equiv StateT.equiv
+-/
 
+#print ReaderT.equiv /-
 /-- reduce the equivalence between two reader monads to the equivalence between
 their respective function spaces -/
 def ReaderT.equiv {m₁ : Type u₀ → Type v₀} {m₂ : Type u₁ → Type v₁} {α₁ ρ₁ : Type u₀}
@@ -96,4 +103,5 @@ def ReaderT.equiv {m₁ : Type u₀ → Type v₀} {m₂ : Type u₁ → Type v�
   left_inv := fun ⟨f⟩ => congr_arg ReaderT.mk <| F.left_inv _
   right_inv := fun ⟨f⟩ => congr_arg ReaderT.mk <| F.right_inv _
 #align reader_t.equiv ReaderT.equiv
+-/
 

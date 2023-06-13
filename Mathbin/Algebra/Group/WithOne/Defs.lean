@@ -242,10 +242,12 @@ instance [Mul α] : MulZeroClass (WithZero α) :=
     zero_mul := id <| Option.map₂_none_left (· * ·)
     mul_zero := id <| Option.map₂_none_right (· * ·) }
 
+#print WithZero.coe_mul /-
 @[simp, norm_cast]
 theorem coe_mul {α : Type u} [Mul α] {a b : α} : ((a * b : α) : WithZero α) = a * b :=
   rfl
 #align with_zero.coe_mul WithZero.coe_mul
+-/
 
 instance [Mul α] : NoZeroDivisors (WithZero α) :=
   ⟨fun a b => id <| Option.map₂_eq_none_iff.1⟩

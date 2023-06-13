@@ -121,11 +121,13 @@ def ofEquiv (α) {β} [Denumerable α] (e : β ≃ α) : Denumerable β :=
 #align denumerable.of_equiv Denumerable.ofEquiv
 -/
 
+#print Denumerable.ofEquiv_ofNat /-
 @[simp]
 theorem ofEquiv_ofNat (α) {β} [Denumerable α] (e : β ≃ α) (n) :
     @ofNat β (ofEquiv _ e) n = e.symm (ofNat α n) := by
   apply of_nat_of_decode <;> show Option.map _ _ = _ <;> simp
 #align denumerable.of_equiv_of_nat Denumerable.ofEquiv_ofNat
+-/
 
 #print Denumerable.equiv₂ /-
 /-- All denumerable types are equivalent. -/
@@ -181,11 +183,13 @@ instance sigma : Denumerable (Sigma γ) :=
 #align denumerable.sigma Denumerable.sigma
 -/
 
+#print Denumerable.sigma_ofNat_val /-
 @[simp]
 theorem sigma_ofNat_val (n : ℕ) :
     ofNat (Sigma γ) n = ⟨ofNat α (unpair n).1, ofNat (γ _) (unpair n).2⟩ :=
   Option.some.inj <| by rw [← decode_eq_of_nat, decode_sigma_val] <;> simp <;> rfl
 #align denumerable.sigma_of_nat_val Denumerable.sigma_ofNat_val
+-/
 
 end Sigma
 
@@ -196,10 +200,12 @@ instance prod : Denumerable (α × β) :=
 #align denumerable.prod Denumerable.prod
 -/
 
+#print Denumerable.prod_ofNat_val /-
 @[simp]
 theorem prod_ofNat_val (n : ℕ) : ofNat (α × β) n = (ofNat α (unpair n).1, ofNat β (unpair n).2) :=
   by simp <;> rfl
 #align denumerable.prod_of_nat_val Denumerable.prod_ofNat_val
+-/
 
 #print Denumerable.prod_nat_ofNat /-
 @[simp]

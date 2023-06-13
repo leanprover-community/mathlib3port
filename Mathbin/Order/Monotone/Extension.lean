@@ -26,6 +26,7 @@ open Set
 variable {α β : Type _} [LinearOrder α] [ConditionallyCompleteLinearOrder β] {f : α → β} {s : Set α}
   {a b : α}
 
+#print MonotoneOn.exists_monotone_extension /-
 /-- If a function is monotone and is bounded on a set `s`, then it admits a monotone extension to
 the whole space. -/
 theorem MonotoneOn.exists_monotone_extension (h : MonotoneOn f s) (hl : BddBelow (f '' s))
@@ -53,11 +54,14 @@ theorem MonotoneOn.exists_monotone_extension (h : MonotoneOn f s) (hl : BddBelow
     refine' csSup_le_csSup (hu' _) (hx.image _) (image_subset _ _)
     exact inter_subset_inter_left _ (Iic_subset_Iic.2 hxy)
 #align monotone_on.exists_monotone_extension MonotoneOn.exists_monotone_extension
+-/
 
+#print AntitoneOn.exists_antitone_extension /-
 /-- If a function is antitone and is bounded on a set `s`, then it admits an antitone extension to
 the whole space. -/
 theorem AntitoneOn.exists_antitone_extension (h : AntitoneOn f s) (hl : BddBelow (f '' s))
     (hu : BddAbove (f '' s)) : ∃ g : α → β, Antitone g ∧ EqOn f g s :=
   h.dual_right.exists_monotone_extension hu hl
 #align antitone_on.exists_antitone_extension AntitoneOn.exists_antitone_extension
+-/
 

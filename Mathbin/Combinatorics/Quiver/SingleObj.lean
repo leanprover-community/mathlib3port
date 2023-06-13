@@ -116,16 +116,20 @@ theorem toPrefunctor_symm_id : toPrefunctor.symm (𝟭q (SingleObj α)) = id :=
 #align quiver.single_obj.to_prefunctor_symm_id Quiver.SingleObj.toPrefunctor_symm_id
 -/
 
+#print Quiver.SingleObj.toPrefunctor_comp /-
 theorem toPrefunctor_comp (f : α → β) (g : β → γ) :
     toPrefunctor (g ∘ f) = toPrefunctor f ⋙q toPrefunctor g :=
   rfl
 #align quiver.single_obj.to_prefunctor_comp Quiver.SingleObj.toPrefunctor_comp
+-/
 
+#print Quiver.SingleObj.toPrefunctor_symm_comp /-
 @[simp]
 theorem toPrefunctor_symm_comp (f : SingleObj α ⥤q SingleObj β) (g : SingleObj β ⥤q SingleObj γ) :
     toPrefunctor.symm (f ⋙q g) = toPrefunctor.symm g ∘ toPrefunctor.symm f := by
   simp only [Equiv.symm_apply_eq, to_prefunctor_comp, Equiv.apply_symm_apply]
 #align quiver.single_obj.to_prefunctor_symm_comp Quiver.SingleObj.toPrefunctor_symm_comp
+-/
 
 #print Quiver.SingleObj.pathToList /-
 /-- Auxiliary definition for `quiver.single_obj.path_equiv_list`.

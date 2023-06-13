@@ -168,6 +168,7 @@ theorem minimals_mono [IsAntisymm α r₂] (h : ∀ a b, r₁ a b → r₂ a b) 
 #align minimals_mono minimals_mono
 -/
 
+#print maximals_union /-
 theorem maximals_union : maximals r (s ∪ t) ⊆ maximals r s ∪ maximals r t :=
   by
   intro a ha
@@ -175,26 +176,37 @@ theorem maximals_union : maximals r (s ∪ t) ⊆ maximals r s ∪ maximals r t 
   · exact Or.inl ⟨h, fun b hb => ha.2 <| Or.inl hb⟩
   · exact Or.inr ⟨h, fun b hb => ha.2 <| Or.inr hb⟩
 #align maximals_union maximals_union
+-/
 
+#print minimals_union /-
 theorem minimals_union : minimals r (s ∪ t) ⊆ minimals r s ∪ minimals r t :=
   maximals_union
 #align minimals_union minimals_union
+-/
 
+#print maximals_inter_subset /-
 theorem maximals_inter_subset : maximals r s ∩ t ⊆ maximals r (s ∩ t) := fun a ha =>
   ⟨⟨ha.1.1, ha.2⟩, fun b hb => ha.1.2 hb.1⟩
 #align maximals_inter_subset maximals_inter_subset
+-/
 
+#print minimals_inter_subset /-
 theorem minimals_inter_subset : minimals r s ∩ t ⊆ minimals r (s ∩ t) :=
   maximals_inter_subset
 #align minimals_inter_subset minimals_inter_subset
+-/
 
+#print inter_maximals_subset /-
 theorem inter_maximals_subset : s ∩ maximals r t ⊆ maximals r (s ∩ t) := fun a ha =>
   ⟨⟨ha.1, ha.2.1⟩, fun b hb => ha.2.2 hb.2⟩
 #align inter_maximals_subset inter_maximals_subset
+-/
 
+#print inter_minimals_subset /-
 theorem inter_minimals_subset : s ∩ minimals r t ⊆ minimals r (s ∩ t) :=
   inter_maximals_subset
 #align inter_minimals_subset inter_minimals_subset
+-/
 
 #print IsAntichain.maximals_eq /-
 theorem IsAntichain.maximals_eq (h : IsAntichain r s) : maximals r s = s :=
@@ -224,6 +236,7 @@ theorem minimals_idem : minimals r (minimals r s) = minimals r s :=
 #align minimals_idem minimals_idem
 -/
 
+#print IsAntichain.max_maximals /-
 /-- If `maximals r s` is included in but *shadows* the antichain `t`, then it is actually
 equal to `t`. -/
 theorem IsAntichain.max_maximals (ht : IsAntichain r t) (h : maximals r s ⊆ t)
@@ -233,7 +246,9 @@ theorem IsAntichain.max_maximals (ht : IsAntichain r t) (h : maximals r s ⊆ t)
   obtain ⟨b, hb, hr⟩ := hs ha
   rwa [of_not_not fun hab => ht (h hb) ha (Ne.symm hab) hr]
 #align is_antichain.max_maximals IsAntichain.max_maximals
+-/
 
+#print IsAntichain.max_minimals /-
 /-- If `minimals r s` is included in but *shadows* the antichain `t`, then it is actually
 equal to `t`. -/
 theorem IsAntichain.max_minimals (ht : IsAntichain r t) (h : minimals r s ⊆ t)
@@ -243,6 +258,7 @@ theorem IsAntichain.max_minimals (ht : IsAntichain r t) (h : minimals r s ⊆ t)
   obtain ⟨b, hb, hr⟩ := hs ha
   rwa [of_not_not fun hab => ht ha (h hb) hab hr]
 #align is_antichain.max_minimals IsAntichain.max_minimals
+-/
 
 variable [PartialOrder α]
 

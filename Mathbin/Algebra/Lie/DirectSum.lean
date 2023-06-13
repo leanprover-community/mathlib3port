@@ -58,10 +58,12 @@ instance : LieRingModule L (⨁ i, M i)
   lie_add x m n := by ext; simp only [map_range_apply, add_apply, lie_add]
   leibniz_lie x y m := by ext; simp only [map_range_apply, lie_lie, add_apply, sub_add_cancel]
 
+#print DirectSum.lie_module_bracket_apply /-
 @[simp]
 theorem lie_module_bracket_apply (x : L) (m : ⨁ i, M i) (i : ι) : ⁅x, m⁆ i = ⁅x, m i⁆ :=
   mapRange_apply _ _ m i
 #align direct_sum.lie_module_bracket_apply DirectSum.lie_module_bracket_apply
+-/
 
 instance : LieModule R L (⨁ i, M i)
     where
@@ -70,6 +72,7 @@ instance : LieModule R L (⨁ i, M i)
 
 variable (R ι L M)
 
+#print DirectSum.lieModuleOf /-
 /-- The inclusion of each component into a direct sum as a morphism of Lie modules. -/
 def lieModuleOf [DecidableEq ι] (j : ι) : M j →ₗ⁅R,L⁆ ⨁ i, M i :=
   { lof R ι M j with
@@ -78,13 +81,16 @@ def lieModuleOf [DecidableEq ι] (j : ι) : M j →ₗ⁅R,L⁆ ⨁ i, M i :=
       · rw [← h]; simp
       · simp [lof, single_eq_of_ne h] }
 #align direct_sum.lie_module_of DirectSum.lieModuleOf
+-/
 
+#print DirectSum.lieModuleComponent /-
 /-- The projection map onto one component, as a morphism of Lie modules. -/
 def lieModuleComponent (j : ι) : (⨁ i, M i) →ₗ⁅R,L⁆ M j :=
   { component R ι M j with
     map_lie' := fun x m => by
       simp only [component, lapply_apply, lie_module_bracket_apply, LinearMap.toFun_eq_coe] }
 #align direct_sum.lie_module_component DirectSum.lieModuleComponent
+-/
 
 end Modules
 
@@ -113,10 +119,12 @@ instance lieRing : LieRing (⨁ i, L i) :=
 #align direct_sum.lie_ring DirectSum.lieRing
 -/
 
+#print DirectSum.bracket_apply /-
 @[simp]
 theorem bracket_apply (x y : ⨁ i, L i) (i : ι) : ⁅x, y⁆ i = ⁅x i, y i⁆ :=
   zipWith_apply _ _ x y i
 #align direct_sum.bracket_apply DirectSum.bracket_apply
+-/
 
 #print DirectSum.lieAlgebra /-
 instance lieAlgebra : LieAlgebra R (⨁ i, L i) :=
@@ -152,14 +160,15 @@ def lieAlgebraComponent (j : ι) : (⨁ i, L i) →ₗ⁅R⁆ L j :=
 #align direct_sum.lie_algebra_component DirectSum.lieAlgebraComponent
 -/
 
+#print DirectSum.lieAlgebra_ext /-
 @[ext]
 theorem lieAlgebra_ext {x y : ⨁ i, L i}
     (h : ∀ i, lieAlgebraComponent R ι L i x = lieAlgebraComponent R ι L i y) : x = y :=
   Dfinsupp.ext h
 #align direct_sum.lie_algebra_ext DirectSum.lieAlgebra_ext
+-/
 
-include R
-
+#print DirectSum.lie_of_of_ne /-
 theorem lie_of_of_ne [DecidableEq ι] {i j : ι} (hij : j ≠ i) (x : L i) (y : L j) :
     ⁅of L i x, of L j y⁆ = 0 := by
   apply lie_algebra_ext R ι L; intro k
@@ -170,7 +179,9 @@ theorem lie_of_of_ne [DecidableEq ι] {i j : ι} (hij : j ≠ i) (x : L i) (y : 
   · simp only [dif_neg, not_false_iff, lie_zero, hik.symm, hij]
   · simp only [dif_neg, not_false_iff, zero_lie, hik]
 #align direct_sum.lie_of_of_ne DirectSum.lie_of_of_ne
+-/
 
+#print DirectSum.lie_of_of_eq /-
 theorem lie_of_of_eq [DecidableEq ι] {i j : ι} (hij : j = i) (x : L i) (y : L j) :
     ⁅of L i x, of L j y⁆ = of L i ⁅x, hij.recOn y⁆ :=
   by
@@ -178,7 +189,9 @@ theorem lie_of_of_eq [DecidableEq ι] {i j : ι} (hij : j = i) (x : L i) (y : L 
   rw [this, ← lie_algebra_of_apply R ι L i ⁅x, hij.rec_on y⁆, LieHom.map_lie, lie_algebra_of_apply,
     lie_algebra_of_apply]
 #align direct_sum.lie_of_of_eq DirectSum.lie_of_of_eq
+-/
 
+#print DirectSum.lie_of /-
 @[simp]
 theorem lie_of [DecidableEq ι] {i j : ι} (x : L i) (y : L j) :
     ⁅of L i x, of L j y⁆ = if hij : j = i then lieAlgebraOf R ι L i ⁅x, hij.recOn y⁆ else 0 :=
@@ -187,9 +200,11 @@ theorem lie_of [DecidableEq ι] {i j : ι} (x : L i) (y : L j) :
   · simp only [lie_of_of_eq R ι L hij x y, hij, dif_pos, not_false_iff, lie_algebra_of_apply]
   · simp only [lie_of_of_ne R ι L hij x y, hij, dif_neg, not_false_iff]
 #align direct_sum.lie_of DirectSum.lie_of
+-/
 
 variable {R L ι}
 
+#print DirectSum.toLieAlgebra /-
 /-- Given a family of Lie algebras `L i`, together with a family of morphisms of Lie algebras
 `f i : L i →ₗ⁅R⁆ L'` into a fixed Lie algebra `L'`, we have a natural linear map:
 `(⨁ i, L i) →ₗ[R] L'`. If in addition `⁅f i x, f j y⁆ = 0` for any `x ∈ L i` and `y ∈ L j` (`i ≠ j`)
@@ -237,6 +252,7 @@ def toLieAlgebra [DecidableEq ι] (L' : Type w₁) [LieRing L'] [LieAlgebra R L'
           LinearMap.toAddMonoidHom_coe]
       · simp only [h, hf j i h.symm x y, dif_neg, not_false_iff, AddMonoidHom.map_zero] }
 #align direct_sum.to_lie_algebra DirectSum.toLieAlgebra
+-/
 
 end Algebras
 

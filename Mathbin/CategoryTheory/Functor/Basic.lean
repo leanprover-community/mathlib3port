@@ -54,7 +54,6 @@ add_decl_doc functor.to_prefunctor
 
 end
 
--- mathport name: «expr ⥤ »
 infixr:26
   " ⥤ " =>-- A functor is basically a function, so give ⥤ a similar precedence to → (25).
   -- For example, `C × D ⥤ E` should parse as `(C × D) ⥤ E` not `C × (D ⥤ E)`.
@@ -84,7 +83,6 @@ protected def id : C ⥤ C where
 #align category_theory.functor.id CategoryTheory.Functor.id
 -/
 
--- mathport name: «expr𝟭»
 notation "𝟭" => Functor.id
 
 -- Type this as `\sb1`
@@ -93,15 +91,19 @@ instance : Inhabited (C ⥤ C) :=
 
 variable {C}
 
+#print CategoryTheory.Functor.id_obj /-
 @[simp]
 theorem id_obj (X : C) : (𝟭 C).obj X = X :=
   rfl
 #align category_theory.functor.id_obj CategoryTheory.Functor.id_obj
+-/
 
+#print CategoryTheory.Functor.id_map /-
 @[simp]
 theorem id_map {X Y : C} (f : X ⟶ Y) : (𝟭 C).map f = f :=
   rfl
 #align category_theory.functor.id_map CategoryTheory.Functor.id_map
+-/
 
 end
 
@@ -121,13 +123,14 @@ def comp (F : C ⥤ D) (G : D ⥤ E) : C ⥤ E
 #align category_theory.functor.comp CategoryTheory.Functor.comp
 -/
 
--- mathport name: «expr ⋙ »
 infixr:80 " ⋙ " => comp
 
+#print CategoryTheory.Functor.comp_map /-
 @[simp]
 theorem comp_map (F : C ⥤ D) (G : D ⥤ E) {X Y : C} (f : X ⟶ Y) : (F ⋙ G).map f = G.map (F.map f) :=
   rfl
 #align category_theory.functor.comp_map CategoryTheory.Functor.comp_map
+-/
 
 #print CategoryTheory.Functor.comp_id /-
 -- These are not simp lemmas because rewriting along equalities between functors
@@ -142,12 +145,14 @@ protected theorem id_comp (F : C ⥤ D) : 𝟭 C ⋙ F = F := by cases F <;> rfl
 #align category_theory.functor.id_comp CategoryTheory.Functor.id_comp
 -/
 
+#print CategoryTheory.Functor.map_dite /-
 @[simp]
 theorem map_dite (F : C ⥤ D) {X Y : C} {P : Prop} [Decidable P] (f : P → (X ⟶ Y))
     (g : ¬P → (X ⟶ Y)) :
     F.map (if h : P then f h else g h) = if h : P then F.map (f h) else F.map (g h) := by
   split_ifs <;> rfl
 #align category_theory.functor.map_dite CategoryTheory.Functor.map_dite
+-/
 
 @[simp]
 theorem toPrefunctor_obj (F : C ⥤ D) (X : C) : F.toPrefunctor.obj X = F.obj X :=

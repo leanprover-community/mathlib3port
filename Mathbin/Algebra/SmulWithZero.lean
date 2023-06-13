@@ -58,13 +58,16 @@ class SMulWithZero [Zero R] [Zero M] extends SMulZeroClass R M where
 #align smul_with_zero SMulWithZero
 -/
 
+#print MulZeroClass.toSMulWithZero /-
 instance MulZeroClass.toSMulWithZero [MulZeroClass R] : SMulWithZero R R
     where
   smul := (· * ·)
   smul_zero := MulZeroClass.mul_zero
   zero_smul := MulZeroClass.zero_mul
 #align mul_zero_class.to_smul_with_zero MulZeroClass.toSMulWithZero
+-/
 
+#print MulZeroClass.toOppositeSMulWithZero /-
 /-- Like `mul_zero_class.to_smul_with_zero`, but multiplies on the right. -/
 instance MulZeroClass.toOppositeSMulWithZero [MulZeroClass R] : SMulWithZero Rᵐᵒᵖ R
     where
@@ -72,6 +75,7 @@ instance MulZeroClass.toOppositeSMulWithZero [MulZeroClass R] : SMulWithZero R�
   smul_zero r := MulZeroClass.zero_mul _
   zero_smul := MulZeroClass.mul_zero
 #align mul_zero_class.to_opposite_smul_with_zero MulZeroClass.toOppositeSMulWithZero
+-/
 
 variable (R) {M} [Zero R] [Zero M] [SMulWithZero R M]
 
@@ -84,9 +88,11 @@ theorem zero_smul (m : M) : (0 : R) • m = 0 :=
 
 variable {R} {a : R} {b : M}
 
+#print smul_eq_zero_of_left /-
 theorem smul_eq_zero_of_left (h : a = 0) (b : M) : a • b = 0 :=
   h.symm ▸ zero_smul _ b
 #align smul_eq_zero_of_left smul_eq_zero_of_left
+-/
 
 #print smul_eq_zero_of_right /-
 theorem smul_eq_zero_of_right (a : R) (h : b = 0) : a • b = 0 :=
@@ -148,17 +154,21 @@ def SMulWithZero.compHom (f : ZeroHom R' R) : SMulWithZero R' M
 
 end Zero
 
+#print AddMonoid.natSMulWithZero /-
 instance AddMonoid.natSMulWithZero [AddMonoid M] : SMulWithZero ℕ M
     where
   smul_zero := nsmul_zero
   zero_smul := zero_nsmul
 #align add_monoid.nat_smul_with_zero AddMonoid.natSMulWithZero
+-/
 
+#print AddGroup.intSMulWithZero /-
 instance AddGroup.intSMulWithZero [AddGroup M] : SMulWithZero ℤ M
     where
   smul_zero := zsmul_zero
   zero_smul := zero_zsmul
 #align add_group.int_smul_with_zero AddGroup.intSMulWithZero
+-/
 
 section MonoidWithZero
 
@@ -177,34 +187,44 @@ class MulActionWithZero extends MulAction R M where
 #align mul_action_with_zero MulActionWithZero
 -/
 
+#print MulActionWithZero.toSMulWithZero /-
 -- see Note [lower instance priority]
 instance (priority := 100) MulActionWithZero.toSMulWithZero [m : MulActionWithZero R M] :
     SMulWithZero R M :=
   { m with }
 #align mul_action_with_zero.to_smul_with_zero MulActionWithZero.toSMulWithZero
+-/
 
+#print MonoidWithZero.toMulActionWithZero /-
 /-- See also `semiring.to_module` -/
 instance MonoidWithZero.toMulActionWithZero : MulActionWithZero R R :=
   { MulZeroClass.toSMulWithZero R, Monoid.toMulAction R with }
 #align monoid_with_zero.to_mul_action_with_zero MonoidWithZero.toMulActionWithZero
+-/
 
+#print MonoidWithZero.toOppositeMulActionWithZero /-
 /-- Like `monoid_with_zero.to_mul_action_with_zero`, but multiplies on the right. See also
 `semiring.to_opposite_module` -/
 instance MonoidWithZero.toOppositeMulActionWithZero : MulActionWithZero Rᵐᵒᵖ R :=
   { MulZeroClass.toOppositeSMulWithZero R, Monoid.toOppositeMulAction R with }
 #align monoid_with_zero.to_opposite_mul_action_with_zero MonoidWithZero.toOppositeMulActionWithZero
+-/
 
+#print MulActionWithZero.subsingleton /-
 protected theorem MulActionWithZero.subsingleton [MulActionWithZero R M] [Subsingleton R] :
     Subsingleton M :=
   ⟨fun x y => by
     rw [← one_smul R x, ← one_smul R y, Subsingleton.elim (1 : R) 0, zero_smul, zero_smul]⟩
 #align mul_action_with_zero.subsingleton MulActionWithZero.subsingleton
+-/
 
+#print MulActionWithZero.nontrivial /-
 protected theorem MulActionWithZero.nontrivial [MulActionWithZero R M] [Nontrivial M] :
     Nontrivial R :=
   (subsingleton_or_nontrivial R).resolve_left fun hR =>
     not_subsingleton M <| MulActionWithZero.subsingleton R M
 #align mul_action_with_zero.nontrivial MulActionWithZero.nontrivial
+-/
 
 variable {R M} [MulActionWithZero R M] [Zero M'] [SMul R M']
 
@@ -246,6 +266,7 @@ section GroupWithZero
 
 variable {α β : Type _} [GroupWithZero α] [GroupWithZero β] [MulActionWithZero α β]
 
+#print smul_inv₀ /-
 theorem smul_inv₀ [SMulCommClass α β β] [IsScalarTower α β β] (c : α) (x : β) :
     (c • x)⁻¹ = c⁻¹ • x⁻¹ := by
   obtain rfl | hc := eq_or_ne c 0
@@ -255,13 +276,16 @@ theorem smul_inv₀ [SMulCommClass α β β] [IsScalarTower α β β] (c : α) (
   · refine' inv_eq_of_mul_eq_one_left _
     rw [smul_mul_smul, inv_mul_cancel hc, inv_mul_cancel hx, one_smul]
 #align smul_inv₀ smul_inv₀
+-/
 
 end GroupWithZero
 
+#print smulMonoidWithZeroHom /-
 /-- Scalar multiplication as a monoid homomorphism with zero. -/
 @[simps]
 def smulMonoidWithZeroHom {α β : Type _} [MonoidWithZero α] [MulZeroOneClass β]
     [MulActionWithZero α β] [IsScalarTower α β β] [SMulCommClass α β β] : α × β →*₀ β :=
   { smulMonoidHom with map_zero' := smul_zero _ }
 #align smul_monoid_with_zero_hom smulMonoidWithZeroHom
+-/
 

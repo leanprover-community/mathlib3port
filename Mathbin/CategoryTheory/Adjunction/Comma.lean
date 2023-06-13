@@ -43,6 +43,7 @@ section OfInitials
 
 variable [∀ A, HasInitial (StructuredArrow A G)]
 
+#print CategoryTheory.leftAdjointOfStructuredArrowInitialsAux /-
 /-- Implementation: If each structured arrow category on `G` has an initial object, an equivalence
 which is helpful for constructing a left adjoint to `G`.
 -/
@@ -64,6 +65,7 @@ def leftAdjointOfStructuredArrowInitialsAux (A : C) (B : D) :
     let B' : structured_arrow A G := structured_arrow.mk f
     apply (comma_morphism.w (initial.to B')).symm.trans (category.id_comp _)
 #align category_theory.left_adjoint_of_structured_arrow_initials_aux CategoryTheory.leftAdjointOfStructuredArrowInitialsAux
+-/
 
 #print CategoryTheory.leftAdjointOfStructuredArrowInitials /-
 /--
@@ -100,6 +102,7 @@ section OfTerminals
 
 variable [∀ A, HasTerminal (CostructuredArrow G A)]
 
+#print CategoryTheory.rightAdjointOfCostructuredArrowTerminalsAux /-
 /-- Implementation: If each costructured arrow category on `G` has a terminal object, an equivalence
 which is helpful for constructing a right adjoint to `G`.
 -/
@@ -120,6 +123,7 @@ def rightAdjointOfCostructuredArrowTerminalsAux (B : D) (A : C) :
     rw [this]
     rfl
 #align category_theory.right_adjoint_of_costructured_arrow_terminals_aux CategoryTheory.rightAdjointOfCostructuredArrowTerminalsAux
+-/
 
 #print CategoryTheory.rightAdjointOfCostructuredArrowTerminals /-
 /--
@@ -158,6 +162,7 @@ variable {F : C ⥤ D}
 
 attribute [local tidy] tactic.discrete_cases
 
+#print CategoryTheory.mkInitialOfLeftAdjoint /-
 /-- Given a left adjoint to `G`, we can construct an initial object in each structured arrow
 category on `G`. -/
 def mkInitialOfLeftAdjoint (h : F ⊣ G) (A : C) :
@@ -170,7 +175,9 @@ def mkInitialOfLeftAdjoint (h : F ⊣ G) (A : C) :
     rw [Equiv.eq_symm_apply, adjunction.hom_equiv_unit]
     apply structured_arrow.w m
 #align category_theory.mk_initial_of_left_adjoint CategoryTheory.mkInitialOfLeftAdjoint
+-/
 
+#print CategoryTheory.mkTerminalOfRightAdjoint /-
 /-- Given a right adjoint to `F`, we can construct a terminal object in each costructured arrow
 category on `F`. -/
 def mkTerminalOfRightAdjoint (h : F ⊣ G) (A : D) :
@@ -183,6 +190,7 @@ def mkTerminalOfRightAdjoint (h : F ⊣ G) (A : D) :
     rw [h.eq_hom_equiv_apply, adjunction.hom_equiv_counit]
     exact costructured_arrow.w m
 #align category_theory.mk_terminal_of_right_adjoint CategoryTheory.mkTerminalOfRightAdjoint
+-/
 
 end
 

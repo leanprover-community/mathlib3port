@@ -34,8 +34,6 @@ section CommRing
 
 variable {n : ℕ} {K : Type _} [CommRing K] {μ : K} (h : IsPrimitiveRoot μ n) (hpos : 0 < n)
 
-include n μ h hpos
-
 /-- `μ` is integral over `ℤ`. -/
 theorem isIntegral : IsIntegral ℤ μ := by
   use X ^ n - 1
@@ -49,8 +47,6 @@ theorem isIntegral : IsIntegral ℤ μ := by
 section IsDomain
 
 variable [IsDomain K] [CharZero K]
-
-omit hpos
 
 /-- The minimal polynomial of a root of unity `μ` divides `X ^ n - 1`. -/
 theorem minpoly_dvd_x_pow_sub_one : minpoly ℤ μ ∣ X ^ n - 1 :=

@@ -196,6 +196,7 @@ def symmetry : swap C D ⋙ swap D C ≅ 𝟭 (C × D)
 #align category_theory.prod.symmetry CategoryTheory.Prod.symmetry
 -/
 
+#print CategoryTheory.Prod.braiding /-
 /-- The equivalence, given by swapping factors, between `C × D` and `D × C`.
 -/
 @[simps]
@@ -203,6 +204,7 @@ def braiding : C × D ≌ D × C :=
   Equivalence.mk (swap C D) (swap D C) (NatIso.ofComponents (fun X => eqToIso (by simp)) (by tidy))
     (NatIso.ofComponents (fun X => eqToIso (by simp)) (by tidy))
 #align category_theory.prod.braiding CategoryTheory.Prod.braiding
+-/
 
 #print CategoryTheory.Prod.swapIsEquivalence /-
 instance swapIsEquivalence : IsEquivalence (swap C D) :=
@@ -252,11 +254,13 @@ def evaluationUncurried : C × (C ⥤ D) ⥤ D
 
 variable {C}
 
+#print CategoryTheory.Functor.constCompEvaluationObj /-
 /-- The constant functor followed by the evalutation functor is just the identity. -/
 @[simps]
 def Functor.constCompEvaluationObj (X : C) : Functor.const C ⋙ (evaluation C D).obj X ≅ 𝟭 D :=
   NatIso.ofComponents (fun Y => Iso.refl _) fun Y Z f => by simp
 #align category_theory.functor.const_comp_evaluation_obj CategoryTheory.Functor.constCompEvaluationObj
+-/
 
 end
 
@@ -314,15 +318,19 @@ def diag : C ⥤ C × C :=
 #align category_theory.functor.diag CategoryTheory.Functor.diag
 -/
 
+#print CategoryTheory.Functor.diag_obj /-
 @[simp]
 theorem diag_obj (X : C) : (diag C).obj X = (X, X) :=
   rfl
 #align category_theory.functor.diag_obj CategoryTheory.Functor.diag_obj
+-/
 
+#print CategoryTheory.Functor.diag_map /-
 @[simp]
 theorem diag_map {X Y : C} (f : X ⟶ Y) : (diag C).map f = (f, f) :=
   rfl
 #align category_theory.functor.diag_map CategoryTheory.Functor.diag_map
+-/
 
 end
 
@@ -347,11 +355,13 @@ def prod {F G : A ⥤ B} {H I : C ⥤ D} (α : F ⟶ G) (β : H ⟶ I) : F.Prod 
    use instead `α.prod β` or `nat_trans.prod α β`. -/
 end NatTrans
 
+#print CategoryTheory.flipCompEvaluation /-
 /-- `F.flip` composed with evaluation is the same as evaluating `F`. -/
 @[simps]
 def flipCompEvaluation (F : A ⥤ B ⥤ C) (a) : F.flip ⋙ (evaluation _ _).obj a ≅ F.obj a :=
   (NatIso.ofComponents fun b => eqToIso rfl) <| by tidy
 #align category_theory.flip_comp_evaluation CategoryTheory.flipCompEvaluation
+-/
 
 variable (A B C)
 
@@ -403,6 +413,7 @@ def functorProdFunctorEquivCounitIso :
 #align category_theory.functor_prod_functor_equiv_counit_iso CategoryTheory.functorProdFunctorEquivCounitIso
 -/
 
+#print CategoryTheory.functorProdFunctorEquiv /-
 /-- The equivalence of categories between `(A ⥤ B) × (A ⥤ C)` and `A ⥤ (B × C)` -/
 @[simps]
 def functorProdFunctorEquiv : (A ⥤ B) × (A ⥤ C) ≌ A ⥤ B × C
@@ -412,6 +423,7 @@ def functorProdFunctorEquiv : (A ⥤ B) × (A ⥤ C) ≌ A ⥤ B × C
   unitIso := functorProdFunctorEquivUnitIso A B C
   counitIso := functorProdFunctorEquivCounitIso A B C
 #align category_theory.functor_prod_functor_equiv CategoryTheory.functorProdFunctorEquiv
+-/
 
 end CategoryTheory
 

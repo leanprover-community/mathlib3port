@@ -445,7 +445,6 @@ def Lf (x y : PGame) : Prop :=
 #align pgame.lf PGame.Lf
 -/
 
--- mathport name: pgame.lf
 scoped infixl:50 " ⧏ " => PGame.Lf
 
 #print PGame.not_le /-
@@ -610,17 +609,23 @@ instance : Preorder PGame :=
           le_trans_aux (fun i => (IHzl i).1) fun j => (IHyr j).2.1⟩
     lt := fun x y => x ≤ y ∧ x ⧏ y }
 
+#print PGame.lt_iff_le_and_lf /-
 theorem lt_iff_le_and_lf {x y : PGame} : x < y ↔ x ≤ y ∧ x ⧏ y :=
   Iff.rfl
 #align pgame.lt_iff_le_and_lf PGame.lt_iff_le_and_lf
+-/
 
+#print PGame.lt_of_le_of_lf /-
 theorem lt_of_le_of_lf {x y : PGame} (h₁ : x ≤ y) (h₂ : x ⧏ y) : x < y :=
   ⟨h₁, h₂⟩
 #align pgame.lt_of_le_of_lf PGame.lt_of_le_of_lf
+-/
 
+#print PGame.lf_of_lt /-
 theorem lf_of_lt {x y : PGame} (h : x < y) : x ⧏ y :=
   h.2
 #align pgame.lf_of_lt PGame.lf_of_lt
+-/
 
 alias lf_of_lt ← _root_.has_lt.lt.lf
 #align has_lt.lt.lf LT.lt.lf
@@ -654,15 +659,19 @@ alias lf_of_le_of_lf ← _root_.has_le.le.trans_lf
 alias lf_of_lf_of_le ← lf.trans_le
 #align pgame.lf.trans_le PGame.Lf.trans_le
 
+#print PGame.lf_of_lt_of_lf /-
 @[trans]
 theorem lf_of_lt_of_lf {x y z : PGame} (h₁ : x < y) (h₂ : y ⧏ z) : x ⧏ z :=
   h₁.le.trans_lf h₂
 #align pgame.lf_of_lt_of_lf PGame.lf_of_lt_of_lf
+-/
 
+#print PGame.lf_of_lf_of_lt /-
 @[trans]
 theorem lf_of_lf_of_lt {x y z : PGame} (h₁ : x ⧏ y) (h₂ : y < z) : x ⧏ z :=
   h₁.trans_le h₂.le
 #align pgame.lf_of_lf_of_lt PGame.lf_of_lf_of_lt
+-/
 
 alias lf_of_lt_of_lf ← _root_.has_lt.lt.trans_lf
 #align has_lt.lt.trans_lf LT.lt.trans_lf
@@ -694,12 +703,14 @@ theorem mk_lf {xl xr} (xL : xl → PGame) (xR : xr → PGame) (j) : mk xl xr xL 
 #align pgame.mk_lf PGame.mk_lf
 -/
 
+#print PGame.le_of_forall_lt /-
 /-- This special case of `pgame.le_of_forall_lf` is useful when dealing with surreals, where `<` is
 preferred over `⧏`. -/
 theorem le_of_forall_lt {x y : PGame} (h₁ : ∀ i, x.moveLeft i < y) (h₂ : ∀ j, x < y.moveRight j) :
     x ≤ y :=
   le_of_forall_lf (fun i => (h₁ i).Lf) fun i => (h₂ i).Lf
 #align pgame.le_of_forall_lt PGame.le_of_forall_lt
+-/
 
 #print PGame.le_def /-
 /-- The definition of `x ≤ y` on pre-games, in terms of `≤` two moves later. -/
@@ -839,7 +850,6 @@ def Equiv (x y : PGame) : Prop :=
 #align pgame.equiv PGame.Equiv
 -/
 
--- mathport name: pgame.equiv
 scoped infixl:0 " ≈ " => PGame.Equiv
 
 instance : IsEquiv _ (· ≈ ·) where
@@ -921,8 +931,10 @@ theorem Lf.not_equiv' {x y} (h : x ⧏ y) : ¬(y ≈ x) := fun h' => h.not_ge h'
 #align pgame.lf.not_equiv' PGame.Lf.not_equiv'
 -/
 
+#print PGame.Lf.not_gt /-
 theorem Lf.not_gt {x y} (h : x ⧏ y) : ¬y < x := fun h' => h.not_ge h'.le
 #align pgame.lf.not_gt PGame.Lf.not_gt
+-/
 
 #print PGame.le_congr_imp /-
 theorem le_congr_imp {x₁ y₁ x₂ y₂} (hx : x₁ ≈ x₂) (hy : y₁ ≈ y₂) (h : x₁ ≤ y₁) : x₂ ≤ y₂ :=
@@ -986,35 +998,49 @@ theorem lf_of_equiv_of_lf {x y z} (h₁ : x ≈ y) : y ⧏ z → x ⧏ z :=
 #align pgame.lf_of_equiv_of_lf PGame.lf_of_equiv_of_lf
 -/
 
+#print PGame.lt_of_lt_of_equiv /-
 @[trans]
 theorem lt_of_lt_of_equiv {x y z} (h₁ : x < y) (h₂ : y ≈ z) : x < z :=
   h₁.trans_le h₂.1
 #align pgame.lt_of_lt_of_equiv PGame.lt_of_lt_of_equiv
+-/
 
+#print PGame.lt_of_equiv_of_lt /-
 @[trans]
 theorem lt_of_equiv_of_lt {x y z} (h₁ : x ≈ y) : y < z → x < z :=
   h₁.1.trans_lt
 #align pgame.lt_of_equiv_of_lt PGame.lt_of_equiv_of_lt
+-/
 
+#print PGame.lt_congr_imp /-
 theorem lt_congr_imp {x₁ y₁ x₂ y₂} (hx : x₁ ≈ x₂) (hy : y₁ ≈ y₂) (h : x₁ < y₁) : x₂ < y₂ :=
   hx.2.trans_lt (h.trans_le hy.1)
 #align pgame.lt_congr_imp PGame.lt_congr_imp
+-/
 
+#print PGame.lt_congr /-
 theorem lt_congr {x₁ y₁ x₂ y₂} (hx : x₁ ≈ x₂) (hy : y₁ ≈ y₂) : x₁ < y₁ ↔ x₂ < y₂ :=
   ⟨lt_congr_imp hx hy, lt_congr_imp hx.symm hy.symm⟩
 #align pgame.lt_congr PGame.lt_congr
+-/
 
+#print PGame.lt_congr_left /-
 theorem lt_congr_left {x₁ x₂ y} (hx : x₁ ≈ x₂) : x₁ < y ↔ x₂ < y :=
   lt_congr hx equiv_rfl
 #align pgame.lt_congr_left PGame.lt_congr_left
+-/
 
+#print PGame.lt_congr_right /-
 theorem lt_congr_right {x y₁ y₂} (hy : y₁ ≈ y₂) : x < y₁ ↔ x < y₂ :=
   lt_congr equiv_rfl hy
 #align pgame.lt_congr_right PGame.lt_congr_right
+-/
 
+#print PGame.lt_or_equiv_of_le /-
 theorem lt_or_equiv_of_le {x y : PGame} (h : x ≤ y) : x < y ∨ (x ≈ y) :=
   and_or_left.mp ⟨h, (em <| y ≤ x).symm.imp_left PGame.not_le.1⟩
 #align pgame.lt_or_equiv_of_le PGame.lt_or_equiv_of_le
+-/
 
 #print PGame.lf_or_equiv_or_gf /-
 theorem lf_or_equiv_or_gf (x y : PGame) : x ⧏ y ∨ (x ≈ y) ∨ y ⧏ x :=
@@ -1060,7 +1086,6 @@ def Fuzzy (x y : PGame) : Prop :=
 #align pgame.fuzzy PGame.Fuzzy
 -/
 
--- mathport name: pgame.fuzzy
 scoped infixl:50 " ‖ " => PGame.Fuzzy
 
 #print PGame.Fuzzy.swap /-
@@ -1087,9 +1112,11 @@ theorem fuzzy_irrefl (x : PGame) : ¬x ‖ x := fun h => lf_irrefl x h.1
 instance : IsIrrefl _ (· ‖ ·) :=
   ⟨fuzzy_irrefl⟩
 
+#print PGame.lf_iff_lt_or_fuzzy /-
 theorem lf_iff_lt_or_fuzzy {x y : PGame} : x ⧏ y ↔ x < y ∨ x ‖ y := by
   simp only [lt_iff_le_and_lf, fuzzy, ← PGame.not_le]; tauto
 #align pgame.lf_iff_lt_or_fuzzy PGame.lf_iff_lt_or_fuzzy
+-/
 
 #print PGame.lf_of_fuzzy /-
 theorem lf_of_fuzzy {x y : PGame} (h : x ‖ y) : x ⧏ y :=
@@ -1100,9 +1127,11 @@ theorem lf_of_fuzzy {x y : PGame} (h : x ‖ y) : x ⧏ y :=
 alias lf_of_fuzzy ← fuzzy.lf
 #align pgame.fuzzy.lf PGame.Fuzzy.lf
 
+#print PGame.lt_or_fuzzy_of_lf /-
 theorem lt_or_fuzzy_of_lf {x y : PGame} : x ⧏ y → x < y ∨ x ‖ y :=
   lf_iff_lt_or_fuzzy.1
 #align pgame.lt_or_fuzzy_of_lf PGame.lt_or_fuzzy_of_lf
+-/
 
 #print PGame.Fuzzy.not_equiv /-
 theorem Fuzzy.not_equiv {x y : PGame} (h : x ‖ y) : ¬(x ≈ y) := fun h' => h'.1.not_gf h.2
@@ -1174,6 +1203,7 @@ theorem fuzzy_of_equiv_of_fuzzy {x y z} (h₁ : x ≈ y) (h₂ : y ‖ z) : x �
 #align pgame.fuzzy_of_equiv_of_fuzzy PGame.fuzzy_of_equiv_of_fuzzy
 -/
 
+#print PGame.lt_or_equiv_or_gt_or_fuzzy /-
 /-- Exactly one of the following is true (although we don't prove this here). -/
 theorem lt_or_equiv_or_gt_or_fuzzy (x y : PGame) : x < y ∨ (x ≈ y) ∨ y < x ∨ x ‖ y :=
   by
@@ -1183,12 +1213,15 @@ theorem lt_or_equiv_or_gt_or_fuzzy (x y : PGame) : x < y ∨ (x ≈ y) ∨ y < x
   · right; right; left; exact ⟨h₂, h₁⟩
   · right; right; right; exact ⟨h₂, h₁⟩
 #align pgame.lt_or_equiv_or_gt_or_fuzzy PGame.lt_or_equiv_or_gt_or_fuzzy
+-/
 
+#print PGame.lt_or_equiv_or_gf /-
 theorem lt_or_equiv_or_gf (x y : PGame) : x < y ∨ (x ≈ y) ∨ y ⧏ x :=
   by
   rw [lf_iff_lt_or_fuzzy, fuzzy.swap_iff]
   exact lt_or_equiv_or_gt_or_fuzzy x y
 #align pgame.lt_or_equiv_or_gf PGame.lt_or_equiv_or_gf
+-/
 
 /-! ### Relabellings -/
 
@@ -1207,7 +1240,6 @@ inductive Relabelling : PGame.{u} → PGame.{u} → Type (u + 1)
 #align pgame.relabelling PGame.Relabelling
 -/
 
--- mathport name: pgame.relabelling
 scoped infixl:50 " ≡r " => PGame.Relabelling
 
 namespace Relabelling
@@ -1592,10 +1624,12 @@ theorem neg_lf_neg_iff {x y : PGame} : -y ⧏ -x ↔ x ⧏ y :=
 #align pgame.neg_lf_neg_iff PGame.neg_lf_neg_iff
 -/
 
+#print PGame.neg_lt_neg_iff /-
 @[simp]
 theorem neg_lt_neg_iff {x y : PGame} : -y < -x ↔ x < y := by
   rw [lt_iff_le_and_lf, lt_iff_le_and_lf, neg_le_neg_iff, neg_lf_neg_iff]
 #align pgame.neg_lt_neg_iff PGame.neg_lt_neg_iff
+-/
 
 #print PGame.neg_equiv_neg_iff /-
 @[simp]
@@ -1621,8 +1655,10 @@ theorem neg_lf_iff {x y : PGame} : -y ⧏ x ↔ -x ⧏ y := by rw [← neg_neg x
 #align pgame.neg_lf_iff PGame.neg_lf_iff
 -/
 
+#print PGame.neg_lt_iff /-
 theorem neg_lt_iff {x y : PGame} : -y < x ↔ -x < y := by rw [← neg_neg x, neg_lt_neg_iff, neg_neg]
 #align pgame.neg_lt_iff PGame.neg_lt_iff
+-/
 
 #print PGame.neg_equiv_iff /-
 theorem neg_equiv_iff {x y : PGame} : (-x ≈ y) ↔ (x ≈ -y) := by
@@ -1646,8 +1682,10 @@ theorem lf_neg_iff {x y : PGame} : y ⧏ -x ↔ x ⧏ -y := by rw [← neg_neg x
 #align pgame.lf_neg_iff PGame.lf_neg_iff
 -/
 
+#print PGame.lt_neg_iff /-
 theorem lt_neg_iff {x y : PGame} : y < -x ↔ x < -y := by rw [← neg_neg x, neg_lt_neg_iff, neg_neg]
 #align pgame.lt_neg_iff PGame.lt_neg_iff
+-/
 
 #print PGame.neg_le_zero_iff /-
 @[simp]
@@ -1673,13 +1711,17 @@ theorem zero_lf_neg_iff {x : PGame} : 0 ⧏ -x ↔ x ⧏ 0 := by rw [lf_neg_iff,
 #align pgame.zero_lf_neg_iff PGame.zero_lf_neg_iff
 -/
 
+#print PGame.neg_lt_zero_iff /-
 @[simp]
 theorem neg_lt_zero_iff {x : PGame} : -x < 0 ↔ 0 < x := by rw [neg_lt_iff, neg_zero]
 #align pgame.neg_lt_zero_iff PGame.neg_lt_zero_iff
+-/
 
+#print PGame.zero_lt_neg_iff /-
 @[simp]
 theorem zero_lt_neg_iff {x : PGame} : 0 < -x ↔ x < 0 := by rw [lt_neg_iff, neg_zero]
 #align pgame.zero_lt_neg_iff PGame.zero_lt_neg_iff
+-/
 
 #print PGame.neg_equiv_zero_iff /-
 @[simp]
@@ -2120,13 +2162,17 @@ theorem add_lf_add_left {y z : PGame} (h : y ⧏ z) (x) : x + y ⧏ x + z := by
 #align pgame.add_lf_add_left PGame.add_lf_add_left
 -/
 
+#print PGame.covariantClass_swap_add_lt /-
 instance covariantClass_swap_add_lt : CovariantClass PGame PGame (swap (· + ·)) (· < ·) :=
   ⟨fun x y z h => ⟨add_le_add_right h.1 x, add_lf_add_right h.2 x⟩⟩
 #align pgame.covariant_class_swap_add_lt PGame.covariantClass_swap_add_lt
+-/
 
+#print PGame.covariantClass_add_lt /-
 instance covariantClass_add_lt : CovariantClass PGame PGame (· + ·) (· < ·) :=
   ⟨fun x y z h => ⟨add_le_add_left h.1 x, add_lf_add_left h.2 x⟩⟩
 #align pgame.covariant_class_add_lt PGame.covariantClass_add_lt
+-/
 
 #print PGame.add_lf_add_of_lf_of_le /-
 theorem add_lf_add_of_lf_of_le {w x y z : PGame} (hwx : w ⧏ x) (hyz : y ≤ z) : w + y ⧏ x + z :=
@@ -2201,6 +2247,7 @@ theorem lf_iff_sub_zero_lf {x y : PGame} : x ⧏ y ↔ 0 ⧏ y - x :=
 #align pgame.lf_iff_sub_zero_lf PGame.lf_iff_sub_zero_lf
 -/
 
+#print PGame.lt_iff_sub_pos /-
 theorem lt_iff_sub_pos {x y : PGame} : x < y ↔ 0 < y - x :=
   ⟨fun h => lt_of_le_of_lt (zero_le_add_right_neg x) (add_lt_add_right h _), fun h =>
     calc
@@ -2210,6 +2257,7 @@ theorem lt_iff_sub_pos {x y : PGame} : x < y ↔ 0 < y - x :=
       _ ≤ y + 0 := (add_le_add_left (add_left_neg_le_zero x) _)
       _ ≤ y := (addZeroRelabelling y).le⟩
 #align pgame.lt_iff_sub_pos PGame.lt_iff_sub_pos
+-/
 
 /-! ### Special pre-games -/
 
@@ -2273,10 +2321,12 @@ theorem neg_star : -star = star := by simp [star]
 #align pgame.neg_star PGame.neg_star
 -/
 
+#print PGame.zero_lt_one /-
 @[simp]
 protected theorem zero_lt_one : (0 : PGame) < 1 :=
   lt_of_le_of_lf (zero_le_of_isEmpty_rightMoves 1) (zero_lf_le.2 ⟨default, le_rfl⟩)
 #align pgame.zero_lt_one PGame.zero_lt_one
+-/
 
 instance : ZeroLEOneClass PGame :=
   ⟨PGame.zero_lt_one.le⟩

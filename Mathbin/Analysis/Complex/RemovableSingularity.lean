@@ -35,6 +35,7 @@ variable {E : Type u} [NormedAddCommGroup E] [NormedSpace ℂ E] [CompleteSpace 
 
 namespace Complex
 
+#print Complex.analyticAt_of_differentiable_on_punctured_nhds_of_continuousAt /-
 /-- **Removable singularity** theorem, weak version. If `f : ℂ → E` is differentiable in a punctured
 neighborhood of a point and is continuous at this point, then it is analytic at this point. -/
 theorem analyticAt_of_differentiable_on_punctured_nhds_of_continuousAt {f : ℂ → E} {c : ℂ}
@@ -50,7 +51,9 @@ theorem analyticAt_of_differentiable_on_punctured_nhds_of_continuousAt {f : ℂ 
     (has_fpower_series_on_ball_of_differentiable_off_countable (countable_singleton c) hc
         (fun z hz => hRs (diff_subset_diff_left ball_subset_closed_ball hz)) hR0).AnalyticAt
 #align complex.analytic_at_of_differentiable_on_punctured_nhds_of_continuous_at Complex.analyticAt_of_differentiable_on_punctured_nhds_of_continuousAt
+-/
 
+#print Complex.differentiableOn_compl_singleton_and_continuousAt_iff /-
 theorem differentiableOn_compl_singleton_and_continuousAt_iff {f : ℂ → E} {s : Set ℂ} {c : ℂ}
     (hs : s ∈ 𝓝 c) : DifferentiableOn ℂ f (s \ {c}) ∧ ContinuousAt f c ↔ DifferentiableOn ℂ f s :=
   by
@@ -66,7 +69,9 @@ theorem differentiableOn_compl_singleton_and_continuousAt_iff {f : ℂ → E} {s
     simpa only [DifferentiableWithinAt, HasFDerivWithinAt, hne.nhds_within_diff_singleton] using
       hd x ⟨hx, hne⟩
 #align complex.differentiable_on_compl_singleton_and_continuous_at_iff Complex.differentiableOn_compl_singleton_and_continuousAt_iff
+-/
 
+#print Complex.differentiableOn_dslope /-
 theorem differentiableOn_dslope {f : ℂ → E} {s : Set ℂ} {c : ℂ} (hc : s ∈ 𝓝 c) :
     DifferentiableOn ℂ (dslope f c) s ↔ DifferentiableOn ℂ f s :=
   ⟨fun h => h.of_dslope, fun h =>
@@ -74,7 +79,9 @@ theorem differentiableOn_dslope {f : ℂ → E} {s : Set ℂ} {c : ℂ} (hc : s 
       ⟨Iff.mpr (differentiableOn_dslope_of_nmem fun h => h.2 rfl) (h.mono <| diff_subset _ _),
         continuousAt_dslope_same.2 <| h.DifferentiableAt hc⟩⟩
 #align complex.differentiable_on_dslope Complex.differentiableOn_dslope
+-/
 
+#print Complex.differentiableOn_update_limUnder_of_isLittleO /-
 /-- **Removable singularity** theorem: if `s` is a neighborhood of `c : ℂ`, a function `f : ℂ → E`
 is complex differentiable on `s \ {c}`, and $f(z) - f(c)=o((z-c)^{-1})$, then `f` redefined to be
 equal to `lim (𝓝[≠] c) f` at `c` is complex differentiable on `s`. -/
@@ -99,7 +106,9 @@ theorem differentiableOn_update_limUnder_of_isLittleO {f : ℂ → E} {s : Set �
     (continuous_within_at_id.tendsto.sub tendsto_const_nhds).smul tendsto_const_nhds
   simpa [← smul_add, ContinuousWithinAt] using H.add H'
 #align complex.differentiable_on_update_lim_of_is_o Complex.differentiableOn_update_limUnder_of_isLittleO
+-/
 
+#print Complex.differentiableOn_update_limUnder_insert_of_isLittleO /-
 /-- **Removable singularity** theorem: if `s` is a punctured neighborhood of `c : ℂ`, a function
 `f : ℂ → E` is complex differentiable on `s`, and $f(z) - f(c)=o((z-c)^{-1})$, then `f` redefined to
 be equal to `lim (𝓝[≠] c) f` at `c` is complex differentiable on `{c} ∪ s`. -/
@@ -110,7 +119,9 @@ theorem differentiableOn_update_limUnder_insert_of_isLittleO {f : ℂ → E} {s 
   differentiableOn_update_limUnder_of_isLittleO (insert_mem_nhds_iff.2 hc)
     (hd.mono fun z hz => hz.1.resolve_left hz.2) ho
 #align complex.differentiable_on_update_lim_insert_of_is_o Complex.differentiableOn_update_limUnder_insert_of_isLittleO
+-/
 
+#print Complex.differentiableOn_update_limUnder_of_bddAbove /-
 /-- **Removable singularity** theorem: if `s` is a neighborhood of `c : ℂ`, a function `f : ℂ → E`
 is complex differentiable and is bounded on `s \ {c}`, then `f` redefined to be equal to
 `lim (𝓝[≠] c) f` at `c` is complex differentiable on `s`. -/
@@ -125,7 +136,9 @@ theorem differentiableOn_update_limUnder_of_bddAbove {f : ℂ → E} {s : Set �
           mem_nhdsWithin_iff_exists_mem_nhds_inter.2
             ⟨s, hc, fun z hz => norm_sub_le_of_le (hC <| mem_image_of_mem _ hz) le_rfl⟩⟩
 #align complex.differentiable_on_update_lim_of_bdd_above Complex.differentiableOn_update_limUnder_of_bddAbove
+-/
 
+#print Complex.tendsto_limUnder_of_differentiable_on_punctured_nhds_of_isLittleO /-
 /-- **Removable singularity** theorem: if a function `f : ℂ → E` is complex differentiable on a
 punctured neighborhood of `c` and $f(z) - f(c)=o((z-c)^{-1})$, then `f` has a limit at `c`. -/
 theorem tendsto_limUnder_of_differentiable_on_punctured_nhds_of_isLittleO {f : ℂ → E} {c : ℂ}
@@ -139,7 +152,9 @@ theorem tendsto_limUnder_of_differentiable_on_punctured_nhds_of_isLittleO {f : �
   have H := differentiable_on_update_lim_of_is_o hd this ho
   exact continuousAt_update_same.1 (H.differentiable_at hd).ContinuousAt
 #align complex.tendsto_lim_of_differentiable_on_punctured_nhds_of_is_o Complex.tendsto_limUnder_of_differentiable_on_punctured_nhds_of_isLittleO
+-/
 
+#print Complex.tendsto_limUnder_of_differentiable_on_punctured_nhds_of_bounded_under /-
 /-- **Removable singularity** theorem: if a function `f : ℂ → E` is complex differentiable and
 bounded on a punctured neighborhood of `c`, then `f` has a limit at `c`. -/
 theorem tendsto_limUnder_of_differentiable_on_punctured_nhds_of_bounded_under {f : ℂ → E} {c : ℂ}
@@ -148,7 +163,9 @@ theorem tendsto_limUnder_of_differentiable_on_punctured_nhds_of_bounded_under {f
     Tendsto f (𝓝[≠] c) (𝓝 <| limUnder (𝓝[≠] c) f) :=
   tendsto_limUnder_of_differentiable_on_punctured_nhds_of_isLittleO hd hb.isLittleO_sub_self_inv
 #align complex.tendsto_lim_of_differentiable_on_punctured_nhds_of_bounded_under Complex.tendsto_limUnder_of_differentiable_on_punctured_nhds_of_bounded_under
+-/
 
+#print Complex.two_pi_I_inv_smul_circleIntegral_sub_sq_inv_smul_of_differentiable /-
 /-- The Cauchy formula for the derivative of a holomorphic function. -/
 theorem two_pi_I_inv_smul_circleIntegral_sub_sq_inv_smul_of_differentiable {U : Set ℂ}
     (hU : IsOpen U) {c w₀ : ℂ} {R : ℝ} {f : ℂ → E} (hc : closedBall c R ⊆ U)
@@ -181,6 +198,7 @@ theorem two_pi_I_inv_smul_circleIntegral_sub_sq_inv_smul_of_differentiable {U : 
     simp only [dslope_of_ne, metric.sphere_disjoint_ball.ne_of_mem hz hw₀, slope, ← smul_assoc, sq,
       mul_inv, Ne.def, not_false_iff, vsub_eq_sub, Algebra.id.smul_eq_mul]
 #align complex.two_pi_I_inv_smul_circle_integral_sub_sq_inv_smul_of_differentiable Complex.two_pi_I_inv_smul_circleIntegral_sub_sq_inv_smul_of_differentiable
+-/
 
 end Complex
 

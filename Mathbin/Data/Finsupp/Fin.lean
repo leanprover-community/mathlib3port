@@ -52,10 +52,12 @@ theorem tail_apply : tail t i = t i.succ :=
 #align finsupp.tail_apply Finsupp.tail_apply
 -/
 
+#print Finsupp.cons_zero /-
 @[simp]
 theorem cons_zero : cons y s 0 = y :=
   rfl
 #align finsupp.cons_zero Finsupp.cons_zero
+-/
 
 #print Finsupp.cons_succ /-
 @[simp]
@@ -71,6 +73,7 @@ theorem tail_cons : tail (cons y s) = s :=
 #align finsupp.tail_cons Finsupp.tail_cons
 -/
 
+#print Finsupp.cons_tail /-
 @[simp]
 theorem cons_tail : cons (t 0) (tail t) = t := by
   ext
@@ -78,6 +81,7 @@ theorem cons_tail : cons (t 0) (tail t) = t := by
   · rw [c_a, cons_zero]
   · rw [← Fin.succ_pred a c_a, cons_succ, ← tail_apply]
 #align finsupp.cons_tail Finsupp.cons_tail
+-/
 
 #print Finsupp.cons_zero_zero /-
 @[simp]

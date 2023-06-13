@@ -68,6 +68,7 @@ section Sort
 
 variable (F G : Sort _) {α γ : Sort _} {β : α → Sort _} [FunLike F α β] [FunLike G α fun _ => γ]
 
+#print FunLike.finite /-
 /-- All `fun_like`s are finite if their domain and codomain are.
 
 Can't be an instance because it can cause infinite loops.
@@ -75,7 +76,9 @@ Can't be an instance because it can cause infinite loops.
 theorem FunLike.finite [Finite α] [∀ i, Finite (β i)] : Finite F :=
   Finite.of_injective _ FunLike.coe_injective
 #align fun_like.finite FunLike.finite
+-/
 
+#print FunLike.finite' /-
 /-- All `fun_like`s are finite if their domain and codomain are.
 
 Non-dependent version of `fun_like.finite` that might be easier to infer.
@@ -84,6 +87,7 @@ Can't be an instance because it can cause infinite loops.
 theorem FunLike.finite' [Finite α] [Finite γ] : Finite G :=
   FunLike.finite G
 #align fun_like.finite' FunLike.finite'
+-/
 
 end Sort
 

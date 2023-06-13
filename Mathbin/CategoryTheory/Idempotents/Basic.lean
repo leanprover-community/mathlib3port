@@ -64,6 +64,7 @@ class IsIdempotentComplete : Prop where
 
 namespace Idempotents
 
+#print CategoryTheory.Idempotents.isIdempotentComplete_iff_hasEqualizer_of_id_and_idempotent /-
 /-- A category is idempotent complete iff for all idempotent endomorphisms,
 the equalizer of the identity and this idempotent exists. -/
 theorem isIdempotentComplete_iff_hasEqualizer_of_id_and_idempotent :
@@ -103,15 +104,18 @@ theorem isIdempotentComplete_iff_hasEqualizer_of_id_and_idempotent :
       exact (limits.fork.condition (equalizer.fork (𝟙 X) p)).symm
     · rw [equalizer.lift_ι]
 #align category_theory.idempotents.is_idempotent_complete_iff_has_equalizer_of_id_and_idempotent CategoryTheory.Idempotents.isIdempotentComplete_iff_hasEqualizer_of_id_and_idempotent
+-/
 
 variable {C}
 
+#print CategoryTheory.Idempotents.idem_of_id_sub_idem /-
 /-- In a preadditive category, when `p : X ⟶ X` is idempotent,
 then `𝟙 X - p` is also idempotent. -/
 theorem idem_of_id_sub_idem [Preadditive C] {X : C} (p : X ⟶ X) (hp : p ≫ p = p) :
     (𝟙 _ - p) ≫ (𝟙 _ - p) = 𝟙 _ - p := by
   simp only [comp_sub, sub_comp, id_comp, comp_id, hp, sub_self, sub_zero]
 #align category_theory.idempotents.idem_of_id_sub_idem CategoryTheory.Idempotents.idem_of_id_sub_idem
+-/
 
 variable (C)
 
@@ -174,6 +178,7 @@ theorem split_iff_of_iso {X X' : C} (φ : X ≅ X') (p : X ⟶ X) (p' : X' ⟶ X
 #align category_theory.idempotents.split_iff_of_iso CategoryTheory.Idempotents.split_iff_of_iso
 -/
 
+#print CategoryTheory.Idempotents.Equivalence.isIdempotentComplete /-
 theorem Equivalence.isIdempotentComplete {D : Type _} [Category D] (ε : C ≌ D)
     (h : IsIdempotentComplete C) : IsIdempotentComplete D :=
   by
@@ -190,7 +195,9 @@ theorem Equivalence.isIdempotentComplete {D : Type _} [Category D] (ε : C ≌ D
   · rw [← ε.functor.map_comp, h₁, ε.functor.map_id]
   · simpa only [← ε.functor.map_comp, h₂, equivalence.fun_inv_map]
 #align category_theory.idempotents.equivalence.is_idempotent_complete CategoryTheory.Idempotents.Equivalence.isIdempotentComplete
+-/
 
+#print CategoryTheory.Idempotents.isIdempotentComplete_iff_of_equivalence /-
 /-- If `C` and `D` are equivalent categories, that `C` is idempotent complete iff `D` is. -/
 theorem isIdempotentComplete_iff_of_equivalence {D : Type _} [Category D] (ε : C ≌ D) :
     IsIdempotentComplete C ↔ IsIdempotentComplete D :=
@@ -199,7 +206,9 @@ theorem isIdempotentComplete_iff_of_equivalence {D : Type _} [Category D] (ε : 
   · exact equivalence.is_idempotent_complete ε
   · exact equivalence.is_idempotent_complete ε.symm
 #align category_theory.idempotents.is_idempotent_complete_iff_of_equivalence CategoryTheory.Idempotents.isIdempotentComplete_iff_of_equivalence
+-/
 
+#print CategoryTheory.Idempotents.isIdempotentComplete_of_isIdempotentComplete_opposite /-
 theorem isIdempotentComplete_of_isIdempotentComplete_opposite (h : IsIdempotentComplete Cᵒᵖ) :
     IsIdempotentComplete C := by
   refine' ⟨_⟩
@@ -211,7 +220,9 @@ theorem isIdempotentComplete_of_isIdempotentComplete_opposite (h : IsIdempotentC
   · simpa only [← unop_comp, h₁]
   · simpa only [← unop_comp, h₂]
 #align category_theory.idempotents.is_idempotent_complete_of_is_idempotent_complete_opposite CategoryTheory.Idempotents.isIdempotentComplete_of_isIdempotentComplete_opposite
+-/
 
+#print CategoryTheory.Idempotents.isIdempotentComplete_iff_opposite /-
 theorem isIdempotentComplete_iff_opposite : IsIdempotentComplete Cᵒᵖ ↔ IsIdempotentComplete C :=
   by
   constructor
@@ -221,6 +232,7 @@ theorem isIdempotentComplete_iff_opposite : IsIdempotentComplete Cᵒᵖ ↔ IsI
     rw [is_idempotent_complete_iff_of_equivalence (op_op_equivalence C)]
     exact h
 #align category_theory.idempotents.is_idempotent_complete_iff_opposite CategoryTheory.Idempotents.isIdempotentComplete_iff_opposite
+-/
 
 instance [IsIdempotentComplete C] : IsIdempotentComplete Cᵒᵖ := by
   rwa [is_idempotent_complete_iff_opposite]

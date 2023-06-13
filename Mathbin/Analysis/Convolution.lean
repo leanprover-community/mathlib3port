@@ -463,14 +463,11 @@ noncomputable def convolution [Sub G] (f : G → E) (g : G → E') (L : E →L[�
   ∫ t, L (f t) (g (x - t)) ∂μ
 #align convolution convolution
 
--- mathport name: convolution
 scoped[convolution] notation:67 f " ⋆[" L:67 ", " μ:67 "] " g:66 => convolution f g L μ
 
--- mathport name: convolution.volume
 scoped[convolution]
   notation:67 f " ⋆[" L:67 "]" g:66 => convolution f g L MeasureTheory.MeasureSpace.volume
 
--- mathport name: convolution.lsmul
 scoped[convolution]
   notation:67 f " ⋆ " g:66 =>
     convolution f g (ContinuousLinearMap.lsmul ℝ ℝ) MeasureTheory.MeasureSpace.volume

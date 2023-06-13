@@ -39,7 +39,6 @@ open scoped Interval
 
 variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
 
--- mathport name: «expr⨍ in .. , »
 notation3"⨍ "(...)" in "a".."b", "r:60:(scoped f => average Measure.restrict volume Ι a b f) => r
 
 #print interval_average_symm /-
@@ -48,6 +47,7 @@ theorem interval_average_symm (f : ℝ → E) (a b : ℝ) : ⨍ x in a..b, f x =
 #align interval_average_symm interval_average_symm
 -/
 
+#print interval_average_eq /-
 theorem interval_average_eq (f : ℝ → E) (a b : ℝ) :
     ⨍ x in a..b, f x = (b - a)⁻¹ • ∫ x in a..b, f x :=
   by
@@ -59,9 +59,12 @@ theorem interval_average_eq (f : ℝ → E) (a b : ℝ) :
     rw [set_average_eq, uIoc_of_lt h, Real.volume_Ioc, intervalIntegral.integral_of_ge h.le,
       ENNReal.toReal_ofReal (sub_nonneg.2 h.le), smul_neg, ← neg_smul, ← inv_neg, neg_sub]
 #align interval_average_eq interval_average_eq
+-/
 
+#print interval_average_eq_div /-
 theorem interval_average_eq_div (f : ℝ → ℝ) (a b : ℝ) :
     ⨍ x in a..b, f x = (∫ x in a..b, f x) / (b - a) := by
   rw [interval_average_eq, smul_eq_mul, div_eq_inv_mul]
 #align interval_average_eq_div interval_average_eq_div
+-/
 

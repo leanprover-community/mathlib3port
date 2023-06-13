@@ -41,7 +41,6 @@ and shows how that polynomial interacts with `mv_polynomial.bind₁`.
 
 variable {p : ℕ} [hp : Fact p.Prime] (n : ℕ) {R : Type _} [CommRing R]
 
--- mathport name: expr𝕎
 local notation "𝕎" => WittVector p
 
 -- type as `\bbW`
@@ -119,8 +118,6 @@ theorem select_isPoly (P : ℕ → Prop) : IsPoly p fun R _Rcr x => select P x :
   apply coeff_select
 #align witt_vector.select_is_poly WittVector.select_isPoly
 
-include hp
-
 theorem select_add_select_not : ∀ x : 𝕎 R, select P x + select (fun i => ¬P i) x = x :=
   by
   ghost_calc _
@@ -182,8 +179,6 @@ def tail (n : ℕ) : 𝕎 R → 𝕎 R :=
   select fun i => n ≤ i
 #align witt_vector.tail WittVector.tail
 
-include hp
-
 @[simp]
 theorem init_add_tail (x : 𝕎 R) (n : ℕ) : init n x + tail n x = x := by
   simp only [init, tail, ← not_lt, select_add_select_not]
@@ -194,8 +189,6 @@ end
 @[simp]
 theorem init_init (x : 𝕎 R) (n : ℕ) : init n (init n x) = init n x := by init_ring
 #align witt_vector.init_init WittVector.init_init
-
-include hp
 
 theorem init_add (x y : 𝕎 R) (n : ℕ) : init n (x + y) = init n (init n x + init n y) := by
   init_ring using witt_add_vars
@@ -228,8 +221,6 @@ theorem init_pow (m : ℕ) (x : 𝕎 R) (n : ℕ) : init n (x ^ m) = init n (ini
 section
 
 variable (p)
-
-omit hp
 
 /-- `witt_vector.init n x` is polynomial in the coefficients of `x`. -/
 theorem init_isPoly (n : ℕ) : IsPoly p fun R _Rcr => init n :=

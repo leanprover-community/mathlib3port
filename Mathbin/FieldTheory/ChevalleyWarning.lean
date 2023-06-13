@@ -56,9 +56,9 @@ open Finset FiniteField
 
 variable {K σ ι : Type _} [Fintype K] [Field K] [Fintype σ] [DecidableEq σ]
 
--- mathport name: exprq
 local notation "q" => Fintype.card K
 
+#print MvPolynomial.sum_eval_eq_zero /-
 theorem MvPolynomial.sum_eval_eq_zero (f : MvPolynomial σ K)
     (h : f.totalDegree < (q - 1) * Fintype.card σ) : ∑ x, eval x f = 0 :=
   by
@@ -109,9 +109,11 @@ theorem MvPolynomial.sum_eval_eq_zero (f : MvPolynomial σ K)
     show (e a : σ → K) j ^ d j = x₀ ⟨j, hj⟩ ^ d j
     rw [Equiv.subtypeEquivCodomain_symm_apply_ne]
 #align mv_polynomial.sum_eval_eq_zero MvPolynomial.sum_eval_eq_zero
+-/
 
 variable [DecidableEq K] (p : ℕ) [CharP K p]
 
+#print char_dvd_card_solutions_of_sum_lt /-
 /-- The **Chevalley–Warning theorem**, finitary version.
 Let `(f i)` be a finite family of multivariate polynomials
 in finitely many variables (`X s`, `s : σ`) over a finite field of characteristic `p`.
@@ -176,7 +178,9 @@ theorem char_dvd_card_solutions_of_sum_lt {s : Finset ι} {f : ι → MvPolynomi
     _ ≤ (f i ^ (q - 1)).totalDegree := by simp only [max_eq_right, Nat.zero_le, total_degree_one]
     _ ≤ (q - 1) * (f i).totalDegree := total_degree_pow _ _
 #align char_dvd_card_solutions_of_sum_lt char_dvd_card_solutions_of_sum_lt
+-/
 
+#print char_dvd_card_solutions_of_fintype_sum_lt /-
 /-- The **Chevalley–Warning theorem**, fintype version.
 Let `(f i)` be a finite family of multivariate polynomials
 in finitely many variables (`X s`, `s : σ`) over a finite field of characteristic `p`.
@@ -187,7 +191,9 @@ theorem char_dvd_card_solutions_of_fintype_sum_lt [Fintype ι] {f : ι → MvPol
     p ∣ Fintype.card { x : σ → K // ∀ i, eval x (f i) = 0 } := by
   simpa using char_dvd_card_solutions_of_sum_lt p h
 #align char_dvd_card_solutions_of_fintype_sum_lt char_dvd_card_solutions_of_fintype_sum_lt
+-/
 
+#print char_dvd_card_solutions /-
 /-- The **Chevalley–Warning theorem**, unary version.
 Let `f` be a multivariate polynomial in finitely many variables (`X s`, `s : σ`)
 over a finite field of characteristic `p`.
@@ -202,7 +208,9 @@ theorem char_dvd_card_solutions {f : MvPolynomial σ K} (h : f.totalDegree < Fin
   simpa only [F, Fintype.univ_punit, forall_eq, mem_singleton] using
     char_dvd_card_solutions_of_sum_lt p this
 #align char_dvd_card_solutions char_dvd_card_solutions
+-/
 
+#print char_dvd_card_solutions_of_add_lt /-
 /-- The **Chevalley–Warning theorem**, binary version.
 Let `f₁`, `f₂` be two multivariate polynomials in finitely many variables (`X s`, `s : σ`) over a
 finite field of characteristic `p`.
@@ -216,6 +224,7 @@ theorem char_dvd_card_solutions_of_add_lt {f₁ f₂ : MvPolynomial σ K}
   have : ∑ b : Bool, (F b).totalDegree < Fintype.card σ := (add_comm _ _).trans_lt h
   simpa only [F, Bool.forall_bool] using char_dvd_card_solutions_of_fintype_sum_lt p this
 #align char_dvd_card_solutions_of_add_lt char_dvd_card_solutions_of_add_lt
+-/
 
 end FiniteField
 

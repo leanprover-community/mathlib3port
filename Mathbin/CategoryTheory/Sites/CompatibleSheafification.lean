@@ -56,6 +56,7 @@ variable [∀ (X : C) (W : J.cover X) (P : Cᵒᵖ ⥤ D), PreservesLimit (W.ind
 
 variable (P : Cᵒᵖ ⥤ D)
 
+#print CategoryTheory.GrothendieckTopology.sheafifyCompIso /-
 /-- The isomorphism between the sheafification of `P` composed with `F` and
 the sheafification of `P ⋙ F`.
 
@@ -66,7 +67,9 @@ of sheafification. -/
 def sheafifyCompIso : J.sheafify P ⋙ F ≅ J.sheafify (P ⋙ F) :=
   J.plusCompIso _ _ ≪≫ (J.plusFunctor _).mapIso (J.plusCompIso _ _)
 #align category_theory.grothendieck_topology.sheafify_comp_iso CategoryTheory.GrothendieckTopology.sheafifyCompIso
+-/
 
+#print CategoryTheory.GrothendieckTopology.sheafificationWhiskerLeftIso /-
 /-- The isomorphism between the sheafification of `P` composed with `F` and
 the sheafification of `P ⋙ F`, functorially in `F`. -/
 def sheafificationWhiskerLeftIso (P : Cᵒᵖ ⥤ D)
@@ -79,7 +82,9 @@ def sheafificationWhiskerLeftIso (P : Cᵒᵖ ⥤ D)
   refine' iso_whisker_right _ _
   refine' J.plus_functor_whisker_left_iso _
 #align category_theory.grothendieck_topology.sheafification_whisker_left_iso CategoryTheory.GrothendieckTopology.sheafificationWhiskerLeftIso
+-/
 
+#print CategoryTheory.GrothendieckTopology.sheafificationWhiskerLeftIso_hom_app /-
 @[simp]
 theorem sheafificationWhiskerLeftIso_hom_app (P : Cᵒᵖ ⥤ D) (F : D ⥤ E)
     [∀ (F : D ⥤ E) (X : C), PreservesColimitsOfShape (J.cover X)ᵒᵖ F]
@@ -90,7 +95,9 @@ theorem sheafificationWhiskerLeftIso_hom_app (P : Cᵒᵖ ⥤ D) (F : D ⥤ E)
   dsimp [sheafification_whisker_left_iso, sheafify_comp_iso]
   rw [category.comp_id]
 #align category_theory.grothendieck_topology.sheafification_whisker_left_iso_hom_app CategoryTheory.GrothendieckTopology.sheafificationWhiskerLeftIso_hom_app
+-/
 
+#print CategoryTheory.GrothendieckTopology.sheafificationWhiskerLeftIso_inv_app /-
 @[simp]
 theorem sheafificationWhiskerLeftIso_inv_app (P : Cᵒᵖ ⥤ D) (F : D ⥤ E)
     [∀ (F : D ⥤ E) (X : C), PreservesColimitsOfShape (J.cover X)ᵒᵖ F]
@@ -101,7 +108,9 @@ theorem sheafificationWhiskerLeftIso_inv_app (P : Cᵒᵖ ⥤ D) (F : D ⥤ E)
   dsimp [sheafification_whisker_left_iso, sheafify_comp_iso]
   erw [category.id_comp]
 #align category_theory.grothendieck_topology.sheafification_whisker_left_iso_inv_app CategoryTheory.GrothendieckTopology.sheafificationWhiskerLeftIso_inv_app
+-/
 
+#print CategoryTheory.GrothendieckTopology.sheafificationWhiskerRightIso /-
 /-- The isomorphism between the sheafification of `P` composed with `F` and
 the sheafification of `P ⋙ F`, functorially in `P`. -/
 def sheafificationWhiskerRightIso :
@@ -114,7 +123,9 @@ def sheafificationWhiskerRightIso :
   refine' (functor.associator _ _ _).symm ≪≫ _
   exact iso_whisker_right (J.plus_functor_whisker_right_iso _) (J.plus_functor E)
 #align category_theory.grothendieck_topology.sheafification_whisker_right_iso CategoryTheory.GrothendieckTopology.sheafificationWhiskerRightIso
+-/
 
+#print CategoryTheory.GrothendieckTopology.sheafificationWhiskerRightIso_hom_app /-
 @[simp]
 theorem sheafificationWhiskerRightIso_hom_app :
     (J.sheafificationWhiskerRightIso F).Hom.app P = (J.sheafifyCompIso F P).Hom :=
@@ -123,7 +134,9 @@ theorem sheafificationWhiskerRightIso_hom_app :
   simp only [category.id_comp, category.comp_id]
   erw [category.id_comp]
 #align category_theory.grothendieck_topology.sheafification_whisker_right_iso_hom_app CategoryTheory.GrothendieckTopology.sheafificationWhiskerRightIso_hom_app
+-/
 
+#print CategoryTheory.GrothendieckTopology.sheafificationWhiskerRightIso_inv_app /-
 @[simp]
 theorem sheafificationWhiskerRightIso_inv_app :
     (J.sheafificationWhiskerRightIso F).inv.app P = (J.sheafifyCompIso F P).inv :=
@@ -132,7 +145,9 @@ theorem sheafificationWhiskerRightIso_inv_app :
   simp only [category.id_comp, category.comp_id]
   erw [category.id_comp]
 #align category_theory.grothendieck_topology.sheafification_whisker_right_iso_inv_app CategoryTheory.GrothendieckTopology.sheafificationWhiskerRightIso_inv_app
+-/
 
+#print CategoryTheory.GrothendieckTopology.whiskerRight_toSheafify_sheafifyCompIso_hom /-
 @[simp, reassoc]
 theorem whiskerRight_toSheafify_sheafifyCompIso_hom :
     whiskerRight (J.toSheafify _) _ ≫ (J.sheafifyCompIso F P).Hom = J.toSheafify _ :=
@@ -144,12 +159,15 @@ theorem whiskerRight_toSheafify_sheafifyCompIso_hom :
     category.assoc, whisker_right_to_plus_comp_plus_comp_iso_hom]
   rfl
 #align category_theory.grothendieck_topology.whisker_right_to_sheafify_sheafify_comp_iso_hom CategoryTheory.GrothendieckTopology.whiskerRight_toSheafify_sheafifyCompIso_hom
+-/
 
+#print CategoryTheory.GrothendieckTopology.toSheafify_comp_sheafifyCompIso_inv /-
 @[simp, reassoc]
 theorem toSheafify_comp_sheafifyCompIso_inv :
     J.toSheafify _ ≫ (J.sheafifyCompIso F P).inv = whiskerRight (J.toSheafify _) _ := by
   rw [iso.comp_inv_eq]; simp
 #align category_theory.grothendieck_topology.to_sheafify_comp_sheafify_comp_iso_inv CategoryTheory.GrothendieckTopology.toSheafify_comp_sheafifyCompIso_inv
+-/
 
 section
 
@@ -157,6 +175,7 @@ section
 variable [ConcreteCategory.{max v u} D] [PreservesLimits (forget D)]
   [∀ X : C, PreservesColimitsOfShape (J.cover X)ᵒᵖ (forget D)] [ReflectsIsomorphisms (forget D)]
 
+#print CategoryTheory.GrothendieckTopology.sheafifyCompIso_inv_eq_sheafifyLift /-
 @[simp]
 theorem sheafifyCompIso_inv_eq_sheafifyLift :
     (J.sheafifyCompIso F P).inv =
@@ -166,6 +185,7 @@ theorem sheafifyCompIso_inv_eq_sheafifyLift :
   rw [iso.comp_inv_eq]
   simp
 #align category_theory.grothendieck_topology.sheafify_comp_iso_inv_eq_sheafify_lift CategoryTheory.GrothendieckTopology.sheafifyCompIso_inv_eq_sheafifyLift
+-/
 
 end
 

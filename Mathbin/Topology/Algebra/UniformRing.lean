@@ -61,21 +61,26 @@ instance : One (Completion α) :=
 instance : Mul (Completion α) :=
   ⟨curry <| (denseInducing_coe.Prod denseInducing_coe).extend (coe ∘ uncurry (· * ·))⟩
 
+#print UniformSpace.Completion.coe_one /-
 @[norm_cast]
 theorem coe_one : ((1 : α) : Completion α) = 1 :=
   rfl
 #align uniform_space.completion.coe_one UniformSpace.Completion.coe_one
+-/
 
 variable {α} [TopologicalRing α]
 
+#print UniformSpace.Completion.coe_mul /-
 @[norm_cast]
 theorem coe_mul (a b : α) : ((a * b : α) : Completion α) = a * b :=
   ((denseInducing_coe.Prod denseInducing_coe).extend_eq
       ((continuous_coe α).comp (@continuous_mul α _ _ _)) (a, b)).symm
 #align uniform_space.completion.coe_mul UniformSpace.Completion.coe_mul
+-/
 
 variable [UniformAddGroup α]
 
+#print UniformSpace.Completion.continuous_mul /-
 theorem continuous_mul : Continuous fun p : Completion α × Completion α => p.1 * p.2 :=
   by
   let m := (AddMonoidHom.mul : α →+ α →+ α).compr₂ to_compl
@@ -85,11 +90,14 @@ theorem continuous_mul : Continuous fun p : Completion α × Completion α => p.
   ext ⟨x, y⟩
   rfl
 #align uniform_space.completion.continuous_mul UniformSpace.Completion.continuous_mul
+-/
 
+#print UniformSpace.Completion.Continuous.mul /-
 theorem Continuous.mul {β : Type _} [TopologicalSpace β] {f g : β → Completion α}
     (hf : Continuous f) (hg : Continuous g) : Continuous fun b => f b * g b :=
   continuous_mul.comp (hf.prod_mk hg : _)
 #align uniform_space.completion.continuous.mul UniformSpace.Completion.Continuous.mul
+-/
 
 instance : Ring (Completion α) :=
   { AddMonoidWithOne.unary, Completion.addCommGroup, Completion.hasMul α,
@@ -131,18 +139,23 @@ instance : Ring (Completion α) :=
               (continuous_snd.comp continuous_snd))))
         fun a b c => by rw [← coe_add, ← coe_mul, ← coe_mul, ← coe_mul, ← coe_add, add_mul] }
 
+#print UniformSpace.Completion.coeRingHom /-
 /-- The map from a uniform ring to its completion, as a ring homomorphism. -/
 def coeRingHom : α →+* Completion α :=
   ⟨coe, coe_one α, fun a b => coe_mul a b, coe_zero, fun a b => coe_add a b⟩
 #align uniform_space.completion.coe_ring_hom UniformSpace.Completion.coeRingHom
+-/
 
+#print UniformSpace.Completion.continuous_coeRingHom /-
 theorem continuous_coeRingHom : Continuous (coeRingHom : α → Completion α) :=
   continuous_coe α
 #align uniform_space.completion.continuous_coe_ring_hom UniformSpace.Completion.continuous_coeRingHom
+-/
 
 variable {β : Type u} [UniformSpace β] [Ring β] [UniformAddGroup β] [TopologicalRing β]
   (f : α →+* β) (hf : Continuous f)
 
+#print UniformSpace.Completion.extensionHom /-
 /-- The completion extension as a ring morphism. -/
 def extensionHom [CompleteSpace β] [SeparatedSpace β] : Completion α →+* β :=
   have hf' : Continuous (f : α →+ β) := hf
@@ -166,23 +179,29 @@ def extensionHom [CompleteSpace β] [SeparatedSpace β] : Completion α →+* β
         fun a b => by
         rw [← coe_mul, extension_coe hf, extension_coe hf, extension_coe hf, f.map_mul] }
 #align uniform_space.completion.extension_hom UniformSpace.Completion.extensionHom
+-/
 
+#print UniformSpace.Completion.topologicalRing /-
 instance topologicalRing : TopologicalRing (Completion α)
     where
   continuous_add := continuous_add
   continuous_mul := continuous_mul
 #align uniform_space.completion.top_ring_compl UniformSpace.Completion.topologicalRing
+-/
 
+#print UniformSpace.Completion.mapRingHom /-
 /-- The completion map as a ring morphism. -/
 def mapRingHom (hf : Continuous f) : Completion α →+* Completion β :=
   extensionHom (coeRingHom.comp f) (continuous_coeRingHom.comp hf)
 #align uniform_space.completion.map_ring_hom UniformSpace.Completion.mapRingHom
+-/
 
 section Algebra
 
 variable (A : Type _) [Ring A] [UniformSpace A] [UniformAddGroup A] [TopologicalRing A] (R : Type _)
   [CommSemiring R] [Algebra R A] [UniformContinuousConstSMul R A]
 
+#print UniformSpace.Completion.map_smul_eq_mul_coe /-
 @[simp]
 theorem map_smul_eq_mul_coe (r : R) :
     Completion.map ((· • ·) r) = (· * ·) (algebraMap R A r : Completion A) :=
@@ -192,6 +211,7 @@ theorem map_smul_eq_mul_coe (r : R) :
   · exact isClosed_eq completion.continuous_map (continuous_mul_left _)
   · rw [map_coe (uniform_continuous_const_smul r) a, Algebra.smul_def, coe_mul]
 #align uniform_space.completion.map_smul_eq_mul_coe UniformSpace.Completion.map_smul_eq_mul_coe
+-/
 
 instance : Algebra R (Completion A) :=
   {
@@ -204,10 +224,12 @@ instance : Algebra R (Completion A) :=
         simpa only [coe_mul] using congr_arg (coe : A → completion A) (Algebra.commutes r a)
     smul_def' := fun r x => congr_fun (map_smul_eq_mul_coe A R r) x }
 
+#print UniformSpace.Completion.algebraMap_def /-
 theorem algebraMap_def (r : R) :
     algebraMap R (Completion A) r = (algebraMap R A r : Completion A) :=
   rfl
 #align uniform_space.completion.algebra_map_def UniformSpace.Completion.algebraMap_def
+-/
 
 end Algebra
 
@@ -222,9 +244,11 @@ instance : CommRing (Completion R) :=
         (isClosed_eq (continuous_fst.mul continuous_snd) (continuous_snd.mul continuous_fst))
         fun a b => by rw [← coe_mul, ← coe_mul, mul_comm] }
 
+#print UniformSpace.Completion.algebra' /-
 /-- A shortcut instance for the common case -/
 instance algebra' : Algebra R (Completion R) := by infer_instance
 #align uniform_space.completion.algebra' UniformSpace.Completion.algebra'
+-/
 
 end CommRing
 
@@ -234,17 +258,22 @@ namespace UniformSpace
 
 variable {α : Type _}
 
+#print UniformSpace.ring_sep_rel /-
 theorem ring_sep_rel (α) [CommRing α] [UniformSpace α] [UniformAddGroup α] [TopologicalRing α] :
     separationSetoid α = Submodule.quotientRel (Ideal.closure ⊥) :=
   Setoid.ext fun x y =>
     (addGroup_separationRel x y).trans <| Iff.trans (by rfl) (Submodule.quotientRel_r_def _).symm
 #align uniform_space.ring_sep_rel UniformSpace.ring_sep_rel
+-/
 
+#print UniformSpace.ring_sep_quot /-
 theorem ring_sep_quot (α : Type u) [r : CommRing α] [UniformSpace α] [UniformAddGroup α]
     [TopologicalRing α] : Quotient (separationSetoid α) = (α ⧸ (⊥ : Ideal α).closure) := by
   rw [@ring_sep_rel α r] <;> rfl
 #align uniform_space.ring_sep_quot UniformSpace.ring_sep_quot
+-/
 
+#print UniformSpace.sepQuotEquivRingQuot /-
 /-- Given a topological ring `α` equipped with a uniform structure that makes subtraction uniformly
 continuous, get an equivalence between the separated quotient of `α` and the quotient ring
 corresponding to the closure of zero. -/
@@ -253,18 +282,23 @@ def sepQuotEquivRingQuot (α) [r : CommRing α] [UniformSpace α] [UniformAddGro
   Quotient.congrRight fun x y =>
     (addGroup_separationRel x y).trans <| Iff.trans (by rfl) (Submodule.quotientRel_r_def _).symm
 #align uniform_space.sep_quot_equiv_ring_quot UniformSpace.sepQuotEquivRingQuot
+-/
 
+#print UniformSpace.commRing /-
 -- TODO: use a form of transport a.k.a. lift definition a.k.a. transfer
 instance commRing [CommRing α] [UniformSpace α] [UniformAddGroup α] [TopologicalRing α] :
     CommRing (Quotient (separationSetoid α)) := by rw [ring_sep_quot α] <;> infer_instance
 #align uniform_space.comm_ring UniformSpace.commRing
+-/
 
+#print UniformSpace.topologicalRing /-
 instance topologicalRing [CommRing α] [UniformSpace α] [UniformAddGroup α] [TopologicalRing α] :
     TopologicalRing (Quotient (separationSetoid α)) :=
   by
   convert topologicalRing_quotient (⊥ : Ideal α).closure <;> try apply ring_sep_rel
   simp [UniformSpace.commRing]
 #align uniform_space.topological_ring UniformSpace.topologicalRing
+-/
 
 end UniformSpace
 
@@ -278,6 +312,7 @@ variable {γ : Type _} [UniformSpace γ] [Semiring γ] [TopologicalSemiring γ]
 
 variable [T2Space γ] [CompleteSpace γ]
 
+#print DenseInducing.extendRingHom /-
 /-- The dense inducing extension as a ring homomorphism. -/
 noncomputable def DenseInducing.extendRingHom {i : α →+* β} {f : α →+* γ} (ue : UniformInducing i)
     (dr : DenseRange i) (hf : UniformContinuous f) : β →+* γ
@@ -310,6 +345,7 @@ noncomputable def DenseInducing.extendRingHom {i : α →+* β} {f : α →+* γ
       simp_rw [← i.map_mul, DenseInducing.extend_eq (ue.dense_inducing dr) hf.continuous _, ←
         f.map_mul]
 #align dense_inducing.extend_ring_hom DenseInducing.extendRingHom
+-/
 
 end UniformExtension
 

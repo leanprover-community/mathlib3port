@@ -69,8 +69,6 @@ open Finset AffineSubspace EuclideanGeometry PointsWithCircumcenterIndex
 variable {V : Type _} {P : Type _} [NormedAddCommGroup V] [InnerProductSpace ℝ V] [MetricSpace P]
   [NormedAddTorsor V P]
 
-include V
-
 /-- The Monge point of a simplex (in 2 or more dimensions) is a
 generalization of the orthocenter of a triangle.  It is defined to be
 the intersection of the Monge planes, where a Monge plane is the
@@ -113,8 +111,6 @@ theorem mongePoint_eq_of_range_eq {n : ℕ} {s₁ s₂ : Simplex ℝ P n}
     circumcenter_eq_of_range_eq h]
 #align affine.simplex.monge_point_eq_of_range_eq Affine.Simplex.mongePoint_eq_of_range_eq
 
-omit V
-
 /-- The weights for the Monge point of an (n+2)-simplex, in terms of
 `points_with_circumcenter`. -/
 def mongePointWeightsWithCircumcenter (n : ℕ) : PointsWithCircumcenterIndex (n + 2) → ℝ
@@ -133,8 +129,6 @@ theorem sum_mongePointWeightsWithCircumcenter (n : ℕ) :
   field_simp [hn1]
   ring
 #align affine.simplex.sum_monge_point_weights_with_circumcenter Affine.Simplex.sum_mongePointWeightsWithCircumcenter
-
-include V
 
 /-- The Monge point of an (n+2)-simplex, in terms of
 `points_with_circumcenter`. -/
@@ -161,8 +155,6 @@ theorem mongePoint_eq_affineCombination_of_pointsWithCircumcenter {n : ℕ}
   · field_simp [hn1]
     ring
 #align affine.simplex.monge_point_eq_affine_combination_of_points_with_circumcenter Affine.Simplex.mongePoint_eq_affineCombination_of_pointsWithCircumcenter
-
-omit V
 
 /-- The weights for the Monge point of an (n+2)-simplex, minus the
 centroid of an n-dimensional face, in terms of
@@ -204,8 +196,6 @@ theorem sum_mongePointVsubFaceCentroidWeightsWithCircumcenter {n : ℕ} {i₁ i�
   rw [sum_centroid_weights_with_circumcenter, sub_self]
   simp [← card_pos, card_compl, h]
 #align affine.simplex.sum_monge_point_vsub_face_centroid_weights_with_circumcenter Affine.Simplex.sum_mongePointVsubFaceCentroidWeightsWithCircumcenter
-
-include V
 
 /-- The Monge point of an (n+2)-simplex, minus the centroid of an
 n-dimensional face, in terms of `points_with_circumcenter`. -/
@@ -467,8 +457,6 @@ open EuclideanGeometry Finset Simplex AffineSubspace FiniteDimensional
 variable {V : Type _} {P : Type _} [NormedAddCommGroup V] [InnerProductSpace ℝ V] [MetricSpace P]
   [NormedAddTorsor V P]
 
-include V
-
 /-- The orthocenter of a triangle is the intersection of its
 altitudes.  It is defined here as the 2-dimensional case of the
 Monge point. -/
@@ -655,8 +643,6 @@ open Affine AffineSubspace FiniteDimensional
 
 variable {V : Type _} {P : Type _} [NormedAddCommGroup V] [InnerProductSpace ℝ V] [MetricSpace P]
   [NormedAddTorsor V P]
-
-include V
 
 /-- Four points form an orthocentric system if they consist of the
 vertices of a triangle and its orthocenter. -/

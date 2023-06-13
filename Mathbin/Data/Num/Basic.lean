@@ -254,15 +254,19 @@ def castNum [z : Zero α] : Num → α
 #align cast_num castNum
 -/
 
+#print posNumCoe /-
 -- see Note [coercion into rings]
 instance (priority := 900) posNumCoe : CoeTC PosNum α :=
   ⟨castPosNum⟩
 #align pos_num_coe posNumCoe
+-/
 
+#print numNatCoe /-
 -- see Note [coercion into rings]
 instance (priority := 900) numNatCoe [z : Zero α] : CoeTC Num α :=
   ⟨castNum⟩
 #align num_nat_coe numNatCoe
+-/
 
 instance : Repr PosNum :=
   ⟨fun n => repr (n : ℕ)⟩
@@ -891,10 +895,12 @@ def castZNum : ZNum → α
 #align cast_znum castZNum
 -/
 
+#print znumCoe /-
 -- see Note [coercion into rings]
 instance (priority := 900) znumCoe : CoeTC ZNum α :=
   ⟨castZNum⟩
 #align znum_coe znumCoe
+-/
 
 instance : Repr ZNum :=
   ⟨fun n => repr (n : ℤ)⟩

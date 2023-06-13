@@ -27,19 +27,23 @@ non-zero element.
 
 variable {K : Type _} [DivisionRing K] [TopologicalSpace K]
 
+#print Filter.tendsto_cocompact_mul_left₀ /-
 /-- Left-multiplication by a nonzero element of a topological division ring is proper, i.e.,
 inverse images of compact sets are compact. -/
 theorem Filter.tendsto_cocompact_mul_left₀ [ContinuousMul K] {a : K} (ha : a ≠ 0) :
     Filter.Tendsto (fun x : K => a * x) (Filter.cocompact K) (Filter.cocompact K) :=
   Filter.tendsto_cocompact_mul_left (inv_mul_cancel ha)
 #align filter.tendsto_cocompact_mul_left₀ Filter.tendsto_cocompact_mul_left₀
+-/
 
+#print Filter.tendsto_cocompact_mul_right₀ /-
 /-- Right-multiplication by a nonzero element of a topological division ring is proper, i.e.,
 inverse images of compact sets are compact. -/
 theorem Filter.tendsto_cocompact_mul_right₀ [ContinuousMul K] {a : K} (ha : a ≠ 0) :
     Filter.Tendsto (fun x : K => x * a) (Filter.cocompact K) (Filter.cocompact K) :=
   Filter.tendsto_cocompact_mul_right (mul_inv_cancel ha)
 #align filter.tendsto_cocompact_mul_right₀ Filter.tendsto_cocompact_mul_right₀
+-/
 
 variable (K)
 
@@ -69,19 +73,25 @@ def Subfield.topologicalClosure (K : Subfield α) : Subfield α :=
 #align subfield.topological_closure Subfield.topologicalClosure
 -/
 
+#print Subfield.le_topologicalClosure /-
 theorem Subfield.le_topologicalClosure (s : Subfield α) : s ≤ s.topologicalClosure :=
   subset_closure
 #align subfield.le_topological_closure Subfield.le_topologicalClosure
+-/
 
+#print Subfield.isClosed_topologicalClosure /-
 theorem Subfield.isClosed_topologicalClosure (s : Subfield α) :
     IsClosed (s.topologicalClosure : Set α) :=
   isClosed_closure
 #align subfield.is_closed_topological_closure Subfield.isClosed_topologicalClosure
+-/
 
+#print Subfield.topologicalClosure_minimal /-
 theorem Subfield.topologicalClosure_minimal (s : Subfield α) {t : Subfield α} (h : s ≤ t)
     (ht : IsClosed (t : Set α)) : s.topologicalClosure ≤ t :=
   closure_minimal h ht
 #align subfield.topological_closure_minimal Subfield.topologicalClosure_minimal
+-/
 
 end Subfield
 
@@ -96,6 +106,7 @@ happens to be a field is enough.
 
 variable {𝕜 : Type _} [Field 𝕜] [TopologicalSpace 𝕜] [TopologicalRing 𝕜]
 
+#print affineHomeomorph /-
 /--
 The map `λ x, a * x + b`, as a homeomorphism from `𝕜` (a topological field) to itself, when `a ≠ 0`.
 -/
@@ -107,6 +118,7 @@ def affineHomeomorph (a b : 𝕜) (h : a ≠ 0) : 𝕜 ≃ₜ 𝕜
   left_inv x := by simp only [add_sub_cancel]; exact mul_div_cancel_left x h
   right_inv y := by simp [mul_div_cancel' _ h]
 #align affine_homeomorph affineHomeomorph
+-/
 
 end affineHomeomorph
 
@@ -116,10 +128,12 @@ variable {α β : Type _} [TopologicalSpace α] [LinearOrderedSemifield β] {a :
 
 open scoped Topology
 
+#print IsLocalMin.inv /-
 theorem IsLocalMin.inv {f : α → β} {a : α} (h1 : IsLocalMin f a) (h2 : ∀ᶠ z in 𝓝 a, 0 < f z) :
     IsLocalMax f⁻¹ a := by
   filter_upwards [h1, h2] with z h3 h4 using (inv_le_inv h4 h2.self_of_nhds).mpr h3
 #align is_local_min.inv IsLocalMin.inv
+-/
 
 end LocalExtr
 
@@ -133,6 +147,7 @@ open Set
 variable {α 𝕜 : Type _} {f g : α → 𝕜} {S : Set α} [TopologicalSpace α] [TopologicalSpace 𝕜]
   [T1Space 𝕜]
 
+#print IsPreconnected.eq_one_or_eq_neg_one_of_sq_eq /-
 /-- If `f` is a function `α → 𝕜` which is continuous on a preconnected set `S`, and
 `f ^ 2 = 1` on `S`, then either `f = 1` on `S`, or `f = -1` on `S`. -/
 theorem IsPreconnected.eq_one_or_eq_neg_one_of_sq_eq [Ring 𝕜] [NoZeroDivisors 𝕜]
@@ -155,7 +170,9 @@ theorem IsPreconnected.eq_one_or_eq_neg_one_of_sq_eq [Ring 𝕜] [NoZeroDivisors
   · exact mem_insert_iff.mpr (hsq hz).symm
   exact discrete_of_t1_of_finite
 #align is_preconnected.eq_one_or_eq_neg_one_of_sq_eq IsPreconnected.eq_one_or_eq_neg_one_of_sq_eq
+-/
 
+#print IsPreconnected.eq_or_eq_neg_of_sq_eq /-
 /-- If `f, g` are functions `α → 𝕜`, both continuous on a preconnected set `S`, with
 `f ^ 2 = g ^ 2` on `S`, and `g z ≠ 0` all `z ∈ S`, then either `f = g` or `f = -g` on
 `S`. -/
@@ -175,7 +192,9 @@ theorem IsPreconnected.eq_or_eq_neg_of_sq_eq [Field 𝕜] [HasContinuousInv₀ �
   · rw [Pi.one_apply, div_pow, Pi.div_apply, hsq hx, div_self]
     exact pow_ne_zero _ (hg_ne hx)
 #align is_preconnected.eq_or_eq_neg_of_sq_eq IsPreconnected.eq_or_eq_neg_of_sq_eq
+-/
 
+#print IsPreconnected.eq_of_sq_eq /-
 /-- If `f, g` are functions `α → 𝕜`, both continuous on a preconnected set `S`, with
 `f ^ 2 = g ^ 2` on `S`, and `g z ≠ 0` all `z ∈ S`, then as soon as `f = g` holds at
 one point of `S` it holds for all points. -/
@@ -195,6 +214,7 @@ theorem IsPreconnected.eq_of_sq_eq [Field 𝕜] [HasContinuousInv₀ 𝕜] [Cont
       rw [h hx, Pi.neg_apply, eq_comm, ← sub_eq_zero, sub_eq_add_neg, neg_neg, ← mul_two, hy',
         MulZeroClass.mul_zero]
 #align is_preconnected.eq_of_sq_eq IsPreconnected.eq_of_sq_eq
+-/
 
 end Preconnected
 

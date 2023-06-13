@@ -61,10 +61,8 @@ variable {α E E' F G G' 𝕜 : Type _} {p : ℝ≥0∞} [IsROrC 𝕜]
 
 variable {m m0 : MeasurableSpace α} {μ : Measure α} {s t : Set α}
 
--- mathport name: «expr⟪ , ⟫»
 local notation "⟪" x ", " y "⟫" => @inner 𝕜 E _ x y
 
--- mathport name: «expr⟪ , ⟫₂»
 local notation "⟪" x ", " y "⟫₂" => @inner 𝕜 (α →₂[μ] E) _ x y
 
 variable (𝕜)

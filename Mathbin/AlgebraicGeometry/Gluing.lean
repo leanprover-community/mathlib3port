@@ -95,9 +95,6 @@ namespace GlueData
 
 variable (D : GlueData)
 
-include D
-
--- mathport name: «expr𝖣»
 local notation "𝖣" => D.toGlueData
 
 /-- The glue data of locally ringed spaces spaces associated to a family of glue data of schemes. -/

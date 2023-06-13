@@ -314,6 +314,7 @@ section
 
 variable {D : Type u₂} [Category.{v₂} D]
 
+#print CategoryTheory.SplitMono.map /-
 /-- Split monomorphisms are also absolute monomorphisms. -/
 @[simps]
 def SplitMono.map {X Y : C} {f : X ⟶ Y} (sm : SplitMono f) (F : C ⥤ D) : SplitMono (F.map f)
@@ -321,7 +322,9 @@ def SplitMono.map {X Y : C} {f : X ⟶ Y} (sm : SplitMono f) (F : C ⥤ D) : Spl
   retraction := F.map sm.retraction
   id' := by rw [← functor.map_comp, split_mono.id, Functor.map_id]
 #align category_theory.split_mono.map CategoryTheory.SplitMono.map
+-/
 
+#print CategoryTheory.SplitEpi.map /-
 /-- Split epimorphisms are also absolute epimorphisms. -/
 @[simps]
 def SplitEpi.map {X Y : C} {f : X ⟶ Y} (se : SplitEpi f) (F : C ⥤ D) : SplitEpi (F.map f)
@@ -329,6 +332,7 @@ def SplitEpi.map {X Y : C} {f : X ⟶ Y} (se : SplitEpi f) (F : C ⥤ D) : Split
   section_ := F.map se.section_
   id' := by rw [← functor.map_comp, split_epi.id, Functor.map_id]
 #align category_theory.split_epi.map CategoryTheory.SplitEpi.map
+-/
 
 instance {X Y : C} (f : X ⟶ Y) [hf : IsSplitMono f] (F : C ⥤ D) : IsSplitMono (F.map f) :=
   IsSplitMono.mk' (hf.exists_splitMono.some.map F)

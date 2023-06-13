@@ -37,7 +37,6 @@ variable {𝕜 : Type _} [IsROrC 𝕜]
 
 variable {n : Type _} [LinearOrder n] [IsWellOrder n (· < ·)] [LocallyFiniteOrderBot n]
 
--- mathport name: «expr⟪ , ⟫ₑ»
 local notation "⟪" x ", " y "⟫ₑ" => @inner 𝕜 _ _ ((PiLp.equiv 2 _).symm x) ((PiLp.equiv _ _).symm y)
 
 open Matrix

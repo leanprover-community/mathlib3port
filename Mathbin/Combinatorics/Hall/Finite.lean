@@ -144,6 +144,7 @@ theorem hall_cond_of_restrict {ι : Type u} {t : ι → Finset α} {s : Finset �
 #align hall_marriage_theorem.hall_cond_of_restrict HallMarriageTheorem.hall_cond_of_restrict
 -/
 
+#print HallMarriageTheorem.hall_cond_of_compl /-
 theorem hall_cond_of_compl {ι : Type u} {t : ι → Finset α} {s : Finset ι}
     (hus : s.card = (s.biUnion t).card) (ht : ∀ s : Finset ι, s.card ≤ (s.biUnion t).card)
     (s' : Finset (sᶜ : Set ι)) : s'.card ≤ (s'.biUnion fun x' => t x' \ s.biUnion t).card :=
@@ -170,6 +171,7 @@ theorem hall_cond_of_compl {ι : Type u} {t : ι → Finset α} {s : Finset ι}
   · apply bUnion_subset_bUnion_of_subset_left
     apply subset_union_left
 #align hall_marriage_theorem.hall_cond_of_compl HallMarriageTheorem.hall_cond_of_compl
+-/
 
 #print HallMarriageTheorem.hall_hard_inductive_step_B /-
 /-- Second case of the inductive step: assuming that
@@ -268,6 +270,7 @@ theorem hall_hard_inductive (ht : ∀ s : Finset ι, s.card ≤ (s.biUnion t).ca
 
 end HallMarriageTheorem
 
+#print Finset.all_card_le_biUnion_card_iff_existsInjective' /-
 /-- This is the version of **Hall's Marriage Theorem** in terms of indexed
 families of finite sets `t : ι → finset α` with `ι` finite.
 It states that there is a set of distinct representatives if and only
@@ -291,4 +294,5 @@ theorem Finset.all_card_le_biUnion_card_iff_existsInjective' {ι α : Type _} [F
     rintro ⟨x, hx, rfl⟩
     exact ⟨x, hx, hf₂ x⟩
 #align finset.all_card_le_bUnion_card_iff_exists_injective' Finset.all_card_le_biUnion_card_iff_existsInjective'
+-/
 

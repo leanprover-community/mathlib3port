@@ -36,7 +36,6 @@ namespace EckmannHilton
 
 variable {X : Type u}
 
--- mathport name: «expr < > »
 local notation a " <" m "> " b => m a b
 
 #print EckmannHilton.IsUnital /-
@@ -46,19 +45,19 @@ structure IsUnital (m : X → X → X) (e : X) extends IsLeftId _ m e, IsRightId
 #align eckmann_hilton.is_unital EckmannHilton.IsUnital
 -/
 
+#print EckmannHilton.MulOneClass.isUnital /-
 @[to_additive EckmannHilton.AddZeroClass.IsUnital]
 theorem MulOneClass.isUnital [G : MulOneClass X] : IsUnital (· * ·) (1 : X) :=
   IsUnital.mk (by infer_instance) (by infer_instance)
 #align eckmann_hilton.mul_one_class.is_unital EckmannHilton.MulOneClass.isUnital
 #align eckmann_hilton.add_zero_class.is_unital EckmannHilton.AddZeroClass.IsUnital
+-/
 
 variable {m₁ m₂ : X → X → X} {e₁ e₂ : X}
 
 variable (h₁ : IsUnital m₁ e₁) (h₂ : IsUnital m₂ e₂)
 
 variable (distrib : ∀ a b c d, ((a <m₂> b) <m₁> c <m₂> d) = (a <m₁> c) <m₂> b <m₁> d)
-
-include h₁ h₂ distrib
 
 #print EckmannHilton.one /-
 /-- If a type carries two unital binary operations that distribute over each other,
@@ -105,8 +104,7 @@ theorem mul_assoc : IsAssociative _ m₂ :=
 #align eckmann_hilton.mul_assoc EckmannHilton.mul_assoc
 -/
 
-omit h₁ h₂ distrib
-
+#print EckmannHilton.commMonoid /-
 /-- If a type carries a unital magma structure that distributes over a unital binary
 operations, then the magma structure is a commutative monoid. -/
 @[reducible,
@@ -121,7 +119,9 @@ def commMonoid [h : MulOneClass X]
     mul_assoc := (mul_assoc h₁ MulOneClass.isUnital Distrib).and_assoc }
 #align eckmann_hilton.comm_monoid EckmannHilton.commMonoid
 #align eckmann_hilton.add_comm_monoid EckmannHilton.addCommMonoid
+-/
 
+#print EckmannHilton.commGroup /-
 /-- If a type carries a group structure that distributes over a unital binary operation,
 then the group is commutative. -/
 @[reducible,
@@ -132,6 +132,7 @@ def commGroup [G : Group X] (distrib : ∀ a b c d, ((a * b) <m₁> c * d) = (a 
   { EckmannHilton.commMonoid h₁ Distrib, G with }
 #align eckmann_hilton.comm_group EckmannHilton.commGroup
 #align eckmann_hilton.add_comm_group EckmannHilton.addCommGroup
+-/
 
 end EckmannHilton
 

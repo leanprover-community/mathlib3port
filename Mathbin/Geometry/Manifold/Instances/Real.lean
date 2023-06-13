@@ -88,17 +88,22 @@ instance [Zero (Fin n)] : Inhabited (EuclideanHalfSpace n) :=
 instance : Inhabited (EuclideanQuadrant n) :=
   ⟨⟨0, fun i => le_rfl⟩⟩
 
+#print range_half_space /-
 theorem range_half_space (n : ℕ) [Zero (Fin n)] :
     (range fun x : EuclideanHalfSpace n => x.val) = {y | 0 ≤ y 0} := by simp
 #align range_half_space range_half_space
+-/
 
+#print range_quadrant /-
 theorem range_quadrant (n : ℕ) :
     (range fun x : EuclideanQuadrant n => x.val) = {y | ∀ i : Fin n, 0 ≤ y i} := by simp
 #align range_quadrant range_quadrant
+-/
 
 end
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (i «expr ∈ » ({0} : set[set] (fin[fin] n))) -/
+#print modelWithCornersEuclideanHalfSpace /-
 /--
 Definition of the model with corners `(euclidean_space ℝ (fin n), euclidean_half_space n)`, used as
 a model for manifolds with boundary. In the locale `manifold`, use the shortcut `𝓡∂ n`.
@@ -128,7 +133,9 @@ def modelWithCornersEuclideanHalfSpace (n : ℕ) [Zero (Fin n)] :
   continuous_invFun :=
     (continuous_id.update 0 <| (continuous_apply 0).max continuous_const).subtype_mk _
 #align model_with_corners_euclidean_half_space modelWithCornersEuclideanHalfSpace
+-/
 
+#print modelWithCornersEuclideanQuadrant /-
 /--
 Definition of the model with corners `(euclidean_space ℝ (fin n), euclidean_quadrant n)`, used as a
 model for manifolds with corners -/
@@ -154,19 +161,19 @@ def modelWithCornersEuclideanQuadrant (n : ℕ) :
     Continuous.subtype_mk
       (continuous_pi fun i => (continuous_id.max continuous_const).comp (continuous_apply i)) _
 #align model_with_corners_euclidean_quadrant modelWithCornersEuclideanQuadrant
+-/
 
--- mathport name: model_with_corners_self.euclidean
 scoped[Manifold]
   notation "𝓡 " n =>
     (modelWithCornersSelf ℝ (EuclideanSpace ℝ (Fin n)) :
       ModelWithCorners ℝ (EuclideanSpace ℝ (Fin n)) (EuclideanSpace ℝ (Fin n)))
 
--- mathport name: model_with_corners_euclidean_half_space.euclidean
 scoped[Manifold]
   notation "𝓡∂ " n =>
     (modelWithCornersEuclideanHalfSpace n :
       ModelWithCorners ℝ (EuclideanSpace ℝ (Fin n)) (EuclideanHalfSpace n))
 
+#print IccLeftChart /-
 /-- The left chart for the topological space `[x, y]`, defined on `[x,y)` and sending `x` to `0` in
 `euclidean_half_space 1`.
 -/
@@ -214,7 +221,9 @@ def IccLeftChart (x y : ℝ) [Fact (x < y)] : LocalHomeomorph (Icc x y) (Euclide
     have B : Continuous fun z : EuclideanSpace ℝ (Fin 1) => z 0 := continuous_apply 0
     exact (A.comp B).comp continuous_subtype_val
 #align Icc_left_chart IccLeftChart
+-/
 
+#print IccRightChart /-
 /-- The right chart for the topological space `[x, y]`, defined on `(x,y]` and sending `y` to `0` in
 `euclidean_half_space 1`.
 -/
@@ -263,7 +272,9 @@ def IccRightChart (x y : ℝ) [Fact (x < y)] : LocalHomeomorph (Icc x y) (Euclid
     have B : Continuous fun z : EuclideanSpace ℝ (Fin 1) => z 0 := continuous_apply 0
     exact (A.comp B).comp continuous_subtype_val
 #align Icc_right_chart IccRightChart
+-/
 
+#print IccManifold /-
 /-- Charted space structure on `[x, y]`, using only two charts taking values in
 `euclidean_half_space 1`.
 -/
@@ -280,7 +291,9 @@ instance IccManifold (x y : ℝ) [Fact (x < y)] : ChartedSpace (EuclideanHalfSpa
       simpa only [not_lt] using h'
   chart_mem_atlas z := by by_cases h' : (z : ℝ) < y <;> simp [h']
 #align Icc_manifold IccManifold
+-/
 
+#print Icc_smooth_manifold /-
 /-- The manifold structure on `[x, y]` is smooth.
 -/
 instance Icc_smooth_manifold (x y : ℝ) [Fact (x < y)] :
@@ -325,6 +338,7 @@ instance Icc_smooth_manifold (x y : ℝ) [Fact (x < y)] :
   ·-- `e = right chart`, `e' = right chart`
     exact (mem_groupoid_of_pregroupoid.mpr (symm_trans_mem_contDiffGroupoid _ _ _)).1
 #align Icc_smooth_manifold Icc_smooth_manifold
+-/
 
 /-! Register the manifold structure on `Icc 0 1`, and also its zero and one. -/
 

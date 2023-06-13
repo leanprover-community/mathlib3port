@@ -104,7 +104,6 @@ noncomputable irreducible_def condexp (m : MeasurableSpace α) {m0 : MeasurableS
   else 0
 #align measure_theory.condexp MeasureTheory.condexp
 
--- mathport name: measure_theory.condexp
 -- We define notation `μ[f|m]` for the conditional expectation of `f` with respect to `m`.
 scoped notation μ "[" f "|" m "]" => MeasureTheory.condexp m μ f
 

@@ -69,14 +69,18 @@ def tensorHom {M N M' N' : ModuleCat R} (f : M ⟶ N) (g : M' ⟶ N') :
 #align Module.monoidal_category.tensor_hom ModuleCat.MonoidalCategory.tensorHom
 -/
 
+#print ModuleCat.MonoidalCategory.tensor_id /-
 theorem tensor_id (M N : ModuleCat R) : tensorHom (𝟙 M) (𝟙 N) = 𝟙 (ModuleCat.of R (M ⊗ N)) := by
   ext1; rfl
 #align Module.monoidal_category.tensor_id ModuleCat.MonoidalCategory.tensor_id
+-/
 
+#print ModuleCat.MonoidalCategory.tensor_comp /-
 theorem tensor_comp {X₁ Y₁ Z₁ X₂ Y₂ Z₂ : ModuleCat R} (f₁ : X₁ ⟶ Y₁) (f₂ : X₂ ⟶ Y₂) (g₁ : Y₁ ⟶ Z₁)
     (g₂ : Y₂ ⟶ Z₂) : tensorHom (f₁ ≫ g₁) (f₂ ≫ g₂) = tensorHom f₁ f₂ ≫ tensorHom g₁ g₂ := by ext1;
   rfl
 #align Module.monoidal_category.tensor_comp ModuleCat.MonoidalCategory.tensor_comp
+-/
 
 #print ModuleCat.MonoidalCategory.associator /-
 /-- (implementation) the associator for R-modules -/
@@ -121,24 +125,30 @@ private theorem pentagon_aux (W X Y Z : Type _) [AddCommMonoid W] [AddCommMonoid
 
 end
 
+#print ModuleCat.MonoidalCategory.associator_naturality /-
 theorem associator_naturality {X₁ X₂ X₃ Y₁ Y₂ Y₃ : ModuleCat R} (f₁ : X₁ ⟶ Y₁) (f₂ : X₂ ⟶ Y₂)
     (f₃ : X₃ ⟶ Y₃) :
     tensorHom (tensorHom f₁ f₂) f₃ ≫ (associator Y₁ Y₂ Y₃).Hom =
       (associator X₁ X₂ X₃).Hom ≫ tensorHom f₁ (tensorHom f₂ f₃) :=
   by convert associator_naturality_aux f₁ f₂ f₃ using 1
 #align Module.monoidal_category.associator_naturality ModuleCat.MonoidalCategory.associator_naturality
+-/
 
+#print ModuleCat.MonoidalCategory.pentagon /-
 theorem pentagon (W X Y Z : ModuleCat R) :
     tensorHom (associator W X Y).Hom (𝟙 Z) ≫
         (associator W (tensorObj X Y) Z).Hom ≫ tensorHom (𝟙 W) (associator X Y Z).Hom =
       (associator (tensorObj W X) Y Z).Hom ≫ (associator W X (tensorObj Y Z)).Hom :=
   by convert pentagon_aux R W X Y Z using 1
 #align Module.monoidal_category.pentagon ModuleCat.MonoidalCategory.pentagon
+-/
 
+#print ModuleCat.MonoidalCategory.leftUnitor /-
 /-- (implementation) the left unitor for R-modules -/
 def leftUnitor (M : ModuleCat.{u} R) : ModuleCat.of R (R ⊗[R] M) ≅ M :=
   (LinearEquiv.toModuleIso (TensorProduct.lid R M) : of R (R ⊗ M) ≅ of R M).trans (ofSelfIso M)
 #align Module.monoidal_category.left_unitor ModuleCat.MonoidalCategory.leftUnitor
+-/
 
 #print ModuleCat.MonoidalCategory.leftUnitor_naturality /-
 theorem leftUnitor_naturality {M N : ModuleCat R} (f : M ⟶ N) :
@@ -151,10 +161,12 @@ theorem leftUnitor_naturality {M N : ModuleCat R} (f : M ⟶ N) :
 #align Module.monoidal_category.left_unitor_naturality ModuleCat.MonoidalCategory.leftUnitor_naturality
 -/
 
+#print ModuleCat.MonoidalCategory.rightUnitor /-
 /-- (implementation) the right unitor for R-modules -/
 def rightUnitor (M : ModuleCat.{u} R) : ModuleCat.of R (M ⊗[R] R) ≅ M :=
   (LinearEquiv.toModuleIso (TensorProduct.rid R M) : of R (M ⊗ R) ≅ of R M).trans (ofSelfIso M)
 #align Module.monoidal_category.right_unitor ModuleCat.MonoidalCategory.rightUnitor
+-/
 
 #print ModuleCat.MonoidalCategory.rightUnitor_naturality /-
 theorem rightUnitor_naturality {M N : ModuleCat R} (f : M ⟶ N) :
@@ -213,59 +225,73 @@ instance : CommRing ((𝟙_ (ModuleCat.{u} R) : ModuleCat.{u} R) : Type u) :=
 namespace MonoidalCategory
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print ModuleCat.MonoidalCategory.hom_apply /-
 @[simp]
 theorem hom_apply {K L M N : ModuleCat.{u} R} (f : K ⟶ L) (g : M ⟶ N) (k : K) (m : M) :
     (f ⊗ g) (k ⊗ₜ m) = f k ⊗ₜ g m :=
   rfl
 #align Module.monoidal_category.hom_apply ModuleCat.MonoidalCategory.hom_apply
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print ModuleCat.MonoidalCategory.leftUnitor_hom_apply /-
 @[simp]
 theorem leftUnitor_hom_apply {M : ModuleCat.{u} R} (r : R) (m : M) :
     ((λ_ M).Hom : 𝟙_ (ModuleCat R) ⊗ M ⟶ M) (r ⊗ₜ[R] m) = r • m :=
   TensorProduct.lid_tmul m r
 #align Module.monoidal_category.left_unitor_hom_apply ModuleCat.MonoidalCategory.leftUnitor_hom_apply
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print ModuleCat.MonoidalCategory.leftUnitor_inv_apply /-
 @[simp]
 theorem leftUnitor_inv_apply {M : ModuleCat.{u} R} (m : M) :
     ((λ_ M).inv : M ⟶ 𝟙_ (ModuleCat.{u} R) ⊗ M) m = 1 ⊗ₜ[R] m :=
   TensorProduct.lid_symm_apply m
 #align Module.monoidal_category.left_unitor_inv_apply ModuleCat.MonoidalCategory.leftUnitor_inv_apply
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print ModuleCat.MonoidalCategory.rightUnitor_hom_apply /-
 @[simp]
 theorem rightUnitor_hom_apply {M : ModuleCat.{u} R} (m : M) (r : R) :
     ((ρ_ M).Hom : M ⊗ 𝟙_ (ModuleCat R) ⟶ M) (m ⊗ₜ r) = r • m :=
   TensorProduct.rid_tmul m r
 #align Module.monoidal_category.right_unitor_hom_apply ModuleCat.MonoidalCategory.rightUnitor_hom_apply
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print ModuleCat.MonoidalCategory.rightUnitor_inv_apply /-
 @[simp]
 theorem rightUnitor_inv_apply {M : ModuleCat.{u} R} (m : M) :
     ((ρ_ M).inv : M ⟶ M ⊗ 𝟙_ (ModuleCat.{u} R)) m = m ⊗ₜ[R] 1 :=
   TensorProduct.rid_symm_apply m
 #align Module.monoidal_category.right_unitor_inv_apply ModuleCat.MonoidalCategory.rightUnitor_inv_apply
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print ModuleCat.MonoidalCategory.associator_hom_apply /-
 @[simp]
 theorem associator_hom_apply {M N K : ModuleCat.{u} R} (m : M) (n : N) (k : K) :
     ((α_ M N K).Hom : (M ⊗ N) ⊗ K ⟶ M ⊗ N ⊗ K) (m ⊗ₜ n ⊗ₜ k) = m ⊗ₜ (n ⊗ₜ k) :=
   rfl
 #align Module.monoidal_category.associator_hom_apply ModuleCat.MonoidalCategory.associator_hom_apply
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print ModuleCat.MonoidalCategory.associator_inv_apply /-
 @[simp]
 theorem associator_inv_apply {M N K : ModuleCat.{u} R} (m : M) (n : N) (k : K) :
     ((α_ M N K).inv : M ⊗ N ⊗ K ⟶ (M ⊗ N) ⊗ K) (m ⊗ₜ (n ⊗ₜ k)) = m ⊗ₜ n ⊗ₜ k :=
   rfl
 #align Module.monoidal_category.associator_inv_apply ModuleCat.MonoidalCategory.associator_inv_apply
+-/
 
 end MonoidalCategory
 

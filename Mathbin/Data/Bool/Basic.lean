@@ -27,7 +27,6 @@ bool, boolean, De Morgan
 -/
 
 
--- mathport name: «expr! »
 prefix:90 "!" => not
 
 namespace Bool
@@ -317,8 +316,10 @@ theorem eq_not_iff : ∀ {a b : Bool}, a = !b ↔ a ≠ b := by decide
 #align bool.eq_bnot_iff Bool.eq_not_iff
 -/
 
+#print Bool.not_eq_iff /-
 theorem not_eq_iff : ∀ {a b : Bool}, !a = b ↔ a ≠ b := by decide
 #align bool.bnot_eq_iff Bool.not_eq_iff
+-/
 
 #print Bool.not_eq_not /-
 @[simp]
@@ -365,11 +366,15 @@ theorem not_iff_not : ∀ {b : Bool}, !b ↔ ¬b := by decide
 #align bool.bnot_iff_not Bool.not_iff_not
 -/
 
+#print Bool.eq_true_of_not_eq_false' /-
 theorem eq_true_of_not_eq_false' : ∀ {a : Bool}, !a = false → a = true := by decide
 #align bool.eq_tt_of_bnot_eq_ff Bool.eq_true_of_not_eq_false'
+-/
 
+#print Bool.eq_false_of_not_eq_true' /-
 theorem eq_false_of_not_eq_true' : ∀ {a : Bool}, !a = true → a = false := by decide
 #align bool.eq_ff_of_bnot_eq_tt Bool.eq_false_of_not_eq_true'
+-/
 
 #print Bool.and_not_self /-
 @[simp]
@@ -473,8 +478,10 @@ theorem not_or : ∀ a b : Bool, !(a || b) = (!a && !b) := by decide
 #align bool.bnot_bor Bool.not_or
 -/
 
+#print Bool.not_inj /-
 theorem not_inj : ∀ {a b : Bool}, !a = !b → a = b := by decide
 #align bool.bnot_inj Bool.not_inj
+-/
 
 instance : LinearOrder Bool where
   le a b := a = false ∨ b = true

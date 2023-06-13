@@ -70,15 +70,18 @@ def LipschitzMul.C [_i : LipschitzMul β] : ℝ≥0 :=
 
 variable {β}
 
+#print lipschitzWith_lipschitz_const_mul_edist /-
 @[to_additive]
 theorem lipschitzWith_lipschitz_const_mul_edist [_i : LipschitzMul β] :
     LipschitzWith (LipschitzMul.C β) fun p : β × β => p.1 * p.2 :=
   Classical.choose_spec _i.lipschitz_mul
 #align lipschitz_with_lipschitz_const_mul_edist lipschitzWith_lipschitz_const_mul_edist
 #align lipschitz_with_lipschitz_const_add_edist lipschitzWith_lipschitz_const_add_edist
+-/
 
 variable [LipschitzMul β]
 
+#print lipschitz_with_lipschitz_const_mul /-
 @[to_additive]
 theorem lipschitz_with_lipschitz_const_mul :
     ∀ p q : β × β, dist (p.1 * p.2) (q.1 * q.2) ≤ LipschitzMul.C β * dist p q :=
@@ -87,14 +90,18 @@ theorem lipschitz_with_lipschitz_const_mul :
   exact lipschitzWith_lipschitz_const_mul_edist
 #align lipschitz_with_lipschitz_const_mul lipschitz_with_lipschitz_const_mul
 #align lipschitz_with_lipschitz_const_add lipschitz_with_lipschitz_const_add
+-/
 
+#print LipschitzMul.continuousMul /-
 -- see Note [lower instance priority]
 @[to_additive]
 instance (priority := 100) LipschitzMul.continuousMul : ContinuousMul β :=
   ⟨lipschitzWith_lipschitz_const_mul_edist.Continuous⟩
 #align has_lipschitz_mul.has_continuous_mul LipschitzMul.continuousMul
 #align has_lipschitz_add.has_continuous_add LipschitzAdd.continuousAdd
+-/
 
+#print Submonoid.lipschitzMul /-
 @[to_additive]
 instance Submonoid.lipschitzMul (s : Submonoid β) : LipschitzMul s
     where lipschitz_mul :=
@@ -103,6 +110,7 @@ instance Submonoid.lipschitzMul (s : Submonoid β) : LipschitzMul s
       convert lipschitzWith_lipschitz_const_mul_edist ⟨(x₁ : β), x₂⟩ ⟨y₁, y₂⟩ using 1⟩
 #align submonoid.has_lipschitz_mul Submonoid.lipschitzMul
 #align add_submonoid.has_lipschitz_add AddSubmonoid.lipschitzAdd
+-/
 
 #print MulOpposite.lipschitzMul /-
 @[to_additive]
@@ -115,6 +123,7 @@ instance MulOpposite.lipschitzMul : LipschitzMul βᵐᵒᵖ
 #align add_opposite.has_lipschitz_add AddOpposite.lipschitzAdd
 -/
 
+#print Real.hasLipschitzAdd /-
 -- this instance could be deduced from `normed_add_comm_group.has_lipschitz_add`, but we prove it
 -- separately here so that it is available earlier in the hierarchy
 instance Real.hasLipschitzAdd : LipschitzAdd ℝ
@@ -130,7 +139,9 @@ instance Real.hasLipschitzAdd : LipschitzAdd ℝ
       have := le_max_right (|p.1 - q.1|) (|p.2 - q.2|)
       linarith⟩
 #align real.has_lipschitz_add Real.hasLipschitzAdd
+-/
 
+#print NNReal.hasLipschitzAdd /-
 -- this instance has the same proof as `add_submonoid.has_lipschitz_add`, but the former can't
 -- directly be applied here since `ℝ≥0` is a subtype of `ℝ`, not an additive submonoid.
 instance NNReal.hasLipschitzAdd : LipschitzAdd ℝ≥0
@@ -139,6 +150,7 @@ instance NNReal.hasLipschitzAdd : LipschitzAdd ℝ≥0
       rintro ⟨x₁, x₂⟩ ⟨y₁, y₂⟩
       convert lipschitzWith_lipschitz_const_add_edist ⟨(x₁ : ℝ), x₂⟩ ⟨y₁, y₂⟩ using 1⟩
 #align nnreal.has_lipschitz_add NNReal.hasLipschitzAdd
+-/
 
 end LipschitzMul
 
@@ -159,13 +171,17 @@ class BoundedSMul : Prop where
 
 variable {α β} [BoundedSMul α β]
 
+#print dist_smul_pair /-
 theorem dist_smul_pair (x : α) (y₁ y₂ : β) : dist (x • y₁) (x • y₂) ≤ dist x 0 * dist y₁ y₂ :=
   BoundedSMul.dist_smul_pair' x y₁ y₂
 #align dist_smul_pair dist_smul_pair
+-/
 
+#print dist_pair_smul /-
 theorem dist_pair_smul (x₁ x₂ : α) (y : β) : dist (x₁ • y) (x₂ • y) ≤ dist x₁ x₂ * dist y 0 :=
   BoundedSMul.dist_pair_smul' x₁ x₂ y
 #align dist_pair_smul dist_pair_smul
+-/
 
 #print BoundedSMul.continuousSMul /-
 -- see Note [lower instance priority]
@@ -206,6 +222,7 @@ instance (priority := 100) BoundedSMul.continuousSMul : ContinuousSMul α β
 #align has_bounded_smul.has_continuous_smul BoundedSMul.continuousSMul
 -/
 
+#print Real.boundedSMul /-
 -- this instance could be deduced from `normed_space.has_bounded_smul`, but we prove it separately
 -- here so that it is available earlier in the hierarchy
 instance Real.boundedSMul : BoundedSMul ℝ ℝ
@@ -213,12 +230,15 @@ instance Real.boundedSMul : BoundedSMul ℝ ℝ
   dist_smul_pair' x y₁ y₂ := by simpa [Real.dist_eq, mul_sub] using (abs_mul x (y₁ - y₂)).le
   dist_pair_smul' x₁ x₂ y := by simpa [Real.dist_eq, sub_mul] using (abs_mul (x₁ - x₂) y).le
 #align real.has_bounded_smul Real.boundedSMul
+-/
 
+#print NNReal.boundedSMul /-
 instance NNReal.boundedSMul : BoundedSMul ℝ≥0 ℝ≥0
     where
   dist_smul_pair' x y₁ y₂ := by convert dist_smul_pair (x : ℝ) (y₁ : ℝ) y₂ using 1
   dist_pair_smul' x₁ x₂ y := by convert dist_pair_smul (x₁ : ℝ) x₂ (y : ℝ) using 1
 #align nnreal.has_bounded_smul NNReal.boundedSMul
+-/
 
 #print BoundedSMul.op /-
 /-- If a scalar is central, then its right action is bounded when its left action is. -/

@@ -89,17 +89,22 @@ variable {J : Type v₂} [SmallCategory J]
 
 namespace ProdPreservesConnectedLimits
 
+#print CategoryTheory.ProdPreservesConnectedLimits.γ₂ /-
 /-- (Impl). The obvious natural transformation from (X × K -) to K. -/
 @[simps]
 def γ₂ {K : J ⥤ C} (X : C) : K ⋙ prod.functor.obj X ⟶ K where app Y := Limits.prod.snd
 #align category_theory.prod_preserves_connected_limits.γ₂ CategoryTheory.ProdPreservesConnectedLimits.γ₂
+-/
 
+#print CategoryTheory.ProdPreservesConnectedLimits.γ₁ /-
 /-- (Impl). The obvious natural transformation from (X × K -) to X -/
 @[simps]
 def γ₁ {K : J ⥤ C} (X : C) : K ⋙ prod.functor.obj X ⟶ (Functor.const J).obj X
     where app Y := Limits.prod.fst
 #align category_theory.prod_preserves_connected_limits.γ₁ CategoryTheory.ProdPreservesConnectedLimits.γ₁
+-/
 
+#print CategoryTheory.ProdPreservesConnectedLimits.forgetCone /-
 /-- (Impl).
 Given a cone for (X × K -), produce a cone for K using the natural transformation `γ₂` -/
 @[simps]
@@ -108,11 +113,13 @@ def forgetCone {X : C} {K : J ⥤ C} (s : Cone (K ⋙ prod.functor.obj X)) : Con
   pt := s.pt
   π := s.π ≫ γ₂ X
 #align category_theory.prod_preserves_connected_limits.forget_cone CategoryTheory.ProdPreservesConnectedLimits.forgetCone
+-/
 
 end ProdPreservesConnectedLimits
 
 open ProdPreservesConnectedLimits
 
+#print CategoryTheory.prodPreservesConnectedLimits /-
 /-- The functor `(X × -)` preserves any connected limit.
 Note that this functor does not preserve the two most obvious disconnected limits - that is,
 `(X × -)` does not preserve products or terminal object, eg `(X ⨯ A) ⨯ (X ⨯ B)` is not isomorphic to
@@ -139,6 +146,7 @@ noncomputable def prodPreservesConnectedLimits [IsConnected J] (X : C) :
               intro j
               simp [← L j] } }
 #align category_theory.prod_preserves_connected_limits CategoryTheory.prodPreservesConnectedLimits
+-/
 
 end CategoryTheory
 

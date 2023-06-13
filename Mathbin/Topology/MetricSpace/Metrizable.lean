@@ -62,6 +62,7 @@ noncomputable def pseudoMetrizableSpacePseudoMetric (X : Type _) [TopologicalSpa
 #align topological_space.pseudo_metrizable_space_pseudo_metric TopologicalSpace.pseudoMetrizableSpacePseudoMetric
 -/
 
+#print TopologicalSpace.pseudoMetrizableSpace_prod /-
 instance pseudoMetrizableSpace_prod [PseudoMetrizableSpace X] [PseudoMetrizableSpace Y] :
     PseudoMetrizableSpace (X × Y) :=
   by
@@ -69,6 +70,7 @@ instance pseudoMetrizableSpace_prod [PseudoMetrizableSpace X] [PseudoMetrizableS
   letI : PseudoMetricSpace Y := pseudo_metrizable_space_pseudo_metric Y
   infer_instance
 #align topological_space.pseudo_metrizable_space_prod TopologicalSpace.pseudoMetrizableSpace_prod
+-/
 
 #print Inducing.pseudoMetrizableSpace /-
 /-- Given an inducing map of a topological space into a pseudo metrizable space, the source space
@@ -146,12 +148,14 @@ instance (priority := 100) t2Space_of_metrizableSpace [MetrizableSpace X] : T2Sp
 #align topological_space.t2_space_of_metrizable_space TopologicalSpace.t2Space_of_metrizableSpace
 -/
 
+#print TopologicalSpace.metrizableSpace_prod /-
 instance metrizableSpace_prod [MetrizableSpace X] [MetrizableSpace Y] : MetrizableSpace (X × Y) :=
   by
   letI : MetricSpace X := metrizable_space_metric X
   letI : MetricSpace Y := metrizable_space_metric Y
   infer_instance
 #align topological_space.metrizable_space_prod TopologicalSpace.metrizableSpace_prod
+-/
 
 #print Embedding.metrizableSpace /-
 /-- Given an embedding of a topological space into a metrizable space, the source space is also
@@ -178,6 +182,7 @@ instance metrizableSpace_pi [∀ i, MetrizableSpace (π i)] : MetrizableSpace (�
 variable (X) [T3Space X] [SecondCountableTopology X]
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print TopologicalSpace.exists_embedding_l_infty /-
 /-- A T₃ topological space with second countable topology can be embedded into `l^∞ = ℕ →ᵇ ℝ`.
 -/
 theorem exists_embedding_l_infty : ∃ f : X → ℕ →ᵇ ℝ, Embedding f :=
@@ -274,6 +279,7 @@ theorem exists_embedding_l_infty : ∃ f : X → ℕ →ᵇ ℝ, Embedding f :=
     cases' le_total δ (ε UV) with hle hle
     exacts [hy _ hle, (Real.dist_le_of_mem_Icc (hf0ε _ _) (hf0ε _ _)).trans (by rwa [sub_zero])]
 #align topological_space.exists_embedding_l_infty TopologicalSpace.exists_embedding_l_infty
+-/
 
 #print TopologicalSpace.metrizableSpace_of_t3_second_countable /-
 /-- *Urysohn's metrization theorem* (Tychonoff's version): a T₃ topological space with second

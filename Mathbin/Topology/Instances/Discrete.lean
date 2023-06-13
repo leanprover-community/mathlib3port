@@ -53,6 +53,7 @@ instance (priority := 100) DiscreteTopology.secondCountableTopology_of_encodable
 #align discrete_topology.second_countable_topology_of_encodable DiscreteTopology.secondCountableTopology_of_encodable
 -/
 
+#print bot_topologicalSpace_eq_generateFrom_of_pred_succOrder /-
 theorem bot_topologicalSpace_eq_generateFrom_of_pred_succOrder {α} [PartialOrder α] [PredOrder α]
     [SuccOrder α] [NoMinOrder α] [NoMaxOrder α] :
     (⊥ : TopologicalSpace α) = generateFrom {s | ∃ a, s = Ioi a ∨ s = Iio a} :=
@@ -68,6 +69,7 @@ theorem bot_topologicalSpace_eq_generateFrom_of_pred_succOrder {α} [PartialOrde
   · exact is_open_generate_from_of_mem ⟨succ a, Or.inr rfl⟩
   · exact is_open_generate_from_of_mem ⟨pred a, Or.inl rfl⟩
 #align bot_topological_space_eq_generate_from_of_pred_succ_order bot_topologicalSpace_eq_generateFrom_of_pred_succOrder
+-/
 
 #print discreteTopology_iff_orderTopology_of_pred_succ' /-
 theorem discreteTopology_iff_orderTopology_of_pred_succ' [PartialOrder α] [PredOrder α]
@@ -88,6 +90,7 @@ instance (priority := 100) DiscreteTopology.orderTopology_of_pred_succ' [h : Dis
 #align discrete_topology.order_topology_of_pred_succ' DiscreteTopology.orderTopology_of_pred_succ'
 -/
 
+#print LinearOrder.bot_topologicalSpace_eq_generateFrom /-
 theorem LinearOrder.bot_topologicalSpace_eq_generateFrom {α} [LinearOrder α] [PredOrder α]
     [SuccOrder α] : (⊥ : TopologicalSpace α) = generateFrom {s | ∃ a, s = Ioi a ∨ s = Iio a} :=
   by
@@ -116,6 +119,7 @@ theorem LinearOrder.bot_topologicalSpace_eq_generateFrom {α} [LinearOrder α] [
       · exact is_open_generate_from_of_mem ⟨succ a, Or.inr rfl⟩
       · exact is_open_generate_from_of_mem ⟨pred a, Or.inl rfl⟩
 #align linear_order.bot_topological_space_eq_generate_from LinearOrder.bot_topologicalSpace_eq_generateFrom
+-/
 
 #print discreteTopology_iff_orderTopology_of_pred_succ /-
 theorem discreteTopology_iff_orderTopology_of_pred_succ [LinearOrder α] [PredOrder α]

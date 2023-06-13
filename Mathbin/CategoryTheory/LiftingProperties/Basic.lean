@@ -60,12 +60,15 @@ namespace HasLiftingProperty
 
 variable {i p}
 
+#print CategoryTheory.HasLiftingProperty.op /-
 theorem op (h : HasLiftingProperty i p) : HasLiftingProperty p.op i.op :=
   ⟨fun f g sq => by
     simp only [comm_sq.has_lift.iff_unop, Quiver.Hom.unop_op]
     infer_instance⟩
 #align category_theory.has_lifting_property.op CategoryTheory.HasLiftingProperty.op
+-/
 
+#print CategoryTheory.HasLiftingProperty.unop /-
 theorem unop {A B X Y : Cᵒᵖ} {i : A ⟶ B} {p : X ⟶ Y} (h : HasLiftingProperty i p) :
     HasLiftingProperty p.unop i.unop :=
   ⟨fun f g sq => by
@@ -73,15 +76,20 @@ theorem unop {A B X Y : Cᵒᵖ} {i : A ⟶ B} {p : X ⟶ Y} (h : HasLiftingProp
     simp only [Quiver.Hom.op_unop]
     infer_instance⟩
 #align category_theory.has_lifting_property.unop CategoryTheory.HasLiftingProperty.unop
+-/
 
+#print CategoryTheory.HasLiftingProperty.iff_op /-
 theorem iff_op : HasLiftingProperty i p ↔ HasLiftingProperty p.op i.op :=
   ⟨op, unop⟩
 #align category_theory.has_lifting_property.iff_op CategoryTheory.HasLiftingProperty.iff_op
+-/
 
+#print CategoryTheory.HasLiftingProperty.iff_unop /-
 theorem iff_unop {A B X Y : Cᵒᵖ} (i : A ⟶ B) (p : X ⟶ Y) :
     HasLiftingProperty i p ↔ HasLiftingProperty p.unop i.unop :=
   ⟨unop, op⟩
 #align category_theory.has_lifting_property.iff_unop CategoryTheory.HasLiftingProperty.iff_unop
+-/
 
 variable (i p)
 

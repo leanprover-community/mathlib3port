@@ -174,11 +174,14 @@ theorem reflect_add (f g : R[X]) (N : ℕ) : reflect N (f + g) = reflect N f + r
 #align polynomial.reflect_add Polynomial.reflect_add
 -/
 
+#print Polynomial.reflect_C_mul /-
 @[simp]
 theorem reflect_C_mul (f : R[X]) (r : R) (N : ℕ) : reflect N (C r * f) = C r * reflect N f := by
   ext; simp only [coeff_reflect, coeff_C_mul]
 #align polynomial.reflect_C_mul Polynomial.reflect_C_mul
+-/
 
+#print Polynomial.reflect_C_mul_X_pow /-
 @[simp]
 theorem reflect_C_mul_X_pow (N n : ℕ) {c : R} : reflect N (C c * X ^ n) = C c * X ^ revAt N n :=
   by
@@ -192,11 +195,14 @@ theorem reflect_C_mul_X_pow (N n : ℕ) {c : R} : reflect N (C c * X ^ n) = C c 
     apply h
     rw [← mem_support_C_mul_X_pow a, rev_at_invol]
 #align polynomial.reflect_C_mul_X_pow Polynomial.reflect_C_mul_X_pow
+-/
 
+#print Polynomial.reflect_C /-
 @[simp]
 theorem reflect_C (r : R) (N : ℕ) : reflect N (C r) = C r * X ^ N := by
   conv_lhs => rw [← mul_one (C r), ← pow_zero X, reflect_C_mul_X_pow, rev_at_zero]
 #align polynomial.reflect_C Polynomial.reflect_C
+-/
 
 #print Polynomial.reflect_monomial /-
 @[simp]
@@ -258,6 +264,7 @@ section Eval₂
 
 variable {S : Type _} [CommSemiring S]
 
+#print Polynomial.eval₂_reflect_mul_pow /-
 theorem eval₂_reflect_mul_pow (i : R →+* S) (x : S) [Invertible x] (N : ℕ) (f : R[X])
     (hf : f.natDegree ≤ N) : eval₂ i (⅟ x) (reflect N f) * x ^ N = eval₂ i x f :=
   by
@@ -272,7 +279,9 @@ theorem eval₂_reflect_mul_pow (i : R →+* S) (x : S) [Invertible x] (N : ℕ)
   · intros
     simp [*, add_mul]
 #align polynomial.eval₂_reflect_mul_pow Polynomial.eval₂_reflect_mul_pow
+-/
 
+#print Polynomial.eval₂_reflect_eq_zero_iff /-
 theorem eval₂_reflect_eq_zero_iff (i : R →+* S) (x : S) [Invertible x] (N : ℕ) (f : R[X])
     (hf : f.natDegree ≤ N) : eval₂ i (⅟ x) (reflect N f) = 0 ↔ eval₂ i x f = 0 :=
   by
@@ -283,6 +292,7 @@ theorem eval₂_reflect_eq_zero_iff (i : R →+* S) (x : S) [Invertible x] (N : 
     rw [← mul_one (eval₂ i (⅟ x) _), ← one_pow N, ← mul_invOf_self x, mul_pow, ← mul_assoc, h,
       MulZeroClass.zero_mul]
 #align polynomial.eval₂_reflect_eq_zero_iff Polynomial.eval₂_reflect_eq_zero_iff
+-/
 
 end Eval₂
 
@@ -380,13 +390,16 @@ theorem reverse_trailingCoeff (f : R[X]) : f.reverse.trailingCoeff = f.leadingCo
 #align polynomial.reverse_trailing_coeff Polynomial.reverse_trailingCoeff
 -/
 
+#print Polynomial.reverse_mul /-
 theorem reverse_mul {f g : R[X]} (fg : f.leadingCoeff * g.leadingCoeff ≠ 0) :
     reverse (f * g) = reverse f * reverse g :=
   by
   unfold reverse
   rw [nat_degree_mul' fg, reflect_mul f g rfl.le rfl.le]
 #align polynomial.reverse_mul Polynomial.reverse_mul
+-/
 
+#print Polynomial.reverse_mul_of_domain /-
 @[simp]
 theorem reverse_mul_of_domain {R : Type _} [Ring R] [NoZeroDivisors R] (f g : R[X]) :
     reverse (f * g) = reverse f * reverse g :=
@@ -397,12 +410,15 @@ theorem reverse_mul_of_domain {R : Type _} [Ring R] [NoZeroDivisors R] (f g : R[
   · rw [g0, MulZeroClass.mul_zero, reverse_zero, MulZeroClass.mul_zero]
   simp [reverse_mul, *]
 #align polynomial.reverse_mul_of_domain Polynomial.reverse_mul_of_domain
+-/
 
+#print Polynomial.trailingCoeff_mul /-
 theorem trailingCoeff_mul {R : Type _} [Ring R] [NoZeroDivisors R] (p q : R[X]) :
     (p * q).trailingCoeff = p.trailingCoeff * q.trailingCoeff := by
   rw [← reverse_leading_coeff, reverse_mul_of_domain, leading_coeff_mul, reverse_leading_coeff,
     reverse_leading_coeff]
 #align polynomial.trailing_coeff_mul Polynomial.trailingCoeff_mul
+-/
 
 #print Polynomial.coeff_one_reverse /-
 @[simp]
@@ -421,16 +437,20 @@ section Eval₂
 
 variable {S : Type _} [CommSemiring S]
 
+#print Polynomial.eval₂_reverse_mul_pow /-
 theorem eval₂_reverse_mul_pow (i : R →+* S) (x : S) [Invertible x] (f : R[X]) :
     eval₂ i (⅟ x) (reverse f) * x ^ f.natDegree = eval₂ i x f :=
   eval₂_reflect_mul_pow i _ _ f le_rfl
 #align polynomial.eval₂_reverse_mul_pow Polynomial.eval₂_reverse_mul_pow
+-/
 
+#print Polynomial.eval₂_reverse_eq_zero_iff /-
 @[simp]
 theorem eval₂_reverse_eq_zero_iff (i : R →+* S) (x : S) [Invertible x] (f : R[X]) :
     eval₂ i (⅟ x) (reverse f) = 0 ↔ eval₂ i x f = 0 :=
   eval₂_reflect_eq_zero_iff i x _ _ le_rfl
 #align polynomial.eval₂_reverse_eq_zero_iff Polynomial.eval₂_reverse_eq_zero_iff
+-/
 
 end Eval₂
 

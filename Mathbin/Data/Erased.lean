@@ -136,10 +136,12 @@ def bind {α β} (a : Erased α) (f : α → Erased β) : Erased β :=
 #align erased.bind Erased.bind
 -/
 
+#print Erased.bind_eq_out /-
 @[simp]
 theorem bind_eq_out {α β} (a f) : @bind α β a f = f a.out := by
   delta bind bind._proof_1 <;> cases f a.out <;> rfl
 #align erased.bind_eq_out Erased.bind_eq_out
+-/
 
 #print Erased.join /-
 /-- Collapses two levels of erasure.
@@ -167,9 +169,11 @@ def map {α β} (f : α → β) (a : Erased α) : Erased β :=
 #align erased.map Erased.map
 -/
 
+#print Erased.map_out /-
 @[simp]
 theorem map_out {α β} {f : α → β} (a : Erased α) : (a.map f).out = f a.out := by simp [map]
 #align erased.map_out Erased.map_out
+-/
 
 instance : Monad Erased where
   pure := @mk

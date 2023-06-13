@@ -274,7 +274,6 @@ unsafe def interval_cases_using (hl hu : expr) (n : Option Name) : tactic Unit :
 /- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:38:34: unsupported: setup_tactic_parser -/
 namespace Interactive
 
--- mathport name: parser.optional
 local postfix:1024 "?" => optional
 
 /-- `interval_cases n` searches for upper and lower bounds on a variable `n`,

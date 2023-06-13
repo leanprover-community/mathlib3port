@@ -120,63 +120,87 @@ def argmin (f : α → β) (l : List α) :=
 #align list.argmin List.argmin
 -/
 
+#print List.argmax_nil /-
 @[simp]
 theorem argmax_nil (f : α → β) : argmax f [] = none :=
   rfl
 #align list.argmax_nil List.argmax_nil
+-/
 
+#print List.argmin_nil /-
 @[simp]
 theorem argmin_nil (f : α → β) : argmin f [] = none :=
   rfl
 #align list.argmin_nil List.argmin_nil
+-/
 
+#print List.argmax_singleton /-
 @[simp]
 theorem argmax_singleton {f : α → β} {a : α} : argmax f [a] = a :=
   rfl
 #align list.argmax_singleton List.argmax_singleton
+-/
 
+#print List.argmin_singleton /-
 @[simp]
 theorem argmin_singleton {f : α → β} {a : α} : argmin f [a] = a :=
   rfl
 #align list.argmin_singleton List.argmin_singleton
+-/
 
+#print List.not_lt_of_mem_argmax /-
 theorem not_lt_of_mem_argmax : a ∈ l → m ∈ argmax f l → ¬f m < f a :=
   not_of_mem_foldl_argAux _ (fun _ => lt_irrefl _) fun _ _ _ => gt_trans
 #align list.not_lt_of_mem_argmax List.not_lt_of_mem_argmax
+-/
 
+#print List.not_lt_of_mem_argmin /-
 theorem not_lt_of_mem_argmin : a ∈ l → m ∈ argmin f l → ¬f a < f m :=
   not_of_mem_foldl_argAux _ (fun _ => lt_irrefl _) fun _ _ _ => lt_trans
 #align list.not_lt_of_mem_argmin List.not_lt_of_mem_argmin
+-/
 
+#print List.argmax_concat /-
 theorem argmax_concat (f : α → β) (a : α) (l : List α) :
     argmax f (l ++ [a]) =
       Option.casesOn (argmax f l) (some a) fun c => if f c < f a then some a else some c :=
   by rw [argmax, argmax] <;> simp [arg_aux]
 #align list.argmax_concat List.argmax_concat
+-/
 
+#print List.argmin_concat /-
 theorem argmin_concat (f : α → β) (a : α) (l : List α) :
     argmin f (l ++ [a]) =
       Option.casesOn (argmin f l) (some a) fun c => if f a < f c then some a else some c :=
   @argmax_concat _ βᵒᵈ _ _ _ _ _
 #align list.argmin_concat List.argmin_concat
+-/
 
+#print List.argmax_mem /-
 theorem argmax_mem : ∀ {l : List α} {m : α}, m ∈ argmax f l → m ∈ l
   | [], m => by simp
   | hd :: tl, m => by simpa [argmax, arg_aux] using foldl_arg_aux_mem _ tl hd m
 #align list.argmax_mem List.argmax_mem
+-/
 
+#print List.argmin_mem /-
 theorem argmin_mem : ∀ {l : List α} {m : α}, m ∈ argmin f l → m ∈ l :=
   @argmax_mem _ βᵒᵈ _ _ _
 #align list.argmin_mem List.argmin_mem
+-/
 
+#print List.argmax_eq_none /-
 @[simp]
 theorem argmax_eq_none : l.argmax f = none ↔ l = [] := by simp [argmax]
 #align list.argmax_eq_none List.argmax_eq_none
+-/
 
+#print List.argmin_eq_none /-
 @[simp]
 theorem argmin_eq_none : l.argmin f = none ↔ l = [] :=
   @argmax_eq_none _ βᵒᵈ _ _ _ _
 #align list.argmin_eq_none List.argmin_eq_none
+-/
 
 end Preorder
 
@@ -184,14 +208,19 @@ section LinearOrder
 
 variable [LinearOrder β] {f : α → β} {l : List α} {o : Option α} {a m : α}
 
+#print List.le_of_mem_argmax /-
 theorem le_of_mem_argmax : a ∈ l → m ∈ argmax f l → f a ≤ f m := fun ha hm =>
   le_of_not_lt <| not_lt_of_mem_argmax ha hm
 #align list.le_of_mem_argmax List.le_of_mem_argmax
+-/
 
+#print List.le_of_mem_argmin /-
 theorem le_of_mem_argmin : a ∈ l → m ∈ argmin f l → f m ≤ f a :=
   @le_of_mem_argmax _ βᵒᵈ _ _ _ _ _
 #align list.le_of_mem_argmin List.le_of_mem_argmin
+-/
 
+#print List.argmax_cons /-
 theorem argmax_cons (f : α → β) (a : α) (l : List α) :
     argmax f (a :: l) =
       Option.casesOn (argmax f l) (some a) fun c => if f a < f c then some c else some a :=
@@ -207,15 +236,19 @@ theorem argmax_cons (f : α → β) (a : α) (l : List α) :
     · exact absurd (lt_trans ‹f a < f m› ‹_›) ‹_›
     · cases (‹f a < f tl›.lt_or_lt _).elim ‹_› ‹_›
 #align list.argmax_cons List.argmax_cons
+-/
 
+#print List.argmin_cons /-
 theorem argmin_cons (f : α → β) (a : α) (l : List α) :
     argmin f (a :: l) =
       Option.casesOn (argmin f l) (some a) fun c => if f c < f a then some c else some a :=
   by convert @argmax_cons _ βᵒᵈ _ _ _ _
 #align list.argmin_cons List.argmin_cons
+-/
 
 variable [DecidableEq α]
 
+#print List.index_of_argmax /-
 theorem index_of_argmax :
     ∀ {l : List α} {m : α}, m ∈ argmax f l → ∀ {a}, a ∈ l → f m ≤ f a → l.indexOfₓ m ≤ l.indexOfₓ a
   | [], m, _, _, _, _ => by simp
@@ -236,13 +269,17 @@ theorem index_of_argmax :
     · rw [if_pos rfl]
       exact bot_le
 #align list.index_of_argmax List.index_of_argmax
+-/
 
+#print List.index_of_argmin /-
 theorem index_of_argmin :
     ∀ {l : List α} {m : α},
       m ∈ argmin f l → ∀ {a}, a ∈ l → f a ≤ f m → l.indexOfₓ m ≤ l.indexOfₓ a :=
   @index_of_argmax _ βᵒᵈ _ _ _
 #align list.index_of_argmin List.index_of_argmin
+-/
 
+#print List.mem_argmax_iff /-
 theorem mem_argmax_iff :
     m ∈ argmax f l ↔
       m ∈ l ∧ (∀ a ∈ l, f a ≤ f m) ∧ ∀ a ∈ l, f m ≤ f a → l.indexOfₓ m ≤ l.indexOfₓ a :=
@@ -256,24 +293,31 @@ theorem mem_argmax_iff :
           (index_of_argmax harg hml (ham _ (argmax_mem harg)))
       rw [(index_of_inj hml (argmax_mem harg)).1 this, Option.mem_def]⟩
 #align list.mem_argmax_iff List.mem_argmax_iff
+-/
 
+#print List.argmax_eq_some_iff /-
 theorem argmax_eq_some_iff :
     argmax f l = some m ↔
       m ∈ l ∧ (∀ a ∈ l, f a ≤ f m) ∧ ∀ a ∈ l, f m ≤ f a → l.indexOfₓ m ≤ l.indexOfₓ a :=
   mem_argmax_iff
 #align list.argmax_eq_some_iff List.argmax_eq_some_iff
+-/
 
+#print List.mem_argmin_iff /-
 theorem mem_argmin_iff :
     m ∈ argmin f l ↔
       m ∈ l ∧ (∀ a ∈ l, f m ≤ f a) ∧ ∀ a ∈ l, f a ≤ f m → l.indexOfₓ m ≤ l.indexOfₓ a :=
   @mem_argmax_iff _ βᵒᵈ _ _ _ _ _
 #align list.mem_argmin_iff List.mem_argmin_iff
+-/
 
+#print List.argmin_eq_some_iff /-
 theorem argmin_eq_some_iff :
     argmin f l = some m ↔
       m ∈ l ∧ (∀ a ∈ l, f m ≤ f a) ∧ ∀ a ∈ l, f a ≤ f m → l.indexOfₓ m ≤ l.indexOfₓ a :=
   mem_argmin_iff
 #align list.argmin_eq_some_iff List.argmin_eq_some_iff
+-/
 
 end LinearOrder
 
@@ -470,6 +514,7 @@ section OrderBot
 
 variable [OrderBot α] {l : List α}
 
+#print List.foldr_max_of_ne_nil /-
 @[simp]
 theorem foldr_max_of_ne_nil (h : l ≠ []) : ↑(l.foldr max ⊥) = l.maximum :=
   by
@@ -480,14 +525,18 @@ theorem foldr_max_of_ne_nil (h : l ≠ []) : ↑(l.foldr max ⊥) = l.maximum :=
     · simp [h]
     · simp [IH h]
 #align list.foldr_max_of_ne_nil List.foldr_max_of_ne_nil
+-/
 
+#print List.max_le_of_forall_le /-
 theorem max_le_of_forall_le (l : List α) (a : α) (h : ∀ x ∈ l, x ≤ a) : l.foldr max ⊥ ≤ a :=
   by
   induction' l with y l IH
   · simp
   · simpa [h y (mem_cons_self _ _)] using IH fun x hx => h x <| mem_cons_of_mem _ hx
 #align list.max_le_of_forall_le List.max_le_of_forall_le
+-/
 
+#print List.le_max_of_le /-
 theorem le_max_of_le {l : List α} {a x : α} (hx : x ∈ l) (h : a ≤ x) : a ≤ l.foldr max ⊥ :=
   by
   induction' l with y l IH
@@ -497,6 +546,7 @@ theorem le_max_of_le {l : List α} {a x : α} (hx : x ∈ l) (h : a ≤ x) : a �
     · exact le_max_of_le_left h
     · exact le_max_of_le_right (IH hl)
 #align list.le_max_of_le List.le_max_of_le
+-/
 
 end OrderBot
 
@@ -504,18 +554,24 @@ section OrderTop
 
 variable [OrderTop α] {l : List α}
 
+#print List.foldr_min_of_ne_nil /-
 @[simp]
 theorem foldr_min_of_ne_nil (h : l ≠ []) : ↑(l.foldr min ⊤) = l.minimum :=
   @foldr_max_of_ne_nil αᵒᵈ _ _ _ h
 #align list.foldr_min_of_ne_nil List.foldr_min_of_ne_nil
+-/
 
+#print List.le_min_of_forall_le /-
 theorem le_min_of_forall_le (l : List α) (a : α) (h : ∀ x ∈ l, a ≤ x) : a ≤ l.foldr min ⊤ :=
   @max_le_of_forall_le αᵒᵈ _ _ _ _ h
 #align list.le_min_of_forall_le List.le_min_of_forall_le
+-/
 
+#print List.min_le_of_le /-
 theorem min_le_of_le (l : List α) (a : α) {x : α} (hx : x ∈ l) (h : x ≤ a) : l.foldr min ⊤ ≤ a :=
   @le_max_of_le αᵒᵈ _ _ _ _ _ hx h
 #align list.min_le_of_le List.min_le_of_le
+-/
 
 end OrderTop
 

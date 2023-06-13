@@ -23,6 +23,7 @@ open Nat
 
 namespace Int
 
+#print Int.coe_nat_dvd /-
 @[norm_cast]
 theorem coe_nat_dvd {m n : ℕ} : (↑m : ℤ) ∣ ↑n ↔ m ∣ n :=
   ⟨fun ⟨a, ae⟩ =>
@@ -35,25 +36,34 @@ theorem coe_nat_dvd {m n : ℕ} : (↑m : ℤ) ∣ ↑n ↔ m ∣ n :=
       subst a; exact ⟨k, Int.ofNat.inj ae⟩,
     fun ⟨k, e⟩ => Dvd.intro k <| by rw [e, Int.ofNat_mul]⟩
 #align int.coe_nat_dvd Int.coe_nat_dvd
+-/
 
+#print Int.coe_nat_dvd_left /-
 theorem coe_nat_dvd_left {n : ℕ} {z : ℤ} : (↑n : ℤ) ∣ z ↔ n ∣ z.natAbs := by
   rcases nat_abs_eq z with (eq | eq) <;> rw [Eq] <;> simp [← coe_nat_dvd]
 #align int.coe_nat_dvd_left Int.coe_nat_dvd_left
+-/
 
+#print Int.coe_nat_dvd_right /-
 theorem coe_nat_dvd_right {n : ℕ} {z : ℤ} : z ∣ (↑n : ℤ) ↔ z.natAbs ∣ n := by
   rcases nat_abs_eq z with (eq | eq) <;> rw [Eq] <;> simp [← coe_nat_dvd]
 #align int.coe_nat_dvd_right Int.coe_nat_dvd_right
+-/
 
+#print Int.le_of_dvd /-
 theorem le_of_dvd {a b : ℤ} (bpos : 0 < b) (H : a ∣ b) : a ≤ b :=
   match a, b, eq_succ_of_zero_lt bpos, H with
   | (m : ℕ), _, ⟨n, rfl⟩, H => ofNat_le_ofNat_of_le <| Nat.le_of_dvd n.succ_pos <| coe_nat_dvd.1 H
   | -[m+1], _, ⟨n, rfl⟩, _ => le_trans (le_of_lt <| negSucc_lt_zero _) (ofNat_zero_le _)
 #align int.le_of_dvd Int.le_of_dvd
+-/
 
+#print Int.eq_one_of_dvd_one /-
 theorem eq_one_of_dvd_one {a : ℤ} (H : 0 ≤ a) (H' : a ∣ 1) : a = 1 :=
   match a, eq_ofNat_of_zero_le H, H' with
   | _, ⟨n, rfl⟩, H' => congr_arg coe <| Nat.eq_one_of_dvd_one <| coe_nat_dvd.1 H'
 #align int.eq_one_of_dvd_one Int.eq_one_of_dvd_one
+-/
 
 #print Int.eq_one_of_mul_eq_one_right /-
 theorem eq_one_of_mul_eq_one_right {a b : ℤ} (H : 0 ≤ a) (H' : a * b = 1) : a = 1 :=
@@ -67,12 +77,14 @@ theorem eq_one_of_mul_eq_one_left {a b : ℤ} (H : 0 ≤ b) (H' : a * b = 1) : b
 #align int.eq_one_of_mul_eq_one_left Int.eq_one_of_mul_eq_one_left
 -/
 
+#print Int.dvd_antisymm /-
 theorem dvd_antisymm {a b : ℤ} (H1 : 0 ≤ a) (H2 : 0 ≤ b) : a ∣ b → b ∣ a → a = b :=
   by
   rw [← abs_of_nonneg H1, ← abs_of_nonneg H2, abs_eq_nat_abs, abs_eq_nat_abs]
   rw [coe_nat_dvd, coe_nat_dvd, coe_nat_inj']
   apply Nat.dvd_antisymm
 #align int.dvd_antisymm Int.dvd_antisymm
+-/
 
 end Int
 

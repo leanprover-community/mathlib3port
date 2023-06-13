@@ -67,17 +67,20 @@ along one of the variables (using either the Lebesgue or Bochner integral) is me
 -/
 
 
+#print measurableSet_integrable /-
 theorem measurableSet_integrable [SigmaFinite ν] ⦃f : α → β → E⦄
     (hf : StronglyMeasurable (uncurry f)) : MeasurableSet {x | Integrable (f x) ν} :=
   by
   simp_rw [integrable, hf.of_uncurry_left.ae_strongly_measurable, true_and_iff]
   exact measurableSet_lt (Measurable.lintegral_prod_right hf.ennnorm) measurable_const
 #align measurable_set_integrable measurableSet_integrable
+-/
 
 section
 
 variable [NormedSpace ℝ E] [CompleteSpace E]
 
+#print MeasureTheory.StronglyMeasurable.integral_prod_right /-
 /-- The Bochner integral is measurable. This shows that the integrand of (the right-hand-side of)
   Fubini's theorem is measurable.
   This version has `f` in curried form. -/
@@ -124,14 +127,18 @@ theorem MeasureTheory.StronglyMeasurable.integral_prod_right [SigmaFinite ν] �
     · simp [f', hfx, integral_undef]
   exact stronglyMeasurable_of_tendsto _ hf' h2f'
 #align measure_theory.strongly_measurable.integral_prod_right MeasureTheory.StronglyMeasurable.integral_prod_right
+-/
 
+#print MeasureTheory.StronglyMeasurable.integral_prod_right' /-
 /-- The Bochner integral is measurable. This shows that the integrand of (the right-hand-side of)
   Fubini's theorem is measurable. -/
 theorem MeasureTheory.StronglyMeasurable.integral_prod_right' [SigmaFinite ν] ⦃f : α × β → E⦄
     (hf : StronglyMeasurable f) : StronglyMeasurable fun x => ∫ y, f (x, y) ∂ν := by
   rw [← uncurry_curry f] at hf ; exact hf.integral_prod_right
 #align measure_theory.strongly_measurable.integral_prod_right' MeasureTheory.StronglyMeasurable.integral_prod_right'
+-/
 
+#print MeasureTheory.StronglyMeasurable.integral_prod_left /-
 /-- The Bochner integral is measurable. This shows that the integrand of (the right-hand-side of)
   the symmetric version of Fubini's theorem is measurable.
   This version has `f` in curried form. -/
@@ -139,13 +146,16 @@ theorem MeasureTheory.StronglyMeasurable.integral_prod_left [SigmaFinite μ] ⦃
     (hf : StronglyMeasurable (uncurry f)) : StronglyMeasurable fun y => ∫ x, f x y ∂μ :=
   (hf.comp_measurable measurable_swap).integral_prod_right'
 #align measure_theory.strongly_measurable.integral_prod_left MeasureTheory.StronglyMeasurable.integral_prod_left
+-/
 
+#print MeasureTheory.StronglyMeasurable.integral_prod_left' /-
 /-- The Bochner integral is measurable. This shows that the integrand of (the right-hand-side of)
   the symmetric version of Fubini's theorem is measurable. -/
 theorem MeasureTheory.StronglyMeasurable.integral_prod_left' [SigmaFinite μ] ⦃f : α × β → E⦄
     (hf : StronglyMeasurable f) : StronglyMeasurable fun y => ∫ x, f (x, y) ∂μ :=
   (hf.comp_measurable measurable_swap).integral_prod_right'
 #align measure_theory.strongly_measurable.integral_prod_left' MeasureTheory.StronglyMeasurable.integral_prod_left'
+-/
 
 end
 
@@ -158,6 +168,7 @@ namespace Measure
 
 variable [SigmaFinite ν]
 
+#print MeasureTheory.Measure.integrable_measure_prod_mk_left /-
 theorem integrable_measure_prod_mk_left {s : Set (α × β)} (hs : MeasurableSet s)
     (h2s : (μ.Prod ν) s ≠ ∞) : Integrable (fun x => (ν (Prod.mk x ⁻¹' s)).toReal) μ :=
   by
@@ -167,6 +178,7 @@ theorem integrable_measure_prod_mk_left {s : Set (α × β)} (hs : MeasurableSet
   refine' (ae_measure_lt_top hs h2s).mp _; apply eventually_of_forall; intro x hx
   rw [lt_top_iff_ne_top] at hx ; simp [of_real_to_real, hx]
 #align measure_theory.measure.integrable_measure_prod_mk_left MeasureTheory.Measure.integrable_measure_prod_mk_left
+-/
 
 end Measure
 
@@ -178,11 +190,13 @@ open MeasureTheory.Measure
 
 section
 
+#print MeasureTheory.AEStronglyMeasurable.prod_swap /-
 theorem MeasureTheory.AEStronglyMeasurable.prod_swap {γ : Type _} [TopologicalSpace γ]
     [SigmaFinite μ] [SigmaFinite ν] {f : β × α → γ} (hf : AEStronglyMeasurable f (ν.Prod μ)) :
     AEStronglyMeasurable (fun z : α × β => f z.symm) (μ.Prod ν) := by rw [← prod_swap] at hf ;
   exact hf.comp_measurable measurable_swap
 #align measure_theory.ae_strongly_measurable.prod_swap MeasureTheory.AEStronglyMeasurable.prod_swap
+-/
 
 #print MeasureTheory.AEStronglyMeasurable.fst /-
 theorem MeasureTheory.AEStronglyMeasurable.fst {γ} [TopologicalSpace γ] [SigmaFinite ν] {f : α → γ}
@@ -198,6 +212,7 @@ theorem MeasureTheory.AEStronglyMeasurable.snd {γ} [TopologicalSpace γ] [Sigma
 #align measure_theory.ae_strongly_measurable.snd MeasureTheory.AEStronglyMeasurable.snd
 -/
 
+#print MeasureTheory.AEStronglyMeasurable.integral_prod_right' /-
 /-- The Bochner integral is a.e.-measurable.
   This shows that the integrand of (the right-hand-side of) Fubini's theorem is a.e.-measurable. -/
 theorem MeasureTheory.AEStronglyMeasurable.integral_prod_right' [SigmaFinite ν] [NormedSpace ℝ E]
@@ -206,6 +221,7 @@ theorem MeasureTheory.AEStronglyMeasurable.integral_prod_right' [SigmaFinite ν]
   ⟨fun x => ∫ y, hf.mk f (x, y) ∂ν, hf.stronglyMeasurable_mk.integral_prod_right', by
     filter_upwards [ae_ae_of_ae_prod hf.ae_eq_mk] with _ hx using integral_congr_ae hx⟩
 #align measure_theory.ae_strongly_measurable.integral_prod_right' MeasureTheory.AEStronglyMeasurable.integral_prod_right'
+-/
 
 #print MeasureTheory.AEStronglyMeasurable.prod_mk_left /-
 theorem MeasureTheory.AEStronglyMeasurable.prod_mk_left {γ : Type _} [SigmaFinite ν]
@@ -229,17 +245,22 @@ variable [SigmaFinite ν]
 
 section
 
+#print MeasureTheory.Integrable.swap /-
 theorem Integrable.swap [SigmaFinite μ] ⦃f : α × β → E⦄ (hf : Integrable f (μ.Prod ν)) :
     Integrable (f ∘ Prod.swap) (ν.Prod μ) :=
   ⟨hf.AEStronglyMeasurable.prod_swap,
     (lintegral_prod_swap _ hf.AEStronglyMeasurable.ennnorm : _).le.trans_lt hf.HasFiniteIntegral⟩
 #align measure_theory.integrable.swap MeasureTheory.Integrable.swap
+-/
 
+#print MeasureTheory.integrable_swap_iff /-
 theorem integrable_swap_iff [SigmaFinite μ] ⦃f : α × β → E⦄ :
     Integrable (f ∘ Prod.swap) (ν.Prod μ) ↔ Integrable f (μ.Prod ν) :=
   ⟨fun hf => by convert hf.swap; ext ⟨x, y⟩; rfl, fun hf => hf.symm⟩
 #align measure_theory.integrable_swap_iff MeasureTheory.integrable_swap_iff
+-/
 
+#print MeasureTheory.hasFiniteIntegral_prod_iff /-
 theorem hasFiniteIntegral_prod_iff ⦃f : α × β → E⦄ (h1f : StronglyMeasurable f) :
     HasFiniteIntegral f (μ.Prod ν) ↔
       (∀ᵐ x ∂μ, HasFiniteIntegral (fun y => f (x, y)) ν) ∧
@@ -259,7 +280,9 @@ theorem hasFiniteIntegral_prod_iff ⦃f : α × β → E⦄ (h1f : StronglyMeasu
     rw [of_real_to_real]; rw [← lt_top_iff_ne_top]; exact hx
   · intro h2f; refine' ae_lt_top _ h2f.ne; exact h1f.ennnorm.lintegral_prod_right'
 #align measure_theory.has_finite_integral_prod_iff MeasureTheory.hasFiniteIntegral_prod_iff
+-/
 
+#print MeasureTheory.hasFiniteIntegral_prod_iff' /-
 theorem hasFiniteIntegral_prod_iff' ⦃f : α × β → E⦄ (h1f : AEStronglyMeasurable f (μ.Prod ν)) :
     HasFiniteIntegral f (μ.Prod ν) ↔
       (∀ᵐ x ∂μ, HasFiniteIntegral (fun y => f (x, y)) ν) ∧
@@ -277,7 +300,9 @@ theorem hasFiniteIntegral_prod_iff' ⦃f : α × β → E⦄ (h1f : AEStronglyMe
       integral_congr_ae (eventually_eq.fun_comp hx _)
   · infer_instance
 #align measure_theory.has_finite_integral_prod_iff' MeasureTheory.hasFiniteIntegral_prod_iff'
+-/
 
+#print MeasureTheory.integrable_prod_iff /-
 /-- A binary function is integrable if the function `y ↦ f (x, y)` is integrable for almost every
   `x` and the function `x ↦ ∫ ‖f (x, y)‖ dy` is integrable. -/
 theorem integrable_prod_iff ⦃f : α × β → E⦄ (h1f : AEStronglyMeasurable f (μ.Prod ν)) :
@@ -287,7 +312,9 @@ theorem integrable_prod_iff ⦃f : α × β → E⦄ (h1f : AEStronglyMeasurable
   simp [integrable, h1f, has_finite_integral_prod_iff', h1f.norm.integral_prod_right',
     h1f.prod_mk_left]
 #align measure_theory.integrable_prod_iff MeasureTheory.integrable_prod_iff
+-/
 
+#print MeasureTheory.integrable_prod_iff' /-
 /-- A binary function is integrable if the function `x ↦ f (x, y)` is integrable for almost every
   `y` and the function `y ↦ ∫ ‖f (x, y)‖ dx` is integrable. -/
 theorem integrable_prod_iff' [SigmaFinite μ] ⦃f : α × β → E⦄
@@ -296,27 +323,37 @@ theorem integrable_prod_iff' [SigmaFinite μ] ⦃f : α × β → E⦄
       (∀ᵐ y ∂ν, Integrable (fun x => f (x, y)) μ) ∧ Integrable (fun y => ∫ x, ‖f (x, y)‖ ∂μ) ν :=
   by convert integrable_prod_iff h1f.prod_swap using 1; rw [integrable_swap_iff]
 #align measure_theory.integrable_prod_iff' MeasureTheory.integrable_prod_iff'
+-/
 
+#print MeasureTheory.Integrable.prod_left_ae /-
 theorem Integrable.prod_left_ae [SigmaFinite μ] ⦃f : α × β → E⦄ (hf : Integrable f (μ.Prod ν)) :
     ∀ᵐ y ∂ν, Integrable (fun x => f (x, y)) μ :=
   ((integrable_prod_iff' hf.AEStronglyMeasurable).mp hf).1
 #align measure_theory.integrable.prod_left_ae MeasureTheory.Integrable.prod_left_ae
+-/
 
+#print MeasureTheory.Integrable.prod_right_ae /-
 theorem Integrable.prod_right_ae [SigmaFinite μ] ⦃f : α × β → E⦄ (hf : Integrable f (μ.Prod ν)) :
     ∀ᵐ x ∂μ, Integrable (fun y => f (x, y)) ν :=
   hf.symm.prod_left_ae
 #align measure_theory.integrable.prod_right_ae MeasureTheory.Integrable.prod_right_ae
+-/
 
+#print MeasureTheory.Integrable.integral_norm_prod_left /-
 theorem Integrable.integral_norm_prod_left ⦃f : α × β → E⦄ (hf : Integrable f (μ.Prod ν)) :
     Integrable (fun x => ∫ y, ‖f (x, y)‖ ∂ν) μ :=
   ((integrable_prod_iff hf.AEStronglyMeasurable).mp hf).2
 #align measure_theory.integrable.integral_norm_prod_left MeasureTheory.Integrable.integral_norm_prod_left
+-/
 
+#print MeasureTheory.Integrable.integral_norm_prod_right /-
 theorem Integrable.integral_norm_prod_right [SigmaFinite μ] ⦃f : α × β → E⦄
     (hf : Integrable f (μ.Prod ν)) : Integrable (fun y => ∫ x, ‖f (x, y)‖ ∂μ) ν :=
   hf.symm.integral_norm_prod_left
 #align measure_theory.integrable.integral_norm_prod_right MeasureTheory.Integrable.integral_norm_prod_right
+-/
 
+#print MeasureTheory.integrable_prod_mul /-
 theorem integrable_prod_mul {L : Type _} [IsROrC L] {f : α → L} {g : β → L} (hf : Integrable f μ)
     (hg : Integrable g ν) : Integrable (fun z : α × β => f z.1 * g z.2) (μ.Prod ν) :=
   by
@@ -325,11 +362,13 @@ theorem integrable_prod_mul {L : Type _} [IsROrC L] {f : α → L} {g : β → L
   · exact eventually_of_forall fun x => hg.const_mul (f x)
   · simpa only [norm_mul, integral_mul_left] using hf.norm.mul_const _
 #align measure_theory.integrable_prod_mul MeasureTheory.integrable_prod_mul
+-/
 
 end
 
 variable [NormedSpace ℝ E] [CompleteSpace E]
 
+#print MeasureTheory.Integrable.integral_prod_left /-
 theorem Integrable.integral_prod_left ⦃f : α × β → E⦄ (hf : Integrable f (μ.Prod ν)) :
     Integrable (fun x => ∫ y, f (x, y) ∂ν) μ :=
   Integrable.mono hf.integral_norm_prod_left hf.AEStronglyMeasurable.integral_prod_right' <|
@@ -339,23 +378,28 @@ theorem Integrable.integral_prod_left ⦃f : α × β → E⦄ (hf : Integrable 
             integral_nonneg_of_ae <|
               eventually_of_forall fun y => (norm_nonneg (f (x, y)) : _)).symm
 #align measure_theory.integrable.integral_prod_left MeasureTheory.Integrable.integral_prod_left
+-/
 
+#print MeasureTheory.Integrable.integral_prod_right /-
 theorem Integrable.integral_prod_right [SigmaFinite μ] ⦃f : α × β → E⦄
     (hf : Integrable f (μ.Prod ν)) : Integrable (fun y => ∫ x, f (x, y) ∂μ) ν :=
   hf.symm.integral_prod_left
 #align measure_theory.integrable.integral_prod_right MeasureTheory.Integrable.integral_prod_right
+-/
 
 /-! ### The Bochner integral on a product -/
 
 
 variable [SigmaFinite μ]
 
+#print MeasureTheory.integral_prod_swap /-
 theorem integral_prod_swap (f : α × β → E) (hf : AEStronglyMeasurable f (μ.Prod ν)) :
     ∫ z, f z.symm ∂ν.Prod μ = ∫ z, f z ∂μ.Prod ν :=
   by
   rw [← prod_swap] at hf 
   rw [← integral_map measurable_swap.ae_measurable hf, prod_swap]
 #align measure_theory.integral_prod_swap MeasureTheory.integral_prod_swap
+-/
 
 variable {E' : Type _} [NormedAddCommGroup E'] [CompleteSpace E'] [NormedSpace ℝ E']
 
@@ -363,6 +407,7 @@ variable {E' : Type _} [NormedAddCommGroup E'] [CompleteSpace E'] [NormedSpace �
   we separate them out as separate lemmas, because they involve quite some steps. -/
 
 
+#print MeasureTheory.integral_fn_integral_add /-
 /-- Integrals commute with addition inside another integral. `F` can be any function. -/
 theorem integral_fn_integral_add ⦃f g : α × β → E⦄ (F : E → E') (hf : Integrable f (μ.Prod ν))
     (hg : Integrable g (μ.Prod ν)) :
@@ -372,7 +417,9 @@ theorem integral_fn_integral_add ⦃f g : α × β → E⦄ (F : E → E') (hf :
   filter_upwards [hf.prod_right_ae, hg.prod_right_ae] with _ h2f h2g
   simp [integral_add h2f h2g]
 #align measure_theory.integral_fn_integral_add MeasureTheory.integral_fn_integral_add
+-/
 
+#print MeasureTheory.integral_fn_integral_sub /-
 /-- Integrals commute with subtraction inside another integral.
   `F` can be any measurable function. -/
 theorem integral_fn_integral_sub ⦃f g : α × β → E⦄ (F : E → E') (hf : Integrable f (μ.Prod ν))
@@ -383,7 +430,9 @@ theorem integral_fn_integral_sub ⦃f g : α × β → E⦄ (F : E → E') (hf :
   filter_upwards [hf.prod_right_ae, hg.prod_right_ae] with _ h2f h2g
   simp [integral_sub h2f h2g]
 #align measure_theory.integral_fn_integral_sub MeasureTheory.integral_fn_integral_sub
+-/
 
+#print MeasureTheory.lintegral_fn_integral_sub /-
 /-- Integrals commute with subtraction inside a lower Lebesgue integral.
   `F` can be any function. -/
 theorem lintegral_fn_integral_sub ⦃f g : α × β → E⦄ (F : E → ℝ≥0∞) (hf : Integrable f (μ.Prod ν))
@@ -394,7 +443,9 @@ theorem lintegral_fn_integral_sub ⦃f g : α × β → E⦄ (F : E → ℝ≥0�
   filter_upwards [hf.prod_right_ae, hg.prod_right_ae] with _ h2f h2g
   simp [integral_sub h2f h2g]
 #align measure_theory.lintegral_fn_integral_sub MeasureTheory.lintegral_fn_integral_sub
+-/
 
+#print MeasureTheory.integral_integral_add /-
 /-- Double integrals commute with addition. -/
 theorem integral_integral_add ⦃f g : α × β → E⦄ (hf : Integrable f (μ.Prod ν))
     (hg : Integrable g (μ.Prod ν)) :
@@ -402,7 +453,9 @@ theorem integral_integral_add ⦃f g : α × β → E⦄ (hf : Integrable f (μ.
   (integral_fn_integral_add id hf hg).trans <|
     integral_add hf.integral_prod_left hg.integral_prod_left
 #align measure_theory.integral_integral_add MeasureTheory.integral_integral_add
+-/
 
+#print MeasureTheory.integral_integral_add' /-
 /-- Double integrals commute with addition. This is the version with `(f + g) (x, y)`
   (instead of `f (x, y) + g (x, y)`) in the LHS. -/
 theorem integral_integral_add' ⦃f g : α × β → E⦄ (hf : Integrable f (μ.Prod ν))
@@ -410,7 +463,9 @@ theorem integral_integral_add' ⦃f g : α × β → E⦄ (hf : Integrable f (μ
     ∫ x, ∫ y, (f + g) (x, y) ∂ν ∂μ = ∫ x, ∫ y, f (x, y) ∂ν ∂μ + ∫ x, ∫ y, g (x, y) ∂ν ∂μ :=
   integral_integral_add hf hg
 #align measure_theory.integral_integral_add' MeasureTheory.integral_integral_add'
+-/
 
+#print MeasureTheory.integral_integral_sub /-
 /-- Double integrals commute with subtraction. -/
 theorem integral_integral_sub ⦃f g : α × β → E⦄ (hf : Integrable f (μ.Prod ν))
     (hg : Integrable g (μ.Prod ν)) :
@@ -418,7 +473,9 @@ theorem integral_integral_sub ⦃f g : α × β → E⦄ (hf : Integrable f (μ.
   (integral_fn_integral_sub id hf hg).trans <|
     integral_sub hf.integral_prod_left hg.integral_prod_left
 #align measure_theory.integral_integral_sub MeasureTheory.integral_integral_sub
+-/
 
+#print MeasureTheory.integral_integral_sub' /-
 /-- Double integrals commute with subtraction. This is the version with `(f - g) (x, y)`
   (instead of `f (x, y) - g (x, y)`) in the LHS. -/
 theorem integral_integral_sub' ⦃f g : α × β → E⦄ (hf : Integrable f (μ.Prod ν))
@@ -426,7 +483,9 @@ theorem integral_integral_sub' ⦃f g : α × β → E⦄ (hf : Integrable f (μ
     ∫ x, ∫ y, (f - g) (x, y) ∂ν ∂μ = ∫ x, ∫ y, f (x, y) ∂ν ∂μ - ∫ x, ∫ y, g (x, y) ∂ν ∂μ :=
   integral_integral_sub hf hg
 #align measure_theory.integral_integral_sub' MeasureTheory.integral_integral_sub'
+-/
 
+#print MeasureTheory.continuous_integral_integral /-
 /-- The map that sends an L¹-function `f : α × β → E` to `∫∫f` is continuous. -/
 theorem continuous_integral_integral :
     Continuous fun f : α × β →₁[μ.Prod ν] E => ∫ x, ∫ y, f (x, y) ∂ν ∂μ :=
@@ -451,7 +510,9 @@ theorem continuous_integral_integral :
   refine' (continuous_of_real.tendsto 0).comp _
   rw [← tendsto_iff_norm_tendsto_zero]; exact tendsto_id
 #align measure_theory.continuous_integral_integral MeasureTheory.continuous_integral_integral
+-/
 
+#print MeasureTheory.integral_prod /-
 /-- **Fubini's Theorem**: For integrable functions on `α × β`,
   the Bochner integral of `f` is equal to the iterated Bochner integral.
   `integrable_prod_iff` can be useful to show that the function in question in integrable.
@@ -478,7 +539,9 @@ theorem integral_prod :
       apply eventually_of_forall; intro x hfgx
       exact integral_congr_ae (ae_eq_symm hfgx)
 #align measure_theory.integral_prod MeasureTheory.integral_prod
+-/
 
+#print MeasureTheory.integral_prod_symm /-
 /-- Symmetric version of **Fubini's Theorem**: For integrable functions on `α × β`,
   the Bochner integral of `f` is equal to the iterated Bochner integral.
   This version has the integrals on the right-hand side in the other order. -/
@@ -486,6 +549,7 @@ theorem integral_prod_symm (f : α × β → E) (hf : Integrable f (μ.Prod ν))
     ∫ z, f z ∂μ.Prod ν = ∫ y, ∫ x, f (x, y) ∂μ ∂ν := by
   simp_rw [← integral_prod_swap f hf.ae_strongly_measurable]; exact integral_prod _ hf.swap
 #align measure_theory.integral_prod_symm MeasureTheory.integral_prod_symm
+-/
 
 #print MeasureTheory.integral_integral /-
 /-- Reversed version of **Fubini's Theorem**. -/
@@ -513,6 +577,7 @@ theorem integral_integral_swap ⦃f : α → β → E⦄ (hf : Integrable (uncur
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print MeasureTheory.set_integral_prod /-
 /-- **Fubini's Theorem** for set integrals. -/
 theorem set_integral_prod (f : α × β → E) {s : Set α} {t : Set β}
     (hf : IntegrableOn f (s ×ˢ t) (μ.Prod ν)) :
@@ -521,7 +586,9 @@ theorem set_integral_prod (f : α × β → E) {s : Set α} {t : Set β}
   simp only [← measure.prod_restrict s t, integrable_on] at hf ⊢
   exact integral_prod f hf
 #align measure_theory.set_integral_prod MeasureTheory.set_integral_prod
+-/
 
+#print MeasureTheory.integral_prod_mul /-
 theorem integral_prod_mul {L : Type _} [IsROrC L] (f : α → L) (g : β → L) :
     ∫ z, f z.1 * g z.2 ∂μ.Prod ν = (∫ x, f x ∂μ) * ∫ y, g y ∂ν :=
   by
@@ -534,12 +601,15 @@ theorem integral_prod_mul {L : Type _} [IsROrC L] (f : α → L) (g : β → L) 
     exact integrable_prod_mul h.1 h.2
   cases H <;> simp [integral_undef h, integral_undef H]
 #align measure_theory.integral_prod_mul MeasureTheory.integral_prod_mul
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print MeasureTheory.set_integral_prod_mul /-
 theorem set_integral_prod_mul {L : Type _} [IsROrC L] (f : α → L) (g : β → L) (s : Set α)
     (t : Set β) : ∫ z in s ×ˢ t, f z.1 * g z.2 ∂μ.Prod ν = (∫ x in s, f x ∂μ) * ∫ y in t, g y ∂ν :=
   by simp only [← measure.prod_restrict s t, integrable_on, integral_prod_mul]
 #align measure_theory.set_integral_prod_mul MeasureTheory.set_integral_prod_mul
+-/
 
 end MeasureTheory
 

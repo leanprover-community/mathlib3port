@@ -214,12 +214,14 @@ theorem treesOfNumNodesEq_zero : treesOfNumNodesEq 0 = {nil} := by rw [trees_of_
 #align tree.trees_of_nodes_eq_zero Tree.treesOfNumNodesEq_zero
 -/
 
+#print Tree.treesOfNumNodesEq_succ /-
 theorem treesOfNumNodesEq_succ (n : ℕ) :
     treesOfNumNodesEq (n + 1) =
       (Nat.antidiagonal n).biUnion fun ij =>
         pairwiseNode (treesOfNumNodesEq ij.1) (treesOfNumNodesEq ij.2) :=
   by rw [trees_of_num_nodes_eq]; ext; simp
 #align tree.trees_of_nodes_eq_succ Tree.treesOfNumNodesEq_succ
+-/
 
 #print Tree.mem_treesOfNumNodesEq /-
 @[simp]

@@ -45,20 +45,25 @@ variable (F : J × K ⥤ C)
 
 open CategoryTheory.prod
 
+#print CategoryTheory.Limits.map_id_left_eq_curry_map /-
 theorem map_id_left_eq_curry_map {j : J} {k k' : K} {f : k ⟶ k'} :
     F.map ((𝟙 j, f) : (j, k) ⟶ (j, k')) = ((curry.obj F).obj j).map f :=
   rfl
 #align category_theory.limits.map_id_left_eq_curry_map CategoryTheory.Limits.map_id_left_eq_curry_map
+-/
 
+#print CategoryTheory.Limits.map_id_right_eq_curry_swap_map /-
 theorem map_id_right_eq_curry_swap_map {j j' : J} {f : j ⟶ j'} {k : K} :
     F.map ((f, 𝟙 k) : (j, k) ⟶ (j', k)) = ((curry.obj (swap K J ⋙ F)).obj k).map f :=
   rfl
 #align category_theory.limits.map_id_right_eq_curry_swap_map CategoryTheory.Limits.map_id_right_eq_curry_swap_map
+-/
 
 variable [HasLimitsOfShape J C]
 
 variable [HasColimitsOfShape K C]
 
+#print CategoryTheory.Limits.colimitLimitToLimitColimit /-
 /-- The universal morphism
 $\colim_k \lim_j F(j,k) → \lim_j \colim_k F(j, k)$.
 -/
@@ -87,7 +92,9 @@ noncomputable def colimitLimitToLimitColimit :
               limits.colimit.ι_desc, category.id_comp, category.assoc,
               map_id_right_eq_curry_swap_map, limit.w_assoc] } }
 #align category_theory.limits.colimit_limit_to_limit_colimit CategoryTheory.Limits.colimitLimitToLimitColimit
+-/
 
+#print CategoryTheory.Limits.ι_colimitLimitToLimitColimit_π /-
 /-- Since `colimit_limit_to_limit_colimit` is a morphism from a colimit to a limit,
 this lemma characterises it.
 -/
@@ -97,7 +104,9 @@ theorem ι_colimitLimitToLimitColimit_π (j) (k) :
       limit.π ((curry.obj (swap K J ⋙ F)).obj k) j ≫ colimit.ι ((curry.obj F).obj j) k :=
   by dsimp [colimit_limit_to_limit_colimit]; simp
 #align category_theory.limits.ι_colimit_limit_to_limit_colimit_π CategoryTheory.Limits.ι_colimitLimitToLimitColimit_π
+-/
 
+#print CategoryTheory.Limits.ι_colimitLimitToLimitColimit_π_apply /-
 @[simp]
 theorem ι_colimitLimitToLimitColimit_π_apply (F : J × K ⥤ Type v) (j) (k) (f) :
     limit.π (curry.obj F ⋙ colim) j
@@ -105,7 +114,9 @@ theorem ι_colimitLimitToLimitColimit_π_apply (F : J × K ⥤ Type v) (j) (k) (
       colimit.ι ((curry.obj F).obj j) k (limit.π ((curry.obj (swap K J ⋙ F)).obj k) j f) :=
   by dsimp [colimit_limit_to_limit_colimit]; simp
 #align category_theory.limits.ι_colimit_limit_to_limit_colimit_π_apply CategoryTheory.Limits.ι_colimitLimitToLimitColimit_π_apply
+-/
 
+#print CategoryTheory.Limits.colimitLimitToLimitColimitCone /-
 /-- The map `colimit_limit_to_limit_colimit` realized as a map of cones. -/
 @[simps]
 noncomputable def colimitLimitToLimitColimitCone (G : J ⥤ K ⥤ C) [HasLimit G] :
@@ -126,6 +137,7 @@ noncomputable def colimitLimitToLimitColimitCone (G : J ⥤ K ⥤ C) [HasLimit G
     simp only [category.id_comp]
     erw [limit_obj_iso_limit_comp_evaluation_hom_π_assoc]
 #align category_theory.limits.colimit_limit_to_limit_colimit_cone CategoryTheory.Limits.colimitLimitToLimitColimitCone
+-/
 
 end CategoryTheory.Limits
 

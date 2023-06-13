@@ -42,6 +42,7 @@ theorem adjoin_algebraMap (R : Type u) (S : Type v) (A : Type w) [CommSemiring R
 #align algebra.adjoin_algebra_map Algebra.adjoin_algebraMap
 -/
 
+#print Algebra.adjoin_restrictScalars /-
 theorem adjoin_restrictScalars (C D E : Type _) [CommSemiring C] [CommSemiring D] [CommSemiring E]
     [Algebra C D] [Algebra C E] [Algebra D E] [IsScalarTower C D E] (S : Set E) :
     (Algebra.adjoin D S).restrictScalars C =
@@ -59,7 +60,9 @@ theorem adjoin_restrictScalars (C D E : Type _) [CommSemiring C] [CommSemiring D
   · rintro ⟨⟨y, ⟨z, ⟨h0, h1⟩⟩⟩, h2⟩
     exact ⟨z, Eq.trans h1 h2⟩
 #align algebra.adjoin_restrict_scalars Algebra.adjoin_restrictScalars
+-/
 
+#print Algebra.adjoin_res_eq_adjoin_res /-
 theorem adjoin_res_eq_adjoin_res (C D E F : Type _) [CommSemiring C] [CommSemiring D]
     [CommSemiring E] [CommSemiring F] [Algebra C D] [Algebra C E] [Algebra C F] [Algebra D F]
     [Algebra E F] [IsScalarTower C D F] [IsScalarTower C E F] {S : Set D} {T : Set E}
@@ -72,6 +75,7 @@ theorem adjoin_res_eq_adjoin_res (C D E F : Type _) [CommSemiring C] [CommSemiri
     IsScalarTower.coe_toAlgHom, IsScalarTower.coe_toAlgHom, ← adjoin_union_eq_adjoin_adjoin, ←
     adjoin_union_eq_adjoin_adjoin, Set.union_comm]
 #align algebra.adjoin_res_eq_adjoin_res Algebra.adjoin_res_eq_adjoin_res
+-/
 
 end Algebra
 
@@ -79,6 +83,7 @@ section
 
 open scoped Classical
 
+#print Algebra.fg_trans' /-
 theorem Algebra.fg_trans' {R S A : Type _} [CommSemiring R] [CommSemiring S] [CommSemiring A]
     [Algebra R S] [Algebra S A] [Algebra R A] [IsScalarTower R S A] (hRS : (⊤ : Subalgebra R S).FG)
     (hSA : (⊤ : Subalgebra S A).FG) : (⊤ : Subalgebra R A).FG :=
@@ -89,6 +94,7 @@ theorem Algebra.fg_trans' {R S A : Type _} [CommSemiring R] [CommSemiring S] [Co
       Algebra.adjoin_algebraMap, hs, Algebra.map_top, IsScalarTower.adjoin_range_toAlgHom, ht,
       Subalgebra.restrictScalars_top]⟩
 #align algebra.fg_trans' Algebra.fg_trans'
+-/
 
 end
 
@@ -106,6 +112,7 @@ open Finset Submodule
 
 open scoped Classical
 
+#print exists_subalgebra_of_fg /-
 theorem exists_subalgebra_of_fg (hAC : (⊤ : Subalgebra A C).FG) (hBC : (⊤ : Submodule B C).FG) :
     ∃ B₀ : Subalgebra A B, B₀.FG ∧ (⊤ : Submodule B₀ C).FG :=
   by
@@ -147,6 +154,7 @@ theorem exists_subalgebra_of_fg (hAC : (⊤ : Subalgebra A C).FG) (hBC : (⊤ : 
     Submonoid.closure_induction hr (fun c hc => hxy c hc) (subset_span <| mem_insert_self _ _)
       fun p q hp hq => hyy <| Submodule.mul_mem_mul hp hq
 #align exists_subalgebra_of_fg exists_subalgebra_of_fg
+-/
 
 end Semiring
 
@@ -156,6 +164,7 @@ variable [CommRing A] [CommRing B] [CommRing C]
 
 variable [Algebra A B] [Algebra B C] [Algebra A C] [IsScalarTower A B C]
 
+#print fg_of_fg_of_fg /-
 /-- **Artin--Tate lemma**: if A ⊆ B ⊆ C is a chain of subrings of commutative rings, and
 A is noetherian, and C is algebra-finite over A, and C is module-finite over B,
 then B is algebra-finite over A.
@@ -171,6 +180,7 @@ theorem fg_of_fg_of_fg [IsNoetherianRing A] (hAC : (⊤ : Subalgebra A C).FG)
       have : IsNoetherian B₀ C := isNoetherian_of_fg_of_noetherian' hB₀C
       fg_of_injective (IsScalarTower.toAlgHom B₀ B C).toLinearMap hBCi
 #align fg_of_fg_of_fg fg_of_fg_of_fg
+-/
 
 end Ring
 

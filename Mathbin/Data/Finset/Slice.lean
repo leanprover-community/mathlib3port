@@ -60,25 +60,31 @@ theorem Sized.mono (h : A ⊆ B) (hB : B.Sized r) : A.Sized r := fun x hx => hB 
 #align set.sized.mono Set.Sized.mono
 -/
 
+#print Set.sized_union /-
 theorem sized_union : (A ∪ B).Sized r ↔ A.Sized r ∧ B.Sized r :=
   ⟨fun hA => ⟨hA.mono <| subset_union_left _ _, hA.mono <| subset_union_right _ _⟩, fun hA x hx =>
     hx.elim (fun h => hA.1 h) fun h => hA.2 h⟩
 #align set.sized_union Set.sized_union
+-/
 
 alias sized_union ↔ _ sized.union
 #align set.sized.union Set.sized.union
 
+#print Set.sized_iUnion /-
 --TODO: A `forall_Union` lemma would be handy here.
 @[simp]
 theorem sized_iUnion {f : ι → Set (Finset α)} : (⋃ i, f i).Sized r ↔ ∀ i, (f i).Sized r := by
   simp_rw [Set.Sized, Set.mem_iUnion, forall_exists_index]; exact forall_swap
 #align set.sized_Union Set.sized_iUnion
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
+#print Set.sized_iUnion₂ /-
 @[simp]
 theorem sized_iUnion₂ {f : ∀ i, κ i → Set (Finset α)} :
     (⋃ (i) (j), f i j).Sized r ↔ ∀ i j, (f i j).Sized r := by simp_rw [sized_Union]
 #align set.sized_Union₂ Set.sized_iUnion₂
+-/
 
 #print Set.Sized.isAntichain /-
 protected theorem Sized.isAntichain (hA : A.Sized r) : IsAntichain (· ⊆ ·) A :=
@@ -158,7 +164,6 @@ def slice (𝒜 : Finset (Finset α)) (r : ℕ) : Finset (Finset α) :=
 #align finset.slice Finset.slice
 -/
 
--- mathport name: finset.slice
 scoped[FinsetFamily] infixl:90 " # " => Finset.slice
 
 #print Finset.mem_slice /-
@@ -194,18 +199,23 @@ theorem ne_of_mem_slice (h₁ : A₁ ∈ 𝒜 # r₁) (h₂ : A₂ ∈ 𝒜 # r�
 #align finset.ne_of_mem_slice Finset.ne_of_mem_slice
 -/
 
+#print Finset.pairwiseDisjoint_slice /-
 theorem pairwiseDisjoint_slice : (Set.univ : Set ℕ).PairwiseDisjoint (slice 𝒜) := fun m _ n _ hmn =>
   disjoint_filter.2 fun s hs hm hn => hmn <| hm.symm.trans hn
 #align finset.pairwise_disjoint_slice Finset.pairwiseDisjoint_slice
+-/
 
 variable [Fintype α] (𝒜)
 
+#print Finset.biUnion_slice /-
 @[simp]
 theorem biUnion_slice [DecidableEq α] : (Iic <| Fintype.card α).biUnion 𝒜.slice = 𝒜 :=
   Subset.antisymm (biUnion_subset.2 fun r _ => slice_subset) fun s hs =>
     mem_biUnion.2 ⟨s.card, mem_Iic.2 <| s.card_le_univ, mem_slice.2 <| ⟨hs, rfl⟩⟩
 #align finset.bUnion_slice Finset.biUnion_slice
+-/
 
+#print Finset.sum_card_slice /-
 @[simp]
 theorem sum_card_slice : ∑ r in Iic (Fintype.card α), (𝒜 # r).card = 𝒜.card :=
   by
@@ -213,6 +223,7 @@ theorem sum_card_slice : ∑ r in Iic (Fintype.card α), (𝒜 # r).card = 𝒜.
   rw [← card_bUnion, bUnion_slice]
   exact finset.pairwise_disjoint_slice.subset (Set.subset_univ _)
 #align finset.sum_card_slice Finset.sum_card_slice
+-/
 
 end Slice
 

@@ -56,8 +56,6 @@ namespace BundledHom
 
 variable [𝒞 : BundledHom hom]
 
-include 𝒞
-
 #print CategoryTheory.BundledHom.category /-
 /-- Every `@bundled_hom c _` defines a category with objects in `bundled c`.
 
@@ -96,6 +94,7 @@ variable {hom}
 
 attribute [local instance] concrete_category.has_coe_to_fun
 
+#print CategoryTheory.BundledHom.mkHasForget₂ /-
 /-- A version of `has_forget₂.mk'` for categories defined using `@bundled_hom`. -/
 def mkHasForget₂ {d : Type u → Type u} {hom_d : ∀ ⦃α β : Type u⦄ (Iα : d α) (Iβ : d β), Type u}
     [BundledHom hom_d] (obj : ∀ ⦃α⦄, c α → d α)
@@ -105,14 +104,13 @@ def mkHasForget₂ {d : Type u → Type u} {hom_d : ∀ ⦃α β : Type u⦄ (I�
   HasForget₂.mk' (Bundled.map @obj) (fun _ => rfl) (@map)
     (by intros <;> apply hEq_of_eq <;> apply h_map)
 #align category_theory.bundled_hom.mk_has_forget₂ CategoryTheory.BundledHom.mkHasForget₂
+-/
 
 variable {d : Type u → Type u}
 
 variable (hom)
 
 section
-
-omit 𝒞
 
 #print CategoryTheory.BundledHom.MapHom /-
 /-- The `hom` corresponding to first forgetting along `F`, then taking the `hom` associated to `c`.
@@ -142,8 +140,6 @@ def map (F : ∀ {α}, d α → c α) : BundledHom (MapHom hom @F)
 
 section
 
-omit 𝒞
-
 #print CategoryTheory.BundledHom.ParentProjection /-
 /-- We use the empty `parent_projection` class to label functions like `comm_monoid.to_monoid`,
 which we would like to use to automatically construct `bundled_hom` instances from.
@@ -167,11 +163,13 @@ instance bundledHomOfParentProjection (F : ∀ {α}, d α → c α) [ParentProje
 #align category_theory.bundled_hom.bundled_hom_of_parent_projection CategoryTheory.BundledHom.bundledHomOfParentProjection
 -/
 
+#print CategoryTheory.BundledHom.forget₂ /-
 instance forget₂ (F : ∀ {α}, d α → c α) [ParentProjection @F] : HasForget₂ (Bundled d) (Bundled c)
     where forget₂ :=
     { obj := fun X => ⟨X, F X.2⟩
       map := fun X Y f => f }
 #align category_theory.bundled_hom.forget₂ CategoryTheory.BundledHom.forget₂
+-/
 
 #print CategoryTheory.BundledHom.forget₂Full /-
 instance forget₂Full (F : ∀ {α}, d α → c α) [ParentProjection @F] :

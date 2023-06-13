@@ -74,8 +74,6 @@ variable [NormedAddCommGroup V] [InnerProductSpace ℝ V] [MetricSpace Pt]
 
 variable [NormedAddTorsor V Pt] [hd2 : Fact (finrank ℝ V = 2)]
 
-include hd2
-
 namespace imo2019_q2
 
 noncomputable section

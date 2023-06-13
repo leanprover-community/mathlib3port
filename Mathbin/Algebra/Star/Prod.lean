@@ -71,9 +71,11 @@ instance {α : Type w} [SMul α R] [SMul α S] [Star α] [Star R] [Star S] [Star
 
 end Prod
 
+#print Units.embed_product_star /-
 @[simp]
 theorem Units.embed_product_star [Monoid R] [StarSemigroup R] (u : Rˣ) :
     Units.embedProduct R (star u) = star (Units.embedProduct R u) :=
   rfl
 #align units.embed_product_star Units.embed_product_star
+-/
 

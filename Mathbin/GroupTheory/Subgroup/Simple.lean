@@ -55,12 +55,14 @@ attribute [to_additive] IsSimpleGroup
 
 variable {G} {A}
 
+#print Subgroup.Normal.eq_bot_or_eq_top /-
 @[to_additive]
 theorem Subgroup.Normal.eq_bot_or_eq_top [IsSimpleGroup G] {H : Subgroup G} (Hn : H.Normal) :
     H = ⊥ ∨ H = ⊤ :=
   IsSimpleGroup.eq_bot_or_eq_top_of_normal H Hn
 #align subgroup.normal.eq_bot_or_eq_top Subgroup.Normal.eq_bot_or_eq_top
 #align add_subgroup.normal.eq_bot_or_eq_top AddSubgroup.Normal.eq_bot_or_eq_top
+-/
 
 namespace IsSimpleGroup
 
@@ -70,6 +72,7 @@ instance {C : Type _} [CommGroup C] [IsSimpleGroup C] : IsSimpleOrder (Subgroup 
 
 open _Root_.Subgroup
 
+#print IsSimpleGroup.isSimpleGroup_of_surjective /-
 @[to_additive]
 theorem isSimpleGroup_of_surjective {H : Type _} [Group H] [IsSimpleGroup G] [Nontrivial H]
     (f : G →* H) (hf : Function.Surjective f) : IsSimpleGroup H :=
@@ -80,6 +83,7 @@ theorem isSimpleGroup_of_surjective {H : Type _} [Group H] [IsSimpleGroup G] [No
     · rw [← comap_top f] at h ; exact comap_injective hf h⟩
 #align is_simple_group.is_simple_group_of_surjective IsSimpleGroup.isSimpleGroup_of_surjective
 #align is_simple_add_group.is_simple_add_group_of_surjective IsSimpleAddGroup.isSimpleAddGroup_of_surjective
+-/
 
 end IsSimpleGroup
 

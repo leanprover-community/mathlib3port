@@ -47,12 +47,14 @@ def extendFrom (A : Set X) (f : X → Y) : X → Y := fun x => @limUnder _ ⟨f 
 #align extend_from extendFrom
 -/
 
+#print tendsto_extendFrom /-
 /-- If `f` converges to some `y` as `x` tends to `x₀` within `A`,
 then `f` tends to `extend_from A f x` as `x` tends to `x₀`. -/
 theorem tendsto_extendFrom {A : Set X} {f : X → Y} {x : X} (h : ∃ y, Tendsto f (𝓝[A] x) (𝓝 y)) :
     Tendsto f (𝓝[A] x) (𝓝 <| extendFrom A f x) :=
   tendsto_nhds_limUnder h
 #align tendsto_extend_from tendsto_extendFrom
+-/
 
 #print extendFrom_eq /-
 theorem extendFrom_eq [T2Space Y] {A : Set X} {f : X → Y} {x : X} {y : Y} (hx : x ∈ closure A)

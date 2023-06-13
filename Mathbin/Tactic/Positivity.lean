@@ -165,7 +165,6 @@ protected unsafe def orelse (tac1 tac2 : tactic strictness) : tactic strictness 
         | _ => pure (nonzero e1)
 #align tactic.positivity.orelse tactic.positivity.orelse
 
--- mathport name: «expr ≤|≥ »
 scoped[Positivity] infixr:2 " ≤|≥ " => tactic.positivity.orelse
 
 /-- This tactic fails with a message saying that `positivity` couldn't prove anything about `e`

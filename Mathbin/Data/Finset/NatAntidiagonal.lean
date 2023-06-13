@@ -140,6 +140,7 @@ theorem antidiagonal.snd_le {n : ℕ} {kl : ℕ × ℕ} (hlk : kl ∈ antidiagon
 #align finset.nat.antidiagonal.snd_le Finset.Nat.antidiagonal.snd_le
 -/
 
+#print Finset.Nat.filter_fst_eq_antidiagonal /-
 theorem filter_fst_eq_antidiagonal (n m : ℕ) :
     filter (fun x : ℕ × ℕ => x.fst = m) (antidiagonal n) = if m ≤ n then {(m, n - m)} else ∅ :=
   by
@@ -151,7 +152,9 @@ theorem filter_fst_eq_antidiagonal (n m : ℕ) :
     simp only [not_mem_empty, iff_false_iff, not_and]
     exact fun hn => ne_of_lt (lt_of_le_of_lt (le_self_add.trans hn.le) h)
 #align finset.nat.filter_fst_eq_antidiagonal Finset.Nat.filter_fst_eq_antidiagonal
+-/
 
+#print Finset.Nat.filter_snd_eq_antidiagonal /-
 theorem filter_snd_eq_antidiagonal (n m : ℕ) :
     filter (fun x : ℕ × ℕ => x.snd = m) (antidiagonal n) = if m ≤ n then {(n - m, m)} else ∅ :=
   by
@@ -159,6 +162,7 @@ theorem filter_snd_eq_antidiagonal (n m : ℕ) :
   rw [← map_swap_antidiagonal]
   simp [filter_map, this, filter_fst_eq_antidiagonal, apply_ite (Finset.map _)]
 #align finset.nat.filter_snd_eq_antidiagonal Finset.Nat.filter_snd_eq_antidiagonal
+-/
 
 section EquivProd
 

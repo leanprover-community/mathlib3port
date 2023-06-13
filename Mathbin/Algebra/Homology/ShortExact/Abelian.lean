@@ -35,6 +35,7 @@ variable [Abelian 𝒜]
 
 open scoped ZeroObject
 
+#print CategoryTheory.isIso_of_shortExact_of_isIso_of_isIso /-
 theorem isIso_of_shortExact_of_isIso_of_isIso (h : ShortExact f g) (h' : ShortExact f' g')
     (i₁ : A ⟶ A') (i₂ : B ⟶ B') (i₃ : C ⟶ C') (comm₁ : i₁ ≫ f' = f ≫ i₂) (comm₂ : i₂ ≫ g' = g ≫ i₃)
     [IsIso i₁] [IsIso i₃] : IsIso i₂ := by
@@ -49,6 +50,7 @@ theorem isIso_of_shortExact_of_isIso_of_isIso (h : ShortExact f g) (h' : ShortEx
       try assumption <;>
     rwa [← epi_iff_exact_zero_right]
 #align category_theory.is_iso_of_short_exact_of_is_iso_of_is_iso CategoryTheory.isIso_of_shortExact_of_isIso_of_isIso
+-/
 
 #print CategoryTheory.Splitting.mk' /-
 /-- To construct a splitting of `A -f⟶ B -g⟶ C` it suffices to supply

@@ -151,8 +151,6 @@ variable {R : Type u} [CommRing R] [Fintype R] {R' : Type v} [CommRing R']
 -- We assume that the target ring `R'` has prime characteristic `p`.
 variable (p : ℕ) [fp : Fact p.Prime] [hch : CharP R' p]
 
-include fp hch
-
 /-- When `R'` has prime characteristic `p`, then the `p`th power of the Gauss sum
 of `χ` and `ψ` is the Gauss sum of `χ^p` and `ψ^p`. -/
 theorem gaussSum_frob (χ : MulChar R R') (ψ : AddChar R R') :

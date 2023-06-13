@@ -20,7 +20,6 @@ namespace Interactive
 
 open Expr Lean.Parser
 
--- mathport name: parser.optional
 local postfix:1024 "?" => optional
 
 /-- This is a "finishing" tactic modification of `simp`. It has two forms.

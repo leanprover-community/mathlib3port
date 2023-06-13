@@ -35,10 +35,9 @@ variable {R : Type u} {Γ₀ : Type v} [CommRing R] [LinearOrderedCommGroupWithZ
 
 variable {v : Valuation R Γ₀} {O : Type w} [CommRing O] [Algebra O R] (hv : Integers v O)
 
-include hv
-
 open Polynomial
 
+#print Valuation.Integers.mem_of_integral /-
 theorem mem_of_integral {x : R} (hx : IsIntegral O x) : x ∈ v.integer :=
   let ⟨p, hpm, hpx⟩ := hx
   le_of_not_lt fun hvx : 1 < v x =>
@@ -53,12 +52,15 @@ theorem mem_of_integral {x : R} (hx : IsIntegral O x) : x ∈ v.integer :=
     · exact mul_lt_mul₀ hvpi (pow_lt_pow₀ hvx <| Finset.mem_range.1 hi)
     · erw [hvpi]; rw [one_mul, one_mul]; exact pow_lt_pow₀ hvx (Finset.mem_range.1 hi)
 #align valuation.integers.mem_of_integral Valuation.Integers.mem_of_integral
+-/
 
+#print Valuation.Integers.integralClosure /-
 protected theorem integralClosure : integralClosure O R = ⊥ :=
   bot_unique fun r hr =>
     let ⟨x, hx⟩ := hv.3 (hv.mem_of_integral hr)
     Algebra.mem_bot.2 ⟨x, hx⟩
 #align valuation.integers.integral_closure Valuation.Integers.integralClosure
+-/
 
 end CommRing
 

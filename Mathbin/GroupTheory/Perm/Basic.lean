@@ -44,11 +44,14 @@ instance permGroup : Group (Perm α)
 #align equiv.perm.perm_group Equiv.Perm.permGroup
 -/
 
+#print Equiv.Perm.default_eq /-
 @[simp]
 theorem default_eq : (default : Perm α) = 1 :=
   rfl
 #align equiv.perm.default_eq Equiv.Perm.default_eq
+-/
 
+#print Equiv.Perm.equivUnitsEnd /-
 /-- The permutation of a type is equivalent to the units group of the endomorphisms monoid of this
 type. -/
 @[simps]
@@ -61,13 +64,16 @@ def equivUnitsEnd : Perm α ≃* Units (Function.End α)
   right_inv u := Units.ext rfl
   map_mul' e₁ e₂ := rfl
 #align equiv.perm.equiv_units_End Equiv.Perm.equivUnitsEnd
+-/
 
+#print MonoidHom.toHomPerm /-
 /-- Lift a monoid homomorphism `f : G →* function.End α` to a monoid homomorphism
 `f : G →* equiv.perm α`. -/
 @[simps]
 def MonoidHom.toHomPerm {G : Type _} [Group G] (f : G →* Function.End α) : G →* Perm α :=
   equivUnitsEnd.symm.toMonoidHom.comp f.toHomUnits
 #align monoid_hom.to_hom_perm MonoidHom.toHomPerm
+-/
 
 #print Equiv.Perm.mul_apply /-
 theorem mul_apply (f g : Perm α) (x) : (f * g) x = f (g x) :=
@@ -95,17 +101,23 @@ theorem apply_inv_self (f : Perm α) (x) : f (f⁻¹ x) = x :=
 #align equiv.perm.apply_inv_self Equiv.Perm.apply_inv_self
 -/
 
+#print Equiv.Perm.one_def /-
 theorem one_def : (1 : Perm α) = Equiv.refl α :=
   rfl
 #align equiv.perm.one_def Equiv.Perm.one_def
+-/
 
+#print Equiv.Perm.mul_def /-
 theorem mul_def (f g : Perm α) : f * g = g.trans f :=
   rfl
 #align equiv.perm.mul_def Equiv.Perm.mul_def
+-/
 
+#print Equiv.Perm.inv_def /-
 theorem inv_def (f : Perm α) : f⁻¹ = f.symm :=
   rfl
 #align equiv.perm.inv_def Equiv.Perm.inv_def
+-/
 
 #print Equiv.Perm.coe_one /-
 @[simp, norm_cast]
@@ -174,76 +186,103 @@ The assumption made here is that if you're using the group structure, you want t
 simp. -/
 
 
+#print Equiv.Perm.trans_one /-
 @[simp]
 theorem trans_one {α : Sort _} {β : Type _} (e : α ≃ β) : e.trans (1 : Perm β) = e :=
   Equiv.trans_refl e
 #align equiv.perm.trans_one Equiv.Perm.trans_one
+-/
 
+#print Equiv.Perm.mul_refl /-
 @[simp]
 theorem mul_refl (e : Perm α) : e * Equiv.refl α = e :=
   Equiv.trans_refl e
 #align equiv.perm.mul_refl Equiv.Perm.mul_refl
+-/
 
+#print Equiv.Perm.one_symm /-
 @[simp]
 theorem one_symm : (1 : Perm α).symm = 1 :=
   Equiv.refl_symm
 #align equiv.perm.one_symm Equiv.Perm.one_symm
+-/
 
+#print Equiv.Perm.refl_inv /-
 @[simp]
 theorem refl_inv : (Equiv.refl α : Perm α)⁻¹ = 1 :=
   Equiv.refl_symm
 #align equiv.perm.refl_inv Equiv.Perm.refl_inv
+-/
 
+#print Equiv.Perm.one_trans /-
 @[simp]
 theorem one_trans {α : Type _} {β : Sort _} (e : α ≃ β) : (1 : Perm α).trans e = e :=
   Equiv.refl_trans e
 #align equiv.perm.one_trans Equiv.Perm.one_trans
+-/
 
+#print Equiv.Perm.refl_mul /-
 @[simp]
 theorem refl_mul (e : Perm α) : Equiv.refl α * e = e :=
   Equiv.refl_trans e
 #align equiv.perm.refl_mul Equiv.Perm.refl_mul
+-/
 
+#print Equiv.Perm.inv_trans_self /-
 @[simp]
 theorem inv_trans_self (e : Perm α) : e⁻¹.trans e = 1 :=
   Equiv.symm_trans_self e
 #align equiv.perm.inv_trans_self Equiv.Perm.inv_trans_self
+-/
 
+#print Equiv.Perm.mul_symm /-
 @[simp]
 theorem mul_symm (e : Perm α) : e * e.symm = 1 :=
   Equiv.symm_trans_self e
 #align equiv.perm.mul_symm Equiv.Perm.mul_symm
+-/
 
+#print Equiv.Perm.self_trans_inv /-
 @[simp]
 theorem self_trans_inv (e : Perm α) : e.trans e⁻¹ = 1 :=
   Equiv.self_trans_symm e
 #align equiv.perm.self_trans_inv Equiv.Perm.self_trans_inv
+-/
 
+#print Equiv.Perm.symm_mul /-
 @[simp]
 theorem symm_mul (e : Perm α) : e.symm * e = 1 :=
   Equiv.self_trans_symm e
 #align equiv.perm.symm_mul Equiv.Perm.symm_mul
+-/
 
 /-! Lemmas about `equiv.perm.sum_congr` re-expressed via the group structure. -/
 
 
+#print Equiv.Perm.sumCongr_mul /-
 @[simp]
 theorem sumCongr_mul {α β : Type _} (e : Perm α) (f : Perm β) (g : Perm α) (h : Perm β) :
     sumCongr e f * sumCongr g h = sumCongr (e * g) (f * h) :=
   sumCongr_trans g h e f
 #align equiv.perm.sum_congr_mul Equiv.Perm.sumCongr_mul
+-/
 
+#print Equiv.Perm.sumCongr_inv /-
 @[simp]
 theorem sumCongr_inv {α β : Type _} (e : Perm α) (f : Perm β) :
     (sumCongr e f)⁻¹ = sumCongr e⁻¹ f⁻¹ :=
   sumCongr_symm e f
 #align equiv.perm.sum_congr_inv Equiv.Perm.sumCongr_inv
+-/
 
+#print Equiv.Perm.sumCongr_one /-
 @[simp]
 theorem sumCongr_one {α β : Type _} : sumCongr (1 : Perm α) (1 : Perm β) = 1 :=
   sumCongr_refl
 #align equiv.perm.sum_congr_one Equiv.Perm.sumCongr_one
+-/
 
+#print Equiv.Perm.sumCongrHom /-
 /-- `equiv.perm.sum_congr` as a `monoid_hom`, with its two arguments bundled into a single `prod`.
 
 This is particularly useful for its `monoid_hom.range` projection, which is the subgroup of
@@ -255,7 +294,9 @@ def sumCongrHom (α β : Type _) : Perm α × Perm β →* Perm (Sum α β)
   map_one' := sumCongr_one
   map_mul' a b := (sumCongr_mul _ _ _ _).symm
 #align equiv.perm.sum_congr_hom Equiv.Perm.sumCongrHom
+-/
 
+#print Equiv.Perm.sumCongrHom_injective /-
 theorem sumCongrHom_injective {α β : Type _} : Function.Injective (sumCongrHom α β) :=
   by
   rintro ⟨⟩ ⟨⟩ h
@@ -264,39 +305,50 @@ theorem sumCongrHom_injective {α β : Type _} : Function.Injective (sumCongrHom
   · simpa using Equiv.congr_fun h (Sum.inl i)
   · simpa using Equiv.congr_fun h (Sum.inr i)
 #align equiv.perm.sum_congr_hom_injective Equiv.Perm.sumCongrHom_injective
+-/
 
+#print Equiv.Perm.sumCongr_swap_one /-
 @[simp]
 theorem sumCongr_swap_one {α β : Type _} [DecidableEq α] [DecidableEq β] (i j : α) :
     sumCongr (Equiv.swap i j) (1 : Perm β) = Equiv.swap (Sum.inl i) (Sum.inl j) :=
   sumCongr_swap_refl i j
 #align equiv.perm.sum_congr_swap_one Equiv.Perm.sumCongr_swap_one
+-/
 
+#print Equiv.Perm.sumCongr_one_swap /-
 @[simp]
 theorem sumCongr_one_swap {α β : Type _} [DecidableEq α] [DecidableEq β] (i j : β) :
     sumCongr (1 : Perm α) (Equiv.swap i j) = Equiv.swap (Sum.inr i) (Sum.inr j) :=
   sumCongr_refl_swap i j
 #align equiv.perm.sum_congr_one_swap Equiv.Perm.sumCongr_one_swap
+-/
 
 /-! Lemmas about `equiv.perm.sigma_congr_right` re-expressed via the group structure. -/
 
 
+#print Equiv.Perm.sigmaCongrRight_mul /-
 @[simp]
 theorem sigmaCongrRight_mul {α : Type _} {β : α → Type _} (F : ∀ a, Perm (β a))
     (G : ∀ a, Perm (β a)) : sigmaCongrRight F * sigmaCongrRight G = sigmaCongrRight (F * G) :=
   sigmaCongrRight_trans G F
 #align equiv.perm.sigma_congr_right_mul Equiv.Perm.sigmaCongrRight_mul
+-/
 
+#print Equiv.Perm.sigmaCongrRight_inv /-
 @[simp]
 theorem sigmaCongrRight_inv {α : Type _} {β : α → Type _} (F : ∀ a, Perm (β a)) :
     (sigmaCongrRight F)⁻¹ = sigmaCongrRight fun a => (F a)⁻¹ :=
   sigmaCongrRight_symm F
 #align equiv.perm.sigma_congr_right_inv Equiv.Perm.sigmaCongrRight_inv
+-/
 
+#print Equiv.Perm.sigmaCongrRight_one /-
 @[simp]
 theorem sigmaCongrRight_one {α : Type _} {β : α → Type _} :
     sigmaCongrRight (1 : ∀ a, Equiv.Perm <| β a) = 1 :=
   sigmaCongrRight_refl
 #align equiv.perm.sigma_congr_right_one Equiv.Perm.sigmaCongrRight_one
+-/
 
 #print Equiv.Perm.sigmaCongrRightHom /-
 /-- `equiv.perm.sigma_congr_right` as a `monoid_hom`.
@@ -312,6 +364,7 @@ def sigmaCongrRightHom {α : Type _} (β : α → Type _) : (∀ a, Perm (β a))
 #align equiv.perm.sigma_congr_right_hom Equiv.Perm.sigmaCongrRightHom
 -/
 
+#print Equiv.Perm.sigmaCongrRightHom_injective /-
 theorem sigmaCongrRightHom_injective {α : Type _} {β : α → Type _} :
     Function.Injective (sigmaCongrRightHom β) :=
   by
@@ -319,7 +372,9 @@ theorem sigmaCongrRightHom_injective {α : Type _} {β : α → Type _} :
   ext (a b)
   simpa using Equiv.congr_fun h ⟨a, b⟩
 #align equiv.perm.sigma_congr_right_hom_injective Equiv.Perm.sigmaCongrRightHom_injective
+-/
 
+#print Equiv.Perm.subtypeCongrHom /-
 /-- `equiv.perm.subtype_congr` as a `monoid_hom`. -/
 @[simps]
 def subtypeCongrHom (p : α → Prop) [DecidablePred p] :
@@ -329,7 +384,9 @@ def subtypeCongrHom (p : α → Prop) [DecidablePred p] :
   map_one' := Perm.subtypeCongr.refl
   map_mul' _ _ := (Perm.subtypeCongr.trans _ _ _ _).symm
 #align equiv.perm.subtype_congr_hom Equiv.Perm.subtypeCongrHom
+-/
 
+#print Equiv.Perm.subtypeCongrHom_injective /-
 theorem subtypeCongrHom_injective (p : α → Prop) [DecidablePred p] :
     Function.Injective (subtypeCongrHom p) :=
   by
@@ -337,6 +394,7 @@ theorem subtypeCongrHom_injective (p : α → Prop) [DecidablePred p] :
   rw [Prod.mk.inj_iff]
   constructor <;> ext i <;> simpa using Equiv.congr_fun h i
 #align equiv.perm.subtype_congr_hom_injective Equiv.Perm.subtypeCongrHom_injective
+-/
 
 #print Equiv.Perm.permCongr_eq_mul /-
 /-- If `e` is also a permutation, we can write `perm_congr`
@@ -354,21 +412,27 @@ section ExtendDomain
 
 variable (e : Perm α) {p : β → Prop} [DecidablePred p] (f : α ≃ Subtype p)
 
+#print Equiv.Perm.extendDomain_one /-
 @[simp]
 theorem extendDomain_one : extendDomain 1 f = 1 :=
   extendDomain_refl f
 #align equiv.perm.extend_domain_one Equiv.Perm.extendDomain_one
+-/
 
+#print Equiv.Perm.extendDomain_inv /-
 @[simp]
 theorem extendDomain_inv : (e.extendDomain f)⁻¹ = e⁻¹.extendDomain f :=
   rfl
 #align equiv.perm.extend_domain_inv Equiv.Perm.extendDomain_inv
+-/
 
+#print Equiv.Perm.extendDomain_mul /-
 @[simp]
 theorem extendDomain_mul (e e' : Perm α) :
     e.extendDomain f * e'.extendDomain f = (e * e').extendDomain f :=
   extendDomain_trans _ _ _
 #align equiv.perm.extend_domain_mul Equiv.Perm.extendDomain_mul
+-/
 
 #print Equiv.Perm.extendDomainHom /-
 /-- `extend_domain` as a group homomorphism -/
@@ -381,16 +445,20 @@ def extendDomainHom : Perm α →* Perm β
 #align equiv.perm.extend_domain_hom Equiv.Perm.extendDomainHom
 -/
 
+#print Equiv.Perm.extendDomainHom_injective /-
 theorem extendDomainHom_injective : Function.Injective (extendDomainHom f) :=
   (injective_iff_map_eq_one (extendDomainHom f)).mpr fun e he =>
     ext fun x =>
       f.Injective (Subtype.ext ((extendDomain_apply_image e f x).symm.trans (ext_iff.mp he (f x))))
 #align equiv.perm.extend_domain_hom_injective Equiv.Perm.extendDomainHom_injective
+-/
 
+#print Equiv.Perm.extendDomain_eq_one_iff /-
 @[simp]
 theorem extendDomain_eq_one_iff {e : Perm α} {f : α ≃ Subtype p} : e.extendDomain f = 1 ↔ e = 1 :=
   (injective_iff_map_eq_one' (extendDomainHom f)).mp (extendDomainHom_injective f) e
 #align equiv.perm.extend_domain_eq_one_iff Equiv.Perm.extendDomain_eq_one_iff
+-/
 
 #print Equiv.Perm.extendDomain_pow /-
 @[simp]
@@ -430,10 +498,12 @@ theorem subtypePerm_apply (f : Perm α) (h : ∀ x, p x ↔ p (f x)) (x : { x //
 #align equiv.perm.subtype_perm_apply Equiv.Perm.subtypePerm_apply
 -/
 
+#print Equiv.Perm.subtypePerm_one /-
 @[simp]
 theorem subtypePerm_one (p : α → Prop) (h := fun _ => Iff.rfl) : @subtypePerm α p 1 h = 1 :=
   Equiv.ext fun ⟨_, _⟩ => rfl
 #align equiv.perm.subtype_perm_one Equiv.Perm.subtypePerm_one
+-/
 
 #print Equiv.Perm.subtypePerm_mul /-
 @[simp]
@@ -547,11 +617,13 @@ theorem mem_iff_ofSubtype_apply_mem (f : Perm (Subtype p)) (x : α) :
 #align equiv.perm.mem_iff_of_subtype_apply_mem Equiv.Perm.mem_iff_ofSubtype_apply_mem
 -/
 
+#print Equiv.Perm.subtypePerm_ofSubtype /-
 @[simp]
 theorem subtypePerm_ofSubtype (f : Perm (Subtype p)) :
     subtypePerm (ofSubtype f) (mem_iff_ofSubtype_apply_mem f) = f :=
   Equiv.ext fun x => Subtype.coe_injective (ofSubtype_apply_coe f x)
 #align equiv.perm.subtype_perm_of_subtype Equiv.Perm.subtypePerm_ofSubtype
+-/
 
 #print Equiv.Perm.subtypeEquivSubtypePerm /-
 /-- Permutations on a subtype are equivalent to permutations on the original type that fix pointwise
@@ -593,26 +665,34 @@ section Swap
 
 variable [DecidableEq α]
 
+#print Equiv.swap_inv /-
 @[simp]
 theorem swap_inv (x y : α) : (swap x y)⁻¹ = swap x y :=
   rfl
 #align equiv.swap_inv Equiv.swap_inv
+-/
 
+#print Equiv.swap_mul_self /-
 @[simp]
 theorem swap_mul_self (i j : α) : swap i j * swap i j = 1 :=
   swap_swap i j
 #align equiv.swap_mul_self Equiv.swap_mul_self
+-/
 
+#print Equiv.swap_mul_eq_mul_swap /-
 theorem swap_mul_eq_mul_swap (f : Perm α) (x y : α) : swap x y * f = f * swap (f⁻¹ x) (f⁻¹ y) :=
   Equiv.ext fun z => by
     simp only [perm.mul_apply, swap_apply_def]
     split_ifs <;>
       simp_all only [perm.apply_inv_self, perm.eq_inv_iff_eq, eq_self_iff_true, not_true]
 #align equiv.swap_mul_eq_mul_swap Equiv.swap_mul_eq_mul_swap
+-/
 
+#print Equiv.mul_swap_eq_swap_mul /-
 theorem mul_swap_eq_swap_mul (f : Perm α) (x y : α) : f * swap x y = swap (f x) (f y) * f := by
   rw [swap_mul_eq_mul_swap, perm.inv_apply_self, perm.inv_apply_self]
 #align equiv.mul_swap_eq_swap_mul Equiv.mul_swap_eq_swap_mul
+-/
 
 #print Equiv.swap_apply_apply /-
 theorem swap_apply_apply (f : Perm α) (x y : α) : swap (f x) (f y) = f * swap x y * f⁻¹ := by
@@ -620,6 +700,7 @@ theorem swap_apply_apply (f : Perm α) (x y : α) : swap (f x) (f y) = f * swap 
 #align equiv.swap_apply_apply Equiv.swap_apply_apply
 -/
 
+#print Equiv.swap_mul_self_mul /-
 /-- Left-multiplying a permutation with `swap i j` twice gives the original permutation.
 
   This specialization of `swap_mul_self` is useful when using cosets of permutations.
@@ -628,7 +709,9 @@ theorem swap_apply_apply (f : Perm α) (x y : α) : swap (f x) (f y) = f * swap 
 theorem swap_mul_self_mul (i j : α) (σ : Perm α) : Equiv.swap i j * (Equiv.swap i j * σ) = σ := by
   rw [← mul_assoc, swap_mul_self, one_mul]
 #align equiv.swap_mul_self_mul Equiv.swap_mul_self_mul
+-/
 
+#print Equiv.mul_swap_mul_self /-
 /-- Right-multiplying a permutation with `swap i j` twice gives the original permutation.
 
   This specialization of `swap_mul_self` is useful when using cosets of permutations.
@@ -637,42 +720,55 @@ theorem swap_mul_self_mul (i j : α) (σ : Perm α) : Equiv.swap i j * (Equiv.sw
 theorem mul_swap_mul_self (i j : α) (σ : Perm α) : σ * Equiv.swap i j * Equiv.swap i j = σ := by
   rw [mul_assoc, swap_mul_self, mul_one]
 #align equiv.mul_swap_mul_self Equiv.mul_swap_mul_self
+-/
 
+#print Equiv.swap_mul_involutive /-
 /-- A stronger version of `mul_right_injective` -/
 @[simp]
 theorem swap_mul_involutive (i j : α) : Function.Involutive ((· * ·) (Equiv.swap i j)) :=
   swap_mul_self_mul i j
 #align equiv.swap_mul_involutive Equiv.swap_mul_involutive
+-/
 
+#print Equiv.mul_swap_involutive /-
 /-- A stronger version of `mul_left_injective` -/
 @[simp]
 theorem mul_swap_involutive (i j : α) : Function.Involutive (· * Equiv.swap i j) :=
   mul_swap_mul_self i j
 #align equiv.mul_swap_involutive Equiv.mul_swap_involutive
+-/
 
+#print Equiv.swap_eq_one_iff /-
 @[simp]
 theorem swap_eq_one_iff {i j : α} : swap i j = (1 : Perm α) ↔ i = j :=
   swap_eq_refl_iff
 #align equiv.swap_eq_one_iff Equiv.swap_eq_one_iff
+-/
 
+#print Equiv.swap_mul_eq_iff /-
 theorem swap_mul_eq_iff {i j : α} {σ : Perm α} : swap i j * σ = σ ↔ i = j :=
   ⟨fun h => by
     have swap_id : swap i j = 1 := mul_right_cancel (trans h (one_mul σ).symm)
     rw [← swap_apply_right i j, swap_id]
     rfl, fun h => by erw [h, swap_self, one_mul]⟩
 #align equiv.swap_mul_eq_iff Equiv.swap_mul_eq_iff
+-/
 
+#print Equiv.mul_swap_eq_iff /-
 theorem mul_swap_eq_iff {i j : α} {σ : Perm α} : σ * swap i j = σ ↔ i = j :=
   ⟨fun h => by
     have swap_id : swap i j = 1 := mul_left_cancel (trans h (one_mul σ).symm)
     rw [← swap_apply_right i j, swap_id]
     rfl, fun h => by erw [h, swap_self, mul_one]⟩
 #align equiv.mul_swap_eq_iff Equiv.mul_swap_eq_iff
+-/
 
+#print Equiv.swap_mul_swap_mul_swap /-
 theorem swap_mul_swap_mul_swap {x y z : α} (hwz : x ≠ y) (hxz : x ≠ z) :
     swap y z * swap x y * swap y z = swap z x :=
   Equiv.ext fun n => by simp only [swap_apply_def, perm.mul_apply]; split_ifs <;> cc
 #align equiv.swap_mul_swap_mul_swap Equiv.swap_mul_swap_mul_swap
+-/
 
 end Swap
 
@@ -680,35 +776,47 @@ section AddGroup
 
 variable [AddGroup α] (a b : α)
 
+#print Equiv.addLeft_zero /-
 @[simp]
 theorem addLeft_zero : Equiv.addLeft (0 : α) = 1 :=
   ext zero_add
 #align equiv.add_left_zero Equiv.addLeft_zero
+-/
 
+#print Equiv.addRight_zero /-
 @[simp]
 theorem addRight_zero : Equiv.addRight (0 : α) = 1 :=
   ext add_zero
 #align equiv.add_right_zero Equiv.addRight_zero
+-/
 
+#print Equiv.addLeft_add /-
 @[simp]
 theorem addLeft_add : Equiv.addLeft (a + b) = Equiv.addLeft a * Equiv.addLeft b :=
   ext <| add_assoc _ _
 #align equiv.add_left_add Equiv.addLeft_add
+-/
 
+#print Equiv.addRight_add /-
 @[simp]
 theorem addRight_add : Equiv.addRight (a + b) = Equiv.addRight b * Equiv.addRight a :=
   ext fun _ => (add_assoc _ _ _).symm
 #align equiv.add_right_add Equiv.addRight_add
+-/
 
+#print Equiv.inv_addLeft /-
 @[simp]
 theorem inv_addLeft : (Equiv.addLeft a)⁻¹ = Equiv.addLeft (-a) :=
   Equiv.coe_inj.1 rfl
 #align equiv.inv_add_left Equiv.inv_addLeft
+-/
 
+#print Equiv.inv_addRight /-
 @[simp]
 theorem inv_addRight : (Equiv.addRight a)⁻¹ = Equiv.addRight (-a) :=
   Equiv.coe_inj.1 rfl
 #align equiv.inv_add_right Equiv.inv_addRight
+-/
 
 #print Equiv.pow_addLeft /-
 @[simp]
@@ -744,41 +852,53 @@ section Group
 
 variable [Group α] (a b : α)
 
+#print Equiv.mulLeft_one /-
 @[simp, to_additive]
 theorem mulLeft_one : Equiv.mulLeft (1 : α) = 1 :=
   ext one_mul
 #align equiv.mul_left_one Equiv.mulLeft_one
 #align equiv.add_left_zero Equiv.addLeft_zero
+-/
 
+#print Equiv.mulRight_one /-
 @[simp, to_additive]
 theorem mulRight_one : Equiv.mulRight (1 : α) = 1 :=
   ext mul_one
 #align equiv.mul_right_one Equiv.mulRight_one
 #align equiv.add_right_zero Equiv.addRight_zero
+-/
 
+#print Equiv.mulLeft_mul /-
 @[simp, to_additive]
 theorem mulLeft_mul : Equiv.mulLeft (a * b) = Equiv.mulLeft a * Equiv.mulLeft b :=
   ext <| mul_assoc _ _
 #align equiv.mul_left_mul Equiv.mulLeft_mul
 #align equiv.add_left_add Equiv.addLeft_add
+-/
 
+#print Equiv.mulRight_mul /-
 @[simp, to_additive]
 theorem mulRight_mul : Equiv.mulRight (a * b) = Equiv.mulRight b * Equiv.mulRight a :=
   ext fun _ => (mul_assoc _ _ _).symm
 #align equiv.mul_right_mul Equiv.mulRight_mul
 #align equiv.add_right_add Equiv.addRight_add
+-/
 
+#print Equiv.inv_mulLeft /-
 @[simp, to_additive inv_add_left]
 theorem inv_mulLeft : (Equiv.mulLeft a)⁻¹ = Equiv.mulLeft a⁻¹ :=
   Equiv.coe_inj.1 rfl
 #align equiv.inv_mul_left Equiv.inv_mulLeft
 #align equiv.inv_add_left Equiv.inv_addLeft
+-/
 
+#print Equiv.inv_mulRight /-
 @[simp, to_additive inv_add_right]
 theorem inv_mulRight : (Equiv.mulRight a)⁻¹ = Equiv.mulRight a⁻¹ :=
   Equiv.coe_inj.1 rfl
 #align equiv.inv_mul_right Equiv.inv_mulRight
 #align equiv.inv_add_right Equiv.inv_addRight
+-/
 
 #print Equiv.pow_mulLeft /-
 @[simp, to_additive pow_add_left]

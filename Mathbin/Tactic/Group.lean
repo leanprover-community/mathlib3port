@@ -28,6 +28,7 @@ group_theory
 -/
 
 
+#print Mathlib.Tactic.Group.zpow_trick /-
 -- The next four lemmas are not general purpose lemmas, they are intended for use only by
 -- the `group` tactic.
 @[to_additive]
@@ -35,18 +36,23 @@ theorem Mathlib.Tactic.Group.zpow_trick {G : Type _} [Group G] (a b : G) (n m : 
     a * b ^ n * b ^ m = a * b ^ (n + m) := by rw [mul_assoc, ← zpow_add]
 #align tactic.group.zpow_trick Mathlib.Tactic.Group.zpow_trick
 #align tactic.group.zsmul_trick Mathlib.Tactic.Group.zsmul_trick
+-/
 
+#print Mathlib.Tactic.Group.zpow_trick_one /-
 @[to_additive]
 theorem Mathlib.Tactic.Group.zpow_trick_one {G : Type _} [Group G] (a b : G) (m : ℤ) :
     a * b * b ^ m = a * b ^ (m + 1) := by rw [mul_assoc, mul_self_zpow]
 #align tactic.group.zpow_trick_one Mathlib.Tactic.Group.zpow_trick_one
 #align tactic.group.zsmul_trick_zero Mathlib.Tactic.Group.zsmul_trick_zero
+-/
 
+#print Mathlib.Tactic.Group.zpow_trick_one' /-
 @[to_additive]
 theorem Mathlib.Tactic.Group.zpow_trick_one' {G : Type _} [Group G] (a b : G) (n : ℤ) :
     a * b ^ n * b = a * b ^ (n + 1) := by rw [mul_assoc, mul_zpow_self]
 #align tactic.group.zpow_trick_one' Mathlib.Tactic.Group.zpow_trick_one'
 #align tactic.group.zsmul_trick_zero' Mathlib.Tactic.Group.zsmul_trick_zero'
+-/
 
 @[to_additive]
 theorem Tactic.Group.zpow_trick_sub {G : Type _} [Group G] (a b : G) (n m : ℤ) :

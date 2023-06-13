@@ -53,6 +53,7 @@ variable [NormedField 𝕜₁] [NormedField 𝕜₂] [Module 𝕜₁ E] [Module 
 
 variable [Module R F] [ContinuousConstSMul R F] [LocallyConvexSpace R F] [SMulCommClass 𝕜₂ R F]
 
+#print ContinuousLinearMap.strongTopology.locallyConvexSpace /-
 theorem strongTopology.locallyConvexSpace (𝔖 : Set (Set E)) (h𝔖₁ : 𝔖.Nonempty)
     (h𝔖₂ : DirectedOn (· ⊆ ·) 𝔖) :
     @LocallyConvexSpace R (E →SL[σ] F) _ _ _ (strongTopology σ F 𝔖) :=
@@ -67,6 +68,7 @@ theorem strongTopology.locallyConvexSpace (𝔖 : Set (Set E)) (h𝔖₁ : 𝔖.
   rintro ⟨S, V⟩ ⟨hS, hVmem, hVconvex⟩ f hf g hg a b ha hb hab x hx
   exact hVconvex (hf x hx) (hg x hx) ha hb hab
 #align continuous_linear_map.strong_topology.locally_convex_space ContinuousLinearMap.strongTopology.locallyConvexSpace
+-/
 
 end General
 

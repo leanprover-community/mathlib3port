@@ -62,13 +62,17 @@ namespace PrimePair
 
 variable [Preorder P] (IF : PrimePair P)
 
+#print Order.Ideal.PrimePair.compl_I_eq_F /-
 theorem compl_I_eq_F : (IF.i : Set P)ᶜ = IF.f :=
   IF.isCompl_i_f.compl_eq
 #align order.ideal.prime_pair.compl_I_eq_F Order.Ideal.PrimePair.compl_I_eq_F
+-/
 
+#print Order.Ideal.PrimePair.compl_F_eq_I /-
 theorem compl_F_eq_I : (IF.f : Set P)ᶜ = IF.i :=
   IF.isCompl_i_f.eq_compl.symm
 #align order.ideal.prime_pair.compl_F_eq_I Order.Ideal.PrimePair.compl_F_eq_I
+-/
 
 #print Order.Ideal.PrimePair.I_isProper /-
 theorem I_isProper : IsProper IF.i := by
@@ -78,17 +82,23 @@ theorem I_isProper : IsProper IF.i := by
 #align order.ideal.prime_pair.I_is_proper Order.Ideal.PrimePair.I_isProper
 -/
 
+#print Order.Ideal.PrimePair.disjoint /-
 theorem disjoint : Disjoint (IF.i : Set P) IF.f :=
   IF.isCompl_i_f.Disjoint
 #align order.ideal.prime_pair.disjoint Order.Ideal.PrimePair.disjoint
+-/
 
+#print Order.Ideal.PrimePair.I_union_F /-
 theorem I_union_F : (IF.i : Set P) ∪ IF.f = Set.univ :=
   IF.isCompl_i_f.sup_eq_top
 #align order.ideal.prime_pair.I_union_F Order.Ideal.PrimePair.I_union_F
+-/
 
+#print Order.Ideal.PrimePair.F_union_I /-
 theorem F_union_I : (IF.f : Set P) ∪ IF.i = Set.univ :=
   IF.isCompl_i_f.symm.sup_eq_top
 #align order.ideal.prime_pair.F_union_I Order.Ideal.PrimePair.F_union_I
+-/
 
 end PrimePair
 
@@ -127,6 +137,7 @@ section SemilatticeInf
 
 variable [SemilatticeInf P] {x y : P} {I : Ideal P}
 
+#print Order.Ideal.IsPrime.mem_or_mem /-
 theorem IsPrime.mem_or_mem (hI : IsPrime I) {x y : P} : x ⊓ y ∈ I → x ∈ I ∨ y ∈ I :=
   by
   contrapose!
@@ -134,7 +145,9 @@ theorem IsPrime.mem_or_mem (hI : IsPrime I) {x y : P} : x ⊓ y ∈ I → x ∈ 
   show x ∈ F ∧ y ∈ F → x ⊓ y ∈ F
   exact fun h => inf_mem h.1 h.2
 #align order.ideal.is_prime.mem_or_mem Order.Ideal.IsPrime.mem_or_mem
+-/
 
+#print Order.Ideal.IsPrime.of_mem_or_mem /-
 theorem IsPrime.of_mem_or_mem [IsProper I] (hI : ∀ {x y : P}, x ⊓ y ∈ I → x ∈ I ∨ y ∈ I) :
     IsPrime I := by
   rw [is_prime_iff]
@@ -147,10 +160,13 @@ theorem IsPrime.of_mem_or_mem [IsProper I] (hI : ∀ {x y : P}, x ⊓ y ∈ I �
     tauto
   · exact @mem_compl_of_ge _ _ _
 #align order.ideal.is_prime.of_mem_or_mem Order.Ideal.IsPrime.of_mem_or_mem
+-/
 
+#print Order.Ideal.isPrime_iff_mem_or_mem /-
 theorem isPrime_iff_mem_or_mem [IsProper I] : IsPrime I ↔ ∀ {x y : P}, x ⊓ y ∈ I → x ∈ I ∨ y ∈ I :=
   ⟨IsPrime.mem_or_mem, IsPrime.of_mem_or_mem⟩
 #align order.ideal.is_prime_iff_mem_or_mem Order.Ideal.isPrime_iff_mem_or_mem
+-/
 
 end SemilatticeInf
 

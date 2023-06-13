@@ -41,6 +41,7 @@ namespace ZMod
 
 variable (p : ℕ) [Fact p.Prime]
 
+#print ZMod.wilsons_lemma /-
 /-- **Wilson's Lemma**: the product of `1`, ..., `p-1` is `-1` modulo `p`. -/
 @[simp]
 theorem wilsons_lemma : ((p - 1)! : ZMod p) = -1 :=
@@ -71,13 +72,16 @@ theorem wilsons_lemma : ((p - 1)! : ZMod p) = -1 :=
       simpa only [val_cast_of_lt hb.right, val_zero] using h
     · simp only [val_cast_of_lt hb.right, Units.val_mk0]
 #align zmod.wilsons_lemma ZMod.wilsons_lemma
+-/
 
+#print ZMod.prod_Ico_one_prime /-
 @[simp]
 theorem prod_Ico_one_prime : ∏ x in Ico 1 p, (x : ZMod p) = -1 :=
   by
   conv in Ico 1 p => rw [← succ_sub_one p, succ_sub (Fact.out p.prime).Pos]
   rw [← prod_nat_cast, Finset.prod_Ico_id_eq_factorial, wilsons_lemma]
 #align zmod.prod_Ico_one_prime ZMod.prod_Ico_one_prime
+-/
 
 end ZMod
 
@@ -85,6 +89,7 @@ namespace Nat
 
 variable {n : ℕ}
 
+#print Nat.prime_of_fac_equiv_neg_one /-
 /-- For `n ≠ 1`, `(n-1)!` is congruent to `-1` modulo `n` only if n is prime. -/
 theorem prime_of_fac_equiv_neg_one (h : ((n - 1)! : ZMod n) = -1) (h1 : n ≠ 1) : Prime n :=
   by
@@ -97,7 +102,9 @@ theorem prime_of_fac_equiv_neg_one (h : ((n - 1)! : ZMod n) = -1) (h1 : n ≠ 1)
   refine' hm2.ne' (nat.dvd_one.mp ((Nat.dvd_add_right hm).mp (hm1.trans _)))
   rw [← ZMod.nat_cast_zmod_eq_zero_iff_dvd, cast_add, cast_one, h, add_left_neg]
 #align nat.prime_of_fac_equiv_neg_one Nat.prime_of_fac_equiv_neg_one
+-/
 
+#print Nat.prime_iff_fac_equiv_neg_one /-
 /-- **Wilson's Theorem**: For `n ≠ 1`, `(n-1)!` is congruent to `-1` modulo `n` iff n is prime. -/
 theorem prime_iff_fac_equiv_neg_one (h : n ≠ 1) : Prime n ↔ ((n - 1)! : ZMod n) = -1 :=
   by
@@ -105,6 +112,7 @@ theorem prime_iff_fac_equiv_neg_one (h : n ≠ 1) : Prime n ↔ ((n - 1)! : ZMod
   haveI := Fact.mk h1
   exact ZMod.wilsons_lemma n
 #align nat.prime_iff_fac_equiv_neg_one Nat.prime_iff_fac_equiv_neg_one
+-/
 
 end Nat
 

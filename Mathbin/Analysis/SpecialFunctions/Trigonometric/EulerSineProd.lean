@@ -43,6 +43,7 @@ We evaluate the integral of `cos (2 * z * x) * cos x ^ n`, for any complex `z` a
 
 variable {z : ℂ} {n : ℕ}
 
+#print EulerSine.antideriv_cos_comp_const_mul /-
 theorem antideriv_cos_comp_const_mul (hz : z ≠ 0) (x : ℝ) :
     HasDerivAt (fun y : ℝ => Complex.sin (2 * z * y) / (2 * z)) (Complex.cos (2 * z * x)) x :=
   by
@@ -53,7 +54,9 @@ theorem antideriv_cos_comp_const_mul (hz : z ≠ 0) (x : ℝ) :
   · ext1 x; rw [mul_comm _ (2 * z)]
   · field_simp; rw [mul_comm _ (2 * z)]
 #align euler_sine.antideriv_cos_comp_const_mul EulerSine.antideriv_cos_comp_const_mul
+-/
 
+#print EulerSine.antideriv_sin_comp_const_mul /-
 theorem antideriv_sin_comp_const_mul (hz : z ≠ 0) (x : ℝ) :
     HasDerivAt (fun y : ℝ => -Complex.cos (2 * z * y) / (2 * z)) (Complex.sin (2 * z * x)) x :=
   by
@@ -64,7 +67,9 @@ theorem antideriv_sin_comp_const_mul (hz : z ≠ 0) (x : ℝ) :
   · ext1 x; rw [mul_comm _ (2 * z)]; field_simp
   · field_simp; rw [mul_comm _ (2 * z)]
 #align euler_sine.antideriv_sin_comp_const_mul EulerSine.antideriv_sin_comp_const_mul
+-/
 
+#print EulerSine.integral_cos_mul_cos_pow_aux /-
 theorem integral_cos_mul_cos_pow_aux (hn : 2 ≤ n) (hz : z ≠ 0) :
     ∫ x : ℝ in 0 ..π / 2, Complex.cos (2 * z * x) * cos x ^ n =
       n / (2 * z) * ∫ x : ℝ in 0 ..π / 2, Complex.sin (2 * z * x) * sin x * cos x ^ (n - 1) :=
@@ -94,7 +99,9 @@ theorem integral_cos_mul_cos_pow_aux (hn : 2 ≤ n) (hz : z ≠ 0) :
   · apply Continuous.intervalIntegrable
     exact complex.continuous_cos.comp (continuous_const.mul Complex.continuous_ofReal)
 #align euler_sine.integral_cos_mul_cos_pow_aux EulerSine.integral_cos_mul_cos_pow_aux
+-/
 
+#print EulerSine.integral_sin_mul_sin_mul_cos_pow_eq /-
 theorem integral_sin_mul_sin_mul_cos_pow_eq (hn : 2 ≤ n) (hz : z ≠ 0) :
     ∫ x : ℝ in 0 ..π / 2, Complex.sin (2 * z * x) * sin x * cos x ^ (n - 1) =
       (n / (2 * z) * ∫ x : ℝ in 0 ..π / 2, Complex.cos (2 * z * x) * cos x ^ n) -
@@ -157,7 +164,9 @@ theorem integral_sin_mul_sin_mul_cos_pow_eq (hn : 2 ≤ n) (hz : z ≠ 0) :
   · apply Continuous.intervalIntegrable
     exact complex.continuous_sin.comp (continuous_const.mul Complex.continuous_ofReal)
 #align euler_sine.integral_sin_mul_sin_mul_cos_pow_eq EulerSine.integral_sin_mul_sin_mul_cos_pow_eq
+-/
 
+#print EulerSine.integral_cos_mul_cos_pow /-
 /-- Note this also holds for `z = 0`, but we do not need this case for `sin_pi_mul_eq`.  -/
 theorem integral_cos_mul_cos_pow (hn : 2 ≤ n) (hz : z ≠ 0) :
     (1 - 4 * z ^ 2 / n ^ 2) * ∫ x : ℝ in 0 ..π / 2, Complex.cos (2 * z * x) * cos x ^ n =
@@ -170,7 +179,9 @@ theorem integral_cos_mul_cos_pow (hn : 2 ≤ n) (hz : z ≠ 0) :
     this 
   convert congr_arg (fun u : ℂ => -u * (2 * z) ^ 2 / n ^ 2) this using 1 <;> · field_simp; ring
 #align euler_sine.integral_cos_mul_cos_pow EulerSine.integral_cos_mul_cos_pow
+-/
 
+#print EulerSine.integral_cos_mul_cos_pow_even /-
 /-- Note this also holds for `z = 0`, but we do not need this case for `sin_pi_mul_eq`. -/
 theorem integral_cos_mul_cos_pow_even (n : ℕ) (hz : z ≠ 0) :
     (1 - z ^ 2 / (n + 1) ^ 2) *
@@ -186,6 +197,7 @@ theorem integral_cos_mul_cos_pow_even (n : ℕ) (hz : z ≠ 0) :
   · push_cast ; ring
   · push_cast ; ring
 #align euler_sine.integral_cos_mul_cos_pow_even EulerSine.integral_cos_mul_cos_pow_even
+-/
 
 #print EulerSine.integral_cos_pow_eq /-
 /-- Relate the integral `cos x ^ n` over `[0, π/2]` to the integral of `sin x ^ n` over `[0, π]`,
@@ -214,9 +226,11 @@ theorem integral_cos_pow_eq (n : ℕ) :
 #align euler_sine.integral_cos_pow_eq EulerSine.integral_cos_pow_eq
 -/
 
+#print EulerSine.integral_cos_pow_pos /-
 theorem integral_cos_pow_pos (n : ℕ) : 0 < ∫ x : ℝ in 0 ..π / 2, cos x ^ n :=
   (integral_cos_pow_eq n).symm ▸ mul_pos one_half_pos (integral_sin_pow_pos _)
 #align euler_sine.integral_cos_pow_pos EulerSine.integral_cos_pow_pos
+-/
 
 #print EulerSine.sin_pi_mul_eq /-
 /-- Finite form of Euler's sine product, with remainder term expressed as a ratio of cosine
@@ -299,6 +313,7 @@ stating that the sequence of measures on `[0, π/2]` given by integration agains
 `tendsto_set_integral_pow_smul_of_unique_maximum_of_is_compact_of_continuous_on`. -/
 
 
+#print EulerSine.tendsto_integral_cos_pow_mul_div /-
 theorem tendsto_integral_cos_pow_mul_div {f : ℝ → ℂ} (hf : ContinuousOn f (Icc 0 (π / 2))) :
     Tendsto
       (fun n : ℕ => (∫ x : ℝ in 0 ..π / 2, ↑(cos x) ^ n * f x) / ↑(∫ x : ℝ in 0 ..π / 2, cos x ^ n))
@@ -319,6 +334,7 @@ theorem tendsto_integral_cos_pow_mul_div {f : ℝ → ℂ} (hf : ContinuousOn f 
     tendsto_set_integral_pow_smul_of_unique_maximum_of_isCompact_of_continuousOn is_compact_Icc
       continuous_on_cos c_lt c_nonneg c_zero_pos zero_mem hf
 #align euler_sine.tendsto_integral_cos_pow_mul_div EulerSine.tendsto_integral_cos_pow_mul_div
+-/
 
 #print Complex.tendsto_euler_sin_prod /-
 /-- Euler's infinite product formula for the complex sine function. -/

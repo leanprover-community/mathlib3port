@@ -316,8 +316,6 @@ variable {X : PresheafedSpace.{u} CommRingCat.{u}} (Y : Scheme.{u})
 
 variable (f : X ⟶ Y.toPresheafedSpace) [H : PresheafedSpace.IsOpenImmersion f]
 
-include H
-
 /-- If `X ⟶ Y` is an open immersion, and `Y` is a scheme, then so is `X`. -/
 def toScheme : Scheme :=
   by
@@ -354,8 +352,6 @@ theorem toSchemeHom_val : (toSchemeHom Y f).val = f :=
 instance toSchemeHom_isOpenImmersion : IsOpenImmersion (toSchemeHom Y f) :=
   H
 #align algebraic_geometry.PresheafedSpace.is_open_immersion.to_Scheme_hom_is_open_immersion AlgebraicGeometry.PresheafedSpace.IsOpenImmersion.toSchemeHom_isOpenImmersion
-
-omit H
 
 theorem scheme_eq_of_locallyRingedSpace_eq {X Y : Scheme}
     (H : X.toLocallyRingedSpace = Y.toLocallyRingedSpace) : X = Y := by cases X; cases Y; congr;
@@ -447,9 +443,6 @@ def isoRestrict : X ≅ (Z.restrict H.base_open : _) :=
   ⟨H.isoRestrict.Hom, H.isoRestrict.inv, H.isoRestrict.hom_inv_id, H.isoRestrict.inv_hom_id⟩
 #align algebraic_geometry.is_open_immersion.iso_restrict AlgebraicGeometry.IsOpenImmersion.isoRestrict
 
-include H
-
--- mathport name: exprforget
 local notation "forget" => Scheme.forgetToLocallyRingedSpace
 
 instance mono : Mono f :=
@@ -921,7 +914,6 @@ def morphismRestrict {X Y : Scheme} (f : X ⟶ Y) (U : Opens Y.carrier) :
   (pullbackRestrictIsoRestrict f U).inv ≫ pullback.snd
 #align algebraic_geometry.morphism_restrict AlgebraicGeometry.morphismRestrict
 
--- mathport name: «expr ∣_ »
 infixl:80 " ∣_ " => morphismRestrict
 
 @[simp, reassoc]

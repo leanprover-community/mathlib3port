@@ -120,7 +120,6 @@ section Unbundled
 
 variable (M : Type v) [AddCommMonoid M] [Module R M]
 
--- mathport name: «expr ⊗ₜ[ , ] »
 -- This notation is necessary because we need to reason about `s ⊗ₜ m` where `s : S` and `m : M`;
 -- without this notation, one need to work with `s : (restrict_scalars f).obj ⟨S⟩`.
 scoped[ChangeOfRings]
@@ -208,7 +207,6 @@ section Unbundled
 
 variable (M : Type v) [AddCommMonoid M] [Module R M]
 
--- mathport name: exprS'
 -- We use `S'` to denote `S` viewed as `R`-module, via the map `f`.
 local notation "S'" => (restrictScalars f).obj ⟨S⟩
 

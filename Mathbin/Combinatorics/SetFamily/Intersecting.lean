@@ -57,22 +57,29 @@ theorem Intersecting.mono (h : t ⊆ s) (hs : s.Intersecting) : t.Intersecting :
 #align set.intersecting.mono Set.Intersecting.mono
 -/
 
+#print Set.Intersecting.not_bot_mem /-
 theorem Intersecting.not_bot_mem (hs : s.Intersecting) : ⊥ ∉ s := fun h => hs h h disjoint_bot_left
 #align set.intersecting.not_bot_mem Set.Intersecting.not_bot_mem
+-/
 
+#print Set.Intersecting.ne_bot /-
 theorem Intersecting.ne_bot (hs : s.Intersecting) (ha : a ∈ s) : a ≠ ⊥ :=
   ne_of_mem_of_not_mem ha hs.not_bot_mem
 #align set.intersecting.ne_bot Set.Intersecting.ne_bot
+-/
 
 #print Set.intersecting_empty /-
 theorem intersecting_empty : (∅ : Set α).Intersecting := fun _ => False.elim
 #align set.intersecting_empty Set.intersecting_empty
 -/
 
+#print Set.intersecting_singleton /-
 @[simp]
 theorem intersecting_singleton : ({a} : Set α).Intersecting ↔ a ≠ ⊥ := by simp [intersecting]
 #align set.intersecting_singleton Set.intersecting_singleton
+-/
 
+#print Set.Intersecting.insert /-
 theorem Intersecting.insert (hs : s.Intersecting) (ha : a ≠ ⊥) (h : ∀ b ∈ s, ¬Disjoint a b) :
     (insert a s).Intersecting := by
   rintro b (rfl | hb) c (rfl | hc)
@@ -81,7 +88,9 @@ theorem Intersecting.insert (hs : s.Intersecting) (ha : a ≠ ⊥) (h : ∀ b �
   · exact fun H => h _ hb H.symm
   · exact hs hb hc
 #align set.intersecting.insert Set.Intersecting.insert
+-/
 
+#print Set.intersecting_insert /-
 theorem intersecting_insert :
     (insert a s).Intersecting ↔ s.Intersecting ∧ a ≠ ⊥ ∧ ∀ b ∈ s, ¬Disjoint a b :=
   ⟨fun h =>
@@ -89,7 +98,9 @@ theorem intersecting_insert :
       h (mem_insert _ _) <| mem_insert_of_mem _ hb⟩,
     fun h => h.1.insert h.2.1 h.2.2⟩
 #align set.intersecting_insert Set.intersecting_insert
+-/
 
+#print Set.intersecting_iff_pairwise_not_disjoint /-
 theorem intersecting_iff_pairwise_not_disjoint :
     s.Intersecting ↔ (s.Pairwise fun a b => ¬Disjoint a b) ∧ s ≠ {⊥} :=
   by
@@ -104,10 +115,13 @@ theorem intersecting_iff_pairwise_not_disjoint :
         (eq_singleton_iff_unique_mem.2
           ⟨hb, fun c hc => not_ne_iff.1 fun H => h.1 hb hc H.symm disjoint_bot_left⟩)
 #align set.intersecting_iff_pairwise_not_disjoint Set.intersecting_iff_pairwise_not_disjoint
+-/
 
+#print Set.Subsingleton.intersecting /-
 protected theorem Subsingleton.intersecting (hs : s.Subsingleton) : s.Intersecting ↔ s ≠ {⊥} :=
   intersecting_iff_pairwise_not_disjoint.trans <| and_iff_right <| hs.Pairwise _
 #align set.subsingleton.intersecting Set.Subsingleton.intersecting
+-/
 
 #print Set.intersecting_iff_eq_empty_of_subsingleton /-
 theorem intersecting_iff_eq_empty_of_subsingleton [Subsingleton α] (s : Set α) :
@@ -152,15 +166,19 @@ theorem Intersecting.isUpperSet' {s : Finset α} (hs : (s : Set α).Intersecting
 
 end SemilatticeInf
 
+#print Set.Intersecting.exists_mem_set /-
 theorem Intersecting.exists_mem_set {𝒜 : Set (Set α)} (h𝒜 : 𝒜.Intersecting) {s t : Set α}
     (hs : s ∈ 𝒜) (ht : t ∈ 𝒜) : ∃ a, a ∈ s ∧ a ∈ t :=
   not_disjoint_iff.1 <| h𝒜 hs ht
 #align set.intersecting.exists_mem_set Set.Intersecting.exists_mem_set
+-/
 
+#print Set.Intersecting.exists_mem_finset /-
 theorem Intersecting.exists_mem_finset [DecidableEq α] {𝒜 : Set (Finset α)} (h𝒜 : 𝒜.Intersecting)
     {s t : Finset α} (hs : s ∈ 𝒜) (ht : t ∈ 𝒜) : ∃ a, a ∈ s ∧ a ∈ t :=
   not_disjoint_iff.1 <| disjoint_coe.Not.2 <| h𝒜 hs ht
 #align set.intersecting.exists_mem_finset Set.Intersecting.exists_mem_finset
+-/
 
 variable [BooleanAlgebra α]
 
@@ -176,6 +194,7 @@ theorem Intersecting.not_mem {s : Set α} (hs : s.Intersecting) {a : α} (ha : a
 #align set.intersecting.not_mem Set.Intersecting.not_mem
 -/
 
+#print Set.Intersecting.disjoint_map_compl /-
 theorem Intersecting.disjoint_map_compl {s : Finset α} (hs : (s : Set α).Intersecting) :
     Disjoint s (s.map ⟨compl, compl_injective⟩) :=
   by
@@ -184,6 +203,7 @@ theorem Intersecting.disjoint_map_compl {s : Finset α} (hs : (s : Set α).Inter
   obtain ⟨x, hx', rfl⟩ := mem_map.mp hxc
   exact hs.not_compl_mem hx' hx
 #align set.intersecting.disjoint_map_compl Set.Intersecting.disjoint_map_compl
+-/
 
 #print Set.Intersecting.card_le /-
 theorem Intersecting.card_le [Fintype α] {s : Finset α} (hs : (s : Set α).Intersecting) :

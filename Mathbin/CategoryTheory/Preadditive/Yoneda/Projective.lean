@@ -35,6 +35,7 @@ variable [Preadditive C]
 
 namespace Projective
 
+#print CategoryTheory.Projective.projective_iff_preservesEpimorphisms_preadditiveCoyoneda_obj /-
 theorem projective_iff_preservesEpimorphisms_preadditiveCoyoneda_obj (P : C) :
     Projective P ↔ (preadditiveCoyoneda.obj (op P)).PreservesEpimorphisms :=
   by
@@ -47,7 +48,9 @@ theorem projective_iff_preservesEpimorphisms_preadditiveCoyoneda_obj (P : C) :
   · intro
     exact (inferInstance : (preadditive_coyoneda.obj (op P) ⋙ forget _).PreservesEpimorphisms)
 #align category_theory.projective.projective_iff_preserves_epimorphisms_preadditive_coyoneda_obj CategoryTheory.Projective.projective_iff_preservesEpimorphisms_preadditiveCoyoneda_obj
+-/
 
+#print CategoryTheory.Projective.projective_iff_preservesEpimorphisms_preadditiveCoyoneda_obj' /-
 theorem projective_iff_preservesEpimorphisms_preadditiveCoyoneda_obj' (P : C) :
     Projective P ↔ (preadditiveCoyonedaObj (op P)).PreservesEpimorphisms :=
   by
@@ -60,6 +63,7 @@ theorem projective_iff_preservesEpimorphisms_preadditiveCoyoneda_obj' (P : C) :
   · intro
     exact (inferInstance : (preadditive_coyoneda_obj (op P) ⋙ forget _).PreservesEpimorphisms)
 #align category_theory.projective.projective_iff_preserves_epimorphisms_preadditive_coyoneda_obj' CategoryTheory.Projective.projective_iff_preservesEpimorphisms_preadditiveCoyoneda_obj'
+-/
 
 end Projective
 

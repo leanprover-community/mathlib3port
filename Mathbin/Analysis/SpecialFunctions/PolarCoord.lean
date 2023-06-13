@@ -33,6 +33,7 @@ open Real Set MeasureTheory
 open scoped Real Topology
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print polarCoord /-
 /-- The polar coordinates local homeomorphism in `ℝ^2`, mapping `(r cos θ, r sin θ)` to `(r, θ)`.
 It is a homeomorphism between `ℝ^2 - (-∞, 0]` and `(0, +∞) × (-π, π)`. -/
 @[simps]
@@ -101,7 +102,9 @@ def polarCoord : LocalHomeomorph (ℝ × ℝ) (ℝ × ℝ)
     · exact (Complex.continuousAt_arg hz).ContinuousWithinAt
     · exact complex.equiv_real_prod_clm.symm.continuous.continuous_on
 #align polar_coord polarCoord
+-/
 
+#print hasFDerivAt_polarCoord_symm /-
 theorem hasFDerivAt_polarCoord_symm (p : ℝ × ℝ) :
     HasFDerivAt polarCoord.symm
       (Matrix.toLin (Basis.finTwoProd ℝ) (Basis.finTwoProd ℝ)
@@ -116,6 +119,7 @@ theorem hasFDerivAt_polarCoord_symm (p : ℝ × ℝ) :
       2 <;>
     simp only [smul_smul, add_comm, neg_mul, neg_smul, smul_neg]
 #align has_fderiv_at_polar_coord_symm hasFDerivAt_polarCoord_symm
+-/
 
 #print polarCoord_source_ae_eq_univ /-
 theorem polarCoord_source_ae_eq_univ : polarCoord.source =ᵐ[volume] univ :=

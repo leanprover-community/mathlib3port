@@ -84,6 +84,7 @@ def insertNone : Finset α ↪o Finset (Option α) :=
 #align finset.insert_none Finset.insertNone
 -/
 
+#print Finset.mem_insertNone /-
 /-⟨none ::ₘ s.1.map some, multiset.nodup_cons.2
   ⟨by simp, s.nodup.map $ λ a b, option.some.inj⟩⟩-/
 @[simp]
@@ -91,13 +92,18 @@ theorem mem_insertNone {s : Finset α} : ∀ {o : Option α}, o ∈ s.insertNone
   | none => iff_of_true (Multiset.mem_cons_self _ _) fun a h => by cases h
   | some a => Multiset.mem_cons.trans <| by simp <;> rfl
 #align finset.mem_insert_none Finset.mem_insertNone
+-/
 
+#print Finset.some_mem_insertNone /-
 theorem some_mem_insertNone {s : Finset α} {a : α} : some a ∈ s.insertNone ↔ a ∈ s := by simp
 #align finset.some_mem_insert_none Finset.some_mem_insertNone
+-/
 
+#print Finset.card_insertNone /-
 @[simp]
 theorem card_insertNone (s : Finset α) : s.insertNone.card = s.card + 1 := by simp [insert_none]
 #align finset.card_insert_none Finset.card_insertNone
+-/
 
 #print Finset.eraseNone /-
 /-- Given `s : finset (option α)`, `s.erase_none : finset α` is the set of `x : α` such that
@@ -182,14 +188,18 @@ theorem map_some_eraseNone [DecidableEq (Option α)] (s : Finset (Option α)) :
 #align finset.map_some_erase_none Finset.map_some_eraseNone
 -/
 
+#print Finset.insertNone_eraseNone /-
 @[simp]
 theorem insertNone_eraseNone [DecidableEq (Option α)] (s : Finset (Option α)) :
     insertNone (eraseNone s) = insert none s := by ext (_ | x) <;> simp
 #align finset.insert_none_erase_none Finset.insertNone_eraseNone
+-/
 
+#print Finset.eraseNone_insertNone /-
 @[simp]
 theorem eraseNone_insertNone (s : Finset α) : eraseNone (insertNone s) = s := by ext; simp
 #align finset.erase_none_insert_none Finset.eraseNone_insertNone
+-/
 
 end Finset
 

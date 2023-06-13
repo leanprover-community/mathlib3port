@@ -48,10 +48,12 @@ variable [TopologicalSpace α] {β : Type _} [TopologicalSpace β]
 
 variable {γ : Type _} [UniformSpace γ] [CompleteSpace γ] [SeparatedSpace γ]
 
+#print DenseInducing.continuous_extend_of_cauchy /-
 theorem continuous_extend_of_cauchy {e : α → β} {f : α → γ} (de : DenseInducing e)
     (h : ∀ b : β, Cauchy (map f (comap e <| 𝓝 b))) : Continuous (de.extend f) :=
   de.continuous_extend fun b => CompleteSpace.complete (h b)
 #align dense_inducing.continuous_extend_of_cauchy DenseInducing.continuous_extend_of_cauchy
+-/
 
 end DenseInducing
 

@@ -29,15 +29,19 @@ namespace Finset
 
 namespace Nat
 
+#print Finset.Nat.prod_antidiagonal_succ /-
 theorem prod_antidiagonal_succ {n : ℕ} {f : ℕ × ℕ → M} :
     ∏ p in antidiagonal (n + 1), f p = f (0, n + 1) * ∏ p in antidiagonal n, f (p.1 + 1, p.2) := by
   rw [antidiagonal_succ, prod_cons, Prod_map]; rfl
 #align finset.nat.prod_antidiagonal_succ Finset.Nat.prod_antidiagonal_succ
+-/
 
+#print Finset.Nat.sum_antidiagonal_succ /-
 theorem sum_antidiagonal_succ {n : ℕ} {f : ℕ × ℕ → N} :
     ∑ p in antidiagonal (n + 1), f p = f (0, n + 1) + ∑ p in antidiagonal n, f (p.1 + 1, p.2) :=
   @prod_antidiagonal_succ (Multiplicative N) _ _ _
 #align finset.nat.sum_antidiagonal_succ Finset.Nat.sum_antidiagonal_succ
+-/
 
 #print Finset.Nat.prod_antidiagonal_swap /-
 @[to_additive]
@@ -48,17 +52,21 @@ theorem prod_antidiagonal_swap {n : ℕ} {f : ℕ × ℕ → M} :
 #align finset.nat.sum_antidiagonal_swap Finset.Nat.sum_antidiagonal_swap
 -/
 
+#print Finset.Nat.prod_antidiagonal_succ' /-
 theorem prod_antidiagonal_succ' {n : ℕ} {f : ℕ × ℕ → M} :
     ∏ p in antidiagonal (n + 1), f p = f (n + 1, 0) * ∏ p in antidiagonal n, f (p.1, p.2 + 1) :=
   by
   rw [← prod_antidiagonal_swap, prod_antidiagonal_succ, ← prod_antidiagonal_swap]
   rfl
 #align finset.nat.prod_antidiagonal_succ' Finset.Nat.prod_antidiagonal_succ'
+-/
 
+#print Finset.Nat.sum_antidiagonal_succ' /-
 theorem sum_antidiagonal_succ' {n : ℕ} {f : ℕ × ℕ → N} :
     ∑ p in antidiagonal (n + 1), f p = f (n + 1, 0) + ∑ p in antidiagonal n, f (p.1, p.2 + 1) :=
   @prod_antidiagonal_succ' (Multiplicative N) _ _ _
 #align finset.nat.sum_antidiagonal_succ' Finset.Nat.sum_antidiagonal_succ'
+-/
 
 #print Finset.Nat.prod_antidiagonal_subst /-
 @[to_additive]

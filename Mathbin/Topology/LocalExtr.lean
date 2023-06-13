@@ -152,17 +152,23 @@ theorem IsLocalExtrOn.on_subset {t : Set α} (hf : IsLocalExtrOn f t a) (h : s �
 #align is_local_extr_on.on_subset IsLocalExtrOn.on_subset
 -/
 
+#print IsLocalMinOn.inter /-
 theorem IsLocalMinOn.inter (hf : IsLocalMinOn f s a) (t) : IsLocalMinOn f (s ∩ t) a :=
   hf.on_subset (inter_subset_left s t)
 #align is_local_min_on.inter IsLocalMinOn.inter
+-/
 
+#print IsLocalMaxOn.inter /-
 theorem IsLocalMaxOn.inter (hf : IsLocalMaxOn f s a) (t) : IsLocalMaxOn f (s ∩ t) a :=
   hf.on_subset (inter_subset_left s t)
 #align is_local_max_on.inter IsLocalMaxOn.inter
+-/
 
+#print IsLocalExtrOn.inter /-
 theorem IsLocalExtrOn.inter (hf : IsLocalExtrOn f s a) (t) : IsLocalExtrOn f (s ∩ t) a :=
   hf.on_subset (inter_subset_left s t)
 #align is_local_extr_on.inter IsLocalExtrOn.inter
+-/
 
 #print IsMinOn.localize /-
 theorem IsMinOn.localize (hf : IsMinOn f s a) : IsLocalMinOn f s a :=
@@ -220,22 +226,28 @@ theorem IsExtrOn.isLocalExtr (hf : IsExtrOn f s a) (hs : s ∈ 𝓝 a) : IsLocal
 #align is_extr_on.is_local_extr IsExtrOn.isLocalExtr
 -/
 
+#print IsLocalMinOn.not_nhds_le_map /-
 theorem IsLocalMinOn.not_nhds_le_map [TopologicalSpace β] (hf : IsLocalMinOn f s a)
     [NeBot (𝓝[<] f a)] : ¬𝓝 (f a) ≤ map f (𝓝[s] a) := fun hle =>
   have : ∀ᶠ y in 𝓝[<] f a, f a ≤ y := (eventually_map.2 hf).filter_mono (inf_le_left.trans hle)
   let ⟨y, hy⟩ := (this.And self_mem_nhdsWithin).exists
   hy.1.not_lt hy.2
 #align is_local_min_on.not_nhds_le_map IsLocalMinOn.not_nhds_le_map
+-/
 
+#print IsLocalMaxOn.not_nhds_le_map /-
 theorem IsLocalMaxOn.not_nhds_le_map [TopologicalSpace β] (hf : IsLocalMaxOn f s a)
     [NeBot (𝓝[>] f a)] : ¬𝓝 (f a) ≤ map f (𝓝[s] a) :=
   @IsLocalMinOn.not_nhds_le_map α βᵒᵈ _ _ _ _ _ ‹_› hf ‹_›
 #align is_local_max_on.not_nhds_le_map IsLocalMaxOn.not_nhds_le_map
+-/
 
+#print IsLocalExtrOn.not_nhds_le_map /-
 theorem IsLocalExtrOn.not_nhds_le_map [TopologicalSpace β] (hf : IsLocalExtrOn f s a)
     [NeBot (𝓝[<] f a)] [NeBot (𝓝[>] f a)] : ¬𝓝 (f a) ≤ map f (𝓝[s] a) :=
   hf.elim (fun h => h.not_nhds_le_map) fun h => h.not_nhds_le_map
 #align is_local_extr_on.not_nhds_le_map IsLocalExtrOn.not_nhds_le_map
+-/
 
 /-! ### Constant -/
 
@@ -480,25 +492,33 @@ section OrderedAddCommMonoid
 
 variable [OrderedAddCommMonoid β] {f g : α → β} {a : α} {s : Set α} {l : Filter α}
 
+#print IsLocalMin.add /-
 theorem IsLocalMin.add (hf : IsLocalMin f a) (hg : IsLocalMin g a) :
     IsLocalMin (fun x => f x + g x) a :=
   hf.add hg
 #align is_local_min.add IsLocalMin.add
+-/
 
+#print IsLocalMax.add /-
 theorem IsLocalMax.add (hf : IsLocalMax f a) (hg : IsLocalMax g a) :
     IsLocalMax (fun x => f x + g x) a :=
   hf.add hg
 #align is_local_max.add IsLocalMax.add
+-/
 
+#print IsLocalMinOn.add /-
 theorem IsLocalMinOn.add (hf : IsLocalMinOn f s a) (hg : IsLocalMinOn g s a) :
     IsLocalMinOn (fun x => f x + g x) s a :=
   hf.add hg
 #align is_local_min_on.add IsLocalMinOn.add
+-/
 
+#print IsLocalMaxOn.add /-
 theorem IsLocalMaxOn.add (hf : IsLocalMaxOn f s a) (hg : IsLocalMaxOn g s a) :
     IsLocalMaxOn (fun x => f x + g x) s a :=
   hf.add hg
 #align is_local_max_on.add IsLocalMaxOn.add
+-/
 
 end OrderedAddCommMonoid
 
@@ -509,49 +529,69 @@ section OrderedAddCommGroup
 
 variable [OrderedAddCommGroup β] {f g : α → β} {a : α} {s : Set α} {l : Filter α}
 
+#print IsLocalMin.neg /-
 theorem IsLocalMin.neg (hf : IsLocalMin f a) : IsLocalMax (fun x => -f x) a :=
   hf.neg
 #align is_local_min.neg IsLocalMin.neg
+-/
 
+#print IsLocalMax.neg /-
 theorem IsLocalMax.neg (hf : IsLocalMax f a) : IsLocalMin (fun x => -f x) a :=
   hf.neg
 #align is_local_max.neg IsLocalMax.neg
+-/
 
+#print IsLocalExtr.neg /-
 theorem IsLocalExtr.neg (hf : IsLocalExtr f a) : IsLocalExtr (fun x => -f x) a :=
   hf.neg
 #align is_local_extr.neg IsLocalExtr.neg
+-/
 
+#print IsLocalMinOn.neg /-
 theorem IsLocalMinOn.neg (hf : IsLocalMinOn f s a) : IsLocalMaxOn (fun x => -f x) s a :=
   hf.neg
 #align is_local_min_on.neg IsLocalMinOn.neg
+-/
 
+#print IsLocalMaxOn.neg /-
 theorem IsLocalMaxOn.neg (hf : IsLocalMaxOn f s a) : IsLocalMinOn (fun x => -f x) s a :=
   hf.neg
 #align is_local_max_on.neg IsLocalMaxOn.neg
+-/
 
+#print IsLocalExtrOn.neg /-
 theorem IsLocalExtrOn.neg (hf : IsLocalExtrOn f s a) : IsLocalExtrOn (fun x => -f x) s a :=
   hf.neg
 #align is_local_extr_on.neg IsLocalExtrOn.neg
+-/
 
+#print IsLocalMin.sub /-
 theorem IsLocalMin.sub (hf : IsLocalMin f a) (hg : IsLocalMax g a) :
     IsLocalMin (fun x => f x - g x) a :=
   hf.sub hg
 #align is_local_min.sub IsLocalMin.sub
+-/
 
+#print IsLocalMax.sub /-
 theorem IsLocalMax.sub (hf : IsLocalMax f a) (hg : IsLocalMin g a) :
     IsLocalMax (fun x => f x - g x) a :=
   hf.sub hg
 #align is_local_max.sub IsLocalMax.sub
+-/
 
+#print IsLocalMinOn.sub /-
 theorem IsLocalMinOn.sub (hf : IsLocalMinOn f s a) (hg : IsLocalMaxOn g s a) :
     IsLocalMinOn (fun x => f x - g x) s a :=
   hf.sub hg
 #align is_local_min_on.sub IsLocalMinOn.sub
+-/
 
+#print IsLocalMaxOn.sub /-
 theorem IsLocalMaxOn.sub (hf : IsLocalMaxOn f s a) (hg : IsLocalMinOn g s a) :
     IsLocalMaxOn (fun x => f x - g x) s a :=
   hf.sub hg
 #align is_local_max_on.sub IsLocalMaxOn.sub
+-/
 
 end OrderedAddCommGroup
 
@@ -562,25 +602,33 @@ section SemilatticeSup
 
 variable [SemilatticeSup β] {f g : α → β} {a : α} {s : Set α} {l : Filter α}
 
+#print IsLocalMin.sup /-
 theorem IsLocalMin.sup (hf : IsLocalMin f a) (hg : IsLocalMin g a) :
     IsLocalMin (fun x => f x ⊔ g x) a :=
   hf.sup hg
 #align is_local_min.sup IsLocalMin.sup
+-/
 
+#print IsLocalMax.sup /-
 theorem IsLocalMax.sup (hf : IsLocalMax f a) (hg : IsLocalMax g a) :
     IsLocalMax (fun x => f x ⊔ g x) a :=
   hf.sup hg
 #align is_local_max.sup IsLocalMax.sup
+-/
 
+#print IsLocalMinOn.sup /-
 theorem IsLocalMinOn.sup (hf : IsLocalMinOn f s a) (hg : IsLocalMinOn g s a) :
     IsLocalMinOn (fun x => f x ⊔ g x) s a :=
   hf.sup hg
 #align is_local_min_on.sup IsLocalMinOn.sup
+-/
 
+#print IsLocalMaxOn.sup /-
 theorem IsLocalMaxOn.sup (hf : IsLocalMaxOn f s a) (hg : IsLocalMaxOn g s a) :
     IsLocalMaxOn (fun x => f x ⊔ g x) s a :=
   hf.sup hg
 #align is_local_max_on.sup IsLocalMaxOn.sup
+-/
 
 end SemilatticeSup
 
@@ -588,25 +636,33 @@ section SemilatticeInf
 
 variable [SemilatticeInf β] {f g : α → β} {a : α} {s : Set α} {l : Filter α}
 
+#print IsLocalMin.inf /-
 theorem IsLocalMin.inf (hf : IsLocalMin f a) (hg : IsLocalMin g a) :
     IsLocalMin (fun x => f x ⊓ g x) a :=
   hf.inf hg
 #align is_local_min.inf IsLocalMin.inf
+-/
 
+#print IsLocalMax.inf /-
 theorem IsLocalMax.inf (hf : IsLocalMax f a) (hg : IsLocalMax g a) :
     IsLocalMax (fun x => f x ⊓ g x) a :=
   hf.inf hg
 #align is_local_max.inf IsLocalMax.inf
+-/
 
+#print IsLocalMinOn.inf /-
 theorem IsLocalMinOn.inf (hf : IsLocalMinOn f s a) (hg : IsLocalMinOn g s a) :
     IsLocalMinOn (fun x => f x ⊓ g x) s a :=
   hf.inf hg
 #align is_local_min_on.inf IsLocalMinOn.inf
+-/
 
+#print IsLocalMaxOn.inf /-
 theorem IsLocalMaxOn.inf (hf : IsLocalMaxOn f s a) (hg : IsLocalMaxOn g s a) :
     IsLocalMaxOn (fun x => f x ⊓ g x) s a :=
   hf.inf hg
 #align is_local_max_on.inf IsLocalMaxOn.inf
+-/
 
 end SemilatticeInf
 
@@ -617,45 +673,61 @@ section LinearOrder
 
 variable [LinearOrder β] {f g : α → β} {a : α} {s : Set α} {l : Filter α}
 
+#print IsLocalMin.min /-
 theorem IsLocalMin.min (hf : IsLocalMin f a) (hg : IsLocalMin g a) :
     IsLocalMin (fun x => min (f x) (g x)) a :=
   hf.min hg
 #align is_local_min.min IsLocalMin.min
+-/
 
+#print IsLocalMax.min /-
 theorem IsLocalMax.min (hf : IsLocalMax f a) (hg : IsLocalMax g a) :
     IsLocalMax (fun x => min (f x) (g x)) a :=
   hf.min hg
 #align is_local_max.min IsLocalMax.min
+-/
 
+#print IsLocalMinOn.min /-
 theorem IsLocalMinOn.min (hf : IsLocalMinOn f s a) (hg : IsLocalMinOn g s a) :
     IsLocalMinOn (fun x => min (f x) (g x)) s a :=
   hf.min hg
 #align is_local_min_on.min IsLocalMinOn.min
+-/
 
+#print IsLocalMaxOn.min /-
 theorem IsLocalMaxOn.min (hf : IsLocalMaxOn f s a) (hg : IsLocalMaxOn g s a) :
     IsLocalMaxOn (fun x => min (f x) (g x)) s a :=
   hf.min hg
 #align is_local_max_on.min IsLocalMaxOn.min
+-/
 
+#print IsLocalMin.max /-
 theorem IsLocalMin.max (hf : IsLocalMin f a) (hg : IsLocalMin g a) :
     IsLocalMin (fun x => max (f x) (g x)) a :=
   hf.max hg
 #align is_local_min.max IsLocalMin.max
+-/
 
+#print IsLocalMax.max /-
 theorem IsLocalMax.max (hf : IsLocalMax f a) (hg : IsLocalMax g a) :
     IsLocalMax (fun x => max (f x) (g x)) a :=
   hf.max hg
 #align is_local_max.max IsLocalMax.max
+-/
 
+#print IsLocalMinOn.max /-
 theorem IsLocalMinOn.max (hf : IsLocalMinOn f s a) (hg : IsLocalMinOn g s a) :
     IsLocalMinOn (fun x => max (f x) (g x)) s a :=
   hf.max hg
 #align is_local_min_on.max IsLocalMinOn.max
+-/
 
+#print IsLocalMaxOn.max /-
 theorem IsLocalMaxOn.max (hf : IsLocalMaxOn f s a) (hg : IsLocalMaxOn g s a) :
     IsLocalMaxOn (fun x => max (f x) (g x)) s a :=
   hf.max hg
 #align is_local_max_on.max IsLocalMaxOn.max
+-/
 
 end LinearOrder
 

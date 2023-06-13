@@ -35,9 +35,11 @@ def sqrt (q : ℚ) : ℚ :=
 #align rat.sqrt Rat.sqrt
 -/
 
+#print Rat.sqrt_eq /-
 theorem sqrt_eq (q : ℚ) : Rat.sqrt (q * q) = |q| := by
   rw [sqrt, mul_self_num, mul_self_denom, Int.sqrt_eq, Nat.sqrt_eq, abs_def]
 #align rat.sqrt_eq Rat.sqrt_eq
+-/
 
 #print Rat.exists_mul_self /-
 theorem exists_mul_self (x : ℚ) : (∃ q, q * q = x) ↔ Rat.sqrt x * Rat.sqrt x = x :=
@@ -45,6 +47,7 @@ theorem exists_mul_self (x : ℚ) : (∃ q, q * q = x) ↔ Rat.sqrt x * Rat.sqrt
 #align rat.exists_mul_self Rat.exists_mul_self
 -/
 
+#print Rat.sqrt_nonneg /-
 theorem sqrt_nonneg (q : ℚ) : 0 ≤ Rat.sqrt q :=
   nonneg_iff_zero_le.1 <|
     (divInt_nonneg _ <|
@@ -52,6 +55,7 @@ theorem sqrt_nonneg (q : ℚ) : 0 ≤ Rat.sqrt q :=
             Nat.pos_of_ne_zero fun H => pos_iff_ne_zero.1 q.Pos <| Nat.sqrt_eq_zero.1 H).2 <|
       Int.coe_nat_nonneg _
 #align rat.sqrt_nonneg Rat.sqrt_nonneg
+-/
 
 end Rat
 

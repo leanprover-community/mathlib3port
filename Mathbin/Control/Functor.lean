@@ -57,6 +57,7 @@ theorem Functor.map_comp_map (f : α → β) (g : β → γ) :
 #align functor.map_comp_map Functor.map_comp_map
 -/
 
+#print Functor.ext /-
 theorem Functor.ext {F} :
     ∀ {F1 : Functor F} {F2 : Functor F} [@LawfulFunctor F F1] [@LawfulFunctor F F2]
       (H : ∀ (α β) (f : α → β) (x : F α), @Functor.map _ F1 _ _ f x = @Functor.map _ F2 _ _ f x),
@@ -69,6 +70,7 @@ theorem Functor.ext {F} :
     have E2 := @map_const_eq _ ⟨@m, @mc'⟩ H2
     exact E1.trans E2.symm
 #align functor.ext Functor.ext
+-/
 
 end Functor
 
@@ -118,9 +120,11 @@ def Const.run {α β} (x : Const α β) : α :=
 
 namespace Const
 
+#print Functor.Const.ext /-
 protected theorem ext {α β} {x y : Const α β} (h : x.run = y.run) : x = y :=
   h
 #align functor.const.ext Functor.Const.ext
+-/
 
 #print Functor.Const.map /-
 /-- The map operation of the `const γ` functor. -/
@@ -266,13 +270,17 @@ instance : LawfulFunctor (Comp F G)
   id_map := @Comp.id_map F G _ _ _ _
   comp_map := @Comp.comp_map F G _ _ _ _
 
+#print Functor.Comp.functor_comp_id /-
 theorem functor_comp_id {F} [AF : Functor F] [LawfulFunctor F] : @Comp.functor F id _ _ = AF :=
   @Functor.ext F _ AF (@Comp.lawfulFunctor F id _ _ _ _) _ fun α β f x => rfl
 #align functor.comp.functor_comp_id Functor.Comp.functor_comp_id
+-/
 
+#print Functor.Comp.functor_id_comp /-
 theorem functor_id_comp {F} [AF : Functor F] [LawfulFunctor F] : @Comp.functor id F _ _ = AF :=
   @Functor.ext F _ AF (@Comp.lawfulFunctor id F _ _ _ _) _ fun α β f x => rfl
 #align functor.comp.functor_id_comp Functor.Comp.functor_id_comp
+-/
 
 end Comp
 
@@ -304,11 +312,13 @@ protected theorem run_pure {α : Type v} : ∀ x : α, (pure x : Comp F G α).ru
 #align functor.comp.run_pure Functor.Comp.run_pure
 -/
 
+#print Functor.Comp.run_seq /-
 @[simp]
 protected theorem run_seq {α β : Type v} (f : Comp F G (α → β)) (x : Comp F G α) :
     (f <*> x).run = (· <*> ·) <$> f.run <*> x.run :=
   rfl
 #align functor.comp.run_seq Functor.Comp.run_seq
+-/
 
 instance : Applicative (Comp F G) :=
   { Comp.hasPure with

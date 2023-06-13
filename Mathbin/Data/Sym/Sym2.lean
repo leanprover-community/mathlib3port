@@ -139,11 +139,13 @@ protected theorem inductionOn {f : Sym2 α → Prop} (i : Sym2 α) (hf : ∀ x y
 #align sym2.induction_on Sym2.inductionOn
 -/
 
+#print Sym2.inductionOn₂ /-
 @[elab_as_elim]
 protected theorem inductionOn₂ {f : Sym2 α → Sym2 β → Prop} (i : Sym2 α) (j : Sym2 β)
     (hf : ∀ a₁ a₂ b₁ b₂, f ⟦(a₁, a₂)⟧ ⟦(b₁, b₂)⟧) : f i j :=
   Quotient.induction_on₂ i j <| by rintro ⟨a₁, a₂⟩ ⟨b₁, b₂⟩; exact hf _ _ _ _
 #align sym2.induction_on₂ Sym2.inductionOn₂
+-/
 
 #print Sym2.exists /-
 protected theorem exists {α : Sort _} {f : Sym2 α → Prop} :
@@ -206,17 +208,21 @@ def lift : { f : α → α → β // ∀ a₁ a₂, f a₁ a₂ = f a₂ a₁ } 
 #align sym2.lift Sym2.lift
 -/
 
+#print Sym2.lift_mk'' /-
 @[simp]
 theorem lift_mk'' (f : { f : α → α → β // ∀ a₁ a₂, f a₁ a₂ = f a₂ a₁ }) (a₁ a₂ : α) :
     lift f ⟦(a₁, a₂)⟧ = (f : α → α → β) a₁ a₂ :=
   rfl
 #align sym2.lift_mk Sym2.lift_mk''
+-/
 
+#print Sym2.coe_lift_symm_apply /-
 @[simp]
 theorem coe_lift_symm_apply (F : Sym2 α → β) (a₁ a₂ : α) :
     (lift.symm F : α → α → β) a₁ a₂ = F ⟦(a₁, a₂)⟧ :=
   rfl
 #align sym2.coe_lift_symm_apply Sym2.coe_lift_symm_apply
+-/
 
 #print Sym2.lift₂ /-
 /-- A two-argument version of `sym2.lift`. -/
@@ -238,6 +244,7 @@ def lift₂ :
 #align sym2.lift₂ Sym2.lift₂
 -/
 
+#print Sym2.lift₂_mk'' /-
 @[simp]
 theorem lift₂_mk''
     (f :
@@ -246,12 +253,15 @@ theorem lift₂_mk''
     (a₁ a₂ : α) (b₁ b₂ : β) : lift₂ f ⟦(a₁, a₂)⟧ ⟦(b₁, b₂)⟧ = (f : α → α → β → β → γ) a₁ a₂ b₁ b₂ :=
   rfl
 #align sym2.lift₂_mk Sym2.lift₂_mk''
+-/
 
+#print Sym2.coe_lift₂_symm_apply /-
 @[simp]
 theorem coe_lift₂_symm_apply (F : Sym2 α → Sym2 β → γ) (a₁ a₂ : α) (b₁ b₂ : β) :
     (lift₂.symm F : α → α → β → β → γ) a₁ a₂ b₁ b₂ = F ⟦(a₁, a₂)⟧ ⟦(b₁, b₂)⟧ :=
   rfl
 #align sym2.coe_lift₂_symm_apply Sym2.coe_lift₂_symm_apply
+-/
 
 #print Sym2.map /-
 /-- The functor `sym2` is functorial, and this function constructs the induced maps.
@@ -267,12 +277,16 @@ theorem map_id : map (@id α) = id := by ext ⟨⟨x, y⟩⟩; rfl
 #align sym2.map_id Sym2.map_id
 -/
 
+#print Sym2.map_comp /-
 theorem map_comp {g : β → γ} {f : α → β} : Sym2.map (g ∘ f) = Sym2.map g ∘ Sym2.map f := by
   ext ⟨⟨x, y⟩⟩; rfl
 #align sym2.map_comp Sym2.map_comp
+-/
 
+#print Sym2.map_map /-
 theorem map_map {g : β → γ} {f : α → β} (x : Sym2 α) : map g (map f x) = map (g ∘ f) x := by tidy
 #align sym2.map_map Sym2.map_map
+-/
 
 #print Sym2.map_pair_eq /-
 @[simp]
@@ -281,6 +295,7 @@ theorem map_pair_eq (f : α → β) (x y : α) : map f ⟦(x, y)⟧ = ⟦(f x, f
 #align sym2.map_pair_eq Sym2.map_pair_eq
 -/
 
+#print Sym2.map.injective /-
 theorem map.injective {f : α → β} (hinj : Injective f) : Injective (map f) :=
   by
   intro z z'
@@ -290,6 +305,7 @@ theorem map.injective {f : α → β} (hinj : Injective f) : Injective (map f) :
   repeat' rw [map_pair_eq, eq_iff]
   rintro (h | h) <;> simp [hinj h.1, hinj h.2]
 #align sym2.map.injective Sym2.map.injective
+-/
 
 section Membership
 
@@ -434,6 +450,7 @@ instance Mem.decidable [DecidableEq α] (x : α) (z : Sym2 α) : Decidable (x �
 
 end Membership
 
+#print Sym2.mem_map /-
 @[simp]
 theorem mem_map {f : α → β} {b : β} {z : Sym2 α} : b ∈ Sym2.map f z ↔ ∃ a, a ∈ z ∧ f a = b :=
   by
@@ -445,7 +462,9 @@ theorem mem_map {f : α → β} {b : β} {z : Sym2 α} : b ∈ Sym2.map f z ↔ 
     · exact ⟨y, by simp⟩
   · rintro ⟨w, rfl | rfl, rfl⟩ <;> simp
 #align sym2.mem_map Sym2.mem_map
+-/
 
+#print Sym2.map_congr /-
 @[congr]
 theorem map_congr {f g : α → β} {s : Sym2 α} (h : ∀ x ∈ s, f x = g x) : map f s = map g s :=
   by
@@ -453,6 +472,7 @@ theorem map_congr {f g : α → β} {s : Sym2 α} (h : ∀ x ∈ s, f x = g x) :
   simp only [mem_map]
   constructor <;> · rintro ⟨w, hw, rfl⟩; exact ⟨w, hw, by simp [hw, h]⟩
 #align sym2.map_congr Sym2.map_congr
+-/
 
 #print Sym2.map_id' /-
 /-- Note: `sym2.map_id` will not simplify `sym2.map id z` due to `sym2.map_congr`. -/
@@ -571,19 +591,23 @@ theorem fromRel_prop {sym : Symmetric r} {a b : α} : ⟦(a, b)⟧ ∈ fromRel S
 #align sym2.from_rel_prop Sym2.fromRel_prop
 -/
 
+#print Sym2.fromRel_bot /-
 theorem fromRel_bot : fromRel (fun (x y : α) z => z : Symmetric ⊥) = ∅ :=
   by
   apply Set.eq_empty_of_forall_not_mem fun e => _
   refine' e.ind _
   simp [-Set.bot_eq_empty, Prop.bot_eq_false]
 #align sym2.from_rel_bot Sym2.fromRel_bot
+-/
 
+#print Sym2.fromRel_top /-
 theorem fromRel_top : fromRel (fun (x y : α) z => z : Symmetric ⊤) = Set.univ :=
   by
   apply Set.eq_univ_of_forall fun e => _
   refine' e.ind _
   simp [-Set.top_eq_univ, Prop.top_eq_true]
 #align sym2.from_rel_top Sym2.fromRel_top
+-/
 
 #print Sym2.fromRel_irreflexive /-
 theorem fromRel_irreflexive {sym : Symmetric r} :
@@ -694,6 +718,7 @@ def equivSym (α : Type _) : Sym2 α ≃ Sym α 2 :=
 #align sym2.equiv_sym Sym2.equivSym
 -/
 
+#print Sym2.equivMultiset /-
 /-- The symmetric square is equivalent to multisets of cardinality
 two. (This is currently a synonym for `equiv_sym`, but it's provided
 in case the definition for `sym` changes.)
@@ -701,6 +726,7 @@ in case the definition for `sym` changes.)
 def equivMultiset (α : Type _) : Sym2 α ≃ { s : Multiset α // s.card = 2 } :=
   equivSym α
 #align sym2.equiv_multiset Sym2.equivMultiset
+-/
 
 end SymEquiv
 

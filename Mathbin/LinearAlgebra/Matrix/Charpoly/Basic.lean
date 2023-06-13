@@ -57,25 +57,32 @@ def charmatrix (M : Matrix n n R) : Matrix n n R[X] :=
 #align charmatrix charmatrix
 -/
 
+#print charmatrix_apply /-
 theorem charmatrix_apply (M : Matrix n n R) (i j : n) :
     charmatrix M i j = X * (1 : Matrix n n R[X]) i j - C (M i j) :=
   rfl
 #align charmatrix_apply charmatrix_apply
+-/
 
+#print charmatrix_apply_eq /-
 @[simp]
 theorem charmatrix_apply_eq (M : Matrix n n R) (i : n) :
     charmatrix M i i = (X : R[X]) - C (M i i) := by
   simp only [charmatrix, sub_left_inj, Pi.sub_apply, scalar_apply_eq, RingHom.mapMatrix_apply,
     map_apply, DMatrix.sub_apply]
 #align charmatrix_apply_eq charmatrix_apply_eq
+-/
 
+#print charmatrix_apply_ne /-
 @[simp]
 theorem charmatrix_apply_ne (M : Matrix n n R) (i j : n) (h : i ≠ j) :
     charmatrix M i j = -C (M i j) := by
   simp only [charmatrix, Pi.sub_apply, scalar_apply_ne _ _ _ h, zero_sub, RingHom.mapMatrix_apply,
     map_apply, DMatrix.sub_apply]
 #align charmatrix_apply_ne charmatrix_apply_ne
+-/
 
+#print matPolyEquiv_charmatrix /-
 theorem matPolyEquiv_charmatrix (M : Matrix n n R) : matPolyEquiv (charmatrix M) = X - C M :=
   by
   ext (k i j)
@@ -87,6 +94,7 @@ theorem matPolyEquiv_charmatrix (M : Matrix n n R) : matPolyEquiv (charmatrix M)
   · rw [charmatrix_apply_ne _ _ _ h, coeff_X, coeff_neg, coeff_C, coeff_C]
     split_ifs <;> simp [h]
 #align mat_poly_equiv_charmatrix matPolyEquiv_charmatrix
+-/
 
 #print charmatrix_reindex /-
 theorem charmatrix_reindex {m : Type v} [DecidableEq m] [Fintype m] (e : n ≃ m) (M : Matrix n n R) :
@@ -115,6 +123,7 @@ theorem Matrix.charpoly_reindex {m : Type v} [DecidableEq m] [Fintype m] (e : n 
 #align matrix.charpoly_reindex Matrix.charpoly_reindex
 -/
 
+#print Matrix.aeval_self_charpoly /-
 -- This proof follows http://drorbn.net/AcademicPensieve/2015-12/CayleyHamilton.pdf
 /-- The **Cayley-Hamilton Theorem**, that the characteristic polynomial of a matrix,
 applied to the matrix itself, is zero.
@@ -146,4 +155,5 @@ theorem Matrix.aeval_self_charpoly (M : Matrix n n R) : aeval M M.charpoly = 0 :
   -- Thus we have $χ_M(M) = 0$, which is the desired result.
   exact h
 #align matrix.aeval_self_charpoly Matrix.aeval_self_charpoly
+-/
 

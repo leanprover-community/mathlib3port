@@ -76,8 +76,8 @@ open scoped FirstOrder
 
 open Structure Fin
 
-/- ./././Mathport/Syntax/Translate/Command.lean:370:30: infer kinds are unsupported in Lean 4: var {} -/
-/- ./././Mathport/Syntax/Translate/Command.lean:370:30: infer kinds are unsupported in Lean 4: func {} -/
+/- ./././Mathport/Syntax/Translate/Command.lean:369:30: infer kinds are unsupported in Lean 4: var {} -/
+/- ./././Mathport/Syntax/Translate/Command.lean:369:30: infer kinds are unsupported in Lean 4: func {} -/
 #print FirstOrder.Language.Term /-
 /-- A term on `α` is either a variable indexed by an element of `α`
   or a function symbol applied to simpler terms. -/
@@ -139,6 +139,7 @@ theorem relabel_id_eq_id : (Term.relabel id : L.term α → L.term α) = id :=
 #align first_order.language.term.relabel_id_eq_id FirstOrder.Language.Term.relabel_id_eq_id
 -/
 
+#print FirstOrder.Language.Term.relabel_relabel /-
 @[simp]
 theorem relabel_relabel (f : α → β) (g : β → γ) (t : L.term α) :
     (t.relabel f).relabel g = t.relabel (g ∘ f) :=
@@ -147,12 +148,15 @@ theorem relabel_relabel (f : α → β) (g : β → γ) (t : L.term α) :
   · rfl
   · simp [ih]
 #align first_order.language.term.relabel_relabel FirstOrder.Language.Term.relabel_relabel
+-/
 
+#print FirstOrder.Language.Term.relabel_comp_relabel /-
 @[simp]
 theorem relabel_comp_relabel (f : α → β) (g : β → γ) :
     (Term.relabel g ∘ Term.relabel f : L.term α → L.term γ) = Term.relabel (g ∘ f) :=
   funext (relabel_relabel f g)
 #align first_order.language.term.relabel_comp_relabel FirstOrder.Language.Term.relabel_comp_relabel
+-/
 
 #print FirstOrder.Language.Term.relabelEquiv /-
 /-- Relabels a term's variables along a bijection. -/
@@ -259,17 +263,21 @@ def constantsVarsEquivLeft : L[[γ]].term (Sum α β) ≃ L.term (Sum (Sum γ α
 #align first_order.language.term.constants_vars_equiv_left FirstOrder.Language.Term.constantsVarsEquivLeft
 -/
 
+#print FirstOrder.Language.Term.constantsVarsEquivLeft_apply /-
 @[simp]
 theorem constantsVarsEquivLeft_apply (t : L[[γ]].term (Sum α β)) :
     constantsVarsEquivLeft t = (constantsToVars t).relabel (Equiv.sumAssoc _ _ _).symm :=
   rfl
 #align first_order.language.term.constants_vars_equiv_left_apply FirstOrder.Language.Term.constantsVarsEquivLeft_apply
+-/
 
+#print FirstOrder.Language.Term.constantsVarsEquivLeft_symm_apply /-
 @[simp]
 theorem constantsVarsEquivLeft_symm_apply (t : L.term (Sum (Sum γ α) β)) :
     constantsVarsEquivLeft.symm t = varsToConstants (t.relabel (Equiv.sumAssoc _ _ _)) :=
   rfl
 #align first_order.language.term.constants_vars_equiv_left_symm_apply FirstOrder.Language.Term.constantsVarsEquivLeft_symm_apply
+-/
 
 #print FirstOrder.Language.Term.inhabitedOfVar /-
 instance inhabitedOfVar [Inhabited α] : Inhabited (L.term α) :=
@@ -301,7 +309,6 @@ def subst : L.term α → (α → L.term β) → L.term β
 
 end Term
 
--- mathport name: language.term.var
 scoped[FirstOrder] prefix:arg "&" => FirstOrder.Language.Term.var ∘ Sum.inr
 
 namespace Lhom
@@ -333,6 +340,7 @@ theorem id_onTerm : ((LHom.id L).onTerm : L.term α → L.term α) = id :=
 
 /- warning: first_order.language.Lhom.comp_on_term clashes with first_order.language.LHom.comp_on_term -> FirstOrder.Language.LHom.comp_onTerm
 Case conversion may be inaccurate. Consider using '#align first_order.language.Lhom.comp_on_term FirstOrder.Language.LHom.comp_onTermₓ'. -/
+#print FirstOrder.Language.LHom.comp_onTerm /-
 @[simp]
 theorem comp_onTerm {L'' : Language} (φ : L' →ᴸ L'') (ψ : L →ᴸ L') :
     ((φ.comp ψ).onTerm : L.term α → L''.term α) = φ.onTerm ∘ ψ.onTerm :=
@@ -343,9 +351,11 @@ theorem comp_onTerm {L'' : Language} (φ : L' →ᴸ L'') (ψ : L →ᴸ L') :
   · simp_rw [on_term, ih]
     rfl
 #align first_order.language.Lhom.comp_on_term FirstOrder.Language.LHom.comp_onTerm
+-/
 
 end Lhom
 
+#print FirstOrder.Language.Lequiv.onTerm /-
 /-- Maps a term's symbols along a language equivalence. -/
 @[simps]
 def Lequiv.onTerm (φ : L ≃ᴸ L') : L.term α ≃ L'.term α
@@ -357,10 +367,11 @@ def Lequiv.onTerm (φ : L ≃ᴸ L') : L.term α ≃ L'.term α
   right_inv := by
     rw [Function.rightInverse_iff_comp, ← Lhom.comp_on_term, φ.right_inv, Lhom.id_on_term]
 #align first_order.language.Lequiv.on_term FirstOrder.Language.Lequiv.onTerm
+-/
 
 variable (L) (α)
 
-/- ./././Mathport/Syntax/Translate/Command.lean:370:30: infer kinds are unsupported in Lean 4: falsum {} -/
+/- ./././Mathport/Syntax/Translate/Command.lean:369:30: infer kinds are unsupported in Lean 4: falsum {} -/
 #print FirstOrder.Language.BoundedFormula /-
 /-- `bounded_formula α n` is the type of formulas with free variables indexed by `α` and up to `n`
   additional free variables. -/
@@ -621,6 +632,7 @@ def liftAt : ∀ {n : ℕ} (n' m : ℕ), L.BoundedFormula α n → L.BoundedForm
 #align first_order.language.bounded_formula.lift_at FirstOrder.Language.BoundedFormula.liftAt
 -/
 
+#print FirstOrder.Language.BoundedFormula.mapTermRel_mapTermRel /-
 @[simp]
 theorem mapTermRel_mapTermRel {L'' : Language}
     (ft : ∀ n, L.term (Sum α (Fin n)) → L'.term (Sum β (Fin n)))
@@ -637,6 +649,7 @@ theorem mapTermRel_mapTermRel {L'' : Language}
   · simp [map_term_rel, ih1, ih2]
   · simp [map_term_rel, ih3]
 #align first_order.language.bounded_formula.map_term_rel_map_term_rel FirstOrder.Language.BoundedFormula.mapTermRel_mapTermRel
+-/
 
 #print FirstOrder.Language.BoundedFormula.mapTermRel_id_id_id /-
 @[simp]
@@ -671,6 +684,7 @@ def relabelAux (g : α → Sum β (Fin n)) (k : ℕ) : Sum α (Fin k) → Sum β
 #align first_order.language.bounded_formula.relabel_aux FirstOrder.Language.BoundedFormula.relabelAux
 -/
 
+#print FirstOrder.Language.BoundedFormula.sum_elim_comp_relabelAux /-
 @[simp]
 theorem sum_elim_comp_relabelAux {m : ℕ} {g : α → Sum β (Fin n)} {v : β → M}
     {xs : Fin (n + m) → M} :
@@ -682,7 +696,9 @@ theorem sum_elim_comp_relabelAux {m : ℕ} {g : α → Sum β (Fin n)} {v : β �
     cases' g x with l r <;> simp
   · simp [bounded_formula.relabel_aux]
 #align first_order.language.bounded_formula.sum_elim_comp_relabel_aux FirstOrder.Language.BoundedFormula.sum_elim_comp_relabelAux
+-/
 
+#print FirstOrder.Language.BoundedFormula.relabelAux_sum_inl /-
 @[simp]
 theorem relabelAux_sum_inl (k : ℕ) :
     relabelAux (Sum.inl : α → Sum α (Fin n)) k = Sum.map id (natAdd n) :=
@@ -690,6 +706,7 @@ theorem relabelAux_sum_inl (k : ℕ) :
   ext x
   cases x <;> · simp [relabel_aux]
 #align first_order.language.bounded_formula.relabel_aux_sum_inl FirstOrder.Language.BoundedFormula.relabelAux_sum_inl
+-/
 
 #print FirstOrder.Language.BoundedFormula.relabel /-
 /-- Relabels a bounded formula's variables along a particular function. -/
@@ -1087,6 +1104,7 @@ theorem id_onBoundedFormula :
 #align first_order.language.Lhom.id_on_bounded_formula FirstOrder.Language.LHom.id_onBoundedFormula
 -/
 
+#print FirstOrder.Language.LHom.comp_onBoundedFormula /-
 @[simp]
 theorem comp_onBoundedFormula {L'' : Language} (φ : L' →ᴸ L'') (ψ : L →ᴸ L') :
     ((φ.comp ψ).onBoundedFormula : L.BoundedFormula α n → L''.BoundedFormula α n) =
@@ -1102,6 +1120,7 @@ theorem comp_onBoundedFormula {L'' : Language} (φ : L' →ᴸ L'') (ψ : L →�
   · simp only [on_bounded_formula, Function.comp_apply, ih1, ih2, eq_self_iff_true, and_self_iff]
   · simp only [ih3, on_bounded_formula, Function.comp_apply]
 #align first_order.language.Lhom.comp_on_bounded_formula FirstOrder.Language.LHom.comp_onBoundedFormula
+-/
 
 #print FirstOrder.Language.LHom.onFormula /-
 /-- Maps a formula's symbols along a language map. -/
@@ -1124,16 +1143,19 @@ def onTheory (g : L →ᴸ L') (T : L.Theory) : L'.Theory :=
 #align first_order.language.Lhom.on_Theory FirstOrder.Language.LHom.onTheory
 -/
 
+#print FirstOrder.Language.LHom.mem_onTheory /-
 @[simp]
 theorem mem_onTheory {g : L →ᴸ L'} {T : L.Theory} {φ : L'.Sentence} :
     φ ∈ g.onTheory T ↔ ∃ φ₀, φ₀ ∈ T ∧ g.onSentence φ₀ = φ :=
   Set.mem_image _ _ _
 #align first_order.language.Lhom.mem_on_Theory FirstOrder.Language.LHom.mem_onTheory
+-/
 
 end Lhom
 
 namespace Lequiv
 
+#print FirstOrder.Language.LEquiv.onBoundedFormula /-
 /-- Maps a bounded formula's symbols along a language equivalence. -/
 @[simps]
 def onBoundedFormula (φ : L ≃ᴸ L') : L.BoundedFormula α n ≃ L'.BoundedFormula α n
@@ -1147,57 +1169,62 @@ def onBoundedFormula (φ : L ≃ᴸ L') : L.BoundedFormula α n ≃ L'.BoundedFo
     rw [Function.rightInverse_iff_comp, ← Lhom.comp_on_bounded_formula, φ.right_inv,
       Lhom.id_on_bounded_formula]
 #align first_order.language.Lequiv.on_bounded_formula FirstOrder.Language.LEquiv.onBoundedFormula
+-/
 
+#print FirstOrder.Language.LEquiv.onBoundedFormula_symm /-
 theorem onBoundedFormula_symm (φ : L ≃ᴸ L') :
     (φ.onBoundedFormula.symm : L'.BoundedFormula α n ≃ L.BoundedFormula α n) =
       φ.symm.onBoundedFormula :=
   rfl
 #align first_order.language.Lequiv.on_bounded_formula_symm FirstOrder.Language.LEquiv.onBoundedFormula_symm
+-/
 
+#print FirstOrder.Language.LEquiv.onFormula /-
 /-- Maps a formula's symbols along a language equivalence. -/
 def onFormula (φ : L ≃ᴸ L') : L.Formula α ≃ L'.Formula α :=
   φ.onBoundedFormula
 #align first_order.language.Lequiv.on_formula FirstOrder.Language.LEquiv.onFormula
+-/
 
+#print FirstOrder.Language.LEquiv.onFormula_apply /-
 @[simp]
 theorem onFormula_apply (φ : L ≃ᴸ L') :
     (φ.onFormula : L.Formula α → L'.Formula α) = φ.toLhom.onFormula :=
   rfl
 #align first_order.language.Lequiv.on_formula_apply FirstOrder.Language.LEquiv.onFormula_apply
+-/
 
+#print FirstOrder.Language.LEquiv.onFormula_symm /-
 @[simp]
 theorem onFormula_symm (φ : L ≃ᴸ L') :
     (φ.onFormula.symm : L'.Formula α ≃ L.Formula α) = φ.symm.onFormula :=
   rfl
 #align first_order.language.Lequiv.on_formula_symm FirstOrder.Language.LEquiv.onFormula_symm
+-/
 
+#print FirstOrder.Language.LEquiv.onSentence /-
 /-- Maps a sentence's symbols along a language equivalence. -/
 @[simps]
 def onSentence (φ : L ≃ᴸ L') : L.Sentence ≃ L'.Sentence :=
   φ.onFormula
 #align first_order.language.Lequiv.on_sentence FirstOrder.Language.LEquiv.onSentence
+-/
 
 end Lequiv
 
--- mathport name: term.bd_equal
 scoped[FirstOrder] infixl:88 " =' " => FirstOrder.Language.Term.bdEqual
 
--- mathport name: bounded_formula.imp
 -- input \~- or \simeq
 scoped[FirstOrder] infixr:62 " ⟹ " => FirstOrder.Language.BoundedFormula.imp
 
--- mathport name: bounded_formula.all
 -- input \==>
 scoped[FirstOrder] prefix:110 "∀'" => FirstOrder.Language.BoundedFormula.all
 
--- mathport name: bounded_formula.not
 scoped[FirstOrder] prefix:arg "∼" => FirstOrder.Language.BoundedFormula.not
 
--- mathport name: bounded_formula.iff
 -- input \~, the ASCII character ~ has too low precedence
 scoped[FirstOrder] infixl:61 " ⇔ " => FirstOrder.Language.BoundedFormula.iff
 
--- mathport name: bounded_formula.ex
 -- input \<=>
 scoped[FirstOrder] prefix:110 "∃'" => FirstOrder.Language.BoundedFormula.ex
 
@@ -1354,10 +1381,12 @@ variable {L} {α}
 
 open Set
 
+#print FirstOrder.Language.monotone_distinctConstantsTheory /-
 theorem monotone_distinctConstantsTheory :
     Monotone (L.distinctConstantsTheory : Set α → L[[α]].Theory) := fun s t st =>
   image_subset _ (inter_subset_inter_left _ (prod_mono st st))
 #align first_order.language.monotone_distinct_constants_theory FirstOrder.Language.monotone_distinctConstantsTheory
+-/
 
 #print FirstOrder.Language.directed_distinctConstantsTheory /-
 theorem directed_distinctConstantsTheory :

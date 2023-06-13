@@ -38,12 +38,12 @@ open scoped ENNReal Topology MeasureTheory
 
 namespace MeasureTheory
 
--- mathport name: «expr →ₛ »
 local infixr:25 " →ₛ " => SimpleFunc
 
 variable {α G : Type _} {p : ℝ≥0∞} {m m0 : MeasurableSpace α} {μ : Measure α} [NormedAddCommGroup G]
   {f : α → G}
 
+#print MeasureTheory.Memℒp.finStronglyMeasurable_of_stronglyMeasurable /-
 theorem Memℒp.finStronglyMeasurable_of_stronglyMeasurable (hf : Memℒp f p μ)
     (hf_meas : StronglyMeasurable f) (hp_ne_zero : p ≠ 0) (hp_ne_top : p ≠ ∞) :
     FinStronglyMeasurable f μ := by
@@ -60,7 +60,9 @@ theorem Memℒp.finStronglyMeasurable_of_stronglyMeasurable (hf : Memℒp f p μ
     apply subset_closure
     simp
 #align measure_theory.mem_ℒp.fin_strongly_measurable_of_strongly_measurable MeasureTheory.Memℒp.finStronglyMeasurable_of_stronglyMeasurable
+-/
 
+#print MeasureTheory.Memℒp.aefinStronglyMeasurable /-
 theorem Memℒp.aefinStronglyMeasurable (hf : Memℒp f p μ) (hp_ne_zero : p ≠ 0) (hp_ne_top : p ≠ ∞) :
     AEFinStronglyMeasurable f μ :=
   ⟨hf.AEStronglyMeasurable.mk f,
@@ -69,16 +71,21 @@ theorem Memℒp.aefinStronglyMeasurable (hf : Memℒp f p μ) (hp_ne_zero : p �
       hf.AEStronglyMeasurable.stronglyMeasurable_mk hp_ne_zero hp_ne_top,
     hf.AEStronglyMeasurable.ae_eq_mk⟩
 #align measure_theory.mem_ℒp.ae_fin_strongly_measurable MeasureTheory.Memℒp.aefinStronglyMeasurable
+-/
 
+#print MeasureTheory.Integrable.aefinStronglyMeasurable /-
 theorem Integrable.aefinStronglyMeasurable (hf : Integrable f μ) : AEFinStronglyMeasurable f μ :=
   (memℒp_one_iff_integrable.mpr hf).AEFinStronglyMeasurable one_ne_zero ENNReal.coe_ne_top
 #align measure_theory.integrable.ae_fin_strongly_measurable MeasureTheory.Integrable.aefinStronglyMeasurable
+-/
 
+#print MeasureTheory.Lp.finStronglyMeasurable /-
 theorem Lp.finStronglyMeasurable (f : Lp G p μ) (hp_ne_zero : p ≠ 0) (hp_ne_top : p ≠ ∞) :
     FinStronglyMeasurable f μ :=
   (Lp.memℒp f).finStronglyMeasurable_of_stronglyMeasurable (Lp.stronglyMeasurable f) hp_ne_zero
     hp_ne_top
 #align measure_theory.Lp.fin_strongly_measurable MeasureTheory.Lp.finStronglyMeasurable
+-/
 
 end MeasureTheory
 

@@ -507,8 +507,6 @@ def algEquiv (L' : Type _) [Field L'] [Algebra K L'] [IsCyclotomicExtension {n} 
 
 scoped[Cyclotomic] attribute [instance] IsCyclotomicExtension.splitting_field_x_pow_sub_one
 
-include n
-
 theorem isGalois : IsGalois K L :=
   letI := splitting_field_X_pow_sub_one n K L
   IsGalois.of_separable_splitting_field (X_pow_sub_one_separable_iff.2 (ne_zero' n K L).1)

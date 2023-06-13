@@ -86,11 +86,13 @@ instance preadditiveNatLinear : Linear ℕ C
 #align category_theory.linear.preadditive_nat_linear CategoryTheory.Linear.preadditiveNatLinear
 -/
 
+#print CategoryTheory.Linear.preadditiveIntLinear /-
 instance preadditiveIntLinear : Linear ℤ C
     where
   smul_comp' X Y Z r f g := (Preadditive.rightComp X g).map_zsmul f r
   comp_smul' X Y Z f r g := (Preadditive.leftComp Z f).map_zsmul g r
 #align category_theory.linear.preadditive_int_linear CategoryTheory.Linear.preadditiveIntLinear
+-/
 
 section End
 
@@ -124,12 +126,14 @@ instance inducedCategory : Linear.{w, v} R (InducedCategory C F)
 
 end InducedCategory
 
+#print CategoryTheory.Linear.fullSubcategory /-
 instance fullSubcategory (Z : C → Prop) : Linear.{w, v} R (FullSubcategory Z)
     where
   homModule X Y := @Linear.homModule R _ C _ _ _ X.obj Y.obj
   smul_comp' P Q R f f' g := smul_comp' _ _ _ _ _ _
   comp_smul' P Q R f g g' := comp_smul' _ _ _ _ _ _
 #align category_theory.linear.full_subcategory CategoryTheory.Linear.fullSubcategory
+-/
 
 variable (R)
 
@@ -188,17 +192,21 @@ def homCongr (k : Type _) {C : Type _} [Category C] [Semiring k] [Preadditive C]
 #align category_theory.linear.hom_congr CategoryTheory.Linear.homCongr
 -/
 
+#print CategoryTheory.Linear.homCongr_apply /-
 theorem homCongr_apply (k : Type _) {C : Type _} [Category C] [Semiring k] [Preadditive C]
     [Linear k C] {X Y W Z : C} (f₁ : X ≅ Y) (f₂ : W ≅ Z) (f : X ⟶ W) :
     homCongr k f₁ f₂ f = (f₁.inv ≫ f) ≫ f₂.hom :=
   rfl
 #align category_theory.linear.hom_congr_apply CategoryTheory.Linear.homCongr_apply
+-/
 
+#print CategoryTheory.Linear.homCongr_symm_apply /-
 theorem homCongr_symm_apply (k : Type _) {C : Type _} [Category C] [Semiring k] [Preadditive C]
     [Linear k C] {X Y W Z : C} (f₁ : X ≅ Y) (f₂ : W ≅ Z) (f : Y ⟶ Z) :
     (homCongr k f₁ f₂).symm f = f₁.hom ≫ f ≫ f₂.inv :=
   rfl
 #align category_theory.linear.hom_congr_symm_apply CategoryTheory.Linear.homCongr_symm_apply
+-/
 
 end
 

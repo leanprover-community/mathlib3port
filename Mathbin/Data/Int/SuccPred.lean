@@ -39,10 +39,12 @@ instance : PredOrder ℤ where
   le_pred_of_lt a b := le_sub_one_of_lt
   le_of_pred_lt a b := le_of_sub_one_lt
 
+#print Int.succ_eq_succ /-
 @[simp]
 theorem succ_eq_succ : Order.succ = succ :=
   rfl
 #align int.succ_eq_succ Int.succ_eq_succ
+-/
 
 #print Int.pred_eq_pred /-
 @[simp]

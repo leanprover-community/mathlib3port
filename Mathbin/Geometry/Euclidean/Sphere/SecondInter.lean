@@ -36,8 +36,6 @@ namespace EuclideanGeometry
 variable {V : Type _} {P : Type _} [NormedAddCommGroup V] [InnerProductSpace ℝ V] [MetricSpace P]
   [NormedAddTorsor V P]
 
-include V
-
 #print EuclideanGeometry.Sphere.secondInter /-
 /-- The second intersection of a sphere with a line through a point on that sphere; that point
 if it is the only point of intersection of the line with the sphere. The intended use of this
@@ -72,14 +70,17 @@ theorem Sphere.secondInter_mem {s : Sphere P} {p : P} (v : V) : s.secondInter p 
 
 variable (V)
 
+#print EuclideanGeometry.Sphere.secondInter_zero /-
 /-- If the vector is zero, `second_inter` gives the original point. -/
 @[simp]
 theorem Sphere.secondInter_zero (s : Sphere P) (p : P) : s.secondInter p (0 : V) = p := by
   simp [sphere.second_inter]
 #align euclidean_geometry.sphere.second_inter_zero EuclideanGeometry.Sphere.secondInter_zero
+-/
 
 variable {V}
 
+#print EuclideanGeometry.Sphere.secondInter_eq_self_iff /-
 /-- The point given by `second_inter` equals the original point if and only if the line is
 orthogonal to the radius vector. -/
 theorem Sphere.secondInter_eq_self_iff {s : Sphere P} {p : P} {v : V} :
@@ -92,6 +93,7 @@ theorem Sphere.secondInter_eq_self_iff {s : Sphere P} {p : P} {v : V} :
       or_iff_right (by norm_num : (-2 : ℝ) ≠ 0)] at hp 
   · rw [sphere.second_inter, hp, MulZeroClass.mul_zero, zero_div, zero_smul, zero_vadd]
 #align euclidean_geometry.sphere.second_inter_eq_self_iff EuclideanGeometry.Sphere.secondInter_eq_self_iff
+-/
 
 #print EuclideanGeometry.Sphere.eq_or_eq_secondInter_of_mem_mk'_span_singleton_iff_mem /-
 /-- A point on a line through a point on a sphere equals that point or `second_inter`. -/
@@ -115,6 +117,7 @@ theorem Sphere.eq_or_eq_secondInter_of_mem_mk'_span_singleton_iff_mem {s : Spher
 #align euclidean_geometry.sphere.eq_or_eq_second_inter_of_mem_mk'_span_singleton_iff_mem EuclideanGeometry.Sphere.eq_or_eq_secondInter_of_mem_mk'_span_singleton_iff_mem
 -/
 
+#print EuclideanGeometry.Sphere.secondInter_smul /-
 /-- `second_inter` is unchanged by multiplying the vector by a nonzero real. -/
 @[simp]
 theorem Sphere.secondInter_smul (s : Sphere P) (p : P) (v : V) {r : ℝ} (hr : r ≠ 0) :
@@ -125,13 +128,16 @@ theorem Sphere.secondInter_smul (s : Sphere P) (p : P) (v : V) {r : ℝ} (hr : r
   rw [mul_comm, ← mul_div_assoc, ← mul_div_assoc, mul_div_cancel_left _ hr, mul_comm, mul_assoc,
     mul_div_cancel_left _ hr, mul_comm]
 #align euclidean_geometry.sphere.second_inter_smul EuclideanGeometry.Sphere.secondInter_smul
+-/
 
+#print EuclideanGeometry.Sphere.secondInter_neg /-
 /-- `second_inter` is unchanged by negating the vector. -/
 @[simp]
 theorem Sphere.secondInter_neg (s : Sphere P) (p : P) (v : V) :
     s.secondInter p (-v) = s.secondInter p v := by
   rw [← neg_one_smul ℝ v, s.second_inter_smul p v (by norm_num : (-1 : ℝ) ≠ 0)]
 #align euclidean_geometry.sphere.second_inter_neg EuclideanGeometry.Sphere.secondInter_neg
+-/
 
 #print EuclideanGeometry.Sphere.secondInter_secondInter /-
 /-- Applying `second_inter` twice returns the original point. -/
@@ -150,6 +156,7 @@ theorem Sphere.secondInter_secondInter (s : Sphere P) (p : P) (v : V) :
 #align euclidean_geometry.sphere.second_inter_second_inter EuclideanGeometry.Sphere.secondInter_secondInter
 -/
 
+#print EuclideanGeometry.Sphere.secondInter_eq_lineMap /-
 /-- If the vector passed to `second_inter` is given by a subtraction involving the point in
 `second_inter`, the result of `second_inter` may be expressed using `line_map`. -/
 theorem Sphere.secondInter_eq_lineMap (s : Sphere P) (p p' : P) :
@@ -157,6 +164,7 @@ theorem Sphere.secondInter_eq_lineMap (s : Sphere P) (p p' : P) :
       AffineMap.lineMap p p' (-2 * ⟪p' -ᵥ p, p -ᵥ s.center⟫ / ⟪p' -ᵥ p, p' -ᵥ p⟫) :=
   rfl
 #align euclidean_geometry.sphere.second_inter_eq_line_map EuclideanGeometry.Sphere.secondInter_eq_lineMap
+-/
 
 #print EuclideanGeometry.Sphere.secondInter_vsub_mem_affineSpan /-
 /-- If the vector passed to `second_inter` is given by a subtraction involving the point in
@@ -180,6 +188,7 @@ theorem Sphere.secondInter_collinear (s : Sphere P) (p p' : P) :
 #align euclidean_geometry.sphere.second_inter_collinear EuclideanGeometry.Sphere.secondInter_collinear
 -/
 
+#print EuclideanGeometry.Sphere.wbtw_secondInter /-
 /-- If the vector passed to `second_inter` is given by a subtraction involving the point in
 `second_inter`, and the second point is not outside the sphere, the second point is weakly
 between the first point and the result of `second_inter`. -/
@@ -195,7 +204,9 @@ theorem Sphere.wbtw_secondInter {s : Sphere P} {p p' : P} (hp : p ∈ s)
     neg_vsub_eq_vsub_rev, neg_eq_zero, eq_comm] at he 
   exact ((inner_pos_or_eq_of_dist_le_radius hp hp').resolve_right (Ne.symm h)).Ne he
 #align euclidean_geometry.sphere.wbtw_second_inter EuclideanGeometry.Sphere.wbtw_secondInter
+-/
 
+#print EuclideanGeometry.Sphere.sbtw_secondInter /-
 /-- If the vector passed to `second_inter` is given by a subtraction involving the point in
 `second_inter`, and the second point is inside the sphere, the second point is strictly between
 the first point and the result of `second_inter`. -/
@@ -208,6 +219,7 @@ theorem Sphere.sbtw_secondInter {s : Sphere P} {p p' : P} (hp : p ∈ s)
     rw [h, mem_sphere.1 ((sphere.second_inter_mem _).2 hp)] at hp' 
     exact lt_irrefl _ hp'
 #align euclidean_geometry.sphere.sbtw_second_inter EuclideanGeometry.Sphere.sbtw_secondInter
+-/
 
 end EuclideanGeometry
 

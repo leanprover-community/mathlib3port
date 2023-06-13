@@ -200,6 +200,7 @@ protected theorem Countable.preimage {s : Set β} (hs : s.Countable) {f : α →
 #align set.countable.preimage Set.Countable.preimage
 -/
 
+#print Set.exists_seq_iSup_eq_top_iff_countable /-
 theorem exists_seq_iSup_eq_top_iff_countable [CompleteLattice α] {p : α → Prop} (h : ∃ x, p x) :
     (∃ s : ℕ → α, (∀ n, p (s n)) ∧ (⨆ n, s n) = ⊤) ↔
       ∃ S : Set α, S.Countable ∧ (∀ s ∈ S, p s) ∧ sSup S = ⊤ :=
@@ -215,6 +216,7 @@ theorem exists_seq_iSup_eq_top_iff_countable [CompleteLattice α] {p : α → Pr
       refine' ⟨fun n => s n, fun n => hps _ (s n).coe_prop, _⟩
       rwa [hs.supr_comp, ← sSup_eq_iSup']
 #align set.exists_seq_supr_eq_top_iff_countable Set.exists_seq_iSup_eq_top_iff_countable
+-/
 
 #print Set.exists_seq_cover_iff_countable /-
 theorem exists_seq_cover_iff_countable {p : Set α → Prop} (h : ∃ s, p s) :
@@ -266,14 +268,18 @@ alias countable.bUnion_iff ↔ _ countable.bUnion
 alias countable.sUnion_iff ↔ _ countable.sUnion
 #align set.countable.sUnion Set.Countable.sUnion
 
+#print Set.countable_union /-
 @[simp]
 theorem countable_union {s t : Set α} : (s ∪ t).Countable ↔ s.Countable ∧ t.Countable := by
   simp [union_eq_Union, and_comm]
 #align set.countable_union Set.countable_union
+-/
 
+#print Set.Countable.union /-
 theorem Countable.union {s t : Set α} (hs : s.Countable) (ht : t.Countable) : (s ∪ t).Countable :=
   countable_union.2 ⟨hs, ht⟩
 #align set.countable.union Set.Countable.union
+-/
 
 #print Set.countable_insert /-
 @[simp]
@@ -333,16 +339,20 @@ theorem countable_setOf_finite_subset {s : Set α} :
 #align set.countable_set_of_finite_subset Set.countable_setOf_finite_subset
 -/
 
+#print Set.countable_univ_pi /-
 theorem countable_univ_pi {π : α → Type _} [Finite α] {s : ∀ a, Set (π a)}
     (hs : ∀ a, (s a).Countable) : (pi univ s).Countable :=
   haveI := fun a => (hs a).to_subtype
   (Countable.of_equiv _ (Equiv.Set.univPi s).symm).to_set
 #align set.countable_univ_pi Set.countable_univ_pi
+-/
 
+#print Set.countable_pi /-
 theorem countable_pi {π : α → Type _} [Finite α] {s : ∀ a, Set (π a)} (hs : ∀ a, (s a).Countable) :
     {f : ∀ a, π a | ∀ a, f a ∈ s a}.Countable := by
   simpa only [← mem_univ_pi] using countable_univ_pi hs
 #align set.countable_pi Set.countable_pi
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Set.Countable.prod /-

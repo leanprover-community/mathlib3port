@@ -131,14 +131,18 @@ theorem denom_eq_conts_b : g.denominators n = (g.continuants n).b :=
 #align generalized_continued_fraction.denom_eq_conts_b GeneralizedContinuedFraction.denom_eq_conts_b
 -/
 
+#print GeneralizedContinuedFraction.convergent_eq_num_div_denom /-
 theorem convergent_eq_num_div_denom : g.convergents n = g.numerators n / g.denominators n :=
   rfl
 #align generalized_continued_fraction.convergent_eq_num_div_denom GeneralizedContinuedFraction.convergent_eq_num_div_denom
+-/
 
+#print GeneralizedContinuedFraction.convergent_eq_conts_a_div_conts_b /-
 theorem convergent_eq_conts_a_div_conts_b :
     g.convergents n = (g.continuants n).a / (g.continuants n).b :=
   rfl
 #align generalized_continued_fraction.convergent_eq_conts_a_div_conts_b GeneralizedContinuedFraction.convergent_eq_conts_a_div_conts_b
+-/
 
 #print GeneralizedContinuedFraction.exists_conts_a_of_num /-
 theorem exists_conts_a_of_num {A : K} (nth_num_eq : g.numerators n = A) :
@@ -152,20 +156,26 @@ theorem exists_conts_b_of_denom {B : K} (nth_denom_eq : g.denominators n = B) :
 #align generalized_continued_fraction.exists_conts_b_of_denom GeneralizedContinuedFraction.exists_conts_b_of_denom
 -/
 
+#print GeneralizedContinuedFraction.zeroth_continuant_aux_eq_one_zero /-
 @[simp]
 theorem zeroth_continuant_aux_eq_one_zero : g.continuantsAux 0 = ⟨1, 0⟩ :=
   rfl
 #align generalized_continued_fraction.zeroth_continuant_aux_eq_one_zero GeneralizedContinuedFraction.zeroth_continuant_aux_eq_one_zero
+-/
 
+#print GeneralizedContinuedFraction.first_continuant_aux_eq_h_one /-
 @[simp]
 theorem first_continuant_aux_eq_h_one : g.continuantsAux 1 = ⟨g.h, 1⟩ :=
   rfl
 #align generalized_continued_fraction.first_continuant_aux_eq_h_one GeneralizedContinuedFraction.first_continuant_aux_eq_h_one
+-/
 
+#print GeneralizedContinuedFraction.zeroth_continuant_eq_h_one /-
 @[simp]
 theorem zeroth_continuant_eq_h_one : g.continuants 0 = ⟨g.h, 1⟩ :=
   rfl
 #align generalized_continued_fraction.zeroth_continuant_eq_h_one GeneralizedContinuedFraction.zeroth_continuant_eq_h_one
+-/
 
 #print GeneralizedContinuedFraction.zeroth_numerator_eq_h /-
 @[simp]
@@ -174,10 +184,12 @@ theorem zeroth_numerator_eq_h : g.numerators 0 = g.h :=
 #align generalized_continued_fraction.zeroth_numerator_eq_h GeneralizedContinuedFraction.zeroth_numerator_eq_h
 -/
 
+#print GeneralizedContinuedFraction.zeroth_denominator_eq_one /-
 @[simp]
 theorem zeroth_denominator_eq_one : g.denominators 0 = 1 :=
   rfl
 #align generalized_continued_fraction.zeroth_denominator_eq_one GeneralizedContinuedFraction.zeroth_denominator_eq_one
+-/
 
 #print GeneralizedContinuedFraction.zeroth_convergent_eq_h /-
 @[simp]
@@ -186,19 +198,25 @@ theorem zeroth_convergent_eq_h : g.convergents 0 = g.h := by
 #align generalized_continued_fraction.zeroth_convergent_eq_h GeneralizedContinuedFraction.zeroth_convergent_eq_h
 -/
 
+#print GeneralizedContinuedFraction.second_continuant_aux_eq /-
 theorem second_continuant_aux_eq {gp : Pair K} (zeroth_s_eq : g.s.get? 0 = some gp) :
     g.continuantsAux 2 = ⟨gp.b * g.h + gp.a, gp.b⟩ := by
   simp [zeroth_s_eq, continuants_aux, next_continuants, next_denominator, next_numerator]
 #align generalized_continued_fraction.second_continuant_aux_eq GeneralizedContinuedFraction.second_continuant_aux_eq
+-/
 
+#print GeneralizedContinuedFraction.first_continuant_eq /-
 theorem first_continuant_eq {gp : Pair K} (zeroth_s_eq : g.s.get? 0 = some gp) :
     g.continuants 1 = ⟨gp.b * g.h + gp.a, gp.b⟩ := by
   simp [nth_cont_eq_succ_nth_cont_aux, second_continuant_aux_eq zeroth_s_eq]
 #align generalized_continued_fraction.first_continuant_eq GeneralizedContinuedFraction.first_continuant_eq
+-/
 
+#print GeneralizedContinuedFraction.first_numerator_eq /-
 theorem first_numerator_eq {gp : Pair K} (zeroth_s_eq : g.s.get? 0 = some gp) :
     g.numerators 1 = gp.b * g.h + gp.a := by simp [num_eq_conts_a, first_continuant_eq zeroth_s_eq]
 #align generalized_continued_fraction.first_numerator_eq GeneralizedContinuedFraction.first_numerator_eq
+-/
 
 #print GeneralizedContinuedFraction.first_denominator_eq /-
 theorem first_denominator_eq {gp : Pair K} (zeroth_s_eq : g.s.get? 0 = some gp) :
@@ -206,10 +224,12 @@ theorem first_denominator_eq {gp : Pair K} (zeroth_s_eq : g.s.get? 0 = some gp) 
 #align generalized_continued_fraction.first_denominator_eq GeneralizedContinuedFraction.first_denominator_eq
 -/
 
+#print GeneralizedContinuedFraction.zeroth_convergent'_aux_eq_zero /-
 @[simp]
 theorem zeroth_convergent'_aux_eq_zero {s : Seq <| Pair K} : convergents'Aux s 0 = 0 :=
   rfl
 #align generalized_continued_fraction.zeroth_convergent'_aux_eq_zero GeneralizedContinuedFraction.zeroth_convergent'_aux_eq_zero
+-/
 
 #print GeneralizedContinuedFraction.zeroth_convergent'_eq_h /-
 @[simp]
@@ -217,14 +237,18 @@ theorem zeroth_convergent'_eq_h : g.convergents' 0 = g.h := by simp [convergents
 #align generalized_continued_fraction.zeroth_convergent'_eq_h GeneralizedContinuedFraction.zeroth_convergent'_eq_h
 -/
 
+#print GeneralizedContinuedFraction.convergents'Aux_succ_none /-
 theorem convergents'Aux_succ_none {s : Seq (Pair K)} (h : s.headI = none) (n : ℕ) :
     convergents'Aux s (n + 1) = 0 := by rw [convergents'_aux, h, convergents'_aux._match_1]
 #align generalized_continued_fraction.convergents'_aux_succ_none GeneralizedContinuedFraction.convergents'Aux_succ_none
+-/
 
+#print GeneralizedContinuedFraction.convergents'Aux_succ_some /-
 theorem convergents'Aux_succ_some {s : Seq (Pair K)} {p : Pair K} (h : s.headI = some p) (n : ℕ) :
     convergents'Aux s (n + 1) = p.a / (p.b + convergents'Aux s.tail n) := by
   rw [convergents'_aux, h, convergents'_aux._match_1]
 #align generalized_continued_fraction.convergents'_aux_succ_some GeneralizedContinuedFraction.convergents'Aux_succ_some
+-/
 
 end WithDivisionRing
 

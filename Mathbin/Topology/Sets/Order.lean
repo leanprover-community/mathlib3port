@@ -94,25 +94,33 @@ instance : Lattice (ClopenUpperSet α) :=
 instance : BoundedOrder (ClopenUpperSet α) :=
   BoundedOrder.lift (coe : _ → Set α) (fun _ _ => id) rfl rfl
 
+#print ClopenUpperSet.coe_sup /-
 @[simp]
 theorem coe_sup (s t : ClopenUpperSet α) : (↑(s ⊔ t) : Set α) = s ∪ t :=
   rfl
 #align clopen_upper_set.coe_sup ClopenUpperSet.coe_sup
+-/
 
+#print ClopenUpperSet.coe_inf /-
 @[simp]
 theorem coe_inf (s t : ClopenUpperSet α) : (↑(s ⊓ t) : Set α) = s ∩ t :=
   rfl
 #align clopen_upper_set.coe_inf ClopenUpperSet.coe_inf
+-/
 
+#print ClopenUpperSet.coe_top /-
 @[simp]
 theorem coe_top : (↑(⊤ : ClopenUpperSet α) : Set α) = univ :=
   rfl
 #align clopen_upper_set.coe_top ClopenUpperSet.coe_top
+-/
 
+#print ClopenUpperSet.coe_bot /-
 @[simp]
 theorem coe_bot : (↑(⊥ : ClopenUpperSet α) : Set α) = ∅ :=
   rfl
 #align clopen_upper_set.coe_bot ClopenUpperSet.coe_bot
+-/
 
 instance : Inhabited (ClopenUpperSet α) :=
   ⟨⊥⟩

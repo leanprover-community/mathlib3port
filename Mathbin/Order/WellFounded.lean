@@ -49,6 +49,7 @@ protected theorem isIrrefl {α : Sort _} {r : α → α → Prop} (h : WellFound
 instance {α : Sort _} [WellFoundedRelation α] : IsIrrefl α WellFoundedRelation.R :=
   IsAsymm.isIrrefl
 
+#print WellFounded.has_min /-
 /-- If `r` is a well-founded relation, then any nonempty set has a minimal element
 with respect to `r`. -/
 theorem has_min {α} {r : α → α → Prop} (H : WellFounded r) (s : Set α) :
@@ -58,6 +59,7 @@ theorem has_min {α} {r : α → α → Prop} (H : WellFounded r) (s : Set α) :
         not_imp_not.1 fun hne hx => hne <| ⟨x, hx, fun y hy hyx => hne <| IH y hyx hy⟩)
       ha
 #align well_founded.has_min WellFounded.has_min
+-/
 
 #print WellFounded.min /-
 /-- A minimal element of a nonempty set in a well-founded order.
@@ -86,6 +88,7 @@ theorem not_lt_min {r : α → α → Prop} (H : WellFounded r) (s : Set α) (h 
 #align well_founded.not_lt_min WellFounded.not_lt_min
 -/
 
+#print WellFounded.wellFounded_iff_has_min /-
 theorem wellFounded_iff_has_min {r : α → α → Prop} :
     WellFounded r ↔ ∀ s : Set α, s.Nonempty → ∃ m ∈ s, ∀ x ∈ s, ¬r x m :=
   by
@@ -96,6 +99,7 @@ theorem wellFounded_iff_has_min {r : α → α → Prop} :
   by_contra hy'
   exact hm' y hy' hy
 #align well_founded.well_founded_iff_has_min WellFounded.wellFounded_iff_has_min
+-/
 
 open Set
 
@@ -174,8 +178,7 @@ private theorem eq_strict_mono_iff_eq_range_aux {f g : β → γ} (hf : StrictMo
   · rw [← hc]
     exact hf.monotone hbc
 
-include h
-
+#print WellFounded.eq_strictMono_iff_eq_range /-
 theorem eq_strictMono_iff_eq_range {f g : β → γ} (hf : StrictMono f) (hg : StrictMono g) :
     Set.range f = Set.range g ↔ f = g :=
   ⟨fun hfg => by
@@ -186,6 +189,7 @@ theorem eq_strictMono_iff_eq_range {f g : β → γ} (hf : StrictMono f) (hg : S
         (eq_strict_mono_iff_eq_range_aux hg hf hfg.symm fun a hab => (H a hab).symm),
     congr_arg _⟩
 #align well_founded.eq_strict_mono_iff_eq_range WellFounded.eq_strictMono_iff_eq_range
+-/
 
 #print WellFounded.self_le_of_strictMono /-
 theorem self_le_of_strictMono {f : β → β} (hf : StrictMono f) : ∀ n, n ≤ f n := by by_contra' h₁;
@@ -213,9 +217,11 @@ noncomputable def argmin [Nonempty α] : α :=
 #align function.argmin Function.argmin
 -/
 
+#print Function.not_lt_argmin /-
 theorem not_lt_argmin [Nonempty α] (a : α) : ¬f a < f (argmin f h) :=
   WellFounded.not_lt_min (InvImage.wf f h) _ _ (Set.mem_univ a)
 #align function.not_lt_argmin Function.not_lt_argmin
+-/
 
 #print Function.argminOn /-
 /-- Given a function `f : α → β` where `β` carries a well-founded `<`, and a non-empty subset `s`
@@ -226,16 +232,20 @@ noncomputable def argminOn (s : Set α) (hs : s.Nonempty) : α :=
 #align function.argmin_on Function.argminOn
 -/
 
+#print Function.argminOn_mem /-
 @[simp]
 theorem argminOn_mem (s : Set α) (hs : s.Nonempty) : argminOn f h s hs ∈ s :=
   WellFounded.min_mem _ _ _
 #align function.argmin_on_mem Function.argminOn_mem
+-/
 
+#print Function.not_lt_argminOn /-
 @[simp]
 theorem not_lt_argminOn (s : Set α) {a : α} (ha : a ∈ s)
     (hs : s.Nonempty := Set.nonempty_of_mem ha) : ¬f a < f (argminOn f h s hs) :=
   WellFounded.not_lt_min (InvImage.wf f h) s hs ha
 #align function.not_lt_argmin_on Function.not_lt_argminOn
+-/
 
 end LT
 
@@ -243,16 +253,20 @@ section LinearOrder
 
 variable [LinearOrder β] (h : WellFounded ((· < ·) : β → β → Prop))
 
+#print Function.argmin_le /-
 @[simp]
 theorem argmin_le (a : α) [Nonempty α] : f (argmin f h) ≤ f a :=
   not_lt.mp <| not_lt_argmin f h a
 #align function.argmin_le Function.argmin_le
+-/
 
+#print Function.argminOn_le /-
 @[simp]
 theorem argminOn_le (s : Set α) {a : α} (ha : a ∈ s) (hs : s.Nonempty := Set.nonempty_of_mem ha) :
     f (argminOn f h s hs) ≤ f a :=
   not_lt.mp <| not_lt_argminOn f h s ha hs
 #align function.argmin_on_le Function.argminOn_le
+-/
 
 end LinearOrder
 
@@ -260,6 +274,7 @@ end Function
 
 section Induction
 
+#print Acc.induction_bot' /-
 /-- Let `r` be a relation on `α`, let `f : α → β` be a function, let `C : β → Prop`, and
 let `bot : α`. This induction principle shows that `C (f bot)` holds, given that
 * some `a` that is accessible by `r` satisfies `C (f a)`, and
@@ -272,6 +287,7 @@ theorem Acc.induction_bot' {α β} {r : α → α → Prop} {a bot : α} (ha : A
       let ⟨y, hy₁, hy₂⟩ := ih x h hC
       ih' y hy₁ hy₂
 #align acc.induction_bot' Acc.induction_bot'
+-/
 
 #print Acc.induction_bot /-
 /-- Let `r` be a relation on `α`, let `C : α → Prop` and let `bot : α`.
@@ -284,6 +300,7 @@ theorem Acc.induction_bot {α} {r : α → α → Prop} {a bot : α} (ha : Acc r
 #align acc.induction_bot Acc.induction_bot
 -/
 
+#print WellFounded.induction_bot' /-
 /-- Let `r` be a well-founded relation on `α`, let `f : α → β` be a function,
 let `C : β → Prop`, and  let `bot : α`.
 This induction principle shows that `C (f bot)` holds, given that
@@ -295,6 +312,7 @@ theorem WellFounded.induction_bot' {α β} {r : α → α → Prop} (hwf : WellF
     C (f a) → C (f bot) :=
   (hwf.apply a).induction_bot' ih
 #align well_founded.induction_bot' WellFounded.induction_bot'
+-/
 
 #print WellFounded.induction_bot /-
 /-- Let `r` be a well-founded relation on `α`, let `C : α → Prop`, and let `bot : α`.

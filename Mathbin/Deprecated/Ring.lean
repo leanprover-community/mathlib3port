@@ -40,10 +40,10 @@ universe u v w
 variable {α : Type u}
 
 #print IsSemiringHom /-
-/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`map_zero] [] -/
-/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`map_one] [] -/
-/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`map_add] [] -/
-/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`map_mul] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`map_zero] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`map_one] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`map_add] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`map_mul] [] -/
 /-- Predicate for semiring homomorphisms (deprecated -- use the bundled `ring_hom` version). -/
 structure IsSemiringHom {α : Type u} {β : Type v} [Semiring α] [Semiring β] (f : α → β) : Prop where
   map_zero : f 0 = 0
@@ -65,6 +65,7 @@ theorem id : IsSemiringHom (@id α) := by refine' { .. } <;> intros <;> rfl
 #align is_semiring_hom.id IsSemiringHom.id
 -/
 
+#print IsSemiringHom.comp /-
 /-- The composition of two semiring homomorphisms is a semiring homomorphism. -/
 theorem comp (hf : IsSemiringHom f) {γ} [Semiring γ] {g : β → γ} (hg : IsSemiringHom g) :
     IsSemiringHom (g ∘ f) :=
@@ -73,6 +74,7 @@ theorem comp (hf : IsSemiringHom f) {γ} [Semiring γ] {g : β → γ} (hg : IsS
     map_add := fun x y => by simp [map_add hf, map_add hg]
     map_mul := fun x y => by simp [map_mul hf, map_mul hg] }
 #align is_semiring_hom.comp IsSemiringHom.comp
+-/
 
 #print IsSemiringHom.to_isAddMonoidHom /-
 /-- A semiring homomorphism is an additive monoid homomorphism. -/
@@ -91,9 +93,9 @@ theorem to_isMonoidHom (hf : IsSemiringHom f) : IsMonoidHom f :=
 end IsSemiringHom
 
 #print IsRingHom /-
-/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`map_one] [] -/
-/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`map_mul] [] -/
-/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`map_add] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`map_one] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`map_mul] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`map_add] [] -/
 /-- Predicate for ring homomorphisms (deprecated -- use the bundled `ring_hom` version). -/
 structure IsRingHom {α : Type u} {β : Type v} [Ring α] [Ring β] (f : α → β) : Prop where
   map_one : f 1 = 1
@@ -115,24 +117,30 @@ theorem of_semiring {f : α → β} (H : IsSemiringHom f) : IsRingHom f :=
 
 variable {f : α → β} (hf : IsRingHom f) {x y : α}
 
+#print IsRingHom.map_zero /-
 /-- Ring homomorphisms map zero to zero. -/
 theorem map_zero (hf : IsRingHom f) : f 0 = 0 :=
   calc
     f 0 = f (0 + 0) - f 0 := by rw [hf.map_add] <;> simp
     _ = 0 := by simp
 #align is_ring_hom.map_zero IsRingHom.map_zero
+-/
 
+#print IsRingHom.map_neg /-
 /-- Ring homomorphisms preserve additive inverses. -/
 theorem map_neg (hf : IsRingHom f) : f (-x) = -f x :=
   calc
     f (-x) = f (-x + x) - f x := by rw [hf.map_add] <;> simp
     _ = -f x := by simp [hf.map_zero]
 #align is_ring_hom.map_neg IsRingHom.map_neg
+-/
 
+#print IsRingHom.map_sub /-
 /-- Ring homomorphisms preserve subtraction. -/
 theorem map_sub (hf : IsRingHom f) : f (x - y) = f x - f y := by
   simp [sub_eq_add_neg, hf.map_add, hf.map_neg]
 #align is_ring_hom.map_sub IsRingHom.map_sub
+-/
 
 #print IsRingHom.id /-
 /-- The identity map is a ring homomorphism. -/
@@ -140,6 +148,7 @@ theorem id : IsRingHom (@id α) := by refine' { .. } <;> intros <;> rfl
 #align is_ring_hom.id IsRingHom.id
 -/
 
+#print IsRingHom.comp /-
 -- see Note [no instance on morphisms]
 /-- The composition of two ring homomorphisms is a ring homomorphism. -/
 theorem comp (hf : IsRingHom f) {γ} [Ring γ] {g : β → γ} (hg : IsRingHom g) : IsRingHom (g ∘ f) :=
@@ -147,6 +156,7 @@ theorem comp (hf : IsRingHom f) {γ} [Ring γ] {g : β → γ} (hg : IsRingHom g
     map_mul := fun x y => by simp [map_mul hf] <;> rw [map_mul hg] <;> rfl
     map_one := by simp [map_one hf] <;> exact map_one hg }
 #align is_ring_hom.comp IsRingHom.comp
+-/
 
 #print IsRingHom.to_isSemiringHom /-
 /-- A ring homomorphism is also a semiring homomorphism. -/
@@ -155,9 +165,11 @@ theorem to_isSemiringHom (hf : IsRingHom f) : IsSemiringHom f :=
 #align is_ring_hom.to_is_semiring_hom IsRingHom.to_isSemiringHom
 -/
 
+#print IsRingHom.to_isAddGroupHom /-
 theorem to_isAddGroupHom (hf : IsRingHom f) : IsAddGroupHom f :=
   { map_add := fun _ _ => hf.map_add }
 #align is_ring_hom.to_is_add_group_hom IsRingHom.to_isAddGroupHom
+-/
 
 end IsRingHom
 
@@ -167,8 +179,6 @@ namespace RingHom
 
 section
 
-include rα rβ
-
 #print RingHom.of /-
 /-- Interpret `f : α → β` with `is_semiring_hom f` as a ring homomorphism. -/
 def of {f : α → β} (hf : IsSemiringHom f) : α →+* β :=
@@ -176,23 +186,29 @@ def of {f : α → β} (hf : IsSemiringHom f) : α →+* β :=
 #align ring_hom.of RingHom.of
 -/
 
+#print RingHom.coe_of /-
 @[simp]
 theorem coe_of {f : α → β} (hf : IsSemiringHom f) : ⇑(of hf) = f :=
   rfl
 #align ring_hom.coe_of RingHom.coe_of
+-/
 
+#print RingHom.to_isSemiringHom /-
 theorem to_isSemiringHom (f : α →+* β) : IsSemiringHom f :=
   { map_zero := f.map_zero
     map_one := f.map_one
     map_add := f.map_add
     map_mul := f.map_mul }
 #align ring_hom.to_is_semiring_hom RingHom.to_isSemiringHom
+-/
 
 end
 
+#print RingHom.to_isRingHom /-
 theorem to_isRingHom {α γ} [Ring α] [Ring γ] (g : α →+* γ) : IsRingHom g :=
   IsRingHom.of_semiring g.to_isSemiringHom
 #align ring_hom.to_is_ring_hom RingHom.to_isRingHom
+-/
 
 end RingHom
 

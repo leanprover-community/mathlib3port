@@ -54,15 +54,20 @@ def notConvergentSeq [Preorder ι] (f : ι → α → β) (g : α → β) (n : �
 
 variable {n : ℕ} {i j : ι} {s : Set α} {ε : ℝ} {f : ι → α → β} {g : α → β}
 
+#print MeasureTheory.Egorov.mem_notConvergentSeq_iff /-
 theorem mem_notConvergentSeq_iff [Preorder ι] {x : α} :
     x ∈ notConvergentSeq f g n j ↔ ∃ (k : _) (hk : j ≤ k), 1 / (n + 1 : ℝ) < dist (f k x) (g x) :=
   by simp_rw [not_convergent_seq, mem_Union]; rfl
 #align measure_theory.egorov.mem_not_convergent_seq_iff MeasureTheory.Egorov.mem_notConvergentSeq_iff
+-/
 
+#print MeasureTheory.Egorov.notConvergentSeq_antitone /-
 theorem notConvergentSeq_antitone [Preorder ι] : Antitone (notConvergentSeq f g n) := fun j k hjk =>
   iUnion₂_mono' fun l hl => ⟨l, le_trans hjk hl, Subset.rfl⟩
 #align measure_theory.egorov.not_convergent_seq_antitone MeasureTheory.Egorov.notConvergentSeq_antitone
+-/
 
+#print MeasureTheory.Egorov.measure_inter_notConvergentSeq_eq_zero /-
 theorem measure_inter_notConvergentSeq_eq_zero [SemilatticeSup ι] [Nonempty ι]
     (hfg : ∀ᵐ x ∂μ, x ∈ s → Tendsto (fun n => f n x) atTop (𝓝 (g x))) (n : ℕ) :
     μ (s ∩ ⋂ j, notConvergentSeq f g n j) = 0 :=
@@ -77,7 +82,9 @@ theorem measure_inter_notConvergentSeq_eq_zero [SemilatticeSup ι] [Nonempty ι]
   obtain ⟨n, hn₁, hn₂⟩ := hx N
   exact ⟨n, hn₁, hn₂.le⟩
 #align measure_theory.egorov.measure_inter_not_convergent_seq_eq_zero MeasureTheory.Egorov.measure_inter_notConvergentSeq_eq_zero
+-/
 
+#print MeasureTheory.Egorov.notConvergentSeq_measurableSet /-
 theorem notConvergentSeq_measurableSet [Preorder ι] [Countable ι]
     (hf : ∀ n, strongly_measurable[m] (f n)) (hg : StronglyMeasurable g) :
     MeasurableSet (notConvergentSeq f g n j) :=
@@ -85,7 +92,9 @@ theorem notConvergentSeq_measurableSet [Preorder ι] [Countable ι]
     MeasurableSet.iUnion fun hk =>
       StronglyMeasurable.measurableSet_lt stronglyMeasurable_const <| (hf k).dist hg
 #align measure_theory.egorov.not_convergent_seq_measurable_set MeasureTheory.Egorov.notConvergentSeq_measurableSet
+-/
 
+#print MeasureTheory.Egorov.measure_notConvergentSeq_tendsto_zero /-
 theorem measure_notConvergentSeq_tendsto_zero [SemilatticeSup ι] [Countable ι]
     (hf : ∀ n, StronglyMeasurable (f n)) (hg : StronglyMeasurable g) (hsm : MeasurableSet s)
     (hs : μ s ≠ ∞) (hfg : ∀ᵐ x ∂μ, x ∈ s → Tendsto (fun n => f n x) atTop (𝓝 (g x))) (n : ℕ) :
@@ -102,9 +111,11 @@ theorem measure_notConvergentSeq_tendsto_zero [SemilatticeSup ι] [Countable ι]
       (fun k l hkl => inter_subset_inter_right _ <| not_convergent_seq_antitone hkl)
       ⟨h.some, (lt_of_le_of_lt (measure_mono <| inter_subset_left _ _) (lt_top_iff_ne_top.2 hs)).Ne⟩
 #align measure_theory.egorov.measure_not_convergent_seq_tendsto_zero MeasureTheory.Egorov.measure_notConvergentSeq_tendsto_zero
+-/
 
 variable [SemilatticeSup ι] [Nonempty ι] [Countable ι]
 
+#print MeasureTheory.Egorov.exists_notConvergentSeq_lt /-
 theorem exists_notConvergentSeq_lt (hε : 0 < ε) (hf : ∀ n, StronglyMeasurable (f n))
     (hg : StronglyMeasurable g) (hsm : MeasurableSet s) (hs : μ s ≠ ∞)
     (hfg : ∀ᵐ x ∂μ, x ∈ s → Tendsto (fun n => f n x) atTop (𝓝 (g x))) (n : ℕ) :
@@ -118,7 +129,9 @@ theorem exists_notConvergentSeq_lt (hε : 0 < ε) (hf : ∀ n, StronglyMeasurabl
   · rw [gt_iff_lt, ENNReal.ofReal_pos]
     exact mul_pos hε (pow_pos (by norm_num) n)
 #align measure_theory.egorov.exists_not_convergent_seq_lt MeasureTheory.Egorov.exists_notConvergentSeq_lt
+-/
 
+#print MeasureTheory.Egorov.notConvergentSeqLtIndex /-
 /-- Given some `ε > 0`, `not_convergent_seq_lt_index` provides the index such that
 `not_convergent_seq` (intersected with a set of finite measure) has measure less than
 `ε * 2⁻¹ ^ n`.
@@ -129,7 +142,9 @@ def notConvergentSeqLtIndex (hε : 0 < ε) (hf : ∀ n, StronglyMeasurable (f n)
     (hfg : ∀ᵐ x ∂μ, x ∈ s → Tendsto (fun n => f n x) atTop (𝓝 (g x))) (n : ℕ) : ι :=
   Classical.choose <| exists_notConvergentSeq_lt hε hf hg hsm hs hfg n
 #align measure_theory.egorov.not_convergent_seq_lt_index MeasureTheory.Egorov.notConvergentSeqLtIndex
+-/
 
+#print MeasureTheory.Egorov.notConvergentSeqLtIndex_spec /-
 theorem notConvergentSeqLtIndex_spec (hε : 0 < ε) (hf : ∀ n, StronglyMeasurable (f n))
     (hg : StronglyMeasurable g) (hsm : MeasurableSet s) (hs : μ s ≠ ∞)
     (hfg : ∀ᵐ x ∂μ, x ∈ s → Tendsto (fun n => f n x) atTop (𝓝 (g x))) (n : ℕ) :
@@ -137,7 +152,9 @@ theorem notConvergentSeqLtIndex_spec (hε : 0 < ε) (hf : ∀ n, StronglyMeasura
       ENNReal.ofReal (ε * 2⁻¹ ^ n) :=
   Classical.choose_spec <| exists_notConvergentSeq_lt hε hf hg hsm hs hfg n
 #align measure_theory.egorov.not_convergent_seq_lt_index_spec MeasureTheory.Egorov.notConvergentSeqLtIndex_spec
+-/
 
+#print MeasureTheory.Egorov.iUnionNotConvergentSeq /-
 /-- Given some `ε > 0`, `Union_not_convergent_seq` is the union of `not_convergent_seq` with
 specific indicies such that `Union_not_convergent_seq` has measure less equal than `ε`.
 
@@ -147,14 +164,18 @@ def iUnionNotConvergentSeq (hε : 0 < ε) (hf : ∀ n, StronglyMeasurable (f n))
     (hfg : ∀ᵐ x ∂μ, x ∈ s → Tendsto (fun n => f n x) atTop (𝓝 (g x))) : Set α :=
   ⋃ n, s ∩ notConvergentSeq f g n (notConvergentSeqLtIndex (half_pos hε) hf hg hsm hs hfg n)
 #align measure_theory.egorov.Union_not_convergent_seq MeasureTheory.Egorov.iUnionNotConvergentSeq
+-/
 
+#print MeasureTheory.Egorov.iUnionNotConvergentSeq_measurableSet /-
 theorem iUnionNotConvergentSeq_measurableSet (hε : 0 < ε) (hf : ∀ n, StronglyMeasurable (f n))
     (hg : StronglyMeasurable g) (hsm : MeasurableSet s) (hs : μ s ≠ ∞)
     (hfg : ∀ᵐ x ∂μ, x ∈ s → Tendsto (fun n => f n x) atTop (𝓝 (g x))) :
     MeasurableSet <| iUnionNotConvergentSeq hε hf hg hsm hs hfg :=
   MeasurableSet.iUnion fun n => hsm.inter <| notConvergentSeq_measurableSet hf hg
 #align measure_theory.egorov.Union_not_convergent_seq_measurable_set MeasureTheory.Egorov.iUnionNotConvergentSeq_measurableSet
+-/
 
+#print MeasureTheory.Egorov.measure_iUnionNotConvergentSeq /-
 theorem measure_iUnionNotConvergentSeq (hε : 0 < ε) (hf : ∀ n, StronglyMeasurable (f n))
     (hg : StronglyMeasurable g) (hsm : MeasurableSet s) (hs : μ s ≠ ∞)
     (hfg : ∀ᵐ x ∂μ, x ∈ s → Tendsto (fun n => f n x) atTop (𝓝 (g x))) :
@@ -172,7 +193,9 @@ theorem measure_iUnionNotConvergentSeq (hε : 0 < ε) (hf : ∀ n, StronglyMeasu
   · rw [inv_eq_one_div]
     exact summable_geometric_two
 #align measure_theory.egorov.measure_Union_not_convergent_seq MeasureTheory.Egorov.measure_iUnionNotConvergentSeq
+-/
 
+#print MeasureTheory.Egorov.iUnionNotConvergentSeq_subset /-
 theorem iUnionNotConvergentSeq_subset (hε : 0 < ε) (hf : ∀ n, StronglyMeasurable (f n))
     (hg : StronglyMeasurable g) (hsm : MeasurableSet s) (hs : μ s ≠ ∞)
     (hfg : ∀ᵐ x ∂μ, x ∈ s → Tendsto (fun n => f n x) atTop (𝓝 (g x))) :
@@ -181,7 +204,9 @@ theorem iUnionNotConvergentSeq_subset (hε : 0 < ε) (hf : ∀ n, StronglyMeasur
   rw [Union_not_convergent_seq, ← inter_Union]
   exact inter_subset_left _ _
 #align measure_theory.egorov.Union_not_convergent_seq_subset MeasureTheory.Egorov.iUnionNotConvergentSeq_subset
+-/
 
+#print MeasureTheory.Egorov.tendstoUniformlyOn_diff_iUnionNotConvergentSeq /-
 theorem tendstoUniformlyOn_diff_iUnionNotConvergentSeq (hε : 0 < ε)
     (hf : ∀ n, StronglyMeasurable (f n)) (hg : StronglyMeasurable g) (hsm : MeasurableSet s)
     (hs : μ s ≠ ∞) (hfg : ∀ᵐ x ∂μ, x ∈ s → Tendsto (fun n => f n x) atTop (𝓝 (g x))) :
@@ -201,6 +226,7 @@ theorem tendstoUniformlyOn_diff_iUnionNotConvergentSeq (hε : 0 < ε)
   rw [dist_comm]
   exact lt_of_le_of_lt (hx n hn) hN
 #align measure_theory.egorov.tendsto_uniformly_on_diff_Union_not_convergent_seq MeasureTheory.Egorov.tendstoUniformlyOn_diff_iUnionNotConvergentSeq
+-/
 
 end Egorov
 
@@ -208,6 +234,7 @@ variable [SemilatticeSup ι] [Nonempty ι] [Countable ι] {γ : Type _} [Topolog
   {f : ι → α → β} {g : α → β} {s : Set α}
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (t «expr ⊆ » s) -/
+#print MeasureTheory.tendstoUniformlyOn_of_ae_tendsto /-
 /-- **Egorov's theorem**: If `f : ι → α → β` is a sequence of strongly measurable functions that
 converges to `g : α → β` almost everywhere on a measurable set `s` of finite measure,
 then for all `ε > 0`, there exists a subset `t ⊆ s` such that `μ t ≤ ε` and `f` converges to `g`
@@ -226,7 +253,9 @@ theorem tendstoUniformlyOn_of_ae_tendsto (hf : ∀ n, StronglyMeasurable (f n))
     Egorov.measure_iUnionNotConvergentSeq hε hf hg hsm hs hfg,
     Egorov.tendstoUniformlyOn_diff_iUnionNotConvergentSeq hε hf hg hsm hs hfg⟩
 #align measure_theory.tendsto_uniformly_on_of_ae_tendsto MeasureTheory.tendstoUniformlyOn_of_ae_tendsto
+-/
 
+#print MeasureTheory.tendstoUniformlyOn_of_ae_tendsto' /-
 /-- Egorov's theorem for finite measure spaces. -/
 theorem tendstoUniformlyOn_of_ae_tendsto' [IsFiniteMeasure μ] (hf : ∀ n, StronglyMeasurable (f n))
     (hg : StronglyMeasurable g) (hfg : ∀ᵐ x ∂μ, Tendsto (fun n => f n x) atTop (𝓝 (g x))) {ε : ℝ}
@@ -239,6 +268,7 @@ theorem tendstoUniformlyOn_of_ae_tendsto' [IsFiniteMeasure μ] (hf : ∀ n, Stro
     rwa [compl_eq_univ_diff]
   · filter_upwards [hfg] with _ htendsto _ using htendsto
 #align measure_theory.tendsto_uniformly_on_of_ae_tendsto' MeasureTheory.tendstoUniformlyOn_of_ae_tendsto'
+-/
 
 end MeasureTheory
 

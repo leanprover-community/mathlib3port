@@ -411,10 +411,12 @@ theorem eq_of_le_of_isDetecting {𝒢 : Set C} (h𝒢 : IsDetecting 𝒢) {X : C
 #align category_theory.subobject.eq_of_le_of_is_detecting CategoryTheory.Subobject.eq_of_le_of_isDetecting
 -/
 
+#print CategoryTheory.Subobject.inf_eq_of_isDetecting /-
 theorem inf_eq_of_isDetecting [HasPullbacks C] {𝒢 : Set C} (h𝒢 : IsDetecting 𝒢) {X : C}
     (P Q : Subobject X) (h : ∀ G ∈ 𝒢, ∀ {f : G ⟶ X}, P.Factors f → Q.Factors f) : P ⊓ Q = P :=
   eq_of_le_of_isDetecting h𝒢 _ _ inf_le_left fun G hG f hf => (inf_factors _).2 ⟨hf, h _ hG hf⟩
 #align category_theory.subobject.inf_eq_of_is_detecting CategoryTheory.Subobject.inf_eq_of_isDetecting
+-/
 
 #print CategoryTheory.Subobject.eq_of_isDetecting /-
 theorem eq_of_isDetecting [HasPullbacks C] {𝒢 : Set C} (h𝒢 : IsDetecting 𝒢) {X : C}
@@ -444,12 +446,14 @@ namespace StructuredArrow
 
 variable (S : D) (T : C ⥤ D)
 
+#print CategoryTheory.StructuredArrow.isCoseparating_proj_preimage /-
 theorem isCoseparating_proj_preimage {𝒢 : Set C} (h𝒢 : IsCoseparating 𝒢) :
     IsCoseparating ((proj S T).obj ⁻¹' 𝒢) :=
   by
   refine' fun X Y f g hfg => ext _ _ (h𝒢 _ _ fun G hG h => _)
   exact congr_arg comma_morphism.right (hfg (mk (Y.hom ≫ T.map h)) hG (hom_mk h rfl))
 #align category_theory.structured_arrow.is_coseparating_proj_preimage CategoryTheory.StructuredArrow.isCoseparating_proj_preimage
+-/
 
 end StructuredArrow
 
@@ -457,12 +461,14 @@ namespace CostructuredArrow
 
 variable (S : C ⥤ D) (T : D)
 
+#print CategoryTheory.CostructuredArrow.isSeparating_proj_preimage /-
 theorem isSeparating_proj_preimage {𝒢 : Set C} (h𝒢 : IsSeparating 𝒢) :
     IsSeparating ((proj S T).obj ⁻¹' 𝒢) :=
   by
   refine' fun X Y f g hfg => ext _ _ (h𝒢 _ _ fun G hG h => _)
   convert congr_arg comma_morphism.left (hfg (mk (S.map h ≫ X.hom)) hG (hom_mk h rfl))
 #align category_theory.costructured_arrow.is_separating_proj_preimage CategoryTheory.CostructuredArrow.isSeparating_proj_preimage
+-/
 
 end CostructuredArrow
 
@@ -632,17 +638,21 @@ theorem IsCodetector.def {G : C} :
 #align category_theory.is_codetector.def CategoryTheory.IsCodetector.def
 -/
 
+#print CategoryTheory.isSeparator_iff_faithful_coyoneda_obj /-
 theorem isSeparator_iff_faithful_coyoneda_obj (G : C) :
     IsSeparator G ↔ Faithful (coyoneda.obj (op G)) :=
   ⟨fun hG => ⟨fun X Y f g hfg => hG.def _ _ (congr_fun hfg)⟩, fun h =>
     (isSeparator_def _).2 fun X Y f g hfg => (coyoneda.obj (op G)).map_injective (funext hfg)⟩
 #align category_theory.is_separator_iff_faithful_coyoneda_obj CategoryTheory.isSeparator_iff_faithful_coyoneda_obj
+-/
 
+#print CategoryTheory.isCoseparator_iff_faithful_yoneda_obj /-
 theorem isCoseparator_iff_faithful_yoneda_obj (G : C) : IsCoseparator G ↔ Faithful (yoneda.obj G) :=
   ⟨fun hG => ⟨fun X Y f g hfg => Quiver.Hom.unop_inj (hG.def _ _ (congr_fun hfg))⟩, fun h =>
     (isCoseparator_def _).2 fun X Y f g hfg =>
       Quiver.Hom.op_inj <| (yoneda.obj G).map_injective (funext hfg)⟩
 #align category_theory.is_coseparator_iff_faithful_yoneda_obj CategoryTheory.isCoseparator_iff_faithful_yoneda_obj
+-/
 
 #print CategoryTheory.isSeparator_iff_epi /-
 theorem isSeparator_iff_epi (G : C) [∀ A : C, HasCoproduct fun f : G ⟶ A => G] :
@@ -780,6 +790,7 @@ theorem isCoseparator_pi_of_isCoseparator {β : Type w} (f : β → C) [HasProdu
 
 end ZeroMorphisms
 
+#print CategoryTheory.isDetector_iff_reflectsIsomorphisms_coyoneda_obj /-
 theorem isDetector_iff_reflectsIsomorphisms_coyoneda_obj (G : C) :
     IsDetector G ↔ ReflectsIsomorphisms (coyoneda.obj (op G)) :=
   by
@@ -792,7 +803,9 @@ theorem isDetector_iff_reflectsIsomorphisms_coyoneda_obj (G : C) :
       exact @is_iso_of_reflects_iso _ _ _ _ _ _ _ (coyoneda.obj (op G)) _ h
     rwa [is_iso_iff_bijective, Function.bijective_iff_existsUnique]
 #align category_theory.is_detector_iff_reflects_isomorphisms_coyoneda_obj CategoryTheory.isDetector_iff_reflectsIsomorphisms_coyoneda_obj
+-/
 
+#print CategoryTheory.isCodetector_iff_reflectsIsomorphisms_yoneda_obj /-
 theorem isCodetector_iff_reflectsIsomorphisms_yoneda_obj (G : C) :
     IsCodetector G ↔ ReflectsIsomorphisms (yoneda.obj G) :=
   by
@@ -804,6 +817,7 @@ theorem isCodetector_iff_reflectsIsomorphisms_yoneda_obj (G : C) :
       exact @is_iso_of_reflects_iso _ _ _ _ _ _ _ (yoneda.obj G) _ h
     rwa [is_iso_iff_bijective, Function.bijective_iff_existsUnique]
 #align category_theory.is_codetector_iff_reflects_isomorphisms_yoneda_obj CategoryTheory.isCodetector_iff_reflectsIsomorphisms_yoneda_obj
+-/
 
 #print CategoryTheory.wellPowered_of_isDetector /-
 theorem wellPowered_of_isDetector [HasPullbacks C] (G : C) (hG : IsDetector G) : WellPowered C :=

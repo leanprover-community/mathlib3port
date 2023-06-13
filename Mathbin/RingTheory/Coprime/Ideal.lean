@@ -26,6 +26,7 @@ namespace Ideal
 
 variable {ι R : Type _} [CommSemiring R]
 
+#print Ideal.iSup_iInf_eq_top_iff_pairwise /-
 /-- A finite family of ideals is pairwise coprime (that is, any two of them generate the whole ring)
 iff when taking all the possible intersections of all but one of these ideals, the resulting family
 of ideals still generate the whole ring.
@@ -94,6 +95,7 @@ theorem iSup_iInf_eq_top_iff_pairwise {t : Finset ι} (h : t.Nonempty) (I : ι �
       rw [dif_neg]; rfl
       rintro rfl; exact hat hj
 #align ideal.supr_infi_eq_top_iff_pairwise Ideal.iSup_iInf_eq_top_iff_pairwise
+-/
 
 end Ideal
 

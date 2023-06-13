@@ -71,6 +71,7 @@ instance left_quotientAction : QuotientAction α H :=
 #align add_action.left_quotient_action AddAction.left_quotientAction
 -/
 
+#print MulAction.right_quotientAction /-
 @[to_additive]
 instance right_quotientAction : QuotientAction H.normalizer.opposite H :=
   ⟨fun b c _ _ => by
@@ -78,6 +79,7 @@ instance right_quotientAction : QuotientAction H.normalizer.opposite H :=
       mem_normalizer_iff'.mp b.prop, mul_assoc, mul_inv_cancel_left]⟩
 #align mul_action.right_quotient_action MulAction.right_quotientAction
 #align add_action.right_quotient_action AddAction.right_quotientAction
+-/
 
 #print MulAction.right_quotientAction' /-
 @[to_additive]
@@ -137,20 +139,24 @@ theorem Quotient.coe_smul_out' [QuotientAction β H] (b : β) (q : α ⧸ H) : �
 #align add_action.quotient.coe_vadd_out' AddAction.Quotient.coe_vadd_out'
 -/
 
+#print QuotientGroup.out'_conj_pow_minimalPeriod_mem /-
 theorem QuotientGroup.out'_conj_pow_minimalPeriod_mem (a : α) (q : α ⧸ H) :
     q.out'⁻¹ * a ^ Function.minimalPeriod ((· • ·) a) q * q.out' ∈ H := by
   rw [mul_assoc, ← QuotientGroup.eq', QuotientGroup.out_eq', ← smul_eq_mul, quotient.mk_smul_out',
     eq_comm, pow_smul_eq_iff_minimal_period_dvd]
 #align quotient_group.out'_conj_pow_minimal_period_mem QuotientGroup.out'_conj_pow_minimalPeriod_mem
+-/
 
 end QuotientAction
 
 open QuotientGroup
 
+#print MulActionHom.toQuotient /-
 /-- The canonical map to the left cosets. -/
 def MulActionHom.toQuotient (H : Subgroup α) : α →[α] α ⧸ H :=
   ⟨coe, Quotient.smul_coe H⟩
 #align mul_action_hom.to_quotient MulActionHom.toQuotient
+-/
 
 #print MulActionHom.toQuotient_apply /-
 @[simp]
@@ -159,11 +165,13 @@ theorem MulActionHom.toQuotient_apply (H : Subgroup α) (g : α) : MulActionHom.
 #align mul_action_hom.to_quotient_apply MulActionHom.toQuotient_apply
 -/
 
+#print MulAction.mulLeftCosetsCompSubtypeVal /-
 @[to_additive]
 instance mulLeftCosetsCompSubtypeVal (H I : Subgroup α) : MulAction I (α ⧸ H) :=
   MulAction.compHom (α ⧸ H) (Subgroup.subtype I)
 #align mul_action.mul_left_cosets_comp_subtype_val MulAction.mulLeftCosetsCompSubtypeVal
 #align add_action.add_left_cosets_comp_subtype_val AddAction.addLeftCosetsCompSubtypeVal
+-/
 
 variable (α) {β} [MulAction α β] (x : β)
 
@@ -227,6 +235,7 @@ noncomputable def orbitEquivQuotientStabilizer (b : β) : orbit α b ≃ α ⧸ 
 #align add_action.orbit_equiv_quotient_stabilizer AddAction.orbitEquivQuotientStabilizer
 -/
 
+#print MulAction.orbitProdStabilizerEquivGroup /-
 /-- Orbit-stabilizer theorem. -/
 @[to_additive "Orbit-stabilizer theorem."]
 noncomputable def orbitProdStabilizerEquivGroup (b : β) : orbit α b × stabilizer α b ≃ α :=
@@ -234,7 +243,9 @@ noncomputable def orbitProdStabilizerEquivGroup (b : β) : orbit α b × stabili
     Subgroup.groupEquivQuotientProdSubgroup.symm
 #align mul_action.orbit_prod_stabilizer_equiv_group MulAction.orbitProdStabilizerEquivGroup
 #align add_action.orbit_sum_stabilizer_equiv_add_group AddAction.orbitSumStabilizerEquivAddGroup
+-/
 
+#print MulAction.card_orbit_mul_card_stabilizer_eq_card_group /-
 /-- Orbit-stabilizer theorem. -/
 @[to_additive "Orbit-stabilizer theorem."]
 theorem card_orbit_mul_card_stabilizer_eq_card_group (b : β) [Fintype α] [Fintype <| orbit α b]
@@ -243,23 +254,27 @@ theorem card_orbit_mul_card_stabilizer_eq_card_group (b : β) [Fintype α] [Fint
   rw [← Fintype.card_prod, Fintype.card_congr (orbit_prod_stabilizer_equiv_group α b)]
 #align mul_action.card_orbit_mul_card_stabilizer_eq_card_group MulAction.card_orbit_mul_card_stabilizer_eq_card_group
 #align add_action.card_orbit_add_card_stabilizer_eq_card_add_group AddAction.card_orbit_add_card_stabilizer_eq_card_addGroup
+-/
 
+#print MulAction.orbitEquivQuotientStabilizer_symm_apply /-
 @[simp, to_additive]
 theorem orbitEquivQuotientStabilizer_symm_apply (b : β) (a : α) :
     ((orbitEquivQuotientStabilizer α b).symm a : β) = a • b :=
   rfl
 #align mul_action.orbit_equiv_quotient_stabilizer_symm_apply MulAction.orbitEquivQuotientStabilizer_symm_apply
 #align add_action.orbit_equiv_quotient_stabilizer_symm_apply AddAction.orbitEquivQuotientStabilizer_symm_apply
+-/
 
+#print MulAction.stabilizer_quotient /-
 @[simp, to_additive]
 theorem stabilizer_quotient {G} [Group G] (H : Subgroup G) :
     MulAction.stabilizer G ((1 : G) : G ⧸ H) = H := by ext; simp [QuotientGroup.eq]
 #align mul_action.stabilizer_quotient MulAction.stabilizer_quotient
 #align add_action.stabilizer_quotient AddAction.stabilizer_quotient
+-/
 
 variable (β)
 
--- mathport name: exprΩ
 local notation "Ω" => Quotient <| orbitRel α β
 
 #print MulAction.selfEquivSigmaOrbitsQuotientStabilizer' /-
@@ -282,6 +297,7 @@ noncomputable def selfEquivSigmaOrbitsQuotientStabilizer' {φ : Ω → β}
 #align add_action.self_equiv_sigma_orbits_quotient_stabilizer' AddAction.selfEquivSigmaOrbitsQuotientStabilizer'
 -/
 
+#print MulAction.card_eq_sum_card_group_div_card_stabilizer' /-
 /-- **Class formula** for a finite group acting on a finite type. See
 `mul_action.card_eq_sum_card_group_div_card_stabilizer` for a specialized version using
 `quotient.out'`. -/
@@ -303,6 +319,7 @@ theorem card_eq_sum_card_group_div_card_stabilizer' [Fintype α] [Fintype β] [F
     Fintype.card_congr (self_equiv_sigma_orbits_quotient_stabilizer' α β hφ)]
 #align mul_action.card_eq_sum_card_group_div_card_stabilizer' MulAction.card_eq_sum_card_group_div_card_stabilizer'
 #align add_action.card_eq_sum_card_add_group_sub_card_stabilizer' AddAction.card_eq_sum_card_addGroup_sub_card_stabilizer'
+-/
 
 #print MulAction.selfEquivSigmaOrbitsQuotientStabilizer /-
 /-- **Class formula**. This is a special case of
@@ -315,6 +332,7 @@ noncomputable def selfEquivSigmaOrbitsQuotientStabilizer : β ≃ Σ ω : Ω, α
 #align add_action.self_equiv_sigma_orbits_quotient_stabilizer AddAction.selfEquivSigmaOrbitsQuotientStabilizer
 -/
 
+#print MulAction.card_eq_sum_card_group_div_card_stabilizer /-
 /-- **Class formula** for a finite group acting on a finite type. -/
 @[to_additive "**Class formula** for a finite group acting on a finite type."]
 theorem card_eq_sum_card_group_div_card_stabilizer [Fintype α] [Fintype β] [Fintype Ω]
@@ -323,6 +341,7 @@ theorem card_eq_sum_card_group_div_card_stabilizer [Fintype α] [Fintype β] [Fi
   card_eq_sum_card_group_div_card_stabilizer' α β Quotient.out_eq'
 #align mul_action.card_eq_sum_card_group_div_card_stabilizer MulAction.card_eq_sum_card_group_div_card_stabilizer
 #align add_action.card_eq_sum_card_add_group_sub_card_stabilizer AddAction.card_eq_sum_card_addGroup_sub_card_stabilizer
+-/
 
 #print MulAction.sigmaFixedByEquivOrbitsProdGroup /-
 /-- **Burnside's lemma** : a (noncomputable) bijection between the disjoint union of all
@@ -423,6 +442,7 @@ theorem quotientCentralizerEmbedding_apply (g : G) (x : G) :
 #align subgroup.quotient_centralizer_embedding_apply Subgroup.quotientCentralizerEmbedding_apply
 -/
 
+#print Subgroup.quotientCenterEmbedding /-
 /-- If `G` is generated by `S`, then the quotient by the center embeds into `S`-indexed sequences
 of commutators. -/
 noncomputable def quotientCenterEmbedding {S : Set G} (hS : closure S = ⊤) :
@@ -431,11 +451,14 @@ noncomputable def quotientCenterEmbedding {S : Set G} (hS : closure S = ⊤) :
     ((quotientiInfEmbedding _).trans
       (Function.Embedding.piCongrRight fun g => quotientCentralizerEmbedding g))
 #align subgroup.quotient_center_embedding Subgroup.quotientCenterEmbedding
+-/
 
+#print Subgroup.quotientCenterEmbedding_apply /-
 theorem quotientCenterEmbedding_apply {S : Set G} (hS : closure S = ⊤) (g : G) (s : S) :
     quotientCenterEmbedding hS g s = ⟨⁅g, s⁆, g, s, rfl⟩ :=
   rfl
 #align subgroup.quotient_center_embedding_apply Subgroup.quotientCenterEmbedding_apply
+-/
 
 end Subgroup
 

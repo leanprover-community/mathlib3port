@@ -60,7 +60,6 @@ abbrev FinsubgraphHom (G' : G.Finsubgraph) (F : SimpleGraph W) :=
 #align simple_graph.finsubgraph_hom SimpleGraph.FinsubgraphHom
 -/
 
--- mathport name: «expr →fg »
 local infixl:50 " →fg " => FinsubgraphHom
 
 instance : OrderBot G.Finsubgraph where
@@ -103,17 +102,22 @@ def finsubgraphOfAdj {u v : V} (e : G.adj u v) : G.Finsubgraph :=
 #align simple_graph.finsubgraph_of_adj SimpleGraph.finsubgraphOfAdj
 -/
 
+#print SimpleGraph.singletonFinsubgraph_le_adj_left /-
 -- Lemmas establishing the ordering between edge- and vertex-generated subgraphs.
 theorem singletonFinsubgraph_le_adj_left {u v : V} {e : G.adj u v} :
     singletonFinsubgraph u ≤ finsubgraphOfAdj e := by
   simp [singleton_finsubgraph, finsubgraph_of_adj]
 #align simple_graph.singleton_finsubgraph_le_adj_left SimpleGraph.singletonFinsubgraph_le_adj_left
+-/
 
+#print SimpleGraph.singletonFinsubgraph_le_adj_right /-
 theorem singletonFinsubgraph_le_adj_right {u v : V} {e : G.adj u v} :
     singletonFinsubgraph v ≤ finsubgraphOfAdj e := by
   simp [singleton_finsubgraph, finsubgraph_of_adj]
 #align simple_graph.singleton_finsubgraph_le_adj_right SimpleGraph.singletonFinsubgraph_le_adj_right
+-/
 
+#print SimpleGraph.FinsubgraphHom.restrict /-
 /-- Given a homomorphism from a subgraph to `F`, construct its restriction to a sub-subgraph. -/
 def FinsubgraphHom.restrict {G' G'' : G.Finsubgraph} (h : G'' ≤ G') (f : G' →fg F) : G'' →fg F :=
   by
@@ -121,13 +125,16 @@ def FinsubgraphHom.restrict {G' G'' : G.Finsubgraph} (h : G'' ≤ G') (f : G' �
   rintro ⟨u, hu⟩ ⟨v, hv⟩ huv
   exact f.map_rel' (h.2 huv)
 #align simple_graph.finsubgraph_hom.restrict SimpleGraph.FinsubgraphHom.restrict
+-/
 
+#print SimpleGraph.finsubgraphHomFunctor /-
 /-- The inverse system of finite homomorphisms. -/
 def finsubgraphHomFunctor (G : SimpleGraph V) (F : SimpleGraph W) : G.Finsubgraphᵒᵖ ⥤ Type max u v
     where
   obj G' := G'.unop →fg F
   map G' G'' g f := f.restrict (CategoryTheory.leOfHom g.unop)
 #align simple_graph.finsubgraph_hom_functor SimpleGraph.finsubgraphHomFunctor
+-/
 
 #print SimpleGraph.nonempty_hom_of_forall_finite_subgraph_hom /-
 /-- If every finite subgraph of a graph `G` has a homomorphism to a finite graph `F`, then there is

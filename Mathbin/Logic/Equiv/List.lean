@@ -90,6 +90,7 @@ theorem decode_list_zero : decode (List α) 0 = some [] :=
 #align encodable.decode_list_zero Encodable.decode_list_zero
 -/
 
+#print Encodable.decode_list_succ /-
 @[simp]
 theorem decode_list_succ (v : ℕ) :
     decode (List α) (succ v) = (· :: ·) <$> decode α v.unpair.1 <*> decode (List α) v.unpair.2 :=
@@ -97,6 +98,7 @@ theorem decode_list_succ (v : ℕ) :
     cases' e : unpair v with v₁ v₂
     simp [decode_list, e]; rfl
 #align encodable.decode_list_succ Encodable.decode_list_succ
+-/
 
 #print Encodable.length_le_encode /-
 theorem length_le_encode : ∀ l : List α, length l ≤ encode l
@@ -308,6 +310,7 @@ open Encodable
 
 section List
 
+#print Denumerable.denumerable_list_aux /-
 theorem denumerable_list_aux : ∀ n : ℕ, ∃ a ∈ @decodeList α _ n, encodeList a = n
   | 0 => by rw [decode_list] <;> exact ⟨_, rfl, rfl⟩
   | succ v => by
@@ -321,6 +324,7 @@ theorem denumerable_list_aux : ∀ n : ℕ, ∃ a ∈ @decodeList α _ n, encode
     use of_nat α v₁ :: a
     simp [decode_list, e, h₂, h₁, encode_list, mkpair_unpair' e]
 #align denumerable.denumerable_list_aux Denumerable.denumerable_list_aux
+-/
 
 #print Denumerable.denumerableList /-
 /-- If `α` is denumerable, then so is `list α`. -/

@@ -255,10 +255,12 @@ def Iterate.rec (p : α → Sort _) {f : α → α} (h : ∀ a, p a → p (f a))
 #align function.iterate.rec Function.Iterate.rec
 -/
 
+#print Function.Iterate.rec_zero /-
 theorem Iterate.rec_zero (p : α → Sort _) {f : α → α} (h : ∀ a, p a → p (f a)) {a : α} (ha : p a) :
     Iterate.rec p h ha 0 = ha :=
   rfl
 #align function.iterate.rec_zero Function.Iterate.rec_zero
+-/
 
 variable {f} {m n : ℕ} {a : α}
 

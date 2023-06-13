@@ -64,6 +64,7 @@ def bernoulli (n : ℕ) : ℚ[X] :=
 #align polynomial.bernoulli Polynomial.bernoulli
 -/
 
+#print Polynomial.bernoulli_def /-
 theorem bernoulli_def (n : ℕ) :
     bernoulli n = ∑ i in range (n + 1), Polynomial.monomial i (bernoulli (n - i) * choose n i) :=
   by
@@ -72,6 +73,7 @@ theorem bernoulli_def (n : ℕ) :
   rintro x hx
   rw [mem_range_succ_iff] at hx ; rw [choose_symm hx, tsub_tsub_cancel_of_le hx]
 #align polynomial.bernoulli_def Polynomial.bernoulli_def
+-/
 
 /-
 ### examples
@@ -114,6 +116,7 @@ theorem bernoulli_eval_one (n : ℕ) : (bernoulli n).eval 1 = bernoulli' n :=
 
 end Examples
 
+#print Polynomial.derivative_bernoulli_add_one /-
 theorem derivative_bernoulli_add_one (k : ℕ) :
     (bernoulli (k + 1)).derivative = (k + 1) * bernoulli k :=
   by
@@ -128,6 +131,7 @@ theorem derivative_bernoulli_add_one (k : ℕ) :
   congr 3
   rw [(choose_mul_succ_eq k m).symm, mul_comm]
 #align polynomial.derivative_bernoulli_add_one Polynomial.derivative_bernoulli_add_one
+-/
 
 theorem derivative_bernoulli (k : ℕ) : (bernoulli k).derivative = k * bernoulli (k - 1) :=
   by
@@ -175,6 +179,7 @@ theorem sum_bernoulli (n : ℕ) :
 #align polynomial.sum_bernoulli Polynomial.sum_bernoulli
 -/
 
+#print Polynomial.bernoulli_eq_sub_sum /-
 /-- Another version of `polynomial.sum_bernoulli`. -/
 theorem bernoulli_eq_sub_sum (n : ℕ) :
     (n.succ : ℚ) • bernoulli n =
@@ -183,7 +188,9 @@ theorem bernoulli_eq_sub_sum (n : ℕ) :
   rw [Nat.cast_succ, ← sum_bernoulli n, sum_range_succ, add_sub_cancel', choose_succ_self_right,
     Nat.cast_succ]
 #align polynomial.bernoulli_eq_sub_sum Polynomial.bernoulli_eq_sub_sum
+-/
 
+#print Polynomial.sum_range_pow_eq_bernoulli_sub /-
 /-- Another version of `bernoulli.sum_range_pow`. -/
 theorem sum_range_pow_eq_bernoulli_sub (n p : ℕ) :
     (p + 1 : ℚ) * ∑ k in range n, (k : ℚ) ^ p = (bernoulli p.succ).eval n - bernoulli p.succ :=
@@ -200,13 +207,17 @@ theorem sum_range_pow_eq_bernoulli_sub (n p : ℕ) :
     · rw [← choose_symm (mem_range_le hx)]
   · norm_cast; apply succ_ne_zero _
 #align polynomial.sum_range_pow_eq_bernoulli_sub Polynomial.sum_range_pow_eq_bernoulli_sub
+-/
 
+#print Polynomial.bernoulli_succ_eval /-
 /-- Rearrangement of `polynomial.sum_range_pow_eq_bernoulli_sub`. -/
 theorem bernoulli_succ_eval (n p : ℕ) :
     (bernoulli p.succ).eval n = bernoulli p.succ + (p + 1 : ℚ) * ∑ k in range n, (k : ℚ) ^ p := by
   apply eq_add_of_sub_eq'; rw [sum_range_pow_eq_bernoulli_sub]
 #align polynomial.bernoulli_succ_eval Polynomial.bernoulli_succ_eval
+-/
 
+#print Polynomial.bernoulli_eval_one_add /-
 theorem bernoulli_eval_one_add (n : ℕ) (x : ℚ) :
     (bernoulli n).eval (1 + x) = (bernoulli n).eval x + n * x ^ (n - 1) :=
   by
@@ -232,11 +243,13 @@ theorem bernoulli_eval_one_add (n : ℕ) (x : ℚ) :
   rw [Nat.cast_succ, ← smul_eq_mul, ← sum_range_succ _ d, eval_monomial_one_add_sub]
   simp_rw [smul_eq_mul]
 #align polynomial.bernoulli_eval_one_add Polynomial.bernoulli_eval_one_add
+-/
 
 open PowerSeries
 
 variable {A : Type _} [CommRing A] [Algebra ℚ A]
 
+#print Polynomial.bernoulli_generating_function /-
 -- TODO: define exponential generating functions, and use them here
 -- This name should probably be updated afterwards
 /-- The theorem that $(e^X - 1) * ∑ Bₙ(t)* X^n/n! = Xe^{tX}$ -/
@@ -283,6 +296,7 @@ theorem bernoulli_generating_function (t : A) :
   apply congr_arg
   rw [mul_assoc, div_eq_mul_inv, ← mul_inv]
 #align polynomial.bernoulli_generating_function Polynomial.bernoulli_generating_function
+-/
 
 end Polynomial
 

@@ -157,10 +157,12 @@ protected def sym (s : Finset α) : ∀ n, Finset (Sym α n)
 #align finset.sym Finset.sym
 -/
 
+#print Finset.sym_zero /-
 @[simp]
 theorem sym_zero : s.Sym 0 = {∅} :=
   rfl
 #align finset.sym_zero Finset.sym_zero
+-/
 
 #print Finset.sym_succ /-
 @[simp]
@@ -169,6 +171,7 @@ theorem sym_succ : s.Sym (n + 1) = s.sup fun a => (s.Sym n).image <| Sym.cons a 
 #align finset.sym_succ Finset.sym_succ
 -/
 
+#print Finset.mem_sym_iff /-
 @[simp]
 theorem mem_sym_iff : m ∈ s.Sym n ↔ ∀ a ∈ m, a ∈ s :=
   by
@@ -189,6 +192,7 @@ theorem mem_sym_iff : m ∈ s.Sym n ↔ ∀ a ∈ m, a ∈ s :=
       ⟨a, h _ <| Sym.mem_cons_self _ _,
         mem_image_of_mem _ <| ih.2 fun b hb => h _ <| Sym.mem_cons_of_mem hb⟩
 #align finset.mem_sym_iff Finset.mem_sym_iff
+-/
 
 #print Finset.sym_empty /-
 @[simp]
@@ -227,6 +231,7 @@ theorem eq_empty_of_sym_eq_empty (h : s.Sym n = ∅) : s = ∅ :=
 #align finset.eq_empty_of_sym_eq_empty Finset.eq_empty_of_sym_eq_empty
 -/
 
+#print Finset.sym_eq_empty /-
 @[simp]
 theorem sym_eq_empty : s.Sym n = ∅ ↔ n ≠ 0 ∧ s = ∅ :=
   by
@@ -236,11 +241,14 @@ theorem sym_eq_empty : s.Sym n = ∅ ↔ n ≠ 0 ∧ s = ∅ :=
     rintro ⟨_, rfl⟩
     exact sym_empty _
 #align finset.sym_eq_empty Finset.sym_eq_empty
+-/
 
+#print Finset.sym_nonempty /-
 @[simp]
 theorem sym_nonempty : (s.Sym n).Nonempty ↔ n = 0 ∨ s.Nonempty := by
   simp_rw [nonempty_iff_ne_empty, Ne.def, sym_eq_empty, not_and_or, not_ne_iff]
 #align finset.sym_nonempty Finset.sym_nonempty
+-/
 
 #print Finset.sym_univ /-
 @[simp]
@@ -256,15 +264,19 @@ theorem sym_mono (h : s ⊆ t) (n : ℕ) : s.Sym n ⊆ t.Sym n := fun m hm =>
 #align finset.sym_mono Finset.sym_mono
 -/
 
+#print Finset.sym_inter /-
 @[simp]
 theorem sym_inter (s t : Finset α) (n : ℕ) : (s ∩ t).Sym n = s.Sym n ∩ t.Sym n := by ext m;
   simp only [mem_inter, mem_sym_iff, imp_and, forall_and]
 #align finset.sym_inter Finset.sym_inter
+-/
 
+#print Finset.sym_union /-
 @[simp]
 theorem sym_union (s t : Finset α) (n : ℕ) : s.Sym n ∪ t.Sym n ⊆ (s ∪ t).Sym n :=
   union_subset (sym_mono (subset_union_left s t) n) (sym_mono (subset_union_right s t) n)
 #align finset.sym_union Finset.sym_union
+-/
 
 #print Finset.sym_fill_mem /-
 theorem sym_fill_mem (a : α) {i : Fin (n + 1)} {m : Sym α (n - i)} (h : m ∈ s.Sym (n - i)) :

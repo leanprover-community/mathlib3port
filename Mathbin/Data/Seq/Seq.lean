@@ -307,9 +307,11 @@ theorem destruct_cons (a : α) : ∀ s, destruct (cons a s) = some (a, s)
 #align stream.seq.destruct_cons Stream'.Seq.destruct_cons
 -/
 
+#print Stream'.Seq.head_eq_destruct /-
 theorem head_eq_destruct (s : Seq α) : head s = Prod.fst <$> destruct s := by
   unfold destruct head <;> cases nth s 0 <;> rfl
 #align stream.seq.head_eq_destruct Stream'.Seq.head_eq_destruct
+-/
 
 #print Stream'.Seq.head_nil /-
 @[simp]
@@ -426,7 +428,6 @@ section Bisim
 
 variable (R : Seq α → Seq α → Prop)
 
--- mathport name: R
 local infixl:50 " ~ " => R
 
 #print Stream'.Seq.BisimO /-

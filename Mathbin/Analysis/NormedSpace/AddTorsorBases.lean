@@ -39,30 +39,35 @@ variable [NormedAddCommGroup E] [NormedSpace 𝕜 E]
 
 variable [MetricSpace P] [NormedAddTorsor E P]
 
-include E
-
+#print isOpenMap_barycentric_coord /-
 theorem isOpenMap_barycentric_coord [Nontrivial ι] (b : AffineBasis ι 𝕜 P) (i : ι) :
     IsOpenMap (b.Coord i) :=
   AffineMap.isOpenMap_linear_iff.mp <|
     (b.Coord i).linear.isOpenMap_of_finiteDimensional <|
       (b.Coord i).linear_surjective_iff.mpr (b.surjective_coord i)
 #align is_open_map_barycentric_coord isOpenMap_barycentric_coord
+-/
 
 variable [FiniteDimensional 𝕜 E] (b : AffineBasis ι 𝕜 P)
 
+#print continuous_barycentric_coord /-
 @[continuity]
 theorem continuous_barycentric_coord (i : ι) : Continuous (b.Coord i) :=
   (b.Coord i).continuous_of_finiteDimensional
 #align continuous_barycentric_coord continuous_barycentric_coord
+-/
 
+#print smooth_barycentric_coord /-
 theorem smooth_barycentric_coord (b : AffineBasis ι 𝕜 E) (i : ι) : ContDiff 𝕜 ⊤ (b.Coord i) :=
   (⟨b.Coord i, continuous_barycentric_coord b i⟩ : E →A[𝕜] 𝕜).ContDiff
 #align smooth_barycentric_coord smooth_barycentric_coord
+-/
 
 end Barycentric
 
 open Set
 
+#print AffineBasis.interior_convexHull /-
 /-- Given a finite-dimensional normed real vector space, the interior of the convex hull of an
 affine basis is the set of points whose barycentric coordinates are strictly positive with respect
 to this basis.
@@ -88,15 +93,15 @@ theorem AffineBasis.interior_convexHull {ι E : Type _} [Finite ι] [NormedAddCo
         (continuous_barycentric_coord b _),
       interior_Ici, mem_Inter, mem_set_of_eq, mem_Ioi, mem_preimage]
 #align affine_basis.interior_convex_hull AffineBasis.interior_convexHull
+-/
 
 variable {V P : Type _} [NormedAddCommGroup V] [NormedSpace ℝ V] [MetricSpace P]
   [NormedAddTorsor V P]
 
-include V
-
 open AffineMap
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (y «expr ∉ » s) -/
+#print IsOpen.exists_between_affineIndependent_span_eq_top /-
 /-- Given a set `s` of affine-independent points belonging to an open set `u`, we may extend `s` to
 an affine basis, all of whose elements belong to `u`. -/
 theorem IsOpen.exists_between_affineIndependent_span_eq_top {s u : Set P} (hu : IsOpen u)
@@ -127,8 +132,10 @@ theorem IsOpen.exists_between_affineIndependent_span_eq_top {s u : Set P} (hu : 
   · exact (ht₂.units_line_map ⟨q, ht₁ hq⟩ w).range
   · rw [affineSpan_eq_affineSpan_lineMap_units (ht₁ hq) w, ht₃]
 #align is_open.exists_between_affine_independent_span_eq_top IsOpen.exists_between_affineIndependent_span_eq_top
+-/
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (s «expr ⊆ » u) -/
+#print IsOpen.exists_subset_affineIndependent_span_eq_top /-
 theorem IsOpen.exists_subset_affineIndependent_span_eq_top {u : Set P} (hu : IsOpen u)
     (hne : u.Nonempty) :
     ∃ (s : _) (_ : s ⊆ u), AffineIndependent ℝ (coe : s → P) ∧ affineSpan ℝ s = ⊤ :=
@@ -139,20 +146,25 @@ theorem IsOpen.exists_subset_affineIndependent_span_eq_top {u : Set P} (hu : IsO
     ⟨s, -, hsu, hs⟩
   exact ⟨s, hsu, hs⟩
 #align is_open.exists_subset_affine_independent_span_eq_top IsOpen.exists_subset_affineIndependent_span_eq_top
+-/
 
+#print IsOpen.affineSpan_eq_top /-
 /-- The affine span of a nonempty open set is `⊤`. -/
 theorem IsOpen.affineSpan_eq_top {u : Set P} (hu : IsOpen u) (hne : u.Nonempty) :
     affineSpan ℝ u = ⊤ :=
   let ⟨s, hsu, hs, hs'⟩ := hu.exists_subset_affineIndependent_span_eq_top hne
   top_unique <| hs' ▸ affineSpan_mono _ hsu
 #align is_open.affine_span_eq_top IsOpen.affineSpan_eq_top
+-/
 
+#print affineSpan_eq_top_of_nonempty_interior /-
 theorem affineSpan_eq_top_of_nonempty_interior {s : Set V}
     (hs : (interior <| convexHull ℝ s).Nonempty) : affineSpan ℝ s = ⊤ :=
   top_unique <|
     isOpen_interior.affineSpan_eq_top hs ▸
       (affineSpan_mono _ interior_subset).trans_eq (affineSpan_convexHull _)
 #align affine_span_eq_top_of_nonempty_interior affineSpan_eq_top_of_nonempty_interior
+-/
 
 #print AffineBasis.centroid_mem_interior_convexHull /-
 theorem AffineBasis.centroid_mem_interior_convexHull {ι} [Fintype ι] (b : AffineBasis ι ℝ V) :
@@ -164,6 +176,7 @@ theorem AffineBasis.centroid_mem_interior_convexHull {ι} [Fintype ι] (b : Affi
 #align affine_basis.centroid_mem_interior_convex_hull AffineBasis.centroid_mem_interior_convexHull
 -/
 
+#print interior_convexHull_nonempty_iff_affineSpan_eq_top /-
 theorem interior_convexHull_nonempty_iff_affineSpan_eq_top [FiniteDimensional ℝ V] {s : Set V} :
     (interior (convexHull ℝ s)).Nonempty ↔ affineSpan ℝ s = ⊤ :=
   by
@@ -177,9 +190,12 @@ theorem interior_convexHull_nonempty_iff_affineSpan_eq_top [FiniteDimensional �
   lift t to Finset V using b.finite_set
   exact ⟨_, b.centroid_mem_interior_convex_hull⟩
 #align interior_convex_hull_nonempty_iff_affine_span_eq_top interior_convexHull_nonempty_iff_affineSpan_eq_top
+-/
 
+#print Convex.interior_nonempty_iff_affineSpan_eq_top /-
 theorem Convex.interior_nonempty_iff_affineSpan_eq_top [FiniteDimensional ℝ V] {s : Set V}
     (hs : Convex ℝ s) : (interior s).Nonempty ↔ affineSpan ℝ s = ⊤ := by
   rw [← interior_convexHull_nonempty_iff_affineSpan_eq_top, hs.convex_hull_eq]
 #align convex.interior_nonempty_iff_affine_span_eq_top Convex.interior_nonempty_iff_affineSpan_eq_top
+-/
 

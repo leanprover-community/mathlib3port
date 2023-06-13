@@ -59,22 +59,30 @@ instance : CategoryStruct (Σ i, C i) where
   id := id
   comp X Y Z f g := comp f g
 
+#print CategoryTheory.Sigma.SigmaHom.comp_def /-
 @[simp]
 theorem comp_def (i : I) (X Y Z : C i) (f : X ⟶ Y) (g : Y ⟶ Z) : comp (mk f) (mk g) = mk (f ≫ g) :=
   rfl
 #align category_theory.sigma.sigma_hom.comp_def CategoryTheory.Sigma.SigmaHom.comp_def
+-/
 
+#print CategoryTheory.Sigma.SigmaHom.assoc /-
 theorem assoc : ∀ (X Y Z W : Σ i, C i) (f : X ⟶ Y) (g : Y ⟶ Z) (h : Z ⟶ W), (f ≫ g) ≫ h = f ≫ g ≫ h
   | _, _, _, _, mk f, mk g, mk h => congr_arg mk (Category.assoc _ _ _)
 #align category_theory.sigma.sigma_hom.assoc CategoryTheory.Sigma.SigmaHom.assoc
+-/
 
+#print CategoryTheory.Sigma.SigmaHom.id_comp /-
 theorem id_comp : ∀ (X Y : Σ i, C i) (f : X ⟶ Y), 𝟙 X ≫ f = f
   | _, _, mk f => congr_arg mk (Category.id_comp _)
 #align category_theory.sigma.sigma_hom.id_comp CategoryTheory.Sigma.SigmaHom.id_comp
+-/
 
+#print CategoryTheory.Sigma.SigmaHom.comp_id /-
 theorem comp_id : ∀ (X Y : Σ i, C i) (f : X ⟶ Y), f ≫ 𝟙 Y = f
   | _, _, mk f => congr_arg mk (Category.comp_id _)
 #align category_theory.sigma.sigma_hom.comp_id CategoryTheory.Sigma.SigmaHom.comp_id
+-/
 
 end SigmaHom
 
@@ -96,10 +104,12 @@ def incl (i : I) : C i ⥤ Σ i, C i where
 #align category_theory.sigma.incl CategoryTheory.Sigma.incl
 -/
 
+#print CategoryTheory.Sigma.incl_obj /-
 @[simp]
 theorem incl_obj {i : I} (X : C i) : (incl i).obj X = ⟨i, X⟩ :=
   rfl
 #align category_theory.sigma.incl_obj CategoryTheory.Sigma.incl_obj
+-/
 
 instance (i : I) : Full (incl i : C i ⥤ Σ i, C i)
     where
@@ -124,11 +134,13 @@ def natTrans {F G : (Σ i, C i) ⥤ D} (h : ∀ i : I, incl i ⋙ F ⟶ incl i �
 #align category_theory.sigma.nat_trans CategoryTheory.Sigma.natTrans
 -/
 
+#print CategoryTheory.Sigma.natTrans_app /-
 @[simp]
 theorem natTrans_app {F G : (Σ i, C i) ⥤ D} (h : ∀ i : I, incl i ⋙ F ⟶ incl i ⋙ G) (i : I)
     (X : C i) : (natTrans h).app ⟨i, X⟩ = (h i).app X :=
   rfl
 #align category_theory.sigma.nat_trans_app CategoryTheory.Sigma.natTrans_app
+-/
 
 /-- (Implementation). An auxiliary definition to build the functor `desc`. -/
 def descMap : ∀ X Y : Σ i, C i, (X ⟶ Y) → ((F X.1).obj X.2 ⟶ (F Y.1).obj Y.2)
@@ -153,10 +165,12 @@ def desc : (Σ i, C i) ⥤ D where
 #align category_theory.sigma.desc CategoryTheory.Sigma.desc
 -/
 
+#print CategoryTheory.Sigma.desc_map_mk /-
 @[simp]
 theorem desc_map_mk {i : I} (X Y : C i) (f : X ⟶ Y) : (desc F).map (SigmaHom.mk f) = (F i).map f :=
   rfl
 #align category_theory.sigma.desc_map_mk CategoryTheory.Sigma.desc_map_mk
+-/
 
 #print CategoryTheory.Sigma.inclDesc /-
 -- We hand-generate the simp lemmas about this since they come out cleaner.
@@ -168,15 +182,19 @@ def inclDesc (i : I) : incl i ⋙ desc F ≅ F i :=
 #align category_theory.sigma.incl_desc CategoryTheory.Sigma.inclDesc
 -/
 
+#print CategoryTheory.Sigma.inclDesc_hom_app /-
 @[simp]
 theorem inclDesc_hom_app (i : I) (X : C i) : (inclDesc F i).Hom.app X = 𝟙 ((F i).obj X) :=
   rfl
 #align category_theory.sigma.incl_desc_hom_app CategoryTheory.Sigma.inclDesc_hom_app
+-/
 
+#print CategoryTheory.Sigma.inclDesc_inv_app /-
 @[simp]
 theorem inclDesc_inv_app (i : I) (X : C i) : (inclDesc F i).inv.app X = 𝟙 ((F i).obj X) :=
   rfl
 #align category_theory.sigma.incl_desc_inv_app CategoryTheory.Sigma.inclDesc_inv_app
+-/
 
 #print CategoryTheory.Sigma.descUniq /-
 /-- If `q` when restricted to each subcategory `C i` agrees with `F i`, then `q` is isomorphic to
@@ -188,17 +206,21 @@ def descUniq (q : (Σ i, C i) ⥤ D) (h : ∀ i, incl i ⋙ q ≅ F i) : q ≅ d
 #align category_theory.sigma.desc_uniq CategoryTheory.Sigma.descUniq
 -/
 
+#print CategoryTheory.Sigma.descUniq_hom_app /-
 @[simp]
 theorem descUniq_hom_app (q : (Σ i, C i) ⥤ D) (h : ∀ i, incl i ⋙ q ≅ F i) (i : I) (X : C i) :
     (descUniq F q h).Hom.app ⟨i, X⟩ = (h i).Hom.app X :=
   rfl
 #align category_theory.sigma.desc_uniq_hom_app CategoryTheory.Sigma.descUniq_hom_app
+-/
 
+#print CategoryTheory.Sigma.descUniq_inv_app /-
 @[simp]
 theorem descUniq_inv_app (q : (Σ i, C i) ⥤ D) (h : ∀ i, incl i ⋙ q ≅ F i) (i : I) (X : C i) :
     (descUniq F q h).inv.app ⟨i, X⟩ = (h i).inv.app X :=
   rfl
 #align category_theory.sigma.desc_uniq_inv_app CategoryTheory.Sigma.descUniq_inv_app
+-/
 
 #print CategoryTheory.Sigma.natIso /-
 /--
@@ -225,16 +247,20 @@ def map : (Σ j : J, C (g j)) ⥤ Σ i : I, C i :=
 #align category_theory.sigma.map CategoryTheory.Sigma.map
 -/
 
+#print CategoryTheory.Sigma.map_obj /-
 @[simp]
 theorem map_obj (j : J) (X : C (g j)) : (Sigma.map C g).obj ⟨j, X⟩ = ⟨g j, X⟩ :=
   rfl
 #align category_theory.sigma.map_obj CategoryTheory.Sigma.map_obj
+-/
 
+#print CategoryTheory.Sigma.map_map /-
 @[simp]
 theorem map_map {j : J} {X Y : C (g j)} (f : X ⟶ Y) :
     (Sigma.map C g).map (SigmaHom.mk f) = SigmaHom.mk f :=
   rfl
 #align category_theory.sigma.map_map CategoryTheory.Sigma.map_map
+-/
 
 #print CategoryTheory.Sigma.inclCompMap /-
 /-- The functor `sigma.map C g` restricted to the subcategory `C j` acts as the inclusion of `g j`.

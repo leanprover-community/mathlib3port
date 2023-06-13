@@ -43,7 +43,6 @@ variable {𝕜 B F F₁ F₂ M M₁ M₂ : Type _} {E : B → Type _} {E₁ : B 
   [FiberBundle F₂ E₂] [VectorBundle 𝕜 F₂ E₂] {e₁ e₁' : Trivialization F₁ (π E₁)}
   {e₂ e₂' : Trivialization F₂ (π E₂)}
 
--- mathport name: exprLE₁E₂
 local notation "LE₁E₂" => TotalSpace (Bundle.ContinuousLinearMap (RingHom.id 𝕜) F₁ E₁ F₂ E₂)
 
 -- This proof is slow, especially the `simp only` and the elaboration of `h₂`.
@@ -68,8 +67,6 @@ theorem smoothOn_continuousLinearMapCoordChange [SmoothManifoldWithCorners IB B]
       ContinuousLinearEquiv.symm_symm, LinearEquiv.toFun_eq_coe,
       ContinuousLinearEquiv.arrowCongrₛₗ_apply, ContinuousLinearMap.coe_comp']
 #align smooth_on_continuous_linear_map_coord_change smoothOn_continuousLinearMapCoordChange
-
-include _i₁ _i₂
 
 theorem hom_chart (y₀ y : LE₁E₂) :
     chartAt (ModelProd HB (F₁ →L[𝕜] F₂)) y₀ y =

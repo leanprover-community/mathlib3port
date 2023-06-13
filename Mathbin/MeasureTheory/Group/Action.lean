@@ -35,7 +35,7 @@ namespace MeasureTheory
 variable {G M α : Type _} {s : Set α}
 
 #print MeasureTheory.VAddInvariantMeasure /-
-/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`measure_preimage_vadd] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`measure_preimage_vadd] [] -/
 /-- A measure `μ : measure α` is invariant under an additive action of `M` on `α` if for any
 measurable set `s : set α` and `c : M`, the measure of its preimage under `λ x, c +ᵥ x` is equal to
 the measure of `s`. -/
@@ -46,7 +46,7 @@ class VAddInvariantMeasure (M α : Type _) [VAdd M α] {_ : MeasurableSpace α} 
 -/
 
 #print MeasureTheory.SMulInvariantMeasure /-
-/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`measure_preimage_smul] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`measure_preimage_smul] [] -/
 /-- A measure `μ : measure α` is invariant under a multiplicative action of `M` on `α` if for any
 measurable set `s : set α` and `c : M`, the measure of its preimage under `λ x, c • x` is equal to
 the measure of `s`. -/
@@ -81,17 +81,21 @@ instance add [SMulInvariantMeasure M α μ] [SMulInvariantMeasure M α ν] :
 #align measure_theory.vadd_invariant_measure.add MeasureTheory.VAddInvariantMeasure.add
 -/
 
+#print MeasureTheory.SMulInvariantMeasure.smul /-
 @[to_additive]
 instance smul [SMulInvariantMeasure M α μ] (c : ℝ≥0∞) : SMulInvariantMeasure M α (c • μ) :=
   ⟨fun a s hs => show c • _ = c • _ from congr_arg ((· • ·) c) (measure_preimage_smul μ a hs)⟩
 #align measure_theory.smul_invariant_measure.smul MeasureTheory.SMulInvariantMeasure.smul
 #align measure_theory.vadd_invariant_measure.vadd MeasureTheory.VAddInvariantMeasure.vadd
+-/
 
+#print MeasureTheory.SMulInvariantMeasure.smul_nnreal /-
 @[to_additive]
 instance smul_nnreal [SMulInvariantMeasure M α μ] (c : ℝ≥0) : SMulInvariantMeasure M α (c • μ) :=
   SMulInvariantMeasure.smul c
 #align measure_theory.smul_invariant_measure.smul_nnreal MeasureTheory.SMulInvariantMeasure.smul_nnreal
 #align measure_theory.vadd_invariant_measure.vadd_nnreal MeasureTheory.VAddInvariantMeasure.vadd_nnreal
+-/
 
 end SmulInvariantMeasure
 
@@ -125,6 +129,7 @@ end MeasurableSMul
 variable (G) {m : MeasurableSpace α} [Group G] [MulAction G α] [MeasurableSpace G]
   [MeasurableSMul G α] (c : G) (μ : Measure α)
 
+#print MeasureTheory.smulInvariantMeasure_tfae /-
 /-- Equivalent definitions of a measure invariant under a multiplicative action of a group.
 
 - 0: `smul_invariant_measure G α μ`;
@@ -158,6 +163,7 @@ theorem smulInvariantMeasure_tfae :
   tfae_finish
 #align measure_theory.smul_invariant_measure_tfae MeasureTheory.smulInvariantMeasure_tfae
 #align measure_theory.vadd_invariant_measure_tfae MeasureTheory.vaddInvariantMeasure_tfae
+-/
 
 /-- Equivalent definitions of a measure invariant under an additive action of a group.
 
@@ -206,13 +212,16 @@ theorem NullMeasurableSet.smul {s} (hs : NullMeasurableSet s μ) (c : G) :
 #align measure_theory.null_measurable_set.vadd MeasureTheory.NullMeasurableSet.vadd
 -/
 
+#print MeasureTheory.measure_smul_null /-
 theorem measure_smul_null {s} (h : μ s = 0) (c : G) : μ (c • s) = 0 := by rwa [measure_smul]
 #align measure_theory.measure_smul_null MeasureTheory.measure_smul_null
+-/
 
 section IsMinimal
 
 variable (G) [TopologicalSpace α] [ContinuousConstSMul G α] [MulAction.IsMinimal G α] {K U : Set α}
 
+#print MeasureTheory.measure_isOpen_pos_of_smulInvariant_of_compact_ne_zero /-
 /-- If measure `μ` is invariant under a group action and is nonzero on a compact set `K`, then it is
 positive on any nonempty open set. In case of a regular measure, one can assume `μ ≠ 0` instead of
 `μ K ≠ 0`, see `measure_theory.measure_is_open_pos_of_smul_invariant_of_ne_zero`. -/
@@ -226,12 +235,14 @@ theorem measure_isOpen_pos_of_smulInvariant_of_compact_ne_zero (hK : IsCompact K
         (measure_biUnion_null_iff t.countable_toSet).2 fun _ _ => by rwa [measure_smul]
 #align measure_theory.measure_is_open_pos_of_smul_invariant_of_compact_ne_zero MeasureTheory.measure_isOpen_pos_of_smulInvariant_of_compact_ne_zero
 #align measure_theory.measure_is_open_pos_of_vadd_invariant_of_compact_ne_zero MeasureTheory.measure_isOpen_pos_of_vaddInvariant_of_compact_ne_zero
+-/
 
 /-- If measure `μ` is invariant under an additive group action and is nonzero on a compact set `K`,
 then it is positive on any nonempty open set. In case of a regular measure, one can assume `μ ≠ 0`
 instead of `μ K ≠ 0`, see `measure_theory.measure_is_open_pos_of_vadd_invariant_of_ne_zero`. -/
 add_decl_doc measure_is_open_pos_of_vadd_invariant_of_compact_ne_zero
 
+#print MeasureTheory.isLocallyFiniteMeasure_of_smulInvariant /-
 @[to_additive]
 theorem isLocallyFiniteMeasure_of_smulInvariant (hU : IsOpen U) (hne : U.Nonempty) (hμU : μ U ≠ ∞) :
     IsLocallyFiniteMeasure μ :=
@@ -241,9 +252,11 @@ theorem isLocallyFiniteMeasure_of_smulInvariant (hU : IsOpen U) (hne : U.Nonempt
       Ne.lt_top <| by rwa [measure_preimage_smul]⟩⟩
 #align measure_theory.is_locally_finite_measure_of_smul_invariant MeasureTheory.isLocallyFiniteMeasure_of_smulInvariant
 #align measure_theory.is_locally_finite_measure_of_vadd_invariant MeasureTheory.isLocallyFiniteMeasure_of_vaddInvariant
+-/
 
 variable [Measure.Regular μ]
 
+#print MeasureTheory.measure_isOpen_pos_of_smulInvariant_of_ne_zero /-
 @[to_additive]
 theorem measure_isOpen_pos_of_smulInvariant_of_ne_zero (hμ : μ ≠ 0) (hU : IsOpen U)
     (hne : U.Nonempty) : 0 < μ U :=
@@ -251,7 +264,9 @@ theorem measure_isOpen_pos_of_smulInvariant_of_ne_zero (hμ : μ ≠ 0) (hU : Is
   measure_isOpen_pos_of_smulInvariant_of_compact_ne_zero G hK hμK hU hne
 #align measure_theory.measure_is_open_pos_of_smul_invariant_of_ne_zero MeasureTheory.measure_isOpen_pos_of_smulInvariant_of_ne_zero
 #align measure_theory.measure_is_open_pos_of_vadd_invariant_of_ne_zero MeasureTheory.measure_isOpen_pos_of_vaddInvariant_of_ne_zero
+-/
 
+#print MeasureTheory.measure_pos_iff_nonempty_of_smulInvariant /-
 @[to_additive]
 theorem measure_pos_iff_nonempty_of_smulInvariant (hμ : μ ≠ 0) (hU : IsOpen U) :
     0 < μ U ↔ U.Nonempty :=
@@ -259,9 +274,9 @@ theorem measure_pos_iff_nonempty_of_smulInvariant (hμ : μ ≠ 0) (hU : IsOpen 
     measure_isOpen_pos_of_smulInvariant_of_ne_zero G hμ hU⟩
 #align measure_theory.measure_pos_iff_nonempty_of_smul_invariant MeasureTheory.measure_pos_iff_nonempty_of_smulInvariant
 #align measure_theory.measure_pos_iff_nonempty_of_vadd_invariant MeasureTheory.measure_pos_iff_nonempty_of_vaddInvariant
+-/
 
-include G
-
+#print MeasureTheory.measure_eq_zero_iff_eq_empty_of_smulInvariant /-
 @[to_additive]
 theorem measure_eq_zero_iff_eq_empty_of_smulInvariant (hμ : μ ≠ 0) (hU : IsOpen U) :
     μ U = 0 ↔ U = ∅ := by
@@ -269,9 +284,11 @@ theorem measure_eq_zero_iff_eq_empty_of_smulInvariant (hμ : μ ≠ 0) (hU : IsO
     measure_pos_iff_nonempty_of_smul_invariant G hμ hU, nonempty_iff_ne_empty]
 #align measure_theory.measure_eq_zero_iff_eq_empty_of_smul_invariant MeasureTheory.measure_eq_zero_iff_eq_empty_of_smulInvariant
 #align measure_theory.measure_eq_zero_iff_eq_empty_of_vadd_invariant MeasureTheory.measure_eq_zero_iff_eq_empty_of_vaddInvariant
+-/
 
 end IsMinimal
 
+#print MeasureTheory.smul_ae_eq_self_of_mem_zpowers /-
 theorem smul_ae_eq_self_of_mem_zpowers {x y : G} (hs : (x • s : Set α) =ᵐ[μ] s)
     (hy : y ∈ Subgroup.zpowers x) : (y • s : Set α) =ᵐ[μ] s :=
   by
@@ -283,7 +300,9 @@ theorem smul_ae_eq_self_of_mem_zpowers {x y : G} (hs : (x • s : Set α) =ᵐ[�
   simpa only [MulAction.toPermHom_apply, MulAction.toPerm_apply, image_smul, ←
     MonoidHom.map_zpow] using he.image_zpow_ae_eq he' k hs
 #align measure_theory.smul_ae_eq_self_of_mem_zpowers MeasureTheory.smul_ae_eq_self_of_mem_zpowers
+-/
 
+#print MeasureTheory.vadd_ae_eq_self_of_mem_zmultiples /-
 theorem vadd_ae_eq_self_of_mem_zmultiples {G : Type _} [MeasurableSpace G] [AddGroup G]
     [AddAction G α] [VAddInvariantMeasure G α μ] [MeasurableVAdd G α] {x y : G}
     (hs : (x +ᵥ s : Set α) =ᵐ[μ] s) (hy : y ∈ AddSubgroup.zmultiples x) :
@@ -299,6 +318,7 @@ theorem vadd_ae_eq_self_of_mem_zmultiples {G : Type _} [MeasurableSpace G] [AddG
           (by infer_instance : MeasurableVAdd G α) a }
   exact @smul_ae_eq_self_of_mem_zpowers (Multiplicative G) α _ _ _ _ _ _ _ _ _ _ hs hy
 #align measure_theory.vadd_ae_eq_self_of_mem_zmultiples MeasureTheory.vadd_ae_eq_self_of_mem_zmultiples
+-/
 
 attribute [to_additive vadd_ae_eq_self_of_mem_zmultiples] smul_ae_eq_self_of_mem_zpowers
 

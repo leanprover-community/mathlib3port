@@ -31,6 +31,7 @@ namespace Finset
 
 variable {α : Type _} [DecidableEq α] [CommGroup α] (s : Finset α) {t : Finset α}
 
+#print Finset.exists_subset_mul_div /-
 /-- **Ruzsa's covering lemma**. -/
 @[to_additive "**Ruzsa's covering lemma**"]
 theorem exists_subset_mul_div (ht : t.Nonempty) :
@@ -59,6 +60,7 @@ theorem exists_subset_mul_div (ht : t.Nonempty) :
   exact mem_mul.2 ⟨_, _, hb, mem_div.2 ⟨_, _, hc₂, hc₁, by simp [div_eq_mul_inv a b]⟩, by simp⟩
 #align finset.exists_subset_mul_div Finset.exists_subset_mul_div
 #align finset.exists_subset_add_sub Finset.exists_subset_add_sub
+-/
 
 end Finset
 

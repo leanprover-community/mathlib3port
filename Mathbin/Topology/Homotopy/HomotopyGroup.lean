@@ -54,15 +54,16 @@ open Homeomorph
 
 noncomputable section
 
--- mathport name: «exprI^ »
 scoped[Topology] notation "I^" N => N → I
 
 namespace Cube
 
+#print Cube.boundary /-
 /-- The points in a cube with at least one projection equal to 0 or 1. -/
 def boundary (N : Type _) : Set (I^N) :=
   {y | ∃ i, y i = 0 ∨ y i = 1}
 #align cube.boundary Cube.boundary
+-/
 
 variable {N : Type _} [DecidableEq N]
 
@@ -98,21 +99,21 @@ def LoopSpace :=
   Path x x
 #align loop_space LoopSpace
 
--- mathport name: exprΩ
 scoped[Topology] notation "Ω" => LoopSpace
 
 instance LoopSpace.inhabited : Inhabited (Path x x) :=
   ⟨Path.refl x⟩
 #align loop_space.inhabited LoopSpace.inhabited
 
+#print GenLoop /-
 /-- The `n`-dimensional generalized loops based at `x` in a space `X` are
   continuous functions `I^n → X` that sends the boundary to `x`.
   We allow an arbitrary indexing type `N` in place of `fin n` here. -/
 def GenLoop : Set C(I^N, X) :=
   {p | ∀ y ∈ Cube.boundary N, p y = x}
 #align gen_loop GenLoop
+-/
 
--- mathport name: «exprΩ^»
 scoped[Topology] notation "Ω^" => GenLoop
 
 variable {N X x}
@@ -133,71 +134,97 @@ theorem copy_eq (f : Ω^ N X x) {g : (I^N) → X} (h : g = f) : copy f g h = f :
   exact congr_fun h x
 #align gen_loop.copy_eq GenLoop.copy_eq
 
+#print GenLoop.boundary /-
 theorem boundary (f : Ω^ N X x) : ∀ y ∈ Cube.boundary N, f y = x :=
   f.2
 #align gen_loop.boundary GenLoop.boundary
+-/
 
+#print GenLoop.funLike /-
 instance funLike : FunLike (Ω^ N X x) (I^N) fun _ => X
     where
   coe f := f.1
   coe_injective' := fun ⟨⟨f, _⟩, _⟩ ⟨⟨g, _⟩, _⟩ h => by congr; exact h
 #align gen_loop.fun_like GenLoop.funLike
+-/
 
+#print GenLoop.ext /-
 @[ext]
 theorem ext (f g : Ω^ N X x) (H : ∀ y, f y = g y) : f = g :=
   FunLike.coe_injective' (funext H)
 #align gen_loop.ext GenLoop.ext
+-/
 
+#print GenLoop.mk_apply /-
 @[simp]
 theorem mk_apply (f : C(I^N, X)) (H y) : (⟨f, H⟩ : Ω^ N X x) y = f y :=
   rfl
 #align gen_loop.mk_apply GenLoop.mk_apply
+-/
 
+#print GenLoop.const /-
 /-- The constant `gen_loop` at `x`. -/
 def const : Ω^ N X x :=
   ⟨ContinuousMap.const _ x, fun _ _ => rfl⟩
 #align gen_loop.const GenLoop.const
+-/
 
+#print GenLoop.const_apply /-
 @[simp]
 theorem const_apply {t} : (@const N X _ x) t = x :=
   rfl
 #align gen_loop.const_apply GenLoop.const_apply
+-/
 
+#print GenLoop.inhabited /-
 instance inhabited : Inhabited (Ω^ N X x) :=
   ⟨const⟩
 #align gen_loop.inhabited GenLoop.inhabited
+-/
 
+#print GenLoop.Homotopic /-
 /-- The "homotopic relative to boundary" relation between `gen_loop`s. -/
 def Homotopic (f g : Ω^ N X x) : Prop :=
   f.1.HomotopicRel g.1 (Cube.boundary N)
 #align gen_loop.homotopic GenLoop.Homotopic
+-/
 
 namespace homotopic
 
 variable {f g h : Ω^ N X x}
 
+#print GenLoop.Homotopic.refl /-
 @[refl]
 theorem refl (f : Ω^ N X x) : Homotopic f f :=
   ContinuousMap.HomotopicRel.refl _
 #align gen_loop.homotopic.refl GenLoop.Homotopic.refl
+-/
 
+#print GenLoop.Homotopic.symm /-
 @[symm]
 theorem symm (H : Homotopic f g) : Homotopic g f :=
   H.symm
 #align gen_loop.homotopic.symm GenLoop.Homotopic.symm
+-/
 
+#print GenLoop.Homotopic.trans /-
 @[trans]
 theorem trans (H0 : Homotopic f g) (H1 : Homotopic g h) : Homotopic f h :=
   H0.trans H1
 #align gen_loop.homotopic.trans GenLoop.Homotopic.trans
+-/
 
+#print GenLoop.Homotopic.equiv /-
 theorem equiv : Equivalence (@Homotopic N X _ x) :=
   ⟨Homotopic.refl, fun _ _ => Homotopic.symm, fun _ _ _ => Homotopic.trans⟩
 #align gen_loop.homotopic.equiv GenLoop.Homotopic.equiv
+-/
 
+#print GenLoop.Homotopic.setoid /-
 instance setoid (N) (x : X) : Setoid (Ω^ N X x) :=
   ⟨Homotopic, equiv⟩
 #align gen_loop.homotopic.setoid GenLoop.Homotopic.setoid
+-/
 
 end homotopic
 
@@ -400,12 +427,14 @@ end LoopHomeo
 
 end GenLoop
 
+#print HomotopyGroup /-
 /-- The `n`th homotopy group at `x` defined as the quotient of `Ω^n x` by the
   `gen_loop.homotopic` relation. -/
 def HomotopyGroup (N) (X : Type _) [TopologicalSpace X] (x : X) : Type _ :=
   Quotient (GenLoop.Homotopic.setoid N x)
 deriving Inhabited
 #align homotopy_group HomotopyGroup
+-/
 
 variable [DecidableEq N]
 
@@ -427,7 +456,6 @@ def HomotopyGroup.Pi (n) (X : Type _) [TopologicalSpace X] (x : X) :=
   HomotopyGroup (Fin n) _ x
 #align homotopy_group.pi HomotopyGroup.Pi
 
--- mathport name: exprπ_
 scoped[Topology] notation "π_" => HomotopyGroup.Pi
 
 /-- The 0-dimensional generalized loops based at `x` are in bijection with `X`. -/

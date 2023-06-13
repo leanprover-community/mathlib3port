@@ -155,6 +155,7 @@ def TendstoUniformly (F : ι → α → β) (f : α → β) (p : Filter ι) :=
 #align tendsto_uniformly TendstoUniformly
 -/
 
+#print tendstoUniformly_iff_tendstoUniformlyOnFilter /-
 theorem tendstoUniformly_iff_tendstoUniformlyOnFilter :
     TendstoUniformly F f p ↔ TendstoUniformlyOnFilter F f p ⊤ :=
   by
@@ -163,10 +164,13 @@ theorem tendstoUniformly_iff_tendstoUniformlyOnFilter :
   simp_rw [← principal_univ, eventually_prod_principal_iff]
   simp
 #align tendsto_uniformly_iff_tendsto_uniformly_on_filter tendstoUniformly_iff_tendstoUniformlyOnFilter
+-/
 
+#print TendstoUniformly.tendstoUniformlyOnFilter /-
 theorem TendstoUniformly.tendstoUniformlyOnFilter (h : TendstoUniformly F f p) :
     TendstoUniformlyOnFilter F f p ⊤ := by rwa [← tendstoUniformly_iff_tendstoUniformlyOnFilter]
 #align tendsto_uniformly.tendsto_uniformly_on_filter TendstoUniformly.tendstoUniformlyOnFilter
+-/
 
 #print tendstoUniformlyOn_iff_tendstoUniformly_comp_coe /-
 theorem tendstoUniformlyOn_iff_tendstoUniformly_comp_coe :
@@ -178,6 +182,7 @@ theorem tendstoUniformlyOn_iff_tendstoUniformly_comp_coe :
 #align tendsto_uniformly_on_iff_tendsto_uniformly_comp_coe tendstoUniformlyOn_iff_tendstoUniformly_comp_coe
 -/
 
+#print tendstoUniformly_iff_tendsto /-
 /-- A sequence of functions `Fₙ` converges uniformly to a limiting function `f` w.r.t.
 filter `p` iff the function `(n, x) ↦ (f x, Fₙ x)` converges along `p ×ᶠ ⊤` to the uniformity.
 In other words: one knows nothing about the behavior of `x` in this limit.
@@ -186,7 +191,9 @@ theorem tendstoUniformly_iff_tendsto {F : ι → α → β} {f : α → β} {p :
     TendstoUniformly F f p ↔ Tendsto (fun q : ι × α => (f q.2, F q.1 q.2)) (p ×ᶠ ⊤) (𝓤 β) := by
   simp [tendstoUniformly_iff_tendstoUniformlyOnFilter, tendstoUniformlyOnFilter_iff_tendsto]
 #align tendsto_uniformly_iff_tendsto tendstoUniformly_iff_tendsto
+-/
 
+#print TendstoUniformlyOnFilter.tendsto_at /-
 /-- Uniform converence implies pointwise convergence. -/
 theorem TendstoUniformlyOnFilter.tendsto_at (h : TendstoUniformlyOnFilter F f p p')
     (hx : 𝓟 {x} ≤ p') : Tendsto (fun n => F n x) p <| 𝓝 (f x) :=
@@ -196,6 +203,7 @@ theorem TendstoUniformlyOnFilter.tendsto_at (h : TendstoUniformlyOnFilter F f p 
   intro i h
   simpa using h.filter_mono hx
 #align tendsto_uniformly_on_filter.tendsto_at TendstoUniformlyOnFilter.tendsto_at
+-/
 
 #print TendstoUniformlyOn.tendsto_at /-
 /-- Uniform converence implies pointwise convergence. -/
@@ -220,15 +228,19 @@ theorem tendstoUniformlyOn_univ : TendstoUniformlyOn F f p univ ↔ TendstoUnifo
 #align tendsto_uniformly_on_univ tendstoUniformlyOn_univ
 -/
 
+#print TendstoUniformlyOnFilter.mono_left /-
 theorem TendstoUniformlyOnFilter.mono_left {p'' : Filter ι} (h : TendstoUniformlyOnFilter F f p p')
     (hp : p'' ≤ p) : TendstoUniformlyOnFilter F f p'' p' := fun u hu =>
   (h u hu).filter_mono (p'.prod_mono_left hp)
 #align tendsto_uniformly_on_filter.mono_left TendstoUniformlyOnFilter.mono_left
+-/
 
+#print TendstoUniformlyOnFilter.mono_right /-
 theorem TendstoUniformlyOnFilter.mono_right {p'' : Filter α} (h : TendstoUniformlyOnFilter F f p p')
     (hp : p'' ≤ p') : TendstoUniformlyOnFilter F f p p'' := fun u hu =>
   (h u hu).filter_mono (p.prod_mono_right hp)
 #align tendsto_uniformly_on_filter.mono_right TendstoUniformlyOnFilter.mono_right
+-/
 
 #print TendstoUniformlyOn.mono /-
 theorem TendstoUniformlyOn.mono {s' : Set α} (h : TendstoUniformlyOn F f p s) (h' : s' ⊆ s) :
@@ -337,6 +349,7 @@ theorem UniformContinuous.comp_tendstoUniformly [UniformSpace γ] {g : β → γ
 #align uniform_continuous.comp_tendsto_uniformly UniformContinuous.comp_tendstoUniformly
 -/
 
+#print TendstoUniformlyOnFilter.prod_map /-
 theorem TendstoUniformlyOnFilter.prod_map {ι' α' β' : Type _} [UniformSpace β'] {F' : ι' → α' → β'}
     {f' : α' → β'} {q : Filter ι'} {q' : Filter α'} (h : TendstoUniformlyOnFilter F f p p')
     (h' : TendstoUniformlyOnFilter F' f' q q') :
@@ -355,8 +368,10 @@ theorem TendstoUniformlyOnFilter.prod_map {ι' α' β' : Type _} [UniformSpace �
     mem_of_mem_of_subset (set.mem_prod.mpr ⟨hxv, hxw⟩) hvw
   exact hout
 #align tendsto_uniformly_on_filter.prod_map TendstoUniformlyOnFilter.prod_map
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print TendstoUniformlyOn.prod_map /-
 theorem TendstoUniformlyOn.prod_map {ι' α' β' : Type _} [UniformSpace β'] {F' : ι' → α' → β'}
     {f' : α' → β'} {p' : Filter ι'} {s' : Set α'} (h : TendstoUniformlyOn F f p s)
     (h' : TendstoUniformlyOn F' f' p' s') :
@@ -366,7 +381,9 @@ theorem TendstoUniformlyOn.prod_map {ι' α' β' : Type _} [UniformSpace β'] {F
   rw [tendstoUniformlyOn_iff_tendstoUniformlyOnFilter] at h h' ⊢
   simpa only [prod_principal_principal] using h.prod_map h'
 #align tendsto_uniformly_on.prod_map TendstoUniformlyOn.prod_map
+-/
 
+#print TendstoUniformly.prod_map /-
 theorem TendstoUniformly.prod_map {ι' α' β' : Type _} [UniformSpace β'] {F' : ι' → α' → β'}
     {f' : α' → β'} {p' : Filter ι'} (h : TendstoUniformly F f p) (h' : TendstoUniformly F' f' p') :
     TendstoUniformly (fun i : ι × ι' => Prod.map (F i.1) (F' i.2)) (Prod.map f f') (p.Prod p') :=
@@ -374,7 +391,9 @@ theorem TendstoUniformly.prod_map {ι' α' β' : Type _} [UniformSpace β'] {F' 
   rw [← tendstoUniformlyOn_univ, ← univ_prod_univ] at *
   exact h.prod_map h'
 #align tendsto_uniformly.prod_map TendstoUniformly.prod_map
+-/
 
+#print TendstoUniformlyOnFilter.prod /-
 theorem TendstoUniformlyOnFilter.prod {ι' β' : Type _} [UniformSpace β'] {F' : ι' → α → β'}
     {f' : α → β'} {q : Filter ι'} (h : TendstoUniformlyOnFilter F f p p')
     (h' : TendstoUniformlyOnFilter F' f' q p') :
@@ -382,20 +401,25 @@ theorem TendstoUniformlyOnFilter.prod {ι' β' : Type _} [UniformSpace β'] {F' 
       (p.Prod q) p' :=
   fun u hu => ((h.Prod_map h') u hu).diag_of_prod_right
 #align tendsto_uniformly_on_filter.prod TendstoUniformlyOnFilter.prod
+-/
 
+#print TendstoUniformlyOn.prod /-
 theorem TendstoUniformlyOn.prod {ι' β' : Type _} [UniformSpace β'] {F' : ι' → α → β'} {f' : α → β'}
     {p' : Filter ι'} (h : TendstoUniformlyOn F f p s) (h' : TendstoUniformlyOn F' f' p' s) :
     TendstoUniformlyOn (fun (i : ι × ι') a => (F i.1 a, F' i.2 a)) (fun a => (f a, f' a))
       (p.Prod p') s :=
   (congr_arg _ s.inter_self).mp ((h.Prod_map h').comp fun a => (a, a))
 #align tendsto_uniformly_on.prod TendstoUniformlyOn.prod
+-/
 
+#print TendstoUniformly.prod /-
 theorem TendstoUniformly.prod {ι' β' : Type _} [UniformSpace β'] {F' : ι' → α → β'} {f' : α → β'}
     {p' : Filter ι'} (h : TendstoUniformly F f p) (h' : TendstoUniformly F' f' p') :
     TendstoUniformly (fun (i : ι × ι') a => (F i.1 a, F' i.2 a)) (fun a => (f a, f' a))
       (p.Prod p') :=
   (h.Prod_map h').comp fun a => (a, a)
 #align tendsto_uniformly.prod TendstoUniformly.prod
+-/
 
 #print tendsto_prod_filter_iff /-
 /-- Uniform convergence on a filter `p'` to a constant function is equivalent to convergence in
@@ -419,6 +443,7 @@ theorem tendsto_prod_principal_iff {c : β} :
 #align tendsto_prod_principal_iff tendsto_prod_principal_iff
 -/
 
+#print tendsto_prod_top_iff /-
 /-- Uniform convergence to a constant function is equivalent to convergence in `p ×ᶠ ⊤`. -/
 theorem tendsto_prod_top_iff {c : β} :
     Tendsto (↿F) (p ×ᶠ ⊤) (𝓝 c) ↔ TendstoUniformly F (fun _ => c) p :=
@@ -426,6 +451,7 @@ theorem tendsto_prod_top_iff {c : β} :
   rw [tendstoUniformly_iff_tendstoUniformlyOnFilter]
   exact tendsto_prod_filter_iff
 #align tendsto_prod_top_iff tendsto_prod_top_iff
+-/
 
 #print tendstoUniformlyOn_empty /-
 /-- Uniform convergence on the empty set is vacuously true -/
@@ -468,6 +494,7 @@ theorem Filter.Tendsto.tendstoUniformlyOn_const {g : ι → β} {b : β} (hg : T
 -/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print UniformContinuousOn.tendstoUniformly /-
 theorem UniformContinuousOn.tendstoUniformly [UniformSpace α] [UniformSpace γ] {x : α} {U : Set α}
     (hU : U ∈ 𝓝 x) {F : α → β → γ} (hF : UniformContinuousOn (↿F) (U ×ˢ (univ : Set β))) :
     TendstoUniformly F (F x) (𝓝 x) :=
@@ -488,6 +515,7 @@ theorem UniformContinuousOn.tendstoUniformly [UniformSpace α] [UniformSpace γ]
     apply mem_of_superset (prod_mem_prod hU (mem_top.mpr rfl)) fun q h => _
     simp [h.1, mem_of_mem_nhds hU]
 #align uniform_continuous_on.tendsto_uniformly UniformContinuousOn.tendstoUniformly
+-/
 
 #print UniformContinuous₂.tendstoUniformly /-
 theorem UniformContinuous₂.tendstoUniformly [UniformSpace α] [UniformSpace γ] {f : α → β → γ}
@@ -595,6 +623,7 @@ theorem UniformCauchySeqOn.tendstoUniformlyOn_of_tendsto [NeBot p] (hF : Uniform
 #align uniform_cauchy_seq_on.tendsto_uniformly_on_of_tendsto UniformCauchySeqOn.tendstoUniformlyOn_of_tendsto
 -/
 
+#print UniformCauchySeqOnFilter.mono_left /-
 theorem UniformCauchySeqOnFilter.mono_left {p'' : Filter ι} (hf : UniformCauchySeqOnFilter F p p')
     (hp : p'' ≤ p) : UniformCauchySeqOnFilter F p'' p' :=
   by
@@ -602,7 +631,9 @@ theorem UniformCauchySeqOnFilter.mono_left {p'' : Filter ι} (hf : UniformCauchy
   have := (hf u hu).filter_mono (p'.prod_mono_left (Filter.prod_mono hp hp))
   exact this.mono (by simp)
 #align uniform_cauchy_seq_on_filter.mono_left UniformCauchySeqOnFilter.mono_left
+-/
 
+#print UniformCauchySeqOnFilter.mono_right /-
 theorem UniformCauchySeqOnFilter.mono_right {p'' : Filter α} (hf : UniformCauchySeqOnFilter F p p')
     (hp : p'' ≤ p') : UniformCauchySeqOnFilter F p p'' :=
   by
@@ -610,6 +641,7 @@ theorem UniformCauchySeqOnFilter.mono_right {p'' : Filter α} (hf : UniformCauch
   have := (hf u hu).filter_mono ((p ×ᶠ p).prod_mono_right hp)
   exact this.mono (by simp)
 #align uniform_cauchy_seq_on_filter.mono_right UniformCauchySeqOnFilter.mono_right
+-/
 
 #print UniformCauchySeqOn.mono /-
 theorem UniformCauchySeqOn.mono {s' : Set α} (hf : UniformCauchySeqOn F p s) (hss' : s' ⊆ s) :
@@ -620,6 +652,7 @@ theorem UniformCauchySeqOn.mono {s' : Set α} (hf : UniformCauchySeqOn F p s) (h
 #align uniform_cauchy_seq_on.mono UniformCauchySeqOn.mono
 -/
 
+#print UniformCauchySeqOnFilter.comp /-
 /-- Composing on the right by a function preserves uniform Cauchy sequences -/
 theorem UniformCauchySeqOnFilter.comp {γ : Type _} (hf : UniformCauchySeqOnFilter F p p')
     (g : γ → α) : UniformCauchySeqOnFilter (fun n => F n ∘ g) p (p'.comap g) :=
@@ -630,7 +663,9 @@ theorem UniformCauchySeqOnFilter.comp {γ : Type _} (hf : UniformCauchySeqOnFilt
   refine' ⟨pa, hpa, pb ∘ g, _, fun x hx y hy => hpapb hx hy⟩
   exact eventually_comap.mpr (hpb.mono fun x hx y hy => by simp only [hx, hy, Function.comp_apply])
 #align uniform_cauchy_seq_on_filter.comp UniformCauchySeqOnFilter.comp
+-/
 
+#print UniformCauchySeqOn.comp /-
 /-- Composing on the right by a function preserves uniform Cauchy sequences -/
 theorem UniformCauchySeqOn.comp {γ : Type _} (hf : UniformCauchySeqOn F p s) (g : γ → α) :
     UniformCauchySeqOn (fun n => F n ∘ g) p (g ⁻¹' s) :=
@@ -638,6 +673,7 @@ theorem UniformCauchySeqOn.comp {γ : Type _} (hf : UniformCauchySeqOn F p s) (g
   rw [uniformCauchySeqOn_iff_uniformCauchySeqOnFilter] at hf ⊢
   simpa only [UniformCauchySeqOn, comap_principal] using hf.comp g
 #align uniform_cauchy_seq_on.comp UniformCauchySeqOn.comp
+-/
 
 #print UniformContinuous.comp_uniformCauchySeqOn /-
 /-- Composing on the left by a uniformly continuous function preserves
@@ -649,6 +685,7 @@ theorem UniformContinuous.comp_uniformCauchySeqOn [UniformSpace γ] {g : β → 
 -/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print UniformCauchySeqOn.prod_map /-
 theorem UniformCauchySeqOn.prod_map {ι' α' β' : Type _} [UniformSpace β'] {F' : ι' → α' → β'}
     {p' : Filter ι'} {s' : Set α'} (h : UniformCauchySeqOn F p s)
     (h' : UniformCauchySeqOn F' p' s') :
@@ -663,13 +700,17 @@ theorem UniformCauchySeqOn.prod_map {ι' α' β' : Type _} [UniformSpace β'] {F
   intro x hx a b ha hb
   refine' hvw ⟨_, mk_mem_prod (hx.1 a ha) (hx.2 b hb), rfl⟩
 #align uniform_cauchy_seq_on.prod_map UniformCauchySeqOn.prod_map
+-/
 
+#print UniformCauchySeqOn.prod /-
 theorem UniformCauchySeqOn.prod {ι' β' : Type _} [UniformSpace β'] {F' : ι' → α → β'}
     {p' : Filter ι'} (h : UniformCauchySeqOn F p s) (h' : UniformCauchySeqOn F' p' s) :
     UniformCauchySeqOn (fun (i : ι × ι') a => (F i.fst a, F' i.snd a)) (p ×ᶠ p') s :=
   (congr_arg _ s.inter_self).mp ((h.Prod_map h').comp fun a => (a, a))
 #align uniform_cauchy_seq_on.prod UniformCauchySeqOn.prod
+-/
 
+#print UniformCauchySeqOn.prod' /-
 theorem UniformCauchySeqOn.prod' {β' : Type _} [UniformSpace β'] {F' : ι → α → β'}
     (h : UniformCauchySeqOn F p s) (h' : UniformCauchySeqOn F' p s) :
     UniformCauchySeqOn (fun (i : ι) a => (F i a, F' i a)) p s :=
@@ -678,6 +719,7 @@ theorem UniformCauchySeqOn.prod' {β' : Type _} [UniformSpace β'] {F' : ι → 
   have hh : tendsto (fun x : ι => (x, x)) p (p ×ᶠ p) := tendsto_diag
   exact (hh.prod_map hh).Eventually ((h.prod h') u hu)
 #align uniform_cauchy_seq_on.prod' UniformCauchySeqOn.prod'
+-/
 
 #print UniformCauchySeqOn.cauchy_map /-
 /-- If a sequence of functions is uniformly Cauchy on a set, then the values at each point form
@@ -830,6 +872,7 @@ theorem TendstoLocallyUniformlyOn.mono (h : TendstoLocallyUniformlyOn F f p s) (
 #align tendsto_locally_uniformly_on.mono TendstoLocallyUniformlyOn.mono
 -/
 
+#print tendstoLocallyUniformlyOn_iUnion /-
 theorem tendstoLocallyUniformlyOn_iUnion {S : γ → Set α} (hS : ∀ i, IsOpen (S i))
     (h : ∀ i, TendstoLocallyUniformlyOn F f p (S i)) : TendstoLocallyUniformlyOn F f p (⋃ i, S i) :=
   by
@@ -839,6 +882,7 @@ theorem tendstoLocallyUniformlyOn_iUnion {S : γ → Set α} (hS : ∀ i, IsOpen
   rw [(hS _).nhdsWithin_eq hi] at ht 
   exact mem_nhdsWithin_of_mem_nhds ht
 #align tendsto_locally_uniformly_on_Union tendstoLocallyUniformlyOn_iUnion
+-/
 
 #print tendstoLocallyUniformlyOn_biUnion /-
 theorem tendstoLocallyUniformlyOn_biUnion {s : Set γ} {S : γ → Set α} (hS : ∀ i ∈ s, IsOpen (S i))
@@ -855,11 +899,13 @@ theorem tendstoLocallyUniformlyOn_sUnion (S : Set (Set α)) (hS : ∀ s ∈ S, I
 #align tendsto_locally_uniformly_on_sUnion tendstoLocallyUniformlyOn_sUnion
 -/
 
+#print TendstoLocallyUniformlyOn.union /-
 theorem TendstoLocallyUniformlyOn.union {s₁ s₂ : Set α} (hs₁ : IsOpen s₁) (hs₂ : IsOpen s₂)
     (h₁ : TendstoLocallyUniformlyOn F f p s₁) (h₂ : TendstoLocallyUniformlyOn F f p s₂) :
     TendstoLocallyUniformlyOn F f p (s₁ ∪ s₂) := by rw [← sUnion_pair];
   refine' tendstoLocallyUniformlyOn_sUnion _ _ _ <;> simp [*]
 #align tendsto_locally_uniformly_on.union TendstoLocallyUniformlyOn.union
+-/
 
 #print tendstoLocallyUniformlyOn_univ /-
 theorem tendstoLocallyUniformlyOn_univ :
@@ -930,6 +976,7 @@ theorem TendstoLocallyUniformly.comp [TopologicalSpace γ] (h : TendstoLocallyUn
 -/
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (K «expr ⊆ » s) -/
+#print tendstoLocallyUniformlyOn_TFAE /-
 theorem tendstoLocallyUniformlyOn_TFAE [LocallyCompactSpace α] (G : ι → α → β) (g : α → β)
     (p : Filter ι) (hs : IsOpen s) :
     TFAE
@@ -950,6 +997,7 @@ theorem tendstoLocallyUniformlyOn_TFAE [LocallyCompactSpace α] (G : ι → α �
     exact ⟨v, hv1, hv2 u hu⟩
   tfae_finish
 #align tendsto_locally_uniformly_on_tfae tendstoLocallyUniformlyOn_TFAE
+-/
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (K «expr ⊆ » s) -/
 #print tendstoLocallyUniformlyOn_iff_forall_isCompact /-
@@ -1031,6 +1079,7 @@ the statements are derived from a statement about locally uniform approximation 
 a point, called `continuous_within_at_of_locally_uniform_approx_of_continuous_within_at`. -/
 
 
+#print continuousWithinAt_of_locally_uniform_approx_of_continuousWithinAt /-
 /-- A function which can be locally uniformly approximated by functions which are continuous
 within a set at a point is continuous within this set at this point. -/
 theorem continuousWithinAt_of_locally_uniform_approx_of_continuousWithinAt (hx : x ∈ s)
@@ -1052,7 +1101,9 @@ theorem continuousWithinAt_of_locally_uniform_approx_of_continuousWithinAt (hx :
     u₂₁ (prod_mk_mem_compRel (refl_mem_uniformity h₂) (hsymm (A.self_of_nhds_within hx)))
   exact C.mono fun y hy => u₁₀ (prod_mk_mem_compRel hy this)
 #align continuous_within_at_of_locally_uniform_approx_of_continuous_within_at continuousWithinAt_of_locally_uniform_approx_of_continuousWithinAt
+-/
 
+#print continuousAt_of_locally_uniform_approx_of_continuousAt /-
 /-- A function which can be locally uniformly approximated by functions which are continuous at
 a point is continuous at this point. -/
 theorem continuousAt_of_locally_uniform_approx_of_continuousAt
@@ -1062,7 +1113,9 @@ theorem continuousAt_of_locally_uniform_approx_of_continuousAt
   apply continuousWithinAt_of_locally_uniform_approx_of_continuousWithinAt (mem_univ _) _
   simpa only [exists_prop, nhdsWithin_univ, continuousWithinAt_univ] using L
 #align continuous_at_of_locally_uniform_approx_of_continuous_at continuousAt_of_locally_uniform_approx_of_continuousAt
+-/
 
+#print continuousOn_of_locally_uniform_approx_of_continuousWithinAt /-
 /-- A function which can be locally uniformly approximated by functions which are continuous
 on a set is continuous on this set. -/
 theorem continuousOn_of_locally_uniform_approx_of_continuousWithinAt
@@ -1071,6 +1124,7 @@ theorem continuousOn_of_locally_uniform_approx_of_continuousWithinAt
     ContinuousOn f s := fun x hx =>
   continuousWithinAt_of_locally_uniform_approx_of_continuousWithinAt hx (L x hx)
 #align continuous_on_of_locally_uniform_approx_of_continuous_within_at continuousOn_of_locally_uniform_approx_of_continuousWithinAt
+-/
 
 #print continuousOn_of_uniform_approx_of_continuousOn /-
 /-- A function which can be uniformly approximated by functions which are continuous on a set
@@ -1082,6 +1136,7 @@ theorem continuousOn_of_uniform_approx_of_continuousOn
 #align continuous_on_of_uniform_approx_of_continuous_on continuousOn_of_uniform_approx_of_continuousOn
 -/
 
+#print continuous_of_locally_uniform_approx_of_continuousAt /-
 /-- A function which can be locally uniformly approximated by continuous functions is continuous. -/
 theorem continuous_of_locally_uniform_approx_of_continuousAt
     (L : ∀ x : α, ∀ u ∈ 𝓤 β, ∃ t ∈ 𝓝 x, ∃ F, ContinuousAt F x ∧ ∀ y ∈ t, (f y, F y) ∈ u) :
@@ -1089,6 +1144,7 @@ theorem continuous_of_locally_uniform_approx_of_continuousAt
   continuous_iff_continuousAt.2 fun x =>
     continuousAt_of_locally_uniform_approx_of_continuousAt (L x)
 #align continuous_of_locally_uniform_approx_of_continuous_at continuous_of_locally_uniform_approx_of_continuousAt
+-/
 
 #print continuous_of_uniform_approx_of_continuous /-
 /-- A function which can be uniformly approximated by continuous functions is continuous. -/
@@ -1156,6 +1212,7 @@ this paragraph, we prove variations around this statement.
 -/
 
 
+#print tendsto_comp_of_locally_uniform_limit_within /-
 /-- If `Fₙ` converges locally uniformly on a neighborhood of `x` within a set `s` to a function `f`
 which is continuous at `x` within `s `, and `gₙ` tends to `x` within `s`, then `Fₙ (gₙ)` tends
 to `f x`. -/
@@ -1174,7 +1231,9 @@ theorem tendsto_comp_of_locally_uniform_limit_within (h : ContinuousWithinAt f s
   rcases hy with ⟨⟨H1, H2⟩, H3⟩
   exact u₁₀ (prod_mk_mem_compRel H3 (H1 _ H2))
 #align tendsto_comp_of_locally_uniform_limit_within tendsto_comp_of_locally_uniform_limit_within
+-/
 
+#print tendsto_comp_of_locally_uniform_limit /-
 /-- If `Fₙ` converges locally uniformly on a neighborhood of `x` to a function `f` which is
 continuous at `x`, and `gₙ` tends to `x`, then `Fₙ (gₙ)` tends to `f x`. -/
 theorem tendsto_comp_of_locally_uniform_limit (h : ContinuousAt f x) (hg : Tendsto g p (𝓝 x))
@@ -1185,6 +1244,7 @@ theorem tendsto_comp_of_locally_uniform_limit (h : ContinuousAt f x) (hg : Tends
   rw [← nhdsWithin_univ] at hunif hg 
   exact tendsto_comp_of_locally_uniform_limit_within h hg hunif
 #align tendsto_comp_of_locally_uniform_limit tendsto_comp_of_locally_uniform_limit
+-/
 
 #print TendstoLocallyUniformlyOn.tendsto_comp /-
 /-- If `Fₙ` tends locally uniformly to `f` on a set `s`, and `gₙ` tends to `x` within `s`, then

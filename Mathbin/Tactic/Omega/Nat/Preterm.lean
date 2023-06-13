@@ -42,16 +42,12 @@ inductive Preterm : Type
   deriving has_reflect, DecidableEq, Inhabited
 #align omega.nat.preterm Omega.Nat.Preterm
 
--- mathport name: preterm.cst
 scoped notation "&" k => Omega.Nat.Preterm.cst k
 
--- mathport name: preterm.var
 scoped infixl:300 " ** " => Omega.Nat.Preterm.var
 
--- mathport name: preterm.add
 scoped notation t " +* " s => Omega.Nat.Preterm.add t s
 
--- mathport name: preterm.sub
 scoped notation t " -* " s => Omega.Nat.Preterm.sub t s
 
 namespace Preterm

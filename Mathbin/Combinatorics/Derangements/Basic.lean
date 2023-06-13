@@ -208,6 +208,7 @@ def derangementsOptionEquivSigmaAtMostOneFixedPoint :
 #align derangements.derangements_option_equiv_sigma_at_most_one_fixed_point derangements.derangementsOptionEquivSigmaAtMostOneFixedPoint
 -/
 
+#print derangements.derangementsRecursionEquiv /-
 /-- The set of derangements on `option α` is equivalent to the union over all `a : α` of
     "derangements on `α` ⊕ derangements on `{a}ᶜ`". -/
 def derangementsRecursionEquiv :
@@ -216,6 +217,7 @@ def derangementsRecursionEquiv :
   derangementsOptionEquivSigmaAtMostOneFixedPoint.trans
     (sigmaCongrRight atMostOneFixedPointEquivSum_derangements)
 #align derangements.derangements_recursion_equiv derangements.derangementsRecursionEquiv
+-/
 
 end Option
 

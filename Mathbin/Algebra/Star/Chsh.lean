@@ -107,6 +107,7 @@ structure IsCHSHTuple {R} [Monoid R] [StarSemigroup R] (A₀ A₁ B₀ B₁ : R)
 
 variable {R : Type u}
 
+#print CHSH_id /-
 theorem CHSH_id [CommRing R] {A₀ A₁ B₀ B₁ : R} (A₀_inv : A₀ ^ 2 = 1) (A₁_inv : A₁ ^ 2 = 1)
     (B₀_inv : B₀ ^ 2 = 1) (B₁_inv : B₁ ^ 2 = 1) :
     (2 - A₀ * B₀ - A₀ * B₁ - A₁ * B₀ + A₁ * B₁) * (2 - A₀ * B₀ - A₀ * B₁ - A₁ * B₀ + A₁ * B₁) =
@@ -122,7 +123,9 @@ theorem CHSH_id [CommRing R] {A₀ A₁ B₀ B₁ : R} (A₀_inv : A₀ ^ 2 = 1)
       mul_one, add_right_neg, add_zero, sub_eq_add_neg, A₀_inv, mul_one, add_right_neg,
       MulZeroClass.zero_mul]
 #align CHSH_id CHSH_id
+-/
 
+#print CHSH_inequality_of_comm /-
 /-- Given a CHSH tuple (A₀, A₁, B₀, B₁) in a *commutative* ordered `*`-algebra over ℝ,
 `A₀ * B₀ + A₀ * B₁ + A₁ * B₀ - A₁ * B₁ ≤ 2`.
 
@@ -158,6 +161,7 @@ theorem CHSH_inequality_of_comm [OrderedCommRing R] [StarOrderedRing R] [Algebra
   apply le_of_sub_nonneg
   simpa only [sub_add_eq_sub_sub, ← sub_add] using i₁
 #align CHSH_inequality_of_comm CHSH_inequality_of_comm
+-/
 
 /-!
 We now prove some rather specialized lemmas in preparation for the Tsirelson inequality,
@@ -165,7 +169,6 @@ which we hide in a namespace as they are unlikely to be useful elsewhere.
 -/
 
 
--- mathport name: «expr√2»
 local notation "√2" => (Real.sqrt 2 : ℝ)
 
 namespace tsirelson_inequality
@@ -176,6 +179,7 @@ we prepare some easy lemmas about √2.
 -/
 
 
+#print TsirelsonInequality.tsirelson_inequality_aux /-
 -- This calculation, which we need for Tsirelson's bound,
 -- defeated me. Thanks for the rescue from Shing Tak Lam!
 theorem tsirelson_inequality_aux : √2 * √2 ^ 3 = √2 * (2 * √2⁻¹ + 4 * (√2⁻¹ * 2⁻¹)) :=
@@ -184,14 +188,18 @@ theorem tsirelson_inequality_aux : √2 * √2 ^ 3 = √2 * (2 * √2⁻¹ + 4 *
   convert congr_arg (· ^ 2) (@Real.sq_sqrt 2 (by norm_num)) using 1 <;> simp only [← pow_mul] <;>
     norm_num
 #align tsirelson_inequality.tsirelson_inequality_aux TsirelsonInequality.tsirelson_inequality_aux
+-/
 
+#print TsirelsonInequality.sqrt_two_inv_mul_self /-
 theorem sqrt_two_inv_mul_self : √2⁻¹ * √2⁻¹ = (2⁻¹ : ℝ) := by rw [← mul_inv]; norm_num
 #align tsirelson_inequality.sqrt_two_inv_mul_self TsirelsonInequality.sqrt_two_inv_mul_self
+-/
 
 end tsirelson_inequality
 
 open tsirelson_inequality
 
+#print tsirelson_inequality /-
 /-- In a noncommutative ordered `*`-algebra over ℝ,
 Tsirelson's bound for a CHSH tuple (A₀, A₁, B₀, B₁) is
 `A₀ * B₀ + A₀ * B₁ + A₁ * B₀ - A₁ * B₁ ≤ 2^(3/2) • 1`.
@@ -261,4 +269,5 @@ theorem tsirelson_inequality [OrderedRing R] [StarOrderedRing R] [Algebra ℝ R]
   apply le_of_sub_nonneg
   simpa only [sub_add_eq_sub_sub, ← sub_add, w] using Pos
 #align tsirelson_inequality tsirelson_inequality
+-/
 

@@ -122,10 +122,12 @@ protected def SMul (R : Type _) [SMul R β] : SMul R α :=
 #align equiv.has_smul Equiv.SMul
 -/
 
+#print Equiv.smul_def /-
 theorem smul_def {R : Type _} [SMul R β] (r : R) (x : α) :
     @SMul.smul _ _ (e.SMul R) r x = e.symm (r • e x) :=
   rfl
 #align equiv.smul_def Equiv.smul_def
+-/
 
 #print Equiv.Pow /-
 /-- Transfer `has_pow` across an `equiv` -/
@@ -136,10 +138,12 @@ protected def Pow (N : Type _) [Pow β N] : Pow α N :=
 #align equiv.has_smul Equiv.SMul
 -/
 
+#print Equiv.pow_def /-
 theorem pow_def {N : Type _} [Pow β N] (n : N) (x : α) :
     @Pow.pow _ _ (e.Pow N) x n = e.symm (e x ^ n) :=
   rfl
 #align equiv.pow_def Equiv.pow_def
+-/
 
 #print Equiv.mulEquiv /-
 /-- An equivalence `e : α ≃ β` gives a multiplicative equivalence `α ≃* β`
@@ -158,12 +162,15 @@ def mulEquiv (e : α ≃ β) [Mul β] :
 #align equiv.add_equiv Equiv.addEquiv
 -/
 
+#print Equiv.mulEquiv_apply /-
 @[simp, to_additive]
 theorem mulEquiv_apply (e : α ≃ β) [Mul β] (a : α) : (mulEquiv e) a = e a :=
   rfl
 #align equiv.mul_equiv_apply Equiv.mulEquiv_apply
 #align equiv.add_equiv_apply Equiv.addEquiv_apply
+-/
 
+#print Equiv.mulEquiv_symm_apply /-
 @[to_additive]
 theorem mulEquiv_symm_apply (e : α ≃ β) [Mul β] (b : β) :
     letI := Equiv.Mul e
@@ -171,7 +178,9 @@ theorem mulEquiv_symm_apply (e : α ≃ β) [Mul β] (b : β) :
   by intros; rfl
 #align equiv.mul_equiv_symm_apply Equiv.mulEquiv_symm_apply
 #align equiv.add_equiv_symm_apply Equiv.addEquiv_symm_apply
+-/
 
+#print Equiv.ringEquiv /-
 /-- An equivalence `e : α ≃ β` gives a ring equivalence `α ≃+* β`
 where the ring structure on `α` is
 the one obtained by transporting a ring structure on `β` back along `e`.
@@ -184,6 +193,7 @@ def ringEquiv (e : α ≃ β) [Add β] [Mul β] : by letI := Equiv.Add e; letI :
       map_add' := fun x y => by apply e.symm.injective; simp
       map_mul' := fun x y => by apply e.symm.injective; simp }
 #align equiv.ring_equiv Equiv.ringEquiv
+-/
 
 #print Equiv.ringEquiv_apply /-
 @[simp]
@@ -513,16 +523,20 @@ protected theorem nontrivial [Nontrivial β] : Nontrivial α :=
 #align equiv.nontrivial Equiv.nontrivial
 -/
 
+#print Equiv.isDomain /-
 /-- Transfer `is_domain` across an `equiv` -/
 @[reducible]
 protected theorem isDomain [Ring α] [Ring β] [IsDomain β] (e : α ≃+* β) : IsDomain α :=
   Function.Injective.isDomain e.toRingHom e.Injective
 #align equiv.is_domain Equiv.isDomain
+-/
 
+#print Equiv.RatCast /-
 /-- Transfer `has_rat_cast` across an `equiv` -/
 @[reducible]
 protected def RatCast [HasRatCast β] : HasRatCast α where ratCast n := e.symm n
 #align equiv.has_rat_cast Equiv.RatCast
+-/
 
 #print Equiv.divisionRing /-
 /-- Transfer `division_ring` across an `equiv` -/
@@ -564,8 +578,6 @@ protected def field [Field β] : Field α :=
 section R
 
 variable (R : Type _)
-
-include R
 
 section
 

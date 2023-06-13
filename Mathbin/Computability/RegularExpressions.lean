@@ -142,10 +142,12 @@ theorem matches'_char (a : α) : (char a).matches' = {[a]} :=
 #align regular_expression.matches_char RegularExpression.matches'_char
 -/
 
+#print RegularExpression.matches'_add /-
 @[simp]
 theorem matches'_add (P Q : RegularExpression α) : (P + Q).matches' = P.matches' + Q.matches' :=
   rfl
 #align regular_expression.matches_add RegularExpression.matches'_add
+-/
 
 #print RegularExpression.matches'_mul /-
 @[simp]
@@ -154,11 +156,13 @@ theorem matches'_mul (P Q : RegularExpression α) : (P * Q).matches' = P.matches
 #align regular_expression.matches_mul RegularExpression.matches'_mul
 -/
 
+#print RegularExpression.matches'_pow /-
 @[simp]
 theorem matches'_pow (P : RegularExpression α) : ∀ n : ℕ, (P ^ n).matches' = P.matches' ^ n
   | 0 => matches'_epsilon
   | n + 1 => (matches'_mul _ _).trans <| Eq.trans (congr_arg _ (matches_pow n)) (pow_succ _ _).symm
 #align regular_expression.matches_pow RegularExpression.matches'_pow
+-/
 
 #print RegularExpression.matches'_star /-
 @[simp]
@@ -178,8 +182,6 @@ def matchEpsilon : RegularExpression α → Bool
   | star P => true
 #align regular_expression.match_epsilon RegularExpression.matchEpsilon
 -/
-
-include dec
 
 #print RegularExpression.deriv /-
 /-- `P.deriv a` matches `x` if `P` matches `a :: x`, the Brzozowski derivative of `P` with respect
@@ -457,8 +459,6 @@ instance (P : RegularExpression α) : DecidablePred P.matches' :=
   rw [← rmatch_iff_matches]
   exact Eq.decidable _ _
 
-omit dec
-
 #print RegularExpression.map /-
 /-- Map the alphabet of a regular expression. -/
 @[simp]
@@ -472,12 +472,14 @@ def map (f : α → β) : RegularExpression α → RegularExpression β
 #align regular_expression.map RegularExpression.map
 -/
 
+#print RegularExpression.map_pow /-
 @[simp]
 protected theorem map_pow (f : α → β) (P : RegularExpression α) :
     ∀ n : ℕ, map f (P ^ n) = map f P ^ n
   | 0 => rfl
   | n + 1 => (congr_arg ((· * ·) (map f P)) (map_pow n) : _)
 #align regular_expression.map_pow RegularExpression.map_pow
+-/
 
 #print RegularExpression.map_id /-
 @[simp]
@@ -491,6 +493,7 @@ theorem map_id : ∀ P : RegularExpression α, P.map id = P
 #align regular_expression.map_id RegularExpression.map_id
 -/
 
+#print RegularExpression.map_map /-
 @[simp]
 theorem map_map (g : β → γ) (f : α → β) : ∀ P : RegularExpression α, (P.map f).map g = P.map (g ∘ f)
   | 0 => rfl
@@ -500,7 +503,9 @@ theorem map_map (g : β → γ) (f : α → β) : ∀ P : RegularExpression α, 
   | R * S => by simp_rw [map, map_map]
   | star R => by simp_rw [map, map_map]
 #align regular_expression.map_map RegularExpression.map_map
+-/
 
+#print RegularExpression.matches'_map /-
 /-- The language of the map is the map of the language. -/
 @[simp]
 theorem matches'_map (f : α → β) :
@@ -516,6 +521,7 @@ theorem matches'_map (f : α → β) :
     simp_rw [← map_pow]
     exact image_Union.symm
 #align regular_expression.matches_map RegularExpression.matches'_map
+-/
 
 end RegularExpression
 

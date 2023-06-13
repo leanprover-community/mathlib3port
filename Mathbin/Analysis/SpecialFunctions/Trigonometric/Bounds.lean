@@ -45,6 +45,7 @@ namespace Real
 
 open scoped Real
 
+#print Real.sin_lt /-
 /-- For 0 < x, we have sin x < x. -/
 theorem sin_lt {x : ℝ} (h : 0 < x) : sin x < x :=
   by
@@ -59,7 +60,9 @@ theorem sin_lt {x : ℝ} (h : 0 < x) : sin x < x :=
   apply pow_le_pow_of_le_one h.le h'
   norm_num
 #align real.sin_lt Real.sin_lt
+-/
 
+#print Real.sin_gt_sub_cube /-
 /-- For 0 < x ≤ 1 we have x - x ^ 3 / 4 < sin x.
 
 This is also true for x > 1, but it's nontrivial for x just above 1. This inequality is not
@@ -77,13 +80,17 @@ theorem sin_gt_sub_cube {x : ℝ} (h : 0 < x) (h' : x ≤ 1) : x - x ^ 3 / 4 < s
   apply pow_le_pow_of_le_one h.le h'
   norm_num
 #align real.sin_gt_sub_cube Real.sin_gt_sub_cube
+-/
 
+#print Real.deriv_tan_sub_id /-
 /-- The derivative of `tan x - x` is `1/(cos x)^2 - 1` away from the zeroes of cos. -/
 theorem deriv_tan_sub_id (x : ℝ) (h : cos x ≠ 0) :
     deriv (fun y : ℝ => tan y - y) x = 1 / cos x ^ 2 - 1 :=
   HasDerivAt.deriv <| by simpa using (has_deriv_at_tan h).add (hasDerivAt_id x).neg
 #align real.deriv_tan_sub_id Real.deriv_tan_sub_id
+-/
 
+#print Real.lt_tan /-
 /-- For all `0 < x < π/2` we have `x < tan x`.
 
 This is proved by checking that the function `tan x - x` vanishes
@@ -126,14 +133,18 @@ theorem lt_tan {x : ℝ} (h1 : 0 < x) (h2 : x < π / 2) : x < tan x :=
   have x_in_U : x ∈ U := ⟨h1.le, h2⟩
   simpa only [tan_zero, sub_zero, sub_pos] using mono zero_in_U x_in_U h1
 #align real.lt_tan Real.lt_tan
+-/
 
+#print Real.le_tan /-
 theorem le_tan {x : ℝ} (h1 : 0 ≤ x) (h2 : x < π / 2) : x ≤ tan x :=
   by
   rcases eq_or_lt_of_le h1 with (rfl | h1')
   · rw [tan_zero]
   · exact le_of_lt (lt_tan h1' h2)
 #align real.le_tan Real.le_tan
+-/
 
+#print Real.cos_lt_one_div_sqrt_sq_add_one /-
 theorem cos_lt_one_div_sqrt_sq_add_one {x : ℝ} (hx1 : -(3 * π / 2) ≤ x) (hx2 : x ≤ 3 * π / 2)
     (hx3 : x ≠ 0) : cos x < 1 / sqrt (x ^ 2 + 1) :=
   by
@@ -158,7 +169,9 @@ theorem cos_lt_one_div_sqrt_sq_add_one {x : ℝ} (hx1 : -(3 * π / 2) ≤ x) (hx
     refine' lt_of_le_of_lt _ (one_div_pos.mpr <| sqrt_pos_of_pos hy3)
     exact cos_nonpos_of_pi_div_two_le_of_le hy1' (by linarith [pi_pos])
 #align real.cos_lt_one_div_sqrt_sq_add_one Real.cos_lt_one_div_sqrt_sq_add_one
+-/
 
+#print Real.cos_le_one_div_sqrt_sq_add_one /-
 theorem cos_le_one_div_sqrt_sq_add_one {x : ℝ} (hx1 : -(3 * π / 2) ≤ x) (hx2 : x ≤ 3 * π / 2) :
     cos x ≤ 1 / sqrt (x ^ 2 + 1) :=
   by
@@ -166,6 +179,7 @@ theorem cos_le_one_div_sqrt_sq_add_one {x : ℝ} (hx1 : -(3 * π / 2) ≤ x) (hx
   · simp
   · exact (cos_lt_one_div_sqrt_sq_add_one hx1 hx2 hx3).le
 #align real.cos_le_one_div_sqrt_sq_add_one Real.cos_le_one_div_sqrt_sq_add_one
+-/
 
 end Real
 

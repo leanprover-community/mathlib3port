@@ -37,10 +37,12 @@ variable (E : Type _)
 instance [UniformSpace E] [Norm E] : Norm (Completion E)
     where norm := Completion.extension Norm.norm
 
+#print UniformSpace.Completion.norm_coe /-
 @[simp]
 theorem norm_coe {E} [SeminormedAddCommGroup E] (x : E) : ‖(x : Completion E)‖ = ‖x‖ :=
   Completion.extension_coe uniformContinuous_norm x
 #align uniform_space.completion.norm_coe UniformSpace.Completion.norm_coe
+-/
 
 instance [SeminormedAddCommGroup E] : NormedAddCommGroup (Completion E) :=
   { Completion.addCommGroup, Completion.instMetricSpace with

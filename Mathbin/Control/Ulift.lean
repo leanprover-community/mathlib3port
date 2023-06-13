@@ -46,10 +46,12 @@ protected def pure : α → PLift α :=
 #align plift.pure PLift.pure
 -/
 
+#print PLift.seq /-
 /-- Applicative sequencing. -/
 protected def seq (f : PLift (α → β)) (x : PLift α) : PLift β :=
   PLift.up (f.down x.down)
 #align plift.seq PLift.seq
+-/
 
 #print PLift.seq_up /-
 @[simp]
@@ -110,15 +112,19 @@ namespace ULift
 
 variable {α : Type u} {β : Type v}
 
+#print ULift.map /-
 /-- Functorial action. -/
 protected def map (f : α → β) (a : ULift α) : ULift β :=
   ULift.up (f a.down)
 #align ulift.map ULift.map
+-/
 
+#print ULift.map_up /-
 @[simp]
 theorem map_up (f : α → β) (a : α) : (ULift.up a).map f = ULift.up (f a) :=
   rfl
 #align ulift.map_up ULift.map_up
+-/
 
 #print ULift.pure /-
 /-- Embedding of pure values. -/
@@ -128,15 +134,19 @@ protected def pure : α → ULift α :=
 #align ulift.pure ULift.pure
 -/
 
+#print ULift.seq /-
 /-- Applicative sequencing. -/
 protected def seq (f : ULift (α → β)) (x : ULift α) : ULift β :=
   ULift.up (f.down x.down)
 #align ulift.seq ULift.seq
+-/
 
+#print ULift.seq_up /-
 @[simp]
 theorem seq_up (f : α → β) (x : α) : (ULift.up f).seq (ULift.up x) = ULift.up (f x) :=
   rfl
 #align ulift.seq_up ULift.seq_up
+-/
 
 #print ULift.bind /-
 /-- Monadic bind. -/
@@ -145,10 +155,12 @@ protected def bind (a : ULift α) (f : α → ULift β) : ULift β :=
 #align ulift.bind ULift.bind
 -/
 
+#print ULift.bind_up /-
 @[simp]
 theorem bind_up (a : α) (f : α → ULift β) : (ULift.up a).bind f = f a :=
   rfl
 #align ulift.bind_up ULift.bind_up
+-/
 
 instance : Monad ULift where
   map := @ULift.map
@@ -176,11 +188,13 @@ instance : LawfulMonad ULift
   bind_assoc := fun α β γ ⟨x⟩ f g => by dsimp only [bind, pure, ULift.pure, ULift.bind]; cases f x;
     rfl
 
+#print ULift.rec.constant /-
 @[simp]
 theorem rec.constant {α : Type u} {β : Sort v} (b : β) :
     (@ULift.rec α (fun _ => β) fun _ => b) = fun _ => b :=
   funext fun x => ULift.casesOn x fun a => Eq.refl (ULift.rec (fun a' => b) { down := a })
 #align ulift.rec.constant ULift.rec.constant
+-/
 
 end ULift
 

@@ -51,6 +51,7 @@ instance decidableLT : @DecidableRel String (· < ·) := by infer_instance
 #align string.decidable_lt String.decidableLT
 -/
 
+#print String.lt_iff_toList_lt /-
 -- short-circuit type class inference
 @[simp]
 theorem lt_iff_toList_lt : ∀ {s₁ s₂ : String}, s₁ < s₂ ↔ s₁.toList < s₂.toList
@@ -69,6 +70,7 @@ theorem lt_iff_toList_lt : ∀ {s₁ s₂ : String}, s₁ < s₂ ↔ s₁.toList
       · simp; refine' ⟨List.Lex.rel, fun e => _⟩
         cases e; · cases h rfl; assumption
 #align string.lt_iff_to_list_lt String.lt_iff_toList_lt
+-/
 
 #print String.LE /-
 instance LE : LE String :=
@@ -81,11 +83,13 @@ instance decidableLE : @DecidableRel String (· ≤ ·) := by infer_instance
 #align string.decidable_le String.decidableLE
 -/
 
+#print String.le_iff_toList_le /-
 -- short-circuit type class inference
 @[simp]
 theorem le_iff_toList_le {s₁ s₂ : String} : s₁ ≤ s₂ ↔ s₁.toList ≤ s₂.toList :=
   (not_congr lt_iff_toList_lt).trans not_lt
 #align string.le_iff_to_list_le String.le_iff_toList_le
+-/
 
 #print String.toList_inj /-
 theorem toList_inj : ∀ {s₁ s₂}, toList s₁ = toList s₂ ↔ s₁ = s₂
@@ -93,14 +97,18 @@ theorem toList_inj : ∀ {s₁ s₂}, toList s₁ = toList s₂ ↔ s₁ = s₂
 #align string.to_list_inj String.toList_inj
 -/
 
+#print String.nil_asString_eq_empty /-
 theorem nil_asString_eq_empty : [].asString = "" :=
   rfl
 #align string.nil_as_string_eq_empty String.nil_asString_eq_empty
+-/
 
+#print String.toList_empty /-
 @[simp]
 theorem toList_empty : "".toList = [] :=
   rfl
 #align string.to_list_empty String.toList_empty
+-/
 
 #print String.asString_inv_toList /-
 theorem asString_inv_toList (s : String) : s.toList.asString = s := by cases s; rfl
@@ -114,15 +122,20 @@ theorem data_singleton (c : Char) : (String.singleton c).toList = [c] :=
 #align string.to_list_singleton String.data_singleton
 -/
 
+#print String.toList_nonempty /-
 theorem toList_nonempty : ∀ {s : String}, s ≠ String.empty → s.toList = s.headI :: (s.drop 1).toList
   | ⟨s⟩, h => by cases s <;> [cases h rfl; rfl]
 #align string.to_list_nonempty String.toList_nonempty
+-/
 
+#print String.head_empty /-
 @[simp]
 theorem head_empty : "".headI = default :=
   rfl
 #align string.head_empty String.head_empty
+-/
 
+#print String.drop_empty /-
 @[simp]
 theorem drop_empty {n : ℕ} : "".drop n = "" :=
   by
@@ -134,6 +147,7 @@ theorem drop_empty {n : ℕ} : "".drop n = "" :=
       simp only [popn, mk_iterator, iterator.nextn, iterator.next]
     · simpa only [← to_list_inj] using hs
 #align string.popn_empty String.drop_empty
+-/
 
 instance : LinearOrder String where
   lt := (· < ·)

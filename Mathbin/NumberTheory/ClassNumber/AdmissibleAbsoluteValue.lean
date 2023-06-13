@@ -36,7 +36,6 @@ of the ring of integers of a global field is finite.
 -/
 
 
--- mathport name: «expr ≺ »
 local infixl:50 " ≺ " => EuclideanDomain.r
 
 namespace AbsoluteValue
@@ -63,6 +62,7 @@ namespace IsAdmissible
 
 variable {abv}
 
+#print AbsoluteValue.IsAdmissible.exists_partition /-
 /-- For all `ε > 0` and finite families `A`, we can partition the remainders of `A` mod `b`
 into `abv.card ε` sets, such that all elements in each part of remainders are close together. -/
 theorem exists_partition {ι : Type _} [Fintype ι] {ε : ℝ} (hε : 0 < ε) {b : R} (hb : b ≠ 0)
@@ -74,7 +74,9 @@ theorem exists_partition {ι : Type _} [Fintype ι] {ε : ℝ} (hε : 0 < ε) {b
   refine' ⟨t ∘ e, fun i₀ i₁ h => _⟩
   convert ht (e i₀) (e i₁) h <;> simp only [e.symm_apply_apply]
 #align absolute_value.is_admissible.exists_partition AbsoluteValue.IsAdmissible.exists_partition
+-/
 
+#print AbsoluteValue.IsAdmissible.exists_approx_aux /-
 /-- Any large enough family of vectors in `R^n` has a pair of elements
 whose remainders are close together, pointwise. -/
 theorem exists_approx_aux (n : ℕ) (h : abv.IsAdmissible) :
@@ -125,7 +127,9 @@ theorem exists_approx_aux (n : ℕ) (h : abv.IsAdmissible) :
   · exact hs k₀ k₁
   · exact h i
 #align absolute_value.is_admissible.exists_approx_aux AbsoluteValue.IsAdmissible.exists_approx_aux
+-/
 
+#print AbsoluteValue.IsAdmissible.exists_approx /-
 /-- Any large enough family of vectors in `R^ι` has a pair of elements
 whose remainders are close together, pointwise. -/
 theorem exists_approx {ι : Type _} [Fintype ι] {ε : ℝ} (hε : 0 < ε) {b : R} (hb : b ≠ 0)
@@ -137,6 +141,7 @@ theorem exists_approx {ι : Type _} [Fintype ι] {ε : ℝ} (hε : 0 < ε) {b : 
   refine' ⟨i₀, i₁, Ne, fun k => _⟩
   convert h (e k) <;> simp only [e.symm_apply_apply]
 #align absolute_value.is_admissible.exists_approx AbsoluteValue.IsAdmissible.exists_approx
+-/
 
 end IsAdmissible
 

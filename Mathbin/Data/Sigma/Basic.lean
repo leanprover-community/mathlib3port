@@ -59,25 +59,33 @@ instance [h₁ : DecidableEq α] [h₂ : ∀ a, DecidableEq (β a)] : DecidableE
       | b₁, b₂, is_false n => isFalse fun h => Sigma.noConfusion h fun e₁ e₂ => n <| eq_of_hEq e₂
     | a₁, _, a₂, _, is_false n => isFalse fun h => Sigma.noConfusion h fun e₁ e₂ => n e₁
 
+#print Sigma.mk.inj_iff /-
 -- sometimes the built-in injectivity support does not work
 @[simp, nolint simp_nf]
 theorem mk.inj_iff {a₁ a₂ : α} {b₁ : β a₁} {b₂ : β a₂} :
     Sigma.mk a₁ b₁ = ⟨a₂, b₂⟩ ↔ a₁ = a₂ ∧ HEq b₁ b₂ := by simp
 #align sigma.mk.inj_iff Sigma.mk.inj_iff
+-/
 
+#print Sigma.eta /-
 @[simp]
 theorem eta : ∀ x : Σ a, β a, Sigma.mk x.1 x.2 = x
   | ⟨i, x⟩ => rfl
 #align sigma.eta Sigma.eta
+-/
 
+#print Sigma.ext /-
 @[ext]
 theorem ext {x₀ x₁ : Sigma β} (h₀ : x₀.1 = x₁.1) (h₁ : HEq x₀.2 x₁.2) : x₀ = x₁ := by cases x₀;
   cases x₁; cases h₀; cases h₁; rfl
 #align sigma.ext Sigma.ext
+-/
 
+#print Sigma.ext_iff /-
 theorem ext_iff {x₀ x₁ : Sigma β} : x₀ = x₁ ↔ x₀.1 = x₁.1 ∧ HEq x₀.2 x₁.2 := by cases x₀; cases x₁;
   exact Sigma.mk.inj_iff
 #align sigma.ext_iff Sigma.ext_iff
+-/
 
 #print Sigma.subtype_ext /-
 /-- A specialized ext lemma for equality of sigma types over an indexed subtype. -/
@@ -95,15 +103,19 @@ theorem subtype_ext_iff {β : Type _} {p : α → β → Prop} {x₀ x₁ : Σ a
 #align sigma.subtype_ext_iff Sigma.subtype_ext_iff
 -/
 
+#print Sigma.forall /-
 @[simp]
 theorem forall {p : (Σ a, β a) → Prop} : (∀ x, p x) ↔ ∀ a b, p ⟨a, b⟩ :=
   ⟨fun h a b => h ⟨a, b⟩, fun h ⟨a, b⟩ => h a b⟩
 #align sigma.forall Sigma.forall
+-/
 
+#print Sigma.exists /-
 @[simp]
 theorem exists {p : (Σ a, β a) → Prop} : (∃ x, p x) ↔ ∃ a b, p ⟨a, b⟩ :=
   ⟨fun ⟨⟨a, b⟩, h⟩ => ⟨a, b, h⟩, fun ⟨a, b, h⟩ => ⟨⟨a, b⟩, h⟩⟩
 #align sigma.exists Sigma.exists
+-/
 
 #print Sigma.map /-
 /-- Map the left and right components of a sigma -/
@@ -120,6 +132,7 @@ theorem sigma_mk_injective {i : α} : Function.Injective (@Sigma.mk α β i)
 #align sigma_mk_injective sigma_mk_injective
 -/
 
+#print Function.Injective.sigma_map /-
 theorem Function.Injective.sigma_map {f₁ : α₁ → α₂} {f₂ : ∀ a, β₁ a → β₂ (f₁ a)}
     (h₁ : Function.Injective f₁) (h₂ : ∀ a, Function.Injective (f₂ a)) :
     Function.Injective (Sigma.map f₁ f₂)
@@ -128,18 +141,24 @@ theorem Function.Injective.sigma_map {f₁ : α₁ → α₂} {f₂ : ∀ a, β�
     obtain rfl : x = y; exact h₂ i (sigma_mk_injective h)
     rfl
 #align function.injective.sigma_map Function.Injective.sigma_map
+-/
 
+#print Function.Injective.of_sigma_map /-
 theorem Function.Injective.of_sigma_map {f₁ : α₁ → α₂} {f₂ : ∀ a, β₁ a → β₂ (f₁ a)}
     (h : Function.Injective (Sigma.map f₁ f₂)) (a : α₁) : Function.Injective (f₂ a) :=
   fun x y hxy => sigma_mk_injective <| @h ⟨a, x⟩ ⟨a, y⟩ (Sigma.ext rfl (heq_iff_eq.2 hxy))
 #align function.injective.of_sigma_map Function.Injective.of_sigma_map
+-/
 
+#print Function.Injective.sigma_map_iff /-
 theorem Function.Injective.sigma_map_iff {f₁ : α₁ → α₂} {f₂ : ∀ a, β₁ a → β₂ (f₁ a)}
     (h₁ : Function.Injective f₁) :
     Function.Injective (Sigma.map f₁ f₂) ↔ ∀ a, Function.Injective (f₂ a) :=
   ⟨fun h => h.of_sigma_map, h₁.sigma_map⟩
 #align function.injective.sigma_map_iff Function.Injective.sigma_map_iff
+-/
 
+#print Function.Surjective.sigma_map /-
 theorem Function.Surjective.sigma_map {f₁ : α₁ → α₂} {f₂ : ∀ a, β₁ a → β₂ (f₁ a)}
     (h₁ : Function.Surjective f₁) (h₂ : ∀ a, Function.Surjective (f₂ a)) :
     Function.Surjective (Sigma.map f₁ f₂) :=
@@ -147,6 +166,7 @@ theorem Function.Surjective.sigma_map {f₁ : α₁ → α₂} {f₂ : ∀ a, β
   simp only [Function.Surjective, Sigma.forall, h₁.forall]
   exact fun i => (h₂ _).forall.2 fun x => ⟨⟨i, x⟩, rfl⟩
 #align function.surjective.sigma_map Function.Surjective.sigma_map
+-/
 
 #print Sigma.curry /-
 /-- Interpret a function on `Σ x : α, β x` as a dependent function with two arguments.
@@ -166,17 +186,21 @@ def Sigma.uncurry {γ : ∀ a, β a → Type _} (f : ∀ (x) (y : β x), γ x y)
 #align sigma.uncurry Sigma.uncurry
 -/
 
+#print Sigma.uncurry_curry /-
 @[simp]
 theorem Sigma.uncurry_curry {γ : ∀ a, β a → Type _} (f : ∀ x : Sigma β, γ x.1 x.2) :
     Sigma.uncurry (Sigma.curry f) = f :=
   funext fun ⟨i, j⟩ => rfl
 #align sigma.uncurry_curry Sigma.uncurry_curry
+-/
 
+#print Sigma.curry_uncurry /-
 @[simp]
 theorem Sigma.curry_uncurry {γ : ∀ a, β a → Type _} (f : ∀ (x) (y : β x), γ x y) :
     Sigma.curry (Sigma.uncurry f) = f :=
   rfl
 #align sigma.curry_uncurry Sigma.curry_uncurry
+-/
 
 #print Prod.toSigma /-
 /-- Convert a product type to a Σ-type. -/
@@ -185,25 +209,33 @@ def Prod.toSigma {α β} (p : α × β) : Σ _ : α, β :=
 #align prod.to_sigma Prod.toSigma
 -/
 
+#print Prod.fst_comp_toSigma /-
 @[simp]
 theorem Prod.fst_comp_toSigma {α β} : Sigma.fst ∘ @Prod.toSigma α β = Prod.fst :=
   rfl
 #align prod.fst_comp_to_sigma Prod.fst_comp_toSigma
+-/
 
+#print Prod.fst_toSigma /-
 @[simp]
 theorem Prod.fst_toSigma {α β} (x : α × β) : (Prod.toSigma x).fst = x.fst :=
   rfl
 #align prod.fst_to_sigma Prod.fst_toSigma
+-/
 
+#print Prod.snd_toSigma /-
 @[simp]
 theorem Prod.snd_toSigma {α β} (x : α × β) : (Prod.toSigma x).snd = x.snd :=
   rfl
 #align prod.snd_to_sigma Prod.snd_toSigma
+-/
 
+#print Prod.toSigma_mk /-
 @[simp]
 theorem Prod.toSigma_mk {α β} (x : α) (y : β) : (x, y).toSigma = ⟨x, y⟩ :=
   rfl
 #align prod.to_sigma_mk Prod.toSigma_mk
+-/
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `reflect_name #[] -/
 -- we generate this manually as `@[derive has_reflect]` fails
@@ -233,10 +265,12 @@ def elim {γ} (f : ∀ a, β a → γ) (a : PSigma β) : γ :=
 #align psigma.elim PSigma.elim
 -/
 
+#print PSigma.elim_val /-
 @[simp]
 theorem elim_val {γ} (f : ∀ a, β a → γ) (a b) : PSigma.elim f ⟨a, b⟩ = f a b :=
   rfl
 #align psigma.elim_val PSigma.elim_val
+-/
 
 instance [Inhabited α] [Inhabited (β default)] : Inhabited (PSigma β) :=
   ⟨⟨default, default⟩⟩
@@ -250,31 +284,41 @@ instance [h₁ : DecidableEq α] [h₂ : ∀ a, DecidableEq (β a)] : DecidableE
       | b₁, b₂, is_false n => isFalse fun h => PSigma.noConfusion h fun e₁ e₂ => n <| eq_of_hEq e₂
     | a₁, _, a₂, _, is_false n => isFalse fun h => PSigma.noConfusion h fun e₁ e₂ => n e₁
 
+#print PSigma.mk.inj_iff /-
 theorem mk.inj_iff {a₁ a₂ : α} {b₁ : β a₁} {b₂ : β a₂} :
     @PSigma.mk α β a₁ b₁ = @PSigma.mk α β a₂ b₂ ↔ a₁ = a₂ ∧ HEq b₁ b₂ :=
   Iff.intro PSigma.mk.inj fun ⟨h₁, h₂⟩ =>
     match a₁, a₂, b₁, b₂, h₁, h₂ with
     | _, _, _, _, Eq.refl a, HEq.refl b => rfl
 #align psigma.mk.inj_iff PSigma.mk.inj_iff
+-/
 
+#print PSigma.ext /-
 @[ext]
 theorem ext {x₀ x₁ : PSigma β} (h₀ : x₀.1 = x₁.1) (h₁ : HEq x₀.2 x₁.2) : x₀ = x₁ := by cases x₀;
   cases x₁; cases h₀; cases h₁; rfl
 #align psigma.ext PSigma.ext
+-/
 
+#print PSigma.ext_iff /-
 theorem ext_iff {x₀ x₁ : PSigma β} : x₀ = x₁ ↔ x₀.1 = x₁.1 ∧ HEq x₀.2 x₁.2 := by cases x₀; cases x₁;
   exact PSigma.mk.inj_iff
 #align psigma.ext_iff PSigma.ext_iff
+-/
 
+#print PSigma.forall /-
 @[simp]
 theorem forall {p : (Σ' a, β a) → Prop} : (∀ x, p x) ↔ ∀ a b, p ⟨a, b⟩ :=
   ⟨fun h a b => h ⟨a, b⟩, fun h ⟨a, b⟩ => h a b⟩
 #align psigma.forall PSigma.forall
+-/
 
+#print PSigma.exists /-
 @[simp]
 theorem exists {p : (Σ' a, β a) → Prop} : (∃ x, p x) ↔ ∃ a b, p ⟨a, b⟩ :=
   ⟨fun ⟨⟨a, b⟩, h⟩ => ⟨a, b, h⟩, fun ⟨a, b, h⟩ => ⟨⟨a, b⟩, h⟩⟩
 #align psigma.exists PSigma.exists
+-/
 
 #print PSigma.subtype_ext /-
 /-- A specialized ext lemma for equality of psigma types over an indexed subtype. -/

@@ -38,8 +38,7 @@ namespace Finsupp
 variable [hz : Zero N] {r : α → α → Prop} {s : N → N → Prop} (hbot : ∀ ⦃n⦄, ¬s n 0)
   (hs : WellFounded s)
 
-include hbot hs
-
+#print Finsupp.Lex.acc /-
 /-- Transferred from `dfinsupp.lex.acc`. See the top of that file for an explanation for the
   appearance of the relation `rᶜ ⊓ (≠)`. -/
 theorem Lex.acc (x : α →₀ N) (h : ∀ a ∈ x.support, Acc (rᶜ ⊓ (· ≠ ·)) a) :
@@ -49,35 +48,44 @@ theorem Lex.acc (x : α →₀ N) (h : ∀ a ∈ x.support, Acc (rᶜ ⊓ (· �
   refine' InvImage.accessible to_dfinsupp (Dfinsupp.Lex.acc (fun a => hbot) (fun a => hs) _ _)
   simpa only [toDfinsupp_support] using h
 #align finsupp.lex.acc Finsupp.Lex.acc
+-/
 
+#print Finsupp.Lex.wellFounded /-
 theorem Lex.wellFounded (hr : WellFounded <| rᶜ ⊓ (· ≠ ·)) : WellFounded (Finsupp.Lex r s) :=
   ⟨fun x => Lex.acc hbot hs x fun a _ => hr.apply a⟩
 #align finsupp.lex.well_founded Finsupp.Lex.wellFounded
+-/
 
+#print Finsupp.Lex.wellFounded' /-
 theorem Lex.wellFounded' [IsTrichotomous α r] (hr : WellFounded r.symm) :
     WellFounded (Finsupp.Lex r s) :=
   (lex_eq_invImage_dfinsupp_lex r s).symm ▸
     InvImage.wf _ (Dfinsupp.Lex.wellFounded' (fun a => hbot) (fun a => hs) hr)
 #align finsupp.lex.well_founded' Finsupp.Lex.wellFounded'
+-/
 
-omit hbot hs
-
+#print Finsupp.Lex.wellFoundedLT /-
 instance Lex.wellFoundedLT [LT α] [IsTrichotomous α (· < ·)] [hα : WellFoundedGT α]
     [CanonicallyOrderedAddMonoid N] [hN : WellFoundedLT N] : WellFoundedLT (Lex (α →₀ N)) :=
   ⟨Lex.wellFounded' (fun n => (zero_le n).not_lt) hN.wf hα.wf⟩
 #align finsupp.lex.well_founded_lt Finsupp.Lex.wellFoundedLT
+-/
 
 variable (r)
 
+#print Finsupp.Lex.wellFounded_of_finite /-
 theorem Lex.wellFounded_of_finite [IsStrictTotalOrder α r] [Finite α] [Zero N]
     (hs : WellFounded s) : WellFounded (Finsupp.Lex r s) :=
   InvImage.wf (@equivFunOnFinite α N _ _) (Pi.Lex.wellFounded r fun a => hs)
 #align finsupp.lex.well_founded_of_finite Finsupp.Lex.wellFounded_of_finite
+-/
 
+#print Finsupp.Lex.wellFoundedLT_of_finite /-
 theorem Lex.wellFoundedLT_of_finite [LinearOrder α] [Finite α] [Zero N] [LT N]
     [hwf : WellFoundedLT N] : WellFoundedLT (Lex (α →₀ N)) :=
   ⟨Finsupp.Lex.wellFounded_of_finite (· < ·) hwf.1⟩
 #align finsupp.lex.well_founded_lt_of_finite Finsupp.Lex.wellFoundedLT_of_finite
+-/
 
 #print Finsupp.wellFoundedLT /-
 protected theorem wellFoundedLT [Zero N] [Preorder N] [WellFoundedLT N] (hbot : ∀ n : N, ¬n < 0) :
@@ -86,10 +94,12 @@ protected theorem wellFoundedLT [Zero N] [Preorder N] [WellFoundedLT N] (hbot : 
 #align finsupp.well_founded_lt Finsupp.wellFoundedLT
 -/
 
+#print Finsupp.wellFoundedLT' /-
 instance wellFoundedLT' [CanonicallyOrderedAddMonoid N] [WellFoundedLT N] :
     WellFoundedLT (α →₀ N) :=
   Finsupp.wellFoundedLT fun a => (zero_le a).not_lt
 #align finsupp.well_founded_lt' Finsupp.wellFoundedLT'
+-/
 
 #print Finsupp.wellFoundedLT_of_finite /-
 instance wellFoundedLT_of_finite [Finite α] [Zero N] [Preorder N] [WellFoundedLT N] :

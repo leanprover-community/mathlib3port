@@ -135,6 +135,7 @@ instead of linearly increasing the work per `my_iso`-related declaration.
 -/
 
 
+#print EquivLike /-
 /-- The class `equiv_like E α β` expresses that terms of type `E` have an
 injective coercion to bijections between `α` and `β`.
 
@@ -149,16 +150,17 @@ class EquivLike (E : Sort _) (α β : outParam (Sort _)) where
   -- The `inv` hypothesis makes this easier to prove with `congr'`
   coe_injective' : ∀ e g, coe e = coe g → inv e = inv g → e = g
 #align equiv_like EquivLike
+-/
 
 namespace EquivLike
 
 variable {E F α β γ : Sort _} [iE : EquivLike E α β] [iF : EquivLike F β γ]
 
-include iE
-
+#print EquivLike.inv_injective /-
 theorem inv_injective : Function.Injective (EquivLike.inv : E → β → α) := fun e g h =>
   coe_injective' e g ((right_inv e).eq_rightInverse (h.symm ▸ left_inv g)) h
 #align equiv_like.inv_injective EquivLike.inv_injective
+-/
 
 #print EquivLike.toEmbeddingLike /-
 instance (priority := 100) toEmbeddingLike : EmbeddingLike E α β
@@ -169,37 +171,52 @@ instance (priority := 100) toEmbeddingLike : EmbeddingLike E α β
 #align equiv_like.to_embedding_like EquivLike.toEmbeddingLike
 -/
 
+#print EquivLike.injective /-
 protected theorem injective (e : E) : Function.Injective e :=
   EmbeddingLike.injective e
 #align equiv_like.injective EquivLike.injective
+-/
 
+#print EquivLike.surjective /-
 protected theorem surjective (e : E) : Function.Surjective e :=
   (right_inv e).Surjective
 #align equiv_like.surjective EquivLike.surjective
+-/
 
+#print EquivLike.bijective /-
 protected theorem bijective (e : E) : Function.Bijective (e : α → β) :=
   ⟨EquivLike.injective e, EquivLike.surjective e⟩
 #align equiv_like.bijective EquivLike.bijective
+-/
 
+#print EquivLike.apply_eq_iff_eq /-
 theorem apply_eq_iff_eq (f : E) {x y : α} : f x = f y ↔ x = y :=
   EmbeddingLike.apply_eq_iff_eq f
 #align equiv_like.apply_eq_iff_eq EquivLike.apply_eq_iff_eq
+-/
 
+#print EquivLike.injective_comp /-
 @[simp]
 theorem injective_comp (e : E) (f : β → γ) : Function.Injective (f ∘ e) ↔ Function.Injective f :=
   Function.Injective.of_comp_iff' f (EquivLike.bijective e)
 #align equiv_like.injective_comp EquivLike.injective_comp
+-/
 
+#print EquivLike.surjective_comp /-
 @[simp]
 theorem surjective_comp (e : E) (f : β → γ) : Function.Surjective (f ∘ e) ↔ Function.Surjective f :=
   (EquivLike.surjective e).of_comp_iff f
 #align equiv_like.surjective_comp EquivLike.surjective_comp
+-/
 
+#print EquivLike.bijective_comp /-
 @[simp]
 theorem bijective_comp (e : E) (f : β → γ) : Function.Bijective (f ∘ e) ↔ Function.Bijective f :=
   (EquivLike.bijective e).of_comp_iff f
 #align equiv_like.bijective_comp EquivLike.bijective_comp
+-/
 
+#print EquivLike.inv_apply_apply /-
 /-- This lemma is only supposed to be used in the generic context, when working with instances
 of classes extending `equiv_like`.
 For concrete isomorphism types such as `equiv`, you should use `equiv.symm_apply_apply`
@@ -210,7 +227,9 @@ TODO: define a generic form of `equiv.symm`. -/
 theorem inv_apply_apply (e : E) (a : α) : EquivLike.inv e (e a) = a :=
   left_inv _ _
 #align equiv_like.inv_apply_apply EquivLike.inv_apply_apply
+-/
 
+#print EquivLike.apply_inv_apply /-
 /-- This lemma is only supposed to be used in the generic context, when working with instances
 of classes extending `equiv_like`.
 For concrete isomorphism types such as `equiv`, you should use `equiv.apply_symm_apply`
@@ -221,24 +240,27 @@ TODO: define a generic form of `equiv.symm`. -/
 theorem apply_inv_apply (e : E) (b : β) : e (EquivLike.inv e b) = b :=
   right_inv _ _
 #align equiv_like.apply_inv_apply EquivLike.apply_inv_apply
+-/
 
-omit iE
-
-include iF
-
+#print EquivLike.comp_injective /-
 theorem comp_injective (f : α → β) (e : F) : Function.Injective (e ∘ f) ↔ Function.Injective f :=
   EmbeddingLike.comp_injective f e
 #align equiv_like.comp_injective EquivLike.comp_injective
+-/
 
+#print EquivLike.comp_surjective /-
 @[simp]
 theorem comp_surjective (f : α → β) (e : F) : Function.Surjective (e ∘ f) ↔ Function.Surjective f :=
   Function.Surjective.of_comp_iff' (EquivLike.bijective e) f
 #align equiv_like.comp_surjective EquivLike.comp_surjective
+-/
 
+#print EquivLike.comp_bijective /-
 @[simp]
 theorem comp_bijective (f : α → β) (e : F) : Function.Bijective (e ∘ f) ↔ Function.Bijective f :=
   (EquivLike.bijective e).of_comp_iff' f
 #align equiv_like.comp_bijective EquivLike.comp_bijective
+-/
 
 #print EquivLike.subsingleton_dom /-
 /-- This is not an instance to avoid slowing down every single `subsingleton` typeclass search.-/

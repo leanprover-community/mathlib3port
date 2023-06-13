@@ -51,7 +51,6 @@ namespace SzemerediRegularity
 variable {α : Type _} [Fintype α] {P : Finpartition (univ : Finset α)} (hP : P.IsEquipartition)
   (G : SimpleGraph α) (ε : ℝ) {U : Finset α} (hU : U ∈ P.parts) (V : Finset α)
 
--- mathport name: exprm
 local notation "m" => (card α / stepBound P.parts.card : ℕ)
 
 /-!

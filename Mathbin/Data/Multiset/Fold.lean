@@ -30,10 +30,7 @@ section Fold
 
 variable (op : α → α → α) [hc : IsCommutative α op] [ha : IsAssociative α op]
 
--- mathport name: op
 local notation a " * " b => op a b
-
-include hc ha
 
 #print Multiset.fold /-
 /-- `fold op b s` folds a commutative associative operation `op` over
@@ -164,21 +161,26 @@ end Fold
 
 section Order
 
+#print Multiset.max_le_of_forall_le /-
 theorem max_le_of_forall_le {α : Type _} [CanonicallyLinearOrderedAddMonoid α] (l : Multiset α)
     (n : α) (h : ∀ x ∈ l, x ≤ n) : l.fold max ⊥ ≤ n :=
   by
   induction l using Quotient.inductionOn
   simpa using List.max_le_of_forall_le _ _ h
 #align multiset.max_le_of_forall_le Multiset.max_le_of_forall_le
+-/
 
+#print Multiset.max_nat_le_of_forall_le /-
 theorem max_nat_le_of_forall_le (l : Multiset ℕ) (n : ℕ) (h : ∀ x ∈ l, x ≤ n) : l.fold max 0 ≤ n :=
   max_le_of_forall_le l n h
 #align multiset.max_nat_le_of_forall_le Multiset.max_nat_le_of_forall_le
+-/
 
 end Order
 
 open Nat
 
+#print Multiset.le_smul_dedup /-
 theorem le_smul_dedup [DecidableEq α] (s : Multiset α) : ∃ n : ℕ, s ≤ n • dedup s :=
   ⟨(s.map fun a => count a s).fold max 0,
     le_iff_count.2 fun a => by
@@ -188,6 +190,7 @@ theorem le_smul_dedup [DecidableEq α] (s : Multiset α) : ∃ n : ℕ, s ≤ n 
           [simp [le_max_left]; simpa [cons_erase h]]
       · simp [count_eq_zero.2 h, Nat.zero_le]⟩
 #align multiset.le_smul_dedup Multiset.le_smul_dedup
+-/
 
 end Multiset
 

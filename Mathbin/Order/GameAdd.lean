@@ -62,6 +62,7 @@ inductive GameAdd : α × β → α × β → Prop
 #align prod.game_add Prod.GameAdd
 -/
 
+#print Prod.gameAdd_iff /-
 theorem gameAdd_iff {rα rβ} {x y : α × β} :
     GameAdd rα rβ x y ↔ rα x.1 y.1 ∧ x.2 = y.2 ∨ rβ x.2 y.2 ∧ x.1 = y.1 :=
   by
@@ -72,27 +73,37 @@ theorem gameAdd_iff {rα rβ} {x y : α × β} :
     rintro ⟨a₁, b₁⟩ ⟨a₂, b₂⟩ (⟨h, rfl : b₁ = b₂⟩ | ⟨h, rfl : a₁ = a₂⟩)
     exacts [game_add.fst h, game_add.snd h]
 #align prod.game_add_iff Prod.gameAdd_iff
+-/
 
+#print Prod.gameAdd_mk_iff /-
 theorem gameAdd_mk_iff {rα rβ} {a₁ a₂ : α} {b₁ b₂ : β} :
     GameAdd rα rβ (a₁, b₁) (a₂, b₂) ↔ rα a₁ a₂ ∧ b₁ = b₂ ∨ rβ b₁ b₂ ∧ a₁ = a₂ :=
   gameAdd_iff
 #align prod.game_add_mk_iff Prod.gameAdd_mk_iff
+-/
 
+#print Prod.gameAdd_swap_swap /-
 @[simp]
 theorem gameAdd_swap_swap : ∀ a b : α × β, GameAdd rβ rα a.symm b.symm ↔ GameAdd rα rβ a b :=
   fun ⟨a₁, b₁⟩ ⟨a₂, b₂⟩ => by rw [Prod.swap, game_add_mk_iff, game_add_mk_iff, or_comm']
 #align prod.game_add_swap_swap Prod.gameAdd_swap_swap
+-/
 
+#print Prod.gameAdd_swap_swap_mk /-
 theorem gameAdd_swap_swap_mk (a₁ a₂ : α) (b₁ b₂ : β) :
     GameAdd rα rβ (a₁, b₁) (a₂, b₂) ↔ GameAdd rβ rα (b₁, a₁) (b₂, a₂) :=
   gameAdd_swap_swap rβ rα (b₁, a₁) (b₂, a₂)
 #align prod.game_add_swap_swap_mk Prod.gameAdd_swap_swap_mk
+-/
 
+#print Prod.gameAdd_le_lex /-
 /-- `prod.game_add` is a `subrelation` of `prod.lex`. -/
 theorem gameAdd_le_lex : GameAdd rα rβ ≤ Prod.Lex rα rβ := fun _ _ h =>
   h.rec (fun _ _ b => Prod.Lex.left b b) fun a _ _ => Prod.Lex.right a
 #align prod.game_add_le_lex Prod.gameAdd_le_lex
+-/
 
+#print Prod.rprod_le_transGen_gameAdd /-
 /-- `prod.rprod` is a subrelation of the transitive closure of `prod.game_add`. -/
 theorem rprod_le_transGen_gameAdd : RProd rα rβ ≤ Relation.TransGen (GameAdd rα rβ) := fun _ _ h =>
   h.rec
@@ -100,9 +111,11 @@ theorem rprod_le_transGen_gameAdd : RProd rα rβ ≤ Relation.TransGen (GameAdd
       intro _ _ _ _ hα hβ
       exact Relation.TransGen.tail (Relation.TransGen.single <| game_add.fst hα) (game_add.snd hβ))
 #align prod.rprod_le_trans_gen_game_add Prod.rprod_le_transGen_gameAdd
+-/
 
 end Prod
 
+#print Acc.prod_gameAdd /-
 /-- If `a` is accessible under `rα` and `b` is accessible under `rβ`, then `(a, b)` is
   accessible under `prod.game_add rα rβ`. Notice that `prod.lex_accessible` requires the
   stronger condition `∀ b, acc rβ b`. -/
@@ -114,7 +127,9 @@ theorem Acc.prod_gameAdd {a b} (ha : Acc rα a) (hb : Acc rβ b) : Acc (Prod.Gam
   rintro (⟨ra⟩ | ⟨rb⟩)
   exacts [iha _ ra (Acc.intro b hb), ihb _ rb]
 #align acc.prod_game_add Acc.prod_gameAdd
+-/
 
+#print WellFounded.prod_gameAdd /-
 /-- The `prod.game_add` relation on well-founded inputs is well-founded.
 
   In particular, the sum of two well-founded games is well-founded. -/
@@ -122,6 +137,7 @@ theorem WellFounded.prod_gameAdd (hα : WellFounded rα) (hβ : WellFounded rβ)
     WellFounded (Prod.GameAdd rα rβ) :=
   ⟨fun ⟨a, b⟩ => (hα.apply a).prod_gameAdd (hβ.apply b)⟩
 #align well_founded.prod_game_add WellFounded.prod_gameAdd
+-/
 
 namespace Prod
 
@@ -137,12 +153,15 @@ def GameAdd.fix {C : α → β → Sort _} (hα : WellFounded rα) (hβ : WellFo
 #align prod.game_add.fix Prod.GameAdd.fix
 -/
 
+#print Prod.GameAdd.fix_eq /-
 theorem GameAdd.fix_eq {C : α → β → Sort _} (hα : WellFounded rα) (hβ : WellFounded rβ)
     (IH : ∀ a₁ b₁, (∀ a₂ b₂, GameAdd rα rβ (a₂, b₂) (a₁, b₁) → C a₂ b₂) → C a₁ b₁) (a : α) (b : β) :
     GameAdd.fix hα hβ IH a b = IH a b fun a' b' h => GameAdd.fix hα hβ IH a' b' :=
   WellFounded.fix_eq _ _ _
 #align prod.game_add.fix_eq Prod.GameAdd.fix_eq
+-/
 
+#print Prod.GameAdd.induction /-
 /-- Induction on the well-founded `prod.game_add` relation.
 
   Note that it's strictly more general to induct on the lexicographic order instead. -/
@@ -152,6 +171,7 @@ theorem GameAdd.induction {C : α → β → Prop} :
         (∀ a₁ b₁, (∀ a₂ b₂, GameAdd rα rβ (a₂, b₂) (a₁, b₁) → C a₂ b₂) → C a₁ b₁) → ∀ a b, C a b :=
   GameAdd.fix
 #align prod.game_add.induction Prod.GameAdd.induction
+-/
 
 end Prod
 

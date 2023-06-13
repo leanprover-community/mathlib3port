@@ -82,20 +82,19 @@ namespace LinearMap
 
 variable (π : W →ₗ[k] V)
 
-include π
-
+#print LinearMap.conjugate /-
 /-- We define the conjugate of `π` by `g`, as a `k`-linear map.
 -/
 def conjugate (g : G) : W →ₗ[k] V :=
   ((GroupSmul.linearMap k V g⁻¹).comp π).comp (GroupSmul.linearMap k W g)
 #align linear_map.conjugate LinearMap.conjugate
+-/
 
 variable (i : V →ₗ[MonoidAlgebra k G] W) (h : ∀ v : V, π (i v) = v)
 
 section
 
-include h
-
+#print LinearMap.conjugate_i /-
 theorem conjugate_i (g : G) (v : V) : (conjugate π g) (i v) = v :=
   by
   dsimp [conjugate]
@@ -103,11 +102,13 @@ theorem conjugate_i (g : G) (v : V) : (conjugate π g) (i v) = v :=
   change (1 : MonoidAlgebra k G) • v = v
   simp
 #align linear_map.conjugate_i LinearMap.conjugate_i
+-/
 
 end
 
 variable (G) [Fintype G]
 
+#print LinearMap.sumOfConjugates /-
 /-- The sum of the conjugates of `π` by each element `g : G`, as a `k`-linear map.
 
 (We postpone dividing by the size of the group as long as possible.)
@@ -115,7 +116,9 @@ variable (G) [Fintype G]
 def sumOfConjugates : W →ₗ[k] V :=
   ∑ g : G, π.conjugate g
 #align linear_map.sum_of_conjugates LinearMap.sumOfConjugates
+-/
 
+#print LinearMap.sumOfConjugatesEquivariant /-
 /-- In fact, the sum over `g : G` of the conjugate of `π` by `g` is a `k[G]`-linear map.
 -/
 def sumOfConjugatesEquivariant : W →ₗ[MonoidAlgebra k G] V :=
@@ -133,22 +136,22 @@ def sumOfConjugatesEquivariant : W →ₗ[MonoidAlgebra k G] V :=
     simp only [← mul_smul, single_mul_single, mul_inv_rev, mul_one, Function.Embedding.coeFn_mk,
       Finset.sum_map, inv_inv, inv_mul_cancel_right]
 #align linear_map.sum_of_conjugates_equivariant LinearMap.sumOfConjugatesEquivariant
+-/
 
 section
 
 variable [inv : Invertible (Fintype.card G : k)]
 
-include inv
-
+#print LinearMap.equivariantProjection /-
 /-- We construct our `k[G]`-linear retraction of `i` as
 $$ \frac{1}{|G|} \sum_{g \in G} g⁻¹ • π(g • -). $$
 -/
 def equivariantProjection : W →ₗ[MonoidAlgebra k G] V :=
   ⅟ (Fintype.card G : k) • π.sumOfConjugatesEquivariant G
 #align linear_map.equivariant_projection LinearMap.equivariantProjection
+-/
 
-include h
-
+#print LinearMap.equivariantProjection_condition /-
 theorem equivariantProjection_condition (v : V) : (π.equivariantProjection G) (i v) = v :=
   by
   rw [equivariant_projection, smul_apply, sum_of_conjugates_equivariant,
@@ -158,6 +161,7 @@ theorem equivariantProjection_condition (v : V) : (π.equivariantProjection G) (
   rw [Finset.sum_const, Finset.card_univ, nsmul_eq_smul_cast k, ← mul_smul,
     Invertible.invOf_mul_self, one_smul]
 #align linear_map.equivariant_projection_condition LinearMap.equivariantProjection_condition
+-/
 
 end
 
@@ -189,6 +193,7 @@ variable {W : Type u} [AddCommGroup W] [Module k W] [Module (MonoidAlgebra k G) 
 
 variable [IsScalarTower k (MonoidAlgebra k G) W]
 
+#print MonoidAlgebra.exists_leftInverse_of_injective /-
 theorem exists_leftInverse_of_injective (f : V →ₗ[MonoidAlgebra k G] W) (hf : f.ker = ⊥) :
     ∃ g : W →ₗ[MonoidAlgebra k G] V, g.comp f = LinearMap.id :=
   by
@@ -204,19 +209,24 @@ theorem exists_leftInverse_of_injective (f : V →ₗ[MonoidAlgebra k G] W) (hf 
   have := congr_arg LinearMap.toFun hφ
   exact congr_fun this v
 #align monoid_algebra.exists_left_inverse_of_injective MonoidAlgebra.exists_leftInverse_of_injective
+-/
 
 namespace Submodule
 
+#print MonoidAlgebra.Submodule.exists_isCompl /-
 theorem exists_isCompl (p : Submodule (MonoidAlgebra k G) V) :
     ∃ q : Submodule (MonoidAlgebra k G) V, IsCompl p q :=
   let ⟨f, hf⟩ := MonoidAlgebra.exists_leftInverse_of_injective p.Subtype p.ker_subtype
   ⟨f.ker, LinearMap.isCompl_of_proj <| LinearMap.ext_iff.1 hf⟩
 #align monoid_algebra.submodule.exists_is_compl MonoidAlgebra.Submodule.exists_isCompl
+-/
 
+#print MonoidAlgebra.Submodule.complementedLattice /-
 /-- This also implies an instance `is_semisimple_module (monoid_algebra k G) V`. -/
 instance complementedLattice : ComplementedLattice (Submodule (MonoidAlgebra k G) V) :=
   ⟨exists_isCompl⟩
 #align monoid_algebra.submodule.complemented_lattice MonoidAlgebra.Submodule.complementedLattice
+-/
 
 end Submodule
 

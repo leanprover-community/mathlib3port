@@ -46,7 +46,7 @@ to make the range of `encode` decidable even when the finiteness of `α` is not.
 open Option List Nat Function
 
 #print Encodable /-
-/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`decode] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`decode] [] -/
 /-- Constructively countable type. Made from an explicit injection `encode : α → ℕ` and a partial
 inverse `decode : ℕ → option α`. Note that finite types *are* countable. See `denumerable` if you
 wish to enforce infiniteness. -/
@@ -122,17 +122,21 @@ def ofEquiv (α) [Encodable α] (e : β ≃ α) : Encodable β :=
 #align encodable.of_equiv Encodable.ofEquiv
 -/
 
+#print Encodable.encode_ofEquiv /-
 @[simp]
 theorem encode_ofEquiv {α β} [Encodable α] (e : β ≃ α) (b : β) :
     @encode _ (ofEquiv _ e) b = encode (e b) :=
   rfl
 #align encodable.encode_of_equiv Encodable.encode_ofEquiv
+-/
 
+#print Encodable.decode_ofEquiv /-
 @[simp]
 theorem decode_ofEquiv {α β} [Encodable α] (e : β ≃ α) (n : ℕ) :
     @decode _ (ofEquiv _ e) n = (decode α n).map e.symm :=
   rfl
 #align encodable.decode_of_equiv Encodable.decode_ofEquiv
+-/
 
 #print Nat.encodable /-
 instance Nat.encodable : Encodable ℕ :=
@@ -360,10 +364,12 @@ theorem encode_inr (b : β) : @encode (Sum α β) _ (Sum.inr b) = bit1 (encode b
   rfl
 #align encodable.encode_inr Encodable.encode_inrₓ
 
+#print Encodable.decode_sum_val /-
 @[simp]
 theorem decode_sum_val (n : ℕ) : decode (Sum α β) n = decodeSum n :=
   rfl
 #align encodable.decode_sum_val Encodable.decode_sum_val
+-/
 
 end Sum
 
@@ -445,12 +451,14 @@ instance Sigma.encodable : Encodable (Sigma γ) :=
 #align sigma.encodable Sigma.encodable
 -/
 
+#print Encodable.decode_sigma_val /-
 @[simp]
 theorem decode_sigma_val (n : ℕ) :
     decode (Sigma γ) n =
       (decode α n.unpair.1).bind fun a => (decode (γ a) n.unpair.2).map <| Sigma.mk a :=
   show decodeSigma._match1 _ = _ by cases n.unpair <;> rfl
 #align encodable.decode_sigma_val Encodable.decode_sigma_val
+-/
 
 #print Encodable.encode_sigma_val /-
 @[simp]
@@ -470,12 +478,14 @@ instance Prod.encodable : Encodable (α × β) :=
   ofEquiv _ (Equiv.sigmaEquivProd α β).symm
 #align prod.encodable Prod.encodable
 
+#print Encodable.decode_prod_val /-
 @[simp]
 theorem decode_prod_val (n : ℕ) :
     decode (α × β) n = (decode α n.unpair.1).bind fun a => (decode β n.unpair.2).map <| Prod.mk a :=
   show (decode (Sigma fun _ => β) n).map (Equiv.sigmaEquivProd α β) = _ by
     simp <;> cases decode α n.unpair.1 <;> simp <;> cases decode β n.unpair.2 <;> rfl
 #align encodable.decode_prod_val Encodable.decode_prod_val
+-/
 
 #print Encodable.encode_prod_val /-
 @[simp]
@@ -492,16 +502,12 @@ open Subtype Decidable
 
 variable {P : α → Prop} [encA : Encodable α] [decP : DecidablePred P]
 
-include encA
-
 #print Encodable.encodeSubtype /-
 /-- Explicit encoding function for a decidable subtype of an encodable type -/
 def encodeSubtype : { a : α // P a } → ℕ
   | ⟨v, h⟩ => encode v
 #align encodable.encode_subtype Encodable.encodeSubtype
 -/
-
-include decP
 
 #print Encodable.decodeSubtype /-
 /-- Explicit decoding function for a decidable subtype of an encodable type -/
@@ -726,17 +732,21 @@ theorem choose_spec (h : ∃ x, p x) : p (choose h) :=
 
 end FindA
 
+#print Encodable.axiom_of_choice /-
 /-- A constructive version of `classical.axiom_of_choice` for `encodable` types. -/
 theorem axiom_of_choice {α : Type _} {β : α → Type _} {R : ∀ x, β x → Prop} [∀ a, Encodable (β a)]
     [∀ x y, Decidable (R x y)] (H : ∀ x, ∃ y, R x y) : ∃ f : ∀ a, β a, ∀ x, R x (f x) :=
   ⟨fun x => choose (H x), fun x => choose_spec (H x)⟩
 #align encodable.axiom_of_choice Encodable.axiom_of_choice
+-/
 
+#print Encodable.skolem /-
 /-- A constructive version of `classical.skolem` for `encodable` types. -/
 theorem skolem {α : Type _} {β : α → Type _} {P : ∀ x, β x → Prop} [c : ∀ a, Encodable (β a)]
     [d : ∀ x y, Decidable (P x y)] : (∀ x, ∃ y, P x y) ↔ ∃ f : ∀ a, β a, ∀ x, P x (f x) :=
   ⟨axiom_of_choice, fun ⟨f, H⟩ x => ⟨_, H x⟩⟩
 #align encodable.skolem Encodable.skolem
+-/
 
 #print Encodable.encode' /-
 /-

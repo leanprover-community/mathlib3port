@@ -61,6 +61,7 @@ open CategoryTheory.Subobject
 
 variable (X : SimplicialObject C)
 
+#print AlgebraicTopology.NormalizedMooreComplex.objX /-
 /-- The normalized Moore complex in degree `n`, as a subobject of `X n`.
 -/
 @[simp]
@@ -68,7 +69,9 @@ def objX : ∀ n : ℕ, Subobject (X.obj (op (SimplexCategory.mk n)))
   | 0 => ⊤
   | n + 1 => Finset.univ.inf fun k : Fin (n + 1) => kernelSubobject (X.δ k.succ)
 #align algebraic_topology.normalized_Moore_complex.obj_X AlgebraicTopology.NormalizedMooreComplex.objX
+-/
 
+#print AlgebraicTopology.NormalizedMooreComplex.objD /-
 /-- The differentials in the normalized Moore complex.
 -/
 @[simp]
@@ -97,7 +100,9 @@ def objD : ∀ n : ℕ, (objX X (n + 1) : C) ⟶ (objX X n : C)
     convert comp_zero
     exact kernel_subobject_arrow_comp _
 #align algebraic_topology.normalized_Moore_complex.obj_d AlgebraicTopology.NormalizedMooreComplex.objD
+-/
 
+#print AlgebraicTopology.NormalizedMooreComplex.d_squared /-
 theorem d_squared (n : ℕ) : objD X (n + 1) ≫ objD X n = 0 :=
   by
   -- It's a pity we need to do a case split here;
@@ -116,6 +121,7 @@ theorem d_squared (n : ℕ) : objD X (n + 1) ≫ objD X n = 0 :=
     slice_lhs 2 3 => rw [kernel_subobject_arrow_comp]
     simp
 #align algebraic_topology.normalized_Moore_complex.d_squared AlgebraicTopology.NormalizedMooreComplex.d_squared
+-/
 
 #print AlgebraicTopology.NormalizedMooreComplex.obj /-
 /-- The normalized Moore complex functor, on objects.
@@ -182,11 +188,13 @@ def normalizedMooreComplex : SimplicialObject C ⥤ ChainComplex C ℕ
 
 variable {C}
 
+#print AlgebraicTopology.normalizedMooreComplex_objD /-
 @[simp]
 theorem normalizedMooreComplex_objD (X : SimplicialObject C) (n : ℕ) :
     ((normalizedMooreComplex C).obj X).d (n + 1) n = NormalizedMooreComplex.objD X n := by
   apply ChainComplex.of_d
 #align algebraic_topology.normalized_Moore_complex_obj_d AlgebraicTopology.normalizedMooreComplex_objD
+-/
 
 end AlgebraicTopology
 

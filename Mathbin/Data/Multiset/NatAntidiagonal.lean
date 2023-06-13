@@ -48,11 +48,13 @@ theorem mem_antidiagonal {n : ℕ} {x : ℕ × ℕ} : x ∈ antidiagonal n ↔ x
 #align multiset.nat.mem_antidiagonal Multiset.Nat.mem_antidiagonal
 -/
 
+#print Multiset.Nat.card_antidiagonal /-
 /-- The cardinality of the antidiagonal of `n` is `n+1`. -/
 @[simp]
 theorem card_antidiagonal (n : ℕ) : (antidiagonal n).card = n + 1 := by
   rw [antidiagonal, coe_card, List.Nat.length_antidiagonal]
 #align multiset.nat.card_antidiagonal Multiset.Nat.card_antidiagonal
+-/
 
 #print Multiset.Nat.antidiagonal_zero /-
 /-- The antidiagonal of `0` is the list `[(0, 0)]` -/

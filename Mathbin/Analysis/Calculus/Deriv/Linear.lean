@@ -53,31 +53,43 @@ section ContinuousLinearMap
 
 variable (e : 𝕜 →L[𝕜] F)
 
+#print ContinuousLinearMap.hasDerivAtFilter /-
 protected theorem ContinuousLinearMap.hasDerivAtFilter : HasDerivAtFilter e (e 1) x L :=
   e.HasFDerivAtFilter.HasDerivAtFilter
 #align continuous_linear_map.has_deriv_at_filter ContinuousLinearMap.hasDerivAtFilter
+-/
 
+#print ContinuousLinearMap.hasStrictDerivAt /-
 protected theorem ContinuousLinearMap.hasStrictDerivAt : HasStrictDerivAt e (e 1) x :=
   e.HasStrictFDerivAt.HasStrictDerivAt
 #align continuous_linear_map.has_strict_deriv_at ContinuousLinearMap.hasStrictDerivAt
+-/
 
+#print ContinuousLinearMap.hasDerivAt /-
 protected theorem ContinuousLinearMap.hasDerivAt : HasDerivAt e (e 1) x :=
   e.HasDerivAtFilter
 #align continuous_linear_map.has_deriv_at ContinuousLinearMap.hasDerivAt
+-/
 
+#print ContinuousLinearMap.hasDerivWithinAt /-
 protected theorem ContinuousLinearMap.hasDerivWithinAt : HasDerivWithinAt e (e 1) s x :=
   e.HasDerivAtFilter
 #align continuous_linear_map.has_deriv_within_at ContinuousLinearMap.hasDerivWithinAt
+-/
 
+#print ContinuousLinearMap.deriv /-
 @[simp]
 protected theorem ContinuousLinearMap.deriv : deriv e x = e 1 :=
   e.HasDerivAt.deriv
 #align continuous_linear_map.deriv ContinuousLinearMap.deriv
+-/
 
+#print ContinuousLinearMap.derivWithin /-
 protected theorem ContinuousLinearMap.derivWithin (hxs : UniqueDiffWithinAt 𝕜 s x) :
     derivWithin e s x = e 1 :=
   e.HasDerivWithinAt.derivWithin hxs
 #align continuous_linear_map.deriv_within ContinuousLinearMap.derivWithin
+-/
 
 end ContinuousLinearMap
 
@@ -88,31 +100,43 @@ section LinearMap
 
 variable (e : 𝕜 →ₗ[𝕜] F)
 
+#print LinearMap.hasDerivAtFilter /-
 protected theorem LinearMap.hasDerivAtFilter : HasDerivAtFilter e (e 1) x L :=
   e.toContinuousLinearMap₁.HasDerivAtFilter
 #align linear_map.has_deriv_at_filter LinearMap.hasDerivAtFilter
+-/
 
+#print LinearMap.hasStrictDerivAt /-
 protected theorem LinearMap.hasStrictDerivAt : HasStrictDerivAt e (e 1) x :=
   e.toContinuousLinearMap₁.HasStrictDerivAt
 #align linear_map.has_strict_deriv_at LinearMap.hasStrictDerivAt
+-/
 
+#print LinearMap.hasDerivAt /-
 protected theorem LinearMap.hasDerivAt : HasDerivAt e (e 1) x :=
   e.HasDerivAtFilter
 #align linear_map.has_deriv_at LinearMap.hasDerivAt
+-/
 
+#print LinearMap.hasDerivWithinAt /-
 protected theorem LinearMap.hasDerivWithinAt : HasDerivWithinAt e (e 1) s x :=
   e.HasDerivAtFilter
 #align linear_map.has_deriv_within_at LinearMap.hasDerivWithinAt
+-/
 
+#print LinearMap.deriv /-
 @[simp]
 protected theorem LinearMap.deriv : deriv e x = e 1 :=
   e.HasDerivAt.deriv
 #align linear_map.deriv LinearMap.deriv
+-/
 
+#print LinearMap.derivWithin /-
 protected theorem LinearMap.derivWithin (hxs : UniqueDiffWithinAt 𝕜 s x) :
     derivWithin e s x = e 1 :=
   e.HasDerivWithinAt.derivWithin hxs
 #align linear_map.deriv_within LinearMap.derivWithin
+-/
 
 end LinearMap
 

@@ -47,6 +47,7 @@ open scoped Pointwise
 
 variable {𝕜 E : Type _}
 
+#print separate_convex_open_set /-
 /-- Given a set `s` which is a convex neighbourhood of `0` and a point `x₀` outside of it, there is
 a continuous linear functional `f` separating `x₀` and `s`, in the sense that it sends `x₀` to 1 and
 all of `s` to values strictly below `1`. -/
@@ -83,10 +84,12 @@ theorem separate_convex_open_set [TopologicalSpace E] [AddCommGroup E] [Topologi
         (absorbent_nhds_zero <| hs₂.mem_nhds hs₀).Absorbs hx₀
     infer_instance
 #align separate_convex_open_set separate_convex_open_set
+-/
 
 variable [TopologicalSpace E] [AddCommGroup E] [TopologicalAddGroup E] [Module ℝ E]
   [ContinuousSMul ℝ E] {s t : Set E} {x y : E}
 
+#print geometric_hahn_banach_open /-
 /-- A version of the **Hahn-Banach theorem**: given disjoint convex sets `s`, `t` where `s` is open,
 there is a continuous linear functional which separates them. -/
 theorem geometric_hahn_banach_open (hs₁ : Convex ℝ s) (hs₂ : IsOpen s) (ht : Convex ℝ t)
@@ -121,20 +124,26 @@ theorem geometric_hahn_banach_open (hs₁ : Convex ℝ s) (hs₂ : IsOpen s) (ht
       simpa using hf₁
   · exact csInf_le ⟨f a₀, ball_image_of_ball <| forall_le _ ha₀⟩ (mem_image_of_mem _ hb)
 #align geometric_hahn_banach_open geometric_hahn_banach_open
+-/
 
+#print geometric_hahn_banach_open_point /-
 theorem geometric_hahn_banach_open_point (hs₁ : Convex ℝ s) (hs₂ : IsOpen s) (disj : x ∉ s) :
     ∃ f : E →L[ℝ] ℝ, ∀ a ∈ s, f a < f x :=
   let ⟨f, s, hs, hx⟩ :=
     geometric_hahn_banach_open hs₁ hs₂ (convex_singleton x) (disjoint_singleton_right.2 disj)
   ⟨f, fun a ha => lt_of_lt_of_le (hs a ha) (hx x (mem_singleton _))⟩
 #align geometric_hahn_banach_open_point geometric_hahn_banach_open_point
+-/
 
+#print geometric_hahn_banach_point_open /-
 theorem geometric_hahn_banach_point_open (ht₁ : Convex ℝ t) (ht₂ : IsOpen t) (disj : x ∉ t) :
     ∃ f : E →L[ℝ] ℝ, ∀ b ∈ t, f x < f b :=
   let ⟨f, hf⟩ := geometric_hahn_banach_open_point ht₁ ht₂ disj
   ⟨-f, by simpa⟩
 #align geometric_hahn_banach_point_open geometric_hahn_banach_point_open
+-/
 
+#print geometric_hahn_banach_open_open /-
 theorem geometric_hahn_banach_open_open (hs₁ : Convex ℝ s) (hs₂ : IsOpen s) (ht₁ : Convex ℝ t)
     (ht₃ : IsOpen t) (disj : Disjoint s t) :
     ∃ (f : E →L[ℝ] ℝ) (u : ℝ), (∀ a ∈ s, f a < u) ∧ ∀ b ∈ t, u < f b :=
@@ -154,9 +163,11 @@ theorem geometric_hahn_banach_open_open (hs₁ : Convex ℝ s) (hs₂ : IsOpen s
   rintro rfl
   exact (hf₁ _ ha₀).not_le (hf₂ _ hb₀)
 #align geometric_hahn_banach_open_open geometric_hahn_banach_open_open
+-/
 
 variable [LocallyConvexSpace ℝ E]
 
+#print geometric_hahn_banach_compact_closed /-
 /-- A version of the **Hahn-Banach theorem**: given disjoint convex sets `s`, `t` where `s` is
 compact and `t` is closed, there is a continuous linear functional which strongly separates them. -/
 theorem geometric_hahn_banach_compact_closed (hs₁ : Convex ℝ s) (hs₂ : IsCompact s)
@@ -175,7 +186,9 @@ theorem geometric_hahn_banach_compact_closed (hs₁ : Convex ℝ s) (hs₂ : IsC
     ⟨f, (f x + u) / 2, u, fun a ha => by linarith [hx₂ a ha], by linarith, fun b hb =>
       hf₂ b (tV hb)⟩
 #align geometric_hahn_banach_compact_closed geometric_hahn_banach_compact_closed
+-/
 
+#print geometric_hahn_banach_closed_compact /-
 /-- A version of the **Hahn-Banach theorem**: given disjoint convex sets `s`, `t` where `s` is
 closed, and `t` is compact, there is a continuous linear functional which strongly separates them.
 -/
@@ -185,7 +198,9 @@ theorem geometric_hahn_banach_closed_compact (hs₁ : Convex ℝ s) (hs₂ : IsC
   let ⟨f, s, t, hs, st, ht⟩ := geometric_hahn_banach_compact_closed ht₁ ht₂ hs₁ hs₂ disj.symm
   ⟨-f, -t, -s, by simpa using ht, by simpa using st, by simpa using hs⟩
 #align geometric_hahn_banach_closed_compact geometric_hahn_banach_closed_compact
+-/
 
+#print geometric_hahn_banach_point_closed /-
 theorem geometric_hahn_banach_point_closed (ht₁ : Convex ℝ t) (ht₂ : IsClosed t) (disj : x ∉ t) :
     ∃ (f : E →L[ℝ] ℝ) (u : ℝ), f x < u ∧ ∀ b ∈ t, u < f b :=
   let ⟨f, u, v, ha, hst, hb⟩ :=
@@ -193,7 +208,9 @@ theorem geometric_hahn_banach_point_closed (ht₁ : Convex ℝ t) (ht₂ : IsClo
       (disjoint_singleton_left.2 disj)
   ⟨f, v, hst.trans' <| ha x <| mem_singleton _, hb⟩
 #align geometric_hahn_banach_point_closed geometric_hahn_banach_point_closed
+-/
 
+#print geometric_hahn_banach_closed_point /-
 theorem geometric_hahn_banach_closed_point (hs₁ : Convex ℝ s) (hs₂ : IsClosed s) (disj : x ∉ s) :
     ∃ (f : E →L[ℝ] ℝ) (u : ℝ), (∀ a ∈ s, f a < u) ∧ u < f x :=
   let ⟨f, s, t, ha, hst, hb⟩ :=
@@ -201,7 +218,9 @@ theorem geometric_hahn_banach_closed_point (hs₁ : Convex ℝ s) (hs₂ : IsClo
       (disjoint_singleton_right.2 disj)
   ⟨f, s, ha, hst.trans <| hb x <| mem_singleton _⟩
 #align geometric_hahn_banach_closed_point geometric_hahn_banach_closed_point
+-/
 
+#print geometric_hahn_banach_point_point /-
 /-- See also `normed_space.eq_iff_forall_dual_eq`. -/
 theorem geometric_hahn_banach_point_point [T1Space E] (hxy : x ≠ y) : ∃ f : E →L[ℝ] ℝ, f x < f y :=
   by
@@ -210,7 +229,9 @@ theorem geometric_hahn_banach_point_point [T1Space E] (hxy : x ≠ y) : ∃ f : 
       (convex_singleton y) isClosed_singleton (disjoint_singleton.2 hxy)
   exact ⟨f, by linarith [hs x rfl, ht y rfl]⟩
 #align geometric_hahn_banach_point_point geometric_hahn_banach_point_point
+-/
 
+#print iInter_halfspaces_eq /-
 /-- A closed convex set is the intersection of the halfspaces containing it. -/
 theorem iInter_halfspaces_eq (hs₁ : Convex ℝ s) (hs₂ : IsClosed s) :
     (⋂ l : E →L[ℝ] ℝ, {x | ∃ y ∈ s, l x ≤ l y}) = s :=
@@ -222,4 +243,5 @@ theorem iInter_halfspaces_eq (hs₁ : Convex ℝ s) (hs₂ : IsClosed s) :
   obtain ⟨y, hy, hxy⟩ := hx l
   exact ((hxy.trans_lt (hlA y hy)).trans hl).not_le le_rfl
 #align Inter_halfspaces_eq iInter_halfspaces_eq
+-/
 

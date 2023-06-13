@@ -34,6 +34,7 @@ class IsInvariantSubring : Prop where
 #align is_invariant_subring IsInvariantSubring
 -/
 
+#print IsInvariantSubring.toMulSemiringAction /-
 instance IsInvariantSubring.toMulSemiringAction [IsInvariantSubring M S] : MulSemiringAction M S
     where
   smul m x := ⟨m • x, IsInvariantSubring.smul_mem m x.2⟩
@@ -44,6 +45,7 @@ instance IsInvariantSubring.toMulSemiringAction [IsInvariantSubring M S] : MulSe
   smul_one m := Subtype.eq <| smul_one m
   smul_mul m s₁ s₂ := Subtype.eq <| smul_mul' m s₁ s₂
 #align is_invariant_subring.to_mul_semiring_action IsInvariantSubring.toMulSemiringAction
+-/
 
 end Ring
 
@@ -55,21 +57,27 @@ variable {R' : Type _} [Ring R'] [MulSemiringAction M R']
 
 variable (U : Subring R') [IsInvariantSubring M U]
 
+#print IsInvariantSubring.subtypeHom /-
 /-- The canonical inclusion from an invariant subring. -/
 def IsInvariantSubring.subtypeHom : U →+*[M] R' :=
   { U.Subtype with map_smul' := fun m s => rfl }
 #align is_invariant_subring.subtype_hom IsInvariantSubring.subtypeHom
+-/
 
+#print IsInvariantSubring.coe_subtypeHom /-
 @[simp]
 theorem IsInvariantSubring.coe_subtypeHom : (IsInvariantSubring.subtypeHom M U : U → R') = coe :=
   rfl
 #align is_invariant_subring.coe_subtype_hom IsInvariantSubring.coe_subtypeHom
+-/
 
+#print IsInvariantSubring.coe_subtypeHom' /-
 @[simp]
 theorem IsInvariantSubring.coe_subtypeHom' :
     (IsInvariantSubring.subtypeHom M U : U →+* R') = U.Subtype :=
   rfl
 #align is_invariant_subring.coe_subtype_hom' IsInvariantSubring.coe_subtypeHom'
+-/
 
 end
 

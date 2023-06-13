@@ -93,7 +93,6 @@ namespace PresheafedSpace.IsOpenImmersion
 
 open PresheafedSpace
 
--- mathport name: expris_open_immersion
 local notation "is_open_immersion" => PresheafedSpace.IsOpenImmersion
 
 attribute [instance] is_open_immersion.c_iso
@@ -321,8 +320,6 @@ section Pullback
 noncomputable section
 
 variable {X Y Z : PresheafedSpace.{v} C} (f : X ⟶ Z) [hf : is_open_immersion f] (g : Y ⟶ Z)
-
-include hf
 
 /-- (Implementation.) The projection map when constructing the pullback along an open immersion.
 -/
@@ -565,8 +562,6 @@ variable {X : PresheafedSpace.{v} C} (Y : SheafedSpace C)
 
 variable (f : X ⟶ Y.toPresheafedSpace) [H : is_open_immersion f]
 
-include H
-
 /-- If `X ⟶ Y` is an open immersion, and `Y` is a SheafedSpace, then so is `X`. -/
 def toSheafedSpace : SheafedSpace C
     where
@@ -604,8 +599,6 @@ instance toSheafedSpace_isOpenImmersion : SheafedSpace.IsOpenImmersion (toSheafe
   H
 #align algebraic_geometry.PresheafedSpace.is_open_immersion.to_SheafedSpace_is_open_immersion AlgebraicGeometry.PresheafedSpace.IsOpenImmersion.toSheafedSpace_isOpenImmersion
 
-omit H
-
 @[simp]
 theorem sheafedSpace_toSheafedSpace {X Y : SheafedSpace.{v} C} (f : X ⟶ Y) [is_open_immersion f] :
     toSheafedSpace Y f = X := by cases X; rfl
@@ -618,8 +611,6 @@ section ToLocallyRingedSpace
 variable {X : PresheafedSpace.{u} CommRingCat.{u}} (Y : LocallyRingedSpace.{u})
 
 variable (f : X ⟶ Y.toPresheafedSpace) [H : is_open_immersion f]
-
-include H
 
 /-- If `X ⟶ Y` is an open immersion, and `Y` is a LocallyRingedSpace, then so is `X`. -/
 def toLocallyRingedSpace : LocallyRingedSpace
@@ -652,8 +643,6 @@ instance toLocallyRingedSpace_isOpenImmersion :
     LocallyRingedSpace.IsOpenImmersion (toLocallyRingedSpaceHom Y f) :=
   H
 #align algebraic_geometry.PresheafedSpace.is_open_immersion.to_LocallyRingedSpace_is_open_immersion AlgebraicGeometry.PresheafedSpace.IsOpenImmersion.toLocallyRingedSpace_isOpenImmersion
-
-omit H
 
 @[simp]
 theorem locallyRingedSpace_toLocallyRingedSpace {X Y : LocallyRingedSpace} (f : X ⟶ Y)
@@ -694,9 +683,6 @@ variable {X Y Z : SheafedSpace C} (f : X ⟶ Z) (g : Y ⟶ Z)
 
 variable [H : SheafedSpace.IsOpenImmersion f]
 
-include H
-
--- mathport name: exprforget
 local notation "forget" => SheafedSpace.forgetToPresheafedSpace
 
 open CategoryTheory.Limits.WalkingCospan
@@ -945,8 +931,6 @@ instance (priority := 100) of_isIso [IsIso g] : LocallyRingedSpace.IsOpenImmersi
         erw [← LocallyRingedSpace.comp_val]; rw [is_iso.hom_inv_id]
         erw [← LocallyRingedSpace.comp_val]; rw [is_iso.inv_hom_id]; constructor <;> simpa⟩⟩
 #align algebraic_geometry.LocallyRingedSpace.is_open_immersion.of_is_iso AlgebraicGeometry.LocallyRingedSpace.IsOpenImmersion.of_isIso
-
-include H
 
 instance comp (g : Z ⟶ Y) [LocallyRingedSpace.IsOpenImmersion g] :
     LocallyRingedSpace.IsOpenImmersion (f ≫ g) :=

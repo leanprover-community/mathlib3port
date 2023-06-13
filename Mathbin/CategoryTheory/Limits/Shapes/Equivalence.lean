@@ -36,9 +36,11 @@ theorem hasInitial_of_equivalence (e : D ⥤ C) [IsEquivalence e] [HasInitial C]
 #align category_theory.has_initial_of_equivalence CategoryTheory.hasInitial_of_equivalence
 -/
 
+#print CategoryTheory.Equivalence.hasInitial_iff /-
 theorem Equivalence.hasInitial_iff (e : C ≌ D) : HasInitial C ↔ HasInitial D :=
   ⟨fun h => has_initial_of_equivalence e.inverse, fun h => has_initial_of_equivalence e.functor⟩
 #align category_theory.equivalence.has_initial_iff CategoryTheory.Equivalence.hasInitial_iff
+-/
 
 #print CategoryTheory.hasTerminal_of_equivalence /-
 theorem hasTerminal_of_equivalence (e : D ⥤ C) [IsEquivalence e] [HasTerminal C] : HasTerminal D :=
@@ -46,9 +48,11 @@ theorem hasTerminal_of_equivalence (e : D ⥤ C) [IsEquivalence e] [HasTerminal 
 #align category_theory.has_terminal_of_equivalence CategoryTheory.hasTerminal_of_equivalence
 -/
 
+#print CategoryTheory.Equivalence.hasTerminal_iff /-
 theorem Equivalence.hasTerminal_iff (e : C ≌ D) : HasTerminal C ↔ HasTerminal D :=
   ⟨fun h => has_terminal_of_equivalence e.inverse, fun h => has_terminal_of_equivalence e.functor⟩
 #align category_theory.equivalence.has_terminal_iff CategoryTheory.Equivalence.hasTerminal_iff
+-/
 
 end CategoryTheory
 

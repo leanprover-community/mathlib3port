@@ -54,8 +54,7 @@ to be satisfied on an explicitly-provided interval.
 
 namespace HasDerivAt
 
-include hab
-
+#print HasDerivAt.lhopital_zero_right_on_Ioo /-
 theorem lhopital_zero_right_on_Ioo (hff' : ∀ x ∈ Ioo a b, HasDerivAt f (f' x) x)
     (hgg' : ∀ x ∈ Ioo a b, HasDerivAt g (g' x) x) (hg' : ∀ x ∈ Ioo a b, g' x ≠ 0)
     (hfa : Tendsto f (𝓝[>] a) (𝓝 0)) (hga : Tendsto g (𝓝[>] a) (𝓝 0))
@@ -106,7 +105,9 @@ theorem lhopital_zero_right_on_Ioo (hff' : ∀ x ∈ Ioo a b, HasDerivAt f (f' x
     try simp
     linarith [this]
 #align has_deriv_at.lhopital_zero_right_on_Ioo HasDerivAt.lhopital_zero_right_on_Ioo
+-/
 
+#print HasDerivAt.lhopital_zero_right_on_Ico /-
 theorem lhopital_zero_right_on_Ico (hff' : ∀ x ∈ Ioo a b, HasDerivAt f (f' x) x)
     (hgg' : ∀ x ∈ Ioo a b, HasDerivAt g (g' x) x) (hcf : ContinuousOn f (Ico a b))
     (hcg : ContinuousOn g (Ico a b)) (hg' : ∀ x ∈ Ioo a b, g' x ≠ 0) (hfa : f a = 0) (hga : g a = 0)
@@ -118,7 +119,9 @@ theorem lhopital_zero_right_on_Ico (hff' : ∀ x ∈ Ioo a b, HasDerivAt f (f' x
   · rw [← hga, ← nhdsWithin_Ioo_eq_nhdsWithin_Ioi hab]
     exact ((hcg a <| left_mem_Ico.mpr hab).mono Ioo_subset_Ico_self).Tendsto
 #align has_deriv_at.lhopital_zero_right_on_Ico HasDerivAt.lhopital_zero_right_on_Ico
+-/
 
+#print HasDerivAt.lhopital_zero_left_on_Ioo /-
 theorem lhopital_zero_left_on_Ioo (hff' : ∀ x ∈ Ioo a b, HasDerivAt f (f' x) x)
     (hgg' : ∀ x ∈ Ioo a b, HasDerivAt g (g' x) x) (hg' : ∀ x ∈ Ioo a b, g' x ≠ 0)
     (hfb : Tendsto f (𝓝[<] b) (𝓝 0)) (hgb : Tendsto g (𝓝[<] b) (𝓝 0))
@@ -145,7 +148,9 @@ theorem lhopital_zero_left_on_Ioo (hff' : ∀ x ∈ Ioo a b, HasDerivAt f (f' x)
   unfold Function.comp at this 
   simpa only [neg_neg]
 #align has_deriv_at.lhopital_zero_left_on_Ioo HasDerivAt.lhopital_zero_left_on_Ioo
+-/
 
+#print HasDerivAt.lhopital_zero_left_on_Ioc /-
 theorem lhopital_zero_left_on_Ioc (hff' : ∀ x ∈ Ioo a b, HasDerivAt f (f' x) x)
     (hgg' : ∀ x ∈ Ioo a b, HasDerivAt g (g' x) x) (hcf : ContinuousOn f (Ioc a b))
     (hcg : ContinuousOn g (Ioc a b)) (hg' : ∀ x ∈ Ioo a b, g' x ≠ 0) (hfb : f b = 0) (hgb : g b = 0)
@@ -157,9 +162,9 @@ theorem lhopital_zero_left_on_Ioc (hff' : ∀ x ∈ Ioo a b, HasDerivAt f (f' x)
   · rw [← hgb, ← nhdsWithin_Ioo_eq_nhdsWithin_Iio hab]
     exact ((hcg b <| right_mem_Ioc.mpr hab).mono Ioo_subset_Ioc_self).Tendsto
 #align has_deriv_at.lhopital_zero_left_on_Ioc HasDerivAt.lhopital_zero_left_on_Ioc
+-/
 
-omit hab
-
+#print HasDerivAt.lhopital_zero_atTop_on_Ioi /-
 theorem lhopital_zero_atTop_on_Ioi (hff' : ∀ x ∈ Ioi a, HasDerivAt f (f' x) x)
     (hgg' : ∀ x ∈ Ioi a, HasDerivAt g (g' x) x) (hg' : ∀ x ∈ Ioi a, g' x ≠ 0)
     (hftop : Tendsto f atTop (𝓝 0)) (hgtop : Tendsto g atTop (𝓝 0))
@@ -194,7 +199,9 @@ theorem lhopital_zero_atTop_on_Ioi (hff' : ∀ x ∈ Ioi a, HasDerivAt f (f' x) 
   unfold Function.comp at this 
   simpa only [inv_inv]
 #align has_deriv_at.lhopital_zero_at_top_on_Ioi HasDerivAt.lhopital_zero_atTop_on_Ioi
+-/
 
+#print HasDerivAt.lhopital_zero_atBot_on_Iio /-
 theorem lhopital_zero_atBot_on_Iio (hff' : ∀ x ∈ Iio a, HasDerivAt f (f' x) x)
     (hgg' : ∀ x ∈ Iio a, HasDerivAt g (g' x) x) (hg' : ∀ x ∈ Iio a, g' x ≠ 0)
     (hfbot : Tendsto f atBot (𝓝 0)) (hgbot : Tendsto g atBot (𝓝 0))
@@ -221,13 +228,13 @@ theorem lhopital_zero_atBot_on_Iio (hff' : ∀ x ∈ Iio a, HasDerivAt f (f' x) 
   unfold Function.comp at this 
   simpa only [neg_neg]
 #align has_deriv_at.lhopital_zero_at_bot_on_Iio HasDerivAt.lhopital_zero_atBot_on_Iio
+-/
 
 end HasDerivAt
 
 namespace deriv
 
-include hab
-
+#print deriv.lhopital_zero_right_on_Ioo /-
 theorem lhopital_zero_right_on_Ioo (hdf : DifferentiableOn ℝ f (Ioo a b))
     (hg' : ∀ x ∈ Ioo a b, deriv g x ≠ 0) (hfa : Tendsto f (𝓝[>] a) (𝓝 0))
     (hga : Tendsto g (𝓝[>] a) (𝓝 0))
@@ -242,7 +249,9 @@ theorem lhopital_zero_right_on_Ioo (hdf : DifferentiableOn ℝ f (Ioo a b))
     HasDerivAt.lhopital_zero_right_on_Ioo hab (fun x hx => (hdf x hx).HasDerivAt)
       (fun x hx => (hdg x hx).HasDerivAt) hg' hfa hga hdiv
 #align deriv.lhopital_zero_right_on_Ioo deriv.lhopital_zero_right_on_Ioo
+-/
 
+#print deriv.lhopital_zero_right_on_Ico /-
 theorem lhopital_zero_right_on_Ico (hdf : DifferentiableOn ℝ f (Ioo a b))
     (hcf : ContinuousOn f (Ico a b)) (hcg : ContinuousOn g (Ico a b))
     (hg' : ∀ x ∈ Ioo a b, (deriv g) x ≠ 0) (hfa : f a = 0) (hga : g a = 0)
@@ -255,7 +264,9 @@ theorem lhopital_zero_right_on_Ico (hdf : DifferentiableOn ℝ f (Ioo a b))
   · rw [← hga, ← nhdsWithin_Ioo_eq_nhdsWithin_Ioi hab]
     exact ((hcg a <| left_mem_Ico.mpr hab).mono Ioo_subset_Ico_self).Tendsto
 #align deriv.lhopital_zero_right_on_Ico deriv.lhopital_zero_right_on_Ico
+-/
 
+#print deriv.lhopital_zero_left_on_Ioo /-
 theorem lhopital_zero_left_on_Ioo (hdf : DifferentiableOn ℝ f (Ioo a b))
     (hg' : ∀ x ∈ Ioo a b, (deriv g) x ≠ 0) (hfb : Tendsto f (𝓝[<] b) (𝓝 0))
     (hgb : Tendsto g (𝓝[<] b) (𝓝 0))
@@ -270,9 +281,9 @@ theorem lhopital_zero_left_on_Ioo (hdf : DifferentiableOn ℝ f (Ioo a b))
     HasDerivAt.lhopital_zero_left_on_Ioo hab (fun x hx => (hdf x hx).HasDerivAt)
       (fun x hx => (hdg x hx).HasDerivAt) hg' hfb hgb hdiv
 #align deriv.lhopital_zero_left_on_Ioo deriv.lhopital_zero_left_on_Ioo
+-/
 
-omit hab
-
+#print deriv.lhopital_zero_atTop_on_Ioi /-
 theorem lhopital_zero_atTop_on_Ioi (hdf : DifferentiableOn ℝ f (Ioi a))
     (hg' : ∀ x ∈ Ioi a, (deriv g) x ≠ 0) (hftop : Tendsto f atTop (𝓝 0))
     (hgtop : Tendsto g atTop (𝓝 0)) (hdiv : Tendsto (fun x => (deriv f) x / (deriv g) x) atTop l) :
@@ -286,7 +297,9 @@ theorem lhopital_zero_atTop_on_Ioi (hdf : DifferentiableOn ℝ f (Ioi a))
     HasDerivAt.lhopital_zero_atTop_on_Ioi (fun x hx => (hdf x hx).HasDerivAt)
       (fun x hx => (hdg x hx).HasDerivAt) hg' hftop hgtop hdiv
 #align deriv.lhopital_zero_at_top_on_Ioi deriv.lhopital_zero_atTop_on_Ioi
+-/
 
+#print deriv.lhopital_zero_atBot_on_Iio /-
 theorem lhopital_zero_atBot_on_Iio (hdf : DifferentiableOn ℝ f (Iio a))
     (hg' : ∀ x ∈ Iio a, (deriv g) x ≠ 0) (hfbot : Tendsto f atBot (𝓝 0))
     (hgbot : Tendsto g atBot (𝓝 0)) (hdiv : Tendsto (fun x => (deriv f) x / (deriv g) x) atBot l) :
@@ -300,6 +313,7 @@ theorem lhopital_zero_atBot_on_Iio (hdf : DifferentiableOn ℝ f (Iio a))
     HasDerivAt.lhopital_zero_atBot_on_Iio (fun x hx => (hdf x hx).HasDerivAt)
       (fun x hx => (hdg x hx).HasDerivAt) hg' hfbot hgbot hdiv
 #align deriv.lhopital_zero_at_bot_on_Iio deriv.lhopital_zero_atBot_on_Iio
+-/
 
 end deriv
 
@@ -313,6 +327,7 @@ conditions holding eventually.
 
 namespace HasDerivAt
 
+#print HasDerivAt.lhopital_zero_nhds_right /-
 /-- L'Hôpital's rule for approaching a real from the right, `has_deriv_at` version -/
 theorem lhopital_zero_nhds_right (hff' : ∀ᶠ x in 𝓝[>] a, HasDerivAt f (f' x) x)
     (hgg' : ∀ᶠ x in 𝓝[>] a, HasDerivAt g (g' x) x) (hg' : ∀ᶠ x in 𝓝[>] a, g' x ≠ 0)
@@ -333,7 +348,9 @@ theorem lhopital_zero_nhds_right (hff' : ∀ᶠ x in 𝓝[>] a, HasDerivAt f (f'
     | exact (hu hx).1.2
     | exact (hu hx).2
 #align has_deriv_at.lhopital_zero_nhds_right HasDerivAt.lhopital_zero_nhds_right
+-/
 
+#print HasDerivAt.lhopital_zero_nhds_left /-
 /-- L'Hôpital's rule for approaching a real from the left, `has_deriv_at` version -/
 theorem lhopital_zero_nhds_left (hff' : ∀ᶠ x in 𝓝[<] a, HasDerivAt f (f' x) x)
     (hgg' : ∀ᶠ x in 𝓝[<] a, HasDerivAt g (g' x) x) (hg' : ∀ᶠ x in 𝓝[<] a, g' x ≠ 0)
@@ -354,7 +371,9 @@ theorem lhopital_zero_nhds_left (hff' : ∀ᶠ x in 𝓝[<] a, HasDerivAt f (f' 
     | exact (hl hx).1.2
     | exact (hl hx).2
 #align has_deriv_at.lhopital_zero_nhds_left HasDerivAt.lhopital_zero_nhds_left
+-/
 
+#print HasDerivAt.lhopital_zero_nhds' /-
 /-- L'Hôpital's rule for approaching a real, `has_deriv_at` version. This
   does not require anything about the situation at `a` -/
 theorem lhopital_zero_nhds' (hff' : ∀ᶠ x in 𝓝[≠] a, HasDerivAt f (f' x) x)
@@ -367,7 +386,9 @@ theorem lhopital_zero_nhds' (hff' : ∀ᶠ x in 𝓝[≠] a, HasDerivAt f (f' x)
     ⟨lhopital_zero_nhds_left hff'.1 hgg'.1 hg'.1 hfa.1 hga.1 hdiv.1,
       lhopital_zero_nhds_right hff'.2 hgg'.2 hg'.2 hfa.2 hga.2 hdiv.2⟩
 #align has_deriv_at.lhopital_zero_nhds' HasDerivAt.lhopital_zero_nhds'
+-/
 
+#print HasDerivAt.lhopital_zero_nhds /-
 /-- **L'Hôpital's rule** for approaching a real, `has_deriv_at` version -/
 theorem lhopital_zero_nhds (hff' : ∀ᶠ x in 𝓝 a, HasDerivAt f (f' x) x)
     (hgg' : ∀ᶠ x in 𝓝 a, HasDerivAt g (g' x) x) (hg' : ∀ᶠ x in 𝓝 a, g' x ≠ 0)
@@ -379,7 +400,9 @@ theorem lhopital_zero_nhds (hff' : ∀ᶠ x in 𝓝 a, HasDerivAt f (f' x) x)
       | apply tendsto_nhdsWithin_of_tendsto_nhds <;>
     assumption
 #align has_deriv_at.lhopital_zero_nhds HasDerivAt.lhopital_zero_nhds
+-/
 
+#print HasDerivAt.lhopital_zero_atTop /-
 /-- L'Hôpital's rule for approaching +∞, `has_deriv_at` version -/
 theorem lhopital_zero_atTop (hff' : ∀ᶠ x in atTop, HasDerivAt f (f' x) x)
     (hgg' : ∀ᶠ x in atTop, HasDerivAt g (g' x) x) (hg' : ∀ᶠ x in atTop, g' x ≠ 0)
@@ -402,7 +425,9 @@ theorem lhopital_zero_atTop (hff' : ∀ᶠ x in atTop, HasDerivAt f (f' x) x)
     | exact (hl' hx).1.1
     | exact (hl' hx).1.2
 #align has_deriv_at.lhopital_zero_at_top HasDerivAt.lhopital_zero_atTop
+-/
 
+#print HasDerivAt.lhopital_zero_atBot /-
 /-- L'Hôpital's rule for approaching -∞, `has_deriv_at` version -/
 theorem lhopital_zero_atBot (hff' : ∀ᶠ x in atBot, HasDerivAt f (f' x) x)
     (hgg' : ∀ᶠ x in atBot, HasDerivAt g (g' x) x) (hg' : ∀ᶠ x in atBot, g' x ≠ 0)
@@ -425,11 +450,13 @@ theorem lhopital_zero_atBot (hff' : ∀ᶠ x in atBot, HasDerivAt f (f' x) x)
     | exact (hl' hx).1.1
     | exact (hl' hx).1.2
 #align has_deriv_at.lhopital_zero_at_bot HasDerivAt.lhopital_zero_atBot
+-/
 
 end HasDerivAt
 
 namespace deriv
 
+#print deriv.lhopital_zero_nhds_right /-
 /-- **L'Hôpital's rule** for approaching a real from the right, `deriv` version -/
 theorem lhopital_zero_nhds_right (hdf : ∀ᶠ x in 𝓝[>] a, DifferentiableAt ℝ f x)
     (hg' : ∀ᶠ x in 𝓝[>] a, deriv g x ≠ 0) (hfa : Tendsto f (𝓝[>] a) (𝓝 0))
@@ -447,7 +474,9 @@ theorem lhopital_zero_nhds_right (hdf : ∀ᶠ x in 𝓝[>] a, DifferentiableAt 
     hdg.mp (eventually_of_forall fun _ => DifferentiableAt.hasDerivAt)
   exact HasDerivAt.lhopital_zero_nhds_right hdf' hdg' hg' hfa hga hdiv
 #align deriv.lhopital_zero_nhds_right deriv.lhopital_zero_nhds_right
+-/
 
+#print deriv.lhopital_zero_nhds_left /-
 /-- **L'Hôpital's rule** for approaching a real from the left, `deriv` version -/
 theorem lhopital_zero_nhds_left (hdf : ∀ᶠ x in 𝓝[<] a, DifferentiableAt ℝ f x)
     (hg' : ∀ᶠ x in 𝓝[<] a, deriv g x ≠ 0) (hfa : Tendsto f (𝓝[<] a) (𝓝 0))
@@ -465,7 +494,9 @@ theorem lhopital_zero_nhds_left (hdf : ∀ᶠ x in 𝓝[<] a, DifferentiableAt �
     hdg.mp (eventually_of_forall fun _ => DifferentiableAt.hasDerivAt)
   exact HasDerivAt.lhopital_zero_nhds_left hdf' hdg' hg' hfa hga hdiv
 #align deriv.lhopital_zero_nhds_left deriv.lhopital_zero_nhds_left
+-/
 
+#print deriv.lhopital_zero_nhds' /-
 /-- **L'Hôpital's rule** for approaching a real, `deriv` version. This
   does not require anything about the situation at `a` -/
 theorem lhopital_zero_nhds' (hdf : ∀ᶠ x in 𝓝[≠] a, DifferentiableAt ℝ f x)
@@ -479,7 +510,9 @@ theorem lhopital_zero_nhds' (hdf : ∀ᶠ x in 𝓝[≠] a, DifferentiableAt ℝ
     ⟨lhopital_zero_nhds_left hdf.1 hg'.1 hfa.1 hga.1 hdiv.1,
       lhopital_zero_nhds_right hdf.2 hg'.2 hfa.2 hga.2 hdiv.2⟩
 #align deriv.lhopital_zero_nhds' deriv.lhopital_zero_nhds'
+-/
 
+#print deriv.lhopital_zero_nhds /-
 /-- **L'Hôpital's rule** for approaching a real, `deriv` version -/
 theorem lhopital_zero_nhds (hdf : ∀ᶠ x in 𝓝 a, DifferentiableAt ℝ f x)
     (hg' : ∀ᶠ x in 𝓝 a, deriv g x ≠ 0) (hfa : Tendsto f (𝓝 a) (𝓝 0)) (hga : Tendsto g (𝓝 a) (𝓝 0))
@@ -491,7 +524,9 @@ theorem lhopital_zero_nhds (hdf : ∀ᶠ x in 𝓝 a, DifferentiableAt ℝ f x)
       | apply tendsto_nhdsWithin_of_tendsto_nhds <;>
     assumption
 #align deriv.lhopital_zero_nhds deriv.lhopital_zero_nhds
+-/
 
+#print deriv.lhopital_zero_atTop /-
 /-- **L'Hôpital's rule** for approaching +∞, `deriv` version -/
 theorem lhopital_zero_atTop (hdf : ∀ᶠ x : ℝ in atTop, DifferentiableAt ℝ f x)
     (hg' : ∀ᶠ x : ℝ in atTop, deriv g x ≠ 0) (hftop : Tendsto f atTop (𝓝 0))
@@ -508,7 +543,9 @@ theorem lhopital_zero_atTop (hdf : ∀ᶠ x : ℝ in atTop, DifferentiableAt ℝ
     hdg.mp (eventually_of_forall fun _ => DifferentiableAt.hasDerivAt)
   exact HasDerivAt.lhopital_zero_atTop hdf' hdg' hg' hftop hgtop hdiv
 #align deriv.lhopital_zero_at_top deriv.lhopital_zero_atTop
+-/
 
+#print deriv.lhopital_zero_atBot /-
 /-- **L'Hôpital's rule** for approaching -∞, `deriv` version -/
 theorem lhopital_zero_atBot (hdf : ∀ᶠ x : ℝ in atBot, DifferentiableAt ℝ f x)
     (hg' : ∀ᶠ x : ℝ in atBot, deriv g x ≠ 0) (hfbot : Tendsto f atBot (𝓝 0))
@@ -525,6 +562,7 @@ theorem lhopital_zero_atBot (hdf : ∀ᶠ x : ℝ in atBot, DifferentiableAt ℝ
     hdg.mp (eventually_of_forall fun _ => DifferentiableAt.hasDerivAt)
   exact HasDerivAt.lhopital_zero_atBot hdf' hdg' hg' hfbot hgbot hdiv
 #align deriv.lhopital_zero_at_bot deriv.lhopital_zero_atBot
+-/
 
 end deriv
 

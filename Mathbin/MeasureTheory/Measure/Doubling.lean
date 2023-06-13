@@ -39,7 +39,7 @@ open Set Filter Metric MeasureTheory TopologicalSpace
 open scoped ENNReal NNReal Topology
 
 #print IsUnifLocDoublingMeasure /-
-/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`exists_measure_closedBall_le_mul] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`exists_measure_closedBall_le_mul] [] -/
 /-- A measure `μ` is said to be a uniformly locally doubling measure if there exists a constant `C`
 such that for all sufficiently small radii `ε`, and for any centre, the measure of a ball of radius
 `2 * ε` is bounded by `C` times the measure of the concentric ball of radius `ε`.
@@ -70,11 +70,14 @@ def doublingConstant : ℝ≥0 :=
 #align is_unif_loc_doubling_measure.doubling_constant IsUnifLocDoublingMeasure.doublingConstant
 -/
 
+#print IsUnifLocDoublingMeasure.exists_measure_closedBall_le_mul' /-
 theorem exists_measure_closedBall_le_mul' :
     ∀ᶠ ε in 𝓝[>] 0, ∀ x, μ (closedBall x (2 * ε)) ≤ doublingConstant μ * μ (closedBall x ε) :=
   Classical.choose_spec <| exists_measure_closedBall_le_mul μ
 #align is_unif_loc_doubling_measure.exists_measure_closed_ball_le_mul' IsUnifLocDoublingMeasure.exists_measure_closedBall_le_mul'
+-/
 
+#print IsUnifLocDoublingMeasure.exists_eventually_forall_measure_closedBall_le_mul /-
 theorem exists_eventually_forall_measure_closedBall_le_mul (K : ℝ) :
     ∃ C : ℝ≥0,
       ∀ᶠ ε in 𝓝[>] 0, ∀ (x t) (ht : t ≤ K), μ (closedBall x (t * ε)) ≤ C * μ (closedBall x ε) :=
@@ -108,6 +111,7 @@ theorem exists_eventually_forall_measure_closedBall_le_mul (K : ℝ) :
     rw [← Real.rpow_nat_cast]
     exact Real.rpow_le_rpow_of_exponent_le one_le_two (Nat.le_ceil (Real.logb 2 K))
 #align is_unif_loc_doubling_measure.exists_eventually_forall_measure_closed_ball_le_mul IsUnifLocDoublingMeasure.exists_eventually_forall_measure_closedBall_le_mul
+-/
 
 #print IsUnifLocDoublingMeasure.scalingConstantOf /-
 /-- A variant of `is_unif_loc_doubling_measure.doubling_constant` which allows for scaling the
@@ -124,6 +128,7 @@ theorem one_le_scalingConstantOf (K : ℝ) : 1 ≤ scalingConstantOf μ K :=
 #align is_unif_loc_doubling_measure.one_le_scaling_constant_of IsUnifLocDoublingMeasure.one_le_scalingConstantOf
 -/
 
+#print IsUnifLocDoublingMeasure.eventually_measure_mul_le_scalingConstantOf_mul /-
 theorem eventually_measure_mul_le_scalingConstantOf_mul (K : ℝ) :
     ∃ R : ℝ,
       0 < R ∧
@@ -142,7 +147,9 @@ theorem eventually_measure_mul_le_scalingConstantOf_mul (K : ℝ) :
   · apply (hR ⟨rpos, hr⟩ x t ht.2).trans _
     exact mul_le_mul_right' (ENNReal.coe_le_coe.2 (le_max_left _ _)) _
 #align is_unif_loc_doubling_measure.eventually_measure_mul_le_scaling_constant_of_mul IsUnifLocDoublingMeasure.eventually_measure_mul_le_scalingConstantOf_mul
+-/
 
+#print IsUnifLocDoublingMeasure.eventually_measure_le_scaling_constant_mul /-
 theorem eventually_measure_le_scaling_constant_mul (K : ℝ) :
     ∀ᶠ r in 𝓝[>] 0, ∀ x, μ (closedBall x (K * r)) ≤ scalingConstantOf μ K * μ (closedBall x r) :=
   by
@@ -151,7 +158,9 @@ theorem eventually_measure_le_scaling_constant_mul (K : ℝ) :
     r hr x
   exact (hr x K le_rfl).trans (mul_le_mul_right' (ENNReal.coe_le_coe.2 (le_max_left _ _)) _)
 #align is_unif_loc_doubling_measure.eventually_measure_le_scaling_constant_mul IsUnifLocDoublingMeasure.eventually_measure_le_scaling_constant_mul
+-/
 
+#print IsUnifLocDoublingMeasure.eventually_measure_le_scaling_constant_mul' /-
 theorem eventually_measure_le_scaling_constant_mul' (K : ℝ) (hK : 0 < K) :
     ∀ᶠ r in 𝓝[>] 0, ∀ x, μ (closedBall x r) ≤ scalingConstantOf μ K⁻¹ * μ (closedBall x (K * r)) :=
   by
@@ -159,6 +168,7 @@ theorem eventually_measure_le_scaling_constant_mul' (K : ℝ) (hK : 0 < K) :
   ext
   simp [inv_mul_cancel_left₀ hK.ne']
 #align is_unif_loc_doubling_measure.eventually_measure_le_scaling_constant_mul' IsUnifLocDoublingMeasure.eventually_measure_le_scaling_constant_mul'
+-/
 
 #print IsUnifLocDoublingMeasure.scalingScaleOf /-
 /-- A scale below which the doubling measure `μ` satisfies good rescaling properties when one
@@ -169,15 +179,19 @@ def scalingScaleOf (K : ℝ) : ℝ :=
 #align is_unif_loc_doubling_measure.scaling_scale_of IsUnifLocDoublingMeasure.scalingScaleOf
 -/
 
+#print IsUnifLocDoublingMeasure.scalingScaleOf_pos /-
 theorem scalingScaleOf_pos (K : ℝ) : 0 < scalingScaleOf μ K :=
   (eventually_measure_mul_le_scalingConstantOf_mul μ K).choose_spec.1
 #align is_unif_loc_doubling_measure.scaling_scale_of_pos IsUnifLocDoublingMeasure.scalingScaleOf_pos
+-/
 
+#print IsUnifLocDoublingMeasure.measure_mul_le_scalingConstantOf_mul /-
 theorem measure_mul_le_scalingConstantOf_mul {K : ℝ} {x : α} {t r : ℝ} (ht : t ∈ Ioc 0 K)
     (hr : r ≤ scalingScaleOf μ K) :
     μ (closedBall x (t * r)) ≤ scalingConstantOf μ K * μ (closedBall x r) :=
   (eventually_measure_mul_le_scalingConstantOf_mul μ K).choose_spec.2 x t r ht hr
 #align is_unif_loc_doubling_measure.measure_mul_le_scaling_constant_of_mul IsUnifLocDoublingMeasure.measure_mul_le_scalingConstantOf_mul
+-/
 
 end IsUnifLocDoublingMeasure
 

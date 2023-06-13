@@ -42,49 +42,63 @@ namespace IsHomeomorphicTrivialFiberBundle
 
 variable {F} {proj : Z → B}
 
+#print IsHomeomorphicTrivialFiberBundle.proj_eq /-
 protected theorem proj_eq (h : IsHomeomorphicTrivialFiberBundle F proj) :
     ∃ e : Z ≃ₜ B × F, proj = Prod.fst ∘ e :=
   ⟨h.some, (funext h.choose_spec).symm⟩
 #align is_homeomorphic_trivial_fiber_bundle.proj_eq IsHomeomorphicTrivialFiberBundle.proj_eq
+-/
 
+#print IsHomeomorphicTrivialFiberBundle.surjective_proj /-
 /-- The projection from a trivial fiber bundle to its base is surjective. -/
 protected theorem surjective_proj [Nonempty F] (h : IsHomeomorphicTrivialFiberBundle F proj) :
     Function.Surjective proj := by
   obtain ⟨e, rfl⟩ := h.proj_eq
   exact prod.fst_surjective.comp e.surjective
 #align is_homeomorphic_trivial_fiber_bundle.surjective_proj IsHomeomorphicTrivialFiberBundle.surjective_proj
+-/
 
+#print IsHomeomorphicTrivialFiberBundle.continuous_proj /-
 /-- The projection from a trivial fiber bundle to its base is continuous. -/
 protected theorem continuous_proj (h : IsHomeomorphicTrivialFiberBundle F proj) : Continuous proj :=
   by
   obtain ⟨e, rfl⟩ := h.proj_eq
   exact continuous_fst.comp e.continuous
 #align is_homeomorphic_trivial_fiber_bundle.continuous_proj IsHomeomorphicTrivialFiberBundle.continuous_proj
+-/
 
+#print IsHomeomorphicTrivialFiberBundle.isOpenMap_proj /-
 /-- The projection from a trivial fiber bundle to its base is open. -/
 protected theorem isOpenMap_proj (h : IsHomeomorphicTrivialFiberBundle F proj) : IsOpenMap proj :=
   by
   obtain ⟨e, rfl⟩ := h.proj_eq
   exact is_open_map_fst.comp e.is_open_map
 #align is_homeomorphic_trivial_fiber_bundle.is_open_map_proj IsHomeomorphicTrivialFiberBundle.isOpenMap_proj
+-/
 
+#print IsHomeomorphicTrivialFiberBundle.quotientMap_proj /-
 /-- The projection from a trivial fiber bundle to its base is open. -/
 protected theorem quotientMap_proj [Nonempty F] (h : IsHomeomorphicTrivialFiberBundle F proj) :
     QuotientMap proj :=
   h.isOpenMap_proj.to_quotientMap h.continuous_proj h.surjective_proj
 #align is_homeomorphic_trivial_fiber_bundle.quotient_map_proj IsHomeomorphicTrivialFiberBundle.quotientMap_proj
+-/
 
 end IsHomeomorphicTrivialFiberBundle
 
+#print isHomeomorphicTrivialFiberBundle_fst /-
 /-- The first projection in a product is a trivial fiber bundle. -/
 theorem isHomeomorphicTrivialFiberBundle_fst :
     IsHomeomorphicTrivialFiberBundle F (Prod.fst : B × F → B) :=
   ⟨Homeomorph.refl _, fun x => rfl⟩
 #align is_homeomorphic_trivial_fiber_bundle_fst isHomeomorphicTrivialFiberBundle_fst
+-/
 
+#print isHomeomorphicTrivialFiberBundle_snd /-
 /-- The second projection in a product is a trivial fiber bundle. -/
 theorem isHomeomorphicTrivialFiberBundle_snd :
     IsHomeomorphicTrivialFiberBundle F (Prod.snd : F × B → B) :=
   ⟨Homeomorph.prodComm _ _, fun x => rfl⟩
 #align is_homeomorphic_trivial_fiber_bundle_snd isHomeomorphicTrivialFiberBundle_snd
+-/
 

@@ -68,10 +68,13 @@ def PContinuous (f : α →. β) :=
 #align pcontinuous PContinuous
 -/
 
+#print open_dom_of_pcontinuous /-
 theorem open_dom_of_pcontinuous {f : α →. β} (h : PContinuous f) : IsOpen f.Dom := by
   rw [← PFun.preimage_univ] <;> exact h _ isOpen_univ
 #align open_dom_of_pcontinuous open_dom_of_pcontinuous
+-/
 
+#print pcontinuous_iff' /-
 theorem pcontinuous_iff' {f : α →. β} :
     PContinuous f ↔ ∀ {x y} (h : y ∈ f x), PTendsto' f (𝓝 x) (𝓝 y) :=
   by
@@ -95,9 +98,12 @@ theorem pcontinuous_iff' {f : α →. β} :
   show f.preimage s ∈ 𝓝 x
   apply h'; rw [mem_nhds_iff]; exact ⟨s, Set.Subset.refl _, os, ys⟩
 #align pcontinuous_iff' pcontinuous_iff'
+-/
 
+#print continuousWithinAt_iff_ptendsto_res /-
 theorem continuousWithinAt_iff_ptendsto_res (f : α → β) {x : α} {s : Set α} :
     ContinuousWithinAt f s x ↔ PTendsto (PFun.res f s) (𝓝 x) (𝓝 (f x)) :=
   tendsto_iff_ptendsto _ _ _ _
 #align continuous_within_at_iff_ptendsto_res continuousWithinAt_iff_ptendsto_res
+-/
 

@@ -37,7 +37,9 @@ instance Complex.measurableSpace : MeasurableSpace ℂ :=
 #align complex.measurable_space Complex.measurableSpace
 -/
 
+#print Complex.borelSpace /-
 instance Complex.borelSpace : BorelSpace ℂ :=
   ⟨rfl⟩
 #align complex.borel_space Complex.borelSpace
+-/
 

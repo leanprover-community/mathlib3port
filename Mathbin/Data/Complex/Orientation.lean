@@ -24,10 +24,12 @@ but keeping it separate results in a significant import reduction.
 
 namespace Complex
 
+#print Complex.orientation /-
 /-- The standard orientation on `ℂ`. -/
 protected noncomputable def orientation : Orientation ℝ ℂ (Fin 2) :=
   Complex.basisOneI.Orientation
 #align complex.orientation Complex.orientation
+-/
 
 end Complex
 

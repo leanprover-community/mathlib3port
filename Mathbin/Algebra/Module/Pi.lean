@@ -35,10 +35,12 @@ variable (x y : ∀ i, f i) (i : I)
 
 namespace Pi
 
+#print IsSMulRegular.pi /-
 theorem IsSMulRegular.pi {α : Type _} [∀ i, SMul α <| f i] {k : α}
     (hk : ∀ i, IsSMulRegular (f i) k) : IsSMulRegular (∀ i, f i) k := fun _ _ h =>
   funext fun i => hk i (congr_fun h i : _)
 #align is_smul_regular.pi IsSMulRegular.pi
+-/
 
 #print Pi.smulWithZero /-
 instance smulWithZero (α) [Zero α] [∀ i, Zero (f i)] [∀ i, SMulWithZero α (f i)] :
@@ -119,12 +121,14 @@ instance (α) {r : Semiring α} {m : ∀ i, AddCommMonoid <| f i} [∀ i, Module
     or_iff_not_imp_left.mpr fun hc =>
       funext fun i => (smul_eq_zero.mp (congr_fun h i)).resolve_left hc⟩
 
+#print Function.noZeroSMulDivisors /-
 /-- A special case of `pi.no_zero_smul_divisors` for non-dependent types. Lean struggles to
 synthesize this instance by itself elsewhere in the library. -/
 instance Function.noZeroSMulDivisors {ι α β : Type _} {r : Semiring α} {m : AddCommMonoid β}
     [Module α β] [NoZeroSMulDivisors α β] : NoZeroSMulDivisors α (ι → β) :=
   Pi.noZeroSMulDivisors _
 #align function.no_zero_smul_divisors Function.noZeroSMulDivisors
+-/
 
 end Pi
 

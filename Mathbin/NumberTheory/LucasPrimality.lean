@@ -41,6 +41,7 @@ to `1`.
 -/
 
 
+#print lucas_primality /-
 /-- If `a^(p-1) = 1 mod p`, but `a^((p-1)/q) ≠ 1 mod p` for all prime factors `q` of `p-1`, then `p`
 is prime. This is true because `a` has order `p-1` in the multiplicative group mod `p`, so this
 group must itself have order `p-1`, which only happens when `p` is prime.
@@ -66,4 +67,5 @@ theorem lucas_primality (p : ℕ) (a : ZMod p) (ha : a ^ (p - 1) = 1)
     _ = orderOf a' := (orderOf_injective (Units.coeHom (ZMod p)) Units.ext a')
     _ ≤ Fintype.card (ZMod p)ˣ := orderOf_le_card_univ
 #align lucas_primality lucas_primality
+-/
 

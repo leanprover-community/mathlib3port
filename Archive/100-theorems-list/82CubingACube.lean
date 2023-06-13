@@ -164,8 +164,6 @@ namespace Correct
 
 variable (h : Correct cs)
 
-include h
-
 theorem toSet_subset_unitCube {i} : (cs i).to_set ⊆ unitCube.to_set :=
   h.iUnion_eq ▸ subset_iUnion _ i
 #align theorems_100.«82».correct.to_set_subset_unit_cube Theorems100.«82».Correct.toSet_subset_unitCube
@@ -300,8 +298,6 @@ theorem t_le_t (hi : i ∈ bcubes cs c) (j : Fin n) : (cs i).b j.succ + (cs i).w
   have h' := tail_sub hi j; dsimp only [side] at h' ; rw [Ico_subset_Ico_iff] at h' 
   exact h'.2; simp [hw]
 #align theorems_100.«82».t_le_t Theorems100.«82».t_le_t
-
-include h v
 
 /-- Every cube in the valley must be smaller than it -/
 theorem w_lt_w (hi : i ∈ bcubes cs c) : (cs i).w < c.w :=
@@ -558,8 +554,6 @@ theorem valley_mi : Valley cs (cs (mi h v)).shiftUp :=
 
 variable (h) [Nontrivial ι]
 
-omit v
-
 /-- We get a sequence of cubes whose size is decreasing -/
 noncomputable def sequenceOfCubes : ℕ → { i : ι // Valley cs (cs i).shiftUp }
   | 0 =>
@@ -585,8 +579,6 @@ theorem injective_sequenceOfCubes : Injective (sequenceOfCubes h) :=
   @Injective.of_comp _ _ _ (fun x : { i : ι // _ } => (cs x.1).w) _
     (strictAnti_sequence_of_cubes h).Injective
 #align theorems_100.«82».injective_sequence_of_cubes Theorems100.«82».injective_sequenceOfCubes
-
-omit h
 
 /-- The infinite sequence of cubes contradicts the finiteness of the family. -/
 theorem not_correct : ¬Correct cs := fun h =>

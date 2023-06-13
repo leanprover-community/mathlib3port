@@ -57,17 +57,21 @@ theorem Finset.mem_powerset_len_univ_iff [Fintype α] {s : Finset α} {k : ℕ} 
 #align finset.mem_powerset_len_univ_iff Finset.mem_powerset_len_univ_iff
 -/
 
+#print Finset.univ_filter_card_eq /-
 @[simp]
 theorem Finset.univ_filter_card_eq (α : Type _) [Fintype α] (k : ℕ) :
     ((Finset.univ : Finset (Finset α)).filterₓ fun s => s.card = k) = Finset.univ.powersetLen k :=
   by ext; simp [Finset.mem_powersetLen]
 #align finset.univ_filter_card_eq Finset.univ_filter_card_eq
+-/
 
+#print Fintype.card_finset_len /-
 @[simp]
 theorem Fintype.card_finset_len [Fintype α] (k : ℕ) :
     Fintype.card { s : Finset α // s.card = k } = Nat.choose (Fintype.card α) k := by
   simp [Fintype.subtype_card, Finset.card_univ]
 #align fintype.card_finset_len Fintype.card_finset_len
+-/
 
 #print Set.fintype /-
 instance Set.fintype [Fintype α] : Fintype (Set α) :=

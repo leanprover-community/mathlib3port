@@ -27,6 +27,7 @@ variable {ι α β : Type _}
 
 namespace Function
 
+#print Function.Injective.linearOrderedSemifield /-
 -- See note [reducible non-instances]
 /-- Pullback a `linear_ordered_semifield` under an injective map. -/
 @[reducible]
@@ -41,7 +42,9 @@ def Injective.linearOrderedSemifield [LinearOrderedSemifield α] [Zero β] [One 
   { hf.LinearOrderedSemiring f zero one add mul nsmul npow nat_cast hsup hinf,
     hf.Semifield f zero one add mul inv div nsmul npow zpow nat_cast with }
 #align function.injective.linear_ordered_semifield Function.Injective.linearOrderedSemifield
+-/
 
+#print Function.Injective.linearOrderedField /-
 -- See note [reducible non-instances]
 /-- Pullback a `linear_ordered_field` under an injective map. -/
 @[reducible]
@@ -60,6 +63,7 @@ def Injective.linearOrderedField [LinearOrderedField α] [Zero β] [One β] [Add
     hf.Field f zero one add mul neg sub inv div nsmul zsmul qsmul npow zpow nat_cast int_cast
       rat_cast with }
 #align function.injective.linear_ordered_field Function.Injective.linearOrderedField
+-/
 
 end Function
 

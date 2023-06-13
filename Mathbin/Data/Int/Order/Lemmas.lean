@@ -62,6 +62,7 @@ theorem natAbs_le_iff_mul_self_le {a b : ℤ} : a.natAbs ≤ b.natAbs ↔ a * a 
 #align int.nat_abs_le_iff_mul_self_le Int.natAbs_le_iff_mul_self_le
 -/
 
+#print Int.dvd_div_of_mul_dvd /-
 theorem dvd_div_of_mul_dvd {a b c : ℤ} (h : a * b ∣ c) : b ∣ c / a :=
   by
   rcases eq_or_ne a 0 with (rfl | ha)
@@ -70,10 +71,12 @@ theorem dvd_div_of_mul_dvd {a b c : ℤ} (h : a * b ∣ c) : b ∣ c / a :=
   refine' ⟨d, _⟩
   rw [mul_assoc, Int.mul_ediv_cancel_left _ ha]
 #align int.dvd_div_of_mul_dvd Int.dvd_div_of_mul_dvd
+-/
 
 /-! ### units -/
 
 
+#print Int.eq_zero_of_abs_lt_dvd /-
 theorem eq_zero_of_abs_lt_dvd {m x : ℤ} (h1 : m ∣ x) (h2 : |x| < m) : x = 0 :=
   by
   by_cases hm : m = 0; · subst m; exact zero_dvd_iff.mp h1
@@ -82,6 +85,7 @@ theorem eq_zero_of_abs_lt_dvd {m x : ℤ} (h1 : m ∣ x) (h2 : |x| < m) : x = 0 
   rw [← abs_lt_one_iff, ← mul_lt_iff_lt_one_right (abs_pos.mpr hm), ← abs_mul]
   exact lt_of_lt_of_le h2 (le_abs_self m)
 #align int.eq_zero_of_abs_lt_dvd Int.eq_zero_of_abs_lt_dvd
+-/
 
 end Int
 

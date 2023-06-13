@@ -30,6 +30,7 @@ section
 
 variable {n : ℕ} (m : ℕ) [CharP R m]
 
+#print ZMod.algebra' /-
 /-- The `zmod n`-algebra structure on rings whose characteristic `m` divides `n` -/
 def algebra' (h : m ∣ n) : Algebra (ZMod n) R :=
   { ZMod.castHom h R with
@@ -43,6 +44,7 @@ def algebra' (h : m ∣ n) : Algebra (ZMod n) R :=
         exact Commute.cast_int_left r k
     smul_def' := fun a r => rfl }
 #align zmod.algebra' ZMod.algebra'
+-/
 
 end
 

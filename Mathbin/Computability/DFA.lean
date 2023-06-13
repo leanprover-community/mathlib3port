@@ -180,6 +180,7 @@ theorem evalFrom_of_pow {x y : List α} {s : σ} (hx : M.evalFrom s x = s)
 #align DFA.eval_from_of_pow DFA.evalFrom_of_pow
 -/
 
+#print DFA.pumping_lemma /-
 theorem pumping_lemma [Fintype σ] {x : List α} (hx : x ∈ M.accepts)
     (hlen : Fintype.card σ ≤ List.length x) :
     ∃ a b c,
@@ -198,6 +199,7 @@ theorem pumping_lemma [Fintype σ] {x : List α} (hx : x ∈ M.accepts)
   have h := M.eval_from_of_pow hb hb'
   rwa [mem_accepts, eval_from_of_append, eval_from_of_append, h, hc]
 #align DFA.pumping_lemma DFA.pumping_lemma
+-/
 
 end DFA
 

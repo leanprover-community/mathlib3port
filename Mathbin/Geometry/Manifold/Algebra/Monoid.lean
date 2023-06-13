@@ -180,11 +180,9 @@ def smoothRightMul : C^∞⟮I, G; I, G⟯ :=
   ⟨rightMul g, smooth_mul_right⟩
 #align smooth_right_mul smoothRightMul
 
--- mathport name: smooth_left_mul
 -- Left multiplication. The abbreviation is `MIL`.
 scoped[LieGroup] notation "𝑳" => smoothLeftMul
 
--- mathport name: smooth_right_mul
 -- Right multiplication. The abbreviation is `MIR`.
 scoped[LieGroup] notation "𝑹" => smoothRightMul
 

@@ -95,17 +95,22 @@ noncomputable def extendTo𝕜' (fr : F →ₗ[ℝ] ℝ) : F →ₗ[𝕜] 𝕜 :
 #align linear_map.extend_to_𝕜' LinearMap.extendTo𝕜'
 -/
 
+#print LinearMap.extendTo𝕜'_apply /-
 theorem extendTo𝕜'_apply (fr : F →ₗ[ℝ] ℝ) (x : F) :
     fr.extendTo𝕜' x = (fr x : 𝕜) - (i : 𝕜) * fr ((i : 𝕜) • x) :=
   rfl
 #align linear_map.extend_to_𝕜'_apply LinearMap.extendTo𝕜'_apply
+-/
 
+#print LinearMap.extendTo𝕜'_apply_re /-
 @[simp]
 theorem extendTo𝕜'_apply_re (fr : F →ₗ[ℝ] ℝ) (x : F) : re (fr.extendTo𝕜' x : 𝕜) = fr x := by
   simp only [extend_to_𝕜'_apply, map_sub, MulZeroClass.zero_mul, MulZeroClass.mul_zero, sub_zero,
     is_R_or_C_simps]
 #align linear_map.extend_to_𝕜'_apply_re LinearMap.extendTo𝕜'_apply_re
+-/
 
+#print LinearMap.norm_extendTo𝕜'_apply_sq /-
 theorem norm_extendTo𝕜'_apply_sq (f : F →ₗ[ℝ] ℝ) (x : F) :
     ‖(f.extendTo𝕜' x : 𝕜)‖ ^ 2 = f (conj (f.extendTo𝕜' x : 𝕜) • x) :=
   calc
@@ -114,6 +119,7 @@ theorem norm_extendTo𝕜'_apply_sq (f : F →ₗ[ℝ] ℝ) (x : F) :
     _ = f (conj (f.extendTo𝕜' x : 𝕜) • x) := by
       rw [← smul_eq_mul, ← map_smul, extend_to_𝕜'_apply_re]
 #align linear_map.norm_extend_to_𝕜'_apply_sq LinearMap.norm_extendTo𝕜'_apply_sq
+-/
 
 end LinearMap
 
@@ -121,6 +127,7 @@ namespace ContinuousLinearMap
 
 variable [NormedSpace ℝ F] [IsScalarTower ℝ 𝕜 F]
 
+#print ContinuousLinearMap.norm_extendTo𝕜'_bound /-
 /-- The norm of the extension is bounded by `‖fr‖`. -/
 theorem norm_extendTo𝕜'_bound (fr : F →L[ℝ] ℝ) (x : F) :
     ‖(fr.toLinearMap.extendTo𝕜' x : 𝕜)‖ ≤ ‖fr‖ * ‖x‖ :=
@@ -137,6 +144,7 @@ theorem norm_extendTo𝕜'_bound (fr : F →L[ℝ] ℝ) (x : F) :
     _ ≤ ‖fr‖ * ‖conj (lm x : 𝕜) • x‖ := (le_op_norm _ _)
     _ = ‖(lm x : 𝕜)‖ * (‖fr‖ * ‖x‖) := by rw [norm_smul, norm_conj, mul_left_comm]
 #align continuous_linear_map.norm_extend_to_𝕜'_bound ContinuousLinearMap.norm_extendTo𝕜'_bound
+-/
 
 #print ContinuousLinearMap.extendTo𝕜' /-
 /-- Extend `fr : F →L[ℝ] ℝ` to `F →L[𝕜] 𝕜`. -/
@@ -145,10 +153,12 @@ noncomputable def extendTo𝕜' (fr : F →L[ℝ] ℝ) : F →L[𝕜] 𝕜 :=
 #align continuous_linear_map.extend_to_𝕜' ContinuousLinearMap.extendTo𝕜'
 -/
 
+#print ContinuousLinearMap.extendTo𝕜'_apply /-
 theorem extendTo𝕜'_apply (fr : F →L[ℝ] ℝ) (x : F) :
     fr.extendTo𝕜' x = (fr x : 𝕜) - (i : 𝕜) * fr ((i : 𝕜) • x) :=
   rfl
 #align continuous_linear_map.extend_to_𝕜'_apply ContinuousLinearMap.extendTo𝕜'_apply
+-/
 
 #print ContinuousLinearMap.norm_extendTo𝕜' /-
 @[simp]
@@ -171,10 +181,12 @@ noncomputable def LinearMap.extendTo𝕜 (fr : RestrictScalars ℝ 𝕜 F →ₗ
 #align linear_map.extend_to_𝕜 LinearMap.extendTo𝕜
 -/
 
+#print LinearMap.extendTo𝕜_apply /-
 theorem LinearMap.extendTo𝕜_apply (fr : RestrictScalars ℝ 𝕜 F →ₗ[ℝ] ℝ) (x : F) :
     fr.extendTo𝕜 x = (fr x : 𝕜) - (i : 𝕜) * fr ((i : 𝕜) • x : _) :=
   rfl
 #align linear_map.extend_to_𝕜_apply LinearMap.extendTo𝕜_apply
+-/
 
 #print ContinuousLinearMap.extendTo𝕜 /-
 /-- Extend `fr : restrict_scalars ℝ 𝕜 F →L[ℝ] ℝ` to `F →L[𝕜] 𝕜`. -/
@@ -183,10 +195,12 @@ noncomputable def ContinuousLinearMap.extendTo𝕜 (fr : RestrictScalars ℝ �
 #align continuous_linear_map.extend_to_𝕜 ContinuousLinearMap.extendTo𝕜
 -/
 
+#print ContinuousLinearMap.extendTo𝕜_apply /-
 theorem ContinuousLinearMap.extendTo𝕜_apply (fr : RestrictScalars ℝ 𝕜 F →L[ℝ] ℝ) (x : F) :
     fr.extendTo𝕜 x = (fr x : 𝕜) - (i : 𝕜) * fr ((i : 𝕜) • x : _) :=
   rfl
 #align continuous_linear_map.extend_to_𝕜_apply ContinuousLinearMap.extendTo𝕜_apply
+-/
 
 #print ContinuousLinearMap.norm_extendTo𝕜 /-
 @[simp]

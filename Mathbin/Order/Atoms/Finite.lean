@@ -48,6 +48,7 @@ namespace IsSimpleOrder
 
 variable [PartialOrder α] [BoundedOrder α] [IsSimpleOrder α] [DecidableEq α]
 
+#print Fintype.IsSimpleOrder.univ /-
 theorem univ : (Finset.univ : Finset α) = {⊤, ⊥} :=
   by
   change Finset.map _ (Finset.univ : Finset Bool) = _
@@ -55,6 +56,7 @@ theorem univ : (Finset.univ : Finset α) = {⊤, ⊥} :=
   simp only [Finset.map_insert, Function.Embedding.coeFn_mk, Finset.map_singleton]
   rfl
 #align fintype.is_simple_order.univ Fintype.IsSimpleOrder.univ
+-/
 
 #print Fintype.IsSimpleOrder.card /-
 theorem card : Fintype.card α = 2 :=

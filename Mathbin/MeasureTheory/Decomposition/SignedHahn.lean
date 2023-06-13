@@ -284,6 +284,7 @@ private theorem exists_subset_restrict_nonpos' (hi₁ : MeasurableSet i) (hi₂ 
     exact restrict_nonpos_seq_subset _ hx
   · infer_instance
 
+#print MeasureTheory.SignedMeasure.exists_subset_restrict_nonpos /-
 /-- A measurable set of negative measure has a negative subset of negative measure. -/
 theorem exists_subset_restrict_nonpos (hi : s i < 0) :
     ∃ j : Set α, MeasurableSet j ∧ j ⊆ i ∧ s ≤[j] 0 ∧ s j < 0 :=
@@ -358,6 +359,7 @@ theorem exists_subset_restrict_nonpos (hi : s i < 0) :
   convert hk₂; norm_cast
   exact tsub_add_cancel_of_le hk₁
 #align measure_theory.signed_measure.exists_subset_restrict_nonpos MeasureTheory.SignedMeasure.exists_subset_restrict_nonpos
+-/
 
 end ExistsSubsetRestrictNonpos
 
@@ -368,9 +370,11 @@ def measureOfNegatives (s : SignedMeasure α) : Set ℝ :=
 #align measure_theory.signed_measure.measure_of_negatives MeasureTheory.SignedMeasure.measureOfNegatives
 -/
 
+#print MeasureTheory.SignedMeasure.zero_mem_measureOfNegatives /-
 theorem zero_mem_measureOfNegatives : (0 : ℝ) ∈ s.measureOfNegatives :=
   ⟨∅, ⟨MeasurableSet.empty, le_restrict_empty _ _⟩, s.Empty⟩
 #align measure_theory.signed_measure.zero_mem_measure_of_negatives MeasureTheory.SignedMeasure.zero_mem_measureOfNegatives
+-/
 
 #print MeasureTheory.SignedMeasure.bddBelow_measureOfNegatives /-
 theorem bddBelow_measureOfNegatives : BddBelow s.measureOfNegatives :=
@@ -402,6 +406,7 @@ theorem bddBelow_measureOfNegatives : BddBelow s.measureOfNegatives :=
 #align measure_theory.signed_measure.bdd_below_measure_of_negatives MeasureTheory.SignedMeasure.bddBelow_measureOfNegatives
 -/
 
+#print MeasureTheory.SignedMeasure.exists_compl_positive_negative /-
 /-- Alternative formulation of `measure_theory.signed_measure.exists_is_compl_positive_negative`
 (the Hahn decomposition theorem) using set complements. -/
 theorem exists_compl_positive_negative (s : SignedMeasure α) :
@@ -448,7 +453,9 @@ theorem exists_compl_positive_negative (s : SignedMeasure α) :
   · exact hA₁.union hD₁
   · exact restrict_le_restrict_union _ _ hA₁ hA₂ hD₁ hD₂
 #align measure_theory.signed_measure.exists_compl_positive_negative MeasureTheory.SignedMeasure.exists_compl_positive_negative
+-/
 
+#print MeasureTheory.SignedMeasure.exists_isCompl_positive_negative /-
 /-- **The Hahn decomposition thoerem**: Given a signed measure `s`, there exist
 complement measurable sets `i` and `j` such that `i` is positive, `j` is negative. -/
 theorem exists_isCompl_positive_negative (s : SignedMeasure α) :
@@ -456,7 +463,9 @@ theorem exists_isCompl_positive_negative (s : SignedMeasure α) :
   let ⟨i, hi₁, hi₂, hi₃⟩ := exists_compl_positive_negative s
   ⟨i, iᶜ, hi₁, hi₂, hi₁.compl, hi₃, isCompl_compl⟩
 #align measure_theory.signed_measure.exists_is_compl_positive_negative MeasureTheory.SignedMeasure.exists_isCompl_positive_negative
+-/
 
+#print MeasureTheory.SignedMeasure.of_symmDiff_compl_positive_negative /-
 /-- The symmetric difference of two Hahn decompositions has measure zero. -/
 theorem of_symmDiff_compl_positive_negative {s : SignedMeasure α} {i j : Set α}
     (hi : MeasurableSet i) (hj : MeasurableSet j) (hi' : 0 ≤[i] s ∧ s ≤[iᶜ] 0)
@@ -493,6 +502,7 @@ theorem of_symmDiff_compl_positive_negative {s : SignedMeasure α} {i j : Set α
     · exact hi.inter hj.compl
   all_goals measurability
 #align measure_theory.signed_measure.of_symm_diff_compl_positive_negative MeasureTheory.SignedMeasure.of_symmDiff_compl_positive_negative
+-/
 
 end SignedMeasure
 

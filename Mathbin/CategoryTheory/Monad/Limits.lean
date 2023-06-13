@@ -185,6 +185,7 @@ def newCocone : Cocone ((D ⋙ forget T) ⋙ ↑T)
 
 variable [PreservesColimit (D ⋙ forget T) (T : C ⥤ C)]
 
+#print CategoryTheory.Monad.ForgetCreatesColimits.lambda /-
 /-- (Impl)
 Define the map `λ : TL ⟶ L`, which will serve as the structure of the coalgebra on `L`, and
 we will show is the colimiting object. We use the cocone constructed by `c` and the fact that
@@ -194,11 +195,14 @@ we will show is the colimiting object. We use the cocone constructed by `c` and 
 def lambda : ((T : C ⥤ C).mapCocone c).pt ⟶ c.pt :=
   (isColimitOfPreserves _ t).desc (newCocone c)
 #align category_theory.monad.forget_creates_colimits.lambda CategoryTheory.Monad.ForgetCreatesColimits.lambda
+-/
 
+#print CategoryTheory.Monad.ForgetCreatesColimits.commuting /-
 /-- (Impl) The key property defining the map `λ : TL ⟶ L`. -/
 theorem commuting (j : J) : (T : C ⥤ C).map (c.ι.app j) ≫ lambda c t = (D.obj j).a ≫ c.ι.app j :=
   (isColimitOfPreserves _ t).fac (newCocone c) j
 #align category_theory.monad.forget_creates_colimits.commuting CategoryTheory.Monad.ForgetCreatesColimits.commuting
+-/
 
 variable [PreservesColimit ((D ⋙ forget T) ⋙ ↑T) (T : C ⥤ C)]
 

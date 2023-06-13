@@ -42,13 +42,10 @@ attribute [-instance] Matrix.SpecialLinearGroup.hasCoeToFun
 
 attribute [-instance] Matrix.GeneralLinearGroup.hasCoeToFun
 
--- mathport name: «expr↑ₘ »
 local prefix:1024 "↑ₘ" => @coe _ (Matrix (Fin 2) (Fin 2) _) _
 
--- mathport name: «expr↑ₘ[ ]»
 local notation:1024 "↑ₘ[" R "]" => @coe _ (Matrix (Fin 2) (Fin 2) R) _
 
--- mathport name: «exprGL( , )⁺»
 local notation "GL(" n ", " R ")" "⁺" => Matrix.GLPos (Fin n) R
 
 /- ./././Mathport/Syntax/Translate/Command.lean:43:9: unsupported derive handler λ α,
@@ -60,7 +57,6 @@ deriving «./././Mathport/Syntax/Translate/Command.lean:43:9: unsupported derive
   has_coe[has_coe] α exprℂ()»
 #align upper_half_plane UpperHalfPlane
 
--- mathport name: upper_half_plane
 scoped[UpperHalfPlane] notation "ℍ" => UpperHalfPlane
 
 namespace UpperHalfPlane

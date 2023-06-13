@@ -45,51 +45,65 @@ def center : Submonoid M where
 #align add_submonoid.center AddSubmonoid.center
 -/
 
+#print Submonoid.coe_center /-
 @[to_additive]
 theorem coe_center : ↑(center M) = Set.center M :=
   rfl
 #align submonoid.coe_center Submonoid.coe_center
 #align add_submonoid.coe_center AddSubmonoid.coe_center
+-/
 
+#print Submonoid.center_toSubsemigroup /-
 @[simp]
 theorem center_toSubsemigroup : (center M).toSubsemigroup = Subsemigroup.center M :=
   rfl
 #align submonoid.center_to_subsemigroup Submonoid.center_toSubsemigroup
+-/
 
+#print AddSubmonoid.center_toAddSubsemigroup /-
 theorem AddSubmonoid.center_toAddSubsemigroup (M) [AddMonoid M] :
     (AddSubmonoid.center M).toAddSubsemigroup = AddSubsemigroup.center M :=
   rfl
 #align add_submonoid.center_to_add_subsemigroup AddSubmonoid.center_toAddSubsemigroup
+-/
 
 attribute [to_additive AddSubmonoid.center_toAddSubsemigroup] Submonoid.center_toSubsemigroup
 
 variable {M}
 
+#print Submonoid.mem_center_iff /-
 @[to_additive]
 theorem mem_center_iff {z : M} : z ∈ center M ↔ ∀ g, g * z = z * g :=
   Iff.rfl
 #align submonoid.mem_center_iff Submonoid.mem_center_iff
 #align add_submonoid.mem_center_iff AddSubmonoid.mem_center_iff
+-/
 
+#print Submonoid.decidableMemCenter /-
 @[to_additive]
 instance decidableMemCenter (a) [Decidable <| ∀ b : M, b * a = a * b] : Decidable (a ∈ center M) :=
   decidable_of_iff' _ mem_center_iff
 #align submonoid.decidable_mem_center Submonoid.decidableMemCenter
 #align add_submonoid.decidable_mem_center AddSubmonoid.decidableMemCenter
+-/
 
 /-- The center of a monoid is commutative. -/
 instance : CommMonoid (center M) :=
   { (center M).toMonoid with mul_comm := fun a b => Subtype.ext <| b.Prop _ }
 
+#print Submonoid.center.smulCommClass_left /-
 /-- The center of a monoid acts commutatively on that monoid. -/
 instance center.smulCommClass_left : SMulCommClass (center M) M M
     where smul_comm m x y := (Commute.left_comm (m.Prop x) y).symm
 #align submonoid.center.smul_comm_class_left Submonoid.center.smulCommClass_left
+-/
 
+#print Submonoid.center.smulCommClass_right /-
 /-- The center of a monoid acts commutatively on that monoid. -/
 instance center.smulCommClass_right : SMulCommClass M (center M) M :=
   SMulCommClass.symm _ _ _
 #align submonoid.center.smul_comm_class_right Submonoid.center.smulCommClass_right
+-/
 
 /-! Note that `smul_comm_class (center M) (center M) M` is already implied by
 `submonoid.smul_comm_class_right` -/
@@ -103,10 +117,12 @@ section
 
 variable (M : Type _) [CommMonoid M]
 
+#print Submonoid.center_eq_top /-
 @[simp]
 theorem center_eq_top : center M = ⊤ :=
   SetLike.coe_injective (Set.center_eq_univ M)
 #align submonoid.center_eq_top Submonoid.center_eq_top
+-/
 
 end
 

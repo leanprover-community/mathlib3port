@@ -77,14 +77,14 @@ namespace CategoryTheory
 variable {C : Type u₁} [Category.{v₁} C] [MonoidalCategory C]
 
 #print CategoryTheory.ExactPairing /-
-/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`coevaluation] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`coevaluation] [] -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`evaluation] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`evaluation] [] -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`coevaluation_evaluation'] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`coevaluation_evaluation'] [] -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`evaluation_coevaluation'] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`evaluation_coevaluation'] [] -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- An exact pairing is a pair of objects `X Y : C` which admit
@@ -103,10 +103,8 @@ class ExactPairing (X Y : C) where
 
 open ExactPairing
 
--- mathport name: exprη_
 notation "η_" => ExactPairing.coevaluation
 
--- mathport name: exprε_
 notation "ε_" => ExactPairing.evaluation
 
 restate_axiom coevaluation_evaluation'
@@ -149,10 +147,8 @@ attribute [instance] has_left_dual.exact
 
 open ExactPairing HasRightDual HasLeftDual MonoidalCategory
 
--- mathport name: left_dual
 prefix:1024 "ᘁ" => leftDual
 
--- mathport name: right_dual
 postfix:1024 "ᘁ" => rightDual
 
 #print CategoryTheory.hasRightDualUnit /-
@@ -211,10 +207,8 @@ def leftAdjointMate {X Y : C} [HasLeftDual X] [HasLeftDual Y] (f : X ⟶ Y) : �
 #align category_theory.left_adjoint_mate CategoryTheory.leftAdjointMate
 -/
 
--- mathport name: right_adjoint_mate
 notation f "ᘁ" => rightAdjointMate f
 
--- mathport name: left_adjoint_mate
 notation "ᘁ" f => leftAdjointMate f
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/

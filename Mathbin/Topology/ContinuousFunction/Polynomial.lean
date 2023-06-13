@@ -70,6 +70,7 @@ section
 variable {α : Type _} [TopologicalSpace α] [CommSemiring R] [TopologicalSpace R]
   [TopologicalSemiring R]
 
+#print Polynomial.aeval_continuousMap_apply /-
 @[simp]
 theorem aeval_continuousMap_apply (g : R[X]) (f : C(α, R)) (x : α) :
     ((Polynomial.aeval f) g) x = g.eval (f x) :=
@@ -78,6 +79,7 @@ theorem aeval_continuousMap_apply (g : R[X]) (f : C(α, R)) (x : α) :
   · intro p q hp hq; simp [hp, hq]
   · intro n a; simp [Pi.pow_apply]
 #align polynomial.aeval_continuous_map_apply Polynomial.aeval_continuousMap_apply
+-/
 
 end
 
@@ -87,6 +89,7 @@ noncomputable section
 
 variable [CommSemiring R] [TopologicalSpace R] [TopologicalSemiring R]
 
+#print Polynomial.toContinuousMapAlgHom /-
 /-- The algebra map from `R[X]` to continuous functions `C(R, R)`.
 -/
 @[simps]
@@ -99,7 +102,9 @@ def toContinuousMapAlgHom : R[X] →ₐ[R] C(R, R)
   map_mul' := by intros; ext; simp
   commutes' := by intros; ext; simp [Algebra.algebraMap_eq_smul_one]
 #align polynomial.to_continuous_map_alg_hom Polynomial.toContinuousMapAlgHom
+-/
 
+#print Polynomial.toContinuousMapOnAlgHom /-
 /-- The algebra map from `R[X]` to continuous functions `C(X, R)`, for any subset `X` of `R`.
 -/
 @[simps]
@@ -112,6 +117,7 @@ def toContinuousMapOnAlgHom (X : Set R) : R[X] →ₐ[R] C(X, R)
   map_mul' := by intros; ext; simp
   commutes' := by intros; ext; simp [Algebra.algebraMap_eq_smul_one]
 #align polynomial.to_continuous_map_on_alg_hom Polynomial.toContinuousMapOnAlgHom
+-/
 
 end
 
@@ -121,6 +127,7 @@ section
 
 variable [CommSemiring R] [TopologicalSpace R] [TopologicalSemiring R]
 
+#print polynomialFunctions /-
 /--
 The subalgebra of polynomial functions in `C(X, R)`, for `X` a subset of some topological semiring
 `R`.
@@ -128,12 +135,15 @@ The subalgebra of polynomial functions in `C(X, R)`, for `X` a subset of some to
 def polynomialFunctions (X : Set R) : Subalgebra R C(X, R) :=
   (⊤ : Subalgebra R R[X]).map (Polynomial.toContinuousMapOnAlgHom X)
 #align polynomial_functions polynomialFunctions
+-/
 
+#print polynomialFunctions_coe /-
 @[simp]
 theorem polynomialFunctions_coe (X : Set R) :
     (polynomialFunctions X : Set C(X, R)) = Set.range (Polynomial.toContinuousMapOnAlgHom X) := by
   ext; simp [polynomialFunctions]
 #align polynomial_functions_coe polynomialFunctions_coe
+-/
 
 #print polynomialFunctions_separatesPoints /-
 -- TODO:
@@ -154,6 +164,7 @@ open scoped unitInterval
 
 open ContinuousMap
 
+#print polynomialFunctions.comap_compRightAlgHom_iccHomeoI /-
 /-- The preimage of polynomials on `[0,1]` under the pullback map by `x ↦ (b-a) * x + a`
 is the polynomials on `[a,b]`. -/
 theorem polynomialFunctions.comap_compRightAlgHom_iccHomeoI (a b : ℝ) (h : a < b) :
@@ -197,6 +208,7 @@ theorem polynomialFunctions.comap_compRightAlgHom_iccHomeoI (a b : ℝ) (h : a <
     · simp
     · ext x; simp [mul_comm]
 #align polynomial_functions.comap_comp_right_alg_hom_Icc_homeo_I polynomialFunctions.comap_compRightAlgHom_iccHomeoI
+-/
 
 end
 

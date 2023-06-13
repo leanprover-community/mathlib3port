@@ -80,17 +80,21 @@ theorem const_one [One β] : const α (1 : β) = 1 :=
 #align pi.const_zero Pi.const_zero
 -/
 
+#print Pi.one_comp /-
 @[simp, to_additive]
 theorem one_comp [One γ] (x : α → β) : (1 : β → γ) ∘ x = 1 :=
   rfl
 #align pi.one_comp Pi.one_comp
 #align pi.zero_comp Pi.zero_comp
+-/
 
+#print Pi.comp_one /-
 @[simp, to_additive]
 theorem comp_one [One β] (x : β → γ) : x ∘ 1 = const α (x 1) :=
   rfl
 #align pi.comp_one Pi.comp_one
 #align pi.comp_zero Pi.comp_zero
+-/
 
 #print Pi.instMul /-
 @[to_additive]
@@ -124,11 +128,13 @@ theorem const_mul [Mul β] (a b : β) : const α a * const α b = const α (a * 
 #align pi.const_add Pi.const_add
 -/
 
+#print Pi.mul_comp /-
 @[to_additive]
 theorem mul_comp [Mul γ] (x y : β → γ) (z : α → β) : (x * y) ∘ z = x ∘ z * y ∘ z :=
   rfl
 #align pi.mul_comp Pi.mul_comp
 #align pi.add_comp Pi.add_comp
+-/
 
 #print Pi.instSMul /-
 @[to_additive Pi.instVAdd]
@@ -138,29 +144,37 @@ instance instSMul [∀ i, SMul α <| f i] : SMul α (∀ i : I, f i) :=
 #align pi.has_vadd Pi.instVAdd
 -/
 
+#print Pi.smul_apply /-
 @[simp, to_additive]
 theorem smul_apply [∀ i, SMul α <| f i] (s : α) (x : ∀ i, f i) (i : I) : (s • x) i = s • x i :=
   rfl
 #align pi.smul_apply Pi.smul_apply
 #align pi.vadd_apply Pi.vadd_apply
+-/
 
+#print Pi.smul_def /-
 @[to_additive]
 theorem smul_def [∀ i, SMul α <| f i] (s : α) (x : ∀ i, f i) : s • x = fun i => s • x i :=
   rfl
 #align pi.smul_def Pi.smul_def
 #align pi.vadd_def Pi.vadd_def
+-/
 
+#print Pi.smul_const /-
 @[simp, to_additive]
 theorem smul_const [SMul α β] (a : α) (b : β) : a • const I b = const I (a • b) :=
   rfl
 #align pi.smul_const Pi.smul_const
 #align pi.vadd_const Pi.vadd_const
+-/
 
+#print Pi.smul_comp /-
 @[to_additive]
 theorem smul_comp [SMul α γ] (a : α) (x : β → γ) (y : I → β) : (a • x) ∘ y = a • x ∘ y :=
   rfl
 #align pi.smul_comp Pi.smul_comp
 #align pi.vadd_comp Pi.vadd_comp
+-/
 
 @[to_additive Pi.instSMul]
 instance hasPow [∀ i, Pow (f i) β] : Pow (∀ i, f i) β :=
@@ -168,30 +182,38 @@ instance hasPow [∀ i, Pow (f i) β] : Pow (∀ i, f i) β :=
 #align pi.has_pow Pi.hasPow
 #align pi.has_smul Pi.instSMul
 
+#print Pi.pow_apply /-
 @[simp, to_additive Pi.smul_apply, to_additive_reorder 5]
 theorem pow_apply [∀ i, Pow (f i) β] (x : ∀ i, f i) (b : β) (i : I) : (x ^ b) i = x i ^ b :=
   rfl
 #align pi.pow_apply Pi.pow_apply
 #align pi.smul_apply Pi.smul_apply
+-/
 
+#print Pi.pow_def /-
 @[to_additive Pi.smul_def, to_additive_reorder 5]
 theorem pow_def [∀ i, Pow (f i) β] (x : ∀ i, f i) (b : β) : x ^ b = fun i => x i ^ b :=
   rfl
 #align pi.pow_def Pi.pow_def
 #align pi.smul_def Pi.smul_def
+-/
 
+#print Pi.const_pow /-
 -- `to_additive` generates bad output if we take `has_pow α β`.
 @[simp, to_additive smul_const, to_additive_reorder 5]
 theorem const_pow [Pow β α] (b : β) (a : α) : const I b ^ a = const I (b ^ a) :=
   rfl
 #align pi.const_pow Pi.const_pow
 #align pi.smul_const Pi.smul_const
+-/
 
+#print Pi.pow_comp /-
 @[to_additive smul_comp, to_additive_reorder 6]
 theorem pow_comp [Pow γ α] (x : β → γ) (a : α) (y : I → β) : (x ^ a) ∘ y = x ∘ y ^ a :=
   rfl
 #align pi.pow_comp Pi.pow_comp
 #align pi.smul_comp Pi.smul_comp
+-/
 
 #print Pi.bit0_apply /-
 @[simp]
@@ -239,11 +261,13 @@ theorem const_inv [Inv β] (a : β) : (const α a)⁻¹ = const α a⁻¹ :=
 #align pi.const_neg Pi.const_neg
 -/
 
+#print Pi.inv_comp /-
 @[to_additive]
 theorem inv_comp [Inv γ] (x : β → γ) (y : α → β) : x⁻¹ ∘ y = (x ∘ y)⁻¹ :=
   rfl
 #align pi.inv_comp Pi.inv_comp
 #align pi.neg_comp Pi.neg_comp
+-/
 
 #print Pi.instDiv /-
 @[to_additive]
@@ -269,11 +293,13 @@ theorem div_def [∀ i, Div <| f i] : x / y = fun i => x i / y i :=
 #align pi.sub_def Pi.sub_def
 -/
 
+#print Pi.div_comp /-
 @[to_additive]
 theorem div_comp [Div γ] (x y : β → γ) (z : α → β) : (x / y) ∘ z = x ∘ z / y ∘ z :=
   rfl
 #align pi.div_comp Pi.div_comp
 #align pi.sub_comp Pi.sub_comp
+-/
 
 #print Pi.const_div /-
 @[simp, to_additive]
@@ -331,6 +357,7 @@ theorem mulSingle_one (i : I) : mulSingle i (1 : f i) = 1 :=
 #align pi.single_zero Pi.single_zero
 -/
 
+#print Pi.mulSingle_apply /-
 /-- On non-dependent functions, `pi.mul_single` can be expressed as an `ite` -/
 @[to_additive "On non-dependent functions, `pi.single` can be expressed as an `ite`"]
 theorem mulSingle_apply {β : Sort _} [One β] (i : I) (x : β) (i' : I) :
@@ -338,13 +365,16 @@ theorem mulSingle_apply {β : Sort _} [One β] (i : I) (x : β) (i' : I) :
   Function.update_apply 1 i x i'
 #align pi.mul_single_apply Pi.mulSingle_apply
 #align pi.single_apply Pi.single_apply
+-/
 
+#print Pi.mulSingle_comm /-
 /-- On non-dependent functions, `pi.mul_single` is symmetric in the two indices. -/
 @[to_additive "On non-dependent functions, `pi.single` is symmetric in the two\nindices."]
 theorem mulSingle_comm {β : Sort _} [One β] (i : I) (x : β) (i' : I) :
     mulSingle i x i' = mulSingle i' x i := by simp [mul_single_apply, eq_comm]
 #align pi.mul_single_comm Pi.mulSingle_comm
 #align pi.single_comm Pi.single_comm
+-/
 
 #print Pi.apply_mulSingle /-
 @[to_additive]
@@ -367,13 +397,16 @@ theorem apply_mulSingle₂ (f' : ∀ i, f i → g i → h i) (hf' : ∀ i, f' i 
 #align pi.apply_single₂ Pi.apply_single₂
 -/
 
+#print Pi.mulSingle_op /-
 @[to_additive]
 theorem mulSingle_op {g : I → Type _} [∀ i, One (g i)] (op : ∀ i, f i → g i) (h : ∀ i, op i 1 = 1)
     (i : I) (x : f i) : mulSingle i (op i x) = fun j => op j (mulSingle i x j) :=
   Eq.symm <| funext <| apply_mulSingle op h i x
 #align pi.mul_single_op Pi.mulSingle_op
 #align pi.single_op Pi.single_op
+-/
 
+#print Pi.mulSingle_op₂ /-
 @[to_additive]
 theorem mulSingle_op₂ {g₁ g₂ : I → Type _} [∀ i, One (g₁ i)] [∀ i, One (g₂ i)]
     (op : ∀ i, g₁ i → g₂ i → f i) (h : ∀ i, op i 1 1 = 1) (i : I) (x₁ : g₁ i) (x₂ : g₂ i) :
@@ -381,6 +414,7 @@ theorem mulSingle_op₂ {g₁ g₂ : I → Type _} [∀ i, One (g₁ i)] [∀ i,
   Eq.symm <| funext <| apply_mulSingle₂ op h i x₁ x₂
 #align pi.mul_single_op₂ Pi.mulSingle_op₂
 #align pi.single_op₂ Pi.single_op₂
+-/
 
 variable (f)
 
@@ -410,15 +444,19 @@ protected def prod (f' : ∀ i, f i) (g' : ∀ i, g i) (i : I) : f i × g i :=
 #align pi.prod Pi.prod
 -/
 
+#print Pi.prod_fst_snd /-
 @[simp]
 theorem prod_fst_snd : Pi.prod (Prod.fst : α × β → α) (Prod.snd : α × β → β) = id :=
   funext fun _ => Prod.mk.eta
 #align pi.prod_fst_snd Pi.prod_fst_snd
+-/
 
+#print Pi.prod_snd_fst /-
 @[simp]
 theorem prod_snd_fst : Pi.prod (Prod.snd : α × β → β) (Prod.fst : α × β → α) = Prod.swap :=
   rfl
 #align pi.prod_snd_fst Pi.prod_snd_fst
+-/
 
 end Pi
 
@@ -496,54 +534,68 @@ def uniqueOfSurjectiveOne (α : Type _) {β : Type _} [One β] (h : Function.Sur
 #align unique_of_surjective_zero uniqueOfSurjectiveZero
 -/
 
+#print Subsingleton.pi_mulSingle_eq /-
 @[to_additive Subsingleton.pi_single_eq]
 theorem Subsingleton.pi_mulSingle_eq {α : Type _} [DecidableEq I] [Subsingleton I] [One α] (i : I)
     (x : α) : Pi.mulSingle i x = fun _ => x :=
   funext fun j => by rw [Subsingleton.elim j i, Pi.mulSingle_eq_same]
 #align subsingleton.pi_mul_single_eq Subsingleton.pi_mulSingle_eq
 #align subsingleton.pi_single_eq Subsingleton.pi_single_eq
+-/
 
 namespace Sum
 
 variable (a a' : α → γ) (b b' : β → γ)
 
+#print Sum.elim_one_one /-
 @[simp, to_additive]
 theorem elim_one_one [One γ] : Sum.elim (1 : α → γ) (1 : β → γ) = 1 :=
   Sum.elim_const_const 1
 #align sum.elim_one_one Sum.elim_one_one
 #align sum.elim_zero_zero Sum.elim_zero_zero
+-/
 
+#print Sum.elim_mulSingle_one /-
 @[simp, to_additive]
 theorem elim_mulSingle_one [DecidableEq α] [DecidableEq β] [One γ] (i : α) (c : γ) :
     Sum.elim (Pi.mulSingle i c) (1 : β → γ) = Pi.mulSingle (Sum.inl i) c := by
   simp only [Pi.mulSingle, Sum.elim_update_left, elim_one_one]
 #align sum.elim_mul_single_one Sum.elim_mulSingle_one
 #align sum.elim_single_zero Sum.elim_single_zero
+-/
 
+#print Sum.elim_one_mulSingle /-
 @[simp, to_additive]
 theorem elim_one_mulSingle [DecidableEq α] [DecidableEq β] [One γ] (i : β) (c : γ) :
     Sum.elim (1 : α → γ) (Pi.mulSingle i c) = Pi.mulSingle (Sum.inr i) c := by
   simp only [Pi.mulSingle, Sum.elim_update_right, elim_one_one]
 #align sum.elim_one_mul_single Sum.elim_one_mulSingle
 #align sum.elim_zero_single Sum.elim_zero_single
+-/
 
+#print Sum.elim_inv_inv /-
 @[to_additive]
 theorem elim_inv_inv [Inv γ] : Sum.elim a⁻¹ b⁻¹ = (Sum.elim a b)⁻¹ :=
   (Sum.comp_elim Inv.inv a b).symm
 #align sum.elim_inv_inv Sum.elim_inv_inv
 #align sum.elim_neg_neg Sum.elim_neg_neg
+-/
 
+#print Sum.elim_mul_mul /-
 @[to_additive]
 theorem elim_mul_mul [Mul γ] : Sum.elim (a * a') (b * b') = Sum.elim a b * Sum.elim a' b' := by
   ext x; cases x <;> rfl
 #align sum.elim_mul_mul Sum.elim_mul_mul
 #align sum.elim_add_add Sum.elim_add_add
+-/
 
+#print Sum.elim_div_div /-
 @[to_additive]
 theorem elim_div_div [Div γ] : Sum.elim (a / a') (b / b') = Sum.elim a b / Sum.elim a' b' := by
   ext x; cases x <;> rfl
 #align sum.elim_div_div Sum.elim_div_div
 #align sum.elim_sub_sub Sum.elim_sub_sub
+-/
 
 end Sum
 

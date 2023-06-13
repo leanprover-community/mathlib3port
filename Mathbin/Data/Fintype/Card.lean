@@ -158,13 +158,17 @@ end Fintype
 
 namespace Fintype
 
+#print Fintype.ofEquiv_card /-
 theorem ofEquiv_card [Fintype α] (f : α ≃ β) : @card β (ofEquiv α f) = card α :=
   Multiset.card_map _ _
 #align fintype.of_equiv_card Fintype.ofEquiv_card
+-/
 
+#print Fintype.card_congr /-
 theorem card_congr {α β} [Fintype α] [Fintype β] (f : α ≃ β) : card α = card β := by
   rw [← of_equiv_card f] <;> congr
 #align fintype.card_congr Fintype.card_congr
+-/
 
 #print Fintype.card_congr' /-
 @[congr]
@@ -228,12 +232,14 @@ noncomputable def equivOfCardEq (h : card α = card β) : α ≃ β :=
 
 end
 
+#print Fintype.card_eq /-
 theorem card_eq {α β} [F : Fintype α] [G : Fintype β] : card α = card β ↔ Nonempty (α ≃ β) :=
   ⟨fun h =>
     haveI := Classical.propDecidable
     (trunc_equiv_of_card_eq h).Nonempty,
     fun ⟨f⟩ => card_congr f⟩
 #align fintype.card_eq Fintype.card_eq
+-/
 
 #print Fintype.card_ofSubsingleton /-
 /-- Note: this lemma is specifically about `fintype.of_subsingleton`. For a statement about
@@ -339,10 +345,12 @@ theorem Finset.card_compl [DecidableEq α] [Fintype α] (s : Finset α) :
 #align finset.card_compl Finset.card_compl
 -/
 
+#print Fintype.card_compl_set /-
 theorem Fintype.card_compl_set [Fintype α] (s : Set α) [Fintype s] [Fintype ↥(sᶜ)] :
     Fintype.card ↥(sᶜ) = Fintype.card α - Fintype.card s := by
   classical rw [← Set.toFinset_card, ← Set.toFinset_card, ← Finset.card_compl, Set.toFinset_compl]
 #align fintype.card_compl_set Fintype.card_compl_set
+-/
 
 #print Fintype.card_fin /-
 @[simp]
@@ -366,10 +374,12 @@ theorem fin_injective : Function.Injective Fin := fun m n h =>
 #align fin_injective fin_injective
 -/
 
+#print Fin.cast_eq_cast' /-
 /-- A reversed version of `fin.cast_eq_cast` that is easier to rewrite with. -/
 theorem Fin.cast_eq_cast' {n m : ℕ} (h : Fin n = Fin m) : cast h = ⇑(Fin.cast <| fin_injective h) :=
   (Fin.cast_eq_cast _).symm
 #align fin.cast_eq_cast' Fin.cast_eq_cast'
+-/
 
 #print card_finset_fin_le /-
 theorem card_finset_fin_le {n : ℕ} (s : Finset (Fin n)) : s.card ≤ n := by
@@ -433,10 +443,12 @@ theorem Fintype.card_bool : Fintype.card Bool = 2 :=
 #align fintype.card_bool Fintype.card_bool
 -/
 
+#print Fintype.card_ulift /-
 @[simp]
 theorem Fintype.card_ulift (α : Type _) [Fintype α] : Fintype.card (ULift α) = Fintype.card α :=
   Fintype.ofEquiv_card _
 #align fintype.card_ulift Fintype.card_ulift
+-/
 
 #print Fintype.card_plift /-
 @[simp]
@@ -522,6 +534,7 @@ noncomputable def Fintype.ofFinite (α : Type _) [Finite α] : Fintype α :=
 #align fintype.of_finite Fintype.ofFinite
 -/
 
+#print Finite.of_injective /-
 theorem Finite.of_injective {α β : Sort _} [Finite β] (f : α → β) (H : Injective f) : Finite α :=
   by
   cases nonempty_fintype (PLift β)
@@ -529,10 +542,13 @@ theorem Finite.of_injective {α β : Sort _} [Finite β] (f : α → β) (H : In
   haveI := Fintype.ofInjective _ H
   exact Finite.of_equiv _ Equiv.plift
 #align finite.of_injective Finite.of_injective
+-/
 
+#print Finite.of_surjective /-
 theorem Finite.of_surjective {α β : Sort _} [Finite α] (f : α → β) (H : Surjective f) : Finite β :=
   Finite.of_injective _ <| injective_surjInv H
 #align finite.of_surjective Finite.of_surjective
+-/
 
 #print Finite.exists_univ_list /-
 theorem Finite.exists_univ_list (α) [Finite α] : ∃ l : List α, l.Nodup ∧ ∀ x : α, x ∈ l :=
@@ -553,14 +569,19 @@ namespace Fintype
 
 variable [Fintype α] [Fintype β]
 
+#print Fintype.card_le_of_injective /-
 theorem card_le_of_injective (f : α → β) (hf : Function.Injective f) : card α ≤ card β :=
   Finset.card_le_card_of_inj_on f (fun _ _ => Finset.mem_univ _) fun _ _ _ _ h => hf h
 #align fintype.card_le_of_injective Fintype.card_le_of_injective
+-/
 
+#print Fintype.card_le_of_embedding /-
 theorem card_le_of_embedding (f : α ↪ β) : card α ≤ card β :=
   card_le_of_injective f f.2
 #align fintype.card_le_of_embedding Fintype.card_le_of_embedding
+-/
 
+#print Fintype.card_lt_of_injective_of_not_mem /-
 theorem card_lt_of_injective_of_not_mem (f : α → β) (h : Function.Injective f) {b : β}
     (w : b ∉ Set.range f) : card α < card β :=
   calc
@@ -568,26 +589,35 @@ theorem card_lt_of_injective_of_not_mem (f : α → β) (h : Function.Injective 
     _ < card β :=
       Finset.card_lt_univ_of_not_mem <| by rwa [← mem_coe, coe_map, coe_univ, Set.image_univ]
 #align fintype.card_lt_of_injective_of_not_mem Fintype.card_lt_of_injective_of_not_mem
+-/
 
+#print Fintype.card_lt_of_injective_not_surjective /-
 theorem card_lt_of_injective_not_surjective (f : α → β) (h : Function.Injective f)
     (h' : ¬Function.Surjective f) : card α < card β :=
   let ⟨y, hy⟩ := not_forall.1 h'
   card_lt_of_injective_of_not_mem f h hy
 #align fintype.card_lt_of_injective_not_surjective Fintype.card_lt_of_injective_not_surjective
+-/
 
+#print Fintype.card_le_of_surjective /-
 theorem card_le_of_surjective (f : α → β) (h : Function.Surjective f) : card β ≤ card α :=
   card_le_of_injective _ (Function.injective_surjInv h)
 #align fintype.card_le_of_surjective Fintype.card_le_of_surjective
+-/
 
+#print Fintype.card_range_le /-
 theorem card_range_le {α β : Type _} (f : α → β) [Fintype α] [Fintype (Set.range f)] :
     Fintype.card (Set.range f) ≤ Fintype.card α :=
   Fintype.card_le_of_surjective (fun a => ⟨f a, by simp⟩) fun ⟨_, a, ha⟩ => ⟨a, by simpa using ha⟩
 #align fintype.card_range_le Fintype.card_range_le
+-/
 
+#print Fintype.card_range /-
 theorem card_range {α β F : Type _} [EmbeddingLike F α β] (f : F) [Fintype α]
     [Fintype (Set.range f)] : Fintype.card (Set.range f) = Fintype.card α :=
   Eq.symm <| Fintype.card_congr <| Equiv.ofInjective _ <| EmbeddingLike.injective f
 #align fintype.card_range Fintype.card_range
+-/
 
 #print Fintype.exists_ne_map_eq_of_card_lt /-
 /-- The pigeonhole principle for finitely many pigeons and pigeonholes.
@@ -727,9 +757,11 @@ theorem two_lt_card_iff : 2 < card α ↔ ∃ a b c : α, a ≠ b ∧ a ≠ c �
 #align fintype.two_lt_card_iff Fintype.two_lt_card_iff
 -/
 
+#print Fintype.card_of_bijective /-
 theorem card_of_bijective {f : α → β} (hf : Bijective f) : card α = card β :=
   card_congr (Equiv.ofBijective f hf)
 #align fintype.card_of_bijective Fintype.card_of_bijective
+-/
 
 end Fintype
 
@@ -767,6 +799,7 @@ theorem surjective_iff_bijective {f : α → α} : Surjective f ↔ Bijective f 
 #align finite.surjective_iff_bijective Finite.surjective_iff_bijective
 -/
 
+#print Finite.injective_iff_surjective_of_equiv /-
 theorem injective_iff_surjective_of_equiv {f : α → β} (e : α ≃ β) : Injective f ↔ Surjective f :=
   have : Injective (e.symm ∘ f) ↔ Surjective (e.symm ∘ f) := injective_iff_surjective
   ⟨fun hinj => by
@@ -774,6 +807,7 @@ theorem injective_iff_surjective_of_equiv {f : α → β} (e : α ≃ β) : Inje
     fun hsurj => by
     simpa [Function.comp] using e.injective.comp (this.2 (e.symm.surjective.comp hsurj))⟩
 #align finite.injective_iff_surjective_of_equiv Finite.injective_iff_surjective_of_equiv
+-/
 
 alias injective_iff_bijective ↔ _root_.function.injective.bijective_of_finite _
 #align function.injective.bijective_of_finite Function.Injective.bijective_of_finite
@@ -792,17 +826,21 @@ namespace Fintype
 
 variable [Fintype α] [Fintype β]
 
+#print Fintype.bijective_iff_injective_and_card /-
 theorem bijective_iff_injective_and_card (f : α → β) :
     Bijective f ↔ Injective f ∧ card α = card β :=
   ⟨fun h => ⟨h.1, card_of_bijective h⟩, fun h =>
     ⟨h.1, h.1.surjective_of_fintype <| equivOfCardEq h.2⟩⟩
 #align fintype.bijective_iff_injective_and_card Fintype.bijective_iff_injective_and_card
+-/
 
+#print Fintype.bijective_iff_surjective_and_card /-
 theorem bijective_iff_surjective_and_card (f : α → β) :
     Bijective f ↔ Surjective f ∧ card α = card β :=
   ⟨fun h => ⟨h.2, card_of_bijective h⟩, fun h =>
     ⟨h.1.injective_of_fintype <| equivOfCardEq h.2, h.1⟩⟩
 #align fintype.bijective_iff_surjective_and_card Fintype.bijective_iff_surjective_and_card
+-/
 
 #print Function.LeftInverse.rightInverse_of_card_le /-
 theorem Function.LeftInverse.rightInverse_of_card_le {f : α → β} {g : β → α} (hfg : LeftInverse f g)
@@ -923,6 +961,7 @@ theorem equiv_of_fintype_self_embedding_to_embedding [Finite α] (e : α ↪ α)
 #align function.embedding.equiv_of_fintype_self_embedding_to_embedding Function.Embedding.equiv_of_fintype_self_embedding_to_embedding
 -/
 
+#print Function.Embedding.is_empty_of_card_lt /-
 /-- If `‖β‖ < ‖α‖` there are no embeddings `α ↪ β`.
 This is a formulation of the pigeonhole principle.
 
@@ -934,6 +973,7 @@ theorem is_empty_of_card_lt [Fintype α] [Fintype β] (h : Fintype.card β < Fin
     let ⟨x, y, Ne, feq⟩ := Fintype.exists_ne_map_eq_of_card_lt f h
     Ne <| f.Injective feq⟩
 #align function.embedding.is_empty_of_card_lt Function.Embedding.is_empty_of_card_lt
+-/
 
 #print Function.Embedding.truncOfCardLe /-
 /-- A constructive embedding of a fintype `α` in another fintype `β` when `card α ≤ card β`. -/
@@ -945,15 +985,20 @@ def truncOfCardLe [Fintype α] [Fintype β] [DecidableEq α] [DecidableEq β]
 #align function.embedding.trunc_of_card_le Function.Embedding.truncOfCardLe
 -/
 
+#print Function.Embedding.nonempty_of_card_le /-
 theorem nonempty_of_card_le [Fintype α] [Fintype β] (h : Fintype.card α ≤ Fintype.card β) :
     Nonempty (α ↪ β) := by classical exact (trunc_of_card_le h).Nonempty
 #align function.embedding.nonempty_of_card_le Function.Embedding.nonempty_of_card_le
+-/
 
+#print Function.Embedding.nonempty_iff_card_le /-
 theorem nonempty_iff_card_le [Fintype α] [Fintype β] :
     Nonempty (α ↪ β) ↔ Fintype.card α ≤ Fintype.card β :=
   ⟨fun ⟨e⟩ => Fintype.card_le_of_embedding e, nonempty_of_card_le⟩
 #align function.embedding.nonempty_iff_card_le Function.Embedding.nonempty_iff_card_le
+-/
 
+#print Function.Embedding.exists_of_card_le_finset /-
 theorem exists_of_card_le_finset [Fintype α] {s : Finset β} (h : Fintype.card α ≤ s.card) :
     ∃ f : α ↪ β, Set.range f ⊆ s :=
   by
@@ -961,6 +1006,7 @@ theorem exists_of_card_le_finset [Fintype α] {s : Finset β} (h : Fintype.card 
   rcases nonempty_of_card_le h with ⟨f⟩
   exact ⟨f.trans (embedding.subtype _), by simp [Set.range_subset_iff]⟩
 #align function.embedding.exists_of_card_le_finset Function.Embedding.exists_of_card_le_finset
+-/
 
 end Function.Embedding
 
@@ -973,12 +1019,14 @@ theorem Finset.univ_map_embedding {α : Type _} [Fintype α] (e : α ↪ α) : u
 
 namespace Fintype
 
+#print Fintype.card_lt_of_surjective_not_injective /-
 theorem card_lt_of_surjective_not_injective [Fintype α] [Fintype β] (f : α → β)
     (h : Function.Surjective f) (h' : ¬Function.Injective f) : card β < card α :=
   card_lt_of_injective_not_surjective _ (Function.injective_surjInv h) fun hg =>
     have w : Function.Bijective (Function.surjInv h) := ⟨Function.injective_surjInv h, hg⟩
     h' <| h.injective_of_fintype (Equiv.ofBijective _ w).symm
 #align fintype.card_lt_of_surjective_not_injective Fintype.card_lt_of_surjective_not_injective
+-/
 
 end Fintype
 
@@ -1144,6 +1192,7 @@ noncomputable def fintypeOrInfinite (α : Type _) : PSum (Fintype α) (Infinite 
 
 end
 
+#print Finset.exists_minimal /-
 theorem Finset.exists_minimal {α : Type _} [Preorder α] (s : Finset α) (h : s.Nonempty) :
     ∃ m ∈ s, ∀ x ∈ s, ¬x < m := by
   obtain ⟨c, hcs : c ∈ s⟩ := h
@@ -1151,11 +1200,14 @@ theorem Finset.exists_minimal {α : Type _} [Preorder α] (s : Finset α) (h : s
   obtain ⟨⟨m, hms : m ∈ s⟩, -, H⟩ := this.has_min Set.univ ⟨⟨c, hcs⟩, trivial⟩
   exact ⟨m, hms, fun x hx hxm => H ⟨x, hx⟩ trivial hxm⟩
 #align finset.exists_minimal Finset.exists_minimal
+-/
 
+#print Finset.exists_maximal /-
 theorem Finset.exists_maximal {α : Type _} [Preorder α] (s : Finset α) (h : s.Nonempty) :
     ∃ m ∈ s, ∀ x ∈ s, ¬m < x :=
   @Finset.exists_minimal αᵒᵈ _ s h
 #align finset.exists_maximal Finset.exists_maximal
+-/
 
 namespace Infinite
 
@@ -1206,13 +1258,17 @@ protected theorem nonempty (α : Type _) [Infinite α] : Nonempty α := by infer
 #align infinite.nonempty Infinite.nonempty
 -/
 
+#print Infinite.of_injective /-
 theorem of_injective {α β} [Infinite β] (f : β → α) (hf : Injective f) : Infinite α :=
   ⟨fun I => (Finite.of_injective f hf).False⟩
 #align infinite.of_injective Infinite.of_injective
+-/
 
+#print Infinite.of_surjective /-
 theorem of_surjective {α β} [Infinite β] (f : α → β) (hf : Surjective f) : Infinite α :=
   ⟨fun I => (Finite.of_surjective f hf).False⟩
 #align infinite.of_surjective Infinite.of_surjective
+-/
 
 end Infinite
 
@@ -1342,10 +1398,13 @@ noncomputable def fintypeOfFinsetCardLe {ι : Type _} (n : ℕ) (w : ∀ s : Fin
 #align fintype_of_finset_card_le fintypeOfFinsetCardLe
 -/
 
+#print not_injective_infinite_finite /-
 theorem not_injective_infinite_finite {α β} [Infinite α] [Finite β] (f : α → β) : ¬Injective f :=
   fun hf => (Finite.of_injective f hf).False
 #align not_injective_infinite_finite not_injective_infinite_finite
+-/
 
+#print Finite.exists_ne_map_eq_of_infinite /-
 /-- The pigeonhole principle for infinitely many pigeons in finitely many pigeonholes. If there are
 infinitely many pigeons in finitely many pigeonholes, then there are at least two pigeons in the
 same pigeonhole.
@@ -1356,11 +1415,15 @@ theorem Finite.exists_ne_map_eq_of_infinite {α β} [Infinite α] [Finite β] (f
     ∃ x y : α, x ≠ y ∧ f x = f y := by
   simpa only [injective, not_forall, not_imp, and_comm] using not_injective_infinite_finite f
 #align finite.exists_ne_map_eq_of_infinite Finite.exists_ne_map_eq_of_infinite
+-/
 
+#print Function.Embedding.is_empty /-
 instance Function.Embedding.is_empty {α β} [Infinite α] [Finite β] : IsEmpty (α ↪ β) :=
   ⟨fun f => not_injective_infinite_finite f f.2⟩
 #align function.embedding.is_empty Function.Embedding.is_empty
+-/
 
+#print Finite.exists_infinite_fiber /-
 /-- The strong pigeonhole principle for infinitely many pigeons in
 finitely many pigeonholes.  If there are infinitely many pigeons in
 finitely many pigeonholes, then there is a pigeonhole with infinitely
@@ -1379,10 +1442,13 @@ theorem Finite.exists_infinite_fiber [Infinite α] [Finite β] (f : α → β) :
       complete := by simp }
   exact key.false
 #align finite.exists_infinite_fiber Finite.exists_infinite_fiber
+-/
 
+#print not_surjective_finite_infinite /-
 theorem not_surjective_finite_infinite {α β} [Finite α] [Infinite β] (f : α → β) : ¬Surjective f :=
   fun hf => (Infinite.of_surjective f hf).not_finite ‹_›
 #align not_surjective_finite_infinite not_surjective_finite_infinite
+-/
 
 section Trunc
 

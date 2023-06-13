@@ -39,11 +39,14 @@ open Metric
 
 variable {𝕜 : Type _} [IsROrC 𝕜] {E : Type _} [NormedAddCommGroup E]
 
+#print IsROrC.norm_coe_norm /-
 theorem IsROrC.norm_coe_norm {z : E} : ‖(‖z‖ : 𝕜)‖ = ‖z‖ := by simp
 #align is_R_or_C.norm_coe_norm IsROrC.norm_coe_norm
+-/
 
 variable [NormedSpace 𝕜 E]
 
+#print norm_smul_inv_norm /-
 /-- Lemma to normalize a vector in a normed space `E` over either `ℂ` or `ℝ` to unit length. -/
 @[simp]
 theorem norm_smul_inv_norm {x : E} (hx : x ≠ 0) : ‖(‖x‖⁻¹ : 𝕜) • x‖ = 1 :=
@@ -51,14 +54,18 @@ theorem norm_smul_inv_norm {x : E} (hx : x ≠ 0) : ‖(‖x‖⁻¹ : 𝕜) •
   have : ‖x‖ ≠ 0 := by simp [hx]
   field_simp [norm_smul]
 #align norm_smul_inv_norm norm_smul_inv_norm
+-/
 
+#print norm_smul_inv_norm' /-
 /-- Lemma to normalize a vector in a normed space `E` over either `ℂ` or `ℝ` to length `r`. -/
 theorem norm_smul_inv_norm' {r : ℝ} (r_nonneg : 0 ≤ r) {x : E} (hx : x ≠ 0) :
     ‖(r * ‖x‖⁻¹ : 𝕜) • x‖ = r := by
   have : ‖x‖ ≠ 0 := by simp [hx]
   field_simp [norm_smul, r_nonneg, is_R_or_C_simps]
 #align norm_smul_inv_norm' norm_smul_inv_norm'
+-/
 
+#print LinearMap.bound_of_sphere_bound /-
 theorem LinearMap.bound_of_sphere_bound {r : ℝ} (r_pos : 0 < r) (c : ℝ) (f : E →ₗ[𝕜] 𝕜)
     (h : ∀ z ∈ sphere (0 : E) r, ‖f z‖ ≤ c) (z : E) : ‖f z‖ ≤ c / r * ‖z‖ :=
   by
@@ -81,14 +88,18 @@ theorem LinearMap.bound_of_sphere_bound {r : ℝ} (r_pos : 0 < r) (c : ℝ) (f :
   · exact mul_nonneg ((norm_nonneg _).trans norm_f_z₁) (norm_nonneg z)
   apply mul_le_mul norm_f_z₁ rfl.le (norm_nonneg z) ((norm_nonneg _).trans norm_f_z₁)
 #align linear_map.bound_of_sphere_bound LinearMap.bound_of_sphere_bound
+-/
 
+#print LinearMap.bound_of_ball_bound' /-
 /-- `linear_map.bound_of_ball_bound` is a version of this over arbitrary nontrivially normed fields.
 It produces a less precise bound so we keep both versions. -/
 theorem LinearMap.bound_of_ball_bound' {r : ℝ} (r_pos : 0 < r) (c : ℝ) (f : E →ₗ[𝕜] 𝕜)
     (h : ∀ z ∈ closedBall (0 : E) r, ‖f z‖ ≤ c) (z : E) : ‖f z‖ ≤ c / r * ‖z‖ :=
   f.bound_of_sphere_bound r_pos c (fun z hz => h z hz.le) z
 #align linear_map.bound_of_ball_bound' LinearMap.bound_of_ball_bound'
+-/
 
+#print ContinuousLinearMap.op_norm_bound_of_ball_bound /-
 theorem ContinuousLinearMap.op_norm_bound_of_ball_bound {r : ℝ} (r_pos : 0 < r) (c : ℝ)
     (f : E →L[𝕜] 𝕜) (h : ∀ z ∈ closedBall (0 : E) r, ‖f z‖ ≤ c) : ‖f‖ ≤ c / r :=
   by
@@ -100,14 +111,15 @@ theorem ContinuousLinearMap.op_norm_bound_of_ball_bound {r : ℝ} (r_pos : 0 < r
   apply LinearMap.bound_of_ball_bound' r_pos
   exact fun z hz => h z hz
 #align continuous_linear_map.op_norm_bound_of_ball_bound ContinuousLinearMap.op_norm_bound_of_ball_bound
+-/
 
 variable (𝕜)
 
-include 𝕜
-
+#print NormedSpace.sphere_nonempty_isROrC /-
 theorem NormedSpace.sphere_nonempty_isROrC [Nontrivial E] {r : ℝ} (hr : 0 ≤ r) :
     Nonempty (sphere (0 : E) r) :=
   letI : NormedSpace ℝ E := NormedSpace.restrictScalars ℝ 𝕜 E
   (normed_space.sphere_nonempty.mpr hr).coeSort
 #align normed_space.sphere_nonempty_is_R_or_C NormedSpace.sphere_nonempty_isROrC
+-/
 

@@ -154,6 +154,7 @@ theorem Multiset.mem_of_mem_toEnumFinset {p : α × ℕ} (h : p ∈ m.toEnumFins
 #align multiset.mem_of_mem_to_enum_finset Multiset.mem_of_mem_toEnumFinset
 -/
 
+#print Multiset.toEnumFinset_mono /-
 @[mono]
 theorem Multiset.toEnumFinset_mono {m₁ m₂ : Multiset α} (h : m₁ ≤ m₂) :
     m₁.toEnumFinset ⊆ m₂.toEnumFinset := by
@@ -161,7 +162,9 @@ theorem Multiset.toEnumFinset_mono {m₁ m₂ : Multiset α} (h : m₁ ≤ m₂)
   simp only [Multiset.mem_toEnumFinset]
   exact gt_of_ge_of_gt (multiset.le_iff_count.mp h p.1)
 #align multiset.to_enum_finset_mono Multiset.toEnumFinset_mono
+-/
 
+#print Multiset.toEnumFinset_subset_iff /-
 @[simp]
 theorem Multiset.toEnumFinset_subset_iff {m₁ m₂ : Multiset α} :
     m₁.toEnumFinset ⊆ m₂.toEnumFinset ↔ m₁ ≤ m₂ :=
@@ -178,6 +181,7 @@ theorem Multiset.toEnumFinset_subset_iff {m₁ m₂ : Multiset α} :
     simpa only [Multiset.mem_toEnumFinset] using h this
   · simp [hx]
 #align multiset.to_enum_finset_subset_iff Multiset.toEnumFinset_subset_iff
+-/
 
 #print Multiset.coeEmbedding /-
 /-- The embedding from a multiset into `α × ℕ` where the second coordinate enumerates repeats.
@@ -282,6 +286,7 @@ theorem Multiset.map_univ {β : Type _} (m : Multiset α) (f : α → β) :
 #align multiset.map_univ Multiset.map_univ
 -/
 
+#print Multiset.card_toEnumFinset /-
 @[simp]
 theorem Multiset.card_toEnumFinset (m : Multiset α) : m.toEnumFinset.card = m.card :=
   by
@@ -290,11 +295,14 @@ theorem Multiset.card_toEnumFinset (m : Multiset α) : m.toEnumFinset.card = m.c
   · rw [Multiset.card_map]
   · rw [m.map_to_enum_finset_fst]
 #align multiset.card_to_enum_finset Multiset.card_toEnumFinset
+-/
 
+#print Multiset.card_coe /-
 @[simp]
 theorem Multiset.card_coe (m : Multiset α) : Fintype.card m = m.card := by
   rw [Fintype.card_congr m.coe_equiv]; simp
 #align multiset.card_coe Multiset.card_coe
+-/
 
 #print Multiset.prod_eq_prod_coe /-
 @[to_additive]

@@ -48,7 +48,6 @@ attribute [local positivity] tactic.positivity_szemeredi_regularity
 variable {α : Type _} [Fintype α] {P : Finpartition (univ : Finset α)} (hP : P.IsEquipartition)
   (G : SimpleGraph α) (ε : ℝ)
 
--- mathport name: exprm
 local notation "m" => (card α / stepBound P.parts.card : ℕ)
 
 namespace SzemerediRegularity

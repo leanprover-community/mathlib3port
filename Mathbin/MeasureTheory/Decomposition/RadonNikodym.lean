@@ -49,8 +49,6 @@ namespace MeasureTheory
 
 namespace Measure
 
-include m
-
 #print MeasureTheory.Measure.withDensity_rnDeriv_eq /-
 theorem withDensity_rnDeriv_eq (μ ν : Measure α) [HaveLebesgueDecomposition μ ν] (h : μ ≪ ν) :
     ν.withDensity (rnDeriv μ ν) = μ :=
@@ -100,10 +98,9 @@ end Measure
 
 namespace SignedMeasure
 
-include m
-
 open Measure VectorMeasure
 
+#print MeasureTheory.SignedMeasure.withDensityᵥ_rnDeriv_eq /-
 theorem withDensityᵥ_rnDeriv_eq (s : SignedMeasure α) (μ : Measure α) [SigmaFinite μ]
     (h : s ≪ᵥ μ.toENNRealVectorMeasure) : μ.withDensityᵥ (s.rnDeriv μ) = s :=
   by
@@ -125,12 +122,15 @@ theorem withDensityᵥ_rnDeriv_eq (s : SignedMeasure α) (μ : Measure α) [Sigm
         exact (lintegral_rn_deriv_lt_top _ _).Ne
   · exact equiv_measure.right_inv μ
 #align measure_theory.signed_measure.with_densityᵥ_rn_deriv_eq MeasureTheory.SignedMeasure.withDensityᵥ_rnDeriv_eq
+-/
 
+#print MeasureTheory.SignedMeasure.absolutelyContinuous_iff_withDensityᵥ_rnDeriv_eq /-
 /-- The Radon-Nikodym theorem for signed measures. -/
 theorem absolutelyContinuous_iff_withDensityᵥ_rnDeriv_eq (s : SignedMeasure α) (μ : Measure α)
     [SigmaFinite μ] : s ≪ᵥ μ.toENNRealVectorMeasure ↔ μ.withDensityᵥ (s.rnDeriv μ) = s :=
   ⟨withDensityᵥ_rnDeriv_eq s μ, fun h => h ▸ withDensityᵥ_absolutelyContinuous _ _⟩
 #align measure_theory.signed_measure.absolutely_continuous_iff_with_densityᵥ_rn_deriv_eq MeasureTheory.SignedMeasure.absolutelyContinuous_iff_withDensityᵥ_rnDeriv_eq
+-/
 
 end SignedMeasure
 

@@ -75,9 +75,11 @@ theorem isConj_iff_eq {α : Type _} [CommMonoid α] {a b : α} : IsConj a b ↔ 
 #align is_conj_iff_eq isConj_iff_eq
 -/
 
+#print MonoidHom.map_isConj /-
 protected theorem MonoidHom.map_isConj (f : α →* β) {a b : α} : IsConj a b → IsConj (f a) (f b)
   | ⟨c, hc⟩ => ⟨Units.map f c, by rw [Units.coe_map, SemiconjBy, ← f.map_mul, hc.eq, f.map_mul]⟩
 #align monoid_hom.map_is_conj MonoidHom.map_isConj
+-/
 
 end Monoid
 
@@ -85,6 +87,7 @@ section CancelMonoid
 
 variable [CancelMonoid α]
 
+#print isConj_one_right /-
 -- These lemmas hold for `right_cancel_monoid` with the current proofs, but for the sake of
 -- not duplicating code (these lemmas also hold for `left_cancel_monoids`) we leave these
 -- not generalised.
@@ -93,13 +96,16 @@ theorem isConj_one_right {a : α} : IsConj 1 a ↔ a = 1 :=
   ⟨fun ⟨c, hc⟩ => mul_right_cancel (hc.symm.trans ((mul_one _).trans (one_mul _).symm)), fun h => by
     rw [h]⟩
 #align is_conj_one_right isConj_one_right
+-/
 
+#print isConj_one_left /-
 @[simp]
 theorem isConj_one_left {a : α} : IsConj a 1 ↔ a = 1 :=
   calc
     IsConj a 1 ↔ IsConj 1 a := ⟨IsConj.symm, IsConj.symm⟩
     _ ↔ a = 1 := isConj_one_right
 #align is_conj_one_left isConj_one_left
+-/
 
 end CancelMonoid
 
@@ -107,22 +113,29 @@ section Group
 
 variable [Group α]
 
+#print isConj_iff /-
 @[simp]
 theorem isConj_iff {a b : α} : IsConj a b ↔ ∃ c : α, c * a * c⁻¹ = b :=
   ⟨fun ⟨c, hc⟩ => ⟨c, mul_inv_eq_iff_eq_mul.2 hc⟩, fun ⟨c, hc⟩ =>
     ⟨⟨c, c⁻¹, mul_inv_self c, inv_mul_self c⟩, mul_inv_eq_iff_eq_mul.1 hc⟩⟩
 #align is_conj_iff isConj_iff
+-/
 
+#print conj_inv /-
 @[simp]
 theorem conj_inv {a b : α} : (b * a * b⁻¹)⁻¹ = b * a⁻¹ * b⁻¹ :=
   ((MulAut.conj b).map_inv a).symm
 #align conj_inv conj_inv
+-/
 
+#print conj_mul /-
 @[simp]
 theorem conj_mul {a b c : α} : b * a * b⁻¹ * (b * c * b⁻¹) = b * (a * c) * b⁻¹ :=
   ((MulAut.conj b).map_mul a c).symm
 #align conj_mul conj_mul
+-/
 
+#print conj_pow /-
 @[simp]
 theorem conj_pow {i : ℕ} {a b : α} : (a * b * a⁻¹) ^ i = a * b ^ i * a⁻¹ :=
   by
@@ -130,7 +143,9 @@ theorem conj_pow {i : ℕ} {a b : α} : (a * b * a⁻¹) ^ i = a * b ^ i * a⁻�
   · simp
   · simp [pow_succ, hi]
 #align conj_pow conj_pow
+-/
 
+#print conj_zpow /-
 @[simp]
 theorem conj_zpow {i : ℤ} {a b : α} : (a * b * a⁻¹) ^ i = a * b ^ i * a⁻¹ :=
   by
@@ -138,13 +153,17 @@ theorem conj_zpow {i : ℤ} {a b : α} : (a * b * a⁻¹) ^ i = a * b ^ i * a⁻
   · simp
   · simp [zpow_negSucc, conj_pow]
 #align conj_zpow conj_zpow
+-/
 
+#print conj_injective /-
 theorem conj_injective {x : α} : Function.Injective fun g : α => x * g * x⁻¹ :=
   (MulAut.conj x).Injective
 #align conj_injective conj_injective
+-/
 
 end Group
 
+#print isConj_iff₀ /-
 @[simp]
 theorem isConj_iff₀ [GroupWithZero α] {a b : α} : IsConj a b ↔ ∃ c : α, c ≠ 0 ∧ c * a * c⁻¹ = b :=
   ⟨fun ⟨c, hc⟩ =>
@@ -157,6 +176,7 @@ theorem isConj_iff₀ [GroupWithZero α] {a b : α} : IsConj a b ↔ ∃ c : α,
       rw [SemiconjBy, ← Units.mul_inv_eq_iff_eq_mul, Units.val_inv_eq_inv_val, Units.val_mk0]
       exact hc⟩⟩
 #align is_conj_iff₀ isConj_iff₀
+-/
 
 namespace IsConj
 
@@ -231,9 +251,11 @@ theorem mk_surjective : Function.Surjective (@ConjClasses.mk α _) :=
 instance : One (ConjClasses α) :=
   ⟨⟦1⟧⟩
 
+#print ConjClasses.one_eq_mk_one /-
 theorem one_eq_mk_one : (1 : ConjClasses α) = ConjClasses.mk 1 :=
   rfl
 #align conj_classes.one_eq_mk_one ConjClasses.one_eq_mk_one
+-/
 
 #print ConjClasses.exists_rep /-
 theorem exists_rep (a : ConjClasses α) : ∃ a0 : α, ConjClasses.mk a0 = a :=
@@ -248,6 +270,7 @@ def map (f : α →* β) : ConjClasses α → ConjClasses β :=
 #align conj_classes.map ConjClasses.map
 -/
 
+#print ConjClasses.map_surjective /-
 theorem map_surjective {f : α →* β} (hf : Function.Surjective f) :
     Function.Surjective (ConjClasses.map f) :=
   by
@@ -256,6 +279,7 @@ theorem map_surjective {f : α →* β} (hf : Function.Surjective f) :
   obtain ⟨a, rfl⟩ := hf b
   exact ⟨ConjClasses.mk a, rfl⟩
 #align conj_classes.map_surjective ConjClasses.map_surjective
+-/
 
 library_note "slow-failing instance priority"/--
 Certain instances trigger further searches when they are considered as candidate instances;

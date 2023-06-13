@@ -26,6 +26,7 @@ open scoped BigOperators Polynomial
 
 variable {R A : Type _} [CommRing R] [IsDomain R] [GCDMonoid R] [CommRing A] [Algebra R A]
 
+#print IsLocalization.surj_of_gcd_domain /-
 theorem IsLocalization.surj_of_gcd_domain (M : Submonoid R) [IsLocalization M A] (z : A) :
     ∃ a b : R, IsUnit (gcd a b) ∧ z * algebraMap R A b = algebraMap R A a :=
   by
@@ -37,6 +38,7 @@ theorem IsLocalization.surj_of_gcd_domain (M : Submonoid R) [IsLocalization M A]
   · rw [Subtype.coe_mk, hy', ← mul_comm y', mul_assoc]; conv_lhs => rw [hx']
   · infer_instance
 #align is_localization.surj_of_gcd_domain IsLocalization.surj_of_gcd_domain
+-/
 
 #print GCDMonoid.toIsIntegrallyClosed /-
 instance (priority := 100) GCDMonoid.toIsIntegrallyClosed : IsIntegrallyClosed R :=

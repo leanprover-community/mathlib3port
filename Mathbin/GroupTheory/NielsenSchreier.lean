@@ -97,6 +97,7 @@ namespace IsFreeGroupoid
 
 attribute [instance] quiver_generators
 
+#print IsFreeGroupoid.ext_functor /-
 /-- Two functors from a free groupoid to a group are equal when they agree on the generating
 quiver. -/
 @[ext]
@@ -106,6 +107,7 @@ theorem ext_functor {G} [Groupoid.{v} G] [IsFreeGroupoid G] {X : Type v} [Group 
   let ⟨_, _, u⟩ := @unique_lift G _ _ X _ fun (a b : Generators G) (e : a ⟶ b) => g.map (of e)
   trans (u _ h) (u _ fun _ _ _ => rfl).symm
 #align is_free_groupoid.ext_functor IsFreeGroupoid.ext_functor
+-/
 
 #print IsFreeGroupoid.actionGroupoidIsFree /-
 /-- An action groupoid over a free group is free. More generally, one could show that the groupoid
@@ -325,9 +327,11 @@ instance endIsFreeOfConnectedFree {G} [Groupoid G] [IsConnected G] [IsFreeGroupo
 
 end IsFreeGroupoid
 
+#print subgroupIsFreeOfIsFree /-
 /-- The Nielsen-Schreier theorem: a subgroup of a free group is free. -/
 instance subgroupIsFreeOfIsFree {G : Type u} [Group G] [IsFreeGroup G] (H : Subgroup G) :
     IsFreeGroup H :=
   IsFreeGroup.ofMulEquiv (endMulEquivSubgroup H)
 #align subgroup_is_free_of_is_free subgroupIsFreeOfIsFree
+-/
 

@@ -70,13 +70,10 @@ class SMul (M : Type _) (α : Type _) where
 #align has_vadd VAdd
 -/
 
--- mathport name: «expr +ᵥ »
 infixl:65 " +ᵥ " => VAdd.vadd
 
--- mathport name: «expr -ᵥ »
 infixl:65 " -ᵥ " => VSub.vsub
 
--- mathport name: «expr • »
 infixr:73 " • " => SMul.smul
 
 attribute [to_additive_reorder 1] Pow
@@ -286,17 +283,21 @@ section Semigroup
 
 variable [Semigroup G]
 
+#print mul_assoc /-
 @[no_rsimp, to_additive]
 theorem mul_assoc : ∀ a b c : G, a * b * c = a * (b * c) :=
   Semigroup.mul_assoc
 #align mul_assoc mul_assoc
 #align add_assoc add_assoc
+-/
 
+#print Semigroup.to_isAssociative /-
 @[to_additive]
 instance Semigroup.to_isAssociative : IsAssociative G (· * ·) :=
   ⟨mul_assoc⟩
 #align semigroup.to_is_associative Semigroup.to_isAssociative
 #align add_semigroup.to_is_associative AddSemigroup.to_isAssociative
+-/
 
 end Semigroup
 
@@ -322,18 +323,23 @@ section CommSemigroup
 
 variable [CommSemigroup G]
 
+#print mul_comm /-
 @[no_rsimp, to_additive]
 theorem mul_comm : ∀ a b : G, a * b = b * a :=
   CommSemigroup.mul_comm
 #align mul_comm mul_comm
 #align add_comm add_comm
+-/
 
+#print CommSemigroup.to_isCommutative /-
 @[to_additive]
 instance CommSemigroup.to_isCommutative : IsCommutative G (· * ·) :=
   ⟨mul_comm⟩
 #align comm_semigroup.to_is_commutative CommSemigroup.to_isCommutative
 #align add_comm_semigroup.to_is_commutative AddCommSemigroup.to_isCommutative
+-/
 
+#print CommSemigroup.IsRightCancelMul.toIsLeftCancelMul /-
 /-- Any `comm_semigroup G` that satisfies `is_right_cancel_mul G` also satisfies
 `is_left_cancel_mul G`. -/
 @[to_additive AddCommSemigroup.IsRightCancelAdd.toIsLeftCancelAdd
@@ -343,7 +349,9 @@ theorem CommSemigroup.IsRightCancelMul.toIsLeftCancelMul (G : Type u) [CommSemig
   ⟨fun a b c h => mul_right_cancel <| (mul_comm _ _).trans (h.trans <| mul_comm _ _)⟩
 #align comm_semigroup.is_right_cancel_mul.to_is_left_cancel_mul CommSemigroup.IsRightCancelMul.toIsLeftCancelMul
 #align add_comm_semigroup.is_right_cancel_add.to_is_left_cancel_add AddCommSemigroup.IsRightCancelAdd.toIsLeftCancelAdd
+-/
 
+#print CommSemigroup.IsLeftCancelMul.toIsRightCancelMul /-
 /-- Any `comm_semigroup G` that satisfies `is_left_cancel_mul G` also satisfies
 `is_right_cancel_mul G`. -/
 @[to_additive AddCommSemigroup.IsLeftCancelAdd.toIsRightCancelAdd
@@ -353,7 +361,9 @@ theorem CommSemigroup.IsLeftCancelMul.toIsRightCancelMul (G : Type u) [CommSemig
   ⟨fun a b c h => mul_left_cancel <| (mul_comm _ _).trans (h.trans <| mul_comm _ _)⟩
 #align comm_semigroup.is_left_cancel_mul.to_is_right_cancel_mul CommSemigroup.IsLeftCancelMul.toIsRightCancelMul
 #align add_comm_semigroup.is_left_cancel_add.to_is_right_cancel_add AddCommSemigroup.IsLeftCancelAdd.toIsRightCancelAdd
+-/
 
+#print CommSemigroup.IsLeftCancelMul.toIsCancelMul /-
 /-- Any `comm_semigroup G` that satisfies `is_left_cancel_mul G` also satisfies
 `is_cancel_mul G`. -/
 @[to_additive AddCommSemigroup.IsLeftCancelAdd.toIsCancelAdd
@@ -363,7 +373,9 @@ theorem CommSemigroup.IsLeftCancelMul.toIsCancelMul (G : Type u) [CommSemigroup 
   { ‹IsLeftCancelMul G›, CommSemigroup.IsLeftCancelMul.toIsRightCancelMul G with }
 #align comm_semigroup.is_left_cancel_mul.to_is_cancel_mul CommSemigroup.IsLeftCancelMul.toIsCancelMul
 #align add_comm_semigroup.is_left_cancel_add.to_is_cancel_add AddCommSemigroup.IsLeftCancelAdd.toIsCancelAdd
+-/
 
+#print CommSemigroup.IsRightCancelMul.toIsCancelMul /-
 /-- Any `comm_semigroup G` that satisfies `is_right_cancel_mul G` also satisfies
 `is_cancel_mul G`. -/
 @[to_additive AddCommSemigroup.IsRightCancelAdd.toIsCancelAdd
@@ -373,6 +385,7 @@ theorem CommSemigroup.IsRightCancelMul.toIsCancelMul (G : Type u) [CommSemigroup
   { ‹IsRightCancelMul G›, CommSemigroup.IsRightCancelMul.toIsLeftCancelMul G with }
 #align comm_semigroup.is_right_cancel_mul.to_is_cancel_mul CommSemigroup.IsRightCancelMul.toIsCancelMul
 #align add_comm_semigroup.is_right_cancel_add.to_is_cancel_add AddCommSemigroup.IsRightCancelAdd.toIsCancelAdd
+-/
 
 end CommSemigroup
 
@@ -395,6 +408,7 @@ class AddLeftCancelSemigroup (G : Type u) extends AddSemigroup G where
 
 attribute [to_additive AddLeftCancelSemigroup] LeftCancelSemigroup
 
+#print LeftCancelSemigroup.toIsLeftCancelMul /-
 /-- Any `left_cancel_semigroup` satisfies `is_left_cancel_mul`. -/
 @[to_additive "Any `add_left_cancel_semigroup` satisfies `is_left_cancel_add`."]
 instance (priority := 100) LeftCancelSemigroup.toIsLeftCancelMul (G : Type u)
@@ -402,6 +416,7 @@ instance (priority := 100) LeftCancelSemigroup.toIsLeftCancelMul (G : Type u)
     where mul_left_cancel := LeftCancelSemigroup.mul_left_cancel
 #align left_cancel_semigroup.to_is_left_cancel_mul LeftCancelSemigroup.toIsLeftCancelMul
 #align add_left_cancel_semigroup.to_is_left_cancel_add AddLeftCancelSemigroup.toIsLeftCancelAdd
+-/
 
 #print RightCancelSemigroup /-
 /-- A `right_cancel_semigroup` is a semigroup such that `a * b = c * b` implies `a = c`. -/
@@ -422,6 +437,7 @@ class AddRightCancelSemigroup (G : Type u) extends AddSemigroup G where
 
 attribute [to_additive AddRightCancelSemigroup] RightCancelSemigroup
 
+#print RightCancelSemigroup.toIsRightCancelMul /-
 /-- Any `right_cancel_semigroup` satisfies `is_right_cancel_mul`. -/
 @[to_additive "Any `add_right_cancel_semigroup` satisfies `is_right_cancel_add`."]
 instance (priority := 100) RightCancelSemigroup.toIsRightCancelMul (G : Type u)
@@ -429,6 +445,7 @@ instance (priority := 100) RightCancelSemigroup.toIsRightCancelMul (G : Type u)
     where mul_right_cancel := RightCancelSemigroup.mul_right_cancel
 #align right_cancel_semigroup.to_is_right_cancel_mul RightCancelSemigroup.toIsRightCancelMul
 #align add_right_cancel_semigroup.to_is_right_cancel_add AddRightCancelSemigroup.toIsRightCancelAdd
+-/
 
 #print MulOneClass /-
 /-- Typeclass for expressing that a type `M` with multiplication and a one satisfies
@@ -450,6 +467,7 @@ class AddZeroClass (M : Type u) extends Zero M, Add M where
 
 attribute [to_additive] MulOneClass
 
+#print MulOneClass.ext /-
 @[ext, to_additive]
 theorem MulOneClass.ext {M : Type u} : ∀ ⦃m₁ m₂ : MulOneClass M⦄, m₁.mul = m₂.mul → m₁ = m₂ :=
   by
@@ -458,22 +476,27 @@ theorem MulOneClass.ext {M : Type u} : ∀ ⦃m₁ m₂ : MulOneClass M⦄, m₁
   exact (one_mul₂ one₁).symm.trans (mul_one₁ one₂)
 #align mul_one_class.ext MulOneClass.ext
 #align add_zero_class.ext AddZeroClass.ext
+-/
 
 section MulOneClass
 
 variable {M : Type u} [MulOneClass M]
 
+#print one_mul /-
 @[ematch, simp, to_additive]
 theorem one_mul : ∀ a : M, 1 * a = a :=
   MulOneClass.one_mul
 #align one_mul one_mul
 #align zero_add zero_add
+-/
 
+#print mul_one /-
 @[ematch, simp, to_additive]
 theorem mul_one : ∀ a : M, a * 1 = a :=
   MulOneClass.mul_one
 #align mul_one mul_one
 #align add_zero add_zero
+-/
 
 @[to_additive]
 instance MulOneClass.to_isLeftId : IsLeftId M (· * ·) 1 :=
@@ -657,18 +680,22 @@ theorem npow_eq_pow (n : ℕ) (x : M) : Monoid.npow n x = x ^ n :=
 #align nsmul_eq_smul nsmul_eq_smul
 -/
 
+#print pow_zero /-
 -- the attributes are intentionally out of order. `zero_smul` proves `zero_nsmul`.
 @[to_additive zero_nsmul, simp]
 theorem pow_zero (a : M) : a ^ 0 = 1 :=
   Monoid.npow_zero _
 #align pow_zero pow_zero
 #align zero_nsmul zero_nsmul
+-/
 
+#print pow_succ /-
 @[to_additive succ_nsmul]
 theorem pow_succ (a : M) (n : ℕ) : a ^ (n + 1) = a * a ^ n :=
   Monoid.npow_succ n a
 #align pow_succ pow_succ
 #align succ_nsmul succ_nsmul
+-/
 
 end
 
@@ -676,11 +703,13 @@ section Monoid
 
 variable {M : Type u} [Monoid M]
 
+#print left_inv_eq_right_inv /-
 @[to_additive]
 theorem left_inv_eq_right_inv {a b c : M} (hba : b * a = 1) (hac : a * c = 1) : b = c := by
   rw [← one_mul c, ← hba, mul_assoc, hac, mul_one b]
 #align left_inv_eq_right_inv left_inv_eq_right_inv
 #align left_neg_eq_right_neg left_neg_eq_right_neg
+-/
 
 end Monoid
 
@@ -785,6 +814,7 @@ instance (priority := 100) CancelCommMonoid.toCancelMonoid (M : Type u) [CancelC
 #align add_cancel_comm_monoid.to_cancel_add_monoid AddCancelCommMonoid.toAddCancelMonoid
 -/
 
+#print CancelMonoid.toIsCancelMul /-
 /-- Any `cancel_monoid M` satisfies `is_cancel_mul M`. -/
 @[to_additive "Any `add_cancel_monoid M` satisfies `is_cancel_add M`."]
 instance (priority := 100) CancelMonoid.toIsCancelMul (M : Type u) [CancelMonoid M] : IsCancelMul M
@@ -793,6 +823,7 @@ instance (priority := 100) CancelMonoid.toIsCancelMul (M : Type u) [CancelMonoid
   mul_right_cancel := CancelMonoid.mul_right_cancel
 #align cancel_monoid.to_is_cancel_mul CancelMonoid.toIsCancelMul
 #align add_cancel_monoid.to_is_cancel_add AddCancelMonoid.toIsCancelAdd
+-/
 
 end CancelMonoid
 
@@ -840,11 +871,13 @@ class InvolutiveInv (G : Type _) extends Inv G where
 
 variable [InvolutiveInv G]
 
+#print inv_inv /-
 @[simp, to_additive]
 theorem inv_inv (a : G) : a⁻¹⁻¹ = a :=
   InvolutiveInv.inv_inv _
 #align inv_inv inv_inv
 #align neg_neg neg_neg
+-/
 
 end InvolutiveInv
 
@@ -970,11 +1003,13 @@ theorem zpow_eq_pow (n : ℤ) (x : G) : DivInvMonoid.zpow n x = x ^ n :=
 #align zsmul_eq_smul zsmul_eq_smul
 -/
 
+#print zpow_zero /-
 @[simp, to_additive zero_zsmul]
 theorem zpow_zero (a : G) : a ^ (0 : ℤ) = 1 :=
   DivInvMonoid.zpow_zero' a
 #align zpow_zero zpow_zero
 #align zero_zsmul zero_zsmul
+-/
 
 #print zpow_ofNat /-
 @[simp, norm_cast, to_additive coe_nat_zsmul]
@@ -999,12 +1034,15 @@ theorem zpow_ofNat (a : G) (n : ℕ) : a ^ Int.ofNat n = a ^ n :=
 #align of_nat_zsmul ofNat_zsmul
 -/
 
+#print zpow_negSucc /-
 @[simp, to_additive]
 theorem zpow_negSucc (a : G) (n : ℕ) : a ^ -[n+1] = (a ^ (n + 1))⁻¹ := by rw [← zpow_ofNat];
   exact DivInvMonoid.zpow_neg' n a
 #align zpow_neg_succ_of_nat zpow_negSucc
 #align zsmul_neg_succ_of_nat negSucc_zsmul
+-/
 
+#print div_eq_mul_inv /-
 /-- Dividing by an element is the same as multiplying by its inverse.
 
 This is a duplicate of `div_inv_monoid.div_eq_mul_inv` ensuring that the types unfold better.
@@ -1015,6 +1053,7 @@ theorem div_eq_mul_inv (a b : G) : a / b = a * b⁻¹ :=
   DivInvMonoid.div_eq_mul_inv _ _
 #align div_eq_mul_inv div_eq_mul_inv
 #align sub_eq_add_neg sub_eq_add_neg
+-/
 
 alias div_eq_mul_inv ← division_def
 #align division_def division_def
@@ -1066,11 +1105,13 @@ attribute [to_additive SubNegZeroMonoid.toNegZeroClass] DivInvOneMonoid.toInvOne
 
 variable [InvOneClass G]
 
+#print inv_one /-
 @[simp, to_additive]
 theorem inv_one : (1 : G)⁻¹ = 1 :=
   InvOneClass.inv_one
 #align inv_one inv_one
 #align neg_zero neg_zero
+-/
 
 end InvOneClass
 
@@ -1105,17 +1146,21 @@ section DivisionMonoid
 
 variable [DivisionMonoid G] {a b : G}
 
+#print mul_inv_rev /-
 @[simp, to_additive neg_add_rev]
 theorem mul_inv_rev (a b : G) : (a * b)⁻¹ = b⁻¹ * a⁻¹ :=
   DivisionMonoid.mul_inv_rev _ _
 #align mul_inv_rev mul_inv_rev
 #align neg_add_rev neg_add_rev
+-/
 
+#print inv_eq_of_mul_eq_one_right /-
 @[to_additive]
 theorem inv_eq_of_mul_eq_one_right : a * b = 1 → a⁻¹ = b :=
   DivisionMonoid.inv_eq_of_mul _ _
 #align inv_eq_of_mul_eq_one_right inv_eq_of_mul_eq_one_right
 #align neg_eq_of_add_eq_zero_right neg_eq_of_add_eq_zero_right
+-/
 
 end DivisionMonoid
 
@@ -1179,56 +1224,72 @@ section Group
 
 variable [Group G] {a b c : G}
 
+#print mul_left_inv /-
 @[simp, to_additive]
 theorem mul_left_inv : ∀ a : G, a⁻¹ * a = 1 :=
   Group.mul_left_inv
 #align mul_left_inv mul_left_inv
 #align add_left_neg add_left_neg
+-/
 
+#print inv_mul_self /-
 @[to_additive]
 theorem inv_mul_self (a : G) : a⁻¹ * a = 1 :=
   mul_left_inv a
 #align inv_mul_self inv_mul_self
 #align neg_add_self neg_add_self
+-/
 
 @[to_additive]
 private theorem inv_eq_of_mul (h : a * b = 1) : a⁻¹ = b :=
   left_inv_eq_right_inv (inv_mul_self a) h
 
+#print mul_right_inv /-
 @[simp, to_additive]
 theorem mul_right_inv (a : G) : a * a⁻¹ = 1 := by
   rw [← mul_left_inv a⁻¹, inv_eq_of_mul (mul_left_inv a)]
 #align mul_right_inv mul_right_inv
 #align add_right_neg add_right_neg
+-/
 
+#print mul_inv_self /-
 @[to_additive]
 theorem mul_inv_self (a : G) : a * a⁻¹ = 1 :=
   mul_right_inv a
 #align mul_inv_self mul_inv_self
 #align add_neg_self add_neg_self
+-/
 
+#print inv_mul_cancel_left /-
 @[simp, to_additive]
 theorem inv_mul_cancel_left (a b : G) : a⁻¹ * (a * b) = b := by
   rw [← mul_assoc, mul_left_inv, one_mul]
 #align inv_mul_cancel_left inv_mul_cancel_left
 #align neg_add_cancel_left neg_add_cancel_left
+-/
 
+#print mul_inv_cancel_left /-
 @[simp, to_additive]
 theorem mul_inv_cancel_left (a b : G) : a * (a⁻¹ * b) = b := by
   rw [← mul_assoc, mul_right_inv, one_mul]
 #align mul_inv_cancel_left mul_inv_cancel_left
 #align add_neg_cancel_left add_neg_cancel_left
+-/
 
+#print mul_inv_cancel_right /-
 @[simp, to_additive]
 theorem mul_inv_cancel_right (a b : G) : a * b * b⁻¹ = a := by
   rw [mul_assoc, mul_right_inv, mul_one]
 #align mul_inv_cancel_right mul_inv_cancel_right
 #align add_neg_cancel_right add_neg_cancel_right
+-/
 
+#print inv_mul_cancel_right /-
 @[simp, to_additive]
 theorem inv_mul_cancel_right (a b : G) : a * b⁻¹ * b = a := by rw [mul_assoc, mul_left_inv, mul_one]
 #align inv_mul_cancel_right inv_mul_cancel_right
 #align neg_add_cancel_right neg_add_cancel_right
+-/
 
 #print Group.toDivisionMonoid /-
 @[to_additive AddGroup.toSubtractionMonoid]

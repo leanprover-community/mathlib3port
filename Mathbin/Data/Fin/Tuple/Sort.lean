@@ -101,10 +101,12 @@ def sort (f : Fin n → α) : Equiv.Perm (Fin n) :=
 #align tuple.sort Tuple.sort
 -/
 
+#print Tuple.graphEquiv₂_apply /-
 theorem graphEquiv₂_apply (f : Fin n → α) (i : Fin n) :
     graphEquiv₂ f i = graphEquiv₁ f (sort f i) :=
   ((graphEquiv₁ f).apply_symm_apply _).symm
 #align tuple.graph_equiv₂_apply Tuple.graphEquiv₂_apply
+-/
 
 #print Tuple.self_comp_sort /-
 theorem self_comp_sort (f : Fin n → α) : f ∘ sort f = graph.proj ∘ graphEquiv₂ f :=
@@ -112,12 +114,14 @@ theorem self_comp_sort (f : Fin n → α) : f ∘ sort f = graph.proj ∘ graphE
 #align tuple.self_comp_sort Tuple.self_comp_sort
 -/
 
+#print Tuple.monotone_proj /-
 theorem monotone_proj (f : Fin n → α) : Monotone (graph.proj : graph f → α) :=
   by
   rintro ⟨⟨x, i⟩, hx⟩ ⟨⟨y, j⟩, hy⟩ (_ | h)
   · exact le_of_lt ‹_›
   · simp [graph.proj]
 #align tuple.monotone_proj Tuple.monotone_proj
+-/
 
 #print Tuple.monotone_sort /-
 theorem monotone_sort (f : Fin n → α) : Monotone (f ∘ sort f) :=
@@ -174,6 +178,7 @@ theorem eq_sort_iff :
 #align tuple.eq_sort_iff Tuple.eq_sort_iff
 -/
 
+#print Tuple.sort_eq_refl_iff_monotone /-
 /-- The permutation that sorts `f` is the identity if and only if `f` is monotone. -/
 theorem sort_eq_refl_iff_monotone : sort f = Equiv.refl _ ↔ Monotone f :=
   by
@@ -181,6 +186,7 @@ theorem sort_eq_refl_iff_monotone : sort f = Equiv.refl _ ↔ Monotone f :=
   simp only [id.def, and_iff_left_iff_imp]
   exact fun _ _ _ hij _ => hij
 #align tuple.sort_eq_refl_iff_monotone Tuple.sort_eq_refl_iff_monotone
+-/
 
 #print Tuple.comp_sort_eq_comp_iff_monotone /-
 /-- A permutation of a tuple `f` is `f` sorted if and only if it is monotone. -/

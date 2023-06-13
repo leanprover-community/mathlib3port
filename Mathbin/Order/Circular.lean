@@ -436,19 +436,23 @@ theorem right_mem_cIcc (a b : α) : b ∈ cIcc a b :=
 #align set.right_mem_cIcc Set.right_mem_cIcc
 -/
 
+#print Set.compl_cIcc /-
 theorem compl_cIcc {a b : α} : cIcc a bᶜ = cIoo b a :=
   by
   ext
   rw [Set.mem_cIoo, sbtw_iff_not_btw]
   rfl
 #align set.compl_cIcc Set.compl_cIcc
+-/
 
+#print Set.compl_cIoo /-
 theorem compl_cIoo {a b : α} : cIoo a bᶜ = cIcc b a :=
   by
   ext
   rw [Set.mem_cIcc, btw_iff_not_sbtw]
   rfl
 #align set.compl_cIoo Set.compl_cIoo
+-/
 
 end CircularOrder
 

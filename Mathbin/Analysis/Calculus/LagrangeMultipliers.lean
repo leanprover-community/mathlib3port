@@ -43,6 +43,7 @@ variable {E F : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpac
   [NormedAddCommGroup F] [NormedSpace ℝ F] [CompleteSpace F] {f : E → F} {φ : E → ℝ} {x₀ : E}
   {f' : E →L[ℝ] F} {φ' : E →L[ℝ] ℝ}
 
+#print IsLocalExtrOn.range_ne_top_of_hasStrictFDerivAt /-
 /-- Lagrange multipliers theorem: if `φ : E → ℝ` has a local extremum on the set `{x | f x = f x₀}`
 at `x₀`, both `f : E → F` and `φ` are strictly differentiable at `x₀`, and the codomain of `f` is
 a complete space, then the linear map `x ↦ (f' x, φ' x)` is not surjective. -/
@@ -59,7 +60,9 @@ theorem IsLocalExtrOn.range_ne_top_of_hasStrictFDerivAt
     exact map_snd_nhdsWithin _
   exact hextr.not_nhds_le_map A.ge
 #align is_local_extr_on.range_ne_top_of_has_strict_fderiv_at IsLocalExtrOn.range_ne_top_of_hasStrictFDerivAt
+-/
 
+#print IsLocalExtrOn.exists_linear_map_of_hasStrictFDerivAt /-
 /-- Lagrange multipliers theorem: if `φ : E → ℝ` has a local extremum on the set `{x | f x = f x₀}`
 at `x₀`, both `f : E → F` and `φ` are strictly differentiable at `x₀`, and the codomain of `f` is
 a complete space, then there exist `Λ : dual ℝ F` and `Λ₀ : ℝ` such that `(Λ, Λ₀) ≠ 0` and
@@ -85,7 +88,9 @@ theorem IsLocalExtrOn.exists_linear_map_of_hasStrictFDerivAt
     LinearMap.coprod_comp_prod, LinearMap.add_apply, LinearMap.coe_comp,
     ContinuousLinearMap.coe_coe, LinearMap.coe_smulRight, LinearMap.one_apply]
 #align is_local_extr_on.exists_linear_map_of_has_strict_fderiv_at IsLocalExtrOn.exists_linear_map_of_hasStrictFDerivAt
+-/
 
+#print IsLocalExtrOn.exists_multipliers_of_hasStrictFDerivAt_1d /-
 /-- Lagrange multipliers theorem: if `φ : E → ℝ` has a local extremum on the set `{x | f x = f x₀}`
 at `x₀`, and both `f : E → ℝ` and `φ` are strictly differentiable at `x₀`, then there exist
 `a b : ℝ` such that `(a, b) ≠ 0` and `a • f' + b • φ' = 0`. -/
@@ -105,7 +110,9 @@ theorem IsLocalExtrOn.exists_multipliers_of_hasStrictFDerivAt_1d {f : E → ℝ}
     have H₂ : f' x * Λ 1 + Λ₀ * φ' x = 0 := by simpa only [Algebra.id.smul_eq_mul, H₁] using hfΛ x
     simpa [mul_comm] using H₂
 #align is_local_extr_on.exists_multipliers_of_has_strict_fderiv_at_1d IsLocalExtrOn.exists_multipliers_of_hasStrictFDerivAt_1d
+-/
 
+#print IsLocalExtrOn.exists_multipliers_of_hasStrictFDerivAt /-
 /-- Lagrange multipliers theorem, 1d version. Let `f : ι → E → ℝ` be a finite family of functions.
 Suppose that `φ : E → ℝ` has a local extremum on the set `{x | ∀ i, f i x = f i x₀}` at `x₀`.
 Suppose that all functions `f i` as well as `φ` are strictly differentiable at `x₀`.
@@ -130,6 +137,7 @@ theorem IsLocalExtrOn.exists_multipliers_of_hasStrictFDerivAt {ι : Type _} [Fin
   · simpa only [Ne.def, Prod.ext_iff, LinearEquiv.map_eq_zero_iff, Prod.fst_zero] using h0
   · ext x; simpa [mul_comm] using hsum x
 #align is_local_extr_on.exists_multipliers_of_has_strict_fderiv_at IsLocalExtrOn.exists_multipliers_of_hasStrictFDerivAt
+-/
 
 #print IsLocalExtrOn.linear_dependent_of_hasStrictFDerivAt /-
 /-- Lagrange multipliers theorem. Let `f : ι → E → ℝ` be a finite family of functions.

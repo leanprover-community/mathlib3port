@@ -55,7 +55,6 @@ namespace WittVector
 
 variable {p : ℕ} {R S : Type _} [hp : Fact p.Prime] [CommRing R] [CommRing S]
 
--- mathport name: expr𝕎
 local notation "𝕎" => WittVector p
 
 -- type as `\bbW`
@@ -66,8 +65,6 @@ open MvPolynomial Finset
 open scoped BigOperators
 
 variable (p)
-
-include hp
 
 /-- The rational polynomials that give the coefficients of `frobenius x`,
 in terms of the coefficients of `x`.
@@ -89,7 +86,6 @@ for `multiplicity p n`. -/
 private def pnat_multiplicity (n : ℕ+) : ℕ :=
   (multiplicity p n).get <| multiplicity.finite_nat_iff.mpr <| ⟨ne_of_gt hp.1.one_lt, n.2⟩
 
--- mathport name: exprv
 local notation "v" => pnatMultiplicity
 
 /-- An auxiliary polynomial over the integers, that satisfies

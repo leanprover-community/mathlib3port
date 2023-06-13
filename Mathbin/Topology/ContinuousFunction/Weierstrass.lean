@@ -32,6 +32,7 @@ open ContinuousMap Filter
 
 open scoped unitInterval
 
+#print polynomialFunctions_closure_eq_top' /-
 /-- The special case of the Weierstrass approximation theorem for the interval `[0,1]`.
 This is just a matter of unravelling definitions and using the Bernstein approximations.
 -/
@@ -50,7 +51,9 @@ theorem polynomialFunctions_closure_eq_top' : (polynomialFunctions I).topologica
   dsimp [bernstein, polynomialFunctions]
   simp
 #align polynomial_functions_closure_eq_top' polynomialFunctions_closure_eq_top'
+-/
 
+#print polynomialFunctions_closure_eq_top /-
 /-- The **Weierstrass Approximation Theorem**:
 polynomials functions on `[a, b] ⊆ ℝ` are dense in `C([a,b],ℝ)`
 
@@ -90,7 +93,9 @@ theorem polynomialFunctions_closure_eq_top (a b : ℝ) :
           ((y.2.2.trans (not_lt.mp h)).trans x.2.1)⟩
     apply Subsingleton.elim
 #align polynomial_functions_closure_eq_top polynomialFunctions_closure_eq_top
+-/
 
+#print continuousMap_mem_polynomialFunctions_closure /-
 /-- An alternative statement of Weierstrass' theorem.
 
 Every real-valued continuous function on `[a,b]` is a uniform limit of polynomials.
@@ -101,9 +106,11 @@ theorem continuousMap_mem_polynomialFunctions_closure (a b : ℝ) (f : C(Set.Icc
   rw [polynomialFunctions_closure_eq_top _ _]
   simp
 #align continuous_map_mem_polynomial_functions_closure continuousMap_mem_polynomialFunctions_closure
+-/
 
 open scoped Polynomial
 
+#print exists_polynomial_near_continuousMap /-
 /-- An alternative statement of Weierstrass' theorem,
 for those who like their epsilons.
 
@@ -118,7 +125,9 @@ theorem exists_polynomial_near_continuousMap (a b : ℝ) (f : C(Set.Icc a b, ℝ
   rw [Metric.mem_ball, dist_eq_norm] at H 
   exact ⟨m, H⟩
 #align exists_polynomial_near_continuous_map exists_polynomial_near_continuousMap
+-/
 
+#print exists_polynomial_near_of_continuousOn /-
 /-- Another alternative statement of Weierstrass's theorem,
 for those who like epsilons, but not bundled continuous functions.
 
@@ -136,4 +145,5 @@ theorem exists_polynomial_near_of_continuousOn (a b : ℝ) (f : ℝ → ℝ)
   intro x m
   exact b ⟨x, m⟩
 #align exists_polynomial_near_of_continuous_on exists_polynomial_near_of_continuousOn
+-/
 

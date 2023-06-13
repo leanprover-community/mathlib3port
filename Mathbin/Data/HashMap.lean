@@ -261,15 +261,12 @@ section
 parameter {n : ℕ+} {bkts : BucketArray α β n} {bidx : Fin n} {f : List (Σ a, β a) → List (Σ a, β a)}
   (u v1 v2 w : List (Σ a, β a))
 
--- mathport name: exprL
 local notation "L" => Array'.read bkts bidx
 
 private def bkts' : BucketArray α β n :=
   Array'.write bkts bidx (f L)
 
 variable (hl : L = u ++ v1 ++ w) (hfl : f L = u ++ v2 ++ w)
-
-include hl hfl
 
 theorem append_of_modify : ∃ u' w', bkts.asList = u' ++ v1 ++ w' ∧ bkts'.asList = u' ++ v2 ++ w' :=
   by
@@ -292,8 +289,6 @@ variable (hvnd : (v2.map Sigma.fst).Nodup)
   (hal : ∀ a : Σ a, β a, a ∈ v2 → mkIdx n (hash_fn a.1) = bidx)
   (djuv : (u.map Sigma.fst).Disjoint (v2.map Sigma.fst))
   (djwv : (w.map Sigma.fst).Disjoint (v2.map Sigma.fst))
-
-include hvnd hal djuv djwv
 
 theorem Valid.modify {sz : ℕ} (v : valid bkts sz) :
     v1.length ≤ sz + v2.length ∧ valid bkts' (sz + v2.length - v1.length) :=

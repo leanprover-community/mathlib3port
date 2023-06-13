@@ -36,36 +36,50 @@ variable {R : Type u} [Ring R] {X Y : ModuleCat.{v} R} (f : X ⟶ Y)
 
 variable {M : Type v} [AddCommGroup M] [Module R M]
 
+#print ModuleCat.ker_eq_bot_of_mono /-
 theorem ker_eq_bot_of_mono [Mono f] : f.ker = ⊥ :=
   LinearMap.ker_eq_bot_of_cancel fun u v => (@cancel_mono _ _ _ _ _ f _ (↟u) (↟v)).1
 #align Module.ker_eq_bot_of_mono ModuleCat.ker_eq_bot_of_mono
+-/
 
+#print ModuleCat.range_eq_top_of_epi /-
 theorem range_eq_top_of_epi [Epi f] : f.range = ⊤ :=
   LinearMap.range_eq_top_of_cancel fun u v => (@cancel_epi _ _ _ _ _ f _ (↟u) (↟v)).1
 #align Module.range_eq_top_of_epi ModuleCat.range_eq_top_of_epi
+-/
 
+#print ModuleCat.mono_iff_ker_eq_bot /-
 theorem mono_iff_ker_eq_bot : Mono f ↔ f.ker = ⊥ :=
   ⟨fun hf => ker_eq_bot_of_mono _, fun hf =>
     ConcreteCategory.mono_of_injective _ <| LinearMap.ker_eq_bot.1 hf⟩
 #align Module.mono_iff_ker_eq_bot ModuleCat.mono_iff_ker_eq_bot
+-/
 
+#print ModuleCat.mono_iff_injective /-
 theorem mono_iff_injective : Mono f ↔ Function.Injective f := by
   rw [mono_iff_ker_eq_bot, LinearMap.ker_eq_bot]
 #align Module.mono_iff_injective ModuleCat.mono_iff_injective
+-/
 
+#print ModuleCat.epi_iff_range_eq_top /-
 theorem epi_iff_range_eq_top : Epi f ↔ f.range = ⊤ :=
   ⟨fun hf => range_eq_top_of_epi _, fun hf =>
     ConcreteCategory.epi_of_surjective _ <| LinearMap.range_eq_top.1 hf⟩
 #align Module.epi_iff_range_eq_top ModuleCat.epi_iff_range_eq_top
+-/
 
+#print ModuleCat.epi_iff_surjective /-
 theorem epi_iff_surjective : Epi f ↔ Function.Surjective f := by
   rw [epi_iff_range_eq_top, LinearMap.range_eq_top]
 #align Module.epi_iff_surjective ModuleCat.epi_iff_surjective
+-/
 
+#print ModuleCat.uniqueOfEpiZero /-
 /-- If the zero morphism is an epi then the codomain is trivial. -/
 def uniqueOfEpiZero (X) [h : Epi (0 : X ⟶ of R M)] : Unique M :=
   uniqueOfSurjectiveZero X ((ModuleCat.epi_iff_surjective _).mp h)
 #align Module.unique_of_epi_zero ModuleCat.uniqueOfEpiZero
+-/
 
 #print ModuleCat.mono_as_hom'_subtype /-
 instance mono_as_hom'_subtype (U : Submodule R X) : Mono (↾U.Subtype) :=

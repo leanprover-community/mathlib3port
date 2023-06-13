@@ -84,6 +84,7 @@ theorem Ideal.eq_span_singleton_of_mem_of_not_mem_sq_of_not_mem_prime_ne {P : Id
 #align ideal.eq_span_singleton_of_mem_of_not_mem_sq_of_not_mem_prime_ne Ideal.eq_span_singleton_of_mem_of_not_mem_sq_of_not_mem_prime_ne
 -/
 
+#print FractionalIdeal.isPrincipal_of_unit_of_comap_mul_span_singleton_eq_top /-
 theorem FractionalIdeal.isPrincipal_of_unit_of_comap_mul_span_singleton_eq_top {R A : Type _}
     [CommRing R] [CommRing A] [Algebra R A] {S : Submonoid R} [IsLocalization S A]
     (I : (FractionalIdeal S A)ˣ) {v : A} (hv : v ∈ (↑I⁻¹ : FractionalIdeal S A))
@@ -112,7 +113,9 @@ theorem FractionalIdeal.isPrincipal_of_unit_of_comap_mul_span_singleton_eq_top {
   · rw [FractionalIdeal.one_le, ← hvw, mul_comm]
     exact FractionalIdeal.mul_mem_mul hv (FractionalIdeal.mem_spanSingleton_self _ _)
 #align fractional_ideal.is_principal_of_unit_of_comap_mul_span_singleton_eq_top FractionalIdeal.isPrincipal_of_unit_of_comap_mul_span_singleton_eq_top
+-/
 
+#print FractionalIdeal.isPrincipal.of_finite_maximals_of_inv /-
 /--
 An invertible fractional ideal of a commutative ring with finitely many maximal ideals is principal.
 
@@ -181,7 +184,9 @@ theorem FractionalIdeal.isPrincipal.of_finite_maximals_of_inv {A : Type _} [Comm
     simp_rw [Ideal.mem_iInf, Finset.mem_erase] at hu 
     exact Submodule.mem_map_of_mem (M.mul_mem_right _ <| hu M ⟨hM'.1.symm, hM⟩)
 #align fractional_ideal.is_principal.of_finite_maximals_of_inv FractionalIdeal.isPrincipal.of_finite_maximals_of_inv
+-/
 
+#print Ideal.IsPrincipal.of_finite_maximals_of_isUnit /-
 /-- An invertible ideal in a commutative ring with finitely many maximal ideals is principal.
 
 https://math.stackexchange.com/a/95857 -/
@@ -191,6 +196,7 @@ theorem Ideal.IsPrincipal.of_finite_maximals_of_isUnit (hf : {I : Ideal R | I.Is
     (FractionalIdeal.isPrincipal.of_finite_maximals_of_inv le_rfl hf I
       (↑hI.Unit⁻¹ : FractionalIdeal R⁰ (FractionRing R)) hI.Unit.mul_inv)
 #align ideal.is_principal.of_finite_maximals_of_is_unit Ideal.IsPrincipal.of_finite_maximals_of_isUnit
+-/
 
 #print IsPrincipalIdealRing.of_finite_primes /-
 /-- A Dedekind domain is a PID if its set of primes is finite. -/
@@ -223,8 +229,7 @@ variable [Algebra R Sₚ] [IsScalarTower R S Sₚ]
 second, so we leave it to the user to provide (automatically). -/
 variable [IsDomain Sₚ] [IsDedekindDomain Sₚ]
 
-include S hp0
-
+#print IsLocalization.OverPrime.mem_normalizedFactors_of_isPrime /-
 /-- If `p` is a prime in the Dedekind domain `R`, `S` an extension of `R` and `Sₚ` the localization
 of `S` at `p`, then all primes in `Sₚ` are factors of the image of `p` in `Sₚ`. -/
 theorem IsLocalization.OverPrime.mem_normalizedFactors_of_isPrime [DecidableEq (Ideal Sₚ)]
@@ -267,7 +272,9 @@ theorem IsLocalization.OverPrime.mem_normalizedFactors_of_isPrime [DecidableEq (
     exact
       (IsLocalization.injective Sₚ non_zero_div).comp (NoZeroSMulDivisors.algebraMap_injective _ _)
 #align is_localization.over_prime.mem_normalized_factors_of_is_prime IsLocalization.OverPrime.mem_normalizedFactors_of_isPrime
+-/
 
+#print IsDedekindDomain.isPrincipalIdealRing_localization_over_prime /-
 /-- Let `p` be a prime in the Dedekind domain `R` and `S` be an integral extension of `R`,
 then the localization `Sₚ` of `S` at `p` is a PID. -/
 theorem IsDedekindDomain.isPrincipalIdealRing_localization_over_prime : IsPrincipalIdealRing Sₚ :=
@@ -286,4 +293,5 @@ theorem IsDedekindDomain.isPrincipalIdealRing_localization_over_prime : IsPrinci
     and_iff_right_of_imp fun hP =>
       or_iff_not_imp_left.mpr (IsLocalization.OverPrime.mem_normalizedFactors_of_isPrime S p hp0 hP)
 #align is_dedekind_domain.is_principal_ideal_ring_localization_over_prime IsDedekindDomain.isPrincipalIdealRing_localization_over_prime
+-/
 

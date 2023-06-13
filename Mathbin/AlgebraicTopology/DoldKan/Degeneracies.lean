@@ -43,6 +43,7 @@ namespace DoldKan
 
 variable {C : Type _} [Category C] [Preadditive C]
 
+#print AlgebraicTopology.DoldKan.HigherFacesVanish.comp_σ /-
 theorem HigherFacesVanish.comp_σ {Y : C} {X : SimplicialObject C} {n b q : ℕ} {φ : Y ⟶ X _[n + 1]}
     (v : HigherFacesVanish q φ) (hnbq : n + 1 = b + q) :
     HigherFacesVanish q
@@ -59,7 +60,9 @@ theorem HigherFacesVanish.comp_σ {Y : C} {X : SimplicialObject C} {n b q : ℕ}
       add_le_add_iff_right]
     linarith
 #align algebraic_topology.dold_kan.higher_faces_vanish.comp_σ AlgebraicTopology.DoldKan.HigherFacesVanish.comp_σ
+-/
 
+#print AlgebraicTopology.DoldKan.σ_comp_P_eq_zero /-
 theorem σ_comp_P_eq_zero (X : SimplicialObject C) {n q : ℕ} (i : Fin (n + 1)) (hi : n + 1 ≤ i + q) :
     X.σ i ≫ (P q).f (n + 1) = 0 :=
   by
@@ -122,7 +125,9 @@ theorem σ_comp_P_eq_zero (X : SimplicialObject C) {n q : ℕ} (i : Fin (n + 1))
           simp only [Fin.rev_eq j hk.symm, Fin.le_iff_val_le_val, Fin.val_mk]
           linarith
 #align algebraic_topology.dold_kan.σ_comp_P_eq_zero AlgebraicTopology.DoldKan.σ_comp_P_eq_zero
+-/
 
+#print AlgebraicTopology.DoldKan.σ_comp_PInfty /-
 @[simp, reassoc]
 theorem σ_comp_PInfty (X : SimplicialObject C) {n : ℕ} (i : Fin (n + 1)) :
     X.σ i ≫ PInfty.f (n + 1) = 0 :=
@@ -130,7 +135,9 @@ theorem σ_comp_PInfty (X : SimplicialObject C) {n : ℕ} (i : Fin (n + 1)) :
   rw [P_infty_f, σ_comp_P_eq_zero X i]
   simp only [le_add_iff_nonneg_left, zero_le]
 #align algebraic_topology.dold_kan.σ_comp_P_infty AlgebraicTopology.DoldKan.σ_comp_PInfty
+-/
 
+#print AlgebraicTopology.DoldKan.degeneracy_comp_PInfty /-
 @[reassoc]
 theorem degeneracy_comp_PInfty (X : SimplicialObject C) (n : ℕ) {Δ' : SimplexCategory}
     (θ : [n] ⟶ Δ') (hθ : ¬Mono θ) : X.map θ.op ≫ PInfty.f n = 0 :=
@@ -146,6 +153,7 @@ theorem degeneracy_comp_PInfty (X : SimplicialObject C) (n : ℕ) {Δ' : Simplex
     rw [h, op_comp, X.map_comp, assoc, show X.map (SimplexCategory.σ i).op = X.σ i by rfl,
       σ_comp_P_infty, comp_zero]
 #align algebraic_topology.dold_kan.degeneracy_comp_P_infty AlgebraicTopology.DoldKan.degeneracy_comp_PInfty
+-/
 
 end DoldKan
 

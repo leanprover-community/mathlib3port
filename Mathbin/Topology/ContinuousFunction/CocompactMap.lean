@@ -87,16 +87,21 @@ directly. -/
 instance : CoeFun (CocompactMap α β) fun _ => α → β :=
   FunLike.hasCoeToFun
 
+#print CocompactMap.coe_toContinuousMap /-
 @[simp]
 theorem coe_toContinuousMap {f : CocompactMap α β} : (f.toContinuousMap : α → β) = f :=
   rfl
 #align cocompact_map.coe_to_continuous_fun CocompactMap.coe_toContinuousMap
+-/
 
+#print CocompactMap.ext /-
 @[ext]
 theorem ext {f g : CocompactMap α β} (h : ∀ x, f x = g x) : f = g :=
   FunLike.ext _ _ h
 #align cocompact_map.ext CocompactMap.ext
+-/
 
+#print CocompactMap.copy /-
 /-- Copy of a `cocompact_map` with a new `to_fun` equal to the old one. Useful
 to fix definitional equalities. -/
 protected def copy (f : CocompactMap α β) (f' : α → β) (h : f' = f) : CocompactMap α β
@@ -105,21 +110,28 @@ protected def copy (f : CocompactMap α β) (f' : α → β) (h : f' = f) : Coco
   continuous_toFun := by rw [h]; exact f.continuous_to_fun
   cocompact_tendsto' := by simp_rw [h]; exact f.cocompact_tendsto'
 #align cocompact_map.copy CocompactMap.copy
+-/
 
+#print CocompactMap.coe_copy /-
 @[simp]
 theorem coe_copy (f : CocompactMap α β) (f' : α → β) (h : f' = f) : ⇑(f.copy f' h) = f' :=
   rfl
 #align cocompact_map.coe_copy CocompactMap.coe_copy
+-/
 
+#print CocompactMap.copy_eq /-
 theorem copy_eq (f : CocompactMap α β) (f' : α → β) (h : f' = f) : f.copy f' h = f :=
   FunLike.ext' h
 #align cocompact_map.copy_eq CocompactMap.copy_eq
+-/
 
+#print CocompactMap.coe_mk /-
 @[simp]
 theorem coe_mk (f : C(α, β)) (h : Tendsto f (cocompact α) (cocompact β)) :
     ⇑(⟨f, h⟩ : CocompactMap α β) = f :=
   rfl
 #align cocompact_map.coe_mk CocompactMap.coe_mk
+-/
 
 section
 
@@ -132,10 +144,12 @@ protected def id : CocompactMap α α :=
 #align cocompact_map.id CocompactMap.id
 -/
 
+#print CocompactMap.coe_id /-
 @[simp]
 theorem coe_id : ⇑(CocompactMap.id α) = id :=
   rfl
 #align cocompact_map.coe_id CocompactMap.coe_id
+-/
 
 end
 
@@ -149,31 +163,41 @@ def comp (f : CocompactMap β γ) (g : CocompactMap α β) : CocompactMap α γ 
 #align cocompact_map.comp CocompactMap.comp
 -/
 
+#print CocompactMap.coe_comp /-
 @[simp]
 theorem coe_comp (f : CocompactMap β γ) (g : CocompactMap α β) : ⇑(comp f g) = f ∘ g :=
   rfl
 #align cocompact_map.coe_comp CocompactMap.coe_comp
+-/
 
+#print CocompactMap.comp_apply /-
 @[simp]
 theorem comp_apply (f : CocompactMap β γ) (g : CocompactMap α β) (a : α) : comp f g a = f (g a) :=
   rfl
 #align cocompact_map.comp_apply CocompactMap.comp_apply
+-/
 
+#print CocompactMap.comp_assoc /-
 @[simp]
 theorem comp_assoc (f : CocompactMap γ δ) (g : CocompactMap β γ) (h : CocompactMap α β) :
     (f.comp g).comp h = f.comp (g.comp h) :=
   rfl
 #align cocompact_map.comp_assoc CocompactMap.comp_assoc
+-/
 
+#print CocompactMap.id_comp /-
 @[simp]
 theorem id_comp (f : CocompactMap α β) : (CocompactMap.id _).comp f = f :=
   ext fun _ => rfl
 #align cocompact_map.id_comp CocompactMap.id_comp
+-/
 
+#print CocompactMap.comp_id /-
 @[simp]
 theorem comp_id (f : CocompactMap α β) : f.comp (CocompactMap.id _) = f :=
   ext fun _ => rfl
 #align cocompact_map.comp_id CocompactMap.comp_id
+-/
 
 #print CocompactMap.tendsto_of_forall_preimage /-
 theorem tendsto_of_forall_preimage {f : α → β} (h : ∀ s, IsCompact s → IsCompact (f ⁻¹' s)) :
@@ -184,6 +208,7 @@ theorem tendsto_of_forall_preimage {f : α → β} (h : ∀ s, IsCompact s → I
 #align cocompact_map.tendsto_of_forall_preimage CocompactMap.tendsto_of_forall_preimage
 -/
 
+#print CocompactMap.isCompact_preimage /-
 /-- If the codomain is Hausdorff, preimages of compact sets are compact under a cocompact
 continuous map. -/
 theorem isCompact_preimage [T2Space β] (f : CocompactMap α β) ⦃s : Set β⦄ (hs : IsCompact s) :
@@ -199,6 +224,7 @@ theorem isCompact_preimage [T2Space β] (f : CocompactMap α β) ⦃s : Set β�
   exact
     isCompact_of_isClosed_subset ht (hs.is_closed.preimage <| map_continuous f) (by simpa using hts)
 #align cocompact_map.is_compact_preimage CocompactMap.isCompact_preimage
+-/
 
 end Basics
 

@@ -54,6 +54,7 @@ variable {α β γ : Type _} [UniformSpace α] [UniformSpace β]
 
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print nhdsSet_diagonal_eq_uniformity /-
 /-- On a compact uniform space, the topology determines the uniform structure, entourages are
 exactly the neighborhoods of the diagonal. -/
 theorem nhdsSet_diagonal_eq_uniformity [CompactSpace α] : 𝓝ˢ (diagonal α) = 𝓤 α :=
@@ -68,12 +69,15 @@ theorem nhdsSet_diagonal_eq_uniformity [CompactSpace α] : 𝓝ˢ (diagonal α) 
   refine' (is_compact_diagonal.nhds_set_basis_uniformity this).ge_iff.2 fun U hU => _
   exact mem_of_superset hU fun ⟨x, y⟩ hxy => mem_Union₂.2 ⟨(x, x), rfl, refl_mem_uniformity hU, hxy⟩
 #align nhds_set_diagonal_eq_uniformity nhdsSet_diagonal_eq_uniformity
+-/
 
+#print compactSpace_uniformity /-
 /-- On a compact uniform space, the topology determines the uniform structure, entourages are
 exactly the neighborhoods of the diagonal. -/
 theorem compactSpace_uniformity [CompactSpace α] : 𝓤 α = ⨆ x, 𝓝 (x, x) :=
   nhdsSet_diagonal_eq_uniformity.symm.trans (nhdsSet_diagonal _)
 #align compact_space_uniformity compactSpace_uniformity
+-/
 
 #print unique_uniformity_of_compact /-
 theorem unique_uniformity_of_compact [t : TopologicalSpace γ] [CompactSpace γ]
@@ -188,6 +192,7 @@ def uniformSpaceOfCompactT2 [TopologicalSpace γ] [CompactSpace γ] [T2Space γ]
 -/
 
 
+#print CompactSpace.uniformContinuous_of_continuous /-
 /-- Heine-Cantor: a continuous function on a compact uniform space is uniformly
 continuous. -/
 theorem CompactSpace.uniformContinuous_of_continuous [CompactSpace α] {f : α → β}
@@ -196,7 +201,9 @@ theorem CompactSpace.uniformContinuous_of_continuous [CompactSpace α] {f : α �
     (h.Prod_map h).tendsto_nhdsSet mapsTo_prod_map_diagonal
   (this.mono_left nhdsSet_diagonal_eq_uniformity.ge).mono_right nhdsSet_diagonal_le_uniformity
 #align compact_space.uniform_continuous_of_continuous CompactSpace.uniformContinuous_of_continuous
+-/
 
+#print IsCompact.uniformContinuousOn_of_continuous /-
 /-- Heine-Cantor: a continuous function on a compact set of a uniform space is uniformly
 continuous. -/
 theorem IsCompact.uniformContinuousOn_of_continuous {s : Set α} {f : α → β} (hs : IsCompact s)
@@ -208,6 +215,7 @@ theorem IsCompact.uniformContinuousOn_of_continuous {s : Set α} {f : α → β}
   skip
   exact CompactSpace.uniformContinuous_of_continuous hf
 #align is_compact.uniform_continuous_on_of_continuous IsCompact.uniformContinuousOn_of_continuous
+-/
 
 #print IsCompact.uniformContinuousAt_of_continuousAt /-
 /-- If `s` is compact and `f` is continuous at all points of `s`, then `f` is
@@ -231,6 +239,7 @@ theorem IsCompact.uniformContinuousAt_of_continuousAt {r : Set (β × β)} {s : 
 #align is_compact.uniform_continuous_at_of_continuous_at IsCompact.uniformContinuousAt_of_continuousAt
 -/
 
+#print Continuous.uniformContinuous_of_tendsto_cocompact /-
 theorem Continuous.uniformContinuous_of_tendsto_cocompact {f : α → β} {x : β}
     (h_cont : Continuous f) (hx : Tendsto f (cocompact α) (𝓝 x)) : UniformContinuous f :=
   uniformContinuous_def.2 fun r hr =>
@@ -248,6 +257,7 @@ theorem Continuous.uniformContinuous_of_tendsto_cocompact {f : α → β} {x : �
     apply htr
     exact ⟨x, htsymm.mk_mem_comm.1 (hst h₁), hst h₂⟩
 #align continuous.uniform_continuous_of_tendsto_cocompact Continuous.uniformContinuous_of_tendsto_cocompact
+-/
 
 #print HasCompactMulSupport.is_one_at_infty /-
 /-- If `f` has compact multiplicative support, then `f` tends to 1 at infinity. -/
@@ -278,6 +288,7 @@ theorem HasCompactMulSupport.uniformContinuous_of_continuous {f : α → β} [On
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print ContinuousOn.tendstoUniformly /-
 /-- A family of functions `α → β → γ` tends uniformly to its value at `x` if `α` is locally compact,
 `β` is compact and `f` is continuous on `U × (univ : set β)` for some neighborhood `U` of `x`. -/
 theorem ContinuousOn.tendstoUniformly [LocallyCompactSpace α] [CompactSpace β] [UniformSpace γ]
@@ -290,13 +301,16 @@ theorem ContinuousOn.tendstoUniformly [LocallyCompactSpace α] [CompactSpace β]
       (h.mono <| prod_mono hKU subset.rfl)
   exact this.tendsto_uniformly hxK
 #align continuous_on.tendsto_uniformly ContinuousOn.tendstoUniformly
+-/
 
+#print Continuous.tendstoUniformly /-
 /-- A continuous family of functions `α → β → γ` tends uniformly to its value at `x` if `α` is
 locally compact and `β` is compact. -/
 theorem Continuous.tendstoUniformly [LocallyCompactSpace α] [CompactSpace β] [UniformSpace γ]
     (f : α → β → γ) (h : Continuous ↿f) (x : α) : TendstoUniformly f (f x) (𝓝 x) :=
   h.ContinuousOn.TendstoUniformly univ_mem
 #align continuous.tendsto_uniformly Continuous.tendstoUniformly
+-/
 
 section UniformConvergence
 

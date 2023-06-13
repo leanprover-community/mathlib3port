@@ -48,12 +48,14 @@ def opposite : Subgroup G ≃ Subgroup Gᵐᵒᵖ
 #align add_subgroup.opposite AddSubgroup.opposite
 -/
 
+#print Subgroup.oppositeEquiv /-
 /-- Bijection between a subgroup `H` and its opposite. -/
 @[to_additive "Bijection between an additive subgroup `H` and its opposite.", simps]
 def oppositeEquiv (H : Subgroup G) : H ≃ H.opposite :=
   MulOpposite.opEquiv.subtypeEquiv fun _ => Iff.rfl
 #align subgroup.opposite_equiv Subgroup.oppositeEquiv
 #align add_subgroup.opposite_equiv AddSubgroup.oppositeEquiv
+-/
 
 @[to_additive]
 instance (H : Subgroup G) [Encodable H] : Encodable H.opposite :=
@@ -63,6 +65,7 @@ instance (H : Subgroup G) [Encodable H] : Encodable H.opposite :=
 instance (H : Subgroup G) [Countable H] : Countable H.opposite :=
   Countable.of_equiv H H.oppositeEquiv
 
+#print Subgroup.smul_opposite_mul /-
 @[to_additive]
 theorem smul_opposite_mul {H : Subgroup G} (x g : G) (h : H.opposite) : h • (g * x) = g * h • x :=
   by
@@ -70,6 +73,7 @@ theorem smul_opposite_mul {H : Subgroup G} (x g : G) (h : H.opposite) : h • (g
   simp [(· • ·), mul_assoc]
 #align subgroup.smul_opposite_mul Subgroup.smul_opposite_mul
 #align add_subgroup.vadd_opposite_add AddSubgroup.vadd_opposite_add
+-/
 
 end Subgroup
 

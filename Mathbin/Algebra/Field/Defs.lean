@@ -58,6 +58,7 @@ universe u
 
 variable {α β K : Type _}
 
+#print Rat.castRec /-
 /-- The default definition of the coercion `(↑(a : ℚ) : K)` for a division ring `K`
 is defined as `(a / b : K) = (a : K) * (b : K)⁻¹`.
 Use `coe` instead of `rat.cast_rec` for better definitional behaviour.
@@ -65,6 +66,7 @@ Use `coe` instead of `rat.cast_rec` for better definitional behaviour.
 def Rat.castRec [HasLiftT ℕ K] [HasLiftT ℤ K] [Mul K] [Inv K] : ℚ → K
   | ⟨a, b, _, _⟩ => ↑a * (↑b)⁻¹
 #align rat.cast_rec Rat.castRec
+-/
 
 /-- Type class for the canonical homomorphism `ℚ → K`.
 -/
@@ -157,13 +159,17 @@ instance (priority := 900) castCoe {K : Type _} [HasRatCast K] : CoeTC ℚ K :=
   ⟨HasRatCast.ratCast⟩
 #align rat.cast_coe Rat.castCoe
 
+#print Rat.cast_mk' /-
 theorem cast_mk' (a b h1 h2) : ((⟨a, b, h1, h2⟩ : ℚ) : K) = a * b⁻¹ :=
   DivisionRing.ratCast_mk _ _ _ _
 #align rat.cast_mk' Rat.cast_mk'
+-/
 
+#print Rat.cast_def /-
 theorem cast_def : ∀ r : ℚ, (r : K) = r.num / r.den
   | ⟨a, b, h1, h2⟩ => (cast_mk' _ _ _ _).trans (div_eq_mul_inv _ _).symm
 #align rat.cast_def Rat.cast_def
+-/
 
 #print Rat.smulDivisionRing /-
 instance (priority := 100) smulDivisionRing : SMul ℚ K :=
@@ -171,14 +177,18 @@ instance (priority := 100) smulDivisionRing : SMul ℚ K :=
 #align rat.smul_division_ring Rat.smulDivisionRing
 -/
 
+#print Rat.smul_def /-
 theorem smul_def (a : ℚ) (x : K) : a • x = ↑a * x :=
   DivisionRing.qsmul_eq_mul' a x
 #align rat.smul_def Rat.smul_def
+-/
 
+#print Rat.smul_one_eq_coe /-
 @[simp]
 theorem smul_one_eq_coe (A : Type _) [DivisionRing A] (m : ℚ) : m • (1 : A) = ↑m := by
   rw [Rat.smul_def, mul_one]
 #align rat.smul_one_eq_coe Rat.smul_one_eq_coe
+-/
 
 end Rat
 
@@ -266,6 +276,7 @@ noncomputable def IsField.toField {R : Type u} [Ring R] (h : IsField R) : Field 
 #align is_field.to_field IsField.toField
 -/
 
+#print uniq_inv_of_isField /-
 /-- For each field, and for each nonzero element of said field, there is a unique inverse.
 Since `is_field` doesn't remember the data of an `inv` function and as such,
 a lemma that there is a unique inverse could be useful.
@@ -281,6 +292,7 @@ theorem uniq_inv_of_isField (R : Type u) [Ring R] (hf : IsField R) :
       _ = x * y * z := by rw [← mul_assoc, hf.mul_comm y x]
       _ = z := by rw [hxy, one_mul]
 #align uniq_inv_of_is_field uniq_inv_of_isField
+-/
 
 end IsField
 

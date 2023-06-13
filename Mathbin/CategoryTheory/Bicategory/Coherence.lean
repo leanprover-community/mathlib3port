@@ -91,11 +91,14 @@ def preinclusion (B : Type u) [Quiver.{v + 1} B] :
 #align category_theory.free_bicategory.preinclusion CategoryTheory.FreeBicategory.preinclusion
 -/
 
+#print CategoryTheory.FreeBicategory.preinclusion_obj /-
 @[simp]
 theorem preinclusion_obj (a : B) : (preinclusion B).obj a = a :=
   rfl
 #align category_theory.free_bicategory.preinclusion_obj CategoryTheory.FreeBicategory.preinclusion_obj
+-/
 
+#print CategoryTheory.FreeBicategory.preinclusion_map₂ /-
 @[simp]
 theorem preinclusion_map₂ {a b : B} (f g : Discrete (Path.{v + 1} a b)) (η : f ⟶ g) :
     (preinclusion B).zipWith η = eqToHom (congr_arg _ (Discrete.ext _ _ (Discrete.eq_of_hom η))) :=
@@ -104,6 +107,7 @@ theorem preinclusion_map₂ {a b : B} (f g : Discrete (Path.{v + 1} a b)) (η : 
   cases discrete.ext _ _ η
   exact (inclusion_path a b).map_id _
 #align category_theory.free_bicategory.preinclusion_map₂ CategoryTheory.FreeBicategory.preinclusion_map₂
+-/
 
 #print CategoryTheory.FreeBicategory.normalizeAux /-
 /-- The normalization of the composition of `p : path a b` and `f : hom b c`.
@@ -119,6 +123,7 @@ def normalizeAux {a : B} : ∀ {b c : B}, Path a b → Hom b c → Path a c
 #align category_theory.free_bicategory.normalize_aux CategoryTheory.FreeBicategory.normalizeAux
 -/
 
+#print CategoryTheory.FreeBicategory.normalizeIso /-
 /-
 We may define
 ```
@@ -150,6 +155,7 @@ def normalizeIso {a : B} :
   | _, _, p, hom.comp f g =>
     (α_ _ _ _).symm ≪≫ whiskerRightIso (normalize_iso p f) g ≪≫ normalize_iso (normalizeAux p f) g
 #align category_theory.free_bicategory.normalize_iso CategoryTheory.FreeBicategory.normalizeIso
+-/
 
 #print CategoryTheory.FreeBicategory.normalizeAux_congr /-
 /-- Given a 2-morphism between `f` and `g` in the free bicategory, we have the equality
@@ -170,6 +176,7 @@ theorem normalizeAux_congr {a b c : B} (p : Path a b) {f g : Hom b c} (η : f �
 #align category_theory.free_bicategory.normalize_aux_congr CategoryTheory.FreeBicategory.normalizeAux_congr
 -/
 
+#print CategoryTheory.FreeBicategory.normalize_naturality /-
 /-- The 2-isomorphism `normalize_iso p f` is natural in `f`. -/
 theorem normalize_naturality {a b c : B} (p : Path a b) {f g : Hom b c} (η : f ⟶ g) :
     (preinclusion B).map ⟨p⟩ ◁ η ≫ (normalizeIso p g).Hom =
@@ -195,6 +202,7 @@ theorem normalize_naturality {a b c : B} (p : Path a b) {f g : Hom b c} (η : f 
     dsimp at this ; simp [this]
   all_goals dsimp; dsimp [id_def, comp_def]; simp
 #align category_theory.free_bicategory.normalize_naturality CategoryTheory.FreeBicategory.normalize_naturality
+-/
 
 #print CategoryTheory.FreeBicategory.normalizeAux_nil_comp /-
 @[simp]
@@ -234,11 +242,13 @@ def normalizeUnitIso (a b : FreeBicategory B) :
 #align category_theory.free_bicategory.normalize_unit_iso CategoryTheory.FreeBicategory.normalizeUnitIso
 -/
 
+#print CategoryTheory.FreeBicategory.normalizeEquiv /-
 /-- Normalization as an equivalence of categories. -/
 def normalizeEquiv (a b : B) : Hom a b ≌ Discrete (Path.{v + 1} a b) :=
   Equivalence.mk ((normalize _).mapFunctor a b) (inclusionPath a b) (normalizeUnitIso a b)
     (Discrete.natIso fun f => eqToIso (by induction f <;> induction f <;> tidy))
 #align category_theory.free_bicategory.normalize_equiv CategoryTheory.FreeBicategory.normalizeEquiv
+-/
 
 #print CategoryTheory.FreeBicategory.locally_thin /-
 /-- The coherence theorem for bicategories. -/
@@ -247,6 +257,7 @@ instance locally_thin {a b : FreeBicategory B} : Quiver.IsThin (a ⟶ b) := fun 
 #align category_theory.free_bicategory.locally_thin CategoryTheory.FreeBicategory.locally_thin
 -/
 
+#print CategoryTheory.FreeBicategory.inclusionMapCompAux /-
 /-- Auxiliary definition for `inclusion`. -/
 def inclusionMapCompAux {a b : B} :
     ∀ {c : B} (f : Path a b) (g : Path b c),
@@ -254,6 +265,7 @@ def inclusionMapCompAux {a b : B} :
   | _, f, nil => (ρ_ ((preinclusion _).map ⟨f⟩)).symm
   | _, f, cons g₁ g₂ => whiskerRightIso (inclusion_map_comp_aux f g₁) (Hom.of g₂) ≪≫ α_ _ _ _
 #align category_theory.free_bicategory.inclusion_map_comp_aux CategoryTheory.FreeBicategory.inclusionMapCompAux
+-/
 
 #print CategoryTheory.FreeBicategory.inclusion /-
 /-- The inclusion pseudofunctor from the locally discrete bicategory on the path category into the

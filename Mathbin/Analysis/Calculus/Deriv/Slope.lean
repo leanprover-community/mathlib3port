@@ -61,6 +61,7 @@ variable {s t : Set 𝕜}
 
 variable {L L₁ L₂ : Filter 𝕜}
 
+#print hasDerivAtFilter_iff_tendsto_slope /-
 /-- If the domain has dimension one, then Fréchet derivative is equivalent to the classical
 definition with a limit. In this version we have to take the limit along the subset `-{x}`,
 because for `y=x` the slope equals zero due to the convention `0⁻¹=0`. -/
@@ -76,13 +77,16 @@ theorem hasDerivAtFilter_iff_tendsto_slope {x : 𝕜} {L : Filter 𝕜} :
   simp only [(· ∘ ·)]
   rw [smul_sub, ← mul_smul, inv_mul_cancel (sub_ne_zero.2 hz), one_smul, slope_def_module]
 #align has_deriv_at_filter_iff_tendsto_slope hasDerivAtFilter_iff_tendsto_slope
+-/
 
+#print hasDerivWithinAt_iff_tendsto_slope /-
 theorem hasDerivWithinAt_iff_tendsto_slope :
     HasDerivWithinAt f f' s x ↔ Tendsto (slope f x) (𝓝[s \ {x}] x) (𝓝 f') :=
   by
   simp only [HasDerivWithinAt, nhdsWithin, diff_eq, inf_assoc.symm, inf_principal.symm]
   exact hasDerivAtFilter_iff_tendsto_slope
 #align has_deriv_within_at_iff_tendsto_slope hasDerivWithinAt_iff_tendsto_slope
+-/
 
 #print hasDerivWithinAt_iff_tendsto_slope' /-
 theorem hasDerivWithinAt_iff_tendsto_slope' (hs : x ∉ s) :
@@ -93,9 +97,11 @@ theorem hasDerivWithinAt_iff_tendsto_slope' (hs : x ∉ s) :
 #align has_deriv_within_at_iff_tendsto_slope' hasDerivWithinAt_iff_tendsto_slope'
 -/
 
+#print hasDerivAt_iff_tendsto_slope /-
 theorem hasDerivAt_iff_tendsto_slope : HasDerivAt f f' x ↔ Tendsto (slope f x) (𝓝[≠] x) (𝓝 f') :=
   hasDerivAtFilter_iff_tendsto_slope
 #align has_deriv_at_iff_tendsto_slope hasDerivAt_iff_tendsto_slope
+-/
 
 end NormedField
 
@@ -106,20 +112,26 @@ section Real
 
 variable {f : ℝ → ℝ} {f' : ℝ} {s : Set ℝ} {x : ℝ} {r : ℝ}
 
+#print HasDerivWithinAt.limsup_slope_le /-
 theorem HasDerivWithinAt.limsup_slope_le (hf : HasDerivWithinAt f f' s x) (hr : f' < r) :
     ∀ᶠ z in 𝓝[s \ {x}] x, slope f x z < r :=
   hasDerivWithinAt_iff_tendsto_slope.1 hf (IsOpen.mem_nhds isOpen_Iio hr)
 #align has_deriv_within_at.limsup_slope_le HasDerivWithinAt.limsup_slope_le
+-/
 
+#print HasDerivWithinAt.limsup_slope_le' /-
 theorem HasDerivWithinAt.limsup_slope_le' (hf : HasDerivWithinAt f f' s x) (hs : x ∉ s)
     (hr : f' < r) : ∀ᶠ z in 𝓝[s] x, slope f x z < r :=
   (hasDerivWithinAt_iff_tendsto_slope' hs).1 hf (IsOpen.mem_nhds isOpen_Iio hr)
 #align has_deriv_within_at.limsup_slope_le' HasDerivWithinAt.limsup_slope_le'
+-/
 
+#print HasDerivWithinAt.liminf_right_slope_le /-
 theorem HasDerivWithinAt.liminf_right_slope_le (hf : HasDerivWithinAt f f' (Ici x) x)
     (hr : f' < r) : ∃ᶠ z in 𝓝[>] x, slope f x z < r :=
   (hf.Ioi_of_Ici.limsup_slope_le' (lt_irrefl x) hr).Frequently
 #align has_deriv_within_at.liminf_right_slope_le HasDerivWithinAt.liminf_right_slope_le
+-/
 
 end Real
 
@@ -130,6 +142,7 @@ open Metric
 variable {E : Type u} [NormedAddCommGroup E] [NormedSpace ℝ E] {f : ℝ → E} {f' : E} {s : Set ℝ}
   {x r : ℝ}
 
+#print HasDerivWithinAt.limsup_norm_slope_le /-
 /-- If `f` has derivative `f'` within `s` at `x`, then for any `r > ‖f'‖` the ratio
 `‖f z - f x‖ / ‖z - x‖` is less than `r` in some neighborhood of `x` within `s`.
 In other words, the limit superior of this ratio as `z` tends to `x` along `s`
@@ -148,7 +161,9 @@ theorem HasDerivWithinAt.limsup_norm_slope_le (hf : HasDerivWithinAt f f' s x) (
   simp only [norm_smul, mem_Iio, norm_inv]
   exact fun _ => id
 #align has_deriv_within_at.limsup_norm_slope_le HasDerivWithinAt.limsup_norm_slope_le
+-/
 
+#print HasDerivWithinAt.limsup_slope_norm_le /-
 /-- If `f` has derivative `f'` within `s` at `x`, then for any `r > ‖f'‖` the ratio
 `(‖f z‖ - ‖f x‖) / ‖z - x‖` is less than `r` in some neighborhood of `x` within `s`.
 In other words, the limit superior of this ratio as `z` tends to `x` along `s`
@@ -164,7 +179,9 @@ theorem HasDerivWithinAt.limsup_slope_norm_le (hf : HasDerivWithinAt f f' s x) (
   refine' lt_of_le_of_lt (mul_le_mul_of_nonneg_left (norm_sub_norm_le _ _) _) hz
   exact inv_nonneg.2 (norm_nonneg _)
 #align has_deriv_within_at.limsup_slope_norm_le HasDerivWithinAt.limsup_slope_norm_le
+-/
 
+#print HasDerivWithinAt.liminf_right_norm_slope_le /-
 /-- If `f` has derivative `f'` within `(x, +∞)` at `x`, then for any `r > ‖f'‖` the ratio
 `‖f z - f x‖ / ‖z - x‖` is frequently less than `r` as `z → x+0`.
 In other words, the limit inferior of this ratio as `z` tends to `x+0`
@@ -174,7 +191,9 @@ theorem HasDerivWithinAt.liminf_right_norm_slope_le (hf : HasDerivWithinAt f f' 
     (hr : ‖f'‖ < r) : ∃ᶠ z in 𝓝[>] x, ‖z - x‖⁻¹ * ‖f z - f x‖ < r :=
   (hf.Ioi_of_Ici.limsup_norm_slope_le hr).Frequently
 #align has_deriv_within_at.liminf_right_norm_slope_le HasDerivWithinAt.liminf_right_norm_slope_le
+-/
 
+#print HasDerivWithinAt.liminf_right_slope_norm_le /-
 /-- If `f` has derivative `f'` within `(x, +∞)` at `x`, then for any `r > ‖f'‖` the ratio
 `(‖f z‖ - ‖f x‖) / (z - x)` is frequently less than `r` as `z → x+0`.
 In other words, the limit inferior of this ratio as `z` tends to `x+0`
@@ -194,6 +213,7 @@ theorem HasDerivWithinAt.liminf_right_slope_norm_le (hf : HasDerivWithinAt f f' 
   intro z hxz hz
   rwa [Real.norm_eq_abs, abs_of_pos (sub_pos_of_lt hxz)] at hz 
 #align has_deriv_within_at.liminf_right_slope_norm_le HasDerivWithinAt.liminf_right_slope_norm_le
+-/
 
 end RealSpace
 

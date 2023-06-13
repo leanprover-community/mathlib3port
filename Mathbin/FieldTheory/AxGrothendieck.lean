@@ -35,6 +35,7 @@ noncomputable section
 
 open MvPolynomial Finset Function
 
+#print ax_grothendieck_of_locally_finite /-
 /-- Any injective polynomial map over an algebraic extension of a finite field is surjective. -/
 theorem ax_grothendieck_of_locally_finite {ι K R : Type _} [Field K] [Finite K] [CommRing R]
     [Finite ι] [Algebra K R] (alg : Algebra.IsAlgebraic K R) (ps : ι → MvPolynomial ι R)
@@ -74,4 +75,5 @@ theorem ax_grothendieck_of_locally_finite {ι K R : Type _} [Field K] [Finite K]
   use fun i => w i
   simpa only [res, Subtype.ext_iff, funext_iff] using hw
 #align ax_grothendieck_of_locally_finite ax_grothendieck_of_locally_finite
+-/
 

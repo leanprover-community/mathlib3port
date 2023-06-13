@@ -36,7 +36,6 @@ namespace WittVector
 
 variable {p : ℕ} {R : Type _} [hp : Fact p.Prime] [CommRing R]
 
--- mathport name: expr𝕎
 local notation "𝕎" => WittVector p
 
 -- type as `\bbW`
@@ -44,19 +43,20 @@ open MvPolynomial
 
 noncomputable section
 
-include hp
-
 variable (p)
 
+#print WittVector.wittMulN /-
 /-- `witt_mul_n p n` is the family of polynomials that computes
 the coefficients of `x * n` in terms of the coefficients of the Witt vector `x`. -/
 noncomputable def wittMulN : ℕ → ℕ → MvPolynomial ℕ ℤ
   | 0 => 0
   | n + 1 => fun k => bind₁ (Function.uncurry <| ![witt_mul_n n, X]) (wittAdd p k)
 #align witt_vector.witt_mul_n WittVector.wittMulN
+-/
 
 variable {p}
 
+#print WittVector.mulN_coeff /-
 theorem mulN_coeff (n : ℕ) (x : 𝕎 R) (k : ℕ) : (x * n).coeff k = aeval x.coeff (wittMulN p n k) :=
   by
   induction' n with n ih generalizing k
@@ -71,6 +71,7 @@ theorem mulN_coeff (n : ℕ) (x : 𝕎 R) (k : ℕ) : (x * n).coeff k = aeval x.
     · simp only [Function.uncurry, Matrix.cons_val_zero, ih]
     · simp only [Function.uncurry, Matrix.cons_val_one, Matrix.head_cons, aeval_X]
 #align witt_vector.mul_n_coeff WittVector.mulN_coeff
+-/
 
 variable (p)
 
@@ -82,6 +83,7 @@ theorem mulN_isPoly (n : ℕ) : IsPoly p fun R _Rcr x => x * n :=
 #align witt_vector.mul_n_is_poly WittVector.mulN_isPoly
 -/
 
+#print WittVector.bind₁_wittMulN_wittPolynomial /-
 @[simp]
 theorem bind₁_wittMulN_wittPolynomial (n k : ℕ) :
     bind₁ (wittMulN p n) (wittPolynomial p ℤ k) = n * wittPolynomial p ℤ k :=
@@ -94,6 +96,7 @@ theorem bind₁_wittMulN_wittPolynomial (n k : ℕ) :
     simp only [ih, Function.uncurry, Function.comp, bind₁_X_left, AlgHom.id_apply,
       Matrix.cons_val_zero, Matrix.head_cons, Matrix.cons_val_one]
 #align witt_vector.bind₁_witt_mul_n_witt_polynomial WittVector.bind₁_wittMulN_wittPolynomial
+-/
 
 end WittVector
 

@@ -424,8 +424,6 @@ theorem mdifferentiableWithinAt_iff {f : M → M'} {s : Set M} {x : M} :
   simp only [HasFDerivWithinAt, nhdsWithin_inter, nhdsWithin_extChartAt_target_eq]
 #align mdifferentiable_within_at_iff mdifferentiableWithinAt_iff
 
-include Is I's
-
 /-- One can reformulate differentiability within a set at a point as continuity within this set at
 this point, and differentiability in any chart containing that point. -/
 theorem mdifferentiableWithinAt_iff_of_mem_source {x' : M} {y : M'}
@@ -566,8 +564,6 @@ theorem mfderivWithin_subset (st : s ⊆ t) (hs : UniqueMdiffWithinAt I s x)
   ((MdifferentiableWithinAt.hasMfderivWithinAt h).mono st).mfderivWithin hs
 #align mfderiv_within_subset mfderivWithin_subset
 
-omit Is I's
-
 theorem MdifferentiableWithinAt.mono (hst : s ⊆ t) (h : MdifferentiableWithinAt I I' f t x) :
     MdifferentiableWithinAt I I' f s x :=
   ⟨ContinuousWithinAt.mono h.1 hst,
@@ -628,8 +624,6 @@ theorem mdifferentiableOn_of_locally_mdifferentiableOn
   exact (mdifferentiableWithinAt_inter (IsOpen.mem_nhds t_open xt)).1 (ht x ⟨xs, xt⟩)
 #align mdifferentiable_on_of_locally_mdifferentiable_on mdifferentiableOn_of_locally_mdifferentiableOn
 
-include Is I's
-
 @[simp, mfld_simps]
 theorem mfderivWithin_univ : mfderivWithin I I' f univ = mfderiv I I' f :=
   by
@@ -654,8 +648,6 @@ theorem mdifferentiableAt_iff_of_mem_source {x' : M} {y : M'}
     (mdifferentiableWithinAt_iff_of_mem_source hx hy).trans <| by
       rw [continuousWithinAt_univ, Set.preimage_univ, Set.univ_inter]
 #align mdifferentiable_at_iff_of_mem_source mdifferentiableAt_iff_of_mem_source
-
-omit Is I's
 
 /-! ### Deriving continuity from differentiability on manifolds -/
 
@@ -685,8 +677,6 @@ theorem MdifferentiableOn.continuousOn (h : MdifferentiableOn I I' f s) : Contin
 theorem Mdifferentiable.continuous (h : Mdifferentiable I I' f) : Continuous f :=
   continuous_iff_continuousAt.2 fun x => (h x).ContinuousAt
 #align mdifferentiable.continuous Mdifferentiable.continuous
-
-include Is I's
 
 theorem tangentMapWithin_subset {p : TangentBundle I M} (st : s ⊆ t)
     (hs : UniqueMdiffWithinAt I s p.1) (h : MdifferentiableWithinAt I I' f t p.1) :
@@ -728,8 +718,6 @@ theorem tangentMap_proj {p : TangentBundle I M} : (tangentMap I I' f p).proj = f
 theorem tangentMap_fst {p : TangentBundle I M} : (tangentMap I I' f p).1 = f p.1 :=
   rfl
 #align tangent_map_fst tangentMap_fst
-
-omit Is I's
 
 theorem MdifferentiableWithinAt.prod_mk {f : M → M'} {g : M → M''}
     (hf : MdifferentiableWithinAt I I' f s x) (hg : MdifferentiableWithinAt I I'' g s x) :
@@ -807,8 +795,6 @@ theorem HasMfderivAt.congr_of_eventuallyEq (h : HasMfderivAt I I' f x f') (h₁ 
   apply h.congr_of_eventually_eq _ (mem_of_mem_nhds h₁ : _)
   rwa [nhdsWithin_univ]
 #align has_mfderiv_at.congr_of_eventually_eq HasMfderivAt.congr_of_eventuallyEq
-
-include Is I's
 
 theorem MdifferentiableWithinAt.congr_of_eventuallyEq (h : MdifferentiableWithinAt I I' f s x)
     (h₁ : f₁ =ᶠ[𝓝[s] x] f) (hx : f₁ x = f x) : MdifferentiableWithinAt I I' f₁ s x :=
@@ -908,8 +894,6 @@ theorem mfderiv_congr {f' : M → M'} (h : f = f') :
 /-! ### Composition lemmas -/
 
 
-omit Is I's
-
 theorem written_in_ext_chart_comp (h : ContinuousWithinAt f s x) :
     {y |
         writtenInExtChartAt I I'' x (g ∘ f) y =
@@ -924,8 +908,6 @@ theorem written_in_ext_chart_comp (h : ContinuousWithinAt f s x) :
 #align written_in_ext_chart_comp written_in_ext_chart_comp
 
 variable (x)
-
-include Is I's I''s
 
 theorem HasMfderivWithinAt.comp (hg : HasMfderivWithinAt I' I'' g u (f x) g')
     (hf : HasMfderivWithinAt I I' f s x f') (hst : s ⊆ f ⁻¹' u) :
@@ -1899,8 +1881,6 @@ variable {𝕜 : Type _} [NontriviallyNormedField 𝕜] {E : Type _} [NormedAddC
   [NormedSpace 𝕜 E''] {H'' : Type _} [TopologicalSpace H''] {I'' : ModelWithCorners 𝕜 E'' H''}
   {M'' : Type _} [TopologicalSpace M''] [ChartedSpace H'' M''] {e : LocalHomeomorph M M'}
   (he : e.Mdifferentiable I I') {e' : LocalHomeomorph M' M''}
-
-include he
 
 theorem symm : e.symm.Mdifferentiable I' I :=
   ⟨he.2, he.1⟩

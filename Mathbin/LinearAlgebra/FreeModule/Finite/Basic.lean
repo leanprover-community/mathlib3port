@@ -58,6 +58,7 @@ variable [AddCommGroup N] [Module R N] [Module.Free R N]
 
 variable {R}
 
+#print Module.Finite.of_basis /-
 /-- A free module with a basis indexed by a `fintype` is finite. -/
 theorem Module.Finite.of_basis {R M ι : Type _} [CommRing R] [AddCommGroup M] [Module R M]
     [Finite ι] (b : Basis ι R M) : Module.Finite R M :=
@@ -67,6 +68,7 @@ theorem Module.Finite.of_basis {R M ι : Type _} [CommRing R] [AddCommGroup M] [
   refine' ⟨⟨finset.univ.image b, _⟩⟩
   simp only [Set.image_univ, Finset.coe_univ, Finset.coe_image, Basis.span_eq]
 #align module.finite.of_basis Module.Finite.of_basis
+-/
 
 #print Module.Finite.matrix /-
 instance Module.Finite.matrix {ι₁ ι₂ : Type _} [Finite ι₁] [Finite ι₂] :

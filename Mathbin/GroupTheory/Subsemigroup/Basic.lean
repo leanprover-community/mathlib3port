@@ -149,11 +149,13 @@ theorem coe_set_mk {s : Set M} (h_mul) : (mk s h_mul : Set M) = s :=
 #align add_subsemigroup.coe_set_mk AddSubsemigroup.coe_set_mk
 -/
 
+#print Subsemigroup.mk_le_mk /-
 @[simp, to_additive]
 theorem mk_le_mk {s t : Set M} (h_mul) (h_mul') : mk s h_mul ≤ mk t h_mul' ↔ s ⊆ t :=
   Iff.rfl
 #align subsemigroup.mk_le_mk Subsemigroup.mk_le_mk
 #align add_subsemigroup.mk_le_mk AddSubsemigroup.mk_le_mk
+-/
 
 #print Subsemigroup.ext /-
 /-- Two subsemigroups are equal if they have the same elements. -/
@@ -259,17 +261,21 @@ instance : Inf (Subsemigroup M) :=
     { carrier := S₁ ∩ S₂
       mul_mem' := fun _ _ ⟨hx, hx'⟩ ⟨hy, hy'⟩ => ⟨S₁.mul_mem hx hy, S₂.mul_mem hx' hy'⟩ }⟩
 
+#print Subsemigroup.coe_inf /-
 @[simp, to_additive]
 theorem coe_inf (p p' : Subsemigroup M) : ((p ⊓ p' : Subsemigroup M) : Set M) = p ∩ p' :=
   rfl
 #align subsemigroup.coe_inf Subsemigroup.coe_inf
 #align add_subsemigroup.coe_inf AddSubsemigroup.coe_inf
+-/
 
+#print Subsemigroup.mem_inf /-
 @[simp, to_additive]
 theorem mem_inf {p p' : Subsemigroup M} {x : M} : x ∈ p ⊓ p' ↔ x ∈ p ∧ x ∈ p' :=
   Iff.rfl
 #align subsemigroup.mem_inf Subsemigroup.mem_inf
 #align add_subsemigroup.mem_inf AddSubsemigroup.mem_inf
+-/
 
 @[to_additive]
 instance : InfSet (Subsemigroup M) :=
@@ -279,29 +285,37 @@ instance : InfSet (Subsemigroup M) :=
         Set.mem_biInter fun i h =>
           i.mul_mem (by apply Set.mem_iInter₂.1 hx i h) (by apply Set.mem_iInter₂.1 hy i h) }⟩
 
+#print Subsemigroup.coe_sInf /-
 @[simp, norm_cast, to_additive]
 theorem coe_sInf (S : Set (Subsemigroup M)) : ((sInf S : Subsemigroup M) : Set M) = ⋂ s ∈ S, ↑s :=
   rfl
 #align subsemigroup.coe_Inf Subsemigroup.coe_sInf
 #align add_subsemigroup.coe_Inf AddSubsemigroup.coe_sInf
+-/
 
+#print Subsemigroup.mem_sInf /-
 @[to_additive]
 theorem mem_sInf {S : Set (Subsemigroup M)} {x : M} : x ∈ sInf S ↔ ∀ p ∈ S, x ∈ p :=
   Set.mem_iInter₂
 #align subsemigroup.mem_Inf Subsemigroup.mem_sInf
 #align add_subsemigroup.mem_Inf AddSubsemigroup.mem_sInf
+-/
 
+#print Subsemigroup.mem_iInf /-
 @[to_additive]
 theorem mem_iInf {ι : Sort _} {S : ι → Subsemigroup M} {x : M} : (x ∈ ⨅ i, S i) ↔ ∀ i, x ∈ S i := by
   simp only [iInf, mem_Inf, Set.forall_range_iff]
 #align subsemigroup.mem_infi Subsemigroup.mem_iInf
 #align add_subsemigroup.mem_infi AddSubsemigroup.mem_iInf
+-/
 
+#print Subsemigroup.coe_iInf /-
 @[simp, norm_cast, to_additive]
 theorem coe_iInf {ι : Sort _} {S : ι → Subsemigroup M} : (↑(⨅ i, S i) : Set M) = ⋂ i, S i := by
   simp only [iInf, coe_Inf, Set.biInter_range]
 #align subsemigroup.coe_infi Subsemigroup.coe_iInf
 #align add_subsemigroup.coe_infi AddSubsemigroup.coe_iInf
+-/
 
 /-- subsemigroups of a monoid form a complete lattice. -/
 @[to_additive "The `add_subsemigroup`s of an `add_monoid` form a complete lattice."]
@@ -374,6 +388,7 @@ variable {S}
 
 open Set
 
+#print Subsemigroup.closure_le /-
 /-- A subsemigroup `S` includes `closure s` if and only if it includes `s`. -/
 @[simp,
   to_additive "An additive subsemigroup `S` includes `closure s`\nif and only if it includes `s`"]
@@ -381,7 +396,9 @@ theorem closure_le : closure s ≤ S ↔ s ⊆ S :=
   ⟨Subset.trans subset_closure, fun h => sInf_le h⟩
 #align subsemigroup.closure_le Subsemigroup.closure_le
 #align add_subsemigroup.closure_le AddSubsemigroup.closure_le
+-/
 
+#print Subsemigroup.closure_mono /-
 /-- subsemigroup closure of a set is monotone in its argument: if `s ⊆ t`,
 then `closure s ≤ closure t`. -/
 @[to_additive
@@ -390,12 +407,15 @@ theorem closure_mono ⦃s t : Set M⦄ (h : s ⊆ t) : closure s ≤ closure t :
   closure_le.2 <| Subset.trans h subset_closure
 #align subsemigroup.closure_mono Subsemigroup.closure_mono
 #align add_subsemigroup.closure_mono AddSubsemigroup.closure_mono
+-/
 
+#print Subsemigroup.closure_eq_of_le /-
 @[to_additive]
 theorem closure_eq_of_le (h₁ : s ⊆ S) (h₂ : S ≤ closure s) : closure s = S :=
   le_antisymm (closure_le.2 h₁) h₂
 #align subsemigroup.closure_eq_of_le Subsemigroup.closure_eq_of_le
 #align add_subsemigroup.closure_eq_of_le AddSubsemigroup.closure_eq_of_le
+-/
 
 variable (S)
 
@@ -460,6 +480,7 @@ theorem dense_induction {p : M → Prop} (x : M) {s : Set M} (hs : closure s = �
 
 variable (M)
 
+#print Subsemigroup.gi /-
 /-- `closure` forms a Galois insertion with the coercion to set. -/
 @[to_additive "`closure` forms a Galois insertion with the coercion to set."]
 protected def gi : GaloisInsertion (@closure M _) coe
@@ -470,6 +491,7 @@ protected def gi : GaloisInsertion (@closure M _) coe
   choice_eq s h := rfl
 #align subsemigroup.gi Subsemigroup.gi
 #align add_subsemigroup.gi AddSubsemigroup.gi
+-/
 
 variable {M}
 
@@ -498,24 +520,31 @@ theorem closure_univ : closure (univ : Set M) = ⊤ :=
 #align add_subsemigroup.closure_univ AddSubsemigroup.closure_univ
 -/
 
+#print Subsemigroup.closure_union /-
 @[to_additive]
 theorem closure_union (s t : Set M) : closure (s ∪ t) = closure s ⊔ closure t :=
   (Subsemigroup.gi M).gc.l_sup
 #align subsemigroup.closure_union Subsemigroup.closure_union
 #align add_subsemigroup.closure_union AddSubsemigroup.closure_union
+-/
 
+#print Subsemigroup.closure_iUnion /-
 @[to_additive]
 theorem closure_iUnion {ι} (s : ι → Set M) : closure (⋃ i, s i) = ⨆ i, closure (s i) :=
   (Subsemigroup.gi M).gc.l_iSup
 #align subsemigroup.closure_Union Subsemigroup.closure_iUnion
 #align add_subsemigroup.closure_Union AddSubsemigroup.closure_iUnion
+-/
 
+#print Subsemigroup.closure_singleton_le_iff_mem /-
 @[simp, to_additive]
 theorem closure_singleton_le_iff_mem (m : M) (p : Subsemigroup M) : closure {m} ≤ p ↔ m ∈ p := by
   rw [closure_le, singleton_subset_iff, SetLike.mem_coe]
 #align subsemigroup.closure_singleton_le_iff_mem Subsemigroup.closure_singleton_le_iff_mem
 #align add_subsemigroup.closure_singleton_le_iff_mem AddSubsemigroup.closure_singleton_le_iff_mem
+-/
 
+#print Subsemigroup.mem_iSup /-
 @[to_additive]
 theorem mem_iSup {ι : Sort _} (p : ι → Subsemigroup M) {m : M} :
     (m ∈ ⨆ i, p i) ↔ ∀ N, (∀ i, p i ≤ N) → m ∈ N :=
@@ -524,13 +553,16 @@ theorem mem_iSup {ι : Sort _} (p : ι → Subsemigroup M) {m : M} :
   simp only [closure_singleton_le_iff_mem]
 #align subsemigroup.mem_supr Subsemigroup.mem_iSup
 #align add_subsemigroup.mem_supr AddSubsemigroup.mem_iSup
+-/
 
+#print Subsemigroup.iSup_eq_closure /-
 @[to_additive]
 theorem iSup_eq_closure {ι : Sort _} (p : ι → Subsemigroup M) :
     (⨆ i, p i) = Subsemigroup.closure (⋃ i, (p i : Set M)) := by
   simp_rw [Subsemigroup.closure_iUnion, Subsemigroup.closure_eq]
 #align subsemigroup.supr_eq_closure Subsemigroup.iSup_eq_closure
 #align add_subsemigroup.supr_eq_closure AddSubsemigroup.iSup_eq_closure
+-/
 
 end Subsemigroup
 
@@ -551,6 +583,7 @@ def eqLocus (f g : M →ₙ* N) : Subsemigroup M
 #align add_hom.eq_mlocus AddHom.eqLocus
 -/
 
+#print MulHom.eqOn_closure /-
 /-- If two mul homomorphisms are equal on a set, then they are equal on its subsemigroup closure. -/
 @[to_additive
       "If two add homomorphisms are equal on a set,\nthen they are equal on its additive subsemigroup closure."]
@@ -558,19 +591,24 @@ theorem eqOn_closure {f g : M →ₙ* N} {s : Set M} (h : Set.EqOn f g s) : Set.
   show closure s ≤ f.eqLocus g from closure_le.2 h
 #align mul_hom.eq_on_mclosure MulHom.eqOn_closure
 #align add_hom.eq_on_mclosure AddHom.eqOn_closure
+-/
 
+#print MulHom.eq_of_eqOn_top /-
 @[to_additive]
 theorem eq_of_eqOn_top {f g : M →ₙ* N} (h : Set.EqOn f g (⊤ : Subsemigroup M)) : f = g :=
   ext fun x => h trivial
 #align mul_hom.eq_of_eq_on_mtop MulHom.eq_of_eqOn_top
 #align add_hom.eq_of_eq_on_mtop AddHom.eq_of_eqOn_top
+-/
 
+#print MulHom.eq_of_eqOn_dense /-
 @[to_additive]
 theorem eq_of_eqOn_dense {s : Set M} (hs : closure s = ⊤) {f g : M →ₙ* N} (h : s.EqOn f g) :
     f = g :=
   eq_of_eqOn_top <| hs ▸ eqOn_closure h
 #align mul_hom.eq_of_eq_on_mdense MulHom.eq_of_eqOn_dense
 #align add_hom.eq_of_eq_on_mdense AddHom.eq_of_eqOn_dense
+-/
 
 end MulHom
 
@@ -582,6 +620,7 @@ namespace MulHom
 
 open Subsemigroup
 
+#print MulHom.ofDense /-
 /-- Let `s` be a subset of a semigroup `M` such that the closure of `s` is the whole semigroup.
 Then `mul_hom.of_mdense` defines a mul homomorphism from `M` asking for a proof
 of `f (x * y) = f x * f y` only for `y ∈ s`. -/
@@ -595,18 +634,21 @@ def ofDense {M N} [Semigroup M] [Semigroup N] {s : Set M} (f : M → N) (hs : cl
       (fun y₁ y₂ h₁ h₂ x => by simp only [← mul_assoc, h₁, h₂]) x
 #align mul_hom.of_mdense MulHom.ofDense
 #align add_hom.of_mdense AddHom.ofDense
+-/
 
 /-- Let `s` be a subset of an additive semigroup `M` such that the closure of `s` is the whole
 semigroup.  Then `add_hom.of_mdense` defines an additive homomorphism from `M` asking for a proof
 of `f (x + y) = f x + f y` only for `y ∈ s`. -/
 add_decl_doc AddHom.ofDense
 
+#print MulHom.coe_ofDense /-
 @[simp, norm_cast, to_additive]
 theorem coe_ofDense [Semigroup M] [Semigroup N] {s : Set M} (f : M → N) (hs : closure s = ⊤)
     (hmul) : (ofDense f hs hmul : M → N) = f :=
   rfl
 #align mul_hom.coe_of_mdense MulHom.coe_ofDense
 #align add_hom.coe_of_mdense AddHom.coe_ofDense
+-/
 
 end MulHom
 

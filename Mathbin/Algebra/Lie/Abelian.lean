@@ -69,6 +69,7 @@ instance LieIdeal.isLieAbelian_of_trivial (R : Type u) (L : Type v) [CommRing R]
 #align lie_ideal.is_lie_abelian_of_trivial LieIdeal.isLieAbelian_of_trivial
 -/
 
+#print Function.Injective.isLieAbelian /-
 theorem Function.Injective.isLieAbelian {R : Type u} {L₁ : Type v} {L₂ : Type w} [CommRing R]
     [LieRing L₁] [LieRing L₂] [LieAlgebra R L₁] [LieAlgebra R L₂] {f : L₁ →ₗ⁅R⁆ L₂}
     (h₁ : Function.Injective f) (h₂ : IsLieAbelian L₂) : IsLieAbelian L₁ :=
@@ -80,7 +81,9 @@ theorem Function.Injective.isLieAbelian {R : Type u} {L₁ : Type v} {L₂ : Typ
           _ = 0 := (trivial_lie_zero _ _ _ _)
           _ = f 0 := f.map_zero.symm }
 #align function.injective.is_lie_abelian Function.Injective.isLieAbelian
+-/
 
+#print Function.Surjective.isLieAbelian /-
 theorem Function.Surjective.isLieAbelian {R : Type u} {L₁ : Type v} {L₂ : Type w} [CommRing R]
     [LieRing L₁] [LieRing L₂] [LieAlgebra R L₁] [LieAlgebra R L₂] {f : L₁ →ₗ⁅R⁆ L₂}
     (h₁ : Function.Surjective f) (h₂ : IsLieAbelian L₁) : IsLieAbelian L₂ :=
@@ -90,13 +93,17 @@ theorem Function.Surjective.isLieAbelian {R : Type u} {L₁ : Type v} {L₂ : Ty
       obtain ⟨v, rfl⟩ := h₁ y
       rw [← LieHom.map_lie, trivial_lie_zero, LieHom.map_zero] }
 #align function.surjective.is_lie_abelian Function.Surjective.isLieAbelian
+-/
 
+#print lie_abelian_iff_equiv_lie_abelian /-
 theorem lie_abelian_iff_equiv_lie_abelian {R : Type u} {L₁ : Type v} {L₂ : Type w} [CommRing R]
     [LieRing L₁] [LieRing L₂] [LieAlgebra R L₁] [LieAlgebra R L₂] (e : L₁ ≃ₗ⁅R⁆ L₂) :
     IsLieAbelian L₁ ↔ IsLieAbelian L₂ :=
   ⟨e.symm.Injective.IsLieAbelian, e.Injective.IsLieAbelian⟩
 #align lie_abelian_iff_equiv_lie_abelian lie_abelian_iff_equiv_lie_abelian
+-/
 
+#print commutative_ring_iff_abelian_lie_ring /-
 theorem commutative_ring_iff_abelian_lie_ring {A : Type v} [Ring A] :
     IsCommutative A (· * ·) ↔ IsLieAbelian A :=
   by
@@ -104,6 +111,7 @@ theorem commutative_ring_iff_abelian_lie_ring {A : Type v} [Ring A] :
   have h₂ : IsLieAbelian A ↔ ∀ a b : A, ⁅a, b⁆ = 0 := ⟨fun h => h.1, fun h => ⟨h⟩⟩
   simp only [h₁, h₂, LieRing.of_associative_ring_bracket, sub_eq_zero]
 #align commutative_ring_iff_abelian_lie_ring commutative_ring_iff_abelian_lie_ring
+-/
 
 #print LieAlgebra.isLieAbelian_bot /-
 theorem LieAlgebra.isLieAbelian_bot (R : Type u) (L : Type v) [CommRing R] [LieRing L]
@@ -192,6 +200,7 @@ theorem trivial_iff_le_maximal_trivial (N : LieSubmodule R L M) :
 #align lie_module.trivial_iff_le_maximal_trivial LieModule.trivial_iff_le_maximal_trivial
 -/
 
+#print LieModule.isTrivial_iff_max_triv_eq_top /-
 theorem isTrivial_iff_max_triv_eq_top : IsTrivial L M ↔ maxTrivSubmodule R L M = ⊤ :=
   by
   constructor
@@ -200,6 +209,7 @@ theorem isTrivial_iff_max_triv_eq_top : IsTrivial L M ↔ maxTrivSubmodule R L M
   · intro h; constructor; intro x m; revert x
     rw [← mem_max_triv_submodule R L M, h]; exact LieSubmodule.mem_top m
 #align lie_module.is_trivial_iff_max_triv_eq_top LieModule.isTrivial_iff_max_triv_eq_top
+-/
 
 variable {R L M N}
 
@@ -343,14 +353,18 @@ theorem self_module_ker_eq_center : LieModule.ker R L L = center R L :=
 #align lie_algebra.self_module_ker_eq_center LieAlgebra.self_module_ker_eq_center
 -/
 
+#print LieAlgebra.abelian_of_le_center /-
 theorem abelian_of_le_center (I : LieIdeal R L) (h : I ≤ center R L) : IsLieAbelian I :=
   haveI : LieModule.IsTrivial L I := (LieModule.trivial_iff_le_maximal_trivial R L L I).mpr h
   LieIdeal.isLieAbelian_of_trivial R L I
 #align lie_algebra.abelian_of_le_center LieAlgebra.abelian_of_le_center
+-/
 
+#print LieAlgebra.isLieAbelian_iff_center_eq_top /-
 theorem isLieAbelian_iff_center_eq_top : IsLieAbelian L ↔ center R L = ⊤ :=
   LieModule.isTrivial_iff_max_triv_eq_top R L L
 #align lie_algebra.is_lie_abelian_iff_center_eq_top LieAlgebra.isLieAbelian_iff_center_eq_top
+-/
 
 end LieAlgebra
 
@@ -368,6 +382,7 @@ variable [LieRingModule L M] [LieModule R L M]
 
 variable (N N' : LieSubmodule R L M) (I J : LieIdeal R L)
 
+#print LieSubmodule.trivial_lie_oper_zero /-
 @[simp]
 theorem LieSubmodule.trivial_lie_oper_zero [LieModule.IsTrivial L M] : ⁅I, N⁆ = ⊥ :=
   by
@@ -375,6 +390,7 @@ theorem LieSubmodule.trivial_lie_oper_zero [LieModule.IsTrivial L M] : ⁅I, N�
   rw [lie_ideal_oper_eq_span, LieSubmodule.lieSpan_le]
   rintro m ⟨x, n, h⟩; rw [trivial_lie_zero] at h ; simp [← h]
 #align lie_submodule.trivial_lie_oper_zero LieSubmodule.trivial_lie_oper_zero
+-/
 
 #print LieSubmodule.lie_abelian_iff_lie_self_eq_bot /-
 theorem LieSubmodule.lie_abelian_iff_lie_self_eq_bot : IsLieAbelian I ↔ ⁅I, I⁆ = ⊥ :=

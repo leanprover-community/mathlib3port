@@ -129,6 +129,7 @@ noncomputable def isImage : IsImage (monoFactorisation f)
 #align AddCommGroup.is_image AddCommGroupCat.isImage
 -/
 
+#print AddCommGroupCat.imageIsoRange /-
 /-- The categorical image of a morphism in `AddCommGroup`
 agrees with the usual group-theoretical range.
 -/
@@ -136,6 +137,7 @@ noncomputable def imageIsoRange {G H : AddCommGroupCat.{0}} (f : G ⟶ H) :
     Limits.image f ≅ AddCommGroupCat.of f.range :=
   IsImage.isoExt (Image.isImage f) (isImage f)
 #align AddCommGroup.image_iso_range AddCommGroupCat.imageIsoRange
+-/
 
 end AddCommGroupCat
 

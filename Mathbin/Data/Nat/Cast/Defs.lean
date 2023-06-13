@@ -115,11 +115,14 @@ instance (priority := 900) castCoe {R} [NatCast R] : CoeTC ℕ R :=
   ⟨Nat.cast⟩
 #align nat.cast_coe Nat.castCoe
 
+#print Nat.cast_zero /-
 @[simp, norm_cast]
 theorem cast_zero : ((0 : ℕ) : R) = 0 :=
   AddMonoidWithOne.natCast_zero
 #align nat.cast_zero Nat.cast_zero
+-/
 
+#print Nat.cast_succ /-
 -- Lemmas about nat.succ need to get a low priority, so that they are tried last.
 -- This is because `nat.succ _` matches `1`, `3`, `x+1`, etc.
 -- Rewriting would then produce really wrong terms.
@@ -127,10 +130,13 @@ theorem cast_zero : ((0 : ℕ) : R) = 0 :=
 theorem cast_succ (n : ℕ) : ((succ n : ℕ) : R) = n + 1 :=
   AddMonoidWithOne.natCast_succ _
 #align nat.cast_succ Nat.cast_succ
+-/
 
+#print Nat.cast_add_one /-
 theorem cast_add_one (n : ℕ) : ((n + 1 : ℕ) : R) = n + 1 :=
   cast_succ _
 #align nat.cast_add_one Nat.cast_add_one
+-/
 
 #print Nat.cast_ite /-
 @[simp, norm_cast]
@@ -163,6 +169,7 @@ protected def binCast [Zero R] [One R] [Add R] (n : ℕ) : R :=
 #align nat.bin_cast Nat.binCast
 -/
 
+#print Nat.binCast_eq /-
 @[simp]
 theorem binCast_eq [AddMonoidWithOne R] (n : ℕ) : (Nat.binCast n : R) = ((n : ℕ) : R) :=
   by
@@ -174,19 +181,26 @@ theorem binCast_eq [AddMonoidWithOne R] (n : ℕ) : (Nat.binCast n : R) = ((n : 
     · cases b <;> simp [bit, bit0, bit1]
     · simp
 #align nat.bin_cast_eq Nat.binCast_eq
+-/
 
+#print Nat.cast_bit0 /-
 @[simp, norm_cast]
 theorem cast_bit0 [AddMonoidWithOne R] (n : ℕ) : ((bit0 n : ℕ) : R) = bit0 n :=
   cast_add _ _
 #align nat.cast_bit0 Nat.cast_bit0
+-/
 
+#print Nat.cast_bit1 /-
 @[simp, norm_cast]
 theorem cast_bit1 [AddMonoidWithOne R] (n : ℕ) : ((bit1 n : ℕ) : R) = bit1 n := by
   rw [bit1, cast_add_one, cast_bit0] <;> rfl
 #align nat.cast_bit1 Nat.cast_bit1
+-/
 
+#print Nat.cast_two /-
 theorem cast_two [AddMonoidWithOne R] : ((2 : ℕ) : R) = 2 := by rw [cast_add_one, cast_one, bit0]
 #align nat.cast_two Nat.cast_two
+-/
 
 attribute [simp, norm_cast] Int.natAbs_ofNat
 
@@ -217,17 +231,23 @@ protected def AddMonoidWithOne.binary {R : Type _} [AddMonoid R] [One R] : AddMo
 
 namespace NeZero
 
+#print NeZero.natCast_ne /-
 theorem natCast_ne (n : ℕ) (R) [AddMonoidWithOne R] [h : NeZero (n : R)] : (n : R) ≠ 0 :=
   h.out
 #align ne_zero.nat_cast_ne NeZero.natCast_ne
+-/
 
+#print NeZero.of_neZero_natCast /-
 theorem of_neZero_natCast (R) [AddMonoidWithOne R] {n : ℕ} [h : NeZero (n : R)] : NeZero n :=
   ⟨by cases h; rintro rfl; · simpa using h⟩
 #align ne_zero.of_ne_zero_coe NeZero.of_neZero_natCast
+-/
 
+#print NeZero.pos_of_neZero_natCast /-
 theorem pos_of_neZero_natCast (R) [AddMonoidWithOne R] {n : ℕ} [NeZero (n : R)] : 0 < n :=
   Nat.pos_of_ne_zero (of_neZero_natCast R).out
 #align ne_zero.pos_of_ne_zero_coe NeZero.pos_of_neZero_natCast
+-/
 
 end NeZero
 

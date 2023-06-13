@@ -26,8 +26,10 @@ instance commutatorElement {G : Type _} [Group G] : Bracket G G :=
 #align commutator_element commutatorElement
 -/
 
+#print commutatorElement_def /-
 theorem commutatorElement_def {G : Type _} [Group G] (g₁ g₂ : G) :
     ⁅g₁, g₂⁆ = g₁ * g₂ * g₁⁻¹ * g₂⁻¹ :=
   rfl
 #align commutator_element_def commutatorElement_def
+-/
 

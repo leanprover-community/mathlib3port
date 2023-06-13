@@ -103,9 +103,11 @@ theorem Reflexive.set_pairwise_iff (hr : Reflexive r) :
 #align reflexive.set_pairwise_iff Reflexive.set_pairwise_iff
 -/
 
+#print Set.Pairwise.on_injective /-
 theorem Pairwise.on_injective (hs : s.Pairwise r) (hf : Function.Injective f) (hfs : ∀ x, f x ∈ s) :
     Pairwise (r on f) := fun i j hij => hs (hfs i) (hfs j) (hf.Ne hij)
 #align set.pairwise.on_injective Set.Pairwise.on_injective
+-/
 
 end Set
 

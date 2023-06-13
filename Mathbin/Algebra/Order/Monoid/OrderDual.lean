@@ -104,12 +104,14 @@ instance [OrderedCommMonoid α] : OrderedCommMonoid αᵒᵈ :=
   { OrderDual.partialOrder α, OrderDual.commMonoid with
     mul_le_mul_left := fun a b h c => mul_le_mul_left' h c }
 
+#print OrderDual.OrderedCancelCommMonoid.to_contravariantClass /-
 @[to_additive OrderDual.OrderedCancelAddCommMonoid.to_contravariantClass]
 instance OrderedCancelCommMonoid.to_contravariantClass [OrderedCancelCommMonoid α] :
     ContravariantClass αᵒᵈ αᵒᵈ Mul.mul LE.le
     where elim a b c := OrderedCancelCommMonoid.le_of_mul_le_mul_left a c b
 #align order_dual.ordered_cancel_comm_monoid.to_contravariant_class OrderDual.OrderedCancelCommMonoid.to_contravariantClass
 #align ordered_cancel_add_comm_monoid.to_contravariant_class OrderDual.OrderedCancelAddCommMonoid.to_contravariantClass
+-/
 
 @[to_additive]
 instance [OrderedCancelCommMonoid α] : OrderedCancelCommMonoid αᵒᵈ :=

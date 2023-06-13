@@ -32,29 +32,39 @@ instance : Group (r ≃r r) where
   mul_one f := ext fun _ => rfl
   mul_left_inv f := ext f.symm_apply_apply
 
+#print RelIso.coe_one /-
 @[simp]
 theorem coe_one : ⇑(1 : r ≃r r) = id :=
   rfl
 #align rel_iso.coe_one RelIso.coe_one
+-/
 
+#print RelIso.coe_mul /-
 @[simp]
 theorem coe_mul (e₁ e₂ : r ≃r r) : ⇑(e₁ * e₂) = e₁ ∘ e₂ :=
   rfl
 #align rel_iso.coe_mul RelIso.coe_mul
+-/
 
+#print RelIso.mul_apply /-
 theorem mul_apply (e₁ e₂ : r ≃r r) (x : α) : (e₁ * e₂) x = e₁ (e₂ x) :=
   rfl
 #align rel_iso.mul_apply RelIso.mul_apply
+-/
 
+#print RelIso.inv_apply_self /-
 @[simp]
 theorem inv_apply_self (e : r ≃r r) (x) : e⁻¹ (e x) = x :=
   e.symm_apply_apply x
 #align rel_iso.inv_apply_self RelIso.inv_apply_self
+-/
 
+#print RelIso.apply_inv_self /-
 @[simp]
 theorem apply_inv_self (e : r ≃r r) (x) : e (e⁻¹ x) = x :=
   e.apply_symm_apply x
 #align rel_iso.apply_inv_self RelIso.apply_inv_self
+-/
 
 end RelIso
 

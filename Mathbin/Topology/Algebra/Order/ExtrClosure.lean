@@ -30,21 +30,28 @@ open scoped Topology
 variable {X Y : Type _} [TopologicalSpace X] [TopologicalSpace Y] [Preorder Y]
   [OrderClosedTopology Y] {f g : X → Y} {s : Set X} {a : X}
 
+#print IsMaxOn.closure /-
 protected theorem IsMaxOn.closure (h : IsMaxOn f s a) (hc : ContinuousOn f (closure s)) :
     IsMaxOn f (closure s) a := fun x hx =>
   ContinuousWithinAt.closure_le hx ((hc x hx).mono subset_closure) continuousWithinAt_const h
 #align is_max_on.closure IsMaxOn.closure
+-/
 
+#print IsMinOn.closure /-
 protected theorem IsMinOn.closure (h : IsMinOn f s a) (hc : ContinuousOn f (closure s)) :
     IsMinOn f (closure s) a :=
   h.dual.closure hc
 #align is_min_on.closure IsMinOn.closure
+-/
 
+#print IsExtrOn.closure /-
 protected theorem IsExtrOn.closure (h : IsExtrOn f s a) (hc : ContinuousOn f (closure s)) :
     IsExtrOn f (closure s) a :=
   h.elim (fun h => Or.inl <| h.closure hc) fun h => Or.inr <| h.closure hc
 #align is_extr_on.closure IsExtrOn.closure
+-/
 
+#print IsLocalMaxOn.closure /-
 protected theorem IsLocalMaxOn.closure (h : IsLocalMaxOn f s a) (hc : ContinuousOn f (closure s)) :
     IsLocalMaxOn f (closure s) a :=
   by
@@ -57,14 +64,19 @@ protected theorem IsLocalMaxOn.closure (h : IsLocalMaxOn f s a) (hc : Continuous
     exact nhdsWithin_le_nhds (Uo.mem_nhds hxU)
   · exact (hc _ hxs).mono ((inter_subset_right _ _).trans subset_closure)
 #align is_local_max_on.closure IsLocalMaxOn.closure
+-/
 
+#print IsLocalMinOn.closure /-
 protected theorem IsLocalMinOn.closure (h : IsLocalMinOn f s a) (hc : ContinuousOn f (closure s)) :
     IsLocalMinOn f (closure s) a :=
   IsLocalMaxOn.closure h.dual hc
 #align is_local_min_on.closure IsLocalMinOn.closure
+-/
 
+#print IsLocalExtrOn.closure /-
 protected theorem IsLocalExtrOn.closure (h : IsLocalExtrOn f s a)
     (hc : ContinuousOn f (closure s)) : IsLocalExtrOn f (closure s) a :=
   h.elim (fun h => Or.inl <| h.closure hc) fun h => Or.inr <| h.closure hc
 #align is_local_extr_on.closure IsLocalExtrOn.closure
+-/
 

@@ -42,8 +42,6 @@ variable [IsLocalization M Rₘ] [IsLocalization (Algebra.algebraMapSubmonoid S 
 
 variable [Algebra Rₘ Sₘ] [Algebra R Sₘ] [IsScalarTower R Rₘ Sₘ] [IsScalarTower R S Sₘ]
 
-include M
-
 /-- Let `S` be an extension of `R` and `Rₘ Sₘ` be localizations at `M` of `R S` respectively.
 Then the norm of `a : Sₘ` over `Rₘ` is the norm of `a : S` over `R` if `S` is free as `R`-module.
 -/

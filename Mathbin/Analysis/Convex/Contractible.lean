@@ -25,6 +25,7 @@ topological space.
 variable {E : Type _} [AddCommGroup E] [Module ℝ E] [TopologicalSpace E] [ContinuousAdd E]
   [ContinuousSMul ℝ E] {s : Set E} {x : E}
 
+#print StarConvex.contractibleSpace /-
 /-- A non-empty star convex set is a contractible space. -/
 protected theorem StarConvex.contractibleSpace (h : StarConvex ℝ x s) (hne : s.Nonempty) :
     ContractibleSpace s :=
@@ -42,16 +43,21 @@ protected theorem StarConvex.contractibleSpace (h : StarConvex ℝ x s) (hne : s
   · ext1; simp
   · ext1; simp
 #align star_convex.contractible_space StarConvex.contractibleSpace
+-/
 
+#print Convex.contractibleSpace /-
 /-- A non-empty convex set is a contractible space. -/
 protected theorem Convex.contractibleSpace (hs : Convex ℝ s) (hne : s.Nonempty) :
     ContractibleSpace s :=
   let ⟨x, hx⟩ := hne
   (hs.StarConvex hx).ContractibleSpace hne
 #align convex.contractible_space Convex.contractibleSpace
+-/
 
+#print RealTopologicalVectorSpace.contractibleSpace /-
 instance (priority := 100) RealTopologicalVectorSpace.contractibleSpace : ContractibleSpace E :=
   (Homeomorph.Set.univ E).contractibleSpace_iff.mp <|
     convex_univ.ContractibleSpace Set.univ_nonempty
 #align real_topological_vector_space.contractible_space RealTopologicalVectorSpace.contractibleSpace
+-/
 

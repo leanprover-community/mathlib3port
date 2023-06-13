@@ -56,21 +56,27 @@ def formPerm : Equiv.Perm α :=
 #align list.form_perm List.formPerm
 -/
 
+#print List.formPerm_nil /-
 @[simp]
 theorem formPerm_nil : formPerm ([] : List α) = 1 :=
   rfl
 #align list.form_perm_nil List.formPerm_nil
+-/
 
+#print List.formPerm_singleton /-
 @[simp]
 theorem formPerm_singleton (x : α) : formPerm [x] = 1 :=
   rfl
 #align list.form_perm_singleton List.formPerm_singleton
+-/
 
+#print List.formPerm_cons_cons /-
 @[simp]
 theorem formPerm_cons_cons (x y : α) (l : List α) :
     formPerm (x :: y :: l) = swap x y * formPerm (y :: l) :=
   prod_cons
 #align list.form_perm_cons_cons List.formPerm_cons_cons
+-/
 
 #print List.formPerm_pair /-
 theorem formPerm_pair (x y : α) : formPerm [x, y] = swap x y :=
@@ -218,6 +224,7 @@ theorem zipWith_swap_prod_support' (l l' : List α) :
 #align list.zip_with_swap_prod_support' List.zipWith_swap_prod_support'
 -/
 
+#print List.zipWith_swap_prod_support /-
 theorem zipWith_swap_prod_support [Fintype α] (l l' : List α) :
     (zipWith swap l l').Prod.support ≤ l.toFinset ⊔ l'.toFinset :=
   by
@@ -225,6 +232,7 @@ theorem zipWith_swap_prod_support [Fintype α] (l l' : List α) :
   have hx' : x ∈ {x | (zip_with swap l l').Prod x ≠ x} := by simpa using hx
   simpa using zip_with_swap_prod_support' _ _ hx'
 #align list.zip_with_swap_prod_support List.zipWith_swap_prod_support
+-/
 
 #print List.support_formPerm_le' /-
 theorem support_formPerm_le' : {x | formPerm l x ≠ x} ≤ l.toFinset :=
@@ -342,6 +350,7 @@ theorem formPerm_eq_of_isRotated {l l' : List α} (hd : Nodup l) (h : l ~r l') :
 #align list.form_perm_eq_of_is_rotated List.formPerm_eq_of_isRotated
 -/
 
+#print List.formPerm_reverse /-
 theorem formPerm_reverse (l : List α) (h : Nodup l) : formPerm l.reverse = (formPerm l)⁻¹ :=
   by
   -- Let's show `form_perm l` is an inverse to `form_perm l.reverse`.
@@ -371,6 +380,7 @@ theorem formPerm_reverse (l : List α) (h : Nodup l) : formPerm l.reverse = (for
       refine' tsub_lt_self _ (zero_lt_one.trans_le (le_add_right le_rfl))
       exact k.zero_le.trans_lt hk
 #align list.form_perm_reverse List.formPerm_reverse
+-/
 
 #print List.formPerm_pow_apply_nthLe /-
 theorem formPerm_pow_apply_nthLe (l : List α) (h : Nodup l) (n k : ℕ) (hk : k < l.length) :
@@ -476,6 +486,7 @@ theorem formPerm_eq_self_of_not_mem (l : List α) (x : α) (h : x ∉ l) : formP
 #align list.form_perm_eq_self_of_not_mem List.formPerm_eq_self_of_not_mem
 -/
 
+#print List.formPerm_eq_one_iff /-
 theorem formPerm_eq_one_iff (hl : Nodup l) : formPerm l = 1 ↔ l.length ≤ 1 :=
   by
   cases' l with hd tl
@@ -488,6 +499,7 @@ theorem formPerm_eq_one_iff (hl : Nodup l) : formPerm l = 1 ↔ l.length ≤ 1 :
         add_le_iff_nonpos_left, length, nonpos_iff_eq_zero, length_eq_zero] at h 
       simp [h]
 #align list.form_perm_eq_one_iff List.formPerm_eq_one_iff
+-/
 
 #print List.formPerm_eq_formPerm_iff /-
 theorem formPerm_eq_formPerm_iff {l l' : List α} (hl : l.Nodup) (hl' : l'.Nodup) :
@@ -527,6 +539,7 @@ theorem form_perm_zpow_apply_mem_imp_mem (l : List α) (x : α) (hx : x ∈ l) (
 #align list.form_perm_zpow_apply_mem_imp_mem List.form_perm_zpow_apply_mem_imp_mem
 -/
 
+#print List.formPerm_pow_length_eq_one_of_nodup /-
 theorem formPerm_pow_length_eq_one_of_nodup (hl : Nodup l) : formPerm l ^ length l = 1 :=
   by
   ext x
@@ -541,6 +554,7 @@ theorem formPerm_pow_length_eq_one_of_nodup (hl : Nodup l) : formPerm l ^ length
       simpa using support_form_perm_le' _ H
     simpa
 #align list.form_perm_pow_length_eq_one_of_nodup List.formPerm_pow_length_eq_one_of_nodup
+-/
 
 end FormPerm
 

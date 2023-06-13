@@ -122,31 +122,41 @@ variable (B : E →ₗ[𝕜] F →ₗ[𝕜] 𝕜)
 instance : TopologicalSpace (WeakBilin B) :=
   TopologicalSpace.induced (fun x y => B x y) Pi.topologicalSpace
 
+#print WeakBilin.coeFn_continuous /-
 /-- The coercion `(λ x y, B x y) : E → (F → 𝕜)` is continuous. -/
 theorem coeFn_continuous : Continuous fun (x : WeakBilin B) y => B x y :=
   continuous_induced_dom
 #align weak_bilin.coe_fn_continuous WeakBilin.coeFn_continuous
+-/
 
+#print WeakBilin.eval_continuous /-
 theorem eval_continuous (y : F) : Continuous fun x : WeakBilin B => B x y :=
   (continuous_pi_iff.mp (coeFn_continuous B)) y
 #align weak_bilin.eval_continuous WeakBilin.eval_continuous
+-/
 
+#print WeakBilin.continuous_of_continuous_eval /-
 theorem continuous_of_continuous_eval [TopologicalSpace α] {g : α → WeakBilin B}
     (h : ∀ y, Continuous fun a => B (g a) y) : Continuous g :=
   continuous_induced_rng.2 (continuous_pi_iff.mpr h)
 #align weak_bilin.continuous_of_continuous_eval WeakBilin.continuous_of_continuous_eval
+-/
 
+#print WeakBilin.embedding /-
 /-- The coercion `(λ x y, B x y) : E → (F → 𝕜)` is an embedding. -/
 theorem embedding {B : E →ₗ[𝕜] F →ₗ[𝕜] 𝕜} (hB : Function.Injective B) :
     Embedding fun (x : WeakBilin B) y => B x y :=
   Function.Injective.embedding_induced <| LinearMap.coe_injective.comp hB
 #align weak_bilin.embedding WeakBilin.embedding
+-/
 
+#print WeakBilin.tendsto_iff_forall_eval_tendsto /-
 theorem tendsto_iff_forall_eval_tendsto {l : Filter α} {f : α → WeakBilin B} {x : WeakBilin B}
     (hB : Function.Injective B) :
     Tendsto f l (𝓝 x) ↔ ∀ y, Tendsto (fun i => B (f i) y) l (𝓝 (B x y)) := by
   rw [← tendsto_pi_nhds, Embedding.tendsto_nhds_iff (Embedding hB)]
 #align weak_bilin.tendsto_iff_forall_eval_tendsto WeakBilin.tendsto_iff_forall_eval_tendsto
+-/
 
 /-- Addition in `weak_space B` is continuous. -/
 instance [ContinuousAdd 𝕜] : ContinuousAdd (WeakBilin B) :=
@@ -199,11 +209,13 @@ end WeakTopology
 
 section WeakStarTopology
 
+#print topDualPairing /-
 /-- The canonical pairing of a vector space and its topological dual. -/
 def topDualPairing (𝕜 E) [CommSemiring 𝕜] [TopologicalSpace 𝕜] [ContinuousAdd 𝕜] [AddCommMonoid E]
     [Module 𝕜 E] [TopologicalSpace E] [ContinuousConstSMul 𝕜 𝕜] : (E →L[𝕜] 𝕜) →ₗ[𝕜] E →ₗ[𝕜] 𝕜 :=
   ContinuousLinearMap.coeLM 𝕜
 #align top_dual_pairing topDualPairing
+-/
 
 variable [CommSemiring 𝕜] [TopologicalSpace 𝕜] [ContinuousAdd 𝕜]
 
@@ -211,11 +223,14 @@ variable [ContinuousConstSMul 𝕜 𝕜]
 
 variable [AddCommMonoid E] [Module 𝕜 E] [TopologicalSpace E]
 
+#print topDualPairing_apply /-
 theorem topDualPairing_apply (v : E →L[𝕜] 𝕜) (x : E) : topDualPairing 𝕜 E v x = v x :=
   rfl
 #align dual_pairing_apply topDualPairing_apply
+-/
 
 /- ./././Mathport/Syntax/Translate/Command.lean:43:9: unsupported derive handler module[module] 𝕜 -/
+#print WeakDual /-
 /-- The weak star topology is the topology coarsest topology on `E →L[𝕜] 𝕜` such that all
 functionals `λ v, top_dual_pairing 𝕜 E v x` are continuous. -/
 def WeakDual (𝕜 E) [CommSemiring 𝕜] [TopologicalSpace 𝕜] [ContinuousAdd 𝕜] [ContinuousConstSMul 𝕜 𝕜]
@@ -225,15 +240,18 @@ deriving AddCommMonoid,
   «./././Mathport/Syntax/Translate/Command.lean:43:9: unsupported derive handler module[module] 𝕜»,
   TopologicalSpace, ContinuousAdd
 #align weak_dual WeakDual
+-/
 
 namespace WeakDual
 
 instance : Inhabited (WeakDual 𝕜 E) :=
   ContinuousLinearMap.inhabited
 
+#print WeakDual.instContinuousLinearMapClass /-
 instance WeakDual.instContinuousLinearMapClass : ContinuousLinearMapClass (WeakDual 𝕜 E) 𝕜 E 𝕜 :=
   ContinuousLinearMap.continuousSemilinearMapClass
 #align weak_dual.weak_dual.continuous_linear_map_class WeakDual.instContinuousLinearMapClass
+-/
 
 /-- Helper instance for when there's too many metavariables to apply `fun_like.has_coe_to_fun`
 directly. -/
@@ -252,12 +270,14 @@ instance (M) [Monoid M] [DistribMulAction M 𝕜] [SMulCommClass 𝕜 M 𝕜] [C
     DistribMulAction M (WeakDual 𝕜 E) :=
   ContinuousLinearMap.distribMulAction
 
+#print WeakDual.instModule' /-
 /-- If `𝕜` is a topological module over a semiring `R` and scalar multiplication commutes with the
 multiplication on `𝕜`, then `weak_dual 𝕜 E` is a module over `R`. -/
 instance instModule' (R) [Semiring R] [Module R 𝕜] [SMulCommClass 𝕜 R 𝕜] [ContinuousConstSMul R 𝕜] :
     Module R (WeakDual 𝕜 E) :=
   ContinuousLinearMap.module
 #align weak_dual.module' WeakDual.instModule'
+-/
 
 instance (M) [Monoid M] [DistribMulAction M 𝕜] [SMulCommClass 𝕜 M 𝕜] [ContinuousConstSMul M 𝕜] :
     ContinuousConstSMul M (WeakDual 𝕜 E) :=
@@ -271,18 +291,24 @@ instance (M) [Monoid M] [DistribMulAction M 𝕜] [SMulCommClass 𝕜 M 𝕜] [T
   ⟨continuous_induced_rng.2 <|
       continuous_fst.smul ((WeakBilin.coeFn_continuous (topDualPairing 𝕜 E)).comp continuous_snd)⟩
 
+#print WeakDual.coeFn_continuous /-
 theorem coeFn_continuous : Continuous fun (x : WeakDual 𝕜 E) y => x y :=
   continuous_induced_dom
 #align weak_dual.coe_fn_continuous WeakDual.coeFn_continuous
+-/
 
+#print WeakDual.eval_continuous /-
 theorem eval_continuous (y : E) : Continuous fun x : WeakDual 𝕜 E => x y :=
   continuous_pi_iff.mp coeFn_continuous y
 #align weak_dual.eval_continuous WeakDual.eval_continuous
+-/
 
+#print WeakDual.continuous_of_continuous_eval /-
 theorem continuous_of_continuous_eval [TopologicalSpace α] {g : α → WeakDual 𝕜 E}
     (h : ∀ y, Continuous fun a => (g a) y) : Continuous g :=
   continuous_induced_rng.2 (continuous_pi_iff.mpr h)
 #align weak_dual.continuous_of_continuous_eval WeakDual.continuous_of_continuous_eval
+-/
 
 instance [T2Space 𝕜] : T2Space (WeakDual 𝕜 E) :=
   Embedding.t2Space <|
@@ -292,6 +318,7 @@ instance [T2Space 𝕜] : T2Space (WeakDual 𝕜 E) :=
 end WeakDual
 
 /- ./././Mathport/Syntax/Translate/Command.lean:43:9: unsupported derive handler module[module] 𝕜 -/
+#print WeakSpace /-
 /-- The weak topology is the topology coarsest topology on `E` such that all
 functionals `λ x, top_dual_pairing 𝕜 E v x` are continuous. -/
 @[nolint has_nonempty_instance]
@@ -302,11 +329,13 @@ deriving AddCommMonoid,
   «./././Mathport/Syntax/Translate/Command.lean:43:9: unsupported derive handler module[module] 𝕜»,
   TopologicalSpace, ContinuousAdd
 #align weak_space WeakSpace
+-/
 
 namespace WeakSpace
 
 variable {𝕜 E F} [AddCommMonoid F] [Module 𝕜 F] [TopologicalSpace F]
 
+#print WeakSpace.map /-
 /-- A continuous linear map from `E` to `F` is still continuous when `E` and `F` are equipped with
 their weak topologies. -/
 def map (f : E →L[𝕜] F) : WeakSpace 𝕜 E →L[𝕜] WeakSpace 𝕜 F :=
@@ -314,24 +343,31 @@ def map (f : E →L[𝕜] F) : WeakSpace 𝕜 E →L[𝕜] WeakSpace 𝕜 F :=
     cont :=
       WeakBilin.continuous_of_continuous_eval _ fun l => WeakBilin.eval_continuous _ (l ∘L f) }
 #align weak_space.map WeakSpace.map
+-/
 
+#print WeakSpace.map_apply /-
 theorem map_apply (f : E →L[𝕜] F) (x : E) : WeakSpace.map f x = f x :=
   rfl
 #align weak_space.map_apply WeakSpace.map_apply
+-/
 
+#print WeakSpace.coe_map /-
 @[simp]
 theorem coe_map (f : E →L[𝕜] F) : (WeakSpace.map f : E → F) = f :=
   rfl
 #align weak_space.coe_map WeakSpace.coe_map
+-/
 
 end WeakSpace
 
+#print tendsto_iff_forall_eval_tendsto_topDualPairing /-
 theorem tendsto_iff_forall_eval_tendsto_topDualPairing {l : Filter α} {f : α → WeakDual 𝕜 E}
     {x : WeakDual 𝕜 E} :
     Tendsto f l (𝓝 x) ↔
       ∀ y, Tendsto (fun i => topDualPairing 𝕜 E (f i) y) l (𝓝 (topDualPairing 𝕜 E x y)) :=
   WeakBilin.tendsto_iff_forall_eval_tendsto _ ContinuousLinearMap.coe_injective
 #align tendsto_iff_forall_eval_tendsto_top_dual_pairing tendsto_iff_forall_eval_tendsto_topDualPairing
+-/
 
 end WeakStarTopology
 

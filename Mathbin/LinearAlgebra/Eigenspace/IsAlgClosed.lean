@@ -57,6 +57,7 @@ noncomputable instance [IsAlgClosed K] [FiniteDimensional K V] [Nontrivial V] (f
     Inhabited f.Eigenvalues :=
   ⟨⟨f.exists_eigenvalue.some, f.exists_eigenvalue.choose_spec⟩⟩
 
+#print Module.End.iSup_generalizedEigenspace_eq_top /-
 /-- The generalized eigenvectors span the entire vector space (Lemma 8.21 of [axler2015]). -/
 theorem iSup_generalizedEigenspace_eq_top [IsAlgClosed K] [FiniteDimensional K V] (f : End K V) :
     (⨆ (μ : K) (k : ℕ), f.generalizedEigenspace μ k) = ⊤ :=
@@ -122,6 +123,7 @@ theorem iSup_generalizedEigenspace_eq_top [IsAlgClosed K] [FiniteDimensional K V
     · rw [← top_le_iff, ← Submodule.eq_top_of_disjoint ER ES h_dim_add h_disjoint]
       apply sup_le hER hES
 #align module.End.supr_generalized_eigenspace_eq_top Module.End.iSup_generalizedEigenspace_eq_top
+-/
 
 end End
 

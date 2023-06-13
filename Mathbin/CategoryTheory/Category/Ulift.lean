@@ -71,6 +71,7 @@ def ULift.downFunctor : ULift.{u₂} C ⥤ C
 #align category_theory.ulift.down_functor CategoryTheory.ULift.downFunctor
 -/
 
+#print CategoryTheory.ULift.equivalence /-
 /-- The categorical equivalence between `C` and `ulift C`. -/
 @[simps]
 def ULift.equivalence : C ≌ ULift.{u₂} C
@@ -91,6 +92,7 @@ def ULift.equivalence : C ≌ ULift.{u₂} C
       inv_hom_id' := by ext; change 𝟙 _ ≫ 𝟙 _ = 𝟙 _; simp }
   functor_unitIso_comp' X := by change 𝟙 X ≫ 𝟙 X = 𝟙 X; simp
 #align category_theory.ulift.equivalence CategoryTheory.ULift.equivalence
+-/
 
 section UliftHom
 
@@ -120,15 +122,19 @@ def ULiftHom.objUp {C} (A : C) : ULiftHom C :=
 #align category_theory.ulift_hom.obj_up CategoryTheory.ULiftHom.objUp
 -/
 
+#print CategoryTheory.objDown_objUp /-
 @[simp]
 theorem objDown_objUp {C} (A : C) : (ULiftHom.objUp A).objDown = A :=
   rfl
 #align category_theory.obj_down_obj_up CategoryTheory.objDown_objUp
+-/
 
+#print CategoryTheory.objUp_objDown /-
 @[simp]
 theorem objUp_objDown {C} (A : ULiftHom C) : ULiftHom.objUp A.objDown = A :=
   rfl
 #align category_theory.obj_up_obj_down CategoryTheory.objUp_objDown
+-/
 
 instance : Category.{max v₂ v₁} (ULiftHom.{v₂} C)
     where
@@ -154,6 +160,7 @@ def ULiftHom.down : ULiftHom C ⥤ C where
 #align category_theory.ulift_hom.down CategoryTheory.ULiftHom.down
 -/
 
+#print CategoryTheory.ULiftHom.equiv /-
 /-- The equivalence between `C` and `ulift_hom C`. -/
 def ULiftHom.equiv : C ≌ ULiftHom C
     where
@@ -162,6 +169,7 @@ def ULiftHom.equiv : C ≌ ULiftHom C
   unitIso := NatIso.ofComponents (fun A => eqToIso rfl) (by tidy)
   counitIso := NatIso.ofComponents (fun A => eqToIso rfl) (by tidy)
 #align category_theory.ulift_hom.equiv CategoryTheory.ULiftHom.equiv
+-/
 
 end UliftHom
 
@@ -206,6 +214,7 @@ def AsSmall.down : AsSmall C ⥤ C where
 #align category_theory.as_small.down CategoryTheory.AsSmall.down
 -/
 
+#print CategoryTheory.AsSmall.equiv /-
 /-- The equivalence between `C` and `as_small C`. -/
 @[simps]
 def AsSmall.equiv : C ≌ AsSmall C where
@@ -214,15 +223,18 @@ def AsSmall.equiv : C ≌ AsSmall C where
   unitIso := NatIso.ofComponents (fun X => eqToIso rfl) (by tidy)
   counitIso := NatIso.ofComponents (fun X => eqToIso <| by ext; rfl) (by tidy)
 #align category_theory.as_small.equiv CategoryTheory.AsSmall.equiv
+-/
 
 instance [Inhabited C] : Inhabited (AsSmall C) :=
   ⟨⟨Inhabited.default _⟩⟩
 
+#print CategoryTheory.ULiftHomULiftCategory.equiv /-
 /-- The equivalence between `C` and `ulift_hom (ulift C)`. -/
 def ULiftHomULiftCategory.equiv.{v', u', v, u} (C : Type u) [Category.{v} C] :
     C ≌ ULiftHom.{v'} (ULift.{u'} C) :=
   ULift.equivalence.trans ULiftHom.equiv
 #align category_theory.ulift_hom_ulift_category.equiv CategoryTheory.ULiftHomULiftCategory.equiv
+-/
 
 end CategoryTheory
 

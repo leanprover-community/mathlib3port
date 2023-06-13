@@ -51,6 +51,7 @@ open scoped NNReal Classical ENNReal Topology
 namespace Vitali
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (u «expr ⊆ » t) -/
+#print Vitali.exists_disjoint_subfamily_covering_enlargment /-
 /-- Vitali covering theorem: given a set `t` of subsets of a type, one may extract a disjoint
 subfamily `u` such that the `τ`-enlargment of this family covers all elements of `t`, where `τ > 1`
 is any fixed number.
@@ -167,8 +168,10 @@ theorem exists_disjoint_subfamily_covering_enlargment (B : ι → Set α) (t : S
       · rw [← not_disjoint_iff_nonempty_inter] at hcb 
         exact (hcb (H _ H')).elim
 #align vitali.exists_disjoint_subfamily_covering_enlargment Vitali.exists_disjoint_subfamily_covering_enlargment
+-/
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (u «expr ⊆ » t) -/
+#print Vitali.exists_disjoint_subfamily_covering_enlargment_closedBall /-
 /-- Vitali covering theorem, closed balls version: given a family `t` of closed balls, one can
 extract a disjoint subfamily `u ⊆ t` so that all balls in `t` are covered by the 5-times
 dilations of balls in `u`. -/
@@ -207,9 +210,11 @@ theorem exists_disjoint_subfamily_covering_enlargment_closedBall [MetricSpace α
     rcases A b ⟨rb.1, rb.2⟩ with ⟨c, cu, hc⟩
     refine' ⟨c, cu, by simp only [closed_ball_eq_empty.2 h'a, empty_subset]⟩
 #align vitali.exists_disjoint_subfamily_covering_enlargment_closed_ball Vitali.exists_disjoint_subfamily_covering_enlargment_closedBall
+-/
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (u «expr ⊆ » t') -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (u «expr ⊆ » t) -/
+#print Vitali.exists_disjoint_covering_ae /-
 /-- The measurable Vitali covering theorem. Assume one is given a family `t` of closed sets with
 nonempty interior, such that each `a ∈ t` is included in a ball `B (x, r)` and covers a definite
 proportion of the ball `B (x, 3 r)` for a given measure `μ` (think of the situation where `μ` is
@@ -427,7 +432,9 @@ theorem exists_disjoint_covering_ae [MetricSpace α] [MeasurableSpace α] [Opens
     _ ≤ C * (ε / C) := (mul_le_mul_left' hw.le _)
     _ ≤ ε := ENNReal.mul_div_le
 #align vitali.exists_disjoint_covering_ae Vitali.exists_disjoint_covering_ae
+-/
 
+#print Vitali.vitaliFamily /-
 /-- Assume that around every point there are arbitrarily small scales at which the measure is
 doubling. Then the set of closed sets `a` with nonempty interior contained in `closed_ball x r` and
 covering a fixed proportion `1/C` of the ball `closed_ball x (3 * r)` forms a Vitali family.
@@ -480,6 +487,7 @@ protected def vitaliFamily [MetricSpace α] [MeasurableSpace α] [OpensMeasurabl
     · convert μt' using 3
       rw [bUnion_image]
 #align vitali.vitali_family Vitali.vitaliFamily
+-/
 
 end Vitali
 

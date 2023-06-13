@@ -304,8 +304,6 @@ theorem types_ι_jointly_surjective (D : GlueData (Type _)) (x : D.glued) :
 
 variable (F : C ⥤ C') [H : ∀ i j k, PreservesLimit (cospan (D.f i j) (D.f i k)) F]
 
-include H
-
 instance (i j k : D.J) : HasPullback (F.map (D.f i j)) (F.map (D.f i k)) :=
   ⟨⟨⟨_, isLimitOfHasPullbackOfPreservesLimit F (D.f i j) (D.f i k)⟩⟩⟩
 
@@ -350,53 +348,61 @@ def diagramIso : D.diagram.multispan ⋙ F ≅ (D.mapGlueData F).diagram.multisp
 #align category_theory.glue_data.diagram_iso CategoryTheory.GlueData.diagramIso
 -/
 
+#print CategoryTheory.GlueData.diagramIso_app_left /-
 @[simp]
 theorem diagramIso_app_left (i : D.J × D.J) :
     (D.diagramIso F).app (WalkingMultispan.left i) = Iso.refl _ :=
   rfl
 #align category_theory.glue_data.diagram_iso_app_left CategoryTheory.GlueData.diagramIso_app_left
+-/
 
+#print CategoryTheory.GlueData.diagramIso_app_right /-
 @[simp]
 theorem diagramIso_app_right (i : D.J) :
     (D.diagramIso F).app (WalkingMultispan.right i) = Iso.refl _ :=
   rfl
 #align category_theory.glue_data.diagram_iso_app_right CategoryTheory.GlueData.diagramIso_app_right
+-/
 
+#print CategoryTheory.GlueData.diagramIso_hom_app_left /-
 @[simp]
 theorem diagramIso_hom_app_left (i : D.J × D.J) :
     (D.diagramIso F).Hom.app (WalkingMultispan.left i) = 𝟙 _ :=
   rfl
 #align category_theory.glue_data.diagram_iso_hom_app_left CategoryTheory.GlueData.diagramIso_hom_app_left
+-/
 
+#print CategoryTheory.GlueData.diagramIso_hom_app_right /-
 @[simp]
 theorem diagramIso_hom_app_right (i : D.J) :
     (D.diagramIso F).Hom.app (WalkingMultispan.right i) = 𝟙 _ :=
   rfl
 #align category_theory.glue_data.diagram_iso_hom_app_right CategoryTheory.GlueData.diagramIso_hom_app_right
+-/
 
+#print CategoryTheory.GlueData.diagramIso_inv_app_left /-
 @[simp]
 theorem diagramIso_inv_app_left (i : D.J × D.J) :
     (D.diagramIso F).inv.app (WalkingMultispan.left i) = 𝟙 _ :=
   rfl
 #align category_theory.glue_data.diagram_iso_inv_app_left CategoryTheory.GlueData.diagramIso_inv_app_left
+-/
 
+#print CategoryTheory.GlueData.diagramIso_inv_app_right /-
 @[simp]
 theorem diagramIso_inv_app_right (i : D.J) :
     (D.diagramIso F).inv.app (WalkingMultispan.right i) = 𝟙 _ :=
   rfl
 #align category_theory.glue_data.diagram_iso_inv_app_right CategoryTheory.GlueData.diagramIso_inv_app_right
+-/
 
 variable [HasMulticoequalizer D.diagram] [PreservesColimit D.diagram.multispan F]
-
-omit H
 
 #print CategoryTheory.GlueData.hasColimit_multispan_comp /-
 theorem hasColimit_multispan_comp : HasColimit (D.diagram.multispan ⋙ F) :=
   ⟨⟨⟨_, PreservesColimit.preserves (colimit.isColimit _)⟩⟩⟩
 #align category_theory.glue_data.has_colimit_multispan_comp CategoryTheory.GlueData.hasColimit_multispan_comp
 -/
-
-include H
 
 attribute [local instance] has_colimit_multispan_comp
 
@@ -408,22 +414,28 @@ theorem hasColimit_mapGlueData_diagram : HasMulticoequalizer (D.mapGlueData F).d
 
 attribute [local instance] has_colimit_map_glue_data_diagram
 
+#print CategoryTheory.GlueData.gluedIso /-
 /-- If `F` preserves the gluing, we obtain an iso between the glued objects. -/
 def gluedIso : F.obj D.glued ≅ (D.mapGlueData F).glued :=
   preservesColimitIso F D.diagram.multispan ≪≫ Limits.HasColimit.isoOfNatIso (D.diagramIso F)
 #align category_theory.glue_data.glued_iso CategoryTheory.GlueData.gluedIso
+-/
 
+#print CategoryTheory.GlueData.ι_gluedIso_hom /-
 @[simp, reassoc]
 theorem ι_gluedIso_hom (i : D.J) : F.map (D.ι i) ≫ (D.gluedIso F).Hom = (D.mapGlueData F).ι i :=
   by
   erw [ι_preserves_colimits_iso_hom_assoc]; rw [has_colimit.iso_of_nat_iso_ι_hom]
   erw [category.id_comp]; rfl
 #align category_theory.glue_data.ι_glued_iso_hom CategoryTheory.GlueData.ι_gluedIso_hom
+-/
 
+#print CategoryTheory.GlueData.ι_gluedIso_inv /-
 @[simp, reassoc]
 theorem ι_gluedIso_inv (i : D.J) : (D.mapGlueData F).ι i ≫ (D.gluedIso F).inv = F.map (D.ι i) := by
   rw [iso.comp_inv_eq, ι_glued_iso_hom]
 #align category_theory.glue_data.ι_glued_iso_inv CategoryTheory.GlueData.ι_gluedIso_inv
+-/
 
 #print CategoryTheory.GlueData.vPullbackConeIsLimitOfMap /-
 /-- If `F` preserves the gluing, and reflects the pullback of `U i ⟶ glued` and `U j ⟶ glued`,
@@ -448,8 +460,7 @@ def vPullbackConeIsLimitOfMap (i j : D.J) [ReflectsLimit (cospan (D.ι i) (D.ι 
 #align category_theory.glue_data.V_pullback_cone_is_limit_of_map CategoryTheory.GlueData.vPullbackConeIsLimitOfMap
 -/
 
-omit H
-
+#print CategoryTheory.GlueData.ι_jointly_surjective /-
 /-- If there is a forgetful functor into `Type` that preserves enough (co)limits, then `D.ι` will
 be jointly surjective. -/
 theorem ι_jointly_surjective (F : C ⥤ Type v) [PreservesColimit D.diagram.multispan F]
@@ -463,6 +474,7 @@ theorem ι_jointly_surjective (F : C ⥤ Type v) [PreservesColimit D.diagram.mul
   rw [e.hom_inv_id, D.ι_glued_iso_inv] at eq 
   exact ⟨i, y, Eq⟩
 #align category_theory.glue_data.ι_jointly_surjective CategoryTheory.GlueData.ι_jointly_surjective
+-/
 
 end GlueData
 

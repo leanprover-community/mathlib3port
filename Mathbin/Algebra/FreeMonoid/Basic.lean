@@ -221,6 +221,7 @@ theorem of_injective : Function.Injective (@of α) :=
 #align free_add_monoid.of_injective FreeAddMonoid.of_injective
 -/
 
+#print FreeMonoid.recOn /-
 /-- Recursor for `free_monoid` using `1` and `free_monoid.of x * xs` instead of `[]` and
 `x :: xs`. -/
 @[elab_as_elim,
@@ -231,21 +232,27 @@ def recOn {C : FreeMonoid α → Sort _} (xs : FreeMonoid α) (h0 : C 1)
   List.recOn xs h0 ih
 #align free_monoid.rec_on FreeMonoid.recOn
 #align free_add_monoid.rec_on FreeAddMonoid.recOn
+-/
 
+#print FreeMonoid.recOn_one /-
 @[simp, to_additive]
 theorem recOn_one {C : FreeMonoid α → Sort _} (h0 : C 1) (ih : ∀ x xs, C xs → C (of x * xs)) :
     @recOn α C 1 h0 ih = h0 :=
   rfl
 #align free_monoid.rec_on_one FreeMonoid.recOn_one
 #align free_add_monoid.rec_on_zero FreeAddMonoid.recOn_zero
+-/
 
+#print FreeMonoid.recOn_of_mul /-
 @[simp, to_additive]
 theorem recOn_of_mul {C : FreeMonoid α → Sort _} (x : α) (xs : FreeMonoid α) (h0 : C 1)
     (ih : ∀ x xs, C xs → C (of x * xs)) : @recOn α C (of x * xs) h0 ih = ih x xs (recOn xs h0 ih) :=
   rfl
 #align free_monoid.rec_on_of_mul FreeMonoid.recOn_of_mul
 #align free_add_monoid.rec_on_of_add FreeAddMonoid.recOn_of_add
+-/
 
+#print FreeMonoid.casesOn /-
 /-- A version of `list.cases_on` for `free_monoid` using `1` and `free_monoid.of x * xs` instead of
 `[]` and `x :: xs`. -/
 @[elab_as_elim,
@@ -256,21 +263,27 @@ def casesOn {C : FreeMonoid α → Sort _} (xs : FreeMonoid α) (h0 : C 1)
   List.casesOn xs h0 ih
 #align free_monoid.cases_on FreeMonoid.casesOn
 #align free_add_monoid.cases_on FreeAddMonoid.casesOn
+-/
 
+#print FreeMonoid.casesOn_one /-
 @[simp, to_additive]
 theorem casesOn_one {C : FreeMonoid α → Sort _} (h0 : C 1) (ih : ∀ x xs, C (of x * xs)) :
     @casesOn α C 1 h0 ih = h0 :=
   rfl
 #align free_monoid.cases_on_one FreeMonoid.casesOn_one
 #align free_add_monoid.cases_on_zero FreeAddMonoid.casesOn_zero
+-/
 
+#print FreeMonoid.casesOn_of_mul /-
 @[simp, to_additive]
 theorem casesOn_of_mul {C : FreeMonoid α → Sort _} (x : α) (xs : FreeMonoid α) (h0 : C 1)
     (ih : ∀ x xs, C (of x * xs)) : @casesOn α C (of x * xs) h0 ih = ih x xs :=
   rfl
 #align free_monoid.cases_on_of_mul FreeMonoid.casesOn_of_mul
 #align free_add_monoid.cases_on_of_add FreeAddMonoid.casesOn_of_add
+-/
 
+#print FreeMonoid.hom_eq /-
 @[ext, to_additive]
 theorem hom_eq ⦃f g : FreeMonoid α →* M⦄ (h : ∀ x, f (of x) = g (of x)) : f = g :=
   MonoidHom.ext fun l =>
@@ -278,6 +291,7 @@ theorem hom_eq ⦃f g : FreeMonoid α →* M⦄ (h : ∀ x, f (of x) = g (of x))
       simp only [h, hxs, MonoidHom.map_mul]
 #align free_monoid.hom_eq FreeMonoid.hom_eq
 #align free_add_monoid.hom_eq FreeAddMonoid.hom_eq
+-/
 
 #print FreeMonoid.prodAux /-
 /-- A variant of `list.prod` that has `[x].prod = x` true definitionally.
@@ -291,13 +305,16 @@ def prodAux {M} [Monoid M] (l : List M) : M :=
 #align free_add_monoid.sum_aux FreeAddMonoid.sumAux
 -/
 
+#print FreeMonoid.prodAux_eq /-
 @[to_additive]
 theorem prodAux_eq : ∀ l : List M, FreeMonoid.prodAux l = l.Prod
   | [] => rfl
   | x :: xs => congr_arg (fun x => List.foldl (· * ·) x xs) (one_mul _).symm
 #align free_monoid.prod_aux_eq FreeMonoid.prodAux_eq
 #align free_add_monoid.sum_aux_eq FreeAddMonoid.sumAux_eq
+-/
 
+#print FreeMonoid.lift /-
 /-- Equivalence between maps `α → M` and monoid homomorphisms `free_monoid α →* M`. -/
 @[to_additive
       "Equivalence between maps `α → A` and additive monoid homomorphisms\n`free_add_monoid α →+ A`."]
@@ -311,48 +328,64 @@ def lift : (α → M) ≃ (FreeMonoid α →* M)
   right_inv f := hom_eq fun x => rfl
 #align free_monoid.lift FreeMonoid.lift
 #align free_add_monoid.lift FreeAddMonoid.lift
+-/
 
+#print FreeMonoid.lift_symm_apply /-
 @[simp, to_additive]
 theorem lift_symm_apply (f : FreeMonoid α →* M) : lift.symm f = f ∘ of :=
   rfl
 #align free_monoid.lift_symm_apply FreeMonoid.lift_symm_apply
 #align free_add_monoid.lift_symm_apply FreeAddMonoid.lift_symm_apply
+-/
 
+#print FreeMonoid.lift_apply /-
 @[to_additive]
 theorem lift_apply (f : α → M) (l : FreeMonoid α) : lift f l = (l.toList.map f).Prod :=
   prodAux_eq _
 #align free_monoid.lift_apply FreeMonoid.lift_apply
 #align free_add_monoid.lift_apply FreeAddMonoid.lift_apply
+-/
 
+#print FreeMonoid.lift_comp_of /-
 @[to_additive]
 theorem lift_comp_of (f : α → M) : lift f ∘ of = f :=
   rfl
 #align free_monoid.lift_comp_of FreeMonoid.lift_comp_of
 #align free_add_monoid.lift_comp_of FreeAddMonoid.lift_comp_of
+-/
 
+#print FreeMonoid.lift_eval_of /-
 @[simp, to_additive]
 theorem lift_eval_of (f : α → M) (x : α) : lift f (of x) = f x :=
   rfl
 #align free_monoid.lift_eval_of FreeMonoid.lift_eval_of
 #align free_add_monoid.lift_eval_of FreeAddMonoid.lift_eval_of
+-/
 
+#print FreeMonoid.lift_restrict /-
 @[simp, to_additive]
 theorem lift_restrict (f : FreeMonoid α →* M) : lift (f ∘ of) = f :=
   lift.apply_symm_apply f
 #align free_monoid.lift_restrict FreeMonoid.lift_restrict
 #align free_add_monoid.lift_restrict FreeAddMonoid.lift_restrict
+-/
 
+#print FreeMonoid.comp_lift /-
 @[to_additive]
 theorem comp_lift (g : M →* N) (f : α → M) : g.comp (lift f) = lift (g ∘ f) := by ext; simp
 #align free_monoid.comp_lift FreeMonoid.comp_lift
 #align free_add_monoid.comp_lift FreeAddMonoid.comp_lift
+-/
 
+#print FreeMonoid.hom_map_lift /-
 @[to_additive]
 theorem hom_map_lift (g : M →* N) (f : α → M) (x : FreeMonoid α) : g (lift f x) = lift (g ∘ f) x :=
   MonoidHom.ext_iff.1 (comp_lift g f) x
 #align free_monoid.hom_map_lift FreeMonoid.hom_map_lift
 #align free_add_monoid.hom_map_lift FreeAddMonoid.hom_map_lift
+-/
 
+#print FreeMonoid.mkMulAction /-
 /-- Define a multiplicative action of `free_monoid α` on `β`. -/
 @[to_additive "Define an additive action of `free_add_monoid α` on `β`."]
 def mkMulAction (f : α → β → β) : MulAction (FreeMonoid α) β
@@ -362,7 +395,9 @@ def mkMulAction (f : α → β → β) : MulAction (FreeMonoid α) β
   mul_smul xs ys b := List.foldr_append _ _ _ _
 #align free_monoid.mk_mul_action FreeMonoid.mkMulAction
 #align free_add_monoid.mk_add_action FreeAddMonoid.mkAddAction
+-/
 
+#print FreeMonoid.smul_def /-
 @[to_additive]
 theorem smul_def (f : α → β → β) (l : FreeMonoid α) (b : β) :
     haveI := mk_mul_action f
@@ -370,7 +405,9 @@ theorem smul_def (f : α → β → β) (l : FreeMonoid α) (b : β) :
   rfl
 #align free_monoid.smul_def FreeMonoid.smul_def
 #align free_add_monoid.vadd_def FreeAddMonoid.vadd_def
+-/
 
+#print FreeMonoid.ofList_smul /-
 @[to_additive]
 theorem ofList_smul (f : α → β → β) (l : List α) (b : β) :
     haveI := mk_mul_action f
@@ -378,6 +415,7 @@ theorem ofList_smul (f : α → β → β) (l : List α) (b : β) :
   rfl
 #align free_monoid.of_list_smul FreeMonoid.ofList_smul
 #align free_add_monoid.of_list_vadd FreeAddMonoid.ofList_vadd
+-/
 
 #print FreeMonoid.of_smul /-
 @[simp, to_additive]
@@ -390,6 +428,7 @@ theorem of_smul (f : α → β → β) (x : α) (y : β) :
 #align free_add_monoid.of_vadd FreeAddMonoid.of_vadd
 -/
 
+#print FreeMonoid.map /-
 /-- The unique monoid homomorphism `free_monoid α →* free_monoid β` that sends
 each `of x` to `of (f x)`. -/
 @[to_additive
@@ -401,42 +440,55 @@ def map (f : α → β) : FreeMonoid α →* FreeMonoid β
   map_mul' l₁ l₂ := List.map_append _ _ _
 #align free_monoid.map FreeMonoid.map
 #align free_add_monoid.map FreeAddMonoid.map
+-/
 
+#print FreeMonoid.map_of /-
 @[simp, to_additive]
 theorem map_of (f : α → β) (x : α) : map f (of x) = of (f x) :=
   rfl
 #align free_monoid.map_of FreeMonoid.map_of
 #align free_add_monoid.map_of FreeAddMonoid.map_of
+-/
 
+#print FreeMonoid.toList_map /-
 @[to_additive]
 theorem toList_map (f : α → β) (xs : FreeMonoid α) : (map f xs).toList = xs.toList.map f :=
   rfl
 #align free_monoid.to_list_map FreeMonoid.toList_map
 #align free_add_monoid.to_list_map FreeAddMonoid.toList_map
+-/
 
+#print FreeMonoid.ofList_map /-
 @[to_additive]
 theorem ofList_map (f : α → β) (xs : List α) : ofList (xs.map f) = map f (ofList xs) :=
   rfl
 #align free_monoid.of_list_map FreeMonoid.ofList_map
 #align free_add_monoid.of_list_map FreeAddMonoid.ofList_map
+-/
 
+#print FreeMonoid.lift_of_comp_eq_map /-
 @[to_additive]
 theorem lift_of_comp_eq_map (f : α → β) : (lift fun x => of (f x)) = map f :=
   hom_eq fun x => rfl
 #align free_monoid.lift_of_comp_eq_map FreeMonoid.lift_of_comp_eq_map
 #align free_add_monoid.lift_of_comp_eq_map FreeAddMonoid.lift_of_comp_eq_map
+-/
 
+#print FreeMonoid.map_comp /-
 @[to_additive]
 theorem map_comp (g : β → γ) (f : α → β) : map (g ∘ f) = (map g).comp (map f) :=
   hom_eq fun x => rfl
 #align free_monoid.map_comp FreeMonoid.map_comp
 #align free_add_monoid.map_comp FreeAddMonoid.map_comp
+-/
 
+#print FreeMonoid.map_id /-
 @[simp, to_additive]
 theorem map_id : map (@id α) = MonoidHom.id (FreeMonoid α) :=
   hom_eq fun x => rfl
 #align free_monoid.map_id FreeMonoid.map_id
 #align free_add_monoid.map_id FreeAddMonoid.map_id
+-/
 
 end FreeMonoid
 

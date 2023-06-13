@@ -67,8 +67,6 @@ namespace Qpf
 
 variable {F : Type u → Type u} [Functor F] [q : Qpf F]
 
-include q
-
 open Functor (Liftp Liftr)
 
 #print Qpf.id_map /-
@@ -402,8 +400,6 @@ namespace Qpf
 
 variable {F : Type u → Type u} [Functor F] [q : Qpf F]
 
-include q
-
 open Functor (Liftp Liftr)
 
 #print Qpf.corecF /-
@@ -536,6 +532,7 @@ theorem Cofix.bisim (r : Cofix F → Cofix F → Prop)
 #align qpf.cofix.bisim Qpf.Cofix.bisim
 -/
 
+#print Qpf.Cofix.bisim' /-
 theorem Cofix.bisim' {α : Type _} (Q : α → Prop) (u v : α → Cofix F)
     (h :
       ∀ x,
@@ -553,6 +550,7 @@ theorem Cofix.bisim' {α : Type _} (Q : α → Prop) (u v : α → Cofix F)
       refine' ⟨a, f, f', xeq.symm ▸ ux'eq, yeq.symm ▸ vx'eq, h'⟩)
     _ _ ⟨x, Qx, rfl, rfl⟩
 #align qpf.cofix.bisim' Qpf.Cofix.bisim'
+-/
 
 end Qpf
 
@@ -564,8 +562,6 @@ namespace Qpf
 variable {F₂ : Type u → Type u} [Functor F₂] [q₂ : Qpf F₂]
 
 variable {F₁ : Type u → Type u} [Functor F₁] [q₁ : Qpf F₁]
-
-include q₂ q₁
 
 #print Qpf.comp /-
 /-- composition of qpfs gives another qpf  -/
@@ -658,8 +654,6 @@ Support.
 namespace Qpf
 
 variable {F : Type u → Type u} [Functor F] [q : Qpf F]
-
-include q
 
 open Functor (Liftp Liftr supp)
 

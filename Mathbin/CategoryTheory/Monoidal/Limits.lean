@@ -46,11 +46,13 @@ instance limitFunctorial : Functorial fun F : J ⥤ C => limit F :=
 #align category_theory.limits.limit_functorial CategoryTheory.Limits.limitFunctorial
 -/
 
+#print CategoryTheory.Limits.limitFunctorial_map /-
 @[simp]
 theorem limitFunctorial_map {F G : J ⥤ C} (α : F ⟶ G) :
     map (fun F : J ⥤ C => limit F) α = Limits.lim.map α :=
   rfl
 #align category_theory.limits.limit_functorial_map CategoryTheory.Limits.limitFunctorial_map
+-/
 
 variable [MonoidalCategory.{v} C]
 
@@ -123,20 +125,27 @@ def limLax : LaxMonoidalFunctor (J ⥤ C) C :=
 #align category_theory.limits.lim_lax CategoryTheory.Limits.limLax
 -/
 
+#print CategoryTheory.Limits.limLax_obj /-
 @[simp]
 theorem limLax_obj (F : J ⥤ C) : limLax.obj F = limit F :=
   rfl
 #align category_theory.limits.lim_lax_obj CategoryTheory.Limits.limLax_obj
+-/
 
+#print CategoryTheory.Limits.limLax_obj' /-
 theorem limLax_obj' (F : J ⥤ C) : limLax.obj F = lim.obj F :=
   rfl
 #align category_theory.limits.lim_lax_obj' CategoryTheory.Limits.limLax_obj'
+-/
 
+#print CategoryTheory.Limits.limLax_map /-
 @[simp]
 theorem limLax_map {F G : J ⥤ C} (α : F ⟶ G) : limLax.map α = lim.map α :=
   rfl
 #align category_theory.limits.lim_lax_map CategoryTheory.Limits.limLax_map
+-/
 
+#print CategoryTheory.Limits.limLax_ε /-
 @[simp]
 theorem limLax_ε :
     (@limLax J _ C _ _ _).ε =
@@ -145,10 +154,12 @@ theorem limLax_ε :
           π := { app := fun j => 𝟙 _ } } :=
   rfl
 #align category_theory.limits.lim_lax_ε CategoryTheory.Limits.limLax_ε
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print CategoryTheory.Limits.limLax_μ /-
 @[simp]
 theorem limLax_μ (F G : J ⥤ C) :
     (@limLax J _ C _ _ _).μ F G =
@@ -161,6 +172,7 @@ theorem limLax_μ (F G : J ⥤ C) :
                 simp only [category.id_comp, ← tensor_comp, limit.w] } } :=
   rfl
 #align category_theory.limits.lim_lax_μ CategoryTheory.Limits.limLax_μ
+-/
 
 end CategoryTheory.Limits
 

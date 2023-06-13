@@ -164,6 +164,7 @@ variable {F G : LaxMonoidalFunctor C D}
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print CategoryTheory.MonoidalNatIso.ofComponents /-
 /-- Construct a monoidal natural isomorphism from object level isomorphisms,
 and the monoidal naturality in the forward direction.
 -/
@@ -184,23 +185,30 @@ def ofComponents (app : ∀ X : C, F.obj X ≅ G.obj X)
         rw [iso.comp_inv_eq, assoc, tensor, ← tensor_comp_assoc, iso.inv_hom_id, iso.inv_hom_id,
           tensor_id, id_comp] }
 #align category_theory.monoidal_nat_iso.of_components CategoryTheory.MonoidalNatIso.ofComponents
+-/
 
+#print CategoryTheory.MonoidalNatIso.ofComponents.hom_app /-
 @[simp]
 theorem ofComponents.hom_app (app : ∀ X : C, F.obj X ≅ G.obj X) (naturality) (unit) (tensor) (X) :
     (ofComponents app naturality Unit tensor).Hom.app X = (app X).Hom :=
   rfl
 #align category_theory.monoidal_nat_iso.of_components.hom_app CategoryTheory.MonoidalNatIso.ofComponents.hom_app
+-/
 
+#print CategoryTheory.MonoidalNatIso.ofComponents.inv_app /-
 @[simp]
 theorem ofComponents.inv_app (app : ∀ X : C, F.obj X ≅ G.obj X) (naturality) (unit) (tensor) (X) :
     (ofComponents app naturality Unit tensor).inv.app X = (app X).inv := by simp [of_components]
 #align category_theory.monoidal_nat_iso.of_components.inv_app CategoryTheory.MonoidalNatIso.ofComponents.inv_app
+-/
 
+#print CategoryTheory.MonoidalNatIso.isIso_of_isIso_app /-
 instance isIso_of_isIso_app (α : F ⟶ G) [∀ X : C, IsIso (α.app X)] : IsIso α :=
   ⟨(IsIso.of_iso
         (ofComponents (fun X => asIso (α.app X)) (fun X Y f => α.toNatTrans.naturality f) α.Unit
           α.tensor)).1⟩
 #align category_theory.monoidal_nat_iso.is_iso_of_is_iso_app CategoryTheory.MonoidalNatIso.isIso_of_isIso_app
+-/
 
 end MonoidalNatIso
 

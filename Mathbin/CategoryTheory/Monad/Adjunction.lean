@@ -74,19 +74,23 @@ def toComonad (h : L ⊣ R) : Comonad D
 #align category_theory.adjunction.to_comonad CategoryTheory.Adjunction.toComonad
 -/
 
+#print CategoryTheory.Adjunction.adjToMonadIso /-
 /-- The monad induced by the Eilenberg-Moore adjunction is the original monad.  -/
 @[simps]
 def adjToMonadIso (T : Monad C) : T.adj.toMonad ≅ T :=
   MonadIso.mk (NatIso.ofComponents (fun X => Iso.refl _) (by tidy)) (fun X => by dsimp; simp)
     fun X => by dsimp; simp
 #align category_theory.adjunction.adj_to_monad_iso CategoryTheory.Adjunction.adjToMonadIso
+-/
 
+#print CategoryTheory.Adjunction.adjToComonadIso /-
 /-- The comonad induced by the Eilenberg-Moore adjunction is the original comonad. -/
 @[simps]
 def adjToComonadIso (G : Comonad C) : G.adj.toComonad ≅ G :=
   ComonadIso.mk (NatIso.ofComponents (fun X => Iso.refl _) (by tidy)) (fun X => by dsimp; simp)
     fun X => by dsimp; simp
 #align category_theory.adjunction.adj_to_comonad_iso CategoryTheory.Adjunction.adjToComonadIso
+-/
 
 end Adjunction
 

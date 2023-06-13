@@ -69,13 +69,16 @@ variable (X : SimplicialObject C)
 
 variable (Y : SimplicialObject C)
 
+#print AlgebraicTopology.AlternatingFaceMapComplex.objD /-
 /-- The differential on the alternating face map complex is the alternate
 sum of the face maps -/
 @[simp]
 def objD (n : ℕ) : X _[n + 1] ⟶ X _[n] :=
   ∑ i : Fin (n + 2), (-1 : ℤ) ^ (i : ℕ) • X.δ i
 #align algebraic_topology.alternating_face_map_complex.obj_d AlgebraicTopology.AlternatingFaceMapComplex.objD
+-/
 
+#print AlgebraicTopology.AlternatingFaceMapComplex.d_squared /-
 /-- ## The chain complex relation `d ≫ d`
 -/
 theorem d_squared (n : ℕ) : objD X (n + 1) ≫ objD X n = 0 :=
@@ -132,6 +135,7 @@ theorem d_squared (n : ℕ) : objD X (n + 1) ≫ objD X n = 0 :=
     · simp only [Prod.mk.inj_iff, Fin.succ_pred, Fin.castLT_castSucc]
       constructor <;> rfl
 #align algebraic_topology.alternating_face_map_complex.d_squared AlgebraicTopology.AlternatingFaceMapComplex.d_squared
+-/
 
 /-!
 ## Construction of the alternating face map complex functor
@@ -145,16 +149,20 @@ def obj : ChainComplex C ℕ :=
 #align algebraic_topology.alternating_face_map_complex.obj AlgebraicTopology.AlternatingFaceMapComplex.obj
 -/
 
+#print AlgebraicTopology.AlternatingFaceMapComplex.obj_X /-
 @[simp]
 theorem obj_X (X : SimplicialObject C) (n : ℕ) : (AlternatingFaceMapComplex.obj X).pt n = X _[n] :=
   rfl
 #align algebraic_topology.alternating_face_map_complex.obj_X AlgebraicTopology.AlternatingFaceMapComplex.obj_X
+-/
 
+#print AlgebraicTopology.AlternatingFaceMapComplex.obj_d_eq /-
 @[simp]
 theorem obj_d_eq (X : SimplicialObject C) (n : ℕ) :
     (AlternatingFaceMapComplex.obj X).d (n + 1) n = ∑ i : Fin (n + 2), (-1 : ℤ) ^ (i : ℕ) • X.δ i :=
   by apply ChainComplex.of_d
 #align algebraic_topology.alternating_face_map_complex.obj_d_eq AlgebraicTopology.AlternatingFaceMapComplex.obj_d_eq
+-/
 
 variable {X} {Y}
 
@@ -195,24 +203,31 @@ def alternatingFaceMapComplex : SimplicialObject C ⥤ ChainComplex C ℕ
 
 variable {C}
 
+#print AlgebraicTopology.alternatingFaceMapComplex_obj_X /-
 @[simp]
 theorem alternatingFaceMapComplex_obj_X (X : SimplicialObject C) (n : ℕ) :
     ((alternatingFaceMapComplex C).obj X).pt n = X _[n] :=
   rfl
 #align algebraic_topology.alternating_face_map_complex_obj_X AlgebraicTopology.alternatingFaceMapComplex_obj_X
+-/
 
+#print AlgebraicTopology.alternatingFaceMapComplex_obj_d /-
 @[simp]
 theorem alternatingFaceMapComplex_obj_d (X : SimplicialObject C) (n : ℕ) :
     ((alternatingFaceMapComplex C).obj X).d (n + 1) n = AlternatingFaceMapComplex.objD X n := by
   apply ChainComplex.of_d
 #align algebraic_topology.alternating_face_map_complex_obj_d AlgebraicTopology.alternatingFaceMapComplex_obj_d
+-/
 
+#print AlgebraicTopology.alternatingFaceMapComplex_map_f /-
 @[simp]
 theorem alternatingFaceMapComplex_map_f {X Y : SimplicialObject C} (f : X ⟶ Y) (n : ℕ) :
     ((alternatingFaceMapComplex C).map f).f n = f.app (op [n]) :=
   rfl
 #align algebraic_topology.alternating_face_map_complex_map_f AlgebraicTopology.alternatingFaceMapComplex_map_f
+-/
 
+#print AlgebraicTopology.map_alternatingFaceMapComplex /-
 theorem map_alternatingFaceMapComplex {D : Type _} [Category D] [Preadditive D] (F : C ⥤ D)
     [F.Additive] :
     alternatingFaceMapComplex C ⋙ F.mapHomologicalComplex _ =
@@ -234,7 +249,9 @@ theorem map_alternatingFaceMapComplex {D : Type _} [Category D] [Preadditive D] 
     · ext n
       rfl
 #align algebraic_topology.map_alternating_face_map_complex AlgebraicTopology.map_alternatingFaceMapComplex
+-/
 
+#print AlgebraicTopology.karoubi_alternatingFaceMapComplex_d /-
 theorem karoubi_alternatingFaceMapComplex_d (P : Karoubi (SimplicialObject C)) (n : ℕ) :
     ((AlternatingFaceMapComplex.obj (KaroubiFunctorCategoryEmbedding.obj P)).d (n + 1) n).f =
       P.p.app (op [n + 1]) ≫ (AlternatingFaceMapComplex.obj P.pt).d (n + 1) n :=
@@ -243,6 +260,7 @@ theorem karoubi_alternatingFaceMapComplex_d (P : Karoubi (SimplicialObject C)) (
   simpa only [alternating_face_map_complex.obj_d_eq, karoubi.sum_hom, preadditive.comp_sum,
     karoubi.zsmul_hom, preadditive.comp_zsmul]
 #align algebraic_topology.karoubi_alternating_face_map_complex_d AlgebraicTopology.karoubi_alternatingFaceMapComplex_d
+-/
 
 namespace AlternatingFaceMapComplex
 
@@ -274,6 +292,7 @@ end AlternatingFaceMapComplex
 
 variable {A : Type _} [Category A] [Abelian A]
 
+#print AlgebraicTopology.inclusionOfMooreComplexMap /-
 /-- The inclusion map of the Moore complex in the alternating face map complex -/
 def inclusionOfMooreComplexMap (X : SimplicialObject A) :
     (normalizedMooreComplex A).obj X ⟶ (alternatingFaceMapComplex A).obj X :=
@@ -312,12 +331,15 @@ def inclusionOfMooreComplexMap (X : SimplicialObject A) :
     rw [Eq]
     cases n <;> dsimp <;> simp
 #align algebraic_topology.inclusion_of_Moore_complex_map AlgebraicTopology.inclusionOfMooreComplexMap
+-/
 
+#print AlgebraicTopology.inclusionOfMooreComplexMap_f /-
 @[simp]
 theorem inclusionOfMooreComplexMap_f (X : SimplicialObject A) (n : ℕ) :
     (inclusionOfMooreComplexMap X).f n = (NormalizedMooreComplex.objX X n).arrow :=
   ChainComplex.ofHom_f _ _ _ _ _ _ _ _ n
 #align algebraic_topology.inclusion_of_Moore_complex_map_f AlgebraicTopology.inclusionOfMooreComplexMap_f
+-/
 
 variable (A)
 
@@ -334,23 +356,29 @@ namespace AlternatingCofaceMapComplex
 
 variable (X Y : CosimplicialObject C)
 
+#print AlgebraicTopology.AlternatingCofaceMapComplex.objD /-
 /-- The differential on the alternating coface map complex is the alternate
 sum of the coface maps -/
 @[simp]
 def objD (n : ℕ) : X.obj [n] ⟶ X.obj [n + 1] :=
   ∑ i : Fin (n + 2), (-1 : ℤ) ^ (i : ℕ) • X.δ i
 #align algebraic_topology.alternating_coface_map_complex.obj_d AlgebraicTopology.AlternatingCofaceMapComplex.objD
+-/
 
+#print AlgebraicTopology.AlternatingCofaceMapComplex.d_eq_unop_d /-
 theorem d_eq_unop_d (n : ℕ) :
     objD X n =
       (AlternatingFaceMapComplex.objD ((cosimplicialSimplicialEquiv C).Functor.obj (op X))
           n).unop :=
   by simpa only [obj_d, alternating_face_map_complex.obj_d, unop_sum, unop_zsmul]
 #align algebraic_topology.alternating_coface_map_complex.d_eq_unop_d AlgebraicTopology.AlternatingCofaceMapComplex.d_eq_unop_d
+-/
 
+#print AlgebraicTopology.AlternatingCofaceMapComplex.d_squared /-
 theorem d_squared (n : ℕ) : objD X n ≫ objD X (n + 1) = 0 := by
   simp only [d_eq_unop_d, ← unop_comp, alternating_face_map_complex.d_squared, unop_zero]
 #align algebraic_topology.alternating_coface_map_complex.d_squared AlgebraicTopology.AlternatingCofaceMapComplex.d_squared
+-/
 
 #print AlgebraicTopology.AlternatingCofaceMapComplex.obj /-
 /-- The alternating coface map complex, on objects -/

@@ -69,13 +69,10 @@ inductive NormalMonoidalObject : Type u
 
 end
 
--- mathport name: exprF
 local notation "F" => FreeMonoidalCategory
 
--- mathport name: exprN
 local notation "N" => Discrete ∘ NormalMonoidalObject
 
--- mathport name: «expr ⟶ᵐ »
 local infixr:10 " ⟶ᵐ " => Hom
 
 #print CategoryTheory.FreeMonoidalCategory.inclusionObj /-
@@ -105,17 +102,21 @@ def normalizeObj : F C → NormalMonoidalObject C → N C
 #align category_theory.free_monoidal_category.normalize_obj CategoryTheory.FreeMonoidalCategory.normalizeObj
 -/
 
+#print CategoryTheory.FreeMonoidalCategory.normalizeObj_unitor /-
 @[simp]
 theorem normalizeObj_unitor (n : NormalMonoidalObject C) : normalizeObj (𝟙_ (F C)) n = ⟨n⟩ :=
   rfl
 #align category_theory.free_monoidal_category.normalize_obj_unitor CategoryTheory.FreeMonoidalCategory.normalizeObj_unitor
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print CategoryTheory.FreeMonoidalCategory.normalizeObj_tensor /-
 @[simp]
 theorem normalizeObj_tensor (X Y : F C) (n : NormalMonoidalObject C) :
     normalizeObj (X ⊗ Y) n = normalizeObj Y (normalizeObj X n).as :=
   rfl
 #align category_theory.free_monoidal_category.normalize_obj_tensor CategoryTheory.FreeMonoidalCategory.normalizeObj_tensor
+-/
 
 section
 
@@ -197,15 +198,20 @@ def tensorFunc : F C ⥤ N C ⥤ F C
 -/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print CategoryTheory.FreeMonoidalCategory.tensorFunc_map_app /-
 theorem tensorFunc_map_app {X Y : F C} (f : X ⟶ Y) (n) : ((tensorFunc C).map f).app n = 𝟙 _ ⊗ f :=
   rfl
 #align category_theory.free_monoidal_category.tensor_func_map_app CategoryTheory.FreeMonoidalCategory.tensorFunc_map_app
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print CategoryTheory.FreeMonoidalCategory.tensorFunc_obj_map /-
 theorem tensorFunc_obj_map (Z : F C) {n n' : N C} (f : n ⟶ n') :
     ((tensorFunc C).obj Z).map f = inclusion.map f ⊗ 𝟙 Z := by cases n; cases n'; tidy
 #align category_theory.free_monoidal_category.tensor_func_obj_map CategoryTheory.FreeMonoidalCategory.tensorFunc_obj_map
+-/
 
+#print CategoryTheory.FreeMonoidalCategory.normalizeIsoApp /-
 /-- Auxiliary definition for `normalize_iso`. Here we construct the isomorphism between
     `n ⊗ X` and `normalize X n`. -/
 @[simp]
@@ -216,40 +222,51 @@ def normalizeIsoApp :
   | tensor X Y, n =>
     (α_ _ _ _).symm ≪≫ tensorIso (normalize_iso_app X n) (Iso.refl _) ≪≫ normalize_iso_app _ _
 #align category_theory.free_monoidal_category.normalize_iso_app CategoryTheory.FreeMonoidalCategory.normalizeIsoApp
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print CategoryTheory.FreeMonoidalCategory.normalizeIsoApp_tensor /-
 @[simp]
 theorem normalizeIsoApp_tensor (X Y : F C) (n : N C) :
     normalizeIsoApp C (X ⊗ Y) n =
       (α_ _ _ _).symm ≪≫ tensorIso (normalizeIsoApp C X n) (Iso.refl _) ≪≫ normalizeIsoApp _ _ _ :=
   rfl
 #align category_theory.free_monoidal_category.normalize_iso_app_tensor CategoryTheory.FreeMonoidalCategory.normalizeIsoApp_tensor
+-/
 
+#print CategoryTheory.FreeMonoidalCategory.normalizeIsoApp_unitor /-
 @[simp]
 theorem normalizeIsoApp_unitor (n : N C) : normalizeIsoApp C (𝟙_ (F C)) n = ρ_ _ :=
   rfl
 #align category_theory.free_monoidal_category.normalize_iso_app_unitor CategoryTheory.FreeMonoidalCategory.normalizeIsoApp_unitor
+-/
 
+#print CategoryTheory.FreeMonoidalCategory.normalizeIsoAux /-
 /-- Auxiliary definition for `normalize_iso`. -/
 @[simp]
 def normalizeIsoAux (X : F C) : (tensorFunc C).obj X ≅ (normalize' C).obj X :=
   NatIso.ofComponents (normalizeIsoApp C X) (by rintro ⟨X⟩ ⟨Y⟩; tidy)
 #align category_theory.free_monoidal_category.normalize_iso_aux CategoryTheory.FreeMonoidalCategory.normalizeIsoAux
+-/
 
 section
 
 variable {D : Type u} [Category.{u} D] {I : Type u} (f : I → D) (X : Discrete I)
 
+#print CategoryTheory.FreeMonoidalCategory.discrete_functor_obj_eq_as /-
 -- TODO: move to discrete_category.lean, decide whether this should be a global simp lemma
 @[simp]
 theorem discrete_functor_obj_eq_as : (Discrete.functor f).obj X = f X.as :=
   rfl
 #align category_theory.free_monoidal_category.discrete_functor_obj_eq_as CategoryTheory.FreeMonoidalCategory.discrete_functor_obj_eq_as
+-/
 
+#print CategoryTheory.FreeMonoidalCategory.discrete_functor_map_eq_id /-
 -- TODO: move to discrete_category.lean, decide whether this should be a global simp lemma
 @[simp]
 theorem discrete_functor_map_eq_id (g : X ⟶ X) : (Discrete.functor f).map g = 𝟙 _ := by tidy
 #align category_theory.free_monoidal_category.discrete_functor_map_eq_id CategoryTheory.FreeMonoidalCategory.discrete_functor_map_eq_id
+-/
 
 end
 

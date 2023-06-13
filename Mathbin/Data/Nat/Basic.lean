@@ -220,6 +220,7 @@ theorem succ_le_succ_iff {m n : ℕ} : succ m ≤ succ n ↔ m ≤ n :=
 #align nat.succ_le_succ_iff Nat.succ_le_succ_iff
 -/
 
+#print Nat.max_succ_succ /-
 theorem max_succ_succ {m n : ℕ} : max (succ m) (succ n) = succ (max m n) :=
   by
   by_cases h1 : m ≤ n
@@ -227,6 +228,7 @@ theorem max_succ_succ {m n : ℕ} : max (succ m) (succ n) = succ (max m n) :=
   · rw [not_le] at h1 ; have h2 := le_of_lt h1
     rw [max_eq_left h2, max_eq_left (succ_le_succ h2)]
 #align nat.max_succ_succ Nat.max_succ_succ
+-/
 
 #print Nat.not_succ_lt_self /-
 theorem not_succ_lt_self {n : ℕ} : ¬succ n < n :=
@@ -313,9 +315,11 @@ theorem forall_lt_succ {P : ℕ → Prop} {n : ℕ} : (∀ m < n + 1, P m) ↔ (
 #align nat.forall_lt_succ Nat.forall_lt_succ
 -/
 
+#print Nat.exists_lt_succ /-
 theorem exists_lt_succ {P : ℕ → Prop} {n : ℕ} : (∃ m < n + 1, P m) ↔ (∃ m < n, P m) ∨ P n := by
   rw [← not_iff_not]; push_neg; exact forall_lt_succ
 #align nat.exists_lt_succ Nat.exists_lt_succ
+-/
 
 /-! ### `add` -/
 
@@ -394,9 +398,11 @@ theorem pred_sub (n m : ℕ) : pred n - m = pred (n - m) := by
 #align nat.pred_sub Nat.pred_sub
 -/
 
+#print Nat.le_pred_of_lt /-
 theorem le_pred_of_lt {n m : ℕ} (h : m < n) : m ≤ n - 1 :=
   Nat.sub_le_sub_right h 1
 #align nat.le_pred_of_lt Nat.le_pred_of_lt
+-/
 
 #print Nat.le_of_pred_lt /-
 theorem le_of_pred_lt {m n : ℕ} : pred m < n → m ≤ n :=
@@ -572,11 +578,13 @@ theorem strongRecOn'_beta {P : ℕ → Sort _} {h} {n : ℕ} :
 #align nat.strong_rec_on_beta' Nat.strongRecOn'_beta
 -/
 
+#print Nat.le_induction /-
 /-- Induction principle starting at a non-zero number. For maps to a `Sort*` see `le_rec_on`. -/
 @[elab_as_elim]
 theorem le_induction {P : Nat → Prop} {m} (h0 : P m) (h1 : ∀ n, m ≤ n → P n → P (n + 1)) :
     ∀ n, m ≤ n → P n := by apply Nat.le.ndrec h0 <;> exact h1
 #align nat.le_induction Nat.le_induction
+-/
 
 #print Nat.decreasingInduction /-
 /-- Decreasing induction: if `P (k+1)` implies `P k`, then `P n` implies `P m` for all `m ≤ n`.
@@ -797,15 +805,19 @@ protected theorem mul_div_cancel_left' {a b : ℕ} (Hd : a ∣ b) : a * (b / a) 
 #align nat.mul_div_cancel_left' Nat.mul_div_cancel_left'
 -/
 
+#print Nat.mul_div_mul_left /-
 --TODO: Update `nat.mul_div_mul` in the core?
 /-- Alias of `nat.mul_div_mul` -/
 protected theorem mul_div_mul_left (a b : ℕ) {c : ℕ} (hc : 0 < c) : c * a / (c * b) = a / b :=
   Nat.mul_div_mul a b hc
 #align nat.mul_div_mul_left Nat.mul_div_mul_left
+-/
 
+#print Nat.mul_div_mul_right /-
 protected theorem mul_div_mul_right (a b : ℕ) {c : ℕ} (hc : 0 < c) : a * c / (b * c) = a / b := by
   rw [mul_comm, mul_comm b, a.mul_div_mul_left b hc]
 #align nat.mul_div_mul_right Nat.mul_div_mul_right
+-/
 
 #print Nat.lt_div_mul_add /-
 theorem lt_div_mul_add {a b : ℕ} (hb : 0 < b) : a < a / b * b + b :=
@@ -1036,16 +1048,20 @@ theorem find_eq_iff (h : ∃ n : ℕ, p n) : Nat.find h = m ↔ p m ∧ ∀ n < 
 #align nat.find_eq_iff Nat.find_eq_iff
 -/
 
+#print Nat.find_lt_iff /-
 @[simp]
 theorem find_lt_iff (h : ∃ n : ℕ, p n) (n : ℕ) : Nat.find h < n ↔ ∃ m < n, p m :=
   ⟨fun h2 => ⟨Nat.find h, h2, Nat.find_spec h⟩, fun ⟨m, hmn, hm⟩ =>
     (Nat.find_min' h hm).trans_lt hmn⟩
 #align nat.find_lt_iff Nat.find_lt_iff
+-/
 
+#print Nat.find_le_iff /-
 @[simp]
 theorem find_le_iff (h : ∃ n : ℕ, p n) (n : ℕ) : Nat.find h ≤ n ↔ ∃ m ≤ n, p m := by
   simp only [exists_prop, ← lt_succ_iff, find_lt_iff]
 #align nat.find_le_iff Nat.find_le_iff
+-/
 
 #print Nat.le_find_iff /-
 @[simp]

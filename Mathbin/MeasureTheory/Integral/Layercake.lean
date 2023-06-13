@@ -76,6 +76,7 @@ namespace MeasureTheory
 
 variable {α : Type _} [MeasurableSpace α] {f : α → ℝ} {g : ℝ → ℝ} {s : Set α}
 
+#print MeasureTheory.lintegral_comp_eq_lintegral_meas_le_mul_of_measurable /-
 /-- An auxiliary version of the layer cake formula (Cavalieri's principle, tail probability
 formula), with a measurability assumption that would also essentially follow from the
 integrability assumptions.
@@ -166,7 +167,9 @@ theorem lintegral_comp_eq_lintegral_meas_le_mul_of_measurable (μ : Measure α) 
   simp_rw [mem_univ, Pi.zero_apply, true_and_iff] at mble 
   exact (ennreal.measurable_of_real.comp (g_mble.comp measurable_snd)).AEMeasurable.indicator mble
 #align measure_theory.lintegral_comp_eq_lintegral_meas_le_mul_of_measurable MeasureTheory.lintegral_comp_eq_lintegral_meas_le_mul_of_measurable
+-/
 
+#print MeasureTheory.lintegral_comp_eq_lintegral_meas_le_mul /-
 /-- The layer cake formula / Cavalieri's principle / tail probability formula:
 
 Let `f` be a non-negative measurable function on a sigma-finite measure space. Let `G` be an
@@ -216,7 +219,9 @@ theorem lintegral_comp_eq_lintegral_meas_le_mul (μ : Measure α) [SigmaFinite �
     lintegral_comp_eq_lintegral_meas_le_mul_of_measurable μ f_nn f_mble G_intble G_mble
       fun t t_pos => G_nn t
 #align measure_theory.lintegral_comp_eq_lintegral_meas_le_mul MeasureTheory.lintegral_comp_eq_lintegral_meas_le_mul
+-/
 
+#print MeasureTheory.lintegral_eq_lintegral_meas_le /-
 /-- The standard case of the layer cake formula / Cavalieri's principle / tail probability formula:
 
 For a nonnegative function `f` on a sigma-finite measure space, the Lebesgue integral of `f` can
@@ -238,7 +243,9 @@ theorem lintegral_eq_lintegral_meas_le (μ : Measure α) [SigmaFinite μ] (f_nn 
   congr with ω
   simp only [intervalIntegral.integral_const, sub_zero, Algebra.id.smul_eq_mul, mul_one]
 #align measure_theory.lintegral_eq_lintegral_meas_le MeasureTheory.lintegral_eq_lintegral_meas_le
+-/
 
+#print MeasureTheory.lintegral_rpow_eq_lintegral_meas_le_mul /-
 /-- An application of the layer cake formula / Cavalieri's principle / tail probability formula:
 
 For a nonnegative function `f` on a sigma-finite measure space, the Lebesgue integral of `f` can
@@ -273,6 +280,7 @@ theorem lintegral_rpow_eq_lintegral_meas_le_mul (μ : Measure α) [SigmaFinite �
     rw [← ENNReal.ofReal_mul p_pos.le, mul_div_cancel' (f ω ^ p) p_pos.ne.symm]
   · exact ((f_mble.pow measurable_const).div_const p).ennreal_ofReal
 #align measure_theory.lintegral_rpow_eq_lintegral_meas_le_mul MeasureTheory.lintegral_rpow_eq_lintegral_meas_le_mul
+-/
 
 end MeasureTheory
 
@@ -288,6 +296,7 @@ variable {β : Type _} [MeasurableSpace β] [MeasurableSingletonClass β]
 
 namespace Measure
 
+#print Measure.meas_le_ne_meas_lt_subset_meas_pos /-
 theorem meas_le_ne_meas_lt_subset_meas_pos {R : Type _} [LinearOrder R] [MeasurableSpace R]
     [MeasurableSingletonClass R] {g : α → R} (g_mble : Measurable g) {t : R}
     (ht : μ {a : α | t ≤ g a} ≠ μ {a : α | t < g a}) : 0 < μ {a : α | g a = t} :=
@@ -312,24 +321,30 @@ theorem meas_le_ne_meas_lt_subset_meas_pos {R : Type _} [LinearOrder R] [Measura
   rw [Con, add_zero] at μ_add 
   exact ht μ_add
 #align measure.meas_le_ne_meas_lt_subset_meas_pos Measure.meas_le_ne_meas_lt_subset_meas_pos
+-/
 
+#print Measure.countable_meas_le_ne_meas_lt /-
 theorem countable_meas_le_ne_meas_lt [SigmaFinite μ] {R : Type _} [LinearOrder R]
     [MeasurableSpace R] [MeasurableSingletonClass R] {g : α → R} (g_mble : Measurable g) :
     {t : R | μ {a : α | t ≤ g a} ≠ μ {a : α | t < g a}}.Countable :=
   Countable.mono (show _ from fun t ht => meas_le_ne_meas_lt_subset_meas_pos μ g_mble ht)
     (Measure.countable_meas_level_set_pos g_mble)
 #align measure.countable_meas_le_ne_meas_lt Measure.countable_meas_le_ne_meas_lt
+-/
 
+#print Measure.meas_le_ae_eq_meas_lt /-
 theorem meas_le_ae_eq_meas_lt [SigmaFinite μ] {R : Type _} [LinearOrder R] [MeasurableSpace R]
     [MeasurableSingletonClass R] (ν : Measure R) [NoAtoms ν] {g : α → R} (g_mble : Measurable g) :
     (fun t => μ {a : α | t ≤ g a}) =ᵐ[ν] fun t => μ {a : α | t < g a} :=
   Set.Countable.measure_zero (Measure.countable_meas_le_ne_meas_lt μ g_mble) _
 #align measure.meas_le_ae_eq_meas_lt Measure.meas_le_ae_eq_meas_lt
+-/
 
 end Measure
 
 variable {f : α → ℝ} {g : ℝ → ℝ} {s : Set α}
 
+#print lintegral_comp_eq_lintegral_meas_lt_mul /-
 /-- The layer cake formula / Cavalieri's principle / tail probability formula:
 
 Let `f` be a non-negative measurable function on a sigma-finite measure space. Let `G` be an
@@ -353,7 +368,9 @@ theorem lintegral_comp_eq_lintegral_meas_lt_mul (μ : Measure α) [SigmaFinite �
   filter_upwards [Measure.meas_le_ae_eq_meas_lt μ (volume.restrict (Ioi 0)) f_mble] with t ht
   rw [ht]
 #align lintegral_comp_eq_lintegral_meas_lt_mul lintegral_comp_eq_lintegral_meas_lt_mul
+-/
 
+#print lintegral_eq_lintegral_meas_lt /-
 /-- The standard case of the layer cake formula / Cavalieri's principle / tail probability formula:
 
 For a nonnegative function `f` on a sigma-finite measure space, the Lebesgue integral of `f` can
@@ -369,7 +386,9 @@ theorem lintegral_eq_lintegral_meas_lt (μ : Measure α) [SigmaFinite μ] (f_nn 
   filter_upwards [Measure.meas_le_ae_eq_meas_lt μ (volume.restrict (Ioi 0)) f_mble] with t ht
   rw [ht]
 #align lintegral_eq_lintegral_meas_lt lintegral_eq_lintegral_meas_lt
+-/
 
+#print lintegral_rpow_eq_lintegral_meas_lt_mul /-
 /-- An application of the layer cake formula / Cavalieri's principle / tail probability formula:
 
 For a nonnegative function `f` on a sigma-finite measure space, the Lebesgue integral of `f` can
@@ -388,6 +407,7 @@ theorem lintegral_rpow_eq_lintegral_meas_lt_mul (μ : Measure α) [SigmaFinite �
   filter_upwards [Measure.meas_le_ae_eq_meas_lt μ (volume.restrict (Ioi 0)) f_mble] with t ht
   rw [ht]
 #align lintegral_rpow_eq_lintegral_meas_lt_mul lintegral_rpow_eq_lintegral_meas_lt_mul
+-/
 
 end LayercakeLt
 

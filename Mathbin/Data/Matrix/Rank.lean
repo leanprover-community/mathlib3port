@@ -55,23 +55,29 @@ noncomputable def rank (A : Matrix m n R) : ℕ :=
 #align matrix.rank Matrix.rank
 -/
 
+#print Matrix.rank_one /-
 @[simp]
 theorem rank_one [StrongRankCondition R] [DecidableEq n] :
     rank (1 : Matrix n n R) = Fintype.card n := by
   rw [rank, mul_vec_lin_one, LinearMap.range_id, finrank_top, finrank_pi]
 #align matrix.rank_one Matrix.rank_one
+-/
 
+#print Matrix.rank_zero /-
 @[simp]
 theorem rank_zero [Nontrivial R] : rank (0 : Matrix m n R) = 0 := by
   rw [rank, mul_vec_lin_zero, LinearMap.range_zero, finrank_bot]
 #align matrix.rank_zero Matrix.rank_zero
+-/
 
+#print Matrix.rank_le_card_width /-
 theorem rank_le_card_width [StrongRankCondition R] (A : Matrix m n R) : A.rank ≤ Fintype.card n :=
   by
   haveI : Module.Finite R (n → R) := Module.Finite.pi
   haveI : Module.Free R (n → R) := Module.Free.pi _ _
   exact A.mul_vec_lin.finrank_range_le.trans_eq (finrank_pi _)
 #align matrix.rank_le_card_width Matrix.rank_le_card_width
+-/
 
 #print Matrix.rank_le_width /-
 theorem rank_le_width [StrongRankCondition R] {m n : ℕ} (A : Matrix (Fin m) (Fin n) R) :
@@ -80,28 +86,31 @@ theorem rank_le_width [StrongRankCondition R] {m n : ℕ} (A : Matrix (Fin m) (F
 #align matrix.rank_le_width Matrix.rank_le_width
 -/
 
+#print Matrix.rank_mul_le_left /-
 theorem rank_mul_le_left [StrongRankCondition R] (A : Matrix m n R) (B : Matrix n o R) :
     (A ⬝ B).rank ≤ A.rank := by
   rw [rank, rank, mul_vec_lin_mul]
   exact Cardinal.toNat_le_of_le_of_lt_aleph0 (rank_lt_aleph_0 _ _) (LinearMap.rank_comp_le_left _ _)
 #align matrix.rank_mul_le_left Matrix.rank_mul_le_left
+-/
 
-include m_fin
-
+#print Matrix.rank_mul_le_right /-
 theorem rank_mul_le_right [StrongRankCondition R] (A : Matrix l m R) (B : Matrix m n R) :
     (A ⬝ B).rank ≤ B.rank := by
   rw [rank, rank, mul_vec_lin_mul]
   exact
     finrank_le_finrank_of_rank_le_rank (LinearMap.lift_rank_comp_le_right _ _) (rank_lt_aleph_0 _ _)
 #align matrix.rank_mul_le_right Matrix.rank_mul_le_right
+-/
 
-omit m_fin
-
+#print Matrix.rank_mul_le /-
 theorem rank_mul_le [StrongRankCondition R] (A : Matrix m n R) (B : Matrix n o R) :
     (A ⬝ B).rank ≤ min A.rank B.rank :=
   le_min (rank_mul_le_left _ _) (rank_mul_le_right _ _)
 #align matrix.rank_mul_le Matrix.rank_mul_le
+-/
 
+#print Matrix.rank_unit /-
 theorem rank_unit [StrongRankCondition R] [DecidableEq n] (A : (Matrix n n R)ˣ) :
     (A : Matrix n n R).rank = Fintype.card n :=
   by
@@ -109,11 +118,15 @@ theorem rank_unit [StrongRankCondition R] [DecidableEq n] (A : (Matrix n n R)ˣ)
   have := rank_mul_le_left (A : Matrix n n R) (↑A⁻¹ : Matrix n n R)
   rwa [← mul_eq_mul, ← Units.val_mul, mul_inv_self, Units.val_one, rank_one] at this 
 #align matrix.rank_unit Matrix.rank_unit
+-/
 
+#print Matrix.rank_of_isUnit /-
 theorem rank_of_isUnit [StrongRankCondition R] [DecidableEq n] (A : Matrix n n R) (h : IsUnit A) :
     A.rank = Fintype.card n := by obtain ⟨A, rfl⟩ := h; exact rank_unit A
 #align matrix.rank_of_is_unit Matrix.rank_of_isUnit
+-/
 
+#print Matrix.rank_submatrix_le /-
 /-- Taking a subset of the rows and permuting the columns reduces the rank. -/
 theorem rank_submatrix_le [StrongRankCondition R] [Fintype m] (f : n → m) (e : n ≃ m)
     (A : Matrix m m R) : rank (A.submatrix f e) ≤ rank A :=
@@ -123,21 +136,25 @@ theorem rank_submatrix_le [StrongRankCondition R] [Fintype m] (f : n → m) (e :
     LinearEquiv.range, Submodule.map_top]
   exact Submodule.finrank_map_le _ _
 #align matrix.rank_submatrix_le Matrix.rank_submatrix_le
+-/
 
+#print Matrix.rank_reindex /-
 theorem rank_reindex [Fintype m] (e₁ e₂ : m ≃ n) (A : Matrix m m R) :
     rank (reindex e₁ e₂ A) = rank A := by
   rw [rank, rank, mul_vec_lin_reindex, LinearMap.range_comp, LinearMap.range_comp,
     LinearEquiv.range, Submodule.map_top, LinearEquiv.finrank_map_eq]
 #align matrix.rank_reindex Matrix.rank_reindex
+-/
 
+#print Matrix.rank_submatrix /-
 @[simp]
 theorem rank_submatrix [Fintype m] (A : Matrix m m R) (e₁ e₂ : n ≃ m) :
     rank (A.submatrix e₁ e₂) = rank A := by
   simpa only [reindex_apply] using rank_reindex e₁.symm e₂.symm A
 #align matrix.rank_submatrix Matrix.rank_submatrix
+-/
 
-include m_fin
-
+#print Matrix.rank_eq_finrank_range_toLin /-
 theorem rank_eq_finrank_range_toLin [DecidableEq n] {M₁ M₂ : Type _} [AddCommGroup M₁]
     [AddCommGroup M₂] [Module R M₁] [Module R M₂] (A : Matrix m n R) (v₁ : Basis m R M₁)
     (v₂ : Basis n R M₂) : A.rank = finrank R (toLin v₂ v₁ A).range :=
@@ -157,15 +174,16 @@ theorem rank_eq_finrank_range_toLin [DecidableEq n] {M₁ M₂ : Type _} [AddCom
   simp only [LinearMap.comp_apply, e₁, e₂, LinearEquiv.coe_coe, Equiv.refl_apply, aux₁, aux₂,
     LinearMap.coe_single, to_lin_self, LinearEquiv.map_sum, LinearEquiv.map_smul, Basis.equiv_apply]
 #align matrix.rank_eq_finrank_range_to_lin Matrix.rank_eq_finrank_range_toLin
+-/
 
+#print Matrix.rank_le_card_height /-
 theorem rank_le_card_height [StrongRankCondition R] (A : Matrix m n R) : A.rank ≤ Fintype.card m :=
   by
   haveI : Module.Finite R (m → R) := Module.Finite.pi
   haveI : Module.Free R (m → R) := Module.Free.pi _ _
   exact (Submodule.finrank_le _).trans (finrank_pi R).le
 #align matrix.rank_le_card_height Matrix.rank_le_card_height
-
-omit m_fin
+-/
 
 #print Matrix.rank_le_height /-
 theorem rank_le_height [StrongRankCondition R] {m n : ℕ} (A : Matrix (Fin m) (Fin n) R) :
@@ -174,10 +192,12 @@ theorem rank_le_height [StrongRankCondition R] {m n : ℕ} (A : Matrix (Fin m) (
 #align matrix.rank_le_height Matrix.rank_le_height
 -/
 
+#print Matrix.rank_eq_finrank_span_cols /-
 /-- The rank of a matrix is the rank of the space spanned by its columns. -/
 theorem rank_eq_finrank_span_cols (A : Matrix m n R) :
     A.rank = finrank R (Submodule.span R (Set.range Aᵀ)) := by rw [rank, Matrix.range_mulVecLin]
 #align matrix.rank_eq_finrank_span_cols Matrix.rank_eq_finrank_span_cols
+-/
 
 end CommRing
 
@@ -200,6 +220,7 @@ section StarOrderedField
 
 variable [Fintype m] [Field R] [PartialOrder R] [StarOrderedRing R]
 
+#print Matrix.ker_mulVecLin_conjTranspose_mul_self /-
 theorem ker_mulVecLin_conjTranspose_mul_self (A : Matrix m n R) :
     LinearMap.ker (Aᴴ ⬝ A).mulVecLin = LinearMap.ker (mulVecLin A) :=
   by
@@ -212,7 +233,9 @@ theorem ker_mulVecLin_conjTranspose_mul_self (A : Matrix m n R) :
       dot_product_star_self_eq_zero] at h 
   · intro h; rw [h, mul_vec_zero]
 #align matrix.ker_mul_vec_lin_conj_transpose_mul_self Matrix.ker_mulVecLin_conjTranspose_mul_self
+-/
 
+#print Matrix.rank_conjTranspose_mul_self /-
 theorem rank_conjTranspose_mul_self (A : Matrix m n R) : (Aᴴ ⬝ A).rank = A.rank :=
   by
   dsimp only [rank]
@@ -222,7 +245,9 @@ theorem rank_conjTranspose_mul_self (A : Matrix m n R) : (Aᴴ ⬝ A).rank = A.r
   congr 1
   rw [ker_mul_vec_lin_conj_transpose_mul_self]
 #align matrix.rank_conj_transpose_mul_self Matrix.rank_conjTranspose_mul_self
+-/
 
+#print Matrix.rank_conjTranspose /-
 -- this follows the proof here https://math.stackexchange.com/a/81903/1896
 /-- TODO: prove this in greater generality. -/
 @[simp]
@@ -232,12 +257,15 @@ theorem rank_conjTranspose (A : Matrix m n R) : Aᴴ.rank = A.rank :=
       congr_arg _ <| conjTranspose_conjTranspose _)
     ((rank_conjTranspose_mul_self _).symm.trans_le <| rank_mul_le_left _ _)
 #align matrix.rank_conj_transpose Matrix.rank_conjTranspose
+-/
 
+#print Matrix.rank_self_mul_conjTranspose /-
 @[simp]
 theorem rank_self_mul_conjTranspose (A : Matrix m n R) : (A ⬝ Aᴴ).rank = A.rank := by
   simpa only [rank_conj_transpose, conj_transpose_conj_transpose] using
     rank_conj_transpose_mul_self Aᴴ
 #align matrix.rank_self_mul_conj_transpose Matrix.rank_self_mul_conjTranspose
+-/
 
 end StarOrderedField
 
@@ -245,6 +273,7 @@ section LinearOrderedField
 
 variable [Fintype m] [LinearOrderedField R]
 
+#print Matrix.ker_mulVecLin_transpose_mul_self /-
 theorem ker_mulVecLin_transpose_mul_self (A : Matrix m n R) :
     LinearMap.ker (Aᵀ ⬝ A).mulVecLin = LinearMap.ker (mulVecLin A) :=
   by
@@ -256,7 +285,9 @@ theorem ker_mulVecLin_transpose_mul_self (A : Matrix m n R) :
     rwa [dot_product_mul_vec, dot_product_zero, vec_mul_transpose, dot_product_self_eq_zero] at h 
   · intro h; rw [h, mul_vec_zero]
 #align matrix.ker_mul_vec_lin_transpose_mul_self Matrix.ker_mulVecLin_transpose_mul_self
+-/
 
+#print Matrix.rank_transpose_mul_self /-
 theorem rank_transpose_mul_self (A : Matrix m n R) : (Aᵀ ⬝ A).rank = A.rank :=
   by
   dsimp only [rank]
@@ -266,21 +297,27 @@ theorem rank_transpose_mul_self (A : Matrix m n R) : (Aᵀ ⬝ A).rank = A.rank 
   congr 1
   rw [ker_mul_vec_lin_transpose_mul_self]
 #align matrix.rank_transpose_mul_self Matrix.rank_transpose_mul_self
+-/
 
+#print Matrix.rank_transpose /-
 /-- TODO: prove this in greater generality. -/
 @[simp]
 theorem rank_transpose (A : Matrix m n R) : Aᵀ.rank = A.rank :=
   le_antisymm ((rank_transpose_mul_self _).symm.trans_le <| rank_mul_le_left _ _)
     ((rank_transpose_mul_self _).symm.trans_le <| rank_mul_le_left _ _)
 #align matrix.rank_transpose Matrix.rank_transpose
+-/
 
+#print Matrix.rank_self_mul_transpose /-
 @[simp]
 theorem rank_self_mul_transpose (A : Matrix m n R) : (A ⬝ Aᵀ).rank = A.rank := by
   simpa only [rank_transpose, transpose_transpose] using rank_transpose_mul_self Aᵀ
 #align matrix.rank_self_mul_transpose Matrix.rank_self_mul_transpose
+-/
 
 end LinearOrderedField
 
+#print Matrix.rank_eq_finrank_span_row /-
 /-- The rank of a matrix is the rank of the space spanned by its rows.
 
 TODO: prove this in a generality that works for `ℂ` too, not just `ℚ` and `ℝ`. -/
@@ -290,6 +327,7 @@ theorem rank_eq_finrank_span_row [LinearOrderedField R] [Finite m] (A : Matrix m
   cases nonempty_fintype m
   rw [← rank_transpose, rank_eq_finrank_span_cols, transpose_transpose]
 #align matrix.rank_eq_finrank_span_row Matrix.rank_eq_finrank_span_row
+-/
 
 end Matrix
 

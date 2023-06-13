@@ -51,7 +51,6 @@ protected def Lex (x y : ∀ i, β i) : Prop :=
 #align pi.lex Pi.Lex
 -/
 
--- mathport name: «exprΠₗ , »
 notation3"Πₗ "/- This unfortunately results in a type that isn't delta-reduced, so we keep the notation out of the
 basic API, just in case -/
 (...)", "r:(scoped p => Lex ∀ i, p i) => r
@@ -63,10 +62,12 @@ theorem toLex_apply (x : ∀ i, β i) (i : ι) : toLex x i = x i :=
 #align pi.to_lex_apply Pi.toLex_apply
 -/
 
+#print Pi.ofLex_apply /-
 @[simp]
 theorem ofLex_apply (x : Lex (∀ i, β i)) (i : ι) : ofLex x i = x i :=
   rfl
 #align pi.of_lex_apply Pi.ofLex_apply
+-/
 
 #print Pi.lex_lt_of_lt_of_preorder /-
 theorem lex_lt_of_lt_of_preorder [∀ i, Preorder (β i)] {r} (hwf : WellFounded r) {x y : ∀ i, β i}
@@ -136,17 +137,22 @@ variable [LinearOrder ι] [IsWellOrder ι (· < ·)] [∀ i, PartialOrder (β i)
 
 open Function
 
+#print Pi.toLex_monotone /-
 theorem toLex_monotone : Monotone (@toLex (∀ i, β i)) := fun a b h =>
   or_iff_not_imp_left.2 fun hne =>
     let ⟨i, hi, hl⟩ := IsWellFounded.wf.has_min {i | a i ≠ b i} (Function.ne_iff.1 hne)
     ⟨i, fun j hj => by contrapose! hl; exact ⟨j, hl, hj⟩, (h i).lt_of_ne hi⟩
 #align pi.to_lex_monotone Pi.toLex_monotone
+-/
 
+#print Pi.toLex_strictMono /-
 theorem toLex_strictMono : StrictMono (@toLex (∀ i, β i)) := fun a b h =>
   let ⟨i, hi, hl⟩ := IsWellFounded.wf.has_min {i | a i ≠ b i} (Function.ne_iff.1 h.Ne)
   ⟨i, fun j hj => by contrapose! hl; exact ⟨j, hl, hj⟩, (h.le i).lt_of_ne hi⟩
 #align pi.to_lex_strict_mono Pi.toLex_strictMono
+-/
 
+#print Pi.lt_toLex_update_self_iff /-
 @[simp]
 theorem lt_toLex_update_self_iff : toLex x < toLex (update x i a) ↔ x i < a :=
   by
@@ -159,7 +165,9 @@ theorem lt_toLex_update_self_iff : toLex x < toLex (update x i a) ↔ x i < a :=
     exact h.false
   · rwa [update_same] at h 
 #align pi.lt_to_lex_update_self_iff Pi.lt_toLex_update_self_iff
+-/
 
+#print Pi.toLex_update_lt_self_iff /-
 @[simp]
 theorem toLex_update_lt_self_iff : toLex (update x i a) < toLex x ↔ a < x i :=
   by
@@ -172,16 +180,21 @@ theorem toLex_update_lt_self_iff : toLex (update x i a) < toLex x ↔ a < x i :=
     exact h.false
   · rwa [update_same] at h 
 #align pi.to_lex_update_lt_self_iff Pi.toLex_update_lt_self_iff
+-/
 
+#print Pi.le_toLex_update_self_iff /-
 @[simp]
 theorem le_toLex_update_self_iff : toLex x ≤ toLex (update x i a) ↔ x i ≤ a := by
   simp_rw [le_iff_lt_or_eq, lt_to_lex_update_self_iff, toLex_inj, eq_update_self_iff]
 #align pi.le_to_lex_update_self_iff Pi.le_toLex_update_self_iff
+-/
 
+#print Pi.toLex_update_le_self_iff /-
 @[simp]
 theorem toLex_update_le_self_iff : toLex (update x i a) ≤ toLex x ↔ a ≤ x i := by
   simp_rw [le_iff_lt_or_eq, to_lex_update_lt_self_iff, toLex_inj, update_eq_self_iff]
 #align pi.to_lex_update_le_self_iff Pi.toLex_update_le_self_iff
+-/
 
 end PartialOrder
 
@@ -209,6 +222,7 @@ instance [Preorder ι] [∀ i, LT (β i)] [∀ i, DenselyOrdered (β i)] :
     rw [h j hj]
     iterate 2 · rw [a₂.update_noteq hj.ne a]; · rwa [a₂.update_same i a]⟩
 
+#print Pi.Lex.noMaxOrder' /-
 theorem Lex.noMaxOrder' [Preorder ι] [∀ i, LT (β i)] (i : ι) [NoMaxOrder (β i)] :
     NoMaxOrder (Lex (∀ i, β i)) :=
   ⟨fun a => by
@@ -216,6 +230,7 @@ theorem Lex.noMaxOrder' [Preorder ι] [∀ i, LT (β i)] (i : ι) [NoMaxOrder (�
     obtain ⟨b, hb⟩ := exists_gt (a i)
     exact ⟨a.update i b, i, fun j hj => (a.update_noteq hj.Ne b).symm, by rwa [a.update_same i b]⟩⟩
 #align pi.lex.no_max_order' Pi.Lex.noMaxOrder'
+-/
 
 instance [LinearOrder ι] [IsWellOrder ι (· < ·)] [Nonempty ι] [∀ i, PartialOrder (β i)]
     [∀ i, NoMaxOrder (β i)] : NoMaxOrder (Lex (∀ i, β i)) :=

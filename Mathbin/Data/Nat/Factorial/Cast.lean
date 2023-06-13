@@ -36,9 +36,11 @@ section Semiring
 
 variable [Semiring S] (a b : ℕ)
 
+#print Nat.cast_ascFactorial /-
 theorem cast_ascFactorial : (a.ascFactorial b : S) = (pochhammer S b).eval (a + 1) := by
   rw [← pochhammer_nat_eq_ascFactorial, pochhammer_eval_cast, Nat.cast_add, Nat.cast_one]
 #align nat.cast_asc_factorial Nat.cast_ascFactorial
+-/
 
 #print Nat.cast_descFactorial /-
 theorem cast_descFactorial : (a.descFactorial b : S) = (pochhammer S b).eval (a - (b - 1) : ℕ) :=
@@ -66,6 +68,7 @@ section Ring
 
 variable [Ring S] (a b : ℕ)
 
+#print Nat.cast_descFactorial_two /-
 /-- Convenience lemma. The `a - 1` is not using truncated subtraction, as opposed to the definition
 of `nat.desc_factorial` as a natural. -/
 theorem cast_descFactorial_two : (a.descFactorial 2 : S) = a * (a - 1) :=
@@ -78,6 +81,7 @@ theorem cast_descFactorial_two : (a.descFactorial 2 : S) = a * (a - 1) :=
       Polynomial.X_mul, Polynomial.eval_mul_X, Polynomial.eval_add, Polynomial.eval_X, cast_one,
       Polynomial.eval_one]
 #align nat.cast_desc_factorial_two Nat.cast_descFactorial_two
+-/
 
 end Ring
 

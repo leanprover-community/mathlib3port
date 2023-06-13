@@ -46,7 +46,6 @@ structure ContinuousOrderHom (α β : Type _) [Preorder α] [Preorder β] [Topol
 #align continuous_order_hom ContinuousOrderHom
 -/
 
--- mathport name: «expr →Co »
 infixr:25 " →Co " => ContinuousOrderHom
 
 section
@@ -110,30 +109,40 @@ directly. -/
 instance : CoeFun (α →Co β) fun _ => α → β :=
   FunLike.hasCoeToFun
 
+#print ContinuousOrderHom.toFun_eq_coe /-
 @[simp]
 theorem toFun_eq_coe {f : α →Co β} : f.toFun = (f : α → β) :=
   rfl
 #align continuous_order_hom.to_fun_eq_coe ContinuousOrderHom.toFun_eq_coe
+-/
 
+#print ContinuousOrderHom.ext /-
 @[ext]
 theorem ext {f g : α →Co β} (h : ∀ a, f a = g a) : f = g :=
   FunLike.ext f g h
 #align continuous_order_hom.ext ContinuousOrderHom.ext
+-/
 
+#print ContinuousOrderHom.copy /-
 /-- Copy of a `continuous_order_hom` with a new `continuous_map` equal to the old one. Useful to fix
 definitional equalities. -/
 protected def copy (f : α →Co β) (f' : α → β) (h : f' = f) : α →Co β :=
   ⟨f.toOrderHom.copy f' <| h, h.symm.subst f.continuous_toFun⟩
 #align continuous_order_hom.copy ContinuousOrderHom.copy
+-/
 
+#print ContinuousOrderHom.coe_copy /-
 @[simp]
 theorem coe_copy (f : α →Co β) (f' : α → β) (h : f' = f) : ⇑(f.copy f' h) = f' :=
   rfl
 #align continuous_order_hom.coe_copy ContinuousOrderHom.coe_copy
+-/
 
+#print ContinuousOrderHom.copy_eq /-
 theorem copy_eq (f : α →Co β) (f' : α → β) (h : f' = f) : f.copy f' h = f :=
   FunLike.ext' h
 #align continuous_order_hom.copy_eq ContinuousOrderHom.copy_eq
+-/
 
 variable (α)
 
@@ -147,17 +156,21 @@ protected def id : α →Co α :=
 instance : Inhabited (α →Co α) :=
   ⟨ContinuousOrderHom.id _⟩
 
+#print ContinuousOrderHom.coe_id /-
 @[simp]
 theorem coe_id : ⇑(ContinuousOrderHom.id α) = id :=
   rfl
 #align continuous_order_hom.coe_id ContinuousOrderHom.coe_id
+-/
 
 variable {α}
 
+#print ContinuousOrderHom.id_apply /-
 @[simp]
 theorem id_apply (a : α) : ContinuousOrderHom.id α a = a :=
   rfl
 #align continuous_order_hom.id_apply ContinuousOrderHom.id_apply
+-/
 
 #print ContinuousOrderHom.comp /-
 /-- Composition of `continuous_order_hom`s as a `continuous_order_hom`. -/
@@ -166,41 +179,55 @@ def comp (f : β →Co γ) (g : α →Co β) : ContinuousOrderHom α γ :=
 #align continuous_order_hom.comp ContinuousOrderHom.comp
 -/
 
+#print ContinuousOrderHom.coe_comp /-
 @[simp]
 theorem coe_comp (f : β →Co γ) (g : α →Co β) : (f.comp g : α → γ) = f ∘ g :=
   rfl
 #align continuous_order_hom.coe_comp ContinuousOrderHom.coe_comp
+-/
 
+#print ContinuousOrderHom.comp_apply /-
 @[simp]
 theorem comp_apply (f : β →Co γ) (g : α →Co β) (a : α) : (f.comp g) a = f (g a) :=
   rfl
 #align continuous_order_hom.comp_apply ContinuousOrderHom.comp_apply
+-/
 
+#print ContinuousOrderHom.comp_assoc /-
 @[simp]
 theorem comp_assoc (f : γ →Co δ) (g : β →Co γ) (h : α →Co β) :
     (f.comp g).comp h = f.comp (g.comp h) :=
   rfl
 #align continuous_order_hom.comp_assoc ContinuousOrderHom.comp_assoc
+-/
 
+#print ContinuousOrderHom.comp_id /-
 @[simp]
 theorem comp_id (f : α →Co β) : f.comp (ContinuousOrderHom.id α) = f :=
   ext fun a => rfl
 #align continuous_order_hom.comp_id ContinuousOrderHom.comp_id
+-/
 
+#print ContinuousOrderHom.id_comp /-
 @[simp]
 theorem id_comp (f : α →Co β) : (ContinuousOrderHom.id β).comp f = f :=
   ext fun a => rfl
 #align continuous_order_hom.id_comp ContinuousOrderHom.id_comp
+-/
 
+#print ContinuousOrderHom.cancel_right /-
 theorem cancel_right {g₁ g₂ : β →Co γ} {f : α →Co β} (hf : Surjective f) :
     g₁.comp f = g₂.comp f ↔ g₁ = g₂ :=
   ⟨fun h => ext <| hf.forall.2 <| FunLike.ext_iff.1 h, congr_arg _⟩
 #align continuous_order_hom.cancel_right ContinuousOrderHom.cancel_right
+-/
 
+#print ContinuousOrderHom.cancel_left /-
 theorem cancel_left {g : β →Co γ} {f₁ f₂ : α →Co β} (hg : Injective g) :
     g.comp f₁ = g.comp f₂ ↔ f₁ = f₂ :=
   ⟨fun h => ext fun a => hg <| by rw [← comp_apply, h, comp_apply], congr_arg _⟩
 #align continuous_order_hom.cancel_left ContinuousOrderHom.cancel_left
+-/
 
 instance : Preorder (α →Co β) :=
   Preorder.lift (coeFn : (α →Co β) → α → β)

@@ -201,15 +201,19 @@ theorem isEmpty_pi {π : α → Sort _} : IsEmpty (∀ a, π a) ↔ ∃ a, IsEmp
 #align is_empty_pi isEmpty_pi
 -/
 
+#print isEmpty_sigma /-
 @[simp]
 theorem isEmpty_sigma {α} {E : α → Type _} : IsEmpty (Sigma E) ↔ ∀ a, IsEmpty (E a) := by
   simp only [← not_nonempty_iff, nonempty_sigma, not_exists]
 #align is_empty_sigma isEmpty_sigma
+-/
 
+#print isEmpty_psigma /-
 @[simp]
 theorem isEmpty_psigma {α} {E : α → Sort _} : IsEmpty (PSigma E) ↔ ∀ a, IsEmpty (E a) := by
   simp only [← not_nonempty_iff, nonempty_psigma, not_exists]
 #align is_empty_psigma isEmpty_psigma
+-/
 
 #print isEmpty_subtype /-
 @[simp]
@@ -218,10 +222,12 @@ theorem isEmpty_subtype (p : α → Prop) : IsEmpty (Subtype p) ↔ ∀ x, ¬p x
 #align is_empty_subtype isEmpty_subtype
 -/
 
+#print isEmpty_prod /-
 @[simp]
 theorem isEmpty_prod {α β : Type _} : IsEmpty (α × β) ↔ IsEmpty α ∨ IsEmpty β := by
   simp only [← not_nonempty_iff, nonempty_prod, not_and_or]
 #align is_empty_prod isEmpty_prod
+-/
 
 #print isEmpty_pprod /-
 @[simp]
@@ -230,20 +236,26 @@ theorem isEmpty_pprod : IsEmpty (PProd α β) ↔ IsEmpty α ∨ IsEmpty β := b
 #align is_empty_pprod isEmpty_pprod
 -/
 
+#print isEmpty_sum /-
 @[simp]
 theorem isEmpty_sum {α β} : IsEmpty (Sum α β) ↔ IsEmpty α ∧ IsEmpty β := by
   simp only [← not_nonempty_iff, nonempty_sum, not_or]
 #align is_empty_sum isEmpty_sum
+-/
 
+#print isEmpty_psum /-
 @[simp]
 theorem isEmpty_psum {α β} : IsEmpty (PSum α β) ↔ IsEmpty α ∧ IsEmpty β := by
   simp only [← not_nonempty_iff, nonempty_psum, not_or]
 #align is_empty_psum isEmpty_psum
+-/
 
+#print isEmpty_ulift /-
 @[simp]
 theorem isEmpty_ulift {α} : IsEmpty (ULift α) ↔ IsEmpty α := by
   simp only [← not_nonempty_iff, nonempty_ulift]
 #align is_empty_ulift isEmpty_ulift
+-/
 
 #print isEmpty_plift /-
 @[simp]
@@ -275,8 +287,10 @@ theorem not_isEmpty_of_nonempty [h : Nonempty α] : ¬IsEmpty α :=
 
 variable {α}
 
+#print Function.extend_of_isEmpty /-
 theorem Function.extend_of_isEmpty [IsEmpty α] (f : α → β) (g : α → γ) (h : β → γ) :
     Function.extend f g h = h :=
   funext fun x => Function.extend_apply' _ _ _ fun ⟨a, h⟩ => isEmptyElim a
 #align function.extend_of_empty Function.extend_of_isEmpty
+-/
 

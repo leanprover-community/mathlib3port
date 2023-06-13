@@ -48,6 +48,7 @@ def IsDedekindDomain.HeightOneSpectrum.maxPowDividing (I : Ideal R) : Ideal R :=
 #align is_dedekind_domain.height_one_spectrum.max_pow_dividing IsDedekindDomain.HeightOneSpectrum.maxPowDividing
 -/
 
+#print Ideal.finite_factors /-
 /-- Only finitely many maximal ideals of `R` divide a given nonzero ideal. -/
 theorem Ideal.finite_factors {I : Ideal R} (hI : I ≠ 0) :
     {v : HeightOneSpectrum R | v.asIdeal ∣ I}.Finite :=
@@ -60,7 +61,9 @@ theorem Ideal.finite_factors {I : Ideal R} (hI : I ≠ 0) :
   simp only at hvw 
   exact Subtype.coe_injective ((height_one_spectrum.ext_iff ↑v ↑w).mpr hvw)
 #align ideal.finite_factors Ideal.finite_factors
+-/
 
+#print Associates.finite_factors /-
 /-- For every nonzero ideal `I` of `v`, there are finitely many maximal ideals `v` such that the
   multiplicity of `v` in the factorization of `I`, denoted `val_v(I)`, is nonzero. -/
 theorem Associates.finite_factors {I : Ideal R} (hI : I ≠ 0) :
@@ -78,9 +81,11 @@ theorem Associates.finite_factors {I : Ideal R} (hI : I ≠ 0) :
   rw [Filter.eventually_cofinite, h_supp]
   exact Ideal.finite_factors hI
 #align associates.finite_factors Associates.finite_factors
+-/
 
 namespace Ideal
 
+#print Ideal.finite_mulSupport /-
 /-- For every nonzero ideal `I` of `v`, there are finitely many maximal ideals `v` such that
   `v^(val_v(I))` is not the unit ideal. -/
 theorem finite_mulSupport {I : Ideal R} (hI : I ≠ 0) :
@@ -97,7 +102,9 @@ theorem finite_mulSupport {I : Ideal R} (hI : I ≠ 0) :
     exact hv hv'
   finite.subset (filter.eventually_cofinite.mp (Associates.finite_factors hI)) h_subset
 #align ideal.finite_mul_support Ideal.finite_mulSupport
+-/
 
+#print Ideal.finite_mulSupport_coe /-
 /-- For every nonzero ideal `I` of `v`, there are finitely many maximal ideals `v` such that
 `v^(val_v(I))`, regarded as a fractional ideal, is not `(1)`. -/
 theorem finite_mulSupport_coe {I : Ideal R} (hI : I ≠ 0) :
@@ -109,7 +116,9 @@ theorem finite_mulSupport_coe {I : Ideal R} (hI : I ≠ 0) :
   simp_rw [Ne.def, zpow_ofNat, ← FractionalIdeal.coeIdeal_pow, FractionalIdeal.coeIdeal_eq_one]
   exact finite_mul_support hI
 #align ideal.finite_mul_support_coe Ideal.finite_mulSupport_coe
+-/
 
+#print Ideal.finite_mulSupport_inv /-
 /-- For every nonzero ideal `I` of `v`, there are finitely many maximal ideals `v` such that
 `v^-(val_v(I))` is not the unit ideal. -/
 theorem finite_mulSupport_inv {I : Ideal R} (hI : I ≠ 0) :
@@ -121,6 +130,7 @@ theorem finite_mulSupport_inv {I : Ideal R} (hI : I ≠ 0) :
   simp_rw [zpow_neg, Ne.def, inv_eq_one]
   exact finite_mul_support_coe hI
 #align ideal.finite_mul_support_inv Ideal.finite_mulSupport_inv
+-/
 
 #print Ideal.finprod_not_dvd /-
 /-- For every nonzero ideal `I` of `v`, `v^(val_v(I) + 1)` does not divide `∏_v v^(val_v(I))`. -/
@@ -178,6 +188,7 @@ theorem finprod_count (I : Ideal R) (hI : I ≠ 0) :
 #align ideal.finprod_count Ideal.finprod_count
 -/
 
+#print Ideal.finprod_heightOneSpectrum_factorization /-
 /-- The ideal `I` equals the finprod `∏_v v^(val_v(I))`. -/
 theorem finprod_heightOneSpectrum_factorization (I : Ideal R) (hI : I ≠ 0) :
     ∏ᶠ v : HeightOneSpectrum R, v.maxPowDividing I = I :=
@@ -194,7 +205,9 @@ theorem finprod_heightOneSpectrum_factorization (I : Ideal R) (hI : I ≠ 0) :
     Ideal.finprod_count
       ⟨J, Ideal.isPrime_of_prime (irreducible_iff_prime.mp hv), Irreducible.ne_zero hv⟩ I hI
 #align ideal.finprod_height_one_spectrum_factorization Ideal.finprod_heightOneSpectrum_factorization
+-/
 
+#print Ideal.finprod_heightOneSpectrum_factorization_coe /-
 /-- The ideal `I` equals the finprod `∏_v v^(val_v(I))`, when both sides are regarded as fractional
 ideals of `R`. -/
 theorem finprod_heightOneSpectrum_factorization_coe (I : Ideal R) (hI : I ≠ 0) :
@@ -208,6 +221,7 @@ theorem finprod_heightOneSpectrum_factorization_coe (I : Ideal R) (hI : I ≠ 0)
   simp_rw [IsDedekindDomain.HeightOneSpectrum.maxPowDividing, FractionalIdeal.coeIdeal_pow,
     zpow_ofNat]
 #align ideal.finprod_height_one_spectrum_factorization_coe Ideal.finprod_heightOneSpectrum_factorization_coe
+-/
 
 end Ideal
 

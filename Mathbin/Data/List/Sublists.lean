@@ -186,6 +186,7 @@ theorem sublistsAux_cons_append (l₁ l₂ : List α) :
   rw [← bind_ret_eq_map, sublists_aux₁_bind]; exact (append_nil _).symm
 #align list.sublists_aux_cons_append List.sublistsAux_cons_append
 
+#print List.sublists_append /-
 theorem sublists_append (l₁ l₂ : List α) :
     sublists (l₁ ++ l₂) = do
       let x ← sublists l₂
@@ -196,6 +197,7 @@ theorem sublists_append (l₁ l₂ : List α) :
       constructor <;>
     rfl
 #align list.sublists_append List.sublists_append
+-/
 
 #print List.sublists_concat /-
 @[simp]
@@ -292,6 +294,7 @@ def sublistsLen {α : Type _} (n : ℕ) (l : List α) : List (List α) :=
 #align list.sublists_len List.sublistsLen
 -/
 
+#print List.sublistsLenAux_append /-
 theorem sublistsLenAux_append {α β γ : Type _} :
     ∀ (n : ℕ) (l : List α) (f : List α → β) (g : β → γ) (r : List β) (s : List γ),
       sublistsLenAux n l (g ∘ f) (r.map g ++ s) = (sublistsLenAux n l f r).map g ++ s
@@ -302,15 +305,20 @@ theorem sublistsLenAux_append {α β γ : Type _} :
     rw [show (g ∘ f) ∘ List.cons a = g ∘ f ∘ List.cons a by rfl, sublists_len_aux_append,
       sublists_len_aux_append]
 #align list.sublists_len_aux_append List.sublistsLenAux_append
+-/
 
+#print List.sublistsLenAux_eq /-
 theorem sublistsLenAux_eq {α β : Type _} (l : List α) (n) (f : List α → β) (r) :
     sublistsLenAux n l f r = (sublistsLen n l).map f ++ r := by
   rw [sublists_len, ← sublists_len_aux_append] <;> rfl
 #align list.sublists_len_aux_eq List.sublistsLenAux_eq
+-/
 
+#print List.sublistsLenAux_zero /-
 theorem sublistsLenAux_zero {α : Type _} (l : List α) (f : List α → β) (r) :
     sublistsLenAux 0 l f r = f [] :: r := by cases l <;> rfl
 #align list.sublists_len_aux_zero List.sublistsLenAux_zero
+-/
 
 #print List.sublistsLen_zero /-
 @[simp]

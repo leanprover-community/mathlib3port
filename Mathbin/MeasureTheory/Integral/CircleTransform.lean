@@ -37,6 +37,7 @@ variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℂ E] (R : ℝ) (z w 
 
 namespace Complex
 
+#print Complex.circleTransform /-
 /-- Given a function `f : ℂ → E`, `circle_transform R z w f` is the functions mapping `θ` to
 `(2 * ↑π * I)⁻¹ • deriv (circle_map z R) θ • ((circle_map z R θ) - w)⁻¹ • f (circle_map z R θ)`.
 
@@ -45,12 +46,16 @@ If `f` is differentiable and `w` is in the interior of the ball, then the integr
 def circleTransform (f : ℂ → E) (θ : ℝ) : E :=
   (2 * ↑π * I)⁻¹ • deriv (circleMap z R) θ • (circleMap z R θ - w)⁻¹ • f (circleMap z R θ)
 #align complex.circle_transform Complex.circleTransform
+-/
 
+#print Complex.circleTransformDeriv /-
 /-- The derivative of `circle_transform` w.r.t `w`.-/
 def circleTransformDeriv (f : ℂ → E) (θ : ℝ) : E :=
   (2 * ↑π * I)⁻¹ • deriv (circleMap z R) θ • ((circleMap z R θ - w) ^ 2)⁻¹ • f (circleMap z R θ)
 #align complex.circle_transform_deriv Complex.circleTransformDeriv
+-/
 
+#print Complex.circleTransformDeriv_periodic /-
 theorem circleTransformDeriv_periodic (f : ℂ → E) :
     Periodic (circleTransformDeriv R z w f) (2 * π) :=
   by
@@ -61,7 +66,9 @@ theorem circleTransformDeriv_periodic (f : ℂ → E) :
   congr 2
   simp [this]
 #align complex.circle_transform_deriv_periodic Complex.circleTransformDeriv_periodic
+-/
 
+#print Complex.circleTransformDeriv_eq /-
 theorem circleTransformDeriv_eq (f : ℂ → E) :
     circleTransformDeriv R z w f = fun θ => (circleMap z R θ - w)⁻¹ • circleTransform R z w f θ :=
   by
@@ -72,7 +79,9 @@ theorem circleTransformDeriv_eq (f : ℂ → E) :
   congr
   ring
 #align complex.circle_transform_deriv_eq Complex.circleTransformDeriv_eq
+-/
 
+#print Complex.integral_circleTransform /-
 theorem integral_circleTransform [CompleteSpace E] (f : ℂ → E) :
     ∫ θ : ℝ in 0 ..2 * π, circleTransform R z w f θ =
       (2 * ↑π * I)⁻¹ • ∮ z in C(z, R), (z - w)⁻¹ • f z :=
@@ -80,7 +89,9 @@ theorem integral_circleTransform [CompleteSpace E] (f : ℂ → E) :
   simp_rw [circle_transform, circleIntegral, deriv_circleMap, circleMap]
   simp
 #align complex.integral_circle_transform Complex.integral_circleTransform
+-/
 
+#print Complex.continuous_circleTransform /-
 theorem continuous_circleTransform {R : ℝ} (hR : 0 < R) {f : ℂ → E} {z w : ℂ}
     (hf : ContinuousOn f <| sphere z R) (hw : w ∈ ball z R) :
     Continuous (circleTransform R z w f) :=
@@ -92,7 +103,9 @@ theorem continuous_circleTransform {R : ℝ} (hR : 0 < R) {f : ℂ → E} {z w :
   · apply ContinuousOn.comp_continuous hf (continuous_circleMap z R)
     exact fun _ => (circleMap_mem_sphere _ hR.le) _
 #align complex.continuous_circle_transform Complex.continuous_circleTransform
+-/
 
+#print Complex.continuous_circleTransformDeriv /-
 theorem continuous_circleTransformDeriv {R : ℝ} (hR : 0 < R) {f : ℂ → E} {z w : ℂ}
     (hf : ContinuousOn f (sphere z R)) (hw : w ∈ ball z R) :
     Continuous (circleTransformDeriv R z w f) :=
@@ -100,6 +113,7 @@ theorem continuous_circleTransformDeriv {R : ℝ} (hR : 0 < R) {f : ℂ → E} {
   rw [circle_transform_deriv_eq]
   exact (continuous_circleMap_inv hw).smul (continuous_circle_transform hR hf hw)
 #align complex.continuous_circle_transform_deriv Complex.continuous_circleTransformDeriv
+-/
 
 #print Complex.circleTransformBoundingFunction /-
 /-- A useful bound for circle integrals (with complex codomain)-/
@@ -109,6 +123,7 @@ def circleTransformBoundingFunction (R : ℝ) (z : ℂ) (w : ℂ × ℝ) : ℂ :
 -/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print Complex.continuousOn_prod_circle_transform_function /-
 theorem continuousOn_prod_circle_transform_function {R r : ℝ} (hr : r < R) {z : ℂ} :
     ContinuousOn (fun w : ℂ × ℝ => (circleMap z R w.snd - w.fst)⁻¹ ^ 2) (closedBall z r ×ˢ univ) :=
   by
@@ -122,9 +137,11 @@ theorem continuousOn_prod_circle_transform_function {R r : ℝ} (hr : r < R) {z 
   have ha2 : a ∈ ball z R := by simp at *; linarith
   exact sub_ne_zero.2 (circleMap_ne_mem_ball ha2 b)
 #align complex.continuous_on_prod_circle_transform_function Complex.continuousOn_prod_circle_transform_function
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print Complex.continuousOn_abs_circleTransformBoundingFunction /-
 theorem continuousOn_abs_circleTransformBoundingFunction {R r : ℝ} (hr : r < R) (z : ℂ) :
     ContinuousOn (abs ∘ fun t => circleTransformBoundingFunction R z t) (closedBall z r ×ˢ univ) :=
   by
@@ -140,11 +157,13 @@ theorem continuousOn_abs_circleTransformBoundingFunction {R r : ℝ} (hr : r < R
   show maps_to _ _ (⊤ : Set ℂ)
   simp [maps_to]
 #align complex.continuous_on_abs_circle_transform_bounding_function Complex.continuousOn_abs_circleTransformBoundingFunction
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print Complex.abs_circleTransformBoundingFunction_le /-
 theorem abs_circleTransformBoundingFunction_le {R r : ℝ} (hr : r < R) (hr' : 0 ≤ r) (z : ℂ) :
     ∃ x : closedBall z r ×ˢ [0, 2 * π],
       ∀ y : closedBall z r ×ˢ [0, 2 * π],
@@ -161,7 +180,9 @@ theorem abs_circleTransformBoundingFunction_le {R r : ℝ} (hr : r < R) (hr' : 0
         (by intro z; simp only [mem_prod, mem_closed_ball, mem_univ, and_true_iff, and_imp]; tauto))
   simpa only [SetCoe.forall, Subtype.coe_mk, SetCoe.exists]
 #align complex.abs_circle_transform_bounding_function_le Complex.abs_circleTransformBoundingFunction_le
+-/
 
+#print Complex.circleTransformDeriv_bound /-
 /-- The derivative of a `circle_transform` is locally bounded. -/
 theorem circleTransformDeriv_bound {R : ℝ} (hR : 0 < R) {z x : ℂ} {f : ℂ → ℂ} (hx : x ∈ ball z R)
     (hf : ContinuousOn f (sphere z R)) :
@@ -200,6 +221,7 @@ theorem circleTransformDeriv_bound {R : ℝ} (hR : 0 < R) {z x : ℂ} {f : ℂ �
     Prod.forall, NormedSpace.sphere_nonempty, mem_sphere_iff_norm] at *
   exact this
 #align complex.circle_transform_deriv_bound Complex.circleTransformDeriv_bound
+-/
 
 end Complex
 

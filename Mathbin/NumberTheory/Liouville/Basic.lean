@@ -91,6 +91,7 @@ open Polynomial Metric Set Real RingHom
 
 open scoped Polynomial
 
+#print Liouville.exists_one_le_pow_mul_dist /-
 /-- Let `Z, N` be types, let `R` be a metric space, let `α : R` be a point and let
 `j : Z → N → R` be a function.  We aim to estimate how close we can get to `α`, while staying
 in the image of `j`.  The points `j z a` of `R` in the image of `j` come with a "cost" equal to
@@ -137,7 +138,9 @@ theorem exists_one_le_pow_mul_dist {Z N R : Type _} [PseudoMetricSpace R] {d : N
     refine' mul_le_mul_of_nonneg_left ((B this).trans _) (zero_le_one.trans (d0 a))
     exact mul_le_mul_of_nonneg_left (le_max_right _ M) dist_nonneg
 #align liouville.exists_one_le_pow_mul_dist Liouville.exists_one_le_pow_mul_dist
+-/
 
+#print Liouville.exists_pos_real_of_irrational_root /-
 theorem exists_pos_real_of_irrational_root {α : ℝ} (ha : Irrational α) {f : ℤ[X]} (f0 : f ≠ 0)
     (fa : eval α (map (algebraMap ℤ ℝ) f) = 0) :
     ∃ A : ℝ, 0 < A ∧ ∀ a : ℤ, ∀ b : ℕ, (1 : ℝ) ≤ (b + 1) ^ f.natDegree * (|α - a / (b + 1)| * A) :=
@@ -191,7 +194,9 @@ theorem exists_pos_real_of_irrational_root {α : ℝ} (ha : Irrational α) {f : 
     refine' ⟨hq, finset.mem_coe.mp (multiset.mem_to_finset.mpr _)⟩
     exact (mem_roots fR0).mpr (is_root.def.mpr hy)
 #align liouville.exists_pos_real_of_irrational_root Liouville.exists_pos_real_of_irrational_root
+-/
 
+#print Liouville.transcendental /-
 /-- **Liouville's Theorem** -/
 protected theorem transcendental {x : ℝ} (lx : Liouville x) : Transcendental ℤ x :=
   by
@@ -235,6 +240,7 @@ protected theorem transcendental {x : ℝ} (lx : Liouville x) : Transcendental �
       div_le_iff hA] at h 
     exact int.coe_nat_lt.mp b1
 #align liouville.transcendental Liouville.transcendental
+-/
 
 end Liouville
 

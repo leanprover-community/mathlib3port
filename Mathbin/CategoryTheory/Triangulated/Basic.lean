@@ -41,6 +41,7 @@ We work in a category `C` equipped with a shift.
 -/
 variable (C : Type u) [Category.{v} C] [HasShift C ℤ]
 
+#print CategoryTheory.Pretriangulated.Triangle /-
 /-- A triangle in `C` is a sextuple `(X,Y,Z,f,g,h)` where `X,Y,Z` are objects of `C`,
 and `f : X ⟶ Y`, `g : Y ⟶ Z`, `h : Z ⟶ X⟦1⟧` are morphisms in `C`.
 See <https://stacks.math.columbia.edu/tag/0144>.
@@ -53,9 +54,11 @@ structure Triangle where mk' ::
   mor₂ : obj₂ ⟶ obj₃
   mor₃ : obj₃ ⟶ obj₁⟦(1 : ℤ)⟧
 #align category_theory.pretriangulated.triangle CategoryTheory.Pretriangulated.Triangle
+-/
 
 variable {C}
 
+#print CategoryTheory.Pretriangulated.Triangle.mk /-
 /-- A triangle `(X,Y,Z,f,g,h)` in `C` is defined by the morphisms `f : X ⟶ Y`, `g : Y ⟶ Z`
 and `h : Z ⟶ X⟦1⟧`.
 -/
@@ -69,6 +72,7 @@ def Triangle.mk {X Y Z : C} (f : X ⟶ Y) (g : Y ⟶ Z) (h : Z ⟶ X⟦(1 : ℤ)
   mor₂ := g
   mor₃ := h
 #align category_theory.pretriangulated.triangle.mk CategoryTheory.Pretriangulated.Triangle.mk
+-/
 
 section
 
@@ -79,15 +83,18 @@ open scoped ZeroObject
 instance : Inhabited (Triangle C) :=
   ⟨⟨0, 0, 0, 0, 0, 0⟩⟩
 
+#print CategoryTheory.Pretriangulated.contractibleTriangle /-
 /-- For each object in `C`, there is a triangle of the form `(X,X,0,𝟙 X,0,0)`
 -/
 @[simps]
 def contractibleTriangle (X : C) : Triangle C :=
   Triangle.mk (𝟙 X) (0 : X ⟶ 0) 0
 #align category_theory.pretriangulated.contractible_triangle CategoryTheory.Pretriangulated.contractibleTriangle
+-/
 
 end
 
+#print CategoryTheory.Pretriangulated.TriangleMorphism /-
 /-- A morphism of triangles `(X,Y,Z,f,g,h) ⟶ (X',Y',Z',f',g',h')` in `C` is a triple of morphisms
 `a : X ⟶ X'`, `b : Y ⟶ Y'`, `c : Z ⟶ Z'` such that
 `a ≫ f' = f ≫ b`, `b ≫ g' = g ≫ c`, and `a⟦1⟧' ≫ h = h' ≫ c`.
@@ -112,6 +119,7 @@ structure TriangleMorphism (T₁ : Triangle C) (T₂ : Triangle C) where
   comm₂' : T₁.mor₂ ≫ hom₃ = hom₂ ≫ T₂.mor₂ := by obviously
   comm₃' : T₁.mor₃ ≫ hom₁⟦1⟧' = hom₃ ≫ T₂.mor₃ := by obviously
 #align category_theory.pretriangulated.triangle_morphism CategoryTheory.Pretriangulated.TriangleMorphism
+-/
 
 restate_axiom triangle_morphism.comm₁'
 
@@ -121,6 +129,7 @@ restate_axiom triangle_morphism.comm₃'
 
 attribute [simp, reassoc] triangle_morphism.comm₁ triangle_morphism.comm₂ triangle_morphism.comm₃
 
+#print CategoryTheory.Pretriangulated.triangleMorphismId /-
 /-- The identity triangle morphism.
 -/
 @[simps]
@@ -130,12 +139,14 @@ def triangleMorphismId (T : Triangle C) : TriangleMorphism T T
   hom₂ := 𝟙 T.obj₂
   hom₃ := 𝟙 T.obj₃
 #align category_theory.pretriangulated.triangle_morphism_id CategoryTheory.Pretriangulated.triangleMorphismId
+-/
 
 instance (T : Triangle C) : Inhabited (TriangleMorphism T T) :=
   ⟨triangleMorphismId T⟩
 
 variable {T₁ T₂ T₃ : Triangle C}
 
+#print CategoryTheory.Pretriangulated.TriangleMorphism.comp /-
 /-- Composition of triangle morphisms gives a triangle morphism.
 -/
 @[simps]
@@ -145,7 +156,9 @@ def TriangleMorphism.comp (f : TriangleMorphism T₁ T₂) (g : TriangleMorphism
   hom₂ := f.hom₂ ≫ g.hom₂
   hom₃ := f.hom₃ ≫ g.hom₃
 #align category_theory.pretriangulated.triangle_morphism.comp CategoryTheory.Pretriangulated.TriangleMorphism.comp
+-/
 
+#print CategoryTheory.Pretriangulated.triangleCategory /-
 /-- Triangles with triangle morphisms form a category.
 -/
 @[simps]
@@ -155,7 +168,9 @@ instance triangleCategory : Category (Triangle C)
   id A := triangleMorphismId A
   comp A B C f g := f.comp g
 #align category_theory.pretriangulated.triangle_category CategoryTheory.Pretriangulated.triangleCategory
+-/
 
+#print CategoryTheory.Pretriangulated.Triangle.homMk /-
 /-- a constructor for morphisms of triangles -/
 @[simps]
 def Triangle.homMk (A B : Triangle C) (hom₁ : A.obj₁ ⟶ B.obj₁) (hom₂ : A.obj₂ ⟶ B.obj₂)
@@ -168,7 +183,9 @@ def Triangle.homMk (A B : Triangle C) (hom₁ : A.obj₁ ⟶ B.obj₁) (hom₂ :
     comm₂' := comm₂
     comm₃' := comm₃ }
 #align category_theory.pretriangulated.triangle.hom_mk CategoryTheory.Pretriangulated.Triangle.homMk
+-/
 
+#print CategoryTheory.Pretriangulated.Triangle.isoMk /-
 /-- a constructor for isomorphisms of triangles -/
 @[simps]
 def Triangle.isoMk (A B : Triangle C) (iso₁ : A.obj₁ ≅ B.obj₁) (iso₂ : A.obj₂ ≅ B.obj₂)
@@ -189,6 +206,7 @@ def Triangle.isoMk (A B : Triangle C) (iso₁ : A.obj₁ ≅ B.obj₁) (iso₂ :
         simp only [← cancel_mono (iso₁.hom⟦(1 : ℤ)⟧'), assoc, ← functor.map_comp, iso.inv_hom_id,
           CategoryTheory.Functor.map_id, comp_id, comm₃, iso.inv_hom_id_assoc])
 #align category_theory.pretriangulated.triangle.iso_mk CategoryTheory.Pretriangulated.Triangle.isoMk
+-/
 
 end CategoryTheory.Pretriangulated
 

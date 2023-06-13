@@ -61,6 +61,7 @@ section Pi
 variable {I A : Type _} {X : I → Type _} [∀ i, TopologicalSpace (X i)] [TopologicalSpace A]
   {f g : ∀ i, C(A, X i)} {S : Set A}
 
+#print ContinuousMap.Homotopy.pi /-
 /-- The product homotopy of `homotopies` between functions `f` and `g` -/
 @[simps]
 def Homotopy.pi (homotopies : ∀ i, Homotopy (f i) (g i)) : Homotopy (pi f) (pi g)
@@ -69,6 +70,7 @@ def Homotopy.pi (homotopies : ∀ i, Homotopy (f i) (g i)) : Homotopy (pi f) (pi
   map_zero_left' t := by ext i; simp only [pi_eval, homotopy.apply_zero]
   map_one_left' t := by ext i; simp only [pi_eval, homotopy.apply_one]
 #align continuous_map.homotopy.pi ContinuousMap.Homotopy.pi
+-/
 
 /-- The relative product homotopy of `homotopies` between functions `f` and `g` -/
 @[simps]
@@ -122,7 +124,6 @@ namespace Path.Homotopic
 
 attribute [local instance] Path.Homotopic.setoid
 
--- mathport name: «expr ⬝ »
 local infixl:70 " ⬝ " => Quotient.comp
 
 section Pi

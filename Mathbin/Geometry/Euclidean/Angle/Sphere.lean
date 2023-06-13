@@ -79,9 +79,6 @@ namespace EuclideanGeometry
 variable {V : Type _} {P : Type _} [NormedAddCommGroup V] [InnerProductSpace ℝ V] [MetricSpace P]
   [NormedAddTorsor V P] [hd2 : Fact (finrank ℝ V = 2)] [Module.Oriented ℝ V (Fin 2)]
 
-include hd2
-
--- mathport name: expro
 local notation "o" => Module.Oriented.positiveOrientation
 
 namespace Sphere
@@ -272,9 +269,6 @@ open EuclideanGeometry
 variable {V : Type _} {P : Type _} [NormedAddCommGroup V] [InnerProductSpace ℝ V] [MetricSpace P]
   [NormedAddTorsor V P] [hd2 : Fact (finrank ℝ V = 2)] [Module.Oriented ℝ V (Fin 2)]
 
-include hd2
-
--- mathport name: expro
 local notation "o" => Module.Oriented.positiveOrientation
 
 /-- The circumcenter of a triangle may be expressed explicitly as a multiple (by half the inverse
@@ -398,9 +392,6 @@ namespace EuclideanGeometry
 variable {V : Type _} {P : Type _} [NormedAddCommGroup V] [InnerProductSpace ℝ V] [MetricSpace P]
   [NormedAddTorsor V P] [hd2 : Fact (finrank ℝ V = 2)] [Module.Oriented ℝ V (Fin 2)]
 
-include hd2
-
--- mathport name: expro
 local notation "o" => Module.Oriented.positiveOrientation
 
 /-- Converse of "angles in same segment are equal" and "opposite angles of a cyclic quadrilateral

@@ -34,16 +34,21 @@ namespace List
 
 variable {α : Type u}
 
+#print List.length_range' /-
 @[simp]
 theorem length_range' : ∀ s n : ℕ, length (range' s n) = n
   | s, 0 => rfl
   | s, n + 1 => congr_arg succ (length_range' _ _)
 #align list.length_range' List.length_range'
+-/
 
+#print List.range'_eq_nil /-
 @[simp]
 theorem range'_eq_nil {s n : ℕ} : range' s n = [] ↔ n = 0 := by rw [← length_eq_zero, length_range']
 #align list.range'_eq_nil List.range'_eq_nil
+-/
 
+#print List.mem_range'_1 /-
 @[simp]
 theorem mem_range'_1 {m : ℕ} : ∀ {s n : ℕ}, m ∈ range' s n ↔ s ≤ m ∧ m < s + n
   | s, 0 => (false_iff_iff _).2 fun ⟨H1, H2⟩ => not_le_of_lt H2 H1
@@ -54,12 +59,16 @@ theorem mem_range'_1 {m : ℕ} : ∀ {s n : ℕ}, m ∈ range' s n ↔ s ≤ m �
     (mem_cons _ _ _).trans <| by
       simp only [mem_range', or_and_left, or_iff_right_of_imp this, l, add_right_comm] <;> rfl
 #align list.mem_range' List.mem_range'_1
+-/
 
+#print List.map_add_range' /-
 theorem map_add_range' (a) : ∀ s n : ℕ, map ((· + ·) a) (range' s n) = range' (a + s) n
   | s, 0 => rfl
   | s, n + 1 => congr_arg (cons _) (map_add_range' (s + 1) n)
 #align list.map_add_range' List.map_add_range'
+-/
 
+#print List.map_sub_range' /-
 theorem map_sub_range' (a) :
     ∀ (s n : ℕ) (h : a ≤ s), map (fun x => x - a) (range' s n) = range' (s - a) n
   | s, 0, _ => rfl
@@ -69,25 +78,35 @@ theorem map_sub_range' (a) :
     rw [Nat.succ_sub h]
     rfl
 #align list.map_sub_range' List.map_sub_range'
+-/
 
+#print List.chain_succ_range' /-
 theorem chain_succ_range' : ∀ s n : ℕ, Chain (fun a b => b = succ a) s (range' (s + 1) n)
   | s, 0 => Chain.nil
   | s, n + 1 => (chain_succ_range' (s + 1) n).cons rfl
 #align list.chain_succ_range' List.chain_succ_range'
+-/
 
+#print List.chain_lt_range' /-
 theorem chain_lt_range' (s n : ℕ) : Chain (· < ·) s (range' (s + 1) n) :=
   (chain_succ_range' s n).imp fun a b e => e.symm ▸ lt_succ_self _
 #align list.chain_lt_range' List.chain_lt_range'
+-/
 
+#print List.pairwise_lt_range' /-
 theorem pairwise_lt_range' : ∀ s n : ℕ, Pairwise (· < ·) (range' s n)
   | s, 0 => Pairwise.nil
   | s, n + 1 => chain_iff_pairwise.1 (chain_lt_range' s n)
 #align list.pairwise_lt_range' List.pairwise_lt_range'
+-/
 
+#print List.nodup_range' /-
 theorem nodup_range' (s n : ℕ) : Nodup (range' s n) :=
   (pairwise_lt_range' s n).imp fun a b => ne_of_lt
 #align list.nodup_range' List.nodup_range'
+-/
 
+#print List.range'_append /-
 @[simp]
 theorem range'_append : ∀ s m n : ℕ, range' s m ++ range' (s + m) n = range' s (n + m)
   | s, 0, n => rfl
@@ -95,12 +114,16 @@ theorem range'_append : ∀ s m n : ℕ, range' s m ++ range' (s + m) n = range'
     show s :: (range' (s + 1) m ++ range' (s + m + 1) n) = s :: range' (s + 1) (n + m) by
       rw [add_right_comm, range'_append]
 #align list.range'_append List.range'_append
+-/
 
+#print List.range'_sublist_right /-
 theorem range'_sublist_right {s m n : ℕ} : range' s m <+ range' s n ↔ m ≤ n :=
   ⟨fun h => by simpa only [length_range'] using h.length_le, fun h => by
     rw [← tsub_add_cancel_of_le h, ← range'_append] <;> apply sublist_append_left⟩
 #align list.range'_sublist_right List.range'_sublist_right
+-/
 
+#print List.range'_subset_right /-
 theorem range'_subset_right {s m n : ℕ} : range' s m ⊆ range' s n ↔ m ≤ n :=
   ⟨fun h =>
     le_of_not_lt fun hn =>
@@ -108,32 +131,43 @@ theorem range'_subset_right {s m n : ℕ} : range' s m ⊆ range' s n ↔ m ≤ 
         (mem_range'_1.1 <| h <| mem_range'_1.2 ⟨Nat.le_add_right _ _, Nat.add_lt_add_left hn s⟩).2,
     fun h => (range'_sublist_right.2 h).Subset⟩
 #align list.range'_subset_right List.range'_subset_right
+-/
 
+#print List.get?_range' /-
 theorem get?_range' : ∀ (s) {m n : ℕ}, m < n → get? (range' s n) m = some (s + m)
   | s, 0, n + 1, _ => rfl
   | s, m + 1, n + 1, h =>
     (nth_range' (s + 1) (lt_of_add_lt_add_right h)).trans <| by rw [add_right_comm] <;> rfl
 #align list.nth_range' List.get?_range'
+-/
 
+#print List.nthLe_range'_1 /-
 @[simp]
 theorem nthLe_range'_1 {n m} (i) (H : i < (range' n m).length) : nthLe (range' n m) i H = n + i :=
   Option.some.inj <| by rw [← nth_le_nth _, nth_range' _ (by simpa using H)]
 #align list.nth_le_range' List.nthLe_range'_1
+-/
 
+#print List.range'_concat /-
 theorem range'_concat (s n : ℕ) : range' s (n + 1) = range' s n ++ [s + n] := by
   rw [add_comm n 1] <;> exact (range'_append s n 1).symm
 #align list.range'_concat List.range'_concat
+-/
 
+#print List.range_loop_range' /-
 theorem range_loop_range' : ∀ s n : ℕ, List.range.loop s (range' s n) = range' 0 (n + s)
   | 0, n => rfl
   | s + 1, n => by
     rw [show n + (s + 1) = n + 1 + s from add_right_comm n s 1] <;>
       exact range_core_range' s (n + 1)
 #align list.range_core_range' List.range_loop_range'
+-/
 
+#print List.range_eq_range' /-
 theorem range_eq_range' (n : ℕ) : range n = range' 0 n :=
   (range_loop_range' n 0).trans <| by rw [zero_add]
 #align list.range_eq_range' List.range_eq_range'
+-/
 
 #print List.range_succ_eq_map /-
 theorem range_succ_eq_map (n : ℕ) : range (n + 1) = 0 :: map succ (range n) := by
@@ -142,9 +176,11 @@ theorem range_succ_eq_map (n : ℕ) : range (n + 1) = 0 :: map succ (range n) :=
 #align list.range_succ_eq_map List.range_succ_eq_map
 -/
 
+#print List.range'_eq_map_range /-
 theorem range'_eq_map_range (s n : ℕ) : range' s n = map ((· + ·) s) (range n) := by
   rw [range_eq_range', map_add_range'] <;> rfl
 #align list.range'_eq_map_range List.range'_eq_map_range
+-/
 
 #print List.length_range /-
 @[simp]
@@ -258,11 +294,13 @@ theorem range_add (a : ℕ) : ∀ b, range (a + b) = range a ++ (range b).map fu
 #align list.range_add List.range_add
 -/
 
+#print List.iota_eq_reverse_range' /-
 theorem iota_eq_reverse_range' : ∀ n : ℕ, iota n = reverse (range' 1 n)
   | 0 => rfl
   | n + 1 => by
     simp only [iota, range'_concat, iota_eq_reverse_range' n, reverse_append, add_comm] <;> rfl
 #align list.iota_eq_reverse_range' List.iota_eq_reverse_range'
+-/
 
 #print List.length_iota /-
 @[simp]
@@ -289,6 +327,7 @@ theorem mem_iota {m n : ℕ} : m ∈ iota n ↔ 1 ≤ m ∧ m ≤ n := by
 #align list.mem_iota List.mem_iota
 -/
 
+#print List.reverse_range' /-
 theorem reverse_range' : ∀ s n : ℕ, reverse (range' s n) = map (fun i => s + n - 1 - i) (range n)
   | s, 0 => rfl
   | s, n + 1 => by
@@ -297,6 +336,7 @@ theorem reverse_range' : ∀ s n : ℕ, reverse (range' s n) = map (fun i => s +
         show a - 1 - i = a - succ i from pred_sub _ _, reverse_singleton, map_cons, tsub_zero,
         cons_append, nil_append, eq_self_iff_true, true_and_iff, map_map] using reverse_range' s n
 #align list.reverse_range' List.reverse_range'
+-/
 
 #print List.finRange /-
 /-- All elements of `fin n`, from `0` to `n-1`. The corresponding finset is `finset.univ`. -/
@@ -339,13 +379,16 @@ theorem finRange_eq_nil {n : ℕ} : finRange n = [] ↔ n = 0 := by
 #align list.fin_range_eq_nil List.finRange_eq_nil
 -/
 
+#print List.prod_range_succ /-
 @[to_additive]
 theorem prod_range_succ {α : Type u} [Monoid α] (f : ℕ → α) (n : ℕ) :
     ((range n.succ).map f).Prod = ((range n).map f).Prod * f n := by
   rw [range_succ, map_append, map_singleton, prod_append, prod_cons, prod_nil, mul_one]
 #align list.prod_range_succ List.prod_range_succ
 #align list.sum_range_succ List.sum_range_succ
+-/
 
+#print List.prod_range_succ' /-
 /-- A variant of `prod_range_succ` which pulls off the first
   term in the product rather than the last.-/
 @[to_additive
@@ -356,12 +399,15 @@ theorem prod_range_succ' {α : Type u} [Monoid α] (f : ℕ → α) (n : ℕ) :
     rw [List.prod_range_succ, hd, mul_assoc, ← List.prod_range_succ]
 #align list.prod_range_succ' List.prod_range_succ'
 #align list.sum_range_succ' List.sum_range_succ'
+-/
 
+#print List.enumFrom_map_fst /-
 @[simp]
 theorem enumFrom_map_fst : ∀ (n) (l : List α), map Prod.fst (enumFrom n l) = range' n l.length
   | n, [] => rfl
   | n, a :: l => congr_arg (cons _) (enum_from_map_fst _ _)
 #align list.enum_from_map_fst List.enumFrom_map_fst
+-/
 
 #print List.enum_map_fst /-
 @[simp]
@@ -383,15 +429,19 @@ theorem unzip_enum_eq_prod (l : List α) : l.enum.unzip = (range l.length, l) :=
 #align list.unzip_enum_eq_prod List.unzip_enum_eq_prod
 -/
 
+#print List.enumFrom_eq_zip_range' /-
 theorem enumFrom_eq_zip_range' (l : List α) {n : ℕ} : l.enumFrom n = (range' n l.length).zip l :=
   zip_of_prod (enumFrom_map_fst _ _) (enumFrom_map_snd _ _)
 #align list.enum_from_eq_zip_range' List.enumFrom_eq_zip_range'
+-/
 
+#print List.unzip_enumFrom_eq_prod /-
 @[simp]
 theorem unzip_enumFrom_eq_prod (l : List α) {n : ℕ} :
     (l.enumFrom n).unzip = (range' n l.length, l) := by
   simp only [enum_from_eq_zip_range', unzip_zip, length_range']
 #align list.unzip_enum_from_eq_prod List.unzip_enumFrom_eq_prod
+-/
 
 #print List.nthLe_range /-
 @[simp]

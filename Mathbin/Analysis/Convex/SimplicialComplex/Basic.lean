@@ -106,13 +106,16 @@ protected theorem subset_space (hs : s ∈ K.faces) : (s : Set E) ⊆ K.space :=
 #align geometry.simplicial_complex.subset_space Geometry.SimplicialComplex.subset_space
 -/
 
+#print Geometry.SimplicialComplex.convexHull_inter_convexHull /-
 theorem convexHull_inter_convexHull (hs : s ∈ K.faces) (ht : t ∈ K.faces) :
     convexHull 𝕜 ↑s ∩ convexHull 𝕜 ↑t = convexHull 𝕜 (s ∩ t : Set E) :=
   (K.inter_subset_convexHull hs ht).antisymm <|
     subset_inter (convexHull_mono <| Set.inter_subset_left _ _) <|
       convexHull_mono <| Set.inter_subset_right _ _
 #align geometry.simplicial_complex.convex_hull_inter_convex_hull Geometry.SimplicialComplex.convexHull_inter_convexHull
+-/
 
+#print Geometry.SimplicialComplex.disjoint_or_exists_inter_eq_convexHull /-
 /-- The conclusion is the usual meaning of "glue nicely" in textbooks. It turns out to be quite
 unusable, as it's about faces as sets in space rather than simplices. Further,  additional structure
 on `𝕜` means the only choice of `u` is `s ∩ t` (but it's hard to prove). -/
@@ -131,9 +134,11 @@ theorem disjoint_or_exists_inter_eq_convexHull (hs : s ∈ K.faces) (ht : t ∈ 
     rfl
   · rw [coe_inter, convex_hull_inter_convex_hull hs ht]
 #align geometry.simplicial_complex.disjoint_or_exists_inter_eq_convex_hull Geometry.SimplicialComplex.disjoint_or_exists_inter_eq_convexHull
+-/
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (t «expr ⊆ » s) -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (s t «expr ∈ » faces) -/
+#print Geometry.SimplicialComplex.ofErase /-
 /-- Construct a simplicial complex by removing the empty face for you. -/
 @[simps]
 def ofErase (faces : Set (Finset E))
@@ -149,6 +154,7 @@ def ofErase (faces : Set (Finset E))
   down_closed s t hs hts ht := ⟨down_closed _ hs.1 _ hts, ht⟩
   inter_subset_convexHull s t hs ht := inter_subset_convex_hull _ hs.1 _ ht.1
 #align geometry.simplicial_complex.of_erase Geometry.SimplicialComplex.ofErase
+-/
 
 #print Geometry.SimplicialComplex.ofSubcomplex /-
 /-- Construct a simplicial complex as a subset of a given simplicial complex. -/

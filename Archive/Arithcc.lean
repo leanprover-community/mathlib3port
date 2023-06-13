@@ -208,7 +208,6 @@ def StateEqRs (t : Register) (ζ₁ ζ₂ : State) : Prop :=
   ∀ r : Register, r < t → ζ₁.rs r = ζ₂.rs r
 #align arithcc.state_eq_rs Arithcc.StateEqRs
 
--- mathport name: «expr ≃[ ]/ac »
 notation:50 ζ₁ " ≃[" t "]/ac " ζ₂:50 => StateEqRs t ζ₁ ζ₂
 
 @[refl]
@@ -230,7 +229,6 @@ def StateEq (t : Register) (ζ₁ ζ₂ : State) : Prop :=
   ζ₁.ac = ζ₂.ac ∧ StateEqRs t ζ₁ ζ₂
 #align arithcc.state_eq Arithcc.StateEq
 
--- mathport name: «expr ≃[ ] »
 notation:50 ζ₁ " ≃[" t "] " ζ₂:50 => StateEq t ζ₁ ζ₂
 
 @[refl]

@@ -55,14 +55,18 @@ theorem Function.Embedding.toEquivRange_apply (a : α) :
 #align function.embedding.to_equiv_range_apply Function.Embedding.toEquivRange_apply
 -/
 
+#print Function.Embedding.toEquivRange_symm_apply_self /-
 @[simp]
 theorem Function.Embedding.toEquivRange_symm_apply_self (a : α) :
     f.toEquivRange.symm ⟨f a, Set.mem_range_self a⟩ = a := by simp [Equiv.symm_apply_eq]
 #align function.embedding.to_equiv_range_symm_apply_self Function.Embedding.toEquivRange_symm_apply_self
+-/
 
+#print Function.Embedding.toEquivRange_eq_ofInjective /-
 theorem Function.Embedding.toEquivRange_eq_ofInjective :
     f.toEquivRange = Equiv.ofInjective f f.Injective := by ext; simp
 #align function.embedding.to_equiv_range_eq_of_injective Function.Embedding.toEquivRange_eq_ofInjective
+-/
 
 #print Equiv.Perm.viaFintypeEmbedding /-
 /-- Extend the domain of `e : equiv.perm α`, mapping it through `f : α ↪ β`.
@@ -101,11 +105,13 @@ theorem Equiv.Perm.viaFintypeEmbedding_apply_not_mem_range {b : β} (h : b ∉ S
 #align equiv.perm.via_fintype_embedding_apply_not_mem_range Equiv.Perm.viaFintypeEmbedding_apply_not_mem_range
 -/
 
+#print Equiv.Perm.viaFintypeEmbedding_sign /-
 @[simp]
 theorem Equiv.Perm.viaFintypeEmbedding_sign [DecidableEq α] [Fintype β] :
     Equiv.Perm.sign (e.viaFintypeEmbedding f) = Equiv.Perm.sign e := by
   simp [Equiv.Perm.viaFintypeEmbedding]
 #align equiv.perm.via_fintype_embedding_sign Equiv.Perm.viaFintypeEmbedding_sign
+-/
 
 namespace Equiv
 

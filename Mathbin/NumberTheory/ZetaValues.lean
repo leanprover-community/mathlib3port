@@ -37,7 +37,6 @@ open scoped Nat Real Interval
 
 open Complex MeasureTheory Set intervalIntegral
 
--- mathport name: expr𝕌
 local notation "𝕌" => UnitAddCircle
 
 attribute [local instance] Real.fact_zero_lt_one

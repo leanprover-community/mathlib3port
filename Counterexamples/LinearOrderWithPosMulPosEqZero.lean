@@ -46,7 +46,6 @@ instance : Zero Foo :=
 instance : One Foo :=
   ⟨one⟩
 
--- mathport name: exprε
 local notation "ε" => eps
 
 /-- The order on `foo` is the one induced by the natural order on the image of `aux1`. -/

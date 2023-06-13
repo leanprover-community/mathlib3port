@@ -69,6 +69,5 @@ def HasQuotient.Quotient (A : outParam <| Type u) {B : Type v} [HasQuotient A B]
 #align has_quotient.quotient HasQuotient.Quotient
 -/
 
--- mathport name: «expr ⧸ »
 notation:35 G " ⧸ " H:34 => HasQuotient.Quotient G H
 

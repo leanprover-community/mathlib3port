@@ -78,6 +78,7 @@ instance (priority := 100) hasFiniteColimits_of_semilatticeSup_orderBot [Semilat
 #align category_theory.limits.complete_lattice.has_finite_colimits_of_semilattice_sup_order_bot CategoryTheory.Limits.CompleteLattice.hasFiniteColimits_of_semilatticeSup_orderBot
 -/
 
+#print CategoryTheory.Limits.CompleteLattice.finite_limit_eq_finset_univ_inf /-
 /-- The limit of a functor from a finite diagram into a `semilattice_inf` with `order_top` is the
 infimum of the objects in the image.
 -/
@@ -85,7 +86,9 @@ theorem finite_limit_eq_finset_univ_inf [SemilatticeInf α] [OrderTop α] (F : J
     limit F = Finset.univ.inf F.obj :=
   (IsLimit.conePointUniqueUpToIso (limit.isLimit F) (finiteLimitCone F).IsLimit).to_eq
 #align category_theory.limits.complete_lattice.finite_limit_eq_finset_univ_inf CategoryTheory.Limits.CompleteLattice.finite_limit_eq_finset_univ_inf
+-/
 
+#print CategoryTheory.Limits.CompleteLattice.finite_colimit_eq_finset_univ_sup /-
 /-- The colimit of a functor from a finite diagram into a `semilattice_sup` with `order_bot`
 is the supremum of the objects in the image.
 -/
@@ -93,6 +96,7 @@ theorem finite_colimit_eq_finset_univ_sup [SemilatticeSup α] [OrderBot α] (F :
     colimit F = Finset.univ.sup F.obj :=
   (IsColimit.coconePointUniqueUpToIso (colimit.isColimit F) (finiteColimitCocone F).IsColimit).to_eq
 #align category_theory.limits.complete_lattice.finite_colimit_eq_finset_univ_sup CategoryTheory.Limits.CompleteLattice.finite_colimit_eq_finset_univ_sup
+-/
 
 #print CategoryTheory.Limits.CompleteLattice.finite_product_eq_finset_inf /-
 /--
@@ -135,6 +139,7 @@ instance (priority := 100) [SemilatticeInf α] [OrderTop α] : HasBinaryProducts
     letI := hasFiniteLimits_of_hasFiniteLimits_of_size.{u} α; infer_instance
   apply has_binary_products_of_has_limit_pair
 
+#print CategoryTheory.Limits.CompleteLattice.prod_eq_inf /-
 /-- The binary product in the category of a `semilattice_inf` with `order_top` is the same as the
 infimum.
 -/
@@ -149,6 +154,7 @@ theorem prod_eq_inf [SemilatticeInf α] [OrderTop α] (x y : α) : Limits.prod x
         x ⊓ y :=
       by rw [inf_top_eq]
 #align category_theory.limits.complete_lattice.prod_eq_inf CategoryTheory.Limits.CompleteLattice.prod_eq_inf
+-/
 
 -- see Note [lower instance priority]
 instance (priority := 100) [SemilatticeSup α] [OrderBot α] : HasBinaryCoproducts α :=
@@ -157,6 +163,7 @@ instance (priority := 100) [SemilatticeSup α] [OrderBot α] : HasBinaryCoproduc
     letI := hasFiniteColimits_of_hasFiniteColimits_of_size.{u} α; infer_instance
   apply has_binary_coproducts_of_has_colimit_pair
 
+#print CategoryTheory.Limits.CompleteLattice.coprod_eq_sup /-
 /-- The binary coproduct in the category of a `semilattice_sup` with `order_bot` is the same as the
 supremum.
 -/
@@ -171,7 +178,9 @@ theorem coprod_eq_sup [SemilatticeSup α] [OrderBot α] (x y : α) : Limits.copr
         x ⊔ y :=
       by rw [sup_bot_eq]
 #align category_theory.limits.complete_lattice.coprod_eq_sup CategoryTheory.Limits.CompleteLattice.coprod_eq_sup
+-/
 
+#print CategoryTheory.Limits.CompleteLattice.pullback_eq_inf /-
 /-- The pullback in the category of a `semilattice_inf` with `order_top` is the same as the infimum
 over the objects.
 -/
@@ -185,7 +194,9 @@ theorem pullback_eq_inf [SemilatticeInf α] [OrderTop α] {x y z : α} (f : x �
     _ = z ⊓ (x ⊓ y) := by rw [inf_top_eq]
     _ = x ⊓ y := inf_eq_right.mpr (inf_le_of_left_le f.le)
 #align category_theory.limits.complete_lattice.pullback_eq_inf CategoryTheory.Limits.CompleteLattice.pullback_eq_inf
+-/
 
+#print CategoryTheory.Limits.CompleteLattice.pushout_eq_sup /-
 /-- The pushout in the category of a `semilattice_sup` with `order_bot` is the same as the supremum
 over the objects.
 -/
@@ -199,6 +210,7 @@ theorem pushout_eq_sup [SemilatticeSup α] [OrderBot α] (x y z : α) (f : z ⟶
     _ = z ⊔ (x ⊔ y) := by rw [sup_bot_eq]
     _ = x ⊔ y := sup_eq_right.mpr (le_sup_of_le_left f.le)
 #align category_theory.limits.complete_lattice.pushout_eq_sup CategoryTheory.Limits.CompleteLattice.pushout_eq_sup
+-/
 
 end Semilattice
 
@@ -252,17 +264,21 @@ instance (priority := 100) hasColimits_of_completeLattice : HasColimits α
 #align category_theory.limits.complete_lattice.has_colimits_of_complete_lattice CategoryTheory.Limits.CompleteLattice.hasColimits_of_completeLattice
 -/
 
+#print CategoryTheory.Limits.CompleteLattice.limit_eq_iInf /-
 /-- The limit of a functor into a complete lattice is the infimum of the objects in the image.
 -/
 theorem limit_eq_iInf (F : J ⥤ α) : limit F = iInf F.obj :=
   (IsLimit.conePointUniqueUpToIso (limit.isLimit F) (limitCone F).IsLimit).to_eq
 #align category_theory.limits.complete_lattice.limit_eq_infi CategoryTheory.Limits.CompleteLattice.limit_eq_iInf
+-/
 
+#print CategoryTheory.Limits.CompleteLattice.colimit_eq_iSup /-
 /-- The colimit of a functor into a complete lattice is the supremum of the objects in the image.
 -/
 theorem colimit_eq_iSup (F : J ⥤ α) : colimit F = iSup F.obj :=
   (IsColimit.coconePointUniqueUpToIso (colimit.isColimit F) (colimitCocone F).IsColimit).to_eq
 #align category_theory.limits.complete_lattice.colimit_eq_supr CategoryTheory.Limits.CompleteLattice.colimit_eq_iSup
+-/
 
 end CategoryTheory.Limits.CompleteLattice
 

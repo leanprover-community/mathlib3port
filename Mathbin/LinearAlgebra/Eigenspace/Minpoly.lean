@@ -32,6 +32,7 @@ open scoped Polynomial
 
 variable {K : Type v} {V : Type w} [Field K] [AddCommGroup V] [Module K V]
 
+#print Module.End.eigenspace_aeval_polynomial_degree_1 /-
 theorem eigenspace_aeval_polynomial_degree_1 (f : End K V) (q : K[X]) (hq : degree q = 1) :
     eigenspace f (-q.coeff 0 / q.leadingCoeff) = (aeval f q).ker :=
   calc
@@ -43,7 +44,9 @@ theorem eigenspace_aeval_polynomial_degree_1 (f : End K V) (q : K[X]) (hq : degr
       simp [algebraMap, Algebra.toRingHom]
     _ = (aeval f q).ker := by rwa [← eq_X_add_C_of_degree_eq_one]
 #align module.End.eigenspace_aeval_polynomial_degree_1 Module.End.eigenspace_aeval_polynomial_degree_1
+-/
 
+#print Module.End.ker_aeval_ring_hom'_unit_polynomial /-
 theorem ker_aeval_ring_hom'_unit_polynomial (f : End K V) (c : K[X]ˣ) :
     (aeval f (c : K[X])).ker = ⊥ :=
   by
@@ -52,7 +55,9 @@ theorem ker_aeval_ring_hom'_unit_polynomial (f : End K V) (c : K[X]ˣ) :
   apply ker_algebra_map_End
   apply coeff_coe_units_zero_ne_zero c
 #align module.End.ker_aeval_ring_hom'_unit_polynomial Module.End.ker_aeval_ring_hom'_unit_polynomial
+-/
 
+#print Module.End.aeval_apply_of_hasEigenvector /-
 theorem aeval_apply_of_hasEigenvector {f : End K V} {p : K[X]} {μ : K} {x : V}
     (h : f.HasEigenvector μ x) : aeval f p x = p.eval μ • x :=
   by
@@ -64,7 +69,9 @@ theorem aeval_apply_of_hasEigenvector {f : End K V} {p : K[X]} {μ : K} {x : V}
     simp only [mem_eigenspace_iff.1 h.1, smul_smul, aeval_X, eval_mul, eval_C, eval_pow, eval_X,
       LinearMap.map_smulₛₗ, RingHom.id_apply, mul_comm]
 #align module.End.aeval_apply_of_has_eigenvector Module.End.aeval_apply_of_hasEigenvector
+-/
 
+#print Module.End.isRoot_of_hasEigenvalue /-
 theorem isRoot_of_hasEigenvalue {f : End K V} {μ : K} (h : f.HasEigenvalue μ) :
     (minpoly K f).IsRoot μ :=
   by
@@ -72,11 +79,13 @@ theorem isRoot_of_hasEigenvalue {f : End K V} {μ : K} (h : f.HasEigenvalue μ) 
   refine' Or.resolve_right (smul_eq_zero.1 _) ne0
   simp [← aeval_apply_of_has_eigenvector ⟨H, ne0⟩, minpoly.aeval K f]
 #align module.End.is_root_of_has_eigenvalue Module.End.isRoot_of_hasEigenvalue
+-/
 
 variable [FiniteDimensional K V] (f : End K V)
 
 variable {f} {μ : K}
 
+#print Module.End.hasEigenvalue_of_isRoot /-
 theorem hasEigenvalue_of_isRoot (h : (minpoly K f).IsRoot μ) : f.HasEigenvalue μ :=
   by
   cases' dvd_iff_is_root.2 h with p hp
@@ -95,10 +104,13 @@ theorem hasEigenvalue_of_isRoot (h : (minpoly K f).IsRoot μ) : f.HasEigenvalue 
     revert h_aeval
     simp [hp, ← hu]
 #align module.End.has_eigenvalue_of_is_root Module.End.hasEigenvalue_of_isRoot
+-/
 
+#print Module.End.hasEigenvalue_iff_isRoot /-
 theorem hasEigenvalue_iff_isRoot : f.HasEigenvalue μ ↔ (minpoly K f).IsRoot μ :=
   ⟨isRoot_of_hasEigenvalue, hasEigenvalue_of_isRoot⟩
 #align module.End.has_eigenvalue_iff_is_root Module.End.hasEigenvalue_iff_isRoot
+-/
 
 /-- An endomorphism of a finite-dimensional vector space has finitely many eigenvalues. -/
 noncomputable instance (f : End K V) : Fintype f.Eigenvalues :=

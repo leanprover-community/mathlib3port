@@ -345,8 +345,6 @@ namespace legendreSym
 
 variable (hp : p ≠ 2)
 
-include hp
-
 /-- `legendre_sym p 2` is given by `χ₈ p`. -/
 theorem at_two : legendreSym p 2 = χ₈ p := by
   simp only [legendreSym, card p, quadraticChar_two ((ring_char_zmod_n p).substr hp), Int.cast_bit0,
@@ -364,8 +362,6 @@ end legendreSym
 namespace ZMod
 
 variable (hp : p ≠ 2)
-
-include hp
 
 /-- `2` is a square modulo an odd prime `p` iff `p` is congruent to `1` or `7` mod `8`. -/
 theorem exists_sq_eq_two_iff : IsSquare (2 : ZMod p) ↔ p % 8 = 1 ∨ p % 8 = 7 :=

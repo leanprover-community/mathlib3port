@@ -73,13 +73,17 @@ private theorem free_and_finite :
     cases ih fun i => N i.succ
     exact ⟨Module.Free.linearMap _ _ _, Module.Finite.linearMap _ _⟩
 
+#print Module.Finite.multilinearMap /-
 instance Module.Finite.multilinearMap : Module.Finite R (MultilinearMap R M₁ M₂) :=
   free_and_finite.2
 #align module.finite.multilinear_map Module.Finite.multilinearMap
+-/
 
+#print Module.Free.multilinearMap /-
 instance Module.Free.multilinearMap : Module.Free R (MultilinearMap R M₁ M₂) :=
   free_and_finite.1
 #align module.free.multilinear_map Module.Free.multilinearMap
+-/
 
 end MultilinearMap
 

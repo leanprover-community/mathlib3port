@@ -42,8 +42,6 @@ namespace ProbabilityTheory.kernel
 
 variable {α β ι : Type _} {mα : MeasurableSpace α} {mβ : MeasurableSpace β}
 
-include mα mβ
-
 variable {κ : kernel α β} {f : α → β → ℝ≥0∞}
 
 /-- Kernel with image `(κ a).with_density (f a)` if `function.uncurry f` is measurable, and

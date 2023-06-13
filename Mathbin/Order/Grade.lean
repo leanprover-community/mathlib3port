@@ -116,26 +116,34 @@ section GradeOrder
 
 variable (𝕆) [GradeOrder 𝕆 α] {a b : α}
 
+#print grade /-
 /-- The grade of an element in a graded order. Morally, this is the number of elements you need to
 go down by to get to `⊥`. -/
 def grade : α → 𝕆 :=
   GradeOrder.grade
 #align grade grade
+-/
 
+#print Covby.grade /-
 protected theorem Covby.grade (h : a ⋖ b) : grade 𝕆 a ⋖ grade 𝕆 b :=
   GradeOrder.covby_grade h
 #align covby.grade Covby.grade
+-/
 
 variable {𝕆}
 
+#print grade_strictMono /-
 theorem grade_strictMono : StrictMono (grade 𝕆 : α → 𝕆) :=
   GradeOrder.grade_strictMono
 #align grade_strict_mono grade_strictMono
+-/
 
+#print covby_iff_lt_covby_grade /-
 theorem covby_iff_lt_covby_grade : a ⋖ b ↔ a < b ∧ grade 𝕆 a ⋖ grade 𝕆 b :=
   ⟨fun h => ⟨h.1, h.grade _⟩,
     And.imp_right fun h c ha hb => h.2 (grade_strictMono ha) <| grade_strictMono hb⟩
 #align covby_iff_lt_covby_grade covby_iff_lt_covby_grade
+-/
 
 end GradeOrder
 
@@ -143,16 +151,20 @@ section GradeMinOrder
 
 variable (𝕆) [GradeMinOrder 𝕆 α] {a : α}
 
+#print IsMin.grade /-
 protected theorem IsMin.grade (h : IsMin a) : IsMin (grade 𝕆 a) :=
   GradeMinOrder.isMin_grade h
 #align is_min.grade IsMin.grade
+-/
 
 variable {𝕆}
 
+#print isMin_grade_iff /-
 @[simp]
 theorem isMin_grade_iff : IsMin (grade 𝕆 a) ↔ IsMin a :=
   ⟨grade_strictMono.isMin_of_apply, IsMin.grade _⟩
 #align is_min_grade_iff isMin_grade_iff
+-/
 
 end GradeMinOrder
 
@@ -160,57 +172,75 @@ section GradeMaxOrder
 
 variable (𝕆) [GradeMaxOrder 𝕆 α] {a : α}
 
+#print IsMax.grade /-
 protected theorem IsMax.grade (h : IsMax a) : IsMax (grade 𝕆 a) :=
   GradeMaxOrder.isMax_grade h
 #align is_max.grade IsMax.grade
+-/
 
 variable {𝕆}
 
+#print isMax_grade_iff /-
 @[simp]
 theorem isMax_grade_iff : IsMax (grade 𝕆 a) ↔ IsMax a :=
   ⟨grade_strictMono.isMax_of_apply, IsMax.grade _⟩
 #align is_max_grade_iff isMax_grade_iff
+-/
 
 end GradeMaxOrder
 
 end Preorder
 
+#print grade_mono /-
 -- graded order
 theorem grade_mono [PartialOrder α] [GradeOrder 𝕆 α] : Monotone (grade 𝕆 : α → 𝕆) :=
   grade_strictMono.Monotone
 #align grade_mono grade_mono
+-/
 
 section LinearOrder
 
 -- graded order
 variable [LinearOrder α] [GradeOrder 𝕆 α] {a b : α}
 
+#print grade_injective /-
 theorem grade_injective : Function.Injective (grade 𝕆 : α → 𝕆) :=
   grade_strictMono.Injective
 #align grade_injective grade_injective
+-/
 
+#print grade_le_grade_iff /-
 @[simp]
 theorem grade_le_grade_iff : grade 𝕆 a ≤ grade 𝕆 b ↔ a ≤ b :=
   grade_strictMono.le_iff_le
 #align grade_le_grade_iff grade_le_grade_iff
+-/
 
+#print grade_lt_grade_iff /-
 @[simp]
 theorem grade_lt_grade_iff : grade 𝕆 a < grade 𝕆 b ↔ a < b :=
   grade_strictMono.lt_iff_lt
 #align grade_lt_grade_iff grade_lt_grade_iff
+-/
 
+#print grade_eq_grade_iff /-
 @[simp]
 theorem grade_eq_grade_iff : grade 𝕆 a = grade 𝕆 b ↔ a = b :=
   grade_injective.eq_iff
 #align grade_eq_grade_iff grade_eq_grade_iff
+-/
 
+#print grade_ne_grade_iff /-
 theorem grade_ne_grade_iff : grade 𝕆 a ≠ grade 𝕆 b ↔ a ≠ b :=
   grade_injective.ne_iff
 #align grade_ne_grade_iff grade_ne_grade_iff
+-/
 
+#print grade_covby_grade_iff /-
 theorem grade_covby_grade_iff : grade 𝕆 a ⋖ grade 𝕆 b ↔ a ⋖ b :=
   (covby_iff_lt_covby_grade.trans <| and_iff_right_of_imp fun h => grade_lt_grade_iff.1 h.1).symm
 #align grade_covby_grade_iff grade_covby_grade_iff
+-/
 
 end LinearOrder
 
@@ -222,15 +252,19 @@ section PartialOrder
 
 variable [PartialOrder 𝕆] [Preorder α]
 
+#print grade_bot /-
 @[simp]
 theorem grade_bot [OrderBot 𝕆] [OrderBot α] [GradeMinOrder 𝕆 α] : grade 𝕆 (⊥ : α) = ⊥ :=
   (isMin_bot.grade _).eq_bot
 #align grade_bot grade_bot
+-/
 
+#print grade_top /-
 @[simp]
 theorem grade_top [OrderTop 𝕆] [OrderTop α] [GradeMaxOrder 𝕆 α] : grade 𝕆 (⊤ : α) = ⊤ :=
   (isMax_top.grade _).eq_top
 #align grade_top grade_top
+-/
 
 end PartialOrder
 
@@ -275,15 +309,19 @@ instance [GradeMinOrder 𝕆 α] : GradeMaxOrder 𝕆ᵒᵈ αᵒᵈ :=
 instance [GradeBoundedOrder 𝕆 α] : GradeBoundedOrder 𝕆ᵒᵈ αᵒᵈ :=
   { OrderDual.gradeMinOrder, OrderDual.gradeMaxOrder with }
 
+#print grade_toDual /-
 @[simp]
 theorem grade_toDual [GradeOrder 𝕆 α] (a : α) : grade 𝕆ᵒᵈ (toDual a) = toDual (grade 𝕆 a) :=
   rfl
 #align grade_to_dual grade_toDual
+-/
 
+#print grade_ofDual /-
 @[simp]
 theorem grade_ofDual [GradeOrder 𝕆 α] (a : αᵒᵈ) : grade 𝕆 (ofDual a) = ofDual (grade 𝕆ᵒᵈ a) :=
   rfl
 #align grade_of_dual grade_ofDual
+-/
 
 /-! #### Lifting a graded order -/
 
@@ -379,6 +417,7 @@ def GradeBoundedOrder.liftRight [GradeBoundedOrder 𝕆 β] (f : α → β) (hf 
 /-! #### `fin n`-graded to `ℕ`-graded to `ℤ`-graded -/
 
 
+#print GradeOrder.finToNat /-
 -- See note [reducible non-instances]
 /-- A `fin n`-graded order is also `ℕ`-graded. We do not mark this an instance because `n` is not
 inferrable. -/
@@ -386,7 +425,9 @@ inferrable. -/
 def GradeOrder.finToNat (n : ℕ) [GradeOrder (Fin n) α] : GradeOrder ℕ α :=
   GradeOrder.liftLeft (_ : Fin n → ℕ) Fin.val_strictMono fun _ _ => Covby.coe_fin
 #align grade_order.fin_to_nat GradeOrder.finToNat
+-/
 
+#print GradeMinOrder.finToNat /-
 -- See note [reducible non-instances]
 /-- A `fin n`-graded order is also `ℕ`-graded. We do not mark this an instance because `n` is not
 inferrable. -/
@@ -399,6 +440,7 @@ def GradeMinOrder.finToNat (n : ℕ) [GradeMinOrder (Fin n) α] : GradeMinOrder 
     rw [h.eq_bot, Fin.bot_eq_zero]
     exact isMin_bot
 #align grade_min_order.fin_to_nat GradeMinOrder.finToNat
+-/
 
 #print GradeOrder.natToInt /-
 instance GradeOrder.natToInt [GradeOrder ℕ α] : GradeOrder ℤ α :=

@@ -25,17 +25,13 @@ open scoped UpperHalfPlane ModularForm
 
 noncomputable section
 
--- mathport name: «expr↑ₘ »
 local prefix:1024 "↑ₘ" => @coe _ (Matrix (Fin 2) (Fin 2) _) _
 
--- mathport name: «expr↑ₘ[ ]»
 -- like `↑ₘ`, but allows the user to specify the ring `R`. Useful to help Lean elaborate.
 local notation "↑ₘ[" R "]" => @coe _ (Matrix (Fin 2) (Fin 2) R) _
 
--- mathport name: «exprGL( , )⁺»
 local notation "GL(" n ", " R ")" "⁺" => Matrix.GLPos (Fin n) R
 
--- mathport name: «exprSL( , )»
 local notation "SL(" n ", " R ")" => Matrix.SpecialLinearGroup (Fin n) R
 
 section SlashInvariantForms

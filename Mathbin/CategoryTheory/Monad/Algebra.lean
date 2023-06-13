@@ -135,6 +135,7 @@ instance eilenbergMoore : Category (Algebra T) where
 #align category_theory.monad.algebra.EilenbergMoore CategoryTheory.Monad.Algebra.eilenbergMoore
 -/
 
+#print CategoryTheory.Monad.Algebra.isoMk /-
 /--
 To construct an isomorphism of algebras, it suffices to give an isomorphism of the carriers which
 commutes with the structure morphisms.
@@ -147,6 +148,7 @@ def isoMk {A B : Algebra T} (h : A.A ≅ B.A) (w : (T : C ⥤ C).map h.Hom ≫ B
     { f := h.inv
       h' := by rw [h.eq_comp_inv, category.assoc, ← w, ← functor.map_comp_assoc]; simp }
 #align category_theory.monad.algebra.iso_mk CategoryTheory.Monad.Algebra.isoMk
+-/
 
 end Algebra
 
@@ -255,6 +257,7 @@ theorem ofRightAdjoint_forget : Adjunction.ofRightAdjoint T.forget = T.adj :=
 #align category_theory.monad.of_right_adjoint_forget CategoryTheory.Monad.ofRightAdjoint_forget
 -/
 
+#print CategoryTheory.Monad.algebraFunctorOfMonadHom /-
 /--
 Given a monad morphism from `T₂` to `T₁`, we get a functor from the algebras of `T₁` to algebras of
 `T₂`.
@@ -269,7 +272,9 @@ def algebraFunctorOfMonadHom {T₁ T₂ : Monad C} (h : T₂ ⟶ T₁) : Algebra
       assoc' := by dsimp; simp [A.assoc] }
   map A₁ A₂ f := { f := f.f }
 #align category_theory.monad.algebra_functor_of_monad_hom CategoryTheory.Monad.algebraFunctorOfMonadHom
+-/
 
+#print CategoryTheory.Monad.algebraFunctorOfMonadHomId /-
 /--
 The identity monad morphism induces the identity functor from the category of algebras to itself.
 -/
@@ -278,7 +283,9 @@ def algebraFunctorOfMonadHomId {T₁ : Monad C} : algebraFunctorOfMonadHom (𝟙
   NatIso.ofComponents (fun X => Algebra.isoMk (Iso.refl _) (by dsimp; simp)) fun X Y f => by ext;
     dsimp; simp
 #align category_theory.monad.algebra_functor_of_monad_hom_id CategoryTheory.Monad.algebraFunctorOfMonadHomId
+-/
 
+#print CategoryTheory.Monad.algebraFunctorOfMonadHomComp /-
 /-- A composition of monad morphisms gives the composition of corresponding functors.
 -/
 @[simps (config := { rhsMd := semireducible })]
@@ -287,7 +294,9 @@ def algebraFunctorOfMonadHomComp {T₁ T₂ T₃ : Monad C} (f : T₁ ⟶ T₂) 
   NatIso.ofComponents (fun X => Algebra.isoMk (Iso.refl _) (by dsimp; simp)) fun X Y f => by ext;
     dsimp; simp
 #align category_theory.monad.algebra_functor_of_monad_hom_comp CategoryTheory.Monad.algebraFunctorOfMonadHomComp
+-/
 
+#print CategoryTheory.Monad.algebraFunctorOfMonadHomEq /-
 /-- If `f` and `g` are two equal morphisms of monads, then the functors of algebras induced by them
 are isomorphic.
 We define it like this as opposed to using `eq_to_iso` so that the components are nicer to prove
@@ -299,7 +308,9 @@ def algebraFunctorOfMonadHomEq {T₁ T₂ : Monad C} {f g : T₁ ⟶ T₂} (h : 
   NatIso.ofComponents (fun X => Algebra.isoMk (Iso.refl _) (by dsimp; simp [h])) fun X Y f => by
     ext; dsimp; simp
 #align category_theory.monad.algebra_functor_of_monad_hom_eq CategoryTheory.Monad.algebraFunctorOfMonadHomEq
+-/
 
+#print CategoryTheory.Monad.algebraEquivOfIsoMonads /-
 /-- Isomorphic monads give equivalent categories of algebras. Furthermore, they are equivalent as
 categories over `C`, that is, we have `algebra_equiv_of_iso_monads h ⋙ forget = forget`.
 -/
@@ -315,12 +326,15 @@ def algebraEquivOfIsoMonads {T₁ T₂ : Monad C} (h : T₁ ≅ T₂) : Algebra 
     (algebraFunctorOfMonadHomComp _ _).symm ≪≫
       algebraFunctorOfMonadHomEq (by simp) ≪≫ algebraFunctorOfMonadHomId
 #align category_theory.monad.algebra_equiv_of_iso_monads CategoryTheory.Monad.algebraEquivOfIsoMonads
+-/
 
+#print CategoryTheory.Monad.algebra_equiv_of_iso_monads_comp_forget /-
 @[simp]
 theorem algebra_equiv_of_iso_monads_comp_forget {T₁ T₂ : Monad C} (h : T₁ ⟶ T₂) :
     algebraFunctorOfMonadHom h ⋙ forget _ = forget _ :=
   rfl
 #align category_theory.monad.algebra_equiv_of_iso_monads_comp_forget CategoryTheory.Monad.algebra_equiv_of_iso_monads_comp_forget
+-/
 
 end Monad
 
@@ -417,6 +431,7 @@ instance eilenbergMoore : Category (Coalgebra G) where
 #align category_theory.comonad.coalgebra.EilenbergMoore CategoryTheory.Comonad.Coalgebra.eilenbergMoore
 -/
 
+#print CategoryTheory.Comonad.Coalgebra.isoMk /-
 /--
 To construct an isomorphism of coalgebras, it suffices to give an isomorphism of the carriers which
 commutes with the structure morphisms.
@@ -429,6 +444,7 @@ def isoMk {A B : Coalgebra G} (h : A.A ≅ B.A) (w : A.a ≫ (G : C ⥤ C).map h
     { f := h.inv
       h' := by rw [h.eq_inv_comp, ← reassoc_of w, ← functor.map_comp]; simp }
 #align category_theory.comonad.coalgebra.iso_mk CategoryTheory.Comonad.Coalgebra.isoMk
+-/
 
 end Coalgebra
 

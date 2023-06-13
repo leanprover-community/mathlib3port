@@ -19,13 +19,17 @@ import Mathbin.Algebra.Group.Units
 
 namespace Nat
 
+#print Nat.units_eq_one /-
 theorem units_eq_one (u : ℕˣ) : u = 1 :=
   Units.ext <| Nat.eq_one_of_dvd_one ⟨u.inv, u.val_inv.symm⟩
 #align nat.units_eq_one Nat.units_eq_one
+-/
 
+#print Nat.addUnits_eq_zero /-
 theorem addUnits_eq_zero (u : AddUnits ℕ) : u = 0 :=
   AddUnits.ext <| (Nat.eq_zero_of_add_eq_zero u.val_neg).1
 #align nat.add_units_eq_zero Nat.addUnits_eq_zero
+-/
 
 #print Nat.isUnit_iff /-
 @[simp]

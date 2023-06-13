@@ -233,10 +233,12 @@ def canonicalTopology (C : Type u) [Category.{v} C] : GrothendieckTopology C :=
 #align category_theory.sheaf.canonical_topology CategoryTheory.Sheaf.canonicalTopology
 -/
 
+#print CategoryTheory.Sheaf.isSheaf_yoneda_obj /-
 /-- `yoneda.obj X` is a sheaf for the canonical topology. -/
 theorem isSheaf_yoneda_obj (X : C) : Presieve.IsSheaf (canonicalTopology C) (yoneda.obj X) :=
   fun Y S hS => sheaf_for_finestTopology _ (Set.mem_range_self _) _ hS
 #align category_theory.sheaf.is_sheaf_yoneda_obj CategoryTheory.Sheaf.isSheaf_yoneda_obj
+-/
 
 #print CategoryTheory.Sheaf.isSheaf_of_representable /-
 /-- A representable functor is a sheaf for the canonical topology. -/
@@ -257,11 +259,13 @@ def Subcanonical (J : GrothendieckTopology C) : Prop :=
 
 namespace Subcanonical
 
+#print CategoryTheory.Sheaf.Subcanonical.of_yoneda_isSheaf /-
 /-- If every functor `yoneda.obj X` is a `J`-sheaf, then `J` is subcanonical. -/
 theorem of_yoneda_isSheaf (J : GrothendieckTopology C)
     (h : ∀ X, Presieve.IsSheaf J (yoneda.obj X)) : Subcanonical J :=
   le_finestTopology _ _ (by rintro P ⟨X, rfl⟩; apply h)
 #align category_theory.sheaf.subcanonical.of_yoneda_is_sheaf CategoryTheory.Sheaf.Subcanonical.of_yoneda_isSheaf
+-/
 
 #print CategoryTheory.Sheaf.Subcanonical.isSheaf_of_representable /-
 /-- If `J` is subcanonical, then any representable is a `J`-sheaf. -/

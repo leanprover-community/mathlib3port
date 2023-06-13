@@ -68,10 +68,12 @@ theorem nonempty_sigma : Nonempty (Σ a : α, γ a) ↔ ∃ a : α, Nonempty (γ
 #align nonempty_sigma nonempty_sigma
 -/
 
+#print nonempty_psigma /-
 @[simp]
 theorem nonempty_psigma {α} {β : α → Sort _} : Nonempty (PSigma β) ↔ ∃ a : α, Nonempty (β a) :=
   Iff.intro (fun ⟨⟨a, c⟩⟩ => ⟨a, ⟨c⟩⟩) fun ⟨a, ⟨c⟩⟩ => ⟨⟨a, c⟩⟩
 #align nonempty_psigma nonempty_psigma
+-/
 
 #print nonempty_subtype /-
 @[simp]
@@ -87,10 +89,12 @@ theorem nonempty_prod : Nonempty (α × β) ↔ Nonempty α ∧ Nonempty β :=
 #align nonempty_prod nonempty_prod
 -/
 
+#print nonempty_pprod /-
 @[simp]
 theorem nonempty_pprod {α β} : Nonempty (PProd α β) ↔ Nonempty α ∧ Nonempty β :=
   Iff.intro (fun ⟨⟨a, b⟩⟩ => ⟨⟨a⟩, ⟨b⟩⟩) fun ⟨⟨a⟩, ⟨b⟩⟩ => ⟨⟨a, b⟩⟩
 #align nonempty_pprod nonempty_pprod
+-/
 
 #print nonempty_sum /-
 @[simp]
@@ -107,6 +111,7 @@ theorem nonempty_sum : Nonempty (Sum α β) ↔ Nonempty α ∨ Nonempty β :=
 #align nonempty_sum nonempty_sum
 -/
 
+#print nonempty_psum /-
 @[simp]
 theorem nonempty_psum {α β} : Nonempty (PSum α β) ↔ Nonempty α ∨ Nonempty β :=
   Iff.intro
@@ -119,15 +124,18 @@ theorem nonempty_psum {α β} : Nonempty (PSum α β) ↔ Nonempty α ∨ Nonemp
     | Or.inl ⟨a⟩ => ⟨PSum.inl a⟩
     | Or.inr ⟨b⟩ => ⟨PSum.inr b⟩
 #align nonempty_psum nonempty_psum
+-/
 
 @[simp]
 theorem nonempty_empty : ¬Nonempty Empty := fun ⟨h⟩ => h.elim
 #align nonempty_empty nonempty_empty
 
+#print nonempty_ulift /-
 @[simp]
 theorem nonempty_ulift : Nonempty (ULift α) ↔ Nonempty α :=
   Iff.intro (fun ⟨⟨a⟩⟩ => ⟨a⟩) fun ⟨a⟩ => ⟨⟨a⟩⟩
 #align nonempty_ulift nonempty_ulift
+-/
 
 #print nonempty_plift /-
 @[simp]
@@ -176,20 +184,26 @@ protected noncomputable def Classical.arbitrary (α) [h : Nonempty α] : α :=
 #align classical.arbitrary Classical.arbitrary
 -/
 
+#print Nonempty.map /-
 /-- Given `f : α → β`, if `α` is nonempty then `β` is also nonempty.
   `nonempty` cannot be a `functor`, because `functor` is restricted to `Type`. -/
 theorem Nonempty.map {α β} (f : α → β) : Nonempty α → Nonempty β
   | ⟨h⟩ => ⟨f h⟩
 #align nonempty.map Nonempty.map
+-/
 
+#print Nonempty.map2 /-
 protected theorem Nonempty.map2 {α β γ : Sort _} (f : α → β → γ) :
     Nonempty α → Nonempty β → Nonempty γ
   | ⟨x⟩, ⟨y⟩ => ⟨f x y⟩
 #align nonempty.map2 Nonempty.map2
+-/
 
+#print Nonempty.congr /-
 protected theorem Nonempty.congr {α β} (f : α → β) (g : β → α) : Nonempty α ↔ Nonempty β :=
   ⟨Nonempty.map f, Nonempty.map g⟩
 #align nonempty.congr Nonempty.congr
+-/
 
 #print Nonempty.elim_to_inhabited /-
 theorem Nonempty.elim_to_inhabited {α : Sort _} [h : Nonempty α] {p : Prop} (f : Inhabited α → p) :
@@ -204,9 +218,11 @@ instance {α β} [h : Nonempty α] [h2 : Nonempty β] : Nonempty (α × β) :=
 instance {ι : Sort _} {α : ι → Sort _} [∀ i, Nonempty (α i)] : Nonempty (∀ i, α i) :=
   ⟨fun _ => Classical.arbitrary _⟩
 
+#print Classical.nonempty_pi /-
 theorem Classical.nonempty_pi {ι} {α : ι → Sort _} : Nonempty (∀ i, α i) ↔ ∀ i, Nonempty (α i) :=
   ⟨fun ⟨f⟩ a => ⟨f a⟩, @Pi.nonempty _ _⟩
 #align classical.nonempty_pi Classical.nonempty_pi
+-/
 
 #print subsingleton_of_not_nonempty /-
 theorem subsingleton_of_not_nonempty {α : Sort _} (h : ¬Nonempty α) : Subsingleton α :=

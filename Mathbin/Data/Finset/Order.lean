@@ -22,6 +22,7 @@ universe u v w
 
 variable {α : Type u}
 
+#print Directed.finset_le /-
 theorem Directed.finset_le {r : α → α → Prop} [IsTrans α r] {ι} [hι : Nonempty ι] {f : ι → α}
     (D : Directed r f) (s : Finset ι) : ∃ z, ∀ i ∈ s, r (f i) (f z) :=
   show ∃ z, ∀ i ∈ s.1, r (f i) (f z) from
@@ -33,6 +34,7 @@ theorem Directed.finset_le {r : α → α → Prop} [IsTrans α r] {ι} [hι : N
       ⟨k, fun a h =>
         Or.cases_on (Multiset.mem_cons.1 h) (fun h => h.symm ▸ h₁) fun h => trans (H _ h) h₂⟩
 #align directed.finset_le Directed.finset_le
+-/
 
 #print Finset.exists_le /-
 theorem Finset.exists_le [Nonempty α] [Preorder α] [IsDirected α (· ≤ ·)] (s : Finset α) :

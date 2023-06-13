@@ -119,34 +119,44 @@ def swap : Sum C D ⥤ Sum D C
 #align category_theory.sum.swap CategoryTheory.Sum.swap
 -/
 
+#print CategoryTheory.Sum.swap_obj_inl /-
 @[simp]
 theorem swap_obj_inl (X : C) : (swap C D).obj (inl X) = inr X :=
   rfl
 #align category_theory.sum.swap_obj_inl CategoryTheory.Sum.swap_obj_inl
+-/
 
+#print CategoryTheory.Sum.swap_obj_inr /-
 @[simp]
 theorem swap_obj_inr (X : D) : (swap C D).obj (inr X) = inl X :=
   rfl
 #align category_theory.sum.swap_obj_inr CategoryTheory.Sum.swap_obj_inr
+-/
 
+#print CategoryTheory.Sum.swap_map_inl /-
 @[simp]
 theorem swap_map_inl {X Y : C} {f : inl X ⟶ inl Y} : (swap C D).map f = f :=
   rfl
 #align category_theory.sum.swap_map_inl CategoryTheory.Sum.swap_map_inl
+-/
 
+#print CategoryTheory.Sum.swap_map_inr /-
 @[simp]
 theorem swap_map_inr {X Y : D} {f : inr X ⟶ inr Y} : (swap C D).map f = f :=
   rfl
 #align category_theory.sum.swap_map_inr CategoryTheory.Sum.swap_map_inr
+-/
 
 namespace Swap
 
+#print CategoryTheory.Sum.Swap.equivalence /-
 /-- `swap` gives an equivalence between `C ⊕ D` and `D ⊕ C`. -/
 def equivalence : Sum C D ≌ Sum D C :=
   Equivalence.mk (swap C D) (swap D C)
     (NatIso.ofComponents (fun X => eqToIso (by cases X <;> rfl)) (by tidy))
     (NatIso.ofComponents (fun X => eqToIso (by cases X <;> rfl)) (by tidy))
 #align category_theory.sum.swap.equivalence CategoryTheory.Sum.Swap.equivalence
+-/
 
 #print CategoryTheory.Sum.Swap.isEquivalence /-
 instance isEquivalence : IsEquivalence (swap C D) :=
@@ -190,27 +200,35 @@ def sum (F : A ⥤ B) (G : C ⥤ D) : Sum A C ⥤ Sum B D
 #align category_theory.functor.sum CategoryTheory.Functor.sum
 -/
 
+#print CategoryTheory.Functor.sum_obj_inl /-
 @[simp]
 theorem sum_obj_inl (F : A ⥤ B) (G : C ⥤ D) (a : A) : (F.Sum G).obj (inl a) = inl (F.obj a) :=
   rfl
 #align category_theory.functor.sum_obj_inl CategoryTheory.Functor.sum_obj_inl
+-/
 
+#print CategoryTheory.Functor.sum_obj_inr /-
 @[simp]
 theorem sum_obj_inr (F : A ⥤ B) (G : C ⥤ D) (c : C) : (F.Sum G).obj (inr c) = inr (G.obj c) :=
   rfl
 #align category_theory.functor.sum_obj_inr CategoryTheory.Functor.sum_obj_inr
+-/
 
+#print CategoryTheory.Functor.sum_map_inl /-
 @[simp]
 theorem sum_map_inl (F : A ⥤ B) (G : C ⥤ D) {a a' : A} (f : inl a ⟶ inl a') :
     (F.Sum G).map f = F.map f :=
   rfl
 #align category_theory.functor.sum_map_inl CategoryTheory.Functor.sum_map_inl
+-/
 
+#print CategoryTheory.Functor.sum_map_inr /-
 @[simp]
 theorem sum_map_inr (F : A ⥤ B) (G : C ⥤ D) {c c' : C} (f : inr c ⟶ inr c') :
     (F.Sum G).map f = G.map f :=
   rfl
 #align category_theory.functor.sum_map_inr CategoryTheory.Functor.sum_map_inr
+-/
 
 end Functor
 
@@ -231,17 +249,21 @@ def sum {F G : A ⥤ B} {H I : C ⥤ D} (α : F ⟶ G) (β : H ⟶ I) : F.Sum H 
 #align category_theory.nat_trans.sum CategoryTheory.NatTrans.sum
 -/
 
+#print CategoryTheory.NatTrans.sum_app_inl /-
 @[simp]
 theorem sum_app_inl {F G : A ⥤ B} {H I : C ⥤ D} (α : F ⟶ G) (β : H ⟶ I) (a : A) :
     (sum α β).app (inl a) = α.app a :=
   rfl
 #align category_theory.nat_trans.sum_app_inl CategoryTheory.NatTrans.sum_app_inl
+-/
 
+#print CategoryTheory.NatTrans.sum_app_inr /-
 @[simp]
 theorem sum_app_inr {F G : A ⥤ B} {H I : C ⥤ D} (α : F ⟶ G) (β : H ⟶ I) (c : C) :
     (sum α β).app (inr c) = β.app c :=
   rfl
 #align category_theory.nat_trans.sum_app_inr CategoryTheory.NatTrans.sum_app_inr
+-/
 
 end NatTrans
 

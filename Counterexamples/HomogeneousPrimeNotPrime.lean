@@ -93,7 +93,6 @@ theorem grading.mul_mem :
 
 end
 
--- mathport name: exprR
 local notation "R" => ZMod 4
 
 /-- `R² ≅ {(a, a) | a ∈ R} ⨁ {(0, b) | b ∈ R}` by `(x, y) ↦ (x, x) + (0, y - x)`. -/

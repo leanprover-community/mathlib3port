@@ -50,6 +50,7 @@ open scoped Pointwise
 
 variable {E L : Type _} [MeasurableSpace E] {μ : Measure E} {F s : Set E}
 
+#print MeasureTheory.exists_pair_mem_lattice_not_disjoint_vadd /-
 /-- **Blichfeldt's Theorem**. If the volume of the set `s` is larger than the covolume of the
 countable subgroup `L` of `E`, then there exists two distincts points `x, y ∈ L` such that `(x + s)`
 and `(y + s)` are not disjoint. -/
@@ -66,8 +67,10 @@ theorem exists_pair_mem_lattice_not_disjoint_vadd [AddCommGroup L] [Countable L]
               fun _ => (hS.vadd _).inter fund.null_measurable_set).symm).trans_le
       (measure_mono <| Union_subset fun _ => inter_subset_right _ _)
 #align measure_theory.exists_pair_mem_lattice_not_disjoint_vadd MeasureTheory.exists_pair_mem_lattice_not_disjoint_vadd
+-/
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (x «expr ≠ » 0) -/
+#print MeasureTheory.exists_ne_zero_mem_lattice_of_measure_mul_two_pow_lt_measure /-
 /-- The **Minkowksi Convex Body Theorem**. If `s` is a convex symmetric domain of `E` whose volume
 is large enough compared to the covolume of a lattice `L` of `E`, then it contains a non-zero
 lattice point of `L`.  -/
@@ -93,6 +96,7 @@ theorem exists_ne_zero_mem_lattice_of_measure_mul_two_pow_lt_measure [NormedAddC
   rw [← hvw, ← inv_smul_smul₀ (two_ne_zero' ℝ) (_ - _), smul_sub, sub_eq_add_neg, smul_add]
   refine' h_conv hw (h_symm _ hv) _ _ _ <;> norm_num
 #align measure_theory.exists_ne_zero_mem_lattice_of_measure_mul_two_pow_lt_measure MeasureTheory.exists_ne_zero_mem_lattice_of_measure_mul_two_pow_lt_measure
+-/
 
 end MeasureTheory
 

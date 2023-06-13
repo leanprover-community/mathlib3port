@@ -42,10 +42,12 @@ namespace Cat
 
 namespace HasLimits
 
+#print CategoryTheory.Cat.HasLimits.categoryObjects /-
 instance categoryObjects {F : J ⥤ Cat.{u, u}} {j} :
     SmallCategory ((F ⋙ Cat.objects.{u, u}).obj j) :=
   (F.obj j).str
 #align category_theory.Cat.has_limits.category_objects CategoryTheory.Cat.HasLimits.categoryObjects
+-/
 
 #print CategoryTheory.Cat.HasLimits.homDiagram /-
 /-- Auxiliary definition:
@@ -139,6 +141,7 @@ def limitConeLift (F : J ⥤ Cat.{v, v}) (s : Cone F) : s.pt ⟶ limitConeX F
 #align category_theory.Cat.has_limits.limit_cone_lift CategoryTheory.Cat.HasLimits.limitConeLift
 -/
 
+#print CategoryTheory.Cat.HasLimits.limit_π_homDiagram_eqToHom /-
 @[simp]
 theorem limit_π_homDiagram_eqToHom {F : J ⥤ Cat.{v, v}} (X Y : limit (F ⋙ Cat.objects.{v, v}))
     (j : J) (h : X = Y) :
@@ -146,6 +149,7 @@ theorem limit_π_homDiagram_eqToHom {F : J ⥤ Cat.{v, v}} (X Y : limit (F ⋙ C
       eqToHom (congr_arg (limit.π (F ⋙ Cat.objects.{v, v}) j) h) :=
   by subst h; simp
 #align category_theory.Cat.has_limits.limit_π_hom_diagram_eq_to_hom CategoryTheory.Cat.HasLimits.limit_π_homDiagram_eqToHom
+-/
 
 #print CategoryTheory.Cat.HasLimits.limitConeIsLimit /-
 /-- Auxiliary definition: the proposed cone is a limit cone. -/

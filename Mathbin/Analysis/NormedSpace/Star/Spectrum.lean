@@ -21,7 +21,6 @@ In this file, we establish various properties related to the spectrum of element
 -/
 
 
--- mathport name: «expr ⋆»
 local postfix:max "⋆" => star
 
 section
@@ -35,6 +34,7 @@ section UnitarySpectrum
 variable {𝕜 : Type _} [NormedField 𝕜] {E : Type _} [NormedRing E] [StarRing E] [CstarRing E]
   [NormedAlgebra 𝕜 E] [CompleteSpace E]
 
+#print unitary.spectrum_subset_circle /-
 theorem unitary.spectrum_subset_circle (u : unitary E) : spectrum 𝕜 (u : E) ⊆ Metric.sphere 0 1 :=
   by
   nontriviality E
@@ -46,11 +46,14 @@ theorem unitary.spectrum_subset_circle (u : unitary E) : spectrum 𝕜 (u : E) �
     have : ‖k‖⁻¹ ≤ ‖↑(unitary.toUnits u)⁻¹‖; simpa only [norm_inv] using norm_le_norm_of_mem hk
     simpa using inv_le_of_inv_le (norm_pos_iff.mpr hnk) this
 #align unitary.spectrum_subset_circle unitary.spectrum_subset_circle
+-/
 
+#print spectrum.subset_circle_of_unitary /-
 theorem spectrum.subset_circle_of_unitary {u : E} (h : u ∈ unitary E) :
     spectrum 𝕜 u ⊆ Metric.sphere 0 1 :=
   unitary.spectrum_subset_circle ⟨u, h⟩
 #align spectrum.subset_circle_of_unitary spectrum.subset_circle_of_unitary
+-/
 
 end UnitarySpectrum
 
@@ -61,9 +64,9 @@ open Complex
 variable {A : Type _} [NormedRing A] [NormedAlgebra ℂ A] [CompleteSpace A] [StarRing A]
   [CstarRing A]
 
--- mathport name: «expr↑ₐ»
 local notation "↑ₐ" => algebraMap ℂ A
 
+#print IsSelfAdjoint.spectralRadius_eq_nnnorm /-
 theorem IsSelfAdjoint.spectralRadius_eq_nnnorm {a : A} (ha : IsSelfAdjoint a) :
     spectralRadius ℂ a = ‖a‖₊ :=
   by
@@ -76,7 +79,9 @@ theorem IsSelfAdjoint.spectralRadius_eq_nnnorm {a : A} (ha : IsSelfAdjoint a) :
   rw [Function.comp_apply, ha.nnnorm_pow_two_pow, ENNReal.coe_pow, ← rpow_nat_cast, ← rpow_mul]
   simp
 #align is_self_adjoint.spectral_radius_eq_nnnorm IsSelfAdjoint.spectralRadius_eq_nnnorm
+-/
 
+#print IsStarNormal.spectralRadius_eq_nnnorm /-
 theorem IsStarNormal.spectralRadius_eq_nnnorm (a : A) [IsStarNormal a] :
     spectralRadius ℂ a = ‖a‖₊ :=
   by
@@ -95,7 +100,9 @@ theorem IsStarNormal.spectralRadius_eq_nnnorm (a : A) [IsStarNormal a] :
   convert tendsto_nhds_unique h₂ (pow_nnnorm_pow_one_div_tendsto_nhds_spectral_radius (a⋆ * a))
   rw [(IsSelfAdjoint.star_mul_self a).spectralRadius_eq_nnnorm, sq, nnnorm_star_mul_self, coe_mul]
 #align is_star_normal.spectral_radius_eq_nnnorm IsStarNormal.spectralRadius_eq_nnnorm
+-/
 
+#print IsSelfAdjoint.mem_spectrum_eq_re /-
 /-- Any element of the spectrum of a selfadjoint is real. -/
 theorem IsSelfAdjoint.mem_spectrum_eq_re [StarModule ℂ A] {a : A} (ha : IsSelfAdjoint a) {z : ℂ}
     (hz : z ∈ spectrum ℂ a) : z = z.re :=
@@ -112,13 +119,17 @@ theorem IsSelfAdjoint.mem_spectrum_eq_re [StarModule ℂ A] {a : A} (ha : IsSelf
           Real.exp_eq_one_iff, smul_eq_mul, I_mul, neg_eq_zero] using
           spectrum.subset_circle_of_unitary hu this)
 #align is_self_adjoint.mem_spectrum_eq_re IsSelfAdjoint.mem_spectrum_eq_re
+-/
 
+#print selfAdjoint.mem_spectrum_eq_re /-
 /-- Any element of the spectrum of a selfadjoint is real. -/
 theorem selfAdjoint.mem_spectrum_eq_re [StarModule ℂ A] (a : selfAdjoint A) {z : ℂ}
     (hz : z ∈ spectrum ℂ (a : A)) : z = z.re :=
   a.Prop.mem_spectrum_eq_re hz
 #align self_adjoint.mem_spectrum_eq_re selfAdjoint.mem_spectrum_eq_re
+-/
 
+#print IsSelfAdjoint.val_re_map_spectrum /-
 /-- The spectrum of a selfadjoint is real -/
 theorem IsSelfAdjoint.val_re_map_spectrum [StarModule ℂ A] {a : A} (ha : IsSelfAdjoint a) :
     spectrum ℂ a = (coe ∘ re '' spectrum ℂ a : Set ℂ) :=
@@ -127,12 +138,15 @@ theorem IsSelfAdjoint.val_re_map_spectrum [StarModule ℂ A] {a : A} (ha : IsSel
     rintro ⟨z, hz, rfl⟩
     simpa only [(ha.mem_spectrum_eq_re hz).symm, Function.comp_apply] using hz
 #align is_self_adjoint.coe_re_map_spectrum IsSelfAdjoint.val_re_map_spectrum
+-/
 
+#print selfAdjoint.val_re_map_spectrum /-
 /-- The spectrum of a selfadjoint is real -/
 theorem selfAdjoint.val_re_map_spectrum [StarModule ℂ A] (a : selfAdjoint A) :
     spectrum ℂ (a : A) = (coe ∘ re '' spectrum ℂ (a : A) : Set ℂ) :=
   a.property.val_re_map_spectrum
 #align self_adjoint.coe_re_map_spectrum selfAdjoint.val_re_map_spectrum
+-/
 
 end ComplexScalars
 
@@ -142,8 +156,7 @@ variable {F A B : Type _} [NormedRing A] [NormedAlgebra ℂ A] [CompleteSpace A]
   [CstarRing A] [NormedRing B] [NormedAlgebra ℂ B] [CompleteSpace B] [StarRing B] [CstarRing B]
   [hF : StarAlgHomClass F ℂ A B] (φ : F)
 
-include hF
-
+#print StarAlgHom.nnnorm_apply_le /-
 /-- A star algebra homomorphism of complex C⋆-algebras is norm contractive. -/
 theorem nnnorm_apply_le (a : A) : ‖(φ a : B)‖₊ ≤ ‖a‖₊ :=
   by
@@ -159,11 +172,14 @@ theorem nnnorm_apply_le (a : A) : ‖(φ a : B)‖₊ ≤ ‖a‖₊ :=
       show spectralRadius ℂ (φ s) ≤ spectralRadius ℂ s from
         iSup_le_iSup_of_subset (AlgHom.spectrum_apply_subset φ s)
 #align star_alg_hom.nnnorm_apply_le StarAlgHom.nnnorm_apply_le
+-/
 
+#print StarAlgHom.norm_apply_le /-
 /-- A star algebra homomorphism of complex C⋆-algebras is norm contractive. -/
 theorem norm_apply_le (a : A) : ‖(φ a : B)‖ ≤ ‖a‖ :=
   nnnorm_apply_le φ a
 #align star_alg_hom.norm_apply_le StarAlgHom.norm_apply_le
+-/
 
 /-- Star algebra homomorphisms between C⋆-algebras are continuous linear maps.
 See note [lower instance priority] -/
@@ -185,8 +201,6 @@ open scoped ComplexStarModule
 variable {F A : Type _} [NormedRing A] [NormedAlgebra ℂ A] [CompleteSpace A] [StarRing A]
   [CstarRing A] [StarModule ℂ A] [hF : AlgHomClass F ℂ A ℂ]
 
-include hF
-
 /-- This instance is provided instead of `star_alg_hom_class` to avoid type class inference loops.
 See note [lower instance priority] -/
 noncomputable instance (priority := 100) : StarHomClass F A ℂ
@@ -203,13 +217,13 @@ noncomputable instance (priority := 100) : StarHomClass F A ℂ
       rcases this with ⟨⟨_, _⟩, _, heq⟩
       rw [← HEq, IsROrC.star_def, IsROrC.conj_ofReal]
 
+#print AlgHomClass.instStarAlgHomClass /-
 /-- This is not an instance to avoid type class inference loops. See
 `weak_dual.complex.star_hom_class`. -/
 noncomputable def AlgHomClass.instStarAlgHomClass : StarAlgHomClass F ℂ A ℂ :=
   { WeakDual.Complex.starHomClass, hF with coe := fun f => f }
 #align alg_hom_class.star_alg_hom_class AlgHomClass.instStarAlgHomClass
-
-omit hF
+-/
 
 namespace CharacterSpace
 

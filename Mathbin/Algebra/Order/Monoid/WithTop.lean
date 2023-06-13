@@ -68,35 +68,45 @@ theorem untop_one' (d : α) : (1 : WithTop α).untop' d = 1 :=
 #align with_top.untop_zero' WithTop.untop_zero'
 -/
 
+#print WithTop.one_le_coe /-
 @[simp, norm_cast, to_additive coe_nonneg]
 theorem one_le_coe [LE α] {a : α} : 1 ≤ (a : WithTop α) ↔ 1 ≤ a :=
   coe_le_coe
 #align with_top.one_le_coe WithTop.one_le_coe
 #align with_top.coe_nonneg WithTop.coe_nonneg
+-/
 
+#print WithTop.coe_le_one /-
 @[simp, norm_cast, to_additive coe_le_zero]
 theorem coe_le_one [LE α] {a : α} : (a : WithTop α) ≤ 1 ↔ a ≤ 1 :=
   coe_le_coe
 #align with_top.coe_le_one WithTop.coe_le_one
 #align with_top.coe_le_zero WithTop.coe_le_zero
+-/
 
+#print WithTop.one_lt_coe /-
 @[simp, norm_cast, to_additive coe_pos]
 theorem one_lt_coe [LT α] {a : α} : 1 < (a : WithTop α) ↔ 1 < a :=
   coe_lt_coe
 #align with_top.one_lt_coe WithTop.one_lt_coe
 #align with_top.coe_pos WithTop.coe_pos
+-/
 
+#print WithTop.coe_lt_one /-
 @[simp, norm_cast, to_additive coe_lt_zero]
 theorem coe_lt_one [LT α] {a : α} : (a : WithTop α) < 1 ↔ a < 1 :=
   coe_lt_coe
 #align with_top.coe_lt_one WithTop.coe_lt_one
 #align with_top.coe_lt_zero WithTop.coe_lt_zero
+-/
 
+#print WithTop.map_one /-
 @[simp, to_additive]
 protected theorem map_one {β} (f : α → β) : (1 : WithTop α).map f = (f 1 : WithTop β) :=
   rfl
 #align with_top.map_one WithTop.map_one
 #align with_top.map_zero WithTop.map_zero
+-/
 
 #print WithTop.one_eq_coe /-
 @[simp, norm_cast, to_additive]
@@ -181,9 +191,11 @@ theorem add_ne_top : a + b ≠ ⊤ ↔ a ≠ ⊤ ∧ b ≠ ⊤ :=
 #align with_top.add_ne_top WithTop.add_ne_top
 -/
 
+#print WithTop.add_lt_top /-
 theorem add_lt_top [LT α] {a b : WithTop α} : a + b < ⊤ ↔ a < ⊤ ∧ b < ⊤ := by
   simp_rw [WithTop.lt_top_iff_ne_top, add_ne_top]
 #align with_top.add_lt_top WithTop.add_lt_top
+-/
 
 #print WithTop.add_eq_coe /-
 theorem add_eq_coe :
@@ -209,6 +221,7 @@ theorem coe_add_eq_top_iff {y : WithTop α} : ↑x + y = ⊤ ↔ y = ⊤ := by
 #align with_top.coe_add_eq_top_iff WithTop.coe_add_eq_top_iff
 -/
 
+#print WithTop.covariantClass_add_le /-
 instance covariantClass_add_le [LE α] [CovariantClass α α (· + ·) (· ≤ ·)] :
     CovariantClass (WithTop α) (WithTop α) (· + ·) (· ≤ ·) :=
   ⟨fun a b c h => by
@@ -216,7 +229,9 @@ instance covariantClass_add_le [LE α] [CovariantClass α α (· + ·) (· ≤ �
     rcases le_coe_iff.1 h with ⟨b, rfl, h'⟩
     exact coe_le_coe.2 (add_le_add_left (coe_le_coe.1 h) _)⟩
 #align with_top.covariant_class_add_le WithTop.covariantClass_add_le
+-/
 
+#print WithTop.covariantClass_swap_add_le /-
 instance covariantClass_swap_add_le [LE α] [CovariantClass α α (swap (· + ·)) (· ≤ ·)] :
     CovariantClass (WithTop α) (WithTop α) (swap (· + ·)) (· ≤ ·) :=
   ⟨fun a b c h => by
@@ -224,7 +239,9 @@ instance covariantClass_swap_add_le [LE α] [CovariantClass α α (swap (· + ·
     rcases le_coe_iff.1 h with ⟨b, rfl, h'⟩
     exact coe_le_coe.2 (add_le_add_right (coe_le_coe.1 h) _)⟩
 #align with_top.covariant_class_swap_add_le WithTop.covariantClass_swap_add_le
+-/
 
+#print WithTop.contravariantClass_add_lt /-
 instance contravariantClass_add_lt [LT α] [ContravariantClass α α (· + ·) (· < ·)] :
     ContravariantClass (WithTop α) (WithTop α) (· + ·) (· < ·) :=
   ⟨fun a b c h => by
@@ -234,7 +251,9 @@ instance contravariantClass_add_lt [LT α] [ContravariantClass α α (· + ·) (
     · exact coe_lt_top _
     · exact coe_lt_coe.2 (lt_of_add_lt_add_left <| coe_lt_coe.1 h)⟩
 #align with_top.contravariant_class_add_lt WithTop.contravariantClass_add_lt
+-/
 
+#print WithTop.contravariantClass_swap_add_lt /-
 instance contravariantClass_swap_add_lt [LT α] [ContravariantClass α α (swap (· + ·)) (· < ·)] :
     ContravariantClass (WithTop α) (WithTop α) (swap (· + ·)) (· < ·) :=
   ⟨fun a b c h => by
@@ -243,7 +262,9 @@ instance contravariantClass_swap_add_lt [LT α] [ContravariantClass α α (swap 
     · exact coe_lt_top _
     · exact coe_lt_coe.2 (lt_of_add_lt_add_right <| coe_lt_coe.1 h)⟩
 #align with_top.contravariant_class_swap_add_lt WithTop.contravariantClass_swap_add_lt
+-/
 
+#print WithTop.le_of_add_le_add_left /-
 protected theorem le_of_add_le_add_left [LE α] [ContravariantClass α α (· + ·) (· ≤ ·)] (ha : a ≠ ⊤)
     (h : a + b ≤ a + c) : b ≤ c := by
   lift a to α using ha
@@ -252,7 +273,9 @@ protected theorem le_of_add_le_add_left [LE α] [ContravariantClass α α (· + 
   simp only [← coe_add, coe_le_coe] at h ⊢
   exact le_of_add_le_add_left h
 #align with_top.le_of_add_le_add_left WithTop.le_of_add_le_add_left
+-/
 
+#print WithTop.le_of_add_le_add_right /-
 protected theorem le_of_add_le_add_right [LE α] [ContravariantClass α α (swap (· + ·)) (· ≤ ·)]
     (ha : a ≠ ⊤) (h : b + a ≤ c + a) : b ≤ c :=
   by
@@ -263,7 +286,9 @@ protected theorem le_of_add_le_add_right [LE α] [ContravariantClass α α (swap
   · exact (not_top_le_coe _ h).elim
   · exact coe_le_coe.2 (le_of_add_le_add_right <| coe_le_coe.1 h)
 #align with_top.le_of_add_le_add_right WithTop.le_of_add_le_add_right
+-/
 
+#print WithTop.add_lt_add_left /-
 protected theorem add_lt_add_left [LT α] [CovariantClass α α (· + ·) (· < ·)] (ha : a ≠ ⊤)
     (h : b < c) : a + b < a + c := by
   lift a to α using ha
@@ -272,7 +297,9 @@ protected theorem add_lt_add_left [LT α] [CovariantClass α α (· + ·) (· < 
   · exact coe_lt_top _
   · exact coe_lt_coe.2 (add_lt_add_left (coe_lt_coe.1 h) _)
 #align with_top.add_lt_add_left WithTop.add_lt_add_left
+-/
 
+#print WithTop.add_lt_add_right /-
 protected theorem add_lt_add_right [LT α] [CovariantClass α α (swap (· + ·)) (· < ·)] (ha : a ≠ ⊤)
     (h : b < c) : b + a < c + a := by
   lift a to α using ha
@@ -281,26 +308,35 @@ protected theorem add_lt_add_right [LT α] [CovariantClass α α (swap (· + ·)
   · exact coe_lt_top _
   · exact coe_lt_coe.2 (add_lt_add_right (coe_lt_coe.1 h) _)
 #align with_top.add_lt_add_right WithTop.add_lt_add_right
+-/
 
+#print WithTop.add_le_add_iff_left /-
 protected theorem add_le_add_iff_left [LE α] [CovariantClass α α (· + ·) (· ≤ ·)]
     [ContravariantClass α α (· + ·) (· ≤ ·)] (ha : a ≠ ⊤) : a + b ≤ a + c ↔ b ≤ c :=
   ⟨WithTop.le_of_add_le_add_left ha, fun h => add_le_add_left h a⟩
 #align with_top.add_le_add_iff_left WithTop.add_le_add_iff_left
+-/
 
+#print WithTop.add_le_add_iff_right /-
 protected theorem add_le_add_iff_right [LE α] [CovariantClass α α (swap (· + ·)) (· ≤ ·)]
     [ContravariantClass α α (swap (· + ·)) (· ≤ ·)] (ha : a ≠ ⊤) : b + a ≤ c + a ↔ b ≤ c :=
   ⟨WithTop.le_of_add_le_add_right ha, fun h => add_le_add_right h a⟩
 #align with_top.add_le_add_iff_right WithTop.add_le_add_iff_right
+-/
 
+#print WithTop.add_lt_add_iff_left /-
 protected theorem add_lt_add_iff_left [LT α] [CovariantClass α α (· + ·) (· < ·)]
     [ContravariantClass α α (· + ·) (· < ·)] (ha : a ≠ ⊤) : a + b < a + c ↔ b < c :=
   ⟨lt_of_add_lt_add_left, WithTop.add_lt_add_left ha⟩
 #align with_top.add_lt_add_iff_left WithTop.add_lt_add_iff_left
+-/
 
+#print WithTop.add_lt_add_iff_right /-
 protected theorem add_lt_add_iff_right [LT α] [CovariantClass α α (swap (· + ·)) (· < ·)]
     [ContravariantClass α α (swap (· + ·)) (· < ·)] (ha : a ≠ ⊤) : b + a < c + a ↔ b < c :=
   ⟨lt_of_add_lt_add_right, WithTop.add_lt_add_right ha⟩
 #align with_top.add_lt_add_iff_right WithTop.add_lt_add_iff_right
+-/
 
 #print WithTop.add_lt_add_of_le_of_lt /-
 protected theorem add_lt_add_of_le_of_lt [Preorder α] [CovariantClass α α (· + ·) (· < ·)]
@@ -318,6 +354,7 @@ protected theorem add_lt_add_of_lt_of_le [Preorder α] [CovariantClass α α (·
 #align with_top.add_lt_add_of_lt_of_le WithTop.add_lt_add_of_lt_of_le
 -/
 
+#print WithTop.map_add /-
 --  There is no `with_top.map_mul_of_mul_hom`, since `with_top` does not have a multiplication.
 @[simp]
 protected theorem map_add {F} [Add β] [AddHomClass F α β] (f : F) (a b : WithTop α) :
@@ -330,6 +367,7 @@ protected theorem map_add {F} [Add β] [AddHomClass F α β] (f : F) (a b : With
     · rw [map_coe, map_coe, ← coe_add, ← coe_add, ← map_add]
       rfl
 #align with_top.map_add WithTop.map_add
+-/
 
 end Add
 
@@ -430,15 +468,19 @@ theorem coe_addHom [AddMonoid α] : ⇑(addHom : α →+ WithTop α) = coe :=
   rfl
 #align with_top.coe_coe_add_hom WithTop.coe_addHom
 
+#print WithTop.zero_lt_top /-
 @[simp]
 theorem zero_lt_top [OrderedAddCommMonoid α] : (0 : WithTop α) < ⊤ :=
   coe_lt_top 0
 #align with_top.zero_lt_top WithTop.zero_lt_top
+-/
 
+#print WithTop.zero_lt_coe /-
 @[simp, norm_cast]
 theorem zero_lt_coe [OrderedAddCommMonoid α] (a : α) : (0 : WithTop α) < a ↔ 0 < a :=
   coe_lt_coe
 #align with_top.zero_lt_coe WithTop.zero_lt_coe
+-/
 
 #print OneHom.withTopMap /-
 /-- A version of `with_top.map` for `one_hom`s. -/
@@ -540,35 +582,45 @@ theorem unbot_one' [One α] (d : α) : (1 : WithBot α).unbot' d = 1 :=
 #align with_bot.unbot_zero' WithBot.unbot_zero'
 -/
 
+#print WithBot.one_le_coe /-
 @[simp, norm_cast, to_additive coe_nonneg]
 theorem one_le_coe [One α] [LE α] {a : α} : 1 ≤ (a : WithBot α) ↔ 1 ≤ a :=
   coe_le_coe
 #align with_bot.one_le_coe WithBot.one_le_coe
 #align with_bot.coe_nonneg WithBot.coe_nonneg
+-/
 
+#print WithBot.coe_le_one /-
 @[simp, norm_cast, to_additive coe_le_zero]
 theorem coe_le_one [One α] [LE α] {a : α} : (a : WithBot α) ≤ 1 ↔ a ≤ 1 :=
   coe_le_coe
 #align with_bot.coe_le_one WithBot.coe_le_one
 #align with_bot.coe_le_zero WithBot.coe_le_zero
+-/
 
+#print WithBot.one_lt_coe /-
 @[simp, norm_cast, to_additive coe_pos]
 theorem one_lt_coe [One α] [LT α] {a : α} : 1 < (a : WithBot α) ↔ 1 < a :=
   coe_lt_coe
 #align with_bot.one_lt_coe WithBot.one_lt_coe
 #align with_bot.coe_pos WithBot.coe_pos
+-/
 
+#print WithBot.coe_lt_one /-
 @[simp, norm_cast, to_additive coe_lt_zero]
 theorem coe_lt_one [One α] [LT α] {a : α} : (a : WithBot α) < 1 ↔ a < 1 :=
   coe_lt_coe
 #align with_bot.coe_lt_one WithBot.coe_lt_one
 #align with_bot.coe_lt_zero WithBot.coe_lt_zero
+-/
 
+#print WithBot.map_one /-
 @[simp, to_additive]
 protected theorem map_one {β} [One α] (f : α → β) : (1 : WithBot α).map f = (f 1 : WithBot β) :=
   rfl
 #align with_bot.map_one WithBot.map_one
 #align with_bot.map_zero WithBot.map_zero
+-/
 
 #print WithBot.coe_nat /-
 @[norm_cast]
@@ -640,9 +692,11 @@ theorem add_ne_bot : a + b ≠ ⊥ ↔ a ≠ ⊥ ∧ b ≠ ⊥ :=
 #align with_bot.add_ne_bot WithBot.add_ne_bot
 -/
 
+#print WithBot.bot_lt_add /-
 theorem bot_lt_add [LT α] {a b : WithBot α} : ⊥ < a + b ↔ ⊥ < a ∧ ⊥ < b :=
   @WithTop.add_lt_top αᵒᵈ _ _ _ _
 #align with_bot.bot_lt_add WithBot.bot_lt_add
+-/
 
 #print WithBot.add_eq_coe /-
 theorem add_eq_coe : a + b = x ↔ ∃ a' b' : α, ↑a' = a ∧ ↑b' = b ∧ a' + b' = x :=
@@ -664,12 +718,14 @@ theorem coe_add_eq_bot_iff : ↑x + b = ⊥ ↔ b = ⊥ :=
 #align with_bot.coe_add_eq_bot_iff WithBot.coe_add_eq_bot_iff
 -/
 
+#print WithBot.map_add /-
 --  There is no `with_bot.map_mul_of_mul_hom`, since `with_bot` does not have a multiplication.
 @[simp]
 protected theorem map_add {F} [Add β] [AddHomClass F α β] (f : F) (a b : WithBot α) :
     (a + b).map f = a.map f + b.map f :=
   WithTop.map_add f a b
 #align with_bot.map_add WithBot.map_add
+-/
 
 #print OneHom.withBotMap /-
 /-- A version of `with_bot.map` for `one_hom`s. -/

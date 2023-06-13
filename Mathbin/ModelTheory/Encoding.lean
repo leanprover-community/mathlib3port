@@ -146,10 +146,13 @@ theorem listEncode_injective :
 #align first_order.language.term.list_encode_injective FirstOrder.Language.Term.listEncode_injective
 -/
 
+#print FirstOrder.Language.Term.card_le /-
 theorem card_le : (#L.term α) ≤ max ℵ₀ (#Sum α (Σ i, L.Functions i)) :=
   lift_le.1 (trans Term.encoding.card_le_card_list (lift_le.2 (mk_list_le_max _)))
 #align first_order.language.term.card_le FirstOrder.Language.Term.card_le
+-/
 
+#print FirstOrder.Language.Term.card_sigma /-
 theorem card_sigma : (#Σ n, L.term (Sum α (Fin n))) = max ℵ₀ (#Sum α (Σ i, L.Functions i)) :=
   by
   refine' le_antisymm _ _
@@ -184,6 +187,7 @@ theorem card_sigma : (#Σ n, L.term (Sum α (Fin n))) = max ℵ₀ (#Sum α (Σ 
         · simp only [Sum.elim_inr, eq_self_iff_true, heq_iff_eq, true_and_iff] at h 
           rw [Sigma.ext_iff.2 ⟨h.1, h.2.1⟩]
 #align first_order.language.term.card_sigma FirstOrder.Language.Term.card_sigma
+-/
 
 instance [Encodable α] [Encodable (Σ i, L.Functions i)] : Encodable (L.term α) :=
   Encodable.ofLeftInjection listEncode (fun l => (listDecode l).head?.join) fun t =>
@@ -248,6 +252,7 @@ def sigmaImp : (Σ n, L.BoundedFormula α n) → (Σ n, L.BoundedFormula α n) �
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print FirstOrder.Language.BoundedFormula.listDecode /-
 /-- Decodes a list of symbols as a list of formulas. -/
 @[simp]
 def listDecode :
@@ -288,6 +293,7 @@ def listDecode :
       (list_decode l).2.2.trans (max_le_max le_rfl le_add_self)⟩
   | _ => ⟨default, [], le_max_left _ _⟩
 #align first_order.language.bounded_formula.list_decode FirstOrder.Language.BoundedFormula.listDecode
+-/
 
 #print FirstOrder.Language.BoundedFormula.listDecode_encode_list /-
 @[simp]
@@ -382,6 +388,7 @@ theorem listEncode_sigma_injective :
 #align first_order.language.bounded_formula.list_encode_sigma_injective FirstOrder.Language.BoundedFormula.listEncode_sigma_injective
 -/
 
+#print FirstOrder.Language.BoundedFormula.card_le /-
 theorem card_le :
     (#Σ n, L.BoundedFormula α n) ≤
       max ℵ₀ (Cardinal.lift.{max u v} (#α) + Cardinal.lift.{u'} L.card) :=
@@ -395,6 +402,7 @@ theorem card_le :
   rw [← add_assoc, add_comm, ← add_assoc, ← add_assoc, aleph_0_add_aleph_0, add_assoc,
     add_eq_max le_rfl, add_assoc, card, symbols, mk_sum, lift_add, lift_lift, lift_lift]
 #align first_order.language.bounded_formula.card_le FirstOrder.Language.BoundedFormula.card_le
+-/
 
 end BoundedFormula
 

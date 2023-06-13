@@ -89,9 +89,11 @@ instance concreteCategory : ConcreteCategory Profinite :=
 #align Profinite.concrete_category Profinite.concreteCategory
 -/
 
+#print Profinite.hasForget₂ /-
 instance hasForget₂ : HasForget₂ Profinite TopCat :=
   InducedCategory.hasForget₂ _
 #align Profinite.has_forget₂ Profinite.hasForget₂
+-/
 
 instance : CoeSort Profinite (Type _) :=
   ⟨fun X => X.toCompHaus⟩
@@ -111,15 +113,19 @@ theorem coe_toCompHaus {X : Profinite} : (X.toCompHaus : Type _) = X :=
   rfl
 #align Profinite.coe_to_CompHaus Profinite.coe_toCompHaus
 
+#print Profinite.coe_id /-
 @[simp]
 theorem coe_id (X : Profinite) : (𝟙 X : X → X) = id :=
   rfl
 #align Profinite.coe_id Profinite.coe_id
+-/
 
+#print Profinite.coe_comp /-
 @[simp]
 theorem coe_comp {X Y Z : Profinite} (f : X ⟶ Y) (g : Y ⟶ Z) : (f ≫ g : X → Z) = g ∘ f :=
   rfl
 #align Profinite.coe_comp Profinite.coe_comp
+-/
 
 end Profinite
 
@@ -169,6 +175,7 @@ def CompHaus.toProfiniteObj (X : CompHaus.{u}) : Profinite.{u}
 #align CompHaus.to_Profinite_obj CompHaus.toProfiniteObj
 -/
 
+#print Profinite.toCompHausEquivalence /-
 /-- (Implementation) The bijection of homsets to establish the reflective adjunction of Profinite
 spaces in compact Hausdorff spaces.
 -/
@@ -182,6 +189,7 @@ def Profinite.toCompHausEquivalence (X : CompHaus.{u}) (Y : Profinite.{u}) :
   left_inv f := ContinuousMap.ext <| ConnectedComponents.surjective_coe.forall.2 fun a => rfl
   right_inv f := ContinuousMap.ext fun x => rfl
 #align Profinite.to_CompHaus_equivalence Profinite.toCompHausEquivalence
+-/
 
 #print CompHaus.toProfinite /-
 /-- The connected_components functor from compact Hausdorff spaces to profinite spaces,
@@ -192,10 +200,12 @@ def CompHaus.toProfinite : CompHaus ⥤ Profinite :=
 #align CompHaus.to_Profinite CompHaus.toProfinite
 -/
 
+#print CompHaus.toProfinite_obj' /-
 theorem CompHaus.toProfinite_obj' (X : CompHaus) :
     ↥(CompHaus.toProfinite.obj X) = ConnectedComponents X :=
   rfl
 #align CompHaus.to_Profinite_obj' CompHaus.toProfinite_obj'
+-/
 
 #print FintypeCat.botTopology /-
 /-- Finite types are given the discrete topology. -/
@@ -313,22 +323,28 @@ noncomputable instance forgetPreservesLimits : Limits.PreservesLimits (forget Pr
 
 variable {X Y : Profinite.{u}} (f : X ⟶ Y)
 
+#print Profinite.isClosedMap /-
 /-- Any morphism of profinite spaces is a closed map. -/
 theorem isClosedMap : IsClosedMap f :=
   CompHaus.isClosedMap _
 #align Profinite.is_closed_map Profinite.isClosedMap
+-/
 
+#print Profinite.isIso_of_bijective /-
 /-- Any continuous bijection of profinite spaces induces an isomorphism. -/
 theorem isIso_of_bijective (bij : Function.Bijective f) : IsIso f :=
   haveI := CompHaus.isIso_of_bijective (Profinite_to_CompHaus.map f) bij
   is_iso_of_fully_faithful profiniteToCompHaus _
 #align Profinite.is_iso_of_bijective Profinite.isIso_of_bijective
+-/
 
+#print Profinite.isoOfBijective /-
 /-- Any continuous bijection of profinite spaces induces an isomorphism. -/
 noncomputable def isoOfBijective (bij : Function.Bijective f) : X ≅ Y :=
   letI := Profinite.isIso_of_bijective f bij
   as_iso f
 #align Profinite.iso_of_bijective Profinite.isoOfBijective
+-/
 
 #print Profinite.forget_reflectsIsomorphisms /-
 instance forget_reflectsIsomorphisms : ReflectsIsomorphisms (forget Profinite) :=
@@ -374,6 +390,7 @@ def isoEquivHomeo : (X ≅ Y) ≃ (X ≃ₜ Y)
 #align Profinite.iso_equiv_homeo Profinite.isoEquivHomeo
 -/
 
+#print Profinite.epi_iff_surjective /-
 theorem epi_iff_surjective {X Y : Profinite.{u}} (f : X ⟶ Y) : Epi f ↔ Function.Surjective f :=
   by
   constructor
@@ -402,7 +419,9 @@ theorem epi_iff_surjective {X Y : Profinite.{u}} (f : X ⟶ Y) : Epi f ↔ Funct
   · rw [← CategoryTheory.epi_iff_surjective]
     apply (forget Profinite).epi_of_epi_map
 #align Profinite.epi_iff_surjective Profinite.epi_iff_surjective
+-/
 
+#print Profinite.mono_iff_injective /-
 theorem mono_iff_injective {X Y : Profinite.{u}} (f : X ⟶ Y) : Mono f ↔ Function.Injective f :=
   by
   constructor
@@ -413,6 +432,7 @@ theorem mono_iff_injective {X Y : Profinite.{u}} (f : X ⟶ Y) : Mono f ↔ Func
   · rw [← CategoryTheory.mono_iff_injective]
     apply (forget Profinite).mono_of_mono_map
 #align Profinite.mono_iff_injective Profinite.mono_iff_injective
+-/
 
 end Profinite
 

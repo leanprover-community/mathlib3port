@@ -162,11 +162,13 @@ def liftLimit {K : J ⥤ C} {F : C ⥤ D} [CreatesLimit K F] {c : Cone (K ⋙ F)
 #align category_theory.lift_limit CategoryTheory.liftLimit
 -/
 
+#print CategoryTheory.liftedLimitMapsToOriginal /-
 /-- The lifted cone has an image isomorphic to the original cone. -/
 def liftedLimitMapsToOriginal {K : J ⥤ C} {F : C ⥤ D} [CreatesLimit K F] {c : Cone (K ⋙ F)}
     (t : IsLimit c) : F.mapCone (liftLimit t) ≅ c :=
   (CreatesLimit.lifts c t).validLift
 #align category_theory.lifted_limit_maps_to_original CategoryTheory.liftedLimitMapsToOriginal
+-/
 
 #print CategoryTheory.liftedLimitIsLimit /-
 /-- The lifted cone is a limit. -/
@@ -213,11 +215,13 @@ def liftColimit {K : J ⥤ C} {F : C ⥤ D} [CreatesColimit K F] {c : Cocone (K 
 #align category_theory.lift_colimit CategoryTheory.liftColimit
 -/
 
+#print CategoryTheory.liftedColimitMapsToOriginal /-
 /-- The lifted cocone has an image isomorphic to the original cocone. -/
 def liftedColimitMapsToOriginal {K : J ⥤ C} {F : C ⥤ D} [CreatesColimit K F] {c : Cocone (K ⋙ F)}
     (t : IsColimit c) : F.mapCocone (liftColimit t) ≅ c :=
   (CreatesColimit.lifts c t).validLift
 #align category_theory.lifted_colimit_maps_to_original CategoryTheory.liftedColimitMapsToOriginal
+-/
 
 #print CategoryTheory.liftedColimitIsColimit /-
 /-- The lifted cocone is a colimit. -/
@@ -330,6 +334,7 @@ def createsLimitOfReflectsIso {K : J ⥤ C} {F : C ⥤ D} [ReflectsIsomorphisms 
 #align category_theory.creates_limit_of_reflects_iso CategoryTheory.createsLimitOfReflectsIso
 -/
 
+#print CategoryTheory.createsLimitOfFullyFaithfulOfLift' /-
 -- Notice however that even if the isomorphism is `iso.refl _`,
 -- this construction will insert additional identity morphisms in the cone maps,
 -- so the constructed limits may not be ideal, definitionally.
@@ -345,7 +350,9 @@ def createsLimitOfFullyFaithfulOfLift' {K : J ⥤ C} {F : C ⥤ D} [Full F] [Fai
       makesLimit :=
         IsLimit.ofFaithful F (IsLimit.ofIsoLimit hl i.symm) _ fun s => F.image_preimage _ }
 #align category_theory.creates_limit_of_fully_faithful_of_lift' CategoryTheory.createsLimitOfFullyFaithfulOfLift'
+-/
 
+#print CategoryTheory.createsLimitOfFullyFaithfulOfLift /-
 -- Notice however that even if the isomorphism is `iso.refl _`,
 -- this construction will insert additional identity morphisms in the cone maps,
 -- so the constructed limits may not be ideal, definitionally.
@@ -356,7 +363,9 @@ def createsLimitOfFullyFaithfulOfLift {K : J ⥤ C} {F : C ⥤ D} [Full F] [Fait
     [HasLimit (K ⋙ F)] (c : Cone K) (i : F.mapCone c ≅ limit.cone (K ⋙ F)) : CreatesLimit K F :=
   createsLimitOfFullyFaithfulOfLift' (limit.isLimit _) c i
 #align category_theory.creates_limit_of_fully_faithful_of_lift CategoryTheory.createsLimitOfFullyFaithfulOfLift
+-/
 
+#print CategoryTheory.createsLimitOfFullyFaithfulOfIso' /-
 -- Notice however that even if the isomorphism is `iso.refl _`,
 -- this construction will insert additional identity morphisms in the cone maps,
 -- so the constructed limits may not be ideal, definitionally.
@@ -373,7 +382,9 @@ def createsLimitOfFullyFaithfulOfIso' {K : J ⥤ C} {F : C ⥤ D} [Full F] [Fait
           naturality' := fun Y Z f => F.map_injective <| by dsimp; simpa using (l.w f).symm } }
     (Cones.ext i fun j => by simp only [functor.image_preimage, functor.map_cone_π_app])
 #align category_theory.creates_limit_of_fully_faithful_of_iso' CategoryTheory.createsLimitOfFullyFaithfulOfIso'
+-/
 
+#print CategoryTheory.createsLimitOfFullyFaithfulOfIso /-
 -- Notice however that even if the isomorphism is `iso.refl _`,
 -- this construction will insert additional identity morphisms in the cone maps,
 -- so the constructed limits may not be ideal, definitionally.
@@ -384,6 +395,7 @@ def createsLimitOfFullyFaithfulOfIso {K : J ⥤ C} {F : C ⥤ D} [Full F] [Faith
     [HasLimit (K ⋙ F)] (X : C) (i : F.obj X ≅ limit (K ⋙ F)) : CreatesLimit K F :=
   createsLimitOfFullyFaithfulOfIso' (limit.isLimit _) X i
 #align category_theory.creates_limit_of_fully_faithful_of_iso CategoryTheory.createsLimitOfFullyFaithfulOfIso
+-/
 
 #print CategoryTheory.preservesLimitOfCreatesLimitAndHasLimit /-
 -- see Note [lower instance priority]
@@ -440,6 +452,7 @@ def createsColimitOfReflectsIso {K : J ⥤ C} {F : C ⥤ D} [ReflectsIsomorphism
 #align category_theory.creates_colimit_of_reflects_iso CategoryTheory.createsColimitOfReflectsIso
 -/
 
+#print CategoryTheory.createsColimitOfFullyFaithfulOfLift' /-
 -- Notice however that even if the isomorphism is `iso.refl _`,
 -- this construction will insert additional identity morphisms in the cocone maps,
 -- so the constructed colimits may not be ideal, definitionally.
@@ -456,7 +469,9 @@ def createsColimitOfFullyFaithfulOfLift' {K : J ⥤ C} {F : C ⥤ D} [Full F] [F
       makesColimit :=
         IsColimit.ofFaithful F (IsColimit.ofIsoColimit hl i.symm) _ fun s => F.image_preimage _ }
 #align category_theory.creates_colimit_of_fully_faithful_of_lift' CategoryTheory.createsColimitOfFullyFaithfulOfLift'
+-/
 
+#print CategoryTheory.createsColimitOfFullyFaithfulOfLift /-
 -- Notice however that even if the isomorphism is `iso.refl _`,
 -- this construction will insert additional identity morphisms in the cocone maps,
 -- so the constructed colimits may not be ideal, definitionally.
@@ -469,7 +484,9 @@ def createsColimitOfFullyFaithfulOfLift {K : J ⥤ C} {F : C ⥤ D} [Full F] [Fa
     CreatesColimit K F :=
   createsColimitOfFullyFaithfulOfLift' (colimit.isColimit _) c i
 #align category_theory.creates_colimit_of_fully_faithful_of_lift CategoryTheory.createsColimitOfFullyFaithfulOfLift
+-/
 
+#print CategoryTheory.createsColimitOfFullyFaithfulOfIso' /-
 -- Notice however that even if the isomorphism is `iso.refl _`,
 -- this construction will insert additional identity morphisms in the cocone maps,
 -- so the constructed colimits may not be ideal, definitionally.
@@ -487,7 +504,9 @@ def createsColimitOfFullyFaithfulOfIso' {K : J ⥤ C} {F : C ⥤ D} [Full F] [Fa
             F.map_injective <| by dsimp; simpa [← cancel_mono i.hom] using l.w f } }
     (Cocones.ext i fun j => by simp)
 #align category_theory.creates_colimit_of_fully_faithful_of_iso' CategoryTheory.createsColimitOfFullyFaithfulOfIso'
+-/
 
+#print CategoryTheory.createsColimitOfFullyFaithfulOfIso /-
 -- Notice however that even if the isomorphism is `iso.refl _`,
 -- this construction will insert additional identity morphisms in the cocone maps,
 -- so the constructed colimits may not be ideal, definitionally.
@@ -499,6 +518,7 @@ def createsColimitOfFullyFaithfulOfIso {K : J ⥤ C} {F : C ⥤ D} [Full F] [Fai
     [HasColimit (K ⋙ F)] (X : C) (i : F.obj X ≅ colimit (K ⋙ F)) : CreatesColimit K F :=
   createsColimitOfFullyFaithfulOfIso' (colimit.isColimit _) X i
 #align category_theory.creates_colimit_of_fully_faithful_of_iso CategoryTheory.createsColimitOfFullyFaithfulOfIso
+-/
 
 #print CategoryTheory.preservesColimitOfCreatesColimitAndHasColimit /-
 -- see Note [lower instance priority]

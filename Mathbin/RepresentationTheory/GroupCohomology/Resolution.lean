@@ -70,10 +70,8 @@ variable {k G : Type u} [CommRing k] {n : ℕ}
 
 open CategoryTheory
 
--- mathport name: «exprGⁿ»
 local notation "Gⁿ" => Fin n → G
 
--- mathport name: «exprGⁿ⁺¹»
 local notation "Gⁿ⁺¹" => Fin (n + 1) → G
 
 namespace GroupCohomology.resolution

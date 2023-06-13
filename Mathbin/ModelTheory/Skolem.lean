@@ -70,6 +70,7 @@ theorem card_functions_sum_skolem₁ :
 #align first_order.language.card_functions_sum_skolem₁ FirstOrder.Language.card_functions_sum_skolem₁
 -/
 
+#print FirstOrder.Language.card_functions_sum_skolem₁_le /-
 theorem card_functions_sum_skolem₁_le : (#Σ n, (L.Sum L.skolem₁).Functions n) ≤ max ℵ₀ L.card :=
   by
   rw [card_functions_sum_skolem₁]
@@ -81,6 +82,7 @@ theorem card_functions_sum_skolem₁_le : (#Σ n, (L.Sum L.skolem₁).Functions 
   · refine' trans bounded_formula.card_le (lift_le.1 _)
     simp only [mk_empty, lift_zero, lift_uzero, zero_add]
 #align first_order.language.card_functions_sum_skolem₁_le FirstOrder.Language.card_functions_sum_skolem₁_le
+-/
 
 #print FirstOrder.Language.skolem₁Structure /-
 /-- The structure assigning each function symbol of `L.skolem₁` to a skolem function generated with
@@ -93,6 +95,7 @@ noncomputable instance skolem₁Structure : L.skolem₁.Structure M :=
 
 namespace Substructure
 
+#print FirstOrder.Language.Substructure.skolem₁_reduct_isElementary /-
 theorem skolem₁_reduct_isElementary (S : (L.Sum L.skolem₁).Substructure M) :
     (LHom.sumInl.substructureReduct S).IsElementary :=
   by
@@ -103,6 +106,7 @@ theorem skolem₁_reduct_isElementary (S : (L.Sum L.skolem₁).Substructure M) :
     ⟨⟨fun_map φ' (coe ∘ x), S.fun_mem (Lhom.sum_inr.on_function φ) (coe ∘ x) fun i => (x i).2⟩,
       Classical.epsilon_spec ⟨a, h⟩⟩
 #align first_order.language.substructure.skolem₁_reduct_is_elementary FirstOrder.Language.Substructure.skolem₁_reduct_isElementary
+-/
 
 #print FirstOrder.Language.Substructure.elementarySkolem₁Reduct /-
 /-- Any `L.sum L.skolem₁`-substructure is an elementary `L`-substructure. -/

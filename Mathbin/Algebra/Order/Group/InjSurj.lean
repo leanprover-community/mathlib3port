@@ -22,6 +22,7 @@ import Mathbin.Algebra.Order.Group.Instances
 
 variable {α β : Type _}
 
+#print Function.Injective.orderedCommGroup /-
 /-- Pullback an `ordered_comm_group` under an injective map.
 See note [reducible non-instances]. -/
 @[reducible,
@@ -36,7 +37,9 @@ def Function.Injective.orderedCommGroup [OrderedCommGroup α] {β : Type _} [One
     hf.CommGroup f one mul inv div npow zpow with }
 #align function.injective.ordered_comm_group Function.Injective.orderedCommGroup
 #align function.injective.ordered_add_comm_group Function.Injective.orderedAddCommGroup
+-/
 
+#print Function.Injective.linearOrderedCommGroup /-
 /-- Pullback a `linear_ordered_comm_group` under an injective map.
 See note [reducible non-instances]. -/
 @[reducible,
@@ -52,4 +55,5 @@ def Function.Injective.linearOrderedCommGroup [LinearOrderedCommGroup α] {β : 
   { LinearOrder.lift f hf hsup hinf, hf.OrderedCommGroup f one mul inv div npow zpow with }
 #align function.injective.linear_ordered_comm_group Function.Injective.linearOrderedCommGroup
 #align function.injective.linear_ordered_add_comm_group Function.Injective.linearOrderedAddCommGroup
+-/
 

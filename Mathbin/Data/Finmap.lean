@@ -95,7 +95,6 @@ def AList.toFinmap (s : AList β) : Finmap β :=
 #align alist.to_finmap AList.toFinmap
 -/
 
--- mathport name: to_finmap
 local notation:arg "⟦" a "⟧" => AList.toFinmap a
 
 #print AList.toFinmap_eq /-
@@ -148,10 +147,12 @@ def liftOn {γ} (s : Finmap β) (f : AList β → γ)
 #align finmap.lift_on Finmap.liftOn
 -/
 
+#print Finmap.liftOn_toFinmap /-
 @[simp]
 theorem liftOn_toFinmap {γ} (s : AList β) (f : AList β → γ) (H) : liftOn ⟦s⟧ f H = f s := by
   cases s <;> rfl
 #align finmap.lift_on_to_finmap Finmap.liftOn_toFinmap
+-/
 
 #print Finmap.liftOn₂ /-
 /-- Lift a permutation-respecting function on 2 `alist`s to 2 `finmap`s. -/
@@ -168,10 +169,12 @@ def liftOn₂ {γ} (s₁ s₂ : Finmap β) (f : AList β → AList β → γ)
 #align finmap.lift_on₂ Finmap.liftOn₂
 -/
 
+#print Finmap.liftOn₂_toFinmap /-
 @[simp]
 theorem liftOn₂_toFinmap {γ} (s₁ s₂ : AList β) (f : AList β → AList β → γ) (H) :
     liftOn₂ ⟦s₁⟧ ⟦s₂⟧ f H = f s₁ s₂ := by cases s₁ <;> cases s₂ <;> rfl
 #align finmap.lift_on₂_to_finmap Finmap.liftOn₂_toFinmap
+-/
 
 /-! ### induction -/
 

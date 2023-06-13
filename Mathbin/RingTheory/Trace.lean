@@ -108,8 +108,6 @@ theorem trace_eq_zero_of_not_exists_basis (h : ¬∃ s : Finset S, Nonempty (Bas
     trace R S = 0 := by ext s; simp [trace_apply, LinearMap.trace, h]
 #align algebra.trace_eq_zero_of_not_exists_basis Algebra.trace_eq_zero_of_not_exists_basis
 
-include b
-
 variable {R}
 
 -- Can't be a `simp` lemma because it depends on a choice of basis
@@ -127,8 +125,6 @@ theorem trace_algebraMap_of_basis (x : R) : trace R S (algebraMap R S x) = Finty
   ext i
   simp [-coe_lmul_eq_mul]
 #align algebra.trace_algebra_map_of_basis Algebra.trace_algebraMap_of_basis
-
-omit b
 
 /-- If `x` is in the base field `K`, then the trace is `[L : K] * x`.
 

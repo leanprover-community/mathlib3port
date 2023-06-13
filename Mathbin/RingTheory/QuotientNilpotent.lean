@@ -19,15 +19,18 @@ import Mathbin.RingTheory.Ideal.QuotientOperations
 -/
 
 
+#print Ideal.isRadical_iff_quotient_reduced /-
 theorem Ideal.isRadical_iff_quotient_reduced {R : Type _} [CommRing R] (I : Ideal R) :
     I.IsRadical ↔ IsReduced (R ⧸ I) :=
   by
   conv_lhs => rw [← @Ideal.mk_ker R _ I]
   exact RingHom.ker_isRadical_iff_reduced_of_surjective (@Ideal.Quotient.mk_surjective R _ I)
 #align ideal.is_radical_iff_quotient_reduced Ideal.isRadical_iff_quotient_reduced
+-/
 
 variable {R S : Type _} [CommSemiring R] [CommRing S] [Algebra R S] (I : Ideal S)
 
+#print Ideal.IsNilpotent.induction_on /-
 /-- Let `P` be a property on ideals. If `P` holds for square-zero ideals, and if
   `P I → P (J ⧸ I) → P J`, then `P` holds for all nilpotent ideals. -/
 theorem Ideal.IsNilpotent.induction_on (hI : IsNilpotent I)
@@ -58,7 +61,9 @@ theorem Ideal.IsNilpotent.induction_on (hI : IsNilpotent I)
     · exact le_refl n.succ.succ
   · apply h₁; rw [← Ideal.map_pow, Ideal.map_quotient_self]
 #align ideal.is_nilpotent.induction_on Ideal.IsNilpotent.induction_on
+-/
 
+#print IsNilpotent.isUnit_quotient_mk_iff /-
 theorem IsNilpotent.isUnit_quotient_mk_iff {R : Type _} [CommRing R] {I : Ideal R}
     (hI : IsNilpotent I) {x : R} : IsUnit (Ideal.Quotient.mk I x) ↔ IsUnit x :=
   by
@@ -83,4 +88,5 @@ theorem IsNilpotent.isUnit_quotient_mk_iff {R : Type _} [CommRing R] {I : Ideal 
     have : x * (y * (2 - x * y)) = 1 := by rw [eq_comm, ← sub_eq_zero, ← this]; ring
     exact isUnit_of_mul_eq_one _ _ this
 #align is_nilpotent.is_unit_quotient_mk_iff IsNilpotent.isUnit_quotient_mk_iff
+-/
 

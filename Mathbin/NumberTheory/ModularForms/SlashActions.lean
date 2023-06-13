@@ -32,17 +32,13 @@ open Complex UpperHalfPlane
 
 open scoped UpperHalfPlane
 
--- mathport name: «expr↑ₘ »
 local prefix:1024 "↑ₘ" => @coe _ (Matrix (Fin 2) (Fin 2) _) _
 
--- mathport name: «expr↑ₘ[ ]»
 -- like `↑ₘ`, but allows the user to specify the ring `R`. Useful to help Lean elaborate.
 local notation "↑ₘ[" R "]" => @coe _ (Matrix (Fin 2) (Fin 2) R) _
 
--- mathport name: «exprGL( , )⁺»
 local notation "GL(" n ", " R ")" "⁺" => Matrix.GLPos (Fin n) R
 
--- mathport name: «exprSL( , )»
 local notation "SL(" n ", " R ")" => Matrix.SpecialLinearGroup (Fin n) R
 
 /-- A general version of the slash action of the space of modular forms.-/
@@ -55,10 +51,8 @@ class SlashAction (β G α γ : Type _) [Group G] [AddMonoid α] [SMul γ α] wh
   add_slash : ∀ (k : β) (g : G) (a b : α), map k g (a + b) = map k g a + map k g b
 #align slash_action SlashAction
 
--- mathport name: modular_form.slash
 scoped[ModularForm] notation:100 f " ∣[" k ";" γ "] " a:100 => SlashAction.map γ k a f
 
--- mathport name: modular_form.slash_complex
 scoped[ModularForm] notation:100 f " ∣[" k "] " a:100 => SlashAction.map ℂ k a f
 
 @[simp]
@@ -103,7 +97,6 @@ variable {Γ : Subgroup SL(2, ℤ)} {k : ℤ} (f : ℍ → ℂ)
 
 section
 
--- mathport name: «expr ∣[ ] »
 -- temporary notation until the instance is built
 local notation:100 f " ∣[" k "]" γ:100 => ModularForm.slash k γ f
 

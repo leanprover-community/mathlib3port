@@ -22,6 +22,7 @@ This file contains some "named" commutative ring identities.
 
 variable {R : Type _} [CommRing R] {a b x₁ x₂ x₃ x₄ x₅ x₆ x₇ x₈ y₁ y₂ y₃ y₄ y₅ y₆ y₇ y₈ n : R}
 
+#print sq_add_sq_mul_sq_add_sq /-
 /-- Brahmagupta-Fibonacci identity or Diophantus identity, see
 <https://en.wikipedia.org/wiki/Brahmagupta%E2%80%93Fibonacci_identity>.
 
@@ -31,7 +32,9 @@ theorem sq_add_sq_mul_sq_add_sq :
     (x₁ ^ 2 + x₂ ^ 2) * (y₁ ^ 2 + y₂ ^ 2) = (x₁ * y₁ - x₂ * y₂) ^ 2 + (x₁ * y₂ + x₂ * y₁) ^ 2 := by
   ring
 #align sq_add_sq_mul_sq_add_sq sq_add_sq_mul_sq_add_sq
+-/
 
+#print sq_add_mul_sq_mul_sq_add_mul_sq /-
 /-- Brahmagupta's identity, see <https://en.wikipedia.org/wiki/Brahmagupta%27s_identity>
 -/
 theorem sq_add_mul_sq_mul_sq_add_mul_sq :
@@ -39,19 +42,25 @@ theorem sq_add_mul_sq_mul_sq_add_mul_sq :
       (x₁ * y₁ - n * x₂ * y₂) ^ 2 + n * (x₁ * y₂ + x₂ * y₁) ^ 2 :=
   by ring
 #align sq_add_mul_sq_mul_sq_add_mul_sq sq_add_mul_sq_mul_sq_add_mul_sq
+-/
 
+#print pow_four_add_four_mul_pow_four /-
 /-- Sophie Germain's identity, see <https://www.cut-the-knot.org/blue/SophieGermainIdentity.shtml>.
 -/
 theorem pow_four_add_four_mul_pow_four :
     a ^ 4 + 4 * b ^ 4 = ((a - b) ^ 2 + b ^ 2) * ((a + b) ^ 2 + b ^ 2) := by ring
 #align pow_four_add_four_mul_pow_four pow_four_add_four_mul_pow_four
+-/
 
+#print pow_four_add_four_mul_pow_four' /-
 /-- Sophie Germain's identity, see <https://www.cut-the-knot.org/blue/SophieGermainIdentity.shtml>.
 -/
 theorem pow_four_add_four_mul_pow_four' :
     a ^ 4 + 4 * b ^ 4 = (a ^ 2 - 2 * a * b + 2 * b ^ 2) * (a ^ 2 + 2 * a * b + 2 * b ^ 2) := by ring
 #align pow_four_add_four_mul_pow_four' pow_four_add_four_mul_pow_four'
+-/
 
+#print sum_four_sq_mul_sum_four_sq /-
 /--
 Euler's four-square identity, see <https://en.wikipedia.org/wiki/Euler%27s_four-square_identity>.
 
@@ -64,7 +73,9 @@ theorem sum_four_sq_mul_sum_four_sq :
         (x₁ * y₄ + x₂ * y₃ - x₃ * y₂ + x₄ * y₁) ^ 2 :=
   by ring
 #align sum_four_sq_mul_sum_four_sq sum_four_sq_mul_sum_four_sq
+-/
 
+#print sum_eight_sq_mul_sum_eight_sq /-
 /--
 Degen's eight squares identity, see <https://en.wikipedia.org/wiki/Degen%27s_eight-square_identity>.
 
@@ -87,4 +98,5 @@ theorem sum_eight_sq_mul_sum_eight_sq :
         (x₁ * y₈ - x₂ * y₇ + x₃ * y₆ + x₄ * y₅ - x₅ * y₄ - x₆ * y₃ + x₇ * y₂ + x₈ * y₁) ^ 2 :=
   by ring
 #align sum_eight_sq_mul_sum_eight_sq sum_eight_sq_mul_sum_eight_sq
+-/
 

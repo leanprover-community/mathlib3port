@@ -198,15 +198,10 @@ namespace AddCircle
 
 variable {T : ℝ} [hT : Fact (0 < T)]
 
-include hT
-
--- mathport name: «expr ∤ »
 local notation a "∤" b => ¬a ∣ b
 
--- mathport name: «expr ∣∣ »
 local notation a "∣∣" b => a ∣ b ∧ (a * a)∤b
 
--- mathport name: expr𝕊
 local notation "𝕊" => AddCircle T
 
 /-- *Gallagher's ergodic theorem* on Diophantine approximation. -/

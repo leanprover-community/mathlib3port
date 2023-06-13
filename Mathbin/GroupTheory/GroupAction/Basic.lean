@@ -121,11 +121,13 @@ instance {b : β} : MulAction α (orbit α b)
   one_smul a := Subtype.ext (one_smul α a)
   mul_smul a a' b' := Subtype.ext (mul_smul a a' b')
 
+#print MulAction.orbit.coe_smul /-
 @[simp, to_additive]
 theorem orbit.coe_smul {b : β} {a : α} {b' : orbit α b} : ↑(a • b') = a • (b' : β) :=
   rfl
 #align mul_action.orbit.coe_smul MulAction.orbit.coe_smul
 #align add_action.orbit.coe_vadd AddAction.orbit.coe_vadd
+-/
 
 variable (α) (β)
 
@@ -200,11 +202,13 @@ def Stabilizer.submonoid (b : β) : Submonoid α
 #align add_action.stabilizer.add_submonoid AddAction.Stabilizer.addSubmonoid
 -/
 
+#print MulAction.mem_stabilizer_submonoid_iff /-
 @[simp, to_additive]
 theorem mem_stabilizer_submonoid_iff {b : β} {a : α} : a ∈ Stabilizer.submonoid α b ↔ a • b = b :=
   Iff.rfl
 #align mul_action.mem_stabilizer_submonoid_iff MulAction.mem_stabilizer_submonoid_iff
 #align add_action.mem_stabilizer_add_submonoid_iff AddAction.mem_stabilizer_addSubmonoid_iff
+-/
 
 #print MulAction.orbit_eq_univ /-
 @[to_additive]
@@ -255,11 +259,13 @@ def stabilizer (b : β) : Subgroup α :=
 
 variable {α} {β}
 
+#print MulAction.mem_stabilizer_iff /-
 @[simp, to_additive]
 theorem mem_stabilizer_iff {b : β} {a : α} : a ∈ stabilizer α b ↔ a • b = b :=
   Iff.rfl
 #align mul_action.mem_stabilizer_iff MulAction.mem_stabilizer_iff
 #align add_action.mem_stabilizer_iff AddAction.mem_stabilizer_iff
+-/
 
 #print MulAction.smul_orbit /-
 @[simp, to_additive]
@@ -359,6 +365,7 @@ theorem quotient_preimage_image_eq_union_mul (U : Set β) :
 #align add_action.quotient_preimage_image_eq_union_add AddAction.quotient_preimage_image_eq_union_add
 -/
 
+#print MulAction.disjoint_image_image_iff /-
 @[to_additive]
 theorem disjoint_image_image_iff {U V : Set β} :
     Disjoint (Quotient.mk' '' U) (Quotient.mk' '' V) ↔ ∀ x ∈ U, ∀ a : α, a • x ∉ V :=
@@ -375,13 +382,16 @@ theorem disjoint_image_image_iff {U V : Set β} :
     exact h y hy₁ a hz₁
 #align mul_action.disjoint_image_image_iff MulAction.disjoint_image_image_iff
 #align add_action.disjoint_image_image_iff AddAction.disjoint_image_image_iff
+-/
 
+#print MulAction.image_inter_image_iff /-
 @[to_additive]
 theorem image_inter_image_iff (U V : Set β) :
     Quotient.mk' '' U ∩ Quotient.mk' '' V = ∅ ↔ ∀ x ∈ U, ∀ a : α, a • x ∉ V :=
   Set.disjoint_iff_inter_eq_empty.symm.trans disjoint_image_image_iff
 #align mul_action.image_inter_image_iff MulAction.image_inter_image_iff
 #align add_action.image_inter_image_iff AddAction.image_inter_image_iff
+-/
 
 variable (α β)
 
@@ -440,7 +450,6 @@ theorem orbitRel.Quotient.orbit_eq_orbit_out (x : orbitRel.Quotient α β)
 
 variable (α) (β)
 
--- mathport name: exprΩ
 local notation "Ω" => orbitRel.Quotient α β
 
 #print MulAction.selfEquivSigmaOrbits' /-
@@ -474,6 +483,7 @@ def selfEquivSigmaOrbits : β ≃ Σ ω : Ω, orbit α ω.out' :=
 
 variable {α β}
 
+#print MulAction.stabilizer_smul_eq_stabilizer_map_conj /-
 /-- If the stabilizer of `x` is `S`, then the stabilizer of `g • x` is `gSg⁻¹`. -/
 theorem stabilizer_smul_eq_stabilizer_map_conj (g : α) (x : β) :
     stabilizer α (g • x) = (stabilizer α x).map (MulAut.conj g).toMonoidHom :=
@@ -482,7 +492,9 @@ theorem stabilizer_smul_eq_stabilizer_map_conj (g : α) (x : β) :
   rw [mem_stabilizer_iff, ← smul_left_cancel_iff g⁻¹, smul_smul, smul_smul, smul_smul, mul_left_inv,
     one_smul, ← mem_stabilizer_iff, Subgroup.mem_map_equiv, MulAut.conj_symm_apply]
 #align mul_action.stabilizer_smul_eq_stabilizer_map_conj MulAction.stabilizer_smul_eq_stabilizer_map_conj
+-/
 
+#print MulAction.stabilizerEquivStabilizerOfOrbitRel /-
 /-- A bijection between the stabilizers of two elements in the same orbit. -/
 noncomputable def stabilizerEquivStabilizerOfOrbitRel {x y : β} (h : (orbitRel α β).Rel x y) :
     stabilizer α x ≃* stabilizer α y :=
@@ -492,6 +504,7 @@ noncomputable def stabilizerEquivStabilizerOfOrbitRel {x y : β} (h : (orbitRel 
     rw [← hg, stabilizer_smul_eq_stabilizer_map_conj]
   (MulEquiv.subgroupCongr this).trans ((MulAut.conj g).subgroupMap <| stabilizer α y).symm
 #align mul_action.stabilizer_equiv_stabilizer_of_orbit_rel MulAction.stabilizerEquivStabilizerOfOrbitRel
+-/
 
 end MulAction
 
@@ -499,6 +512,7 @@ namespace AddAction
 
 variable [AddGroup α] [AddAction α β]
 
+#print AddAction.stabilizer_vadd_eq_stabilizer_map_conj /-
 /-- If the stabilizer of `x` is `S`, then the stabilizer of `g +ᵥ x` is `g + S + (-g)`. -/
 theorem stabilizer_vadd_eq_stabilizer_map_conj (g : α) (x : β) :
     stabilizer α (g +ᵥ x) = (stabilizer α x).map (AddAut.conj g).toAddMonoidHom :=
@@ -508,7 +522,9 @@ theorem stabilizer_vadd_eq_stabilizer_map_conj (g : α) (x : β) :
     add_left_neg, zero_vadd, ← mem_stabilizer_iff, AddSubgroup.mem_map_equiv,
     AddAut.conj_symm_apply]
 #align add_action.stabilizer_vadd_eq_stabilizer_map_conj AddAction.stabilizer_vadd_eq_stabilizer_map_conj
+-/
 
+#print AddAction.stabilizerEquivStabilizerOfOrbitRel /-
 /-- A bijection between the stabilizers of two elements in the same orbit. -/
 noncomputable def stabilizerEquivStabilizerOfOrbitRel {x y : β} (h : (orbitRel α β).Rel x y) :
     stabilizer α x ≃+ stabilizer α y :=
@@ -518,9 +534,11 @@ noncomputable def stabilizerEquivStabilizerOfOrbitRel {x y : β} (h : (orbitRel 
     rw [← hg, stabilizer_vadd_eq_stabilizer_map_conj]
   (AddEquiv.addSubgroupCongr this).trans ((AddAut.conj g).addSubgroupMap <| stabilizer α y).symm
 #align add_action.stabilizer_equiv_stabilizer_of_orbit_rel AddAction.stabilizerEquivStabilizerOfOrbitRel
+-/
 
 end AddAction
 
+#print smul_cancel_of_non_zero_divisor /-
 /-- `smul` by a `k : M` over a ring is injective, if `k` is not a zero divisor.
 The general theory of such `k` is elaborated by `is_smul_regular`.
 The typeclass that restricts all terms of `M` to have this property is `no_zero_smul_divisors`. -/
@@ -531,4 +549,5 @@ theorem smul_cancel_of_non_zero_divisor {M R : Type _} [Monoid M] [NonUnitalNonA
   refine' h _ _
   rw [smul_sub, h', sub_self]
 #align smul_cancel_of_non_zero_divisor smul_cancel_of_non_zero_divisor
+-/
 

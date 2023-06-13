@@ -22,9 +22,9 @@ open Filter Set
 
 open scoped Classical BigOperators Topology Real
 
--- mathport name: abs
 local notation "|" x "|" => abs x
 
+#print Real.tendsto_sum_pi_div_four /-
 /-- This theorem establishes **Leibniz's series for `π`**: The alternating sum of the reciprocals
   of the odd numbers is `π/4`. Note that this is a conditionally rather than absolutely convergent
   series. The main tool that this proof uses is the Mean Value Theorem (specifically avoiding the
@@ -156,6 +156,7 @@ theorem tendsto_sum_pi_div_four :
     _ = 1 - U + U ^ (2 * k) * U := by ring
     _ = 1 - u k + u k ^ (2 * (k : ℝ) + 1) := by rw [← pow_succ' (U : ℝ) (2 * k)]; norm_cast
 #align real.tendsto_sum_pi_div_four Real.tendsto_sum_pi_div_four
+-/
 
 end Real
 

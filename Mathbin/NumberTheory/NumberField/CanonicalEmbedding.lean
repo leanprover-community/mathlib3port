@@ -40,7 +40,6 @@ variable (K : Type _) [Field K]
 
 namespace NumberField.canonicalEmbedding
 
--- mathport name: exprE
 -- The ambient space `ℝ^r₁ × ℂ^r₂` with `(r₁, r₂)` the signature of `K`.
 scoped[CanonicalEmbedding]
   notation "E" =>

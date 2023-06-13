@@ -98,19 +98,25 @@ theorem mem_of_mem_tail (v : Vector α n) (ha : a ∈ v.tail.toList) : a ∈ v.t
 #align vector.mem_of_mem_tail Vector.mem_of_mem_tail
 -/
 
+#print Vector.mem_map_iff /-
 theorem mem_map_iff (b : β) (v : Vector α n) (f : α → β) :
     b ∈ (v.map f).toList ↔ ∃ a : α, a ∈ v.toList ∧ f a = b := by
   rw [Vector.toList_map, List.mem_map]
 #align vector.mem_map_iff Vector.mem_map_iff
+-/
 
+#print Vector.not_mem_map_zero /-
 theorem not_mem_map_zero (b : β) (v : Vector α 0) (f : α → β) : b ∉ (v.map f).toList := by
   simpa only [Vector.eq_nil v, Vector.map_nil, Vector.toList_nil] using List.not_mem_nil b
 #align vector.not_mem_map_zero Vector.not_mem_map_zero
+-/
 
+#print Vector.mem_map_succ_iff /-
 theorem mem_map_succ_iff (b : β) (v : Vector α (n + 1)) (f : α → β) :
     b ∈ (v.map f).toList ↔ f v.headI = b ∨ ∃ a : α, a ∈ v.tail.toList ∧ f a = b := by
   rw [mem_succ_iff, head_map, tail_map, mem_map_iff, @eq_comm _ b]
 #align vector.mem_map_succ_iff Vector.mem_map_succ_iff
+-/
 
 end Vector
 

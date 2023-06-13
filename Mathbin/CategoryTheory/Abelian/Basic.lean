@@ -523,6 +523,7 @@ variable {X Y : C} {f : X ⟶ Y}
 
 attribute [local instance] non_preadditive_abelian
 
+#print CategoryTheory.Abelian.epiIsCokernelOfKernel /-
 /-- In an abelian category, an epi is the cokernel of its kernel. More precisely:
     If `f` is an epimorphism and `s` is some limit kernel cone on `f`, then `f` is a cokernel
     of `fork.ι s`. -/
@@ -530,7 +531,9 @@ def epiIsCokernelOfKernel [Epi f] (s : Fork f 0) (h : IsLimit s) :
     IsColimit (CokernelCofork.ofπ f (KernelFork.condition s)) :=
   NonPreadditiveAbelian.epiIsCokernelOfKernel s h
 #align category_theory.abelian.epi_is_cokernel_of_kernel CategoryTheory.Abelian.epiIsCokernelOfKernel
+-/
 
+#print CategoryTheory.Abelian.monoIsKernelOfCokernel /-
 /-- In an abelian category, a mono is the kernel of its cokernel. More precisely:
     If `f` is a monomorphism and `s` is some colimit cokernel cocone on `f`, then `f` is a kernel
     of `cofork.π s`. -/
@@ -538,6 +541,7 @@ def monoIsKernelOfCokernel [Mono f] (s : Cofork f 0) (h : IsColimit s) :
     IsLimit (KernelFork.ofι f (CokernelCofork.condition s)) :=
   NonPreadditiveAbelian.monoIsKernelOfCokernel s h
 #align category_theory.abelian.mono_is_kernel_of_cokernel CategoryTheory.Abelian.monoIsKernelOfCokernel
+-/
 
 variable (f)
 
@@ -637,6 +641,7 @@ abbrev pullbackToBiproduct : pullback f g ⟶ X ⊞ Y :=
 #align category_theory.abelian.pullback_to_biproduct_is_kernel.pullback_to_biproduct CategoryTheory.Abelian.PullbackToBiproductIsKernel.pullbackToBiproduct
 -/
 
+#print CategoryTheory.Abelian.PullbackToBiproductIsKernel.pullbackToBiproductFork /-
 /-- The canonical map `pullback f g ⟶ X ⊞ Y` induces a kernel cone on the map
     `biproduct X Y ⟶ Z` induced by `f` and `g`. A slightly more intuitive way to think of
     this may be that it induces an equalizer fork on the maps induced by `(f, 0)` and
@@ -645,7 +650,9 @@ abbrev pullbackToBiproductFork : KernelFork (biprod.desc f (-g)) :=
   KernelFork.ofι (pullbackToBiproduct f g) <| by
     rw [biprod.lift_desc, comp_neg, pullback.condition, add_right_neg]
 #align category_theory.abelian.pullback_to_biproduct_is_kernel.pullback_to_biproduct_fork CategoryTheory.Abelian.PullbackToBiproductIsKernel.pullbackToBiproductFork
+-/
 
+#print CategoryTheory.Abelian.PullbackToBiproductIsKernel.isLimitPullbackToBiproduct /-
 /-- The canonical map `pullback f g ⟶ X ⊞ Y` is a kernel of the map induced by
     `(f, -g)`. -/
 def isLimitPullbackToBiproduct : IsLimit (pullbackToBiproductFork f g) :=
@@ -661,6 +668,7 @@ def isLimitPullbackToBiproduct : IsLimit (pullbackToBiproductFork f g) :=
       · rw [biprod.lift_snd, pullback.lift_snd])
     fun s m h => by ext <;> simp [← h]
 #align category_theory.abelian.pullback_to_biproduct_is_kernel.is_limit_pullback_to_biproduct CategoryTheory.Abelian.PullbackToBiproductIsKernel.isLimitPullbackToBiproduct
+-/
 
 end PullbackToBiproductIsKernel
 
@@ -675,13 +683,16 @@ abbrev biproductToPushout : Y ⊞ Z ⟶ pushout f g :=
 #align category_theory.abelian.biproduct_to_pushout_is_cokernel.biproduct_to_pushout CategoryTheory.Abelian.BiproductToPushoutIsCokernel.biproductToPushout
 -/
 
+#print CategoryTheory.Abelian.BiproductToPushoutIsCokernel.biproductToPushoutCofork /-
 /-- The canonical map `Y ⊞ Z ⟶ pushout f g` induces a cokernel cofork on the map
     `X ⟶ Y ⊞ Z` induced by `f` and `-g`. -/
 abbrev biproductToPushoutCofork : CokernelCofork (biprod.lift f (-g)) :=
   CokernelCofork.ofπ (biproductToPushout f g) <| by
     rw [biprod.lift_desc, neg_comp, pushout.condition, add_right_neg]
 #align category_theory.abelian.biproduct_to_pushout_is_cokernel.biproduct_to_pushout_cofork CategoryTheory.Abelian.BiproductToPushoutIsCokernel.biproductToPushoutCofork
+-/
 
+#print CategoryTheory.Abelian.BiproductToPushoutIsCokernel.isColimitBiproductToPushout /-
 /-- The cofork induced by the canonical map `Y ⊞ Z ⟶ pushout f g` is in fact a colimit cokernel
     cofork. -/
 def isColimitBiproductToPushout : IsColimit (biproductToPushoutCofork f g) :=
@@ -693,6 +704,7 @@ def isColimitBiproductToPushout : IsColimit (biproductToPushoutCofork f g) :=
             biprod.lift_eq, cofork.condition s, zero_comp])
     (fun s => by ext <;> simp) fun s m h => by ext <;> simp [← h]
 #align category_theory.abelian.biproduct_to_pushout_is_cokernel.is_colimit_biproduct_to_pushout CategoryTheory.Abelian.BiproductToPushoutIsCokernel.isColimitBiproductToPushout
+-/
 
 end BiproductToPushoutIsCokernel
 

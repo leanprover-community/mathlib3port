@@ -23,6 +23,7 @@ We split this from `algebra.order.field.basic` to avoid importing the finiteness
 
 variable {α ι : Type _} [LinearOrderedSemifield α]
 
+#print Pi.exists_forall_pos_add_lt /-
 theorem Pi.exists_forall_pos_add_lt [ExistsAddOfLE α] [Finite ι] {x y : ι → α}
     (h : ∀ i, x i < y i) : ∃ ε, 0 < ε ∧ ∀ i, x i + ε < y i :=
   by
@@ -36,4 +37,5 @@ theorem Pi.exists_forall_pos_add_lt [ExistsAddOfLE α] [Finite ι] {x y : ι →
     ⟨_, half_pos hε, fun i =>
       add_lt_add_left ((half_lt_self hε).trans_le <| Finset.inf'_le _ <| Finset.mem_univ _) _⟩
 #align pi.exists_forall_pos_add_lt Pi.exists_forall_pos_add_lt
+-/
 

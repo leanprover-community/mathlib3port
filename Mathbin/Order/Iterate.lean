@@ -107,15 +107,19 @@ variable {g : β → β} {h : β → α}
 
 open Function
 
+#print Monotone.le_iterate_comp_of_le /-
 theorem le_iterate_comp_of_le (hf : Monotone f) (H : h ∘ g ≤ f ∘ h) (n : ℕ) :
     h ∘ g^[n] ≤ f^[n] ∘ h := fun x => by
   refine' hf.seq_le_seq n _ (fun k hk => _) fun k hk => _ <;> simp [iterate_succ', H _]
 #align monotone.le_iterate_comp_of_le Monotone.le_iterate_comp_of_le
+-/
 
+#print Monotone.iterate_comp_le_of_le /-
 theorem iterate_comp_le_of_le (hf : Monotone f) (H : f ∘ h ≤ h ∘ g) (n : ℕ) :
     f^[n] ∘ h ≤ h ∘ g^[n] :=
   hf.dual.le_iterate_comp_of_le H n
 #align monotone.iterate_comp_le_of_le Monotone.iterate_comp_le_of_le
+-/
 
 #print Monotone.iterate_le_of_le /-
 /-- If `f ≤ g` and `f` is monotone, then `f^[n] ≤ g^[n]`. -/

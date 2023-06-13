@@ -40,8 +40,7 @@ section
 variable {A B : C} {X Y : D} {i : A ⟶ B} {p : X ⟶ Y} {u : G.obj A ⟶ X} {v : G.obj B ⟶ Y}
   (sq : CommSq u (G.map i) p v) (adj : G ⊣ F)
 
-include sq
-
+#print CategoryTheory.CommSq.right_adjoint /-
 /-- When we have an adjunction `G ⊣ F`, any commutative square where the left
 map is of the form `G.map i` and the right map is `p` has an "adjoint" commutative
 square whose left map is `i` and whose right map is `F.map p`. -/
@@ -50,7 +49,9 @@ theorem right_adjoint : CommSq (adj.homEquiv _ _ u) i (F.map p) (adj.homEquiv _ 
     simp only [adjunction.hom_equiv_unit, assoc, ← F.map_comp, sq.w]
     rw [F.map_comp, adjunction.unit_naturality_assoc]⟩
 #align category_theory.comm_sq.right_adjoint CategoryTheory.CommSq.right_adjoint
+-/
 
+#print CategoryTheory.CommSq.rightAdjointLiftStructEquiv /-
 /-- The liftings of a commutative are in bijection with the liftings of its (right)
 adjoint square. -/
 def rightAdjointLiftStructEquiv : sq.LiftStruct ≃ (sq.rightAdjoint adj).LiftStruct
@@ -70,13 +71,16 @@ def rightAdjointLiftStructEquiv : sq.LiftStruct ≃ (sq.rightAdjoint adj).LiftSt
   left_inv := by tidy
   right_inv := by tidy
 #align category_theory.comm_sq.right_adjoint_lift_struct_equiv CategoryTheory.CommSq.rightAdjointLiftStructEquiv
+-/
 
+#print CategoryTheory.CommSq.right_adjoint_hasLift_iff /-
 /-- A square has a lifting if and only if its (right) adjoint square has a lifting. -/
 theorem right_adjoint_hasLift_iff : HasLift (sq.rightAdjoint adj) ↔ HasLift sq :=
   by
   simp only [has_lift.iff]
   exact Equiv.nonempty_congr (sq.right_adjoint_lift_struct_equiv adj).symm
 #align category_theory.comm_sq.right_adjoint_has_lift_iff CategoryTheory.CommSq.right_adjoint_hasLift_iff
+-/
 
 instance [HasLift sq] : HasLift (sq.rightAdjoint adj) := by rw [right_adjoint_has_lift_iff];
   infer_instance
@@ -88,8 +92,7 @@ section
 variable {A B : C} {X Y : D} {i : A ⟶ B} {p : X ⟶ Y} {u : A ⟶ F.obj X} {v : B ⟶ F.obj Y}
   (sq : CommSq u i (F.map p) v) (adj : G ⊣ F)
 
-include sq
-
+#print CategoryTheory.CommSq.left_adjoint /-
 /-- When we have an adjunction `G ⊣ F`, any commutative square where the left
 map is of the form `i` and the right map is `F.map p` has an "adjoint" commutative
 square whose left map is `G.map i` and whose right map is `p`. -/
@@ -98,7 +101,9 @@ theorem left_adjoint : CommSq ((adj.homEquiv _ _).symm u) (G.map i) p ((adj.homE
     simp only [adjunction.hom_equiv_counit, assoc, ← G.map_comp_assoc, ← sq.w]
     rw [G.map_comp, assoc, adjunction.counit_naturality]⟩
 #align category_theory.comm_sq.left_adjoint CategoryTheory.CommSq.left_adjoint
+-/
 
+#print CategoryTheory.CommSq.leftAdjointLiftStructEquiv /-
 /-- The liftings of a commutative are in bijection with the liftings of its (left)
 adjoint square. -/
 def leftAdjointLiftStructEquiv : sq.LiftStruct ≃ (sq.leftAdjoint adj).LiftStruct
@@ -118,13 +123,16 @@ def leftAdjointLiftStructEquiv : sq.LiftStruct ≃ (sq.leftAdjoint adj).LiftStru
   left_inv := by tidy
   right_inv := by tidy
 #align category_theory.comm_sq.left_adjoint_lift_struct_equiv CategoryTheory.CommSq.leftAdjointLiftStructEquiv
+-/
 
+#print CategoryTheory.CommSq.left_adjoint_hasLift_iff /-
 /-- A (left) adjoint square has a lifting if and only if the original square has a lifting. -/
 theorem left_adjoint_hasLift_iff : HasLift (sq.leftAdjoint adj) ↔ HasLift sq :=
   by
   simp only [has_lift.iff]
   exact Equiv.nonempty_congr (sq.left_adjoint_lift_struct_equiv adj).symm
 #align category_theory.comm_sq.left_adjoint_has_lift_iff CategoryTheory.CommSq.left_adjoint_hasLift_iff
+-/
 
 instance [HasLift sq] : HasLift (sq.leftAdjoint adj) := by rw [left_adjoint_has_lift_iff];
   infer_instance
@@ -135,6 +143,7 @@ end CommSq
 
 namespace Adjunction
 
+#print CategoryTheory.Adjunction.hasLiftingProperty_iff /-
 theorem hasLiftingProperty_iff (adj : G ⊣ F) {A B : C} {X Y : D} (i : A ⟶ B) (p : X ⟶ Y) :
     HasLiftingProperty (G.map i) p ↔ HasLiftingProperty i (F.map p) :=
   by
@@ -144,6 +153,7 @@ theorem hasLiftingProperty_iff (adj : G ⊣ F) {A B : C} {X Y : D} (i : A ⟶ B)
   · rw [← sq.right_adjoint_has_lift_iff adj]
     infer_instance
 #align category_theory.adjunction.has_lifting_property_iff CategoryTheory.Adjunction.hasLiftingProperty_iff
+-/
 
 end Adjunction
 

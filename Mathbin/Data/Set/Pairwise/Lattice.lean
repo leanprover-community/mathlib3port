@@ -31,6 +31,7 @@ variable {f g : ι → α} {s t u : Set α} {a b : α}
 
 namespace Set
 
+#print Set.pairwise_iUnion /-
 theorem pairwise_iUnion {f : ι → Set α} (h : Directed (· ⊆ ·) f) :
     (⋃ n, f n).Pairwise r ↔ ∀ n, (f n).Pairwise r :=
   by
@@ -43,6 +44,7 @@ theorem pairwise_iUnion {f : ι → Set α} (h : Directed (· ⊆ ·) f) :
     rcases h m n with ⟨p, mp, np⟩
     exact H p (mp hm) (np hn) hij
 #align set.pairwise_Union Set.pairwise_iUnion
+-/
 
 #print Set.pairwise_sUnion /-
 theorem pairwise_sUnion {r : α → α → Prop} {s : Set (Set α)} (h : DirectedOn (· ⊆ ·) s) :
@@ -61,10 +63,12 @@ section PartialOrderBot
 
 variable [PartialOrder α] [OrderBot α] {s t : Set ι} {f g : ι → α}
 
+#print Set.pairwiseDisjoint_iUnion /-
 theorem pairwiseDisjoint_iUnion {g : ι' → Set ι} (h : Directed (· ⊆ ·) g) :
     (⋃ n, g n).PairwiseDisjoint f ↔ ∀ ⦃n⦄, (g n).PairwiseDisjoint f :=
   pairwise_iUnion h
 #align set.pairwise_disjoint_Union Set.pairwiseDisjoint_iUnion
+-/
 
 #print Set.pairwiseDisjoint_sUnion /-
 theorem pairwiseDisjoint_sUnion {s : Set (Set ι)} (h : DirectedOn (· ⊆ ·) s) :
@@ -79,6 +83,7 @@ section CompleteLattice
 
 variable [CompleteLattice α]
 
+#print Set.PairwiseDisjoint.biUnion /-
 /-- Bind operation for `set.pairwise_disjoint`. If you want to only consider finsets of indices, you
 can use `set.pairwise_disjoint.bUnion_finset`. -/
 theorem PairwiseDisjoint.biUnion {s : Set ι'} {g : ι' → Set ι} {f : ι → α}
@@ -93,9 +98,11 @@ theorem PairwiseDisjoint.biUnion {s : Set ι'} {g : ι' → Set ι} {f : ι → 
   · exact hg d hd (hcd.subst ha) hb hab
   · exact (hs hc hd <| ne_of_apply_ne _ hcd).mono (le_iSup₂ a ha) (le_iSup₂ b hb)
 #align set.pairwise_disjoint.bUnion Set.PairwiseDisjoint.biUnion
+-/
 
 end CompleteLattice
 
+#print Set.biUnion_diff_biUnion_eq /-
 theorem biUnion_diff_biUnion_eq {s t : Set ι} {f : ι → Set α} (h : (s ∪ t).PairwiseDisjoint f) :
     ((⋃ i ∈ s, f i) \ ⋃ i ∈ t, f i) = ⋃ i ∈ s \ t, f i :=
   by
@@ -105,13 +112,16 @@ theorem biUnion_diff_biUnion_eq {s t : Set ι} {f : ι → Set α} (h : (s ∪ t
   rw [mem_Union₂]; rintro ⟨j, hj, haj⟩
   exact (h (Or.inl hi.1) (Or.inr hj) (ne_of_mem_of_not_mem hj hi.2).symm).le_bot ⟨ha, haj⟩
 #align set.bUnion_diff_bUnion_eq Set.biUnion_diff_biUnion_eq
+-/
 
+#print Set.biUnionEqSigmaOfDisjoint /-
 /-- Equivalence between a disjoint bounded union and a dependent sum. -/
 noncomputable def biUnionEqSigmaOfDisjoint {s : Set ι} {f : ι → Set α} (h : s.PairwiseDisjoint f) :
     (⋃ i ∈ s, f i) ≃ Σ i : s, f i :=
   (Equiv.setCongr (biUnion_eq_iUnion _ _)).trans <|
     unionEqSigmaOfDisjoint fun ⟨i, hi⟩ ⟨j, hj⟩ ne => h hi hj fun eq => Ne <| Subtype.eq Eq
 #align set.bUnion_eq_sigma_of_disjoint Set.biUnionEqSigmaOfDisjoint
+-/
 
 end Set
 
@@ -119,6 +129,7 @@ section
 
 variable {f : ι → Set α} {s t : Set ι}
 
+#print Set.PairwiseDisjoint.subset_of_biUnion_subset_biUnion /-
 theorem Set.PairwiseDisjoint.subset_of_biUnion_subset_biUnion (h₀ : (s ∪ t).PairwiseDisjoint f)
     (h₁ : ∀ i ∈ s, (f i).Nonempty) (h : (⋃ i ∈ s, f i) ⊆ ⋃ i ∈ t, f i) : s ⊆ t :=
   by
@@ -128,17 +139,22 @@ theorem Set.PairwiseDisjoint.subset_of_biUnion_subset_biUnion (h₀ : (s ∪ t).
   rwa [h₀.eq (subset_union_left _ _ hi) (subset_union_right _ _ hj)
       (not_disjoint_iff.2 ⟨a, hai, haj⟩)]
 #align set.pairwise_disjoint.subset_of_bUnion_subset_bUnion Set.PairwiseDisjoint.subset_of_biUnion_subset_biUnion
+-/
 
+#print Pairwise.subset_of_biUnion_subset_biUnion /-
 theorem Pairwise.subset_of_biUnion_subset_biUnion (h₀ : Pairwise (Disjoint on f))
     (h₁ : ∀ i ∈ s, (f i).Nonempty) (h : (⋃ i ∈ s, f i) ⊆ ⋃ i ∈ t, f i) : s ⊆ t :=
   Set.PairwiseDisjoint.subset_of_biUnion_subset_biUnion (h₀.set_pairwise _) h₁ h
 #align pairwise.subset_of_bUnion_subset_bUnion Pairwise.subset_of_biUnion_subset_biUnion
+-/
 
+#print Pairwise.biUnion_injective /-
 theorem Pairwise.biUnion_injective (h₀ : Pairwise (Disjoint on f)) (h₁ : ∀ i, (f i).Nonempty) :
     Injective fun s : Set ι => ⋃ i ∈ s, f i := fun s t h =>
   ((h₀.subset_of_biUnion_subset_biUnion fun _ _ => h₁ _) <| h.Subset).antisymm <|
     (h₀.subset_of_biUnion_subset_biUnion fun _ _ => h₁ _) <| h.Superset
 #align pairwise.bUnion_injective Pairwise.biUnion_injective
+-/
 
 end
 

@@ -49,9 +49,11 @@ variable [AddCommMonoid M] [Module R M] [Module A M] [IsScalarTower R A M]
 
 variable {A}
 
+#print Algebra.lmul_algebraMap /-
 theorem lmul_algebraMap (x : R) : Algebra.lmul R A (algebraMap R A x) = Algebra.lsmul R A x :=
   Eq.symm <| LinearMap.ext <| smul_def x
 #align algebra.lmul_algebra_map Algebra.lmul_algebraMap
+-/
 
 end Algebra
 
@@ -65,16 +67,20 @@ variable [Algebra R S] [Algebra S A]
 
 variable (R S A)
 
+#print IsScalarTower.subalgebra /-
 instance subalgebra (S₀ : Subalgebra R S) : IsScalarTower S₀ S A :=
   of_algebraMap_eq fun x => rfl
 #align is_scalar_tower.subalgebra IsScalarTower.subalgebra
+-/
 
 variable [Algebra R A] [IsScalarTower R S A]
 
+#print IsScalarTower.subalgebra' /-
 instance subalgebra' (S₀ : Subalgebra R S) : IsScalarTower R S₀ A :=
   @IsScalarTower.of_algebraMap_eq R S₀ A _ _ _ _ _ _ fun _ =>
     (IsScalarTower.algebraMap_apply R S A _ : _)
 #align is_scalar_tower.subalgebra' IsScalarTower.subalgebra'
+-/
 
 end Semiring
 
@@ -100,26 +106,34 @@ def restrictScalars (U : Subalgebra S A) : Subalgebra R A :=
 #align subalgebra.restrict_scalars Subalgebra.restrictScalars
 -/
 
+#print Subalgebra.coe_restrictScalars /-
 @[simp]
 theorem coe_restrictScalars {U : Subalgebra S A} : (restrictScalars R U : Set A) = (U : Set A) :=
   rfl
 #align subalgebra.coe_restrict_scalars Subalgebra.coe_restrictScalars
+-/
 
+#print Subalgebra.restrictScalars_top /-
 @[simp]
 theorem restrictScalars_top : restrictScalars R (⊤ : Subalgebra S A) = ⊤ :=
   SetLike.coe_injective rfl
 #align subalgebra.restrict_scalars_top Subalgebra.restrictScalars_top
+-/
 
+#print Subalgebra.restrictScalars_toSubmodule /-
 @[simp]
 theorem restrictScalars_toSubmodule {U : Subalgebra S A} :
     (U.restrictScalars R).toSubmodule = U.toSubmodule.restrictScalars R :=
   SetLike.coe_injective rfl
 #align subalgebra.restrict_scalars_to_submodule Subalgebra.restrictScalars_toSubmodule
+-/
 
+#print Subalgebra.mem_restrictScalars /-
 @[simp]
 theorem mem_restrictScalars {U : Subalgebra S A} {x : A} : x ∈ restrictScalars R U ↔ x ∈ U :=
   Iff.rfl
 #align subalgebra.mem_restrict_scalars Subalgebra.mem_restrictScalars
+-/
 
 #print Subalgebra.restrictScalars_injective /-
 theorem restrictScalars_injective :
@@ -128,6 +142,7 @@ theorem restrictScalars_injective :
 #align subalgebra.restrict_scalars_injective Subalgebra.restrictScalars_injective
 -/
 
+#print Subalgebra.ofRestrictScalars /-
 /-- Produces an `R`-algebra map from `U.restrict_scalars R` given an `S`-algebra map from `U`.
 
 This is a special case of `alg_hom.restrict_scalars` that can be helpful in elaboration. -/
@@ -135,6 +150,7 @@ This is a special case of `alg_hom.restrict_scalars` that can be helpful in elab
 def ofRestrictScalars (U : Subalgebra S A) (f : U →ₐ[S] B) : U.restrictScalars R →ₐ[R] B :=
   f.restrictScalars R
 #align subalgebra.of_restrict_scalars Subalgebra.ofRestrictScalars
+-/
 
 end Semiring
 

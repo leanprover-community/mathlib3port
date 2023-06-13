@@ -177,10 +177,12 @@ variable [∀ P, Decidable P]
 instance : Monad Finset :=
   { Finset.applicative with bind := fun α β => @sup _ _ _ _ }
 
+#print Finset.bind_def /-
 @[simp]
 theorem bind_def {α β} : (· >>= ·) = @sup (Finset α) β _ _ :=
   rfl
 #align finset.bind_def Finset.bind_def
+-/
 
 instance : LawfulMonad Finset :=
   {
@@ -221,10 +223,12 @@ def traverse [DecidableEq β] (f : α → F β) (s : Finset α) : F (Finset β) 
 #align finset.traverse Finset.traverse
 -/
 
+#print Finset.id_traverse /-
 @[simp]
 theorem id_traverse [DecidableEq α] (s : Finset α) : traverse id.mk s = s := by
   rw [traverse, Multiset.id_traverse]; exact s.val_to_finset
 #align finset.id_traverse Finset.id_traverse
+-/
 
 open scoped Classical
 

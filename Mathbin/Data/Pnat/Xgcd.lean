@@ -532,6 +532,7 @@ theorem gcdB'_coe : (gcdB' a b : ℕ) = gcdY a b + gcdZ a b :=
 #align pnat.gcd_b'_coe PNat.gcdB'_coe
 -/
 
+#print PNat.gcd_props /-
 theorem gcd_props :
     let d := gcdD a b
     let w := gcdW a b
@@ -573,6 +574,7 @@ theorem gcd_props :
   rw [ha'', hb'']; repeat' rw [← mul_assoc]; rw [hza', hwb']
   constructor <;> ring
 #align pnat.gcd_props PNat.gcd_props
+-/
 
 #print PNat.gcd_eq /-
 theorem gcd_eq : gcdD a b = gcd a b :=
@@ -589,25 +591,35 @@ theorem gcd_eq : gcdD a b = gcd a b :=
 #align pnat.gcd_eq PNat.gcd_eq
 -/
 
+#print PNat.gcd_det_eq /-
 theorem gcd_det_eq : gcdW a b * gcdZ a b = succPNat (gcdX a b * gcdY a b) :=
   (gcd_props a b).1
 #align pnat.gcd_det_eq PNat.gcd_det_eq
+-/
 
+#print PNat.gcd_a_eq /-
 theorem gcd_a_eq : a = gcdA' a b * gcd a b :=
   gcd_eq a b ▸ (gcd_props a b).2.1
 #align pnat.gcd_a_eq PNat.gcd_a_eq
+-/
 
+#print PNat.gcd_b_eq /-
 theorem gcd_b_eq : b = gcdB' a b * gcd a b :=
   gcd_eq a b ▸ (gcd_props a b).2.2.1
 #align pnat.gcd_b_eq PNat.gcd_b_eq
+-/
 
+#print PNat.gcd_rel_left' /-
 theorem gcd_rel_left' : gcdZ a b * gcdA' a b = succPNat (gcdX a b * gcdB' a b) :=
   (gcd_props a b).2.2.2.1
 #align pnat.gcd_rel_left' PNat.gcd_rel_left'
+-/
 
+#print PNat.gcd_rel_right' /-
 theorem gcd_rel_right' : gcdW a b * gcdB' a b = succPNat (gcdY a b * gcdA' a b) :=
   (gcd_props a b).2.2.2.2.1
 #align pnat.gcd_rel_right' PNat.gcd_rel_right'
+-/
 
 #print PNat.gcd_rel_left /-
 theorem gcd_rel_left : (gcdZ a b * a : ℕ) = gcdX a b * b + gcd a b :=

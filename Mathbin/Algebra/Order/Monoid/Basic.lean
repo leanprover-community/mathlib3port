@@ -28,6 +28,7 @@ universe u
 
 variable {α : Type u} {β : Type _}
 
+#print Function.Injective.orderedCommMonoid /-
 /-- Pullback an `ordered_comm_monoid` under an injective map.
 See note [reducible non-instances]. -/
 @[reducible,
@@ -42,7 +43,9 @@ def Function.Injective.orderedCommMonoid [OrderedCommMonoid α] {β : Type _} [O
       show f (c * a) ≤ f (c * b) by rw [mul, mul]; apply mul_le_mul_left'; exact ab }
 #align function.injective.ordered_comm_monoid Function.Injective.orderedCommMonoid
 #align function.injective.ordered_add_comm_monoid Function.Injective.orderedAddCommMonoid
+-/
 
+#print Function.Injective.linearOrderedCommMonoid /-
 /-- Pullback a `linear_ordered_comm_monoid` under an injective map.
 See note [reducible non-instances]. -/
 @[reducible,
@@ -56,6 +59,7 @@ def Function.Injective.linearOrderedCommMonoid [LinearOrderedCommMonoid α] {β 
   { hf.OrderedCommMonoid f one mul npow, LinearOrder.lift f hf hsup hinf with }
 #align function.injective.linear_ordered_comm_monoid Function.Injective.linearOrderedCommMonoid
 #align function.injective.linear_ordered_add_comm_monoid Function.Injective.linearOrderedAddCommMonoid
+-/
 
 #print OrderEmbedding.mulLeft /-
 -- TODO find a better home for the next two constructions.

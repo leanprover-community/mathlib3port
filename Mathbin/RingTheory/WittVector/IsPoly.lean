@@ -165,15 +165,12 @@ universe u
 
 variable {p : ℕ} {R S : Type u} {σ idx : Type _} [hp : Fact p.Prime] [CommRing R] [CommRing S]
 
--- mathport name: expr𝕎
 local notation "𝕎" => WittVector p
 
 -- type as `\bbW`
 open MvPolynomial
 
 open Function (uncurry)
-
-include hp
 
 variable (p)
 
@@ -184,6 +181,7 @@ noncomputable section
 -/
 
 
+#print WittVector.poly_eq_of_wittPolynomial_bind_eq' /-
 theorem poly_eq_of_wittPolynomial_bind_eq' (f g : ℕ → MvPolynomial (idx × ℕ) ℤ)
     (h : ∀ n, bind₁ f (wittPolynomial p _ n) = bind₁ g (wittPolynomial p _ n)) : f = g :=
   by
@@ -195,7 +193,9 @@ theorem poly_eq_of_wittPolynomial_bind_eq' (f g : ℕ → MvPolynomial (idx × �
   simpa only [Function.comp, map_bind₁, map_wittPolynomial, ← bind₁_bind₁,
     bind₁_wittPolynomial_xInTermsOfW, bind₁_X_right] using h
 #align witt_vector.poly_eq_of_witt_polynomial_bind_eq' WittVector.poly_eq_of_wittPolynomial_bind_eq'
+-/
 
+#print WittVector.poly_eq_of_wittPolynomial_bind_eq /-
 theorem poly_eq_of_wittPolynomial_bind_eq (f g : ℕ → MvPolynomial ℕ ℤ)
     (h : ∀ n, bind₁ f (wittPolynomial p _ n) = bind₁ g (wittPolynomial p _ n)) : f = g :=
   by
@@ -207,8 +207,7 @@ theorem poly_eq_of_wittPolynomial_bind_eq (f g : ℕ → MvPolynomial ℕ ℤ)
   simpa only [Function.comp, map_bind₁, map_wittPolynomial, ← bind₁_bind₁,
     bind₁_wittPolynomial_xInTermsOfW, bind₁_X_right] using h
 #align witt_vector.poly_eq_of_witt_polynomial_bind_eq WittVector.poly_eq_of_wittPolynomial_bind_eq
-
-omit hp
+-/
 
 #print WittVector.IsPoly /-
 -- Ideally, we would generalise this to n-ary functions
@@ -251,8 +250,7 @@ instance : Inhabited (IsPoly p fun _ _ => id) :=
 
 variable {p}
 
-include hp
-
+#print WittVector.IsPoly.ext /-
 theorem ext {f g} (hf : IsPoly p f) (hg : IsPoly p g)
     (h :
       ∀ (R : Type u) [_Rcr : CommRing R] (x : 𝕎 R) (n : ℕ),
@@ -281,8 +279,7 @@ theorem ext {f g} (hf : IsPoly p f) (hg : IsPoly p g)
     apply eval₂_hom_congr (RingHom.ext_int _ _) _ rfl
     simp only [coeff_mk]; rfl
 #align witt_vector.is_poly.ext WittVector.IsPoly.ext
-
-omit hp
+-/
 
 #print WittVector.IsPoly.comp /-
 /-- The composition of polynomial functions is polynomial. -/
@@ -482,8 +479,6 @@ unsafe def is_poly_attr : user_attribute
 
 end Tactic
 
-include hp
-
 /-!
 ### `is_poly` instances
 
@@ -516,21 +511,22 @@ instance zeroIsPoly : IsPoly p fun _ _ _ => 0 :=
 #align witt_vector.zero_is_poly WittVector.zeroIsPoly
 -/
 
+#print WittVector.bind₁_zero_wittPolynomial /-
 @[simp]
 theorem bind₁_zero_wittPolynomial (n : ℕ) :
     bind₁ (0 : ℕ → MvPolynomial ℕ R) (wittPolynomial p R n) = 0 := by
   rw [← aeval_eq_bind₁, aeval_zero, constantCoeff_wittPolynomial, RingHom.map_zero]
 #align witt_vector.bind₁_zero_witt_polynomial WittVector.bind₁_zero_wittPolynomial
+-/
 
-omit hp
-
+#print WittVector.onePoly /-
 /-- The coefficients of `1 : 𝕎 R` as polynomials. -/
 def onePoly (n : ℕ) : MvPolynomial ℕ ℤ :=
   if n = 0 then 1 else 0
 #align witt_vector.one_poly WittVector.onePoly
+-/
 
-include hp
-
+#print WittVector.bind₁_onePoly_wittPolynomial /-
 @[simp]
 theorem bind₁_onePoly_wittPolynomial (n : ℕ) : bind₁ onePoly (wittPolynomial p ℤ n) = 1 :=
   by
@@ -543,6 +539,7 @@ theorem bind₁_onePoly_wittPolynomial (n : ℕ) : bind₁ onePoly (wittPolynomi
       AlgHom.map_pow, bind₁_X_right, AlgHom.map_mul]
   · rw [Finset.mem_range]; decide
 #align witt_vector.bind₁_one_poly_witt_polynomial WittVector.bind₁_onePoly_wittPolynomial
+-/
 
 #print WittVector.oneIsPoly /-
 /-- The function that is constantly one on Witt vectors is a polynomial function. -/
@@ -557,8 +554,6 @@ instance oneIsPoly : IsPoly p fun _ _ _ => 1 :=
 -/
 
 end ZeroOne
-
-omit hp
 
 #print WittVector.addIsPoly₂ /-
 /-- Addition of Witt vectors is a polynomial function. -/
@@ -576,8 +571,7 @@ theorem mulIsPoly₂ [Fact p.Prime] : IsPoly₂ p fun _ _ => (· * ·) :=
 #align witt_vector.mul_is_poly₂ WittVector.mulIsPoly₂
 -/
 
-include hp
-
+#print WittVector.IsPoly.map /-
 -- unfortunately this is not universe polymorphic, merely because `f` isn't
 theorem IsPoly.map {f} (hf : IsPoly p f) (g : R →+* S) (x : 𝕎 R) : map g (f x) = f (map g x) :=
   by
@@ -590,10 +584,9 @@ theorem IsPoly.map {f} (hf : IsPoly p f) (g : R →+* S) (x : 𝕎 R) : map g (f
   apply eval₂_hom_congr (RingHom.ext_int _ _) _ rfl
   simp only [map_coeff]
 #align witt_vector.is_poly.map WittVector.IsPoly.map
+-/
 
 namespace IsPoly₂
-
-omit hp
 
 instance [Fact p.Prime] : Inhabited (IsPoly₂ p _) :=
   ⟨addIsPoly₂⟩
@@ -618,8 +611,7 @@ theorem compRight {g f} (hg : IsPoly₂ p g) (hf : IsPoly p f) :
 #align witt_vector.is_poly₂.comp_right WittVector.IsPoly₂.compRight
 -/
 
-include hp
-
+#print WittVector.IsPoly₂.ext /-
 theorem ext {f g} (hf : IsPoly₂ p f) (hg : IsPoly₂ p g)
     (h :
       ∀ (R : Type u) [_Rcr : CommRing R] (x y : 𝕎 R) (n : ℕ),
@@ -650,7 +642,9 @@ theorem ext {f g} (hf : IsPoly₂ p f) (hg : IsPoly₂ p g)
     ext ⟨b, _⟩
     fin_cases b <;> simp only [coeff_mk, uncurry] <;> rfl
 #align witt_vector.is_poly₂.ext WittVector.IsPoly₂.ext
+-/
 
+#print WittVector.IsPoly₂.map /-
 -- unfortunately this is not universe polymorphic, merely because `f` isn't
 theorem map {f} (hf : IsPoly₂ p f) (g : R →+* S) (x y : 𝕎 R) :
     map g (f x y) = f (map g x) (map g y) :=
@@ -664,6 +658,7 @@ theorem map {f} (hf : IsPoly₂ p f) (g : R →+* S) (x y : 𝕎 R) :
   try ext ⟨i, k⟩; fin_cases i
   all_goals simp only [map_coeff, Matrix.cons_val_zero, Matrix.head_cons, Matrix.cons_val_one]
 #align witt_vector.is_poly₂.map WittVector.IsPoly₂.map
+-/
 
 end IsPoly₂
 

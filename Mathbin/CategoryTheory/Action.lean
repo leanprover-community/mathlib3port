@@ -70,15 +70,19 @@ def π : ActionCategory M X ⥤ SingleObj M :=
 #align category_theory.action_category.π CategoryTheory.ActionCategory.π
 -/
 
+#print CategoryTheory.ActionCategory.π_map /-
 @[simp]
 theorem π_map (p q : ActionCategory M X) (f : p ⟶ q) : (π M X).map f = f.val :=
   rfl
 #align category_theory.action_category.π_map CategoryTheory.ActionCategory.π_map
+-/
 
+#print CategoryTheory.ActionCategory.π_obj /-
 @[simp]
 theorem π_obj (p : ActionCategory M X) : (π M X).obj p = SingleObj.star M :=
   Unit.ext
 #align category_theory.action_category.π_obj CategoryTheory.ActionCategory.π_obj
+-/
 
 variable {M X}
 
@@ -92,14 +96,18 @@ protected def back : ActionCategory M X → X := fun x => x.snd
 instance : CoeTC X (ActionCategory M X) :=
   ⟨fun x => ⟨(), x⟩⟩
 
+#print CategoryTheory.ActionCategory.coe_back /-
 @[simp]
 theorem coe_back (x : X) : (↑x : ActionCategory M X).back = x :=
   rfl
 #align category_theory.action_category.coe_back CategoryTheory.ActionCategory.coe_back
+-/
 
+#print CategoryTheory.ActionCategory.back_coe /-
 @[simp]
 theorem back_coe (x : ActionCategory M X) : ↑x.back = x := by ext <;> rfl
 #align category_theory.action_category.back_coe CategoryTheory.ActionCategory.back_coe
+-/
 
 variable (M X)
 
@@ -113,9 +121,11 @@ def objEquiv : X ≃ ActionCategory M X where
 #align category_theory.action_category.obj_equiv CategoryTheory.ActionCategory.objEquiv
 -/
 
+#print CategoryTheory.ActionCategory.hom_as_subtype /-
 theorem hom_as_subtype (p q : ActionCategory M X) : (p ⟶ q) = { m : M // m • p.back = q.back } :=
   rfl
 #align category_theory.action_category.hom_as_subtype CategoryTheory.ActionCategory.hom_as_subtype
+-/
 
 instance [Inhabited X] : Inhabited (ActionCategory M X) :=
   ⟨show X from default⟩
@@ -125,35 +135,45 @@ instance [Nonempty X] : Nonempty (ActionCategory M X) :=
 
 variable {X} (x : X)
 
+#print CategoryTheory.ActionCategory.stabilizerIsoEnd /-
 /-- The stabilizer of a point is isomorphic to the endomorphism monoid at the
   corresponding point. In fact they are definitionally equivalent. -/
 def stabilizerIsoEnd : Stabilizer.submonoid M x ≃* End (↑x : ActionCategory M X) :=
   MulEquiv.refl _
 #align category_theory.action_category.stabilizer_iso_End CategoryTheory.ActionCategory.stabilizerIsoEnd
+-/
 
+#print CategoryTheory.ActionCategory.stabilizerIsoEnd_apply /-
 @[simp]
 theorem stabilizerIsoEnd_apply (f : Stabilizer.submonoid M x) :
     (stabilizerIsoEnd M x).toFun f = f :=
   rfl
 #align category_theory.action_category.stabilizer_iso_End_apply CategoryTheory.ActionCategory.stabilizerIsoEnd_apply
+-/
 
+#print CategoryTheory.ActionCategory.stabilizerIsoEnd_symm_apply /-
 @[simp]
 theorem stabilizerIsoEnd_symm_apply (f : End _) : (stabilizerIsoEnd M x).invFun f = f :=
   rfl
 #align category_theory.action_category.stabilizer_iso_End_symm_apply CategoryTheory.ActionCategory.stabilizerIsoEnd_symm_apply
+-/
 
 variable {M X}
 
+#print CategoryTheory.ActionCategory.id_val /-
 @[simp]
 protected theorem id_val (x : ActionCategory M X) : Subtype.val (𝟙 x) = 1 :=
   rfl
 #align category_theory.action_category.id_val CategoryTheory.ActionCategory.id_val
+-/
 
+#print CategoryTheory.ActionCategory.comp_val /-
 @[simp]
 protected theorem comp_val {x y z : ActionCategory M X} (f : x ⟶ y) (g : y ⟶ z) :
     (f ≫ g).val = g.val * f.val :=
   rfl
 #align category_theory.action_category.comp_val CategoryTheory.ActionCategory.comp_val
+-/
 
 instance [IsPretransitive M X] [Nonempty X] : IsConnected (ActionCategory M X) :=
   zigzag_isConnected fun x y =>
@@ -175,16 +195,21 @@ def endMulEquivSubgroup (H : Subgroup G) : End (objEquiv G (G ⧸ H) ↑(1 : G))
 #align category_theory.action_category.End_mul_equiv_subgroup CategoryTheory.ActionCategory.endMulEquivSubgroup
 -/
 
+#print CategoryTheory.ActionCategory.homOfPair /-
 /-- A target vertex `t` and a scalar `g` determine a morphism in the action groupoid. -/
 def homOfPair (t : X) (g : G) : ↑(g⁻¹ • t) ⟶ (t : ActionCategory G X) :=
   Subtype.mk g (smul_inv_smul g t)
 #align category_theory.action_category.hom_of_pair CategoryTheory.ActionCategory.homOfPair
+-/
 
+#print CategoryTheory.ActionCategory.homOfPair.val /-
 @[simp]
 theorem homOfPair.val (t : X) (g : G) : (homOfPair t g).val = g :=
   rfl
 #align category_theory.action_category.hom_of_pair.val CategoryTheory.ActionCategory.homOfPair.val
+-/
 
+#print CategoryTheory.ActionCategory.cases /-
 /-- Any morphism in the action groupoid is given by some pair. -/
 protected def cases {P : ∀ ⦃a b : ActionCategory G X⦄, (a ⟶ b) → Sort _}
     (hyp : ∀ t g, P (homOfPair t g)) ⦃a b⦄ (f : a ⟶ b) : P f :=
@@ -196,6 +221,7 @@ protected def cases {P : ∀ ⦃a b : ActionCategory G X⦄, (a ⟶ b) → Sort 
   cases inv_smul_eq_iff.mpr h.symm
   rfl
 #align category_theory.action_category.cases CategoryTheory.ActionCategory.cases
+-/
 
 variable {H : Type _} [Group H]
 

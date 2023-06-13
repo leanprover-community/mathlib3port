@@ -41,7 +41,6 @@ variable {α β γ : Type _}
 
 namespace Prod.Lex
 
--- mathport name: «expr ×ₗ »
 notation:35 α " ×ₗ " β:34 => Lex (Prod α β)
 
 unsafe instance [has_to_format α] [has_to_format β] : has_to_format (α ×ₗ β) :=
@@ -70,15 +69,19 @@ instance instLT (α β : Type _) [LT α] [LT β] : LT (α ×ₗ β) where lt := 
 #align prod.lex.has_lt Prod.Lex.instLT
 -/
 
+#print Prod.Lex.le_iff /-
 theorem le_iff [LT α] [LE β] (a b : α × β) :
     toLex a ≤ toLex b ↔ a.1 < b.1 ∨ a.1 = b.1 ∧ a.2 ≤ b.2 :=
   Prod.lex_def (· < ·) (· ≤ ·)
 #align prod.lex.le_iff Prod.Lex.le_iff
+-/
 
+#print Prod.Lex.lt_iff /-
 theorem lt_iff [LT α] [LT β] (a b : α × β) :
     toLex a < toLex b ↔ a.1 < b.1 ∨ a.1 = b.1 ∧ a.2 < b.2 :=
   Prod.lex_def (· < ·) (· < ·)
 #align prod.lex.lt_iff Prod.Lex.lt_iff
+-/
 
 #print Prod.Lex.preorder /-
 /-- Dictionary / lexicographic preorder for pairs. -/
@@ -114,6 +117,7 @@ section Preorder
 
 variable [PartialOrder α] [Preorder β]
 
+#print Prod.Lex.toLex_mono /-
 theorem toLex_mono : Monotone (toLex : α × β → α ×ₗ β) :=
   by
   rintro ⟨a₁, b₁⟩ ⟨a₂, b₂⟩ ⟨ha, hb⟩
@@ -121,7 +125,9 @@ theorem toLex_mono : Monotone (toLex : α × β → α ×ₗ β) :=
   · exact right _ hb
   · exact left _ _ ha
 #align prod.lex.to_lex_mono Prod.Lex.toLex_mono
+-/
 
+#print Prod.Lex.toLex_strictMono /-
 theorem toLex_strictMono : StrictMono (toLex : α × β → α ×ₗ β) :=
   by
   rintro ⟨a₁, b₁⟩ ⟨a₂, b₂⟩ h
@@ -129,6 +135,7 @@ theorem toLex_strictMono : StrictMono (toLex : α × β → α ×ₗ β) :=
   · exact right _ (Prod.mk_lt_mk_iff_right.1 h)
   · exact left _ _ ha
 #align prod.lex.to_lex_strict_mono Prod.Lex.toLex_strictMono
+-/
 
 end Preorder
 

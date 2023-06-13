@@ -154,6 +154,7 @@ theorem rcomap_compose (r : Rel α β) (s : Rel β γ) : rcomap r ∘ rcomap s =
 #align filter.rcomap_compose Filter.rcomap_compose
 -/
 
+#print Filter.rtendsto_iff_le_rcomap /-
 theorem rtendsto_iff_le_rcomap (r : Rel α β) (l₁ : Filter α) (l₂ : Filter β) :
     RTendsto r l₁ l₂ ↔ l₁ ≤ l₂.rcomap r :=
   by
@@ -163,6 +164,7 @@ theorem rtendsto_iff_le_rcomap (r : Rel α β) (l₁ : Filter α) (l₂ : Filter
   · exact fun h s t tl₂ => mem_of_superset (h t tl₂)
   · exact fun h t tl₂ => h _ t tl₂ Set.Subset.rfl
 #align filter.rtendsto_iff_le_rcomap Filter.rtendsto_iff_le_rcomap
+-/
 
 #print Filter.rcomap' /-
 -- Interestingly, there does not seem to be a way to express this relation using a forward map.
@@ -181,11 +183,13 @@ def rcomap' (r : Rel α β) (f : Filter β) : Filter α
 #align filter.rcomap' Filter.rcomap'
 -/
 
+#print Filter.mem_rcomap' /-
 @[simp]
 theorem mem_rcomap' (r : Rel α β) (l : Filter β) (s : Set α) :
     s ∈ l.rcomap' r ↔ ∃ t ∈ l, r.Preimage t ⊆ s :=
   Iff.rfl
 #align filter.mem_rcomap' Filter.mem_rcomap'
+-/
 
 #print Filter.rcomap'_sets /-
 theorem rcomap'_sets (r : Rel α β) (f : Filter β) :
@@ -288,17 +292,21 @@ theorem ptendsto_iff_rtendsto (l₁ : Filter α) (l₂ : Filter β) (f : α →.
 #align filter.ptendsto_iff_rtendsto Filter.ptendsto_iff_rtendsto
 -/
 
+#print Filter.pmap_res /-
 theorem pmap_res (l : Filter α) (s : Set α) (f : α → β) : pmap (PFun.res f s) l = map f (l ⊓ 𝓟 s) :=
   by
   ext t
   simp only [PFun.core_res, mem_pmap, mem_map, mem_inf_principal, imp_iff_not_or]
   rfl
 #align filter.pmap_res Filter.pmap_res
+-/
 
+#print Filter.tendsto_iff_ptendsto /-
 theorem tendsto_iff_ptendsto (l₁ : Filter α) (l₂ : Filter β) (s : Set α) (f : α → β) :
     Tendsto f (l₁ ⊓ 𝓟 s) l₂ ↔ PTendsto (PFun.res f s) l₁ l₂ := by
   simp only [tendsto, ptendsto, pmap_res]
 #align filter.tendsto_iff_ptendsto Filter.tendsto_iff_ptendsto
+-/
 
 #print Filter.tendsto_iff_ptendsto_univ /-
 theorem tendsto_iff_ptendsto_univ (l₁ : Filter α) (l₂ : Filter β) (f : α → β) :

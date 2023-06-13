@@ -136,17 +136,21 @@ protected theorem map_one' (f : α → β) : (1 : Filter α).map f = pure (f 1) 
 #align filter.map_zero' Filter.map_zero'
 -/
 
+#print Filter.le_one_iff /-
 @[simp, to_additive]
 theorem le_one_iff : f ≤ 1 ↔ (1 : Set α) ∈ f :=
   le_pure_iff
 #align filter.le_one_iff Filter.le_one_iff
 #align filter.nonpos_iff Filter.nonpos_iff
+-/
 
+#print Filter.NeBot.le_one_iff /-
 @[to_additive]
 protected theorem NeBot.le_one_iff (h : f.ne_bot) : f ≤ 1 ↔ f = 1 :=
   h.le_pure_iff
 #align filter.ne_bot.le_one_iff Filter.NeBot.le_one_iff
 #align filter.ne_bot.nonpos_iff Filter.NeBot.nonpos_iff
+-/
 
 #print Filter.eventually_one /-
 @[simp, to_additive]
@@ -199,11 +203,13 @@ theorem pureOneHom_apply (a : α) : pureOneHom a = pure a :=
 
 variable [One β]
 
+#print Filter.map_one /-
 @[simp, to_additive]
 protected theorem map_one [OneHomClass F α β] (φ : F) : map φ 1 = 1 := by
   rw [Filter.map_one', map_one, pure_one]
 #align filter.map_one Filter.map_one
 #align filter.map_zero Filter.map_zero
+-/
 
 end One
 
@@ -235,11 +241,13 @@ theorem mem_inv : s ∈ f⁻¹ ↔ Inv.inv ⁻¹' s ∈ f :=
 #align filter.mem_neg Filter.mem_neg
 -/
 
+#print Filter.inv_le_inv /-
 @[to_additive]
 protected theorem inv_le_inv (hf : f ≤ g) : f⁻¹ ≤ g⁻¹ :=
   map_mono hf
 #align filter.inv_le_inv Filter.inv_le_inv
 #align filter.neg_le_neg Filter.neg_le_neg
+-/
 
 #print Filter.inv_pure /-
 @[simp, to_additive]
@@ -249,11 +257,13 @@ theorem inv_pure : (pure a : Filter α)⁻¹ = pure a⁻¹ :=
 #align filter.neg_pure Filter.neg_pure
 -/
 
+#print Filter.inv_eq_bot_iff /-
 @[simp, to_additive]
 theorem inv_eq_bot_iff : f⁻¹ = ⊥ ↔ f = ⊥ :=
   map_eq_bot_iff
 #align filter.inv_eq_bot_iff Filter.inv_eq_bot_iff
 #align filter.neg_eq_bot_iff Filter.neg_eq_bot_iff
+-/
 
 #print Filter.neBot_inv_iff /-
 @[simp, to_additive]
@@ -276,10 +286,12 @@ section InvolutiveInv
 
 variable [InvolutiveInv α] {f g : Filter α} {s : Set α}
 
+#print Filter.inv_mem_inv /-
 @[to_additive]
 theorem inv_mem_inv (hs : s ∈ f) : s⁻¹ ∈ f⁻¹ := by rwa [mem_inv, inv_preimage, inv_inv]
 #align filter.inv_mem_inv Filter.inv_mem_inv
 #align filter.neg_mem_neg Filter.neg_mem_neg
+-/
 
 #print Filter.instInvolutiveInv /-
 /-- Inversion is involutive on `filter α` if it is on `α`. -/
@@ -293,22 +305,28 @@ protected def instInvolutiveInv : InvolutiveInv (Filter α) :=
 
 scoped[Pointwise] attribute [instance] Filter.instInvolutiveInv Filter.instInvolutiveNeg
 
+#print Filter.inv_le_inv_iff /-
 @[simp, to_additive]
 protected theorem inv_le_inv_iff : f⁻¹ ≤ g⁻¹ ↔ f ≤ g :=
   ⟨fun h => inv_inv f ▸ inv_inv g ▸ Filter.inv_le_inv h, Filter.inv_le_inv⟩
 #align filter.inv_le_inv_iff Filter.inv_le_inv_iff
 #align filter.neg_le_neg_iff Filter.neg_le_neg_iff
+-/
 
+#print Filter.inv_le_iff_le_inv /-
 @[to_additive]
 theorem inv_le_iff_le_inv : f⁻¹ ≤ g ↔ f ≤ g⁻¹ := by rw [← Filter.inv_le_inv_iff, inv_inv]
 #align filter.inv_le_iff_le_inv Filter.inv_le_iff_le_inv
 #align filter.neg_le_iff_le_neg Filter.neg_le_iff_le_neg
+-/
 
+#print Filter.inv_le_self /-
 @[simp, to_additive]
 theorem inv_le_self : f⁻¹ ≤ f ↔ f⁻¹ = f :=
   ⟨fun h => h.antisymm <| inv_le_iff_le_inv.1 h, Eq.le⟩
 #align filter.inv_le_self Filter.inv_le_self
 #align filter.neg_le_self Filter.neg_le_self
+-/
 
 end InvolutiveInv
 
@@ -356,23 +374,29 @@ theorem mul_mem_mul : s ∈ f → t ∈ g → s * t ∈ f * g :=
 #align filter.add_mem_add Filter.add_mem_add
 -/
 
+#print Filter.bot_mul /-
 @[simp, to_additive]
 theorem bot_mul : ⊥ * g = ⊥ :=
   map₂_bot_left
 #align filter.bot_mul Filter.bot_mul
 #align filter.bot_add Filter.bot_add
+-/
 
+#print Filter.mul_bot /-
 @[simp, to_additive]
 theorem mul_bot : f * ⊥ = ⊥ :=
   map₂_bot_right
 #align filter.mul_bot Filter.mul_bot
 #align filter.add_bot Filter.add_bot
+-/
 
+#print Filter.mul_eq_bot_iff /-
 @[simp, to_additive]
 theorem mul_eq_bot_iff : f * g = ⊥ ↔ f = ⊥ ∨ g = ⊥ :=
   map₂_eq_bot_iff
 #align filter.mul_eq_bot_iff Filter.mul_eq_bot_iff
 #align filter.add_eq_bot_iff Filter.add_eq_bot_iff
+-/
 
 #print Filter.mul_neBot_iff /-
 @[simp, to_additive]
@@ -430,29 +454,37 @@ theorem pure_mul_pure : (pure a : Filter α) * pure b = pure (a * b) :=
 #align filter.pure_add_pure Filter.pure_add_pure
 -/
 
+#print Filter.le_mul_iff /-
 @[simp, to_additive]
 theorem le_mul_iff : h ≤ f * g ↔ ∀ ⦃s⦄, s ∈ f → ∀ ⦃t⦄, t ∈ g → s * t ∈ h :=
   le_map₂_iff
 #align filter.le_mul_iff Filter.le_mul_iff
 #align filter.le_add_iff Filter.le_add_iff
+-/
 
+#print Filter.covariant_mul /-
 @[to_additive]
 instance covariant_mul : CovariantClass (Filter α) (Filter α) (· * ·) (· ≤ ·) :=
   ⟨fun f g h => map₂_mono_left⟩
 #align filter.covariant_mul Filter.covariant_mul
 #align filter.covariant_add Filter.covariant_add
+-/
 
+#print Filter.covariant_swap_mul /-
 @[to_additive]
 instance covariant_swap_mul : CovariantClass (Filter α) (Filter α) (swap (· * ·)) (· ≤ ·) :=
   ⟨fun f g h => map₂_mono_right⟩
 #align filter.covariant_swap_mul Filter.covariant_swap_mul
 #align filter.covariant_swap_add Filter.covariant_swap_add
+-/
 
+#print Filter.map_mul /-
 @[to_additive]
 protected theorem map_mul [MulHomClass F α β] (m : F) : (f₁ * f₂).map m = f₁.map m * f₂.map m :=
   map_map₂_distrib <| map_mul m
 #align filter.map_mul Filter.map_mul
 #align filter.map_add Filter.map_add
+-/
 
 #print Filter.pureMulHom /-
 /-- `pure` operation as a `mul_hom`. -/
@@ -523,23 +555,29 @@ theorem div_mem_div : s ∈ f → t ∈ g → s / t ∈ f / g :=
 #align filter.sub_mem_sub Filter.sub_mem_sub
 -/
 
+#print Filter.bot_div /-
 @[simp, to_additive]
 theorem bot_div : ⊥ / g = ⊥ :=
   map₂_bot_left
 #align filter.bot_div Filter.bot_div
 #align filter.bot_sub Filter.bot_sub
+-/
 
+#print Filter.div_bot /-
 @[simp, to_additive]
 theorem div_bot : f / ⊥ = ⊥ :=
   map₂_bot_right
 #align filter.div_bot Filter.div_bot
 #align filter.sub_bot Filter.sub_bot
+-/
 
+#print Filter.div_eq_bot_iff /-
 @[simp, to_additive]
 theorem div_eq_bot_iff : f / g = ⊥ ↔ f = ⊥ ∨ g = ⊥ :=
   map₂_eq_bot_iff
 #align filter.div_eq_bot_iff Filter.div_eq_bot_iff
 #align filter.sub_eq_bot_iff Filter.sub_eq_bot_iff
+-/
 
 #print Filter.div_neBot_iff /-
 @[simp, to_additive]
@@ -597,41 +635,53 @@ theorem pure_div_pure : (pure a : Filter α) / pure b = pure (a / b) :=
 #align filter.pure_sub_pure Filter.pure_sub_pure
 -/
 
+#print Filter.div_le_div /-
 @[to_additive]
 protected theorem div_le_div : f₁ ≤ f₂ → g₁ ≤ g₂ → f₁ / g₁ ≤ f₂ / g₂ :=
   map₂_mono
 #align filter.div_le_div Filter.div_le_div
 #align filter.sub_le_sub Filter.sub_le_sub
+-/
 
+#print Filter.div_le_div_left /-
 @[to_additive]
 protected theorem div_le_div_left : g₁ ≤ g₂ → f / g₁ ≤ f / g₂ :=
   map₂_mono_left
 #align filter.div_le_div_left Filter.div_le_div_left
 #align filter.sub_le_sub_left Filter.sub_le_sub_left
+-/
 
+#print Filter.div_le_div_right /-
 @[to_additive]
 protected theorem div_le_div_right : f₁ ≤ f₂ → f₁ / g ≤ f₂ / g :=
   map₂_mono_right
 #align filter.div_le_div_right Filter.div_le_div_right
 #align filter.sub_le_sub_right Filter.sub_le_sub_right
+-/
 
+#print Filter.le_div_iff /-
 @[simp, to_additive]
 protected theorem le_div_iff : h ≤ f / g ↔ ∀ ⦃s⦄, s ∈ f → ∀ ⦃t⦄, t ∈ g → s / t ∈ h :=
   le_map₂_iff
 #align filter.le_div_iff Filter.le_div_iff
 #align filter.le_sub_iff Filter.le_sub_iff
+-/
 
+#print Filter.covariant_div /-
 @[to_additive]
 instance covariant_div : CovariantClass (Filter α) (Filter α) (· / ·) (· ≤ ·) :=
   ⟨fun f g h => map₂_mono_left⟩
 #align filter.covariant_div Filter.covariant_div
 #align filter.covariant_sub Filter.covariant_sub
+-/
 
+#print Filter.covariant_swap_div /-
 @[to_additive]
 instance covariant_swap_div : CovariantClass (Filter α) (Filter α) (swap (· / ·)) (· ≤ ·) :=
   ⟨fun f g h => map₂_mono_right⟩
 #align filter.covariant_swap_div Filter.covariant_swap_div
 #align filter.covariant_swap_sub Filter.covariant_swap_sub
+-/
 
 end Div
 
@@ -731,6 +781,7 @@ def mapMonoidHom [MonoidHomClass F α β] (φ : F) : Filter α →* Filter β
 #align filter.map_add_monoid_hom Filter.mapAddMonoidHom
 -/
 
+#print Filter.comap_mul_comap_le /-
 -- The other direction does not hold in general
 @[to_additive]
 theorem comap_mul_comap_le [MulHomClass F α β] (m : F) {f g : Filter β} :
@@ -739,13 +790,16 @@ theorem comap_mul_comap_le [MulHomClass F α β] (m : F) {f g : Filter β} :
     (preimage_mul_preimage_subset _).trans <| (preimage_mono t₁t₂).trans mt⟩
 #align filter.comap_mul_comap_le Filter.comap_mul_comap_le
 #align filter.comap_add_comap_le Filter.comap_add_comap_le
+-/
 
+#print Filter.Tendsto.mul_mul /-
 @[to_additive]
 theorem Tendsto.mul_mul [MulHomClass F α β] (m : F) {f₁ g₁ : Filter α} {f₂ g₂ : Filter β} :
     Tendsto m f₁ f₂ → Tendsto m g₁ g₂ → Tendsto m (f₁ * g₁) (f₂ * g₂) := fun hf hg =>
   (Filter.map_mul m).trans_le <| mul_le_mul' hf hg
 #align filter.tendsto.mul_mul Filter.Tendsto.mul_mul
 #align filter.tendsto.add_add Filter.Tendsto.add_add
+-/
 
 #print Filter.pureMonoidHom /-
 /-- `pure` as a `monoid_hom`. -/
@@ -756,17 +810,21 @@ def pureMonoidHom : α →* Filter α :=
 #align filter.pure_add_monoid_hom Filter.pureAddMonoidHom
 -/
 
+#print Filter.coe_pureMonoidHom /-
 @[simp, to_additive]
 theorem coe_pureMonoidHom : (pureMonoidHom : α → Filter α) = pure :=
   rfl
 #align filter.coe_pure_monoid_hom Filter.coe_pureMonoidHom
 #align filter.coe_pure_add_monoid_hom Filter.coe_pureAddMonoidHom
+-/
 
+#print Filter.pureMonoidHom_apply /-
 @[simp, to_additive]
 theorem pureMonoidHom_apply (a : α) : pureMonoidHom a = pure a :=
   rfl
 #align filter.pure_monoid_hom_apply Filter.pureMonoidHom_apply
 #align filter.pure_add_monoid_hom_apply Filter.pureAddMonoidHom_apply
+-/
 
 end MulOneClass
 
@@ -785,19 +843,24 @@ protected def monoid : Monoid (Filter α) :=
 
 scoped[Pointwise] attribute [instance] Filter.monoid Filter.addMonoid
 
+#print Filter.pow_mem_pow /-
 @[to_additive]
 theorem pow_mem_pow (hs : s ∈ f) : ∀ n : ℕ, s ^ n ∈ f ^ n
   | 0 => by rw [pow_zero]; exact one_mem_one
   | n + 1 => by rw [pow_succ]; exact mul_mem_mul hs (pow_mem_pow _)
 #align filter.pow_mem_pow Filter.pow_mem_pow
 #align filter.nsmul_mem_nsmul Filter.nsmul_mem_nsmul
+-/
 
+#print Filter.bot_pow /-
 @[simp, to_additive nsmul_bot]
 theorem bot_pow {n : ℕ} (hn : n ≠ 0) : (⊥ : Filter α) ^ n = ⊥ := by
   rw [← tsub_add_cancel_of_le (Nat.succ_le_of_lt <| Nat.pos_of_ne_zero hn), pow_succ, bot_mul]
 #align filter.bot_pow Filter.bot_pow
 #align filter.nsmul_bot Filter.nsmul_bot
+-/
 
+#print Filter.mul_top_of_one_le /-
 @[to_additive]
 theorem mul_top_of_one_le (hf : 1 ≤ f) : f * ⊤ = ⊤ :=
   by
@@ -807,7 +870,9 @@ theorem mul_top_of_one_le (hf : 1 ≤ f) : f * ⊤ = ⊤ :=
   rwa [mul_univ_of_one_mem (mem_one.1 <| hf ht), univ_subset_iff] at hs 
 #align filter.mul_top_of_one_le Filter.mul_top_of_one_le
 #align filter.add_top_of_nonneg Filter.add_top_of_nonneg
+-/
 
+#print Filter.top_mul_of_one_le /-
 @[to_additive]
 theorem top_mul_of_one_le (hf : 1 ≤ f) : ⊤ * f = ⊤ :=
   by
@@ -817,20 +882,26 @@ theorem top_mul_of_one_le (hf : 1 ≤ f) : ⊤ * f = ⊤ :=
   rwa [univ_mul_of_one_mem (mem_one.1 <| hf ht), univ_subset_iff] at hs 
 #align filter.top_mul_of_one_le Filter.top_mul_of_one_le
 #align filter.top_add_of_nonneg Filter.top_add_of_nonneg
+-/
 
+#print Filter.top_mul_top /-
 @[simp, to_additive]
 theorem top_mul_top : (⊤ : Filter α) * ⊤ = ⊤ :=
   mul_top_of_one_le le_top
 #align filter.top_mul_top Filter.top_mul_top
 #align filter.top_add_top Filter.top_add_top
+-/
 
+#print Filter.nsmul_top /-
 --TODO: `to_additive` trips up on the `1 : ℕ` used in the pattern-matching.
 theorem nsmul_top {α : Type _} [AddMonoid α] : ∀ {n : ℕ}, n ≠ 0 → n • (⊤ : Filter α) = ⊤
   | 0 => fun h => (h rfl).elim
   | 1 => fun _ => one_nsmul _
   | n + 2 => fun _ => by rw [succ_nsmul, nsmul_top n.succ_ne_zero, top_add_top]
 #align filter.nsmul_top Filter.nsmul_top
+-/
 
+#print Filter.top_pow /-
 @[to_additive nsmul_top]
 theorem top_pow : ∀ {n : ℕ}, n ≠ 0 → (⊤ : Filter α) ^ n = ⊤
   | 0 => fun h => (h rfl).elim
@@ -838,6 +909,7 @@ theorem top_pow : ∀ {n : ℕ}, n ≠ 0 → (⊤ : Filter α) ^ n = ⊤
   | n + 2 => fun _ => by rw [pow_succ, top_pow n.succ_ne_zero, top_mul_top]
 #align filter.top_pow Filter.top_pow
 #align filter.nsmul_top Filter.nsmul_top
+-/
 
 #print IsUnit.filter /-
 @[to_additive]
@@ -864,6 +936,7 @@ section DivisionMonoid
 
 variable [DivisionMonoid α] {f g : Filter α}
 
+#print Filter.mul_eq_one_iff /-
 @[to_additive]
 protected theorem mul_eq_one_iff : f * g = 1 ↔ ∃ a b, f = pure a ∧ g = pure b ∧ a * b = 1 :=
   by
@@ -879,6 +952,7 @@ protected theorem mul_eq_one_iff : f * g = 1 ↔ ∃ a b, f = pure a ∧ g = pur
     rw [pure_mul_pure, h, pure_one]
 #align filter.mul_eq_one_iff Filter.mul_eq_one_iff
 #align filter.add_eq_zero_iff Filter.add_eq_zero_iff
+-/
 
 #print Filter.divisionMonoid /-
 /-- `filter α` is a division monoid under pointwise operations if `α` is. -/
@@ -949,13 +1023,17 @@ lacks.
 -/
 
 
+#print Filter.mul_add_subset /-
 theorem mul_add_subset : f * (g + h) ≤ f * g + f * h :=
   map₂_distrib_le_left mul_add
 #align filter.mul_add_subset Filter.mul_add_subset
+-/
 
+#print Filter.add_mul_subset /-
 theorem add_mul_subset : (f + g) * h ≤ f * h + g * h :=
   map₂_distrib_le_right add_mul
 #align filter.add_mul_subset Filter.add_mul_subset
+-/
 
 end Distrib
 
@@ -966,17 +1044,21 @@ variable [MulZeroClass α] {f g : Filter α}
 /-! Note that `filter` is not a `mul_zero_class` because `0 * ⊥ ≠ 0`. -/
 
 
+#print Filter.NeBot.mul_zero_nonneg /-
 theorem NeBot.mul_zero_nonneg (hf : f.ne_bot) : 0 ≤ f * 0 :=
   le_mul_iff.2 fun t₁ h₁ t₂ h₂ =>
     let ⟨a, ha⟩ := hf.nonempty_of_mem h₁
     ⟨_, _, ha, h₂, MulZeroClass.mul_zero _⟩
 #align filter.ne_bot.mul_zero_nonneg Filter.NeBot.mul_zero_nonneg
+-/
 
+#print Filter.NeBot.zero_mul_nonneg /-
 theorem NeBot.zero_mul_nonneg (hg : g.ne_bot) : 0 ≤ 0 * g :=
   le_mul_iff.2 fun t₁ h₁ t₂ h₂ =>
     let ⟨b, hb⟩ := hg.nonempty_of_mem h₂
     ⟨_, _, h₁, hb, MulZeroClass.zero_mul _⟩
 #align filter.ne_bot.zero_mul_nonneg Filter.NeBot.zero_mul_nonneg
+-/
 
 end MulZeroClass
 
@@ -988,6 +1070,7 @@ variable [Group α] [DivisionMonoid β] [MonoidHomClass F α β] (m : F) {f g f�
 /-! Note that `filter α` is not a group because `f / f ≠ 1` in general -/
 
 
+#print Filter.one_le_div_iff /-
 @[simp, to_additive]
 protected theorem one_le_div_iff : 1 ≤ f / g ↔ ¬Disjoint f g :=
   by
@@ -998,13 +1081,17 @@ protected theorem one_le_div_iff : 1 ≤ f / g ↔ ¬Disjoint f g :=
     exact hs (Set.one_mem_div_iff.2 fun ht => h <| disjoint_of_disjoint_of_mem ht h₁ h₂)
 #align filter.one_le_div_iff Filter.one_le_div_iff
 #align filter.nonneg_sub_iff Filter.nonneg_sub_iff
+-/
 
+#print Filter.not_one_le_div_iff /-
 @[to_additive]
 theorem not_one_le_div_iff : ¬1 ≤ f / g ↔ Disjoint f g :=
   Filter.one_le_div_iff.not_left
 #align filter.not_one_le_div_iff Filter.not_one_le_div_iff
 #align filter.not_nonneg_sub_iff Filter.not_nonneg_sub_iff
+-/
 
+#print Filter.NeBot.one_le_div /-
 @[to_additive]
 theorem NeBot.one_le_div (h : f.ne_bot) : 1 ≤ f / f :=
   by
@@ -1014,6 +1101,7 @@ theorem NeBot.one_le_div (h : f.ne_bot) : 1 ≤ f / f :=
   exact hs (Set.div_mem_div ha₁ ha₂)
 #align filter.ne_bot.one_le_div Filter.NeBot.one_le_div
 #align filter.ne_bot.nonneg_sub Filter.NeBot.nonneg_sub
+-/
 
 #print Filter.isUnit_pure /-
 @[to_additive]
@@ -1030,31 +1118,37 @@ theorem isUnit_iff_singleton : IsUnit f ↔ ∃ a, f = pure a := by
 #align filter.is_unit_iff_singleton Filter.isUnit_iff_singleton
 -/
 
-include β
-
+#print Filter.map_inv' /-
 @[to_additive]
 theorem map_inv' : f⁻¹.map m = (f.map m)⁻¹ :=
   Semiconj.filter_map (map_inv m) f
 #align filter.map_inv' Filter.map_inv'
 #align filter.map_neg' Filter.map_neg'
+-/
 
+#print Filter.Tendsto.inv_inv /-
 @[to_additive]
 theorem Tendsto.inv_inv : Tendsto m f₁ f₂ → Tendsto m f₁⁻¹ f₂⁻¹ := fun hf =>
   (Filter.map_inv' m).trans_le <| Filter.inv_le_inv hf
 #align filter.tendsto.inv_inv Filter.Tendsto.inv_inv
 #align filter.tendsto.neg_neg Filter.Tendsto.neg_neg
+-/
 
+#print Filter.map_div /-
 @[to_additive]
 protected theorem map_div : (f / g).map m = f.map m / g.map m :=
   map_map₂_distrib <| map_div m
 #align filter.map_div Filter.map_div
 #align filter.map_sub Filter.map_sub
+-/
 
+#print Filter.Tendsto.div_div /-
 @[to_additive]
 theorem Tendsto.div_div : Tendsto m f₁ f₂ → Tendsto m g₁ g₂ → Tendsto m (f₁ / g₁) (f₂ / g₂) :=
   fun hf hg => (Filter.map_div m).trans_le <| Filter.div_le_div hf hg
 #align filter.tendsto.div_div Filter.Tendsto.div_div
 #align filter.tendsto.sub_sub Filter.Tendsto.sub_sub
+-/
 
 end Group
 
@@ -1064,17 +1158,21 @@ section GroupWithZero
 
 variable [GroupWithZero α] {f g : Filter α}
 
+#print Filter.NeBot.div_zero_nonneg /-
 theorem NeBot.div_zero_nonneg (hf : f.ne_bot) : 0 ≤ f / 0 :=
   Filter.le_div_iff.2 fun t₁ h₁ t₂ h₂ =>
     let ⟨a, ha⟩ := hf.nonempty_of_mem h₁
     ⟨_, _, ha, h₂, div_zero _⟩
 #align filter.ne_bot.div_zero_nonneg Filter.NeBot.div_zero_nonneg
+-/
 
+#print Filter.NeBot.zero_div_nonneg /-
 theorem NeBot.zero_div_nonneg (hg : g.ne_bot) : 0 ≤ 0 / g :=
   Filter.le_div_iff.2 fun t₁ h₁ t₂ h₂ =>
     let ⟨b, hb⟩ := hg.nonempty_of_mem h₂
     ⟨_, _, h₁, hb, zero_div _⟩
 #align filter.ne_bot.zero_div_nonneg Filter.NeBot.zero_div_nonneg
+-/
 
 end GroupWithZero
 
@@ -1116,29 +1214,37 @@ theorem mem_smul : t ∈ f • g ↔ ∃ t₁ t₂, t₁ ∈ f ∧ t₂ ∈ g �
 #align filter.mem_vadd Filter.mem_vadd
 -/
 
+#print Filter.smul_mem_smul /-
 @[to_additive]
 theorem smul_mem_smul : s ∈ f → t ∈ g → s • t ∈ f • g :=
   image2_mem_map₂
 #align filter.smul_mem_smul Filter.smul_mem_smul
 #align filter.vadd_mem_vadd Filter.vadd_mem_vadd
+-/
 
+#print Filter.bot_smul /-
 @[simp, to_additive]
 theorem bot_smul : (⊥ : Filter α) • g = ⊥ :=
   map₂_bot_left
 #align filter.bot_smul Filter.bot_smul
 #align filter.bot_vadd Filter.bot_vadd
+-/
 
+#print Filter.smul_bot /-
 @[simp, to_additive]
 theorem smul_bot : f • (⊥ : Filter β) = ⊥ :=
   map₂_bot_right
 #align filter.smul_bot Filter.smul_bot
 #align filter.vadd_bot Filter.vadd_bot
+-/
 
+#print Filter.smul_eq_bot_iff /-
 @[simp, to_additive]
 theorem smul_eq_bot_iff : f • g = ⊥ ↔ f = ⊥ ∨ g = ⊥ :=
   map₂_eq_bot_iff
 #align filter.smul_eq_bot_iff Filter.smul_eq_bot_iff
 #align filter.vadd_eq_bot_iff Filter.vadd_eq_bot_iff
+-/
 
 #print Filter.smul_neBot_iff /-
 @[simp, to_additive]
@@ -1148,11 +1254,13 @@ theorem smul_neBot_iff : (f • g).ne_bot ↔ f.ne_bot ∧ g.ne_bot :=
 #align filter.vadd_ne_bot_iff Filter.vadd_neBot_iff
 -/
 
+#print Filter.NeBot.smul /-
 @[to_additive]
 theorem NeBot.smul : NeBot f → NeBot g → NeBot (f • g) :=
   NeBot.map₂
 #align filter.ne_bot.smul Filter.NeBot.smul
 #align filter.ne_bot.vadd Filter.NeBot.vadd
+-/
 
 #print Filter.NeBot.of_smul_left /-
 @[to_additive]
@@ -1194,35 +1302,45 @@ theorem pure_smul_pure : (pure a : Filter α) • (pure b : Filter β) = pure (a
 #align filter.pure_vadd_pure Filter.pure_vadd_pure
 -/
 
+#print Filter.smul_le_smul /-
 @[to_additive]
 theorem smul_le_smul : f₁ ≤ f₂ → g₁ ≤ g₂ → f₁ • g₁ ≤ f₂ • g₂ :=
   map₂_mono
 #align filter.smul_le_smul Filter.smul_le_smul
 #align filter.vadd_le_vadd Filter.vadd_le_vadd
+-/
 
+#print Filter.smul_le_smul_left /-
 @[to_additive]
 theorem smul_le_smul_left : g₁ ≤ g₂ → f • g₁ ≤ f • g₂ :=
   map₂_mono_left
 #align filter.smul_le_smul_left Filter.smul_le_smul_left
 #align filter.vadd_le_vadd_left Filter.vadd_le_vadd_left
+-/
 
+#print Filter.smul_le_smul_right /-
 @[to_additive]
 theorem smul_le_smul_right : f₁ ≤ f₂ → f₁ • g ≤ f₂ • g :=
   map₂_mono_right
 #align filter.smul_le_smul_right Filter.smul_le_smul_right
 #align filter.vadd_le_vadd_right Filter.vadd_le_vadd_right
+-/
 
+#print Filter.le_smul_iff /-
 @[simp, to_additive]
 theorem le_smul_iff : h ≤ f • g ↔ ∀ ⦃s⦄, s ∈ f → ∀ ⦃t⦄, t ∈ g → s • t ∈ h :=
   le_map₂_iff
 #align filter.le_smul_iff Filter.le_smul_iff
 #align filter.le_vadd_iff Filter.le_vadd_iff
+-/
 
+#print Filter.covariant_smul /-
 @[to_additive]
 instance covariant_smul : CovariantClass (Filter α) (Filter β) (· • ·) (· ≤ ·) :=
   ⟨fun f g h => map₂_mono_left⟩
 #align filter.covariant_smul Filter.covariant_smul
 #align filter.covariant_vadd Filter.covariant_vadd
+-/
 
 end Smul
 
@@ -1232,8 +1350,6 @@ end Smul
 section Vsub
 
 variable [VSub α β] {f f₁ f₂ g g₁ g₂ : Filter β} {h : Filter α} {s t : Set β} {a b : β}
-
-include α
 
 #print Filter.instVSub /-
 /-- The filter `f -ᵥ g` is generated by `{s -ᵥ t | s ∈ f, t ∈ g}` in locale `pointwise`. -/
@@ -1246,14 +1362,18 @@ protected def instVSub : VSub (Filter α) (Filter β) :=
 
 scoped[Pointwise] attribute [instance] Filter.instVSub
 
+#print Filter.map₂_vsub /-
 @[simp]
 theorem map₂_vsub : map₂ (· -ᵥ ·) f g = f -ᵥ g :=
   rfl
 #align filter.map₂_vsub Filter.map₂_vsub
+-/
 
+#print Filter.mem_vsub /-
 theorem mem_vsub {s : Set α} : s ∈ f -ᵥ g ↔ ∃ t₁ t₂, t₁ ∈ f ∧ t₂ ∈ g ∧ t₁ -ᵥ t₂ ⊆ s :=
   Iff.rfl
 #align filter.mem_vsub Filter.mem_vsub
+-/
 
 #print Filter.vsub_mem_vsub /-
 theorem vsub_mem_vsub : s ∈ f → t ∈ g → s -ᵥ t ∈ f -ᵥ g :=
@@ -1261,25 +1381,33 @@ theorem vsub_mem_vsub : s ∈ f → t ∈ g → s -ᵥ t ∈ f -ᵥ g :=
 #align filter.vsub_mem_vsub Filter.vsub_mem_vsub
 -/
 
+#print Filter.bot_vsub /-
 @[simp]
 theorem bot_vsub : (⊥ : Filter β) -ᵥ g = ⊥ :=
   map₂_bot_left
 #align filter.bot_vsub Filter.bot_vsub
+-/
 
+#print Filter.vsub_bot /-
 @[simp]
 theorem vsub_bot : f -ᵥ (⊥ : Filter β) = ⊥ :=
   map₂_bot_right
 #align filter.vsub_bot Filter.vsub_bot
+-/
 
+#print Filter.vsub_eq_bot_iff /-
 @[simp]
 theorem vsub_eq_bot_iff : f -ᵥ g = ⊥ ↔ f = ⊥ ∨ g = ⊥ :=
   map₂_eq_bot_iff
 #align filter.vsub_eq_bot_iff Filter.vsub_eq_bot_iff
+-/
 
+#print Filter.vsub_neBot_iff /-
 @[simp]
 theorem vsub_neBot_iff : (f -ᵥ g : Filter α).ne_bot ↔ f.ne_bot ∧ g.ne_bot :=
   map₂_neBot_iff
 #align filter.vsub_ne_bot_iff Filter.vsub_neBot_iff
+-/
 
 #print Filter.NeBot.vsub /-
 theorem NeBot.vsub : NeBot f → NeBot g → NeBot (f -ᵥ g) :=
@@ -1287,45 +1415,63 @@ theorem NeBot.vsub : NeBot f → NeBot g → NeBot (f -ᵥ g) :=
 #align filter.ne_bot.vsub Filter.NeBot.vsub
 -/
 
+#print Filter.NeBot.of_vsub_left /-
 theorem NeBot.of_vsub_left : (f -ᵥ g : Filter α).ne_bot → f.ne_bot :=
   NeBot.of_map₂_left
 #align filter.ne_bot.of_vsub_left Filter.NeBot.of_vsub_left
+-/
 
+#print Filter.NeBot.of_vsub_right /-
 theorem NeBot.of_vsub_right : (f -ᵥ g : Filter α).ne_bot → g.ne_bot :=
   NeBot.of_map₂_right
 #align filter.ne_bot.of_vsub_right Filter.NeBot.of_vsub_right
+-/
 
+#print Filter.pure_vsub /-
 @[simp]
 theorem pure_vsub : (pure a : Filter β) -ᵥ g = g.map ((· -ᵥ ·) a) :=
   map₂_pure_left
 #align filter.pure_vsub Filter.pure_vsub
+-/
 
+#print Filter.vsub_pure /-
 @[simp]
 theorem vsub_pure : f -ᵥ pure b = f.map (· -ᵥ b) :=
   map₂_pure_right
 #align filter.vsub_pure Filter.vsub_pure
+-/
 
+#print Filter.pure_vsub_pure /-
 @[simp]
 theorem pure_vsub_pure : (pure a : Filter β) -ᵥ pure b = (pure (a -ᵥ b) : Filter α) :=
   map₂_pure
 #align filter.pure_vsub_pure Filter.pure_vsub_pure
+-/
 
+#print Filter.vsub_le_vsub /-
 theorem vsub_le_vsub : f₁ ≤ f₂ → g₁ ≤ g₂ → f₁ -ᵥ g₁ ≤ f₂ -ᵥ g₂ :=
   map₂_mono
 #align filter.vsub_le_vsub Filter.vsub_le_vsub
+-/
 
+#print Filter.vsub_le_vsub_left /-
 theorem vsub_le_vsub_left : g₁ ≤ g₂ → f -ᵥ g₁ ≤ f -ᵥ g₂ :=
   map₂_mono_left
 #align filter.vsub_le_vsub_left Filter.vsub_le_vsub_left
+-/
 
+#print Filter.vsub_le_vsub_right /-
 theorem vsub_le_vsub_right : f₁ ≤ f₂ → f₁ -ᵥ g ≤ f₂ -ᵥ g :=
   map₂_mono_right
 #align filter.vsub_le_vsub_right Filter.vsub_le_vsub_right
+-/
 
+#print Filter.le_vsub_iff /-
 @[simp]
 theorem le_vsub_iff : h ≤ f -ᵥ g ↔ ∀ ⦃s⦄, s ∈ f → ∀ ⦃t⦄, t ∈ g → s -ᵥ t ∈ h :=
   le_map₂_iff
 #align filter.le_vsub_iff Filter.le_vsub_iff
+-/
 
 end Vsub
 
@@ -1372,17 +1518,21 @@ theorem smul_set_mem_smul_filter : s ∈ f → a • s ∈ a • f :=
 #align filter.vadd_set_mem_vadd_filter Filter.vadd_set_mem_vadd_filter
 -/
 
+#print Filter.smul_filter_bot /-
 @[simp, to_additive]
 theorem smul_filter_bot : a • (⊥ : Filter β) = ⊥ :=
   map_bot
 #align filter.smul_filter_bot Filter.smul_filter_bot
 #align filter.vadd_filter_bot Filter.vadd_filter_bot
+-/
 
+#print Filter.smul_filter_eq_bot_iff /-
 @[simp, to_additive]
 theorem smul_filter_eq_bot_iff : a • f = ⊥ ↔ f = ⊥ :=
   map_eq_bot_iff
 #align filter.smul_filter_eq_bot_iff Filter.smul_filter_eq_bot_iff
 #align filter.vadd_filter_eq_bot_iff Filter.vadd_filter_eq_bot_iff
+-/
 
 #print Filter.smul_filter_neBot_iff /-
 @[simp, to_additive]
@@ -1407,17 +1557,21 @@ theorem NeBot.of_smul_filter : (a • f).ne_bot → f.ne_bot :=
 #align filter.ne_bot.of_vadd_filter Filter.NeBot.of_vadd_filter
 -/
 
+#print Filter.smul_filter_le_smul_filter /-
 @[to_additive]
 theorem smul_filter_le_smul_filter (hf : f₁ ≤ f₂) : a • f₁ ≤ a • f₂ :=
   map_mono hf
 #align filter.smul_filter_le_smul_filter Filter.smul_filter_le_smul_filter
 #align filter.vadd_filter_le_vadd_filter Filter.vadd_filter_le_vadd_filter
+-/
 
+#print Filter.covariant_smul_filter /-
 @[to_additive]
 instance covariant_smul_filter : CovariantClass α (Filter β) (· • ·) (· ≤ ·) :=
   ⟨fun f => map_mono⟩
 #align filter.covariant_smul_filter Filter.covariant_smul_filter
 #align filter.covariant_vadd_filter Filter.covariant_vadd_filter
+-/
 
 end Smul
 
@@ -1560,18 +1714,23 @@ because `0 * ⊥ ≠ 0`.
 -/
 
 
+#print Filter.NeBot.smul_zero_nonneg /-
 theorem NeBot.smul_zero_nonneg (hf : f.ne_bot) : 0 ≤ f • (0 : Filter β) :=
   le_smul_iff.2 fun t₁ h₁ t₂ h₂ =>
     let ⟨a, ha⟩ := hf.nonempty_of_mem h₁
     ⟨_, _, ha, h₂, smul_zero _⟩
 #align filter.ne_bot.smul_zero_nonneg Filter.NeBot.smul_zero_nonneg
+-/
 
+#print Filter.NeBot.zero_smul_nonneg /-
 theorem NeBot.zero_smul_nonneg (hg : g.ne_bot) : 0 ≤ (0 : Filter α) • g :=
   le_smul_iff.2 fun t₁ h₁ t₂ h₂ =>
     let ⟨b, hb⟩ := hg.nonempty_of_mem h₂
     ⟨_, _, h₁, hb, zero_smul _ _⟩
 #align filter.ne_bot.zero_smul_nonneg Filter.NeBot.zero_smul_nonneg
+-/
 
+#print Filter.zero_smul_filter_nonpos /-
 theorem zero_smul_filter_nonpos : (0 : α) • g ≤ 0 :=
   by
   refine' fun s hs => mem_smul_filter.2 _
@@ -1579,6 +1738,7 @@ theorem zero_smul_filter_nonpos : (0 : α) • g ≤ 0 :=
   refine' eq_univ_iff_forall.2 fun a => _
   rwa [mem_preimage, zero_smul]
 #align filter.zero_smul_filter_nonpos Filter.zero_smul_filter_nonpos
+-/
 
 #print Filter.zero_smul_filter /-
 theorem zero_smul_filter (hg : g.ne_bot) : (0 : α) • g = 0 :=

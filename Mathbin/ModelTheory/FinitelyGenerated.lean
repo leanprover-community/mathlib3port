@@ -53,6 +53,7 @@ def FG (N : L.Substructure M) : Prop :=
 #align first_order.language.substructure.fg FirstOrder.Language.Substructure.FG
 -/
 
+#print FirstOrder.Language.Substructure.fg_def /-
 theorem fg_def {N : L.Substructure M} : N.FG ↔ ∃ S : Set M, S.Finite ∧ closure L S = N :=
   ⟨fun ⟨t, h⟩ => ⟨_, Finset.finite_toSet t, h⟩,
     by
@@ -60,7 +61,9 @@ theorem fg_def {N : L.Substructure M} : N.FG ↔ ∃ S : Set M, S.Finite ∧ clo
     rcases finite.exists_finset_coe h with ⟨t, rfl⟩
     exact ⟨t, rfl⟩⟩
 #align first_order.language.substructure.fg_def FirstOrder.Language.Substructure.fg_def
+-/
 
+#print FirstOrder.Language.Substructure.fg_iff_exists_fin_generating_family /-
 theorem fg_iff_exists_fin_generating_family {N : L.Substructure M} :
     N.FG ↔ ∃ (n : ℕ) (s : Fin n → M), closure L (range s) = N :=
   by
@@ -72,31 +75,43 @@ theorem fg_iff_exists_fin_generating_family {N : L.Substructure M} :
   · rintro ⟨n, s, hs⟩
     refine' ⟨range s, finite_range s, hs⟩
 #align first_order.language.substructure.fg_iff_exists_fin_generating_family FirstOrder.Language.Substructure.fg_iff_exists_fin_generating_family
+-/
 
+#print FirstOrder.Language.Substructure.fg_bot /-
 theorem fg_bot : (⊥ : L.Substructure M).FG :=
   ⟨∅, by rw [Finset.coe_empty, closure_empty]⟩
 #align first_order.language.substructure.fg_bot FirstOrder.Language.Substructure.fg_bot
+-/
 
+#print FirstOrder.Language.Substructure.fg_closure /-
 theorem fg_closure {s : Set M} (hs : s.Finite) : FG (closure L s) :=
   ⟨hs.toFinset, by rw [hs.coe_to_finset]⟩
 #align first_order.language.substructure.fg_closure FirstOrder.Language.Substructure.fg_closure
+-/
 
+#print FirstOrder.Language.Substructure.fg_closure_singleton /-
 theorem fg_closure_singleton (x : M) : FG (closure L ({x} : Set M)) :=
   fg_closure (finite_singleton x)
 #align first_order.language.substructure.fg_closure_singleton FirstOrder.Language.Substructure.fg_closure_singleton
+-/
 
+#print FirstOrder.Language.Substructure.FG.sup /-
 theorem FG.sup {N₁ N₂ : L.Substructure M} (hN₁ : N₁.FG) (hN₂ : N₂.FG) : (N₁ ⊔ N₂).FG :=
   let ⟨t₁, ht₁⟩ := fg_def.1 hN₁
   let ⟨t₂, ht₂⟩ := fg_def.1 hN₂
   fg_def.2 ⟨t₁ ∪ t₂, ht₁.1.union ht₂.1, by rw [closure_union, ht₁.2, ht₂.2]⟩
 #align first_order.language.substructure.fg.sup FirstOrder.Language.Substructure.FG.sup
+-/
 
+#print FirstOrder.Language.Substructure.FG.map /-
 theorem FG.map {N : Type _} [L.Structure N] (f : M →[L] N) {s : L.Substructure M} (hs : s.FG) :
     (s.map f).FG :=
   let ⟨t, ht⟩ := fg_def.1 hs
   fg_def.2 ⟨f '' t, ht.1.image _, by rw [closure_image, ht.2]⟩
 #align first_order.language.substructure.fg.map FirstOrder.Language.Substructure.FG.map
+-/
 
+#print FirstOrder.Language.Substructure.FG.of_map_embedding /-
 theorem FG.of_map_embedding {N : Type _} [L.Structure N] (f : M ↪[L] N) {s : L.Substructure M}
     (hs : (s.map f.toHom).FG) : s.FG :=
   by
@@ -111,6 +126,7 @@ theorem FG.of_map_embedding {N : Type _} [L.Structure N] (f : M ↪[L] N) {s : L
   rw [h] at h' 
   exact hom.map_le_range h'
 #align first_order.language.substructure.fg.of_map_embedding FirstOrder.Language.Substructure.FG.of_map_embedding
+-/
 
 #print FirstOrder.Language.Substructure.CG /-
 /-- A substructure of `M` is countably generated if it is the closure of a countable subset of `M`.
@@ -120,16 +136,21 @@ def CG (N : L.Substructure M) : Prop :=
 #align first_order.language.substructure.cg FirstOrder.Language.Substructure.CG
 -/
 
+#print FirstOrder.Language.Substructure.cg_def /-
 theorem cg_def {N : L.Substructure M} : N.CG ↔ ∃ S : Set M, S.Countable ∧ closure L S = N :=
   Iff.refl _
 #align first_order.language.substructure.cg_def FirstOrder.Language.Substructure.cg_def
+-/
 
+#print FirstOrder.Language.Substructure.FG.cg /-
 theorem FG.cg {N : L.Substructure M} (h : N.FG) : N.CG :=
   by
   obtain ⟨s, hf, rfl⟩ := fg_def.1 h
   refine' ⟨s, hf.countable, rfl⟩
 #align first_order.language.substructure.fg.cg FirstOrder.Language.Substructure.FG.cg
+-/
 
+#print FirstOrder.Language.Substructure.cg_iff_empty_or_exists_nat_generating_family /-
 theorem cg_iff_empty_or_exists_nat_generating_family {N : L.Substructure M} :
     N.CG ↔ ↑N = (∅ : Set M) ∨ ∃ s : ℕ → M, closure L (range s) = N :=
   by
@@ -152,31 +173,43 @@ theorem cg_iff_empty_or_exists_nat_generating_family {N : L.Substructure M} :
     · obtain ⟨f, rfl⟩ := h
       exact ⟨range f, countable_range _, rfl⟩
 #align first_order.language.substructure.cg_iff_empty_or_exists_nat_generating_family FirstOrder.Language.Substructure.cg_iff_empty_or_exists_nat_generating_family
+-/
 
+#print FirstOrder.Language.Substructure.cg_bot /-
 theorem cg_bot : (⊥ : L.Substructure M).CG :=
   fg_bot.CG
 #align first_order.language.substructure.cg_bot FirstOrder.Language.Substructure.cg_bot
+-/
 
+#print FirstOrder.Language.Substructure.cg_closure /-
 theorem cg_closure {s : Set M} (hs : s.Countable) : CG (closure L s) :=
   ⟨s, hs, rfl⟩
 #align first_order.language.substructure.cg_closure FirstOrder.Language.Substructure.cg_closure
+-/
 
+#print FirstOrder.Language.Substructure.cg_closure_singleton /-
 theorem cg_closure_singleton (x : M) : CG (closure L ({x} : Set M)) :=
   (fg_closure_singleton x).CG
 #align first_order.language.substructure.cg_closure_singleton FirstOrder.Language.Substructure.cg_closure_singleton
+-/
 
+#print FirstOrder.Language.Substructure.CG.sup /-
 theorem CG.sup {N₁ N₂ : L.Substructure M} (hN₁ : N₁.CG) (hN₂ : N₂.CG) : (N₁ ⊔ N₂).CG :=
   let ⟨t₁, ht₁⟩ := cg_def.1 hN₁
   let ⟨t₂, ht₂⟩ := cg_def.1 hN₂
   cg_def.2 ⟨t₁ ∪ t₂, ht₁.1.union ht₂.1, by rw [closure_union, ht₁.2, ht₂.2]⟩
 #align first_order.language.substructure.cg.sup FirstOrder.Language.Substructure.CG.sup
+-/
 
+#print FirstOrder.Language.Substructure.CG.map /-
 theorem CG.map {N : Type _} [L.Structure N] (f : M →[L] N) {s : L.Substructure M} (hs : s.CG) :
     (s.map f).CG :=
   let ⟨t, ht⟩ := cg_def.1 hs
   cg_def.2 ⟨f '' t, ht.1.image _, by rw [closure_image, ht.2]⟩
 #align first_order.language.substructure.cg.map FirstOrder.Language.Substructure.CG.map
+-/
 
+#print FirstOrder.Language.Substructure.CG.of_map_embedding /-
 theorem CG.of_map_embedding {N : Type _} [L.Structure N] (f : M ↪[L] N) {s : L.Substructure M}
     (hs : (s.map f.toHom).CG) : s.CG :=
   by
@@ -191,7 +224,9 @@ theorem CG.of_map_embedding {N : Type _} [L.Structure N] (f : M ↪[L] N) {s : L
   rw [h2] at h' 
   exact hom.map_le_range h'
 #align first_order.language.substructure.cg.of_map_embedding FirstOrder.Language.Substructure.CG.of_map_embedding
+-/
 
+#print FirstOrder.Language.Substructure.cg_iff_countable /-
 theorem cg_iff_countable [Countable (Σ l, L.Functions l)] {s : L.Substructure M} :
     s.CG ↔ Countable s :=
   by
@@ -199,6 +234,7 @@ theorem cg_iff_countable [Countable (Σ l, L.Functions l)] {s : L.Substructure M
   rintro ⟨s, h, rfl⟩
   exact h.substructure_closure L
 #align first_order.language.substructure.cg_iff_countable FirstOrder.Language.Substructure.cg_iff_countable
+-/
 
 end Substructure
 
@@ -224,21 +260,28 @@ class CG : Prop where
 
 variable {L M}
 
+#print FirstOrder.Language.Structure.fg_def /-
 theorem fg_def : FG L M ↔ (⊤ : L.Substructure M).FG :=
   ⟨fun h => h.1, fun h => ⟨h⟩⟩
 #align first_order.language.Structure.fg_def FirstOrder.Language.Structure.fg_def
+-/
 
+#print FirstOrder.Language.Structure.fg_iff /-
 /-- An equivalent expression of `Structure.fg` in terms of `set.finite` instead of `finset`. -/
 theorem fg_iff : FG L M ↔ ∃ S : Set M, S.Finite ∧ closure L S = (⊤ : L.Substructure M) := by
   rw [fg_def, substructure.fg_def]
 #align first_order.language.Structure.fg_iff FirstOrder.Language.Structure.fg_iff
+-/
 
+#print FirstOrder.Language.Structure.FG.range /-
 theorem FG.range {N : Type _} [L.Structure N] (h : FG L M) (f : M →[L] N) : f.range.FG :=
   by
   rw [hom.range_eq_map]
   exact (fg_def.1 h).map f
 #align first_order.language.Structure.fg.range FirstOrder.Language.Structure.FG.range
+-/
 
+#print FirstOrder.Language.Structure.FG.map_of_surjective /-
 theorem FG.map_of_surjective {N : Type _} [L.Structure N] (h : FG L M) (f : M →[L] N)
     (hs : Function.Surjective f) : FG L N :=
   by
@@ -246,22 +289,30 @@ theorem FG.map_of_surjective {N : Type _} [L.Structure N] (h : FG L M) (f : M �
   rw [fg_def, ← hs]
   exact h.range f
 #align first_order.language.Structure.fg.map_of_surjective FirstOrder.Language.Structure.FG.map_of_surjective
+-/
 
+#print FirstOrder.Language.Structure.cg_def /-
 theorem cg_def : CG L M ↔ (⊤ : L.Substructure M).CG :=
   ⟨fun h => h.1, fun h => ⟨h⟩⟩
 #align first_order.language.Structure.cg_def FirstOrder.Language.Structure.cg_def
+-/
 
+#print FirstOrder.Language.Structure.cg_iff /-
 /-- An equivalent expression of `Structure.cg`. -/
 theorem cg_iff : CG L M ↔ ∃ S : Set M, S.Countable ∧ closure L S = (⊤ : L.Substructure M) := by
   rw [cg_def, substructure.cg_def]
 #align first_order.language.Structure.cg_iff FirstOrder.Language.Structure.cg_iff
+-/
 
+#print FirstOrder.Language.Structure.CG.range /-
 theorem CG.range {N : Type _} [L.Structure N] (h : CG L M) (f : M →[L] N) : f.range.CG :=
   by
   rw [hom.range_eq_map]
   exact (cg_def.1 h).map f
 #align first_order.language.Structure.cg.range FirstOrder.Language.Structure.CG.range
+-/
 
+#print FirstOrder.Language.Structure.CG.map_of_surjective /-
 theorem CG.map_of_surjective {N : Type _} [L.Structure N] (h : CG L M) (f : M →[L] N)
     (hs : Function.Surjective f) : CG L N :=
   by
@@ -269,14 +320,19 @@ theorem CG.map_of_surjective {N : Type _} [L.Structure N] (h : CG L M) (f : M �
   rw [cg_def, ← hs]
   exact h.range f
 #align first_order.language.Structure.cg.map_of_surjective FirstOrder.Language.Structure.CG.map_of_surjective
+-/
 
+#print FirstOrder.Language.Structure.cg_iff_countable /-
 theorem cg_iff_countable [Countable (Σ l, L.Functions l)] : CG L M ↔ Countable M := by
   rw [cg_def, cg_iff_countable, top_equiv.to_equiv.countable_iff]
 #align first_order.language.Structure.cg_iff_countable FirstOrder.Language.Structure.cg_iff_countable
+-/
 
+#print FirstOrder.Language.Structure.FG.cg /-
 theorem FG.cg (h : FG L M) : CG L M :=
   cg_def.2 (fg_def.1 h).CG
 #align first_order.language.Structure.fg.cg FirstOrder.Language.Structure.FG.cg
+-/
 
 #print FirstOrder.Language.Structure.cg_of_fg /-
 instance (priority := 100) cg_of_fg [h : FG L M] : CG L M :=
@@ -286,12 +342,15 @@ instance (priority := 100) cg_of_fg [h : FG L M] : CG L M :=
 
 end Structure
 
+#print FirstOrder.Language.Equiv.fg_iff /-
 theorem Equiv.fg_iff {N : Type _} [L.Structure N] (f : M ≃[L] N) :
     Structure.FG L M ↔ Structure.FG L N :=
   ⟨fun h => h.mapOfSurjective f.toHom f.toEquiv.Surjective, fun h =>
     h.mapOfSurjective f.symm.toHom f.toEquiv.symm.Surjective⟩
 #align first_order.language.equiv.fg_iff FirstOrder.Language.Equiv.fg_iff
+-/
 
+#print FirstOrder.Language.Substructure.fg_iff_structure_fg /-
 theorem Substructure.fg_iff_structure_fg (S : L.Substructure M) : S.FG ↔ Structure.FG L S :=
   by
   rw [Structure.fg_def]
@@ -302,13 +361,17 @@ theorem Substructure.fg_iff_structure_fg (S : L.Substructure M) : S.FG ↔ Struc
     rw [← hom.range_eq_map, range_subtype] at h 
     exact h
 #align first_order.language.substructure.fg_iff_Structure_fg FirstOrder.Language.Substructure.fg_iff_structure_fg
+-/
 
+#print FirstOrder.Language.Equiv.cg_iff /-
 theorem Equiv.cg_iff {N : Type _} [L.Structure N] (f : M ≃[L] N) :
     Structure.CG L M ↔ Structure.CG L N :=
   ⟨fun h => h.mapOfSurjective f.toHom f.toEquiv.Surjective, fun h =>
     h.mapOfSurjective f.symm.toHom f.toEquiv.symm.Surjective⟩
 #align first_order.language.equiv.cg_iff FirstOrder.Language.Equiv.cg_iff
+-/
 
+#print FirstOrder.Language.Substructure.cg_iff_structure_cg /-
 theorem Substructure.cg_iff_structure_cg (S : L.Substructure M) : S.CG ↔ Structure.CG L S :=
   by
   rw [Structure.cg_def]
@@ -319,6 +382,7 @@ theorem Substructure.cg_iff_structure_cg (S : L.Substructure M) : S.CG ↔ Struc
     rw [← hom.range_eq_map, range_subtype] at h 
     exact h
 #align first_order.language.substructure.cg_iff_Structure_cg FirstOrder.Language.Substructure.cg_iff_structure_cg
+-/
 
 end Language
 

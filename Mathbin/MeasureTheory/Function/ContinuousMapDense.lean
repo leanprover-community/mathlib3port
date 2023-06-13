@@ -77,6 +77,7 @@ namespace MeasureTheory
 
 variable [NormedSpace ℝ E]
 
+#print MeasureTheory.exists_continuous_snorm_sub_le_of_closed /-
 /-- A variant of Urysohn's lemma, `ℒ^p` version, for an outer regular measure `μ`:
 consider two sets `s ⊆ u` which are respectively closed and open with `μ s < ∞`, and a vector `c`.
 Then one may find a continuous function `f` equal to `c` on `s` and to `0` outside of `u`,
@@ -146,8 +147,10 @@ theorem exists_continuous_snorm_sub_le_of_closed [μ.OuterRegular] (hp : p ≠ �
       gc_support.trans (inter_subset_left _ _), gc_mem⟩
   exact hη _ ((measure_mono (diff_subset_diff (inter_subset_right _ _) subset.rfl)).trans hV.le)
 #align measure_theory.exists_continuous_snorm_sub_le_of_closed MeasureTheory.exists_continuous_snorm_sub_le_of_closed
+-/
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (s «expr ⊆ » t) -/
+#print MeasureTheory.Memℒp.exists_hasCompactSupport_snorm_sub_le /-
 /-- In a locally compact space, any function in `ℒp` can be approximated by compactly supported
 continuous functions when `p < ∞`, version in terms of `snorm`. -/
 theorem Memℒp.exists_hasCompactSupport_snorm_sub_le [LocallyCompactSpace α] [μ.regular] (hp : p ≠ ∞)
@@ -204,7 +207,9 @@ theorem Memℒp.exists_hasCompactSupport_snorm_sub_le [LocallyCompactSpace α] [
   contrapose! hx
   exact interior_subset (f_support hx)
 #align measure_theory.mem_ℒp.exists_has_compact_support_snorm_sub_le MeasureTheory.Memℒp.exists_hasCompactSupport_snorm_sub_le
+-/
 
+#print MeasureTheory.Memℒp.exists_hasCompactSupport_integral_rpow_sub_le /-
 /-- In a locally compact space, any function in `ℒp` can be approximated by compactly supported
 continuous functions when `0 < p < ∞`, version in terms of `∫`. -/
 theorem Memℒp.exists_hasCompactSupport_integral_rpow_sub_le [LocallyCompactSpace α] [μ.regular]
@@ -226,7 +231,9 @@ theorem Memℒp.exists_hasCompactSupport_integral_rpow_sub_le [LocallyCompactSpa
     Real.rpow_le_rpow_iff _ hε.le (inv_pos.2 hp)] at hg 
   exact integral_nonneg fun x => Real.rpow_nonneg_of_nonneg (norm_nonneg _) _
 #align measure_theory.mem_ℒp.exists_has_compact_support_integral_rpow_sub_le MeasureTheory.Memℒp.exists_hasCompactSupport_integral_rpow_sub_le
+-/
 
+#print MeasureTheory.Integrable.exists_hasCompactSupport_lintegral_sub_le /-
 /-- In a locally compact space, any integrable function can be approximated by compactly supported
 continuous functions, version in terms of `∫⁻`. -/
 theorem Integrable.exists_hasCompactSupport_lintegral_sub_le [LocallyCompactSpace α] [μ.regular]
@@ -236,7 +243,9 @@ theorem Integrable.exists_hasCompactSupport_lintegral_sub_le [LocallyCompactSpac
   simp only [← mem_ℒp_one_iff_integrable, ← snorm_one_eq_lintegral_nnnorm] at hf ⊢
   exact hf.exists_has_compact_support_snorm_sub_le ENNReal.one_ne_top hε
 #align measure_theory.integrable.exists_has_compact_support_lintegral_sub_le MeasureTheory.Integrable.exists_hasCompactSupport_lintegral_sub_le
+-/
 
+#print MeasureTheory.Integrable.exists_hasCompactSupport_integral_sub_le /-
 /-- In a locally compact space, any integrable function can be approximated by compactly supported
 continuous functions, version in terms of `∫`. -/
 theorem Integrable.exists_hasCompactSupport_integral_sub_le [LocallyCompactSpace α] [μ.regular]
@@ -247,8 +256,10 @@ theorem Integrable.exists_hasCompactSupport_integral_sub_le [LocallyCompactSpace
     hf ⊢
   simpa using hf.exists_has_compact_support_integral_rpow_sub_le zero_lt_one hε
 #align measure_theory.integrable.exists_has_compact_support_integral_sub_le MeasureTheory.Integrable.exists_hasCompactSupport_integral_sub_le
+-/
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (s «expr ⊆ » t) -/
+#print MeasureTheory.Memℒp.exists_boundedContinuous_snorm_sub_le /-
 /-- Any function in `ℒp` can be approximated by bounded continuous functions when `p < ∞`,
 version in terms of `snorm`. -/
 theorem Memℒp.exists_boundedContinuous_snorm_sub_le [μ.WeaklyRegular] (hp : p ≠ ∞) {f : α → E}
@@ -303,7 +314,9 @@ theorem Memℒp.exists_boundedContinuous_snorm_sub_le [μ.WeaklyRegular] (hp : p
   refine' ⟨f, I3, f_cont, f_mem, _⟩
   exact (BoundedContinuousFunction.ofNormedAddCommGroup f f_cont _ f_bound).bounded_range
 #align measure_theory.mem_ℒp.exists_bounded_continuous_snorm_sub_le MeasureTheory.Memℒp.exists_boundedContinuous_snorm_sub_le
+-/
 
+#print MeasureTheory.Memℒp.exists_boundedContinuous_integral_rpow_sub_le /-
 /-- Any function in `ℒp` can be approximated by bounded continuous functions when `0 < p < ∞`,
 version in terms of `∫`. -/
 theorem Memℒp.exists_boundedContinuous_integral_rpow_sub_le [μ.WeaklyRegular] {p : ℝ} (hp : 0 < p)
@@ -322,7 +335,9 @@ theorem Memℒp.exists_boundedContinuous_integral_rpow_sub_le [μ.WeaklyRegular]
     Real.rpow_le_rpow_iff _ hε.le (inv_pos.2 hp)] at hg 
   exact integral_nonneg fun x => Real.rpow_nonneg_of_nonneg (norm_nonneg _) _
 #align measure_theory.mem_ℒp.exists_bounded_continuous_integral_rpow_sub_le MeasureTheory.Memℒp.exists_boundedContinuous_integral_rpow_sub_le
+-/
 
+#print MeasureTheory.Integrable.exists_boundedContinuous_lintegral_sub_le /-
 /-- Any integrable function can be approximated by bounded continuous functions,
 version in terms of `∫⁻`. -/
 theorem Integrable.exists_boundedContinuous_lintegral_sub_le [μ.WeaklyRegular] {f : α → E}
@@ -332,7 +347,9 @@ theorem Integrable.exists_boundedContinuous_lintegral_sub_le [μ.WeaklyRegular] 
   simp only [← mem_ℒp_one_iff_integrable, ← snorm_one_eq_lintegral_nnnorm] at hf ⊢
   exact hf.exists_bounded_continuous_snorm_sub_le ENNReal.one_ne_top hε
 #align measure_theory.integrable.exists_bounded_continuous_lintegral_sub_le MeasureTheory.Integrable.exists_boundedContinuous_lintegral_sub_le
+-/
 
+#print MeasureTheory.Integrable.exists_boundedContinuous_integral_sub_le /-
 /-- Any integrable function can be approximated by bounded continuous functions,
 version in terms of `∫`. -/
 theorem Integrable.exists_boundedContinuous_integral_sub_le [μ.WeaklyRegular] {f : α → E}
@@ -343,11 +360,13 @@ theorem Integrable.exists_boundedContinuous_integral_sub_le [μ.WeaklyRegular] {
     hf ⊢
   simpa using hf.exists_bounded_continuous_integral_rpow_sub_le zero_lt_one hε
 #align measure_theory.integrable.exists_bounded_continuous_integral_sub_le MeasureTheory.Integrable.exists_boundedContinuous_integral_sub_le
+-/
 
 namespace Lp
 
 variable (E)
 
+#print MeasureTheory.Lp.boundedContinuousFunction_dense /-
 /-- A function in `Lp` can be approximated in `Lp` by continuous functions. -/
 theorem boundedContinuousFunction_dense [SecondCountableTopologyEither α E] [_i : Fact (1 ≤ p)]
     (hp : p ≠ ∞) [μ.WeaklyRegular] : (boundedContinuousFunction E p μ).topologicalClosure = ⊤ :=
@@ -368,6 +387,7 @@ theorem boundedContinuousFunction_dense [SecondCountableTopologyEither α E] [_i
   filter_upwards [coe_fn_sub f (g_mem.to_Lp g), g_mem.coe_fn_to_Lp] with x hx h'x
   simp only [hx, Pi.sub_apply, sub_right_inj, h'x]
 #align measure_theory.Lp.bounded_continuous_function_dense MeasureTheory.Lp.boundedContinuousFunction_dense
+-/
 
 end Lp
 
@@ -377,12 +397,11 @@ variable [SecondCountableTopologyEither α E] [_i : Fact (1 ≤ p)] (hp : p ≠ 
 
 variable (𝕜 : Type _) [NormedField 𝕜] [NormedAlgebra ℝ 𝕜] [NormedSpace 𝕜 E]
 
-include _i hp
-
 variable (E) (μ)
 
 namespace BoundedContinuousFunction
 
+#print BoundedContinuousFunction.toLp_denseRange /-
 theorem toLp_denseRange [μ.WeaklyRegular] [IsFiniteMeasure μ] :
     DenseRange ⇑(toLp p μ 𝕜 : (α →ᵇ E) →L[𝕜] Lp E p μ) :=
   by
@@ -392,11 +411,13 @@ theorem toLp_denseRange [μ.WeaklyRegular] [IsFiniteMeasure μ] :
     by exact congr_arg coe this
   simp [range_to_Lp p μ, MeasureTheory.Lp.boundedContinuousFunction_dense E hp]
 #align bounded_continuous_function.to_Lp_dense_range BoundedContinuousFunction.toLp_denseRange
+-/
 
 end BoundedContinuousFunction
 
 namespace ContinuousMap
 
+#print ContinuousMap.toLp_denseRange /-
 theorem toLp_denseRange [CompactSpace α] [μ.WeaklyRegular] [IsFiniteMeasure μ] :
     DenseRange ⇑(toLp p μ 𝕜 : C(α, E) →L[𝕜] Lp E p μ) :=
   by
@@ -406,6 +427,7 @@ theorem toLp_denseRange [CompactSpace α] [μ.WeaklyRegular] [IsFiniteMeasure μ
     by exact congr_arg coe this
   simp [range_to_Lp p μ, MeasureTheory.Lp.boundedContinuousFunction_dense E hp]
 #align continuous_map.to_Lp_dense_range ContinuousMap.toLp_denseRange
+-/
 
 end ContinuousMap
 

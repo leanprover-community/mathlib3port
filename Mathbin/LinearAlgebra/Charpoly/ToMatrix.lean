@@ -42,6 +42,7 @@ namespace LinearMap
 
 section Basic
 
+#print LinearMap.charpoly_toMatrix /-
 /-- `charpoly f` is the characteristic polynomial of the matrix of `f` in any basis. -/
 @[simp]
 theorem charpoly_toMatrix {ι : Type w} [Fintype ι] (b : Basis ι R M) :
@@ -91,6 +92,7 @@ theorem charpoly_toMatrix {ι : Type w} [Fintype ι] (b : Basis ι R M) :
     _ = (scalar ι' X - C.map_matrix A').det := by rw [← det_mul, hPQ, det_one, one_mul]
     _ = f.charpoly := rfl
 #align linear_map.charpoly_to_matrix LinearMap.charpoly_toMatrix
+-/
 
 end Basic
 

@@ -62,25 +62,25 @@ protected def get (x : (Comp F G) α) : F fun i => G i α :=
 #align mvqpf.comp.get MvQPF.Comp.get
 -/
 
+#print MvQPF.Comp.mk_get /-
 @[simp]
 protected theorem mk_get (x : (Comp F G) α) : Comp.mk (Comp.get x) = x :=
   rfl
 #align mvqpf.comp.mk_get MvQPF.Comp.mk_get
+-/
 
+#print MvQPF.Comp.get_mk /-
 @[simp]
 protected theorem get_mk (x : F fun i => G i α) : Comp.get (Comp.mk x) = x :=
   rfl
 #align mvqpf.comp.get_mk MvQPF.Comp.get_mk
-
-include fG
+-/
 
 #print MvQPF.Comp.map' /-
 /-- map operation defined on a vector of functors -/
 protected def map' : (fun i : Fin2 n => G i α) ⟹ fun i : Fin2 n => G i β := fun i => map f
 #align mvqpf.comp.map' MvQPF.Comp.map'
 -/
-
-include fF
 
 #print MvQPF.Comp.map /-
 /-- The composition of functors is itself functorial -/
@@ -91,17 +91,19 @@ protected def map : (Comp F G) α → (Comp F G) β :=
 
 instance : MvFunctor (Comp F G) where map α β := Comp.map
 
+#print MvQPF.Comp.map_mk /-
 theorem map_mk (x : F fun i => G i α) :
     f <$$> Comp.mk x = Comp.mk ((fun i (x : G i α) => f <$$> x) <$$> x) :=
   rfl
 #align mvqpf.comp.map_mk MvQPF.Comp.map_mk
+-/
 
+#print MvQPF.Comp.get_map /-
 theorem get_map (x : Comp F G α) :
     Comp.get (f <$$> x) = (fun i (x : G i α) => f <$$> x) <$$> Comp.get x :=
   rfl
 #align mvqpf.comp.get_map MvQPF.Comp.get_map
-
-include q q'
+-/
 
 instance : MvQPF (Comp F G)
     where

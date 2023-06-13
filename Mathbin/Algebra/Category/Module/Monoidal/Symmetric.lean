@@ -95,19 +95,23 @@ instance symmetricCategory : SymmetricCategory (ModuleCat.{u} R)
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print ModuleCat.MonoidalCategory.braiding_hom_apply /-
 @[simp]
 theorem braiding_hom_apply {M N : ModuleCat.{u} R} (m : M) (n : N) :
     ((β_ M N).Hom : M ⊗ N ⟶ N ⊗ M) (m ⊗ₜ n) = n ⊗ₜ m :=
   rfl
 #align Module.monoidal_category.braiding_hom_apply ModuleCat.MonoidalCategory.braiding_hom_apply
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print ModuleCat.MonoidalCategory.braiding_inv_apply /-
 @[simp]
 theorem braiding_inv_apply {M N : ModuleCat.{u} R} (m : M) (n : N) :
     ((β_ M N).inv : N ⊗ M ⟶ M ⊗ N) (n ⊗ₜ m) = m ⊗ₜ n :=
   rfl
 #align Module.monoidal_category.braiding_inv_apply ModuleCat.MonoidalCategory.braiding_inv_apply
+-/
 
 end MonoidalCategory
 

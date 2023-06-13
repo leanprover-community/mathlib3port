@@ -100,8 +100,6 @@ end OrderDual
 
 variable {α : Type _} {m : MeasurableSpace α} {μ : Measure α} {f g : α → M}
 
-include m
-
 section Sup
 
 variable [Sup M]
@@ -176,15 +174,11 @@ theorem AEMeasurable.sup (hf : AEMeasurable f μ) (hg : AEMeasurable g μ) :
 #align ae_measurable.sup AEMeasurable.sup
 -/
 
-omit m
-
 #print MeasurableSup₂.toMeasurableSup /-
 instance (priority := 100) MeasurableSup₂.toMeasurableSup : MeasurableSup M :=
   ⟨fun c => measurable_const.sup measurable_id, fun c => measurable_id.sup measurable_const⟩
 #align has_measurable_sup₂.to_has_measurable_sup MeasurableSup₂.toMeasurableSup
 -/
-
-include m
 
 end MeasurableSup₂
 
@@ -264,15 +258,11 @@ theorem AEMeasurable.inf (hf : AEMeasurable f μ) (hg : AEMeasurable g μ) :
 #align ae_measurable.inf AEMeasurable.inf
 -/
 
-omit m
-
 #print MeasurableInf₂.to_hasMeasurableInf /-
 instance (priority := 100) MeasurableInf₂.to_hasMeasurableInf : MeasurableInf M :=
   ⟨fun c => measurable_const.inf measurable_id, fun c => measurable_id.inf measurable_const⟩
 #align has_measurable_inf₂.to_has_measurable_inf MeasurableInf₂.to_hasMeasurableInf
 -/
-
-include m
 
 end MeasurableInf₂
 
@@ -284,12 +274,15 @@ open Finset
 
 variable {δ : Type _} [MeasurableSpace δ] [SemilatticeSup α] [MeasurableSup₂ α]
 
+#print Finset.measurable_sup' /-
 @[measurability]
 theorem Finset.measurable_sup' {ι : Type _} {s : Finset ι} (hs : s.Nonempty) {f : ι → δ → α}
     (hf : ∀ n ∈ s, Measurable (f n)) : Measurable (s.sup' hs f) :=
   Finset.sup'_induction hs _ (fun f hf g hg => hf.sup hg) fun n hn => hf n hn
 #align finset.measurable_sup' Finset.measurable_sup'
+-/
 
+#print Finset.measurable_range_sup' /-
 @[measurability]
 theorem Finset.measurable_range_sup' {f : ℕ → δ → α} {n : ℕ} (hf : ∀ k ≤ n, Measurable (f k)) :
     Measurable ((range (n + 1)).sup' nonempty_range_succ f) :=
@@ -298,7 +291,9 @@ theorem Finset.measurable_range_sup' {f : ℕ → δ → α} {n : ℕ} (hf : ∀
   refine' Finset.measurable_sup' _ _
   simpa [Finset.mem_range]
 #align finset.measurable_range_sup' Finset.measurable_range_sup'
+-/
 
+#print Finset.measurable_range_sup'' /-
 @[measurability]
 theorem Finset.measurable_range_sup'' {f : ℕ → δ → α} {n : ℕ} (hf : ∀ k ≤ n, Measurable (f k)) :
     Measurable fun x => (range (n + 1)).sup' nonempty_range_succ fun k => f k x :=
@@ -307,6 +302,7 @@ theorem Finset.measurable_range_sup'' {f : ℕ → δ → α} {n : ℕ} (hf : �
   ext x
   simp
 #align finset.measurable_range_sup'' Finset.measurable_range_sup''
+-/
 
 end SemilatticeSup
 

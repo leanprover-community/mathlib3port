@@ -395,7 +395,6 @@ section Bisim
 
 variable (R : Stream' α → Stream' α → Prop)
 
--- mathport name: «expr ~ »
 local infixl:50 " ~ " => R
 
 #print Stream'.IsBisimulation /-
@@ -825,9 +824,11 @@ theorem mem_cycle {a : α} {l : List α} : ∀ h : l ≠ [], a ∈ l → a ∈ c
 #align stream.mem_cycle Stream'.mem_cycle
 -/
 
+#print Stream'.cycle_singleton /-
 theorem cycle_singleton (a : α) (h : [a] ≠ []) : cycle [a] h = const a :=
   coinduction rfl fun β fr ch => by rwa [cycle_eq, const_eq]
 #align stream.cycle_singleton Stream'.cycle_singleton
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Stream'.tails_eq /-

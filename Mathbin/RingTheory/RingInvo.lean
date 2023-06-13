@@ -70,6 +70,7 @@ instance (R : Type _) [Semiring R] : RingInvoClass (RingInvo R) R
   right_inv := right_inv
   involution := involution'
 
+#print RingInvo.mk' /-
 /-- Construct a ring involution from a ring homomorphism. -/
 def mk' (f : R →+* Rᵐᵒᵖ) (involution : ∀ r, (f (f r).unop).unop = r) : RingInvo R :=
   { f with
@@ -78,6 +79,7 @@ def mk' (f : R →+* Rᵐᵒᵖ) (involution : ∀ r, (f (f r).unop).unop = r) :
     right_inv := fun r => MulOpposite.unop_injective <| involution _
     involution' := involution }
 #align ring_invo.mk' RingInvo.mk'
+-/
 
 /-- Helper instance for when there's too many metavariables to apply
 `fun_like.has_coe_to_fun` directly. -/
@@ -89,10 +91,12 @@ theorem toFun_eq_coe (f : RingInvo R) : f.toFun = f :=
   rfl
 #align ring_invo.to_fun_eq_coe RingInvo.toFun_eq_coe
 
+#print RingInvo.involution /-
 @[simp]
 theorem involution (f : RingInvo R) (x : R) : (f (f x).unop).unop = x :=
   f.involution' x
 #align ring_invo.involution RingInvo.involution
+-/
 
 instance hasCoeToRingEquiv : Coe (RingInvo R) (R ≃+* Rᵐᵒᵖ) :=
   ⟨RingInvo.toRingEquiv⟩
@@ -105,10 +109,12 @@ theorem coe_ringEquiv (f : RingInvo R) (a : R) : (f : R ≃+* Rᵐᵒᵖ) a = f 
 #align ring_invo.coe_ring_equiv RingInvo.coe_ringEquiv
 -/
 
+#print RingInvo.map_eq_zero_iff /-
 @[simp]
 theorem map_eq_zero_iff (f : RingInvo R) {x : R} : f x = 0 ↔ x = 0 :=
   f.toRingEquiv.map_eq_zero_iff
 #align ring_invo.map_eq_zero_iff RingInvo.map_eq_zero_iff
+-/
 
 end RingInvo
 

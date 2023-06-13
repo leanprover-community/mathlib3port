@@ -42,6 +42,7 @@ section
 
 variable {V : Type _} [Category V] [Abelian V]
 
+#print imageToKernel_op /-
 theorem imageToKernel_op {X Y Z : V} (f : X ⟶ Y) (g : Y ⟶ Z) (w : f ≫ g = 0) :
     imageToKernel g.op f.op (by rw [← op_comp, w, op_zero]) =
       (imageSubobjectIso _ ≪≫ (imageOpOp _).symm).Hom ≫
@@ -54,7 +55,9 @@ theorem imageToKernel_op {X Y Z : V} (f : X ⟶ Y) (g : Y ⟶ Z) (w : f ≫ g = 
     imageToKernel_arrow, kernel_subobject_arrow', kernel.lift_ι, ← op_comp, cokernel.π_desc, ←
     image_subobject_arrow, ← image_unop_op_inv_comp_op_factor_thru_image g.op]
 #align image_to_kernel_op imageToKernel_op
+-/
 
+#print imageToKernel_unop /-
 theorem imageToKernel_unop {X Y Z : Vᵒᵖ} (f : X ⟶ Y) (g : Y ⟶ Z) (w : f ≫ g = 0) :
     imageToKernel g.unop f.unop (by rw [← unop_comp, w, unop_zero]) =
       (imageSubobjectIso _ ≪≫ (imageUnopUnop _).symm).Hom ≫
@@ -68,6 +71,7 @@ theorem imageToKernel_unop {X Y Z : Vᵒᵖ} (f : X ⟶ Y) (g : Y ⟶ Z) (w : f 
     imageToKernel_arrow, kernel_subobject_arrow', kernel.lift_ι, cokernel.π_desc, iso.unop_inv, ←
     unop_comp, factor_thru_image_comp_image_unop_op_inv, Quiver.Hom.unop_op, image_subobject_arrow]
 #align image_to_kernel_unop imageToKernel_unop
+-/
 
 #print homologyOp /-
 /-- Given `f, g` with `f ≫ g = 0`, the homology of `g.op, f.op` is the opposite of the homology of
@@ -220,6 +224,7 @@ def opCounitIso : opInverse V c ⋙ opFunctor V c ≅ 𝟭 (HomologicalComplex V
 #align homological_complex.op_counit_iso HomologicalComplex.opCounitIso
 -/
 
+#print HomologicalComplex.opEquivalence /-
 /-- Given a category of complexes with objects in `V`, there is a natural equivalence between its
 opposite category and a category of complexes with objects in `Vᵒᵖ`. -/
 @[simps]
@@ -236,6 +241,7 @@ def opEquivalence : (HomologicalComplex V c)ᵒᵖ ≌ HomologicalComplex Vᵒ�
       op_functor_map_f, Quiver.Hom.unop_op, hom.iso_of_components_hom_f]
     exact category.comp_id _
 #align homological_complex.op_equivalence HomologicalComplex.opEquivalence
+-/
 
 #print HomologicalComplex.unopFunctor /-
 /-- Auxilliary definition for `unop_equivalence`. -/
@@ -296,6 +302,7 @@ def unopCounitIso : unopInverse V c ⋙ unopFunctor V c ≅ 𝟭 (HomologicalCom
 #align homological_complex.unop_counit_iso HomologicalComplex.unopCounitIso
 -/
 
+#print HomologicalComplex.unopEquivalence /-
 /-- Given a category of complexes with objects in `Vᵒᵖ`, there is a natural equivalence between its
 opposite category and a category of complexes with objects in `V`. -/
 @[simps]
@@ -312,14 +319,19 @@ def unopEquivalence : (HomologicalComplex Vᵒᵖ c)ᵒᵖ ≌ HomologicalComple
       op_functor_map_f, Quiver.Hom.unop_op, hom.iso_of_components_hom_f]
     exact category.comp_id _
 #align homological_complex.unop_equivalence HomologicalComplex.unopEquivalence
+-/
 
 variable {V c}
 
+#print HomologicalComplex.opFunctor_additive /-
 instance opFunctor_additive : (@opFunctor ι V _ c _).Additive where
 #align homological_complex.op_functor_additive HomologicalComplex.opFunctor_additive
+-/
 
+#print HomologicalComplex.unopFunctor_additive /-
 instance unopFunctor_additive : (@unopFunctor ι V _ c _).Additive where
 #align homological_complex.unop_functor_additive HomologicalComplex.unopFunctor_additive
+-/
 
 end
 

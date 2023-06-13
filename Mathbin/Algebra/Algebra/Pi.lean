@@ -55,16 +55,20 @@ instance algebra {r : CommSemiring R} [s : ∀ i, Semiring (f i)] [∀ i, Algebr
 #align pi.algebra Pi.algebra
 -/
 
+#print Pi.algebraMap_def /-
 theorem algebraMap_def {r : CommSemiring R} [s : ∀ i, Semiring (f i)] [∀ i, Algebra R (f i)]
     (a : R) : algebraMap R (∀ i, f i) a = fun i => algebraMap R (f i) a :=
   rfl
 #align pi.algebra_map_def Pi.algebraMap_def
+-/
 
+#print Pi.algebraMap_apply /-
 @[simp]
 theorem algebraMap_apply {r : CommSemiring R} [s : ∀ i, Semiring (f i)] [∀ i, Algebra R (f i)]
     (a : R) (i : I) : algebraMap R (∀ i, f i) a i = algebraMap R (f i) a :=
   rfl
 #align pi.algebra_map_apply Pi.algebraMap_apply
+-/
 
 -- One could also build a `Π i, R i`-algebra structure on `Π i, A i`,
 -- when each `A i` is an `R i`-algebra, although I'm not sure that it's useful.
@@ -95,17 +99,21 @@ def constAlgHom : B →ₐ[R] A → B :=
 #align pi.const_alg_hom Pi.constAlgHom
 -/
 
+#print Pi.constRingHom_eq_algebraMap /-
 /-- When `R` is commutative and permits an `algebra_map`, `pi.const_ring_hom` is equal to that
 map. -/
 @[simp]
 theorem constRingHom_eq_algebraMap : constRingHom A R = algebraMap R (A → R) :=
   rfl
 #align pi.const_ring_hom_eq_algebra_map Pi.constRingHom_eq_algebraMap
+-/
 
+#print Pi.constAlgHom_eq_algebra_ofId /-
 @[simp]
 theorem constAlgHom_eq_algebra_ofId : constAlgHom R A R = Algebra.ofId R (A → R) :=
   rfl
 #align pi.const_alg_hom_eq_algebra_of_id Pi.constAlgHom_eq_algebra_ofId
+-/
 
 end Pi
 
@@ -161,20 +169,25 @@ def piCongrRight {R ι : Type _} {A₁ A₂ : ι → Type _} [CommSemiring R] [�
 #align alg_equiv.Pi_congr_right AlgEquiv.piCongrRight
 -/
 
+#print AlgEquiv.piCongrRight_refl /-
 @[simp]
 theorem piCongrRight_refl {R ι : Type _} {A : ι → Type _} [CommSemiring R] [∀ i, Semiring (A i)]
     [∀ i, Algebra R (A i)] :
     (piCongrRight fun i => (AlgEquiv.refl : A i ≃ₐ[R] A i)) = AlgEquiv.refl :=
   rfl
 #align alg_equiv.Pi_congr_right_refl AlgEquiv.piCongrRight_refl
+-/
 
+#print AlgEquiv.piCongrRight_symm /-
 @[simp]
 theorem piCongrRight_symm {R ι : Type _} {A₁ A₂ : ι → Type _} [CommSemiring R]
     [∀ i, Semiring (A₁ i)] [∀ i, Semiring (A₂ i)] [∀ i, Algebra R (A₁ i)] [∀ i, Algebra R (A₂ i)]
     (e : ∀ i, A₁ i ≃ₐ[R] A₂ i) : (piCongrRight e).symm = piCongrRight fun i => (e i).symm :=
   rfl
 #align alg_equiv.Pi_congr_right_symm AlgEquiv.piCongrRight_symm
+-/
 
+#print AlgEquiv.piCongrRight_trans /-
 @[simp]
 theorem piCongrRight_trans {R ι : Type _} {A₁ A₂ A₃ : ι → Type _} [CommSemiring R]
     [∀ i, Semiring (A₁ i)] [∀ i, Semiring (A₂ i)] [∀ i, Semiring (A₃ i)] [∀ i, Algebra R (A₁ i)]
@@ -183,6 +196,7 @@ theorem piCongrRight_trans {R ι : Type _} {A₁ A₂ A₃ : ι → Type _} [Com
     (piCongrRight e₁).trans (piCongrRight e₂) = piCongrRight fun i => (e₁ i).trans (e₂ i) :=
   rfl
 #align alg_equiv.Pi_congr_right_trans AlgEquiv.piCongrRight_trans
+-/
 
 end AlgEquiv
 

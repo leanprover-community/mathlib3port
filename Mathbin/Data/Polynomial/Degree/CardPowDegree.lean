@@ -74,22 +74,29 @@ noncomputable def cardPowDegree : AbsoluteValue Fq[X] ℤ :=
 #align polynomial.card_pow_degree Polynomial.cardPowDegree
 -/
 
+#print Polynomial.cardPowDegree_apply /-
 theorem cardPowDegree_apply (p : Fq[X]) :
     cardPowDegree p = if p = 0 then 0 else Fintype.card Fq ^ natDegree p :=
   rfl
 #align polynomial.card_pow_degree_apply Polynomial.cardPowDegree_apply
+-/
 
+#print Polynomial.cardPowDegree_zero /-
 @[simp]
 theorem cardPowDegree_zero : cardPowDegree (0 : Fq[X]) = 0 :=
   if_pos rfl
 #align polynomial.card_pow_degree_zero Polynomial.cardPowDegree_zero
+-/
 
+#print Polynomial.cardPowDegree_nonzero /-
 @[simp]
 theorem cardPowDegree_nonzero (p : Fq[X]) (hp : p ≠ 0) :
     cardPowDegree p = Fintype.card Fq ^ p.natDegree :=
   if_neg hp
 #align polynomial.card_pow_degree_nonzero Polynomial.cardPowDegree_nonzero
+-/
 
+#print Polynomial.cardPowDegree_isEuclidean /-
 theorem cardPowDegree_isEuclidean : IsEuclidean (cardPowDegree : AbsoluteValue Fq[X] ℤ) :=
   have card_pos : 0 < Fintype.card Fq := Fintype.card_pos_iff.mpr inferInstance
   have pow_pos : ∀ n, 0 < (Fintype.card Fq : ℤ) ^ n := fun n =>
@@ -107,6 +114,7 @@ theorem cardPowDegree_isEuclidean : IsEuclidean (cardPowDegree : AbsoluteValue F
       · rw [degree_eq_nat_degree hp, degree_eq_nat_degree hq, WithBot.coe_lt_coe, pow_lt_pow_iff]
         exact_mod_cast @Fintype.one_lt_card Fq _ _ }
 #align polynomial.card_pow_degree_is_euclidean Polynomial.cardPowDegree_isEuclidean
+-/
 
 end Polynomial
 

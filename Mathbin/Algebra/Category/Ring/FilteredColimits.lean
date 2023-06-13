@@ -54,12 +54,14 @@ section
 -- passing around `F` all the time.
 parameter {J : Type v} [SmallCategory J] (F : J ⥤ SemiRingCat.{max v u})
 
+#print SemiRingCat.FilteredColimits.semiringObj /-
 -- This instance is needed below in `colimit_semiring`, during the verification of the
 -- semiring axioms.
 instance semiringObj (j : J) :
     Semiring (((F ⋙ forget₂ SemiRingCat MonCat.{max v u}) ⋙ forget MonCat).obj j) :=
   show Semiring (F.obj j) by infer_instance
 #align SemiRing.filtered_colimits.semiring_obj SemiRingCat.FilteredColimits.semiringObj
+-/
 
 variable [IsFiltered J]
 

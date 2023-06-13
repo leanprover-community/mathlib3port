@@ -106,6 +106,7 @@ def flipEquivalenceCounitIso :
 #align homological_complex.flip_equivalence_counit_iso HomologicalComplex.flipEquivalenceCounitIso
 -/
 
+#print HomologicalComplex.flipEquivalence /-
 /-- Flipping a complex of complexes over the diagonal, as an equivalence of categories. -/
 @[simps]
 def flipEquivalence :
@@ -116,6 +117,7 @@ def flipEquivalence :
   unitIso := flipEquivalenceUnitIso V c c'
   counitIso := flipEquivalenceCounitIso V c c'
 #align homological_complex.flip_equivalence HomologicalComplex.flipEquivalence
+-/
 
 end HomologicalComplex
 

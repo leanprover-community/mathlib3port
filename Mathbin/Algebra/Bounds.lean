@@ -34,65 +34,85 @@ section inv_neg
 variable {G : Type _} [Group G] [Preorder G] [CovariantClass G G (· * ·) (· ≤ ·)]
   [CovariantClass G G (swap (· * ·)) (· ≤ ·)] {s : Set G} {a : G}
 
+#print bddAbove_inv /-
 @[simp, to_additive]
 theorem bddAbove_inv : BddAbove s⁻¹ ↔ BddBelow s :=
   (OrderIso.inv G).bddAbove_preimage
 #align bdd_above_inv bddAbove_inv
 #align bdd_above_neg bddAbove_neg
+-/
 
+#print bddBelow_inv /-
 @[simp, to_additive]
 theorem bddBelow_inv : BddBelow s⁻¹ ↔ BddAbove s :=
   (OrderIso.inv G).bddBelow_preimage
 #align bdd_below_inv bddBelow_inv
 #align bdd_below_neg bddBelow_neg
+-/
 
+#print BddAbove.inv /-
 @[to_additive]
 theorem BddAbove.inv (h : BddAbove s) : BddBelow s⁻¹ :=
   bddBelow_inv.2 h
 #align bdd_above.inv BddAbove.inv
 #align bdd_above.neg BddAbove.neg
+-/
 
+#print BddBelow.inv /-
 @[to_additive]
 theorem BddBelow.inv (h : BddBelow s) : BddAbove s⁻¹ :=
   bddAbove_inv.2 h
 #align bdd_below.inv BddBelow.inv
 #align bdd_below.neg BddBelow.neg
+-/
 
+#print isLUB_inv /-
 @[simp, to_additive]
 theorem isLUB_inv : IsLUB s⁻¹ a ↔ IsGLB s a⁻¹ :=
   (OrderIso.inv G).isLUB_preimage
 #align is_lub_inv isLUB_inv
 #align is_lub_neg isLUB_neg
+-/
 
+#print isLUB_inv' /-
 @[to_additive]
 theorem isLUB_inv' : IsLUB s⁻¹ a⁻¹ ↔ IsGLB s a :=
   (OrderIso.inv G).isLUB_preimage'
 #align is_lub_inv' isLUB_inv'
 #align is_lub_neg' isLUB_neg'
+-/
 
+#print IsGLB.inv /-
 @[to_additive]
 theorem IsGLB.inv (h : IsGLB s a) : IsLUB s⁻¹ a⁻¹ :=
   isLUB_inv'.2 h
 #align is_glb.inv IsGLB.inv
 #align is_glb.neg IsGLB.neg
+-/
 
+#print isGLB_inv /-
 @[simp, to_additive]
 theorem isGLB_inv : IsGLB s⁻¹ a ↔ IsLUB s a⁻¹ :=
   (OrderIso.inv G).isGLB_preimage
 #align is_glb_inv isGLB_inv
 #align is_glb_neg isGLB_neg
+-/
 
+#print isGLB_inv' /-
 @[to_additive]
 theorem isGLB_inv' : IsGLB s⁻¹ a⁻¹ ↔ IsLUB s a :=
   (OrderIso.inv G).isGLB_preimage'
 #align is_glb_inv' isGLB_inv'
 #align is_glb_neg' isGLB_neg'
+-/
 
+#print IsLUB.inv /-
 @[to_additive]
 theorem IsLUB.inv (h : IsLUB s a) : IsGLB s⁻¹ a⁻¹ :=
   isGLB_inv'.2 h
 #align is_lub.inv IsLUB.inv
 #align is_lub.neg IsLUB.neg
+-/
 
 end inv_neg
 
@@ -162,17 +182,21 @@ section Right
 variable {ι G : Type _} [Group G] [ConditionallyCompleteLattice G]
   [CovariantClass G G (Function.swap (· * ·)) (· ≤ ·)] [Nonempty ι] {f : ι → G}
 
+#print ciSup_mul /-
 @[to_additive]
 theorem ciSup_mul (hf : BddAbove (Set.range f)) (a : G) : (⨆ i, f i) * a = ⨆ i, f i * a :=
   (OrderIso.mulRight a).map_ciSup hf
 #align csupr_mul ciSup_mul
 #align csupr_add ciSup_add
+-/
 
+#print ciSup_div /-
 @[to_additive]
 theorem ciSup_div (hf : BddAbove (Set.range f)) (a : G) : (⨆ i, f i) / a = ⨆ i, f i / a := by
   simp only [div_eq_mul_inv, ciSup_mul hf]
 #align csupr_div ciSup_div
 #align csupr_sub ciSup_sub
+-/
 
 end Right
 
@@ -181,11 +205,13 @@ section Left
 variable {ι G : Type _} [Group G] [ConditionallyCompleteLattice G]
   [CovariantClass G G (· * ·) (· ≤ ·)] [Nonempty ι] {f : ι → G}
 
+#print mul_ciSup /-
 @[to_additive]
 theorem mul_ciSup (hf : BddAbove (Set.range f)) (a : G) : (a * ⨆ i, f i) = ⨆ i, a * f i :=
   (OrderIso.mulLeft a).map_ciSup hf
 #align mul_csupr mul_ciSup
 #align add_csupr add_ciSup
+-/
 
 end Left
 

@@ -51,19 +51,21 @@ open VectorMeasure
 
 namespace ComplexMeasure
 
-include m
-
+#print MeasureTheory.ComplexMeasure.re /-
 /-- The real part of a complex measure is a signed measure. -/
 @[simps apply]
 def re : ComplexMeasure α →ₗ[ℝ] SignedMeasure α :=
   mapRangeₗ Complex.reClm Complex.continuous_re
 #align measure_theory.complex_measure.re MeasureTheory.ComplexMeasure.re
+-/
 
+#print MeasureTheory.ComplexMeasure.im /-
 /-- The imaginary part of a complex measure is a signed measure. -/
 @[simps apply]
 def im : ComplexMeasure α →ₗ[ℝ] SignedMeasure α :=
   mapRangeₗ Complex.imClm Complex.continuous_im
 #align measure_theory.complex_measure.im MeasureTheory.ComplexMeasure.im
+-/
 
 #print MeasureTheory.SignedMeasure.toComplexMeasure /-
 /-- Given `s` and `t` signed measures, `s + it` is a complex measure-/
@@ -84,17 +86,23 @@ theorem MeasureTheory.SignedMeasure.toComplexMeasure_apply {s t : SignedMeasure 
 #align measure_theory.signed_measure.to_complex_measure_apply MeasureTheory.SignedMeasure.toComplexMeasure_apply
 -/
 
+#print MeasureTheory.ComplexMeasure.toComplexMeasure_to_signedMeasure /-
 theorem toComplexMeasure_to_signedMeasure (c : ComplexMeasure α) : c.re.toComplexMeasure c.im = c :=
   by ext (i hi) <;> rfl
 #align measure_theory.complex_measure.to_complex_measure_to_signed_measure MeasureTheory.ComplexMeasure.toComplexMeasure_to_signedMeasure
+-/
 
+#print MeasureTheory.SignedMeasure.re_toComplexMeasure /-
 theorem MeasureTheory.SignedMeasure.re_toComplexMeasure (s t : SignedMeasure α) :
     (s.toComplexMeasure t).re = s := by ext (i hi); rfl
 #align measure_theory.signed_measure.re_to_complex_measure MeasureTheory.SignedMeasure.re_toComplexMeasure
+-/
 
+#print MeasureTheory.SignedMeasure.im_toComplexMeasure /-
 theorem MeasureTheory.SignedMeasure.im_toComplexMeasure (s t : SignedMeasure α) :
     (s.toComplexMeasure t).im = t := by ext (i hi); rfl
 #align measure_theory.signed_measure.im_to_complex_measure MeasureTheory.SignedMeasure.im_toComplexMeasure
+-/
 
 #print MeasureTheory.ComplexMeasure.equivSignedMeasure /-
 /-- The complex measures form an equivalence to the type of pairs of signed measures. -/
@@ -114,6 +122,7 @@ variable {R : Type _} [Semiring R] [Module R ℝ]
 
 variable [ContinuousConstSMul R ℝ] [ContinuousConstSMul R ℂ]
 
+#print MeasureTheory.ComplexMeasure.equivSignedMeasureₗ /-
 /-- The complex measures form an linear isomorphism to the type of pairs of signed measures. -/
 @[simps]
 def equivSignedMeasureₗ : ComplexMeasure α ≃ₗ[R] SignedMeasure α × SignedMeasure α :=
@@ -127,9 +136,11 @@ def equivSignedMeasureₗ : ComplexMeasure α ≃ₗ[R] SignedMeasure α × Sign
         change (r • c i).im = r • (c i).im
         simp [Complex.smul_im] }
 #align measure_theory.complex_measure.equiv_signed_measureₗ MeasureTheory.ComplexMeasure.equivSignedMeasureₗ
+-/
 
 end
 
+#print MeasureTheory.ComplexMeasure.absolutelyContinuous_eNNReal_iff /-
 theorem absolutelyContinuous_eNNReal_iff (c : ComplexMeasure α) (μ : VectorMeasure α ℝ≥0∞) :
     c ≪ᵥ μ ↔ c.re ≪ᵥ μ ∧ c.im ≪ᵥ μ := by
   constructor <;> intro h
@@ -138,6 +149,7 @@ theorem absolutelyContinuous_eNNReal_iff (c : ComplexMeasure α) (μ : VectorMea
     rw [← Complex.re_add_im (c i), (_ : (c i).re = 0), (_ : (c i).im = 0)]
     exacts [by simp, h.2 hi, h.1 hi]
 #align measure_theory.complex_measure.absolutely_continuous_ennreal_iff MeasureTheory.ComplexMeasure.absolutelyContinuous_eNNReal_iff
+-/
 
 end ComplexMeasure
 

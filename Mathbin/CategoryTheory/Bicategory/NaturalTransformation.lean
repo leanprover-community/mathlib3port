@@ -103,20 +103,25 @@ section
 
 variable {a b c : B} {a' : C}
 
+#print CategoryTheory.OplaxNatTrans.whiskerLeft_naturality_naturality /-
 @[simp, reassoc]
 theorem whiskerLeft_naturality_naturality (f : a' ⟶ G.obj a) {g h : a ⟶ b} (β : g ⟶ h) :
     f ◁ G.zipWith β ▷ θ.app b ≫ f ◁ θ.naturality h =
       f ◁ θ.naturality g ≫ f ◁ θ.app a ◁ H.zipWith β :=
   by simp_rw [← bicategory.whisker_left_comp, naturality_naturality]
 #align category_theory.oplax_nat_trans.whisker_left_naturality_naturality CategoryTheory.OplaxNatTrans.whiskerLeft_naturality_naturality
+-/
 
+#print CategoryTheory.OplaxNatTrans.whiskerRight_naturality_naturality /-
 @[simp, reassoc]
 theorem whiskerRight_naturality_naturality {f g : a ⟶ b} (β : f ⟶ g) (h : G.obj b ⟶ a') :
     F.zipWith β ▷ η.app b ▷ h ≫ η.naturality g ▷ h =
       η.naturality f ▷ h ≫ (α_ _ _ _).Hom ≫ η.app a ◁ G.zipWith β ▷ h ≫ (α_ _ _ _).inv :=
   by rw [← comp_whisker_right, naturality_naturality, comp_whisker_right, whisker_assoc]
 #align category_theory.oplax_nat_trans.whisker_right_naturality_naturality CategoryTheory.OplaxNatTrans.whiskerRight_naturality_naturality
+-/
 
+#print CategoryTheory.OplaxNatTrans.whiskerLeft_naturality_comp /-
 @[simp, reassoc]
 theorem whiskerLeft_naturality_comp (f : a' ⟶ G.obj a) (g : a ⟶ b) (h : b ⟶ c) :
     f ◁ θ.naturality (g ≫ h) ≫ f ◁ θ.app a ◁ H.map_comp g h =
@@ -126,7 +131,9 @@ theorem whiskerLeft_naturality_comp (f : a' ⟶ G.obj a) (g : a ⟶ b) (h : b �
             f ◁ (α_ _ _ _).inv ≫ f ◁ θ.naturality g ▷ H.map h ≫ f ◁ (α_ _ _ _).Hom :=
   by simp_rw [← bicategory.whisker_left_comp, naturality_comp]
 #align category_theory.oplax_nat_trans.whisker_left_naturality_comp CategoryTheory.OplaxNatTrans.whiskerLeft_naturality_comp
+-/
 
+#print CategoryTheory.OplaxNatTrans.whiskerRight_naturality_comp /-
 @[simp, reassoc]
 theorem whiskerRight_naturality_comp (f : a ⟶ b) (g : b ⟶ c) (h : G.obj c ⟶ a') :
     η.naturality (f ≫ g) ▷ h ≫ (α_ _ _ _).Hom ≫ η.app a ◁ G.map_comp f g ▷ h =
@@ -139,20 +146,25 @@ theorem whiskerRight_naturality_comp (f : a ⟶ b) (g : b ⟶ c) (h : G.obj c �
                   η.naturality f ▷ G.map g ▷ h ≫ (α_ _ _ _).Hom ▷ h ≫ (α_ _ _ _).Hom :=
   by rw [← associator_naturality_middle, ← comp_whisker_right_assoc, naturality_comp]; simp
 #align category_theory.oplax_nat_trans.whisker_right_naturality_comp CategoryTheory.OplaxNatTrans.whiskerRight_naturality_comp
+-/
 
+#print CategoryTheory.OplaxNatTrans.whiskerLeft_naturality_id /-
 @[simp, reassoc]
 theorem whiskerLeft_naturality_id (f : a' ⟶ G.obj a) :
     f ◁ θ.naturality (𝟙 a) ≫ f ◁ θ.app a ◁ H.map_id a =
       f ◁ G.map_id a ▷ θ.app a ≫ f ◁ (λ_ (θ.app a)).Hom ≫ f ◁ (ρ_ (θ.app a)).inv :=
   by simp_rw [← bicategory.whisker_left_comp, naturality_id]
 #align category_theory.oplax_nat_trans.whisker_left_naturality_id CategoryTheory.OplaxNatTrans.whiskerLeft_naturality_id
+-/
 
+#print CategoryTheory.OplaxNatTrans.whiskerRight_naturality_id /-
 @[simp, reassoc]
 theorem whiskerRight_naturality_id (f : G.obj a ⟶ a') :
     η.naturality (𝟙 a) ▷ f ≫ (α_ _ _ _).Hom ≫ η.app a ◁ G.map_id a ▷ f =
       F.map_id a ▷ η.app a ▷ f ≫ (λ_ (η.app a)).Hom ▷ f ≫ (ρ_ (η.app a)).inv ▷ f ≫ (α_ _ _ _).Hom :=
   by rw [← associator_naturality_middle, ← comp_whisker_right_assoc, naturality_id]; simp
 #align category_theory.oplax_nat_trans.whisker_right_naturality_id CategoryTheory.OplaxNatTrans.whiskerRight_naturality_id
+-/
 
 end
 
@@ -246,18 +258,22 @@ section
 
 variable (Γ : Modification η θ) {a b c : B} {a' : C}
 
+#print CategoryTheory.OplaxNatTrans.Modification.whiskerLeft_naturality /-
 @[simp, reassoc]
 theorem whiskerLeft_naturality (f : a' ⟶ F.obj b) (g : b ⟶ c) :
     f ◁ F.map g ◁ Γ.app c ≫ f ◁ θ.naturality g = f ◁ η.naturality g ≫ f ◁ Γ.app b ▷ G.map g := by
   simp_rw [← bicategory.whisker_left_comp, naturality]
 #align category_theory.oplax_nat_trans.modification.whisker_left_naturality CategoryTheory.OplaxNatTrans.Modification.whiskerLeft_naturality
+-/
 
+#print CategoryTheory.OplaxNatTrans.Modification.whiskerRight_naturality /-
 @[simp, reassoc]
 theorem whiskerRight_naturality (f : a ⟶ b) (g : G.obj b ⟶ a') :
     F.map f ◁ Γ.app b ▷ g ≫ (α_ _ _ _).inv ≫ θ.naturality f ▷ g =
       (α_ _ _ _).inv ≫ η.naturality f ▷ g ≫ Γ.app a ▷ G.map f ▷ g :=
   by simp_rw [associator_inv_naturality_middle_assoc, ← comp_whisker_right, naturality]
 #align category_theory.oplax_nat_trans.modification.whisker_right_naturality CategoryTheory.OplaxNatTrans.Modification.whiskerRight_naturality
+-/
 
 end
 
@@ -282,6 +298,7 @@ instance category (F G : OplaxFunctor B C) : Category (F ⟶ G)
 #align category_theory.oplax_nat_trans.category CategoryTheory.OplaxNatTrans.category
 -/
 
+#print CategoryTheory.OplaxNatTrans.ModificationIso.ofComponents /-
 /-- Construct a modification isomorphism between oplax natural transformations
 by giving object level isomorphisms, and checking naturality only in the forward direction.
 -/
@@ -297,6 +314,7 @@ def ModificationIso.ofComponents (app : ∀ a, η.app a ≅ θ.app a)
       naturality := fun a b f => by
         simpa using congr_arg (fun f => _ ◁ (app b).inv ≫ f ≫ (app a).inv ▷ _) (naturality f).symm }
 #align category_theory.oplax_nat_trans.modification_iso.of_components CategoryTheory.OplaxNatTrans.ModificationIso.ofComponents
+-/
 
 end
 

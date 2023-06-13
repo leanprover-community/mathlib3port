@@ -69,10 +69,13 @@ namespace Action
 
 variable {V}
 
+#print Action.ρ_one /-
 @[simp]
 theorem ρ_one {G : MonCat.{u}} (A : Action V G) : A.ρ 1 = 𝟙 A.V := by rw [MonoidHom.map_one]; rfl
 #align Action.ρ_one Action.ρ_one
+-/
 
+#print Action.ρAut /-
 /-- When a group acts, we can lift the action to the group of automorphisms. -/
 @[simps]
 def ρAut {G : GroupCat.{u}} (A : Action V (MonCat.of G)) : G ⟶ GroupCat.of (Aut A.V)
@@ -85,6 +88,7 @@ def ρAut {G : GroupCat.{u}} (A : Action V (MonCat.of G)) : G ⟶ GroupCat.of (A
   map_one' := by ext; exact A.ρ.map_one
   map_mul' x y := by ext; exact A.ρ.map_mul x y
 #align Action.ρ_Aut Action.ρAut
+-/
 
 variable (G : MonCat.{u})
 
@@ -170,6 +174,7 @@ theorem comp_hom {M N K : Action V G} (f : M ⟶ N) (g : N ⟶ K) :
 #align Action.comp_hom Action.comp_hom
 -/
 
+#print Action.mkIso /-
 /-- Construct an isomorphism of `G` actions/representations
 from an isomorphism of the the underlying objects,
 where the forward direction commutes with the group action. -/
@@ -183,6 +188,7 @@ def mkIso {M N : Action V G} (f : M.V ≅ N.V) (comm : ∀ g : G, M.ρ g ≫ f.H
     { Hom := f.inv
       comm' := fun g => by have w := comm g =≫ f.inv; simp at w ; simp [w] }
 #align Action.mk_iso Action.mkIso
+-/
 
 #print Action.isIso_of_hom_isIso /-
 instance (priority := 100) isIso_of_hom_isIso {M N : Action V G} (f : M ⟶ N) [IsIso f.Hom] :
@@ -190,9 +196,11 @@ instance (priority := 100) isIso_of_hom_isIso {M N : Action V G} (f : M ⟶ N) [
 #align Action.is_iso_of_hom_is_iso Action.isIso_of_hom_isIso
 -/
 
+#print Action.isIso_hom_mk /-
 instance isIso_hom_mk {M N : Action V G} (f : M.V ⟶ N.V) [IsIso f] (w) : @IsIso _ _ M N ⟨f, w⟩ :=
   IsIso.of_iso (mkIso (asIso f) w)
 #align Action.is_iso_hom_mk Action.isIso_hom_mk
+-/
 
 namespace FunctorCategoryEquivalence
 
@@ -253,6 +261,7 @@ open FunctorCategoryEquivalence
 
 variable (V G)
 
+#print Action.functorCategoryEquivalence /-
 /-- The category of actions of `G` in the category `V`
 is equivalent to the functor category `single_obj G ⥤ V`.
 -/
@@ -263,6 +272,7 @@ def functorCategoryEquivalence : Action V G ≌ SingleObj G ⥤ V
   unitIso := unitIso
   counitIso := counitIso
 #align Action.functor_category_equivalence Action.functorCategoryEquivalence
+-/
 
 attribute [simps] functor_category_equivalence
 
@@ -318,15 +328,19 @@ instance : Faithful (forget V G) where map_injective' X Y f g w := Hom.ext _ _ w
 instance [ConcreteCategory V] : ConcreteCategory (Action V G)
     where forget := forget V G ⋙ ConcreteCategory.forget V
 
+#print Action.hasForgetToV /-
 instance hasForgetToV [ConcreteCategory V] : HasForget₂ (Action V G) V where forget₂ := forget V G
 #align Action.has_forget_to_V Action.hasForgetToV
+-/
 
+#print Action.functorCategoryEquivalenceCompEvaluation /-
 /-- The forgetful functor is intertwined by `functor_category_equivalence` with
 evaluation at `punit.star`. -/
 def functorCategoryEquivalenceCompEvaluation :
     (functorCategoryEquivalence V G).Functor ⋙ (evaluation _ _).obj PUnit.unit ≅ forget V G :=
   Iso.refl _
 #align Action.functor_category_equivalence_comp_evaluation Action.functorCategoryEquivalenceCompEvaluation
+-/
 
 noncomputable instance [HasLimits V] : Limits.PreservesLimits (forget V G) :=
   Limits.preservesLimitsOfNatIso (Action.functorCategoryEquivalenceCompEvaluation V G)
@@ -337,10 +351,12 @@ noncomputable instance [HasColimits V] : PreservesColimits (forget V G) :=
 -- TODO construct categorical images?
 end Forget
 
+#print Action.Iso.conj_ρ /-
 theorem Iso.conj_ρ {M N : Action V G} (f : M ≅ N) (g : G) :
     N.ρ g = ((forget V G).mapIso f).conj (M.ρ g) := by rw [iso.conj_apply, iso.eq_inv_comp];
   simp [f.hom.comm']
 #align Action.iso.conj_ρ Action.Iso.conj_ρ
+-/
 
 section HasZeroMorphisms
 
@@ -352,16 +368,22 @@ instance : HasZeroMorphisms (Action V G)
   comp_zero P Q f R := by ext1; simp
   zero_comp P Q R f := by ext1; simp
 
+#print Action.forget_preservesZeroMorphisms /-
 instance forget_preservesZeroMorphisms : Functor.PreservesZeroMorphisms (forget V G) where
 #align Action.forget_preserves_zero_morphisms Action.forget_preservesZeroMorphisms
+-/
 
+#print Action.forget₂_preservesZeroMorphisms /-
 instance forget₂_preservesZeroMorphisms [ConcreteCategory V] :
     Functor.PreservesZeroMorphisms (forget₂ (Action V G) V) where
 #align Action.forget₂_preserves_zero_morphisms Action.forget₂_preservesZeroMorphisms
+-/
 
+#print Action.functorCategoryEquivalence_preservesZeroMorphisms /-
 instance functorCategoryEquivalence_preservesZeroMorphisms :
     Functor.PreservesZeroMorphisms (functorCategoryEquivalence V G).Functor where
 #align Action.functor_category_equivalence_preserves_zero_morphisms Action.functorCategoryEquivalence_preservesZeroMorphisms
+-/
 
 end HasZeroMorphisms
 
@@ -383,36 +405,50 @@ instance : Preadditive (Action V G)
   add_comp := by intros; ext; exact preadditive.add_comp _ _ _ _ _ _
   comp_add := by intros; ext; exact preadditive.comp_add _ _ _ _ _ _
 
+#print Action.forget_additive /-
 instance forget_additive : Functor.Additive (forget V G) where
 #align Action.forget_additive Action.forget_additive
+-/
 
+#print Action.forget₂_additive /-
 instance forget₂_additive [ConcreteCategory V] : Functor.Additive (forget₂ (Action V G) V) where
 #align Action.forget₂_additive Action.forget₂_additive
+-/
 
+#print Action.functorCategoryEquivalence_additive /-
 instance functorCategoryEquivalence_additive :
     Functor.Additive (functorCategoryEquivalence V G).Functor where
 #align Action.functor_category_equivalence_additive Action.functorCategoryEquivalence_additive
+-/
 
+#print Action.zero_hom /-
 @[simp]
 theorem zero_hom {X Y : Action V G} : (0 : X ⟶ Y).Hom = 0 :=
   rfl
 #align Action.zero_hom Action.zero_hom
+-/
 
+#print Action.neg_hom /-
 @[simp]
 theorem neg_hom {X Y : Action V G} (f : X ⟶ Y) : (-f).Hom = -f.Hom :=
   rfl
 #align Action.neg_hom Action.neg_hom
+-/
 
+#print Action.add_hom /-
 @[simp]
 theorem add_hom {X Y : Action V G} (f g : X ⟶ Y) : (f + g).Hom = f.Hom + g.Hom :=
   rfl
 #align Action.add_hom Action.add_hom
+-/
 
+#print Action.sum_hom /-
 @[simp]
 theorem sum_hom {X Y : Action V G} {ι : Type _} (f : ι → (X ⟶ Y)) (s : Finset ι) :
     (s.Sum f).Hom = s.Sum fun i => (f i).Hom :=
   (forget V G).map_sum f s
 #align Action.sum_hom Action.sum_hom
+-/
 
 end Preadditive
 
@@ -433,29 +469,39 @@ instance : Linear R (Action V G)
   smul_comp' := by intros; ext; exact linear.smul_comp _ _ _ _ _ _
   comp_smul' := by intros; ext; exact linear.comp_smul _ _ _ _ _ _
 
+#print Action.forget_linear /-
 instance forget_linear : Functor.Linear R (forget V G) where
 #align Action.forget_linear Action.forget_linear
+-/
 
+#print Action.forget₂_linear /-
 instance forget₂_linear [ConcreteCategory V] : Functor.Linear R (forget₂ (Action V G) V) where
 #align Action.forget₂_linear Action.forget₂_linear
+-/
 
+#print Action.functorCategoryEquivalence_linear /-
 instance functorCategoryEquivalence_linear :
     Functor.Linear R (functorCategoryEquivalence V G).Functor where
 #align Action.functor_category_equivalence_linear Action.functorCategoryEquivalence_linear
+-/
 
+#print Action.smul_hom /-
 @[simp]
 theorem smul_hom {X Y : Action V G} (r : R) (f : X ⟶ Y) : (r • f).Hom = r • f.Hom :=
   rfl
 #align Action.smul_hom Action.smul_hom
+-/
 
 end Linear
 
 section Abelian
 
+#print Action.abelianAux /-
 /-- Auxilliary construction for the `abelian (Action V G)` instance. -/
 def abelianAux : Action V G ≌ ULift.{u} (SingleObj G) ⥤ V :=
   (functorCategoryEquivalence V G).trans (Equivalence.congrLeft ULift.equivalence)
 #align Action.abelian_aux Action.abelianAux
+-/
 
 noncomputable instance [Abelian V] : Abelian (Action V G) :=
   abelianOfEquivalence abelianAux.Functor
@@ -476,10 +522,12 @@ theorem tensorUnit_v : (𝟙_ (Action V G)).V = 𝟙_ V :=
 #align Action.tensor_unit_V Action.tensorUnit_v
 -/
 
+#print Action.tensorUnit_rho /-
 @[simp]
 theorem tensorUnit_rho {g : G} : (𝟙_ (Action V G)).ρ g = 𝟙 (𝟙_ V) :=
   rfl
 #align Action.tensor_unit_rho Action.tensorUnit_rho
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -492,10 +540,12 @@ theorem tensor_v {X Y : Action V G} : (X ⊗ Y).V = X.V ⊗ Y.V :=
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print Action.tensor_rho /-
 @[simp]
 theorem tensor_rho {X Y : Action V G} {g : G} : (X ⊗ Y).ρ g = X.ρ g ⊗ Y.ρ g :=
   rfl
 #align Action.tensor_rho Action.tensor_rho
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -560,6 +610,7 @@ theorem rightUnitor_inv_hom {X : Action V G} : Hom.hom (ρ_ X).inv = (ρ_ X.V).i
 #align Action.right_unitor_inv_hom Action.rightUnitor_inv_hom
 -/
 
+#print Action.tensorUnitIso /-
 /-- Given an object `X` isomorphic to the tensor unit of `V`, `X` equipped with the trivial action
 is isomorphic to the tensor unit of `Action V G`. -/
 def tensorUnitIso {X : V} (f : 𝟙_ V ≅ X) : 𝟙_ (Action V G) ≅ Action.mk X 1 :=
@@ -567,6 +618,7 @@ def tensorUnitIso {X : V} (f : 𝟙_ V ≅ X) : 𝟙_ (Action V G) ≅ Action.mk
     simp only [MonoidHom.one_apply, End.one_def, category.id_comp f.hom, tensor_unit_rho,
       category.comp_id]
 #align Action.tensor_unit_iso Action.tensorUnitIso
+-/
 
 variable (V G)
 
@@ -593,11 +645,13 @@ variable [BraidedCategory V]
 instance : BraidedCategory (Action V G) :=
   braidedCategoryOfFaithful (forgetMonoidal V G) (fun X Y => mkIso (β_ _ _) (by tidy)) (by tidy)
 
+#print Action.forgetBraided /-
 /-- When `V` is braided the forgetful functor `Action V G` to `V` is braided. -/
 @[simps]
 def forgetBraided : BraidedFunctor (Action V G) V :=
   { forgetMonoidal _ _ with }
 #align Action.forget_braided Action.forgetBraided
+-/
 
 #print Action.forgetBraided_faithful /-
 instance forgetBraided_faithful : Faithful (forgetBraided V G).toFunctor := by
@@ -642,6 +696,7 @@ instance : IsEquivalence (functorCategoryMonoidalEquivalence V G).toFunctor := b
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print Action.functorCategoryMonoidalEquivalence.μ_app /-
 @[simp]
 theorem functorCategoryMonoidalEquivalence.μ_app (A B : Action V G) :
     ((functorCategoryMonoidalEquivalence V G).μ A B).app PUnit.unit = 𝟙 _ :=
@@ -651,7 +706,9 @@ theorem functorCategoryMonoidalEquivalence.μ_app (A B : Action V G) :
   show (𝟙 A.V ⊗ 𝟙 B.V) ≫ 𝟙 (A.V ⊗ B.V) ≫ (𝟙 A.V ⊗ 𝟙 B.V) = 𝟙 (A.V ⊗ B.V)
   simp only [monoidal_category.tensor_id, category.comp_id]
 #align Action.functor_category_monoidal_equivalence.μ_app Action.functorCategoryMonoidalEquivalence.μ_app
+-/
 
+#print Action.functorCategoryMonoidalEquivalence.μIso_inv_app /-
 @[simp]
 theorem functorCategoryMonoidalEquivalence.μIso_inv_app (A B : Action V G) :
     ((functorCategoryMonoidalEquivalence V G).μIso A B).inv.app PUnit.unit = 𝟙 _ :=
@@ -661,7 +718,9 @@ theorem functorCategoryMonoidalEquivalence.μIso_inv_app (A B : Action V G) :
   rw [category.comp_id, nat_iso.app_hom, monoidal_functor.μ_iso_hom,
     functor_category_monoidal_equivalence.μ_app]
 #align Action.functor_category_monoidal_equivalence.μ_iso_inv_app Action.functorCategoryMonoidalEquivalence.μIso_inv_app
+-/
 
+#print Action.functorCategoryMonoidalEquivalence.ε_app /-
 @[simp]
 theorem functorCategoryMonoidalEquivalence.ε_app :
     (functorCategoryMonoidalEquivalence V G).ε.app PUnit.unit = 𝟙 _ :=
@@ -672,42 +731,55 @@ theorem functorCategoryMonoidalEquivalence.ε_app :
   rw [nat_iso.is_iso_inv_app, category.id_comp]
   exact is_iso.inv_id
 #align Action.functor_category_monoidal_equivalence.ε_app Action.functorCategoryMonoidalEquivalence.ε_app
+-/
 
+#print Action.functorCategoryMonoidalEquivalence.inv_counit_app_hom /-
 @[simp]
 theorem functorCategoryMonoidalEquivalence.inv_counit_app_hom (A : Action V G) :
     ((functorCategoryMonoidalEquivalence _ _).inv.Adjunction.counit.app A).Hom = 𝟙 _ :=
   rfl
 #align Action.functor_category_monoidal_equivalence.inv_counit_app_hom Action.functorCategoryMonoidalEquivalence.inv_counit_app_hom
+-/
 
+#print Action.functorCategoryMonoidalEquivalence.counit_app /-
 @[simp]
 theorem functorCategoryMonoidalEquivalence.counit_app (A : SingleObj G ⥤ V) :
     ((functorCategoryMonoidalEquivalence _ _).Adjunction.counit.app A).app PUnit.unit = 𝟙 _ :=
   rfl
 #align Action.functor_category_monoidal_equivalence.counit_app Action.functorCategoryMonoidalEquivalence.counit_app
+-/
 
+#print Action.functorCategoryMonoidalEquivalence.inv_unit_app_app /-
 @[simp]
 theorem functorCategoryMonoidalEquivalence.inv_unit_app_app (A : SingleObj G ⥤ V) :
     ((functorCategoryMonoidalEquivalence _ _).inv.Adjunction.Unit.app A).app PUnit.unit = 𝟙 _ :=
   rfl
 #align Action.functor_category_monoidal_equivalence.inv_unit_app_app Action.functorCategoryMonoidalEquivalence.inv_unit_app_app
+-/
 
+#print Action.functorCategoryMonoidalEquivalence.unit_app_hom /-
 @[simp]
 theorem functorCategoryMonoidalEquivalence.unit_app_hom (A : Action V G) :
     ((functorCategoryMonoidalEquivalence _ _).Adjunction.Unit.app A).Hom = 𝟙 _ :=
   rfl
 #align Action.functor_category_monoidal_equivalence.unit_app_hom Action.functorCategoryMonoidalEquivalence.unit_app_hom
+-/
 
+#print Action.functorCategoryMonoidalEquivalence.functor_map /-
 @[simp]
 theorem functorCategoryMonoidalEquivalence.functor_map {A B : Action V G} (f : A ⟶ B) :
     (functorCategoryMonoidalEquivalence _ _).map f = FunctorCategoryEquivalence.functor.map f :=
   rfl
 #align Action.functor_category_monoidal_equivalence.functor_map Action.functorCategoryMonoidalEquivalence.functor_map
+-/
 
+#print Action.functorCategoryMonoidalEquivalence.inverse_map /-
 @[simp]
 theorem functorCategoryMonoidalEquivalence.inverse_map {A B : SingleObj G ⥤ V} (f : A ⟶ B) :
     (functorCategoryMonoidalEquivalence _ _).inv.map f = FunctorCategoryEquivalence.inverse.map f :=
   rfl
 #align Action.functor_category_monoidal_equivalence.inverse_map Action.functorCategoryMonoidalEquivalence.inverse_map
+-/
 
 variable (H : GroupCat.{u})
 
@@ -736,34 +808,43 @@ variable {V H} (X : Action V H)
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print Action.rightDual_v /-
 @[simp]
 theorem rightDual_v [RightRigidCategory V] : Xᘁ.V = X.Vᘁ :=
   rfl
 #align Action.right_dual_V Action.rightDual_v
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print Action.leftDual_v /-
 @[simp]
 theorem leftDual_v [LeftRigidCategory V] : (ᘁX).V = ᘁX.V :=
   rfl
 #align Action.left_dual_V Action.leftDual_v
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print Action.rightDual_ρ /-
 @[simp]
 theorem rightDual_ρ [RightRigidCategory V] (h : H) : Xᘁ.ρ h = X.ρ (h⁻¹ : H)ᘁ := by
   rw [← single_obj.inv_as_inv]; rfl
 #align Action.right_dual_ρ Action.rightDual_ρ
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print Action.leftDual_ρ /-
 @[simp]
 theorem leftDual_ρ [LeftRigidCategory V] (h : H) : (ᘁX).ρ h = ᘁX.ρ (h⁻¹ : H) := by
   rw [← single_obj.inv_as_inv]; rfl
 #align Action.left_dual_ρ Action.leftDual_ρ
+-/
 
 end Monoidal
 
+#print Action.actionPunitEquivalence /-
 /-- Actions/representations of the trivial group are just objects in the ambient category. -/
 def actionPunitEquivalence : Action V (MonCat.of PUnit) ≌ V
     where
@@ -775,6 +856,7 @@ def actionPunitEquivalence : Action V (MonCat.of PUnit) ≌ V
     NatIso.ofComponents (fun X => mkIso (Iso.refl _) fun ⟨⟩ => by simpa using ρ_one X) (by tidy)
   counitIso := NatIso.ofComponents (fun X => Iso.refl _) (by tidy)
 #align Action.Action_punit_equivalence Action.actionPunitEquivalence
+-/
 
 variable (V)
 
@@ -822,13 +904,17 @@ attribute [simps] res_comp
 -- the locally discrete bicategory constructed from `Monᵒᵖ` to `Cat`, sending `G` to `Action V G`.
 variable {G} {H : MonCat.{u}} (f : G ⟶ H)
 
+#print Action.res_additive /-
 instance res_additive [Preadditive V] : (res V f).Additive where
 #align Action.res_additive Action.res_additive
+-/
 
 variable {R : Type _} [Semiring R]
 
+#print Action.res_linear /-
 instance res_linear [Preadditive V] [Linear R V] : (res V f).Linear R where
 #align Action.res_linear Action.res_linear
+-/
 
 #print Action.ofMulAction /-
 /-- Bundles a type `H` with a multiplicative action of `G` as an `Action`. -/
@@ -839,11 +925,13 @@ def ofMulAction (G H : Type u) [Monoid G] [MulAction G H] : Action (Type u) (Mon
 #align Action.of_mul_action Action.ofMulAction
 -/
 
+#print Action.ofMulAction_apply /-
 @[simp]
 theorem ofMulAction_apply {G H : Type u} [Monoid G] [MulAction G H] (g : G) (x : H) :
     (ofMulAction G H).ρ g x = (g • x : H) :=
   rfl
 #align Action.of_mul_action_apply Action.ofMulAction_apply
+-/
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `discrete_cases #[] -/
 #print Action.ofMulActionLimitCone /-
@@ -908,6 +996,7 @@ def diagonalOneIsoLeftRegular (G : Type u) [Monoid G] : diagonal G 1 ≅ leftReg
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print Action.leftRegularTensorIso /-
 /-- Given `X : Action (Type u) (Mon.of G)` for `G` a group, then `G × X` (with `G` acting as left
 multiplication on the first factor and by `X.ρ` on the second) is isomorphic as a `G`-set to
 `G × X` (with `G` acting as left multiplication on the first factor and trivially on the second).
@@ -942,6 +1031,7 @@ def leftRegularTensorIso (G : Type u) [Group G] (X : Action (Type u) (MonCat.of 
           show (X.ρ (x.1⁻¹ : G) * X.ρ x.1) _ = _ by
             simpa only [← X.ρ.map_mul, inv_mul_self, X.ρ.map_one])
 #align Action.left_regular_tensor_iso Action.leftRegularTensorIso
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Action.diagonalSucc /-
@@ -982,13 +1072,17 @@ def mapAction (F : V ⥤ W) (G : MonCat.{u}) : Action V G ⥤ Action W G
 
 variable (F : V ⥤ W) (G : MonCat.{u}) [Preadditive V] [Preadditive W]
 
+#print CategoryTheory.Functor.mapAction_preadditive /-
 instance mapAction_preadditive [F.Additive] : (F.mapAction G).Additive where
 #align category_theory.functor.map_Action_preadditive CategoryTheory.Functor.mapAction_preadditive
+-/
 
 variable {R : Type _} [Semiring R] [CategoryTheory.Linear R V] [CategoryTheory.Linear R W]
 
+#print CategoryTheory.Functor.mapAction_linear /-
 instance mapAction_linear [F.Additive] [F.Linear R] : (F.mapAction G).Linear R where
 #align category_theory.functor.map_Action_linear CategoryTheory.Functor.mapAction_linear
+-/
 
 end CategoryTheory.Functor
 
@@ -1023,6 +1117,7 @@ def mapAction : MonoidalFunctor (Action V G) (Action W G) :=
 #align category_theory.monoidal_functor.map_Action CategoryTheory.MonoidalFunctor.mapAction
 -/
 
+#print CategoryTheory.MonoidalFunctor.mapAction_ε_inv_hom /-
 @[simp]
 theorem mapAction_ε_inv_hom : (inv (F.mapAction G).ε).Hom = inv F.ε :=
   by
@@ -1030,7 +1125,9 @@ theorem mapAction_ε_inv_hom : (inv (F.mapAction G).ε).Hom = inv F.ε :=
   simp only [← F.map_Action_to_lax_monoidal_functor_ε_hom G, ← Action.comp_hom, is_iso.hom_inv_id,
     id_hom]
 #align category_theory.monoidal_functor.map_Action_ε_inv_hom CategoryTheory.MonoidalFunctor.mapAction_ε_inv_hom
+-/
 
+#print CategoryTheory.MonoidalFunctor.mapAction_μ_inv_hom /-
 @[simp]
 theorem mapAction_μ_inv_hom (X Y : Action V G) :
     (inv ((F.mapAction G).μ X Y)).Hom = inv (F.μ X.V Y.V) :=
@@ -1039,6 +1136,7 @@ theorem mapAction_μ_inv_hom (X Y : Action V G) :
   simpa only [← F.map_Action_to_lax_monoidal_functor_μ_hom G, ← Action.comp_hom, is_iso.hom_inv_id,
     id_hom]
 #align category_theory.monoidal_functor.map_Action_μ_inv_hom CategoryTheory.MonoidalFunctor.mapAction_μ_inv_hom
+-/
 
 end CategoryTheory.MonoidalFunctor
 

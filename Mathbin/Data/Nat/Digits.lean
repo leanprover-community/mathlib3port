@@ -205,6 +205,7 @@ def ofDigits {α : Type _} [Semiring α] (b : α) : List ℕ → α
 #align nat.of_digits Nat.ofDigits
 -/
 
+#print Nat.ofDigits_eq_foldr /-
 theorem ofDigits_eq_foldr {α : Type _} [Semiring α] (b : α) (L : List ℕ) :
     ofDigits b L = L.foldr (fun x y => x + b * y) 0 :=
   by
@@ -212,6 +213,7 @@ theorem ofDigits_eq_foldr {α : Type _} [Semiring α] (b : α) (L : List ℕ) :
   · rfl
   · dsimp [of_digits]; rw [ih]
 #align nat.of_digits_eq_foldr Nat.ofDigits_eq_foldr
+-/
 
 #print Nat.ofDigits_eq_sum_map_with_index_aux /-
 theorem ofDigits_eq_sum_map_with_index_aux (b : ℕ) (l : List ℕ) :
@@ -250,10 +252,12 @@ theorem ofDigits_singleton {b n : ℕ} : ofDigits b [n] = n := by simp [of_digit
 -/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print Nat.ofDigits_one_cons /-
 @[simp]
 theorem ofDigits_one_cons {α : Type _} [Semiring α] (h : ℕ) (L : List ℕ) :
     ofDigits (1 : α) (h::L) = h + ofDigits 1 L := by simp [of_digits]
 #align nat.of_digits_one_cons Nat.ofDigits_one_cons
+-/
 
 #print Nat.ofDigits_append /-
 theorem ofDigits_append {b : ℕ} {l1 l2 : List ℕ} :
@@ -277,6 +281,7 @@ theorem coe_ofDigits (α : Type _) [Semiring α] (b : ℕ) (L : List ℕ) :
 #align nat.coe_of_digits Nat.coe_ofDigits
 -/
 
+#print Nat.coe_int_ofDigits /-
 @[norm_cast]
 theorem coe_int_ofDigits (b : ℕ) (L : List ℕ) : ((ofDigits b L : ℕ) : ℤ) = ofDigits (b : ℤ) L :=
   by
@@ -284,6 +289,7 @@ theorem coe_int_ofDigits (b : ℕ) (L : List ℕ) : ((ofDigits b L : ℕ) : ℤ)
   · rfl
   · dsimp [of_digits]; push_cast
 #align nat.coe_int_of_digits Nat.coe_int_ofDigits
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -613,6 +619,7 @@ theorem digits_two_eq_bits (n : ℕ) : digits 2 n = n.bits.map fun b => cond b 1
 /-! ### Modular Arithmetic -/
 
 
+#print Nat.dvd_ofDigits_sub_ofDigits /-
 -- This is really a theorem about polynomials.
 theorem dvd_ofDigits_sub_ofDigits {α : Type _} [CommRing α] {a b k : α} (h : k ∣ a - b)
     (L : List ℕ) : k ∣ ofDigits a L - ofDigits b L :=
@@ -622,6 +629,7 @@ theorem dvd_ofDigits_sub_ofDigits {α : Type _} [CommRing α] {a b k : α} (h : 
   · simp only [of_digits, add_sub_add_left_eq_sub]
     exact dvd_mul_sub_mul h ih
 #align nat.dvd_of_digits_sub_of_digits Nat.dvd_ofDigits_sub_ofDigits
+-/
 
 #print Nat.ofDigits_modEq' /-
 theorem ofDigits_modEq' (b b' : ℕ) (k : ℕ) (h : b ≡ b' [MOD k]) (L : List ℕ) :
@@ -648,6 +656,7 @@ theorem ofDigits_mod (b k : ℕ) (L : List ℕ) : ofDigits b L % k = ofDigits (b
 #align nat.of_digits_mod Nat.ofDigits_mod
 -/
 
+#print Nat.ofDigits_zmodeq' /-
 theorem ofDigits_zmodeq' (b b' : ℤ) (k : ℕ) (h : b ≡ b' [ZMOD k]) (L : List ℕ) :
     ofDigits b L ≡ ofDigits b' L [ZMOD k] :=
   by
@@ -658,14 +667,19 @@ theorem ofDigits_zmodeq' (b b' : ℤ) (k : ℕ) (h : b ≡ b' [ZMOD k]) (L : Lis
     conv_lhs => rw [Int.add_emod, Int.mul_emod, h, ih]
     conv_rhs => rw [Int.add_emod, Int.mul_emod]
 #align nat.of_digits_zmodeq' Nat.ofDigits_zmodeq'
+-/
 
+#print Nat.ofDigits_zmodeq /-
 theorem ofDigits_zmodeq (b : ℤ) (k : ℕ) (L : List ℕ) : ofDigits b L ≡ ofDigits (b % k) L [ZMOD k] :=
   ofDigits_zmodeq' b (b % k) k (b.mod_modEq ↑k).symm L
 #align nat.of_digits_zmodeq Nat.ofDigits_zmodeq
+-/
 
+#print Nat.ofDigits_zmod /-
 theorem ofDigits_zmod (b : ℤ) (k : ℕ) (L : List ℕ) : ofDigits b L % k = ofDigits (b % k) L % k :=
   ofDigits_zmodeq b k L
 #align nat.of_digits_zmod Nat.ofDigits_zmod
+-/
 
 #print Nat.modEq_digits_sum /-
 theorem modEq_digits_sum (b b' : ℕ) (h : b' % b = 1) (n : ℕ) : n ≡ (digits b' n).Sum [MOD b] :=
@@ -692,6 +706,7 @@ theorem modEq_nine_digits_sum (n : ℕ) : n ≡ (digits 10 n).Sum [MOD 9] :=
 #align nat.modeq_nine_digits_sum Nat.modEq_nine_digits_sum
 -/
 
+#print Nat.zmodeq_ofDigits_digits /-
 theorem zmodeq_ofDigits_digits (b b' : ℕ) (c : ℤ) (h : b' ≡ c [ZMOD b]) (n : ℕ) :
     n ≡ ofDigits c (digits b' n) [ZMOD b] :=
   by
@@ -702,9 +717,11 @@ theorem zmodeq_ofDigits_digits (b b' : ℕ) (c : ℤ) (h : b' ≡ c [ZMOD b]) (n
   rw [coe_int_of_digits]
   apply of_digits_zmodeq' _ _ _ h
 #align nat.zmodeq_of_digits_digits Nat.zmodeq_ofDigits_digits
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print Nat.ofDigits_neg_one /-
 theorem ofDigits_neg_one :
     ∀ L : List ℕ, ofDigits (-1 : ℤ) L = (L.map fun n : ℕ => (n : ℤ)).alternatingSum
   | [] => rfl
@@ -714,6 +731,7 @@ theorem ofDigits_neg_one :
     simp only [of_digits, List.alternatingSum, List.map_cons, of_digits_neg_one t]
     ring
 #align nat.of_digits_neg_one Nat.ofDigits_neg_one
+-/
 
 #print Nat.modEq_eleven_digits_sum /-
 theorem modEq_eleven_digits_sum (n : ℕ) :
@@ -749,6 +767,7 @@ theorem nine_dvd_iff (n : ℕ) : 9 ∣ n ↔ 9 ∣ (digits 10 n).Sum :=
 #align nat.nine_dvd_iff Nat.nine_dvd_iff
 -/
 
+#print Nat.dvd_iff_dvd_ofDigits /-
 theorem dvd_iff_dvd_ofDigits (b b' : ℕ) (c : ℤ) (h : (b : ℤ) ∣ (b' : ℤ) - c) (n : ℕ) :
     b ∣ n ↔ (b : ℤ) ∣ ofDigits c (digits b' n) :=
   by
@@ -756,7 +775,9 @@ theorem dvd_iff_dvd_ofDigits (b b' : ℕ) (c : ℤ) (h : (b : ℤ) ∣ (b' : ℤ
   exact
     dvd_iff_dvd_of_dvd_sub (zmodeq_of_digits_digits b b' c (Int.modEq_iff_dvd.2 h).symm _).symm.Dvd
 #align nat.dvd_iff_dvd_of_digits Nat.dvd_iff_dvd_ofDigits
+-/
 
+#print Nat.eleven_dvd_iff /-
 theorem eleven_dvd_iff :
     11 ∣ n ↔ (11 : ℤ) ∣ ((digits 10 n).map fun n : ℕ => (n : ℤ)).alternatingSum :=
   by
@@ -764,6 +785,7 @@ theorem eleven_dvd_iff :
   rw [of_digits_neg_one] at t 
   exact t
 #align nat.eleven_dvd_iff Nat.eleven_dvd_iff
+-/
 
 #print Nat.eleven_dvd_of_palindrome /-
 theorem eleven_dvd_of_palindrome (p : (digits 10 n).Palindrome) (h : Even (digits 10 n).length) :

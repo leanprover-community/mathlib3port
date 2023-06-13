@@ -47,36 +47,46 @@ open Polynomial
 
 namespace Polynomial
 
+#print Polynomial.hermite /-
 /-- the nth probabilist's Hermite polynomial -/
 noncomputable def hermite : ℕ → Polynomial ℤ
   | 0 => 1
   | n + 1 => X * hermite n - (hermite n).derivative
 #align polynomial.hermite Polynomial.hermite
+-/
 
+#print Polynomial.hermite_succ /-
 /-- The recursion `hermite (n+1) = (x - d/dx) (hermite n)` -/
 @[simp]
 theorem hermite_succ (n : ℕ) : hermite (n + 1) = X * hermite n - (hermite n).derivative := by
   rw [hermite]
 #align polynomial.hermite_succ Polynomial.hermite_succ
+-/
 
+#print Polynomial.hermite_eq_iterate /-
 theorem hermite_eq_iterate (n : ℕ) : hermite n = ((fun p => X * p - p.derivative)^[n]) 1 :=
   by
   induction' n with n ih
   · rfl
   · rw [Function.iterate_succ_apply', ← ih, hermite_succ]
 #align polynomial.hermite_eq_iterate Polynomial.hermite_eq_iterate
+-/
 
+#print Polynomial.hermite_zero /-
 @[simp]
 theorem hermite_zero : hermite 0 = C 1 :=
   rfl
 #align polynomial.hermite_zero Polynomial.hermite_zero
+-/
 
+#print Polynomial.hermite_one /-
 @[simp]
 theorem hermite_one : hermite 1 = X :=
   by
   rw [hermite_succ, hermite_zero]
   simp only [map_one, mul_one, derivative_one, sub_zero]
 #align polynomial.hermite_one Polynomial.hermite_one
+-/
 
 /-! ### Lemmas about `polynomial.coeff` -/
 
@@ -148,9 +158,11 @@ theorem leadingCoeff_hermite (n : ℕ) : (hermite n).leadingCoeff = 1 := by
 #align polynomial.leading_coeff_hermite Polynomial.leadingCoeff_hermite
 -/
 
+#print Polynomial.hermite_monic /-
 theorem hermite_monic (n : ℕ) : (hermite n).Monic :=
   leadingCoeff_hermite n
 #align polynomial.hermite_monic Polynomial.hermite_monic
+-/
 
 #print Polynomial.coeff_hermite_of_odd_add /-
 theorem coeff_hermite_of_odd_add {n k : ℕ} (hnk : Odd (n + k)) : coeff (hermite n) k = 0 :=
@@ -174,6 +186,7 @@ section CoeffExplicit
 
 open scoped Nat
 
+#print Polynomial.coeff_hermite_explicit /-
 /-- Because of `coeff_hermite_of_odd_add`, every nonzero coefficient is described as follows. -/
 theorem coeff_hermite_explicit :
     ∀ n k : ℕ, coeff (hermite (2 * n + k)) k = (-1) ^ n * (2 * n - 1)‼ * Nat.choose (2 * n + k) k
@@ -218,7 +231,9 @@ theorem coeff_hermite_explicit :
     · rw [coeff_hermite_explicit (n + 1) k]
     · rw [(by ring : 2 * (n + 1) + k = 2 * n + (k + 2)), coeff_hermite_explicit n (k + 2)]
 #align polynomial.coeff_hermite_explicit Polynomial.coeff_hermite_explicit
+-/
 
+#print Polynomial.coeff_hermite_of_even_add /-
 theorem coeff_hermite_of_even_add {n k : ℕ} (hnk : Even (n + k)) :
     coeff (hermite n) k = (-1) ^ ((n - k) / 2) * (n - k - 1)‼ * Nat.choose n k :=
   by
@@ -229,7 +244,9 @@ theorem coeff_hermite_of_even_add {n k : ℕ} (hnk : Even (n + k)) :
       Nat.mul_div_cancel_left _ (Nat.succ_pos 1), coeff_hermite_explicit]
   · simp [Nat.choose_eq_zero_of_lt h_lt, coeff_hermite_of_lt h_lt]
 #align polynomial.coeff_hermite_of_even_add Polynomial.coeff_hermite_of_even_add
+-/
 
+#print Polynomial.coeff_hermite /-
 theorem coeff_hermite (n k : ℕ) :
     coeff (hermite n) k =
       if Even (n + k) then (-1) ^ ((n - k) / 2) * (n - k - 1)‼ * Nat.choose n k else 0 :=
@@ -238,6 +255,7 @@ theorem coeff_hermite (n k : ℕ) :
   exact coeff_hermite_of_even_add h
   exact coeff_hermite_of_odd_add (nat.odd_iff_not_even.mpr h)
 #align polynomial.coeff_hermite Polynomial.coeff_hermite
+-/
 
 end CoeffExplicit
 

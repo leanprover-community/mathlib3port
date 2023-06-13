@@ -152,7 +152,6 @@ end
 #align lists'.subset Lists'.Subset
 -/
 
--- mathport name: «expr ~ »
 local infixl:50 " ~ " => Lists.Equiv
 
 /-- Equivalence of ZFA lists. Defined inductively. -/
@@ -171,15 +170,20 @@ equivalent as a ZFA list to this ZFA list. -/
 instance {b} : Membership (Lists α) (Lists' α b) :=
   ⟨fun a l => ∃ a' ∈ l.toList, a ~ a'⟩
 
+#print Lists'.mem_def /-
 theorem mem_def {b a} {l : Lists' α b} : a ∈ l ↔ ∃ a' ∈ l.toList, a ~ a' :=
   Iff.rfl
 #align lists'.mem_def Lists'.mem_def
+-/
 
+#print Lists'.mem_cons /-
 @[simp]
 theorem mem_cons {a y l} : a ∈ @cons α y l ↔ a ~ y ∨ a ∈ l := by
   simp [mem_def, or_and_right, exists_or]
 #align lists'.mem_cons Lists'.mem_cons
+-/
 
+#print Lists'.cons_subset /-
 theorem cons_subset {a} {l₁ l₂ : Lists' α true} : Lists'.cons a l₁ ⊆ l₂ ↔ a ∈ l₂ ∧ l₁ ⊆ l₂ :=
   by
   refine' ⟨fun h => _, fun ⟨⟨a', m, e⟩, s⟩ => subset.cons e m s⟩
@@ -187,6 +191,7 @@ theorem cons_subset {a} {l₁ l₂ : Lists' α true} : Lists'.cons a l₁ ⊆ l�
   cases' h with l a' a'' l l' e m s; · cases a; cases h'
   cases a; cases a'; cases h'; exact ⟨⟨_, m, e⟩, s⟩
 #align lists'.cons_subset Lists'.cons_subset
+-/
 
 #print Lists'.ofList_subset /-
 theorem ofList_subset {l₁ l₂ : List (Lists α)} (h : l₁ ⊆ l₂) :
@@ -213,13 +218,16 @@ theorem subset_nil {l : Lists' α true} : l ⊆ Lists'.nil → l = Lists'.nil :=
 #align lists'.subset_nil Lists'.subset_nil
 -/
 
+#print Lists'.mem_of_subset' /-
 theorem mem_of_subset' {a} {l₁ l₂ : Lists' α true} (s : l₁ ⊆ l₂) (h : a ∈ l₁.toList) : a ∈ l₂ :=
   by
   induction' s with _ a a' l l' e m s IH; · cases h
   simp at h ; rcases h with (rfl | h)
   exacts [⟨_, m, e⟩, IH h]
 #align lists'.mem_of_subset' Lists'.mem_of_subset'
+-/
 
+#print Lists'.subset_def /-
 theorem subset_def {l₁ l₂ : Lists' α true} : l₁ ⊆ l₂ ↔ ∀ a ∈ l₁.toList, a ∈ l₂ :=
   ⟨fun H a => mem_of_subset' H, fun H =>
     by
@@ -228,6 +236,7 @@ theorem subset_def {l₁ l₂ : Lists' α true} : l₁ ⊆ l₂ ↔ ∀ a ∈ l�
     · exact subset.nil
     · simp at H ; exact cons_subset.2 ⟨H.1, ih H.2⟩⟩
 #align lists'.subset_def Lists'.subset_def
+-/
 
 end Lists'
 
@@ -404,19 +413,23 @@ def Equiv.decidableMeas :
 
 open WellFoundedTactics
 
+#print Lists.sizeof_pos /-
 theorem sizeof_pos {b} (l : Lists' α b) : 0 < SizeOf.sizeOf l := by
   cases l <;>
     run_tac
       andthen unfold_sizeof trivial_nat_lt
 #align lists.sizeof_pos Lists.sizeof_pos
+-/
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic well_founded_tactics.unfold_sizeof -/
+#print Lists.lt_sizeof_cons' /-
 theorem lt_sizeof_cons' {b} (a : Lists' α b) (l) :
     SizeOf.sizeOf (⟨b, a⟩ : Lists α) < SizeOf.sizeOf (Lists'.cons' a l) := by
   run_tac
     unfold_sizeof;
   apply sizeof_pos
 #align lists.lt_sizeof_cons' Lists.lt_sizeof_cons'
+-/
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic well_founded_tactics.default_dec_tac -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic well_founded_tactics.default_dec_tac -/
@@ -503,14 +516,18 @@ end Lists
 
 namespace Lists'
 
+#print Lists'.mem_equiv_left /-
 theorem mem_equiv_left {l : Lists' α true} : ∀ {a a'}, a ~ a' → (a ∈ l ↔ a' ∈ l) :=
   suffices ∀ {a a'}, a ~ a' → a ∈ l → a' ∈ l from fun a a' e => ⟨this e, this e.symm⟩
   fun a₁ a₂ e₁ ⟨a₃, m₃, e₂⟩ => ⟨_, m₃, e₁.symm.trans e₂⟩
 #align lists'.mem_equiv_left Lists'.mem_equiv_left
+-/
 
+#print Lists'.mem_of_subset /-
 theorem mem_of_subset {a} {l₁ l₂ : Lists' α true} (s : l₁ ⊆ l₂) : a ∈ l₁ → a ∈ l₂
   | ⟨a', m, e⟩ => (mem_equiv_left e).2 (mem_of_subset' s m)
 #align lists'.mem_of_subset Lists'.mem_of_subset
+-/
 
 #print Lists'.Subset.trans /-
 theorem Subset.trans {l₁ l₂ l₃ : Lists' α true} (h₁ : l₁ ⊆ l₂) (h₂ : l₂ ⊆ l₃) : l₁ ⊆ l₃ :=

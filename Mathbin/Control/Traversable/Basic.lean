@@ -72,6 +72,7 @@ variable (F : Type u → Type v) [Applicative F] [LawfulApplicative F]
 
 variable (G : Type u → Type w) [Applicative G] [LawfulApplicative G]
 
+#print ApplicativeTransformation /-
 /-- A transformation between applicative functors.  It is a natural
 transformation such that `app` preserves the `has_pure.pure` and
 `functor.map` (`<*>`) operations. See
@@ -81,6 +82,7 @@ structure ApplicativeTransformation : Type max (u + 1) v w where
   preserves_pure' : ∀ {α : Type u} (x : α), app _ (pure x) = pure x
   preserves_seq' : ∀ {α β : Type u} (x : F (α → β)) (y : F α), app _ (x <*> y) = app _ x <*> app _ y
 #align applicative_transformation ApplicativeTransformation
+-/
 
 end ApplicativeTransformation
 
@@ -95,54 +97,72 @@ instance : CoeFun (ApplicativeTransformation F G) fun _ => ∀ {α}, F α → G 
 
 variable {F G}
 
+#print ApplicativeTransformation.app_eq_coe /-
 @[simp]
 theorem app_eq_coe (η : ApplicativeTransformation F G) : η.app = η :=
   rfl
 #align applicative_transformation.app_eq_coe ApplicativeTransformation.app_eq_coe
+-/
 
+#print ApplicativeTransformation.coe_mk /-
 @[simp]
 theorem coe_mk (f : ∀ α : Type u, F α → G α) (pp ps) :
     ⇑(ApplicativeTransformation.mk f pp ps) = f :=
   rfl
 #align applicative_transformation.coe_mk ApplicativeTransformation.coe_mk
+-/
 
+#print ApplicativeTransformation.congr_fun /-
 protected theorem congr_fun (η η' : ApplicativeTransformation F G) (h : η = η') {α : Type u}
     (x : F α) : η x = η' x :=
   congr_arg (fun η'' : ApplicativeTransformation F G => η'' x) h
 #align applicative_transformation.congr_fun ApplicativeTransformation.congr_fun
+-/
 
+#print ApplicativeTransformation.congr_arg /-
 protected theorem congr_arg (η : ApplicativeTransformation F G) {α : Type u} {x y : F α}
     (h : x = y) : η x = η y :=
   congr_arg (fun z : F α => η z) h
 #align applicative_transformation.congr_arg ApplicativeTransformation.congr_arg
+-/
 
+#print ApplicativeTransformation.coe_inj /-
 theorem coe_inj ⦃η η' : ApplicativeTransformation F G⦄ (h : (η : ∀ α, F α → G α) = η') : η = η' :=
   by cases η; cases η'; congr; exact h
 #align applicative_transformation.coe_inj ApplicativeTransformation.coe_inj
+-/
 
+#print ApplicativeTransformation.ext /-
 @[ext]
 theorem ext ⦃η η' : ApplicativeTransformation F G⦄ (h : ∀ (α : Type u) (x : F α), η x = η' x) :
     η = η' := by apply coe_inj; ext1 α; exact funext (h α)
 #align applicative_transformation.ext ApplicativeTransformation.ext
+-/
 
+#print ApplicativeTransformation.ext_iff /-
 theorem ext_iff {η η' : ApplicativeTransformation F G} :
     η = η' ↔ ∀ (α : Type u) (x : F α), η x = η' x :=
   ⟨fun h α x => h ▸ rfl, fun h => ext h⟩
 #align applicative_transformation.ext_iff ApplicativeTransformation.ext_iff
+-/
 
 section Preserves
 
 variable (η : ApplicativeTransformation F G)
 
+#print ApplicativeTransformation.preserves_pure /-
 @[functor_norm]
 theorem preserves_pure {α} : ∀ x : α, η (pure x) = pure x :=
   η.preserves_pure'
 #align applicative_transformation.preserves_pure ApplicativeTransformation.preserves_pure
+-/
 
+#print ApplicativeTransformation.preserves_seq /-
 @[functor_norm]
 theorem preserves_seq {α β : Type u} : ∀ (x : F (α → β)) (y : F α), η (x <*> y) = η x <*> η y :=
   η.preserves_seq'
 #align applicative_transformation.preserves_seq ApplicativeTransformation.preserves_seq
+-/
 
 #print ApplicativeTransformation.preserves_map /-
 @[functor_norm]
@@ -176,6 +196,7 @@ universe s t
 
 variable {H : Type u → Type s} [Applicative H] [LawfulApplicative H]
 
+#print ApplicativeTransformation.comp /-
 /-- The composition of applicative transformations. -/
 def comp (η' : ApplicativeTransformation G H) (η : ApplicativeTransformation F G) :
     ApplicativeTransformation F H where
@@ -183,28 +204,37 @@ def comp (η' : ApplicativeTransformation G H) (η : ApplicativeTransformation F
   preserves_pure' α x := by simp [functor_norm]
   preserves_seq' α β x y := by simp [functor_norm]
 #align applicative_transformation.comp ApplicativeTransformation.comp
+-/
 
+#print ApplicativeTransformation.comp_apply /-
 @[simp]
 theorem comp_apply (η' : ApplicativeTransformation G H) (η : ApplicativeTransformation F G)
     {α : Type u} (x : F α) : η'.comp η x = η' (η x) :=
   rfl
 #align applicative_transformation.comp_apply ApplicativeTransformation.comp_apply
+-/
 
+#print ApplicativeTransformation.comp_assoc /-
 theorem comp_assoc {I : Type u → Type t} [Applicative I] [LawfulApplicative I]
     (η'' : ApplicativeTransformation H I) (η' : ApplicativeTransformation G H)
     (η : ApplicativeTransformation F G) : (η''.comp η').comp η = η''.comp (η'.comp η) :=
   rfl
 #align applicative_transformation.comp_assoc ApplicativeTransformation.comp_assoc
+-/
 
+#print ApplicativeTransformation.comp_id /-
 @[simp]
 theorem comp_id (η : ApplicativeTransformation F G) : η.comp idTransformation = η :=
   ext fun α x => rfl
 #align applicative_transformation.comp_id ApplicativeTransformation.comp_id
+-/
 
+#print ApplicativeTransformation.id_comp /-
 @[simp]
 theorem id_comp (η : ApplicativeTransformation F G) : idTransformation.comp η = η :=
   ext fun α x => rfl
 #align applicative_transformation.id_comp ApplicativeTransformation.id_comp
+-/
 
 end ApplicativeTransformation
 

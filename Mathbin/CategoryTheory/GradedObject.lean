@@ -126,6 +126,7 @@ theorem eqToHom_apply {β : Type w} {X Y : ∀ b : β, C} (h : X = Y) (b : β) :
 #align category_theory.graded_object.eq_to_hom_apply CategoryTheory.GradedObject.eqToHom_apply
 -/
 
+#print CategoryTheory.GradedObject.comapEquiv /-
 /-- The equivalence between β-graded objects and γ-graded objects,
 given an equivalence between β and γ.
 -/
@@ -138,10 +139,12 @@ def comapEquiv {β γ : Type w} (e : β ≃ γ) : GradedObject β C ≌ GradedOb
   unitIso := (comapEq C (by ext; simp)).trans (comapComp _ _ _).symm
   functor_unitIso_comp' X := by ext b; dsimp; simp
 #align category_theory.graded_object.comap_equiv CategoryTheory.GradedObject.comapEquiv
+-/
 
 -- See note [dsimp, simp].
 end
 
+#print CategoryTheory.GradedObject.hasShift /-
 instance hasShift {β : Type _} [AddCommGroup β] (s : β) : HasShift (GradedObjectWithShift s C) ℤ :=
   hasShiftMk _ _
     { f := fun n => comap (fun _ => C) fun b : β => b + n • s
@@ -151,19 +154,24 @@ instance hasShift {β : Type _} [AddCommGroup β] (s : β) : HasShift (GradedObj
       zero_add_hom_app := fun n X => by ext; dsimp; simpa
       add_zero_hom_app := fun n X => by ext; dsimp; simpa }
 #align category_theory.graded_object.has_shift CategoryTheory.GradedObject.hasShift
+-/
 
+#print CategoryTheory.GradedObject.shiftFunctor_obj_apply /-
 @[simp]
 theorem shiftFunctor_obj_apply {β : Type _} [AddCommGroup β] (s : β) (X : β → C) (t : β) (n : ℤ) :
     (shiftFunctor (GradedObjectWithShift s C) n).obj X t = X (t + n • s) :=
   rfl
 #align category_theory.graded_object.shift_functor_obj_apply CategoryTheory.GradedObject.shiftFunctor_obj_apply
+-/
 
+#print CategoryTheory.GradedObject.shiftFunctor_map_apply /-
 @[simp]
 theorem shiftFunctor_map_apply {β : Type _} [AddCommGroup β] (s : β)
     {X Y : GradedObjectWithShift s C} (f : X ⟶ Y) (t : β) (n : ℤ) :
     (shiftFunctor (GradedObjectWithShift s C) n).map f t = f (t + n • s) :=
   rfl
 #align category_theory.graded_object.shift_functor_map_apply CategoryTheory.GradedObject.shiftFunctor_map_apply
+-/
 
 #print CategoryTheory.GradedObject.hasZeroMorphisms /-
 instance hasZeroMorphisms [HasZeroMorphisms C] (β : Type w) :

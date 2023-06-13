@@ -54,10 +54,8 @@ def MulOpposite (α : Type u) : Type u :=
 #align add_opposite AddOpposite
 -/
 
--- mathport name: «expr ᵐᵒᵖ»
 postfix:max "ᵐᵒᵖ" => MulOpposite
 
--- mathport name: «expr ᵃᵒᵖ»
 postfix:max "ᵃᵒᵖ" => AddOpposite
 
 variable {α : Type u}
@@ -116,11 +114,13 @@ theorem unop_comp_op : (unop : αᵐᵒᵖ → α) ∘ op = id :=
 #align add_opposite.unop_comp_op AddOpposite.unop_comp_op
 -/
 
+#print MulOpposite.rec' /-
 /-- A recursor for `mul_opposite`. Use as `induction x using mul_opposite.rec`. -/
 @[simp, to_additive "A recursor for `add_opposite`. Use as `induction x using add_opposite.rec`."]
 protected def rec' {F : ∀ X : αᵐᵒᵖ, Sort v} (h : ∀ X, F (op X)) : ∀ X, F X := fun X => h (unop X)
 #align mul_opposite.rec MulOpposite.rec'
 #align add_opposite.rec AddOpposite.rec'
+-/
 
 #print MulOpposite.opEquiv /-
 /-- The canonical bijection between `α` and `αᵐᵒᵖ`. -/

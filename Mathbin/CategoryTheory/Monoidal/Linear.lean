@@ -67,14 +67,19 @@ instance tensorRight_linear (X : C) : (tensorRight X).Linear R where
 #align category_theory.tensor_right_linear CategoryTheory.tensorRight_linear
 -/
 
+#print CategoryTheory.tensoringLeft_linear /-
 instance tensoringLeft_linear (X : C) : ((tensoringLeft C).obj X).Linear R where
 #align category_theory.tensoring_left_linear CategoryTheory.tensoringLeft_linear
+-/
 
+#print CategoryTheory.tensoringRight_linear /-
 instance tensoringRight_linear (X : C) : ((tensoringRight C).obj X).Linear R where
 #align category_theory.tensoring_right_linear CategoryTheory.tensoringRight_linear
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print CategoryTheory.monoidalLinearOfFaithful /-
 /-- A faithful linear monoidal functor to a linear monoidal category
 ensures that the domain is linear monoidal. -/
 theorem monoidalLinearOfFaithful {D : Type _} [Category D] [Preadditive D] [Linear R D]
@@ -91,6 +96,7 @@ theorem monoidalLinearOfFaithful {D : Type _} [Category D] [Preadditive D] [Line
       simp only [F.to_functor.map_smul r (f ⊗ g), F.to_functor.map_smul r f, F.map_tensor,
         monoidal_linear.smul_tensor, linear.smul_comp, linear.comp_smul] }
 #align category_theory.monoidal_linear_of_faithful CategoryTheory.monoidalLinearOfFaithful
+-/
 
 end CategoryTheory
 

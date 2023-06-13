@@ -64,12 +64,14 @@ class NonarchimedeanRing (R : Type _) [Ring R] [TopologicalSpace R] extends Topo
 #align nonarchimedean_ring NonarchimedeanRing
 -/
 
+#print NonarchimedeanRing.to_nonarchimedeanAddGroup /-
 -- see Note [lower instance priority]
 /-- Every nonarchimedean ring is naturally a nonarchimedean additive group. -/
 instance (priority := 100) NonarchimedeanRing.to_nonarchimedeanAddGroup (R : Type _) [Ring R]
     [TopologicalSpace R] [t : NonarchimedeanRing R] : NonarchimedeanAddGroup R :=
   { t with }
 #align nonarchimedean_ring.to_nonarchimedean_add_group NonarchimedeanRing.to_nonarchimedeanAddGroup
+-/
 
 namespace NonarchimedeanGroup
 
@@ -79,6 +81,7 @@ variable {H : Type _} [Group H] [TopologicalSpace H] [TopologicalGroup H]
 
 variable {K : Type _} [Group K] [TopologicalSpace K] [NonarchimedeanGroup K]
 
+#print NonarchimedeanGroup.nonarchimedean_of_emb /-
 /-- If a topological group embeds into a nonarchimedean group, then it is nonarchimedean. -/
 @[to_additive NonarchimedeanAddGroup.nonarchimedean_of_emb
       "If a topological group embeds into a\nnonarchimedean group, then it is nonarchimedean."]
@@ -90,8 +93,10 @@ theorem nonarchimedean_of_emb (f : G →* H) (emb : OpenEmbedding f) : Nonarchim
       ⟨{ Subgroup.map f V with is_open' := emb.IsOpenMap _ V.IsOpen }, Set.image_subset_iff.2 hV⟩ }
 #align nonarchimedean_group.nonarchimedean_of_emb NonarchimedeanGroup.nonarchimedean_of_emb
 #align nonarchimedean_add_group.nonarchimedean_of_emb NonarchimedeanAddGroup.nonarchimedean_of_emb
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print NonarchimedeanGroup.prod_subset /-
 /-- An open neighborhood of the identity in the cartesian product of two nonarchimedean groups
 contains the cartesian product of an open neighborhood in each group. -/
 @[to_additive NonarchimedeanAddGroup.prod_subset
@@ -109,8 +114,10 @@ theorem prod_subset {U} (hU : U ∈ nhds (1 : G × K)) :
   exact Set.Subset.trans (Set.prod_mono hV hW) h (Set.mem_sep hX hY)
 #align nonarchimedean_group.prod_subset NonarchimedeanGroup.prod_subset
 #align nonarchimedean_add_group.prod_subset NonarchimedeanAddGroup.prod_subset
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print NonarchimedeanGroup.prod_self_subset /-
 /-- An open neighborhood of the identity in the cartesian square of a nonarchimedean group
 contains the cartesian square of an open neighborhood in the group. -/
 @[to_additive NonarchimedeanAddGroup.prod_self_subset
@@ -121,6 +128,7 @@ theorem prod_self_subset {U} (hU : U ∈ nhds (1 : G × G)) :
   ⟨V ⊓ W, by refine' Set.Subset.trans (Set.prod_mono _ _) ‹_› <;> simp⟩
 #align nonarchimedean_group.prod_self_subset NonarchimedeanGroup.prod_self_subset
 #align nonarchimedean_add_group.prod_self_subset NonarchimedeanAddGroup.prod_self_subset
+-/
 
 /-- The cartesian product of two nonarchimedean groups is nonarchimedean. -/
 @[to_additive "The cartesian product of two nonarchimedean groups is nonarchimedean."]
@@ -147,13 +155,16 @@ variable [Ring S] [TopologicalSpace S] [NonarchimedeanRing S]
 instance : NonarchimedeanRing (R × S)
     where is_nonarchimedean := NonarchimedeanAddGroup.is_nonarchimedean
 
+#print NonarchimedeanRing.left_mul_subset /-
 /-- Given an open subgroup `U` and an element `r` of a nonarchimedean ring, there is an open
   subgroup `V` such that `r • V` is contained in `U`. -/
 theorem left_mul_subset (U : OpenAddSubgroup R) (r : R) :
     ∃ V : OpenAddSubgroup R, r • (V : Set R) ⊆ U :=
   ⟨U.comap (AddMonoidHom.mulLeft r) (continuous_mul_left r), (U : Set R).image_preimage_subset _⟩
 #align nonarchimedean_ring.left_mul_subset NonarchimedeanRing.left_mul_subset
+-/
 
+#print NonarchimedeanRing.mul_subset /-
 /-- An open subgroup of a nonarchimedean ring contains the square of another one. -/
 theorem mul_subset (U : OpenAddSubgroup R) : ∃ V : OpenAddSubgroup R, (V : Set R) * V ⊆ U :=
   by
@@ -169,6 +180,7 @@ theorem mul_subset (U : OpenAddSubgroup R) : ∃ V : OpenAddSubgroup R, (V : Set
   simp only [Set.mem_preimage, SetLike.mem_coe] at hy 
   rwa [hv] at hy 
 #align nonarchimedean_ring.mul_subset NonarchimedeanRing.mul_subset
+-/
 
 end NonarchimedeanRing
 

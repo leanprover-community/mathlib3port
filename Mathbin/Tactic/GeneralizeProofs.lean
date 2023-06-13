@@ -88,7 +88,6 @@ unsafe def generalize_proofs (ns : List Name) (loc : Interactive.Loc) : tactic U
   intron n <|> intros $> ()
 #align tactic.generalize_proofs tactic.generalize_proofs
 
--- mathport name: parser.many
 local postfix:1024 "*" => many
 
 namespace Interactive

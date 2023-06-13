@@ -84,7 +84,6 @@ open CategoryTheory Filter Ultrafilter TopologicalSpace CategoryTheory.Limits Fi
 
 open scoped Classical Topology
 
--- mathport name: exprβ
 local notation "β" => ofTypeMonad Ultrafilter
 
 #print Compactum /-
@@ -131,21 +130,28 @@ instance {X Y : Compactum} : CoeFun (X ⟶ Y) fun f => X → Y :=
 instance : HasLimits Compactum :=
   hasLimits_of_hasLimits_createsLimits forget
 
+#print Compactum.str /-
 /-- The structure map for a compactum, essentially sending an ultrafilter to its limit. -/
 def str (X : Compactum) : Ultrafilter X → X :=
   X.a
 #align Compactum.str Compactum.str
+-/
 
+#print Compactum.join /-
 /-- The monadic join. -/
 def join (X : Compactum) : Ultrafilter (Ultrafilter X) → Ultrafilter X :=
   β.μ.app _
 #align Compactum.join Compactum.join
+-/
 
+#print Compactum.incl /-
 /-- The inclusion of `X` into `ultrafilter X`. -/
 def incl (X : Compactum) : X → Ultrafilter X :=
   β.η.app _
 #align Compactum.incl Compactum.incl
+-/
 
+#print Compactum.str_incl /-
 @[simp]
 theorem str_incl (X : Compactum) (x : X) : X.str (X.incl x) = x :=
   by
@@ -153,7 +159,9 @@ theorem str_incl (X : Compactum) (x : X) : X.str (X.incl x) = x :=
   rw [monad.algebra.unit]
   rfl
 #align Compactum.str_incl Compactum.str_incl
+-/
 
+#print Compactum.str_hom_commute /-
 @[simp]
 theorem str_hom_commute (X Y : Compactum) (f : X ⟶ Y) (xs : Ultrafilter X) :
     f (X.str xs) = Y.str (map f xs) :=
@@ -162,7 +170,9 @@ theorem str_hom_commute (X Y : Compactum) (f : X ⟶ Y) (xs : Ultrafilter X) :
   rw [← f.h]
   rfl
 #align Compactum.str_hom_commute Compactum.str_hom_commute
+-/
 
+#print Compactum.join_distrib /-
 @[simp]
 theorem join_distrib (X : Compactum) (uux : Ultrafilter (Ultrafilter X)) :
     X.str (X.join uux) = X.str (map X.str uux) :=
@@ -171,6 +181,7 @@ theorem join_distrib (X : Compactum) (uux : Ultrafilter (Ultrafilter X)) :
   rw [monad.algebra.assoc]
   rfl
 #align Compactum.join_distrib Compactum.join_distrib
+-/
 
 instance {X : Compactum} : TopologicalSpace X
     where
@@ -180,6 +191,7 @@ instance {X : Compactum} : TopologicalSpace X
   isOpen_sUnion := fun S h1 F ⟨T, hT, h2⟩ =>
     mem_of_superset (h1 T hT _ h2) (Set.subset_sUnion_of_mem hT)
 
+#print Compactum.isClosed_iff /-
 theorem isClosed_iff {X : Compactum} (S : Set X) :
     IsClosed S ↔ ∀ F : Ultrafilter X, S ∈ F → X.str F ∈ S :=
   by
@@ -194,6 +206,7 @@ theorem isClosed_iff {X : Compactum} (S : Set X) :
     specialize h1 F
     cases F.mem_or_compl_mem S; exacts [absurd (h1 h) h2, h]
 #align Compactum.is_closed_iff Compactum.isClosed_iff
+-/
 
 instance {X : Compactum} : CompactSpace X :=
   by
@@ -293,14 +306,17 @@ private theorem cl_cl {X : Compactum} (A : Set X) : cl (cl A) ⊆ cl A :=
   intro t ht
   exact finite_inter_closure.basic (@hT t ht)
 
+#print Compactum.isClosed_cl /-
 theorem isClosed_cl {X : Compactum} (A : Set X) : IsClosed (cl A) :=
   by
   rw [is_closed_iff]
   intro F hF
   exact cl_cl _ ⟨F, hF, rfl⟩
 #align Compactum.is_closed_cl Compactum.isClosed_cl
+-/
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (S1 S2 «expr ∈ » T0) -/
+#print Compactum.str_eq_of_le_nhds /-
 theorem str_eq_of_le_nhds {X : Compactum} (F : Ultrafilter X) (x : X) : ↑F ≤ 𝓝 x → X.str F = x :=
   by
   -- Notation to be used in this proof.
@@ -381,10 +397,13 @@ theorem str_eq_of_le_nhds {X : Compactum} (F : Ultrafilter X) (x : X) : ↑F ≤
   intro t ht
   exact finite_inter_closure.basic (@hT t ht)
 #align Compactum.str_eq_of_le_nhds Compactum.str_eq_of_le_nhds
+-/
 
+#print Compactum.le_nhds_of_str_eq /-
 theorem le_nhds_of_str_eq {X : Compactum} (F : Ultrafilter X) (x : X) : X.str F = x → ↑F ≤ 𝓝 x :=
   fun h => le_nhds_iff.mpr fun s hx hs => hs _ <| by rwa [h]
 #align Compactum.le_nhds_of_str_eq Compactum.le_nhds_of_str_eq
+-/
 
 -- All the hard work above boils down to this t2_space instance.
 instance {X : Compactum} : T2Space X :=
@@ -393,13 +412,16 @@ instance {X : Compactum} : T2Space X :=
   intro _ _ F hx hy
   rw [← str_eq_of_le_nhds _ _ hx, ← str_eq_of_le_nhds _ _ hy]
 
+#print Compactum.lim_eq_str /-
 /-- The structure map of a compactum actually computes limits. -/
 theorem lim_eq_str {X : Compactum} (F : Ultrafilter X) : F.lim = X.str F :=
   by
   rw [Ultrafilter.lim_eq_iff_le_nhds, le_nhds_iff]
   tauto
 #align Compactum.Lim_eq_str Compactum.lim_eq_str
+-/
 
+#print Compactum.cl_eq_closure /-
 theorem cl_eq_closure {X : Compactum} (A : Set X) : cl A = closure A :=
   by
   ext
@@ -410,7 +432,9 @@ theorem cl_eq_closure {X : Compactum} (A : Set X) : cl A = closure A :=
   · rintro ⟨F, h1, h2⟩
     exact ⟨F, h1, str_eq_of_le_nhds _ _ h2⟩
 #align Compactum.cl_eq_closure Compactum.cl_eq_closure
+-/
 
+#print Compactum.continuous_of_hom /-
 /-- Any morphism of compacta is continuous. -/
 theorem continuous_of_hom {X Y : Compactum} (f : X ⟶ Y) : Continuous f :=
   by
@@ -420,6 +444,7 @@ theorem continuous_of_hom {X Y : Compactum} (f : X ⟶ Y) : Continuous f :=
   apply le_nhds_of_str_eq
   rw [← str_hom_commute, str_eq_of_le_nhds _ x h]
 #align Compactum.continuous_of_hom Compactum.continuous_of_hom
+-/
 
 #print Compactum.ofTopologicalSpace /-
 /-- Given any compact Hausdorff space, we construct a Compactum. -/
@@ -456,6 +481,7 @@ noncomputable def ofTopologicalSpace (X : Type _) [TopologicalSpace X] [CompactS
 #align Compactum.of_topological_space Compactum.ofTopologicalSpace
 -/
 
+#print Compactum.homOfContinuous /-
 /-- Any continuous map between Compacta is a morphism of compacta. -/
 def homOfContinuous {X Y : Compactum} (f : X → Y) (cont : Continuous f) : X ⟶ Y :=
   { f
@@ -466,6 +492,7 @@ def homOfContinuous {X Y : Compactum} (f : X → Y) (cont : Continuous f) : X �
       have := str_eq_of_le_nhds (Ultrafilter.map f F) _ cont
       simpa only [← this, types_comp_apply, of_type_functor_map] }
 #align Compactum.hom_of_continuous Compactum.homOfContinuous
+-/
 
 end Compactum
 
@@ -495,6 +522,7 @@ theorem faithful : Faithful compactumToCompHaus :=
 #align Compactum_to_CompHaus.faithful compactumToCompHaus.faithful
 -/
 
+#print compactumToCompHaus.isoOfTopologicalSpace /-
 /-- This definition is used to prove essential surjectivity of Compactum_to_CompHaus. -/
 def isoOfTopologicalSpace {D : CompHaus} :
     compactumToCompHaus.obj (Compactum.ofTopologicalSpace D) ≅ D
@@ -508,6 +536,7 @@ def isoOfTopologicalSpace {D : CompHaus} :
       continuous_toFun :=
         continuous_def.2 fun _ h1 => by rw [isOpen_iff_ultrafilter']; intro _ h2; exact h1 _ h2 }
 #align Compactum_to_CompHaus.iso_of_topological_space compactumToCompHaus.isoOfTopologicalSpace
+-/
 
 #print compactumToCompHaus.essSurj /-
 /-- The functor Compactum_to_CompHaus is essentially surjective. -/

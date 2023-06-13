@@ -88,6 +88,7 @@ instance (priority := 100) ContinuousSMul.continuousConstSMul : ContinuousConstS
 #align has_continuous_vadd.has_continuous_const_vadd ContinuousVAdd.continuousConstVAdd
 -/
 
+#print Filter.Tendsto.smul /-
 @[to_additive]
 theorem Filter.Tendsto.smul {f : α → M} {g : α → X} {l : Filter α} {c : M} {a : X}
     (hf : Tendsto f l (𝓝 c)) (hg : Tendsto g l (𝓝 a)) :
@@ -95,41 +96,52 @@ theorem Filter.Tendsto.smul {f : α → M} {g : α → X} {l : Filter α} {c : M
   (continuous_smul.Tendsto _).comp (hf.prod_mk_nhds hg)
 #align filter.tendsto.smul Filter.Tendsto.smul
 #align filter.tendsto.vadd Filter.Tendsto.vadd
+-/
 
+#print Filter.Tendsto.smul_const /-
 @[to_additive]
 theorem Filter.Tendsto.smul_const {f : α → M} {l : Filter α} {c : M} (hf : Tendsto f l (𝓝 c))
     (a : X) : Tendsto (fun x => f x • a) l (𝓝 (c • a)) :=
   hf.smul tendsto_const_nhds
 #align filter.tendsto.smul_const Filter.Tendsto.smul_const
 #align filter.tendsto.vadd_const Filter.Tendsto.vadd_const
+-/
 
 variable {f : Y → M} {g : Y → X} {b : Y} {s : Set Y}
 
+#print ContinuousWithinAt.smul /-
 @[to_additive]
 theorem ContinuousWithinAt.smul (hf : ContinuousWithinAt f s b) (hg : ContinuousWithinAt g s b) :
     ContinuousWithinAt (fun x => f x • g x) s b :=
   hf.smul hg
 #align continuous_within_at.smul ContinuousWithinAt.smul
 #align continuous_within_at.vadd ContinuousWithinAt.vadd
+-/
 
+#print ContinuousAt.smul /-
 @[to_additive]
 theorem ContinuousAt.smul (hf : ContinuousAt f b) (hg : ContinuousAt g b) :
     ContinuousAt (fun x => f x • g x) b :=
   hf.smul hg
 #align continuous_at.smul ContinuousAt.smul
 #align continuous_at.vadd ContinuousAt.vadd
+-/
 
+#print ContinuousOn.smul /-
 @[to_additive]
 theorem ContinuousOn.smul (hf : ContinuousOn f s) (hg : ContinuousOn g s) :
     ContinuousOn (fun x => f x • g x) s := fun x hx => (hf x hx).smul (hg x hx)
 #align continuous_on.smul ContinuousOn.smul
 #align continuous_on.vadd ContinuousOn.vadd
+-/
 
+#print Continuous.smul /-
 @[continuity, to_additive]
 theorem Continuous.smul (hf : Continuous f) (hg : Continuous g) : Continuous fun x => f x • g x :=
   continuous_smul.comp (hf.prod_mk hg)
 #align continuous.smul Continuous.smul
 #align continuous.vadd Continuous.vadd
+-/
 
 #print ContinuousSMul.op /-
 /-- If a scalar action is central, then its right action is continuous when its left action is. -/
@@ -159,6 +171,7 @@ section Monoid
 
 variable [Monoid M] [MulAction M X] [ContinuousSMul M X]
 
+#print Units.continuousSMul /-
 @[to_additive]
 instance Units.continuousSMul : ContinuousSMul Mˣ X
     where continuous_smul :=
@@ -166,6 +179,7 @@ instance Units.continuousSMul : ContinuousSMul Mˣ X
       continuous_smul.comp ((Units.continuous_val.comp continuous_fst).prod_mk continuous_snd)
 #align units.has_continuous_smul Units.continuousSMul
 #align add_units.has_continuous_vadd AddUnits.continuousVAdd
+-/
 
 end Monoid
 
@@ -188,6 +202,7 @@ section LatticeOps
 
 variable {ι : Sort _} {M X : Type _} [TopologicalSpace M] [SMul M X]
 
+#print continuousSMul_sInf /-
 @[to_additive]
 theorem continuousSMul_sInf {ts : Set (TopologicalSpace X)}
     (h : ∀ t ∈ ts, @ContinuousSMul M X _ _ t) : @ContinuousSMul M X _ _ (sInf ts) :=
@@ -199,20 +214,25 @@ theorem continuousSMul_sInf {ts : Set (TopologicalSpace X)}
           continuous_sInf_dom₂ (Eq.refl _) ht (@ContinuousSMul.continuous_smul _ _ _ _ t (h t ht)) }
 #align has_continuous_smul_Inf continuousSMul_sInf
 #align has_continuous_vadd_Inf continuousVAdd_sInf
+-/
 
+#print continuousSMul_iInf /-
 @[to_additive]
 theorem continuousSMul_iInf {ts' : ι → TopologicalSpace X}
     (h : ∀ i, @ContinuousSMul M X _ _ (ts' i)) : @ContinuousSMul M X _ _ (⨅ i, ts' i) :=
   continuousSMul_sInf <| Set.forall_range_iff.mpr h
 #align has_continuous_smul_infi continuousSMul_iInf
 #align has_continuous_vadd_infi continuousVAdd_iInf
+-/
 
+#print continuousSMul_inf /-
 @[to_additive]
 theorem continuousSMul_inf {t₁ t₂ : TopologicalSpace X} [@ContinuousSMul M X _ _ t₁]
     [@ContinuousSMul M X _ _ t₂] : @ContinuousSMul M X _ _ (t₁ ⊓ t₂) := by rw [inf_eq_iInf];
   refine' continuousSMul_iInf fun b => _; cases b <;> assumption
 #align has_continuous_smul_inf continuousSMul_inf
 #align has_continuous_vadd_inf continuousVAdd_inf
+-/
 
 end LatticeOps
 
@@ -222,8 +242,7 @@ variable (G : Type _) (P : Type _) [AddGroup G] [AddTorsor G P] [TopologicalSpac
 
 variable [PreconnectedSpace G] [TopologicalSpace P] [ContinuousVAdd G P]
 
-include G
-
+#print AddTorsor.connectedSpace /-
 /-- An `add_torsor` for a connected space is a connected space. This is not an instance because
 it loops for a group as a torsor over itself. -/
 protected theorem AddTorsor.connectedSpace : ConnectedSpace P :=
@@ -235,6 +254,7 @@ protected theorem AddTorsor.connectedSpace : ConnectedSpace P :=
       rw [Set.image_univ, Equiv.range_eq_univ]
     to_nonempty := inferInstance }
 #align add_torsor.connected_space AddTorsor.connectedSpace
+-/
 
 end AddTorsor
 

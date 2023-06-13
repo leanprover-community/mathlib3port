@@ -139,9 +139,11 @@ def Integral : Giry.Algebra where
 
 end MeasCat
 
+#print TopCat.hasForgetToMeasCat /-
 instance TopCat.hasForgetToMeasCat : HasForget₂ TopCat.{u} MeasCat.{u} :=
   BundledHom.mkHasForget₂ borel (fun X Y f => ⟨f.1, f.2.borel_measurable⟩) (by intros <;> rfl)
 #align Top.has_forget_to_Meas TopCat.hasForgetToMeasCat
+-/
 
 #print Borel /-
 /-- The Borel functor, the canonical embedding of topological spaces into measurable spaces. -/

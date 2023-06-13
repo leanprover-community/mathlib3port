@@ -98,37 +98,49 @@ section Pi
 variable {ι : Type _} [Fintype ι] {E' : ι → Type _} [∀ i, NormedAddCommGroup (E' i)]
   [∀ i, NormedSpace 𝕜 (E' i)] {φ : 𝕜 → ∀ i, E' i} {φ' : ∀ i, E' i}
 
+#print hasStrictDerivAt_pi /-
 @[simp]
 theorem hasStrictDerivAt_pi :
     HasStrictDerivAt φ φ' x ↔ ∀ i, HasStrictDerivAt (fun x => φ x i) (φ' i) x :=
   hasStrictFDerivAt_pi'
 #align has_strict_deriv_at_pi hasStrictDerivAt_pi
+-/
 
+#print hasDerivAtFilter_pi /-
 @[simp]
 theorem hasDerivAtFilter_pi :
     HasDerivAtFilter φ φ' x L ↔ ∀ i, HasDerivAtFilter (fun x => φ x i) (φ' i) x L :=
   hasFDerivAtFilter_pi'
 #align has_deriv_at_filter_pi hasDerivAtFilter_pi
+-/
 
+#print hasDerivAt_pi /-
 theorem hasDerivAt_pi : HasDerivAt φ φ' x ↔ ∀ i, HasDerivAt (fun x => φ x i) (φ' i) x :=
   hasDerivAtFilter_pi
 #align has_deriv_at_pi hasDerivAt_pi
+-/
 
+#print hasDerivWithinAt_pi /-
 theorem hasDerivWithinAt_pi :
     HasDerivWithinAt φ φ' s x ↔ ∀ i, HasDerivWithinAt (fun x => φ x i) (φ' i) s x :=
   hasDerivAtFilter_pi
 #align has_deriv_within_at_pi hasDerivWithinAt_pi
+-/
 
+#print derivWithin_pi /-
 theorem derivWithin_pi (h : ∀ i, DifferentiableWithinAt 𝕜 (fun x => φ x i) s x)
     (hs : UniqueDiffWithinAt 𝕜 s x) :
     derivWithin φ s x = fun i => derivWithin (fun x => φ x i) s x :=
   (hasDerivWithinAt_pi.2 fun i => (h i).HasDerivWithinAt).derivWithin hs
 #align deriv_within_pi derivWithin_pi
+-/
 
+#print deriv_pi /-
 theorem deriv_pi (h : ∀ i, DifferentiableAt 𝕜 (fun x => φ x i) x) :
     deriv φ x = fun i => deriv (fun x => φ x i) x :=
   (hasDerivAt_pi.2 fun i => (h i).HasDerivAt).deriv
 #align deriv_pi deriv_pi
+-/
 
 end Pi
 

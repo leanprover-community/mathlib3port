@@ -44,7 +44,6 @@ variable {𝕜 : Type _} [IsROrC 𝕜]
 
 variable {E : Type _} [NormedAddCommGroup E] [InnerProductSpace 𝕜 E]
 
--- mathport name: «expr⟪ , ⟫»
 local notation "⟪" x ", " y "⟫" => @inner 𝕜 _ _ x y
 
 open scoped NNReal
@@ -55,7 +54,6 @@ namespace ContinuousLinearMap
 
 variable (T : E →L[𝕜] E)
 
--- mathport name: exprrayleigh_quotient
 local notation "rayleigh_quotient" => fun x : E => T.reApplyInnerSelf x / ‖(x : E)‖ ^ 2
 
 theorem rayleigh_smul (x : E) {c : 𝕜} (hc : c ≠ 0) :
@@ -121,7 +119,6 @@ theorem LinearMap.IsSymmetric.hasStrictFDerivAt_reApplyInnerSelf {T : F →L[ℝ
 
 variable [CompleteSpace F] {T : F →L[ℝ] F}
 
--- mathport name: exprrayleigh_quotient
 local notation "rayleigh_quotient" => fun x : F => T.reApplyInnerSelf x / ‖(x : F)‖ ^ 2
 
 theorem linearly_dependent_of_isLocalExtrOn (hT : IsSelfAdjoint T) {x₀ : F}
@@ -177,7 +174,6 @@ section CompleteSpace
 
 variable [CompleteSpace E] {T : E →L[𝕜] E}
 
--- mathport name: exprrayleigh_quotient
 local notation "rayleigh_quotient" => fun x : E => T.reApplyInnerSelf x / ‖(x : E)‖ ^ 2
 
 theorem eq_smul_self_of_isLocalExtrOn (hT : IsSelfAdjoint T) {x₀ : E}
@@ -250,8 +246,6 @@ namespace LinearMap
 
 namespace IsSymmetric
 
-include _i
-
 /-- The supremum of the Rayleigh quotient of a symmetric operator `T` on a nontrivial
 finite-dimensional vector space is an eigenvalue for that operator. -/
 theorem hasEigenvalue_iSup_of_finiteDimensional (hT : T.IsSymmetric) :
@@ -295,8 +289,6 @@ theorem hasEigenvalue_iInf_of_finiteDimensional (hT : T.IsSymmetric) :
     simpa [← norm_eq_zero, Ne.def]
   exact has_eigenvalue_of_has_eigenvector (T'.prop.has_eigenvector_of_is_min_on hx₀_ne this)
 #align linear_map.is_symmetric.has_eigenvalue_infi_of_finite_dimensional LinearMap.IsSymmetric.hasEigenvalue_iInf_of_finiteDimensional
-
-omit _i
 
 theorem subsingleton_of_no_eigenvalue_finiteDimensional (hT : T.IsSymmetric)
     (hT' : ∀ μ : 𝕜, Module.End.eigenspace (T : E →ₗ[𝕜] E) μ = ⊥) : Subsingleton E :=

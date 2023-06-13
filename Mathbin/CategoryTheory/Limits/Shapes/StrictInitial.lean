@@ -252,6 +252,7 @@ theorem IsTerminal.subsingleton_to (hI : IsTerminal I) {A : C} : Subsingleton (I
 variable {J : Type v} [SmallCategory J]
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (j «expr ≠ » i) -/
+#print CategoryTheory.Limits.limit_π_isIso_of_is_strict_terminal /-
 /-- If all but one object in a diagram is strict terminal, the the limit is isomorphic to the
 said object via `limit.π`. -/
 theorem limit_π_isIso_of_is_strict_terminal (F : J ⥤ C) [HasLimit F] (i : J)
@@ -276,6 +277,7 @@ theorem limit_π_isIso_of_is_strict_terminal (F : J ⥤ C) [HasLimit F] (i : J)
     · apply (H _ h).hom_ext
   · rw [limit.lift_π]; simpa
 #align category_theory.limits.limit_π_is_iso_of_is_strict_terminal CategoryTheory.Limits.limit_π_isIso_of_is_strict_terminal
+-/
 
 variable [HasTerminal C]
 

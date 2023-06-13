@@ -43,11 +43,13 @@ section InvolutiveInv
 
 variable [InvolutiveInv α] {s : Set α}
 
+#print Set.Finite.inv /-
 @[to_additive]
 theorem Finite.inv (hs : s.Finite) : s⁻¹.Finite :=
   hs.Preimage <| inv_injective.InjOn _
 #align set.finite.inv Set.Finite.inv
 #align set.finite.neg Set.Finite.neg
+-/
 
 end InvolutiveInv
 
@@ -78,12 +80,15 @@ section Monoid
 
 variable [Monoid α] {s t : Set α}
 
+#print Set.decidableMemMul /-
 @[to_additive]
 instance decidableMemMul [Fintype α] [DecidableEq α] [DecidablePred (· ∈ s)]
     [DecidablePred (· ∈ t)] : DecidablePred (· ∈ s * t) := fun _ => decidable_of_iff _ mem_mul.symm
 #align set.decidable_mem_mul Set.decidableMemMul
 #align set.decidable_mem_add Set.decidableMemAdd
+-/
 
+#print Set.decidableMemPow /-
 @[to_additive]
 instance decidableMemPow [Fintype α] [DecidableEq α] [DecidablePred (· ∈ s)] (n : ℕ) :
     DecidablePred (· ∈ s ^ n) := by
@@ -92,6 +97,7 @@ instance decidableMemPow [Fintype α] [DecidableEq α] [DecidablePred (· ∈ s)
   · letI := ih; rw [pow_succ]; infer_instance
 #align set.decidable_mem_pow Set.decidableMemPow
 #align set.decidable_mem_nsmul Set.decidableMemNSMul
+-/
 
 end Monoid
 
@@ -99,11 +105,13 @@ section SMul
 
 variable [SMul α β] {s : Set α} {t : Set β}
 
+#print Set.Finite.smul /-
 @[to_additive]
 theorem Finite.smul : s.Finite → t.Finite → (s • t).Finite :=
   Finite.image2 _
 #align set.finite.smul Set.Finite.smul
 #align set.finite.vadd Set.Finite.vadd
+-/
 
 end SMul
 
@@ -132,8 +140,6 @@ end HasSmulSet
 section Vsub
 
 variable [VSub α β] {s t : Set β}
-
-include α
 
 #print Set.Finite.vsub /-
 theorem Finite.vsub (hs : s.Finite) (ht : t.Finite) : Set.Finite (s -ᵥ t) :=
@@ -196,6 +202,7 @@ namespace Group
 
 variable {G : Type _} [Group G] [Fintype G] (S : Set G)
 
+#print Group.card_pow_eq_card_pow_card_univ /-
 @[to_additive]
 theorem card_pow_eq_card_pow_card_univ [∀ k : ℕ, DecidablePred (· ∈ S ^ k)] :
     ∀ k, Fintype.card G ≤ k → Fintype.card ↥(S ^ k) = Fintype.card ↥(S ^ Fintype.card G) :=
@@ -226,6 +233,7 @@ theorem card_pow_eq_card_pow_card_univ [∀ k : ℕ, DecidablePred (· ∈ S ^ k
   rwa [set.mem_singleton_iff.mp hb, inv_mul_cancel_left]
 #align group.card_pow_eq_card_pow_card_univ Group.card_pow_eq_card_pow_card_univ
 #align add_group.card_nsmul_eq_card_nsmul_card_univ AddGroup.card_nsmul_eq_card_nsmul_card_univ
+-/
 
 end Group
 

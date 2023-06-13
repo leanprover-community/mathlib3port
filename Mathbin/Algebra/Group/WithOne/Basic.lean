@@ -55,6 +55,7 @@ attribute [local semireducible] WithOne WithZero
 
 variable [Mul α] [MulOneClass β]
 
+#print WithOne.lift /-
 /-- Lift a semigroup homomorphism `f` to a bundled monoid homorphism. -/
 @[to_additive "Lift an add_semigroup homomorphism `f` to a bundled add_monoid homorphism."]
 def lift : (α →ₙ* β) ≃ (WithOne α →* β)
@@ -70,20 +71,25 @@ def lift : (α →ₙ* β) ≃ (WithOne α →* β)
   right_inv F := MonoidHom.ext fun x => WithOne.cases_on x F.map_one.symm fun x => rfl
 #align with_one.lift WithOne.lift
 #align with_zero.lift WithZero.lift
+-/
 
 variable (f : α →ₙ* β)
 
+#print WithOne.lift_coe /-
 @[simp, to_additive]
 theorem lift_coe (x : α) : lift f x = f x :=
   rfl
 #align with_one.lift_coe WithOne.lift_coe
 #align with_zero.lift_coe WithZero.lift_coe
+-/
 
+#print WithOne.lift_one /-
 @[simp, to_additive]
 theorem lift_one : lift f 1 = 1 :=
   rfl
 #align with_one.lift_one WithOne.lift_one
 #align with_zero.lift_zero WithZero.lift_zero
+-/
 
 #print WithOne.lift_unique /-
 @[to_additive]
@@ -110,11 +116,13 @@ def map (f : α →ₙ* β) : WithOne α →* WithOne β :=
 #align with_zero.map WithZero.map
 -/
 
+#print WithOne.map_coe /-
 @[simp, to_additive]
 theorem map_coe (f : α →ₙ* β) (a : α) : map f (a : WithOne α) = f a :=
   lift_coe _ _
 #align with_one.map_coe WithOne.map_coe
 #align with_zero.map_coe WithZero.map_coe
+-/
 
 #print WithOne.map_id /-
 @[simp, to_additive]
@@ -124,11 +132,13 @@ theorem map_id : map (MulHom.id α) = MonoidHom.id (WithOne α) := by ext;
 #align with_zero.map_id WithZero.map_id
 -/
 
+#print WithOne.map_map /-
 @[to_additive]
 theorem map_map (f : α →ₙ* β) (g : β →ₙ* γ) (x) : map g (map f x) = map (g.comp f) x := by
   induction x using WithOne.cases_on <;> rfl
 #align with_one.map_map WithOne.map_map
 #align with_zero.map_map WithZero.map_map
+-/
 
 #print WithOne.map_comp /-
 @[simp, to_additive]

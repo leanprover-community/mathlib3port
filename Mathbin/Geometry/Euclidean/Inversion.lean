@@ -38,8 +38,6 @@ namespace EuclideanGeometry
 variable {V P : Type _} [NormedAddCommGroup V] [InnerProductSpace ℝ V] [MetricSpace P]
   [NormedAddTorsor V P] {a b c d x y z : P} {R : ℝ}
 
-include V
-
 #print EuclideanGeometry.inversion /-
 /-- Inversion in a sphere in an affine space. This map sends each point `x` to the point `y` such
 that `y -ᵥ c = (R / dist x c) ^ 2 • (x -ᵥ c)`, where `c` and `R` are the center and the radius the
@@ -49,10 +47,12 @@ def inversion (c : P) (R : ℝ) (x : P) : P :=
 #align euclidean_geometry.inversion EuclideanGeometry.inversion
 -/
 
+#print EuclideanGeometry.inversion_vsub_center /-
 theorem inversion_vsub_center (c : P) (R : ℝ) (x : P) :
     inversion c R x -ᵥ c = (R / dist x c) ^ 2 • (x -ᵥ c) :=
   vadd_vsub _ _
 #align euclidean_geometry.inversion_vsub_center EuclideanGeometry.inversion_vsub_center
+-/
 
 #print EuclideanGeometry.inversion_self /-
 @[simp]
@@ -77,6 +77,7 @@ theorem inversion_of_mem_sphere (h : x ∈ Metric.sphere c R) : inversion c R x 
 #align euclidean_geometry.inversion_of_mem_sphere EuclideanGeometry.inversion_of_mem_sphere
 -/
 
+#print EuclideanGeometry.dist_inversion_center /-
 /-- Distance from the image of a point under inversion to the center. This formula accidentally
 works for `x = c`. -/
 theorem dist_inversion_center (c x : P) (R : ℝ) : dist (inversion c R x) c = R ^ 2 / dist x c :=
@@ -85,13 +86,17 @@ theorem dist_inversion_center (c x : P) (R : ℝ) : dist (inversion c R x) c = R
   have : dist x c ≠ 0 := dist_ne_zero.2 hx
   field_simp [inversion, norm_smul, abs_div, ← dist_eq_norm_vsub, sq, mul_assoc]
 #align euclidean_geometry.dist_inversion_center EuclideanGeometry.dist_inversion_center
+-/
 
+#print EuclideanGeometry.dist_center_inversion /-
 /-- Distance from the center of an inversion to the image of a point under the inversion. This
 formula accidentally works for `x = c`. -/
 theorem dist_center_inversion (c x : P) (R : ℝ) : dist c (inversion c R x) = R ^ 2 / dist c x := by
   rw [dist_comm c, dist_comm c, dist_inversion_center]
 #align euclidean_geometry.dist_center_inversion EuclideanGeometry.dist_center_inversion
+-/
 
+#print EuclideanGeometry.inversion_inversion /-
 @[simp]
 theorem inversion_inversion (c : P) {R : ℝ} (hR : R ≠ 0) (x : P) :
     inversion c R (inversion c R x) = x :=
@@ -103,23 +108,33 @@ theorem inversion_inversion (c : P) {R : ℝ} (hR : R ≠ 0) (x : P) :
       vsub_vadd]
     exact pow_ne_zero _ hR
 #align euclidean_geometry.inversion_inversion EuclideanGeometry.inversion_inversion
+-/
 
+#print EuclideanGeometry.inversion_involutive /-
 theorem inversion_involutive (c : P) {R : ℝ} (hR : R ≠ 0) : Involutive (inversion c R) :=
   inversion_inversion c hR
 #align euclidean_geometry.inversion_involutive EuclideanGeometry.inversion_involutive
+-/
 
+#print EuclideanGeometry.inversion_surjective /-
 theorem inversion_surjective (c : P) {R : ℝ} (hR : R ≠ 0) : Surjective (inversion c R) :=
   (inversion_involutive c hR).Surjective
 #align euclidean_geometry.inversion_surjective EuclideanGeometry.inversion_surjective
+-/
 
+#print EuclideanGeometry.inversion_injective /-
 theorem inversion_injective (c : P) {R : ℝ} (hR : R ≠ 0) : Injective (inversion c R) :=
   (inversion_involutive c hR).Injective
 #align euclidean_geometry.inversion_injective EuclideanGeometry.inversion_injective
+-/
 
+#print EuclideanGeometry.inversion_bijective /-
 theorem inversion_bijective (c : P) {R : ℝ} (hR : R ≠ 0) : Bijective (inversion c R) :=
   (inversion_involutive c hR).Bijective
 #align euclidean_geometry.inversion_bijective EuclideanGeometry.inversion_bijective
+-/
 
+#print EuclideanGeometry.dist_inversion_inversion /-
 /-- Distance between the images of two points under an inversion. -/
 theorem dist_inversion_inversion (hx : x ≠ c) (hy : y ≠ c) (R : ℝ) :
     dist (inversion c R x) (inversion c R y) = R ^ 2 / (dist x c * dist y c) * dist x y :=
@@ -129,7 +144,9 @@ theorem dist_inversion_inversion (hx : x ≠ c) (hy : y ≠ c) (R : ℝ) :
   simpa only [dist_vsub_cancel_right] using
     dist_div_norm_sq_smul (vsub_ne_zero.2 hx) (vsub_ne_zero.2 hy) R
 #align euclidean_geometry.dist_inversion_inversion EuclideanGeometry.dist_inversion_inversion
+-/
 
+#print EuclideanGeometry.mul_dist_le_mul_dist_add_mul_dist /-
 /-- **Ptolemy's inequality**: in a quadrangle `ABCD`, `|AC| * |BD| ≤ |AB| * |CD| + |BC| * |AD|`. If
 `ABCD` is a convex cyclic polygon, then this inequality becomes an equality, see
 `euclidean_geometry.mul_dist_add_mul_dist_eq_mul_dist_of_cospherical`.  -/
@@ -153,6 +170,7 @@ theorem mul_dist_le_mul_dist_add_mul_dist (a b c d : P) :
   rw [← div_le_div_right (mul_pos hb (mul_pos hc hd))]
   convert H <;> · field_simp [hb.ne', hc.ne', hd.ne', dist_comm a]; ring
 #align euclidean_geometry.mul_dist_le_mul_dist_add_mul_dist EuclideanGeometry.mul_dist_le_mul_dist_add_mul_dist
+-/
 
 end EuclideanGeometry
 

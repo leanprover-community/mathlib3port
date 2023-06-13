@@ -34,8 +34,6 @@ namespace AddCircle
 
 variable {T : ℝ} [hT : Fact (0 < T)]
 
-include hT
-
 theorem closedBall_ae_eq_ball {x : AddCircle T} {ε : ℝ} : closedBall x ε =ᵐ[volume] ball x ε :=
   by
   cases' le_or_lt ε 0 with hε hε

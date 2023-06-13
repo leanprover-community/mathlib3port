@@ -59,7 +59,6 @@ structure PEquiv (α : Type u) (β : Type v) where
 #align pequiv PEquiv
 -/
 
--- mathport name: «expr ≃. »
 infixr:25 " ≃. " => PEquiv
 
 namespace PEquiv
@@ -522,9 +521,11 @@ instance : PartialOrder (α ≃. β)
         · exact eq_none_iff_forall_not_mem.2 fun b hb => Option.not_mem_none b <| h ▸ fg a b hb
         · exact gf _ _ h)
 
+#print PEquiv.le_def /-
 theorem le_def {f g : α ≃. β} : f ≤ g ↔ ∀ (a : α) (b : β), b ∈ f a → b ∈ g a :=
   Iff.rfl
 #align pequiv.le_def PEquiv.le_def
+-/
 
 instance : OrderBot (α ≃. β) :=
   { PEquiv.hasBot with bot_le := fun _ _ _ h => (not_mem_none _ h).elim }
@@ -582,18 +583,24 @@ theorem toPEquiv_refl : (Equiv.refl α).toPEquiv = PEquiv.refl α :=
 #align equiv.to_pequiv_refl Equiv.toPEquiv_refl
 -/
 
+#print Equiv.toPEquiv_trans /-
 theorem toPEquiv_trans (f : α ≃ β) (g : β ≃ γ) :
     (f.trans g).toPEquiv = f.toPEquiv.trans g.toPEquiv :=
   rfl
 #align equiv.to_pequiv_trans Equiv.toPEquiv_trans
+-/
 
+#print Equiv.toPEquiv_symm /-
 theorem toPEquiv_symm (f : α ≃ β) : f.symm.toPEquiv = f.toPEquiv.symm :=
   rfl
 #align equiv.to_pequiv_symm Equiv.toPEquiv_symm
+-/
 
+#print Equiv.toPEquiv_apply /-
 theorem toPEquiv_apply (f : α ≃ β) (x : α) : f.toPEquiv x = some (f x) :=
   rfl
 #align equiv.to_pequiv_apply Equiv.toPEquiv_apply
+-/
 
 end Equiv
 

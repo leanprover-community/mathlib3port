@@ -140,6 +140,7 @@ theorem hyperoperation_ge_three_one (n : ℕ) : ∀ k : ℕ, hyperoperation (n +
 #align hyperoperation_ge_three_one hyperoperation_ge_three_one
 -/
 
+#print hyperoperation_ge_four_zero /-
 theorem hyperoperation_ge_four_zero (n k : ℕ) :
     hyperoperation (n + 4) 0 k = if Even k then 1 else 0 :=
   by
@@ -153,4 +154,5 @@ theorem hyperoperation_ge_four_zero (n k : ℕ) :
     · exact hyperoperation_ge_two_eq_self (n + 1) 0
     · exact hyperoperation_ge_three_eq_one n 0
 #align hyperoperation_ge_four_zero hyperoperation_ge_four_zero
+-/
 

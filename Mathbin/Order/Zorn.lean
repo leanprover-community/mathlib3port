@@ -73,7 +73,6 @@ open Classical Set
 
 variable {α β : Type _} {r : α → α → Prop} {c : Set α}
 
--- mathport name: «expr ≺ »
 local infixl:50 " ≺ " => r
 
 #print exists_maximal_of_chains_bounded /-
@@ -125,6 +124,7 @@ theorem zorn_nonempty_preorder [Nonempty α]
 -/
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (c «expr ⊆ » s) -/
+#print zorn_preorder₀ /-
 theorem zorn_preorder₀ (s : Set α)
     (ih : ∀ (c) (_ : c ⊆ s), IsChain (· ≤ ·) c → ∃ ub ∈ s, ∀ z ∈ c, z ≤ ub) :
     ∃ m ∈ s, ∀ z ∈ s, m ≤ z → z ≤ m :=
@@ -138,8 +138,10 @@ theorem zorn_preorder₀ (s : Set α)
       ⟨⟨ub, hubs⟩, fun ⟨y, hy⟩ hc => hub _ ⟨_, hc, rfl⟩⟩
   ⟨m, hms, fun z hzs hmz => h ⟨z, hzs⟩ hmz⟩
 #align zorn_preorder₀ zorn_preorder₀
+-/
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (c «expr ⊆ » s) -/
+#print zorn_nonempty_preorder₀ /-
 theorem zorn_nonempty_preorder₀ (s : Set α)
     (ih : ∀ (c) (_ : c ⊆ s), IsChain (· ≤ ·) c → ∀ y ∈ c, ∃ ub ∈ s, ∀ z ∈ c, z ≤ ub) (x : α)
     (hxs : x ∈ s) : ∃ m ∈ s, x ≤ m ∧ ∀ z ∈ s, m ≤ z → z ≤ m :=
@@ -151,6 +153,7 @@ theorem zorn_nonempty_preorder₀ (s : Set α)
     · rcases ih c (fun z hz => (hcs hz).1) hc y hy with ⟨z, hzs, hz⟩
       exact ⟨z, ⟨hzs, (hcs hy).2.trans <| hz _ hy⟩, hz⟩
 #align zorn_nonempty_preorder₀ zorn_nonempty_preorder₀
+-/
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (c «expr ⊆ » Ici[set.Ici] a) -/
 #print zorn_nonempty_Ici₀ /-
@@ -185,50 +188,62 @@ theorem zorn_nonempty_partialOrder [Nonempty α]
 -/
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (c «expr ⊆ » s) -/
+#print zorn_partialOrder₀ /-
 theorem zorn_partialOrder₀ (s : Set α)
     (ih : ∀ (c) (_ : c ⊆ s), IsChain (· ≤ ·) c → ∃ ub ∈ s, ∀ z ∈ c, z ≤ ub) :
     ∃ m ∈ s, ∀ z ∈ s, m ≤ z → z = m :=
   let ⟨m, hms, hm⟩ := zorn_preorder₀ s ih
   ⟨m, hms, fun z hzs hmz => (hm z hzs hmz).antisymm hmz⟩
 #align zorn_partial_order₀ zorn_partialOrder₀
+-/
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (c «expr ⊆ » s) -/
+#print zorn_nonempty_partialOrder₀ /-
 theorem zorn_nonempty_partialOrder₀ (s : Set α)
     (ih : ∀ (c) (_ : c ⊆ s), IsChain (· ≤ ·) c → ∀ y ∈ c, ∃ ub ∈ s, ∀ z ∈ c, z ≤ ub) (x : α)
     (hxs : x ∈ s) : ∃ m ∈ s, x ≤ m ∧ ∀ z ∈ s, m ≤ z → z = m :=
   let ⟨m, hms, hxm, hm⟩ := zorn_nonempty_preorder₀ s ih x hxs
   ⟨m, hms, hxm, fun z hzs hmz => (hm z hzs hmz).antisymm hmz⟩
 #align zorn_nonempty_partial_order₀ zorn_nonempty_partialOrder₀
+-/
 
 end PartialOrder
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (c «expr ⊆ » S) -/
+#print zorn_subset /-
 theorem zorn_subset (S : Set (Set α))
     (h : ∀ (c) (_ : c ⊆ S), IsChain (· ⊆ ·) c → ∃ ub ∈ S, ∀ s ∈ c, s ⊆ ub) :
     ∃ m ∈ S, ∀ a ∈ S, m ⊆ a → a = m :=
   zorn_partialOrder₀ S h
 #align zorn_subset zorn_subset
+-/
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (c «expr ⊆ » S) -/
+#print zorn_subset_nonempty /-
 theorem zorn_subset_nonempty (S : Set (Set α))
     (H : ∀ (c) (_ : c ⊆ S), IsChain (· ⊆ ·) c → c.Nonempty → ∃ ub ∈ S, ∀ s ∈ c, s ⊆ ub) (x)
     (hx : x ∈ S) : ∃ m ∈ S, x ⊆ m ∧ ∀ a ∈ S, m ⊆ a → a = m :=
   zorn_nonempty_partialOrder₀ _ (fun c cS hc y yc => H _ cS hc ⟨y, yc⟩) _ hx
 #align zorn_subset_nonempty zorn_subset_nonempty
+-/
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (c «expr ⊆ » S) -/
+#print zorn_superset /-
 theorem zorn_superset (S : Set (Set α))
     (h : ∀ (c) (_ : c ⊆ S), IsChain (· ⊆ ·) c → ∃ lb ∈ S, ∀ s ∈ c, lb ⊆ s) :
     ∃ m ∈ S, ∀ a ∈ S, a ⊆ m → a = m :=
   @zorn_partialOrder₀ (Set α)ᵒᵈ _ S fun c cS hc => h c cS hc.symm
 #align zorn_superset zorn_superset
+-/
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (c «expr ⊆ » S) -/
+#print zorn_superset_nonempty /-
 theorem zorn_superset_nonempty (S : Set (Set α))
     (H : ∀ (c) (_ : c ⊆ S), IsChain (· ⊆ ·) c → c.Nonempty → ∃ lb ∈ S, ∀ s ∈ c, lb ⊆ s) (x)
     (hx : x ∈ S) : ∃ m ∈ S, m ⊆ x ∧ ∀ a ∈ S, a ⊆ m → a = m :=
   @zorn_nonempty_partialOrder₀ (Set α)ᵒᵈ _ S (fun c cS hc y yc => H _ cS hc.symm ⟨y, yc⟩) _ hx
 #align zorn_superset_nonempty zorn_superset_nonempty
+-/
 
 #print IsChain.exists_maxChain /-
 /-- Every chain is contained in a maximal chain. This generalizes Hausdorff's maximality principle.

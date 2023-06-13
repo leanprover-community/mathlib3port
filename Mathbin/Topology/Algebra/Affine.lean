@@ -39,6 +39,7 @@ section Ring
 
 variable [Ring R] [Module R E] [Module R F]
 
+#print AffineMap.continuous_iff /-
 /-- An affine map is continuous iff its underlying linear map is continuous. See also
 `affine_map.continuous_linear_iff`. -/
 theorem continuous_iff {f : E →ᵃ[R] F} : Continuous f ↔ Continuous f.linear :=
@@ -53,7 +54,9 @@ theorem continuous_iff {f : E →ᵃ[R] F} : Continuous f ↔ Continuous f.linea
     have := hc.add continuous_const
     exact this
 #align affine_map.continuous_iff AffineMap.continuous_iff
+-/
 
+#print AffineMap.lineMap_continuous /-
 /-- The line map is continuous. -/
 @[continuity]
 theorem lineMap_continuous [TopologicalSpace R] [ContinuousSMul R F] {p v : F} :
@@ -61,6 +64,7 @@ theorem lineMap_continuous [TopologicalSpace R] [ContinuousSMul R F] {p v : F} :
   continuous_iff.mpr <|
     (continuous_id.smul continuous_const).add <| @continuous_const _ _ _ _ (0 : F)
 #align affine_map.line_map_continuous AffineMap.lineMap_continuous
+-/
 
 end Ring
 
@@ -84,10 +88,12 @@ section Field
 
 variable [Field R] [Module R F] [ContinuousConstSMul R F]
 
+#print AffineMap.homothety_isOpenMap /-
 theorem homothety_isOpenMap (x : F) (t : R) (ht : t ≠ 0) : IsOpenMap <| homothety x t := by
   apply IsOpenMap.of_inverse (homothety_continuous x t⁻¹) <;> intro e <;>
     simp [← AffineMap.comp_apply, ← homothety_mul, ht]
 #align affine_map.homothety_is_open_map AffineMap.homothety_isOpenMap
+-/
 
 end Field
 

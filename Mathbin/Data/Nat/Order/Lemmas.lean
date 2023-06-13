@@ -49,10 +49,12 @@ instance Subtype.semilatticeSup (s : Set ℕ) : SemilatticeSup s :=
 #align nat.subtype.semilattice_sup Nat.Subtype.semilatticeSup
 -/
 
+#print Nat.Subtype.coe_bot /-
 theorem Subtype.coe_bot {s : Set ℕ} [DecidablePred (· ∈ s)] [h : Nonempty s] :
     ((⊥ : s) : ℕ) = Nat.find (nonempty_subtype.1 h) :=
   rfl
 #align nat.subtype.coe_bot Nat.Subtype.coe_bot
+-/
 
 #print Nat.set_eq_univ /-
 theorem set_eq_univ {S : Set ℕ} : S = Set.univ ↔ 0 ∈ S ∧ ∀ k : ℕ, k ∈ S → k + 1 ∈ S :=
@@ -143,6 +145,7 @@ theorem dvd_sub' {k m n : ℕ} (h₁ : k ∣ m) (h₂ : k ∣ n) : k ∣ m - n :
 #align nat.dvd_sub' Nat.dvd_sub'
 -/
 
+#print Nat.succ_div /-
 theorem succ_div : ∀ a b : ℕ, (a + 1) / b = a / b + if b ∣ a + 1 then 1 else 0
   | a, 0 => by simp
   | 0, 1 => by simp
@@ -171,6 +174,7 @@ theorem succ_div : ∀ a b : ℕ, (a + 1) / b = a / b + if b ∣ a + 1 then 1 el
         hb_le_a1 (le_of_succ_le_succ (le_of_dvd (succ_pos _) h))
       simp [hba, hb_le_a1, hb_dvd_a]
 #align nat.succ_div Nat.succ_div
+-/
 
 #print Nat.succ_div_of_dvd /-
 theorem succ_div_of_dvd {a b : ℕ} (hba : b ∣ a + 1) : (a + 1) / b = a / b + 1 := by

@@ -31,6 +31,7 @@ section Monoid
 
 variable [Monoid α] [Monoid β] [MonoidHomClass F α β]
 
+#print Set.image_list_prod /-
 @[to_additive]
 theorem image_list_prod (f : F) :
     ∀ l : List (Set α), (f : α → β) '' l.Prod = (l.map fun s => f '' s).Prod
@@ -38,6 +39,7 @@ theorem image_list_prod (f : F) :
   | a :: as => by rw [List.map_cons, List.prod_cons, List.prod_cons, image_mul, image_list_prod]
 #align set.image_list_prod Set.image_list_prod
 #align set.image_list_sum Set.image_list_sum
+-/
 
 end Monoid
 
@@ -45,6 +47,7 @@ section CommMonoid
 
 variable [CommMonoid α] [CommMonoid β] [MonoidHomClass F α β]
 
+#print Set.image_multiset_prod /-
 @[to_additive]
 theorem image_multiset_prod (f : F) :
     ∀ m : Multiset (Set α), (f : α → β) '' m.Prod = (m.map fun s => f '' s).Prod :=
@@ -53,14 +56,18 @@ theorem image_multiset_prod (f : F) :
       image_list_prod f
 #align set.image_multiset_prod Set.image_multiset_prod
 #align set.image_multiset_sum Set.image_multiset_sum
+-/
 
+#print Set.image_finset_prod /-
 @[to_additive]
 theorem image_finset_prod (f : F) (m : Finset ι) (s : ι → Set α) :
     (f : α → β) '' ∏ i in m, s i = ∏ i in m, f '' s i :=
   (image_multiset_prod f _).trans <| congr_arg Multiset.prod <| Multiset.map_map _ _ _
 #align set.image_finset_prod Set.image_finset_prod
 #align set.image_finset_sum Set.image_finset_sum
+-/
 
+#print Set.mem_finset_prod /-
 /-- The n-ary version of `set.mem_mul`. -/
 @[to_additive " The n-ary version of `set.mem_add`. "]
 theorem mem_finset_prod (t : Finset ι) (f : ι → Set α) (a : α) :
@@ -85,7 +92,9 @@ theorem mem_finset_prod (t : Finset ι) (f : ι → Set α) (a : α) :
         ⟨g, fun i hi => hg (Finset.mem_insert_of_mem hi), rfl⟩, rfl⟩
 #align set.mem_finset_prod Set.mem_finset_prod
 #align set.mem_finset_sum Set.mem_finset_sum
+-/
 
+#print Set.mem_fintype_prod /-
 /-- A version of `set.mem_finset_prod` with a simpler RHS for products over a fintype. -/
 @[to_additive " A version of `set.mem_finset_sum` with a simpler RHS for sums over a fintype. "]
 theorem mem_fintype_prod [Fintype ι] (f : ι → Set α) (a : α) :
@@ -93,7 +102,9 @@ theorem mem_fintype_prod [Fintype ι] (f : ι → Set α) (a : α) :
   simp
 #align set.mem_fintype_prod Set.mem_fintype_prod
 #align set.mem_fintype_sum Set.mem_fintype_sum
+-/
 
+#print Set.list_prod_mem_list_prod /-
 /-- An n-ary version of `set.mul_mem_mul`. -/
 @[to_additive " An n-ary version of `set.add_mem_add`. "]
 theorem list_prod_mem_list_prod (t : List ι) (f : ι → Set α) (g : ι → α) (hg : ∀ i ∈ t, g i ∈ f i) :
@@ -107,7 +118,9 @@ theorem list_prod_mem_list_prod (t : List ι) (f : ι → Set α) (g : ι → α
         (ih fun i hi => hg i <| List.mem_cons_of_mem _ hi)
 #align set.list_prod_mem_list_prod Set.list_prod_mem_list_prod
 #align set.list_sum_mem_list_sum Set.list_sum_mem_list_sum
+-/
 
+#print Set.list_prod_subset_list_prod /-
 /-- An n-ary version of `set.mul_subset_mul`. -/
 @[to_additive " An n-ary version of `set.add_subset_add`. "]
 theorem list_prod_subset_list_prod (t : List ι) (f₁ f₂ : ι → Set α) (hf : ∀ i ∈ t, f₁ i ⊆ f₂ i) :
@@ -121,14 +134,18 @@ theorem list_prod_subset_list_prod (t : List ι) (f₁ f₂ : ι → Set α) (hf
         (ih fun i hi => hf i <| List.mem_cons_of_mem _ hi)
 #align set.list_prod_subset_list_prod Set.list_prod_subset_list_prod
 #align set.list_sum_subset_list_sum Set.list_sum_subset_list_sum
+-/
 
+#print Set.list_prod_singleton /-
 @[to_additive]
 theorem list_prod_singleton {M : Type _} [CommMonoid M] (s : List M) :
     (s.map fun i => ({i} : Set M)).Prod = {s.Prod} :=
   (map_list_prod (singletonMonoidHom : M →* Set M) _).symm
 #align set.list_prod_singleton Set.list_prod_singleton
 #align set.list_sum_singleton Set.list_sum_singleton
+-/
 
+#print Set.multiset_prod_mem_multiset_prod /-
 /-- An n-ary version of `set.mul_mem_mul`. -/
 @[to_additive " An n-ary version of `set.add_mem_add`. "]
 theorem multiset_prod_mem_multiset_prod (t : Multiset ι) (f : ι → Set α) (g : ι → α)
@@ -139,7 +156,9 @@ theorem multiset_prod_mem_multiset_prod (t : Multiset ι) (f : ι → Set α) (g
   exact list_prod_mem_list_prod _ _ _ hg
 #align set.multiset_prod_mem_multiset_prod Set.multiset_prod_mem_multiset_prod
 #align set.multiset_sum_mem_multiset_sum Set.multiset_sum_mem_multiset_sum
+-/
 
+#print Set.multiset_prod_subset_multiset_prod /-
 /-- An n-ary version of `set.mul_subset_mul`. -/
 @[to_additive " An n-ary version of `set.add_subset_add`. "]
 theorem multiset_prod_subset_multiset_prod (t : Multiset ι) (f₁ f₂ : ι → Set α)
@@ -150,6 +169,7 @@ theorem multiset_prod_subset_multiset_prod (t : Multiset ι) (f₁ f₂ : ι →
   exact list_prod_subset_list_prod _ _ _ hf
 #align set.multiset_prod_subset_multiset_prod Set.multiset_prod_subset_multiset_prod
 #align set.multiset_sum_subset_multiset_sum Set.multiset_sum_subset_multiset_sum
+-/
 
 #print Set.multiset_prod_singleton /-
 @[to_additive]
@@ -160,6 +180,7 @@ theorem multiset_prod_singleton {M : Type _} [CommMonoid M] (s : Multiset M) :
 #align set.multiset_sum_singleton Set.multiset_sum_singleton
 -/
 
+#print Set.finset_prod_mem_finset_prod /-
 /-- An n-ary version of `set.mul_mem_mul`. -/
 @[to_additive " An n-ary version of `set.add_mem_add`. "]
 theorem finset_prod_mem_finset_prod (t : Finset ι) (f : ι → Set α) (g : ι → α)
@@ -167,7 +188,9 @@ theorem finset_prod_mem_finset_prod (t : Finset ι) (f : ι → Set α) (g : ι 
   multiset_prod_mem_multiset_prod _ _ _ hg
 #align set.finset_prod_mem_finset_prod Set.finset_prod_mem_finset_prod
 #align set.finset_sum_mem_finset_sum Set.finset_sum_mem_finset_sum
+-/
 
+#print Set.finset_prod_subset_finset_prod /-
 /-- An n-ary version of `set.mul_subset_mul`. -/
 @[to_additive " An n-ary version of `set.add_subset_add`. "]
 theorem finset_prod_subset_finset_prod (t : Finset ι) (f₁ f₂ : ι → Set α)
@@ -175,14 +198,18 @@ theorem finset_prod_subset_finset_prod (t : Finset ι) (f₁ f₂ : ι → Set �
   multiset_prod_subset_multiset_prod _ _ _ hf
 #align set.finset_prod_subset_finset_prod Set.finset_prod_subset_finset_prod
 #align set.finset_sum_subset_finset_sum Set.finset_sum_subset_finset_sum
+-/
 
+#print Set.finset_prod_singleton /-
 @[to_additive]
 theorem finset_prod_singleton {M ι : Type _} [CommMonoid M] (s : Finset ι) (I : ι → M) :
     ∏ i : ι in s, ({I i} : Set M) = {∏ i : ι in s, I i} :=
   (map_prod (singletonMonoidHom : M →* Set M) _ _).symm
 #align set.finset_prod_singleton Set.finset_prod_singleton
 #align set.finset_sum_singleton Set.finset_sum_singleton
+-/
 
+#print Set.image_finset_prod_pi /-
 /-- The n-ary version of `set.image_mul_prod`. -/
 @[to_additive "The n-ary version of `set.add_image_prod`. "]
 theorem image_finset_prod_pi (l : Finset ι) (S : ι → Set α) :
@@ -190,7 +217,9 @@ theorem image_finset_prod_pi (l : Finset ι) (S : ι → Set α) :
   simp_rw [mem_finset_prod, mem_image, mem_pi, exists_prop, Finset.mem_coe]
 #align set.image_finset_prod_pi Set.image_finset_prod_pi
 #align set.image_finset_sum_pi Set.image_finset_sum_pi
+-/
 
+#print Set.image_fintype_prod_pi /-
 /-- A special case of `set.image_finset_prod_pi` for `finset.univ`. -/
 @[to_additive "A special case of `set.image_finset_sum_pi` for `finset.univ`. "]
 theorem image_fintype_prod_pi [Fintype ι] (S : ι → Set α) :
@@ -198,6 +227,7 @@ theorem image_fintype_prod_pi [Fintype ι] (S : ι → Set α) :
   simpa only [Finset.coe_univ] using image_finset_prod_pi Finset.univ S
 #align set.image_fintype_prod_pi Set.image_fintype_prod_pi
 #align set.image_fintype_sum_pi Set.image_fintype_sum_pi
+-/
 
 end CommMonoid
 

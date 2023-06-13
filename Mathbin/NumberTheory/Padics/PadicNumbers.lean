@@ -87,6 +87,7 @@ section
 
 variable {p : ℕ} [Fact p.Prime]
 
+#print PadicSeq.stationary /-
 /-- The `p`-adic norm of the entries of a nonzero Cauchy sequence of rationals is eventually
 constant. -/
 theorem stationary {f : CauSeq ℚ (padicNorm p)} (hf : ¬f ≈ 0) :
@@ -109,17 +110,22 @@ theorem stationary {f : CauSeq ℚ (padicNorm p)} (hf : ¬f ≈ 0) :
     rw [← hnam, sub_eq_add_neg, add_comm] at this 
     apply _root_.lt_irrefl _ this⟩
 #align padic_seq.stationary PadicSeq.stationary
+-/
 
+#print PadicSeq.stationaryPoint /-
 /-- For all `n ≥ stationary_point f hf`, the `p`-adic norm of `f n` is the same. -/
 def stationaryPoint {f : PadicSeq p} (hf : ¬f ≈ 0) : ℕ :=
   Classical.choose <| stationary hf
 #align padic_seq.stationary_point PadicSeq.stationaryPoint
+-/
 
+#print PadicSeq.stationaryPoint_spec /-
 theorem stationaryPoint_spec {f : PadicSeq p} (hf : ¬f ≈ 0) :
     ∀ {m n},
       stationaryPoint hf ≤ m → stationaryPoint hf ≤ n → padicNorm p (f n) = padicNorm p (f m) :=
   Classical.choose_spec <| stationary hf
 #align padic_seq.stationary_point_spec PadicSeq.stationaryPoint_spec
+-/
 
 #print PadicSeq.norm /-
 /-- Since the norm of the entries of a Cauchy sequence is eventually stationary,
@@ -129,6 +135,7 @@ def norm (f : PadicSeq p) : ℚ :=
 #align padic_seq.norm PadicSeq.norm
 -/
 
+#print PadicSeq.norm_zero_iff /-
 theorem norm_zero_iff (f : PadicSeq p) : f.norm = 0 ↔ f ≈ 0 :=
   by
   constructor
@@ -144,6 +151,7 @@ theorem norm_zero_iff (f : PadicSeq p) : f.norm = 0 ↔ f ≈ 0 :=
   · intro h
     simp [norm, h]
 #align padic_seq.norm_zero_iff PadicSeq.norm_zero_iff
+-/
 
 end
 
@@ -153,35 +161,48 @@ open CauSeq
 
 variable {p : ℕ} [Fact p.Prime]
 
+#print PadicSeq.equiv_zero_of_val_eq_of_equiv_zero /-
 theorem equiv_zero_of_val_eq_of_equiv_zero {f g : PadicSeq p}
     (h : ∀ k, padicNorm p (f k) = padicNorm p (g k)) (hf : f ≈ 0) : g ≈ 0 := fun ε hε =>
   let ⟨i, hi⟩ := hf _ hε
   ⟨i, fun j hj => by simpa [h] using hi _ hj⟩
 #align padic_seq.equiv_zero_of_val_eq_of_equiv_zero PadicSeq.equiv_zero_of_val_eq_of_equiv_zero
+-/
 
+#print PadicSeq.norm_nonzero_of_not_equiv_zero /-
 theorem norm_nonzero_of_not_equiv_zero {f : PadicSeq p} (hf : ¬f ≈ 0) : f.norm ≠ 0 :=
   hf ∘ f.norm_zero_iff.1
 #align padic_seq.norm_nonzero_of_not_equiv_zero PadicSeq.norm_nonzero_of_not_equiv_zero
+-/
 
+#print PadicSeq.norm_eq_norm_app_of_nonzero /-
 theorem norm_eq_norm_app_of_nonzero {f : PadicSeq p} (hf : ¬f ≈ 0) :
     ∃ k, f.norm = padicNorm p k ∧ k ≠ 0 :=
   have heq : f.norm = padicNorm p (f <| stationaryPoint hf) := by simp [norm, hf]
   ⟨f <| stationaryPoint hf, HEq, fun h =>
     norm_nonzero_of_not_equiv_zero hf (by simpa [h] using HEq)⟩
 #align padic_seq.norm_eq_norm_app_of_nonzero PadicSeq.norm_eq_norm_app_of_nonzero
+-/
 
+#print PadicSeq.not_limZero_const_of_nonzero /-
 theorem not_limZero_const_of_nonzero {q : ℚ} (hq : q ≠ 0) : ¬LimZero (const (padicNorm p) q) :=
   fun h' => hq <| const_limZero.1 h'
 #align padic_seq.not_lim_zero_const_of_nonzero PadicSeq.not_limZero_const_of_nonzero
+-/
 
+#print PadicSeq.not_equiv_zero_const_of_nonzero /-
 theorem not_equiv_zero_const_of_nonzero {q : ℚ} (hq : q ≠ 0) : ¬const (padicNorm p) q ≈ 0 :=
   fun h : LimZero (const (padicNorm p) q - 0) => not_limZero_const_of_nonzero hq <| by simpa using h
 #align padic_seq.not_equiv_zero_const_of_nonzero PadicSeq.not_equiv_zero_const_of_nonzero
+-/
 
+#print PadicSeq.norm_nonneg /-
 theorem norm_nonneg (f : PadicSeq p) : 0 ≤ f.norm :=
   if hf : f ≈ 0 then by simp [hf, norm] else by simp [norm, hf, padicNorm.nonneg]
 #align padic_seq.norm_nonneg PadicSeq.norm_nonneg
+-/
 
+#print PadicSeq.lift_index_left_left /-
 /-- An auxiliary lemma for manipulating sequence indices. -/
 theorem lift_index_left_left {f : PadicSeq p} (hf : ¬f ≈ 0) (v2 v3 : ℕ) :
     padicNorm p (f (stationaryPoint hf)) = padicNorm p (f (max (stationaryPoint hf) (max v2 v3))) :=
@@ -190,7 +211,9 @@ theorem lift_index_left_left {f : PadicSeq p} (hf : ¬f ≈ 0) (v2 v3 : ℕ) :
   · apply le_max_left
   · exact le_rfl
 #align padic_seq.lift_index_left_left PadicSeq.lift_index_left_left
+-/
 
+#print PadicSeq.lift_index_left /-
 /-- An auxiliary lemma for manipulating sequence indices. -/
 theorem lift_index_left {f : PadicSeq p} (hf : ¬f ≈ 0) (v1 v3 : ℕ) :
     padicNorm p (f (stationaryPoint hf)) = padicNorm p (f (max v1 (max (stationaryPoint hf) v3))) :=
@@ -201,7 +224,9 @@ theorem lift_index_left {f : PadicSeq p} (hf : ¬f ≈ 0) (v1 v3 : ℕ) :
     · apply le_max_right
   · exact le_rfl
 #align padic_seq.lift_index_left PadicSeq.lift_index_left
+-/
 
+#print PadicSeq.lift_index_right /-
 /-- An auxiliary lemma for manipulating sequence indices. -/
 theorem lift_index_right {f : PadicSeq p} (hf : ¬f ≈ 0) (v1 v2 : ℕ) :
     padicNorm p (f (stationaryPoint hf)) = padicNorm p (f (max v1 (max v2 (stationaryPoint hf)))) :=
@@ -212,6 +237,7 @@ theorem lift_index_right {f : PadicSeq p} (hf : ¬f ≈ 0) (v1 v2 : ℕ) :
     · apply le_max_right
   · exact le_rfl
 #align padic_seq.lift_index_right PadicSeq.lift_index_right
+-/
 
 end Embedding
 
@@ -232,6 +258,7 @@ def valuation (f : PadicSeq p) : ℤ :=
 #align padic_seq.valuation PadicSeq.valuation
 -/
 
+#print PadicSeq.norm_eq_pow_val /-
 theorem norm_eq_pow_val {f : PadicSeq p} (hf : ¬f ≈ 0) : f.norm = p ^ (-f.Valuation : ℤ) :=
   by
   rw [norm, Valuation, dif_neg hf, dif_neg hf, padicNorm, if_neg]
@@ -243,7 +270,9 @@ theorem norm_eq_pow_val {f : PadicSeq p} (hf : ¬f ≈ 0) : f.norm = p ^ (-f.Val
   rw [stationary_point_spec hf le_rfl hn]
   simpa [H] using hε
 #align padic_seq.norm_eq_pow_val PadicSeq.norm_eq_pow_val
+-/
 
+#print PadicSeq.val_eq_iff_norm_eq /-
 theorem val_eq_iff_norm_eq {f g : PadicSeq p} (hf : ¬f ≈ 0) (hg : ¬g ≈ 0) :
     f.Valuation = g.Valuation ↔ f.norm = g.norm :=
   by
@@ -251,6 +280,7 @@ theorem val_eq_iff_norm_eq {f g : PadicSeq p} (hf : ¬f ≈ 0) (hg : ¬g ≈ 0) 
   · exact_mod_cast (Fact.out p.prime).Pos
   · exact_mod_cast (Fact.out p.prime).ne_one
 #align padic_seq.val_eq_iff_norm_eq PadicSeq.val_eq_iff_norm_eq
+-/
 
 end Valuation
 
@@ -289,8 +319,7 @@ open CauSeq
 
 variable {p : ℕ} [hp : Fact p.Prime]
 
-include hp
-
+#print PadicSeq.norm_mul /-
 theorem norm_mul (f g : PadicSeq p) : (f * g).norm = f.norm * g.norm :=
   if hf : f ≈ 0 then by
     have hg : f * g ≈ 0 := mul_equiv_zero' _ hf
@@ -306,14 +335,19 @@ theorem norm_mul (f g : PadicSeq p) : (f * g).norm = f.norm * g.norm :=
       padic_index_simp [hfg, hf, hg]
       apply padicNorm.mul
 #align padic_seq.norm_mul PadicSeq.norm_mul
+-/
 
+#print PadicSeq.eq_zero_iff_equiv_zero /-
 theorem eq_zero_iff_equiv_zero (f : PadicSeq p) : mk f = 0 ↔ f ≈ 0 :=
   mk_eq
 #align padic_seq.eq_zero_iff_equiv_zero PadicSeq.eq_zero_iff_equiv_zero
+-/
 
+#print PadicSeq.ne_zero_iff_nequiv_zero /-
 theorem ne_zero_iff_nequiv_zero (f : PadicSeq p) : mk f ≠ 0 ↔ ¬f ≈ 0 :=
   not_iff_not.2 (eq_zero_iff_equiv_zero _)
 #align padic_seq.ne_zero_iff_nequiv_zero PadicSeq.ne_zero_iff_nequiv_zero
+-/
 
 #print PadicSeq.norm_const /-
 theorem norm_const (q : ℚ) : norm (const (padicNorm p) q) = padicNorm p q :=
@@ -327,17 +361,21 @@ theorem norm_const (q : ℚ) : norm (const (padicNorm p) q) = padicNorm p q :=
 #align padic_seq.norm_const PadicSeq.norm_const
 -/
 
+#print PadicSeq.norm_values_discrete /-
 theorem norm_values_discrete (a : PadicSeq p) (ha : ¬a ≈ 0) : ∃ z : ℤ, a.norm = p ^ (-z) :=
   by
   let ⟨k, hk, hk'⟩ := norm_eq_norm_app_of_nonzero ha
   simpa [hk] using padicNorm.values_discrete hk'
 #align padic_seq.norm_values_discrete PadicSeq.norm_values_discrete
+-/
 
+#print PadicSeq.norm_one /-
 theorem norm_one : norm (1 : PadicSeq p) = 1 :=
   by
   have h1 : ¬(1 : PadicSeq p) ≈ 0 := one_not_equiv_zero _
   simp [h1, norm, hp.1.one_lt]
 #align padic_seq.norm_one PadicSeq.norm_one
+-/
 
 private theorem norm_eq_of_equiv_aux {f g : PadicSeq p} (hf : ¬f ≈ 0) (hg : ¬g ≈ 0) (hfg : f ≈ g)
     (h : padicNorm p (f (stationaryPoint hf)) ≠ padicNorm p (g (stationaryPoint hg)))
@@ -373,6 +411,7 @@ private theorem norm_eq_of_equiv {f g : PadicSeq p} (hf : ¬f ≈ 0) (hg : ¬g �
     apply le_of_not_gt hnlt
     apply h
 
+#print PadicSeq.norm_equiv /-
 theorem norm_equiv {f g : PadicSeq p} (hfg : f ≈ g) : f.norm = g.norm :=
   if hf : f ≈ 0 then by
     have hg : g ≈ 0 := Setoid.trans (Setoid.symm hfg) hf
@@ -381,6 +420,7 @@ theorem norm_equiv {f g : PadicSeq p} (hfg : f ≈ g) : f.norm = g.norm :=
     have hg : ¬g ≈ 0 := hf ∘ Setoid.trans hfg
     unfold norm <;> split_ifs <;> exact norm_eq_of_equiv hf hg hfg
 #align padic_seq.norm_equiv PadicSeq.norm_equiv
+-/
 
 private theorem norm_nonarchimedean_aux {f g : PadicSeq p} (hfg : ¬f + g ≈ 0) (hf : ¬f ≈ 0)
     (hg : ¬g ≈ 0) : (f + g).norm ≤ max f.norm g.norm :=
@@ -389,6 +429,7 @@ private theorem norm_nonarchimedean_aux {f g : PadicSeq p} (hfg : ¬f + g ≈ 0)
   padic_index_simp [hfg, hf, hg]
   apply padicNorm.nonarchimedean
 
+#print PadicSeq.norm_nonarchimedean /-
 theorem norm_nonarchimedean (f g : PadicSeq p) : (f + g).norm ≤ max f.norm g.norm :=
   if hfg : f + g ≈ 0 then
     by
@@ -416,6 +457,7 @@ theorem norm_nonarchimedean (f g : PadicSeq p) : (f + g).norm ≤ max f.norm g.n
         rw [this, hcfg]
       else norm_nonarchimedean_aux hfg hf hg
 #align padic_seq.norm_nonarchimedean PadicSeq.norm_nonarchimedean
+-/
 
 #print PadicSeq.norm_eq /-
 theorem norm_eq {f g : PadicSeq p} (h : ∀ k, padicNorm p (f k) = padicNorm p (g k)) :
@@ -437,10 +479,13 @@ theorem norm_eq {f g : PadicSeq p} (h : ∀ k, padicNorm p (f k) = padicNorm p (
 #align padic_seq.norm_eq PadicSeq.norm_eq
 -/
 
+#print PadicSeq.norm_neg /-
 theorem norm_neg (a : PadicSeq p) : (-a).norm = a.norm :=
   norm_eq <| by simp
 #align padic_seq.norm_neg PadicSeq.norm_neg
+-/
 
+#print PadicSeq.norm_eq_of_add_equiv_zero /-
 theorem norm_eq_of_add_equiv_zero {f g : PadicSeq p} (h : f + g ≈ 0) : f.norm = g.norm :=
   by
   have : LimZero (f + g - 0) := h
@@ -448,7 +493,9 @@ theorem norm_eq_of_add_equiv_zero {f g : PadicSeq p} (h : f + g ≈ 0) : f.norm 
   have : f.norm = (-g).norm := norm_equiv this
   simpa only [norm_neg] using this
 #align padic_seq.norm_eq_of_add_equiv_zero PadicSeq.norm_eq_of_add_equiv_zero
+-/
 
+#print PadicSeq.add_eq_max_of_ne /-
 theorem add_eq_max_of_ne {f g : PadicSeq p} (hfgne : f.norm ≠ g.norm) :
     (f + g).norm = max f.norm g.norm :=
   have hfg : ¬f + g ≈ 0 := mt norm_eq_of_add_equiv_zero hfgne
@@ -470,6 +517,7 @@ theorem add_eq_max_of_ne {f g : PadicSeq p} (hfgne : f.norm ≠ g.norm) :
       padic_index_simp [hfg, hf, hg] at hfgne ⊢
       exact padicNorm.add_eq_max_of_ne hfgne
 #align padic_seq.add_eq_max_of_ne PadicSeq.add_eq_max_of_ne
+-/
 
 end Embedding
 
@@ -483,7 +531,6 @@ def Padic (p : ℕ) [Fact p.Prime] :=
 #align padic Padic
 -/
 
--- mathport name: «exprℚ_[ ]»
 notation "ℚ_[" p "]" => Padic p
 
 namespace Padic
@@ -530,66 +577,89 @@ def mk : PadicSeq p → ℚ_[p] :=
 
 variable (p)
 
+#print Padic.zero_def /-
 theorem zero_def : (0 : ℚ_[p]) = ⟦0⟧ :=
   rfl
 #align padic.zero_def Padic.zero_def
+-/
 
+#print Padic.mk_eq /-
 theorem mk_eq {f g : PadicSeq p} : mk f = mk g ↔ f ≈ g :=
   Quotient.eq'
 #align padic.mk_eq Padic.mk_eq
+-/
 
+#print Padic.const_equiv /-
 theorem const_equiv {q r : ℚ} : const (padicNorm p) q ≈ const (padicNorm p) r ↔ q = r :=
   ⟨fun heq => eq_of_sub_eq_zero <| const_limZero.1 HEq, fun heq => by
     rw [HEq] <;> apply Setoid.refl _⟩
 #align padic.const_equiv Padic.const_equiv
+-/
 
+#print Padic.coe_inj /-
 @[norm_cast]
 theorem coe_inj {q r : ℚ} : (↑q : ℚ_[p]) = ↑r ↔ q = r :=
   ⟨(const_equiv p).1 ∘ Quotient.eq'.1, fun h => by rw [h]⟩
 #align padic.coe_inj Padic.coe_inj
+-/
 
 instance : CharZero ℚ_[p] :=
   ⟨fun m n => by rw [← Rat.cast_coe_nat]; norm_cast; exact id⟩
 
+#print Padic.coe_add /-
 @[norm_cast]
 theorem coe_add : ∀ {x y : ℚ}, (↑(x + y) : ℚ_[p]) = ↑x + ↑y :=
   Rat.cast_add
 #align padic.coe_add Padic.coe_add
+-/
 
+#print Padic.coe_neg /-
 @[norm_cast]
 theorem coe_neg : ∀ {x : ℚ}, (↑(-x) : ℚ_[p]) = -↑x :=
   Rat.cast_neg
 #align padic.coe_neg Padic.coe_neg
+-/
 
+#print Padic.coe_mul /-
 @[norm_cast]
 theorem coe_mul : ∀ {x y : ℚ}, (↑(x * y) : ℚ_[p]) = ↑x * ↑y :=
   Rat.cast_mul
 #align padic.coe_mul Padic.coe_mul
+-/
 
+#print Padic.coe_sub /-
 @[norm_cast]
 theorem coe_sub : ∀ {x y : ℚ}, (↑(x - y) : ℚ_[p]) = ↑x - ↑y :=
   Rat.cast_sub
 #align padic.coe_sub Padic.coe_sub
+-/
 
+#print Padic.coe_div /-
 @[norm_cast]
 theorem coe_div : ∀ {x y : ℚ}, (↑(x / y) : ℚ_[p]) = ↑x / ↑y :=
   Rat.cast_div
 #align padic.coe_div Padic.coe_div
+-/
 
+#print Padic.coe_one /-
 @[norm_cast]
 theorem coe_one : (↑1 : ℚ_[p]) = 1 :=
   rfl
 #align padic.coe_one Padic.coe_one
+-/
 
+#print Padic.coe_zero /-
 @[norm_cast]
 theorem coe_zero : (↑0 : ℚ_[p]) = 0 :=
   rfl
 #align padic.coe_zero Padic.coe_zero
+-/
 
 end Completion
 
 end Padic
 
+#print padicNormE /-
 /-- The rational-valued `p`-adic norm on `ℚ_[p]` is lifted from the norm on Cauchy sequences. The
 canonical form of this function is the normed space instance, with notation `‖ ‖`. -/
 def padicNormE {p : ℕ} [hp : Fact p.Prime] : AbsoluteValue ℚ_[p] ℚ
@@ -609,6 +679,7 @@ def padicNormE {p : ℕ} [hp : Fact p.Prime] : AbsoluteValue ℚ_[p] ℚ
     refine' max_le_add_of_nonneg (Quotient.inductionOn q <| PadicSeq.norm_nonneg) _
     exact Quotient.inductionOn r <| PadicSeq.norm_nonneg
 #align padic_norm_e padicNormE
+-/
 
 namespace padicNormE
 
@@ -618,6 +689,7 @@ open PadicSeq
 
 variable {p : ℕ} [Fact p.Prime]
 
+#print padicNormE.defn /-
 theorem defn (f : PadicSeq p) {ε : ℚ} (hε : 0 < ε) : ∃ N, ∀ i ≥ N, padicNormE (⟦f⟧ - f i) < ε :=
   by
   dsimp [padicNormE]
@@ -635,30 +707,39 @@ theorem defn (f : PadicSeq p) {ε : ℚ} (hε : 0 < ε) : ∃ N, ∀ i ≥ N, pa
     rw [← this]
     exact hN _ le_rfl _ hi
 #align padic_norm_e.defn padicNormE.defn
+-/
 
+#print padicNormE.nonarchimedean' /-
 /-- Theorems about `padic_norm_e` are named with a `'` so the names do not conflict with the
 equivalent theorems about `norm` (`‖ ‖`). -/
 theorem nonarchimedean' (q r : ℚ_[p]) : padicNormE (q + r) ≤ max (padicNormE q) (padicNormE r) :=
   Quotient.induction_on₂ q r <| norm_nonarchimedean
 #align padic_norm_e.nonarchimedean' padicNormE.nonarchimedean'
+-/
 
+#print padicNormE.add_eq_max_of_ne' /-
 /-- Theorems about `padic_norm_e` are named with a `'` so the names do not conflict with the
 equivalent theorems about `norm` (`‖ ‖`). -/
 theorem add_eq_max_of_ne' {q r : ℚ_[p]} :
     padicNormE q ≠ padicNormE r → padicNormE (q + r) = max (padicNormE q) (padicNormE r) :=
   Quotient.induction_on₂ q r fun _ _ => PadicSeq.add_eq_max_of_ne
 #align padic_norm_e.add_eq_max_of_ne' padicNormE.add_eq_max_of_ne'
+-/
 
+#print padicNormE.eq_padic_norm' /-
 @[simp]
 theorem eq_padic_norm' (q : ℚ) : padicNormE (q : ℚ_[p]) = padicNorm p q :=
   norm_const _
 #align padic_norm_e.eq_padic_norm' padicNormE.eq_padic_norm'
+-/
 
+#print padicNormE.image' /-
 protected theorem image' {q : ℚ_[p]} : q ≠ 0 → ∃ n : ℤ, padicNormE q = p ^ (-n) :=
   Quotient.inductionOn q fun f hf =>
     have : ¬f ≈ 0 := (ne_zero_iff_nequiv_zero f).1 hf
     norm_values_discrete f this
 #align padic_norm_e.image' padicNormE.image'
+-/
 
 end Embedding
 
@@ -673,6 +754,7 @@ open PadicSeq Padic
 variable {p : ℕ} [Fact p.Prime] (f : CauSeq _ (@padicNormE p _))
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (m n «expr ≥ » N) -/
+#print Padic.rat_dense' /-
 theorem rat_dense' (q : ℚ_[p]) {ε : ℚ} (hε : 0 < ε) : ∃ r : ℚ, padicNormE (q - r) < ε :=
   Quotient.inductionOn q fun q' =>
     have : ∃ N, ∀ (m) (_ : m ≥ N) (n) (_ : n ≥ N), padicNorm p (q' m - q' n) < ε := cauchy₂ _ hε
@@ -691,17 +773,21 @@ theorem rat_dense' (q : ℚ_[p]) {ε : ℚ} (hε : 0 < ε) : ∃ r : ℚ, padicN
           simpa only [this]
         · exact hN _ (lt_of_not_ge hle).le _ le_rfl⟩
 #align padic.rat_dense' Padic.rat_dense'
+-/
 
 open Classical
 
 private theorem div_nat_pos (n : ℕ) : 0 < 1 / (n + 1 : ℚ) :=
   div_pos zero_lt_one (by exact_mod_cast succ_pos _)
 
+#print Padic.limSeq /-
 /-- `lim_seq f`, for `f` a Cauchy sequence of `p`-adic numbers, is a sequence of rationals with the
 same limit point as `f`. -/
 def limSeq : ℕ → ℚ := fun n => Classical.choose (rat_dense' (f n) (div_nat_pos n))
 #align padic.lim_seq Padic.limSeq
+-/
 
+#print Padic.exi_rat_seq_conv /-
 theorem exi_rat_seq_conv {ε : ℚ} (hε : 0 < ε) :
     ∃ N, ∀ i ≥ N, padicNormE (f i - (limSeq f i : ℚ_[p])) < ε :=
   by
@@ -713,7 +799,9 @@ theorem exi_rat_seq_conv {ε : ℚ} (hε : 0 < ε) :
   · exact (div_le_iff hε).mp (le_trans (le_of_lt hN) (by exact_mod_cast hi))
   · apply le_of_lt; simpa
 #align padic.exi_rat_seq_conv Padic.exi_rat_seq_conv
+-/
 
+#print Padic.exi_rat_seq_conv_cauchy /-
 theorem exi_rat_seq_conv_cauchy : IsCauSeq (padicNorm p) (limSeq f) := fun ε hε =>
   by
   have hε3 : 0 < ε / 3 := div_pos hε (by norm_num)
@@ -745,6 +833,7 @@ theorem exi_rat_seq_conv_cauchy : IsCauSeq (padicNorm p) (limSeq f) := fun ε h�
       · apply_mod_cast hN
         apply le_max_left
 #align padic.exi_rat_seq_conv_cauchy Padic.exi_rat_seq_conv_cauchy
+-/
 
 private def lim' : PadicSeq p :=
   ⟨_, exi_rat_seq_conv_cauchy f⟩
@@ -752,6 +841,7 @@ private def lim' : PadicSeq p :=
 private def lim : ℚ_[p] :=
   ⟦lim' f⟧
 
+#print Padic.complete' /-
 theorem complete' : ∃ q : ℚ_[p], ∀ ε > 0, ∃ N, ∀ i ≥ N, padicNormE (q - f i) < ε :=
   ⟨limUnder f, fun ε hε =>
     by
@@ -766,6 +856,7 @@ theorem complete' : ∃ q : ℚ_[p], ∀ ε > 0, ∃ N, ∀ i ≥ N, padicNormE 
     · rw [padic_norm_e.map_sub]
       exact hN _ (le_of_max_le_left hi)⟩
 #align padic.complete' Padic.complete'
+-/
 
 end Complete
 
@@ -799,6 +890,7 @@ instance : NormedField ℚ_[p] :=
     norm_mul' := by simp [Norm.norm, map_mul]
     norm := norm }
 
+#print Padic.isAbsoluteValue /-
 instance isAbsoluteValue : IsAbsoluteValue fun a : ℚ_[p] => ‖a‖
     where
   abv_nonneg := norm_nonneg
@@ -806,12 +898,15 @@ instance isAbsoluteValue : IsAbsoluteValue fun a : ℚ_[p] => ‖a‖
   abv_add := norm_add_le
   abv_mul := by simp [Norm.norm, map_mul]
 #align padic.is_absolute_value Padic.isAbsoluteValue
+-/
 
+#print Padic.rat_dense /-
 theorem rat_dense (q : ℚ_[p]) {ε : ℝ} (hε : 0 < ε) : ∃ r : ℚ, ‖q - r‖ < ε :=
   let ⟨ε', hε'l, hε'r⟩ := exists_rat_btwn hε
   let ⟨r, hr⟩ := rat_dense' q (by simpa using hε'l)
   ⟨r, lt_trans (by simpa [Norm.norm] using hr) hε'r⟩
 #align padic.rat_dense Padic.rat_dense
+-/
 
 end NormedSpace
 
@@ -823,22 +918,27 @@ section NormedSpace
 
 variable {p : ℕ} [hp : Fact p.Prime]
 
-include hp
-
+#print padicNormE.mul /-
 @[simp]
 protected theorem mul (q r : ℚ_[p]) : ‖q * r‖ = ‖q‖ * ‖r‖ := by simp [Norm.norm, map_mul]
 #align padic_norm_e.mul padicNormE.mul
+-/
 
+#print padicNormE.is_norm /-
 protected theorem is_norm (q : ℚ_[p]) : ↑(padicNormE q) = ‖q‖ :=
   rfl
 #align padic_norm_e.is_norm padicNormE.is_norm
+-/
 
+#print padicNormE.nonarchimedean /-
 theorem nonarchimedean (q r : ℚ_[p]) : ‖q + r‖ ≤ max ‖q‖ ‖r‖ :=
   by
   unfold Norm.norm
   exact_mod_cast nonarchimedean' _ _
 #align padic_norm_e.nonarchimedean padicNormE.nonarchimedean
+-/
 
+#print padicNormE.add_eq_max_of_ne /-
 theorem add_eq_max_of_ne {q r : ℚ_[p]} (h : ‖q‖ ≠ ‖r‖) : ‖q + r‖ = max ‖q‖ ‖r‖ :=
   by
   unfold Norm.norm
@@ -848,14 +948,18 @@ theorem add_eq_max_of_ne {q r : ℚ_[p]} (h : ‖q‖ ≠ ‖r‖) : ‖q + r‖
   unfold Norm.norm
   exact_mod_cast h'
 #align padic_norm_e.add_eq_max_of_ne padicNormE.add_eq_max_of_ne
+-/
 
+#print padicNormE.eq_padicNorm /-
 @[simp]
 theorem eq_padicNorm (q : ℚ) : ‖(q : ℚ_[p])‖ = padicNorm p q :=
   by
   unfold Norm.norm
   rw [← padicNormE.eq_padic_norm']
 #align padic_norm_e.eq_padic_norm padicNormE.eq_padicNorm
+-/
 
+#print padicNormE.norm_p /-
 @[simp]
 theorem norm_p : ‖(p : ℚ_[p])‖ = p⁻¹ :=
   by
@@ -865,22 +969,29 @@ theorem norm_p : ‖(p : ℚ_[p])‖ = p⁻¹ :=
   rw [← @Rat.cast_coe_nat ℚ_[p] _ p]
   simp [p₀, p₁, norm, padicNorm, padicValRat, padicValInt, zpow_neg, -Rat.cast_coe_nat]
 #align padic_norm_e.norm_p padicNormE.norm_p
+-/
 
+#print padicNormE.norm_p_lt_one /-
 theorem norm_p_lt_one : ‖(p : ℚ_[p])‖ < 1 :=
   by
   rw [norm_p]
   apply inv_lt_one
   exact_mod_cast hp.1.one_lt
 #align padic_norm_e.norm_p_lt_one padicNormE.norm_p_lt_one
+-/
 
+#print padicNormE.norm_p_zpow /-
 @[simp]
 theorem norm_p_zpow (n : ℤ) : ‖(p ^ n : ℚ_[p])‖ = p ^ (-n) := by
   rw [norm_zpow, norm_p, zpow_neg, inv_zpow]
 #align padic_norm_e.norm_p_zpow padicNormE.norm_p_zpow
+-/
 
+#print padicNormE.norm_p_pow /-
 @[simp]
 theorem norm_p_pow (n : ℕ) : ‖(p ^ n : ℚ_[p])‖ = p ^ (-n : ℤ) := by rw [← norm_p_zpow, zpow_ofNat]
 #align padic_norm_e.norm_p_pow padicNormE.norm_p_pow
+-/
 
 instance : NontriviallyNormedField ℚ_[p] :=
   { Padic.normedField p with
@@ -889,19 +1000,23 @@ instance : NontriviallyNormedField ℚ_[p] :=
         rw [norm_inv, norm_p, inv_inv]
         exact_mod_cast hp.1.one_lt⟩ }
 
+#print padicNormE.image /-
 protected theorem image {q : ℚ_[p]} : q ≠ 0 → ∃ n : ℤ, ‖q‖ = ↑((p : ℚ) ^ (-n)) :=
   Quotient.inductionOn q fun f hf =>
     have : ¬f ≈ 0 := (PadicSeq.ne_zero_iff_nequiv_zero f).1 hf
     let ⟨n, hn⟩ := PadicSeq.norm_values_discrete f this
     ⟨n, congr_arg coe hn⟩
 #align padic_norm_e.image padicNormE.image
+-/
 
+#print padicNormE.is_rat /-
 protected theorem is_rat (q : ℚ_[p]) : ∃ q' : ℚ, ‖q‖ = q' :=
   if h : q = 0 then ⟨0, by simp [h]⟩
   else
     let ⟨n, hn⟩ := padicNormE.image h
     ⟨_, hn⟩
 #align padic_norm_e.is_rat padicNormE.is_rat
+-/
 
 #print padicNormE.ratNorm /-
 /-- `rat_norm q`, for a `p`-adic number `q` is the `p`-adic norm of `q`, as rational number.
@@ -912,10 +1027,13 @@ def ratNorm (q : ℚ_[p]) : ℚ :=
 #align padic_norm_e.rat_norm padicNormE.ratNorm
 -/
 
+#print padicNormE.eq_ratNorm /-
 theorem eq_ratNorm (q : ℚ_[p]) : ‖q‖ = ratNorm q :=
   Classical.choose_spec (padicNormE.is_rat q)
 #align padic_norm_e.eq_rat_norm padicNormE.eq_ratNorm
+-/
 
+#print padicNormE.norm_rat_le_one /-
 theorem norm_rat_le_one : ∀ {q : ℚ} (hq : ¬p ∣ q.den), ‖(q : ℚ_[p])‖ ≤ 1
   | ⟨n, d, hn, hd⟩ => fun hq : ¬p ∣ d =>
     if hnz : n = 0 then
@@ -940,12 +1058,16 @@ theorem norm_rat_le_one : ∀ {q : ℚ} (hq : ¬p ∣ q.den), ‖(q : ℚ_[p])�
         apply one_le_pow
         exact hp.1.Pos
 #align padic_norm_e.norm_rat_le_one padicNormE.norm_rat_le_one
+-/
 
+#print padicNormE.norm_int_le_one /-
 theorem norm_int_le_one (z : ℤ) : ‖(z : ℚ_[p])‖ ≤ 1 :=
   suffices ‖((z : ℚ) : ℚ_[p])‖ ≤ 1 by simpa
   norm_rat_le_one <| by simp [hp.1.ne_one]
 #align padic_norm_e.norm_int_le_one padicNormE.norm_int_le_one
+-/
 
+#print padicNormE.norm_int_lt_one_iff_dvd /-
 theorem norm_int_lt_one_iff_dvd (k : ℤ) : ‖(k : ℚ_[p])‖ < 1 ↔ ↑p ∣ k :=
   by
   constructor
@@ -980,7 +1102,9 @@ theorem norm_int_lt_one_iff_dvd (k : ℤ) : ‖(k : ℚ_[p])‖ < 1 ↔ ↑p ∣
       apply inv_lt_one
       exact_mod_cast hp.1.one_lt
 #align padic_norm_e.norm_int_lt_one_iff_dvd padicNormE.norm_int_lt_one_iff_dvd
+-/
 
+#print padicNormE.norm_int_le_pow_iff_dvd /-
 theorem norm_int_le_pow_iff_dvd (k : ℤ) (n : ℕ) : ‖(k : ℚ_[p])‖ ≤ ↑p ^ (-n : ℤ) ↔ ↑(p ^ n) ∣ k :=
   by
   have : (p : ℝ) ^ (-n : ℤ) = ↑(p ^ (-n : ℤ) : ℚ) := by simp
@@ -988,16 +1112,21 @@ theorem norm_int_le_pow_iff_dvd (k : ℤ) (n : ℕ) : ‖(k : ℚ_[p])‖ ≤ �
   norm_cast
   rw [← padicNorm.dvd_iff_norm_le]
 #align padic_norm_e.norm_int_le_pow_iff_dvd padicNormE.norm_int_le_pow_iff_dvd
+-/
 
+#print padicNormE.eq_of_norm_add_lt_right /-
 theorem eq_of_norm_add_lt_right {z1 z2 : ℚ_[p]} (h : ‖z1 + z2‖ < ‖z2‖) : ‖z1‖ = ‖z2‖ :=
   by_contradiction fun hne =>
     not_lt_of_ge (by rw [padicNormE.add_eq_max_of_ne hne] <;> apply le_max_right) h
 #align padic_norm_e.eq_of_norm_add_lt_right padicNormE.eq_of_norm_add_lt_right
+-/
 
+#print padicNormE.eq_of_norm_add_lt_left /-
 theorem eq_of_norm_add_lt_left {z1 z2 : ℚ_[p]} (h : ‖z1 + z2‖ < ‖z1‖) : ‖z1‖ = ‖z2‖ :=
   by_contradiction fun hne =>
     not_lt_of_ge (by rw [padicNormE.add_eq_max_of_ne hne] <;> apply le_max_left) h
 #align padic_norm_e.eq_of_norm_add_lt_left padicNormE.eq_of_norm_add_lt_left
+-/
 
 end NormedSpace
 
@@ -1007,11 +1136,10 @@ namespace Padic
 
 variable {p : ℕ} [hp : Fact p.Prime]
 
-include hp
-
 /- ./././Mathport/Syntax/Translate/Basic.lean:334:40: warning: unsupported option eqn_compiler.zeta -/
 set_option eqn_compiler.zeta true
 
+#print Padic.complete /-
 instance complete : CauSeq.IsComplete ℚ_[p] norm :=
   by
   constructor; intro f
@@ -1033,7 +1161,9 @@ instance complete : CauSeq.IsComplete ℚ_[p] norm :=
   refine' lt_trans _ hε'.2
   exact_mod_cast hN i hi
 #align padic.complete Padic.complete
+-/
 
+#print Padic.padicNormE_lim_le /-
 theorem padicNormE_lim_le {f : CauSeq ℚ_[p] norm} {a : ℝ} (ha : 0 < a) (hf : ∀ i, ‖f i‖ ≤ a) :
     ‖f.lim‖ ≤ a :=
   let ⟨N, hN⟩ := Setoid.symm (CauSeq.equiv_lim f) _ ha
@@ -1042,6 +1172,7 @@ theorem padicNormE_lim_le {f : CauSeq ℚ_[p] norm} {a : ℝ} (ha : 0 < a) (hf :
     _ ≤ max ‖f.lim - f N‖ ‖f N‖ := (padicNormE.nonarchimedean _ _)
     _ ≤ a := max_le (le_of_lt (hN _ le_rfl)) (hf _)
 #align padic.padic_norm_e_lim_le Padic.padicNormE_lim_le
+-/
 
 open Filter Set
 
@@ -1073,11 +1204,14 @@ def valuation : ℚ_[p] → ℤ :=
 #align padic.valuation Padic.valuation
 -/
 
+#print Padic.valuation_zero /-
 @[simp]
 theorem valuation_zero : valuation (0 : ℚ_[p]) = 0 :=
   dif_pos ((const_equiv p).2 rfl)
 #align padic.valuation_zero Padic.valuation_zero
+-/
 
+#print Padic.valuation_one /-
 @[simp]
 theorem valuation_one : valuation (1 : ℚ_[p]) = 0 :=
   by
@@ -1087,7 +1221,9 @@ theorem valuation_one : valuation (1 : ℚ_[p]) = 0 :=
   rw [dif_neg h]
   simp
 #align padic.valuation_one Padic.valuation_one
+-/
 
+#print Padic.norm_eq_pow_val /-
 theorem norm_eq_pow_val {x : ℚ_[p]} : x ≠ 0 → ‖x‖ = p ^ (-x.Valuation) :=
   by
   apply Quotient.inductionOn' x; clear x
@@ -1101,7 +1237,9 @@ theorem norm_eq_pow_val {x : ℚ_[p]} : x ≠ 0 → ‖x‖ = p ^ (-x.Valuation)
     apply Quotient.sound
     simpa using hf
 #align padic.norm_eq_pow_val Padic.norm_eq_pow_val
+-/
 
+#print Padic.valuation_p /-
 @[simp]
 theorem valuation_p : valuation (p : ℚ_[p]) = 1 :=
   by
@@ -1110,7 +1248,9 @@ theorem valuation_p : valuation (p : ℚ_[p]) = 1 :=
   · exact_mod_cast (Fact.out p.prime).NeZero
   · simp
 #align padic.valuation_p Padic.valuation_p
+-/
 
+#print Padic.valuation_map_add /-
 theorem valuation_map_add {x y : ℚ_[p]} (hxy : x + y ≠ 0) :
     min (valuation x) (valuation y) ≤ valuation (x + y) :=
   by
@@ -1127,7 +1267,9 @@ theorem valuation_map_add {x y : ℚ_[p]} (hxy : x + y ≠ 0) :
       rwa [norm_eq_pow_val hx, norm_eq_pow_val hy, norm_eq_pow_val hxy,
         zpow_le_max_iff_min_le hp_one] at h_norm 
 #align padic.valuation_map_add Padic.valuation_map_add
+-/
 
+#print Padic.valuation_map_mul /-
 @[simp]
 theorem valuation_map_mul {x y : ℚ_[p]} (hx : x ≠ 0) (hy : y ≠ 0) :
     valuation (x * y) = valuation x + valuation y :=
@@ -1144,6 +1286,7 @@ theorem valuation_map_mul {x y : ℚ_[p]} (hx : x ≠ 0) (hy : y ≠ 0) :
     zpow_add₀ (ne_of_gt hp_pos), zpow_inj hp_pos hp_ne_one, ← neg_add, neg_inj] at h_norm 
   exact h_norm
 #align padic.valuation_map_mul Padic.valuation_map_mul
+-/
 
 #print Padic.addValuationDef /-
 /-- The additive `p`-adic valuation on `ℚ_[p]`, with values in `with_top ℤ`. -/
@@ -1151,16 +1294,21 @@ def addValuationDef : ℚ_[p] → WithTop ℤ := fun x => if x = 0 then ⊤ else
 #align padic.add_valuation_def Padic.addValuationDef
 -/
 
+#print Padic.AddValuation.map_zero /-
 @[simp]
 theorem AddValuation.map_zero : addValuationDef (0 : ℚ_[p]) = ⊤ := by
   simp only [add_valuation_def, if_pos (Eq.refl _)]
 #align padic.add_valuation.map_zero Padic.AddValuation.map_zero
+-/
 
+#print Padic.AddValuation.map_one /-
 @[simp]
 theorem AddValuation.map_one : addValuationDef (1 : ℚ_[p]) = 0 := by
   simp only [add_valuation_def, if_neg one_ne_zero, valuation_one, WithTop.coe_zero]
 #align padic.add_valuation.map_one Padic.AddValuation.map_one
+-/
 
+#print Padic.AddValuation.map_mul /-
 theorem AddValuation.map_mul (x y : ℚ_[p]) :
     addValuationDef (x * y) = addValuationDef x + addValuationDef y :=
   by
@@ -1173,7 +1321,9 @@ theorem AddValuation.map_mul (x y : ℚ_[p]) :
       rw [if_neg hx, if_neg hy, if_neg (mul_ne_zero hx hy), ← WithTop.coe_add, WithTop.coe_eq_coe,
         valuation_map_mul hx hy]
 #align padic.add_valuation.map_mul Padic.AddValuation.map_mul
+-/
 
+#print Padic.AddValuation.map_add /-
 theorem AddValuation.map_add (x y : ℚ_[p]) :
     min (addValuationDef x) (addValuationDef y) ≤ addValuationDef (x + y) :=
   by
@@ -1188,23 +1338,29 @@ theorem AddValuation.map_add (x y : ℚ_[p]) :
       · rw [if_neg hx, if_neg hy, if_neg hxy, ← WithTop.coe_min, WithTop.coe_le_coe]
         exact valuation_map_add hxy
 #align padic.add_valuation.map_add Padic.AddValuation.map_add
+-/
 
+#print Padic.addValuation /-
 /-- The additive `p`-adic valuation on `ℚ_[p]`, as an `add_valuation`. -/
 def addValuation : AddValuation ℚ_[p] (WithTop ℤ) :=
   AddValuation.of addValuationDef AddValuation.map_zero AddValuation.map_one AddValuation.map_add
     AddValuation.map_mul
 #align padic.add_valuation Padic.addValuation
+-/
 
+#print Padic.addValuation.apply /-
 @[simp]
 theorem addValuation.apply {x : ℚ_[p]} (hx : x ≠ 0) : x.AddValuation = x.Valuation := by
   simp only [AddValuation, AddValuation.of_apply, add_valuation_def, if_neg hx]
 #align padic.add_valuation.apply Padic.addValuation.apply
+-/
 
 section NormLeIff
 
 /-! ### Various characterizations of open unit balls -/
 
 
+#print Padic.norm_le_pow_iff_norm_lt_pow_add_one /-
 theorem norm_le_pow_iff_norm_lt_pow_add_one (x : ℚ_[p]) (n : ℤ) : ‖x‖ ≤ p ^ n ↔ ‖x‖ < p ^ (n + 1) :=
   by
   have aux : ∀ n : ℤ, 0 < (p ^ n : ℝ) := by apply Nat.zpow_pos_of_pos; exact hp.1.Pos
@@ -1214,11 +1370,15 @@ theorem norm_le_pow_iff_norm_lt_pow_add_one (x : ℚ_[p]) (n : ℤ) : ‖x‖ �
   have H := zpow_strictMono h1p
   rw [H.le_iff_le, H.lt_iff_lt, Int.lt_add_one_iff]
 #align padic.norm_le_pow_iff_norm_lt_pow_add_one Padic.norm_le_pow_iff_norm_lt_pow_add_one
+-/
 
+#print Padic.norm_lt_pow_iff_norm_le_pow_sub_one /-
 theorem norm_lt_pow_iff_norm_le_pow_sub_one (x : ℚ_[p]) (n : ℤ) : ‖x‖ < p ^ n ↔ ‖x‖ ≤ p ^ (n - 1) :=
   by rw [norm_le_pow_iff_norm_lt_pow_add_one, sub_add_cancel]
 #align padic.norm_lt_pow_iff_norm_le_pow_sub_one Padic.norm_lt_pow_iff_norm_le_pow_sub_one
+-/
 
+#print Padic.norm_le_one_iff_val_nonneg /-
 theorem norm_le_one_iff_val_nonneg (x : ℚ_[p]) : ‖x‖ ≤ 1 ↔ 0 ≤ x.Valuation :=
   by
   by_cases hx : x = 0
@@ -1226,6 +1386,7 @@ theorem norm_le_one_iff_val_nonneg (x : ℚ_[p]) : ‖x‖ ≤ 1 ↔ 0 ≤ x.Val
   · rw [norm_eq_pow_val hx, ← zpow_zero (p : ℝ), zpow_le_iff_le, Right.neg_nonpos_iff]
     exact Nat.one_lt_cast.2 (Nat.Prime.one_lt' p).1
 #align padic.norm_le_one_iff_val_nonneg Padic.norm_le_one_iff_val_nonneg
+-/
 
 end NormLeIff
 

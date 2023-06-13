@@ -86,11 +86,14 @@ instance structure : L.Structure ((u : Filter α).product M) :=
 #align first_order.language.ultraproduct.Structure FirstOrder.Language.Ultraproduct.structure
 -/
 
+#print FirstOrder.Language.Ultraproduct.funMap_cast /-
 theorem funMap_cast {n : ℕ} (f : L.Functions n) (x : Fin n → ∀ a, M a) :
     (funMap f fun i => (x i : (u : Filter α).product M)) = fun a => funMap f fun i => x i a := by
   apply fun_map_quotient_mk
 #align first_order.language.ultraproduct.fun_map_cast FirstOrder.Language.Ultraproduct.funMap_cast
+-/
 
+#print FirstOrder.Language.Ultraproduct.term_realize_cast /-
 theorem term_realize_cast {β : Type _} (x : β → ∀ a, M a) (t : L.term β) :
     (t.realize fun i => (x i : (u : Filter α).product M)) = fun a => t.realize fun i => x i a :=
   by
@@ -103,9 +106,11 @@ theorem term_realize_cast {β : Type _} (x : β → ∀ a, M a) (t : L.term β) 
   · simp only [term.realize, t_ih]
     rfl
 #align first_order.language.ultraproduct.term_realize_cast FirstOrder.Language.Ultraproduct.term_realize_cast
+-/
 
 variable [∀ a : α, Nonempty (M a)]
 
+#print FirstOrder.Language.Ultraproduct.boundedFormula_realize_cast /-
 theorem boundedFormula_realize_cast {β : Type _} {n : ℕ} (φ : L.BoundedFormula β n)
     (x : β → ∀ a, M a) (v : Fin n → ∀ a, M a) :
     (φ.realize (fun i : β => (x i : (u : Filter α).product M)) fun i => v i) ↔
@@ -152,7 +157,9 @@ theorem boundedFormula_realize_cast {β : Type _} {n : ℕ} (φ : L.BoundedFormu
     · rw [Filter.eventually_iff] at *
       exact Filter.mem_of_superset h fun a ha => ha (m a)
 #align first_order.language.ultraproduct.bounded_formula_realize_cast FirstOrder.Language.Ultraproduct.boundedFormula_realize_cast
+-/
 
+#print FirstOrder.Language.Ultraproduct.realize_formula_cast /-
 theorem realize_formula_cast {β : Type _} (φ : L.Formula β) (x : β → ∀ a, M a) :
     (φ.realize fun i => (x i : (u : Filter α).product M)) ↔
       ∀ᶠ a : α in u, φ.realize fun i => x i a :=
@@ -160,9 +167,11 @@ theorem realize_formula_cast {β : Type _} (φ : L.Formula β) (x : β → ∀ a
   simp_rw [formula.realize, ← bounded_formula_realize_cast φ x, iff_eq_eq]
   exact congr rfl (Subsingleton.elim _ _)
 #align first_order.language.ultraproduct.realize_formula_cast FirstOrder.Language.Ultraproduct.realize_formula_cast
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print FirstOrder.Language.Ultraproduct.sentence_realize /-
 /-- Łoś's Theorem : A sentence is true in an ultraproduct if and only if the set of structures it is
   true in is in the ultrafilter. -/
 theorem sentence_realize (φ : L.Sentence) : (u : Filter α).product M ⊨ φ ↔ ∀ᶠ a : α in u, M a ⊨ φ :=
@@ -170,6 +179,7 @@ theorem sentence_realize (φ : L.Sentence) : (u : Filter α).product M ⊨ φ �
   simp_rw [sentence.realize, ← realize_formula_cast φ, iff_eq_eq]
   exact congr rfl (Subsingleton.elim _ _)
 #align first_order.language.ultraproduct.sentence_realize FirstOrder.Language.Ultraproduct.sentence_realize
+-/
 
 instance : Nonempty ((u : Filter α).product M) :=
   letI : ∀ a, Inhabited (M a) := fun _ => Classical.inhabited_of_nonempty'

@@ -36,6 +36,7 @@ that the concrete definition is equivalent to a *-closed subalgebra which is wea
 
 universe u v
 
+#print WStarAlgebra /-
 /-- Sakai's definition of a von Neumann algebra as a C^* algebra with a Banach space predual.
 
 So that we can unambiguously talk about these "abstract" von Neumann algebras
@@ -55,7 +56,9 @@ class WStarAlgebra (M : Type u) [NormedRing M] [StarRing M] [CstarRing M] [Modul
     ∃ (X : Type u) (_ : NormedAddCommGroup X) (_ : NormedSpace ℂ X) (_ : CompleteSpace X),
       Nonempty (NormedSpace.Dual ℂ X ≃ₗᵢ⋆[ℂ] M)
 #align wstar_algebra WStarAlgebra
+-/
 
+#print VonNeumannAlgebra /-
 -- TODO: Without this, `von_neumann_algebra` times out. Why?
 /-- The double commutant definition of a von Neumann algebra,
 as a *-closed subalgebra of bounded operators on a Hilbert space,
@@ -76,6 +79,7 @@ structure VonNeumannAlgebra (H : Type u) [NormedAddCommGroup H] [InnerProductSpa
     [CompleteSpace H] extends StarSubalgebra ℂ (H →L[ℂ] H) where
   centralizer_centralizer' : Set.centralizer (Set.centralizer carrier) = carrier
 #align von_neumann_algebra VonNeumannAlgebra
+-/
 
 /-- Consider a von Neumann algebra acting on a Hilbert space `H` as a *-subalgebra of `H →L[ℂ] H`.
 (That is, we forget that it is equal to its double commutant
@@ -106,17 +110,22 @@ theorem mem_carrier {S : VonNeumannAlgebra H} {x : H →L[ℂ] H} :
   Iff.rfl
 #align von_neumann_algebra.mem_carrier VonNeumannAlgebra.mem_carrierₓ
 
+#print VonNeumannAlgebra.ext /-
 @[ext]
 theorem ext {S T : VonNeumannAlgebra H} (h : ∀ x, x ∈ S ↔ x ∈ T) : S = T :=
   SetLike.ext h
 #align von_neumann_algebra.ext VonNeumannAlgebra.ext
+-/
 
+#print VonNeumannAlgebra.centralizer_centralizer /-
 @[simp]
 theorem centralizer_centralizer (S : VonNeumannAlgebra H) :
     Set.centralizer (Set.centralizer (S : Set (H →L[ℂ] H))) = S :=
   S.centralizer_centralizer'
 #align von_neumann_algebra.centralizer_centralizer VonNeumannAlgebra.centralizer_centralizer
+-/
 
+#print VonNeumannAlgebra.commutant /-
 /-- The centralizer of a `von_neumann_algebra`, as a `von_neumann_algebra`.-/
 def commutant (S : VonNeumannAlgebra H) : VonNeumannAlgebra H :=
   {
@@ -125,23 +134,30 @@ def commutant (S : VonNeumannAlgebra H) : VonNeumannAlgebra H :=
     carrier := Set.centralizer (S : Set (H →L[ℂ] H))
     centralizer_centralizer' := by rw [S.centralizer_centralizer] }
 #align von_neumann_algebra.commutant VonNeumannAlgebra.commutant
+-/
 
+#print VonNeumannAlgebra.coe_commutant /-
 @[simp]
 theorem coe_commutant (S : VonNeumannAlgebra H) :
     ↑S.commutant = Set.centralizer (S : Set (H →L[ℂ] H)) :=
   rfl
 #align von_neumann_algebra.coe_commutant VonNeumannAlgebra.coe_commutant
+-/
 
+#print VonNeumannAlgebra.mem_commutant_iff /-
 @[simp]
 theorem mem_commutant_iff {S : VonNeumannAlgebra H} {z : H →L[ℂ] H} :
     z ∈ S.commutant ↔ ∀ g ∈ S, g * z = z * g :=
   Iff.rfl
 #align von_neumann_algebra.mem_commutant_iff VonNeumannAlgebra.mem_commutant_iff
+-/
 
+#print VonNeumannAlgebra.commutant_commutant /-
 @[simp]
 theorem commutant_commutant (S : VonNeumannAlgebra H) : S.commutant.commutant = S :=
   SetLike.coe_injective S.centralizer_centralizer'
 #align von_neumann_algebra.commutant_commutant VonNeumannAlgebra.commutant_commutant
+-/
 
 end VonNeumannAlgebra
 

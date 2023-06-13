@@ -48,12 +48,14 @@ instance smul' {g : I → Type _} [∀ i, SMul (f i) (g i)] : SMul (∀ i, f i) 
 #align pi.has_vadd' Pi.vadd'
 -/
 
+#print Pi.smul_apply' /-
 @[simp, to_additive]
 theorem smul_apply' {g : I → Type _} [∀ i, SMul (f i) (g i)] (s : ∀ i, f i) (x : ∀ i, g i) :
     (s • x) i = s i • x i :=
   rfl
 #align pi.smul_apply' Pi.smul_apply'
 #align pi.vadd_apply' Pi.vadd_apply'
+-/
 
 #print Pi.isScalarTower /-
 @[to_additive]
@@ -117,6 +119,7 @@ instance {α : Type _} [∀ i, SMul α <| f i] [∀ i, SMul αᵐᵒᵖ <| f i] 
     IsCentralScalar α (∀ i, f i) :=
   ⟨fun r m => funext fun i => op_smul_eq_smul _ _⟩
 
+#print Pi.faithfulSMul_at /-
 /-- If `f i` has a faithful scalar action for a given `i`, then so does `Π i, f i`. This is
 not an instance as `i` cannot be inferred. -/
 @[to_additive Pi.faithfulVAdd_at
@@ -131,6 +134,7 @@ theorem faithfulSMul_at {α : Type _} [∀ i, SMul α <| f i] [∀ i, Nonempty (
       simpa using this⟩
 #align pi.has_faithful_smul_at Pi.faithfulSMul_at
 #align pi.has_faithful_vadd_at Pi.faithfulVAdd_at
+-/
 
 #print Pi.faithfulSMul /-
 @[to_additive Pi.faithfulVAdd]
@@ -208,23 +212,29 @@ instance distribMulAction' {g : I → Type _} {m : ∀ i, Monoid (f i)} {n : ∀
 #align pi.distrib_mul_action' Pi.distribMulAction'
 -/
 
+#print Pi.single_smul /-
 theorem single_smul {α} [Monoid α] [∀ i, AddMonoid <| f i] [∀ i, DistribMulAction α <| f i]
     [DecidableEq I] (i : I) (r : α) (x : f i) : single i (r • x) = r • single i x :=
   single_op (fun i : I => ((· • ·) r : f i → f i)) (fun j => smul_zero _) _ _
 #align pi.single_smul Pi.single_smul
+-/
 
+#print Pi.single_smul' /-
 /-- A version of `pi.single_smul` for non-dependent functions. It is useful in cases Lean fails
 to apply `pi.single_smul`. -/
 theorem single_smul' {α β} [Monoid α] [AddMonoid β] [DistribMulAction α β] [DecidableEq I] (i : I)
     (r : α) (x : β) : single i (r • x) = r • single i x :=
   single_smul i r x
 #align pi.single_smul' Pi.single_smul'
+-/
 
+#print Pi.single_smul₀ /-
 theorem single_smul₀ {g : I → Type _} [∀ i, MonoidWithZero (f i)] [∀ i, AddMonoid (g i)]
     [∀ i, DistribMulAction (f i) (g i)] [DecidableEq I] (i : I) (r : f i) (x : g i) :
     single i (r • x) = single i r • single i x :=
   single_op₂ (fun i : I => ((· • ·) : f i → g i → g i)) (fun j => smul_zero _) _ _ _
 #align pi.single_smul₀ Pi.single_smul₀
+-/
 
 #print Pi.mulDistribMulAction /-
 instance mulDistribMulAction (α) {m : Monoid α} {n : ∀ i, Monoid <| f i}
@@ -273,34 +283,40 @@ instance smulCommClass {ι α β M : Type _} [SMul α M] [SMul β M] [SMulCommCl
 #align function.vadd_comm_class Function.vaddCommClass
 -/
 
+#print Function.update_smul /-
 @[to_additive]
 theorem update_smul {α : Type _} [∀ i, SMul α (f i)] [DecidableEq I] (c : α) (f₁ : ∀ i, f i) (i : I)
     (x₁ : f i) : update (c • f₁) i (c • x₁) = c • update f₁ i x₁ :=
   funext fun j => (apply_update (fun i => (· • ·) c) f₁ i x₁ j).symm
 #align function.update_smul Function.update_smul
 #align function.update_vadd Function.update_vadd
+-/
 
 end Function
 
 namespace Set
 
+#print Set.piecewise_smul /-
 @[to_additive]
 theorem piecewise_smul {α : Type _} [∀ i, SMul α (f i)] (s : Set I) [∀ i, Decidable (i ∈ s)] (c : α)
     (f₁ g₁ : ∀ i, f i) : s.piecewise (c • f₁) (c • g₁) = c • s.piecewise f₁ g₁ :=
   s.piecewise_op _ _ fun _ => (· • ·) c
 #align set.piecewise_smul Set.piecewise_smul
 #align set.piecewise_vadd Set.piecewise_vadd
+-/
 
 end Set
 
 section Extend
 
+#print Function.extend_smul /-
 @[to_additive]
 theorem Function.extend_smul {R α β γ : Type _} [SMul R γ] (r : R) (f : α → β) (g : α → γ)
     (e : β → γ) : Function.extend f (r • g) (r • e) = r • Function.extend f g e :=
   funext fun _ => by convert (apply_dite ((· • ·) r) _ _ _).symm
 #align function.extend_smul Function.extend_smul
 #align function.extend_vadd Function.extend_vadd
+-/
 
 end Extend
 

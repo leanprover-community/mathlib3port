@@ -804,6 +804,7 @@ theorem merge_nil_right (t : Ordnode α) : merge nil t = t :=
 #align ordnode.merge_nil_right Ordnode.merge_nil_right
 -/
 
+#print Ordnode.merge_node /-
 @[simp]
 theorem merge_node {ls ll lx lr rs rl rx rr} :
     merge (@node α ls ll lx lr) (node rs rl rx rr) =
@@ -813,6 +814,7 @@ theorem merge_node {ls ll lx lr rs rl rx rr} :
         else glue (node ls ll lx lr) (node rs rl rx rr) :=
   rfl
 #align ordnode.merge_node Ordnode.merge_node
+-/
 
 /-! ### `insert` -/
 

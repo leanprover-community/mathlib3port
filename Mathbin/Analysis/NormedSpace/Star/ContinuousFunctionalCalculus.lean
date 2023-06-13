@@ -88,6 +88,7 @@ noncomputable instance elementalStarAlgebra.Complex.normedAlgebra (a : A) :
 
 variable [CompleteSpace A] (a : A) [IsStarNormal a] (S : StarSubalgebra ℂ A)
 
+#print spectrum_star_mul_self_of_isStarNormal /-
 /-- This lemma is used in the proof of `star_subalgebra.is_unit_of_is_unit_of_is_star_normal`,
 which in turn is the key to spectral permanence `star_subalgebra.spectrum_eq`, which is itself
 necessary for the continuous functional calculus. Using the continuous functional calculus, this
@@ -110,9 +111,11 @@ theorem spectrum_star_mul_self_of_isStarNormal :
       ⟨Complex.zero_le_real.2 (norm_nonneg _),
         Complex.real_le_real.2 (AlgHom.norm_apply_le_self φ (star a' * a'))⟩
 #align spectrum_star_mul_self_of_is_star_normal spectrum_star_mul_self_of_isStarNormal
+-/
 
 variable {a}
 
+#print elementalStarAlgebra.isUnit_of_isUnit_of_isStarNormal /-
 /-- This is the key lemma on the way to establishing spectral permanence for C⋆-algebras, which is
 established in `star_subalgebra.spectrum_eq`. This lemma is superseded by
 `star_subalgebra.coe_is_unit`, which does not require an `is_star_normal` hypothesis and holds for
@@ -190,7 +193,9 @@ theorem elementalStarAlgebra.isUnit_of_isUnit_of_isStarNormal (h : IsUnit a) :
             IsROrC.conj_ofReal]
         _ < ‖star a * a‖₊ := spectrum.spectralRadius_lt_of_forall_lt _ h₂)
 #align elemental_star_algebra.is_unit_of_is_unit_of_is_star_normal elementalStarAlgebra.isUnit_of_isUnit_of_isStarNormal
+-/
 
+#print StarSubalgebra.isUnit_coe_inv_mem /-
 /-- For `x : A` which is invertible in `A`, the inverse lies in any unital C⋆-subalgebra `S`
 containing `x`. -/
 theorem StarSubalgebra.isUnit_coe_inv_mem {S : StarSubalgebra ℂ A} (hS : IsClosed (S : Set A))
@@ -207,7 +212,9 @@ theorem StarSubalgebra.isUnit_coe_inv_mem {S : StarSubalgebra ℂ A} (hS : IsClo
   convert (↑hx'.unit⁻¹ : elementalStarAlgebra ℂ (star x * x)).Prop using 1
   exact left_inv_eq_right_inv hx.unit.inv_mul (congr_arg coe hx'.unit.mul_inv)
 #align star_subalgebra.is_unit_coe_inv_mem StarSubalgebra.isUnit_coe_inv_mem
+-/
 
+#print StarSubalgebra.coe_isUnit /-
 /-- For a unital C⋆-subalgebra `S` of `A` and `x : S`, if `↑x : A` is invertible in `A`, then
 `x` is invertible in `S`. -/
 theorem StarSubalgebra.coe_isUnit {S : StarSubalgebra ℂ A} (hS : IsClosed (S : Set A)) {x : S} :
@@ -218,21 +225,27 @@ theorem StarSubalgebra.coe_isUnit {S : StarSubalgebra ℂ A} (hS : IsClosed (S :
       fun hx => hx.map S.subtype⟩
   exacts [Subtype.coe_injective hx.mul_coe_inv, Subtype.coe_injective hx.coe_inv_mul]
 #align star_subalgebra.coe_is_unit StarSubalgebra.coe_isUnit
+-/
 
+#print StarSubalgebra.mem_spectrum_iff /-
 theorem StarSubalgebra.mem_spectrum_iff {S : StarSubalgebra ℂ A} (hS : IsClosed (S : Set A)) {x : S}
     {z : ℂ} : z ∈ spectrum ℂ x ↔ z ∈ spectrum ℂ (x : A) :=
   not_iff_not.2 (StarSubalgebra.coe_isUnit hS).symm
 #align star_subalgebra.mem_spectrum_iff StarSubalgebra.mem_spectrum_iff
+-/
 
+#print StarSubalgebra.spectrum_eq /-
 /-- **Spectral permanence.** The spectrum of an element is invariant of the (closed)
 `star_subalgebra` in which it is contained. -/
 theorem StarSubalgebra.spectrum_eq {S : StarSubalgebra ℂ A} (hS : IsClosed (S : Set A)) (x : S) :
     spectrum ℂ x = spectrum ℂ (x : A) :=
   Set.ext fun z => StarSubalgebra.mem_spectrum_iff hS
 #align star_subalgebra.spectrum_eq StarSubalgebra.spectrum_eq
+-/
 
 variable (a)
 
+#print elementalStarAlgebra.characterSpaceToSpectrum /-
 /-- The natural map from `character_space ℂ (elemental_star_algebra ℂ x)` to `spectrum ℂ x` given
 by evaluating `φ` at `x`. This is essentially just evaluation of the `gelfand_transform` of `x`,
 but because we want something in `spectrum ℂ x`, as opposed to
@@ -247,13 +260,17 @@ noncomputable def elementalStarAlgebra.characterSpaceToSpectrum (x : A)
         ⟨x, self_mem ℂ x⟩] using
       AlgHom.apply_mem_spectrum φ ⟨x, self_mem ℂ x⟩
 #align elemental_star_algebra.character_space_to_spectrum elementalStarAlgebra.characterSpaceToSpectrum
+-/
 
+#print elementalStarAlgebra.continuous_characterSpaceToSpectrum /-
 theorem elementalStarAlgebra.continuous_characterSpaceToSpectrum (x : A) :
     Continuous (elementalStarAlgebra.characterSpaceToSpectrum x) :=
   continuous_induced_rng.2
     (map_continuous <| gelfandTransform ℂ (elementalStarAlgebra ℂ x) ⟨x, self_mem ℂ x⟩)
 #align elemental_star_algebra.continuous_character_space_to_spectrum elementalStarAlgebra.continuous_characterSpaceToSpectrum
+-/
 
+#print elementalStarAlgebra.bijective_characterSpaceToSpectrum /-
 theorem elementalStarAlgebra.bijective_characterSpaceToSpectrum :
     Function.Bijective (elementalStarAlgebra.characterSpaceToSpectrum a) :=
   by
@@ -271,7 +288,9 @@ theorem elementalStarAlgebra.bijective_characterSpaceToSpectrum :
   obtain ⟨φ, rfl⟩ := hz'
   exact ⟨φ, rfl⟩
 #align elemental_star_algebra.bijective_character_space_to_spectrum elementalStarAlgebra.bijective_characterSpaceToSpectrum
+-/
 
+#print elementalStarAlgebra.characterSpaceHomeo /-
 /-- The homeomorphism between the character space of the unital C⋆-subalgebra generated by a
 single normal element `a : A` and `spectrum ℂ a`. -/
 noncomputable def elementalStarAlgebra.characterSpaceHomeo :
@@ -281,7 +300,9 @@ noncomputable def elementalStarAlgebra.characterSpaceHomeo :
       (elementalStarAlgebra.bijective_characterSpaceToSpectrum a))
     (elementalStarAlgebra.continuous_characterSpaceToSpectrum a)
 #align elemental_star_algebra.character_space_homeo elementalStarAlgebra.characterSpaceHomeo
+-/
 
+#print continuousFunctionalCalculus /-
 /-- **Continuous functional calculus.** Given a normal element `a : A` of a unital C⋆-algebra,
 the continuous functional calculus is a `star_alg_equiv` from the complex-valued continuous
 functions on the spectrum of `a` to the unital C⋆-subalgebra generated by `a`. Moreover, this
@@ -292,10 +313,13 @@ noncomputable def continuousFunctionalCalculus :
   ((elementalStarAlgebra.characterSpaceHomeo a).compStarAlgEquiv' ℂ ℂ).trans
     (gelfandStarTransform (elementalStarAlgebra ℂ a)).symm
 #align continuous_functional_calculus continuousFunctionalCalculus
+-/
 
+#print continuousFunctionalCalculus_map_id /-
 theorem continuousFunctionalCalculus_map_id :
     continuousFunctionalCalculus a ((ContinuousMap.id ℂ).restrict (spectrum ℂ a)) =
       ⟨a, self_mem ℂ a⟩ :=
   StarAlgEquiv.symm_apply_apply _ _
 #align continuous_functional_calculus_map_id continuousFunctionalCalculus_map_id
+-/
 

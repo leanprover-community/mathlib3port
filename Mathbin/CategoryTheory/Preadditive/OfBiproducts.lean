@@ -57,10 +57,8 @@ def rightAdd (f g : X ⟶ Y) : X ⟶ Y :=
 #align category_theory.semiadditive_of_binary_biproducts.right_add CategoryTheory.SemiadditiveOfBinaryBiproducts.rightAdd
 -/
 
--- mathport name: «expr +ₗ »
 local infixr:65 " +ₗ " => leftAdd X Y
 
--- mathport name: «expr +ᵣ »
 local infixr:65 " +ᵣ " => rightAdd X Y
 
 #print CategoryTheory.SemiadditiveOfBinaryBiproducts.isUnital_leftAdd /-
@@ -113,22 +111,30 @@ variable {X Y Z : C}
 
 attribute [local instance] add_comm_monoid_hom_of_has_binary_biproducts
 
+#print CategoryTheory.SemiadditiveOfBinaryBiproducts.add_eq_right_addition /-
 theorem add_eq_right_addition (f g : X ⟶ Y) : f + g = biprod.lift (𝟙 X) (𝟙 X) ≫ biprod.desc f g :=
   rfl
 #align category_theory.semiadditive_of_binary_biproducts.add_eq_right_addition CategoryTheory.SemiadditiveOfBinaryBiproducts.add_eq_right_addition
+-/
 
+#print CategoryTheory.SemiadditiveOfBinaryBiproducts.add_eq_left_addition /-
 theorem add_eq_left_addition (f g : X ⟶ Y) : f + g = biprod.lift f g ≫ biprod.desc (𝟙 Y) (𝟙 Y) :=
   congr_fun₂ (EckmannHilton.mul (isUnital_leftAdd X Y) (isUnital_rightAdd X Y) (distrib X Y)).symm f
     g
 #align category_theory.semiadditive_of_binary_biproducts.add_eq_left_addition CategoryTheory.SemiadditiveOfBinaryBiproducts.add_eq_left_addition
+-/
 
+#print CategoryTheory.SemiadditiveOfBinaryBiproducts.add_comp /-
 theorem add_comp (f g : X ⟶ Y) (h : Y ⟶ Z) : (f + g) ≫ h = f ≫ h + g ≫ h := by
   simp only [add_eq_right_addition, category.assoc]; congr; ext <;> simp
 #align category_theory.semiadditive_of_binary_biproducts.add_comp CategoryTheory.SemiadditiveOfBinaryBiproducts.add_comp
+-/
 
+#print CategoryTheory.SemiadditiveOfBinaryBiproducts.comp_add /-
 theorem comp_add (f : X ⟶ Y) (g h : Y ⟶ Z) : f ≫ (g + h) = f ≫ g + f ≫ h := by
   simp only [add_eq_left_addition, ← category.assoc]; congr; ext <;> simp
 #align category_theory.semiadditive_of_binary_biproducts.comp_add CategoryTheory.SemiadditiveOfBinaryBiproducts.comp_add
+-/
 
 end
 

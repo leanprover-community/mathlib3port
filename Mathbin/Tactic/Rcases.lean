@@ -98,10 +98,8 @@ def ListPi :=
   List
 #align tactic.list_Pi Tactic.ListPi
 
--- mathport name: «exprlistΣ»
 local notation "listΣ" => ListSigma
 
--- mathport name: «exprlistΠ»
 local notation "listΠ" => ListPi
 
 /-- A metavariable representing a subgoal, together with a list of local constants to clear. -/

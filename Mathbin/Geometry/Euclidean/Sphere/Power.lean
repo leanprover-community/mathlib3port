@@ -43,6 +43,7 @@ which are used to deduce corresponding results for Euclidean affine spaces.
 -/
 
 
+#print InnerProductGeometry.mul_norm_eq_abs_sub_sq_norm /-
 theorem mul_norm_eq_abs_sub_sq_norm {x y z : V} (h₁ : ∃ k : ℝ, k ≠ 1 ∧ x + y = k • (x - y))
     (h₂ : ‖z - y‖ = ‖z + y‖) : ‖x - y‖ * ‖x + y‖ = |‖z + y‖ ^ 2 - ‖z - x‖ ^ 2| :=
   by
@@ -71,6 +72,7 @@ theorem mul_norm_eq_abs_sub_sq_norm {x y z : V} (h₁ : ∃ k : ℝ, k ≠ 1 ∧
     _ = |‖z + y‖ ^ 2 - ‖z - x‖ ^ 2| := by
       simp [norm_add_sq_real, norm_sub_sq_real, hzy, hzx, abs_sub_comm]
 #align inner_product_geometry.mul_norm_eq_abs_sub_sq_norm InnerProductGeometry.mul_norm_eq_abs_sub_sq_norm
+-/
 
 end InnerProductGeometry
 
@@ -87,8 +89,7 @@ open InnerProductGeometry
 
 variable {P : Type _} [MetricSpace P] [NormedAddTorsor V P]
 
-include V
-
+#print EuclideanGeometry.mul_dist_eq_abs_sub_sq_dist /-
 /-- If `P` is a point on the line `AB` and `Q` is equidistant from `A` and `B`, then
 `AP * BP = abs (BQ ^ 2 - PQ ^ 2)`. -/
 theorem mul_dist_eq_abs_sub_sq_dist {a b p q : P} (hp : ∃ k : ℝ, k ≠ 1 ∧ b -ᵥ p = k • (a -ᵥ p))
@@ -104,7 +105,9 @@ theorem mul_dist_eq_abs_sub_sq_dist {a b p q : P} (hp : ∃ k : ℝ, k ≠ 1 ∧
   rw [dist_eq_norm_vsub V a q, dist_eq_norm_vsub V b q, ← h3, h] at hq 
   exact mul_norm_eq_abs_sub_sq_norm hp hq
 #align euclidean_geometry.mul_dist_eq_abs_sub_sq_dist EuclideanGeometry.mul_dist_eq_abs_sub_sq_dist
+-/
 
+#print EuclideanGeometry.mul_dist_eq_mul_dist_of_cospherical /-
 /-- If `A`, `B`, `C`, `D` are cospherical and `P` is on both lines `AB` and `CD`, then
 `AP * BP = CP * DP`. -/
 theorem mul_dist_eq_mul_dist_of_cospherical {a b c d p : P} (h : Cospherical ({a, b, c, d} : Set P))
@@ -119,7 +122,9 @@ theorem mul_dist_eq_mul_dist_of_cospherical {a b c d p : P} (h : Cospherical ({a
     rw [mul_dist_eq_abs_sub_sq_dist hapb ha, hb, mul_dist_eq_abs_sub_sq_dist hcpd hc, hd]
   all_goals simp
 #align euclidean_geometry.mul_dist_eq_mul_dist_of_cospherical EuclideanGeometry.mul_dist_eq_mul_dist_of_cospherical
+-/
 
+#print EuclideanGeometry.mul_dist_eq_mul_dist_of_cospherical_of_angle_eq_pi /-
 /-- **Intersecting Chords Theorem**. -/
 theorem mul_dist_eq_mul_dist_of_cospherical_of_angle_eq_pi {a b c d p : P}
     (h : Cospherical ({a, b, c, d} : Set P)) (hapb : ∠ a p b = π) (hcpd : ∠ c p d = π) :
@@ -129,7 +134,9 @@ theorem mul_dist_eq_mul_dist_of_cospherical_of_angle_eq_pi {a b c d p : P}
   obtain ⟨-, k₂, _, hcd⟩ := angle_eq_pi_iff.mp hcpd
   exact mul_dist_eq_mul_dist_of_cospherical h ⟨k₁, by linarith, hab⟩ ⟨k₂, by linarith, hcd⟩
 #align euclidean_geometry.mul_dist_eq_mul_dist_of_cospherical_of_angle_eq_pi EuclideanGeometry.mul_dist_eq_mul_dist_of_cospherical_of_angle_eq_pi
+-/
 
+#print EuclideanGeometry.mul_dist_eq_mul_dist_of_cospherical_of_angle_eq_zero /-
 /-- **Intersecting Secants Theorem**. -/
 theorem mul_dist_eq_mul_dist_of_cospherical_of_angle_eq_zero {a b c d p : P}
     (h : Cospherical ({a, b, c, d} : Set P)) (hab : a ≠ b) (hcd : c ≠ d) (hapb : ∠ a p b = 0)
@@ -141,6 +148,7 @@ theorem mul_dist_eq_mul_dist_of_cospherical_of_angle_eq_zero {a b c d p : P}
     simp_all only [Classical.not_not, one_smul]
   exacts [hab (vsub_left_cancel hab₁).symm, hcd (vsub_left_cancel hcd₁).symm]
 #align euclidean_geometry.mul_dist_eq_mul_dist_of_cospherical_of_angle_eq_zero EuclideanGeometry.mul_dist_eq_mul_dist_of_cospherical_of_angle_eq_zero
+-/
 
 end EuclideanGeometry
 

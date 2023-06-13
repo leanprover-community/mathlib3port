@@ -79,16 +79,21 @@ def bernoulli' : ℕ → ℚ :=
 #align bernoulli' bernoulli'
 -/
 
+#print bernoulli'_def' /-
 theorem bernoulli'_def' (n : ℕ) :
     bernoulli' n = 1 - ∑ k : Fin n, n.choose k / (n - k + 1) * bernoulli' k :=
   WellFounded.fix_eq _ _ _
 #align bernoulli'_def' bernoulli'_def'
+-/
 
+#print bernoulli'_def /-
 theorem bernoulli'_def (n : ℕ) :
     bernoulli' n = 1 - ∑ k in range n, n.choose k / (n - k + 1) * bernoulli' k := by
   rw [bernoulli'_def', ← Fin.sum_univ_eq_sum_range]; rfl
 #align bernoulli'_def bernoulli'_def
+-/
 
+#print bernoulli'_spec /-
 theorem bernoulli'_spec (n : ℕ) :
     ∑ k in range n.succ, (n.choose (n - k) : ℚ) / (n - k + 1) * bernoulli' k = 1 :=
   by
@@ -96,7 +101,9 @@ theorem bernoulli'_spec (n : ℕ) :
   conv in n.choose (_ - _) => rw [choose_symm (mem_range.1 H).le]
   simp only [one_mul, cast_one, sub_self, sub_add_cancel, choose_zero_right, zero_add, div_one]
 #align bernoulli'_spec bernoulli'_spec
+-/
 
+#print bernoulli'_spec' /-
 theorem bernoulli'_spec' (n : ℕ) :
     ∑ k in antidiagonal n, ((k.1 + k.2).choose k.2 : ℚ) / (k.2 + 1) * bernoulli' k.1 = 1 :=
   by
@@ -104,6 +111,7 @@ theorem bernoulli'_spec' (n : ℕ) :
   refine' sum_congr rfl fun x hx => _
   simp only [add_tsub_cancel_of_le, mem_range_succ_iff.mp hx, cast_sub]
 #align bernoulli'_spec' bernoulli'_spec'
+-/
 
 /-! ### Examples -/
 
@@ -147,6 +155,7 @@ theorem bernoulli'_four : bernoulli' 4 = -1 / 30 :=
 
 end Examples
 
+#print sum_bernoulli' /-
 @[simp]
 theorem sum_bernoulli' (n : ℕ) : ∑ k in range n, (n.choose k : ℚ) * bernoulli' k = n :=
   by
@@ -162,6 +171,7 @@ theorem sum_bernoulli' (n : ℕ) : ∑ k in range n, (n.choose k : ℚ) * bernou
   field_simp [← cast_sub (mem_range.1 hk).le, mul_comm]
   rw_mod_cast [tsub_add_eq_add_tsub (mem_range.1 hk).le, choose_mul_succ_eq]
 #align sum_bernoulli' sum_bernoulli'
+-/
 
 #print bernoulli'PowerSeries /-
 /-- The exponential generating function for the Bernoulli numbers `bernoulli' n`. -/
@@ -170,6 +180,7 @@ def bernoulli'PowerSeries :=
 #align bernoulli'_power_series bernoulli'PowerSeries
 -/
 
+#print bernoulli'PowerSeries_mul_exp_sub_one /-
 theorem bernoulli'PowerSeries_mul_exp_sub_one : bernoulli'PowerSeries A * (exp A - 1) = X * exp A :=
   by
   ext n
@@ -193,6 +204,7 @@ theorem bernoulli'PowerSeries_mul_exp_sub_one : bernoulli'PowerSeries A * (exp A
   rw [cast_mul, cast_mul, mul_div_mul_right, cast_div_char_zero, cast_mul]
   assumption; rwa [Nat.cast_succ]
 #align bernoulli'_power_series_mul_exp_sub_one bernoulli'PowerSeries_mul_exp_sub_one
+-/
 
 #print bernoulli'_odd_eq_zero /-
 /-- Odd Bernoulli numbers (greater than 1) are zero. -/
@@ -251,6 +263,7 @@ theorem bernoulli_eq_bernoulli'_of_ne_one {n : ℕ} (hn : n ≠ 1) : bernoulli n
 #align bernoulli_eq_bernoulli'_of_ne_one bernoulli_eq_bernoulli'_of_ne_one
 -/
 
+#print sum_bernoulli /-
 @[simp]
 theorem sum_bernoulli (n : ℕ) :
     ∑ k in range n, (n.choose k : ℚ) * bernoulli k = if n = 1 then 1 else 0 :=
@@ -269,7 +282,9 @@ theorem sum_bernoulli (n : ℕ) :
   · simp only [one_div, mul_one, bernoulli'_zero, cast_one, choose_zero_right, add_sub_cancel]
     ring
 #align sum_bernoulli sum_bernoulli
+-/
 
+#print bernoulli_spec' /-
 theorem bernoulli_spec' (n : ℕ) :
     ∑ k in antidiagonal n, ((k.1 + k.2).choose k.2 : ℚ) / (k.2 + 1) * bernoulli k.1 =
       if n = 0 then 1 else 0 :=
@@ -292,6 +307,7 @@ theorem bernoulli_spec' (n : ℕ) :
   · field_simp [h₃]
     norm_num
 #align bernoulli_spec' bernoulli_spec'
+-/
 
 #print bernoulliPowerSeries /-
 /-- The exponential generating function for the Bernoulli numbers `bernoulli n`. -/
@@ -300,6 +316,7 @@ def bernoulliPowerSeries :=
 #align bernoulli_power_series bernoulliPowerSeries
 -/
 
+#print bernoulliPowerSeries_mul_exp_sub_one /-
 theorem bernoulliPowerSeries_mul_exp_sub_one : bernoulliPowerSeries A * (exp A - 1) = X :=
   by
   ext n
@@ -323,9 +340,11 @@ theorem bernoulliPowerSeries_mul_exp_sub_one : bernoulliPowerSeries A * (exp A -
     Nat.factorial_ne_zero, hj]
   cc
 #align bernoulli_power_series_mul_exp_sub_one bernoulliPowerSeries_mul_exp_sub_one
+-/
 
 section Faulhaber
 
+#print sum_range_pow /-
 /-- **Faulhaber's theorem** relating the **sum of of p-th powers** to the Bernoulli numbers:
 $$\sum_{k=0}^{n-1} k^p = \sum_{i=0}^p B_i\binom{p+1}{i}\frac{n^{p+1-i}}{p+1}.$$
 See https://proofwiki.org/wiki/Faulhaber%27s_Formula and [orosi2018faulhaber] for
@@ -389,7 +408,9 @@ theorem sum_range_pow (n p : ℕ) :
   refine' sum_congr rfl fun x hx => _
   field_simp [mul_right_comm _ ↑p !, ← mul_assoc _ _ ↑p !, cast_add_one_ne_zero, hne]
 #align sum_range_pow sum_range_pow
+-/
 
+#print sum_Ico_pow /-
 /-- Alternate form of **Faulhaber's theorem**, relating the sum of p-th powers to the Bernoulli
 numbers: $$\sum_{k=1}^{n} k^p = \sum_{i=0}^p (-1)^iB_i\binom{p+1}{i}\frac{n^{p+1-i}}{p+1}.$$
 Deduced from `sum_range_pow`. -/
@@ -445,6 +466,7 @@ theorem sum_Ico_pow (n p : ℕ) :
         ∑ i in range p.succ.succ, f' i :=
       by simp_rw [sum_range_succ']
 #align sum_Ico_pow sum_Ico_pow
+-/
 
 end Faulhaber
 

@@ -61,12 +61,14 @@ deriving Category
 #align category_theory.component CategoryTheory.Component
 -/
 
+#print CategoryTheory.Component.ι /-
 /-- The inclusion functor from a connected component to the whole category. -/
 @[simps (config := { rhsMd := semireducible })]
 def Component.ι (j) : Component j ⥤ J :=
   fullSubcategoryInclusion _
 deriving Full, Faithful
 #align category_theory.component.ι CategoryTheory.Component.ι
+-/
 
 /-- Each connected component of the category is nonempty. -/
 instance (j : ConnectedComponents J) : Nonempty (Component j) :=
@@ -170,11 +172,13 @@ instance : EssSurj (decomposedTo J) where mem_essImage j := ⟨⟨_, j, rfl⟩, 
 instance : IsEquivalence (decomposedTo J) :=
   Equivalence.ofFullyFaithfullyEssSurj _
 
+#print CategoryTheory.decomposedEquiv /-
 /-- This gives that any category is equivalent to a disjoint union of connected categories. -/
 @[simps (config := { rhsMd := semireducible }) Functor]
 def decomposedEquiv : Decomposed J ≌ J :=
   (decomposedTo J).asEquivalence
 #align category_theory.decomposed_equiv CategoryTheory.decomposedEquiv
+-/
 
 end CategoryTheory
 

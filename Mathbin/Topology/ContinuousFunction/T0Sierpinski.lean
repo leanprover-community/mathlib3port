@@ -31,6 +31,7 @@ noncomputable section
 
 namespace TopologicalSpace
 
+#print TopologicalSpace.eq_induced_by_maps_to_sierpinski /-
 theorem eq_induced_by_maps_to_sierpinski (X : Type _) [t : TopologicalSpace X] :
     t = ⨅ u : Opens X, sierpinskiSpace.induced (· ∈ u) :=
   by
@@ -43,6 +44,7 @@ theorem eq_induced_by_maps_to_sierpinski (X : Type _) [t : TopologicalSpace X] :
     simp only [Set.mem_iUnion, Set.mem_setOf_eq, isOpen_induced_iff]
     exact ⟨⟨u, h⟩, {True}, isOpen_singleton_true, by simp [Set.preimage]⟩
 #align topological_space.eq_induced_by_maps_to_sierpinski TopologicalSpace.eq_induced_by_maps_to_sierpinski
+-/
 
 variable (X : Type _) [TopologicalSpace X]
 
@@ -57,22 +59,28 @@ def productOfMemOpens : C(X, Opens X → Prop)
 #align topological_space.product_of_mem_opens TopologicalSpace.productOfMemOpens
 -/
 
+#print TopologicalSpace.productOfMemOpens_inducing /-
 theorem productOfMemOpens_inducing : Inducing (productOfMemOpens X) :=
   by
   convert inducing_iInf_to_pi fun (u : opens X) (x : X) => x ∈ u
   apply eq_induced_by_maps_to_sierpinski
 #align topological_space.product_of_mem_opens_inducing TopologicalSpace.productOfMemOpens_inducing
+-/
 
+#print TopologicalSpace.productOfMemOpens_injective /-
 theorem productOfMemOpens_injective [T0Space X] : Function.Injective (productOfMemOpens X) :=
   by
   intro x1 x2 h
   apply Inseparable.eq
   rw [← Inducing.inseparable_iff (product_of_mem_opens_inducing X), h]
 #align topological_space.product_of_mem_opens_injective TopologicalSpace.productOfMemOpens_injective
+-/
 
+#print TopologicalSpace.productOfMemOpens_embedding /-
 theorem productOfMemOpens_embedding [T0Space X] : Embedding (productOfMemOpens X) :=
   Embedding.mk (productOfMemOpens_inducing X) (productOfMemOpens_injective X)
 #align topological_space.product_of_mem_opens_embedding TopologicalSpace.productOfMemOpens_embedding
+-/
 
 end TopologicalSpace
 

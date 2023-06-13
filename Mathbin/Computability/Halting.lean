@@ -77,6 +77,7 @@ open Nat.Partrec (code)
 
 open Nat.Partrec.Code
 
+#print Partrec.merge' /-
 theorem merge' {f g : α →. σ} (hf : Partrec f) (hg : Partrec g) :
     ∃ k : α →. σ,
       Partrec k ∧ ∀ a, (∀ x ∈ k a, x ∈ f a ∨ x ∈ g a) ∧ ((k a).Dom ↔ (f a).Dom ∨ (g a).Dom) :=
@@ -103,7 +104,9 @@ theorem merge' {f g : α →. σ} (hf : Partrec f) (hg : Partrec g) :
   · exact Or.inl ha
   exact Or.inr ha
 #align partrec.merge' Partrec.merge'
+-/
 
+#print Partrec.merge /-
 theorem merge {f g : α →. σ} (hf : Partrec f) (hg : Partrec g)
     (H : ∀ (a), ∀ x ∈ f a, ∀ y ∈ g a, x = y) :
     ∃ k : α →. σ, Partrec k ∧ ∀ a x, x ∈ k a ↔ x ∈ f a ∨ x ∈ g a :=
@@ -119,7 +122,9 @@ theorem merge {f g : α →. σ} (hf : Partrec f) (hg : Partrec g)
       · exact H _ _ h' _ h
       · exact mem_unique h' h⟩⟩
 #align partrec.merge Partrec.merge
+-/
 
+#print Partrec.cond /-
 theorem cond {c : α → Bool} {f : α →. σ} {g : α →. σ} (hc : Computable c) (hf : Partrec f)
     (hg : Partrec g) : Partrec fun a => cond (c a) (f a) (g a) :=
   let ⟨cf, ef⟩ := exists_code.1 hf
@@ -128,7 +133,9 @@ theorem cond {c : α → Bool} {f : α →. σ} {g : α →. σ} (hc : Computabl
         ((@Computable.decode σ _).comp snd).ofOption.to₂).of_eq
     fun a => by cases c a <;> simp [ef, eg, encodek]
 #align partrec.cond Partrec.cond
+-/
 
+#print Partrec.sum_casesOn /-
 theorem sum_casesOn {f : α → Sum β γ} {g : α → β →. σ} {h : α → γ →. σ} (hf : Computable f)
     (hg : Partrec₂ g) (hh : Partrec₂ h) : @Partrec _ σ _ _ fun a => Sum.casesOn (f a) (g a) (h a) :=
   option_some_iff.1 <|
@@ -137,6 +144,7 @@ theorem sum_casesOn {f : α → Sum β γ} {g : α → β →. σ} {h : α → �
           (sum_casesOn_right hf (const Option.none).to₂ (option_some_iff.2 hh).to₂)).of_eq
       fun a => by cases f a <;> simp only [Bool.cond_true, Bool.cond_false]
 #align partrec.sum_cases Partrec.sum_casesOn
+-/
 
 end Partrec
 
@@ -162,10 +170,12 @@ theorem RePred.of_eq {α} [Primcodable α] {p q : α → Prop} (hp : RePred p) (
 #align re_pred.of_eq RePred.of_eq
 -/
 
+#print Partrec.dom_re /-
 theorem Partrec.dom_re {α β} [Primcodable α] [Primcodable β] {f : α →. β} (h : Partrec f) :
     RePred fun a => (f a).Dom :=
   (h.map (Computable.const ()).to₂).of_eq fun n => Part.ext fun _ => by simp [Part.dom_iff_mem]
 #align partrec.dom_re Partrec.dom_re
+-/
 
 #print ComputablePred.of_eq /-
 theorem ComputablePred.of_eq {α} [Primcodable α] {p q : α → Prop} (hp : ComputablePred p)

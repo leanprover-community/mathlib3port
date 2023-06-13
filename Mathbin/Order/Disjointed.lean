@@ -66,9 +66,11 @@ theorem disjointed_zero (f : ℕ → α) : disjointed f 0 = f 0 :=
 #align disjointed_zero disjointed_zero
 -/
 
+#print disjointed_succ /-
 theorem disjointed_succ (f : ℕ → α) (n : ℕ) : disjointed f (n + 1) = f (n + 1) \ partialSups f n :=
   rfl
 #align disjointed_succ disjointed_succ
+-/
 
 #print disjointed_le_id /-
 theorem disjointed_le_id : disjointed ≤ (id : (ℕ → α) → ℕ → α) :=
@@ -98,6 +100,7 @@ theorem disjoint_disjointed (f : ℕ → α) : Pairwise (Disjoint on disjointed 
 #align disjoint_disjointed disjoint_disjointed
 -/
 
+#print disjointedRec /-
 /-- An induction principle for `disjointed`. To define/prove something on `disjointed f n`, it's
 enough to define/prove it for `f n` and being able to extend through diffs. -/
 def disjointedRec {f : ℕ → α} {p : α → Sort _} (hdiff : ∀ ⦃t i⦄, p t → p (t \ f i)) :
@@ -112,17 +115,22 @@ def disjointedRec {f : ℕ → α} {p : α → Sort _} (hdiff : ∀ ⦃t i⦄, p
     rw [partialSups_succ, ← sdiff_sdiff_left]
     exact hdiff ih
 #align disjointed_rec disjointedRec
+-/
 
+#print disjointedRec_zero /-
 @[simp]
 theorem disjointedRec_zero {f : ℕ → α} {p : α → Sort _} (hdiff : ∀ ⦃t i⦄, p t → p (t \ f i))
     (h₀ : p (f 0)) : disjointedRec hdiff h₀ = h₀ :=
   rfl
 #align disjointed_rec_zero disjointedRec_zero
+-/
 
+#print Monotone.disjointed_eq /-
 -- TODO: Find a useful statement of `disjointed_rec_succ`.
 theorem Monotone.disjointed_eq {f : ℕ → α} (hf : Monotone f) (n : ℕ) :
     disjointed f (n + 1) = f (n + 1) \ f n := by rw [disjointed_succ, hf.partial_sups_eq]
 #align monotone.disjointed_eq Monotone.disjointed_eq
+-/
 
 #print partialSups_disjointed /-
 @[simp]
@@ -163,10 +171,13 @@ section CompleteBooleanAlgebra
 
 variable [CompleteBooleanAlgebra α]
 
+#print iSup_disjointed /-
 theorem iSup_disjointed (f : ℕ → α) : (⨆ n, disjointed f n) = ⨆ n, f n :=
   iSup_eq_iSup_of_partialSups_eq_partialSups (partialSups_disjointed f)
 #align supr_disjointed iSup_disjointed
+-/
 
+#print disjointed_eq_inf_compl /-
 theorem disjointed_eq_inf_compl (f : ℕ → α) (n : ℕ) : disjointed f n = f n ⊓ ⨅ i < n, f iᶜ :=
   by
   cases n
@@ -178,26 +189,35 @@ theorem disjointed_eq_inf_compl (f : ℕ → α) (n : ℕ) : disjointed f n = f 
   ext i
   rw [Nat.lt_succ_iff]
 #align disjointed_eq_inf_compl disjointed_eq_inf_compl
+-/
 
 end CompleteBooleanAlgebra
 
 /-! ### Set notation variants of lemmas -/
 
 
+#print disjointed_subset /-
 theorem disjointed_subset (f : ℕ → Set α) (n : ℕ) : disjointed f n ⊆ f n :=
   disjointed_le f n
 #align disjointed_subset disjointed_subset
+-/
 
+#print iUnion_disjointed /-
 theorem iUnion_disjointed {f : ℕ → Set α} : (⋃ n, disjointed f n) = ⋃ n, f n :=
   iSup_disjointed f
 #align Union_disjointed iUnion_disjointed
+-/
 
+#print disjointed_eq_inter_compl /-
 theorem disjointed_eq_inter_compl (f : ℕ → Set α) (n : ℕ) : disjointed f n = f n ∩ ⋂ i < n, f iᶜ :=
   disjointed_eq_inf_compl f n
 #align disjointed_eq_inter_compl disjointed_eq_inter_compl
+-/
 
+#print preimage_find_eq_disjointed /-
 theorem preimage_find_eq_disjointed (s : ℕ → Set α) (H : ∀ x, ∃ n, x ∈ s n)
     [∀ x n, Decidable (x ∈ s n)] (n : ℕ) : (fun x => Nat.find (H x)) ⁻¹' {n} = disjointed s n := by
   ext x; simp [Nat.find_eq_iff, disjointed_eq_inter_compl]
 #align preimage_find_eq_disjointed preimage_find_eq_disjointed
+-/
 

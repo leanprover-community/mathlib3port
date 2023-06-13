@@ -28,6 +28,7 @@ open scoped Topology Classical
 
 variable {a b : ℝ} {f f' : ℝ → ℝ}
 
+#print exists_hasDerivWithinAt_eq_of_gt_of_lt /-
 /-- **Darboux's theorem**: if `a ≤ b` and `f' a < m < f' b`, then `f' c = m` for some
 `c ∈ (a, b)`. -/
 theorem exists_hasDerivWithinAt_eq_of_gt_of_lt (hab : a ≤ b)
@@ -68,7 +69,9 @@ theorem exists_hasDerivWithinAt_eq_of_gt_of_lt (hab : a ≤ b)
   have : Icc a b ∈ 𝓝 c := by rwa [← mem_interior_iff_mem_nhds, interior_Icc]
   exact (hc.is_local_min this).hasDerivAt_eq_zero ((hg c cmem).HasDerivAt this)
 #align exists_has_deriv_within_at_eq_of_gt_of_lt exists_hasDerivWithinAt_eq_of_gt_of_lt
+-/
 
+#print exists_hasDerivWithinAt_eq_of_lt_of_gt /-
 /-- **Darboux's theorem**: if `a ≤ b` and `f' b < m < f' a`, then `f' c = m` for some `c ∈ (a, b)`.
 -/
 theorem exists_hasDerivWithinAt_eq_of_lt_of_gt (hab : a ≤ b)
@@ -79,6 +82,7 @@ theorem exists_hasDerivWithinAt_eq_of_lt_of_gt (hab : a ≤ b)
       (neg_lt_neg hmb)
   ⟨c, cmem, neg_injective hc⟩
 #align exists_has_deriv_within_at_eq_of_lt_of_gt exists_hasDerivWithinAt_eq_of_lt_of_gt
+-/
 
 #print Set.OrdConnected.image_hasDerivWithinAt /-
 /-- **Darboux's theorem**: the image of an `ord_connected` set under `f'` is an `ord_connected`
@@ -120,27 +124,34 @@ theorem Set.OrdConnected.image_deriv {s : Set ℝ} (hs : OrdConnected s)
 #align set.ord_connected.image_deriv Set.OrdConnected.image_deriv
 -/
 
+#print Convex.image_hasDerivWithinAt /-
 /-- **Darboux's theorem**: the image of a convex set under `f'` is a convex set,
 `has_deriv_within_at` version. -/
 theorem Convex.image_hasDerivWithinAt {s : Set ℝ} (hs : Convex ℝ s)
     (hf : ∀ x ∈ s, HasDerivWithinAt f (f' x) s x) : Convex ℝ (f' '' s) :=
   (hs.OrdConnected.image_hasDerivWithinAt hf).Convex
 #align convex.image_has_deriv_within_at Convex.image_hasDerivWithinAt
+-/
 
+#print Convex.image_derivWithin /-
 /-- **Darboux's theorem**: the image of a convex set under `f'` is a convex set,
 `deriv_within` version. -/
 theorem Convex.image_derivWithin {s : Set ℝ} (hs : Convex ℝ s) (hf : DifferentiableOn ℝ f s) :
     Convex ℝ (derivWithin f s '' s) :=
   (hs.OrdConnected.image_derivWithin hf).Convex
 #align convex.image_deriv_within Convex.image_derivWithin
+-/
 
+#print Convex.image_deriv /-
 /-- **Darboux's theorem**: the image of a convex set under `f'` is a convex set,
 `deriv` version. -/
 theorem Convex.image_deriv {s : Set ℝ} (hs : Convex ℝ s) (hf : ∀ x ∈ s, DifferentiableAt ℝ f x) :
     Convex ℝ (deriv f '' s) :=
   (hs.OrdConnected.image_deriv hf).Convex
 #align convex.image_deriv Convex.image_deriv
+-/
 
+#print exists_hasDerivWithinAt_eq_of_ge_of_le /-
 /-- **Darboux's theorem**: if `a ≤ b` and `f' a ≤ m ≤ f' b`, then `f' c = m` for some
 `c ∈ [a, b]`. -/
 theorem exists_hasDerivWithinAt_eq_of_ge_of_le (hab : a ≤ b)
@@ -149,7 +160,9 @@ theorem exists_hasDerivWithinAt_eq_of_ge_of_le (hab : a ≤ b)
   (ordConnected_Icc.image_hasDerivWithinAt hf).out (mem_image_of_mem _ (left_mem_Icc.2 hab))
     (mem_image_of_mem _ (right_mem_Icc.2 hab)) ⟨hma, hmb⟩
 #align exists_has_deriv_within_at_eq_of_ge_of_le exists_hasDerivWithinAt_eq_of_ge_of_le
+-/
 
+#print exists_hasDerivWithinAt_eq_of_le_of_ge /-
 /-- **Darboux's theorem**: if `a ≤ b` and `f' b ≤ m ≤ f' a`, then `f' c = m` for some
 `c ∈ [a, b]`. -/
 theorem exists_hasDerivWithinAt_eq_of_le_of_ge (hab : a ≤ b)
@@ -158,7 +171,9 @@ theorem exists_hasDerivWithinAt_eq_of_le_of_ge (hab : a ≤ b)
   (ordConnected_Icc.image_hasDerivWithinAt hf).out (mem_image_of_mem _ (left_mem_Icc.2 hab))
     (mem_image_of_mem _ (right_mem_Icc.2 hab)) ⟨hma, hmb⟩
 #align exists_has_deriv_within_at_eq_of_le_of_ge exists_hasDerivWithinAt_eq_of_le_of_ge
+-/
 
+#print hasDerivWithinAt_forall_lt_or_forall_gt_of_forall_ne /-
 /-- If the derivative of a function is never equal to `m`, then either
 it is always greater than `m`, or it is always less than `m`. -/
 theorem hasDerivWithinAt_forall_lt_or_forall_gt_of_forall_ne {s : Set ℝ} (hs : Convex ℝ s)
@@ -171,4 +186,5 @@ theorem hasDerivWithinAt_forall_lt_or_forall_gt_of_forall_ne {s : Set ℝ} (hs :
     (hs.ord_connected.image_has_deriv_within_at hf).out (mem_image_of_mem f' ha)
       (mem_image_of_mem f' hb) ⟨hma, hmb⟩
 #align has_deriv_within_at_forall_lt_or_forall_gt_of_forall_ne hasDerivWithinAt_forall_lt_or_forall_gt_of_forall_ne
+-/
 

@@ -176,6 +176,7 @@ theorem testBit_two_pow_of_ne {n m : ℕ} (hm : n ≠ m) : testBit (2 ^ n) m = f
 #align nat.test_bit_two_pow_of_ne Nat.testBit_two_pow_of_ne
 -/
 
+#print Nat.testBit_two_pow /-
 theorem testBit_two_pow (n m : ℕ) : testBit (2 ^ n) m = (n = m) :=
   by
   by_cases n = m
@@ -184,6 +185,7 @@ theorem testBit_two_pow (n m : ℕ) : testBit (2 ^ n) m = (n = m) :=
   · rw [test_bit_two_pow_of_ne h]
     simp [h]
 #align nat.test_bit_two_pow Nat.testBit_two_pow
+-/
 
 #print Nat.bitwise'_comm /-
 /-- If `f` is a commutative operation on bools such that `f ff ff = ff`, then `bitwise f` is also

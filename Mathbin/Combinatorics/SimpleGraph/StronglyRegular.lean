@@ -46,6 +46,7 @@ variable [Fintype V] [DecidableEq V]
 
 variable (G : SimpleGraph V) [DecidableRel G.Adj]
 
+#print SimpleGraph.IsSRGWith /-
 /-- A graph is strongly regular with parameters `n k ℓ μ` if
  * its vertex set has cardinality `n`
  * it is regular with degree `k`
@@ -58,9 +59,11 @@ structure IsSRGWith (n k ℓ μ : ℕ) : Prop where
   of_adj : ∀ v w : V, G.Adj v w → Fintype.card (G.commonNeighbors v w) = ℓ
   of_not_adj : ∀ v w : V, v ≠ w → ¬G.Adj v w → Fintype.card (G.commonNeighbors v w) = μ
 #align simple_graph.is_SRG_with SimpleGraph.IsSRGWith
+-/
 
 variable {G} {n k ℓ μ : ℕ}
 
+#print SimpleGraph.bot_strongly_regular /-
 /-- Empty graphs are strongly regular. Note that `ℓ` can take any value
   for empty graphs, since there are no pairs of adjacent vertices. -/
 theorem bot_strongly_regular : (⊥ : SimpleGraph V).IsSRGWith (Fintype.card V) 0 ℓ 0 :=
@@ -74,6 +77,7 @@ theorem bot_strongly_regular : (⊥ : SimpleGraph V).IsSRGWith (Fintype.card V) 
       ext
       simp [mem_common_neighbors] }
 #align simple_graph.bot_strongly_regular SimpleGraph.bot_strongly_regular
+-/
 
 #print SimpleGraph.IsSRGWith.top /-
 /-- Complete graphs are strongly regular. Note that `μ` can take any value

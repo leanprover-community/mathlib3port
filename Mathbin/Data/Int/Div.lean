@@ -24,6 +24,7 @@ open Nat
 
 namespace Int
 
+#print Int.eq_mul_div_of_mul_eq_mul_of_dvd_left /-
 theorem eq_mul_div_of_mul_eq_mul_of_dvd_left {a b c d : ℤ} (hb : b ≠ 0) (hbc : b ∣ c)
     (h : b * a = c * d) : a = c / b * d :=
   by
@@ -33,7 +34,9 @@ theorem eq_mul_div_of_mul_eq_mul_of_dvd_left {a b c d : ℤ} (hb : b ≠ 0) (hbc
   rw [mul_assoc] at h 
   apply mul_left_cancel₀ hb h
 #align int.eq_mul_div_of_mul_eq_mul_of_dvd_left Int.eq_mul_div_of_mul_eq_mul_of_dvd_left
+-/
 
+#print Int.eq_zero_of_dvd_of_natAbs_lt_natAbs /-
 /-- If an integer with larger absolute value divides an integer, it is
 zero. -/
 theorem eq_zero_of_dvd_of_natAbs_lt_natAbs {a b : ℤ} (w : a ∣ b) (h : natAbs b < natAbs a) :
@@ -42,10 +45,13 @@ theorem eq_zero_of_dvd_of_natAbs_lt_natAbs {a b : ℤ} (w : a ∣ b) (h : natAbs
   rw [← nat_abs_eq_zero]
   exact eq_zero_of_dvd_of_lt w h
 #align int.eq_zero_of_dvd_of_nat_abs_lt_nat_abs Int.eq_zero_of_dvd_of_natAbs_lt_natAbs
+-/
 
+#print Int.eq_zero_of_dvd_of_nonneg_of_lt /-
 theorem eq_zero_of_dvd_of_nonneg_of_lt {a b : ℤ} (w₁ : 0 ≤ a) (w₂ : a < b) (h : b ∣ a) : a = 0 :=
   eq_zero_of_dvd_of_natAbs_lt_natAbs h (natAbs_lt_natAbs_of_nonneg_of_lt w₁ w₂)
 #align int.eq_zero_of_dvd_of_nonneg_of_lt Int.eq_zero_of_dvd_of_nonneg_of_lt
+-/
 
 #print Int.eq_of_mod_eq_of_natAbs_sub_lt_natAbs /-
 /-- If two integers are congruent to a sufficiently large modulus,
@@ -67,9 +73,11 @@ theorem ofNat_add_negSucc_of_ge {m n : ℕ} (h : n.succ ≤ m) :
 #align int.of_nat_add_neg_succ_of_nat_of_ge Int.ofNat_add_negSucc_of_ge
 -/
 
+#print Int.natAbs_le_of_dvd_ne_zero /-
 theorem natAbs_le_of_dvd_ne_zero {s t : ℤ} (hst : s ∣ t) (ht : t ≠ 0) : natAbs s ≤ natAbs t :=
   not_lt.mp (mt (eq_zero_of_dvd_of_natAbs_lt_natAbs hst) ht)
 #align int.nat_abs_le_of_dvd_ne_zero Int.natAbs_le_of_dvd_ne_zero
+-/
 
 end Int
 

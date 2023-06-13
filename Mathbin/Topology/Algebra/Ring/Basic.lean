@@ -72,6 +72,7 @@ class TopologicalRing [TopologicalSpace α] [NonUnitalNonAssocRing α] extends T
 
 variable {α}
 
+#print TopologicalSemiring.continuousNeg_of_mul /-
 /-- If `R` is a ring with a continuous multiplication, then negation is continuous as well since it
 is just multiplication with `-1`. -/
 theorem TopologicalSemiring.continuousNeg_of_mul [TopologicalSpace α] [NonAssocRing α]
@@ -80,6 +81,7 @@ theorem TopologicalSemiring.continuousNeg_of_mul [TopologicalSpace α] [NonAssoc
     continuous_neg := by
       simpa using (continuous_const.mul continuous_id : Continuous fun x : α => -1 * x) }
 #align topological_semiring.has_continuous_neg_of_mul TopologicalSemiring.continuousNeg_of_mul
+-/
 
 #print TopologicalSemiring.toTopologicalRing /-
 /-- If `R` is a ring which is a topological semiring, then it is automatically a topological
@@ -136,31 +138,41 @@ def Subsemiring.topologicalClosure (s : Subsemiring α) : Subsemiring α :=
 #align subsemiring.topological_closure Subsemiring.topologicalClosure
 -/
 
+#print Subsemiring.topologicalClosure_coe /-
 @[simp]
 theorem Subsemiring.topologicalClosure_coe (s : Subsemiring α) :
     (s.topologicalClosure : Set α) = closure (s : Set α) :=
   rfl
 #align subsemiring.topological_closure_coe Subsemiring.topologicalClosure_coe
+-/
 
+#print Subsemiring.le_topologicalClosure /-
 theorem Subsemiring.le_topologicalClosure (s : Subsemiring α) : s ≤ s.topologicalClosure :=
   subset_closure
 #align subsemiring.le_topological_closure Subsemiring.le_topologicalClosure
+-/
 
+#print Subsemiring.isClosed_topologicalClosure /-
 theorem Subsemiring.isClosed_topologicalClosure (s : Subsemiring α) :
     IsClosed (s.topologicalClosure : Set α) := by convert isClosed_closure
 #align subsemiring.is_closed_topological_closure Subsemiring.isClosed_topologicalClosure
+-/
 
+#print Subsemiring.topologicalClosure_minimal /-
 theorem Subsemiring.topologicalClosure_minimal (s : Subsemiring α) {t : Subsemiring α} (h : s ≤ t)
     (ht : IsClosed (t : Set α)) : s.topologicalClosure ≤ t :=
   closure_minimal h ht
 #align subsemiring.topological_closure_minimal Subsemiring.topologicalClosure_minimal
+-/
 
+#print Subsemiring.commSemiringTopologicalClosure /-
 /-- If a subsemiring of a topological semiring is commutative, then so is its
 topological closure. -/
 def Subsemiring.commSemiringTopologicalClosure [T2Space α] (s : Subsemiring α)
     (hs : ∀ x y : s, x * y = y * x) : CommSemiring s.topologicalClosure :=
   { s.topologicalClosure.toSemiring, s.toSubmonoid.commMonoidTopologicalClosure hs with }
 #align subsemiring.comm_semiring_topological_closure Subsemiring.commSemiringTopologicalClosure
+-/
 
 end
 
@@ -231,6 +243,7 @@ section
 
 variable {R : Type _} [NonUnitalNonAssocRing R] [TopologicalSpace R]
 
+#print TopologicalRing.of_addGroup_of_nhds_zero /-
 theorem TopologicalRing.of_addGroup_of_nhds_zero [TopologicalAddGroup R]
     (hmul : Tendsto (uncurry ((· * ·) : R → R → R)) (𝓝 0 ×ᶠ 𝓝 0) <| 𝓝 0)
     (hmul_left : ∀ x₀ : R, Tendsto (fun x : R => x₀ * x) (𝓝 0) <| 𝓝 0)
@@ -259,7 +272,9 @@ theorem TopologicalRing.of_addGroup_of_nhds_zero [TopologicalAddGroup R]
   refine' tendsto_map.comp (hadd.comp (tendsto.prod_mk _ hmul))
   exact hadd.comp (((hmul_right y₀).comp tendsto_fst).prod_mk ((hmul_left x₀).comp tendsto_snd))
 #align topological_ring.of_add_group_of_nhds_zero TopologicalRing.of_addGroup_of_nhds_zero
+-/
 
+#print TopologicalRing.of_nhds_zero /-
 theorem TopologicalRing.of_nhds_zero
     (hadd : Tendsto (uncurry ((· + ·) : R → R → R)) (𝓝 0 ×ᶠ 𝓝 0) <| 𝓝 0)
     (hneg : Tendsto (fun x => -x : R → R) (𝓝 0) (𝓝 0))
@@ -270,6 +285,7 @@ theorem TopologicalRing.of_nhds_zero
   haveI := TopologicalAddGroup.of_comm_of_nhds_zero hadd hneg hleft
   TopologicalRing.of_addGroup_of_nhds_zero hmul hmul_left hmul_right
 #align topological_ring.of_nhds_zero TopologicalRing.of_nhds_zero
+-/
 
 end
 
@@ -279,15 +295,19 @@ section
 
 variable [NonUnitalNonAssocRing α] [TopologicalRing α]
 
+#print mulLeft_continuous /-
 /-- In a topological semiring, the left-multiplication `add_monoid_hom` is continuous. -/
 theorem mulLeft_continuous (x : α) : Continuous (AddMonoidHom.mulLeft x) :=
   continuous_const.mul continuous_id
 #align mul_left_continuous mulLeft_continuous
+-/
 
+#print mulRight_continuous /-
 /-- In a topological semiring, the right-multiplication `add_monoid_hom` is continuous. -/
 theorem mulRight_continuous (x : α) : Continuous (AddMonoidHom.mulRight x) :=
   continuous_id.mul continuous_const
 #align mul_right_continuous mulRight_continuous
+-/
 
 end
 
@@ -309,24 +329,32 @@ def Subring.topologicalClosure (S : Subring α) : Subring α :=
 #align subring.topological_closure Subring.topologicalClosure
 -/
 
+#print Subring.le_topologicalClosure /-
 theorem Subring.le_topologicalClosure (s : Subring α) : s ≤ s.topologicalClosure :=
   subset_closure
 #align subring.le_topological_closure Subring.le_topologicalClosure
+-/
 
+#print Subring.isClosed_topologicalClosure /-
 theorem Subring.isClosed_topologicalClosure (s : Subring α) :
     IsClosed (s.topologicalClosure : Set α) := by convert isClosed_closure
 #align subring.is_closed_topological_closure Subring.isClosed_topologicalClosure
+-/
 
+#print Subring.topologicalClosure_minimal /-
 theorem Subring.topologicalClosure_minimal (s : Subring α) {t : Subring α} (h : s ≤ t)
     (ht : IsClosed (t : Set α)) : s.topologicalClosure ≤ t :=
   closure_minimal h ht
 #align subring.topological_closure_minimal Subring.topologicalClosure_minimal
+-/
 
+#print Subring.commRingTopologicalClosure /-
 /-- If a subring of a topological ring is commutative, then so is its topological closure. -/
 def Subring.commRingTopologicalClosure [T2Space α] (s : Subring α) (hs : ∀ x y : s, x * y = y * x) :
     CommRing s.topologicalClosure :=
   { s.topologicalClosure.toRing, s.toSubmonoid.commMonoidTopologicalClosure hs with }
 #align subring.comm_ring_topological_closure Subring.commRingTopologicalClosure
+-/
 
 end TopologicalSemiring
 
@@ -375,7 +403,6 @@ theorem ext {f g : RingTopology α} (h : f.IsOpen = g.IsOpen) : f = g := by ext 
 instance : PartialOrder (RingTopology α) :=
   PartialOrder.lift RingTopology.toTopologicalSpace <| ext
 
--- mathport name: exprcont
 local notation "cont" => @Continuous _ _
 
 private def def_Inf (S : Set (RingTopology α)) : RingTopology α :=
@@ -428,6 +455,7 @@ def coinduced {α β : Type _} [t : TopologicalSpace α] [Ring β] (f : α → �
 #align ring_topology.coinduced RingTopology.coinduced
 -/
 
+#print RingTopology.coinduced_continuous /-
 theorem coinduced_continuous {α β : Type _} [t : TopologicalSpace α] [Ring β] (f : α → β) :
     cont t (coinduced f).toTopologicalSpace f :=
   by
@@ -436,7 +464,9 @@ theorem coinduced_continuous {α β : Type _} [t : TopologicalSpace α] [Ring β
   rintro _ ⟨t', ht', rfl⟩
   exact ht'
 #align ring_topology.coinduced_continuous RingTopology.coinduced_continuous
+-/
 
+#print RingTopology.toAddGroupTopology /-
 /-- The forgetful functor from ring topologies on `a` to additive group topologies on `a`. -/
 def toAddGroupTopology (t : RingTopology α) : AddGroupTopology α
     where
@@ -444,16 +474,20 @@ def toAddGroupTopology (t : RingTopology α) : AddGroupTopology α
   to_topologicalAddGroup :=
     @TopologicalRing.to_topologicalAddGroup _ _ t.toTopologicalSpace t.toTopologicalRing
 #align ring_topology.to_add_group_topology RingTopology.toAddGroupTopology
+-/
 
+#print RingTopology.toAddGroupTopology.orderEmbedding /-
 /-- The order embedding from ring topologies on `a` to additive group topologies on `a`. -/
 def toAddGroupTopology.orderEmbedding : OrderEmbedding (RingTopology α) (AddGroupTopology α) :=
   OrderEmbedding.ofMapLEIff toAddGroupTopology fun _ _ => Iff.rfl
 #align ring_topology.to_add_group_topology.order_embedding RingTopology.toAddGroupTopology.orderEmbedding
+-/
 
 end RingTopology
 
 section AbsoluteValue
 
+#print AbsoluteValue.comp /-
 /-- Construct an absolute value on a semiring `T` from an absolute value on a semiring `R`
 and an injective ring homomorphism `f : T →+* R` -/
 def AbsoluteValue.comp {R S T : Type _} [Semiring T] [Semiring R] [OrderedSemiring S]
@@ -465,6 +499,7 @@ def AbsoluteValue.comp {R S T : Type _} [Semiring T] [Semiring R] [OrderedSemiri
   eq_zero' := by simp only [map_eq_zero_iff f hf, v.eq_zero, forall_const, iff_self_iff]
   add_le' := by simp only [Function.comp_apply, map_add, v.add_le, forall_const]
 #align absolute_value.comp AbsoluteValue.comp
+-/
 
 end AbsoluteValue
 

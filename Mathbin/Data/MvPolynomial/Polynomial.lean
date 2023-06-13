@@ -23,6 +23,7 @@ namespace MvPolynomial
 
 variable {R S : Type _} [CommSemiring R] [CommSemiring S] {σ : Type _}
 
+#print MvPolynomial.polynomial_eval_eval₂ /-
 theorem polynomial_eval_eval₂ (f : R →+* Polynomial S) (g : σ → Polynomial S) (p : MvPolynomial σ R)
     (x : S) :
     Polynomial.eval x (MvPolynomial.eval₂ f g p) =
@@ -35,7 +36,9 @@ theorem polynomial_eval_eval₂ (f : R →+* Polynomial S) (g : σ → Polynomia
   · intro p n hp
     simp [hp]
 #align mv_polynomial.polynomial_eval_eval₂ MvPolynomial.polynomial_eval_eval₂
+-/
 
+#print MvPolynomial.eval_polynomial_eval_finSuccEquiv /-
 theorem eval_polynomial_eval_finSuccEquiv {n : ℕ} (f : MvPolynomial (Fin (n + 1)) R)
     (q : MvPolynomial (Fin n) R) (x : Fin n → R) :
     (eval x) (Polynomial.eval q (finSuccEquiv R n f)) =
@@ -49,6 +52,7 @@ theorem eval_polynomial_eval_finSuccEquiv {n : ℕ} (f : MvPolynomial (Fin (n + 
   funext i
   refine' Fin.cases (by simp) (by simp) i
 #align mv_polynomial.eval_polynomial_eval_fin_succ_equiv MvPolynomial.eval_polynomial_eval_finSuccEquiv
+-/
 
 end MvPolynomial
 

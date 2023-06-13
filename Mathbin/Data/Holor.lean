@@ -182,7 +182,6 @@ def mul [s : Mul α] (x : Holor α ds₁) (y : Holor α ds₂) : Holor α (ds₁
 #align holor.mul Holor.mul
 -/
 
--- mathport name: «expr ⊗ »
 local infixl:70 " ⊗ " => mul
 
 #print Holor.cast_type /-
@@ -204,6 +203,7 @@ def assocLeft : Holor α (ds₁ ++ (ds₂ ++ ds₃)) → Holor α (ds₁ ++ ds�
 #align holor.assoc_left Holor.assocLeft
 -/
 
+#print Holor.mul_assoc0 /-
 theorem mul_assoc0 [Semigroup α] (x : Holor α ds₁) (y : Holor α ds₂) (z : Holor α ds₃) :
     x ⊗ y ⊗ z = (x ⊗ (y ⊗ z)).assocLeft :=
   funext fun t : HolorIndex (ds₁ ++ ds₂ ++ ds₃) =>
@@ -216,35 +216,48 @@ theorem mul_assoc0 [Semigroup α] (x : Holor α ds₁) (y : Holor α ds₂) (z :
     rfl
     rw [append_assoc]
 #align holor.mul_assoc0 Holor.mul_assoc0
+-/
 
+#print Holor.mul_assoc /-
 theorem mul_assoc [Semigroup α] (x : Holor α ds₁) (y : Holor α ds₂) (z : Holor α ds₃) :
     HEq (mul (mul x y) z) (mul x (mul y z)) := by simp [cast_hEq, mul_assoc0, assoc_left]
 #align holor.mul_assoc Holor.mul_assoc
+-/
 
+#print Holor.mul_left_distrib /-
 theorem mul_left_distrib [Distrib α] (x : Holor α ds₁) (y : Holor α ds₂) (z : Holor α ds₂) :
     x ⊗ (y + z) = x ⊗ y + x ⊗ z :=
   funext fun t =>
     left_distrib (x (HolorIndex.take t)) (y (HolorIndex.drop t)) (z (HolorIndex.drop t))
 #align holor.mul_left_distrib Holor.mul_left_distrib
+-/
 
+#print Holor.mul_right_distrib /-
 theorem mul_right_distrib [Distrib α] (x : Holor α ds₁) (y : Holor α ds₁) (z : Holor α ds₂) :
     (x + y) ⊗ z = x ⊗ z + y ⊗ z :=
   funext fun t => add_mul (x (HolorIndex.take t)) (y (HolorIndex.take t)) (z (HolorIndex.drop t))
 #align holor.mul_right_distrib Holor.mul_right_distrib
+-/
 
+#print Holor.zero_mul /-
 @[simp]
 theorem zero_mul {α : Type} [Ring α] (x : Holor α ds₂) : (0 : Holor α ds₁) ⊗ x = 0 :=
   funext fun t => MulZeroClass.zero_mul (x (HolorIndex.drop t))
 #align holor.zero_mul Holor.zero_mul
+-/
 
+#print Holor.mul_zero /-
 @[simp]
 theorem mul_zero {α : Type} [Ring α] (x : Holor α ds₁) : x ⊗ (0 : Holor α ds₂) = 0 :=
   funext fun t => MulZeroClass.mul_zero (x (HolorIndex.take t))
 #align holor.mul_zero Holor.mul_zero
+-/
 
+#print Holor.mul_scalar_mul /-
 theorem mul_scalar_mul [Monoid α] (x : Holor α []) (y : Holor α ds) :
     x ⊗ y = x ⟨[], Forall₂.nil⟩ • y := by simp [mul, SMul.smul, HolorIndex.take, HolorIndex.drop]
 #align holor.mul_scalar_mul Holor.mul_scalar_mul
+-/
 
 #print Holor.slice /-
 -- holor slices
@@ -285,12 +298,14 @@ theorem slice_eq (x : Holor α (d :: ds)) (y : Holor α (d :: ds)) (h : slice x 
 #align holor.slice_eq Holor.slice_eq
 -/
 
+#print Holor.slice_unitVec_mul /-
 theorem slice_unitVec_mul [Ring α] {i : ℕ} {j : ℕ} (hid : i < d) (x : Holor α ds) :
     slice (unitVec d j ⊗ x) i hid = if i = j then x else 0 :=
   funext fun t : HolorIndex ds =>
     if h : i = j then by simp [slice, mul, HolorIndex.take, unit_vec, HolorIndex.drop, h]
     else by simp [slice, mul, HolorIndex.take, unit_vec, HolorIndex.drop, h] <;> rfl
 #align holor.slice_unit_vec_mul Holor.slice_unitVec_mul
+-/
 
 #print Holor.slice_add /-
 theorem slice_add [Add α] (i : ℕ) (hid : i < d) (x : Holor α (d :: ds)) (y : Holor α (d :: ds)) :
@@ -305,6 +320,7 @@ theorem slice_zero [Zero α] (i : ℕ) (hid : i < d) : slice (0 : Holor α (d ::
 #align holor.slice_zero Holor.slice_zero
 -/
 
+#print Holor.slice_sum /-
 theorem slice_sum [AddCommMonoid α] {β : Type} (i : ℕ) (hid : i < d) (s : Finset β)
     (f : β → Holor α (d :: ds)) : ∑ x in s, slice (f x) i hid = slice (∑ x in s, f x) i hid :=
   by
@@ -314,7 +330,9 @@ theorem slice_sum [AddCommMonoid α] {β : Type} (i : ℕ) (hid : i < d) (s : Fi
   · intro _ _ h_not_in ih
     rw [Finset.sum_insert h_not_in, ih, slice_add, Finset.sum_insert h_not_in]
 #align holor.slice_sum Holor.slice_sum
+-/
 
+#print Holor.sum_unitVec_mul_slice /-
 /-- The original holor can be recovered from its slices by multiplying with unit vectors and
 summing up. -/
 @[simp]
@@ -336,6 +354,7 @@ theorem sum_unitVec_mul_slice [Ring α] (x : Holor α (d :: ds)) :
     exfalso
     exact absurd (Finset.mem_attach _ _) hid'
 #align holor.sum_unit_vec_mul_slice Holor.sum_unitVec_mul_slice
+-/
 
 #print Holor.CPRankMax1 /-
 -- CP rank
@@ -358,18 +377,23 @@ inductive CPRankMax [Mul α] [AddMonoid α] : ℕ → ∀ {ds}, Holor α ds → 
 #align holor.cprank_max Holor.CPRankMax
 -/
 
+#print Holor.cprankMax_nil /-
 theorem cprankMax_nil [Monoid α] [AddMonoid α] (x : Holor α nil) : CPRankMax 1 x :=
   by
   have h := CPRankMax.succ 0 x 0 (CPRankMax1.nil x) CPRankMax.zero
   rwa [add_zero x, zero_add] at h 
 #align holor.cprank_max_nil Holor.cprankMax_nil
+-/
 
+#print Holor.cprankMax_1 /-
 theorem cprankMax_1 [Monoid α] [AddMonoid α] {x : Holor α ds} (h : CPRankMax1 x) : CPRankMax 1 x :=
   by
   have h' := CPRankMax.succ 0 x 0 h CPRankMax.zero
   rwa [zero_add, add_zero] at h' 
 #align holor.cprank_max_1 Holor.cprankMax_1
+-/
 
+#print Holor.cprankMax_add /-
 theorem cprankMax_add [Monoid α] [AddMonoid α] :
     ∀ {m : ℕ} {n : ℕ} {x : Holor α ds} {y : Holor α ds},
       CPRankMax m x → CPRankMax n y → CPRankMax (m + n) (x + y)
@@ -381,7 +405,9 @@ theorem cprankMax_add [Monoid α] [AddMonoid α] :
     · assumption
     · exact cprank_max_add hx₂ hy
 #align holor.cprank_max_add Holor.cprankMax_add
+-/
 
+#print Holor.cprankMax_mul /-
 theorem cprankMax_mul [Ring α] :
     ∀ (n : ℕ) (x : Holor α [d]) (y : Holor α ds), CPRankMax n y → CPRankMax n (x ⊗ y)
   | 0, x, _, cprank_max.zero => by simp [MulZeroClass.mul_zero x, cprank_max.zero]
@@ -393,7 +419,9 @@ theorem cprankMax_mul [Ring α] :
     · exact cprank_max_1 (cprank_max1.cons _ _ hy₁)
     · exact cprank_max_mul k x y₂ hy₂
 #align holor.cprank_max_mul Holor.cprankMax_mul
+-/
 
+#print Holor.cprankMax_sum /-
 theorem cprankMax_sum [Ring α] {β} {n : ℕ} (s : Finset β) (f : β → Holor α ds) :
     (∀ x ∈ s, CPRankMax n (f x)) → CPRankMax (s.card * n) (∑ x in s, f x) :=
   letI := Classical.decEq β
@@ -410,7 +438,9 @@ theorem cprankMax_sum [Ring α] {β} {n : ℕ} (s : Finset β) (f : β → Holor
         simp only [h_cprank, Finset.mem_insert_of_mem, h_x_in_s]
       exact cprank_max_add (h_cprank x (Finset.mem_insert_self x s)) ih')
 #align holor.cprank_max_sum Holor.cprankMax_sum
+-/
 
+#print Holor.cprankMax_upper_bound /-
 theorem cprankMax_upper_bound [Ring α] : ∀ {ds}, ∀ x : Holor α ds, CPRankMax ds.Prod x
   | [], x => cprankMax_nil x
   | d :: ds, x =>
@@ -435,6 +465,7 @@ theorem cprankMax_upper_bound [Ring α] : ∀ {ds}, ∀ x : Holor α ds, CPRankM
     rw [h_dds_prod]
     exact h_cprank_max_sum
 #align holor.cprank_max_upper_bound Holor.cprankMax_upper_bound
+-/
 
 #print Holor.cprank /-
 /-- The CP rank of a holor `x`: the smallest N such that

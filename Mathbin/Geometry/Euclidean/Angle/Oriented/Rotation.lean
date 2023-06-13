@@ -43,7 +43,6 @@ variable [InnerProductSpace ℝ V] [InnerProductSpace ℝ V']
 
 variable [Fact (finrank ℝ V = 2)] [Fact (finrank ℝ V' = 2)] (o : Orientation ℝ V (Fin 2))
 
--- mathport name: exprJ
 local notation "J" => o.rightAngleRotation
 
 /-- Auxiliary construction to build a rotation by the oriented angle `θ`. -/

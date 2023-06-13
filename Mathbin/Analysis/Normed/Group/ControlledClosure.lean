@@ -31,6 +31,7 @@ variable {G : Type _} [NormedAddCommGroup G] [CompleteSpace G]
 
 variable {H : Type _} [NormedAddCommGroup H]
 
+#print controlled_closure_of_complete /-
 /-- Given `f : normed_add_group_hom G H` for some complete `G` and a subgroup `K` of `H`, if every
 element `x` of `K` has a preimage under `f` whose norm is at most `C*‖x‖` then the same holds for
 elements of the (topological) closure of `K` with constant `C+ε` instead of `C`, for any
@@ -121,7 +122,9 @@ theorem controlled_closure_of_complete {f : NormedAddGroupHom G H} {K : AddSubgr
       _ = ∑ k in range (n + 1), C * b k + C * ‖h‖ := by rw [← add_assoc, sum_range_succ']
       _ ≤ (C + ε) * ‖h‖ := by rw [add_comm, add_mul]; apply add_le_add_left this
 #align controlled_closure_of_complete controlled_closure_of_complete
+-/
 
+#print controlled_closure_range_of_complete /-
 /-- Given `f : normed_add_group_hom G H` for some complete `G`, if every element `x` of the image of
 an isometric immersion `j : normed_add_group_hom K H` has a preimage under `f` whose norm is at most
 `C*‖x‖` then the same holds for elements of the (topological) closure of this image with constant
@@ -141,4 +144,5 @@ theorem controlled_closure_range_of_complete {f : NormedAddGroupHom G H} {K : Ty
     exact hyp k
   exact controlled_closure_of_complete hC hε hyp
 #align controlled_closure_range_of_complete controlled_closure_range_of_complete
+-/
 

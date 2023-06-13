@@ -26,6 +26,7 @@ open Complex Set
 
 open scoped ComplexConjugate
 
+#print Complex.subfield_eq_of_closed /-
 /-- The only closed subfields of `ℂ` are `ℝ` and `ℂ`. -/
 theorem Complex.subfield_eq_of_closed {K : Subfield ℂ} (hc : IsClosed (K : Set ℂ)) :
     K = ofReal.fieldRange ∨ K = ⊤ :=
@@ -51,9 +52,11 @@ theorem Complex.subfield_eq_of_closed {K : Subfield ℂ} (hc : IsClosed (K : Set
   rw [DenseRange.closure_range rat.dense_embedding_coe_real.dense]
   simp only [image_univ]
 #align complex.subfield_eq_of_closed Complex.subfield_eq_of_closed
+-/
 
 /- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Misc2.lean:304:22: continuitity! not supported at the moment -/
 /- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Misc2.lean:304:22: continuitity! not supported at the moment -/
+#print Complex.uniformContinuous_ringHom_eq_id_or_conj /-
 /-- Let `K` a subfield of `ℂ` and let `ψ : K →+* ℂ` a ring homomorphism. Assume that `ψ` is uniform
 continuous, then `ψ` is either the inclusion map or the composition of the inclusion map with the
 complex conjugation. -/
@@ -108,6 +111,7 @@ theorem Complex.uniformContinuous_ringHom_eq_id_or_conj (K : Subfield ℂ) {ψ :
     use ⟨y, by convert hy; simpa only [id.def, Set.image_id']⟩
     simp only [Subtype.mk_eq_mk, Subtype.coe_mk]
 #align complex.uniform_continuous_ring_hom_eq_id_or_conj Complex.uniformContinuous_ringHom_eq_id_or_conj
+-/
 
 end ComplexSubfield
 

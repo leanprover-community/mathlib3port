@@ -40,8 +40,6 @@ namespace WellFounded
 
 variable (hwf : WellFounded r)
 
-include hwf
-
 #print WellFounded.wellOrderExtension /-
 /-- An arbitrary well order on `α` that extends `r`.
 
@@ -60,9 +58,11 @@ noncomputable def wellOrderExtension : LinearOrder α :=
 #align well_founded.well_order_extension WellFounded.wellOrderExtension
 -/
 
+#print WellFounded.wellOrderExtension.isWellFounded_lt /-
 instance wellOrderExtension.isWellFounded_lt : IsWellFounded α hwf.wellOrderExtension.lt :=
   ⟨InvImage.wf _ <| WellFounded.prod_lex Ordinal.wellFoundedLT.wf WellOrderingRel.isWellOrder.wf⟩
 #align well_founded.well_order_extension.is_well_founded_lt WellFounded.wellOrderExtension.isWellFounded_lt
+-/
 
 #print WellFounded.exists_well_order_ge /-
 /-- Any well-founded relation can be extended to a well-ordering on that type. -/

@@ -52,10 +52,10 @@ class Quiver (V : Type u) where
 #align quiver Quiver
 -/
 
--- mathport name: «expr ⟶ »
 infixr:10 " ⟶ " => Quiver.Hom
 
-/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`obj] [] -/
+#print Prefunctor /-
+/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`obj] [] -/
 -- type as \h
 /-- A morphism of quivers. As we will later have categorical functors extend this structure,
 we call it a `prefunctor`.
@@ -64,6 +64,7 @@ structure Prefunctor (V : Type u₁) [Quiver.{v₁} V] (W : Type u₂) [Quiver.{
   obj : V → W
   map : ∀ {X Y : V}, (X ⟶ Y) → (obj X ⟶ obj Y)
 #align prefunctor Prefunctor
+-/
 
 namespace Prefunctor
 
@@ -109,40 +110,45 @@ def comp {U : Type _} [Quiver U] {V : Type _} [Quiver V] {W : Type _} [Quiver W]
 #align prefunctor.comp Prefunctor.comp
 -/
 
+#print Prefunctor.comp_id /-
 @[simp]
 theorem comp_id {U : Type _} [Quiver U] {V : Type _} [Quiver V] (F : Prefunctor U V) :
     F.comp (id _) = F := by cases F; rfl
 #align prefunctor.comp_id Prefunctor.comp_id
+-/
 
+#print Prefunctor.id_comp /-
 @[simp]
 theorem id_comp {U : Type _} [Quiver U] {V : Type _} [Quiver V] (F : Prefunctor U V) :
     (id _).comp F = F := by cases F; rfl
 #align prefunctor.id_comp Prefunctor.id_comp
+-/
 
+#print Prefunctor.comp_assoc /-
 @[simp]
 theorem comp_assoc {U V W Z : Type _} [Quiver U] [Quiver V] [Quiver W] [Quiver Z]
     (F : Prefunctor U V) (G : Prefunctor V W) (H : Prefunctor W Z) :
     (F.comp G).comp H = F.comp (G.comp H) :=
   rfl
 #align prefunctor.comp_assoc Prefunctor.comp_assoc
+-/
 
--- mathport name: «expr ⥤q »
 infixl:50 " ⥤q " => Prefunctor
 
--- mathport name: «expr ⋙q »
 infixl:60 " ⋙q " => Prefunctor.comp
 
--- mathport name: «expr𝟭q»
 notation "𝟭q" => id
 
 end Prefunctor
 
 namespace Quiver
 
+#print Quiver.opposite /-
 /-- `Vᵒᵖ` reverses the direction of all arrows of `V`. -/
 instance opposite {V} [Quiver V] : Quiver Vᵒᵖ :=
   ⟨fun a b => unop b ⟶ unop a⟩
 #align quiver.opposite Quiver.opposite
+-/
 
 #print Quiver.Hom.op /-
 /-- The opposite of an arrow in `V`.

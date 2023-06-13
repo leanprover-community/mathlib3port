@@ -32,15 +32,19 @@ class LinearOrderedCommMonoidWithZero (α : Type _) extends LinearOrderedCommMon
 #align linear_ordered_comm_monoid_with_zero LinearOrderedCommMonoidWithZero
 -/
 
+#print LinearOrderedCommMonoidWithZero.toZeroLeOneClass /-
 instance (priority := 100) LinearOrderedCommMonoidWithZero.toZeroLeOneClass
     [LinearOrderedCommMonoidWithZero α] : ZeroLEOneClass α :=
   { ‹LinearOrderedCommMonoidWithZero α› with }
 #align linear_ordered_comm_monoid_with_zero.to_zero_le_one_class LinearOrderedCommMonoidWithZero.toZeroLeOneClass
+-/
 
+#print CanonicallyOrderedAddMonoid.toZeroLeOneClass /-
 instance (priority := 100) CanonicallyOrderedAddMonoid.toZeroLeOneClass
     [CanonicallyOrderedAddMonoid α] [One α] : ZeroLEOneClass α :=
   ⟨zero_le 1⟩
 #align canonically_ordered_add_monoid.to_zero_le_one_class CanonicallyOrderedAddMonoid.toZeroLeOneClass
+-/
 
 namespace WithZero
 
@@ -67,9 +71,11 @@ theorem zero_lt_coe [Preorder α] (a : α) : (0 : WithZero α) < a :=
 #align with_zero.zero_lt_coe WithZero.zero_lt_coe
 -/
 
+#print WithZero.zero_eq_bot /-
 theorem zero_eq_bot [Preorder α] : (0 : WithZero α) = ⊥ :=
   rfl
 #align with_zero.zero_eq_bot WithZero.zero_eq_bot
+-/
 
 #print WithZero.coe_lt_coe /-
 @[simp, norm_cast]
@@ -91,6 +97,7 @@ instance [Lattice α] : Lattice (WithZero α) :=
 instance [LinearOrder α] : LinearOrder (WithZero α) :=
   WithBot.linearOrder
 
+#print WithZero.covariantClass_mul_le /-
 instance covariantClass_mul_le {α : Type u} [Mul α] [Preorder α]
     [CovariantClass α α (· * ·) (· ≤ ·)] :
     CovariantClass (WithZero α) (WithZero α) (· * ·) (· ≤ ·) :=
@@ -102,6 +109,7 @@ instance covariantClass_mul_le {α : Type u} [Mul α] [Preorder α]
   rw [← coe_mul, ← coe_mul, coe_le_coe]
   exact mul_le_mul_left' hbc' a
 #align with_zero.covariant_class_mul_le WithZero.covariantClass_mul_le
+-/
 
 @[simp]
 theorem le_max_iff [LinearOrder α] {a b c : α} : (a : WithZero α) ≤ max b c ↔ a ≤ max b c := by
@@ -117,6 +125,7 @@ instance [OrderedCommMonoid α] : OrderedCommMonoid (WithZero α) :=
   { WithZero.commMonoidWithZero, WithZero.partialOrder with
     mul_le_mul_left := fun _ _ => mul_le_mul_left' }
 
+#print WithZero.covariantClass_add_le /-
 protected theorem covariantClass_add_le [AddZeroClass α] [Preorder α]
     [CovariantClass α α (· + ·) (· ≤ ·)] (h : ∀ a : α, 0 ≤ a) :
     CovariantClass (WithZero α) (WithZero α) (· + ·) (· ≤ ·) :=
@@ -134,7 +143,9 @@ protected theorem covariantClass_add_le [AddZeroClass α] [Preorder α]
     rw [← coe_add, ← coe_add, coe_le_coe]
     exact add_le_add_left hbc' a
 #align with_zero.covariant_class_add_le WithZero.covariantClass_add_le
+-/
 
+#print WithZero.orderedAddCommMonoid /-
 /-
 Note 1 : the below is not an instance because it requires `zero_le`. It seems
 like a rather pathological definition because α already has a zero.
@@ -151,6 +162,7 @@ protected def orderedAddCommMonoid [OrderedAddCommMonoid α] (zero_le : ∀ a : 
   { WithZero.partialOrder, WithZero.addCommMonoid with
     add_le_add_left := @add_le_add_left _ _ _ (WithZero.covariantClass_add_le zero_le) .. }
 #align with_zero.ordered_add_comm_monoid WithZero.orderedAddCommMonoid
+-/
 
 end WithZero
 

@@ -38,12 +38,15 @@ namespace MonCat
 
 variable {J : Type v} [SmallCategory J]
 
+#print MonCat.monoidObj /-
 @[to_additive]
 instance monoidObj (F : J ⥤ MonCat.{max v u}) (j) : Monoid ((F ⋙ forget MonCat).obj j) := by
   change Monoid (F.obj j); infer_instance
 #align Mon.monoid_obj MonCat.monoidObj
 #align AddMon.add_monoid_obj AddMonCat.addMonoidObj
+-/
 
+#print MonCat.sectionsSubmonoid /-
 /-- The flat sections of a functor into `Mon` form a submonoid of all sections.
 -/
 @[to_additive
@@ -59,6 +62,7 @@ def sectionsSubmonoid (F : J ⥤ MonCat.{max v u}) : Submonoid (∀ j, F.obj j)
     rw [ah f, bh f]
 #align Mon.sections_submonoid MonCat.sectionsSubmonoid
 #align AddMon.sections_add_submonoid AddMonCat.sectionsAddSubmonoid
+-/
 
 #print MonCat.limitMonoid /-
 @[to_additive]
@@ -69,6 +73,7 @@ instance limitMonoid (F : J ⥤ MonCat.{max v u}) :
 #align AddMon.limit_add_monoid AddMonCat.limitAddMonoid
 -/
 
+#print MonCat.limitπMonoidHom /-
 /-- `limit.π (F ⋙ forget Mon) j` as a `monoid_hom`. -/
 @[to_additive "`limit.π (F ⋙ forget AddMon) j` as an `add_monoid_hom`."]
 def limitπMonoidHom (F : J ⥤ MonCat.{max v u}) (j) :
@@ -79,6 +84,7 @@ def limitπMonoidHom (F : J ⥤ MonCat.{max v u}) (j) :
   map_mul' x y := rfl
 #align Mon.limit_π_monoid_hom MonCat.limitπMonoidHom
 #align AddMon.limit_π_add_monoid_hom AddMonCat.limitπAddMonoidHom
+-/
 
 namespace HasLimits
 
@@ -171,11 +177,13 @@ namespace CommMonCat
 
 variable {J : Type v} [SmallCategory J]
 
+#print CommMonCat.commMonoidObj /-
 @[to_additive]
 instance commMonoidObj (F : J ⥤ CommMonCat.{max v u}) (j) :
     CommMonoid ((F ⋙ forget CommMonCat).obj j) := by change CommMonoid (F.obj j); infer_instance
 #align CommMon.comm_monoid_obj CommMonCat.commMonoidObj
 #align AddCommMon.add_comm_monoid_obj AddCommMonCat.addCommMonoidObj
+-/
 
 #print CommMonCat.limitCommMonoid /-
 @[to_additive]

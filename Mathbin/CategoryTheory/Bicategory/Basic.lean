@@ -54,11 +54,11 @@ universe w v u
 open Category Iso
 
 #print CategoryTheory.Bicategory /-
-/- ./././Mathport/Syntax/Translate/Command.lean:407:24: unsupported: (notation) in structure -/
-/- ./././Mathport/Syntax/Translate/Command.lean:407:24: unsupported: (notation) in structure -/
-/- ./././Mathport/Syntax/Translate/Command.lean:407:24: unsupported: (notation) in structure -/
-/- ./././Mathport/Syntax/Translate/Command.lean:407:24: unsupported: (notation) in structure -/
-/- ./././Mathport/Syntax/Translate/Command.lean:407:24: unsupported: (notation) in structure -/
+/- ./././Mathport/Syntax/Translate/Command.lean:406:24: unsupported: (notation) in structure -/
+/- ./././Mathport/Syntax/Translate/Command.lean:406:24: unsupported: (notation) in structure -/
+/- ./././Mathport/Syntax/Translate/Command.lean:406:24: unsupported: (notation) in structure -/
+/- ./././Mathport/Syntax/Translate/Command.lean:406:24: unsupported: (notation) in structure -/
+/- ./././Mathport/Syntax/Translate/Command.lean:406:24: unsupported: (notation) in structure -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ◁ » -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ◁ » -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ◁ » -/
@@ -185,20 +185,15 @@ class Bicategory (B : Type u) extends CategoryStruct.{v} B where
 #align category_theory.bicategory CategoryTheory.Bicategory
 -/
 
--- mathport name: bicategory.whisker_left
 -- The precedence of the whiskerings is higher than that of the composition `≫`.
 scoped[Bicategory] infixr:81 " ◁ " => Bicategory.whiskerLeft
 
--- mathport name: bicategory.whisker_right
 scoped[Bicategory] infixl:81 " ▷ " => Bicategory.whiskerRight
 
--- mathport name: bicategory.associator
 scoped[Bicategory] notation "α_" => Bicategory.associator
 
--- mathport name: bicategory.left_unitor
 scoped[Bicategory] notation "λ_" => Bicategory.leftUnitor
 
--- mathport name: bicategory.right_unitor
 scoped[Bicategory] notation "ρ_" => Bicategory.rightUnitor
 
 namespace Bicategory

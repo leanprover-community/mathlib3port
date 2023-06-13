@@ -137,40 +137,55 @@ def IccExtend {a b : α} (h : a ≤ b) (f : Icc a b → β) : α → β :=
 #align set.Icc_extend Set.IccExtend
 -/
 
+#print Set.IccExtend_range /-
 @[simp]
 theorem IccExtend_range (f : Icc a b → β) : range (IccExtend h f) = range f := by
   simp only [Icc_extend, range_comp f, range_proj_Icc, range_id']
 #align set.Icc_extend_range Set.IccExtend_range
+-/
 
+#print Set.IccExtend_of_le_left /-
 theorem IccExtend_of_le_left (f : Icc a b → β) (hx : x ≤ a) :
     IccExtend h f x = f ⟨a, left_mem_Icc.2 h⟩ :=
   congr_arg f <| projIcc_of_le_left h hx
 #align set.Icc_extend_of_le_left Set.IccExtend_of_le_left
+-/
 
+#print Set.IccExtend_left /-
 @[simp]
 theorem IccExtend_left (f : Icc a b → β) : IccExtend h f a = f ⟨a, left_mem_Icc.2 h⟩ :=
   IccExtend_of_le_left h f le_rfl
 #align set.Icc_extend_left Set.IccExtend_left
+-/
 
+#print Set.IccExtend_of_right_le /-
 theorem IccExtend_of_right_le (f : Icc a b → β) (hx : b ≤ x) :
     IccExtend h f x = f ⟨b, right_mem_Icc.2 h⟩ :=
   congr_arg f <| projIcc_of_right_le h hx
 #align set.Icc_extend_of_right_le Set.IccExtend_of_right_le
+-/
 
+#print Set.IccExtend_right /-
 @[simp]
 theorem IccExtend_right (f : Icc a b → β) : IccExtend h f b = f ⟨b, right_mem_Icc.2 h⟩ :=
   IccExtend_of_right_le h f le_rfl
 #align set.Icc_extend_right Set.IccExtend_right
+-/
 
+#print Set.IccExtend_of_mem /-
 theorem IccExtend_of_mem (f : Icc a b → β) (hx : x ∈ Icc a b) : IccExtend h f x = f ⟨x, hx⟩ :=
   congr_arg f <| projIcc_of_mem h hx
 #align set.Icc_extend_of_mem Set.IccExtend_of_mem
+-/
 
+#print Set.IccExtend_val /-
 @[simp]
 theorem IccExtend_val (f : Icc a b → β) (x : Icc a b) : IccExtend h f x = f x :=
   congr_arg f <| projIcc_val h x
 #align set.Icc_extend_coe Set.IccExtend_val
+-/
 
+#print Set.IccExtend_eq_self /-
 /-- If `f : α → β` is a constant both on $(-∞, a]$ and on $[b, +∞)$, then the extension of this
 function from $[a, b]$ to the whole line is equal to the original function. -/
 theorem IccExtend_eq_self (f : α → β) (ha : ∀ x < a, f x = f a) (hb : ∀ x, b < x → f x = f b) :
@@ -183,6 +198,7 @@ theorem IccExtend_eq_self (f : α → β) (ha : ∀ x < a, f x = f a) (hb : ∀ 
       rw [Icc_extend_coe]
     · simp [Icc_extend_of_right_le _ _ hbx.le, hb x hbx]
 #align set.Icc_extend_eq_self Set.IccExtend_eq_self
+-/
 
 end Set
 
@@ -190,12 +206,16 @@ open Set
 
 variable [Preorder β] {a b : α} (h : a ≤ b) {f : Icc a b → β}
 
+#print Monotone.IccExtend /-
 theorem Monotone.IccExtend (hf : Monotone f) : Monotone (IccExtend h f) :=
   hf.comp <| monotone_projIcc h
 #align monotone.Icc_extend Monotone.IccExtend
+-/
 
+#print StrictMono.strictMonoOn_IccExtend /-
 theorem StrictMono.strictMonoOn_IccExtend (hf : StrictMono f) :
     StrictMonoOn (IccExtend h f) (Icc a b) :=
   hf.comp_strictMonoOn (strictMonoOn_projIcc h)
 #align strict_mono.strict_mono_on_Icc_extend StrictMono.strictMonoOn_IccExtend
+-/
 

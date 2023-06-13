@@ -47,7 +47,6 @@ namespace WittVector
 
 variable (p : ℕ) [hp : Fact p.Prime]
 
--- mathport name: expr𝕎
 local notation "𝕎" => WittVector p
 
 namespace RecursionMain
@@ -65,8 +64,6 @@ whose variable represents the `n`th coefficient of `x` in `x * a`.
 
 
 section CommRing
-
-include hp
 
 variable {k : Type _} [CommRing k] [CharP k p]
 
@@ -105,8 +102,6 @@ theorem succNthDefiningPoly_degree [IsDomain k] (n : ℕ) (a₁ a₂ : 𝕎 k) (
 end CommRing
 
 section IsAlgClosed
-
-include hp
 
 variable {k : Type _} [Field k] [CharP k p] [IsAlgClosed k]
 
@@ -152,8 +147,6 @@ end IsAlgClosed
 end RecursionMain
 
 namespace RecursionBase
-
-include hp
 
 variable {k : Type _} [Field k] [IsAlgClosed k]
 
@@ -202,8 +195,6 @@ section FrobeniusRotation
 
 section IsAlgClosed
 
-include hp
-
 variable {k : Type _} [Field k] [CharP k p] [IsAlgClosed k]
 
 /-- Recursively defines the sequence of coefficients for `witt_vector.frobenius_rotation`.
@@ -250,7 +241,6 @@ theorem frobenius_frobeniusRotation {a₁ a₂ : 𝕎 k} (ha₁ : a₁.coeff 0 �
     rfl
 #align witt_vector.frobenius_frobenius_rotation WittVector.frobenius_frobeniusRotation
 
--- mathport name: exprφ
 local notation "φ" => IsFractionRing.fieldEquivOfRingEquiv (frobeniusEquiv p k)
 
 theorem exists_frobenius_solution_fractionRing_aux (m n : ℕ) (r' q' : 𝕎 k) (hr' : r'.coeff 0 ≠ 0)

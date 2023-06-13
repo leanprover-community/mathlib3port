@@ -106,15 +106,19 @@ instance : Inhabited NonemptyFinLinOrdCat :=
 instance (α : NonemptyFinLinOrdCat) : NonemptyFinLinOrd α :=
   α.str
 
+#print NonemptyFinLinOrdCat.hasForgetToLinOrd /-
 instance hasForgetToLinOrd : HasForget₂ NonemptyFinLinOrdCat LinOrdCat :=
   BundledHom.forget₂ _ _
 #align NonemptyFinLinOrd.has_forget_to_LinOrd NonemptyFinLinOrdCat.hasForgetToLinOrd
+-/
 
+#print NonemptyFinLinOrdCat.hasForgetToFinPartOrd /-
 instance hasForgetToFinPartOrd : HasForget₂ NonemptyFinLinOrdCat FinPartOrd
     where forget₂ :=
     { obj := fun X => FinPartOrd.of X
       map := fun X Y => id }
 #align NonemptyFinLinOrd.has_forget_to_FinPartOrd NonemptyFinLinOrdCat.hasForgetToFinPartOrd
+-/
 
 #print NonemptyFinLinOrdCat.Iso.mk /-
 /-- Constructs an equivalence between nonempty finite linear orders from an order isomorphism
@@ -139,6 +143,7 @@ def dual : NonemptyFinLinOrdCat ⥤ NonemptyFinLinOrdCat
 #align NonemptyFinLinOrd.dual NonemptyFinLinOrdCat.dual
 -/
 
+#print NonemptyFinLinOrdCat.dualEquiv /-
 /-- The equivalence between `NonemptyFinLinOrd` and itself induced by `order_dual` both ways. -/
 @[simps Functor inverse]
 def dualEquiv : NonemptyFinLinOrdCat ≌ NonemptyFinLinOrdCat :=
@@ -146,6 +151,7 @@ def dualEquiv : NonemptyFinLinOrdCat ≌ NonemptyFinLinOrdCat :=
     (NatIso.ofComponents (fun X => Iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
     (NatIso.ofComponents (fun X => Iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
 #align NonemptyFinLinOrd.dual_equiv NonemptyFinLinOrdCat.dualEquiv
+-/
 
 #print NonemptyFinLinOrdCat.mono_iff_injective /-
 theorem mono_iff_injective {A B : NonemptyFinLinOrdCat.{u}} (f : A ⟶ B) :

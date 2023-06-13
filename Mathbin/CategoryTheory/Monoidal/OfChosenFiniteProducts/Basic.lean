@@ -55,15 +55,19 @@ def BinaryFan.swap {P Q : C} (t : BinaryFan P Q) : BinaryFan Q P :=
 #align category_theory.limits.binary_fan.swap CategoryTheory.Limits.BinaryFan.swap
 -/
 
+#print CategoryTheory.Limits.BinaryFan.swap_fst /-
 @[simp]
 theorem BinaryFan.swap_fst {P Q : C} (t : BinaryFan P Q) : t.symm.fst = t.snd :=
   rfl
 #align category_theory.limits.binary_fan.swap_fst CategoryTheory.Limits.BinaryFan.swap_fst
+-/
 
+#print CategoryTheory.Limits.BinaryFan.swap_snd /-
 @[simp]
 theorem BinaryFan.swap_snd {P Q : C} (t : BinaryFan P Q) : t.symm.snd = t.fst :=
   rfl
 #align category_theory.limits.binary_fan.swap_snd CategoryTheory.Limits.BinaryFan.swap_snd
+-/
 
 #print CategoryTheory.Limits.IsLimit.swapBinaryFan /-
 /-- If a cone `t` over `P Q` is a limit cone, then `t.swap` is a limit cone over `Q P`.
@@ -114,18 +118,22 @@ def BinaryFan.assoc {X Y Z : C} {sXY : BinaryFan X Y} {sYZ : BinaryFan Y Z} (Q :
 #align category_theory.limits.binary_fan.assoc CategoryTheory.Limits.BinaryFan.assoc
 -/
 
+#print CategoryTheory.Limits.BinaryFan.assoc_fst /-
 @[simp]
 theorem BinaryFan.assoc_fst {X Y Z : C} {sXY : BinaryFan X Y} {sYZ : BinaryFan Y Z}
     (Q : IsLimit sYZ) (s : BinaryFan sXY.pt Z) : (s.and_assoc Q).fst = s.fst ≫ sXY.fst :=
   rfl
 #align category_theory.limits.binary_fan.assoc_fst CategoryTheory.Limits.BinaryFan.assoc_fst
+-/
 
+#print CategoryTheory.Limits.BinaryFan.assoc_snd /-
 @[simp]
 theorem BinaryFan.assoc_snd {X Y Z : C} {sXY : BinaryFan X Y} {sYZ : BinaryFan Y Z}
     (Q : IsLimit sYZ) (s : BinaryFan sXY.pt Z) :
     (s.and_assoc Q).snd = Q.lift (BinaryFan.mk (s.fst ≫ sXY.snd) s.snd) :=
   rfl
 #align category_theory.limits.binary_fan.assoc_snd CategoryTheory.Limits.BinaryFan.assoc_snd
+-/
 
 #print CategoryTheory.Limits.BinaryFan.assocInv /-
 /-- Given binary fans `sXY` over `X Y`, and `sYZ` over `Y Z`, and `s` over `X sYZ.X`,
@@ -139,18 +147,22 @@ def BinaryFan.assocInv {X Y Z : C} {sXY : BinaryFan X Y} (P : IsLimit sXY) {sYZ 
 #align category_theory.limits.binary_fan.assoc_inv CategoryTheory.Limits.BinaryFan.assocInv
 -/
 
+#print CategoryTheory.Limits.BinaryFan.assocInv_fst /-
 @[simp]
 theorem BinaryFan.assocInv_fst {X Y Z : C} {sXY : BinaryFan X Y} (P : IsLimit sXY)
     {sYZ : BinaryFan Y Z} (s : BinaryFan X sYZ.pt) :
     (s.assocInv P).fst = P.lift (BinaryFan.mk s.fst (s.snd ≫ sYZ.fst)) :=
   rfl
 #align category_theory.limits.binary_fan.assoc_inv_fst CategoryTheory.Limits.BinaryFan.assocInv_fst
+-/
 
+#print CategoryTheory.Limits.BinaryFan.assocInv_snd /-
 @[simp]
 theorem BinaryFan.assocInv_snd {X Y Z : C} {sXY : BinaryFan X Y} (P : IsLimit sXY)
     {sYZ : BinaryFan Y Z} (s : BinaryFan X sYZ.pt) : (s.assocInv P).snd = s.snd ≫ sYZ.snd :=
   rfl
 #align category_theory.limits.binary_fan.assoc_inv_snd CategoryTheory.Limits.BinaryFan.assocInv_snd
+-/
 
 #print CategoryTheory.Limits.IsLimit.assoc /-
 /-- If all the binary fans involved a limit cones, `binary_fan.assoc` produces another limit cone.

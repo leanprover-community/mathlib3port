@@ -50,12 +50,14 @@ variable [AddCommGroup Q] [Module R Q] [LieRingModule L Q] [LieModule R L Q]
 
 attribute [local ext] TensorProduct.ext
 
+#print TensorProduct.LieModule.hasBracketAux /-
 /-- It is useful to define the bracket via this auxiliary function so that we have a type-theoretic
 expression of the fact that `L` acts by linear endomorphisms. It simplifies the proofs in
 `lie_ring_module` below. -/
 def hasBracketAux (x : L) : Module.End R (M ⊗[R] N) :=
   (toEndomorphism R L M x).rTensor N + (toEndomorphism R L N x).lTensor M
 #align tensor_product.lie_module.has_bracket_aux TensorProduct.LieModule.hasBracketAux
+-/
 
 #print TensorProduct.LieModule.lieRingModule /-
 /-- The tensor product of two Lie modules is a Lie ring module. -/
@@ -83,6 +85,7 @@ instance lieRingModule : LieRingModule L (M ⊗[R] N)
 #align tensor_product.lie_module.lie_ring_module TensorProduct.LieModule.lieRingModule
 -/
 
+#print TensorProduct.LieModule.lieModule /-
 /-- The tensor product of two Lie modules is a Lie module. -/
 instance lieModule : LieModule R L (M ⊗[R] N)
     where
@@ -92,13 +95,16 @@ instance lieModule : LieModule R L (M ⊗[R] N)
       LinearMap.lTensor_smul, LieHom.map_smul, LinearMap.add_apply]
   lie_smul c x := LinearMap.map_smul _ c
 #align tensor_product.lie_module.lie_module TensorProduct.LieModule.lieModule
+-/
 
+#print TensorProduct.LieModule.lie_tmul_right /-
 @[simp]
 theorem lie_tmul_right (x : L) (m : M) (n : N) : ⁅x, m ⊗ₜ[R] n⁆ = ⁅x, m⁆ ⊗ₜ n + m ⊗ₜ ⁅x, n⁆ :=
   show hasBracketAux x (m ⊗ₜ[R] n) = _ by
     simp only [has_bracket_aux, LinearMap.rTensor_tmul, to_endomorphism_apply_apply,
       LinearMap.add_apply, LinearMap.lTensor_tmul]
 #align tensor_product.lie_module.lie_tmul_right TensorProduct.LieModule.lie_tmul_right
+-/
 
 variable (R L M N P Q)
 
@@ -115,10 +121,12 @@ def lift : (M →ₗ[R] N →ₗ[R] P) ≃ₗ⁅R,L⁆ M ⊗[R] N →ₗ[R] P :=
 #align tensor_product.lie_module.lift TensorProduct.LieModule.lift
 -/
 
+#print TensorProduct.LieModule.lift_apply /-
 @[simp]
 theorem lift_apply (f : M →ₗ[R] N →ₗ[R] P) (m : M) (n : N) : lift R L M N P f (m ⊗ₜ n) = f m n :=
   rfl
 #align tensor_product.lie_module.lift_apply TensorProduct.LieModule.lift_apply
+-/
 
 #print TensorProduct.LieModule.liftLie /-
 /-- A weaker form of the universal property for tensor product of modules of a Lie algebra.

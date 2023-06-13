@@ -39,27 +39,32 @@ open Set Metric Filter TopologicalSpace
 
 open scoped Topology OnePoint
 
--- mathport name: «exprℚ∞»
 local notation "ℚ∞" => OnePoint ℚ
 
 namespace Rat
 
 variable {p q : ℚ} {s t : Set ℚ}
 
+#print Rat.interior_compact_eq_empty /-
 theorem interior_compact_eq_empty (hs : IsCompact s) : interior s = ∅ :=
   denseEmbedding_coe_real.to_denseInducing.interior_compact_eq_empty dense_irrational hs
 #align rat.interior_compact_eq_empty Rat.interior_compact_eq_empty
+-/
 
+#print Rat.dense_compl_compact /-
 theorem dense_compl_compact (hs : IsCompact s) : Dense (sᶜ) :=
   interior_eq_empty_iff_dense_compl.1 (interior_compact_eq_empty hs)
 #align rat.dense_compl_compact Rat.dense_compl_compact
+-/
 
+#print Rat.cocompact_inf_nhds_neBot /-
 instance cocompact_inf_nhds_neBot : NeBot (cocompact ℚ ⊓ 𝓝 p) :=
   by
   refine' (has_basis_cocompact.inf (nhds_basis_opens _)).neBot_iff.2 _
   rintro ⟨s, o⟩ ⟨hs, hpo, ho⟩; rw [inter_comm]
   exact (dense_compl_compact hs).inter_open_nonempty _ ho ⟨p, hpo⟩
 #align rat.cocompact_inf_nhds_ne_bot Rat.cocompact_inf_nhds_neBot
+-/
 
 #print Rat.not_countably_generated_cocompact /-
 theorem not_countably_generated_cocompact : ¬IsCountablyGenerated (cocompact ℚ) :=
@@ -73,6 +78,7 @@ theorem not_countably_generated_cocompact : ¬IsCountablyGenerated (cocompact �
 #align rat.not_countably_generated_cocompact Rat.not_countably_generated_cocompact
 -/
 
+#print Rat.not_countably_generated_nhds_infty_opc /-
 theorem not_countably_generated_nhds_infty_opc : ¬IsCountablyGenerated (𝓝 (∞ : ℚ∞)) :=
   by
   intro
@@ -80,14 +86,19 @@ theorem not_countably_generated_nhds_infty_opc : ¬IsCountablyGenerated (𝓝 (�
   rw [OnePoint.comap_coe_nhds_infty, coclosed_compact_eq_cocompact] at this 
   exact not_countably_generated_cocompact this
 #align rat.not_countably_generated_nhds_infty_alexandroff Rat.not_countably_generated_nhds_infty_opc
+-/
 
+#print Rat.not_firstCountableTopology_opc /-
 theorem not_firstCountableTopology_opc : ¬FirstCountableTopology ℚ∞ := by intro;
   exact not_countably_generated_nhds_infty_alexandroff inferInstance
 #align rat.not_first_countable_topology_alexandroff Rat.not_firstCountableTopology_opc
+-/
 
+#print Rat.not_secondCountableTopology_opc /-
 theorem not_secondCountableTopology_opc : ¬SecondCountableTopology ℚ∞ := by intro;
   exact not_first_countable_topology_alexandroff inferInstance
 #align rat.not_second_countable_topology_alexandroff Rat.not_secondCountableTopology_opc
+-/
 
 instance : TotallyDisconnectedSpace ℚ :=
   by

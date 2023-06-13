@@ -49,6 +49,7 @@ def reflTransSymmAux (x : I × I) : ℝ :=
 #align path.homotopy.refl_trans_symm_aux Path.Homotopy.reflTransSymmAux
 -/
 
+#print Path.Homotopy.continuous_reflTransSymmAux /-
 @[continuity]
 theorem continuous_reflTransSymmAux : Continuous reflTransSymmAux :=
   by
@@ -60,6 +61,7 @@ theorem continuous_reflTransSymmAux : Continuous reflTransSymmAux :=
   intro x hx
   norm_num [hx, mul_assoc]
 #align path.homotopy.continuous_refl_trans_symm_aux Path.Homotopy.continuous_reflTransSymmAux
+-/
 
 #print Path.Homotopy.reflTransSymmAux_mem_I /-
 theorem reflTransSymmAux_mem_I (x : I × I) : reflTransSymmAux x ∈ I :=
@@ -160,11 +162,15 @@ theorem transReflReparamAux_mem_I (t : I) : transReflReparamAux t ∈ I :=
 #align path.homotopy.trans_refl_reparam_aux_mem_I Path.Homotopy.transReflReparamAux_mem_I
 -/
 
+#print Path.Homotopy.transReflReparamAux_zero /-
 theorem transReflReparamAux_zero : transReflReparamAux 0 = 0 := by norm_num [trans_refl_reparam_aux]
 #align path.homotopy.trans_refl_reparam_aux_zero Path.Homotopy.transReflReparamAux_zero
+-/
 
+#print Path.Homotopy.transReflReparamAux_one /-
 theorem transReflReparamAux_one : transReflReparamAux 1 = 1 := by norm_num [trans_refl_reparam_aux]
 #align path.homotopy.trans_refl_reparam_aux_one Path.Homotopy.transReflReparamAux_one
+-/
 
 #print Path.Homotopy.trans_refl_reparam /-
 theorem trans_refl_reparam (p : Path x₀ x₁) :
@@ -234,13 +240,17 @@ theorem transAssocReparamAux_mem_I (t : I) : transAssocReparamAux t ∈ I :=
 #align path.homotopy.trans_assoc_reparam_aux_mem_I Path.Homotopy.transAssocReparamAux_mem_I
 -/
 
+#print Path.Homotopy.transAssocReparamAux_zero /-
 theorem transAssocReparamAux_zero : transAssocReparamAux 0 = 0 := by
   norm_num [trans_assoc_reparam_aux]
 #align path.homotopy.trans_assoc_reparam_aux_zero Path.Homotopy.transAssocReparamAux_zero
+-/
 
+#print Path.Homotopy.transAssocReparamAux_one /-
 theorem transAssocReparamAux_one : transAssocReparamAux 1 = 1 := by
   norm_num [trans_assoc_reparam_aux]
 #align path.homotopy.trans_assoc_reparam_aux_one Path.Homotopy.transAssocReparamAux_one
+-/
 
 #print Path.Homotopy.trans_assoc_reparam /-
 theorem trans_assoc_reparam {x₀ x₁ x₂ x₃ : X} (p : Path x₀ x₁) (q : Path x₁ x₂) (r : Path x₂ x₃) :
@@ -384,40 +394,45 @@ def fundamentalGroupoidFunctor : TopCat ⥤ CategoryTheory.Grpd
 #align fundamental_groupoid.fundamental_groupoid_functor FundamentalGroupoid.fundamentalGroupoidFunctor
 -/
 
--- mathport name: fundamental_groupoid_functor
 scoped notation "π" => FundamentalGroupoid.fundamentalGroupoidFunctor
 
--- mathport name: fundamental_groupoid_functor.obj
 scoped notation "πₓ" => FundamentalGroupoid.fundamentalGroupoidFunctor.obj
 
--- mathport name: fundamental_groupoid_functor.map
 scoped notation "πₘ" => FundamentalGroupoid.fundamentalGroupoidFunctor.map
 
+#print FundamentalGroupoid.map_eq /-
 theorem map_eq {X Y : TopCat} {x₀ x₁ : X} (f : C(X, Y)) (p : Path.Homotopic.Quotient x₀ x₁) :
     (πₘ f).map p = p.mapFn f :=
   rfl
 #align fundamental_groupoid.map_eq FundamentalGroupoid.map_eq
+-/
 
+#print FundamentalGroupoid.toTop /-
 /-- Help the typechecker by converting a point in a groupoid back to a point in
 the underlying topological space. -/
 @[reducible]
 def toTop {X : TopCat} (x : πₓ X) : X :=
   x
 #align fundamental_groupoid.to_top FundamentalGroupoid.toTop
+-/
 
+#print FundamentalGroupoid.fromTop /-
 /-- Help the typechecker by converting a point in a topological space to a
 point in the fundamental groupoid of that space -/
 @[reducible]
 def fromTop {X : TopCat} (x : X) : πₓ X :=
   x
 #align fundamental_groupoid.from_top FundamentalGroupoid.fromTop
+-/
 
+#print FundamentalGroupoid.toPath /-
 /-- Help the typechecker by converting an arrow in the fundamental groupoid of
 a topological space back to a path in that space (i.e., `path.homotopic.quotient`). -/
 @[reducible]
 def toPath {X : TopCat} {x₀ x₁ : πₓ X} (p : x₀ ⟶ x₁) : Path.Homotopic.Quotient x₀ x₁ :=
   p
 #align fundamental_groupoid.to_path FundamentalGroupoid.toPath
+-/
 
 #print FundamentalGroupoid.fromPath /-
 /-- Help the typechecker by convering a path in a topological space to an arrow in the

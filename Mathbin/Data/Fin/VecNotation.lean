@@ -72,7 +72,6 @@ def vecCons {n : ℕ} (h : α) (t : Fin n → α) : Fin n.succ → α :=
 #align matrix.vec_cons Matrix.vecCons
 -/
 
--- mathport name: «expr![ ,]»
 notation3"!["(l ", "* => foldr (h t => vecCons h t) vecEmpty)"]" => l
 
 #print Matrix.vecHead /-
@@ -123,10 +122,12 @@ theorem head_fin_const (a : α) : (vecHead fun i : Fin (n + 1) => a) = a :=
 #align matrix.head_fin_const Matrix.head_fin_const
 -/
 
+#print Matrix.cons_val_zero /-
 @[simp]
 theorem cons_val_zero (x : α) (u : Fin m → α) : vecCons x u 0 = x :=
   rfl
 #align matrix.cons_val_zero Matrix.cons_val_zero
+-/
 
 #print Matrix.cons_val_zero' /-
 theorem cons_val_zero' (h : 0 < m.succ) (x : α) (u : Fin m → α) : vecCons x u ⟨0, h⟩ = x :=
@@ -162,10 +163,12 @@ theorem tail_cons (x : α) (u : Fin m → α) : vecTail (vecCons x u) = u := by 
 #align matrix.tail_cons Matrix.tail_cons
 -/
 
+#print Matrix.empty_val' /-
 @[simp]
 theorem empty_val' {n' : Type _} (j : n') : (fun i => (![] : Fin 0 → n' → α) i j) = ![] :=
   empty_eq _
 #align matrix.empty_val' Matrix.empty_val'
+-/
 
 #print Matrix.cons_head_tail /-
 @[simp]
@@ -174,10 +177,12 @@ theorem cons_head_tail (u : Fin m.succ → α) : vecCons (vecHead u) (vecTail u)
 #align matrix.cons_head_tail Matrix.cons_head_tail
 -/
 
+#print Matrix.range_cons /-
 @[simp]
 theorem range_cons (x : α) (u : Fin n → α) : Set.range (vecCons x u) = {x} ∪ Set.range u :=
   Set.ext fun y => by simp [Fin.exists_fin_succ, eq_comm]
 #align matrix.range_cons Matrix.range_cons
+-/
 
 #print Matrix.range_empty /-
 @[simp]
@@ -290,6 +295,7 @@ def vecAppend {α : Type _} {o : ℕ} (ho : o = m + n) (u : Fin m → α) (v : F
 #align matrix.vec_append Matrix.vecAppend
 -/
 
+#print Matrix.vecAppend_eq_ite /-
 theorem vecAppend_eq_ite {α : Type _} {o : ℕ} (ho : o = m + n) (u : Fin m → α) (v : Fin n → α) :
     vecAppend ho u v = fun i =>
       if h : (i : ℕ) < m then u ⟨i, h⟩
@@ -301,17 +307,22 @@ theorem vecAppend_eq_ite {α : Type _} {o : ℕ} (ho : o = m + n) (u : Fin m →
   simp only [eq_rec_constant]
   rfl
 #align matrix.vec_append_eq_ite Matrix.vecAppend_eq_ite
+-/
 
+#print Matrix.vecAppend_apply_zero /-
 @[simp]
 theorem vecAppend_apply_zero {α : Type _} {o : ℕ} (ho : o + 1 = m + 1 + n) (u : Fin (m + 1) → α)
     (v : Fin n → α) : vecAppend ho u v 0 = u 0 :=
   rfl
 #align matrix.vec_append_apply_zero Matrix.vecAppend_apply_zero
+-/
 
+#print Matrix.empty_vecAppend /-
 @[simp]
 theorem empty_vecAppend (v : Fin n → α) : vecAppend (zero_add _).symm ![] v = v := by ext;
   simp [vec_append_eq_ite]
 #align matrix.empty_vec_append Matrix.empty_vecAppend
+-/
 
 #print Matrix.cons_vecAppend /-
 @[simp]
@@ -390,11 +401,13 @@ theorem vecAlt1_vecAppend (v : Fin (n + 1) → α) : vecAlt1 rfl (vecAppend rfl 
 #align matrix.vec_alt1_vec_append Matrix.vecAlt1_vecAppend
 -/
 
+#print Matrix.vecHead_vecAlt0 /-
 @[simp]
 theorem vecHead_vecAlt0 (hm : m + 2 = n + 1 + (n + 1)) (v : Fin (m + 2) → α) :
     vecHead (vecAlt0 hm v) = v 0 :=
   rfl
 #align matrix.vec_head_vec_alt0 Matrix.vecHead_vecAlt0
+-/
 
 #print Matrix.vecHead_vecAlt1 /-
 @[simp]
@@ -479,15 +492,19 @@ section Smul
 
 variable {M : Type _} [SMul M α]
 
+#print Matrix.smul_empty /-
 @[simp]
 theorem smul_empty (x : M) (v : Fin 0 → α) : x • v = ![] :=
   empty_eq _
 #align matrix.smul_empty Matrix.smul_empty
+-/
 
+#print Matrix.smul_cons /-
 @[simp]
 theorem smul_cons (x : M) (y : α) (v : Fin n → α) : x • vecCons y v = vecCons (x • y) (x • v) := by
   ext i; refine' Fin.cases _ _ i <;> simp
 #align matrix.smul_cons Matrix.smul_cons
+-/
 
 end Smul
 

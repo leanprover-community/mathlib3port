@@ -40,8 +40,6 @@ namespace AddCircle
 
 variable {T : ℝ} [hT : Fact (0 < T)]
 
-include hT
-
 /-- If a null-measurable subset of the circle is almost invariant under rotation by a family of
 rational angles with denominators tending to infinity, then it must be almost empty or almost full.
 -/

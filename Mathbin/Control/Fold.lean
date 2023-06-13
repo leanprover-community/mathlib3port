@@ -131,6 +131,7 @@ def Foldl.get (x : Foldl α) : α → α :=
 #align monoid.foldl.get Monoid.Foldl.get
 -/
 
+#print Monoid.Foldl.ofFreeMonoid /-
 @[simps]
 def Foldl.ofFreeMonoid (f : β → α → β) : FreeMonoid α →* Monoid.Foldl β
     where
@@ -139,6 +140,7 @@ def Foldl.ofFreeMonoid (f : β → α → β) : FreeMonoid α →* Monoid.Foldl 
   map_mul' := by
     intros <;> simp only [FreeMonoid.toList_mul, flip, unop_op, List.foldl_append, op_inj] <;> rfl
 #align monoid.foldl.of_free_monoid Monoid.Foldl.ofFreeMonoid
+-/
 
 #print Monoid.Foldr /-
 @[reducible]
@@ -159,6 +161,7 @@ def Foldr.get (x : Foldr α) : α → α :=
 #align monoid.foldr.get Monoid.Foldr.get
 -/
 
+#print Monoid.Foldr.ofFreeMonoid /-
 @[simps]
 def Foldr.ofFreeMonoid (f : α → β → β) : FreeMonoid α →* Monoid.Foldr β
     where
@@ -166,6 +169,7 @@ def Foldr.ofFreeMonoid (f : α → β → β) : FreeMonoid α →* Monoid.Foldr 
   map_one' := rfl
   map_mul' xs ys := funext fun z => List.foldr_append _ _ _ _
 #align monoid.foldr.of_free_monoid Monoid.Foldr.ofFreeMonoid
+-/
 
 #print Monoid.foldlM /-
 @[reducible]
@@ -186,6 +190,7 @@ def foldlM.get (x : foldlM m α) : α → m α :=
 #align monoid.mfoldl.get Monoid.foldlM.get
 -/
 
+#print Monoid.foldlM.ofFreeMonoid /-
 @[simps]
 def foldlM.ofFreeMonoid [LawfulMonad m] (f : β → α → m β) : FreeMonoid α →* Monoid.foldlM m β
     where
@@ -193,6 +198,7 @@ def foldlM.ofFreeMonoid [LawfulMonad m] (f : β → α → m β) : FreeMonoid α
   map_one' := rfl
   map_mul' := by intros <;> apply unop_injective <;> ext <;> apply List.foldlM_append
 #align monoid.mfoldl.of_free_monoid Monoid.foldlM.ofFreeMonoid
+-/
 
 #print Monoid.foldrM /-
 @[reducible]
@@ -213,6 +219,7 @@ def foldrM.get (x : foldrM m α) : α → m α :=
 #align monoid.mfoldr.get Monoid.foldrM.get
 -/
 
+#print Monoid.foldrM.ofFreeMonoid /-
 @[simps]
 def foldrM.ofFreeMonoid [LawfulMonad m] (f : α → β → m β) : FreeMonoid α →* Monoid.foldrM m β
     where
@@ -220,6 +227,7 @@ def foldrM.ofFreeMonoid [LawfulMonad m] (f : α → β → m β) : FreeMonoid α
   map_one' := rfl
   map_mul' := by intros <;> ext <;> apply List.foldrM_append
 #align monoid.mfoldr.of_free_monoid Monoid.foldrM.ofFreeMonoid
+-/
 
 end Monoid
 
@@ -308,15 +316,19 @@ def mapFold [Monoid α] [Monoid β] (f : α →* β) : ApplicativeTransformation
 #align traversable.map_fold Traversable.mapFold
 -/
 
+#print Traversable.Free.map_eq_map /-
 theorem Free.map_eq_map (f : α → β) (xs : List α) :
     f <$> xs = (FreeMonoid.map f (FreeMonoid.ofList xs)).toList :=
   rfl
 #align traversable.free.map_eq_map Traversable.Free.map_eq_map
+-/
 
+#print Traversable.foldl.unop_ofFreeMonoid /-
 theorem foldl.unop_ofFreeMonoid (f : β → α → β) (xs : FreeMonoid α) (a : β) :
     unop (Foldl.ofFreeMonoid f xs) a = List.foldl f a xs.toList :=
   rfl
 #align traversable.foldl.unop_of_free_monoid Traversable.foldl.unop_ofFreeMonoid
+-/
 
 variable (m : Type u → Type u) [Monad m] [LawfulMonad m]
 
@@ -324,6 +336,7 @@ variable {t : Type u → Type u} [Traversable t] [IsLawfulTraversable t]
 
 open IsLawfulTraversable
 
+#print Traversable.foldMap_hom /-
 theorem foldMap_hom [Monoid α] [Monoid β] (f : α →* β) (g : γ → α) (x : t γ) :
     f (foldMap g x) = foldMap (f ∘ g) x :=
   calc
@@ -332,11 +345,14 @@ theorem foldMap_hom [Monoid α] [Monoid β] (f : α →* β) (g : γ → α) (x 
     _ = traverse ((mapFold f).app _ ∘ Const.mk' ∘ g) x := (naturality (mapFold f) _ _)
     _ = foldMap (f ∘ g) x := rfl
 #align traversable.fold_map_hom Traversable.foldMap_hom
+-/
 
+#print Traversable.foldMap_hom_free /-
 theorem foldMap_hom_free [Monoid β] (f : FreeMonoid α →* β) (x : t α) :
     f (foldMap FreeMonoid.of x) = foldMap (f ∘ FreeMonoid.of) x :=
   foldMap_hom f _ x
 #align traversable.fold_map_hom_free Traversable.foldMap_hom_free
+-/
 
 end ApplicativeTransformation
 
@@ -350,29 +366,37 @@ variable {α β γ : Type u}
 
 variable {t : Type u → Type u} [Traversable t] [IsLawfulTraversable t]
 
+#print Traversable.foldl.ofFreeMonoid_comp_of /-
 @[simp]
 theorem foldl.ofFreeMonoid_comp_of (f : α → β → α) :
     Foldl.ofFreeMonoid f ∘ FreeMonoid.of = Foldl.mk ∘ flip f :=
   rfl
 #align traversable.foldl.of_free_monoid_comp_of Traversable.foldl.ofFreeMonoid_comp_of
+-/
 
+#print Traversable.foldr.ofFreeMonoid_comp_of /-
 @[simp]
 theorem foldr.ofFreeMonoid_comp_of (f : β → α → α) :
     Foldr.ofFreeMonoid f ∘ FreeMonoid.of = Foldr.mk ∘ f :=
   rfl
 #align traversable.foldr.of_free_monoid_comp_of Traversable.foldr.ofFreeMonoid_comp_of
+-/
 
+#print Traversable.foldlm.ofFreeMonoid_comp_of /-
 @[simp]
 theorem foldlm.ofFreeMonoid_comp_of {m} [Monad m] [LawfulMonad m] (f : α → β → m α) :
     foldlM.ofFreeMonoid f ∘ FreeMonoid.of = foldlM.mk ∘ flip f := by ext1 x;
   simp [(· ∘ ·), mfoldl.of_free_monoid, mfoldl.mk, flip]; rfl
 #align traversable.mfoldl.of_free_monoid_comp_of Traversable.foldlm.ofFreeMonoid_comp_of
+-/
 
+#print Traversable.foldrm.ofFreeMonoid_comp_of /-
 @[simp]
 theorem foldrm.ofFreeMonoid_comp_of {m} [Monad m] [LawfulMonad m] (f : β → α → m α) :
     foldrM.ofFreeMonoid f ∘ FreeMonoid.of = foldrM.mk ∘ f := by ext;
   simp [(· ∘ ·), mfoldr.of_free_monoid, mfoldr.mk, flip]
 #align traversable.mfoldr.of_free_monoid_comp_of Traversable.foldrm.ofFreeMonoid_comp_of
+-/
 
 #print Traversable.toList_spec /-
 theorem toList_spec (xs : t α) : toList xs = FreeMonoid.toList (foldMap FreeMonoid.of xs) :=
@@ -393,9 +417,11 @@ theorem toList_spec (xs : t α) : toList xs = FreeMonoid.toList (foldMap FreeMon
 #align traversable.to_list_spec Traversable.toList_spec
 -/
 
+#print Traversable.foldMap_map /-
 theorem foldMap_map [Monoid γ] (f : α → β) (g : β → γ) (xs : t α) :
     foldMap g (f <$> xs) = foldMap (g ∘ f) xs := by simp only [fold_map, traverse_map]
 #align traversable.fold_map_map Traversable.foldMap_map
+-/
 
 #print Traversable.foldl_toList /-
 theorem foldl_toList (f : α → β → α) (xs : t β) (x : α) :
@@ -417,6 +443,7 @@ theorem foldr_toList (f : α → β → β) (xs : t α) (x : β) :
 #align traversable.foldr_to_list Traversable.foldr_toList
 -/
 
+#print Traversable.toList_map /-
 /-
 
 -/
@@ -424,6 +451,7 @@ theorem toList_map (f : α → β) (xs : t α) : toList (f <$> xs) = f <$> toLis
   simp only [to_list_spec, free.map_eq_map, fold_map_hom, fold_map_map, FreeMonoid.ofList_toList,
     FreeMonoid.map_of, (· ∘ ·)]
 #align traversable.to_list_map Traversable.toList_map
+-/
 
 #print Traversable.foldl_map /-
 @[simp]

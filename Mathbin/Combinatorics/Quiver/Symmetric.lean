@@ -76,12 +76,15 @@ class HasInvolutiveReverse extends HasReverse V where
 
 variable {U V W}
 
+#print Quiver.reverse_reverse /-
 @[simp]
 theorem reverse_reverse [h : HasInvolutiveReverse V] {a b : V} (f : a ⟶ b) :
     reverse (reverse f) = f :=
   h.inv' f
 #align quiver.reverse_reverse Quiver.reverse_reverse
+-/
 
+#print Quiver.reverse_inj /-
 @[simp]
 theorem reverse_inj [HasInvolutiveReverse V] {a b : V} (f g : a ⟶ b) :
     reverse f = reverse g ↔ f = g := by
@@ -89,10 +92,13 @@ theorem reverse_inj [HasInvolutiveReverse V] {a b : V} (f g : a ⟶ b) :
   · rintro h; simpa using congr_arg Quiver.reverse h
   · rintro h; congr; assumption
 #align quiver.reverse_inj Quiver.reverse_inj
+-/
 
+#print Quiver.eq_reverse_iff /-
 theorem eq_reverse_iff [HasInvolutiveReverse V] {a b : V} (f : a ⟶ b) (g : b ⟶ a) :
     f = reverse g ↔ reverse f = g := by rw [← reverse_inj, reverse_reverse]
 #align quiver.eq_reverse_iff Quiver.eq_reverse_iff
+-/
 
 section MapReverse
 
@@ -105,11 +111,13 @@ class Prefunctor.MapReverse (φ : U ⥤q V) where
 #align prefunctor.map_reverse Prefunctor.MapReverse
 -/
 
+#print Prefunctor.map_reverse /-
 @[simp]
 theorem Prefunctor.map_reverse (φ : U ⥤q V) [φ.MapReverse] {u v : U} (e : u ⟶ v) :
     φ.map (reverse e) = reverse (φ.map e) :=
   Prefunctor.MapReverse.map_reverse' e
 #align prefunctor.map_reverse' Prefunctor.map_reverse
+-/
 
 #print Prefunctor.mapReverseComp /-
 instance Prefunctor.mapReverseComp (φ : U ⥤q V) (ψ : V ⥤q W) [φ.MapReverse] [ψ.MapReverse] :
@@ -133,10 +141,12 @@ instance : HasInvolutiveReverse (Symmetrify V)
   reverse' _ _ e := e.symm
   inv' _ _ e := congr_fun Sum.swap_swap_eq e
 
+#print Quiver.symmetrify_reverse /-
 @[simp]
 theorem symmetrify_reverse {a b : Symmetrify V} (e : a ⟶ b) : reverse e = e.symm :=
   rfl
 #align quiver.symmetrify_reverse Quiver.symmetrify_reverse
+-/
 
 #print Quiver.Hom.toPos /-
 /-- Shorthand for the "forward" arrow corresponding to `f` in `symmetrify V` -/
@@ -161,17 +171,22 @@ def Path.reverse [HasReverse V] {a : V} : ∀ {b}, Path a b → Path b a
 #align quiver.path.reverse Quiver.Path.reverse
 -/
 
+#print Quiver.Path.reverse_toPath /-
 @[simp]
 theorem Path.reverse_toPath [HasReverse V] {a b : V} (f : a ⟶ b) :
     f.toPath.reverse = (reverse f).toPath :=
   rfl
 #align quiver.path.reverse_to_path Quiver.Path.reverse_toPath
+-/
 
+#print Quiver.Path.reverse_comp /-
 @[simp]
 theorem Path.reverse_comp [HasReverse V] {a b c : V} (p : Path a b) (q : Path b c) :
     (p.comp q).reverse = q.reverse.comp p.reverse := by induction q; · simp; · simp [q_ih]
 #align quiver.path.reverse_comp Quiver.Path.reverse_comp
+-/
 
+#print Quiver.Path.reverse_reverse /-
 @[simp]
 theorem Path.reverse_reverse [HasInvolutiveReverse V] {a b : V} (p : Path a b) :
     p.reverse.reverse = p := by
@@ -180,6 +195,7 @@ theorem Path.reverse_reverse [HasInvolutiveReverse V] {a b : V} (p : Path a b) :
   · simp only [path.reverse, path.reverse_comp, path.reverse_to_path, reverse_reverse, p_ih]
     rfl
 #align quiver.path.reverse_reverse Quiver.Path.reverse_reverse
+-/
 
 namespace Symmetrify
 
@@ -204,13 +220,16 @@ def lift [HasReverse V'] (φ : V ⥤q V') : Symmetrify V ⥤q V'
 #align quiver.symmetrify.lift Quiver.Symmetrify.lift
 -/
 
+#print Quiver.Symmetrify.lift_spec /-
 theorem lift_spec [HasReverse V'] (φ : V ⥤q V') : of ⋙q lift φ = φ :=
   by
   fapply Prefunctor.ext
   · rintro X; rfl
   · rintro X Y f; rfl
 #align quiver.symmetrify.lift_spec Quiver.Symmetrify.lift_spec
+-/
 
+#print Quiver.Symmetrify.lift_reverse /-
 theorem lift_reverse [h : HasInvolutiveReverse V'] (φ : V ⥤q V') {X Y : Symmetrify V} (f : X ⟶ Y) :
     (lift φ).map (Quiver.reverse f) = Quiver.reverse ((lift φ).map f) :=
   by
@@ -218,7 +237,9 @@ theorem lift_reverse [h : HasInvolutiveReverse V'] (φ : V ⥤q V') {X Y : Symme
   · simp only; rfl
   · simp only [reverse_reverse]; rfl
 #align quiver.symmetrify.lift_reverse Quiver.Symmetrify.lift_reverse
+-/
 
+#print Quiver.Symmetrify.lift_unique /-
 /-- `lift φ` is the only prefunctor extending `φ` and preserving reverses. -/
 theorem lift_unique [HasReverse V'] (φ : V ⥤q V') (Φ : Symmetrify V ⥤q V') (hΦ : of ⋙q Φ = φ)
     [hΦrev : Φ.MapReverse] : Φ = lift φ := by
@@ -231,6 +252,7 @@ theorem lift_unique [HasReverse V'] (φ : V ⥤q V') (Φ : Symmetrify V ⥤q V')
     · dsimp [lift, of]
       simp only [← Prefunctor.map_reverse, symmetrify_reverse, Sum.swap_inl]
 #align quiver.symmetrify.lift_unique Quiver.Symmetrify.lift_unique
+-/
 
 /-- A prefunctor canonically defines a prefunctor of the symmetrifications. -/
 @[simps]
@@ -258,10 +280,12 @@ instance [HasInvolutiveReverse V] : HasInvolutiveReverse (Push σ)
   reverse' a b F := by cases F; constructor; apply reverse; exact F_f
   inv' a b F := by cases F; dsimp [reverse]; congr; apply reverse_reverse
 
+#print Quiver.Push.of_reverse /-
 theorem of_reverse [h : HasInvolutiveReverse V] (X Y : V) (f : X ⟶ Y) :
     (reverse <| (Push.of σ).map f) = (Push.of σ).map (reverse f) :=
   rfl
 #align quiver.push.of_reverse Quiver.Push.of_reverse
+-/
 
 #print Quiver.Push.ofMapReverse /-
 instance ofMapReverse [h : HasInvolutiveReverse V] : (Push.of σ).MapReverse :=

@@ -51,6 +51,7 @@ theorem isOpen_imageOfDf : IsOpen (imageOfDf f) :=
 #align algebraic_geometry.polynomial.is_open_image_of_Df AlgebraicGeometry.Polynomial.isOpen_imageOfDf
 -/
 
+#print AlgebraicGeometry.Polynomial.comap_C_mem_imageOfDf /-
 /-- If a point of `Spec R[x]` is not contained in the vanishing set of `f`, then its image in
 `Spec R` is contained in the open set where at least one of the coefficients of `f` is non-zero.
 This lemma is a reformulation of `exists_C_coeff_not_mem`. -/
@@ -59,7 +60,9 @@ theorem comap_C_mem_imageOfDf {I : PrimeSpectrum R[X]}
     PrimeSpectrum.comap (Polynomial.C : R →+* R[X]) I ∈ imageOfDf f :=
   exists_C_coeff_not_mem (mem_compl_zeroLocus_iff_not_mem.mp H)
 #align algebraic_geometry.polynomial.comap_C_mem_image_of_Df AlgebraicGeometry.Polynomial.comap_C_mem_imageOfDf
+-/
 
+#print AlgebraicGeometry.Polynomial.imageOfDf_eq_comap_C_compl_zeroLocus /-
 /-- The open set `image_of_Df f` coincides with the image of `basic_open f` under the
 morphism `C⁺ : Spec R[x] → Spec R`. -/
 theorem imageOfDf_eq_comap_C_compl_zeroLocus :
@@ -77,7 +80,9 @@ theorem imageOfDf_eq_comap_C_compl_zeroLocus :
   · rintro ⟨xli, complement, rfl⟩
     exact comap_C_mem_image_of_Df complement
 #align algebraic_geometry.polynomial.image_of_Df_eq_comap_C_compl_zero_locus AlgebraicGeometry.Polynomial.imageOfDf_eq_comap_C_compl_zeroLocus
+-/
 
+#print AlgebraicGeometry.Polynomial.isOpenMap_comap_C /-
 /-- The morphism `C⁺ : Spec R[x] → Spec R` is open.
 Stacks Project "Lemma 00FB", first part.
 
@@ -90,6 +95,7 @@ theorem isOpenMap_comap_C : IsOpenMap (PrimeSpectrum.comap (C : R →+* R[X])) :
   simp_rw [← image_of_Df_eq_comap_C_compl_zero_locus]
   exact isOpen_iUnion fun f => is_open_image_of_Df
 #align algebraic_geometry.polynomial.is_open_map_comap_C AlgebraicGeometry.Polynomial.isOpenMap_comap_C
+-/
 
 end Polynomial
 

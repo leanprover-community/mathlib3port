@@ -34,19 +34,25 @@ def Nullhomotopic (f : C(X, Y)) : Prop :=
 #align continuous_map.nullhomotopic ContinuousMap.Nullhomotopic
 -/
 
+#print ContinuousMap.nullhomotopic_of_constant /-
 theorem nullhomotopic_of_constant (y : Y) : Nullhomotopic (ContinuousMap.const X y) :=
   ⟨y, by rfl⟩
 #align continuous_map.nullhomotopic_of_constant ContinuousMap.nullhomotopic_of_constant
+-/
 
+#print ContinuousMap.Nullhomotopic.comp_right /-
 theorem Nullhomotopic.comp_right {f : C(X, Y)} (hf : f.Nullhomotopic) (g : C(Y, Z)) :
     (g.comp f).Nullhomotopic := by cases' hf with y hy; use g y;
   exact homotopic.hcomp hy (homotopic.refl g)
 #align continuous_map.nullhomotopic.comp_right ContinuousMap.Nullhomotopic.comp_right
+-/
 
+#print ContinuousMap.Nullhomotopic.comp_left /-
 theorem Nullhomotopic.comp_left {f : C(Y, Z)} (hf : f.Nullhomotopic) (g : C(X, Y)) :
     (f.comp g).Nullhomotopic := by cases' hf with y hy; use y;
   exact homotopic.hcomp (homotopic.refl g) hy
 #align continuous_map.nullhomotopic.comp_left ContinuousMap.Nullhomotopic.comp_left
+-/
 
 end ContinuousMap
 
@@ -55,7 +61,7 @@ open ContinuousMap
 open scoped ContinuousMap
 
 #print ContractibleSpace /-
-/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`hequiv_unit] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`hequiv_unit] [] -/
 /-- A contractible space is one that is homotopy equivalent to `unit`. -/
 class ContractibleSpace (X : Type _) [TopologicalSpace X] : Prop where
   hequiv_unit : Nonempty (X ≃ₕ Unit)
@@ -97,10 +103,12 @@ protected theorem ContinuousMap.HomotopyEquiv.contractibleSpace [ContractibleSpa
 #align continuous_map.homotopy_equiv.contractible_space ContinuousMap.HomotopyEquiv.contractibleSpace
 -/
 
+#print ContinuousMap.HomotopyEquiv.contractibleSpace_iff /-
 protected theorem ContinuousMap.HomotopyEquiv.contractibleSpace_iff (e : X ≃ₕ Y) :
     ContractibleSpace X ↔ ContractibleSpace Y :=
   ⟨by intro h; exact e.symm.contractible_space, by intro h; exact e.contractible_space⟩
 #align continuous_map.homotopy_equiv.contractible_space_iff ContinuousMap.HomotopyEquiv.contractibleSpace_iff
+-/
 
 #print Homeomorph.contractibleSpace /-
 protected theorem Homeomorph.contractibleSpace [ContractibleSpace Y] (e : X ≃ₜ Y) :
@@ -109,10 +117,12 @@ protected theorem Homeomorph.contractibleSpace [ContractibleSpace Y] (e : X ≃�
 #align homeomorph.contractible_space Homeomorph.contractibleSpace
 -/
 
+#print Homeomorph.contractibleSpace_iff /-
 protected theorem Homeomorph.contractibleSpace_iff (e : X ≃ₜ Y) :
     ContractibleSpace X ↔ ContractibleSpace Y :=
   e.toHomotopyEquiv.contractibleSpace_iff
 #align homeomorph.contractible_space_iff Homeomorph.contractibleSpace_iff
+-/
 
 namespace ContractibleSpace
 

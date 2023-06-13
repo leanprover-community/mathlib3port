@@ -81,6 +81,7 @@ instance : ReflectsIsomorphisms (N₁ : SimplicialObject C ⥤ Karoubi (ChainCom
         simplicial_object.σ_naturality, h₁, h₂, h₃]
       tauto⟩
 
+#print AlgebraicTopology.DoldKan.compatibility_N₂_N₁_karoubi /-
 theorem compatibility_N₂_N₁_karoubi :
     N₂ ⋙ (karoubiChainComplexEquivalence C ℕ).Functor =
       karoubiFunctorCategoryEmbedding SimplexCategoryᵒᵖ C ⋙
@@ -110,6 +111,7 @@ theorem compatibility_N₂_N₁_karoubi :
       karoubi_chain_complex_equivalence_functor_obj_X_p, N₂_obj_p_f, eq_to_hom_refl,
       P_infty_f_naturality_assoc, app_comp_p, P_infty_f_idem_assoc]
 #align algebraic_topology.dold_kan.compatibility_N₂_N₁_karoubi AlgebraicTopology.DoldKan.compatibility_N₂_N₁_karoubi
+-/
 
 /-- We deduce that `N₂ : karoubi (simplicial_object C) ⥤ karoubi (chain_complex C ℕ))`
 reflects isomorphisms from the fact that

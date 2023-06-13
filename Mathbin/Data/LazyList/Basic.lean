@@ -28,9 +28,11 @@ universe u
 
 namespace Thunk
 
+#print Thunk.pure /-
 /-- Creates a thunk with a (non-lazy) constant value. -/
 def pure {α} (x : α) : Thunk α := fun _ => x
 #align thunk.mk Thunk.pure
+-/
 
 instance {α : Type u} [DecidableEq α] : DecidableEq (Thunk α)
   | a, b =>
@@ -163,21 +165,27 @@ instance : Monad LazyList where
   pure := @LazyList.singleton
   bind := @LazyList.bind
 
+#print LazyList.append_nil /-
 theorem append_nil {α} (xs : LazyList α) : xs.append LazyList.nil = xs :=
   by
   induction xs; rfl
   simp [LazyList.append, xs_ih]
   ext; congr
 #align lazy_list.append_nil LazyList.append_nil
+-/
 
+#print LazyList.append_assoc /-
 theorem append_assoc {α} (xs ys zs : LazyList α) :
     (xs.append ys).append zs = xs.append (ys.append zs) := by induction xs <;> simp [append, *]
 #align lazy_list.append_assoc LazyList.append_assoc
+-/
 
+#print LazyList.append_bind /-
 theorem append_bind {α β} (xs : LazyList α) (ys : Thunk (LazyList α)) (f : α → LazyList β) :
     (@LazyList.append _ xs ys).bind f = (xs.bind f).append ((ys ()).bind f) := by
   induction xs <;> simp [LazyList.bind, append, *, append_assoc, append, LazyList.bind]
 #align lazy_list.append_bind LazyList.append_bind
+-/
 
 instance : LawfulMonad LazyList
     where
@@ -223,16 +231,20 @@ theorem mem_nil {α} (x : α) : x ∈ @LazyList.nil α ↔ False :=
 #align lazy_list.mem_nil LazyList.mem_nil
 -/
 
+#print LazyList.mem_cons /-
 @[simp]
 theorem mem_cons {α} (x y : α) (ys : Thunk (LazyList α)) :
     x ∈ @LazyList.cons α y ys ↔ x = y ∨ x ∈ ys () :=
   Iff.rfl
 #align lazy_list.mem_cons LazyList.mem_cons
+-/
 
+#print LazyList.forall_mem_cons /-
 theorem forall_mem_cons {α} {p : α → Prop} {a : α} {l : Thunk (LazyList α)} :
     (∀ x ∈ @LazyList.cons _ a l, p x) ↔ p a ∧ ∀ x ∈ l (), p x := by
   simp only [Membership.Mem, LazyList.Mem, or_imp, forall_and, forall_eq]
 #align lazy_list.forall_mem_cons LazyList.forall_mem_cons
+-/
 
 /-! ### map for partial functions -/
 

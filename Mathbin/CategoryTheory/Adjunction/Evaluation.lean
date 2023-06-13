@@ -59,6 +59,7 @@ def evaluationLeftAdjoint (c : C) : D ⥤ C ⥤ D
 #align category_theory.evaluation_left_adjoint CategoryTheory.evaluationLeftAdjoint
 -/
 
+#print CategoryTheory.evaluationAdjunctionRight /-
 /-- The adjunction showing that evaluation is a right adjoint. -/
 @[simps unit_app counit_app_app]
 def evaluationAdjunctionRight (c : C) : evaluationLeftAdjoint D c ⊣ (evaluation _ _).obj c :=
@@ -80,11 +81,15 @@ def evaluationAdjunctionRight (c : C) : evaluationLeftAdjoint D c ⊣ (evaluatio
       homEquiv_naturality_left_symm := by intros; ext; dsimp; simp
       homEquiv_naturality_right := by intros; dsimp; simp }
 #align category_theory.evaluation_adjunction_right CategoryTheory.evaluationAdjunctionRight
+-/
 
+#print CategoryTheory.evaluationIsRightAdjoint /-
 instance evaluationIsRightAdjoint (c : C) : IsRightAdjoint ((evaluation _ D).obj c) :=
   ⟨_, evaluationAdjunctionRight _ _⟩
 #align category_theory.evaluation_is_right_adjoint CategoryTheory.evaluationIsRightAdjoint
+-/
 
+#print CategoryTheory.NatTrans.mono_iff_mono_app /-
 theorem NatTrans.mono_iff_mono_app {F G : C ⥤ D} (η : F ⟶ G) : Mono η ↔ ∀ c, Mono (η.app c) :=
   by
   constructor
@@ -93,6 +98,7 @@ theorem NatTrans.mono_iff_mono_app {F G : C ⥤ D} (η : F ⟶ G) : Mono η ↔ 
   · intro _
     apply nat_trans.mono_of_mono_app
 #align category_theory.nat_trans.mono_iff_mono_app CategoryTheory.NatTrans.mono_iff_mono_app
+-/
 
 end
 
@@ -124,6 +130,7 @@ def evaluationRightAdjoint (c : C) : D ⥤ C ⥤ D
 #align category_theory.evaluation_right_adjoint CategoryTheory.evaluationRightAdjoint
 -/
 
+#print CategoryTheory.evaluationAdjunctionLeft /-
 /-- The adjunction showing that evaluation is a left adjoint. -/
 @[simps unit_app_app counit_app]
 def evaluationAdjunctionLeft (c : C) : (evaluation _ _).obj c ⊣ evaluationRightAdjoint D c :=
@@ -145,11 +152,15 @@ def evaluationAdjunctionLeft (c : C) : (evaluation _ _).obj c ⊣ evaluationRigh
       homEquiv_naturality_left_symm := by intros; dsimp; simp
       homEquiv_naturality_right := by intros; ext; dsimp; simp }
 #align category_theory.evaluation_adjunction_left CategoryTheory.evaluationAdjunctionLeft
+-/
 
+#print CategoryTheory.evaluationIsLeftAdjoint /-
 instance evaluationIsLeftAdjoint (c : C) : IsLeftAdjoint ((evaluation _ D).obj c) :=
   ⟨_, evaluationAdjunctionLeft _ _⟩
 #align category_theory.evaluation_is_left_adjoint CategoryTheory.evaluationIsLeftAdjoint
+-/
 
+#print CategoryTheory.NatTrans.epi_iff_epi_app /-
 theorem NatTrans.epi_iff_epi_app {F G : C ⥤ D} (η : F ⟶ G) : Epi η ↔ ∀ c, Epi (η.app c) :=
   by
   constructor
@@ -158,6 +169,7 @@ theorem NatTrans.epi_iff_epi_app {F G : C ⥤ D} (η : F ⟶ G) : Epi η ↔ ∀
   · intros
     apply nat_trans.epi_of_epi_app
 #align category_theory.nat_trans.epi_iff_epi_app CategoryTheory.NatTrans.epi_iff_epi_app
+-/
 
 end
 

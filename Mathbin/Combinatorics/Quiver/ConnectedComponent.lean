@@ -68,10 +68,12 @@ instance : CoeTC V (WeaklyConnectedComponent V) :=
 instance [Inhabited V] : Inhabited (WeaklyConnectedComponent V) :=
   ⟨show V from default⟩
 
+#print Quiver.WeaklyConnectedComponent.eq /-
 protected theorem eq (a b : V) :
     (a : WeaklyConnectedComponent V) = b ↔ Nonempty (@Path (Symmetrify V) _ a b) :=
   Quotient.eq''
 #align quiver.weakly_connected_component.eq Quiver.WeaklyConnectedComponent.eq
+-/
 
 end WeaklyConnectedComponent
 

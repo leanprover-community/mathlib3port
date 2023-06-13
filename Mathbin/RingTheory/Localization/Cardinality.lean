@@ -40,8 +40,6 @@ namespace IsLocalization
 variable {R : Type u} [CommRing R] (S : Submonoid R) {L : Type u} [CommRing L] [Algebra R L]
   [IsLocalization S L]
 
-include S
-
 #print IsLocalization.card_le /-
 /-- A localization always has cardinality less than or equal to the base ring. -/
 theorem card_le : (#L) ≤ (#R) := by
@@ -60,10 +58,12 @@ theorem card_le : (#L) ≤ (#R) := by
 
 variable (L)
 
+#print IsLocalization.card /-
 /-- If you do not localize at any zero-divisors, localization preserves cardinality. -/
 theorem card (hS : S ≤ R⁰) : (#R) = (#L) :=
   (Cardinal.mk_le_of_injective (IsLocalization.injective L hS)).antisymm (card_le S)
 #align is_localization.card IsLocalization.card
+-/
 
 end IsLocalization
 

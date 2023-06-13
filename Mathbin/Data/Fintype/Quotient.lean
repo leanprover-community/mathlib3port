@@ -49,6 +49,7 @@ def Quotient.finChoiceAux {ι : Type _} [DecidableEq ι] {α : ι → Type _} [S
 #align quotient.fin_choice_aux Quotient.finChoiceAux
 -/
 
+#print Quotient.finChoiceAux_eq /-
 theorem Quotient.finChoiceAux_eq {ι : Type _} [DecidableEq ι] {α : ι → Type _}
     [S : ∀ i, Setoid (α i)] :
     ∀ (l : List ι) (f : ∀ i ∈ l, α i), (Quotient.finChoiceAux l fun i h => ⟦f i h⟧) = ⟦f⟧
@@ -59,6 +60,7 @@ theorem Quotient.finChoiceAux_eq {ι : Type _} [DecidableEq ι] {α : ι → Typ
     by_cases e : j = i <;> simp [e]
     subst j; rfl
 #align quotient.fin_choice_aux_eq Quotient.finChoiceAux_eq
+-/
 
 #print Quotient.finChoice /-
 /-- Given a collection of setoids indexed by a fintype `ι` and a
@@ -81,6 +83,7 @@ def Quotient.finChoice {ι : Type _} [DecidableEq ι] [Fintype ι] {α : ι → 
 #align quotient.fin_choice Quotient.finChoice
 -/
 
+#print Quotient.finChoice_eq /-
 theorem Quotient.finChoice_eq {ι : Type _} [DecidableEq ι] [Fintype ι] {α : ι → Type _}
     [∀ i, Setoid (α i)] (f : ∀ i, α i) : (Quotient.finChoice fun i => ⟦f i⟧) = ⟦f⟧ :=
   by
@@ -90,4 +93,5 @@ theorem Quotient.finChoice_eq {ι : Type _} [DecidableEq ι] [Fintype ι] {α : 
     exact Quotient.inductionOn (@Finset.univ ι _).1 fun l => Quotient.finChoiceAux_eq _ _
   simp [this]; exact Setoid.refl _
 #align quotient.fin_choice_eq Quotient.finChoice_eq
+-/
 

@@ -31,6 +31,7 @@ namespace AbsoluteValue
 
 open Int
 
+#print AbsoluteValue.exists_partition_int /-
 /-- We can partition a finite family into `partition_card ε` sets, such that the remainders
 in each set are close together. -/
 theorem exists_partition_int (n : ℕ) {ε : ℝ} (hε : 0 < ε) {b : ℤ} (hb : b ≠ 0) (A : Fin n → ℤ) :
@@ -58,6 +59,7 @@ theorem exists_partition_int (n : ℕ) {ε : ℝ} (hε : 0 < ε) {b : ℤ} (hb :
   rw [abs_sub_comm, ← sub_div, abs_div, abs_of_nonneg hbε.le, div_lt_iff hbε, one_mul] at hi 
   rwa [Int.cast_abs, Int.cast_sub]
 #align absolute_value.exists_partition_int AbsoluteValue.exists_partition_int
+-/
 
 #print AbsoluteValue.absIsAdmissible /-
 /-- `abs : ℤ → ℤ` is an admissible absolute value -/

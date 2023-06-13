@@ -42,14 +42,18 @@ section Ext
 
 variable {M N : DMatrix m n α}
 
+#print DMatrix.ext_iff /-
 theorem ext_iff : (∀ i j, M i j = N i j) ↔ M = N :=
   ⟨fun h => funext fun i => funext <| h i, fun h => by simp [h]⟩
 #align dmatrix.ext_iff DMatrix.ext_iff
+-/
 
+#print DMatrix.ext /-
 @[ext]
 theorem ext : (∀ i j, M i j = N i j) → M = N :=
   ext_iff.mp
 #align dmatrix.ext DMatrix.ext
+-/
 
 end Ext
 
@@ -60,17 +64,21 @@ def map (M : DMatrix m n α) {β : m → n → Type w} (f : ∀ ⦃i j⦄, α i 
 #align dmatrix.map DMatrix.map
 -/
 
+#print DMatrix.map_apply /-
 @[simp]
 theorem map_apply {M : DMatrix m n α} {β : m → n → Type w} {f : ∀ ⦃i j⦄, α i j → β i j} {i : m}
     {j : n} : M.map f i j = f (M i j) :=
   rfl
 #align dmatrix.map_apply DMatrix.map_apply
+-/
 
+#print DMatrix.map_map /-
 @[simp]
 theorem map_map {M : DMatrix m n α} {β : m → n → Type w} {γ : m → n → Type z}
     {f : ∀ ⦃i j⦄, α i j → β i j} {g : ∀ ⦃i j⦄, β i j → γ i j} :
     (M.map f).map g = M.map fun i j x => g (f x) := by ext; simp
 #align dmatrix.map_map DMatrix.map_map
+-/
 
 #print DMatrix.transpose /-
 /-- The transpose of a dmatrix. -/
@@ -79,7 +87,6 @@ def transpose (M : DMatrix m n α) : DMatrix n m fun j i => α i j
 #align dmatrix.transpose DMatrix.transpose
 -/
 
--- mathport name: dmatrix.transpose
 scoped postfix:1024 "ᵀ" => DMatrix.transpose
 
 #print DMatrix.col /-
@@ -135,43 +142,57 @@ instance [∀ i j, Unique (α i j)] : Unique (DMatrix m n α) :=
 instance [∀ i j, Subsingleton (α i j)] : Subsingleton (DMatrix m n α) :=
   Pi.subsingleton
 
+#print DMatrix.zero_apply /-
 @[simp]
 theorem zero_apply [∀ i j, Zero (α i j)] (i j) : (0 : DMatrix m n α) i j = 0 :=
   rfl
 #align dmatrix.zero_apply DMatrix.zero_apply
+-/
 
+#print DMatrix.neg_apply /-
 @[simp]
 theorem neg_apply [∀ i j, Neg (α i j)] (M : DMatrix m n α) (i j) : (-M) i j = -M i j :=
   rfl
 #align dmatrix.neg_apply DMatrix.neg_apply
+-/
 
+#print DMatrix.add_apply /-
 @[simp]
 theorem add_apply [∀ i j, Add (α i j)] (M N : DMatrix m n α) (i j) : (M + N) i j = M i j + N i j :=
   rfl
 #align dmatrix.add_apply DMatrix.add_apply
+-/
 
+#print DMatrix.sub_apply /-
 @[simp]
 theorem sub_apply [∀ i j, Sub (α i j)] (M N : DMatrix m n α) (i j) : (M - N) i j = M i j - N i j :=
   rfl
 #align dmatrix.sub_apply DMatrix.sub_apply
+-/
 
+#print DMatrix.map_zero /-
 @[simp]
 theorem map_zero [∀ i j, Zero (α i j)] {β : m → n → Type w} [∀ i j, Zero (β i j)]
     {f : ∀ ⦃i j⦄, α i j → β i j} (h : ∀ i j, f (0 : α i j) = 0) : (0 : DMatrix m n α).map f = 0 :=
   by ext; simp [h]
 #align dmatrix.map_zero DMatrix.map_zero
+-/
 
+#print DMatrix.map_add /-
 theorem map_add [∀ i j, AddMonoid (α i j)] {β : m → n → Type w} [∀ i j, AddMonoid (β i j)]
     (f : ∀ ⦃i j⦄, α i j →+ β i j) (M N : DMatrix m n α) :
     ((M + N).map fun i j => @f i j) = (M.map fun i j => @f i j) + N.map fun i j => @f i j := by ext;
   simp
 #align dmatrix.map_add DMatrix.map_add
+-/
 
+#print DMatrix.map_sub /-
 theorem map_sub [∀ i j, AddGroup (α i j)] {β : m → n → Type w} [∀ i j, AddGroup (β i j)]
     (f : ∀ ⦃i j⦄, α i j →+ β i j) (M N : DMatrix m n α) :
     ((M - N).map fun i j => @f i j) = (M.map fun i j => @f i j) - N.map fun i j => @f i j := by ext;
   simp
 #align dmatrix.map_sub DMatrix.map_sub
+-/
 
 #print DMatrix.subsingleton_of_empty_left /-
 instance subsingleton_of_empty_left [IsEmpty m] : Subsingleton (DMatrix m n α) :=
@@ -199,10 +220,12 @@ def AddMonoidHom.mapDMatrix [∀ i j, AddMonoid (α i j)] {β : m → n → Type
 #align add_monoid_hom.map_dmatrix AddMonoidHom.mapDMatrix
 -/
 
+#print AddMonoidHom.mapDMatrix_apply /-
 @[simp]
 theorem AddMonoidHom.mapDMatrix_apply [∀ i j, AddMonoid (α i j)] {β : m → n → Type w}
     [∀ i j, AddMonoid (β i j)] (f : ∀ ⦃i j⦄, α i j →+ β i j) (M : DMatrix m n α) :
     AddMonoidHom.mapDMatrix f M = M.map fun i j => @f i j :=
   rfl
 #align add_monoid_hom.map_dmatrix_apply AddMonoidHom.mapDMatrix_apply
+-/
 

@@ -39,7 +39,6 @@ deriving Decidable
 #align int.modeq Int.ModEq
 -/
 
--- mathport name: «expr ≡ [ZMOD ]»
 notation:50 a " ≡ " b " [ZMOD " n "]" => ModEq n a b
 
 variable {m n a b c d : ℤ}
@@ -96,20 +95,28 @@ theorem coe_nat_modEq_iff {a b n : ℕ} : a ≡ b [ZMOD n] ↔ a ≡ b [MOD n] :
 #align int.coe_nat_modeq_iff Int.coe_nat_modEq_iff
 -/
 
+#print Int.modEq_zero_iff_dvd /-
 theorem modEq_zero_iff_dvd : a ≡ 0 [ZMOD n] ↔ n ∣ a := by rw [modeq, zero_mod, dvd_iff_mod_eq_zero]
 #align int.modeq_zero_iff_dvd Int.modEq_zero_iff_dvd
+-/
 
+#print Dvd.dvd.modEq_zero_int /-
 theorem Dvd.dvd.modEq_zero_int (h : n ∣ a) : a ≡ 0 [ZMOD n] :=
   modEq_zero_iff_dvd.2 h
 #align has_dvd.dvd.modeq_zero_int Dvd.dvd.modEq_zero_int
+-/
 
+#print Dvd.dvd.zero_modEq_int /-
 theorem Dvd.dvd.zero_modEq_int (h : n ∣ a) : 0 ≡ a [ZMOD n] :=
   h.modEq_zero_int.symm
 #align has_dvd.dvd.zero_modeq_int Dvd.dvd.zero_modEq_int
+-/
 
+#print Int.modEq_iff_dvd /-
 theorem modEq_iff_dvd : a ≡ b [ZMOD n] ↔ n ∣ b - a := by
   rw [modeq, eq_comm] <;> simp [mod_eq_mod_iff_mod_sub_eq_zero, dvd_iff_mod_eq_zero]
 #align int.modeq_iff_dvd Int.modEq_iff_dvd
+-/
 
 #print Int.modEq_iff_add_fac /-
 theorem modEq_iff_add_fac {a b n : ℤ} : a ≡ b [ZMOD n] ↔ ∃ t, b = a + n * t :=
@@ -143,9 +150,11 @@ theorem modEq_neg : a ≡ b [ZMOD -n] ↔ a ≡ b [ZMOD n] := by simp [modeq_iff
 
 namespace Modeq
 
+#print Int.ModEq.of_dvd /-
 protected theorem of_dvd (d : m ∣ n) (h : a ≡ b [ZMOD n]) : a ≡ b [ZMOD m] :=
   modEq_of_dvd <| d.trans h.Dvd
 #align int.modeq.of_dvd Int.ModEq.of_dvd
+-/
 
 #print Int.ModEq.mul_left' /-
 protected theorem mul_left' (h : a ≡ b [ZMOD n]) : c * a ≡ c * b [ZMOD c * n] :=
@@ -250,12 +259,14 @@ protected theorem mul (h₁ : a ≡ b [ZMOD n]) (h₂ : c ≡ d [ZMOD n]) : a * 
 #align int.modeq.mul Int.ModEq.mul
 -/
 
+#print Int.ModEq.pow /-
 protected theorem pow (m : ℕ) (h : a ≡ b [ZMOD n]) : a ^ m ≡ b ^ m [ZMOD n] :=
   by
   induction' m with d hd; · rfl
   rw [pow_succ, pow_succ]
   exact h.mul hd
 #align int.modeq.pow Int.ModEq.pow
+-/
 
 #print Int.ModEq.of_mul_left /-
 theorem of_mul_left (m : ℤ) (h : a ≡ b [ZMOD m * n]) : a ≡ b [ZMOD n] := by
@@ -292,9 +303,11 @@ theorem cancel_left_div_gcd (hm : 0 < m) (h : c * a ≡ c * b [ZMOD m]) : a ≡ 
 #align int.modeq.cancel_left_div_gcd Int.ModEq.cancel_left_div_gcd
 -/
 
+#print Int.ModEq.of_div /-
 theorem of_div (h : a / c ≡ b / c [ZMOD m / c]) (ha : c ∣ a) (ha : c ∣ b) (ha : c ∣ m) :
     a ≡ b [ZMOD m] := by convert h.mul_left' <;> rwa [Int.mul_ediv_cancel']
 #align int.modeq.of_div Int.ModEq.of_div
+-/
 
 end Modeq
 

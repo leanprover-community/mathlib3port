@@ -52,6 +52,7 @@ abbrev IsFractionRing [CommRing K] [Algebra R K] :=
 #align is_fraction_ring IsFractionRing
 -/
 
+#print Rat.isFractionRing /-
 /-- The cast from `int` to `rat` as a `fraction_ring`. -/
 instance Rat.isFractionRing : IsFractionRing ℤ ℚ
     where
@@ -71,6 +72,7 @@ instance Rat.isFractionRing : IsFractionRing ℤ ℚ
     apply mul_left_cancel₀ _ h
     rwa [mem_nonZeroDivisors_iff_ne_zero] at hc 
 #align rat.is_fraction_ring Rat.isFractionRing
+-/
 
 namespace IsFractionRing
 
@@ -82,15 +84,19 @@ section CommRing
 
 variable [CommRing K] [Algebra R K] [IsFractionRing R K] [Algebra A K] [IsFractionRing A K]
 
+#print IsFractionRing.to_map_eq_zero_iff /-
 theorem to_map_eq_zero_iff {x : R} : algebraMap R K x = 0 ↔ x = 0 :=
   to_map_eq_zero_iff _ (le_of_eq rfl)
 #align is_fraction_ring.to_map_eq_zero_iff IsFractionRing.to_map_eq_zero_iff
+-/
 
 variable (R K)
 
+#print IsFractionRing.injective /-
 protected theorem injective : Function.Injective (algebraMap R K) :=
   IsLocalization.injective _ (le_of_eq rfl)
 #align is_fraction_ring.injective IsFractionRing.injective
+-/
 
 variable {R K}
 
@@ -106,18 +112,22 @@ instance (priority := 100) [NoZeroDivisors K] : NoZeroSMulDivisors R K :=
 
 variable {R K}
 
+#print IsFractionRing.to_map_ne_zero_of_mem_nonZeroDivisors /-
 protected theorem to_map_ne_zero_of_mem_nonZeroDivisors [Nontrivial R] {x : R}
     (hx : x ∈ nonZeroDivisors R) : algebraMap R K x ≠ 0 :=
   IsLocalization.to_map_ne_zero_of_mem_nonZeroDivisors _ le_rfl hx
 #align is_fraction_ring.to_map_ne_zero_of_mem_non_zero_divisors IsFractionRing.to_map_ne_zero_of_mem_nonZeroDivisors
+-/
 
 variable (A)
 
+#print IsFractionRing.isDomain /-
 /-- A `comm_ring` `K` which is the localization of an integral domain `R` at `R - {0}` is an
 integral domain. -/
 protected theorem isDomain : IsDomain K :=
   isDomain_of_le_nonZeroDivisors _ (le_refl (nonZeroDivisors A))
 #align is_fraction_ring.is_domain IsFractionRing.isDomain
+-/
 
 attribute [local instance] Classical.decEq
 
@@ -133,6 +143,7 @@ protected noncomputable irreducible_def inv (z : K) : K :=
 #align is_fraction_ring.inv IsFractionRing.inv
 -/
 
+#print IsFractionRing.mul_inv_cancel /-
 protected theorem mul_inv_cancel (x : K) (hx : x ≠ 0) : x * IsFractionRing.inv A x = 1 :=
   by
   rw [IsFractionRing.inv, dif_neg hx, ←
@@ -145,6 +156,7 @@ protected theorem mul_inv_cancel (x : K) (hx : x ≠ 0) : x * IsFractionRing.inv
   rw [mk'_spec, ← eq_mk'_iff_mul_eq]
   exact (mk'_sec _ x).symm
 #align is_fraction_ring.mul_inv_cancel IsFractionRing.mul_inv_cancel
+-/
 
 #print IsFractionRing.toField /-
 /-- A `comm_ring` `K` which is the localization of an integral domain `R` at `R - {0}` is a field.
@@ -167,30 +179,39 @@ end CommRing
 variable {B : Type _} [CommRing B] [IsDomain B] [Field K] {L : Type _} [Field L] [Algebra A K]
   [IsFractionRing A K] {g : A →+* L}
 
+#print IsFractionRing.mk'_mk_eq_div /-
 theorem mk'_mk_eq_div {r s} (hs : s ∈ nonZeroDivisors A) :
     mk' K r ⟨s, hs⟩ = algebraMap A K r / algebraMap A K s :=
   mk'_eq_iff_eq_mul.2 <|
     (div_mul_cancel (algebraMap A K r)
         (IsFractionRing.to_map_ne_zero_of_mem_nonZeroDivisors hs)).symm
 #align is_fraction_ring.mk'_mk_eq_div IsFractionRing.mk'_mk_eq_div
+-/
 
+#print IsFractionRing.mk'_eq_div /-
 @[simp]
 theorem mk'_eq_div {r} (s : nonZeroDivisors A) : mk' K r s = algebraMap A K r / algebraMap A K s :=
   mk'_mk_eq_div s.2
 #align is_fraction_ring.mk'_eq_div IsFractionRing.mk'_eq_div
+-/
 
+#print IsFractionRing.div_surjective /-
 theorem div_surjective (z : K) :
     ∃ (x y : A) (hy : y ∈ nonZeroDivisors A), algebraMap _ _ x / algebraMap _ _ y = z :=
   let ⟨x, ⟨y, hy⟩, h⟩ := mk'_surjective (nonZeroDivisors A) z
   ⟨x, y, hy, by rwa [mk'_eq_div] at h ⟩
 #align is_fraction_ring.div_surjective IsFractionRing.div_surjective
+-/
 
+#print IsFractionRing.isUnit_map_of_injective /-
 theorem isUnit_map_of_injective (hg : Function.Injective g) (y : nonZeroDivisors A) :
     IsUnit (g y) :=
   IsUnit.mk0 (g y) <|
     show g.toMonoidWithZeroHom y ≠ 0 from map_ne_zero_of_mem_nonZeroDivisors g hg y.2
 #align is_fraction_ring.is_unit_map_of_injective IsFractionRing.isUnit_map_of_injective
+-/
 
+#print IsFractionRing.mk'_eq_zero_iff_eq_zero /-
 @[simp]
 theorem mk'_eq_zero_iff_eq_zero [Algebra R K] [IsFractionRing R K] {x : R} {y : nonZeroDivisors R} :
     mk' K x y = 0 ↔ x = 0 :=
@@ -199,7 +220,9 @@ theorem mk'_eq_zero_iff_eq_zero [Algebra R K] [IsFractionRing R K] {x : R} {y : 
   · simp_rw [mk'_eq_zero_iff, mul_left_coe_nonZeroDivisors_eq_zero_iff] at hxy 
     exact (exists_const _).mp hxy
 #align is_fraction_ring.mk'_eq_zero_iff_eq_zero IsFractionRing.mk'_eq_zero_iff_eq_zero
+-/
 
+#print IsFractionRing.mk'_eq_one_iff_eq /-
 theorem mk'_eq_one_iff_eq {x : A} {y : nonZeroDivisors A} : mk' K x y = 1 ↔ x = y :=
   by
   refine' ⟨_, fun hxy => by rw [hxy, mk'_self']⟩
@@ -209,9 +232,11 @@ theorem mk'_eq_one_iff_eq {x : A} {y : nonZeroDivisors A} : mk' K x y = 1 ↔ x 
     rw [IsFractionRing.mk'_eq_div, div_eq_one_iff_eq hy] at hxy 
     exact IsFractionRing.injective A K hxy
 #align is_fraction_ring.mk'_eq_one_iff_eq IsFractionRing.mk'_eq_one_iff_eq
+-/
 
 open Function
 
+#print IsFractionRing.lift /-
 /-- Given an integral domain `A` with field of fractions `K`,
 and an injective ring hom `g : A →+* L` where `L` is a field, we get a
 field hom sending `z : K` to `g x * (g y)⁻¹`, where `(x, y) : A × (non_zero_divisors A)` are
@@ -219,7 +244,9 @@ such that `z = f x * (f y)⁻¹`. -/
 noncomputable def lift (hg : Injective g) : K →+* L :=
   lift fun y : nonZeroDivisors A => isUnit_map_of_injective hg y
 #align is_fraction_ring.lift IsFractionRing.lift
+-/
 
+#print IsFractionRing.lift_algebraMap /-
 /-- Given an integral domain `A` with field of fractions `K`,
 and an injective ring hom `g : A →+* L` where `L` is a field,
 the field hom induced from `K` to `L` maps `x` to `g x` for all
@@ -228,7 +255,9 @@ the field hom induced from `K` to `L` maps `x` to `g x` for all
 theorem lift_algebraMap (hg : Injective g) (x) : lift hg (algebraMap A K x) = g x :=
   lift_eq _ _
 #align is_fraction_ring.lift_algebra_map IsFractionRing.lift_algebraMap
+-/
 
+#print IsFractionRing.lift_mk' /-
 /-- Given an integral domain `A` with field of fractions `K`,
 and an injective ring hom `g : A →+* L` where `L` is a field,
 field hom induced from `K` to `L` maps `f x / f y` to `g x / g y` for all
@@ -236,7 +265,9 @@ field hom induced from `K` to `L` maps `f x / f y` to `g x / g y` for all
 theorem lift_mk' (hg : Injective g) (x) (y : nonZeroDivisors A) : lift hg (mk' K x y) = g x / g y :=
   by simp only [mk'_eq_div, map_div₀, lift_algebra_map]
 #align is_fraction_ring.lift_mk' IsFractionRing.lift_mk'
+-/
 
+#print IsFractionRing.map /-
 /-- Given integral domains `A, B` with fields of fractions `K`, `L`
 and an injective ring hom `j : A →+* B`, we get a field hom
 sending `z : K` to `g (j x) * (g (j y))⁻¹`, where `(x, y) : A × (non_zero_divisors A)` are
@@ -248,7 +279,9 @@ noncomputable def map {A B K L : Type _} [CommRing A] [CommRing B] [IsDomain B] 
     (show nonZeroDivisors A ≤ (nonZeroDivisors B).comap j from
       nonZeroDivisors_le_comap_nonZeroDivisors_of_injective j hj)
 #align is_fraction_ring.map IsFractionRing.map
+-/
 
+#print IsFractionRing.fieldEquivOfRingEquiv /-
 /-- Given integral domains `A, B` and localization maps to their fields of fractions
 `f : A →+* K, g : B →+* L`, an isomorphism `j : A ≃+* B` induces an isomorphism of
 fields of fractions `K ≃+* L`. -/
@@ -262,9 +295,11 @@ noncomputable def fieldEquivOfRingEquiv [Algebra B L] [IsFractionRing B L] (h : 
         mem_nonZeroDivisors_iff_ne_zero, mem_nonZeroDivisors_iff_ne_zero]
       exact h.symm.map_ne_zero_iff)
 #align is_fraction_ring.field_equiv_of_ring_equiv IsFractionRing.fieldEquivOfRingEquiv
+-/
 
 variable (S)
 
+#print IsFractionRing.isFractionRing_iff_of_base_ringEquiv /-
 theorem isFractionRing_iff_of_base_ringEquiv (h : R ≃+* P) :
     IsFractionRing R S ↔
       @IsFractionRing P _ S _ ((algebraMap R S).comp h.symm.toRingHom).toAlgebra :=
@@ -284,7 +319,9 @@ theorem isFractionRing_iff_of_base_ringEquiv (h : R ≃+* P) :
     apply hx
     rw [← h.symm.map_mul, hz, h.symm.map_zero]
 #align is_fraction_ring.is_fraction_ring_iff_of_base_ring_equiv IsFractionRing.isFractionRing_iff_of_base_ringEquiv
+-/
 
+#print IsFractionRing.nontrivial /-
 protected theorem nontrivial (R S : Type _) [CommRing R] [Nontrivial R] [CommRing S] [Algebra R S]
     [IsFractionRing R S] : Nontrivial S :=
   by
@@ -295,6 +332,7 @@ protected theorem nontrivial (R S : Type _) [CommRing R] [Nontrivial R] [CommRin
     IsLocalization.injective S (le_of_eq rfl)
       (((algebraMap R S).map_zero.trans h).trans (algebraMap R S).map_one.symm)
 #align is_fraction_ring.nontrivial IsFractionRing.nontrivial
+-/
 
 end IsFractionRing
 
@@ -339,12 +377,14 @@ noncomputable instance : Field (FractionRing A) :=
     zsmul := SubNegMonoid.zsmul
     npow := Localization.npow _ }
 
+#print FractionRing.mk_eq_div /-
 @[simp]
 theorem mk_eq_div {r s} :
     (Localization.mk r s : FractionRing A) =
       (algebraMap _ _ r / algebraMap A _ s : FractionRing A) :=
   by rw [Localization.mk_eq_mk', IsFractionRing.mk'_eq_div]
 #align fraction_ring.mk_eq_div FractionRing.mk_eq_div
+-/
 
 noncomputable instance [IsDomain R] [Field K] [Algebra R K] [NoZeroSMulDivisors R K] :
     Algebra (FractionRing R) K :=
@@ -356,6 +396,7 @@ instance [IsDomain R] [Field K] [Algebra R K] [NoZeroSMulDivisors R K] :
 
 variable (A)
 
+#print FractionRing.algEquiv /-
 /-- Given an integral domain `A` and a localization map to a field of fractions
 `f : A →+* K`, we get an `A`-isomorphism between the field of fractions of `A` as a quotient
 type and `K`. -/
@@ -363,6 +404,7 @@ noncomputable def algEquiv (K : Type _) [Field K] [Algebra A K] [IsFractionRing 
     FractionRing A ≃ₐ[A] K :=
   Localization.algEquiv (nonZeroDivisors A) K
 #align fraction_ring.alg_equiv FractionRing.algEquiv
+-/
 
 instance [Algebra R A] [NoZeroSMulDivisors R A] : NoZeroSMulDivisors R (FractionRing A) :=
   NoZeroSMulDivisors.of_algebraMap_injective

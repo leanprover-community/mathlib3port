@@ -83,6 +83,7 @@ def prodEmbeddingDisjointEquivSigmaEmbeddingRestricted {α β γ : Type _} :
 #align equiv.prod_embedding_disjoint_equiv_sigma_embedding_restricted Equiv.prodEmbeddingDisjointEquivSigmaEmbeddingRestricted
 -/
 
+#print Equiv.sumEmbeddingEquivSigmaEmbeddingRestricted /-
 /-- A combination of the above results, allowing us to turn one embedding over a sum type
 into two dependent embeddings, the second of which avoids any members of the range
 of the first. This is helpful for constructing larger embeddings out of smaller ones. -/
@@ -91,6 +92,7 @@ def sumEmbeddingEquivSigmaEmbeddingRestricted {α β γ : Type _} :
   Equiv.trans sumEmbeddingEquivProdEmbeddingDisjoint
     prodEmbeddingDisjointEquivSigmaEmbeddingRestricted
 #align equiv.sum_embedding_equiv_sigma_embedding_restricted Equiv.sumEmbeddingEquivSigmaEmbeddingRestricted
+-/
 
 #print Equiv.uniqueEmbeddingEquivResult /-
 /-- Embeddings from a single-member type are equivalent to members of the target type. -/

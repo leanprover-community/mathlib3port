@@ -182,7 +182,6 @@ theorem discr_powerBasis_eq_prod' [IsSeparable K L] (e : Fin pb.dim ≃ (L →�
   ring
 #align algebra.discr_power_basis_eq_prod' Algebra.discr_powerBasis_eq_prod'
 
--- mathport name: exprn
 local notation "n" => finrank K L
 
 /-- A variation of `of_power_basis_eq_prod`. -/

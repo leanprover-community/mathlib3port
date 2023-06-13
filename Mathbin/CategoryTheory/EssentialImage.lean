@@ -56,10 +56,12 @@ def essImage.witness {Y : D} (h : Y ∈ F.essImage) : C :=
 #align category_theory.functor.ess_image.witness CategoryTheory.Functor.essImage.witness
 -/
 
+#print CategoryTheory.Functor.essImage.getIso /-
 /-- Extract the isomorphism between `F.obj h.witness` and `Y` itself. -/
 def essImage.getIso {Y : D} (h : Y ∈ F.essImage) : F.obj h.witness ≅ Y :=
   Classical.choice h.choose_spec
 #align category_theory.functor.ess_image.get_iso CategoryTheory.Functor.essImage.getIso
+-/
 
 #print CategoryTheory.Functor.essImage.ofIso /-
 /-- Being in the essential image is a "hygenic" property: it is preserved under isomorphism. -/
@@ -85,10 +87,12 @@ theorem essImage_eq_of_natIso {F' : C ⥤ D} (h : F ≅ F') : essImage F = essIm
 #align category_theory.functor.ess_image_eq_of_nat_iso CategoryTheory.Functor.essImage_eq_of_natIso
 -/
 
+#print CategoryTheory.Functor.obj_mem_essImage /-
 /-- An object in the image is in the essential image. -/
 theorem obj_mem_essImage (F : D ⥤ C) (Y : D) : F.obj Y ∈ essImage F :=
   ⟨Y, ⟨Iso.refl _⟩⟩
 #align category_theory.functor.obj_mem_ess_image CategoryTheory.Functor.obj_mem_essImage
+-/
 
 #print CategoryTheory.Functor.EssImageSubcategory /-
 /-- The essential image of a functor, interpreted of a full subcategory of the target category. -/
@@ -132,7 +136,7 @@ def toEssImageCompEssentialImageInclusion (F : C ⥤ D) : F.toEssImage ⋙ F.ess
 end Functor
 
 #print CategoryTheory.EssSurj /-
-/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`mem_essImage] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`mem_essImage] [] -/
 /-- A functor `F : C ⥤ D` is essentially surjective if every object of `D` is in the essential image
 of `F`. In other words, for every `Y : D`, there is some `X : C` with `F.obj X ≅ Y`.
 
@@ -157,11 +161,13 @@ def Functor.objPreimage (Y : D) : C :=
 #align category_theory.functor.obj_preimage CategoryTheory.Functor.objPreimage
 -/
 
+#print CategoryTheory.Functor.objObjPreimageIso /-
 /-- Applying an essentially surjective functor to a preimage of `Y` yields an object that is
     isomorphic to `Y`. -/
 def Functor.objObjPreimageIso (Y : D) : F.obj (F.objPreimage Y) ≅ Y :=
   (EssSurj.mem_essImage F Y).getIso
 #align category_theory.functor.obj_obj_preimage_iso CategoryTheory.Functor.objObjPreimageIso
+-/
 
 #print CategoryTheory.Faithful.toEssImage /-
 /-- The induced functor of a faithful functor is faithful -/

@@ -32,15 +32,19 @@ namespace ULift
 instance [HasRatCast α] : HasRatCast (ULift α) :=
   ⟨fun a => up a⟩
 
+#print ULift.up_ratCast /-
 @[simp, norm_cast]
 theorem up_ratCast [HasRatCast α] (q : ℚ) : up (q : α) = q :=
   rfl
 #align ulift.up_rat_cast ULift.up_ratCast
+-/
 
+#print ULift.down_ratCast /-
 @[simp, norm_cast]
 theorem down_ratCast [HasRatCast α] (q : ℚ) : down (q : ULift α) = q :=
   rfl
 #align ulift.down_rat_cast ULift.down_ratCast
+-/
 
 #print ULift.divisionSemiring /-
 instance divisionSemiring [DivisionSemiring α] : DivisionSemiring (ULift α) := by

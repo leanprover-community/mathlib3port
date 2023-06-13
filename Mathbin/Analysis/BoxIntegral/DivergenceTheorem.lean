@@ -66,19 +66,17 @@ variable {E : Type u} [NormedAddCommGroup E] [NormedSpace ℝ E] {n : ℕ}
 
 namespace BoxIntegral
 
--- mathport name: «exprℝⁿ»
 local notation "ℝⁿ" => Fin n → ℝ
 
--- mathport name: «exprℝⁿ⁺¹»
 local notation "ℝⁿ⁺¹" => Fin (n + 1) → ℝ
 
--- mathport name: «exprEⁿ⁺¹»
 local notation "Eⁿ⁺¹" => Fin (n + 1) → E
 
 variable [CompleteSpace E] (I : Box (Fin (n + 1))) {i : Fin (n + 1)}
 
 open MeasureTheory
 
+#print BoxIntegral.norm_volume_sub_integral_face_upper_sub_lower_smul_le /-
 /-- Auxiliary lemma for the divergence theorem. -/
 theorem norm_volume_sub_integral_face_upper_sub_lower_smul_le {f : ℝⁿ⁺¹ → E} {f' : ℝⁿ⁺¹ →L[ℝ] E}
     (hfc : ContinuousOn f I.Icc) {x : ℝⁿ⁺¹} (hxI : x ∈ I.Icc) {a : E} {ε : ℝ} (h0 : 0 < ε)
@@ -156,8 +154,10 @@ theorem norm_volume_sub_integral_face_upper_sub_lower_smul_le {f : ℝⁿ⁺¹ �
       rw [← measure.to_box_additive_apply, box.volume_apply, ← I.volume_face_mul i]
       ac_rfl
 #align box_integral.norm_volume_sub_integral_face_upper_sub_lower_smul_le BoxIntegral.norm_volume_sub_integral_face_upper_sub_lower_smul_le
+-/
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (y₁ y₂ «expr ∈ » «expr ∩ »(closed_ball x δ, I.Icc)) -/
+#print BoxIntegral.hasIntegral_GP_pderiv /-
 /-- If `f : ℝⁿ⁺¹ → E` is differentiable on a closed rectangular box `I` with derivative `f'`, then
 the partial derivative `λ x, f' x (pi.single i 1)` is Henstock-Kurzweil integrable with integral
 equal to the difference of integrals of `f` over the faces `x i = I.upper i` and `x i = I.lower i`.
@@ -290,7 +290,9 @@ theorem hasIntegral_GP_pderiv (f : ℝⁿ⁺¹ → E) (f' : ℝⁿ⁺¹ → ℝ�
     · rw [mul_right_comm (2 : ℝ), ← box.volume_apply]
       exact mul_le_mul_of_nonneg_right hlt.le ENNReal.toReal_nonneg
 #align box_integral.has_integral_GP_pderiv BoxIntegral.hasIntegral_GP_pderiv
+-/
 
+#print BoxIntegral.hasIntegral_GP_divergence_of_forall_hasDerivWithinAt /-
 /-- Divergence theorem for a Henstock-Kurzweil style integral.
 
 If `f : ℝⁿ⁺¹ → Eⁿ⁺¹` is differentiable on a closed rectangular box `I` with derivative `f'`, then
@@ -314,6 +316,7 @@ theorem hasIntegral_GP_divergence_of_forall_hasDerivWithinAt (f : ℝⁿ⁺¹ �
   simp only [hasFDerivWithinAt_pi', continuousWithinAt_pi] at Hd Hs 
   convert has_integral_GP_pderiv I _ _ s hs (fun x hx => Hs x hx i) (fun x hx => Hd x hx i) i
 #align box_integral.has_integral_GP_divergence_of_forall_has_deriv_within_at BoxIntegral.hasIntegral_GP_divergence_of_forall_hasDerivWithinAt
+-/
 
 end BoxIntegral
 

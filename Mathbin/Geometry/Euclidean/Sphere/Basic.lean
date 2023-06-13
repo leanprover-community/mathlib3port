@@ -244,8 +244,7 @@ section NormedSpace
 
 variable [NormedAddCommGroup V] [NormedSpace ℝ V] [MetricSpace P] [NormedAddTorsor V P]
 
-include V
-
+#print EuclideanGeometry.cospherical_pair /-
 /-- Two points are cospherical. -/
 theorem cospherical_pair (p₁ p₂ : P) : Cospherical ({p₁, p₂} : Set P) :=
   ⟨midpoint ℝ p₁ p₂, ‖(2 : ℝ)‖⁻¹ * dist p₁ p₂,
@@ -254,6 +253,7 @@ theorem cospherical_pair (p₁ p₂ : P) : Cospherical ({p₁, p₂} : Set P) :=
     · rw [dist_comm, dist_midpoint_left]
     · rw [dist_comm, dist_midpoint_right]⟩
 #align euclidean_geometry.cospherical_pair EuclideanGeometry.cospherical_pair
+-/
 
 #print EuclideanGeometry.Concyclic /-
 /-- A set of points is concyclic if it is cospherical and coplanar. (Most results are stated
@@ -271,28 +271,32 @@ theorem Concyclic.subset {ps₁ ps₂ : Set P} (hs : ps₁ ⊆ ps₂) (h : Concy
 #align euclidean_geometry.concyclic.subset EuclideanGeometry.Concyclic.subset
 -/
 
+#print EuclideanGeometry.concyclic_empty /-
 /-- The empty set is concyclic. -/
 theorem concyclic_empty : Concyclic (∅ : Set P) :=
   ⟨cospherical_empty, coplanar_empty ℝ P⟩
 #align euclidean_geometry.concyclic_empty EuclideanGeometry.concyclic_empty
+-/
 
+#print EuclideanGeometry.concyclic_singleton /-
 /-- A single point is concyclic. -/
 theorem concyclic_singleton (p : P) : Concyclic ({p} : Set P) :=
   ⟨cospherical_singleton p, coplanar_singleton ℝ p⟩
 #align euclidean_geometry.concyclic_singleton EuclideanGeometry.concyclic_singleton
+-/
 
+#print EuclideanGeometry.concyclic_pair /-
 /-- Two points are concyclic. -/
 theorem concyclic_pair (p₁ p₂ : P) : Concyclic ({p₁, p₂} : Set P) :=
   ⟨cospherical_pair p₁ p₂, coplanar_pair ℝ p₁ p₂⟩
 #align euclidean_geometry.concyclic_pair EuclideanGeometry.concyclic_pair
+-/
 
 end NormedSpace
 
 section EuclideanSpace
 
 variable [NormedAddCommGroup V] [InnerProductSpace ℝ V] [MetricSpace P] [NormedAddTorsor V P]
-
-include V
 
 #print EuclideanGeometry.Cospherical.affineIndependent /-
 /-- Any three points in a cospherical set are affinely independent. -/
@@ -360,6 +364,7 @@ theorem Cospherical.affineIndependent_of_ne {p₁ p₂ p₃ : P} (hs : Cospheric
 #align euclidean_geometry.cospherical.affine_independent_of_ne EuclideanGeometry.Cospherical.affineIndependent_of_ne
 -/
 
+#print EuclideanGeometry.inner_vsub_vsub_of_mem_sphere_of_mem_sphere /-
 /-- Suppose that `p₁` and `p₂` lie in spheres `s₁` and `s₂`.  Then the vector between the centers
 of those spheres is orthogonal to that between `p₁` and `p₂`; this is a version of
 `inner_vsub_vsub_of_dist_eq_of_dist_eq` for bundled spheres.  (In two dimensions, this says that
@@ -370,7 +375,9 @@ theorem inner_vsub_vsub_of_mem_sphere_of_mem_sphere {p₁ p₂ : P} {s₁ s₂ :
   inner_vsub_vsub_of_dist_eq_of_dist_eq (dist_center_eq_dist_center_of_mem_sphere hp₁s₁ hp₂s₁)
     (dist_center_eq_dist_center_of_mem_sphere hp₁s₂ hp₂s₂)
 #align euclidean_geometry.inner_vsub_vsub_of_mem_sphere_of_mem_sphere EuclideanGeometry.inner_vsub_vsub_of_mem_sphere_of_mem_sphere
+-/
 
+#print EuclideanGeometry.eq_of_mem_sphere_of_mem_sphere_of_mem_of_finrank_eq_two /-
 /-- Two spheres intersect in at most two points in a two-dimensional subspace containing their
 centers; this is a version of `eq_of_dist_eq_of_dist_eq_of_mem_of_finrank_eq_two` for bundled
 spheres. -/
@@ -382,7 +389,9 @@ theorem eq_of_mem_sphere_of_mem_sphere_of_mem_of_finrank_eq_two {s : AffineSubsp
   eq_of_dist_eq_of_dist_eq_of_mem_of_finrank_eq_two hd hs₁ hs₂ hp₁s hp₂s hps
     ((Sphere.center_ne_iff_ne_of_mem hps₁ hps₂).2 hs) hp hp₁s₁ hp₂s₁ hps₁ hp₁s₂ hp₂s₂ hps₂
 #align euclidean_geometry.eq_of_mem_sphere_of_mem_sphere_of_mem_of_finrank_eq_two EuclideanGeometry.eq_of_mem_sphere_of_mem_sphere_of_mem_of_finrank_eq_two
+-/
 
+#print EuclideanGeometry.eq_of_mem_sphere_of_mem_sphere_of_finrank_eq_two /-
 /-- Two spheres intersect in at most two points in two-dimensional space; this is a version of
 `eq_of_dist_eq_of_dist_eq_of_finrank_eq_two` for bundled spheres. -/
 theorem eq_of_mem_sphere_of_mem_sphere_of_finrank_eq_two [FiniteDimensional ℝ V]
@@ -392,7 +401,9 @@ theorem eq_of_mem_sphere_of_mem_sphere_of_finrank_eq_two [FiniteDimensional ℝ 
   eq_of_dist_eq_of_dist_eq_of_finrank_eq_two hd ((Sphere.center_ne_iff_ne_of_mem hps₁ hps₂).2 hs) hp
     hp₁s₁ hp₂s₁ hps₁ hp₁s₂ hp₂s₂ hps₂
 #align euclidean_geometry.eq_of_mem_sphere_of_mem_sphere_of_finrank_eq_two EuclideanGeometry.eq_of_mem_sphere_of_mem_sphere_of_finrank_eq_two
+-/
 
+#print EuclideanGeometry.inner_pos_or_eq_of_dist_le_radius /-
 /-- Given a point on a sphere and a point not outside it, the inner product between the
 difference of those points and the radius vector is positive unless the points are equal. -/
 theorem inner_pos_or_eq_of_dist_le_radius {s : Sphere P} {p₁ p₂ : P} (hp₁ : p₁ ∈ s)
@@ -424,7 +435,9 @@ theorem inner_pos_or_eq_of_dist_le_radius {s : Sphere P} {p₁ p₂ : P} (hp₁ 
       refine' h (Eq.symm _)
       simpa using hp₂'
 #align euclidean_geometry.inner_pos_or_eq_of_dist_le_radius EuclideanGeometry.inner_pos_or_eq_of_dist_le_radius
+-/
 
+#print EuclideanGeometry.inner_nonneg_of_dist_le_radius /-
 /-- Given a point on a sphere and a point not outside it, the inner product between the
 difference of those points and the radius vector is nonnegative. -/
 theorem inner_nonneg_of_dist_le_radius {s : Sphere P} {p₁ p₂ : P} (hp₁ : p₁ ∈ s)
@@ -434,7 +447,9 @@ theorem inner_nonneg_of_dist_le_radius {s : Sphere P} {p₁ p₂ : P} (hp₁ : p
   · exact h.le
   · simp
 #align euclidean_geometry.inner_nonneg_of_dist_le_radius EuclideanGeometry.inner_nonneg_of_dist_le_radius
+-/
 
+#print EuclideanGeometry.inner_pos_of_dist_lt_radius /-
 /-- Given a point on a sphere and a point inside it, the inner product between the difference of
 those points and the radius vector is positive. -/
 theorem inner_pos_of_dist_lt_radius {s : Sphere P} {p₁ p₂ : P} (hp₁ : p₁ ∈ s)
@@ -445,7 +460,9 @@ theorem inner_pos_of_dist_lt_radius {s : Sphere P} {p₁ p₂ : P} (hp₁ : p₁
     exact False.elim (hp₂.ne hp₁)
   exact (inner_pos_or_eq_of_dist_le_radius hp₁ hp₂.le).resolve_right h
 #align euclidean_geometry.inner_pos_of_dist_lt_radius EuclideanGeometry.inner_pos_of_dist_lt_radius
+-/
 
+#print EuclideanGeometry.wbtw_of_collinear_of_dist_center_le_radius /-
 /-- Given three collinear points, two on a sphere and one not outside it, the one not outside it
 is weakly between the other two points. -/
 theorem wbtw_of_collinear_of_dist_center_le_radius {s : Sphere P} {p₁ p₂ p₃ : P}
@@ -453,7 +470,9 @@ theorem wbtw_of_collinear_of_dist_center_le_radius {s : Sphere P} {p₁ p₂ p�
     (hp₃ : p₃ ∈ s) (hp₁p₃ : p₁ ≠ p₃) : Wbtw ℝ p₁ p₂ p₃ :=
   h.wbtw_of_dist_eq_of_dist_le hp₁ hp₂ hp₃ hp₁p₃
 #align euclidean_geometry.wbtw_of_collinear_of_dist_center_le_radius EuclideanGeometry.wbtw_of_collinear_of_dist_center_le_radius
+-/
 
+#print EuclideanGeometry.sbtw_of_collinear_of_dist_center_lt_radius /-
 /-- Given three collinear points, two on a sphere and one inside it, the one inside it is
 strictly between the other two points. -/
 theorem sbtw_of_collinear_of_dist_center_lt_radius {s : Sphere P} {p₁ p₂ p₃ : P}
@@ -461,6 +480,7 @@ theorem sbtw_of_collinear_of_dist_center_lt_radius {s : Sphere P} {p₁ p₂ p�
     (hp₃ : p₃ ∈ s) (hp₁p₃ : p₁ ≠ p₃) : Sbtw ℝ p₁ p₂ p₃ :=
   h.sbtw_of_dist_eq_of_dist_lt hp₁ hp₂ hp₃ hp₁p₃
 #align euclidean_geometry.sbtw_of_collinear_of_dist_center_lt_radius EuclideanGeometry.sbtw_of_collinear_of_dist_center_lt_radius
+-/
 
 end EuclideanSpace
 

@@ -99,21 +99,27 @@ instance category : LargeCategory.{max v u} Cat.{v, u} :=
 #align category_theory.Cat.category CategoryTheory.Cat.category
 -/
 
+#print CategoryTheory.Cat.id_map /-
 @[simp]
 theorem id_map {C : Cat} {X Y : C} (f : X ⟶ Y) : (𝟙 C : C ⥤ C).map f = f :=
   Functor.id_map f
 #align category_theory.Cat.id_map CategoryTheory.Cat.id_map
+-/
 
+#print CategoryTheory.Cat.comp_obj /-
 @[simp]
 theorem comp_obj {C D E : Cat} (F : C ⟶ D) (G : D ⟶ E) (X : C) : (F ≫ G).obj X = G.obj (F.obj X) :=
   Functor.comp_obj F G X
 #align category_theory.Cat.comp_obj CategoryTheory.Cat.comp_obj
+-/
 
+#print CategoryTheory.Cat.comp_map /-
 @[simp]
 theorem comp_map {C D E : Cat} (F : C ⟶ D) (G : D ⟶ E) {X Y : C} (f : X ⟶ Y) :
     (F ≫ G).map f = G.map (F.map f) :=
   Functor.comp_map F G f
 #align category_theory.Cat.comp_map CategoryTheory.Cat.comp_map
+-/
 
 #print CategoryTheory.Cat.objects /-
 /-- Functor that gets the set of objects of a category. It is not
@@ -128,6 +134,7 @@ section
 
 attribute [local simp] eq_to_hom_map
 
+#print CategoryTheory.Cat.equivOfIso /-
 /-- Any isomorphism in `Cat` induces an equivalence of the underlying categories. -/
 def equivOfIso {C D : Cat} (γ : C ≅ D) : C ≌ D
     where
@@ -136,6 +143,7 @@ def equivOfIso {C D : Cat} (γ : C ≅ D) : C ≌ D
   unitIso := eqToIso <| Eq.symm γ.hom_inv_id
   counitIso := eqToIso γ.inv_hom_id
 #align category_theory.Cat.equiv_of_iso CategoryTheory.Cat.equivOfIso
+-/
 
 end
 

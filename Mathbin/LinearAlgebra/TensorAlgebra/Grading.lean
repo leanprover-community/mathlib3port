@@ -30,22 +30,27 @@ open scoped DirectSum
 
 variable (R M)
 
+#print TensorAlgebra.GradedAlgebra.ι /-
 /-- A version of `tensor_algebra.ι` that maps directly into the graded structure. This is
 primarily an auxiliary construction used to provide `tensor_algebra.graded_algebra`. -/
 def GradedAlgebra.ι : M →ₗ[R] ⨁ i : ℕ, ↥((ι R : M →ₗ[_] _).range ^ i) :=
   DirectSum.lof R ℕ (fun i => ↥((ι R : M →ₗ[_] _).range ^ i)) 1 ∘ₗ
     (ι R).codRestrict _ fun m => by simpa only [pow_one] using LinearMap.mem_range_self _ m
 #align tensor_algebra.graded_algebra.ι TensorAlgebra.GradedAlgebra.ι
+-/
 
+#print TensorAlgebra.GradedAlgebra.ι_apply /-
 theorem GradedAlgebra.ι_apply (m : M) :
     GradedAlgebra.ι R M m =
       DirectSum.of (fun i => ↥((ι R : M →ₗ[_] _).range ^ i)) 1
         ⟨ι R m, by simpa only [pow_one] using LinearMap.mem_range_self _ m⟩ :=
   rfl
 #align tensor_algebra.graded_algebra.ι_apply TensorAlgebra.GradedAlgebra.ι_apply
+-/
 
 variable {R M}
 
+#print TensorAlgebra.gradedAlgebra /-
 /-- The tensor algebra is graded by the powers of the submodule `(tensor_algebra.ι R).range`. -/
 instance gradedAlgebra :
     GradedAlgebra ((· ^ ·) (ι R : M →ₗ[R] TensorAlgebra R M).range : ℕ → Submodule R _) :=
@@ -67,6 +72,7 @@ instance gradedAlgebra :
       rw [AlgHom.map_mul, ih, lift_ι_apply, graded_algebra.ι_apply R M, DirectSum.of_mul_of]
       exact DirectSum.of_eq_of_gradedMonoid_eq (Sigma.subtype_ext (add_comm _ _) rfl)
 #align tensor_algebra.graded_algebra TensorAlgebra.gradedAlgebra
+-/
 
 end TensorAlgebra
 

@@ -299,11 +299,13 @@ theorem simple_iff_subobject_isSimpleOrder (X : C) : Simple X ↔ IsSimpleOrder 
 #align category_theory.simple_iff_subobject_is_simple_order CategoryTheory.simple_iff_subobject_isSimpleOrder
 -/
 
+#print CategoryTheory.subobject_simple_iff_isAtom /-
 /-- A subobject is simple iff it is an atom in the subobject lattice. -/
 theorem subobject_simple_iff_isAtom {X : C} (Y : Subobject X) : Simple (Y : C) ↔ IsAtom Y :=
   (simple_iff_subobject_isSimpleOrder _).trans
     ((OrderIso.isSimpleOrder_iff (subobjectOrderIso Y)).trans Set.isSimpleOrder_Iic_iff_isAtom)
 #align category_theory.subobject_simple_iff_is_atom CategoryTheory.subobject_simple_iff_isAtom
+-/
 
 end Subobject
 

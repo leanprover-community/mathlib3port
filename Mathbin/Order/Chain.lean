@@ -46,7 +46,6 @@ section Chain
 
 variable (r : α → α → Prop)
 
--- mathport name: «expr ≺ »
 local infixl:50 " ≺ " => r
 
 #print IsChain /-
@@ -126,11 +125,13 @@ theorem isChain_univ_iff : IsChain r (univ : Set α) ↔ IsTrichotomous α r :=
 #align is_chain_univ_iff isChain_univ_iff
 -/
 
+#print IsChain.image /-
 theorem IsChain.image (r : α → α → Prop) (s : β → β → Prop) (f : α → β)
     (h : ∀ x y, r x y → s (f x) (f y)) {c : Set α} (hrc : IsChain r c) : IsChain s (f '' c) :=
   fun x ⟨a, ha₁, ha₂⟩ y ⟨b, hb₁, hb₂⟩ =>
   ha₂ ▸ hb₂ ▸ fun hxy => (hrc ha₁ hb₁ <| ne_of_apply_ne f hxy).imp (h _ _) (h _ _)
 #align is_chain.image IsChain.image
+-/
 
 section Total
 
@@ -183,13 +184,17 @@ theorem IsMaxChain.not_superChain (h : IsMaxChain r s) : ¬SuperChain r s t := f
 #align is_max_chain.not_super_chain IsMaxChain.not_superChain
 -/
 
+#print IsMaxChain.bot_mem /-
 theorem IsMaxChain.bot_mem [LE α] [OrderBot α] (h : IsMaxChain (· ≤ ·) s) : ⊥ ∈ s :=
   (h.2 (h.1.insert fun a _ _ => Or.inl bot_le) <| subset_insert _ _).symm ▸ mem_insert _ _
 #align is_max_chain.bot_mem IsMaxChain.bot_mem
+-/
 
+#print IsMaxChain.top_mem /-
 theorem IsMaxChain.top_mem [LE α] [OrderTop α] (h : IsMaxChain (· ≤ ·) s) : ⊤ ∈ s :=
   (h.2 (h.1.insert fun a _ _ => Or.inr le_top) <| subset_insert _ _).symm ▸ mem_insert _ _
 #align is_max_chain.top_mem IsMaxChain.top_mem
+-/
 
 open scoped Classical
 
@@ -414,13 +419,17 @@ protected theorem maxChain (s : Flag α) : IsMaxChain (· ≤ ·) (s : Set α) :
 #align flag.max_chain Flag.maxChain
 -/
 
+#print Flag.top_mem /-
 theorem top_mem [OrderTop α] (s : Flag α) : (⊤ : α) ∈ s :=
   s.maxChain.top_mem
 #align flag.top_mem Flag.top_mem
+-/
 
+#print Flag.bot_mem /-
 theorem bot_mem [OrderBot α] (s : Flag α) : (⊥ : α) ∈ s :=
   s.maxChain.bot_mem
 #align flag.bot_mem Flag.bot_mem
+-/
 
 end LE
 

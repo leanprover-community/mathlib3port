@@ -40,6 +40,7 @@ namespace BoxIntegral
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (F «expr ⊆ » «expr ∩ »(s, I.Icc)) -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (U «expr ⊇ » «expr ∩ »(s, I.Icc)) -/
+#print BoxIntegral.hasIntegralIndicatorConst /-
 /-- The indicator function of a measurable set is McShane integrable with respect to any
 locally-finite measure. -/
 theorem hasIntegralIndicatorConst (l : IntegrationParams) (hl : l.bRiemann = false)
@@ -103,6 +104,7 @@ theorem hasIntegralIndicatorConst (l : IntegrationParams) (hl : l.bRiemann = fal
     refine' hrs'F _ ⟨π.tag_mem_Icc J, hxF⟩ _
     simpa only [r, s.piecewise_eq_of_not_mem _ _ hxF] using hπ.1 J hJπ (box.coe_subset_Icc hxJ)
 #align box_integral.has_integral_indicator_const BoxIntegral.hasIntegralIndicatorConst
+-/
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (U «expr ⊇ » «expr ⁻¹' »(N, {n})) -/
 #print BoxIntegral.HasIntegral.of_aeEq_zero /-

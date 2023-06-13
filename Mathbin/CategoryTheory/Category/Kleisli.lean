@@ -64,15 +64,19 @@ instance KleisliCat.category {m} [Monad.{u, v} m] [LawfulMonad m] : Category (Kl
 #align category_theory.Kleisli.category CategoryTheory.KleisliCat.category
 -/
 
+#print CategoryTheory.KleisliCat.id_def /-
 @[simp]
 theorem KleisliCat.id_def {m} [Monad m] (α : KleisliCat m) : 𝟙 α = @pure m _ α :=
   rfl
 #align category_theory.Kleisli.id_def CategoryTheory.KleisliCat.id_def
+-/
 
+#print CategoryTheory.KleisliCat.comp_def /-
 theorem KleisliCat.comp_def {m} [Monad m] (α β γ : KleisliCat m) (xs : α ⟶ β) (ys : β ⟶ γ) (a : α) :
     (xs ≫ ys) a = xs a >>= ys :=
   rfl
 #align category_theory.Kleisli.comp_def CategoryTheory.KleisliCat.comp_def
+-/
 
 instance : Inhabited (KleisliCat id) :=
   ⟨PUnit⟩

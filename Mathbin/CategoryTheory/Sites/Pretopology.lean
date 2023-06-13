@@ -138,10 +138,12 @@ def toGrothendieck (K : Pretopology C) : GrothendieckTopology C
 #align category_theory.pretopology.to_grothendieck CategoryTheory.Pretopology.toGrothendieck
 -/
 
+#print CategoryTheory.Pretopology.mem_toGrothendieck /-
 theorem mem_toGrothendieck (K : Pretopology C) (X S) :
     S ∈ toGrothendieck C K X ↔ ∃ R ∈ K X, R ≤ (S : Presieve X) :=
   Iff.rfl
 #align category_theory.pretopology.mem_to_grothendieck CategoryTheory.Pretopology.mem_toGrothendieck
+-/
 
 #print CategoryTheory.Pretopology.ofGrothendieck /-
 /-- The largest pretopology generating the given Grothendieck topology.
@@ -167,6 +169,7 @@ def ofGrothendieck (J : GrothendieckTopology C) : Pretopology C
 #align category_theory.pretopology.of_grothendieck CategoryTheory.Pretopology.ofGrothendieck
 -/
 
+#print CategoryTheory.Pretopology.gi /-
 /-- We have a galois insertion from pretopologies to Grothendieck topologies. -/
 def gi : GaloisInsertion (toGrothendieck C) (ofGrothendieck C)
     where
@@ -181,6 +184,7 @@ def gi : GaloisInsertion (toGrothendieck C) (ofGrothendieck C)
   choice x hx := toGrothendieck C x
   choice_eq _ _ := rfl
 #align category_theory.pretopology.gi CategoryTheory.Pretopology.gi
+-/
 
 #print CategoryTheory.Pretopology.trivial /-
 /--
@@ -226,10 +230,12 @@ instance : OrderBot (Pretopology C) where
     rintro ⟨Y, f, hf, rfl⟩
     exact K.has_isos f
 
+#print CategoryTheory.Pretopology.toGrothendieck_bot /-
 /-- The trivial pretopology induces the trivial grothendieck topology. -/
 theorem toGrothendieck_bot : toGrothendieck C ⊥ = ⊥ :=
   (gi C).gc.l_bot
 #align category_theory.pretopology.to_grothendieck_bot CategoryTheory.Pretopology.toGrothendieck_bot
+-/
 
 end Pretopology
 

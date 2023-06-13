@@ -41,6 +41,7 @@ theorem ordConnectedComponent_mem_nhds : ordConnectedComponent s a ∈ 𝓝 a �
 #align set.ord_connected_component_mem_nhds Set.ordConnectedComponent_mem_nhds
 -/
 
+#print Set.compl_section_ordSeparatingSet_mem_nhdsWithin_Ici /-
 theorem compl_section_ordSeparatingSet_mem_nhdsWithin_Ici (hd : Disjoint s (closure t))
     (ha : a ∈ s) : (ordConnectedSection <| ordSeparatingSet s t)ᶜ ∈ 𝓝[≥] a :=
   by
@@ -78,7 +79,9 @@ theorem compl_section_ordSeparatingSet_mem_nhdsWithin_Ici (hd : Disjoint s (clos
       have hya : y < a := not_le.1 fun hay => hsub ⟨hay, hyc.trans hcb⟩ hyt
       exact hxy (Icc_subset_uIcc ⟨hya.le, hx.1⟩) ha
 #align set.compl_section_ord_separating_set_mem_nhds_within_Ici Set.compl_section_ordSeparatingSet_mem_nhdsWithin_Ici
+-/
 
+#print Set.compl_section_ordSeparatingSet_mem_nhdsWithin_Iic /-
 theorem compl_section_ordSeparatingSet_mem_nhdsWithin_Iic (hd : Disjoint s (closure t))
     (ha : a ∈ s) : (ordConnectedSection <| ordSeparatingSet s t)ᶜ ∈ 𝓝[≤] a :=
   by
@@ -87,7 +90,9 @@ theorem compl_section_ordSeparatingSet_mem_nhdsWithin_Iic (hd : Disjoint s (clos
   simpa only [dual_ord_separating_set, dual_ord_connected_section] using
     compl_section_ord_separating_set_mem_nhds_within_Ici hd' ha'
 #align set.compl_section_ord_separating_set_mem_nhds_within_Iic Set.compl_section_ordSeparatingSet_mem_nhdsWithin_Iic
+-/
 
+#print Set.compl_section_ordSeparatingSet_mem_nhds /-
 theorem compl_section_ordSeparatingSet_mem_nhds (hd : Disjoint s (closure t)) (ha : a ∈ s) :
     (ordConnectedSection <| ordSeparatingSet s t)ᶜ ∈ 𝓝 a :=
   by
@@ -96,13 +101,16 @@ theorem compl_section_ordSeparatingSet_mem_nhds (hd : Disjoint s (closure t)) (h
     ⟨compl_section_ord_separating_set_mem_nhds_within_Iic hd ha,
       compl_section_ord_separating_set_mem_nhds_within_Ici hd ha⟩
 #align set.compl_section_ord_separating_set_mem_nhds Set.compl_section_ordSeparatingSet_mem_nhds
+-/
 
+#print Set.ordT5Nhd_mem_nhdsSet /-
 theorem ordT5Nhd_mem_nhdsSet (hd : Disjoint s (closure t)) : ordT5Nhd s t ∈ 𝓝ˢ s :=
   bUnion_mem_nhdsSet fun x hx =>
     ordConnectedComponent_mem_nhds.2 <|
       inter_mem (by rw [← mem_interior_iff_mem_nhds, interior_compl]; exact disjoint_left.1 hd hx)
         (compl_section_ordSeparatingSet_mem_nhds hd hx)
 #align set.ord_t5_nhd_mem_nhds_set Set.ordT5Nhd_mem_nhdsSet
+-/
 
 end Set
 

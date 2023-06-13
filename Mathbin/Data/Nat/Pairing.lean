@@ -186,6 +186,7 @@ theorem pair_lt_pair_right (a) {b₁ b₂} (h : b₁ < b₂) : pair a b₁ < pai
 #align nat.mkpair_lt_mkpair_right Nat.pair_lt_pair_right
 -/
 
+#print Nat.pair_lt_max_add_one_sq /-
 theorem pair_lt_max_add_one_sq (m n : ℕ) : pair m n < (max m n + 1) ^ 2 :=
   by
   rw [mkpair, add_sq, mul_one, two_mul, sq, add_assoc, add_assoc]
@@ -195,7 +196,9 @@ theorem pair_lt_max_add_one_sq (m n : ℕ) : pair m n < (max m n + 1) ^ 2 :=
   · rw [if_neg h.not_lt, max_eq_left h, add_lt_add_iff_left, add_assoc, add_lt_add_iff_left]
     exact lt_succ_of_le h
 #align nat.mkpair_lt_max_add_one_sq Nat.pair_lt_max_add_one_sq
+-/
 
+#print Nat.max_sq_add_min_le_pair /-
 theorem max_sq_add_min_le_pair (m n : ℕ) : max m n ^ 2 + min m n ≤ pair m n :=
   by
   rw [mkpair]
@@ -204,6 +207,7 @@ theorem max_sq_add_min_le_pair (m n : ℕ) : max m n ^ 2 + min m n ≤ pair m n 
   · rw [if_neg h.not_lt, max_eq_left h, min_eq_right h, sq, add_assoc, add_le_add_iff_left]
     exact le_add_self
 #align nat.max_sq_add_min_le_mkpair Nat.max_sq_add_min_le_pair
+-/
 
 #print Nat.add_le_pair /-
 theorem add_le_pair (m n : ℕ) : m + n ≤ pair m n :=
@@ -225,16 +229,20 @@ open Nat
 section CompleteLattice
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
+#print iSup_unpair /-
 theorem iSup_unpair {α} [CompleteLattice α] (f : ℕ → ℕ → α) :
     (⨆ n : ℕ, f n.unpair.1 n.unpair.2) = ⨆ (i : ℕ) (j : ℕ), f i j := by
   rw [← (iSup_prod : (⨆ i : ℕ × ℕ, f i.1 i.2) = _), ← nat.surjective_unpair.supr_comp]
 #align supr_unpair iSup_unpair
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
+#print iInf_unpair /-
 theorem iInf_unpair {α} [CompleteLattice α] (f : ℕ → ℕ → α) :
     (⨅ n : ℕ, f n.unpair.1 n.unpair.2) = ⨅ (i : ℕ) (j : ℕ), f i j :=
   iSup_unpair (show ℕ → ℕ → αᵒᵈ from f)
 #align infi_unpair iInf_unpair
+-/
 
 end CompleteLattice
 
@@ -242,10 +250,12 @@ namespace Set
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print Set.iUnion_unpair_prod /-
 theorem iUnion_unpair_prod {α β} {s : ℕ → Set α} {t : ℕ → Set β} :
     (⋃ n : ℕ, s n.unpair.fst ×ˢ t n.unpair.snd) = (⋃ n, s n) ×ˢ ⋃ n, t n := by rw [← Union_prod];
   convert surjective_unpair.Union_comp _; rfl
 #align set.Union_unpair_prod Set.iUnion_unpair_prod
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 #print Set.iUnion_unpair /-

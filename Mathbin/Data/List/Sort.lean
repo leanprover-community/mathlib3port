@@ -162,17 +162,21 @@ section Monotone
 
 variable {n : ℕ} {α : Type uu} [Preorder α] {f : Fin n → α}
 
+#print List.monotone_iff_ofFn_sorted /-
 /-- A tuple is monotone if and only if the list obtained from it is sorted. -/
 theorem monotone_iff_ofFn_sorted : Monotone f ↔ (ofFn f).Sorted (· ≤ ·) :=
   by
   simp_rw [sorted, pairwise_iff_nth_le, length_of_fn, nth_le_of_fn', monotone_iff_forall_lt]
   exact ⟨fun h i j hj hij => h <| fin.mk_lt_mk.mpr hij, fun h ⟨i, _⟩ ⟨j, hj⟩ hij => h i j hj hij⟩
 #align list.monotone_iff_of_fn_sorted List.monotone_iff_ofFn_sorted
+-/
 
+#print Monotone.ofFn_sorted /-
 /-- The list obtained from a monotone tuple is sorted. -/
 theorem Monotone.ofFn_sorted (h : Monotone f) : (ofFn f).Sorted (· ≤ ·) :=
   monotone_iff_ofFn_sorted.1 h
 #align list.monotone.of_fn_sorted Monotone.ofFn_sorted
+-/
 
 end Monotone
 
@@ -180,7 +184,6 @@ section Sort
 
 variable {α : Type uu} (r : α → α → Prop) [DecidableRel r]
 
--- mathport name: «expr ≼ »
 local infixl:50 " ≼ " => r
 
 /-! ### Insertion sort -/
@@ -389,8 +392,6 @@ def merge : List α → List α → List α
   | a :: l, b :: l' => if a ≼ b then a :: merge l (b :: l') else b :: merge (a :: l) l'
 #align list.merge List.merge
 -/
-
-include r
 
 #print List.mergeSort /-
 /-- Implementation of a merge sort algorithm to sort a list. -/

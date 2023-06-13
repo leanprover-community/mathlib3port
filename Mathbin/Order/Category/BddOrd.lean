@@ -48,10 +48,12 @@ def of (α : Type _) [PartialOrder α] [BoundedOrder α] : BddOrdCat :=
 #align BddOrd.of BddOrdCat.of
 -/
 
+#print BddOrdCat.coe_of /-
 @[simp]
 theorem coe_of (α : Type _) [PartialOrder α] [BoundedOrder α] : ↥(of α) = α :=
   rfl
 #align BddOrd.coe_of BddOrdCat.coe_of
+-/
 
 instance : Inhabited BddOrdCat :=
   ⟨of PUnit⟩
@@ -76,12 +78,15 @@ instance concreteCategory : ConcreteCategory BddOrdCat
 #align BddOrd.concrete_category BddOrdCat.concreteCategory
 -/
 
+#print BddOrdCat.hasForgetToPartOrd /-
 instance hasForgetToPartOrd : HasForget₂ BddOrdCat PartOrdCat
     where forget₂ :=
     { obj := fun X => X.toPartOrd
       map := fun X Y => BoundedOrderHom.toOrderHom }
 #align BddOrd.has_forget_to_PartOrd BddOrdCat.hasForgetToPartOrd
+-/
 
+#print BddOrdCat.hasForgetToBipointed /-
 instance hasForgetToBipointed : HasForget₂ BddOrdCat Bipointed
     where
   forget₂ :=
@@ -89,6 +94,7 @@ instance hasForgetToBipointed : HasForget₂ BddOrdCat Bipointed
       map := fun X Y f => ⟨f, map_bot f, map_top f⟩ }
   forget_comp := rfl
 #align BddOrd.has_forget_to_Bipointed BddOrdCat.hasForgetToBipointed
+-/
 
 #print BddOrdCat.dual /-
 /-- `order_dual` as a functor. -/
@@ -99,6 +105,7 @@ def dual : BddOrdCat ⥤ BddOrdCat where
 #align BddOrd.dual BddOrdCat.dual
 -/
 
+#print BddOrdCat.Iso.mk /-
 /-- Constructs an equivalence between bounded orders from an order isomorphism between them. -/
 @[simps]
 def Iso.mk {α β : BddOrdCat.{u}} (e : α ≃o β) : α ≅ β
@@ -108,7 +115,9 @@ def Iso.mk {α β : BddOrdCat.{u}} (e : α ≃o β) : α ≅ β
   hom_inv_id' := by ext; exact e.symm_apply_apply _
   inv_hom_id' := by ext; exact e.apply_symm_apply _
 #align BddOrd.iso.mk BddOrdCat.Iso.mk
+-/
 
+#print BddOrdCat.dualEquiv /-
 /-- The equivalence between `BddOrd` and itself induced by `order_dual` both ways. -/
 @[simps Functor inverse]
 def dualEquiv : BddOrdCat ≌ BddOrdCat :=
@@ -116,6 +125,7 @@ def dualEquiv : BddOrdCat ≌ BddOrdCat :=
     (NatIso.ofComponents (fun X => Iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
     (NatIso.ofComponents (fun X => Iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
 #align BddOrd.dual_equiv BddOrdCat.dualEquiv
+-/
 
 end BddOrdCat
 

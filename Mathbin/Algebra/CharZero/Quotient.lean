@@ -22,6 +22,7 @@ variable {R : Type _} [DivisionRing R] [CharZero R] {p : R}
 
 namespace AddSubgroup
 
+#print AddSubgroup.zsmul_mem_zmultiples_iff_exists_sub_div /-
 /-- `z • r` is a multiple of `p` iff `r` is `pk/z` above a multiple of `p`, where `0 ≤ k < |z|`. -/
 theorem zsmul_mem_zmultiples_iff_exists_sub_div {r : R} {z : ℤ} (hz : z ≠ 0) :
     z • r ∈ AddSubgroup.zmultiples p ↔
@@ -43,7 +44,9 @@ theorem zsmul_mem_zmultiples_iff_exists_sub_div {r : R} {z : ℤ} (hz : z ≠ 0)
   · rintro ⟨k, n, h⟩
     exact ⟨_, h⟩
 #align add_subgroup.zsmul_mem_zmultiples_iff_exists_sub_div AddSubgroup.zsmul_mem_zmultiples_iff_exists_sub_div
+-/
 
+#print AddSubgroup.nsmul_mem_zmultiples_iff_exists_sub_div /-
 theorem nsmul_mem_zmultiples_iff_exists_sub_div {r : R} {n : ℕ} (hn : n ≠ 0) :
     n • r ∈ AddSubgroup.zmultiples p ↔
       ∃ k : Fin n, r - (k : ℕ) • (p / n : R) ∈ AddSubgroup.zmultiples p :=
@@ -52,11 +55,13 @@ theorem nsmul_mem_zmultiples_iff_exists_sub_div {r : R} {n : ℕ} (hn : n ≠ 0)
     Int.cast_ofNat]
   rfl
 #align add_subgroup.nsmul_mem_zmultiples_iff_exists_sub_div AddSubgroup.nsmul_mem_zmultiples_iff_exists_sub_div
+-/
 
 end AddSubgroup
 
 namespace quotientAddGroup
 
+#print QuotientAddGroup.zmultiples_zsmul_eq_zsmul_iff /-
 theorem zmultiples_zsmul_eq_zsmul_iff {ψ θ : R ⧸ AddSubgroup.zmultiples p} {z : ℤ} (hz : z ≠ 0) :
     z • ψ = z • θ ↔ ∃ k : Fin z.natAbs, ψ = θ + (k : ℕ) • (p / z : R) :=
   by
@@ -67,7 +72,9 @@ theorem zmultiples_zsmul_eq_zsmul_iff {ψ θ : R ⧸ AddSubgroup.zmultiples p} {
   simp_rw [← coe_zsmul, ← coe_nsmul, ← coe_add, QuotientAddGroup.eq_iff_sub_mem, ← smul_sub, ←
     sub_sub, AddSubgroup.zsmul_mem_zmultiples_iff_exists_sub_div hz]
 #align quotient_add_group.zmultiples_zsmul_eq_zsmul_iff QuotientAddGroup.zmultiples_zsmul_eq_zsmul_iff
+-/
 
+#print QuotientAddGroup.zmultiples_nsmul_eq_nsmul_iff /-
 theorem zmultiples_nsmul_eq_nsmul_iff {ψ θ : R ⧸ AddSubgroup.zmultiples p} {n : ℕ} (hz : n ≠ 0) :
     n • ψ = n • θ ↔ ∃ k : Fin n, ψ = θ + (k : ℕ) • (p / n : R) :=
   by
@@ -75,6 +82,7 @@ theorem zmultiples_nsmul_eq_nsmul_iff {ψ θ : R ⧸ AddSubgroup.zmultiples p} {
     zmultiples_zsmul_eq_zsmul_iff (int.coe_nat_ne_zero.mpr hz), Int.cast_ofNat]
   rfl
 #align quotient_add_group.zmultiples_nsmul_eq_nsmul_iff QuotientAddGroup.zmultiples_nsmul_eq_nsmul_iff
+-/
 
 end quotientAddGroup
 

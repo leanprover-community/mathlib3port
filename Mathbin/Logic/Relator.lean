@@ -41,7 +41,6 @@ def LiftFun (f : α → γ) (g : β → δ) : Prop :=
 #align relator.lift_fun Relator.LiftFun
 -/
 
--- mathport name: «expr ⇒ »
 infixr:40 " ⇒ " => LiftFun
 
 end
@@ -88,10 +87,12 @@ def BiUnique : Prop :=
 
 variable {R}
 
+#print Relator.RightTotal.rel_forall /-
 theorem RightTotal.rel_forall (h : RightTotal R) :
     ((R ⇒ Implies) ⇒ Implies) (fun p => ∀ i, p i) fun q => ∀ i, q i := fun p q Hrel H b =>
   Exists.elim (h b) fun a Rab => Hrel Rab (H _)
 #align relator.right_total.rel_forall Relator.RightTotal.rel_forall
+-/
 
 #print Relator.LeftTotal.rel_exists /-
 theorem LeftTotal.rel_exists (h : LeftTotal R) :
@@ -145,8 +146,10 @@ variable {α : Type _} {β : Type _} {γ : Type _} {δ : Type _}
 
 variable {r : α → β → Prop} {p : β → γ → Prop} {q : γ → δ → Prop}
 
+#print Relator.LeftUnique.flip /-
 theorem LeftUnique.flip (h : LeftUnique r) : RightUnique (flip r) := fun a b c h₁ h₂ => h h₁ h₂
 #align relator.left_unique.flip Relator.LeftUnique.flip
+-/
 
 #print Relator.rel_and /-
 theorem rel_and : ((· ↔ ·) ⇒ (· ↔ ·) ⇒ (· ↔ ·)) (· ∧ ·) (· ∧ ·) := fun a b h₁ c d h₂ =>
@@ -166,9 +169,11 @@ theorem rel_iff : ((· ↔ ·) ⇒ (· ↔ ·) ⇒ (· ↔ ·)) (· ↔ ·) (· 
 #align relator.rel_iff Relator.rel_iff
 -/
 
+#print Relator.rel_eq /-
 theorem rel_eq {r : α → β → Prop} (hr : BiUnique r) : (r ⇒ r ⇒ (· ↔ ·)) (· = ·) (· = ·) :=
   fun a b h₁ c d h₂ => ⟨fun h => hr.right h₁ <| h.symm ▸ h₂, fun h => hr.left h₁ <| h.symm ▸ h₂⟩
 #align relator.rel_eq Relator.rel_eq
+-/
 
 end Relator
 

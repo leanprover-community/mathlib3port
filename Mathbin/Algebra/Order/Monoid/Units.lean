@@ -62,17 +62,21 @@ def orderEmbeddingVal [Monoid α] [LinearOrder α] : αˣ ↪o α :=
 #align add_units.order_embedding_coe AddUnits.orderEmbeddingVal
 -/
 
+#print Units.max_val /-
 @[simp, norm_cast, to_additive]
 theorem max_val [Monoid α] [LinearOrder α] {a b : αˣ} : (↑(max a b) : α) = max a b :=
   Monotone.map_max orderEmbeddingVal.Monotone
 #align units.max_coe Units.max_val
 #align add_units.max_coe AddUnits.max_val
+-/
 
+#print Units.min_val /-
 @[simp, norm_cast, to_additive]
 theorem min_val [Monoid α] [LinearOrder α] {a b : αˣ} : (↑(min a b) : α) = min a b :=
   Monotone.map_min orderEmbeddingVal.Monotone
 #align units.min_coe Units.min_val
 #align add_units.min_coe AddUnits.min_val
+-/
 
 end Units
 

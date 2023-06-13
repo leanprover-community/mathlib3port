@@ -31,6 +31,7 @@ open Real intervalIntegral MeasureTheory Set Filter
 
 open scoped Topology
 
+#print exp_neg_integrableOn_Ioi /-
 /-- `exp (-b * x)` is integrable on `(a, ∞)`. -/
 theorem exp_neg_integrableOn_Ioi (a : ℝ) {b : ℝ} (h : 0 < b) :
     IntegrableOn (fun x : ℝ => exp (-b * x)) (Ioi a) :=
@@ -42,7 +43,9 @@ theorem exp_neg_integrableOn_Ioi (a : ℝ) {b : ℝ} (h : 0 < b) :
   refine' integrable_on_Ioi_deriv_of_nonneg' (fun x hx => _) (fun x hx => (exp_pos _).le) this
   simpa [h.ne'] using ((hasDerivAt_id x).const_mul b).neg.exp.neg.div_const b
 #align exp_neg_integrable_on_Ioi exp_neg_integrableOn_Ioi
+-/
 
+#print integrable_of_isBigO_exp_neg /-
 /-- If `f` is continuous on `[a, ∞)`, and is `O (exp (-b * x))` at `∞` for some `b > 0`, then
 `f` is integrable on `(a, ∞)`. -/
 theorem integrable_of_isBigO_exp_neg {f : ℝ → ℝ} {a b : ℝ} (h0 : 0 < b)
@@ -75,4 +78,5 @@ theorem integrable_of_isBigO_exp_neg {f : ℝ → ℝ} {a b : ℝ} (h0 : 0 < b)
   specialize bdr x ((le_max_right a r).trans h1x.le)
   exact bdr.trans (mul_le_mul_of_nonneg_right (le_abs_self c) (norm_nonneg _))
 #align integrable_of_is_O_exp_neg integrable_of_isBigO_exp_neg
+-/
 

@@ -66,6 +66,7 @@ theorem swap_mem_antidiagonal {n : α →₀ ℕ} {f : (α →₀ ℕ) × (α �
 #align finsupp.swap_mem_antidiagonal Finsupp.swap_mem_antidiagonal
 -/
 
+#print Finsupp.antidiagonal_filter_fst_eq /-
 theorem antidiagonal_filter_fst_eq (f g : α →₀ ℕ)
     [D : ∀ p : (α →₀ ℕ) × (α →₀ ℕ), Decidable (p.1 = g)] :
     ((antidiagonal f).filterₓ fun p => p.1 = g) = if g ≤ f then {(g, f - g)} else ∅ :=
@@ -77,7 +78,9 @@ theorem antidiagonal_filter_fst_eq (f g : α →₀ ℕ)
   · rintro rfl; exact ⟨le_add_right le_rfl, (add_tsub_cancel_left _ _).symm⟩
   · rintro ⟨h, rfl⟩; exact add_tsub_cancel_of_le h
 #align finsupp.antidiagonal_filter_fst_eq Finsupp.antidiagonal_filter_fst_eq
+-/
 
+#print Finsupp.antidiagonal_filter_snd_eq /-
 theorem antidiagonal_filter_snd_eq (f g : α →₀ ℕ)
     [D : ∀ p : (α →₀ ℕ) × (α →₀ ℕ), Decidable (p.2 = g)] :
     ((antidiagonal f).filterₓ fun p => p.2 = g) = if g ≤ f then {(f - g, g)} else ∅ :=
@@ -89,6 +92,7 @@ theorem antidiagonal_filter_snd_eq (f g : α →₀ ℕ)
   · rintro rfl; exact ⟨le_add_left le_rfl, (add_tsub_cancel_right _ _).symm⟩
   · rintro ⟨h, rfl⟩; exact tsub_add_cancel_of_le h
 #align finsupp.antidiagonal_filter_snd_eq Finsupp.antidiagonal_filter_snd_eq
+-/
 
 #print Finsupp.antidiagonal_zero /-
 @[simp]
@@ -97,6 +101,7 @@ theorem antidiagonal_zero : antidiagonal (0 : α →₀ ℕ) = singleton (0, 0) 
 #align finsupp.antidiagonal_zero Finsupp.antidiagonal_zero
 -/
 
+#print Finsupp.prod_antidiagonal_swap /-
 @[to_additive]
 theorem prod_antidiagonal_swap {M : Type _} [CommMonoid M] (n : α →₀ ℕ)
     (f : (α →₀ ℕ) → (α →₀ ℕ) → M) :
@@ -106,6 +111,7 @@ theorem prod_antidiagonal_swap {M : Type _} [CommMonoid M] (n : α →₀ ℕ)
     ⟨p.symm, swap_mem_antidiagonal.2 hp, p.swap_swap.symm⟩
 #align finsupp.prod_antidiagonal_swap Finsupp.prod_antidiagonal_swap
 #align finsupp.sum_antidiagonal_swap Finsupp.sum_antidiagonal_swap
+-/
 
 end Finsupp
 

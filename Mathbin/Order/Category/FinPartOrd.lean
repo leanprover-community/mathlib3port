@@ -84,15 +84,19 @@ instance concreteCategory : ConcreteCategory FinPartOrd :=
 #align FinPartOrd.concrete_category FinPartOrd.concreteCategory
 -/
 
+#print FinPartOrd.hasForgetToPartOrdCat /-
 instance hasForgetToPartOrdCat : HasForget₂ FinPartOrd PartOrdCat :=
   InducedCategory.hasForget₂ FinPartOrd.toPartOrd
 #align FinPartOrd.has_forget_to_PartOrd FinPartOrd.hasForgetToPartOrdCat
+-/
 
+#print FinPartOrd.hasForgetToFintype /-
 instance hasForgetToFintype : HasForget₂ FinPartOrd FintypeCat
     where forget₂ :=
     { obj := fun X => ⟨X⟩
       map := fun X Y => coeFn }
 #align FinPartOrd.has_forget_to_Fintype FinPartOrd.hasForgetToFintype
+-/
 
 #print FinPartOrd.Iso.mk /-
 /-- Constructs an isomorphism of finite partial orders from an order isomorphism between them. -/
@@ -115,6 +119,7 @@ def dual : FinPartOrd ⥤ FinPartOrd where
 #align FinPartOrd.dual FinPartOrd.dual
 -/
 
+#print FinPartOrd.dualEquiv /-
 /-- The equivalence between `FinPartOrd` and itself induced by `order_dual` both ways. -/
 @[simps Functor inverse]
 def dualEquiv : FinPartOrd ≌ FinPartOrd :=
@@ -122,6 +127,7 @@ def dualEquiv : FinPartOrd ≌ FinPartOrd :=
     (NatIso.ofComponents (fun X => Iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
     (NatIso.ofComponents (fun X => Iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
 #align FinPartOrd.dual_equiv FinPartOrd.dualEquiv
+-/
 
 end FinPartOrd
 

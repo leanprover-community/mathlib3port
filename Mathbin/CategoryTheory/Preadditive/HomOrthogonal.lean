@@ -67,9 +67,11 @@ namespace HomOrthogonal
 
 variable {ι : Type _} {s : ι → C}
 
+#print CategoryTheory.HomOrthogonal.eq_zero /-
 theorem eq_zero [HasZeroMorphisms C] (o : HomOrthogonal s) {i j : ι} (w : i ≠ j) (f : s i ⟶ s j) :
     f = 0 := by haveI := o i j w; apply Subsingleton.elim
 #align category_theory.hom_orthogonal.eq_zero CategoryTheory.HomOrthogonal.eq_zero
+-/
 
 section
 
@@ -111,6 +113,7 @@ section
 
 variable [Preadditive C] [HasFiniteBiproducts C]
 
+#print CategoryTheory.HomOrthogonal.matrixDecompositionAddEquiv /-
 /-- `hom_orthogonal.matrix_decomposition` as an additive equivalence. -/
 @[simps]
 noncomputable def matrixDecompositionAddEquiv (o : HomOrthogonal s) {α β : Type} [Fintype α]
@@ -119,7 +122,9 @@ noncomputable def matrixDecompositionAddEquiv (o : HomOrthogonal s) {α β : Typ
       ∀ i : ι, Matrix (g ⁻¹' {i}) (f ⁻¹' {i}) (End (s i)) :=
   { o.matrixDecomposition with map_add' := fun w z => by ext; dsimp [biproduct.components]; simp }
 #align category_theory.hom_orthogonal.matrix_decomposition_add_equiv CategoryTheory.HomOrthogonal.matrixDecompositionAddEquiv
+-/
 
+#print CategoryTheory.HomOrthogonal.matrixDecomposition_id /-
 @[simp]
 theorem matrixDecomposition_id (o : HomOrthogonal s) {α : Type} [Fintype α] {f : α → ι} (i : ι) :
     o.matrixDecomposition (𝟙 (⨁ fun a => s (f a))) i = 1 :=
@@ -133,7 +138,9 @@ theorem matrixDecomposition_id (o : HomOrthogonal s) {α : Type} [Fintype α] {f
   · convert comp_zero
     simpa using biproduct.ι_π_ne _ (Ne.symm h)
 #align category_theory.hom_orthogonal.matrix_decomposition_id CategoryTheory.HomOrthogonal.matrixDecomposition_id
+-/
 
+#print CategoryTheory.HomOrthogonal.matrixDecomposition_comp /-
 theorem matrixDecomposition_comp (o : HomOrthogonal s) {α β γ : Type} [Fintype α] [Fintype β]
     [Fintype γ] {f : α → ι} {g : β → ι} {h : γ → ι} (z : (⨁ fun a => s (f a)) ⟶ ⨁ fun b => s (g b))
     (w : (⨁ fun b => s (g b)) ⟶ ⨁ fun c => s (h c)) (i : ι) :
@@ -157,6 +164,7 @@ theorem matrixDecomposition_comp (o : HomOrthogonal s) {α β γ : Type} [Fintyp
     convert comp_zero
     apply o.eq_zero nm
 #align category_theory.hom_orthogonal.matrix_decomposition_comp CategoryTheory.HomOrthogonal.matrixDecomposition_comp
+-/
 
 section
 
@@ -184,6 +192,7 @@ if `s i` is simple (as then `End (s i)` is a division ring).
 
 variable [∀ i, InvariantBasisNumber (End (s i))]
 
+#print CategoryTheory.HomOrthogonal.equiv_of_iso /-
 /-- Given a hom orthogonal family `s : ι → C`
 for which each `End (s i)` is a ring with invariant basis number (e.g. if each `s i` is simple),
 if two direct sums over `s` are isomorphic, then they have the same multiplicities.
@@ -200,6 +209,7 @@ theorem equiv_of_iso (o : HomOrthogonal s) {α β : Type} [Fintype α] [Fintype 
     Matrix.square_of_invertible (o.matrix_decomposition i.inv c) (o.matrix_decomposition i.hom c)
       (by rw [← o.matrix_decomposition_comp]; simp) (by rw [← o.matrix_decomposition_comp]; simp)
 #align category_theory.hom_orthogonal.equiv_of_iso CategoryTheory.HomOrthogonal.equiv_of_iso
+-/
 
 end
 

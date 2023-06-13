@@ -288,6 +288,7 @@ theorem squarefree_two : Squarefree 2 := by rw [squarefree_iff_nodup_factors] <;
 
 open UniqueFactorizationMonoid
 
+#print Nat.divisors_filter_squarefree /-
 theorem divisors_filter_squarefree {n : ℕ} (h0 : n ≠ 0) :
     (n.divisors.filterₓ Squarefree).val =
       (UniqueFactorizationMonoid.normalizedFactors n).toFinset.powerset.val.map fun x =>
@@ -341,9 +342,11 @@ theorem divisors_filter_squarefree {n : ℕ} (h0 : n ≠ 0) :
       rw [← Multiset.mem_toFinset]
       apply hy hz
 #align nat.divisors_filter_squarefree Nat.divisors_filter_squarefree
+-/
 
 open scoped BigOperators
 
+#print Nat.sum_divisors_filter_squarefree /-
 theorem sum_divisors_filter_squarefree {n : ℕ} (h0 : n ≠ 0) {α : Type _} [AddCommMonoid α]
     {f : ℕ → α} :
     ∑ i in n.divisors.filterₓ Squarefree, f i =
@@ -352,6 +355,7 @@ theorem sum_divisors_filter_squarefree {n : ℕ} (h0 : n ≠ 0) {α : Type _} [A
   rw [Finset.sum_eq_multiset_sum, divisors_filter_squarefree h0, Multiset.map_map,
     Finset.sum_eq_multiset_sum]
 #align nat.sum_divisors_filter_squarefree Nat.sum_divisors_filter_squarefree
+-/
 
 #print Nat.sq_mul_squarefree_of_pos /-
 theorem sq_mul_squarefree_of_pos {n : ℕ} (hn : 0 < n) :

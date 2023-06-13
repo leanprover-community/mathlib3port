@@ -56,38 +56,52 @@ namespace Quotient
 
 variable {N I}
 
+#print LieSubmodule.Quotient.addCommGroup /-
 instance addCommGroup : AddCommGroup (M ⧸ N) :=
   Submodule.Quotient.addCommGroup _
 #align lie_submodule.quotient.add_comm_group LieSubmodule.Quotient.addCommGroup
+-/
 
+#print LieSubmodule.Quotient.module' /-
 instance module' {S : Type _} [Semiring S] [SMul S R] [Module S M] [IsScalarTower S R M] :
     Module S (M ⧸ N) :=
   Submodule.Quotient.module' _
 #align lie_submodule.quotient.module' LieSubmodule.Quotient.module'
+-/
 
+#print LieSubmodule.Quotient.module /-
 instance module : Module R (M ⧸ N) :=
   Submodule.Quotient.module _
 #align lie_submodule.quotient.module LieSubmodule.Quotient.module
+-/
 
+#print LieSubmodule.Quotient.isCentralScalar /-
 instance isCentralScalar {S : Type _} [Semiring S] [SMul S R] [Module S M] [IsScalarTower S R M]
     [SMul Sᵐᵒᵖ R] [Module Sᵐᵒᵖ M] [IsScalarTower Sᵐᵒᵖ R M] [IsCentralScalar S M] :
     IsCentralScalar S (M ⧸ N) :=
   Submodule.Quotient.isCentralScalar _
 #align lie_submodule.quotient.is_central_scalar LieSubmodule.Quotient.isCentralScalar
+-/
 
+#print LieSubmodule.Quotient.inhabited /-
 instance inhabited : Inhabited (M ⧸ N) :=
   ⟨0⟩
 #align lie_submodule.quotient.inhabited LieSubmodule.Quotient.inhabited
+-/
 
+#print LieSubmodule.Quotient.mk /-
 /-- Map sending an element of `M` to the corresponding element of `M/N`, when `N` is a
 lie_submodule of the lie_module `N`. -/
 abbrev mk : M → M ⧸ N :=
   Submodule.Quotient.mk
 #align lie_submodule.quotient.mk LieSubmodule.Quotient.mk
+-/
 
+#print LieSubmodule.Quotient.is_quotient_mk /-
 theorem is_quotient_mk (m : M) : Quotient.mk'' m = (mk m : M ⧸ N) :=
   rfl
 #align lie_submodule.quotient.is_quotient_mk LieSubmodule.Quotient.is_quotient_mk
+-/
 
 #print LieSubmodule.Quotient.lieSubmoduleInvariant /-
 /-- Given a Lie module `M` over a Lie algebra `L`, together with a Lie submodule `N ⊆ M`, there

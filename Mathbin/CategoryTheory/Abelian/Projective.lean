@@ -50,6 +50,7 @@ theorem exact_d_f [EnoughProjectives C] {X Y : C} (f : X ⟶ Y) : Exact (d f) f 
 #align category_theory.exact_d_f CategoryTheory.exact_d_f
 -/
 
+#print CategoryTheory.preservesFiniteColimitsPreadditiveCoyonedaObjOfProjective /-
 /-- The preadditive Co-Yoneda functor on `P` preserves colimits if `P` is projective. -/
 def preservesFiniteColimitsPreadditiveCoyonedaObjOfProjective (P : C) [hP : Projective P] :
     PreservesFiniteColimits (preadditiveCoyonedaObj (op P)) :=
@@ -57,7 +58,9 @@ def preservesFiniteColimitsPreadditiveCoyonedaObjOfProjective (P : C) [hP : Proj
   letI := (projective_iff_preserves_epimorphisms_preadditive_coyoneda_obj' P).mp hP
   apply functor.preserves_finite_colimits_of_preserves_epis_and_kernels
 #align category_theory.preserves_finite_colimits_preadditive_coyoneda_obj_of_projective CategoryTheory.preservesFiniteColimitsPreadditiveCoyonedaObjOfProjective
+-/
 
+#print CategoryTheory.projective_of_preservesFiniteColimits_preadditiveCoyonedaObj /-
 /-- An object is projective if its preadditive Co-Yoneda functor preserves finite colimits. -/
 theorem projective_of_preservesFiniteColimits_preadditiveCoyonedaObj (P : C)
     [hP : PreservesFiniteColimits (preadditiveCoyonedaObj (op P))] : Projective P :=
@@ -65,6 +68,7 @@ theorem projective_of_preservesFiniteColimits_preadditiveCoyonedaObj (P : C)
   rw [projective_iff_preserves_epimorphisms_preadditive_coyoneda_obj']
   infer_instance
 #align category_theory.projective_of_preserves_finite_colimits_preadditive_coyoneda_obj CategoryTheory.projective_of_preservesFiniteColimits_preadditiveCoyonedaObj
+-/
 
 namespace ProjectiveResolution
 
@@ -90,6 +94,7 @@ def ofComplex (Z : C) : ChainComplex C ℕ :=
 #align category_theory.ProjectiveResolution.of_complex CategoryTheory.ProjectiveResolution.ofComplex
 -/
 
+#print CategoryTheory.ProjectiveResolution.of /-
 /-- In any abelian category with enough projectives,
 `ProjectiveResolution.of Z` constructs a projective resolution of the object `Z`.
 -/
@@ -103,6 +108,7 @@ irreducible_def of (Z : C) : ProjectiveResolution Z :=
     exact := by rintro (_ | n) <;> · simp; apply exact_d_f
     Epi := Projective.π_epi Z }
 #align category_theory.ProjectiveResolution.of CategoryTheory.ProjectiveResolution.of
+-/
 
 instance (priority := 100) (Z : C) : HasProjectiveResolution Z where out := ⟨of Z⟩
 
@@ -116,6 +122,7 @@ namespace HomologicalComplex.Hom
 
 variable {C : Type u} [Category.{v} C] [Abelian C]
 
+#print HomologicalComplex.Hom.toSingle₀ProjectiveResolution /-
 /-- If `X` is a chain complex of projective objects and we have a quasi-isomorphism `f : X ⟶ Y[0]`,
 then `X` is a projective resolution of `Y.` -/
 def toSingle₀ProjectiveResolution {X : ChainComplex C ℕ} {Y : C}
@@ -128,6 +135,7 @@ def toSingle₀ProjectiveResolution {X : ChainComplex C ℕ} {Y : C}
   exact := f.to_single₀_exact_at_succ
   Epi := f.to_single₀_epi_at_zero
 #align homological_complex.hom.to_single₀_ProjectiveResolution HomologicalComplex.Hom.toSingle₀ProjectiveResolution
+-/
 
 end HomologicalComplex.Hom
 

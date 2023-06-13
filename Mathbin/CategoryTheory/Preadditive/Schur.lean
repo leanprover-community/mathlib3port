@@ -98,6 +98,7 @@ section
 
 variable (𝕜 : Type _) [DivisionRing 𝕜]
 
+#print CategoryTheory.finrank_hom_simple_simple_eq_zero_of_not_iso /-
 /-- Part of **Schur's lemma** for `𝕜`-linear categories:
 the hom space between two non-isomorphic simple objects is 0-dimensional.
 -/
@@ -111,6 +112,7 @@ theorem finrank_hom_simple_simple_eq_zero_of_not_iso [HasKernels C] [Linear 𝕜
       refine' p.mp fun _ => h (as_iso f)
   finrank_zero_of_subsingleton
 #align category_theory.finrank_hom_simple_simple_eq_zero_of_not_iso CategoryTheory.finrank_hom_simple_simple_eq_zero_of_not_iso
+-/
 
 end
 
@@ -118,6 +120,7 @@ variable (𝕜 : Type _) [Field 𝕜]
 
 variable [IsAlgClosed 𝕜] [Linear 𝕜 C]
 
+#print CategoryTheory.finrank_endomorphism_eq_one /-
 -- In the proof below we have some difficulty using `I : finite_dimensional 𝕜 (X ⟶ X)`
 -- where we need a `finite_dimensional 𝕜 (End X)`.
 -- These are definitionally equal, but without eta reduction Lean can't see this.
@@ -146,21 +149,26 @@ theorem finrank_endomorphism_eq_one {X : C} (is_iso_iff_nonzero : ∀ f : X ⟶ 
       Classical.not_not, sub_eq_zero, Algebra.algebraMap_eq_smul_one] at nu 
     exact nu.symm
 #align category_theory.finrank_endomorphism_eq_one CategoryTheory.finrank_endomorphism_eq_one
+-/
 
 variable [HasKernels C]
 
+#print CategoryTheory.finrank_endomorphism_simple_eq_one /-
 /-- **Schur's lemma** for endomorphisms in `𝕜`-linear categories.
 -/
 theorem finrank_endomorphism_simple_eq_one (X : C) [Simple X] [I : FiniteDimensional 𝕜 (X ⟶ X)] :
     finrank 𝕜 (X ⟶ X) = 1 :=
   finrank_endomorphism_eq_one 𝕜 isIso_iff_nonzero
 #align category_theory.finrank_endomorphism_simple_eq_one CategoryTheory.finrank_endomorphism_simple_eq_one
+-/
 
+#print CategoryTheory.endomorphism_simple_eq_smul_id /-
 theorem endomorphism_simple_eq_smul_id {X : C} [Simple X] [I : FiniteDimensional 𝕜 (X ⟶ X)]
     (f : X ⟶ X) : ∃ c : 𝕜, c • 𝟙 X = f :=
   (finrank_eq_one_iff_of_nonzero' (𝟙 X) (id_nonzero X)).mp (finrank_endomorphism_simple_eq_one 𝕜 X)
     f
 #align category_theory.endomorphism_simple_eq_smul_id CategoryTheory.endomorphism_simple_eq_smul_id
+-/
 
 #print CategoryTheory.fieldEndOfFiniteDimensional /-
 /-- Endomorphisms of a simple object form a field if they are finite dimensional.

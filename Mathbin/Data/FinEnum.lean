@@ -26,7 +26,8 @@ universe u v
 
 open Finset
 
-/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`Equiv] [] -/
+#print FinEnum /-
+/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`Equiv] [] -/
 /-- `fin_enum α` means that `α` is finite and can be enumerated in some order,
   i.e. `α` has an explicit bijection with `fin n` for some n. -/
 class FinEnum (α : Sort _) where
@@ -34,6 +35,7 @@ class FinEnum (α : Sort _) where
   Equiv : α ≃ Fin card
   [decEq : DecidableEq α]
 #align fin_enum FinEnum
+-/
 
 attribute [instance 100] FinEnum.decEq
 
@@ -272,6 +274,7 @@ def pi {β : α → Type max u v} [DecidableEq α] :
 #align fin_enum.pi FinEnum.pi
 -/
 
+#print FinEnum.mem_pi /-
 theorem mem_pi {β : α → Type max u v} [FinEnum α] [∀ a, FinEnum (β a)] (xs : List α)
     (f : ∀ a, a ∈ xs → β a) : f ∈ pi xs fun x => toList (β x) :=
   by
@@ -283,6 +286,7 @@ theorem mem_pi {β : α → Type max u v} [FinEnum α] [∀ a, FinEnum (β a)] (
     · apply xs_ih
     · ext (x h); simp [pi.cons]; split_ifs; subst x; rfl; rfl
 #align fin_enum.mem_pi FinEnum.mem_pi
+-/
 
 #print FinEnum.pi.enum /-
 /-- enumerate all functions whose domain and range are finitely enumerable -/
@@ -303,12 +307,14 @@ instance pi.finEnum {β : α → Type max u v} [FinEnum α] [∀ a, FinEnum (β 
 #align fin_enum.pi.fin_enum FinEnum.pi.finEnum
 -/
 
+#print FinEnum.pfunFinEnum /-
 instance pfunFinEnum (p : Prop) [Decidable p] (α : p → Type _) [∀ hp, FinEnum (α hp)] :
     FinEnum (∀ hp : p, α hp) :=
   if hp : p then
     ofList ((toList (α hp)).map fun x hp' => x) (by intro <;> simp <;> exact ⟨x hp, rfl⟩)
   else ofList [fun hp' => (hp hp').elim] (by intro <;> simp <;> ext hp' <;> cases hp hp')
 #align fin_enum.pfun_fin_enum FinEnum.pfunFinEnum
+-/
 
 end FinEnum
 

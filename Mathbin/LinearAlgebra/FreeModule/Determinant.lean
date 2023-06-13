@@ -27,6 +27,7 @@ free (finite) modules over any commutative ring.
 -/
 
 
+#print LinearMap.det_zero'' /-
 @[simp]
 theorem LinearMap.det_zero'' {R M : Type _} [CommRing R] [AddCommGroup M] [Module R M]
     [Module.Free R M] [Module.Finite R M] [Nontrivial M] : LinearMap.det (0 : M →ₗ[R] M) = 0 :=
@@ -35,4 +36,5 @@ theorem LinearMap.det_zero'' {R M : Type _} [CommRing R] [AddCommGroup M] [Modul
   nontriviality R
   exact LinearMap.det_zero' (Module.Free.chooseBasis R M)
 #align linear_map.det_zero'' LinearMap.det_zero''
+-/
 

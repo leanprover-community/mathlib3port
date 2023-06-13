@@ -100,10 +100,12 @@ theorem ordConnectedComponent_univ : ordConnectedComponent univ x = univ := by
 #align set.ord_connected_component_univ Set.ordConnectedComponent_univ
 -/
 
+#print Set.ordConnectedComponent_inter /-
 theorem ordConnectedComponent_inter (s t : Set α) (x : α) :
     ordConnectedComponent (s ∩ t) x = ordConnectedComponent s x ∩ ordConnectedComponent t x := by
   simp [ord_connected_component, set_of_and]
 #align set.ord_connected_component_inter Set.ordConnectedComponent_inter
+-/
 
 #print Set.mem_ordConnectedComponent_comm /-
 theorem mem_ordConnectedComponent_comm :
@@ -231,15 +233,19 @@ theorem ordSeparatingSet_comm (s t : Set α) : ordSeparatingSet s t = ordSeparat
 #align set.ord_separating_set_comm Set.ordSeparatingSet_comm
 -/
 
+#print Set.disjoint_left_ordSeparatingSet /-
 theorem disjoint_left_ordSeparatingSet : Disjoint s (ordSeparatingSet s t) :=
   Disjoint.inter_right' _ <|
     disjoint_iUnion₂_right.2 fun x hx =>
       disjoint_compl_right.mono_right <| ordConnectedComponent_subset
 #align set.disjoint_left_ord_separating_set Set.disjoint_left_ordSeparatingSet
+-/
 
+#print Set.disjoint_right_ordSeparatingSet /-
 theorem disjoint_right_ordSeparatingSet : Disjoint t (ordSeparatingSet s t) :=
   ordSeparatingSet_comm t s ▸ disjoint_left_ordSeparatingSet
 #align set.disjoint_right_ord_separating_set Set.disjoint_right_ordSeparatingSet
+-/
 
 #print Set.dual_ordSeparatingSet /-
 theorem dual_ordSeparatingSet :
@@ -256,6 +262,7 @@ def ordT5Nhd (s t : Set α) : Set α :=
 #align set.ord_t5_nhd Set.ordT5Nhd
 -/
 
+#print Set.disjoint_ordT5Nhd /-
 theorem disjoint_ordT5Nhd : Disjoint (ordT5Nhd s t) (ordT5Nhd t s) :=
   by
   rw [disjoint_iff_inf_le]
@@ -289,6 +296,7 @@ theorem disjoint_ordT5Nhd : Disjoint (ordT5Nhd s t) (ordT5Nhd t s) :=
       fun hyb =>
       disjoint_left.1 disjoint_right_ord_separating_set hbt (hy <| Icc_subset_uIcc ⟨hxb, hyb.le⟩)⟩
 #align set.disjoint_ord_t5_nhd Set.disjoint_ordT5Nhd
+-/
 
 end Set
 

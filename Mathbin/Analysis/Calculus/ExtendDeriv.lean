@@ -41,6 +41,7 @@ attribute [local mono] prod_mono
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print has_fderiv_at_boundary_of_tendsto_fderiv /-
 /-- If a function `f` is differentiable in a convex open set and continuous on its closure, and its
 derivative converges to a limit `f'` at a point on the boundary, then `f` is differentiable there
 with derivative `f'`. -/
@@ -115,6 +116,7 @@ theorem has_fderiv_at_boundary_of_tendsto_fderiv {f : E → F} {s : Set E} {x : 
       tendsto_const_nhds.mul
         (tendsto.comp continuous_norm.continuous_at <| tendsto_snd.sub tendsto_fst)
 #align has_fderiv_at_boundary_of_tendsto_fderiv has_fderiv_at_boundary_of_tendsto_fderiv
+-/
 
 #print has_deriv_at_interval_left_endpoint_of_tendsto_deriv /-
 /-- If a function is differentiable on the right of a point `a : ℝ`, continuous at `a`, and

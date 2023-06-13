@@ -35,7 +35,6 @@ def update (m : Nat) (a : α) (v : Nat → α) : Nat → α
   | n => if n = m then a else v n
 #align omega.update Omega.update
 
--- mathport name: omega.update
 scoped notation v " ⟨" m " ↦ " a "⟩" => Omega.update m a v
 
 theorem update_eq (m : Nat) (a : α) (v : Nat → α) : (v ⟨m ↦ a⟩) m = a := by

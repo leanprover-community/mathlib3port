@@ -62,8 +62,6 @@ variable {G : C ⥤ E} {H : D ⥤ F} {L₁ : C ⥤ D} {R₁ : D ⥤ C} {L₂ : E
 
 variable (adj₁ : L₁ ⊣ R₁) (adj₂ : L₂ ⊣ R₂)
 
-include adj₁ adj₂
-
 #print CategoryTheory.transferNatTrans /-
 /-- Suppose we have a square of functors (where the top and bottom are adjunctions `L₁ ⊣ R₁` and
 `L₂ ⊣ R₂` respectively).
@@ -117,12 +115,15 @@ def transferNatTrans : (G ⋙ L₂ ⟶ L₁ ⋙ H) ≃ (R₁ ⋙ G ⟶ H ⋙ R�
 #align category_theory.transfer_nat_trans CategoryTheory.transferNatTrans
 -/
 
+#print CategoryTheory.transferNatTrans_counit /-
 theorem transferNatTrans_counit (f : G ⋙ L₂ ⟶ L₁ ⋙ H) (Y : D) :
     L₂.map ((transferNatTrans adj₁ adj₂ f).app _) ≫ adj₂.counit.app _ =
       f.app _ ≫ H.map (adj₁.counit.app Y) :=
   by erw [functor.map_comp]; simp
 #align category_theory.transfer_nat_trans_counit CategoryTheory.transferNatTrans_counit
+-/
 
+#print CategoryTheory.unit_transferNatTrans /-
 theorem unit_transferNatTrans (f : G ⋙ L₂ ⟶ L₁ ⋙ H) (X : C) :
     G.map (adj₁.Unit.app X) ≫ (transferNatTrans adj₁ adj₂ f).app _ =
       adj₂.Unit.app _ ≫ R₂.map (f.app _) :=
@@ -132,6 +133,7 @@ theorem unit_transferNatTrans (f : G ⋙ L₂ ⟶ L₁ ⋙ H) (X : C) :
     functor.comp_map, ← H.map_comp]
   dsimp; simp
 #align category_theory.unit_transfer_nat_trans CategoryTheory.unit_transferNatTrans
+-/
 
 -- See library note [dsimp, simp]
 end Square
@@ -162,6 +164,7 @@ def transferNatTransSelf : (L₂ ⟶ L₁) ≃ (R₁ ⟶ R₂) :=
 #align category_theory.transfer_nat_trans_self CategoryTheory.transferNatTransSelf
 -/
 
+#print CategoryTheory.transferNatTransSelf_counit /-
 theorem transferNatTransSelf_counit (f : L₂ ⟶ L₁) (X) :
     L₂.map ((transferNatTransSelf adj₁ adj₂ f).app _) ≫ adj₂.counit.app X =
       f.app _ ≫ adj₁.counit.app X :=
@@ -173,7 +176,9 @@ theorem transferNatTransSelf_counit (f : L₂ ⟶ L₁) (X) :
   rw [this]
   simp
 #align category_theory.transfer_nat_trans_self_counit CategoryTheory.transferNatTransSelf_counit
+-/
 
+#print CategoryTheory.unit_transferNatTransSelf /-
 theorem unit_transferNatTransSelf (f : L₂ ⟶ L₁) (X) :
     adj₁.Unit.app _ ≫ (transferNatTransSelf adj₁ adj₂ f).app _ =
       adj₂.Unit.app X ≫ Functor.map _ (f.app _) :=
@@ -185,6 +190,7 @@ theorem unit_transferNatTransSelf (f : L₂ ⟶ L₁) (X) :
   rw [this]
   simp
 #align category_theory.unit_transfer_nat_trans_self CategoryTheory.unit_transferNatTransSelf
+-/
 
 #print CategoryTheory.transferNatTransSelf_id /-
 @[simp]
@@ -214,19 +220,23 @@ theorem transferNatTransSelf_comp (f g) :
 #align category_theory.transfer_nat_trans_self_comp CategoryTheory.transferNatTransSelf_comp
 -/
 
+#print CategoryTheory.transferNatTransSelf_adjunction_id /-
 theorem transferNatTransSelf_adjunction_id {L R : C ⥤ C} (adj : L ⊣ R) (f : 𝟭 C ⟶ L) (X : C) :
     (transferNatTransSelf adj Adjunction.id f).app X = f.app (R.obj X) ≫ adj.counit.app X :=
   by
   dsimp [transfer_nat_trans_self, transfer_nat_trans, adjunction.id]
   simp only [comp_id, id_comp]
 #align category_theory.transfer_nat_trans_self_adjunction_id CategoryTheory.transferNatTransSelf_adjunction_id
+-/
 
+#print CategoryTheory.transferNatTransSelf_adjunction_id_symm /-
 theorem transferNatTransSelf_adjunction_id_symm {L R : C ⥤ C} (adj : L ⊣ R) (g : R ⟶ 𝟭 C) (X : C) :
     ((transferNatTransSelf adj Adjunction.id).symm g).app X = adj.Unit.app X ≫ g.app (L.obj X) :=
   by
   dsimp [transfer_nat_trans_self, transfer_nat_trans, adjunction.id]
   simp only [comp_id, id_comp]
 #align category_theory.transfer_nat_trans_self_adjunction_id_symm CategoryTheory.transferNatTransSelf_adjunction_id_symm
+-/
 
 #print CategoryTheory.transferNatTransSelf_symm_comp /-
 theorem transferNatTransSelf_symm_comp (f g) :

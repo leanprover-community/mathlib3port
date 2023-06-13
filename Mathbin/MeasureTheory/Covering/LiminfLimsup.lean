@@ -40,6 +40,7 @@ variable {α : Type _} [MetricSpace α] [SecondCountableTopology α] [Measurable
 
 variable (μ : Measure α) [IsLocallyFiniteMeasure μ] [IsUnifLocDoublingMeasure μ]
 
+#print blimsup_cthickening_ae_le_of_eventually_mul_le_aux /-
 /-- This is really an auxiliary result en route to `blimsup_cthickening_ae_le_of_eventually_mul_le`
 (which is itself an auxiliary result en route to `blimsup_cthickening_mul_ae_eq`).
 
@@ -170,7 +171,9 @@ theorem blimsup_cthickening_ae_le_of_eventually_mul_le_aux (p : ℕ → Prop) {s
   replace hj₃ := tsub_le_tsub_right hj₃ (↑C⁻¹ * μ (B j))
   rwa [ENNReal.add_sub_cancel_left hB] at hj₃ 
 #align blimsup_cthickening_ae_le_of_eventually_mul_le_aux blimsup_cthickening_ae_le_of_eventually_mul_le_aux
+-/
 
+#print blimsup_cthickening_ae_le_of_eventually_mul_le /-
 /-- This is really an auxiliary result en route to `blimsup_cthickening_mul_ae_eq`.
 
 NB: The `set : α` type ascription is present because of issue #16932 on GitHub. -/
@@ -199,7 +202,9 @@ theorem blimsup_cthickening_ae_le_of_eventually_mul_le (p : ℕ → Prop) {s : �
       blimsup_cthickening_ae_le_of_eventually_mul_le_aux μ p hs (tendsto_nhds_max_right hr) hRp hM
         hM' hMr
 #align blimsup_cthickening_ae_le_of_eventually_mul_le blimsup_cthickening_ae_le_of_eventually_mul_le
+-/
 
+#print blimsup_cthickening_mul_ae_eq /-
 /-- Given a sequence of subsets `sᵢ` of a metric space, together with a sequence of radii `rᵢ`
 such that `rᵢ → 0`, the set of points which belong to infinitely many of the closed
 `rᵢ`-thickenings of `sᵢ` is unchanged almost everywhere for a uniformly locally doubling measure if
@@ -258,7 +263,9 @@ theorem blimsup_cthickening_mul_ae_eq (p : ℕ → Prop) (s : ℕ → Set α) {M
     blimsup_congr (eventually_of_forall h₂)]
   exact ae_eq_set_union (this (fun i => p i ∧ 0 < r i) hr') (ae_eq_refl _)
 #align blimsup_cthickening_mul_ae_eq blimsup_cthickening_mul_ae_eq
+-/
 
+#print blimsup_cthickening_ae_eq_blimsup_thickening /-
 theorem blimsup_cthickening_ae_eq_blimsup_thickening {p : ℕ → Prop} {s : ℕ → Set α} {r : ℕ → ℝ}
     (hr : Tendsto r atTop (𝓝 0)) (hr' : ∀ᶠ i in atTop, p i → 0 < r i) :
     (blimsup (fun i => cthickening (r i) (s i)) atTop p : Set α) =ᵐ[μ]
@@ -273,7 +280,9 @@ theorem blimsup_cthickening_ae_eq_blimsup_thickening {p : ℕ → Prop} {s : ℕ
     nlinarith [hi pi]
   · exact mono_blimsup fun i pi => thickening_subset_cthickening _ _
 #align blimsup_cthickening_ae_eq_blimsup_thickening blimsup_cthickening_ae_eq_blimsup_thickening
+-/
 
+#print blimsup_thickening_mul_ae_eq_aux /-
 /-- An auxiliary result en route to `blimsup_thickening_mul_ae_eq`. -/
 theorem blimsup_thickening_mul_ae_eq_aux (p : ℕ → Prop) (s : ℕ → Set α) {M : ℝ} (hM : 0 < M)
     (r : ℕ → ℝ) (hr : Tendsto r atTop (𝓝 0)) (hr' : ∀ᶠ i in atTop, p i → 0 < r i) :
@@ -287,7 +296,9 @@ theorem blimsup_thickening_mul_ae_eq_aux (p : ℕ → Prop) (s : ℕ → Set α)
   have h₃ := blimsup_cthickening_ae_eq_blimsup_thickening μ hr hr'
   exact h₃.symm.trans (h₂.trans h₁)
 #align blimsup_thickening_mul_ae_eq_aux blimsup_thickening_mul_ae_eq_aux
+-/
 
+#print blimsup_thickening_mul_ae_eq /-
 /-- Given a sequence of subsets `sᵢ` of a metric space, together with a sequence of radii `rᵢ`
 such that `rᵢ → 0`, the set of points which belong to infinitely many of the
 `rᵢ`-thickenings of `sᵢ` is unchanged almost everywhere for a uniformly locally doubling measure if
@@ -322,4 +333,5 @@ theorem blimsup_thickening_mul_ae_eq (p : ℕ → Prop) (s : ℕ → Set α) {M 
   rw [h₁, h₂]
   exact blimsup_thickening_mul_ae_eq_aux μ q s hM r hr (eventually_of_forall fun i hi => hi.2)
 #align blimsup_thickening_mul_ae_eq blimsup_thickening_mul_ae_eq
+-/
 

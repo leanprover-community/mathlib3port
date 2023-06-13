@@ -200,10 +200,12 @@ unsafe def exists_eq_elim : binder_eq_elim
   apply_elim_eq := apply' `` exists_elim_eq_left <|> apply' `` exists_elim_eq_right
 #align exists_eq_elim exists_eq_elim
 
+#print forall_comm /-
 theorem forall_comm.{u, v} {α : Sort u} {β : Sort v} (p : α → β → Prop) :
     (∀ a b, p a b) ↔ ∀ b a, p a b :=
   ⟨fun h b a => h a b, fun h b a => h a b⟩
 #align forall_comm forall_comm
+-/
 
 theorem forall_elim_eq_left.{u, v} {α : Sort u} (a : α) (p : ∀ a' : α, a' = a → Prop) :
     (∀ (a' : α) (h : a' = a), p a' h) ↔ p a rfl :=

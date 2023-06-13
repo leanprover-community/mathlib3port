@@ -28,7 +28,6 @@ open MvPolynomial
 
 variable {p : ℕ} {R S : Type _} [hp : Fact p.Prime] [CommRing R] [CommRing S]
 
--- mathport name: expr𝕎
 local notation "𝕎" => WittVector p
 
 -- type as `\bbW`
@@ -59,8 +58,6 @@ theorem verschiebungFun_coeff_succ (x : 𝕎 R) (n : ℕ) :
   rfl
 #align witt_vector.verschiebung_fun_coeff_succ WittVector.verschiebungFun_coeff_succ
 
-include hp
-
 @[ghost_simps]
 theorem ghostComponent_zero_verschiebungFun (x : 𝕎 R) : ghostComponent 0 (verschiebungFun x) = 0 :=
   by
@@ -79,8 +76,6 @@ theorem ghostComponent_verschiebungFun (x : 𝕎 R) (n : ℕ) :
   simp only [pow_succ, mul_assoc, verschiebung_fun_coeff, if_neg (Nat.succ_ne_zero i),
     Nat.succ_sub_succ, tsub_zero]
 #align witt_vector.ghost_component_verschiebung_fun WittVector.ghostComponent_verschiebungFun
-
-omit hp
 
 /-- The 0th Verschiebung polynomial is 0. For `n > 0`, the `n`th Verschiebung polynomial is the
 variable `X (n-1)`.
@@ -117,8 +112,6 @@ theorem verschiebungFun_isPoly : IsPoly p fun R _Rcr => @verschiebungFun p R _Rc
 
 variable {p}
 
-include hp
-
 /--
 `verschiebung x` shifts the coefficients of `x` up by one, by inserting 0 as the 0th coefficient.
 `x.coeff i` then becomes `(verchiebung x).coeff (i + 1)`.
@@ -134,15 +127,11 @@ noncomputable def verschiebung : 𝕎 R →+ 𝕎 R
   map_add' := by ghost_calc _ _; rintro ⟨⟩ <;> ghost_simp
 #align witt_vector.verschiebung WittVector.verschiebung
 
-omit hp
-
 /-- `witt_vector.verschiebung` is a polynomial function. -/
 @[is_poly]
 theorem verschiebung_isPoly : IsPoly p fun R _Rcr => @verschiebung p R hp _Rcr :=
   verschiebungFun_isPoly p
 #align witt_vector.verschiebung_is_poly WittVector.verschiebung_isPoly
-
-include hp
 
 /-- verschiebung is a natural transformation -/
 @[simp]

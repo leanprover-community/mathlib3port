@@ -39,11 +39,13 @@ theorem cast_sub {m n} (h : m ≤ n) : ((n - m : ℕ) : R) = n - m :=
   eq_sub_of_add_eq <| by rw [← cast_add, Nat.sub_add_cancel h]
 #align nat.cast_sub Nat.cast_subₓ
 
+#print Nat.cast_pred /-
 @[simp, norm_cast]
 theorem cast_pred : ∀ {n}, 0 < n → ((n - 1 : ℕ) : R) = n - 1
   | 0, h => by cases h
   | n + 1, h => by rw [cast_succ, add_sub_cancel] <;> rfl
 #align nat.cast_pred Nat.cast_pred
+-/
 
 end Nat
 
@@ -95,9 +97,11 @@ theorem negOfNat_eq (n : ℕ) : negOfNat n = -(n : ℤ) := by cases n <;> rfl
 #align int.neg_of_nat_eq Int.negOfNat_eq
 -/
 
+#print Int.cast_negOfNat /-
 @[simp]
 theorem cast_negOfNat (n : ℕ) : ((negOfNat n : ℤ) : R) = -n := by simp [neg_of_nat_eq]
 #align int.cast_neg_of_nat Int.cast_negOfNat
+-/
 
 @[simp, norm_cast]
 theorem cast_add : ∀ m n, ((m + n : ℤ) : R) = m + n
@@ -130,24 +134,34 @@ theorem ofNat_bit1 (n : ℕ) : (↑(bit1 n) : ℤ) = bit1 ↑n :=
 #align int.coe_nat_bit1 Int.ofNat_bit1
 -/
 
+#print Int.cast_bit0 /-
 @[simp, norm_cast]
 theorem cast_bit0 (n : ℤ) : ((bit0 n : ℤ) : R) = bit0 n :=
   cast_add _ _
 #align int.cast_bit0 Int.cast_bit0
+-/
 
+#print Int.cast_bit1 /-
 @[simp, norm_cast]
 theorem cast_bit1 (n : ℤ) : ((bit1 n : ℤ) : R) = bit1 n := by
   rw [bit1, cast_add, cast_one, cast_bit0] <;> rfl
 #align int.cast_bit1 Int.cast_bit1
+-/
 
+#print Int.cast_two /-
 theorem cast_two : ((2 : ℤ) : R) = 2 := by simp
 #align int.cast_two Int.cast_two
+-/
 
+#print Int.cast_three /-
 theorem cast_three : ((3 : ℤ) : R) = 3 := by simp
 #align int.cast_three Int.cast_three
+-/
 
+#print Int.cast_four /-
 theorem cast_four : ((4 : ℤ) : R) = 4 := by simp
 #align int.cast_four Int.cast_four
+-/
 
 end Int
 

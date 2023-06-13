@@ -30,17 +30,21 @@ instance [HasRatCast α] : HasRatCast αᵐᵒᵖ :=
 
 variable {α}
 
+#print MulOpposite.op_ratCast /-
 @[simp, norm_cast, to_additive]
 theorem op_ratCast [HasRatCast α] (q : ℚ) : op (q : α) = q :=
   rfl
 #align mul_opposite.op_rat_cast MulOpposite.op_ratCast
 #align add_opposite.op_rat_cast AddOpposite.op_ratCast
+-/
 
+#print MulOpposite.unop_ratCast /-
 @[simp, norm_cast, to_additive]
 theorem unop_ratCast [HasRatCast α] (q : ℚ) : unop (q : αᵐᵒᵖ) = q :=
   rfl
 #align mul_opposite.unop_rat_cast MulOpposite.unop_ratCast
 #align add_opposite.unop_rat_cast AddOpposite.unop_ratCast
+-/
 
 variable (α)
 

@@ -35,6 +35,7 @@ variable [Preadditive C]
 
 namespace Injective
 
+#print CategoryTheory.Injective.injective_iff_preservesEpimorphisms_preadditiveYoneda_obj /-
 theorem injective_iff_preservesEpimorphisms_preadditiveYoneda_obj (J : C) :
     Injective J ↔ (preadditiveYoneda.obj J).PreservesEpimorphisms :=
   by
@@ -46,7 +47,9 @@ theorem injective_iff_preservesEpimorphisms_preadditiveYoneda_obj (J : C) :
   · intro
     exact (inferInstance : (preadditive_yoneda.obj J ⋙ forget _).PreservesEpimorphisms)
 #align category_theory.injective.injective_iff_preserves_epimorphisms_preadditive_yoneda_obj CategoryTheory.Injective.injective_iff_preservesEpimorphisms_preadditiveYoneda_obj
+-/
 
+#print CategoryTheory.Injective.injective_iff_preservesEpimorphisms_preadditive_yoneda_obj' /-
 theorem injective_iff_preservesEpimorphisms_preadditive_yoneda_obj' (J : C) :
     Injective J ↔ (preadditiveYonedaObj J).PreservesEpimorphisms :=
   by
@@ -58,6 +61,7 @@ theorem injective_iff_preservesEpimorphisms_preadditive_yoneda_obj' (J : C) :
   · intro
     exact (inferInstance : (preadditive_yoneda_obj J ⋙ forget _).PreservesEpimorphisms)
 #align category_theory.injective.injective_iff_preserves_epimorphisms_preadditive_yoneda_obj' CategoryTheory.Injective.injective_iff_preservesEpimorphisms_preadditive_yoneda_obj'
+-/
 
 end Injective
 

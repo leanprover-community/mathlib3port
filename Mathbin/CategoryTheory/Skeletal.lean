@@ -111,10 +111,12 @@ instance : EssSurj (fromSkeleton C) where mem_essImage X := ⟨Quotient.mk' X, Q
 noncomputable instance : IsEquivalence (fromSkeleton C) :=
   Equivalence.ofFullyFaithfullyEssSurj (fromSkeleton C)
 
+#print CategoryTheory.skeletonEquivalence /-
 /-- The equivalence between the skeleton and the category itself. -/
 noncomputable def skeletonEquivalence : Skeleton C ≌ C :=
   (fromSkeleton C).asEquivalence
 #align category_theory.skeleton_equivalence CategoryTheory.skeletonEquivalence
+-/
 
 #print CategoryTheory.skeleton_skeletal /-
 theorem skeleton_skeletal : Skeletal (Skeleton C) :=
@@ -138,6 +140,7 @@ section
 
 variable {C D}
 
+#print CategoryTheory.Equivalence.skeletonEquiv /-
 /-- Two categories which are categorically equivalent have skeletons with equivalent objects.
 -/
 noncomputable def Equivalence.skeletonEquiv (e : C ≌ D) : Skeleton C ≃ Skeleton D :=
@@ -147,6 +150,7 @@ noncomputable def Equivalence.skeletonEquiv (e : C ≌ D) : Skeleton C ≃ Skele
     left_inv := fun X => skeleton_skeletal C ⟨(f.unitIso.app X).symm⟩
     right_inv := fun Y => skeleton_skeletal D ⟨f.counitIso.app Y⟩ }
 #align category_theory.equivalence.skeleton_equiv CategoryTheory.Equivalence.skeletonEquiv
+-/
 
 end
 
@@ -292,10 +296,12 @@ noncomputable instance fromThinSkeletonEquivalence : IsEquivalence (fromThinSkel
 #align category_theory.thin_skeleton.from_thin_skeleton_equivalence CategoryTheory.ThinSkeleton.fromThinSkeletonEquivalence
 -/
 
+#print CategoryTheory.ThinSkeleton.equivalence /-
 /-- The equivalence between the thin skeleton and the category itself. -/
 noncomputable def equivalence : ThinSkeleton C ≌ C :=
   (fromThinSkeleton C).asEquivalence
 #align category_theory.thin_skeleton.equivalence CategoryTheory.ThinSkeleton.equivalence
+-/
 
 variable {C}
 
@@ -390,6 +396,7 @@ section
 
 variable {C} {α : Type _} [PartialOrder α]
 
+#print CategoryTheory.Equivalence.thinSkeletonOrderIso /-
 /--
 When `e : C ≌ α` is a categorical equivalence from a thin category `C` to some partial order `α`,
 the `thin_skeleton C` is order isomorphic to `α`.
@@ -398,6 +405,7 @@ noncomputable def Equivalence.thinSkeletonOrderIso [Quiver.IsThin C] (e : C ≌ 
     ThinSkeleton C ≃o α :=
   ((ThinSkeleton.equivalence C).trans e).toOrderIso
 #align category_theory.equivalence.thin_skeleton_order_iso CategoryTheory.Equivalence.thinSkeletonOrderIso
+-/
 
 end
 

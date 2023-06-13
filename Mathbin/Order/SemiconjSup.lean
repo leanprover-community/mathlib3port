@@ -53,31 +53,42 @@ def IsOrderRightAdjoint [Preorder α] [Preorder β] (f : α → β) (g : β → 
 #align is_order_right_adjoint IsOrderRightAdjoint
 -/
 
+#print isOrderRightAdjoint_sSup /-
 theorem isOrderRightAdjoint_sSup [CompleteLattice α] [Preorder β] (f : α → β) :
     IsOrderRightAdjoint f fun y => sSup {x | f x ≤ y} := fun y => isLUB_sSup _
 #align is_order_right_adjoint_Sup isOrderRightAdjoint_sSup
+-/
 
+#print isOrderRightAdjoint_csSup /-
 theorem isOrderRightAdjoint_csSup [ConditionallyCompleteLattice α] [Preorder β] (f : α → β)
     (hne : ∀ y, ∃ x, f x ≤ y) (hbdd : ∀ y, BddAbove {x | f x ≤ y}) :
     IsOrderRightAdjoint f fun y => sSup {x | f x ≤ y} := fun y => isLUB_csSup (hne y) (hbdd y)
 #align is_order_right_adjoint_cSup isOrderRightAdjoint_csSup
+-/
 
 namespace IsOrderRightAdjoint
 
+#print IsOrderRightAdjoint.unique /-
 protected theorem unique [PartialOrder α] [Preorder β] {f : α → β} {g₁ g₂ : β → α}
     (h₁ : IsOrderRightAdjoint f g₁) (h₂ : IsOrderRightAdjoint f g₂) : g₁ = g₂ :=
   funext fun y => (h₁ y).unique (h₂ y)
 #align is_order_right_adjoint.unique IsOrderRightAdjoint.unique
+-/
 
+#print IsOrderRightAdjoint.right_mono /-
 theorem right_mono [Preorder α] [Preorder β] {f : α → β} {g : β → α} (h : IsOrderRightAdjoint f g) :
     Monotone g := fun y₁ y₂ hy => (h y₁).mono (h y₂) fun x hx => le_trans hx hy
 #align is_order_right_adjoint.right_mono IsOrderRightAdjoint.right_mono
+-/
 
+#print IsOrderRightAdjoint.orderIso_comp /-
 theorem orderIso_comp [Preorder α] [Preorder β] [Preorder γ] {f : α → β} {g : β → α}
     (h : IsOrderRightAdjoint f g) (e : β ≃o γ) : IsOrderRightAdjoint (e ∘ f) (g ∘ e.symm) :=
   fun y => by simpa [e.le_symm_apply] using h (e.symm y)
 #align is_order_right_adjoint.order_iso_comp IsOrderRightAdjoint.orderIso_comp
+-/
 
+#print IsOrderRightAdjoint.comp_orderIso /-
 theorem comp_orderIso [Preorder α] [Preorder β] [Preorder γ] {f : α → β} {g : β → α}
     (h : IsOrderRightAdjoint f g) (e : γ ≃o α) : IsOrderRightAdjoint (f ∘ e) (e.symm ∘ g) :=
   by
@@ -86,11 +97,13 @@ theorem comp_orderIso [Preorder α] [Preorder β] [Preorder γ] {f : α → β} 
   rw [e.is_lub_preimage, e.apply_symm_apply]
   exact h y
 #align is_order_right_adjoint.comp_order_iso IsOrderRightAdjoint.comp_orderIso
+-/
 
 end IsOrderRightAdjoint
 
 namespace Function
 
+#print Function.Semiconj.symm_adjoint /-
 /-- If an order automorphism `fa` is semiconjugate to an order embedding `fb` by a function `g`
 and `g'` is an order right adjoint of `g` (i.e. `g' y = Sup {x | f x ≤ y}`), then `fb` is
 semiconjugate to `fa` by `g'`.
@@ -105,9 +118,11 @@ theorem Semiconj.symm_adjoint [PartialOrder α] [Preorder β] {fa : α ≃o α} 
   rw [← fa.surjective.image_preimage {x | g x ≤ fb y}, preimage_set_of_eq]
   simp only [h.eq, fb.le_iff_le, fa.left_ord_continuous (hg' _)]
 #align function.semiconj.symm_adjoint Function.Semiconj.symm_adjoint
+-/
 
 variable {G : Type _}
 
+#print Function.semiconj_of_isLUB /-
 theorem semiconj_of_isLUB [PartialOrder α] [Group G] (f₁ f₂ : G →* α ≃o α) {h : α → α}
     (H : ∀ x, IsLUB (range fun g' => (f₁ g')⁻¹ (f₂ g' x)) (h x)) (g : G) :
     Function.Semiconj h (f₂ g) (f₁ g) :=
@@ -117,7 +132,9 @@ theorem semiconj_of_isLUB [PartialOrder α] [Group G] (f₁ f₂ : G →* α ≃
   rw [← range_comp, ← (Equiv.mulRight g).Surjective.range_comp _] at this 
   simpa [(· ∘ ·)] using this
 #align function.semiconj_of_is_lub Function.semiconj_of_isLUB
+-/
 
+#print Function.sSup_div_semiconj /-
 /-- Consider two actions `f₁ f₂ : G → α → α` of a group on a complete lattice by order
 isomorphisms. Then the map `x ↦ ⨆ g : G, (f₁ g)⁻¹ (f₂ g x)` semiconjugates each `f₁ g'` to `f₂ g'`.
 
@@ -127,7 +144,9 @@ theorem sSup_div_semiconj [CompleteLattice α] [Group G] (f₁ f₂ : G →* α 
     Function.Semiconj (fun x => ⨆ g' : G, (f₁ g')⁻¹ (f₂ g' x)) (f₂ g) (f₁ g) :=
   semiconj_of_isLUB f₁ f₂ (fun x => isLUB_iSup) _
 #align function.Sup_div_semiconj Function.sSup_div_semiconj
+-/
 
+#print Function.csSup_div_semiconj /-
 /-- Consider two actions `f₁ f₂ : G → α → α` of a group on a conditionally complete lattice by order
 isomorphisms. Suppose that each set $s(x)=\{f_1(g)^{-1} (f_2(g)(x)) | g \in G\}$ is bounded above.
 Then the map `x ↦ Sup s(x)` semiconjugates each `f₁ g'` to `f₂ g'`.
@@ -139,6 +158,7 @@ theorem csSup_div_semiconj [ConditionallyCompleteLattice α] [Group G] (f₁ f�
     Function.Semiconj (fun x => ⨆ g' : G, (f₁ g')⁻¹ (f₂ g' x)) (f₂ g) (f₁ g) :=
   semiconj_of_isLUB f₁ f₂ (fun x => isLUB_csSup (range_nonempty _) (hbdd x)) _
 #align function.cSup_div_semiconj Function.csSup_div_semiconj
+-/
 
 end Function
 

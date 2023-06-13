@@ -22,6 +22,7 @@ open Function
 
 open scoped UniformConvergence
 
+#print equicontinuous_of_equicontinuousAt_one /-
 @[to_additive]
 theorem equicontinuous_of_equicontinuousAt_one {ι G M hom : Type _} [TopologicalSpace G]
     [UniformSpace M] [Group G] [Group M] [TopologicalGroup G] [UniformGroup M]
@@ -38,7 +39,9 @@ theorem equicontinuous_of_equicontinuousAt_one {ι G M hom : Type _} [Topologica
   exact continuous_of_continuousAt_one φ hf
 #align equicontinuous_of_equicontinuous_at_one equicontinuous_of_equicontinuousAt_one
 #align equicontinuous_of_equicontinuous_at_zero equicontinuous_of_equicontinuousAt_zero
+-/
 
+#print uniformEquicontinuous_of_equicontinuousAt_one /-
 @[to_additive]
 theorem uniformEquicontinuous_of_equicontinuousAt_one {ι G M hom : Type _} [UniformSpace G]
     [UniformSpace M] [Group G] [Group M] [UniformGroup G] [UniformGroup M] [MonoidHomClass hom G M]
@@ -54,4 +57,5 @@ theorem uniformEquicontinuous_of_equicontinuousAt_one {ι G M hom : Type _} [Uni
   exact uniformContinuous_of_continuousAt_one φ hf
 #align uniform_equicontinuous_of_equicontinuous_at_one uniformEquicontinuous_of_equicontinuousAt_one
 #align uniform_equicontinuous_of_equicontinuous_at_zero uniformEquicontinuous_of_equicontinuousAt_zero
+-/
 

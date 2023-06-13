@@ -29,7 +29,6 @@ open List hiding head?
 
 variable (F : PFunctor.{u})
 
--- mathport name: «expr♯ »
 local prefix:0 "♯" =>
   cast
     (by
@@ -486,6 +485,7 @@ theorem agree_iff_agree' {n : ℕ} (x y : M F) :
 #align pfunctor.M.agree_iff_agree' PFunctor.M.agree_iff_agree'
 -/
 
+#print PFunctor.M.cases_mk /-
 @[simp]
 theorem cases_mk {r : M F → Sort _} (x : F.Obj <| M F) (f : ∀ x : F.Obj <| M F, r (M.mk x)) :
     PFunctor.M.cases f (M.mk x) = f x :=
@@ -498,18 +498,23 @@ theorem cases_mk {r : M F → Sort _} (x : F.Obj <| M F) (f : ∀ x : F.Obj <| M
   cases h : x_snd x; dsimp only [head]
   congr with n; change (x_snd x).approx n = _; rw [h]
 #align pfunctor.M.cases_mk PFunctor.M.cases_mk
+-/
 
+#print PFunctor.M.casesOn_mk /-
 @[simp]
 theorem casesOn_mk {r : M F → Sort _} (x : F.Obj <| M F) (f : ∀ x : F.Obj <| M F, r (M.mk x)) :
     PFunctor.M.casesOn (M.mk x) f = f x :=
   cases_mk x f
 #align pfunctor.M.cases_on_mk PFunctor.M.casesOn_mk
+-/
 
+#print PFunctor.M.casesOn_mk' /-
 @[simp]
 theorem casesOn_mk' {r : M F → Sort _} {a} (x : F.B a → M F)
     (f : ∀ (a) (f : F.B a → M F), r (M.mk ⟨a, f⟩)) : PFunctor.M.casesOn' (M.mk ⟨a, x⟩) f = f a x :=
   cases_mk ⟨_, x⟩ _
 #align pfunctor.M.cases_on_mk' PFunctor.M.casesOn_mk'
+-/
 
 #print PFunctor.M.IsPath /-
 /-- `is_path p x` tells us if `p` is a valid path through `x` -/
@@ -694,7 +699,6 @@ section Bisim
 
 variable (R : M F → M F → Prop)
 
--- mathport name: «expr ~ »
 local infixl:50 " ~ " => R
 
 #print PFunctor.M.IsBisimulation /-
@@ -787,6 +791,7 @@ theorem bisim (R : M P → M P → Prop)
 #align pfunctor.M.bisim PFunctor.M.bisim
 -/
 
+#print PFunctor.M.bisim' /-
 theorem bisim' {α : Type _} (Q : α → Prop) (u v : α → M P)
     (h :
       ∀ x,
@@ -802,6 +807,7 @@ theorem bisim' {α : Type _} (Q : α → Prop) (u v : α → M P)
       ⟨a, f, f', xeq.symm ▸ ux'eq, yeq.symm ▸ vx'eq, h'⟩)
     _ _ ⟨x, Qx, rfl, rfl⟩
 #align pfunctor.M.bisim' PFunctor.M.bisim'
+-/
 
 #print PFunctor.M.bisim_equiv /-
 -- for the record, show M_bisim follows from _bisim'

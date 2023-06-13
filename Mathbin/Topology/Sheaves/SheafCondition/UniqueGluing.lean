@@ -75,20 +75,25 @@ attribute [local instance] concrete_category.has_coe_to_sort concrete_category.h
 
 variable {X : TopCat.{w}} (F : Presheaf C X) {ι : Type w} (U : ι → Opens X)
 
+#print TopCat.Presheaf.IsCompatible /-
 /-- A family of sections `sf` is compatible, if the restrictions of `sf i` and `sf j` to `U i ⊓ U j`
 agree, for all `i` and `j`
 -/
 def IsCompatible (sf : ∀ i : ι, F.obj (op (U i))) : Prop :=
   ∀ i j : ι, F.map (inf_le_left (U i) (U j)).op (sf i) = F.map (inf_le_right (U i) (U j)).op (sf j)
 #align Top.presheaf.is_compatible TopCat.Presheaf.IsCompatible
+-/
 
+#print TopCat.Presheaf.IsGluing /-
 /-- A section `s` is a gluing for a family of sections `sf` if it restricts to `sf i` on `U i`,
 for all `i`
 -/
 def IsGluing (sf : ∀ i : ι, F.obj (op (U i))) (s : F.obj (op (iSup U))) : Prop :=
   ∀ i : ι, F.map (Opens.leSupr U i).op s = sf i
 #align Top.presheaf.is_gluing TopCat.Presheaf.IsGluing
+-/
 
+#print TopCat.Presheaf.IsSheafUniqueGluing /-
 /--
 The sheaf condition in terms of unique gluings. A presheaf `F : presheaf C X` satisfies this sheaf
 condition if and only if, for every compatible family of sections `sf : Π i : ι, F.obj (op (U i))`,
@@ -101,6 +106,7 @@ def IsSheafUniqueGluing : Prop :=
   ∀ ⦃ι : Type w⦄ (U : ι → Opens X) (sf : ∀ i : ι, F.obj (op (U i))),
     IsCompatible F U sf → ∃! s : F.obj (op (iSup U)), IsGluing F U sf s
 #align Top.presheaf.is_sheaf_unique_gluing TopCat.Presheaf.IsSheafUniqueGluing
+-/
 
 end
 
@@ -108,6 +114,7 @@ section TypeValued
 
 variable {X : TopCat.{w}} (F : Presheaf (Type max w v) X) {ι : Type w} (U : ι → Opens X)
 
+#print TopCat.Presheaf.piOpensIsoSectionsFamily /-
 /-- For presheaves of types, terms of `pi_opens F U` are just families of sections.
 -/
 def piOpensIsoSectionsFamily : piOpens F U ≅ ∀ i : ι, F.obj (op (U i)) :=
@@ -115,7 +122,9 @@ def piOpensIsoSectionsFamily : piOpens F U ≅ ∀ i : ι, F.obj (op (U i)) :=
     (limit.isLimit (Discrete.functor fun i : ι => F.obj (op (U i))))
     (Types.productLimitCone.{w, max w v} fun i : ι => F.obj (op (U i))).IsLimit
 #align Top.presheaf.pi_opens_iso_sections_family TopCat.Presheaf.piOpensIsoSectionsFamily
+-/
 
+#print TopCat.Presheaf.compatible_iff_leftRes_eq_rightRes /-
 /-- Under the isomorphism `pi_opens_iso_sections_family`, compatibility of sections is the same
 as being equalized by the arrows `left_res` and `right_res` of the equalizer diagram.
 -/
@@ -132,7 +141,9 @@ theorem compatible_iff_leftRes_eq_rightRes (sf : piOpens F U) :
     · rw [left_res, types.pi_lift_π_apply]; rfl
     · rw [right_res, types.pi_lift_π_apply]; rfl
 #align Top.presheaf.compatible_iff_left_res_eq_right_res TopCat.Presheaf.compatible_iff_leftRes_eq_rightRes
+-/
 
+#print TopCat.Presheaf.isGluing_iff_eq_res /-
 /-- Under the isomorphism `pi_opens_iso_sections_family`, being a gluing of a family of
 sections `sf` is the same as lying in the preimage of `res` (the leftmost arrow of the
 equalizer diagram).
@@ -150,7 +161,9 @@ theorem isGluing_iff_eq_res (sf : piOpens F U) (s : F.obj (op (iSup U))) :
     rw [res, types.pi_lift_π_apply]
     rfl
 #align Top.presheaf.is_gluing_iff_eq_res TopCat.Presheaf.isGluing_iff_eq_res
+-/
 
+#print TopCat.Presheaf.isSheaf_of_isSheafUniqueGluing_types /-
 /-- The "equalizer" sheaf condition can be obtained from the sheaf condition
 in terms of unique gluings.
 -/
@@ -178,7 +191,9 @@ theorem isSheaf_of_isSheafUniqueGluing_types (Fsh : F.IsSheafUniqueGluing) : F.I
     rw [is_gluing_iff_eq_res]
     exact congr_fun hl x
 #align Top.presheaf.is_sheaf_of_is_sheaf_unique_gluing_types TopCat.Presheaf.isSheaf_of_isSheafUniqueGluing_types
+-/
 
+#print TopCat.Presheaf.isSheafUniqueGluing_of_isSheaf_types /-
 /-- The sheaf condition in terms of unique gluings can be obtained from the usual
 "equalizer" sheaf condition.
 -/
@@ -201,13 +216,16 @@ theorem isSheafUniqueGluing_of_isSheaf_types (Fsh : F.IsSheaf) : F.IsSheafUnique
     convert hy
     rw [inv_hom_id_apply]
 #align Top.presheaf.is_sheaf_unique_gluing_of_is_sheaf_types TopCat.Presheaf.isSheafUniqueGluing_of_isSheaf_types
+-/
 
+#print TopCat.Presheaf.isSheaf_iff_isSheafUniqueGluing_types /-
 /-- For type-valued presheaves, the sheaf condition in terms of unique gluings is equivalent to the
 usual sheaf condition in terms of equalizer diagrams.
 -/
 theorem isSheaf_iff_isSheafUniqueGluing_types : F.IsSheaf ↔ F.IsSheafUniqueGluing :=
   Iff.intro (isSheafUniqueGluing_of_isSheaf_types F) (isSheaf_of_isSheafUniqueGluing_types F)
 #align Top.presheaf.is_sheaf_iff_is_sheaf_unique_gluing_types TopCat.Presheaf.isSheaf_iff_isSheafUniqueGluing_types
+-/
 
 end TypeValued
 
@@ -220,6 +238,7 @@ variable [HasLimitsOfSize.{w, w} C] [ReflectsIsomorphisms (forget C)]
 
 variable {X : TopCat.{w}} (F : Presheaf C X) {ι : Type w} (U : ι → Opens X)
 
+#print TopCat.Presheaf.isSheaf_iff_isSheafUniqueGluing /-
 /-- For presheaves valued in a concrete category, whose forgetful functor reflects isomorphisms and
 preserves limits, the sheaf condition in terms of unique gluings is equivalent to the usual one
 in terms of equalizer diagrams.
@@ -228,6 +247,7 @@ theorem isSheaf_iff_isSheafUniqueGluing : F.IsSheaf ↔ F.IsSheafUniqueGluing :=
   Iff.trans (isSheaf_iff_isSheaf_comp (forget C) F)
     (isSheaf_iff_isSheafUniqueGluing_types (F ⋙ forget C))
 #align Top.presheaf.is_sheaf_iff_is_sheaf_unique_gluing TopCat.Presheaf.isSheaf_iff_isSheafUniqueGluing
+-/
 
 end
 
@@ -249,13 +269,16 @@ variable [PreservesLimitsOfSize.{w, w} (ConcreteCategory.forget C)]
 
 variable {X : TopCat.{w}} (F : Sheaf C X) {ι : Type w} (U : ι → Opens X)
 
+#print TopCat.Sheaf.existsUnique_gluing /-
 /-- A more convenient way of obtaining a unique gluing of sections for a sheaf.
 -/
 theorem existsUnique_gluing (sf : ∀ i : ι, F.1.obj (op (U i))) (h : IsCompatible F.1 U sf) :
     ∃! s : F.1.obj (op (iSup U)), IsGluing F.1 U sf s :=
   (isSheaf_iff_isSheafUniqueGluing F.1).mp F.cond U sf h
 #align Top.sheaf.exists_unique_gluing TopCat.Sheaf.existsUnique_gluing
+-/
 
+#print TopCat.Sheaf.existsUnique_gluing' /-
 /-- In this version of the lemma, the inclusion homs `iUV` can be specified directly by the user,
 which can be more convenient in practice.
 -/
@@ -275,7 +298,9 @@ theorem existsUnique_gluing' (V : Opens X) (iUV : ∀ i : ι, U i ⟶ V) (hcover
     · rw [eq_to_hom_op, eq_to_hom_op, eq_to_hom_trans, eq_to_hom_refl, F.1.map_id, id_apply]
     · convert gl'_spec i
 #align Top.sheaf.exists_unique_gluing' TopCat.Sheaf.existsUnique_gluing'
+-/
 
+#print TopCat.Sheaf.eq_of_locally_eq /-
 @[ext]
 theorem eq_of_locally_eq (s t : F.1.obj (op (iSup U)))
     (h : ∀ i, F.1.map (Opens.leSupr U i).op s = F.1.map (Opens.leSupr U i).op t) : s = t :=
@@ -288,7 +313,9 @@ theorem eq_of_locally_eq (s t : F.1.obj (op (iSup U)))
   · apply gl_uniq; intro i; rfl
   · symm; apply gl_uniq; intro i; rw [← h]
 #align Top.sheaf.eq_of_locally_eq TopCat.Sheaf.eq_of_locally_eq
+-/
 
+#print TopCat.Sheaf.eq_of_locally_eq' /-
 /-- In this version of the lemma, the inclusion homs `iUV` can be specified directly by the user,
 which can be more convenient in practice.
 -/
@@ -305,7 +332,9 @@ theorem eq_of_locally_eq' (V : Opens X) (iUV : ∀ i : ι, U i ⟶ V) (hcover : 
   rw [← comp_apply, ← comp_apply, ← F.1.map_comp]
   convert h i
 #align Top.sheaf.eq_of_locally_eq' TopCat.Sheaf.eq_of_locally_eq'
+-/
 
+#print TopCat.Sheaf.eq_of_locally_eq₂ /-
 theorem eq_of_locally_eq₂ {U₁ U₂ V : Opens X} (i₁ : U₁ ⟶ V) (i₂ : U₂ ⟶ V) (hcover : V ≤ U₁ ⊔ U₂)
     (s t : F.1.obj (op V)) (h₁ : F.1.map i₁.op s = F.1.map i₁.op t)
     (h₂ : F.1.map i₂.op s = F.1.map i₂.op t) : s = t := by
@@ -317,6 +346,7 @@ theorem eq_of_locally_eq₂ {U₁ U₂ V : Opens X} (i₁ : U₁ ⟶ V) (i₂ : 
     · convert le_iSup (fun t : ULift Bool => if t.1 then U₁ else U₂) (ULift.up False)
   · rintro ⟨_ | _⟩ <;> simp [h₁, h₂]
 #align Top.sheaf.eq_of_locally_eq₂ TopCat.Sheaf.eq_of_locally_eq₂
+-/
 
 end
 

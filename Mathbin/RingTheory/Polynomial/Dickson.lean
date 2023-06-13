@@ -72,10 +72,12 @@ noncomputable def dickson : ℕ → R[X]
 #align polynomial.dickson Polynomial.dickson
 -/
 
+#print Polynomial.dickson_zero /-
 @[simp]
 theorem dickson_zero : dickson k a 0 = 3 - k :=
   rfl
 #align polynomial.dickson_zero Polynomial.dickson_zero
+-/
 
 #print Polynomial.dickson_one /-
 @[simp]
@@ -84,14 +86,19 @@ theorem dickson_one : dickson k a 1 = X :=
 #align polynomial.dickson_one Polynomial.dickson_one
 -/
 
+#print Polynomial.dickson_two /-
 theorem dickson_two : dickson k a 2 = X ^ 2 - C a * (3 - k) := by simp only [dickson, sq]
 #align polynomial.dickson_two Polynomial.dickson_two
+-/
 
+#print Polynomial.dickson_add_two /-
 @[simp]
 theorem dickson_add_two (n : ℕ) :
     dickson k a (n + 2) = X * dickson k a (n + 1) - C a * dickson k a n := by rw [dickson]
 #align polynomial.dickson_add_two Polynomial.dickson_add_two
+-/
 
+#print Polynomial.dickson_of_two_le /-
 theorem dickson_of_two_le {n : ℕ} (h : 2 ≤ n) :
     dickson k a n = X * dickson k a (n - 1) - C a * dickson k a (n - 2) :=
   by
@@ -99,9 +106,11 @@ theorem dickson_of_two_le {n : ℕ} (h : 2 ≤ n) :
   rw [add_comm]
   exact dickson_add_two k a n
 #align polynomial.dickson_of_two_le Polynomial.dickson_of_two_le
+-/
 
 variable {R S k a}
 
+#print Polynomial.map_dickson /-
 theorem map_dickson (f : R →+* S) : ∀ n : ℕ, map f (dickson k a n) = dickson k (f a) n
   | 0 => by
     simp only [dickson_zero, Polynomial.map_sub, Polynomial.map_nat_cast, bit1, bit0,
@@ -112,9 +121,11 @@ theorem map_dickson (f : R →+* S) : ∀ n : ℕ, map f (dickson k a n) = dicks
     simp only [dickson_add_two, Polynomial.map_sub, Polynomial.map_mul, map_X, map_C]
     rw [map_dickson, map_dickson]
 #align polynomial.map_dickson Polynomial.map_dickson
+-/
 
 variable {R}
 
+#print Polynomial.dickson_two_zero /-
 @[simp]
 theorem dickson_two_zero : ∀ n : ℕ, dickson 2 (0 : R) n = X ^ n
   | 0 => by simp only [dickson_zero, pow_zero]; norm_num
@@ -123,6 +134,7 @@ theorem dickson_two_zero : ∀ n : ℕ, dickson 2 (0 : R) n = X ^ n
     simp only [dickson_add_two, C_0, MulZeroClass.zero_mul, sub_zero]
     rw [dickson_two_zero, pow_add X (n + 1) 1, mul_comm, pow_one]
 #align polynomial.dickson_two_zero Polynomial.dickson_two_zero
+-/
 
 section Dickson
 
@@ -140,6 +152,7 @@ There is exactly one other Lambda structure on `ℤ[X]` in terms of binomial pol
 
 variable {R}
 
+#print Polynomial.dickson_one_one_eval_add_inv /-
 theorem dickson_one_one_eval_add_inv (x y : R) (h : x * y = 1) :
     ∀ n, (dickson 1 (1 : R) n).eval (x + y) = x ^ n + y ^ n
   | 0 => by simp only [bit0, eval_one, eval_add, pow_zero, dickson_zero]; norm_num
@@ -151,9 +164,11 @@ theorem dickson_one_one_eval_add_inv (x y : R) (h : x * y = 1) :
     conv_lhs => simp only [pow_succ, add_mul, mul_add, h, ← mul_assoc, mul_comm y x, one_mul]
     ring
 #align polynomial.dickson_one_one_eval_add_inv Polynomial.dickson_one_one_eval_add_inv
+-/
 
 variable (R)
 
+#print Polynomial.dickson_one_one_eq_chebyshev_T /-
 theorem dickson_one_one_eq_chebyshev_T [Invertible (2 : R)] :
     ∀ n, dickson 1 (1 : R) n = 2 * (Chebyshev.T R n).comp (C (⅟ 2) * X)
   | 0 => by simp only [chebyshev.T_zero, mul_one, one_comp, dickson_zero]; norm_num
@@ -168,7 +183,9 @@ theorem dickson_one_one_eq_chebyshev_T [Invertible (2 : R)] :
     rw [C_1, one_mul]
     ring
 #align polynomial.dickson_one_one_eq_chebyshev_T Polynomial.dickson_one_one_eq_chebyshev_T
+-/
 
+#print Polynomial.chebyshev_T_eq_dickson_one_one /-
 theorem chebyshev_T_eq_dickson_one_one [Invertible (2 : R)] (n : ℕ) :
     Chebyshev.T R n = C (⅟ 2) * (dickson 1 1 n).comp (2 * X) :=
   by
@@ -176,7 +193,9 @@ theorem chebyshev_T_eq_dickson_one_one [Invertible (2 : R)] (n : ℕ) :
   simp only [comp_assoc, mul_comp, C_comp, X_comp, ← mul_assoc, ← C_1, ← C_bit0, ← C_mul]
   rw [invOf_mul_self, C_1, one_mul, one_mul, comp_X]
 #align polynomial.chebyshev_T_eq_dickson_one_one Polynomial.chebyshev_T_eq_dickson_one_one
+-/
 
+#print Polynomial.dickson_one_one_mul /-
 /-- The `(m * n)`-th Dickson polynomial of the first kind is the composition of the `m`-th and
 `n`-th. -/
 theorem dickson_one_one_mul (m n : ℕ) :
@@ -196,12 +215,16 @@ theorem dickson_one_one_mul (m n : ℕ) :
   apply eval₂_congr rfl _ rfl
   rw [mul_comp, C_comp, X_comp, ← mul_assoc, ← C_1, ← C_bit0, ← C_mul, invOf_mul_self, C_1, one_mul]
 #align polynomial.dickson_one_one_mul Polynomial.dickson_one_one_mul
+-/
 
+#print Polynomial.dickson_one_one_comp_comm /-
 theorem dickson_one_one_comp_comm (m n : ℕ) :
     (dickson 1 (1 : R) m).comp (dickson 1 1 n) = (dickson 1 1 n).comp (dickson 1 1 m) := by
   rw [← dickson_one_one_mul, mul_comm, dickson_one_one_mul]
 #align polynomial.dickson_one_one_comp_comm Polynomial.dickson_one_one_comp_comm
+-/
 
+#print Polynomial.dickson_one_one_zmod_p /-
 theorem dickson_one_one_zmod_p (p : ℕ) [Fact p.Prime] : dickson 1 (1 : ZMod p) p = X ^ p :=
   by
   -- Recall that `dickson_eval_add_inv` characterises `dickson 1 1 p`
@@ -272,7 +295,9 @@ theorem dickson_one_one_zmod_p (p : ℕ) [Fact p.Prime] : dickson 1 (1 : ZMod p)
       · simp only [hx, or_false_iff, exists_eq_right]
         exact ⟨_, rfl, hx⟩
 #align polynomial.dickson_one_one_zmod_p Polynomial.dickson_one_one_zmod_p
+-/
 
+#print Polynomial.dickson_one_one_charP /-
 theorem dickson_one_one_charP (p : ℕ) [Fact p.Prime] [CharP R p] : dickson 1 (1 : R) p = X ^ p :=
   by
   have h : (1 : R) = ZMod.castHom (dvd_refl p) R 1
@@ -280,6 +305,7 @@ theorem dickson_one_one_charP (p : ℕ) [Fact p.Prime] [CharP R p] : dickson 1 (
   rw [h, ← map_dickson (ZMod.castHom (dvd_refl p) R), dickson_one_one_zmod_p, Polynomial.map_pow,
     map_X]
 #align polynomial.dickson_one_one_char_p Polynomial.dickson_one_one_charP
+-/
 
 end Dickson
 

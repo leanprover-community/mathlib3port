@@ -47,6 +47,7 @@ theorem isPrimePow_iff_pow_succ : IsPrimePow n ↔ ∃ (p : R) (k : ℕ), Prime 
 #align is_prime_pow_iff_pow_succ isPrimePow_iff_pow_succ
 -/
 
+#print not_isPrimePow_zero /-
 theorem not_isPrimePow_zero [NoZeroDivisors R] : ¬IsPrimePow (0 : R) :=
   by
   simp only [isPrimePow_def, not_exists, not_and', and_imp]
@@ -54,6 +55,7 @@ theorem not_isPrimePow_zero [NoZeroDivisors R] : ¬IsPrimePow (0 : R) :=
   rw [pow_eq_zero hx]
   simp
 #align not_is_prime_pow_zero not_isPrimePow_zero
+-/
 
 #print IsPrimePow.not_unit /-
 theorem IsPrimePow.not_unit {n : R} (h : IsPrimePow n) : ¬IsUnit n :=
@@ -67,9 +69,11 @@ theorem IsUnit.not_isPrimePow {n : R} (h : IsUnit n) : ¬IsPrimePow n := fun h' 
 #align is_unit.not_is_prime_pow IsUnit.not_isPrimePow
 -/
 
+#print not_isPrimePow_one /-
 theorem not_isPrimePow_one : ¬IsPrimePow (1 : R) :=
   isUnit_one.not_isPrimePow
 #align not_is_prime_pow_one not_isPrimePow_one
+-/
 
 #print Prime.isPrimePow /-
 theorem Prime.isPrimePow {p : R} (hp : Prime p) : IsPrimePow p :=
@@ -84,13 +88,17 @@ theorem IsPrimePow.pow {n : R} (hn : IsPrimePow n) {k : ℕ} (hk : k ≠ 0) : Is
 #align is_prime_pow.pow IsPrimePow.pow
 -/
 
+#print IsPrimePow.ne_zero /-
 theorem IsPrimePow.ne_zero [NoZeroDivisors R] {n : R} (h : IsPrimePow n) : n ≠ 0 := fun t =>
   Eq.ndrec not_isPrimePow_zero t.symm h
 #align is_prime_pow.ne_zero IsPrimePow.ne_zero
+-/
 
+#print IsPrimePow.ne_one /-
 theorem IsPrimePow.ne_one {n : R} (h : IsPrimePow n) : n ≠ 1 := fun t =>
   Eq.ndrec not_isPrimePow_one t.symm h
 #align is_prime_pow.ne_one IsPrimePow.ne_one
+-/
 
 section Nat
 
@@ -134,6 +142,7 @@ theorem IsPrimePow.dvd {n m : ℕ} (hn : IsPrimePow n) (hm : m ∣ n) (hm₁ : m
 #align is_prime_pow.dvd IsPrimePow.dvd
 -/
 
+#print Nat.disjoint_divisors_filter_isPrimePow /-
 theorem Nat.disjoint_divisors_filter_isPrimePow {a b : ℕ} (hab : a.coprime b) :
     Disjoint (a.divisors.filterₓ IsPrimePow) (b.divisors.filterₓ IsPrimePow) :=
   by
@@ -141,6 +150,7 @@ theorem Nat.disjoint_divisors_filter_isPrimePow {a b : ℕ} (hab : a.coprime b) 
   rintro n han ha hn hbn hb -
   exact hn.ne_one (Nat.eq_one_of_dvd_coprimes hab han hbn)
 #align nat.disjoint_divisors_filter_prime_pow Nat.disjoint_divisors_filter_isPrimePow
+-/
 
 #print IsPrimePow.two_le /-
 theorem IsPrimePow.two_le : ∀ {n : ℕ}, IsPrimePow n → 2 ≤ n

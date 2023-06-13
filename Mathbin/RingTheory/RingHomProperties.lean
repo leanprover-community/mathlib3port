@@ -37,8 +37,6 @@ namespace RingHom
 
 variable (P : ∀ {R S : Type u} [CommRing R] [CommRing S] (f : R →+* S), Prop)
 
-include P
-
 section RespectsIso
 
 #print RingHom.RespectsIso /-
@@ -71,6 +69,7 @@ theorem RespectsIso.cancel_right_isIso (hP : RespectsIso @P) {R S T : CommRingCa
 #align ring_hom.respects_iso.cancel_right_is_iso RingHom.RespectsIso.cancel_right_isIso
 -/
 
+#print RingHom.RespectsIso.is_localization_away_iff /-
 theorem RespectsIso.is_localization_away_iff (hP : RingHom.RespectsIso @P) {R S : Type _}
     (R' S' : Type _) [CommRing R] [CommRing S] [CommRing R'] [CommRing S'] [Algebra R R']
     [Algebra S S'] (f : R →+* S) (r : R) [IsLocalization.Away r R'] [IsLocalization.Away (f r) S'] :
@@ -93,6 +92,7 @@ theorem RespectsIso.is_localization_away_iff (hP : RingHom.RespectsIso @P) {R S 
     IsLocalization.ringEquivOfRingEquiv_apply, RingHom.coe_mk, RingEquiv.toFun_eq_coe,
     IsLocalization.ringEquivOfRingEquiv_eq, IsLocalization.map_eq]
 #align ring_hom.respects_iso.is_localization_away_iff RingHom.RespectsIso.is_localization_away_iff
+-/
 
 end RespectsIso
 
@@ -109,6 +109,7 @@ def StableUnderComposition : Prop :=
 
 variable {P}
 
+#print RingHom.StableUnderComposition.respectsIso /-
 theorem StableUnderComposition.respectsIso (hP : RingHom.StableUnderComposition @P)
     (hP' : ∀ {R S : Type _} [CommRing R] [CommRing S] (e : R ≃+* S), P e.to_ring_hom) :
     RingHom.RespectsIso @P := by
@@ -116,6 +117,7 @@ theorem StableUnderComposition.respectsIso (hP : RingHom.StableUnderComposition 
   · introv H; skip; apply hP; exacts [H, hP' e]
   · introv H; skip; apply hP; exacts [hP' e, H]
 #align ring_hom.stable_under_composition.respects_iso RingHom.StableUnderComposition.respectsIso
+-/
 
 end StableUnderComposition
 
@@ -132,6 +134,7 @@ def StableUnderBaseChange : Prop :=
 #align ring_hom.stable_under_base_change RingHom.StableUnderBaseChange
 -/
 
+#print RingHom.StableUnderBaseChange.mk /-
 theorem StableUnderBaseChange.mk (h₁ : RespectsIso @P)
     (h₂ :
       ∀ ⦃R S T⦄ [CommRing R] [CommRing S] [CommRing T],
@@ -163,8 +166,7 @@ theorem StableUnderBaseChange.mk (h₁ : RespectsIso @P)
     dsimp only [e]
     rw [h.symm.1.equiv_tmul, Algebra.smul_def, AlgHom.toLinearMap_apply, map_one, mul_one]
 #align ring_hom.stable_under_base_change.mk RingHom.StableUnderBaseChange.mk
-
-omit P
+-/
 
 attribute [local instance] Algebra.TensorProduct.rightAlgebra
 

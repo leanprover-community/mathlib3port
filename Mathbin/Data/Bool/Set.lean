@@ -39,10 +39,12 @@ theorem range_eq {α : Type _} (f : Bool → α) : range f = {f false, f true} :
 #align bool.range_eq Bool.range_eq
 -/
 
+#print Bool.compl_singleton /-
 @[simp]
 theorem compl_singleton (b : Bool) : ({b}ᶜ : Set Bool) = {!b} :=
   ext fun _ => eq_not_iff.symm
 #align bool.compl_singleton Bool.compl_singleton
+-/
 
 end Bool
 

@@ -44,7 +44,7 @@ section Basic
 variable [Semiring R] [AddCommMonoid M] [Module R M]
 
 #print Module.Free /-
-/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`exists_basis] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`exists_basis] [] -/
 /-- `module.free R M` is the statement that the `R`-module `M` is free.-/
 class Module.Free : Prop where
   exists_basis : Nonempty (Σ I : Type v, Basis I R M)
@@ -106,10 +106,12 @@ noncomputable def chooseBasis : Basis (ChooseBasisIndex R M) R M :=
 #align module.free.choose_basis Module.Free.chooseBasis
 -/
 
+#print Module.Free.repr /-
 /-- The isomorphism `M ≃ₗ[R] (choose_basis_index R M →₀ R)`. -/
 noncomputable def repr : M ≃ₗ[R] ChooseBasisIndex R M →₀ R :=
   (chooseBasis R M).repr
 #align module.free.repr Module.Free.repr
+-/
 
 #print Module.Free.constr /-
 /-- The universal property of free modules: giving a functon `(choose_basis_index R M) → N`, for `N`
@@ -126,10 +128,12 @@ noncomputable def constr {S : Type z} [Semiring S] [Module S N] [SMulCommClass R
 #align module.free.constr Module.Free.constr
 -/
 
+#print Module.Free.noZeroSMulDivisors /-
 instance (priority := 100) noZeroSMulDivisors [NoZeroDivisors R] : NoZeroSMulDivisors R M :=
   let ⟨⟨_, b⟩⟩ := exists_basis R M
   b.NoZeroSMulDivisors
 #align module.free.no_zero_smul_divisors Module.Free.noZeroSMulDivisors
+-/
 
 instance [Nontrivial M] : Nonempty (Module.Free.ChooseBasisIndex R M) :=
   (Module.Free.chooseBasis R M).index_nonempty
@@ -160,9 +164,11 @@ instance self : Module.Free R R :=
 #align module.free.self Module.Free.self
 -/
 
+#print Module.Free.prod /-
 instance prod [Module.Free R N] : Module.Free R (M × N) :=
   of_basis <| (chooseBasis R M).Prod (chooseBasis R N)
 #align module.free.prod Module.Free.prod
+-/
 
 #print Module.Free.pi /-
 /-- The product of finitely many free modules is free. -/
@@ -190,25 +196,33 @@ instance function [Finite ι] : Module.Free R (ι → M) :=
 #align module.free.function Module.Free.function
 -/
 
+#print Module.Free.finsupp /-
 instance finsupp : Module.Free R (ι →₀ M) :=
   of_basis (Finsupp.basis fun i => chooseBasis R M)
 #align module.free.finsupp Module.Free.finsupp
+-/
 
 variable {ι}
 
+#print Module.Free.of_subsingleton /-
 instance (priority := 100) of_subsingleton [Subsingleton N] : Module.Free R N :=
   of_basis (Basis.empty N : Basis PEmpty R N)
 #align module.free.of_subsingleton Module.Free.of_subsingleton
+-/
 
+#print Module.Free.of_subsingleton' /-
 instance (priority := 100) of_subsingleton' [Subsingleton R] : Module.Free R N :=
   letI := Module.subsingleton R N
   Module.Free.of_subsingleton R N
 #align module.free.of_subsingleton' Module.Free.of_subsingleton'
+-/
 
+#print Module.Free.dfinsupp /-
 instance dfinsupp {ι : Type _} (M : ι → Type _) [∀ i : ι, AddCommMonoid (M i)]
     [∀ i : ι, Module R (M i)] [∀ i : ι, Module.Free R (M i)] : Module.Free R (Π₀ i, M i) :=
   of_basis <| Dfinsupp.basis fun i => chooseBasis R (M i)
 #align module.free.dfinsupp Module.Free.dfinsupp
+-/
 
 #print Module.Free.directSum /-
 instance directSum {ι : Type _} (M : ι → Type _) [∀ i : ι, AddCommMonoid (M i)]
@@ -225,11 +239,13 @@ variable [CommRing R] [AddCommGroup M] [Module R M] [Module.Free R M]
 
 variable [AddCommGroup N] [Module R N] [Module.Free R N]
 
+#print Module.Free.tensor /-
 instance tensor : Module.Free R (M ⊗[R] N) :=
   let ⟨bM⟩ := exists_basis R M
   let ⟨bN⟩ := exists_basis R N
   of_basis (bM.2.TensorProduct bN.2)
 #align module.free.tensor Module.Free.tensor
+-/
 
 end CommRing
 

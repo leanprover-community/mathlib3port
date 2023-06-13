@@ -107,10 +107,6 @@ variable [dec : ∀ x : M, Decidable (x = 0)]
 
 open Ideal Submodule.IsPrincipal
 
-include dec
-
-include hp hM
-
 theorem Ideal.torsionOf_eq_span_pow_pOrder (x : M) : torsionOf R M x = span {p ^ pOrder hM x} :=
   by
   dsimp only [p_order]
@@ -172,8 +168,6 @@ theorem exists_smul_eq_zero_and_mk_eq {z : M} (hz : Module.IsTorsionBy R M (p ^ 
 #align module.exists_smul_eq_zero_and_mk_eq Module.exists_smul_eq_zero_and_mk_eq
 
 open Finset Multiset
-
-omit dec hM
 
 /-- A finitely generated `p ^ ∞`-torsion module over a PID is isomorphic to a direct sum of some
   `R ⧸ R ∙ (p ^ e i)` for some `e i`.-/

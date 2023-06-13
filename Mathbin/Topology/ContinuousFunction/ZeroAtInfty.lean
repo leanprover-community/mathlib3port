@@ -47,10 +47,8 @@ structure ZeroAtInftyContinuousMap (α : Type u) (β : Type v) [TopologicalSpace
   zero_at_infty' : Tendsto to_fun (cocompact α) (𝓝 0)
 #align zero_at_infty_continuous_map ZeroAtInftyContinuousMap
 
--- mathport name: zero_at_infty_continuous_map
 scoped[ZeroAtInfty] notation (priority := 2000) "C₀(" α ", " β ")" => ZeroAtInftyContinuousMap α β
 
--- mathport name: zero_at_infty_continuous_map.arrow
 scoped[ZeroAtInfty] notation α " →C₀ " β => ZeroAtInftyContinuousMap α β
 
 section
@@ -594,7 +592,6 @@ category of topological spaces with morphisms given by `cocompact_map`s.
 
 variable {δ : Type _} [TopologicalSpace β] [TopologicalSpace γ] [TopologicalSpace δ]
 
--- mathport name: «expr →co »
 local notation α " →co " β => CocompactMap α β
 
 section

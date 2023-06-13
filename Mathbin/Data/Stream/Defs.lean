@@ -43,7 +43,6 @@ def cons (a : α) (s : Stream' α) : Stream' α
 #align stream.cons Stream'.cons
 -/
 
--- mathport name: stream.cons
 notation h "::" t => cons h t
 
 #print Stream'.head /-
@@ -160,7 +159,6 @@ def interleave (s₁ s₂ : Stream' α) : Stream' α :=
 #align stream.interleave Stream'.interleave
 -/
 
--- mathport name: «expr ⋈ »
 infixl:65 " ⋈ " => interleave
 
 #print Stream'.even /-
@@ -186,7 +184,6 @@ def appendStream' : List α → Stream' α → Stream' α
 #align stream.append_stream Stream'.appendStream'
 -/
 
--- mathport name: «expr ++ₛ »
 infixl:65 " ++ₛ " => appendStream'
 
 #print Stream'.take /-
@@ -256,7 +253,6 @@ def apply (f : Stream' (α → β)) (s : Stream' α) : Stream' β := fun n => (n
 #align stream.apply Stream'.apply
 -/
 
--- mathport name: «expr ⊛ »
 infixl:75 " ⊛ " => apply
 
 #print Stream'.nats /-

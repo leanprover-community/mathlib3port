@@ -74,23 +74,31 @@ instance [DecidableEq ι] [DecidableEq α] : Decidable (SupIndep s f) :=
   apply @Finset.decidableDforallFinset _ _ _ _
   exact fun i hi => @Implies.decidable _ _ _ (decidable_of_iff' (_ = ⊥) disjoint_iff)
 
+#print Finset.SupIndep.subset /-
 theorem SupIndep.subset (ht : t.SupIndep f) (h : s ⊆ t) : s.SupIndep f := fun u hu i hi =>
   ht (hu.trans h) (h hi)
 #align finset.sup_indep.subset Finset.SupIndep.subset
+-/
 
+#print Finset.supIndep_empty /-
 theorem supIndep_empty (f : ι → α) : (∅ : Finset ι).SupIndep f := fun _ _ a ha => ha.elim
 #align finset.sup_indep_empty Finset.supIndep_empty
+-/
 
+#print Finset.supIndep_singleton /-
 theorem supIndep_singleton (i : ι) (f : ι → α) : ({i} : Finset ι).SupIndep f := fun s hs j hji hj =>
   by
   rw [eq_empty_of_ssubset_singleton ⟨hs, fun h => hj (h hji)⟩, sup_empty]
   exact disjoint_bot_right
 #align finset.sup_indep_singleton Finset.supIndep_singleton
+-/
 
+#print Finset.SupIndep.pairwiseDisjoint /-
 theorem SupIndep.pairwiseDisjoint (hs : s.SupIndep f) : (s : Set ι).PairwiseDisjoint f :=
   fun a ha b hb hab =>
   sup_singleton.subst <| hs (singleton_subset_iff.2 hb) ha <| not_mem_singleton.2 hab
 #align finset.sup_indep.pairwise_disjoint Finset.SupIndep.pairwiseDisjoint
+-/
 
 #print Finset.supIndep_iff_disjoint_erase /-
 /-- The RHS looks like the definition of `complete_lattice.independent`. -/
@@ -133,13 +141,16 @@ theorem supIndep_univ_bool (f : Bool → α) :
 #align finset.sup_indep_univ_bool Finset.supIndep_univ_bool
 -/
 
+#print Finset.supIndep_univ_fin_two /-
 @[simp]
 theorem supIndep_univ_fin_two (f : Fin 2 → α) :
     (Finset.univ : Finset (Fin 2)).SupIndep f ↔ Disjoint (f 0) (f 1) :=
   haveI : (0 : Fin 2) ≠ 1 := by simp
   sup_indep_pair this
 #align finset.sup_indep_univ_fin_two Finset.supIndep_univ_fin_two
+-/
 
+#print Finset.SupIndep.attach /-
 theorem SupIndep.attach (hs : s.SupIndep f) : s.attach.SupIndep (f ∘ Subtype.val) :=
   by
   intro t ht i _ hi
@@ -150,6 +161,7 @@ theorem SupIndep.attach (hs : s.SupIndep f) : s.attach.SupIndep (f ∘ Subtype.v
   obtain ⟨j, hj, hji⟩ := hi'
   rwa [Subtype.ext hji] at hj 
 #align finset.sup_indep.attach Finset.SupIndep.attach
+-/
 
 end Lattice
 
@@ -157,16 +169,19 @@ section DistribLattice
 
 variable [DistribLattice α] [OrderBot α] {s : Finset ι} {f : ι → α}
 
+#print Finset.supIndep_iff_pairwiseDisjoint /-
 theorem supIndep_iff_pairwiseDisjoint : s.SupIndep f ↔ (s : Set ι).PairwiseDisjoint f :=
   ⟨SupIndep.pairwiseDisjoint, fun hs t ht i hi hit =>
     Finset.disjoint_sup_right.2 fun j hj => hs hi (ht hj) (ne_of_mem_of_not_mem hj hit).symm⟩
 #align finset.sup_indep_iff_pairwise_disjoint Finset.supIndep_iff_pairwiseDisjoint
+-/
 
 alias sup_indep_iff_pairwise_disjoint ↔ sup_indep.pairwise_disjoint
   _root_.set.pairwise_disjoint.sup_indep
 #align finset.sup_indep.pairwise_disjoint Finset.SupIndep.pairwiseDisjoint
 #align set.pairwise_disjoint.sup_indep Set.PairwiseDisjoint.supIndep
 
+#print Finset.SupIndep.sup /-
 /-- Bind operation for `sup_indep`. -/
 theorem SupIndep.sup [DecidableEq ι] {s : Finset ι'} {g : ι' → Finset ι} {f : ι → α}
     (hs : s.SupIndep fun i => (g i).sup f) (hg : ∀ i' ∈ s, (g i').SupIndep f) :
@@ -176,12 +191,15 @@ theorem SupIndep.sup [DecidableEq ι] {s : Finset ι'} {g : ι' → Finset ι} {
   rw [sup_eq_bUnion, coe_bUnion]
   exact hs.bUnion_finset hg
 #align finset.sup_indep.sup Finset.SupIndep.sup
+-/
 
+#print Finset.SupIndep.biUnion /-
 /-- Bind operation for `sup_indep`. -/
 theorem SupIndep.biUnion [DecidableEq ι] {s : Finset ι'} {g : ι' → Finset ι} {f : ι → α}
     (hs : s.SupIndep fun i => (g i).sup f) (hg : ∀ i' ∈ s, (g i').SupIndep f) :
     (s.biUnion g).SupIndep f := by rw [← sup_eq_bUnion]; exact hs.sup hg
 #align finset.sup_indep.bUnion Finset.SupIndep.biUnion
+-/
 
 end DistribLattice
 
@@ -241,8 +259,7 @@ theorem setIndependent_pair {a b : α} (hab : a ≠ b) :
 #align complete_lattice.set_independent_pair CompleteLattice.setIndependent_pair
 -/
 
-include hs
-
+#print CompleteLattice.SetIndependent.disjoint_sSup /-
 /-- If the elements of a set are independent, then any element is disjoint from the `Sup` of some
 subset of the rest. -/
 theorem SetIndependent.disjoint_sSup {x : α} {y : Set α} (hx : x ∈ s) (hy : y ⊆ s) (hxy : x ∉ y) :
@@ -252,8 +269,7 @@ theorem SetIndependent.disjoint_sSup {x : α} {y : Set α} (hx : x ∈ s) (hy : 
   rw [insert_diff_of_mem _ (mem_singleton _), diff_singleton_eq_self hxy] at this 
   exact this
 #align complete_lattice.set_independent.disjoint_Sup CompleteLattice.SetIndependent.disjoint_sSup
-
-omit hs
+-/
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (j «expr ≠ » i) -/
 #print CompleteLattice.Independent /-
@@ -286,19 +302,25 @@ theorem setIndependent_iff {α : Type _} [CompleteLattice α] (s : Set α) :
 variable {t : ι → α} (ht : Independent t)
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (j «expr ≠ » i) -/
+#print CompleteLattice.independent_def /-
 theorem independent_def : Independent t ↔ ∀ i : ι, Disjoint (t i) (⨆ (j) (_ : j ≠ i), t j) :=
   Iff.rfl
 #align complete_lattice.independent_def CompleteLattice.independent_def
+-/
 
+#print CompleteLattice.independent_def' /-
 theorem independent_def' : Independent t ↔ ∀ i, Disjoint (t i) (sSup (t '' {j | j ≠ i})) := by
   simp_rw [sSup_image]; rfl
 #align complete_lattice.independent_def' CompleteLattice.independent_def'
+-/
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (j «expr ≠ » i) -/
+#print CompleteLattice.independent_def'' /-
 theorem independent_def'' :
     Independent t ↔ ∀ i, Disjoint (t i) (sSup {a | ∃ (j : _) (_ : j ≠ i), t j = a}) := by
   rw [independent_def']; tidy
 #align complete_lattice.independent_def'' CompleteLattice.independent_def''
+-/
 
 #print CompleteLattice.independent_empty /-
 @[simp]
@@ -327,6 +349,7 @@ theorem Independent.mono {s t : ι → α} (hs : Independent s) (hst : t ≤ s) 
 #align complete_lattice.independent.mono CompleteLattice.Independent.mono
 -/
 
+#print CompleteLattice.Independent.comp /-
 /-- Composing an independent indexed family with an injective function on the index results in
 another indepedendent indexed family. -/
 theorem Independent.comp {ι ι' : Sort _} {t : ι → α} {f : ι' → ι} (ht : Independent t)
@@ -336,7 +359,9 @@ theorem Independent.comp {ι ι' : Sort _} {t : ι → α} {f : ι' → ι} (ht 
     refine' (iSup_mono fun i => _).trans (iSup_comp_le _ f)
     exact iSup_const_mono hf.ne
 #align complete_lattice.independent.comp CompleteLattice.Independent.comp
+-/
 
+#print CompleteLattice.Independent.comp' /-
 theorem Independent.comp' {ι ι' : Sort _} {t : ι → α} {f : ι' → ι} (ht : Independent <| t ∘ f)
     (hf : Surjective f) : Independent t := by
   intro i
@@ -344,6 +369,7 @@ theorem Independent.comp' {ι ι' : Sort _} {t : ι → α} {f : ι' → ι} (ht
   rw [← hf.supr_comp]
   exact (ht i').mono_right (biSup_mono fun j' hij => mt (congr_arg f) hij)
 #align complete_lattice.independent.comp' CompleteLattice.Independent.comp'
+-/
 
 #print CompleteLattice.Independent.setIndependent_range /-
 theorem Independent.setIndependent_range (ht : Independent t) : SetIndependent <| range t :=
@@ -354,6 +380,7 @@ theorem Independent.setIndependent_range (ht : Independent t) : SetIndependent <
 #align complete_lattice.independent.set_independent_range CompleteLattice.Independent.setIndependent_range
 -/
 
+#print CompleteLattice.Independent.injective /-
 theorem Independent.injective (ht : Independent t) (h_ne_bot : ∀ i, t i ≠ ⊥) : Injective t :=
   by
   intro i j h
@@ -366,6 +393,7 @@ theorem Independent.injective (ht : Independent t) (h_ne_bot : ∀ i, t i ≠ �
   replace contra : j ≠ i; · exact Ne.symm contra
   exact le_iSup₂ j contra
 #align complete_lattice.independent.injective CompleteLattice.Independent.injective
+-/
 
 #print CompleteLattice.independent_pair /-
 theorem independent_pair {i j : ι} (hij : i ≠ j) (huniv : ∀ k, k = i ∨ k = j) :
@@ -381,13 +409,16 @@ theorem independent_pair {i j : ι} (hij : i ≠ j) (huniv : ∀ k, k = i ∨ k 
 #align complete_lattice.independent_pair CompleteLattice.independent_pair
 -/
 
+#print CompleteLattice.Independent.map_orderIso /-
 /-- Composing an indepedent indexed family with an order isomorphism on the elements results in
 another indepedendent indexed family. -/
 theorem Independent.map_orderIso {ι : Sort _} {α β : Type _} [CompleteLattice α] [CompleteLattice β]
     (f : α ≃o β) {a : ι → α} (ha : Independent a) : Independent (f ∘ a) := fun i =>
   ((ha i).map_orderIso f).mono_right (f.Monotone.le_map_iSup₂ _)
 #align complete_lattice.independent.map_order_iso CompleteLattice.Independent.map_orderIso
+-/
 
+#print CompleteLattice.independent_map_orderIso_iff /-
 @[simp]
 theorem independent_map_orderIso_iff {ι : Sort _} {α β : Type _} [CompleteLattice α]
     [CompleteLattice β] (f : α ≃o β) {a : ι → α} : Independent (f ∘ a) ↔ Independent a :=
@@ -396,16 +427,20 @@ theorem independent_map_orderIso_iff {ι : Sort _} {α β : Type _} [CompleteLat
     hf ▸ h.map_orderIso f.symm,
     fun h => h.map_orderIso f⟩
 #align complete_lattice.independent_map_order_iso_iff CompleteLattice.independent_map_orderIso_iff
+-/
 
+#print CompleteLattice.Independent.disjoint_biSup /-
 /-- If the elements of a set are independent, then any element is disjoint from the `supr` of some
 subset of the rest. -/
 theorem Independent.disjoint_biSup {ι : Type _} {α : Type _} [CompleteLattice α] {t : ι → α}
     (ht : Independent t) {x : ι} {y : Set ι} (hx : x ∉ y) : Disjoint (t x) (⨆ i ∈ y, t i) :=
   Disjoint.mono_right (biSup_mono fun i hi => (ne_of_mem_of_not_mem hi hx : _)) (ht x)
 #align complete_lattice.independent.disjoint_bsupr CompleteLattice.Independent.disjoint_biSup
+-/
 
 end CompleteLattice
 
+#print CompleteLattice.independent_iff_supIndep /-
 theorem CompleteLattice.independent_iff_supIndep [CompleteLattice α] {s : Finset ι} {f : ι → α} :
     CompleteLattice.Independent (f ∘ (coe : s → ι)) ↔ s.SupIndep f := by
   classical
@@ -417,18 +452,21 @@ theorem CompleteLattice.independent_iff_supIndep [CompleteLattice α] {s : Finse
   congr 1 with x
   simp [iSup_and, @iSup_comm _ (x ∈ s)]
 #align complete_lattice.independent_iff_sup_indep CompleteLattice.independent_iff_supIndep
+-/
 
 alias CompleteLattice.independent_iff_supIndep ↔ CompleteLattice.Independent.supIndep
   Finset.SupIndep.independent
 #align complete_lattice.independent.sup_indep CompleteLattice.Independent.supIndep
 #align finset.sup_indep.independent Finset.SupIndep.independent
 
+#print CompleteLattice.independent_iff_supIndep_univ /-
 /-- A variant of `complete_lattice.independent_iff_sup_indep` for `fintype`s. -/
 theorem CompleteLattice.independent_iff_supIndep_univ [CompleteLattice α] [Fintype ι] {f : ι → α} :
     CompleteLattice.Independent f ↔ Finset.univ.SupIndep f := by
   classical simp [Finset.supIndep_iff_disjoint_erase, CompleteLattice.Independent,
     Finset.sup_eq_iSup]
 #align complete_lattice.independent_iff_sup_indep_univ CompleteLattice.independent_iff_supIndep_univ
+-/
 
 alias CompleteLattice.independent_iff_supIndep_univ ↔ CompleteLattice.Independent.sup_indep_univ
   Finset.SupIndep.independent_of_univ

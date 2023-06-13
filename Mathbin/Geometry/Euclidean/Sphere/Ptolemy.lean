@@ -53,8 +53,6 @@ variable {V : Type _} [NormedAddCommGroup V] [InnerProductSpace ℝ V]
 
 variable {P : Type _} [MetricSpace P] [NormedAddTorsor V P]
 
-include V
-
 /-- **Ptolemy’s Theorem**. -/
 theorem mul_dist_add_mul_dist_eq_mul_dist_of_cospherical {a b c d p : P}
     (h : Cospherical ({a, b, c, d} : Set P)) (hapc : ∠ a p c = π) (hbpd : ∠ b p d = π) :

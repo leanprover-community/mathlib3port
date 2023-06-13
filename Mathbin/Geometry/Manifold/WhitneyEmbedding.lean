@@ -55,8 +55,6 @@ In this section we prove a version of the Whitney embedding theorem: for any com
 
 variable [T2Space M] [hi : Fintype ι] {s : Set M} (f : SmoothBumpCovering ι I M s)
 
-include hi
-
 /-- Smooth embedding of `M` into `(E × ℝ) ^ ι`. -/
 def embeddingPiTangent : C^∞⟮I, M; 𝓘(ℝ, ι → E × ℝ), ι → E × ℝ⟯
     where
@@ -122,8 +120,6 @@ theorem embeddingPiTangent_injective_mfderiv (x : M) (hx : x ∈ s) :
     Injective (mfderiv I 𝓘(ℝ, ι → E × ℝ) f.embeddingPiTangent x) :=
   LinearMap.ker_eq_bot.1 (f.embeddingPiTangent_ker_mfderiv x hx)
 #align smooth_bump_covering.embedding_pi_tangent_injective_mfderiv SmoothBumpCovering.embeddingPiTangent_injective_mfderiv
-
-omit hi
 
 /-- Baby version of the **Whitney weak embedding theorem**: if `M` admits a finite covering by
 supports of bump functions, then for some `n` it can be immersed into the `n`-dimensional

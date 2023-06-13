@@ -39,28 +39,36 @@ variable [SMul M α] [SMul M β] [SMul N α] [SMul N β] (a : M) (b : α) (c : �
 instance : SMul M (Sum α β) :=
   ⟨fun a => Sum.map ((· • ·) a) ((· • ·) a)⟩
 
+#print Sum.smul_def /-
 @[to_additive]
 theorem smul_def : a • x = x.map ((· • ·) a) ((· • ·) a) :=
   rfl
 #align sum.smul_def Sum.smul_def
 #align sum.vadd_def Sum.vadd_def
+-/
 
+#print Sum.smul_inl /-
 @[simp, to_additive]
 theorem smul_inl : a • (inl b : Sum α β) = inl (a • b) :=
   rfl
 #align sum.smul_inl Sum.smul_inl
 #align sum.vadd_inl Sum.vadd_inl
+-/
 
+#print Sum.smul_inr /-
 @[simp, to_additive]
 theorem smul_inr : a • (inr c : Sum α β) = inr (a • c) :=
   rfl
 #align sum.smul_inr Sum.smul_inr
 #align sum.vadd_inr Sum.vadd_inr
+-/
 
+#print Sum.smul_swap /-
 @[simp, to_additive]
 theorem smul_swap : (a • x).symm = a • x.symm := by cases x <;> rfl
 #align sum.smul_swap Sum.smul_swap
 #align sum.vadd_swap Sum.vadd_swap
+-/
 
 instance [SMul M N] [IsScalarTower M N α] [IsScalarTower M N β] : IsScalarTower M N (Sum α β) :=
   ⟨fun a b x => by cases x;

@@ -509,10 +509,8 @@ unsafe def ext (xs : List rcases_patt) (fuel : Option ℕ) (cfg : ApplyCfg := { 
   pure σ
 #align tactic.ext tactic.ext
 
--- mathport name: parser.optional
 local postfix:1024 "?" => optional
 
--- mathport name: parser.many
 local postfix:1024 "*" => many
 
 /-- `ext1 id` selects and apply one extensionality lemma (with attribute

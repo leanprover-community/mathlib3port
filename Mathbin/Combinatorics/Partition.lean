@@ -126,6 +126,7 @@ def indiscretePartition (n : ℕ) : Partition n :=
 instance {n : ℕ} : Inhabited (Partition n) :=
   ⟨indiscretePartition n⟩
 
+#print Nat.Partition.count_ofSums_of_ne_zero /-
 /-- The number of times a positive integer `i` appears in the partition `of_sums n l hl` is the same
 as the number of times it appears in the multiset `l`.
 (For `i = 0`, `partition.non_zero` combined with `multiset.count_eq_zero_of_not_mem` gives that
@@ -135,11 +136,14 @@ theorem count_ofSums_of_ne_zero {n : ℕ} {l : Multiset ℕ} (hl : l.Sum = n) {i
     (ofSums n l hl).parts.count i = l.count i :=
   count_filter_of_pos hi
 #align nat.partition.count_of_sums_of_ne_zero Nat.Partition.count_ofSums_of_ne_zero
+-/
 
+#print Nat.Partition.count_ofSums_zero /-
 theorem count_ofSums_zero {n : ℕ} {l : Multiset ℕ} (hl : l.Sum = n) :
     (ofSums n l hl).parts.count 0 = 0 :=
   count_filter_of_neg fun h => h rfl
 #align nat.partition.count_of_sums_zero Nat.Partition.count_ofSums_zero
+-/
 
 /-- Show there are finitely many partitions by considering the surjection from compositions to
 partitions.

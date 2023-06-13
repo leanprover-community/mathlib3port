@@ -228,8 +228,10 @@ theorem coe_nat_inj' {m n : ℕ} : (↑m : ℤ) = ↑n ↔ m = n :=
 #align int.coe_nat_inj' Int.coe_nat_inj'
 -/
 
+#print Int.coe_nat_strictMono /-
 theorem coe_nat_strictMono : StrictMono (coe : ℕ → ℤ) := fun _ _ => Int.ofNat_lt.2
 #align int.coe_nat_strict_mono Int.coe_nat_strictMono
+-/
 
 #print Int.coe_nat_nonneg /-
 theorem coe_nat_nonneg (n : ℕ) : 0 ≤ (n : ℤ) :=
@@ -671,15 +673,19 @@ theorem mul_ediv_mul_of_pos {a : ℤ} (b c : ℤ) (H : 0 < a) : a * b / (a * c) 
 #align int.mul_div_mul_of_pos Int.mul_ediv_mul_of_pos
 -/
 
+#print Int.mul_ediv_mul_of_pos_left /-
 @[simp]
 theorem mul_ediv_mul_of_pos_left (a : ℤ) {b : ℤ} (H : 0 < b) (c : ℤ) : a * b / (c * b) = a / c := by
   rw [mul_comm, mul_comm c, mul_div_mul_of_pos _ _ H]
 #align int.mul_div_mul_of_pos_left Int.mul_ediv_mul_of_pos_left
+-/
 
+#print Int.mul_emod_mul_of_pos /-
 @[simp]
 theorem mul_emod_mul_of_pos {a : ℤ} (H : 0 < a) (b c : ℤ) : a * b % (a * c) = a * (b % c) := by
   rw [mod_def, mod_def, mul_div_mul_of_pos _ _ H, mul_sub_left_distrib, mul_assoc]
 #align int.mul_mod_mul_of_pos Int.mul_emod_mul_of_pos
+-/
 
 theorem mul_div_cancel_of_mod_eq_zero {a b : ℤ} (H : a % b = 0) : b * (a / b) = a := by
   have := mod_add_div a b <;> rwa [H, zero_add] at this 
@@ -689,9 +695,11 @@ theorem div_mul_cancel_of_mod_eq_zero {a b : ℤ} (H : a % b = 0) : a / b * b = 
   rw [mul_comm, mul_div_cancel_of_mod_eq_zero H]
 #align int.div_mul_cancel_of_mod_eq_zero Int.div_mul_cancel_of_mod_eq_zeroₓ
 
+#print Int.natAbs_sign /-
 theorem natAbs_sign (z : ℤ) : z.sign.natAbs = if z = 0 then 0 else 1 := by
   rcases z with ((_ | _) | _) <;> rfl
 #align int.nat_abs_sign Int.natAbs_sign
+-/
 
 #print Int.natAbs_sign_of_nonzero /-
 theorem natAbs_sign_of_nonzero {z : ℤ} (hz : z ≠ 0) : z.sign.natAbs = 1 := by
@@ -713,11 +721,13 @@ theorem sign_neg (z : ℤ) : Int.sign (-z) = -Int.sign z := by rcases z with ((_
 #align int.sign_neg Int.sign_neg
 -/
 
+#print Int.div_sign /-
 theorem div_sign : ∀ a b, a / sign b = a * sign b
   | a, (n + 1 : ℕ) => by unfold SignType.sign <;> simp
   | a, 0 => by simp [SignType.sign]
   | a, -[n+1] => by simp [SignType.sign]
 #align int.div_sign Int.div_sign
+-/
 
 #print Int.sign_mul /-
 @[simp]
@@ -762,10 +772,12 @@ theorem negSucc_add_negSucc (m n : ℕ) : -[m+1] + -[n+1] = -[Nat.succ (m + n)+1
 /-! ### to_nat -/
 
 
+#print Int.toNat_eq_max /-
 theorem toNat_eq_max : ∀ a : ℤ, (toNat a : ℤ) = max a 0
   | (n : ℕ) => (max_eq_left (ofNat_zero_le n)).symm
   | -[n+1] => (max_eq_right (le_of_lt (negSucc_lt_zero n))).symm
 #align int.to_nat_eq_max Int.toNat_eq_max
+-/
 
 #print Int.toNat_zero /-
 @[simp]

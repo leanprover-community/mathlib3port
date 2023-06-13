@@ -53,18 +53,24 @@ theorem coeff_divX : (divX p).coeff n = p.coeff (n + 1) := by rw [add_comm]; cas
 #align polynomial.coeff_div_X Polynomial.coeff_divX
 -/
 
+#print Polynomial.divX_mul_X_add /-
 theorem divX_mul_X_add (p : R[X]) : divX p * X + C (p.coeff 0) = p :=
   ext <| by rintro ⟨_ | _⟩ <;> simp [coeff_C, Nat.succ_ne_zero, coeff_mul_X]
 #align polynomial.div_X_mul_X_add Polynomial.divX_mul_X_add
+-/
 
+#print Polynomial.divX_C /-
 @[simp]
 theorem divX_C (a : R) : divX (C a) = 0 :=
   ext fun n => by simp [coeff_div_X, coeff_C, Finsupp.single_eq_of_ne _]
 #align polynomial.div_X_C Polynomial.divX_C
+-/
 
+#print Polynomial.divX_eq_zero_iff /-
 theorem divX_eq_zero_iff : divX p = 0 ↔ p = C (p.coeff 0) :=
   ⟨fun h => by simpa [eq_comm, h] using div_X_mul_X_add p, fun h => by rw [h, div_X_C]⟩
 #align polynomial.div_X_eq_zero_iff Polynomial.divX_eq_zero_iff
+-/
 
 #print Polynomial.divX_add /-
 theorem divX_add : divX (p + q) = divX p + divX q :=
@@ -105,6 +111,7 @@ theorem degree_divX_lt (hp0 : p ≠ 0) : (divX p).degree < p.degree := by
 #align polynomial.degree_div_X_lt Polynomial.degree_divX_lt
 -/
 
+#print Polynomial.recOnHorner /-
 /-- An induction principle for polynomials, valued in Sort* instead of Prop. -/
 @[elab_as_elim]
 noncomputable def recOnHorner {M : R[X] → Sort _} :
@@ -127,7 +134,9 @@ noncomputable def recOnHorner {M : R[X] → Sort _} :
                 show M (div_X p * X) by rw [hpX0, MulZeroClass.zero_mul] <;> exact M0
               else MX (div_X p) hpX0 (rec_on_horner _ M0 MC MX))
 #align polynomial.rec_on_horner Polynomial.recOnHorner
+-/
 
+#print Polynomial.degree_pos_induction_on /-
 /-- A property holds for all polynomials of positive `degree` with coefficients in a semiring `R`
 if it holds for
 * `a * X`, with `a ∈ R`,
@@ -154,7 +163,9 @@ theorem degree_pos_induction_on {P : R[X] → Prop} (p : R[X]) (h0 : 0 < degree 
           exact hC fun h : coeff p 0 = 0 => by simpa [h, Nat.not_lt_zero] using h0')
     h0
 #align polynomial.degree_pos_induction_on Polynomial.degree_pos_induction_on
+-/
 
+#print Polynomial.natDegree_ne_zero_induction_on /-
 /-- A property holds for all polynomials of non-zero `nat_degree` with coefficients in a
 semiring `R` if it holds for
 * `p + a`, with `a ∈ R`, `p ∈ R[X]`,
@@ -190,6 +201,7 @@ theorem natDegree_ne_zero_induction_on {M : R[X] → Prop} {f : R[X]} (f0 : f.na
       rw [C_mul_X_pow_eq_monomial]
       exact h_monomial a0 n.succ_ne_zero
 #align polynomial.nat_degree_ne_zero_induction_on Polynomial.natDegree_ne_zero_induction_on
+-/
 
 end Semiring
 

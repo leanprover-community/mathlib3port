@@ -87,18 +87,23 @@ def rightRes : piOpens F U ⟶ piInters.{v'} F U :=
 #align Top.presheaf.sheaf_condition_equalizer_products.right_res TopCat.Presheaf.SheafConditionEqualizerProducts.rightRes
 -/
 
+#print TopCat.Presheaf.SheafConditionEqualizerProducts.res /-
 /-- The morphism `F.obj U ⟶ Π F.obj (U i)` whose components
 are given by the restriction maps from `U j` to `U i ⊓ U j`.
 -/
 def res : F.obj (op (iSup U)) ⟶ piOpens.{v'} F U :=
   Pi.lift fun i : ι => F.map (TopologicalSpace.Opens.leSupr U i).op
 #align Top.presheaf.sheaf_condition_equalizer_products.res TopCat.Presheaf.SheafConditionEqualizerProducts.res
+-/
 
+#print TopCat.Presheaf.SheafConditionEqualizerProducts.res_π /-
 @[simp, elementwise]
 theorem res_π (i : ι) : res F U ≫ limit.π _ ⟨i⟩ = F.map (Opens.leSupr U i).op := by
   rw [res, limit.lift_π, fan.mk_π_app]
 #align Top.presheaf.sheaf_condition_equalizer_products.res_π TopCat.Presheaf.SheafConditionEqualizerProducts.res_π
+-/
 
+#print TopCat.Presheaf.SheafConditionEqualizerProducts.w /-
 @[elementwise]
 theorem w : res F U ≫ leftRes F U = res F U ≫ rightRes F U :=
   by
@@ -109,6 +114,7 @@ theorem w : res F U ≫ leftRes F U = res F U ≫ rightRes F U :=
   rw [← F.map_comp]
   congr
 #align Top.presheaf.sheaf_condition_equalizer_products.w TopCat.Presheaf.SheafConditionEqualizerProducts.w
+-/
 
 #print TopCat.Presheaf.SheafConditionEqualizerProducts.diagram /-
 /-- The equalizer diagram for the sheaf condition.
@@ -128,41 +134,54 @@ def fork : Fork.{v} (leftRes F U) (rightRes F U) :=
 #align Top.presheaf.sheaf_condition_equalizer_products.fork TopCat.Presheaf.SheafConditionEqualizerProducts.fork
 -/
 
+#print TopCat.Presheaf.SheafConditionEqualizerProducts.fork_pt /-
 @[simp]
 theorem fork_pt : (fork F U).pt = F.obj (op (iSup U)) :=
   rfl
 #align Top.presheaf.sheaf_condition_equalizer_products.fork_X TopCat.Presheaf.SheafConditionEqualizerProducts.fork_pt
+-/
 
+#print TopCat.Presheaf.SheafConditionEqualizerProducts.fork_ι /-
 @[simp]
 theorem fork_ι : (fork F U).ι = res F U :=
   rfl
 #align Top.presheaf.sheaf_condition_equalizer_products.fork_ι TopCat.Presheaf.SheafConditionEqualizerProducts.fork_ι
+-/
 
+#print TopCat.Presheaf.SheafConditionEqualizerProducts.fork_π_app_walkingParallelPair_zero /-
 @[simp]
 theorem fork_π_app_walkingParallelPair_zero : (fork F U).π.app WalkingParallelPair.zero = res F U :=
   rfl
 #align Top.presheaf.sheaf_condition_equalizer_products.fork_π_app_walking_parallel_pair_zero TopCat.Presheaf.SheafConditionEqualizerProducts.fork_π_app_walkingParallelPair_zero
+-/
 
+#print TopCat.Presheaf.SheafConditionEqualizerProducts.fork_π_app_walkingParallelPair_one /-
 @[simp]
 theorem fork_π_app_walkingParallelPair_one :
     (fork F U).π.app WalkingParallelPair.one = res F U ≫ leftRes F U :=
   rfl
 #align Top.presheaf.sheaf_condition_equalizer_products.fork_π_app_walking_parallel_pair_one TopCat.Presheaf.SheafConditionEqualizerProducts.fork_π_app_walkingParallelPair_one
+-/
 
 variable {F} {G : Presheaf C X}
 
+#print TopCat.Presheaf.SheafConditionEqualizerProducts.piOpens.isoOfIso /-
 /-- Isomorphic presheaves have isomorphic `pi_opens` for any cover `U`. -/
 @[simp]
 def piOpens.isoOfIso (α : F ≅ G) : piOpens F U ≅ piOpens.{v'} G U :=
   Pi.mapIso fun X => α.app _
 #align Top.presheaf.sheaf_condition_equalizer_products.pi_opens.iso_of_iso TopCat.Presheaf.SheafConditionEqualizerProducts.piOpens.isoOfIso
+-/
 
+#print TopCat.Presheaf.SheafConditionEqualizerProducts.piInters.isoOfIso /-
 /-- Isomorphic presheaves have isomorphic `pi_inters` for any cover `U`. -/
 @[simp]
 def piInters.isoOfIso (α : F ≅ G) : piInters F U ≅ piInters.{v'} G U :=
   Pi.mapIso fun X => α.app _
 #align Top.presheaf.sheaf_condition_equalizer_products.pi_inters.iso_of_iso TopCat.Presheaf.SheafConditionEqualizerProducts.piInters.isoOfIso
+-/
 
+#print TopCat.Presheaf.SheafConditionEqualizerProducts.diagram.isoOfIso /-
 /-- Isomorphic presheaves have isomorphic sheaf condition diagrams. -/
 def diagram.isoOfIso (α : F ≅ G) : diagram F U ≅ diagram.{v'} G U :=
   NatIso.ofComponents (by rintro ⟨⟩; exact pi_opens.iso_of_iso U α; exact pi_inters.iso_of_iso U α)
@@ -173,7 +192,9 @@ def diagram.isoOfIso (α : F ≅ G) : diagram F U ≅ diagram.{v'} G U :=
       · ext; simp [right_res]
       · simp)
 #align Top.presheaf.sheaf_condition_equalizer_products.diagram.iso_of_iso TopCat.Presheaf.SheafConditionEqualizerProducts.diagram.isoOfIso
+-/
 
+#print TopCat.Presheaf.SheafConditionEqualizerProducts.fork.isoOfIso /-
 /-- If `F G : presheaf C X` are isomorphic presheaves,
 then the `fork F U`, the canonical cone of the sheaf condition diagram for `F`,
 is isomorphic to `fork F G` postcomposed with the corresponding isomorphism between
@@ -189,6 +210,7 @@ def fork.isoOfIso (α : F ≅ G) :
     -- Ugh, `simp` can't unfold abbreviations.
     simp [res, diagram.iso_of_iso]
 #align Top.presheaf.sheaf_condition_equalizer_products.fork.iso_of_iso TopCat.Presheaf.SheafConditionEqualizerProducts.fork.isoOfIso
+-/
 
 end SheafConditionEqualizerProducts
 
@@ -213,6 +235,7 @@ namespace SheafConditionPairwiseIntersections
 
 open CategoryTheory.Pairwise CategoryTheory.Pairwise.Hom
 
+#print TopCat.Presheaf.SheafConditionPairwiseIntersections.coneEquivFunctorObj /-
 /-- Implementation of `sheaf_condition_pairwise_intersections.cone_equiv`. -/
 @[simps]
 def coneEquivFunctorObj (c : Cone ((diagram U).op ⋙ F)) :
@@ -248,11 +271,13 @@ def coneEquivFunctorObj (c : Cone ((diagram U).op ⋙ F)) :
           dsimp
           simp only [limit.lift_π, category.id_comp, fan.mk_π_app] }
 #align Top.presheaf.sheaf_condition_pairwise_intersections.cone_equiv_functor_obj TopCat.Presheaf.SheafConditionPairwiseIntersections.coneEquivFunctorObj
+-/
 
 section
 
 attribute [local tidy] tactic.case_bash
 
+#print TopCat.Presheaf.SheafConditionPairwiseIntersections.coneEquivFunctor /-
 /-- Implementation of `sheaf_condition_pairwise_intersections.cone_equiv`. -/
 @[simps]
 def coneEquivFunctor :
@@ -267,9 +292,11 @@ def coneEquivFunctor :
             simp only [limits.fan.mk_π_app, limits.cone_morphism.w, limits.limit.lift_π,
               category.assoc, cone_equiv_functor_obj_π_app] }
 #align Top.presheaf.sheaf_condition_pairwise_intersections.cone_equiv_functor TopCat.Presheaf.SheafConditionPairwiseIntersections.coneEquivFunctor
+-/
 
 end
 
+#print TopCat.Presheaf.SheafConditionPairwiseIntersections.coneEquivInverseObj /-
 /-- Implementation of `sheaf_condition_pairwise_intersections.cone_equiv`. -/
 @[simps]
 def coneEquivInverseObj (c : Limits.Cone (SheafConditionEqualizerProducts.diagram F U)) :
@@ -310,7 +337,9 @@ def coneEquivInverseObj (c : Limits.Cone (SheafConditionEqualizerProducts.diagra
           rfl
         · dsimp; erw [F.map_id]; simp }
 #align Top.presheaf.sheaf_condition_pairwise_intersections.cone_equiv_inverse_obj TopCat.Presheaf.SheafConditionPairwiseIntersections.coneEquivInverseObj
+-/
 
+#print TopCat.Presheaf.SheafConditionPairwiseIntersections.coneEquivInverse /-
 /-- Implementation of `sheaf_condition_pairwise_intersections.cone_equiv`. -/
 @[simps]
 def coneEquivInverse :
@@ -329,7 +358,9 @@ def coneEquivInverse :
         · dsimp
           rw [← f.w walking_parallel_pair.one, category.assoc] }
 #align Top.presheaf.sheaf_condition_pairwise_intersections.cone_equiv_inverse TopCat.Presheaf.SheafConditionPairwiseIntersections.coneEquivInverse
+-/
 
+#print TopCat.Presheaf.SheafConditionPairwiseIntersections.coneEquivUnitIsoApp /-
 /-- Implementation of `sheaf_condition_pairwise_intersections.cone_equiv`. -/
 @[simps]
 def coneEquivUnitIsoApp (c : Cone ((diagram U).op ⋙ F)) :
@@ -352,13 +383,16 @@ def coneEquivUnitIsoApp (c : Cone ((diagram U).op ⋙ F)) :
     ext
     simp only [category.comp_id, limits.cone.category_comp_hom, limits.cone.category_id_hom]
 #align Top.presheaf.sheaf_condition_pairwise_intersections.cone_equiv_unit_iso_app TopCat.Presheaf.SheafConditionPairwiseIntersections.coneEquivUnitIsoApp
+-/
 
+#print TopCat.Presheaf.SheafConditionPairwiseIntersections.coneEquivUnitIso /-
 /-- Implementation of `sheaf_condition_pairwise_intersections.cone_equiv`. -/
 @[simps]
 def coneEquivUnitIso :
     𝟭 (Limits.Cone ((diagram U).op ⋙ F)) ≅ coneEquivFunctor F U ⋙ coneEquivInverse F U :=
   NatIso.ofComponents (coneEquivUnitIsoApp F U) (by tidy)
 #align Top.presheaf.sheaf_condition_pairwise_intersections.cone_equiv_unit_iso TopCat.Presheaf.SheafConditionPairwiseIntersections.coneEquivUnitIso
+-/
 
 #print TopCat.Presheaf.SheafConditionPairwiseIntersections.coneEquivCounitIso /-
 /-- Implementation of `sheaf_condition_pairwise_intersections.cone_equiv`. -/
@@ -390,6 +424,7 @@ def coneEquivCounitIso :
 #align Top.presheaf.sheaf_condition_pairwise_intersections.cone_equiv_counit_iso TopCat.Presheaf.SheafConditionPairwiseIntersections.coneEquivCounitIso
 -/
 
+#print TopCat.Presheaf.SheafConditionPairwiseIntersections.coneEquiv /-
 /--
 Cones over `diagram U ⋙ F` are the same as a cones over the usual sheaf condition equalizer diagram.
 -/
@@ -402,10 +437,12 @@ def coneEquiv :
   unitIso := coneEquivUnitIso F U
   counitIso := coneEquivCounitIso F U
 #align Top.presheaf.sheaf_condition_pairwise_intersections.cone_equiv TopCat.Presheaf.SheafConditionPairwiseIntersections.coneEquiv
+-/
 
 attribute [local reducible] sheaf_condition_equalizer_products.res
   sheaf_condition_equalizer_products.left_res
 
+#print TopCat.Presheaf.SheafConditionPairwiseIntersections.isLimitMapConeOfIsLimitSheafConditionFork /-
 /-- If `sheaf_condition_equalizer_products.fork` is an equalizer,
 then `F.map_cone (cone U)` is a limit cone.
 -/
@@ -439,7 +476,9 @@ def isLimitMapConeOfIsLimitSheafConditionFork
       hom_inv_id' := by ext; dsimp; simp only [category.comp_id]
       inv_hom_id' := by ext; dsimp; simp only [category.comp_id] }
 #align Top.presheaf.sheaf_condition_pairwise_intersections.is_limit_map_cone_of_is_limit_sheaf_condition_fork TopCat.Presheaf.SheafConditionPairwiseIntersections.isLimitMapConeOfIsLimitSheafConditionFork
+-/
 
+#print TopCat.Presheaf.SheafConditionPairwiseIntersections.isLimitSheafConditionForkOfIsLimitMapCone /-
 /-- If `F.map_cone (cone U)` is a limit cone,
 then `sheaf_condition_equalizer_products.fork` is an equalizer.
 -/
@@ -469,6 +508,7 @@ def isLimitSheafConditionForkOfIsLimitMapCone (Q : IsLimit (F.mapCone (cocone U)
       hom_inv_id' := by ext; dsimp; simp only [category.comp_id]
       inv_hom_id' := by ext; dsimp; simp only [category.comp_id] }
 #align Top.presheaf.sheaf_condition_pairwise_intersections.is_limit_sheaf_condition_fork_of_is_limit_map_cone TopCat.Presheaf.SheafConditionPairwiseIntersections.isLimitSheafConditionForkOfIsLimitMapCone
+-/
 
 end SheafConditionPairwiseIntersections
 

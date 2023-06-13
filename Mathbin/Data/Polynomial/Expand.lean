@@ -46,62 +46,85 @@ noncomputable def expand : R[X] →ₐ[R] R[X] :=
 #align polynomial.expand Polynomial.expand
 -/
 
+#print Polynomial.coe_expand /-
 theorem coe_expand : (expand R p : R[X] → R[X]) = eval₂ C (X ^ p) :=
   rfl
 #align polynomial.coe_expand Polynomial.coe_expand
+-/
 
 variable {R}
 
+#print Polynomial.expand_eq_sum /-
 theorem expand_eq_sum {f : R[X]} : expand R p f = f.Sum fun e a => C a * (X ^ p) ^ e := by
   dsimp [expand, eval₂]; rfl
 #align polynomial.expand_eq_sum Polynomial.expand_eq_sum
+-/
 
+#print Polynomial.expand_C /-
 @[simp]
 theorem expand_C (r : R) : expand R p (C r) = C r :=
   eval₂_C _ _
 #align polynomial.expand_C Polynomial.expand_C
+-/
 
+#print Polynomial.expand_X /-
 @[simp]
 theorem expand_X : expand R p X = X ^ p :=
   eval₂_X _ _
 #align polynomial.expand_X Polynomial.expand_X
+-/
 
+#print Polynomial.expand_monomial /-
 @[simp]
 theorem expand_monomial (r : R) : expand R p (monomial q r) = monomial (q * p) r := by
   simp_rw [← smul_X_eq_monomial, AlgHom.map_smul, AlgHom.map_pow, expand_X, mul_comm, pow_mul]
 #align polynomial.expand_monomial Polynomial.expand_monomial
+-/
 
+#print Polynomial.expand_expand /-
 theorem expand_expand (f : R[X]) : expand R p (expand R q f) = expand R (p * q) f :=
   Polynomial.induction_on f (fun r => by simp_rw [expand_C])
     (fun f g ihf ihg => by simp_rw [AlgHom.map_add, ihf, ihg]) fun n r ih => by
     simp_rw [AlgHom.map_mul, expand_C, AlgHom.map_pow, expand_X, AlgHom.map_pow, expand_X, pow_mul]
 #align polynomial.expand_expand Polynomial.expand_expand
+-/
 
+#print Polynomial.expand_mul /-
 theorem expand_mul (f : R[X]) : expand R (p * q) f = expand R p (expand R q f) :=
   (expand_expand p q f).symm
 #align polynomial.expand_mul Polynomial.expand_mul
+-/
 
+#print Polynomial.expand_zero /-
 @[simp]
 theorem expand_zero (f : R[X]) : expand R 0 f = C (eval 1 f) := by simp [expand]
 #align polynomial.expand_zero Polynomial.expand_zero
+-/
 
+#print Polynomial.expand_one /-
 @[simp]
 theorem expand_one (f : R[X]) : expand R 1 f = f :=
   Polynomial.induction_on f (fun r => by rw [expand_C])
     (fun f g ihf ihg => by rw [AlgHom.map_add, ihf, ihg]) fun n r ih => by
     rw [AlgHom.map_mul, expand_C, AlgHom.map_pow, expand_X, pow_one]
 #align polynomial.expand_one Polynomial.expand_one
+-/
 
+#print Polynomial.expand_pow /-
 theorem expand_pow (f : R[X]) : expand R (p ^ q) f = (expand R p^[q]) f :=
   Nat.recOn q (by rw [pow_zero, expand_one, Function.iterate_zero, id]) fun n ih => by
     rw [Function.iterate_succ_apply', pow_succ, expand_mul, ih]
 #align polynomial.expand_pow Polynomial.expand_pow
+-/
 
+#print Polynomial.derivative_expand /-
 theorem derivative_expand (f : R[X]) :
     (expand R p f).derivative = expand R p f.derivative * (p * X ^ (p - 1)) := by
   rw [coe_expand, derivative_eval₂_C, derivative_pow, C_eq_nat_cast, derivative_X, mul_one]
 #align polynomial.derivative_expand Polynomial.derivative_expand
+-/
 
+#print Polynomial.coeff_expand /-
 theorem coeff_expand {p : ℕ} (hp : 0 < p) (f : R[X]) (n : ℕ) :
     (expand R p f).coeff n = if p ∣ n then f.coeff (n / p) else 0 :=
   by
@@ -113,39 +136,55 @@ theorem coeff_expand {p : ℕ} (hp : 0 < p) (f : R[X]) (n : ℕ) :
     · intro hn; rw [not_mem_support_iff.1 hn]; split_ifs <;> rfl
   · rw [Finset.sum_eq_zero]; intro k hk; rw [if_neg]; exact fun hkn => h ⟨k, hkn.symm⟩
 #align polynomial.coeff_expand Polynomial.coeff_expand
+-/
 
+#print Polynomial.coeff_expand_mul /-
 @[simp]
 theorem coeff_expand_mul {p : ℕ} (hp : 0 < p) (f : R[X]) (n : ℕ) :
     (expand R p f).coeff (n * p) = f.coeff n := by
   rw [coeff_expand hp, if_pos (dvd_mul_left _ _), Nat.mul_div_cancel _ hp]
 #align polynomial.coeff_expand_mul Polynomial.coeff_expand_mul
+-/
 
+#print Polynomial.coeff_expand_mul' /-
 @[simp]
 theorem coeff_expand_mul' {p : ℕ} (hp : 0 < p) (f : R[X]) (n : ℕ) :
     (expand R p f).coeff (p * n) = f.coeff n := by rw [mul_comm, coeff_expand_mul hp]
 #align polynomial.coeff_expand_mul' Polynomial.coeff_expand_mul'
+-/
 
+#print Polynomial.expand_injective /-
 /-- Expansion is injective. -/
 theorem expand_injective {n : ℕ} (hn : 0 < n) : Function.Injective (expand R n) := fun g g' H =>
   ext fun k => by rw [← coeff_expand_mul hn, H, coeff_expand_mul hn]
 #align polynomial.expand_injective Polynomial.expand_injective
+-/
 
+#print Polynomial.expand_inj /-
 theorem expand_inj {p : ℕ} (hp : 0 < p) {f g : R[X]} : expand R p f = expand R p g ↔ f = g :=
   (expand_injective hp).eq_iff
 #align polynomial.expand_inj Polynomial.expand_inj
+-/
 
+#print Polynomial.expand_eq_zero /-
 theorem expand_eq_zero {p : ℕ} (hp : 0 < p) {f : R[X]} : expand R p f = 0 ↔ f = 0 :=
   (expand_injective hp).eq_iff' (map_zero _)
 #align polynomial.expand_eq_zero Polynomial.expand_eq_zero
+-/
 
+#print Polynomial.expand_ne_zero /-
 theorem expand_ne_zero {p : ℕ} (hp : 0 < p) {f : R[X]} : expand R p f ≠ 0 ↔ f ≠ 0 :=
   (expand_eq_zero hp).Not
 #align polynomial.expand_ne_zero Polynomial.expand_ne_zero
+-/
 
+#print Polynomial.expand_eq_C /-
 theorem expand_eq_C {p : ℕ} (hp : 0 < p) {f : R[X]} {r : R} : expand R p f = C r ↔ f = C r := by
   rw [← expand_C, expand_inj hp, expand_C]
 #align polynomial.expand_eq_C Polynomial.expand_eq_C
+-/
 
+#print Polynomial.natDegree_expand /-
 theorem natDegree_expand (p : ℕ) (f : R[X]) : (expand R p f).natDegree = f.natDegree * p :=
   by
   cases' p.eq_zero_or_pos with hp hp
@@ -162,13 +201,17 @@ theorem natDegree_expand (p : ℕ) (f : R[X]) : (expand R p f).natDegree = f.nat
   · refine' le_degree_of_ne_zero _
     rw [coeff_expand_mul hp, ← leading_coeff]; exact mt leading_coeff_eq_zero.1 hf
 #align polynomial.nat_degree_expand Polynomial.natDegree_expand
+-/
 
+#print Polynomial.Monic.expand /-
 theorem Monic.expand {p : ℕ} {f : R[X]} (hp : 0 < p) (h : f.Monic) : (expand R p f).Monic :=
   by
   rw [monic.def, leading_coeff, nat_degree_expand, coeff_expand hp]
   simp [hp, h]
 #align polynomial.monic.expand Polynomial.Monic.expand
+-/
 
+#print Polynomial.map_expand /-
 theorem map_expand {p : ℕ} {f : R →+* S} {q : R[X]} : map f (expand R p q) = expand S p (map f q) :=
   by
   by_cases hp : p = 0
@@ -177,14 +220,18 @@ theorem map_expand {p : ℕ} {f : R →+* S} {q : R[X]} : map f (expand R p q) =
   rw [coeff_map, coeff_expand (Nat.pos_of_ne_zero hp), coeff_expand (Nat.pos_of_ne_zero hp)]
   split_ifs <;> simp
 #align polynomial.map_expand Polynomial.map_expand
+-/
 
+#print Polynomial.expand_eval /-
 @[simp]
 theorem expand_eval (p : ℕ) (P : R[X]) (r : R) : eval r (expand R p P) = eval (r ^ p) P :=
   by
   refine' Polynomial.induction_on P (fun a => by simp) (fun f g hf hg => _) fun n a h => by simp
   rw [AlgHom.map_add, eval_add, eval_add, hf, hg]
 #align polynomial.expand_eval Polynomial.expand_eval
+-/
 
+#print Polynomial.expand_aeval /-
 @[simp]
 theorem expand_aeval {A : Type _} [Semiring A] [Algebra R A] (p : ℕ) (P : R[X]) (r : A) :
     aeval r (expand R p P) = aeval (r ^ p) P :=
@@ -192,6 +239,7 @@ theorem expand_aeval {A : Type _} [Semiring A] [Algebra R A] (p : ℕ) (P : R[X]
   refine' Polynomial.induction_on P (fun a => by simp) (fun f g hf hg => _) fun n a h => by simp
   rw [AlgHom.map_add, aeval_add, aeval_add, hf, hg]
 #align polynomial.expand_aeval Polynomial.expand_aeval
+-/
 
 #print Polynomial.contract /-
 /-- The opposite of `expand`: sends `∑ aₙ xⁿᵖ` to `∑ aₙ xⁿ`. -/
@@ -215,16 +263,19 @@ theorem coeff_contract {p : ℕ} (hp : p ≠ 0) (f : R[X]) (n : ℕ) :
 #align polynomial.coeff_contract Polynomial.coeff_contract
 -/
 
+#print Polynomial.contract_expand /-
 theorem contract_expand {f : R[X]} (hp : p ≠ 0) : contract p (expand R p f) = f :=
   by
   ext
   simp [coeff_contract hp, coeff_expand hp.bot_lt, Nat.mul_div_cancel _ hp.bot_lt]
 #align polynomial.contract_expand Polynomial.contract_expand
+-/
 
 section CharP
 
 variable [CharP R p]
 
+#print Polynomial.expand_contract /-
 theorem expand_contract [NoZeroDivisors R] {f : R[X]} (hf : f.derivative = 0) (hp : p ≠ 0) :
     expand R p (contract p f) = f := by
   ext n
@@ -240,11 +291,11 @@ theorem expand_contract [NoZeroDivisors R] {f : R[X]} (hf : f.derivative = 0) (h
     rw [← Nat.cast_succ, CharP.cast_eq_zero_iff R p] at this 
     exact absurd this h
 #align polynomial.expand_contract Polynomial.expand_contract
+-/
 
 variable [hp : Fact p.Prime]
 
-include hp
-
+#print Polynomial.expand_char /-
 theorem expand_char (f : R[X]) : map (frobenius R p) (expand R p f) = f ^ p :=
   by
   refine' f.induction_on' (fun a b ha hb => _) fun n a => _
@@ -253,7 +304,9 @@ theorem expand_char (f : R[X]) : map (frobenius R p) (expand R p f) = f ^ p :=
       mul_pow, ← C.map_pow, frobenius_def]
     ring
 #align polynomial.expand_char Polynomial.expand_char
+-/
 
+#print Polynomial.map_expand_pow_char /-
 theorem map_expand_pow_char (f : R[X]) (n : ℕ) :
     map (frobenius R p ^ n) (expand R (p ^ n) f) = f ^ p ^ n :=
   by
@@ -263,6 +316,7 @@ theorem map_expand_pow_char (f : R[X]) (n : ℕ) :
   rw [pow_succ', pow_mul, ← n_ih, ← expand_char, pow_succ, RingHom.mul_def, ← map_map, mul_comm,
     expand_mul, ← map_expand]
 #align polynomial.map_expand_pow_char Polynomial.map_expand_pow_char
+-/
 
 end CharP
 
@@ -272,6 +326,7 @@ section IsDomain
 
 variable (R : Type u) [CommRing R] [IsDomain R]
 
+#print Polynomial.isLocalRingHom_expand /-
 theorem isLocalRingHom_expand {p : ℕ} (hp : 0 < p) :
     IsLocalRingHom (↑(expand R p) : R[X] →+* R[X]) :=
   by
@@ -280,20 +335,25 @@ theorem isLocalRingHom_expand {p : ℕ} (hp : 0 < p) :
   rw [coeff_expand hp, if_pos (dvd_zero _), p.zero_div] at hf2 
   rw [hf2, is_unit_C] at hf1 ; rw [expand_eq_C hp] at hf2 ; rwa [hf2, is_unit_C]
 #align polynomial.is_local_ring_hom_expand Polynomial.isLocalRingHom_expand
+-/
 
 variable {R}
 
+#print Polynomial.of_irreducible_expand /-
 theorem of_irreducible_expand {p : ℕ} (hp : p ≠ 0) {f : R[X]} (hf : Irreducible (expand R p f)) :
     Irreducible f :=
   let _ := isLocalRingHom_expand R hp.bot_lt
   of_irreducible_map (↑(expand R p)) hf
 #align polynomial.of_irreducible_expand Polynomial.of_irreducible_expand
+-/
 
+#print Polynomial.of_irreducible_expand_pow /-
 theorem of_irreducible_expand_pow {p : ℕ} (hp : p ≠ 0) {f : R[X]} {n : ℕ} :
     Irreducible (expand R (p ^ n) f) → Irreducible f :=
   Nat.recOn n (fun hf => by rwa [pow_zero, expand_one] at hf ) fun n ih hf =>
     ih <| of_irreducible_expand hp <| by rw [pow_succ] at hf ; rwa [expand_expand]
 #align polynomial.of_irreducible_expand_pow Polynomial.of_irreducible_expand_pow
+-/
 
 end IsDomain
 

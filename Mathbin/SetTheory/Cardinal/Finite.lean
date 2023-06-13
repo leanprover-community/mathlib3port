@@ -64,13 +64,17 @@ theorem finite_of_card_ne_zero (h : Nat.card α ≠ 0) : Finite α :=
 #align nat.finite_of_card_ne_zero Nat.finite_of_card_ne_zero
 -/
 
+#print Nat.card_congr /-
 theorem card_congr (f : α ≃ β) : Nat.card α = Nat.card β :=
   Cardinal.toNat_congr f
 #align nat.card_congr Nat.card_congr
+-/
 
+#print Nat.card_eq_of_bijective /-
 theorem card_eq_of_bijective (f : α → β) (hf : Function.Bijective f) : Nat.card α = Nat.card β :=
   card_congr (Equiv.ofBijective f hf)
 #align nat.card_eq_of_bijective Nat.card_eq_of_bijective
+-/
 
 #print Nat.card_eq_of_equiv_fin /-
 theorem card_eq_of_equiv_fin {α : Type _} {n : ℕ} (f : α ≃ Fin n) : Nat.card α = n := by
@@ -127,15 +131,19 @@ theorem card_of_isEmpty [IsEmpty α] : Nat.card α = 0 := by simp
 #align nat.card_of_is_empty Nat.card_of_isEmpty
 -/
 
+#print Nat.card_prod /-
 @[simp]
 theorem card_prod (α β : Type _) : Nat.card (α × β) = Nat.card α * Nat.card β := by
   simp only [Nat.card, mk_prod, to_nat_mul, to_nat_lift]
 #align nat.card_prod Nat.card_prod
+-/
 
+#print Nat.card_ulift /-
 @[simp]
 theorem card_ulift (α : Type _) : Nat.card (ULift α) = Nat.card α :=
   card_congr Equiv.ulift
 #align nat.card_ulift Nat.card_ulift
+-/
 
 #print Nat.card_plift /-
 @[simp]
@@ -150,11 +158,13 @@ theorem card_pi {β : α → Type _} [Fintype α] : Nat.card (∀ a, β a) = ∏
 #align nat.card_pi Nat.card_pi
 -/
 
+#print Nat.card_fun /-
 theorem card_fun [Finite α] : Nat.card (α → β) = Nat.card β ^ Nat.card α :=
   by
   haveI := Fintype.ofFinite α
   rw [Nat.card_pi, Finset.prod_const, Finset.card_univ, ← Nat.card_eq_fintype_card]
 #align nat.card_fun Nat.card_fun
+-/
 
 #print Nat.card_zmod /-
 @[simp]
@@ -178,10 +188,12 @@ def card (α : Type _) : PartENat :=
 #align part_enat.card PartENat.card
 -/
 
+#print PartENat.card_eq_coe_fintype_card /-
 @[simp]
 theorem card_eq_coe_fintype_card [Fintype α] : card α = Fintype.card α :=
   mk_toPartENat_eq_coe_card
 #align part_enat.card_eq_coe_fintype_card PartENat.card_eq_coe_fintype_card
+-/
 
 #print PartENat.card_eq_top_of_infinite /-
 @[simp]

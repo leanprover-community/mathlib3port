@@ -270,43 +270,57 @@ section OrderTop
 
 variable [PartialOrder α] [OrderTop α] (c : ClosureOperator α)
 
+#print ClosureOperator.closure_top /-
 @[simp]
 theorem closure_top : c ⊤ = ⊤ :=
   le_top.antisymm (c.le_closure _)
 #align closure_operator.closure_top ClosureOperator.closure_top
+-/
 
+#print ClosureOperator.top_mem_closed /-
 theorem top_mem_closed : ⊤ ∈ c.closed :=
   c.closure_top
 #align closure_operator.top_mem_closed ClosureOperator.top_mem_closed
+-/
 
 end OrderTop
 
+#print ClosureOperator.closure_inf_le /-
 theorem closure_inf_le [SemilatticeInf α] (c : ClosureOperator α) (x y : α) :
     c (x ⊓ y) ≤ c x ⊓ c y :=
   c.Monotone.map_inf_le _ _
 #align closure_operator.closure_inf_le ClosureOperator.closure_inf_le
+-/
 
 section SemilatticeSup
 
 variable [SemilatticeSup α] (c : ClosureOperator α)
 
+#print ClosureOperator.closure_sup_closure_le /-
 theorem closure_sup_closure_le (x y : α) : c x ⊔ c y ≤ c (x ⊔ y) :=
   c.Monotone.le_map_sup _ _
 #align closure_operator.closure_sup_closure_le ClosureOperator.closure_sup_closure_le
+-/
 
+#print ClosureOperator.closure_sup_closure_left /-
 theorem closure_sup_closure_left (x y : α) : c (c x ⊔ y) = c (x ⊔ y) :=
   ((c.le_closure_iff _ _).1
         (sup_le (c.Monotone le_sup_left) (le_sup_right.trans (c.le_closure _)))).antisymm
     (c.Monotone (sup_le_sup_right (c.le_closure _) _))
 #align closure_operator.closure_sup_closure_left ClosureOperator.closure_sup_closure_left
+-/
 
+#print ClosureOperator.closure_sup_closure_right /-
 theorem closure_sup_closure_right (x y : α) : c (x ⊔ c y) = c (x ⊔ y) := by
   rw [sup_comm, closure_sup_closure_left, sup_comm]
 #align closure_operator.closure_sup_closure_right ClosureOperator.closure_sup_closure_right
+-/
 
+#print ClosureOperator.closure_sup_closure /-
 theorem closure_sup_closure (x y : α) : c (c x ⊔ c y) = c (x ⊔ y) := by
   rw [closure_sup_closure_left, closure_sup_closure_right]
 #align closure_operator.closure_sup_closure ClosureOperator.closure_sup_closure
+-/
 
 end SemilatticeSup
 
@@ -314,20 +328,24 @@ section CompleteLattice
 
 variable [CompleteLattice α] (c : ClosureOperator α)
 
+#print ClosureOperator.closure_iSup_closure /-
 @[simp]
 theorem closure_iSup_closure (f : ι → α) : c (⨆ i, c (f i)) = c (⨆ i, f i) :=
   le_antisymm ((c.le_closure_iff _ _).1 <| iSup_le fun i => c.Monotone <| le_iSup f i) <|
     c.Monotone <| iSup_mono fun i => c.le_closure _
 #align closure_operator.closure_supr_closure ClosureOperator.closure_iSup_closure
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
+#print ClosureOperator.closure_iSup₂_closure /-
 @[simp]
 theorem closure_iSup₂_closure (f : ∀ i, κ i → α) :
     c (⨆ (i) (j), c (f i j)) = c (⨆ (i) (j), f i j) :=
   le_antisymm ((c.le_closure_iff _ _).1 <| iSup₂_le fun i j => c.Monotone <| le_iSup₂ i j) <|
     c.Monotone <| iSup₂_mono fun i j => c.le_closure _
 #align closure_operator.closure_supr₂_closure ClosureOperator.closure_iSup₂_closure
+-/
 
 end CompleteLattice
 
@@ -378,25 +396,33 @@ def Simps.apply : α → β :=
   l
 #align lower_adjoint.simps.apply LowerAdjoint.Simps.apply
 
+#print LowerAdjoint.gc /-
 theorem gc : GaloisConnection l u :=
   l.gc'
 #align lower_adjoint.gc LowerAdjoint.gc
+-/
 
+#print LowerAdjoint.ext /-
 @[ext]
 theorem ext : ∀ l₁ l₂ : LowerAdjoint u, (l₁ : α → β) = (l₂ : α → β) → l₁ = l₂
   | ⟨l₁, _⟩, ⟨l₂, _⟩, h => by congr; exact h
 #align lower_adjoint.ext LowerAdjoint.ext
+-/
 
+#print LowerAdjoint.monotone /-
 @[mono]
 theorem monotone : Monotone (u ∘ l) :=
   l.gc.monotone_u.comp l.gc.monotone_l
 #align lower_adjoint.monotone LowerAdjoint.monotone
+-/
 
+#print LowerAdjoint.le_closure /-
 /-- Every element is less than its closure. This property is sometimes referred to as extensivity or
 inflationarity. -/
 theorem le_closure (x : α) : x ≤ u (l x) :=
   l.gc.le_u_l _
 #align lower_adjoint.le_closure LowerAdjoint.le_closure
+-/
 
 end Preorder
 
@@ -417,13 +443,17 @@ def closureOperator : ClosureOperator α
 #align lower_adjoint.closure_operator LowerAdjoint.closureOperator
 -/
 
+#print LowerAdjoint.idempotent /-
 theorem idempotent (x : α) : u (l (u (l x))) = u (l x) :=
   l.ClosureOperator.idempotent _
 #align lower_adjoint.idempotent LowerAdjoint.idempotent
+-/
 
+#print LowerAdjoint.le_closure_iff /-
 theorem le_closure_iff (x y : α) : x ≤ u (l y) ↔ u (l x) ≤ u (l y) :=
   l.ClosureOperator.le_closure_iff _ _
 #align lower_adjoint.le_closure_iff LowerAdjoint.le_closure_iff
+-/
 
 end PartialOrder
 
@@ -437,13 +467,17 @@ def closed : Set α := fun x => u (l x) = x
 #align lower_adjoint.closed LowerAdjoint.closed
 -/
 
+#print LowerAdjoint.mem_closed_iff /-
 theorem mem_closed_iff (x : α) : x ∈ l.closed ↔ u (l x) = x :=
   Iff.rfl
 #align lower_adjoint.mem_closed_iff LowerAdjoint.mem_closed_iff
+-/
 
+#print LowerAdjoint.closure_eq_self_of_mem_closed /-
 theorem closure_eq_self_of_mem_closed {x : α} (h : x ∈ l.closed) : u (l x) = x :=
   h
 #align lower_adjoint.closure_eq_self_of_mem_closed LowerAdjoint.closure_eq_self_of_mem_closed
+-/
 
 end Preorder
 
@@ -451,19 +485,25 @@ section PartialOrder
 
 variable [PartialOrder α] [PartialOrder β] {u : β → α} (l : LowerAdjoint u)
 
+#print LowerAdjoint.mem_closed_iff_closure_le /-
 theorem mem_closed_iff_closure_le (x : α) : x ∈ l.closed ↔ u (l x) ≤ x :=
   l.ClosureOperator.mem_closed_iff_closure_le _
 #align lower_adjoint.mem_closed_iff_closure_le LowerAdjoint.mem_closed_iff_closure_le
+-/
 
+#print LowerAdjoint.closure_is_closed /-
 @[simp]
 theorem closure_is_closed (x : α) : u (l x) ∈ l.closed :=
   l.idempotent x
 #align lower_adjoint.closure_is_closed LowerAdjoint.closure_is_closed
+-/
 
+#print LowerAdjoint.closed_eq_range_close /-
 /-- The set of closed elements for `l` is the range of `u ∘ l`. -/
 theorem closed_eq_range_close : l.closed = Set.range (u ∘ l) :=
   l.ClosureOperator.closed_eq_range_close
 #align lower_adjoint.closed_eq_range_close LowerAdjoint.closed_eq_range_close
+-/
 
 #print LowerAdjoint.toClosed /-
 /-- Send an `x` to an element of the set of closed elements (by taking the closure). -/
@@ -472,42 +512,56 @@ def toClosed (x : α) : l.closed :=
 #align lower_adjoint.to_closed LowerAdjoint.toClosed
 -/
 
+#print LowerAdjoint.closure_le_closed_iff_le /-
 @[simp]
 theorem closure_le_closed_iff_le (x : α) {y : α} (hy : l.closed y) : u (l x) ≤ y ↔ x ≤ y :=
   l.ClosureOperator.closure_le_closed_iff_le x hy
 #align lower_adjoint.closure_le_closed_iff_le LowerAdjoint.closure_le_closed_iff_le
+-/
 
 end PartialOrder
 
+#print LowerAdjoint.closure_top /-
 theorem closure_top [PartialOrder α] [OrderTop α] [Preorder β] {u : β → α} (l : LowerAdjoint u) :
     u (l ⊤) = ⊤ :=
   l.ClosureOperator.closure_top
 #align lower_adjoint.closure_top LowerAdjoint.closure_top
+-/
 
+#print LowerAdjoint.closure_inf_le /-
 theorem closure_inf_le [SemilatticeInf α] [Preorder β] {u : β → α} (l : LowerAdjoint u) (x y : α) :
     u (l (x ⊓ y)) ≤ u (l x) ⊓ u (l y) :=
   l.ClosureOperator.closure_inf_le x y
 #align lower_adjoint.closure_inf_le LowerAdjoint.closure_inf_le
+-/
 
 section SemilatticeSup
 
 variable [SemilatticeSup α] [Preorder β] {u : β → α} (l : LowerAdjoint u)
 
+#print LowerAdjoint.closure_sup_closure_le /-
 theorem closure_sup_closure_le (x y : α) : u (l x) ⊔ u (l y) ≤ u (l (x ⊔ y)) :=
   l.ClosureOperator.closure_sup_closure_le x y
 #align lower_adjoint.closure_sup_closure_le LowerAdjoint.closure_sup_closure_le
+-/
 
+#print LowerAdjoint.closure_sup_closure_left /-
 theorem closure_sup_closure_left (x y : α) : u (l (u (l x) ⊔ y)) = u (l (x ⊔ y)) :=
   l.ClosureOperator.closure_sup_closure_left x y
 #align lower_adjoint.closure_sup_closure_left LowerAdjoint.closure_sup_closure_left
+-/
 
+#print LowerAdjoint.closure_sup_closure_right /-
 theorem closure_sup_closure_right (x y : α) : u (l (x ⊔ u (l y))) = u (l (x ⊔ y)) :=
   l.ClosureOperator.closure_sup_closure_right x y
 #align lower_adjoint.closure_sup_closure_right LowerAdjoint.closure_sup_closure_right
+-/
 
+#print LowerAdjoint.closure_sup_closure /-
 theorem closure_sup_closure (x y : α) : u (l (u (l x) ⊔ u (l y))) = u (l (x ⊔ y)) :=
   l.ClosureOperator.closure_sup_closure x y
 #align lower_adjoint.closure_sup_closure LowerAdjoint.closure_sup_closure
+-/
 
 end SemilatticeSup
 
@@ -515,16 +569,20 @@ section CompleteLattice
 
 variable [CompleteLattice α] [Preorder β] {u : β → α} (l : LowerAdjoint u)
 
+#print LowerAdjoint.closure_iSup_closure /-
 theorem closure_iSup_closure (f : ι → α) : u (l (⨆ i, u (l (f i)))) = u (l (⨆ i, f i)) :=
   l.ClosureOperator.closure_iSup_closure _
 #align lower_adjoint.closure_supr_closure LowerAdjoint.closure_iSup_closure
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
+#print LowerAdjoint.closure_iSup₂_closure /-
 theorem closure_iSup₂_closure (f : ∀ i, κ i → α) :
     u (l <| ⨆ (i) (j), u (l <| f i j)) = u (l <| ⨆ (i) (j), f i j) :=
   l.ClosureOperator.closure_iSup₂_closure _
 #align lower_adjoint.closure_supr₂_closure LowerAdjoint.closure_iSup₂_closure
+-/
 
 end CompleteLattice
 
@@ -533,58 +591,80 @@ section CoeToSet
 
 variable [SetLike α β] (l : LowerAdjoint (coe : α → Set β))
 
+#print LowerAdjoint.subset_closure /-
 theorem subset_closure (s : Set β) : s ⊆ l s :=
   l.le_closure s
 #align lower_adjoint.subset_closure LowerAdjoint.subset_closure
+-/
 
+#print LowerAdjoint.not_mem_of_not_mem_closure /-
 theorem not_mem_of_not_mem_closure {s : Set β} {P : β} (hP : P ∉ l s) : P ∉ s := fun h =>
   hP (subset_closure _ s h)
 #align lower_adjoint.not_mem_of_not_mem_closure LowerAdjoint.not_mem_of_not_mem_closure
+-/
 
+#print LowerAdjoint.le_iff_subset /-
 theorem le_iff_subset (s : Set β) (S : α) : l s ≤ S ↔ s ⊆ S :=
   l.gc s S
 #align lower_adjoint.le_iff_subset LowerAdjoint.le_iff_subset
+-/
 
+#print LowerAdjoint.mem_iff /-
 theorem mem_iff (s : Set β) (x : β) : x ∈ l s ↔ ∀ S : α, s ⊆ S → x ∈ S :=
   by
   simp_rw [← SetLike.mem_coe, ← Set.singleton_subset_iff, ← l.le_iff_subset]
   exact ⟨fun h S => h.trans, fun h => h _ le_rfl⟩
 #align lower_adjoint.mem_iff LowerAdjoint.mem_iff
+-/
 
+#print LowerAdjoint.eq_of_le /-
 theorem eq_of_le {s : Set β} {S : α} (h₁ : s ⊆ S) (h₂ : S ≤ l s) : l s = S :=
   ((l.le_iff_subset _ _).2 h₁).antisymm h₂
 #align lower_adjoint.eq_of_le LowerAdjoint.eq_of_le
+-/
 
+#print LowerAdjoint.closure_union_closure_subset /-
 theorem closure_union_closure_subset (x y : α) : (l x : Set β) ∪ l y ⊆ l (x ∪ y) :=
   l.closure_sup_closure_le x y
 #align lower_adjoint.closure_union_closure_subset LowerAdjoint.closure_union_closure_subset
+-/
 
+#print LowerAdjoint.closure_union_closure_left /-
 @[simp]
 theorem closure_union_closure_left (x y : α) : l (l x ∪ y) = l (x ∪ y) :=
   SetLike.coe_injective (l.closure_sup_closure_left x y)
 #align lower_adjoint.closure_union_closure_left LowerAdjoint.closure_union_closure_left
+-/
 
+#print LowerAdjoint.closure_union_closure_right /-
 @[simp]
 theorem closure_union_closure_right (x y : α) : l (x ∪ l y) = l (x ∪ y) :=
   SetLike.coe_injective (l.closure_sup_closure_right x y)
 #align lower_adjoint.closure_union_closure_right LowerAdjoint.closure_union_closure_right
+-/
 
+#print LowerAdjoint.closure_union_closure /-
 theorem closure_union_closure (x y : α) : l (l x ∪ l y) = l (x ∪ y) :=
   SetLike.coe_injective (l.ClosureOperator.closure_sup_closure x y)
 #align lower_adjoint.closure_union_closure LowerAdjoint.closure_union_closure
+-/
 
+#print LowerAdjoint.closure_iUnion_closure /-
 @[simp]
 theorem closure_iUnion_closure (f : ι → α) : l (⋃ i, l (f i)) = l (⋃ i, f i) :=
   SetLike.coe_injective <| l.closure_iSup_closure _
 #align lower_adjoint.closure_Union_closure LowerAdjoint.closure_iUnion_closure
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:107:6: warning: expanding binder group (i j) -/
+#print LowerAdjoint.closure_iUnion₂_closure /-
 @[simp]
 theorem closure_iUnion₂_closure (f : ∀ i, κ i → α) :
     l (⋃ (i) (j), l (f i j)) = l (⋃ (i) (j), f i j) :=
   SetLike.coe_injective <| l.closure_iSup₂_closure _
 #align lower_adjoint.closure_Union₂_closure LowerAdjoint.closure_iUnion₂_closure
+-/
 
 end CoeToSet
 

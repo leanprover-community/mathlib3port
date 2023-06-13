@@ -124,6 +124,7 @@ theorem MulOpposite.smul_eq_mul_unop [Mul α] {a : αᵐᵒᵖ} {a' : α} : a �
 #align add_opposite.vadd_eq_add_unop AddOpposite.vadd_eq_add_unop
 -/
 
+#print MulAction.OppositeRegular.isPretransitive /-
 /-- The right regular action of a group on itself is transitive. -/
 @[to_additive "The right regular action of an additive group on itself is transitive."]
 instance MulAction.OppositeRegular.isPretransitive {G : Type _} [Group G] :
@@ -131,24 +132,31 @@ instance MulAction.OppositeRegular.isPretransitive {G : Type _} [Group G] :
   ⟨fun x y => ⟨op (x⁻¹ * y), mul_inv_cancel_left _ _⟩⟩
 #align mul_action.opposite_regular.is_pretransitive MulAction.OppositeRegular.isPretransitive
 #align add_action.opposite_regular.is_pretransitive AddAction.OppositeRegular.isPretransitive
+-/
 
+#print Semigroup.opposite_smulCommClass /-
 @[to_additive]
 instance Semigroup.opposite_smulCommClass [Semigroup α] : SMulCommClass αᵐᵒᵖ α α
     where smul_comm x y z := mul_assoc _ _ _
 #align semigroup.opposite_smul_comm_class Semigroup.opposite_smulCommClass
 #align add_semigroup.opposite_vadd_comm_class AddSemigroup.opposite_vaddCommClass
+-/
 
+#print Semigroup.opposite_smulCommClass' /-
 @[to_additive]
 instance Semigroup.opposite_smulCommClass' [Semigroup α] : SMulCommClass α αᵐᵒᵖ α :=
   SMulCommClass.symm _ _ _
 #align semigroup.opposite_smul_comm_class' Semigroup.opposite_smulCommClass'
 #align add_semigroup.opposite_vadd_comm_class' AddSemigroup.opposite_vaddCommClass'
+-/
 
+#print CommSemigroup.isCentralScalar /-
 @[to_additive]
 instance CommSemigroup.isCentralScalar [CommSemigroup α] : IsCentralScalar α α :=
   ⟨fun r m => mul_comm _ _⟩
 #align comm_semigroup.is_central_scalar CommSemigroup.isCentralScalar
 #align add_comm_semigroup.is_central_scalar AddCommSemigroup.isCentralVAdd
+-/
 
 #print Monoid.toOppositeMulAction /-
 /-- Like `monoid.to_mul_action`, but multiplies on the right. -/
@@ -185,16 +193,20 @@ instance SMulCommClass.opposite_mid {M N} [Mul N] [SMul M N] [IsScalarTower M N 
 example [Monoid α] : Monoid.toMulAction αᵐᵒᵖ = MulOpposite.mulAction α αᵐᵒᵖ :=
   rfl
 
+#print LeftCancelMonoid.toFaithfulSMul_opposite /-
 /-- `monoid.to_opposite_mul_action` is faithful on cancellative monoids. -/
 @[to_additive "`add_monoid.to_opposite_add_action` is faithful on cancellative monoids."]
 instance LeftCancelMonoid.toFaithfulSMul_opposite [LeftCancelMonoid α] : FaithfulSMul αᵐᵒᵖ α :=
   ⟨fun x y h => unop_injective <| mul_left_cancel (h 1)⟩
 #align left_cancel_monoid.to_has_faithful_opposite_scalar LeftCancelMonoid.toFaithfulSMul_opposite
 #align add_left_cancel_monoid.to_has_faithful_opposite_scalar AddLeftCancelMonoid.toFaithfulVAdd_opposite
+-/
 
+#print CancelMonoidWithZero.toFaithfulSMul_opposite /-
 /-- `monoid.to_opposite_mul_action` is faithful on nontrivial cancellative monoids with zero. -/
 instance CancelMonoidWithZero.toFaithfulSMul_opposite [CancelMonoidWithZero α] [Nontrivial α] :
     FaithfulSMul αᵐᵒᵖ α :=
   ⟨fun x y h => unop_injective <| mul_left_cancel₀ one_ne_zero (h 1)⟩
 #align cancel_monoid_with_zero.to_has_faithful_opposite_scalar CancelMonoidWithZero.toFaithfulSMul_opposite
+-/
 

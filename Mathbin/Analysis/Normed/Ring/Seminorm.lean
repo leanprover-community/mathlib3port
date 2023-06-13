@@ -105,25 +105,33 @@ instance ringSeminormClass : RingSeminormClass (RingSeminorm R) R ℝ
 instance : CoeFun (RingSeminorm R) fun _ => R → ℝ :=
   FunLike.hasCoeToFun
 
+#print RingSeminorm.toFun_eq_coe /-
 @[simp]
 theorem toFun_eq_coe (p : RingSeminorm R) : p.toFun = p :=
   rfl
 #align ring_seminorm.to_fun_eq_coe RingSeminorm.toFun_eq_coe
+-/
 
+#print RingSeminorm.ext /-
 @[ext]
 theorem ext {p q : RingSeminorm R} : (∀ x, p x = q x) → p = q :=
   FunLike.ext p q
 #align ring_seminorm.ext RingSeminorm.ext
+-/
 
 instance : Zero (RingSeminorm R) :=
   ⟨{ AddGroupSeminorm.hasZero.zero with mul_le' := fun _ _ => (MulZeroClass.zero_mul _).ge }⟩
 
+#print RingSeminorm.eq_zero_iff /-
 theorem eq_zero_iff {p : RingSeminorm R} : p = 0 ↔ ∀ x, p x = 0 :=
   FunLike.ext_iff
 #align ring_seminorm.eq_zero_iff RingSeminorm.eq_zero_iff
+-/
 
+#print RingSeminorm.ne_zero_iff /-
 theorem ne_zero_iff {p : RingSeminorm R} : p ≠ 0 ↔ ∃ x, p x ≠ 0 := by simp [eq_zero_iff]
 #align ring_seminorm.ne_zero_iff RingSeminorm.ne_zero_iff
+-/
 
 instance : Inhabited (RingSeminorm R) :=
   ⟨0⟩
@@ -142,10 +150,12 @@ instance [DecidableEq R] : One (RingSeminorm R) :=
         · change ite _ _ _ ≤ ite _ _ _ * ite _ _ _
           simp only [if_false, h, left_ne_zero_of_mul h, right_ne_zero_of_mul h, mul_one] }⟩
 
+#print RingSeminorm.apply_one /-
 @[simp]
 theorem apply_one [DecidableEq R] (x : R) : (1 : RingSeminorm R) x = if x = 0 then 0 else 1 :=
   rfl
 #align ring_seminorm.apply_one RingSeminorm.apply_one
+-/
 
 end NonUnitalRing
 
@@ -153,6 +163,7 @@ section Ring
 
 variable [Ring R] (p : RingSeminorm R)
 
+#print RingSeminorm.seminorm_one_eq_one_iff_ne_zero /-
 theorem seminorm_one_eq_one_iff_ne_zero (hp : p 1 ≤ 1) : p 1 = 1 ↔ p ≠ 0 :=
   by
   refine' ⟨fun h => ne_zero_iff.mpr ⟨1, by rw [h]; exact one_ne_zero⟩, fun h => _⟩
@@ -162,6 +173,7 @@ theorem seminorm_one_eq_one_iff_ne_zero (hp : p 1 ≤ 1) : p 1 = 1 ↔ p ≠ 0 :
   · refine' hp.antisymm ((le_mul_iff_one_le_left hp0).1 _)
     simpa only [one_mul] using map_mul_le_mul p (1 : R) _
 #align ring_seminorm.seminorm_one_eq_one_iff_ne_zero RingSeminorm.seminorm_one_eq_one_iff_ne_zero
+-/
 
 end Ring
 
@@ -202,10 +214,12 @@ theorem toFun_eq_coe (p : RingNorm R) : p.toFun = p :=
   rfl
 #align ring_norm.to_fun_eq_coe RingNorm.toFun_eq_coe
 
+#print RingNorm.ext /-
 @[ext]
 theorem ext {p q : RingNorm R} : (∀ x, p x = q x) → p = q :=
   FunLike.ext p q
 #align ring_norm.ext RingNorm.ext
+-/
 
 variable (R)
 
@@ -214,10 +228,12 @@ variable (R)
 instance [DecidableEq R] : One (RingNorm R) :=
   ⟨{ (1 : RingSeminorm R), (1 : AddGroupNorm R) with }⟩
 
+#print RingNorm.apply_one /-
 @[simp]
 theorem apply_one [DecidableEq R] (x : R) : (1 : RingNorm R) x = if x = 0 then 0 else 1 :=
   rfl
 #align ring_norm.apply_one RingNorm.apply_one
+-/
 
 instance [DecidableEq R] : Inhabited (RingNorm R) :=
   ⟨1⟩
@@ -245,15 +261,19 @@ instance mulRingSeminormClass : MulRingSeminormClass (MulRingSeminorm R) R ℝ
 instance : CoeFun (MulRingSeminorm R) fun _ => R → ℝ :=
   FunLike.hasCoeToFun
 
+#print MulRingSeminorm.toFun_eq_coe /-
 @[simp]
 theorem toFun_eq_coe (p : MulRingSeminorm R) : p.toFun = p :=
   rfl
 #align mul_ring_seminorm.to_fun_eq_coe MulRingSeminorm.toFun_eq_coe
+-/
 
+#print MulRingSeminorm.ext /-
 @[ext]
 theorem ext {p q : MulRingSeminorm R} : (∀ x, p x = q x) → p = q :=
   FunLike.ext p q
 #align mul_ring_seminorm.ext MulRingSeminorm.ext
+-/
 
 variable [DecidableEq R] [NoZeroDivisors R] [Nontrivial R]
 
@@ -269,10 +289,12 @@ instance : One (MulRingSeminorm R) :=
         · simp
         · simp [hx, hy] }⟩
 
+#print MulRingSeminorm.apply_one /-
 @[simp]
 theorem apply_one (x : R) : (1 : MulRingSeminorm R) x = if x = 0 then 0 else 1 :=
   rfl
 #align mul_ring_seminorm.apply_one MulRingSeminorm.apply_one
+-/
 
 instance : Inhabited (MulRingSeminorm R) :=
   ⟨1⟩
@@ -306,10 +328,12 @@ theorem toFun_eq_coe (p : MulRingNorm R) : p.toFun = p :=
   rfl
 #align mul_ring_norm.to_fun_eq_coe MulRingNorm.toFun_eq_coe
 
+#print MulRingNorm.ext /-
 @[ext]
 theorem ext {p q : MulRingNorm R} : (∀ x, p x = q x) → p = q :=
   FunLike.ext p q
 #align mul_ring_norm.ext MulRingNorm.ext
+-/
 
 variable (R) [DecidableEq R] [NoZeroDivisors R] [Nontrivial R]
 
@@ -318,16 +342,19 @@ other element. -/
 instance : One (MulRingNorm R) :=
   ⟨{ (1 : MulRingSeminorm R), (1 : AddGroupNorm R) with }⟩
 
+#print MulRingNorm.apply_one /-
 @[simp]
 theorem apply_one (x : R) : (1 : MulRingNorm R) x = if x = 0 then 0 else 1 :=
   rfl
 #align mul_ring_norm.apply_one MulRingNorm.apply_one
+-/
 
 instance : Inhabited (MulRingNorm R) :=
   ⟨1⟩
 
 end MulRingNorm
 
+#print RingSeminorm.toRingNorm /-
 /-- A nonzero ring seminorm on a field `K` is a ring norm. -/
 def RingSeminorm.toRingNorm {K : Type _} [Field K] (f : RingSeminorm K) (hnt : f ≠ 0) :
     RingNorm K :=
@@ -346,6 +373,7 @@ def RingSeminorm.toRingNorm {K : Type _} [Field K] (f : RingSeminorm K) (hnt : f
             (map_nonneg f _)
       exact hc hc0 }
 #align ring_seminorm.to_ring_norm RingSeminorm.toRingNorm
+-/
 
 #print normRingNorm /-
 /-- The norm of a normed_ring as a ring_norm. -/

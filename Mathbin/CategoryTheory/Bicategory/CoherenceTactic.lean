@@ -186,7 +186,7 @@ instance Mathlib.Tactic.BicategoryCoherence.liftHom₂WhiskerRight {f g : a ⟶ 
 -/
 
 #print Mathlib.Tactic.BicategoryCoherence.BicategoricalCoherence /-
-/- ./././Mathport/Syntax/Translate/Command.lean:394:30: infer kinds are unsupported in Lean 4: #[`Hom] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`Hom] [] -/
 /-- A typeclass carrying a choice of bicategorical structural isomorphism between two objects.
 Used by the `⊗≫` bicategorical composition operator, and the `coherence` tactic.
 -/
@@ -342,7 +342,6 @@ def Mathlib.Tactic.BicategoryCoherence.bicategoricalComp {f g h i : a ⟶ b}
 #align category_theory.bicategory.bicategorical_comp Mathlib.Tactic.BicategoryCoherence.bicategoricalComp
 -/
 
--- mathport name: bicategorical_comp
 scoped[Bicategory] infixr:80 " ⊗≫ " => Mathlib.Tactic.BicategoryCoherence.bicategoricalComp
 
 #print Mathlib.Tactic.BicategoryCoherence.bicategoricalIsoComp /-
@@ -357,7 +356,6 @@ def Mathlib.Tactic.BicategoryCoherence.bicategoricalIsoComp {f g h i : a ⟶ b}
 #align category_theory.bicategory.bicategorical_iso_comp Mathlib.Tactic.BicategoryCoherence.bicategoricalIsoComp
 -/
 
--- mathport name: bicategorical_iso_comp
 scoped[Bicategory] infixr:80 " ≪⊗≫ " => Mathlib.Tactic.BicategoryCoherence.bicategoricalIsoComp
 
 -- type as \ot \gg

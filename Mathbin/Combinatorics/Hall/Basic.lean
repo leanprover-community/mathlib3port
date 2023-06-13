@@ -225,6 +225,7 @@ theorem Fintype.all_card_le_rel_image_card_iff_exists_injective {α : Type u} {�
 #align fintype.all_card_le_rel_image_card_iff_exists_injective Fintype.all_card_le_rel_image_card_iff_exists_injective
 -/
 
+#print Fintype.all_card_le_filter_rel_iff_exists_injective /-
 -- TODO: decidable_pred makes Yael sad. When an appropriate decidable_rel-like exists, fix it.
 /-- This is a version of **Hall's Marriage Theorem** in terms of a relation to a finite type.
 There is a transversal of the relation (an injective function `α → β` whose graph is a subrelation
@@ -249,4 +250,5 @@ theorem Fintype.all_card_le_filter_rel_iff_exists_injective {α : Type u} {β : 
   simp_rw [h, h']
   apply Finset.all_card_le_biUnion_card_iff_exists_injective
 #align fintype.all_card_le_filter_rel_iff_exists_injective Fintype.all_card_le_filter_rel_iff_exists_injective
+-/
 

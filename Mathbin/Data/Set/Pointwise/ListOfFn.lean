@@ -29,6 +29,7 @@ variable [Monoid α] {s t : Set α} {a : α} {m n : ℕ}
 
 open scoped Pointwise
 
+#print Set.mem_prod_list_ofFn /-
 @[to_additive]
 theorem mem_prod_list_ofFn {a : α} {s : Fin n → Set α} :
     a ∈ (List.ofFn s).Prod ↔ ∃ f : ∀ i : Fin n, s i, (List.ofFn fun i => (f i : α)).Prod = a :=
@@ -41,7 +42,9 @@ theorem mem_prod_list_ofFn {a : α} {s : Fin n → Set α} :
       exists_prop]
 #align set.mem_prod_list_of_fn Set.mem_prod_list_ofFn
 #align set.mem_sum_list_of_fn Set.mem_sum_list_ofFn
+-/
 
+#print Set.mem_list_prod /-
 @[to_additive]
 theorem mem_list_prod {l : List (Set α)} {a : α} :
     a ∈ l.Prod ↔
@@ -56,13 +59,16 @@ theorem mem_list_prod {l : List (Set α)} {a : α} :
   · rintro ⟨fi, rfl, rfl⟩; exact ⟨fun i => _, rfl⟩
 #align set.mem_list_prod Set.mem_list_prod
 #align set.mem_list_sum Set.mem_list_sum
+-/
 
+#print Set.mem_pow /-
 @[to_additive]
 theorem mem_pow {a : α} {n : ℕ} :
     a ∈ s ^ n ↔ ∃ f : Fin n → s, (List.ofFn fun i => (f i : α)).Prod = a := by
   rw [← mem_prod_list_of_fn, List.ofFn_const, List.prod_replicate]
 #align set.mem_pow Set.mem_pow
 #align set.mem_nsmul Set.mem_nsmul
+-/
 
 end Set
 

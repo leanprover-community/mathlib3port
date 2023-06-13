@@ -41,15 +41,19 @@ section Quiver
 
 variable [Quiver.{v₁} C]
 
+#print Quiver.Hom.op_inj /-
 theorem Quiver.Hom.op_inj {X Y : C} :
     Function.Injective (Quiver.Hom.op : (X ⟶ Y) → (op Y ⟶ op X)) := fun _ _ H =>
   congr_arg Quiver.Hom.unop H
 #align quiver.hom.op_inj Quiver.Hom.op_inj
+-/
 
+#print Quiver.Hom.unop_inj /-
 theorem Quiver.Hom.unop_inj {X Y : Cᵒᵖ} :
     Function.Injective (Quiver.Hom.unop : (X ⟶ Y) → (unop Y ⟶ unop X)) := fun _ _ H =>
   congr_arg Quiver.Hom.op H
 #align quiver.hom.unop_inj Quiver.Hom.unop_inj
+-/
 
 #print Quiver.Hom.unop_op /-
 @[simp]
@@ -58,10 +62,12 @@ theorem Quiver.Hom.unop_op {X Y : C} (f : X ⟶ Y) : f.op.unop = f :=
 #align quiver.hom.unop_op Quiver.Hom.unop_op
 -/
 
+#print Quiver.Hom.op_unop /-
 @[simp]
 theorem Quiver.Hom.op_unop {X Y : Cᵒᵖ} (f : X ⟶ Y) : f.unop.op = f :=
   rfl
 #align quiver.hom.op_unop Quiver.Hom.op_unop
+-/
 
 end Quiver
 
@@ -145,6 +151,7 @@ def unopUnop : C ⥤ Cᵒᵖᵒᵖ where
 #align category_theory.unop_unop CategoryTheory.unopUnop
 -/
 
+#print CategoryTheory.opOpEquivalence /-
 /-- The double opposite category is equivalent to the original. -/
 @[simps]
 def opOpEquivalence : Cᵒᵖᵒᵖ ≌ C where
@@ -153,6 +160,7 @@ def opOpEquivalence : Cᵒᵖᵒᵖ ≌ C where
   unitIso := Iso.refl (𝟭 Cᵒᵖᵒᵖ)
   counitIso := Iso.refl (unopUnop C ⋙ opOp C)
 #align category_theory.op_op_equivalence CategoryTheory.opOpEquivalence
+-/
 
 end
 
@@ -637,6 +645,7 @@ namespace Equivalence
 
 variable {D : Type u₂} [Category.{v₂} D]
 
+#print CategoryTheory.Equivalence.op /-
 /-- An equivalence between categories gives an equivalence between the opposite categories.
 -/
 @[simps]
@@ -647,7 +656,9 @@ def op (e : C ≌ D) : Cᵒᵖ ≌ Dᵒᵖ where
   counitIso := (NatIso.op e.counitIso).symm
   functor_unitIso_comp' X := by apply Quiver.Hom.unop_inj; dsimp; simp
 #align category_theory.equivalence.op CategoryTheory.Equivalence.op
+-/
 
+#print CategoryTheory.Equivalence.unop /-
 /-- An equivalence between opposite categories gives an equivalence between the original categories.
 -/
 @[simps]
@@ -658,6 +669,7 @@ def unop (e : Cᵒᵖ ≌ Dᵒᵖ) : C ≌ D where
   counitIso := (NatIso.unop e.counitIso).symm
   functor_unitIso_comp' X := by apply Quiver.Hom.op_inj; dsimp; simp
 #align category_theory.equivalence.unop CategoryTheory.Equivalence.unop
+-/
 
 end Equivalence
 
@@ -722,6 +734,7 @@ variable (C)
 
 variable (D : Type u₂) [Category.{v₂} D]
 
+#print CategoryTheory.Functor.opUnopEquiv /-
 /-- The equivalence of functor categories induced by `op` and `unop`.
 -/
 @[simps]
@@ -739,7 +752,9 @@ def opUnopEquiv : (C ⥤ D)ᵒᵖ ≌ Cᵒᵖ ⥤ Dᵒᵖ
         tidy)
   counitIso := NatIso.ofComponents (fun F => F.unopOpIso) (by tidy)
 #align category_theory.functor.op_unop_equiv CategoryTheory.Functor.opUnopEquiv
+-/
 
+#print CategoryTheory.Functor.leftOpRightOpEquiv /-
 /-- The equivalence of functor categories induced by `left_op` and `right_op`.
 -/
 @[simps]
@@ -761,6 +776,7 @@ def leftOpRightOpEquiv : (Cᵒᵖ ⥤ D)ᵒᵖ ≌ C ⥤ Dᵒᵖ
         tidy)
   counitIso := NatIso.ofComponents (fun F => F.leftOpRightOpIso) (by tidy)
 #align category_theory.functor.left_op_right_op_equiv CategoryTheory.Functor.leftOpRightOpEquiv
+-/
 
 end Functor
 

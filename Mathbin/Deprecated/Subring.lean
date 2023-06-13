@@ -63,45 +63,57 @@ def IsSubring.subring {S : Set R} (hs : IsSubring S) : Subring R
 
 namespace RingHom
 
+#print RingHom.isSubring_preimage /-
 theorem isSubring_preimage {R : Type u} {S : Type v} [Ring R] [Ring S] (f : R →+* S) {s : Set S}
     (hs : IsSubring s) : IsSubring (f ⁻¹' s) :=
   { IsAddGroupHom.preimage f.to_isAddGroupHom hs.to_isAddSubgroup,
     IsSubmonoid.preimage f.to_isMonoidHom hs.to_isSubmonoid with }
 #align ring_hom.is_subring_preimage RingHom.isSubring_preimage
+-/
 
+#print RingHom.isSubring_image /-
 theorem isSubring_image {R : Type u} {S : Type v} [Ring R] [Ring S] (f : R →+* S) {s : Set R}
     (hs : IsSubring s) : IsSubring (f '' s) :=
   { IsAddGroupHom.image_addSubgroup f.to_isAddGroupHom hs.to_isAddSubgroup,
     IsSubmonoid.image f.to_isMonoidHom hs.to_isSubmonoid with }
 #align ring_hom.is_subring_image RingHom.isSubring_image
+-/
 
+#print RingHom.isSubring_set_range /-
 theorem isSubring_set_range {R : Type u} {S : Type v} [Ring R] [Ring S] (f : R →+* S) :
     IsSubring (Set.range f) :=
   { IsAddGroupHom.range_addSubgroup f.to_isAddGroupHom, Range.isSubmonoid f.to_isMonoidHom with }
 #align ring_hom.is_subring_set_range RingHom.isSubring_set_range
+-/
 
 end RingHom
 
 variable {cR : Type u} [CommRing cR]
 
+#print IsSubring.inter /-
 theorem IsSubring.inter {S₁ S₂ : Set R} (hS₁ : IsSubring S₁) (hS₂ : IsSubring S₂) :
     IsSubring (S₁ ∩ S₂) :=
   { IsAddSubgroup.inter hS₁.to_isAddSubgroup hS₂.to_isAddSubgroup,
     IsSubmonoid.inter hS₁.to_isSubmonoid hS₂.to_isSubmonoid with }
 #align is_subring.inter IsSubring.inter
+-/
 
+#print IsSubring.iInter /-
 theorem IsSubring.iInter {ι : Sort _} {S : ι → Set R} (h : ∀ y : ι, IsSubring (S y)) :
     IsSubring (Set.iInter S) :=
   { IsAddSubgroup.iInter fun i => (h i).to_isAddSubgroup,
     IsSubmonoid.iInter fun i => (h i).to_isSubmonoid with }
 #align is_subring.Inter IsSubring.iInter
+-/
 
+#print isSubring_iUnion_of_directed /-
 theorem isSubring_iUnion_of_directed {ι : Type _} [hι : Nonempty ι] {s : ι → Set R}
     (h : ∀ i, IsSubring (s i)) (directed : ∀ i j, ∃ k, s i ⊆ s k ∧ s j ⊆ s k) :
     IsSubring (⋃ i, s i) :=
   { to_isAddSubgroup := isAddSubgroup_iUnion_of_directed (fun i => (h i).to_isAddSubgroup) Directed
     to_isSubmonoid := isSubmonoid_iUnion_of_directed (fun i => (h i).to_isSubmonoid) Directed }
 #align is_subring_Union_of_directed isSubring_iUnion_of_directed
+-/
 
 namespace Ring
 
@@ -117,6 +129,7 @@ variable {s : Set R}
 
 attribute [local reducible] closure
 
+#print Ring.exists_list_of_mem_closure /-
 theorem exists_list_of_mem_closure {a : R} (h : a ∈ closure s) :
     ∃ L : List (List R), (∀ l ∈ L, ∀ x ∈ l, x ∈ s ∨ x = (-1 : R)) ∧ (L.map List.prod).Sum = a :=
   AddGroup.InClosure.rec_on h
@@ -141,9 +154,11 @@ theorem exists_list_of_mem_closure {a : R} (h : a ∈ closure s) :
     | _, _, ⟨L1, h1, rfl⟩, ⟨L2, h2, rfl⟩ =>
       ⟨L1 ++ L2, List.forall_mem_append.2 ⟨h1, h2⟩, by rw [List.map_append, List.sum_append]⟩
 #align ring.exists_list_of_mem_closure Ring.exists_list_of_mem_closure
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print Ring.InClosure.recOn /-
 @[elab_as_elim]
 protected theorem InClosure.recOn {C : R → Prop} {x : R} (hx : x ∈ closure s) (h1 : C 1)
     (hneg1 : C (-1)) (hs : ∀ z ∈ s, ∀ n, C n → C (z * n)) (ha : ∀ {x y}, C x → C y → C (x + y)) :
@@ -181,6 +196,7 @@ protected theorem InClosure.recOn {C : R → Prop} {x : R} (hx : x ∈ closure s
         Or.inr <| by rw [List.prod_cons, List.prod_cons, HP, neg_mul_eq_mul_neg]⟩
   · exact ⟨L, HL', Or.inl <| by rw [List.prod_cons, hhd, HP, neg_one_mul, neg_neg]⟩
 #align ring.in_closure.rec_on Ring.InClosure.recOn
+-/
 
 #print Ring.closure.isSubring /-
 theorem closure.isSubring : IsSubring (closure s) :=
@@ -235,6 +251,7 @@ theorem closure_mono {s t : Set R} (H : s ⊆ t) : closure s ⊆ closure t :=
 #align ring.closure_mono Ring.closure_mono
 -/
 
+#print Ring.image_closure /-
 theorem image_closure {S : Type _} [Ring S] (f : R →+* S) (s : Set R) :
     f '' closure s = closure (f '' s) :=
   le_antisymm
@@ -252,6 +269,7 @@ theorem image_closure {S : Type _} [Ring S] (f : R →+* S) (s : Set R) :
     (closure_subset (RingHom.isSubring_image _ closure.isSubring) <|
       Set.image_subset _ subset_closure)
 #align ring.image_closure Ring.image_closure
+-/
 
 end Ring
 

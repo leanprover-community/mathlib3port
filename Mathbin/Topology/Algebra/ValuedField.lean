@@ -50,6 +50,7 @@ section InversionEstimate
 
 variable (v : Valuation K Γ₀)
 
+#print Valuation.inversion_estimate /-
 -- The following is the main technical lemma ensuring that inversion is continuous
 -- in the topology induced by a valuation on a division ring (ie the next instance)
 -- and the fact that a valued field is completable
@@ -78,6 +79,7 @@ theorem Valuation.inversion_estimate {x y : K} {γ : Γ₀ˣ} (y_ne : y ≠ 0)
     _ = (v <| x - y) * (v y * v y)⁻¹ := by rw [Valuation.map_sub_swap]
     _ < γ := hyp1'
 #align valuation.inversion_estimate Valuation.inversion_estimate
+-/
 
 end InversionEstimate
 
@@ -126,6 +128,7 @@ open scoped WithZeroTopology
 
 open Valued
 
+#print Valued.continuous_valuation /-
 theorem Valued.continuous_valuation [Valued K Γ₀] : Continuous (v : K → Γ₀) :=
   by
   rw [continuous_iff_continuousAt]
@@ -139,6 +142,7 @@ theorem Valued.continuous_valuation [Valued K Γ₀] : Continuous (v : K → Γ�
     rw [ContinuousAt, WithZeroTopology.tendsto_of_ne_zero v_ne]
     apply Valued.loc_const v_ne
 #align valued.continuous_valuation Valued.continuous_valuation
+-/
 
 end
 
@@ -152,9 +156,6 @@ open UniformSpace
 
 variable {K : Type _} [Field K] {Γ₀ : Type _} [LinearOrderedCommGroupWithZero Γ₀] [hv : Valued K Γ₀]
 
-include hv
-
--- mathport name: exprhat
 local notation "hat " => Completion
 
 #print Valued.completable /-
@@ -215,6 +216,7 @@ noncomputable def extension : hat K → Γ₀ :=
 -/
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (x y «expr ∈ » V') -/
+#print Valued.continuous_extension /-
 theorem continuous_extension : Continuous (Valued.extension : hat K → Γ₀) :=
   by
   refine' completion.dense_inducing_coe.continuous_extend _
@@ -294,7 +296,9 @@ theorem continuous_extension : Continuous (Valued.extension : hat K → Γ₀) :
       _ = v (a * z₀⁻¹) * v z₀ := (Valuation.map_mul _ _ _)
       _ = v z₀ := by rw [this, one_mul]
 #align valued.continuous_extension Valued.continuous_extension
+-/
 
+#print Valued.extension_extends /-
 @[simp, norm_cast]
 theorem extension_extends (x : K) : extension (x : hat K) = v x :=
   by
@@ -302,6 +306,7 @@ theorem extension_extends (x : K) : extension (x : hat K) = v x :=
   rw [← completion.dense_inducing_coe.nhds_eq_comap]
   exact valued.continuous_valuation.continuous_at
 #align valued.extension_extends Valued.extension_extends
+-/
 
 #print Valued.extensionValuation /-
 /-- the extension of a valuation on a division ring to its completion. -/
@@ -338,6 +343,7 @@ noncomputable def extensionValuation : Valuation (hat K) Γ₀
 #align valued.extension_valuation Valued.extensionValuation
 -/
 
+#print Valued.closure_coe_completion_v_lt /-
 -- Bourbaki CA VI §5 no.3 Proposition 5 (d)
 theorem closure_coe_completion_v_lt {γ : Γ₀ˣ} :
     closure (coe '' {x : K | v x < (γ : Γ₀)}) = {x : hat K | extensionValuation x < (γ : Γ₀)} :=
@@ -366,6 +372,7 @@ theorem closure_coe_completion_v_lt {γ : Γ₀ˣ} :
     rw [← hy₁] at hx 
     exact ⟨⟨y, ⟨y, hx, rfl⟩⟩, hy₂⟩
 #align valued.closure_coe_completion_v_lt Valued.closure_coe_completion_v_lt
+-/
 
 #print Valued.valuedCompletion /-
 noncomputable instance valuedCompletion : Valued (hat K) Γ₀
@@ -383,10 +390,12 @@ noncomputable instance valuedCompletion : Valued (hat K) Γ₀
 #align valued.valued_completion Valued.valuedCompletion
 -/
 
+#print Valued.valuedCompletion_apply /-
 @[simp, norm_cast]
 theorem valuedCompletion_apply (x : K) : Valued.v (x : hat K) = v x :=
   extension_extends x
 #align valued.valued_completion_apply Valued.valuedCompletion_apply
+-/
 
 end Valued
 
