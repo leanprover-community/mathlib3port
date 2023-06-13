@@ -57,11 +57,13 @@ variable [Fact (finrank ℝ V = 2)] [Fact (finrank ℝ V' = 2)] (o : Orientation
 -- mathport name: exprω
 local notation "ω" => o.areaForm
 
+#print Orientation.oangle /-
 /-- The oriented angle from `x` to `y`, modulo `2 * π`. If either vector is 0, this is 0.
 See `inner_product_geometry.angle` for the corresponding unoriented angle definition. -/
 def oangle (x y : V) : Real.Angle :=
   Complex.arg (o.kahler x y)
 #align orientation.oangle Orientation.oangle
+-/
 
 /-- Oriented angles are continuous when the vectors involved are nonzero. -/
 theorem continuousAt_oangle {x : V × V} (hx1 : x.1 ≠ 0) (hx2 : x.2 ≠ 0) :
@@ -166,10 +168,12 @@ theorem right_ne_zero_of_oangle_sign_ne_zero {x y : V} (h : (o.oangle x y).sign 
   o.right_ne_zero_of_oangle_ne_zero (Real.Angle.sign_ne_zero_iff.1 h).1
 #align orientation.right_ne_zero_of_oangle_sign_ne_zero Orientation.right_ne_zero_of_oangle_sign_ne_zero
 
+#print Orientation.ne_of_oangle_sign_ne_zero /-
 /-- If the sign of the angle between two vectors is nonzero, the vectors are not equal. -/
 theorem ne_of_oangle_sign_ne_zero {x y : V} (h : (o.oangle x y).sign ≠ 0) : x ≠ y :=
   o.ne_of_oangle_ne_zero (Real.Angle.sign_ne_zero_iff.1 h).1
 #align orientation.ne_of_oangle_sign_ne_zero Orientation.ne_of_oangle_sign_ne_zero
+-/
 
 /-- If the sign of the angle between two vectors is positive, the first vector is nonzero. -/
 theorem left_ne_zero_of_oangle_sign_eq_one {x y : V} (h : (o.oangle x y).sign = 1) : x ≠ 0 :=
@@ -181,10 +185,12 @@ theorem right_ne_zero_of_oangle_sign_eq_one {x y : V} (h : (o.oangle x y).sign =
   o.right_ne_zero_of_oangle_sign_ne_zero (h.symm ▸ by decide : (o.oangle x y).sign ≠ 0)
 #align orientation.right_ne_zero_of_oangle_sign_eq_one Orientation.right_ne_zero_of_oangle_sign_eq_one
 
+#print Orientation.ne_of_oangle_sign_eq_one /-
 /-- If the sign of the angle between two vectors is positive, the vectors are not equal. -/
 theorem ne_of_oangle_sign_eq_one {x y : V} (h : (o.oangle x y).sign = 1) : x ≠ y :=
   o.ne_of_oangle_sign_ne_zero (h.symm ▸ by decide : (o.oangle x y).sign ≠ 0)
 #align orientation.ne_of_oangle_sign_eq_one Orientation.ne_of_oangle_sign_eq_one
+-/
 
 /-- If the sign of the angle between two vectors is negative, the first vector is nonzero. -/
 theorem left_ne_zero_of_oangle_sign_eq_neg_one {x y : V} (h : (o.oangle x y).sign = -1) : x ≠ 0 :=
@@ -196,10 +202,12 @@ theorem right_ne_zero_of_oangle_sign_eq_neg_one {x y : V} (h : (o.oangle x y).si
   o.right_ne_zero_of_oangle_sign_ne_zero (h.symm ▸ by decide : (o.oangle x y).sign ≠ 0)
 #align orientation.right_ne_zero_of_oangle_sign_eq_neg_one Orientation.right_ne_zero_of_oangle_sign_eq_neg_one
 
+#print Orientation.ne_of_oangle_sign_eq_neg_one /-
 /-- If the sign of the angle between two vectors is negative, the vectors are not equal. -/
 theorem ne_of_oangle_sign_eq_neg_one {x y : V} (h : (o.oangle x y).sign = -1) : x ≠ y :=
   o.ne_of_oangle_sign_ne_zero (h.symm ▸ by decide : (o.oangle x y).sign ≠ 0)
 #align orientation.ne_of_oangle_sign_eq_neg_one Orientation.ne_of_oangle_sign_eq_neg_one
+-/
 
 /-- Swapping the two vectors passed to `oangle` negates the angle. -/
 theorem oangle_rev (x y : V) : o.oangle y x = -o.oangle x y := by
@@ -710,6 +718,7 @@ theorem eq_zero_or_angle_eq_zero_or_pi_of_sign_oangle_eq_zero {x y : V}
   rcases h with (h | h) <;> simp [h, real.pi_pos.le]
 #align orientation.eq_zero_or_angle_eq_zero_or_pi_of_sign_oangle_eq_zero Orientation.eq_zero_or_angle_eq_zero_or_pi_of_sign_oangle_eq_zero
 
+#print Orientation.oangle_eq_of_angle_eq_of_sign_eq /-
 /-- If two unoriented angles are equal, and the signs of the corresponding oriented angles are
 equal, then the oriented angles are equal (even in degenerate cases). -/
 theorem oangle_eq_of_angle_eq_of_sign_eq {w x y z : V}
@@ -752,6 +761,7 @@ theorem oangle_eq_of_angle_eq_of_sign_eq {w x y z : V}
     rwa [o.angle_eq_abs_oangle_to_real h0.1.1 h0.1.2,
       o.angle_eq_abs_oangle_to_real h0.2.1 h0.2.2] at h 
 #align orientation.oangle_eq_of_angle_eq_of_sign_eq Orientation.oangle_eq_of_angle_eq_of_sign_eq
+-/
 
 /-- If the signs of two oriented angles between nonzero vectors are equal, the oriented angles are
 equal if and only if the unoriented angles are equal. -/
@@ -866,6 +876,7 @@ theorem inner_rev_eq_zero_of_oangle_eq_neg_pi_div_two {x y : V} (h : o.oangle x 
     ⟪y, x⟫ = 0 := by rw [real_inner_comm, o.inner_eq_zero_of_oangle_eq_neg_pi_div_two h]
 #align orientation.inner_rev_eq_zero_of_oangle_eq_neg_pi_div_two Orientation.inner_rev_eq_zero_of_oangle_eq_neg_pi_div_two
 
+#print Orientation.oangle_sign_neg_left /-
 /-- Negating the first vector passed to `oangle` negates the sign of the angle. -/
 @[simp]
 theorem oangle_sign_neg_left (x y : V) : (o.oangle (-x) y).sign = -(o.oangle x y).sign :=
@@ -874,7 +885,9 @@ theorem oangle_sign_neg_left (x y : V) : (o.oangle (-x) y).sign = -(o.oangle x y
   by_cases hy : y = 0; · simp [hy]
   rw [o.oangle_neg_left hx hy, Real.Angle.sign_add_pi]
 #align orientation.oangle_sign_neg_left Orientation.oangle_sign_neg_left
+-/
 
+#print Orientation.oangle_sign_neg_right /-
 /-- Negating the second vector passed to `oangle` negates the sign of the angle. -/
 @[simp]
 theorem oangle_sign_neg_right (x y : V) : (o.oangle x (-y)).sign = -(o.oangle x y).sign :=
@@ -883,6 +896,7 @@ theorem oangle_sign_neg_right (x y : V) : (o.oangle x (-y)).sign = -(o.oangle x 
   by_cases hy : y = 0; · simp [hy]
   rw [o.oangle_neg_right hx hy, Real.Angle.sign_add_pi]
 #align orientation.oangle_sign_neg_right Orientation.oangle_sign_neg_right
+-/
 
 /-- Multiplying the first vector passed to `oangle` by a real multiplies the sign of the angle by
 the sign of the real. -/
@@ -930,6 +944,7 @@ theorem oangle_smul_add_right_eq_zero_or_eq_pi_iff {x y : V} (r : ℝ) :
     simpa [h0] using hm
 #align orientation.oangle_smul_add_right_eq_zero_or_eq_pi_iff Orientation.oangle_smul_add_right_eq_zero_or_eq_pi_iff
 
+#print Orientation.oangle_sign_smul_add_right /-
 /-- Adding a multiple of the first vector passed to `oangle` to the second vector does not change
 the sign of the angle. -/
 @[simp]
@@ -972,7 +987,9 @@ theorem oangle_sign_smul_add_right (x y : V) (r : ℝ) :
   have hy : (x, r • x + y) ∈ s := Set.mem_image_of_mem _ (Set.mem_univ _)
   convert Real.Angle.sign_eq_of_continuousOn hc hf hs hx hy
 #align orientation.oangle_sign_smul_add_right Orientation.oangle_sign_smul_add_right
+-/
 
+#print Orientation.oangle_sign_add_smul_left /-
 /-- Adding a multiple of the second vector passed to `oangle` to the first vector does not change
 the sign of the angle. -/
 @[simp]
@@ -980,7 +997,9 @@ theorem oangle_sign_add_smul_left (x y : V) (r : ℝ) :
     (o.oangle (x + r • y) y).sign = (o.oangle x y).sign := by
   simp_rw [o.oangle_rev y, Real.Angle.sign_neg, add_comm x, oangle_sign_smul_add_right]
 #align orientation.oangle_sign_add_smul_left Orientation.oangle_sign_add_smul_left
+-/
 
+#print Orientation.oangle_sign_sub_smul_right /-
 /-- Subtracting a multiple of the first vector passed to `oangle` from the second vector does
 not change the sign of the angle. -/
 @[simp]
@@ -988,7 +1007,9 @@ theorem oangle_sign_sub_smul_right (x y : V) (r : ℝ) :
     (o.oangle x (y - r • x)).sign = (o.oangle x y).sign := by
   rw [sub_eq_add_neg, ← neg_smul, add_comm, oangle_sign_smul_add_right]
 #align orientation.oangle_sign_sub_smul_right Orientation.oangle_sign_sub_smul_right
+-/
 
+#print Orientation.oangle_sign_sub_smul_left /-
 /-- Subtracting a multiple of the second vector passed to `oangle` from the first vector does
 not change the sign of the angle. -/
 @[simp]
@@ -996,35 +1017,45 @@ theorem oangle_sign_sub_smul_left (x y : V) (r : ℝ) :
     (o.oangle (x - r • y) y).sign = (o.oangle x y).sign := by
   rw [sub_eq_add_neg, ← neg_smul, oangle_sign_add_smul_left]
 #align orientation.oangle_sign_sub_smul_left Orientation.oangle_sign_sub_smul_left
+-/
 
+#print Orientation.oangle_sign_add_right /-
 /-- Adding the first vector passed to `oangle` to the second vector does not change the sign of
 the angle. -/
 @[simp]
 theorem oangle_sign_add_right (x y : V) : (o.oangle x (x + y)).sign = (o.oangle x y).sign := by
   rw [← o.oangle_sign_smul_add_right x y 1, one_smul]
 #align orientation.oangle_sign_add_right Orientation.oangle_sign_add_right
+-/
 
+#print Orientation.oangle_sign_add_left /-
 /-- Adding the second vector passed to `oangle` to the first vector does not change the sign of
 the angle. -/
 @[simp]
 theorem oangle_sign_add_left (x y : V) : (o.oangle (x + y) y).sign = (o.oangle x y).sign := by
   rw [← o.oangle_sign_add_smul_left x y 1, one_smul]
 #align orientation.oangle_sign_add_left Orientation.oangle_sign_add_left
+-/
 
+#print Orientation.oangle_sign_sub_right /-
 /-- Subtracting the first vector passed to `oangle` from the second vector does not change the
 sign of the angle. -/
 @[simp]
 theorem oangle_sign_sub_right (x y : V) : (o.oangle x (y - x)).sign = (o.oangle x y).sign := by
   rw [← o.oangle_sign_sub_smul_right x y 1, one_smul]
 #align orientation.oangle_sign_sub_right Orientation.oangle_sign_sub_right
+-/
 
+#print Orientation.oangle_sign_sub_left /-
 /-- Subtracting the second vector passed to `oangle` from the first vector does not change the
 sign of the angle. -/
 @[simp]
 theorem oangle_sign_sub_left (x y : V) : (o.oangle (x - y) y).sign = (o.oangle x y).sign := by
   rw [← o.oangle_sign_sub_smul_left x y 1, one_smul]
 #align orientation.oangle_sign_sub_left Orientation.oangle_sign_sub_left
+-/
 
+#print Orientation.oangle_sign_smul_sub_right /-
 /-- Subtracting the second vector passed to `oangle` from a multiple of the first vector negates
 the sign of the angle. -/
 @[simp]
@@ -1032,7 +1063,9 @@ theorem oangle_sign_smul_sub_right (x y : V) (r : ℝ) :
     (o.oangle x (r • x - y)).sign = -(o.oangle x y).sign := by
   rw [← oangle_sign_neg_right, sub_eq_add_neg, oangle_sign_smul_add_right]
 #align orientation.oangle_sign_smul_sub_right Orientation.oangle_sign_smul_sub_right
+-/
 
+#print Orientation.oangle_sign_smul_sub_left /-
 /-- Subtracting the first vector passed to `oangle` from a multiple of the second vector negates
 the sign of the angle. -/
 @[simp]
@@ -1040,33 +1073,43 @@ theorem oangle_sign_smul_sub_left (x y : V) (r : ℝ) :
     (o.oangle (r • y - x) y).sign = -(o.oangle x y).sign := by
   rw [← oangle_sign_neg_left, sub_eq_neg_add, oangle_sign_add_smul_left]
 #align orientation.oangle_sign_smul_sub_left Orientation.oangle_sign_smul_sub_left
+-/
 
+#print Orientation.oangle_sign_sub_right_eq_neg /-
 /-- Subtracting the second vector passed to `oangle` from the first vector negates the sign of
 the angle. -/
 theorem oangle_sign_sub_right_eq_neg (x y : V) : (o.oangle x (x - y)).sign = -(o.oangle x y).sign :=
   by rw [← o.oangle_sign_smul_sub_right x y 1, one_smul]
 #align orientation.oangle_sign_sub_right_eq_neg Orientation.oangle_sign_sub_right_eq_neg
+-/
 
+#print Orientation.oangle_sign_sub_left_eq_neg /-
 /-- Subtracting the first vector passed to `oangle` from the second vector negates the sign of
 the angle. -/
 theorem oangle_sign_sub_left_eq_neg (x y : V) : (o.oangle (y - x) y).sign = -(o.oangle x y).sign :=
   by rw [← o.oangle_sign_smul_sub_left x y 1, one_smul]
 #align orientation.oangle_sign_sub_left_eq_neg Orientation.oangle_sign_sub_left_eq_neg
+-/
 
+#print Orientation.oangle_sign_sub_right_swap /-
 /-- Subtracting the first vector passed to `oangle` from the second vector then swapping the
 vectors does not change the sign of the angle. -/
 @[simp]
 theorem oangle_sign_sub_right_swap (x y : V) : (o.oangle y (y - x)).sign = (o.oangle x y).sign := by
   rw [oangle_sign_sub_right_eq_neg, o.oangle_rev y x, Real.Angle.sign_neg]
 #align orientation.oangle_sign_sub_right_swap Orientation.oangle_sign_sub_right_swap
+-/
 
+#print Orientation.oangle_sign_sub_left_swap /-
 /-- Subtracting the second vector passed to `oangle` from the first vector then swapping the
 vectors does not change the sign of the angle. -/
 @[simp]
 theorem oangle_sign_sub_left_swap (x y : V) : (o.oangle (x - y) x).sign = (o.oangle x y).sign := by
   rw [oangle_sign_sub_left_eq_neg, o.oangle_rev y x, Real.Angle.sign_neg]
 #align orientation.oangle_sign_sub_left_swap Orientation.oangle_sign_sub_left_swap
+-/
 
+#print Orientation.oangle_sign_smul_add_smul_right /-
 /-- The sign of the angle between a vector, and a linear combination of that vector with a second
 vector, is the sign of the factor by which the second vector is multiplied in that combination
 multiplied by the sign of the angle between the two vectors. -/
@@ -1077,7 +1120,9 @@ theorem oangle_sign_smul_add_smul_right (x y : V) (r₁ r₂ : ℝ) :
   rw [← o.oangle_sign_smul_add_right x (r₁ • x + r₂ • y) (-r₁)]
   simp
 #align orientation.oangle_sign_smul_add_smul_right Orientation.oangle_sign_smul_add_smul_right
+-/
 
+#print Orientation.oangle_sign_smul_add_smul_left /-
 /-- The sign of the angle between a linear combination of two vectors and the second vector is
 the sign of the factor by which the first vector is multiplied in that combination multiplied by
 the sign of the angle between the two vectors. -/
@@ -1087,7 +1132,9 @@ theorem oangle_sign_smul_add_smul_left (x y : V) (r₁ r₂ : ℝ) :
   simp_rw [o.oangle_rev y, Real.Angle.sign_neg, add_comm (r₁ • x), oangle_sign_smul_add_smul_right,
     mul_neg]
 #align orientation.oangle_sign_smul_add_smul_left Orientation.oangle_sign_smul_add_smul_left
+-/
 
+#print Orientation.oangle_sign_smul_add_smul_smul_add_smul /-
 /-- The sign of the angle between two linear combinations of two vectors is the sign of the
 determinant of the factors in those combinations multiplied by the sign of the angle between the
 two vectors. -/
@@ -1108,6 +1155,7 @@ theorem oangle_sign_smul_add_smul_smul_add_smul (x y : V) (r₁ r₂ r₃ r₄ :
       mul_assoc, div_mul_cancel _ hr₁, add_comm, neg_mul, ← sub_eq_add_neg, mul_comm r₄,
       mul_comm r₃]
 #align orientation.oangle_sign_smul_add_smul_smul_add_smul Orientation.oangle_sign_smul_add_smul_smul_add_smul
+-/
 
 /-- A base angle of an isosceles triangle is acute, oriented vector angle form. -/
 theorem abs_oangle_sub_left_toReal_lt_pi_div_two {x y : V} (h : ‖x‖ = ‖y‖) :

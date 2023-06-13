@@ -70,9 +70,9 @@ instance : ConcreteCategory BddLat
   forget := ⟨coeSort, fun X Y => coeFn, fun X => rfl, fun X Y Z f g => rfl⟩
   forget_faithful := ⟨fun X Y => by convert FunLike.coe_injective⟩
 
-instance hasForgetToBddOrd : HasForget₂ BddLat BddOrd
+instance hasForgetToBddOrd : HasForget₂ BddLat BddOrdCat
     where forget₂ :=
-    { obj := fun X => BddOrd.of X
+    { obj := fun X => BddOrdCat.of X
       map := fun X Y => BoundedLatticeHom.toBoundedOrderHom }
 #align BddLat.has_forget_to_BddOrd BddLat.hasForgetToBddOrd
 
@@ -95,9 +95,9 @@ instance hasForgetToSemilatInf : HasForget₂ BddLat SemilatInf
 #align BddLat.has_forget_to_SemilatInf BddLat.hasForgetToSemilatInf
 
 @[simp]
-theorem coe_forget_to_bddOrd (X : BddLat) : ↥((forget₂ BddLat BddOrd).obj X) = ↥X :=
+theorem coe_forget_to_bddOrdCat (X : BddLat) : ↥((forget₂ BddLat BddOrdCat).obj X) = ↥X :=
   rfl
-#align BddLat.coe_forget_to_BddOrd BddLat.coe_forget_to_bddOrd
+#align BddLat.coe_forget_to_BddOrd BddLat.coe_forget_to_bddOrdCat
 
 @[simp]
 theorem coe_forget_to_latCat (X : BddLat) : ↥((forget₂ BddLat LatCat).obj X) = ↥X :=
@@ -114,23 +114,23 @@ theorem coe_forget_to_semilatInf (X : BddLat) : ↥((forget₂ BddLat SemilatInf
   rfl
 #align BddLat.coe_forget_to_SemilatInf BddLat.coe_forget_to_semilatInf
 
-theorem forget_latCat_partOrdCat_eq_forget_bddOrd_partOrdCat :
+theorem forget_latCat_partOrdCat_eq_forget_bddOrdCat_partOrdCat :
     forget₂ BddLat LatCat ⋙ forget₂ LatCat PartOrdCat =
-      forget₂ BddLat BddOrd ⋙ forget₂ BddOrd PartOrdCat :=
+      forget₂ BddLat BddOrdCat ⋙ forget₂ BddOrdCat PartOrdCat :=
   rfl
-#align BddLat.forget_Lat_PartOrd_eq_forget_BddOrd_PartOrd BddLat.forget_latCat_partOrdCat_eq_forget_bddOrd_partOrdCat
+#align BddLat.forget_Lat_PartOrd_eq_forget_BddOrd_PartOrd BddLat.forget_latCat_partOrdCat_eq_forget_bddOrdCat_partOrdCat
 
-theorem forget_semilatSup_partOrdCat_eq_forget_bddOrd_partOrdCat :
+theorem forget_semilatSup_partOrdCat_eq_forget_bddOrdCat_partOrdCat :
     forget₂ BddLat SemilatSup ⋙ forget₂ SemilatSup PartOrdCat =
-      forget₂ BddLat BddOrd ⋙ forget₂ BddOrd PartOrdCat :=
+      forget₂ BddLat BddOrdCat ⋙ forget₂ BddOrdCat PartOrdCat :=
   rfl
-#align BddLat.forget_SemilatSup_PartOrd_eq_forget_BddOrd_PartOrd BddLat.forget_semilatSup_partOrdCat_eq_forget_bddOrd_partOrdCat
+#align BddLat.forget_SemilatSup_PartOrd_eq_forget_BddOrd_PartOrd BddLat.forget_semilatSup_partOrdCat_eq_forget_bddOrdCat_partOrdCat
 
-theorem forget_semilatInf_partOrdCat_eq_forget_bddOrd_partOrdCat :
+theorem forget_semilatInf_partOrdCat_eq_forget_bddOrdCat_partOrdCat :
     forget₂ BddLat SemilatInf ⋙ forget₂ SemilatInf PartOrdCat =
-      forget₂ BddLat BddOrd ⋙ forget₂ BddOrd PartOrdCat :=
+      forget₂ BddLat BddOrdCat ⋙ forget₂ BddOrdCat PartOrdCat :=
   rfl
-#align BddLat.forget_SemilatInf_PartOrd_eq_forget_BddOrd_PartOrd BddLat.forget_semilatInf_partOrdCat_eq_forget_bddOrd_partOrdCat
+#align BddLat.forget_SemilatInf_PartOrd_eq_forget_BddOrd_PartOrd BddLat.forget_semilatInf_partOrdCat_eq_forget_bddOrdCat_partOrdCat
 
 /-- Constructs an equivalence between bounded lattices from an order isomorphism
 between them. -/
@@ -160,10 +160,10 @@ def dualEquiv : BddLat ≌ BddLat :=
 
 end BddLat
 
-theorem bddLat_dual_comp_forget_to_bddOrd :
-    BddLat.dual ⋙ forget₂ BddLat BddOrd = forget₂ BddLat BddOrd ⋙ BddOrd.dual :=
+theorem bddLat_dual_comp_forget_to_bddOrdCat :
+    BddLat.dual ⋙ forget₂ BddLat BddOrdCat = forget₂ BddLat BddOrdCat ⋙ BddOrdCat.dual :=
   rfl
-#align BddLat_dual_comp_forget_to_BddOrd bddLat_dual_comp_forget_to_bddOrd
+#align BddLat_dual_comp_forget_to_BddOrd bddLat_dual_comp_forget_to_bddOrdCat
 
 theorem bddLat_dual_comp_forget_to_latCat :
     BddLat.dual ⋙ forget₂ BddLat LatCat = forget₂ BddLat LatCat ⋙ LatCat.dual :=

@@ -23,36 +23,41 @@ universe u v
 
 open CategoryTheory
 
+#print BddOrdCat /-
 /-- The category of bounded orders with monotone functions. -/
-structure BddOrd where
+structure BddOrdCat where
   toPartOrd : PartOrdCat
   [isBoundedOrder : BoundedOrder to_PartOrd]
-#align BddOrd BddOrd
+#align BddOrd BddOrdCat
+-/
 
-namespace BddOrd
+namespace BddOrdCat
 
-instance : CoeSort BddOrd (Type _) :=
+instance : CoeSort BddOrdCat (Type _) :=
   InducedCategory.hasCoeToSort toPartOrd
 
-instance (X : BddOrd) : PartialOrder X :=
+instance (X : BddOrdCat) : PartialOrder X :=
   X.toPartOrd.str
 
-attribute [instance] BddOrd.isBoundedOrder
+attribute [instance] BddOrdCat.isBoundedOrder
 
+#print BddOrdCat.of /-
 /-- Construct a bundled `BddOrd` from a `fintype` `partial_order`. -/
-def of (α : Type _) [PartialOrder α] [BoundedOrder α] : BddOrd :=
+def of (α : Type _) [PartialOrder α] [BoundedOrder α] : BddOrdCat :=
   ⟨⟨α⟩⟩
-#align BddOrd.of BddOrd.of
+#align BddOrd.of BddOrdCat.of
+-/
 
 @[simp]
 theorem coe_of (α : Type _) [PartialOrder α] [BoundedOrder α] : ↥(of α) = α :=
   rfl
-#align BddOrd.coe_of BddOrd.coe_of
+#align BddOrd.coe_of BddOrdCat.coe_of
 
-instance : Inhabited BddOrd :=
+instance : Inhabited BddOrdCat :=
   ⟨of PUnit⟩
 
-instance largeCategory : LargeCategory.{u} BddOrd
+#print BddOrdCat.largeCategory /-
+instance largeCategory : LargeCategory.{u} BddOrdCat
     where
   Hom X Y := BoundedOrderHom X Y
   id X := BoundedOrderHom.id X
@@ -60,62 +65,72 @@ instance largeCategory : LargeCategory.{u} BddOrd
   id_comp' X Y := BoundedOrderHom.comp_id
   comp_id' X Y := BoundedOrderHom.id_comp
   assoc' W X Y Z _ _ _ := BoundedOrderHom.comp_assoc _ _ _
-#align BddOrd.large_category BddOrd.largeCategory
+#align BddOrd.large_category BddOrdCat.largeCategory
+-/
 
-instance concreteCategory : ConcreteCategory BddOrd
+#print BddOrdCat.concreteCategory /-
+instance concreteCategory : ConcreteCategory BddOrdCat
     where
   forget := ⟨coeSort, fun X Y => coeFn, fun X => rfl, fun X Y Z f g => rfl⟩
   forget_faithful := ⟨fun X Y => by convert FunLike.coe_injective⟩
-#align BddOrd.concrete_category BddOrd.concreteCategory
+#align BddOrd.concrete_category BddOrdCat.concreteCategory
+-/
 
-instance hasForgetToPartOrd : HasForget₂ BddOrd PartOrdCat
+instance hasForgetToPartOrd : HasForget₂ BddOrdCat PartOrdCat
     where forget₂ :=
     { obj := fun X => X.toPartOrd
       map := fun X Y => BoundedOrderHom.toOrderHom }
-#align BddOrd.has_forget_to_PartOrd BddOrd.hasForgetToPartOrd
+#align BddOrd.has_forget_to_PartOrd BddOrdCat.hasForgetToPartOrd
 
-instance hasForgetToBipointed : HasForget₂ BddOrd Bipointed
+instance hasForgetToBipointed : HasForget₂ BddOrdCat Bipointed
     where
   forget₂ :=
     { obj := fun X => ⟨X, ⊥, ⊤⟩
       map := fun X Y f => ⟨f, map_bot f, map_top f⟩ }
   forget_comp := rfl
-#align BddOrd.has_forget_to_Bipointed BddOrd.hasForgetToBipointed
+#align BddOrd.has_forget_to_Bipointed BddOrdCat.hasForgetToBipointed
 
+#print BddOrdCat.dual /-
 /-- `order_dual` as a functor. -/
 @[simps]
-def dual : BddOrd ⥤ BddOrd where
+def dual : BddOrdCat ⥤ BddOrdCat where
   obj X := of Xᵒᵈ
   map X Y := BoundedOrderHom.dual
-#align BddOrd.dual BddOrd.dual
+#align BddOrd.dual BddOrdCat.dual
+-/
 
 /-- Constructs an equivalence between bounded orders from an order isomorphism between them. -/
 @[simps]
-def Iso.mk {α β : BddOrd.{u}} (e : α ≃o β) : α ≅ β
+def Iso.mk {α β : BddOrdCat.{u}} (e : α ≃o β) : α ≅ β
     where
   Hom := e
   inv := e.symm
   hom_inv_id' := by ext; exact e.symm_apply_apply _
   inv_hom_id' := by ext; exact e.apply_symm_apply _
-#align BddOrd.iso.mk BddOrd.Iso.mk
+#align BddOrd.iso.mk BddOrdCat.Iso.mk
 
 /-- The equivalence between `BddOrd` and itself induced by `order_dual` both ways. -/
 @[simps Functor inverse]
-def dualEquiv : BddOrd ≌ BddOrd :=
+def dualEquiv : BddOrdCat ≌ BddOrdCat :=
   Equivalence.mk dual dual
     (NatIso.ofComponents (fun X => Iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
     (NatIso.ofComponents (fun X => Iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
-#align BddOrd.dual_equiv BddOrd.dualEquiv
+#align BddOrd.dual_equiv BddOrdCat.dualEquiv
 
-end BddOrd
+end BddOrdCat
 
+#print bddOrd_dual_comp_forget_to_partOrdCat /-
 theorem bddOrd_dual_comp_forget_to_partOrdCat :
-    BddOrd.dual ⋙ forget₂ BddOrd PartOrdCat = forget₂ BddOrd PartOrdCat ⋙ PartOrdCat.dual :=
+    BddOrdCat.dual ⋙ forget₂ BddOrdCat PartOrdCat =
+      forget₂ BddOrdCat PartOrdCat ⋙ PartOrdCat.dual :=
   rfl
 #align BddOrd_dual_comp_forget_to_PartOrd bddOrd_dual_comp_forget_to_partOrdCat
+-/
 
+#print bddOrd_dual_comp_forget_to_bipointed /-
 theorem bddOrd_dual_comp_forget_to_bipointed :
-    BddOrd.dual ⋙ forget₂ BddOrd Bipointed = forget₂ BddOrd Bipointed ⋙ Bipointed.swap :=
+    BddOrdCat.dual ⋙ forget₂ BddOrdCat Bipointed = forget₂ BddOrdCat Bipointed ⋙ Bipointed.swap :=
   rfl
 #align BddOrd_dual_comp_forget_to_Bipointed bddOrd_dual_comp_forget_to_bipointed
+-/
 
