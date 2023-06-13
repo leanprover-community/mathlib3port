@@ -74,7 +74,7 @@ theorem Lp.ae_eq_zero_of_forall_set_integral_eq_zero' (hm : m ≤ m0) (f : Lp E'
     (hp_ne_zero : p ≠ 0) (hp_ne_top : p ≠ ∞)
     (hf_int_finite : ∀ s, measurable_set[m] s → μ s < ∞ → IntegrableOn f s μ)
     (hf_zero : ∀ s : Set α, measurable_set[m] s → μ s < ∞ → ∫ x in s, f x ∂μ = 0)
-    (hf_meas : AeStronglyMeasurable' m f μ) : f =ᵐ[μ] 0 :=
+    (hf_meas : AEStronglyMeasurable' m f μ) : f =ᵐ[μ] 0 :=
   by
   let f_meas : Lp_meas E' 𝕜 m p μ := ⟨f, hf_meas⟩
   have hf_f_meas : f =ᵐ[μ] f_meas := by simp only [coeFn_coe_base', Subtype.coe_mk]
@@ -95,7 +95,7 @@ theorem Lp.ae_eq_of_forall_set_integral_eq' (hm : m ≤ m0) (f g : Lp E' p μ) (
     (hp_ne_top : p ≠ ∞) (hf_int_finite : ∀ s, measurable_set[m] s → μ s < ∞ → IntegrableOn f s μ)
     (hg_int_finite : ∀ s, measurable_set[m] s → μ s < ∞ → IntegrableOn g s μ)
     (hfg : ∀ s : Set α, measurable_set[m] s → μ s < ∞ → ∫ x in s, f x ∂μ = ∫ x in s, g x ∂μ)
-    (hf_meas : AeStronglyMeasurable' m f μ) (hg_meas : AeStronglyMeasurable' m g μ) : f =ᵐ[μ] g :=
+    (hf_meas : AEStronglyMeasurable' m f μ) (hg_meas : AEStronglyMeasurable' m g μ) : f =ᵐ[μ] g :=
   by
   suffices h_sub : ⇑(f - g) =ᵐ[μ] 0
   · rw [← sub_ae_eq_zero]; exact (Lp.coe_fn_sub f g).symm.trans h_sub
@@ -125,7 +125,7 @@ theorem ae_eq_of_forall_set_integral_eq_of_sigma_finite' (hm : m ≤ m0) [SigmaF
     {f g : α → F'} (hf_int_finite : ∀ s, measurable_set[m] s → μ s < ∞ → IntegrableOn f s μ)
     (hg_int_finite : ∀ s, measurable_set[m] s → μ s < ∞ → IntegrableOn g s μ)
     (hfg_eq : ∀ s : Set α, measurable_set[m] s → μ s < ∞ → ∫ x in s, f x ∂μ = ∫ x in s, g x ∂μ)
-    (hfm : AeStronglyMeasurable' m f μ) (hgm : AeStronglyMeasurable' m g μ) : f =ᵐ[μ] g :=
+    (hfm : AEStronglyMeasurable' m f μ) (hgm : AEStronglyMeasurable' m g μ) : f =ᵐ[μ] g :=
   by
   rw [← ae_eq_trim_iff_of_ae_strongly_measurable' hm hfm hgm]
   have hf_mk_int_finite :

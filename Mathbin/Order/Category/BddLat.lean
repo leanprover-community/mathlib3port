@@ -82,13 +82,13 @@ instance hasForgetToLat : HasForget₂ BddLat LatCat
       map := fun X Y => BoundedLatticeHom.toLatticeHom }
 #align BddLat.has_forget_to_Lat BddLat.hasForgetToLat
 
-instance hasForgetToSemilatSup : HasForget₂ BddLat SemilatSup
+instance hasForgetToSemilatSup : HasForget₂ BddLat SemilatSupCat
     where forget₂ :=
     { obj := fun X => ⟨X⟩
       map := fun X Y => BoundedLatticeHom.toSupBotHom }
 #align BddLat.has_forget_to_SemilatSup BddLat.hasForgetToSemilatSup
 
-instance hasForgetToSemilatInf : HasForget₂ BddLat SemilatInf
+instance hasForgetToSemilatInf : HasForget₂ BddLat SemilatInfCat
     where forget₂ :=
     { obj := fun X => ⟨X⟩
       map := fun X Y => BoundedLatticeHom.toInfTopHom }
@@ -105,14 +105,14 @@ theorem coe_forget_to_latCat (X : BddLat) : ↥((forget₂ BddLat LatCat).obj X)
 #align BddLat.coe_forget_to_Lat BddLat.coe_forget_to_latCat
 
 @[simp]
-theorem coe_forget_to_semilatSup (X : BddLat) : ↥((forget₂ BddLat SemilatSup).obj X) = ↥X :=
+theorem coe_forget_to_semilatSupCat (X : BddLat) : ↥((forget₂ BddLat SemilatSupCat).obj X) = ↥X :=
   rfl
-#align BddLat.coe_forget_to_SemilatSup BddLat.coe_forget_to_semilatSup
+#align BddLat.coe_forget_to_SemilatSup BddLat.coe_forget_to_semilatSupCat
 
 @[simp]
-theorem coe_forget_to_semilatInf (X : BddLat) : ↥((forget₂ BddLat SemilatInf).obj X) = ↥X :=
+theorem coe_forget_to_semilatInfCat (X : BddLat) : ↥((forget₂ BddLat SemilatInfCat).obj X) = ↥X :=
   rfl
-#align BddLat.coe_forget_to_SemilatInf BddLat.coe_forget_to_semilatInf
+#align BddLat.coe_forget_to_SemilatInf BddLat.coe_forget_to_semilatInfCat
 
 theorem forget_latCat_partOrdCat_eq_forget_bddOrdCat_partOrdCat :
     forget₂ BddLat LatCat ⋙ forget₂ LatCat PartOrdCat =
@@ -120,17 +120,17 @@ theorem forget_latCat_partOrdCat_eq_forget_bddOrdCat_partOrdCat :
   rfl
 #align BddLat.forget_Lat_PartOrd_eq_forget_BddOrd_PartOrd BddLat.forget_latCat_partOrdCat_eq_forget_bddOrdCat_partOrdCat
 
-theorem forget_semilatSup_partOrdCat_eq_forget_bddOrdCat_partOrdCat :
-    forget₂ BddLat SemilatSup ⋙ forget₂ SemilatSup PartOrdCat =
+theorem forget_semilatSupCat_partOrdCat_eq_forget_bddOrdCat_partOrdCat :
+    forget₂ BddLat SemilatSupCat ⋙ forget₂ SemilatSupCat PartOrdCat =
       forget₂ BddLat BddOrdCat ⋙ forget₂ BddOrdCat PartOrdCat :=
   rfl
-#align BddLat.forget_SemilatSup_PartOrd_eq_forget_BddOrd_PartOrd BddLat.forget_semilatSup_partOrdCat_eq_forget_bddOrdCat_partOrdCat
+#align BddLat.forget_SemilatSup_PartOrd_eq_forget_BddOrd_PartOrd BddLat.forget_semilatSupCat_partOrdCat_eq_forget_bddOrdCat_partOrdCat
 
-theorem forget_semilatInf_partOrdCat_eq_forget_bddOrdCat_partOrdCat :
-    forget₂ BddLat SemilatInf ⋙ forget₂ SemilatInf PartOrdCat =
+theorem forget_semilatInfCat_partOrdCat_eq_forget_bddOrdCat_partOrdCat :
+    forget₂ BddLat SemilatInfCat ⋙ forget₂ SemilatInfCat PartOrdCat =
       forget₂ BddLat BddOrdCat ⋙ forget₂ BddOrdCat PartOrdCat :=
   rfl
-#align BddLat.forget_SemilatInf_PartOrd_eq_forget_BddOrd_PartOrd BddLat.forget_semilatInf_partOrdCat_eq_forget_bddOrdCat_partOrdCat
+#align BddLat.forget_SemilatInf_PartOrd_eq_forget_BddOrd_PartOrd BddLat.forget_semilatInfCat_partOrdCat_eq_forget_bddOrdCat_partOrdCat
 
 /-- Constructs an equivalence between bounded lattices from an order isomorphism
 between them. -/
@@ -170,15 +170,17 @@ theorem bddLat_dual_comp_forget_to_latCat :
   rfl
 #align BddLat_dual_comp_forget_to_Lat bddLat_dual_comp_forget_to_latCat
 
-theorem bddLat_dual_comp_forget_to_semilatSup :
-    BddLat.dual ⋙ forget₂ BddLat SemilatSup = forget₂ BddLat SemilatInf ⋙ SemilatInf.dual :=
+theorem bddLat_dual_comp_forget_to_semilatSupCat :
+    BddLat.dual ⋙ forget₂ BddLat SemilatSupCat =
+      forget₂ BddLat SemilatInfCat ⋙ SemilatInfCat.dual :=
   rfl
-#align BddLat_dual_comp_forget_to_SemilatSup bddLat_dual_comp_forget_to_semilatSup
+#align BddLat_dual_comp_forget_to_SemilatSup bddLat_dual_comp_forget_to_semilatSupCat
 
-theorem bddLat_dual_comp_forget_to_semilatInf :
-    BddLat.dual ⋙ forget₂ BddLat SemilatInf = forget₂ BddLat SemilatSup ⋙ SemilatSup.dual :=
+theorem bddLat_dual_comp_forget_to_semilatInfCat :
+    BddLat.dual ⋙ forget₂ BddLat SemilatInfCat =
+      forget₂ BddLat SemilatSupCat ⋙ SemilatSupCat.dual :=
   rfl
-#align BddLat_dual_comp_forget_to_SemilatInf bddLat_dual_comp_forget_to_semilatInf
+#align BddLat_dual_comp_forget_to_SemilatInf bddLat_dual_comp_forget_to_semilatInfCat
 
 /-- The functor that adds a bottom and a top element to a lattice. This is the free functor. -/
 def latToBddLat : LatCat.{u} ⥤ BddLat

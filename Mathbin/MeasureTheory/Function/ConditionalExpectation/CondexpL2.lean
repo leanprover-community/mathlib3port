@@ -78,10 +78,10 @@ noncomputable def condexpL2 (hm : m ≤ m0) : (α →₂[μ] E) →L[𝕜] lpMea
 
 variable {𝕜}
 
-theorem aeStronglyMeasurable'_condexpL2 (hm : m ≤ m0) (f : α →₂[μ] E) :
-    AeStronglyMeasurable' m (condexpL2 𝕜 hm f) μ :=
+theorem aEStronglyMeasurable'_condexpL2 (hm : m ≤ m0) (f : α →₂[μ] E) :
+    AEStronglyMeasurable' m (condexpL2 𝕜 hm f) μ :=
   lpMeas.aeStronglyMeasurable' _
-#align measure_theory.ae_strongly_measurable'_condexp_L2 MeasureTheory.aeStronglyMeasurable'_condexpL2
+#align measure_theory.ae_strongly_measurable'_condexp_L2 MeasureTheory.aEStronglyMeasurable'_condexpL2
 
 theorem integrableOn_condexpL2_of_measure_ne_top (hm : m ≤ m0) (hμs : μ s ≠ ∞) (f : α →₂[μ] E) :
     IntegrableOn (condexpL2 𝕜 hm f) s μ :=
@@ -141,7 +141,7 @@ theorem condexpL2_indicator_of_measurable (hm : m ≤ m0) (hs : measurable_set[m
 #align measure_theory.condexp_L2_indicator_of_measurable MeasureTheory.condexpL2_indicator_of_measurable
 
 theorem inner_condexpL2_eq_inner_fun (hm : m ≤ m0) (f g : α →₂[μ] E)
-    (hg : AeStronglyMeasurable' m g μ) : ⟪(condexpL2 𝕜 hm f : α →₂[μ] E), g⟫₂ = ⟪f, g⟫₂ :=
+    (hg : AEStronglyMeasurable' m g μ) : ⟪(condexpL2 𝕜 hm f : α →₂[μ] E), g⟫₂ = ⟪f, g⟫₂ :=
   by
   symm
   rw [← sub_eq_zero, ← inner_sub_left, condexp_L2]
@@ -409,8 +409,8 @@ noncomputable def condexpIndSmul (hm : m ≤ m0) (hs : MeasurableSet s) (hμs : 
   (toSpanSingleton ℝ x).compLpL 2 μ (condexpL2 ℝ hm (indicatorConstLp 2 hs hμs (1 : ℝ)))
 #align measure_theory.condexp_ind_smul MeasureTheory.condexpIndSmul
 
-theorem aeStronglyMeasurable'_condexpIndSmul (hm : m ≤ m0) (hs : MeasurableSet s) (hμs : μ s ≠ ∞)
-    (x : G) : AeStronglyMeasurable' m (condexpIndSmul hm hs hμs x) μ :=
+theorem aEStronglyMeasurable'_condexpIndSmul (hm : m ≤ m0) (hs : MeasurableSet s) (hμs : μ s ≠ ∞)
+    (x : G) : AEStronglyMeasurable' m (condexpIndSmul hm hs hμs x) μ :=
   by
   have h : ae_strongly_measurable' m (condexp_L2 ℝ hm (indicator_const_Lp 2 hs hμs (1 : ℝ))) μ :=
     ae_strongly_measurable'_condexp_L2 _ _
@@ -423,7 +423,7 @@ theorem aeStronglyMeasurable'_condexpIndSmul (hm : m ≤ m0) (hs : MeasurableSet
     refine' eventually_eq.trans _ (coe_fn_comp_LpL _ _).symm
     rw [Lp_meas_coe]
   exact ae_strongly_measurable'.continuous_comp (to_span_singleton ℝ x).Continuous h
-#align measure_theory.ae_strongly_measurable'_condexp_ind_smul MeasureTheory.aeStronglyMeasurable'_condexpIndSmul
+#align measure_theory.ae_strongly_measurable'_condexp_ind_smul MeasureTheory.aEStronglyMeasurable'_condexpIndSmul
 
 theorem condexpIndSmul_add (hs : MeasurableSet s) (hμs : μ s ≠ ∞) (x y : G) :
     condexpIndSmul hm hs hμs (x + y) = condexpIndSmul hm hs hμs x + condexpIndSmul hm hs hμs y := by

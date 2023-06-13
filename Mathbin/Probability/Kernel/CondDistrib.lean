@@ -103,11 +103,11 @@ theorem MeasureTheory.AEStronglyMeasurable.integral_condDistrib (hX : AEMeasurab
   (hf.integral_condDistrib_map hX hY).comp_aemeasurable hX
 #align measure_theory.ae_strongly_measurable.integral_cond_distrib MeasureTheory.AEStronglyMeasurable.integral_condDistrib
 
-theorem aeStronglyMeasurable'_integral_condDistrib (hX : AEMeasurable X μ) (hY : AEMeasurable Y μ)
+theorem aEStronglyMeasurable'_integral_condDistrib (hX : AEMeasurable X μ) (hY : AEMeasurable Y μ)
     (hf : AEStronglyMeasurable f (μ.map fun a => (X a, Y a))) :
-    AeStronglyMeasurable' (mβ.comap X) (fun a => ∫ y, f (X a, y) ∂condDistrib Y X μ (X a)) μ :=
+    AEStronglyMeasurable' (mβ.comap X) (fun a => ∫ y, f (X a, y) ∂condDistrib Y X μ (X a)) μ :=
   (hf.integral_condDistrib_map hX hY).comp_ae_measurable' hX
-#align probability_theory.ae_strongly_measurable'_integral_cond_distrib ProbabilityTheory.aeStronglyMeasurable'_integral_condDistrib
+#align probability_theory.ae_strongly_measurable'_integral_cond_distrib ProbabilityTheory.aEStronglyMeasurable'_integral_condDistrib
 
 end Measurability
 

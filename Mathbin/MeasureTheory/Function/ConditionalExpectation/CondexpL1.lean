@@ -284,11 +284,11 @@ theorem condexpInd_ae_eq_condexpIndSmul (hm : m ≤ m0) [SigmaFinite (μ.trim hm
 
 variable {hm : m ≤ m0} [SigmaFinite (μ.trim hm)]
 
-theorem aeStronglyMeasurable'_condexpInd (hs : MeasurableSet s) (hμs : μ s ≠ ∞) (x : G) :
-    AeStronglyMeasurable' m (condexpInd hm μ s x) μ :=
-  AeStronglyMeasurable'.congr (aeStronglyMeasurable'_condexpIndSmul hm hs hμs x)
+theorem aEStronglyMeasurable'_condexpInd (hs : MeasurableSet s) (hμs : μ s ≠ ∞) (x : G) :
+    AEStronglyMeasurable' m (condexpInd hm μ s x) μ :=
+  AEStronglyMeasurable'.congr (aEStronglyMeasurable'_condexpIndSmul hm hs hμs x)
     (condexpInd_ae_eq_condexpIndSmul hm hs hμs x).symm
-#align measure_theory.ae_strongly_measurable'_condexp_ind MeasureTheory.aeStronglyMeasurable'_condexpInd
+#align measure_theory.ae_strongly_measurable'_condexp_ind MeasureTheory.aEStronglyMeasurable'_condexpInd
 
 @[simp]
 theorem condexpInd_empty : condexpInd hm μ ∅ = (0 : G →L[ℝ] α →₁[μ] G) :=
@@ -470,8 +470,8 @@ theorem set_integral_condexpL1Clm (f : α →₁[μ] F') (hs : measurable_set[m]
   exact tendsto_nhds_unique h_left h_right
 #align measure_theory.set_integral_condexp_L1_clm MeasureTheory.set_integral_condexpL1Clm
 
-theorem aeStronglyMeasurable'_condexpL1Clm (f : α →₁[μ] F') :
-    AeStronglyMeasurable' m (condexpL1Clm hm μ f) μ :=
+theorem aEStronglyMeasurable'_condexpL1Clm (f : α →₁[μ] F') :
+    AEStronglyMeasurable' m (condexpL1Clm hm μ f) μ :=
   by
   refine'
     Lp.induction ENNReal.one_ne_top
@@ -490,7 +490,7 @@ theorem aeStronglyMeasurable'_condexpL1Clm (f : α →₁[μ] F') :
     rw [this]
     refine' IsClosed.preimage (condexp_L1_clm hm μ).Continuous _
     exact is_closed_ae_strongly_measurable' hm
-#align measure_theory.ae_strongly_measurable'_condexp_L1_clm MeasureTheory.aeStronglyMeasurable'_condexpL1Clm
+#align measure_theory.ae_strongly_measurable'_condexp_L1_clm MeasureTheory.aEStronglyMeasurable'_condexpL1Clm
 
 theorem condexpL1Clm_lpMeas (f : lpMeas F' ℝ m 1 μ) : condexpL1Clm hm μ (f : α →₁[μ] F') = ↑f :=
   by
@@ -519,10 +519,10 @@ theorem condexpL1Clm_lpMeas (f : lpMeas F' ℝ m 1 μ) : condexpL1Clm hm μ (f :
       exact LinearIsometryEquiv.continuous _
 #align measure_theory.condexp_L1_clm_Lp_meas MeasureTheory.condexpL1Clm_lpMeas
 
-theorem condexpL1Clm_of_aeStronglyMeasurable' (f : α →₁[μ] F') (hfm : AeStronglyMeasurable' m f μ) :
+theorem condexpL1Clm_of_aEStronglyMeasurable' (f : α →₁[μ] F') (hfm : AEStronglyMeasurable' m f μ) :
     condexpL1Clm hm μ f = f :=
   condexpL1Clm_lpMeas (⟨f, hfm⟩ : lpMeas F' ℝ m 1 μ)
-#align measure_theory.condexp_L1_clm_of_ae_strongly_measurable' MeasureTheory.condexpL1Clm_of_aeStronglyMeasurable'
+#align measure_theory.condexp_L1_clm_of_ae_strongly_measurable' MeasureTheory.condexpL1Clm_of_aEStronglyMeasurable'
 
 /-- Conditional expectation of a function, in L1. Its value is 0 if the function is not
 integrable. The function-valued `condexp` should be used instead in most cases. -/
@@ -548,8 +548,8 @@ theorem condexpL1_measure_zero (hm : m ≤ m0) : condexpL1 hm (0 : Measure α) f
   setToFun_measure_zero _ rfl
 #align measure_theory.condexp_L1_measure_zero MeasureTheory.condexpL1_measure_zero
 
-theorem aeStronglyMeasurable'_condexpL1 {f : α → F'} :
-    AeStronglyMeasurable' m (condexpL1 hm μ f) μ :=
+theorem aEStronglyMeasurable'_condexpL1 {f : α → F'} :
+    AEStronglyMeasurable' m (condexpL1 hm μ f) μ :=
   by
   by_cases hf : integrable f μ
   · rw [condexp_L1_eq hf]
@@ -557,7 +557,7 @@ theorem aeStronglyMeasurable'_condexpL1 {f : α → F'} :
   · rw [condexp_L1_undef hf]
     refine' ae_strongly_measurable'.congr _ (coe_fn_zero _ _ _).symm
     exact strongly_measurable.ae_strongly_measurable' (@strongly_measurable_zero _ _ m _ _)
-#align measure_theory.ae_strongly_measurable'_condexp_L1 MeasureTheory.aeStronglyMeasurable'_condexpL1
+#align measure_theory.ae_strongly_measurable'_condexp_L1 MeasureTheory.aEStronglyMeasurable'_condexpL1
 
 theorem condexpL1_congr_ae (hm : m ≤ m0) [SigmaFinite (μ.trim hm)] (h : f =ᵐ[μ] g) :
     condexpL1 hm μ f = condexpL1 hm μ g :=
@@ -597,14 +597,14 @@ theorem condexpL1_sub (hf : Integrable f μ) (hg : Integrable g μ) :
   setToFun_sub _ hf hg
 #align measure_theory.condexp_L1_sub MeasureTheory.condexpL1_sub
 
-theorem condexpL1_of_aeStronglyMeasurable' (hfm : AeStronglyMeasurable' m f μ)
+theorem condexpL1_of_aEStronglyMeasurable' (hfm : AEStronglyMeasurable' m f μ)
     (hfi : Integrable f μ) : condexpL1 hm μ f =ᵐ[μ] f :=
   by
   rw [condexp_L1_eq hfi]
   refine' eventually_eq.trans _ (integrable.coe_fn_to_L1 hfi)
   rw [condexp_L1_clm_of_ae_strongly_measurable']
   exact ae_strongly_measurable'.congr hfm (integrable.coe_fn_to_L1 hfi).symm
-#align measure_theory.condexp_L1_of_ae_strongly_measurable' MeasureTheory.condexpL1_of_aeStronglyMeasurable'
+#align measure_theory.condexp_L1_of_ae_strongly_measurable' MeasureTheory.condexpL1_of_aEStronglyMeasurable'
 
 theorem condexpL1_mono {E} [NormedLatticeAddCommGroup E] [CompleteSpace E] [NormedSpace ℝ E]
     [OrderedSMul ℝ E] {f g : α → E} (hf : Integrable f μ) (hg : Integrable g μ) (hfg : f ≤ᵐ[μ] g) :

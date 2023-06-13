@@ -348,7 +348,7 @@ theorem condexp_stronglyMeasurable_mul_of_bound (hm : m ≤ m0) [IsFiniteMeasure
 #align measure_theory.condexp_strongly_measurable_mul_of_bound MeasureTheory.condexp_stronglyMeasurable_mul_of_bound
 
 theorem condexp_strongly_measurable_mul_of_bound₀ (hm : m ≤ m0) [IsFiniteMeasure μ] {f g : α → ℝ}
-    (hf : AeStronglyMeasurable' m f μ) (hg : Integrable g μ) (c : ℝ)
+    (hf : AEStronglyMeasurable' m f μ) (hg : Integrable g μ) (c : ℝ)
     (hf_bound : ∀ᵐ x ∂μ, ‖f x‖ ≤ c) : μ[f * g|m] =ᵐ[μ] f * μ[g|m] :=
   by
   have : μ[f * g|m] =ᵐ[μ] μ[hf.mk f * g|m] :=
@@ -412,7 +412,7 @@ theorem condexp_stronglyMeasurable_mul {f g : α → ℝ} (hf : strongly_measura
 #align measure_theory.condexp_strongly_measurable_mul MeasureTheory.condexp_stronglyMeasurable_mul
 
 /-- Pull-out property of the conditional expectation. -/
-theorem condexp_strongly_measurable_mul₀ {f g : α → ℝ} (hf : AeStronglyMeasurable' m f μ)
+theorem condexp_strongly_measurable_mul₀ {f g : α → ℝ} (hf : AEStronglyMeasurable' m f μ)
     (hfg : Integrable (f * g) μ) (hg : Integrable g μ) : μ[f * g|m] =ᵐ[μ] f * μ[g|m] :=
   by
   have : μ[f * g|m] =ᵐ[μ] μ[hf.mk f * g|m] :=

@@ -106,16 +106,16 @@ theorem MeasureTheory.AEStronglyMeasurable.integral_condexpKernel [NormedSpace �
       (hf.comp_snd_map_prod_id hm)
 #align measure_theory.ae_strongly_measurable.integral_condexp_kernel MeasureTheory.AEStronglyMeasurable.integral_condexpKernel
 
-theorem aeStronglyMeasurable'_integral_condexpKernel [NormedSpace ℝ F] [CompleteSpace F]
+theorem aEStronglyMeasurable'_integral_condexpKernel [NormedSpace ℝ F] [CompleteSpace F]
     (hm : m ≤ mΩ) (hf : AEStronglyMeasurable f μ) :
-    AeStronglyMeasurable' m (fun ω => ∫ y, f y ∂condexpKernel μ m ω) μ :=
+    AEStronglyMeasurable' m (fun ω => ∫ y, f y ∂condexpKernel μ m ω) μ :=
   by
   rw [condexp_kernel]
   have h :=
     ae_strongly_measurable'_integral_cond_distrib (ae_measurable_id'' μ hm) aemeasurable_id
       (hf.comp_snd_map_prod_id hm)
   rwa [MeasurableSpace.comap_id] at h 
-#align probability_theory.ae_strongly_measurable'_integral_condexp_kernel ProbabilityTheory.aeStronglyMeasurable'_integral_condexpKernel
+#align probability_theory.ae_strongly_measurable'_integral_condexp_kernel ProbabilityTheory.aEStronglyMeasurable'_integral_condexpKernel
 
 end Measurability
 

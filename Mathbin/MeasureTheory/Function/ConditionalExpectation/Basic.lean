@@ -98,7 +98,7 @@ noncomputable irreducible_def condexp (m : MeasurableSpace α) {m0 : MeasurableS
     if h : SigmaFinite (μ.trim hm) ∧ Integrable f μ then
       if strongly_measurable[m] f then f
       else
-        (@aeStronglyMeasurable'_condexpL1 _ _ _ _ _ m m0 μ hm h.1 _).mk
+        (@aEStronglyMeasurable'_condexpL1 _ _ _ _ _ m m0 μ hm h.1 _).mk
           (@condexpL1 _ _ _ _ _ _ _ hm μ h.1 f)
     else 0
   else 0
@@ -119,7 +119,7 @@ theorem condexp_of_sigmaFinite (hm : m ≤ m0) [hμm : SigmaFinite (μ.trim hm)]
     μ[f|m] =
       if Integrable f μ then
         if strongly_measurable[m] f then f
-        else aeStronglyMeasurable'_condexpL1.mk (condexpL1 hm μ f)
+        else aEStronglyMeasurable'_condexpL1.mk (condexpL1 hm μ f)
       else 0 :=
   by
   rw [condexp, dif_pos hm]
@@ -213,13 +213,13 @@ theorem condexp_congr_ae (h : f =ᵐ[μ] g) : μ[f|m] =ᵐ[μ] μ[g|m] :=
         (condexp_ae_eq_condexp_L1 hm g).symm)
 #align measure_theory.condexp_congr_ae MeasureTheory.condexp_congr_ae
 
-theorem condexp_of_aeStronglyMeasurable' (hm : m ≤ m0) [hμm : SigmaFinite (μ.trim hm)] {f : α → F'}
-    (hf : AeStronglyMeasurable' m f μ) (hfi : Integrable f μ) : μ[f|m] =ᵐ[μ] f :=
+theorem condexp_of_aEStronglyMeasurable' (hm : m ≤ m0) [hμm : SigmaFinite (μ.trim hm)] {f : α → F'}
+    (hf : AEStronglyMeasurable' m f μ) (hfi : Integrable f μ) : μ[f|m] =ᵐ[μ] f :=
   by
   refine' ((condexp_congr_ae hf.ae_eq_mk).trans _).trans hf.ae_eq_mk.symm
   rw [condexp_of_strongly_measurable hm hf.strongly_measurable_mk
       ((integrable_congr hf.ae_eq_mk).mp hfi)]
-#align measure_theory.condexp_of_ae_strongly_measurable' MeasureTheory.condexp_of_aeStronglyMeasurable'
+#align measure_theory.condexp_of_ae_strongly_measurable' MeasureTheory.condexp_of_aEStronglyMeasurable'
 
 theorem integrable_condexp : Integrable (μ[f|m]) μ :=
   by
@@ -255,7 +255,7 @@ theorem ae_eq_condexp_of_forall_set_integral_eq (hm : m ≤ m0) [SigmaFinite (μ
     {f g : α → F'} (hf : Integrable f μ)
     (hg_int_finite : ∀ s, measurable_set[m] s → μ s < ∞ → IntegrableOn g s μ)
     (hg_eq : ∀ s : Set α, measurable_set[m] s → μ s < ∞ → ∫ x in s, g x ∂μ = ∫ x in s, f x ∂μ)
-    (hgm : AeStronglyMeasurable' m g μ) : g =ᵐ[μ] μ[f|m] :=
+    (hgm : AEStronglyMeasurable' m g μ) : g =ᵐ[μ] μ[f|m] :=
   by
   refine'
     ae_eq_of_forall_set_integral_eq_of_sigma_finite' hm hg_int_finite

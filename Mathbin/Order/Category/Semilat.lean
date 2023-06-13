@@ -27,43 +27,51 @@ universe u
 
 open CategoryTheory
 
+#print SemilatSupCat /-
 /-- The category of sup-semilattices with a bottom element. -/
-structure SemilatSup : Type (u + 1) where
+structure SemilatSupCat : Type (u + 1) where
   pt : Type u
   [isSemilatticeSup : SemilatticeSup X]
   [isOrderBot : OrderBot X]
-#align SemilatSup SemilatSup
+#align SemilatSup SemilatSupCat
+-/
 
+#print SemilatInfCat /-
 /-- The category of inf-semilattices with a top element. -/
-structure SemilatInf : Type (u + 1) where
+structure SemilatInfCat : Type (u + 1) where
   pt : Type u
   [isSemilatticeInf : SemilatticeInf X]
   [isOrderTop : OrderTop X]
-#align SemilatInf SemilatInf
+#align SemilatInf SemilatInfCat
+-/
 
-attribute [protected] SemilatSup.X SemilatInf.X
+attribute [protected] SemilatSupCat.X SemilatInfCat.X
 
-namespace SemilatSup
+namespace SemilatSupCat
 
-instance : CoeSort SemilatSup (Type _) :=
-  ⟨SemilatSup.X⟩
+instance : CoeSort SemilatSupCat (Type _) :=
+  ⟨SemilatSupCat.X⟩
 
 attribute [instance] is_semilattice_sup is_order_bot
 
+#print SemilatSupCat.of /-
 /-- Construct a bundled `SemilatSup` from a `semilattice_sup`. -/
-def of (α : Type _) [SemilatticeSup α] [OrderBot α] : SemilatSup :=
+def of (α : Type _) [SemilatticeSup α] [OrderBot α] : SemilatSupCat :=
   ⟨α⟩
-#align SemilatSup.of SemilatSup.of
+#align SemilatSup.of SemilatSupCat.of
+-/
 
+#print SemilatSupCat.coe_of /-
 @[simp]
 theorem coe_of (α : Type _) [SemilatticeSup α] [OrderBot α] : ↥(of α) = α :=
   rfl
-#align SemilatSup.coe_of SemilatSup.coe_of
+#align SemilatSup.coe_of SemilatSupCat.coe_of
+-/
 
-instance : Inhabited SemilatSup :=
+instance : Inhabited SemilatSupCat :=
   ⟨of PUnit⟩
 
-instance : LargeCategory.{u} SemilatSup
+instance : LargeCategory.{u} SemilatSupCat
     where
   Hom X Y := SupBotHom X Y
   id X := SupBotHom.id X
@@ -72,47 +80,52 @@ instance : LargeCategory.{u} SemilatSup
   comp_id' X Y := SupBotHom.id_comp
   assoc' W X Y Z _ _ _ := SupBotHom.comp_assoc _ _ _
 
-instance : ConcreteCategory SemilatSup
+instance : ConcreteCategory SemilatSupCat
     where
   forget :=
-    { obj := SemilatSup.X
+    { obj := SemilatSupCat.X
       map := fun X Y => coeFn }
   forget_faithful := ⟨fun X Y => FunLike.coe_injective⟩
 
-instance hasForgetToPartOrd : HasForget₂ SemilatSup PartOrdCat
+instance hasForgetToPartOrd : HasForget₂ SemilatSupCat PartOrdCat
     where forget₂ :=
     { obj := fun X => ⟨X⟩
       map := fun X Y f => f }
-#align SemilatSup.has_forget_to_PartOrd SemilatSup.hasForgetToPartOrd
+#align SemilatSup.has_forget_to_PartOrd SemilatSupCat.hasForgetToPartOrd
 
 @[simp]
-theorem coe_forget_to_partOrdCat (X : SemilatSup) : ↥((forget₂ SemilatSup PartOrdCat).obj X) = ↥X :=
+theorem coe_forget_to_partOrdCat (X : SemilatSupCat) :
+    ↥((forget₂ SemilatSupCat PartOrdCat).obj X) = ↥X :=
   rfl
-#align SemilatSup.coe_forget_to_PartOrd SemilatSup.coe_forget_to_partOrdCat
+#align SemilatSup.coe_forget_to_PartOrd SemilatSupCat.coe_forget_to_partOrdCat
 
-end SemilatSup
+end SemilatSupCat
 
-namespace SemilatInf
+namespace SemilatInfCat
 
-instance : CoeSort SemilatInf (Type _) :=
-  ⟨SemilatInf.X⟩
+instance : CoeSort SemilatInfCat (Type _) :=
+  ⟨SemilatInfCat.X⟩
 
 attribute [instance] is_semilattice_inf is_order_top
 
+#print SemilatInfCat.of /-
 /-- Construct a bundled `SemilatInf` from a `semilattice_inf`. -/
-def of (α : Type _) [SemilatticeInf α] [OrderTop α] : SemilatInf :=
+def of (α : Type _) [SemilatticeInf α] [OrderTop α] : SemilatInfCat :=
   ⟨α⟩
-#align SemilatInf.of SemilatInf.of
+#align SemilatInf.of SemilatInfCat.of
+-/
 
+#print SemilatInfCat.coe_of /-
 @[simp]
 theorem coe_of (α : Type _) [SemilatticeInf α] [OrderTop α] : ↥(of α) = α :=
   rfl
-#align SemilatInf.coe_of SemilatInf.coe_of
+#align SemilatInf.coe_of SemilatInfCat.coe_of
+-/
 
-instance : Inhabited SemilatInf :=
+instance : Inhabited SemilatInfCat :=
   ⟨of PUnit⟩
 
-instance : LargeCategory.{u} SemilatInf
+instance : LargeCategory.{u} SemilatInfCat
     where
   Hom X Y := InfTopHom X Y
   id X := InfTopHom.id X
@@ -121,91 +134,92 @@ instance : LargeCategory.{u} SemilatInf
   comp_id' X Y := InfTopHom.id_comp
   assoc' W X Y Z _ _ _ := InfTopHom.comp_assoc _ _ _
 
-instance : ConcreteCategory SemilatInf
+instance : ConcreteCategory SemilatInfCat
     where
   forget :=
-    { obj := SemilatInf.X
+    { obj := SemilatInfCat.X
       map := fun X Y => coeFn }
   forget_faithful := ⟨fun X Y => FunLike.coe_injective⟩
 
-instance hasForgetToPartOrd : HasForget₂ SemilatInf PartOrdCat
+instance hasForgetToPartOrd : HasForget₂ SemilatInfCat PartOrdCat
     where forget₂ :=
     { obj := fun X => ⟨X⟩
       map := fun X Y f => f }
-#align SemilatInf.has_forget_to_PartOrd SemilatInf.hasForgetToPartOrd
+#align SemilatInf.has_forget_to_PartOrd SemilatInfCat.hasForgetToPartOrd
 
 @[simp]
-theorem coe_forget_to_partOrdCat (X : SemilatInf) : ↥((forget₂ SemilatInf PartOrdCat).obj X) = ↥X :=
+theorem coe_forget_to_partOrdCat (X : SemilatInfCat) :
+    ↥((forget₂ SemilatInfCat PartOrdCat).obj X) = ↥X :=
   rfl
-#align SemilatInf.coe_forget_to_PartOrd SemilatInf.coe_forget_to_partOrdCat
+#align SemilatInf.coe_forget_to_PartOrd SemilatInfCat.coe_forget_to_partOrdCat
 
-end SemilatInf
+end SemilatInfCat
 
 /-! ### Order dual -/
 
 
-namespace SemilatSup
+namespace SemilatSupCat
 
 /-- Constructs an isomorphism of lattices from an order isomorphism between them. -/
 @[simps]
-def Iso.mk {α β : SemilatSup.{u}} (e : α ≃o β) : α ≅ β
+def Iso.mk {α β : SemilatSupCat.{u}} (e : α ≃o β) : α ≅ β
     where
   Hom := e
   inv := e.symm
   hom_inv_id' := by ext; exact e.symm_apply_apply _
   inv_hom_id' := by ext; exact e.apply_symm_apply _
-#align SemilatSup.iso.mk SemilatSup.Iso.mk
+#align SemilatSup.iso.mk SemilatSupCat.Iso.mk
 
 /-- `order_dual` as a functor. -/
 @[simps]
-def dual : SemilatSup ⥤ SemilatInf
+def dual : SemilatSupCat ⥤ SemilatInfCat
     where
-  obj X := SemilatInf.of Xᵒᵈ
+  obj X := SemilatInfCat.of Xᵒᵈ
   map X Y := SupBotHom.dual
-#align SemilatSup.dual SemilatSup.dual
+#align SemilatSup.dual SemilatSupCat.dual
 
-end SemilatSup
+end SemilatSupCat
 
-namespace SemilatInf
+namespace SemilatInfCat
 
 /-- Constructs an isomorphism of lattices from an order isomorphism between them. -/
 @[simps]
-def Iso.mk {α β : SemilatInf.{u}} (e : α ≃o β) : α ≅ β
+def Iso.mk {α β : SemilatInfCat.{u}} (e : α ≃o β) : α ≅ β
     where
   Hom := e
   inv := e.symm
   hom_inv_id' := by ext; exact e.symm_apply_apply _
   inv_hom_id' := by ext; exact e.apply_symm_apply _
-#align SemilatInf.iso.mk SemilatInf.Iso.mk
+#align SemilatInf.iso.mk SemilatInfCat.Iso.mk
 
 /-- `order_dual` as a functor. -/
 @[simps]
-def dual : SemilatInf ⥤ SemilatSup
+def dual : SemilatInfCat ⥤ SemilatSupCat
     where
-  obj X := SemilatSup.of Xᵒᵈ
+  obj X := SemilatSupCat.of Xᵒᵈ
   map X Y := InfTopHom.dual
-#align SemilatInf.dual SemilatInf.dual
+#align SemilatInf.dual SemilatInfCat.dual
 
-end SemilatInf
+end SemilatInfCat
 
 /-- The equivalence between `SemilatSup` and `SemilatInf` induced by `order_dual` both ways.
 -/
 @[simps Functor inverse]
-def semilatSupEquivSemilatInf : SemilatSup ≌ SemilatInf :=
-  Equivalence.mk SemilatSup.dual SemilatInf.dual
-    (NatIso.ofComponents (fun X => SemilatSup.Iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
-    (NatIso.ofComponents (fun X => SemilatInf.Iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
-#align SemilatSup_equiv_SemilatInf semilatSupEquivSemilatInf
+def SemilatSupCatEquivSemilatInfCat : SemilatSupCat ≌ SemilatInfCat :=
+  Equivalence.mk SemilatSupCat.dual SemilatInfCat.dual
+    (NatIso.ofComponents (fun X => SemilatSupCat.Iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
+    (NatIso.ofComponents (fun X => SemilatInfCat.Iso.mk <| OrderIso.dualDual X) fun X Y f => rfl)
+#align SemilatSup_equiv_SemilatInf SemilatSupCatEquivSemilatInfCat
 
-theorem semilatSup_dual_comp_forget_to_partOrdCat :
-    SemilatSup.dual ⋙ forget₂ SemilatInf PartOrdCat =
-      forget₂ SemilatSup PartOrdCat ⋙ PartOrdCat.dual :=
+theorem SemilatSupCat_dual_comp_forget_to_partOrdCat :
+    SemilatSupCat.dual ⋙ forget₂ SemilatInfCat PartOrdCat =
+      forget₂ SemilatSupCat PartOrdCat ⋙ PartOrdCat.dual :=
   rfl
-#align SemilatSup_dual_comp_forget_to_PartOrd semilatSup_dual_comp_forget_to_partOrdCat
+#align SemilatSup_dual_comp_forget_to_PartOrd SemilatSupCat_dual_comp_forget_to_partOrdCat
 
-theorem semilatInf_dual_comp_forget_to_partOrdCat :
-    SemilatInf.dual ⋙ forget₂ SemilatSup PartOrdCat =
-      forget₂ SemilatInf PartOrdCat ⋙ PartOrdCat.dual :=
+theorem SemilatInfCat_dual_comp_forget_to_partOrdCat :
+    SemilatInfCat.dual ⋙ forget₂ SemilatSupCat PartOrdCat =
+      forget₂ SemilatInfCat PartOrdCat ⋙ PartOrdCat.dual :=
   rfl
-#align SemilatInf_dual_comp_forget_to_PartOrd semilatInf_dual_comp_forget_to_partOrdCat
+#align SemilatInf_dual_comp_forget_to_PartOrd SemilatInfCat_dual_comp_forget_to_partOrdCat
 
