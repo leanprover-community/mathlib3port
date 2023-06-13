@@ -83,17 +83,22 @@ theorem hermite_one : hermite 1 = X :=
 
 section Coeff
 
+#print Polynomial.coeff_hermite_succ_zero /-
 theorem coeff_hermite_succ_zero (n : ℕ) : coeff (hermite (n + 1)) 0 = -coeff (hermite n) 1 := by
   simp [coeff_derivative]
 #align polynomial.coeff_hermite_succ_zero Polynomial.coeff_hermite_succ_zero
+-/
 
+#print Polynomial.coeff_hermite_succ_succ /-
 theorem coeff_hermite_succ_succ (n k : ℕ) :
     coeff (hermite (n + 1)) (k + 1) = coeff (hermite n) k - (k + 2) * coeff (hermite n) (k + 2) :=
   by
   rw [hermite_succ, coeff_sub, coeff_X_mul, coeff_derivative, mul_comm]
   norm_cast
 #align polynomial.coeff_hermite_succ_succ Polynomial.coeff_hermite_succ_succ
+-/
 
+#print Polynomial.coeff_hermite_of_lt /-
 theorem coeff_hermite_of_lt {n k : ℕ} (hnk : n < k) : coeff (hermite n) k = 0 :=
   by
   obtain ⟨k, rfl⟩ := Nat.exists_eq_add_of_lt hnk
@@ -104,7 +109,9 @@ theorem coeff_hermite_of_lt {n k : ℕ} (hnk : n < k) : coeff (hermite n) k = 0 
     rw [Nat.succ_eq_add_one, coeff_hermite_succ_succ, add_right_comm, this, ih k, ih (k + 2),
       MulZeroClass.mul_zero, sub_zero]
 #align polynomial.coeff_hermite_of_lt Polynomial.coeff_hermite_of_lt
+-/
 
+#print Polynomial.coeff_hermite_self /-
 @[simp]
 theorem coeff_hermite_self (n : ℕ) : coeff (hermite n) n = 1 :=
   by
@@ -113,7 +120,9 @@ theorem coeff_hermite_self (n : ℕ) : coeff (hermite n) n = 1 :=
   · rw [coeff_hermite_succ_succ, ih, coeff_hermite_of_lt, MulZeroClass.mul_zero, sub_zero]
     simp
 #align polynomial.coeff_hermite_self Polynomial.coeff_hermite_self
+-/
 
+#print Polynomial.degree_hermite /-
 @[simp]
 theorem degree_hermite (n : ℕ) : (hermite n).degree = n :=
   by
@@ -123,21 +132,27 @@ theorem degree_hermite (n : ℕ) : (hermite n).degree = n :=
     exact coeff_hermite_of_lt
   · simp [coeff_hermite_self n]
 #align polynomial.degree_hermite Polynomial.degree_hermite
+-/
 
+#print Polynomial.natDegree_hermite /-
 @[simp]
 theorem natDegree_hermite {n : ℕ} : (hermite n).natDegree = n :=
   natDegree_eq_of_degree_eq_some (degree_hermite n)
 #align polynomial.nat_degree_hermite Polynomial.natDegree_hermite
+-/
 
+#print Polynomial.leadingCoeff_hermite /-
 @[simp]
 theorem leadingCoeff_hermite (n : ℕ) : (hermite n).leadingCoeff = 1 := by
   rw [← coeff_nat_degree, nat_degree_hermite, coeff_hermite_self]
 #align polynomial.leading_coeff_hermite Polynomial.leadingCoeff_hermite
+-/
 
 theorem hermite_monic (n : ℕ) : (hermite n).Monic :=
   leadingCoeff_hermite n
 #align polynomial.hermite_monic Polynomial.hermite_monic
 
+#print Polynomial.coeff_hermite_of_odd_add /-
 theorem coeff_hermite_of_odd_add {n k : ℕ} (hnk : Odd (n + k)) : coeff (hermite n) k = 0 :=
   by
   induction' n with n ih generalizing k
@@ -151,6 +166,7 @@ theorem coeff_hermite_of_odd_add {n k : ℕ} (hnk : Odd (n + k)) : coeff (hermit
       · rw [(by rw [Nat.succ_add, Nat.add_succ] : n.succ + k.succ = n + k + 2)] at hnk 
         exact (nat.odd_add.mp hnk).mpr even_two
 #align polynomial.coeff_hermite_of_odd_add Polynomial.coeff_hermite_of_odd_add
+-/
 
 end Coeff
 

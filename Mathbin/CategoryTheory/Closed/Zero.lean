@@ -71,15 +71,15 @@ attribute [local instance] unique_homset_of_zero
 /-- A cartesian closed category with a zero object is equivalent to the category with one object and
 one morphism.
 -/
-def equivPunit [HasZeroObject C] : C ≌ Discrete PUnit :=
+def equivPUnit [HasZeroObject C] : C ≌ Discrete PUnit :=
   Equivalence.mk (Functor.star C) (Functor.fromPUnit 0)
     (NatIso.ofComponents
       (fun X =>
         { Hom := default
           inv := default })
       fun X Y f => by decide)
-    (Functor.pUnitExt _ _)
-#align category_theory.equiv_punit CategoryTheory.equivPunit
+    (Functor.punitExt _ _)
+#align category_theory.equiv_punit CategoryTheory.equivPUnit
 
 end CategoryTheory
 

@@ -62,20 +62,26 @@ variable (𝕜) [Ring 𝕜] [AddCommGroup V] [Module 𝕜 V] [TopologicalSpace P
 
 include V
 
+#print intrinsicInterior /-
 /-- The intrinsic interior of a set is its interior considered as a set in its affine span. -/
 def intrinsicInterior (s : Set P) : Set P :=
   coe '' interior (coe ⁻¹' s : Set <| affineSpan 𝕜 s)
 #align intrinsic_interior intrinsicInterior
+-/
 
+#print intrinsicFrontier /-
 /-- The intrinsic frontier of a set is its frontier considered as a set in its affine span. -/
 def intrinsicFrontier (s : Set P) : Set P :=
   coe '' frontier (coe ⁻¹' s : Set <| affineSpan 𝕜 s)
 #align intrinsic_frontier intrinsicFrontier
+-/
 
+#print intrinsicClosure /-
 /-- The intrinsic closure of a set is its closure considered as a set in its affine span. -/
 def intrinsicClosure (s : Set P) : Set P :=
   coe '' closure (coe ⁻¹' s : Set <| affineSpan 𝕜 s)
 #align intrinsic_closure intrinsicClosure
+-/
 
 variable {𝕜}
 
@@ -131,8 +137,8 @@ theorem intrinsicClosure_nonempty : (intrinsicClosure 𝕜 s).Nonempty ↔ s.Non
     Nonempty.mono subset_intrinsicClosure⟩
 #align intrinsic_closure_nonempty intrinsicClosure_nonempty
 
-alias intrinsicClosure_nonempty ↔ Set.Nonempty.of_intrinsicClosure Set.Nonempty.intrinsicClosure
-#align set.nonempty.of_intrinsic_closure Set.Nonempty.of_intrinsicClosure
+alias intrinsicClosure_nonempty ↔ Set.Nonempty.ofIntrinsicClosure Set.Nonempty.intrinsicClosure
+#align set.nonempty.of_intrinsic_closure Set.Nonempty.ofIntrinsicClosure
 #align set.nonempty.intrinsic_closure Set.Nonempty.intrinsicClosure
 
 attribute [protected] Set.Nonempty.intrinsicClosure
@@ -353,6 +359,7 @@ private theorem aux {α β : Type _} [TopologicalSpace α] [TopologicalSpace β]
 
 variable [NormedAddCommGroup V] [NormedSpace ℝ V] [FiniteDimensional ℝ V] {s : Set V}
 
+#print Set.Nonempty.intrinsicInterior /-
 /-- The intrinsic interior of a nonempty convex set is nonempty. -/
 protected theorem Set.Nonempty.intrinsicInterior (hscv : Convex ℝ s) (hsne : s.Nonempty) :
     (intrinsicInterior ℝ s).Nonempty :=
@@ -369,10 +376,13 @@ protected theorem Set.Nonempty.intrinsicInterior (hscv : Convex ℝ s) (hsne : s
       ((affineSpan ℝ s).Subtype.comp
         (AffineIsometryEquiv.constVSub ℝ p').symm.toAffineEquiv.toAffineMap)
 #align set.nonempty.intrinsic_interior Set.Nonempty.intrinsicInterior
+-/
 
+#print intrinsicInterior_nonempty /-
 theorem intrinsicInterior_nonempty (hs : Convex ℝ s) :
     (intrinsicInterior ℝ s).Nonempty ↔ s.Nonempty :=
   ⟨by simp_rw [nonempty_iff_ne_empty]; rintro h rfl; exact h intrinsicInterior_empty,
     Set.Nonempty.intrinsicInterior hs⟩
 #align intrinsic_interior_nonempty intrinsicInterior_nonempty
+-/
 

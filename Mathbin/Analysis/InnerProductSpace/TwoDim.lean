@@ -86,6 +86,7 @@ namespace Orientation
 
 include o
 
+#print Orientation.areaForm /-
 /-- An antisymmetric bilinear form on an oriented real inner product space of dimension 2 (usual
 notation `ω`).  When evaluated on two vectors, it gives the oriented area of the parallelogram they
 span. -/
@@ -97,6 +98,7 @@ irreducible_def areaForm : E →ₗ[ℝ] E →ₗ[ℝ] ℝ :=
     LinearMap.llcomp ℝ E (AlternatingMap ℝ E ℝ (Fin 0)) ℝ z ∘ₗ AlternatingMap.curryLeftLinearMap
   exact y ∘ₗ AlternatingMap.curryLeftLinearMap o.volume_form
 #align orientation.area_form Orientation.areaForm
+-/
 
 omit o
 
@@ -131,11 +133,13 @@ theorem areaForm_neg_orientation : (-o).areaForm = -o.areaForm :=
   simp [area_form_to_volume_form]
 #align orientation.area_form_neg_orientation Orientation.areaForm_neg_orientation
 
+#print Orientation.areaForm' /-
 /-- Continuous linear map version of `orientation.area_form`, useful for calculus. -/
 def areaForm' : E →L[ℝ] E →L[ℝ] ℝ :=
   (↑(LinearMap.toContinuousLinearMap : (E →ₗ[ℝ] ℝ) ≃ₗ[ℝ] E →L[ℝ] ℝ) ∘ₗ
       o.areaForm).toContinuousLinearMap
 #align orientation.area_form' Orientation.areaForm'
+-/
 
 @[simp]
 theorem areaForm'_apply (x : E) : o.areaForm' x = (o.areaForm x).toContinuousLinearMap :=
@@ -186,6 +190,7 @@ theorem areaForm_comp_linearIsometryEquiv (φ : E ≃ₗᵢ[ℝ] E)
   · simp
 #align orientation.area_form_comp_linear_isometry_equiv Orientation.areaForm_comp_linearIsometryEquiv
 
+#print Orientation.rightAngleRotationAux₁ /-
 /-- Auxiliary construction for `orientation.right_angle_rotation`, rotation by 90 degrees in an
 oriented real inner product space of dimension 2. -/
 irreducible_def rightAngleRotationAux₁ : E →ₗ[ℝ] E :=
@@ -193,6 +198,7 @@ irreducible_def rightAngleRotationAux₁ : E →ₗ[ℝ] E :=
     (InnerProductSpace.toDual ℝ E).toLinearEquiv ≪≫ₗ LinearMap.toContinuousLinearMap.symm
   ↑to_dual.symm ∘ₗ ω
 #align orientation.right_angle_rotation_aux₁ Orientation.rightAngleRotationAux₁
+-/
 
 @[simp]
 theorem inner_rightAngleRotationAux₁_left (x y : E) : ⟪o.rightAngleRotationAux₁ x, y⟫ = ω x y := by
@@ -209,6 +215,7 @@ theorem inner_rightAngleRotationAux₁_right (x y : E) : ⟪x, o.rightAngleRotat
   simp [o.area_form_swap y x]
 #align orientation.inner_right_angle_rotation_aux₁_right Orientation.inner_rightAngleRotationAux₁_right
 
+#print Orientation.rightAngleRotationAux₂ /-
 /-- Auxiliary construction for `orientation.right_angle_rotation`, rotation by 90 degrees in an
 oriented real inner product space of dimension 2. -/
 def rightAngleRotationAux₂ : E →ₗᵢ[ℝ] E :=
@@ -242,6 +249,7 @@ def rightAngleRotationAux₂ : E →ₗᵢ[ℝ] E :=
         rw [← o.inner_right_angle_rotation_aux₁_left x w]
         exact abs_real_inner_le_norm (o.right_angle_rotation_aux₁ x) w }
 #align orientation.right_angle_rotation_aux₂ Orientation.rightAngleRotationAux₂
+-/
 
 @[simp]
 theorem rightAngleRotationAux₁_rightAngleRotationAux₁ (x : E) :
@@ -255,6 +263,7 @@ theorem rightAngleRotationAux₁_rightAngleRotationAux₁ (x : E) :
     inner_neg_right]
 #align orientation.right_angle_rotation_aux₁_right_angle_rotation_aux₁ Orientation.rightAngleRotationAux₁_rightAngleRotationAux₁
 
+#print Orientation.rightAngleRotation /-
 /-- An isometric automorphism of an oriented real inner product space of dimension 2 (usual notation
 `J`). This automorphism squares to -1.  We will define rotations in such a way that this
 automorphism is equal to rotation by 90 degrees. -/
@@ -262,6 +271,7 @@ irreducible_def rightAngleRotation : E ≃ₗᵢ[ℝ] E :=
   LinearIsometryEquiv.ofLinearIsometry o.rightAngleRotationAux₂ (-o.rightAngleRotationAux₁)
     (by ext <;> simp [right_angle_rotation_aux₂]) (by ext <;> simp [right_angle_rotation_aux₂])
 #align orientation.right_angle_rotation Orientation.rightAngleRotation
+-/
 
 -- mathport name: exprJ
 local notation "J" => o.rightAngleRotation
@@ -287,6 +297,7 @@ theorem rightAngleRotation_rightAngleRotation (x : E) : J (J x) = -x :=
   exact o.right_angle_rotation_aux₁_right_angle_rotation_aux₁ x
 #align orientation.right_angle_rotation_right_angle_rotation Orientation.rightAngleRotation_rightAngleRotation
 
+#print Orientation.rightAngleRotation_symm /-
 @[simp]
 theorem rightAngleRotation_symm :
     LinearIsometryEquiv.symm J = LinearIsometryEquiv.trans J (LinearIsometryEquiv.neg ℝ) :=
@@ -294,6 +305,7 @@ theorem rightAngleRotation_symm :
   rw [right_angle_rotation]
   exact LinearIsometryEquiv.toLinearIsometry_injective rfl
 #align orientation.right_angle_rotation_symm Orientation.rightAngleRotation_symm
+-/
 
 @[simp]
 theorem inner_rightAngleRotation_self (x : E) : ⟪J x, x⟫ = 0 := by simp
@@ -324,10 +336,12 @@ theorem areaForm_rightAngleRotation_right (x y : E) : ω x (J y) = ⟪x, y⟫ :=
 theorem areaForm_comp_rightAngleRotation (x y : E) : ω (J x) (J y) = ω x y := by simp
 #align orientation.area_form_comp_right_angle_rotation Orientation.areaForm_comp_rightAngleRotation
 
+#print Orientation.rightAngleRotation_trans_rightAngleRotation /-
 @[simp]
 theorem rightAngleRotation_trans_rightAngleRotation :
     LinearIsometryEquiv.trans J J = LinearIsometryEquiv.neg ℝ := by ext <;> simp
 #align orientation.right_angle_rotation_trans_right_angle_rotation Orientation.rightAngleRotation_trans_rightAngleRotation
+-/
 
 theorem rightAngleRotation_neg_orientation (x : E) :
     (-o).rightAngleRotation x = -o.rightAngleRotation x :=
@@ -370,18 +384,20 @@ theorem linearIsometryEquiv_comp_rightAngleRotation (φ : E ≃ₗᵢ[ℝ] E)
     rw [Fact.out (finrank ℝ E = 2), Fintype.card_fin]
 #align orientation.linear_isometry_equiv_comp_right_angle_rotation Orientation.linearIsometryEquiv_comp_rightAngleRotation
 
+#print Orientation.rightAngleRotation_map' /-
 theorem rightAngleRotation_map' {F : Type _} [NormedAddCommGroup F] [InnerProductSpace ℝ F]
     [Fact (finrank ℝ F = 2)] (φ : E ≃ₗᵢ[ℝ] F) :
     (Orientation.map (Fin 2) φ.toLinearEquiv o).rightAngleRotation =
       (φ.symm.trans o.rightAngleRotation).trans φ :=
   LinearIsometryEquiv.ext <| o.rightAngleRotation_map φ
 #align orientation.right_angle_rotation_map' Orientation.rightAngleRotation_map'
+-/
 
 /-- `J` commutes with any positively-oriented isometric automorphism. -/
-theorem linearIsometryEquiv_comp_right_angle_rotation' (φ : E ≃ₗᵢ[ℝ] E)
+theorem linearIsometryEquiv_comp_rightAngleRotation' (φ : E ≃ₗᵢ[ℝ] E)
     (hφ : 0 < (φ.toLinearEquiv : E →ₗ[ℝ] E).det) : LinearIsometryEquiv.trans J φ = φ.trans J :=
   LinearIsometryEquiv.ext <| o.linearIsometryEquiv_comp_rightAngleRotation φ hφ
-#align orientation.linear_isometry_equiv_comp_right_angle_rotation' Orientation.linearIsometryEquiv_comp_right_angle_rotation'
+#align orientation.linear_isometry_equiv_comp_right_angle_rotation' Orientation.linearIsometryEquiv_comp_rightAngleRotation'
 
 /-- For a nonzero vector `x` in an oriented two-dimensional real inner product space `E`,
 `![x, J x]` forms an (orthogonal) basis for `E`. -/
@@ -406,7 +422,7 @@ theorem coe_basisRightAngleRotation (x : E) (hx : x ≠ 0) :
 
 /-- For vectors `a x y : E`, the identity `⟪a, x⟫ * ⟪a, y⟫ + ω a x * ω a y = ‖a‖ ^ 2 * ⟪x, y⟫`. (See
 `orientation.inner_mul_inner_add_area_form_mul_area_form` for the "applied" form.)-/
-theorem inner_mul_inner_add_areaForm_mul_area_form' (a x : E) :
+theorem inner_mul_inner_add_areaForm_mul_areaForm' (a x : E) :
     ⟪a, x⟫ • innerₛₗ ℝ a + ω a x • ω a = ‖a‖ ^ 2 • innerₛₗ ℝ x :=
   by
   by_cases ha : a = 0
@@ -424,12 +440,12 @@ theorem inner_mul_inner_add_areaForm_mul_area_form' (a x : E) :
       o.area_form_apply_self, o.inner_right_angle_rotation_right]
     rw [o.area_form_swap]
     ring
-#align orientation.inner_mul_inner_add_area_form_mul_area_form' Orientation.inner_mul_inner_add_areaForm_mul_area_form'
+#align orientation.inner_mul_inner_add_area_form_mul_area_form' Orientation.inner_mul_inner_add_areaForm_mul_areaForm'
 
 /-- For vectors `a x y : E`, the identity `⟪a, x⟫ * ⟪a, y⟫ + ω a x * ω a y = ‖a‖ ^ 2 * ⟪x, y⟫`. -/
 theorem inner_mul_inner_add_areaForm_mul_areaForm (a x y : E) :
     ⟪a, x⟫ * ⟪a, y⟫ + ω a x * ω a y = ‖a‖ ^ 2 * ⟪x, y⟫ :=
-  congr_arg (fun f : E →ₗ[ℝ] ℝ => f y) (o.inner_mul_inner_add_areaForm_mul_area_form' a x)
+  congr_arg (fun f : E →ₗ[ℝ] ℝ => f y) (o.inner_mul_inner_add_areaForm_mul_areaForm' a x)
 #align orientation.inner_mul_inner_add_area_form_mul_area_form Orientation.inner_mul_inner_add_areaForm_mul_areaForm
 
 theorem inner_sq_add_areaForm_sq (a b : E) : ⟪a, b⟫ ^ 2 + ω a b ^ 2 = ‖a‖ ^ 2 * ‖b‖ ^ 2 := by

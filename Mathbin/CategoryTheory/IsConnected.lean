@@ -393,15 +393,15 @@ theorem isConnected_of_zigzag [Nonempty J]
 #align category_theory.is_connected_of_zigzag CategoryTheory.isConnected_of_zigzag
 -/
 
-#print CategoryTheory.discreteIsConnectedEquivPunit /-
+#print CategoryTheory.discreteIsConnectedEquivPUnit /-
 /-- If `discrete α` is connected, then `α` is (type-)equivalent to `punit`. -/
-def discreteIsConnectedEquivPunit {α : Type u₁} [IsConnected (Discrete α)] : α ≃ PUnit :=
+def discreteIsConnectedEquivPUnit {α : Type u₁} [IsConnected (Discrete α)] : α ≃ PUnit :=
   Discrete.equivOfEquivalence.{u₁, u₁}
     { Functor := Functor.star (Discrete α)
       inverse := Discrete.functor fun _ => Classical.arbitrary _
       unitIso := iso_constant _ (Classical.arbitrary _)
-      counitIso := Functor.pUnitExt _ _ }
-#align category_theory.discrete_is_connected_equiv_punit CategoryTheory.discreteIsConnectedEquivPunit
+      counitIso := Functor.punitExt _ _ }
+#align category_theory.discrete_is_connected_equiv_punit CategoryTheory.discreteIsConnectedEquivPUnit
 -/
 
 variable {C : Type u₂} [Category.{u₁} C]

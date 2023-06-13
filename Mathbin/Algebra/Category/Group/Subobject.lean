@@ -22,9 +22,11 @@ universe u
 
 namespace AddCommGroupCat
 
+#print AddCommGroupCat.wellPowered_addCommGroupCat /-
 instance wellPowered_addCommGroupCat : WellPowered AddCommGroupCat.{u} :=
   wellPowered_of_equiv (forget₂ (ModuleCat.{u} ℤ) AddCommGroupCat.{u}).asEquivalence
 #align AddCommGroup.well_powered_AddCommGroup AddCommGroupCat.wellPowered_addCommGroupCat
+-/
 
 end AddCommGroupCat
 

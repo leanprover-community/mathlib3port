@@ -169,10 +169,10 @@ theorem algebraMap_surjective_of_isIntegral {k K : Type _} [Field k] [Ring K] [I
   exact (RingHom.map_neg (algebraMap k K) ((minpoly k x).coeff 0)).symm ▸ this.symm
 #align is_alg_closed.algebra_map_surjective_of_is_integral IsAlgClosed.algebraMap_surjective_of_isIntegral
 
-theorem algebra_map_surjective_of_is_integral' {k K : Type _} [Field k] [CommRing K] [IsDomain K]
+theorem algebraMap_surjective_of_isIntegral' {k K : Type _} [Field k] [CommRing K] [IsDomain K]
     [hk : IsAlgClosed k] (f : k →+* K) (hf : f.IsIntegral) : Function.Surjective f :=
   @algebraMap_surjective_of_isIntegral k K _ _ _ _ f.toAlgebra hf
-#align is_alg_closed.algebra_map_surjective_of_is_integral' IsAlgClosed.algebra_map_surjective_of_is_integral'
+#align is_alg_closed.algebra_map_surjective_of_is_integral' IsAlgClosed.algebraMap_surjective_of_isIntegral'
 
 theorem algebraMap_surjective_of_isAlgebraic {k K : Type _} [Field k] [Ring K] [IsDomain K]
     [hk : IsAlgClosed k] [Algebra k K] (hf : Algebra.IsAlgebraic k K) :

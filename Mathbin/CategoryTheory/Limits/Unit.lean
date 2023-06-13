@@ -31,32 +31,32 @@ namespace CategoryTheory.Limits
 
 variable {J : Type v} [Category.{v'} J] {F : J ⥤ Discrete PUnit}
 
-#print CategoryTheory.Limits.pUnitCone /-
+#print CategoryTheory.Limits.punitCone /-
 /-- A trivial cone for a functor into `punit`. `punit_cone_is_limit` shows it is a limit. -/
-def pUnitCone : Cone F :=
-  ⟨⟨⟨⟩⟩, (Functor.pUnitExt _ _).Hom⟩
-#align category_theory.limits.punit_cone CategoryTheory.Limits.pUnitCone
+def punitCone : Cone F :=
+  ⟨⟨⟨⟩⟩, (Functor.punitExt _ _).Hom⟩
+#align category_theory.limits.punit_cone CategoryTheory.Limits.punitCone
 -/
 
-#print CategoryTheory.Limits.pUnitCocone /-
+#print CategoryTheory.Limits.punitCocone /-
 /-- A trivial cocone for a functor into `punit`. `punit_cocone_is_limit` shows it is a colimit. -/
-def pUnitCocone : Cocone F :=
-  ⟨⟨⟨⟩⟩, (Functor.pUnitExt _ _).Hom⟩
-#align category_theory.limits.punit_cocone CategoryTheory.Limits.pUnitCocone
+def punitCocone : Cocone F :=
+  ⟨⟨⟨⟩⟩, (Functor.punitExt _ _).Hom⟩
+#align category_theory.limits.punit_cocone CategoryTheory.Limits.punitCocone
 -/
 
-#print CategoryTheory.Limits.pUnitConeIsLimit /-
+#print CategoryTheory.Limits.punitConeIsLimit /-
 /-- Any cone over a functor into `punit` is a limit cone.
 -/
-def pUnitConeIsLimit {c : Cone F} : IsLimit c := by tidy
-#align category_theory.limits.punit_cone_is_limit CategoryTheory.Limits.pUnitConeIsLimit
+def punitConeIsLimit {c : Cone F} : IsLimit c := by tidy
+#align category_theory.limits.punit_cone_is_limit CategoryTheory.Limits.punitConeIsLimit
 -/
 
-#print CategoryTheory.Limits.pUnitCoconeIsColimit /-
+#print CategoryTheory.Limits.punitCoconeIsColimit /-
 /-- Any cocone over a functor into `punit` is a colimit cocone.
 -/
-def pUnitCoconeIsColimit {c : Cocone F} : IsColimit c := by tidy
-#align category_theory.limits.punit_cocone_is_colimit CategoryTheory.Limits.pUnitCoconeIsColimit
+def punitCoconeIsColimit {c : Cocone F} : IsColimit c := by tidy
+#align category_theory.limits.punit_cocone_is_colimit CategoryTheory.Limits.punitCoconeIsColimit
 -/
 
 instance : HasLimitsOfSize.{v', v} (Discrete PUnit) := by tidy
