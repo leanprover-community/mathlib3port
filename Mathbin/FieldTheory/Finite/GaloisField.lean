@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson, Alex J. Best, Johan Commelin, Eric Rodriguez, Ruben Van de Velde
 
 ! This file was ported from Lean 3 source module field_theory.finite.galois_field
-! leanprover-community/mathlib commit df76f43357840485b9d04ed5dee5ab115d420e87
+! leanprover-community/mathlib commit 9fb8964792b4237dac6200193a0d533f1b3f7423
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -49,10 +49,10 @@ instance FiniteField.HasSub.Sub.Polynomial.isSplittingField (K F : Type _) [Fiel
       FiniteField.X_pow_card_sub_X_natDegree_eq K Fintype.one_lt_card
     rw [← splits_id_iff_splits, splits_iff_card_roots, Polynomial.map_sub, Polynomial.map_pow,
       map_X, h, FiniteField.roots_X_pow_card_sub_X K, ← Finset.card_def, Finset.card_univ]
-  adjoin_roots := by
+  adjoin_rootSet := by
     classical
     trans Algebra.adjoin F ((roots (X ^ Fintype.card K - X : K[X])).toFinset : Set K)
-    · simp only [Polynomial.map_pow, map_X, Polynomial.map_sub]
+    · simp only [root_set, Polynomial.map_pow, map_X, Polynomial.map_sub]
     · rw [FiniteField.roots_X_pow_card_sub_X, val_to_finset, coe_univ, Algebra.adjoin_univ]
 #align finite_field.has_sub.sub.polynomial.is_splitting_field FiniteField.HasSub.Sub.Polynomial.isSplittingField
 

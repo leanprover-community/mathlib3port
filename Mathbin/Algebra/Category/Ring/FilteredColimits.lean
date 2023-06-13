@@ -217,7 +217,7 @@ instance colimitCommSemiring : CommSemiring R :=
 #print CommSemiRingCat.FilteredColimits.colimit /-
 /-- The bundled commutative semiring giving the filtered colimit of a diagram. -/
 def colimit : CommSemiRingCat :=
-  CommSemiRing.of R
+  CommSemiRingCat.of R
 #align CommSemiRing.filtered_colimits.colimit CommSemiRingCat.FilteredColimits.colimit
 -/
 

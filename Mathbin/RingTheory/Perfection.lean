@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kenny Lau
 
 ! This file was ported from Lean 3 source module ring_theory.perfection
-! leanprover-community/mathlib commit 0b9eaaa7686280fad8cce467f5c3c57ee6ce77f8
+! leanprover-community/mathlib commit 087c325ae0ab42dbdd5dee55bc37d3d5a0bf2197
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -20,6 +20,9 @@ import Mathbin.RingTheory.Valuation.Integers
 
 /-!
 # Ring Perfection and Tilt
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 In this file we define the perfection of a ring of characteristic p, and the tilt of a field
 given a valuation to `ℝ≥0`.

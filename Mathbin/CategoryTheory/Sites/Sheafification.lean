@@ -138,7 +138,6 @@ theorem equiv_apply {X : C} {P : Cᵒᵖ ⥤ D} {S : J.cover X} [HasMultiequaliz
   rfl
 #align category_theory.meq.equiv_apply CategoryTheory.Meq.equiv_apply
 
-#print CategoryTheory.Meq.equiv_symm_eq_apply /-
 @[simp]
 theorem equiv_symm_eq_apply {X : C} {P : Cᵒᵖ ⥤ D} {S : J.cover X} [HasMultiequalizer (S.index P)]
     (x : Meq P S) (I : S.arrow) : Multiequalizer.ι (S.index P) I ((Meq.equiv P S).symm x) = x I :=
@@ -147,7 +146,6 @@ theorem equiv_symm_eq_apply {X : C} {P : Cᵒᵖ ⥤ D} {S : J.cover X} [HasMult
   rw [← equiv_apply]
   simp
 #align category_theory.meq.equiv_symm_eq_apply CategoryTheory.Meq.equiv_symm_eq_apply
--/
 
 end Meq
 

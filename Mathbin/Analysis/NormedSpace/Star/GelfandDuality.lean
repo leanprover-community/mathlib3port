@@ -4,7 +4,7 @@ Reeased under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
 
 ! This file was ported from Lean 3 source module analysis.normed_space.star.gelfand_duality
-! leanprover-community/mathlib commit e65771194f9e923a70dfb49b6ca7be6e400d8b6f
+! leanprover-community/mathlib commit 087c325ae0ab42dbdd5dee55bc37d3d5a0bf2197
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -18,6 +18,9 @@ import Mathbin.Topology.ContinuousFunction.StoneWeierstrass
 
 /-!
 # Gelfand Duality
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 The `gelfand_transform` is an algebra homomorphism from a topological `𝕜`-algebra `A` to
 `C(character_space 𝕜 A, 𝕜)`. In the case where `A` is a commutative complex Banach algebra, then

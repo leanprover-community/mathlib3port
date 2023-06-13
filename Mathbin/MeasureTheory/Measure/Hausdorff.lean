@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov
 
 ! This file was ported from Lean 3 source module measure_theory.measure.hausdorff
-! leanprover-community/mathlib commit 3d5c4a7a5fb0d982f97ed953161264f1dbd90ead
+! leanprover-community/mathlib commit 087c325ae0ab42dbdd5dee55bc37d3d5a0bf2197
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -17,6 +17,9 @@ import Mathbin.Topology.MetricSpace.MetricSeparated
 
 /-!
 # Hausdorff measure and metric (outer) measures
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 In this file we define the `d`-dimensional Hausdorff measure on an (extended) metric space `X` and
 the Hausdorff dimension of a set in an (extended) metric space. Let `μ d δ` be the maximal outer

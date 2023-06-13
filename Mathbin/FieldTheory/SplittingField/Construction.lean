@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module field_theory.splitting_field.construction
-! leanprover-community/mathlib commit df76f43357840485b9d04ed5dee5ab115d420e87
+! leanprover-community/mathlib commit 9fb8964792b4237dac6200193a0d533f1b3f7423
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -482,19 +482,17 @@ theorem exists_lift (n : ℕ) :
     ⟨k, by rw [algebra_map_succ, ← RingHom.comp_assoc, hk, AdjoinRoot.lift_comp_of]⟩
 #align polynomial.splitting_field_aux.exists_lift Polynomial.SplittingFieldAux.exists_lift
 
-theorem adjoin_roots (n : ℕ) :
+theorem adjoin_rootSet (n : ℕ) :
     ∀ {K : Type u} [Field K],
       ∀ (f : K[X]) (hfn : f.natDegree = n),
-        Algebra.adjoin K
-            (↑(f.map <| algebraMap K <| splitting_field_aux n f).roots.toFinset :
-              Set (splitting_field_aux n f)) =
-          ⊤ :=
+        Algebra.adjoin K (f.rootSet (splitting_field_aux n f)) = ⊤ :=
   Nat.recOn n (fun K _ f hf => Algebra.eq_top_iff.2 fun x => Subalgebra.range_le _ ⟨x, rfl⟩)
     fun n ih K _ f hfn =>
     by
     have hndf : f.nat_degree ≠ 0 := by intro h; rw [h] at hfn ; cases hfn
     have hfn0 : f ≠ 0 := by intro h; rw [h] at hndf ; exact hndf rfl
     have hmf0 : map (algebraMap K (splitting_field_aux n.succ f)) f ≠ 0 := map_ne_zero hfn0
+    simp_rw [root_set] at ih ⊢
     rw [algebra_map_succ, ← map_map, ← X_sub_C_mul_remove_factor _ hndf, Polynomial.map_mul] at hmf0
       ⊢
     rw [roots_mul hmf0, Polynomial.map_sub, map_X, map_C, roots_X_sub_C, Multiset.toFinset_add,
@@ -505,7 +503,7 @@ theorem adjoin_roots (n : ℕ) :
       IsScalarTower.adjoin_range_toAlgHom K (AdjoinRoot f.factor)
         (splitting_field_aux n f.remove_factor),
       ih _ (nat_degree_remove_factor' hfn), Subalgebra.restrictScalars_top]
-#align polynomial.splitting_field_aux.adjoin_roots Polynomial.SplittingFieldAux.adjoin_roots
+#align polynomial.splitting_field_aux.adjoin_root_set Polynomial.SplittingFieldAux.adjoin_rootSet
 
 end SplittingFieldAux
 
@@ -570,15 +568,8 @@ def lift : SplittingField f →ₐ[K] L :=
       RingHom.ext_iff.1 this r }
 #align polynomial.splitting_field.lift Polynomial.SplittingField.lift
 
-theorem adjoin_roots :
-    Algebra.adjoin K
-        (↑(f.map (algebraMap K <| SplittingField f)).roots.toFinset : Set (SplittingField f)) =
-      ⊤ :=
-  SplittingFieldAux.adjoin_roots _ _ rfl
-#align polynomial.splitting_field.adjoin_roots Polynomial.SplittingField.adjoin_roots
-
-theorem adjoin_rootSet : Algebra.adjoin K (f.rootSet f.SplittingField) = ⊤ :=
-  adjoin_roots f
+theorem adjoin_rootSet : Algebra.adjoin K (f.rootSet (SplittingField f)) = ⊤ :=
+  SplittingFieldAux.adjoin_rootSet _ _ rfl
 #align polynomial.splitting_field.adjoin_root_set Polynomial.SplittingField.adjoin_rootSet
 
 end SplittingField
@@ -592,7 +583,7 @@ variable (K L) [Algebra K L]
 variable {K}
 
 instance splittingField (f : K[X]) : IsSplittingField K (SplittingField f) f :=
-  ⟨SplittingField.splits f, SplittingField.adjoin_roots f⟩
+  ⟨SplittingField.splits f, SplittingField.adjoin_rootSet f⟩
 #align polynomial.is_splitting_field.splitting_field Polynomial.IsSplittingField.splittingField
 
 instance (f : K[X]) : FiniteDimensional K f.SplittingField :=

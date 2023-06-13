@@ -197,12 +197,10 @@ theorem ConcreteCategory.bijective_of_isIso {X Y : C} (f : X ⟶ Y) [IsIso f] :
     Function.Bijective ((forget C).map f) := by rw [← is_iso_iff_bijective]; infer_instance
 #align category_theory.concrete_category.bijective_of_is_iso CategoryTheory.ConcreteCategory.bijective_of_isIso
 
-#print CategoryTheory.ConcreteCategory.hasCoeToFun_Type /-
 @[simp]
 theorem ConcreteCategory.hasCoeToFun_Type {X Y : Type u} (f : X ⟶ Y) : coeFn f = f :=
   rfl
 #align category_theory.concrete_category.has_coe_to_fun_Type CategoryTheory.ConcreteCategory.hasCoeToFun_Type
--/
 
 end
 

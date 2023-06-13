@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bolton Bailey
 
 ! This file was ported from Lean 3 source module number_theory.prime_counting
-! leanprover-community/mathlib commit 16de0889b9e841c59af6cfece272b9276f9bf5ae
+! leanprover-community/mathlib commit 7fdd4f3746cb059edfdb5d52cba98f66fce418c0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -72,12 +72,12 @@ theorem monotone_primeCounting : Monotone primeCounting :=
 
 @[simp]
 theorem primeCounting'_nth_eq (n : ℕ) : π' (nth Prime n) = n :=
-  count_nth_of_infinite _ infinite_setOf_prime _
+  count_nth_of_infinite infinite_setOf_prime _
 #align nat.prime_counting'_nth_eq Nat.primeCounting'_nth_eq
 
 @[simp]
 theorem prime_nth_prime (n : ℕ) : Prime (nth Prime n) :=
-  nth_mem_of_infinite _ infinite_setOf_prime _
+  nth_mem_of_infinite infinite_setOf_prime _
 #align nat.prime_nth_prime Nat.prime_nth_prime
 
 /-- A linear upper bound on the size of the `prime_counting'` function -/

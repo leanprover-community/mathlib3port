@@ -189,18 +189,18 @@ deriving instance LargeCategory, ConcreteCategory for CommSemiRingCat
 instance : CoeSort CommSemiRingCat (Type _) :=
   Bundled.hasCoeToSort
 
-#print CommSemiRing.of /-
+#print CommSemiRingCat.of /-
 /-- Construct a bundled CommSemiRing from the underlying type and typeclass. -/
 def of (R : Type u) [CommSemiring R] : CommSemiRingCat :=
   Bundled.of R
-#align CommSemiRing.of CommSemiRing.of
+#align CommSemiRing.of CommSemiRingCat.of
 -/
 
-#print CommSemiRing.ofHom /-
+#print CommSemiRingCat.ofHom /-
 /-- Typecheck a `ring_hom` as a morphism in `CommSemiRing`. -/
 def ofHom {R S : Type u} [CommSemiring R] [CommSemiring S] (f : R →+* S) : of R ⟶ of S :=
   f
-#align CommSemiRing.of_hom CommSemiRing.ofHom
+#align CommSemiRing.of_hom CommSemiRingCat.ofHom
 -/
 
 @[simp]
@@ -215,22 +215,22 @@ instance : Inhabited CommSemiRingCat :=
 instance (R : CommSemiRingCat) : CommSemiring R :=
   R.str
 
-#print CommSemiRing.coe_of /-
+#print CommSemiRingCat.coe_of /-
 @[simp]
-theorem coe_of (R : Type u) [CommSemiring R] : (CommSemiRing.of R : Type u) = R :=
+theorem coe_of (R : Type u) [CommSemiring R] : (CommSemiRingCat.of R : Type u) = R :=
   rfl
-#align CommSemiRing.coe_of CommSemiRing.coe_of
+#align CommSemiRing.coe_of CommSemiRingCat.coe_of
 -/
 
 instance hasForgetToSemiRingCat : HasForget₂ CommSemiRingCat SemiRingCat :=
   BundledHom.forget₂ _ _
-#align CommSemiRing.has_forget_to_SemiRing CommSemiRing.hasForgetToSemiRingCat
+#align CommSemiRing.has_forget_to_SemiRing CommSemiRingCat.hasForgetToSemiRingCat
 
 /-- The forgetful functor from commutative rings to (multiplicative) commutative monoids. -/
 instance hasForgetToCommMonCat : HasForget₂ CommSemiRingCat CommMonCat :=
   HasForget₂.mk' (fun R : CommSemiRingCat => CommMonCat.of R) (fun R => rfl)
     (fun R₁ R₂ f => f.toMonoidHom) (by tidy)
-#align CommSemiRing.has_forget_to_CommMon CommSemiRing.hasForgetToCommMonCat
+#align CommSemiRing.has_forget_to_CommMon CommSemiRingCat.hasForgetToCommMonCat
 
 end CommSemiRingCat
 
@@ -290,7 +290,7 @@ instance hasForgetToRingCat : HasForget₂ CommRingCat RingCat :=
 
 /-- The forgetful functor from commutative rings to (multiplicative) commutative monoids. -/
 instance hasForgetToCommSemiRingCat : HasForget₂ CommRingCat CommSemiRingCat :=
-  HasForget₂.mk' (fun R : CommRingCat => CommSemiRing.of R) (fun R => rfl) (fun R₁ R₂ f => f)
+  HasForget₂.mk' (fun R : CommRingCat => CommSemiRingCat.of R) (fun R => rfl) (fun R₁ R₂ f => f)
     (by tidy)
 #align CommRing.has_forget_to_CommSemiRing CommRingCat.hasForgetToCommSemiRingCat
 

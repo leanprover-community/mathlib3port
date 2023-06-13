@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Thomas Browning, Patrick Lutz
 
 ! This file was ported from Lean 3 source module field_theory.galois
-! leanprover-community/mathlib commit 00f91228655eecdcd3ac97a7fd8dbcb139fe990a
+! leanprover-community/mathlib commit 9fb8964792b4237dac6200193a0d533f1b3f7423
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -357,11 +357,8 @@ theorem is_separable_splitting_field [FiniteDimensional F E] [IsGalois F E] :
   rw [eq_top_iff, ← IntermediateField.top_toSubalgebra, ← h1]
   rw [IntermediateField.adjoin_simple_toSubalgebra_of_integral (integral F α)]
   apply Algebra.adjoin_mono
-  rw [Set.singleton_subset_iff, Finset.mem_coe, Multiset.mem_toFinset, Polynomial.mem_roots]
-  · dsimp only [Polynomial.IsRoot]
-    rw [Polynomial.eval_map, ← Polynomial.aeval_def]
-    exact minpoly.aeval _ _
-  · exact Polynomial.map_ne_zero (minpoly.ne_zero (integral F α))
+  rw [Set.singleton_subset_iff, Polynomial.mem_rootSet]
+  exact ⟨minpoly.ne_zero (integral F α), minpoly.aeval _ _⟩
 #align is_galois.is_separable_splitting_field IsGalois.is_separable_splitting_field
 
 theorem of_fixedField_eq_bot [FiniteDimensional F E]
@@ -443,7 +440,7 @@ theorem of_separable_splitting_field [sp : p.IsSplittingField F E] (hp : p.Separ
   have adjoin_root : IntermediateField.adjoin F ↑s = ⊤ :=
     by
     apply IntermediateField.toSubalgebra_injective
-    rw [IntermediateField.top_toSubalgebra, ← top_le_iff, ← sp.adjoin_roots]
+    rw [IntermediateField.top_toSubalgebra, ← top_le_iff, ← sp.adjoin_root_set]
     apply IntermediateField.algebra_adjoin_le_adjoin
   let P : IntermediateField F E → Prop := fun K => Fintype.card (K →ₐ[F] E) = finrank F K
   suffices P (IntermediateField.adjoin F ↑s)

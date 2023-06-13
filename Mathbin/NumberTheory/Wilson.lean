@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: John Nicol
 
 ! This file was ported from Lean 3 source module number_theory.wilson
-! leanprover-community/mathlib commit c471da714c044131b90c133701e51b877c246677
+! leanprover-community/mathlib commit 087c325ae0ab42dbdd5dee55bc37d3d5a0bf2197
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.FieldTheory.Finite.Basic
 
 /-!
 # Wilson's theorem.
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file contains a proof of Wilson's theorem.
 

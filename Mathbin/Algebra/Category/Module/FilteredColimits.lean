@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Justus Springer
 
 ! This file was ported from Lean 3 source module algebra.category.Module.filtered_colimits
-! leanprover-community/mathlib commit 806bbb0132ba63b93d5edbe4789ea226f8329979
+! leanprover-community/mathlib commit 087c325ae0ab42dbdd5dee55bc37d3d5a0bf2197
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Algebra.Category.Module.Basic
 
 /-!
 # The forgetful functor from `R`-modules preserves filtered colimits.
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 Forgetful functors from algebraic categories usually don't preserve colimits. However, they tend
 to preserve _filtered_ colimits.

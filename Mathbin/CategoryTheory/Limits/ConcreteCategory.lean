@@ -70,7 +70,6 @@ open WidePullback
 
 open WidePullbackShape
 
-#print CategoryTheory.Limits.Concrete.widePullback_ext /-
 theorem Concrete.widePullback_ext {B : C} {ι : Type w} {X : ι → C} (f : ∀ j : ι, X j ⟶ B)
     [HasWidePullback B X f] [PreservesLimit (wideCospan B X f) (forget C)]
     (x y : widePullback B X f) (h₀ : base f x = base f y) (h : ∀ j, π f j x = π f j y) : x = y :=
@@ -80,9 +79,7 @@ theorem Concrete.widePullback_ext {B : C} {ι : Type w} {X : ι → C} (f : ∀ 
   · exact h₀
   · apply h
 #align category_theory.limits.concrete.wide_pullback_ext CategoryTheory.Limits.Concrete.widePullback_ext
--/
 
-#print CategoryTheory.Limits.Concrete.widePullback_ext' /-
 theorem Concrete.widePullback_ext' {B : C} {ι : Type w} [Nonempty ι] {X : ι → C}
     (f : ∀ j : ι, X j ⟶ B) [HasWidePullback.{w} B X f]
     [PreservesLimit (wideCospan B X f) (forget C)] (x y : widePullback B X f)
@@ -92,13 +89,11 @@ theorem Concrete.widePullback_ext' {B : C} {ι : Type w} [Nonempty ι] {X : ι �
   inhabit ι
   simp only [← π_arrow f (Inhabited.default _), comp_apply, h]
 #align category_theory.limits.concrete.wide_pullback_ext' CategoryTheory.Limits.Concrete.widePullback_ext'
--/
 
 end WidePullback
 
 section Multiequalizer
 
-#print CategoryTheory.Limits.Concrete.multiequalizer_ext /-
 theorem Concrete.multiequalizer_ext {I : MulticospanIndex.{w} C} [HasMultiequalizer I]
     [PreservesLimit I.multicospan (forget C)] (x y : multiequalizer I)
     (h : ∀ t : I.L, Multiequalizer.ι I t x = Multiequalizer.ι I t y) : x = y :=
@@ -108,7 +103,6 @@ theorem Concrete.multiequalizer_ext {I : MulticospanIndex.{w} C} [HasMultiequali
   · apply h
   · rw [← limit.w I.multicospan (walking_multicospan.hom.fst b), comp_apply, comp_apply, h]
 #align category_theory.limits.concrete.multiequalizer_ext CategoryTheory.Limits.Concrete.multiequalizer_ext
--/
 
 /-- An auxiliary equivalence to be used in `multiequalizer_equiv` below.-/
 def Concrete.multiequalizerEquivAux (I : MulticospanIndex C) :
@@ -142,7 +136,6 @@ def Concrete.multiequalizerEquivAux (I : MulticospanIndex C) :
   right_inv := by intro x; ext i; rfl
 #align category_theory.limits.concrete.multiequalizer_equiv_aux CategoryTheory.Limits.Concrete.multiequalizerEquivAux
 
-#print CategoryTheory.Limits.Concrete.multiequalizerEquiv /-
 /-- The equivalence between the noncomputable multiequalizer and
 and the concrete multiequalizer. -/
 noncomputable def Concrete.multiequalizerEquiv (I : MulticospanIndex.{w} C) [HasMultiequalizer I]
@@ -154,7 +147,6 @@ noncomputable def Concrete.multiequalizerEquiv (I : MulticospanIndex.{w} C) [Has
   let E := h2.conePointUniqueUpToIso (Types.limitConeIsLimit _)
   Equiv.trans E.toEquiv (Concrete.multiequalizerEquivAux I)
 #align category_theory.limits.concrete.multiequalizer_equiv CategoryTheory.Limits.Concrete.multiequalizerEquiv
--/
 
 @[simp]
 theorem Concrete.multiequalizerEquiv_apply (I : MulticospanIndex.{w} C) [HasMultiequalizer I]
@@ -322,7 +314,6 @@ open WidePushout
 
 open WidePushoutShape
 
-#print CategoryTheory.Limits.Concrete.widePushout_exists_rep /-
 theorem Concrete.widePushout_exists_rep {B : C} {α : Type _} {X : α → C} (f : ∀ j : α, B ⟶ X j)
     [HasWidePushout.{v} B X f] [PreservesColimit (wideSpan B X f) (forget C)]
     (x : widePushout B X f) : (∃ y : B, head f y = x) ∨ ∃ (i : α) (y : X i), ι f i y = x :=
@@ -332,9 +323,7 @@ theorem Concrete.widePushout_exists_rep {B : C} {α : Type _} {X : α → C} (f 
   · right
     use j, y
 #align category_theory.limits.concrete.wide_pushout_exists_rep CategoryTheory.Limits.Concrete.widePushout_exists_rep
--/
 
-#print CategoryTheory.Limits.Concrete.widePushout_exists_rep' /-
 theorem Concrete.widePushout_exists_rep' {B : C} {α : Type _} [Nonempty α] {X : α → C}
     (f : ∀ j : α, B ⟶ X j) [HasWidePushout.{v} B X f] [PreservesColimit (wideSpan B X f) (forget C)]
     (x : widePushout B X f) : ∃ (i : α) (y : X i), ι f i y = x :=
@@ -345,7 +334,6 @@ theorem Concrete.widePushout_exists_rep' {B : C} {α : Type _} [Nonempty α] {X 
     simp only [← arrow_ι _ (Inhabited.default α), comp_apply]
   · use i, y
 #align category_theory.limits.concrete.wide_pushout_exists_rep' CategoryTheory.Limits.Concrete.widePushout_exists_rep'
--/
 
 end WidePushout
 

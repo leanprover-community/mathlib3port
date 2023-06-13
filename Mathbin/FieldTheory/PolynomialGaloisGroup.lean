@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Thomas Browning, Patrick Lutz
 
 ! This file was ported from Lean 3 source module field_theory.polynomial_galois_group
-! leanprover-community/mathlib commit caa58cbf5bfb7f81ccbaca4e8b8ac4bc2b39cc1c
+! leanprover-community/mathlib commit 9fb8964792b4237dac6200193a0d533f1b3f7423
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -76,7 +76,7 @@ theorem ext {σ τ : p.Gal} (h : ∀ x ∈ p.rootSet p.SplittingField, σ x = τ
     AlgEquiv.ext fun x =>
       (AlgHom.mem_equalizer σ.to_alg_hom τ.to_alg_hom x).mp
         ((set_like.ext_iff.mp _ x).mpr Algebra.mem_top)
-  rwa [eq_top_iff, ← splitting_field.adjoin_roots, Algebra.adjoin_le_iff]
+  rwa [eq_top_iff, ← splitting_field.adjoin_root_set, Algebra.adjoin_le_iff]
 #align polynomial.gal.ext Polynomial.Gal.ext
 
 /-- If `p` splits in `F` then the `p.gal` is trivial. -/

@@ -2168,9 +2168,13 @@ import Mathbin.MeasureTheory.Function.AeEqFun
 import Mathbin.MeasureTheory.Function.AeEqOfIntegral
 import Mathbin.MeasureTheory.Function.AeMeasurableOrder
 import Mathbin.MeasureTheory.Function.AeMeasurableSequence
+import Mathbin.MeasureTheory.Function.ConditionalExpectation.AeMeasurable
 import Mathbin.MeasureTheory.Function.ConditionalExpectation.Basic
+import Mathbin.MeasureTheory.Function.ConditionalExpectation.CondexpL1
+import Mathbin.MeasureTheory.Function.ConditionalExpectation.CondexpL2
 import Mathbin.MeasureTheory.Function.ConditionalExpectation.Indicator
 import Mathbin.MeasureTheory.Function.ConditionalExpectation.Real
+import Mathbin.MeasureTheory.Function.ConditionalExpectation.Unique
 import Mathbin.MeasureTheory.Function.ContinuousMapDense
 import Mathbin.MeasureTheory.Function.ConvergenceInMeasure
 import Mathbin.MeasureTheory.Function.Egorov

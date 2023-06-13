@@ -231,7 +231,7 @@ instance (F : J ⥤ CommSemiRingCat.{max v u}) :
     CreatesLimit F (forget₂ CommSemiRingCat SemiRingCat.{max v u}) :=
   createsLimitOfReflectsIso fun c' t =>
     { liftedCone :=
-        { pt := CommSemiRing.of (Types.limitCone (F ⋙ forget _)).pt
+        { pt := CommSemiRingCat.of (Types.limitCone (F ⋙ forget _)).pt
           π :=
             { app := by
                 apply SemiRingCat.limitπRingHom (F ⋙ forget₂ CommSemiRingCat SemiRingCat.{max v u})
