@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémi Bottinelli, Junyan Xu
 
 ! This file was ported from Lean 3 source module category_theory.groupoid.subgroupoid
-! leanprover-community/mathlib commit 70fd9563a21e7b963887c9360bd29b2393e6225a
+! leanprover-community/mathlib commit 44e2ae8cffc713925494e4975ee31ec1d06929b3
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -18,6 +18,9 @@ import Mathbin.Order.GaloisConnection
 
 /-!
 # Subgroupoid
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file defines subgroupoids as `structure`s containing the subsets of arrows and their
 stability under composition and inversion.

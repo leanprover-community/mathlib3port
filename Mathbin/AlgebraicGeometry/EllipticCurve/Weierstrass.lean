@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Buzzard, David Kurniadi Angdinata
 
 ! This file was ported from Lean 3 source module algebraic_geometry.elliptic_curve.weierstrass
-! leanprover-community/mathlib commit 03994e05d8bfc59a41d2ec99523d6553d21848ac
+! leanprover-community/mathlib commit e2e7f2ac359e7514e4d40061d7c08bb69487ba4e
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -15,7 +15,7 @@ import Mathbin.Tactic.LinearCombination
 /-!
 # Weierstrass equations of elliptic curves
 
-We give a working definition of an elliptic curve as a nonsingular Weierstrass curve given by a
+This file defines the structure of an elliptic curve as a nonsingular Weierstrass curve given by a
 Weierstrass equation, which is mathematically accurate in many cases but also good for computation.
 
 ## Mathematical background
@@ -357,7 +357,7 @@ section Polynomial
 
 open Polynomial
 
-open scoped Polynomial
+open scoped Polynomial PolynomialPolynomial
 
 /-- The polynomial $W(X, Y) := Y^2 + a_1XY + a_3Y - (X^3 + a_2X^2 + a_4X + a_6)$ associated to a
 Weierstrass curve `W` over `R`. For ease of polynomial manipulation, this is represented as a term
@@ -629,10 +629,12 @@ abbrev FunctionField : Type u :=
 
 namespace CoordinateRing
 
+open Ideal
+
 instance [IsDomain R] [NormalizedGCDMonoid R] : IsDomain W.CoordinateRing :=
-  (Ideal.Quotient.isDomain_iff_prime _).mpr <| by
-    simpa only [Ideal.span_singleton_prime W.polynomial_ne_zero, ←
-      GCDMonoid.irreducible_iff_prime] using W.irreducible_polynomial
+  (Quotient.isDomain_iff_prime _).mpr <| by
+    simpa only [span_singleton_prime W.polynomial_ne_zero, ← GCDMonoid.irreducible_iff_prime] using
+      W.irreducible_polynomial
 
 instance isDomain_of_field {F : Type u} [Field F] (W : WeierstrassCurve F) :
     IsDomain W.CoordinateRing := by classical infer_instance
@@ -665,30 +667,49 @@ theorem yClass_ne_zero [Nontrivial R] : yClass W y ≠ 0 :=
 /-- The ideal $\langle X - x \rangle$ of $R[W]$ for some $x \in R$. -/
 @[simp]
 noncomputable def xIdeal : Ideal W.CoordinateRing :=
-  Ideal.span {xClass W x}
+  span {xClass W x}
 #align weierstrass_curve.coordinate_ring.X_ideal WeierstrassCurve.CoordinateRing.xIdeal
 
 /-- The ideal $\langle Y - y(X) \rangle$ of $R[W]$ for some $y(X) \in R[X]$. -/
 @[simp]
 noncomputable def yIdeal : Ideal W.CoordinateRing :=
-  Ideal.span {yClass W y}
+  span {yClass W y}
 #align weierstrass_curve.coordinate_ring.Y_ideal WeierstrassCurve.CoordinateRing.yIdeal
+
+/-- The ideal $\langle X - x, Y - y(X) \rangle$ of $R[W]$ for some $x \in R$ and $y(X) \in R[X]$. -/
+@[simp]
+noncomputable def xYIdeal (x : R) (y : R[X]) : Ideal W.CoordinateRing :=
+  span {xClass W x, yClass W y}
+#align weierstrass_curve.coordinate_ring.XY_ideal WeierstrassCurve.CoordinateRing.xYIdeal
 
 /-! ### The coordinate ring as an `R[X]`-algebra -/
 
 
 noncomputable instance : Algebra R[X] W.CoordinateRing :=
-  Ideal.Quotient.algebra R[X]
+  Quotient.algebra R[X]
 
 noncomputable instance algebra' : Algebra R W.CoordinateRing :=
-  Ideal.Quotient.algebra R
+  Quotient.algebra R
 #align weierstrass_curve.coordinate_ring.algebra' WeierstrassCurve.CoordinateRing.algebra'
 
 instance : IsScalarTower R R[X] W.CoordinateRing :=
-  Ideal.Quotient.isScalarTower R R[X] _
+  Quotient.isScalarTower R R[X] _
 
 instance [Subsingleton R] : Subsingleton W.CoordinateRing :=
   Module.subsingleton R[X] _
+
+/-- The $R$-algebra isomorphism from $R[W] / \langle X - x, Y - y(X) \rangle$ to $R$ obtained by
+evaluation at $y(X)$ and at $x$ provided that $W(x, y(x)) = 0$. -/
+noncomputable def quotientXYIdealEquiv {x : R} {y : R[X]} (h : (W.Polynomial.eval y).eval x = 0) :
+    (W.CoordinateRing ⧸ xYIdeal W x y) ≃ₐ[R] R :=
+  (quotientEquivAlgOfEq R <| by
+        simpa only [XY_ideal, X_class, Y_class, ← Set.image_pair, ← map_span]).trans <|
+    (DoubleQuot.quotQuotEquivQuotOfLEₐ R <|
+          (span_singleton_le_iff_mem _).mpr <|
+            mem_span_C_X_sub_C_X_sub_C_iff_eval_eval_eq_zero.mpr h).trans <|
+      ((quotientSpanCXSubCAlgEquiv (X - C x) y).restrictScalars R).trans <|
+        quotientSpanXSubCAlgEquiv x
+#align weierstrass_curve.coordinate_ring.quotient_XY_ideal_equiv WeierstrassCurve.CoordinateRing.quotientXYIdealEquiv
 
 /-- The basis $\{1, Y\}$ for the coordinate ring $R[W]$ over the polynomial ring $R[X]$.
 
@@ -746,7 +767,7 @@ variable (W)
 theorem smul_basis_mul_c (p q : R[X]) :
     (p • 1 + q • AdjoinRoot.mk W.Polynomial Y) * AdjoinRoot.mk W.Polynomial (C y) =
       (p * y) • 1 + (q * y) • AdjoinRoot.mk W.Polynomial Y :=
-  by simp only [smul, map_mul]; ring1
+  by simp only [smul, _root_.map_mul]; ring1
 #align weierstrass_curve.coordinate_ring.smul_basis_mul_C WeierstrassCurve.CoordinateRing.smul_basis_mul_c
 
 theorem smul_basis_mul_Y (p q : R[X]) :
@@ -759,7 +780,7 @@ theorem smul_basis_mul_Y (p q : R[X]) :
       AdjoinRoot.mk W.polynomial
         (C (X ^ 3 + C W.a₂ * X ^ 2 + C W.a₄ * X + C W.a₆) - C (C W.a₁ * X + C W.a₃) * Y) :=
     adjoin_root.mk_eq_mk.mpr ⟨1, by simp only [WeierstrassCurve.polynomial]; ring1⟩
-  simp only [smul, add_mul, mul_assoc, ← sq, Y_sq, map_sub, map_mul]
+  simp only [smul, add_mul, mul_assoc, ← sq, Y_sq, map_sub, _root_.map_mul]
   ring1
 #align weierstrass_curve.coordinate_ring.smul_basis_mul_Y WeierstrassCurve.CoordinateRing.smul_basis_mul_Y
 
@@ -781,7 +802,7 @@ theorem norm_smul_basis (p q : R[X]) :
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.4289455181.C_simp -/
 theorem coe_norm_smul_basis (p q : R[X]) :
     ↑(Algebra.norm R[X] <| p • 1 + q • AdjoinRoot.mk W.Polynomial Y) =
-      AdjoinRoot.mk W.Polynomial ((C p + C q * X) * (C p + C q * (-X - C (C W.a₁ * X + C W.a₃)))) :=
+      AdjoinRoot.mk W.Polynomial ((C p + C q * X) * (C p + C q * (-Y - C (C W.a₁ * X + C W.a₃)))) :=
   AdjoinRoot.mk_eq_mk.mpr
     ⟨C q ^ 2, by rw [norm_smul_basis, WeierstrassCurve.polynomial];
       run_tac

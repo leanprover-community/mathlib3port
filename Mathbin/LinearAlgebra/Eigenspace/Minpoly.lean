@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Bentkamp
 
 ! This file was ported from Lean 3 source module linear_algebra.eigenspace.minpoly
-! leanprover-community/mathlib commit 6b0169218d01f2837d79ea2784882009a0da1aa1
+! leanprover-community/mathlib commit 8efcf8022aac8e01df8d302dcebdbc25d6a886c8
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.FieldTheory.Minpoly.Field
 
 /-!
 # Eigenvalues are the roots of the minimal polynomial.
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 ## Tags
 
@@ -121,7 +124,7 @@ noncomputable instance (f : End K V) : Fintype f.Eigenvalues :=
       ext μ
       have : μ ∈ {μ : K | f.eigenspace μ = ⊥ → False} ↔ ¬f.eigenspace μ = ⊥ := by tauto
       convert rfl.mpr this
-      simp [Polynomial.rootSet_def, Polynomial.mem_roots h, ← has_eigenvalue_iff_is_root,
+      classical simp [Polynomial.rootSet_def, Polynomial.mem_roots h, ← has_eigenvalue_iff_is_root,
         has_eigenvalue])
 
 end End

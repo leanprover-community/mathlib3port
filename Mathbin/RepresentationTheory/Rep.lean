@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module representation_theory.Rep
-! leanprover-community/mathlib commit 74403a3b2551b0970855e14ef5e8fd0d6af1bfc2
+! leanprover-community/mathlib commit cec81510e48e579bde6acd8568c06a87af045b63
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -84,7 +84,6 @@ theorem of_ρ {V : Type u} [AddCommGroup V] [Module k V] (ρ : G →* V →ₗ[k
   rfl
 #align Rep.of_ρ Rep.of_ρ
 
-@[simp]
 theorem Action_ρ_eq_ρ {A : Rep k G} : Action.ρ A = A.ρ :=
   rfl
 #align Rep.Action_ρ_eq_ρ Rep.Action_ρ_eq_ρ
@@ -95,6 +94,23 @@ theorem of_ρ_apply {V : Type u} [AddCommGroup V] [Module k V] (ρ : Representat
     (g : MonCat.of G) : (Rep.of ρ).ρ g = ρ (g : G) :=
   rfl
 #align Rep.of_ρ_apply Rep.of_ρ_apply
+
+@[simp]
+theorem ρ_inv_self_apply {G : Type u} [Group G] (A : Rep k G) (g : G) (x : A) :
+    A.ρ g⁻¹ (A.ρ g x) = x :=
+  show (A.ρ g⁻¹ * A.ρ g) x = x by rw [← map_mul, inv_mul_self, map_one, LinearMap.one_apply]
+#align Rep.ρ_inv_self_apply Rep.ρ_inv_self_apply
+
+@[simp]
+theorem ρ_self_inv_apply {G : Type u} [Group G] {A : Rep k G} (g : G) (x : A) :
+    A.ρ g (A.ρ g⁻¹ x) = x :=
+  show (A.ρ g * A.ρ g⁻¹) x = x by rw [← map_mul, mul_inv_self, map_one, LinearMap.one_apply]
+#align Rep.ρ_self_inv_apply Rep.ρ_self_inv_apply
+
+theorem hom_comm_apply {A B : Rep k G} (f : A ⟶ B) (g : G) (x : A) :
+    f.hom (A.ρ g x) = B.ρ g (f.hom x) :=
+  LinearMap.ext_iff.1 (f.comm g) x
+#align Rep.hom_comm_apply Rep.hom_comm_apply
 
 variable (k G)
 
@@ -280,114 +296,100 @@ end Linearization
 
 end
 
-section
+section MonoidalClosed
 
 open Action
 
 variable [Group G] (A B C : Rep k G)
 
-noncomputable instance : MonoidalClosed (Rep k G) :=
-  MonoidalClosed.ofEquiv (functorCategoryMonoidalEquivalence _ _)
+/-- Given a `k`-linear `G`-representation `(A, ρ₁)`, this is the 'internal Hom' functor sending
+`(B, ρ₂)` to the representation `Homₖ(A, B)` that maps `g : G` and `f : A →ₗ[k] B` to
+`(ρ₂ g) ∘ₗ f ∘ₗ (ρ₁ g⁻¹)`. -/
+@[simps]
+protected def ihom (A : Rep k G) : Rep k G ⥤ Rep k G
+    where
+  obj B := Rep.of (Representation.linHom A.ρ B.ρ)
+  map X Y f :=
+    { hom := ModuleCat.ofHom (LinearMap.llcomp k _ _ _ f.hom)
+      comm' := fun g =>
+        LinearMap.ext fun x =>
+          LinearMap.ext fun y => show f.hom (X.ρ g _) = _ by simpa only [hom_comm_apply] }
+  map_id' B := by ext <;> rfl
+  map_comp' B C D f g := by ext <;> rfl
+#align Rep.ihom Rep.ihom
 
-/-- Explicit description of the 'internal Hom' `iHom(A, B)` of two representations `A, B`:
-this is `F⁻¹(iHom(F(A), F(B)))`, where `F` is an equivalence
-`Rep k G ≌ (single_obj G ⥤ Module k)`. Just used to prove `Rep.ihom_obj_ρ`. -/
-theorem ihom_obj_ρ_def :
-    ((ihom A).obj B).ρ =
-      (FunctorCategoryEquivalence.inverse.obj
-          ((FunctorCategoryEquivalence.functor.obj A).closedIhom.obj
-            (FunctorCategoryEquivalence.functor.obj B))).ρ :=
+@[simp]
+protected theorem ihom_obj_ρ_apply {A B : Rep k G} (g : G) (x : A →ₗ[k] B) :
+    ((Rep.ihom A).obj B).ρ g x = B.ρ g ∘ₗ x ∘ₗ A.ρ g⁻¹ :=
+  rfl
+#align Rep.ihom_obj_ρ_apply Rep.ihom_obj_ρ_apply
+
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/-- Given a `k`-linear `G`-representation `A`, this is the Hom-set bijection in the adjunction
+`A ⊗ - ⊣ ihom(A, -)`. It sends `f : A ⊗ B ⟶ C` to a `Rep k G` morphism defined by currying the
+`k`-linear map underlying `f`, giving a map `A →ₗ[k] B →ₗ[k] C`, then flipping the arguments. -/
+@[simps]
+protected def homEquiv (A B C : Rep k G) : (A ⊗ B ⟶ C) ≃ (B ⟶ (Rep.ihom A).obj C)
+    where
+  toFun f :=
+    { hom := (TensorProduct.curry f.hom).flip
+      comm' := fun g => by
+        refine' LinearMap.ext fun x => LinearMap.ext fun y => _
+        change f.hom (_ ⊗ₜ[k] _) = C.ρ g (f.hom (_ ⊗ₜ[k] _))
+        rw [← hom_comm_apply]
+        change _ = f.hom ((A.ρ g * A.ρ g⁻¹) y ⊗ₜ[k] _)
+        simpa only [← map_mul, mul_inv_self, map_one] }
+  invFun f :=
+    { hom := TensorProduct.uncurry k _ _ _ f.hom.flip
+      comm' := fun g =>
+        TensorProduct.ext' fun x y =>
+          by
+          dsimp only [monoidal_category.tensor_left_obj, ModuleCat.comp_def, LinearMap.comp_apply,
+            tensor_rho, ModuleCat.MonoidalCategory.hom_apply, TensorProduct.map_tmul]
+          simp only [TensorProduct.uncurry_apply f.hom.flip, LinearMap.flip_apply, Action_ρ_eq_ρ,
+            hom_comm_apply f g y, Rep.ihom_obj_ρ_apply, LinearMap.comp_apply, ρ_inv_self_apply] }
+  left_inv f := Action.Hom.ext _ _ (TensorProduct.ext' fun x y => rfl)
+  right_inv f := by ext <;> rfl
+#align Rep.hom_equiv Rep.homEquiv
+
+instance : MonoidalClosed (Rep k G)
+    where closed' A :=
+    {
+      isAdj :=
+        { right := Rep.ihom A
+          adj :=
+            Adjunction.mkOfHomEquiv
+              { homEquiv := Rep.homEquiv A
+                homEquiv_naturality_left_symm := fun X Y Z f g => by ext <;> rfl
+                homEquiv_naturality_right := fun X Y Z f g => by ext <;> rfl } } }
+
+@[simp]
+theorem ihom_obj_ρ_def (A B : Rep k G) : ((ihom A).obj B).ρ = ((Rep.ihom A).obj B).ρ :=
   rfl
 #align Rep.ihom_obj_ρ_def Rep.ihom_obj_ρ_def
 
-/-- Given `k`-linear `G`-representations `(A, ρ₁), (B, ρ₂)`, the 'internal Hom' is the
-representation on `Homₖ(A, B)` sending `g : G` and `f : A →ₗ[k] B` to `(ρ₂ g) ∘ₗ f ∘ₗ (ρ₁ g⁻¹)`. -/
 @[simp]
-theorem ihom_obj_ρ : ((ihom A).obj B).ρ = A.ρ.linHom B.ρ :=
-  by
-  refine' MonoidHom.ext fun g => _
-  simpa only [ihom_obj_ρ_def, functor_category_equivalence.inverse_obj_ρ_apply,
-    functor.closed_ihom_obj_map, ← functor.map_inv, single_obj.inv_as_inv]
-#align Rep.ihom_obj_ρ Rep.ihom_obj_ρ
-
-@[simp]
-theorem ihom_map_hom {B C : Rep k G} (f : B ⟶ C) :
-    ((ihom A).map f).hom = LinearMap.llcomp k A B C f.hom :=
+theorem homEquiv_def (A B C : Rep k G) : (ihom.adjunction A).homEquiv B C = Rep.homEquiv A B C :=
   rfl
-#align Rep.ihom_map_hom Rep.ihom_map_hom
+#align Rep.hom_equiv_def Rep.homEquiv_def
 
-/-- Unfolds the unit in the adjunction `A ⊗ - ⊣ iHom(A, -)`; just used to prove
-`Rep.ihom_coev_app_hom`. -/
-theorem ihom_coev_app_def :
-    (ihom.coev A).app B =
-      FunctorCategoryEquivalence.unitIso.hom.app B ≫
-        FunctorCategoryEquivalence.inverse.map
-          ((FunctorCategoryEquivalence.functor.obj A).closedUnit.app _ ≫
-            (FunctorCategoryEquivalence.functor.obj A).closedIhom.map
-              ((functorCategoryMonoidalEquivalence (ModuleCat.{u} k) (MonCat.of G)).μ A B)) :=
-  rfl
-#align Rep.ihom_coev_app_def Rep.ihom_coev_app_def
-
-/-- Describes the unit in the adjunction `A ⊗ - ⊣ iHom(A, -)`; given another `k`-linear
-`G`-representation `B,` the `k`-linear map underlying the resulting map `B ⟶ iHom(A, A ⊗ B)` is
-given by flipping the arguments in the natural `k`-bilinear map `A →ₗ[k] B →ₗ[k] A ⊗ B`. -/
 @[simp]
-theorem ihom_coev_app_hom : Action.Hom.hom ((ihom.coev A).app B) = (TensorProduct.mk _ _ _).flip :=
-  by
-  refine' LinearMap.ext fun x => LinearMap.ext fun y => _
-  simpa only [ihom_coev_app_def, functor.map_comp, comp_hom,
-    functor_category_equivalence.inverse_map_hom, functor.closed_ihom_map_app,
-    functor_category_monoidal_equivalence.μ_app]
-#align Rep.ihom_coev_app_hom Rep.ihom_coev_app_hom
-
-variable {A B C}
-
-/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-/-- Given a `k`-linear `G`-representation `A`, the adjunction `A ⊗ - ⊣ iHom(A, -)` defines a
-bijection `Hom(A ⊗ B, C) ≃ Hom(B, iHom(A, C))` for all `B, C`. Given `f : A ⊗ B ⟶ C`, this lemma
-describes the `k`-linear map underlying `f`'s image under the bijection. It is given by currying the
-`k`-linear map underlying `f`, giving a map `A →ₗ[k] B →ₗ[k] C`, then flipping the arguments. -/
-@[simp]
-theorem monoidalClosed_curry_hom (f : A ⊗ B ⟶ C) :
-    (MonoidalClosed.curry f).hom = (TensorProduct.curry f.hom).flip :=
-  by
-  rw [monoidal_closed.curry_eq, comp_hom, ihom_coev_app_hom]
-  rfl
-#align Rep.monoidal_closed_curry_hom Rep.monoidalClosed_curry_hom
-
-/-- Given a `k`-linear `G`-representation `A`, the adjunction `A ⊗ - ⊣ iHom(A, -)` defines a
-bijection `Hom(A ⊗ B, C) ≃ Hom(B, iHom(A, C))` for all `B, C`. Given `f : B ⟶ iHom(A, C)`, this
-lemma describes the `k`-linear map underlying `f`'s image under the bijection. It is given by
-flipping the arguments of the `k`-linear map underlying `f`, giving a map `A →ₗ[k] B →ₗ[k] C`, then
-uncurrying. -/
-@[simp]
-theorem monoidalClosed_uncurry_hom (f : B ⟶ (ihom A).obj C) :
-    (MonoidalClosed.uncurry f).hom = TensorProduct.uncurry _ _ _ _ f.hom.flip :=
-  by
-  simp only [monoidal_closed.of_equiv_uncurry_def, comp_inv_iso_inv_app,
-    monoidal_functor.comm_tensor_left_inv_app, comp_hom,
-    functor_category_monoidal_equivalence.inverse_map, functor_category_equivalence.inverse_map_hom,
-    functor_category_monoidal_equivalence.μ_iso_inv_app]
-  ext
-  rfl
-#align Rep.monoidal_closed_uncurry_hom Rep.monoidalClosed_uncurry_hom
-
-/-- Describes the counit in the adjunction `A ⊗ - ⊣ iHom(A, -)`; given another `k`-linear
-`G`-representation `B,` the `k`-linear map underlying the resulting morphism `A ⊗ iHom(A, B) ⟶ B`
-is given by uncurrying the map `A →ₗ[k] (A →ₗ[k] B) →ₗ[k] B` defined by flipping the arguments in
-the identity map on `Homₖ(A, B).` -/
-@[simp]
-theorem ihom_ev_app_hom :
-    Action.Hom.hom ((ihom.ev A).app B) = TensorProduct.uncurry _ _ _ _ LinearMap.id.flip :=
-  monoidalClosed_uncurry_hom _
+theorem ihom_ev_app_hom (A B : Rep k G) :
+    Action.Hom.hom ((ihom.ev A).app B) = TensorProduct.uncurry _ _ _ _ LinearMap.id.flip := by
+  ext <;> rfl
 #align Rep.ihom_ev_app_hom Rep.ihom_ev_app_hom
+
+@[simp]
+theorem ihom_coev_app_hom (A B : Rep k G) :
+    Action.Hom.hom ((ihom.coev A).app B) = (TensorProduct.mk _ _ _).flip := by ext <;> rfl
+#align Rep.ihom_coev_app_hom Rep.ihom_coev_app_hom
 
 variable (A B C)
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- There is a `k`-linear isomorphism between the sets of representation morphisms`Hom(A ⊗ B, C)`
 and `Hom(B, Homₖ(A, C))`. -/
-noncomputable def MonoidalClosed.linearHomEquiv : (A ⊗ B ⟶ C) ≃ₗ[k] B ⟶ A ⟶[Rep k G] C :=
+def MonoidalClosed.linearHomEquiv : (A ⊗ B ⟶ C) ≃ₗ[k] B ⟶ A ⟶[Rep k G] C :=
   {
     (ihom.adjunction A).homEquiv _
       _ with
@@ -398,52 +400,39 @@ noncomputable def MonoidalClosed.linearHomEquiv : (A ⊗ B ⟶ C) ≃ₗ[k] B �
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- There is a `k`-linear isomorphism between the sets of representation morphisms`Hom(A ⊗ B, C)`
 and `Hom(A, Homₖ(B, C))`. -/
-noncomputable def MonoidalClosed.linearHomEquivComm : (A ⊗ B ⟶ C) ≃ₗ[k] A ⟶ B ⟶[Rep k G] C :=
+def MonoidalClosed.linearHomEquivComm : (A ⊗ B ⟶ C) ≃ₗ[k] A ⟶ B ⟶[Rep k G] C :=
   Linear.homCongr k (β_ A B) (Iso.refl _) ≪≫ₗ MonoidalClosed.linearHomEquiv _ _ _
 #align Rep.monoidal_closed.linear_hom_equiv_comm Rep.MonoidalClosed.linearHomEquivComm
 
 variable {A B C}
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+@[simp]
 theorem MonoidalClosed.linearHomEquiv_hom (f : A ⊗ B ⟶ C) :
     (MonoidalClosed.linearHomEquiv A B C f).hom = (TensorProduct.curry f.hom).flip :=
-  monoidalClosed_curry_hom _
+  rfl
 #align Rep.monoidal_closed.linear_hom_equiv_hom Rep.MonoidalClosed.linearHomEquiv_hom
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+@[simp]
 theorem MonoidalClosed.linearHomEquivComm_hom (f : A ⊗ B ⟶ C) :
     (MonoidalClosed.linearHomEquivComm A B C f).hom = TensorProduct.curry f.hom :=
-  by
-  dsimp only [monoidal_closed.linear_hom_equiv_comm]
-  refine' LinearMap.ext fun x => LinearMap.ext fun y => _
-  simp only [LinearEquiv.trans_apply, monoidal_closed.linear_hom_equiv_hom, linear.hom_congr_apply,
-    iso.refl_hom, iso.symm_hom, LinearMap.toFun_eq_coe, LinearMap.coe_comp, Function.comp_apply,
-    linear.left_comp_apply, linear.right_comp_apply, category.comp_id, Action.comp_hom,
-    LinearMap.flip_apply, TensorProduct.curry_apply, ModuleCat.coe_comp, Function.comp_apply,
-    monoidal_category.braiding_inv_apply]
+  rfl
 #align Rep.monoidal_closed.linear_hom_equiv_comm_hom Rep.MonoidalClosed.linearHomEquivComm_hom
 
+@[simp]
 theorem MonoidalClosed.linearHomEquiv_symm_hom (f : B ⟶ A ⟶[Rep k G] C) :
     ((MonoidalClosed.linearHomEquiv A B C).symm f).hom = TensorProduct.uncurry k A B C f.hom.flip :=
-  monoidalClosed_uncurry_hom _
+  rfl
 #align Rep.monoidal_closed.linear_hom_equiv_symm_hom Rep.MonoidalClosed.linearHomEquiv_symm_hom
 
+@[simp]
 theorem MonoidalClosed.linearHomEquivComm_symm_hom (f : A ⟶ B ⟶[Rep k G] C) :
     ((MonoidalClosed.linearHomEquivComm A B C).symm f).hom = TensorProduct.uncurry k A B C f.hom :=
-  by
-  dsimp only [monoidal_closed.linear_hom_equiv_comm]
-  refine'
-    TensorProduct.AlgebraTensorModule.curry_injective
-      (LinearMap.ext fun x => LinearMap.ext fun y => _)
-  simp only [LinearEquiv.trans_symm, LinearEquiv.trans_apply, linear.hom_congr_symm_apply,
-    iso.refl_inv, LinearMap.coe_comp, Function.comp_apply, category.comp_id, Action.comp_hom,
-    monoidal_closed.linear_hom_equiv_symm_hom, TensorProduct.AlgebraTensorModule.curry_apply,
-    LinearMap.coe_restrictScalars, LinearMap.toFun_eq_coe, LinearMap.flip_apply,
-    TensorProduct.curry_apply, ModuleCat.coe_comp, Function.comp_apply,
-    monoidal_category.braiding_hom_apply, TensorProduct.uncurry_apply]
+  by ext <;> rfl
 #align Rep.monoidal_closed.linear_hom_equiv_comm_symm_hom Rep.MonoidalClosed.linearHomEquivComm_symm_hom
 
-end
+end MonoidalClosed
 
 end Rep
 

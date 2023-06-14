@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
 
 ! This file was ported from Lean 3 source module analysis.normed_space.star.continuous_functional_calculus
-! leanprover-community/mathlib commit 31c24aa72e7b3e5ed97a8412470e904f82b81004
+! leanprover-community/mathlib commit 44e2ae8cffc713925494e4975ee31ec1d06929b3
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.Analysis.NormedSpace.Star.GelfandDuality
 import Mathbin.Topology.Algebra.StarSubalgebra
 
 /-! # Continuous functional calculus
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 In this file we construct the `continuous_functional_calculus` for a normal element `a` of a
 (unital) C⋆-algebra over `ℂ`. This is a star algebra equivalence

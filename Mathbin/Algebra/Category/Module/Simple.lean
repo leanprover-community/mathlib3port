@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Pierre-Alexandre Bazin, Scott Morrison
 
 ! This file was ported from Lean 3 source module algebra.category.Module.simple
-! leanprover-community/mathlib commit 4ed0bcaef698011b0692b93a042a2282f490f6b6
+! leanprover-community/mathlib commit 44e2ae8cffc713925494e4975ee31ec1d06929b3
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -16,6 +16,9 @@ import Mathbin.LinearAlgebra.FiniteDimensional
 
 /-!
 # Simple objects in the category of `R`-modules
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 We prove simple modules are exactly simple objects in the category of `R`-modules.
 -/

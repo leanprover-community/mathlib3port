@@ -45,12 +45,10 @@ theorem Ideal.coe_closure (I : Ideal R) : (I.closure : Set R) = closure I :=
 #align ideal.coe_closure Ideal.coe_closure
 -/
 
-#print Ideal.closure_eq_of_isClosed /-
 @[simp]
 theorem Ideal.closure_eq_of_isClosed (I : Ideal R) [hI : IsClosed (I : Set R)] : I.closure = I :=
   SetLike.ext' hI.closure_eq
-#align ideal.closure_eq_of_is_closed Ideal.closure_eq_of_isClosed
--/
+#align ideal.closure_eq_of_is_closed Ideal.closure_eq_of_isClosedₓ
 
 end Ring
 

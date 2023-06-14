@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Thomas Browning, Patrick Lutz
 
 ! This file was ported from Lean 3 source module field_theory.abel_ruffini
-! leanprover-community/mathlib commit 7fdeecc0d03cd40f7a165e6cf00a4d2286db599f
+! leanprover-community/mathlib commit fbbd626e4e8fe4d1ce64903e26276ec2873f2976
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -219,8 +219,8 @@ variable (F)
 
 /-- Inductive definition of solvable by radicals -/
 inductive IsSolvableByRad : E → Prop
-  | base (a : F) : IsSolvableByRad (algebraMap F E a)
-  | add (a b : E) : IsSolvableByRad a → IsSolvableByRad b → IsSolvableByRad (a + b)
+  | base (α : F) : IsSolvableByRad (algebraMap F E α)
+  | add (α β : E) : IsSolvableByRad α → IsSolvableByRad β → IsSolvableByRad (α + β)
   | neg (α : E) : IsSolvableByRad α → IsSolvableByRad (-α)
   | mul (α β : E) : IsSolvableByRad α → IsSolvableByRad β → IsSolvableByRad (α * β)
   | inv (α : E) : IsSolvableByRad α → IsSolvableByRad α⁻¹

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Amelia Livingston
 
 ! This file was ported from Lean 3 source module representation_theory.group_cohomology.resolution
-! leanprover-community/mathlib commit cc5dd6244981976cc9da7afc4eee5682b037a013
+! leanprover-community/mathlib commit cec81510e48e579bde6acd8568c06a87af045b63
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -307,9 +307,8 @@ theorem diagonalHomEquiv_symm_apply (f : (Fin n → G) → A) (x : Fin (n + 1) �
     category.comp_id, Rep.MonoidalClosed.linearHomEquivComm_symm_hom, iso.trans_hom,
     ModuleCat.comp_def, LinearMap.comp_apply, Representation.repOfTprodIso_apply,
     diagonal_succ_hom_single x (1 : k), TensorProduct.uncurry_apply, Rep.leftRegularHom_hom,
-    Finsupp.lift_apply, Rep.ihom_obj_ρ, Representation.linHom_apply, Finsupp.sum_single_index,
-    zero_smul, one_smul, Rep.of_ρ, Rep.Action_ρ_eq_ρ, Rep.trivial_def (x 0)⁻¹,
-    Finsupp.llift_apply A k k]
+    Finsupp.lift_apply, ihom_obj_ρ_def, Rep.ihom_obj_ρ_apply, Finsupp.sum_single_index, zero_smul,
+    one_smul, Rep.of_ρ, Rep.Action_ρ_eq_ρ, Rep.trivial_def (x 0)⁻¹, Finsupp.llift_apply A k k]
 #align Rep.diagonal_hom_equiv_symm_apply Rep.diagonalHomEquiv_symm_apply
 
 /-- Auxiliary lemma for defining group cohomology, used to show that the isomorphism
