@@ -289,7 +289,7 @@ theorem Scheme.specMap_presheaf_map_eqToHom {X : Scheme} {U V : Opens X.carrier}
 
 theorem IsAffineOpen.specΓIdentity_hom_app_fromSpec {X : Scheme} {U : Opens X.carrier}
     (hU : IsAffineOpen U) :
-    specΓIdentity.Hom.app (X.Presheaf.obj <| op U) ≫ hU.fromSpec.1.c.app (op U) =
+    SpecΓIdentity.Hom.app (X.Presheaf.obj <| op U) ≫ hU.fromSpec.1.c.app (op U) =
       (Scheme.spec.obj _).Presheaf.map (eqToHom hU.fromSpec_base_preimage).op :=
   by
   haveI : is_affine _ := hU
@@ -320,7 +320,7 @@ theorem IsAffineOpen.specΓIdentity_hom_app_fromSpec {X : Scheme} {U : Opens X.c
 @[elementwise]
 theorem IsAffineOpen.fromSpec_app_eq {X : Scheme} {U : Opens X.carrier} (hU : IsAffineOpen U) :
     hU.fromSpec.1.c.app (op U) =
-      specΓIdentity.inv.app (X.Presheaf.obj <| op U) ≫
+      SpecΓIdentity.inv.app (X.Presheaf.obj <| op U) ≫
         (Scheme.spec.obj _).Presheaf.map (eqToHom hU.fromSpec_base_preimage).op :=
   by rw [← hU.Spec_Γ_identity_hom_app_from_Spec, iso.inv_hom_id_app_assoc]
 #align algebraic_geometry.is_affine_open.from_Spec_app_eq AlgebraicGeometry.IsAffineOpen.fromSpec_app_eq
@@ -447,7 +447,7 @@ instance {X : Scheme} {U : Opens X.carrier} (f : X.Presheaf.obj (op U)) :
 theorem IsAffineOpen.opens_map_fromSpec_basicOpen {X : Scheme} {U : Opens X.carrier}
     (hU : IsAffineOpen U) (f : X.Presheaf.obj (op U)) :
     (Opens.map hU.fromSpec.val.base).obj (X.basicOpen f) =
-      RingedSpace.basicOpen _ (specΓIdentity.inv.app (X.Presheaf.obj <| op U) f) :=
+      RingedSpace.basicOpen _ (SpecΓIdentity.inv.app (X.Presheaf.obj <| op U) f) :=
   by
   erw [LocallyRingedSpace.preimage_basic_open]
   refine'
@@ -468,7 +468,7 @@ def basicOpenSectionsToAffine {X : Scheme} {U : Opens X.carrier} (hU : IsAffineO
     (f : X.Presheaf.obj (op U)) :
     X.Presheaf.obj (op <| X.basicOpen f) ⟶
       (Scheme.spec.obj <| op <| X.Presheaf.obj (op U)).Presheaf.obj
-        (op <| Scheme.basicOpen _ <| specΓIdentity.inv.app (X.Presheaf.obj (op U)) f) :=
+        (op <| Scheme.basicOpen _ <| SpecΓIdentity.inv.app (X.Presheaf.obj (op U)) f) :=
   hU.fromSpec.1.c.app (op <| X.basicOpen f) ≫
     (Scheme.spec.obj <| op <| X.Presheaf.obj (op U)).Presheaf.map
       (eqToHom <| (hU.opens_map_fromSpec_basicOpen f).symm).op

@@ -92,7 +92,7 @@ theorem comp_map {α β γ : Type _} (f : α → β) (g : β → γ) (x : F α) 
 theorem lawfulFunctor
     (h : ∀ α β : Type u, @Functor.mapConst F _ α _ = Functor.map ∘ Function.const β) :
     LawfulFunctor F :=
-  { mapConst_eq := h
+  { map_const := h
     id_map := @id_map F _ _
     comp_map := @comp_map F _ _ }
 #align qpf.is_lawful_functor Qpf.lawfulFunctor

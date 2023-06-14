@@ -29,6 +29,7 @@ open scoped Topology ENNReal
 
 namespace AnalyticOn
 
+#print AnalyticOn.eqOn_zero_of_preconnected_of_eventuallyEq_zero_aux /-
 /-- If an analytic function vanishes around a point, then it is uniformly zero along
 a connected set. Superseded by `eq_on_zero_of_preconnected_of_locally_zero` which does not assume
 completeness of the target space. -/
@@ -75,7 +76,9 @@ theorem eqOn_zero_of_preconnected_of_eventuallyEq_zero_aux [CompleteSpace F] {f 
     exact this.apply_eq_zero n _
   exact HasSum.unique A B
 #align analytic_on.eq_on_zero_of_preconnected_of_eventually_eq_zero_aux AnalyticOn.eqOn_zero_of_preconnected_of_eventuallyEq_zero_aux
+-/
 
+#print AnalyticOn.eqOn_zero_of_preconnected_of_eventuallyEq_zero /-
 /-- The *identity principle* for analytic functions: If an analytic function vanishes in a whole
 neighborhood of a point `z₀`, then it is uniformly zero along a connected set. For a one-dimensional
 version assuming only that the function vanishes at some points arbitrarily close to `z₀`, see
@@ -95,7 +98,9 @@ theorem eqOn_zero_of_preconnected_of_eventuallyEq_zero {f : E → F} {U : Set E}
   have : e (f z) = e 0 := by simpa only using A hz
   exact UniformSpace.Completion.coe_injective F this
 #align analytic_on.eq_on_zero_of_preconnected_of_eventually_eq_zero AnalyticOn.eqOn_zero_of_preconnected_of_eventuallyEq_zero
+-/
 
+#print AnalyticOn.eqOn_of_preconnected_of_eventuallyEq /-
 /-- The *identity principle* for analytic functions: If two analytic functions coincide in a whole
 neighborhood of a point `z₀`, then they coincide globally along a connected set.
 For a one-dimensional version assuming only that the functions coincide at some points
@@ -107,7 +112,9 @@ theorem eqOn_of_preconnected_of_eventuallyEq {f g : E → F} {U : Set E} (hf : A
   simpa [sub_eq_zero] using fun z hz =>
     (hf.sub hg).eqOn_zero_of_preconnected_of_eventuallyEq_zero hU h₀ hfg' hz
 #align analytic_on.eq_on_of_preconnected_of_eventually_eq AnalyticOn.eqOn_of_preconnected_of_eventuallyEq
+-/
 
+#print AnalyticOn.eq_of_eventuallyEq /-
 /-- The *identity principle* for analytic functions: If two analytic functions on a normed space
 coincide in a neighborhood of a point `z₀`, then they coincide everywhere.
 For a one-dimensional version assuming only that the functions coincide at some points
@@ -117,6 +124,7 @@ theorem eq_of_eventuallyEq {f g : E → F} [PreconnectedSpace E] (hf : AnalyticO
   funext fun x =>
     eqOn_of_preconnected_of_eventuallyEq hf hg isPreconnected_univ (mem_univ z₀) hfg (mem_univ x)
 #align analytic_on.eq_of_eventually_eq AnalyticOn.eq_of_eventuallyEq
+-/
 
 end AnalyticOn
 

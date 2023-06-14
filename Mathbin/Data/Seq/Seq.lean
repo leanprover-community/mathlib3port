@@ -1256,7 +1256,7 @@ instance : Monad Seq1 where
 
 instance : LawfulMonad Seq1 where
   id_map := @map_id
-  bind_pure_comp_eq_map := @bind_ret
+  bind_pure_comp := @bind_ret
   pure_bind := @ret_bind
   bind_assoc := @bind_assoc
 

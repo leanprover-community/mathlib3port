@@ -470,7 +470,7 @@ instance lawfulMonad : LawfulMonad Ultrafilter
   id_map α f := coe_injective (id_map f.1)
   pure_bind α β a f := coe_injective (pure_bind a (coe ∘ f))
   bind_assoc α β γ f m₁ m₂ := coe_injective (filter_eq rfl)
-  bind_pure_comp_eq_map α β f x := coe_injective (bind_pure_comp_eq_map f x.1)
+  bind_pure_comp α β f x := coe_injective (bind_pure_comp f x.1)
 #align ultrafilter.is_lawful_monad Ultrafilter.lawfulMonad
 -/
 

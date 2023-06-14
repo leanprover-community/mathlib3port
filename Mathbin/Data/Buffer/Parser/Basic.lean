@@ -285,7 +285,7 @@ variable {f : α → β}
 
 @[simp]
 theorem map_eq_done : (f <$> p) cb n = done n' b ↔ ∃ a : α, p cb n = done n' a ∧ f a = b := by
-  cases hp : p cb n <;> simp [← LawfulMonad.bind_pure_comp_eq_map, hp, and_assoc', pure_eq_done]
+  cases hp : p cb n <;> simp [← LawfulMonad.bind_pure_comp, hp, and_assoc', pure_eq_done]
 #align parser.map_eq_done Parser.map_eq_done
 
 @[simp]

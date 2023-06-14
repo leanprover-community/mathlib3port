@@ -299,14 +299,14 @@ def identityToΓSpec : 𝟭 LocallyRingedSpace.{u} ⟶ Γ.rightOp ⋙ Spec.toLoc
 namespace ΓSpec
 
 theorem left_triangle (X : LocallyRingedSpace) :
-    specΓIdentity.inv.app (Γ.obj (op X)) ≫ (identityToΓSpec.app X).val.c.app (op ⊤) = 𝟙 _ :=
+    SpecΓIdentity.inv.app (Γ.obj (op X)) ≫ (identityToΓSpec.app X).val.c.app (op ⊤) = 𝟙 _ :=
   X.Γ_Spec_left_triangle
 #align algebraic_geometry.Γ_Spec.left_triangle AlgebraicGeometry.ΓSpec.left_triangle
 
 /-- `Spec_Γ_identity` is iso so these are mutually two-sided inverses. -/
 theorem right_triangle (R : CommRingCat) :
     identityToΓSpec.app (Spec.toLocallyRingedSpace.obj <| op R) ≫
-        Spec.toLocallyRingedSpace.map (specΓIdentity.inv.app R).op =
+        Spec.toLocallyRingedSpace.map (SpecΓIdentity.inv.app R).op =
       𝟙 _ :=
   by
   apply LocallyRingedSpace.comp_ring_hom_ext
@@ -324,7 +324,7 @@ theorem right_triangle (R : CommRingCat) :
 def locallyRingedSpaceAdjunction : Γ.rightOp ⊣ Spec.toLocallyRingedSpace :=
   Adjunction.mkOfUnitCounit
     { Unit := identityToΓSpec
-      counit := (NatIso.op specΓIdentity).inv
+      counit := (NatIso.op SpecΓIdentity).inv
       left_triangle := by
         ext X; erw [category.id_comp]
         exact congr_arg Quiver.Hom.op (left_triangle X)
@@ -396,7 +396,7 @@ theorem adjunction_unit_app_app_top (X : Scheme) :
       ((Scheme.spec.obj (op <| X.Presheaf.obj (op ⊤))).Presheaf.obj (op ⊤) ⟶
         ((ΓSpec.adjunction.Unit.app X).1.base _* X.Presheaf).obj (op ⊤))
       ((ΓSpec.adjunction.Unit.app X).val.c.app (op ⊤))
-      (specΓIdentity.Hom.app (X.Presheaf.obj (op ⊤))) :=
+      (SpecΓIdentity.Hom.app (X.Presheaf.obj (op ⊤))) :=
   by
   have := congr_app Γ_Spec.adjunction.left_triangle X
   dsimp at this 

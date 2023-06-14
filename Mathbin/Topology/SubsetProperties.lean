@@ -1368,9 +1368,11 @@ instance Pi.compactSpace [∀ i, CompactSpace (π i)] : CompactSpace (∀ i, π 
 #align pi.compact_space Pi.compactSpace
 -/
 
+#print Function.compactSpace /-
 instance Function.compactSpace [CompactSpace β] : CompactSpace (ι → β) :=
   Pi.compactSpace
 #align function.compact_space Function.compactSpace
+-/
 
 #print Filter.coprodᵢ_cocompact /-
 /-- **Tychonoff's theorem** formulated in terms of filters: `filter.cocompact` on an indexed product
@@ -1434,17 +1436,24 @@ theorem locallyCompactSpace_of_hasBasis {ι : α → Type _} {p : ∀ x, ι x �
 #align locally_compact_space_of_has_basis locallyCompactSpace_of_hasBasis
 -/
 
+/- warning: prod.locally_compact_space clashes with locally_compact_space.prod -> Prod.locallyCompactSpace
+Case conversion may be inaccurate. Consider using '#align prod.locally_compact_space Prod.locallyCompactSpaceₓ'. -/
+#print Prod.locallyCompactSpace /-
 instance Prod.locallyCompactSpace (α : Type _) (β : Type _) [TopologicalSpace α]
     [TopologicalSpace β] [LocallyCompactSpace α] [LocallyCompactSpace β] :
     LocallyCompactSpace (α × β) :=
   have := fun x : α × β => (compact_basis_nhds x.1).prod_nhds' (compact_basis_nhds x.2)
   locallyCompactSpace_of_hasBasis this fun x s ⟨⟨_, h₁⟩, _, h₂⟩ => h₁.Prod h₂
 #align prod.locally_compact_space Prod.locallyCompactSpace
+-/
 
 section Pi
 
 variable [∀ i, TopologicalSpace (π i)] [∀ i, LocallyCompactSpace (π i)]
 
+/- warning: pi.locally_compact_space_of_finite clashes with locally_compact_space.pi_finite -> Pi.locallyCompactSpace_of_finite
+Case conversion may be inaccurate. Consider using '#align pi.locally_compact_space_of_finite Pi.locallyCompactSpace_of_finiteₓ'. -/
+#print Pi.locallyCompactSpace_of_finite /-
 /-- In general it suffices that all but finitely many of the spaces are compact,
   but that's not straightforward to state and use. -/
 instance Pi.locallyCompactSpace_of_finite [Finite ι] : LocallyCompactSpace (∀ i, π i) :=
@@ -1457,7 +1466,11 @@ instance Pi.locallyCompactSpace_of_finite [Finite ι] : LocallyCompactSpace (∀
     · exact (set_pi_mem_nhds_iff (@Set.finite_univ ι _) _).mpr fun i hi => hn'' i
     · exact fun i hi => hsub' i (h i trivial)⟩
 #align pi.locally_compact_space_of_finite Pi.locallyCompactSpace_of_finite
+-/
 
+/- warning: pi.locally_compact_space clashes with locally_compact_space.pi -> Pi.locallyCompactSpace
+Case conversion may be inaccurate. Consider using '#align pi.locally_compact_space Pi.locallyCompactSpaceₓ'. -/
+#print Pi.locallyCompactSpace /-
 /-- For spaces that are not Hausdorff. -/
 instance Pi.locallyCompactSpace [∀ i, CompactSpace (π i)] : LocallyCompactSpace (∀ i, π i) :=
   ⟨fun t n hn => by
@@ -1474,16 +1487,21 @@ instance Pi.locallyCompactSpace [∀ i, CompactSpace (π i)] : LocallyCompactSpa
       · rw [if_pos h]; exact hc i
       · rw [if_neg h]; exact CompactSpace.isCompact_univ⟩
 #align pi.locally_compact_space Pi.locallyCompactSpace
+-/
 
+#print Function.locallyCompactSpace_of_finite /-
 instance Function.locallyCompactSpace_of_finite [Finite ι] [LocallyCompactSpace β] :
     LocallyCompactSpace (ι → β) :=
   Pi.locallyCompactSpace_of_finite
 #align function.locally_compact_space_of_finite Function.locallyCompactSpace_of_finite
+-/
 
+#print Function.locallyCompactSpace /-
 instance Function.locallyCompactSpace [LocallyCompactSpace β] [CompactSpace β] :
     LocallyCompactSpace (ι → β) :=
   Pi.locallyCompactSpace
 #align function.locally_compact_space Function.locallyCompactSpace
+-/
 
 end Pi
 

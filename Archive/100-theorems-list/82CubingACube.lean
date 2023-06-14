@@ -110,7 +110,7 @@ def bottom (c : Cube (n + 1)) : Set (Fin (n + 1) → ℝ) :=
 #align theorems_100.«82».cube.bottom Theorems100.«82».Cube.bottom
 
 theorem b_mem_bottom (c : Cube (n + 1)) : c.b ∈ c.bottom := by
-  simp [bottom, to_set, side, cube.hw, le_refl, Cube.tail]
+  simp [bottom, to_set, side, cube.hw, le_refl, cube.tail]
 #align theorems_100.«82».cube.b_mem_bottom Theorems100.«82».Cube.b_mem_bottom
 
 def xm (c : Cube (n + 1)) : ℝ :=
@@ -129,7 +129,7 @@ def shiftUp (c : Cube (n + 1)) : Cube (n + 1) :=
 #align theorems_100.«82».cube.shift_up Theorems100.«82».Cube.shiftUp
 
 @[simp]
-theorem tail_shiftUp (c : Cube (n + 1)) : c.shiftUp.tail = c.tail := by simp [shift_up, Cube.tail]
+theorem tail_shiftUp (c : Cube (n + 1)) : c.shiftUp.tail = c.tail := by simp [shift_up, cube.tail]
 #align theorems_100.«82».cube.tail_shift_up Theorems100.«82».Cube.tail_shiftUp
 
 @[simp]
@@ -214,7 +214,7 @@ theorem shiftUp_bottom_subset_bottoms (hc : (cs i).xm ≠ 1) :
     (cs i).shiftUp.bottom ⊆ ⋃ i : ι, (cs i).bottom :=
   by
   intro p hp; cases' hp with hp0 hps; rw [tail_shift_up] at hps 
-  have : p ∈ (unit_cube : Cube (n + 1)).to_set :=
+  have : p ∈ (unit_cube : cube (n + 1)).to_set :=
     by
     simp only [to_set, forall_fin_succ, hp0, side_unit_cube, mem_set_of_eq, mem_Ico, head_shift_up]
     refine' ⟨⟨_, _⟩, _⟩
@@ -259,7 +259,7 @@ theorem valley_unitCube [Nontrivial ι] (h : Correct cs) : Valley cs unitCube :=
   · intro v
     simp only [bottom, and_imp, mem_Union, mem_set_of_eq]
     intro h0 hv
-    have : v ∈ (unit_cube : Cube (n + 1)).to_set :=
+    have : v ∈ (unit_cube : cube (n + 1)).to_set :=
       by
       dsimp only [to_set, unit_cube, mem_set_of_eq]
       rw [forall_fin_succ, h0]; constructor; norm_num [side, unit_cube]; exact hv
@@ -328,7 +328,7 @@ theorem nontrivial_bcubes : (bcubes cs c).Nontrivial :=
   refine' ⟨i, h2i, i', h2i', _⟩
   rintro rfl
   apply not_le_of_lt (hi'.2 ⟨1, Nat.le_of_succ_le_succ h.three_le⟩).2
-  simp only [tail, Cube.tail, p]
+  simp only [tail, cube.tail, p]
   rw [if_pos, add_le_add_iff_right]
   · exact (hi.2 _).1
   rfl

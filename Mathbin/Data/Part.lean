@@ -744,9 +744,8 @@ instance : Monad Part where
   map := @map
   bind := @Part.bind
 
-instance : LawfulMonad Part
-    where
-  bind_pure_comp_eq_map := @bind_some_eq_map
+instance : LawfulMonad Part where
+  bind_pure_comp := @bind_some_eq_map
   id_map β f := by cases f <;> rfl
   pure_bind := @bind_some
   bind_assoc := @bind_assoc

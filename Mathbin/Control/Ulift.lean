@@ -93,8 +93,8 @@ instance : LawfulApplicative PLift
 
 instance : LawfulMonad PLift
     where
-  bind_pure_comp_eq_map := fun α β f ⟨x⟩ => rfl
-  bind_map_eq_seq := fun α β ⟨a⟩ ⟨b⟩ => rfl
+  bind_pure_comp := fun α β f ⟨x⟩ => rfl
+  bind_map := fun α β ⟨a⟩ ⟨b⟩ => rfl
   pure_bind α β x f := rfl
   bind_assoc := fun α β γ ⟨x⟩ f g => rfl
 
@@ -182,8 +182,8 @@ instance : LawfulApplicative ULift
 
 instance : LawfulMonad ULift
     where
-  bind_pure_comp_eq_map := fun α β f ⟨x⟩ => rfl
-  bind_map_eq_seq := fun α β ⟨a⟩ ⟨b⟩ => rfl
+  bind_pure_comp := fun α β f ⟨x⟩ => rfl
+  bind_map := fun α β ⟨a⟩ ⟨b⟩ => rfl
   pure_bind α β x f := by dsimp only [bind, pure, ULift.pure, ULift.bind]; cases f x; rfl
   bind_assoc := fun α β γ ⟨x⟩ f g => by dsimp only [bind, pure, ULift.pure, ULift.bind]; cases f x;
     rfl

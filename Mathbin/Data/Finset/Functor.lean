@@ -187,8 +187,8 @@ theorem bind_def {α β} : (· >>= ·) = @sup (Finset α) β _ _ :=
 instance : LawfulMonad Finset :=
   {
     Finset.lawfulApplicative with
-    bind_pure_comp_eq_map := fun α β f s => sup_singleton'' _ _
-    bind_map_eq_seq := fun α β t s => rfl
+    bind_pure_comp := fun α β f s => sup_singleton'' _ _
+    bind_map := fun α β t s => rfl
     pure_bind := fun α β t s => sup_singleton
     bind_assoc := fun α β γ s f g => by convert sup_bUnion _ _; exact sup_eq_bUnion _ _ }
 

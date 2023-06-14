@@ -124,7 +124,7 @@ theorem seq_bind_eq (x : m α) {g : β → m γ} {f : α → β} : f <$> x >>= g
 -/
 
 theorem seq_eq_bind_map {x : m α} {f : m (α → β)} : f <*> x = f >>= (· <$> x) :=
-  (bind_map_eq_seq f x).symm
+  (bind_map f x).symm
 #align seq_eq_bind_map seq_eq_bind_mapₓ
 
 /-- This is the Kleisli composition -/
@@ -271,8 +271,8 @@ instance : LawfulMonad (Sum.{v, u} e)
     where
   bind_assoc := by intros; casesm Sum _ _ <;> rfl
   pure_bind := by intros; rfl
-  bind_pure_comp_eq_map := by intros; casesm Sum _ _ <;> rfl
-  bind_map_eq_seq := by intros; cases f <;> rfl
+  bind_pure_comp := by intros; casesm Sum _ _ <;> rfl
+  bind_map := by intros; cases f <;> rfl
 
 end Sum
 

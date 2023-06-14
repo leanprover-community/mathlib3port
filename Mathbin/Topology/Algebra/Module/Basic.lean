@@ -1438,18 +1438,22 @@ theorem range_coprod [Module R₁ M₂] [Module R₁ M₃] [ContinuousAdd M₃] 
 #align continuous_linear_map.range_coprod ContinuousLinearMap.range_coprod
 -/
 
+#print ContinuousLinearMap.comp_fst_add_comp_snd /-
 theorem comp_fst_add_comp_snd [Module R₁ M₂] [Module R₁ M₃] [ContinuousAdd M₃] (f : M₁ →L[R₁] M₃)
     (g : M₂ →L[R₁] M₃) :
     f.comp (ContinuousLinearMap.fst R₁ M₁ M₂) + g.comp (ContinuousLinearMap.snd R₁ M₁ M₂) =
       f.coprod g :=
   rfl
 #align continuous_linear_map.comp_fst_add_comp_snd ContinuousLinearMap.comp_fst_add_comp_snd
+-/
 
+#print ContinuousLinearMap.coprod_inl_inr /-
 theorem coprod_inl_inr [ContinuousAdd M₁] [ContinuousAdd M'₁] :
     (ContinuousLinearMap.inl R₁ M₁ M'₁).coprod (ContinuousLinearMap.inr R₁ M₁ M'₁) =
       ContinuousLinearMap.id R₁ (M₁ × M'₁) :=
   by apply coe_injective; apply LinearMap.coprod_inl_inr
 #align continuous_linear_map.coprod_inl_inr ContinuousLinearMap.coprod_inl_inr
+-/
 
 section
 

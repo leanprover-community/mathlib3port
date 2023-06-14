@@ -1279,7 +1279,7 @@ instance : LawfulMonad FreeGroup.{u}
     FreeGroup.induction_on x (by iterate 3 rw [one_bind]) (fun x => by iterate 2 rw [pure_bind])
       (fun x ih => by iterate 3 rw [inv_bind] <;> rw [ih]) fun x y ihx ihy => by
       iterate 3 rw [mul_bind] <;> rw [ihx, ihy]
-  bind_pure_comp_eq_map α β f x :=
+  bind_pure_comp α β f x :=
     FreeGroup.induction_on x (by rw [one_bind, map_one]) (fun x => by rw [pure_bind, map_pure])
       (fun x ih => by rw [inv_bind, map_inv, ih]) fun x y ihx ihy => by
       rw [mul_bind, map_mul, ihx, ihy]

@@ -233,7 +233,7 @@ instance : LawfulMonad Semiquot
           ⟨fun ⟨b, ⟨a, as, bf⟩, cg⟩ => ⟨a, as, b, bf, cg⟩, fun ⟨a, as, b, bf, cg⟩ =>
             ⟨b, ⟨a, as, bf⟩, cg⟩⟩
   id_map α q := ext.2 <| by simp
-  bind_pure_comp_eq_map α β f s := ext.2 <| by simp [eq_comm]
+  bind_pure_comp α β f s := ext.2 <| by simp [eq_comm]
 
 instance : LE (Semiquot α) :=
   ⟨fun s t => s.s ⊆ t.s⟩

@@ -1001,7 +1001,7 @@ instance : Monad Computation where
 
 instance : LawfulMonad Computation where
   id_map := @map_id
-  bind_pure_comp_eq_map := @bind_pure
+  bind_pure_comp := @bind_pure
   pure_bind := @ret_bind
   bind_assoc := @bind_assoc
 

@@ -91,7 +91,7 @@ theorem bind_def {α β} : (· >>= ·) = @bind α β :=
 
 instance : LawfulMonad Multiset
     where
-  bind_pure_comp_eq_map α β f s := Multiset.induction_on s rfl fun a s ih => by simp
+  bind_pure_comp α β f s := Multiset.induction_on s rfl fun a s ih => by simp
   pure_bind α β x f := by simp [pure]
   bind_assoc := @bind_assoc
 

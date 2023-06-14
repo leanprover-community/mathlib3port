@@ -186,13 +186,13 @@ theorem mem_support_seq_iff : b ∈ (seq q p).support ↔ ∃ f ∈ q.support, b
 end Seq
 
 instance : LawfulFunctor Pmf where
-  mapConst_eq α β := rfl
+  map_const α β := rfl
   id_map α := bind_pure
   comp_map α β γ g h x := (map_comp _ _ _).symm
 
 instance : LawfulMonad Pmf where
-  bind_pure_comp_eq_map α β f x := rfl
-  bind_map_eq_seq α β f x := rfl
+  bind_pure_comp α β f x := rfl
+  bind_map α β f x := rfl
   pure_bind α β := pure_bind
   bind_assoc α β γ := bind_bind
 

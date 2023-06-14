@@ -2697,7 +2697,7 @@ protected theorem lawfulMonad : LawfulMonad Filter :=
   { id_map := fun α f => filter_eq rfl
     pure_bind := fun α β => pure_bind
     bind_assoc := fun α β γ f m₁ m₂ => filter_eq rfl
-    bind_pure_comp_eq_map := fun α β f x =>
+    bind_pure_comp := fun α β f x =>
       Filter.ext fun s => by
         simp only [Bind.bind, bind, Functor.map, mem_map', mem_join, mem_set_of_eq, comp,
           mem_pure] }
