@@ -432,7 +432,7 @@ theorem hasDerivAt_gammaIntegral {s : ℂ} (hs : 0 < s.re) :
     HasDerivAt gammaIntegral (∫ t : ℝ in Ioi 0, t ^ (s - 1) * (Real.log t * Real.exp (-t))) s :=
   by
   rw [Gamma_integral_eq_mellin]
-  convert (mellin_has_deriv_of_isBigO_rpow _ _ (lt_add_one _) _ hs).2
+  convert (mellin_hasDerivAt_of_isBigO_rpow _ _ (lt_add_one _) _ hs).2
   · refine' (Continuous.continuousOn _).LocallyIntegrableOn measurableSet_Ioi
     exact continuous_of_real.comp (real.continuous_exp.comp continuous_neg)
   · rw [← is_O_norm_left]
