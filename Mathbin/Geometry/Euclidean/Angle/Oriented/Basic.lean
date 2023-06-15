@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers, Heather Macbeth
 
 ! This file was ported from Lean 3 source module geometry.euclidean.angle.oriented.basic
-! leanprover-community/mathlib commit f0c8bf9245297a541f468be517f1bde6195105e9
+! leanprover-community/mathlib commit d07a9c875ed7139abfde6a333b2be205c5bd404e
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Geometry.Euclidean.Angle.Unoriented.Basic
 
 /-!
 # Oriented angles.
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file defines oriented angles in real inner product spaces.
 

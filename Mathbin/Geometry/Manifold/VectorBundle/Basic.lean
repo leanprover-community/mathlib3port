@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Heather Macbeth
 
 ! This file was ported from Lean 3 source module geometry.manifold.vector_bundle.basic
-! leanprover-community/mathlib commit f7ebde7ee0d1505dfccac8644ae12371aa3c1c9f
+! leanprover-community/mathlib commit f9ec187127cc5b381dfcf5f4a22dacca4c20b63d
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -190,6 +190,13 @@ theorem contMdiffAt_totalSpace (f : M → TotalSpace E) (x₀ : M) :
         ContMdiffAt IM 𝓘(𝕜, F) n (fun x => (trivializationAt F E (f x₀).proj (f x)).2) x₀ :=
   by simp_rw [← contMdiffWithinAt_univ]; exact cont_mdiff_within_at_total_space f
 #align bundle.cont_mdiff_at_total_space Bundle.contMdiffAt_totalSpace
+
+/-- Characterization of C^n sections of a smooth vector bundle. -/
+theorem contMdiffAt_section (s : ∀ x, E x) (x₀ : B) :
+    ContMdiffAt IB (IB.Prod 𝓘(𝕜, F)) n (fun x => totalSpaceMk x (s x)) x₀ ↔
+      ContMdiffAt IB 𝓘(𝕜, F) n (fun x => (trivializationAt F E x₀ (totalSpaceMk x (s x))).2) x₀ :=
+  by simp_rw [cont_mdiff_at_total_space, and_iff_right_iff_imp]; intro x; exact contMdiffAt_id
+#align bundle.cont_mdiff_at_section Bundle.contMdiffAt_section
 
 variable (E)
 

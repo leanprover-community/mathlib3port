@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module ring_theory.ring_hom_properties
-! leanprover-community/mathlib commit a7c017d750512a352b623b1824d75da5998457d0
+! leanprover-community/mathlib commit d07a9c875ed7139abfde6a333b2be205c5bd404e
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -16,6 +16,9 @@ import Mathbin.RingTheory.IsTensorProduct
 
 /-!
 # Properties of ring homomorphisms
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 We provide the basic framework for talking about properties of ring homomorphisms.
 The following meta-properties of predicates on ring homomorphisms are defined

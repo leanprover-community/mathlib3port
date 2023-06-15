@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser, Jireh Loreaux
 
 ! This file was ported from Lean 3 source module group_theory.subsemigroup.center
-! leanprover-community/mathlib commit c3291da49cfa65f0d43b094750541c0731edc932
+! leanprover-community/mathlib commit 1ac8d4304efba9d03fa720d06516fac845aa5353
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -224,7 +224,7 @@ section
 variable (M) [CommSemigroup M]
 
 #print Subsemigroup.center_eq_top /-
-@[to_additive, simp]
+@[simp, to_additive]
 theorem center_eq_top : center M = ⊤ :=
   SetLike.coe_injective (Set.center_eq_univ M)
 #align subsemigroup.center_eq_top Subsemigroup.center_eq_top

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro
 
 ! This file was ported from Lean 3 source module topology.algebra.monoid
-! leanprover-community/mathlib commit 6efec6bb9fcaed3cf1baaddb2eaadd8a2a06679c
+! leanprover-community/mathlib commit 1ac8d4304efba9d03fa720d06516fac845aa5353
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1024,7 +1024,7 @@ protected def mulRight (x : X) : C(X, X) :=
 -/
 
 #print ContinuousMap.coe_mulRight /-
-@[to_additive, simp]
+@[simp, to_additive]
 theorem coe_mulRight (x : X) : ⇑(ContinuousMap.mulRight x) = fun y => y * x :=
   rfl
 #align continuous_map.coe_mul_right ContinuousMap.coe_mulRight
@@ -1041,7 +1041,7 @@ protected def mulLeft (x : X) : C(X, X) :=
 -/
 
 #print ContinuousMap.coe_mulLeft /-
-@[to_additive, simp]
+@[simp, to_additive]
 theorem coe_mulLeft (x : X) : ⇑(ContinuousMap.mulLeft x) = fun y => x * y :=
   rfl
 #align continuous_map.coe_mul_left ContinuousMap.coe_mulLeft

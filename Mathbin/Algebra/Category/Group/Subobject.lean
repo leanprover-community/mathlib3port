@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Markus Himmel
 
 ! This file was ported from Lean 3 source module algebra.category.Group.subobject
-! leanprover-community/mathlib commit 29b834dfbba4ed1b7950628bbf5e69ab98c15b4c
+! leanprover-community/mathlib commit d07a9c875ed7139abfde6a333b2be205c5bd404e
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Algebra.Category.Module.Subobject
 
 /-!
 # The category of abelian groups is well-powered
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 -/
 
 

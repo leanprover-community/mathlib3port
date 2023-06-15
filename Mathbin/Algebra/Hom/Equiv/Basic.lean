@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Callum Sutton, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module algebra.hom.equiv.basic
-! leanprover-community/mathlib commit 448144f7ae193a8990cb7473c9e9a01990f64ac7
+! leanprover-community/mathlib commit 1ac8d4304efba9d03fa720d06516fac845aa5353
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -548,7 +548,7 @@ theorem self_trans_symm (e : M ≃* N) : e.trans e.symm = refl M :=
 -/
 
 #print MulEquiv.coe_monoidHom_refl /-
-@[to_additive, simp]
+@[simp, to_additive]
 theorem coe_monoidHom_refl {M} [MulOneClass M] : (refl M : M →* M) = MonoidHom.id M :=
   rfl
 #align mul_equiv.coe_monoid_hom_refl MulEquiv.coe_monoidHom_refl
@@ -556,7 +556,7 @@ theorem coe_monoidHom_refl {M} [MulOneClass M] : (refl M : M →* M) = MonoidHom
 -/
 
 #print MulEquiv.coe_monoidHom_trans /-
-@[to_additive, simp]
+@[simp, to_additive]
 theorem coe_monoidHom_trans {M N P} [MulOneClass M] [MulOneClass N] [MulOneClass P] (e₁ : M ≃* N)
     (e₂ : N ≃* P) : (e₁.trans e₂ : M →* P) = (e₂ : N →* P).comp ↑e₁ :=
   rfl

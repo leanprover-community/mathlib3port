@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module order.category.Semilat
-! leanprover-community/mathlib commit e8ac6315bcfcbaf2d19a046719c3b553206dac75
+! leanprover-community/mathlib commit d07a9c875ed7139abfde6a333b2be205c5bd404e
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Order.Hom.Lattice
 
 /-!
 # The categories of semilattices
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This defines `SemilatSup` and `SemilatInf`, the categories of sup-semilattices with a bottom
 element and inf-semilattices with a top element.

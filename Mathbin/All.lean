@@ -1872,6 +1872,7 @@ import Mathbin.Geometry.Manifold.VectorBundle.Basic
 import Mathbin.Geometry.Manifold.VectorBundle.FiberwiseLinear
 import Mathbin.Geometry.Manifold.VectorBundle.Hom
 import Mathbin.Geometry.Manifold.VectorBundle.Pullback
+import Mathbin.Geometry.Manifold.VectorBundle.SmoothSection
 import Mathbin.Geometry.Manifold.VectorBundle.Tangent
 import Mathbin.Geometry.Manifold.WhitneyEmbedding
 import Mathbin.GroupTheory.Abelianization

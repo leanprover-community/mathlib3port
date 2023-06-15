@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Johan Commelin, Mario Carneiro
 
 ! This file was ported from Lean 3 source module data.mv_polynomial.basic
-! leanprover-community/mathlib commit 2f5b500a507264de86d666a5f87ddb976e2d8de4
+! leanprover-community/mathlib commit c8734e8953e4b439147bd6f75c2163f6d27cdce6
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -145,13 +145,15 @@ instance [CommSemiring S₁] [SMulZeroClass R S₁] [SMulZeroClass Rᵐᵒᵖ S�
 instance [CommSemiring R] [CommSemiring S₁] [Algebra R S₁] : Algebra R (MvPolynomial σ S₁) :=
   AddMonoidAlgebra.algebra
 
-#print MvPolynomial.isScalarTower' /-
--- Register with high priority to avoid timeout in `data.mv_polynomial.pderiv`
-instance isScalarTower' [CommSemiring R] [CommSemiring S₁] [Algebra R S₁] :
+instance isScalarTower_right [CommSemiring S₁] [DistribSMul R S₁] [IsScalarTower R S₁ S₁] :
     IsScalarTower R (MvPolynomial σ S₁) (MvPolynomial σ S₁) :=
-  IsScalarTower.right
-#align mv_polynomial.is_scalar_tower' MvPolynomial.isScalarTower'
--/
+  AddMonoidAlgebra.isScalarTower_self _
+#align mv_polynomial.is_scalar_tower_right MvPolynomial.isScalarTower_right
+
+instance sMulCommClass_right [CommSemiring S₁] [DistribSMul R S₁] [SMulCommClass R S₁ S₁] :
+    SMulCommClass R (MvPolynomial σ S₁) (MvPolynomial σ S₁) :=
+  AddMonoidAlgebra.sMulCommClass_self _
+#align mv_polynomial.smul_comm_class_right MvPolynomial.sMulCommClass_right
 
 #print MvPolynomial.unique /-
 /-- If `R` is a subsingleton, then `mv_polynomial σ R` has a unique element -/

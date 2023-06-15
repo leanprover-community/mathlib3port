@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alexander Bentkamp
 
 ! This file was ported from Lean 3 source module linear_algebra.eigenspace.minpoly
-! leanprover-community/mathlib commit 8efcf8022aac8e01df8d302dcebdbc25d6a886c8
+! leanprover-community/mathlib commit c3216069e5f9369e6be586ccbfcde2592b3cec92
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -117,15 +117,14 @@ theorem hasEigenvalue_iff_isRoot : f.HasEigenvalue μ ↔ (minpoly K f).IsRoot �
 
 /-- An endomorphism of a finite-dimensional vector space has finitely many eigenvalues. -/
 noncomputable instance (f : End K V) : Fintype f.Eigenvalues :=
-  Set.Finite.fintype
-    (by
+  Set.Finite.fintype <|
+    show {μ | eigenspace f μ ≠ ⊥}.Finite
+      by
       have h : minpoly K f ≠ 0 := minpoly.ne_zero f.is_integral
-      convert (minpoly K f).rootSet_finite K
+      convert (minpoly K f).rootSet_finite K using 1
       ext μ
-      have : μ ∈ {μ : K | f.eigenspace μ = ⊥ → False} ↔ ¬f.eigenspace μ = ⊥ := by tauto
-      convert rfl.mpr this
       classical simp [Polynomial.rootSet_def, Polynomial.mem_roots h, ← has_eigenvalue_iff_is_root,
-        has_eigenvalue])
+        has_eigenvalue]
 
 end End
 

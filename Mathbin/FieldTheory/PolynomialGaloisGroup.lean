@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Thomas Browning, Patrick Lutz
 
 ! This file was ported from Lean 3 source module field_theory.polynomial_galois_group
-! leanprover-community/mathlib commit 9fb8964792b4237dac6200193a0d533f1b3f7423
+! leanprover-community/mathlib commit 8bdf5e9b7f395d20e104dd1e309316daee8ad547
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -46,7 +46,7 @@ equals the number of real roots plus the number of roots not fixed by complex co
 
 noncomputable section
 
-open scoped Classical Polynomial
+open scoped Polynomial
 
 open FiniteDimensional
 
@@ -163,7 +163,7 @@ theorem mapRoots_bijective [h : Fact (p.Splits (algebraMap F E))] :
     have hy := Subtype.mem y
     simp only [root_set, Finset.mem_coe, Multiset.mem_toFinset, key, Multiset.mem_map] at hy 
     rcases hy with ⟨x, hx1, hx2⟩
-    exact ⟨⟨x, multiset.mem_to_finset.mpr hx1⟩, Subtype.ext hx2⟩
+    classical exact ⟨⟨x, multiset.mem_to_finset.mpr hx1⟩, Subtype.ext hx2⟩
 #align polynomial.gal.map_roots_bijective Polynomial.Gal.mapRoots_bijective
 
 /-- The bijection between `root_set p p.splitting_field` and `root_set p E`. -/
@@ -234,14 +234,25 @@ variable {p q}
 
 /-- `polynomial.gal.restrict`, when both fields are splitting fields of polynomials. -/
 def restrictDvd (hpq : p ∣ q) : q.Gal →* p.Gal :=
+  haveI := Classical.dec (q = 0)
   if hq : q = 0 then 1
   else
     @restrict F _ p _ _ _
-      ⟨splits_of_splits_of_dvd (algebraMap F q.SplittingField) hq (SplittingField.splits q) hpq⟩
+      ⟨splits_of_splits_of_dvd (algebraMap F q.splitting_field) hq (splitting_field.splits q) hpq⟩
 #align polynomial.gal.restrict_dvd Polynomial.Gal.restrictDvd
 
+theorem restrictDvd_def [Decidable (q = 0)] (hpq : p ∣ q) :
+    restrictDvd hpq =
+      if hq : q = 0 then 1
+      else
+        @restrict F _ p _ _ _
+          ⟨splits_of_splits_of_dvd (algebraMap F q.SplittingField) hq (SplittingField.splits q)
+              hpq⟩ :=
+  by convert rfl
+#align polynomial.gal.restrict_dvd_def Polynomial.Gal.restrictDvd_def
+
 theorem restrictDvd_surjective (hpq : p ∣ q) (hq : q ≠ 0) : Function.Surjective (restrictDvd hpq) :=
-  by simp only [restrict_dvd, dif_neg hq, restrict_surjective]
+  by classical simp only [restrict_dvd_def, dif_neg hq, restrict_surjective]
 #align polynomial.gal.restrict_dvd_surjective Polynomial.Gal.restrictDvd_surjective
 
 variable (p q)
@@ -258,10 +269,11 @@ theorem restrictProd_injective : Function.Injective (restrictProd p q) :=
   · have : Unique (p * q).Gal := by rw [hpq]; infer_instance
     exact fun f g h => Eq.trans (Unique.eq_default f) (Unique.eq_default g).symm
   intro f g hfg
-  dsimp only [restrict_prod, restrict_dvd] at hfg 
+  classical
+  simp only [restrict_prod, restrict_dvd_def] at hfg 
   simp only [dif_neg hpq, MonoidHom.prod_apply, Prod.mk.inj_iff] at hfg 
   ext (x hx)
-  rw [root_set, Polynomial.map_mul, Polynomial.roots_mul] at hx 
+  rw [root_set_def, Polynomial.map_mul, Polynomial.roots_mul] at hx 
   cases' multiset.mem_add.mp (multiset.mem_to_finset.mp hx) with h h
   · haveI : Fact (p.splits (algebraMap F (p * q).SplittingField)) :=
       ⟨splits_of_splits_of_dvd _ hpq (splitting_field.splits (p * q)) (dvd_mul_right p q)⟩
@@ -456,8 +468,8 @@ theorem card_complex_roots_eq_card_real_add_card_not_gal_inv (p : ℚ[X]) :
 theorem galActionHom_bijective_of_prime_degree {p : ℚ[X]} (p_irr : Irreducible p)
     (p_deg : p.natDegree.Prime)
     (p_roots : Fintype.card (p.rootSet ℂ) = Fintype.card (p.rootSet ℝ) + 2) :
-    Function.Bijective (galActionHom p ℂ) :=
-  by
+    Function.Bijective (galActionHom p ℂ) := by
+  classical
   have h1 : Fintype.card (p.root_set ℂ) = p.nat_degree :=
     by
     simp_rw [root_set_def, Finset.coe_sort_coe, Fintype.card_coe]

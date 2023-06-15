@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Moritz Doll
 
 ! This file was ported from Lean 3 source module analysis.special_functions.japanese_bracket
-! leanprover-community/mathlib commit fd5edc43dc4f10b85abfe544b88f82cf13c5f844
+! leanprover-community/mathlib commit d07a9c875ed7139abfde6a333b2be205c5bd404e
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.MeasureTheory.Integral.Layercake
 
 /-!
 # Japanese Bracket
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 In this file, we show that Japanese bracket $(1 + \|x\|^2)^{1/2}$ can be estimated from above
 and below by $1 + \|x\|$.

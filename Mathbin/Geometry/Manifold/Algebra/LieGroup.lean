@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicolò Cavalleri
 
 ! This file was ported from Lean 3 source module geometry.manifold.algebra.lie_group
-! leanprover-community/mathlib commit d1bd9c5df2867c1cb463bc6364446d57bdd9f7f1
+! leanprover-community/mathlib commit f9ec187127cc5b381dfcf5f4a22dacca4c20b63d
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -75,6 +75,7 @@ variable {𝕜 : Type _} [NontriviallyNormedField 𝕜] {H : Type _} [Topologica
   {I' : ModelWithCorners 𝕜 E' H'} {M : Type _} [TopologicalSpace M] [ChartedSpace H' M]
   {E'' : Type _} [NormedAddCommGroup E''] [NormedSpace 𝕜 E''] {H'' : Type _} [TopologicalSpace H'']
   {I'' : ModelWithCorners 𝕜 E'' H''} {M' : Type _} [TopologicalSpace M'] [ChartedSpace H'' M']
+  {n : ℕ∞}
 
 section
 
@@ -98,30 +99,112 @@ theorem topologicalGroup_of_lieGroup : TopologicalGroup G :=
 end
 
 @[to_additive]
-theorem Smooth.inv {f : M → G} (hf : Smooth I' I f) : Smooth I' I fun x => (f x)⁻¹ :=
-  (smooth_inv I).comp hf
-#align smooth.inv Smooth.inv
-#align smooth.neg Smooth.neg
+theorem ContMdiffWithinAt.inv {f : M → G} {s : Set M} {x₀ : M}
+    (hf : ContMdiffWithinAt I' I n f s x₀) : ContMdiffWithinAt I' I n (fun x => (f x)⁻¹) s x₀ :=
+  ((smooth_inv I).of_le le_top).ContMdiffAt.ContMdiffWithinAt.comp x₀ hf <| Set.mapsTo_univ _ _
+#align cont_mdiff_within_at.inv ContMdiffWithinAt.inv
+#align cont_mdiff_within_at.neg ContMdiffWithinAt.neg
+
+@[to_additive]
+theorem ContMdiffAt.inv {f : M → G} {x₀ : M} (hf : ContMdiffAt I' I n f x₀) :
+    ContMdiffAt I' I n (fun x => (f x)⁻¹) x₀ :=
+  ((smooth_inv I).of_le le_top).ContMdiffAt.comp x₀ hf
+#align cont_mdiff_at.inv ContMdiffAt.inv
+#align cont_mdiff_at.neg ContMdiffAt.neg
+
+@[to_additive]
+theorem ContMdiffOn.inv {f : M → G} {s : Set M} (hf : ContMdiffOn I' I n f s) :
+    ContMdiffOn I' I n (fun x => (f x)⁻¹) s := fun x hx => (hf x hx).inv
+#align cont_mdiff_on.inv ContMdiffOn.inv
+#align cont_mdiff_on.neg ContMdiffOn.neg
+
+@[to_additive]
+theorem ContMdiff.inv {f : M → G} (hf : ContMdiff I' I n f) : ContMdiff I' I n fun x => (f x)⁻¹ :=
+  fun x => (hf x).inv
+#align cont_mdiff.inv ContMdiff.inv
+#align cont_mdiff.neg ContMdiff.neg
+
+@[to_additive]
+theorem SmoothWithinAt.inv {f : M → G} {s : Set M} {x₀ : M} (hf : SmoothWithinAt I' I f s x₀) :
+    SmoothWithinAt I' I (fun x => (f x)⁻¹) s x₀ :=
+  hf.inv
+#align smooth_within_at.inv SmoothWithinAt.inv
+#align smooth_within_at.neg SmoothWithinAt.neg
+
+@[to_additive]
+theorem SmoothAt.inv {f : M → G} {x₀ : M} (hf : SmoothAt I' I f x₀) :
+    SmoothAt I' I (fun x => (f x)⁻¹) x₀ :=
+  hf.inv
+#align smooth_at.inv SmoothAt.inv
+#align smooth_at.neg SmoothAt.neg
 
 @[to_additive]
 theorem SmoothOn.inv {f : M → G} {s : Set M} (hf : SmoothOn I' I f s) :
     SmoothOn I' I (fun x => (f x)⁻¹) s :=
-  (smooth_inv I).comp_smoothOn hf
+  hf.inv
 #align smooth_on.inv SmoothOn.inv
 #align smooth_on.neg SmoothOn.neg
 
 @[to_additive]
-theorem Smooth.div {f g : M → G} (hf : Smooth I' I f) (hg : Smooth I' I g) : Smooth I' I (f / g) :=
-  by rw [div_eq_mul_inv]; exact ((smooth_mul I).comp (hf.prod_mk hg.inv) : _)
-#align smooth.div Smooth.div
-#align smooth.sub Smooth.sub
+theorem Smooth.inv {f : M → G} (hf : Smooth I' I f) : Smooth I' I fun x => (f x)⁻¹ :=
+  hf.inv
+#align smooth.inv Smooth.inv
+#align smooth.neg Smooth.neg
+
+@[to_additive]
+theorem ContMdiffWithinAt.div {f g : M → G} {s : Set M} {x₀ : M}
+    (hf : ContMdiffWithinAt I' I n f s x₀) (hg : ContMdiffWithinAt I' I n g s x₀) :
+    ContMdiffWithinAt I' I n (fun x => f x / g x) s x₀ := by simp_rw [div_eq_mul_inv];
+  exact hf.mul hg.inv
+#align cont_mdiff_within_at.div ContMdiffWithinAt.div
+#align cont_mdiff_within_at.sub ContMdiffWithinAt.sub
+
+@[to_additive]
+theorem ContMdiffAt.div {f g : M → G} {x₀ : M} (hf : ContMdiffAt I' I n f x₀)
+    (hg : ContMdiffAt I' I n g x₀) : ContMdiffAt I' I n (fun x => f x / g x) x₀ := by
+  simp_rw [div_eq_mul_inv]; exact hf.mul hg.inv
+#align cont_mdiff_at.div ContMdiffAt.div
+#align cont_mdiff_at.sub ContMdiffAt.sub
+
+@[to_additive]
+theorem ContMdiffOn.div {f g : M → G} {s : Set M} (hf : ContMdiffOn I' I n f s)
+    (hg : ContMdiffOn I' I n g s) : ContMdiffOn I' I n (fun x => f x / g x) s := by
+  simp_rw [div_eq_mul_inv]; exact hf.mul hg.inv
+#align cont_mdiff_on.div ContMdiffOn.div
+#align cont_mdiff_on.sub ContMdiffOn.sub
+
+@[to_additive]
+theorem ContMdiff.div {f g : M → G} (hf : ContMdiff I' I n f) (hg : ContMdiff I' I n g) :
+    ContMdiff I' I n fun x => f x / g x := by simp_rw [div_eq_mul_inv]; exact hf.mul hg.inv
+#align cont_mdiff.div ContMdiff.div
+#align cont_mdiff.sub ContMdiff.sub
+
+@[to_additive]
+theorem SmoothWithinAt.div {f g : M → G} {s : Set M} {x₀ : M} (hf : SmoothWithinAt I' I f s x₀)
+    (hg : SmoothWithinAt I' I g s x₀) : SmoothWithinAt I' I (fun x => f x / g x) s x₀ :=
+  hf.div hg
+#align smooth_within_at.div SmoothWithinAt.div
+#align smooth_within_at.sub SmoothWithinAt.sub
+
+@[to_additive]
+theorem SmoothAt.div {f g : M → G} {x₀ : M} (hf : SmoothAt I' I f x₀) (hg : SmoothAt I' I g x₀) :
+    SmoothAt I' I (fun x => f x / g x) x₀ :=
+  hf.div hg
+#align smooth_at.div SmoothAt.div
+#align smooth_at.sub SmoothAt.sub
 
 @[to_additive]
 theorem SmoothOn.div {f g : M → G} {s : Set M} (hf : SmoothOn I' I f s) (hg : SmoothOn I' I g s) :
-    SmoothOn I' I (f / g) s := by rw [div_eq_mul_inv];
-  exact ((smooth_mul I).comp_smoothOn (hf.prod_mk hg.inv) : _)
+    SmoothOn I' I (f / g) s :=
+  hf.div hg
 #align smooth_on.div SmoothOn.div
 #align smooth_on.sub SmoothOn.sub
+
+@[to_additive]
+theorem Smooth.div {f g : M → G} (hf : Smooth I' I f) (hg : Smooth I' I g) : Smooth I' I (f / g) :=
+  hf.div hg
+#align smooth.div Smooth.div
+#align smooth.sub Smooth.sub
 
 end LieGroup
 

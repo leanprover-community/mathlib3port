@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Luke Mantle
 
 ! This file was ported from Lean 3 source module ring_theory.polynomial.hermite.basic
-! leanprover-community/mathlib commit 938d3db9c278f8a52c0f964a405806f0f2b09b74
+! leanprover-community/mathlib commit d07a9c875ed7139abfde6a333b2be205c5bd404e
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.Data.Nat.Factorial.DoubleFactorial
 
 /-!
 # Hermite polynomials
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file defines `polynomial.hermite n`, the nth probabilist's Hermite polynomial.
 

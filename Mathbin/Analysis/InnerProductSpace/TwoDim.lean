@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.two_dim
-! leanprover-community/mathlib commit cd8fafa2fac98e1a67097e8a91ad9901cfde48af
+! leanprover-community/mathlib commit d07a9c875ed7139abfde6a333b2be205c5bd404e
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -15,6 +15,9 @@ import Mathbin.Tactic.LinearCombination
 
 /-!
 # Oriented two-dimensional real inner product spaces
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file defines constructions specific to the geometry of an oriented two-dimensional real inner
 product space `E`.
