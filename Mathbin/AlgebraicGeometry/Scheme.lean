@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module algebraic_geometry.Scheme
-! leanprover-community/mathlib commit 06c75afebd8b612d3b20fe836424298f2387ca53
+! leanprover-community/mathlib commit 88474d1b5af6d37c2ab728b757771bced7f5194c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Algebra.Category.Ring.Constructions
 
 /-!
 # The category of schemes
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 A scheme is a locally ringed space such that every point is contained in some open set
 where there is an isomorphism of presheaves between the restriction to that open set,
@@ -194,9 +197,12 @@ theorem specMap_comp {R S T : CommRingCat} (f : R ⟶ S) (g : S ⟶ T) :
   Spec.locallyRingedSpaceMap_comp f g
 #align algebraic_geometry.Scheme.Spec_map_comp AlgebraicGeometry.Scheme.specMap_comp
 
+-- TODO: make either `Spec_obj` or `Spec.obj` the simp-normal form. `LocallyRingedSpace_obj` is
+-- the simp-normal form of `toLocallyRingedSpace.obj`, but adding `simps` here without `attrs := []`
+-- for the same effect caused problems in mathlib4.
 /-- The spectrum, as a contravariant functor from commutative rings to schemes.
 -/
-@[simps]
+@[simps (config := { attrs := [] })]
 def spec : CommRingCatᵒᵖ ⥤ Scheme where
   obj R := specObj (unop R)
   map R S f := specMap f.unop

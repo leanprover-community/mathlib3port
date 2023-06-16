@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Loeffler
 
 ! This file was ported from Lean 3 source module analysis.mellin_transform
-! leanprover-community/mathlib commit 917c3c072e487b3cccdbfeff17e75b40e45f66cb
+! leanprover-community/mathlib commit 8af7091a43227e179939ba132e54e54e9f3b089a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Analysis.Calculus.ParametricIntegral
 import Mathbin.MeasureTheory.Measure.Haar.NormedSpace
 
 /-! # The Mellin transform
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 We define the Mellin transform of a locally integrable function on `Ioi 0`, and show it is
 differentiable in a suitable vertical strip.

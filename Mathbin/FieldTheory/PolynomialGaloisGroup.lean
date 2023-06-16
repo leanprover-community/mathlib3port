@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Thomas Browning, Patrick Lutz
 
 ! This file was ported from Lean 3 source module field_theory.polynomial_galois_group
-! leanprover-community/mathlib commit 8bdf5e9b7f395d20e104dd1e309316daee8ad547
+! leanprover-community/mathlib commit e3f4be1fcb5376c4948d7f095bec45350bfb9d1a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -163,7 +163,7 @@ theorem mapRoots_bijective [h : Fact (p.Splits (algebraMap F E))] :
     have hy := Subtype.mem y
     simp only [root_set, Finset.mem_coe, Multiset.mem_toFinset, key, Multiset.mem_map] at hy 
     rcases hy with ⟨x, hx1, hx2⟩
-    classical exact ⟨⟨x, multiset.mem_to_finset.mpr hx1⟩, Subtype.ext hx2⟩
+    exact ⟨⟨x, (@Multiset.mem_toFinset _ (Classical.decEq _) _ _).mpr hx1⟩, Subtype.ext hx2⟩
 #align polynomial.gal.map_roots_bijective Polynomial.Gal.mapRoots_bijective
 
 /-- The bijection between `root_set p p.splitting_field` and `root_set p E`. -/
@@ -280,7 +280,8 @@ theorem restrictProd_injective : Function.Injective (restrictProd p q) :=
     have key :
       x =
         algebraMap p.splitting_field (p * q).SplittingField
-          ((roots_equiv_roots p _).invFun ⟨x, multiset.mem_to_finset.mpr h⟩) :=
+          ((roots_equiv_roots p _).invFun
+            ⟨x, (@Multiset.mem_toFinset _ (Classical.decEq _) _ _).mpr h⟩) :=
       subtype.ext_iff.mp (Equiv.apply_symm_apply (roots_equiv_roots p _) ⟨x, _⟩).symm
     rw [key, ← AlgEquiv.restrictNormal_commutes, ← AlgEquiv.restrictNormal_commutes]
     exact congr_arg _ (alg_equiv.ext_iff.mp hfg.1 _)
@@ -289,7 +290,8 @@ theorem restrictProd_injective : Function.Injective (restrictProd p q) :=
     have key :
       x =
         algebraMap q.splitting_field (p * q).SplittingField
-          ((roots_equiv_roots q _).invFun ⟨x, multiset.mem_to_finset.mpr h⟩) :=
+          ((roots_equiv_roots q _).invFun
+            ⟨x, (@Multiset.mem_toFinset _ (Classical.decEq _) _ _).mpr h⟩) :=
       subtype.ext_iff.mp (Equiv.apply_symm_apply (roots_equiv_roots q _) ⟨x, _⟩).symm
     rw [key, ← AlgEquiv.restrictNormal_commutes, ← AlgEquiv.restrictNormal_commutes]
     exact congr_arg _ (alg_equiv.ext_iff.mp hfg.2 _)
@@ -304,13 +306,13 @@ theorem mul_splits_in_splittingField_of_mul {p₁ q₁ p₂ q₂ : F[X]} (hq₁ 
   apply splits_mul
   · rw [←
       (splitting_field.lift q₁
-          (splits_of_splits_of_dvd _ (mul_ne_zero hq₁ hq₂) (splitting_field.splits _)
-            (dvd_mul_right q₁ q₂))).comp_algebraMap]
+          (splits_of_splits_of_dvd (algebraMap F (q₁ * q₂).SplittingField) (mul_ne_zero hq₁ hq₂)
+            (splitting_field.splits _) (dvd_mul_right q₁ q₂))).comp_algebraMap]
     exact splits_comp_of_splits _ _ h₁
   · rw [←
       (splitting_field.lift q₂
-          (splits_of_splits_of_dvd _ (mul_ne_zero hq₁ hq₂) (splitting_field.splits _)
-            (dvd_mul_left q₂ q₁))).comp_algebraMap]
+          (splits_of_splits_of_dvd (algebraMap F (q₁ * q₂).SplittingField) (mul_ne_zero hq₁ hq₂)
+            (splitting_field.splits _) (dvd_mul_left q₂ q₁))).comp_algebraMap]
     exact splits_comp_of_splits _ _ h₂
 #align polynomial.gal.mul_splits_in_splitting_field_of_mul Polynomial.Gal.mul_splits_in_splittingField_of_mul
 
@@ -358,7 +360,9 @@ theorem splits_in_splittingField_of_comp (hq : q.natDegree ≠ 0) :
 
 /-- `polynomial.gal.restrict` for the composition of polynomials. -/
 def restrictComp (hq : q.natDegree ≠ 0) : (p.comp q).Gal →* p.Gal :=
-  @restrict F _ p _ _ _ ⟨splits_in_splittingField_of_comp p q hq⟩
+  let h : Fact (Splits (algebraMap F (p.comp q).SplittingField) p) :=
+    ⟨splits_in_splittingField_of_comp p q hq⟩
+  @restrict F _ p _ _ _ h
 #align polynomial.gal.restrict_comp Polynomial.Gal.restrictComp
 
 theorem restrictComp_surjective (hq : q.natDegree ≠ 0) :

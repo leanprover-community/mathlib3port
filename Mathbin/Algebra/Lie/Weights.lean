@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module algebra.lie.weights
-! leanprover-community/mathlib commit 6b0169218d01f2837d79ea2784882009a0da1aa1
+! leanprover-community/mathlib commit 8af7091a43227e179939ba132e54e54e9f3b089a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -18,6 +18,9 @@ import Mathbin.RingTheory.TensorProduct
 
 /-!
 # Weights and roots of Lie modules and Lie algebras
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 Just as a key tool when studying the behaviour of a linear operator is to decompose the space on
 which it acts into a sum of (generalised) eigenspaces, a key tool when studying a representation `M`

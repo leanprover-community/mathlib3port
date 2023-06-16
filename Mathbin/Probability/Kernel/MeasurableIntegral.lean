@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 
 ! This file was ported from Lean 3 source module probability.kernel.measurable_integral
-! leanprover-community/mathlib commit 28b2a92f2996d28e580450863c130955de0ed398
+! leanprover-community/mathlib commit 8af7091a43227e179939ba132e54e54e9f3b089a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.Probability.Kernel.Basic
 
 /-!
 # Measurability of the integral against a kernel
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 The Lebesgue integral of a measurable function against a kernel is measurable. The Bochner integral
 is strongly measurable.

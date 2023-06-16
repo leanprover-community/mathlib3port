@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Thomas Browning, Patrick Lutz
 
 ! This file was ported from Lean 3 source module field_theory.abel_ruffini
-! leanprover-community/mathlib commit fbbd626e4e8fe4d1ce64903e26276ec2873f2976
+! leanprover-community/mathlib commit e3f4be1fcb5376c4948d7f095bec45350bfb9d1a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -373,8 +373,8 @@ theorem induction2 {α β γ : solvableByRad F E} (hγ : γ ∈ F⟮⟯) (hα : 
         exact minpoly.aeval F γ)
       (minpoly.monic (IsIntegral γ))
   rw [P, key]
-  exact
-    gal_isSolvable_of_splits ⟨Normal.splits (splitting_field.normal _) _⟩ (gal_mul_isSolvable hα hβ)
+  refine' gal_isSolvable_of_splits ⟨_⟩ (gal_mul_isSolvable hα hβ)
+  exact Normal.splits (splitting_field.normal _) (f ⟨γ, hγ⟩)
 #align solvable_by_rad.induction2 solvableByRad.induction2
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:192:11: unsupported (impossible) -/

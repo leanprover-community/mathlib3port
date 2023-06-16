@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module algebraic_geometry.properties
-! leanprover-community/mathlib commit d39590fc8728fbf6743249802486f8c91ffe07bc
+! leanprover-community/mathlib commit 88474d1b5af6d37c2ab728b757771bced7f5194c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -316,12 +316,13 @@ theorem isIntegralOfOpenImmersion {X Y : Scheme} (f : X ⟶ Y) [H : IsOpenImmers
       _
 #align algebraic_geometry.is_integral_of_open_immersion AlgebraicGeometry.isIntegralOfOpenImmersion
 
-instance {R : CommRingCat} [H : IsDomain R] : IsIntegral (Scheme.spec.obj <| op R) :=
+instance {R : CommRingCat} [H : IsDomain R] : IrreducibleSpace (Scheme.spec.obj <| op R).carrier :=
   by
-  apply (config := { instances := false }) is_integral_of_is_irreducible_is_reduced
-  · infer_instance
-  · dsimp [Spec.Top_obj]
-    infer_instance
+  convert PrimeSpectrum.irreducibleSpace
+  assumption
+
+instance {R : CommRingCat} [IsDomain R] : IsIntegral (Scheme.spec.obj <| op R) :=
+  isIntegralOfIsIrreducibleIsReduced _
 
 theorem affine_isIntegral_iff (R : CommRingCat) :
     IsIntegral (Scheme.spec.obj <| op R) ↔ IsDomain R :=

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module ring_theory.ring_hom.finite
-! leanprover-community/mathlib commit b5aecf07a179c60b6b37c1ac9da952f3b565c785
+! leanprover-community/mathlib commit 8af7091a43227e179939ba132e54e54e9f3b089a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.RingTheory.RingHomProperties
 /-!
 
 # The meta properties of finite ring homomorphisms.
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 -/
 

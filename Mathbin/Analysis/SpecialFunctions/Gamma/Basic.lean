@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Loeffler
 
 ! This file was ported from Lean 3 source module analysis.special_functions.gamma.basic
-! leanprover-community/mathlib commit cca40788df1b8755d5baf17ab2f27dacc2e17acb
+! leanprover-community/mathlib commit 8af7091a43227e179939ba132e54e54e9f3b089a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.Analysis.MellinTransform
 
 /-!
 # The Gamma function
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file defines the `Γ` function (of a real or complex variable `s`). We define this by Euler's
 integral `Γ(s) = ∫ x in Ioi 0, exp (-x) * x ^ (s - 1)` in the range where this integral converges

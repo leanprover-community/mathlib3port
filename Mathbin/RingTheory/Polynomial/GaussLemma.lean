@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 
 ! This file was ported from Lean 3 source module ring_theory.polynomial.gauss_lemma
-! leanprover-community/mathlib commit df76f43357840485b9d04ed5dee5ab115d420e87
+! leanprover-community/mathlib commit e3f4be1fcb5376c4948d7f095bec45350bfb9d1a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -58,7 +58,6 @@ theorem integralClosure.mem_lifts_of_monic_of_dvd_map {f : R[X]} (hf : f.Monic) 
     (hg : g.Monic) (hd : g ∣ f.map (algebraMap R K)) :
     g ∈ lifts (algebraMap (integralClosure R K) K) :=
   by
-  haveI : IsScalarTower R K g.splitting_field := splitting_field_aux.is_scalar_tower _ _ _
   have :=
     mem_lift_of_splits_of_roots_mem_range (integralClosure R g.splitting_field)
       ((splits_id_iff_splits _).2 <| splitting_field.splits g) (hg.map _) fun a ha =>
@@ -75,7 +74,7 @@ theorem integralClosure.mem_lifts_of_monic_of_dvd_map {f : R[X]} (hf : f.Monic) 
   refine' Multiset.mem_of_le (roots.le_of_dvd ((hf.map _).map _).NeZero _) ha
   · infer_instance
   · exact map_dvd (algebraMap K g.splitting_field) hd
-  · apply splitting_field_aux.is_scalar_tower
+  · infer_instance
 #align integral_closure.mem_lifts_of_monic_of_dvd_map integralClosure.mem_lifts_of_monic_of_dvd_map
 
 variable [IsDomain R] [IsFractionRing R K]

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vincent Beffara
 
 ! This file was ported from Lean 3 source module analysis.analytic.isolated_zeros
-! leanprover-community/mathlib commit a3209ddf94136d36e5e5c624b10b2a347cc9d090
+! leanprover-community/mathlib commit 8af7091a43227e179939ba132e54e54e9f3b089a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -16,6 +16,9 @@ import Mathbin.Analysis.Analytic.Uniqueness
 
 /-!
 # Principle of isolated zeros
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file proves the fact that the zeros of a non-constant analytic function of one variable are
 isolated. It also introduces a little bit of API in the `has_fpower_series_at` namespace that is

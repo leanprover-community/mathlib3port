@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module algebraic_geometry.AffineScheme
-! leanprover-community/mathlib commit 533f62f4dd62a5aad24a04326e6e787c8f7e98b1
+! leanprover-community/mathlib commit 88474d1b5af6d37c2ab728b757771bced7f5194c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -275,9 +275,9 @@ theorem IsAffineOpen.fromSpec_base_preimage {X : Scheme} {U : Opens X.carrier}
   exact Set.preimage_image_eq _ PresheafedSpace.is_open_immersion.base_open.inj
 #align algebraic_geometry.is_affine_open.from_Spec_base_preimage AlgebraicGeometry.IsAffineOpen.fromSpec_base_preimage
 
-theorem Scheme.specMap_presheaf_map_eqToHom {X : Scheme} {U V : Opens X.carrier} (h : U = V) (W) :
+theorem Scheme.spec_map_presheaf_map_eqToHom {X : Scheme} {U V : Opens X.carrier} (h : U = V) (W) :
     (Scheme.spec.map (X.Presheaf.map (eqToHom h).op).op).val.c.app W =
-      eqToHom (by cases h; induction W using Opposite.rec'; dsimp; simp; rfl) :=
+      eqToHom (by cases h; induction W using Opposite.rec'; dsimp; simp) :=
   by
   have : Scheme.Spec.map (X.presheaf.map (𝟙 (op U))).op = 𝟙 _ := by
     rw [X.presheaf.map_id, op_id, Scheme.Spec.map_id]
@@ -285,7 +285,7 @@ theorem Scheme.specMap_presheaf_map_eqToHom {X : Scheme} {U V : Opens X.carrier}
   refine' (Scheme.congr_app this _).trans _
   erw [category.id_comp]
   simpa [eq_to_hom_map]
-#align algebraic_geometry.Scheme.Spec_map_presheaf_map_eq_to_hom AlgebraicGeometry.Scheme.specMap_presheaf_map_eqToHom
+#align algebraic_geometry.Scheme.Spec_map_presheaf_map_eq_to_hom AlgebraicGeometry.Scheme.spec_map_presheaf_map_eqToHom
 
 theorem IsAffineOpen.specΓIdentity_hom_app_fromSpec {X : Scheme} {U : Opens X.carrier}
     (hU : IsAffineOpen U) :

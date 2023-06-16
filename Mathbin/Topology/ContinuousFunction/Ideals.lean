@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jireh Loreaux
 
 ! This file was ported from Lean 3 source module topology.continuous_function.ideals
-! leanprover-community/mathlib commit c2258f7bf086b17eac0929d635403780c39e239f
+! leanprover-community/mathlib commit 8af7091a43227e179939ba132e54e54e9f3b089a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -17,6 +17,9 @@ import Mathbin.Topology.Algebra.Module.CharacterSpace
 
 /-!
 # Ideals of continuous functions
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 For a topological semiring `R` and a topological space `X` there is a Galois connection between
 `ideal C(X, R)` and `set X` given by sending each `I : ideal C(X, R)` to

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 
 ! This file was ported from Lean 3 source module probability.kernel.with_density
-! leanprover-community/mathlib commit c0d694db494dd4f9aa57f2714b6e4c82b4ebc113
+! leanprover-community/mathlib commit 8af7091a43227e179939ba132e54e54e9f3b089a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.MeasureTheory.Integral.SetIntegral
 
 /-!
 # With Density
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 For an s-finite kernel `κ : kernel α β` and a function `f : α → β → ℝ≥0∞` which is finite
 everywhere, we define `with_density κ f` as the kernel `a ↦ (κ a).with_density (f a)`. This is

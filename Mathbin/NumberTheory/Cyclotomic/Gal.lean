@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Rodriguez
 
 ! This file was ported from Lean 3 source module number_theory.cyclotomic.gal
-! leanprover-community/mathlib commit 861a26926586cd46ff80264d121cdb6fa0e35cc1
+! leanprover-community/mathlib commit e3f4be1fcb5376c4948d7f095bec45350bfb9d1a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -170,7 +170,8 @@ variable [Field L] (hμ : IsPrimitiveRoot μ n) [Algebra K L] [IsCyclotomicExten
 Asserts that the Galois group of `cyclotomic n K` is equivalent to `(zmod n)ˣ`
 if `cyclotomic n K` is irreducible in the base field. -/
 noncomputable def galCyclotomicEquivUnitsZmod : (cyclotomic n K).Gal ≃* (ZMod n)ˣ :=
-  (AlgEquiv.autCongr (IsSplittingField.algEquiv _ _)).symm.trans
+  (AlgEquiv.autCongr
+          (IsSplittingField.algEquiv L _ : L ≃ₐ[K] (cyclotomic n K).SplittingField)).symm.trans
     (IsCyclotomicExtension.autEquivPow L h)
 #align gal_cyclotomic_equiv_units_zmod galCyclotomicEquivUnitsZmod
 
@@ -178,7 +179,8 @@ noncomputable def galCyclotomicEquivUnitsZmod : (cyclotomic n K).Gal ≃* (ZMod 
 Asserts that the Galois group of `X ^ n - 1` is equivalent to `(zmod n)ˣ`
 if `cyclotomic n K` is irreducible in the base field. -/
 noncomputable def galXPowEquivUnitsZmod : (X ^ (n : ℕ) - 1).Gal ≃* (ZMod n)ˣ :=
-  (AlgEquiv.autCongr (IsSplittingField.algEquiv _ _)).symm.trans
+  (AlgEquiv.autCongr
+          (IsSplittingField.algEquiv L _ : L ≃ₐ[K] (X ^ (n : ℕ) - 1).SplittingField)).symm.trans
     (IsCyclotomicExtension.autEquivPow L h)
 #align gal_X_pow_equiv_units_zmod galXPowEquivUnitsZmod
 

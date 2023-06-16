@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael Stoll
 
 ! This file was ported from Lean 3 source module number_theory.legendre_symbol.gauss_sum
-! leanprover-community/mathlib commit d11893b411025250c8e61ff2f12ccbd7ee35ab15
+! leanprover-community/mathlib commit e3f4be1fcb5376c4948d7f095bec45350bfb9d1a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -295,17 +295,30 @@ theorem FiniteField.two_pow_card {F : Type _} [Fintype F] [Field F] (hF : ringCh
   -- we now show that the Gauss sum of `χ` and `ψ₈` has the relevant property
   have hg : gaussSum χ ψ₈.char ^ 2 = χ (-1) * Fintype.card (ZMod 8) :=
     by
-    rw [hχ, one_mul, card, gaussSum]
-    convert ← congr_arg (· ^ 2) (Fin.sum_univ_eight fun x => (χ₈ x : FF) * τ ^ x.val)
-    · ext; congr; apply pow_one
-    convert_to (0 + 1 * τ ^ 1 + 0 + -1 * τ ^ 3 + 0 + -1 * τ ^ 5 + 0 + 1 * τ ^ 7) ^ 2 = _
-    · simp only [χ₈_apply, Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.head_cons,
-        Matrix.cons_vec_bit0_eq_alt0, Matrix.cons_vec_bit1_eq_alt1, Matrix.cons_vecAppend,
-        Matrix.cons_vecAlt0, Matrix.cons_vecAlt1, Int.cast_zero, Int.cast_one, Int.cast_neg,
-        MulZeroClass.zero_mul]
-      rfl
-    convert_to 8 + (τ ^ 4 + 1) * (τ ^ 10 - 2 * τ ^ 8 - 2 * τ ^ 6 + 6 * τ ^ 4 + τ ^ 2 - 8) = _
-    · ring; · rw [τ_spec]; norm_num
+    have h := congr_arg (· ^ 2) (Fin.sum_univ_eight fun x => (χ₈ x : FF) * τ ^ x.1)
+    have h₁ : (fun i : Fin 8 => ↑(χ₈ i) * τ ^ i.val) = fun a : ZMod 8 => χ a * ψ₈.char a := by ext;
+      congr; apply pow_one
+    have h₂ :
+      (0 + 1 * τ ^ 1 + 0 + -1 * τ ^ 3 + 0 + -1 * τ ^ 5 + 0 + 1 * τ ^ 7) ^ 2 =
+        8 + (τ ^ 4 + 1) * (τ ^ 10 - 2 * τ ^ 8 - 2 * τ ^ 6 + 6 * τ ^ 4 + τ ^ 2 - 8) :=
+      by ring
+    have h₃ : 8 + (τ ^ 4 + 1) * (τ ^ 10 - 2 * τ ^ 8 - 2 * τ ^ 6 + 6 * τ ^ 4 + τ ^ 2 - 8) = ↑8 := by
+      rw [τ_spec]; norm_num
+    have h₄ : (0 + 1 * τ ^ 1 + 0 + -1 * τ ^ 3 + 0 + -1 * τ ^ 5 + 0 + 1 * τ ^ 7) ^ 2 = ↑8 := by
+      rw [← h₃, ← h₂]
+    have h₅ :
+      (fun x : FF => x ^ 2)
+          (↑(χ₈ 0) * τ ^ 0 + ↑(χ₈ 1) * τ ^ 1 + ↑(χ₈ 2) * τ ^ 2 + ↑(χ₈ 3) * τ ^ 3 + ↑(χ₈ 4) * τ ^ 4 +
+                ↑(χ₈ 5) * τ ^ 5 +
+              ↑(χ₈ 6) * τ ^ 6 +
+            ↑(χ₈ 7) * τ ^ 7) =
+        ↑8 :=
+      by
+      simp only [← h₄, χ₈_apply, Matrix.cons_val_zero, algebraMap.coe_zero, MulZeroClass.zero_mul,
+        Matrix.cons_val_one, Matrix.head_cons, algebraMap.coe_one, Matrix.cons_vec_bit0_eq_alt0,
+        Matrix.cons_vecAppend, Matrix.cons_vecAlt0, Matrix.cons_vec_bit1_eq_alt1,
+        Matrix.cons_vecAlt1, Int.cast_neg]
+    simpa only [hχ, one_mul, card, gaussSum, ← h₅, h₁] using h
   -- this allows us to apply `card_pow_char_pow` to our situation
   have h := Char.card_pow_char_pow hq ψ₈.char (ringChar FF) n hu hFF hg
   rw [card, ← hchar, hχ, one_mul, ← hc, ← Nat.cast_pow (ringChar F), ← hc] at h 

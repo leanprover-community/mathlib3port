@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Vincent Beffara
 
 ! This file was ported from Lean 3 source module analysis.complex.open_mapping
-! leanprover-community/mathlib commit f9dd3204df14a0749cd456fac1e6849dfe7d2b88
+! leanprover-community/mathlib commit 8af7091a43227e179939ba132e54e54e9f3b089a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.Analysis.Complex.AbsMax
 
 /-!
 # The open mapping theorem for holomorphic functions
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file proves the open mapping theorem for holomorphic functions, namely that an analytic
 function on a preconnected set of the complex plane is either constant or open. The main step is to

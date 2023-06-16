@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module analysis.analytic.uniqueness
-! leanprover-community/mathlib commit a3209ddf94136d36e5e5c624b10b2a347cc9d090
+! leanprover-community/mathlib commit 8af7091a43227e179939ba132e54e54e9f3b089a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.Analysis.NormedSpace.Completion
 
 /-!
 # Uniqueness principle for analytic functions
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 We show that two analytic functions which coincide around a point coincide on whole connected sets,
 in `analytic_on.eq_on_of_preconnected_of_eventually_eq`.

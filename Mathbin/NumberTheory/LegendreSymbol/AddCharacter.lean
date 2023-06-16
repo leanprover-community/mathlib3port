@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael Stoll
 
 ! This file was ported from Lean 3 source module number_theory.legendre_symbol.add_character
-! leanprover-community/mathlib commit 70fd9563a21e7b963887c9360bd29b2393e6225a
+! leanprover-community/mathlib commit e3f4be1fcb5376c4948d7f095bec45350bfb9d1a
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -250,16 +250,33 @@ theorem IsNontrivial.isPrimitive {F : Type u} [Field F] {ψ : AddChar F R'} (hψ
   rwa [mul_shift_apply, mul_inv_cancel_left₀ ha]
 #align add_char.is_nontrivial.is_primitive AddChar.IsNontrivial.isPrimitive
 
+-- Using `structure` gives a timeout, see
+-- https://leanprover.zulipchat.com/#narrow/stream/287929-mathlib4/topic/mysterious.20finsupp.20related.20timeout/near/365719262 and
+-- https://leanprover.zulipchat.com/#narrow/stream/287929-mathlib4/topic/mysterious.20finsupp.20related.20timeout
+-- In Lean4, `set_option genInjectivity false in` may solve this issue.
 -- can't prove that they always exist
-/-- Structure for a primitive additive character on a finite ring `R` into a cyclotomic extension
+/-- Definition for a primitive additive character on a finite ring `R` into a cyclotomic extension
 of a field `R'`. It records which cyclotomic extension it is, the character, and the
 fact that the character is primitive. -/
 @[nolint has_nonempty_instance]
-structure PrimitiveAddChar (R : Type u) [CommRing R] [Fintype R] (R' : Type v) [Field R'] where
-  n : ℕ+
-  Char : AddChar R (CyclotomicField n R')
-  prim : IsPrimitive Char
+def PrimitiveAddChar (R : Type u) [CommRing R] (R' : Type v) [Field R'] :=
+  Σ n : ℕ+, Σ' char : AddChar R (CyclotomicField n R'), IsPrimitive Char
 #align add_char.primitive_add_char AddChar.PrimitiveAddChar
+
+/-- The first projection from `primitive_add_char`, giving the cyclotomic field. -/
+noncomputable def PrimitiveAddChar.n {R : Type u} [CommRing R] {R' : Type v} [Field R'] :
+    PrimitiveAddChar R R' → ℕ+ := fun χ => χ.1
+#align add_char.primitive_add_char.n AddChar.PrimitiveAddChar.n
+
+/-- The second projection from `primitive_add_char`, giving the character. -/
+noncomputable def PrimitiveAddChar.char {R : Type u} [CommRing R] {R' : Type v} [Field R'] :
+    ∀ χ : PrimitiveAddChar R R', AddChar R (CyclotomicField χ.n R') := fun χ => χ.2.1
+#align add_char.primitive_add_char.char AddChar.PrimitiveAddChar.char
+
+/-- The third projection from `primitive_add_char`, showing that `χ.2` is primitive. -/
+theorem PrimitiveAddChar.prim {R : Type u} [CommRing R] {R' : Type v} [Field R'] :
+    ∀ χ : PrimitiveAddChar R R', IsPrimitive χ.Char := fun χ => χ.2.2
+#align add_char.primitive_add_char.prim AddChar.PrimitiveAddChar.prim
 
 /-!
 ### Additive characters on `zmod n`
@@ -341,9 +358,8 @@ does not divide `n` -/
 noncomputable def primitiveZmodChar (n : ℕ+) (F' : Type v) [Field F'] (h : (n : F') ≠ 0) :
     PrimitiveAddChar (ZMod n) F' :=
   haveI : NeZero ((n : ℕ) : F') := ⟨h⟩
-  { n
-    Char := zmod_char n (IsCyclotomicExtension.zeta_pow n F' _)
-    prim := zmod_char_primitive_of_primitive_root n (IsCyclotomicExtension.zeta_spec n F' _) }
+  ⟨n, zmod_char n (IsCyclotomicExtension.zeta_pow n F' _),
+    zmod_char_primitive_of_primitive_root n (IsCyclotomicExtension.zeta_spec n F' _)⟩
 #align add_char.primitive_zmod_char AddChar.primitiveZmodChar
 
 /-!
@@ -374,10 +390,7 @@ noncomputable def primitiveCharFiniteField (F F' : Type _) [Field F] [Fintype F]
     obtain ⟨a, ha⟩ := FiniteField.trace_to_zMod_nondegenerate F one_ne_zero
     rw [one_mul] at ha 
     exact ⟨a, fun hf => ha <| (ψ.prim.zmod_char_eq_one_iff pp <| Algebra.trace (ZMod p) F a).mp hf⟩
-  exact
-    { n := ψ.n
-      Char := ψ'
-      prim := hψ'.is_primitive }
+  exact ⟨ψ.n, ψ', hψ'.is_primitive⟩
 #align add_char.primitive_char_finite_field AddChar.primitiveCharFiniteField
 
 /-!
