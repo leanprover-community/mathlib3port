@@ -1,17 +1,3 @@
-import Archive.«100-theorems-list».«16AbelRuffini»
-import Archive.«100-theorems-list».«30BallotProblem»
-import Archive.«100-theorems-list».«37SolutionOfCubic»
-import Archive.«100-theorems-list».«42InverseTriangleSum»
-import Archive.«100-theorems-list».«45Partition»
-import Archive.«100-theorems-list».«54Konigsberg»
-import Archive.«100-theorems-list».«57HeronsFormula»
-import Archive.«100-theorems-list».«70PerfectNumbers»
-import Archive.«100-theorems-list».«73AscendingDescendingSequences»
-import Archive.«100-theorems-list».«81SumOfPrimeReciprocalsDiverges»
-import Archive.«100-theorems-list».«82CubingACube»
-import Archive.«100-theorems-list».«83FriendshipGraphs»
-import Archive.«100-theorems-list».«93BirthdayProblem»
-import Archive.«100-theorems-list».«9AreaOfACircle»
 import Archive.Arithcc
 import Archive.Examples.MersennePrimes
 import Archive.Examples.PropEncodable
@@ -52,4 +38,18 @@ import Archive.MiuLanguage.DecisionNec
 import Archive.MiuLanguage.DecisionSuf
 import Archive.OxfordInvariants.«2021summer».Week3P1
 import Archive.Sensitivity
+import Archive.Wiedijk100Theorems.AbelRuffini
+import Archive.Wiedijk100Theorems.AreaOfACircle
+import Archive.Wiedijk100Theorems.AscendingDescendingSequences
+import Archive.Wiedijk100Theorems.BallotProblem
+import Archive.Wiedijk100Theorems.BirthdayProblem
+import Archive.Wiedijk100Theorems.CubingACube
+import Archive.Wiedijk100Theorems.FriendshipGraphs
+import Archive.Wiedijk100Theorems.HeronsFormula
+import Archive.Wiedijk100Theorems.InverseTriangleSum
+import Archive.Wiedijk100Theorems.Konigsberg
+import Archive.Wiedijk100Theorems.Partition
+import Archive.Wiedijk100Theorems.PerfectNumbers
+import Archive.Wiedijk100Theorems.SolutionOfCubic
+import Archive.Wiedijk100Theorems.SumOfPrimeReciprocalsDiverges
 

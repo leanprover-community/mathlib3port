@@ -3,8 +3,8 @@ Copyright (c) 2021 Thomas Browning. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Thomas Browning
 
-! This file was ported from Lean 3 source module «100-theorems-list».«16_abel_ruffini»
-! leanprover-community/mathlib commit 7fdeecc0d03cd40f7a165e6cf00a4d2286db599f
+! This file was ported from Lean 3 source module wiedijk_100_theorems.abel_ruffini
+! leanprover-community/mathlib commit 5563b1b49e86e135e8c7b556da5ad2f5ff881cad
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

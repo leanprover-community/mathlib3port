@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Riccardo Brasca
 
 ! This file was ported from Lean 3 source module analysis.normed.group.SemiNormedGroup
-! leanprover-community/mathlib commit 17ef379e997badd73e5eabb4d38f11919ab3c4b3
+! leanprover-community/mathlib commit cff8231f04dfa33fd8f2f45792eebd862ef30cad
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -15,6 +15,9 @@ import Mathbin.CategoryTheory.Elementwise
 
 /-!
 # The category of seminormed groups
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 We define `SemiNormedGroup`, the category of seminormed groups and normed group homs between them,
 as well as `SemiNormedGroup₁`, the subcategory of norm non-increasing morphisms.

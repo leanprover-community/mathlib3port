@@ -1204,7 +1204,7 @@ theorem dualAnnihilator_inj {W W' : Subspace K V} :
 an arbitrary extension of `φ` to an element of the dual of `V`.
 That is, `dual_lift W φ` sends `w ∈ W` to `φ x` and `x` in a chosen complement of `W` to `0`. -/
 noncomputable def dualLift (W : Subspace K V) : Module.Dual K W →ₗ[K] Module.Dual K V :=
-  let h := Classical.indefiniteDescription _ W.exists_isCompl
+  let h := Classical.indefiniteDescription _ W.exists_is_compl
   (LinearMap.ofIsComplProd h.2).comp (LinearMap.inl _ _ _)
 #align subspace.dual_lift Subspace.dualLift
 -/

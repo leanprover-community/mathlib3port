@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sam van Gool, Jake Levinson
 
 ! This file was ported from Lean 3 source module topology.sheaves.locally_surjective
-! leanprover-community/mathlib commit fb7698eb37544cbb66292b68b40e54d001f8d1a9
+! leanprover-community/mathlib commit cff8231f04dfa33fd8f2f45792eebd862ef30cad
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -15,6 +15,9 @@ import Mathbin.CategoryTheory.Sites.Surjective
 /-!
 
 # Locally surjective maps of presheaves.
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 Let `X` be a topological space, `ℱ` and `𝒢` presheaves on `X`, `T : ℱ ⟶ 𝒢` a map.
 

@@ -2317,12 +2317,14 @@ import Mathbin.NumberTheory.FunctionField
 import Mathbin.NumberTheory.KummerDedekind
 import Mathbin.NumberTheory.LSeries
 import Mathbin.NumberTheory.LegendreSymbol.AddCharacter
+import Mathbin.NumberTheory.LegendreSymbol.Basic
 import Mathbin.NumberTheory.LegendreSymbol.GaussEisensteinLemmas
 import Mathbin.NumberTheory.LegendreSymbol.GaussSum
 import Mathbin.NumberTheory.LegendreSymbol.JacobiSymbol
 import Mathbin.NumberTheory.LegendreSymbol.MulCharacter
 import Mathbin.NumberTheory.LegendreSymbol.NormNum
-import Mathbin.NumberTheory.LegendreSymbol.QuadraticChar
+import Mathbin.NumberTheory.LegendreSymbol.QuadraticChar.Basic
+import Mathbin.NumberTheory.LegendreSymbol.QuadraticChar.GaussSum
 import Mathbin.NumberTheory.LegendreSymbol.QuadraticReciprocity
 import Mathbin.NumberTheory.LegendreSymbol.ZmodChar
 import Mathbin.NumberTheory.Liouville.Basic
@@ -2367,6 +2369,7 @@ import Mathbin.NumberTheory.ZetaFunction
 import Mathbin.NumberTheory.ZetaValues
 import Mathbin.NumberTheory.Zsqrtd.Basic
 import Mathbin.NumberTheory.Zsqrtd.GaussianInt
+import Mathbin.NumberTheory.Zsqrtd.QuadraticReciprocity
 import Mathbin.NumberTheory.Zsqrtd.ToReal
 import Mathbin.Order.Antichain
 import Mathbin.Order.Antisymmetrization

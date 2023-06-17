@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Johannes Hölzl, Patrick Massot
 
 ! This file was ported from Lean 3 source module data.set.prod
-! leanprover-community/mathlib commit 27f315c5591c84687852f816d8ef31fe103d03de
+! leanprover-community/mathlib commit c4c2ed622f43768eff32608d4a0f8a6cec1c047d
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -261,11 +261,26 @@ theorem prod_inter_prod : s₁ ×ˢ t₁ ∩ s₂ ×ˢ t₂ = (s₁ ∩ s₂) ×
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Set.disjoint_prod /-
+@[simp]
 theorem disjoint_prod : Disjoint (s₁ ×ˢ t₁) (s₂ ×ˢ t₂) ↔ Disjoint s₁ s₂ ∨ Disjoint t₁ t₂ := by
   simp_rw [disjoint_left, mem_prod, not_and_or, Prod.forall, and_imp, ← @forall_or_right α, ←
     @forall_or_left β, ← @forall_or_right (_ ∈ s₁), ← @forall_or_left (_ ∈ t₁)]
 #align set.disjoint_prod Set.disjoint_prod
 -/
+
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+theorem Disjoint.set_prod_left (hs : Disjoint s₁ s₂) (t₁ t₂ : Set β) :
+    Disjoint (s₁ ×ˢ t₁) (s₂ ×ˢ t₂) :=
+  disjoint_left.2 fun ⟨a, b⟩ ⟨ha₁, hb₁⟩ ⟨ha₂, hb₂⟩ => disjoint_left.1 hs ha₁ ha₂
+#align disjoint.set_prod_left Disjoint.set_prod_left
+
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+theorem Disjoint.set_prod_right (ht : Disjoint t₁ t₂) (s₁ s₂ : Set α) :
+    Disjoint (s₁ ×ˢ t₁) (s₂ ×ˢ t₂) :=
+  disjoint_left.2 fun ⟨a, b⟩ ⟨ha₁, hb₁⟩ ⟨ha₂, hb₂⟩ => disjoint_left.1 ht hb₁ hb₂
+#align disjoint.set_prod_right Disjoint.set_prod_right
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -1025,6 +1040,24 @@ theorem disjoint_univ_pi : Disjoint (pi univ t₁) (pi univ t₂) ↔ ∃ i, Dis
   simp only [disjoint_iff_inter_eq_empty, ← pi_inter_distrib, univ_pi_eq_empty_iff]
 #align set.disjoint_univ_pi Set.disjoint_univ_pi
 -/
+
+theorem Disjoint.set_pi (hi : i ∈ s) (ht : Disjoint (t₁ i) (t₂ i)) : Disjoint (s.pi t₁) (s.pi t₂) :=
+  disjoint_left.2 fun h h₁ h₂ => disjoint_left.1 ht (h₁ _ hi) (h₂ _ hi)
+#align disjoint.set_pi Disjoint.set_pi
+
+section Nonempty
+
+variable [∀ i, Nonempty (α i)]
+
+theorem pi_eq_empty_iff' : s.pi t = ∅ ↔ ∃ i ∈ s, t i = ∅ := by simp [pi_eq_empty_iff]
+#align set.pi_eq_empty_iff' Set.pi_eq_empty_iff'
+
+@[simp]
+theorem disjoint_pi : Disjoint (s.pi t₁) (s.pi t₂) ↔ ∃ i ∈ s, Disjoint (t₁ i) (t₂ i) := by
+  simp only [disjoint_iff_inter_eq_empty, ← pi_inter_distrib, pi_eq_empty_iff']
+#align set.disjoint_pi Set.disjoint_pi
+
+end Nonempty
 
 #print Set.range_dcomp /-
 @[simp]

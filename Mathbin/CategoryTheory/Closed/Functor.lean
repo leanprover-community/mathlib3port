@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.closed.functor
-! leanprover-community/mathlib commit cea27692b3fdeb328a2ddba6aabf181754543184
+! leanprover-community/mathlib commit cff8231f04dfa33fd8f2f45792eebd862ef30cad
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.CategoryTheory.Adjunction.FullyFaithful
 
 /-!
 # Cartesian closed functors
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 Define the exponential comparison morphisms for a functor which preserves binary products, and use
 them to define a cartesian closed functor: one which (naturally) preserves exponentials.

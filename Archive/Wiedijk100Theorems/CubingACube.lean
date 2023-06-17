@@ -3,8 +3,8 @@ Copyright (c) 2019 Floris van Doorn. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 
-! This file was ported from Lean 3 source module «100-theorems-list».«82_cubing_a_cube»
-! leanprover-community/mathlib commit 328375597f2c0dd00522d9c2e5a33b6a6128feeb
+! This file was ported from Lean 3 source module wiedijk_100_theorems.cubing_a_cube
+! leanprover-community/mathlib commit 5563b1b49e86e135e8c7b556da5ad2f5ff881cad
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

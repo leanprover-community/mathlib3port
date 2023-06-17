@@ -1952,7 +1952,7 @@ theorem Submodule.exists_le_ker_of_lt_top (p : Submodule K V) (hp : p < ⊤) :
 
 #print quotient_prod_linearEquiv /-
 theorem quotient_prod_linearEquiv (p : Submodule K V) : Nonempty (((V ⧸ p) × p) ≃ₗ[K] V) :=
-  let ⟨q, hq⟩ := p.exists_isCompl
+  let ⟨q, hq⟩ := p.exists_is_compl
   Nonempty.intro <|
     ((quotientEquivOfIsCompl p q hq).Prod (LinearEquiv.refl _ _)).trans
       (prodEquivOfIsCompl q p hq.symm)

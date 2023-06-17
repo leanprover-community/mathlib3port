@@ -4,11 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Michael Stoll
 
 ! This file was ported from Lean 3 source module number_theory.sum_two_squares
-! leanprover-community/mathlib commit 34ebaffc1d1e8e783fc05438ec2e70af87275ac9
+! leanprover-community/mathlib commit 5b2fe80501ff327b9109fb09b7cc8c325cd0d7d9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
-import Mathbin.NumberTheory.Zsqrtd.GaussianInt
+import Mathbin.NumberTheory.Zsqrtd.QuadraticReciprocity
 import Mathbin.Tactic.LinearCombination
 
 /-!

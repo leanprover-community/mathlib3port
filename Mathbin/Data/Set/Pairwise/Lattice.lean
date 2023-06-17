@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module data.set.pairwise.lattice
-! leanprover-community/mathlib commit 31ca6f9cf5f90a6206092cd7f84b359dcb6d52e0
+! leanprover-community/mathlib commit c4c2ed622f43768eff32608d4a0f8a6cec1c047d
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -21,9 +21,9 @@ In this file we prove many facts about `pairwise` and the set lattice.
 -/
 
 
-open Set Function
+open Function Set Order
 
-variable {α β γ ι ι' : Type _} {r p q : α → α → Prop}
+variable {α β γ ι ι' : Type _} {κ : Sort _} {r p q : α → α → Prop}
 
 section Pairwise
 
@@ -32,7 +32,7 @@ variable {f g : ι → α} {s t u : Set α} {a b : α}
 namespace Set
 
 #print Set.pairwise_iUnion /-
-theorem pairwise_iUnion {f : ι → Set α} (h : Directed (· ⊆ ·) f) :
+theorem pairwise_iUnion {f : κ → Set α} (h : Directed (· ⊆ ·) f) :
     (⋃ n, f n).Pairwise r ↔ ∀ n, (f n).Pairwise r :=
   by
   constructor
@@ -81,7 +81,7 @@ end PartialOrderBot
 
 section CompleteLattice
 
-variable [CompleteLattice α]
+variable [CompleteLattice α] {s : Set ι} {t : Set ι'}
 
 #print Set.PairwiseDisjoint.biUnion /-
 /-- Bind operation for `set.pairwise_disjoint`. If you want to only consider finsets of indices, you
@@ -100,7 +100,46 @@ theorem PairwiseDisjoint.biUnion {s : Set ι'} {g : ι' → Set ι} {f : ι → 
 #align set.pairwise_disjoint.bUnion Set.PairwiseDisjoint.biUnion
 -/
 
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/-- If the suprema of columns are pairwise disjoint and suprema of rows as well, then everything is
+pairwise disjoint. Not to be confused with `set.pairwise_disjoint.prod`. -/
+theorem PairwiseDisjoint.prod_left {f : ι × ι' → α}
+    (hs : s.PairwiseDisjoint fun i => ⨆ i' ∈ t, f (i, i'))
+    (ht : t.PairwiseDisjoint fun i' => ⨆ i ∈ s, f (i, i')) :
+    (s ×ˢ t : Set (ι × ι')).PairwiseDisjoint f :=
+  by
+  rintro ⟨i, i'⟩ hi ⟨j, j'⟩ hj h
+  rw [mem_prod] at hi hj 
+  obtain rfl | hij := eq_or_ne i j
+  · refine' (ht hi.2 hj.2 <| (Prod.mk.inj_left _).ne_iff.1 h).mono _ _
+    · convert le_iSup₂ i hi.1; rfl
+    · convert le_iSup₂ i hj.1; rfl
+  · refine' (hs hi.1 hj.1 hij).mono _ _
+    · convert le_iSup₂ i' hi.2; rfl
+    · convert le_iSup₂ j' hj.2; rfl
+#align set.pairwise_disjoint.prod_left Set.PairwiseDisjoint.prod_left
+
 end CompleteLattice
+
+section Frame
+
+variable [Frame α]
+
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+theorem pairwiseDisjoint_prod_left {s : Set ι} {t : Set ι'} {f : ι × ι' → α} :
+    (s ×ˢ t : Set (ι × ι')).PairwiseDisjoint f ↔
+      (s.PairwiseDisjoint fun i => ⨆ i' ∈ t, f (i, i')) ∧
+        t.PairwiseDisjoint fun i' => ⨆ i ∈ s, f (i, i') :=
+  by
+  refine'
+        ⟨fun h => ⟨fun i hi j hj hij => _, fun i hi j hj hij => _⟩, fun h => h.1.prod_left h.2⟩ <;>
+      simp_rw [Function.onFun, iSup_disjoint_iff, disjoint_iSup_iff] <;>
+    intro i' hi' j' hj'
+  · exact h (mk_mem_prod hi hi') (mk_mem_prod hj hj') (ne_of_apply_ne Prod.fst hij)
+  · exact h (mk_mem_prod hi' hi) (mk_mem_prod hj' hj) (ne_of_apply_ne Prod.snd hij)
+#align set.pairwise_disjoint_prod_left Set.pairwiseDisjoint_prod_left
+
+end Frame
 
 #print Set.biUnion_diff_biUnion_eq /-
 theorem biUnion_diff_biUnion_eq {s t : Set ι} {f : ι → Set α} (h : (s ∪ t).PairwiseDisjoint f) :

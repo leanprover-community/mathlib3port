@@ -3,8 +3,8 @@ Copyright (c) 2022 Kyle Miller. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kyle Miller
 
-! This file was ported from Lean 3 source module «100-theorems-list».«54_konigsberg»
-! leanprover-community/mathlib commit af8760ccc4c03bbdff0b140e6f7bd047b0eecbeb
+! This file was ported from Lean 3 source module wiedijk_100_theorems.konigsberg
+! leanprover-community/mathlib commit 5563b1b49e86e135e8c7b556da5ad2f5ff881cad
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/

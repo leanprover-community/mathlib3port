@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth, Frédéric Dupuis
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.rayleigh
-! leanprover-community/mathlib commit 6b0169218d01f2837d79ea2784882009a0da1aa1
+! leanprover-community/mathlib commit cff8231f04dfa33fd8f2f45792eebd862ef30cad
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -16,6 +16,9 @@ import Mathbin.LinearAlgebra.Eigenspace.Basic
 
 /-!
 # The Rayleigh quotient
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 The Rayleigh quotient of a self-adjoint operator `T` on an inner product space `E` is the function
 `λ x, ⟪T x, x⟫ / ‖x‖ ^ 2`.

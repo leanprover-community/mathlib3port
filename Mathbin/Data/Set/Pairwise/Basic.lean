@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module data.set.pairwise.basic
-! leanprover-community/mathlib commit c227d107bbada5d0d9d20287e3282c0a7f1651a0
+! leanprover-community/mathlib commit c4c2ed622f43768eff32608d4a0f8a6cec1c047d
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -36,7 +36,7 @@ on `set.pairwise_disjoint`, even though the latter unfolds to something nicer.
 -/
 
 
-open Set Function
+open Function Order Set
 
 variable {α β γ ι ι' : Type _} {r p q : α → α → Prop}
 
@@ -453,6 +453,8 @@ end SemilatticeInfBot
 /-! ### Pairwise disjoint set of sets -/
 
 
+variable {s : Set ι} {t : Set ι'}
+
 #print Set.pairwiseDisjoint_range_singleton /-
 theorem pairwiseDisjoint_range_singleton :
     (Set.range (singleton : ι → Set ι)).PairwiseDisjoint id :=
@@ -475,6 +477,26 @@ theorem PairwiseDisjoint.elim_set {s : Set ι} {f : ι → Set α} (hs : s.Pairw
   hs.elim hi hj <| not_disjoint_iff.2 ⟨a, hai, haj⟩
 #align set.pairwise_disjoint.elim_set Set.PairwiseDisjoint.elim_set
 -/
+
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+/- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+theorem PairwiseDisjoint.prod {f : ι → Set α} {g : ι' → Set β} (hs : s.PairwiseDisjoint f)
+    (ht : t.PairwiseDisjoint g) :
+    (s ×ˢ t : Set (ι × ι')).PairwiseDisjoint fun i => f i.1 ×ˢ g i.2 :=
+  fun ⟨i, i'⟩ ⟨hi, hi'⟩ ⟨j, j'⟩ ⟨hj, hj'⟩ hij =>
+  disjoint_left.2 fun ⟨a, b⟩ ⟨hai, hbi⟩ ⟨haj, hbj⟩ =>
+    hij <| Prod.ext (hs.elim_set hi hj _ hai haj) <| ht.elim_set hi' hj' _ hbi hbj
+#align set.pairwise_disjoint.prod Set.PairwiseDisjoint.prod
+
+theorem pairwiseDisjoint_pi {ι' α : ι → Type _} {s : ∀ i, Set (ι' i)} {f : ∀ i, ι' i → Set (α i)}
+    (hs : ∀ i, (s i).PairwiseDisjoint (f i)) :
+    ((univ : Set ι).pi s).PairwiseDisjoint fun I => (univ : Set ι).pi fun i => f _ (I i) :=
+  fun I hI J hJ hIJ =>
+  disjoint_left.2 fun a haI haJ =>
+    hIJ <|
+      funext fun i =>
+        (hs i).elim_set (hI i trivial) (hJ i trivial) (a i) (haI i trivial) (haJ i trivial)
+#align set.pairwise_disjoint_pi Set.pairwiseDisjoint_pi
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Set.pairwiseDisjoint_image_right_iff /-

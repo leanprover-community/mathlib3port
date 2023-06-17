@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module order.category.FinBddDistLat
-! leanprover-community/mathlib commit 937b1c59c58710ef8ed91f8727ef402d49d621a2
+! leanprover-community/mathlib commit cff8231f04dfa33fd8f2f45792eebd862ef30cad
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.Order.Category.FinPartOrd
 
 /-!
 # The category of finite bounded distributive lattices
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file defines `FinBddDistLat`, the category of finite distributive lattices with
 bounded lattice homomorphisms.
