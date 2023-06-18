@@ -54,8 +54,8 @@ theorem Complex.subfield_eq_of_closed {K : Subfield ℂ} (hc : IsClosed (K : Set
 #align complex.subfield_eq_of_closed Complex.subfield_eq_of_closed
 -/
 
-/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Misc2.lean:304:22: continuitity! not supported at the moment -/
-/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Misc2.lean:304:22: continuitity! not supported at the moment -/
+/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Misc2.lean:305:22: continuitity! not supported at the moment -/
+/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Misc2.lean:305:22: continuitity! not supported at the moment -/
 #print Complex.uniformContinuous_ringHom_eq_id_or_conj /-
 /-- Let `K` a subfield of `ℂ` and let `ψ : K →+* ℂ` a ring homomorphism. Assume that `ψ` is uniform
 continuous, then `ψ` is either the inclusion map or the composition of the inclusion map with the

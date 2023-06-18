@@ -1436,8 +1436,6 @@ theorem locallyCompactSpace_of_hasBasis {ι : α → Type _} {p : ∀ x, ι x �
 #align locally_compact_space_of_has_basis locallyCompactSpace_of_hasBasis
 -/
 
-/- warning: prod.locally_compact_space clashes with locally_compact_space.prod -> Prod.locallyCompactSpace
-Case conversion may be inaccurate. Consider using '#align prod.locally_compact_space Prod.locallyCompactSpaceₓ'. -/
 #print Prod.locallyCompactSpace /-
 instance Prod.locallyCompactSpace (α : Type _) (β : Type _) [TopologicalSpace α]
     [TopologicalSpace β] [LocallyCompactSpace α] [LocallyCompactSpace β] :
@@ -1451,8 +1449,6 @@ section Pi
 
 variable [∀ i, TopologicalSpace (π i)] [∀ i, LocallyCompactSpace (π i)]
 
-/- warning: pi.locally_compact_space_of_finite clashes with locally_compact_space.pi_finite -> Pi.locallyCompactSpace_of_finite
-Case conversion may be inaccurate. Consider using '#align pi.locally_compact_space_of_finite Pi.locallyCompactSpace_of_finiteₓ'. -/
 #print Pi.locallyCompactSpace_of_finite /-
 /-- In general it suffices that all but finitely many of the spaces are compact,
   but that's not straightforward to state and use. -/
@@ -1468,8 +1464,6 @@ instance Pi.locallyCompactSpace_of_finite [Finite ι] : LocallyCompactSpace (∀
 #align pi.locally_compact_space_of_finite Pi.locallyCompactSpace_of_finite
 -/
 
-/- warning: pi.locally_compact_space clashes with locally_compact_space.pi -> Pi.locallyCompactSpace
-Case conversion may be inaccurate. Consider using '#align pi.locally_compact_space Pi.locallyCompactSpaceₓ'. -/
 #print Pi.locallyCompactSpace /-
 /-- For spaces that are not Hausdorff. -/
 instance Pi.locallyCompactSpace [∀ i, CompactSpace (π i)] : LocallyCompactSpace (∀ i, π i) :=

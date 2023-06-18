@@ -75,6 +75,7 @@ open scoped BigOperators
 
 open scoped TensorProduct
 
+#print LieModule.preWeightSpace /-
 /-- Given a Lie module `M` over a Lie algebra `L`, the pre-weight space of `M` with respect to a
 map `χ : L → R` is the simultaneous generalized eigenspace of the action of all `x : L` on `M`,
 with eigenvalues `χ x`.
@@ -83,14 +84,18 @@ See also `lie_module.weight_space`. -/
 def preWeightSpace (χ : L → R) : Submodule R M :=
   ⨅ x : L, (toEndomorphism R L M x).maximalGeneralizedEigenspace (χ x)
 #align lie_module.pre_weight_space LieModule.preWeightSpace
+-/
 
+#print LieModule.mem_preWeightSpace /-
 theorem mem_preWeightSpace (χ : L → R) (m : M) :
     m ∈ preWeightSpace M χ ↔ ∀ x, ∃ k : ℕ, ((toEndomorphism R L M x - χ x • 1) ^ k) m = 0 := by
   simp [pre_weight_space, -LinearMap.pow_apply]
 #align lie_module.mem_pre_weight_space LieModule.mem_preWeightSpace
+-/
 
 variable (R)
 
+#print LieModule.exists_preWeightSpace_zero_le_ker_of_isNoetherian /-
 theorem exists_preWeightSpace_zero_le_ker_of_isNoetherian [IsNoetherian R M] (x : L) :
     ∃ k : ℕ, preWeightSpace M (0 : L → R) ≤ (toEndomorphism R L M x ^ k).ker :=
   by
@@ -98,9 +103,11 @@ theorem exists_preWeightSpace_zero_le_ker_of_isNoetherian [IsNoetherian R M] (x 
   simp only [← Module.End.generalizedEigenspace_zero, pre_weight_space, Pi.zero_apply, iInf_le, ←
     (to_endomorphism R L M x).maximalGeneralizedEigenspace_eq]
 #align lie_module.exists_pre_weight_space_zero_le_ker_of_is_noetherian LieModule.exists_preWeightSpace_zero_le_ker_of_isNoetherian
+-/
 
 variable {R} (L)
 
+#print LieModule.weight_vector_multiplication /-
 /-- See also `bourbaki1975b` Chapter VII §1.1, Proposition 2 (ii). -/
 protected theorem weight_vector_multiplication (M₁ : Type w₁) (M₂ : Type w₂) (M₃ : Type w₃)
     [AddCommGroup M₁] [Module R M₁] [LieRingModule L M₁] [LieModule R L M₁] [AddCommGroup M₂]
@@ -174,9 +181,11 @@ protected theorem weight_vector_multiplication (M₁ : Type w₁) (M₂ : Type w
       LinearMap.map_zero]
   · rw [LinearMap.mul_apply, LinearMap.pow_map_zero_of_le hj hf₂, LinearMap.map_zero]
 #align lie_module.weight_vector_multiplication LieModule.weight_vector_multiplication
+-/
 
 variable {L M}
 
+#print LieModule.lie_mem_preWeightSpace_of_mem_preWeightSpace /-
 theorem lie_mem_preWeightSpace_of_mem_preWeightSpace {χ₁ χ₂ : L → R} {x : L} {m : M}
     (hx : x ∈ preWeightSpace L χ₁) (hm : m ∈ preWeightSpace M χ₂) :
     ⁅x, m⁆ ∈ preWeightSpace M (χ₁ + χ₂) :=
@@ -188,9 +197,11 @@ theorem lie_mem_preWeightSpace_of_mem_preWeightSpace {χ₁ χ₂ : L → R} {x 
   simp only [Submodule.subtype_apply, to_module_hom_apply, TensorProduct.map_tmul]
   rfl
 #align lie_module.lie_mem_pre_weight_space_of_mem_pre_weight_space LieModule.lie_mem_preWeightSpace_of_mem_preWeightSpace
+-/
 
 variable (M)
 
+#print LieModule.weightSpace /-
 /-- If a Lie algebra is nilpotent, then pre-weight spaces are Lie submodules. -/
 def weightSpace [LieAlgebra.IsNilpotent R L] (χ : L → R) : LieSubmodule R L M :=
   { preWeightSpace M χ with
@@ -200,12 +211,16 @@ def weightSpace [LieAlgebra.IsNilpotent R L] (χ : L → R) : LieSubmodule R L M
       suffices pre_weight_space L (0 : L → R) = ⊤ by simp only [this, Submodule.mem_top]
       exact LieAlgebra.iInf_max_gen_zero_eigenspace_eq_top_of_nilpotent R L }
 #align lie_module.weight_space LieModule.weightSpace
+-/
 
+#print LieModule.mem_weightSpace /-
 theorem mem_weightSpace [LieAlgebra.IsNilpotent R L] (χ : L → R) (m : M) :
     m ∈ weightSpace M χ ↔ m ∈ preWeightSpace M χ :=
   Iff.rfl
 #align lie_module.mem_weight_space LieModule.mem_weightSpace
+-/
 
+#print LieModule.zero_weightSpace_eq_top_of_nilpotent' /-
 /-- See also the more useful form `lie_module.zero_weight_space_eq_top_of_nilpotent`. -/
 @[simp]
 theorem zero_weightSpace_eq_top_of_nilpotent' [LieAlgebra.IsNilpotent R L] [IsNilpotent R L M] :
@@ -214,7 +229,9 @@ theorem zero_weightSpace_eq_top_of_nilpotent' [LieAlgebra.IsNilpotent R L] [IsNi
   rw [← LieSubmodule.coe_toSubmodule_eq_iff, LieSubmodule.top_coeSubmodule]
   exact infi_max_gen_zero_eigenspace_eq_top_of_nilpotent R L M
 #align lie_module.zero_weight_space_eq_top_of_nilpotent' LieModule.zero_weightSpace_eq_top_of_nilpotent'
+-/
 
+#print LieModule.coe_weightSpace_of_top /-
 theorem coe_weightSpace_of_top [LieAlgebra.IsNilpotent R L] (χ : L → R) :
     (weightSpace M (χ ∘ (⊤ : LieSubalgebra R L).incl) : Submodule R M) = weightSpace M χ :=
   by
@@ -225,7 +242,9 @@ theorem coe_weightSpace_of_top [LieAlgebra.IsNilpotent R L] (χ : L → R) :
   · obtain ⟨k, hk⟩ := h ⟨x, Set.mem_univ x⟩; use k; exact hk
   · obtain ⟨k, hk⟩ := h x; use k; exact hk
 #align lie_module.coe_weight_space_of_top LieModule.coe_weightSpace_of_top
+-/
 
+#print LieModule.zero_weightSpace_eq_top_of_nilpotent /-
 @[simp]
 theorem zero_weightSpace_eq_top_of_nilpotent [LieAlgebra.IsNilpotent R L] [IsNilpotent R L M] :
     weightSpace M (0 : (⊤ : LieSubalgebra R L) → R) = ⊤ :=
@@ -237,20 +256,26 @@ theorem zero_weightSpace_eq_top_of_nilpotent [LieAlgebra.IsNilpotent R L] [IsNil
     coe_weight_space_of_top, ← infi_max_gen_zero_eigenspace_eq_top_of_nilpotent R L M]
   rfl
 #align lie_module.zero_weight_space_eq_top_of_nilpotent LieModule.zero_weightSpace_eq_top_of_nilpotent
+-/
 
+#print LieModule.IsWeight /-
 /-- Given a Lie module `M` of a Lie algebra `L`, a weight of `M` with respect to a nilpotent
 subalgebra `H ⊆ L` is a Lie character whose corresponding weight space is non-empty. -/
 def IsWeight (χ : LieCharacter R H) : Prop :=
   weightSpace M χ ≠ ⊥
 #align lie_module.is_weight LieModule.IsWeight
+-/
 
+#print LieModule.isWeight_zero_of_nilpotent /-
 /-- For a non-trivial nilpotent Lie module over a nilpotent Lie algebra, the zero character is a
 weight with respect to the `⊤` Lie subalgebra. -/
 theorem isWeight_zero_of_nilpotent [Nontrivial M] [LieAlgebra.IsNilpotent R L] [IsNilpotent R L M] :
     IsWeight (⊤ : LieSubalgebra R L) M 0 := by
   rw [is_weight, LieHom.coe_zero, zero_weight_space_eq_top_of_nilpotent]; exact top_ne_bot
 #align lie_module.is_weight_zero_of_nilpotent LieModule.isWeight_zero_of_nilpotent
+-/
 
+#print LieModule.isNilpotent_toEndomorphism_weightSpace_zero /-
 /-- A (nilpotent) Lie algebra acts nilpotently on the zero weight space of a Noetherian Lie
 module. -/
 theorem isNilpotent_toEndomorphism_weightSpace_zero [LieAlgebra.IsNilpotent R L] [IsNoetherian R M]
@@ -264,6 +289,7 @@ theorem isNilpotent_toEndomorphism_weightSpace_zero [LieAlgebra.IsNilpotent R L]
     SetLike.coe_eq_coe, LinearMap.restrict_apply, Submodule.coe_mk, Submodule.coe_zero]
   exact hk hm
 #align lie_module.is_nilpotent_to_endomorphism_weight_space_zero LieModule.isNilpotent_toEndomorphism_weightSpace_zero
+-/
 
 /-- By Engel's theorem, when the Lie algebra is Noetherian, the zero weight space of a Noetherian
 Lie module is nilpotent. -/
@@ -281,24 +307,31 @@ open TensorProduct.LieModule
 
 open LieModule
 
+#print LieAlgebra.rootSpace /-
 /-- Given a nilpotent Lie subalgebra `H ⊆ L`, the root space of a map `χ : H → R` is the weight
 space of `L` regarded as a module of `H` via the adjoint action. -/
 abbrev rootSpace (χ : H → R) : LieSubmodule R H L :=
   weightSpace L χ
 #align lie_algebra.root_space LieAlgebra.rootSpace
+-/
 
+#print LieAlgebra.zero_rootSpace_eq_top_of_nilpotent /-
 @[simp]
 theorem zero_rootSpace_eq_top_of_nilpotent [h : IsNilpotent R L] :
     rootSpace (⊤ : LieSubalgebra R L) 0 = ⊤ :=
   zero_weightSpace_eq_top_of_nilpotent L
 #align lie_algebra.zero_root_space_eq_top_of_nilpotent LieAlgebra.zero_rootSpace_eq_top_of_nilpotent
+-/
 
+#print LieAlgebra.IsRoot /-
 /-- A root of a Lie algebra `L` with respect to a nilpotent subalgebra `H ⊆ L` is a weight of `L`,
 regarded as a module of `H` via the adjoint action. -/
 abbrev IsRoot :=
   IsWeight H L
 #align lie_algebra.is_root LieAlgebra.IsRoot
+-/
 
+#print LieAlgebra.rootSpace_comap_eq_weightSpace /-
 @[simp]
 theorem rootSpace_comap_eq_weightSpace (χ : H → R) :
     (rootSpace H χ).comap H.incl' = weightSpace H χ :=
@@ -323,9 +356,11 @@ theorem rootSpace_comap_eq_weightSpace (χ : H → R) :
       Submodule.coe_smul_of_tower, LinearMap.coe_comp, LinearMap.sub_apply]
   simp_rw [LinearMap.commute_pow_left_of_commute (hfg _)]
 #align lie_algebra.root_space_comap_eq_weight_space LieAlgebra.rootSpace_comap_eq_weightSpace
+-/
 
 variable {H M}
 
+#print LieAlgebra.lie_mem_weightSpace_of_mem_weightSpace /-
 theorem lie_mem_weightSpace_of_mem_weightSpace {χ₁ χ₂ : H → R} {x : L} {m : M}
     (hx : x ∈ rootSpace H χ₁) (hm : m ∈ weightSpace M χ₂) : ⁅x, m⁆ ∈ weightSpace M (χ₁ + χ₂) :=
   by
@@ -336,9 +371,11 @@ theorem lie_mem_weightSpace_of_mem_weightSpace {χ₁ χ₂ : H → R} {x : L} {
   simp only [Submodule.subtype_apply, to_module_hom_apply, Submodule.coe_mk,
     LieModuleHom.coe_restrictLie, TensorProduct.map_tmul]
 #align lie_algebra.lie_mem_weight_space_of_mem_weight_space LieAlgebra.lie_mem_weightSpace_of_mem_weightSpace
+-/
 
 variable (R L H M)
 
+#print LieAlgebra.rootSpaceWeightSpaceProductAux /-
 /-- Auxiliary definition for `root_space_weight_space_product`,
 which is close to the deterministic timeout limit.
 -/
@@ -364,7 +401,9 @@ def rootSpaceWeightSpaceProductAux {χ₁ χ₂ χ₃ : H → R} (hχ : χ₁ + 
     rw [LinearMap.smul_apply, LinearMap.coe_mk, LinearMap.coe_mk, Subtype.coe_mk,
       LieSubmodule.coe_smul, smul_lie, LieSubmodule.coe_smul, Subtype.coe_mk]
 #align lie_algebra.root_space_weight_space_product_aux LieAlgebra.rootSpaceWeightSpaceProductAux
+-/
 
+#print LieAlgebra.rootSpaceWeightSpaceProduct /-
 /-- Given a nilpotent Lie subalgebra `H ⊆ L` together with `χ₁ χ₂ : H → R`, there is a natural
 `R`-bilinear product of root vectors and weight vectors, compatible with the actions of `H`. -/
 def rootSpaceWeightSpaceProduct (χ₁ χ₂ χ₃ : H → R) (hχ : χ₁ + χ₂ = χ₃) :
@@ -379,7 +418,9 @@ def rootSpaceWeightSpaceProduct (χ₁ χ₂ χ₃ : H → R) (hχ : χ₁ + χ�
             LieSubalgebra.coe_bracket_of_module, LieSubalgebra.coe_bracket_of_module,
             LieSubmodule.coe_bracket, LieSubalgebra.coe_bracket_of_module, lie_lie] }
 #align lie_algebra.root_space_weight_space_product LieAlgebra.rootSpaceWeightSpaceProduct
+-/
 
+#print LieAlgebra.coe_rootSpaceWeightSpaceProduct_tmul /-
 @[simp]
 theorem coe_rootSpaceWeightSpaceProduct_tmul (χ₁ χ₂ χ₃ : H → R) (hχ : χ₁ + χ₂ = χ₃)
     (x : rootSpace H χ₁) (m : weightSpace M χ₂) :
@@ -388,24 +429,32 @@ theorem coe_rootSpaceWeightSpaceProduct_tmul (χ₁ χ₂ χ₃ : H → R) (hχ 
     LieModuleHom.coe_toLinearMap, coe_lift_lie_eq_lift_coe, Submodule.coe_mk, LinearMap.coe_mk,
     LieModuleHom.coe_mk]
 #align lie_algebra.coe_root_space_weight_space_product_tmul LieAlgebra.coe_rootSpaceWeightSpaceProduct_tmul
+-/
 
+#print LieAlgebra.rootSpaceProduct /-
 /-- Given a nilpotent Lie subalgebra `H ⊆ L` together with `χ₁ χ₂ : H → R`, there is a natural
 `R`-bilinear product of root vectors, compatible with the actions of `H`. -/
 def rootSpaceProduct (χ₁ χ₂ χ₃ : H → R) (hχ : χ₁ + χ₂ = χ₃) :
     rootSpace H χ₁ ⊗[R] rootSpace H χ₂ →ₗ⁅R,H⁆ rootSpace H χ₃ :=
   rootSpaceWeightSpaceProduct R L H L χ₁ χ₂ χ₃ hχ
 #align lie_algebra.root_space_product LieAlgebra.rootSpaceProduct
+-/
 
+#print LieAlgebra.rootSpaceProduct_def /-
 @[simp]
 theorem rootSpaceProduct_def : rootSpaceProduct R L H = rootSpaceWeightSpaceProduct R L H L :=
   rfl
 #align lie_algebra.root_space_product_def LieAlgebra.rootSpaceProduct_def
+-/
 
+#print LieAlgebra.rootSpaceProduct_tmul /-
 theorem rootSpaceProduct_tmul (χ₁ χ₂ χ₃ : H → R) (hχ : χ₁ + χ₂ = χ₃) (x : rootSpace H χ₁)
     (y : rootSpace H χ₂) : (rootSpaceProduct R L H χ₁ χ₂ χ₃ hχ (x ⊗ₜ y) : L) = ⁅(x : L), (y : L)⁆ :=
   by simp only [root_space_product_def, coe_root_space_weight_space_product_tmul]
 #align lie_algebra.root_space_product_tmul LieAlgebra.rootSpaceProduct_tmul
+-/
 
+#print LieAlgebra.zeroRootSubalgebra /-
 /-- Given a nilpotent Lie subalgebra `H ⊆ L`, the root space of the zero map `0 : H → R` is a Lie
 subalgebra of `L`. -/
 def zeroRootSubalgebra : LieSubalgebra R L :=
@@ -417,19 +466,25 @@ def zeroRootSubalgebra : LieSubalgebra R L :=
         rwa [root_space_product_tmul, Subtype.coe_mk, Subtype.coe_mk] at this 
       exact (root_space_product R L H 0 0 0 (add_zero 0) xy).property }
 #align lie_algebra.zero_root_subalgebra LieAlgebra.zeroRootSubalgebra
+-/
 
+#print LieAlgebra.coe_zeroRootSubalgebra /-
 @[simp]
 theorem coe_zeroRootSubalgebra : (zeroRootSubalgebra R L H : Submodule R L) = rootSpace H 0 :=
   rfl
 #align lie_algebra.coe_zero_root_subalgebra LieAlgebra.coe_zeroRootSubalgebra
+-/
 
+#print LieAlgebra.mem_zeroRootSubalgebra /-
 theorem mem_zeroRootSubalgebra (x : L) :
     x ∈ zeroRootSubalgebra R L H ↔ ∀ y : H, ∃ k : ℕ, (toEndomorphism R H L y ^ k) x = 0 := by
   simp only [zero_root_subalgebra, mem_weight_space, mem_pre_weight_space, Pi.zero_apply, sub_zero,
     SetLike.mem_coe, zero_smul, LieSubmodule.mem_coeSubmodule, Submodule.mem_carrier,
     LieSubalgebra.mem_mk_iff]
 #align lie_algebra.mem_zero_root_subalgebra LieAlgebra.mem_zeroRootSubalgebra
+-/
 
+#print LieAlgebra.toLieSubmodule_le_rootSpace_zero /-
 theorem toLieSubmodule_le_rootSpace_zero : H.toLieSubmodule ≤ rootSpace H 0 :=
   by
   intro x hx
@@ -452,14 +507,18 @@ theorem toLieSubmodule_le_rootSpace_zero : H.toLieSubmodule ≤ rootSpace H 0 :=
     Submodule.coe_eq_zero]
   exact h
 #align lie_algebra.to_lie_submodule_le_root_space_zero LieAlgebra.toLieSubmodule_le_rootSpace_zero
+-/
 
+#print LieAlgebra.le_zeroRootSubalgebra /-
 theorem le_zeroRootSubalgebra : H ≤ zeroRootSubalgebra R L H :=
   by
   rw [← LieSubalgebra.coe_submodule_le_coe_submodule, ← H.coe_to_lie_submodule,
     coe_zero_root_subalgebra, LieSubmodule.coeSubmodule_le_coeSubmodule]
   exact to_lie_submodule_le_root_space_zero R L H
 #align lie_algebra.le_zero_root_subalgebra LieAlgebra.le_zeroRootSubalgebra
+-/
 
+#print LieAlgebra.zeroRootSubalgebra_normalizer_eq_self /-
 @[simp]
 theorem zeroRootSubalgebra_normalizer_eq_self :
     (zeroRootSubalgebra R L H).normalizer = zeroRootSubalgebra R L H :=
@@ -477,7 +536,9 @@ theorem zeroRootSubalgebra_normalizer_eq_self :
   rw [LinearMap.iterate_succ, LinearMap.coe_comp, Function.comp_apply, to_endomorphism_apply_apply,
     LieSubalgebra.coe_bracket_of_module, Submodule.coe_mk, hk]
 #align lie_algebra.zero_root_subalgebra_normalizer_eq_self LieAlgebra.zeroRootSubalgebra_normalizer_eq_self
+-/
 
+#print LieAlgebra.is_cartan_of_zeroRootSubalgebra_eq /-
 /-- If the zero root subalgebra of a nilpotent Lie subalgebra `H` is just `H` then `H` is a Cartan
 subalgebra.
 
@@ -488,7 +549,9 @@ theorem is_cartan_of_zeroRootSubalgebra_eq (h : zeroRootSubalgebra R L H = H) :
   { nilpotent := inferInstance
     self_normalizing := by rw [← h]; exact zero_root_subalgebra_normalizer_eq_self R L H }
 #align lie_algebra.is_cartan_of_zero_root_subalgebra_eq LieAlgebra.is_cartan_of_zeroRootSubalgebra_eq
+-/
 
+#print LieAlgebra.zeroRootSubalgebra_eq_of_is_cartan /-
 @[simp]
 theorem zeroRootSubalgebra_eq_of_is_cartan (H : LieSubalgebra R L) [H.IsCartanSubalgebra]
     [IsNoetherian R L] : zeroRootSubalgebra R L H = H :=
@@ -498,11 +561,14 @@ theorem zeroRootSubalgebra_eq_of_is_cartan (H : LieSubalgebra R L) [H.IsCartanSu
   obtain ⟨k, hk⟩ := (root_space H 0).isNilpotent_iff_exists_self_le_ucs.mp (by infer_instance)
   exact hk.trans (LieSubmodule.ucs_le_of_normalizer_eq_self (by simp) k)
 #align lie_algebra.zero_root_subalgebra_eq_of_is_cartan LieAlgebra.zeroRootSubalgebra_eq_of_is_cartan
+-/
 
+#print LieAlgebra.zeroRootSubalgebra_eq_iff_is_cartan /-
 theorem zeroRootSubalgebra_eq_iff_is_cartan [IsNoetherian R L] :
     zeroRootSubalgebra R L H = H ↔ H.IsCartanSubalgebra :=
   ⟨is_cartan_of_zeroRootSubalgebra_eq R L H, by intros; simp⟩
 #align lie_algebra.zero_root_subalgebra_eq_iff_is_cartan LieAlgebra.zeroRootSubalgebra_eq_iff_is_cartan
+-/
 
 end LieAlgebra
 
@@ -512,6 +578,7 @@ open LieAlgebra
 
 variable {R L H}
 
+#print LieModule.weightSpace' /-
 /-- A priori, weight spaces are Lie submodules over the Lie subalgebra `H` used to define them.
 However they are naturally Lie submodules over the (in general larger) Lie subalgebra
 `zero_root_subalgebra R L H`. Even though it is often the case that
@@ -526,11 +593,14 @@ def weightSpace' (χ : H → R) : LieSubmodule R (zeroRootSubalgebra R L H) M :=
       rw [← zero_add χ]
       exact lie_mem_weight_space_of_mem_weight_space hx hm }
 #align lie_module.weight_space' LieModule.weightSpace'
+-/
 
+#print LieModule.coe_weightSpace' /-
 @[simp]
 theorem coe_weightSpace' (χ : H → R) : (weightSpace' M χ : Submodule R M) = weightSpace M χ :=
   rfl
 #align lie_module.coe_weight_space' LieModule.coe_weightSpace'
+-/
 
 end LieModule
 

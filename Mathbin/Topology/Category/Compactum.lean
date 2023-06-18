@@ -489,7 +489,7 @@ def homOfContinuous {X Y : Compactum} (f : X → Y) (cont : Continuous f) : X �
       rw [continuous_iff_ultrafilter] at cont 
       ext (F : Ultrafilter X)
       specialize cont (X.str F) F (le_nhds_of_str_eq F (X.str F) rfl)
-      have := str_eq_of_le_nhds (Ultrafilter.map f F) _ cont
+      have := str_eq_of_le_nhds (Ultrafilter.map f F) _ Cont
       simpa only [← this, types_comp_apply, of_type_functor_map] }
 #align Compactum.hom_of_continuous Compactum.homOfContinuous
 -/

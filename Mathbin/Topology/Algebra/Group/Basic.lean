@@ -1184,7 +1184,7 @@ instance topologicalGroup_quotient [N.Normal] : TopologicalGroup (G ⧸ N)
       · exact (QuotientGroup.isOpenMap_coe N).Prod (QuotientGroup.isOpenMap_coe N)
       · exact continuous_quot_mk.prod_map continuous_quot_mk
       · exact (surjective_quot_mk _).Prod_map (surjective_quot_mk _)
-    exact (QuotientMap.continuous_iff Quot).2 cont
+    exact (QuotientMap.continuous_iff Quot).2 Cont
   continuous_inv := by convert (@continuous_inv G _ _ _).quotient_map' _
 #align topological_group_quotient topologicalGroup_quotient
 #align topological_add_group_quotient topologicalAddGroup_quotient

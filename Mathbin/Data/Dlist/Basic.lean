@@ -30,22 +30,23 @@ useful for append-heavy uses such as logging and pretty printing.
 #print Std.DList.join /-
 /-- Concatenates a list of difference lists to form a single difference list. Similar to
 `list.join`. -/
-def Std.DList.join {α : Type _} : List (Dlist α) → Dlist α
-  | [] => Dlist.empty
+def Std.DList.join {α : Type _} : List (Std.DList α) → Std.DList α
+  | [] => Std.DList.empty
   | x :: xs => x ++ Std.DList.join xs
 #align dlist.join Std.DList.join
 -/
 
 #print Std.DList_singleton /-
 @[simp]
-theorem Std.DList_singleton {α : Type _} {a : α} : Dlist.singleton a = Std.DList.lazy_ofList [a] :=
+theorem Std.DList_singleton {α : Type _} {a : α} :
+    Std.DList.singleton a = Std.DList.lazy_ofList [a] :=
   rfl
 #align dlist_singleton Std.DList_singleton
 -/
 
 #print Std.DList_lazy /-
 @[simp]
-theorem Std.DList_lazy {α : Type _} {l : List α} : Std.DList.lazy_ofList l = Dlist.ofList l :=
+theorem Std.DList_lazy {α : Type _} {l : List α} : Std.DList.lazy_ofList l = Std.DList.ofList l :=
   rfl
 #align dlist_lazy Std.DList_lazy
 -/

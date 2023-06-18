@@ -135,7 +135,7 @@ theorem exists_approx_polynomial {b : Fq[X]} (hb : b ≠ 0) {ε : ℝ} (hε : 0 
       exists_eq_polynomial le_rfl b le_b (fun i => A i % b) fun i => EuclideanDomain.mod_lt (A i) hb
     refine' ⟨i₀, i₁, i_ne, _⟩
     simp only at mod_eq 
-    rwa [mod_eq, sub_self, map_zero, Int.cast_zero]
+    rwa [mod_eq, sub_self, AbsoluteValue.map_zero, Int.cast_zero]
   -- Otherwise, it suffices to choose two elements whose difference is of small enough degree.
   rw [not_le] at le_b 
   obtain ⟨i₀, i₁, i_ne, deg_lt⟩ :=
@@ -145,7 +145,7 @@ theorem exists_approx_polynomial {b : Fq[X]} (hb : b ≠ 0) {ε : ℝ} (hε : 0 
   use i₀, i₁, i_ne
   -- Again, if the remainders are equal we are done.
   by_cases h : A i₁ % b = A i₀ % b
-  · rwa [h, sub_self, map_zero, Int.cast_zero]
+  · rwa [h, sub_self, AbsoluteValue.map_zero, Int.cast_zero]
   have h' : A i₁ % b - A i₀ % b ≠ 0 := mt sub_eq_zero.mp h
   -- If the remainders are not equal, we'll show their difference is of small degree.
   -- In particular, we'll show the degree is less than the following:
@@ -178,7 +178,7 @@ theorem cardPowDegree_anti_archimedean {x y z : Fq[X]} {a : ℤ} (hxy : cardPowD
   by_cases hyz' : y = z
   · rwa [← hyz']
   by_cases hxz' : x = z
-  · rwa [hxz', sub_self, map_zero]
+  · rwa [hxz', sub_self, AbsoluteValue.map_zero]
   rw [← Ne.def, ← sub_ne_zero] at hxy' hyz' hxz' 
   refine' lt_of_le_of_lt _ (max_lt hxy hyz)
   rw [card_pow_degree_nonzero _ hxz', card_pow_degree_nonzero _ hxy',

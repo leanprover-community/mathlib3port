@@ -429,8 +429,8 @@ def toPushforwardStalkAlgHom :
 #align algebraic_geometry.structure_sheaf.to_pushforward_stalk_alg_hom AlgebraicGeometry.StructureSheaf.toPushforwardStalkAlgHom
 -/
 
-#print AlgebraicGeometry.StructureSheaf.is_localized_module_toPushforwardStalkAlgHom_aux /-
-theorem is_localized_module_toPushforwardStalkAlgHom_aux (y) :
+#print AlgebraicGeometry.StructureSheaf.isLocalizedModule_toPushforwardStalkAlgHom_aux /-
+theorem isLocalizedModule_toPushforwardStalkAlgHom_aux (y) :
     ∃ x : S × p.asIdeal.primeCompl, x.2 • y = toPushforwardStalkAlgHom R S p x.1 :=
   by
   obtain ⟨U, hp, s, e⟩ := TopCat.Presheaf.germ_exist _ _ y
@@ -458,7 +458,7 @@ theorem is_localized_module_toPushforwardStalkAlgHom_aux (y) :
   dsimp only [Subtype.coe_mk] at hsn 
   rw [← map_pow (algebraMap R S)] at hsn 
   congr 1
-#align algebraic_geometry.structure_sheaf.is_localized_module_to_pushforward_stalk_alg_hom_aux AlgebraicGeometry.StructureSheaf.is_localized_module_toPushforwardStalkAlgHom_aux
+#align algebraic_geometry.structure_sheaf.is_localized_module_to_pushforward_stalk_alg_hom_aux AlgebraicGeometry.StructureSheaf.isLocalizedModule_toPushforwardStalkAlgHom_aux
 -/
 
 #print AlgebraicGeometry.StructureSheaf.isLocalizedModule_toPushforwardStalkAlgHom /-

@@ -58,6 +58,7 @@ variable {C : Type u} [Category.{v} C] [ConcreteCategory.{v} C] {X : TopCat.{v}}
 
 variable {ℱ 𝒢 : X.Presheaf C}
 
+#print TopCat.Presheaf.IsLocallySurjective /-
 /-- A map of presheaves `T : ℱ ⟶ 𝒢` is **locally surjective** if for any open set `U`,
 section `t` over `U`, and `x ∈ U`, there exists an open set `x ∈ V ⊆ U` and a section `s` over `V`
 such that `$T_*(s_V) = t|_V$`.
@@ -67,17 +68,21 @@ See `is_locally_surjective_iff` below.
 def IsLocallySurjective (T : ℱ ⟶ 𝒢) :=
   CategoryTheory.IsLocallySurjective (Opens.grothendieckTopology X) T
 #align Top.presheaf.is_locally_surjective TopCat.Presheaf.IsLocallySurjective
+-/
 
+#print TopCat.Presheaf.isLocallySurjective_iff /-
 theorem isLocallySurjective_iff (T : ℱ ⟶ 𝒢) :
     IsLocallySurjective T ↔
       ∀ (U t), ∀ x ∈ U, ∃ (V : _) (ι : V ⟶ U), (∃ s, T.app _ s = t |_ₕ ι) ∧ x ∈ V :=
   Iff.rfl
 #align Top.presheaf.is_locally_surjective_iff TopCat.Presheaf.isLocallySurjective_iff
+-/
 
 section SurjectiveOnStalks
 
 variable [Limits.HasColimits C] [Limits.PreservesFilteredColimits (forget C)]
 
+#print TopCat.Presheaf.locally_surjective_iff_surjective_on_stalks /-
 /-- An equivalent condition for a map of presheaves to be locally surjective
 is for all the induced maps on stalks to be surjective. -/
 theorem locally_surjective_iff_surjective_on_stalks (T : ℱ ⟶ 𝒢) :
@@ -122,6 +127,7 @@ theorem locally_surjective_iff_surjective_on_stalks (T : ℱ ⟶ 𝒢) :
     convert h_eq
     simp only [← comp_apply, T.naturality]
 #align Top.presheaf.locally_surjective_iff_surjective_on_stalks TopCat.Presheaf.locally_surjective_iff_surjective_on_stalks
+-/
 
 end SurjectiveOnStalks
 

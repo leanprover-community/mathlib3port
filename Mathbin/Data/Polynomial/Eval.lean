@@ -1355,11 +1355,13 @@ theorem eval_comp : (p.comp q).eval x = p.eval (q.eval x) :=
 #align polynomial.eval_comp Polynomial.eval_comp
 -/
 
+#print Polynomial.iterate_comp_eval /-
 @[simp]
 theorem iterate_comp_eval :
     ∀ (k : ℕ) (t : R), ((p.comp^[k]) q).eval t = ((fun x => p.eval x)^[k]) (q.eval t) :=
   iterate_comp_eval₂ _
 #align polynomial.iterate_comp_eval Polynomial.iterate_comp_eval
+-/
 
 #print Polynomial.compRingHom /-
 /-- `comp p`, regarded as a ring homomorphism from `R[X]` to itself. -/

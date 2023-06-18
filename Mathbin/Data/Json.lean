@@ -254,7 +254,7 @@ unsafe def of_json_helper (struct_name : Name) (t : expr) :
         mk_meta_univ
     let ft : expr ← mk_meta_var (expr.sort u)
     let f_binder ← mk_local' fname BinderInfo.default ft
-    let new_vars := vars.concat (fname, to_pexpr f_binder)
+    let new_vars := vars.push (fname, to_pexpr f_binder)
     let with_field ← of_json_helper new_vars js >>= tactic.lambdas [f_binder]
     let without_field ←
       of_json_helper vars js <|>
@@ -272,7 +272,7 @@ unsafe def of_json_helper (struct_name : Name) (t : expr) :
           mk_meta_univ
       let ft ← mk_meta_var (expr.sort u)
       let f_binder ← mk_local' fname BinderInfo.default ft
-      let new_vars := vars.concat (fname, to_pexpr f_binder)
+      let new_vars := vars.push (fname, to_pexpr f_binder)
       let with_field ← of_json_helper new_vars js >>= tactic.lambdas [f_binder]
       to_expr ``(dite _ $(with_field) fun _ => exception fun _ => f!"condition does not hold")
 #align of_json_helper of_json_helper

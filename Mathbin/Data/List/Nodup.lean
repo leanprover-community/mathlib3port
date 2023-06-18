@@ -440,7 +440,7 @@ protected theorem Nodup.filterMap {f : α → Option β} (h : ∀ a a' b, b ∈ 
 -/
 
 #print List.Nodup.concat /-
-protected theorem Nodup.concat (h : a ∉ l) (h' : l.Nodup) : (l.concat a).Nodup := by
+protected theorem Nodup.concat (h : a ∉ l) (h' : l.Nodup) : (l.push a).Nodup := by
   rw [concat_eq_append] <;> exact h'.append (nodup_singleton _) (disjoint_singleton.2 h)
 #align list.nodup.concat List.Nodup.concat
 -/

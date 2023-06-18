@@ -56,6 +56,7 @@ variable {V : Type _} [NormedAddCommGroup V] [InnerProductSpace ℝ V]
 
 variable {P : Type _} [MetricSpace P] [NormedAddTorsor V P]
 
+#print EuclideanGeometry.mul_dist_add_mul_dist_eq_mul_dist_of_cospherical /-
 /-- **Ptolemy’s Theorem**. -/
 theorem mul_dist_add_mul_dist_eq_mul_dist_of_cospherical {a b c d p : P}
     (h : Cospherical ({a, b, c, d} : Set P)) (hapc : ∠ a p c = π) (hbpd : ∠ b p d = π) :
@@ -79,6 +80,7 @@ theorem mul_dist_add_mul_dist_eq_mul_dist_of_cospherical {a b c d p : P}
   field_simp [h₁, h₂, dist_eq_add_dist_of_angle_eq_pi hbpd, h₃, hbp, dist_comm a b, h₄, ← sq,
     dist_sq_mul_dist_add_dist_sq_mul_dist b, hapc]
 #align euclidean_geometry.mul_dist_add_mul_dist_eq_mul_dist_of_cospherical EuclideanGeometry.mul_dist_add_mul_dist_eq_mul_dist_of_cospherical
+-/
 
 end EuclideanGeometry
 

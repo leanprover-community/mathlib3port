@@ -481,15 +481,15 @@ def scanl (f : α → β → α) (a : α) (s : WSeq β) : WSeq α :=
 /-- Get the weak sequence of initial segments of the input sequence -/
 def inits (s : WSeq α) : WSeq (List α) :=
   cons [] <|
-    @Seq.corec (Option (List α)) (Dlist α × WSeq α)
+    @Seq.corec (Option (List α)) (Std.DList α × WSeq α)
       (fun ⟨l, s⟩ =>
         match Seq.destruct s with
         | none => none
         | some (none, s') => some (none, l, s')
         | some (some a, s') =>
-          let l' := l.concat a
+          let l' := l.push a
           some (some l'.toList, l', s'))
-      (Dlist.empty, s)
+      (Std.DList.empty, s)
 #align stream.wseq.inits Stream'.WSeq.inits
 -/
 

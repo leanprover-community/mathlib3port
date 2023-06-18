@@ -458,7 +458,7 @@ theorem correctness {α} [CommSemiring α] (t : Tree α) (r₁ r₂ : CsringExpr
     unsafe
   def
     reflect_expr
-    : expr → CsringExpr × Dlist expr
+    : expr → CsringExpr × Std.DList expr
     |
         q( $ ( e₁ ) + $ ( e₂ ) )
         =>
@@ -478,15 +478,15 @@ theorem correctness {α} [CommSemiring α] (t : Tree α) (r₁ r₂ : CsringExpr
           reflect_expr e₁ , expr.to_nat e₂
           with
           | ( r₁ , l₁ ) , some n₂ => ( r₁ . pow ( Num.ofNat' n₂ ) , l₁ )
-            | ( r₁ , l₁ ) , none => ( CsringExpr.atom 1 , Dlist.singleton e )
+            | ( r₁ , l₁ ) , none => ( CsringExpr.atom 1 , Std.DList.singleton e )
       |
         e
         =>
         match
           expr.to_nat e
           with
-          | some n => ( CsringExpr.const ( Num.ofNat' n ) , Dlist.empty )
-            | none => ( CsringExpr.atom 1 , Dlist.singleton e )
+          | some n => ( CsringExpr.const ( Num.ofNat' n ) , Std.DList.empty )
+            | none => ( CsringExpr.atom 1 , Std.DList.singleton e )
 #align tactic.ring2.reflect_expr tactic.ring2.reflect_expr
 
 /-- In the output of `reflect_expr`, `atom`s are initialized with incorrect indices.

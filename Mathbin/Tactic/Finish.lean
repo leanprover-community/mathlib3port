@@ -498,16 +498,16 @@ inductive CaseOption
 -- leave as many goals as necessary
 private unsafe def case_cont (s : CaseOption) (cont : CaseOption → tactic Unit) : tactic Unit := do
   match s with
-    | case_option.force => cont case_option.force >> cont case_option.force
+    | case_option.force => Cont case_option.force >> Cont case_option.force
     |
     case_option.at_most_one =>-- if the first one succeeds, commit to it, and try the second
           condM
-          (cont case_option.force >> return tt) (cont case_option.at_most_one) skip <|>
+          (Cont case_option.force >> return tt) (Cont case_option.at_most_one) skip <|>
         (-- otherwise, try the second
             swap >>
-            cont case_option.force) >>
-          cont case_option.at_most_one
-    | case_option.accept => focus' [cont case_option.accept, cont case_option.accept]
+            Cont case_option.force) >>
+          Cont case_option.at_most_one
+    | case_option.accept => focus' [Cont case_option.accept, Cont case_option.accept]
 
 -- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
 -- failed to format: unknown constant 'term.pseudo.antiquot'
@@ -521,18 +521,18 @@ unsafe
           match
             t
             with
-            | q( $ ( a ) ∨ $ ( b ) ) => ( cases h >> case_cont s cont ) >> return tt
+            | q( $ ( a ) ∨ $ ( b ) ) => ( cases h >> case_cont s Cont ) >> return tt
               | _ => return ff
 #align auto.case_hyp auto.case_hyp
 
 unsafe def case_some_hyp_aux (s : CaseOption) (cont : CaseOption → tactic Unit) :
     List expr → tactic Bool
   | [] => return false
-  | h :: hs => condM (case_hyp h s cont) (return true) (case_some_hyp_aux hs)
+  | h :: hs => condM (case_hyp h s Cont) (return true) (case_some_hyp_aux hs)
 #align auto.case_some_hyp_aux auto.case_some_hyp_aux
 
 unsafe def case_some_hyp (s : CaseOption) (cont : CaseOption → tactic Unit) : tactic Bool :=
-  local_context >>= case_some_hyp_aux s cont
+  local_context >>= case_some_hyp_aux s Cont
 #align auto.case_some_hyp auto.case_some_hyp
 
 /-!

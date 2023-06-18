@@ -35,16 +35,16 @@ open CategoryTheory CategoryTheory.Limits Opposite TopologicalSpace
 namespace AlgebraicGeometry
 
 /-- `Spec ℤ` is the terminal object in the category of schemes. -/
-noncomputable def specZIsTerminal : IsTerminal (Scheme.spec.obj (op <| CommRingCat.of ℤ)) :=
-  @IsTerminal.isTerminalObj _ _ Scheme.spec _ inferInstance
+noncomputable def specZIsTerminal : IsTerminal (Scheme.Spec.obj (op <| CommRingCat.of ℤ)) :=
+  @IsTerminal.isTerminalObj _ _ Scheme.Spec _ inferInstance
     (terminalOpOfInitial CommRingCat.zIsInitial)
 #align algebraic_geometry.Spec_Z_is_terminal AlgebraicGeometry.specZIsTerminal
 
 instance : HasTerminal Scheme :=
-  hasTerminal_of_hasTerminal_of_preservesLimit Scheme.spec
+  hasTerminal_of_hasTerminal_of_preservesLimit Scheme.Spec
 
 instance : IsAffine (⊤_ Scheme.{u}) :=
-  isAffine_of_iso (PreservesTerminal.iso Scheme.spec).inv
+  isAffineOfIso (PreservesTerminal.iso Scheme.Spec).inv
 
 instance : HasFiniteLimits Scheme :=
   hasFiniteLimits_of_hasTerminal_and_pullbacks
@@ -82,7 +82,7 @@ theorem emptyIsInitial_to : emptyIsInitial.to = Scheme.emptyTo :=
 instance : IsEmpty Scheme.empty.carrier :=
   show IsEmpty PEmpty by infer_instance
 
-instance spec_pUnit_isEmpty : IsEmpty (Scheme.spec.obj (op <| CommRingCat.of PUnit)).carrier :=
+instance spec_pUnit_isEmpty : IsEmpty (Scheme.Spec.obj (op <| CommRingCat.of PUnit)).carrier :=
   ⟨PrimeSpectrum.pUnit⟩
 #align algebraic_geometry.Spec_punit_is_empty AlgebraicGeometry.spec_pUnit_isEmpty
 
@@ -113,14 +113,14 @@ noncomputable def isInitialOfIsEmpty {X : Scheme} [IsEmpty X.carrier] : IsInitia
 #align algebraic_geometry.is_initial_of_is_empty AlgebraicGeometry.isInitialOfIsEmpty
 
 /-- `Spec 0` is the initial object in the category of schemes. -/
-noncomputable def specPunitIsInitial : IsInitial (Scheme.spec.obj (op <| CommRingCat.of PUnit)) :=
+noncomputable def specPunitIsInitial : IsInitial (Scheme.Spec.obj (op <| CommRingCat.of PUnit)) :=
   emptyIsInitial.of_iso (asIso <| emptyIsInitial.to _)
 #align algebraic_geometry.Spec_punit_is_initial AlgebraicGeometry.specPunitIsInitial
 
-instance (priority := 100) isAffine_of_isEmpty {X : Scheme} [IsEmpty X.carrier] : IsAffine X :=
-  isAffine_of_iso
-    (inv (emptyIsInitial.to X) ≫ emptyIsInitial.to (Scheme.spec.obj (op <| CommRingCat.of PUnit)))
-#align algebraic_geometry.is_affine_of_is_empty AlgebraicGeometry.isAffine_of_isEmpty
+instance (priority := 100) isAffineOfIsEmpty {X : Scheme} [IsEmpty X.carrier] : IsAffine X :=
+  isAffineOfIso
+    (inv (emptyIsInitial.to X) ≫ emptyIsInitial.to (Scheme.Spec.obj (op <| CommRingCat.of PUnit)))
+#align algebraic_geometry.is_affine_of_is_empty AlgebraicGeometry.isAffineOfIsEmpty
 
 instance : HasInitial Scheme :=
   hasInitial_of_unique Scheme.empty

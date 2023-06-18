@@ -2002,7 +2002,7 @@ def extend : Fₗ →SL[σ₁₂] F :=
       refine' fun b => h_dense.induction_on b _ _
       ·
         exact
-          isClosed_eq (cont.comp (continuous_const_smul _)) ((continuous_const_smul _).comp cont)
+          isClosed_eq (cont.comp (continuous_const_smul _)) ((continuous_const_smul _).comp Cont)
       · intro x; rw [← map_smul]; simp only [Eq]; exact ContinuousLinearMap.map_smulₛₗ _ _ _
     cont }
 #align continuous_linear_map.extend ContinuousLinearMap.extend
@@ -2047,7 +2047,7 @@ theorem op_norm_extend_le : ‖ψ‖ ≤ N * ‖f‖ :=
   by_cases N0 : 0 ≤ N
   · refine' op_norm_le_bound ψ _ (isClosed_property h_dense (isClosed_le _ _) _)
     · exact mul_nonneg N0 (norm_nonneg _)
-    · exact continuous_norm.comp (cont ψ)
+    · exact continuous_norm.comp (Cont ψ)
     · exact continuous_const.mul continuous_norm
     · intro x
       rw [Eq]

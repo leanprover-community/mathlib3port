@@ -91,11 +91,11 @@ instance topologicalRing_quotient : TopologicalRing (R ⧸ N) :=
     { continuous_add :=
         have cont : Continuous (mk N ∘ fun p : R × R => p.fst + p.snd) :=
           continuous_quot_mk.comp continuous_add
-        (QuotientMap.continuous_iff (QuotientRing.quotientMap_coe_coe N)).mpr cont
+        (QuotientMap.continuous_iff (QuotientRing.quotientMap_coe_coe N)).mpr Cont
       continuous_mul :=
         have cont : Continuous (mk N ∘ fun p : R × R => p.fst * p.snd) :=
           continuous_quot_mk.comp continuous_mul
-        (QuotientMap.continuous_iff (QuotientRing.quotientMap_coe_coe N)).mpr cont }
+        (QuotientMap.continuous_iff (QuotientRing.quotientMap_coe_coe N)).mpr Cont }
 #align topological_ring_quotient topologicalRing_quotient
 -/
 

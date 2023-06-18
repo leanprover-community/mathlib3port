@@ -37,6 +37,7 @@ variable {ι : Type _} {c : ComplexShape ι} {C D : HomologicalComplex (ModuleCa
 
 namespace ModuleCat
 
+#print ModuleCat.homology_ext /-
 /-- To prove that two maps out of a homology group are equal,
 it suffices to check they are equal on the images of cycles.
 -/
@@ -52,13 +53,17 @@ theorem homology_ext {L M N K : ModuleCat R} {f : L ⟶ M} {g : M ⟶ N} (w : f 
   equiv_rw (kernel_subobject_iso g ≪≫ ModuleCat.kernelIsoKer g).toLinearEquiv.toEquiv at n 
   convert w n <;> simp [to_kernel_subobject]
 #align Module.homology_ext ModuleCat.homology_ext
+-/
 
+#print ModuleCat.toCycles /-
 /-- Bundle an element `C.X i` such that `C.d_from i x = 0` as a term of `C.cycles i`. -/
 abbrev toCycles {C : HomologicalComplex (ModuleCat.{u} R) c} {i : ι}
     (x : LinearMap.ker (C.dFrom i)) : C.cycles i :=
   toKernelSubobject x
 #align Module.to_cycles ModuleCat.toCycles
+-/
 
+#print ModuleCat.cycles_ext /-
 @[ext]
 theorem cycles_ext {C : HomologicalComplex (ModuleCat.{u} R) c} {i : ι} {x y : C.cycles i}
     (w : (C.cycles i).arrow x = (C.cycles i).arrow y) : x = y :=
@@ -66,25 +71,32 @@ theorem cycles_ext {C : HomologicalComplex (ModuleCat.{u} R) c} {i : ι} {x y : 
   apply_fun (C.cycles i).arrow using (ModuleCat.mono_iff_injective _).mp (cycles C i).arrow_mono
   exact w
 #align Module.cycles_ext ModuleCat.cycles_ext
+-/
 
 attribute [local instance] concrete_category.has_coe_to_sort
 
+#print ModuleCat.cyclesMap_toCycles /-
 @[simp]
 theorem cyclesMap_toCycles (f : C ⟶ D) {i : ι} (x : LinearMap.ker (C.dFrom i)) :
     (cyclesMap f i) (toCycles x) = toCycles ⟨f.f i x.1, by simp [x.2]⟩ := by ext; simp
 #align Module.cycles_map_to_cycles ModuleCat.cyclesMap_toCycles
+-/
 
+#print ModuleCat.toHomology /-
 /-- Build a term of `C.homology i` from an element `C.X i` such that `C.d_from i x = 0`. -/
 abbrev toHomology {C : HomologicalComplex (ModuleCat.{u} R) c} {i : ι}
     (x : LinearMap.ker (C.dFrom i)) : C.homology i :=
   homology.π (C.dTo i) (C.dFrom i) _ (toCycles x)
 #align Module.to_homology ModuleCat.toHomology
+-/
 
+#print ModuleCat.homology_ext' /-
 @[ext]
 theorem homology_ext' {M : ModuleCat R} (i : ι) {h k : C.homology i ⟶ M}
     (w : ∀ x : LinearMap.ker (C.dFrom i), h (toHomology x) = k (toHomology x)) : h = k :=
   homology_ext _ w
 #align Module.homology_ext' ModuleCat.homology_ext'
+-/
 
 /-- We give an alternative proof of `homology_map_eq_of_homotopy`,
 specialized to the setting of `V = Module R`,

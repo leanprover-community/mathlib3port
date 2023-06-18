@@ -37,6 +37,7 @@ section CommRing
 
 variable {n : ℕ} {K : Type _} [CommRing K] {μ : K} (h : IsPrimitiveRoot μ n) (hpos : 0 < n)
 
+#print IsPrimitiveRoot.isIntegral /-
 /-- `μ` is integral over `ℤ`. -/
 theorem isIntegral : IsIntegral ℤ μ := by
   use X ^ n - 1
@@ -46,11 +47,13 @@ theorem isIntegral : IsIntegral ℤ μ := by
     simp only [((IsPrimitiveRoot.iff_def μ n).mp h).left, eval₂_one, eval₂_X_pow, eval₂_sub,
       sub_self]
 #align is_primitive_root.is_integral IsPrimitiveRoot.isIntegral
+-/
 
 section IsDomain
 
 variable [IsDomain K] [CharZero K]
 
+#print IsPrimitiveRoot.minpoly_dvd_x_pow_sub_one /-
 /-- The minimal polynomial of a root of unity `μ` divides `X ^ n - 1`. -/
 theorem minpoly_dvd_x_pow_sub_one : minpoly ℤ μ ∣ X ^ n - 1 :=
   by
@@ -61,7 +64,9 @@ theorem minpoly_dvd_x_pow_sub_one : minpoly ℤ μ ∣ X ^ n - 1 :=
   simp only [((IsPrimitiveRoot.iff_def μ n).mp h).left, aeval_X_pow, eq_intCast, Int.cast_one,
     aeval_one, AlgHom.map_sub, sub_self]
 #align is_primitive_root.minpoly_dvd_X_pow_sub_one IsPrimitiveRoot.minpoly_dvd_x_pow_sub_one
+-/
 
+#print IsPrimitiveRoot.separable_minpoly_mod /-
 /-- The reduction modulo `p` of the minimal polynomial of a root of unity `μ` is separable. -/
 theorem separable_minpoly_mod {p : ℕ} [Fact p.Prime] (hdiv : ¬p ∣ n) :
     Separable (map (Int.castRingHom (ZMod p)) (minpoly ℤ μ)) :=
@@ -73,13 +78,17 @@ theorem separable_minpoly_mod {p : ℕ} [Fact p.Prime] (hdiv : ¬p ∣ n) :
   by_contra hzero
   exact hdiv ((ZMod.nat_cast_zmod_eq_zero_iff_dvd n p).1 hzero)
 #align is_primitive_root.separable_minpoly_mod IsPrimitiveRoot.separable_minpoly_mod
+-/
 
+#print IsPrimitiveRoot.squarefree_minpoly_mod /-
 /-- The reduction modulo `p` of the minimal polynomial of a root of unity `μ` is squarefree. -/
 theorem squarefree_minpoly_mod {p : ℕ} [Fact p.Prime] (hdiv : ¬p ∣ n) :
     Squarefree (map (Int.castRingHom (ZMod p)) (minpoly ℤ μ)) :=
   (separable_minpoly_mod h hdiv).Squarefree
 #align is_primitive_root.squarefree_minpoly_mod IsPrimitiveRoot.squarefree_minpoly_mod
+-/
 
+#print IsPrimitiveRoot.minpoly_dvd_expand /-
 /- Let `P` be the minimal polynomial of a root of unity `μ` and `Q` be the minimal polynomial of
 `μ ^ p`, where `p` is a natural number that does not divide `n`. Then `P` divides `expand ℤ p Q`. -/
 theorem minpoly_dvd_expand {p : ℕ} (hdiv : ¬p ∣ n) : minpoly ℤ μ ∣ expand ℤ p (minpoly ℤ (μ ^ p)) :=
@@ -92,7 +101,9 @@ theorem minpoly_dvd_expand {p : ℕ} (hdiv : ¬p ∣ n) : minpoly ℤ μ ∣ exp
       eval_comp, eval_pow, eval_X, ← eval₂_eq_eval_map, ← aeval_def]
     exact minpoly.aeval _ _
 #align is_primitive_root.minpoly_dvd_expand IsPrimitiveRoot.minpoly_dvd_expand
+-/
 
+#print IsPrimitiveRoot.minpoly_dvd_pow_mod /-
 /- Let `P` be the minimal polynomial of a root of unity `μ` and `Q` be the minimal polynomial of
 `μ ^ p`, where `p` is a prime that does not divide `n`. Then `P` divides `Q ^ p` modulo `p`. -/
 theorem minpoly_dvd_pow_mod {p : ℕ} [hprime : Fact p.Prime] (hdiv : ¬p ∣ n) :
@@ -107,7 +118,9 @@ theorem minpoly_dvd_pow_mod {p : ℕ} [hprime : Fact p.Prime] (hdiv : ¬p ∣ n)
   apply RingHom.map_dvd (map_ring_hom (Int.castRingHom (ZMod p)))
   exact minpoly_dvd_expand h hdiv
 #align is_primitive_root.minpoly_dvd_pow_mod IsPrimitiveRoot.minpoly_dvd_pow_mod
+-/
 
+#print IsPrimitiveRoot.minpoly_dvd_mod_p /-
 /- Let `P` be the minimal polynomial of a root of unity `μ` and `Q` be the minimal polynomial of
 `μ ^ p`, where `p` is a prime that does not divide `n`. Then `P` divides `Q` modulo `p`. -/
 theorem minpoly_dvd_mod_p {p : ℕ} [hprime : Fact p.Prime] (hdiv : ¬p ∣ n) :
@@ -117,7 +130,9 @@ theorem minpoly_dvd_mod_p {p : ℕ} [hprime : Fact p.Prime] (hdiv : ¬p ∣ n) :
         hprime.1.NeZero).1
     (minpoly_dvd_pow_mod h hdiv)
 #align is_primitive_root.minpoly_dvd_mod_p IsPrimitiveRoot.minpoly_dvd_mod_p
+-/
 
+#print IsPrimitiveRoot.minpoly_eq_pow /-
 /-- If `p` is a prime that does not divide `n`,
 then the minimal polynomials of a primitive `n`-th root of unity `μ`
 and of `μ ^ p` are the same. -/
@@ -175,7 +190,9 @@ theorem minpoly_eq_pow {p : ℕ} [hprime : Fact p.Prime] (hdiv : ¬p ∣ n) :
     simp only [Pmonic, eq_intCast, monic.leading_coeff, Int.cast_one, Ne.def, not_false_iff,
       one_ne_zero]
 #align is_primitive_root.minpoly_eq_pow IsPrimitiveRoot.minpoly_eq_pow
+-/
 
+#print IsPrimitiveRoot.minpoly_eq_pow_coprime /-
 /-- If `m : ℕ` is coprime with `n`,
 then the minimal polynomials of a primitive `n`-th root of unity `μ`
 and of `μ ^ m` are the same. -/
@@ -198,7 +215,9 @@ theorem minpoly_eq_pow_coprime {m : ℕ} (hcop : Nat.coprime m n) : minpoly ℤ 
     congr 1
     ring
 #align is_primitive_root.minpoly_eq_pow_coprime IsPrimitiveRoot.minpoly_eq_pow_coprime
+-/
 
+#print IsPrimitiveRoot.pow_isRoot_minpoly /-
 /-- If `m : ℕ` is coprime with `n`,
 then the minimal polynomial of a primitive `n`-th root of unity `μ`
 has `μ ^ m` as root. -/
@@ -206,7 +225,9 @@ theorem pow_isRoot_minpoly {m : ℕ} (hcop : Nat.coprime m n) :
     IsRoot (map (Int.castRingHom K) (minpoly ℤ μ)) (μ ^ m) := by
   simpa [minpoly_eq_pow_coprime h hcop, eval_map, aeval_def (μ ^ m) _] using minpoly.aeval ℤ (μ ^ m)
 #align is_primitive_root.pow_is_root_minpoly IsPrimitiveRoot.pow_isRoot_minpoly
+-/
 
+#print IsPrimitiveRoot.is_roots_of_minpoly /-
 /-- `primitive_roots n K` is a subset of the roots of the minimal polynomial of a primitive
 `n`-th root of unity `μ`. -/
 theorem is_roots_of_minpoly [DecidableEq K] :
@@ -220,7 +241,9 @@ theorem is_roots_of_minpoly [DecidableEq K] :
     mem_roots (map_monic_ne_zero <| minpoly.monic <| IsIntegral h hpos)] using
     pow_is_root_minpoly h hcop
 #align is_primitive_root.is_roots_of_minpoly IsPrimitiveRoot.is_roots_of_minpoly
+-/
 
+#print IsPrimitiveRoot.totient_le_degree_minpoly /-
 /-- The degree of the minimal polynomial of `μ` is at least `totient n`. -/
 theorem totient_le_degree_minpoly : Nat.totient n ≤ (minpoly ℤ μ).natDegree := by
   classical
@@ -235,6 +258,7 @@ theorem totient_le_degree_minpoly : Nat.totient n ≤ (minpoly ℤ μ).natDegree
     _ ≤ P_K.nat_degree := (card_roots' _)
     _ ≤ P.nat_degree := nat_degree_map_le _ _
 #align is_primitive_root.totient_le_degree_minpoly IsPrimitiveRoot.totient_le_degree_minpoly
+-/
 
 end IsDomain
 

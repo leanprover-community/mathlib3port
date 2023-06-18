@@ -138,7 +138,7 @@ theorem ofFn_succ {n} (f : Fin (succ n) → α) : ofFn f = f 0 :: ofFn fun i => 
 
 #print List.ofFn_succ' /-
 theorem ofFn_succ' {n} (f : Fin (succ n) → α) :
-    ofFn f = (ofFn fun i => f i.cast_succ).concat (f (Fin.last _)) :=
+    ofFn f = (ofFn fun i => f i.cast_succ).push (f (Fin.last _)) :=
   by
   induction' n with n IH
   · rw [of_fn_zero, concat_nil, of_fn_succ, of_fn_zero]; rfl

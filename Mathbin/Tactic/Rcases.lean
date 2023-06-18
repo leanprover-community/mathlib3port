@@ -327,8 +327,8 @@ pattern against its constructor. It returns the list of names that will be passe
 and the list of `(constructor name, patterns)` for each constructor, where `patterns` is the
 (conjunctive) list of patterns to apply to each constructor argument. -/
 unsafe def rcases.process_constructors (params : Nat) :
-    listΣ Name → listΣ rcases_patt → tactic (Dlist Name × listΣ (Name × listΠ rcases_patt))
-  | [], ps => pure (Dlist.empty, [])
+    listΣ Name → listΣ rcases_patt → tactic (Std.DList Name × listΣ (Name × listΠ rcases_patt))
+  | [], ps => pure (Std.DList.empty, [])
   | c :: cs, ps => do
     let l ← mk_const c >>= get_arity_list
     let ((explicit, h), t) :=
@@ -342,7 +342,7 @@ unsafe def rcases.process_constructors (params : Nat) :
         _)
     let (ns, ps) := rcases.process_constructor explicit (l.drop params) h
     let (l, r) ← rcases.process_constructors cs t
-    pure (Dlist.ofList ns ++ l, (c, ps) :: r)
+    pure (Std.DList.ofList ns ++ l, (c, ps) :: r)
 #align tactic.rcases.process_constructors tactic.rcases.process_constructors
 
 /-- Like `zip`, but only elements satisfying a matching predicate `p` will go in the list,

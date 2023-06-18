@@ -70,7 +70,7 @@ theorem prod_append : (l₁ ++ l₂).Prod = l₁.Prod * l₂.Prod :=
 
 #print List.prod_concat /-
 @[to_additive]
-theorem prod_concat : (l.concat a).Prod = l.Prod * a := by
+theorem prod_concat : (l.push a).Prod = l.Prod * a := by
   rw [concat_eq_append, prod_append, prod_singleton]
 #align list.prod_concat List.prod_concat
 #align list.sum_concat List.sum_concat

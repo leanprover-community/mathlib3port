@@ -39,12 +39,12 @@ theorem isColimit_exists_rep {c : Cocone F} (hc : IsColimit c) (x : c.pt) :
     ∃ (i : J) (y : F.obj i), (c.ι.app i).base y = x :=
   Concrete.isColimit_exists_rep (F ⋙ SheafedSpace.forget _)
     (isColimitOfPreserves (SheafedSpace.forget _) hc) x
-#align algebraic_geometry.SheafedSpace.is_colimit_exists_rep AlgebraicGeometry.SheafedSpace.isColimit_exists_rep
+#align algebraic_geometry.SheafedSpace.is_colimit_exists_rep AlgebraicGeometry.SheafedSpaceₓ.isColimit_exists_rep
 
 theorem colimit_exists_rep (x : colimit F) : ∃ (i : J) (y : F.obj i), (colimit.ι F i).base y = x :=
   Concrete.isColimit_exists_rep (F ⋙ SheafedSpace.forget _)
     (isColimitOfPreserves (SheafedSpace.forget _) (colimit.isColimit F)) x
-#align algebraic_geometry.SheafedSpace.colimit_exists_rep AlgebraicGeometry.SheafedSpace.colimit_exists_rep
+#align algebraic_geometry.SheafedSpace.colimit_exists_rep AlgebraicGeometry.SheafedSpaceₓ.colimit_exists_rep
 
 instance {X Y : SheafedSpace C} (f g : X ⟶ Y) : Epi (coequalizer.π f g).base :=
   by

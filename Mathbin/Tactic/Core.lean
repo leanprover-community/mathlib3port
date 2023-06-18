@@ -1014,14 +1014,14 @@ unsafe def subobject_names (struct_n : Name) : tactic (List Name × List Name) :
   return <| fields fun fn => ↑("_" ++ fn) ∈ vs
 #align tactic.subobject_names tactic.subobject_names
 
-private unsafe def expanded_field_list' : Name → tactic (Dlist <| Name × Name)
+private unsafe def expanded_field_list' : Name → tactic (Std.DList <| Name × Name)
   | struct_n => do
     let (so, fs) ← subobject_names struct_n
     let ts ←
       so.mapM fun n => do
           let (_, e) ← mk_const (n.updatePrefix struct_n) >>= infer_type >>= open_pis
           expanded_field_list' <| e
-    return <| Std.DList.join ts ++ Dlist.ofList (fs <| Prod.mk struct_n)
+    return <| Std.DList.join ts ++ Std.DList.ofList (fs <| Prod.mk struct_n)
 
 open Functor Function
 
@@ -1031,7 +1031,7 @@ of the projection is `prefix.name`.
 
 `struct_n` cannot be a synonym for a `structure`, it must be itself a `structure` -/
 unsafe def expanded_field_list (struct_n : Name) : tactic (List <| Name × Name) :=
-  Dlist.toList <$> expanded_field_list' struct_n
+  Std.DList.toList <$> expanded_field_list' struct_n
 #align tactic.expanded_field_list tactic.expanded_field_list
 
 /-- Return a list of all type classes which can be instantiated

@@ -4909,7 +4909,7 @@ theorem reduceOption_singleton (x : Option α) : [x].reduceOption = x.toList := 
 
 #print List.reduceOption_concat /-
 theorem reduceOption_concat (l : List (Option α)) (x : Option α) :
-    (l.concat x).reduceOption = l.reduceOption ++ x.toList :=
+    (l.push x).reduceOption = l.reduceOption ++ x.toList :=
   by
   induction' l with hd tl hl generalizing x
   · cases x <;> simp [Option.toList]
@@ -4920,7 +4920,7 @@ theorem reduceOption_concat (l : List (Option α)) (x : Option α) :
 
 #print List.reduceOption_concat_of_some /-
 theorem reduceOption_concat_of_some (l : List (Option α)) (x : α) :
-    (l.concat (some x)).reduceOption = l.reduceOption.concat x := by
+    (l.push (some x)).reduceOption = l.reduceOption.push x := by
   simp only [reduce_option_nil, concat_eq_append, reduce_option_append, reduce_option_cons_of_some]
 #align list.reduce_option_concat_of_some List.reduceOption_concat_of_some
 -/

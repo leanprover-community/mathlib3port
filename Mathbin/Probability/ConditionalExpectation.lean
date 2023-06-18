@@ -38,6 +38,7 @@ open ProbabilityTheory
 variable {Ω E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
   {m₁ m₂ m : MeasurableSpace Ω} {μ : Measure Ω} {f : Ω → E}
 
+#print MeasureTheory.condexp_indep_eq /-
 /-- If `m₁, m₂` are independent σ-algebras and `f` is `m₁`-measurable, then `𝔼[f | m₂] = 𝔼[f]`
 almost everywhere. -/
 theorem condexp_indep_eq (hle₁ : m₁ ≤ m) (hle₂ : m₂ ≤ m) [SigmaFinite (μ.trim hle₂)]
@@ -85,6 +86,7 @@ theorem condexp_indep_eq (hle₁ : m₁ ≤ m) (hle₂ : m₂ ≤ m) [SigmaFinit
     filter_upwards [huv] with x hx _ using hx
   · exact ⟨f, hf, eventually_eq.rfl⟩
 #align measure_theory.condexp_indep_eq MeasureTheory.condexp_indep_eq
+-/
 
 end MeasureTheory
 

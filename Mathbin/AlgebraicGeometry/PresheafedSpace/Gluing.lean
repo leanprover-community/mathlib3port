@@ -531,7 +531,7 @@ that the `U i`'s are open subspaces of the glued space.
 @[nolint has_nonempty_instance]
 structure GlueData extends GlueData (SheafedSpace.{v} C) where
   f_open : ∀ i j, SheafedSpace.IsOpenImmersion (f i j)
-#align algebraic_geometry.SheafedSpace.glue_data AlgebraicGeometry.SheafedSpace.GlueData
+#align algebraic_geometry.SheafedSpace.glue_data AlgebraicGeometry.SheafedSpaceₓ.GlueData
 
 attribute [instance] glue_data.f_open
 
@@ -545,7 +545,7 @@ local notation "𝖣" => D.toGlueData
 abbrev toPresheafedSpaceGlueData : PresheafedSpace.GlueData C :=
   { f_open := D.f_open
     toGlueData := 𝖣.mapGlueData forgetToPresheafedSpace }
-#align algebraic_geometry.SheafedSpace.glue_data.to_PresheafedSpace_glue_data AlgebraicGeometry.SheafedSpace.GlueData.toPresheafedSpaceGlueData
+#align algebraic_geometry.SheafedSpace.glue_data.to_PresheafedSpace_glue_data AlgebraicGeometry.SheafedSpaceₓ.GlueData.toPresheafedSpaceGlueData
 
 variable [HasLimits C]
 
@@ -553,20 +553,20 @@ variable [HasLimits C]
 abbrev isoPresheafedSpace :
     𝖣.glued.toPresheafedSpace ≅ D.toPresheafedSpaceGlueData.toGlueData.glued :=
   𝖣.gluedIso forgetToPresheafedSpace
-#align algebraic_geometry.SheafedSpace.glue_data.iso_PresheafedSpace AlgebraicGeometry.SheafedSpace.GlueData.isoPresheafedSpace
+#align algebraic_geometry.SheafedSpace.glue_data.iso_PresheafedSpace AlgebraicGeometry.SheafedSpaceₓ.GlueData.isoPresheafedSpace
 
 theorem ι_isoPresheafedSpace_inv (i : D.J) :
     D.toPresheafedSpaceGlueData.toGlueData.ι i ≫ D.isoPresheafedSpace.inv = 𝖣.ι i :=
   𝖣.ι_gluedIso_inv _ _
-#align algebraic_geometry.SheafedSpace.glue_data.ι_iso_PresheafedSpace_inv AlgebraicGeometry.SheafedSpace.GlueData.ι_isoPresheafedSpace_inv
+#align algebraic_geometry.SheafedSpace.glue_data.ι_iso_PresheafedSpace_inv AlgebraicGeometry.SheafedSpaceₓ.GlueData.ι_isoPresheafedSpace_inv
 
-instance ι_isOpenImmersion (i : D.J) : IsOpenImmersion (𝖣.ι i) := by
+instance ιIsOpenImmersion (i : D.J) : IsOpenImmersion (𝖣.ι i) := by
   rw [← D.ι_iso_PresheafedSpace_inv]; infer_instance
-#align algebraic_geometry.SheafedSpace.glue_data.ι_is_open_immersion AlgebraicGeometry.SheafedSpace.GlueData.ι_isOpenImmersion
+#align algebraic_geometry.SheafedSpace.glue_data.ι_is_open_immersion AlgebraicGeometry.SheafedSpaceₓ.GlueData.ιIsOpenImmersion
 
 theorem ι_jointly_surjective (x : 𝖣.glued) : ∃ (i : D.J) (y : D.U i), (𝖣.ι i).base y = x :=
   𝖣.ι_jointly_surjective (SheafedSpace.forget _ ⋙ CategoryTheory.forget TopCat) x
-#align algebraic_geometry.SheafedSpace.glue_data.ι_jointly_surjective AlgebraicGeometry.SheafedSpace.GlueData.ι_jointly_surjective
+#align algebraic_geometry.SheafedSpace.glue_data.ι_jointly_surjective AlgebraicGeometry.SheafedSpaceₓ.GlueData.ι_jointly_surjective
 
 /-- The following diagram is a pullback, i.e. `Vᵢⱼ` is the intersection of `Uᵢ` and `Uⱼ` in `X`.
 
@@ -578,7 +578,7 @@ Vᵢⱼ ⟶ Uᵢ
 def vPullbackConeIsLimit (i j : D.J) : IsLimit (𝖣.vPullbackCone i j) :=
   𝖣.vPullbackConeIsLimitOfMap forgetToPresheafedSpace i j
     (D.toPresheafedSpaceGlueData.vPullbackConeIsLimit _ _)
-#align algebraic_geometry.SheafedSpace.glue_data.V_pullback_cone_is_limit AlgebraicGeometry.SheafedSpace.GlueData.vPullbackConeIsLimit
+#align algebraic_geometry.SheafedSpace.glue_data.V_pullback_cone_is_limit AlgebraicGeometry.SheafedSpaceₓ.GlueData.vPullbackConeIsLimit
 
 end GlueData
 

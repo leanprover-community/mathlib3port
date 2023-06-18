@@ -117,19 +117,19 @@ instance functionField_isScalarTower [IrreducibleSpace X.carrier] (U : Opens X.c
 #align algebraic_geometry.function_field_is_scalar_tower AlgebraicGeometry.functionField_isScalarTower
 
 noncomputable instance (R : CommRingCat) [IsDomain R] :
-    Algebra R (Scheme.spec.obj <| op R).functionField :=
+    Algebra R (Scheme.Spec.obj <| op R).functionField :=
   RingHom.toAlgebra <| by change CommRingCat.of R ⟶ _; apply structure_sheaf.to_stalk
 
 @[simp]
 theorem genericPoint_eq_bot_of_affine (R : CommRingCat) [IsDomain R] :
-    genericPoint (Scheme.spec.obj <| op R).carrier = (⟨0, Ideal.bot_prime⟩ : PrimeSpectrum R) :=
+    genericPoint (Scheme.Spec.obj <| op R).carrier = (⟨0, Ideal.bot_prime⟩ : PrimeSpectrum R) :=
   by
   apply (genericPoint_spec (Scheme.Spec.obj <| op R).carrier).Eq
   simp [isGenericPoint_def, ← PrimeSpectrum.zeroLocus_vanishingIdeal_eq_closure]
 #align algebraic_geometry.generic_point_eq_bot_of_affine AlgebraicGeometry.genericPoint_eq_bot_of_affine
 
 instance functionField_isFractionRing_of_affine (R : CommRingCat.{u}) [IsDomain R] :
-    IsFractionRing R (Scheme.spec.obj <| op R).functionField :=
+    IsFractionRing R (Scheme.Spec.obj <| op R).functionField :=
   by
   convert structure_sheaf.is_localization.to_stalk R _
   delta IsFractionRing IsLocalization.AtPrime
@@ -149,7 +149,7 @@ theorem IsAffineOpen.primeIdealOf_genericPoint {X : Scheme} [IsIntegral X] {U : 
     hU.primeIdealOf
         ⟨genericPoint X.carrier,
           ((genericPoint_spec X.carrier).mem_open_set_iff U.IsOpen).mpr (by simpa using h)⟩ =
-      genericPoint (Scheme.spec.obj <| op <| X.Presheaf.obj <| op U).carrier :=
+      genericPoint (Scheme.Spec.obj <| op <| X.Presheaf.obj <| op U).carrier :=
   by
   haveI : is_affine _ := hU
   have e : U.open_embedding.is_open_map.functor.obj ⊤ = U := by ext1;
@@ -182,7 +182,7 @@ theorem functionField_isFractionRing_of_isAffineOpen [IsIntegral X] (U : Opens X
 #align algebraic_geometry.function_field_is_fraction_ring_of_is_affine_open AlgebraicGeometry.functionField_isFractionRing_of_isAffineOpen
 
 instance (x : X.carrier) : IsAffine (X.affineCover.obj x) :=
-  AlgebraicGeometry.spec_isAffine _
+  AlgebraicGeometry.specIsAffine _
 
 instance [h : IsIntegral X] (x : X.carrier) : IsFractionRing (X.Presheaf.stalk x) X.functionField :=
   by

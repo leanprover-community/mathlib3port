@@ -57,6 +57,7 @@ open scoped Nat Topology ComplexConjugate
 
 namespace Real
 
+#print Real.Gamma_integrand_isLittleO /-
 /-- Asymptotic bound for the `Γ` function integrand. -/
 theorem Gamma_integrand_isLittleO (s : ℝ) :
     (fun x : ℝ => exp (-x) * x ^ s) =o[atTop] fun x : ℝ => exp (-(1 / 2) * x) :=
@@ -74,9 +75,11 @@ theorem Gamma_integrand_isLittleO (s : ℝ) :
   rw [this]
   exact (tendsto_exp_mul_div_rpow_atTop s (1 / 2) one_half_pos).inv_tendsto_atTop
 #align real.Gamma_integrand_is_o Real.Gamma_integrand_isLittleO
+-/
 
+#print Real.GammaIntegral_convergent /-
 /-- The Euler integral for the `Γ` function converges for positive real `s`. -/
-theorem Gamma_integral_convergent {s : ℝ} (h : 0 < s) :
+theorem GammaIntegral_convergent {s : ℝ} (h : 0 < s) :
     IntegrableOn (fun x : ℝ => exp (-x) * x ^ (s - 1)) (Ioi 0) :=
   by
   rw [← Ioc_union_Ioi_eq_Ioi (@zero_le_one ℝ _ _ _ _), integrable_on_union]
@@ -89,19 +92,21 @@ theorem Gamma_integral_convergent {s : ℝ} (h : 0 < s) :
     refine' continuous_on_id.neg.exp.mul (continuous_on_id.rpow_const _)
     intro x hx
     exact Or.inl ((zero_lt_one : (0 : ℝ) < 1).trans_le hx).ne'
-#align real.Gamma_integral_convergent Real.Gamma_integral_convergent
+#align real.Gamma_integral_convergent Real.GammaIntegral_convergent
+-/
 
 end Real
 
 namespace Complex
 
+#print Complex.GammaIntegral_convergent /-
 /- Technical note: In defining the Gamma integrand exp (-x) * x ^ (s - 1) for s complex, we have to
 make a choice between ↑(real.exp (-x)), complex.exp (↑(-x)), and complex.exp (-↑x), all of which are
 equal but not definitionally so. We use the first of these throughout. -/
 /-- The integral defining the `Γ` function converges for complex `s` with `0 < re s`.
 
 This is proved by reduction to the real case. -/
-theorem Gamma_integral_convergent {s : ℂ} (hs : 0 < s.re) :
+theorem GammaIntegral_convergent {s : ℂ} (hs : 0 < s.re) :
     IntegrableOn (fun x => (-x).exp * x ^ (s - 1) : ℝ → ℂ) (Ioi 0) :=
   by
   constructor
@@ -113,24 +118,28 @@ theorem Gamma_integral_convergent {s : ℂ} (hs : 0 < s.re) :
       rw [of_real_re]; exact Or.inl hx
     exact ContinuousAt.comp this continuous_of_real.continuous_at
   · rw [← has_finite_integral_norm_iff]
-    refine' has_finite_integral.congr (Real.Gamma_integral_convergent hs).2 _
+    refine' has_finite_integral.congr (Real.GammaIntegral_convergent hs).2 _
     refine' (ae_restrict_iff' measurableSet_Ioi).mpr (ae_of_all _ fun x hx => _)
     dsimp only
     rw [norm_eq_abs, map_mul, abs_of_nonneg <| le_of_lt <| exp_pos <| -x,
       abs_cpow_eq_rpow_re_of_pos hx _]
     simp
-#align complex.Gamma_integral_convergent Complex.Gamma_integral_convergent
+#align complex.Gamma_integral_convergent Complex.GammaIntegral_convergent
+-/
 
+#print Complex.GammaIntegral /-
 /-- Euler's integral for the `Γ` function (of a complex variable `s`), defined as
 `∫ x in Ioi 0, exp (-x) * x ^ (s - 1)`.
 
 See `complex.Gamma_integral_convergent` for a proof of the convergence of the integral for
 `0 < re s`. -/
-def gammaIntegral (s : ℂ) : ℂ :=
+def GammaIntegral (s : ℂ) : ℂ :=
   ∫ x in Ioi (0 : ℝ), ↑(-x).exp * ↑x ^ (s - 1)
-#align complex.Gamma_integral Complex.gammaIntegral
+#align complex.Gamma_integral Complex.GammaIntegral
+-/
 
-theorem gammaIntegral_conj (s : ℂ) : gammaIntegral (conj s) = conj (gammaIntegral s) :=
+#print Complex.GammaIntegral_conj /-
+theorem GammaIntegral_conj (s : ℂ) : GammaIntegral (conj s) = conj (GammaIntegral s) :=
   by
   rw [Gamma_integral, Gamma_integral, ← integral_conj]
   refine' set_integral_congr measurableSet_Ioi fun x hx => _
@@ -138,22 +147,27 @@ theorem gammaIntegral_conj (s : ℂ) : gammaIntegral (conj s) = conj (gammaInteg
   rw [RingHom.map_mul, conj_of_real, cpow_def_of_ne_zero (of_real_ne_zero.mpr (ne_of_gt hx)),
     cpow_def_of_ne_zero (of_real_ne_zero.mpr (ne_of_gt hx)), ← exp_conj, RingHom.map_mul, ←
     of_real_log (le_of_lt hx), conj_of_real, RingHom.map_sub, RingHom.map_one]
-#align complex.Gamma_integral_conj Complex.gammaIntegral_conj
+#align complex.Gamma_integral_conj Complex.GammaIntegral_conj
+-/
 
-theorem gammaIntegral_of_real (s : ℝ) :
-    gammaIntegral ↑s = ↑(∫ x : ℝ in Ioi 0, Real.exp (-x) * x ^ (s - 1)) :=
+#print Complex.GammaIntegral_ofReal /-
+theorem GammaIntegral_ofReal (s : ℝ) :
+    GammaIntegral ↑s = ↑(∫ x : ℝ in Ioi 0, Real.exp (-x) * x ^ (s - 1)) :=
   by
   rw [Gamma_integral, ← _root_.integral_of_real]
   refine' set_integral_congr measurableSet_Ioi _
   intro x hx; dsimp only
   rw [of_real_mul, of_real_cpow (mem_Ioi.mp hx).le]
   simp
-#align complex.Gamma_integral_of_real Complex.gammaIntegral_of_real
+#align complex.Gamma_integral_of_real Complex.GammaIntegral_ofReal
+-/
 
-theorem gammaIntegral_one : gammaIntegral 1 = 1 := by
+#print Complex.GammaIntegral_one /-
+theorem GammaIntegral_one : GammaIntegral 1 = 1 := by
   simpa only [← of_real_one, Gamma_integral_of_real, of_real_inj, sub_self, rpow_zero,
     mul_one] using integral_exp_neg_Ioi_zero
-#align complex.Gamma_integral_one Complex.gammaIntegral_one
+#align complex.Gamma_integral_one Complex.GammaIntegral_one
+-/
 
 end Complex
 
@@ -164,15 +178,19 @@ namespace Complex
 
 section GammaRecurrence
 
+#print Complex.partialGamma /-
 /-- The indefinite version of the `Γ` function, `Γ(s, X) = ∫ x ∈ 0..X, exp(-x) x ^ (s - 1)`. -/
 def partialGamma (s : ℂ) (X : ℝ) : ℂ :=
   ∫ x in 0 ..X, (-x).exp * x ^ (s - 1)
 #align complex.partial_Gamma Complex.partialGamma
+-/
 
+#print Complex.tendsto_partialGamma /-
 theorem tendsto_partialGamma {s : ℂ} (hs : 0 < s.re) :
-    Tendsto (fun X : ℝ => partialGamma s X) atTop (𝓝 <| gammaIntegral s) :=
-  intervalIntegral_tendsto_integral_Ioi 0 (Gamma_integral_convergent hs) tendsto_id
+    Tendsto (fun X : ℝ => partialGamma s X) atTop (𝓝 <| GammaIntegral s) :=
+  intervalIntegral_tendsto_integral_Ioi 0 (GammaIntegral_convergent hs) tendsto_id
 #align complex.tendsto_partial_Gamma Complex.tendsto_partialGamma
+-/
 
 private theorem Gamma_integrand_interval_integrable (s : ℂ) {X : ℝ} (hs : 0 < s.re) (hX : 0 ≤ X) :
     IntervalIntegrable (fun x => (-x).exp * x ^ (s - 1) : ℝ → ℂ) volume 0 X :=
@@ -205,7 +223,7 @@ private theorem Gamma_integrand_deriv_integrable_B {s : ℂ} (hs : 0 < s.re) {Y 
   rw [← has_finite_integral_norm_iff]
   simp_rw [norm_eq_abs, map_mul]
   refine'
-    (((Real.Gamma_integral_convergent hs).mono_set Ioc_subset_Ioi_self).HasFiniteIntegral.congr
+    (((Real.GammaIntegral_convergent hs).mono_set Ioc_subset_Ioi_self).HasFiniteIntegral.congr
           _).const_mul
       _
   rw [eventually_eq, ae_restrict_iff']
@@ -214,6 +232,7 @@ private theorem Gamma_integrand_deriv_integrable_B {s : ℂ} (hs : 0 < s.re) {Y 
     simp
   · exact measurableSet_Ioc
 
+#print Complex.partialGamma_add_one /-
 /-- The recurrence relation for the indefinite version of the `Γ` function. -/
 theorem partialGamma_add_one {s : ℂ} (hs : 0 < s.re) {X : ℝ} (hX : 0 ≤ X) :
     partialGamma (s + 1) X = s * partialGamma s X - (-X).exp * X ^ s :=
@@ -256,10 +275,12 @@ theorem partialGamma_add_one {s : ℂ} (hs : 0 < s.re) {X : ℝ} (hX : 0 ≤ X) 
   · rw [MulZeroClass.mul_zero, add_zero]; congr; ext1; ring
   · contrapose! hs; rw [hs, zero_re]
 #align complex.partial_Gamma_add_one Complex.partialGamma_add_one
+-/
 
+#print Complex.GammaIntegral_add_one /-
 /-- The recurrence relation for the `Γ` integral. -/
-theorem gammaIntegral_add_one {s : ℂ} (hs : 0 < s.re) :
-    gammaIntegral (s + 1) = s * gammaIntegral s :=
+theorem GammaIntegral_add_one {s : ℂ} (hs : 0 < s.re) :
+    GammaIntegral (s + 1) = s * GammaIntegral s :=
   by
   suffices tendsto (s + 1).partialGamma at_top (𝓝 <| s * Gamma_integral s)
     by
@@ -282,7 +303,8 @@ theorem gammaIntegral_add_one {s : ℂ} (hs : 0 < s.re) :
     rw [norm_eq_abs, map_mul, abs.map_neg, abs_cpow_eq_rpow_re_of_pos hx,
       abs_of_nonneg (exp_pos (-x)).le, neg_mul, one_mul]
   exact (tendsto_congr' this).mpr (tendsto_rpow_mul_exp_neg_mul_atTop_nhds_0 _ _ zero_lt_one)
-#align complex.Gamma_integral_add_one Complex.gammaIntegral_add_one
+#align complex.Gamma_integral_add_one Complex.GammaIntegral_add_one
+-/
 
 end GammaRecurrence
 
@@ -291,14 +313,17 @@ end GammaRecurrence
 
 section GammaDef
 
+#print Complex.GammaAux /-
 /-- The `n`th function in this family is `Γ(s)` if `-n < s.re`, and junk otherwise. -/
-noncomputable def gammaAux : ℕ → ℂ → ℂ
-  | 0 => gammaIntegral
+noncomputable def GammaAux : ℕ → ℂ → ℂ
+  | 0 => GammaIntegral
   | n + 1 => fun s : ℂ => Gamma_aux n (s + 1) / s
-#align complex.Gamma_aux Complex.gammaAux
+#align complex.Gamma_aux Complex.GammaAux
+-/
 
-theorem gammaAux_recurrence1 (s : ℂ) (n : ℕ) (h1 : -s.re < ↑n) :
-    gammaAux n s = gammaAux n (s + 1) / s :=
+#print Complex.GammaAux_recurrence1 /-
+theorem GammaAux_recurrence1 (s : ℂ) (n : ℕ) (h1 : -s.re < ↑n) :
+    GammaAux n s = GammaAux n (s + 1) / s :=
   by
   induction' n with n hn generalizing s
   · simp only [Nat.cast_zero, neg_lt_zero] at h1 
@@ -311,10 +336,12 @@ theorem gammaAux_recurrence1 (s : ℂ) (n : ℕ) (h1 : -s.re < ↑n) :
       rw [Nat.succ_eq_add_one, Nat.cast_add, Nat.cast_one] at h1 
       rw [add_re, one_re]; linarith
     rw [← hn (s + 1) hh1]
-#align complex.Gamma_aux_recurrence1 Complex.gammaAux_recurrence1
+#align complex.Gamma_aux_recurrence1 Complex.GammaAux_recurrence1
+-/
 
-theorem gammaAux_recurrence2 (s : ℂ) (n : ℕ) (h1 : -s.re < ↑n) :
-    gammaAux n s = gammaAux (n + 1) s := by
+#print Complex.GammaAux_recurrence2 /-
+theorem GammaAux_recurrence2 (s : ℂ) (n : ℕ) (h1 : -s.re < ↑n) :
+    GammaAux n s = GammaAux (n + 1) s := by
   cases n
   · simp only [Nat.cast_zero, neg_lt_zero] at h1 
     dsimp only [Gamma_aux]
@@ -331,15 +358,19 @@ theorem gammaAux_recurrence2 (s : ℂ) (n : ℕ) (h1 : -s.re < ↑n) :
         rw [add_re, one_re]; linarith
       rw [Gamma_aux_recurrence1 (s + 1) n hh1]
     rw [this]
-#align complex.Gamma_aux_recurrence2 Complex.gammaAux_recurrence2
+#align complex.Gamma_aux_recurrence2 Complex.GammaAux_recurrence2
+-/
 
+#print Complex.Gamma /-
 /-- The `Γ` function (of a complex variable `s`). -/
 @[pp_nodot]
-def gamma (s : ℂ) : ℂ :=
-  gammaAux ⌊1 - s.re⌋₊ s
-#align complex.Gamma Complex.gamma
+def Gamma (s : ℂ) : ℂ :=
+  GammaAux ⌊1 - s.re⌋₊ s
+#align complex.Gamma Complex.Gamma
+-/
 
-theorem gamma_eq_gammaAux (s : ℂ) (n : ℕ) (h1 : -s.re < ↑n) : gamma s = gammaAux n s :=
+#print Complex.Gamma_eq_GammaAux /-
+theorem Gamma_eq_GammaAux (s : ℂ) (n : ℕ) (h1 : -s.re < ↑n) : Gamma s = GammaAux n s :=
   by
   have u : ∀ k : ℕ, Gamma_aux (⌊1 - s.re⌋₊ + k) s = Gamma s :=
     by
@@ -357,40 +388,52 @@ theorem gamma_eq_gammaAux (s : ℂ) (n : ℕ) (h1 : -s.re < ↑n) : gamma s = ga
   · apply Nat.le_of_lt_succ
     exact_mod_cast lt_of_le_of_lt (Nat.floor_le h) (by linarith : 1 - s.re < n + 1)
   · rw [Nat.floor_of_nonpos]; linarith; linarith
-#align complex.Gamma_eq_Gamma_aux Complex.gamma_eq_gammaAux
+#align complex.Gamma_eq_Gamma_aux Complex.Gamma_eq_GammaAux
+-/
 
+#print Complex.Gamma_add_one /-
 /-- The recurrence relation for the `Γ` function. -/
-theorem gamma_add_one (s : ℂ) (h2 : s ≠ 0) : gamma (s + 1) = s * gamma s :=
+theorem Gamma_add_one (s : ℂ) (h2 : s ≠ 0) : Gamma (s + 1) = s * Gamma s :=
   by
   let n := ⌊1 - s.re⌋₊
   have t1 : -s.re < n := by simpa only [sub_sub_cancel_left] using Nat.sub_one_lt_floor (1 - s.re)
   have t2 : -(s + 1).re < n := by rw [add_re, one_re]; linarith
   rw [Gamma_eq_Gamma_aux s n t1, Gamma_eq_Gamma_aux (s + 1) n t2, Gamma_aux_recurrence1 s n t1]
   field_simp; ring
-#align complex.Gamma_add_one Complex.gamma_add_one
+#align complex.Gamma_add_one Complex.Gamma_add_one
+-/
 
-theorem gamma_eq_integral {s : ℂ} (hs : 0 < s.re) : gamma s = gammaIntegral s :=
-  gamma_eq_gammaAux s 0 (by norm_cast; linarith)
-#align complex.Gamma_eq_integral Complex.gamma_eq_integral
+#print Complex.Gamma_eq_integral /-
+theorem Gamma_eq_integral {s : ℂ} (hs : 0 < s.re) : Gamma s = GammaIntegral s :=
+  Gamma_eq_GammaAux s 0 (by norm_cast; linarith)
+#align complex.Gamma_eq_integral Complex.Gamma_eq_integral
+-/
 
-theorem gamma_one : gamma 1 = 1 := by rw [Gamma_eq_integral]; simpa using Gamma_integral_one; simp
-#align complex.Gamma_one Complex.gamma_one
+#print Complex.Gamma_one /-
+theorem Gamma_one : Gamma 1 = 1 := by rw [Gamma_eq_integral]; simpa using Gamma_integral_one; simp
+#align complex.Gamma_one Complex.Gamma_one
+-/
 
-theorem gamma_nat_eq_factorial (n : ℕ) : gamma (n + 1) = n ! :=
+#print Complex.Gamma_nat_eq_factorial /-
+theorem Gamma_nat_eq_factorial (n : ℕ) : Gamma (n + 1) = n ! :=
   by
   induction' n with n hn
   · simpa using Gamma_one
   · rw [Gamma_add_one n.succ <| nat.cast_ne_zero.mpr <| Nat.succ_ne_zero n]
     simp only [Nat.cast_succ, Nat.factorial_succ, Nat.cast_mul]; congr; exact hn
-#align complex.Gamma_nat_eq_factorial Complex.gamma_nat_eq_factorial
+#align complex.Gamma_nat_eq_factorial Complex.Gamma_nat_eq_factorial
+-/
 
+#print Complex.Gamma_zero /-
 /-- At `0` the Gamma function is undefined; by convention we assign it the value `0`. -/
-theorem gamma_zero : gamma 0 = 0 := by
+theorem Gamma_zero : Gamma 0 = 0 := by
   simp_rw [Gamma, zero_re, sub_zero, Nat.floor_one, Gamma_aux, div_zero]
-#align complex.Gamma_zero Complex.gamma_zero
+#align complex.Gamma_zero Complex.Gamma_zero
+-/
 
+#print Complex.Gamma_neg_nat_eq_zero /-
 /-- At `-n` for `n ∈ ℕ`, the Gamma function is undefined; by convention we assign it the value 0. -/
-theorem gamma_neg_nat_eq_zero (n : ℕ) : gamma (-n) = 0 :=
+theorem Gamma_neg_nat_eq_zero (n : ℕ) : Gamma (-n) = 0 :=
   by
   induction' n with n IH
   · rw [Nat.cast_zero, neg_zero, Gamma_zero]
@@ -401,9 +444,11 @@ theorem gamma_neg_nat_eq_zero (n : ℕ) : gamma (-n) = 0 :=
     rw [this, Gamma_add_one _ A] at IH 
     contrapose! IH
     exact mul_ne_zero A IH
-#align complex.Gamma_neg_nat_eq_zero Complex.gamma_neg_nat_eq_zero
+#align complex.Gamma_neg_nat_eq_zero Complex.Gamma_neg_nat_eq_zero
+-/
 
-theorem gamma_conj (s : ℂ) : gamma (conj s) = conj (gamma s) :=
+#print Complex.Gamma_conj /-
+theorem Gamma_conj (s : ℂ) : Gamma (conj s) = conj (Gamma s) :=
   by
   suffices : ∀ (n : ℕ) (s : ℂ), Gamma_aux n (conj s) = conj (Gamma_aux n s); exact this _ _
   intro n
@@ -415,7 +460,8 @@ theorem gamma_conj (s : ℂ) : gamma (conj s) = conj (gamma s) :=
     rw [div_eq_mul_inv _ s, RingHom.map_mul, conj_inv, ← div_eq_mul_inv]
     suffices conj s + 1 = conj (s + 1) by rw [this, IH]
     rw [RingHom.map_add, RingHom.map_one]
-#align complex.Gamma_conj Complex.gamma_conj
+#align complex.Gamma_conj Complex.Gamma_conj
+-/
 
 end GammaDef
 
@@ -424,15 +470,18 @@ end GammaDef
 
 section GammaHasDeriv
 
+#print Complex.GammaIntegral_eq_mellin /-
 /-- Rewrite the Gamma integral as an example of a Mellin transform. -/
-theorem gammaIntegral_eq_mellin : gammaIntegral = mellin fun x => Real.exp (-x) :=
+theorem GammaIntegral_eq_mellin : GammaIntegral = mellin fun x => Real.exp (-x) :=
   funext fun s => by simp only [mellin, Gamma_integral, smul_eq_mul, mul_comm]
-#align complex.Gamma_integral_eq_mellin Complex.gammaIntegral_eq_mellin
+#align complex.Gamma_integral_eq_mellin Complex.GammaIntegral_eq_mellin
+-/
 
+#print Complex.hasDerivAt_GammaIntegral /-
 /-- The derivative of the `Γ` integral, at any `s ∈ ℂ` with `1 < re s`, is given by the Melllin
 transform of `log t * exp (-t)`. -/
-theorem hasDerivAt_gammaIntegral {s : ℂ} (hs : 0 < s.re) :
-    HasDerivAt gammaIntegral (∫ t : ℝ in Ioi 0, t ^ (s - 1) * (Real.log t * Real.exp (-t))) s :=
+theorem hasDerivAt_GammaIntegral {s : ℂ} (hs : 0 < s.re) :
+    HasDerivAt GammaIntegral (∫ t : ℝ in Ioi 0, t ^ (s - 1) * (Real.log t * Real.exp (-t))) s :=
   by
   rw [Gamma_integral_eq_mellin]
   convert (mellin_hasDerivAt_of_isBigO_rpow _ _ (lt_add_one _) _ hs).2
@@ -445,10 +494,12 @@ theorem hasDerivAt_gammaIntegral {s : ℂ} (hs : 0 < s.re) :
     refine' is_O_const_of_tendsto (_ : tendsto _ _ (𝓝 1)) one_ne_zero
     rw [(by simp : (1 : ℂ) = Real.exp (-0))]
     exact (continuous_of_real.comp (real.continuous_exp.comp continuous_neg)).ContinuousWithinAt
-#align complex.has_deriv_at_Gamma_integral Complex.hasDerivAt_gammaIntegral
+#align complex.has_deriv_at_Gamma_integral Complex.hasDerivAt_GammaIntegral
+-/
 
-theorem differentiableAt_gammaAux (s : ℂ) (n : ℕ) (h1 : 1 - s.re < n) (h2 : ∀ m : ℕ, s ≠ -m) :
-    DifferentiableAt ℂ (gammaAux n) s :=
+#print Complex.differentiableAt_GammaAux /-
+theorem differentiableAt_GammaAux (s : ℂ) (n : ℕ) (h1 : 1 - s.re < n) (h2 : ∀ m : ℕ, s ≠ -m) :
+    DifferentiableAt ℂ (GammaAux n) s :=
   by
   induction' n with n hn generalizing s
   · refine' (has_deriv_at_Gamma_integral _).DifferentiableAt
@@ -464,9 +515,11 @@ theorem differentiableAt_gammaAux (s : ℂ) (n : ℕ) (h1 : 1 - s.re < n) (h2 : 
       simpa using this
     refine' DifferentiableAt.div (DifferentiableAt.comp _ (hn a b) _) _ _
     simp; simp; simpa using h2 0
-#align complex.differentiable_at_Gamma_aux Complex.differentiableAt_gammaAux
+#align complex.differentiable_at_Gamma_aux Complex.differentiableAt_GammaAux
+-/
 
-theorem differentiableAt_gamma (s : ℂ) (hs : ∀ m : ℕ, s ≠ -m) : DifferentiableAt ℂ gamma s :=
+#print Complex.differentiableAt_Gamma /-
+theorem differentiableAt_Gamma (s : ℂ) (hs : ∀ m : ℕ, s ≠ -m) : DifferentiableAt ℂ Gamma s :=
   by
   let n := ⌊1 - s.re⌋₊ + 1
   have hn : 1 - s.re < n := by exact_mod_cast Nat.lt_floor_add_one (1 - s.re)
@@ -482,38 +535,44 @@ theorem differentiableAt_gamma (s : ℂ) (hs : ∀ m : ℕ, s ≠ -m) : Differen
   apply eventually_eq_of_mem this
   intro t ht; rw [mem_set_of_eq] at ht 
   apply Gamma_eq_Gamma_aux; linarith
-#align complex.differentiable_at_Gamma Complex.differentiableAt_gamma
+#align complex.differentiable_at_Gamma Complex.differentiableAt_Gamma
+-/
 
 end GammaHasDeriv
 
+#print Complex.tendsto_self_mul_Gamma_nhds_zero /-
 /-- At `s = 0`, the Gamma function has a simple pole with residue 1. -/
-theorem tendsto_self_mul_gamma_nhds_zero : Tendsto (fun z : ℂ => z * gamma z) (𝓝[≠] 0) (𝓝 1) :=
+theorem tendsto_self_mul_Gamma_nhds_zero : Tendsto (fun z : ℂ => z * Gamma z) (𝓝[≠] 0) (𝓝 1) :=
   by
-  rw [show 𝓝 (1 : ℂ) = 𝓝 (Gamma (0 + 1)) by simp only [zero_add, Complex.gamma_one]]
+  rw [show 𝓝 (1 : ℂ) = 𝓝 (Gamma (0 + 1)) by simp only [zero_add, Complex.Gamma_one]]
   convert
     (tendsto.mono_left _ nhdsWithin_le_nhds).congr'
-      (eventually_eq_of_mem self_mem_nhdsWithin Complex.gamma_add_one)
+      (eventually_eq_of_mem self_mem_nhdsWithin Complex.Gamma_add_one)
   refine' ContinuousAt.comp _ (continuous_id.add continuous_const).ContinuousAt
-  refine' (Complex.differentiableAt_gamma _ fun m => _).ContinuousAt
+  refine' (Complex.differentiableAt_Gamma _ fun m => _).ContinuousAt
   rw [zero_add, ← of_real_nat_cast, ← of_real_neg, ← of_real_one, Ne.def, of_real_inj]
   refine' (lt_of_le_of_lt _ zero_lt_one).ne'
   exact neg_nonpos.mpr (Nat.cast_nonneg _)
-#align complex.tendsto_self_mul_Gamma_nhds_zero Complex.tendsto_self_mul_gamma_nhds_zero
+#align complex.tendsto_self_mul_Gamma_nhds_zero Complex.tendsto_self_mul_Gamma_nhds_zero
+-/
 
 end Complex
 
 namespace Real
 
+#print Real.Gamma /-
 /-- The `Γ` function (of a real variable `s`). -/
 @[pp_nodot]
-def gamma (s : ℝ) : ℝ :=
-  (Complex.gamma s).re
-#align real.Gamma Real.gamma
+def Gamma (s : ℝ) : ℝ :=
+  (Complex.Gamma s).re
+#align real.Gamma Real.Gamma
+-/
 
-theorem gamma_eq_integral {s : ℝ} (hs : 0 < s) : gamma s = ∫ x in Ioi 0, exp (-x) * x ^ (s - 1) :=
+#print Real.Gamma_eq_integral /-
+theorem Gamma_eq_integral {s : ℝ} (hs : 0 < s) : Gamma s = ∫ x in Ioi 0, exp (-x) * x ^ (s - 1) :=
   by
-  rw [Gamma, Complex.gamma_eq_integral (by rwa [Complex.ofReal_re] : 0 < Complex.re s)]
-  dsimp only [Complex.gammaIntegral]
+  rw [Gamma, Complex.Gamma_eq_integral (by rwa [Complex.ofReal_re] : 0 < Complex.re s)]
+  dsimp only [Complex.GammaIntegral]
   simp_rw [← Complex.ofReal_one, ← Complex.ofReal_sub]
   suffices
     ∫ x : ℝ in Ioi 0, ↑(exp (-x)) * (x : ℂ) ^ ((s - 1 : ℝ) : ℂ) =
@@ -523,42 +582,56 @@ theorem gamma_eq_integral {s : ℝ} (hs : 0 < s) : gamma s = ∫ x in Ioi 0, exp
   push_cast
   rw [Complex.ofReal_cpow (le_of_lt hx)]
   push_cast
-#align real.Gamma_eq_integral Real.gamma_eq_integral
+#align real.Gamma_eq_integral Real.Gamma_eq_integral
+-/
 
-theorem gamma_add_one {s : ℝ} (hs : s ≠ 0) : gamma (s + 1) = s * gamma s :=
+#print Real.Gamma_add_one /-
+theorem Gamma_add_one {s : ℝ} (hs : s ≠ 0) : Gamma (s + 1) = s * Gamma s :=
   by
   simp_rw [Gamma]
-  rw [Complex.ofReal_add, Complex.ofReal_one, Complex.gamma_add_one, Complex.ofReal_mul_re]
+  rw [Complex.ofReal_add, Complex.ofReal_one, Complex.Gamma_add_one, Complex.ofReal_mul_re]
   rwa [Complex.ofReal_ne_zero]
-#align real.Gamma_add_one Real.gamma_add_one
+#align real.Gamma_add_one Real.Gamma_add_one
+-/
 
-theorem gamma_one : gamma 1 = 1 := by
-  rw [Gamma, Complex.ofReal_one, Complex.gamma_one, Complex.one_re]
-#align real.Gamma_one Real.gamma_one
+#print Real.Gamma_one /-
+theorem Gamma_one : Gamma 1 = 1 := by
+  rw [Gamma, Complex.ofReal_one, Complex.Gamma_one, Complex.one_re]
+#align real.Gamma_one Real.Gamma_one
+-/
 
-theorem Complex.gamma_of_real (s : ℝ) : Complex.gamma (s : ℂ) = gamma s := by
-  rw [Gamma, eq_comm, ← Complex.conj_eq_iff_re, ← Complex.gamma_conj, Complex.conj_ofReal]
-#align complex.Gamma_of_real Complex.gamma_of_real
+#print Complex.Gamma_ofReal /-
+theorem Complex.Gamma_ofReal (s : ℝ) : Complex.Gamma (s : ℂ) = Gamma s := by
+  rw [Gamma, eq_comm, ← Complex.conj_eq_iff_re, ← Complex.Gamma_conj, Complex.conj_ofReal]
+#align complex.Gamma_of_real Complex.Gamma_ofReal
+-/
 
-theorem gamma_nat_eq_factorial (n : ℕ) : gamma (n + 1) = n ! := by
+#print Real.Gamma_nat_eq_factorial /-
+theorem Gamma_nat_eq_factorial (n : ℕ) : Gamma (n + 1) = n ! := by
   rw [Gamma, Complex.ofReal_add, Complex.ofReal_nat_cast, Complex.ofReal_one,
-    Complex.gamma_nat_eq_factorial, ← Complex.ofReal_nat_cast, Complex.ofReal_re]
-#align real.Gamma_nat_eq_factorial Real.gamma_nat_eq_factorial
+    Complex.Gamma_nat_eq_factorial, ← Complex.ofReal_nat_cast, Complex.ofReal_re]
+#align real.Gamma_nat_eq_factorial Real.Gamma_nat_eq_factorial
+-/
 
+#print Real.Gamma_zero /-
 /-- At `0` the Gamma function is undefined; by convention we assign it the value `0`. -/
-theorem gamma_zero : gamma 0 = 0 := by
-  simpa only [← Complex.ofReal_zero, Complex.gamma_of_real, Complex.ofReal_inj] using
-    Complex.gamma_zero
-#align real.Gamma_zero Real.gamma_zero
+theorem Gamma_zero : Gamma 0 = 0 := by
+  simpa only [← Complex.ofReal_zero, Complex.Gamma_ofReal, Complex.ofReal_inj] using
+    Complex.Gamma_zero
+#align real.Gamma_zero Real.Gamma_zero
+-/
 
+#print Real.Gamma_neg_nat_eq_zero /-
 /-- At `-n` for `n ∈ ℕ`, the Gamma function is undefined; by convention we assign it the value `0`.
 -/
-theorem gamma_neg_nat_eq_zero (n : ℕ) : gamma (-n) = 0 := by
-  simpa only [← Complex.ofReal_nat_cast, ← Complex.ofReal_neg, Complex.gamma_of_real,
-    Complex.ofReal_eq_zero] using Complex.gamma_neg_nat_eq_zero n
-#align real.Gamma_neg_nat_eq_zero Real.gamma_neg_nat_eq_zero
+theorem Gamma_neg_nat_eq_zero (n : ℕ) : Gamma (-n) = 0 := by
+  simpa only [← Complex.ofReal_nat_cast, ← Complex.ofReal_neg, Complex.Gamma_ofReal,
+    Complex.ofReal_eq_zero] using Complex.Gamma_neg_nat_eq_zero n
+#align real.Gamma_neg_nat_eq_zero Real.Gamma_neg_nat_eq_zero
+-/
 
-theorem gamma_pos_of_pos {s : ℝ} (hs : 0 < s) : 0 < gamma s :=
+#print Real.Gamma_pos_of_pos /-
+theorem Gamma_pos_of_pos {s : ℝ} (hs : 0 < s) : 0 < Gamma s :=
   by
   rw [Gamma_eq_integral hs]
   have : (Function.support fun x : ℝ => exp (-x) * x ^ (s - 1)) ∩ Ioi 0 = Ioi 0 :=
@@ -573,11 +646,13 @@ theorem gamma_pos_of_pos {s : ℝ} (hs : 0 < s) : 0 < gamma s :=
   · refine' eventually_of_mem (self_mem_ae_restrict measurableSet_Ioi) _
     exact fun x hx => (mul_pos (exp_pos _) (rpow_pos_of_pos hx _)).le
   · exact Gamma_integral_convergent hs
-#align real.Gamma_pos_of_pos Real.gamma_pos_of_pos
+#align real.Gamma_pos_of_pos Real.Gamma_pos_of_pos
+-/
 
+#print Real.Gamma_ne_zero /-
 /-- The Gamma function does not vanish on `ℝ` (except at non-positive integers, where the function
 is mathematically undefined and we set it to `0` by convention). -/
-theorem gamma_ne_zero {s : ℝ} (hs : ∀ m : ℕ, s ≠ -m) : gamma s ≠ 0 :=
+theorem Gamma_ne_zero {s : ℝ} (hs : ∀ m : ℕ, s ≠ -m) : Gamma s ≠ 0 :=
   by
   suffices ∀ {n : ℕ}, -(n : ℝ) < s → Gamma s ≠ 0
     by
@@ -605,18 +680,23 @@ theorem gamma_ne_zero {s : ℝ} (hs : ∀ m : ℕ, s ≠ -m) : gamma s ≠ 0 :=
     rw [Gamma_add_one, mul_ne_zero_iff] at this 
     · exact this.2
     · simpa using hs 0
-#align real.Gamma_ne_zero Real.gamma_ne_zero
+#align real.Gamma_ne_zero Real.Gamma_ne_zero
+-/
 
-theorem gamma_eq_zero_iff (s : ℝ) : gamma s = 0 ↔ ∃ m : ℕ, s = -m :=
+#print Real.Gamma_eq_zero_iff /-
+theorem Gamma_eq_zero_iff (s : ℝ) : Gamma s = 0 ↔ ∃ m : ℕ, s = -m :=
   ⟨by contrapose!; exact Gamma_ne_zero, by rintro ⟨m, rfl⟩; exact Gamma_neg_nat_eq_zero m⟩
-#align real.Gamma_eq_zero_iff Real.gamma_eq_zero_iff
+#align real.Gamma_eq_zero_iff Real.Gamma_eq_zero_iff
+-/
 
-theorem differentiableAt_gamma {s : ℝ} (hs : ∀ m : ℕ, s ≠ -m) : DifferentiableAt ℝ gamma s :=
+#print Real.differentiableAt_Gamma /-
+theorem differentiableAt_Gamma {s : ℝ} (hs : ∀ m : ℕ, s ≠ -m) : DifferentiableAt ℝ Gamma s :=
   by
-  refine' (Complex.differentiableAt_gamma _ _).HasDerivAt.real_of_complex.DifferentiableAt
+  refine' (Complex.differentiableAt_Gamma _ _).HasDerivAt.real_of_complex.DifferentiableAt
   simp_rw [← Complex.ofReal_nat_cast, ← Complex.ofReal_neg, Ne.def, Complex.ofReal_inj]
   exact hs
-#align real.differentiable_at_Gamma Real.differentiableAt_gamma
+#align real.differentiable_at_Gamma Real.differentiableAt_Gamma
+-/
 
 end Real
 

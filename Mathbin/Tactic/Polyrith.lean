@@ -301,7 +301,7 @@ to the appropriate `poly` object representing the sum of two `poly`s.
 Here, `p` and `q` are themselves string forms of `poly`s.
 -/
 unsafe def add_parser (cont : Parser Poly) : Parser Poly :=
-  str "poly.add " >> Poly.add <$> cont <*> (ch ' ' >> cont)
+  str "poly.add " >> Poly.add <$> Cont <*> (ch ' ' >> Cont)
 #align polyrith.add_parser polyrith.add_parser
 
 /-- A parser object that parses `string`s of the form `"poly.sub p q"`
@@ -309,7 +309,7 @@ to the appropriate `poly` object representing the subtraction of two `poly`s.
 Here, `p` and `q` are themselves string forms of `poly`s.
 -/
 unsafe def sub_parser (cont : Parser Poly) : Parser Poly :=
-  str "poly.sub " >> Poly.sub <$> cont <*> (ch ' ' >> cont)
+  str "poly.sub " >> Poly.sub <$> Cont <*> (ch ' ' >> Cont)
 #align polyrith.sub_parser polyrith.sub_parser
 
 /-- A parser object that parses `string`s of the form `"poly.mul p q"`
@@ -317,7 +317,7 @@ to the appropriate `poly` object representing the product of two `poly`s.
 Here, `p` and `q` are themselves string forms of `poly`s.
 -/
 unsafe def mul_parser (cont : Parser Poly) : Parser Poly :=
-  str "poly.mul " >> Poly.mul <$> cont <*> (ch ' ' >> cont)
+  str "poly.mul " >> Poly.mul <$> Cont <*> (ch ' ' >> Cont)
 #align polyrith.mul_parser polyrith.mul_parser
 
 /-- A parser object that parses `string`s of the form `"poly.pow p n"`
@@ -326,7 +326,7 @@ power of a natural number. Here, `p` is the string form of a `poly`
 and `n` is a natural number.
 -/
 unsafe def pow_parser (cont : Parser Poly) : Parser Poly :=
-  str "poly.pow " >> Poly.pow <$> cont <*> (ch ' ' >> Nat)
+  str "poly.pow " >> Poly.pow <$> Cont <*> (ch ' ' >> Nat)
 #align polyrith.pow_parser polyrith.pow_parser
 
 /-- A parser object that parses `string`s of the form `"poly.neg p"`
@@ -334,7 +334,7 @@ to the appropriate `poly` object representing the negation of a `poly`.
 Here, `p` is the string form of a `poly`.
 -/
 unsafe def neg_parser (cont : Parser Poly) : Parser Poly :=
-  str "poly.neg " >> Poly.neg <$> cont
+  str "poly.neg " >> Poly.neg <$> Cont
 #align polyrith.neg_parser polyrith.neg_parser
 
 /-- A parser for `poly` that uses an s-essresion style formats such as

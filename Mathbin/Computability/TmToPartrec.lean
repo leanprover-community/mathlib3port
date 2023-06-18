@@ -458,10 +458,10 @@ to `v'` in finitely many steps if and only if `code.eval c v = some v'`.
 /-- The type of continuations, built up during evaluation of a `code` expression. -/
 inductive Cont
   | halt
-  | cons₁ : Code → List ℕ → cont → cont
-  | cons₂ : List ℕ → cont → cont
-  | comp : Code → cont → cont
-  | fix : Code → cont → cont
+  | cons₁ : Code → List ℕ → Cont → Cont
+  | cons₂ : List ℕ → Cont → Cont
+  | comp : Code → Cont → Cont
+  | fix : Code → Cont → Cont
   deriving Inhabited
 #align turing.to_partrec.cont Turing.ToPartrec.Cont
 -/

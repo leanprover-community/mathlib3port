@@ -33,29 +33,37 @@ open Finset Nat
 
 open scoped BigOperators
 
+#print Polynomial.eval_one_cyclotomic_prime /-
 @[simp]
 theorem eval_one_cyclotomic_prime {R : Type _} [CommRing R] {p : ℕ} [hn : Fact p.Prime] :
     eval 1 (cyclotomic p R) = p := by
   simp only [cyclotomic_prime, eval_X, one_pow, Finset.sum_const, eval_pow, eval_finset_sum,
     Finset.card_range, smul_one_eq_coe]
 #align polynomial.eval_one_cyclotomic_prime Polynomial.eval_one_cyclotomic_prime
+-/
 
+#print Polynomial.eval₂_one_cyclotomic_prime /-
 @[simp]
 theorem eval₂_one_cyclotomic_prime {R S : Type _} [CommRing R] [Semiring S] (f : R →+* S) {p : ℕ}
     [Fact p.Prime] : eval₂ f 1 (cyclotomic p R) = p := by simp
 #align polynomial.eval₂_one_cyclotomic_prime Polynomial.eval₂_one_cyclotomic_prime
+-/
 
+#print Polynomial.eval_one_cyclotomic_prime_pow /-
 @[simp]
 theorem eval_one_cyclotomic_prime_pow {R : Type _} [CommRing R] {p : ℕ} (k : ℕ)
     [hn : Fact p.Prime] : eval 1 (cyclotomic (p ^ (k + 1)) R) = p := by
   simp only [cyclotomic_prime_pow_eq_geom_sum hn.out, eval_X, one_pow, Finset.sum_const, eval_pow,
     eval_finset_sum, Finset.card_range, smul_one_eq_coe]
 #align polynomial.eval_one_cyclotomic_prime_pow Polynomial.eval_one_cyclotomic_prime_pow
+-/
 
+#print Polynomial.eval₂_one_cyclotomic_prime_pow /-
 @[simp]
 theorem eval₂_one_cyclotomic_prime_pow {R S : Type _} [CommRing R] [Semiring S] (f : R →+* S)
     {p : ℕ} (k : ℕ) [Fact p.Prime] : eval₂ f 1 (cyclotomic (p ^ (k + 1)) R) = p := by simp
 #align polynomial.eval₂_one_cyclotomic_prime_pow Polynomial.eval₂_one_cyclotomic_prime_pow
+-/
 
 private theorem cyclotomic_neg_one_pos {n : ℕ} (hn : 2 < n) {R} [LinearOrderedCommRing R] :
     0 < eval (-1 : R) (cyclotomic n R) :=
@@ -77,6 +85,7 @@ private theorem cyclotomic_neg_one_pos {n : ℕ} (hn : 2 < n) {R} [LinearOrdered
   rw [hy.eq_order_of] at hn 
   exact hn.not_le LinearOrderedRing.orderOf_le_two
 
+#print Polynomial.cyclotomic_pos /-
 theorem cyclotomic_pos {n : ℕ} (hn : 2 < n) {R} [LinearOrderedCommRing R] (x : R) :
     0 < eval x (cyclotomic n R) :=
   by
@@ -123,7 +132,9 @@ theorem cyclotomic_pos {n : ℕ} (hn : 2 < n) {R} [LinearOrderedCommRing R] (x :
       exact hn'.ne' hi.2.2.1
     · simpa only [eval_X, eval_one, cyclotomic_two, eval_add] using h.right.le
 #align polynomial.cyclotomic_pos Polynomial.cyclotomic_pos
+-/
 
+#print Polynomial.cyclotomic_pos_and_nonneg /-
 theorem cyclotomic_pos_and_nonneg (n : ℕ) {R} [LinearOrderedCommRing R] (x : R) :
     (1 < x → 0 < eval x (cyclotomic n R)) ∧ (1 ≤ x → 0 ≤ eval x (cyclotomic n R)) :=
   by
@@ -135,7 +146,9 @@ theorem cyclotomic_pos_and_nonneg (n : ℕ) {R} [LinearOrderedCommRing R] (x : R
   · have : 2 < n + 3 := by decide
     constructor <;> intro <;> [skip; apply le_of_lt] <;> apply cyclotomic_pos this
 #align polynomial.cyclotomic_pos_and_nonneg Polynomial.cyclotomic_pos_and_nonneg
+-/
 
+#print Polynomial.cyclotomic_pos' /-
 /-- Cyclotomic polynomials are always positive on inputs larger than one.
 Similar to `cyclotomic_pos` but with the condition on the input rather than index of the
 cyclotomic polynomial. -/
@@ -143,13 +156,17 @@ theorem cyclotomic_pos' (n : ℕ) {R} [LinearOrderedCommRing R] {x : R} (hx : 1 
     0 < eval x (cyclotomic n R) :=
   (cyclotomic_pos_and_nonneg n x).1 hx
 #align polynomial.cyclotomic_pos' Polynomial.cyclotomic_pos'
+-/
 
+#print Polynomial.cyclotomic_nonneg /-
 /-- Cyclotomic polynomials are always nonnegative on inputs one or more. -/
 theorem cyclotomic_nonneg (n : ℕ) {R} [LinearOrderedCommRing R] {x : R} (hx : 1 ≤ x) :
     0 ≤ eval x (cyclotomic n R) :=
   (cyclotomic_pos_and_nonneg n x).2 hx
 #align polynomial.cyclotomic_nonneg Polynomial.cyclotomic_nonneg
+-/
 
+#print Polynomial.eval_one_cyclotomic_not_prime_pow /-
 theorem eval_one_cyclotomic_not_prime_pow {R : Type _} [Ring R] {n : ℕ}
     (h : ∀ {p : ℕ}, p.Prime → ∀ k : ℕ, p ^ k ≠ n) : eval 1 (cyclotomic n R) = 1 :=
   by
@@ -192,7 +209,9 @@ theorem eval_one_cyclotomic_not_prime_pow {R : Type _} [Ring R] {n : ℕ}
     apply Nat.succ_injective
     exact Nat.pow_right_injective hp.two_le hxy
 #align polynomial.eval_one_cyclotomic_not_prime_pow Polynomial.eval_one_cyclotomic_not_prime_pow
+-/
 
+#print Polynomial.sub_one_pow_totient_lt_cyclotomic_eval /-
 theorem sub_one_pow_totient_lt_cyclotomic_eval {n : ℕ} {q : ℝ} (hn' : 2 ≤ n) (hq' : 1 < q) :
     (q - 1) ^ totient n < (cyclotomic n ℝ).eval q :=
   by
@@ -248,14 +267,18 @@ theorem sub_one_pow_totient_lt_cyclotomic_eval {n : ℕ} {q : ℝ} (hn' : 2 ≤ 
       NNReal.coe_lt_coe, ← Units.val_lt_val, Units.val_mk0 _, coe_nnnorm]
     simpa only [hq'.le, Real.coe_toNNReal', max_eq_left, sub_nonneg] using hex
 #align polynomial.sub_one_pow_totient_lt_cyclotomic_eval Polynomial.sub_one_pow_totient_lt_cyclotomic_eval
+-/
 
+#print Polynomial.sub_one_pow_totient_le_cyclotomic_eval /-
 theorem sub_one_pow_totient_le_cyclotomic_eval {q : ℝ} (hq' : 1 < q) :
     ∀ n, (q - 1) ^ totient n ≤ (cyclotomic n ℝ).eval q
   | 0 => by simp only [totient_zero, pow_zero, cyclotomic_zero, eval_one]
   | 1 => by simp only [totient_one, pow_one, cyclotomic_one, eval_sub, eval_X, eval_one]
   | n + 2 => (sub_one_pow_totient_lt_cyclotomic_eval (by decide) hq').le
 #align polynomial.sub_one_pow_totient_le_cyclotomic_eval Polynomial.sub_one_pow_totient_le_cyclotomic_eval
+-/
 
+#print Polynomial.cyclotomic_eval_lt_add_one_pow_totient /-
 theorem cyclotomic_eval_lt_add_one_pow_totient {n : ℕ} {q : ℝ} (hn' : 3 ≤ n) (hq' : 1 < q) :
     (cyclotomic n ℝ).eval q < (q + 1) ^ totient n :=
   by
@@ -325,7 +348,9 @@ theorem cyclotomic_eval_lt_add_one_pow_totient {n : ℕ} {q : ℝ} (hn' : 3 ≤ 
     obtain ⟨ζ, hζ, hhζ : Complex.abs _ < _⟩ := hex
     exact ⟨ζ, hζ, by simp [hhζ]⟩
 #align polynomial.cyclotomic_eval_lt_add_one_pow_totient Polynomial.cyclotomic_eval_lt_add_one_pow_totient
+-/
 
+#print Polynomial.cyclotomic_eval_le_add_one_pow_totient /-
 theorem cyclotomic_eval_le_add_one_pow_totient {q : ℝ} (hq' : 1 < q) :
     ∀ n, (cyclotomic n ℝ).eval q ≤ (q + 1) ^ totient n
   | 0 => by simp
@@ -333,7 +358,9 @@ theorem cyclotomic_eval_le_add_one_pow_totient {q : ℝ} (hq' : 1 < q) :
   | 2 => by simp
   | n + 3 => (cyclotomic_eval_lt_add_one_pow_totient (by decide) hq').le
 #align polynomial.cyclotomic_eval_le_add_one_pow_totient Polynomial.cyclotomic_eval_le_add_one_pow_totient
+-/
 
+#print Polynomial.sub_one_pow_totient_lt_natAbs_cyclotomic_eval /-
 theorem sub_one_pow_totient_lt_natAbs_cyclotomic_eval {n : ℕ} {q : ℕ} (hn' : 1 < n) (hq : q ≠ 1) :
     (q - 1) ^ totient n < ((cyclotomic n ℤ).eval ↑q).natAbs :=
   by
@@ -345,13 +372,16 @@ theorem sub_one_pow_totient_lt_natAbs_cyclotomic_eval {n : ℕ} {q : ℕ} (hn' :
   refine' (sub_one_pow_totient_lt_cyclotomic_eval hn' (Nat.one_lt_cast.2 hq')).trans_le _
   exact (cyclotomic.eval_apply (q : ℤ) n (algebraMap ℤ ℝ)).trans_le (le_abs_self _)
 #align polynomial.sub_one_pow_totient_lt_nat_abs_cyclotomic_eval Polynomial.sub_one_pow_totient_lt_natAbs_cyclotomic_eval
+-/
 
+#print Polynomial.sub_one_lt_natAbs_cyclotomic_eval /-
 theorem sub_one_lt_natAbs_cyclotomic_eval {n : ℕ} {q : ℕ} (hn' : 1 < n) (hq : q ≠ 1) :
     q - 1 < ((cyclotomic n ℤ).eval ↑q).natAbs :=
   calc
     q - 1 ≤ (q - 1) ^ totient n := Nat.le_self_pow (Nat.totient_pos <| pos_of_gt hn').ne' _
     _ < ((cyclotomic n ℤ).eval ↑q).natAbs := sub_one_pow_totient_lt_natAbs_cyclotomic_eval hn' hq
 #align polynomial.sub_one_lt_nat_abs_cyclotomic_eval Polynomial.sub_one_lt_natAbs_cyclotomic_eval
+-/
 
 end Polynomial
 

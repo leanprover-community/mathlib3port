@@ -52,7 +52,7 @@ section DefnLemmas
 
 variable {α β : Type} (msgs : Thunk (List String)) (msg : Thunk String)
 
-variable (p q : Parser α) (cb : CharBuffer) (n n' : ℕ) {err : Dlist String}
+variable (p q : Parser α) (cb : CharBuffer) (n n' : ℕ) {err : Std.DList String}
 
 variable {a : α} {b : β}
 
@@ -78,7 +78,7 @@ class Static : Prop where
 /-- A `parser α` is defined to be `err_static` if it does not move on error.
 -/
 class ErrStatic : Prop where
-  of_fail : ∀ {cb : CharBuffer} {n n' : ℕ} {err : Dlist String}, p cb n = fail n' err → n = n'
+  of_fail : ∀ {cb : CharBuffer} {n n' : ℕ} {err : Std.DList String}, p cb n = fail n' err → n = n'
 #align parser.err_static Parser.ErrStatic
 
 /-- A `parser α` is defined to be `step` if it always moves exactly one char forward on success.
@@ -98,11 +98,12 @@ class Prog : Prop where
 -/
 class Bounded : Prop where
   ex' :
-    ∀ {cb : CharBuffer} {n : ℕ}, cb.size ≤ n → ∃ (n' : ℕ) (err : Dlist String), p cb n = fail n' err
+    ∀ {cb : CharBuffer} {n : ℕ},
+      cb.size ≤ n → ∃ (n' : ℕ) (err : Std.DList String), p cb n = fail n' err
 #align parser.bounded Parser.Bounded
 
 theorem Bounded.exists (p : Parser α) [p.Bounded] {cb : CharBuffer} {n : ℕ} (h : cb.size ≤ n) :
-    ∃ (n' : ℕ) (err : Dlist String), p cb n = fail n' err :=
+    ∃ (n' : ℕ) (err : Std.DList String), p cb n = fail n' err :=
   Bounded.ex' h
 #align parser.bounded.exists Parser.Bounded.exists
 
@@ -121,7 +122,7 @@ class ConditionallyUnfailing : Prop where
 
 theorem fail_iff :
     (∀ pos' result, p cb n ≠ done pos' result) ↔
-      ∃ (pos' : ℕ) (err : Dlist String), p cb n = fail pos' err :=
+      ∃ (pos' : ℕ) (err : Std.DList String), p cb n = fail pos' err :=
   by cases p cb n <;> simp
 #align parser.fail_iff Parser.fail_iff
 
@@ -395,15 +396,15 @@ theorem failure_eq_failure : @Parser.failure α = failure :=
 #align parser.failure_eq_failure Parser.failure_eq_failure
 
 @[simp]
-theorem failure_def : (failure : Parser α) cb n = fail n Dlist.empty :=
+theorem failure_def : (failure : Parser α) cb n = fail n Std.DList.empty :=
   rfl
 #align parser.failure_def Parser.failure_def
 
 theorem not_failure_eq_done : ¬(failure : Parser α) cb n = done n' a := by simp
 #align parser.not_failure_eq_done Parser.not_failure_eq_done
 
-theorem failure_eq_fail : (failure : Parser α) cb n = fail n' err ↔ n = n' ∧ err = Dlist.empty := by
-  simp [eq_comm]
+theorem failure_eq_fail :
+    (failure : Parser α) cb n = fail n' err ↔ n = n' ∧ err = Std.DList.empty := by simp [eq_comm]
 #align parser.failure_eq_fail Parser.failure_eq_fail
 
 theorem seq_eq_done {f : Parser (α → β)} {p : Parser α} :
@@ -466,7 +467,7 @@ theorem guard_eq_done {p : Prop} [Decidable p] {u : Unit} :
 #align parser.guard_eq_done Parser.guard_eq_done
 
 theorem guard_eq_fail {p : Prop} [Decidable p] :
-    @guard Parser _ p _ cb n = fail n' err ↔ ¬p ∧ n = n' ∧ err = Dlist.empty := by
+    @guard Parser _ p _ cb n = fail n' err ↔ ¬p ∧ n = n' ∧ err = Std.DList.empty := by
   by_cases hp : p <;> simp [guard, hp, eq_comm, pure_eq_done]
 #align parser.guard_eq_fail Parser.guard_eq_fail
 
@@ -695,7 +696,7 @@ end DefnLemmas
 section Done
 
 variable {α β : Type} {cb : CharBuffer} {n n' : ℕ} {a a' : α} {b : β} {c : Char} {u : Unit}
-  {err : Dlist String}
+  {err : Std.DList String}
 
 theorem anyChar_eq_done :
     anyChar cb n = done n' c ↔ ∃ hn : n < cb.size, n' = n + 1 ∧ cb.read ⟨n, hn⟩ = c :=
@@ -704,7 +705,8 @@ theorem anyChar_eq_done :
   split_ifs with h <;> simp [h, eq_comm]
 #align parser.any_char_eq_done Parser.anyChar_eq_done
 
-theorem anyChar_eq_fail : anyChar cb n = fail n' err ↔ n = n' ∧ err = Dlist.empty ∧ cb.size ≤ n :=
+theorem anyChar_eq_fail :
+    anyChar cb n = fail n' err ↔ n = n' ∧ err = Std.DList.empty ∧ cb.size ≤ n :=
   by
   simp_rw [any_char]
   split_ifs with h <;> simp [← not_lt, h, eq_comm]
@@ -727,7 +729,7 @@ theorem sat_eq_done {p : Char → Prop} [DecidablePred p] :
 
 theorem sat_eq_fail {p : Char → Prop} [DecidablePred p] :
     sat p cb n = fail n' err ↔
-      n = n' ∧ err = Dlist.empty ∧ ∀ h : n < cb.size, ¬p (cb.read ⟨n, h⟩) :=
+      n = n' ∧ err = Std.DList.empty ∧ ∀ h : n < cb.size, ¬p (cb.read ⟨n, h⟩) :=
   by
   dsimp only [sat]
   split_ifs <;> simp [*, eq_comm]
@@ -824,12 +826,12 @@ theorem foldrCore_eq_done {f : α → β → β} {p : Parser α} {reps : ℕ} {b
 #align parser.foldr_core_eq_done Parser.foldrCore_eq_done
 
 @[simp]
-theorem foldrCore_zero_eq_fail {f : α → β → β} {p : Parser α} {err : Dlist String} :
-    foldrCore f p b 0 cb n = fail n' err ↔ n = n' ∧ err = Dlist.empty := by
+theorem foldrCore_zero_eq_fail {f : α → β → β} {p : Parser α} {err : Std.DList String} :
+    foldrCore f p b 0 cb n = fail n' err ↔ n = n' ∧ err = Std.DList.empty := by
   simp [foldr_core, eq_comm]
 #align parser.foldr_core_zero_eq_fail Parser.foldrCore_zero_eq_fail
 
-theorem foldrCore_succ_eq_fail {f : α → β → β} {p : Parser α} {reps : ℕ} {err : Dlist String} :
+theorem foldrCore_succ_eq_fail {f : α → β → β} {p : Parser α} {reps : ℕ} {err : Std.DList String} :
     foldrCore f p b (reps + 1) cb n = fail n' err ↔
       n ≠ n' ∧
         (p cb n = fail n' err ∨
@@ -850,10 +852,10 @@ theorem foldr_eq_done {f : α → β → β} {p : Parser α} {b' : β} :
   by simp [foldr, foldr_core_eq_done]
 #align parser.foldr_eq_done Parser.foldr_eq_done
 
-theorem foldr_eq_fail_iff_mono_at_end {f : α → β → β} {p : Parser α} {err : Dlist String} [p.mono]
-    (hc : cb.size ≤ n) :
+theorem foldr_eq_fail_iff_mono_at_end {f : α → β → β} {p : Parser α} {err : Std.DList String}
+    [p.mono] (hc : cb.size ≤ n) :
     foldr f p b cb n = fail n' err ↔
-      n < n' ∧ (p cb n = fail n' err ∨ ∃ a : α, p cb n = done n' a ∧ err = Dlist.empty) :=
+      n < n' ∧ (p cb n = fail n' err ∨ ∃ a : α, p cb n = done n' a ∧ err = Std.DList.empty) :=
   by
   have : cb.size - n = 0 := tsub_eq_zero_iff_le.mpr hc
   simp only [foldr, foldr_core_succ_eq_fail, this, and_left_comm, foldr_core_zero_eq_fail,
@@ -863,7 +865,7 @@ theorem foldr_eq_fail_iff_mono_at_end {f : α → β → β} {p : Parser α} {er
   · exact mono.of_done h
 #align parser.foldr_eq_fail_iff_mono_at_end Parser.foldr_eq_fail_iff_mono_at_end
 
-theorem foldr_eq_fail {f : α → β → β} {p : Parser α} {err : Dlist String} :
+theorem foldr_eq_fail {f : α → β → β} {p : Parser α} {err : Std.DList String} :
     foldr f p b cb n = fail n' err ↔
       n ≠ n' ∧
         (p cb n = fail n' err ∨
@@ -890,12 +892,12 @@ theorem foldlCore_eq_done {f : β → α → β} {p : Parser α} {reps : ℕ} {b
 #align parser.foldl_core_eq_done Parser.foldlCore_eq_done
 
 @[simp]
-theorem foldlCore_zero_eq_fail {f : β → α → β} {p : Parser α} {err : Dlist String} :
-    foldlCore f b p 0 cb n = fail n' err ↔ n = n' ∧ err = Dlist.empty := by
+theorem foldlCore_zero_eq_fail {f : β → α → β} {p : Parser α} {err : Std.DList String} :
+    foldlCore f b p 0 cb n = fail n' err ↔ n = n' ∧ err = Std.DList.empty := by
   simp [foldl_core, eq_comm]
 #align parser.foldl_core_zero_eq_fail Parser.foldlCore_zero_eq_fail
 
-theorem foldlCore_succ_eq_fail {f : β → α → β} {p : Parser α} {reps : ℕ} {err : Dlist String} :
+theorem foldlCore_succ_eq_fail {f : β → α → β} {p : Parser α} {reps : ℕ} {err : Std.DList String} :
     foldlCore f b p (reps + 1) cb n = fail n' err ↔
       n ≠ n' ∧
         (p cb n = fail n' err ∨
@@ -917,7 +919,7 @@ theorem foldl_eq_done {f : β → α → β} {p : Parser α} {b' : β} :
   by simp [foldl, foldl_core_eq_done]
 #align parser.foldl_eq_done Parser.foldl_eq_done
 
-theorem foldl_eq_fail {f : β → α → β} {p : Parser α} {err : Dlist String} :
+theorem foldl_eq_fail {f : β → α → β} {p : Parser α} {err : Std.DList String} :
     foldl f b p cb n = fail n' err ↔
       n ≠ n' ∧
         (p cb n = fail n' err ∨
@@ -926,10 +928,10 @@ theorem foldl_eq_fail {f : β → α → β} {p : Parser α} {err : Dlist String
   by simp [foldl, foldl_core_succ_eq_fail]
 #align parser.foldl_eq_fail Parser.foldl_eq_fail
 
-theorem foldl_eq_fail_iff_mono_at_end {f : β → α → β} {p : Parser α} {err : Dlist String} [p.mono]
-    (hc : cb.size ≤ n) :
+theorem foldl_eq_fail_iff_mono_at_end {f : β → α → β} {p : Parser α} {err : Std.DList String}
+    [p.mono] (hc : cb.size ≤ n) :
     foldl f b p cb n = fail n' err ↔
-      n < n' ∧ (p cb n = fail n' err ∨ ∃ a : α, p cb n = done n' a ∧ err = Dlist.empty) :=
+      n < n' ∧ (p cb n = fail n' err ∨ ∃ a : α, p cb n = done n' a ∧ err = Std.DList.empty) :=
   by
   have : cb.size - n = 0 := tsub_eq_zero_iff_le.mpr hc
   simp only [foldl, foldl_core_succ_eq_fail, this, and_left_comm, ne_iff_lt_iff_le, exists_eq_left,
@@ -956,7 +958,7 @@ theorem many_eq_done {p : Parser α} {x : α} {xs : List α} :
   by simp [many, foldr_eq_done, and_comm, and_assoc, and_left_comm]
 #align parser.many_eq_done Parser.many_eq_done
 
-theorem many_eq_fail {p : Parser α} {err : Dlist String} :
+theorem many_eq_fail {p : Parser α} {err : Std.DList String} :
     many p cb n = fail n' err ↔
       n ≠ n' ∧
         (p cb n = fail n' err ∨
@@ -1022,7 +1024,7 @@ theorem many1_eq_done {p : Parser α} {l : List α} :
   simp [many1, seq_eq_done, map_eq_done]
 #align parser.many1_eq_done Parser.many1_eq_done
 
-theorem many1_eq_fail {p : Parser α} {err : Dlist String} :
+theorem many1_eq_fail {p : Parser α} {err : Std.DList String} :
     many1 p cb n = fail n' err ↔
       p cb n = fail n' err ∨ ∃ (np : ℕ) (a : α), p cb n = done np a ∧ many p cb np = fail n' err :=
   by simp [many1, seq_eq_fail]
@@ -1094,7 +1096,7 @@ theorem digit_eq_done {k : ℕ} :
 theorem digit_eq_fail :
     digit cb n = fail n' err ↔
       n = n' ∧
-        err = Dlist.ofList ["<digit>"] ∧
+        err = Std.DList.ofList ["<digit>"] ∧
           ∀ h : n < cb.size, ¬(fun c => '0' ≤ c ∧ c ≤ '9') (cb.read ⟨n, h⟩) :=
   by simp [digit, sat_eq_fail]
 #align parser.digit_eq_fail Parser.digit_eq_fail
@@ -1104,7 +1106,7 @@ end Done
 namespace Static
 
 variable {α β : Type} {p q : Parser α} {msgs : Thunk (List String)} {msg : Thunk String}
-  {cb : CharBuffer} {n' n : ℕ} {err : Dlist String} {a : α} {b : β} {sep : Parser Unit}
+  {cb : CharBuffer} {n' n : ℕ} {err : Std.DList String} {a : α} {b : β} {sep : Parser Unit}
 
 theorem not_of_ne (h : p cb n = done n' a) (hne : n ≠ n') : ¬Static p := by intro;
   exact hne (of_done h)
@@ -1355,7 +1357,7 @@ namespace Bounded
 
 variable {α β : Type} {msgs : Thunk (List String)} {msg : Thunk String}
 
-variable {p q : Parser α} {cb : CharBuffer} {n n' : ℕ} {err : Dlist String}
+variable {p q : Parser α} {cb : CharBuffer} {n n' : ℕ} {err : Std.DList String}
 
 variable {a : α} {b : β}
 
@@ -1618,7 +1620,7 @@ end Bounded
 namespace Unfailing
 
 variable {α β : Type} {p q : Parser α} {msgs : Thunk (List String)} {msg : Thunk String}
-  {cb : CharBuffer} {n' n : ℕ} {err : Dlist String} {a : α} {b : β} {sep : Parser Unit}
+  {cb : CharBuffer} {n' n : ℕ} {err : Std.DList String} {a : α} {b : β} {sep : Parser Unit}
 
 theorem of_bounded [p.Bounded] : ¬Unfailing p :=
   by
@@ -1677,7 +1679,7 @@ instance mapM' {l : List α} {f : α → Parser β} [∀ a, (f a).Unfailing] : (
 theorem failure : ¬@Parser.Unfailing α failure :=
   by
   intro h
-  have : (failure : Parser α) Buffer.nil 0 = fail 0 Dlist.empty := by simp
+  have : (failure : Parser α) Buffer.nil 0 = fail 0 Std.DList.empty := by simp
   exact of_fail this
 #align parser.unfailing.failure Parser.Unfailing.failure
 
@@ -1764,7 +1766,7 @@ end Unfailing
 namespace ErrStatic
 
 variable {α β : Type} {p q : Parser α} {msgs : Thunk (List String)} {msg : Thunk String}
-  {cb : CharBuffer} {n' n : ℕ} {err : Dlist String} {a : α} {b : β} {sep : Parser Unit}
+  {cb : CharBuffer} {n' n : ℕ} {err : Std.DList String} {a : α} {b : β} {sep : Parser Unit}
 
 theorem not_of_ne (h : p cb n = fail n' err) (hne : n ≠ n') : ¬ErrStatic p := by intro;
   exact hne (of_fail h)
@@ -1963,7 +1965,7 @@ end ErrStatic
 namespace Step
 
 variable {α β : Type} {p q : Parser α} {msgs : Thunk (List String)} {msg : Thunk String}
-  {cb : CharBuffer} {n' n : ℕ} {err : Dlist String} {a : α} {b : β} {sep : Parser Unit}
+  {cb : CharBuffer} {n' n : ℕ} {err : Std.DList String} {a : α} {b : β} {sep : Parser Unit}
 
 theorem not_step_of_static_done [Static p] (h : ∃ cb n n' a, p cb n = done n' a) : ¬Step p :=
   by
@@ -2155,7 +2157,7 @@ end Step
 section Step
 
 variable {α β : Type} {p q : Parser α} {msgs : Thunk (List String)} {msg : Thunk String}
-  {cb : CharBuffer} {n' n : ℕ} {err : Dlist String} {a : α} {b : β} {sep : Parser Unit}
+  {cb : CharBuffer} {n' n : ℕ} {err : Std.DList String} {a : α} {b : β} {sep : Parser Unit}
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -2213,7 +2215,7 @@ end Step
 namespace Prog
 
 variable {α β : Type} {p q : Parser α} {msgs : Thunk (List String)} {msg : Thunk String}
-  {cb : CharBuffer} {n' n : ℕ} {err : Dlist String} {a : α} {b : β} {sep : Parser Unit}
+  {cb : CharBuffer} {n' n : ℕ} {err : Std.DList String} {a : α} {b : β} {sep : Parser Unit}
 
 -- see Note [lower instance priority]
 instance (priority := 100) of_step [Step p] : Prog p :=
@@ -2392,7 +2394,7 @@ end Prog
 
 variable {α β : Type} {msgs : Thunk (List String)} {msg : Thunk String}
 
-variable {p q : Parser α} {cb : CharBuffer} {n n' : ℕ} {err : Dlist String}
+variable {p q : Parser α} {cb : CharBuffer} {n n' : ℕ} {err : Std.DList String}
 
 variable {a : α} {b : β}
 

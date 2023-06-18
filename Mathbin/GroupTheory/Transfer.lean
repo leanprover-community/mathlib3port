@@ -252,17 +252,17 @@ noncomputable def transferSylow [FiniteIndex (P : Subgroup G)] : G →* (P : Sub
 
 variable [Fact p.Prime] [Finite (Sylow p G)]
 
-#print MonoidHom.transfer_sylow_eq_pow_aux /-
+#print MonoidHom.transferSylow_eq_pow_aux /-
 /-- Auxillary lemma in order to state `transfer_sylow_eq_pow`. -/
-theorem transfer_sylow_eq_pow_aux (g : G) (hg : g ∈ P) (k : ℕ) (g₀ : G)
-    (h : g₀⁻¹ * g ^ k * g₀ ∈ P) : g₀⁻¹ * g ^ k * g₀ = g ^ k :=
+theorem transferSylow_eq_pow_aux (g : G) (hg : g ∈ P) (k : ℕ) (g₀ : G) (h : g₀⁻¹ * g ^ k * g₀ ∈ P) :
+    g₀⁻¹ * g ^ k * g₀ = g ^ k :=
   by
   haveI : (P : Subgroup G).IsCommutative :=
     ⟨⟨fun a b => Subtype.ext (hP (le_normalizer b.2) a a.2)⟩⟩
   replace hg := (P : Subgroup G).pow_mem hg k
   obtain ⟨n, hn, h⟩ := P.conj_eq_normalizer_conj_of_mem (g ^ k) g₀ hg h
   exact h.trans (Commute.inv_mul_cancel (hP hn (g ^ k) hg).symm)
-#align monoid_hom.transfer_sylow_eq_pow_aux MonoidHom.transfer_sylow_eq_pow_aux
+#align monoid_hom.transfer_sylow_eq_pow_aux MonoidHom.transferSylow_eq_pow_aux
 -/
 
 variable [FiniteIndex (P : Subgroup G)]
@@ -270,7 +270,7 @@ variable [FiniteIndex (P : Subgroup G)]
 #print MonoidHom.transferSylow_eq_pow /-
 theorem transferSylow_eq_pow (g : G) (hg : g ∈ P) :
     transferSylow P hP g =
-      ⟨g ^ (P : Subgroup G).index, transfer_eq_pow_aux g (transfer_sylow_eq_pow_aux P hP g hg)⟩ :=
+      ⟨g ^ (P : Subgroup G).index, transfer_eq_pow_aux g (transferSylow_eq_pow_aux P hP g hg)⟩ :=
   by apply transfer_eq_pow
 #align monoid_hom.transfer_sylow_eq_pow MonoidHom.transferSylow_eq_pow
 -/

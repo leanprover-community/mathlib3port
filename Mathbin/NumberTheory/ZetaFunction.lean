@@ -96,7 +96,7 @@ def riemannCompletedZeta (s : ℂ) : ℂ :=
 /-- The Riemann zeta function `ζ(s)`. We set this to be irreducible to hide messy implementation
 details. -/
 irreducible_def riemannZeta :=
-  Function.update (fun s : ℂ => ↑π ^ (s / 2) * riemannCompletedZeta s / gamma (s / 2)) 0 (-1 / 2)
+  Function.update (fun s : ℂ => ↑π ^ (s / 2) * riemannCompletedZeta s / Gamma (s / 2)) 0 (-1 / 2)
 #align riemann_zeta riemannZeta
 
 /- Note the next lemma is true by definition; what's hard is to show that with this definition, `ζ`
@@ -417,7 +417,7 @@ theorem differentiableAt_riemannZeta {s : ℂ} (hs' : s ≠ 1) : DifferentiableA
               (fun t ht => (c1 t ht.2 ht.1).DifferentiableWithinAt) _)
             0 hs').DifferentiableAt
         S_nhds
-    simp only [zero_div, div_zero, Complex.gamma_zero, MulZeroClass.mul_zero, cpow_zero, sub_zero]
+    simp only [zero_div, div_zero, Complex.Gamma_zero, MulZeroClass.mul_zero, cpow_zero, sub_zero]
     -- Remains to show completed zeta is `o (s ^ (-1))` near 0.
     refine' (is_O_const_of_tendsto c2 <| one_ne_zero' ℂ).trans_isLittleO _
     rw [is_o_iff_tendsto']
@@ -431,7 +431,7 @@ theorem riemannZeta_neg_two_mul_nat_add_one (n : ℕ) : riemannZeta (-2 * (n + 1
   have : (-2 : ℂ) * (n + 1) ≠ 0 :=
     mul_ne_zero (neg_ne_zero.mpr two_ne_zero) (Nat.cast_add_one_ne_zero n)
   rw [riemannZeta, Function.update_noteq this,
-    show -2 * ((n : ℂ) + 1) / 2 = -↑(n + 1) by push_cast ; ring, Complex.gamma_neg_nat_eq_zero,
+    show -2 * ((n : ℂ) + 1) / 2 = -↑(n + 1) by push_cast ; ring, Complex.Gamma_neg_nat_eq_zero,
     div_zero]
 #align riemann_zeta_neg_two_mul_nat_add_one riemannZeta_neg_two_mul_nat_add_one
 
@@ -515,9 +515,9 @@ theorem completed_zeta_eq_mellin_of_one_lt_re {s : ℂ} (hs : 1 < re s) :
 individual term in the series. -/
 theorem integral_cpow_mul_exp_neg_pi_mul_sq {s : ℂ} (hs : 0 < s.re) (n : ℕ) :
     ∫ t : ℝ in Ioi 0, (t : ℂ) ^ (s - 1) * rexp (-π * t * (n + 1) ^ 2) =
-      ↑π ^ (-s) * Complex.gamma s * (1 / (n + 1) ^ (2 * s)) :=
+      ↑π ^ (-s) * Complex.Gamma s * (1 / (n + 1) ^ (2 * s)) :=
   by
-  rw [Complex.gamma_eq_integral hs, Gamma_integral_eq_mellin]
+  rw [Complex.Gamma_eq_integral hs, Gamma_integral_eq_mellin]
   conv_rhs =>
     congr
     rw [← smul_eq_mul, ← mellin_comp_mul_left _ _ pi_pos]
@@ -537,7 +537,7 @@ theorem integral_cpow_mul_exp_neg_pi_mul_sq {s : ℂ} (hs : 0 < s.re) (n : ℕ) 
 #align integral_cpow_mul_exp_neg_pi_mul_sq integral_cpow_mul_exp_neg_pi_mul_sq
 
 theorem mellin_zetaKernel₁_eq_tsum {s : ℂ} (hs : 1 / 2 < s.re) :
-    mellin zetaKernel₁ s = π ^ (-s) * gamma s * ∑' n : ℕ, 1 / (n + 1) ^ (2 * s) :=
+    mellin zetaKernel₁ s = π ^ (-s) * Gamma s * ∑' n : ℕ, 1 / (n + 1) ^ (2 * s) :=
   by
   let bd : ℕ → ℝ → ℝ := fun n t => t ^ (s.re - 1) * exp (-π * t * (n + 1) ^ 2)
   let f : ℕ → ℝ → ℂ := fun n t => t ^ (s - 1) * exp (-π * t * (n + 1) ^ 2)
@@ -591,7 +591,7 @@ theorem mellin_zetaKernel₁_eq_tsum {s : ℂ} (hs : 1 / 2 < s.re) :
 #align mellin_zeta_kernel₁_eq_tsum mellin_zetaKernel₁_eq_tsum
 
 theorem completed_zeta_eq_tsum_of_one_lt_re {s : ℂ} (hs : 1 < re s) :
-    riemannCompletedZeta s = π ^ (-s / 2) * gamma (s / 2) * ∑' n : ℕ, 1 / (n + 1) ^ s :=
+    riemannCompletedZeta s = π ^ (-s / 2) * Gamma (s / 2) * ∑' n : ℕ, 1 / (n + 1) ^ s :=
   by
   rw [completed_zeta_eq_mellin_of_one_lt_re hs, mellin_zetaKernel₁_eq_tsum, neg_div,
     mul_div_cancel' _ (two_ne_zero' ℂ)]
@@ -709,7 +709,7 @@ theorem riemannCompletedZeta_one_sub (s : ℂ) :
 `ζ (1 - s) = 2 ^ (1 - s) * π ^ (-s) * Γ s * sin (π * (1 - s) / 2) * ζ s`. -/
 theorem riemannZeta_one_sub {s : ℂ} (hs : ∀ n : ℕ, s ≠ -n) (hs' : s ≠ 1) :
     riemannZeta (1 - s) =
-      2 ^ (1 - s) * π ^ (-s) * gamma s * sin (π * (1 - s) / 2) * riemannZeta s :=
+      2 ^ (1 - s) * π ^ (-s) * Gamma s * sin (π * (1 - s) / 2) * riemannZeta s :=
   by
   -- Deducing this from the previous formulations is quite involved. The proof uses two
   -- nontrivial facts (the doubling formula and reflection formula for Gamma) and a lot of careful
@@ -744,7 +744,7 @@ theorem riemannZeta_one_sub {s : ℂ} (hs : ∀ n : ℕ, s ≠ -n) (hs' : s ≠ 
     obtain ⟨n, rfl⟩ := hs_pos_odd
     have : (1 - (1 + 2 * (n : ℂ))) / 2 = -↑n := by
       rw [← sub_sub, sub_self, zero_sub, neg_div, mul_div_cancel_left _ (two_ne_zero' ℂ)]
-    rw [this, Complex.gamma_neg_nat_eq_zero, div_zero]
+    rw [this, Complex.Gamma_neg_nat_eq_zero, div_zero]
     have : (π : ℂ) * (1 - (1 + 2 * ↑n)) / 2 = ↑(-n : ℤ) * π := by push_cast ; field_simp; ring
     rw [this, Complex.sin_int_mul_pi, MulZeroClass.mul_zero, MulZeroClass.zero_mul]
   have h_Ga_ne4 : Gamma ((1 - s) / 2) ≠ 0 :=
@@ -817,7 +817,7 @@ theorem riemannZeta_neg_nat_eq_bernoulli (k : ℕ) :
     rw [show ((2 * (m + 1))! : ℂ) = Gamma (2 * m + 2) * (↑(2 * m + 1) + 1)
         by
         rw [(by push_cast ; ring : (2 * m + 2 : ℂ) = ↑(2 * m + 1) + 1),
-          Complex.gamma_nat_eq_factorial, (by ring : 2 * (m + 1) = 2 * m + 1 + 1),
+          Complex.Gamma_nat_eq_factorial, (by ring : 2 * (m + 1) = 2 * m + 1 + 1),
           Nat.factorial_succ, Nat.cast_mul, mul_comm]
         push_cast ]
     rw [← div_div, neg_one_mul]

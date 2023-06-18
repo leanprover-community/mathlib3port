@@ -101,7 +101,7 @@ unsafe def as_goal (e : expr) (tac : tactic Unit) : tactic Unit := do
 
 open List hiding map
 
-open Functor Dlist
+open Functor Std.DList
 
 section Config
 
@@ -135,7 +135,7 @@ unsafe def pi_head : expr → tactic expr
 
 unsafe def delete_expr (e : expr) : List expr → tactic (Option (List expr))
   | [] => return none
-  | x :: xs => compare opt e x >> return (some xs) <|> map (cons x) <$> delete_expr xs
+  | x :: xs => compare opt e x >> return (some xs) <|> map (Std.DList.cons x) <$> delete_expr xs
 #align tactic.interactive.delete_expr tactic.interactive.delete_expr
 
 unsafe def match_ac' : List expr → List expr → tactic (List expr × List expr × List expr)
@@ -202,17 +202,17 @@ unsafe def check_ac : expr → tactic (Bool × Bool × Option (expr × expr × e
   | _ => return (false, false, none, expr.var 1)
 #align tactic.interactive.check_ac tactic.interactive.check_ac
 
-unsafe def parse_assoc_chain' (f : expr) : expr → tactic (Dlist expr)
+unsafe def parse_assoc_chain' (f : expr) : expr → tactic (Std.DList expr)
   | e =>
     (do
         let expr.app (expr.app f' x) y ← return e
         is_def_eq f f'
         (· ++ ·) <$> parse_assoc_chain' x <*> parse_assoc_chain' y) <|>
-      return (singleton e)
+      return (Std.DList.singleton e)
 #align tactic.interactive.parse_assoc_chain' tactic.interactive.parse_assoc_chain'
 
 unsafe def parse_assoc_chain (f : expr) : expr → tactic (List expr) :=
-  map Dlist.toList ∘ parse_assoc_chain' f
+  map Std.DList.toList ∘ parse_assoc_chain' f
 #align tactic.interactive.parse_assoc_chain tactic.interactive.parse_assoc_chain
 
 unsafe def fold_assoc (op : expr) :

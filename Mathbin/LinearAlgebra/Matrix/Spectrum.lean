@@ -40,36 +40,48 @@ namespace IsHermitian
 
 variable (hA : A.IsHermitian)
 
+#print Matrix.IsHermitian.eigenvalues₀ /-
 /-- The eigenvalues of a hermitian matrix, indexed by `fin (fintype.card n)` where `n` is the index
 type of the matrix. -/
 noncomputable def eigenvalues₀ : Fin (Fintype.card n) → ℝ :=
   (isHermitian_iff_isSymmetric.1 hA).Eigenvalues finrank_euclideanSpace
 #align matrix.is_hermitian.eigenvalues₀ Matrix.IsHermitian.eigenvalues₀
+-/
 
+#print Matrix.IsHermitian.eigenvalues /-
 /-- The eigenvalues of a hermitian matrix, reusing the index `n` of the matrix entries. -/
 noncomputable def eigenvalues : n → ℝ := fun i =>
   hA.eigenvalues₀ <| (Fintype.equivOfCardEq (Fintype.card_fin _)).symm i
 #align matrix.is_hermitian.eigenvalues Matrix.IsHermitian.eigenvalues
+-/
 
+#print Matrix.IsHermitian.eigenvectorBasis /-
 /-- A choice of an orthonormal basis of eigenvectors of a hermitian matrix. -/
 noncomputable def eigenvectorBasis : OrthonormalBasis n 𝕜 (EuclideanSpace 𝕜 n) :=
   ((isHermitian_iff_isSymmetric.1 hA).eigenvectorBasis finrank_euclideanSpace).reindex
     (Fintype.equivOfCardEq (Fintype.card_fin _))
 #align matrix.is_hermitian.eigenvector_basis Matrix.IsHermitian.eigenvectorBasis
+-/
 
+#print Matrix.IsHermitian.eigenvectorMatrix /-
 /-- A matrix whose columns are an orthonormal basis of eigenvectors of a hermitian matrix. -/
 noncomputable def eigenvectorMatrix : Matrix n n 𝕜 :=
   (PiLp.basisFun _ 𝕜 n).toMatrix (eigenvectorBasis hA).toBasis
 #align matrix.is_hermitian.eigenvector_matrix Matrix.IsHermitian.eigenvectorMatrix
+-/
 
+#print Matrix.IsHermitian.eigenvectorMatrixInv /-
 /-- The inverse of `eigenvector_matrix` -/
 noncomputable def eigenvectorMatrixInv : Matrix n n 𝕜 :=
   (eigenvectorBasis hA).toBasis.toMatrix (PiLp.basisFun _ 𝕜 n)
 #align matrix.is_hermitian.eigenvector_matrix_inv Matrix.IsHermitian.eigenvectorMatrixInv
+-/
 
+#print Matrix.IsHermitian.eigenvectorMatrix_mul_inv /-
 theorem eigenvectorMatrix_mul_inv : hA.eigenvectorMatrix ⬝ hA.eigenvectorMatrixInv = 1 := by
   apply Basis.toMatrix_mul_toMatrix_flip
 #align matrix.is_hermitian.eigenvector_matrix_mul_inv Matrix.IsHermitian.eigenvectorMatrix_mul_inv
+-/
 
 noncomputable instance : Invertible hA.eigenvectorMatrixInv :=
   invertibleOfLeftInverse _ _ hA.eigenvectorMatrix_mul_inv
@@ -77,28 +89,37 @@ noncomputable instance : Invertible hA.eigenvectorMatrixInv :=
 noncomputable instance : Invertible hA.eigenvectorMatrix :=
   invertibleOfRightInverse _ _ hA.eigenvectorMatrix_mul_inv
 
+#print Matrix.IsHermitian.eigenvectorMatrix_apply /-
 theorem eigenvectorMatrix_apply (i j : n) : hA.eigenvectorMatrix i j = hA.eigenvectorBasis j i := by
   simp_rw [eigenvector_matrix, Basis.toMatrix_apply, OrthonormalBasis.coe_toBasis,
     PiLp.basisFun_repr]
 #align matrix.is_hermitian.eigenvector_matrix_apply Matrix.IsHermitian.eigenvectorMatrix_apply
+-/
 
+#print Matrix.IsHermitian.eigenvectorMatrixInv_apply /-
 theorem eigenvectorMatrixInv_apply (i j : n) :
     hA.eigenvectorMatrixInv i j = star (hA.eigenvectorBasis i j) := by
   rw [eigenvector_matrix_inv, Basis.toMatrix_apply, OrthonormalBasis.coe_toBasis_repr_apply,
     OrthonormalBasis.repr_apply_apply, PiLp.basisFun_apply, PiLp.equiv_symm_single,
     EuclideanSpace.inner_single_right, one_mul, IsROrC.star_def]
 #align matrix.is_hermitian.eigenvector_matrix_inv_apply Matrix.IsHermitian.eigenvectorMatrixInv_apply
+-/
 
+#print Matrix.IsHermitian.conjTranspose_eigenvectorMatrixInv /-
 theorem conjTranspose_eigenvectorMatrixInv : hA.eigenvectorMatrixInvᴴ = hA.eigenvectorMatrix :=
   by
   ext (i j)
   rw [conj_transpose_apply, eigenvector_matrix_inv_apply, eigenvector_matrix_apply, star_star]
 #align matrix.is_hermitian.conj_transpose_eigenvector_matrix_inv Matrix.IsHermitian.conjTranspose_eigenvectorMatrixInv
+-/
 
+#print Matrix.IsHermitian.conjTranspose_eigenvectorMatrix /-
 theorem conjTranspose_eigenvectorMatrix : hA.eigenvectorMatrixᴴ = hA.eigenvectorMatrixInv := by
   rw [← conj_transpose_eigenvector_matrix_inv, conj_transpose_conj_transpose]
 #align matrix.is_hermitian.conj_transpose_eigenvector_matrix Matrix.IsHermitian.conjTranspose_eigenvectorMatrix
+-/
 
+#print Matrix.IsHermitian.spectral_theorem /-
 /-- *Diagonalization theorem*, *spectral theorem* for matrices; A hermitian matrix can be
 diagonalized by a change of basis.
 
@@ -122,7 +143,9 @@ theorem spectral_theorem :
     rw [eigenvector_basis, Basis.toMatrix_apply, OrthonormalBasis.coe_toBasis_repr_apply,
       OrthonormalBasis.repr_reindex, eigenvalues₀, PiLp.basisFun_apply, PiLp.equiv_symm_single]
 #align matrix.is_hermitian.spectral_theorem Matrix.IsHermitian.spectral_theorem
+-/
 
+#print Matrix.IsHermitian.eigenvalues_eq /-
 theorem eigenvalues_eq (i : n) :
     hA.Eigenvalues i =
       IsROrC.re (star (hA.eigenvectorMatrixᵀ i) ⬝ᵥ A.mulVec (hA.eigenvectorMatrixᵀ i)) :=
@@ -134,13 +157,16 @@ theorem eigenvalues_eq (i : n) :
     conj_transpose_eigenvector_matrix, mul_mul_apply] at this 
   exact this.symm
 #align matrix.is_hermitian.eigenvalues_eq Matrix.IsHermitian.eigenvalues_eq
+-/
 
+#print Matrix.IsHermitian.det_eq_prod_eigenvalues /-
 /-- The determinant of a hermitian matrix is the product of its eigenvalues. -/
 theorem det_eq_prod_eigenvalues : det A = ∏ i, hA.Eigenvalues i :=
   by
   apply mul_left_cancel₀ (det_ne_zero_of_left_inverse (eigenvector_matrix_mul_inv hA))
   rw [← det_mul, spectral_theorem, det_mul, mul_comm, det_diagonal]
 #align matrix.is_hermitian.det_eq_prod_eigenvalues Matrix.IsHermitian.det_eq_prod_eigenvalues
+-/
 
 end IsHermitian
 

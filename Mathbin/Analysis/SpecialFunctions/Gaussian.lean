@@ -360,7 +360,7 @@ theorem integral_gaussian_Ioi (b : ℝ) : ∫ x in Ioi 0, exp (-b * x ^ 2) = sqr
 #align integral_gaussian_Ioi integral_gaussian_Ioi
 
 /-- The special-value formula `Γ(1/2) = √π`, which is equivalent to the Gaussian integral. -/
-theorem Real.gamma_one_half_eq : Real.gamma (1 / 2) = sqrt π :=
+theorem Real.gamma_one_half_eq : Real.Gamma (1 / 2) = sqrt π :=
   by
   rw [Gamma_eq_integral one_half_pos, ← integral_comp_rpow_Ioi_of_pos zero_lt_two]
   convert congr_arg (fun x : ℝ => 2 * x) (integral_gaussian_Ioi 1)
@@ -379,7 +379,7 @@ theorem Real.gamma_one_half_eq : Real.gamma (1 / 2) = sqrt π :=
 #align real.Gamma_one_half_eq Real.gamma_one_half_eq
 
 /-- The special-value formula `Γ(1/2) = √π`, which is equivalent to the Gaussian integral. -/
-theorem Complex.gamma_one_half_eq : Complex.gamma (1 / 2) = π ^ (1 / 2 : ℂ) :=
+theorem Complex.gamma_one_half_eq : Complex.Gamma (1 / 2) = π ^ (1 / 2 : ℂ) :=
   by
   convert congr_arg coe Real.gamma_one_half_eq
   · simpa only [one_div, of_real_inv, of_real_bit0] using Gamma_of_real (1 / 2)

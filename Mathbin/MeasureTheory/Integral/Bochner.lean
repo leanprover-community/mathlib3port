@@ -917,7 +917,7 @@ theorem integral_eq_norm_posPart_sub (f : α →₁[μ] ℝ) :
       (fun f : α →₁[μ] ℝ => integral f = ‖Lp.pos_part f‖ - ‖Lp.neg_part f‖)
       (simple_func.dense_range one_ne_top) (isClosed_eq _ _) _ f
   · simp only [integral]
-    exact cont _
+    exact Cont _
   ·
     refine'
       Continuous.sub (continuous_norm.comp Lp.continuous_pos_part)

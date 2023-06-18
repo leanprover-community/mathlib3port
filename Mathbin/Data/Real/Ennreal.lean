@@ -357,13 +357,17 @@ theorem toReal_eq_zero_iff (x : ℝ≥0∞) : x.toReal = 0 ↔ x = 0 ∨ x = ∞
 #align ennreal.to_real_eq_zero_iff ENNReal.toReal_eq_zero_iff
 -/
 
+#print ENNReal.toNNReal_ne_zero /-
 theorem toNNReal_ne_zero : a.toNNReal ≠ 0 ↔ a ≠ 0 ∧ a ≠ ∞ :=
   a.toNNReal_eq_zero_iff.Not.trans not_or
 #align ennreal.to_nnreal_ne_zero ENNReal.toNNReal_ne_zero
+-/
 
+#print ENNReal.toReal_ne_zero /-
 theorem toReal_ne_zero : a.toReal ≠ 0 ↔ a ≠ 0 ∧ a ≠ ∞ :=
   a.toReal_eq_zero_iff.Not.trans not_or
 #align ennreal.to_real_ne_zero ENNReal.toReal_ne_zero
+-/
 
 #print ENNReal.toNNReal_eq_one_iff /-
 theorem toNNReal_eq_one_iff (x : ℝ≥0∞) : x.toNNReal = 1 ↔ x = 1 :=
@@ -381,13 +385,17 @@ theorem toReal_eq_one_iff (x : ℝ≥0∞) : x.toReal = 1 ↔ x = 1 := by
 #align ennreal.to_real_eq_one_iff ENNReal.toReal_eq_one_iff
 -/
 
+#print ENNReal.toNNReal_ne_one /-
 theorem toNNReal_ne_one : a.toNNReal ≠ 1 ↔ a ≠ 1 :=
   a.toNNReal_eq_one_iff.Not
 #align ennreal.to_nnreal_ne_one ENNReal.toNNReal_ne_one
+-/
 
+#print ENNReal.toReal_ne_one /-
 theorem toReal_ne_one : a.toReal ≠ 1 ↔ a ≠ 1 :=
   a.toReal_eq_one_iff.Not
 #align ennreal.to_real_ne_one ENNReal.toReal_ne_one
+-/
 
 #print ENNReal.coe_ne_top /-
 @[simp]

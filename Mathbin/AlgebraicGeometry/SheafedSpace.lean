@@ -45,12 +45,10 @@ attribute [local tidy] tactic.op_induction'
 
 namespace AlgebraicGeometry
 
-#print AlgebraicGeometry.SheafedSpace /-
 /-- A `SheafedSpace C` is a topological space equipped with a sheaf of `C`s. -/
 structure SheafedSpace extends PresheafedSpace.{v} C where
   IsSheaf : presheaf.IsSheaf
-#align algebraic_geometry.SheafedSpace AlgebraicGeometry.SheafedSpace
--/
+#align algebraic_geometry.SheafedSpace AlgebraicGeometry.SheafedSpaceₓ
 
 variable {C}
 
@@ -71,7 +69,7 @@ def sheaf (X : SheafedSpace C) : Sheaf C (X : TopCat.{v}) :=
 @[simp]
 theorem as_coe (X : SheafedSpace.{v} C) : X.carrier = (X : TopCat.{v}) :=
   rfl
-#align algebraic_geometry.SheafedSpace.as_coe AlgebraicGeometry.SheafedSpace.as_coe
+#align algebraic_geometry.SheafedSpace.as_coe AlgebraicGeometry.SheafedSpaceₓ.as_coe
 
 #print AlgebraicGeometry.SheafedSpace.mk_coe /-
 @[simp]

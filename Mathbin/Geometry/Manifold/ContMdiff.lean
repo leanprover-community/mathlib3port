@@ -359,7 +359,7 @@ theorem contMdiffWithinAt_iff_target :
     exact
       inter_mem self_mem_nhdsWithin
         (h.preimage_mem_nhds_within <| (chart_at _ _).open_source.mem_nhds <| mem_chart_source _ _)
-  simp_rw [cont, ContDiffWithinAtProp, extChartAt, LocalHomeomorph.extend, LocalEquiv.coe_trans,
+  simp_rw [Cont, ContDiffWithinAtProp, extChartAt, LocalHomeomorph.extend, LocalEquiv.coe_trans,
     ModelWithCorners.toLocalEquiv_coe, LocalHomeomorph.coe_coe, modelWithCornersSelf_coe,
     chartAt_self_eq, LocalHomeomorph.refl_apply, comp.left_id]
 #align cont_mdiff_within_at_iff_target contMdiffWithinAt_iff_target

@@ -562,7 +562,6 @@ theorem adjoin_induction {s : Set E} {p : E → Prop} {x} (h : x ∈ adjoin F s)
 #align intermediate_field.adjoin_induction IntermediateField.adjoin_induction
 -/
 
-#print IntermediateField.Insert /-
 --this definition of notation is courtesy of Kyle Miller on zulip
 /-- Variation on `set.insert` to enable good notation for adjoining elements to fields.
 Used to preferentially use `singleton` rather than `insert` when adjoining one element.
@@ -570,19 +569,14 @@ Used to preferentially use `singleton` rather than `insert` when adjoining one e
 class Insert {α : Type _} (s : Set α) where
   insert : α → Set α
 #align intermediate_field.insert IntermediateField.Insert
--/
 
-#print IntermediateField.insertEmpty /-
 instance (priority := 1000) insertEmpty {α : Type _} : Insert (∅ : Set α)
     where insert x := @singleton _ _ Set.hasSingleton x
 #align intermediate_field.insert_empty IntermediateField.insertEmpty
--/
 
-#print IntermediateField.insertNonempty /-
 instance (priority := 900) insertNonempty {α : Type _} (s : Set α) : Insert s
     where insert x := Insert.insert x s
 #align intermediate_field.insert_nonempty IntermediateField.insertNonempty
--/
 
 notation3:max K"⟮"(l ", "* => foldr (h t => Insert.insert t h) ∅)"⟯" => adjoin K l
 

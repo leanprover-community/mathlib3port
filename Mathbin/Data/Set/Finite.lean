@@ -132,14 +132,18 @@ protected noncomputable def Finite.toFinset {s : Set α} (h : s.Finite) : Finset
 #align set.finite.to_finset Set.Finite.toFinset
 -/
 
+#print Set.Finite.toFinset_eq_toFinset /-
 theorem Finite.toFinset_eq_toFinset {s : Set α} [Fintype s] (h : s.Finite) :
     h.toFinset = s.toFinset := by rw [finite.to_finset]; congr
 #align set.finite.to_finset_eq_to_finset Set.Finite.toFinset_eq_toFinset
+-/
 
+#print Set.toFinite_toFinset /-
 @[simp]
 theorem toFinite_toFinset (s : Set α) [Fintype s] : s.toFinite.toFinset = s.toFinset :=
   s.toFinite.toFinset_eq_toFinset
 #align set.to_finite_to_finset Set.toFinite_toFinset
+-/
 
 #print Set.Finite.exists_finset /-
 theorem Finite.exists_finset {s : Set α} (h : s.Finite) :

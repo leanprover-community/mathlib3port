@@ -556,8 +556,8 @@ theorem hasPullback_of_cover : HasPullback f g :=
 #align algebraic_geometry.Scheme.pullback.has_pullback_of_cover AlgebraicGeometry.Scheme.Pullback.hasPullback_of_cover
 
 instance affine_hasPullback {A B C : CommRingCat}
-    (f : spec.obj (Opposite.op A) ⟶ spec.obj (Opposite.op C))
-    (g : spec.obj (Opposite.op B) ⟶ spec.obj (Opposite.op C)) : HasPullback f g :=
+    (f : Spec.obj (Opposite.op A) ⟶ Spec.obj (Opposite.op C))
+    (g : Spec.obj (Opposite.op B) ⟶ Spec.obj (Opposite.op C)) : HasPullback f g :=
   by
   rw [← Spec.image_preimage f, ← Spec.image_preimage g]
   exact
@@ -565,13 +565,13 @@ instance affine_hasPullback {A B C : CommRingCat}
 #align algebraic_geometry.Scheme.pullback.affine_has_pullback AlgebraicGeometry.Scheme.Pullback.affine_hasPullback
 
 theorem affine_affine_hasPullback {B C : CommRingCat} {X : Scheme}
-    (f : X ⟶ spec.obj (Opposite.op C)) (g : spec.obj (Opposite.op B) ⟶ spec.obj (Opposite.op C)) :
+    (f : X ⟶ Spec.obj (Opposite.op C)) (g : Spec.obj (Opposite.op B) ⟶ Spec.obj (Opposite.op C)) :
     HasPullback f g :=
   hasPullback_of_cover X.affineCover f g
 #align algebraic_geometry.Scheme.pullback.affine_affine_has_pullback AlgebraicGeometry.Scheme.Pullback.affine_affine_hasPullback
 
-instance base_affine_hasPullback {C : CommRingCat} {X Y : Scheme} (f : X ⟶ spec.obj (Opposite.op C))
-    (g : Y ⟶ spec.obj (Opposite.op C)) : HasPullback f g :=
+instance base_affine_hasPullback {C : CommRingCat} {X Y : Scheme} (f : X ⟶ Spec.obj (Opposite.op C))
+    (g : Y ⟶ Spec.obj (Opposite.op C)) : HasPullback f g :=
   @hasPullback_symmetry _ _ _
     (@hasPullback_of_cover Y.affineCover g f fun i =>
       @hasPullback_symmetry _ _ _ <| affine_affine_hasPullback _ _)
@@ -601,11 +601,11 @@ instance : HasPullbacks Scheme :=
 
 instance {X Y Z : Scheme} (f : X ⟶ Z) (g : Y ⟶ Z) [IsAffine X] [IsAffine Y] [IsAffine Z] :
     IsAffine (pullback f g) :=
-  isAffine_of_iso
-    (pullback.map f g (spec.map (Γ.map f.op).op) (spec.map (Γ.map g.op).op)
+  isAffineOfIso
+    (pullback.map f g (Spec.map (Γ.map f.op).op) (Spec.map (Γ.map g.op).op)
         (ΓSpec.adjunction.Unit.app X) (ΓSpec.adjunction.Unit.app Y) (ΓSpec.adjunction.Unit.app Z)
         (ΓSpec.adjunction.Unit.naturality f) (ΓSpec.adjunction.Unit.naturality g) ≫
-      (PreservesPullback.iso spec _ _).inv)
+      (PreservesPullback.iso Spec _ _).inv)
 
 /-- Given an open cover `{ Xᵢ }` of `X`, then `X ×[Z] Y` is covered by `Xᵢ ×[Z] Y`. -/
 @[simps J obj map]

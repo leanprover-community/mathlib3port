@@ -45,6 +45,7 @@ namespace Polynomial
 
 variable {R : Type _} [CommRing R] {n : ℕ}
 
+#print Polynomial.isRoot_of_unity_of_root_cyclotomic /-
 theorem isRoot_of_unity_of_root_cyclotomic {ζ : R} {i : ℕ} (hi : i ∈ n.divisors)
     (h : (cyclotomic i R).IsRoot ζ) : ζ ^ n = 1 :=
   by
@@ -57,18 +58,22 @@ theorem isRoot_of_unity_of_root_cyclotomic {ζ : R} {i : ℕ} (hi : i ∈ n.divi
   apply eval_eq_zero_of_dvd_of_eval_eq_zero _ h
   exact Finset.dvd_prod_of_mem _ hi
 #align polynomial.is_root_of_unity_of_root_cyclotomic Polynomial.isRoot_of_unity_of_root_cyclotomic
+-/
 
 section IsDomain
 
 variable [IsDomain R]
 
+#print isRoot_of_unity_iff /-
 theorem isRoot_of_unity_iff (h : 0 < n) (R : Type _) [CommRing R] [IsDomain R] {ζ : R} :
     ζ ^ n = 1 ↔ ∃ i ∈ n.divisors, (cyclotomic i R).IsRoot ζ := by
   rw [← mem_nth_roots h, nth_roots, mem_roots <| X_pow_sub_C_ne_zero h _, C_1, ←
       prod_cyclotomic_eq_X_pow_sub_one h, is_root_prod] <;>
     infer_instance
 #align is_root_of_unity_iff isRoot_of_unity_iff
+-/
 
+#print IsPrimitiveRoot.isRoot_cyclotomic /-
 /-- Any `n`-th primitive root of unity is a root of `cyclotomic n R`.-/
 theorem IsPrimitiveRoot.isRoot_cyclotomic (hpos : 0 < n) {μ : R} (h : IsPrimitiveRoot μ n) :
     IsRoot (cyclotomic n R) μ :=
@@ -77,6 +82,7 @@ theorem IsPrimitiveRoot.isRoot_cyclotomic (hpos : 0 < n) {μ : R} (h : IsPrimiti
     roots_prod_X_sub_C, ← Finset.mem_def]
   rwa [← mem_primitiveRoots hpos] at h 
 #align is_primitive_root.is_root_cyclotomic IsPrimitiveRoot.isRoot_cyclotomic
+-/
 
 private theorem is_root_cyclotomic_iff' {n : ℕ} {K : Type _} [Field K] {μ : K} [NeZero (n : K)] :
     IsRoot (cyclotomic n K) μ ↔ IsPrimitiveRoot μ n :=
@@ -114,6 +120,7 @@ private theorem is_root_cyclotomic_iff' {n : ℕ} {K : Type _} [Field K] {μ : K
   simp [Polynomial.isUnit_iff_degree_eq_zero]
   all_goals infer_instance
 
+#print Polynomial.isRoot_cyclotomic_iff /-
 theorem isRoot_cyclotomic_iff [NeZero (n : R)] {μ : R} :
     IsRoot (cyclotomic n R) μ ↔ IsPrimitiveRoot μ n :=
   by
@@ -122,7 +129,9 @@ theorem isRoot_cyclotomic_iff [NeZero (n : R)] {μ : R} :
   rw [← is_root_map_iff hf, ← IsPrimitiveRoot.map_iff_of_injective hf, map_cyclotomic, ←
     is_root_cyclotomic_iff']
 #align polynomial.is_root_cyclotomic_iff Polynomial.isRoot_cyclotomic_iff
+-/
 
+#print Polynomial.roots_cyclotomic_nodup /-
 theorem roots_cyclotomic_nodup [NeZero (n : R)] : (cyclotomic n R).roots.Nodup :=
   by
   obtain h | ⟨ζ, hζ⟩ := (cyclotomic n R).roots.empty_or_exists_mem
@@ -134,18 +143,24 @@ theorem roots_cyclotomic_nodup [NeZero (n : R)] : (cyclotomic n R).roots.Nodup :
         cyclotomic.dvd_X_pow_sub_one n R)
       hζ.nth_roots_nodup
 #align polynomial.roots_cyclotomic_nodup Polynomial.roots_cyclotomic_nodup
+-/
 
+#print Polynomial.cyclotomic.roots_to_finset_eq_primitiveRoots /-
 theorem cyclotomic.roots_to_finset_eq_primitiveRoots [NeZero (n : R)] :
     (⟨(cyclotomic n R).roots, roots_cyclotomic_nodup⟩ : Finset _) = primitiveRoots n R := by ext;
   simp [cyclotomic_ne_zero n R, is_root_cyclotomic_iff, mem_primitiveRoots,
     NeZero.pos_of_neZero_natCast R]
 #align polynomial.cyclotomic.roots_to_finset_eq_primitive_roots Polynomial.cyclotomic.roots_to_finset_eq_primitiveRoots
+-/
 
+#print Polynomial.cyclotomic.roots_eq_primitiveRoots_val /-
 theorem cyclotomic.roots_eq_primitiveRoots_val [NeZero (n : R)] :
     (cyclotomic n R).roots = (primitiveRoots n R).val := by
   rw [← cyclotomic.roots_to_finset_eq_primitive_roots]
 #align polynomial.cyclotomic.roots_eq_primitive_roots_val Polynomial.cyclotomic.roots_eq_primitiveRoots_val
+-/
 
+#print Polynomial.isRoot_cyclotomic_iff_charZero /-
 /-- If `R` is of characteristic zero, then `ζ` is a root of `cyclotomic n R` if and only if it is a
 primitive `n`-th root of unity. -/
 theorem isRoot_cyclotomic_iff_charZero {n : ℕ} {R : Type _} [CommRing R] [IsDomain R] [CharZero R]
@@ -153,9 +168,11 @@ theorem isRoot_cyclotomic_iff_charZero {n : ℕ} {R : Type _} [CommRing R] [IsDo
   letI := NeZero.of_gt hn
   is_root_cyclotomic_iff
 #align polynomial.is_root_cyclotomic_iff_char_zero Polynomial.isRoot_cyclotomic_iff_charZero
+-/
 
 end IsDomain
 
+#print Polynomial.cyclotomic_injective /-
 /-- Over a ring `R` of characteristic zero, `λ n, cyclotomic n R` is injective. -/
 theorem cyclotomic_injective [CharZero R] : Function.Injective fun n => cyclotomic n R :=
   by
@@ -180,7 +197,9 @@ theorem cyclotomic_injective [CharZero R] : Function.Injective fun n => cyclotom
     replace hprim := hprim.eq_order_of
     rwa [← IsPrimitiveRoot.eq_orderOf hroot] at hprim 
 #align polynomial.cyclotomic_injective Polynomial.cyclotomic_injective
+-/
 
+#print IsPrimitiveRoot.minpoly_dvd_cyclotomic /-
 /-- The minimal polynomial of a primitive `n`-th root of unity `μ` divides `cyclotomic n ℤ`. -/
 theorem IsPrimitiveRoot.minpoly_dvd_cyclotomic {n : ℕ} {K : Type _} [Field K] {μ : K}
     (h : IsPrimitiveRoot μ n) (hpos : 0 < n) [CharZero K] : minpoly ℤ μ ∣ cyclotomic n ℤ :=
@@ -188,11 +207,13 @@ theorem IsPrimitiveRoot.minpoly_dvd_cyclotomic {n : ℕ} {K : Type _} [Field K] 
   apply minpoly.isIntegrallyClosed_dvd (h.is_integral hpos)
   simpa [aeval_def, eval₂_eq_eval_map, is_root.def] using h.is_root_cyclotomic hpos
 #align is_primitive_root.minpoly_dvd_cyclotomic IsPrimitiveRoot.minpoly_dvd_cyclotomic
+-/
 
 section minpoly
 
 open IsPrimitiveRoot Complex
 
+#print IsPrimitiveRoot.minpoly_eq_cyclotomic_of_irreducible /-
 theorem IsPrimitiveRoot.minpoly_eq_cyclotomic_of_irreducible {K : Type _} [Field K] {R : Type _}
     [CommRing R] [IsDomain R] {μ : R} {n : ℕ} [Algebra K R] (hμ : IsPrimitiveRoot μ n)
     (h : Irreducible <| cyclotomic n K) [NeZero (n : K)] : cyclotomic n K = minpoly K μ :=
@@ -201,7 +222,9 @@ theorem IsPrimitiveRoot.minpoly_eq_cyclotomic_of_irreducible {K : Type _} [Field
   refine' minpoly.eq_of_irreducible_of_monic h _ (cyclotomic.monic n K)
   rwa [aeval_def, eval₂_eq_eval_map, map_cyclotomic, ← is_root.def, is_root_cyclotomic_iff]
 #align is_primitive_root.minpoly_eq_cyclotomic_of_irreducible IsPrimitiveRoot.minpoly_eq_cyclotomic_of_irreducible
+-/
 
+#print Polynomial.cyclotomic_eq_minpoly /-
 /-- `cyclotomic n ℤ` is the minimal polynomial of a primitive `n`-th root of unity `μ`. -/
 theorem cyclotomic_eq_minpoly {n : ℕ} {K : Type _} [Field K] {μ : K} (h : IsPrimitiveRoot μ n)
     (hpos : 0 < n) [CharZero K] : cyclotomic n ℤ = minpoly ℤ μ :=
@@ -211,7 +234,9 @@ theorem cyclotomic_eq_minpoly {n : ℕ} {K : Type _} [Field K] {μ : K} (h : IsP
       (h.minpoly_dvd_cyclotomic hpos) _
   simpa [nat_degree_cyclotomic n ℤ] using totient_le_degree_minpoly h
 #align polynomial.cyclotomic_eq_minpoly Polynomial.cyclotomic_eq_minpoly
+-/
 
+#print Polynomial.cyclotomic_eq_minpoly_rat /-
 /-- `cyclotomic n ℚ` is the minimal polynomial of a primitive `n`-th root of unity `μ`. -/
 theorem cyclotomic_eq_minpoly_rat {n : ℕ} {K : Type _} [Field K] {μ : K} (h : IsPrimitiveRoot μ n)
     (hpos : 0 < n) [CharZero K] : cyclotomic n ℚ = minpoly ℚ μ :=
@@ -219,7 +244,9 @@ theorem cyclotomic_eq_minpoly_rat {n : ℕ} {K : Type _} [Field K] {μ : K} (h :
   rw [← map_cyclotomic_int, cyclotomic_eq_minpoly h hpos]
   exact (minpoly.isIntegrallyClosed_eq_field_fractions' _ (IsIntegral h hpos)).symm
 #align polynomial.cyclotomic_eq_minpoly_rat Polynomial.cyclotomic_eq_minpoly_rat
+-/
 
+#print Polynomial.cyclotomic.irreducible /-
 /-- `cyclotomic n ℤ` is irreducible. -/
 theorem cyclotomic.irreducible {n : ℕ} (hpos : 0 < n) : Irreducible (cyclotomic n ℤ) :=
   by
@@ -227,7 +254,9 @@ theorem cyclotomic.irreducible {n : ℕ} (hpos : 0 < n) : Irreducible (cyclotomi
   apply minpoly.irreducible
   exact (is_primitive_root_exp n hpos.ne').IsIntegral hpos
 #align polynomial.cyclotomic.irreducible Polynomial.cyclotomic.irreducible
+-/
 
+#print Polynomial.cyclotomic.irreducible_rat /-
 /-- `cyclotomic n ℚ` is irreducible. -/
 theorem cyclotomic.irreducible_rat {n : ℕ} (hpos : 0 < n) : Irreducible (cyclotomic n ℚ) :=
   by
@@ -236,7 +265,9 @@ theorem cyclotomic.irreducible_rat {n : ℕ} (hpos : 0 < n) : Irreducible (cyclo
     (is_primitive.irreducible_iff_irreducible_map_fraction_map (cyclotomic.is_primitive n ℤ)).1
       (cyclotomic.irreducible hpos)
 #align polynomial.cyclotomic.irreducible_rat Polynomial.cyclotomic.irreducible_rat
+-/
 
+#print Polynomial.cyclotomic.isCoprime_rat /-
 /-- If `n ≠ m`, then `(cyclotomic n ℚ)` and `(cyclotomic m ℚ)` are coprime. -/
 theorem cyclotomic.isCoprime_rat {n m : ℕ} (h : n ≠ m) :
     IsCoprime (cyclotomic n ℚ) (cyclotomic m ℚ) :=
@@ -253,6 +284,7 @@ theorem cyclotomic.isCoprime_rat {n m : ℕ} (h : n ≠ m) :
           Irreducible.associated_of_dvd (cyclotomic.irreducible_rat hnzero)
             (cyclotomic.irreducible_rat hmzero) hdiv
 #align polynomial.cyclotomic.is_coprime_rat Polynomial.cyclotomic.isCoprime_rat
+-/
 
 end minpoly
 

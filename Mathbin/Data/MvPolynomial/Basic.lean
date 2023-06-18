@@ -145,15 +145,19 @@ instance [CommSemiring S₁] [SMulZeroClass R S₁] [SMulZeroClass Rᵐᵒᵖ S�
 instance [CommSemiring R] [CommSemiring S₁] [Algebra R S₁] : Algebra R (MvPolynomial σ S₁) :=
   AddMonoidAlgebra.algebra
 
+#print MvPolynomial.isScalarTower_right /-
 instance isScalarTower_right [CommSemiring S₁] [DistribSMul R S₁] [IsScalarTower R S₁ S₁] :
     IsScalarTower R (MvPolynomial σ S₁) (MvPolynomial σ S₁) :=
   AddMonoidAlgebra.isScalarTower_self _
 #align mv_polynomial.is_scalar_tower_right MvPolynomial.isScalarTower_right
+-/
 
-instance sMulCommClass_right [CommSemiring S₁] [DistribSMul R S₁] [SMulCommClass R S₁ S₁] :
+#print MvPolynomial.smulCommClass_right /-
+instance smulCommClass_right [CommSemiring S₁] [DistribSMul R S₁] [SMulCommClass R S₁ S₁] :
     SMulCommClass R (MvPolynomial σ S₁) (MvPolynomial σ S₁) :=
   AddMonoidAlgebra.sMulCommClass_self _
-#align mv_polynomial.smul_comm_class_right MvPolynomial.sMulCommClass_right
+#align mv_polynomial.smul_comm_class_right MvPolynomial.smulCommClass_right
+-/
 
 #print MvPolynomial.unique /-
 /-- If `R` is a subsingleton, then `mv_polynomial σ R` has a unique element -/

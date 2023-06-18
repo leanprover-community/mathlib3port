@@ -336,7 +336,7 @@ def locallyRingedSpaceAdjunction : Γ.rightOp ⊣ Spec.toLocallyRingedSpace :=
 attribute [local semireducible] Spec.to_LocallyRingedSpace
 
 /-- The adjunction `Γ ⊣ Spec` from `CommRingᵒᵖ` to `Scheme`. -/
-def adjunction : Scheme.Γ.rightOp ⊣ Scheme.spec :=
+def adjunction : Scheme.Γ.rightOp ⊣ Scheme.Spec :=
   locallyRingedSpaceAdjunction.restrictFullyFaithful Scheme.forgetToLocallyRingedSpace (𝟭 _)
     (NatIso.ofComponents (fun X => Iso.refl _) fun _ _ f => by simpa)
     (NatIso.ofComponents (fun X => Iso.refl _) fun _ _ f => by simpa)
@@ -354,7 +354,7 @@ theorem adjunction_homEquiv (X : Scheme) (R : CommRingCatᵒᵖ) :
 #align algebraic_geometry.Γ_Spec.adjunction_hom_equiv AlgebraicGeometry.ΓSpec.adjunction_homEquiv
 
 theorem adjunction_homEquiv_symm_apply {X : Scheme} {R : CommRingCatᵒᵖ}
-    (f : X ⟶ Scheme.spec.obj R) :
+    (f : X ⟶ Scheme.Spec.obj R) :
     (ΓSpec.adjunction.homEquiv X R).symm f = (locallyRingedSpaceAdjunction.homEquiv X.1 R).symm f :=
   by congr 2; exact adjunction_hom_equiv _ _
 #align algebraic_geometry.Γ_Spec.adjunction_hom_equiv_symm_apply AlgebraicGeometry.ΓSpec.adjunction_homEquiv_symm_apply
@@ -393,7 +393,7 @@ instance isIso_adjunction_counit : IsIso ΓSpec.adjunction.counit :=
 -- But lean times out when trying to unify the types of the two sides.
 theorem adjunction_unit_app_app_top (X : Scheme) :
     @Eq
-      ((Scheme.spec.obj (op <| X.Presheaf.obj (op ⊤))).Presheaf.obj (op ⊤) ⟶
+      ((Scheme.Spec.obj (op <| X.Presheaf.obj (op ⊤))).Presheaf.obj (op ⊤) ⟶
         ((ΓSpec.adjunction.Unit.app X).1.base _* X.Presheaf).obj (op ⊤))
       ((ΓSpec.adjunction.Unit.app X).val.c.app (op ⊤))
       (SpecΓIdentity.Hom.app (X.Presheaf.obj (op ⊤))) :=
@@ -416,7 +416,7 @@ end ΓSpec
 instance : Limits.PreservesLimits Spec.toLocallyRingedSpace :=
   ΓSpec.locallyRingedSpaceAdjunction.rightAdjointPreservesLimits
 
-instance Spec.preservesLimits : Limits.preservesLimits Scheme.spec :=
+instance Spec.preservesLimits : Limits.preservesLimits Scheme.Spec :=
   ΓSpec.adjunction.rightAdjointPreservesLimits
 #align algebraic_geometry.Spec.preserves_limits AlgebraicGeometry.Spec.preservesLimits
 
@@ -424,7 +424,7 @@ instance Spec.preservesLimits : Limits.preservesLimits Scheme.spec :=
 instance : Full Spec.toLocallyRingedSpace :=
   rFullOfCounitIsIso ΓSpec.locallyRingedSpaceAdjunction
 
-instance Spec.full : Full Scheme.spec :=
+instance Spec.full : Full Scheme.Spec :=
   rFullOfCounitIsIso ΓSpec.adjunction
 #align algebraic_geometry.Spec.full AlgebraicGeometry.Spec.full
 
@@ -432,20 +432,20 @@ instance Spec.full : Full Scheme.spec :=
 instance : Faithful Spec.toLocallyRingedSpace :=
   R_faithful_of_counit_isIso ΓSpec.locallyRingedSpaceAdjunction
 
-instance Spec.faithful : Faithful Scheme.spec :=
+instance Spec.faithful : Faithful Scheme.Spec :=
   R_faithful_of_counit_isIso ΓSpec.adjunction
 #align algebraic_geometry.Spec.faithful AlgebraicGeometry.Spec.faithful
 
 instance : IsRightAdjoint Spec.toLocallyRingedSpace :=
   ⟨_, ΓSpec.locallyRingedSpaceAdjunction⟩
 
-instance : IsRightAdjoint Scheme.spec :=
+instance : IsRightAdjoint Scheme.Spec :=
   ⟨_, ΓSpec.adjunction⟩
 
 instance : Reflective Spec.toLocallyRingedSpace :=
   ⟨⟩
 
-instance Spec.reflective : Reflective Scheme.spec :=
+instance Spec.reflective : Reflective Scheme.Spec :=
   ⟨⟩
 #align algebraic_geometry.Spec.reflective AlgebraicGeometry.Spec.reflective
 

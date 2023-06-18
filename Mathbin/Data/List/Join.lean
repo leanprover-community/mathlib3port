@@ -49,7 +49,7 @@ theorem join_append (L₁ L₂ : List (List α)) : join (L₁ ++ L₂) = join L�
 -/
 
 #print List.join_concat /-
-theorem join_concat (L : List (List α)) (l : List α) : join (L.concat l) = join L ++ l := by simp
+theorem join_concat (L : List (List α)) (l : List α) : join (L.push l) = join L ++ l := by simp
 #align list.join_concat List.join_concat
 -/
 

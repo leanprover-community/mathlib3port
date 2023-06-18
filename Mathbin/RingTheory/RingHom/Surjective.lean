@@ -29,17 +29,22 @@ open TensorProduct Algebra.TensorProduct
 local notation "surjective" => fun {X Y : Type _} [CommRing X] [CommRing Y] => fun f : X →+* Y =>
   Function.Surjective f
 
+#print RingHom.surjective_stableUnderComposition /-
 theorem surjective_stableUnderComposition : StableUnderComposition surjective := by introv R hf hg;
   exact hg.comp hf
 #align ring_hom.surjective_stable_under_composition RingHom.surjective_stableUnderComposition
+-/
 
+#print RingHom.surjective_respectsIso /-
 theorem surjective_respectsIso : RespectsIso surjective :=
   by
   apply surjective_stable_under_composition.respects_iso
   intros
   exact e.surjective
 #align ring_hom.surjective_respects_iso RingHom.surjective_respectsIso
+-/
 
+#print RingHom.surjective_stableUnderBaseChange /-
 theorem surjective_stableUnderBaseChange : StableUnderBaseChange surjective :=
   by
   refine' stable_under_base_change.mk _ surjective_respects_iso _
@@ -52,9 +57,11 @@ theorem surjective_stableUnderBaseChange : StableUnderBaseChange surjective :=
     rw [TensorProduct.smul_tmul, Algebra.algebraMap_eq_smul_one]
   · obtain ⟨⟨x, rfl⟩, ⟨y, rfl⟩⟩ := ex, ey; exact ⟨x + y, map_add _ x y⟩
 #align ring_hom.surjective_stable_under_base_change RingHom.surjective_stableUnderBaseChange
+-/
 
 open scoped BigOperators
 
+#print RingHom.surjective_ofLocalizationSpan /-
 theorem surjective_ofLocalizationSpan : OfLocalizationSpan surjective :=
   by
   introv R hs H
@@ -81,6 +88,7 @@ theorem surjective_ofLocalizationSpan : OfLocalizationSpan surjective :=
     simp_rw [_root_.one_mul, ← _root_.mul_assoc, ← map_pow, ← f.map_mul, ← pow_add, map_pow] at hm 
     exact ⟨_, hm⟩
 #align ring_hom.surjective_of_localization_span RingHom.surjective_ofLocalizationSpan
+-/
 
 end RingHom
 

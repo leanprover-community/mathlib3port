@@ -132,13 +132,11 @@ protected theorem add_le (x y : R) : abv (x + y) ≤ abv x + abv y :=
 #align absolute_value.add_le AbsoluteValue.add_le
 -/
 
-/- warning: absolute_value.map_mul clashes with map_mul -> map_mul
-Case conversion may be inaccurate. Consider using '#align absolute_value.map_mul map_mulₓ'. -/
-#print map_mul /-
+#print AbsoluteValue.map_mul /-
 @[simp]
 protected theorem map_mul (x y : R) : abv (x * y) = abv x * abv y :=
   abv.map_mul' x y
-#align absolute_value.map_mul map_mul
+#align absolute_value.map_mul AbsoluteValue.map_mul
 -/
 
 #print AbsoluteValue.ne_zero_iff /-
@@ -172,13 +170,11 @@ theorem map_one_of_isLeftRegular (h : IsLeftRegular (abv 1)) : abv 1 = 1 :=
 #align absolute_value.map_one_of_is_regular AbsoluteValue.map_one_of_isLeftRegular
 -/
 
-/- warning: absolute_value.map_zero clashes with map_zero -> map_zero
-Case conversion may be inaccurate. Consider using '#align absolute_value.map_zero map_zeroₓ'. -/
-#print map_zero /-
+#print AbsoluteValue.map_zero /-
 @[simp]
 protected theorem map_zero : abv 0 = 0 :=
   abv.eq_zero.2 rfl
-#align absolute_value.map_zero map_zero
+#align absolute_value.map_zero AbsoluteValue.map_zero
 -/
 
 end Semiring
@@ -256,13 +252,11 @@ theorem coe_toMonoidHom : ⇑abv.toMonoidHom = abv :=
 #align absolute_value.coe_to_monoid_hom AbsoluteValue.coe_toMonoidHom
 -/
 
-/- warning: absolute_value.map_pow clashes with map_pow -> map_pow
-Case conversion may be inaccurate. Consider using '#align absolute_value.map_pow map_powₓ'. -/
-#print map_pow /-
+#print AbsoluteValue.map_pow /-
 @[simp]
 protected theorem map_pow (a : R) (n : ℕ) : abv (a ^ n) = abv a ^ n :=
   abv.toMonoidHom.map_pow a n
-#align absolute_value.map_pow map_pow
+#align absolute_value.map_pow AbsoluteValue.map_pow
 -/
 
 end IsDomain

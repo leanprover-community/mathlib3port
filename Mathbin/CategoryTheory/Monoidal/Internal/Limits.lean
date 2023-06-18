@@ -38,6 +38,7 @@ variable {J : Type v} [SmallCategory J]
 
 variable {C : Type u} [Category.{v} C] [HasLimits C] [MonoidalCategory.{v} C]
 
+#print Mon_.limit /-
 /-- We construct the (candidate) limit of a functor `F : J ⥤ Mon_ C`
 by interpreting it as a functor `Mon_ (J ⥤ C)`,
 and noting that taking limits is a lax monoidal functor,
@@ -47,7 +48,9 @@ and hence sends monoid objects to monoid objects.
 def limit (F : J ⥤ Mon_ C) : Mon_ C :=
   limLax.mapMon.obj (MonFunctorCategoryEquivalence.inverse.obj F)
 #align Mon_.limit Mon_.limit
+-/
 
+#print Mon_.limitCone /-
 /-- Implementation of `Mon_.has_limits`: a limiting cone over a functor `F : J ⥤ Mon_ C`.
 -/
 @[simps]
@@ -57,7 +60,9 @@ def limitCone (F : J ⥤ Mon_ C) : Cone F where
     { app := fun j => { Hom := limit.π (F ⋙ Mon_.forget C) j }
       naturality' := fun j j' f => by ext; exact (limit.cone (F ⋙ Mon_.forget C)).π.naturality f }
 #align Mon_.limit_cone Mon_.limitCone
+-/
 
+#print Mon_.forgetMapConeLimitConeIso /-
 /-- The image of the proposed limit cone for `F : J ⥤ Mon_ C` under the forgetful functor
 `forget C : Mon_ C ⥤ C` is isomorphic to the limit cone of `F ⋙ forget C`.
 -/
@@ -65,7 +70,9 @@ def forgetMapConeLimitConeIso (F : J ⥤ Mon_ C) :
     (forget C).mapCone (limitCone F) ≅ limit.cone (F ⋙ forget C) :=
   Cones.ext (Iso.refl _) fun j => by tidy
 #align Mon_.forget_map_cone_limit_cone_iso Mon_.forgetMapConeLimitConeIso
+-/
 
+#print Mon_.limitConeIsLimit /-
 /-- Implementation of `Mon_.has_limits`:
 the proposed cone over a functor `F : J ⥤ Mon_ C` is a limit cone.
 -/
@@ -85,7 +92,9 @@ def limitConeIsLimit (F : J ⥤ Mon_ C) : IsLimit (limitCone F)
     dsimp; simp only [Mon_.forget_map, limit.lift_π, functor.map_cone_π_app]
     exact congr_arg Mon_.Hom.hom (w j)
 #align Mon_.limit_cone_is_limit Mon_.limitConeIsLimit
+-/
 
+#print Mon_.hasLimits /-
 instance hasLimits : HasLimits (Mon_ C)
     where HasLimitsOfShape J 𝒥 :=
     {
@@ -94,7 +103,9 @@ instance hasLimits : HasLimits (Mon_ C)
           { Cone := limit_cone F
             IsLimit := limit_cone_is_limit F } }
 #align Mon_.has_limits Mon_.hasLimits
+-/
 
+#print Mon_.forgetPreservesLimits /-
 instance forgetPreservesLimits : PreservesLimits (Mon_.forget C)
     where PreservesLimitsOfShape J 𝒥 :=
     {
@@ -103,6 +114,7 @@ instance forgetPreservesLimits : PreservesLimits (Mon_.forget C)
           (is_limit.of_iso_limit (limit.is_limit (F ⋙ Mon_.forget C))
             (forget_map_cone_limit_cone_iso F).symm) }
 #align Mon_.forget_preserves_limits Mon_.forgetPreservesLimits
+-/
 
 end Mon_
 

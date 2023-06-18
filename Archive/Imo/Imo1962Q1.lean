@@ -31,7 +31,7 @@ namespace imo1962_q1
 open Nat
 
 def ProblemPredicate (n : ℕ) : Prop :=
-  (digits 10 n).headI = 6 ∧ ofDigits 10 ((digits 10 n).tail.concat 6) = 4 * n
+  (digits 10 n).headI = 6 ∧ ofDigits 10 ((digits 10 n).tail.push 6) = 4 * n
 #align imo1962_q1.problem_predicate Imo1962Q1.ProblemPredicate
 
 /-!

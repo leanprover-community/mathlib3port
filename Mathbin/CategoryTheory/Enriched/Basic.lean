@@ -47,6 +47,7 @@ open MonoidalCategory
 
 variable (V : Type v) [Category.{w} V] [MonoidalCategory V]
 
+#print CategoryTheory.EnrichedCategory /-
 /- ./././Mathport/Syntax/Translate/Command.lean:406:24: unsupported: (notation) in structure -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:207:4: warning: unsupported notation `«expr ⟶[] » -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -75,50 +76,64 @@ class EnrichedCategory (C : Type u₁) where
       (α_ _ _ _).inv ≫ (comp W X Y ⊗ 𝟙 _) ≫ comp W Y Z = (𝟙 _ ⊗ comp X Y Z) ≫ comp W X Z := by
     obviously
 #align category_theory.enriched_category CategoryTheory.EnrichedCategory
+-/
 
 notation X " ⟶[" V "] " Y:10 => (EnrichedCategory.hom X Y : V)
 
 variable (V) {C : Type u₁} [EnrichedCategory V C]
 
+#print CategoryTheory.eId /-
 /-- The `𝟙_ V`-shaped generalized element giving the identity in a `V`-enriched category.
 -/
 def eId (X : C) : 𝟙_ V ⟶ X ⟶[V] X :=
   EnrichedCategory.id X
 #align category_theory.e_id CategoryTheory.eId
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print CategoryTheory.eComp /-
 /-- The composition `V`-morphism for a `V`-enriched category.
 -/
 def eComp (X Y Z : C) : ((X ⟶[V] Y) ⊗ Y ⟶[V] Z) ⟶ X ⟶[V] Z :=
   EnrichedCategory.comp X Y Z
 #align category_theory.e_comp CategoryTheory.eComp
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print CategoryTheory.e_id_comp /-
 -- We don't just use `restate_axiom` here; that would leave `V` as an implicit argument.
 @[simp, reassoc]
-theorem eId_comp (X Y : C) : (λ_ (X ⟶[V] Y)).inv ≫ (eId V X ⊗ 𝟙 _) ≫ eComp V X X Y = 𝟙 (X ⟶[V] Y) :=
+theorem e_id_comp (X Y : C) :
+    (λ_ (X ⟶[V] Y)).inv ≫ (eId V X ⊗ 𝟙 _) ≫ eComp V X X Y = 𝟙 (X ⟶[V] Y) :=
   EnrichedCategory.id_comp X Y
-#align category_theory.e_id_comp CategoryTheory.eId_comp
+#align category_theory.e_id_comp CategoryTheory.e_id_comp
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print CategoryTheory.e_comp_id /-
 @[simp, reassoc]
-theorem eComp_id (X Y : C) : (ρ_ (X ⟶[V] Y)).inv ≫ (𝟙 _ ⊗ eId V Y) ≫ eComp V X Y Y = 𝟙 (X ⟶[V] Y) :=
+theorem e_comp_id (X Y : C) :
+    (ρ_ (X ⟶[V] Y)).inv ≫ (𝟙 _ ⊗ eId V Y) ≫ eComp V X Y Y = 𝟙 (X ⟶[V] Y) :=
   EnrichedCategory.comp_id X Y
-#align category_theory.e_comp_id CategoryTheory.eComp_id
+#align category_theory.e_comp_id CategoryTheory.e_comp_id
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print CategoryTheory.e_assoc /-
 @[simp, reassoc]
 theorem e_assoc (W X Y Z : C) :
     (α_ _ _ _).inv ≫ (eComp V W X Y ⊗ 𝟙 _) ≫ eComp V W Y Z =
       (𝟙 _ ⊗ eComp V X Y Z) ≫ eComp V W X Z :=
   EnrichedCategory.assoc W X Y Z
 #align category_theory.e_assoc CategoryTheory.e_assoc
+-/
 
 section
 
 variable {V} {W : Type v} [Category.{w} W] [MonoidalCategory W]
 
+#print CategoryTheory.TransportEnrichment /-
 /-- A type synonym for `C`, which should come equipped with a `V`-enriched category structure.
 In a moment we will equip this with the `W`-enriched category structure
 obtained by applying the functor `F : lax_monoidal_functor V W` to each hom object.
@@ -127,6 +142,7 @@ obtained by applying the functor `F : lax_monoidal_functor V W` to each hom obje
 def TransportEnrichment (F : LaxMonoidalFunctor V W) (C : Type u₁) :=
   C
 #align category_theory.transport_enrichment CategoryTheory.TransportEnrichment
+-/
 
 instance (F : LaxMonoidalFunctor V W) : EnrichedCategory W (TransportEnrichment F C)
     where
@@ -149,6 +165,7 @@ instance (F : LaxMonoidalFunctor V W) : EnrichedCategory W (TransportEnrichment 
 
 end
 
+#print CategoryTheory.categoryOfEnrichedCategoryType /-
 /-- Construct an honest category from a `Type v`-enriched category.
 -/
 def categoryOfEnrichedCategoryType (C : Type u₁) [𝒞 : EnrichedCategory (Type v) C] : Category.{v} C
@@ -156,11 +173,13 @@ def categoryOfEnrichedCategoryType (C : Type u₁) [𝒞 : EnrichedCategory (Typ
   Hom := 𝒞.Hom
   id X := eId (Type v) X PUnit.unit
   comp X Y Z f g := eComp (Type v) X Y Z ⟨f, g⟩
-  id_comp' X Y f := congr_fun (eId_comp (Type v) X Y) f
-  comp_id' X Y f := congr_fun (eComp_id (Type v) X Y) f
+  id_comp' X Y f := congr_fun (e_id_comp (Type v) X Y) f
+  comp_id' X Y f := congr_fun (e_comp_id (Type v) X Y) f
   assoc' W X Y Z f g h := (congr_fun (e_assoc (Type v) W X Y Z) ⟨f, g, h⟩ : _)
 #align category_theory.category_of_enriched_category_Type CategoryTheory.categoryOfEnrichedCategoryType
+-/
 
+#print CategoryTheory.enrichedCategoryTypeOfCategory /-
 /-- Construct a `Type v`-enriched category from an honest category.
 -/
 def enrichedCategoryTypeOfCategory (C : Type u₁) [𝒞 : Category.{v} C] : EnrichedCategory (Type v) C
@@ -172,7 +191,9 @@ def enrichedCategoryTypeOfCategory (C : Type u₁) [𝒞 : Category.{v} C] : Enr
   comp_id X Y := by ext; simp
   and_assoc W X Y Z := by ext ⟨f, g, h⟩; simp
 #align category_theory.enriched_category_Type_of_category CategoryTheory.enrichedCategoryTypeOfCategory
+-/
 
+#print CategoryTheory.enrichedCategoryTypeEquivCategory /-
 /-- We verify that an enriched category in `Type u` is just the same thing as an honest category.
 -/
 def enrichedCategoryTypeEquivCategory (C : Type u₁) : EnrichedCategory (Type v) C ≃ Category.{v} C
@@ -187,11 +208,13 @@ def enrichedCategoryTypeEquivCategory (C : Type u₁) : EnrichedCategory (Type v
     · ext (X Y Z⟨f, g⟩); rfl
   right_inv 𝒞 := by rcases 𝒞 with @⟨@⟨⟨⟩⟩⟩; dsimp; congr
 #align category_theory.enriched_category_Type_equiv_category CategoryTheory.enrichedCategoryTypeEquivCategory
+-/
 
 section
 
 variable {W : Type (v + 1)} [Category.{v} W] [MonoidalCategory W] [EnrichedCategory W C]
 
+#print CategoryTheory.ForgetEnrichment /-
 /-- A type synonym for `C`, which should come equipped with a `V`-enriched category structure.
 In a moment we will equip this with the (honest) category structure
 so that `X ⟶ Y` is `(𝟙_ W) ⟶ (X ⟶[W] Y)`.
@@ -214,36 +237,47 @@ def ForgetEnrichment (W : Type (v + 1)) [Category.{v} W] [MonoidalCategory W] (C
     [EnrichedCategory W C] :=
   C
 #align category_theory.forget_enrichment CategoryTheory.ForgetEnrichment
+-/
 
 variable (W)
 
+#print CategoryTheory.ForgetEnrichment.of /-
 /-- Typecheck an object of `C` as an object of `forget_enrichment W C`. -/
 def ForgetEnrichment.of (X : C) : ForgetEnrichment W C :=
   X
 #align category_theory.forget_enrichment.of CategoryTheory.ForgetEnrichment.of
+-/
 
+#print CategoryTheory.ForgetEnrichment.to /-
 /-- Typecheck an object of `forget_enrichment W C` as an object of `C`. -/
 def ForgetEnrichment.to (X : ForgetEnrichment W C) : C :=
   X
 #align category_theory.forget_enrichment.to CategoryTheory.ForgetEnrichment.to
+-/
 
+#print CategoryTheory.ForgetEnrichment.to_of /-
 @[simp]
 theorem ForgetEnrichment.to_of (X : C) : ForgetEnrichment.to W (ForgetEnrichment.of W X) = X :=
   rfl
 #align category_theory.forget_enrichment.to_of CategoryTheory.ForgetEnrichment.to_of
+-/
 
+#print CategoryTheory.ForgetEnrichment.of_to /-
 @[simp]
 theorem ForgetEnrichment.of_to (X : ForgetEnrichment W C) :
     ForgetEnrichment.of W (ForgetEnrichment.to W X) = X :=
   rfl
 #align category_theory.forget_enrichment.of_to CategoryTheory.ForgetEnrichment.of_to
+-/
 
+#print CategoryTheory.categoryForgetEnrichment /-
 instance categoryForgetEnrichment : Category (ForgetEnrichment W C) :=
   by
   let I : enriched_category (Type v) (transport_enrichment (coyoneda_tensor_unit W) C) :=
     inferInstance
   exact enriched_category_Type_equiv_category C I
 #align category_theory.category_forget_enrichment CategoryTheory.categoryForgetEnrichment
+-/
 
 /-- We verify that the morphism types in `forget_enrichment W C` are `(𝟙_ W) ⟶ (X ⟶[W] Y)`.
 -/
@@ -251,44 +285,57 @@ example (X Y : ForgetEnrichment W C) :
     (X ⟶ Y) = (𝟙_ W ⟶ ForgetEnrichment.to W X ⟶[W] ForgetEnrichment.to W Y) :=
   rfl
 
+#print CategoryTheory.ForgetEnrichment.homOf /-
 /-- Typecheck a `(𝟙_ W)`-shaped `W`-morphism as a morphism in `forget_enrichment W C`. -/
 def ForgetEnrichment.homOf {X Y : C} (f : 𝟙_ W ⟶ X ⟶[W] Y) :
     ForgetEnrichment.of W X ⟶ ForgetEnrichment.of W Y :=
   f
 #align category_theory.forget_enrichment.hom_of CategoryTheory.ForgetEnrichment.homOf
+-/
 
+#print CategoryTheory.ForgetEnrichment.homTo /-
 /-- Typecheck a morphism in `forget_enrichment W C` as a `(𝟙_ W)`-shaped `W`-morphism. -/
 def ForgetEnrichment.homTo {X Y : ForgetEnrichment W C} (f : X ⟶ Y) :
     𝟙_ W ⟶ ForgetEnrichment.to W X ⟶[W] ForgetEnrichment.to W Y :=
   f
 #align category_theory.forget_enrichment.hom_to CategoryTheory.ForgetEnrichment.homTo
+-/
 
+#print CategoryTheory.ForgetEnrichment.homTo_homOf /-
 @[simp]
 theorem ForgetEnrichment.homTo_homOf {X Y : C} (f : 𝟙_ W ⟶ X ⟶[W] Y) :
     ForgetEnrichment.homTo W (ForgetEnrichment.homOf W f) = f :=
   rfl
 #align category_theory.forget_enrichment.hom_to_hom_of CategoryTheory.ForgetEnrichment.homTo_homOf
+-/
 
+#print CategoryTheory.ForgetEnrichment.homOf_homTo /-
 @[simp]
 theorem ForgetEnrichment.homOf_homTo {X Y : ForgetEnrichment W C} (f : X ⟶ Y) :
     ForgetEnrichment.homOf W (ForgetEnrichment.homTo W f) = f :=
   rfl
 #align category_theory.forget_enrichment.hom_of_hom_to CategoryTheory.ForgetEnrichment.homOf_homTo
+-/
 
+#print CategoryTheory.forgetEnrichment_id /-
 /-- The identity in the "underlying" category of an enriched category. -/
 @[simp]
 theorem forgetEnrichment_id (X : ForgetEnrichment W C) :
     ForgetEnrichment.homTo W (𝟙 X) = eId W (ForgetEnrichment.to W X : C) :=
   Category.id_comp _
 #align category_theory.forget_enrichment_id CategoryTheory.forgetEnrichment_id
+-/
 
+#print CategoryTheory.forgetEnrichment_id' /-
 @[simp]
 theorem forgetEnrichment_id' (X : C) :
     ForgetEnrichment.homOf W (eId W X) = 𝟙 (ForgetEnrichment.of W X : C) :=
   (forgetEnrichment_id W (ForgetEnrichment.of W X)).symm
 #align category_theory.forget_enrichment_id' CategoryTheory.forgetEnrichment_id'
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print CategoryTheory.forgetEnrichment_comp /-
 /-- Composition in the "underlying" category of an enriched category. -/
 @[simp]
 theorem forgetEnrichment_comp {X Y Z : ForgetEnrichment W C} (f : X ⟶ Y) (g : Y ⟶ Z) :
@@ -297,9 +344,11 @@ theorem forgetEnrichment_comp {X Y Z : ForgetEnrichment W C} (f : X ⟶ Y) (g : 
         eComp W _ _ _ :=
   rfl
 #align category_theory.forget_enrichment_comp CategoryTheory.forgetEnrichment_comp
+-/
 
 end
 
+#print CategoryTheory.EnrichedFunctor /-
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- A `V`-functor `F` between `V`-enriched categories
 has a `V`-morphism from `X ⟶[V] Y` to `F.obj X ⟶[V] F.obj Y`,
@@ -315,6 +364,7 @@ structure EnrichedFunctor (C : Type u₁) [EnrichedCategory V C] (D : Type u₂)
       eComp V X Y Z ≫ map X Z = (map X Y ⊗ map Y Z) ≫ eComp V (obj X) (obj Y) (obj Z) := by
     obviously
 #align category_theory.enriched_functor CategoryTheory.EnrichedFunctor
+-/
 
 restate_axiom enriched_functor.map_id'
 
@@ -324,6 +374,7 @@ attribute [simp, reassoc] enriched_functor.map_id
 
 attribute [simp, reassoc] enriched_functor.map_comp
 
+#print CategoryTheory.EnrichedFunctor.id /-
 /-- The identity enriched functor. -/
 @[simps]
 def EnrichedFunctor.id (C : Type u₁) [EnrichedCategory V C] : EnrichedFunctor V C C
@@ -331,10 +382,12 @@ def EnrichedFunctor.id (C : Type u₁) [EnrichedCategory V C] : EnrichedFunctor 
   obj X := X
   map X Y := 𝟙 _
 #align category_theory.enriched_functor.id CategoryTheory.EnrichedFunctor.id
+-/
 
 instance : Inhabited (EnrichedFunctor V C C) :=
   ⟨EnrichedFunctor.id V C⟩
 
+#print CategoryTheory.EnrichedFunctor.comp /-
 /-- Composition of enriched functors. -/
 @[simps]
 def EnrichedFunctor.comp {C : Type u₁} {D : Type u₂} {E : Type u₃} [EnrichedCategory V C]
@@ -344,11 +397,13 @@ def EnrichedFunctor.comp {C : Type u₁} {D : Type u₂} {E : Type u₃} [Enrich
   obj X := G.obj (F.obj X)
   map X Y := F.map _ _ ≫ G.map _ _
 #align category_theory.enriched_functor.comp CategoryTheory.EnrichedFunctor.comp
+-/
 
 section
 
 variable {W : Type (v + 1)} [Category.{v} W] [MonoidalCategory W]
 
+#print CategoryTheory.EnrichedFunctor.forget /-
 /-- An enriched functor induces an honest functor of the underlying categories,
 by mapping the `(𝟙_ W)`-shaped morphisms.
 -/
@@ -367,6 +422,7 @@ def EnrichedFunctor.forget {C : Type u₁} {D : Type u₂} [EnrichedCategory W C
       rfl
     · intro f g w; apply_fun forget_enrichment.hom_of W at w ; simpa using w
 #align category_theory.enriched_functor.forget CategoryTheory.EnrichedFunctor.forget
+-/
 
 end
 
@@ -421,6 +477,7 @@ coming from the ambient braiding on `V`.)
 -/
 
 
+#print CategoryTheory.GradedNatTrans /-
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- The type of `A`-graded natural transformations between `V`-functors `F` and `G`.
@@ -434,11 +491,13 @@ structure GradedNatTrans (A : Center V) (F G : EnrichedFunctor V C D) where
       (A.2.β (X ⟶[V] Y)).Hom ≫ (F.map X Y ⊗ app Y) ≫ eComp V _ _ _ =
         (app X ⊗ G.map X Y) ≫ eComp V _ _ _
 #align category_theory.graded_nat_trans CategoryTheory.GradedNatTrans
+-/
 
 variable [BraidedCategory V]
 
 open BraidedCategory
 
+#print CategoryTheory.enrichedNatTransYoneda /-
 /-- A presheaf isomorphic to the Yoneda embedding of
 the `V`-object of natural transformations from `F` to `G`.
 -/
@@ -455,6 +514,7 @@ def enrichedNatTransYoneda (F G : EnrichedFunctor V C D) : Vᵒᵖ ⥤ Type max 
           category.assoc, ← braiding_naturality_assoc, id_tensor_comp_tensor_id_assoc, p, ←
           tensor_comp_assoc, category.id_comp] }
 #align category_theory.enriched_nat_trans_yoneda CategoryTheory.enrichedNatTransYoneda
+-/
 
 -- TODO assuming `[has_limits C]` construct the actual object of natural transformations
 -- and show that the functor category is `V`-enriched.
@@ -464,6 +524,7 @@ section
 
 attribute [local instance] category_of_enriched_category_Type
 
+#print CategoryTheory.enrichedFunctorTypeEquivFunctor /-
 /-- We verify that an enriched functor between `Type v` enriched categories
 is just the same thing as an honest functor.
 -/
@@ -484,7 +545,9 @@ def enrichedFunctorTypeEquivFunctor {C : Type u₁} [𝒞 : EnrichedCategory (Ty
   left_inv F := by cases F; simp
   right_inv F := by cases F; simp
 #align category_theory.enriched_functor_Type_equiv_functor CategoryTheory.enrichedFunctorTypeEquivFunctor
+-/
 
+#print CategoryTheory.enrichedNatTransYonedaTypeIsoYonedaNatTrans /-
 /-- We verify that the presheaf representing natural transformations
 between `Type v`-enriched functors is actually represented by
 the usual type of natural transformations!
@@ -503,6 +566,7 @@ def enrichedNatTransYonedaTypeIsoYonedaNatTrans {C : Type v} [EnrichedCategory (
             naturality := fun X Y => by ext ⟨x, f⟩; exact (σ x).naturality f } })
     (by tidy)
 #align category_theory.enriched_nat_trans_yoneda_Type_iso_yoneda_nat_trans CategoryTheory.enrichedNatTransYonedaTypeIsoYonedaNatTrans
+-/
 
 end
 

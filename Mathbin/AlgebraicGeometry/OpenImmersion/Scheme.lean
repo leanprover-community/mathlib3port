@@ -100,7 +100,7 @@ variable [∀ x, HasPullback (𝒰.map x ≫ f) g]
 def affineCover (X : Scheme) : OpenCover X
     where
   J := X.carrier
-  obj x := spec.obj <| Opposite.op (X.local_affine x).choose_spec.some
+  obj x := Spec.obj <| Opposite.op (X.local_affine x).choose_spec.some
   map x :=
     ((X.local_affine x).choose_spec.choose_spec.some.inv ≫ X.toLocallyRingedSpace.of_restrict _ : _)
   f x := x
@@ -205,7 +205,7 @@ instance val_base_isIso {X Y : Scheme} (f : X ⟶ Y) [IsIso f] : IsIso f.1.base 
 
 instance basic_open_isOpenImmersion {R : CommRingCat} (f : R) :
     AlgebraicGeometry.IsOpenImmersion
-      (Scheme.spec.map (CommRingCat.ofHom (algebraMap R (Localization.Away f))).op) :=
+      (Scheme.Spec.map (CommRingCat.ofHom (algebraMap R (Localization.Away f))).op) :=
   by
   apply (config := { instances := false }) SheafedSpace.is_open_immersion.of_stalk_iso
   any_goals infer_instance
@@ -216,11 +216,11 @@ instance basic_open_isOpenImmersion {R : CommRingCat} (f : R) :
 #align algebraic_geometry.Scheme.basic_open_is_open_immersion AlgebraicGeometry.Scheme.basic_open_isOpenImmersion
 
 /-- The basic open sets form an affine open cover of `Spec R`. -/
-def affineBasisCoverOfAffine (R : CommRingCat) : OpenCover (spec.obj (Opposite.op R))
+def affineBasisCoverOfAffine (R : CommRingCat) : OpenCover (Spec.obj (Opposite.op R))
     where
   J := R
-  obj r := spec.obj (Opposite.op <| CommRingCat.of <| Localization.Away r)
-  map r := spec.map (Quiver.Hom.op (algebraMap R (Localization.Away r) : _))
+  obj r := Spec.obj (Opposite.op <| CommRingCat.of <| Localization.Away r)
+  map r := Spec.map (Quiver.Hom.op (algebraMap R (Localization.Away r) : _))
   f x := 1
   Covers r := by
     rw [set.range_iff_surjective.mpr ((TopCat.epi_iff_surjective _).mp _)]
@@ -241,7 +241,7 @@ def affineBasisCoverRing (X : Scheme) (i : X.affineBasisCover.J) : CommRingCat :
 #align algebraic_geometry.Scheme.affine_basis_cover_ring AlgebraicGeometry.Scheme.affineBasisCoverRing
 
 theorem affineBasisCover_obj (X : Scheme) (i : X.affineBasisCover.J) :
-    X.affineBasisCover.obj i = spec.obj (op <| X.affineBasisCoverRing i) :=
+    X.affineBasisCover.obj i = Spec.obj (op <| X.affineBasisCoverRing i) :=
   rfl
 #align algebraic_geometry.Scheme.affine_basis_cover_obj AlgebraicGeometry.Scheme.affineBasisCover_obj
 
@@ -408,7 +408,7 @@ theorem to_iso {X Y : Scheme} (f : X ⟶ Y) [h : IsOpenImmersion f] [Epi f.1.bas
 
 theorem of_stalk_iso {X Y : Scheme} (f : X ⟶ Y) (hf : OpenEmbedding f.1.base)
     [∀ x, IsIso (PresheafedSpace.stalkMap f.1 x)] : IsOpenImmersion f :=
-  SheafedSpace.IsOpenImmersion.of_stalk_iso f.1 hf
+  SheafedSpace.IsOpenImmersion.ofStalkIso f.1 hf
 #align algebraic_geometry.is_open_immersion.of_stalk_iso AlgebraicGeometry.IsOpenImmersion.of_stalk_iso
 
 theorem iff_stalk_iso {X Y : Scheme} (f : X ⟶ Y) :

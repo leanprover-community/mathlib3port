@@ -223,7 +223,7 @@ def concat {u v w : V} (p : G.Walk u v) (h : G.Adj v w) : G.Walk u w :=
 
 #print SimpleGraph.Walk.concat_eq_append /-
 theorem concat_eq_append {u v w : V} (p : G.Walk u v) (h : G.Adj v w) :
-    p.concat h = p.append (cons h nil) :=
+    p.push h = p.append (cons h nil) :=
   rfl
 #align simple_graph.walk.concat_eq_append SimpleGraph.Walk.concat_eq_append
 -/
@@ -340,7 +340,7 @@ theorem append_copy_copy {u v w u' v' w'} (p : G.Walk u v) (q : G.Walk v w) (hu 
 -/
 
 #print SimpleGraph.Walk.concat_nil /-
-theorem concat_nil {u v : V} (h : G.Adj u v) : nil.concat h = cons h nil :=
+theorem concat_nil {u v : V} (h : G.Adj u v) : nil.push h = cons h nil :=
   rfl
 #align simple_graph.walk.concat_nil SimpleGraph.Walk.concat_nil
 -/
@@ -348,21 +348,21 @@ theorem concat_nil {u v : V} (h : G.Adj u v) : nil.concat h = cons h nil :=
 #print SimpleGraph.Walk.concat_cons /-
 @[simp]
 theorem concat_cons {u v w x : V} (h : G.Adj u v) (p : G.Walk v w) (h' : G.Adj w x) :
-    (cons h p).concat h' = cons h (p.concat h') :=
+    (cons h p).push h' = cons h (p.push h') :=
   rfl
 #align simple_graph.walk.concat_cons SimpleGraph.Walk.concat_cons
 -/
 
 #print SimpleGraph.Walk.append_concat /-
 theorem append_concat {u v w x : V} (p : G.Walk u v) (q : G.Walk v w) (h : G.Adj w x) :
-    p.append (q.concat h) = (p.append q).concat h :=
+    p.append (q.push h) = (p.append q).push h :=
   append_assoc _ _ _
 #align simple_graph.walk.append_concat SimpleGraph.Walk.append_concat
 -/
 
 #print SimpleGraph.Walk.concat_append /-
 theorem concat_append {u v w x : V} (p : G.Walk u v) (h : G.Adj v w) (q : G.Walk w x) :
-    (p.concat h).append q = p.append (cons h q) := by
+    (p.push h).append q = p.append (cons h q) := by
   rw [concat_eq_append, ← append_assoc, cons_nil_append]
 #align simple_graph.walk.concat_append SimpleGraph.Walk.concat_append
 -/
@@ -371,7 +371,7 @@ theorem concat_append {u v w x : V} (p : G.Walk u v) (h : G.Adj v w) (q : G.Walk
 /-- A non-trivial `cons` walk is representable as a `concat` walk. -/
 theorem exists_cons_eq_concat :
     ∀ {u v w : V} (h : G.Adj u v) (p : G.Walk v w),
-      ∃ (x : V) (q : G.Walk u x) (h' : G.Adj x w), cons h p = q.concat h'
+      ∃ (x : V) (q : G.Walk u x) (h' : G.Adj x w), cons h p = q.push h'
   | _, _, _, h, nil => ⟨_, nil, h, rfl⟩
   | _, _, _, h, cons h' p =>
     by
@@ -385,7 +385,7 @@ theorem exists_cons_eq_concat :
 /-- A non-trivial `concat` walk is representable as a `cons` walk. -/
 theorem exists_concat_eq_cons :
     ∀ {u v w : V} (p : G.Walk u v) (h : G.Adj v w),
-      ∃ (x : V) (h' : G.Adj u x) (q : G.Walk x w), p.concat h = cons h' q
+      ∃ (x : V) (h' : G.Adj u x) (q : G.Walk x w), p.push h = cons h' q
   | _, _, _, nil, h => ⟨_, h, nil, rfl⟩
   | _, _, _, cons h' p, h => ⟨_, h', Walk.concat p h, concat_cons _ _ _⟩
 #align simple_graph.walk.exists_concat_eq_cons SimpleGraph.Walk.exists_concat_eq_cons
@@ -462,7 +462,7 @@ theorem reverse_append {u v w : V} (p : G.Walk u v) (q : G.Walk v w) :
 #print SimpleGraph.Walk.reverse_concat /-
 @[simp]
 theorem reverse_concat {u v w : V} (p : G.Walk u v) (h : G.Adj v w) :
-    (p.concat h).reverse = cons (G.symm h) p.reverse := by simp [concat_eq_append]
+    (p.push h).reverse = cons (G.symm h) p.reverse := by simp [concat_eq_append]
 #align simple_graph.walk.reverse_concat SimpleGraph.Walk.reverse_concat
 -/
 
@@ -508,7 +508,7 @@ theorem length_append :
 #print SimpleGraph.Walk.length_concat /-
 @[simp]
 theorem length_concat {u v w : V} (p : G.Walk u v) (h : G.Adj v w) :
-    (p.concat h).length = p.length + 1 :=
+    (p.push h).length = p.length + 1 :=
   length_append _ _
 #align simple_graph.walk.length_concat SimpleGraph.Walk.length_concat
 -/
@@ -555,7 +555,7 @@ theorem length_eq_zero_iff {u : V} {p : G.Walk u u} : p.length = 0 ↔ p = nil :
 section ConcatRec
 
 variable {motive : ∀ u v : V, G.Walk u v → Sort _} (Hnil : ∀ {u : V}, motive u u nil)
-  (Hconcat : ∀ {u v w : V} (p : G.Walk u v) (h : G.Adj v w), motive u v p → motive u w (p.concat h))
+  (Hconcat : ∀ {u v w : V} (p : G.Walk u v) (h : G.Adj v w), motive u v p → motive u w (p.push h))
 
 #print SimpleGraph.Walk.concatRecAux /-
 /-- Auxiliary definition for `simple_graph.walk.concat_rec` -/
@@ -588,7 +588,7 @@ theorem concatRec_nil (u : V) :
 #print SimpleGraph.Walk.concatRec_concat /-
 @[simp]
 theorem concatRec_concat {u v w : V} (p : G.Walk u v) (h : G.Adj v w) :
-    @concatRec _ _ motive @Hnil @Hconcat _ _ (p.concat h) =
+    @concatRec _ _ motive @Hnil @Hconcat _ _ (p.push h) =
       Hconcat p h (concatRec (@Hnil) (@Hconcat) p) :=
   by
   simp only [concat_rec]
@@ -604,14 +604,14 @@ theorem concatRec_concat {u v w : V} (p : G.Walk u v) (h : G.Adj v w) :
 end ConcatRec
 
 #print SimpleGraph.Walk.concat_ne_nil /-
-theorem concat_ne_nil {u v : V} (p : G.Walk u v) (h : G.Adj v u) : p.concat h ≠ nil := by
+theorem concat_ne_nil {u v : V} (p : G.Walk u v) (h : G.Adj v u) : p.push h ≠ nil := by
   cases p <;> simp [concat]
 #align simple_graph.walk.concat_ne_nil SimpleGraph.Walk.concat_ne_nil
 -/
 
 #print SimpleGraph.Walk.concat_inj /-
 theorem concat_inj {u v v' w : V} {p : G.Walk u v} {h : G.Adj v w} {p' : G.Walk u v'}
-    {h' : G.Adj v' w} (he : p.concat h = p'.concat h') : ∃ hv : v = v', p.copy rfl hv = p' :=
+    {h' : G.Adj v' w} (he : p.push h = p'.push h') : ∃ hv : v = v', p.copy rfl hv = p' :=
   by
   induction p
   · cases p'
@@ -682,7 +682,7 @@ theorem support_cons {u v w : V} (h : G.Adj u v) (p : G.Walk v w) :
 #print SimpleGraph.Walk.support_concat /-
 @[simp]
 theorem support_concat {u v w : V} (p : G.Walk u v) (h : G.Adj v w) :
-    (p.concat h).support = p.support.concat w := by induction p <;> simp [*, concat_nil]
+    (p.push h).support = p.support.push w := by induction p <;> simp [*, concat_nil]
 #align simple_graph.walk.support_concat SimpleGraph.Walk.support_concat
 -/
 
@@ -884,7 +884,7 @@ theorem darts_cons {u v w : V} (h : G.Adj u v) (p : G.Walk v w) :
 #print SimpleGraph.Walk.darts_concat /-
 @[simp]
 theorem darts_concat {u v w : V} (p : G.Walk u v) (h : G.Adj v w) :
-    (p.concat h).darts = p.darts.concat ⟨(v, w), h⟩ := by induction p <;> simp [*, concat_nil]
+    (p.push h).darts = p.darts.push ⟨(v, w), h⟩ := by induction p <;> simp [*, concat_nil]
 #align simple_graph.walk.darts_concat SimpleGraph.Walk.darts_concat
 -/
 
@@ -959,7 +959,7 @@ theorem edges_cons {u v w : V} (h : G.Adj u v) (p : G.Walk v w) :
 #print SimpleGraph.Walk.edges_concat /-
 @[simp]
 theorem edges_concat {u v w : V} (p : G.Walk u v) (h : G.Adj v w) :
-    (p.concat h).edges = p.edges.concat ⟦(v, w)⟧ := by simp [edges]
+    (p.push h).edges = p.edges.push ⟦(v, w)⟧ := by simp [edges]
 #align simple_graph.walk.edges_concat SimpleGraph.Walk.edges_concat
 -/
 

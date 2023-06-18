@@ -69,9 +69,11 @@ def borel (α : Type u) [TopologicalSpace α] : MeasurableSpace α :=
 #align borel borel
 -/
 
+#print borel_anti /-
 theorem borel_anti : Antitone (@borel α) := fun _ _ h =>
   MeasurableSpace.generateFrom_le fun s hs => GenerateMeasurable.basic _ (h _ hs)
 #align borel_anti borel_anti
+-/
 
 #print borel_eq_top_of_discrete /-
 theorem borel_eq_top_of_discrete [TopologicalSpace α] [DiscreteTopology α] : borel α = ⊤ :=

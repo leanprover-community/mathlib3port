@@ -754,7 +754,7 @@ open AdjoinRoot IsAdjoinRoot minpoly PowerBasis IsAdjoinRootMonic Algebra
 
 theorem Algebra.adjoin.powerBasis'_minpoly_gen [IsDomain R] [IsDomain S] [NoZeroSMulDivisors R S]
     [IsIntegrallyClosed R] {x : S} (hx' : IsIntegral R x) :
-    minpoly R x = minpoly R (Algebra.adjoin.powerBasis' hx').gen :=
+    minpoly R x = minpoly R (minpoly.Algebra.adjoin.powerBasis' hx').gen :=
   by
   haveI := is_domain_of_prime (prime_of_is_integrally_closed hx')
   haveI :=

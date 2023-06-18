@@ -98,7 +98,7 @@ theorem isReducedOfOpenImmersion {X Y : Scheme} (f : X ⟶ Y) [H : IsOpenImmersi
               Y.presheaf.obj _ ≅ _).symm.commRingCatIsoToRingEquiv.Injective
 #align algebraic_geometry.is_reduced_of_open_immersion AlgebraicGeometry.isReducedOfOpenImmersion
 
-instance {R : CommRingCat} [H : IsReduced R] : IsReduced (Scheme.spec.obj <| op R) :=
+instance {R : CommRingCat} [H : IsReduced R] : IsReduced (Scheme.Spec.obj <| op R) :=
   by
   apply (config := { instances := false }) is_reduced_of_stalk_is_reduced
   intro x; dsimp
@@ -109,7 +109,7 @@ instance {R : CommRingCat} [H : IsReduced R] : IsReduced (Scheme.spec.obj <| op 
       (structure_sheaf.stalk_iso R x).commRingCatIsoToRingEquiv.Injective
 
 theorem affine_isReduced_iff (R : CommRingCat) :
-    IsReduced (Scheme.spec.obj <| op R) ↔ IsReduced R :=
+    IsReduced (Scheme.Spec.obj <| op R) ↔ IsReduced R :=
   by
   refine' ⟨_, fun h => inferInstance⟩
   intro h
@@ -142,7 +142,7 @@ theorem reduce_to_affine_global (P : ∀ (X : Scheme) (U : Opens X.carrier), Pro
       ∀ {X Y} (f : X ⟶ Y) [hf : IsOpenImmersion f],
         ∃ (U : Set X.carrier) (V : Set Y.carrier) (hU : U = ⊤) (hV : V = Set.range f.1.base),
           P X ⟨U, hU.symm ▸ isOpen_univ⟩ → P Y ⟨V, hV.symm ▸ hf.base_open.open_range⟩)
-    (h₃ : ∀ R : CommRingCat, P (Scheme.spec.obj <| op R) ⊤) :
+    (h₃ : ∀ R : CommRingCat, P (Scheme.Spec.obj <| op R) ⊤) :
     ∀ (X : Scheme) (U : Opens X.carrier), P X U :=
   by
   intro X U
@@ -159,7 +159,7 @@ theorem reduce_to_affine_global (P : ∀ (X : Scheme) (U : Opens X.carrier), Pro
 #align algebraic_geometry.reduce_to_affine_global AlgebraicGeometry.reduce_to_affine_global
 
 theorem reduce_to_affine_nbhd (P : ∀ (X : Scheme) (x : X.carrier), Prop)
-    (h₁ : ∀ (R : CommRingCat) (x : PrimeSpectrum R), P (Scheme.spec.obj <| op R) x)
+    (h₁ : ∀ (R : CommRingCat) (x : PrimeSpectrum R), P (Scheme.Spec.obj <| op R) x)
     (h₂ : ∀ {X Y} (f : X ⟶ Y) [IsOpenImmersion f] (x : X.carrier), P X x → P Y (f.1.base x)) :
     ∀ (X : Scheme) (x : X.carrier), P X x := by
   intro X x
@@ -316,16 +316,16 @@ theorem isIntegralOfOpenImmersion {X Y : Scheme} (f : X ⟶ Y) [H : IsOpenImmers
       _
 #align algebraic_geometry.is_integral_of_open_immersion AlgebraicGeometry.isIntegralOfOpenImmersion
 
-instance {R : CommRingCat} [H : IsDomain R] : IrreducibleSpace (Scheme.spec.obj <| op R).carrier :=
+instance {R : CommRingCat} [H : IsDomain R] : IrreducibleSpace (Scheme.Spec.obj <| op R).carrier :=
   by
   convert PrimeSpectrum.irreducibleSpace
   assumption
 
-instance {R : CommRingCat} [IsDomain R] : IsIntegral (Scheme.spec.obj <| op R) :=
+instance {R : CommRingCat} [IsDomain R] : IsIntegral (Scheme.Spec.obj <| op R) :=
   isIntegralOfIsIrreducibleIsReduced _
 
 theorem affine_isIntegral_iff (R : CommRingCat) :
-    IsIntegral (Scheme.spec.obj <| op R) ↔ IsDomain R :=
+    IsIntegral (Scheme.Spec.obj <| op R) ↔ IsDomain R :=
   ⟨fun h =>
     RingEquiv.isDomain ((Scheme.Spec.obj <| op R).Presheaf.obj _)
       (as_iso <| to_Spec_Γ R).commRingCatIsoToRingEquiv,

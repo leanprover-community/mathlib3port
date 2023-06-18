@@ -28,16 +28,16 @@ unsafe def fill_args : expr → tactic (expr × List expr)
   | e => return (e, [])
 #align tactic.fill_args tactic.fill_args
 
-unsafe def mk_assoc_pattern' (fn : expr) : expr → tactic (Dlist expr)
+unsafe def mk_assoc_pattern' (fn : expr) : expr → tactic (Std.DList expr)
   | e =>
     (do
         let (e₀, e₁) ← match_fn fn e
         (· ++ ·) <$> mk_assoc_pattern' e₀ <*> mk_assoc_pattern' e₁) <|>
-      pure (Dlist.singleton e)
+      pure (Std.DList.singleton e)
 #align tactic.mk_assoc_pattern' tactic.mk_assoc_pattern'
 
 unsafe def mk_assoc_pattern (fn e : expr) : tactic (List expr) :=
-  Dlist.toList <$> mk_assoc_pattern' fn e
+  Std.DList.toList <$> mk_assoc_pattern' fn e
 #align tactic.mk_assoc_pattern tactic.mk_assoc_pattern
 
 unsafe def mk_assoc (fn : expr) : List expr → tactic expr
@@ -147,14 +147,14 @@ unsafe def assoc_rewrite_intl (assoc h e : expr) : tactic (expr × expr) := do
 
 -- TODO(Simon): visit expressions built of `fn` nested inside other such expressions:
 -- e.g.: x + f (a + b + c) + y should generate two rewrite candidates
-unsafe def enum_assoc_subexpr' (fn : expr) : expr → tactic (Dlist expr)
+unsafe def enum_assoc_subexpr' (fn : expr) : expr → tactic (Std.DList expr)
   | e =>
-    Dlist.singleton e <$ (match_fn fn e >> guard ¬e.has_var) <|>
-      expr.mfoldl (fun es e' => (· ++ es) <$> enum_assoc_subexpr' e') Dlist.empty e
+    Std.DList.singleton e <$ (match_fn fn e >> guard ¬e.has_var) <|>
+      expr.mfoldl (fun es e' => (· ++ es) <$> enum_assoc_subexpr' e') Std.DList.empty e
 #align tactic.enum_assoc_subexpr' tactic.enum_assoc_subexpr'
 
 unsafe def enum_assoc_subexpr (fn e : expr) : tactic (List expr) :=
-  Dlist.toList <$> enum_assoc_subexpr' fn e
+  Std.DList.toList <$> enum_assoc_subexpr' fn e
 #align tactic.enum_assoc_subexpr tactic.enum_assoc_subexpr
 
 unsafe def mk_assoc_instance (fn : expr) : tactic expr := do

@@ -511,7 +511,7 @@ theorem of_inverse {f : α → β} {f' : β → α} (h : Continuous f') (l_inv :
 theorem to_quotientMap {f : α → β} (open_map : IsOpenMap f) (cont : Continuous f)
     (surj : Surjective f) : QuotientMap f :=
   quotientMap_iff.2
-    ⟨surj, fun s => ⟨fun h => h.Preimage cont, fun h => surj.image_preimage s ▸ open_map _ h⟩⟩
+    ⟨surj, fun s => ⟨fun h => h.Preimage Cont, fun h => surj.image_preimage s ▸ open_map _ h⟩⟩
 #align is_open_map.to_quotient_map IsOpenMap.to_quotientMap
 -/
 

@@ -39,7 +39,7 @@ noncomputable instance AddCircle.measurableSpace {a : ℝ} : MeasurableSpace (Ad
 #align add_circle.measurable_space AddCircle.measurableSpace
 
 instance AddCircle.borelSpace {a : ℝ} : BorelSpace (AddCircle a) :=
-  quotientAddGroup.borelSpace
+  QuotientAddGroup.borelSpace
 #align add_circle.borel_space AddCircle.borelSpace
 
 @[measurability]

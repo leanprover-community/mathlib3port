@@ -423,7 +423,7 @@ instance : Epi 𝒰.fromGlued.val.base :=
   exact h
 
 instance fromGlued_open_immersion : IsOpenImmersion 𝒰.fromGlued :=
-  SheafedSpace.IsOpenImmersion.of_stalk_iso _ 𝒰.fromGlued_openEmbedding
+  SheafedSpace.IsOpenImmersion.ofStalkIso _ 𝒰.fromGlued_openEmbedding
 #align algebraic_geometry.Scheme.open_cover.from_glued_open_immersion AlgebraicGeometry.Scheme.OpenCover.fromGlued_open_immersion
 
 instance : IsIso 𝒰.fromGlued :=

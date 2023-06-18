@@ -108,7 +108,7 @@ section Convexity
 proved using the Hölder inequality applied to Euler's integral. -/
 theorem gamma_mul_add_mul_le_rpow_gamma_mul_rpow_gamma {s t a b : ℝ} (hs : 0 < s) (ht : 0 < t)
     (ha : 0 < a) (hb : 0 < b) (hab : a + b = 1) :
-    gamma (a * s + b * t) ≤ gamma s ^ a * gamma t ^ b :=
+    Gamma (a * s + b * t) ≤ Gamma s ^ a * Gamma t ^ b :=
   by
   -- We will apply Hölder's inequality, for the conjugate exponents `p = 1 / a`
   -- and `q = 1 / b`, to the functions `f a s` and `f b t`, where `f` is as follows:
@@ -167,7 +167,7 @@ theorem gamma_mul_add_mul_le_rpow_gamma_mul_rpow_gamma {s t a b : ℝ} (hs : 0 <
     congr 2 <;> exact set_integral_congr measurableSet_Ioi fun x hx => fpow (by assumption) _ hx
 #align real.Gamma_mul_add_mul_le_rpow_Gamma_mul_rpow_Gamma Real.gamma_mul_add_mul_le_rpow_gamma_mul_rpow_gamma
 
-theorem convexOn_log_gamma : ConvexOn ℝ (Ioi 0) (log ∘ gamma) :=
+theorem convexOn_log_gamma : ConvexOn ℝ (Ioi 0) (log ∘ Gamma) :=
   by
   refine' convex_on_iff_forall_pos.mpr ⟨convex_Ioi _, fun x hx y hy a b ha hb hab => _⟩
   have : b = 1 - a := by linarith; subst this
@@ -180,7 +180,7 @@ theorem convexOn_log_gamma : ConvexOn ℝ (Ioi 0) (log ∘ gamma) :=
   exact Gamma_mul_add_mul_le_rpow_Gamma_mul_rpow_Gamma hx hy ha hb hab
 #align real.convex_on_log_Gamma Real.convexOn_log_gamma
 
-theorem convexOn_gamma : ConvexOn ℝ (Ioi 0) gamma :=
+theorem convexOn_gamma : ConvexOn ℝ (Ioi 0) Gamma :=
   by
   refine'
     ((convex_on_exp.subset (subset_univ _) _).comp convex_on_log_Gamma
@@ -377,7 +377,7 @@ theorem tendsto_logGammaSeq (hf_conv : ConvexOn ℝ (Ioi 0) f)
 #align real.bohr_mollerup.tendsto_log_gamma_seq Real.BohrMollerup.tendsto_logGammaSeq
 
 theorem tendsto_log_gamma {x : ℝ} (hx : 0 < x) :
-    Tendsto (logGammaSeq x) atTop (𝓝 <| log (gamma x)) :=
+    Tendsto (logGammaSeq x) atTop (𝓝 <| log (Gamma x)) :=
   by
   have : log (Gamma x) = (log ∘ Gamma) x - (log ∘ Gamma) 1 := by
     simp_rw [Function.comp_apply, Gamma_one, log_one, sub_zero]
@@ -393,7 +393,7 @@ end BohrMollerup
 function on the positive reals which satisfies `f 1 = 1` and `f (x + 1) = x * f x` for all `x`. -/
 theorem eq_gamma_of_log_convex {f : ℝ → ℝ} (hf_conv : ConvexOn ℝ (Ioi 0) (log ∘ f))
     (hf_feq : ∀ {y : ℝ}, 0 < y → f (y + 1) = y * f y) (hf_pos : ∀ {y : ℝ}, 0 < y → 0 < f y)
-    (hf_one : f 1 = 1) : EqOn f gamma (Ioi (0 : ℝ)) :=
+    (hf_one : f 1 = 1) : EqOn f Gamma (Ioi (0 : ℝ)) :=
   by
   suffices : eq_on (log ∘ f) (log ∘ Gamma) (Ioi (0 : ℝ))
   exact fun x hx => log_inj_on_pos (hf_pos hx) (Gamma_pos_of_pos hx) (this hx)
@@ -411,10 +411,10 @@ end BohrMollerup
 -- (section)
 section StrictMono
 
-theorem gamma_two : gamma 2 = 1 := by simpa using Gamma_nat_eq_factorial 1
+theorem gamma_two : Gamma 2 = 1 := by simpa using Gamma_nat_eq_factorial 1
 #align real.Gamma_two Real.gamma_two
 
-theorem gamma_three_div_two_lt_one : gamma (3 / 2) < 1 :=
+theorem gamma_three_div_two_lt_one : Gamma (3 / 2) < 1 :=
   by
   -- This can also be proved using the closed-form evaluation of `Gamma (1 / 2)` in
   -- `analysis.special_functions.gaussian`, but we give a self-contained proof using log-convexity
@@ -439,7 +439,7 @@ theorem gamma_three_div_two_lt_one : gamma (3 / 2) < 1 :=
     norm_num
 #align real.Gamma_three_div_two_lt_one Real.gamma_three_div_two_lt_one
 
-theorem gamma_strictMonoOn_Ici : StrictMonoOn gamma (Ici 2) :=
+theorem gamma_strictMonoOn_Ici : StrictMonoOn Gamma (Ici 2) :=
   by
   convert
     convex_on_Gamma.strict_mono_of_lt (by norm_num : (0 : ℝ) < 3 / 2)
@@ -464,7 +464,7 @@ multiple of `Gamma`, and we can compute the constant by specialising at `s = 1`.
 
 /-- Auxiliary definition for the doubling formula (we'll show this is equal to `Gamma s`) -/
 def doublingGamma (s : ℝ) : ℝ :=
-  gamma (s / 2) * gamma (s / 2 + 1 / 2) * 2 ^ (s - 1) / sqrt π
+  Gamma (s / 2) * Gamma (s / 2 + 1 / 2) * 2 ^ (s - 1) / sqrt π
 #align real.doubling_Gamma Real.doublingGamma
 
 theorem doublingGamma_add_one (s : ℝ) (hs : s ≠ 0) : doublingGamma (s + 1) = s * doublingGamma s :=
@@ -481,7 +481,7 @@ theorem doublingGamma_one : doublingGamma 1 = 1 := by
 
 theorem log_doublingGamma_eq :
     EqOn (log ∘ doublingGamma)
-      (fun s => log (gamma (s / 2)) + log (gamma (s / 2 + 1 / 2)) + s * log 2 - log (2 * sqrt π))
+      (fun s => log (Gamma (s / 2)) + log (Gamma (s / 2 + 1 / 2)) + s * log 2 - log (2 * sqrt π))
       (Ioi 0) :=
   by
   intro s hs
@@ -520,7 +520,7 @@ theorem doublingGamma_log_convex_Ioi : ConvexOn ℝ (Ioi (0 : ℝ)) (log ∘ dou
       (convexOn_id (convex_Ioi (0 : ℝ))).smul (log_pos one_lt_two).le
 #align real.doubling_Gamma_log_convex_Ioi Real.doublingGamma_log_convex_Ioi
 
-theorem doublingGamma_eq_gamma {s : ℝ} (hs : 0 < s) : doublingGamma s = gamma s :=
+theorem doublingGamma_eq_gamma {s : ℝ} (hs : 0 < s) : doublingGamma s = Gamma s :=
   by
   refine'
     eq_Gamma_of_log_convex doubling_Gamma_log_convex_Ioi
@@ -533,7 +533,7 @@ theorem doublingGamma_eq_gamma {s : ℝ} (hs : 0 < s) : doublingGamma s = gamma 
 we shall later prove this for all `s` as `real.Gamma_mul_Gamma_add_half` (superseding this result)
 but this result is needed as an intermediate step. -/
 theorem gamma_mul_gamma_add_half_of_pos {s : ℝ} (hs : 0 < s) :
-    gamma s * gamma (s + 1 / 2) = gamma (2 * s) * 2 ^ (1 - 2 * s) * sqrt π :=
+    Gamma s * Gamma (s + 1 / 2) = Gamma (2 * s) * 2 ^ (1 - 2 * s) * sqrt π :=
   by
   rw [← doubling_Gamma_eq_Gamma (mul_pos two_pos hs), doubling_Gamma,
     mul_div_cancel_left _ (two_ne_zero' ℝ), (by abel : 1 - 2 * s = -(2 * s - 1)),

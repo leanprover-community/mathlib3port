@@ -42,7 +42,7 @@ namespace ProbabilityTheory
 
 namespace Kernel
 
-#print ProbabilityTheory.Kernel.measurable_kernel_prod_mk_left_of_finite /-
+#print ProbabilityTheory.kernel.measurable_kernel_prod_mk_left_of_finite /-
 /-- This is an auxiliary lemma for `measurable_kernel_prod_mk_left`. -/
 theorem measurable_kernel_prod_mk_left_of_finite {t : Set (α × β)} (ht : MeasurableSet t)
     (hκs : ∀ a, IsFiniteMeasure (κ a)) : Measurable fun a => κ a (Prod.mk a ⁻¹' t) :=
@@ -105,10 +105,10 @@ theorem measurable_kernel_prod_mk_left_of_finite {t : Set (α × β)} (ht : Meas
       · exact fun i => (@measurable_prod_mk_left α β _ _ a) _ (hf_meas i)
     rw [h_tsum]
     exact Measurable.ennreal_tsum hf
-#align probability_theory.kernel.measurable_kernel_prod_mk_left_of_finite ProbabilityTheory.Kernel.measurable_kernel_prod_mk_left_of_finite
+#align probability_theory.kernel.measurable_kernel_prod_mk_left_of_finite ProbabilityTheory.kernel.measurable_kernel_prod_mk_left_of_finite
 -/
 
-#print ProbabilityTheory.Kernel.measurable_kernel_prod_mk_left /-
+#print ProbabilityTheory.kernel.measurable_kernel_prod_mk_left /-
 theorem measurable_kernel_prod_mk_left [IsSFiniteKernel κ] {t : Set (α × β)}
     (ht : MeasurableSet t) : Measurable fun a => κ a (Prod.mk a ⁻¹' t) :=
   by
@@ -118,10 +118,10 @@ theorem measurable_kernel_prod_mk_left [IsSFiniteKernel κ] {t : Set (α × β)}
   simp_rw [this]
   refine' Measurable.ennreal_tsum fun n => _
   exact measurable_kernel_prod_mk_left_of_finite ht inferInstance
-#align probability_theory.kernel.measurable_kernel_prod_mk_left ProbabilityTheory.Kernel.measurable_kernel_prod_mk_left
+#align probability_theory.kernel.measurable_kernel_prod_mk_left ProbabilityTheory.kernel.measurable_kernel_prod_mk_left
 -/
 
-#print ProbabilityTheory.Kernel.measurable_kernel_prod_mk_left' /-
+#print ProbabilityTheory.kernel.measurable_kernel_prod_mk_left' /-
 theorem measurable_kernel_prod_mk_left' [IsSFiniteKernel η] {s : Set (β × γ)} (hs : MeasurableSet s)
     (a : α) : Measurable fun b => η (a, b) (Prod.mk b ⁻¹' s) :=
   by
@@ -130,14 +130,14 @@ theorem measurable_kernel_prod_mk_left' [IsSFiniteKernel η] {s : Set (β × γ)
   simp_rw [this]
   refine' (measurable_kernel_prod_mk_left _).comp measurable_prod_mk_left
   exact (measurable_fst.snd.prod_mk measurable_snd) hs
-#align probability_theory.kernel.measurable_kernel_prod_mk_left' ProbabilityTheory.Kernel.measurable_kernel_prod_mk_left'
+#align probability_theory.kernel.measurable_kernel_prod_mk_left' ProbabilityTheory.kernel.measurable_kernel_prod_mk_left'
 -/
 
-#print ProbabilityTheory.Kernel.measurable_kernel_prod_mk_right /-
+#print ProbabilityTheory.kernel.measurable_kernel_prod_mk_right /-
 theorem measurable_kernel_prod_mk_right [IsSFiniteKernel κ] {s : Set (β × α)}
     (hs : MeasurableSet s) : Measurable fun y => κ y ((fun x => (x, y)) ⁻¹' s) :=
   measurable_kernel_prod_mk_left (measurableSet_swap_iff.mpr hs)
-#align probability_theory.kernel.measurable_kernel_prod_mk_right ProbabilityTheory.Kernel.measurable_kernel_prod_mk_right
+#align probability_theory.kernel.measurable_kernel_prod_mk_right ProbabilityTheory.kernel.measurable_kernel_prod_mk_right
 -/
 
 end Kernel
@@ -148,14 +148,14 @@ section Lintegral
 
 variable [IsSFiniteKernel κ] [IsSFiniteKernel η]
 
-#print ProbabilityTheory.Kernel.measurable_lintegral_indicator_const /-
+#print ProbabilityTheory.kernel.measurable_lintegral_indicator_const /-
 /-- Auxiliary lemma for `measurable.lintegral_kernel_prod_right`. -/
-theorem Kernel.measurable_lintegral_indicator_const {t : Set (α × β)} (ht : MeasurableSet t)
+theorem kernel.measurable_lintegral_indicator_const {t : Set (α × β)} (ht : MeasurableSet t)
     (c : ℝ≥0∞) : Measurable fun a => ∫⁻ b, t.indicator (Function.const (α × β) c) (a, b) ∂κ a :=
   by
   simp_rw [lintegral_indicator_const_comp measurable_prod_mk_left ht _]
   exact Measurable.const_mul (measurable_kernel_prod_mk_left ht) c
-#align probability_theory.kernel.measurable_lintegral_indicator_const ProbabilityTheory.Kernel.measurable_lintegral_indicator_const
+#align probability_theory.kernel.measurable_lintegral_indicator_const ProbabilityTheory.kernel.measurable_lintegral_indicator_const
 -/
 
 #print Measurable.lintegral_kernel_prod_right /-

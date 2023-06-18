@@ -31,22 +31,29 @@ variable {𝕜 : Type _} [IsROrC 𝕜] {m n : Type _} [Fintype m] [Fintype n]
 
 open scoped Matrix
 
+#print Matrix.PosDef /-
 /-- A matrix `M : matrix n n 𝕜` is positive definite if it is hermitian
    and `xᴴMx` is greater than zero for all nonzero `x`. -/
 def PosDef (M : Matrix n n 𝕜) :=
   M.IsHermitian ∧ ∀ x : n → 𝕜, x ≠ 0 → 0 < IsROrC.re (dotProduct (star x) (M.mulVec x))
 #align matrix.pos_def Matrix.PosDef
+-/
 
+#print Matrix.PosDef.isHermitian /-
 theorem PosDef.isHermitian {M : Matrix n n 𝕜} (hM : M.PosDef) : M.IsHermitian :=
   hM.1
 #align matrix.pos_def.is_hermitian Matrix.PosDef.isHermitian
+-/
 
+#print Matrix.PosSemidef /-
 /-- A matrix `M : matrix n n 𝕜` is positive semidefinite if it is hermitian
    and `xᴴMx` is nonnegative for all `x`. -/
 def PosSemidef (M : Matrix n n 𝕜) :=
   M.IsHermitian ∧ ∀ x : n → 𝕜, 0 ≤ IsROrC.re (dotProduct (star x) (M.mulVec x))
 #align matrix.pos_semidef Matrix.PosSemidef
+-/
 
+#print Matrix.PosDef.posSemidef /-
 theorem PosDef.posSemidef {M : Matrix n n 𝕜} (hM : M.PosDef) : M.PosSemidef :=
   by
   refine' ⟨hM.1, _⟩
@@ -55,7 +62,9 @@ theorem PosDef.posSemidef {M : Matrix n n 𝕜} (hM : M.PosDef) : M.PosSemidef :
   · simp only [hx, zero_dot_product, star_zero, IsROrC.zero_re']
   · exact le_of_lt (hM.2 x hx)
 #align matrix.pos_def.pos_semidef Matrix.PosDef.posSemidef
+-/
 
+#print Matrix.PosSemidef.submatrix /-
 theorem PosSemidef.submatrix {M : Matrix n n 𝕜} (hM : M.PosSemidef) (e : m ≃ n) :
     (M.submatrix e e).PosSemidef :=
   by
@@ -74,20 +83,26 @@ theorem PosSemidef.submatrix {M : Matrix n n 𝕜} (hM : M.PosSemidef) (e : m �
     simp only [eq_self_iff_true, imp_true_iff, Equiv.symm_apply_apply, Finset.mem_univ,
       submatrix_apply, Equiv.apply_symm_apply, Pi.star_apply]
 #align matrix.pos_semidef.submatrix Matrix.PosSemidef.submatrix
+-/
 
+#print Matrix.posSemidef_submatrix_equiv /-
 @[simp]
 theorem posSemidef_submatrix_equiv {M : Matrix n n 𝕜} (e : m ≃ n) :
     (M.submatrix e e).PosSemidef ↔ M.PosSemidef :=
   ⟨fun h => by simpa using h.submatrix e.symm, fun h => h.submatrix _⟩
 #align matrix.pos_semidef_submatrix_equiv Matrix.posSemidef_submatrix_equiv
+-/
 
+#print Matrix.PosDef.transpose /-
 theorem PosDef.transpose {M : Matrix n n 𝕜} (hM : M.PosDef) : Mᵀ.PosDef :=
   by
   refine' ⟨is_hermitian.transpose hM.1, fun x hx => _⟩
   convert hM.2 (star x) (star_ne_zero.2 hx) using 2
   rw [mul_vec_transpose, Matrix.dotProduct_mulVec, star_star, dot_product_comm]
 #align matrix.pos_def.transpose Matrix.PosDef.transpose
+-/
 
+#print Matrix.posDef_of_toQuadraticForm' /-
 theorem posDef_of_toQuadraticForm' [DecidableEq n] {M : Matrix n n ℝ} (hM : M.IsSymm)
     (hMq : M.toQuadraticForm'.PosDef) : M.PosDef :=
   by
@@ -96,18 +111,22 @@ theorem posDef_of_toQuadraticForm' [DecidableEq n] {M : Matrix n n ℝ} (hM : M.
     Matrix.toBilin'_apply'] at hMq 
   apply hMq x hx
 #align matrix.pos_def_of_to_quadratic_form' Matrix.posDef_of_toQuadraticForm'
+-/
 
+#print Matrix.posDef_toQuadraticForm' /-
 theorem posDef_toQuadraticForm' [DecidableEq n] {M : Matrix n n ℝ} (hM : M.PosDef) :
     M.toQuadraticForm'.PosDef := by
   intro x hx
   simp only [to_quadratic_form', BilinForm.toQuadraticForm_apply, Matrix.toBilin'_apply']
   apply hM.2 x hx
 #align matrix.pos_def_to_quadratic_form' Matrix.posDef_toQuadraticForm'
+-/
 
 namespace PosDef
 
 variable {M : Matrix n n ℝ} (hM : M.PosDef)
 
+#print Matrix.PosDef.det_pos /-
 theorem det_pos [DecidableEq n] : 0 < det M :=
   by
   rw [hM.is_hermitian.det_eq_prod_eigenvalues]
@@ -120,6 +139,7 @@ theorem det_pos [DecidableEq n] : 0 < det M :=
   simpa only [h_det, not_isUnit_zero] using
     is_unit_det_of_invertible hM.is_hermitian.eigenvector_matrixᵀ
 #align matrix.pos_def.det_pos Matrix.PosDef.det_pos
+-/
 
 end PosDef
 
@@ -129,13 +149,16 @@ namespace QuadraticForm
 
 variable {n : Type _} [Fintype n]
 
+#print QuadraticForm.posDef_of_toMatrix' /-
 theorem posDef_of_toMatrix' [DecidableEq n] {Q : QuadraticForm ℝ (n → ℝ)}
     (hQ : Q.toMatrix'.PosDef) : Q.PosDef :=
   by
   rw [← to_quadratic_form_associated ℝ Q, ← bilin_form.to_matrix'.left_inv ((associated_hom _) Q)]
   apply Matrix.posDef_toQuadraticForm' hQ
 #align quadratic_form.pos_def_of_to_matrix' QuadraticForm.posDef_of_toMatrix'
+-/
 
+#print QuadraticForm.posDef_toMatrix' /-
 theorem posDef_toMatrix' [DecidableEq n] {Q : QuadraticForm ℝ (n → ℝ)} (hQ : Q.PosDef) :
     Q.toMatrix'.PosDef :=
   by
@@ -143,6 +166,7 @@ theorem posDef_toMatrix' [DecidableEq n] {Q : QuadraticForm ℝ (n → ℝ)} (hQ
     bilin_form.to_matrix'.left_inv ((associated_hom _) Q)] at hQ 
   apply Matrix.posDef_of_toQuadraticForm' (is_symm_to_matrix' Q) hQ
 #align quadratic_form.pos_def_to_matrix' QuadraticForm.posDef_toMatrix'
+-/
 
 end QuadraticForm
 
@@ -150,6 +174,7 @@ namespace Matrix
 
 variable {𝕜 : Type _} [IsROrC 𝕜] {n : Type _} [Fintype n]
 
+#print Matrix.NormedAddCommGroup.ofMatrix /-
 /-- A positive definite matrix `M` induces a norm `‖x‖ = sqrt (re xᴴMx)`. -/
 @[reducible]
 noncomputable def NormedAddCommGroup.ofMatrix {M : Matrix n n 𝕜} (hM : M.PosDef) :
@@ -172,12 +197,15 @@ noncomputable def NormedAddCommGroup.ofMatrix {M : Matrix n n 𝕜} (hM : M.PosD
       smul_left := fun x y r => by
         rw [← smul_eq_mul, ← smul_dot_product, starRingEnd_apply, ← star_smul] }
 #align matrix.normed_add_comm_group.of_matrix Matrix.NormedAddCommGroup.ofMatrix
+-/
 
+#print Matrix.InnerProductSpace.ofMatrix /-
 /-- A positive definite matrix `M` induces an inner product `⟪x, y⟫ = xᴴMy`. -/
 def InnerProductSpace.ofMatrix {M : Matrix n n 𝕜} (hM : M.PosDef) :
     @InnerProductSpace 𝕜 (n → 𝕜) _ (NormedAddCommGroup.ofMatrix hM) :=
   InnerProductSpace.ofCore _
 #align matrix.inner_product_space.of_matrix Matrix.InnerProductSpace.ofMatrix
+-/
 
 end Matrix
 

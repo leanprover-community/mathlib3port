@@ -615,6 +615,7 @@ noncomputable def roots (p : R[X]) : Multiset R := by
 #align polynomial.roots Polynomial.roots
 -/
 
+#print Polynomial.roots_def /-
 theorem roots_def [DecidableEq R] (p : R[X]) [Decidable (p = 0)] :
     p.roots = if h : p = 0 then ∅ else Classical.choose (exists_multiset_roots h) :=
   by
@@ -622,6 +623,7 @@ theorem roots_def [DecidableEq R] (p : R[X]) [Decidable (p = 0)] :
   obtain rfl := Subsingleton.elim ‹_› (Classical.dec (p = 0))
   rfl
 #align polynomial.roots_def Polynomial.roots_def
+-/
 
 #print Polynomial.roots_zero /-
 @[simp]
