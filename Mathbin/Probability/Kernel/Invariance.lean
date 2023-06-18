@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying
 
 ! This file was ported from Lean 3 source module probability.kernel.invariance
-! leanprover-community/mathlib commit 3b92d54a05ee592aa2c6181a4e76b1bb7cc45d0b
+! leanprover-community/mathlib commit 2a0ce625dbb0ffbc7d1316597de0b25c1ec75303
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.Probability.Kernel.Composition
 
 /-!
 # Invariance of measures along a kernel
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 We say that a measure `μ` is invariant with respect to a kernel `κ` if its push-forward along the
 kernel `μ.bind κ` is the same measure.

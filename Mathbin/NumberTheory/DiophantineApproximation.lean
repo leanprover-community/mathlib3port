@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael Geißer, Michael Stoll
 
 ! This file was ported from Lean 3 source module number_theory.diophantine_approximation
-! leanprover-community/mathlib commit e25a317463bd37d88e33da164465d8c47922b1cd
+! leanprover-community/mathlib commit 2a0ce625dbb0ffbc7d1316597de0b25c1ec75303
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -18,6 +18,9 @@ import Mathbin.Tactic.Basic
 
 /-!
 # Diophantine Approximation
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 The first part of this file gives proofs of various versions of
 **Dirichlet's approximation theorem** and its important consequence that when $\xi$ is an

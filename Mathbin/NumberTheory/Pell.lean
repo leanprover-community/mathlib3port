@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael Geißer, Michael Stoll
 
 ! This file was ported from Lean 3 source module number_theory.pell
-! leanprover-community/mathlib commit 7ad820c4997738e2f542f8a20f32911f52020e26
+! leanprover-community/mathlib commit 2a0ce625dbb0ffbc7d1316597de0b25c1ec75303
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -15,6 +15,9 @@ import Mathbin.NumberTheory.Zsqrtd.Basic
 
 /-!
 # Pell's Equation
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 *Pell's Equation* is the equation $x^2 - d y^2 = 1$, where $d$ is a positive integer
 that is not a square, and one is interested in solutions in integers $x$ and $y$.
