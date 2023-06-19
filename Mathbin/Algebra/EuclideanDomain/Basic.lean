@@ -131,9 +131,11 @@ theorem mul_div_assoc (x : R) {y z : R} (h : z ∣ y) : x * y / z = x * (y / z) 
 #align euclidean_domain.mul_div_assoc EuclideanDomain.mul_div_assoc
 -/
 
+#print EuclideanDomain.mul_div_cancel' /-
 protected theorem mul_div_cancel' {a b : R} (hb : b ≠ 0) (hab : b ∣ a) : b * (a / b) = a := by
   rw [← mul_div_assoc _ hab, mul_div_cancel_left _ hb]
 #align euclidean_domain.mul_div_cancel' EuclideanDomain.mul_div_cancel'
+-/
 
 #print EuclideanDomain.div_one /-
 -- This generalizes `int.div_one`, see note [simp-normal form]

@@ -73,6 +73,7 @@ theorem right_div_gcd_ne_zero {p q : R} (hq : q ≠ 0) : q / GCDMonoid.gcd p q �
 #align right_div_gcd_ne_zero right_div_gcd_ne_zero
 -/
 
+#print isCoprime_div_gcd_div_gcd /-
 theorem isCoprime_div_gcd_div_gcd (hq : q ≠ 0) :
     IsCoprime (p / GCDMonoid.gcd p q) (q / GCDMonoid.gcd p q) :=
   (gcd_isUnit_iff _ _).1 <|
@@ -81,6 +82,7 @@ theorem isCoprime_div_gcd_div_gcd (hq : q ≠ 0) :
         (EuclideanDomain.mul_div_cancel' (gcd_ne_zero_of_right hq) <| gcd_dvd_right _ _).symm <|
       gcd_ne_zero_of_right hq
 #align is_coprime_div_gcd_div_gcd isCoprime_div_gcd_div_gcd
+-/
 
 end GCDMonoid
 

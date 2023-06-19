@@ -61,6 +61,7 @@ open Set Filter Function Metric MeasureTheory
 
 open scoped MeasureTheory Topology Pointwise
 
+#print approxOrderOf /-
 /-- In a seminormed group `A`, given `n : ℕ` and `δ : ℝ`, `approx_order_of A n δ` is the set of
 elements within a distance `δ` of a point of order `n`. -/
 @[to_additive approxAddOrderOf
@@ -69,14 +70,18 @@ def approxOrderOf (A : Type _) [SeminormedGroup A] (n : ℕ) (δ : ℝ) : Set A 
   thickening δ {y | orderOf y = n}
 #align approx_order_of approxOrderOf
 #align approx_add_order_of approxAddOrderOf
+-/
 
+#print mem_approxOrderOf_iff /-
 @[to_additive mem_approx_add_orderOf_iff]
 theorem mem_approxOrderOf_iff {A : Type _} [SeminormedGroup A] {n : ℕ} {δ : ℝ} {a : A} :
     a ∈ approxOrderOf A n δ ↔ ∃ b : A, orderOf b = n ∧ a ∈ ball b δ := by
   simp only [approxOrderOf, thickening_eq_bUnion_ball, mem_Union₂, mem_set_of_eq, exists_prop]
 #align mem_approx_order_of_iff mem_approxOrderOf_iff
 #align mem_approx_add_order_of_iff mem_approx_add_orderOf_iff
+-/
 
+#print wellApproximable /-
 /-- In a seminormed group `A`, given a sequence of distances `δ₁, δ₂, ...`, `well_approximable A δ`
 is the limsup as `n → ∞` of the sets `approx_order_of A n δₙ`. Thus, it is the set of points that
 lie in infinitely many of the sets `approx_order_of A n δₙ`. -/
@@ -86,7 +91,9 @@ def wellApproximable (A : Type _) [SeminormedGroup A] (δ : ℕ → ℝ) : Set A
   blimsup (fun n => approxOrderOf A n (δ n)) atTop fun n => 0 < n
 #align well_approximable wellApproximable
 #align add_well_approximable addWellApproximable
+-/
 
+#print mem_wellApproximable_iff /-
 @[to_additive mem_add_wellApproximable_iff]
 theorem mem_wellApproximable_iff {A : Type _} [SeminormedGroup A] {δ : ℕ → ℝ} {a : A} :
     a ∈ wellApproximable A δ ↔
@@ -94,11 +101,13 @@ theorem mem_wellApproximable_iff {A : Type _} [SeminormedGroup A] {δ : ℕ → 
   Iff.rfl
 #align mem_well_approximable_iff mem_wellApproximable_iff
 #align mem_add_well_approximable_iff mem_add_wellApproximable_iff
+-/
 
 namespace approxOrderOf
 
 variable {A : Type _} [SeminormedCommGroup A] {a : A} {m n : ℕ} (δ : ℝ)
 
+#print approxOrderOf.image_pow_subset_of_coprime /-
 @[to_additive]
 theorem image_pow_subset_of_coprime (hm : 0 < m) (hmn : n.coprime m) :
     (fun y => y ^ m) '' approxOrderOf A n δ ⊆ approxOrderOf A n (m * δ) :=
@@ -111,7 +120,9 @@ theorem image_pow_subset_of_coprime (hm : 0 < m) (hmn : n.coprime m) :
   simp only [nsmul_eq_mul, Algebra.id.smul_eq_mul]
 #align approx_order_of.image_pow_subset_of_coprime approxOrderOf.image_pow_subset_of_coprime
 #align approx_add_order_of.image_nsmul_subset_of_coprime approxAddOrderOf.image_nsmul_subset_of_coprime
+-/
 
+#print approxOrderOf.image_pow_subset /-
 @[to_additive]
 theorem image_pow_subset (n : ℕ) (hm : 0 < m) :
     (fun y => y ^ m) '' approxOrderOf A (n * m) δ ⊆ approxOrderOf A n (m * δ) :=
@@ -125,7 +136,9 @@ theorem image_pow_subset (n : ℕ) (hm : 0 < m) :
   simp only [nsmul_eq_mul]
 #align approx_order_of.image_pow_subset approxOrderOf.image_pow_subset
 #align approx_add_order_of.image_nsmul_subset approxAddOrderOf.image_nsmul_subset
+-/
 
+#print approxOrderOf.smul_subset_of_coprime /-
 @[to_additive]
 theorem smul_subset_of_coprime (han : (orderOf a).coprime n) :
     a • approxOrderOf A n δ ⊆ approxOrderOf A (orderOf a * n) δ :=
@@ -139,7 +152,9 @@ theorem smul_subset_of_coprime (han : (orderOf a).coprime n) :
   exact (Commute.all a b).orderOf_mul_eq_mul_orderOf_of_coprime han
 #align approx_order_of.smul_subset_of_coprime approxOrderOf.smul_subset_of_coprime
 #align approx_add_order_of.vadd_subset_of_coprime approxAddOrderOf.vadd_subset_of_coprime
+-/
 
+#print approxOrderOf.smul_eq_of_mul_dvd /-
 @[to_additive vadd_eq_of_mul_dvd]
 theorem smul_eq_of_mul_dvd (hn : 0 < n) (han : orderOf a ^ 2 ∣ n) :
     a • approxOrderOf A n δ = approxOrderOf A n δ :=
@@ -164,11 +179,13 @@ theorem smul_eq_of_mul_dvd (hn : 0 < n) (han : orderOf a ^ 2 ∣ n) :
     hf.Union_comp fun b => ball (b : A) δ
 #align approx_order_of.smul_eq_of_mul_dvd approxOrderOf.smul_eq_of_mul_dvd
 #align approx_add_order_of.vadd_eq_of_mul_dvd approxAddOrderOf.vadd_eq_of_mul_dvd
+-/
 
 end approxOrderOf
 
 namespace UnitAddCircle
 
+#print UnitAddCircle.mem_approxAddOrderOf_iff /-
 theorem mem_approxAddOrderOf_iff {δ : ℝ} {x : UnitAddCircle} {n : ℕ} (hn : 0 < n) :
     x ∈ approxAddOrderOf UnitAddCircle n δ ↔ ∃ m < n, gcd m n = 1 ∧ ‖x - ↑((m : ℝ) / n)‖ < δ :=
   by
@@ -179,7 +196,9 @@ theorem mem_approxAddOrderOf_iff {δ : ℝ} {x : UnitAddCircle} {n : ℕ} (hn : 
   · rintro ⟨y, ⟨m, hm₁, hm₂, rfl⟩, hx⟩; exact ⟨m, hm₁, hm₂, hx⟩
   · rintro ⟨m, hm₁, hm₂, hx⟩; exact ⟨↑((m : ℝ) / n), ⟨m, hm₁, hm₂, rfl⟩, hx⟩
 #align unit_add_circle.mem_approx_add_order_of_iff UnitAddCircle.mem_approxAddOrderOf_iff
+-/
 
+#print UnitAddCircle.mem_addWellApproximable_iff /-
 theorem mem_addWellApproximable_iff (δ : ℕ → ℝ) (x : UnitAddCircle) :
     x ∈ addWellApproximable UnitAddCircle δ ↔
       {n : ℕ | ∃ m < n, gcd m n = 1 ∧ ‖x - ↑((m : ℝ) / n)‖ < δ n}.Infinite :=
@@ -191,6 +210,7 @@ theorem mem_addWellApproximable_iff (δ : ℕ → ℝ) (x : UnitAddCircle) :
   · have h : 0 < n := by obtain ⟨m, hm₁, hm₂, hm₃⟩ := hn; exact pos_of_gt hm₁
     exact ⟨h, (mem_approx_add_orderOf_iff h).mpr hn⟩
 #align unit_add_circle.mem_add_well_approximable_iff UnitAddCircle.mem_addWellApproximable_iff
+-/
 
 end UnitAddCircle
 
@@ -204,6 +224,7 @@ local notation a "∣∣" b => a ∣ b ∧ (a * a)∤b
 
 local notation "𝕊" => AddCircle T
 
+#print AddCircle.addWellApproximable_ae_empty_or_univ /-
 /-- *Gallagher's ergodic theorem* on Diophantine approximation. -/
 theorem addWellApproximable_ae_empty_or_univ (δ : ℕ → ℝ) (hδ : Tendsto δ atTop (𝓝 0)) :
     (∀ᵐ x, ¬addWellApproximable 𝕊 δ x) ∨ ∀ᵐ x, addWellApproximable 𝕊 δ x :=
@@ -344,6 +365,7 @@ theorem addWellApproximable_ae_empty_or_univ (δ : ℕ → ℝ) (hδ : Tendsto �
     · cases hB p; · contradiction
       simp only [h, union_ae_eq_univ_of_ae_eq_univ_left, union_ae_eq_univ_of_ae_eq_univ_right]
 #align add_circle.add_well_approximable_ae_empty_or_univ AddCircle.addWellApproximable_ae_empty_or_univ
+-/
 
 end AddCircle
 

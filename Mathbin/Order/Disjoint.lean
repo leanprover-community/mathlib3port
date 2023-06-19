@@ -877,30 +877,40 @@ section Lattice
 
 variable [Lattice α] [BoundedOrder α]
 
+#print IsComplemented /-
 /-- An element is *complemented* if it has a complement. -/
 def IsComplemented (a : α) : Prop :=
   ∃ b, IsCompl a b
 #align is_complemented IsComplemented
+-/
 
+#print isComplemented_bot /-
 theorem isComplemented_bot : IsComplemented (⊥ : α) :=
   ⟨⊤, isCompl_bot_top⟩
 #align is_complemented_bot isComplemented_bot
+-/
 
+#print isComplemented_top /-
 theorem isComplemented_top : IsComplemented (⊤ : α) :=
   ⟨⊥, isCompl_top_bot⟩
 #align is_complemented_top isComplemented_top
+-/
 
 end Lattice
 
 variable [DistribLattice α] [BoundedOrder α] {a b : α}
 
+#print IsComplemented.sup /-
 theorem IsComplemented.sup : IsComplemented a → IsComplemented b → IsComplemented (a ⊔ b) :=
   fun ⟨a', ha⟩ ⟨b', hb⟩ => ⟨a' ⊓ b', ha.sup_inf hb⟩
 #align is_complemented.sup IsComplemented.sup
+-/
 
+#print IsComplemented.inf /-
 theorem IsComplemented.inf : IsComplemented a → IsComplemented b → IsComplemented (a ⊓ b) :=
   fun ⟨a', ha⟩ ⟨b', hb⟩ => ⟨a' ⊔ b', ha.inf_sup hb⟩
 #align is_complemented.inf IsComplemented.inf
+-/
 
 end IsComplemented
 
@@ -925,6 +935,7 @@ instance : ComplementedLattice αᵒᵈ :=
 
 end ComplementedLattice
 
+#print Complementeds /-
 -- TODO: Define as a sublattice?
 /-- The sublattice of complemented elements. -/
 @[reducible]
@@ -932,6 +943,7 @@ def Complementeds (α : Type _) [Lattice α] [BoundedOrder α] : Type _ :=
   { a : α // IsComplemented a }
 deriving PartialOrder
 #align complementeds Complementeds
+-/
 
 namespace Complementeds
 
@@ -939,50 +951,68 @@ section Lattice
 
 variable [Lattice α] [BoundedOrder α] {a b : Complementeds α}
 
+#print Complementeds.hasCoeT /-
 instance hasCoeT : CoeTC (Complementeds α) α :=
   ⟨Subtype.val⟩
 #align complementeds.has_coe_t Complementeds.hasCoeT
+-/
 
+#print Complementeds.coe_injective /-
 theorem coe_injective : Injective (coe : Complementeds α → α) :=
   Subtype.coe_injective
 #align complementeds.coe_injective Complementeds.coe_injective
+-/
 
+#print Complementeds.coe_inj /-
 @[simp, norm_cast]
 theorem coe_inj : (a : α) = b ↔ a = b :=
   Subtype.coe_inj
 #align complementeds.coe_inj Complementeds.coe_inj
+-/
 
+#print Complementeds.coe_le_coe /-
 @[simp, norm_cast]
 theorem coe_le_coe : (a : α) ≤ b ↔ a ≤ b := by simp
 #align complementeds.coe_le_coe Complementeds.coe_le_coe
+-/
 
+#print Complementeds.coe_lt_coe /-
 @[simp, norm_cast]
 theorem coe_lt_coe : (a : α) < b ↔ a < b :=
   Iff.rfl
 #align complementeds.coe_lt_coe Complementeds.coe_lt_coe
+-/
 
 instance : BoundedOrder (Complementeds α) :=
   Subtype.boundedOrder isComplemented_bot isComplemented_top
 
+#print Complementeds.coe_bot /-
 @[simp, norm_cast]
 theorem coe_bot : ((⊥ : Complementeds α) : α) = ⊥ :=
   rfl
 #align complementeds.coe_bot Complementeds.coe_bot
+-/
 
+#print Complementeds.coe_top /-
 @[simp, norm_cast]
 theorem coe_top : ((⊤ : Complementeds α) : α) = ⊤ :=
   rfl
 #align complementeds.coe_top Complementeds.coe_top
+-/
 
+#print Complementeds.mk_bot /-
 @[simp]
 theorem mk_bot : (⟨⊥, isComplemented_bot⟩ : Complementeds α) = ⊥ :=
   rfl
 #align complementeds.mk_bot Complementeds.mk_bot
+-/
 
+#print Complementeds.mk_top /-
 @[simp]
 theorem mk_top : (⟨⊤, isComplemented_top⟩ : Complementeds α) = ⊤ :=
   rfl
 #align complementeds.mk_top Complementeds.mk_top
+-/
 
 instance : Inhabited (Complementeds α) :=
   ⟨⊥⟩
@@ -997,45 +1027,59 @@ instance : Sup (Complementeds α) :=
 instance : Inf (Complementeds α) :=
   ⟨fun a b => ⟨a ⊓ b, a.2.inf b.2⟩⟩
 
+#print Complementeds.coe_sup /-
 @[simp, norm_cast]
 theorem coe_sup (a b : Complementeds α) : (↑(a ⊔ b) : α) = a ⊔ b :=
   rfl
 #align complementeds.coe_sup Complementeds.coe_sup
+-/
 
+#print Complementeds.coe_inf /-
 @[simp, norm_cast]
 theorem coe_inf (a b : Complementeds α) : (↑(a ⊓ b) : α) = a ⊓ b :=
   rfl
 #align complementeds.coe_inf Complementeds.coe_inf
+-/
 
+#print Complementeds.mk_sup_mk /-
 @[simp]
 theorem mk_sup_mk {a b : α} (ha : IsComplemented a) (hb : IsComplemented b) :
     (⟨a, ha⟩ ⊔ ⟨b, hb⟩ : Complementeds α) = ⟨a ⊔ b, ha.sup hb⟩ :=
   rfl
 #align complementeds.mk_sup_mk Complementeds.mk_sup_mk
+-/
 
+#print Complementeds.mk_inf_mk /-
 @[simp]
 theorem mk_inf_mk {a b : α} (ha : IsComplemented a) (hb : IsComplemented b) :
     (⟨a, ha⟩ ⊓ ⟨b, hb⟩ : Complementeds α) = ⟨a ⊓ b, ha.inf hb⟩ :=
   rfl
 #align complementeds.mk_inf_mk Complementeds.mk_inf_mk
+-/
 
 instance : DistribLattice (Complementeds α) :=
   Complementeds.coe_injective.DistribLattice _ coe_sup coe_inf
 
+#print Complementeds.disjoint_coe /-
 @[simp, norm_cast]
 theorem disjoint_coe : Disjoint (a : α) b ↔ Disjoint a b := by
   rw [disjoint_iff, disjoint_iff, ← coe_inf, ← coe_bot, coe_inj]
 #align complementeds.disjoint_coe Complementeds.disjoint_coe
+-/
 
+#print Complementeds.codisjoint_coe /-
 @[simp, norm_cast]
 theorem codisjoint_coe : Codisjoint (a : α) b ↔ Codisjoint a b := by
   rw [codisjoint_iff, codisjoint_iff, ← coe_sup, ← coe_top, coe_inj]
 #align complementeds.codisjoint_coe Complementeds.codisjoint_coe
+-/
 
+#print Complementeds.isCompl_coe /-
 @[simp, norm_cast]
 theorem isCompl_coe : IsCompl (a : α) b ↔ IsCompl a b := by
   simp_rw [isCompl_iff, disjoint_coe, codisjoint_coe]
 #align complementeds.is_compl_coe Complementeds.isCompl_coe
+-/
 
 instance : ComplementedLattice (Complementeds α) :=
   ⟨fun ⟨a, b, h⟩ => ⟨⟨b, a, h.symm⟩, isCompl_coe.1 h⟩⟩
