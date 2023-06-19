@@ -112,10 +112,10 @@ instance : IsInvariantSubfield M (FixedPoints.subfield M F)
 instance : SMulCommClass M (FixedPoints.subfield M F) F
     where smul_comm m f f' := show m • (↑f * f') = f * m • f' by rw [smul_mul', f.prop m]
 
-#print FixedPoints.smul_comm_class' /-
-instance smul_comm_class' : SMulCommClass (FixedPoints.subfield M F) M F :=
+#print FixedPoints.smulCommClass' /-
+instance smulCommClass' : SMulCommClass (FixedPoints.subfield M F) M F :=
   SMulCommClass.symm _ _ _
-#align fixed_points.smul_comm_class' FixedPoints.smul_comm_class'
+#align fixed_points.smul_comm_class' FixedPoints.smulCommClass'
 -/
 
 #print FixedPoints.smul /-

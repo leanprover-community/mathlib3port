@@ -115,14 +115,14 @@ def lift : (L →ₗ⁅R⁆ A) ≃ (UniversalEnvelopingAlgebra R L →ₐ[R] A)
   invFun F := (F : UniversalEnvelopingAlgebra R L →ₗ⁅R⁆ A).comp (ι R)
   left_inv f := by ext;
     simp only [ι, mk_alg_hom, TensorAlgebra.lift_ι_apply, LieHom.coe_toLinearMap,
-      LinearMap.toFun_eq_coe, LinearMap.coe_comp, LieHom.coe_comp, AlgHom.coe_to_lieHom,
+      LinearMap.toFun_eq_coe, LinearMap.coe_comp, LieHom.coe_comp, AlgHom.coe_toLieHom,
       LieHom.coe_mk, Function.comp_apply, AlgHom.toLinearMap_apply,
       RingQuot.liftAlgHom_mkAlgHom_apply]
   right_inv F := by ext;
     simp only [ι, mk_alg_hom, TensorAlgebra.lift_ι_apply, LieHom.coe_toLinearMap,
       LinearMap.toFun_eq_coe, LinearMap.coe_comp, LieHom.coe_linearMap_comp,
       AlgHom.comp_toLinearMap, Function.comp_apply, AlgHom.toLinearMap_apply,
-      RingQuot.liftAlgHom_mkAlgHom_apply, AlgHom.coe_to_lieHom, LieHom.coe_mk]
+      RingQuot.liftAlgHom_mkAlgHom_apply, AlgHom.coe_toLieHom, LieHom.coe_mk]
 #align universal_enveloping_algebra.lift UniversalEnvelopingAlgebra.lift
 -/
 

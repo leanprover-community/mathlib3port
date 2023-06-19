@@ -196,13 +196,13 @@ theorem image_of_equiv {ν : Measure β} (h : IsFundamentalDomain G s μ) (f : �
 #align measure_theory.is_add_fundamental_domain.image_of_equiv MeasureTheory.IsAddFundamentalDomain.image_of_equiv
 -/
 
-#print MeasureTheory.IsFundamentalDomain.pairwise_aEDisjoint_of_ac /-
+#print MeasureTheory.IsFundamentalDomain.pairwise_aedisjoint_of_ac /-
 @[to_additive]
-theorem pairwise_aEDisjoint_of_ac {ν} (h : IsFundamentalDomain G s μ) (hν : ν ≪ μ) :
+theorem pairwise_aedisjoint_of_ac {ν} (h : IsFundamentalDomain G s μ) (hν : ν ≪ μ) :
     Pairwise fun g₁ g₂ : G => AEDisjoint ν (g₁ • s) (g₂ • s) :=
   h.AEDisjoint.mono fun g₁ g₂ H => hν H
-#align measure_theory.is_fundamental_domain.pairwise_ae_disjoint_of_ac MeasureTheory.IsFundamentalDomain.pairwise_aEDisjoint_of_ac
-#align measure_theory.is_add_fundamental_domain.pairwise_ae_disjoint_of_ac MeasureTheory.IsAddFundamentalDomain.pairwise_aEDisjoint_of_ac
+#align measure_theory.is_fundamental_domain.pairwise_ae_disjoint_of_ac MeasureTheory.IsFundamentalDomain.pairwise_aedisjoint_of_ac
+#align measure_theory.is_add_fundamental_domain.pairwise_ae_disjoint_of_ac MeasureTheory.IsAddFundamentalDomain.pairwise_aedisjoint_of_ac
 -/
 
 #print MeasureTheory.IsFundamentalDomain.smul_of_comm /-

@@ -213,11 +213,11 @@ theorem toLieHom_coe : f.toLieHom = ↑f :=
   rfl
 #align alg_hom.to_lie_hom_coe AlgHom.toLieHom_coe
 
-#print AlgHom.coe_to_lieHom /-
+#print AlgHom.coe_toLieHom /-
 @[simp]
-theorem coe_to_lieHom : ((f : A →ₗ⁅R⁆ B) : A → B) = f :=
+theorem coe_toLieHom : ((f : A →ₗ⁅R⁆ B) : A → B) = f :=
   rfl
-#align alg_hom.coe_to_lie_hom AlgHom.coe_to_lieHom
+#align alg_hom.coe_to_lie_hom AlgHom.coe_toLieHom
 -/
 
 #print AlgHom.toLieHom_apply /-
@@ -226,24 +226,24 @@ theorem toLieHom_apply (x : A) : f.toLieHom x = f x :=
 #align alg_hom.to_lie_hom_apply AlgHom.toLieHom_apply
 -/
 
-#print AlgHom.to_lieHom_id /-
+#print AlgHom.toLieHom_id /-
 @[simp]
-theorem to_lieHom_id : (AlgHom.id R A : A →ₗ⁅R⁆ A) = LieHom.id :=
+theorem toLieHom_id : (AlgHom.id R A : A →ₗ⁅R⁆ A) = LieHom.id :=
   rfl
-#align alg_hom.to_lie_hom_id AlgHom.to_lieHom_id
+#align alg_hom.to_lie_hom_id AlgHom.toLieHom_id
 -/
 
-#print AlgHom.to_lieHom_comp /-
+#print AlgHom.toLieHom_comp /-
 @[simp]
-theorem to_lieHom_comp : (g.comp f : A →ₗ⁅R⁆ C) = (g : B →ₗ⁅R⁆ C).comp (f : A →ₗ⁅R⁆ B) :=
+theorem toLieHom_comp : (g.comp f : A →ₗ⁅R⁆ C) = (g : B →ₗ⁅R⁆ C).comp (f : A →ₗ⁅R⁆ B) :=
   rfl
-#align alg_hom.to_lie_hom_comp AlgHom.to_lieHom_comp
+#align alg_hom.to_lie_hom_comp AlgHom.toLieHom_comp
 -/
 
-#print AlgHom.to_lieHom_injective /-
-theorem to_lieHom_injective {f g : A →ₐ[R] B} (h : (f : A →ₗ⁅R⁆ B) = (g : A →ₗ⁅R⁆ B)) : f = g := by
+#print AlgHom.toLieHom_injective /-
+theorem toLieHom_injective {f g : A →ₐ[R] B} (h : (f : A →ₗ⁅R⁆ B) = (g : A →ₗ⁅R⁆ B)) : f = g := by
   ext a; exact LieHom.congr_fun h a
-#align alg_hom.to_lie_hom_injective AlgHom.to_lieHom_injective
+#align alg_hom.to_lie_hom_injective AlgHom.toLieHom_injective
 -/
 
 end AlgHom
