@@ -236,14 +236,14 @@ theorem condexp_congr_ae (h : f =ᵐ[μ] g) : μ[f|m] =ᵐ[μ] μ[g|m] :=
 #align measure_theory.condexp_congr_ae MeasureTheory.condexp_congr_ae
 -/
 
-#print MeasureTheory.condexp_of_aEStronglyMeasurable' /-
-theorem condexp_of_aEStronglyMeasurable' (hm : m ≤ m0) [hμm : SigmaFinite (μ.trim hm)] {f : α → F'}
+#print MeasureTheory.condexp_of_aestronglyMeasurable' /-
+theorem condexp_of_aestronglyMeasurable' (hm : m ≤ m0) [hμm : SigmaFinite (μ.trim hm)] {f : α → F'}
     (hf : AEStronglyMeasurable' m f μ) (hfi : Integrable f μ) : μ[f|m] =ᵐ[μ] f :=
   by
   refine' ((condexp_congr_ae hf.ae_eq_mk).trans _).trans hf.ae_eq_mk.symm
   rw [condexp_of_strongly_measurable hm hf.strongly_measurable_mk
       ((integrable_congr hf.ae_eq_mk).mp hfi)]
-#align measure_theory.condexp_of_ae_strongly_measurable' MeasureTheory.condexp_of_aEStronglyMeasurable'
+#align measure_theory.condexp_of_ae_strongly_measurable' MeasureTheory.condexp_of_aestronglyMeasurable'
 -/
 
 #print MeasureTheory.integrable_condexp /-

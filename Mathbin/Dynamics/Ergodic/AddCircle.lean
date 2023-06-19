@@ -40,6 +40,7 @@ namespace AddCircle
 
 variable {T : ℝ} [hT : Fact (0 < T)]
 
+#print AddCircle.ae_empty_or_univ_of_forall_vadd_ae_eq_self /-
 /-- If a null-measurable subset of the circle is almost invariant under rotation by a family of
 rational angles with denominators tending to infinity, then it must be almost empty or almost full.
 -/
@@ -107,7 +108,9 @@ theorem ae_empty_or_univ_of_forall_vadd_ae_eq_self {s : Set <| AddCircle T}
     volume_of_add_preimage_eq s _ (u j) d huj (hu₁ j) closed_ball_ae_eq_ball, nsmul_eq_mul, ←
     mul_assoc, hI₂]
 #align add_circle.ae_empty_or_univ_of_forall_vadd_ae_eq_self AddCircle.ae_empty_or_univ_of_forall_vadd_ae_eq_self
+-/
 
+#print AddCircle.ergodic_zsmul /-
 theorem ergodic_zsmul {n : ℤ} (hn : 1 < |n|) : Ergodic fun y : AddCircle T => n • y :=
   { measurePreserving_zsmul volume (abs_pos.mp <| lt_trans zero_lt_one hn) with
     ae_empty_or_univ := fun s hs hs' =>
@@ -125,11 +128,15 @@ theorem ergodic_zsmul {n : ℤ} (hn : 1 < |n|) : Ergodic fun y : AddCircle T => 
         exact Nat.tendsto_pow_atTop_atTop_of_one_lt hn
       exact ae_empty_or_univ_of_forall_vadd_ae_eq_self hs.null_measurable_set hu₁ hu₂ }
 #align add_circle.ergodic_zsmul AddCircle.ergodic_zsmul
+-/
 
+#print AddCircle.ergodic_nsmul /-
 theorem ergodic_nsmul {n : ℕ} (hn : 1 < n) : Ergodic fun y : AddCircle T => n • y :=
   ergodic_zsmul (by simp [hn] : 1 < |(n : ℤ)|)
 #align add_circle.ergodic_nsmul AddCircle.ergodic_nsmul
+-/
 
+#print AddCircle.ergodic_zsmul_add /-
 theorem ergodic_zsmul_add (x : AddCircle T) {n : ℤ} (h : 1 < |n|) : Ergodic fun y => n • y + x :=
   by
   set f : AddCircle T → AddCircle T := fun y => n • y + x
@@ -149,10 +156,13 @@ theorem ergodic_zsmul_add (x : AddCircle T) {n : ℤ} (h : 1 < |n|) : Ergodic fu
     zsmul_neg', neg_smul, neg_add_rev]
   abel
 #align add_circle.ergodic_zsmul_add AddCircle.ergodic_zsmul_add
+-/
 
+#print AddCircle.ergodic_nsmul_add /-
 theorem ergodic_nsmul_add (x : AddCircle T) {n : ℕ} (h : 1 < n) : Ergodic fun y => n • y + x :=
   ergodic_zsmul_add x (by simp [h] : 1 < |(n : ℤ)|)
 #align add_circle.ergodic_nsmul_add AddCircle.ergodic_nsmul_add
+-/
 
 end AddCircle
 

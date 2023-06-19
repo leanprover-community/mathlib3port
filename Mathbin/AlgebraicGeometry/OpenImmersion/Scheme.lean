@@ -329,40 +329,40 @@ def toScheme : Scheme :=
   constructor
   · rw [LocallyRingedSpace.is_open_immersion.lift_range]; exact hx
   · delta LocallyRingedSpace.is_open_immersion.lift; infer_instance
-#align algebraic_geometry.PresheafedSpace.is_open_immersion.to_Scheme AlgebraicGeometry.PresheafedSpace.IsOpenImmersion.toScheme
+#align algebraic_geometry.PresheafedSpace.is_open_immersion.to_Scheme AlgebraicGeometry.PresheafedSpace.IsOpenImmersionₓ.toScheme
 
 @[simp]
 theorem toScheme_toLocallyRingedSpace :
     (toScheme Y f).toLocallyRingedSpace = toLocallyRingedSpace Y.1 f :=
   rfl
-#align algebraic_geometry.PresheafedSpace.is_open_immersion.to_Scheme_to_LocallyRingedSpace AlgebraicGeometry.PresheafedSpace.IsOpenImmersion.toScheme_toLocallyRingedSpace
+#align algebraic_geometry.PresheafedSpace.is_open_immersion.to_Scheme_to_LocallyRingedSpace AlgebraicGeometry.PresheafedSpace.IsOpenImmersionₓ.toScheme_toLocallyRingedSpace
 
 /-- If `X ⟶ Y` is an open immersion of PresheafedSpaces, and `Y` is a Scheme, we can
 upgrade it into a morphism of Schemes.
 -/
 def toSchemeHom : toScheme Y f ⟶ Y :=
   toLocallyRingedSpaceHom _ f
-#align algebraic_geometry.PresheafedSpace.is_open_immersion.to_Scheme_hom AlgebraicGeometry.PresheafedSpace.IsOpenImmersion.toSchemeHom
+#align algebraic_geometry.PresheafedSpace.is_open_immersion.to_Scheme_hom AlgebraicGeometry.PresheafedSpace.IsOpenImmersionₓ.toSchemeHom
 
 @[simp]
 theorem toSchemeHom_val : (toSchemeHom Y f).val = f :=
   rfl
-#align algebraic_geometry.PresheafedSpace.is_open_immersion.to_Scheme_hom_val AlgebraicGeometry.PresheafedSpace.IsOpenImmersion.toSchemeHom_val
+#align algebraic_geometry.PresheafedSpace.is_open_immersion.to_Scheme_hom_val AlgebraicGeometry.PresheafedSpace.IsOpenImmersionₓ.toSchemeHom_val
 
 instance toSchemeHom_isOpenImmersion : IsOpenImmersion (toSchemeHom Y f) :=
   H
-#align algebraic_geometry.PresheafedSpace.is_open_immersion.to_Scheme_hom_is_open_immersion AlgebraicGeometry.PresheafedSpace.IsOpenImmersion.toSchemeHom_isOpenImmersion
+#align algebraic_geometry.PresheafedSpace.is_open_immersion.to_Scheme_hom_is_open_immersion AlgebraicGeometry.PresheafedSpace.IsOpenImmersionₓ.toSchemeHom_isOpenImmersionₓ
 
 theorem scheme_eq_of_locallyRingedSpace_eq {X Y : Scheme}
     (H : X.toLocallyRingedSpace = Y.toLocallyRingedSpace) : X = Y := by cases X; cases Y; congr;
   exact H
-#align algebraic_geometry.PresheafedSpace.is_open_immersion.Scheme_eq_of_LocallyRingedSpace_eq AlgebraicGeometry.PresheafedSpace.IsOpenImmersion.scheme_eq_of_locallyRingedSpace_eq
+#align algebraic_geometry.PresheafedSpace.is_open_immersion.Scheme_eq_of_LocallyRingedSpace_eq AlgebraicGeometry.PresheafedSpace.IsOpenImmersionₓ.scheme_eq_of_locallyRingedSpace_eq
 
 theorem scheme_toScheme {X Y : Scheme} (f : X ⟶ Y) [IsOpenImmersion f] : toScheme Y f.1 = X :=
   by
   apply Scheme_eq_of_LocallyRingedSpace_eq
   exact LocallyRingedSpace_to_LocallyRingedSpace f
-#align algebraic_geometry.PresheafedSpace.is_open_immersion.Scheme_to_Scheme AlgebraicGeometry.PresheafedSpace.IsOpenImmersion.scheme_toScheme
+#align algebraic_geometry.PresheafedSpace.is_open_immersion.Scheme_to_Scheme AlgebraicGeometry.PresheafedSpace.IsOpenImmersionₓ.scheme_toScheme
 
 end ToScheme
 
@@ -408,7 +408,7 @@ theorem to_iso {X Y : Scheme} (f : X ⟶ Y) [h : IsOpenImmersion f] [Epi f.1.bas
 
 theorem of_stalk_iso {X Y : Scheme} (f : X ⟶ Y) (hf : OpenEmbedding f.1.base)
     [∀ x, IsIso (PresheafedSpace.stalkMap f.1 x)] : IsOpenImmersion f :=
-  SheafedSpace.IsOpenImmersion.ofStalkIso f.1 hf
+  SheafedSpace.IsOpenImmersion.of_stalk_iso f.1 hf
 #align algebraic_geometry.is_open_immersion.of_stalk_iso AlgebraicGeometry.IsOpenImmersion.of_stalk_iso
 
 theorem iff_stalk_iso {X Y : Scheme} (f : X ⟶ Y) :
