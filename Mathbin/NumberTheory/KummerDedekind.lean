@@ -62,6 +62,7 @@ open Ideal Polynomial DoubleQuot UniqueFactorizationMonoid Algebra RingHom
 
 local notation:max R "<" x ">" => adjoin R ({x} : Set S)
 
+#print conductor /-
 /-- Let `S / R` be a ring extension and `x : S`, then the conductor of `R<x>` is the
     biggest ideal of `S` contained in `R<x>`. -/
 def conductor (x : S) : Ideal S
@@ -71,31 +72,43 @@ def conductor (x : S) : Ideal S
   add_mem' a b ha hb c := by simpa only [add_mul] using Subalgebra.add_mem _ (ha c) (hb c)
   smul_mem' c a ha b := by simpa only [smul_eq_mul, mul_left_comm, mul_assoc] using ha (c * b)
 #align conductor conductor
+-/
 
 variable {R} {x : S}
 
+#print conductor_eq_of_eq /-
 theorem conductor_eq_of_eq {y : S} (h : (R<x> : Set S) = R<y>) : conductor R x = conductor R y :=
   Ideal.ext fun a => forall_congr' fun b => Set.ext_iff.mp h _
 #align conductor_eq_of_eq conductor_eq_of_eq
+-/
 
+#print conductor_subset_adjoin /-
 theorem conductor_subset_adjoin : (conductor R x : Set S) ⊆ R<x> := fun y hy => by
   simpa only [mul_one] using hy 1
 #align conductor_subset_adjoin conductor_subset_adjoin
+-/
 
+#print mem_conductor_iff /-
 theorem mem_conductor_iff {y : S} : y ∈ conductor R x ↔ ∀ b : S, y * b ∈ R<x> :=
   ⟨fun h => h, fun h => h⟩
 #align mem_conductor_iff mem_conductor_iff
+-/
 
+#print conductor_eq_top_of_adjoin_eq_top /-
 theorem conductor_eq_top_of_adjoin_eq_top (h : R<x> = ⊤) : conductor R x = ⊤ := by
   simp only [Ideal.eq_top_iff_one, mem_conductor_iff, h, mem_top, forall_const]
 #align conductor_eq_top_of_adjoin_eq_top conductor_eq_top_of_adjoin_eq_top
+-/
 
+#print conductor_eq_top_of_powerBasis /-
 theorem conductor_eq_top_of_powerBasis (pb : PowerBasis R S) : conductor R pb.gen = ⊤ :=
   conductor_eq_top_of_adjoin_eq_top pb.adjoin_gen_eq_top
 #align conductor_eq_top_of_power_basis conductor_eq_top_of_powerBasis
+-/
 
 variable {I : Ideal R}
 
+#print prod_mem_ideal_map_of_mem_conductor /-
 /-- This technical lemma tell us that if `C` is the conductor of `R<x>` and `I` is an ideal of `R`
   then `p * (I * S) ⊆ I * R<x>` for any `p` in `C ∩ R` -/
 theorem prod_mem_ideal_map_of_mem_conductor {p : R} {z : S}
@@ -133,7 +146,9 @@ theorem prod_mem_ideal_map_of_mem_conductor {p : R} {z : S}
   · intro y hy
     exact lem ((Finsupp.mem_supported _ l).mp H hy)
 #align prod_mem_ideal_map_of_mem_conductor prod_mem_ideal_map_of_mem_conductor
+-/
 
+#print comap_map_eq_map_adjoin_of_coprime_conductor /-
 /-- A technical result telling us that `(I * S) ∩ R<x> = I * R<x>` for any ideal `I` of `R`. -/
 theorem comap_map_eq_map_adjoin_of_coprime_conductor
     (hx : (conductor R x).comap (algebraMap R S) ⊔ I = ⊤)
@@ -176,7 +191,9 @@ theorem comap_map_eq_map_adjoin_of_coprime_conductor
     rw [this, ← Ideal.map_map]
     apply Ideal.le_comap_map
 #align comap_map_eq_map_adjoin_of_coprime_conductor comap_map_eq_map_adjoin_of_coprime_conductor
+-/
 
+#print quotAdjoinEquivQuotMap /-
 /-- The canonical morphism of rings from `R<x> ⧸ (I*R<x>)` to `S ⧸ (I*S)` is an isomorphism
     when `I` and `(conductor R x) ∩ R` are coprime. -/
 noncomputable def quotAdjoinEquivQuotMap (hx : (conductor R x).comap (algebraMap R S) ⊔ I = ⊤)
@@ -218,7 +235,9 @@ noncomputable def quotAdjoinEquivQuotMap (hx : (conductor R x).comap (algebraMap
         simpa only [← hu']
         · exact Ideal.Quotient.mk_surjective)
 #align quot_adjoin_equiv_quot_map quotAdjoinEquivQuotMap
+-/
 
+#print quotAdjoinEquivQuotMap_apply_mk /-
 @[simp]
 theorem quotAdjoinEquivQuotMap_apply_mk (hx : (conductor R x).comap (algebraMap R S) ⊔ I = ⊤)
     (h_alg : Function.Injective (algebraMap R<x> S)) (a : R<x>) :
@@ -226,6 +245,7 @@ theorem quotAdjoinEquivQuotMap_apply_mk (hx : (conductor R x).comap (algebraMap 
       (I.map (algebraMap R S)).Quotient.mk ↑a :=
   rfl
 #align quot_adjoin_equiv_quot_map_apply_mk quotAdjoinEquivQuotMap_apply_mk
+-/
 
 namespace KummerDedekind
 
@@ -239,6 +259,7 @@ variable [NoZeroSMulDivisors R S]
 
 attribute [local instance] Ideal.Quotient.field
 
+#print KummerDedekind.normalizedFactorsMapEquivNormalizedFactorsMinPolyMk /-
 /-- The first half of the **Kummer-Dedekind Theorem** in the monogenic case, stating that the prime
     factors of `I*S` are in bijection with those of the minimal polynomial of the generator of `S`
     over `R`, taken `mod I`.-/
@@ -273,7 +294,9 @@ noncomputable def normalizedFactorsMapEquivNormalizedFactorsMinPolyMk (hI : IsMa
         (show map I.Quotient.mk (minpoly R x) ≠ 0 from
           Polynomial.map_monic_ne_zero (minpoly.monic hx'))).symm
 #align kummer_dedekind.normalized_factors_map_equiv_normalized_factors_min_poly_mk KummerDedekind.normalizedFactorsMapEquivNormalizedFactorsMinPolyMk
+-/
 
+#print KummerDedekind.multiplicity_factors_map_eq_multiplicity /-
 /-- The second half of the **Kummer-Dedekind Theorem** in the monogenic case, stating that the
     bijection `factors_equiv'` defined in the first half preserves multiplicities. -/
 theorem multiplicity_factors_map_eq_multiplicity (hI : IsMaximal I) (hI' : I ≠ ⊥)
@@ -288,7 +311,9 @@ theorem multiplicity_factors_map_eq_multiplicity (hI : IsMaximal I) (hI' : I ≠
     multiplicity_normalizedFactorsEquivSpanNormalizedFactors_symm_eq_multiplicity,
     normalizedFactorsEquivOfQuotEquiv_multiplicity_eq_multiplicity]
 #align kummer_dedekind.multiplicity_factors_map_eq_multiplicity KummerDedekind.multiplicity_factors_map_eq_multiplicity
+-/
 
+#print KummerDedekind.normalizedFactors_ideal_map_eq_normalizedFactors_min_poly_mk_map /-
 /-- The **Kummer-Dedekind Theorem**. -/
 theorem normalizedFactors_ideal_map_eq_normalizedFactors_min_poly_mk_map (hI : IsMaximal I)
     (hI' : I ≠ ⊥) (hx : (conductor R x).comap (algebraMap R S) ⊔ I = ⊤) (hx' : IsIntegral R x) :
@@ -339,7 +364,9 @@ theorem normalizedFactors_ideal_map_eq_normalizedFactors_min_poly_mk_map (hI : I
     rwa [← bot_eq_zero, Ne.def,
       map_eq_bot_iff_of_injective (NoZeroSMulDivisors.algebraMap_injective R S)]
 #align kummer_dedekind.normalized_factors_ideal_map_eq_normalized_factors_min_poly_mk_map KummerDedekind.normalizedFactors_ideal_map_eq_normalizedFactors_min_poly_mk_map
+-/
 
+#print KummerDedekind.Ideal.irreducible_map_of_irreducible_minpoly /-
 theorem Ideal.irreducible_map_of_irreducible_minpoly (hI : IsMaximal I) (hI' : I ≠ ⊥)
     (hx : (conductor R x).comap (algebraMap R S) ⊔ I = ⊤) (hx' : IsIntegral R x)
     (hf : Irreducible (map I.Quotient.mk (minpoly R x))) : Irreducible (I.map (algebraMap R S)) :=
@@ -373,6 +400,7 @@ theorem Ideal.irreducible_map_of_irreducible_minpoly (hI : IsMaximal I) (hI' : I
   rw [Multiset.attach_map_val, Multiset.map_singleton, Subtype.coe_mk]
   exact normalized_factors_irreducible hf
 #align kummer_dedekind.ideal.irreducible_map_of_irreducible_minpoly KummerDedekind.Ideal.irreducible_map_of_irreducible_minpoly
+-/
 
 end KummerDedekind
 

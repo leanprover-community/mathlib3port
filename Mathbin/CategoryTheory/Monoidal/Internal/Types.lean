@@ -28,6 +28,7 @@ open CategoryTheory
 
 namespace monTypeEquivalenceMon
 
+#print MonTypeEquivalenceMon.monMonoid /-
 instance monMonoid (A : Mon_ (Type u)) : Monoid A.pt
     where
   one := A.one PUnit.unit
@@ -36,7 +37,9 @@ instance monMonoid (A : Mon_ (Type u)) : Monoid A.pt
   mul_one x := by convert congr_fun A.mul_one (x, PUnit.unit)
   mul_assoc x y z := by convert congr_fun A.mul_assoc ((x, y), z)
 #align Mon_Type_equivalence_Mon.Mon_monoid MonTypeEquivalenceMon.monMonoid
+-/
 
+#print MonTypeEquivalenceMon.functor /-
 /-- Converting a monoid object in `Type` to a bundled monoid.
 -/
 def functor : Mon_ (Type u) ⥤ MonCat.{u}
@@ -47,7 +50,9 @@ def functor : Mon_ (Type u) ⥤ MonCat.{u}
       map_one' := congr_fun f.OneHom PUnit.unit
       map_mul' := fun x y => congr_fun f.MulHom (x, y) }
 #align Mon_Type_equivalence_Mon.functor MonTypeEquivalenceMon.functor
+-/
 
+#print MonTypeEquivalenceMon.inverse /-
 /-- Converting a bundled monoid to a monoid object in `Type`.
 -/
 def inverse : MonCat.{u} ⥤ Mon_ (Type u)
@@ -61,11 +66,13 @@ def inverse : MonCat.{u} ⥤ Mon_ (Type u)
       mul_assoc' := by ext ⟨⟨x, y⟩, z⟩; simp [mul_assoc] }
   map A B f := { Hom := f }
 #align Mon_Type_equivalence_Mon.inverse MonTypeEquivalenceMon.inverse
+-/
 
 end monTypeEquivalenceMon
 
 open monTypeEquivalenceMon
 
+#print monTypeEquivalenceMon /-
 /-- The category of internal monoid objects in `Type`
 is equivalent to the category of "native" bundled monoids.
 -/
@@ -92,7 +99,9 @@ def monTypeEquivalenceMon : Mon_ (Type u) ≌ MonCat.{u}
               map_mul' := fun x y => rfl } })
       (by tidy)
 #align Mon_Type_equivalence_Mon monTypeEquivalenceMon
+-/
 
+#print monTypeEquivalenceMonForget /-
 /-- The equivalence `Mon_ (Type u) ≌ Mon.{u}`
 is naturally compatible with the forgetful functors to `Type u`.
 -/
@@ -100,18 +109,24 @@ def monTypeEquivalenceMonForget :
     MonTypeEquivalenceMon.functor ⋙ forget MonCat ≅ Mon_.forget (Type u) :=
   NatIso.ofComponents (fun A => Iso.refl _) (by tidy)
 #align Mon_Type_equivalence_Mon_forget monTypeEquivalenceMonForget
+-/
 
+#print monTypeInhabited /-
 instance monTypeInhabited : Inhabited (Mon_ (Type u)) :=
   ⟨MonTypeEquivalenceMon.inverse.obj (MonCat.of PUnit)⟩
 #align Mon_Type_inhabited monTypeInhabited
+-/
 
 namespace commMonTypeEquivalenceCommMon
 
+#print CommMonTypeEquivalenceCommMon.commMonCommMonoid /-
 instance commMonCommMonoid (A : CommMon_ (Type u)) : CommMonoid A.pt :=
   { MonTypeEquivalenceMon.monMonoid A.toMon_ with
     mul_comm := fun x y => by convert congr_fun A.mul_comm (y, x) }
 #align CommMon_Type_equivalence_CommMon.CommMon_comm_monoid CommMonTypeEquivalenceCommMon.commMonCommMonoid
+-/
 
+#print CommMonTypeEquivalenceCommMon.functor /-
 /-- Converting a commutative monoid object in `Type` to a bundled commutative monoid.
 -/
 def functor : CommMon_ (Type u) ⥤ CommMonCat.{u}
@@ -119,7 +134,9 @@ def functor : CommMon_ (Type u) ⥤ CommMonCat.{u}
   obj A := ⟨A.pt⟩
   map A B f := MonTypeEquivalenceMon.functor.map f
 #align CommMon_Type_equivalence_CommMon.functor CommMonTypeEquivalenceCommMon.functor
+-/
 
+#print CommMonTypeEquivalenceCommMon.inverse /-
 /-- Converting a bundled commutative monoid to a commutative monoid object in `Type`.
 -/
 def inverse : CommMonCat.{u} ⥤ CommMon_ (Type u)
@@ -129,11 +146,13 @@ def inverse : CommMonCat.{u} ⥤ CommMon_ (Type u)
       mul_comm' := by ext ⟨x, y⟩; exact CommMonoid.mul_comm y x }
   map A B f := MonTypeEquivalenceMon.inverse.map f
 #align CommMon_Type_equivalence_CommMon.inverse CommMonTypeEquivalenceCommMon.inverse
+-/
 
 end commMonTypeEquivalenceCommMon
 
 open commMonTypeEquivalenceCommMon
 
+#print commMonTypeEquivalenceCommMon /-
 /-- The category of internal commutative monoid objects in `Type`
 is equivalent to the category of "native" bundled commutative monoids.
 -/
@@ -160,7 +179,9 @@ def commMonTypeEquivalenceCommMon : CommMon_ (Type u) ≌ CommMonCat.{u}
               map_mul' := fun x y => rfl } })
       (by tidy)
 #align CommMon_Type_equivalence_CommMon commMonTypeEquivalenceCommMon
+-/
 
+#print commMonTypeEquivalenceCommMonForget /-
 /-- The equivalences `Mon_ (Type u) ≌ Mon.{u}` and `CommMon_ (Type u) ≌ CommMon.{u}`
 are naturally compatible with the forgetful functors to `Mon` and `Mon_ (Type u)`.
 -/
@@ -169,8 +190,11 @@ def commMonTypeEquivalenceCommMonForget :
       CommMon_.forget₂Mon_ (Type u) ⋙ MonTypeEquivalenceMon.functor :=
   NatIso.ofComponents (fun A => Iso.refl _) (by tidy)
 #align CommMon_Type_equivalence_CommMon_forget commMonTypeEquivalenceCommMonForget
+-/
 
+#print commMonTypeInhabited /-
 instance commMonTypeInhabited : Inhabited (CommMon_ (Type u)) :=
   ⟨CommMonTypeEquivalenceCommMon.inverse.obj (CommMonCat.of PUnit)⟩
 #align CommMon_Type_inhabited commMonTypeInhabited
+-/
 
