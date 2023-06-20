@@ -109,6 +109,7 @@ submartingale converges to its `limit_process` almost everywhere.
 -/
 
 
+#print MeasureTheory.not_frequently_of_upcrossings_lt_top /-
 /-- If a stochastic process has bounded upcrossing from below `a` to above `b`,
 then it does not frequently visit both below `a` and above `b`. -/
 theorem not_frequently_of_upcrossings_lt_top (hab : a < b) (hω : upcrossings a b f ω ≠ ∞) :
@@ -133,14 +134,18 @@ theorem not_frequently_of_upcrossings_lt_top (hab : a < b) (hω : upcrossings a 
         Nat.succ_le_of_lt <|
           lt_of_le_of_lt hN (upcrossings_before_lt_of_exists_upcrossing hab hN₁ hN₁' hN₂ hN₂')⟩
 #align measure_theory.not_frequently_of_upcrossings_lt_top MeasureTheory.not_frequently_of_upcrossings_lt_top
+-/
 
+#print MeasureTheory.upcrossings_eq_top_of_frequently_lt /-
 /-- A stochastic process that frequently visits below `a` and above `b` have infinite
 upcrossings. -/
 theorem upcrossings_eq_top_of_frequently_lt (hab : a < b) (h₁ : ∃ᶠ n in atTop, f n ω < a)
     (h₂ : ∃ᶠ n in atTop, b < f n ω) : upcrossings a b f ω = ∞ :=
   by_contradiction fun h => not_frequently_of_upcrossings_lt_top hab h ⟨h₁, h₂⟩
 #align measure_theory.upcrossings_eq_top_of_frequently_lt MeasureTheory.upcrossings_eq_top_of_frequently_lt
+-/
 
+#print MeasureTheory.tendsto_of_uncrossing_lt_top /-
 /-- A realization of a stochastic process with bounded upcrossings and bounded liminfs is
 convergent.
 
@@ -160,7 +165,9 @@ theorem tendsto_of_uncrossing_lt_top (hf₁ : liminf (fun n => (‖f n ω‖₊ 
     exact
       False.elim ((hf₂ a b hab).Ne (upcrossings_eq_top_of_frequently_lt (Rat.cast_lt.2 hab) h₁ h₂))
 #align measure_theory.tendsto_of_uncrossing_lt_top MeasureTheory.tendsto_of_uncrossing_lt_top
+-/
 
+#print MeasureTheory.Submartingale.upcrossings_ae_lt_top' /-
 /-- An L¹-bounded submartingale has bounded upcrossings almost everywhere. -/
 theorem Submartingale.upcrossings_ae_lt_top' [IsFiniteMeasure μ] (hf : Submartingale f ℱ μ)
     (hbdd : ∀ n, snorm (f n) 1 μ ≤ R) (hab : a < b) : ∀ᵐ ω ∂μ, upcrossings a b f ω < ∞ :=
@@ -199,7 +206,9 @@ theorem Submartingale.upcrossings_ae_lt_top' [IsFiniteMeasure μ] (hf : Submarti
   · simp only [hab, Ne.def, ENNReal.ofReal_eq_zero, sub_nonpos, not_le, true_or_iff]
   · simp only [Ne.def, ENNReal.ofReal_ne_top, not_false_iff, true_or_iff]
 #align measure_theory.submartingale.upcrossings_ae_lt_top' MeasureTheory.Submartingale.upcrossings_ae_lt_top'
+-/
 
+#print MeasureTheory.Submartingale.upcrossings_ae_lt_top /-
 theorem Submartingale.upcrossings_ae_lt_top [IsFiniteMeasure μ] (hf : Submartingale f ℱ μ)
     (hbdd : ∀ n, snorm (f n) 1 μ ≤ R) : ∀ᵐ ω ∂μ, ∀ a b : ℚ, a < b → upcrossings a b f ω < ∞ :=
   by
@@ -207,7 +216,9 @@ theorem Submartingale.upcrossings_ae_lt_top [IsFiniteMeasure μ] (hf : Submartin
   rintro a b hab
   exact hf.upcrossings_ae_lt_top' hbdd (Rat.cast_lt.2 hab)
 #align measure_theory.submartingale.upcrossings_ae_lt_top MeasureTheory.Submartingale.upcrossings_ae_lt_top
+-/
 
+#print MeasureTheory.Submartingale.exists_ae_tendsto_of_bdd /-
 /-- An L¹-bounded submartingale converges almost everywhere. -/
 theorem Submartingale.exists_ae_tendsto_of_bdd [IsFiniteMeasure μ] (hf : Submartingale f ℱ μ)
     (hbdd : ∀ n, snorm (f n) 1 μ ≤ R) : ∀ᵐ ω ∂μ, ∃ c, Tendsto (fun n => f n ω) atTop (𝓝 c) :=
@@ -218,7 +229,9 @@ theorem Submartingale.exists_ae_tendsto_of_bdd [IsFiniteMeasure μ] (hf : Submar
     ω h₁ h₂
   exact tendsto_of_uncrossing_lt_top h₂ h₁
 #align measure_theory.submartingale.exists_ae_tendsto_of_bdd MeasureTheory.Submartingale.exists_ae_tendsto_of_bdd
+-/
 
+#print MeasureTheory.Submartingale.exists_ae_trim_tendsto_of_bdd /-
 theorem Submartingale.exists_ae_trim_tendsto_of_bdd [IsFiniteMeasure μ] (hf : Submartingale f ℱ μ)
     (hbdd : ∀ n, snorm (f n) 1 μ ≤ R) :
     ∀ᵐ ω ∂μ.trim (sSup_le fun m ⟨n, hn⟩ => hn ▸ ℱ.le _ : (⨆ n, ℱ n) ≤ m0),
@@ -232,7 +245,9 @@ theorem Submartingale.exists_ae_trim_tendsto_of_bdd [IsFiniteMeasure μ] (hf : S
         (@measurable_set_exists_tendsto _ _ _ _ _ _ (⨆ n, ℱ n) _ _ _ _ _ fun n =>
           (hf.strongly_measurable n).Measurable.mono (le_sSup ⟨n, rfl⟩) le_rfl)
 #align measure_theory.submartingale.exists_ae_trim_tendsto_of_bdd MeasureTheory.Submartingale.exists_ae_trim_tendsto_of_bdd
+-/
 
+#print MeasureTheory.Submartingale.ae_tendsto_limitProcess /-
 /-- **Almost everywhere martingale convergence theorem**: An L¹-bounded submartingale converges
 almost everywhere to a `⨆ n, ℱ n`-measurable function. -/
 theorem Submartingale.ae_tendsto_limitProcess [IsFiniteMeasure μ] (hf : Submartingale f ℱ μ)
@@ -263,13 +278,16 @@ theorem Submartingale.ae_tendsto_limitProcess [IsFiniteMeasure μ] (hf : Submart
     exact hω ▸ hg'ω
   exact ⟨g, hgm, measure_eq_zero_of_trim_eq_zero hle hg⟩
 #align measure_theory.submartingale.ae_tendsto_limit_process MeasureTheory.Submartingale.ae_tendsto_limitProcess
+-/
 
+#print MeasureTheory.Submartingale.memℒp_limitProcess /-
 /-- The limiting process of an Lᵖ-bounded submartingale is Lᵖ. -/
 theorem Submartingale.memℒp_limitProcess {p : ℝ≥0∞} (hf : Submartingale f ℱ μ)
     (hbdd : ∀ n, snorm (f n) p μ ≤ R) : Memℒp (ℱ.limitProcess f μ) p μ :=
   memℒp_limitProcess_of_snorm_bdd
     (fun n => ((hf.StronglyMeasurable n).mono (ℱ.le n)).AEStronglyMeasurable) hbdd
 #align measure_theory.submartingale.mem_ℒp_limit_process MeasureTheory.Submartingale.memℒp_limitProcess
+-/
 
 end AeConvergence
 
@@ -341,6 +359,7 @@ and the a.e. limit of a submartingale coincide.
 -/
 
 
+#print MeasureTheory.Submartingale.tendsto_snorm_one_limitProcess /-
 /-- Part a of the **L¹ martingale convergence theorem**: a uniformly integrable submartingale
 adapted to the filtration `ℱ` converges a.e. and in L¹ to an integrable function which is
 measurable with respect to the σ-algebra `⨆ n, ℱ n`. -/
@@ -356,14 +375,18 @@ theorem Submartingale.tendsto_snorm_one_limitProcess (hf : Submartingale f ℱ �
       (mem_ℒp_limit_process_of_snorm_bdd hmeas hR) hunif.2.1
       (tendsto_in_measure_of_tendsto_ae hmeas <| hf.ae_tendsto_limit_process hR)
 #align measure_theory.submartingale.tendsto_snorm_one_limit_process MeasureTheory.Submartingale.tendsto_snorm_one_limitProcess
+-/
 
+#print MeasureTheory.Submartingale.ae_tendsto_limitProcess_of_uniformIntegrable /-
 theorem Submartingale.ae_tendsto_limitProcess_of_uniformIntegrable (hf : Submartingale f ℱ μ)
     (hunif : UniformIntegrable f 1 μ) :
     ∀ᵐ ω ∂μ, Tendsto (fun n => f n ω) atTop (𝓝 (ℱ.limitProcess f μ ω)) :=
   let ⟨R, hR⟩ := hunif.2.2
   hf.ae_tendsto_limitProcess hR
 #align measure_theory.submartingale.ae_tendsto_limit_process_of_uniform_integrable MeasureTheory.Submartingale.ae_tendsto_limitProcess_of_uniformIntegrable
+-/
 
+#print MeasureTheory.Martingale.eq_condexp_of_tendsto_snorm /-
 /-- If a martingale `f` adapted to `ℱ` converges in L¹ to `g`, then for all `n`, `f n` is almost
 everywhere equal to `𝔼[g | ℱ n]`. -/
 theorem Martingale.eq_condexp_of_tendsto_snorm {μ : Measure Ω} (hf : Martingale f ℱ μ)
@@ -386,7 +409,9 @@ theorem Martingale.eq_condexp_of_tendsto_snorm {μ : Measure Ω} (hf : Martingal
     simp only [hx, Pi.sub_apply]
   exact tendsto_nhds_unique (tendsto_atTop_of_eventually_const hev) ht
 #align measure_theory.martingale.eq_condexp_of_tendsto_snorm MeasureTheory.Martingale.eq_condexp_of_tendsto_snorm
+-/
 
+#print MeasureTheory.Martingale.ae_eq_condexp_limitProcess /-
 /-- Part b of the **L¹ martingale convergence theorem**: if `f` is a uniformly integrable martingale
 adapted to the filtration `ℱ`, then for all `n`, `f n` is almost everywhere equal to the conditional
 expectation of its limiting process wrt. `ℱ n`. -/
@@ -396,7 +421,9 @@ theorem Martingale.ae_eq_condexp_limitProcess (hf : Martingale f ℱ μ)
   hf.eq_condexp_of_tendsto_snorm ((memℒp_limitProcess_of_snorm_bdd hbdd.1 hR).Integrable le_rfl)
     (hf.Submartingale.tendsto_snorm_one_limitProcess hbdd) n
 #align measure_theory.martingale.ae_eq_condexp_limit_process MeasureTheory.Martingale.ae_eq_condexp_limitProcess
+-/
 
+#print MeasureTheory.Integrable.tendsto_ae_condexp /-
 /-- Part c of the **L¹ martingale convergnce theorem**: Given a integrable function `g` which
 is measurable with respect to `⨆ n, ℱ n` where `ℱ` is a filtration, the martingale defined by
 `𝔼[g | ℱ n]` converges almost everywhere to `g`.
@@ -461,7 +488,9 @@ theorem Integrable.tendsto_ae_condexp (hg : Integrable g μ)
       integral_Union (fun n => hle _ (hfmeas n)) hf hlimint.integrable_on]
     exact tsum_congr fun n => HEq _ (measure_lt_top _ _)
 #align measure_theory.integrable.tendsto_ae_condexp MeasureTheory.Integrable.tendsto_ae_condexp
+-/
 
+#print MeasureTheory.Integrable.tendsto_snorm_condexp /-
 /-- Part c of the **L¹ martingale convergnce theorem**: Given a integrable function `g` which
 is measurable with respect to `⨆ n, ℱ n` where `ℱ` is a filtration, the martingale defined by
 `𝔼[g | ℱ n]` converges in L¹ to `g`.
@@ -478,7 +507,9 @@ theorem Integrable.tendsto_snorm_condexp (hg : Integrable g μ)
       (fun n => (stronglyMeasurable_condexp.mono (ℱ.le n)).AEStronglyMeasurable)
       (hg.tendsto_ae_condexp hgmeas))
 #align measure_theory.integrable.tendsto_snorm_condexp MeasureTheory.Integrable.tendsto_snorm_condexp
+-/
 
+#print MeasureTheory.tendsto_ae_condexp /-
 /-- **Lévy's upward theorem**, almost everywhere version: given a function `g` and a filtration
 `ℱ`, the sequence defined by `𝔼[g | ℱ n]` converges almost everywhere to `𝔼[g | ⨆ n, ℱ n]`. -/
 theorem tendsto_ae_condexp (g : Ω → ℝ) :
@@ -492,7 +523,9 @@ theorem tendsto_ae_condexp (g : Ω → ℝ) :
   filter_upwards [HEq, ht] with x hxeq hxt
   exact hxt.congr hxeq
 #align measure_theory.tendsto_ae_condexp MeasureTheory.tendsto_ae_condexp
+-/
 
+#print MeasureTheory.tendsto_snorm_condexp /-
 /-- **Lévy's upward theorem**, L¹ version: given a function `g` and a filtration `ℱ`, the
 sequence defined by `𝔼[g | ℱ n]` converges in L¹ to `𝔼[g | ⨆ n, ℱ n]`. -/
 theorem tendsto_snorm_condexp (g : Ω → ℝ) :
@@ -506,6 +539,7 @@ theorem tendsto_snorm_condexp (g : Ω → ℝ) :
   filter_upwards [HEq n] with x hxeq
   simp only [hxeq, Pi.sub_apply]
 #align measure_theory.tendsto_snorm_condexp MeasureTheory.tendsto_snorm_condexp
+-/
 
 end L1Convergence
 

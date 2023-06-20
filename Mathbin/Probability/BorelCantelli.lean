@@ -41,6 +41,7 @@ section BorelCantelli
 variable {ι β : Type _} [LinearOrder ι] [mβ : MeasurableSpace β] [NormedAddCommGroup β]
   [BorelSpace β] {f : ι → Ω → β} {i j : ι} {s : ι → Set Ω}
 
+#print ProbabilityTheory.iIndepFun.indep_comap_natural_of_lt /-
 theorem iIndepFun.indep_comap_natural_of_lt (hf : ∀ i, StronglyMeasurable (f i))
     (hfi : iIndepFun (fun i => mβ) f μ) (hij : i < j) :
     Indep (MeasurableSpace.comap (f j) mβ) (Filtration.natural f hf i) μ :=
@@ -51,14 +52,18 @@ theorem iIndepFun.indep_comap_natural_of_lt (hf : ∀ i, StronglyMeasurable (f i
     by rwa [iSup_singleton] at this 
   exact indep_supr_of_disjoint (fun k => (hf k).Measurable.comap_le) hfi (by simpa)
 #align probability_theory.Indep_fun.indep_comap_natural_of_lt ProbabilityTheory.iIndepFun.indep_comap_natural_of_lt
+-/
 
+#print ProbabilityTheory.iIndepFun.condexp_natural_ae_eq_of_lt /-
 theorem iIndepFun.condexp_natural_ae_eq_of_lt [SecondCountableTopology β] [CompleteSpace β]
     [NormedSpace ℝ β] (hf : ∀ i, StronglyMeasurable (f i)) (hfi : iIndepFun (fun i => mβ) f μ)
     (hij : i < j) : μ[f j|Filtration.natural f hf i] =ᵐ[μ] fun ω => μ[f j] :=
   condexp_indep_eq (hf j).Measurable.comap_le (Filtration.le _ _)
     (comap_measurable <| f j).StronglyMeasurable (hfi.indep_comap_natural_of_lt hf hij)
 #align probability_theory.Indep_fun.condexp_natural_ae_eq_of_lt ProbabilityTheory.iIndepFun.condexp_natural_ae_eq_of_lt
+-/
 
+#print ProbabilityTheory.iIndepSet.condexp_indicator_filtrationOfSet_ae_eq /-
 theorem iIndepSet.condexp_indicator_filtrationOfSet_ae_eq (hsm : ∀ n, MeasurableSet (s n))
     (hs : iIndepSet s μ) (hij : i < j) :
     μ[(s j).indicator (fun ω => 1 : Ω → ℝ)|filtrationOfSet hsm i] =ᵐ[μ] fun ω => (μ (s j)).toReal :=
@@ -68,9 +73,11 @@ theorem iIndepSet.condexp_indicator_filtrationOfSet_ae_eq (hsm : ∀ n, Measurab
   · simp only [integral_indicator_const _ (hsm _), Algebra.id.smul_eq_mul, mul_one]
   · infer_instance
 #align probability_theory.Indep_set.condexp_indicator_filtration_of_set_ae_eq ProbabilityTheory.iIndepSet.condexp_indicator_filtrationOfSet_ae_eq
+-/
 
 open Filter
 
+#print ProbabilityTheory.measure_limsup_eq_one /-
 /-- **The second Borel-Cantelli lemma**: Given a sequence of independent sets `(sₙ)` such that
 `∑ n, μ sₙ = ∞`, `limsup sₙ` has measure 1. -/
 theorem measure_limsup_eq_one {s : ℕ → Set Ω} (hsm : ∀ n, MeasurableSet (s n)) (hs : iIndepSet s μ)
@@ -118,6 +125,7 @@ theorem measure_limsup_eq_one {s : ℕ → Set Ω} (hsm : ∀ n, MeasurableSet (
       · exact hB.trans (by simp)
       · exact fun _ _ => measure_ne_top _ _
 #align probability_theory.measure_limsup_eq_one ProbabilityTheory.measure_limsup_eq_one
+-/
 
 end BorelCantelli
 
