@@ -62,10 +62,12 @@ theorem PairwiseDisjoint.image_finset_of_le [DecidableEq ι] {s : Finset ι} {f 
 #align set.pairwise_disjoint.image_finset_of_le Set.PairwiseDisjoint.image_finset_of_le
 -/
 
+#print Set.PairwiseDisjoint.attach /-
 theorem PairwiseDisjoint.attach (hs : (s : Set ι).PairwiseDisjoint f) :
     (s.attach : Set { x // x ∈ s }).PairwiseDisjoint (f ∘ Subtype.val) := fun i _ j _ hij =>
   hs i.2 j.2 <| mt Subtype.ext_val hij
 #align set.pairwise_disjoint.attach Set.PairwiseDisjoint.attach
+-/
 
 end SemilatticeInf
 

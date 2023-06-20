@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael Stoll
 
 ! This file was ported from Lean 3 source module number_theory.legendre_symbol.add_character
-! leanprover-community/mathlib commit e3f4be1fcb5376c4948d7f095bec45350bfb9d1a
+! leanprover-community/mathlib commit 0723536a0522d24fc2f159a096fb3304bef77472
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -384,6 +384,7 @@ noncomputable def primitiveCharFiniteField (F F' : Type _) [Field F] [Fintype F]
     · rw [hq]
       exact fun hf => Nat.Prime.ne_zero hp.1 (zero_dvd_iff.mp hf)
   let ψ := primitive_zmod_char pp F' (ne_zero_iff.mp (NeZero.of_not_dvd F' hp₂))
+  letI : Algebra (ZMod p) F := ZMod.algebra _ _
   let ψ' := ψ.char.comp (Algebra.trace (ZMod p) F).toAddMonoidHom.toMultiplicative
   have hψ' : is_nontrivial ψ' :=
     by

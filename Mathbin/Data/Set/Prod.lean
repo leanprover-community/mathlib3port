@@ -1049,13 +1049,17 @@ section Nonempty
 
 variable [∀ i, Nonempty (α i)]
 
+#print Set.pi_eq_empty_iff' /-
 theorem pi_eq_empty_iff' : s.pi t = ∅ ↔ ∃ i ∈ s, t i = ∅ := by simp [pi_eq_empty_iff]
 #align set.pi_eq_empty_iff' Set.pi_eq_empty_iff'
+-/
 
+#print Set.disjoint_pi /-
 @[simp]
 theorem disjoint_pi : Disjoint (s.pi t₁) (s.pi t₂) ↔ ∃ i ∈ s, Disjoint (t₁ i) (t₂ i) := by
   simp only [disjoint_iff_inter_eq_empty, ← pi_inter_distrib, pi_eq_empty_iff']
 #align set.disjoint_pi Set.disjoint_pi
+-/
 
 end Nonempty
 

@@ -101,12 +101,14 @@ theorem SupIndep.pairwiseDisjoint (hs : s.SupIndep f) : (s : Set ι).PairwiseDis
 #align finset.sup_indep.pairwise_disjoint Finset.SupIndep.pairwiseDisjoint
 -/
 
+#print Finset.SupIndep.le_sup_iff /-
 theorem SupIndep.le_sup_iff (hs : s.SupIndep f) (hts : t ⊆ s) (hi : i ∈ s) (hf : ∀ i, f i ≠ ⊥) :
     f i ≤ t.sup f ↔ i ∈ t := by
   refine' ⟨fun h => _, le_sup⟩
   by_contra hit
   exact hf i (disjoint_self.1 <| (hs hts hi hit).mono_right h)
 #align finset.sup_indep.le_sup_iff Finset.SupIndep.le_sup_iff
+-/
 
 #print Finset.supIndep_iff_disjoint_erase /-
 /-- The RHS looks like the definition of `complete_lattice.independent`. -/
@@ -117,6 +119,7 @@ theorem supIndep_iff_disjoint_erase [DecidableEq ι] :
 #align finset.sup_indep_iff_disjoint_erase Finset.supIndep_iff_disjoint_erase
 -/
 
+#print Finset.SupIndep.image /-
 theorem SupIndep.image [DecidableEq ι] {s : Finset ι'} {g : ι' → ι} (hs : s.SupIndep (f ∘ g)) :
     (s.image g).SupIndep f := by
   intro t ht i hi hit
@@ -130,7 +133,9 @@ theorem SupIndep.image [DecidableEq ι] {s : Finset ι'} {g : ι' → ι} (hs : 
   obtain ⟨j, hj, rfl⟩ := mem_image.1 (ht hjt)
   exact mem_image_of_mem _ (mem_erase.2 ⟨ne_of_apply_ne g (ne_of_mem_of_not_mem hjt hit), hj⟩)
 #align finset.sup_indep.image Finset.SupIndep.image
+-/
 
+#print Finset.supIndep_map /-
 theorem supIndep_map {s : Finset ι'} {g : ι' ↪ ι} : (s.map g).SupIndep f ↔ s.SupIndep (f ∘ g) :=
   by
   refine' ⟨fun hs t ht i hi hit => _, fun hs => _⟩
@@ -141,6 +146,7 @@ theorem supIndep_map {s : Finset ι'} {g : ι' ↪ ι} : (s.map g).SupIndep f �
     rw [map_eq_image]
     exact hs.image
 #align finset.sup_indep_map Finset.supIndep_map
+-/
 
 #print Finset.supIndep_pair /-
 @[simp]
@@ -196,6 +202,7 @@ theorem SupIndep.attach (hs : s.SupIndep f) : s.attach.SupIndep fun a => f a :=
 #align finset.sup_indep.attach Finset.SupIndep.attach
 -/
 
+#print Finset.supIndep_attach /-
 @[simp]
 theorem supIndep_attach : (s.attach.SupIndep fun a => f a) ↔ s.SupIndep f :=
   by
@@ -210,6 +217,7 @@ theorem supIndep_attach : (s.attach.SupIndep fun a => f a) ↔ s.SupIndep f :=
     Subtype.forall, Subtype.coe_mk]
   exact fun a => forall_congr' fun j => ⟨fun h _ => h, fun h hj => h (ht hj) hj⟩
 #align finset.sup_indep_attach Finset.supIndep_attach
+-/
 
 end Lattice
 
@@ -249,6 +257,7 @@ theorem SupIndep.biUnion [DecidableEq ι] {s : Finset ι'} {g : ι' → Finset �
 #align finset.sup_indep.bUnion Finset.SupIndep.biUnion
 -/
 
+#print Finset.SupIndep.sigma /-
 /-- Bind operation for `sup_indep`. -/
 theorem SupIndep.sigma {β : ι → Type _} {s : Finset ι} {g : ∀ i, Finset (β i)} {f : Sigma β → α}
     (hs : s.SupIndep fun i => (g i).sup fun b => f ⟨i, b⟩)
@@ -266,7 +275,9 @@ theorem SupIndep.sigma {β : ι → Type _} {s : Finset ι} {g : ∀ i, Finset (
     · convert le_sup hi.2
     · convert le_sup hj.2
 #align finset.sup_indep.sigma Finset.SupIndep.sigma
+-/
 
+#print Finset.SupIndep.product /-
 theorem SupIndep.product {s : Finset ι} {t : Finset ι'} {f : ι × ι' → α}
     (hs : s.SupIndep fun i => t.sup fun i' => f (i, i'))
     (ht : t.SupIndep fun i' => s.sup fun i => f (i, i')) : (s.product t).SupIndep f :=
@@ -285,7 +296,9 @@ theorem SupIndep.product {s : Finset ι} {t : Finset ι'} {f : ι × ι' → α}
     · convert le_sup hi.2
     · convert le_sup hj.2
 #align finset.sup_indep.product Finset.SupIndep.product
+-/
 
+#print Finset.supIndep_product_iff /-
 theorem supIndep_product_iff {s : Finset ι} {t : Finset ι'} {f : ι × ι' → α} :
     (s.product t).SupIndep f ↔
       (s.SupIndep fun i => t.sup fun i' => f (i, i')) ∧
@@ -299,6 +312,7 @@ theorem supIndep_product_iff {s : Finset ι} {t : Finset ι'} {f : ι × ι' →
   · exact h (mk_mem_product hi hi') (mk_mem_product hj hj') (ne_of_apply_ne Prod.fst hij)
   · exact h (mk_mem_product hi' hi) (mk_mem_product hj' hj) (ne_of_apply_ne Prod.snd hij)
 #align finset.sup_indep_product_iff Finset.supIndep_product_iff
+-/
 
 end DistribLattice
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Rodriguez
 
 ! This file was ported from Lean 3 source module field_theory.cardinality
-! leanprover-community/mathlib commit 13e18cfa070ea337ea960176414f5ae3a1534aae
+! leanprover-community/mathlib commit 0723536a0522d24fc2f159a096fb3304bef77472
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -42,8 +42,10 @@ universe u
 /-- A finite field has prime power cardinality. -/
 theorem Fintype.isPrimePow_card_of_field {α} [Fintype α] [Field α] : IsPrimePow ‖α‖ :=
   by
+  -- TODO: `algebra` version of `char_p.exists`, of type `Σ p, algebra (zmod p) α`
   cases' CharP.exists α with p _
   haveI hp := Fact.mk (CharP.char_is_prime α p)
+  letI : Algebra (ZMod p) α := ZMod.algebra _ _
   let b := IsNoetherian.finsetBasis (ZMod p) α
   rw [Module.card_fintype b, ZMod.card, isPrimePow_pow_iff]
   · exact hp.1.IsPrimePow

@@ -4,13 +4,16 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 
 ! This file was ported from Lean 3 source module measure_theory.function.conditional_expectation.condexp_L1
-! leanprover-community/mathlib commit d8bbb04e2d2a44596798a9207ceefc0fb236e41e
+! leanprover-community/mathlib commit e160cefedc932ce41c7049bf0c4b0f061d06216e
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.MeasureTheory.Function.ConditionalExpectation.CondexpL2
 
 /-! # Conditional expectation in L1
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file contains two more steps of the construction of the conditional expectation, which is
 completed in `measure_theory.function.conditional_expectation.basic`. See that file for a

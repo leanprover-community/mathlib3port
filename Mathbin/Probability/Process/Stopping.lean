@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying, Rémy Degenne
 
 ! This file was ported from Lean 3 source module probability.process.stopping
-! leanprover-community/mathlib commit ba074af83b6cf54c3104e59402b39410ddbd6dca
+! leanprover-community/mathlib commit e160cefedc932ce41c7049bf0c4b0f061d06216e
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.Probability.Process.Adapted
 
 /-!
 # Stopping times, stopped processes and stopped values
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 Definition and properties of stopping times.
 

@@ -101,6 +101,7 @@ theorem PairwiseDisjoint.biUnion {s : Set ι'} {g : ι' → Set ι} {f : ι → 
 -/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print Set.PairwiseDisjoint.prod_left /-
 /-- If the suprema of columns are pairwise disjoint and suprema of rows as well, then everything is
 pairwise disjoint. Not to be confused with `set.pairwise_disjoint.prod`. -/
 theorem PairwiseDisjoint.prod_left {f : ι × ι' → α}
@@ -118,6 +119,7 @@ theorem PairwiseDisjoint.prod_left {f : ι × ι' → α}
     · convert le_iSup₂ i' hi.2; rfl
     · convert le_iSup₂ j' hj.2; rfl
 #align set.pairwise_disjoint.prod_left Set.PairwiseDisjoint.prod_left
+-/
 
 end CompleteLattice
 
@@ -126,6 +128,7 @@ section Frame
 variable [Frame α]
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print Set.pairwiseDisjoint_prod_left /-
 theorem pairwiseDisjoint_prod_left {s : Set ι} {t : Set ι'} {f : ι × ι' → α} :
     (s ×ˢ t : Set (ι × ι')).PairwiseDisjoint f ↔
       (s.PairwiseDisjoint fun i => ⨆ i' ∈ t, f (i, i')) ∧
@@ -138,6 +141,7 @@ theorem pairwiseDisjoint_prod_left {s : Set ι} {t : Set ι'} {f : ι × ι' →
   · exact h (mk_mem_prod hi hi') (mk_mem_prod hj hj') (ne_of_apply_ne Prod.fst hij)
   · exact h (mk_mem_prod hi' hi) (mk_mem_prod hj' hj) (ne_of_apply_ne Prod.snd hij)
 #align set.pairwise_disjoint_prod_left Set.pairwiseDisjoint_prod_left
+-/
 
 end Frame
 

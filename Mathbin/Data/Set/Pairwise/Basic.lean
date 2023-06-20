@@ -480,6 +480,7 @@ theorem PairwiseDisjoint.elim_set {s : Set ι} {f : ι → Set α} (hs : s.Pairw
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print Set.PairwiseDisjoint.prod /-
 theorem PairwiseDisjoint.prod {f : ι → Set α} {g : ι' → Set β} (hs : s.PairwiseDisjoint f)
     (ht : t.PairwiseDisjoint g) :
     (s ×ˢ t : Set (ι × ι')).PairwiseDisjoint fun i => f i.1 ×ˢ g i.2 :=
@@ -487,7 +488,9 @@ theorem PairwiseDisjoint.prod {f : ι → Set α} {g : ι' → Set β} (hs : s.P
   disjoint_left.2 fun ⟨a, b⟩ ⟨hai, hbi⟩ ⟨haj, hbj⟩ =>
     hij <| Prod.ext (hs.elim_set hi hj _ hai haj) <| ht.elim_set hi' hj' _ hbi hbj
 #align set.pairwise_disjoint.prod Set.PairwiseDisjoint.prod
+-/
 
+#print Set.pairwiseDisjoint_pi /-
 theorem pairwiseDisjoint_pi {ι' α : ι → Type _} {s : ∀ i, Set (ι' i)} {f : ∀ i, ι' i → Set (α i)}
     (hs : ∀ i, (s i).PairwiseDisjoint (f i)) :
     ((univ : Set ι).pi s).PairwiseDisjoint fun I => (univ : Set ι).pi fun i => f _ (I i) :=
@@ -497,6 +500,7 @@ theorem pairwiseDisjoint_pi {ι' α : ι → Type _} {s : ∀ i, Set (ι' i)} {f
       funext fun i =>
         (hs i).elim_set (hI i trivial) (hJ i trivial) (a i) (haI i trivial) (haJ i trivial)
 #align set.pairwise_disjoint_pi Set.pairwiseDisjoint_pi
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Set.pairwiseDisjoint_image_right_iff /-

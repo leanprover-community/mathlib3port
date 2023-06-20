@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 
 ! This file was ported from Lean 3 source module probability.notation
-! leanprover-community/mathlib commit 00abe0695d8767201e6d008afa22393978bb324d
+! leanprover-community/mathlib commit e160cefedc932ce41c7049bf0c4b0f061d06216e
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.Probability.ProbabilityMassFunction.Basic
 import Mathbin.MeasureTheory.Function.ConditionalExpectation.Basic
 
 /-! # Notations for probability theory
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file defines the following notations, for functions `X,Y`, measures `P, Q` defined on a
 measurable space `m0`, and another measurable space structure `m` with `hm : m ≤ m0`,
