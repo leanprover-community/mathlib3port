@@ -207,7 +207,7 @@ end VectorFourier
 /-! ## Fourier theory for functions on `𝕜` -/
 
 
-namespace Fourier
+namespace fourier
 
 variable {𝕜 : Type _} [CommRing 𝕜] [MeasurableSpace 𝕜] {E : Type _} [NormedAddCommGroup E]
   [NormedSpace ℂ E]
@@ -257,7 +257,7 @@ theorem fourierIntegral_comp_add_right [MeasurableAdd 𝕜] (e : Multiplicative 
 
 end Defs
 
-end Fourier
+end fourier
 
 open scoped Real
 
