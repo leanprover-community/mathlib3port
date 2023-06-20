@@ -101,7 +101,7 @@ def of {V : Type u} [AddCommGroup V] [Module k V] [FiniteDimensional k V]
 instance : HasForget₂ (FdRep k G) (Rep k G)
     where forget₂ := (forget₂ (FgModule k) (ModuleCat k)).mapAction (MonCat.of G)
 
-theorem forget₂_ρ (V : FdRep k G) : ((forget₂ (FdRep k G) (Rep k G)).obj V).ρ = V.ρ := by ext (g v);
+theorem forget₂_ρ (V : FdRep k G) : ((forget₂ (FdRep k G) (Rep k G)).obj V).ρ = V.ρ := by ext g v;
   rfl
 #align fdRep.forget₂_ρ FdRep.forget₂_ρ
 

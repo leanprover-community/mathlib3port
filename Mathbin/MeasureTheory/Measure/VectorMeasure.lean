@@ -548,7 +548,7 @@ theorem toSignedMeasure_eq_toSignedMeasure_iff {μ ν : Measure α} [IsFiniteMea
 
 #print MeasureTheory.Measure.toSignedMeasure_zero /-
 @[simp]
-theorem toSignedMeasure_zero : (0 : Measure α).toSignedMeasure = 0 := by ext (i hi); simp
+theorem toSignedMeasure_zero : (0 : Measure α).toSignedMeasure = 0 := by ext i hi; simp
 #align measure_theory.measure.to_signed_measure_zero MeasureTheory.Measure.toSignedMeasure_zero
 -/
 
@@ -557,7 +557,7 @@ theorem toSignedMeasure_zero : (0 : Measure α).toSignedMeasure = 0 := by ext (i
 theorem toSignedMeasure_add (μ ν : Measure α) [IsFiniteMeasure μ] [IsFiniteMeasure ν] :
     (μ + ν).toSignedMeasure = μ.toSignedMeasure + ν.toSignedMeasure :=
   by
-  ext (i hi)
+  ext i hi
   rw [to_signed_measure_apply_measurable hi, add_apply,
     ENNReal.toReal_add (ne_of_lt (measure_lt_top _ _)) (ne_of_lt (measure_lt_top _ _)),
     vector_measure.add_apply, to_signed_measure_apply_measurable hi,
@@ -571,7 +571,7 @@ theorem toSignedMeasure_add (μ ν : Measure α) [IsFiniteMeasure μ] [IsFiniteM
 theorem toSignedMeasure_smul (μ : Measure α) [IsFiniteMeasure μ] (r : ℝ≥0) :
     (r • μ).toSignedMeasure = r • μ.toSignedMeasure :=
   by
-  ext (i hi)
+  ext i hi
   rw [to_signed_measure_apply_measurable hi, vector_measure.smul_apply,
     to_signed_measure_apply_measurable hi, coe_smul, Pi.smul_apply, ENNReal.toReal_smul]
 #align measure_theory.measure.to_signed_measure_smul MeasureTheory.Measure.toSignedMeasure_smul
@@ -601,7 +601,7 @@ theorem toENNRealVectorMeasure_apply_measurable {μ : Measure α} {i : Set α} (
 
 #print MeasureTheory.Measure.toENNRealVectorMeasure_zero /-
 @[simp]
-theorem toENNRealVectorMeasure_zero : (0 : Measure α).toENNRealVectorMeasure = 0 := by ext (i hi);
+theorem toENNRealVectorMeasure_zero : (0 : Measure α).toENNRealVectorMeasure = 0 := by ext i hi;
   simp
 #align measure_theory.measure.to_ennreal_vector_measure_zero MeasureTheory.Measure.toENNRealVectorMeasure_zero
 -/
@@ -716,7 +716,7 @@ theorem map_id : v.map id = v :=
 theorem map_zero (f : α → β) : (0 : VectorMeasure α M).map f = 0 :=
   by
   by_cases hf : Measurable f
-  · ext (i hi)
+  · ext i hi
     rw [map_apply _ hf hi, zero_apply, zero_apply]
   · exact dif_neg hf
 #align measure_theory.vector_measure.map_zero MeasureTheory.VectorMeasure.map_zero
@@ -860,7 +860,7 @@ theorem restrict_univ : v.restrict univ = v :=
 theorem restrict_zero {i : Set α} : (0 : VectorMeasure α M).restrict i = 0 :=
   by
   by_cases hi : MeasurableSet i
-  · ext (j hj); rw [restrict_apply 0 hi hj]; rfl
+  · ext j hj; rw [restrict_apply 0 hi hj]; rfl
   · exact dif_neg hi
 #align measure_theory.vector_measure.restrict_zero MeasureTheory.VectorMeasure.restrict_zero
 -/
@@ -873,7 +873,7 @@ variable [ContinuousAdd M]
 theorem map_add (v w : VectorMeasure α M) (f : α → β) : (v + w).map f = v.map f + w.map f :=
   by
   by_cases hf : Measurable f
-  · ext (i hi)
+  · ext i hi
     simp [map_apply _ hf hi]
   · simp [map, dif_neg hf]
 #align measure_theory.vector_measure.map_add MeasureTheory.VectorMeasure.map_add
@@ -895,7 +895,7 @@ theorem restrict_add (v w : VectorMeasure α M) (i : Set α) :
     (v + w).restrict i = v.restrict i + w.restrict i :=
   by
   by_cases hi : MeasurableSet i
-  · ext (j hj)
+  · ext j hj
     simp [restrict_apply _ hi hj]
   · simp [restrict_not_measurable _ hi]
 #align measure_theory.vector_measure.restrict_add MeasureTheory.VectorMeasure.restrict_add
@@ -929,11 +929,11 @@ variable {R : Type _} [Semiring R] [DistribMulAction R M] [ContinuousConstSMul R
 theorem map_smul {v : VectorMeasure α M} {f : α → β} (c : R) : (c • v).map f = c • v.map f :=
   by
   by_cases hf : Measurable f
-  · ext (i hi)
+  · ext i hi
     simp [map_apply _ hf hi]
   · simp only [map, dif_neg hf]
     -- `smul_zero` does not work since we do not require `has_continuous_add`
-    ext (i hi);
+    ext i hi;
     simp
 #align measure_theory.vector_measure.map_smul MeasureTheory.VectorMeasure.map_smul
 -/
@@ -944,11 +944,11 @@ theorem restrict_smul {v : VectorMeasure α M} {i : Set α} (c : R) :
     (c • v).restrict i = c • v.restrict i :=
   by
   by_cases hi : MeasurableSet i
-  · ext (j hj)
+  · ext j hj
     simp [restrict_apply _ hi hj]
   · simp only [restrict_not_measurable _ hi]
     -- `smul_zero` does not work since we do not require `has_continuous_add`
-    ext (j hj);
+    ext j hj;
     simp
 #align measure_theory.vector_measure.restrict_smul MeasureTheory.VectorMeasure.restrict_smul
 -/
@@ -1587,7 +1587,7 @@ theorem trim_measurableSet_eq (hle : m ≤ n) {i : Set α} (hi : measurable_set[
 theorem restrict_trim (hle : m ≤ n) {i : Set α} (hi : measurable_set[m] i) :
     @VectorMeasure.restrict α m M _ _ (v.trim hle) i = (v.restrict i).trim hle :=
   by
-  ext (j hj)
+  ext j hj
   rw [restrict_apply, trim_measurable_set_eq hle hj, restrict_apply, trim_measurable_set_eq]
   all_goals measurability
 #align measure_theory.vector_measure.restrict_trim MeasureTheory.VectorMeasure.restrict_trim
@@ -1708,7 +1708,7 @@ instance toMeasureOfLEZero_finite (hi : s ≤[i] 0) (hi₁ : MeasurableSet i) :
 theorem toMeasureOfZeroLE_toSignedMeasure (hs : 0 ≤[univ] s) :
     (s.toMeasureOfZeroLE univ MeasurableSet.univ hs).toSignedMeasure = s :=
   by
-  ext (i hi)
+  ext i hi
   simp [measure.to_signed_measure_apply_measurable hi, to_measure_of_zero_le_apply _ _ _ hi]
 #align measure_theory.signed_measure.to_measure_of_zero_le_to_signed_measure MeasureTheory.SignedMeasure.toMeasureOfZeroLE_toSignedMeasure
 -/
@@ -1717,7 +1717,7 @@ theorem toMeasureOfZeroLE_toSignedMeasure (hs : 0 ≤[univ] s) :
 theorem toMeasureOfLEZero_toSignedMeasure (hs : s ≤[univ] 0) :
     (s.toMeasureOfLEZero univ MeasurableSet.univ hs).toSignedMeasure = -s :=
   by
-  ext (i hi)
+  ext i hi
   simp [measure.to_signed_measure_apply_measurable hi, to_measure_of_le_zero_apply _ _ _ hi]
 #align measure_theory.signed_measure.to_measure_of_le_zero_to_signed_measure MeasureTheory.SignedMeasure.toMeasureOfLEZero_toSignedMeasure
 -/

@@ -126,7 +126,7 @@ theorem d_eq :
       (diagonalHomEquiv n A).toModuleIso.inv ≫
         (linearYonedaObjResolution A).d n (n + 1) ≫ (diagonalHomEquiv (n + 1) A).toModuleIso.Hom :=
   by
-  ext (f g)
+  ext f g
   simp only [ModuleCat.coe_comp, LinearEquiv.coe_coe, Function.comp_apply,
     LinearEquiv.toModuleIso_inv, linear_yoneda_obj_resolution_d_apply, LinearEquiv.toModuleIso_hom,
     diagonal_hom_equiv_apply, Action.comp_hom, resolution.d_eq k G n,
@@ -162,7 +162,7 @@ noncomputable abbrev inhomogeneousCochains : CochainComplex (ModuleCat k) ℕ :=
   CochainComplex.of (fun n => ModuleCat.of k ((Fin n → G) → A))
     (fun n => InhomogeneousCochains.d n A) fun n =>
     by
-    ext (x y)
+    ext x y
     have := LinearMap.ext_iff.1 ((linear_yoneda_obj_resolution A).d_comp_d n (n + 1) (n + 2))
     simp only [ModuleCat.coe_comp, Function.comp_apply] at this 
     simp only [ModuleCat.coe_comp, Function.comp_apply, d_eq, LinearEquiv.toModuleIso_hom,

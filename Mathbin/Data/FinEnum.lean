@@ -279,12 +279,12 @@ theorem mem_pi {β : α → Type max u v} [FinEnum α] [∀ a, FinEnum (β a)] (
     (f : ∀ a, a ∈ xs → β a) : f ∈ pi xs fun x => toList (β x) :=
   by
   induction xs <;> simp [pi, -List.map_eq_map, monad_norm, functor_norm]
-  · ext (a⟨⟩)
+  · ext a ⟨⟩
   · exists pi.cons xs_hd xs_tl (f _ (List.mem_cons_self _ _))
     constructor; exact ⟨_, rfl⟩
     exists pi.tail f; constructor
     · apply xs_ih
-    · ext (x h); simp [pi.cons]; split_ifs; subst x; rfl; rfl
+    · ext x h; simp [pi.cons]; split_ifs; subst x; rfl; rfl
 #align fin_enum.mem_pi FinEnum.mem_pi
 -/
 

@@ -55,7 +55,7 @@ theorem TensorProduct.toMatrix_map (f : M →ₗ[R] M') (g : N →ₗ[R] N') :
     toMatrix (bM.TensorProduct bN) (bM'.TensorProduct bN') (TensorProduct.map f g) =
       toMatrix bM bM' f ⊗ₖ toMatrix bN bN' g :=
   by
-  ext (⟨i, j⟩⟨i', j'⟩)
+  ext ⟨i, j⟩ ⟨i', j'⟩
   simp_rw [Matrix.kroneckerMap_apply, to_matrix_apply, Basis.tensorProduct_apply,
     TensorProduct.map_tmul, Basis.tensorProduct_repr_tmul_apply]
 #align tensor_product.to_matrix_map TensorProduct.toMatrix_map
@@ -79,7 +79,7 @@ theorem TensorProduct.toMatrix_comm :
     toMatrix (bM.TensorProduct bN) (bN.TensorProduct bM) (TensorProduct.comm R M N) =
       (1 : Matrix (ι × κ) (ι × κ) R).submatrix Prod.swap id :=
   by
-  ext (⟨i, j⟩⟨i', j'⟩)
+  ext ⟨i, j⟩ ⟨i', j'⟩
   simp_rw [to_matrix_apply, Basis.tensorProduct_apply, LinearEquiv.coe_coe, TensorProduct.comm_tmul,
     Basis.tensorProduct_repr_tmul_apply, Matrix.submatrix_apply, Prod.swap_prod_mk, id.def,
     Basis.repr_self_apply, Matrix.one_apply, Prod.ext_iff, ite_and, @eq_comm _ i', @eq_comm _ j']
@@ -94,7 +94,7 @@ theorem TensorProduct.toMatrix_assoc :
         (TensorProduct.assoc R M N P) =
       (1 : Matrix (ι × κ × τ) (ι × κ × τ) R).submatrix id (Equiv.prodAssoc _ _ _) :=
   by
-  ext (⟨i, j, k⟩⟨⟨i', j'⟩, k'⟩)
+  ext ⟨i, j, k⟩ ⟨⟨i', j'⟩, k'⟩
   simp_rw [to_matrix_apply, Basis.tensorProduct_apply, LinearEquiv.coe_coe,
     TensorProduct.assoc_tmul, Basis.tensorProduct_repr_tmul_apply, Matrix.submatrix_apply,
     Equiv.prodAssoc_apply, id.def, Basis.repr_self_apply, Matrix.one_apply, Prod.ext_iff, ite_and,

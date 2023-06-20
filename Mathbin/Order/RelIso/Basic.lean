@@ -402,7 +402,7 @@ def preimage (f : α ↪ β) (s : β → β → Prop) : f ⁻¹'o s ↪r s :=
 -/
 
 #print RelEmbedding.eq_preimage /-
-theorem eq_preimage (f : r ↪r s) : r = f ⁻¹'o s := by ext (a b); exact f.map_rel_iff.symm
+theorem eq_preimage (f : r ↪r s) : r = f ⁻¹'o s := by ext a b; exact f.map_rel_iff.symm
 #align rel_embedding.eq_preimage RelEmbedding.eq_preimage
 -/
 

@@ -791,7 +791,7 @@ theorem iUnion_filter_not (π : Prepartition I) (p : Box ι → Prop) :
   by
   simp only [prepartition.Union]
   convert (@Set.biUnion_diff_biUnion_eq _ (box ι) π.boxes (π.filter p).boxes coe _).symm
-  · ext (J x); simp (config := { contextual := true })
+  · ext J x; simp (config := { contextual := true })
   · convert π.pairwise_disjoint; simp
 #align box_integral.prepartition.Union_filter_not BoxIntegral.Prepartition.iUnion_filter_not
 -/

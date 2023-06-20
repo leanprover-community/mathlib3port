@@ -102,7 +102,7 @@ theorem diagramNatTrans_id (X : C) (P : Cᵒᵖ ⥤ D) : J.diagramNatTrans (𝟙
 #print CategoryTheory.GrothendieckTopology.diagramNatTrans_zero /-
 @[simp]
 theorem diagramNatTrans_zero [Preadditive D] (X : C) (P Q : Cᵒᵖ ⥤ D) :
-    J.diagramNatTrans (0 : P ⟶ Q) X = 0 := by ext (j x); dsimp;
+    J.diagramNatTrans (0 : P ⟶ Q) X = 0 := by ext j x; dsimp;
   rw [zero_comp, multiequalizer.lift_ι, comp_zero]
 #align category_theory.grothendieck_topology.diagram_nat_trans_zero CategoryTheory.GrothendieckTopology.diagramNatTrans_zero
 -/
@@ -302,7 +302,7 @@ variable {D}
 @[simp]
 theorem plusMap_toPlus : J.plusMap (J.toPlus P) = J.toPlus (J.plusObj P) :=
   by
-  ext (X S)
+  ext X S
   dsimp [to_plus, plus_obj, plus_map]
   delta cover.to_multiequalizer
   simp only [ι_colim_map]

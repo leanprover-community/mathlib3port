@@ -132,7 +132,7 @@ def equiv (F : S ⥤ D) [∀ x, HasLimit (diagram ι F x)] (G : L ⥤ D) :
         tidy }
   left_inv := by
     intro x
-    ext (k j)
+    ext k j
     dsimp only [cone]
     rw [limit.lift_π]
     simp only [nat_trans.naturality_assoc, loc_map]
@@ -283,7 +283,7 @@ def equiv (F : S ⥤ D) [I : ∀ x, HasColimit (diagram ι F x)] (G : L ⥤ D) :
         tidy }
   left_inv := by
     intro x
-    ext (k j)
+    ext k j
     rw [colimit.ι_desc]
     dsimp only [cocone]
     rw [category.assoc, ← x.naturality j.hom, ← category.assoc]

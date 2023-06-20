@@ -361,7 +361,7 @@ theorem natAbs_det_equiv (I : Ideal S) {E : Type _} [AddEquivClass E S I] (e : E
     _ = Fintype.card (S ⧸ I) := _
     _ = abs_norm I := (Submodule.cardQuot_apply _).symm
   -- since `linear_map.to_matrix b' b' f` is the diagonal matrix with `a` along the diagonal.
-  · congr; ext (i j)
+  · congr; ext i j
     rw [LinearMap.toMatrix_apply, ha, LinearEquiv.map_smul, Basis.repr_self, Finsupp.smul_single,
       smul_eq_mul, mul_one]
     by_cases h : i = j

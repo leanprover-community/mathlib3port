@@ -130,7 +130,7 @@ inductive pullbackArrows [HasPullbacks C] (R : Presieve X) : Presieve Y
 theorem pullback_singleton [HasPullbacks C] (g : Z ⟶ X) :
     pullbackArrows f (singleton g) = singleton (pullback.snd : pullback g f ⟶ _) :=
   by
-  ext (W h)
+  ext W h
   constructor
   · rintro ⟨W, _, _, _⟩
     exact singleton.mk
@@ -149,7 +149,7 @@ inductive ofArrows {ι : Type _} (Y : ι → C) (f : ∀ i, Y i ⟶ X) : Presiev
 #print CategoryTheory.Presieve.ofArrows_pUnit /-
 theorem ofArrows_pUnit : (ofArrows _ fun _ : PUnit => f) = singleton f :=
   by
-  ext (Y g)
+  ext Y g
   constructor
   · rintro ⟨_⟩
     apply singleton.mk
@@ -163,7 +163,7 @@ theorem ofArrows_pullback [HasPullbacks C] {ι : Type _} (Z : ι → C) (g : ∀
     (ofArrows (fun i => pullback (g i) f) fun i => pullback.snd) =
       pullbackArrows f (ofArrows Z g) :=
   by
-  ext (T h)
+  ext T h
   constructor
   · rintro ⟨hk⟩
     exact pullback_arrows.mk _ _ (of_arrows.mk hk)
@@ -181,7 +181,7 @@ theorem ofArrows_bind {ι : Type _} (Z : ι → C) (g : ∀ i : ι, Z i ⟶ X)
       ofArrows (fun i : Σ i, j _ (ofArrows.mk i) => W (g i.1) _ i.2) fun ij =>
         k (g ij.1) _ ij.2 ≫ g ij.1 :=
   by
-  ext (Y f)
+  ext Y f
   constructor
   · rintro ⟨_, _, _, ⟨i⟩, ⟨i'⟩, rfl⟩
     exact of_arrows.mk (Sigma.mk _ _)
@@ -249,7 +249,7 @@ noncomputable def getFunctorPushforwardStructure {F : C ⥤ D} {S : Presieve X} 
 theorem functorPushforward_comp (R : Presieve X) :
     R.functorPushforward (F ⋙ G) = (R.functorPushforward F).functorPushforward G :=
   by
-  ext (x f)
+  ext x f
   constructor
   · rintro ⟨X, f₁, g₁, h₁, rfl⟩; exact ⟨F.obj X, F.map f₁, g₁, ⟨X, f₁, 𝟙 _, h₁, by simp⟩, rfl⟩
   · rintro ⟨X, f₁, g₁, ⟨X', f₂, g₂, h₁, rfl⟩, rfl⟩; use ⟨X', f₂, g₁ ≫ G.map g₂, h₁, by simp⟩
@@ -679,7 +679,7 @@ def galoisInsertionOfIsSplitEpi (f : Y ⟶ X) [IsSplitEpi f] :
 theorem pullbackArrows_comm [HasPullbacks C] {X Y : C} (f : Y ⟶ X) (R : Presieve X) :
     Sieve.generate (R.pullbackArrows f) = (Sieve.generate R).pullback f :=
   by
-  ext (Z g)
+  ext Z g
   constructor
   · rintro ⟨_, h, k, hk, rfl⟩
     cases' hk with W g hg
@@ -734,7 +734,7 @@ theorem functorPullback_comp (R : Sieve ((F ⋙ G).obj X)) :
 theorem functorPushforward_extend_eq {R : Presieve X} :
     (generate R).arrows.functorPushforward F = R.functorPushforward F :=
   by
-  ext (Y f); constructor
+  ext Y f; constructor
   · rintro ⟨X', g, f', ⟨X'', g', f'', h₁, rfl⟩, rfl⟩
     exact ⟨X'', f'', f' ≫ F.map g', h₁, by simp⟩
   · rintro ⟨X', g, f', h₁, h₂⟩; exact ⟨X', g, f', le_generate R _ h₁, h₂⟩
@@ -757,7 +757,7 @@ def functorPushforward (R : Sieve X) : Sieve (F.obj X)
 @[simp]
 theorem functorPushforward_id (R : Sieve X) : R.functorPushforward (𝟭 _) = R :=
   by
-  ext (X f)
+  ext X f
   constructor
   · intro hf
     obtain ⟨X, g, h, hg, rfl⟩ := hf
@@ -943,7 +943,7 @@ theorem natTransOfLe_comm {S T : Sieve X} (h : S ≤ T) :
 #print CategoryTheory.Sieve.functorInclusion_is_mono /-
 /-- The presheaf induced by a sieve is a subobject of the yoneda embedding. -/
 instance functorInclusion_is_mono : Mono S.functorInclusion :=
-  ⟨fun Z f g h => by ext (Y y); apply congr_fun (nat_trans.congr_app h Y) y⟩
+  ⟨fun Z f g h => by ext Y y; apply congr_fun (nat_trans.congr_app h Y) y⟩
 #align category_theory.sieve.functor_inclusion_is_mono CategoryTheory.Sieve.functorInclusion_is_mono
 -/
 

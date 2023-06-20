@@ -138,7 +138,7 @@ theorem iteratedFDeriv_zero_fun {n : ℕ} : (iteratedFDeriv 𝕜 n fun x : E => 
   by
   induction' n with n IH
   · ext m; simp
-  · ext (x m)
+  · ext x m
     rw [iteratedFDeriv_succ_apply_left, IH]
     change (fderiv 𝕜 (fun x : E => (0 : E[×n]→L[𝕜] F)) x : E → E[×n]→L[𝕜] F) (m 0) (tail m) = _
     rw [fderiv_const]
@@ -217,7 +217,7 @@ theorem contDiffOn_of_subsingleton [Subsingleton F] : ContDiffOn 𝕜 n f s := b
 #print iteratedFDeriv_succ_const /-
 theorem iteratedFDeriv_succ_const (n : ℕ) (c : F) : (iteratedFDeriv 𝕜 (n + 1) fun y : E => c) = 0 :=
   by
-  ext (x m)
+  ext x m
   simp only [iteratedFDeriv_succ_apply_right, fderiv_const, Pi.zero_apply, iteratedFDeriv_zero_fun,
     ContinuousMultilinearMap.zero_apply, ContinuousLinearMap.zero_apply]
 #align iterated_fderiv_succ_const iteratedFDeriv_succ_const
@@ -535,7 +535,7 @@ theorem HasFTaylorSeriesUpToOn.compContinuousLinearMap (hf : HasFTaylorSeriesUpT
     convert
       (hA m).HasFDerivAt.comp_hasFDerivWithinAt x
         ((hf.fderiv_within m hm (g x) hx).comp x g.has_fderiv_within_at (subset.refl _))
-    ext (y v)
+    ext y v
     change p (g x) (Nat.succ m) (g ∘ cons y v) = p (g x) m.succ (cons (g y) (g ∘ v))
     rw [comp_cons]
   · intro m hm

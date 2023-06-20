@@ -170,7 +170,7 @@ instance KaehlerDifferential.isScalarTower_of_tower {R₁ R₂ : Type _} [CommRi
     IsScalarTower R₁ R₂ (Ω[S⁄R]) :=
   by
   convert RestrictScalars.isScalarTower R₁ R₂ (Ω[S⁄R]) using 1
-  ext (x m)
+  ext x m
   show algebraMap R₁ S x • m = algebraMap R₂ S (algebraMap R₁ R₂ x) • m
   rw [← IsScalarTower.algebraMap_apply]
 #align kaehler_differential.is_scalar_tower_of_tower KaehlerDifferential.isScalarTower_of_tower
@@ -178,7 +178,7 @@ instance KaehlerDifferential.isScalarTower_of_tower {R₁ R₂ : Type _} [CommRi
 instance KaehlerDifferential.is_scalar_tower' : IsScalarTower R (S ⊗[R] S) (Ω[S⁄R]) :=
   by
   convert RestrictScalars.isScalarTower R (S ⊗[R] S) (Ω[S⁄R]) using 1
-  ext (x m)
+  ext x m
   show algebraMap R S x • m = algebraMap R (S ⊗[R] S) x • m
   simp_rw [IsScalarTower.algebraMap_apply R S (S ⊗[R] S), IsScalarTower.algebraMap_smul]
 #align kaehler_differential.is_scalar_tower' KaehlerDifferential.is_scalar_tower'

@@ -221,7 +221,7 @@ def natTransHσ (q : ℕ) : alternatingFaceMapComplex C ⟶ alternatingFaceMapCo
     unfold Hσ
     rw [null_homotopic_map'_comp, comp_null_homotopic_map']
     congr
-    ext (n m hnm)
+    ext n m hnm
     simp only [alternating_face_map_complex_map_f, hσ'_naturality]
 #align algebraic_topology.dold_kan.nat_trans_Hσ AlgebraicTopology.DoldKan.natTransHσ
 -/

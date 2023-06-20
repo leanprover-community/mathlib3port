@@ -54,7 +54,7 @@ def evaluationLeftAdjoint (c : C) : D ⥤ C ⥤ D
   map d₁ d₂ f :=
     { app := fun e => Sigma.desc fun h => f ≫ Sigma.ι (fun _ => d₂) h
       naturality' := by intros; ext; dsimp; simp }
-  map_id' := by intros; ext (x⟨j⟩); dsimp; simp
+  map_id' := by intros; ext x ⟨j⟩; dsimp; simp
   map_comp' := by intros; ext; dsimp; simp
 #align category_theory.evaluation_left_adjoint CategoryTheory.evaluationLeftAdjoint
 -/
@@ -71,7 +71,7 @@ def evaluationAdjunctionRight (c : C) : evaluationLeftAdjoint D c ⊣ (evaluatio
               naturality' := by intros; ext; dsimp; simp }
           left_inv := by
             intro f
-            ext (x⟨g⟩)
+            ext x ⟨g⟩
             dsimp
             simp only [colimit.ι_desc, limits.cofan.mk_ι_app, category.assoc, ← f.naturality,
               evaluation_left_adjoint_obj_map, colimit.ι_desc_assoc, cofan.mk_ι_app]
@@ -125,7 +125,7 @@ def evaluationRightAdjoint (c : C) : D ⥤ C ⥤ D
   map d₁ d₂ f :=
     { app := fun t => Pi.lift fun g => Pi.π _ g ≫ f
       naturality' := by intros; ext; dsimp; simp }
-  map_id' := by intros; ext (x⟨j⟩); dsimp; simp
+  map_id' := by intros; ext x ⟨j⟩; dsimp; simp
   map_comp' := by intros; ext; dsimp; simp
 #align category_theory.evaluation_right_adjoint CategoryTheory.evaluationRightAdjoint
 -/
@@ -143,7 +143,7 @@ def evaluationAdjunctionLeft (c : C) : (evaluation _ _).obj c ⊣ evaluationRigh
           left_inv := fun f => by dsimp; simp
           right_inv := by
             intro f
-            ext (x⟨g⟩)
+            ext x ⟨g⟩
             dsimp
             simp only [limit.lift_π, evaluation_right_adjoint_obj_map, nat_trans.naturality_assoc,
               fan.mk_π_app]

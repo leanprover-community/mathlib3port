@@ -1470,7 +1470,7 @@ theorem coe_normSeminorm : ⇑(normSeminorm 𝕜 E) = norm :=
 
 #print ball_normSeminorm /-
 @[simp]
-theorem ball_normSeminorm : (normSeminorm 𝕜 E).ball = Metric.ball := by ext (x r y);
+theorem ball_normSeminorm : (normSeminorm 𝕜 E).ball = Metric.ball := by ext x r y;
   simp only [Seminorm.mem_ball, Metric.mem_ball, coe_normSeminorm, dist_eq_norm]
 #align ball_norm_seminorm ball_normSeminorm
 -/

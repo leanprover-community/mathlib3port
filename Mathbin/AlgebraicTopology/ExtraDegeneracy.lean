@@ -215,13 +215,13 @@ def extraDegeneracy (Δ : SimplexCategory) :
   s' x := SimplexCategory.Hom.mk (OrderHom.const _ 0)
   s n f := shift f
   s'_comp_ε' := by ext1 j; fin_cases j
-  s₀_comp_δ₁' := by ext (x j); fin_cases j; rfl
+  s₀_comp_δ₁' := by ext x j; fin_cases j; rfl
   s_comp_δ₀' n := by
-    ext (φ i) : 4
+    ext φ i : 4
     dsimp [simplicial_object.δ, SimplexCategory.δ, SSet.standardSimplex]
     simp only [shift_fun_succ]
   s_comp_δ' n i := by
-    ext (φ j) : 4
+    ext φ j : 4
     dsimp [simplicial_object.δ, SimplexCategory.δ, SSet.standardSimplex]
     by_cases j = 0
     · subst h
@@ -230,7 +230,7 @@ def extraDegeneracy (Δ : SimplexCategory) :
       subst hk
       simp only [Fin.succ_succAbove_succ, shift_fun_succ]
   s_comp_σ' n i := by
-    ext (φ j) : 4
+    ext φ j : 4
     dsimp [simplicial_object.σ, SimplexCategory.σ, SSet.standardSimplex]
     by_cases j = 0
     · subst h

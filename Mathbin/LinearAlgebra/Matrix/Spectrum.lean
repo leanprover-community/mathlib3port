@@ -108,7 +108,7 @@ theorem eigenvectorMatrixInv_apply (i j : n) :
 #print Matrix.IsHermitian.conjTranspose_eigenvectorMatrixInv /-
 theorem conjTranspose_eigenvectorMatrixInv : hA.eigenvectorMatrixInvᴴ = hA.eigenvectorMatrix :=
   by
-  ext (i j)
+  ext i j
   rw [conj_transpose_apply, eigenvector_matrix_inv_apply, eigenvector_matrix_apply, star_star]
 #align matrix.is_hermitian.conj_transpose_eigenvector_matrix_inv Matrix.IsHermitian.conjTranspose_eigenvectorMatrixInv
 -/
@@ -128,7 +128,7 @@ theorem spectral_theorem :
     hA.eigenvectorMatrixInv ⬝ A = diagonal (coe ∘ hA.Eigenvalues) ⬝ hA.eigenvectorMatrixInv :=
   by
   rw [eigenvector_matrix_inv, PiLp.basis_toMatrix_basisFun_mul]
-  ext (i j)
+  ext i j
   have := is_hermitian_iff_is_symmetric.1 hA
   convert
     this.diagonalization_basis_apply_self_apply finrank_euclideanSpace (EuclideanSpace.single j 1)

@@ -43,11 +43,11 @@ def monoidalClosedHomEquiv (M N P : ModuleCat.{u} R) :
   toFun f := LinearMap.compr₂ (TensorProduct.mk R N M) ((β_ N M).Hom ≫ f)
   invFun f := (β_ M N).Hom ≫ TensorProduct.lift f
   left_inv f := by
-    ext (m n)
+    ext m n
     simp only [TensorProduct.mk_apply, TensorProduct.lift.tmul, LinearMap.compr₂_apply,
       Function.comp_apply, coe_comp, monoidal_category.braiding_hom_apply]
   right_inv f := by
-    ext (m n)
+    ext m n
     simp only [TensorProduct.mk_apply, TensorProduct.lift.tmul, LinearMap.compr₂_apply,
       symmetric_category.symmetry_assoc]
 #align Module.monoidal_closed_hom_equiv ModuleCat.monoidalClosedHomEquiv

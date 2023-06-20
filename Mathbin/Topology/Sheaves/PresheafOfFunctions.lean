@@ -54,7 +54,7 @@ def presheafToTypes (T : X → Type w) : X.Presheaf (Type max v w)
     where
   obj U := ∀ x : unop U, T x
   map U V i g := fun x : unop V => g (i.unop x)
-  map_id' U := by ext (g⟨x, hx⟩); rfl
+  map_id' U := by ext g ⟨x, hx⟩; rfl
   map_comp' U V W i j := rfl
 #align Top.presheaf_to_Types TopCat.presheafToTypes
 -/
@@ -89,7 +89,7 @@ def presheafToType (T : Type w) : X.Presheaf (Type max v w)
     where
   obj U := unop U → T
   map U V i g := g ∘ i.unop
-  map_id' U := by ext (g⟨x, hx⟩); rfl
+  map_id' U := by ext g ⟨x, hx⟩; rfl
   map_comp' U V W i j := rfl
 #align Top.presheaf_to_Type TopCat.presheafToType
 -/

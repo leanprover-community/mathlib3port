@@ -313,7 +313,7 @@ theorem mem_support_bindOnSupport_iff (b : β) :
 theorem bindOnSupport_eq_bind (p : Pmf α) (f : α → Pmf β) :
     (p.bindOnSupport fun a _ => f a) = p.bind f :=
   by
-  ext (b x)
+  ext b x
   have : ∀ a, ite (p a = 0) 0 (p a * f a b) = p a * f a b := fun a =>
     ite_eq_right_iff.2 fun h => h.symm ▸ symm (MulZeroClass.zero_mul <| f a b)
   simp only [bind_on_support_apply fun a _ => f a, p.bind_apply f, dite_eq_ite, mul_ite,

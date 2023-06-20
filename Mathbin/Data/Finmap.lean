@@ -466,7 +466,7 @@ def keysLookupEquiv :
     · ext1 i
       have : i ∈ s → ∃ x, f i = some x := fun hi => ⟨Option.get _, Option.get_mem <| (hf i).2 hi⟩
       simpa [Multiset.keys]
-    · ext (i x) : 2
+    · ext i x : 2
       simp only [Option.mem_def, lookup_eq_some_iff, Finset.mem_val, Finset.mem_sigma,
         Option.mem_toFinset, and_iff_right_iff_imp, ← hf]
       exact fun h => Option.isSome_iff_exists.2 ⟨_, h⟩

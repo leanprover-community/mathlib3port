@@ -220,7 +220,7 @@ theorem col_empty (v : Fin 0 → α) : col v = vecEmpty :=
 #print Matrix.col_cons /-
 @[simp]
 theorem col_cons (x : α) (u : Fin m → α) : col (vecCons x u) = vecCons (fun _ => x) (col u) := by
-  ext (i j); refine' Fin.cases _ _ i <;> simp [vec_head, vec_tail]
+  ext i j; refine' Fin.cases _ _ i <;> simp [vec_head, vec_tail]
 #align matrix.col_cons Matrix.col_cons
 -/
 
@@ -257,7 +257,7 @@ theorem transpose_empty_cols (A : Matrix (Fin 0) m' α) : Aᵀ = of fun i => ![]
 #print Matrix.cons_transpose /-
 @[simp]
 theorem cons_transpose (v : n' → α) (A : Matrix (Fin m) n' α) :
-    (of (vecCons v A))ᵀ = of fun i => vecCons (v i) (Aᵀ i) := by ext (i j);
+    (of (vecCons v A))ᵀ = of fun i => vecCons (v i) (Aᵀ i) := by ext i j;
   refine' Fin.cases _ _ j <;> simp
 #align matrix.cons_transpose Matrix.cons_transpose
 -/
@@ -273,7 +273,7 @@ theorem head_transpose (A : Matrix m' (Fin n.succ) α) :
 #print Matrix.tail_transpose /-
 @[simp]
 theorem tail_transpose (A : Matrix m' (Fin n.succ) α) : vecTail (of.symm Aᵀ) = (vecTail ∘ A)ᵀ := by
-  ext (i j); rfl
+  ext i j; rfl
 #align matrix.tail_transpose Matrix.tail_transpose
 -/
 
@@ -315,7 +315,7 @@ theorem mul_val_succ [Fintype n'] (A : Matrix (Fin m.succ) n' α) (B : Matrix n'
 #print Matrix.cons_mul /-
 @[simp]
 theorem cons_mul [Fintype n'] (v : n' → α) (A : Fin m → n' → α) (B : Matrix n' o' α) :
-    of (vecCons v A) ⬝ B = of (vecCons (vecMul v B) (of.symm (of A ⬝ B))) := by ext (i j);
+    of (vecCons v A) ⬝ B = of (vecCons (vecMul v B) (of.symm (of A ⬝ B))) := by ext i j;
   refine' Fin.cases _ _ i; · rfl; simp [mul_val_succ]
 #align matrix.cons_mul Matrix.cons_mul
 -/
@@ -430,7 +430,7 @@ theorem cons_vecMulVec (x : α) (v : Fin m → α) (w : n' → α) :
 #print Matrix.vecMulVec_cons /-
 @[simp]
 theorem vecMulVec_cons (v : m' → α) (x : α) (w : Fin n → α) :
-    vecMulVec v (vecCons x w) = fun i => v i • vecCons x w := by ext (i j);
+    vecMulVec v (vecCons x w) = fun i => v i • vecCons x w := by ext i j;
   rw [vec_mul_vec_apply, Pi.smul_apply, smul_eq_mul]
 #align matrix.vec_mul_vec_cons Matrix.vecMulVec_cons
 -/
@@ -471,7 +471,7 @@ theorem submatrix_empty (A : Matrix m' n' α) (row : Fin 0 → m') (col : o' →
 @[simp]
 theorem submatrix_cons_row (A : Matrix m' n' α) (i : m') (row : Fin m → m') (col : o' → n') :
     submatrix A (vecCons i row) col = vecCons (fun j => A i (col j)) (submatrix A row col) := by
-  ext (i j); refine' Fin.cases _ _ i <;> simp [submatrix]
+  ext i j; refine' Fin.cases _ _ i <;> simp [submatrix]
 #align matrix.submatrix_cons_row Matrix.submatrix_cons_row
 -/
 
@@ -502,14 +502,14 @@ section One
 variable [Zero α] [One α]
 
 #print Matrix.one_fin_two /-
-theorem one_fin_two : (1 : Matrix (Fin 2) (Fin 2) α) = !![1, 0; 0, 1] := by ext (i j);
+theorem one_fin_two : (1 : Matrix (Fin 2) (Fin 2) α) = !![1, 0; 0, 1] := by ext i j;
   fin_cases i <;> fin_cases j <;> rfl
 #align matrix.one_fin_two Matrix.one_fin_two
 -/
 
 #print Matrix.one_fin_three /-
 theorem one_fin_three : (1 : Matrix (Fin 3) (Fin 3) α) = !![1, 0, 0; 0, 1, 0; 0, 0, 1] := by
-  ext (i j); fin_cases i <;> fin_cases j <;> rfl
+  ext i j; fin_cases i <;> fin_cases j <;> rfl
 #align matrix.one_fin_three Matrix.one_fin_three
 -/
 
@@ -517,13 +517,13 @@ end One
 
 #print Matrix.eta_fin_two /-
 theorem eta_fin_two (A : Matrix (Fin 2) (Fin 2) α) : A = !![A 0 0, A 0 1; A 1 0, A 1 1] := by
-  ext (i j); fin_cases i <;> fin_cases j <;> rfl
+  ext i j; fin_cases i <;> fin_cases j <;> rfl
 #align matrix.eta_fin_two Matrix.eta_fin_two
 -/
 
 #print Matrix.eta_fin_three /-
 theorem eta_fin_three (A : Matrix (Fin 3) (Fin 3) α) :
-    A = !![A 0 0, A 0 1, A 0 2; A 1 0, A 1 1, A 1 2; A 2 0, A 2 1, A 2 2] := by ext (i j);
+    A = !![A 0 0, A 0 1, A 0 2; A 1 0, A 1 1, A 1 2; A 2 0, A 2 1, A 2 2] := by ext i j;
   fin_cases i <;> fin_cases j <;> rfl
 #align matrix.eta_fin_three Matrix.eta_fin_three
 -/
@@ -534,7 +534,7 @@ theorem mul_fin_two [AddCommMonoid α] [Mul α] (a₁₁ a₁₂ a₂₁ a₂₂
       !![a₁₁ * b₁₁ + a₁₂ * b₂₁, a₁₁ * b₁₂ + a₁₂ * b₂₂;
         a₂₁ * b₁₁ + a₂₂ * b₂₁, a₂₁ * b₁₂ + a₂₂ * b₂₂] :=
   by
-  ext (i j)
+  ext i j
   fin_cases i <;> fin_cases j <;> simp [Matrix.mul, dot_product, Fin.sum_univ_succ]
 #align matrix.mul_fin_two Matrix.mul_fin_two
 -/
@@ -551,7 +551,7 @@ theorem mul_fin_three [AddCommMonoid α] [Mul α]
         a₃₁ * b₁₁ + a₃₂ * b₂₁ + a₃₃ * b₃₁, a₃₁ * b₁₂ + a₃₂ * b₂₂ + a₃₃ * b₃₂,
           a₃₁ * b₁₃ + a₃₂ * b₂₃ + a₃₃ * b₃₃] :=
   by
-  ext (i j)
+  ext i j
   fin_cases i <;> fin_cases j <;> simp [Matrix.mul, dot_product, Fin.sum_univ_succ, ← add_assoc]
 #align matrix.mul_fin_three Matrix.mul_fin_three
 -/

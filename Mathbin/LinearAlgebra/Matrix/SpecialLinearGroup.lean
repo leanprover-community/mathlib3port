@@ -354,7 +354,7 @@ theorem fin_two_induction (P : SL(2, R) → Prop)
     (g : SL(2, R)) : P g := by
   obtain ⟨m, hm⟩ := g
   convert h (m 0 0) (m 0 1) (m 1 0) (m 1 1) (by rwa [det_fin_two] at hm )
-  ext (i j); fin_cases i <;> fin_cases j <;> rfl
+  ext i j; fin_cases i <;> fin_cases j <;> rfl
 #align matrix.special_linear_group.fin_two_induction Matrix.SpecialLinearGroup.fin_two_induction
 -/
 

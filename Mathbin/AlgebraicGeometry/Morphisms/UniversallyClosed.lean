@@ -46,7 +46,7 @@ class UniversallyClosed (f : X ⟶ Y) : Prop where
 #align algebraic_geometry.universally_closed AlgebraicGeometry.UniversallyClosed
 
 theorem universallyClosed_eq : @UniversallyClosed = universally (topologically @IsClosedMap) := by
-  ext (X Y f); rw [universally_closed_iff]
+  ext X Y f; rw [universally_closed_iff]
 #align algebraic_geometry.universally_closed_eq AlgebraicGeometry.universallyClosed_eq
 
 theorem universallyClosed_respectsIso : RespectsIso @UniversallyClosed :=

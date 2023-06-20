@@ -70,7 +70,7 @@ theorem bind_smul (κ : kernel α β) (μ : Measure α) (r : ℝ≥0∞) : (r �
 theorem const_bind_eq_comp_const (κ : kernel α β) (μ : Measure α) :
     const α (μ.bind κ) = κ ∘ₖ const α μ :=
   by
-  ext (a s hs) : 2
+  ext a s hs : 2
   simp_rw [comp_apply' _ _ _ hs, const_apply, measure.bind_apply hs (kernel.measurable _)]
 #align probability_theory.kernel.const_bind_eq_comp_const ProbabilityTheory.kernel.const_bind_eq_comp_const
 -/

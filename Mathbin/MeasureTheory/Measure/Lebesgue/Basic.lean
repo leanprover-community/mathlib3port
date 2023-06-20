@@ -498,7 +498,7 @@ theorem volume_preserving_transvectionStruct [DecidableEq ι] (t : TransvectionS
   have : (t.to_matrix.to_lin' : (ι → ℝ) → ι → ℝ) = e.symm ∘ F ∘ e :=
     by
     cases t
-    ext (f k)
+    ext f k
     simp only [LinearEquiv.map_smul, dite_eq_ite, LinearMap.id_coe, p, ite_not,
       Algebra.id.smul_eq_mul, one_mul, dot_product, std_basis_matrix,
       MeasurableEquiv.piEquivPiSubtypeProd_symm_apply, id.def, transvection, Pi.add_apply,

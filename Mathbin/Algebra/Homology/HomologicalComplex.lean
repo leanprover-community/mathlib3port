@@ -100,7 +100,7 @@ theorem ext {C₁ C₂ : HomologicalComplex V c} (h_X : C₁.pt = C₂.pt)
   dsimp at h_X 
   subst h_X
   simp only [true_and_iff, eq_self_iff_true, heq_iff_eq]
-  ext (i j)
+  ext i j
   by_cases hij : c.rel i j
   · simpa only [id_comp, eq_to_hom_refl, comp_id] using h_d i j hij
   · rw [C₁_shape' i j hij, C₂_shape' i j hij]

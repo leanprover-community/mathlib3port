@@ -134,7 +134,7 @@ def productLimitCone : Limits.LimitCone (Discrete.functor f)
     { lift := lift f
       fac := fun s j => by cases j; ext; simp
       uniq := fun s m w => by
-        ext (x j)
+        ext x j
         dsimp only [has_limit.lift]
         simp only [AddMonoidHom.coe_mk]
         exact congr_arg (fun g : s.X ⟶ f j => (g : s.X → f j) x) (w ⟨j⟩) }

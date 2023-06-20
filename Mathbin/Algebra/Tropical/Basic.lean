@@ -376,12 +376,12 @@ instance : LinearOrder (Tropical R) :=
     DecidableEq := Tropical.decidableEq
     max := fun a b => trop (max (untrop a) (untrop b))
     max_def := by
-      ext (x y)
+      ext x y
       rw [maxDefault, max_def, apply_ite trop, trop_untrop, trop_untrop,
         if_congr untrop_le_iff rfl rfl]
     min := (· + ·)
     min_def := by
-      ext (x y)
+      ext x y
       rw [trop_add_def, minDefault, min_def, apply_ite trop, trop_untrop, trop_untrop,
         if_congr untrop_le_iff rfl rfl] }
 

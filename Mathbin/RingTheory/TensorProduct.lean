@@ -1227,7 +1227,7 @@ def endTensorEndAlgHom : End R M ⊗[R] End R N →ₐ[R] End R (M ⊗[R] N) :=
     simp only [hom_tensor_hom_map_apply, TensorProduct.map_mul]
   · intro r
     simp only [hom_tensor_hom_map_apply]
-    ext (m n); simp [smul_tmul]
+    ext m n; simp [smul_tmul]
 #align module.End_tensor_End_alg_hom Module.endTensorEndAlgHom
 -/
 

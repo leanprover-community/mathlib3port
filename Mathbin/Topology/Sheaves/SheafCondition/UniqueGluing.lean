@@ -182,7 +182,7 @@ theorem isSheaf_of_isSheafUniqueGluing_types (Fsh : F.IsSheafUniqueGluing) : F.I
   choose m m_spec m_uniq using fun x : s.X =>
     Fsh U ((pi_opens_iso_sections_family F U).Hom (s.ι x)) (h_compatible x)
   refine' ⟨m, _, _⟩
-  · ext (⟨i⟩x)
+  · ext ⟨i⟩ x
     simp [res]
     exact m_spec x i
   · intro l hl

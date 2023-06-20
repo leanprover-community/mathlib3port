@@ -1335,7 +1335,7 @@ theorem deleteEdges_spanningCoe_eq :
 theorem deleteEdges_coe_eq (s : Set (Sym2 G'.verts)) :
     G'.coe.deleteEdges s = (G'.deleteEdges (Sym2.map coe '' s)).coe :=
   by
-  ext (⟨v, hv⟩⟨w, hw⟩)
+  ext ⟨v, hv⟩ ⟨w, hw⟩
   simp only [SimpleGraph.deleteEdges_adj, coe_adj, Subtype.coe_mk, delete_edges_adj, Set.mem_image,
     not_exists, not_and, and_congr_right_iff]
   intro h
@@ -1353,8 +1353,7 @@ theorem deleteEdges_coe_eq (s : Set (Sym2 G'.verts)) :
 
 #print SimpleGraph.Subgraph.coe_deleteEdges_eq /-
 theorem coe_deleteEdges_eq (s : Set (Sym2 V)) :
-    (G'.deleteEdges s).coe = G'.coe.deleteEdges (Sym2.map coe ⁻¹' s) := by ext (⟨v, hv⟩⟨w, hw⟩);
-  simp
+    (G'.deleteEdges s).coe = G'.coe.deleteEdges (Sym2.map coe ⁻¹' s) := by ext ⟨v, hv⟩ ⟨w, hw⟩; simp
 #align simple_graph.subgraph.coe_delete_edges_eq SimpleGraph.Subgraph.coe_deleteEdges_eq
 -/
 
@@ -1428,7 +1427,7 @@ def induce (G' : G.Subgraph) (s : Set V) : G.Subgraph
 
 #print SimpleGraph.induce_eq_coe_induce_top /-
 theorem SimpleGraph.induce_eq_coe_induce_top (s : Set V) :
-    G.induce s = ((⊤ : G.Subgraph).induce s).coe := by ext (v w); simp
+    G.induce s = ((⊤ : G.Subgraph).induce s).coe := by ext v w; simp
 #align simple_graph.induce_eq_coe_induce_top SimpleGraph.induce_eq_coe_induce_top
 -/
 

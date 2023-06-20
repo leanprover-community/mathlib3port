@@ -324,7 +324,7 @@ theorem coeff_frobenius_charP (x : 𝕎 R) (n : ℕ) : coeff (frobenius x) n = x
 
 theorem frobenius_eq_map_frobenius : @frobenius p R _ _ = map (frobenius R p) :=
   by
-  ext (x n)
+  ext x n
   simp only [coeff_frobenius_char_p, map_coeff, frobenius_def]
 #align witt_vector.frobenius_eq_map_frobenius WittVector.frobenius_eq_map_frobenius
 

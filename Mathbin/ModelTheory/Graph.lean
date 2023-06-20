@@ -135,9 +135,9 @@ theorem SimpleGraph.simpleGraphOfStructure (G : SimpleGraph V) :
 theorem structure_simpleGraphOfStructure [S : Language.graph.Structure V] [V ⊨ Theory.simpleGraph] :
     (simpleGraphOfStructure V).Structure = S :=
   by
-  ext (n f xs)
+  ext n f xs
   · exact (is_relational.empty_functions n).elim f
-  · ext (n r xs)
+  · ext n r xs
     rw [iff_eq_eq]
     cases n
     · exact r.elim

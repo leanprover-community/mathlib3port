@@ -255,7 +255,7 @@ theorem toεNFA_evalFrom_match (M : NFA α σ) (start : Set σ) :
   by
   rw [eval_from, εNFA.evalFrom, to_ε_NFA_ε_closure]
   congr
-  ext (S s)
+  ext S s
   simp only [step_set, εNFA.stepSet, exists_prop, Set.mem_iUnion]
   apply exists_congr
   simp only [and_congr_right_iff]

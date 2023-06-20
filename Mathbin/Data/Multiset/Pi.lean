@@ -78,7 +78,7 @@ theorem Pi.cons_swap {a a' : α} {b : δ a} {b' : δ a'} {m : Multiset α} {f : 
 theorem pi.cons_eta {m : Multiset α} {a : α} (f : ∀ a' ∈ a ::ₘ m, δ a') :
     (Pi.cons m a (f _ (mem_cons_self _ _)) fun a' ha' => f a' (mem_cons_of_mem ha')) = f :=
   by
-  ext (a' h')
+  ext a' h'
   by_cases a' = a
   · subst h; rw [pi.cons_same]
   · rw [pi.cons_ne _ h]

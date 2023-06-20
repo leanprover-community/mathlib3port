@@ -372,7 +372,7 @@ theorem sigmaFinsuppEquivDfinsupp_single [DecidableEq ι] [Zero N] (a : Σ i, η
       @Dfinsupp.single _ (fun i => η i →₀ N) _ _ a.1 (Finsupp.single a.2 n) :=
   by
   obtain ⟨i, a⟩ := a
-  ext (j b)
+  ext j b
   by_cases h : i = j
   · subst h
     classical simp [split_apply, Finsupp.single_apply]

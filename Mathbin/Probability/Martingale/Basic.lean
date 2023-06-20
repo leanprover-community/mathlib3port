@@ -491,7 +491,7 @@ theorem smul_nonneg {f : ι → Ω → F} {c : ℝ} (hc : 0 ≤ c) (hf : Superma
 theorem smul_nonpos {f : ι → Ω → F} {c : ℝ} (hc : c ≤ 0) (hf : Supermartingale f ℱ μ) :
     Submartingale (c • f) ℱ μ :=
   by
-  rw [← neg_neg c, (by ext (i x); simp : - -c • f = -(-c • f))]
+  rw [← neg_neg c, (by ext i x; simp : - -c • f = -(-c • f))]
   exact (hf.smul_nonneg <| neg_nonneg.2 hc).neg
 #align measure_theory.supermartingale.smul_nonpos MeasureTheory.Supermartingale.smul_nonpos
 -/
@@ -511,7 +511,7 @@ variable {F : Type _} [NormedLatticeAddCommGroup F] [NormedSpace ℝ F] [Complet
 theorem smul_nonneg {f : ι → Ω → F} {c : ℝ} (hc : 0 ≤ c) (hf : Submartingale f ℱ μ) :
     Submartingale (c • f) ℱ μ :=
   by
-  rw [← neg_neg c, (by ext (i x); simp : - -c • f = -(c • -f))]
+  rw [← neg_neg c, (by ext i x; simp : - -c • f = -(c • -f))]
   exact supermartingale.neg (hf.neg.smul_nonneg hc)
 #align measure_theory.submartingale.smul_nonneg MeasureTheory.Submartingale.smul_nonneg
 -/
@@ -520,7 +520,7 @@ theorem smul_nonneg {f : ι → Ω → F} {c : ℝ} (hc : 0 ≤ c) (hf : Submart
 theorem smul_nonpos {f : ι → Ω → F} {c : ℝ} (hc : c ≤ 0) (hf : Submartingale f ℱ μ) :
     Supermartingale (c • f) ℱ μ :=
   by
-  rw [← neg_neg c, (by ext (i x); simp : - -c • f = -(-c • f))]
+  rw [← neg_neg c, (by ext i x; simp : - -c • f = -(-c • f))]
   exact (hf.smul_nonneg <| neg_nonneg.2 hc).neg
 #align measure_theory.submartingale.smul_nonpos MeasureTheory.Submartingale.smul_nonpos
 -/

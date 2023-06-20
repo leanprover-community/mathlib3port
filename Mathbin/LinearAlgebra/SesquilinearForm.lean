@@ -521,7 +521,7 @@ variable {B B' f g}
 theorem isAdjointPair_iff_comp_eq_compl₂ : IsAdjointPair B B' f g ↔ B'.comp f = B.compl₂ g :=
   by
   constructor <;> intro h
-  · ext (x y); rw [comp_apply, compl₂_apply]; exact h x y
+  · ext x y; rw [comp_apply, compl₂_apply]; exact h x y
   · intro _ _; rw [← compl₂_apply, ← comp_apply, h]
 #align linear_map.is_adjoint_pair_iff_comp_eq_compl₂ LinearMap.isAdjointPair_iff_comp_eq_compl₂
 -/
@@ -792,7 +792,7 @@ theorem separatingLeft_congr_iff :
     (e₁.arrowCongr (e₂.arrowCongr (LinearEquiv.refl R R)) B).SeparatingLeft ↔ B.SeparatingLeft :=
   ⟨fun h => by
     convert h.congr e₁.symm e₂.symm
-    ext (x y)
+    ext x y
     simp, SeparatingLeft.congr e₁ e₂⟩
 #align linear_map.separating_left_congr_iff LinearMap.separatingLeft_congr_iff
 -/

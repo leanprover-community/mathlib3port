@@ -640,7 +640,7 @@ theorem coinduced_compose [tα : TopologicalSpace α] {f : α → β} {g : β �
 theorem Equiv.induced_symm {α β : Type _} (e : α ≃ β) :
     TopologicalSpace.induced e.symm = TopologicalSpace.coinduced e :=
   by
-  ext (t U)
+  ext t U
   constructor
   · rintro ⟨V, hV, rfl⟩
     rwa [isOpen_coinduced, e.preimage_symm_preimage]

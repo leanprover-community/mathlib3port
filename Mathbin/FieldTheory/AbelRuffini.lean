@@ -103,7 +103,7 @@ theorem gal_x_pow_sub_one_isSolvable (n : ℕ) : IsSolvable (X ^ n - 1 : F[X]).G
   have hn'' : (X ^ n - 1 : F[X]) ≠ 0 := X_pow_sub_C_ne_zero hn' 1
   apply isSolvable_of_comm
   intro σ τ
-  ext (a ha)
+  ext a ha
   simp only [mem_root_set_of_ne hn'', map_sub, aeval_X_pow, aeval_one, sub_eq_zero] at ha 
   have key : ∀ σ : (X ^ n - 1 : F[X]).Gal, ∃ m : ℕ, σ a = a ^ m :=
     by
@@ -138,7 +138,7 @@ theorem gal_x_pow_sub_c_isSolvable_aux (n : ℕ) (a : F)
           (minpoly.dvd F c (by rwa [map_id, AlgHom.map_sub, sub_eq_zero, aeval_X_pow, aeval_one]))))
   apply isSolvable_of_comm
   intro σ τ
-  ext (b hb)
+  ext b hb
   simp only [mem_root_set_of_ne hn'', map_sub, aeval_X_pow, aeval_C, sub_eq_zero] at hb 
   have hb' : b ≠ 0 := by
     intro hb'

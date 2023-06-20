@@ -844,7 +844,7 @@ theorem diag_sub_val {n} {α : TypeVec.{u} n} : subtypeVal (repeatEq α) ⊚ dia
 #print TypeVec.prod_id /-
 theorem prod_id : ∀ {n} {α β : TypeVec.{u} n}, (id ⊗' id) = (id : α ⊗ β ⟹ _) :=
   by
-  intros; ext (i a); induction i
+  intros; ext i a; induction i
   · cases a; rfl
   · apply i_ih
 #align typevec.prod_id TypeVec.prod_id
@@ -857,7 +857,7 @@ theorem prod_id : ∀ {n} {α β : TypeVec.{u} n}, (id ⊗' id) = (id : α ⊗ �
 theorem append_prod_appendFun {n} {α α' β β' : TypeVec.{u} n} {φ φ' ψ ψ' : Type u} {f₀ : α ⟹ α'}
     {g₀ : β ⟹ β'} {f₁ : φ → φ'} {g₁ : ψ → ψ'} :
     (f₀ ⊗' g₀ ::: Prod.map f₁ g₁) = ((f₀ ::: f₁) ⊗' (g₀ ::: g₁)) := by
-  ext (i a) <;> cases i <;> [cases a; skip] <;> rfl
+  ext i a <;> cases i <;> [cases a; skip] <;> rfl
 #align typevec.append_prod_append_fun TypeVec.append_prod_appendFun
 -/
 
@@ -985,7 +985,7 @@ theorem subtypeVal_diagSub {α : TypeVec n} : subtypeVal (repeatEq α) ⊚ diagS
 @[simp]
 theorem toSubtype_of_subtype {α : TypeVec n} (p : α ⟹ repeat n Prop) :
     toSubtype p ⊚ ofSubtype p = id := by
-  ext (i x) <;> induction i <;> dsimp only [id, to_subtype, comp, of_subtype] at * <;> simp [*]
+  ext i x <;> induction i <;> dsimp only [id, to_subtype, comp, of_subtype] at * <;> simp [*]
 #align typevec.to_subtype_of_subtype TypeVec.toSubtype_of_subtype
 -/
 
@@ -993,7 +993,7 @@ theorem toSubtype_of_subtype {α : TypeVec n} (p : α ⟹ repeat n Prop) :
 @[simp]
 theorem subtypeVal_toSubtype {α : TypeVec n} (p : α ⟹ repeat n Prop) :
     subtypeVal p ⊚ toSubtype p = fun _ => Subtype.val := by
-  ext (i x) <;> induction i <;> dsimp only [to_subtype, comp, subtype_val] at * <;> simp [*]
+  ext i x <;> induction i <;> dsimp only [to_subtype, comp, subtype_val] at * <;> simp [*]
 #align typevec.subtype_val_to_subtype TypeVec.subtypeVal_toSubtype
 -/
 
@@ -1008,7 +1008,7 @@ theorem toSubtype_of_subtype_assoc {α β : TypeVec n} (p : α ⟹ repeat n Prop
 @[simp]
 theorem toSubtype'_of_subtype' {α : TypeVec n} (r : α ⊗ α ⟹ repeat n Prop) :
     toSubtype' r ⊚ ofSubtype' r = id := by
-  ext (i x) <;> induction i <;> dsimp only [id, to_subtype', comp, of_subtype'] at * <;>
+  ext i x <;> induction i <;> dsimp only [id, to_subtype', comp, of_subtype'] at * <;>
     simp [Subtype.eta, *]
 #align typevec.to_subtype'_of_subtype' TypeVec.toSubtype'_of_subtype'
 -/
@@ -1016,7 +1016,7 @@ theorem toSubtype'_of_subtype' {α : TypeVec n} (r : α ⊗ α ⟹ repeat n Prop
 #print TypeVec.subtypeVal_toSubtype' /-
 theorem subtypeVal_toSubtype' {α : TypeVec n} (r : α ⊗ α ⟹ repeat n Prop) :
     subtypeVal r ⊚ toSubtype' r = fun i x => prod.mk i x.1.fst x.1.snd := by
-  ext (i x) <;> induction i <;> dsimp only [id, to_subtype', comp, subtype_val, Prod.mk] at * <;>
+  ext i x <;> induction i <;> dsimp only [id, to_subtype', comp, subtype_val, Prod.mk] at * <;>
     simp [*]
 #align typevec.subtype_val_to_subtype' TypeVec.subtypeVal_toSubtype'
 -/

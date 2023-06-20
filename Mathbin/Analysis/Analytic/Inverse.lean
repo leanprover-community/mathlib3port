@@ -103,7 +103,7 @@ term is invertible. -/
 theorem leftInv_comp (p : FormalMultilinearSeries 𝕜 E F) (i : E ≃L[𝕜] F)
     (h : p 1 = (continuousMultilinearCurryFin1 𝕜 E F).symm i) : (leftInv p i).comp p = id 𝕜 E :=
   by
-  ext (n v)
+  ext n v
   cases n
   ·
     simp only [left_inv, ContinuousMultilinearMap.zero_apply, id_apply_ne_one, Ne.def,
@@ -260,7 +260,7 @@ term is invertible and its constant term vanishes. -/
 theorem comp_rightInv (p : FormalMultilinearSeries 𝕜 E F) (i : E ≃L[𝕜] F)
     (h : p 1 = (continuousMultilinearCurryFin1 𝕜 E F).symm i) (h0 : p 0 = 0) :
     p.comp (rightInv p i) = id 𝕜 F := by
-  ext (n v)
+  ext n v
   cases n
   ·
     simp only [h0, ContinuousMultilinearMap.zero_apply, id_apply_ne_one, Ne.def, not_false_iff,

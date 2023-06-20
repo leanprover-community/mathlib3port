@@ -579,7 +579,7 @@ theorem AffineTargetMorphismProperty.IsLocal.diagonal {P : AffineTargetMorphismP
 theorem diagonal_targetAffineLocally_eq_targetAffineLocally (P : AffineTargetMorphismProperty)
     (hP : P.IsLocal) : (targetAffineLocally P).diagonal = targetAffineLocally P.diagonal :=
   by
-  ext (_ _ f)
+  ext _ _ f
   exact
     ((hP.diagonal_affine_open_cover_tfae f).out 0 1).trans
       ((hP.diagonal.affine_open_cover_tfae f).out 1 0)

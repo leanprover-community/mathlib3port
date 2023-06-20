@@ -372,7 +372,7 @@ instance : CompleteBooleanAlgebra (SimpleGraph V) :=
     le_top := fun x v w h => x.ne_of_adj h
     bot_le := fun x v w h => h.elim
     sdiff_eq := fun x y => by
-      ext (v w); refine' ⟨fun h => ⟨h.1, ⟨_, h.2⟩⟩, fun h => ⟨h.1, h.2.2⟩⟩
+      ext v w; refine' ⟨fun h => ⟨h.1, ⟨_, h.2⟩⟩, fun h => ⟨h.1, h.2.2⟩⟩
       rintro rfl; exact x.irrefl h.1
     inf_compl_le_bot := fun a v w h => False.elim <| h.2.2 h.1
     top_le_sup_compl := fun a v w ne => by by_cases a.adj v w; exact Or.inl h; exact Or.inr ⟨Ne, h⟩
@@ -713,21 +713,21 @@ theorem edgeSet_fromEdgeSet : (fromEdgeSet s).edgeSetEmbedding = s \ {e | e.IsDi
 
 #print SimpleGraph.fromEdgeSet_edgeSet /-
 @[simp]
-theorem fromEdgeSet_edgeSet : fromEdgeSet G.edgeSetEmbedding = G := by ext (v w);
+theorem fromEdgeSet_edgeSet : fromEdgeSet G.edgeSetEmbedding = G := by ext v w;
   exact ⟨fun h => h.1, fun h => ⟨h, G.ne_of_adj h⟩⟩
 #align simple_graph.from_edge_set_edge_set SimpleGraph.fromEdgeSet_edgeSet
 -/
 
 #print SimpleGraph.fromEdgeSet_empty /-
 @[simp]
-theorem fromEdgeSet_empty : fromEdgeSet (∅ : Set (Sym2 V)) = ⊥ := by ext (v w);
+theorem fromEdgeSet_empty : fromEdgeSet (∅ : Set (Sym2 V)) = ⊥ := by ext v w;
   simp only [from_edge_set_adj, Set.mem_empty_iff_false, false_and_iff, bot_adj]
 #align simple_graph.from_edge_set_empty SimpleGraph.fromEdgeSet_empty
 -/
 
 #print SimpleGraph.fromEdgeSet_univ /-
 @[simp]
-theorem fromEdgeSet_univ : fromEdgeSet (Set.univ : Set (Sym2 V)) = ⊤ := by ext (v w);
+theorem fromEdgeSet_univ : fromEdgeSet (Set.univ : Set (Sym2 V)) = ⊤ := by ext v w;
   simp only [from_edge_set_adj, Set.mem_univ, true_and_iff, top_adj]
 #align simple_graph.from_edge_set_univ SimpleGraph.fromEdgeSet_univ
 -/
@@ -735,7 +735,7 @@ theorem fromEdgeSet_univ : fromEdgeSet (Set.univ : Set (Sym2 V)) = ⊤ := by ext
 #print SimpleGraph.fromEdgeSet_inf /-
 @[simp]
 theorem fromEdgeSet_inf (s t : Set (Sym2 V)) :
-    fromEdgeSet s ⊓ fromEdgeSet t = fromEdgeSet (s ∩ t) := by ext (v w);
+    fromEdgeSet s ⊓ fromEdgeSet t = fromEdgeSet (s ∩ t) := by ext v w;
   simp only [from_edge_set_adj, Set.mem_inter_iff, Ne.def, inf_adj]; tauto
 #align simple_graph.from_edge_set_inf SimpleGraph.fromEdgeSet_inf
 -/
@@ -743,7 +743,7 @@ theorem fromEdgeSet_inf (s t : Set (Sym2 V)) :
 #print SimpleGraph.fromEdgeSet_sup /-
 @[simp]
 theorem fromEdgeSet_sup (s t : Set (Sym2 V)) :
-    fromEdgeSet s ⊔ fromEdgeSet t = fromEdgeSet (s ∪ t) := by ext (v w);
+    fromEdgeSet s ⊔ fromEdgeSet t = fromEdgeSet (s ∪ t) := by ext v w;
   simp [Set.mem_union, or_and_right]
 #align simple_graph.from_edge_set_sup SimpleGraph.fromEdgeSet_sup
 -/
@@ -751,7 +751,7 @@ theorem fromEdgeSet_sup (s t : Set (Sym2 V)) :
 #print SimpleGraph.fromEdgeSet_sdiff /-
 @[simp]
 theorem fromEdgeSet_sdiff (s t : Set (Sym2 V)) :
-    fromEdgeSet s \ fromEdgeSet t = fromEdgeSet (s \ t) := by ext (v w);
+    fromEdgeSet s \ fromEdgeSet t = fromEdgeSet (s \ t) := by ext v w;
   constructor <;> simp (config := { contextual := true })
 #align simple_graph.from_edge_set_sdiff SimpleGraph.fromEdgeSet_sdiff
 -/
@@ -1399,7 +1399,7 @@ theorem deleteEdges_eq_inter_edgeSet (s : Set (Sym2 V)) :
 
 #print SimpleGraph.deleteEdges_sdiff_eq_of_le /-
 theorem deleteEdges_sdiff_eq_of_le {H : SimpleGraph V} (h : H ≤ G) :
-    G.deleteEdges (G.edgeSetEmbedding \ H.edgeSetEmbedding) = H := by ext (v w);
+    G.deleteEdges (G.edgeSetEmbedding \ H.edgeSetEmbedding) = H := by ext v w;
   constructor <;> simp (config := { contextual := true }) [@h v w]
 #align simple_graph.delete_edges_sdiff_eq_of_le SimpleGraph.deleteEdges_sdiff_eq_of_le
 -/

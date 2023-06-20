@@ -270,7 +270,7 @@ theorem det_from_blocks₂₂ (A : Matrix m m α) (B : Matrix m n α) (C : Matri
   have :
     from_blocks A B C D = (from_blocks D C B A).submatrix (Equiv.sumComm _ _) (Equiv.sumComm _ _) :=
     by
-    ext (i j)
+    ext i j
     cases i <;> cases j <;> rfl
   rw [this, det_submatrix_equiv_self, det_from_blocks₁₁]
 #align matrix.det_from_blocks₂₂ Matrix.det_from_blocks₂₂

@@ -76,7 +76,7 @@ instance lieRingModule : LieRingModule L (M ⊗[R] N)
       (has_bracket_aux x).comp (has_bracket_aux y) =
         has_bracket_aux ⁅x, y⁆ + (has_bracket_aux y).comp (has_bracket_aux x)
       by simp only [← LinearMap.add_apply]; rw [← LinearMap.comp_apply, this]; rfl
-    ext (m n)
+    ext m n
     simp only [has_bracket_aux, LieRing.of_associative_ring_bracket, LinearMap.mul_apply, mk_apply,
       LinearMap.lTensor_sub, LinearMap.compr₂_apply, Function.comp_apply, LinearMap.coe_comp,
       LinearMap.rTensor_tmul, LieHom.map_lie, to_endomorphism_apply_apply, LinearMap.add_apply,
@@ -114,7 +114,7 @@ tensor-hom adjunction is equivariant with respect to the `L` action. -/
 def lift : (M →ₗ[R] N →ₗ[R] P) ≃ₗ⁅R,L⁆ M ⊗[R] N →ₗ[R] P :=
   { TensorProduct.lift.equiv R M N P with
     map_lie' := fun x f => by
-      ext (m n);
+      ext m n;
       simp only [mk_apply, LinearMap.compr₂_apply, lie_tmul_right, LinearMap.sub_apply,
         lift.equiv_apply, LinearEquiv.toFun_eq_coe, LieHom.lie_apply, LinearMap.map_add]
       abel }
@@ -146,7 +146,7 @@ theorem coe_liftLie_eq_lift_coe (f : M →ₗ⁅R,L⁆ N →ₗ[R] P) :
   by
   suffices (lift_lie R L M N P f : M ⊗[R] N →ₗ[R] P) = lift R L M N P f by
     rw [← this, LieModuleHom.coe_toLinearMap]
-  ext (m n)
+  ext m n
   simp only [lift_lie, LinearEquiv.trans_apply, LieModuleEquiv.coe_to_linearEquiv,
     coe_linear_map_max_triv_linear_map_equiv_lie_module_hom, coe_max_triv_equiv_apply,
     coe_linear_map_max_triv_linear_map_equiv_lie_module_hom_symm]

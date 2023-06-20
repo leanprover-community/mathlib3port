@@ -56,7 +56,7 @@ theorem Algebra.norm_localization [Module.Free R S] [Module.Finite R S] (a : S) 
   rw [Algebra.norm_eq_matrix_det (b.localization_localization Rₘ M Sₘ),
     Algebra.norm_eq_matrix_det b, RingHom.map_det]
   congr
-  ext (i j)
+  ext i j
   simp only [Matrix.map_apply, RingHom.mapMatrix_apply, Algebra.leftMulMatrix_eq_repr_mul,
     Basis.localizationLocalization_apply, ← _root_.map_mul]
   apply Basis.localizationLocalization_repr_algebraMap

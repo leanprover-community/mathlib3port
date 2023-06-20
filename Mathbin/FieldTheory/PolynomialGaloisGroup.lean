@@ -218,7 +218,7 @@ theorem galActionHom_injective [Fact (p.Splits (algebraMap F E))] :
   by
   rw [injective_iff_map_eq_one]
   intro ϕ hϕ
-  ext (x hx)
+  ext x hx
   have key := equiv.perm.ext_iff.mp hϕ (roots_equiv_roots p E ⟨x, hx⟩)
   change
     roots_equiv_roots p E (ϕ • (roots_equiv_roots p E).symm (roots_equiv_roots p E ⟨x, hx⟩)) =
@@ -272,7 +272,7 @@ theorem restrictProd_injective : Function.Injective (restrictProd p q) :=
   classical
   simp only [restrict_prod, restrict_dvd_def] at hfg 
   simp only [dif_neg hpq, MonoidHom.prod_apply, Prod.mk.inj_iff] at hfg 
-  ext (x hx)
+  ext x hx
   rw [root_set_def, Polynomial.map_mul, Polynomial.roots_mul] at hx 
   cases' multiset.mem_add.mp (multiset.mem_to_finset.mp hx) with h h
   · haveI : Fact (p.splits (algebraMap F (p * q).SplittingField)) :=

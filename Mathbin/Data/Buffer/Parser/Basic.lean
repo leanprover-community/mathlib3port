@@ -785,7 +785,7 @@ theorem oneOf'_eq_done {cs : List Char} :
 
 theorem str_eq_charBuf (s : String) : str s = charBuf s.toList.toBuffer :=
   by
-  ext (cb n)
+  ext cb n
   rw [str, char_buf]
   congr
   · simp [Buffer.toString, String.asString_inv_toList]

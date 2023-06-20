@@ -114,7 +114,7 @@ theorem comapEq_symm {β γ : Type w} {f g : β → γ} (h : f = g) :
 theorem comapEq_trans {β γ : Type w} {f g h : β → γ} (k : f = g) (l : g = h) :
     comapEq C (k.trans l) = comapEq C k ≪≫ comapEq C l :=
   by
-  ext (X b)
+  ext X b
   simp
 #align category_theory.graded_object.comap_eq_trans CategoryTheory.GradedObject.comapEq_trans
 -/

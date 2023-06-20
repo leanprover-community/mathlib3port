@@ -722,7 +722,7 @@ theorem curry_injective : Function.Injective (curry : (M ⊗[R] N →ₗ[R] P) �
 theorem ext_threefold {g h : (M ⊗[R] N) ⊗[R] P →ₗ[R] Q}
     (H : ∀ x y z, g (x ⊗ₜ y ⊗ₜ z) = h (x ⊗ₜ y ⊗ₜ z)) : g = h :=
   by
-  ext (x y z)
+  ext x y z
   exact H x y z
 #align tensor_product.ext_threefold TensorProduct.ext_threefold
 -/
@@ -732,7 +732,7 @@ theorem ext_threefold {g h : (M ⊗[R] N) ⊗[R] P →ₗ[R] Q}
 theorem ext_fourfold {g h : ((M ⊗[R] N) ⊗[R] P) ⊗[R] Q →ₗ[R] S}
     (H : ∀ w x y z, g (w ⊗ₜ x ⊗ₜ y ⊗ₜ z) = h (w ⊗ₜ x ⊗ₜ y ⊗ₜ z)) : g = h :=
   by
-  ext (w x y z)
+  ext w x y z
   exact H w x y z
 #align tensor_product.ext_fourfold TensorProduct.ext_fourfold
 -/
@@ -743,7 +743,7 @@ form (m ⊗ₜ n) ⊗ₜ (p ⊗ₜ q) are equal. -/
 theorem ext_fourfold' {φ ψ : (M ⊗[R] N) ⊗[R] P ⊗[R] Q →ₗ[R] S}
     (H : ∀ w x y z, φ (w ⊗ₜ x ⊗ₜ (y ⊗ₜ z)) = ψ (w ⊗ₜ x ⊗ₜ (y ⊗ₜ z))) : φ = ψ :=
   by
-  ext (m n p q)
+  ext m n p q
   exact H m n p q
 #align tensor_product.ext_fourfold' TensorProduct.ext_fourfold'
 -/
@@ -1243,9 +1243,8 @@ attribute [local ext] TensorProduct.ext
 def lTensorHom : (N →ₗ[R] P) →ₗ[R] M ⊗[R] N →ₗ[R] M ⊗[R] P
     where
   toFun := lTensor M
-  map_add' f g := by ext (x y);
-    simp only [compr₂_apply, mk_apply, add_apply, ltensor_tmul, tmul_add]
-  map_smul' r f := by dsimp; ext (x y);
+  map_add' f g := by ext x y; simp only [compr₂_apply, mk_apply, add_apply, ltensor_tmul, tmul_add]
+  map_smul' r f := by dsimp; ext x y;
     simp only [compr₂_apply, mk_apply, tmul_smul, smul_apply, ltensor_tmul]
 #align linear_map.ltensor_hom LinearMap.lTensorHom
 -/
@@ -1255,9 +1254,8 @@ def lTensorHom : (N →ₗ[R] P) →ₗ[R] M ⊗[R] N →ₗ[R] M ⊗[R] P
 def rTensorHom : (N →ₗ[R] P) →ₗ[R] N ⊗[R] M →ₗ[R] P ⊗[R] M
     where
   toFun f := f.rTensor M
-  map_add' f g := by ext (x y);
-    simp only [compr₂_apply, mk_apply, add_apply, rtensor_tmul, add_tmul]
-  map_smul' r f := by dsimp; ext (x y);
+  map_add' f g := by ext x y; simp only [compr₂_apply, mk_apply, add_apply, rtensor_tmul, add_tmul]
+  map_smul' r f := by dsimp; ext x y;
     simp only [compr₂_apply, mk_apply, smul_tmul, tmul_smul, smul_apply, rtensor_tmul]
 #align linear_map.rtensor_hom LinearMap.rTensorHom
 -/
@@ -1319,7 +1317,7 @@ theorem rTensor_smul (r : R) (f : N →ₗ[R] P) : (r • f).rTensor M = r • f
 -/
 
 #print LinearMap.lTensor_comp /-
-theorem lTensor_comp : (g.comp f).lTensor M = (g.lTensor M).comp (f.lTensor M) := by ext (m n);
+theorem lTensor_comp : (g.comp f).lTensor M = (g.lTensor M).comp (f.lTensor M) := by ext m n;
   simp only [compr₂_apply, mk_apply, comp_apply, ltensor_tmul]
 #align linear_map.ltensor_comp LinearMap.lTensor_comp
 -/
@@ -1331,7 +1329,7 @@ theorem lTensor_comp_apply (x : M ⊗[R] N) :
 -/
 
 #print LinearMap.rTensor_comp /-
-theorem rTensor_comp : (g.comp f).rTensor M = (g.rTensor M).comp (f.rTensor M) := by ext (m n);
+theorem rTensor_comp : (g.comp f).rTensor M = (g.rTensor M).comp (f.rTensor M) := by ext m n;
   simp only [compr₂_apply, mk_apply, comp_apply, rtensor_tmul]
 #align linear_map.rtensor_comp LinearMap.rTensor_comp
 -/

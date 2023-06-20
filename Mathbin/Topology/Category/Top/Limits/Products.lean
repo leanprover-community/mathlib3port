@@ -54,7 +54,7 @@ def piFan {ι : Type v} (α : ι → TopCat.{max v u}) : Fan α :=
 def piFanIsLimit {ι : Type v} (α : ι → TopCat.{max v u}) : IsLimit (piFan α)
     where
   lift S := { toFun := fun s i => S.π.app ⟨i⟩ s }
-  uniq := by intro S m h; ext (x i); simp [← h ⟨i⟩]
+  uniq := by intro S m h; ext x i; simp [← h ⟨i⟩]
   fac s j := by cases j; tidy
 #align Top.pi_fan_is_limit TopCat.piFanIsLimit
 -/

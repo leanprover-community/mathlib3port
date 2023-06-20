@@ -104,7 +104,7 @@ This should be thought of as a generalisation of `finset.nat.antidiagonal_tuple`
 def cut {ι : Type _} (s : Finset ι) (n : ℕ) : Finset (ι → ℕ) :=
   Finset.filter (fun f => s.Sum f = n)
     ((s.pi fun _ => range (n + 1)).map
-      ⟨fun f i => if h : i ∈ s then f i h else 0, fun f g h => by ext (i hi);
+      ⟨fun f i => if h : i ∈ s then f i h else 0, fun f g h => by ext i hi;
         simpa [dif_pos hi] using congr_fun h i⟩)
 #align theorems_100.cut Theorems100.cut
 

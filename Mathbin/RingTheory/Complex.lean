@@ -20,7 +20,7 @@ open Complex
 theorem Algebra.leftMulMatrix_complex (z : ℂ) :
     Algebra.leftMulMatrix Complex.basisOneI z = !![z.re, -z.im; z.im, z.re] :=
   by
-  ext (i j)
+  ext i j
   rw [Algebra.leftMulMatrix_eq_repr_mul, Complex.coe_basisOneI_repr, Complex.coe_basisOneI, mul_re,
     mul_im, Matrix.of_apply]
   fin_cases j

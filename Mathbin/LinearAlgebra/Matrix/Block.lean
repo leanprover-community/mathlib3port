@@ -325,7 +325,7 @@ theorem BlockTriangular.toBlock_inverse_mul_toBlock_eq_one [LinearOrder α] [Inv
     by rw [← to_block_mul_eq_add, inv_mul_of_invertible M, to_block_one_self]
   have h_zero : M.to_block (fun i => ¬p i) p = 0 :=
     by
-    ext (i j)
+    ext i j
     simpa using hM (lt_of_lt_of_le j.2 (le_of_not_lt i.2))
   simpa [h_zero] using h_sum
 #align matrix.block_triangular.to_block_inverse_mul_to_block_eq_one Matrix.BlockTriangular.toBlock_inverse_mul_toBlock_eq_one
@@ -365,7 +365,7 @@ theorem toBlock_inverse_eq_zero [LinearOrder α] [Invertible M] (hM : BlockTrian
     rw [disjoint_iff_inf_le]
     exact fun i h => h.1 h.2
   have h_zero : M.to_block q p = 0 := by
-    ext (i j)
+    ext i j
     simpa using hM (lt_of_lt_of_le j.2 <| le_of_not_lt i.2)
   have h_mul_eq_zero : M⁻¹.toBlock q p ⬝ M.to_block p p = 0 := by simpa [h_zero] using h_sum
   haveI : Invertible (M.to_block p p) := hM.invertible_to_block k

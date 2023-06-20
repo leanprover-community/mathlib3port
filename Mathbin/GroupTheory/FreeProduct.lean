@@ -160,10 +160,10 @@ def lift : (∀ i, M i →* N) ≃ (FreeProduct M →* N)
             simp only [MonoidHom.map_mul, FreeMonoid.lift_eval_of])
   invFun f i := f.comp of
   left_inv := by
-    intro fi; ext (i x)
+    intro fi; ext i x
     rw [MonoidHom.comp_apply, of_apply, Con.lift_mk', FreeMonoid.lift_eval_of]
   right_inv := by
-    intro f; ext (i x)
+    intro f; ext i x
     simp only [MonoidHom.comp_apply, of_apply, Con.lift_mk', FreeMonoid.lift_eval_of]
 #align free_product.lift FreeProduct.lift
 -/
@@ -938,7 +938,7 @@ def freeGroupEquivFreeProduct {ι : Type u_1} :
   exact FreeGroup.lift fun i => @FreeProduct.of ι _ _ i (FreeGroup.of Unit.unit)
   exact FreeProduct.lift fun i => FreeGroup.lift fun pstar => FreeGroup.of i
   · ext i; rfl
-  · ext (i a); cases a; rfl
+  · ext i a; cases a; rfl
 #align free_group_equiv_free_product freeGroupEquivFreeProduct
 -/
 

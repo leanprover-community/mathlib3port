@@ -88,7 +88,7 @@ def isProduct (J : Type v) (f : J → ωCPO) : IsLimit (product f)
     ⟨⟨fun t j => s.π.app ⟨j⟩ t, fun x y h j => (s.π.app ⟨j⟩).Monotone h⟩, fun x =>
       funext fun j => (s.π.app ⟨j⟩).Continuous x⟩
   uniq s m w := by
-    ext (t j)
+    ext t j
     change m t j = s.π.app ⟨j⟩ t
     rw [← w ⟨j⟩]
     rfl

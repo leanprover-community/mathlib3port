@@ -132,7 +132,7 @@ theorem homEquiv_leftAdjointUniq_hom_app {F F' : C ⥤ D} {G : D ⥤ C} (adj1 : 
   apply Quiver.Hom.op_inj
   apply coyoneda.map_injective
   swap; infer_instance
-  ext (f y)
+  ext f y
   simpa [left_adjoint_uniq, left_adjoints_coyoneda_equiv]
 #align category_theory.adjunction.hom_equiv_left_adjoint_uniq_hom_app CategoryTheory.Adjunction.homEquiv_leftAdjointUniq_hom_app
 -/
@@ -165,7 +165,7 @@ theorem leftAdjointUniq_hom_counit {F F' : C ⥤ D} {G : D ⥤ C} (adj1 : F ⊣ 
   apply Quiver.Hom.op_inj
   apply coyoneda.map_injective
   swap; infer_instance
-  ext (y f)
+  ext y f
   have :
     F.map (adj2.unit.app (G.obj x)) ≫ adj1.counit.app (F'.obj (G.obj x)) ≫ adj2.counit.app x ≫ f =
       adj1.counit.app x ≫ f :=

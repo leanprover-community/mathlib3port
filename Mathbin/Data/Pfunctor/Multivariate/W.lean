@@ -126,7 +126,7 @@ theorem wPathDestRight_wPathCasesOn {α : TypeVec n} {a : P.A} {f : P.getLast.B 
 #print MvPFunctor.wPathCasesOn_eta /-
 theorem wPathCasesOn_eta {α : TypeVec n} {a : P.A} {f : P.getLast.B a → P.getLast.W}
     (h : P.WPath ⟨a, f⟩ ⟹ α) : P.wPathCasesOn (P.wPathDestLeft h) (P.wPathDestRight h) = h := by
-  ext (i x) <;> cases x <;> rfl
+  ext i x <;> cases x <;> rfl
 #align mvpfunctor.W_path_cases_on_eta MvPFunctor.wPathCasesOn_eta
 -/
 
@@ -134,7 +134,7 @@ theorem wPathCasesOn_eta {α : TypeVec n} {a : P.A} {f : P.getLast.B a → P.get
 theorem comp_wPathCasesOn {α β : TypeVec n} (h : α ⟹ β) {a : P.A} {f : P.getLast.B a → P.getLast.W}
     (g' : P.drop.B a ⟹ α) (g : ∀ j : P.getLast.B a, P.WPath (f j) ⟹ α) :
     h ⊚ P.wPathCasesOn g' g = P.wPathCasesOn (h ⊚ g') fun i => h ⊚ g i := by
-  ext (i x) <;> cases x <;> rfl
+  ext i x <;> cases x <;> rfl
 #align mvpfunctor.comp_W_path_cases_on MvPFunctor.comp_wPathCasesOn
 -/
 

@@ -521,7 +521,7 @@ theorem dualBasis_apply (i : ι) (m : M) : b.dualBasis i m = b.repr m i :=
 
 #print Basis.coe_dualBasis /-
 @[simp]
-theorem coe_dualBasis : ⇑b.dualBasis = b.Coord := by ext (i x); apply dual_basis_apply
+theorem coe_dualBasis : ⇑b.dualBasis = b.Coord := by ext i x; apply dual_basis_apply
 #align basis.coe_dual_basis Basis.coe_dualBasis
 -/
 
@@ -1227,7 +1227,7 @@ theorem dualLift_of_mem {φ : Module.Dual K W} {w : V} (hw : w ∈ W) : W.dualLi
 #print Subspace.dualRestrict_comp_dualLift /-
 @[simp]
 theorem dualRestrict_comp_dualLift (W : Subspace K V) : W.dualRestrict.comp W.dualLift = 1 := by
-  ext (φ x); simp
+  ext φ x; simp
 #align subspace.dual_restrict_comp_dual_lift Subspace.dualRestrict_comp_dualLift
 -/
 
@@ -1524,7 +1524,7 @@ theorem range_dualMap_eq_dualAnnihilator_ker_of_surjective (f : M →ₗ[R] M')
   · rw [LinearMap.range_comp_of_range_eq_top]
     apply LinearEquiv.range
   · apply congr_arg
-    ext (φ x)
+    ext φ x
     simp only [LinearMap.coe_comp, LinearEquiv.coe_toLinearMap, LinearMap.dualMap_apply,
       LinearEquiv.dualMap_apply, mkq_apply, f', LinearMap.quotKerEquivOfSurjective,
       LinearEquiv.trans_symm, LinearEquiv.trans_apply, LinearEquiv.ofTop_symm_apply,
@@ -1848,13 +1848,13 @@ noncomputable def dualDistribEquivOfBasis (b : Basis ι R M) (c : Basis κ R N) 
     Dual R M ⊗[R] Dual R N ≃ₗ[R] Dual R (M ⊗[R] N) :=
   by
   refine' LinearEquiv.ofLinear (dual_distrib R M N) (dual_distrib_inv_of_basis b c) _ _
-  · ext (f m n)
+  · ext f m n
     have h : ∀ r s : R, r • s = s • r := IsCommutative.comm
     simp only [compr₂_apply, mk_apply, comp_apply, id_apply, dual_distrib_inv_of_basis_apply,
       LinearMap.map_sum, map_smul, sum_apply, smul_apply, dual_distrib_apply, h (f _) _, ←
       f.map_smul, ← f.map_sum, ← smul_tmul_smul, ← tmul_sum, ← sum_tmul, Basis.coe_dualBasis,
       Basis.coord_apply, Basis.sum_repr]
-  · ext (f g)
+  · ext f g
     simp only [compr₂_apply, mk_apply, comp_apply, id_apply, dual_distrib_inv_of_basis_apply,
       dual_distrib_apply, ← smul_tmul_smul, ← tmul_sum, ← sum_tmul, Basis.coe_dualBasis,
       Basis.sum_dual_apply_smul_coord]

@@ -368,7 +368,7 @@ variable {R₂}
 
 #print BilinForm.flip_flip_aux /-
 theorem flip_flip_aux [Algebra R₂ R] (A : BilinForm R M) : (flipHomAux R₂) (flipHomAux R₂ A) = A :=
-  by ext (A x y); simp [flip_hom_aux]
+  by ext A x y; simp [flip_hom_aux]
 #align bilin_form.flip_flip_aux BilinForm.flip_flip_aux
 -/
 
@@ -397,7 +397,7 @@ theorem flip_apply [Algebra R₂ R] (A : BilinForm R M) (x y : M) : flipHom R₂
 
 #print BilinForm.flip_flip /-
 theorem flip_flip [Algebra R₂ R] :
-    (flipHom R₂).trans (flipHom R₂) = LinearEquiv.refl R₂ (BilinForm R M) := by ext (A x y); simp
+    (flipHom R₂).trans (flipHom R₂) = LinearEquiv.refl R₂ (BilinForm R M) := by ext A x y; simp
 #align bilin_form.flip_flip BilinForm.flip_flip
 -/
 
@@ -795,7 +795,7 @@ theorem congr_apply (e : M₂ ≃ₗ[R₂] M₂') (B : BilinForm R₂ M₂) (x y
 
 #print BilinForm.congr_symm /-
 @[simp]
-theorem congr_symm (e : M₂ ≃ₗ[R₂] M₂') : (congr e).symm = congr e.symm := by ext (B x y);
+theorem congr_symm (e : M₂ ≃ₗ[R₂] M₂') : (congr e).symm = congr e.symm := by ext B x y;
   simp only [congr_apply, LinearEquiv.symm_symm]; rfl
 #align bilin_form.congr_symm BilinForm.congr_symm
 -/
@@ -1152,7 +1152,7 @@ theorem isSymm_iff_flip' [Algebra R₂ R] : B.IsSymm ↔ flipHom R₂ B = B :=
   by
   constructor
   · intro h
-    ext (x y)
+    ext x y
     exact h y x
   · intro h x y
     conv_lhs => rw [← h]
@@ -1271,7 +1271,7 @@ theorem isAdjointPair_iff_compLeft_eq_compRight (f g : Module.End R M) :
     IsAdjointPair B F f g ↔ F.compLeft f = B.compRight g :=
   by
   constructor <;> intro h
-  · ext (x y); rw [comp_left_apply, comp_right_apply]; apply h
+  · ext x y; rw [comp_left_apply, comp_right_apply]; apply h
   · intro x y; rw [← comp_left_apply, ← comp_right_apply]; rw [h]
 #align bilin_form.is_adjoint_pair_iff_comp_left_eq_comp_right BilinForm.isAdjointPair_iff_compLeft_eq_compRight
 -/

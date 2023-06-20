@@ -222,7 +222,7 @@ theorem incMatrix_mul_transpose [Fintype α] [DecidableEq α] [DecidableRel G.Ad
     G.incMatrix R ⬝ (G.incMatrix R)ᵀ = fun a b =>
       if a = b then G.degree a else if G.Adj a b then 1 else 0 :=
   by
-  ext (a b)
+  ext a b
   split_ifs with h h'
   · subst b
     convert G.inc_matrix_mul_transpose_diag

@@ -166,9 +166,9 @@ def lsum [Semiring S] [Module S N] [SMulCommClass R S N] :
             sum_add_hom_single, sum_add_hom_single, LinearMap.toAddMonoidHom_coe,
             LinearMap.map_smul] }
   invFun F i := F.comp (lsingle i)
-  left_inv F := by ext (x y); simp
-  right_inv F := by ext (x y); simp
-  map_add' F G := by ext (x y); simp
+  left_inv F := by ext x y; simp
+  right_inv F := by ext x y; simp
+  map_add' F G := by ext x y; simp
   map_smul' c F := by ext; simp
 #align dfinsupp.lsum Dfinsupp.lsum
 -/

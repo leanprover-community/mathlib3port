@@ -188,7 +188,7 @@ theorem WithDensityᵥEq.congr_ae {f g : α → E} (h : f =ᵐ[μ] g) :
     μ.withDensityᵥ f = μ.withDensityᵥ g :=
   by
   by_cases hf : integrable f μ
-  · ext (i hi)
+  · ext i hi
     rw [with_densityᵥ_apply hf hi, with_densityᵥ_apply (hf.congr h) hi]
     exact integral_congr_ae (ae_restrict_of_ae h)
   · have hg : ¬integrable g μ := by intro hg; exact hf (hg.congr h.symm)
@@ -211,7 +211,7 @@ theorem withDensityᵥ_toReal {f : α → ℝ≥0∞} (hfm : AEMeasurable f μ) 
       @toSignedMeasure α _ (μ.withDensity f) (isFiniteMeasure_withDensity hf) :=
   by
   have hfi := integrable_to_real_of_lintegral_ne_top hfm hf
-  ext (i hi)
+  ext i hi
   rw [with_densityᵥ_apply hfi hi, to_signed_measure_apply_measurable hi, with_density_apply _ hi,
     integral_to_real hfm.restrict]
   refine' ae_lt_top' hfm.restrict (ne_top_of_le_ne_top hf _)
@@ -229,7 +229,7 @@ theorem withDensityᵥ_eq_withDensity_pos_part_sub_withDensity_neg_part {f : α 
         @toSignedMeasure α _ (μ.withDensity fun x => ENNReal.ofReal <| -f x)
           (isFiniteMeasure_withDensity_ofReal hfi.neg.2) :=
   by
-  ext (i hi)
+  ext i hi
   rw [with_densityᵥ_apply hfi hi,
     integral_eq_lintegral_pos_part_sub_lintegral_neg_part hfi.integrable_on,
     vector_measure.sub_apply, to_signed_measure_apply_measurable hi,

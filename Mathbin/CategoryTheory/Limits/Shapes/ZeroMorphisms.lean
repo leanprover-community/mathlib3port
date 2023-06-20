@@ -108,7 +108,7 @@ private theorem ext_aux (I J : HasZeroMorphisms C)
     I = J := by
   cases I; cases J
   congr
-  · ext (X Y)
+  · ext X Y
     exact w X Y
   · apply proof_irrel_heq
   · apply proof_irrel_heq

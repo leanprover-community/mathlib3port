@@ -625,7 +625,7 @@ theorem biproduct.isoCoproduct_hom {f : J → C} [HasBiproduct f] :
 #print CategoryTheory.Limits.biproduct.map_eq_map' /-
 theorem biproduct.map_eq_map' {f g : J → C} [HasBiproduct f] [HasBiproduct g] (p : ∀ b, f b ⟶ g b) :
     biproduct.map p = biproduct.map' p := by
-  ext (j j')
+  ext j j'
   simp only [discrete.nat_trans_app, limits.is_colimit.ι_map, limits.is_limit.map_π, category.assoc,
     ← bicone.to_cone_π_app_mk, ← biproduct.bicone_π, ← bicone.to_cocone_ι_app_mk, ←
     biproduct.bicone_ι]
@@ -907,7 +907,7 @@ def kernelForkBiproductToSubtype (p : Set K) : LimitCone (parallelPair (biproduc
   Cone :=
     KernelFork.ofι (biproduct.fromSubtype f (pᶜ))
       (by
-        ext (j k)
+        ext j k
         simp only [biproduct.ι_from_subtype_assoc, biproduct.ι_to_subtype, comp_zero, zero_comp]
         erw [dif_neg j.2]
         simp only [zero_comp])
@@ -947,7 +947,7 @@ def cokernelCoforkBiproductFromSubtype (p : Set K) :
   Cocone :=
     CokernelCofork.ofπ (biproduct.toSubtype f (pᶜ))
       (by
-        ext (j k)
+        ext j k
         simp only [Pi.compl_apply, biproduct.ι_from_subtype_assoc, biproduct.ι_to_subtype,
           comp_zero, zero_comp]
         rw [dif_neg]

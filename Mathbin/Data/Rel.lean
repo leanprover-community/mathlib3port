@@ -66,7 +66,7 @@ theorem inv_def (x : α) (y : β) : r.inv y x ↔ r x y :=
 -/
 
 #print Rel.inv_inv /-
-theorem inv_inv : inv (inv r) = r := by ext (x y); rfl
+theorem inv_inv : inv (inv r) = r := by ext x y; rfl
 #align rel.inv_inv Rel.inv_inv
 -/
 
@@ -90,12 +90,12 @@ def codom :=
 -/
 
 #print Rel.codom_inv /-
-theorem codom_inv : r.inv.codom = r.dom := by ext (x y); rfl
+theorem codom_inv : r.inv.codom = r.dom := by ext x y; rfl
 #align rel.codom_inv Rel.codom_inv
 -/
 
 #print Rel.dom_inv /-
-theorem dom_inv : r.inv.dom = r.codom := by ext (x y); rfl
+theorem dom_inv : r.inv.dom = r.codom := by ext x y; rfl
 #align rel.dom_inv Rel.dom_inv
 -/
 
@@ -110,7 +110,7 @@ local infixr:0 " ∘ " => Rel.comp
 #print Rel.comp_assoc /-
 theorem comp_assoc (r : Rel α β) (s : Rel β γ) (t : Rel γ δ) : ((r ∘ s) ∘ t) = (r ∘ s ∘ t) :=
   by
-  unfold comp; ext (x w); constructor
+  unfold comp; ext x w; constructor
   · rintro ⟨z, ⟨y, rxy, syz⟩, tzw⟩; exact ⟨y, rxy, z, syz, tzw⟩
   rintro ⟨y, rxy, z, syz, tzw⟩; exact ⟨z, ⟨y, rxy, syz⟩, tzw⟩
 #align rel.comp_assoc Rel.comp_assoc
@@ -129,12 +129,12 @@ theorem comp_left_id (r : Rel α β) : (@Eq α ∘ r) = r := by unfold comp; ext
 -/
 
 #print Rel.inv_id /-
-theorem inv_id : inv (@Eq α) = @Eq α := by ext (x y); constructor <;> apply Eq.symm
+theorem inv_id : inv (@Eq α) = @Eq α := by ext x y; constructor <;> apply Eq.symm
 #align rel.inv_id Rel.inv_id
 -/
 
 #print Rel.inv_comp /-
-theorem inv_comp (r : Rel α β) (s : Rel β γ) : inv (r ∘ s) = (inv s ∘ inv r) := by ext (x z);
+theorem inv_comp (r : Rel α β) (s : Rel β γ) : inv (r ∘ s) = (inv s ∘ inv r) := by ext x z;
   simp [comp, inv, flip, and_comm]
 #align rel.inv_comp Rel.inv_comp
 -/

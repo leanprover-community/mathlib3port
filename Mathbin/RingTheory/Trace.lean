@@ -442,7 +442,7 @@ theorem traceMatrix_apply (b : κ → B) (i j) : traceMatrix A b i j = traceForm
 #align algebra.trace_matrix_apply Algebra.traceMatrix_apply
 
 theorem traceMatrix_reindex {κ' : Type _} (b : Basis κ A B) (f : κ ≃ κ') :
-    traceMatrix A (b.reindex f) = reindex f f (traceMatrix A b) := by ext (x y); simp
+    traceMatrix A (b.reindex f) = reindex f f (traceMatrix A b) := by ext x y; simp
 #align algebra.trace_matrix_reindex Algebra.traceMatrix_reindex
 
 variable {A}
@@ -450,7 +450,7 @@ variable {A}
 theorem traceMatrix_of_matrix_vecMul [Fintype κ] (b : κ → B) (P : Matrix κ κ A) :
     traceMatrix A ((P.map (algebraMap A B)).vecMul b) = Pᵀ ⬝ traceMatrix A b ⬝ P :=
   by
-  ext (α β)
+  ext α β
   rw [trace_matrix_apply, vec_mul, dot_product, vec_mul, dot_product, Matrix.mul_apply,
     BilinForm.sum_left,
     Fintype.sum_congr _ _ fun i : κ =>
@@ -480,7 +480,7 @@ theorem traceMatrix_of_matrix_mulVec [Fintype κ] (b : κ → B) (P : Matrix κ 
 theorem traceMatrix_of_basis [Fintype κ] [DecidableEq κ] (b : Basis κ A B) :
     traceMatrix A b = BilinForm.toMatrix b (traceForm A B) :=
   by
-  ext (i j)
+  ext i j
   rw [trace_matrix_apply, trace_form_apply, trace_form_to_matrix]
 #align algebra.trace_matrix_of_basis Algebra.traceMatrix_of_basis
 
@@ -537,7 +537,7 @@ variable {A}
 
 theorem embeddingsMatrixReindex_eq_vandermonde (pb : PowerBasis A B)
     (e : Fin pb.dim ≃ (B →ₐ[A] C)) :
-    embeddingsMatrixReindex A C pb.Basis e = (vandermonde fun i => e i pb.gen)ᵀ := by ext (i j);
+    embeddingsMatrixReindex A C pb.Basis e = (vandermonde fun i => e i pb.gen)ᵀ := by ext i j;
   simp [embeddings_matrix_reindex, embeddings_matrix]
 #align algebra.embeddings_matrix_reindex_eq_vandermonde Algebra.embeddingsMatrixReindex_eq_vandermonde
 
@@ -553,7 +553,7 @@ variable (b : κ → L) (pb : PowerBasis K L)
 
 theorem traceMatrix_eq_embeddingsMatrix_mul_trans :
     (traceMatrix K b).map (algebraMap K E) = embeddingsMatrix K E b ⬝ (embeddingsMatrix K E b)ᵀ :=
-  by ext (i j); simp [trace_eq_sum_embeddings, embeddings_matrix, Matrix.mul_apply]
+  by ext i j; simp [trace_eq_sum_embeddings, embeddings_matrix, Matrix.mul_apply]
 #align algebra.trace_matrix_eq_embeddings_matrix_mul_trans Algebra.traceMatrix_eq_embeddingsMatrix_mul_trans
 
 theorem traceMatrix_eq_embeddingsMatrixReindex_mul_trans [Fintype κ] (e : κ ≃ (L →ₐ[K] E)) :

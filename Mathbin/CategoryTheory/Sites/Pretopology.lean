@@ -211,7 +211,7 @@ def trivial : Pretopology C
     rcases hS g (singleton_self g) with ⟨Y, f, i, hTi⟩
     refine' ⟨_, f ≫ g, _, _⟩
     · skip; infer_instance
-    ext (W k)
+    ext W k
     constructor
     · rintro ⟨V, h, k, ⟨_⟩, hh, rfl⟩
       rw [hTi] at hh 

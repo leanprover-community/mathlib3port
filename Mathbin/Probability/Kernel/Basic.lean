@@ -240,7 +240,7 @@ theorem ext_iff' {η : kernel α β} :
 #print ProbabilityTheory.kernel.ext_fun /-
 theorem ext_fun {η : kernel α β} (h : ∀ a f, Measurable f → ∫⁻ b, f b ∂κ a = ∫⁻ b, f b ∂η a) :
     κ = η := by
-  ext (a s hs)
+  ext a s hs
   specialize h a (s.indicator fun _ => 1) (Measurable.indicator measurable_const hs)
   simp_rw [lintegral_indicator_const hs, one_mul] at h 
   rw [h]
@@ -298,7 +298,7 @@ theorem sum_apply' [Countable ι] (κ : ι → kernel α β) (a : α) {s : Set �
 @[simp]
 theorem sum_zero [Countable ι] : (kernel.sum fun i : ι => (0 : kernel α β)) = 0 :=
   by
-  ext (a s hs) : 2
+  ext a s hs : 2
   rw [sum_apply' _ a hs]
   simp only [zero_apply, measure.coe_zero, Pi.zero_apply, tsum_zero]
 #align probability_theory.kernel.sum_zero ProbabilityTheory.kernel.sum_zero
@@ -307,13 +307,13 @@ theorem sum_zero [Countable ι] : (kernel.sum fun i : ι => (0 : kernel α β)) 
 #print ProbabilityTheory.kernel.sum_comm /-
 theorem sum_comm [Countable ι] (κ : ι → ι → kernel α β) :
     (kernel.sum fun n => kernel.sum (κ n)) = kernel.sum fun m => kernel.sum fun n => κ n m := by
-  ext (a s hs); simp_rw [sum_apply]; rw [measure.sum_comm]
+  ext a s hs; simp_rw [sum_apply]; rw [measure.sum_comm]
 #align probability_theory.kernel.sum_comm ProbabilityTheory.kernel.sum_comm
 -/
 
 #print ProbabilityTheory.kernel.sum_fintype /-
 @[simp]
-theorem sum_fintype [Fintype ι] (κ : ι → kernel α β) : kernel.sum κ = ∑ i, κ i := by ext (a s hs);
+theorem sum_fintype [Fintype ι] (κ : ι → kernel α β) : kernel.sum κ = ∑ i, κ i := by ext a s hs;
   simp only [sum_apply' κ a hs, finset_sum_apply' _ κ a s, tsum_fintype]
 #align probability_theory.kernel.sum_fintype ProbabilityTheory.kernel.sum_fintype
 -/
@@ -322,7 +322,7 @@ theorem sum_fintype [Fintype ι] (κ : ι → kernel α β) : kernel.sum κ = �
 theorem sum_add [Countable ι] (κ η : ι → kernel α β) :
     (kernel.sum fun n => κ n + η n) = kernel.sum κ + kernel.sum η :=
   by
-  ext (a s hs)
+  ext a s hs
   simp only [coe_fn_add, Pi.add_apply, sum_apply, measure.sum_apply _ hs, Pi.add_apply,
     measure.coe_add, tsum_add ENNReal.summable ENNReal.summable]
 #align probability_theory.kernel.sum_add ProbabilityTheory.kernel.sum_add
@@ -344,7 +344,7 @@ instance (priority := 100) IsFiniteKernel.isSFiniteKernel [h : IsFiniteKernel κ
     IsSFiniteKernel κ :=
   ⟨⟨fun n => if n = 0 then κ else 0, fun n => by split_ifs; exact h; infer_instance,
       by
-      ext (a s hs)
+      ext a s hs
       rw [kernel.sum_apply' _ _ hs]
       have : (fun i => ((ite (i = 0) κ 0) a) s) = fun i => ite (i = 0) (κ a s) 0 := by ext1 i;
         split_ifs <;> rfl
@@ -411,7 +411,7 @@ theorem isSFiniteKernel_sum_of_denumerable [Denumerable ι] {κs : ι → kernel
   refine' ⟨⟨fun n => seq (κs (e n).1) (e n).2, inferInstance, _⟩⟩
   have hκ_eq : kernel.sum κs = kernel.sum fun n => kernel.sum (seq (κs n)) := by
     simp_rw [kernel_sum_seq]
-  ext (a s hs) : 2
+  ext a s hs : 2
   rw [hκ_eq]
   simp_rw [kernel.sum_apply' _ _ hs]
   change ∑' (i) (m), seq (κs i) m a s = ∑' n, (fun im : ι × ℕ => seq (κs im.fst) im.snd a s) (e n)

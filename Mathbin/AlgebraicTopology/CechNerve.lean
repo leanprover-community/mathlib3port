@@ -211,7 +211,7 @@ def cechNerveEquiv (X : SimplicialObject.Augmented C) (F : Arrow C) :
     · rfl
   right_inv := by
     intro A
-    ext (_⟨j⟩)
+    ext _ ⟨j⟩
     · dsimp
       simp only [arrow.cech_nerve_map, wide_pullback.lift_π, nat_trans.naturality_assoc]
       erw [wide_pullback.lift_π]
@@ -396,7 +396,7 @@ def cechConerveEquiv (F : Arrow C) (X : CosimplicialObject.Augmented C) :
   left_inv := by
     intro A
     dsimp
-    ext _; · rfl; ext (_⟨⟩)
+    ext _; · rfl; ext _ ⟨⟩
     -- A bug in the `ext` tactic?
     · dsimp
       simp only [arrow.cech_conerve_map, wide_pushout.ι_desc, category.assoc, ←

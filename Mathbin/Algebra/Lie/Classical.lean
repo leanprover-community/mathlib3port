@@ -211,7 +211,7 @@ variable [Fintype p] [Fintype q]
 #print LieAlgebra.Orthogonal.pso_inv /-
 theorem pso_inv {i : R} (hi : i * i = -1) : Pso p q R i * Pso p q R (-i) = 1 :=
   by
-  ext (x y); rcases x with ⟨⟩ <;> rcases y with ⟨⟩
+  ext x y; rcases x with ⟨⟩ <;> rcases y with ⟨⟩
   ·-- x y : p
       by_cases h : x = y <;>
       simp [Pso, indefinite_diagonal, h]
@@ -236,7 +236,7 @@ def invertiblePso {i : R} (hi : i * i = -1) : Invertible (Pso p q R i) :=
 theorem indefiniteDiagonal_transform {i : R} (hi : i * i = -1) :
     (Pso p q R i)ᵀ ⬝ indefiniteDiagonal p q R ⬝ Pso p q R i = 1 :=
   by
-  ext (x y); rcases x with ⟨⟩ <;> rcases y with ⟨⟩
+  ext x y; rcases x with ⟨⟩ <;> rcases y with ⟨⟩
   ·-- x y : p
       by_cases h : x = y <;>
       simp [Pso, indefinite_diagonal, h]
@@ -440,7 +440,7 @@ theorem indefiniteDiagonal_assoc :
       Matrix.reindexLieEquiv (Equiv.sumAssoc Unit l l).symm
         (Matrix.fromBlocks 1 0 0 (indefiniteDiagonal l l R)) :=
   by
-  ext (i j)
+  ext i j
   rcases i with ⟨⟨i₁ | i₂⟩ | i₃⟩ <;> rcases j with ⟨⟨j₁ | j₂⟩ | j₃⟩ <;>
       simp only [indefinite_diagonal, Matrix.diagonal_apply, Equiv.sumAssoc_apply_inl_inl,
         Matrix.reindexLieEquiv_apply, Matrix.submatrix_apply, Equiv.symm_symm, Matrix.reindex_apply,

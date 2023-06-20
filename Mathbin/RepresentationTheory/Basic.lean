@@ -303,8 +303,8 @@ variable (k : Type _) [CommSemiring k] (G : Type _) [Monoid G] (H : Type _) [Mul
 noncomputable def ofMulAction : Representation k G (H →₀ k)
     where
   toFun g := Finsupp.lmapDomain k k ((· • ·) g)
-  map_one' := by ext (x y); dsimp; simp
-  map_mul' x y := by ext (z w); simp [mul_smul]
+  map_one' := by ext x y; dsimp; simp
+  map_mul' x y := by ext z w; simp [mul_smul]
 #align representation.of_mul_action Representation.ofMulAction
 -/
 

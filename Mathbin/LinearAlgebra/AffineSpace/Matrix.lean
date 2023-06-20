@@ -59,7 +59,7 @@ theorem toMatrix_apply {ι' : Type _} (q : ι' → P) (i : ι') (j : ι) :
 @[simp]
 theorem toMatrix_self [DecidableEq ι] : b.toMatrix b = (1 : Matrix ι ι k) :=
   by
-  ext (i j)
+  ext i j
   rw [to_matrix_apply, coord_apply, Matrix.one_eq_pi_single, Pi.single_apply]
 #align affine_basis.to_matrix_self AffineBasis.toMatrix_self
 -/
@@ -145,7 +145,7 @@ variable [DecidableEq ι]
 #print AffineBasis.toMatrix_mul_toMatrix /-
 theorem toMatrix_mul_toMatrix : b.toMatrix b₂ ⬝ b₂.toMatrix b = 1 :=
   by
-  ext (l m)
+  ext l m
   change (b₂.to_matrix b).vecMul (b.coords (b₂ l)) m = _
   rw [to_matrix_vec_mul_coords, coords_apply, ← to_matrix_apply, to_matrix_self]
 #align affine_basis.to_matrix_mul_to_matrix AffineBasis.toMatrix_mul_toMatrix

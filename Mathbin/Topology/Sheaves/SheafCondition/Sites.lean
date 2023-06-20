@@ -105,7 +105,7 @@ def presieveOfCovering {ι : Type v} (U : ι → Opens X) : Presieve (iSup U) :=
     then we get back the original presieve `R`. -/
 @[simp]
 theorem covering_presieve_eq_self {Y : Opens X} (R : Presieve Y) :
-    presieveOfCoveringAux (coveringOfPresieve Y R) Y = R := by ext (Z f);
+    presieveOfCoveringAux (coveringOfPresieve Y R) Y = R := by ext Z f;
   exact ⟨fun ⟨⟨_, _, h⟩, rfl⟩ => by convert h, fun h => ⟨⟨Z, f, h⟩, rfl⟩⟩
 #align Top.presheaf.covering_presieve_eq_self TopCat.Presheaf.covering_presieve_eq_self
 -/

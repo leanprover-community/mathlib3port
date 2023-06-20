@@ -130,7 +130,7 @@ theorem degree_eq_of_not_adj {v w : V} (hvw : ¬G.Adj v w) : degree G v = degree
 theorem adjMatrix_sq_of_regular (hd : G.IsRegularOfDegree d) :
     G.adjMatrix R ^ 2 = fun v w => if v = w then d else 1 :=
   by
-  ext (v w); by_cases h : v = w
+  ext v w; by_cases h : v = w
   · rw [h, sq, mul_eq_mul, adj_matrix_mul_self_apply_self, hd]; simp
   · rw [adj_matrix_sq_of_ne R hG h, if_neg h]
 #align theorems_100.friendship.adj_matrix_sq_of_regular Theorems100.Friendship.adjMatrix_sq_of_regular

@@ -676,7 +676,7 @@ theorem pi_coe (γ : ∀ i, Path (as i) (bs i)) : coeFn (Path.pi γ) = fun t i =
 theorem trans_pi_eq_pi_trans (γ₀ : ∀ i, Path (as i) (bs i)) (γ₁ : ∀ i, Path (bs i) (cs i)) :
     (Path.pi γ₀).trans (Path.pi γ₁) = Path.pi fun i => (γ₀ i).trans (γ₁ i) :=
   by
-  ext (t i)
+  ext t i
   unfold Path.trans
   simp only [Path.coe_mk_mk, Function.comp_apply, pi_coe_fn]
   split_ifs <;> rfl

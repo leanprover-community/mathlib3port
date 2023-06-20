@@ -1166,7 +1166,7 @@ instance emptyStructure : Language.empty.Structure M :=
 
 instance : Unique (Language.empty.Structure M) :=
   ⟨⟨Language.emptyStructure⟩, fun a => by
-    ext (n f)
+    ext n f
     · exact Empty.elim f
     · exact Subsingleton.elim _ _⟩
 

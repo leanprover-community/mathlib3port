@@ -74,7 +74,7 @@ theorem hyperoperation_recursion (n m k : ℕ) :
 @[simp]
 theorem hyperoperation_one : hyperoperation 1 = (· + ·) :=
   by
-  ext (m k)
+  ext m k
   induction' k with bn bih
   · rw [Nat.add_zero m, hyperoperation]
   · rw [hyperoperation_recursion, bih, hyperoperation_zero]
@@ -86,7 +86,7 @@ theorem hyperoperation_one : hyperoperation 1 = (· + ·) :=
 @[simp]
 theorem hyperoperation_two : hyperoperation 2 = (· * ·) :=
   by
-  ext (m k)
+  ext m k
   induction' k with bn bih
   · rw [hyperoperation]
     exact (Nat.mul_zero m).symm
@@ -99,7 +99,7 @@ theorem hyperoperation_two : hyperoperation 2 = (· * ·) :=
 @[simp]
 theorem hyperoperation_three : hyperoperation 3 = (· ^ ·) :=
   by
-  ext (m k)
+  ext m k
   induction' k with bn bih
   · rw [hyperoperation_ge_three_eq_one]
     exact (pow_zero m).symm

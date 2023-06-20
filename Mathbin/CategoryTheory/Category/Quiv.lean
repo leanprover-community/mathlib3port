@@ -130,7 +130,7 @@ def adj : Cat.free ⊣ QuivCat.forget :=
             rintro ⟨obj, map⟩
             dsimp only [Prefunctor.comp]
             congr
-            ext (X Y f)
+            ext X Y f
             exact category.id_comp _ }
       homEquiv_naturality_left_symm := fun V W C f g => by change (show paths V ⥤ _ from _) = _;
         ext; apply eq_conj_eq_to_hom; rfl }

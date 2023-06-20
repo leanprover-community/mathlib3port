@@ -458,7 +458,7 @@ theorem compl₁₂_inj {f₁ f₂ : Mₗ →ₗ[R] Nₗ →ₗ[R] Pₗ} {g : Q�
   by
   constructor <;> intro h
   · -- B₁.comp l r = B₂.comp l r → B₁ = B₂
-    ext (x y)
+    ext x y
     cases' hₗ x with x' hx; subst hx
     cases' hᵣ y with y' hy; subst hy
     convert LinearMap.congr_fun₂ h x' y'

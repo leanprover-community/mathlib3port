@@ -88,7 +88,7 @@ theorem const_lt_iff [Preorder β] {x y : β} : (↑x : β*) < ↑y ↔ x < y :=
 -/
 
 #print Filter.Germ.lt_def /-
-theorem lt_def [Preorder β] : ((· < ·) : β* → β* → Prop) = LiftRel (· < ·) := by ext (⟨f⟩⟨g⟩);
+theorem lt_def [Preorder β] : ((· < ·) : β* → β* → Prop) = LiftRel (· < ·) := by ext ⟨f⟩ ⟨g⟩;
   exact coe_lt
 #align filter.germ.lt_def Filter.Germ.lt_def
 -/

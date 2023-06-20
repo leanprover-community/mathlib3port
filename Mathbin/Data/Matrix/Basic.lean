@@ -483,7 +483,7 @@ theorem diagonal_zero [Zero α] : (diagonal fun _ => 0 : Matrix n n α) = 0 := b
 @[simp]
 theorem diagonal_transpose [Zero α] (v : n → α) : (diagonal v)ᵀ = diagonal v :=
   by
-  ext (i j)
+  ext i j
   by_cases h : i = j
   · simp [h, transpose]
   · simp [h, transpose, diagonal_apply_ne' _ h]
@@ -494,14 +494,14 @@ theorem diagonal_transpose [Zero α] (v : n → α) : (diagonal v)ᵀ = diagonal
 @[simp]
 theorem diagonal_add [AddZeroClass α] (d₁ d₂ : n → α) :
     diagonal d₁ + diagonal d₂ = diagonal fun i => d₁ i + d₂ i := by
-  ext (i j) <;> by_cases h : i = j <;> simp [h]
+  ext i j <;> by_cases h : i = j <;> simp [h]
 #align matrix.diagonal_add Matrix.diagonal_add
 -/
 
 #print Matrix.diagonal_smul /-
 @[simp]
 theorem diagonal_smul [Monoid R] [AddMonoid α] [DistribMulAction R α] (r : R) (d : n → α) :
-    diagonal (r • d) = r • diagonal d := by ext (i j) <;> by_cases h : i = j <;> simp [h]
+    diagonal (r • d) = r • diagonal d := by ext i j <;> by_cases h : i = j <;> simp [h]
 #align matrix.diagonal_smul Matrix.diagonal_smul
 -/
 
@@ -1142,26 +1142,26 @@ variable [NonUnitalNonAssocSemiring α]
 #print Matrix.mul_zero /-
 @[simp]
 protected theorem mul_zero [Fintype n] (M : Matrix m n α) : M ⬝ (0 : Matrix n o α) = 0 := by
-  ext (i j); apply dot_product_zero
+  ext i j; apply dot_product_zero
 #align matrix.mul_zero Matrix.mul_zero
 -/
 
 #print Matrix.zero_mul /-
 @[simp]
 protected theorem zero_mul [Fintype m] (M : Matrix m n α) : (0 : Matrix l m α) ⬝ M = 0 := by
-  ext (i j); apply zero_dot_product
+  ext i j; apply zero_dot_product
 #align matrix.zero_mul Matrix.zero_mul
 -/
 
 #print Matrix.mul_add /-
 protected theorem mul_add [Fintype n] (L : Matrix m n α) (M N : Matrix n o α) :
-    L ⬝ (M + N) = L ⬝ M + L ⬝ N := by ext (i j); apply dot_product_add
+    L ⬝ (M + N) = L ⬝ M + L ⬝ N := by ext i j; apply dot_product_add
 #align matrix.mul_add Matrix.mul_add
 -/
 
 #print Matrix.add_mul /-
 protected theorem add_mul [Fintype m] (L M : Matrix l m α) (N : Matrix m n α) :
-    (L + M) ⬝ N = L ⬝ N + M ⬝ N := by ext (i j); apply add_dot_product
+    (L + M) ⬝ N = L ⬝ N + M ⬝ N := by ext i j; apply add_dot_product
 #align matrix.add_mul Matrix.add_mul
 -/
 
@@ -1194,7 +1194,7 @@ theorem mul_diagonal [Fintype n] [DecidableEq n] (d : n → α) (M : Matrix m n 
 @[simp]
 theorem diagonal_mul_diagonal [Fintype n] [DecidableEq n] (d₁ d₂ : n → α) :
     diagonal d₁ ⬝ diagonal d₂ = diagonal fun i => d₁ i * d₂ i := by
-  ext (i j) <;> by_cases i = j <;> simp [h]
+  ext i j <;> by_cases i = j <;> simp [h]
 #align matrix.diagonal_mul_diagonal Matrix.diagonal_mul_diagonal
 -/
 
@@ -1279,14 +1279,14 @@ variable [NonAssocSemiring α]
 #print Matrix.one_mul /-
 @[simp]
 protected theorem one_mul [Fintype m] [DecidableEq m] (M : Matrix m n α) :
-    (1 : Matrix m m α) ⬝ M = M := by ext (i j) <;> rw [← diagonal_one, diagonal_mul, one_mul]
+    (1 : Matrix m m α) ⬝ M = M := by ext i j <;> rw [← diagonal_one, diagonal_mul, one_mul]
 #align matrix.one_mul Matrix.one_mul
 -/
 
 #print Matrix.mul_one /-
 @[simp]
 protected theorem mul_one [Fintype n] [DecidableEq n] (M : Matrix m n α) :
-    M ⬝ (1 : Matrix n n α) = M := by ext (i j) <;> rw [← diagonal_one, mul_diagonal, mul_one]
+    M ⬝ (1 : Matrix n n α) = M := by ext i j <;> rw [← diagonal_one, mul_diagonal, mul_one]
 #align matrix.mul_one Matrix.mul_one
 -/
 
@@ -1935,7 +1935,7 @@ theorem vecMulVec_apply [Mul α] (w : m → α) (v : n → α) (i j) : vecMulVec
 
 #print Matrix.vecMulVec_eq /-
 theorem vecMulVec_eq [Mul α] [AddCommMonoid α] (w : m → α) (v : n → α) :
-    vecMulVec w v = col w ⬝ row v := by ext (i j);
+    vecMulVec w v = col w ⬝ row v := by ext i j;
   simp only [vec_mul_vec, mul_apply, Fintype.univ_punit, Finset.sum_singleton]; rfl
 #align matrix.vec_mul_vec_eq Matrix.vecMulVec_eq
 -/
@@ -2294,7 +2294,7 @@ theorem transpose_transpose (M : Matrix m n α) : Mᵀᵀ = M := by ext <;> rfl
 
 #print Matrix.transpose_zero /-
 @[simp]
-theorem transpose_zero [Zero α] : (0 : Matrix m n α)ᵀ = 0 := by ext (i j) <;> rfl
+theorem transpose_zero [Zero α] : (0 : Matrix m n α)ᵀ = 0 := by ext i j <;> rfl
 #align matrix.transpose_zero Matrix.transpose_zero
 -/
 
@@ -2302,7 +2302,7 @@ theorem transpose_zero [Zero α] : (0 : Matrix m n α)ᵀ = 0 := by ext (i j) <;
 @[simp]
 theorem transpose_one [DecidableEq n] [Zero α] [One α] : (1 : Matrix n n α)ᵀ = 1 :=
   by
-  ext (i j)
+  ext i j
   rw [transpose_apply, ← diagonal_one]
   by_cases i = j
   · simp only [h, diagonal_apply_eq]
@@ -2313,14 +2313,14 @@ theorem transpose_one [DecidableEq n] [Zero α] [One α] : (1 : Matrix n n α)�
 #print Matrix.transpose_add /-
 @[simp]
 theorem transpose_add [Add α] (M : Matrix m n α) (N : Matrix m n α) : (M + N)ᵀ = Mᵀ + Nᵀ := by
-  ext (i j); simp
+  ext i j; simp
 #align matrix.transpose_add Matrix.transpose_add
 -/
 
 #print Matrix.transpose_sub /-
 @[simp]
 theorem transpose_sub [Sub α] (M : Matrix m n α) (N : Matrix m n α) : (M - N)ᵀ = Mᵀ - Nᵀ := by
-  ext (i j); simp
+  ext i j; simp
 #align matrix.transpose_sub Matrix.transpose_sub
 -/
 
@@ -2329,7 +2329,7 @@ theorem transpose_sub [Sub α] (M : Matrix m n α) (N : Matrix m n α) : (M - N)
 theorem transpose_mul [AddCommMonoid α] [CommSemigroup α] [Fintype n] (M : Matrix m n α)
     (N : Matrix n l α) : (M ⬝ N)ᵀ = Nᵀ ⬝ Mᵀ :=
   by
-  ext (i j)
+  ext i j
   apply dot_product_comm
 #align matrix.transpose_mul Matrix.transpose_mul
 -/
@@ -2337,13 +2337,13 @@ theorem transpose_mul [AddCommMonoid α] [CommSemigroup α] [Fintype n] (M : Mat
 #print Matrix.transpose_smul /-
 @[simp]
 theorem transpose_smul {R : Type _} [SMul R α] (c : R) (M : Matrix m n α) : (c • M)ᵀ = c • Mᵀ := by
-  ext (i j); rfl
+  ext i j; rfl
 #align matrix.transpose_smul Matrix.transpose_smul
 -/
 
 #print Matrix.transpose_neg /-
 @[simp]
-theorem transpose_neg [Neg α] (M : Matrix m n α) : (-M)ᵀ = -Mᵀ := by ext (i j) <;> rfl
+theorem transpose_neg [Neg α] (M : Matrix m n α) : (-M)ᵀ = -Mᵀ := by ext i j <;> rfl
 #align matrix.transpose_neg Matrix.transpose_neg
 -/
 
@@ -3316,7 +3316,7 @@ theorem updateColumn_apply [DecidableEq n] {j' : n} :
 theorem updateColumn_subsingleton [Subsingleton n] (A : Matrix m n R) (i : n) (b : m → R) :
     A.updateColumn i b = (col b).submatrix id (Function.const n ()) :=
   by
-  ext (x y)
+  ext x y
   simp [update_column_apply, Subsingleton.elim i y]
 #align matrix.update_column_subsingleton Matrix.updateColumn_subsingleton
 -/
@@ -3326,7 +3326,7 @@ theorem updateColumn_subsingleton [Subsingleton n] (A : Matrix m n R) (i : n) (b
 theorem updateRow_subsingleton [Subsingleton m] (A : Matrix m n R) (i : m) (b : n → R) :
     A.updateRow i b = (row b).submatrix (Function.const m ()) id :=
   by
-  ext (x y)
+  ext x y
   simp [update_column_apply, Subsingleton.elim i x]
 #align matrix.update_row_subsingleton Matrix.updateRow_subsingleton
 -/
@@ -3335,7 +3335,7 @@ theorem updateRow_subsingleton [Subsingleton m] (A : Matrix m n R) (i : m) (b : 
 theorem map_updateRow [DecidableEq m] (f : α → β) :
     map (updateRow M i b) f = updateRow (M.map f) i (f ∘ b) :=
   by
-  ext (i' j')
+  ext i' j'
   rw [update_row_apply, map_apply, map_apply, update_row_apply]
   exact apply_ite f _ _ _
 #align matrix.map_update_row Matrix.map_updateRow
@@ -3345,7 +3345,7 @@ theorem map_updateRow [DecidableEq m] (f : α → β) :
 theorem map_updateColumn [DecidableEq n] (f : α → β) :
     map (updateColumn M j c) f = updateColumn (M.map f) j (f ∘ c) :=
   by
-  ext (i' j')
+  ext i' j'
   rw [update_column_apply, map_apply, map_apply, update_column_apply]
   exact apply_ite f _ _ _
 #align matrix.map_update_column Matrix.map_updateColumn
@@ -3354,7 +3354,7 @@ theorem map_updateColumn [DecidableEq n] (f : α → β) :
 #print Matrix.updateRow_transpose /-
 theorem updateRow_transpose [DecidableEq n] : updateRow Mᵀ j c = (updateColumn M j c)ᵀ :=
   by
-  ext (i' j)
+  ext i' j
   rw [transpose_apply, update_row_apply, update_column_apply]
   rfl
 #align matrix.update_row_transpose Matrix.updateRow_transpose
@@ -3363,7 +3363,7 @@ theorem updateRow_transpose [DecidableEq n] : updateRow Mᵀ j c = (updateColumn
 #print Matrix.updateColumn_transpose /-
 theorem updateColumn_transpose [DecidableEq m] : updateColumn Mᵀ i b = (updateRow M i b)ᵀ :=
   by
-  ext (i' j)
+  ext i' j
   rw [transpose_apply, update_row_apply, update_column_apply]
   rfl
 #align matrix.update_column_transpose Matrix.updateColumn_transpose
@@ -3408,7 +3408,7 @@ theorem updateColumn_eq_self [DecidableEq n] (A : Matrix m n α) (i : n) :
 theorem diagonal_updateColumn_single [DecidableEq n] [Zero α] (v : n → α) (i : n) (x : α) :
     (diagonal v).updateColumn i (Pi.single i x) = diagonal (Function.update v i x) :=
   by
-  ext (j k)
+  ext j k
   obtain rfl | hjk := eq_or_ne j k
   · rw [diagonal_apply_eq]
     obtain rfl | hji := eq_or_ne j i
@@ -3436,7 +3436,7 @@ theorem updateRow_submatrix_equiv [DecidableEq l] [DecidableEq m] (A : Matrix m 
     (r : o → α) (e : l ≃ m) (f : o ≃ n) :
     updateRow (A.submatrix e f) i r = (A.updateRow (e i) fun j => r (f.symm j)).submatrix e f :=
   by
-  ext (i' j)
+  ext i' j
   simp only [submatrix_apply, update_row_apply, Equiv.apply_eq_iff_eq, Equiv.symm_apply_apply]
 #align matrix.update_row_submatrix_equiv Matrix.updateRow_submatrix_equiv
 -/

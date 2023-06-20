@@ -586,7 +586,7 @@ instance : CompleteLattice (Filter α) :=
     rfl-- inf
       Filter.hasInf.1
     (by
-      ext (f g) : 2
+      ext f g : 2
       exact
         le_antisymm (le_inf (fun s => mem_inf_of_left) fun s => mem_inf_of_right)
           (by
@@ -597,7 +597,7 @@ instance : CompleteLattice (Filter α) :=
     (-- Sup
       join ∘
       𝓟)
-    (by ext (s x); exact mem_Inter₂.symm.trans (Set.ext_iff.1 (sInter_image _ _) x).symm)-- Inf
+    (by ext s x; exact mem_Inter₂.symm.trans (Set.ext_iff.1 (sInter_image _ _) x).symm)-- Inf
     _
     rfl
 

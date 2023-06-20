@@ -166,7 +166,7 @@ theorem circulant_sub [Sub α] [Sub n] (v w : n → α) :
 theorem circulant_mul [Semiring α] [Fintype n] [AddGroup n] (v w : n → α) :
     circulant v ⬝ circulant w = circulant (mulVec (circulant v) w) :=
   by
-  ext (i j)
+  ext i j
   simp only [mul_apply, mul_vec, circulant_apply, dot_product]
   refine' Fintype.sum_equiv (Equiv.subRight j) _ _ _
   intro x
@@ -187,7 +187,7 @@ theorem Fin.circulant_mul [Semiring α] :
 theorem circulant_mul_comm [CommSemigroup α] [AddCommMonoid α] [Fintype n] [AddCommGroup n]
     (v w : n → α) : circulant v ⬝ circulant w = circulant w ⬝ circulant v :=
   by
-  ext (i j)
+  ext i j
   simp only [mul_apply, circulant_apply, mul_comm]
   refine' Fintype.sum_equiv ((Equiv.subLeft i).trans (Equiv.addRight j)) _ _ _
   intro x
@@ -216,7 +216,7 @@ theorem circulant_smul [Sub n] [SMul R α] (k : R) (v : n → α) :
 #print Matrix.circulant_single_one /-
 @[simp]
 theorem circulant_single_one (α n) [Zero α] [One α] [DecidableEq n] [AddGroup n] :
-    circulant (Pi.single 0 1 : n → α) = (1 : Matrix n n α) := by ext (i j);
+    circulant (Pi.single 0 1 : n → α) = (1 : Matrix n n α) := by ext i j;
   simp [one_apply, Pi.single_apply, sub_eq_zero]
 #align matrix.circulant_single_one Matrix.circulant_single_one
 -/
@@ -226,7 +226,7 @@ theorem circulant_single_one (α n) [Zero α] [One α] [DecidableEq n] [AddGroup
 theorem circulant_single (n) [Semiring α] [DecidableEq n] [AddGroup n] [Fintype n] (a : α) :
     circulant (Pi.single 0 a : n → α) = scalar n a :=
   by
-  ext (i j)
+  ext i j
   simp [Pi.single_apply, one_apply, sub_eq_zero]
 #align matrix.circulant_single Matrix.circulant_single
 -/

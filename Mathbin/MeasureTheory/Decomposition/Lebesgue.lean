@@ -1135,7 +1135,7 @@ theorem toJordanDecomposition_eq_of_eq_add_withDensity {f : α → ℝ} (hf : Me
   haveI := is_finite_measure_with_density_of_real hfi.neg.2
   refine' to_jordan_decomposition_eq _
   simp_rw [jordan_decomposition.to_signed_measure, hadd]
-  ext (i hi)
+  ext i hi
   rw [vector_measure.sub_apply, to_signed_measure_apply_measurable hi,
       to_signed_measure_apply_measurable hi, add_apply, add_apply, ENNReal.toReal_add,
       ENNReal.toReal_add, add_sub_add_comm, ← to_signed_measure_apply_measurable hi, ←
@@ -1431,7 +1431,7 @@ theorem singularPart_add_withDensity_rnDeriv_eq [c.HaveLebesgueDecomposition μ]
     c.singularPart μ + μ.withDensityᵥ (c.rnDeriv μ) = c :=
   by
   conv_rhs => rw [← c.to_complex_measure_to_signed_measure]
-  ext (i hi) : 1
+  ext i hi : 1
   rw [vector_measure.add_apply, signed_measure.to_complex_measure_apply]
   ext
   · rw [Complex.add_re, with_densityᵥ_apply (c.integrable_rn_deriv μ) hi, ← IsROrC.re_eq_complex_re,

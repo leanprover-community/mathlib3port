@@ -94,7 +94,7 @@ theorem stdBasis_ne (i j : ι) (h : j ≠ i) (b : φ i) : stdBasis R φ i b j = 
 #print LinearMap.stdBasis_eq_pi_diag /-
 theorem stdBasis_eq_pi_diag (i : ι) : stdBasis R φ i = pi (diag i) :=
   by
-  ext (x j)
+  ext x j
   convert (update_apply 0 x i j _).symm
   rfl
 #align linear_map.std_basis_eq_pi_diag LinearMap.stdBasis_eq_pi_diag
@@ -377,7 +377,7 @@ variable {n m}
 theorem stdBasis_eq_stdBasisMatrix (i : n) (j : m) [DecidableEq n] [DecidableEq m] :
     stdBasis R n m (i, j) = stdBasisMatrix i j (1 : R) :=
   by
-  ext (a b)
+  ext a b
   by_cases hi : i = a <;> by_cases hj : j = b
   · simp [std_basis, hi, hj]
   · simp [std_basis, hi, hj, Ne.symm hj, LinearMap.stdBasis_ne]

@@ -197,7 +197,7 @@ theorem toMatrix_rotation (a : circle) :
     LinearMap.toMatrix basisOneI basisOneI (rotation a).toLinearEquiv =
       Matrix.planeConformalMatrix (re a) (im a) (by simp [pow_two, ← norm_sq_apply]) :=
   by
-  ext (i j)
+  ext i j
   simp [LinearMap.toMatrix_apply]
   fin_cases i <;> fin_cases j <;> simp
 #align to_matrix_rotation toMatrix_rotation

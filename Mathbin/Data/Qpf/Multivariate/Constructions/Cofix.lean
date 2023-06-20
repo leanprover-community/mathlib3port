@@ -394,7 +394,7 @@ theorem liftr_map_last [LawfulMvFunctor F] {α : TypeVec n} {ι ι'} (R : ι' �
         drop_fun_to_subtype]
       erw [to_subtype_of_subtype_assoc, id_comp]
       clear * -
-      ext (i x) : 2; induction i
+      ext i x : 2; induction i
       rfl; apply i_ih
     simp only [h, last_fun_from_append1_drop_last, last_fun_to_subtype, last_fun_append_fun,
       last_fun_subtype_val, comp.left_id, last_fun_comp, last_fun_prod]

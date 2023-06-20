@@ -46,7 +46,7 @@ class LocallyOfFiniteType (f : X ⟶ Y) : Prop where
 
 theorem locallyOfFiniteType_eq : @LocallyOfFiniteType = affineLocally @RingHom.FiniteType :=
   by
-  ext (X Y f)
+  ext X Y f
   rw [locally_of_finite_type_iff, affine_locally_iff_affine_opens_le]
   exact RingHom.finiteType_respectsIso
 #align algebraic_geometry.locally_of_finite_type_eq AlgebraicGeometry.locallyOfFiniteType_eq

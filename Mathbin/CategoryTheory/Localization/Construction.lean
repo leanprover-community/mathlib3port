@@ -252,7 +252,7 @@ theorem morphismProperty_is_top (P : MorphismProperty W.Localization)
     (hP₁ : ∀ ⦃X Y : C⦄ (f : X ⟶ Y), P (W.Q.map f))
     (hP₂ : ∀ ⦃X Y : C⦄ (w : X ⟶ Y) (hw : W w), P (winv w hw)) (hP₃ : P.StableUnderComposition) :
     P = ⊤ := by
-  ext (X Y f)
+  ext X Y f
   constructor
   · intro hf
     simp only [Pi.top_apply]

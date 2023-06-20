@@ -88,19 +88,19 @@ theorem MeasureTheory.SignedMeasure.toComplexMeasure_apply {s t : SignedMeasure 
 
 #print MeasureTheory.ComplexMeasure.toComplexMeasure_to_signedMeasure /-
 theorem toComplexMeasure_to_signedMeasure (c : ComplexMeasure α) : c.re.toComplexMeasure c.im = c :=
-  by ext (i hi) <;> rfl
+  by ext i hi <;> rfl
 #align measure_theory.complex_measure.to_complex_measure_to_signed_measure MeasureTheory.ComplexMeasure.toComplexMeasure_to_signedMeasure
 -/
 
 #print MeasureTheory.SignedMeasure.re_toComplexMeasure /-
 theorem MeasureTheory.SignedMeasure.re_toComplexMeasure (s t : SignedMeasure α) :
-    (s.toComplexMeasure t).re = s := by ext (i hi); rfl
+    (s.toComplexMeasure t).re = s := by ext i hi; rfl
 #align measure_theory.signed_measure.re_to_complex_measure MeasureTheory.SignedMeasure.re_toComplexMeasure
 -/
 
 #print MeasureTheory.SignedMeasure.im_toComplexMeasure /-
 theorem MeasureTheory.SignedMeasure.im_toComplexMeasure (s t : SignedMeasure α) :
-    (s.toComplexMeasure t).im = t := by ext (i hi); rfl
+    (s.toComplexMeasure t).im = t := by ext i hi; rfl
 #align measure_theory.signed_measure.im_to_complex_measure MeasureTheory.SignedMeasure.im_toComplexMeasure
 -/
 
@@ -127,12 +127,12 @@ variable [ContinuousConstSMul R ℝ] [ContinuousConstSMul R ℂ]
 @[simps]
 def equivSignedMeasureₗ : ComplexMeasure α ≃ₗ[R] SignedMeasure α × SignedMeasure α :=
   { equivSignedMeasure with
-    map_add' := fun c d => by ext (i hi) <;> rfl
+    map_add' := fun c d => by ext i hi <;> rfl
     map_smul' := by
-      intro r c; ext (i hi)
+      intro r c; ext i hi
       · change (r • c i).re = r • (c i).re
         simp [Complex.smul_re]
-      · ext (i hi)
+      · ext i hi
         change (r • c i).im = r • (c i).im
         simp [Complex.smul_im] }
 #align measure_theory.complex_measure.equiv_signed_measureₗ MeasureTheory.ComplexMeasure.equivSignedMeasureₗ

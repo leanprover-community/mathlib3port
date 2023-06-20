@@ -364,7 +364,7 @@ theorem nullHomotopicMap'_comp (hom : ∀ i j, c.Rel j i → (C.pt i ⟶ D.pt j)
   ext n
   erw [null_homotopic_map_comp]
   congr
-  ext (i j)
+  ext i j
   split_ifs
   · rfl
   · rw [zero_comp]
@@ -392,7 +392,7 @@ theorem comp_nullHomotopicMap' (f : C ⟶ D) (hom : ∀ i j, c.Rel j i → (D.pt
   ext n
   erw [comp_null_homotopic_map]
   congr
-  ext (i j)
+  ext i j
   split_ifs
   · rfl
   · rw [comp_zero]
@@ -422,7 +422,7 @@ theorem map_nullHomotopicMap' {W : Type _} [Category W] [Preadditive W] (G : V �
   ext n
   erw [map_null_homotopic_map]
   congr
-  ext (i j)
+  ext i j
   split_ifs
   · rfl
   · rw [G.map_zero]

@@ -471,7 +471,7 @@ theorem x_projective (G : Type u) [Group G] (n : ℕ) :
 `G`-representation. It sends `(g₀, ..., gₙ₊₁) ↦ ∑ (-1)ⁱ • (g₀, ..., ĝᵢ, ..., gₙ₊₁)`. -/
 theorem d_eq (n : ℕ) : ((GroupCohomology.resolution k G).d (n + 1) n).hom = d k G (n + 1) :=
   by
-  ext (x y)
+  ext x y
   dsimp [GroupCohomology.resolution]
   simpa [← @intCast_smul k, simplicial_object.δ]
 #align group_cohomology.resolution.d_eq GroupCohomology.resolution.d_eq

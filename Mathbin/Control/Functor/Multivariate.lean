@@ -218,9 +218,9 @@ theorem LiftP_PredLast_iff {β} (p : β → Prop) (x : F (α ::: β)) :
   by
   dsimp only [liftp, liftp']
   apply exists_iff_exists_of_mono F (f _ n α) (g _ n α)
-  · ext (i⟨x, _⟩); cases i <;> rfl
+  · ext i ⟨x, _⟩; cases i <;> rfl
   · intros; rw [MvFunctor.map_map, (· ⊚ ·)]
-    congr <;> ext (i⟨x, _⟩) <;> cases i <;> rfl
+    congr <;> ext i ⟨x, _⟩ <;> cases i <;> rfl
 #align mvfunctor.liftp_last_pred_iff MvFunctor.LiftP_PredLast_iff
 -/
 
@@ -255,9 +255,9 @@ theorem LiftR_RelLast_iff (x y : F (α ::: β)) :
   by
   dsimp only [liftr, liftr']
   apply exists_iff_exists_of_mono F (f rr _ _) (g rr _ _)
-  · ext (i⟨x, _⟩) : 2; cases i <;> rfl
+  · ext i ⟨x, _⟩ : 2; cases i <;> rfl
   · intros; rw [MvFunctor.map_map, MvFunctor.map_map, (· ⊚ ·), (· ⊚ ·)]
-    congr <;> ext (i⟨x, _⟩) <;> cases i <;> rfl
+    congr <;> ext i ⟨x, _⟩ <;> cases i <;> rfl
 #align mvfunctor.liftr_last_rel_iff MvFunctor.LiftR_RelLast_iff
 -/
 

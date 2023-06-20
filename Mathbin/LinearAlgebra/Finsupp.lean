@@ -315,7 +315,7 @@ end
 theorem restrictDom_comp_subtype (s : Set α) :
     (restrictDom M R s).comp (Submodule.subtype _) = LinearMap.id :=
   by
-  ext (l a)
+  ext l a
   by_cases a ∈ s <;> simp [h]
   exact ((mem_supported' R l.1).1 l.2 a h).symm
 #align finsupp.restrict_dom_comp_subtype Finsupp.restrictDom_comp_subtype
@@ -438,10 +438,10 @@ def lsum : (α → M →ₗ[R] N) ≃ₗ[S] (α →₀ M) →ₗ[R] N
       map_add' := (liftAddHom fun x => (F x).toAddMonoidHom).map_add
       map_smul' := fun c f => by simp [sum_smul_index', smul_sum] }
   invFun F x := F.comp (lsingle x)
-  left_inv F := by ext (x y); simp
-  right_inv F := by ext (x y); simp
-  map_add' F G := by ext (x y); simp
-  map_smul' F G := by ext (x y); simp
+  left_inv F := by ext x y; simp
+  right_inv F := by ext x y; simp
+  map_add' F G := by ext x y; simp
+  map_smul' F G := by ext x y; simp
 #align finsupp.lsum Finsupp.lsum
 -/
 
@@ -1469,7 +1469,7 @@ def splittingOfFinsuppSurjective (f : M →ₗ[R] α →₀ R) (s : Surjective f
 theorem splittingOfFinsuppSurjective_splits (f : M →ₗ[R] α →₀ R) (s : Surjective f) :
     f.comp (splittingOfFinsuppSurjective f s) = LinearMap.id :=
   by
-  ext (x y)
+  ext x y
   dsimp [splitting_of_finsupp_surjective]
   congr
   rw [sum_single_index, one_smul]
@@ -1506,7 +1506,7 @@ def splittingOfFunOnFintypeSurjective [Fintype α] (f : M →ₗ[R] α → R) (s
 theorem splittingOfFunOnFintypeSurjective_splits [Fintype α] (f : M →ₗ[R] α → R)
     (s : Surjective f) : f.comp (splittingOfFunOnFintypeSurjective f s) = LinearMap.id :=
   by
-  ext (x y)
+  ext x y
   dsimp [splitting_of_fun_on_fintype_surjective]
   rw [linear_equiv_fun_on_finite_symm_single, Finsupp.sum_single_index, one_smul,
     (s (Finsupp.single x 1)).choose_spec, Finsupp.single_eq_pi_single]

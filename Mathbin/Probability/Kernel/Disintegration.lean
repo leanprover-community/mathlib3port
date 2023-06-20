@@ -243,7 +243,7 @@ theorem kernel.const_eq_compProd_real (γ : Type _) [MeasurableSpace γ] (ρ : M
     [IsFiniteMeasure ρ] :
     kernel.const γ ρ = kernel.const γ ρ.fst ⊗ₖ kernel.prodMkLeft γ (condKernelReal ρ) :=
   by
-  ext (a s hs) : 2
+  ext a s hs : 2
   rw [kernel.comp_prod_apply _ _ _ hs, kernel.const_apply, kernel.const_apply]
   simp_rw [kernel.prod_mk_left_apply]
   rw [lintegral_cond_kernel_real_mem ρ hs]
@@ -353,7 +353,7 @@ theorem exists_cond_kernel (γ : Type _) [MeasurableSpace γ] :
     · rw [kernel.deterministic_apply' _ _ hf.measurable_set_range, Set.indicator_apply, if_pos hx₀]
   have : kernel.const γ ρ = kernel.comap_right (kernel.const γ ρ') h_prod_embed :=
     by
-    ext (c t ht) : 2
+    ext c t ht : 2
     rw [kernel.const_apply, kernel.comap_right_apply' _ _ _ ht, kernel.const_apply,
       measure.map_apply h_prod_embed.measurable (h_prod_embed.measurable_set_image.mpr ht)]
     congr with x : 1
@@ -363,7 +363,7 @@ theorem exists_cond_kernel (γ : Type _) [MeasurableSpace γ] :
     rintro ⟨a, b, h_mem, rfl, hf_eq⟩
     rwa [hf.injective hf_eq] at h_mem 
   rw [this, kernel.const_eq_comp_prod_real _ ρ']
-  ext (c t ht) : 2
+  ext c t ht : 2
   rw [kernel.comap_right_apply' _ _ _ ht,
     kernel.comp_prod_apply _ _ _ (h_prod_embed.measurable_set_image.mpr ht), kernel.const_apply,
     h_fst, kernel.comp_prod_apply _ _ _ ht, kernel.const_apply]
@@ -422,7 +422,7 @@ theorem kernel.const_eq_compProd (γ : Type _) [MeasurableSpace γ] (ρ : Measur
     [IsFiniteMeasure ρ] :
     kernel.const γ ρ = kernel.const γ ρ.fst ⊗ₖ kernel.prodMkLeft γ ρ.condKernel :=
   by
-  ext (a s hs) : 2
+  ext a s hs : 2
   simpa only [kernel.const_apply, kernel.comp_prod_apply _ _ _ hs, kernel.prod_mk_left_apply'] using
     kernel.ext_iff'.mp (kernel.const_unit_eq_comp_prod ρ) () s hs
 #align probability_theory.kernel.const_eq_comp_prod ProbabilityTheory.kernel.const_eq_compProd

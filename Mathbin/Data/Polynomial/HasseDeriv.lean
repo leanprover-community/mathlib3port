@@ -167,7 +167,7 @@ theorem factorial_smul_hasseDeriv : ⇑(k ! • @hasseDeriv R _ k) = @derivative
   by
   induction' k with k ih
   · rw [hasse_deriv_zero, factorial_zero, iterate_zero, one_smul, LinearMap.id_coe]
-  ext (f n) : 2
+  ext f n : 2
   rw [iterate_succ_apply', ← ih]
   simp only [LinearMap.smul_apply, coeff_smul, LinearMap.map_smul_of_tower, coeff_derivative,
     hasse_deriv_coeff, ← @choose_symm_add _ k]
@@ -273,7 +273,7 @@ theorem hasseDeriv_mul (f g : R[X]) :
       ∑ ij : ℕ × ℕ in antidiagonal k, ((comp_hom.comp ((comp_hom Φ) (D ij.1))).flip (D ij.2) f) g
   simp only [← finset_sum_apply]
   congr 2; clear f g
-  ext (m r n s) : 4
+  ext m r n s : 4
   simp only [finset_sum_apply, coe_mul_left, coe_comp, flip_apply, comp_app, hasse_deriv_monomial,
     LinearMap.toAddMonoidHom_coe, comp_hom_apply_apply, coe_mul, monomial_mul_monomial]
   have aux :

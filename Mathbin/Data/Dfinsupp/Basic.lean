@@ -1772,7 +1772,7 @@ theorem sigmaCurry_apply [∀ i j, Zero (δ i j)] (f : Π₀ i : Σ i, _, δ i.1
 #print Dfinsupp.sigmaCurry_zero /-
 @[simp]
 theorem sigmaCurry_zero [∀ i j, Zero (δ i j)] : sigmaCurry (0 : Π₀ i : Σ i, _, δ i.1 i.2) = 0 := by
-  ext (i j); rw [sigma_curry_apply]; rfl
+  ext i j; rw [sigma_curry_apply]; rfl
 #align dfinsupp.sigma_curry_zero Dfinsupp.sigmaCurry_zero
 -/
 
@@ -1781,7 +1781,7 @@ theorem sigmaCurry_zero [∀ i j, Zero (δ i j)] : sigmaCurry (0 : Π₀ i : Σ 
 theorem sigmaCurry_add [∀ i j, AddZeroClass (δ i j)] (f g : Π₀ i : Σ i, α i, δ i.1 i.2) :
     @sigmaCurry _ _ δ _ (f + g) = @sigmaCurry _ _ δ _ f + @sigmaCurry ι α δ _ g :=
   by
-  ext (i j)
+  ext i j
   rw [@add_apply _ (fun i => Π₀ j, δ i j) _ (sigma_curry _), add_apply, sigma_curry_apply,
     sigma_curry_apply, sigma_curry_apply, add_apply]
 #align dfinsupp.sigma_curry_add Dfinsupp.sigmaCurry_add
@@ -1793,7 +1793,7 @@ theorem sigmaCurry_smul [Monoid γ] [∀ i j, AddMonoid (δ i j)] [∀ i j, Dist
     (r : γ) (f : Π₀ i : Σ i, α i, δ i.1 i.2) :
     @sigmaCurry _ _ δ _ (r • f) = r • @sigmaCurry _ _ δ _ f :=
   by
-  ext (i j)
+  ext i j
   rw [@smul_apply _ _ (fun i => Π₀ j, δ i j) _ _ _ _ (sigma_curry _), smul_apply, sigma_curry_apply,
     sigma_curry_apply, smul_apply]
 #align dfinsupp.sigma_curry_smul Dfinsupp.sigmaCurry_smul
@@ -1806,7 +1806,7 @@ theorem sigmaCurry_single [DecidableEq ι] [∀ i, DecidableEq (α i)] [∀ i j,
     @sigmaCurry _ _ _ _ (single ij x) = single ij.1 (single ij.2 x : Π₀ j, δ ij.1 j) :=
   by
   obtain ⟨i, j⟩ := ij
-  ext (i' j')
+  ext i' j'
   dsimp only
   rw [sigma_curry_apply]
   obtain rfl | hi := eq_or_ne i i'
@@ -1913,7 +1913,7 @@ noncomputable def sigmaCurryEquiv [∀ i j, Zero (δ i j)] [∀ i, DecidableEq (
   toFun := sigmaCurry
   invFun := sigmaUncurry
   left_inv f := by ext ⟨i, j⟩; rw [sigma_uncurry_apply, sigma_curry_apply]
-  right_inv f := by ext (i j); rw [sigma_curry_apply, sigma_uncurry_apply]
+  right_inv f := by ext i j; rw [sigma_curry_apply, sigma_uncurry_apply]
 #align dfinsupp.sigma_curry_equiv Dfinsupp.sigmaCurryEquiv
 -/
 

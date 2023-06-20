@@ -231,7 +231,7 @@ theorem extend_agrees {x : FamilyOfElements P R} (t : x.Compatible) {f : Y ⟶ X
 theorem restrict_extend {x : FamilyOfElements P R} (t : x.Compatible) :
     x.sieveExtend.restrict (le_generate R) = x :=
   by
-  ext (Y f hf)
+  ext Y f hf
   exact extend_agrees t hf
 #align category_theory.presieve.restrict_extend CategoryTheory.Presieve.restrict_extend
 -/
@@ -279,7 +279,7 @@ theorem extend_restrict {x : FamilyOfElements P (generate R)} (t : x.Compatible)
     (x.restrict (le_generate R)).sieveExtend = x :=
   by
   rw [compatible_iff_sieve_compatible] at t 
-  ext (_ _ h); apply (t _ _ _).symm.trans; congr
+  ext _ _ h; apply (t _ _ _).symm.trans; congr
   exact h.some_spec.some_spec.some_spec.2
 #align category_theory.presieve.extend_restrict CategoryTheory.Presieve.extend_restrict
 -/
@@ -565,7 +565,7 @@ def natTransEquivCompatibleFamily {P : Cᵒᵖ ⥤ Type v₁} :
         ext ⟨f, hf⟩
         apply t.2.to_sieveCompatible _ }
   left_inv α := by
-    ext (X⟨_, _⟩)
+    ext X ⟨_, _⟩
     rfl
   right_inv := by
     rintro ⟨x, hx⟩
@@ -587,7 +587,7 @@ theorem extension_iff_amalgamation {P : Cᵒᵖ ⥤ Type v₁} (x : S.Functor �
     simp
   -- See note [dsimp, simp].
   · intro h
-    ext (Y⟨f, hf⟩)
+    ext Y ⟨f, hf⟩
     have : _ = x.app Y _ := h f hf
     rw [yoneda_equiv_naturality] at this 
     rw [← this]
@@ -949,10 +949,10 @@ def firstObjEqFamily : FirstObj P R ≅ R.FamilyOfElements P
   Hom t Y f hf := Pi.π (fun f : Σ Y, { f : Y ⟶ X // R f } => P.obj (op f.1)) ⟨_, _, hf⟩ t
   inv := Pi.lift fun f x => x _ f.2.2
   hom_inv_id' := by
-    ext (⟨Y, f, hf⟩p)
+    ext ⟨Y, f, hf⟩ p
     simpa
   inv_hom_id' := by
-    ext (x Y f hf)
+    ext x Y f hf
     apply limits.types.limit.lift_π_apply'
 #align category_theory.equalizer.first_obj_eq_family CategoryTheory.Equalizer.firstObjEqFamily
 -/
@@ -1050,7 +1050,7 @@ theorem equalizer_sheaf_condition :
   rw [Equiv.eq_symm_apply]
   constructor
   · intro q
-    ext (Y f hf)
+    ext Y f hf
     simpa [first_obj_eq_family, fork_map] using q _ _
   · intro q Y f hf
     rw [← q]
@@ -1145,7 +1145,7 @@ theorem sheaf_condition : R.IsSheafFor P ↔ Nonempty (IsLimit (Fork.ofι _ (w P
   rw [Equiv.eq_symm_apply]
   constructor
   · intro q
-    ext (Y f hf)
+    ext Y f hf
     simpa [fork_map] using q _ _
   · intro q Y f hf
     rw [← q]

@@ -237,7 +237,7 @@ theorem tendsto_lcRow0 {cd : Fin 2 → ℤ} (hcd : IsCoprime (cd 0) (cd 1)) :
   have hf₂ : ClosedEmbedding (lc_row0_extend hcd) :=
     (lc_row0_extend hcd).toContinuousLinearEquiv.toHomeomorph.ClosedEmbedding
   convert hf₂.tendsto_cocompact.comp (hf₁.comp subtype.coe_injective.tendsto_cofinite) using 1
-  ext (⟨g, rfl⟩i j) : 3
+  ext ⟨g, rfl⟩ i j : 3
   fin_cases i <;> [fin_cases j; skip]
   -- the following are proved by `simp`, but it is replaced by `simp only` to avoid timeouts.
   ·
@@ -370,10 +370,10 @@ theorem exists_eq_t_zpow_of_c_eq_zero (hc : ↑ₘg 1 0 = 0) : ∃ n : ℤ, ∀ 
   rcases Int.eq_one_or_neg_one_of_mul_eq_one' had with (⟨ha, hd⟩ | ⟨ha, hd⟩)
   · use ↑ₘg 0 1
     suffices g = T ^ ↑ₘg 0 1 by intro z; conv_lhs => rw [this]
-    ext (i j); fin_cases i <;> fin_cases j <;> simp [ha, hc, hd, coe_T_zpow]
+    ext i j; fin_cases i <;> fin_cases j <;> simp [ha, hc, hd, coe_T_zpow]
   · use -↑ₘg 0 1
     suffices g = -T ^ (-↑ₘg 0 1) by intro z; conv_lhs => rw [this, SL_neg_smul]
-    ext (i j); fin_cases i <;> fin_cases j <;> simp [ha, hc, hd, coe_T_zpow]
+    ext i j; fin_cases i <;> fin_cases j <;> simp [ha, hc, hd, coe_T_zpow]
 #align modular_group.exists_eq_T_zpow_of_c_eq_zero ModularGroup.exists_eq_t_zpow_of_c_eq_zero
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr «expr!![ »(matrix.notation [expr _, ",", expr _, ";", expr _, ",", expr _, "]"] [])]] -/

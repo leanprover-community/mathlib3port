@@ -188,7 +188,7 @@ theorem IsDiag.kronecker [MulZeroClass α] {A : Matrix m m α} {B : Matrix n n �
 #print Matrix.IsDiag.isSymm /-
 theorem IsDiag.isSymm [Zero α] {A : Matrix n n α} (h : A.IsDiag) : A.IsSymm :=
   by
-  ext (i j)
+  ext i j
   by_cases g : i = j; · rw [g]
   simp [h g, h (Ne.symm g)]
 #align matrix.is_diag.is_symm Matrix.IsDiag.isSymm

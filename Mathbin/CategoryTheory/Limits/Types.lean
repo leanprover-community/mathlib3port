@@ -56,7 +56,7 @@ attribute [local elab_without_expected_type] congr_fun
 def limitConeIsLimit (F : J ⥤ Type max v u) : IsLimit (limitCone F)
     where
   lift s v := ⟨fun j => s.π.app j v, fun j j' f => congr_fun (Cone.w s f) _⟩
-  uniq := by intros; ext (x j); exact congr_fun (w j) x
+  uniq := by intros; ext x j; exact congr_fun (w j) x
 #align category_theory.limits.types.limit_cone_is_limit CategoryTheory.Limits.Types.limitConeIsLimit
 -/
 
@@ -531,7 +531,7 @@ protected theorem rel_equiv : Equivalence (FilteredColimit.Rel F) :=
 #print CategoryTheory.Limits.Types.FilteredColimit.rel_eq_eqvGen_quot_rel /-
 protected theorem rel_eq_eqvGen_quot_rel : FilteredColimit.Rel F = EqvGen (Quot.Rel F) :=
   by
-  ext (⟨j, x⟩⟨j', y⟩)
+  ext ⟨j, x⟩ ⟨j', y⟩
   constructor
   · apply eqv_gen_quot_rel_of_rel
   · rw [← (filtered_colimit.rel_equiv F).eqvGen_iff]

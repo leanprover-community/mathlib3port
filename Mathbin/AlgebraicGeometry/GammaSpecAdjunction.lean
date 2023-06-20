@@ -310,7 +310,7 @@ theorem right_triangle (R : CommRingCat) :
       𝟙 _ :=
   by
   apply LocallyRingedSpace.comp_ring_hom_ext
-  · ext ((p : PrimeSpectrum R)x)
+  · ext (p : PrimeSpectrum R) x
     erw [←
       IsLocalization.AtPrime.to_map_mem_maximal_iff ((structure_sheaf R).Presheaf.stalk p)
         p.as_ideal x]

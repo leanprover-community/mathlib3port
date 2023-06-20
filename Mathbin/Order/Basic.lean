@@ -836,7 +836,7 @@ theorem Preorder.ext {α} {A B : Preorder α}
         (haveI := A
           x ≤ y) ↔
           x ≤ y) :
-    A = B := by ext (x y); exact H x y
+    A = B := by ext x y; exact H x y
 #align preorder.ext Preorder.ext
 -/
 
@@ -847,7 +847,7 @@ theorem PartialOrder.ext {α} {A B : PartialOrder α}
         (haveI := A
           x ≤ y) ↔
           x ≤ y) :
-    A = B := by ext (x y); exact H x y
+    A = B := by ext x y; exact H x y
 #align partial_order.ext PartialOrder.ext
 -/
 
@@ -858,7 +858,7 @@ theorem LinearOrder.ext {α} {A B : LinearOrder α}
         (haveI := A
           x ≤ y) ↔
           x ≤ y) :
-    A = B := by ext (x y); exact H x y
+    A = B := by ext x y; exact H x y
 #align linear_order.ext LinearOrder.ext
 -/
 
@@ -1314,8 +1314,8 @@ def LinearOrder.lift {α β} [LinearOrder β] [Sup α] [Inf α] (f : α → β) 
     DecidableEq := fun x y => decidable_of_iff (f x = f y) inj.eq_iff
     min := (· ⊓ ·)
     max := (· ⊔ ·)
-    min_def := by ext (x y); apply inj; rw [hinf, min_def, minDefault, apply_ite f]; rfl
-    max_def := by ext (x y); apply inj; rw [hsup, max_def, maxDefault, apply_ite f]; rfl }
+    min_def := by ext x y; apply inj; rw [hinf, min_def, minDefault, apply_ite f]; rfl
+    max_def := by ext x y; apply inj; rw [hsup, max_def, maxDefault, apply_ite f]; rfl }
 #align linear_order.lift LinearOrder.lift
 -/
 

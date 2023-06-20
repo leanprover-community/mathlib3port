@@ -85,7 +85,7 @@ variable [PartialOrder α] [PartialOrder β]
 
 #print SimpleGraph.hasse_prod /-
 @[simp]
-theorem hasse_prod : hasse (α × β) = hasse α □ hasse β := by ext (x y);
+theorem hasse_prod : hasse (α × β) = hasse α □ hasse β := by ext x y;
   simp_rw [box_prod_adj, hasse_adj, Prod.covby_iff, or_and_right, @eq_comm _ y.1, @eq_comm _ y.2,
     or_or_or_comm]
 #align simple_graph.hasse_prod SimpleGraph.hasse_prod

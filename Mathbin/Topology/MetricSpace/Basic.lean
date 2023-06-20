@@ -178,7 +178,7 @@ theorem PseudoMetricSpace.ext {α : Type _} {m m' : PseudoMetricSpace α}
   dsimp at h 
   subst h
   congr
-  · ext (x y) : 2
+  · ext x y : 2
     dsimp at m_edist_dist m'_edist_dist 
     simp [m_edist_dist, m'_edist_dist]
   · dsimp at m_uniformity_dist m'_uniformity_dist 

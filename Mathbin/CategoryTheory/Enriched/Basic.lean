@@ -204,8 +204,8 @@ def enrichedCategoryTypeEquivCategory (C : Type u₁) : EnrichedCategory (Type v
     cases 𝒞
     dsimp [enriched_category_Type_of_category]
     congr
-    · ext (X⟨⟩); rfl
-    · ext (X Y Z⟨f, g⟩); rfl
+    · ext X ⟨⟩; rfl
+    · ext X Y Z ⟨f, g⟩; rfl
   right_inv 𝒞 := by rcases 𝒞 with @⟨@⟨⟨⟩⟩⟩; dsimp; congr
 #align category_theory.enriched_category_Type_equiv_category CategoryTheory.enrichedCategoryTypeEquivCategory
 -/

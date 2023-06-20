@@ -108,7 +108,7 @@ theorem μ_natural {X Y X' Y' : Type u} (f : X ⟶ Y) (g : X' ⟶ Y') :
     ((free R).map f ⊗ (free R).map g) ≫ (μ R Y Y').Hom = (μ R X X').Hom ≫ (free R).map (f ⊗ g) :=
   by
   intros
-  ext (x x'⟨y, y'⟩)
+  ext x x' ⟨y, y'⟩
   dsimp [μ]
   simp_rw [Finsupp.mapDomain_single, finsuppTensorFinsupp'_single_tmul_single, mul_one,
     Finsupp.mapDomain_single, CategoryTheory.tensor_apply]
@@ -178,7 +178,7 @@ instance : LaxMonoidal.{u} (free R).obj
   associativity' := associativity R
 
 instance : IsIso (LaxMonoidal.ε (free R).obj) :=
-  ⟨⟨Finsupp.lapply PUnit.unit, ⟨by ext; simp, by ext (⟨⟩⟨⟩); simp⟩⟩⟩
+  ⟨⟨Finsupp.lapply PUnit.unit, ⟨by ext; simp, by ext ⟨⟩ ⟨⟩; simp⟩⟩⟩
 
 end Free
 
@@ -264,7 +264,7 @@ instance : Preadditive (Free R C)
   comp_add X Y Z f g g' := by
     dsimp
     rw [← Finsupp.sum_add]
-    congr; ext (r h)
+    congr; ext r h
     rw [Finsupp.sum_add_index'] <;> · simp [mul_add]
 
 instance : Linear R (Free R C)
@@ -276,7 +276,7 @@ instance : Linear R (Free R C)
   comp_smul' X Y Z f r g := by
     dsimp
     simp_rw [Finsupp.smul_sum]
-    congr; ext (h s)
+    congr; ext h s
     rw [Finsupp.sum_smul_index] <;> simp [Finsupp.smul_sum, mul_left_comm]
 
 #print CategoryTheory.Free.single_comp_single /-

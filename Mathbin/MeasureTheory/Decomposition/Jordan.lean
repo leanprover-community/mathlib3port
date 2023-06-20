@@ -303,7 +303,7 @@ theorem toSignedMeasure_toJordanDecomposition (s : SignedMeasure α) :
   by
   obtain ⟨i, hi₁, hi₂, hi₃, hμ, hν⟩ := s.to_jordan_decomposition_spec
   simp only [jordan_decomposition.to_signed_measure, hμ, hν]
-  ext (k hk)
+  ext k hk
   rw [to_signed_measure_sub_apply hk, to_measure_of_zero_le_apply _ hi₂ hi₁ hk,
     to_measure_of_le_zero_apply _ hi₃ hi₁.compl hk]
   simp only [ENNReal.coe_toReal, Subtype.coe_mk, ENNReal.some_eq_coe, sub_neg_eq_add]

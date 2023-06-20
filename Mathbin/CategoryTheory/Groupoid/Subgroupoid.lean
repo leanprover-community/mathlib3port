@@ -235,7 +235,7 @@ def vertexSubgroup {c : C} (hc : c ∈ S.objs) : Subgroup (c ⟶ c)
 instance : SetLike (Subgroupoid C) (Σ c d : C, c ⟶ d)
     where
   coe S := {F | F.2.2 ∈ S.arrows F.1 F.2.1}
-  coe_injective' := fun ⟨S, _, _⟩ ⟨T, _, _⟩ h => by ext (c d f); apply Set.ext_iff.1 h ⟨c, d, f⟩
+  coe_injective' := fun ⟨S, _, _⟩ ⟨T, _, _⟩ h => by ext c d f; apply Set.ext_iff.1 h ⟨c, d, f⟩
 
 #print CategoryTheory.Subgroupoid.mem_iff /-
 theorem mem_iff (S : Subgroupoid C) (F : Σ c d, c ⟶ d) : F ∈ S ↔ F.2.2 ∈ S.arrows F.1 F.2.1 :=

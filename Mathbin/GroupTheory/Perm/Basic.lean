@@ -369,7 +369,7 @@ theorem sigmaCongrRightHom_injective {α : Type _} {β : α → Type _} :
     Function.Injective (sigmaCongrRightHom β) :=
   by
   intro x y h
-  ext (a b)
+  ext a b
   simpa using Equiv.congr_fun h ⟨a, b⟩
 #align equiv.perm.sigma_congr_right_hom_injective Equiv.Perm.sigmaCongrRightHom_injective
 -/

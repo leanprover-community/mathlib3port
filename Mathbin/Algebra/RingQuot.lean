@@ -146,7 +146,7 @@ def ringCon (r : R → R → Prop) : RingCon R
 #print RingQuot.eqvGen_rel_eq /-
 theorem eqvGen_rel_eq (r : R → R → Prop) : EqvGen (Rel r) = RingConGen.Rel r :=
   by
-  ext (x₁ x₂)
+  ext x₁ x₂
   constructor
   · intro h
     induction' h with x₃ x₄ h₃₄

@@ -305,7 +305,7 @@ theorem HasFTaylorSeriesUpToOn.hasFDerivWithinAt (h : HasFTaylorSeriesUpToOn n f
   rw [LinearIsometryEquiv.comp_hasFDerivWithinAt_iff']
   have : ((0 : ℕ) : ℕ∞) < n := lt_of_lt_of_le (WithTop.coe_lt_coe.2 Nat.zero_lt_one) hn
   convert h.fderiv_within _ this x hx
-  ext (y v)
+  ext y v
   change (p x 1) (snoc 0 y) = (p x 1) (cons y v)
   unfold_coes
   congr with i
@@ -404,7 +404,7 @@ theorem hasFTaylorSeriesUpToOn_succ_iff_right {n : ℕ} :
           (p x m.succ.succ).curryRight.curryLeft s x
       rw [LinearIsometryEquiv.comp_hasFDerivWithinAt_iff']
       convert H.fderiv_within _ A x hx
-      ext (y v)
+      ext y v
       change
         (p x m.succ.succ) (snoc (cons y (init v)) (v (last _))) =
           (p x (Nat.succ (Nat.succ m))) (cons y v)
@@ -431,7 +431,7 @@ theorem hasFTaylorSeriesUpToOn_succ_iff_right {n : ℕ} :
           Htaylor.fderiv_within _ A x hx
         rw [LinearIsometryEquiv.comp_hasFDerivWithinAt_iff'] at this 
         convert this
-        ext (y v)
+        ext y v
         change
           (p x (Nat.succ (Nat.succ m))) (cons y v) =
             (p x m.succ.succ) (snoc (cons y (init v)) (v (last _)))
@@ -689,10 +689,10 @@ theorem contDiffWithinAt_succ_iff_hasFDerivWithinAt {n : ℕ} :
         congr
         decide
       · convert (Hp'.mono (inter_subset_left v u)).congr fun x hx => Hp'.zero_eq x hx.1
-        · ext (x y)
+        · ext x y
           change p' x 0 (init (@snoc 0 (fun i : Fin 1 => E) 0 y)) y = p' x 0 0 y
           rw [init_snoc]
-        · ext (x k v y)
+        · ext x k v y
           change
             p' x k (init (@snoc k (fun i : Fin k.succ => E) v y))
                 (@snoc k (fun i : Fin k.succ => E) v y (last k)) =
@@ -1968,7 +1968,7 @@ theorem iteratedFDerivWithin_univ {n : ℕ} :
   by
   induction' n with n IH
   · ext x; simp
-  · ext (x m)
+  · ext x m
     rw [iteratedFDeriv_succ_apply_left, iteratedFDerivWithin_succ_apply_left, IH, fderivWithin_univ]
 #align iterated_fderiv_within_univ iteratedFDerivWithin_univ
 -/

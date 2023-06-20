@@ -892,13 +892,13 @@ instance : Subsingleton (LocallyFiniteOrder α) :=
   Subsingleton.intro fun h₀ h₁ => by
     cases h₀
     cases h₁
-    have hIcc : h₀_finset_Icc = h₁_finset_Icc := by ext (a b x);
+    have hIcc : h₀_finset_Icc = h₁_finset_Icc := by ext a b x;
       rw [h₀_finset_mem_Icc, h₁_finset_mem_Icc]
-    have hIco : h₀_finset_Ico = h₁_finset_Ico := by ext (a b x);
+    have hIco : h₀_finset_Ico = h₁_finset_Ico := by ext a b x;
       rw [h₀_finset_mem_Ico, h₁_finset_mem_Ico]
-    have hIoc : h₀_finset_Ioc = h₁_finset_Ioc := by ext (a b x);
+    have hIoc : h₀_finset_Ioc = h₁_finset_Ioc := by ext a b x;
       rw [h₀_finset_mem_Ioc, h₁_finset_mem_Ioc]
-    have hIoo : h₀_finset_Ioo = h₁_finset_Ioo := by ext (a b x);
+    have hIoo : h₀_finset_Ioo = h₁_finset_Ioo := by ext a b x;
       rw [h₀_finset_mem_Ioo, h₁_finset_mem_Ioo]
     simp_rw [hIcc, hIco, hIoc, hIoo]
 
@@ -906,9 +906,9 @@ instance : Subsingleton (LocallyFiniteOrderTop α) :=
   Subsingleton.intro fun h₀ h₁ => by
     cases h₀
     cases h₁
-    have hIci : h₀_finset_Ici = h₁_finset_Ici := by ext (a b x);
+    have hIci : h₀_finset_Ici = h₁_finset_Ici := by ext a b x;
       rw [h₀_finset_mem_Ici, h₁_finset_mem_Ici]
-    have hIoi : h₀_finset_Ioi = h₁_finset_Ioi := by ext (a b x);
+    have hIoi : h₀_finset_Ioi = h₁_finset_Ioi := by ext a b x;
       rw [h₀_finset_mem_Ioi, h₁_finset_mem_Ioi]
     simp_rw [hIci, hIoi]
 
@@ -916,9 +916,9 @@ instance : Subsingleton (LocallyFiniteOrderBot α) :=
   Subsingleton.intro fun h₀ h₁ => by
     cases h₀
     cases h₁
-    have hIic : h₀_finset_Iic = h₁_finset_Iic := by ext (a b x);
+    have hIic : h₀_finset_Iic = h₁_finset_Iic := by ext a b x;
       rw [h₀_finset_mem_Iic, h₁_finset_mem_Iic]
-    have hIio : h₀_finset_Iio = h₁_finset_Iio := by ext (a b x);
+    have hIio : h₀_finset_Iio = h₁_finset_Iio := by ext a b x;
       rw [h₀_finset_mem_Iio, h₁_finset_mem_Iio]
     simp_rw [hIic, hIio]
 
