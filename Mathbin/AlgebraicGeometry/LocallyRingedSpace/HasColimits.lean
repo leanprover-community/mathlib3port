@@ -62,6 +62,7 @@ section HasCoproducts
 
 variable {ι : Type u} (F : Discrete ι ⥤ LocallyRingedSpace.{u})
 
+#print AlgebraicGeometry.LocallyRingedSpace.coproduct /-
 /-- The explicit coproduct for `F : discrete ι ⥤ LocallyRingedSpace`. -/
 noncomputable def coproduct : LocallyRingedSpace
     where
@@ -76,7 +77,9 @@ noncomputable def coproduct : LocallyRingedSpace
               (PresheafedSpace.stalk_map (colimit.ι (F ⋙ forget_to_SheafedSpace) i : _)
                 y)).symm.commRingCatIsoToRingEquiv.LocalRing
 #align algebraic_geometry.LocallyRingedSpace.coproduct AlgebraicGeometry.LocallyRingedSpace.coproduct
+-/
 
+#print AlgebraicGeometry.LocallyRingedSpace.coproductCofan /-
 /-- The explicit coproduct cofan for `F : discrete ι ⥤ LocallyRingedSpace`. -/
 noncomputable def coproductCofan : Cocone F
     where
@@ -85,7 +88,9 @@ noncomputable def coproductCofan : Cocone F
     { app := fun j => ⟨colimit.ι (F ⋙ forgetToSheafedSpace) j, inferInstance⟩
       naturality' := fun j j' f => by cases j; cases j'; tidy }
 #align algebraic_geometry.LocallyRingedSpace.coproduct_cofan AlgebraicGeometry.LocallyRingedSpace.coproductCofan
+-/
 
+#print AlgebraicGeometry.LocallyRingedSpace.coproductCofanIsColimit /-
 /-- The explicit coproduct cofan constructed in `coproduct_cofan` is indeed a colimit. -/
 noncomputable def coproductCofanIsColimit : IsColimit (coproductCofan F)
     where
@@ -112,6 +117,7 @@ noncomputable def coproductCofanIsColimit : IsColimit (coproductCofan F)
       (IsColimit.uniq _ (forgetToSheafedSpace.mapCocone s) f.1 fun j =>
         congr_arg LocallyRingedSpace.Hom.val (h j))
 #align algebraic_geometry.LocallyRingedSpace.coproduct_cofan_is_colimit AlgebraicGeometry.LocallyRingedSpace.coproductCofanIsColimit
+-/
 
 instance : HasCoproducts.{u} LocallyRingedSpace.{u} := fun ι =>
   ⟨fun F => ⟨⟨⟨_, coproductCofanIsColimit F⟩⟩⟩⟩
@@ -129,6 +135,7 @@ variable {X Y : LocallyRingedSpace.{v}} (f g : X ⟶ Y)
 
 namespace HasCoequalizer
 
+#print AlgebraicGeometry.LocallyRingedSpace.HasCoequalizer.coequalizer_π_app_isLocalRingHom /-
 instance coequalizer_π_app_isLocalRingHom
     (U : TopologicalSpace.Opens (coequalizer f.val g.val).carrier) :
     IsLocalRingHom ((coequalizer.π f.val g.val : _).c.app (op U)) :=
@@ -140,6 +147,7 @@ instance coequalizer_π_app_isLocalRingHom
     PresheafedSpace.colimit_presheaf_obj_iso_componentwise_limit_hom_π]
   infer_instance
 #align algebraic_geometry.LocallyRingedSpace.has_coequalizer.coequalizer_π_app_is_local_ring_hom AlgebraicGeometry.LocallyRingedSpace.HasCoequalizer.coequalizer_π_app_isLocalRingHom
+-/
 
 /-!
 We roughly follow the construction given in [MR0302656]. Given a pair `f, g : X ⟶ Y` of morphisms
@@ -164,12 +172,15 @@ variable (U : Opens (coequalizer f.1 g.1).carrier)
 
 variable (s : (coequalizer f.1 g.1).Presheaf.obj (op U))
 
+#print AlgebraicGeometry.LocallyRingedSpace.HasCoequalizer.imageBasicOpen /-
 /-- (Implementation). The basic open set of the section `π꙳ s`. -/
 noncomputable def imageBasicOpen : Opens Y :=
   Y.toRingedSpace.basicOpen
     (show Y.Presheaf.obj (op (unop _)) from ((coequalizer.π f.1 g.1).c.app (op U)) s)
 #align algebraic_geometry.LocallyRingedSpace.has_coequalizer.image_basic_open AlgebraicGeometry.LocallyRingedSpace.HasCoequalizer.imageBasicOpen
+-/
 
+#print AlgebraicGeometry.LocallyRingedSpace.HasCoequalizer.imageBasicOpen_image_preimage /-
 theorem imageBasicOpen_image_preimage :
     (coequalizer.π f.1 g.1).base ⁻¹' ((coequalizer.π f.1 g.1).base '' (imageBasicOpen f g U s).1) =
       (imageBasicOpen f g U s).1 :=
@@ -197,7 +208,9 @@ theorem imageBasicOpen_image_preimage :
     rw [coequalizer.condition f.1 g.1]
     exact fun _ h => h
 #align algebraic_geometry.LocallyRingedSpace.has_coequalizer.image_basic_open_image_preimage AlgebraicGeometry.LocallyRingedSpace.HasCoequalizer.imageBasicOpen_image_preimage
+-/
 
+#print AlgebraicGeometry.LocallyRingedSpace.HasCoequalizer.imageBasicOpen_image_open /-
 theorem imageBasicOpen_image_open :
     IsOpen ((coequalizer.π f.1 g.1).base '' (imageBasicOpen f g U s).1) :=
   by
@@ -210,7 +223,9 @@ theorem imageBasicOpen_image_open :
   rw [image_basic_open_image_preimage]
   exact (image_basic_open f g U s).2
 #align algebraic_geometry.LocallyRingedSpace.has_coequalizer.image_basic_open_image_open AlgebraicGeometry.LocallyRingedSpace.HasCoequalizer.imageBasicOpen_image_open
+-/
 
+#print AlgebraicGeometry.LocallyRingedSpace.HasCoequalizer.coequalizer_π_stalk_isLocalRingHom /-
 instance coequalizer_π_stalk_isLocalRingHom (x : Y) :
     IsLocalRingHom (PresheafedSpace.stalkMap (coequalizer.π f.val g.val : _) x) :=
   by
@@ -241,9 +256,11 @@ instance coequalizer_π_stalk_isLocalRingHom (x : Y) :
       (((coequalizer.π f.val g.val).c.app (op U)) s)
   infer_instance
 #align algebraic_geometry.LocallyRingedSpace.has_coequalizer.coequalizer_π_stalk_is_local_ring_hom AlgebraicGeometry.LocallyRingedSpace.HasCoequalizer.coequalizer_π_stalk_isLocalRingHom
+-/
 
 end HasCoequalizer
 
+#print AlgebraicGeometry.LocallyRingedSpace.coequalizer /-
 /-- The coequalizer of two locally ringed space in the category of sheafed spaces is a locally
 ringed space. -/
 noncomputable def coequalizer : LocallyRingedSpace
@@ -255,19 +272,25 @@ noncomputable def coequalizer : LocallyRingedSpace
       (TopCat.epi_iff_surjective (coequalizer.π f.val g.val).base).mp inferInstance x
     exact (PresheafedSpace.stalk_map (coequalizer.π f.val g.val : _) y).domain_localRing
 #align algebraic_geometry.LocallyRingedSpace.coequalizer AlgebraicGeometry.LocallyRingedSpace.coequalizer
+-/
 
+#print AlgebraicGeometry.LocallyRingedSpace.coequalizerCofork /-
 /-- The explicit coequalizer cofork of locally ringed spaces. -/
 noncomputable def coequalizerCofork : Cofork f g :=
   @Cofork.ofπ _ _ _ _ f g (coequalizer f g) ⟨coequalizer.π f.1 g.1, inferInstance⟩
     (LocallyRingedSpace.Hom.ext _ _ (coequalizer.condition f.1 g.1))
 #align algebraic_geometry.LocallyRingedSpace.coequalizer_cofork AlgebraicGeometry.LocallyRingedSpace.coequalizerCofork
+-/
 
+#print AlgebraicGeometry.LocallyRingedSpace.isLocalRingHom_stalkMap_congr /-
 theorem isLocalRingHom_stalkMap_congr {X Y : RingedSpace} (f g : X ⟶ Y) (H : f = g) (x)
     (h : IsLocalRingHom (PresheafedSpace.stalkMap f x)) :
     IsLocalRingHom (PresheafedSpace.stalkMap g x) := by
   rw [PresheafedSpace.stalk_map.congr_hom _ _ H.symm x]; infer_instance
 #align algebraic_geometry.LocallyRingedSpace.is_local_ring_hom_stalk_map_congr AlgebraicGeometry.LocallyRingedSpace.isLocalRingHom_stalkMap_congr
+-/
 
+#print AlgebraicGeometry.LocallyRingedSpace.coequalizerCoforkIsColimit /-
 /-- The cofork constructed in `coequalizer_cofork` is indeed a colimit cocone. -/
 noncomputable def coequalizerCoforkIsColimit : IsColimit (coequalizerCofork f g) :=
   by
@@ -297,6 +320,7 @@ noncomputable def coequalizerCoforkIsColimit : IsColimit (coequalizerCofork f g)
     exact h
   · exact h
 #align algebraic_geometry.LocallyRingedSpace.coequalizer_cofork_is_colimit AlgebraicGeometry.LocallyRingedSpace.coequalizerCoforkIsColimit
+-/
 
 instance : HasCoequalizer f g :=
   ⟨⟨⟨_, coequalizerCoforkIsColimit f g⟩⟩⟩
@@ -304,6 +328,7 @@ instance : HasCoequalizer f g :=
 instance : HasCoequalizers LocallyRingedSpace :=
   hasCoequalizers_of_hasColimit_parallelPair _
 
+#print AlgebraicGeometry.LocallyRingedSpace.preservesCoequalizer /-
 noncomputable instance preservesCoequalizer :
     PreservesColimitsOfShape WalkingParallelPair forgetToSheafedSpace.{v} :=
   ⟨fun F => by
@@ -313,6 +338,7 @@ noncomputable instance preservesCoequalizer :
     dsimp only [forget_to_SheafedSpace]
     exact coequalizer_is_coequalizer _ _⟩
 #align algebraic_geometry.LocallyRingedSpace.preserves_coequalizer AlgebraicGeometry.LocallyRingedSpace.preservesCoequalizer
+-/
 
 end HasCoequalizer
 

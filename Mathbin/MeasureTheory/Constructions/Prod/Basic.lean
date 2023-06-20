@@ -961,6 +961,7 @@ instance [IsFiniteMeasure ρ] : IsFiniteMeasure ρ.fst := by rw [fst]; infer_ins
 instance [IsProbabilityMeasure ρ] : IsProbabilityMeasure ρ.fst
     where measure_univ := by rw [fst_univ]; exact measure_univ
 
+#print MeasureTheory.Measure.fst_map_prod_mk₀ /-
 theorem fst_map_prod_mk₀ {X : α → β} {Y : α → γ} {μ : Measure α} (hX : AEMeasurable X μ)
     (hY : AEMeasurable Y μ) : (μ.map fun a => (X a, Y a)).fst = μ.map X :=
   by
@@ -969,11 +970,14 @@ theorem fst_map_prod_mk₀ {X : α → β} {Y : α → γ} {μ : Measure α} (hX
     measure.map_apply_of_ae_measurable hX hs, ← prod_univ, mk_preimage_prod, preimage_univ,
     inter_univ]
 #align measure_theory.measure.fst_map_prod_mk₀ MeasureTheory.Measure.fst_map_prod_mk₀
+-/
 
+#print MeasureTheory.Measure.fst_map_prod_mk /-
 theorem fst_map_prod_mk {X : α → β} {Y : α → γ} {μ : Measure α} (hX : Measurable X)
     (hY : Measurable Y) : (μ.map fun a => (X a, Y a)).fst = μ.map X :=
   fst_map_prod_mk₀ hX.AEMeasurable hY.AEMeasurable
 #align measure_theory.measure.fst_map_prod_mk MeasureTheory.Measure.fst_map_prod_mk
+-/
 
 #print MeasureTheory.Measure.snd /-
 /-- Marginal measure on `β` obtained from a measure on `ρ` `α × β`, defined by `ρ.map prod.snd`. -/
@@ -998,6 +1002,7 @@ instance [IsFiniteMeasure ρ] : IsFiniteMeasure ρ.snd := by rw [snd]; infer_ins
 instance [IsProbabilityMeasure ρ] : IsProbabilityMeasure ρ.snd
     where measure_univ := by rw [snd_univ]; exact measure_univ
 
+#print MeasureTheory.Measure.snd_map_prod_mk₀ /-
 theorem snd_map_prod_mk₀ {X : α → β} {Y : α → γ} {μ : Measure α} (hX : AEMeasurable X μ)
     (hY : AEMeasurable Y μ) : (μ.map fun a => (X a, Y a)).snd = μ.map Y :=
   by
@@ -1006,11 +1011,14 @@ theorem snd_map_prod_mk₀ {X : α → β} {Y : α → γ} {μ : Measure α} (hX
     measure.map_apply_of_ae_measurable hY hs, ← univ_prod, mk_preimage_prod, preimage_univ,
     univ_inter]
 #align measure_theory.measure.snd_map_prod_mk₀ MeasureTheory.Measure.snd_map_prod_mk₀
+-/
 
+#print MeasureTheory.Measure.snd_map_prod_mk /-
 theorem snd_map_prod_mk {X : α → β} {Y : α → γ} {μ : Measure α} (hX : Measurable X)
     (hY : Measurable Y) : (μ.map fun a => (X a, Y a)).snd = μ.map Y :=
   snd_map_prod_mk₀ hX.AEMeasurable hY.AEMeasurable
 #align measure_theory.measure.snd_map_prod_mk MeasureTheory.Measure.snd_map_prod_mk
+-/
 
 end Measure
 
