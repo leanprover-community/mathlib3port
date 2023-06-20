@@ -56,33 +56,33 @@ variable (f : ℝ → E) (s : Set ℝ) (l : ℝ≥0)
 `l * (y - x)` for any `x y` in `s`.
 -/
 def HasConstantSpeedOnWith :=
-  ∀ ⦃x⦄ (hx : x ∈ s) ⦃y⦄ (hy : y ∈ s), evariationOn f (s ∩ Icc x y) = ENNReal.ofReal (l * (y - x))
+  ∀ ⦃x⦄ (hx : x ∈ s) ⦃y⦄ (hy : y ∈ s), eVariationOn f (s ∩ Icc x y) = ENNReal.ofReal (l * (y - x))
 #align has_constant_speed_on_with HasConstantSpeedOnWith
 
 variable {f} {s} {l}
 
-theorem HasConstantSpeedOnWith.hasLocallyBoundedVariationOn (h : HasConstantSpeedOnWith f s l) :
-    HasLocallyBoundedVariationOn f s := fun x y hx hy => by
-  simp only [HasBoundedVariationOn, h hx hy, Ne.def, ENNReal.ofReal_ne_top, not_false_iff]
-#align has_constant_speed_on_with.has_locally_bounded_variation_on HasConstantSpeedOnWith.hasLocallyBoundedVariationOn
+theorem HasConstantSpeedOnWith.locallyBoundedVariationOn (h : HasConstantSpeedOnWith f s l) :
+    LocallyBoundedVariationOn f s := fun x y hx hy => by
+  simp only [BoundedVariationOn, h hx hy, Ne.def, ENNReal.ofReal_ne_top, not_false_iff]
+#align has_constant_speed_on_with.has_locally_bounded_variation_on HasConstantSpeedOnWith.locallyBoundedVariationOn
 
 theorem hasConstantSpeedOnWith_of_subsingleton (f : ℝ → E) {s : Set ℝ} (hs : s.Subsingleton)
     (l : ℝ≥0) : HasConstantSpeedOnWith f s l :=
   by
   rintro x hx y hy; cases hs hx hy
-  rw [evariationOn.subsingleton f (fun y hy z hz => hs hy.1 hz.1 : (s ∩ Icc x x).Subsingleton)]
+  rw [eVariationOn.subsingleton f (fun y hy z hz => hs hy.1 hz.1 : (s ∩ Icc x x).Subsingleton)]
   simp only [sub_self, MulZeroClass.mul_zero, ENNReal.ofReal_zero]
 #align has_constant_speed_on_with_of_subsingleton hasConstantSpeedOnWith_of_subsingleton
 
 theorem hasConstantSpeedOnWith_iff_ordered :
     HasConstantSpeedOnWith f s l ↔
       ∀ ⦃x⦄ (hx : x ∈ s) ⦃y⦄ (hy : y ∈ s),
-        x ≤ y → evariationOn f (s ∩ Icc x y) = ENNReal.ofReal (l * (y - x)) :=
+        x ≤ y → eVariationOn f (s ∩ Icc x y) = ENNReal.ofReal (l * (y - x)) :=
   by
   refine' ⟨fun h x xs y ys xy => h xs ys, fun h x xs y ys => _⟩
   rcases le_total x y with (xy | yx)
   · exact h xs ys xy
-  · rw [evariationOn.subsingleton, ENNReal.ofReal_of_nonpos]
+  · rw [eVariationOn.subsingleton, ENNReal.ofReal_of_nonpos]
     · exact mul_nonpos_of_nonneg_of_nonpos l.prop (sub_nonpos_of_le yx)
     · rintro z ⟨zs, xz, zy⟩ w ⟨ws, xw, wy⟩
       cases le_antisymm (zy.trans yx) xz
@@ -92,7 +92,7 @@ theorem hasConstantSpeedOnWith_iff_ordered :
 
 theorem hasConstantSpeedOnWith_iff_variationOnFromTo_eq :
     HasConstantSpeedOnWith f s l ↔
-      HasLocallyBoundedVariationOn f s ∧
+      LocallyBoundedVariationOn f s ∧
         ∀ ⦃x⦄ (hx : x ∈ s) ⦃y⦄ (hy : y ∈ s), variationOnFromTo f s x y = l * (y - x) :=
   by
   constructor
@@ -131,7 +131,7 @@ theorem HasConstantSpeedOnWith.union {t : Set ℝ} (hfs : HasConstantSpeedOnWith
         exacts [Or.inl ⟨ws, zw, hs.2 ws⟩, Or.inr ⟨wt, ht.2 wt, wy⟩]
       · rintro (⟨ws, zw, wx⟩ | ⟨wt, xw, wy⟩)
         exacts [⟨Or.inl ws, zw, wx.trans (ht.2 yt)⟩, ⟨Or.inr wt, (hs.2 zs).trans xw, wy⟩]
-    rw [this, @evariationOn.union _ _ _ _ f _ _ x, hfs zs hs.1 (hs.2 zs), hft ht.1 yt (ht.2 yt), ←
+    rw [this, @eVariationOn.union _ _ _ _ f _ _ x, hfs zs hs.1 (hs.2 zs), hft ht.1 yt (ht.2 yt), ←
       ENNReal.ofReal_add (mul_nonneg l.prop (sub_nonneg.mpr (hs.2 zs)))
         (mul_nonneg l.prop (sub_nonneg.mpr (ht.2 yt)))]
     ring_nf
@@ -139,7 +139,7 @@ theorem HasConstantSpeedOnWith.union {t : Set ℝ} (hfs : HasConstantSpeedOnWith
       ⟨⟨ht.1, le_rfl, ht.2 yt⟩, fun w ⟨wt, xw, wy⟩ => xw⟩]
   · cases le_antisymm zy ((hs.2 ys).trans (ht.2 zt))
     simp only [Icc_self, sub_self, MulZeroClass.mul_zero, ENNReal.ofReal_zero]
-    exact evariationOn.subsingleton _ fun _ ⟨_, uz⟩ _ ⟨_, vz⟩ => uz.trans vz.symm
+    exact eVariationOn.subsingleton _ fun _ ⟨_, uz⟩ _ ⟨_, vz⟩ => uz.trans vz.symm
   · have : (s ∪ t) ∩ Icc z y = t ∩ Icc z y := by
       ext w; constructor
       · rintro ⟨ws | wt, zw, wy⟩
@@ -171,11 +171,11 @@ theorem hasConstantSpeedOnWith_zero_iff :
     HasConstantSpeedOnWith f s 0 ↔ ∀ (x) (_ : x ∈ s) (y) (_ : y ∈ s), edist (f x) (f y) = 0 :=
   by
   dsimp [HasConstantSpeedOnWith]
-  simp only [MulZeroClass.zero_mul, ENNReal.ofReal_zero, ← evariationOn.eq_zero_iff]
+  simp only [MulZeroClass.zero_mul, ENNReal.ofReal_zero, ← eVariationOn.eq_zero_iff]
   constructor
   · by_contra'
     obtain ⟨h, hfs⟩ := this
-    simp_rw [evariationOn.eq_zero_iff] at hfs h 
+    simp_rw [eVariationOn.eq_zero_iff] at hfs h 
     push_neg at hfs 
     obtain ⟨x, xs, y, ys, hxy⟩ := hfs
     rcases le_total x y with (xy | yx)
@@ -185,7 +185,7 @@ theorem hasConstantSpeedOnWith_zero_iff :
   · rintro h x xs y ys
     refine' le_antisymm _ zero_le'
     rw [← h]
-    exact evariationOn.mono f (inter_subset_left s (Icc x y))
+    exact eVariationOn.mono f (inter_subset_left s (Icc x y))
 #align has_constant_speed_on_with_zero_iff hasConstantSpeedOnWith_zero_iff
 
 theorem HasConstantSpeedOnWith.ratio {l' : ℝ≥0} (hl' : l' ≠ 0) {φ : ℝ → ℝ} (φm : MonotoneOn φ s)
@@ -263,7 +263,7 @@ noncomputable def naturalParameterization (f : α → E) (s : Set α) (a : α) :
 #align natural_parameterization naturalParameterization
 
 theorem edist_naturalParameterization_eq_zero {f : α → E} {s : Set α}
-    (hf : HasLocallyBoundedVariationOn f s) {a : α} (as : a ∈ s) {b : α} (bs : b ∈ s) :
+    (hf : LocallyBoundedVariationOn f s) {a : α} (as : a ∈ s) {b : α} (bs : b ∈ s) :
     edist (naturalParameterization f s a (variationOnFromTo f s a b)) (f b) = 0 :=
   by
   dsimp only [naturalParameterization]
@@ -277,7 +277,7 @@ theorem edist_naturalParameterization_eq_zero {f : α → E} {s : Set α}
 #align edist_natural_parameterization_eq_zero edist_naturalParameterization_eq_zero
 
 theorem has_unit_speed_naturalParameterization (f : α → E) {s : Set α}
-    (hf : HasLocallyBoundedVariationOn f s) {a : α} (as : a ∈ s) :
+    (hf : LocallyBoundedVariationOn f s) {a : α} (as : a ∈ s) :
     HasUnitSpeedOn (naturalParameterization f s a) (variationOnFromTo f s a '' s) :=
   by
   dsimp only [HasUnitSpeedOn]
@@ -285,14 +285,14 @@ theorem has_unit_speed_naturalParameterization (f : α → E) {s : Set α}
   rintro _ ⟨b, bs, rfl⟩ _ ⟨c, cs, rfl⟩ h
   rcases le_total c b with (cb | bc)
   · rw [NNReal.coe_one, one_mul, le_antisymm h (variationOnFromTo.monotoneOn hf as cs bs cb),
-      sub_self, ENNReal.ofReal_zero, Icc_self, evariationOn.subsingleton]
+      sub_self, ENNReal.ofReal_zero, Icc_self, eVariationOn.subsingleton]
     exact fun x hx y hy => hx.2.trans hy.2.symm
   · rw [NNReal.coe_one, one_mul, sub_eq_add_neg, variationOnFromTo.eq_neg_swap, neg_neg, add_comm,
       variationOnFromTo.add hf bs as cs, ← variationOnFromTo.eq_neg_swap f]
     rw [←
-      evariationOn.comp_inter_Icc_eq_of_monotoneOn (naturalParameterization f s a) _
+      eVariationOn.comp_inter_Icc_eq_of_monotoneOn (naturalParameterization f s a) _
         (variationOnFromTo.monotoneOn hf as) bs cs]
-    rw [@evariationOn.eq_of_edist_zero_on _ _ _ _ _ f]
+    rw [@eVariationOn.eq_of_edist_zero_on _ _ _ _ _ f]
     · rw [variationOnFromTo.eq_of_le _ _ bc, ENNReal.ofReal_toReal (hf b c bs cs)]
     · rintro x ⟨xs, bx, xc⟩
       exact edist_naturalParameterization_eq_zero hf as xs
