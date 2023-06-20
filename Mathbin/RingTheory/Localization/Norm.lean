@@ -42,6 +42,7 @@ variable [IsLocalization M Rₘ] [IsLocalization (Algebra.algebraMapSubmonoid S 
 
 variable [Algebra Rₘ Sₘ] [Algebra R Sₘ] [IsScalarTower R Rₘ Sₘ] [IsScalarTower R S Sₘ]
 
+#print Algebra.norm_localization /-
 /-- Let `S` be an extension of `R` and `Rₘ Sₘ` be localizations at `M` of `R S` respectively.
 Then the norm of `a : Sₘ` over `Rₘ` is the norm of `a : S` over `R` if `S` is free as `R`-module.
 -/
@@ -61,4 +62,5 @@ theorem Algebra.norm_localization [Module.Free R S] [Module.Finite R S] (a : S) 
     Basis.localizationLocalization_apply, ← _root_.map_mul]
   apply Basis.localizationLocalization_repr_algebraMap
 #align algebra.norm_localization Algebra.norm_localization
+-/
 
