@@ -71,20 +71,25 @@ section Truncation
 
 variable {α : Type _}
 
+#print ProbabilityTheory.truncation /-
 /-- Truncating a real-valued function to the interval `(-A, A]`. -/
 def truncation (f : α → ℝ) (A : ℝ) :=
   indicator (Set.Ioc (-A) A) id ∘ f
 #align probability_theory.truncation ProbabilityTheory.truncation
+-/
 
 variable {m : MeasurableSpace α} {μ : Measure α} {f : α → ℝ}
 
+#print MeasureTheory.AEStronglyMeasurable.truncation /-
 theorem MeasureTheory.AEStronglyMeasurable.truncation (hf : AEStronglyMeasurable f μ) {A : ℝ} :
     AEStronglyMeasurable (truncation f A) μ :=
   by
   apply ae_strongly_measurable.comp_ae_measurable _ hf.ae_measurable
   exact (strongly_measurable_id.indicator measurableSet_Ioc).AEStronglyMeasurable
 #align measure_theory.ae_strongly_measurable.truncation MeasureTheory.AEStronglyMeasurable.truncation
+-/
 
+#print ProbabilityTheory.abs_truncation_le_bound /-
 theorem abs_truncation_le_bound (f : α → ℝ) (A : ℝ) (x : α) : |truncation f A x| ≤ |A| :=
   by
   simp only [truncation, Set.indicator, Set.mem_Icc, id.def, Function.comp_apply]
@@ -92,11 +97,15 @@ theorem abs_truncation_le_bound (f : α → ℝ) (A : ℝ) (x : α) : |truncatio
   · exact abs_le_abs h.2 (neg_le.2 h.1.le)
   · simp [abs_nonneg]
 #align probability_theory.abs_truncation_le_bound ProbabilityTheory.abs_truncation_le_bound
+-/
 
+#print ProbabilityTheory.truncation_zero /-
 @[simp]
 theorem truncation_zero (f : α → ℝ) : truncation f 0 = 0 := by simp [truncation]
 #align probability_theory.truncation_zero ProbabilityTheory.truncation_zero
+-/
 
+#print ProbabilityTheory.abs_truncation_le_abs_self /-
 theorem abs_truncation_le_abs_self (f : α → ℝ) (A : ℝ) (x : α) : |truncation f A x| ≤ |f x| :=
   by
   simp only [truncation, indicator, Set.mem_Icc, id.def, Function.comp_apply]
@@ -104,7 +113,9 @@ theorem abs_truncation_le_abs_self (f : α → ℝ) (A : ℝ) (x : α) : |trunca
   · exact le_rfl
   · simp [abs_nonneg]
 #align probability_theory.abs_truncation_le_abs_self ProbabilityTheory.abs_truncation_le_abs_self
+-/
 
+#print ProbabilityTheory.truncation_eq_self /-
 theorem truncation_eq_self {f : α → ℝ} {A : ℝ} {x : α} (h : |f x| < A) : truncation f A x = f x :=
   by
   simp only [truncation, indicator, Set.mem_Icc, id.def, Function.comp_apply, ite_eq_left_iff]
@@ -112,7 +123,9 @@ theorem truncation_eq_self {f : α → ℝ} {A : ℝ} {x : α} (h : |f x| < A) :
   apply H.elim
   simp [(abs_lt.1 h).1, (abs_lt.1 h).2.le]
 #align probability_theory.truncation_eq_self ProbabilityTheory.truncation_eq_self
+-/
 
+#print ProbabilityTheory.truncation_eq_of_nonneg /-
 theorem truncation_eq_of_nonneg {f : α → ℝ} {A : ℝ} (h : ∀ x, 0 ≤ f x) :
     truncation f A = indicator (Set.Ioc 0 A) id ∘ f :=
   by
@@ -125,21 +138,29 @@ theorem truncation_eq_of_nonneg {f : α → ℝ} {A : ℝ} (h : ∀ x, 0 ≤ f x
     · simp only [h'x, and_false_iff]
   · simp only [truncation, indicator, hx, id.def, Function.comp_apply, if_t_t]
 #align probability_theory.truncation_eq_of_nonneg ProbabilityTheory.truncation_eq_of_nonneg
+-/
 
+#print ProbabilityTheory.truncation_nonneg /-
 theorem truncation_nonneg {f : α → ℝ} (A : ℝ) {x : α} (h : 0 ≤ f x) : 0 ≤ truncation f A x :=
   Set.indicator_apply_nonneg fun _ => h
 #align probability_theory.truncation_nonneg ProbabilityTheory.truncation_nonneg
+-/
 
+#print MeasureTheory.AEStronglyMeasurable.memℒp_truncation /-
 theorem MeasureTheory.AEStronglyMeasurable.memℒp_truncation [IsFiniteMeasure μ]
     (hf : AEStronglyMeasurable f μ) {A : ℝ} {p : ℝ≥0∞} : Memℒp (truncation f A) p μ :=
   Memℒp.of_bound hf.truncation (|A|) (eventually_of_forall fun x => abs_truncation_le_bound _ _ _)
 #align measure_theory.ae_strongly_measurable.mem_ℒp_truncation MeasureTheory.AEStronglyMeasurable.memℒp_truncation
+-/
 
+#print MeasureTheory.AEStronglyMeasurable.integrable_truncation /-
 theorem MeasureTheory.AEStronglyMeasurable.integrable_truncation [IsFiniteMeasure μ]
     (hf : AEStronglyMeasurable f μ) {A : ℝ} : Integrable (truncation f A) μ := by
   rw [← mem_ℒp_one_iff_integrable]; exact hf.mem_ℒp_truncation
 #align measure_theory.ae_strongly_measurable.integrable_truncation MeasureTheory.AEStronglyMeasurable.integrable_truncation
+-/
 
+#print ProbabilityTheory.moment_truncation_eq_intervalIntegral /-
 theorem moment_truncation_eq_intervalIntegral (hf : AEStronglyMeasurable f μ) {A : ℝ} (hA : 0 ≤ A)
     {n : ℕ} (hn : n ≠ 0) : ∫ x, truncation f A x ^ n ∂μ = ∫ y in -A..A, y ^ n ∂Measure.map f μ :=
   by
@@ -150,7 +171,9 @@ theorem moment_truncation_eq_intervalIntegral (hf : AEStronglyMeasurable f μ) {
   · linarith
   · exact ((measurable_id.indicator M).pow_const n).AEStronglyMeasurable
 #align probability_theory.moment_truncation_eq_interval_integral ProbabilityTheory.moment_truncation_eq_intervalIntegral
+-/
 
+#print ProbabilityTheory.moment_truncation_eq_intervalIntegral_of_nonneg /-
 theorem moment_truncation_eq_intervalIntegral_of_nonneg (hf : AEStronglyMeasurable f μ) {A : ℝ}
     {n : ℕ} (hn : n ≠ 0) (h'f : 0 ≤ f) :
     ∫ x, truncation f A x ^ n ∂μ = ∫ y in 0 ..A, y ^ n ∂Measure.map f μ :=
@@ -177,17 +200,23 @@ theorem moment_truncation_eq_intervalIntegral_of_nonneg (hf : AEStronglyMeasurab
       simp [this, zero_pow' _ hn]
     · exact ((measurable_id.indicator M).pow_const n).AEStronglyMeasurable
 #align probability_theory.moment_truncation_eq_interval_integral_of_nonneg ProbabilityTheory.moment_truncation_eq_intervalIntegral_of_nonneg
+-/
 
+#print ProbabilityTheory.integral_truncation_eq_intervalIntegral /-
 theorem integral_truncation_eq_intervalIntegral (hf : AEStronglyMeasurable f μ) {A : ℝ}
     (hA : 0 ≤ A) : ∫ x, truncation f A x ∂μ = ∫ y in -A..A, y ∂Measure.map f μ := by
   simpa using moment_truncation_eq_interval_integral hf hA one_ne_zero
 #align probability_theory.integral_truncation_eq_interval_integral ProbabilityTheory.integral_truncation_eq_intervalIntegral
+-/
 
+#print ProbabilityTheory.integral_truncation_eq_intervalIntegral_of_nonneg /-
 theorem integral_truncation_eq_intervalIntegral_of_nonneg (hf : AEStronglyMeasurable f μ) {A : ℝ}
     (h'f : 0 ≤ f) : ∫ x, truncation f A x ∂μ = ∫ y in 0 ..A, y ∂Measure.map f μ := by
   simpa using moment_truncation_eq_interval_integral_of_nonneg hf one_ne_zero h'f
 #align probability_theory.integral_truncation_eq_interval_integral_of_nonneg ProbabilityTheory.integral_truncation_eq_intervalIntegral_of_nonneg
+-/
 
+#print ProbabilityTheory.integral_truncation_le_integral_of_nonneg /-
 theorem integral_truncation_le_integral_of_nonneg (hf : Integrable f μ) (h'f : 0 ≤ f) {A : ℝ} :
     ∫ x, truncation f A x ∂μ ≤ ∫ x, f x ∂μ :=
   by
@@ -200,7 +229,9 @@ theorem integral_truncation_le_integral_of_nonneg (hf : Integrable f μ) (h'f : 
       _ ≤ |f x| := (abs_truncation_le_abs_self _ _ _)
       _ = f x := abs_of_nonneg (h'f x)
 #align probability_theory.integral_truncation_le_integral_of_nonneg ProbabilityTheory.integral_truncation_le_integral_of_nonneg
+-/
 
+#print ProbabilityTheory.tendsto_integral_truncation /-
 /-- If a function is integrable, then the integral of its truncated versions converges to the
 integral of the whole function. -/
 theorem tendsto_integral_truncation {f : α → ℝ} (hf : Integrable f μ) :
@@ -218,12 +249,15 @@ theorem tendsto_integral_truncation {f : α → ℝ} (hf : Integrable f μ) :
     filter_upwards [Ioi_mem_at_top (abs (f x))] with A hA
     exact (truncation_eq_self hA).symm
 #align probability_theory.tendsto_integral_truncation ProbabilityTheory.tendsto_integral_truncation
+-/
 
+#print ProbabilityTheory.IdentDistrib.truncation /-
 theorem IdentDistrib.truncation {β : Type _} [MeasurableSpace β] {ν : Measure β} {f : α → ℝ}
     {g : β → ℝ} (h : IdentDistrib f g μ ν) {A : ℝ} :
     IdentDistrib (truncation f A) (truncation g A) μ ν :=
   h.comp (measurable_id.indicator measurableSet_Ioc)
 #align probability_theory.ident_distrib.truncation ProbabilityTheory.IdentDistrib.truncation
+-/
 
 end Truncation
 
@@ -233,6 +267,7 @@ variable {Ω : Type _} [MeasureSpace Ω] [IsProbabilityMeasure (ℙ : Measure Ω
 
 section MomentEstimates
 
+#print ProbabilityTheory.sum_prob_mem_Ioc_le /-
 theorem sum_prob_mem_Ioc_le {X : Ω → ℝ} (hint : Integrable X) (hnonneg : 0 ≤ X) {K : ℕ} {N : ℕ}
     (hKN : K ≤ N) : ∑ j in range K, ℙ {ω | X ω ∈ Set.Ioc (j : ℝ) N} ≤ ENNReal.ofReal (𝔼[X] + 1) :=
   by
@@ -325,7 +360,9 @@ theorem sum_prob_mem_Ioc_le {X : Ω → ℝ} (hint : Integrable X) (hnonneg : 0 
       rw [intervalIntegral.integral_of_le (Nat.cast_le.2 ((mem_range.1 hj).le.trans hKN))]
     _ ≤ ENNReal.ofReal (𝔼[X] + 1) := ENNReal.ofReal_le_ofReal A
 #align probability_theory.sum_prob_mem_Ioc_le ProbabilityTheory.sum_prob_mem_Ioc_le
+-/
 
+#print ProbabilityTheory.tsum_prob_mem_Ioi_lt_top /-
 theorem tsum_prob_mem_Ioi_lt_top {X : Ω → ℝ} (hint : Integrable X) (hnonneg : 0 ≤ X) :
     ∑' j : ℕ, ℙ {ω | X ω ∈ Set.Ioi (j : ℝ)} < ∞ :=
   by
@@ -357,7 +394,9 @@ theorem tsum_prob_mem_Ioi_lt_top {X : Ω → ℝ} (hint : Integrable X) (hnonneg
   filter_upwards [Ici_mem_at_top K] with N hN
   exact sum_prob_mem_Ioc_le hint hnonneg hN
 #align probability_theory.tsum_prob_mem_Ioi_lt_top ProbabilityTheory.tsum_prob_mem_Ioi_lt_top
+-/
 
+#print ProbabilityTheory.sum_variance_truncation_le /-
 theorem sum_variance_truncation_le {X : Ω → ℝ} (hint : Integrable X) (hnonneg : 0 ≤ X) (K : ℕ) :
     ∑ j in range K, ((j : ℝ) ^ 2)⁻¹ * 𝔼[truncation X j ^ 2] ≤ 2 * 𝔼[X] :=
   by
@@ -435,6 +474,7 @@ theorem sum_variance_truncation_le {X : Ω → ℝ} (hint : Integrable X) (hnonn
           exact integral_truncation_le_integral_of_nonneg hint hnonneg)
         zero_le_two
 #align probability_theory.sum_variance_truncation_le ProbabilityTheory.sum_variance_truncation_le
+-/
 
 end MomentEstimates
 
@@ -446,6 +486,7 @@ variable (X : ℕ → Ω → ℝ) (hint : Integrable (X 0))
   (hindep : Pairwise fun i j => IndepFun (X i) (X j)) (hident : ∀ i, IdentDistrib (X i) (X 0))
   (hnonneg : ∀ i ω, 0 ≤ X i ω)
 
+#print ProbabilityTheory.strong_law_aux1 /-
 /- The truncation of `Xᵢ` up to `i` satisfies the strong law of large numbers (with respect to
 the truncated expectation) along the sequence `c^n`, for any `c > 1`, up to a given `ε > 0`.
 This follows from a variance control. -/
@@ -468,7 +509,7 @@ theorem strong_law_aux1 {c : ℝ} (c_one : 1 < c) {ε : ℝ} (εpos : 0 < ε) :
   have c_pos : 0 < c := zero_lt_one.trans c_one
   let ρ : Measure ℝ := measure.map (X 0) ℙ
   have hX : ∀ i, ae_strongly_measurable (X i) ℙ := fun i =>
-    (hident i).symm.aEStronglyMeasurable_snd hint.1
+    (hident i).symm.aestronglyMeasurable_snd hint.1
   have A : ∀ i, strongly_measurable (indicator (Set.Ioc (-i : ℝ) i) id) := fun i =>
     strongly_measurable_id.indicator measurableSet_Ioc
   set Y := fun n : ℕ => truncation (X n) n with hY
@@ -499,7 +540,7 @@ theorem strong_law_aux1 {c : ℝ} (c_one : 1 < c) {ε : ℝ} (εpos : 0 < ε) :
         congr 1
         rw [hS, indep_fun.variance_sum]
         · intro j hj
-          exact (hident j).aEStronglyMeasurable_fst.memℒp_truncation
+          exact (hident j).aestronglyMeasurable_fst.memℒp_truncation
         · intro k hk l hl hkl
           exact (hindep hkl).comp (A k).Measurable (A l).Measurable
       _ =
@@ -551,7 +592,7 @@ theorem strong_law_aux1 {c : ℝ} (c_one : 1 < c) {ε : ℝ} (εpos : 0 < ε) :
         apply meas_ge_le_variance_div_sq
         ·
           exact
-            mem_ℒp_finset_sum' _ fun j hj => (hident j).aEStronglyMeasurable_fst.memℒp_truncation
+            mem_ℒp_finset_sum' _ fun j hj => (hident j).aestronglyMeasurable_fst.memℒp_truncation
         · apply mul_pos (Nat.cast_pos.2 _) εpos
           refine' zero_lt_one.trans_le _
           apply Nat.le_floor
@@ -575,7 +616,9 @@ theorem strong_law_aux1 {c : ℝ} (c_one : 1 < c) {ε : ℝ} (εpos : 0 < ε) :
   simp_rw [not_le, mul_comm, S, sum_apply] at hω 
   exact hω
 #align probability_theory.strong_law_aux1 ProbabilityTheory.strong_law_aux1
+-/
 
+#print ProbabilityTheory.strong_law_aux2 /-
 /- The truncation of `Xᵢ` up to `i` satisfies the strong law of large numbers
 (with respect to the truncated expectation) along the sequence
 `c^n`, for any `c > 1`. This follows from `strong_law_aux1` by varying `ε`. -/
@@ -597,7 +640,9 @@ theorem strong_law_aux2 {c : ℝ} (c_one : 1 < c) :
   simp only [Real.norm_eq_abs, LatticeOrderedCommGroup.abs_abs, Nat.abs_cast]
   exact hn.le.trans (mul_le_mul_of_nonneg_right hi.le (Nat.cast_nonneg _))
 #align probability_theory.strong_law_aux2 ProbabilityTheory.strong_law_aux2
+-/
 
+#print ProbabilityTheory.strong_law_aux3 /-
 /-- The expectation of the truncated version of `Xᵢ` behaves asymptotically like the whole
 expectation. This follows from convergence and Cesaro averaging. -/
 theorem strong_law_aux3 :
@@ -614,7 +659,9 @@ theorem strong_law_aux3 :
   rw [integral_finset_sum _ fun i hi => _]
   exact ((hident i).symm.integrable_snd hint).1.integrable_truncation
 #align probability_theory.strong_law_aux3 ProbabilityTheory.strong_law_aux3
+-/
 
+#print ProbabilityTheory.strong_law_aux4 /-
 /- The truncation of `Xᵢ` up to `i` satisfies the strong law of large numbers
 (with respect to the original expectation) along the sequence
 `c^n`, for any `c > 1`. This follows from the version from the truncated expectation, and the
@@ -631,7 +678,9 @@ theorem strong_law_aux4 {c : ℝ} (c_one : 1 < c) :
   ext1 n
   simp
 #align probability_theory.strong_law_aux4 ProbabilityTheory.strong_law_aux4
+-/
 
+#print ProbabilityTheory.strong_law_aux5 /-
 /-- The truncated and non-truncated versions of `Xᵢ` have the same asymptotic behavior, as they
 almost surely coincide at all but finitely many steps. This follows from a probability computation
 and Borel-Cantelli. -/
@@ -663,7 +712,9 @@ theorem strong_law_aux5 :
   ext n
   rw [sum_sub_distrib]
 #align probability_theory.strong_law_aux5 ProbabilityTheory.strong_law_aux5
+-/
 
+#print ProbabilityTheory.strong_law_aux6 /-
 /- `Xᵢ` satisfies the strong law of large numbers along the sequence
 `c^n`, for any `c > 1`. This follows from the version for the truncated `Xᵢ`, and the fact that
 `Xᵢ` and its truncated version have the same asymptotic behavior. -/
@@ -690,7 +741,9 @@ theorem strong_law_aux6 {c : ℝ} (c_one : 1 < c) :
     · ext1 n
       field_simp [(H n).ne']
 #align probability_theory.strong_law_aux6 ProbabilityTheory.strong_law_aux6
+-/
 
+#print ProbabilityTheory.strong_law_aux7 /-
 /-- `Xᵢ` satisfies the strong law of large numbers along all integers. This follows from the
 corresponding fact along the sequences `c^n`, and the fact that any integer can be sandwiched
 between `c^n` and `c^(n+1)` with comparably small error if `c` is close enough to `1`
@@ -712,9 +765,11 @@ theorem strong_law_aux7 :
     exact sum_le_sum_of_subset_of_nonneg (range_mono hmn) fun i hi h'i => hnonneg i ω
   · exact hω
 #align probability_theory.strong_law_aux7 ProbabilityTheory.strong_law_aux7
+-/
 
 end StrongLawNonneg
 
+#print ProbabilityTheory.strong_law_ae /-
 /-- *Strong law of large numbers*, almost sure version: if `X n` is a sequence of independent
 identically distributed integrable real-valued random variables, then `∑ i in range n, X i / n`
 converges almost surely to `𝔼[X 0]`. We give here the strong version, due to Etemadi, that only
@@ -740,6 +795,7 @@ theorem strong_law_ae (X : ℕ → Ω → ℝ) (hint : Integrable (X 0))
   · simp only [← sub_div, ← sum_sub_distrib, max_zero_sub_max_neg_zero_eq_self]
   · simp only [← integral_sub hint.pos_part hint.neg_part, max_zero_sub_max_neg_zero_eq_self]
 #align probability_theory.strong_law_ae ProbabilityTheory.strong_law_ae
+-/
 
 end StrongLawAe
 
@@ -747,6 +803,7 @@ section StrongLawLp
 
 variable {Ω : Type _} [MeasureSpace Ω] [IsProbabilityMeasure (ℙ : Measure Ω)]
 
+#print ProbabilityTheory.strong_law_Lp /-
 /-- *Strong law of large numbers*, Lᵖ version: if `X n` is a sequence of independent
 identically distributed real-valued random variables in Lᵖ, then `∑ i in range n, X i / n`
 converges in Lᵖ to `𝔼[X 0]`. -/
@@ -755,7 +812,7 @@ theorem strong_law_Lp {p : ℝ≥0∞} (hp : 1 ≤ p) (hp' : p ≠ ∞) (X : ℕ
     Tendsto (fun n => snorm (fun ω => (∑ i in range n, X i ω) / n - 𝔼[X 0]) p ℙ) atTop (𝓝 0) :=
   by
   have hmeas : ∀ i, ae_strongly_measurable (X i) ℙ := fun i =>
-    (hident i).aEStronglyMeasurable_iff.2 hℒp.1
+    (hident i).aestronglyMeasurable_iff.2 hℒp.1
   have hint : integrable (X 0) ℙ := hℒp.integrable hp
   have havg : ∀ n, ae_strongly_measurable (fun ω => (∑ i in range n, X i ω) / n) ℙ :=
     by
@@ -773,6 +830,7 @@ theorem strong_law_Lp {p : ℝ≥0∞} (hp : 1 ≤ p) (hp' : p ≠ ∞) (X : ℕ
   · ext n ω
     simp only [Pi.coe_nat, Pi.div_apply, sum_apply]
 #align probability_theory.strong_law_Lp ProbabilityTheory.strong_law_Lp
+-/
 
 end StrongLawLp
 
