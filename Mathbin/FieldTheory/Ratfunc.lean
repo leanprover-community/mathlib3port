@@ -1421,7 +1421,7 @@ theorem num_ne_zero {x : RatFunc K} (hx : x ≠ 0) : num x ≠ 0 :=
 theorem num_mul_eq_mul_denom_iff {x : RatFunc K} {p q : K[X]} (hq : q ≠ 0) :
     x.num * q = p * x.den ↔ x = algebraMap _ _ p / algebraMap _ _ q :=
   by
-  rw [← (algebra_map_injective K).eq_iff, eq_div_iff (algebra_map_ne_zero hq)]
+  rw [← (algebraMap_injective K).eq_iff, eq_div_iff (algebra_map_ne_zero hq)]
   conv_rhs => rw [← num_div_denom x]
   rw [RingHom.map_mul, RingHom.map_mul, div_eq_mul_inv, mul_assoc, mul_comm (Inv.inv _), ←
     mul_assoc, ← div_eq_mul_inv, div_eq_iff]

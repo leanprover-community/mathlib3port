@@ -1098,8 +1098,8 @@ variable [Algebra R A] [Algebra R A'] [IsScalarTower R A B] [IsScalarTower R A' 
 /-- Integral closures are all isomorphic to each other. -/
 noncomputable def equiv : A ≃ₐ[R] A' :=
   AlgEquiv.ofAlgHom (lift _ B (isIntegral_algebra R B)) (lift _ B (isIntegral_algebra R B))
-    (by ext x; apply algebra_map_injective A' R B; simp)
-    (by ext x; apply algebra_map_injective A R B; simp)
+    (by ext x; apply algebraMap_injective A' R B; simp)
+    (by ext x; apply algebraMap_injective A R B; simp)
 #align is_integral_closure.equiv IsIntegralClosure.equiv
 -/
 
