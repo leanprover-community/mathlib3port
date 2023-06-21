@@ -103,12 +103,12 @@ def chooseNat' (x y : ℕ) (p : x < y) : Gen (Set.Ico x y) :=
 
 open Nat
 
-instance : Uliftable Gen.{u} Gen.{v} :=
+instance : ULiftable Gen.{u} Gen.{v} :=
   ReaderT.uliftable' (Equiv.ulift.trans Equiv.ulift.symm)
 
 instance : HasOrelse Gen.{u} :=
   ⟨fun α x y => do
-    let b ← Uliftable.up <| chooseAny Bool
+    let b ← ULiftable.up <| chooseAny Bool
     if b then x else y⟩
 
 variable {α}
@@ -139,7 +139,7 @@ by the size parameter of `gen`. -/
 def listOf (cmd : Gen α) : Gen (List α) :=
   sized fun sz => do
     do
-      let ⟨n⟩ ← Uliftable.up <| choose_nat 0 (sz + 1) (by decide)
+      let ⟨n⟩ ← ULiftable.up <| choose_nat 0 (sz + 1) (by decide)
       let v ← vector_of n cmd
       return v
 #align slim_check.gen.list_of SlimCheck.Gen.listOf
@@ -150,7 +150,7 @@ open ULift
 #print SlimCheck.Gen.oneOf /-
 /-- Given a list of example generators, choose one to create an example. -/
 def oneOf (xs : List (Gen α)) (pos : 0 < xs.length) : Gen α := do
-  let ⟨⟨n, h, h'⟩⟩ ← Uliftable.up <| chooseNat' 0 xs.length Pos
+  let ⟨⟨n, h, h'⟩⟩ ← ULiftable.up <| chooseNat' 0 xs.length Pos
   List.nthLe xs n h'
 #align slim_check.gen.one_of SlimCheck.Gen.oneOf
 -/
@@ -158,7 +158,7 @@ def oneOf (xs : List (Gen α)) (pos : 0 < xs.length) : Gen α := do
 #print SlimCheck.Gen.elements /-
 /-- Given a list of example generators, choose one to create an example. -/
 def elements (xs : List α) (pos : 0 < xs.length) : Gen α := do
-  let ⟨⟨n, h₀, h₁⟩⟩ ← Uliftable.up <| chooseNat' 0 xs.length Pos
+  let ⟨⟨n, h₀, h₁⟩⟩ ← ULiftable.up <| chooseNat' 0 xs.length Pos
   pure <| List.nthLe xs n h₁
 #align slim_check.gen.elements SlimCheck.Gen.elements
 -/
@@ -194,7 +194,7 @@ def freq (xs : List (ℕ+ × Gen α)) (pos : 0 < xs.length) : Gen α :=
       List.length_map (Subtype.val ∘ Prod.fst) xs ▸
         List.length_le_sum_of_one_le _ fun i => by simp; intros; assumption
   have : 0 ≤ s - 1 := le_tsub_of_add_le_right ha
-  Uliftable.adaptUp Gen.{0} Gen.{u} (chooseNat 0 (s - 1) this) fun i =>
+  ULiftable.adaptUp Gen.{0} Gen.{u} (chooseNat 0 (s - 1) this) fun i =>
     freqAux xs i.1 (by rcases i with ⟨i, h₀, h₁⟩ <;> rwa [le_tsub_iff_right] at h₁  <;> exact ha)
 #align slim_check.gen.freq SlimCheck.Gen.freq
 
@@ -205,7 +205,7 @@ def permutationOf {α : Type u} : ∀ xs : List α, Gen (Subtype <| List.Perm xs
   | [] => pure ⟨[], List.Perm.nil⟩
   | x::xs => do
     let ⟨xs', h⟩ ← permutation_of xs
-    let ⟨⟨n, _, h'⟩⟩ ← Uliftable.up <| chooseNat 0 xs'.length (by decide)
+    let ⟨⟨n, _, h'⟩⟩ ← ULiftable.up <| chooseNat 0 xs'.length (by decide)
     pure
         ⟨List.insertNth n x xs',
           List.Perm.trans (List.Perm.cons _ h) (List.perm_insertNth _ _ h').symm⟩

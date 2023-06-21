@@ -141,7 +141,7 @@ instance Pi.sampleableExt : SampleableExt (α → β)
   interp := TotalFunction.apply
   sample := do
     let xs ← (Sampleable.sample (List (α × β)) : Gen (List (α × β)))
-    let ⟨x⟩ ← (Uliftable.up <| sample β : Gen (ULift.{max u v} β))
+    let ⟨x⟩ ← (ULiftable.up <| sample β : Gen (ULift.{max u v} β))
     pure <| total_function.with_default (list.to_finmap' xs) x
   shrink := TotalFunction.shrink
 #align slim_check.total_function.pi.sampleable_ext SlimCheck.TotalFunction.Pi.sampleableExt
@@ -202,7 +202,7 @@ instance Finsupp.sampleableExt [Repr α] [Repr β] : SampleableExt (α →₀ β
   interp := TotalFunction.applyFinsupp
   sample := do
     let xs ← (Sampleable.sample (List (α × β)) : Gen (List (α × β)))
-    let ⟨x⟩ ← (Uliftable.up <| sample β : Gen (ULift.{max u v} β))
+    let ⟨x⟩ ← (ULiftable.up <| sample β : Gen (ULift.{max u v} β))
     pure <| total_function.with_default (list.to_finmap' xs) x
   shrink := TotalFunction.shrink
 #align slim_check.total_function.finsupp.sampleable_ext SlimCheck.TotalFunction.Finsupp.sampleableExt
@@ -214,7 +214,7 @@ instance Dfinsupp.sampleableExt [Repr α] [Repr β] : SampleableExt (Π₀ a : �
   interp := Finsupp.toDfinsupp ∘ TotalFunction.applyFinsupp
   sample := do
     let xs ← (Sampleable.sample (List (α × β)) : Gen (List (α × β)))
-    let ⟨x⟩ ← (Uliftable.up <| sample β : Gen (ULift.{max u v} β))
+    let ⟨x⟩ ← (ULiftable.up <| sample β : Gen (ULift.{max u v} β))
     pure <| total_function.with_default (list.to_finmap' xs) x
   shrink := TotalFunction.shrink
 #align slim_check.total_function.dfinsupp.sampleable_ext SlimCheck.TotalFunction.Dfinsupp.sampleableExt

@@ -391,8 +391,8 @@ instance Prod.sampleable : SampleableBifunctor.{u, v} Prod
     where
   wf := _
   sample α β sama samb := do
-    let ⟨x⟩ ← (Uliftable.up <| sama : Gen (ULift.{max u v} α))
-    let ⟨y⟩ ← (Uliftable.up <| samb : Gen (ULift.{max u v} β))
+    let ⟨x⟩ ← (ULiftable.up <| sama : Gen (ULift.{max u v} α))
+    let ⟨y⟩ ← (ULiftable.up <| samb : Gen (ULift.{max u v} β))
     pure (x, y)
   shrink := @Prod.shrink
   pRepr := @Prod.hasRepr
@@ -417,8 +417,8 @@ instance Sum.sampleable : SampleableBifunctor.{u, v} Sum
     where
   wf := _
   sample (α : Type u) (β : Type v) sam_α sam_β :=
-    @Uliftable.upMap Gen.{u} Gen.{max u v} _ _ _ _ (@Sum.inl α β) sam_α <|>
-      @Uliftable.upMap Gen.{v} Gen.{max v u} _ _ _ _ (@Sum.inr α β) sam_β
+    @ULiftable.upMap Gen.{u} Gen.{max u v} _ _ _ _ (@Sum.inl α β) sam_α <|>
+      @ULiftable.upMap Gen.{v} Gen.{max v u} _ _ _ _ (@Sum.inr α β) sam_β
   shrink α β Iα Iβ shr_α shr_β := @Sum.shrink _ _ Iα Iβ shr_α shr_β
   pRepr := @Sum.hasRepr
 #align slim_check.sum.sampleable SlimCheck.Sum.sampleable
@@ -772,7 +772,7 @@ instance Large.sampleableFunctor : SampleableFunctor Large
 instance Ulift.sampleableFunctor : SampleableFunctor ULift.{u, v}
     where
   wf α h := ⟨fun ⟨x⟩ => @SizeOf.sizeOf α h x⟩
-  sample α samp := Uliftable.upMap ULift.up <| samp
+  sample α samp := ULiftable.upMap ULift.up <| samp
   shrink := fun α _ shr ⟨x⟩ => (shr x).map (Subtype.map ULift.up fun a h => h)
   pRepr α h := ⟨@repr α h ∘ ULift.down⟩
 #align slim_check.ulift.sampleable_functor SlimCheck.Ulift.sampleableFunctor
@@ -900,7 +900,7 @@ open Tactic
 def printSamples {t : Type u} [Repr t] (g : Gen t) : Io Unit := do
   let xs ←
     Io.runRand <|
-        Uliftable.down do
+        ULiftable.down do
           let xs ← (List.range 10).mapM <| g.run ∘ ULift.up
           pure ⟨xs repr⟩
   xs Io.putStrLn

@@ -65,7 +65,7 @@ def Rand :=
 #align rand Rand
 -/
 
-instance (g : Type) : Uliftable (RandG.{u} g) (RandG.{v} g) :=
+instance (g : Type) : ULiftable (RandG.{u} g) (RandG.{v} g) :=
   @StateT.uliftable' _ _ _ _ _ (Equiv.ulift.trans Equiv.ulift.symm)
 
 open ULift hiding Inhabited
@@ -130,7 +130,7 @@ def random : RandG g α :=
 
 /-- generate an infinite series of random values of type `α` -/
 def randomSeries : RandG g (Stream' α) := do
-  let gen ← Uliftable.up (split g)
+  let gen ← ULiftable.up (split g)
   pure <| Stream'.corecState (Random.random α g) gen
 #align rand.random_series Rand.randomSeries
 
@@ -146,7 +146,7 @@ def randomR [Preorder α] [BoundedRandom α] (x y : α) (h : x ≤ y) : RandG g 
 /-- generate an infinite series of random values of type `α` between `x` and `y` inclusive. -/
 def randomSeriesR [Preorder α] [BoundedRandom α] (x y : α) (h : x ≤ y) :
     RandG g (Stream' (x .. y)) := do
-  let gen ← Uliftable.up (split g)
+  let gen ← ULiftable.up (split g)
   pure <| corec_state (BoundedRandom.randomR g x y h) gen
 #align rand.random_series_r Rand.randomSeriesR
 

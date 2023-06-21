@@ -69,7 +69,7 @@ def tsnd {α α'} (f : α → F α') : t β α → F (t β α') :=
 #align bitraversable.tsnd Bitraversable.tsnd
 -/
 
-variable [IsLawfulBitraversable t] [LawfulApplicative F] [LawfulApplicative G]
+variable [LawfulBitraversable t] [LawfulApplicative F] [LawfulApplicative G]
 
 #print Bitraversable.id_tfst /-
 @[higher_order tfst_id]

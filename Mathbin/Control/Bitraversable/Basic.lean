@@ -68,9 +68,9 @@ def bisequence {t m} [Bitraversable t] [Applicative m] {α β} : t (m α) (m β)
 
 open Functor
 
-#print IsLawfulBitraversable /-
+#print LawfulBitraversable /-
 /-- Bifunctor. This typeclass asserts that a lawless bitraversable bifunctor is lawful. -/
-class IsLawfulBitraversable (t : Type u → Type u → Type u) [Bitraversable t] extends
+class LawfulBitraversable (t : Type u → Type u → Type u) [Bitraversable t] extends
     LawfulBifunctor t where
   id_bitraverse : ∀ {α β} (x : t α β), bitraverse id.mk id.mk x = id.mk x
   comp_bitraverse :
@@ -85,12 +85,12 @@ class IsLawfulBitraversable (t : Type u → Type u → Type u) [Bitraversable t]
     ∀ {F G} [Applicative F] [Applicative G] [LawfulApplicative F] [LawfulApplicative G]
       (η : ApplicativeTransformation F G) {α α' β β'} (f : α → F β) (f' : α' → F β') (x : t α α'),
       η (bitraverse f f' x) = bitraverse (@η _ ∘ f) (@η _ ∘ f') x
-#align is_lawful_bitraversable IsLawfulBitraversable
+#align is_lawful_bitraversable LawfulBitraversable
 -/
 
-export IsLawfulBitraversable (id_bitraverse comp_bitraverse bitraverse_eq_bimap_id)
+export LawfulBitraversable (id_bitraverse comp_bitraverse bitraverse_eq_bimap_id)
 
-open IsLawfulBitraversable
+open LawfulBitraversable
 
 attribute [higher_order bitraverse_id_id] id_bitraverse
 
@@ -98,5 +98,5 @@ attribute [higher_order bitraverse_comp] comp_bitraverse
 
 attribute [higher_order] binaturality bitraverse_eq_bimap_id
 
-export IsLawfulBitraversable (bitraverse_id_id bitraverse_comp)
+export LawfulBitraversable (bitraverse_id_id bitraverse_comp)
 

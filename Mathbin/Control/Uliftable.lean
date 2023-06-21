@@ -43,107 +43,127 @@ universe u₀ u₁ v₀ v₁ v₂ w w₀ w₁
 
 variable {s : Type u₀} {s' : Type u₁} {r r' w w' : Type _}
 
+#print ULiftable /-
 /- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`congr] [] -/
 /-- Given a universe polymorphic type family `M.{u} : Type u₁ → Type
 u₂`, this class convert between instantiations, from
 `M.{u} : Type u₁ → Type u₂` to `M.{v} : Type v₁ → Type v₂` and back -/
-class Uliftable (f : Type u₀ → Type u₁) (g : Type v₀ → Type v₁) where
+class ULiftable (f : Type u₀ → Type u₁) (g : Type v₀ → Type v₁) where
   congr {α β} : α ≃ β → f α ≃ g β
-#align uliftable Uliftable
+#align uliftable ULiftable
+-/
 
-namespace Uliftable
+namespace ULiftable
 
+#print ULiftable.up /-
 /-- The most common practical use `uliftable` (together with `up`), this function takes
 `x : M.{u} α` and lifts it to M.{max u v} (ulift.{v} α) -/
 @[reducible]
-def up {f : Type u₀ → Type u₁} {g : Type max u₀ v₀ → Type v₁} [Uliftable f g] {α} :
+def up {f : Type u₀ → Type u₁} {g : Type max u₀ v₀ → Type v₁} [ULiftable f g] {α} :
     f α → g (ULift α) :=
-  (Uliftable.congr f g Equiv.ulift.symm).toFun
-#align uliftable.up Uliftable.up
+  (ULiftable.congr f g Equiv.ulift.symm).toFun
+#align uliftable.up ULiftable.up
+-/
 
+#print ULiftable.down /-
 /-- The most common practical use of `uliftable` (together with `up`), this function takes
 `x : M.{max u v} (ulift.{v} α)` and lowers it to `M.{u} α` -/
 @[reducible]
-def down {f : Type u₀ → Type u₁} {g : Type max u₀ v₀ → Type v₁} [Uliftable f g] {α} :
+def down {f : Type u₀ → Type u₁} {g : Type max u₀ v₀ → Type v₁} [ULiftable f g] {α} :
     g (ULift α) → f α :=
-  (Uliftable.congr f g Equiv.ulift.symm).invFun
-#align uliftable.down Uliftable.down
+  (ULiftable.congr f g Equiv.ulift.symm).invFun
+#align uliftable.down ULiftable.down
+-/
 
+#print ULiftable.adaptUp /-
 /-- convenient shortcut to avoid manipulating `ulift` -/
-def adaptUp (F : Type v₀ → Type v₁) (G : Type max v₀ u₀ → Type u₁) [Uliftable F G] [Monad G] {α β}
+def adaptUp (F : Type v₀ → Type v₁) (G : Type max v₀ u₀ → Type u₁) [ULiftable F G] [Monad G] {α β}
     (x : F α) (f : α → G β) : G β :=
   up x >>= f ∘ ULift.down
-#align uliftable.adapt_up Uliftable.adaptUp
+#align uliftable.adapt_up ULiftable.adaptUp
+-/
 
+#print ULiftable.adaptDown /-
 /-- convenient shortcut to avoid manipulating `ulift` -/
-def adaptDown {F : Type max u₀ v₀ → Type u₁} {G : Type v₀ → Type v₁} [L : Uliftable G F] [Monad F]
+def adaptDown {F : Type max u₀ v₀ → Type u₁} {G : Type v₀ → Type v₁} [L : ULiftable G F] [Monad F]
     {α β} (x : F α) (f : α → G β) : G β :=
   @down.{v₀, v₁, max u₀ v₀} G F L β <| x >>= @up.{v₀, v₁, max u₀ v₀} G F L β ∘ f
-#align uliftable.adapt_down Uliftable.adaptDown
+#align uliftable.adapt_down ULiftable.adaptDown
+-/
 
+#print ULiftable.upMap /-
 /-- map function that moves up universes -/
-def upMap {F : Type u₀ → Type u₁} {G : Type max u₀ v₀ → Type v₁} [inst : Uliftable F G] [Functor G]
+def upMap {F : Type u₀ → Type u₁} {G : Type max u₀ v₀ → Type v₁} [inst : ULiftable F G] [Functor G]
     {α β} (f : α → β) (x : F α) : G β :=
   Functor.map (f ∘ ULift.down) (up x)
-#align uliftable.up_map Uliftable.upMap
+#align uliftable.up_map ULiftable.upMap
+-/
 
+#print ULiftable.downMap /-
 /-- map function that moves down universes -/
-def downMap {F : Type max u₀ v₀ → Type u₁} {G : Type u₀ → Type v₁} [inst : Uliftable G F]
+def downMap {F : Type max u₀ v₀ → Type u₁} {G : Type u₀ → Type v₁} [inst : ULiftable G F]
     [Functor F] {α β} (f : α → β) (x : F α) : G β :=
   down (Functor.map (ULift.up ∘ f) x : F (ULift β))
-#align uliftable.down_map Uliftable.downMap
+#align uliftable.down_map ULiftable.downMap
+-/
 
+#print ULiftable.up_down /-
 @[simp]
-theorem up_down {f : Type u₀ → Type u₁} {g : Type max u₀ v₀ → Type v₁} [Uliftable f g] {α}
+theorem up_down {f : Type u₀ → Type u₁} {g : Type max u₀ v₀ → Type v₁} [ULiftable f g] {α}
     (x : g (ULift α)) : up (down x : f α) = x :=
-  (Uliftable.congr f g Equiv.ulift.symm).right_inv _
-#align uliftable.up_down Uliftable.up_down
+  (ULiftable.congr f g Equiv.ulift.symm).right_inv _
+#align uliftable.up_down ULiftable.up_down
+-/
 
+#print ULiftable.down_up /-
 @[simp]
-theorem down_up {f : Type u₀ → Type u₁} {g : Type max u₀ v₀ → Type v₁} [Uliftable f g] {α}
+theorem down_up {f : Type u₀ → Type u₁} {g : Type max u₀ v₀ → Type v₁} [ULiftable f g] {α}
     (x : f α) : down (up x : g _) = x :=
-  (Uliftable.congr f g Equiv.ulift.symm).left_inv _
-#align uliftable.down_up Uliftable.down_up
+  (ULiftable.congr f g Equiv.ulift.symm).left_inv _
+#align uliftable.down_up ULiftable.down_up
+-/
 
-end Uliftable
+end ULiftable
 
 open ULift
 
-instance : Uliftable id id where congr α β F := F
+instance : ULiftable id id where congr α β F := F
 
 /-- for specific state types, this function helps to create a uliftable instance -/
-def StateT.uliftable' {m : Type u₀ → Type v₀} {m' : Type u₁ → Type v₁} [Uliftable m m']
-    (F : s ≃ s') : Uliftable (StateT s m) (StateT s' m')
+def StateT.uliftable' {m : Type u₀ → Type v₀} {m' : Type u₁ → Type v₁} [ULiftable m m']
+    (F : s ≃ s') : ULiftable (StateT s m) (StateT s' m')
     where congr α β G :=
-    StateT.equiv <| Equiv.piCongr F fun _ => Uliftable.congr _ _ <| Equiv.prodCongr G F
+    StateT.equiv <| Equiv.piCongr F fun _ => ULiftable.congr _ _ <| Equiv.prodCongr G F
 #align state_t.uliftable' StateTₓ.uliftable'
 
-instance {m m'} [Uliftable m m'] : Uliftable (StateT s m) (StateT (ULift s) m') :=
+instance {m m'} [ULiftable m m'] : ULiftable (StateT s m) (StateT (ULift s) m') :=
   StateT.uliftable' Equiv.ulift.symm
 
 /-- for specific reader monads, this function helps to create a uliftable instance -/
-def ReaderT.uliftable' {m m'} [Uliftable m m'] (F : s ≃ s') :
-    Uliftable (ReaderT s m) (ReaderT s' m')
-    where congr α β G := ReaderT.equiv <| Equiv.piCongr F fun _ => Uliftable.congr _ _ G
+def ReaderT.uliftable' {m m'} [ULiftable m m'] (F : s ≃ s') :
+    ULiftable (ReaderT s m) (ReaderT s' m')
+    where congr α β G := ReaderT.equiv <| Equiv.piCongr F fun _ => ULiftable.congr _ _ G
 #align reader_t.uliftable' ReaderTₓ.uliftable'
 
-instance {m m'} [Uliftable m m'] : Uliftable (ReaderT s m) (ReaderT (ULift s) m') :=
+instance {m m'} [ULiftable m m'] : ULiftable (ReaderT s m) (ReaderT (ULift s) m') :=
   ReaderT.uliftable' Equiv.ulift.symm
 
+#print ContT.uliftable' /-
 /-- for specific continuation passing monads, this function helps to create a uliftable instance -/
-def ContT.uliftable' {m m'} [Uliftable m m'] (F : r ≃ r') : Uliftable (ContT r m) (ContT r' m')
-    where congr α β := ContT.equiv (Uliftable.congr _ _ F)
+def ContT.uliftable' {m m'} [ULiftable m m'] (F : r ≃ r') : ULiftable (ContT r m) (ContT r' m')
+    where congr α β := ContT.equiv (ULiftable.congr _ _ F)
 #align cont_t.uliftable' ContT.uliftable'
+-/
 
-instance {s m m'} [Uliftable m m'] : Uliftable (ContT s m) (ContT (ULift s) m') :=
+instance {s m m'} [ULiftable m m'] : ULiftable (ContT s m) (ContT (ULift s) m') :=
   ContT.uliftable' Equiv.ulift.symm
 
 /-- for specific writer monads, this function helps to create a uliftable instance -/
-def WriterT.uliftable' {m m'} [Uliftable m m'] (F : w ≃ w') :
-    Uliftable (WriterT w m) (WriterT w' m')
-    where congr α β G := WriterT.equiv <| Uliftable.congr _ _ <| Equiv.prodCongr G F
+def WriterT.uliftable' {m m'} [ULiftable m m'] (F : w ≃ w') :
+    ULiftable (WriterT w m) (WriterT w' m')
+    where congr α β G := WriterT.equiv <| ULiftable.congr _ _ <| Equiv.prodCongr G F
 #align writer_t.uliftable' WriterTₓ.uliftable'
 
-instance {m m'} [Uliftable m m'] : Uliftable (WriterT s m) (WriterT (ULift s) m') :=
+instance {m m'} [ULiftable m m'] : ULiftable (WriterT s m) (WriterT (ULift s) m') :=
   WriterT.uliftable' Equiv.ulift.symm
 

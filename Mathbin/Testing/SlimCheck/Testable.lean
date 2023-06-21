@@ -540,7 +540,7 @@ def minimizeAux [SampleableExt α] [∀ x, Testable (β x)] (cfg : SlimCheckCfg)
       (SampleableExt.shrink x).firstM fun ⟨a, h⟩ => do
           let ⟨r⟩ ←
             monadLift
-                (Uliftable.up <| Testable.run (β (interp α a)) cfg true :
+                (ULiftable.up <| Testable.run (β (interp α a)) cfg true :
                   Gen (ULift <| TestResult <| β <| interp α a))
           if is_failure r then
               pure (⟨a, r, ⟨h⟩⟩ : Σ a, test_result (β (interp α a)) × PLift (sizeof_lt a x))
@@ -577,9 +577,9 @@ bound variable with it -/
 instance varTestable [SampleableExt α] [∀ x, Testable (β x)] :
     Testable (NamedBinder var <| ∀ x : α, β x) :=
   ⟨fun cfg min => do
-    Uliftable.adaptDown (sampleable_ext.sample α) fun x => do
+    ULiftable.adaptDown (sampleable_ext.sample α) fun x => do
         let r ← testable.run (β (sampleable_ext.interp α x)) cfg ff
-        Uliftable.adaptDown
+        ULiftable.adaptDown
             (if is_failure r ∧ min then minimize _ _ cfg var x r
             else if cfg then (trace s! "  {var } := {repr x}") <| pure ⟨x, r⟩ else pure ⟨x, r⟩)
             fun ⟨x, r⟩ =>
