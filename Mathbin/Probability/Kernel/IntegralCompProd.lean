@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 
 ! This file was ported from Lean 3 source module probability.kernel.integral_comp_prod
-! leanprover-community/mathlib commit c0d694db494dd4f9aa57f2714b6e4c82b4ebc113
+! leanprover-community/mathlib commit f2ad3645af9effcdb587637dc28a6074edc813f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.MeasureTheory.Integral.SetIntegral
 
 /-!
 # Bochner integral of a function against the composition-product of two kernels
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 We prove properties of the composition-product of two kernels. If `κ` is an s-finite kernel from
 `α` to `β` and `η` is an s-finite kernel from `α × β` to `γ`, we can form their composition-product

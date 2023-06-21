@@ -229,21 +229,20 @@ section CommSemiring
 
 variable [CommSemiring R] {𝓟 : Ideal R} {f : R[X]} (hf : f.IsEisensteinAt 𝓟)
 
-#print Polynomial.IsEisensteinAt.Polynomial.Monic.leadingCoeff_not_mem /-
-theorem Polynomial.IsEisensteinAt.Polynomial.Monic.leadingCoeff_not_mem (hf : f.Monic) (h : 𝓟 ≠ ⊤) :
-    ¬f.leadingCoeff ∈ 𝓟 :=
+#print Polynomial.Monic.leadingCoeff_not_mem /-
+theorem Polynomial.Monic.leadingCoeff_not_mem (hf : f.Monic) (h : 𝓟 ≠ ⊤) : ¬f.leadingCoeff ∈ 𝓟 :=
   hf.leadingCoeff.symm ▸ (Ideal.ne_top_iff_one _).1 h
-#align polynomial.monic.leading_coeff_not_mem Polynomial.IsEisensteinAt.Polynomial.Monic.leadingCoeff_not_mem
+#align polynomial.monic.leading_coeff_not_mem Polynomial.Monic.leadingCoeff_not_mem
 -/
 
-#print Polynomial.IsEisensteinAt.Polynomial.Monic.isEisensteinAt_of_mem_of_not_mem /-
-theorem Polynomial.IsEisensteinAt.Polynomial.Monic.isEisensteinAt_of_mem_of_not_mem (hf : f.Monic)
-    (h : 𝓟 ≠ ⊤) (hmem : ∀ {n}, n < f.natDegree → f.coeff n ∈ 𝓟) (hnot_mem : f.coeff 0 ∉ 𝓟 ^ 2) :
+#print Polynomial.Monic.isEisensteinAt_of_mem_of_not_mem /-
+theorem Polynomial.Monic.isEisensteinAt_of_mem_of_not_mem (hf : f.Monic) (h : 𝓟 ≠ ⊤)
+    (hmem : ∀ {n}, n < f.natDegree → f.coeff n ∈ 𝓟) (hnot_mem : f.coeff 0 ∉ 𝓟 ^ 2) :
     f.IsEisensteinAt 𝓟 :=
   { leading := hf.leadingCoeff_not_mem h
     Mem := fun n hn => hmem hn
     not_mem := hnot_mem }
-#align polynomial.monic.is_eisenstein_at_of_mem_of_not_mem Polynomial.IsEisensteinAt.Polynomial.Monic.isEisensteinAt_of_mem_of_not_mem
+#align polynomial.monic.is_eisenstein_at_of_mem_of_not_mem Polynomial.Monic.isEisensteinAt_of_mem_of_not_mem
 -/
 
 #print Polynomial.IsEisensteinAt.isWeaklyEisensteinAt /-

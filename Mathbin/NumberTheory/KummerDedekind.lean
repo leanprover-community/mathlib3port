@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen, Paul Lezeau
 
 ! This file was ported from Lean 3 source module number_theory.kummer_dedekind
-! leanprover-community/mathlib commit f0c8bf9245297a541f468be517f1bde6195105e9
+! leanprover-community/mathlib commit f2ad3645af9effcdb587637dc28a6074edc813f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.RingTheory.IsAdjoinRoot
 
 /-!
 # Kummer-Dedekind theorem
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file proves the monogenic version of the Kummer-Dedekind theorem on the splitting of prime
 ideals in an extension of the ring of integers. This states that if `I` is a prime ideal of

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 
 ! This file was ported from Lean 3 source module probability.martingale.optional_sampling
-! leanprover-community/mathlib commit ba074af83b6cf54c3104e59402b39410ddbd6dca
+! leanprover-community/mathlib commit f2ad3645af9effcdb587637dc28a6074edc813f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Probability.Martingale.Basic
 
 /-!
 # Optional sampling theorem
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 If `τ` is a bounded stopping time and `σ` is another stopping time, then the value of a martingale
 `f` at the stopping time `min τ σ` is almost everywhere equal to

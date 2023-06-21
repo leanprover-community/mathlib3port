@@ -35,22 +35,26 @@ number field, ring of integers
 -/
 
 
+#print NumberField /-
 /-- A number field is a field which has characteristic zero and is finite
 dimensional over ℚ. -/
 class NumberField (K : Type _) [Field K] : Prop where
   [to_charZero : CharZero K]
   [to_finiteDimensional : FiniteDimensional ℚ K]
 #align number_field NumberField
+-/
 
 open Function Module
 
 open scoped Classical BigOperators nonZeroDivisors
 
+#print Int.not_isField /-
 /-- `ℤ` with its usual ring structure is not a field. -/
 theorem Int.not_isField : ¬IsField ℤ := fun h =>
   Int.not_even_one <|
     (h.mul_inv_cancel two_ne_zero).imp fun a => by rw [← two_mul] <;> exact Eq.symm
 #align int.not_is_field Int.not_isField
+-/
 
 namespace NumberField
 
@@ -59,22 +63,29 @@ variable (K L : Type _) [Field K] [Field L] [nf : NumberField K]
 -- See note [lower instance priority]
 attribute [instance] NumberField.to_charZero NumberField.to_finiteDimensional
 
+#print NumberField.isAlgebraic /-
 protected theorem isAlgebraic : Algebra.IsAlgebraic ℚ K :=
   Algebra.isAlgebraic_of_finite _ _
 #align number_field.is_algebraic NumberField.isAlgebraic
+-/
 
+#print NumberField.ringOfIntegers /-
 /-- The ring of integers (or number ring) corresponding to a number field
 is the integral closure of ℤ in the number field. -/
 def ringOfIntegers :=
   integralClosure ℤ K
 #align number_field.ring_of_integers NumberField.ringOfIntegers
+-/
 
 scoped notation "𝓞" => NumberField.ringOfIntegers
 
+#print NumberField.mem_ringOfIntegers /-
 theorem mem_ringOfIntegers (x : K) : x ∈ 𝓞 K ↔ IsIntegral ℤ x :=
   Iff.rfl
 #align number_field.mem_ring_of_integers NumberField.mem_ringOfIntegers
+-/
 
+#print NumberField.isIntegral_of_mem_ringOfIntegers /-
 theorem isIntegral_of_mem_ringOfIntegers {K : Type _} [Field K] {x : K} (hx : x ∈ 𝓞 K) :
     IsIntegral ℤ (⟨x, hx⟩ : 𝓞 K) := by
   obtain ⟨P, hPm, hP⟩ := hx
@@ -82,7 +93,9 @@ theorem isIntegral_of_mem_ringOfIntegers {K : Type _} [Field K] {x : K} (hx : x 
   rw [← Polynomial.aeval_def, ← Subalgebra.coe_eq_zero, Polynomial.aeval_subalgebra_coe,
     Polynomial.aeval_def, Subtype.coe_mk, hP]
 #align number_field.is_integral_of_mem_ring_of_integers NumberField.isIntegral_of_mem_ringOfIntegers
+-/
 
+#print NumberField.ringOfIntegersAlgebra /-
 /-- Given an algebra between two fields, create an algebra between their two rings of integers.
 
 For now, this is not an instance by default as it creates an equal-but-not-defeq diamond with
@@ -98,6 +111,7 @@ def ringOfIntegersAlgebra [Algebra K L] : Algebra (𝓞 K) (𝓞 L) :=
       map_mul' := fun x y =>
         Subtype.ext <| by simp only [Subalgebra.coe_mul, map_mul, Subtype.coe_mk] }
 #align number_field.ring_of_integers_algebra NumberField.ringOfIntegersAlgebra
+-/
 
 namespace RingOfIntegers
 
@@ -112,20 +126,26 @@ instance : IsIntegralClosure (𝓞 K) ℤ K :=
 instance [NumberField K] : IsIntegrallyClosed (𝓞 K) :=
   integralClosure.isIntegrallyClosedOfFiniteExtension ℚ
 
+#print NumberField.RingOfIntegers.isIntegral_coe /-
 theorem isIntegral_coe (x : 𝓞 K) : IsIntegral ℤ (x : K) :=
   x.2
-#align number_field.ring_of_integers.is_integral_coe NumberField.ringOfIntegers.isIntegral_coe
+#align number_field.ring_of_integers.is_integral_coe NumberField.RingOfIntegers.isIntegral_coe
+-/
 
+#print NumberField.RingOfIntegers.map_mem /-
 theorem map_mem {F L : Type _} [Field L] [CharZero K] [CharZero L] [AlgHomClass F ℚ K L] (f : F)
     (x : 𝓞 K) : f x ∈ 𝓞 L :=
-  (mem_ringOfIntegers _ _).2 <| map_isIntegral_int f <| ringOfIntegers.isIntegral_coe x
-#align number_field.ring_of_integers.map_mem NumberField.ringOfIntegers.map_mem
+  (mem_ringOfIntegers _ _).2 <| map_isIntegral_int f <| RingOfIntegers.isIntegral_coe x
+#align number_field.ring_of_integers.map_mem NumberField.RingOfIntegers.map_mem
+-/
 
+#print NumberField.RingOfIntegers.equiv /-
 /-- The ring of integers of `K` are equivalent to any integral closure of `ℤ` in `K` -/
 protected noncomputable def equiv (R : Type _) [CommRing R] [Algebra R K]
     [IsIntegralClosure R ℤ K] : 𝓞 K ≃+* R :=
   (IsIntegralClosure.equiv ℤ R K _).symm.toRingEquiv
-#align number_field.ring_of_integers.equiv NumberField.ringOfIntegers.equiv
+#align number_field.ring_of_integers.equiv NumberField.RingOfIntegers.equiv
+-/
 
 variable (K)
 
@@ -135,6 +155,7 @@ instance : CharZero (𝓞 K) :=
 instance : IsNoetherian ℤ (𝓞 K) :=
   IsIntegralClosure.isNoetherian _ ℚ K _
 
+#print NumberField.RingOfIntegers.not_isField /-
 /-- The ring of integers of a number field is not a field. -/
 theorem not_isField : ¬IsField (𝓞 K) :=
   by
@@ -143,7 +164,8 @@ theorem not_isField : ¬IsField (𝓞 K) :=
   intro hf
   exact
     Int.not_isField (((IsIntegralClosure.isIntegral_algebra ℤ K).isField_iff_isField h_inj).mpr hf)
-#align number_field.ring_of_integers.not_is_field NumberField.ringOfIntegers.not_isField
+#align number_field.ring_of_integers.not_is_field NumberField.RingOfIntegers.not_isField
+-/
 
 instance : IsDedekindDomain (𝓞 K) :=
   IsIntegralClosure.isDedekindDomain ℤ ℚ K _
@@ -154,27 +176,35 @@ instance : Free ℤ (𝓞 K) :=
 instance : IsLocalization (Algebra.algebraMapSubmonoid (𝓞 K) ℤ⁰) K :=
   IsIntegralClosure.isLocalization ℤ ℚ K (𝓞 K)
 
+#print NumberField.RingOfIntegers.basis /-
 /-- A ℤ-basis of the ring of integers of `K`. -/
 noncomputable def basis : Basis (Free.ChooseBasisIndex ℤ (𝓞 K)) ℤ (𝓞 K) :=
   Free.chooseBasis ℤ (𝓞 K)
-#align number_field.ring_of_integers.basis NumberField.ringOfIntegers.basis
+#align number_field.ring_of_integers.basis NumberField.RingOfIntegers.basis
+-/
 
 end RingOfIntegers
 
+#print NumberField.integralBasis /-
 /-- A basis of `K` over `ℚ` that is also a basis of `𝓞 K` over `ℤ`. -/
 noncomputable def integralBasis : Basis (Free.ChooseBasisIndex ℤ (𝓞 K)) ℚ K :=
-  Basis.localizationLocalization ℚ (nonZeroDivisors ℤ) K (ringOfIntegers.basis K)
+  Basis.localizationLocalization ℚ (nonZeroDivisors ℤ) K (RingOfIntegers.basis K)
 #align number_field.integral_basis NumberField.integralBasis
+-/
 
+#print NumberField.integralBasis_apply /-
 @[simp]
 theorem integralBasis_apply (i : Free.ChooseBasisIndex ℤ (𝓞 K)) :
-    integralBasis K i = algebraMap (𝓞 K) K (ringOfIntegers.basis K i) :=
-  Basis.localizationLocalization_apply ℚ (nonZeroDivisors ℤ) K (ringOfIntegers.basis K) i
+    integralBasis K i = algebraMap (𝓞 K) K (RingOfIntegers.basis K i) :=
+  Basis.localizationLocalization_apply ℚ (nonZeroDivisors ℤ) K (RingOfIntegers.basis K) i
 #align number_field.integral_basis_apply NumberField.integralBasis_apply
+-/
 
-theorem ringOfIntegers.rank : FiniteDimensional.finrank ℤ (𝓞 K) = FiniteDimensional.finrank ℚ K :=
+#print NumberField.RingOfIntegers.rank /-
+theorem RingOfIntegers.rank : FiniteDimensional.finrank ℤ (𝓞 K) = FiniteDimensional.finrank ℚ K :=
   IsIntegralClosure.rank ℤ ℚ K (𝓞 K)
-#align number_field.ring_of_integers.rank NumberField.ringOfIntegers.rank
+#align number_field.ring_of_integers.rank NumberField.RingOfIntegers.rank
+-/
 
 end NumberField
 
@@ -182,6 +212,7 @@ namespace Rat
 
 open NumberField
 
+#print Rat.numberField /-
 instance numberField : NumberField ℚ
     where
   to_charZero := inferInstance
@@ -191,11 +222,14 @@ instance numberField : NumberField ℚ
   -- Show that these coincide:
   by convert (inferInstance : FiniteDimensional ℚ ℚ)
 #align rat.number_field Rat.numberField
+-/
 
+#print Rat.ringOfIntegersEquiv /-
 /-- The ring of integers of `ℚ` as a number field is just `ℤ`. -/
 noncomputable def ringOfIntegersEquiv : ringOfIntegers ℚ ≃+* ℤ :=
-  ringOfIntegers.equiv ℤ
+  RingOfIntegers.equiv ℤ
 #align rat.ring_of_integers_equiv Rat.ringOfIntegersEquiv
+-/
 
 end Rat
 

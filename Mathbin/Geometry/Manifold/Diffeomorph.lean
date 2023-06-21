@@ -73,7 +73,7 @@ variable (I I' M M' n)
 -/
 @[protect_proj, nolint has_nonempty_instance]
 structure Diffeomorph extends M ≃ M' where
-  contMdiff_toFun : ContMdiff I I' n to_equiv
+  contMdiff_to_fun : ContMdiff I I' n to_equiv
   contMdiff_inv_fun : ContMdiff I' I n to_equiv.symm
 #align diffeomorph Diffeomorph
 
@@ -97,15 +97,15 @@ instance : CoeFun (M ≃ₘ^n⟮I, I'⟯ M') fun _ => M → M' :=
   ⟨fun e => e.toEquiv⟩
 
 instance : Coe (M ≃ₘ^n⟮I, I'⟯ M') C^n⟮I, M; I', M'⟯ :=
-  ⟨fun Φ => ⟨Φ, Φ.contMdiff_toFun⟩⟩
+  ⟨fun Φ => ⟨Φ, Φ.contMdiff_to_fun⟩⟩
 
 @[continuity]
 protected theorem continuous (h : M ≃ₘ^n⟮I, I'⟯ M') : Continuous h :=
-  h.contMdiff_toFun.Continuous
+  h.contMdiff_to_fun.Continuous
 #align diffeomorph.continuous Diffeomorph.continuous
 
 protected theorem contMdiff (h : M ≃ₘ^n⟮I, I'⟯ M') : ContMdiff I I' n h :=
-  h.contMdiff_toFun
+  h.contMdiff_to_fun
 #align diffeomorph.cont_mdiff Diffeomorph.contMdiff
 
 protected theorem contMdiffAt (h : M ≃ₘ^n⟮I, I'⟯ M') {x} : ContMdiffAt I I' n h x :=
@@ -121,7 +121,7 @@ protected theorem contDiff (h : E ≃ₘ^n[𝕜] E') : ContDiff 𝕜 n h :=
 #align diffeomorph.cont_diff Diffeomorph.contDiff
 
 protected theorem smooth (h : M ≃ₘ⟮I, I'⟯ M') : Smooth I I' h :=
-  h.contMdiff_toFun
+  h.contMdiff_to_fun
 #align diffeomorph.smooth Diffeomorph.smooth
 
 protected theorem mdifferentiable (h : M ≃ₘ^n⟮I, I'⟯ M') (hn : 1 ≤ n) : Mdifferentiable I I' h :=
@@ -175,7 +175,7 @@ variable (M I n)
 /-- Identity map as a diffeomorphism. -/
 protected def refl : M ≃ₘ^n⟮I, I⟯ M
     where
-  contMdiff_toFun := contMdiff_id
+  contMdiff_to_fun := contMdiff_id
   contMdiff_inv_fun := contMdiff_id
   toEquiv := Equiv.refl M
 #align diffeomorph.refl Diffeomorph.refl
@@ -195,7 +195,7 @@ end
 /-- Composition of two diffeomorphisms. -/
 protected def trans (h₁ : M ≃ₘ^n⟮I, I'⟯ M') (h₂ : M' ≃ₘ^n⟮I', J⟯ N) : M ≃ₘ^n⟮I, J⟯ N
     where
-  contMdiff_toFun := h₂.contMdiff_toFun.comp h₁.contMdiff_toFun
+  contMdiff_to_fun := h₂.contMdiff_to_fun.comp h₁.contMdiff_to_fun
   contMdiff_inv_fun := h₁.contMdiff_inv_fun.comp h₂.contMdiff_inv_fun
   toEquiv := h₁.toEquiv.trans h₂.toEquiv
 #align diffeomorph.trans Diffeomorph.trans
@@ -218,8 +218,8 @@ theorem coe_trans (h₁ : M ≃ₘ^n⟮I, I'⟯ M') (h₂ : M' ≃ₘ^n⟮I', J�
 /-- Inverse of a diffeomorphism. -/
 protected def symm (h : M ≃ₘ^n⟮I, J⟯ N) : N ≃ₘ^n⟮J, I⟯ M
     where
-  contMdiff_toFun := h.contMdiff_inv_fun
-  contMdiff_inv_fun := h.contMdiff_toFun
+  contMdiff_to_fun := h.contMdiff_inv_fun
+  contMdiff_inv_fun := h.contMdiff_to_fun
   toEquiv := h.toEquiv.symm
 #align diffeomorph.symm Diffeomorph.symm
 
@@ -384,7 +384,7 @@ section Constructions
 def prodCongr (h₁ : M ≃ₘ^n⟮I, I'⟯ M') (h₂ : N ≃ₘ^n⟮J, J'⟯ N') :
     (M × N) ≃ₘ^n⟮I.Prod J, I'.Prod J'⟯ M' × N'
     where
-  contMdiff_toFun := (h₁.ContMdiff.comp contMdiff_fst).prod_mk (h₂.ContMdiff.comp contMdiff_snd)
+  contMdiff_to_fun := (h₁.ContMdiff.comp contMdiff_fst).prod_mk (h₂.ContMdiff.comp contMdiff_snd)
   contMdiff_inv_fun :=
     (h₁.symm.ContMdiff.comp contMdiff_fst).prod_mk (h₂.symm.ContMdiff.comp contMdiff_snd)
   toEquiv := h₁.toEquiv.prodCongr h₂.toEquiv
@@ -409,7 +409,7 @@ variable (I J J' M N N' n)
 /-- `M × N` is diffeomorphic to `N × M`. -/
 def prodComm : (M × N) ≃ₘ^n⟮I.Prod J, J.Prod I⟯ N × M
     where
-  contMdiff_toFun := contMdiff_snd.prod_mk contMdiff_fst
+  contMdiff_to_fun := contMdiff_snd.prod_mk contMdiff_fst
   contMdiff_inv_fun := contMdiff_snd.prod_mk contMdiff_fst
   toEquiv := Equiv.prodComm M N
 #align diffeomorph.prod_comm Diffeomorph.prodComm
@@ -427,7 +427,7 @@ theorem coe_prodComm : ⇑(prodComm I J M N n) = Prod.swap :=
 /-- `(M × N) × N'` is diffeomorphic to `M × (N × N')`. -/
 def prodAssoc : ((M × N) × N') ≃ₘ^n⟮(I.Prod J).Prod J', I.Prod (J.Prod J')⟯ M × N × N'
     where
-  contMdiff_toFun :=
+  contMdiff_to_fun :=
     (contMdiff_fst.comp contMdiff_fst).prod_mk
       ((contMdiff_snd.comp contMdiff_fst).prod_mk contMdiff_snd)
   contMdiff_inv_fun :=
@@ -483,7 +483,7 @@ variable (e : E ≃L[𝕜] E')
 /-- A continuous linear equivalence between normed spaces is a diffeomorphism. -/
 def toDiffeomorph : E ≃ₘ[𝕜] E'
     where
-  contMdiff_toFun := e.ContDiff.ContMdiff
+  contMdiff_to_fun := e.ContDiff.ContMdiff
   contMdiff_inv_fun := e.symm.ContDiff.ContMdiff
   toEquiv := e.toLinearEquiv.toEquiv
 #align continuous_linear_equiv.to_diffeomorph ContinuousLinearEquiv.toDiffeomorph
@@ -571,7 +571,7 @@ with model `I.trans_diffeomorph e`. -/
 def toTransDiffeomorph (e : E ≃ₘ[𝕜] F) : M ≃ₘ⟮I, I.transDiffeomorph e⟯ M
     where
   toEquiv := Equiv.refl M
-  contMdiff_toFun x :=
+  contMdiff_to_fun x :=
     by
     refine' contMdiffWithinAt_iff'.2 ⟨continuousWithinAt_id, _⟩
     refine' e.cont_diff.cont_diff_within_at.congr' (fun y hy => _) _

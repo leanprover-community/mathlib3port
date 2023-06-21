@@ -133,12 +133,14 @@ theorem derivative_bernoulli_add_one (k : ℕ) :
 #align polynomial.derivative_bernoulli_add_one Polynomial.derivative_bernoulli_add_one
 -/
 
+#print Polynomial.derivative_bernoulli /-
 theorem derivative_bernoulli (k : ℕ) : (bernoulli k).derivative = k * bernoulli (k - 1) :=
   by
   cases k
   · rw [Nat.cast_zero, MulZeroClass.zero_mul, bernoulli_zero, derivative_one]
   · exact_mod_cast derivative_bernoulli_add_one k
 #align polynomial.derivative_bernoulli Polynomial.derivative_bernoulli
+-/
 
 #print Polynomial.sum_bernoulli /-
 @[simp]

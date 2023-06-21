@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module geometry.manifold.whitney_embedding
-! leanprover-community/mathlib commit f2ce6086713c78a7f880485f7917ea547a215982
+! leanprover-community/mathlib commit 86c29aefdba50b3f33e86e52e3b2f51a0d8f0282
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -58,8 +58,8 @@ variable [T2Space M] [hi : Fintype ι] {s : Set M} (f : SmoothBumpCovering ι I 
 /-- Smooth embedding of `M` into `(E × ℝ) ^ ι`. -/
 def embeddingPiTangent : C^∞⟮I, M; 𝓘(ℝ, ι → E × ℝ), ι → E × ℝ⟯
     where
-  toFun x i := (f i x • extChartAt I (f.c i) x, f i x)
-  contMdiff_toFun :=
+  val x i := (f i x • extChartAt I (f.c i) x, f i x)
+  property :=
     contMdiff_pi_space.2 fun i =>
       ((f i).smooth_smul contMdiffOn_extChartAt).prod_mk_space (f i).Smooth
 #align smooth_bump_covering.embedding_pi_tangent SmoothBumpCovering.embeddingPiTangent

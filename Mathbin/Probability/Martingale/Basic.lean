@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne, Kexing Ying
 
 ! This file was ported from Lean 3 source module probability.martingale.basic
-! leanprover-community/mathlib commit ba074af83b6cf54c3104e59402b39410ddbd6dca
+! leanprover-community/mathlib commit f2ad3645af9effcdb587637dc28a6074edc813f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Probability.Process.Stopping
 
 /-!
 # Martingales
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 A family of functions `f : ι → Ω → E` is a martingale with respect to a filtration `ℱ` if every
 `f i` is integrable, `f` is adapted with respect to `ℱ` and for all `i ≤ j`,

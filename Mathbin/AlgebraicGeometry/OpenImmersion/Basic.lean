@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module algebraic_geometry.open_immersion.basic
-! leanprover-community/mathlib commit 533f62f4dd62a5aad24a04326e6e787c8f7e98b1
+! leanprover-community/mathlib commit f2ad3645af9effcdb587637dc28a6074edc813f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.AlgebraicGeometry.LocallyRingedSpace
 
 /-!
 # Open immersions of structured spaces
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 We say that a morphism of presheafed spaces `f : X ⟶ Y` is an open immersion if
 the underlying map of spaces is an open embedding `f : X ⟶ U ⊆ Y`,

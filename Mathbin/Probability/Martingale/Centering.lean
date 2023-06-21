@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 
 ! This file was ported from Lean 3 source module probability.martingale.centering
-! leanprover-community/mathlib commit bea6c853b6edbd15e9d0941825abd04d77933ed0
+! leanprover-community/mathlib commit f2ad3645af9effcdb587637dc28a6074edc813f9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.Probability.Martingale.Basic
 
 /-!
 # Centering lemma for stochastic processes
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 Any `ℕ`-indexed stochastic process which is adapted and integrable can be written as the sum of a
 martingale and a predictable process. This result is also known as **Doob's decomposition theorem**.

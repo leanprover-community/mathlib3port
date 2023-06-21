@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicolò Cavalleri
 
 ! This file was ported from Lean 3 source module geometry.manifold.derivation_bundle
-! leanprover-community/mathlib commit b608348ffaeb7f557f2fd46876037abafd326ff3
+! leanprover-community/mathlib commit 86c29aefdba50b3f33e86e52e3b2f51a0d8f0282
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -51,8 +51,9 @@ variable {𝕜 M}
 
 namespace PointedSmoothMap
 
-instance {x : M} : CoeFun C^∞⟮I, M; 𝕜⟯⟨x⟩ fun _ => M → 𝕜 :=
-  ContMdiffMap.hasCoeToFun
+instance funLike {x : M} : FunLike C^∞⟮I, M; 𝕜⟯⟨x⟩ M fun _ => 𝕜 :=
+  ContMdiffMap.funLike
+#align pointed_smooth_map.fun_like PointedSmoothMap.funLike
 
 instance {x : M} : CommRing C^∞⟮I, M; 𝕜⟯⟨x⟩ :=
   SmoothMap.commRing

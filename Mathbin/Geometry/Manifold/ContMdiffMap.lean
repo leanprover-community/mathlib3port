@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicolò Cavalleri
 
 ! This file was ported from Lean 3 source module geometry.manifold.cont_mdiff_map
-! leanprover-community/mathlib commit e354e865255654389cc46e6032160238df2e0f40
+! leanprover-community/mathlib commit 86c29aefdba50b3f33e86e52e3b2f51a0d8f0282
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -32,10 +32,8 @@ variable {𝕜 : Type _} [NontriviallyNormedField 𝕜] {E : Type _} [NormedAddC
   {J : ModelWithCorners 𝕜 F G} {N : Type _} [TopologicalSpace N] [ChartedSpace G N] (n : ℕ∞)
 
 /-- Bundled `n` times continuously differentiable maps. -/
-@[protect_proj]
-structure ContMdiffMap where
-  toFun : M → M'
-  contMdiff_toFun : ContMdiff I I' n to_fun
+def ContMdiffMap :=
+  { f : M → M' // ContMdiff I I' n f }
 #align cont_mdiff_map ContMdiffMap
 
 /-- Bundled smooth maps. -/
@@ -55,29 +53,33 @@ namespace ContMdiffMap
 
 variable {I} {I'} {M} {M'} {n}
 
-instance : CoeFun C^n⟮I, M; I', M'⟯ fun _ => M → M' :=
-  ⟨ContMdiffMap.toFun⟩
+instance funLike : FunLike C^n⟮I, M; I', M'⟯ M fun _ => M'
+    where
+  coe := Subtype.val
+  coe_injective' := Subtype.coe_injective
+#align cont_mdiff_map.fun_like ContMdiffMap.funLike
+
+protected theorem contMdiff (f : C^n⟮I, M; I', M'⟯) : ContMdiff I I' n f :=
+  f.Prop
+#align cont_mdiff_map.cont_mdiff ContMdiffMap.contMdiff
+
+protected theorem smooth (f : C^∞⟮I, M; I', M'⟯) : Smooth I I' f :=
+  f.Prop
+#align cont_mdiff_map.smooth ContMdiffMap.smooth
 
 instance : Coe C^n⟮I, M; I', M'⟯ C(M, M') :=
-  ⟨fun f => ⟨f, f.contMdiff_toFun.Continuous⟩⟩
+  ⟨fun f => ⟨f, f.ContMdiff.Continuous⟩⟩
 
-attribute [to_additive_ignore_args 21] ContMdiffMap ContMdiffMap.hasCoeToFun
+attribute [to_additive_ignore_args 21] ContMdiffMap ContMdiffMap.funLike
   ContMdiffMap.ContinuousMap.hasCoe
 
 variable {f g : C^n⟮I, M; I', M'⟯}
 
 @[simp]
-theorem coeFn_mk (f : M → M') (hf : ContMdiff I I' n f) : (mk f hf : M → M') = f :=
+theorem coeFn_mk (f : M → M') (hf : ContMdiff I I' n f) :
+    ((Subtype.mk f hf : C^n⟮I, M; I', M'⟯) : M → M') = f :=
   rfl
 #align cont_mdiff_map.coe_fn_mk ContMdiffMap.coeFn_mk
-
-protected theorem contMdiff (f : C^n⟮I, M; I', M'⟯) : ContMdiff I I' n f :=
-  f.contMdiff_toFun
-#align cont_mdiff_map.cont_mdiff ContMdiffMap.contMdiff
-
-protected theorem smooth (f : C^∞⟮I, M; I', M'⟯) : Smooth I I' f :=
-  f.contMdiff_toFun
-#align cont_mdiff_map.smooth ContMdiffMap.smooth
 
 theorem coe_inj ⦃f g : C^n⟮I, M; I', M'⟯⦄ (h : (f : M → M') = g) : f = g := by
   cases f <;> cases g <;> cases h <;> rfl
@@ -101,8 +103,8 @@ def id : C^n⟮I, M; I, M⟯ :=
 /-- The composition of smooth maps, as a smooth map. -/
 def comp (f : C^n⟮I', M'; I'', M''⟯) (g : C^n⟮I, M; I', M'⟯) : C^n⟮I, M; I'', M''⟯
     where
-  toFun a := f (g a)
-  contMdiff_toFun := f.contMdiff_toFun.comp g.contMdiff_toFun
+  val a := f (g a)
+  property := f.ContMdiff.comp g.ContMdiff
 #align cont_mdiff_map.comp ContMdiffMap.comp
 
 @[simp]
