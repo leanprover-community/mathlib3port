@@ -17,6 +17,7 @@ import Mathbin.RingTheory.Trace
 
 open Complex
 
+#print Algebra.leftMulMatrix_complex /-
 theorem Algebra.leftMulMatrix_complex (z : ℂ) :
     Algebra.leftMulMatrix Complex.basisOneI z = !![z.re, -z.im; z.im, z.re] :=
   by
@@ -31,22 +32,29 @@ theorem Algebra.leftMulMatrix_complex (z : ℂ) :
       zero_sub, add_zero]
     fin_cases i <;> rfl
 #align algebra.left_mul_matrix_complex Algebra.leftMulMatrix_complex
+-/
 
+#print Algebra.trace_complex_apply /-
 theorem Algebra.trace_complex_apply (z : ℂ) : Algebra.trace ℝ ℂ z = 2 * z.re :=
   by
   rw [Algebra.trace_eq_matrix_trace Complex.basisOneI, Algebra.leftMulMatrix_complex,
     Matrix.trace_fin_two]
   exact (two_mul _).symm
 #align algebra.trace_complex_apply Algebra.trace_complex_apply
+-/
 
+#print Algebra.norm_complex_apply /-
 theorem Algebra.norm_complex_apply (z : ℂ) : Algebra.norm ℝ z = z.normSq :=
   by
   rw [Algebra.norm_eq_matrix_det Complex.basisOneI, Algebra.leftMulMatrix_complex,
     Matrix.det_fin_two, norm_sq_apply]
   simp
 #align algebra.norm_complex_apply Algebra.norm_complex_apply
+-/
 
+#print Algebra.norm_complex_eq /-
 theorem Algebra.norm_complex_eq : Algebra.norm ℝ = normSq.toMonoidHom :=
   MonoidHom.ext Algebra.norm_complex_apply
 #align algebra.norm_complex_eq Algebra.norm_complex_eq
+-/
 

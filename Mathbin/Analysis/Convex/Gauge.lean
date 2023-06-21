@@ -433,13 +433,10 @@ theorem gauge_lt_one_eq_self_of_open (hs₁ : Convex ℝ s) (hs₀ : (0 : E) ∈
 #align gauge_lt_one_eq_self_of_open gauge_lt_one_eq_self_of_open
 -/
 
-#print gauge_lt_one_of_mem_of_open /-
 theorem gauge_lt_one_of_mem_of_open (hs₁ : Convex ℝ s) (hs₀ : (0 : E) ∈ s) (hs₂ : IsOpen s) {x : E}
     (hx : x ∈ s) : gauge s x < 1 := by rwa [← gauge_lt_one_eq_self_of_open hs₁ hs₀ hs₂] at hx 
-#align gauge_lt_one_of_mem_of_open gauge_lt_one_of_mem_of_open
--/
+#align gauge_lt_one_of_mem_of_open gauge_lt_one_of_mem_of_openₓ
 
-#print gauge_lt_of_mem_smul /-
 theorem gauge_lt_of_mem_smul (x : E) (ε : ℝ) (hε : 0 < ε) (hs₀ : (0 : E) ∈ s) (hs₁ : Convex ℝ s)
     (hs₂ : IsOpen s) (hx : x ∈ ε • s) : gauge s x < ε :=
   by
@@ -448,8 +445,7 @@ theorem gauge_lt_of_mem_smul (x : E) (ε : ℝ) (hε : 0 < ε) (hs₀ : (0 : E) 
   rwa [gauge_smul_of_nonneg (inv_nonneg.2 hε.le), smul_eq_mul, inv_mul_lt_iff hε, mul_one] at
     h_gauge_lt 
   infer_instance
-#align gauge_lt_of_mem_smul gauge_lt_of_mem_smul
--/
+#align gauge_lt_of_mem_smul gauge_lt_of_mem_smulₓ
 
 end TopologicalSpace
 
