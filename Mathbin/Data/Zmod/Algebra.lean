@@ -50,6 +50,7 @@ def algebra' (h : m ∣ n) : Algebra (ZMod n) R :=
 
 end
 
+#print ZMod.algebra /-
 /-- The `zmod p`-algebra structure on a ring of characteristic `p`. This is not an
 instance since it creates a diamond with `algebra.id`.
 See note [reducible non-instances]. -/
@@ -57,6 +58,7 @@ See note [reducible non-instances]. -/
 def algebra (p : ℕ) [CharP R p] : Algebra (ZMod p) R :=
   algebra' R p dvd_rfl
 #align zmod.algebra ZMod.algebra
+-/
 
 end ZMod
 

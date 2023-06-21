@@ -44,40 +44,53 @@ namespace Nat
 
 open Finset
 
+#print Nat.primeCounting' /-
 /-- A variant of the traditional prime counting function which gives the number of primes
 *strictly* less than the input. More convenient for avoiding off-by-one errors.
 -/
 def primeCounting' : ℕ → ℕ :=
   Nat.count Prime
 #align nat.prime_counting' Nat.primeCounting'
+-/
 
+#print Nat.primeCounting /-
 /-- The prime counting function: Returns the number of primes less than or equal to the input. -/
 def primeCounting (n : ℕ) : ℕ :=
   primeCounting' (n + 1)
 #align nat.prime_counting Nat.primeCounting
+-/
 
 scoped notation "π" => Nat.primeCounting
 
 scoped notation "π'" => Nat.primeCounting'
 
+#print Nat.monotone_primeCounting' /-
 theorem monotone_primeCounting' : Monotone primeCounting' :=
   count_monotone Prime
 #align nat.monotone_prime_counting' Nat.monotone_primeCounting'
+-/
 
+#print Nat.monotone_primeCounting /-
 theorem monotone_primeCounting : Monotone primeCounting :=
   monotone_primeCounting'.comp (monotone_id.AddConst _)
 #align nat.monotone_prime_counting Nat.monotone_primeCounting
+-/
 
+#print Nat.primeCounting'_nth_eq /-
 @[simp]
 theorem primeCounting'_nth_eq (n : ℕ) : π' (nth Prime n) = n :=
   count_nth_of_infinite infinite_setOf_prime _
 #align nat.prime_counting'_nth_eq Nat.primeCounting'_nth_eq
+-/
 
+#print Nat.prime_nth_prime /-
 @[simp]
 theorem prime_nth_prime (n : ℕ) : Prime (nth Prime n) :=
   nth_mem_of_infinite infinite_setOf_prime _
 #align nat.prime_nth_prime Nat.prime_nth_prime
+-/
 
+#print Nat.primeCounting'_add_le /-
 /-- A linear upper bound on the size of the `prime_counting'` function -/
 theorem primeCounting'_add_le {a k : ℕ} (h0 : 0 < a) (h1 : a < k) (n : ℕ) :
     π' (k + n) ≤ π' k + Nat.totient a * (n / a + 1) :=
@@ -103,6 +116,7 @@ theorem primeCounting'_add_le {a k : ℕ} (h0 : 0 < a) (h1 : a < k) (n : ℕ) :
       rw [add_le_add_iff_left]
       exact Ico_filter_coprime_le k n h0
 #align nat.prime_counting'_add_le Nat.primeCounting'_add_le
+-/
 
 end Nat
 
