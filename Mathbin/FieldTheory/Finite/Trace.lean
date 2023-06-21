@@ -24,6 +24,7 @@ finite field, trace
 
 namespace FiniteField
 
+#print FiniteField.trace_to_zMod_nondegenerate /-
 /-- The trace map from a finite field to its prime field is nongedenerate. -/
 theorem trace_to_zMod_nondegenerate (F : Type _) [Field F] [Finite F]
     [Algebra (ZMod (ringChar F)) F] {a : F} (ha : a ≠ 0) :
@@ -35,6 +36,7 @@ theorem trace_to_zMod_nondegenerate (F : Type _) [Field F] [Finite F]
   by_contra' hf
   exact ha (htr hf)
 #align finite_field.trace_to_zmod_nondegenerate FiniteField.trace_to_zMod_nondegenerate
+-/
 
 end FiniteField
 

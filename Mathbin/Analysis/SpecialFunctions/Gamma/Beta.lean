@@ -143,7 +143,7 @@ theorem gamma_mul_gamma_eq_betaIntegral {s t : ℂ} (hs : 0 < re s) (ht : 0 < re
   -- Note that we haven't proved (yet) that the Gamma function has no zeroes, so we can't formulate
   -- this as a formula for the Beta function.
   have conv_int :=
-    integral_pos_convolution (Gamma_integral_convergent hs) (Gamma_integral_convergent ht)
+    integral_posConvolution (Gamma_integral_convergent hs) (Gamma_integral_convergent ht)
       (ContinuousLinearMap.mul ℝ ℂ)
   simp_rw [ContinuousLinearMap.mul_apply'] at conv_int 
   have hst : 0 < re (s + t) := by rw [add_re]; exact add_pos hs ht
