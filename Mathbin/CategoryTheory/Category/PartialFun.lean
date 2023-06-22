@@ -38,21 +38,25 @@ universe u
 
 variable {α β : Type _}
 
+#print PartialFun /-
 /-- The category of types equipped with partial functions. -/
 def PartialFun : Type _ :=
   Type _
 #align PartialFun PartialFun
+-/
 
 namespace PartialFun
 
 instance : CoeSort PartialFun (Type _) :=
   ⟨id⟩
 
+#print PartialFun.of /-
 /-- Turns a type into a `PartialFun`. -/
 @[nolint has_nonempty_instance]
 def of : Type _ → PartialFun :=
   id
 #align PartialFun.of PartialFun.of
+-/
 
 @[simp]
 theorem coe_of (X : Type _) : ↥(of X) = X :=
@@ -62,6 +66,7 @@ theorem coe_of (X : Type _) : ↥(of X) = X :=
 instance : Inhabited PartialFun :=
   ⟨Type _⟩
 
+#print PartialFun.largeCategory /-
 instance largeCategory : LargeCategory.{u} PartialFun
     where
   Hom := PFun
@@ -71,7 +76,9 @@ instance largeCategory : LargeCategory.{u} PartialFun
   comp_id' := @PFun.id_comp
   assoc' W X Y Z _ _ _ := (PFun.comp_assoc _ _ _).symm
 #align PartialFun.large_category PartialFun.largeCategory
+-/
 
+#print PartialFun.Iso.mk /-
 /-- Constructs a partial function isomorphism between types from an equivalence between them. -/
 @[simps]
 def Iso.mk {α β : PartialFun.{u}} (e : α ≃ β) : α ≅ β
@@ -81,9 +88,11 @@ def Iso.mk {α β : PartialFun.{u}} (e : α ≃ β) : α ≅ β
   hom_inv_id' := (PFun.coe_comp _ _).symm.trans <| congr_arg coe e.symm_comp_self
   inv_hom_id' := (PFun.coe_comp _ _).symm.trans <| congr_arg coe e.self_comp_symm
 #align PartialFun.iso.mk PartialFun.Iso.mk
+-/
 
 end PartialFun
 
+#print typeToPartialFun /-
 /-- The forgetful functor from `Type` to `PartialFun` which forgets that the maps are total. -/
 def typeToPartialFun : Type u ⥤ PartialFun
     where
@@ -91,10 +100,12 @@ def typeToPartialFun : Type u ⥤ PartialFun
   map := @PFun.lift
   map_comp' _ _ _ _ _ := PFun.coe_comp _ _
 #align Type_to_PartialFun typeToPartialFun
+-/
 
 instance : Faithful typeToPartialFun :=
   ⟨fun X Y => PFun.lift_injective⟩
 
+#print pointedToPartialFun /-
 /-- The functor which deletes the point of a pointed type. In return, this makes the maps partial.
 This the computable part of the equivalence `PartialFun_equiv_Pointed`. -/
 @[simps map]
@@ -117,7 +128,9 @@ def pointedToPartialFun : Pointed.{u} ⥤ PartialFun
       rintro ⟨b, _, rfl : b = _, h⟩
       exact h
 #align Pointed_to_PartialFun pointedToPartialFun
+-/
 
+#print partialFunToPointed /-
 /-- The functor which maps undefined values to a new point. This makes the maps total and creates
 pointed types. This the noncomputable part of the equivalence `PartialFun_equiv_Pointed`. It can't
 be computable because `= option.none` is decidable while the domain of a general `part` isn't. -/
@@ -131,7 +144,9 @@ noncomputable def partialFunToPointed : PartialFun ⥤ Pointed := by
       map_comp' := fun X Y Z f g =>
         Pointed.Hom.ext _ _ <| funext fun o => Option.recOn o rfl fun a => Part.bind_toOption _ _ }
 #align PartialFun_to_Pointed partialFunToPointed
+-/
 
+#print partialFunEquivPointed /-
 /-- The equivalence induced by `PartialFun_to_Pointed` and `Pointed_to_PartialFun`.
 `part.equiv_option` made functorial. -/
 @[simps]
@@ -185,7 +200,9 @@ noncomputable def partialFunEquivPointed : PartialFun.{u} ≌ Pointed := by
               · rfl
               · exact Eq.symm (of_not_not h))
 #align PartialFun_equiv_Pointed partialFunEquivPointed
+-/
 
+#print typeToPartialFunIsoPartialFunToPointed /-
 /-- Forgetting that maps are total and making them total again by adding a point is the same as just
 adding a point. -/
 @[simps]
@@ -201,4 +218,5 @@ noncomputable def typeToPartialFunIsoPartialFunToPointed :
     Pointed.Hom.ext _ _ <|
       funext fun a => Option.recOn a rfl fun a => by convert Part.some_toOption _
 #align Type_to_PartialFun_iso_PartialFun_to_Pointed typeToPartialFunIsoPartialFunToPointed
+-/
 
