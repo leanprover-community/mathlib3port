@@ -161,7 +161,7 @@ theorem Continuous.matrix_mul [Fintype n] [Mul R] [AddCommMonoid R] [ContinuousA
 
 instance [Fintype n] [Mul R] [AddCommMonoid R] [ContinuousAdd R] [ContinuousMul R] :
     ContinuousMul (Matrix n n R) :=
-  ⟨continuous_fst.matrix_mul continuous_snd⟩
+  ⟨continuous_fst.matrixMul continuous_snd⟩
 
 instance [Fintype n] [NonUnitalNonAssocSemiring R] [TopologicalSemiring R] :
     TopologicalSemiring (Matrix n n R) where

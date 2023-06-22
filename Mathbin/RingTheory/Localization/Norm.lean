@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module ring_theory.localization.norm
-! leanprover-community/mathlib commit 2e59a6de168f95d16b16d217b808a36290398c0a
+! leanprover-community/mathlib commit e8e130de9dba4ed6897183c3193c752ffadbcc77
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.RingTheory.Norm
 /-!
 
 # Field/algebra norm and localization
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file contains results on the combination of `algebra.norm` and `is_localization`.
 

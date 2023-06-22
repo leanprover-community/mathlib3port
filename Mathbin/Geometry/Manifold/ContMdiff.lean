@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Floris van Doorn
 
 ! This file was ported from Lean 3 source module geometry.manifold.cont_mdiff
-! leanprover-community/mathlib commit e354e865255654389cc46e6032160238df2e0f40
+! leanprover-community/mathlib commit e5ab837fc252451f3eb9124ae6e7b6f57455e7b9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1365,6 +1365,32 @@ theorem contMdiff_of_support {f : M → F} (hf : ∀ x ∈ tsupport f, ContMdiff
   · refine' ContMdiffAt.congr_of_eventuallyEq _ (eventuallyEq_zero_nhds.2 hx)
     exact contMdiffAt_const
 #align cont_mdiff_of_support contMdiff_of_support
+
+/-! ### The inclusion map from one open set to another is smooth -/
+
+
+section
+
+open TopologicalSpace
+
+theorem contMdiff_inclusion {n : ℕ∞} {U V : Opens M} (h : U ≤ V) :
+    ContMdiff I I n (Set.inclusion h : U → V) :=
+  by
+  rintro ⟨x, hx : x ∈ U⟩
+  apply (cont_diff_within_at_localInvariantProp I I n).liftProp_inclusion
+  intro y
+  dsimp [ContDiffWithinAtProp]
+  rw [Set.univ_inter]
+  refine' cont_diff_within_at_id.congr _ _
+  · exact I.right_inv_on
+  · exact congr_arg I (I.left_inv y)
+#align cont_mdiff_inclusion contMdiff_inclusion
+
+theorem smooth_inclusion {U V : Opens M} (h : U ≤ V) : Smooth I I (Set.inclusion h : U → V) :=
+  contMdiff_inclusion h
+#align smooth_inclusion smooth_inclusion
+
+end
 
 /-! ### Equivalence with the basic definition for functions between vector spaces -/
 

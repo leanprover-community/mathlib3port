@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module topology.local_homeomorph
-! leanprover-community/mathlib commit 23aa88e32dcc9d2a24cca7bc23268567ed4cd7d6
+! leanprover-community/mathlib commit 431589bce478b2229eba14b14a283250428217db
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1821,6 +1821,17 @@ theorem subtypeRestr_source : (e.subtypeRestr s).source = coe ⁻¹' e.source :=
 #align local_homeomorph.subtype_restr_source LocalHomeomorph.subtypeRestr_source
 -/
 
+variable {s}
+
+theorem map_subtype_source {x : s} (hxe : (x : α) ∈ e.source) : e x ∈ (e.subtypeRestr s).target :=
+  by
+  refine' ⟨e.map_source hxe, _⟩
+  rw [s.local_homeomorph_subtype_coe_target, mem_preimage, e.left_inv_on hxe]
+  exact x.prop
+#align local_homeomorph.map_subtype_source LocalHomeomorph.map_subtype_source
+
+variable (s)
+
 #print LocalHomeomorph.subtypeRestr_symm_trans_subtypeRestr /-
 /- This lemma characterizes the transition functions of an open subset in terms of the transition
 functions of the original space. -/
@@ -1843,6 +1854,27 @@ theorem subtypeRestr_symm_trans_subtypeRestr (f f' : LocalHomeomorph α β) :
   simp only [mfld_simps]
 #align local_homeomorph.subtype_restr_symm_trans_subtype_restr LocalHomeomorph.subtypeRestr_symm_trans_subtypeRestr
 -/
+
+theorem subtypeRestr_symm_eqOn_of_le {U V : Opens α} [Nonempty U] [Nonempty V] (hUV : U ≤ V) :
+    EqOn (e.subtypeRestr V).symm (Set.inclusion hUV ∘ (e.subtypeRestr U).symm)
+      (e.subtypeRestr U).target :=
+  by
+  set i := Set.inclusion hUV
+  intro y hy
+  dsimp [LocalHomeomorph.subtypeRestr_def] at hy ⊢
+  have hyV : e.symm y ∈ V.local_homeomorph_subtype_coe.target :=
+    by
+    rw [opens.local_homeomorph_subtype_coe_target] at hy ⊢
+    exact hUV hy.2
+  refine' V.local_homeomorph_subtype_coe.inj_on _ trivial _
+  · rw [← LocalHomeomorph.symm_target]
+    apply LocalHomeomorph.map_source
+    rw [LocalHomeomorph.symm_source]
+    exact hyV
+  · rw [V.local_homeomorph_subtype_coe.right_inv hyV]
+    show _ = U.local_homeomorph_subtype_coe _
+    rw [U.local_homeomorph_subtype_coe.right_inv hy.2]
+#align local_homeomorph.subtype_restr_symm_eq_on_of_le LocalHomeomorph.subtypeRestr_symm_eqOn_of_le
 
 end LocalHomeomorph
 

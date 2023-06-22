@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module ring_theory.norm
-! leanprover-community/mathlib commit fecd3520d2a236856f254f27714b80dcfe28ea57
+! leanprover-community/mathlib commit e8e130de9dba4ed6897183c3193c752ffadbcc77
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -18,6 +18,9 @@ import Mathbin.FieldTheory.Galois
 
 /-!
 # Norm for (finite) ring extensions
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 Suppose we have an `R`-algebra `S` with a finite basis. For each `s : S`,
 the determinant of the linear map given by multiplying by `s` gives information

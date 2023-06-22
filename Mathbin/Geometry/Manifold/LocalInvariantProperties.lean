@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Floris van Doorn
 
 ! This file was ported from Lean 3 source module geometry.manifold.local_invariant_properties
-! leanprover-community/mathlib commit ce38d86c0b2d427ce208c3cee3159cb421d2b3c4
+! leanprover-community/mathlib commit 431589bce478b2229eba14b14a283250428217db
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -55,7 +55,7 @@ noncomputable section
 
 open scoped Classical Manifold Topology
 
-open Set Filter
+open Set Filter TopologicalSpace
 
 variable {H M H' M' X : Type _}
 
@@ -712,6 +712,31 @@ theorem liftProp_id (hG : G.LocalInvariantProp G Q) (hQ : ∀ y, Q id univ y) :
   exact fun x => hG.congr' ((chart_at H x).eventually_right_inverse <| mem_chart_target H x) (hQ _)
 #align structure_groupoid.local_invariant_prop.lift_prop_id StructureGroupoid.LocalInvariantProp.liftProp_id
 -/
+
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr «expr ∧ »(_, _)]] -/
+theorem liftPropAt_iff_comp_inclusion (hG : LocalInvariantProp G G' P) {U V : Opens M} (hUV : U ≤ V)
+    (f : V → M') (x : U) :
+    LiftPropAt P f (Set.inclusion hUV x) ↔ LiftPropAt P (f ∘ Set.inclusion hUV : U → M') x :=
+  by
+  trace
+    "./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr «expr ∧ »(_, _)]]"
+  ·
+    simp [continuousWithinAt_univ,
+      (TopologicalSpace.Opens.openEmbedding_of_le hUV).continuousAt_iff]
+  · apply hG.congr_iff
+    exact
+      (TopologicalSpace.Opens.chartAt_inclusion_symm_eventuallyEq hUV).fun_comp
+        (chart_at H' (f (Set.inclusion hUV x)) ∘ f)
+#align structure_groupoid.local_invariant_prop.lift_prop_at_iff_comp_inclusion StructureGroupoid.LocalInvariantProp.liftPropAt_iff_comp_inclusion
+
+theorem liftProp_inclusion {Q : (H → H) → Set H → H → Prop} (hG : LocalInvariantProp G G Q)
+    (hQ : ∀ y, Q id univ y) {U V : Opens M} (hUV : U ≤ V) :
+    LiftProp Q (Set.inclusion hUV : U → V) := by
+  intro x
+  show lift_prop_at Q (id ∘ inclusion hUV) x
+  rw [← hG.lift_prop_at_iff_comp_inclusion hUV]
+  apply hG.lift_prop_id hQ
+#align structure_groupoid.local_invariant_prop.lift_prop_inclusion StructureGroupoid.LocalInvariantProp.liftProp_inclusion
 
 end LocalInvariantProp
 

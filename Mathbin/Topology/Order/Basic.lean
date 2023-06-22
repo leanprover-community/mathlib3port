@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module topology.order.basic
-! leanprover-community/mathlib commit c985ae9840e06836a71db38de372f20acb49b790
+! leanprover-community/mathlib commit 3efd324a3a31eaa40c9d5bfc669c4fafee5f9423
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -981,66 +981,6 @@ theorem Dense.exists_between [DenselyOrdered α] {s : Set α} (hs : Dense s) {x 
     ∃ z ∈ s, z ∈ Ioo x y :=
   hs.exists_mem_open isOpen_Ioo (nonempty_Ioo.2 h)
 #align dense.exists_between Dense.exists_between
--/
-
-variable [Nonempty α] [TopologicalSpace β]
-
-#print IsCompact.bddBelow /-
-/-- A compact set is bounded below -/
-theorem IsCompact.bddBelow {s : Set α} (hs : IsCompact s) : BddBelow s :=
-  by
-  by_contra H
-  rcases hs.elim_finite_subcover_image (fun x (_ : x ∈ s) => @isOpen_Ioi _ _ _ _ x) _ with
-    ⟨t, st, ft, ht⟩
-  · refine' H (ft.bdd_below.imp fun C hC y hy => _)
-    rcases mem_Union₂.1 (ht hy) with ⟨x, hx, xy⟩
-    exact le_trans (hC hx) (le_of_lt xy)
-  · refine' fun x hx => mem_Union₂.2 (not_imp_comm.1 _ H)
-    exact fun h => ⟨x, fun y hy => le_of_not_lt (h.imp fun ys => ⟨_, hy, ys⟩)⟩
-#align is_compact.bdd_below IsCompact.bddBelow
--/
-
-#print IsCompact.bddAbove /-
-/-- A compact set is bounded above -/
-theorem IsCompact.bddAbove {s : Set α} (hs : IsCompact s) : BddAbove s :=
-  @IsCompact.bddBelow αᵒᵈ _ _ _ _ _ hs
-#align is_compact.bdd_above IsCompact.bddAbove
--/
-
-#print IsCompact.bddBelow_image /-
-/-- A continuous function is bounded below on a compact set. -/
-theorem IsCompact.bddBelow_image {f : β → α} {K : Set β} (hK : IsCompact K)
-    (hf : ContinuousOn f K) : BddBelow (f '' K) :=
-  (hK.image_of_continuousOn hf).BddBelow
-#align is_compact.bdd_below_image IsCompact.bddBelow_image
--/
-
-#print IsCompact.bddAbove_image /-
-/-- A continuous function is bounded above on a compact set. -/
-theorem IsCompact.bddAbove_image {f : β → α} {K : Set β} (hK : IsCompact K)
-    (hf : ContinuousOn f K) : BddAbove (f '' K) :=
-  @IsCompact.bddBelow_image αᵒᵈ _ _ _ _ _ _ _ _ hK hf
-#align is_compact.bdd_above_image IsCompact.bddAbove_image
--/
-
-#print Continuous.bddBelow_range_of_hasCompactMulSupport /-
-/-- A continuous function with compact support is bounded below. -/
-@[to_additive " A continuous function with compact support is bounded below. "]
-theorem Continuous.bddBelow_range_of_hasCompactMulSupport [One α] {f : β → α} (hf : Continuous f)
-    (h : HasCompactMulSupport f) : BddBelow (range f) :=
-  (h.isCompact_range hf).BddBelow
-#align continuous.bdd_below_range_of_has_compact_mul_support Continuous.bddBelow_range_of_hasCompactMulSupport
-#align continuous.bdd_below_range_of_has_compact_support Continuous.bddBelow_range_of_hasCompactSupport
--/
-
-#print Continuous.bddAbove_range_of_hasCompactMulSupport /-
-/-- A continuous function with compact support is bounded above. -/
-@[to_additive " A continuous function with compact support is bounded above. "]
-theorem Continuous.bddAbove_range_of_hasCompactMulSupport [One α] {f : β → α} (hf : Continuous f)
-    (h : HasCompactMulSupport f) : BddAbove (range f) :=
-  @Continuous.bddBelow_range_of_hasCompactMulSupport αᵒᵈ _ _ _ _ _ _ _ _ hf h
-#align continuous.bdd_above_range_of_has_compact_mul_support Continuous.bddAbove_range_of_hasCompactMulSupport
-#align continuous.bdd_above_range_of_has_compact_support Continuous.bddAbove_range_of_hasCompactSupport
 -/
 
 end LinearOrder

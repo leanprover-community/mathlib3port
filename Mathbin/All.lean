@@ -1471,6 +1471,7 @@ import Mathbin.Data.Matrix.CharP
 import Mathbin.Data.Matrix.Dmatrix
 import Mathbin.Data.Matrix.DualNumber
 import Mathbin.Data.Matrix.Hadamard
+import Mathbin.Data.Matrix.Invertible
 import Mathbin.Data.Matrix.Kronecker
 import Mathbin.Data.Matrix.Notation
 import Mathbin.Data.Matrix.Pequiv
@@ -1867,6 +1868,7 @@ import Mathbin.Geometry.Manifold.LocalInvariantProperties
 import Mathbin.Geometry.Manifold.Metrizable
 import Mathbin.Geometry.Manifold.Mfderiv
 import Mathbin.Geometry.Manifold.PartitionOfUnity
+import Mathbin.Geometry.Manifold.Sheaf.Basic
 import Mathbin.Geometry.Manifold.SmoothManifoldWithCorners
 import Mathbin.Geometry.Manifold.VectorBundle.Basic
 import Mathbin.Geometry.Manifold.VectorBundle.FiberwiseLinear

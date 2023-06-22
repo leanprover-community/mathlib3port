@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module order.directed
-! leanprover-community/mathlib commit e8cf0cfec5fcab9baf46dc17d30c5e22048468be
+! leanprover-community/mathlib commit 3efd324a3a31eaa40c9d5bfc669c4fafee5f9423
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -195,6 +195,10 @@ theorem directedOn_of_inf_mem [SemilatticeInf α] {S : Set α}
 #align directed_on_of_inf_mem directedOn_of_inf_mem
 -/
 
+theorem IsTotal.directed [IsTotal α r] (f : ι → α) : Directed r f := fun i j =>
+  Or.cases_on (total_of r (f i) (f j)) (fun h => ⟨j, h, refl _⟩) fun h => ⟨i, refl _, h⟩
+#align is_total.directed IsTotal.directed
+
 #print IsDirected /-
 /-- `is_directed α r` states that for any elements `a`, `b` there exists an element `c` such that
 `r a c` and `r b c`. -/
@@ -239,8 +243,8 @@ theorem directedOn_univ_iff : DirectedOn r Set.univ ↔ IsDirected α r :=
 
 #print IsTotal.to_isDirected /-
 -- see Note [lower instance priority]
-instance (priority := 100) IsTotal.to_isDirected [IsTotal α r] : IsDirected α r :=
-  ⟨fun a b => Or.cases_on (total_of r a b) (fun h => ⟨b, h, refl _⟩) fun h => ⟨a, refl _, h⟩⟩
+instance (priority := 100) IsTotal.to_isDirected [IsTotal α r] : IsDirected α r := by
+  rw [← directed_id_iff] <;> exact IsTotal.directed _
 #align is_total.to_is_directed IsTotal.to_isDirected
 -/
 

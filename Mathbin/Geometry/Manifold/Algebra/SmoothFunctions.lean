@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicolò Cavalleri
 
 ! This file was ported from Lean 3 source module geometry.manifold.algebra.smooth_functions
-! leanprover-community/mathlib commit d1bd9c5df2867c1cb463bc6364446d57bdd9f7f1
+! leanprover-community/mathlib commit e5ab837fc252451f3eb9124ae6e7b6f57455e7b9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -20,6 +20,8 @@ In this file, we define instances of algebraic structures over smooth functions.
 noncomputable section
 
 open scoped Manifold
+
+open TopologicalSpace
 
 variable {𝕜 : Type _} [NontriviallyNormedField 𝕜] {E : Type _} [NormedAddCommGroup E]
   [NormedSpace 𝕜 E] {E' : Type _} [NormedAddCommGroup E'] [NormedSpace 𝕜 E'] {H : Type _}
@@ -104,6 +106,40 @@ def coeFnMonoidHom {G : Type _} [Monoid G] [TopologicalSpace G] [ChartedSpace H'
 #align smooth_map.coe_fn_monoid_hom SmoothMap.coeFnMonoidHom
 #align smooth_map.coe_fn_add_monoid_hom SmoothMap.coe_fn_add_monoid_hom
 
+variable (I N)
+
+/-- For a manifold `N` and a smooth homomorphism `φ` between Lie groups `G'`, `G''`, the
+'left-composition-by-`φ`' group homomorphism from `C^∞⟮I, N; I', G'⟯` to `C^∞⟮I, N; I'', G''⟯`. -/
+@[to_additive
+      "For a manifold `N` and a smooth homomorphism `φ` between additive Lie groups `G'`,\n`G''`, the 'left-composition-by-`φ`' group homomorphism from `C^∞⟮I, N; I', G'⟯` to\n`C^∞⟮I, N; I'', G''⟯`."]
+def compLeftMonoidHom {G' : Type _} [Monoid G'] [TopologicalSpace G'] [ChartedSpace H' G']
+    [HasSmoothMul I' G'] {G'' : Type _} [Monoid G''] [TopologicalSpace G''] [ChartedSpace H'' G'']
+    [HasSmoothMul I'' G''] (φ : G' →* G'') (hφ : Smooth I' I'' φ) :
+    C^∞⟮I, N; I', G'⟯ →* C^∞⟮I, N; I'', G''⟯
+    where
+  toFun f := ⟨φ ∘ f, fun x => (hφ.Smooth _).comp x (f.ContMdiff x)⟩
+  map_one' := by ext x <;> show φ 1 = 1 <;> simp
+  map_mul' f g := by ext x <;> show φ (f x * g x) = φ (f x) * φ (g x) <;> simp
+#align smooth_map.comp_left_monoid_hom SmoothMap.compLeftMonoidHom
+#align smooth_map.comp_left_add_monoid_hom SmoothMap.comp_left_add_monoid_hom
+
+variable (I') {N}
+
+/-- For a Lie group `G` and open sets `U ⊆ V` in `N`, the 'restriction' group homomorphism from
+`C^∞⟮I, V; I', G⟯` to `C^∞⟮I, U; I', G⟯`. -/
+@[to_additive
+      "For an additive Lie group `G` and open sets `U ⊆ V` in `N`, the 'restriction' group\nhomomorphism from `C^∞⟮I, V; I', G⟯` to `C^∞⟮I, U; I', G⟯`."]
+def restrictMonoidHom (G : Type _) [Monoid G] [TopologicalSpace G] [ChartedSpace H' G]
+    [HasSmoothMul I' G] {U V : Opens N} (h : U ≤ V) : C^∞⟮I, V; I', G⟯ →* C^∞⟮I, U; I', G⟯
+    where
+  toFun f := ⟨f ∘ Set.inclusion h, f.Smooth.comp (smooth_inclusion h)⟩
+  map_one' := rfl
+  map_mul' f g := rfl
+#align smooth_map.restrict_monoid_hom SmoothMap.restrictMonoidHom
+#align smooth_map.restrict_add_monoid_hom SmoothMap.restrict_add_monoid_hom
+
+variable {I N I' N'}
+
 @[to_additive]
 instance commMonoid {G : Type _} [CommMonoid G] [TopologicalSpace G] [ChartedSpace H' G]
     [HasSmoothMul I' G] : CommMonoid C^∞⟮I, N; I', G⟯ :=
@@ -174,6 +210,31 @@ instance commRing {R : Type _} [CommRing R] [TopologicalSpace R] [ChartedSpace H
     [SmoothRing I' R] : CommRing C^∞⟮I, N; I', R⟯ :=
   { SmoothMap.semiring, SmoothMap.add_comm_group, SmoothMap.commMonoid with }
 #align smooth_map.comm_ring SmoothMap.commRing
+
+variable (I N)
+
+/-- For a manifold `N` and a smooth homomorphism `φ` between smooth rings `R'`, `R''`, the
+'left-composition-by-`φ`' ring homomorphism from `C^∞⟮I, N; I', R'⟯` to `C^∞⟮I, N; I'', R''⟯`. -/
+def compLeftRingHom {R' : Type _} [Ring R'] [TopologicalSpace R'] [ChartedSpace H' R']
+    [SmoothRing I' R'] {R'' : Type _} [Ring R''] [TopologicalSpace R''] [ChartedSpace H'' R'']
+    [SmoothRing I'' R''] (φ : R' →+* R'') (hφ : Smooth I' I'' φ) :
+    C^∞⟮I, N; I', R'⟯ →+* C^∞⟮I, N; I'', R''⟯ :=
+  { SmoothMap.compLeftMonoidHom I N φ.toMonoidHom hφ,
+    SmoothMap.comp_left_add_monoid_hom I N φ.toAddMonoidHom hφ with
+    toFun := fun f => ⟨φ ∘ f, fun x => (hφ.Smooth _).comp x (f.ContMdiff x)⟩ }
+#align smooth_map.comp_left_ring_hom SmoothMap.compLeftRingHom
+
+variable (I') {N}
+
+/-- For a "smooth ring" `R` and open sets `U ⊆ V` in `N`, the "restriction" ring homomorphism from
+`C^∞⟮I, V; I', R⟯` to `C^∞⟮I, U; I', R⟯`. -/
+def restrictRingHom (R : Type _) [Ring R] [TopologicalSpace R] [ChartedSpace H' R] [SmoothRing I' R]
+    {U V : Opens N} (h : U ≤ V) : C^∞⟮I, V; I', R⟯ →+* C^∞⟮I, U; I', R⟯ :=
+  { SmoothMap.restrictMonoidHom I I' R h, SmoothMap.restrict_add_monoid_hom I I' R h with
+    toFun := fun f => ⟨f ∘ Set.inclusion h, f.Smooth.comp (smooth_inclusion h)⟩ }
+#align smooth_map.restrict_ring_hom SmoothMap.restrictRingHom
+
+variable {I N I' N'}
 
 /-- Coercion to a function as a `ring_hom`. -/
 @[simps]

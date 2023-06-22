@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module geometry.manifold.charted_space
-! leanprover-community/mathlib commit 814d76e2247d5ba8bc024843552da1278bfe9e5c
+! leanprover-community/mathlib commit 431589bce478b2229eba14b14a283250428217db
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1232,6 +1232,22 @@ instance [ClosedUnderRestriction G] : HasGroupoid s G
     apply closedUnderRestriction'
     · exact G.compatible (chart_mem_atlas H x) (chart_mem_atlas H x')
     · exact preimage_open_of_open_symm (chart_at H x) s.2
+
+theorem chartAt_inclusion_symm_eventuallyEq {U V : Opens M} (hUV : U ≤ V) {x : U} :
+    (chartAt H
+          (Set.inclusion hUV x)).symm =ᶠ[𝓝 (chartAt H (Set.inclusion hUV x) (Set.inclusion hUV x))]
+      Set.inclusion hUV ∘ (chartAt H x).symm :=
+  by
+  set i := Set.inclusion hUV
+  set e := chart_at H (x : M)
+  haveI : Nonempty U := ⟨x⟩
+  haveI : Nonempty V := ⟨i x⟩
+  have heUx_nhds : (e.subtype_restr U).target ∈ 𝓝 (e x) :=
+    by
+    apply (e.subtype_restr U).open_target.mem_nhds
+    exact e.map_subtype_source (mem_chart_source _ _)
+  exact Filter.eventuallyEq_of_mem heUx_nhds (e.subtype_restr_symm_eq_on_of_le hUV)
+#align topological_space.opens.chart_at_inclusion_symm_eventually_eq TopologicalSpace.Opens.chartAt_inclusion_symm_eventuallyEq
 
 end TopologicalSpace.Opens
 

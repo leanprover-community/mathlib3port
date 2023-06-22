@@ -4,10 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Tim Baanen, Lu-Ming Zhang
 
 ! This file was ported from Lean 3 source module linear_algebra.matrix.nonsingular_inverse
-! leanprover-community/mathlib commit 9d2f0748e6c50d7a2657c564b1ff2c695b39148d
+! leanprover-community/mathlib commit 722b3b152ddd5e0cf21c0a29787c76596cb6b422
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
+import Mathbin.Data.Matrix.Invertible
 import Mathbin.LinearAlgebra.Matrix.Adjugate
 
 /-!
@@ -71,48 +72,6 @@ open Equiv Equiv.Perm Finset
 section Invertible
 
 variable [Fintype n] [DecidableEq n] [CommRing α]
-
-#print Matrix.invOf_mul_self /-
-/-- A copy of `inv_of_mul_self` using `⬝` not `*`. -/
-protected theorem invOf_mul_self (A : Matrix n n α) [Invertible A] : ⅟ A ⬝ A = 1 :=
-  invOf_mul_self A
-#align matrix.inv_of_mul_self Matrix.invOf_mul_self
--/
-
-#print Matrix.mul_invOf_self /-
-/-- A copy of `mul_inv_of_self` using `⬝` not `*`. -/
-protected theorem mul_invOf_self (A : Matrix n n α) [Invertible A] : A ⬝ ⅟ A = 1 :=
-  mul_invOf_self A
-#align matrix.mul_inv_of_self Matrix.mul_invOf_self
--/
-
-#print Matrix.invOf_mul_self_assoc /-
-/-- A copy of `inv_of_mul_self_assoc` using `⬝` not `*`. -/
-protected theorem invOf_mul_self_assoc (A : Matrix n n α) (B : Matrix n m α) [Invertible A] :
-    ⅟ A ⬝ (A ⬝ B) = B := by rw [← Matrix.mul_assoc, Matrix.invOf_mul_self, Matrix.one_mul]
-#align matrix.inv_of_mul_self_assoc Matrix.invOf_mul_self_assoc
--/
-
-#print Matrix.mul_invOf_self_assoc /-
-/-- A copy of `mul_inv_of_self_assoc` using `⬝` not `*`. -/
-protected theorem mul_invOf_self_assoc (A : Matrix n n α) (B : Matrix n m α) [Invertible A] :
-    A ⬝ (⅟ A ⬝ B) = B := by rw [← Matrix.mul_assoc, Matrix.mul_invOf_self, Matrix.one_mul]
-#align matrix.mul_inv_of_self_assoc Matrix.mul_invOf_self_assoc
--/
-
-#print Matrix.mul_invOf_mul_self_cancel /-
-/-- A copy of `mul_inv_of_mul_self_cancel` using `⬝` not `*`. -/
-protected theorem mul_invOf_mul_self_cancel (A : Matrix m n α) (B : Matrix n n α) [Invertible B] :
-    A ⬝ ⅟ B ⬝ B = A := by rw [Matrix.mul_assoc, Matrix.invOf_mul_self, Matrix.mul_one]
-#align matrix.mul_inv_of_mul_self_cancel Matrix.mul_invOf_mul_self_cancel
--/
-
-#print Matrix.mul_mul_invOf_self_cancel /-
-/-- A copy of `mul_mul_inv_of_self_cancel` using `⬝` not `*`. -/
-protected theorem mul_mul_invOf_self_cancel (A : Matrix m n α) (B : Matrix n n α) [Invertible B] :
-    A ⬝ B ⬝ ⅟ B = A := by rw [Matrix.mul_assoc, Matrix.mul_invOf_self, Matrix.mul_one]
-#align matrix.mul_mul_inv_of_self_cancel Matrix.mul_mul_invOf_self_cancel
--/
 
 variable (A : Matrix n n α) (B : Matrix n n α)
 

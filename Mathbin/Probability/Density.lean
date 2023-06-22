@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kexing Ying
 
 ! This file was ported from Lean 3 source module probability.density
-! leanprover-community/mathlib commit 44e2ae8cffc713925494e4975ee31ec1d06929b3
+! leanprover-community/mathlib commit c14c8fcde993801fca8946b0d80131a1a81d1520
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -417,7 +417,7 @@ theorem hasPDF {m : MeasurableSpace Ω} {X : Ω → E} {ℙ : Measure Ω} {μ : 
           simp [hnt]
         rw [HEq, Set.inter_univ] at this 
         exact hns this
-      exact MeasureTheory.Set.indicator_ae_eq_zero hu.symm)
+      exact MeasureTheory.Set.indicator_ae_eq_zero.1 hu.symm)
 #align measure_theory.pdf.is_uniform.has_pdf MeasureTheory.pdf.IsUniform.hasPDF
 -/
 

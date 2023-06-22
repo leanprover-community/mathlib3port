@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jan-David Salchow, Sébastien Gouëzel, Jean Lo
 
 ! This file was ported from Lean 3 source module analysis.normed_space.continuous_linear_map
-! leanprover-community/mathlib commit 9a48a083b390d9b84a71efbdc4e8dfa26a687104
+! leanprover-community/mathlib commit 6285167a053ad0990fc88e56c48ccd9fae6550eb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -274,41 +274,6 @@ variable (𝕜)
 theorem toSpanSingleton_homothety (x : E) (c : 𝕜) :
     ‖LinearMap.toSpanSingleton 𝕜 E x c‖ = ‖x‖ * ‖c‖ := by rw [mul_comm]; exact norm_smul _ _
 #align continuous_linear_map.to_span_singleton_homothety ContinuousLinearMap.toSpanSingleton_homothety
--/
-
-#print ContinuousLinearMap.toSpanSingleton /-
-/-- Given an element `x` of a normed space `E` over a field `𝕜`, the natural continuous
-    linear map from `𝕜` to `E` by taking multiples of `x`.-/
-def toSpanSingleton (x : E) : 𝕜 →L[𝕜] E :=
-  ofHomothety (LinearMap.toSpanSingleton 𝕜 E x) ‖x‖ (toSpanSingleton_homothety 𝕜 x)
-#align continuous_linear_map.to_span_singleton ContinuousLinearMap.toSpanSingleton
--/
-
-#print ContinuousLinearMap.toSpanSingleton_apply /-
-theorem toSpanSingleton_apply (x : E) (r : 𝕜) : toSpanSingleton 𝕜 x r = r • x := by
-  simp [to_span_singleton, of_homothety, LinearMap.toSpanSingleton]
-#align continuous_linear_map.to_span_singleton_apply ContinuousLinearMap.toSpanSingleton_apply
--/
-
-#print ContinuousLinearMap.toSpanSingleton_add /-
-theorem toSpanSingleton_add (x y : E) :
-    toSpanSingleton 𝕜 (x + y) = toSpanSingleton 𝕜 x + toSpanSingleton 𝕜 y := by ext1;
-  simp [to_span_singleton_apply]
-#align continuous_linear_map.to_span_singleton_add ContinuousLinearMap.toSpanSingleton_add
--/
-
-#print ContinuousLinearMap.toSpanSingleton_smul' /-
-theorem toSpanSingleton_smul' (𝕜') [NormedField 𝕜'] [NormedSpace 𝕜' E] [SMulCommClass 𝕜 𝕜' E]
-    (c : 𝕜') (x : E) : toSpanSingleton 𝕜 (c • x) = c • toSpanSingleton 𝕜 x := by ext1;
-  rw [to_span_singleton_apply, smul_apply, to_span_singleton_apply, smul_comm]
-#align continuous_linear_map.to_span_singleton_smul' ContinuousLinearMap.toSpanSingleton_smul'
--/
-
-#print ContinuousLinearMap.toSpanSingleton_smul /-
-theorem toSpanSingleton_smul (c : 𝕜) (x : E) :
-    toSpanSingleton 𝕜 (c • x) = c • toSpanSingleton 𝕜 x :=
-  toSpanSingleton_smul' 𝕜 𝕜 c x
-#align continuous_linear_map.to_span_singleton_smul ContinuousLinearMap.toSpanSingleton_smul
 -/
 
 end ContinuousLinearMap

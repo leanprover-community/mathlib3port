@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module algebra.invertible
-! leanprover-community/mathlib commit 448144f7ae193a8990cb7473c9e9a01990f64ac7
+! leanprover-community/mathlib commit 722b3b152ddd5e0cf21c0a29787c76596cb6b422
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -145,13 +145,20 @@ theorem invertible_unique {α : Type u} [Monoid α] (a b : α) [Invertible a] [I
 instance [Monoid α] (a : α) : Subsingleton (Invertible a) :=
   ⟨fun ⟨b, hba, hab⟩ ⟨c, hca, hac⟩ => by congr; exact left_inv_eq_right_inv hba hac⟩
 
+/-- If `r` is invertible and `s = r` and `si = ⅟r`, then `s` is invertible with `⅟s = si`. -/
+def Invertible.copy' [MulOneClass α] {r : α} (hr : Invertible r) (s : α) (si : α) (hs : s = r)
+    (hsi : si = ⅟ r) : Invertible s where
+  invOf := si
+  invOf_mul_self := by rw [hs, hsi, invOf_mul_self]
+  mul_invOf_self := by rw [hs, hsi, mul_invOf_self]
+#align invertible.copy' Invertible.copy'
+
 #print Invertible.copy /-
 /-- If `r` is invertible and `s = r`, then `s` is invertible. -/
-def Invertible.copy [MulOneClass α] {r : α} (hr : Invertible r) (s : α) (hs : s = r) : Invertible s
-    where
-  invOf := ⅟ r
-  invOf_mul_self := by rw [hs, invOf_mul_self]
-  mul_invOf_self := by rw [hs, mul_invOf_self]
+@[reducible]
+def Invertible.copy [MulOneClass α] {r : α} (hr : Invertible r) (s : α) (hs : s = r) :
+    Invertible s :=
+  hr.copy' _ _ hs rfl
 #align invertible.copy Invertible.copy
 -/
 
@@ -307,6 +314,13 @@ theorem invOf_mul [Monoid α] (a b : α) [Invertible a] [Invertible b] [Invertib
 #align inv_of_mul invOf_mul
 -/
 
+/-- A copy of `invertible_mul` for dot notation. -/
+@[reducible]
+def Invertible.mul [Monoid α] {a b : α} (ha : Invertible a) (hb : Invertible b) :
+    Invertible (a * b) :=
+  invertibleMul _ _
+#align invertible.mul Invertible.mul
+
 #print Commute.invOf_right /-
 theorem Commute.invOf_right [Monoid α] {a b : α} [Invertible b] (h : Commute a b) :
     Commute a (⅟ b) :=
@@ -351,6 +365,54 @@ instance (priority := 100) Invertible.ne_zero [MulZeroOneClass α] [Nontrivial �
   ⟨nonzero_of_invertible a⟩
 #align invertible.ne_zero Invertible.ne_zero
 -/
+
+section Monoid
+
+variable [Monoid α]
+
+/-- This is the `invertible` version of `units.is_unit_units_mul` -/
+@[reducible]
+def invertibleOfInvertibleMul (a b : α) [Invertible a] [Invertible (a * b)] : Invertible b
+    where
+  invOf := ⅟ (a * b) * a
+  invOf_mul_self := by rw [mul_assoc, invOf_mul_self]
+  mul_invOf_self := by
+    rw [← (isUnit_of_invertible a).mul_right_inj, ← mul_assoc, ← mul_assoc, mul_invOf_self, mul_one,
+      one_mul]
+#align invertible_of_invertible_mul invertibleOfInvertibleMul
+
+/-- This is the `invertible` version of `units.is_unit_mul_units` -/
+@[reducible]
+def invertibleOfMulInvertible (a b : α) [Invertible (a * b)] [Invertible b] : Invertible a
+    where
+  invOf := b * ⅟ (a * b)
+  invOf_mul_self := by
+    rw [← (isUnit_of_invertible b).mul_left_inj, mul_assoc, mul_assoc, invOf_mul_self, mul_one,
+      one_mul]
+  mul_invOf_self := by rw [← mul_assoc, mul_invOf_self]
+#align invertible_of_mul_invertible invertibleOfMulInvertible
+
+/-- `invertible_of_invertible_mul` and `invertible_mul` as an equivalence. -/
+@[simps]
+def Invertible.mulLeft {a : α} (ha : Invertible a) (b : α) : Invertible b ≃ Invertible (a * b)
+    where
+  toFun hb := invertibleMul a b
+  invFun hab := invertibleOfInvertibleMul a _
+  left_inv hb := Subsingleton.elim _ _
+  right_inv hab := Subsingleton.elim _ _
+#align invertible.mul_left Invertible.mulLeft
+
+/-- `invertible_of_mul_invertible` and `invertible_mul` as an equivalence. -/
+@[simps]
+def Invertible.mulRight (a : α) {b : α} (ha : Invertible b) : Invertible a ≃ Invertible (a * b)
+    where
+  toFun hb := invertibleMul a b
+  invFun hab := invertibleOfMulInvertible _ b
+  left_inv hb := Subsingleton.elim _ _
+  right_inv hab := Subsingleton.elim _ _
+#align invertible.mul_right Invertible.mulRight
+
+end Monoid
 
 section MonoidWithZero
 
