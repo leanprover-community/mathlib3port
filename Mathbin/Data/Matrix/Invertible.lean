@@ -70,41 +70,52 @@ protected theorem mul_mul_invOf_self_cancel (A : Matrix m n α) (B : Matrix n n 
 #align matrix.mul_mul_inv_of_self_cancel Matrix.mul_mul_invOf_self_cancel
 -/
 
+#print Matrix.invertibleMul /-
 /-- A copy of `invertible_mul` using `⬝` not `*`. -/
 @[reducible]
 protected def invertibleMul (A B : Matrix n n α) [Invertible A] [Invertible B] :
     Invertible (A ⬝ B) :=
   { invertibleMul _ _ with invOf := ⅟ B ⬝ ⅟ A }
 #align matrix.invertible_mul Matrix.invertibleMul
+-/
 
+#print Invertible.matrixMul /-
 /-- A copy of `invertible.mul` using `⬝` not `*`.-/
 @[reducible]
 def Invertible.matrixMul {A B : Matrix n n α} (ha : Invertible A) (hb : Invertible B) :
     Invertible (A ⬝ B) :=
   invertibleMul _ _
 #align invertible.matrix_mul Invertible.matrixMul
+-/
 
+#print Matrix.invOf_mul /-
 protected theorem invOf_mul {A B : Matrix n n α} [Invertible A] [Invertible B]
     [Invertible (A ⬝ B)] : ⅟ (A ⬝ B) = ⅟ B ⬝ ⅟ A :=
   invOf_mul _ _
 #align matrix.inv_of_mul Matrix.invOf_mul
+-/
 
+#print Matrix.invertibleOfInvertibleMul /-
 /-- A copy of `invertible_of_invertible_mul` using `⬝` not `*`. -/
 @[reducible]
 protected def invertibleOfInvertibleMul (a b : Matrix n n α) [Invertible a] [Invertible (a ⬝ b)] :
     Invertible b :=
   { invertibleOfInvertibleMul a b with invOf := ⅟ (a ⬝ b) ⬝ a }
 #align matrix.invertible_of_invertible_mul Matrix.invertibleOfInvertibleMul
+-/
 
+#print Matrix.invertibleOfMulInvertible /-
 /-- A copy of `invertible_of_mul_invertible` using `⬝` not `*`. -/
 @[reducible]
 protected def invertibleOfMulInvertible (a b : Matrix n n α) [Invertible (a ⬝ b)] [Invertible b] :
     Invertible a :=
   { invertibleOfMulInvertible a b with invOf := b ⬝ ⅟ (a ⬝ b) }
 #align matrix.invertible_of_mul_invertible Matrix.invertibleOfMulInvertible
+-/
 
 end Matrix
 
+#print Invertible.matrixMulLeft /-
 /-- A copy of `invertible.mul_left` using `⬝` not `*`. -/
 @[reducible]
 def Invertible.matrixMulLeft {a : Matrix n n α} (ha : Invertible a) (b : Matrix n n α) :
@@ -115,7 +126,9 @@ def Invertible.matrixMulLeft {a : Matrix n n α} (ha : Invertible a) (b : Matrix
   left_inv hb := Subsingleton.elim _ _
   right_inv hab := Subsingleton.elim _ _
 #align invertible.matrix_mul_left Invertible.matrixMulLeft
+-/
 
+#print Invertible.matrixMulRight /-
 /-- A copy of `invertible.mul_right` using `⬝` not `*`. -/
 @[reducible]
 def Invertible.matrixMulRight (a : Matrix n n α) {b : Matrix n n α} (ha : Invertible b) :
@@ -126,4 +139,5 @@ def Invertible.matrixMulRight (a : Matrix n n α) {b : Matrix n n α} (ha : Inve
   left_inv hb := Subsingleton.elim _ _
   right_inv hab := Subsingleton.elim _ _
 #align invertible.matrix_mul_right Invertible.matrixMulRight
+-/
 
