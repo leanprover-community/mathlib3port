@@ -85,8 +85,8 @@ instance stalk_isReduced_of_reduced [IsReduced X] (x : X.carrier) :
   rw [comp_apply, e', map_zero]
 #align algebraic_geometry.stalk_is_reduced_of_reduced AlgebraicGeometry.stalk_isReduced_of_reduced
 
-theorem isReducedOfOpenImmersion {X Y : Scheme} (f : X ⟶ Y) [H : IsOpenImmersion f] [IsReduced Y] :
-    IsReduced X := by
+theorem isReducedOfOpenImmersion {X Y : Scheme} (f : X ⟶ Y) [H : IsOpenImmersionCat f]
+    [IsReduced Y] : IsReduced X := by
   constructor
   intro U
   have : U = (opens.map f.1.base).obj (H.base_open.is_open_map.functor.obj U) := by ext1;
@@ -139,7 +139,7 @@ theorem reduce_to_affine_global (P : ∀ (X : Scheme) (U : Opens X.carrier), Pro
       ∀ (X : Scheme) (U : Opens X.carrier),
         (∀ x : U, ∃ (V : _) (h : x.1 ∈ V) (i : V ⟶ U), P X V) → P X U)
     (h₂ :
-      ∀ {X Y} (f : X ⟶ Y) [hf : IsOpenImmersion f],
+      ∀ {X Y} (f : X ⟶ Y) [hf : IsOpenImmersionCat f],
         ∃ (U : Set X.carrier) (V : Set Y.carrier) (hU : U = ⊤) (hV : V = Set.range f.1.base),
           P X ⟨U, hU.symm ▸ isOpen_univ⟩ → P Y ⟨V, hV.symm ▸ hf.base_open.open_range⟩)
     (h₃ : ∀ R : CommRingCat, P (Scheme.Spec.obj <| op R) ⊤) :
@@ -160,7 +160,7 @@ theorem reduce_to_affine_global (P : ∀ (X : Scheme) (U : Opens X.carrier), Pro
 
 theorem reduce_to_affine_nbhd (P : ∀ (X : Scheme) (x : X.carrier), Prop)
     (h₁ : ∀ (R : CommRingCat) (x : PrimeSpectrum R), P (Scheme.Spec.obj <| op R) x)
-    (h₂ : ∀ {X Y} (f : X ⟶ Y) [IsOpenImmersion f] (x : X.carrier), P X x → P Y (f.1.base x)) :
+    (h₂ : ∀ {X Y} (f : X ⟶ Y) [IsOpenImmersionCat f] (x : X.carrier), P X x → P Y (f.1.base x)) :
     ∀ (X : Scheme) (x : X.carrier), P X x := by
   intro X x
   obtain ⟨y, e⟩ := X.affine_cover.covers x
@@ -298,8 +298,9 @@ theorem isIntegral_iff_is_irreducible_and_isReduced :
     is_integral_of_is_irreducible_is_reduced X⟩
 #align algebraic_geometry.is_integral_iff_is_irreducible_and_is_reduced AlgebraicGeometry.isIntegral_iff_is_irreducible_and_isReduced
 
-theorem isIntegralOfOpenImmersion {X Y : Scheme} (f : X ⟶ Y) [H : IsOpenImmersion f] [IsIntegral Y]
-    [Nonempty X.carrier] : IsIntegral X := by
+theorem isIntegralOfOpenImmersion {X Y : Scheme} (f : X ⟶ Y) [H : IsOpenImmersionCat f]
+    [IsIntegral Y] [Nonempty X.carrier] : IsIntegral X :=
+  by
   constructor
   intro U hU
   have : U = (opens.map f.1.base).obj (H.base_open.is_open_map.functor.obj U) := by ext1;

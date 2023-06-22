@@ -164,7 +164,7 @@ def Scheme.affineOpens (X : Scheme) : Set (Opens X.carrier) :=
 #align algebraic_geometry.Scheme.affine_opens AlgebraicGeometry.Scheme.affineOpens
 
 theorem rangeIsAffineOpenOfOpenImmersion {X Y : Scheme} [IsAffine X] (f : X ⟶ Y)
-    [H : IsOpenImmersion f] : IsAffineOpen f.opensRange :=
+    [H : IsOpenImmersionCat f] : IsAffineOpen f.opensRange :=
   by
   refine' is_affine_of_iso (is_open_immersion.iso_of_range_eq f (Y.of_restrict _) _).inv
   exact subtype.range_coe.symm
@@ -210,10 +210,10 @@ def IsAffineOpen.fromSpec {X : Scheme} {U : Opens X.carrier} (hU : IsAffineOpen 
       (X.restrict U.open_embedding).isoSpec.inv ≫ X.of_restrict _
 #align algebraic_geometry.is_affine_open.from_Spec AlgebraicGeometry.IsAffineOpen.fromSpec
 
-instance IsAffineOpen.isOpenImmersion_fromSpec {X : Scheme} {U : Opens X.carrier}
-    (hU : IsAffineOpen U) : IsOpenImmersion hU.fromSpec := by delta is_affine_open.from_Spec;
+instance IsAffineOpen.isOpenImmersionCat_fromSpec {X : Scheme} {U : Opens X.carrier}
+    (hU : IsAffineOpen U) : IsOpenImmersionCat hU.fromSpec := by delta is_affine_open.from_Spec;
   infer_instance
-#align algebraic_geometry.is_affine_open.is_open_immersion_from_Spec AlgebraicGeometry.IsAffineOpen.isOpenImmersion_fromSpec
+#align algebraic_geometry.is_affine_open.is_open_immersion_from_Spec AlgebraicGeometry.IsAffineOpen.isOpenImmersionCat_fromSpec
 
 theorem IsAffineOpen.fromSpec_range {X : Scheme} {U : Opens X.carrier} (hU : IsAffineOpen U) :
     Set.range hU.fromSpec.1.base = (U : Set X.carrier) :=
@@ -227,7 +227,7 @@ theorem IsAffineOpen.fromSpec_range {X : Scheme} {U : Opens X.carrier} (hU : IsA
 #align algebraic_geometry.is_affine_open.from_Spec_range AlgebraicGeometry.IsAffineOpen.fromSpec_range
 
 theorem IsAffineOpen.fromSpec_image_top {X : Scheme} {U : Opens X.carrier} (hU : IsAffineOpen U) :
-    hU.isOpenImmersion_fromSpec.base_open.IsOpenMap.Functor.obj ⊤ = U := by ext1;
+    hU.isOpenImmersionCat_fromSpec.base_open.IsOpenMap.Functor.obj ⊤ = U := by ext1;
   exact set.image_univ.trans hU.from_Spec_range
 #align algebraic_geometry.is_affine_open.from_Spec_image_top AlgebraicGeometry.IsAffineOpen.fromSpec_image_top
 
@@ -242,7 +242,7 @@ theorem IsAffineOpen.isCompact {X : Scheme} {U : Opens X.carrier} (hU : IsAffine
 #align algebraic_geometry.is_affine_open.is_compact AlgebraicGeometry.IsAffineOpen.isCompact
 
 theorem IsAffineOpen.imageIsOpenImmersion {X Y : Scheme} {U : Opens X.carrier} (hU : IsAffineOpen U)
-    (f : X ⟶ Y) [H : IsOpenImmersion f] : IsAffineOpen (f.opensFunctor.obj U) :=
+    (f : X ⟶ Y) [H : IsOpenImmersionCat f] : IsAffineOpen (f.opensFunctor.obj U) :=
   by
   haveI : is_affine _ := hU
   convert range_is_affine_open_of_open_immersion (X.of_restrict U.open_embedding ≫ f)
@@ -250,7 +250,7 @@ theorem IsAffineOpen.imageIsOpenImmersion {X Y : Scheme} {U : Opens X.carrier} (
   exact Set.image_eq_range _ _
 #align algebraic_geometry.is_affine_open.image_is_open_immersion AlgebraicGeometry.IsAffineOpen.imageIsOpenImmersion
 
-theorem isAffineOpen_iff_of_isOpenImmersion {X Y : Scheme} (f : X ⟶ Y) [H : IsOpenImmersion f]
+theorem isAffineOpen_iff_of_isOpenImmersionCat {X Y : Scheme} (f : X ⟶ Y) [H : IsOpenImmersionCat f]
     (U : Opens X.carrier) : IsAffineOpen (H.openFunctor.obj U) ↔ IsAffineOpen U :=
   by
   refine' ⟨fun hU => @is_affine_of_iso _ _ hU, fun hU => hU.imageIsOpenImmersion f⟩
@@ -260,7 +260,7 @@ theorem isAffineOpen_iff_of_isOpenImmersion {X Y : Scheme} (f : X ⟶ Y) [H : Is
     rw [Subtype.range_coe, Subtype.range_coe]
     rfl
   · infer_instance
-#align algebraic_geometry.is_affine_open_iff_of_is_open_immersion AlgebraicGeometry.isAffineOpen_iff_of_isOpenImmersion
+#align algebraic_geometry.is_affine_open_iff_of_is_open_immersion AlgebraicGeometry.isAffineOpen_iff_of_isOpenImmersionCat
 
 instance Scheme.quasi_compact_of_affine (X : Scheme) [IsAffine X] : CompactSpace X.carrier :=
   ⟨(topIsAffineOpen X).IsCompact⟩

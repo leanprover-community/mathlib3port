@@ -1081,11 +1081,13 @@ theorem forall_mem_cons (h : a ∉ s) (p : α → Prop) :
 #align finset.forall_mem_cons Finset.forall_mem_cons
 -/
 
+#print Finset.forall_of_forall_cons /-
 /-- Useful in proofs by induction. -/
 theorem forall_of_forall_cons {p : α → Prop} {h : a ∉ s} (H : ∀ x, x ∈ cons a s h → p x) (x)
     (h : x ∈ s) : p x :=
   H _ <| mem_cons.2 <| Or.inr h
 #align finset.forall_of_forall_cons Finset.forall_of_forall_cons
+-/
 
 #print Finset.mk_cons /-
 @[simp]
@@ -4110,11 +4112,13 @@ theorem forall_mem_insert [DecidableEq α] (a : α) (s : Finset α) (p : α → 
 #align finset.forall_mem_insert Finset.forall_mem_insert
 -/
 
+#print Finset.forall_of_forall_insert /-
 /-- Useful in proofs by induction. -/
 theorem forall_of_forall_insert [DecidableEq α] {p : α → Prop} {a : α} {s : Finset α}
     (H : ∀ x, x ∈ insert a s → p x) (x) (h : x ∈ s) : p x :=
   H _ <| mem_insert_of_mem h
 #align finset.forall_of_forall_insert Finset.forall_of_forall_insert
+-/
 
 end Finset
 

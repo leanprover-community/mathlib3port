@@ -306,7 +306,7 @@ theorem source_affine_locally_of_source_open_cover_aux (h₁ : RingHom.RespectsI
 #align algebraic_geometry.source_affine_locally_of_source_open_cover_aux AlgebraicGeometry.source_affine_locally_of_source_open_cover_aux
 
 theorem isOpenImmersionCompOfSourceAffineLocally (h₁ : RingHom.RespectsIso @P) {X Y Z : Scheme}
-    [IsAffine X] [IsAffine Z] (f : X ⟶ Y) [IsOpenImmersion f] (g : Y ⟶ Z)
+    [IsAffine X] [IsAffine Z] (f : X ⟶ Y) [IsOpenImmersionCat f] (g : Y ⟶ Z)
     (h₂ : sourceAffineLocally (@P) g) : P (Scheme.Γ.map (f ≫ g).op) :=
   by
   rw [←
@@ -386,7 +386,8 @@ theorem affine_openCover_tFAE {X Y : Scheme.{u}} [IsAffine Y] (f : X ⟶ Y) :
           ∀ i : 𝒰.J, P (Scheme.Γ.map (𝒰.map i ≫ f).op),
         ∀ (𝒰 : Scheme.OpenCover.{u} X) [∀ i, IsAffine (𝒰.obj i)] (i : 𝒰.J),
           P (Scheme.Γ.map (𝒰.map i ≫ f).op),
-        ∀ {U : Scheme} (g : U ⟶ X) [IsAffine U] [IsOpenImmersion g], P (Scheme.Γ.map (g ≫ f).op)] :=
+        ∀ {U : Scheme} (g : U ⟶ X) [IsAffine U] [IsOpenImmersionCat g],
+          P (Scheme.Γ.map (g ≫ f).op)] :=
   by
   tfae_have 1 → 4
   · intro H U g _ hg
@@ -416,7 +417,7 @@ theorem openCover_tFAE {X Y : Scheme.{u}} [IsAffine Y] (f : X ⟶ Y) :
       [sourceAffineLocally (@P) f,
         ∃ 𝒰 : Scheme.OpenCover.{u} X, ∀ i : 𝒰.J, sourceAffineLocally (@P) (𝒰.map i ≫ f),
         ∀ (𝒰 : Scheme.OpenCover.{u} X) (i : 𝒰.J), sourceAffineLocally (@P) (𝒰.map i ≫ f),
-        ∀ {U : Scheme} (g : U ⟶ X) [IsOpenImmersion g], sourceAffineLocally (@P) (g ≫ f)] :=
+        ∀ {U : Scheme} (g : U ⟶ X) [IsOpenImmersionCat g], sourceAffineLocally (@P) (g ≫ f)] :=
   by
   tfae_have 1 → 4
   · intro H U g hg V
@@ -444,7 +445,7 @@ theorem openCover_tFAE {X Y : Scheme.{u}} [IsAffine Y] (f : X ⟶ Y) :
 #align ring_hom.property_is_local.open_cover_tfae RingHom.PropertyIsLocal.openCover_tFAE
 
 theorem sourceAffineLocallyCompOfIsOpenImmersion {X Y Z : Scheme.{u}} [IsAffine Z] (f : X ⟶ Y)
-    (g : Y ⟶ Z) [IsOpenImmersion f] (H : sourceAffineLocally (@P) g) :
+    (g : Y ⟶ Z) [IsOpenImmersionCat f] (H : sourceAffineLocally (@P) g) :
     sourceAffineLocally (@P) (f ≫ g) := by apply ((hP.open_cover_tfae g).out 0 3).mp H
 #align ring_hom.property_is_local.source_affine_locally_comp_of_is_open_immersion RingHom.PropertyIsLocal.sourceAffineLocallyCompOfIsOpenImmersion
 
@@ -500,8 +501,8 @@ theorem source_openCover_iff {X Y : Scheme.{u}} (f : X ⟶ Y) (𝒰 : Scheme.Ope
     exact H
 #align ring_hom.property_is_local.source_open_cover_iff RingHom.PropertyIsLocal.source_openCover_iff
 
-theorem affineLocally_of_isOpenImmersion (hP : RingHom.PropertyIsLocal @P) {X Y : Scheme}
-    (f : X ⟶ Y) [hf : IsOpenImmersion f] : affineLocally (@P) f :=
+theorem affineLocally_of_isOpenImmersionCat (hP : RingHom.PropertyIsLocal @P) {X Y : Scheme}
+    (f : X ⟶ Y) [hf : IsOpenImmersionCat f] : affineLocally (@P) f :=
   by
   intro U
   haveI H : is_affine _ := U.2
@@ -514,7 +515,7 @@ theorem affineLocally_of_isOpenImmersion (hP : RingHom.PropertyIsLocal @P) {X Y 
     · infer_instance
     · refine' IsLocalization.away_of_isUnit_of_bijective _ isUnit_one Function.bijective_id
   · intro i; exact H
-#align ring_hom.property_is_local.affine_locally_of_is_open_immersion RingHom.PropertyIsLocal.affineLocally_of_isOpenImmersion
+#align ring_hom.property_is_local.affine_locally_of_is_open_immersion RingHom.PropertyIsLocal.affineLocally_of_isOpenImmersionCat
 
 theorem affineLocally_of_comp
     (H :

@@ -715,8 +715,8 @@ namespace AlgebraicGeometry
 
 instance {X Y S X' Y' S' : Scheme} (f : X ⟶ S) (g : Y ⟶ S) (f' : X' ⟶ S') (g' : Y' ⟶ S')
     (i₁ : X ⟶ X') (i₂ : Y ⟶ Y') (i₃ : S ⟶ S') (e₁ : f ≫ i₃ = i₁ ≫ f') (e₂ : g ≫ i₃ = i₂ ≫ g')
-    [IsOpenImmersion i₁] [IsOpenImmersion i₂] [Mono i₃] :
-    IsOpenImmersion (pullback.map f g f' g' i₁ i₂ i₃ e₁ e₂) :=
+    [IsOpenImmersionCat i₁] [IsOpenImmersionCat i₂] [Mono i₃] :
+    IsOpenImmersionCat (pullback.map f g f' g' i₁ i₂ i₃ e₁ e₂) :=
   by
   rw [pullback_map_eq_pullback_fst_fst_iso_inv]
   infer_instance

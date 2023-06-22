@@ -214,7 +214,7 @@ theorem AffineTargetMorphismProperty.IsLocal.affine_openCover_tFAE
           ∀ i : 𝒰.J, P (pullback.snd : (𝒰.pullback_cover f).obj i ⟶ 𝒰.obj i),
         ∀ (𝒰 : Scheme.OpenCover.{u} Y) [∀ i, IsAffine (𝒰.obj i)] (i : 𝒰.J),
           P (pullback.snd : (𝒰.pullback_cover f).obj i ⟶ 𝒰.obj i),
-        ∀ {U : Scheme} (g : U ⟶ Y) [IsAffine U] [IsOpenImmersion g],
+        ∀ {U : Scheme} (g : U ⟶ Y) [IsAffine U] [IsOpenImmersionCat g],
           P (pullback.snd : pullback f g ⟶ U),
         ∃ (ι : Type u) (U : ι → Opens Y.carrier) (hU : iSup U = ⊤) (hU' : ∀ i, IsAffineOpen (U i)),
           ∀ i, @P (f ∣_ U i) (hU' i)] :=
@@ -258,7 +258,7 @@ theorem AffineTargetMorphismProperty.isLocalOfOpenCoverImply (P : AffineTargetMo
       ∀ {X Y : Scheme.{u}} (f : X ⟶ Y),
         (∃ (𝒰 : Scheme.OpenCover.{u} Y) (_ : ∀ i, IsAffine (𝒰.obj i)),
             ∀ i : 𝒰.J, P (pullback.snd : (𝒰.pullback_cover f).obj i ⟶ 𝒰.obj i)) →
-          ∀ {U : Scheme} (g : U ⟶ Y) [IsAffine U] [IsOpenImmersion g],
+          ∀ {U : Scheme} (g : U ⟶ Y) [IsAffine U] [IsOpenImmersionCat g],
             P (pullback.snd : pullback f g ⟶ U)) :
     P.IsLocal := by
   refine' ⟨hP, _, _⟩
@@ -364,7 +364,7 @@ theorem PropertyIsLocalAtTarget.openCover_tFAE {P : MorphismProperty Scheme}
         ∀ (𝒰 : Scheme.OpenCover.{u} Y) (i : 𝒰.J),
           P (pullback.snd : (𝒰.pullbackCover f).obj i ⟶ 𝒰.obj i),
         ∀ U : Opens Y.carrier, P (f ∣_ U),
-        ∀ {U : Scheme} (g : U ⟶ Y) [IsOpenImmersion g], P (pullback.snd : pullback f g ⟶ U),
+        ∀ {U : Scheme} (g : U ⟶ Y) [IsOpenImmersionCat g], P (pullback.snd : pullback f g ⟶ U),
         ∃ (ι : Type u) (U : ι → Opens Y.carrier) (hU : iSup U = ⊤), ∀ i, P (f ∣_ U i)] :=
   by
   tfae_have 2 → 1
@@ -468,8 +468,8 @@ See `diagonal_target_affine_locally_eq_target_affine_locally`.
 -/
 def AffineTargetMorphismProperty.diagonal (P : AffineTargetMorphismProperty) :
     AffineTargetMorphismProperty := fun X Y f hf =>
-  ∀ {U₁ U₂ : Scheme} (f₁ : U₁ ⟶ X) (f₂ : U₂ ⟶ X) [IsAffine U₁] [IsAffine U₂] [IsOpenImmersion f₁]
-    [IsOpenImmersion f₂], P (pullback.map_desc f₁ f₂ f)
+  ∀ {U₁ U₂ : Scheme} (f₁ : U₁ ⟶ X) (f₂ : U₂ ⟶ X) [IsAffine U₁] [IsAffine U₂] [IsOpenImmersionCat f₁]
+    [IsOpenImmersionCat f₂], P (pullback.map_desc f₁ f₂ f)
 #align algebraic_geometry.affine_target_morphism_property.diagonal AlgebraicGeometry.AffineTargetMorphismProperty.diagonal
 
 theorem AffineTargetMorphismProperty.diagonal_respectsIso (P : AffineTargetMorphismProperty)
@@ -517,7 +517,7 @@ theorem diagonalTargetAffineLocallyOfOpenCover (P : AffineTargetMorphismProperty
 
 theorem AffineTargetMorphismProperty.diagonalOfTargetAffineLocally
     (P : AffineTargetMorphismProperty) (hP : P.IsLocal) {X Y U : Scheme.{u}} (f : X ⟶ Y) (g : U ⟶ Y)
-    [IsAffine U] [IsOpenImmersion g] (H : (targetAffineLocally P).diagonal f) :
+    [IsAffine U] [IsOpenImmersionCat g] (H : (targetAffineLocally P).diagonal f) :
     P.diagonal (pullback.snd : pullback f g ⟶ _) :=
   by
   rintro U V f₁ f₂ _ _ _ _
@@ -546,7 +546,7 @@ theorem AffineTargetMorphismProperty.IsLocal.diagonal_affine_openCover_tFAE
           ∀ i : 𝒰.J, P.diagonal (pullback.snd : pullback f (𝒰.map i) ⟶ _),
         ∀ (𝒰 : Scheme.OpenCover.{u} Y) [∀ i, IsAffine (𝒰.obj i)] (i : 𝒰.J),
           P.diagonal (pullback.snd : pullback f (𝒰.map i) ⟶ _),
-        ∀ {U : Scheme} (g : U ⟶ Y) [IsAffine U] [IsOpenImmersion g],
+        ∀ {U : Scheme} (g : U ⟶ Y) [IsAffine U] [IsOpenImmersionCat g],
           P.diagonal (pullback.snd : pullback f g ⟶ _),
         ∃ (𝒰 : Scheme.OpenCover.{u} Y) (_ : ∀ i, IsAffine (𝒰.obj i)) (𝒰' :
           ∀ i, Scheme.OpenCover.{u} (pullback f (𝒰.map i))) (_ : ∀ i j, IsAffine ((𝒰' i).obj j)),

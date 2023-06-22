@@ -83,7 +83,7 @@ theorem Scheme.germToFunctionField_injective [IsIntegral X] (U : Opens X.carrier
   germ_injective_of_isIntegral _ _
 #align algebraic_geometry.Scheme.germ_to_function_field_injective AlgebraicGeometry.Scheme.germToFunctionField_injective
 
-theorem genericPoint_eq_of_isOpenImmersion {X Y : Scheme} (f : X ⟶ Y) [H : IsOpenImmersion f]
+theorem genericPoint_eq_of_isOpenImmersionCat {X Y : Scheme} (f : X ⟶ Y) [H : IsOpenImmersionCat f]
     [hX : IrreducibleSpace X.carrier] [IrreducibleSpace Y.carrier] :
     f.1.base (genericPoint X.carrier : _) = (genericPoint Y.carrier : _) :=
   by
@@ -97,7 +97,7 @@ theorem genericPoint_eq_of_isOpenImmersion {X Y : Scheme} (f : X ⟶ Y) [H : IsO
   apply (config := { instances := false }) PreirreducibleSpace.isPreirreducible_univ
   show PreirreducibleSpace Y.carrier; · infer_instance
   exact ⟨_, trivial, Set.mem_range_self hX.2.some⟩
-#align algebraic_geometry.generic_point_eq_of_is_open_immersion AlgebraicGeometry.genericPoint_eq_of_isOpenImmersion
+#align algebraic_geometry.generic_point_eq_of_is_open_immersion AlgebraicGeometry.genericPoint_eq_of_isOpenImmersionCat
 
 noncomputable instance stalkFunctionFieldAlgebra [IrreducibleSpace X.carrier] (x : X.carrier) :
     Algebra (X.Presheaf.stalk x) X.functionField :=

@@ -52,8 +52,8 @@ theorem locallyOfFiniteType_eq : @LocallyOfFiniteType = affineLocally @RingHom.F
 #align algebraic_geometry.locally_of_finite_type_eq AlgebraicGeometry.locallyOfFiniteType_eq
 
 instance (priority := 900) locallyOfFiniteTypeOfIsOpenImmersion {X Y : Scheme} (f : X ⟶ Y)
-    [IsOpenImmersion f] : LocallyOfFiniteType f :=
-  locallyOfFiniteType_eq.symm ▸ RingHom.finiteType_is_local.affineLocally_of_isOpenImmersion f
+    [IsOpenImmersionCat f] : LocallyOfFiniteType f :=
+  locallyOfFiniteType_eq.symm ▸ RingHom.finiteType_is_local.affineLocally_of_isOpenImmersionCat f
 #align algebraic_geometry.locally_of_finite_type_of_is_open_immersion AlgebraicGeometry.locallyOfFiniteTypeOfIsOpenImmersion
 
 theorem locallyOfFiniteType_stableUnderComposition :

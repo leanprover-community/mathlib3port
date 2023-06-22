@@ -175,7 +175,7 @@ theorem QuasiSeparated.affine_openCover_tFAE {X Y : Scheme.{u}} (f : X ⟶ Y) :
           ∀ i : 𝒰.J, QuasiSeparatedSpace (pullback f (𝒰.map i)).carrier,
         ∀ (𝒰 : Scheme.OpenCover.{u} Y) [∀ i, IsAffine (𝒰.obj i)] (i : 𝒰.J),
           QuasiSeparatedSpace (pullback f (𝒰.map i)).carrier,
-        ∀ {U : Scheme} (g : U ⟶ Y) [IsAffine U] [IsOpenImmersion g],
+        ∀ {U : Scheme} (g : U ⟶ Y) [IsAffine U] [IsOpenImmersionCat g],
           QuasiSeparatedSpace (pullback f g).carrier,
         ∃ (𝒰 : Scheme.OpenCover.{u} Y) (_ : ∀ i, IsAffine (𝒰.obj i)) (𝒰' :
           ∀ i : 𝒰.J, Scheme.OpenCover.{u} (pullback f (𝒰.map i))) (_ :
@@ -202,7 +202,7 @@ theorem QuasiSeparated.openCover_tFAE {X Y : Scheme.{u}} (f : X ⟶ Y) :
         ∀ (𝒰 : Scheme.OpenCover.{u} Y) (i : 𝒰.J),
           QuasiSeparated (pullback.snd : (𝒰.pullbackCover f).obj i ⟶ 𝒰.obj i),
         ∀ U : Opens Y.carrier, QuasiSeparated (f ∣_ U),
-        ∀ {U : Scheme} (g : U ⟶ Y) [IsOpenImmersion g],
+        ∀ {U : Scheme} (g : U ⟶ Y) [IsOpenImmersionCat g],
           QuasiSeparated (pullback.snd : pullback f g ⟶ _),
         ∃ (ι : Type u) (U : ι → Opens Y.carrier) (hU : iSup U = ⊤),
           ∀ i, QuasiSeparated (f ∣_ U i)] :=

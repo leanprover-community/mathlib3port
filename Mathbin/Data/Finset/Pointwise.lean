@@ -2553,6 +2553,7 @@ theorem card_smul_finset (a : α) (s : Finset β) : (a • s).card = s.card :=
 #align finset.card_vadd_finset Finset.card_vadd_finset
 -/
 
+#print Finset.card_dvd_card_smul_right /-
 /-- If the left cosets of `t` by elements of `s` are disjoint (but not necessarily distinct!), then
 the size of `t` divides the size of `s * t`. -/
 @[to_additive
@@ -2562,9 +2563,11 @@ theorem card_dvd_card_smul_right {s : Finset α} :
   card_dvd_card_image₂_right fun _ _ => MulAction.injective _
 #align finset.card_dvd_card_smul_right Finset.card_dvd_card_smul_right
 #align finset.card_dvd_card_vadd_right Finset.card_dvd_card_vadd_right
+-/
 
 variable [DecidableEq α]
 
+#print Finset.card_dvd_card_mul_left /-
 /-- If the right cosets of `s` by elements of `t` are disjoint (but not necessarily distinct!), then
 the size of `s` divides the size of `s * t`. -/
 @[to_additive
@@ -2575,6 +2578,7 @@ theorem card_dvd_card_mul_left {s t : Finset α} :
   card_dvd_card_image₂_left fun _ _ => mul_left_injective _
 #align finset.card_dvd_card_mul_left Finset.card_dvd_card_mul_left
 #align finset.card_dvd_card_add_left Finset.card_dvd_card_add_left
+-/
 
 end Group
 

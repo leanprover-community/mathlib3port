@@ -312,7 +312,7 @@ def FqtInfty :=
 
 instance : Field (FqtInfty Fq) :=
   letI := infty_valued_Fqt Fq
-  UniformSpace.Completion.field
+  UniformSpace.Completion.instField
 
 instance : Inhabited (FqtInfty Fq) :=
   ⟨(0 : FqtInfty Fq)⟩

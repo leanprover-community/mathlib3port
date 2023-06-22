@@ -86,7 +86,7 @@ that the `U i`'s are open subschemes of the glued space.
 -/
 @[nolint has_nonempty_instance]
 structure GlueData extends CategoryTheory.GlueData Scheme where
-  f_open : ∀ i j, IsOpenImmersion (f i j)
+  f_open : ∀ i j, IsOpenImmersionCat (f i j)
 #align algebraic_geometry.Scheme.glue_data AlgebraicGeometry.Scheme.GlueData
 
 attribute [instance] glue_data.f_open
@@ -154,9 +154,9 @@ theorem ι_isoLocallyRingedSpace_inv (i : D.J) :
   𝖣.ι_gluedIso_inv forgetToLocallyRingedSpace i
 #align algebraic_geometry.Scheme.glue_data.ι_iso_LocallyRingedSpace_inv AlgebraicGeometry.Scheme.GlueData.ι_isoLocallyRingedSpace_inv
 
-instance ι_isOpenImmersion (i : D.J) : IsOpenImmersion (𝖣.ι i) := by
+instance ι_isOpenImmersionCat (i : D.J) : IsOpenImmersionCat (𝖣.ι i) := by
   rw [← D.ι_iso_LocallyRingedSpace_inv]; infer_instance
-#align algebraic_geometry.Scheme.glue_data.ι_is_open_immersion AlgebraicGeometry.Scheme.GlueData.ι_isOpenImmersion
+#align algebraic_geometry.Scheme.glue_data.ι_is_open_immersion AlgebraicGeometry.Scheme.GlueData.ι_isOpenImmersionCat
 
 theorem ι_jointly_surjective (x : 𝖣.glued.carrier) :
     ∃ (i : D.J) (y : (D.U i).carrier), (D.ι i).1.base y = x :=
@@ -422,7 +422,7 @@ instance : Epi 𝒰.fromGlued.val.base :=
   rw [← 𝒰.ι_from_glued (𝒰.f x)] at h 
   exact h
 
-instance fromGlued_open_immersion : IsOpenImmersion 𝒰.fromGlued :=
+instance fromGlued_open_immersion : IsOpenImmersionCat 𝒰.fromGlued :=
   SheafedSpace.IsOpenImmersion.of_stalk_iso _ 𝒰.fromGlued_openEmbedding
 #align algebraic_geometry.Scheme.open_cover.from_glued_open_immersion AlgebraicGeometry.Scheme.OpenCover.fromGlued_open_immersion
 

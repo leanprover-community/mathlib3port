@@ -86,8 +86,8 @@ instance spec_pUnit_isEmpty : IsEmpty (Scheme.Spec.obj (op <| CommRingCat.of PUn
   ⟨PrimeSpectrum.pUnit⟩
 #align algebraic_geometry.Spec_punit_is_empty AlgebraicGeometry.spec_pUnit_isEmpty
 
-instance (priority := 100) isOpenImmersion_of_isEmpty {X Y : Scheme} (f : X ⟶ Y)
-    [IsEmpty X.carrier] : IsOpenImmersion f :=
+instance (priority := 100) isOpenImmersionCat_of_isEmpty {X Y : Scheme} (f : X ⟶ Y)
+    [IsEmpty X.carrier] : IsOpenImmersionCat f :=
   by
   apply (config := { instances := false }) is_open_immersion.of_stalk_iso
   · apply openEmbedding_of_continuous_injective_open
@@ -96,7 +96,7 @@ instance (priority := 100) isOpenImmersion_of_isEmpty {X Y : Scheme} (f : X ⟶ 
     · intro U hU; convert isOpen_empty; ext; apply (iff_false_iff _).mpr
       exact fun x => isEmptyElim (show X.carrier from x.some)
   · rintro (i : X.carrier); exact isEmptyElim i
-#align algebraic_geometry.is_open_immersion_of_is_empty AlgebraicGeometry.isOpenImmersion_of_isEmpty
+#align algebraic_geometry.is_open_immersion_of_is_empty AlgebraicGeometry.isOpenImmersionCat_of_isEmpty
 
 instance (priority := 100) isIso_of_isEmpty {X Y : Scheme} (f : X ⟶ Y) [IsEmpty Y.carrier] :
     IsIso f :=

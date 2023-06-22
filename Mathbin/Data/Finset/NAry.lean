@@ -618,6 +618,7 @@ theorem image₂_right_identity {f : γ → β → γ} {b : β} (h : ∀ a, f a 
 #align finset.image₂_right_identity Finset.image₂_right_identity
 -/
 
+#print Finset.card_dvd_card_image₂_right /-
 /-- If each partial application of `f` is injective, and images of `s` under those partial
 applications are disjoint (but not necessarily distinct!), then the size of `t` divides the size of
 `finset.image₂ f s t`. -/
@@ -641,7 +642,9 @@ theorem card_dvd_card_image₂_right (hf : ∀ a ∈ s, Injective (f a))
           (Set.mem_image_of_mem _ <| mem_insert_of_mem hb) h).trans_subset
       (image_subset_image₂_right hb)
 #align finset.card_dvd_card_image₂_right Finset.card_dvd_card_image₂_right
+-/
 
+#print Finset.card_dvd_card_image₂_left /-
 /-- If each partial application of `f` is injective, and images of `t` under those partial
 applications are disjoint (but not necessarily distinct!), then the size of `s` divides the size of
 `finset.image₂ f s t`. -/
@@ -649,6 +652,7 @@ theorem card_dvd_card_image₂_left (hf : ∀ b ∈ t, Injective fun a => f a b)
     (ht : ((fun b => s.image fun a => f a b) '' t).PairwiseDisjoint id) :
     s.card ∣ (image₂ f s t).card := by rw [← image₂_swap]; exact card_dvd_card_image₂_right hf ht
 #align finset.card_dvd_card_image₂_left Finset.card_dvd_card_image₂_left
+-/
 
 variable [DecidableEq α] [DecidableEq β]
 

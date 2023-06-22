@@ -111,15 +111,19 @@ instance covariantClass_mul_le {α : Type u} [Mul α] [Preorder α]
 #align with_zero.covariant_class_mul_le WithZero.covariantClass_mul_le
 -/
 
+#print WithZero.le_max_iff /-
 @[simp]
 theorem le_max_iff [LinearOrder α] {a b c : α} : (a : WithZero α) ≤ max b c ↔ a ≤ max b c := by
   simp only [WithZero.coe_le_coe, le_max_iff]
 #align with_zero.le_max_iff WithZero.le_max_iff
+-/
 
+#print WithZero.min_le_iff /-
 @[simp]
 theorem min_le_iff [LinearOrder α] {a b c : α} : min (a : WithZero α) b ≤ c ↔ min a b ≤ c := by
   simp only [WithZero.coe_le_coe, min_le_iff]
 #align with_zero.min_le_iff WithZero.min_le_iff
+-/
 
 instance [OrderedCommMonoid α] : OrderedCommMonoid (WithZero α) :=
   { WithZero.commMonoidWithZero, WithZero.partialOrder with
