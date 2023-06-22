@@ -73,7 +73,7 @@ instance : NormedAddCommGroup ℂ :=
       eq_zero_of_map_eq_zero' := fun _ => abs.eq_zero.1 }
 
 instance : NormedField ℂ :=
-  { Complex.field,
+  { Complex.instField,
     Complex.normedAddCommGroup with
     norm := abs
     dist_eq := fun _ _ => rfl
