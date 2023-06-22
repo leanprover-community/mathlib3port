@@ -146,15 +146,15 @@ theorem exists_finset_card_le_mul [FiniteIndex H] {S : Finset G} (hS : closure (
 #align subgroup.exists_finset_card_le_mul Subgroup.exists_finset_card_le_mul
 -/
 
-#print Subgroup.fG_of_index_ne_zero /-
+#print Subgroup.fg_of_index_ne_zero /-
 /-- **Schreier's Lemma**: A finite index subgroup of a finitely generated
   group is finitely generated. -/
-instance fG_of_index_ne_zero [hG : Group.FG G] [FiniteIndex H] : Group.FG H :=
+instance fg_of_index_ne_zero [hG : Group.FG G] [FiniteIndex H] : Group.FG H :=
   by
   obtain ⟨S, hS⟩ := hG.1
   obtain ⟨T, -, hT⟩ := exists_finset_card_le_mul H hS
   exact ⟨⟨T, hT⟩⟩
-#align subgroup.fg_of_index_ne_zero Subgroup.fG_of_index_ne_zero
+#align subgroup.fg_of_index_ne_zero Subgroup.fg_of_index_ne_zero
 -/
 
 #print Subgroup.rank_le_index_mul_rank /-

@@ -1671,7 +1671,6 @@ theorem IsOpen.closure_div (ht : IsOpen t) (s : Set α) : closure s / t = s / t 
 
 end TopologicalGroup
 
-#print AddGroupWithZeroNhd /-
 /- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`z] [] -/
 /-- additive group with a neighbourhood around 0.
 Only used to construct a topology and uniform space.
@@ -1684,7 +1683,6 @@ class AddGroupWithZeroNhd (G : Type u) extends AddCommGroup G where
   zero_z : pure 0 ≤ Z
   sub_z : Tendsto (fun p : G × G => p.1 - p.2) (Z ×ᶠ Z) Z
 #align add_group_with_zero_nhd AddGroupWithZeroNhd
--/
 
 section FilterMul
 

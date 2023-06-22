@@ -81,7 +81,7 @@ theorem ι_eq_zero : ι (0 : QuadraticForm R Unit) = 0 :=
 
 /-- Since the vector space is empty the ring is commutative. -/
 instance : CommRing (CliffordAlgebra (0 : QuadraticForm R Unit)) :=
-  { CliffordAlgebra.ring _ with
+  { CliffordAlgebra.instRing _ with
     mul_comm := fun x y => by
       induction x using CliffordAlgebra.induction
       case h_grade0 r => apply Algebra.commutes
@@ -216,7 +216,7 @@ protected def equiv : CliffordAlgebra q ≃ₐ[ℝ] ℂ :=
 
 TODO: prove this is true for all `clifford_algebra`s over a 1-dimensional vector space. -/
 instance : CommRing (CliffordAlgebra q) :=
-  { CliffordAlgebra.ring _ with
+  { CliffordAlgebra.instRing _ with
     mul_comm := fun x y =>
       CliffordAlgebraComplex.equiv.Injective <| by
         rw [AlgEquiv.map_mul, mul_comm, AlgEquiv.map_mul] }

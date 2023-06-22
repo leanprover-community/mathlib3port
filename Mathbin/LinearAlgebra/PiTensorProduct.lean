@@ -259,21 +259,21 @@ variable [Monoid R₁] [DistribMulAction R₁ R] [SMulCommClass R₁ R R]
 
 variable [Monoid R₂] [DistribMulAction R₂ R] [SMulCommClass R₂ R R]
 
-#print PiTensorProduct.hasSmul' /-
+#print PiTensorProduct.hasSMul' /-
 -- Most of the time we want the instance below this one, which is easier for typeclass resolution
 -- to find.
-instance hasSmul' : SMul R₁ (⨂[R] i, s i) :=
+instance hasSMul' : SMul R₁ (⨂[R] i, s i) :=
   ⟨fun r =>
     liftAddHom (fun f : R × ∀ i, s i => tprodCoeff R (r • f.1) f.2)
       (fun r' f i hf => by simp_rw [zero_tprod_coeff' _ f i hf])
       (fun f => by simp [zero_tprod_coeff]) (fun r' f i m₁ m₂ => by simp [add_tprod_coeff])
       (fun r' r'' f => by simp [add_tprod_coeff', mul_add]) fun z f i r' => by
       simp [smul_tprod_coeff, mul_smul_comm]⟩
-#align pi_tensor_product.has_smul' PiTensorProduct.hasSmul'
+#align pi_tensor_product.has_smul' PiTensorProduct.hasSMul'
 -/
 
 instance : SMul R (⨂[R] i, s i) :=
-  PiTensorProduct.hasSmul'
+  PiTensorProduct.hasSMul'
 
 #print PiTensorProduct.smul_tprodCoeff' /-
 theorem smul_tprodCoeff' (r : R₁) (z : R) (f : ∀ i, s i) :

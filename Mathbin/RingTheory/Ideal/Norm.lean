@@ -62,36 +62,46 @@ variable {R M : Type _} [Ring R] [AddCommGroup M] [Module R M]
 
 section
 
+#print Submodule.cardQuot /-
 /-- The cardinality of `(M ⧸ S)`, if `(M ⧸ S)` is finite, and `0` otherwise.
 This is used to define the absolute ideal norm `ideal.abs_norm`.
 -/
 noncomputable def cardQuot (S : Submodule R M) : ℕ :=
   AddSubgroup.index S.toAddSubgroup
 #align submodule.card_quot Submodule.cardQuot
+-/
 
+#print Submodule.cardQuot_apply /-
 @[simp]
 theorem cardQuot_apply (S : Submodule R M) [Fintype (M ⧸ S)] : cardQuot S = Fintype.card (M ⧸ S) :=
   AddSubgroup.index_eq_card _
 #align submodule.card_quot_apply Submodule.cardQuot_apply
+-/
 
 variable (R M)
 
+#print Submodule.cardQuot_bot /-
 @[simp]
 theorem cardQuot_bot [Infinite M] : cardQuot (⊥ : Submodule R M) = 0 :=
   AddSubgroup.index_bot.trans Nat.card_eq_zero_of_infinite
 #align submodule.card_quot_bot Submodule.cardQuot_bot
+-/
 
+#print Submodule.cardQuot_top /-
 @[simp]
 theorem cardQuot_top : cardQuot (⊤ : Submodule R M) = 1 :=
   AddSubgroup.index_top
 #align submodule.card_quot_top Submodule.cardQuot_top
+-/
 
 variable {R M}
 
+#print Submodule.cardQuot_eq_one_iff /-
 @[simp]
 theorem cardQuot_eq_one_iff {P : Submodule R M} : cardQuot P = 1 ↔ P = ⊤ :=
   AddSubgroup.index_eq_one.trans (by simp [SetLike.ext_iff])
 #align submodule.card_quot_eq_one_iff Submodule.cardQuot_eq_one_iff
+-/
 
 end
 
@@ -103,6 +113,7 @@ variable {S : Type _} [CommRing S] [IsDomain S]
 
 open Submodule
 
+#print cardQuot_mul_of_coprime /-
 /-- Multiplicity of the ideal norm, for coprime ideals.
 This is essentially just a repackaging of the Chinese Remainder Theorem.
 -/
@@ -129,7 +140,9 @@ theorem cardQuot_mul_of_coprime [IsDedekindDomain S] [Module.Free ℤ S] [Module
     fintype.card_eq.mpr ⟨(Ideal.quotientMulEquivQuotientProd I J coprime).toEquiv⟩,
     Fintype.card_prod]
 #align card_quot_mul_of_coprime cardQuot_mul_of_coprime
+-/
 
+#print Ideal.mul_add_mem_pow_succ_inj /-
 /-- If the `d` from `ideal.exists_mul_add_mem_pow_succ` is unique, up to `P`,
 then so are the `c`s, up to `P ^ (i + 1)`.
 Inspired by [Neukirch], proposition 6.1 -/
@@ -142,11 +155,13 @@ theorem Ideal.mul_add_mem_pow_succ_inj (P : Ideal S) {i : ℕ} (a d d' e e' : S)
   convert Ideal.add_mem _ this (Ideal.sub_mem _ e_mem e'_mem)
   ring
 #align ideal.mul_add_mem_pow_succ_inj Ideal.mul_add_mem_pow_succ_inj
+-/
 
 section PPrime
 
 variable {P : Ideal S} [P_prime : P.IsPrime] (hP : P ≠ ⊥)
 
+#print Ideal.exists_mul_add_mem_pow_succ /-
 /-- If `a ∈ P^i \ P^(i+1)` and `c ∈ P^i`, then `a * d + e = c` for `e ∈ P^(i+1)`.
 `ideal.mul_add_mem_pow_succ_unique` shows the choice of `d` is unique, up to `P`.
 Inspired by [Neukirch], proposition 6.1 -/
@@ -165,7 +180,9 @@ theorem Ideal.exists_mul_add_mem_pow_succ [IsDedekindDomain S] {i : ℕ} (a c : 
   rw [this]
   exact mem_sup.mpr ⟨a, mem_span_singleton_self a, 0, by simp, by simp⟩
 #align ideal.exists_mul_add_mem_pow_succ Ideal.exists_mul_add_mem_pow_succ
+-/
 
+#print Ideal.mem_prime_of_mul_mem_pow /-
 theorem Ideal.mem_prime_of_mul_mem_pow [IsDedekindDomain S] {P : Ideal S} [P_prime : P.IsPrime]
     (hP : P ≠ ⊥) {i : ℕ} {a b : S} (a_not_mem : a ∉ P ^ (i + 1)) (ab_mem : a * b ∈ P ^ (i + 1)) :
     b ∈ P :=
@@ -174,7 +191,9 @@ theorem Ideal.mem_prime_of_mul_mem_pow [IsDedekindDomain S] {P : Ideal S} [P_pri
     Ideal.span_singleton_mul_span_singleton] at a_not_mem ab_mem ⊢
   exact (prime_pow_succ_dvd_mul (Ideal.prime_of_isPrime hP P_prime) ab_mem).resolve_left a_not_mem
 #align ideal.mem_prime_of_mul_mem_pow Ideal.mem_prime_of_mul_mem_pow
+-/
 
+#print Ideal.mul_add_mem_pow_succ_unique /-
 /-- The choice of `d` in `ideal.exists_mul_add_mem_pow_succ` is unique, up to `P`.
 Inspired by [Neukirch], proposition 6.1 -/
 theorem Ideal.mul_add_mem_pow_succ_unique [IsDedekindDomain S] {i : ℕ} (a d d' e e' : S)
@@ -188,7 +207,9 @@ theorem Ideal.mul_add_mem_pow_succ_unique [IsDedekindDomain S] {i : ℕ} (a d d'
     ring
   exact Ideal.mem_prime_of_mul_mem_pow hP a_not_mem h'
 #align ideal.mul_add_mem_pow_succ_unique Ideal.mul_add_mem_pow_succ_unique
+-/
 
+#print cardQuot_pow_of_prime /-
 /-- Multiplicity of the ideal norm, for powers of prime ideals. -/
 theorem cardQuot_pow_of_prime [IsDedekindDomain S] [Module.Finite ℤ S] [Module.Free ℤ S] {i : ℕ} :
     cardQuot (P ^ i) = cardQuot P ^ i :=
@@ -231,9 +252,11 @@ theorem cardQuot_pow_of_prime [IsDedekindDomain S] [Module.Finite ℤ S] [Module
     rw [hf, add_zero]
     exact (Submodule.Quotient.eq _).mp (hk_eq _ hd')
 #align card_quot_pow_of_prime cardQuot_pow_of_prime
+-/
 
 end PPrime
 
+#print cardQuot_mul /-
 /-- Multiplicativity of the ideal norm in number rings. -/
 theorem cardQuot_mul [IsDedekindDomain S] [Module.Free ℤ S] [Module.Finite ℤ S] (I J : Ideal S) :
     cardQuot (I * J) = cardQuot I * cardQuot J :=
@@ -256,7 +279,9 @@ theorem cardQuot_mul [IsDedekindDomain S] [Module.Free ℤ S] [Module.Finite ℤ
         (ideal.is_unit_iff.mp
           (hIJ _ (ideal.dvd_iff_le.mpr le_sup_left) (ideal.dvd_iff_le.mpr le_sup_right)))
 #align card_quot_mul cardQuot_mul
+-/
 
+#print Ideal.absNorm /-
 /-- The absolute norm of the ideal `I : ideal R` is the cardinality of the quotient `R ⧸ I`. -/
 noncomputable def Ideal.absNorm [Infinite S] [IsDedekindDomain S] [Module.Free ℤ S]
     [Module.Finite ℤ S] : Ideal S →*₀ ℕ
@@ -266,33 +291,45 @@ noncomputable def Ideal.absNorm [Infinite S] [IsDedekindDomain S] [Module.Free �
   map_one' := by rw [Ideal.one_eq_top, card_quot_top]
   map_zero' := by rw [Ideal.zero_eq_bot, card_quot_bot]
 #align ideal.abs_norm Ideal.absNorm
+-/
 
 namespace Ideal
 
 variable [Infinite S] [IsDedekindDomain S] [Module.Free ℤ S] [Module.Finite ℤ S]
 
+#print Ideal.absNorm_apply /-
 theorem absNorm_apply (I : Ideal S) : absNorm I = cardQuot I :=
   rfl
 #align ideal.abs_norm_apply Ideal.absNorm_apply
+-/
 
+#print Ideal.absNorm_bot /-
 @[simp]
 theorem absNorm_bot : absNorm (⊥ : Ideal S) = 0 := by rw [← Ideal.zero_eq_bot, _root_.map_zero]
 #align ideal.abs_norm_bot Ideal.absNorm_bot
+-/
 
+#print Ideal.absNorm_top /-
 @[simp]
 theorem absNorm_top : absNorm (⊤ : Ideal S) = 1 := by rw [← Ideal.one_eq_top, _root_.map_one]
 #align ideal.abs_norm_top Ideal.absNorm_top
+-/
 
+#print Ideal.absNorm_eq_one_iff /-
 @[simp]
 theorem absNorm_eq_one_iff {I : Ideal S} : absNorm I = 1 ↔ I = ⊤ := by
   rw [abs_norm_apply, card_quot_eq_one_iff]
 #align ideal.abs_norm_eq_one_iff Ideal.absNorm_eq_one_iff
+-/
 
+#print Ideal.absNorm_ne_zero_iff /-
 theorem absNorm_ne_zero_iff (I : Ideal S) : Ideal.absNorm I ≠ 0 ↔ Finite (S ⧸ I) :=
   ⟨fun h => Nat.finite_of_card_ne_zero h, fun h =>
     (@AddSubgroup.finiteIndex_of_finite_quotient _ _ _ h).FiniteIndex⟩
 #align ideal.abs_norm_ne_zero_iff Ideal.absNorm_ne_zero_iff
+-/
 
+#print Ideal.natAbs_det_equiv /-
 /-- Let `e : S ≃ I` be an additive isomorphism (therefore a `ℤ`-linear equiv).
 Then an alternative way to compute the norm of `I` is given by taking the determinant of `e`.
 See `nat_abs_det_basis_change` for a more familiar formulation of this result. -/
@@ -374,7 +411,9 @@ theorem natAbs_det_equiv (I : Ideal S) {E : Type _} [AddEquivClass E S I] (e : E
   simp_rw [fintype.card_eq.mpr ⟨(Ideal.quotientEquivPiZMod I b hI).toEquiv⟩, Fintype.card_pi,
     ZMod.card]
 #align ideal.nat_abs_det_equiv Ideal.natAbs_det_equiv
+-/
 
+#print Ideal.natAbs_det_basis_change /-
 /-- Let `b` be a basis for `S` over `ℤ` and `bI` a basis for `I` over `ℤ` of the same dimension.
 Then an alternative way to compute the norm of `I` is given by taking the determinant of `bI`
 over `b`. -/
@@ -388,7 +427,9 @@ theorem natAbs_det_basis_change {ι : Type _} [Fintype ι] [DecidableEq ι] (b :
       by rw [Basis.det_comp_basis]
     _ = _ := nat_abs_det_equiv I e
 #align ideal.nat_abs_det_basis_change Ideal.natAbs_det_basis_change
+-/
 
+#print Ideal.absNorm_span_singleton /-
 @[simp]
 theorem absNorm_span_singleton (r : S) : absNorm (span ({r} : Set S)) = (Algebra.norm ℤ r).natAbs :=
   by
@@ -405,17 +446,23 @@ theorem absNorm_span_singleton (r : S) : absNorm (span ({r} : Set S)) = (Algebra
   refine' b.ext fun i => _
   simp
 #align ideal.abs_norm_span_singleton Ideal.absNorm_span_singleton
+-/
 
+#print Ideal.absNorm_dvd_absNorm_of_le /-
 theorem absNorm_dvd_absNorm_of_le {I J : Ideal S} (h : J ≤ I) : I.absNorm ∣ J.absNorm :=
   map_dvd absNorm (dvd_iff_le.mpr h)
 #align ideal.abs_norm_dvd_abs_norm_of_le Ideal.absNorm_dvd_absNorm_of_le
+-/
 
+#print Ideal.absNorm_dvd_norm_of_mem /-
 theorem absNorm_dvd_norm_of_mem {I : Ideal S} {x : S} (h : x ∈ I) : ↑I.absNorm ∣ Algebra.norm ℤ x :=
   by
   rw [← Int.dvd_natAbs, ← abs_norm_span_singleton x, Int.coe_nat_dvd]
   exact abs_norm_dvd_abs_norm_of_le ((span_singleton_le_iff_mem _).mpr h)
 #align ideal.abs_norm_dvd_norm_of_mem Ideal.absNorm_dvd_norm_of_mem
+-/
 
+#print Ideal.absNorm_span_insert /-
 @[simp]
 theorem absNorm_span_insert (r : S) (s : Set S) :
     absNorm (span (insert r s)) ∣ gcd (absNorm (span s)) (Algebra.norm ℤ r).natAbs :=
@@ -425,7 +472,9 @@ theorem absNorm_span_insert (r : S) (s : Set S) :
         (absNorm_dvd_absNorm_of_le (span_mono (Set.singleton_subset_iff.mpr (Set.mem_insert _ _))))
         (by rw [abs_norm_span_singleton])⟩
 #align ideal.abs_norm_span_insert Ideal.absNorm_span_insert
+-/
 
+#print Ideal.irreducible_of_irreducible_absNorm /-
 theorem irreducible_of_irreducible_absNorm {I : Ideal S} (hI : Irreducible I.absNorm) :
     Irreducible I :=
   irreducible_iff.mpr
@@ -436,26 +485,36 @@ theorem irreducible_of_irreducible_absNorm {I : Ideal S} (hI : Irreducible I.abs
         simpa only [Ideal.isUnit_iff, Nat.isUnit_iff, abs_norm_eq_one_iff] using
           hI.is_unit_or_is_unit (_root_.map_mul abs_norm a b)⟩
 #align ideal.irreducible_of_irreducible_abs_norm Ideal.irreducible_of_irreducible_absNorm
+-/
 
+#print Ideal.isPrime_of_irreducible_absNorm /-
 theorem isPrime_of_irreducible_absNorm {I : Ideal S} (hI : Irreducible I.absNorm) : I.IsPrime :=
   isPrime_of_prime
     (UniqueFactorizationMonoid.irreducible_iff_prime.mp (irreducible_of_irreducible_absNorm hI))
 #align ideal.is_prime_of_irreducible_abs_norm Ideal.isPrime_of_irreducible_absNorm
+-/
 
+#print Ideal.prime_of_irreducible_absNorm_span /-
 theorem prime_of_irreducible_absNorm_span {a : S} (ha : a ≠ 0)
     (hI : Irreducible (Ideal.span ({a} : Set S)).absNorm) : Prime a :=
   (Ideal.span_singleton_prime ha).mp (isPrime_of_irreducible_absNorm hI)
 #align ideal.prime_of_irreducible_abs_norm_span Ideal.prime_of_irreducible_absNorm_span
+-/
 
+#print Ideal.absNorm_mem /-
 theorem absNorm_mem (I : Ideal S) : ↑I.absNorm ∈ I := by
   rw [abs_norm_apply, card_quot, ← Ideal.Quotient.eq_zero_iff_mem, map_natCast,
     quotient.index_eq_zero]
 #align ideal.abs_norm_mem Ideal.absNorm_mem
+-/
 
+#print Ideal.span_singleton_absNorm_le /-
 theorem span_singleton_absNorm_le (I : Ideal S) : Ideal.span {(Ideal.absNorm I : S)} ≤ I := by
   simp only [Ideal.span_le, Set.singleton_subset_iff, SetLike.mem_coe, Ideal.absNorm_mem I]
 #align ideal.span_singleton_abs_norm_le Ideal.span_singleton_absNorm_le
+-/
 
+#print Ideal.finite_setOf_absNorm_eq /-
 theorem finite_setOf_absNorm_eq [CharZero S] {n : ℕ} (hn : 0 < n) :
     {I : Ideal S | Ideal.absNorm I = n}.Finite :=
   by
@@ -474,6 +533,7 @@ theorem finite_setOf_absNorm_eq [CharZero S] {n : ℕ} (hn : 0 < n) :
       comap_map_mk (span_singleton_abs_norm_le J), ← hJ.symm]
     exact congr_arg (Ideal.comap (Ideal.Quotient.mk (@Ideal.span S _ {n}))) h
 #align ideal.finite_set_of_abs_norm_eq Ideal.finite_setOf_absNorm_eq
+-/
 
 end Ideal
 
@@ -489,6 +549,7 @@ open Submodule
 
 variable (R : Type _) [CommRing R] {S : Type _} [CommRing S] [Algebra R S]
 
+#print Ideal.spanNorm /-
 /-- `ideal.span_norm R (I : ideal S)` is the ideal generated by mapping `algebra.norm R` over `I`.
 
 See also `ideal.rel_norm`.
@@ -496,15 +557,19 @@ See also `ideal.rel_norm`.
 def spanNorm (I : Ideal S) : Ideal R :=
   Ideal.span (Algebra.norm R '' (I : Set S))
 #align ideal.span_norm Ideal.spanNorm
+-/
 
+#print Ideal.spanNorm_bot /-
 @[simp]
 theorem spanNorm_bot [Nontrivial S] [Module.Free R S] [Module.Finite R S] :
     spanNorm R (⊥ : Ideal S) = ⊥ :=
   span_eq_bot.mpr fun x hx => by simpa using hx
 #align ideal.span_norm_bot Ideal.spanNorm_bot
+-/
 
 variable {R}
 
+#print Ideal.spanNorm_eq_bot_iff /-
 @[simp]
 theorem spanNorm_eq_bot_iff [IsDomain R] [IsDomain S] [Module.Free R S] [Module.Finite R S]
     {I : Ideal S} : spanNorm R I = ⊥ ↔ I = ⊥ :=
@@ -515,13 +580,17 @@ theorem spanNorm_eq_bot_iff [IsDomain R] [IsDomain S] [Module.Free R S] [Module.
     SetLike.le_def]
   rfl
 #align ideal.span_norm_eq_bot_iff Ideal.spanNorm_eq_bot_iff
+-/
 
 variable (R)
 
+#print Ideal.norm_mem_spanNorm /-
 theorem norm_mem_spanNorm {I : Ideal S} (x : S) (hx : x ∈ I) : Algebra.norm R x ∈ I.spanNorm R :=
   subset_span (Set.mem_image_of_mem _ hx)
 #align ideal.norm_mem_span_norm Ideal.norm_mem_spanNorm
+-/
 
+#print Ideal.spanNorm_singleton /-
 @[simp]
 theorem spanNorm_singleton {r : S} : spanNorm R (span ({r} : Set S)) = span {Algebra.norm R r} :=
   le_antisymm
@@ -532,21 +601,29 @@ theorem spanNorm_singleton {r : S} : spanNorm R (span ({r} : Set S)) = span {Alg
           exact map_dvd _ (mem_span_singleton.mp hx')))
     ((span_singleton_le_iff_mem _).mpr (norm_mem_spanNorm _ _ (mem_span_singleton_self _)))
 #align ideal.span_norm_singleton Ideal.spanNorm_singleton
+-/
 
+#print Ideal.spanNorm_top /-
 @[simp]
 theorem spanNorm_top : spanNorm R (⊤ : Ideal S) = ⊤ := by simp [← Ideal.span_singleton_one]
 #align ideal.span_norm_top Ideal.spanNorm_top
+-/
 
+#print Ideal.map_spanNorm /-
 theorem map_spanNorm (I : Ideal S) {T : Type _} [CommRing T] (f : R →+* T) :
     map f (spanNorm R I) = span (f ∘ Algebra.norm R '' (I : Set S)) := by
   rw [span_norm, map_span, Set.image_image]
 #align ideal.map_span_norm Ideal.map_spanNorm
+-/
 
+#print Ideal.spanNorm_mono /-
 @[mono]
 theorem spanNorm_mono {I J : Ideal S} (h : I ≤ J) : spanNorm R I ≤ spanNorm R J :=
   Ideal.span_mono (Set.monotone_image h)
 #align ideal.span_norm_mono Ideal.spanNorm_mono
+-/
 
+#print Ideal.spanNorm_localization /-
 theorem spanNorm_localization (I : Ideal S) [Module.Finite R S] [Module.Free R S] (M : Submonoid R)
     {Rₘ : Type _} (Sₘ : Type _) [CommRing Rₘ] [Algebra R Rₘ] [CommRing Sₘ] [Algebra S Sₘ]
     [Algebra Rₘ Sₘ] [Algebra R Sₘ] [IsScalarTower R Rₘ Sₘ] [IsScalarTower R S Sₘ]
@@ -579,7 +656,9 @@ theorem spanNorm_localization (I : Ideal S) [Module.Finite R S] [Module.Free R S
     exact subset_span (Set.mem_image_of_mem _ (mem_map_of_mem _ ha))
     all_goals infer_instance
 #align ideal.span_norm_localization Ideal.spanNorm_localization
+-/
 
+#print Ideal.spanNorm_mul_spanNorm_le /-
 theorem spanNorm_mul_spanNorm_le (I J : Ideal S) :
     spanNorm R I * spanNorm R J ≤ spanNorm R (I * J) :=
   by
@@ -588,7 +667,9 @@ theorem spanNorm_mul_spanNorm_le (I J : Ideal S) :
   rintro _ ⟨x, y, hxI, hyJ, rfl⟩
   exact Ideal.mul_mem_mul hxI hyJ
 #align ideal.span_norm_mul_span_norm_le Ideal.spanNorm_mul_spanNorm_le
+-/
 
+#print Ideal.spanNorm_mul_of_bot_or_top /-
 /-- This condition `eq_bot_or_top` is equivalent to being a field.
 However, `span_norm_mul_of_field` is harder to apply since we'd need to upgrade a `comm_ring R`
 instance to a `field R` instance. -/
@@ -607,17 +688,21 @@ theorem spanNorm_mul_of_bot_or_top [IsDomain R] [IsDomain S] [Module.Free R S] [
   rw [hJ]
   exact le_top
 #align ideal.span_norm_mul_of_bot_or_top Ideal.spanNorm_mul_of_bot_or_top
+-/
 
+#print Ideal.spanNorm_mul_of_field /-
 @[simp]
 theorem spanNorm_mul_of_field {K : Type _} [Field K] [Algebra K S] [IsDomain S] [Module.Finite K S]
     (I J : Ideal S) : spanNorm K (I * J) = spanNorm K I * spanNorm K J :=
   spanNorm_mul_of_bot_or_top K eq_bot_or_top I J
 #align ideal.span_norm_mul_of_field Ideal.spanNorm_mul_of_field
+-/
 
 variable [IsDomain R] [IsDomain S] [IsDedekindDomain R] [IsDedekindDomain S]
 
 variable [Module.Finite R S] [Module.Free R S]
 
+#print Ideal.spanNorm_mul /-
 /-- Multiplicativity of `ideal.span_norm`. simp-normal form is `map_mul (ideal.rel_norm R)`. -/
 theorem spanNorm_mul (I J : Ideal S) : spanNorm R (I * J) = spanNorm R I * spanNorm R J :=
   by
@@ -654,7 +739,9 @@ theorem spanNorm_mul (I J : Ideal S) : spanNorm R (I * J) = spanNorm R I * spanN
   repeat' infer_instance
   repeat' assumption
 #align ideal.span_norm_mul Ideal.spanNorm_mul
+-/
 
+#print Ideal.relNorm /-
 /-- The relative norm `ideal.rel_norm R (I : ideal S)`, where `R` and `S` are Dedekind domains,
 and `S` is an extension of `R` that is finite and free as a module. -/
 def relNorm : Ideal S →*₀ Ideal R where
@@ -663,53 +750,72 @@ def relNorm : Ideal S →*₀ Ideal R where
   map_one' := by rw [one_eq_top, span_norm_top R, one_eq_top]
   map_mul' := spanNorm_mul R
 #align ideal.rel_norm Ideal.relNorm
+-/
 
+#print Ideal.relNorm_apply /-
 theorem relNorm_apply (I : Ideal S) : relNorm R I = span (Algebra.norm R '' (I : Set S) : Set R) :=
   rfl
 #align ideal.rel_norm_apply Ideal.relNorm_apply
+-/
 
+#print Ideal.spanNorm_eq /-
 @[simp]
 theorem spanNorm_eq (I : Ideal S) : spanNorm R I = relNorm R I :=
   rfl
 #align ideal.span_norm_eq Ideal.spanNorm_eq
+-/
 
+#print Ideal.relNorm_bot /-
 @[simp]
 theorem relNorm_bot : relNorm R (⊥ : Ideal S) = ⊥ := by
   simpa only [zero_eq_bot] using map_zero (rel_norm R : Ideal S →*₀ _)
 #align ideal.rel_norm_bot Ideal.relNorm_bot
+-/
 
+#print Ideal.relNorm_top /-
 @[simp]
 theorem relNorm_top : relNorm R (⊤ : Ideal S) = ⊤ := by
   simpa only [one_eq_top] using map_one (rel_norm R : Ideal S →*₀ _)
 #align ideal.rel_norm_top Ideal.relNorm_top
+-/
 
 variable {R}
 
+#print Ideal.relNorm_eq_bot_iff /-
 @[simp]
 theorem relNorm_eq_bot_iff {I : Ideal S} : relNorm R I = ⊥ ↔ I = ⊥ :=
   spanNorm_eq_bot_iff
 #align ideal.rel_norm_eq_bot_iff Ideal.relNorm_eq_bot_iff
+-/
 
 variable (R)
 
+#print Ideal.norm_mem_relNorm /-
 theorem norm_mem_relNorm (I : Ideal S) {x : S} (hx : x ∈ I) : Algebra.norm R x ∈ relNorm R I :=
   norm_mem_spanNorm R x hx
 #align ideal.norm_mem_rel_norm Ideal.norm_mem_relNorm
+-/
 
+#print Ideal.relNorm_singleton /-
 @[simp]
 theorem relNorm_singleton (r : S) : relNorm R (span ({r} : Set S)) = span {Algebra.norm R r} :=
   spanNorm_singleton R
 #align ideal.rel_norm_singleton Ideal.relNorm_singleton
+-/
 
+#print Ideal.map_relNorm /-
 theorem map_relNorm (I : Ideal S) {T : Type _} [CommRing T] (f : R →+* T) :
     map f (relNorm R I) = span (f ∘ Algebra.norm R '' (I : Set S)) :=
   map_spanNorm R I f
 #align ideal.map_rel_norm Ideal.map_relNorm
+-/
 
+#print Ideal.relNorm_mono /-
 @[mono]
 theorem relNorm_mono {I J : Ideal S} (h : I ≤ J) : relNorm R I ≤ relNorm R J :=
   spanNorm_mono R h
 #align ideal.rel_norm_mono Ideal.relNorm_mono
+-/
 
 end Ideal
 
