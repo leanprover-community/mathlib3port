@@ -28,6 +28,7 @@ section EntrywiseSupNorm
 
 variable [IsROrC 𝕜] [Fintype n] [DecidableEq n]
 
+#print entry_norm_bound_of_unitary /-
 theorem entry_norm_bound_of_unitary {U : Matrix n n 𝕜} (hU : U ∈ Matrix.unitaryGroup n 𝕜)
     (i j : n) : ‖U i j‖ ≤ 1 :=
   by
@@ -61,9 +62,11 @@ theorem entry_norm_bound_of_unitary {U : Matrix n n 𝕜} (hU : U ∈ Matrix.uni
   rw [← sq_le_one_iff (norm_nonneg (U i j)), ← diag_eq_one, re_diag_eq_norm_sum]
   exact norm_sum
 #align entry_norm_bound_of_unitary entry_norm_bound_of_unitary
+-/
 
 attribute [local instance] Matrix.normedAddCommGroup
 
+#print entrywise_sup_norm_bound_of_unitary /-
 /-- The entrywise sup norm of a unitary matrix is at most 1. -/
 theorem entrywise_sup_norm_bound_of_unitary {U : Matrix n n 𝕜} (hU : U ∈ Matrix.unitaryGroup n 𝕜) :
     ‖U‖ ≤ 1 := by
@@ -71,6 +74,7 @@ theorem entrywise_sup_norm_bound_of_unitary {U : Matrix n n 𝕜} (hU : U ∈ Ma
   intro i j
   exact entry_norm_bound_of_unitary hU _ _
 #align entrywise_sup_norm_bound_of_unitary entrywise_sup_norm_bound_of_unitary
+-/
 
 end EntrywiseSupNorm
 
