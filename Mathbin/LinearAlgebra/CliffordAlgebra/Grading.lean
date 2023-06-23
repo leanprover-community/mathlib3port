@@ -30,28 +30,37 @@ open scoped DirectSum
 
 variable (Q)
 
+#print CliffordAlgebra.evenOdd /-
 /-- The even or odd submodule, defined as the supremum of the even or odd powers of
 `(ι Q).range`. `even_odd 0` is the even submodule, and `even_odd 1` is the odd submodule. -/
 def evenOdd (i : ZMod 2) : Submodule R (CliffordAlgebra Q) :=
   ⨆ j : { n : ℕ // ↑n = i }, (ι Q).range ^ (j : ℕ)
 #align clifford_algebra.even_odd CliffordAlgebra.evenOdd
+-/
 
+#print CliffordAlgebra.one_le_evenOdd_zero /-
 theorem one_le_evenOdd_zero : 1 ≤ evenOdd Q 0 :=
   by
   refine' le_trans _ (le_iSup _ ⟨0, Nat.cast_zero⟩)
   exact (pow_zero _).ge
 #align clifford_algebra.one_le_even_odd_zero CliffordAlgebra.one_le_evenOdd_zero
+-/
 
+#print CliffordAlgebra.range_ι_le_evenOdd_one /-
 theorem range_ι_le_evenOdd_one : (ι Q).range ≤ evenOdd Q 1 :=
   by
   refine' le_trans _ (le_iSup _ ⟨1, Nat.cast_one⟩)
   exact (pow_one _).ge
 #align clifford_algebra.range_ι_le_even_odd_one CliffordAlgebra.range_ι_le_evenOdd_one
+-/
 
+#print CliffordAlgebra.ι_mem_evenOdd_one /-
 theorem ι_mem_evenOdd_one (m : M) : ι Q m ∈ evenOdd Q 1 :=
   range_ι_le_evenOdd_one Q <| LinearMap.mem_range_self _ m
 #align clifford_algebra.ι_mem_even_odd_one CliffordAlgebra.ι_mem_evenOdd_one
+-/
 
+#print CliffordAlgebra.ι_mul_ι_mem_evenOdd_zero /-
 theorem ι_mul_ι_mem_evenOdd_zero (m₁ m₂ : M) : ι Q m₁ * ι Q m₂ ∈ evenOdd Q 0 :=
   Submodule.mem_iSup_of_mem ⟨2, rfl⟩
     (by
@@ -60,7 +69,9 @@ theorem ι_mul_ι_mem_evenOdd_zero (m₁ m₂ : M) : ι Q m₁ * ι Q m₂ ∈ e
         Submodule.mul_mem_mul (LinearMap.mem_range_self (ι Q) m₁)
           (LinearMap.mem_range_self (ι Q) m₂))
 #align clifford_algebra.ι_mul_ι_mem_even_odd_zero CliffordAlgebra.ι_mul_ι_mem_evenOdd_zero
+-/
 
+#print CliffordAlgebra.evenOdd_mul_le /-
 theorem evenOdd_mul_le (i j : ZMod 2) : evenOdd Q i * evenOdd Q j ≤ evenOdd Q (i + j) :=
   by
   simp_rw [even_odd, Submodule.iSup_eq_span, Submodule.span_mul_span]
@@ -73,31 +84,41 @@ theorem evenOdd_mul_le (i j : ZMod 2) : evenOdd Q i * evenOdd Q j ≤ evenOdd Q 
   simp only [Subtype.coe_mk, Nat.cast_add, pow_add]
   exact Submodule.mul_mem_mul hx' hy'
 #align clifford_algebra.even_odd_mul_le CliffordAlgebra.evenOdd_mul_le
+-/
 
+#print CliffordAlgebra.evenOdd.gradedMonoid /-
 instance evenOdd.gradedMonoid : SetLike.GradedMonoid (evenOdd Q)
     where
   one_mem := Submodule.one_le.mp (one_le_evenOdd_zero Q)
   mul_mem i j p q hp hq := Submodule.mul_le.mp (evenOdd_mul_le Q _ _) _ hp _ hq
 #align clifford_algebra.even_odd.graded_monoid CliffordAlgebra.evenOdd.gradedMonoid
+-/
 
+#print CliffordAlgebra.GradedAlgebra.ι /-
 /-- A version of `clifford_algebra.ι` that maps directly into the graded structure. This is
 primarily an auxiliary construction used to provide `clifford_algebra.graded_algebra`. -/
 def GradedAlgebra.ι : M →ₗ[R] ⨁ i : ZMod 2, evenOdd Q i :=
   DirectSum.lof R (ZMod 2) (fun i => ↥(evenOdd Q i)) 1 ∘ₗ (ι Q).codRestrict _ (ι_mem_evenOdd_one Q)
 #align clifford_algebra.graded_algebra.ι CliffordAlgebra.GradedAlgebra.ι
+-/
 
+#print CliffordAlgebra.GradedAlgebra.ι_apply /-
 theorem GradedAlgebra.ι_apply (m : M) :
     GradedAlgebra.ι Q m = DirectSum.of (fun i => ↥(evenOdd Q i)) 1 ⟨ι Q m, ι_mem_evenOdd_one Q m⟩ :=
   rfl
 #align clifford_algebra.graded_algebra.ι_apply CliffordAlgebra.GradedAlgebra.ι_apply
+-/
 
+#print CliffordAlgebra.GradedAlgebra.ι_sq_scalar /-
 theorem GradedAlgebra.ι_sq_scalar (m : M) :
     GradedAlgebra.ι Q m * GradedAlgebra.ι Q m = algebraMap R _ (Q m) :=
   by
   rw [graded_algebra.ι_apply Q, DirectSum.of_mul_of, DirectSum.algebraMap_apply]
   refine' DirectSum.of_eq_of_gradedMonoid_eq (Sigma.subtype_ext rfl <| ι_sq_scalar _ _)
 #align clifford_algebra.graded_algebra.ι_sq_scalar CliffordAlgebra.GradedAlgebra.ι_sq_scalar
+-/
 
+#print CliffordAlgebra.GradedAlgebra.lift_ι_eq /-
 theorem GradedAlgebra.lift_ι_eq (i' : ZMod 2) (x' : evenOdd Q i') :
     lift Q ⟨by apply graded_algebra.ι Q, GradedAlgebra.ι_sq_scalar Q⟩ x' =
       DirectSum.of (fun i => evenOdd Q i) i' x' :=
@@ -123,7 +144,9 @@ theorem GradedAlgebra.lift_ι_eq (i' : ZMod 2) (x' : evenOdd Q i') :
     apply dfinsupp.single_eq_zero.mpr; rfl
   · rw [AlgHom.map_add, ihx, ihy, ← map_add]; rfl
 #align clifford_algebra.graded_algebra.lift_ι_eq CliffordAlgebra.GradedAlgebra.lift_ι_eq
+-/
 
+#print CliffordAlgebra.gradedAlgebra /-
 /-- The clifford algebra is graded by the even and odd parts. -/
 instance gradedAlgebra : GradedAlgebra (evenOdd Q) :=
   GradedAlgebra.ofAlgHom (evenOdd Q)
@@ -139,7 +162,9 @@ instance gradedAlgebra : GradedAlgebra (evenOdd Q) :=
       rw [lift_ι_apply, graded_algebra.ι_apply Q, DirectSum.coeAlgHom_of, Subtype.coe_mk])
     (by apply graded_algebra.lift_ι_eq Q)
 #align clifford_algebra.graded_algebra CliffordAlgebra.gradedAlgebra
+-/
 
+#print CliffordAlgebra.iSup_ι_range_eq_top /-
 theorem iSup_ι_range_eq_top : (⨆ i : ℕ, (ι Q).range ^ i) = ⊤ :=
   by
   rw [← (DirectSum.Decomposition.isInternal (even_odd Q)).submodule_iSup_eq_top, eq_comm]
@@ -150,14 +175,18 @@ theorem iSup_ι_range_eq_top : (⨆ i : ℕ, (ι Q).range ^ i) = ⊤ :=
     _ = ⨆ i : ℕ, (ι Q).range ^ i :=
       Function.Surjective.iSup_congr (fun i => i.2) (fun i => ⟨⟨_, i, rfl⟩, rfl⟩) fun _ => rfl
 #align clifford_algebra.supr_ι_range_eq_top CliffordAlgebra.iSup_ι_range_eq_top
+-/
 
+#print CliffordAlgebra.evenOdd_isCompl /-
 theorem evenOdd_isCompl : IsCompl (evenOdd Q 0) (evenOdd Q 1) :=
   (DirectSum.Decomposition.isInternal (evenOdd Q)).IsCompl zero_ne_one <|
     by
     have : (Finset.univ : Finset (ZMod 2)) = {0, 1} := rfl
     simpa using congr_arg (coe : Finset (ZMod 2) → Set (ZMod 2)) this
 #align clifford_algebra.even_odd_is_compl CliffordAlgebra.evenOdd_isCompl
+-/
 
+#print CliffordAlgebra.evenOdd_induction /-
 /-- To show a property is true on the even or odd part, it suffices to show it is true on the
 scalars or vectors (respectively), closed under addition, and under left-multiplication by a pair
 of vectors. -/
@@ -202,7 +231,9 @@ theorem evenOdd_induction (n : ZMod 2) {P : ∀ x, x ∈ evenOdd Q n → Prop}
   · intro x y hx hy
     apply hadd
 #align clifford_algebra.even_odd_induction CliffordAlgebra.evenOdd_induction
+-/
 
+#print CliffordAlgebra.even_induction /-
 /-- To show a property is true on the even parts, it suffices to show it is true on the
 scalars, closed under addition, and under left-multiplication by a pair of vectors. -/
 @[elab_as_elim]
@@ -221,7 +252,9 @@ theorem even_induction {P : ∀ x, x ∈ evenOdd Q 0 → Prop}
   rintro ⟨r, rfl⟩
   exact hr r
 #align clifford_algebra.even_induction CliffordAlgebra.even_induction
+-/
 
+#print CliffordAlgebra.odd_induction /-
 /-- To show a property is true on the odd parts, it suffices to show it is true on the
 vectors, closed under addition, and under left-multiplication by a pair of vectors. -/
 @[elab_as_elim]
@@ -240,6 +273,7 @@ theorem odd_induction {P : ∀ x, x ∈ evenOdd Q 1 → Prop}
   rintro ⟨v, rfl⟩
   exact hι v
 #align clifford_algebra.odd_induction CliffordAlgebra.odd_induction
+-/
 
 end CliffordAlgebra
 

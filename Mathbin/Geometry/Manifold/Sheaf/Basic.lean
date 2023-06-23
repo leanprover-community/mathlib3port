@@ -45,14 +45,19 @@ variable {H : Type _} [TopologicalSpace H] {H' : Type _} [TopologicalSpace H']
   (M : Type u) [TopologicalSpace M] [ChartedSpace H M] (M' : Type u) [TopologicalSpace M']
   [ChartedSpace H' M']
 
+#print TopCat.of.chartedSpace /-
 instance TopCat.of.chartedSpace : ChartedSpace H (TopCat.of M) :=
   (inferInstance : ChartedSpace H M)
 #align Top.of.charted_space TopCat.of.chartedSpace
+-/
 
+#print TopCat.of.hasGroupoid /-
 instance TopCat.of.hasGroupoid [HasGroupoid M G] : HasGroupoid (TopCat.of M) G :=
   (inferInstance : HasGroupoid M G)
 #align Top.of.has_groupoid TopCat.of.hasGroupoid
+-/
 
+#print StructureGroupoid.LocalInvariantProp.localPredicate /-
 /-- Let `P` be a `local_invariant_prop` for functions between spaces with the groupoids `G`, `G'`
 and let `M`, `M'` be charted spaces modelled on the model spaces of those groupoids.  Then there is
 an induced `local_predicate` on the functions from `M` to `M'`, given by `lift_prop P`. -/
@@ -79,7 +84,9 @@ def StructureGroupoid.LocalInvariantProp.localPredicate (hG : LocalInvariantProp
     ext1
     rfl
 #align structure_groupoid.local_invariant_prop.local_predicate StructureGroupoid.LocalInvariantProp.localPredicate
+-/
 
+#print StructureGroupoid.LocalInvariantProp.sheaf /-
 /-- Let `P` be a `local_invariant_prop` for functions between spaces with the groupoids `G`, `G'`
 and let `M`, `M'` be charted spaces modelled on the model spaces of those groupoids.  Then there is
 a sheaf of types on `M` which, to each open set `U` in `M`, associates the type of bundled
@@ -88,14 +95,19 @@ def StructureGroupoid.LocalInvariantProp.sheaf (hG : LocalInvariantProp G G' P) 
     TopCat.Sheaf (Type u) (TopCat.of M) :=
   TopCat.subsheafToTypes (hG.LocalPredicateₓ M M')
 #align structure_groupoid.local_invariant_prop.sheaf StructureGroupoid.LocalInvariantProp.sheaf
+-/
 
+#print StructureGroupoid.LocalInvariantProp.sheafHasCoeToFun /-
 instance StructureGroupoid.LocalInvariantProp.sheafHasCoeToFun (hG : LocalInvariantProp G G' P)
     (U : (Opens (TopCat.of M))ᵒᵖ) : CoeFun ((hG.Sheaf M M').val.obj U) fun _ => unop U → M'
     where coe a := a.1
 #align structure_groupoid.local_invariant_prop.sheaf_has_coe_to_fun StructureGroupoid.LocalInvariantProp.sheafHasCoeToFun
+-/
 
+#print StructureGroupoid.LocalInvariantProp.section_spec /-
 theorem StructureGroupoid.LocalInvariantProp.section_spec (hG : LocalInvariantProp G G' P)
     (U : (Opens (TopCat.of M))ᵒᵖ) (f : (hG.Sheaf M M').val.obj U) : LiftProp P f :=
   f.2
 #align structure_groupoid.local_invariant_prop.section_spec StructureGroupoid.LocalInvariantProp.section_spec
+-/
 
