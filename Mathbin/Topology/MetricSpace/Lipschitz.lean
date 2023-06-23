@@ -772,15 +772,15 @@ end Metric
 end LipschitzOnWith
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
-#print continuousOn_prod_of_continuousOn_lipschitz_on /-
+#print continuousOn_prod_of_continuousOn_lipschitzOnWith /-
 /-- Consider a function `f : α × β → γ`. Suppose that it is continuous on each “vertical fiber”
 `{a} × t`, `a ∈ s`, and is Lipschitz continuous on each “horizontal fiber” `s × {b}`, `b ∈ t`
 with the same Lipschitz constant `K`. Then it is continuous on `s × t`.
 
 The actual statement uses (Lipschitz) continuity of `λ y, f (a, y)` and `λ x, f (x, b)` instead
 of continuity of `f` on subsets of the product space. -/
-theorem continuousOn_prod_of_continuousOn_lipschitz_on [PseudoEMetricSpace α] [TopologicalSpace β]
-    [PseudoEMetricSpace γ] (f : α × β → γ) {s : Set α} {t : Set β} (K : ℝ≥0)
+theorem continuousOn_prod_of_continuousOn_lipschitzOnWith [PseudoEMetricSpace α]
+    [TopologicalSpace β] [PseudoEMetricSpace γ] (f : α × β → γ) {s : Set α} {t : Set β} (K : ℝ≥0)
     (ha : ∀ a ∈ s, ContinuousOn (fun y => f (a, y)) t)
     (hb : ∀ b ∈ t, LipschitzOnWith K (fun x => f (x, b)) s) : ContinuousOn f (s ×ˢ t) :=
   by
@@ -801,23 +801,23 @@ theorem continuousOn_prod_of_continuousOn_lipschitz_on [PseudoEMetricSpace α] [
       edist_triangle _ _ _
     _ < ε / 2 + ε / 2 := (ENNReal.add_lt_add ((hb _ hbt).edist_lt_of_edist_lt_div has hx hax) hby)
     _ = ε := ENNReal.add_halves ε
-#align continuous_on_prod_of_continuous_on_lipschitz_on continuousOn_prod_of_continuousOn_lipschitz_on
+#align continuous_on_prod_of_continuous_on_lipschitz_on continuousOn_prod_of_continuousOn_lipschitzOnWith
 -/
 
-#print continuous_prod_of_continuous_lipschitz /-
+#print continuous_prod_of_continuous_lipschitzWith /-
 /-- Consider a function `f : α × β → γ`. Suppose that it is continuous on each “vertical section”
 `{a} × univ`, `a : α`, and is Lipschitz continuous on each “horizontal section”
 `univ × {b}`, `b : β` with the same Lipschitz constant `K`. Then it is continuous.
 
 The actual statement uses (Lipschitz) continuity of `λ y, f (a, y)` and `λ x, f (x, b)` instead
 of continuity of `f` on subsets of the product space. -/
-theorem continuous_prod_of_continuous_lipschitz [PseudoEMetricSpace α] [TopologicalSpace β]
+theorem continuous_prod_of_continuous_lipschitzWith [PseudoEMetricSpace α] [TopologicalSpace β]
     [PseudoEMetricSpace γ] (f : α × β → γ) (K : ℝ≥0) (ha : ∀ a, Continuous fun y => f (a, y))
     (hb : ∀ b, LipschitzWith K fun x => f (x, b)) : Continuous f :=
   by
   simp only [continuous_iff_continuousOn_univ, ← univ_prod_univ, ← lipschitz_on_univ] at *
-  exact continuousOn_prod_of_continuousOn_lipschitz_on f K (fun a _ => ha a) fun b _ => hb b
-#align continuous_prod_of_continuous_lipschitz continuous_prod_of_continuous_lipschitz
+  exact continuousOn_prod_of_continuousOn_lipschitzOnWith f K (fun a _ => ha a) fun b _ => hb b
+#align continuous_prod_of_continuous_lipschitz continuous_prod_of_continuous_lipschitzWith
 -/
 
 open Metric

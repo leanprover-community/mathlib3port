@@ -275,12 +275,10 @@ noncomputable def normalizedFactorsMapEquivNormalizedFactorsMinPolyMk (hI : IsMa
                 (by
                   apply NoZeroSMulDivisors.algebraMap_injective (Algebra.adjoin R {x}) S
                   exact Subalgebra.noZeroSMulDivisors_top (Algebra.adjoin R {x}))).symm.trans
-          (((minpoly.Algebra.adjoin.powerBasis' hx').quotientEquivQuotientMinpolyMap
-                  I).toRingEquiv.trans
+          (((Algebra.adjoin.powerBasis' hx').quotientEquivQuotientMinpolyMap I).toRingEquiv.trans
             (quotEquivOfEq
               (show
-                Ideal.span
-                    {(minpoly R (minpoly.Algebra.adjoin.powerBasis' hx').gen).map I.Quotient.mk} =
+                Ideal.span {(minpoly R (Algebra.adjoin.powerBasis' hx').gen).map I.Quotient.mk} =
                   Ideal.span {(minpoly R x).map I.Quotient.mk}
                 by rw [Algebra.adjoin.powerBasis'_minpoly_gen hx']))))
         (--show that `I * S` ≠ ⊥
