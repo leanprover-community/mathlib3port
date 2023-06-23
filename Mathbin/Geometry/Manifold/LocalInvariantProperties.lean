@@ -714,6 +714,7 @@ theorem liftProp_id (hG : G.LocalInvariantProp G Q) (hQ : ∀ y, Q id univ y) :
 -/
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr «expr ∧ »(_, _)]] -/
+#print StructureGroupoid.LocalInvariantProp.liftPropAt_iff_comp_inclusion /-
 theorem liftPropAt_iff_comp_inclusion (hG : LocalInvariantProp G G' P) {U V : Opens M} (hUV : U ≤ V)
     (f : V → M') (x : U) :
     LiftPropAt P f (Set.inclusion hUV x) ↔ LiftPropAt P (f ∘ Set.inclusion hUV : U → M') x :=
@@ -728,7 +729,9 @@ theorem liftPropAt_iff_comp_inclusion (hG : LocalInvariantProp G G' P) {U V : Op
       (TopologicalSpace.Opens.chartAt_inclusion_symm_eventuallyEq hUV).fun_comp
         (chart_at H' (f (Set.inclusion hUV x)) ∘ f)
 #align structure_groupoid.local_invariant_prop.lift_prop_at_iff_comp_inclusion StructureGroupoid.LocalInvariantProp.liftPropAt_iff_comp_inclusion
+-/
 
+#print StructureGroupoid.LocalInvariantProp.liftProp_inclusion /-
 theorem liftProp_inclusion {Q : (H → H) → Set H → H → Prop} (hG : LocalInvariantProp G G Q)
     (hQ : ∀ y, Q id univ y) {U V : Opens M} (hUV : U ≤ V) :
     LiftProp Q (Set.inclusion hUV : U → V) := by
@@ -737,6 +740,7 @@ theorem liftProp_inclusion {Q : (H → H) → Set H → H → Prop} (hG : LocalI
   rw [← hG.lift_prop_at_iff_comp_inclusion hUV]
   apply hG.lift_prop_id hQ
 #align structure_groupoid.local_invariant_prop.lift_prop_inclusion StructureGroupoid.LocalInvariantProp.liftProp_inclusion
+-/
 
 end LocalInvariantProp
 

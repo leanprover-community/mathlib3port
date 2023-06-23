@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bolton Bailey
 
 ! This file was ported from Lean 3 source module number_theory.prime_counting
-! leanprover-community/mathlib commit 7fdd4f3746cb059edfdb5d52cba98f66fce418c0
+! leanprover-community/mathlib commit 1b089e3bdc3ce6b39cd472543474a0a137128c6c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -16,6 +16,9 @@ import Mathbin.Data.Nat.Nth
 
 /-!
 # The Prime Counting Function
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 In this file we define the prime counting function: the function on natural numbers that returns
 the number of primes less than or equal to its input.

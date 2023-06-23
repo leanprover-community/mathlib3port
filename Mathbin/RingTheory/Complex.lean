@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module ring_theory.complex
-! leanprover-community/mathlib commit 9015c511549dc77a0f8d6eba021d8ac4bba20c82
+! leanprover-community/mathlib commit 1b089e3bdc3ce6b39cd472543474a0a137128c6c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,7 +12,10 @@ import Mathbin.Data.Complex.Module
 import Mathbin.RingTheory.Norm
 import Mathbin.RingTheory.Trace
 
-/-! # Lemmas about `algebra.trace` and `algebra.norm` on `ℂ` -/
+/-! # Lemmas about `algebra.trace` and `algebra.norm` on `ℂ` 
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.-/
 
 
 open Complex

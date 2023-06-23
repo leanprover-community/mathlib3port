@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module group_theory.group_action.basic
-! leanprover-community/mathlib commit a11f9106a169dd302a285019e5165f8ab32ff433
+! leanprover-community/mathlib commit d30d31261cdb4d2f5e612eabc3c4bf45556350d5
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -337,6 +337,12 @@ def orbitRel : Setoid β where
 attribute [local instance] orbit_rel
 
 variable {α} {β}
+
+@[to_additive]
+theorem orbitRel_apply {x y : β} : (orbitRel α β).Rel x y ↔ x ∈ orbit α y :=
+  Iff.rfl
+#align mul_action.orbit_rel_apply MulAction.orbitRel_apply
+#align add_action.orbit_rel_apply AddAction.orbitRel_apply
 
 #print MulAction.quotient_preimage_image_eq_union_mul /-
 /-- When you take a set `U` in `β`, push it down to the quotient, and pull back, you get the union

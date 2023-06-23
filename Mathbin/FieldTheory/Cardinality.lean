@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Rodriguez
 
 ! This file was ported from Lean 3 source module field_theory.cardinality
-! leanprover-community/mathlib commit 0723536a0522d24fc2f159a096fb3304bef77472
+! leanprover-community/mathlib commit 1b089e3bdc3ce6b39cd472543474a0a137128c6c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -19,6 +19,9 @@ import Mathbin.SetTheory.Cardinal.Divisibility
 
 /-!
 # Cardinality of Fields
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 In this file we show all the possible cardinalities of fields. All infinite cardinals can harbour
 a field structure, and so can all types with prime power cardinalities, and this is sharp.

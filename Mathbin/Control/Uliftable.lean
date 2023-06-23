@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 
 ! This file was ported from Lean 3 source module control.uliftable
-! leanprover-community/mathlib commit cc8c90d4ac61725a8f6c92691d8abcd2dec88115
+! leanprover-community/mathlib commit 1b089e3bdc3ce6b39cd472543474a0a137128c6c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -16,6 +16,9 @@ import Mathbin.Tactic.Interactive
 
 /-!
 # Universe lifting for type families
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 Some functors such as `option` and `list` are universe polymorphic. Unlike
 type polymorphism where `option α` is a function application and reasoning and

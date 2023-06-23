@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Rémy Degenne
 
 ! This file was ported from Lean 3 source module probability.kernel.cond_distrib
-! leanprover-community/mathlib commit 00abe0695d8767201e6d008afa22393978bb324d
+! leanprover-community/mathlib commit 1b089e3bdc3ce6b39cd472543474a0a137128c6c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Probability.Notation
 
 /-!
 # Regular conditional probability distribution
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 We define the regular conditional probability distribution of `Y : α → Ω` given `X : α → β`, where
 `Ω` is a standard Borel space. This is a `kernel β Ω` such that for almost all `a`, `cond_distrib`

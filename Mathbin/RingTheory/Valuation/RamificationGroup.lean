@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michail Karatarakis
 
 ! This file was ported from Lean 3 source module ring_theory.valuation.ramification_group
-! leanprover-community/mathlib commit 88b76e4c78d85d9ac31d991aa05ff22c09da889b
+! leanprover-community/mathlib commit 1b089e3bdc3ce6b39cd472543474a0a137128c6c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.RingTheory.Valuation.ValuationSubring
 
 /-!
 # Ramification groups
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 The decomposition subgroup and inertia subgroups.
 

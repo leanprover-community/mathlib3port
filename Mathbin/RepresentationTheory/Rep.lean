@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module representation_theory.Rep
-! leanprover-community/mathlib commit cec81510e48e579bde6acd8568c06a87af045b63
+! leanprover-community/mathlib commit 1b089e3bdc3ce6b39cd472543474a0a137128c6c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -18,6 +18,9 @@ import Mathbin.CategoryTheory.Closed.FunctorCategory
 
 /-!
 # `Rep k G` is the category of `k`-linear representations of `G`.
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 If `V : Rep k G`, there is a coercion that allows you to treat `V` as a type,
 and this type comes equipped with a `module k V` instance.

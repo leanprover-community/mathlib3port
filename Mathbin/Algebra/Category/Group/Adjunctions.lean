@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Johannes Hölzl
 
 ! This file was ported from Lean 3 source module algebra.category.Group.adjunctions
-! leanprover-community/mathlib commit ecef68622cf98f6d42c459e5b5a079aeecdd9842
+! leanprover-community/mathlib commit 1b089e3bdc3ce6b39cd472543474a0a137128c6c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.GroupTheory.FreeAbelianGroup
 
 /-!
 # Adjunctions regarding the category of (abelian) groups
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file contains construction of basic adjunctions concerning the category of groups and the
 category of abelian groups.

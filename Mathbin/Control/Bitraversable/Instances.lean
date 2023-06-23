@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 
 ! This file was ported from Lean 3 source module control.bitraversable.instances
-! leanprover-community/mathlib commit 1e7f6b9a746d445350890f3ad5236f3fc686c103
+! leanprover-community/mathlib commit 1b089e3bdc3ce6b39cd472543474a0a137128c6c
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Control.Traversable.Lemmas
 
 /-!
 # Bitraversable instances
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file provides `bitraversable` instances for concrete bifunctors:
 * `prod`

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 
 ! This file was ported from Lean 3 source module wiedijk_100_theorems.ascending_descending_sequences
-! leanprover-community/mathlib commit 5563b1b49e86e135e8c7b556da5ad2f5ff881cad
+! leanprover-community/mathlib commit 554bb38de8ded0dafe93b7f18f0bfee6ef77dc5d
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -30,8 +30,6 @@ sequences, increasing, decreasing, Ramsey, Erdos-Szekeres, Erdős–Szekeres, Er
 variable {α : Type _} [LinearOrder α] {β : Type _}
 
 open Function Finset
-
-open scoped Classical
 
 namespace Theorems100
 

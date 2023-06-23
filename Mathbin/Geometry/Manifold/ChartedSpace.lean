@@ -1233,6 +1233,7 @@ instance [ClosedUnderRestriction G] : HasGroupoid s G
     · exact G.compatible (chart_mem_atlas H x) (chart_mem_atlas H x')
     · exact preimage_open_of_open_symm (chart_at H x) s.2
 
+#print TopologicalSpace.Opens.chartAt_inclusion_symm_eventuallyEq /-
 theorem chartAt_inclusion_symm_eventuallyEq {U V : Opens M} (hUV : U ≤ V) {x : U} :
     (chartAt H
           (Set.inclusion hUV x)).symm =ᶠ[𝓝 (chartAt H (Set.inclusion hUV x) (Set.inclusion hUV x))]
@@ -1248,6 +1249,7 @@ theorem chartAt_inclusion_symm_eventuallyEq {U V : Opens M} (hUV : U ≤ V) {x :
     exact e.map_subtype_source (mem_chart_source _ _)
   exact Filter.eventuallyEq_of_mem heUx_nhds (e.subtype_restr_symm_eq_on_of_le hUV)
 #align topological_space.opens.chart_at_inclusion_symm_eventually_eq TopologicalSpace.Opens.chartAt_inclusion_symm_eventuallyEq
+-/
 
 end TopologicalSpace.Opens
 

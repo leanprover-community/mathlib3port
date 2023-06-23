@@ -1823,12 +1823,14 @@ theorem subtypeRestr_source : (e.subtypeRestr s).source = coe ⁻¹' e.source :=
 
 variable {s}
 
+#print LocalHomeomorph.map_subtype_source /-
 theorem map_subtype_source {x : s} (hxe : (x : α) ∈ e.source) : e x ∈ (e.subtypeRestr s).target :=
   by
   refine' ⟨e.map_source hxe, _⟩
   rw [s.local_homeomorph_subtype_coe_target, mem_preimage, e.left_inv_on hxe]
   exact x.prop
 #align local_homeomorph.map_subtype_source LocalHomeomorph.map_subtype_source
+-/
 
 variable (s)
 
@@ -1855,6 +1857,7 @@ theorem subtypeRestr_symm_trans_subtypeRestr (f f' : LocalHomeomorph α β) :
 #align local_homeomorph.subtype_restr_symm_trans_subtype_restr LocalHomeomorph.subtypeRestr_symm_trans_subtypeRestr
 -/
 
+#print LocalHomeomorph.subtypeRestr_symm_eqOn_of_le /-
 theorem subtypeRestr_symm_eqOn_of_le {U V : Opens α} [Nonempty U] [Nonempty V] (hUV : U ≤ V) :
     EqOn (e.subtypeRestr V).symm (Set.inclusion hUV ∘ (e.subtypeRestr U).symm)
       (e.subtypeRestr U).target :=
@@ -1875,6 +1878,7 @@ theorem subtypeRestr_symm_eqOn_of_le {U V : Opens α} [Nonempty U] [Nonempty V] 
     show _ = U.local_homeomorph_subtype_coe _
     rw [U.local_homeomorph_subtype_coe.right_inv hy.2]
 #align local_homeomorph.subtype_restr_symm_eq_on_of_le LocalHomeomorph.subtypeRestr_symm_eqOn_of_le
+-/
 
 end LocalHomeomorph
 

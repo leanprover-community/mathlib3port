@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module topology.algebra.module.multilinear
-! leanprover-community/mathlib commit f2b757fc5c341d88741b9c4630b1e8ba973c5726
+! leanprover-community/mathlib commit f40476639bac089693a489c9e354ebd75dc0f886
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -323,6 +323,13 @@ theorem pi_apply {ι' : Type _} {M' : ι' → Type _} [∀ i, AddCommMonoid (M' 
 #align continuous_multilinear_map.pi_apply ContinuousMultilinearMap.pi_apply
 -/
 
+/-- Restrict the codomain of a continuous multilinear map to a submodule. -/
+@[simps toMultilinearMap apply_coe]
+def codRestrict (f : ContinuousMultilinearMap R M₁ M₂) (p : Submodule R M₂) (h : ∀ v, f v ∈ p) :
+    ContinuousMultilinearMap R M₁ p :=
+  ⟨f.1.codRestrict p h, f.cont.subtype_mk _⟩
+#align continuous_multilinear_map.cod_restrict ContinuousMultilinearMap.codRestrict
+
 section
 
 variable (R M₂)
@@ -404,6 +411,32 @@ def piEquiv {ι' : Type _} {M' : ι' → Type _} [∀ i, AddCommMonoid (M' i)]
   right_inv f := by ext; rfl
 #align continuous_multilinear_map.pi_equiv ContinuousMultilinearMap.piEquiv
 -/
+
+#print ContinuousMultilinearMap.domDomCongr /-
+/-- An equivalence of the index set defines an equivalence between the spaces of continuous
+multilinear maps. This is the forward map of this equivalence. -/
+@[simps toMultilinearMap apply]
+def domDomCongr {ι' : Type _} (e : ι ≃ ι') (f : ContinuousMultilinearMap R (fun _ : ι => M₂) M₃) :
+    ContinuousMultilinearMap R (fun _ : ι' => M₂) M₃
+    where
+  toMultilinearMap := f.domDomCongr e
+  cont := f.cont.comp <| continuous_pi fun _ => continuous_apply _
+#align continuous_multilinear_map.dom_dom_congr ContinuousMultilinearMap.domDomCongr
+-/
+
+/-- An equivalence of the index set defines an equivalence between the spaces of continuous
+multilinear maps. In case of normed spaces, this is a linear isometric equivalence, see
+`continuous.multilinear_map.dom_dom_congrₗᵢ`. -/
+@[simps]
+def domDomCongrEquiv {ι' : Type _} (e : ι ≃ ι') :
+    ContinuousMultilinearMap R (fun _ : ι => M₂) M₃ ≃
+      ContinuousMultilinearMap R (fun _ : ι' => M₂) M₃
+    where
+  toFun := domDomCongr e
+  invFun := domDomCongr e.symm
+  left_inv _ := ext fun _ => by simp
+  right_inv _ := ext fun _ => by simp
+#align continuous_multilinear_map.dom_dom_congr_equiv ContinuousMultilinearMap.domDomCongrEquiv
 
 #print ContinuousMultilinearMap.cons_add /-
 /-- In the specific case of continuous multilinear maps on spaces indexed by `fin (n+1)`, where one
