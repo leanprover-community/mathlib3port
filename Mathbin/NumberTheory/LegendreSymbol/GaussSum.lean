@@ -286,7 +286,7 @@ theorem FiniteField.two_pow_card {F : Type _} [Fintype F] [Field F] (hF : ringCh
   have τ_spec : τ ^ 4 = -1 := by
     refine' (sq_eq_one_iff.1 _).resolve_left _ <;>
       · simp only [τ, ← map_nsmul_pow]
-        erw [AddChar.IsPrimitive.zMod_char_eq_one_iff 8 ψ₈.prim]
+        erw [AddChar.IsPrimitive.zmod_char_eq_one_iff 8 ψ₈.prim]
         decide
   -- we consider `χ₈` as a multiplicative character `ℤ/8ℤ → FF`
   let χ := χ₈.ring_hom_comp (Int.castRingHom FF)

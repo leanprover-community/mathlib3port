@@ -282,6 +282,7 @@ theorem IsCompact.disjoint_nhdsSet_right {l : Filter α} (hs : IsCompact s) :
 #align is_compact.disjoint_nhds_set_right IsCompact.disjoint_nhdsSet_right
 -/
 
+#print IsCompact.elim_directed_family_closed /-
 /-- For every directed family of closed sets whose intersection avoids a compact set,
 there exists a single element of the family which itself avoids this compact set. -/
 theorem IsCompact.elim_directed_family_closed {ι : Type v} [hι : Nonempty ι] (hs : IsCompact s)
@@ -297,6 +298,7 @@ theorem IsCompact.elim_directed_family_closed {ι : Type v} [hι : Nonempty ι] 
     simpa only [subset_def, not_forall, eq_empty_iff_forall_not_mem, mem_Union, exists_prop,
       mem_inter_iff, not_and, iff_self_iff, mem_Inter, mem_compl_iff] using ht⟩
 #align is_compact.elim_directed_family_closed IsCompact.elim_directed_family_closed
+-/
 
 #print IsCompact.elim_finite_subfamily_closed /-
 /-- For every family of closed sets whose intersection avoids a compact set,

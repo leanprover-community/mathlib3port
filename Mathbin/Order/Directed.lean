@@ -195,9 +195,11 @@ theorem directedOn_of_inf_mem [SemilatticeInf α] {S : Set α}
 #align directed_on_of_inf_mem directedOn_of_inf_mem
 -/
 
+#print IsTotal.directed /-
 theorem IsTotal.directed [IsTotal α r] (f : ι → α) : Directed r f := fun i j =>
   Or.cases_on (total_of r (f i) (f j)) (fun h => ⟨j, h, refl _⟩) fun h => ⟨i, refl _, h⟩
 #align is_total.directed IsTotal.directed
+-/
 
 #print IsDirected /-
 /-- `is_directed α r` states that for any elements `a`, `b` there exists an element `c` such that

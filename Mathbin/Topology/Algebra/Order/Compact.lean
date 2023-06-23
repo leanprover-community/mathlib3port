@@ -616,13 +616,13 @@ theorem IsCompact.exists_isLocalMinOn_mem_subset {f : β → α} {s t : Set β} 
 #align is_compact.exists_local_min_on_mem_subset IsCompact.exists_isLocalMinOn_mem_subset
 -/
 
-#print IsCompact.exists_local_min_mem_open /-
-theorem IsCompact.exists_local_min_mem_open {f : β → α} {s t : Set β} {z : β} (ht : IsCompact t)
+#print IsCompact.exists_isLocalMin_mem_open /-
+theorem IsCompact.exists_isLocalMin_mem_open {f : β → α} {s t : Set β} {z : β} (ht : IsCompact t)
     (hst : s ⊆ t) (hf : ContinuousOn f t) (hz : z ∈ t) (hfz : ∀ z' ∈ t \ s, f z < f z')
     (hs : IsOpen s) : ∃ x ∈ s, IsLocalMin f x :=
   by
   obtain ⟨x, hx, hfx⟩ := ht.exists_local_min_on_mem_subset hf hz hfz
   exact ⟨x, hx, hfx.is_local_min (Filter.mem_of_superset (hs.mem_nhds hx) hst)⟩
-#align is_compact.exists_local_min_mem_open IsCompact.exists_local_min_mem_open
+#align is_compact.exists_local_min_mem_open IsCompact.exists_isLocalMin_mem_open
 -/
 
