@@ -64,6 +64,7 @@ variable {R : Type u} [CommRing R] [IsDomain R] [IsDedekindDomain R]
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (v «expr ∉ » S) -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (v «expr ∉ » S) -/
+#print Set.integer /-
 /-- The `R`-subalgebra of `S`-integers of `K`. -/
 @[simps]
 def integer : Subalgebra R K :=
@@ -73,24 +74,30 @@ def integer : Subalgebra R K :=
       Set.ext fun _ => by simpa only [SetLike.mem_coe, Subring.mem_iInf] with
     algebraMap_mem' := fun x v _ => v.valuation_le_one x }
 #align set.integer Set.integer
+-/
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (v «expr ∉ » S) -/
+#print Set.integer_eq /-
 theorem integer_eq :
     (S.integer K).toSubring =
       ⨅ (v) (_ : v ∉ S), (v : HeightOneSpectrum R).Valuation.ValuationSubring.toSubring :=
   SetLike.ext' <| by simpa only [integer, Subring.copy_eq]
 #align set.integer_eq Set.integer_eq
+-/
 
+#print Set.integer_valuation_le_one /-
 theorem integer_valuation_le_one (x : S.integer K) {v : HeightOneSpectrum R} (hv : v ∉ S) :
     v.Valuation (x : K) ≤ 1 :=
   x.property v hv
 #align set.integer_valuation_le_one Set.integer_valuation_le_one
+-/
 
 /-! ## `S`-units -/
 
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (v «expr ∉ » S) -/
 /- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (v «expr ∉ » S) -/
+#print Set.unit /-
 /-- The subgroup of `S`-units of `Kˣ`. -/
 @[simps]
 def unit : Subgroup Kˣ :=
@@ -98,18 +105,24 @@ def unit : Subgroup Kˣ :=
       {x : Kˣ | ∀ (v) (_ : v ∉ S), (v : HeightOneSpectrum R).Valuation (x : K) = 1} <|
     Set.ext fun _ => by simpa only [SetLike.mem_coe, Subgroup.mem_iInf, Valuation.mem_unitGroup_iff]
 #align set.unit Set.unit
+-/
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (v «expr ∉ » S) -/
+#print Set.unit_eq /-
 theorem unit_eq :
     S.Unit K = ⨅ (v) (_ : v ∉ S), (v : HeightOneSpectrum R).Valuation.ValuationSubring.unitGroup :=
   Subgroup.copy_eq _ _ _
 #align set.unit_eq Set.unit_eq
+-/
 
+#print Set.unit_valuation_eq_one /-
 theorem unit_valuation_eq_one (x : S.Unit K) {v : HeightOneSpectrum R} (hv : v ∉ S) :
     v.Valuation (x : K) = 1 :=
   x.property v hv
 #align set.unit_valuation_eq_one Set.unit_valuation_eq_one
+-/
 
+#print Set.unitEquivUnitsInteger /-
 /-- The group of `S`-units is the group of units of the ring of `S`-integers. -/
 @[simps]
 def unitEquivUnitsInteger : S.Unit K ≃* (S.integer K)ˣ
@@ -126,6 +139,7 @@ def unitEquivUnitsInteger : S.Unit K ≃* (S.integer K)ˣ
   right_inv _ := by ext; rfl
   map_mul' _ _ := by ext; rfl
 #align set.unit_equiv_units_integer Set.unitEquivUnitsInteger
+-/
 
 end Set
 
