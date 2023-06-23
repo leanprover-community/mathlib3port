@@ -39,6 +39,7 @@ section
 
 variable [NormedSpace ℝ E] [FiniteDimensional ℝ E]
 
+#print exists_smooth_tsupport_subset /-
 /-- If a set `s` is a neighborhood of `x`, then there exists a smooth function `f` taking
 values in `[0, 1]`, supported in `s` and with `f x = 1`. -/
 theorem exists_smooth_tsupport_subset {s : Set E} {x : E} (hs : s ∈ 𝓝 x) :
@@ -77,7 +78,9 @@ theorem exists_smooth_tsupport_subset {s : Set E} {x : E} (hs : s ∈ 𝓝 x) :
     apply mem_closed_ball_self
     exact (half_pos d_pos).le
 #align exists_smooth_tsupport_subset exists_smooth_tsupport_subset
+-/
 
+#print IsOpen.exists_smooth_support_eq /-
 /-- Given an open set `s` in a finite-dimensional real normed vector space, there exists a smooth
 function with values in `[0, 1]` whose support is exactly `s`. -/
 theorem IsOpen.exists_smooth_support_eq {s : Set E} (hs : IsOpen s) :
@@ -207,6 +210,7 @@ theorem IsOpen.exists_smooth_support_eq {s : Set E} (hs : IsOpen s) :
     apply (le_abs_self _).trans
     simpa only [norm_iteratedFDeriv_zero] using hr n 0 (zero_le n) y
 #align is_open.exists_smooth_support_eq IsOpen.exists_smooth_support_eq
+-/
 
 end
 
@@ -214,11 +218,13 @@ section
 
 namespace ExistsContDiffBumpBase
 
+#print ExistsContDiffBumpBase.φ /-
 /-- An auxiliary function to construct partitions of unity on finite-dimensional real vector spaces.
 It is the characteristic function of the closed unit ball. -/
 def φ : E → ℝ :=
   (closedBall (0 : E) 1).indicator fun y => (1 : ℝ)
 #align exists_cont_diff_bump_base.φ ExistsContDiffBumpBase.φ
+-/
 
 variable [NormedSpace ℝ E] [FiniteDimensional ℝ E]
 
@@ -226,6 +232,7 @@ section HelperDefinitions
 
 variable (E)
 
+#print ExistsContDiffBumpBase.u_exists /-
 theorem u_exists :
     ∃ u : E → ℝ,
       ContDiff ℝ ⊤ u ∧ (∀ x, u x ∈ Icc (0 : ℝ) 1) ∧ support u = ball 0 1 ∧ ∀ x, u (-x) = u x :=
@@ -256,48 +263,65 @@ theorem u_exists :
       simp only [I1, I2, add_zero, zero_div]
   · intro x; simp only [add_comm, neg_neg]
 #align exists_cont_diff_bump_base.u_exists ExistsContDiffBumpBase.u_exists
+-/
 
 variable {E}
 
+#print ExistsContDiffBumpBase.u /-
 /-- An auxiliary function to construct partitions of unity on finite-dimensional real vector spaces,
 which is smooth, symmetric, and with support equal to the unit ball. -/
 def u (x : E) : ℝ :=
   Classical.choose (u_exists E) x
 #align exists_cont_diff_bump_base.u ExistsContDiffBumpBase.u
+-/
 
 variable (E)
 
+#print ExistsContDiffBumpBase.u_smooth /-
 theorem u_smooth : ContDiff ℝ ⊤ (u : E → ℝ) :=
   (Classical.choose_spec (u_exists E)).1
 #align exists_cont_diff_bump_base.u_smooth ExistsContDiffBumpBase.u_smooth
+-/
 
+#print ExistsContDiffBumpBase.u_continuous /-
 theorem u_continuous : Continuous (u : E → ℝ) :=
   (u_smooth E).Continuous
 #align exists_cont_diff_bump_base.u_continuous ExistsContDiffBumpBase.u_continuous
+-/
 
+#print ExistsContDiffBumpBase.u_support /-
 theorem u_support : support (u : E → ℝ) = ball 0 1 :=
   (Classical.choose_spec (u_exists E)).2.2.1
 #align exists_cont_diff_bump_base.u_support ExistsContDiffBumpBase.u_support
+-/
 
+#print ExistsContDiffBumpBase.u_compact_support /-
 theorem u_compact_support : HasCompactSupport (u : E → ℝ) :=
   by
   rw [hasCompactSupport_def, u_support, closure_ball (0 : E) one_ne_zero]
   exact is_compact_closed_ball _ _
 #align exists_cont_diff_bump_base.u_compact_support ExistsContDiffBumpBase.u_compact_support
+-/
 
 variable {E}
 
+#print ExistsContDiffBumpBase.u_nonneg /-
 theorem u_nonneg (x : E) : 0 ≤ u x :=
   ((Classical.choose_spec (u_exists E)).2.1 x).1
 #align exists_cont_diff_bump_base.u_nonneg ExistsContDiffBumpBase.u_nonneg
+-/
 
+#print ExistsContDiffBumpBase.u_le_one /-
 theorem u_le_one (x : E) : u x ≤ 1 :=
   ((Classical.choose_spec (u_exists E)).2.1 x).2
 #align exists_cont_diff_bump_base.u_le_one ExistsContDiffBumpBase.u_le_one
+-/
 
+#print ExistsContDiffBumpBase.u_neg /-
 theorem u_neg (x : E) : u (-x) = u x :=
   (Classical.choose_spec (u_exists E)).2.2.2 x
 #align exists_cont_diff_bump_base.u_neg ExistsContDiffBumpBase.u_neg
+-/
 
 variable [MeasurableSpace E] [BorelSpace E]
 
@@ -305,26 +329,33 @@ local notation "μ" => MeasureTheory.Measure.addHaar
 
 variable (E)
 
+#print ExistsContDiffBumpBase.u_int_pos /-
 theorem u_int_pos : 0 < ∫ x : E, u x ∂μ :=
   by
   refine' (integral_pos_iff_support_of_nonneg u_nonneg _).mpr _
   · exact (u_continuous E).integrable_of_hasCompactSupport (u_compact_support E)
   · rw [u_support]; exact measure_ball_pos _ _ zero_lt_one
 #align exists_cont_diff_bump_base.u_int_pos ExistsContDiffBumpBase.u_int_pos
+-/
 
 variable {E}
 
+#print ExistsContDiffBumpBase.w /-
 /-- An auxiliary function to construct partitions of unity on finite-dimensional real vector spaces,
 which is smooth, symmetric, with support equal to the ball of radius `D` and integral `1`. -/
 def w (D : ℝ) (x : E) : ℝ :=
   ((∫ x : E, u x ∂μ) * |D| ^ finrank ℝ E)⁻¹ • u (D⁻¹ • x)
 #align exists_cont_diff_bump_base.W ExistsContDiffBumpBase.w
+-/
 
+#print ExistsContDiffBumpBase.w_def /-
 theorem w_def (D : ℝ) :
     (w D : E → ℝ) = fun x => ((∫ x : E, u x ∂μ) * |D| ^ finrank ℝ E)⁻¹ • u (D⁻¹ • x) := by ext1 x;
   rfl
 #align exists_cont_diff_bump_base.W_def ExistsContDiffBumpBase.w_def
+-/
 
+#print ExistsContDiffBumpBase.w_nonneg /-
 theorem w_nonneg (D : ℝ) (x : E) : 0 ≤ w D x :=
   by
   apply mul_nonneg _ (u_nonneg _)
@@ -332,20 +363,26 @@ theorem w_nonneg (D : ℝ) (x : E) : 0 ≤ w D x :=
   apply mul_nonneg (u_int_pos E).le
   apply pow_nonneg (abs_nonneg D)
 #align exists_cont_diff_bump_base.W_nonneg ExistsContDiffBumpBase.w_nonneg
+-/
 
+#print ExistsContDiffBumpBase.w_mul_φ_nonneg /-
 theorem w_mul_φ_nonneg (D : ℝ) (x y : E) : 0 ≤ w D y * φ (x - y) :=
   mul_nonneg (w_nonneg D y) (indicator_nonneg (by simp only [zero_le_one, imp_true_iff]) _)
 #align exists_cont_diff_bump_base.W_mul_φ_nonneg ExistsContDiffBumpBase.w_mul_φ_nonneg
+-/
 
 variable (E)
 
+#print ExistsContDiffBumpBase.w_integral /-
 theorem w_integral {D : ℝ} (Dpos : 0 < D) : ∫ x : E, w D x ∂μ = 1 :=
   by
   simp_rw [W, integral_smul]
   rw [integral_comp_inv_smul_of_nonneg μ (u : E → ℝ) Dpos.le, abs_of_nonneg Dpos.le, mul_comm]
   field_simp [Dpos.ne', (u_int_pos E).ne']
 #align exists_cont_diff_bump_base.W_integral ExistsContDiffBumpBase.w_integral
+-/
 
+#print ExistsContDiffBumpBase.w_support /-
 theorem w_support {D : ℝ} (Dpos : 0 < D) : support (w D : E → ℝ) = ball 0 D :=
   by
   have B : D • ball (0 : E) 1 = ball 0 D := by
@@ -355,15 +392,19 @@ theorem w_support {D : ℝ} (Dpos : 0 < D) : support (w D : E → ℝ) = ball 0 
     support_comp_inv_smul₀ Dpos.ne', u_support, B, support_const (u_int_pos E).ne', support_const C,
     abs_of_nonneg Dpos.le]
 #align exists_cont_diff_bump_base.W_support ExistsContDiffBumpBase.w_support
+-/
 
+#print ExistsContDiffBumpBase.w_compact_support /-
 theorem w_compact_support {D : ℝ} (Dpos : 0 < D) : HasCompactSupport (w D : E → ℝ) :=
   by
   rw [hasCompactSupport_def, W_support E Dpos, closure_ball (0 : E) Dpos.ne']
   exact is_compact_closed_ball _ _
 #align exists_cont_diff_bump_base.W_compact_support ExistsContDiffBumpBase.w_compact_support
+-/
 
 variable {E}
 
+#print ExistsContDiffBumpBase.y /-
 /-- An auxiliary function to construct partitions of unity on finite-dimensional real vector spaces.
 It is the convolution between a smooth function of integral `1` supported in the ball of radius `D`,
 with the indicator function of the closed unit ball. Therefore, it is smooth, equal to `1` on the
@@ -371,7 +412,9 @@ ball of radius `1 - D`, with support equal to the ball of radius `1 + D`. -/
 def y (D : ℝ) : E → ℝ :=
   w D ⋆[lsmul ℝ ℝ, μ] φ
 #align exists_cont_diff_bump_base.Y ExistsContDiffBumpBase.y
+-/
 
+#print ExistsContDiffBumpBase.y_neg /-
 theorem y_neg (D : ℝ) (x : E) : y D (-x) = y D x :=
   by
   apply convolution_neg_of_neg_eq
@@ -381,7 +424,9 @@ theorem y_neg (D : ℝ) (x : E) : y D (-x) = y D x :=
   · apply eventually_of_forall fun x => _
     simp only [φ, indicator, mem_closedBall_zero_iff, norm_neg]
 #align exists_cont_diff_bump_base.Y_neg ExistsContDiffBumpBase.y_neg
+-/
 
+#print ExistsContDiffBumpBase.y_eq_one_of_mem_closedBall /-
 theorem y_eq_one_of_mem_closedBall {D : ℝ} {x : E} (Dpos : 0 < D)
     (hx : x ∈ closedBall (0 : E) (1 - D)) : y D x = 1 :=
   by
@@ -402,7 +447,9 @@ theorem y_eq_one_of_mem_closedBall {D : ℝ} {x : E} (Dpos : 0 < D)
   simp only [lsmul_apply, Algebra.id.smul_eq_mul, integral_mul_right, W_integral E Dpos, Bx,
     one_mul]
 #align exists_cont_diff_bump_base.Y_eq_one_of_mem_closed_ball ExistsContDiffBumpBase.y_eq_one_of_mem_closedBall
+-/
 
+#print ExistsContDiffBumpBase.y_eq_zero_of_not_mem_ball /-
 theorem y_eq_zero_of_not_mem_ball {D : ℝ} {x : E} (Dpos : 0 < D) (hx : x ∉ ball (0 : E) (1 + D)) :
     y D x = 0 := by
   change (W D ⋆[lsmul ℝ ℝ, μ] φ) x = 0
@@ -421,11 +468,15 @@ theorem y_eq_zero_of_not_mem_ball {D : ℝ} {x : E} (Dpos : 0 < D) (hx : x ∉ b
   rw [convolution_eq_right' _ (le_of_eq (W_support E Dpos)) B']
   simp only [lsmul_apply, Algebra.id.smul_eq_mul, Bx, MulZeroClass.mul_zero, integral_const]
 #align exists_cont_diff_bump_base.Y_eq_zero_of_not_mem_ball ExistsContDiffBumpBase.y_eq_zero_of_not_mem_ball
+-/
 
+#print ExistsContDiffBumpBase.y_nonneg /-
 theorem y_nonneg (D : ℝ) (x : E) : 0 ≤ y D x :=
   integral_nonneg (w_mul_φ_nonneg D x)
 #align exists_cont_diff_bump_base.Y_nonneg ExistsContDiffBumpBase.y_nonneg
+-/
 
+#print ExistsContDiffBumpBase.y_le_one /-
 theorem y_le_one {D : ℝ} (x : E) (Dpos : 0 < D) : y D x ≤ 1 :=
   by
   have A : (W D ⋆[lsmul ℝ ℝ, μ] φ) x ≤ (W D ⋆[lsmul ℝ ℝ, μ] 1) x :=
@@ -442,7 +493,9 @@ theorem y_le_one {D : ℝ} (x : E) (Dpos : 0 < D) : y D x ≤ 1 :=
       lsmul_apply, Algebra.id.smul_eq_mul, integral_mul_left, W_integral E Dpos, Pi.smul_apply]
   exact A.trans (le_of_eq B)
 #align exists_cont_diff_bump_base.Y_le_one ExistsContDiffBumpBase.y_le_one
+-/
 
+#print ExistsContDiffBumpBase.y_pos_of_mem_ball /-
 theorem y_pos_of_mem_ball {D : ℝ} {x : E} (Dpos : 0 < D) (D_lt_one : D < 1)
     (hx : x ∈ ball (0 : E) (1 + D)) : 0 < y D x :=
   by
@@ -489,10 +542,12 @@ theorem y_pos_of_mem_ball {D : ℝ} {x : E} (Dpos : 0 < D) (D_lt_one : D < 1)
     apply measure_ball_pos
     exact div_pos (mul_pos Dpos (by linarith only [hx])) B
 #align exists_cont_diff_bump_base.Y_pos_of_mem_ball ExistsContDiffBumpBase.y_pos_of_mem_ball
+-/
 
 variable (E)
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print ExistsContDiffBumpBase.y_smooth /-
 theorem y_smooth : ContDiffOn ℝ ⊤ (uncurry y) (Ioo (0 : ℝ) 1 ×ˢ (univ : Set E)) :=
   by
   have hs : IsOpen (Ioo (0 : ℝ) (1 : ℝ)) := isOpen_Ioo
@@ -520,13 +575,16 @@ theorem y_smooth : ContDiffOn ℝ ⊤ (uncurry y) (Ioo (0 : ℝ) 1 ×ˢ (univ : 
     · apply (u_smooth E).comp_contDiffOn
       exact ContDiffOn.smul (cont_diff_on_fst.inv fun x hx => ne_of_gt hx.1.1) contDiffOn_snd
 #align exists_cont_diff_bump_base.Y_smooth ExistsContDiffBumpBase.y_smooth
+-/
 
+#print ExistsContDiffBumpBase.y_support /-
 theorem y_support {D : ℝ} (Dpos : 0 < D) (D_lt_one : D < 1) :
     support (y D : E → ℝ) = ball (0 : E) (1 + D) :=
   support_eq_iff.2
     ⟨fun x hx => (y_pos_of_mem_ball Dpos D_lt_one hx).ne', fun x hx =>
       y_eq_zero_of_not_mem_ball Dpos hx⟩
 #align exists_cont_diff_bump_base.Y_support ExistsContDiffBumpBase.y_support
+-/
 
 variable {E}
 
