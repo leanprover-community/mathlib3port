@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Xavier Roblot
 
 ! This file was ported from Lean 3 source module number_theory.number_field.units
-! leanprover-community/mathlib commit 00f91228655eecdcd3ac97a7fd8dbcb139fe990a
+! leanprover-community/mathlib commit 5d0c76894ada7940957143163d7b921345474cbc
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.NumberTheory.NumberField.Norm
 
 /-!
 # Units of a number field
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 We prove results about the group `(𝓞 K)ˣ` of units of the ring of integers `𝓞 K` of a number
 field `K`.
 

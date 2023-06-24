@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module analysis.normed_space.matrix_exponential
-! leanprover-community/mathlib commit 1e3201306d4d9eb1fd54c60d7c4510ad5126f6f9
+! leanprover-community/mathlib commit 5d0c76894ada7940957143163d7b921345474cbc
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -17,6 +17,9 @@ import Mathbin.Topology.UniformSpace.Matrix
 
 /-!
 # Lemmas about the matrix exponential
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 In this file, we provide results about `exp` on `matrix`s over a topological or normed algebra.
 Note that generic results over all topological spaces such as `exp_zero` can be used on matrices

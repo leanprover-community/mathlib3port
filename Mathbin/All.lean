@@ -585,6 +585,7 @@ import Mathbin.Analysis.Complex.Schwarz
 import Mathbin.Analysis.Complex.UnitDisc.Basic
 import Mathbin.Analysis.Complex.UpperHalfPlane.Basic
 import Mathbin.Analysis.Complex.UpperHalfPlane.FunctionsBoundedAtInfty
+import Mathbin.Analysis.Complex.UpperHalfPlane.Manifold
 import Mathbin.Analysis.Complex.UpperHalfPlane.Metric
 import Mathbin.Analysis.Complex.UpperHalfPlane.Topology
 import Mathbin.Analysis.ConstantSpeed
@@ -2338,7 +2339,8 @@ import Mathbin.NumberTheory.LucasLehmer
 import Mathbin.NumberTheory.LucasPrimality
 import Mathbin.NumberTheory.ModularForms.Basic
 import Mathbin.NumberTheory.ModularForms.CongruenceSubgroups
-import Mathbin.NumberTheory.ModularForms.JacobiTheta
+import Mathbin.NumberTheory.ModularForms.JacobiTheta.Basic
+import Mathbin.NumberTheory.ModularForms.JacobiTheta.Manifold
 import Mathbin.NumberTheory.ModularForms.SlashActions
 import Mathbin.NumberTheory.ModularForms.SlashInvariantForms
 import Mathbin.NumberTheory.Modular
@@ -3106,6 +3108,7 @@ import Mathbin.Topology.MetricSpace.CauSeqFilter
 import Mathbin.Topology.MetricSpace.Closeds
 import Mathbin.Topology.MetricSpace.Completion
 import Mathbin.Topology.MetricSpace.Contracting
+import Mathbin.Topology.MetricSpace.Dilation
 import Mathbin.Topology.MetricSpace.EmetricParacompact
 import Mathbin.Topology.MetricSpace.EmetricSpace
 import Mathbin.Topology.MetricSpace.Equicontinuity

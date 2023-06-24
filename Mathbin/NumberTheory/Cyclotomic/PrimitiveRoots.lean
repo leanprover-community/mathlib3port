@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Alex Best, Riccardo Brasca, Eric Rodriguez
 
 ! This file was ported from Lean 3 source module number_theory.cyclotomic.primitive_roots
-! leanprover-community/mathlib commit 5bfbcca0a7ffdd21cf1682e59106d6c942434a32
+! leanprover-community/mathlib commit 5d0c76894ada7940957143163d7b921345474cbc
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -18,6 +18,9 @@ import Mathbin.RingTheory.Polynomial.Cyclotomic.Expand
 
 /-!
 # Primitive roots in cyclotomic fields
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 If `is_cyclotomic_extension {n} A B`, we define an element `zeta n A B : B` that is a primitive
 `n`th-root of unity in `B` and we study its properties. We also prove related theorems under the
 more general assumption of just being a primitive root, for reasons described in the implementation

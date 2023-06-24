@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Kurniadi Angdinata
 
 ! This file was ported from Lean 3 source module ring_theory.dedekind_domain.S_integer
-! leanprover-community/mathlib commit 00ab77614e085c9ef49479babba1a7d826d3232e
+! leanprover-community/mathlib commit 5d0c76894ada7940957143163d7b921345474cbc
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.RingTheory.DedekindDomain.AdicValuation
 
 /-!
 # `S`-integers and `S`-units of fraction fields of Dedekind domains
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 Let `K` be the field of fractions of a Dedekind domain `R`, and let `S` be a set of prime ideals in
 the height one spectrum of `R`. An `S`-integer of `K` is defined to have `v`-adic valuation at most

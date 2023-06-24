@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.complex.upper_half_plane.topology
-! leanprover-community/mathlib commit f0c8bf9245297a541f468be517f1bde6195105e9
+! leanprover-community/mathlib commit 57f9349f2fe19d2de7207e99b0341808d977cdcf
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,7 +14,6 @@ import Mathbin.Analysis.Convex.Normed
 import Mathbin.Analysis.Convex.Complex
 import Mathbin.Analysis.Complex.ReImTopology
 import Mathbin.Topology.Homotopy.Contractible
-import Mathbin.Geometry.Manifold.ContMdiffMfderiv
 
 /-!
 # Topology on the upper half plane
@@ -28,7 +27,7 @@ noncomputable section
 
 open Set Filter Function TopologicalSpace Complex
 
-open scoped Filter Topology UpperHalfPlane Manifold
+open scoped Filter Topology UpperHalfPlane
 
 namespace UpperHalfPlane
 
@@ -79,23 +78,6 @@ instance : NoncompactSpace ℍ := by
 
 instance : LocallyCompactSpace ℍ :=
   openEmbedding_coe.LocallyCompactSpace
-
-instance UpperHalfPlane.chartedSpace : ChartedSpace ℂ ℍ :=
-  UpperHalfPlane.openEmbedding_coe.singletonChartedSpace
-#align upper_half_plane.upper_half_plane.charted_space UpperHalfPlane.UpperHalfPlane.chartedSpace
-
-instance UpperHalfPlane.smoothManifoldWithCorners : SmoothManifoldWithCorners 𝓘(ℂ) ℍ :=
-  UpperHalfPlane.openEmbedding_coe.singleton_smoothManifoldWithCorners 𝓘(ℂ)
-#align upper_half_plane.upper_half_plane.smooth_manifold_with_corners UpperHalfPlane.UpperHalfPlane.smoothManifoldWithCorners
-
-/-- The inclusion map `ℍ → ℂ` is a smooth map of manifolds. -/
-theorem smooth_coe : Smooth 𝓘(ℂ) 𝓘(ℂ) (coe : ℍ → ℂ) := fun x => contMdiffAt_extChartAt
-#align upper_half_plane.smooth_coe UpperHalfPlane.smooth_coe
-
-/-- The inclusion map `ℍ → ℂ` is a differentiable map of manifolds. -/
-theorem mdifferentiable_coe : Mdifferentiable 𝓘(ℂ) 𝓘(ℂ) (coe : ℍ → ℂ) :=
-  smooth_coe.Mdifferentiable
-#align upper_half_plane.mdifferentiable_coe UpperHalfPlane.mdifferentiable_coe
 
 end UpperHalfPlane
 

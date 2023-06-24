@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser, Utensil Song
 
 ! This file was ported from Lean 3 source module linear_algebra.clifford_algebra.basic
-! leanprover-community/mathlib commit d46774d43797f5d1f507a63a6e904f7a533ae74a
+! leanprover-community/mathlib commit 5d0c76894ada7940957143163d7b921345474cbc
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.LinearAlgebra.QuadraticForm.Isometry
 
 /-!
 # Clifford Algebras
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 We construct the Clifford algebra of a module `M` over a commutative ring `R`, equipped with
 a quadratic_form `Q`.

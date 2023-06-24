@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca
 
 ! This file was ported from Lean 3 source module number_theory.cyclotomic.basic
-! leanprover-community/mathlib commit 4b05d3f4f0601dca8abf99c4ec99187682ed0bba
+! leanprover-community/mathlib commit 5d0c76894ada7940957143163d7b921345474cbc
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.FieldTheory.Galois
 
 /-!
 # Cyclotomic extensions
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 Let `A` and `B` be commutative rings with `algebra A B`. For `S : set ℕ+`, we define a class
 `is_cyclotomic_extension S A B` expressing the fact that `B` is obtained from `A` by adding `n`-th

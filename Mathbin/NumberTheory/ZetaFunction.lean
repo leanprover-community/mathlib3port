@@ -4,12 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Loeffler
 
 ! This file was ported from Lean 3 source module number_theory.zeta_function
-! leanprover-community/mathlib commit 81843c08659063f91486be95a617b5e9ec93c9da
+! leanprover-community/mathlib commit 57f9349f2fe19d2de7207e99b0341808d977cdcf
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.SpecialFunctions.Gamma.Beta
-import Mathbin.NumberTheory.ModularForms.JacobiTheta
+import Mathbin.NumberTheory.ModularForms.JacobiTheta.Basic
 import Mathbin.NumberTheory.ZetaValues
 
 /-!

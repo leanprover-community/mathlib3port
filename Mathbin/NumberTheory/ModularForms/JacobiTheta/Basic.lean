@@ -3,8 +3,8 @@ Copyright (c) 2023 David Loeffler. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Loeffler
 
-! This file was ported from Lean 3 source module number_theory.modular_forms.jacobi_theta
-! leanprover-community/mathlib commit c720ca1664115159ac610a74e079287d052cf8d0
+! This file was ported from Lean 3 source module number_theory.modular_forms.jacobi_theta.basic
+! leanprover-community/mathlib commit 57f9349f2fe19d2de7207e99b0341808d977cdcf
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -25,9 +25,9 @@ show that `θ` is differentiable on `ℍ`, and `θ(τ) - 1` has exponential deca
 -/
 
 
-open Complex Real Asymptotics
+open Complex Real Asymptotics Filter
 
-open scoped Real BigOperators UpperHalfPlane Manifold
+open scoped Real BigOperators UpperHalfPlane
 
 /-- Jacobi's theta function `∑' (n : ℤ), exp (π * I * n ^ 2 * τ)`. -/
 noncomputable def jacobiTheta (z : ℂ) : ℂ :=
@@ -168,7 +168,7 @@ theorem norm_jacobiTheta_sub_one_le {z : ℂ} (hz : 0 < im z) :
 
 /-- The norm of `jacobi_theta τ - 1` decays exponentially as `im τ → ∞`. -/
 theorem isBigO_at_im_infty_jacobiTheta_sub_one :
-    IsBigO (Filter.comap im Filter.atTop) (fun τ => jacobiTheta τ - 1) fun τ => rexp (-π * τ.im) :=
+    (fun τ => jacobiTheta τ - 1) =O[comap im atTop] fun τ => rexp (-π * τ.im) :=
   by
   simp_rw [is_O, is_O_with, Filter.eventually_comap, Filter.eventually_atTop]
   refine'
@@ -201,10 +201,6 @@ theorem differentiableAt_jacobiTheta {z : ℂ} (hz : 0 < im z) : DifferentiableA
   obtain ⟨bd, bd_s, le_bd⟩ := exists_summable_bound_exp_mul_sq hy
   exact differentiable_on_tsum_of_summable_norm bd_s h1 h2 fun i w hw => le_bd (le_of_lt hw) i
 #align differentiable_at_jacobi_theta differentiableAt_jacobiTheta
-
-theorem mdifferentiable_jacobiTheta : Mdifferentiable 𝓘(ℂ) 𝓘(ℂ) (jacobiTheta ∘ coe : ℍ → ℂ) :=
-  fun τ => (differentiableAt_jacobiTheta τ.2).MdifferentiableAt.comp τ τ.mdifferentiable_coe
-#align mdifferentiable_jacobi_theta mdifferentiable_jacobiTheta
 
 theorem continuousAt_jacobiTheta {z : ℂ} (hz : 0 < im z) : ContinuousAt jacobiTheta z :=
   (differentiableAt_jacobiTheta hz).ContinuousAt

@@ -4,12 +4,12 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 
 ! This file was ported from Lean 3 source module number_theory.modular_forms.basic
-! leanprover-community/mathlib commit 59150e4a8ab64a88e35d5cfa0a17b762a68acfe9
+! leanprover-community/mathlib commit 57f9349f2fe19d2de7207e99b0341808d977cdcf
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Analysis.Complex.UpperHalfPlane.FunctionsBoundedAtInfty
-import Mathbin.Analysis.Complex.UpperHalfPlane.Topology
+import Mathbin.Analysis.Complex.UpperHalfPlane.Manifold
 import Mathbin.NumberTheory.ModularForms.SlashInvariantForms
 
 /-!
