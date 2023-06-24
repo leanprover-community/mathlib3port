@@ -38,6 +38,7 @@ variable {φ φ' : B → F ≃L[𝕜] F} {U U' : Set B}
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print FiberwiseLinear.localHomeomorph /-
 /-- For `B` a topological space and `F` a `𝕜`-normed space, a map from `U : set B` to `F ≃L[𝕜] F`
 determines a local homeomorphism from `B × F` to itself by its action fiberwise. -/
 def localHomeomorph (φ : B → F ≃L[𝕜] F) (hU : IsOpen U)
@@ -63,7 +64,9 @@ def localHomeomorph (φ : B → F ≃L[𝕜] F) (hU : IsOpen U)
       h2φ.prod_map continuousOn_id
     continuous_on_fst.prod (is_bounded_bilinear_map_apply.continuous.comp_continuous_on this)
 #align fiberwise_linear.local_homeomorph FiberwiseLinear.localHomeomorph
+-/
 
+#print FiberwiseLinear.trans_localHomeomorph_apply /-
 /-- Compute the composition of two local homeomorphisms induced by fiberwise linear
 equivalences. -/
 theorem trans_localHomeomorph_apply (hU : IsOpen U)
@@ -76,8 +79,10 @@ theorem trans_localHomeomorph_apply (hU : IsOpen U)
       ⟨b, φ' b (φ b v)⟩ :=
   rfl
 #align fiberwise_linear.trans_local_homeomorph_apply FiberwiseLinear.trans_localHomeomorph_apply
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print FiberwiseLinear.source_trans_localHomeomorph /-
 /-- Compute the source of the composition of two local homeomorphisms induced by fiberwise linear
 equivalences. -/
 theorem source_trans_localHomeomorph (hU : IsOpen U)
@@ -90,8 +95,10 @@ theorem source_trans_localHomeomorph (hU : IsOpen U)
       (U ∩ U') ×ˢ univ :=
   by dsimp only [FiberwiseLinear.localHomeomorph]; mfld_set_tac
 #align fiberwise_linear.source_trans_local_homeomorph FiberwiseLinear.source_trans_localHomeomorph
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print FiberwiseLinear.target_trans_localHomeomorph /-
 /-- Compute the target of the composition of two local homeomorphisms induced by fiberwise linear
 equivalences. -/
 theorem target_trans_localHomeomorph (hU : IsOpen U)
@@ -104,6 +111,7 @@ theorem target_trans_localHomeomorph (hU : IsOpen U)
       (U ∩ U') ×ˢ univ :=
   by dsimp only [FiberwiseLinear.localHomeomorph]; mfld_set_tac
 #align fiberwise_linear.target_trans_local_homeomorph FiberwiseLinear.target_trans_localHomeomorph
+-/
 
 end FiberwiseLinear
 
@@ -115,6 +123,7 @@ variable {EB : Type _} [NormedAddCommGroup EB] [NormedSpace 𝕜 EB] {HB : Type 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print SmoothFiberwiseLinear.locality_aux₁ /-
 /-- Let `e` be a local homeomorphism of `B × F`.  Suppose that at every point `p` in the source of
 `e`, there is some neighbourhood `s` of `p` on which `e` is equal to a bi-smooth fiberwise linear
 local homeomorphism.
@@ -176,11 +185,13 @@ theorem SmoothFiberwiseLinear.locality_aux₁ (e : LocalHomeomorph (B × F) (B �
   · intro y hy; refine' ⟨(y, 0), heu ⟨p, hp⟩ ⟨_, _⟩ hy, rfl⟩
   · rw [← hesu, e.restr_source_inter]; exact heφ ⟨p, hp⟩
 #align smooth_fiberwise_linear.locality_aux₁ SmoothFiberwiseLinear.locality_aux₁
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:73:14: unsupported tactic `congrm #[[expr (_, _)]] -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print SmoothFiberwiseLinear.locality_aux₂ /-
 /-- Let `e` be a local homeomorphism of `B × F` whose source is `U ×ˢ univ`, for some set `U` in
 `B`, and which, at any point `x` in `U`, admits a neighbourhood `u` of `x` such that `e` is equal on
 `u ×ˢ univ` to some bi-smooth fiberwise linear local homeomorphism.  Then `e` itself is equal to
@@ -265,9 +276,11 @@ theorem SmoothFiberwiseLinear.locality_aux₂ (e : LocalHomeomorph (B × F) (B �
   rw [hΦφ]
   apply hux
 #align smooth_fiberwise_linear.locality_aux₂ SmoothFiberwiseLinear.locality_aux₂
+-/
 
 variable (F B IB)
 
+#print smoothFiberwiseLinear /-
 /-- For `B` a manifold and `F` a normed space, the groupoid on `B × F` consisting of local
 homeomorphisms which are bi-smooth and fiberwise linear, and induce the identity on `B`.
 When a (topological) vector bundle is smooth, then the composition of charts associated
@@ -324,7 +337,9 @@ def smoothFiberwiseLinear : StructureGroupoid (B × F)
     rintro e e' ⟨φ, U, hU, hφ, h2φ, heφ⟩ hee'
     exact ⟨φ, U, hU, hφ, h2φ, Setoid.trans hee' heφ⟩
 #align smooth_fiberwise_linear smoothFiberwiseLinear
+-/
 
+#print mem_smoothFiberwiseLinear_iff /-
 @[simp]
 theorem mem_smoothFiberwiseLinear_iff (e : LocalHomeomorph (B × F) (B × F)) :
     e ∈ smoothFiberwiseLinear B F IB ↔
@@ -334,4 +349,5 @@ theorem mem_smoothFiberwiseLinear_iff (e : LocalHomeomorph (B × F) (B × F)) :
         e.EqOnSource (FiberwiseLinear.localHomeomorph φ hU hφ.ContinuousOn h2φ.ContinuousOn) :=
   show e ∈ Set.iUnion _ ↔ _ by simp only [mem_Union]; rfl
 #align mem_smooth_fiberwise_linear_iff mem_smoothFiberwiseLinear_iff
+-/
 

@@ -711,7 +711,7 @@ theorem tangentMap_tangentBundle_pure (p : TangentBundle I M) :
 
 end TangentBundle
 
-namespace ContMdiffMap
+namespace ContMDiffMap
 
 -- These helpers for dot notation have been moved here from `geometry.manifold.cont_mdiff_map`
 -- to avoid needing to import `geometry.manifold.cont_mdiff_mfderiv` there.
@@ -721,15 +721,15 @@ open scoped Manifold
 
 protected theorem mdifferentiable' (f : C^n⟮I, M; I', M'⟯) (hn : 1 ≤ n) : Mdifferentiable I I' f :=
   f.ContMDiff.Mdifferentiable hn
-#align cont_mdiff_map.mdifferentiable' ContMdiffMap.mdifferentiable'
+#align cont_mdiff_map.mdifferentiable' ContMDiffMap.mdifferentiable'
 
 protected theorem mdifferentiable (f : C^∞⟮I, M; I', M'⟯) : Mdifferentiable I I' f :=
   f.ContMDiff.Mdifferentiable le_top
-#align cont_mdiff_map.mdifferentiable ContMdiffMap.mdifferentiable
+#align cont_mdiff_map.mdifferentiable ContMDiffMap.mdifferentiable
 
 protected theorem mdifferentiableAt (f : C^∞⟮I, M; I', M'⟯) {x} : MdifferentiableAt I I' f x :=
   f.Mdifferentiable x
-#align cont_mdiff_map.mdifferentiable_at ContMdiffMap.mdifferentiableAt
+#align cont_mdiff_map.mdifferentiable_at ContMDiffMap.mdifferentiableAt
 
-end ContMdiffMap
+end ContMDiffMap
 

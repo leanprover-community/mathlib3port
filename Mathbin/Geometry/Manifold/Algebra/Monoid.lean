@@ -201,13 +201,13 @@ theorem R_apply : (𝑹 I g) h = h * g :=
 @[simp]
 theorem L_mul {G : Type _} [Semigroup G] [TopologicalSpace G] [ChartedSpace H G] [HasSmoothMul I G]
     (g h : G) : 𝑳 I (g * h) = (𝑳 I g).comp (𝑳 I h) := by ext;
-  simp only [ContMdiffMap.comp_apply, L_apply, mul_assoc]
+  simp only [ContMDiffMap.comp_apply, L_apply, mul_assoc]
 #align L_mul L_mul
 
 @[simp]
 theorem R_mul {G : Type _} [Semigroup G] [TopologicalSpace G] [ChartedSpace H G] [HasSmoothMul I G]
     (g h : G) : 𝑹 I (g * h) = (𝑹 I h).comp (𝑹 I g) := by ext;
-  simp only [ContMdiffMap.comp_apply, R_apply, mul_assoc]
+  simp only [ContMDiffMap.comp_apply, R_apply, mul_assoc]
 #align R_mul R_mul
 
 section

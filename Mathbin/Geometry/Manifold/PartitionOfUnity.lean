@@ -341,13 +341,13 @@ theorem exists_isSubordinate [T2Space M] [SigmaCompactSpace M] (hs : IsClosed s)
       (fun x hx => hfin.point_finite x) hsub' with
     ⟨V, hsV, hVc, hVf⟩
   choose r hrR hr using fun i => (f i).exists_r_pos_lt_subset_ball (hVc i) (hVf i)
-  refine' ⟨ι, ⟨c, fun i => (f i).updateR (r i) (hrR i), hcs, _, fun x hx => _⟩, fun i => _⟩
-  · simpa only [SmoothBumpFunction.support_updateR]
+  refine' ⟨ι, ⟨c, fun i => (f i).updateRIn (r i) (hrR i), hcs, _, fun x hx => _⟩, fun i => _⟩
+  · simpa only [SmoothBumpFunction.support_updateRIn]
   · refine' (mem_Union.1 <| hsV hx).imp fun i hi => _
     exact
-      ((f i).updateR _ _).eventuallyEq_one_of_dist_lt ((f i).support_subset_source <| hVf _ hi)
+      ((f i).updateRIn _ _).eventuallyEq_one_of_dist_lt ((f i).support_subset_source <| hVf _ hi)
         (hr i hi).2
-  · simpa only [coe_mk, SmoothBumpFunction.support_updateR, tsupport] using hfU i
+  · simpa only [coe_mk, SmoothBumpFunction.support_updateRIn, tsupport] using hfU i
 #align smooth_bump_covering.exists_is_subordinate SmoothBumpCovering.exists_isSubordinate
 
 variable {I M}
@@ -484,7 +484,7 @@ theorem exists_smooth_zero_one_of_closed [T2Space M] [SigmaCompactSpace M] {s t 
   refine'
     ⟨⟨_, g.smooth_sum⟩, fun x hx => _, fun x => g.sum_eq_one, fun x =>
       ⟨g.sum_nonneg x, g.sum_le_one x⟩⟩
-  suffices ∀ i, g i x = 0 by simp only [this, ContMdiffMap.coeFn_mk, finsum_zero, Pi.zero_apply]
+  suffices ∀ i, g i x = 0 by simp only [this, ContMDiffMap.coeFn_mk, finsum_zero, Pi.zero_apply]
   refine' fun i => f.to_smooth_partition_of_unity_zero_of_zero _
   exact nmem_support.1 (subset_compl_comm.1 (hf.support_subset i) hx)
 #align exists_smooth_zero_one_of_closed exists_smooth_zero_one_of_closed

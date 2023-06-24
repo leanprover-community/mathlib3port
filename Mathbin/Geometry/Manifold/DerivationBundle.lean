@@ -52,7 +52,7 @@ variable {𝕜 M}
 namespace PointedSmoothMap
 
 instance funLike {x : M} : FunLike C^∞⟮I, M; 𝕜⟯⟨x⟩ M fun _ => 𝕜 :=
-  ContMdiffMap.funLike
+  ContMDiffMap.funLike
 #align pointed_smooth_map.fun_like PointedSmoothMap.funLike
 
 instance {x : M} : CommRing C^∞⟮I, M; 𝕜⟯⟨x⟩ :=
@@ -144,7 +144,7 @@ def hfdifferential {f : C^∞⟮I, M; I', M'⟯} {x : M} {y : M'} (h : f x = y) 
           simp only [SmoothMap.smul_comp, Derivation.map_smul, RingHom.id_apply] }
       fun g g' => by
       simp only [Derivation.leibniz, SmoothMap.mul_comp, LinearMap.coe_mk,
-        PointedSmoothMap.smul_def, ContMdiffMap.comp_apply, h]
+        PointedSmoothMap.smul_def, ContMDiffMap.comp_apply, h]
   map_smul' k v := rfl
   map_add' v w := rfl
 #align hfdifferential hfdifferential

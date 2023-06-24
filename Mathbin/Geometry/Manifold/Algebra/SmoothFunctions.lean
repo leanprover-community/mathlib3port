@@ -49,14 +49,14 @@ theorem coe_mul {G : Type _} [Mul G] [TopologicalSpace G] [ChartedSpace H' G] [H
 @[simp, to_additive]
 theorem mul_comp {G : Type _} [Mul G] [TopologicalSpace G] [ChartedSpace H' G] [HasSmoothMul I' G]
     (f g : C^∞⟮I'', N'; I', G⟯) (h : C^∞⟮I, N; I'', N'⟯) : (f * g).comp h = f.comp h * g.comp h :=
-  by ext <;> simp only [ContMdiffMap.comp_apply, coe_mul, Pi.mul_apply]
+  by ext <;> simp only [ContMDiffMap.comp_apply, coe_mul, Pi.mul_apply]
 #align smooth_map.mul_comp SmoothMap.mul_comp
 #align smooth_map.add_comp SmoothMap.add_comp
 
 @[to_additive]
 instance hasOne {G : Type _} [Monoid G] [TopologicalSpace G] [ChartedSpace H' G] :
     One C^∞⟮I, N; I', G⟯ :=
-  ⟨ContMdiffMap.const (1 : G)⟩
+  ⟨ContMDiffMap.const (1 : G)⟩
 #align smooth_map.has_one SmoothMap.hasOne
 #align smooth_map.has_zero SmoothMap.hasZero
 
@@ -281,7 +281,7 @@ theorem smul_comp {V : Type _} [NormedAddCommGroup V] [NormedSpace 𝕜 V] (r : 
 
 instance module {V : Type _} [NormedAddCommGroup V] [NormedSpace 𝕜 V] :
     Module 𝕜 C^∞⟮I, N; 𝓘(𝕜, V), V⟯ :=
-  Function.Injective.module 𝕜 coe_fn_add_monoid_hom ContMdiffMap.coe_inj coe_smul
+  Function.Injective.module 𝕜 coe_fn_add_monoid_hom ContMDiffMap.coe_injective coe_smul
 #align smooth_map.module SmoothMap.module
 
 /-- Coercion to a function as a `linear_map`. -/

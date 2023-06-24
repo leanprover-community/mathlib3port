@@ -251,7 +251,7 @@ theorem evalAt_mul : evalAt (g * h) X = 𝒅ₕ (L_apply I g h) (evalAt h X) := 
 
 theorem comp_L : (X f).comp (𝑳 I g) = X (f.comp (𝑳 I g)) := by
   ext h <;>
-    rw [ContMdiffMap.comp_apply, L_apply, ← eval_at_apply, eval_at_mul, apply_hfdifferential,
+    rw [ContMDiffMap.comp_apply, L_apply, ← eval_at_apply, eval_at_mul, apply_hfdifferential,
       apply_fdifferential, eval_at_apply]
 #align left_invariant_derivation.comp_L LeftInvariantDerivation.comp_L
 
