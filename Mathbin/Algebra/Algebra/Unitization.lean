@@ -699,10 +699,10 @@ theorem algebraMap_eq_inl : ⇑(algebraMap R (Unitization R A)) = inl :=
 #align unitization.algebra_map_eq_inl Unitization.algebraMap_eq_inl
 -/
 
-#print Unitization.algebraMap_eq_inl_hom /-
-theorem algebraMap_eq_inl_hom : algebraMap R (Unitization R A) = inlRingHom R A :=
+#print Unitization.algebraMap_eq_inlRingHom /-
+theorem algebraMap_eq_inlRingHom : algebraMap R (Unitization R A) = inlRingHom R A :=
   rfl
-#align unitization.algebra_map_eq_inl_hom Unitization.algebraMap_eq_inl_hom
+#align unitization.algebra_map_eq_inl_hom Unitization.algebraMap_eq_inlRingHom
 -/
 
 #print Unitization.fstHom /-
