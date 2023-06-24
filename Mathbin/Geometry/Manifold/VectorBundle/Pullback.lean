@@ -38,6 +38,7 @@ variable [NontriviallyNormedField 𝕜] [∀ x, AddCommMonoid (E x)] [∀ x, Mod
   [TopologicalSpace B'] [ChartedSpace HB' B'] [SmoothManifoldWithCorners IB' B'] [FiberBundle F E]
   [VectorBundle 𝕜 F E] [SmoothVectorBundle F E IB] (f : SmoothMap IB' IB B' B)
 
+#print SmoothVectorBundle.pullback /-
 /-- For a smooth vector bundle `E` over a manifold `B` and a smooth map `f : B' → B`, the pullback
 vector bundle `f *ᵖ E` is a smooth vector bundle. -/
 instance SmoothVectorBundle.pullback : SmoothVectorBundle F (f *ᵖ E) IB'
@@ -50,4 +51,5 @@ instance SmoothVectorBundle.pullback : SmoothVectorBundle F (f *ᵖ E) IB'
     rw [e.coord_changeL_apply e' hb, (e.pullback f).coordChangeL_apply' _]
     exacts [rfl, hb]
 #align smooth_vector_bundle.pullback SmoothVectorBundle.pullback
+-/
 

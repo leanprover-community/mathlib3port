@@ -743,8 +743,8 @@ theorem primitiveRoots_one : primitiveRoots 1 R = {(1 : R)} :=
 #align is_primitive_root.primitive_roots_one IsPrimitiveRoot.primitiveRoots_one
 -/
 
-#print IsPrimitiveRoot.ne_zero' /-
-theorem ne_zero' {n : ℕ+} (hζ : IsPrimitiveRoot ζ n) : NeZero ((n : ℕ) : R) :=
+#print IsPrimitiveRoot.neZero' /-
+theorem neZero' {n : ℕ+} (hζ : IsPrimitiveRoot ζ n) : NeZero ((n : ℕ) : R) :=
   by
   let p := ringChar R
   have hfin := multiplicity.finite_nat_iff.2 ⟨CharP.char_ne_one R p, n.pos⟩
@@ -766,7 +766,7 @@ theorem ne_zero' {n : ℕ+} (hζ : IsPrimitiveRoot ζ n) : NeZero ((n : ℕ) : R
     · rw [hm.1, hk, pow_succ, mul_assoc, mul_comm p]
       exact lt_mul_of_one_lt_right hpos hpri.1.one_lt
   · exact NeZero.of_not_dvd R hp
-#align is_primitive_root.ne_zero' IsPrimitiveRoot.ne_zero'
+#align is_primitive_root.ne_zero' IsPrimitiveRoot.neZero'
 -/
 
 #print IsPrimitiveRoot.mem_nthRootsFinset /-

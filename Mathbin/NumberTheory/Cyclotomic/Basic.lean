@@ -341,13 +341,13 @@ theorem neZero [h : IsCyclotomicExtension {n} A B] [IsDomain B] : NeZero ((n : �
 #align is_cyclotomic_extension.ne_zero IsCyclotomicExtension.neZero
 -/
 
-#print IsCyclotomicExtension.ne_zero' /-
+#print IsCyclotomicExtension.neZero' /-
 @[protected]
-theorem ne_zero' [IsCyclotomicExtension {n} A B] [IsDomain B] : NeZero ((n : ℕ) : A) :=
+theorem neZero' [IsCyclotomicExtension {n} A B] [IsDomain B] : NeZero ((n : ℕ) : A) :=
   by
   apply NeZero.nat_of_neZero (algebraMap A B)
   exact NeZero n A B
-#align is_cyclotomic_extension.ne_zero' IsCyclotomicExtension.ne_zero'
+#align is_cyclotomic_extension.ne_zero' IsCyclotomicExtension.neZero'
 -/
 
 end Basic

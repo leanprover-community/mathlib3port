@@ -76,7 +76,7 @@ theorem discr_prime_pow_ne_two [IsCyclotomicExtension {p ^ (k + 1)} K L] [hp : F
     discr K (hζ.PowerBasis K).basis =
       (-1) ^ ((p ^ (k + 1) : ℕ).totient / 2) * p ^ ((p : ℕ) ^ k * ((p - 1) * (k + 1) - 1)) :=
   by
-  haveI hne := IsCyclotomicExtension.ne_zero' (p ^ (k + 1)) K L
+  haveI hne := IsCyclotomicExtension.neZero' (p ^ (k + 1)) K L
   rw [discr_power_basis_eq_norm, finrank L hirr, hζ.power_basis_gen _, ←
     hζ.minpoly_eq_cyclotomic_of_irreducible hirr, PNat.pow_coe,
     totient_prime_pow hp.out (succ_pos k), succ_sub_one]

@@ -144,12 +144,12 @@ theorem IsIntegrallyClosed.degree_le_of_ne_zero {s : S} (hs : IsIntegral R s) {p
 #align minpoly.is_integrally_closed.degree_le_of_ne_zero minpoly.IsIntegrallyClosed.degree_le_of_ne_zero
 -/
 
-#print minpoly.IsIntegrallyClosed.Minpoly.unique /-
+#print IsIntegrallyClosed.minpoly.unique /-
 /-- The minimal polynomial of an element `x` is uniquely characterized by its defining property:
 if there is another monic polynomial of minimal degree that has `x` as a root, then this polynomial
 is equal to the minimal polynomial of `x`. See also `minpoly.unique` which relaxes the
 assumptions on `S` in exchange for stronger assumptions on `R`. -/
-theorem IsIntegrallyClosed.Minpoly.unique {s : S} {P : R[X]} (hmo : P.Monic)
+theorem IsIntegrallyClosed.minpoly.unique {s : S} {P : R[X]} (hmo : P.Monic)
     (hP : Polynomial.aeval s P = 0)
     (Pmin : ∀ Q : R[X], Q.Monic → Polynomial.aeval s Q = 0 → degree P ≤ degree Q) :
     P = minpoly R s := by
@@ -161,7 +161,7 @@ theorem IsIntegrallyClosed.Minpoly.unique {s : S} {P : R[X]} (hmo : P.Monic)
   refine' degree_sub_lt _ (NeZero hs) _
   · exact le_antisymm (min R s hmo hP) (Pmin (minpoly R s) (monic hs) (aeval R s))
   · rw [(monic hs).leadingCoeff, hmo.leading_coeff]
-#align minpoly.is_integrally_closed.minpoly.unique minpoly.IsIntegrallyClosed.Minpoly.unique
+#align minpoly.is_integrally_closed.minpoly.unique IsIntegrallyClosed.minpoly.unique
 -/
 
 #print minpoly.prime_of_isIntegrallyClosed /-

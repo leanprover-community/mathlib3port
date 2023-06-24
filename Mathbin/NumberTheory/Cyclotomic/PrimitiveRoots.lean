@@ -170,7 +170,7 @@ noncomputable def embeddingsEquivPrimitiveRoots (C : Type _) [CommRing C] [IsDom
     (hirr : Irreducible (cyclotomic n K)) : (L →ₐ[K] C) ≃ primitiveRoots n C :=
   (hζ.PowerBasis K).liftEquiv.trans
     { toFun := fun x => by
-        haveI := IsCyclotomicExtension.ne_zero' n K L
+        haveI := IsCyclotomicExtension.neZero' n K L
         haveI hn := NeZero.of_noZeroSMulDivisors K C n
         refine' ⟨x.1, _⟩
         cases x
@@ -178,7 +178,7 @@ noncomputable def embeddingsEquivPrimitiveRoots (C : Type _) [CommRing C] [IsDom
           map_cyclotomic _ (algebraMap K C), hζ.minpoly_eq_cyclotomic_of_irreducible hirr, ←
           eval₂_eq_eval_map, ← aeval_def]
       invFun := fun x => by
-        haveI := IsCyclotomicExtension.ne_zero' n K L
+        haveI := IsCyclotomicExtension.neZero' n K L
         haveI hn := NeZero.of_noZeroSMulDivisors K C n
         refine' ⟨x.1, _⟩
         cases x
@@ -210,7 +210,7 @@ variable {K} (L)
 cyclotomic extension is `n.totient`. -/
 theorem finrank (hirr : Irreducible (cyclotomic n K)) : finrank K L = (n : ℕ).totient :=
   by
-  haveI := IsCyclotomicExtension.ne_zero' n K L
+  haveI := IsCyclotomicExtension.neZero' n K L
   rw [((zeta_spec n K L).PowerBasis K).finrank, IsPrimitiveRoot.powerBasis_dim, ←
     (zeta_spec n K L).minpoly_eq_cyclotomic_of_irreducible hirr, nat_degree_cyclotomic]
 #align is_cyclotomic_extension.finrank IsCyclotomicExtension.finrank
@@ -244,7 +244,7 @@ theorem norm_eq_neg_one_pow (hζ : IsPrimitiveRoot ζ 2) [IsDomain L] :
 theorem norm_eq_one [IsDomain L] [IsCyclotomicExtension {n} K L] (hn : n ≠ 2)
     (hirr : Irreducible (cyclotomic n K)) : norm K ζ = 1 :=
   by
-  haveI := IsCyclotomicExtension.ne_zero' n K L
+  haveI := IsCyclotomicExtension.neZero' n K L
   by_cases h1 : n = 1
   · rw [h1, one_coe, one_right_iff] at hζ 
     rw [hζ, show 1 = algebraMap K L 1 by simp, Algebra.norm_algebraMap, one_pow]
@@ -296,7 +296,7 @@ variable {K} [Field K] [Algebra K L]
 theorem sub_one_norm_eq_eval_cyclotomic [IsCyclotomicExtension {n} K L] (h : 2 < (n : ℕ))
     (hirr : Irreducible (cyclotomic n K)) : norm K (ζ - 1) = ↑(eval 1 (cyclotomic n ℤ)) :=
   by
-  haveI := IsCyclotomicExtension.ne_zero' n K L
+  haveI := IsCyclotomicExtension.neZero' n K L
   let E := AlgebraicClosure L
   obtain ⟨z, hz⟩ := IsAlgClosed.exists_root _ (degree_cyclotomic_pos n E n.pos).Ne.symm
   apply (algebraMap K E).Injective
@@ -352,7 +352,7 @@ theorem minpoly_sub_one_eq_cyclotomic_comp [Algebra K A] [IsDomain A] {ζ : A}
     (h : Irreducible (Polynomial.cyclotomic n K)) :
     minpoly K (ζ - 1) = (cyclotomic n K).comp (X + 1) :=
   by
-  haveI := IsCyclotomicExtension.ne_zero' n K A
+  haveI := IsCyclotomicExtension.neZero' n K A
   rw [show ζ - 1 = ζ + algebraMap K A (-1) by simp [sub_eq_add_neg],
     minpoly.add_algebraMap (IsCyclotomicExtension.integral {n} K A ζ),
     hζ.minpoly_eq_cyclotomic_of_irreducible h]

@@ -109,7 +109,7 @@ noncomputable def autEquivPow : (L ≃ₐ[K] L) ≃* (ZMod n)ˣ :=
     invFun := fun t =>
       (hζ.PowerBasis K).equivOfMinpoly ((hμ t).PowerBasis K)
         (by
-          haveI := IsCyclotomicExtension.ne_zero' n K L
+          haveI := IsCyclotomicExtension.neZero' n K L
           simp only [IsPrimitiveRoot.powerBasis_gen]
           have hr :=
             IsPrimitiveRoot.minpoly_eq_cyclotomic_of_irreducible
