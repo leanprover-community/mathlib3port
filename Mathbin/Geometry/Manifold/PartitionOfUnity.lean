@@ -186,7 +186,7 @@ the sum `λ x, ∑ᶠ i, f i x • g i x` is smooth on the whole manifold. -/
 theorem contMDiff_finsum_smul {g : ι → M → F}
     (hg : ∀ (i), ∀ x ∈ tsupport (f i), ContMDiffAt I 𝓘(ℝ, F) n (g i) x) :
     ContMDiff I 𝓘(ℝ, F) n fun x => ∑ᶠ i, f i x • g i x :=
-  (cont_mdiff_finsum fun i => f.contMDiff_smul (hg i)) <|
+  (contMDiff_finsum fun i => f.contMDiff_smul (hg i)) <|
     f.LocallyFinite.Subset fun i => support_smul_subset_left _ _
 #align smooth_partition_of_unity.cont_mdiff_finsum_smul SmoothPartitionOfUnity.contMDiff_finsum_smul
 

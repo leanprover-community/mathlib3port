@@ -179,7 +179,7 @@ theorem not_solvable_by_rad (p : ℕ) (x : ℂ) (hx : aeval x (Φ ℚ a b) = 0) 
     (hp : p.Prime) (hpa : p ∣ a) (hpb : p ∣ b) (hp2b : ¬p ^ 2 ∣ b) : ¬IsSolvableByRad ℚ x :=
   by
   have h_irred := irreducible_Phi a b p hp hpa hpb hp2b
-  apply mt (solvableByRad.is_solvable' h_irred hx)
+  apply mt (solvableByRad.isSolvable' h_irred hx)
   intro h
   refine'
     Equiv.Perm.not_solvable _ (le_of_eq _) (solvable_of_surjective (gal_Phi a b hab h_irred).2)

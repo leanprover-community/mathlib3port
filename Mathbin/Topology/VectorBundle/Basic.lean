@@ -1209,15 +1209,14 @@ def toFiberBundle : @FiberBundle B F _ _ _ a.totalSpaceTopology _ :=
 #align vector_prebundle.to_fiber_bundle VectorPrebundle.toFiberBundle
 -/
 
-#print VectorPrebundle.to_vectorBundle /-
+#print VectorPrebundle.toVectorBundle /-
 /-- Make a `vector_bundle` from a `vector_prebundle`.  Concretely this means
 that, given a `vector_prebundle` structure for a sigma-type `E` -- which consists of a
 number of "pretrivializations" identifying parts of `E` with product spaces `U × F` -- one
 establishes that for the topology constructed on the sigma-type using
 `vector_prebundle.total_space_topology`, these "pretrivializations" are actually
 "trivializations" (i.e., homeomorphisms with respect to the constructed topology). -/
-theorem to_vectorBundle :
-    @VectorBundle R _ F E _ _ _ _ _ _ a.totalSpaceTopology _ a.toFiberBundle :=
+theorem toVectorBundle : @VectorBundle R _ F E _ _ _ _ _ _ a.totalSpaceTopology _ a.toFiberBundle :=
   { trivialization_linear' := by
       rintro _ ⟨e, he, rfl⟩
       apply linear_of_mem_pretrivialization_atlas
@@ -1230,7 +1229,7 @@ theorem to_vectorBundle :
       rw [a.coord_change_apply he he' hb v, ContinuousLinearEquiv.coe_coe,
         Trivialization.coordChangeL_apply]
       exacts [rfl, hb] }
-#align vector_prebundle.to_vector_bundle VectorPrebundle.to_vectorBundle
+#align vector_prebundle.to_vector_bundle VectorPrebundle.toVectorBundle
 -/
 
 end VectorPrebundle

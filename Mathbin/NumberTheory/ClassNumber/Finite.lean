@@ -57,6 +57,7 @@ variable {R S} (abv : AbsoluteValue R ℤ)
 
 variable {ι : Type _} [DecidableEq ι] [Fintype ι] (bS : Basis ι R S)
 
+#print ClassGroup.normBound /-
 /-- If `b` is an `R`-basis of `S` of cardinality `n`, then `norm_bound abv b` is an integer
 such that for every `R`-integral element `a : S` with coordinates `≤ y`,
 we have algebra.norm a ≤ norm_bound abv b * y ^ n`. (See also `norm_le` and `norm_lt`). -/
@@ -70,7 +71,9 @@ noncomputable def normBound : ℤ :=
       ⟨_, Finset.mem_image.mpr ⟨⟨i, i, i⟩, Finset.mem_univ _, rfl⟩⟩
   Nat.factorial n • (n • m) ^ n
 #align class_group.norm_bound ClassGroup.normBound
+-/
 
+#print ClassGroup.normBound_pos /-
 theorem normBound_pos : 0 < normBound abv bS :=
   by
   obtain ⟨i, j, k, hijk⟩ : ∃ i j k, Algebra.leftMulMatrix bS (bS i) j k ≠ 0 :=
@@ -88,7 +91,9 @@ theorem normBound_pos : 0 < normBound abv bS :=
   refine' lt_of_lt_of_le (abv.pos hijk) (Finset.le_max' _ _ _)
   exact finset.mem_image.mpr ⟨⟨i, j, k⟩, Finset.mem_univ _, rfl⟩
 #align class_group.norm_bound_pos ClassGroup.normBound_pos
+-/
 
+#print ClassGroup.norm_le /-
 /-- If the `R`-integral element `a : S` has coordinates `≤ y` with respect to some basis `b`,
 its norm is less than `norm_bound abv b * y ^ dim S`. -/
 theorem norm_le (a : S) {y : ℤ} (hy : ∀ k, abv (bS.repr a k) ≤ y) :
@@ -104,7 +109,9 @@ theorem norm_le (a : S) {y : ℤ} (hy : ∀ k, abv (bS.repr a k) ≤ y) :
     apply Finset.le_max'
     exact finset.mem_image.mpr ⟨⟨i, j, k⟩, Finset.mem_univ _, rfl⟩
 #align class_group.norm_le ClassGroup.norm_le
+-/
 
+#print ClassGroup.norm_lt /-
 /-- If the `R`-integral element `a : S` has coordinates `< y` with respect to some basis `b`,
 its norm is strictly less than `norm_bound abv b * y ^ dim S`. -/
 theorem norm_lt {T : Type _} [LinearOrderedRing T] (a : S) {y : T}
@@ -135,7 +142,9 @@ theorem norm_lt {T : Type _} [LinearOrderedRing T] (a : S) {y : T}
   · exact int.cast_pos.mpr (norm_bound_pos abv bS)
   · infer_instance
 #align class_group.norm_lt ClassGroup.norm_lt
+-/
 
+#print ClassGroup.exists_min /-
 /-- A nonzero ideal has an element of minimal norm. -/
 theorem exists_min (I : (Ideal S)⁰) :
     ∃ b ∈ (I : Ideal S),
@@ -154,11 +163,13 @@ theorem exists_min (I : (Ideal S)⁰) :
   · obtain ⟨b, b_mem, b_ne_zero⟩ := (I : Ideal S).ne_bot_iff.mp (nonZeroDivisors.coe_ne_zero I)
     exact ⟨_, ⟨b, b_mem, b_ne_zero, rfl⟩⟩
 #align class_group.exists_min ClassGroup.exists_min
+-/
 
 section IsAdmissible
 
 variable (L) {abv} (adm : abv.IsAdmissible)
 
+#print ClassGroup.cardM /-
 /-- If we have a large enough set of elements in `R^ι`, then there will be a pair
 whose remainders are close together. We'll show that all sets of cardinality
 at least `cardM bS adm` elements satisfy this condition.
@@ -169,27 +180,35 @@ the minimum cardinality can be exponentially smaller.
 noncomputable def cardM : ℕ :=
   adm.card (normBound abv bS ^ (-1 / Fintype.card ι : ℝ)) ^ Fintype.card ι
 #align class_group.cardM ClassGroup.cardM
+-/
 
 variable [Infinite R]
 
+#print ClassGroup.distinctElems /-
 /-- In the following results, we need a large set of distinct elements of `R`. -/
 noncomputable def distinctElems : Fin (cardM bS adm).succ ↪ R :=
   Fin.valEmbedding.trans (Infinite.natEmbedding R)
 #align class_group.distinct_elems ClassGroup.distinctElems
+-/
 
 variable [DecidableEq R]
 
+#print ClassGroup.finsetApprox /-
 /-- `finset_approx` is a finite set such that each fractional ideal in the integral closure
 contains an element close to `finset_approx`. -/
 noncomputable def finsetApprox : Finset R :=
   (Finset.univ.image fun xy : _ × _ => distinctElems bS adm xy.1 - distinctElems bS adm xy.2).eraseₓ
     0
 #align class_group.finset_approx ClassGroup.finsetApprox
+-/
 
+#print ClassGroup.finsetApprox.zero_not_mem /-
 theorem finsetApprox.zero_not_mem : (0 : R) ∉ finsetApprox bS adm :=
   Finset.not_mem_erase _ _
 #align class_group.finset_approx.zero_not_mem ClassGroup.finsetApprox.zero_not_mem
+-/
 
+#print ClassGroup.mem_finsetApprox /-
 @[simp]
 theorem mem_finsetApprox {x : R} :
     x ∈ finsetApprox bS adm ↔ ∃ i j, i ≠ j ∧ distinctElems bS adm i - distinctElems bS adm j = x :=
@@ -205,6 +224,7 @@ theorem mem_finsetApprox {x : R} :
     rw [Ne.def, sub_eq_zero]
     exact fun h => hij ((distinct_elems bS adm).Injective h)
 #align class_group.mem_finset_approx ClassGroup.mem_finsetApprox
+-/
 
 section Real
 
@@ -212,6 +232,7 @@ open Real
 
 attribute [-instance] Real.decidableEq
 
+#print ClassGroup.exists_mem_finsetApprox /-
 /-- We can approximate `a / b : L` with `q / r`, where `r` has finitely many options for `L`. -/
 theorem exists_mem_finsetApprox (a : S) {b} (hb : b ≠ (0 : R)) :
     ∃ q : S,
@@ -270,7 +291,9 @@ theorem exists_mem_finsetApprox (a : S) {b} (hb : b ≠ (0 : R)) :
       smul_eq_mul, mul_boole, Finset.sum_ite_eq', Finset.mem_univ, if_true]
   · exact_mod_cast ε_le
 #align class_group.exists_mem_finset_approx ClassGroup.exists_mem_finsetApprox
+-/
 
+#print ClassGroup.exists_mem_finset_approx' /-
 /-- We can approximate `a / b : L` with `q / r`, where `r` has finitely many options for `L`. -/
 theorem exists_mem_finset_approx' (h : Algebra.IsAlgebraic R L) (a : S) {b : S} (hb : b ≠ 0) :
     ∃ q : S,
@@ -293,9 +316,11 @@ theorem exists_mem_finset_approx' (h : Algebra.IsAlgebraic R L) (a : S) {b : S} 
     smul_sub b', sub_mul, smul_comm, h, mul_comm b a', Algebra.smul_mul_assoc r a' b,
     Algebra.smul_mul_assoc b' q b]
 #align class_group.exists_mem_finset_approx' ClassGroup.exists_mem_finset_approx'
+-/
 
 end Real
 
+#print ClassGroup.prod_finsetApprox_ne_zero /-
 theorem prod_finsetApprox_ne_zero : algebraMap R S (∏ m in finsetApprox bS adm, m) ≠ 0 :=
   by
   refine' mt ((injective_iff_map_eq_zero _).mp bS.algebra_map_injective _) _
@@ -303,12 +328,16 @@ theorem prod_finsetApprox_ne_zero : algebraMap R S (∏ m in finsetApprox bS adm
   rintro x hx rfl
   exact finset_approx.zero_not_mem bS adm hx
 #align class_group.prod_finset_approx_ne_zero ClassGroup.prod_finsetApprox_ne_zero
+-/
 
+#print ClassGroup.ne_bot_of_prod_finsetApprox_mem /-
 theorem ne_bot_of_prod_finsetApprox_mem (J : Ideal S)
     (h : algebraMap _ _ (∏ m in finsetApprox bS adm, m) ∈ J) : J ≠ ⊥ :=
   (Submodule.ne_bot_iff _).mpr ⟨_, h, prod_finsetApprox_ne_zero _ _⟩
 #align class_group.ne_bot_of_prod_finset_approx_mem ClassGroup.ne_bot_of_prod_finsetApprox_mem
+-/
 
+#print ClassGroup.exists_mk0_eq_mk0 /-
 /-- Each class in the class group contains an ideal `J`
 such that `M := Π m ∈ finset_approx` is in `J`. -/
 theorem exists_mk0_eq_mk0 [IsDedekindDomain S] (h : Algebra.IsAlgebraic R L) (I : (Ideal S)⁰) :
@@ -347,7 +376,9 @@ theorem exists_mk0_eq_mk0 [IsDedekindDomain S] (h : Algebra.IsAlgebraic R L) (I 
   refine' mul_dvd_mul_right (dvd_trans (RingHom.map_dvd _ _) hr') _
   exact Multiset.dvd_prod (multiset.mem_map.mpr ⟨_, r_mem, rfl⟩)
 #align class_group.exists_mk0_eq_mk0 ClassGroup.exists_mk0_eq_mk0
+-/
 
+#print ClassGroup.mkMMem /-
 /-- `class_group.mk_M_mem` is a specialization of `class_group.mk0` to (the finite set of)
 ideals that contain `M := ∏ m in finset_approx L f abs, m`.
 By showing this function is surjective, we prove that the class group is finite. -/
@@ -356,7 +387,9 @@ noncomputable def mkMMem [IsDedekindDomain S]
   ClassGroup.mk0
     ⟨J.1, mem_nonZeroDivisors_iff_ne_zero.mpr (ne_bot_of_prod_finsetApprox_mem bS adm J.1 J.2)⟩
 #align class_group.mk_M_mem ClassGroup.mkMMem
+-/
 
+#print ClassGroup.mkMMem_surjective /-
 theorem mkMMem_surjective [IsDedekindDomain S] (h : Algebra.IsAlgebraic R L) :
     Function.Surjective (ClassGroup.mkMMem bS adm) :=
   by
@@ -365,9 +398,11 @@ theorem mkMMem_surjective [IsDedekindDomain S] (h : Algebra.IsAlgebraic R L) :
   obtain ⟨J, mk0_eq_mk0, J_dvd⟩ := exists_mk0_eq_mk0 L bS adm h ⟨I, hI⟩
   exact ⟨⟨J, J_dvd⟩, mk0_eq_mk0.symm⟩
 #align class_group.mk_M_mem_surjective ClassGroup.mkMMem_surjective
+-/
 
 open scoped Classical
 
+#print ClassGroup.fintypeOfAdmissibleOfAlgebraic /-
 /-- The main theorem: the class group of an integral closure `S` of `R` in an
 algebraic extension `L` is finite if there is an admissible absolute value.
 
@@ -387,7 +422,9 @@ noncomputable def fintypeOfAdmissibleOfAlgebraic [IsDedekindDomain S]
         Ideal.dvd_iff_le.trans (by rw [Equiv.refl_apply, Ideal.span_le, Set.singleton_subset_iff])))
     (ClassGroup.mkMMem bS adm) (ClassGroup.mkMMem_surjective L bS adm h)
 #align class_group.fintype_of_admissible_of_algebraic ClassGroup.fintypeOfAdmissibleOfAlgebraic
+-/
 
+#print ClassGroup.fintypeOfAdmissibleOfFinite /-
 /-- The main theorem: the class group of an integral closure `S` of `R` in a
 finite extension `L` of `K = Frac(R)` is finite if there is an admissible
 absolute value.
@@ -414,6 +451,7 @@ noncomputable def fintypeOfAdmissibleOfFinite : Fintype (ClassGroup S) :=
     simp only [Algebra.smul_def, mul_one]
     apply IsFractionRing.injective
 #align class_group.fintype_of_admissible_of_finite ClassGroup.fintypeOfAdmissibleOfFinite
+-/
 
 end IsAdmissible
 

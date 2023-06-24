@@ -322,7 +322,7 @@ instance Bundle.ContinuousLinearMap.fiberBundle :
 /-- The continuous `σ`-semilinear_maps between two vector bundles form a vector bundle. -/
 instance Bundle.ContinuousLinearMap.vectorBundle :
     VectorBundle 𝕜₂ (F₁ →SL[σ] F₂) (Bundle.ContinuousLinearMap σ F₁ E₁ F₂ E₂) :=
-  (Bundle.ContinuousLinearMap.vectorPrebundle σ F₁ E₁ F₂ E₂).to_vectorBundle
+  (Bundle.ContinuousLinearMap.vectorPrebundle σ F₁ E₁ F₂ E₂).toVectorBundle
 #align bundle.continuous_linear_map.vector_bundle Bundle.ContinuousLinearMap.vectorBundle
 
 variable (e₁ e₂) [he₁ : MemTrivializationAtlas e₁] [he₂ : MemTrivializationAtlas e₂] {F₁ E₁ F₂ E₂}
