@@ -53,7 +53,7 @@ instance SmoothRing.to_lieAddGroup (I : ModelWithCorners 𝕜 E H) (R : Type _) 
 end SmoothRing
 
 instance fieldSmoothRing {𝕜 : Type _} [NontriviallyNormedField 𝕜] : SmoothRing 𝓘(𝕜) 𝕜 :=
-  { normedSpace_lieAddGroup with
+  { normedSpaceLieAddGroup with
     smooth_mul := by
       rw [smooth_iff]
       refine' ⟨continuous_mul, fun x y => _⟩
