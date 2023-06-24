@@ -117,7 +117,7 @@ def compLeftMonoidHom {G' : Type _} [Monoid G'] [TopologicalSpace G'] [ChartedSp
     [HasSmoothMul I'' G''] (φ : G' →* G'') (hφ : Smooth I' I'' φ) :
     C^∞⟮I, N; I', G'⟯ →* C^∞⟮I, N; I'', G''⟯
     where
-  toFun f := ⟨φ ∘ f, fun x => (hφ.Smooth _).comp x (f.ContMdiff x)⟩
+  toFun f := ⟨φ ∘ f, fun x => (hφ.Smooth _).comp x (f.ContMDiff x)⟩
   map_one' := by ext x <;> show φ 1 = 1 <;> simp
   map_mul' f g := by ext x <;> show φ (f x * g x) = φ (f x) * φ (g x) <;> simp
 #align smooth_map.comp_left_monoid_hom SmoothMap.compLeftMonoidHom
@@ -221,7 +221,7 @@ def compLeftRingHom {R' : Type _} [Ring R'] [TopologicalSpace R'] [ChartedSpace 
     C^∞⟮I, N; I', R'⟯ →+* C^∞⟮I, N; I'', R''⟯ :=
   { SmoothMap.compLeftMonoidHom I N φ.toMonoidHom hφ,
     SmoothMap.comp_left_add_monoid_hom I N φ.toAddMonoidHom hφ with
-    toFun := fun f => ⟨φ ∘ f, fun x => (hφ.Smooth _).comp x (f.ContMdiff x)⟩ }
+    toFun := fun f => ⟨φ ∘ f, fun x => (hφ.Smooth _).comp x (f.ContMDiff x)⟩ }
 #align smooth_map.comp_left_ring_hom SmoothMap.compLeftRingHom
 
 variable (I') {N}

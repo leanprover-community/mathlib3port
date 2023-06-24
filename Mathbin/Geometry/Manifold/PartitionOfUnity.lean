@@ -169,26 +169,26 @@ theorem sum_nonneg (x : M) : 0 ≤ ∑ᶠ i, f i x :=
   f.toPartitionOfUnity.sum_nonneg x
 #align smooth_partition_of_unity.sum_nonneg SmoothPartitionOfUnity.sum_nonneg
 
-theorem contMdiff_smul {g : M → F} {i} (hg : ∀ x ∈ tsupport (f i), ContMdiffAt I 𝓘(ℝ, F) n g x) :
-    ContMdiff I 𝓘(ℝ, F) n fun x => f i x • g x :=
-  contMdiff_of_support fun x hx =>
-    ((f i).ContMdiff.ContMdiffAt.of_le le_top).smul <| hg x <| tsupport_smul_subset_left _ _ hx
-#align smooth_partition_of_unity.cont_mdiff_smul SmoothPartitionOfUnity.contMdiff_smul
+theorem contMDiff_smul {g : M → F} {i} (hg : ∀ x ∈ tsupport (f i), ContMDiffAt I 𝓘(ℝ, F) n g x) :
+    ContMDiff I 𝓘(ℝ, F) n fun x => f i x • g x :=
+  contMDiff_of_support fun x hx =>
+    ((f i).ContMDiff.ContMDiffAt.of_le le_top).smul <| hg x <| tsupport_smul_subset_left _ _ hx
+#align smooth_partition_of_unity.cont_mdiff_smul SmoothPartitionOfUnity.contMDiff_smul
 
 theorem smooth_smul {g : M → F} {i} (hg : ∀ x ∈ tsupport (f i), SmoothAt I 𝓘(ℝ, F) g x) :
     Smooth I 𝓘(ℝ, F) fun x => f i x • g x :=
-  f.contMdiff_smul hg
+  f.contMDiff_smul hg
 #align smooth_partition_of_unity.smooth_smul SmoothPartitionOfUnity.smooth_smul
 
 /-- If `f` is a smooth partition of unity on a set `s : set M` and `g : ι → M → F` is a family of
 functions such that `g i` is $C^n$ smooth at every point of the topological support of `f i`, then
 the sum `λ x, ∑ᶠ i, f i x • g i x` is smooth on the whole manifold. -/
-theorem contMdiff_finsum_smul {g : ι → M → F}
-    (hg : ∀ (i), ∀ x ∈ tsupport (f i), ContMdiffAt I 𝓘(ℝ, F) n (g i) x) :
-    ContMdiff I 𝓘(ℝ, F) n fun x => ∑ᶠ i, f i x • g i x :=
-  (cont_mdiff_finsum fun i => f.contMdiff_smul (hg i)) <|
+theorem contMDiff_finsum_smul {g : ι → M → F}
+    (hg : ∀ (i), ∀ x ∈ tsupport (f i), ContMDiffAt I 𝓘(ℝ, F) n (g i) x) :
+    ContMDiff I 𝓘(ℝ, F) n fun x => ∑ᶠ i, f i x • g i x :=
+  (cont_mdiff_finsum fun i => f.contMDiff_smul (hg i)) <|
     f.LocallyFinite.Subset fun i => support_smul_subset_left _ _
-#align smooth_partition_of_unity.cont_mdiff_finsum_smul SmoothPartitionOfUnity.contMdiff_finsum_smul
+#align smooth_partition_of_unity.cont_mdiff_finsum_smul SmoothPartitionOfUnity.contMDiff_finsum_smul
 
 /-- If `f` is a smooth partition of unity on a set `s : set M` and `g : ι → M → F` is a family of
 functions such that `g i` is smooth at every point of the topological support of `f i`, then the sum
@@ -196,7 +196,7 @@ functions such that `g i` is smooth at every point of the topological support of
 theorem smooth_finsum_smul {g : ι → M → F}
     (hg : ∀ (i), ∀ x ∈ tsupport (f i), SmoothAt I 𝓘(ℝ, F) (g i) x) :
     Smooth I 𝓘(ℝ, F) fun x => ∑ᶠ i, f i x • g i x :=
-  f.contMdiff_finsum_smul hg
+  f.contMDiff_finsum_smul hg
 #align smooth_partition_of_unity.smooth_finsum_smul SmoothPartitionOfUnity.smooth_finsum_smul
 
 theorem finsum_smul_mem_convex {g : ι → M → F} {t : Set F} {x : M} (hx : x ∈ s)
@@ -224,11 +224,11 @@ alias is_subordinate_to_partition_of_unity ↔ _ is_subordinate.to_partition_of_
 /-- If `f` is a smooth partition of unity on a set `s : set M` subordinate to a family of open sets
 `U : ι → set M` and `g : ι → M → F` is a family of functions such that `g i` is $C^n$ smooth on
 `U i`, then the sum `λ x, ∑ᶠ i, f i x • g i x` is $C^n$ smooth on the whole manifold. -/
-theorem IsSubordinate.contMdiff_finsum_smul {g : ι → M → F} (hf : f.IsSubordinate U)
-    (ho : ∀ i, IsOpen (U i)) (hg : ∀ i, ContMdiffOn I 𝓘(ℝ, F) n (g i) (U i)) :
-    ContMdiff I 𝓘(ℝ, F) n fun x => ∑ᶠ i, f i x • g i x :=
-  f.contMdiff_finsum_smul fun i x hx => (hg i).ContMdiffAt <| (ho i).mem_nhds (hf i hx)
-#align smooth_partition_of_unity.is_subordinate.cont_mdiff_finsum_smul SmoothPartitionOfUnity.IsSubordinate.contMdiff_finsum_smul
+theorem IsSubordinate.contMDiff_finsum_smul {g : ι → M → F} (hf : f.IsSubordinate U)
+    (ho : ∀ i, IsOpen (U i)) (hg : ∀ i, ContMDiffOn I 𝓘(ℝ, F) n (g i) (U i)) :
+    ContMDiff I 𝓘(ℝ, F) n fun x => ∑ᶠ i, f i x • g i x :=
+  f.contMDiff_finsum_smul fun i x hx => (hg i).ContMDiffAt <| (ho i).mem_nhds (hf i hx)
+#align smooth_partition_of_unity.is_subordinate.cont_mdiff_finsum_smul SmoothPartitionOfUnity.IsSubordinate.contMDiff_finsum_smul
 
 /-- If `f` is a smooth partition of unity on a set `s : set M` subordinate to a family of open sets
 `U : ι → set M` and `g : ι → M → F` is a family of functions such that `g i` is smooth on `U i`,
@@ -236,7 +236,7 @@ then the sum `λ x, ∑ᶠ i, f i x • g i x` is smooth on the whole manifold. 
 theorem IsSubordinate.smooth_finsum_smul {g : ι → M → F} (hf : f.IsSubordinate U)
     (ho : ∀ i, IsOpen (U i)) (hg : ∀ i, SmoothOn I 𝓘(ℝ, F) (g i) (U i)) :
     Smooth I 𝓘(ℝ, F) fun x => ∑ᶠ i, f i x • g i x :=
-  hf.contMdiff_finsum_smul ho hg
+  hf.contMDiff_finsum_smul ho hg
 #align smooth_partition_of_unity.is_subordinate.smooth_finsum_smul SmoothPartitionOfUnity.IsSubordinate.smooth_finsum_smul
 
 end SmoothPartitionOfUnity
@@ -532,7 +532,7 @@ be a family of convex sets. Suppose that for each point `x : M` there exists a n
 for all `x`. See also `exists_smooth_forall_mem_convex_of_local` and
 `exists_smooth_forall_mem_convex_of_local_const`. -/
 theorem exists_cont_mdiff_forall_mem_convex_of_local (ht : ∀ x, Convex ℝ (t x))
-    (Hloc : ∀ x : M, ∃ U ∈ 𝓝 x, ∃ g : M → F, ContMdiffOn I 𝓘(ℝ, F) n g U ∧ ∀ y ∈ U, g y ∈ t y) :
+    (Hloc : ∀ x : M, ∃ U ∈ 𝓝 x, ∃ g : M → F, ContMDiffOn I 𝓘(ℝ, F) n g U ∧ ∀ y ∈ U, g y ∈ t y) :
     ∃ g : C^n⟮I, M; 𝓘(ℝ, F), F⟯, ∀ x, g x ∈ t x :=
   by
   choose U hU g hgs hgt using Hloc

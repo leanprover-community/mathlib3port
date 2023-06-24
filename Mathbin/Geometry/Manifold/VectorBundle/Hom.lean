@@ -55,7 +55,7 @@ theorem smoothOn_continuousLinearMapCoordChange [SmoothManifoldWithCorners IB B]
   by
   let L₁ := compL 𝕜 F₁ F₂ F₂
   have h₁ : Smooth _ _ _ := L₁.cont_mdiff
-  have h₂ : Smooth _ _ _ := (ContinuousLinearMap.flip (compL 𝕜 F₁ F₁ F₂)).ContMdiff
+  have h₂ : Smooth _ _ _ := (ContinuousLinearMap.flip (compL 𝕜 F₁ F₁ F₂)).ContMDiff
   have h₃ : SmoothOn IB _ _ _ := smooth_on_coord_change e₁' e₁
   have h₄ : SmoothOn IB _ _ _ := smooth_on_coord_change e₂ e₂'
   refine' ((h₁.comp_smooth_on (h₄.mono _)).clm_comp (h₂.comp_smooth_on (h₃.mono _))).congr _
@@ -78,20 +78,20 @@ theorem hom_chart (y₀ y : LE₁E₂) :
 
 variable {IB}
 
-theorem contMdiffAt_hom_bundle (f : M → LE₁E₂) {x₀ : M} {n : ℕ∞} :
-    ContMdiffAt IM (IB.Prod 𝓘(𝕜, F₁ →L[𝕜] F₂)) n f x₀ ↔
-      ContMdiffAt IM IB n (fun x => (f x).1) x₀ ∧
-        ContMdiffAt IM 𝓘(𝕜, F₁ →L[𝕜] F₂) n
+theorem contMDiffAt_hom_bundle (f : M → LE₁E₂) {x₀ : M} {n : ℕ∞} :
+    ContMDiffAt IM (IB.Prod 𝓘(𝕜, F₁ →L[𝕜] F₂)) n f x₀ ↔
+      ContMDiffAt IM IB n (fun x => (f x).1) x₀ ∧
+        ContMDiffAt IM 𝓘(𝕜, F₁ →L[𝕜] F₂) n
           (fun x => inCoordinates F₁ E₁ F₂ E₂ (f x₀).1 (f x).1 (f x₀).1 (f x).1 (f x).2) x₀ :=
   by apply cont_mdiff_at_total_space
-#align cont_mdiff_at_hom_bundle contMdiffAt_hom_bundle
+#align cont_mdiff_at_hom_bundle contMDiffAt_hom_bundle
 
 theorem smoothAt_hom_bundle (f : M → LE₁E₂) {x₀ : M} :
     SmoothAt IM (IB.Prod 𝓘(𝕜, F₁ →L[𝕜] F₂)) f x₀ ↔
       SmoothAt IM IB (fun x => (f x).1) x₀ ∧
         SmoothAt IM 𝓘(𝕜, F₁ →L[𝕜] F₂)
           (fun x => inCoordinates F₁ E₁ F₂ E₂ (f x₀).1 (f x).1 (f x₀).1 (f x).1 (f x).2) x₀ :=
-  contMdiffAt_hom_bundle f
+  contMDiffAt_hom_bundle f
 #align smooth_at_hom_bundle smoothAt_hom_bundle
 
 variable [SmoothManifoldWithCorners IB B] [SmoothVectorBundle F₁ E₁ IB]

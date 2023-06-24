@@ -99,30 +99,30 @@ theorem topologicalGroup_of_lieGroup : TopologicalGroup G :=
 end
 
 @[to_additive]
-theorem ContMdiffWithinAt.inv {f : M → G} {s : Set M} {x₀ : M}
-    (hf : ContMdiffWithinAt I' I n f s x₀) : ContMdiffWithinAt I' I n (fun x => (f x)⁻¹) s x₀ :=
-  ((smooth_inv I).of_le le_top).ContMdiffAt.ContMdiffWithinAt.comp x₀ hf <| Set.mapsTo_univ _ _
-#align cont_mdiff_within_at.inv ContMdiffWithinAt.inv
-#align cont_mdiff_within_at.neg ContMdiffWithinAt.neg
+theorem ContMDiffWithinAt.inv {f : M → G} {s : Set M} {x₀ : M}
+    (hf : ContMDiffWithinAt I' I n f s x₀) : ContMDiffWithinAt I' I n (fun x => (f x)⁻¹) s x₀ :=
+  ((smooth_inv I).of_le le_top).ContMDiffAt.ContMDiffWithinAt.comp x₀ hf <| Set.mapsTo_univ _ _
+#align cont_mdiff_within_at.inv ContMDiffWithinAt.inv
+#align cont_mdiff_within_at.neg ContMDiffWithinAt.neg
 
 @[to_additive]
-theorem ContMdiffAt.inv {f : M → G} {x₀ : M} (hf : ContMdiffAt I' I n f x₀) :
-    ContMdiffAt I' I n (fun x => (f x)⁻¹) x₀ :=
-  ((smooth_inv I).of_le le_top).ContMdiffAt.comp x₀ hf
-#align cont_mdiff_at.inv ContMdiffAt.inv
-#align cont_mdiff_at.neg ContMdiffAt.neg
+theorem ContMDiffAt.inv {f : M → G} {x₀ : M} (hf : ContMDiffAt I' I n f x₀) :
+    ContMDiffAt I' I n (fun x => (f x)⁻¹) x₀ :=
+  ((smooth_inv I).of_le le_top).ContMDiffAt.comp x₀ hf
+#align cont_mdiff_at.inv ContMDiffAt.inv
+#align cont_mdiff_at.neg ContMDiffAt.neg
 
 @[to_additive]
-theorem ContMdiffOn.inv {f : M → G} {s : Set M} (hf : ContMdiffOn I' I n f s) :
-    ContMdiffOn I' I n (fun x => (f x)⁻¹) s := fun x hx => (hf x hx).inv
-#align cont_mdiff_on.inv ContMdiffOn.inv
-#align cont_mdiff_on.neg ContMdiffOn.neg
+theorem ContMDiffOn.inv {f : M → G} {s : Set M} (hf : ContMDiffOn I' I n f s) :
+    ContMDiffOn I' I n (fun x => (f x)⁻¹) s := fun x hx => (hf x hx).inv
+#align cont_mdiff_on.inv ContMDiffOn.inv
+#align cont_mdiff_on.neg ContMDiffOn.neg
 
 @[to_additive]
-theorem ContMdiff.inv {f : M → G} (hf : ContMdiff I' I n f) : ContMdiff I' I n fun x => (f x)⁻¹ :=
+theorem ContMDiff.inv {f : M → G} (hf : ContMDiff I' I n f) : ContMDiff I' I n fun x => (f x)⁻¹ :=
   fun x => (hf x).inv
-#align cont_mdiff.inv ContMdiff.inv
-#align cont_mdiff.neg ContMdiff.neg
+#align cont_mdiff.inv ContMDiff.inv
+#align cont_mdiff.neg ContMDiff.neg
 
 @[to_additive]
 theorem SmoothWithinAt.inv {f : M → G} {s : Set M} {x₀ : M} (hf : SmoothWithinAt I' I f s x₀) :
@@ -152,32 +152,32 @@ theorem Smooth.inv {f : M → G} (hf : Smooth I' I f) : Smooth I' I fun x => (f 
 #align smooth.neg Smooth.neg
 
 @[to_additive]
-theorem ContMdiffWithinAt.div {f g : M → G} {s : Set M} {x₀ : M}
-    (hf : ContMdiffWithinAt I' I n f s x₀) (hg : ContMdiffWithinAt I' I n g s x₀) :
-    ContMdiffWithinAt I' I n (fun x => f x / g x) s x₀ := by simp_rw [div_eq_mul_inv];
+theorem ContMDiffWithinAt.div {f g : M → G} {s : Set M} {x₀ : M}
+    (hf : ContMDiffWithinAt I' I n f s x₀) (hg : ContMDiffWithinAt I' I n g s x₀) :
+    ContMDiffWithinAt I' I n (fun x => f x / g x) s x₀ := by simp_rw [div_eq_mul_inv];
   exact hf.mul hg.inv
-#align cont_mdiff_within_at.div ContMdiffWithinAt.div
-#align cont_mdiff_within_at.sub ContMdiffWithinAt.sub
+#align cont_mdiff_within_at.div ContMDiffWithinAt.div
+#align cont_mdiff_within_at.sub ContMDiffWithinAt.sub
 
 @[to_additive]
-theorem ContMdiffAt.div {f g : M → G} {x₀ : M} (hf : ContMdiffAt I' I n f x₀)
-    (hg : ContMdiffAt I' I n g x₀) : ContMdiffAt I' I n (fun x => f x / g x) x₀ := by
+theorem ContMDiffAt.div {f g : M → G} {x₀ : M} (hf : ContMDiffAt I' I n f x₀)
+    (hg : ContMDiffAt I' I n g x₀) : ContMDiffAt I' I n (fun x => f x / g x) x₀ := by
   simp_rw [div_eq_mul_inv]; exact hf.mul hg.inv
-#align cont_mdiff_at.div ContMdiffAt.div
-#align cont_mdiff_at.sub ContMdiffAt.sub
+#align cont_mdiff_at.div ContMDiffAt.div
+#align cont_mdiff_at.sub ContMDiffAt.sub
 
 @[to_additive]
-theorem ContMdiffOn.div {f g : M → G} {s : Set M} (hf : ContMdiffOn I' I n f s)
-    (hg : ContMdiffOn I' I n g s) : ContMdiffOn I' I n (fun x => f x / g x) s := by
+theorem ContMDiffOn.div {f g : M → G} {s : Set M} (hf : ContMDiffOn I' I n f s)
+    (hg : ContMDiffOn I' I n g s) : ContMDiffOn I' I n (fun x => f x / g x) s := by
   simp_rw [div_eq_mul_inv]; exact hf.mul hg.inv
-#align cont_mdiff_on.div ContMdiffOn.div
-#align cont_mdiff_on.sub ContMdiffOn.sub
+#align cont_mdiff_on.div ContMDiffOn.div
+#align cont_mdiff_on.sub ContMDiffOn.sub
 
 @[to_additive]
-theorem ContMdiff.div {f g : M → G} (hf : ContMdiff I' I n f) (hg : ContMdiff I' I n g) :
-    ContMdiff I' I n fun x => f x / g x := by simp_rw [div_eq_mul_inv]; exact hf.mul hg.inv
-#align cont_mdiff.div ContMdiff.div
-#align cont_mdiff.sub ContMdiff.sub
+theorem ContMDiff.div {f g : M → G} (hf : ContMDiff I' I n f) (hg : ContMDiff I' I n g) :
+    ContMDiff I' I n fun x => f x / g x := by simp_rw [div_eq_mul_inv]; exact hf.mul hg.inv
+#align cont_mdiff.div ContMDiff.div
+#align cont_mdiff.sub ContMDiff.sub
 
 @[to_additive]
 theorem SmoothWithinAt.div {f g : M → G} {s : Set M} {x₀ : M} (hf : SmoothWithinAt I' I f s x₀)

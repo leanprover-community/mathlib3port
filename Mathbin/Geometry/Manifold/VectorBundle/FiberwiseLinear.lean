@@ -242,18 +242,18 @@ theorem SmoothFiberwiseLinear.locality_aux₂ (e : LocalHomeomorph (B × F) (B �
     exact Union_lift_mk ⟨y, hyu⟩ _
   have hΦ : SmoothOn IB 𝓘(𝕜, F →L[𝕜] F) (fun y => (Φ y : F →L[𝕜] F)) U :=
     by
-    apply contMdiffOn_of_locally_contMdiffOn
+    apply contMDiffOn_of_locally_contMDiffOn
     intro x hx
     refine' ⟨u ⟨x, hx⟩, hu ⟨x, hx⟩, hux _, _⟩
-    refine' (ContMdiffOn.congr (hφ ⟨x, hx⟩) _).mono (inter_subset_right _ _)
+    refine' (ContMDiffOn.congr (hφ ⟨x, hx⟩) _).mono (inter_subset_right _ _)
     intro y hy
     rw [hΦφ ⟨x, hx⟩ y hy]
   have h2Φ : SmoothOn IB 𝓘(𝕜, F →L[𝕜] F) (fun y => ((Φ y).symm : F →L[𝕜] F)) U :=
     by
-    apply contMdiffOn_of_locally_contMdiffOn
+    apply contMDiffOn_of_locally_contMDiffOn
     intro x hx
     refine' ⟨u ⟨x, hx⟩, hu ⟨x, hx⟩, hux _, _⟩
-    refine' (ContMdiffOn.congr (h2φ ⟨x, hx⟩) _).mono (inter_subset_right _ _)
+    refine' (ContMDiffOn.congr (h2φ ⟨x, hx⟩) _).mono (inter_subset_right _ _)
     intro y hy
     rw [hΦφ ⟨x, hx⟩ y hy]
   refine' ⟨Φ, U, hU', hΦ, h2Φ, hU, fun p hp => _⟩
@@ -304,8 +304,8 @@ def smoothFiberwiseLinear : StructureGroupoid (B × F)
   id_mem' := by
     simp_rw [mem_Union]
     refine' ⟨fun b => ContinuousLinearEquiv.refl 𝕜 F, univ, isOpen_univ, _, _, ⟨_, fun b hb => _⟩⟩
-    · apply contMdiffOn_const
-    · apply contMdiffOn_const
+    · apply contMDiffOn_const
+    · apply contMDiffOn_const
     ·
       simp only [FiberwiseLinear.localHomeomorph, LocalHomeomorph.refl_localEquiv,
         LocalEquiv.refl_source, univ_prod_univ]

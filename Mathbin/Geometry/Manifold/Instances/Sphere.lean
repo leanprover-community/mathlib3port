@@ -464,10 +464,10 @@ instance {n : ℕ} [Fact (finrank ℝ E = n + 1)] :
       rfl)
 
 /-- The inclusion map (i.e., `coe`) from the sphere in `E` to `E` is smooth.  -/
-theorem contMdiff_coe_sphere {n : ℕ} [Fact (finrank ℝ E = n + 1)] :
-    ContMdiff (𝓡 n) 𝓘(ℝ, E) ∞ (coe : sphere (0 : E) 1 → E) :=
+theorem contMDiff_coe_sphere {n : ℕ} [Fact (finrank ℝ E = n + 1)] :
+    ContMDiff (𝓡 n) 𝓘(ℝ, E) ∞ (coe : sphere (0 : E) 1 → E) :=
   by
-  rw [contMdiff_iff]
+  rw [contMDiff_iff]
   constructor
   · exact continuous_subtype_val
   · intro v _
@@ -478,7 +478,7 @@ theorem contMdiff_coe_sphere {n : ℕ} [Fact (finrank ℝ E = n + 1)] :
     exact
       ((cont_diff_stereo_inv_fun_aux.comp (ℝ ∙ (-v : E))ᗮ.subtypeL.ContDiff).comp
           U.symm.cont_diff).ContDiffOn
-#align cont_mdiff_coe_sphere contMdiff_coe_sphere
+#align cont_mdiff_coe_sphere contMDiff_coe_sphere
 
 variable {F : Type _} [NormedAddCommGroup F] [NormedSpace ℝ F]
 
@@ -488,11 +488,11 @@ variable {M : Type _} [TopologicalSpace M] [ChartedSpace H M] [SmoothManifoldWit
 
 /-- If a `cont_mdiff` function `f : M → E`, where `M` is some manifold, takes values in the
 sphere, then it restricts to a `cont_mdiff` function from `M` to the sphere. -/
-theorem ContMdiff.codRestrict_sphere {n : ℕ} [Fact (finrank ℝ E = n + 1)] {m : ℕ∞} {f : M → E}
-    (hf : ContMdiff I 𝓘(ℝ, E) m f) (hf' : ∀ x, f x ∈ sphere (0 : E) 1) :
-    ContMdiff I (𝓡 n) m (Set.codRestrict _ _ hf' : M → sphere (0 : E) 1) :=
+theorem ContMDiff.codRestrict_sphere {n : ℕ} [Fact (finrank ℝ E = n + 1)] {m : ℕ∞} {f : M → E}
+    (hf : ContMDiff I 𝓘(ℝ, E) m f) (hf' : ∀ x, f x ∈ sphere (0 : E) 1) :
+    ContMDiff I (𝓡 n) m (Set.codRestrict _ _ hf' : M → sphere (0 : E) 1) :=
   by
-  rw [contMdiff_iff_target]
+  rw [contMDiff_iff_target]
   refine' ⟨continuous_induced_rng.2 hf.continuous, _⟩
   intro v
   let U : _ ≃ₗᵢ[ℝ] _ :=
@@ -500,8 +500,8 @@ theorem ContMdiff.codRestrict_sphere {n : ℕ} [Fact (finrank ℝ E = n + 1)] {m
         OrthonormalBasis.fromOrthogonalSpanSingleton
         n (ne_zero_of_mem_unit_sphere (-v))).repr
   have h : ContDiffOn ℝ ⊤ _ Set.univ := U.cont_diff.cont_diff_on
-  have H₁ := (h.comp' contDiffOn_stereoToFun).ContMdiffOn
-  have H₂ : ContMdiffOn _ _ _ _ Set.univ := hf.cont_mdiff_on
+  have H₁ := (h.comp' contDiffOn_stereoToFun).ContMDiffOn
+  have H₂ : ContMDiffOn _ _ _ _ Set.univ := hf.cont_mdiff_on
   convert (H₁.of_le le_top).comp' H₂ using 1
   ext x
   have hfxv : f x = -↑v ↔ ⟪f x, -↑v⟫_ℝ = 1 :=
@@ -511,17 +511,17 @@ theorem ContMdiff.codRestrict_sphere {n : ℕ} [Fact (finrank ℝ E = n + 1)] {m
     exact norm_eq_of_mem_sphere (-v)
   dsimp [chart_at]
   simp [not_iff_not, Subtype.ext_iff, hfxv, real_inner_comm]
-#align cont_mdiff.cod_restrict_sphere ContMdiff.codRestrict_sphere
+#align cont_mdiff.cod_restrict_sphere ContMDiff.codRestrict_sphere
 
 /-- The antipodal map is smooth. -/
-theorem contMdiff_neg_sphere {n : ℕ} [Fact (finrank ℝ E = n + 1)] :
-    ContMdiff (𝓡 n) (𝓡 n) ∞ fun x : sphere (0 : E) 1 => -x :=
+theorem contMDiff_neg_sphere {n : ℕ} [Fact (finrank ℝ E = n + 1)] :
+    ContMDiff (𝓡 n) (𝓡 n) ∞ fun x : sphere (0 : E) 1 => -x :=
   by
   -- this doesn't elaborate well in term mode
-  apply ContMdiff.codRestrict_sphere
+  apply ContMDiff.codRestrict_sphere
   apply cont_diff_neg.cont_mdiff.comp _
-  exact contMdiff_coe_sphere
-#align cont_mdiff_neg_sphere contMdiff_neg_sphere
+  exact contMDiff_coe_sphere
+#align cont_mdiff_neg_sphere contMDiff_neg_sphere
 
 /-- Consider the differential of the inclusion of the sphere in `E` at the point `v` as a continuous
 linear map from `tangent_space (𝓡 n) v` to `E`.  The range of this map is the orthogonal complement
@@ -534,7 +534,7 @@ theorem range_mfderiv_coe_sphere {n : ℕ} [Fact (finrank ℝ E = n + 1)] (v : s
     (mfderiv (𝓡 n) 𝓘(ℝ, E) (coe : sphere (0 : E) 1 → E) v : TangentSpace (𝓡 n) v →L[ℝ] E).range =
       (ℝ ∙ (v : E))ᗮ :=
   by
-  rw [((contMdiff_coe_sphere v).MdifferentiableAt le_top).mfderiv]
+  rw [((contMDiff_coe_sphere v).MdifferentiableAt le_top).mfderiv]
   simp only [chart_at, stereographic', stereographic_neg_apply, fderivWithin_univ,
     LinearIsometryEquiv.toHomeomorph_symm, LinearIsometryEquiv.coe_toHomeomorph,
     LinearIsometryEquiv.map_zero, mfld_simps]
@@ -568,7 +568,7 @@ linear map from `tangent_space (𝓡 n) v` to `E`.  This map is injective. -/
 theorem mfderiv_coe_sphere_injective {n : ℕ} [Fact (finrank ℝ E = n + 1)] (v : sphere (0 : E) 1) :
     Injective (mfderiv (𝓡 n) 𝓘(ℝ, E) (coe : sphere (0 : E) 1 → E) v) :=
   by
-  rw [((contMdiff_coe_sphere v).MdifferentiableAt le_top).mfderiv]
+  rw [((contMDiff_coe_sphere v).MdifferentiableAt le_top).mfderiv]
   simp only [chart_at, stereographic', stereographic_neg_apply, fderivWithin_univ,
     LinearIsometryEquiv.toHomeomorph_symm, LinearIsometryEquiv.coe_toHomeomorph,
     LinearIsometryEquiv.map_zero, mfld_simps]
@@ -604,26 +604,26 @@ instance : SmoothManifoldWithCorners (𝓡 1) circle :=
 instance : LieGroup (𝓡 1) circle
     where
   smooth_mul := by
-    apply ContMdiff.codRestrict_sphere
+    apply ContMDiff.codRestrict_sphere
     let c : circle → ℂ := coe
-    have h₂ : ContMdiff (𝓘(ℝ, ℂ).Prod 𝓘(ℝ, ℂ)) 𝓘(ℝ, ℂ) ∞ fun z : ℂ × ℂ => z.fst * z.snd :=
+    have h₂ : ContMDiff (𝓘(ℝ, ℂ).Prod 𝓘(ℝ, ℂ)) 𝓘(ℝ, ℂ) ∞ fun z : ℂ × ℂ => z.fst * z.snd :=
       by
-      rw [contMdiff_iff]
+      rw [contMDiff_iff]
       exact ⟨continuous_mul, fun x y => cont_diff_mul.cont_diff_on⟩
-    suffices h₁ : ContMdiff _ _ _ (Prod.map c c)
+    suffices h₁ : ContMDiff _ _ _ (Prod.map c c)
     · apply h₂.comp h₁
     -- this elaborates much faster with `apply`
-      apply ContMdiff.prod_map <;>
-      exact contMdiff_coe_sphere
+      apply ContMDiff.prod_map <;>
+      exact contMDiff_coe_sphere
   smooth_inv := by
-    apply ContMdiff.codRestrict_sphere
+    apply ContMDiff.codRestrict_sphere
     simp only [← coe_inv_circle, coe_inv_circle_eq_conj]
-    exact complex.conj_cle.cont_diff.cont_mdiff.comp contMdiff_coe_sphere
+    exact complex.conj_cle.cont_diff.cont_mdiff.comp contMDiff_coe_sphere
 
 /-- The map `λ t, exp (t * I)` from `ℝ` to the unit circle in `ℂ` is smooth. -/
-theorem contMdiff_expMapCircle : ContMdiff 𝓘(ℝ, ℝ) (𝓡 1) ∞ expMapCircle :=
-  (contDiff_exp.comp (contDiff_id.smul contDiff_const)).ContMdiff.codRestrict_sphere _
-#align cont_mdiff_exp_map_circle contMdiff_expMapCircle
+theorem contMDiff_expMapCircle : ContMDiff 𝓘(ℝ, ℝ) (𝓡 1) ∞ expMapCircle :=
+  (contDiff_exp.comp (contDiff_id.smul contDiff_const)).ContMDiff.codRestrict_sphere _
+#align cont_mdiff_exp_map_circle contMDiff_expMapCircle
 
 end circle
 

@@ -29,7 +29,7 @@ instance : SmoothManifoldWithCorners 𝓘(ℂ) ℍ :=
   UpperHalfPlane.openEmbedding_coe.singleton_smoothManifoldWithCorners 𝓘(ℂ)
 
 /-- The inclusion map `ℍ → ℂ` is a smooth map of manifolds. -/
-theorem smooth_coe : Smooth 𝓘(ℂ) 𝓘(ℂ) (coe : ℍ → ℂ) := fun x => contMdiffAt_extChartAt
+theorem smooth_coe : Smooth 𝓘(ℂ) 𝓘(ℂ) (coe : ℍ → ℂ) := fun x => contMDiffAt_extChartAt
 #align upper_half_plane.smooth_coe UpperHalfPlane.smooth_coe
 
 /-- The inclusion map `ℍ → ℂ` is a differentiable map of manifolds. -/

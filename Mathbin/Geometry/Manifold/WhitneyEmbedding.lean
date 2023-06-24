@@ -60,8 +60,8 @@ def embeddingPiTangent : C^∞⟮I, M; 𝓘(ℝ, ι → E × ℝ), ι → E × �
     where
   val x i := (f i x • extChartAt I (f.c i) x, f i x)
   property :=
-    contMdiff_pi_space.2 fun i =>
-      ((f i).smooth_smul contMdiffOn_extChartAt).prod_mk_space (f i).Smooth
+    contMDiff_pi_space.2 fun i =>
+      ((f i).smooth_smul contMDiffOn_extChartAt).prod_mk_space (f i).Smooth
 #align smooth_bump_covering.embedding_pi_tangent SmoothBumpCovering.embeddingPiTangent
 
 @[local simp]

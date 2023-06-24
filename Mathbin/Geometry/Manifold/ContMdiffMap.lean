@@ -33,7 +33,7 @@ variable {𝕜 : Type _} [NontriviallyNormedField 𝕜] {E : Type _} [NormedAddC
 
 /-- Bundled `n` times continuously differentiable maps. -/
 def ContMdiffMap :=
-  { f : M → M' // ContMdiff I I' n f }
+  { f : M → M' // ContMDiff I I' n f }
 #align cont_mdiff_map ContMdiffMap
 
 /-- Bundled smooth maps. -/
@@ -59,16 +59,16 @@ instance funLike : FunLike C^n⟮I, M; I', M'⟯ M fun _ => M'
   coe_injective' := Subtype.coe_injective
 #align cont_mdiff_map.fun_like ContMdiffMap.funLike
 
-protected theorem contMdiff (f : C^n⟮I, M; I', M'⟯) : ContMdiff I I' n f :=
+protected theorem contMDiff (f : C^n⟮I, M; I', M'⟯) : ContMDiff I I' n f :=
   f.Prop
-#align cont_mdiff_map.cont_mdiff ContMdiffMap.contMdiff
+#align cont_mdiff_map.cont_mdiff ContMdiffMap.contMDiff
 
 protected theorem smooth (f : C^∞⟮I, M; I', M'⟯) : Smooth I I' f :=
   f.Prop
 #align cont_mdiff_map.smooth ContMdiffMap.smooth
 
 instance : Coe C^n⟮I, M; I', M'⟯ C(M, M') :=
-  ⟨fun f => ⟨f, f.ContMdiff.Continuous⟩⟩
+  ⟨fun f => ⟨f, f.ContMDiff.Continuous⟩⟩
 
 attribute [to_additive_ignore_args 21] ContMdiffMap ContMdiffMap.funLike
   ContMdiffMap.ContinuousMap.hasCoe
@@ -76,7 +76,7 @@ attribute [to_additive_ignore_args 21] ContMdiffMap ContMdiffMap.funLike
 variable {f g : C^n⟮I, M; I', M'⟯}
 
 @[simp]
-theorem coeFn_mk (f : M → M') (hf : ContMdiff I I' n f) :
+theorem coeFn_mk (f : M → M') (hf : ContMDiff I I' n f) :
     ((Subtype.mk f hf : C^n⟮I, M; I', M'⟯) : M → M') = f :=
   rfl
 #align cont_mdiff_map.coe_fn_mk ContMdiffMap.coeFn_mk
@@ -93,18 +93,18 @@ instance : ContinuousMapClass C^n⟮I, M; I', M'⟯ M M'
     where
   coe f := ⇑f
   coe_injective' := coe_inj
-  map_continuous f := f.ContMdiff.Continuous
+  map_continuous f := f.ContMDiff.Continuous
 
 /-- The identity as a smooth map. -/
 def id : C^n⟮I, M; I, M⟯ :=
-  ⟨id, contMdiff_id⟩
+  ⟨id, contMDiff_id⟩
 #align cont_mdiff_map.id ContMdiffMap.id
 
 /-- The composition of smooth maps, as a smooth map. -/
 def comp (f : C^n⟮I', M'; I'', M''⟯) (g : C^n⟮I, M; I', M'⟯) : C^n⟮I, M; I'', M''⟯
     where
   val a := f (g a)
-  property := f.ContMdiff.comp g.ContMdiff
+  property := f.ContMDiff.comp g.ContMDiff
 #align cont_mdiff_map.comp ContMdiffMap.comp
 
 @[simp]
@@ -114,21 +114,21 @@ theorem comp_apply (f : C^n⟮I', M'; I'', M''⟯) (g : C^n⟮I, M; I', M'⟯) (
 #align cont_mdiff_map.comp_apply ContMdiffMap.comp_apply
 
 instance [Inhabited M'] : Inhabited C^n⟮I, M; I', M'⟯ :=
-  ⟨⟨fun _ => default, contMdiff_const⟩⟩
+  ⟨⟨fun _ => default, contMDiff_const⟩⟩
 
 /-- Constant map as a smooth map -/
 def const (y : M') : C^n⟮I, M; I', M'⟯ :=
-  ⟨fun x => y, contMdiff_const⟩
+  ⟨fun x => y, contMDiff_const⟩
 #align cont_mdiff_map.const ContMdiffMap.const
 
 /-- The first projection of a product, as a smooth map. -/
 def fst : C^n⟮I.Prod I', M × M'; I, M⟯ :=
-  ⟨Prod.fst, contMdiff_fst⟩
+  ⟨Prod.fst, contMDiff_fst⟩
 #align cont_mdiff_map.fst ContMdiffMap.fst
 
 /-- The second projection of a product, as a smooth map. -/
 def snd : C^n⟮I.Prod I', M × M'; I', M'⟯ :=
-  ⟨Prod.snd, contMdiff_snd⟩
+  ⟨Prod.snd, contMDiff_snd⟩
 #align cont_mdiff_map.snd ContMdiffMap.snd
 
 /-- Given two smooth maps `f` and `g`, this is the smooth map `x ↦ (f x, g x)`. -/
@@ -140,6 +140,6 @@ end ContMdiffMap
 
 instance ContinuousLinearMap.hasCoeToContMdiffMap :
     Coe (E →L[𝕜] E') C^n⟮𝓘(𝕜, E), E; 𝓘(𝕜, E'), E'⟯ :=
-  ⟨fun f => ⟨f.toFun, f.ContMdiff⟩⟩
+  ⟨fun f => ⟨f.toFun, f.ContMDiff⟩⟩
 #align continuous_linear_map.has_coe_to_cont_mdiff_map ContinuousLinearMap.hasCoeToContMdiffMap
 

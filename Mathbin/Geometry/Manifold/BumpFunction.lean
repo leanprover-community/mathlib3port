@@ -338,12 +338,12 @@ variable [SmoothManifoldWithCorners I M] {I}
 /-- A smooth bump function is infinitely smooth. -/
 protected theorem smooth : Smooth I 𝓘(ℝ) f :=
   by
-  refine' contMdiff_of_support fun x hx => _
+  refine' contMDiff_of_support fun x hx => _
   have : x ∈ (chart_at H c).source := f.tsupport_subset_chart_at_source hx
   refine'
-    ContMdiffAt.congr_of_eventuallyEq _
+    ContMDiffAt.congr_of_eventuallyEq _
       (f.eq_on_source.eventually_eq_of_mem <| IsOpen.mem_nhds (chart_at _ _).open_source this)
-  exact f.to_cont_diff_bump.cont_diff_at.cont_mdiff_at.comp _ (contMdiffAt_ext_chart_at' this)
+  exact f.to_cont_diff_bump.cont_diff_at.cont_mdiff_at.comp _ (contMDiffAt_extChartAt' this)
 #align smooth_bump_function.smooth SmoothBumpFunction.smooth
 
 protected theorem smoothAt {x} : SmoothAt I 𝓘(ℝ) f x :=
@@ -359,14 +359,14 @@ on the source of the chart at `c`, then `f • g` is smooth on the whole manifol
 theorem smooth_smul {G} [NormedAddCommGroup G] [NormedSpace ℝ G] {g : M → G}
     (hg : SmoothOn I 𝓘(ℝ, G) g (chartAt H c).source) : Smooth I 𝓘(ℝ, G) fun x => f x • g x :=
   by
-  apply contMdiff_of_support fun x hx => _
+  apply contMDiff_of_support fun x hx => _
   have : x ∈ (chart_at H c).source
   calc
     x ∈ tsupport fun x => f x • g x := hx
     _ ⊆ tsupport f := (tsupport_smul_subset_left _ _)
     _ ⊆ (chart_at _ c).source := f.tsupport_subset_chart_at_source
   exact
-    f.smooth_at.smul ((hg _ this).ContMdiffAt <| IsOpen.mem_nhds (chart_at _ _).open_source this)
+    f.smooth_at.smul ((hg _ this).ContMDiffAt <| IsOpen.mem_nhds (chart_at _ _).open_source this)
 #align smooth_bump_function.smooth_smul SmoothBumpFunction.smooth_smul
 
 end SmoothBumpFunction
