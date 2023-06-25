@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Xavier Roblot
 
 ! This file was ported from Lean 3 source module number_theory.number_field.canonical_embedding
-! leanprover-community/mathlib commit 60da01b41bbe4206f05d34fd70c8dd7498717a30
+! leanprover-community/mathlib commit fdc286cc6967a012f41b87f76dcd2797b53152af
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.NumberTheory.NumberField.Embeddings
 
 /-!
 # Canonical embedding of a number field
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 The canonical embedding of a number field `K` of signature `(r₁, r₂)` is the ring homomorphism
 `K →+* ℝ^r₁ × ℂ^r₂` that sends `x ∈ K` to `(φ_₁(x),...,φ_r₁(x)) × (ψ_₁(x),..., ψ_r₂(x))` where

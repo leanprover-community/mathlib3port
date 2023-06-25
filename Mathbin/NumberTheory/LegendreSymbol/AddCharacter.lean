@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael Stoll
 
 ! This file was ported from Lean 3 source module number_theory.legendre_symbol.add_character
-! leanprover-community/mathlib commit 0723536a0522d24fc2f159a096fb3304bef77472
+! leanprover-community/mathlib commit fdc286cc6967a012f41b87f76dcd2797b53152af
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.FieldTheory.Finite.Trace
 
 /-!
 # Additive characters of finite rings and fields
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 Let `R` be a finite commutative ring. An *additive character* of `R` with values
 in another commutative ring `R'` is simply a morphism from the additive group

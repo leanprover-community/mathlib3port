@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module algebraic_geometry.presheafed_space.gluing
-! leanprover-community/mathlib commit 533f62f4dd62a5aad24a04326e6e787c8f7e98b1
+! leanprover-community/mathlib commit fdc286cc6967a012f41b87f76dcd2797b53152af
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.AlgebraicGeometry.LocallyRingedSpace.HasColimits
 
 /-!
 # Gluing Structured spaces
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 Given a family of gluing data of structured spaces (presheafed spaces, sheafed spaces, or locally
 ringed spaces), we may glue them together.
