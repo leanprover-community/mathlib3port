@@ -77,15 +77,15 @@ theorem M.mk_eq (x y : Σ j, F.obj j)
 #align Module.filtered_colimits.M.mk_eq ModuleCat.FilteredColimits.M.mk_eq
 -/
 
-#print ModuleCat.FilteredColimits.colimitSmulAux /-
+#print ModuleCat.FilteredColimits.colimitSMulAux /-
 /-- The "unlifted" version of scalar multiplication in the colimit. -/
-def colimitSmulAux (r : R) (x : Σ j, F.obj j) : M :=
+def colimitSMulAux (r : R) (x : Σ j, F.obj j) : M :=
   M.mk ⟨x.1, r • x.2⟩
-#align Module.filtered_colimits.colimit_smul_aux ModuleCat.FilteredColimits.colimitSmulAux
+#align Module.filtered_colimits.colimit_smul_aux ModuleCat.FilteredColimits.colimitSMulAux
 -/
 
-#print ModuleCat.FilteredColimits.colimitSmulAux_eq_of_rel /-
-theorem colimitSmulAux_eq_of_rel (r : R) (x y : Σ j, F.obj j)
+#print ModuleCat.FilteredColimits.colimitSMulAux_eq_of_rel /-
+theorem colimitSMulAux_eq_of_rel (r : R) (x y : Σ j, F.obj j)
     (h : Types.FilteredColimit.Rel (F ⋙ forget (ModuleCat R)) x y) :
     colimit_smul_aux r x = colimit_smul_aux r y :=
   by
@@ -94,7 +94,7 @@ theorem colimitSmulAux_eq_of_rel (r : R) (x y : Σ j, F.obj j)
   use k, f, g
   simp only [CategoryTheory.Functor.comp_map, forget_map_eq_coe] at hfg 
   rw [LinearMap.map_smul, LinearMap.map_smul, hfg]
-#align Module.filtered_colimits.colimit_smul_aux_eq_of_rel ModuleCat.FilteredColimits.colimitSmulAux_eq_of_rel
+#align Module.filtered_colimits.colimit_smul_aux_eq_of_rel ModuleCat.FilteredColimits.colimitSMulAux_eq_of_rel
 -/
 
 #print ModuleCat.FilteredColimits.colimitHasSmul /-

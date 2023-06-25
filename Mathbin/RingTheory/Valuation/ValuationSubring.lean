@@ -971,21 +971,21 @@ open scoped Pointwise
 
 variable {G : Type _} [Group G] [MulSemiringAction G K]
 
-#print ValuationSubring.pointwiseHasSmul /-
+#print ValuationSubring.pointwiseHasSMul /-
 /-- The action on a valuation subring corresponding to applying the action to every element.
 
 This is available as an instance in the `pointwise` locale. -/
-def pointwiseHasSmul : SMul G (ValuationSubring K)
+def pointwiseHasSMul : SMul G (ValuationSubring K)
     where smul g
     S :=-- TODO: if we add `valuation_subring.map` at a later date, we should use it here
     { g • S.toSubring with
       mem_or_inv_mem' := fun x =>
         (mem_or_inv_mem S (g⁻¹ • x)).imp Subring.mem_pointwise_smul_iff_inv_smul_mem.mpr fun h =>
           Subring.mem_pointwise_smul_iff_inv_smul_mem.mpr <| by rwa [smul_inv''] }
-#align valuation_subring.pointwise_has_smul ValuationSubring.pointwiseHasSmul
+#align valuation_subring.pointwise_has_smul ValuationSubring.pointwiseHasSMul
 -/
 
-scoped[Pointwise] attribute [instance] ValuationSubring.pointwiseHasSmul
+scoped[Pointwise] attribute [instance] ValuationSubring.pointwiseHasSMul
 
 open scoped Pointwise
 
