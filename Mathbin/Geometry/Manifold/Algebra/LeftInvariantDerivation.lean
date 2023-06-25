@@ -31,7 +31,7 @@ open scoped LieGroup Manifold Derivation
 
 variable {𝕜 : Type _} [NontriviallyNormedField 𝕜] {E : Type _} [NormedAddCommGroup E]
   [NormedSpace 𝕜 E] {H : Type _} [TopologicalSpace H] (I : ModelWithCorners 𝕜 E H) (G : Type _)
-  [TopologicalSpace G] [ChartedSpace H G] [Monoid G] [HasSmoothMul I G] (g h : G)
+  [TopologicalSpace G] [ChartedSpace H G] [Monoid G] [SmoothMul I G] (g h : G)
 
 -- Generate trivial has_sizeof instance. It prevents weird type class inference timeout problems
 @[local nolint instance_priority, local instance 10000]

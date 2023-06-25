@@ -33,21 +33,21 @@ variable {𝕜 : Type _} [NontriviallyNormedField 𝕜] {E : Type _} [NormedAddC
 namespace SmoothMap
 
 @[to_additive]
-instance hasMul {G : Type _} [Mul G] [TopologicalSpace G] [ChartedSpace H' G] [HasSmoothMul I' G] :
+instance hasMul {G : Type _} [Mul G] [TopologicalSpace G] [ChartedSpace H' G] [SmoothMul I' G] :
     Mul C^∞⟮I, N; I', G⟯ :=
   ⟨fun f g => ⟨f * g, f.Smooth.mul g.Smooth⟩⟩
 #align smooth_map.has_mul SmoothMap.hasMul
 #align smooth_map.has_add SmoothMap.hasAdd
 
 @[simp, to_additive]
-theorem coe_mul {G : Type _} [Mul G] [TopologicalSpace G] [ChartedSpace H' G] [HasSmoothMul I' G]
+theorem coe_mul {G : Type _} [Mul G] [TopologicalSpace G] [ChartedSpace H' G] [SmoothMul I' G]
     (f g : C^∞⟮I, N; I', G⟯) : ⇑(f * g) = f * g :=
   rfl
 #align smooth_map.coe_mul SmoothMap.coe_mul
 #align smooth_map.coe_add SmoothMap.coe_add
 
 @[simp, to_additive]
-theorem mul_comp {G : Type _} [Mul G] [TopologicalSpace G] [ChartedSpace H' G] [HasSmoothMul I' G]
+theorem mul_comp {G : Type _} [Mul G] [TopologicalSpace G] [ChartedSpace H' G] [SmoothMul I' G]
     (f g : C^∞⟮I'', N'; I', G⟯) (h : C^∞⟮I, N; I'', N'⟯) : (f * g).comp h = f.comp h * g.comp h :=
   by ext <;> simp only [ContMDiffMap.comp_apply, coe_mul, Pi.mul_apply]
 #align smooth_map.mul_comp SmoothMap.mul_comp
@@ -79,14 +79,14 @@ under pointwise multiplication.
 
 @[to_additive]
 instance semigroup {G : Type _} [Semigroup G] [TopologicalSpace G] [ChartedSpace H' G]
-    [HasSmoothMul I' G] : Semigroup C^∞⟮I, N; I', G⟯ :=
+    [SmoothMul I' G] : Semigroup C^∞⟮I, N; I', G⟯ :=
   { SmoothMap.hasMul with mul_assoc := fun a b c => by ext <;> exact mul_assoc _ _ _ }
 #align smooth_map.semigroup SmoothMap.semigroup
 #align smooth_map.add_semigroup SmoothMap.addSemigroup
 
 @[to_additive]
-instance monoid {G : Type _} [Monoid G] [TopologicalSpace G] [ChartedSpace H' G]
-    [HasSmoothMul I' G] : Monoid C^∞⟮I, N; I', G⟯ :=
+instance monoid {G : Type _} [Monoid G] [TopologicalSpace G] [ChartedSpace H' G] [SmoothMul I' G] :
+    Monoid C^∞⟮I, N; I', G⟯ :=
   { SmoothMap.semigroup,
     SmoothMap.hasOne with
     one_mul := fun a => by ext <;> exact one_mul _
@@ -98,7 +98,7 @@ instance monoid {G : Type _} [Monoid G] [TopologicalSpace G] [ChartedSpace H' G]
 @[to_additive "Coercion to a function as an `add_monoid_hom`. Similar to `add_monoid_hom.coe_fn`.",
   simps]
 def coeFnMonoidHom {G : Type _} [Monoid G] [TopologicalSpace G] [ChartedSpace H' G]
-    [HasSmoothMul I' G] : C^∞⟮I, N; I', G⟯ →* N → G
+    [SmoothMul I' G] : C^∞⟮I, N; I', G⟯ →* N → G
     where
   toFun := coeFn
   map_one' := coe_one
@@ -113,8 +113,8 @@ variable (I N)
 @[to_additive
       "For a manifold `N` and a smooth homomorphism `φ` between additive Lie groups `G'`,\n`G''`, the 'left-composition-by-`φ`' group homomorphism from `C^∞⟮I, N; I', G'⟯` to\n`C^∞⟮I, N; I'', G''⟯`."]
 def compLeftMonoidHom {G' : Type _} [Monoid G'] [TopologicalSpace G'] [ChartedSpace H' G']
-    [HasSmoothMul I' G'] {G'' : Type _} [Monoid G''] [TopologicalSpace G''] [ChartedSpace H'' G'']
-    [HasSmoothMul I'' G''] (φ : G' →* G'') (hφ : Smooth I' I'' φ) :
+    [SmoothMul I' G'] {G'' : Type _} [Monoid G''] [TopologicalSpace G''] [ChartedSpace H'' G'']
+    [SmoothMul I'' G''] (φ : G' →* G'') (hφ : Smooth I' I'' φ) :
     C^∞⟮I, N; I', G'⟯ →* C^∞⟮I, N; I'', G''⟯
     where
   toFun f := ⟨φ ∘ f, fun x => (hφ.Smooth _).comp x (f.ContMDiff x)⟩
@@ -130,7 +130,7 @@ variable (I') {N}
 @[to_additive
       "For an additive Lie group `G` and open sets `U ⊆ V` in `N`, the 'restriction' group\nhomomorphism from `C^∞⟮I, V; I', G⟯` to `C^∞⟮I, U; I', G⟯`."]
 def restrictMonoidHom (G : Type _) [Monoid G] [TopologicalSpace G] [ChartedSpace H' G]
-    [HasSmoothMul I' G] {U V : Opens N} (h : U ≤ V) : C^∞⟮I, V; I', G⟯ →* C^∞⟮I, U; I', G⟯
+    [SmoothMul I' G] {U V : Opens N} (h : U ≤ V) : C^∞⟮I, V; I', G⟯ →* C^∞⟮I, U; I', G⟯
     where
   toFun f := ⟨f ∘ Set.inclusion h, f.Smooth.comp (smooth_inclusion h)⟩
   map_one' := rfl
@@ -142,7 +142,7 @@ variable {I N I' N'}
 
 @[to_additive]
 instance commMonoid {G : Type _} [CommMonoid G] [TopologicalSpace G] [ChartedSpace H' G]
-    [HasSmoothMul I' G] : CommMonoid C^∞⟮I, N; I', G⟯ :=
+    [SmoothMul I' G] : CommMonoid C^∞⟮I, N; I', G⟯ :=
   { SmoothMap.monoid, SmoothMap.hasOne with mul_comm := fun a b => by ext <;> exact mul_comm _ _ }
 #align smooth_map.comm_monoid SmoothMap.commMonoid
 #align smooth_map.add_comm_monoid SmoothMap.addCommMonoid
