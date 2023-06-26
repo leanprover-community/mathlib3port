@@ -46,7 +46,7 @@ open scoped Manifold Topology
 
 open Complex
 
-namespace Mdifferentiable
+namespace MDifferentiable
 
 variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℂ E]
 
@@ -56,7 +56,7 @@ variable {M : Type _} [TopologicalSpace M] [CompactSpace M] [ChartedSpace E M]
   [SmoothManifoldWithCorners 𝓘(ℂ, E) M]
 
 /-- A holomorphic function on a compact complex manifold is locally constant. -/
-protected theorem isLocallyConstant {f : M → F} (hf : Mdifferentiable 𝓘(ℂ, E) 𝓘(ℂ, F) f) :
+protected theorem isLocallyConstant {f : M → F} (hf : MDifferentiable 𝓘(ℂ, E) 𝓘(ℂ, F) f) :
     IsLocallyConstant f :=
   by
   haveI : LocallyConnectedSpace M := ChartedSpace.locallyConnectedSpace E M
@@ -109,20 +109,20 @@ protected theorem isLocallyConstant {f : M → F} (hf : Mdifferentiable 𝓘(ℂ
   rintro q ⟨hqs, hq : chart_at E p q ∈ _, hq'⟩
   refine' ⟨_, hqs⟩
   simpa [LocalHomeomorph.left_inv _ hq', hp, -norm_eq_abs] using hUf (chart_at E p q) hq
-#align mdifferentiable.is_locally_constant Mdifferentiable.isLocallyConstant
+#align mdifferentiable.is_locally_constant MDifferentiable.isLocallyConstant
 
 /-- A holomorphic function on a compact connected complex manifold is constant. -/
 theorem apply_eq_of_compactSpace [PreconnectedSpace M] {f : M → F}
-    (hf : Mdifferentiable 𝓘(ℂ, E) 𝓘(ℂ, F) f) (a b : M) : f a = f b :=
+    (hf : MDifferentiable 𝓘(ℂ, E) 𝓘(ℂ, F) f) (a b : M) : f a = f b :=
   hf.IsLocallyConstant.apply_eq_of_preconnectedSpace _ _
-#align mdifferentiable.apply_eq_of_compact_space Mdifferentiable.apply_eq_of_compactSpace
+#align mdifferentiable.apply_eq_of_compact_space MDifferentiable.apply_eq_of_compactSpace
 
 /-- A holomorphic function on a compact connected complex manifold is the constant function `f ≡ v`,
 for some value `v`. -/
 theorem exists_eq_const_of_compactSpace [PreconnectedSpace M] {f : M → F}
-    (hf : Mdifferentiable 𝓘(ℂ, E) 𝓘(ℂ, F) f) : ∃ v : F, f = Function.const M v :=
+    (hf : MDifferentiable 𝓘(ℂ, E) 𝓘(ℂ, F) f) : ∃ v : F, f = Function.const M v :=
   hf.IsLocallyConstant.exists_eq_const
-#align mdifferentiable.exists_eq_const_of_compact_space Mdifferentiable.exists_eq_const_of_compactSpace
+#align mdifferentiable.exists_eq_const_of_compact_space MDifferentiable.exists_eq_const_of_compactSpace
 
-end Mdifferentiable
+end MDifferentiable
 

@@ -33,9 +33,9 @@ theorem smooth_coe : Smooth 𝓘(ℂ) 𝓘(ℂ) (coe : ℍ → ℂ) := fun x => 
 #align upper_half_plane.smooth_coe UpperHalfPlane.smooth_coe
 
 /-- The inclusion map `ℍ → ℂ` is a differentiable map of manifolds. -/
-theorem mdifferentiable_coe : Mdifferentiable 𝓘(ℂ) 𝓘(ℂ) (coe : ℍ → ℂ) :=
-  smooth_coe.Mdifferentiable
-#align upper_half_plane.mdifferentiable_coe UpperHalfPlane.mdifferentiable_coe
+theorem mDifferentiable_coe : MDifferentiable 𝓘(ℂ) 𝓘(ℂ) (coe : ℍ → ℂ) :=
+  smooth_coe.MDifferentiable
+#align upper_half_plane.mdifferentiable_coe UpperHalfPlane.mDifferentiable_coe
 
 end UpperHalfPlane
 

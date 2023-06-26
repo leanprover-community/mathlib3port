@@ -124,14 +124,14 @@ protected theorem smooth (h : M ≃ₘ⟮I, I'⟯ M') : Smooth I I' h :=
   h.contMDiff_to_fun
 #align diffeomorph.smooth Diffeomorph.smooth
 
-protected theorem mdifferentiable (h : M ≃ₘ^n⟮I, I'⟯ M') (hn : 1 ≤ n) : Mdifferentiable I I' h :=
-  h.ContMDiff.Mdifferentiable hn
-#align diffeomorph.mdifferentiable Diffeomorph.mdifferentiable
+protected theorem mDifferentiable (h : M ≃ₘ^n⟮I, I'⟯ M') (hn : 1 ≤ n) : MDifferentiable I I' h :=
+  h.ContMDiff.MDifferentiable hn
+#align diffeomorph.mdifferentiable Diffeomorph.mDifferentiable
 
-protected theorem mdifferentiableOn (h : M ≃ₘ^n⟮I, I'⟯ M') (s : Set M) (hn : 1 ≤ n) :
-    MdifferentiableOn I I' h s :=
-  (h.Mdifferentiable hn).MdifferentiableOn
-#align diffeomorph.mdifferentiable_on Diffeomorph.mdifferentiableOn
+protected theorem mDifferentiableOn (h : M ≃ₘ^n⟮I, I'⟯ M') (s : Set M) (hn : 1 ≤ n) :
+    MDifferentiableOn I I' h s :=
+  (h.MDifferentiable hn).MDifferentiableOn
+#align diffeomorph.mdifferentiable_on Diffeomorph.mDifferentiableOn
 
 @[simp]
 theorem coe_toEquiv (h : M ≃ₘ^n⟮I, I'⟯ M') : ⇑h.toEquiv = h :=
@@ -373,10 +373,10 @@ theorem contMDiff_diffeomorph_comp_iff {m} (h : M ≃ₘ^n⟮I, J⟯ N) {f : M' 
   forall_congr' fun x => h.contMDiffWithinAt_diffeomorph_comp_iff hm
 #align diffeomorph.cont_mdiff_diffeomorph_comp_iff Diffeomorph.contMDiff_diffeomorph_comp_iff
 
-theorem toLocalHomeomorph_mdifferentiable (h : M ≃ₘ^n⟮I, J⟯ N) (hn : 1 ≤ n) :
-    h.toHomeomorph.toLocalHomeomorph.Mdifferentiable I J :=
-  ⟨h.MdifferentiableOn _ hn, h.symm.MdifferentiableOn _ hn⟩
-#align diffeomorph.to_local_homeomorph_mdifferentiable Diffeomorph.toLocalHomeomorph_mdifferentiable
+theorem toLocalHomeomorph_mDifferentiable (h : M ≃ₘ^n⟮I, J⟯ N) (hn : 1 ≤ n) :
+    h.toHomeomorph.toLocalHomeomorph.MDifferentiable I J :=
+  ⟨h.MDifferentiableOn _ hn, h.symm.MDifferentiableOn _ hn⟩
+#align diffeomorph.to_local_homeomorph_mdifferentiable Diffeomorph.toLocalHomeomorph_mDifferentiable
 
 section Constructions
 
@@ -442,30 +442,30 @@ end Constructions
 
 variable [SmoothManifoldWithCorners I M] [SmoothManifoldWithCorners J N]
 
-theorem uniqueMdiffOn_image_aux (h : M ≃ₘ^n⟮I, J⟯ N) (hn : 1 ≤ n) {s : Set M}
-    (hs : UniqueMdiffOn I s) : UniqueMdiffOn J (h '' s) :=
+theorem uniqueMDiffOn_image_aux (h : M ≃ₘ^n⟮I, J⟯ N) (hn : 1 ≤ n) {s : Set M}
+    (hs : UniqueMDiffOn I s) : UniqueMDiffOn J (h '' s) :=
   by
   convert hs.unique_mdiff_on_preimage (h.to_local_homeomorph_mdifferentiable hn)
   simp [h.image_eq_preimage]
-#align diffeomorph.unique_mdiff_on_image_aux Diffeomorph.uniqueMdiffOn_image_aux
+#align diffeomorph.unique_mdiff_on_image_aux Diffeomorph.uniqueMDiffOn_image_aux
 
 @[simp]
-theorem uniqueMdiffOn_image (h : M ≃ₘ^n⟮I, J⟯ N) (hn : 1 ≤ n) {s : Set M} :
-    UniqueMdiffOn J (h '' s) ↔ UniqueMdiffOn I s :=
-  ⟨fun hs => h.symm_image_image s ▸ h.symm.uniqueMdiffOn_image_aux hn hs,
-    h.uniqueMdiffOn_image_aux hn⟩
-#align diffeomorph.unique_mdiff_on_image Diffeomorph.uniqueMdiffOn_image
+theorem uniqueMDiffOn_image (h : M ≃ₘ^n⟮I, J⟯ N) (hn : 1 ≤ n) {s : Set M} :
+    UniqueMDiffOn J (h '' s) ↔ UniqueMDiffOn I s :=
+  ⟨fun hs => h.symm_image_image s ▸ h.symm.uniqueMDiffOn_image_aux hn hs,
+    h.uniqueMDiffOn_image_aux hn⟩
+#align diffeomorph.unique_mdiff_on_image Diffeomorph.uniqueMDiffOn_image
 
 @[simp]
-theorem uniqueMdiffOn_preimage (h : M ≃ₘ^n⟮I, J⟯ N) (hn : 1 ≤ n) {s : Set N} :
-    UniqueMdiffOn I (h ⁻¹' s) ↔ UniqueMdiffOn J s :=
-  h.symm_image_eq_preimage s ▸ h.symm.uniqueMdiffOn_image hn
-#align diffeomorph.unique_mdiff_on_preimage Diffeomorph.uniqueMdiffOn_preimage
+theorem uniqueMDiffOn_preimage (h : M ≃ₘ^n⟮I, J⟯ N) (hn : 1 ≤ n) {s : Set N} :
+    UniqueMDiffOn I (h ⁻¹' s) ↔ UniqueMDiffOn J s :=
+  h.symm_image_eq_preimage s ▸ h.symm.uniqueMDiffOn_image hn
+#align diffeomorph.unique_mdiff_on_preimage Diffeomorph.uniqueMDiffOn_preimage
 
 @[simp]
 theorem uniqueDiffOn_image (h : E ≃ₘ^n[𝕜] F) (hn : 1 ≤ n) {s : Set E} :
     UniqueDiffOn 𝕜 (h '' s) ↔ UniqueDiffOn 𝕜 s := by
-  simp only [← uniqueMdiffOn_iff_uniqueDiffOn, unique_mdiff_on_image, hn]
+  simp only [← uniqueMDiffOn_iff_uniqueDiffOn, unique_mdiff_on_image, hn]
 #align diffeomorph.unique_diff_on_image Diffeomorph.uniqueDiffOn_image
 
 @[simp]

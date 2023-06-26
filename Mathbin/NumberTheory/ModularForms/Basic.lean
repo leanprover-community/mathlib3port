@@ -45,7 +45,7 @@ open scoped ModularForm
 
 /-- These are `slash_invariant_form`'s that are holomophic and bounded at infinity. -/
 structure ModularForm extends SlashInvariantForm Γ k where
-  holo' : Mdifferentiable 𝓘(ℂ) 𝓘(ℂ) (to_fun : ℍ → ℂ)
+  holo' : MDifferentiable 𝓘(ℂ) 𝓘(ℂ) (to_fun : ℍ → ℂ)
   bdd_at_infty' : ∀ A : SL(2, ℤ), IsBoundedAtImInfty (to_fun ∣[k] A)
 #align modular_form ModularForm
 
@@ -54,7 +54,7 @@ add_decl_doc ModularForm.toSlashInvariantForm
 
 /-- These are `slash_invariant_form`s that are holomophic and zero at infinity. -/
 structure CuspForm extends SlashInvariantForm Γ k where
-  holo' : Mdifferentiable 𝓘(ℂ) 𝓘(ℂ) (to_fun : ℍ → ℂ)
+  holo' : MDifferentiable 𝓘(ℂ) 𝓘(ℂ) (to_fun : ℍ → ℂ)
   zero_at_infty' : ∀ A : SL(2, ℤ), IsZeroAtImInfty (to_fun ∣[k] A)
 #align cusp_form CuspForm
 
@@ -65,7 +65,7 @@ add_decl_doc CuspForm.toSlashInvariantForm
 `slash_invariant_form_class` by requiring that the functions be holomorphic and bounded
 at infinity. -/
 class ModularFormClass extends SlashInvariantFormClass F Γ k where
-  holo : ∀ f : F, Mdifferentiable 𝓘(ℂ) 𝓘(ℂ) (f : ℍ → ℂ)
+  holo : ∀ f : F, MDifferentiable 𝓘(ℂ) 𝓘(ℂ) (f : ℍ → ℂ)
   bdd_at_infty : ∀ (f : F) (A : SL(2, ℤ)), IsBoundedAtImInfty (f ∣[k] A)
 #align modular_form_class ModularFormClass
 
@@ -73,7 +73,7 @@ class ModularFormClass extends SlashInvariantFormClass F Γ k where
 `slash_invariant_form_class` by requiring that the functions be holomorphic and zero
 at infinity. -/
 class CuspFormClass extends SlashInvariantFormClass F Γ k where
-  holo : ∀ f : F, Mdifferentiable 𝓘(ℂ) 𝓘(ℂ) (f : ℍ → ℂ)
+  holo : ∀ f : F, MDifferentiable 𝓘(ℂ) 𝓘(ℂ) (f : ℍ → ℂ)
   zero_at_infty : ∀ (f : F) (A : SL(2, ℤ)), IsZeroAtImInfty (f ∣[k] A)
 #align cusp_form_class CuspFormClass
 

@@ -65,54 +65,74 @@ variable {𝕜 : Type _} [NontriviallyNormedField 𝕜]
 /-! ### Deducing differentiability from smoothness -/
 
 
+#print ContMDiffWithinAt.mdifferentiableWithinAt /-
 theorem ContMDiffWithinAt.mdifferentiableWithinAt (hf : ContMDiffWithinAt I I' n f s x)
-    (hn : 1 ≤ n) : MdifferentiableWithinAt I I' f s x :=
+    (hn : 1 ≤ n) : MDifferentiableWithinAt I I' f s x :=
   by
-  suffices h : MdifferentiableWithinAt I I' f (s ∩ f ⁻¹' (extChartAt I' (f x)).source) x
+  suffices h : MDifferentiableWithinAt I I' f (s ∩ f ⁻¹' (extChartAt I' (f x)).source) x
   · rwa [mdifferentiableWithinAt_inter'] at h 
     apply hf.1.preimage_mem_nhdsWithin
     exact extChartAt_source_mem_nhds I' (f x)
   rw [mdifferentiableWithinAt_iff]
   exact ⟨hf.1.mono (inter_subset_left _ _), (hf.2.DifferentiableWithinAt hn).mono (by mfld_set_tac)⟩
 #align cont_mdiff_within_at.mdifferentiable_within_at ContMDiffWithinAt.mdifferentiableWithinAt
+-/
 
+#print ContMDiffAt.mdifferentiableAt /-
 theorem ContMDiffAt.mdifferentiableAt (hf : ContMDiffAt I I' n f x) (hn : 1 ≤ n) :
-    MdifferentiableAt I I' f x :=
+    MDifferentiableAt I I' f x :=
   mdifferentiableWithinAt_univ.1 <| ContMDiffWithinAt.mdifferentiableWithinAt hf hn
 #align cont_mdiff_at.mdifferentiable_at ContMDiffAt.mdifferentiableAt
+-/
 
+#print ContMDiffOn.mdifferentiableOn /-
 theorem ContMDiffOn.mdifferentiableOn (hf : ContMDiffOn I I' n f s) (hn : 1 ≤ n) :
-    MdifferentiableOn I I' f s := fun x hx => (hf x hx).MdifferentiableWithinAt hn
+    MDifferentiableOn I I' f s := fun x hx => (hf x hx).MDifferentiableWithinAt hn
 #align cont_mdiff_on.mdifferentiable_on ContMDiffOn.mdifferentiableOn
+-/
 
-theorem ContMDiff.mdifferentiable (hf : ContMDiff I I' n f) (hn : 1 ≤ n) : Mdifferentiable I I' f :=
-  fun x => (hf x).MdifferentiableAt hn
+#print ContMDiff.mdifferentiable /-
+theorem ContMDiff.mdifferentiable (hf : ContMDiff I I' n f) (hn : 1 ≤ n) : MDifferentiable I I' f :=
+  fun x => (hf x).MDifferentiableAt hn
 #align cont_mdiff.mdifferentiable ContMDiff.mdifferentiable
+-/
 
+#print SmoothWithinAt.mdifferentiableWithinAt /-
 theorem SmoothWithinAt.mdifferentiableWithinAt (hf : SmoothWithinAt I I' f s x) :
-    MdifferentiableWithinAt I I' f s x :=
-  hf.MdifferentiableWithinAt le_top
+    MDifferentiableWithinAt I I' f s x :=
+  hf.MDifferentiableWithinAt le_top
 #align smooth_within_at.mdifferentiable_within_at SmoothWithinAt.mdifferentiableWithinAt
+-/
 
-theorem SmoothAt.mdifferentiableAt (hf : SmoothAt I I' f x) : MdifferentiableAt I I' f x :=
-  hf.MdifferentiableAt le_top
+#print SmoothAt.mdifferentiableAt /-
+theorem SmoothAt.mdifferentiableAt (hf : SmoothAt I I' f x) : MDifferentiableAt I I' f x :=
+  hf.MDifferentiableAt le_top
 #align smooth_at.mdifferentiable_at SmoothAt.mdifferentiableAt
+-/
 
-theorem SmoothOn.mdifferentiableOn (hf : SmoothOn I I' f s) : MdifferentiableOn I I' f s :=
-  hf.MdifferentiableOn le_top
+#print SmoothOn.mdifferentiableOn /-
+theorem SmoothOn.mdifferentiableOn (hf : SmoothOn I I' f s) : MDifferentiableOn I I' f s :=
+  hf.MDifferentiableOn le_top
 #align smooth_on.mdifferentiable_on SmoothOn.mdifferentiableOn
+-/
 
-theorem Smooth.mdifferentiable (hf : Smooth I I' f) : Mdifferentiable I I' f :=
+#print Smooth.mdifferentiable /-
+theorem Smooth.mdifferentiable (hf : Smooth I I' f) : MDifferentiable I I' f :=
   ContMDiff.mdifferentiable hf le_top
 #align smooth.mdifferentiable Smooth.mdifferentiable
+-/
 
-theorem Smooth.mdifferentiableAt (hf : Smooth I I' f) : MdifferentiableAt I I' f x :=
-  hf.Mdifferentiable x
+#print Smooth.mdifferentiableAt /-
+theorem Smooth.mdifferentiableAt (hf : Smooth I I' f) : MDifferentiableAt I I' f x :=
+  hf.MDifferentiable x
 #align smooth.mdifferentiable_at Smooth.mdifferentiableAt
+-/
 
-theorem Smooth.mdifferentiableWithinAt (hf : Smooth I I' f) : MdifferentiableWithinAt I I' f s x :=
-  hf.MdifferentiableAt.MdifferentiableWithinAt
+#print Smooth.mdifferentiableWithinAt /-
+theorem Smooth.mdifferentiableWithinAt (hf : Smooth I I' f) : MDifferentiableWithinAt I I' f s x :=
+  hf.MDifferentiableAt.MDifferentiableWithinAt
 #align smooth.mdifferentiable_within_at Smooth.mdifferentiableWithinAt
+-/
 
 /-! ### The derivative of a smooth function is smooth -/
 
@@ -294,7 +314,7 @@ derivative is continuous. In this auxiliary lemma, we prove this fact when the s
 space are model spaces in models with corners. The general fact is proved in
 `cont_mdiff_on.continuous_on_tangent_map_within`-/
 theorem ContMDiffOn.continuousOn_tangentMapWithin_aux {f : H → H'} {s : Set H}
-    (hf : ContMDiffOn I I' n f s) (hn : 1 ≤ n) (hs : UniqueMdiffOn I s) :
+    (hf : ContMDiffOn I I' n f s) (hn : 1 ≤ n) (hs : UniqueMDiffOn I s) :
     ContinuousOn (tangentMapWithin I I' f s) (π (TangentSpace I) ⁻¹' s) :=
   by
   suffices h :
@@ -322,7 +342,7 @@ theorem ContMDiffOn.continuousOn_tangentMapWithin_aux {f : H → H'} {s : Set H}
     simp only [mfld_simps]
     apply congr_fun
     apply congr_arg
-    rw [MdifferentiableWithinAt.mfderivWithin (hf.mdifferentiable_on hn x hx)]
+    rw [MDifferentiableWithinAt.mfderivWithin (hf.mdifferentiable_on hn x hx)]
     rfl
   suffices h :
     ContinuousOn
@@ -370,7 +390,7 @@ theorem ContMDiffOn.continuousOn_tangentMapWithin_aux {f : H → H'} {s : Set H}
 are model spaces in models with corners. The general fact is proved in
 `cont_mdiff_on.cont_mdiff_on_tangent_map_within` -/
 theorem ContMDiffOn.contMDiffOn_tangentMapWithin_aux {f : H → H'} {s : Set H}
-    (hf : ContMDiffOn I I' n f s) (hmn : m + 1 ≤ n) (hs : UniqueMdiffOn I s) :
+    (hf : ContMDiffOn I I' n f s) (hmn : m + 1 ≤ n) (hs : UniqueMDiffOn I s) :
     ContMDiffOn I.tangent I'.tangent m (tangentMapWithin I I' f s) (π (TangentSpace I) ⁻¹' s) :=
   by
   have m_le_n : m ≤ n := by
@@ -384,7 +404,7 @@ theorem ContMDiffOn.contMDiffOn_tangentMapWithin_aux {f : H → H'} {s : Set H}
   have U' : UniqueDiffOn 𝕜 (range I ∩ I.symm ⁻¹' s) :=
     by
     intro y hy
-    simpa only [UniqueMdiffOn, UniqueMdiffWithinAt, hy.1, inter_comm, mfld_simps] using
+    simpa only [UniqueMDiffOn, UniqueMDiffWithinAt, hy.1, inter_comm, mfld_simps] using
       hs (I.symm y) hy.2
   rw [contMDiffOn_iff]
   refine' ⟨hf.continuous_on_tangent_map_within_aux one_le_n hs, fun p q => _⟩
@@ -435,7 +455,7 @@ theorem ContMDiffOn.contMDiffOn_tangentMapWithin_aux {f : H → H'} {s : Set H}
 /-- If a function is `C^n` on a domain with unique derivatives, then its bundled derivative
 is `C^m` when `m+1 ≤ n`. -/
 theorem ContMDiffOn.contMDiffOn_tangentMapWithin (hf : ContMDiffOn I I' n f s) (hmn : m + 1 ≤ n)
-    (hs : UniqueMdiffOn I s) :
+    (hs : UniqueMDiffOn I s) :
     ContMDiffOn I.tangent I'.tangent m (tangentMapWithin I I' f s) (π (TangentSpace I) ⁻¹' s) :=
   by
   /- The strategy of the proof is to avoid unfolding the definitions, and reduce by functoriality
@@ -495,12 +515,12 @@ theorem ContMDiffOn.contMDiffOn_tangentMapWithin (hf : ContMDiffOn I I' n f s) (
     derivative as a composition of a function between model spaces and of charts.
     Convention: statements about the differentiability of `a ∘ b ∘ c` are named `diff_abc`. Statements
     about differentiability in the bundle have a `_lift` suffix. -/
-  have U' : UniqueMdiffOn I s' :=
+  have U' : UniqueMDiffOn I s' :=
     by
-    apply UniqueMdiffOn.inter _ l.open_source
+    apply UniqueMDiffOn.inter _ l.open_source
     rw [ho, inter_comm]
     exact hs.inter o_open
-  have U'l : UniqueMdiffOn I s'l := U'.unique_mdiff_on_preimage (mdifferentiable_chart _ _)
+  have U'l : UniqueMDiffOn I s'l := U'.unique_mdiff_on_preimage (mdifferentiable_chart _ _)
   have diff_f : ContMDiffOn I I' n f s' := hf.mono (by mfld_set_tac)
   have diff_r : ContMDiffOn I' I' n r r.source := contMDiffOn_chart
   have diff_rf : ContMDiffOn I I' n (r ∘ f) s' :=
@@ -555,8 +575,8 @@ theorem ContMDiffOn.contMDiffOn_tangentMapWithin (hf : ContMDiffOn I I' n f s) (
     by
     intro q hq
     simp only [s'_lift, mfld_simps] at hq 
-    have U'q : UniqueMdiffWithinAt I s' q.1 := by apply U'; simp only [hq, s', mfld_simps]
-    have U'lq : UniqueMdiffWithinAt I s'l (Dl q).1 := by apply U'l; simp only [hq, s'l, mfld_simps]
+    have U'q : UniqueMDiffWithinAt I s' q.1 := by apply U'; simp only [hq, s', mfld_simps]
+    have U'lq : UniqueMDiffWithinAt I s'l (Dl q).1 := by apply U'l; simp only [hq, s'l, mfld_simps]
     have A :
       tangentMapWithin I I' ((r ∘ f) ∘ l.symm) s'l (il.symm (Dl q)) =
         tangentMapWithin I I' (r ∘ f) s' (tangentMapWithin I I l.symm s'l (il.symm (Dl q))) :=
@@ -600,7 +620,7 @@ theorem ContMDiffOn.contMDiffOn_tangentMapWithin (hf : ContMDiffOn I I' n f s) (
           tangentMap I' I' r (tangentMapWithin I I' f s' q) :=
         by
         apply tangentMapWithin_eq_tangentMap
-        · apply IsOpen.uniqueMdiffWithinAt _ r.open_source; simp [hq]
+        · apply IsOpen.uniqueMDiffWithinAt _ r.open_source; simp [hq]
         · refine' mdifferentiableAt_atlas _ (chart_mem_atlas _ _) _
           simp only [hq, mfld_simps]
       have : f p.proj = (tangentMapWithin I I' f s p).1 := rfl
@@ -626,7 +646,7 @@ theorem ContMDiffOn.contMDiffOn_tangentMapWithin (hf : ContMDiffOn I I' n f s) (
 /-- If a function is `C^n` on a domain with unique derivatives, with `1 ≤ n`, then its bundled
 derivative is continuous there. -/
 theorem ContMDiffOn.continuousOn_tangentMapWithin (hf : ContMDiffOn I I' n f s) (hmn : 1 ≤ n)
-    (hs : UniqueMdiffOn I s) :
+    (hs : UniqueMDiffOn I s) :
     ContinuousOn (tangentMapWithin I I' f s) (π (TangentSpace I) ⁻¹' s) :=
   haveI :
     ContMDiffOn I.tangent I'.tangent 0 (tangentMapWithin I I' f s) (π (TangentSpace I) ⁻¹' s) :=
@@ -639,7 +659,7 @@ theorem ContMDiff.contMDiff_tangentMap (hf : ContMDiff I I' n f) (hmn : m + 1 �
     ContMDiff I.tangent I'.tangent m (tangentMap I I' f) :=
   by
   rw [← contMDiffOn_univ] at hf ⊢
-  convert hf.cont_mdiff_on_tangent_map_within hmn uniqueMdiffOn_univ
+  convert hf.cont_mdiff_on_tangent_map_within hmn uniqueMDiffOn_univ
   rw [tangentMapWithin_univ]
 #align cont_mdiff.cont_mdiff_tangent_map ContMDiff.contMDiff_tangentMap
 
@@ -649,7 +669,7 @@ theorem ContMDiff.continuous_tangentMap (hf : ContMDiff I I' n f) (hmn : 1 ≤ n
   by
   rw [← contMDiffOn_univ] at hf 
   rw [continuous_iff_continuousOn_univ]
-  convert hf.continuous_on_tangent_map_within hmn uniqueMdiffOn_univ
+  convert hf.continuous_on_tangent_map_within hmn uniqueMDiffOn_univ
   rw [tangentMapWithin_univ]
 #align cont_mdiff.continuous_tangent_map ContMDiff.continuous_tangentMap
 
@@ -684,7 +704,7 @@ theorem tangentMap_tangentBundle_pure (p : TangentBundle I M) :
     apply IsOpen.mem_nhds
     apply (LocalHomeomorph.open_target _).Preimage I.continuous_inv_fun
     simp only [mfld_simps]
-  have A : MdifferentiableAt I I.tangent (fun x => @total_space_mk M (TangentSpace I) x 0) x :=
+  have A : MDifferentiableAt I I.tangent (fun x => @total_space_mk M (TangentSpace I) x 0) x :=
     haveI : Smooth I (I.prod 𝓘(𝕜, E)) (zero_section (TangentSpace I : M → Type _)) :=
       Bundle.smooth_zeroSection 𝕜 (TangentSpace I : M → Type _)
     this.mdifferentiable_at
@@ -719,17 +739,17 @@ namespace ContMDiffMap
 -- They could be moved to another file (perhaps a new file) if desired.
 open scoped Manifold
 
-protected theorem mdifferentiable' (f : C^n⟮I, M; I', M'⟯) (hn : 1 ≤ n) : Mdifferentiable I I' f :=
-  f.ContMDiff.Mdifferentiable hn
+protected theorem mdifferentiable' (f : C^n⟮I, M; I', M'⟯) (hn : 1 ≤ n) : MDifferentiable I I' f :=
+  f.ContMDiff.MDifferentiable hn
 #align cont_mdiff_map.mdifferentiable' ContMDiffMap.mdifferentiable'
 
-protected theorem mdifferentiable (f : C^∞⟮I, M; I', M'⟯) : Mdifferentiable I I' f :=
-  f.ContMDiff.Mdifferentiable le_top
-#align cont_mdiff_map.mdifferentiable ContMDiffMap.mdifferentiable
+protected theorem mDifferentiable (f : C^∞⟮I, M; I', M'⟯) : MDifferentiable I I' f :=
+  f.ContMDiff.MDifferentiable le_top
+#align cont_mdiff_map.mdifferentiable ContMDiffMap.mDifferentiable
 
-protected theorem mdifferentiableAt (f : C^∞⟮I, M; I', M'⟯) {x} : MdifferentiableAt I I' f x :=
-  f.Mdifferentiable x
-#align cont_mdiff_map.mdifferentiable_at ContMDiffMap.mdifferentiableAt
+protected theorem mDifferentiableAt (f : C^∞⟮I, M; I', M'⟯) {x} : MDifferentiableAt I I' f x :=
+  f.MDifferentiable x
+#align cont_mdiff_map.mdifferentiable_at ContMDiffMap.mDifferentiableAt
 
 end ContMDiffMap
 

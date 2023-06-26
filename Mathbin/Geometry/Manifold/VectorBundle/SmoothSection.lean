@@ -85,19 +85,19 @@ protected theorem smooth (s : Cₛ^∞⟮I; F, V⟯) :
 #align cont_mdiff_section.smooth ContMdiffSection.smooth
 
 protected theorem mdifferentiable' (s : Cₛ^n⟮I; F, V⟯) (hn : 1 ≤ n) :
-    Mdifferentiable I (I.Prod 𝓘(𝕜, F)) fun x => totalSpaceMk x (s x : V x) :=
-  s.ContMDiff.Mdifferentiable hn
+    MDifferentiable I (I.Prod 𝓘(𝕜, F)) fun x => totalSpaceMk x (s x : V x) :=
+  s.ContMDiff.MDifferentiable hn
 #align cont_mdiff_section.mdifferentiable' ContMdiffSection.mdifferentiable'
 
-protected theorem mdifferentiable (s : Cₛ^∞⟮I; F, V⟯) :
-    Mdifferentiable I (I.Prod 𝓘(𝕜, F)) fun x => totalSpaceMk x (s x : V x) :=
-  s.ContMDiff.Mdifferentiable le_top
-#align cont_mdiff_section.mdifferentiable ContMdiffSection.mdifferentiable
+protected theorem mDifferentiable (s : Cₛ^∞⟮I; F, V⟯) :
+    MDifferentiable I (I.Prod 𝓘(𝕜, F)) fun x => totalSpaceMk x (s x : V x) :=
+  s.ContMDiff.MDifferentiable le_top
+#align cont_mdiff_section.mdifferentiable ContMdiffSection.mDifferentiable
 
-protected theorem mdifferentiableAt (s : Cₛ^∞⟮I; F, V⟯) {x} :
-    MdifferentiableAt I (I.Prod 𝓘(𝕜, F)) (fun x => totalSpaceMk x (s x : V x)) x :=
-  s.Mdifferentiable x
-#align cont_mdiff_section.mdifferentiable_at ContMdiffSection.mdifferentiableAt
+protected theorem mDifferentiableAt (s : Cₛ^∞⟮I; F, V⟯) {x} :
+    MDifferentiableAt I (I.Prod 𝓘(𝕜, F)) (fun x => totalSpaceMk x (s x : V x)) x :=
+  s.MDifferentiable x
+#align cont_mdiff_section.mdifferentiable_at ContMdiffSection.mDifferentiableAt
 
 theorem coe_inj ⦃s t : Cₛ^n⟮I; F, V⟯⦄ (h : (s : ∀ x, V x) = t) : s = t := by
   cases s <;> cases t <;> cases h <;> rfl
