@@ -51,6 +51,7 @@ open Real
 
 namespace Bertrand
 
+#print Bertrand.real_main_inequality /-
 /-- A reified version of the `bertrand.main_inequality` below.
 This is not best possible: it actually holds for 464 ≤ x.
 -/
@@ -92,6 +93,7 @@ theorem real_main_inequality {x : ℝ} (n_large : (512 : ℝ) ≤ x) :
         rpow_le_rpow_iff _ (rpow_pos_of_pos four_pos _).le three_pos, ← rpow_mul] <;>
       norm_num1
 #align bertrand.real_main_inequality Bertrand.real_main_inequality
+-/
 
 end Bertrand
 
@@ -101,6 +103,7 @@ section Nat
 
 open Nat
 
+#print bertrand_main_inequality /-
 /-- The inequality which contradicts Bertrand's postulate, for large enough `n`.
 -/
 theorem bertrand_main_inequality {n : ℕ} (n_large : 512 ≤ n) :
@@ -119,7 +122,9 @@ theorem bertrand_main_inequality {n : ℕ} (n_large : 512 ≤ n) :
   · refine' mul_nonneg (Nat.cast_nonneg _) _
     exact Real.rpow_nonneg_of_nonneg (mul_nonneg zero_le_two (Nat.cast_nonneg _)) _
 #align bertrand_main_inequality bertrand_main_inequality
+-/
 
+#print centralBinom_factorization_small /-
 /-- A lemma that tells us that, in the case where Bertrand's postulate does not hold, the prime
 factorization of the central binomial coefficent only has factors at most `2 * n / 3 + 1`.
 -/
@@ -139,7 +144,9 @@ theorem centralBinom_factorization_small (n : ℕ) (n_large : 2 < n)
   · rw [factorization_eq_zero_of_non_prime n.central_binom h, pow_zero]
   · rw [factorization_central_binom_of_two_mul_self_lt_three_mul n_large h h2x, pow_zero]
 #align central_binom_factorization_small centralBinom_factorization_small
+-/
 
+#print centralBinom_le_of_no_bertrand_prime /-
 /-- An upper bound on the central binomial coefficient used in the proof of Bertrand's postulate.
 The bound splits the prime factors of `central_binom n` into those
 1. At most `sqrt (2 * n)`, which contribute at most `2 * n` for each such prime.
@@ -179,9 +186,11 @@ theorem centralBinom_le_of_no_bertrand_prime (n : ℕ) (n_big : 2 < n)
     refine' Finset.prod_le_prod_of_subset_of_one_le' (Finset.filter_subset _ _) _
     exact fun p hp _ => (Finset.mem_filter.1 hp).2.one_lt.le
 #align central_binom_le_of_no_bertrand_prime centralBinom_le_of_no_bertrand_prime
+-/
 
 namespace Nat
 
+#print Nat.exists_prime_lt_and_le_two_mul_eventually /-
 /-- Proves that Bertrand's postulate holds for all sufficiently large `n`.
 -/
 theorem exists_prime_lt_and_le_two_mul_eventually (n : ℕ) (n_big : 512 ≤ n) :
@@ -199,7 +208,9 @@ theorem exists_prime_lt_and_le_two_mul_eventually (n : ℕ) (n_big : 512 ≤ n) 
     centralBinom_le_of_no_bertrand_prime n (lt_of_lt_of_le (by norm_num1) n_big) no_prime
   rw [mul_assoc] at H1 ; exact not_le.2 H2 ((mul_le_mul_left' H3 n).trans H1)
 #align nat.exists_prime_lt_and_le_two_mul_eventually Nat.exists_prime_lt_and_le_two_mul_eventually
+-/
 
+#print Nat.exists_prime_lt_and_le_two_mul_succ /-
 /-- Proves that Bertrand's postulate holds over all positive naturals less than n by identifying a
 descending list of primes, each no more than twice the next, such that the list contains a witness
 for each number ≤ n.
@@ -211,8 +222,10 @@ theorem exists_prime_lt_and_le_two_mul_succ {n} (q) {p : ℕ} (prime_p : Nat.Pri
   by_cases p ≤ 2 * n; · exact ⟨p, prime_p, hn, h⟩
   exact H (lt_of_mul_lt_mul_left' (lt_of_lt_of_le (not_le.1 h) covering))
 #align nat.exists_prime_lt_and_le_two_mul_succ Nat.exists_prime_lt_and_le_two_mul_succ
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
+#print Nat.exists_prime_lt_and_le_two_mul /-
 /--
 **Bertrand's Postulate**: For any positive natural number, there is a prime which is greater than
 it, but no more than twice as large.
@@ -232,6 +245,7 @@ theorem exists_prime_lt_and_le_two_mul (n : ℕ) (hn0 : n ≠ 0) :
     [317, 163, 83, 43, 23, 13, 7, 5, 3, 2].mapM' fun n => sorry
   exact fun h2 => ⟨2, prime_two, h2, Nat.mul_le_mul_left 2 (Nat.pos_of_ne_zero hn0)⟩
 #align nat.exists_prime_lt_and_le_two_mul Nat.exists_prime_lt_and_le_two_mul
+-/
 
 alias Nat.exists_prime_lt_and_le_two_mul ← bertrand
 #align nat.bertrand Nat.bertrand

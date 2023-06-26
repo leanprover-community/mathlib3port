@@ -53,6 +53,7 @@ notation "cexp" => Complex.exp
 
 notation "rexp" => Real.exp
 
+#print exp_neg_mul_sq_isLittleO_exp_neg /-
 theorem exp_neg_mul_sq_isLittleO_exp_neg {b : ℝ} (hb : 0 < b) :
     (fun x : ℝ => exp (-b * x ^ 2)) =o[atTop] fun x : ℝ => exp (-x) :=
   by
@@ -62,7 +63,9 @@ theorem exp_neg_mul_sq_isLittleO_exp_neg {b : ℝ} (hb : 0 < b) :
   apply tendsto_at_top_add_const_right at_top (-1 : ℝ)
   exact tendsto.const_mul_at_top hb tendsto_id
 #align exp_neg_mul_sq_is_o_exp_neg exp_neg_mul_sq_isLittleO_exp_neg
+-/
 
+#print rpow_mul_exp_neg_mul_sq_isLittleO_exp_neg /-
 theorem rpow_mul_exp_neg_mul_sq_isLittleO_exp_neg {b : ℝ} (hb : 0 < b) (s : ℝ) :
     (fun x : ℝ => x ^ s * exp (-b * x ^ 2)) =o[atTop] fun x : ℝ => exp (-(1 / 2) * x) :=
   by
@@ -72,7 +75,9 @@ theorem rpow_mul_exp_neg_mul_sq_isLittleO_exp_neg {b : ℝ} (hb : 0 < b) (s : �
   convert Gamma_integrand_is_o s
   simp_rw [mul_comm]
 #align rpow_mul_exp_neg_mul_sq_is_o_exp_neg rpow_mul_exp_neg_mul_sq_isLittleO_exp_neg
+-/
 
+#print integrableOn_rpow_mul_exp_neg_mul_sq /-
 theorem integrableOn_rpow_mul_exp_neg_mul_sq {b : ℝ} (hb : 0 < b) {s : ℝ} (hs : -1 < s) :
     IntegrableOn (fun x : ℝ => x ^ s * exp (-b * x ^ 2)) (Ioi 0) :=
   by
@@ -91,7 +96,9 @@ theorem integrableOn_rpow_mul_exp_neg_mul_sq {b : ℝ} (hb : 0 < b) {s : ℝ} (h
     apply ((continuous_at_rpow_const _ _ (Or.inl N)).mul _).ContinuousWithinAt
     exact (continuous_exp.comp (continuous_const.mul (continuous_pow 2))).ContinuousAt
 #align integrable_on_rpow_mul_exp_neg_mul_sq integrableOn_rpow_mul_exp_neg_mul_sq
+-/
 
+#print integrable_rpow_mul_exp_neg_mul_sq /-
 theorem integrable_rpow_mul_exp_neg_mul_sq {b : ℝ} (hb : 0 < b) {s : ℝ} (hs : -1 < s) :
     Integrable fun x : ℝ => x ^ s * exp (-b * x ^ 2) :=
   by
@@ -114,11 +121,15 @@ theorem integrable_rpow_mul_exp_neg_mul_sq {b : ℝ} (hb : 0 < b) {s : ℝ} (hs 
     apply mul_le_mul_of_nonneg_right _ (exp_pos _).le
     simpa [abs_of_nonneg h'x] using abs_rpow_le_abs_rpow (-x) s
 #align integrable_rpow_mul_exp_neg_mul_sq integrable_rpow_mul_exp_neg_mul_sq
+-/
 
+#print integrable_exp_neg_mul_sq /-
 theorem integrable_exp_neg_mul_sq {b : ℝ} (hb : 0 < b) : Integrable fun x : ℝ => exp (-b * x ^ 2) :=
   by simpa using integrable_rpow_mul_exp_neg_mul_sq hb (by norm_num : (-1 : ℝ) < 0)
 #align integrable_exp_neg_mul_sq integrable_exp_neg_mul_sq
+-/
 
+#print integrableOn_Ioi_exp_neg_mul_sq_iff /-
 theorem integrableOn_Ioi_exp_neg_mul_sq_iff {b : ℝ} :
     IntegrableOn (fun x : ℝ => exp (-b * x ^ 2)) (Ioi 0) ↔ 0 < b :=
   by
@@ -132,23 +143,31 @@ theorem integrableOn_Ioi_exp_neg_mul_sq_iff {b : ℝ} :
     exact mul_nonpos_of_nonpos_of_nonneg hb (sq_nonneg _)
   simpa using this.trans_lt h.2
 #align integrable_on_Ioi_exp_neg_mul_sq_iff integrableOn_Ioi_exp_neg_mul_sq_iff
+-/
 
+#print integrable_exp_neg_mul_sq_iff /-
 theorem integrable_exp_neg_mul_sq_iff {b : ℝ} :
     (Integrable fun x : ℝ => exp (-b * x ^ 2)) ↔ 0 < b :=
   ⟨fun h => integrableOn_Ioi_exp_neg_mul_sq_iff.mp h.IntegrableOn, integrable_exp_neg_mul_sq⟩
 #align integrable_exp_neg_mul_sq_iff integrable_exp_neg_mul_sq_iff
+-/
 
+#print integrable_mul_exp_neg_mul_sq /-
 theorem integrable_mul_exp_neg_mul_sq {b : ℝ} (hb : 0 < b) :
     Integrable fun x : ℝ => x * exp (-b * x ^ 2) := by
   simpa using integrable_rpow_mul_exp_neg_mul_sq hb (by norm_num : (-1 : ℝ) < 1)
 #align integrable_mul_exp_neg_mul_sq integrable_mul_exp_neg_mul_sq
+-/
 
+#print norm_cexp_neg_mul_sq /-
 theorem norm_cexp_neg_mul_sq (b : ℂ) (x : ℝ) : ‖Complex.exp (-b * x ^ 2)‖ = exp (-b.re * x ^ 2) :=
   by
   rw [Complex.norm_eq_abs, Complex.abs_exp, ← of_real_pow, mul_comm (-b) _, of_real_mul_re, neg_re,
     mul_comm]
 #align norm_cexp_neg_mul_sq norm_cexp_neg_mul_sq
+-/
 
+#print integrable_cexp_neg_mul_sq /-
 theorem integrable_cexp_neg_mul_sq {b : ℂ} (hb : 0 < b.re) :
     Integrable fun x : ℝ => cexp (-b * x ^ 2) :=
   by
@@ -160,7 +179,9 @@ theorem integrable_cexp_neg_mul_sq {b : ℂ} (hb : 0 < b.re) :
   simp_rw [norm_cexp_neg_mul_sq]
   exact (integrable_exp_neg_mul_sq hb).2
 #align integrable_cexp_neg_mul_sq integrable_cexp_neg_mul_sq
+-/
 
+#print integrable_mul_cexp_neg_mul_sq /-
 theorem integrable_mul_cexp_neg_mul_sq {b : ℂ} (hb : 0 < b.re) :
     Integrable fun x : ℝ => ↑x * cexp (-b * x ^ 2) :=
   by
@@ -173,7 +194,9 @@ theorem integrable_mul_cexp_neg_mul_sq {b : ℂ} (hb : 0 < b.re) :
   rw [norm_mul, norm_mul, norm_cexp_neg_mul_sq b, Complex.norm_eq_abs, abs_of_real,
     Real.norm_eq_abs, norm_of_nonneg (exp_pos _).le]
 #align integrable_mul_cexp_neg_mul_sq integrable_mul_cexp_neg_mul_sq
+-/
 
+#print integral_mul_cexp_neg_mul_sq /-
 theorem integral_mul_cexp_neg_mul_sq {b : ℂ} (hb : 0 < b.re) :
     ∫ r : ℝ in Ioi 0, (r : ℂ) * cexp (-b * r ^ 2) = (2 * b)⁻¹ :=
   by
@@ -198,7 +221,9 @@ theorem integral_mul_cexp_neg_mul_sq {b : ℂ} (hb : 0 < b.re) :
   simp only [MulZeroClass.mul_zero, of_real_zero, zero_pow', Ne.def, bit0_eq_zero, Nat.one_ne_zero,
     not_false_iff, Complex.exp_zero, mul_one, sub_neg_eq_add, zero_add]
 #align integral_mul_cexp_neg_mul_sq integral_mul_cexp_neg_mul_sq
+-/
 
+#print integral_gaussian_sq_complex /-
 /-- The *square* of the Gaussian integral `∫ x:ℝ, exp (-b * x^2)` is equal to `π / b`. -/
 theorem integral_gaussian_sq_complex {b : ℂ} (hb : 0 < b.re) :
     (∫ x : ℝ, cexp (-b * x ^ 2)) ^ 2 = π / b :=
@@ -232,7 +257,9 @@ theorem integral_gaussian_sq_complex {b : ℂ} (hb : 0 < b.re) :
       field_simp [(by contrapose! hb; rw [hb, zero_re] : b ≠ 0)]
       ring
 #align integral_gaussian_sq_complex integral_gaussian_sq_complex
+-/
 
+#print integral_gaussian /-
 theorem integral_gaussian (b : ℝ) : ∫ x, exp (-b * x ^ 2) = sqrt (π / b) :=
   by
   -- First we deal with the crazy case where `b ≤ 0`: then both sides vanish.
@@ -248,7 +275,9 @@ theorem integral_gaussian (b : ℝ) : ∫ x, exp (-b * x ^ 2) = sqrt (π / b) :=
   ext1 x
   rw [of_real_exp, of_real_mul, of_real_pow, of_real_neg]
 #align integral_gaussian integral_gaussian
+-/
 
+#print continuousAt_gaussian_integral /-
 theorem continuousAt_gaussian_integral (b : ℂ) (hb : 0 < re b) :
     ContinuousAt (fun c : ℂ => ∫ x : ℝ, cexp (-c * x ^ 2)) b :=
   by
@@ -274,7 +303,9 @@ theorem continuousAt_gaussian_integral (b : ℂ) (hb : 0 < re b) :
     continuous_at_of_dominated (eventually_of_forall f_meas) f_le_bd (integrable_exp_neg_mul_sq hd)
       (ae_of_all _ f_cts)
 #align continuous_at_gaussian_integral continuousAt_gaussian_integral
+-/
 
+#print integral_gaussian_complex /-
 theorem integral_gaussian_complex {b : ℂ} (hb : 0 < re b) :
     ∫ x : ℝ, cexp (-b * x ^ 2) = (π / b) ^ (1 / 2 : ℂ) :=
   by
@@ -315,7 +346,9 @@ theorem integral_gaussian_complex {b : ℂ} (hb : 0 < re b) :
     · rwa [sqrt_eq_rpow]
     · rw [div_one]; exact pi_pos.le
 #align integral_gaussian_complex integral_gaussian_complex
+-/
 
+#print integral_gaussian_complex_Ioi /-
 -- The Gaussian integral on the half-line, `∫ x in Ioi 0, exp (-b * x^2)`, for complex `b`.
 theorem integral_gaussian_complex_Ioi {b : ℂ} (hb : 0 < re b) :
     ∫ x : ℝ in Ioi 0, cexp (-b * x ^ 2) = (π / b) ^ (1 / 2 : ℂ) / 2 :=
@@ -343,7 +376,9 @@ theorem integral_gaussian_complex_Ioi {b : ℂ} (hb : 0 < re b) :
     apply (integrable_cexp_neg_mul_sq hb).IntegrableOn
   exact tendsto_nhds_unique t2 t1
 #align integral_gaussian_complex_Ioi integral_gaussian_complex_Ioi
+-/
 
+#print integral_gaussian_Ioi /-
 -- The Gaussian integral on the half-line, `∫ x in Ioi 0, exp (-b * x^2)`, for real `b`.
 theorem integral_gaussian_Ioi (b : ℝ) : ∫ x in Ioi 0, exp (-b * x ^ 2) = sqrt (π / b) / 2 :=
   by
@@ -358,9 +393,11 @@ theorem integral_gaussian_Ioi (b : ℝ) : ∫ x in Ioi 0, exp (-b * x ^ 2) = sqr
     norm_num
     exact (div_pos pi_pos hb).le
 #align integral_gaussian_Ioi integral_gaussian_Ioi
+-/
 
+#print Real.Gamma_one_half_eq /-
 /-- The special-value formula `Γ(1/2) = √π`, which is equivalent to the Gaussian integral. -/
-theorem Real.gamma_one_half_eq : Real.Gamma (1 / 2) = sqrt π :=
+theorem Real.Gamma_one_half_eq : Real.Gamma (1 / 2) = sqrt π :=
   by
   rw [Gamma_eq_integral one_half_pos, ← integral_comp_rpow_Ioi_of_pos zero_lt_two]
   convert congr_arg (fun x : ℝ => 2 * x) (integral_gaussian_Ioi 1)
@@ -376,15 +413,18 @@ theorem Real.gamma_one_half_eq : Real.Gamma (1 / 2) = sqrt π :=
     field_simp [(ne_of_lt hx).symm]
     norm_num; ring
   · rw [div_one, ← mul_div_assoc, mul_comm, mul_div_cancel _ (two_ne_zero' ℝ)]
-#align real.Gamma_one_half_eq Real.gamma_one_half_eq
+#align real.Gamma_one_half_eq Real.Gamma_one_half_eq
+-/
 
+#print Complex.Gamma_one_half_eq /-
 /-- The special-value formula `Γ(1/2) = √π`, which is equivalent to the Gaussian integral. -/
-theorem Complex.gamma_one_half_eq : Complex.Gamma (1 / 2) = π ^ (1 / 2 : ℂ) :=
+theorem Complex.Gamma_one_half_eq : Complex.Gamma (1 / 2) = π ^ (1 / 2 : ℂ) :=
   by
-  convert congr_arg coe Real.gamma_one_half_eq
+  convert congr_arg coe Real.Gamma_one_half_eq
   · simpa only [one_div, of_real_inv, of_real_bit0] using Gamma_of_real (1 / 2)
   · rw [sqrt_eq_rpow, of_real_cpow pi_pos.le, of_real_div, of_real_bit0, of_real_one]
-#align complex.Gamma_one_half_eq Complex.gamma_one_half_eq
+#align complex.Gamma_one_half_eq Complex.Gamma_one_half_eq
+-/
 
 namespace GaussianFourier
 
@@ -398,22 +438,27 @@ open scoped Real
 
 variable {b : ℂ}
 
+#print GaussianFourier.verticalIntegral /-
 /-- The integral of the Gaussian function over the vertical edges of a rectangle
 with vertices at `(±T, 0)` and `(±T, c)`.  -/
 def verticalIntegral (b : ℂ) (c T : ℝ) : ℂ :=
   ∫ y : ℝ in 0 ..c, I * (cexp (-b * (T + y * I) ^ 2) - cexp (-b * (T - y * I) ^ 2))
 #align gaussian_fourier.vertical_integral GaussianFourier.verticalIntegral
+-/
 
+#print GaussianFourier.norm_cexp_neg_mul_sq_add_mul_I /-
 /-- Explicit formula for the norm of the Gaussian function along the vertical
 edges. -/
-theorem norm_cexp_neg_mul_sq_add_mul_i (b : ℂ) (c T : ℝ) :
+theorem norm_cexp_neg_mul_sq_add_mul_I (b : ℂ) (c T : ℝ) :
     ‖cexp (-b * (T + c * I) ^ 2)‖ = exp (-(b.re * T ^ 2 - 2 * b.im * c * T - b.re * c ^ 2)) :=
   by
   rw [Complex.norm_eq_abs, Complex.abs_exp, neg_mul, neg_re, ← re_add_im b]
   simp only [sq, re_add_im, mul_re, mul_im, add_re, add_im, of_real_re, of_real_im, I_re, I_im]
   ring_nf
-#align gaussian_fourier.norm_cexp_neg_mul_sq_add_mul_I GaussianFourier.norm_cexp_neg_mul_sq_add_mul_i
+#align gaussian_fourier.norm_cexp_neg_mul_sq_add_mul_I GaussianFourier.norm_cexp_neg_mul_sq_add_mul_I
+-/
 
+#print GaussianFourier.norm_cexp_neg_mul_sq_add_mul_I' /-
 theorem norm_cexp_neg_mul_sq_add_mul_I' (hb : b.re ≠ 0) (c T : ℝ) :
     ‖cexp (-b * (T + c * I) ^ 2)‖ =
       exp (-(b.re * (T - b.im * c / b.re) ^ 2 - c ^ 2 * (b.im ^ 2 / b.re + b.re))) :=
@@ -424,7 +469,9 @@ theorem norm_cexp_neg_mul_sq_add_mul_I' (hb : b.re ≠ 0) (c T : ℝ) :
     by field_simp; ring
   rw [norm_cexp_neg_mul_sq_add_mul_I, this]
 #align gaussian_fourier.norm_cexp_neg_mul_sq_add_mul_I' GaussianFourier.norm_cexp_neg_mul_sq_add_mul_I'
+-/
 
+#print GaussianFourier.verticalIntegral_norm_le /-
 theorem verticalIntegral_norm_le (hb : 0 < b.re) (c : ℝ) {T : ℝ} (hT : 0 ≤ T) :
     ‖verticalIntegral b c T‖ ≤
       2 * |c| * exp (-(b.re * T ^ 2 - 2 * |b.im| * |c| * T - b.re * c ^ 2)) :=
@@ -471,7 +518,9 @@ theorem verticalIntegral_norm_le (hb : 0 < b.re) (c : ℝ) {T : ℝ} (hT : 0 ≤
     rw [← abs_neg y] at absy 
     simpa only [neg_mul, of_real_neg] using vert_norm_bound hT absy
 #align gaussian_fourier.vertical_integral_norm_le GaussianFourier.verticalIntegral_norm_le
+-/
 
+#print GaussianFourier.tendsto_verticalIntegral /-
 theorem tendsto_verticalIntegral (hb : 0 < b.re) (c : ℝ) :
     Tendsto (verticalIntegral b c) atTop (𝓝 0) :=
   by
@@ -489,8 +538,10 @@ theorem tendsto_verticalIntegral (hb : 0 < b.re) (c : ℝ) :
   refine' tendsto.at_top_mul_at_top (tendsto_at_top_add_const_right _ _ _) tendsto_id
   exact (tendsto_const_mul_at_top_of_pos hb).mpr tendsto_id
 #align gaussian_fourier.tendsto_vertical_integral GaussianFourier.tendsto_verticalIntegral
+-/
 
-theorem integrable_cexp_neg_mul_sq_add_real_mul_i (hb : 0 < b.re) (c : ℝ) :
+#print GaussianFourier.integrable_cexp_neg_mul_sq_add_real_mul_I /-
+theorem integrable_cexp_neg_mul_sq_add_real_mul_I (hb : 0 < b.re) (c : ℝ) :
     Integrable fun x : ℝ => cexp (-b * (x + c * I) ^ 2) :=
   by
   refine'
@@ -505,9 +556,11 @@ theorem integrable_cexp_neg_mul_sq_add_real_mul_i (hb : 0 < b.re) (c : ℝ) :
     exact (integrable.comp_sub_right this (b.im * c / b.re)).HasFiniteIntegral.const_mul _
   simp_rw [← neg_mul]
   apply integrable_exp_neg_mul_sq hb
-#align gaussian_fourier.integrable_cexp_neg_mul_sq_add_real_mul_I GaussianFourier.integrable_cexp_neg_mul_sq_add_real_mul_i
+#align gaussian_fourier.integrable_cexp_neg_mul_sq_add_real_mul_I GaussianFourier.integrable_cexp_neg_mul_sq_add_real_mul_I
+-/
 
-theorem integral_cexp_neg_mul_sq_add_real_mul_i (hb : 0 < b.re) (c : ℝ) :
+#print GaussianFourier.integral_cexp_neg_mul_sq_add_real_mul_I /-
+theorem integral_cexp_neg_mul_sq_add_real_mul_I (hb : 0 < b.re) (c : ℝ) :
     ∫ x : ℝ, cexp (-b * (x + c * I) ^ 2) = (π / b) ^ (1 / 2 : ℂ) :=
   by
   refine'
@@ -549,8 +602,10 @@ theorem integral_cexp_neg_mul_sq_add_real_mul_i (hb : 0 < b.re) (c : ℝ) :
   exact
     interval_integral_tendsto_integral (integrable_cexp_neg_mul_sq hb) tendsto_neg_at_top_at_bot
       tendsto_id
-#align gaussian_fourier.integral_cexp_neg_mul_sq_add_real_mul_I GaussianFourier.integral_cexp_neg_mul_sq_add_real_mul_i
+#align gaussian_fourier.integral_cexp_neg_mul_sq_add_real_mul_I GaussianFourier.integral_cexp_neg_mul_sq_add_real_mul_I
+-/
 
+#print integral_cexp_neg_mul_sq_add_const /-
 theorem integral_cexp_neg_mul_sq_add_const (hb : 0 < b.re) (c : ℂ) :
     ∫ x : ℝ, cexp (-b * (x + c) ^ 2) = (π / b) ^ (1 / 2 : ℂ) :=
   by
@@ -560,7 +615,9 @@ theorem integral_cexp_neg_mul_sq_add_const (hb : 0 < b.re) (c : ℂ) :
   · apply integral_cexp_neg_mul_sq_add_real_mul_I hb
   · infer_instance
 #align integral_cexp_neg_mul_sq_add_const integral_cexp_neg_mul_sq_add_const
+-/
 
+#print fourier_transform_gaussian /-
 theorem fourier_transform_gaussian (hb : 0 < b.re) (t : ℂ) :
     ∫ x : ℝ, cexp (I * t * x) * cexp (-b * x ^ 2) =
       cexp (-t ^ 2 / (4 * b)) * (π / b) ^ (1 / 2 : ℂ) :=
@@ -575,7 +632,9 @@ theorem fourier_transform_gaussian (hb : 0 < b.re) (t : ℂ) :
     field_simp; ring
   simp_rw [this, Complex.exp_add, integral_mul_left, integral_cexp_neg_mul_sq_add_const hb]
 #align fourier_transform_gaussian fourier_transform_gaussian
+-/
 
+#print fourier_transform_gaussian_pi /-
 theorem fourier_transform_gaussian_pi (hb : 0 < b.re) :
     (𝓕 fun x : ℝ => cexp (-π * b * x ^ 2)) = fun t : ℝ =>
       1 / b ^ (1 / 2 : ℂ) * cexp (-π / b * t ^ 2) :=
@@ -595,6 +654,7 @@ theorem fourier_transform_gaussian_pi (hb : 0 < b.re) :
       rw [Ne.def, arg_eq_pi_iff, not_and_or, not_lt]
       exact Or.inl hb.le
 #align fourier_transform_gaussian_pi fourier_transform_gaussian_pi
+-/
 
 end GaussianFourier
 
@@ -605,6 +665,7 @@ section GaussianPoisson
 
 variable {E : Type _} [NormedAddCommGroup E]
 
+#print tendsto_rpow_abs_mul_exp_neg_mul_sq_cocompact /-
 theorem tendsto_rpow_abs_mul_exp_neg_mul_sq_cocompact {a : ℝ} (ha : 0 < a) (s : ℝ) :
     Tendsto (fun x : ℝ => |x| ^ s * rexp (-a * x ^ 2)) (cocompact ℝ) (𝓝 0) :=
   by
@@ -616,7 +677,9 @@ theorem tendsto_rpow_abs_mul_exp_neg_mul_sq_cocompact {a : ℝ} (ha : 0 < a) (s 
     (rpow_mul_exp_neg_mul_sq_isLittleO_exp_neg ha s).tendsto_zero_of_tendsto
       (tendsto_exp_at_bot.comp <| tendsto_id.neg_const_mul_at_top (neg_lt_zero.mpr one_half_pos))
 #align tendsto_rpow_abs_mul_exp_neg_mul_sq_cocompact tendsto_rpow_abs_mul_exp_neg_mul_sq_cocompact
+-/
 
+#print isLittleO_exp_neg_mul_sq_cocompact /-
 theorem isLittleO_exp_neg_mul_sq_cocompact {a : ℂ} (ha : 0 < a.re) (s : ℝ) :
     (fun x : ℝ => Complex.exp (-a * x ^ 2)) =o[cocompact ℝ] fun x : ℝ => |x| ^ s :=
   by
@@ -634,7 +697,9 @@ theorem isLittleO_exp_neg_mul_sq_cocompact {a : ℂ} (ha : 0 < a.re) (s : ℝ) :
     rw [norm_mul, norm_of_nonneg (rpow_nonneg_of_nonneg (abs_nonneg _) _), mul_comm,
       rpow_neg (abs_nonneg x), div_eq_mul_inv, norm_of_nonneg (exp_pos _).le]
 #align is_o_exp_neg_mul_sq_cocompact isLittleO_exp_neg_mul_sq_cocompact
+-/
 
+#print Complex.tsum_exp_neg_mul_int_sq /-
 theorem Complex.tsum_exp_neg_mul_int_sq {a : ℂ} (ha : 0 < a.re) :
     ∑' n : ℤ, cexp (-π * a * n ^ 2) = 1 / a ^ (1 / 2 : ℂ) * ∑' n : ℤ, cexp (-π / a * n ^ 2) :=
   by
@@ -667,13 +732,16 @@ theorem Complex.tsum_exp_neg_mul_int_sq {a : ℂ} (ha : 0 < a.re) :
       (complex.continuous_exp.comp (continuous_const.mul (continuous_of_real.pow 2)) : Continuous f)
       one_lt_two f_bd Ff_bd
 #align complex.tsum_exp_neg_mul_int_sq Complex.tsum_exp_neg_mul_int_sq
+-/
 
+#print Real.tsum_exp_neg_mul_int_sq /-
 theorem Real.tsum_exp_neg_mul_int_sq {a : ℝ} (ha : 0 < a) :
     ∑' n : ℤ, exp (-π * a * n ^ 2) = 1 / a ^ (1 / 2 : ℝ) * ∑' n : ℤ, exp (-π / a * n ^ 2) := by
   simpa only [← of_real_inj, of_real_mul, of_real_tsum, of_real_exp, of_real_div, of_real_pow,
     of_real_int_cast, of_real_neg, of_real_cpow ha.le, of_real_bit0, of_real_one] using
     Complex.tsum_exp_neg_mul_int_sq (by rwa [of_real_re] : 0 < (a : ℂ).re)
 #align real.tsum_exp_neg_mul_int_sq Real.tsum_exp_neg_mul_int_sq
+-/
 
 end GaussianPoisson
 
