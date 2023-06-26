@@ -26,6 +26,7 @@ section GaussEisenstein
 
 namespace ZMod
 
+#print ZMod.Ico_map_valMinAbs_natAbs_eq_Ico_map_id /-
 /-- The image of the map sending a non zero natural number `x ≤ p / 2` to the absolute value
   of the element of interger in the interval `(-p/2, p/2]` congruent to `a * x` mod p is the set
   of non zero natural numbers `x` such that `x ≤ p / 2` -/
@@ -70,6 +71,7 @@ theorem Ico_map_valMinAbs_natAbs_eq_Ico_map_id (p : ℕ) [hp : Fact p.Prime] (a 
       (fun x _ => (a * x : ZMod p).valMinAbs.natAbs) hmem (fun _ _ => rfl)
       (inj_on_of_surj_on_of_card_le _ hmem hsurj le_rfl) hsurj
 #align zmod.Ico_map_val_min_abs_nat_abs_eq_Ico_map_id ZMod.Ico_map_valMinAbs_natAbs_eq_Ico_map_id
+-/
 
 private theorem gauss_lemma_aux₁ (p : ℕ) [Fact p.Prime] [Fact (p % 2 = 1)] {a : ℤ}
     (hap : (a : ZMod p) ≠ 0) :
@@ -109,6 +111,7 @@ private theorem gauss_lemma_aux₁ (p : ℕ) [Fact p.Prime] [Fact (p % 2 = 1)] {
         Ico_map_val_min_abs_nat_abs_eq_Ico_map_id p a hap, ← Finset.prod_eq_multiset_prod,
         prod_Ico_id_eq_factorial]
 
+#print ZMod.gauss_lemma_aux /-
 theorem gauss_lemma_aux (p : ℕ) [hp : Fact p.Prime] [Fact (p % 2 = 1)] {a : ℤ}
     (hap : (a : ZMod p) ≠ 0) :
     (a ^ (p / 2) : ZMod p) =
@@ -119,7 +122,9 @@ theorem gauss_lemma_aux (p : ℕ) [hp : Fact p.Prime] [Fact (p % 2 = 1)] {a : �
             exact Nat.div_lt_self hp.1.Pos (by decide))).1 <|
     by simpa using gauss_lemma_aux₁ p hap
 #align zmod.gauss_lemma_aux ZMod.gauss_lemma_aux
+-/
 
+#print ZMod.gauss_lemma /-
 /-- Gauss' lemma. The legendre symbol can be computed by considering the number of naturals less
   than `p/2` such that `(a * x) % p > p / 2` -/
 theorem gauss_lemma {p : ℕ} [Fact p.Prime] {a : ℤ} (hp : p ≠ 2) (ha0 : (a : ZMod p) ≠ 0) :
@@ -138,6 +143,7 @@ theorem gauss_lemma {p : ℕ} [Fact p.Prime] {a : ℤ} (hp : p ≠ 2) (ha0 : (a 
           ((Ico 1 (p / 2).succ).filterₓ fun x : ℕ => p / 2 < (a * x : ZMod p).val).card <;>
     simp_all [ne_neg_self p one_ne_zero, (ne_neg_self p one_ne_zero).symm]
 #align zmod.gauss_lemma ZMod.gauss_lemma
+-/
 
 private theorem eisenstein_lemma_aux₁ (p : ℕ) [Fact p.Prime] [hp2 : Fact (p % 2 = 1)] {a : ℕ}
     (hap : (a : ZMod p) ≠ 0) :
@@ -174,6 +180,7 @@ private theorem eisenstein_lemma_aux₁ (p : ℕ) [Fact p.Prime] [hp2 : Fact (p 
               simp [Nat.cast_sum])
         rfl
 
+#print ZMod.eisenstein_lemma_aux /-
 theorem eisenstein_lemma_aux (p : ℕ) [Fact p.Prime] [Fact (p % 2 = 1)] {a : ℕ} (ha2 : a % 2 = 1)
     (hap : (a : ZMod p) ≠ 0) :
     ((Ico 1 (p / 2).succ).filterₓ fun x : ℕ => p / 2 < (a * x : ZMod p).val).card ≡
@@ -185,7 +192,9 @@ theorem eisenstein_lemma_aux (p : ℕ) [Fact p.Prime] [Fact (p % 2 = 1)] {a : �
         add_neg_eq_iff_eq_add.symm, neg_eq_self_mod_two, add_assoc] using
         Eq.symm (eisenstein_lemma_aux₁ p hap)
 #align zmod.eisenstein_lemma_aux ZMod.eisenstein_lemma_aux
+-/
 
+#print ZMod.div_eq_filter_card /-
 theorem div_eq_filter_card {a b c : ℕ} (hb0 : 0 < b) (hc : a / b ≤ c) :
     a / b = ((Ico 1 c.succ).filterₓ fun x => x * b ≤ a).card :=
   calc
@@ -197,6 +206,7 @@ theorem div_eq_filter_card {a b c : ℕ} (hb0 : 0 < b) (hc : a / b ≤ c) :
           have : x * b ≤ a → x ≤ c := fun h => le_trans (by rwa [le_div_iff_mul_le hb0]) hc
           simp [lt_succ_iff, le_div_iff_mul_le hb0] <;> tauto
 #align zmod.div_eq_filter_card ZMod.div_eq_filter_card
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /-- The given sum is the number of integer points in the triangle formed by the diagonal of the
@@ -240,6 +250,7 @@ private theorem sum_Ico_eq_card_lt {p q : ℕ} :
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print ZMod.sum_mul_div_add_sum_mul_div_eq_mul /-
 /-- Each of the sums in this lemma is the cardinality of the set integer points in each of the
   two triangles formed by the diagonal of the rectangle `(0, p/2) × (0, q/2)`. Adding them
   gives the number of points in the rectangle. -/
@@ -288,7 +299,9 @@ theorem sum_mul_div_add_sum_mul_div_eq_mul (p q : ℕ) [hp : Fact p.Prime] (hq0 
     card_product]
   simp only [card_Ico, tsub_zero, succ_sub_succ_eq_sub]
 #align zmod.sum_mul_div_add_sum_mul_div_eq_mul ZMod.sum_mul_div_add_sum_mul_div_eq_mul
+-/
 
+#print ZMod.eisenstein_lemma /-
 theorem eisenstein_lemma {p : ℕ} [Fact p.Prime] (hp : p ≠ 2) {a : ℕ} (ha1 : a % 2 = 1)
     (ha0 : (a : ZMod p) ≠ 0) : legendreSym p a = (-1) ^ ∑ x in Ico 1 (p / 2).succ, x * a / p :=
   by
@@ -298,6 +311,7 @@ theorem eisenstein_lemma {p : ℕ} [Fact p.Prime] (hp : p ≠ 2) {a : ℕ} (ha1 
     (by norm_cast : ((a : ℤ) : ZMod p) = (a : ZMod p)),
     show _ = _ from eisenstein_lemma_aux p ha1 ha0]
 #align zmod.eisenstein_lemma ZMod.eisenstein_lemma
+-/
 
 end ZMod
 
