@@ -320,14 +320,14 @@ topological vector bundle over `B` with fibers isomorphic to `F`, then `smooth_v
 registers that the bundle is smooth, in the sense of having smooth transition functions.
 This is a mixin, not carrying any new data`. -/
 class SmoothVectorBundle : Prop where
-  smoothOn_coord_change :
+  smoothOn_coordChangeL :
     ∀ (e e' : Trivialization F (π E)) [MemTrivializationAtlas e] [MemTrivializationAtlas e'],
       SmoothOn IB 𝓘(𝕜, F →L[𝕜] F) (fun b : B => (e.coordChangeL 𝕜 e' b : F →L[𝕜] F))
         (e.baseSet ∩ e'.baseSet)
 #align smooth_vector_bundle SmoothVectorBundle
 -/
 
-export SmoothVectorBundle (smoothOn_coord_change)
+export SmoothVectorBundle (smoothOn_coordChangeL)
 
 variable [SmoothVectorBundle F E IB]
 
@@ -381,10 +381,10 @@ namespace VectorBundleCore
 variable {ι : Type _} {F} (Z : VectorBundleCore 𝕜 B F ι)
 
 #print VectorBundleCore.IsSmooth /-
-/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`smoothOn_coord_change] [] -/
+/- ./././Mathport/Syntax/Translate/Command.lean:393:30: infer kinds are unsupported in Lean 4: #[`smoothOn_coordChangeL] [] -/
 /-- Mixin for a `vector_bundle_core` stating smoothness (of transition functions). -/
 class IsSmooth (IB : ModelWithCorners 𝕜 EB HB) : Prop where
-  smoothOn_coord_change :
+  smoothOn_coordChangeL :
     ∀ i j, SmoothOn IB 𝓘(𝕜, F →L[𝕜] F) (Z.coordChange i j) (Z.baseSet i ∩ Z.baseSet j)
 #align vector_bundle_core.is_smooth VectorBundleCore.IsSmooth
 -/
@@ -398,7 +398,7 @@ variable [Z.IsSmooth IB]
 /-- If a `vector_bundle_core` has the `is_smooth` mixin, then the vector bundle constructed from it
 is a smooth vector bundle. -/
 instance smoothVectorBundle : SmoothVectorBundle F Z.Fiber IB
-    where smoothOn_coord_change := by
+    where smoothOn_coordChangeL := by
     rintro - - ⟨i, rfl⟩ ⟨i', rfl⟩
     refine' (Z.smooth_on_coord_change IB i i').congr fun b hb => _
     ext v
@@ -414,7 +414,7 @@ end VectorBundleCore
 #print Bundle.Trivial.smoothVectorBundle /-
 /-- A trivial vector bundle over a smooth manifold is a smooth vector bundle. -/
 instance Bundle.Trivial.smoothVectorBundle : SmoothVectorBundle F (Bundle.Trivial B F) IB
-    where smoothOn_coord_change := by
+    where smoothOn_coordChangeL := by
     intro e e' he he'
     obtain rfl := Bundle.Trivial.eq_trivialization B F e
     obtain rfl := Bundle.Trivial.eq_trivialization B F e'
@@ -441,7 +441,7 @@ variable [∀ x : B, TopologicalSpace (E₁ x)] [∀ x : B, TopologicalSpace (E�
 #print Bundle.Prod.smoothVectorBundle /-
 /-- The direct sum of two smooth vector bundles over the same base is a smooth vector bundle. -/
 instance Bundle.Prod.smoothVectorBundle : SmoothVectorBundle (F₁ × F₂) (E₁ ×ᵇ E₂) IB
-    where smoothOn_coord_change :=
+    where smoothOn_coordChangeL :=
     by
     rintro _ _ ⟨e₁, e₂, i₁, i₂, rfl⟩ ⟨e₁', e₂', i₁', i₂', rfl⟩
     skip
@@ -531,7 +531,7 @@ theorem smoothVectorBundle :
     @SmoothVectorBundle _ _ F E _ _ _ _ _ _ IB _ _ _ _ _ _ _ a.totalSpaceTopology _ a.toFiberBundle
       a.toVectorBundle :=
   {
-    smoothOn_coord_change := by
+    smoothOn_coordChangeL := by
       rintro _ _ ⟨e, he, rfl⟩ ⟨e', he', rfl⟩
       refine' (a.smooth_on_smooth_coord_change he he').congr _
       intro b hb
