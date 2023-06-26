@@ -46,7 +46,7 @@ open scoped BigOperators Classical
 
 attribute [local positivity] tactic.positivity_szemeredi_regularity
 
-namespace SzemerediRegularity
+namespace szemeredi_regularity
 
 variable {α : Type _} [Fintype α] {P : Finpartition (univ : Finset α)} (hP : P.IsEquipartition)
   (G : SimpleGraph α) (ε : ℝ) {U : Finset α} (hU : U ∈ P.parts) (V : Finset α)
@@ -617,5 +617,5 @@ theorem edgeDensity_chunk_uniform [Nonempty α] (hPα : P.parts.card * 16 ^ P.pa
 #align szemeredi_regularity.edge_density_chunk_uniform SzemerediRegularity.edgeDensity_chunk_uniform
 -/
 
-end SzemerediRegularity
+end szemeredi_regularity
 

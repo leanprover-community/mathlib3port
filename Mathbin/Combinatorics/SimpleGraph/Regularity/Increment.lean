@@ -39,7 +39,7 @@ Once ported to mathlib4, this file will be a great golfing ground for Heather's 
 -/
 
 
-open Finset Fintype SimpleGraph SzemerediRegularity
+open Finset Fintype SimpleGraph szemeredi_regularity
 
 open scoped BigOperators Classical
 
@@ -50,8 +50,9 @@ variable {α : Type _} [Fintype α] {P : Finpartition (univ : Finset α)} (hP : 
 
 local notation "m" => (card α / stepBound P.parts.card : ℕ)
 
-namespace SzemerediRegularity
+namespace szemeredi_regularity
 
+#print SzemerediRegularity.increment /-
 /-- The **increment partition** in Szemerédi's Regularity Lemma.
 
 If an equipartition is *not* uniform, then the increment partition is a (much bigger) equipartition
@@ -61,11 +62,13 @@ not-too-big uniform equipartition. -/
 noncomputable def increment : Finpartition (univ : Finset α) :=
   P.bind fun U => chunk hP G ε
 #align szemeredi_regularity.increment SzemerediRegularity.increment
+-/
 
 open Finpartition Finpartition.IsEquipartition
 
 variable {hP G ε}
 
+#print SzemerediRegularity.card_increment /-
 /-- The increment partition has a prescribed (very big) size in terms of the original partition. -/
 theorem card_increment (hPα : P.parts.card * 16 ^ P.parts.card ≤ card α) (hPG : ¬P.IsUniform G ε) :
     (increment hP G ε).parts.card = stepBound P.parts.card :=
@@ -82,7 +85,9 @@ theorem card_increment (hPα : P.parts.card * 16 ^ P.parts.card ≤ card α) (hP
   congr
   rw [filter_card_add_filter_neg_card_eq_card, card_attach]
 #align szemeredi_regularity.card_increment SzemerediRegularity.card_increment
+-/
 
+#print SzemerediRegularity.increment_isEquipartition /-
 theorem increment_isEquipartition (hP : P.IsEquipartition) (G : SimpleGraph α) (ε : ℝ) :
     (increment hP G ε).IsEquipartition :=
   by
@@ -92,6 +97,7 @@ theorem increment_isEquipartition (hP : P.IsEquipartition) (G : SimpleGraph α) 
   obtain ⟨U, hU, hA⟩ := hA
   exact card_eq_of_mem_parts_chunk hA
 #align szemeredi_regularity.increment_is_equipartition SzemerediRegularity.increment_isEquipartition
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 private theorem distinct_pairs_increment :
@@ -119,6 +125,7 @@ private noncomputable def pair_contrib (G : SimpleGraph α) (ε : ℝ) (hP : P.I
   ∑ i in (chunk hP G ε (mem_offDiag.1 x.2).1).parts ×ˢ (chunk hP G ε (mem_offDiag.1 x.2).2.1).parts,
     G.edgeDensity i.fst i.snd ^ 2
 
+#print SzemerediRegularity.offDiag_pairs_le_increment_energy /-
 theorem offDiag_pairs_le_increment_energy :
     ∑ x in P.parts.offDiag.attach, pairContrib G ε hP x / (increment hP G ε).parts.card ^ 2 ≤
       (increment hP G ε).energy G :=
@@ -142,7 +149,9 @@ theorem offDiag_pairs_le_increment_energy :
           P.disjoint.elim_finset hs.2.1 ht.2.1 b (Finpartition.le _ huv₁.2 hb) <|
             Finpartition.le _ huv₂.2 hb)
 #align szemeredi_regularity.off_diag_pairs_le_increment_energy SzemerediRegularity.offDiag_pairs_le_increment_energy
+-/
 
+#print SzemerediRegularity.pairContrib_lower_bound /-
 theorem pairContrib_lower_bound [Nonempty α] (x : { i // i ∈ P.parts.offDiag }) (hε₁ : ε ≤ 1)
     (hPα : P.parts.card * 16 ^ P.parts.card ≤ card α) (hPε : 100 ≤ 4 ^ P.parts.card * ε ^ 5) :
     (↑(G.edgeDensity x.1.1 x.1.2) ^ 2 - ε ^ 5 / 25 +
@@ -156,7 +165,9 @@ theorem pairContrib_lower_bound [Nonempty α] (x : { i // i ∈ P.parts.offDiag 
     exact edge_density_chunk_uniform hPα hPε _ _
   · exact edge_density_chunk_not_uniform hPα hPε hε₁ (mem_off_diag.1 x.2).2.2 h
 #align szemeredi_regularity.pair_contrib_lower_bound SzemerediRegularity.pairContrib_lower_bound
+-/
 
+#print SzemerediRegularity.uniform_add_nonuniform_eq_offDiag_pairs /-
 theorem uniform_add_nonuniform_eq_offDiag_pairs [Nonempty α] (hε₁ : ε ≤ 1) (hP₇ : 7 ≤ P.parts.card)
     (hPα : P.parts.card * 16 ^ P.parts.card ≤ card α) (hPε : 100 ≤ 4 ^ P.parts.card * ε ^ 5)
     (hPG : ¬P.IsUniform G ε) :
@@ -211,7 +222,9 @@ theorem uniform_add_nonuniform_eq_offDiag_pairs [Nonempty α] (hε₁ : ε ≤ 1
     div_le_iff (show (0 : ℝ) < 1 / 3 - 1 / 25 - 1 / 4 by norm_num)]
   exact le_trans (show _ ≤ (7 : ℝ) by norm_num) (by exact_mod_cast hP₇)
 #align szemeredi_regularity.uniform_add_nonuniform_eq_off_diag_pairs SzemerediRegularity.uniform_add_nonuniform_eq_offDiag_pairs
+-/
 
+#print SzemerediRegularity.energy_increment /-
 /-- The increment partition has energy greater than the original one by a known fixed amount. -/
 theorem energy_increment [Nonempty α] (hP : P.IsEquipartition) (hP₇ : 7 ≤ P.parts.card)
     (hε : 100 < 4 ^ P.parts.card * ε ^ 5) (hPα : P.parts.card * 16 ^ P.parts.card ≤ card α)
@@ -224,6 +237,7 @@ theorem energy_increment [Nonempty α] (hP : P.IsEquipartition) (hP₇ : 7 ≤ P
   exact h.trans (by exact_mod_cast off_diag_pairs_le_increment_energy)
   positivity
 #align szemeredi_regularity.energy_increment SzemerediRegularity.energy_increment
+-/
 
-end SzemerediRegularity
+end szemeredi_regularity
 

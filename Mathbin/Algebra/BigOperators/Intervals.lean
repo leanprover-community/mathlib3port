@@ -252,7 +252,7 @@ theorem prod_range_add_one_eq_factorial : ∀ n : ℕ, ∏ x in range n, (x + 1)
 #align finset.prod_range_add_one_eq_factorial Finset.prod_range_add_one_eq_factorial
 -/
 
-section GaussSum
+section gaussSum
 
 #print Finset.sum_range_id_mul_two /-
 /-- Gauss' summation formula -/
@@ -274,7 +274,7 @@ theorem sum_range_id (n : ℕ) : ∑ i in range n, i = n * (n - 1) / 2 := by
 #align finset.sum_range_id Finset.sum_range_id
 -/
 
-end GaussSum
+end gaussSum
 
 end Generic
 

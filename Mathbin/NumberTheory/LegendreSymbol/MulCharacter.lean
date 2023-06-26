@@ -101,18 +101,14 @@ variable {R : Type u} [CommMonoid R]
 -- The target
 variable {R' : Type v} [CommMonoidWithZero R']
 
-#print MulChar.coeToFun /-
 instance coeToFun : CoeFun (MulChar R R') fun _ => R → R' :=
   ⟨fun χ => χ.toFun⟩
 #align mul_char.coe_to_fun MulChar.coeToFun
--/
 
-#print MulChar.Simps.apply /-
 /-- See note [custom simps projection] -/
 protected def Simps.apply (χ : MulChar R R') : R → R' :=
   χ
 #align mul_char.simps.apply MulChar.Simps.apply
--/
 
 initialize_simps_projections MulChar (to_monoid_hom_to_fun → apply, -toMonoidHom)
 
@@ -139,19 +135,15 @@ noncomputable def trivial : MulChar R R'
 
 end trivial
 
-#print MulChar.coe_coe /-
 @[simp]
 theorem coe_coe (χ : MulChar R R') : (χ.toMonoidHom : R → R') = χ :=
   rfl
 #align mul_char.coe_coe MulChar.coe_coe
--/
 
-#print MulChar.toFun_eq_coe /-
 @[simp]
 theorem toFun_eq_coe (χ : MulChar R R') : χ.toFun = χ :=
   rfl
 #align mul_char.to_fun_eq_coe MulChar.toFun_eq_coe
--/
 
 #print MulChar.coe_mk /-
 @[simp]

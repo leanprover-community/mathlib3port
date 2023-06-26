@@ -37,7 +37,7 @@ open Finset Fintype Function Real
 
 open scoped BigOperators
 
-namespace SzemerediRegularity
+namespace szemeredi_regularity
 
 #print SzemerediRegularity.stepBound /-
 /-- Auxiliary function for Szemerédi's regularity lemma. Blowing up a partition of size `n` during
@@ -67,9 +67,9 @@ theorem stepBound_pos_iff {n : ℕ} : 0 < stepBound n ↔ 0 < n :=
 alias step_bound_pos_iff ↔ _ step_bound_pos
 #align szemeredi_regularity.step_bound_pos SzemerediRegularity.stepBound_pos
 
-end SzemerediRegularity
+end szemeredi_regularity
 
-open SzemerediRegularity
+open szemeredi_regularity
 
 variable {α : Type _} [DecidableEq α] [Fintype α] {P : Finpartition (univ : Finset α)}
   {u : Finset α} {ε : ℝ}
@@ -131,7 +131,7 @@ end Tactic
 
 attribute [local positivity] tactic.positivity_szemeredi_regularity
 
-namespace SzemerediRegularity
+namespace szemeredi_regularity
 
 #print SzemerediRegularity.m_pos /-
 theorem m_pos [Nonempty α] (hPα : P.parts.card * 16 ^ P.parts.card ≤ card α) : 0 < m := by
@@ -331,11 +331,11 @@ theorem add_div_le_sum_sq_div_card (hst : s ⊆ t) (f : ι → 𝕜) (d : 𝕜) 
 #align szemeredi_regularity.add_div_le_sum_sq_div_card SzemerediRegularity.add_div_le_sum_sq_div_card
 -/
 
-end SzemerediRegularity
+end szemeredi_regularity
 
 namespace Tactic
 
-open Positivity SzemerediRegularity
+open Positivity szemeredi_regularity
 
 /-- Extension for the `positivity` tactic: `szemeredi_regularity.initial_bound` and
 `szemeredi_regularity.bound` are always positive. -/

@@ -73,6 +73,7 @@ open scoped Classical
 
 variable {α : Type _} [Fintype α] (G : SimpleGraph α) {ε : ℝ} {l : ℕ}
 
+#print szemeredi_regularity /-
 /-- Effective **Szemerédi Regularity Lemma**: For any sufficiently large graph, there is an
 `ε`-uniform equipartition of bounded size (where the bound does not depend on the graph). -/
 theorem szemeredi_regularity (hε : 0 < ε) (hl : l ≤ card α) :
@@ -166,4 +167,5 @@ theorem szemeredi_regularity (hε : 0 < ε) (hl : l ≤ card α) :
   · rw [Nat.cast_succ, mul_add, mul_one]
     exact add_le_add_right hP₄ _
 #align szemeredi_regularity szemeredi_regularity
+-/
 
