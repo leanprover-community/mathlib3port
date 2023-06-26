@@ -38,7 +38,7 @@ open CategoryTheory
 
 open CategoryTheory.Limits
 
-namespace FgModule
+namespace FGModuleCat
 
 variable {J : Type} [SmallCategory J] [FinCategory J]
 
@@ -52,32 +52,32 @@ instance {J : Type} [Fintype J] (Z : J → ModuleCat.{v} k) [∀ j, FiniteDimens
 
 /-- Finite limits of finite dimensional vectors spaces are finite dimensional,
 because we can realise them as subobjects of a finite product. -/
-instance (F : J ⥤ FgModule k) :
-    FiniteDimensional k (limit (F ⋙ forget₂ (FgModule k) (ModuleCat.{v} k)) : ModuleCat.{v} k) :=
-  haveI : ∀ j, FiniteDimensional k ((F ⋙ forget₂ (FgModule k) (ModuleCat.{v} k)).obj j) := by
+instance (F : J ⥤ FGModuleCat k) :
+    FiniteDimensional k (limit (F ⋙ forget₂ (FGModuleCat k) (ModuleCat.{v} k)) : ModuleCat.{v} k) :=
+  haveI : ∀ j, FiniteDimensional k ((F ⋙ forget₂ (FGModuleCat k) (ModuleCat.{v} k)).obj j) := by
     intro j; change FiniteDimensional k (F.obj j).obj; infer_instance
   FiniteDimensional.of_injective
-    (limit_subobject_product (F ⋙ forget₂ (FgModule k) (ModuleCat.{v} k)))
+    (limit_subobject_product (F ⋙ forget₂ (FGModuleCat k) (ModuleCat.{v} k)))
     ((ModuleCat.mono_iff_injective _).1 (by infer_instance))
 
 /-- The forgetful functor from `fgModule k` to `Module k` creates all finite limits. -/
-def forget₂CreatesLimit (F : J ⥤ FgModule k) :
-    CreatesLimit F (forget₂ (FgModule k) (ModuleCat.{v} k)) :=
+def forget₂CreatesLimit (F : J ⥤ FGModuleCat k) :
+    CreatesLimit F (forget₂ (FGModuleCat k) (ModuleCat.{v} k)) :=
   createsLimitOfFullyFaithfulOfIso
-    ⟨(limit (F ⋙ forget₂ (FgModule k) (ModuleCat.{v} k)) : ModuleCat.{v} k), by infer_instance⟩
+    ⟨(limit (F ⋙ forget₂ (FGModuleCat k) (ModuleCat.{v} k)) : ModuleCat.{v} k), by infer_instance⟩
     (Iso.refl _)
-#align fgModule.forget₂_creates_limit FgModule.forget₂CreatesLimit
+#align fgModule.forget₂_creates_limit FGModuleCat.forget₂CreatesLimit
 
-instance : CreatesLimitsOfShape J (forget₂ (FgModule k) (ModuleCat.{v} k))
+instance : CreatesLimitsOfShape J (forget₂ (FGModuleCat k) (ModuleCat.{v} k))
     where CreatesLimit F := forget₂CreatesLimit F
 
-instance : HasFiniteLimits (FgModule k)
+instance : HasFiniteLimits (FGModuleCat k)
     where out J _ _ :=
     has_limits_of_shape_of_has_limits_of_shape_creates_limits_of_shape
-      (forget₂ (FgModule k) (ModuleCat.{v} k))
+      (forget₂ (FGModuleCat k) (ModuleCat.{v} k))
 
-instance : PreservesFiniteLimits (forget₂ (FgModule k) (ModuleCat.{v} k))
+instance : PreservesFiniteLimits (forget₂ (FGModuleCat k) (ModuleCat.{v} k))
     where PreservesFiniteLimits J _ _ := inferInstance
 
-end FgModule
+end FGModuleCat
 
