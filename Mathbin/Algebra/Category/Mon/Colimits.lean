@@ -52,6 +52,7 @@ and the identifications given by the morphisms in the diagram.
 
 variable {J : Type v} [SmallCategory J] (F : J ⥤ MonCat.{v})
 
+#print MonCat.Colimits.Prequotient /-
 /-- An inductive type representing all monoid expressions (without relations)
 on a collection of types indexed by the objects of `J`.
 -/
@@ -62,12 +63,14 @@ inductive Prequotient-- There's always `of`
   | one : prequotient
   | mul : prequotient → prequotient → prequotient
 #align Mon.colimits.prequotient MonCat.Colimits.Prequotient
+-/
 
 instance : Inhabited (Prequotient F) :=
   ⟨Prequotient.one⟩
 
 open Prequotient
 
+#print MonCat.Colimits.Relation /-
 /-- The relation on `prequotient` saying when two expressions are equal
 because of the monoid laws, or
 because one element is mapped to another by a morphism in the diagram.
@@ -97,7 +100,9 @@ inductive Relation : Prequotient F → Prequotient F → Prop-- Make it an equiv
   | one_mul : ∀ x, relation (mul one x) x
   | mul_one : ∀ x, relation (mul x one) x
 #align Mon.colimits.relation MonCat.Colimits.Relation
+-/
 
+#print MonCat.Colimits.colimitSetoid /-
 /-- The setoid corresponding to monoid expressions modulo monoid relations and identifications.
 -/
 def colimitSetoid : Setoid (Prequotient F)
@@ -105,16 +110,20 @@ def colimitSetoid : Setoid (Prequotient F)
   R := Relation F
   iseqv := ⟨Relation.refl, Relation.symm, Relation.trans⟩
 #align Mon.colimits.colimit_setoid MonCat.Colimits.colimitSetoid
+-/
 
 attribute [instance] colimit_setoid
 
+#print MonCat.Colimits.ColimitType /-
 /-- The underlying type of the colimit of a diagram in `Mon`.
 -/
 def ColimitType : Type v :=
   Quotient (colimitSetoid F)
 deriving Inhabited
 #align Mon.colimits.colimit_type MonCat.Colimits.ColimitType
+-/
 
+#print MonCat.Colimits.monoidColimitType /-
 instance monoidColimitType : Monoid (ColimitType F)
     where
   mul := by
@@ -157,28 +166,38 @@ instance monoidColimitType : Monoid (ColimitType F)
     apply relation.mul_one
     rfl
 #align Mon.colimits.monoid_colimit_type MonCat.Colimits.monoidColimitType
+-/
 
+#print MonCat.Colimits.quot_one /-
 @[simp]
 theorem quot_one : Quot.mk Setoid.r one = (1 : ColimitType F) :=
   rfl
 #align Mon.colimits.quot_one MonCat.Colimits.quot_one
+-/
 
+#print MonCat.Colimits.quot_mul /-
 @[simp]
 theorem quot_mul (x y) :
     Quot.mk Setoid.r (mul x y) = (Quot.mk Setoid.r x * Quot.mk Setoid.r y : ColimitType F) :=
   rfl
 #align Mon.colimits.quot_mul MonCat.Colimits.quot_mul
+-/
 
+#print MonCat.Colimits.colimit /-
 /-- The bundled monoid giving the colimit of a diagram. -/
 def colimit : MonCat :=
   ⟨ColimitType F, by infer_instance⟩
 #align Mon.colimits.colimit MonCat.Colimits.colimit
+-/
 
+#print MonCat.Colimits.coconeFun /-
 /-- The function from a given monoid in the diagram to the colimit monoid. -/
 def coconeFun (j : J) (x : F.obj j) : ColimitType F :=
   Quot.mk _ (of j x)
 #align Mon.colimits.cocone_fun MonCat.Colimits.coconeFun
+-/
 
+#print MonCat.Colimits.coconeMorphism /-
 /-- The monoid homomorphism from a given monoid in the diagram to the colimit monoid. -/
 def coconeMorphism (j : J) : F.obj j ⟶ colimit F
     where
@@ -186,7 +205,9 @@ def coconeMorphism (j : J) : F.obj j ⟶ colimit F
   map_one' := Quot.sound (Relation.one _)
   map_mul' x y := Quot.sound (Relation.mul _ _ _)
 #align Mon.colimits.cocone_morphism MonCat.Colimits.coconeMorphism
+-/
 
+#print MonCat.Colimits.cocone_naturality /-
 @[simp]
 theorem cocone_naturality {j j' : J} (f : j ⟶ j') :
     F.map f ≫ coconeMorphism F j' = coconeMorphism F j :=
@@ -195,19 +216,25 @@ theorem cocone_naturality {j j' : J} (f : j ⟶ j') :
   apply Quot.sound
   apply Relation.Map
 #align Mon.colimits.cocone_naturality MonCat.Colimits.cocone_naturality
+-/
 
+#print MonCat.Colimits.cocone_naturality_components /-
 @[simp]
 theorem cocone_naturality_components (j j' : J) (f : j ⟶ j') (x : F.obj j) :
     (coconeMorphism F j') (F.map f x) = (coconeMorphism F j) x := by rw [← cocone_naturality F f];
   rfl
 #align Mon.colimits.cocone_naturality_components MonCat.Colimits.cocone_naturality_components
+-/
 
+#print MonCat.Colimits.colimitCocone /-
 /-- The cocone over the proposed colimit monoid. -/
 def colimitCocone : Cocone F where
   pt := colimit F
   ι := { app := coconeMorphism F }
 #align Mon.colimits.colimit_cocone MonCat.Colimits.colimitCocone
+-/
 
+#print MonCat.Colimits.descFunLift /-
 /-- The function from the free monoid on the diagram to the cone point of any other cocone. -/
 @[simp]
 def descFunLift (s : Cocone F) : Prequotient F → s.pt
@@ -215,7 +242,9 @@ def descFunLift (s : Cocone F) : Prequotient F → s.pt
   | one => 1
   | mul x y => desc_fun_lift x * desc_fun_lift y
 #align Mon.colimits.desc_fun_lift MonCat.Colimits.descFunLift
+-/
 
+#print MonCat.Colimits.descFun /-
 /-- The function from the colimit monoid to the cone point of any other cocone. -/
 def descFun (s : Cocone F) : ColimitType F → s.pt :=
   by
@@ -246,7 +275,9 @@ def descFun (s : Cocone F) : ColimitType F → s.pt :=
     -- mul_one
     · rw [mul_one]
 #align Mon.colimits.desc_fun MonCat.Colimits.descFun
+-/
 
+#print MonCat.Colimits.descMorphism /-
 /-- The monoid homomorphism from the colimit monoid to the cone point of any other cocone. -/
 def descMorphism (s : Cocone F) : colimit F ⟶ s.pt
     where
@@ -254,7 +285,9 @@ def descMorphism (s : Cocone F) : colimit F ⟶ s.pt
   map_one' := rfl
   map_mul' x y := by induction x <;> induction y <;> rfl
 #align Mon.colimits.desc_morphism MonCat.Colimits.descMorphism
+-/
 
+#print MonCat.Colimits.colimitIsColimit /-
 /-- Evidence that the proposed colimit is the colimit. -/
 def colimitIsColimit : IsColimit (colimitCocone F)
     where
@@ -271,7 +304,9 @@ def colimitIsColimit : IsColimit (colimitCocone F)
     · simp [*]
     rfl
 #align Mon.colimits.colimit_is_colimit MonCat.Colimits.colimitIsColimit
+-/
 
+#print MonCat.Colimits.hasColimits_monCat /-
 instance hasColimits_monCat : HasColimits MonCat
     where HasColimitsOfShape J 𝒥 :=
     {
@@ -280,6 +315,7 @@ instance hasColimits_monCat : HasColimits MonCat
           { Cocone := colimit_cocone F
             IsColimit := colimit_is_colimit F } }
 #align Mon.colimits.has_colimits_Mon MonCat.Colimits.hasColimits_monCat
+-/
 
 end MonCat.Colimits
 

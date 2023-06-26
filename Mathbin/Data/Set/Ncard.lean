@@ -164,16 +164,16 @@ theorem ncard_ne_zero_of_mem (h : a ∈ s)
 #align set.ncard_ne_zero_of_mem Set.ncard_ne_zero_of_mem
 -/
 
-#print Set.Finite_of_ncard_ne_zero /-
-theorem Finite_of_ncard_ne_zero (hs : s.ncard ≠ 0) : s.Finite :=
+#print Set.finite_of_ncard_ne_zero /-
+theorem finite_of_ncard_ne_zero (hs : s.ncard ≠ 0) : s.Finite :=
   s.finite_or_infinite.elim id fun h => (hs h.ncard).elim
-#align set.finite_of_ncard_ne_zero Set.Finite_of_ncard_ne_zero
+#align set.finite_of_ncard_ne_zero Set.finite_of_ncard_ne_zero
 -/
 
-#print Set.Finite_of_ncard_pos /-
-theorem Finite_of_ncard_pos (hs : 0 < s.ncard) : s.Finite :=
-  Finite_of_ncard_ne_zero hs.Ne.symm
-#align set.finite_of_ncard_pos Set.Finite_of_ncard_pos
+#print Set.finite_of_ncard_pos /-
+theorem finite_of_ncard_pos (hs : 0 < s.ncard) : s.Finite :=
+  finite_of_ncard_ne_zero hs.Ne.symm
+#align set.finite_of_ncard_pos Set.finite_of_ncard_pos
 -/
 
 #print Set.nonempty_of_ncard_ne_zero /-
@@ -406,17 +406,17 @@ theorem ncard_image_iff
 #align set.ncard_image_iff Set.ncard_image_iff
 -/
 
-#print Set.ncard_image_ofInjective /-
-theorem ncard_image_ofInjective (s : Set α) (H : f.Injective) : (f '' s).ncard = s.ncard :=
+#print Set.ncard_image_of_injective /-
+theorem ncard_image_of_injective (s : Set α) (H : f.Injective) : (f '' s).ncard = s.ncard :=
   ncard_image_of_injOn fun x _ y _ h => H h
-#align set.ncard_image_of_injective Set.ncard_image_ofInjective
+#align set.ncard_image_of_injective Set.ncard_image_of_injective
 -/
 
-#print Set.ncard_preimage_ofInjective_subset_range /-
-theorem ncard_preimage_ofInjective_subset_range {s : Set β} (H : f.Injective)
+#print Set.ncard_preimage_of_injective_subset_range /-
+theorem ncard_preimage_of_injective_subset_range {s : Set β} (H : f.Injective)
     (hs : s ⊆ Set.range f) : (f ⁻¹' s).ncard = s.ncard := by
   rw [← ncard_image_of_injective _ H, image_preimage_eq_iff.mpr hs]
-#align set.ncard_preimage_of_injective_subset_range Set.ncard_preimage_ofInjective_subset_range
+#align set.ncard_preimage_of_injective_subset_range Set.ncard_preimage_of_injective_subset_range
 -/
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic to_finite_tac -/
@@ -437,7 +437,7 @@ theorem fiber_ncard_ne_zero_iff_mem_image {y : β}
 #print Set.ncard_map /-
 @[simp]
 theorem ncard_map (f : α ↪ β) : (f '' s).ncard = s.ncard :=
-  ncard_image_ofInjective _ f.Injective
+  ncard_image_of_injective _ f.Injective
 #align set.ncard_map Set.ncard_map
 -/
 
@@ -554,8 +554,8 @@ theorem ncard_strictMono [Finite α] : @StrictMono (Set α) _ _ _ ncard := fun _
 -/
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic to_finite_tac -/
-#print Set.ncard_eq_ofBijective /-
-theorem ncard_eq_ofBijective {n : ℕ} (f : ∀ i, i < n → α)
+#print Set.ncard_eq_of_bijective /-
+theorem ncard_eq_of_bijective {n : ℕ} (f : ∀ i, i < n → α)
     (hf : ∀ a ∈ s, ∃ i, ∃ h : i < n, f i h = a) (hf' : ∀ (i) (h : i < n), f i h ∈ s)
     (f_inj : ∀ (i j) (hi : i < n) (hj : j < n), f i hi = f j hj → i = j)
     (hs : s.Finite := by
@@ -565,7 +565,7 @@ theorem ncard_eq_ofBijective {n : ℕ} (f : ∀ i, i < n → α)
   rw [ncard_eq_to_finset_card _ hs]
   apply Finset.card_eq_of_bijective
   all_goals simpa
-#align set.ncard_eq_of_bijective Set.ncard_eq_ofBijective
+#align set.ncard_eq_of_bijective Set.ncard_eq_of_bijective
 -/
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic to_finite_tac -/
@@ -951,24 +951,24 @@ theorem exists_intermediate_Set (i : ℕ) (h₁ : i + s.ncard ≤ t.ncard) (h₂
 #align set.exists_intermediate_set Set.exists_intermediate_Set
 -/
 
-#print Set.exists_intermediate_Set' /-
-theorem exists_intermediate_Set' {m : ℕ} (hs : s.ncard ≤ m) (ht : m ≤ t.ncard) (h : s ⊆ t) :
+#print Set.exists_intermediate_set' /-
+theorem exists_intermediate_set' {m : ℕ} (hs : s.ncard ≤ m) (ht : m ≤ t.ncard) (h : s ⊆ t) :
     ∃ r : Set α, s ⊆ r ∧ r ⊆ t ∧ r.ncard = m :=
   by
   obtain ⟨r, hsr, hrt, hc⟩ :=
     exists_intermediate_set (m - s.ncard) (by rwa [tsub_add_cancel_of_le hs]) h
   rw [tsub_add_cancel_of_le hs] at hc 
   exact ⟨r, hsr, hrt, hc⟩
-#align set.exists_intermediate_set' Set.exists_intermediate_Set'
+#align set.exists_intermediate_set' Set.exists_intermediate_set'
 -/
 
-#print Set.exists_smaller_Set /-
+#print Set.exists_smaller_set /-
 /-- We can shrink `s` to any smaller size. -/
-theorem exists_smaller_Set (s : Set α) (i : ℕ) (h₁ : i ≤ s.ncard) :
+theorem exists_smaller_set (s : Set α) (i : ℕ) (h₁ : i ≤ s.ncard) :
     ∃ t : Set α, t ⊆ s ∧ t.ncard = i :=
   (exists_intermediate_Set i (by simpa) (empty_subset s)).imp fun t ht =>
     ⟨ht.2.1, by simpa using ht.2.2⟩
-#align set.exists_smaller_set Set.exists_smaller_Set
+#align set.exists_smaller_set Set.exists_smaller_set
 -/
 
 /- warning: set.infinite.exists_subset_ncard_eq clashes with set.Infinite.exists_subset_ncard_eq -> Set.Infinite.exists_subset_ncard_eq
