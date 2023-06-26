@@ -61,13 +61,16 @@ contained in the corresponding witness of non-uniformity.
 -/
 
 
+#print SzemerediRegularity.chunk /-
 /-- The portion of `szemeredi_regularity.increment` which partitions `U`. -/
 noncomputable def chunk : Finpartition U :=
   if hUcard : U.card = m * 4 ^ P.parts.card + (card α / P.parts.card - m * 4 ^ P.parts.card) then
     (atomise U <| P.nonuniformWitnesses G ε U).equitabilise <| card_aux₁ hUcard
   else (atomise U <| P.nonuniformWitnesses G ε U).equitabilise <| card_aux₂ hP hU hUcard
 #align szemeredi_regularity.chunk SzemerediRegularity.chunk
+-/
 
+#print SzemerediRegularity.star /-
 -- `hP` and `hU` are used to get that `U` has size
 -- `m * 4 ^ P.parts.card + a or m * 4 ^ P.parts.card + a + 1`
 /-- The portion of `szemeredi_regularity.chunk` which is contained in the witness of non uniformity
@@ -75,6 +78,7 @@ of `U` and `V`. -/
 noncomputable def star (V : Finset α) : Finset (Finset α) :=
   (chunk hP G ε hU).parts.filterₓ (· ⊆ G.nonuniformWitness ε U V)
 #align szemeredi_regularity.star SzemerediRegularity.star
+-/
 
 /-!
 ### Density estimates
@@ -83,16 +87,20 @@ We estimate the density between parts of `chunk`.
 -/
 
 
+#print SzemerediRegularity.biUnion_star_subset_nonuniformWitness /-
 theorem biUnion_star_subset_nonuniformWitness :
     (star hP G ε hU V).biUnion id ⊆ G.nonuniformWitness ε U V :=
   biUnion_subset_iff_forall_subset.2 fun A hA => (mem_filter.1 hA).2
 #align szemeredi_regularity.bUnion_star_subset_nonuniform_witness SzemerediRegularity.biUnion_star_subset_nonuniformWitness
+-/
 
 variable {hP G ε hU V} {𝒜 : Finset (Finset α)} {s : Finset α}
 
+#print SzemerediRegularity.star_subset_chunk /-
 theorem star_subset_chunk : star hP G ε hU V ⊆ (chunk hP G ε hU).parts :=
   filter_subset _ _
 #align szemeredi_regularity.star_subset_chunk SzemerediRegularity.star_subset_chunk
+-/
 
 private theorem card_nonuniform_witness_sdiff_bUnion_star (hV : V ∈ P.parts) (hUV : U ≠ V)
     (h₂ : ¬G.IsUniform ε U V) :
@@ -199,6 +207,7 @@ variable {hP G ε U hU V}
 /-! ### `chunk` -/
 
 
+#print SzemerediRegularity.card_chunk /-
 theorem card_chunk (hm : m ≠ 0) : (chunk hP G ε hU).parts.card = 4 ^ P.parts.card :=
   by
   unfold chunk
@@ -207,26 +216,35 @@ theorem card_chunk (hm : m ≠ 0) : (chunk hP G ε hU).parts.card = 4 ^ P.parts.
     exact le_of_lt a_add_one_le_four_pow_parts_card
   · rw [card_parts_equitabilise _ _ hm, tsub_add_cancel_of_le a_add_one_le_four_pow_parts_card]
 #align szemeredi_regularity.card_chunk SzemerediRegularity.card_chunk
+-/
 
+#print SzemerediRegularity.card_eq_of_mem_parts_chunk /-
 theorem card_eq_of_mem_parts_chunk (hs : s ∈ (chunk hP G ε hU).parts) :
     s.card = m ∨ s.card = m + 1 := by unfold chunk at hs ;
   split_ifs at hs  <;> exact card_eq_of_mem_parts_equitabilise hs
 #align szemeredi_regularity.card_eq_of_mem_parts_chunk SzemerediRegularity.card_eq_of_mem_parts_chunk
+-/
 
+#print SzemerediRegularity.m_le_card_of_mem_chunk_parts /-
 theorem m_le_card_of_mem_chunk_parts (hs : s ∈ (chunk hP G ε hU).parts) : m ≤ s.card :=
   (card_eq_of_mem_parts_chunk hs).elim ge_of_eq fun i => by simp [i]
 #align szemeredi_regularity.m_le_card_of_mem_chunk_parts SzemerediRegularity.m_le_card_of_mem_chunk_parts
+-/
 
+#print SzemerediRegularity.card_le_m_add_one_of_mem_chunk_parts /-
 theorem card_le_m_add_one_of_mem_chunk_parts (hs : s ∈ (chunk hP G ε hU).parts) : s.card ≤ m + 1 :=
   (card_eq_of_mem_parts_chunk hs).elim (fun i => by simp [i]) fun i => i.le
 #align szemeredi_regularity.card_le_m_add_one_of_mem_chunk_parts SzemerediRegularity.card_le_m_add_one_of_mem_chunk_parts
+-/
 
+#print SzemerediRegularity.card_biUnion_star_le_m_add_one_card_star_mul /-
 theorem card_biUnion_star_le_m_add_one_card_star_mul :
     (((star hP G ε hU V).biUnion id).card : ℝ) ≤ (star hP G ε hU V).card * (m + 1) := by
   exact_mod_cast
     card_bUnion_le_card_mul _ _ _ fun s hs =>
       card_le_m_add_one_of_mem_chunk_parts <| star_subset_chunk hs
 #align szemeredi_regularity.card_bUnion_star_le_m_add_one_card_star_mul SzemerediRegularity.card_biUnion_star_le_m_add_one_card_star_mul
+-/
 
 private theorem le_sum_card_subset_chunk_parts (h𝒜 : 𝒜 ⊆ (chunk hP G ε hU).parts) (hs : s ∈ 𝒜) :
     (𝒜.card : ℝ) * s.card * (m / (m + 1)) ≤ (𝒜.sup id).card :=
@@ -520,6 +538,7 @@ private theorem edge_density_star_not_uniform [Nonempty α]
   left; linarith
   right; linarith
 
+#print SzemerediRegularity.edgeDensity_chunk_not_uniform /-
 /-- Lower bound on the edge densities between non-uniform parts of `szemeredi_regularity.increment`.
 -/
 theorem edgeDensity_chunk_not_uniform [Nonempty α] (hPα : P.parts.card * 16 ^ P.parts.card ≤ card α)
@@ -578,7 +597,9 @@ theorem edgeDensity_chunk_not_uniform [Nonempty α] (hPα : P.parts.card * 16 ^ 
         norm_num
         exact hP
 #align szemeredi_regularity.edge_density_chunk_not_uniform SzemerediRegularity.edgeDensity_chunk_not_uniform
+-/
 
+#print SzemerediRegularity.edgeDensity_chunk_uniform /-
 /-- Lower bound on the edge densities between parts of `szemeredi_regularity.increment`. This is the
 blanket lower bound used the uniform parts. -/
 theorem edgeDensity_chunk_uniform [Nonempty α] (hPα : P.parts.card * 16 ^ P.parts.card ≤ card α)
@@ -594,6 +615,7 @@ theorem edgeDensity_chunk_uniform [Nonempty α] (hPα : P.parts.card * 16 ^ P.pa
         cast_mul, ← mul_pow] <;>
     norm_cast
 #align szemeredi_regularity.edge_density_chunk_uniform SzemerediRegularity.edgeDensity_chunk_uniform
+-/
 
 end SzemerediRegularity
 
