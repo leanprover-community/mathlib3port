@@ -276,12 +276,12 @@ theorem numeric_nat : ∀ n : ℕ, Numeric n
 #align pgame.numeric_nat PGame.numeric_nat
 
 /-- Ordinal games are numeric. -/
-theorem numeric_toPgame (o : Ordinal) : o.toPgame.Numeric :=
+theorem numeric_toPGame (o : Ordinal) : o.toPGame.Numeric :=
   by
   induction' o using Ordinal.induction with o IH
   apply numeric_of_is_empty_right_moves
-  simpa using fun i => IH _ (Ordinal.toLeftMovesToPgame_symm_lt i)
-#align pgame.numeric_to_pgame PGame.numeric_toPgame
+  simpa using fun i => IH _ (Ordinal.toLeftMovesToPGame_symm_lt i)
+#align pgame.numeric_to_pgame PGame.numeric_toPGame
 
 end PGame
 
@@ -404,9 +404,9 @@ namespace Ordinal
 /-- Converts an ordinal into the corresponding surreal. -/
 noncomputable def toSurreal : Ordinal ↪o Surreal
     where
-  toFun o := mk _ (numeric_toPgame o)
-  inj' a b h := toPgame_equiv_iff.1 (Quotient.exact h)
-  map_rel_iff' := @toPgame_le_iff
+  toFun o := mk _ (numeric_toPGame o)
+  inj' a b h := toPGame_equiv_iff.1 (Quotient.exact h)
+  map_rel_iff' := @toPGame_le_iff
 #align ordinal.to_surreal Ordinal.toSurreal
 
 end Ordinal

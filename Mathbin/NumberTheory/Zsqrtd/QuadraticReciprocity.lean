@@ -32,6 +32,7 @@ namespace GaussianInt
 
 open PrincipalIdealRing
 
+#print GaussianInt.mod_four_eq_three_of_nat_prime_of_prime /-
 theorem mod_four_eq_three_of_nat_prime_of_prime (p : ℕ) [hp : Fact p.Prime]
     (hpi : Prime (p : ℤ[i])) : p % 4 = 3 :=
   hp.1.eq_two_or_odd.elim
@@ -92,7 +93,9 @@ theorem mod_four_eq_three_of_nat_prime_of_prime (p : ℕ) [hp : Fact p.Prime]
       clear_aux_decl
       tauto
 #align gaussian_int.mod_four_eq_three_of_nat_prime_of_prime GaussianInt.mod_four_eq_three_of_nat_prime_of_prime
+-/
 
+#print GaussianInt.prime_of_nat_prime_of_mod_four_eq_three /-
 theorem prime_of_nat_prime_of_mod_four_eq_three (p : ℕ) [hp : Fact p.Prime] (hp3 : p % 4 = 3) :
     Prime (p : ℤ[i]) :=
   irreducible_iff_prime.1 <|
@@ -102,12 +105,15 @@ theorem prime_of_nat_prime_of_mod_four_eq_three (p : ℕ) [hp : Fact p.Prime] (h
         erw [← ZMod.nat_cast_mod p 4, hp3] <;> exact by decide
       this a b (hab ▸ by simp)
 #align gaussian_int.prime_of_nat_prime_of_mod_four_eq_three GaussianInt.prime_of_nat_prime_of_mod_four_eq_three
+-/
 
+#print GaussianInt.prime_iff_mod_four_eq_three_of_nat_prime /-
 /-- A prime natural number is prime in `ℤ[i]` if and only if it is `3` mod `4` -/
 theorem prime_iff_mod_four_eq_three_of_nat_prime (p : ℕ) [hp : Fact p.Prime] :
     Prime (p : ℤ[i]) ↔ p % 4 = 3 :=
   ⟨mod_four_eq_three_of_nat_prime_of_prime p, prime_of_nat_prime_of_mod_four_eq_three p⟩
 #align gaussian_int.prime_iff_mod_four_eq_three_of_nat_prime GaussianInt.prime_iff_mod_four_eq_three_of_nat_prime
+-/
 
 end GaussianInt
 

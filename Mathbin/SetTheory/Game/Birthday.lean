@@ -121,7 +121,7 @@ theorem neg_birthday : ∀ x : PGame, (-x).birthday = x.birthday
 #align pgame.neg_birthday PGame.neg_birthday
 
 @[simp]
-theorem toPgame_birthday (o : Ordinal) : o.toPgame.birthday = o :=
+theorem toPGame_birthday (o : Ordinal) : o.toPGame.birthday = o :=
   by
   induction' o using Ordinal.induction with o IH
   rw [to_pgame_def, PGame.birthday]
@@ -129,19 +129,19 @@ theorem toPgame_birthday (o : Ordinal) : o.toPgame.birthday = o :=
   nth_rw 1 [← lsub_typein o]
   congr with x
   exact IH _ (typein_lt_self x)
-#align pgame.to_pgame_birthday PGame.toPgame_birthday
+#align pgame.to_pgame_birthday PGame.toPGame_birthday
 
-theorem le_birthday : ∀ x : PGame, x ≤ x.birthday.toPgame
+theorem le_birthday : ∀ x : PGame, x ≤ x.birthday.toPGame
   | ⟨xl, _, xL, _⟩ =>
     le_def.2
       ⟨fun i =>
-        Or.inl ⟨toLeftMovesToPgame ⟨_, birthday_moveLeft_lt i⟩, by simp [le_birthday (xL i)]⟩,
+        Or.inl ⟨toLeftMovesToPGame ⟨_, birthday_moveLeft_lt i⟩, by simp [le_birthday (xL i)]⟩,
         isEmptyElim⟩
 #align pgame.le_birthday PGame.le_birthday
 
 variable (a b x : PGame.{u})
 
-theorem neg_birthday_le : -x.birthday.toPgame ≤ x := by
+theorem neg_birthday_le : -x.birthday.toPGame ≤ x := by
   simpa only [neg_birthday, ← neg_le_iff] using le_birthday (-x)
 #align pgame.neg_birthday_le PGame.neg_birthday_le
 
