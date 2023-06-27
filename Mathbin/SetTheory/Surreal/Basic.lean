@@ -63,40 +63,53 @@ open scoped PGame
 
 namespace PGame
 
+#print PGame.Numeric /-
 /-- A pre-game is numeric if everything in the L set is less than everything in the R set,
 and all the elements of L and R are also numeric. -/
 def Numeric : PGame → Prop
   | ⟨l, r, L, R⟩ => (∀ i j, L i < R j) ∧ (∀ i, numeric (L i)) ∧ ∀ j, numeric (R j)
 #align pgame.numeric PGame.Numeric
+-/
 
+#print PGame.numeric_def /-
 theorem numeric_def {x : PGame} :
     Numeric x ↔
       (∀ i j, x.moveLeft i < x.moveRight j) ∧
         (∀ i, Numeric (x.moveLeft i)) ∧ ∀ j, Numeric (x.moveRight j) :=
   by cases x; rfl
 #align pgame.numeric_def PGame.numeric_def
+-/
 
 namespace Numeric
 
+#print PGame.Numeric.mk /-
 theorem mk {x : PGame} (h₁ : ∀ i j, x.moveLeft i < x.moveRight j) (h₂ : ∀ i, Numeric (x.moveLeft i))
     (h₃ : ∀ j, Numeric (x.moveRight j)) : Numeric x :=
   numeric_def.2 ⟨h₁, h₂, h₃⟩
 #align pgame.numeric.mk PGame.Numeric.mk
+-/
 
+#print PGame.Numeric.left_lt_right /-
 theorem left_lt_right {x : PGame} (o : Numeric x) (i : x.LeftMoves) (j : x.RightMoves) :
     x.moveLeft i < x.moveRight j := by cases x; exact o.1 i j
 #align pgame.numeric.left_lt_right PGame.Numeric.left_lt_right
+-/
 
+#print PGame.Numeric.moveLeft /-
 theorem moveLeft {x : PGame} (o : Numeric x) (i : x.LeftMoves) : Numeric (x.moveLeft i) := by
   cases x; exact o.2.1 i
 #align pgame.numeric.move_left PGame.Numeric.moveLeft
+-/
 
+#print PGame.Numeric.moveRight /-
 theorem moveRight {x : PGame} (o : Numeric x) (j : x.RightMoves) : Numeric (x.moveRight j) := by
   cases x; exact o.2.2 j
 #align pgame.numeric.move_right PGame.Numeric.moveRight
+-/
 
 end Numeric
 
+#print PGame.numeric_rec /-
 @[elab_as_elim]
 theorem numeric_rec {C : PGame → Prop}
     (H :
@@ -108,7 +121,9 @@ theorem numeric_rec {C : PGame → Prop}
   | ⟨l, r, L, R⟩, ⟨h, hl, hr⟩ =>
     H _ _ _ _ h hl hr (fun i => numeric_rec _ (hl i)) fun i => numeric_rec _ (hr i)
 #align pgame.numeric_rec PGame.numeric_rec
+-/
 
+#print PGame.Relabelling.numeric_imp /-
 theorem Relabelling.numeric_imp {x y : PGame} (r : x ≡r y) (ox : Numeric x) : Numeric y :=
   by
   induction' x using PGame.moveRecOn with x IHl IHr generalizing y
@@ -118,12 +133,16 @@ theorem Relabelling.numeric_imp {x y : PGame} (r : x ≡r y) (ox : Numeric x) : 
   · exact IHl _ (ox.move_left _) (r.move_left_symm i)
   · exact IHr _ (ox.move_right _) (r.move_right_symm j)
 #align pgame.relabelling.numeric_imp PGame.Relabelling.numeric_imp
+-/
 
+#print PGame.Relabelling.numeric_congr /-
 /-- Relabellings preserve being numeric. -/
 theorem Relabelling.numeric_congr {x y : PGame} (r : x ≡r y) : Numeric x ↔ Numeric y :=
   ⟨r.numeric_imp, r.symm.numeric_imp⟩
 #align pgame.relabelling.numeric_congr PGame.Relabelling.numeric_congr
+-/
 
+#print PGame.lf_asymm /-
 theorem lf_asymm {x y : PGame} (ox : Numeric x) (oy : Numeric y) : x ⧏ y → ¬y ⧏ x :=
   by
   refine' numeric_rec (fun xl xr xL xR hx oxl oxr IHxl IHxr => _) x ox y oy
@@ -134,25 +153,33 @@ theorem lf_asymm {x y : PGame} (ox : Numeric x) (oy : Numeric y) : x ⧏ y → �
   · exact (le_trans h₁ h₂).not_gf (lf_of_lt (hx _ _))
   · exact IHxr _ _ (oyr _) (h₁.lf_move_right _) (h₂.lf_move_right _)
 #align pgame.lf_asymm PGame.lf_asymm
+-/
 
+#print PGame.le_of_lf /-
 theorem le_of_lf {x y : PGame} (h : x ⧏ y) (ox : Numeric x) (oy : Numeric y) : x ≤ y :=
   not_lf.1 (lf_asymm ox oy h)
 #align pgame.le_of_lf PGame.le_of_lf
+-/
 
 alias le_of_lf ← lf.le
 #align pgame.lf.le PGame.Lf.le
 
+#print PGame.lt_of_lf /-
 theorem lt_of_lf {x y : PGame} (h : x ⧏ y) (ox : Numeric x) (oy : Numeric y) : x < y :=
   (lt_or_fuzzy_of_lf h).resolve_right (not_fuzzy_of_le (h.le ox oy))
 #align pgame.lt_of_lf PGame.lt_of_lf
+-/
 
 alias lt_of_lf ← lf.lt
 #align pgame.lf.lt PGame.Lf.lt
 
+#print PGame.lf_iff_lt /-
 theorem lf_iff_lt {x y : PGame} (ox : Numeric x) (oy : Numeric y) : x ⧏ y ↔ x < y :=
   ⟨fun h => h.lt ox oy, lf_of_lt⟩
 #align pgame.lf_iff_lt PGame.lf_iff_lt
+-/
 
+#print PGame.le_iff_forall_lt /-
 /-- Definition of `x ≤ y` on numeric pre-games, in terms of `<` -/
 theorem le_iff_forall_lt {x y : PGame} (ox : x.Numeric) (oy : y.Numeric) :
     x ≤ y ↔ (∀ i, x.moveLeft i < y) ∧ ∀ j, x < y.moveRight j := by
@@ -160,18 +187,24 @@ theorem le_iff_forall_lt {x y : PGame} (ox : x.Numeric) (oy : y.Numeric) :
       refine' forall_congr' fun i => lf_iff_lt _ _ <;>
     apply_rules [numeric.move_left, numeric.move_right]
 #align pgame.le_iff_forall_lt PGame.le_iff_forall_lt
+-/
 
+#print PGame.lt_iff_exists_le /-
 /-- Definition of `x < y` on numeric pre-games, in terms of `≤` -/
 theorem lt_iff_exists_le {x y : PGame} (ox : x.Numeric) (oy : y.Numeric) :
     x < y ↔ (∃ i, x ≤ y.moveLeft i) ∨ ∃ j, x.moveRight j ≤ y := by
   rw [← lf_iff_lt ox oy, lf_iff_exists_le]
 #align pgame.lt_iff_exists_le PGame.lt_iff_exists_le
+-/
 
+#print PGame.lt_of_exists_le /-
 theorem lt_of_exists_le {x y : PGame} (ox : x.Numeric) (oy : y.Numeric) :
     ((∃ i, x ≤ y.moveLeft i) ∨ ∃ j, x.moveRight j ≤ y) → x < y :=
   (lt_iff_exists_le ox oy).2
 #align pgame.lt_of_exists_le PGame.lt_of_exists_le
+-/
 
+#print PGame.lt_def /-
 /-- The definition of `x < y` on numeric pre-games, in terms of `<` two moves later. -/
 theorem lt_def {x y : PGame} (ox : x.Numeric) (oy : y.Numeric) :
     x < y ↔
@@ -183,61 +216,87 @@ theorem lt_def {x y : PGame} (ox : x.Numeric) (oy : y.Numeric) :
       refine' forall_congr' fun i => lf_iff_lt _ _ <;>
     apply_rules [numeric.move_left, numeric.move_right]
 #align pgame.lt_def PGame.lt_def
+-/
 
+#print PGame.not_fuzzy /-
 theorem not_fuzzy {x y : PGame} (ox : Numeric x) (oy : Numeric y) : ¬Fuzzy x y := fun h =>
   not_lf.2 ((lf_of_fuzzy h).le ox oy) h.2
 #align pgame.not_fuzzy PGame.not_fuzzy
+-/
 
+#print PGame.lt_or_equiv_or_gt /-
 theorem lt_or_equiv_or_gt {x y : PGame} (ox : Numeric x) (oy : Numeric y) :
     x < y ∨ (x ≈ y) ∨ y < x :=
   ((lf_or_equiv_or_gf x y).imp fun h => h.lt ox oy) <| Or.imp_right fun h => h.lt oy ox
 #align pgame.lt_or_equiv_or_gt PGame.lt_or_equiv_or_gt
+-/
 
+#print PGame.numeric_of_isEmpty /-
 theorem numeric_of_isEmpty (x : PGame) [IsEmpty x.LeftMoves] [IsEmpty x.RightMoves] : Numeric x :=
   Numeric.mk isEmptyElim isEmptyElim isEmptyElim
 #align pgame.numeric_of_is_empty PGame.numeric_of_isEmpty
+-/
 
+#print PGame.numeric_of_isEmpty_leftMoves /-
 theorem numeric_of_isEmpty_leftMoves (x : PGame) [IsEmpty x.LeftMoves] :
     (∀ j, Numeric (x.moveRight j)) → Numeric x :=
   Numeric.mk isEmptyElim isEmptyElim
 #align pgame.numeric_of_is_empty_left_moves PGame.numeric_of_isEmpty_leftMoves
+-/
 
+#print PGame.numeric_of_isEmpty_rightMoves /-
 theorem numeric_of_isEmpty_rightMoves (x : PGame) [IsEmpty x.RightMoves]
     (H : ∀ i, Numeric (x.moveLeft i)) : Numeric x :=
   Numeric.mk (fun _ => isEmptyElim) H isEmptyElim
 #align pgame.numeric_of_is_empty_right_moves PGame.numeric_of_isEmpty_rightMoves
+-/
 
+#print PGame.numeric_zero /-
 theorem numeric_zero : Numeric 0 :=
   numeric_of_isEmpty 0
 #align pgame.numeric_zero PGame.numeric_zero
+-/
 
+#print PGame.numeric_one /-
 theorem numeric_one : Numeric 1 :=
   numeric_of_isEmpty_rightMoves 1 fun _ => numeric_zero
 #align pgame.numeric_one PGame.numeric_one
+-/
 
+#print PGame.Numeric.neg /-
 theorem Numeric.neg : ∀ {x : PGame} (o : Numeric x), Numeric (-x)
   | ⟨l, r, L, R⟩, o =>
     ⟨fun j i => neg_lt_neg_iff.2 (o.1 i j), fun j => (o.2.2 j).neg, fun i => (o.2.1 i).neg⟩
 #align pgame.numeric.neg PGame.Numeric.neg
+-/
 
 namespace Numeric
 
+#print PGame.Numeric.moveLeft_lt /-
 theorem moveLeft_lt {x : PGame} (o : Numeric x) (i) : x.moveLeft i < x :=
   (moveLeft_lf i).lt (o.moveLeft i) o
 #align pgame.numeric.move_left_lt PGame.Numeric.moveLeft_lt
+-/
 
+#print PGame.Numeric.moveLeft_le /-
 theorem moveLeft_le {x : PGame} (o : Numeric x) (i) : x.moveLeft i ≤ x :=
   (o.moveLeft_lt i).le
 #align pgame.numeric.move_left_le PGame.Numeric.moveLeft_le
+-/
 
+#print PGame.Numeric.lt_moveRight /-
 theorem lt_moveRight {x : PGame} (o : Numeric x) (j) : x < x.moveRight j :=
   (lf_moveRight j).lt o (o.moveRight j)
 #align pgame.numeric.lt_move_right PGame.Numeric.lt_moveRight
+-/
 
+#print PGame.Numeric.le_moveRight /-
 theorem le_moveRight {x : PGame} (o : Numeric x) (j) : x ≤ x.moveRight j :=
   (o.lt_moveRight j).le
 #align pgame.numeric.le_move_right PGame.Numeric.le_moveRight
+-/
 
+#print PGame.Numeric.add /-
 theorem add : ∀ {x y : PGame} (ox : Numeric x) (oy : Numeric y), Numeric (x + y)
   | ⟨xl, xr, xL, xR⟩, ⟨yl, yr, yL, yR⟩, ox, oy =>
     ⟨by
@@ -262,19 +321,25 @@ theorem add : ∀ {x y : PGame} (ox : Numeric x) (oy : Numeric y), Numeric (x + 
         · apply ox.add (oy.move_right jy)⟩
 decreasing_by pgame_wf_tac
 #align pgame.numeric.add PGame.Numeric.add
+-/
 
+#print PGame.Numeric.sub /-
 theorem sub {x y : PGame} (ox : Numeric x) (oy : Numeric y) : Numeric (x - y) :=
   ox.add oy.neg
 #align pgame.numeric.sub PGame.Numeric.sub
+-/
 
 end Numeric
 
+#print PGame.numeric_nat /-
 /-- Pre-games defined by natural numbers are numeric. -/
 theorem numeric_nat : ∀ n : ℕ, Numeric n
   | 0 => numeric_zero
   | n + 1 => (numeric_nat n).add numeric_one
 #align pgame.numeric_nat PGame.numeric_nat
+-/
 
+#print PGame.numeric_toPGame /-
 /-- Ordinal games are numeric. -/
 theorem numeric_toPGame (o : Ordinal) : o.toPGame.Numeric :=
   by
@@ -282,24 +347,29 @@ theorem numeric_toPGame (o : Ordinal) : o.toPGame.Numeric :=
   apply numeric_of_is_empty_right_moves
   simpa using fun i => IH _ (Ordinal.toLeftMovesToPGame_symm_lt i)
 #align pgame.numeric_to_pgame PGame.numeric_toPGame
+-/
 
 end PGame
 
 open PGame
 
+#print Surreal /-
 /-- The type of surreal numbers. These are the numeric pre-games quotiented
 by the equivalence relation `x ≈ y ↔ x ≤ y ∧ y ≤ x`. In the quotient,
 the order becomes a total order. -/
 def Surreal :=
   Quotient (Subtype.setoid Numeric)
 #align surreal Surreal
+-/
 
 namespace Surreal
 
+#print Surreal.mk /-
 /-- Construct a surreal number from a numeric pre-game. -/
 def mk (x : PGame) (h : x.Numeric) : Surreal :=
   ⟦⟨x, h⟩⟧
 #align surreal.mk Surreal.mk
+-/
 
 instance : Zero Surreal :=
   ⟨mk 0 numeric_zero⟩
@@ -310,12 +380,15 @@ instance : One Surreal :=
 instance : Inhabited Surreal :=
   ⟨0⟩
 
+#print Surreal.lift /-
 /-- Lift an equivalence-respecting function on pre-games to surreals. -/
 def lift {α} (f : ∀ x, Numeric x → α)
     (H : ∀ {x y} (hx : Numeric x) (hy : Numeric y), x.Equiv y → f x hx = f y hy) : Surreal → α :=
   Quotient.lift (fun x : { x // Numeric x } => f x.1 x.2) fun x y => H x.2 y.2
 #align surreal.lift Surreal.lift
+-/
 
+#print Surreal.lift₂ /-
 /-- Lift a binary equivalence-respecting function on pre-games to surreals. -/
 def lift₂ {α} (f : ∀ x y, Numeric x → Numeric y → α)
     (H :
@@ -325,6 +398,7 @@ def lift₂ {α} (f : ∀ x y, Numeric x → Numeric y → α)
   lift (fun x ox => lift (fun y oy => f x y ox oy) fun y₁ y₂ oy₁ oy₂ => H _ _ _ _ equiv_rfl)
     fun x₁ x₂ ox₁ ox₂ h => funext <| Quotient.ind fun ⟨y, oy⟩ => H _ _ _ _ h equiv_rfl
 #align surreal.lift₂ Surreal.lift₂
+-/
 
 instance : LE Surreal :=
   ⟨lift₂ (fun x y _ _ => x ≤ y) fun x₁ y₁ x₂ y₂ _ _ _ _ hx hy => propext (le_congr hx hy)⟩
@@ -372,6 +446,7 @@ noncomputable instance : LinearOrderedAddCommGroup Surreal :=
 instance : AddMonoidWithOne Surreal :=
   AddMonoidWithOne.unary
 
+#print Surreal.toGame /-
 /-- Casts a `surreal` number into a `game`. -/
 def toGame : Surreal →+o Game
     where
@@ -380,20 +455,27 @@ def toGame : Surreal →+o Game
   map_add' := by rintro ⟨_, _⟩ ⟨_, _⟩; rfl
   monotone' := by rintro ⟨_, _⟩ ⟨_, _⟩; exact id
 #align surreal.to_game Surreal.toGame
+-/
 
+#print Surreal.zero_toGame /-
 theorem zero_toGame : toGame 0 = 0 :=
   rfl
 #align surreal.zero_to_game Surreal.zero_toGame
+-/
 
+#print Surreal.one_toGame /-
 @[simp]
 theorem one_toGame : toGame 1 = 1 :=
   rfl
 #align surreal.one_to_game Surreal.one_toGame
+-/
 
+#print Surreal.nat_toGame /-
 @[simp]
 theorem nat_toGame : ∀ n : ℕ, toGame n = n :=
   map_natCast' _ one_toGame
 #align surreal.nat_to_game Surreal.nat_toGame
+-/
 
 end Surreal
 
@@ -401,6 +483,7 @@ open Surreal
 
 namespace Ordinal
 
+#print Ordinal.toSurreal /-
 /-- Converts an ordinal into the corresponding surreal. -/
 noncomputable def toSurreal : Ordinal ↪o Surreal
     where
@@ -408,6 +491,7 @@ noncomputable def toSurreal : Ordinal ↪o Surreal
   inj' a b h := toPGame_equiv_iff.1 (Quotient.exact h)
   map_rel_iff' := @toPGame_le_iff
 #align ordinal.to_surreal Ordinal.toSurreal
+-/
 
 end Ordinal
 

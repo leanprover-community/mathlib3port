@@ -45,13 +45,16 @@ variable {C : Type u₁} {D : Type u₂} [Category.{v₁} C] [Category.{v₁} D]
 
 variable (i) [HasFiniteProducts C] [CartesianClosed C]
 
+#print CategoryTheory.ExponentialIdeal /-
 /-- The subcategory `D` of `C` expressed as an inclusion functor is an *exponential ideal* if
 `B ∈ D` implies `A ⟹ B ∈ D` for all `A`.
 -/
 class ExponentialIdeal : Prop where
   exp_closed : ∀ {B}, B ∈ i.essImage → ∀ A, (A ⟹ B) ∈ i.essImage
 #align category_theory.exponential_ideal CategoryTheory.ExponentialIdeal
+-/
 
+#print CategoryTheory.ExponentialIdeal.mk' /-
 /-- To show `i` is an exponential ideal it suffices to show that `A ⟹ iB` is "in" `D` for any `A` in
 `C` and `B` in `D`.
 -/
@@ -61,6 +64,7 @@ theorem ExponentialIdeal.mk' (h : ∀ (B : D) (A : C), (A ⟹ i.obj B) ∈ i.ess
     rcases hB with ⟨B', ⟨iB'⟩⟩
     exact functor.ess_image.of_iso ((exp A).mapIso iB') (h B' A)⟩
 #align category_theory.exponential_ideal.mk' CategoryTheory.ExponentialIdeal.mk'
+-/
 
 /-- The entire category viewed as a subcategory is an exponential ideal. -/
 instance : ExponentialIdeal (𝟭 C) :=
@@ -76,6 +80,7 @@ instance : ExponentialIdeal (subterminalInclusion C) :=
   refine' ⟨⟨A ⟹ B.1, fun Z g h => _⟩, ⟨iso.refl _⟩⟩
   exact uncurry_injective (B.2 (cartesian_closed.uncurry g) (cartesian_closed.uncurry h))
 
+#print CategoryTheory.exponentialIdealReflective /-
 /-- If `D` is a reflective subcategory, the property of being an exponential ideal is equivalent to
 the presence of a natural isomorphism `i ⋙ exp A ⋙ left_adjoint i ⋙ i ≅ i ⋙ exp A`, that is:
 `(A ⟹ iB) ≅ i L (A ⟹ iB)`, naturally in `B`.
@@ -91,7 +96,9 @@ def exponentialIdealReflective (A : C) [Reflective i] [ExponentialIdeal i] :
     apply as_iso ((adjunction.of_right_adjoint i).Unit.app (A ⟹ i.obj X))
   · simp
 #align category_theory.exponential_ideal_reflective CategoryTheory.exponentialIdealReflective
+-/
 
+#print CategoryTheory.ExponentialIdeal.mk_of_iso /-
 /-- Given a natural isomorphism `i ⋙ exp A ⋙ left_adjoint i ⋙ i ≅ i ⋙ exp A`, we can show `i`
 is an exponential ideal.
 -/
@@ -102,6 +109,7 @@ theorem ExponentialIdeal.mk_of_iso [Reflective i]
   intro B A
   exact ⟨_, ⟨(h A).app B⟩⟩
 #align category_theory.exponential_ideal.mk_of_iso CategoryTheory.ExponentialIdeal.mk_of_iso
+-/
 
 end Ideal
 
@@ -111,9 +119,11 @@ variable {C : Type u₁} {D : Type u₂} [Category.{v₁} C] [Category.{v₁} D]
 
 variable (i : D ⥤ C)
 
+#print CategoryTheory.reflective_products /-
 theorem reflective_products [HasFiniteProducts C] [Reflective i] : HasFiniteProducts D :=
   ⟨fun n => hasLimitsOfShape_of_reflective i⟩
 #align category_theory.reflective_products CategoryTheory.reflective_products
+-/
 
 attribute [local instance 10] reflective_products
 
@@ -121,10 +131,11 @@ open CartesianClosed
 
 variable [HasFiniteProducts C] [Reflective i] [CartesianClosed C]
 
+#print CategoryTheory.exponentialIdeal_of_preservesBinaryProducts /-
 /-- If the reflector preserves binary products, the subcategory is an exponential ideal.
 This is the converse of `preserves_binary_products_of_exponential_ideal`.
 -/
-instance (priority := 10) exponentialIdeal_of_preserves_binary_products
+instance (priority := 10) exponentialIdeal_of_preservesBinaryProducts
     [PreservesLimitsOfShape (Discrete WalkingPair) (leftAdjoint i)] : ExponentialIdeal i :=
   by
   let ir := adjunction.of_right_adjoint i
@@ -146,10 +157,12 @@ instance (priority := 10) exponentialIdeal_of_preserves_binary_products
     apply is_iso.hom_inv_id_assoc
   haveI : is_split_mono (η.app (A ⟹ i.obj B)) := is_split_mono.mk' ⟨_, this⟩
   apply mem_ess_image_of_unit_is_split_mono
-#align category_theory.exponential_ideal_of_preserves_binary_products CategoryTheory.exponentialIdeal_of_preserves_binary_products
+#align category_theory.exponential_ideal_of_preserves_binary_products CategoryTheory.exponentialIdeal_of_preservesBinaryProducts
+-/
 
 variable [ExponentialIdeal i]
 
+#print CategoryTheory.cartesianClosedOfReflective /-
 /-- If `i` witnesses that `D` is a reflective subcategory and an exponential ideal, then `D` is
 itself cartesian closed.
 -/
@@ -172,11 +185,13 @@ def cartesianClosedOfReflective : CartesianClosed D
                 simp
             · apply (exponential_ideal_reflective i _).symm } }
 #align category_theory.cartesian_closed_of_reflective CategoryTheory.cartesianClosedOfReflective
+-/
 
 -- It's annoying that I need to do this.
 attribute [-instance] CategoryTheory.preservesLimitOfCreatesLimitAndHasLimit
   CategoryTheory.preservesLimitOfShapeOfCreatesLimitsOfShapeAndHasLimitsOfShape
 
+#print CategoryTheory.bijection /-
 /-- We construct a bijection between morphisms `L(A ⨯ B) ⟶ X` and morphisms `LA ⨯ LB ⟶ X`.
 This bijection has two key properties:
 * It is natural in `X`: See `bijection_natural`.
@@ -210,7 +225,9 @@ noncomputable def bijection (A B : C) (X : D) :
       exact (preserves_limit_pair.iso _ _ _).symm
     _ ≃ ((leftAdjoint i).obj A ⨯ (leftAdjoint i).obj B ⟶ X) := (equivOfFullyFaithful _).symm
 #align category_theory.bijection CategoryTheory.bijection
+-/
 
+#print CategoryTheory.bijection_symm_apply_id /-
 theorem bijection_symm_apply_id (A B : C) : (bijection i A B _).symm (𝟙 _) = prodComparison _ _ _ :=
   by
   dsimp [bijection]
@@ -226,7 +243,9 @@ theorem bijection_symm_apply_id (A B : C) : (bijection i A B _).symm (𝟙 _) = 
   · rw [limits.prod.map_snd, assoc, assoc, prod_comparison_snd, ← i.map_comp, prod_comparison_snd]
     apply (adjunction.of_right_adjoint i).Unit.naturality
 #align category_theory.bijection_symm_apply_id CategoryTheory.bijection_symm_apply_id
+-/
 
+#print CategoryTheory.bijection_natural /-
 theorem bijection_natural (A B : C) (X X' : D) (f : (leftAdjoint i).obj (A ⨯ B) ⟶ X) (g : X ⟶ X') :
     bijection i _ _ _ (f ≫ g) = bijection i _ _ _ f ≫ g :=
   by
@@ -237,7 +256,9 @@ theorem bijection_natural (A B : C) (X X' : D) (f : (leftAdjoint i).obj (A ⨯ B
     unit_comp_partial_bijective_natural, uncurry_natural_right, ← assoc, curry_natural_right,
     unit_comp_partial_bijective_natural, uncurry_natural_right, assoc]
 #align category_theory.bijection_natural CategoryTheory.bijection_natural
+-/
 
+#print CategoryTheory.prodComparison_iso /-
 /--
 The bijection allows us to show that `prod_comparison L A B` is an isomorphism, where the inverse
 is the forward map of the identity morphism.
@@ -248,9 +269,11 @@ theorem prodComparison_iso (A B : C) : IsIso (prodComparison (leftAdjoint i) A B
         Equiv.apply_symm_apply, id_comp],
       by rw [← bijection_natural, id_comp, ← bijection_symm_apply_id, Equiv.apply_symm_apply]⟩⟩
 #align category_theory.prod_comparison_iso CategoryTheory.prodComparison_iso
+-/
 
 attribute [local instance] prod_comparison_iso
 
+#print CategoryTheory.preservesBinaryProductsOfExponentialIdeal /-
 /--
 If a reflective subcategory is an exponential ideal, then the reflector preserves binary products.
 This is the converse of `exponential_ideal_of_preserves_binary_products`.
@@ -262,7 +285,9 @@ noncomputable def preservesBinaryProductsOfExponentialIdeal :
     apply limits.preserves_limit_of_iso_diagram _ (diagram_iso_pair K).symm
     apply preserves_limit_pair.of_iso_prod_comparison
 #align category_theory.preserves_binary_products_of_exponential_ideal CategoryTheory.preservesBinaryProductsOfExponentialIdeal
+-/
 
+#print CategoryTheory.preservesFiniteProductsOfExponentialIdeal /-
 /--
 If a reflective subcategory is an exponential ideal, then the reflector preserves finite products.
 -/
@@ -273,6 +298,7 @@ noncomputable def preservesFiniteProductsOfExponentialIdeal (J : Type) [Fintype 
   letI := leftAdjointPreservesTerminalOfReflective.{0} i
   apply preserves_finite_products_of_preserves_binary_and_terminal (left_adjoint i) J
 #align category_theory.preserves_finite_products_of_exponential_ideal CategoryTheory.preservesFiniteProductsOfExponentialIdeal
+-/
 
 end
 
