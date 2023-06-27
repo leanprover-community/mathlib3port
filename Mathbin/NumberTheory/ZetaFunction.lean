@@ -720,18 +720,18 @@ theorem riemannZeta_one_sub {s : ℂ} (hs : ∀ n : ℕ, s ≠ -n) (hs' : s ≠ 
     exact Or.inl two_ne_zero
   have h_Ga_ne1 : Gamma (s / 2) ≠ 0 :=
     by
-    rw [Ne.def, Complex.gamma_eq_zero_iff]
+    rw [Ne.def, Complex.Gamma_eq_zero_iff]
     contrapose! hs
     obtain ⟨m, hm⟩ := hs
     rw [div_eq_iff (two_ne_zero' ℂ), ← Nat.cast_two, neg_mul, ← Nat.cast_mul] at hm 
     exact ⟨m * 2, by rw [hm]⟩
   have h_Ga_eq : Gamma s = Gamma (s / 2) * Gamma ((s + 1) / 2) * 2 ^ (s - 1) / sqrt π := by
-    rw [add_div, Complex.gamma_mul_gamma_add_half, mul_div_cancel' _ (two_ne_zero' ℂ),
+    rw [add_div, Complex.Gamma_mul_Gamma_add_half, mul_div_cancel' _ (two_ne_zero' ℂ),
       (by ring : 1 - s = -(s - 1)), cpow_neg, ← div_eq_mul_inv, eq_div_iff h_sqrt,
       div_mul_eq_mul_div₀, div_mul_cancel _ h_pow]
   have h_Ga_ne3 : Gamma ((s + 1) / 2) ≠ 0 :=
     by
-    have h_Ga_aux : Gamma s ≠ 0 := Complex.gamma_ne_zero hs
+    have h_Ga_aux : Gamma s ≠ 0 := Complex.Gamma_ne_zero hs
     contrapose! h_Ga_aux
     rw [h_Ga_eq, h_Ga_aux, MulZeroClass.mul_zero, MulZeroClass.zero_mul, zero_div]
   rw [riemannZeta, Function.update_noteq (by rwa [sub_ne_zero, ne_comm] : 1 - s ≠ 0),
@@ -749,7 +749,7 @@ theorem riemannZeta_one_sub {s : ℂ} (hs : ∀ n : ℕ, s ≠ -n) (hs' : s ≠ 
     rw [this, Complex.sin_int_mul_pi, MulZeroClass.mul_zero, MulZeroClass.zero_mul]
   have h_Ga_ne4 : Gamma ((1 - s) / 2) ≠ 0 :=
     by
-    rw [Ne.def, Complex.gamma_eq_zero_iff]
+    rw [Ne.def, Complex.Gamma_eq_zero_iff]
     contrapose! hs_pos_odd
     obtain ⟨m, hm⟩ := hs_pos_odd
     rw [div_eq_iff (two_ne_zero' ℂ), sub_eq_iff_eq_add, neg_mul, ← sub_eq_neg_add,
@@ -758,7 +758,7 @@ theorem riemannZeta_one_sub {s : ℂ} (hs : ∀ n : ℕ, s ≠ -n) (hs' : s ≠ 
   -- At last the main proof
   rw [show sin (↑π * (1 - s) / 2) = π * (Gamma ((1 - s) / 2) * Gamma (s / 2 + 1 / 2))⁻¹
       by
-      have := congr_arg Inv.inv (Complex.gamma_mul_gamma_one_sub ((1 - s) / 2)).symm
+      have := congr_arg Inv.inv (Complex.Gamma_mul_Gamma_one_sub ((1 - s) / 2)).symm
       rwa [(by ring : 1 - (1 - s) / 2 = s / 2 + 1 / 2), inv_div,
         div_eq_iff (of_real_ne_zero.mpr pi_pos.ne'), mul_comm _ ↑π, mul_div_assoc'] at this ]
   rw [(by rw [← neg_sub] : (2 : ℂ) ^ (1 - s) = 2 ^ (-(s - 1))), cpow_neg, h_Ga_eq]
