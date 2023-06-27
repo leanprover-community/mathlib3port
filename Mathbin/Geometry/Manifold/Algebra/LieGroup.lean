@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicolò Cavalleri
 
 ! This file was ported from Lean 3 source module geometry.manifold.algebra.lie_group
-! leanprover-community/mathlib commit f9ec187127cc5b381dfcf5f4a22dacca4c20b63d
+! leanprover-community/mathlib commit 30faa0c3618ce1472bf6305ae0e3fa56affa3f95
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.Geometry.Manifold.Algebra.Monoid
 
 /-!
 # Lie groups
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 A Lie group is a group that is also a smooth manifold, in which the group operations of
 multiplication and inversion are smooth maps. Smoothness of the group multiplication means that

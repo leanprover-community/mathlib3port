@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module linear_algebra.clifford_algebra.fold
-! leanprover-community/mathlib commit 446eb51ce0a90f8385f260d2b52e760e2004246b
+! leanprover-community/mathlib commit 30faa0c3618ce1472bf6305ae0e3fa56affa3f95
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.LinearAlgebra.CliffordAlgebra.Conjugation
 
 /-!
 # Recursive computation rules for the Clifford algebra
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file provides API for a special case `clifford_algebra.foldr` of the universal property
 `clifford_algebra.lift` with `A = module.End R N` for some arbitrary module `N`. This specialization

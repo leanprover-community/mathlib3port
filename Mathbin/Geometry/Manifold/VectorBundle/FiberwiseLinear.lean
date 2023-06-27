@@ -4,13 +4,16 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Heather Macbeth
 
 ! This file was ported from Lean 3 source module geometry.manifold.vector_bundle.fiberwise_linear
-! leanprover-community/mathlib commit be2c24f56783935652cefffb4bfca7e4b25d167e
+! leanprover-community/mathlib commit 30faa0c3618ce1472bf6305ae0e3fa56affa3f95
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Geometry.Manifold.ContMdiff
 
 /-! # The groupoid of smooth, fiberwise-linear maps
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file contains preliminaries for the definition of a smooth vector bundle: an associated
 `structure_groupoid`, the groupoid of `smooth_fiberwise_linear` functions.

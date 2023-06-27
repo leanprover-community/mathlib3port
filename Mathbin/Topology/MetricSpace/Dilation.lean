@@ -5,7 +5,7 @@ Dilations of emetric and metric spaces
 Authors: Hanting Zhang
 
 ! This file was ported from Lean 3 source module topology.metric_space.dilation
-! leanprover-community/mathlib commit 93f880918cb51905fd51b76add8273cbc27718ab
+! leanprover-community/mathlib commit 30faa0c3618ce1472bf6305ae0e3fa56affa3f95
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.Data.FunLike.Basic
 
 /-!
 # Dilations
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 We define dilations, i.e., maps between emetric spaces that satisfy
 `edist (f x) (f y) = r * edist x y` for some `r ∉ {0, ∞}`.

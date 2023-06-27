@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Thomas Browning, Patrick Lutz
 
 ! This file was ported from Lean 3 source module field_theory.abel_ruffini
-! leanprover-community/mathlib commit e3f4be1fcb5376c4948d7f095bec45350bfb9d1a
+! leanprover-community/mathlib commit 30faa0c3618ce1472bf6305ae0e3fa56affa3f95
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.RingTheory.RootsOfUnity.Basic
 
 /-!
 # The Abel-Ruffini Theorem
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file proves one direction of the Abel-Ruffini theorem, namely that if an element is solvable
 by radicals, then its minimal polynomial has solvable Galois group.

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module number_theory.class_number.function_field
-! leanprover-community/mathlib commit d0259b01c82eed3f50390a60404c63faf9e60b1f
+! leanprover-community/mathlib commit 30faa0c3618ce1472bf6305ae0e3fa56affa3f95
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.NumberTheory.FunctionField
 
 /-!
 # Class numbers of function fields
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file defines the class number of a function field as the (finite) cardinality of
 the class group of its ring of integers. It also proves some elementary results

@@ -88,24 +88,24 @@ theorem not_mem_prime_iff_unit_in_stalk (r : Γ.obj (op X)) (x : X) :
 #align algebraic_geometry.LocallyRingedSpace.not_mem_prime_iff_unit_in_stalk AlgebraicGeometry.LocallyRingedSpace.not_mem_prime_iff_unit_in_stalk
 -/
 
-#print AlgebraicGeometry.LocallyRingedSpace.to_Γ_Spec_preim_basicOpen_eq /-
+#print AlgebraicGeometry.LocallyRingedSpace.toΓSpec_preim_basicOpen_eq /-
 /-- The preimage of a basic open in `Spec Γ(X)` under the unit is the basic
 open in `X` defined by the same element (they are equal as sets). -/
-theorem to_Γ_Spec_preim_basicOpen_eq (r : Γ.obj (op X)) :
+theorem toΓSpec_preim_basicOpen_eq (r : Γ.obj (op X)) :
     X.toΓSpecFun ⁻¹' (basicOpen r).1 = (X.toRingedSpace.basicOpen r).1 := by ext;
   erw [X.to_RingedSpace.mem_top_basic_open]; apply not_mem_prime_iff_unit_in_stalk
-#align algebraic_geometry.LocallyRingedSpace.to_Γ_Spec_preim_basic_open_eq AlgebraicGeometry.LocallyRingedSpace.to_Γ_Spec_preim_basicOpen_eq
+#align algebraic_geometry.LocallyRingedSpace.to_Γ_Spec_preim_basic_open_eq AlgebraicGeometry.LocallyRingedSpace.toΓSpec_preim_basicOpen_eq
 -/
 
-#print AlgebraicGeometry.LocallyRingedSpace.to_Γ_Spec_continuous /-
+#print AlgebraicGeometry.LocallyRingedSpace.toΓSpec_continuous /-
 /-- `to_Γ_Spec_fun` is continuous. -/
-theorem to_Γ_Spec_continuous : Continuous X.toΓSpecFun :=
+theorem toΓSpec_continuous : Continuous X.toΓSpecFun :=
   by
   apply is_topological_basis_basic_opens.continuous
   rintro _ ⟨r, rfl⟩
   erw [X.to_Γ_Spec_preim_basic_open_eq r]
   exact (X.to_RingedSpace.basic_open r).2
-#align algebraic_geometry.LocallyRingedSpace.to_Γ_Spec_continuous AlgebraicGeometry.LocallyRingedSpace.to_Γ_Spec_continuous
+#align algebraic_geometry.LocallyRingedSpace.to_Γ_Spec_continuous AlgebraicGeometry.LocallyRingedSpace.toΓSpec_continuous
 -/
 
 #print AlgebraicGeometry.LocallyRingedSpace.toΓSpecBase /-
@@ -115,7 +115,7 @@ space of `X` to the prime spectrum of its global sections. -/
 def toΓSpecBase : X.toTopCat ⟶ Spec.topObj (Γ.obj (op X))
     where
   toFun := X.toΓSpecFun
-  continuous_toFun := X.to_Γ_Spec_continuous
+  continuous_toFun := X.toΓSpec_continuous
 #align algebraic_geometry.LocallyRingedSpace.to_Γ_Spec_base AlgebraicGeometry.LocallyRingedSpace.toΓSpecBase
 -/
 
@@ -131,7 +131,7 @@ abbrev toΓSpecMapBasicOpen : Opens X :=
 #print AlgebraicGeometry.LocallyRingedSpace.toΓSpecMapBasicOpen_eq /-
 /-- The preimage is the basic open in `X` defined by the same element `r`. -/
 theorem toΓSpecMapBasicOpen_eq : X.toΓSpecMapBasicOpen r = X.toRingedSpace.basicOpen r :=
-  Opens.ext (X.to_Γ_Spec_preim_basicOpen_eq r)
+  Opens.ext (X.toΓSpec_preim_basicOpen_eq r)
 #align algebraic_geometry.LocallyRingedSpace.to_Γ_Spec_map_basic_open_eq AlgebraicGeometry.LocallyRingedSpace.toΓSpecMapBasicOpen_eq
 -/
 
@@ -234,10 +234,10 @@ theorem toΓSpecSheafedSpace_app_spec (r : Γ.obj (op X)) :
 #align algebraic_geometry.LocallyRingedSpace.to_Γ_Spec_SheafedSpace_app_spec AlgebraicGeometry.LocallyRingedSpace.toΓSpecSheafedSpace_app_spec
 -/
 
-#print AlgebraicGeometry.LocallyRingedSpace.toStalk_stalkMap_to_Γ_Spec /-
+#print AlgebraicGeometry.LocallyRingedSpace.toStalk_stalkMap_toΓSpec /-
 /-- The map on stalks induced by the unit commutes with maps from `Γ(X)` to
     stalks (in `Spec Γ(X)` and in `X`). -/
-theorem toStalk_stalkMap_to_Γ_Spec (x : X) :
+theorem toStalk_stalkMap_toΓSpec (x : X) :
     toStalk _ _ ≫ PresheafedSpace.stalkMap X.toΓSpecSheafedSpace x = X.ΓToStalk x :=
   by
   rw [PresheafedSpace.stalk_map]
@@ -252,7 +252,7 @@ theorem toStalk_stalkMap_to_Γ_Spec (x : X) :
   congr 1
   change (X.to_Γ_Spec_base _* X.presheaf).map le_top.hom.op ≫ _ = _
   apply germ_res
-#align algebraic_geometry.LocallyRingedSpace.to_stalk_stalk_map_to_Γ_Spec AlgebraicGeometry.LocallyRingedSpace.toStalk_stalkMap_to_Γ_Spec
+#align algebraic_geometry.LocallyRingedSpace.to_stalk_stalk_map_to_Γ_Spec AlgebraicGeometry.LocallyRingedSpace.toStalk_stalkMap_toΓSpec
 -/
 
 #print AlgebraicGeometry.LocallyRingedSpace.toΓSpec /-

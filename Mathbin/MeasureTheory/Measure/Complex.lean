@@ -140,15 +140,15 @@ def equivSignedMeasureₗ : ComplexMeasure α ≃ₗ[R] SignedMeasure α × Sign
 
 end
 
-#print MeasureTheory.ComplexMeasure.absolutelyContinuous_eNNReal_iff /-
-theorem absolutelyContinuous_eNNReal_iff (c : ComplexMeasure α) (μ : VectorMeasure α ℝ≥0∞) :
+#print MeasureTheory.ComplexMeasure.absolutelyContinuous_ennreal_iff /-
+theorem absolutelyContinuous_ennreal_iff (c : ComplexMeasure α) (μ : VectorMeasure α ℝ≥0∞) :
     c ≪ᵥ μ ↔ c.re ≪ᵥ μ ∧ c.im ≪ᵥ μ := by
   constructor <;> intro h
   · constructor <;> · intro i hi; simp [h hi]
   · intro i hi
     rw [← Complex.re_add_im (c i), (_ : (c i).re = 0), (_ : (c i).im = 0)]
     exacts [by simp, h.2 hi, h.1 hi]
-#align measure_theory.complex_measure.absolutely_continuous_ennreal_iff MeasureTheory.ComplexMeasure.absolutelyContinuous_eNNReal_iff
+#align measure_theory.complex_measure.absolutely_continuous_ennreal_iff MeasureTheory.ComplexMeasure.absolutelyContinuous_ennreal_iff
 -/
 
 end ComplexMeasure

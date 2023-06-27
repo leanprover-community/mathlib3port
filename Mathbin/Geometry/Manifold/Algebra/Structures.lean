@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicolò Cavalleri
 
 ! This file was ported from Lean 3 source module geometry.manifold.algebra.structures
-! leanprover-community/mathlib commit d1bd9c5df2867c1cb463bc6364446d57bdd9f7f1
+! leanprover-community/mathlib commit 30faa0c3618ce1472bf6305ae0e3fa56affa3f95
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.Geometry.Manifold.Algebra.LieGroup
 
 /-!
 # Smooth structures
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 In this file we define smooth structures that build on Lie groups. We prefer using the term smooth
 instead of Lie mainly because Lie ring has currently another use in mathematics.

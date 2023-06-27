@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudryashov, Moritz Doll
 
 ! This file was ported from Lean 3 source module linear_algebra.linear_pmap
-! leanprover-community/mathlib commit ee05e9ce1322178f0c12004eb93c00d2c8c00ed2
+! leanprover-community/mathlib commit 8b981918a93bc45a8600de608cde7944a80d92b9
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -643,6 +643,11 @@ theorem toPMap_apply (f : E →ₗ[R] F) (p : Submodule R E) (x : p) : f.toPMap 
   rfl
 #align linear_map.to_pmap_apply LinearMap.toPMap_apply
 -/
+
+@[simp]
+theorem toPMap_domain (f : E →ₗ[R] F) (p : Submodule R E) : (f.toPMap p).domain = p :=
+  rfl
+#align linear_map.to_pmap_domain LinearMap.toPMap_domain
 
 #print LinearMap.compPMap /-
 /-- Compose a linear map with a `linear_pmap` -/

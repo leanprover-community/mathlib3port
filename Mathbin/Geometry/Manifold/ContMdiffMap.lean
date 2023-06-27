@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicolò Cavalleri
 
 ! This file was ported from Lean 3 source module geometry.manifold.cont_mdiff_map
-! leanprover-community/mathlib commit 86c29aefdba50b3f33e86e52e3b2f51a0d8f0282
+! leanprover-community/mathlib commit 30faa0c3618ce1472bf6305ae0e3fa56affa3f95
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Topology.ContinuousFunction.Basic
 
 /-!
 # Smooth bundled map
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 In this file we define the type `cont_mdiff_map` of `n` times continuously differentiable
 bundled maps.

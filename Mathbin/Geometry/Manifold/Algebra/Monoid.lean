@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicolò Cavalleri
 
 ! This file was ported from Lean 3 source module geometry.manifold.algebra.monoid
-! leanprover-community/mathlib commit e354e865255654389cc46e6032160238df2e0f40
+! leanprover-community/mathlib commit 30faa0c3618ce1472bf6305ae0e3fa56affa3f95
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.Geometry.Manifold.ContMdiffMap
 
 /-!
 # Smooth monoid
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 A smooth monoid is a monoid that is also a smooth manifold, in which multiplication is a smooth map
 of the product manifold `G` × `G` into `G`.
 

@@ -4,13 +4,16 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Heather Macbeth
 
 ! This file was ported from Lean 3 source module geometry.manifold.vector_bundle.tangent
-! leanprover-community/mathlib commit e354e865255654389cc46e6032160238df2e0f40
+! leanprover-community/mathlib commit 30faa0c3618ce1472bf6305ae0e3fa56affa3f95
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
 import Mathbin.Geometry.Manifold.VectorBundle.Basic
 
 /-! # Tangent bundles
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file defines the tangent bundle as a smooth vector bundle.
 

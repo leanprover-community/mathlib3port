@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module data.nat.part_enat
-! leanprover-community/mathlib commit 114ff8a4a7935cb7531062200bff375e7b1d6d85
+! leanprover-community/mathlib commit 3ff3f2d6a3118b8711063de7111a0d77a53219a8
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -611,6 +611,14 @@ theorem add_one_le_iff_lt {x y : PartENat} (hx : x ≠ ⊤) : x + 1 ≤ y ↔ x 
 #align part_enat.add_one_le_iff_lt PartENat.add_one_le_iff_lt
 -/
 
+/- warning: part_enat.coe_succ_le_iff clashes with part_enat.coe_succ_le_succ_iff -> PartENat.coe_succ_le_iff
+Case conversion may be inaccurate. Consider using '#align part_enat.coe_succ_le_iff PartENat.coe_succ_le_iffₓ'. -/
+#print PartENat.coe_succ_le_iff /-
+theorem coe_succ_le_iff {n : ℕ} {e : PartENat} : ↑n.succ ≤ e ↔ ↑n < e := by
+  rw [Nat.succ_eq_add_one n, Nat.cast_add, Nat.cast_one, add_one_le_iff_lt (coe_ne_top n)]
+#align part_enat.coe_succ_le_iff PartENat.coe_succ_le_iff
+-/
+
 #print PartENat.lt_add_one_iff_lt /-
 theorem lt_add_one_iff_lt {x y : PartENat} (hx : x ≠ ⊤) : x < y + 1 ↔ x ≤ y :=
   by
@@ -619,6 +627,12 @@ theorem lt_add_one_iff_lt {x y : PartENat} (hx : x ≠ ⊤) : x < y + 1 ↔ x �
   induction' y using PartENat.casesOn with n; · rw [top_add]; apply coe_lt_top
   apply_mod_cast Nat.lt_succ_of_le; apply_mod_cast h
 #align part_enat.lt_add_one_iff_lt PartENat.lt_add_one_iff_lt
+-/
+
+#print PartENat.lt_coe_succ_iff_le /-
+theorem lt_coe_succ_iff_le {x : PartENat} {n : ℕ} (hx : x ≠ ⊤) : x < n.succ ↔ x ≤ n := by
+  rw [Nat.succ_eq_add_one n, Nat.cast_add, Nat.cast_one, lt_add_one_iff_lt hx]
+#align part_enat.lt_coe_succ_iff_le PartENat.lt_coe_succ_iff_le
 -/
 
 #print PartENat.add_eq_top_iff /-

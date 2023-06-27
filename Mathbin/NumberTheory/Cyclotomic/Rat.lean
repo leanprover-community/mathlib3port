@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca
 
 ! This file was ported from Lean 3 source module number_theory.cyclotomic.rat
-! leanprover-community/mathlib commit b353176c24d96c23f0ce1cc63efc3f55019702d9
+! leanprover-community/mathlib commit 30faa0c3618ce1472bf6305ae0e3fa56affa3f95
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.RingTheory.Polynomial.Eisenstein.IsIntegral
 
 /-!
 # Ring of integers of `p ^ n`-th cyclotomic fields
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 We gather results about cyclotomic extensions of `ℚ`. In particular, we compute the ring of
 integers of a `p ^ n`-th cyclotomic extension of `ℚ`.
 

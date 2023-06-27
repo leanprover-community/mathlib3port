@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Amelia Livingston
 
 ! This file was ported from Lean 3 source module representation_theory.group_cohomology.resolution
-! leanprover-community/mathlib commit cec81510e48e579bde6acd8568c06a87af045b63
+! leanprover-community/mathlib commit 30faa0c3618ce1472bf6305ae0e3fa56affa3f95
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -15,6 +15,9 @@ import Mathbin.RepresentationTheory.Rep
 
 /-!
 # The structure of the `k[G]`-module `k[Gⁿ]`
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file contains facts about an important `k[G]`-module structure on `k[Gⁿ]`, where `k` is a
 commutative ring and `G` is a group. The module structure arises from the representation

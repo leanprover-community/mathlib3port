@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module linear_algebra.clifford_algebra.equivs
-! leanprover-community/mathlib commit cf7a7252c1989efe5800e0b3cdfeb4228ac6b40e
+! leanprover-community/mathlib commit 30faa0c3618ce1472bf6305ae0e3fa56affa3f95
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -17,6 +17,9 @@ import Mathbin.LinearAlgebra.QuadraticForm.Prod
 
 /-!
 # Other constructions isomorphic to Clifford Algebras
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file contains isomorphisms showing that other types are equivalent to some `clifford_algebra`.
 

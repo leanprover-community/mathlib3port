@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anne Baanen
 
 ! This file was ported from Lean 3 source module number_theory.class_number.finite
-! leanprover-community/mathlib commit ea0bcd84221246c801a6f8fbe8a4372f6d04b176
+! leanprover-community/mathlib commit 30faa0c3618ce1472bf6305ae0e3fa56affa3f95
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -18,6 +18,9 @@ import Mathbin.RingTheory.Norm
 
 /-!
 # Class numbers of global fields
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 In this file, we use the notion of "admissible absolute value" to prove
 finiteness of the class group for number fields and function fields,
 and define `class_number` as the order of this group.

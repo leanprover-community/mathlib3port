@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Rodriguez
 
 ! This file was ported from Lean 3 source module number_theory.cyclotomic.gal
-! leanprover-community/mathlib commit e3f4be1fcb5376c4948d7f095bec45350bfb9d1a
+! leanprover-community/mathlib commit 30faa0c3618ce1472bf6305ae0e3fa56affa3f95
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.FieldTheory.PolynomialGaloisGroup
 
 /-!
 # Galois group of cyclotomic extensions
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 In this file, we show the relationship between the Galois group of `K(ζₙ)` and `(zmod n)ˣ`;
 it is always a subgroup, and if the `n`th cyclotomic polynomial is irreducible, they are isomorphic.

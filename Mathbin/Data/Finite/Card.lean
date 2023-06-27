@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kyle Miller
 
 ! This file was ported from Lean 3 source module data.finite.card
-! leanprover-community/mathlib commit 34ee86e6a59d911a8e4f89b68793ee7577ae79c7
+! leanprover-community/mathlib commit 3ff3f2d6a3118b8711063de7111a0d77a53219a8
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -237,6 +237,22 @@ theorem card_subtype_lt [Finite α] {p : α → Prop} {x : α} (hx : ¬p x) :
 -/
 
 end Finite
+
+namespace PartENat
+
+/- warning: part_enat.card_eq_coe_nat_card clashes with part_enat.card_of_finite -> PartENat.card_eq_coe_nat_card
+Case conversion may be inaccurate. Consider using '#align part_enat.card_eq_coe_nat_card PartENat.card_eq_coe_nat_cardₓ'. -/
+#print PartENat.card_eq_coe_nat_card /-
+theorem card_eq_coe_nat_card (α : Type _) [Finite α] : card α = Nat.card α :=
+  by
+  unfold PartENat.card
+  apply symm
+  rw [Cardinal.natCast_eq_toPartENat_iff]
+  exact Finite.cast_card_eq_mk
+#align part_enat.card_eq_coe_nat_card PartENat.card_eq_coe_nat_card
+-/
+
+end PartENat
 
 namespace Set
 

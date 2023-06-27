@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Heather Macbeth
 
 ! This file was ported from Lean 3 source module geometry.manifold.vector_bundle.pullback
-! leanprover-community/mathlib commit be2c24f56783935652cefffb4bfca7e4b25d167e
+! leanprover-community/mathlib commit 30faa0c3618ce1472bf6305ae0e3fa56affa3f95
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.Geometry.Manifold.ContMdiffMap
 import Mathbin.Geometry.Manifold.VectorBundle.Basic
 
 /-! # Pullbacks of smooth vector bundles
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file defines pullbacks of smooth vector bundles over a smooth manifold.
 

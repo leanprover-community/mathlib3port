@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Floris van Doorn
 
 ! This file was ported from Lean 3 source module geometry.manifold.cont_mdiff
-! leanprover-community/mathlib commit e5ab837fc252451f3eb9124ae6e7b6f57455e7b9
+! leanprover-community/mathlib commit 30faa0c3618ce1472bf6305ae0e3fa56affa3f95
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Geometry.Manifold.LocalInvariantProperties
 
 /-!
 # Smooth functions between smooth manifolds
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 We define `Cⁿ` functions between smooth manifolds, as functions which are `Cⁿ` in charts, and prove
 basic properties of these notions.

@@ -501,11 +501,10 @@ theorem coe_smul_adicCompletion (r : R) (x : K) :
 instance : Algebra K (v.adicCompletion K) :=
   @UniformSpace.Completion.algebra' K _ v.adicValued.toUniformSpace _ _
 
-#print IsDedekindDomain.HeightOneSpectrum.algebraMap_adic_completion' /-
-theorem algebraMap_adic_completion' :
-    ⇑(algebraMap R <| v.adicCompletion K) = coe ∘ algebraMap R K :=
+#print IsDedekindDomain.HeightOneSpectrum.algebraMap_adicCompletion' /-
+theorem algebraMap_adicCompletion' : ⇑(algebraMap R <| v.adicCompletion K) = coe ∘ algebraMap R K :=
   rfl
-#align is_dedekind_domain.height_one_spectrum.algebra_map_adic_completion' IsDedekindDomain.HeightOneSpectrum.algebraMap_adic_completion'
+#align is_dedekind_domain.height_one_spectrum.algebra_map_adic_completion' IsDedekindDomain.HeightOneSpectrum.algebraMap_adicCompletion'
 -/
 
 #print IsDedekindDomain.HeightOneSpectrum.algebraMap_adicCompletion /-
@@ -564,11 +563,11 @@ instance : NoZeroSMulDivisors R (v.adicCompletionIntegers K)
     exact
       IsFractionRing.injective R K (UniformSpace.Completion.coe_injective K (subtype.ext_iff.mp hc))
 
-#print IsDedekindDomain.HeightOneSpectrum.AdicCompletion.is_scalar_tower' /-
-instance AdicCompletion.is_scalar_tower' :
+#print IsDedekindDomain.HeightOneSpectrum.AdicCompletion.instIsScalarTower' /-
+instance AdicCompletion.instIsScalarTower' :
     IsScalarTower R (v.adicCompletionIntegers K) (v.adicCompletion K)
     where smul_assoc x y z := by simp only [Algebra.smul_def]; apply mul_assoc
-#align is_dedekind_domain.height_one_spectrum.adic_completion.is_scalar_tower' IsDedekindDomain.HeightOneSpectrum.AdicCompletion.is_scalar_tower'
+#align is_dedekind_domain.height_one_spectrum.adic_completion.is_scalar_tower' IsDedekindDomain.HeightOneSpectrum.AdicCompletion.instIsScalarTower'
 -/
 
 end AlgebraInstances

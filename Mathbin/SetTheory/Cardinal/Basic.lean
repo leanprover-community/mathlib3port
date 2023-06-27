@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Mario Carneiro, Floris van Doorn
 
 ! This file was ported from Lean 3 source module set_theory.cardinal.basic
-! leanprover-community/mathlib commit 9bb28972724354ac0574e2b318be896ec252025f
+! leanprover-community/mathlib commit 3ff3f2d6a3118b8711063de7111a0d77a53219a8
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -2052,6 +2052,13 @@ theorem cast_toNat_of_aleph0_le {c : Cardinal} (h : ℵ₀ ≤ c) : ↑c.toNat =
 #align cardinal.cast_to_nat_of_aleph_0_le Cardinal.cast_toNat_of_aleph0_le
 -/
 
+#print Cardinal.toNat_eq_iff_eq_of_lt_aleph0 /-
+theorem toNat_eq_iff_eq_of_lt_aleph0 {c d : Cardinal} (hc : c < ℵ₀) (hd : d < ℵ₀) :
+    c.toNat = d.toNat ↔ c = d := by
+  rw [← nat_cast_inj, cast_to_nat_of_lt_aleph_0 hc, cast_to_nat_of_lt_aleph_0 hd]
+#align cardinal.to_nat_eq_iff_eq_of_lt_aleph_0 Cardinal.toNat_eq_iff_eq_of_lt_aleph0
+-/
+
 #print Cardinal.toNat_le_iff_le_of_lt_aleph0 /-
 theorem toNat_le_iff_le_of_lt_aleph0 {c d : Cardinal} (hc : c < ℵ₀) (hd : d < ℵ₀) :
     c.toNat ≤ d.toNat ↔ c ≤ d := by
@@ -2288,10 +2295,91 @@ theorem aleph0_toPartENat : toPartENat ℵ₀ = ⊤ :=
 #align cardinal.aleph_0_to_part_enat Cardinal.aleph0_toPartENat
 -/
 
+/- warning: cardinal.to_part_enat_eq_top_iff_le_aleph_0 clashes with to_part_enat_eq_top_iff_le_aleph_0 -> Cardinal.toPartENat_eq_top_iff_le_aleph0
+Case conversion may be inaccurate. Consider using '#align cardinal.to_part_enat_eq_top_iff_le_aleph_0 Cardinal.toPartENat_eq_top_iff_le_aleph0ₓ'. -/
+#print Cardinal.toPartENat_eq_top_iff_le_aleph0 /-
+theorem toPartENat_eq_top_iff_le_aleph0 {c : Cardinal} : toPartENat c = ⊤ ↔ aleph0 ≤ c :=
+  by
+  cases' lt_or_ge c aleph_0 with hc hc
+  simp only [to_part_enat_apply_of_lt_aleph_0 hc, PartENat.natCast_ne_top, false_iff_iff, not_le,
+    hc]
+  simp only [to_part_enat_apply_of_aleph_0_le hc, eq_self_iff_true, true_iff_iff]
+  exact hc
+#align cardinal.to_part_enat_eq_top_iff_le_aleph_0 Cardinal.toPartENat_eq_top_iff_le_aleph0
+-/
+
+theorem toPartENat_le_iff_le_of_le_aleph0 {c c' : Cardinal} (h : c ≤ aleph0) :
+    toPartENat c ≤ toPartENat c' ↔ c ≤ c' :=
+  by
+  cases' lt_or_ge c aleph_0 with hc hc
+  rw [to_part_enat_apply_of_lt_aleph_0 hc]
+  cases' lt_or_ge c' aleph_0 with hc' hc'
+  · rw [to_part_enat_apply_of_lt_aleph_0 hc']
+    rw [PartENat.coe_le_coe]
+    exact to_nat_le_iff_le_of_lt_aleph_0 hc hc'
+  · simp only [to_part_enat_apply_of_aleph_0_le hc', le_top, true_iff_iff]
+    exact le_trans h hc'
+  · rw [to_part_enat_apply_of_aleph_0_le hc]
+    simp only [top_le_iff, Cardinal.toPartENat_eq_top_iff_le_aleph0, le_antisymm h hc]
+#align cardinal.to_part_enat_le_iff_le_of_le_aleph_0 Cardinal.toPartENat_le_iff_le_of_le_aleph0
+
+theorem toPartENat_le_iff_le_of_lt_aleph0 {c c' : Cardinal} (hc' : c' < aleph0) :
+    toPartENat c ≤ toPartENat c' ↔ c ≤ c' :=
+  by
+  cases' lt_or_ge c aleph_0 with hc hc
+  · rw [to_part_enat_apply_of_lt_aleph_0 hc]
+    rw [to_part_enat_apply_of_lt_aleph_0 hc']
+    rw [PartENat.coe_le_coe]
+    exact to_nat_le_iff_le_of_lt_aleph_0 hc hc'
+  · rw [to_part_enat_apply_of_aleph_0_le hc]
+    simp only [top_le_iff, Cardinal.toPartENat_eq_top_iff_le_aleph0]
+    rw [← not_iff_not, not_le, not_le]
+    simp only [hc', lt_of_lt_of_le hc' hc]
+#align cardinal.to_part_enat_le_iff_le_of_lt_aleph_0 Cardinal.toPartENat_le_iff_le_of_lt_aleph0
+
+theorem toPartENat_eq_iff_eq_of_le_aleph0 {c c' : Cardinal} (hc : c ≤ aleph0) (hc' : c' ≤ aleph0) :
+    toPartENat c = toPartENat c' ↔ c = c' := by
+  rw [le_antisymm_iff, le_antisymm_iff, Cardinal.toPartENat_le_iff_of_le_aleph0 hc,
+    Cardinal.toPartENat_le_iff_of_le_aleph0 hc']
+#align cardinal.to_part_enat_eq_iff_eq_of_le_aleph_0 Cardinal.toPartENat_eq_iff_eq_of_le_aleph0
+
+#print Cardinal.toPartENat_mono /-
+theorem toPartENat_mono {c c' : Cardinal} (h : c ≤ c') : toPartENat c ≤ toPartENat c' :=
+  by
+  cases' lt_or_ge c aleph_0 with hc hc
+  rw [to_part_enat_apply_of_lt_aleph_0 hc]
+  cases' lt_or_ge c' aleph_0 with hc' hc'
+  rw [to_part_enat_apply_of_lt_aleph_0 hc']
+  simp only [PartENat.coe_le_coe]
+  exact to_nat_le_of_le_of_lt_aleph_0 hc' h
+  rw [to_part_enat_apply_of_aleph_0_le hc']
+  exact le_top
+  rw [to_part_enat_apply_of_aleph_0_le hc, to_part_enat_apply_of_aleph_0_le (le_trans hc h)]
+#align cardinal.to_part_enat_mono Cardinal.toPartENat_mono
+-/
+
 #print Cardinal.toPartENat_surjective /-
 theorem toPartENat_surjective : Surjective toPartENat := fun x =>
   PartENat.casesOn x ⟨ℵ₀, toPartENat_apply_of_aleph0_le le_rfl⟩ fun n => ⟨n, toPartENat_cast n⟩
 #align cardinal.to_part_enat_surjective Cardinal.toPartENat_surjective
+-/
+
+#print Cardinal.toPartENat_lift /-
+theorem toPartENat_lift (c : Cardinal.{v}) : (lift.{u, v} c).toPartENat = c.toPartENat :=
+  by
+  cases' lt_or_ge c ℵ₀ with hc hc
+  · rw [to_part_enat_apply_of_lt_aleph_0 hc, Cardinal.toPartENat_apply_of_lt_aleph0 _]
+    simp only [to_nat_lift]
+    rw [← lift_aleph_0, lift_lt]; exact hc
+  · rw [to_part_enat_apply_of_aleph_0_le hc, Cardinal.toPartENat_apply_of_aleph0_le _]
+    rw [← lift_aleph_0, lift_le]; exact hc
+#align cardinal.to_part_enat_lift Cardinal.toPartENat_lift
+-/
+
+#print Cardinal.toPartENat_congr /-
+theorem toPartENat_congr {β : Type v} (e : α ≃ β) : (#α).toPartENat = (#β).toPartENat := by
+  rw [← to_part_enat_lift, lift_mk_eq.mpr ⟨e⟩, to_part_enat_lift]
+#align cardinal.to_part_enat_congr Cardinal.toPartENat_congr
 -/
 
 #print Cardinal.mk_toPartENat_eq_coe_card /-
