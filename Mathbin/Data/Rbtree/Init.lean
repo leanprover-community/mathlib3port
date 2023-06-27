@@ -12,121 +12,141 @@ Authors: Leonardo de Moura
 -- This file used to be a part of `prelude`
 universe u v
 
-inductive Rbnode (α : Type u)
-  | leaf : Rbnode
-  | red_node (lchild : Rbnode) (val : α) (rchild : Rbnode) : Rbnode
-  | black_node (lchild : Rbnode) (val : α) (rchild : Rbnode) : Rbnode
-#align rbnode Rbnode
+#print Std.RBNode /-
+inductive Std.RBNode (α : Type u)
+  | leaf : Std.RBNode
+  | red_node (lchild : Std.RBNode) (val : α) (rchild : Std.RBNode) : Std.RBNode
+  | black_node (lchild : Std.RBNode) (val : α) (rchild : Std.RBNode) : Std.RBNode
+#align rbnode Std.RBNode
+-/
 
-namespace Rbnode
+namespace Std.RBNode
 
 variable {α : Type u} {β : Type v}
 
-inductive Color
+#print Std.RBColor /-
+inductive RBColor
   | red
   | black
-#align rbnode.color Rbnode.Color
+#align rbnode.color Std.RBColor
+-/
 
 open Color Nat
 
-instance Color.decidableEq : DecidableEq Color := fun a b =>
-  Color.casesOn a (Color.casesOn b (isTrue rfl) (isFalse fun h => Color.noConfusion h))
-    (Color.casesOn b (isFalse fun h => Color.noConfusion h) (isTrue rfl))
-#align rbnode.color.decidable_eq Rbnode.Color.decidableEq
+instance RBColor.decidableEq : DecidableEq RBColor := fun a b =>
+  RBColor.casesOn a (RBColor.casesOn b (isTrue rfl) (isFalse fun h => RBColor.noConfusion h))
+    (RBColor.casesOn b (isFalse fun h => RBColor.noConfusion h) (isTrue rfl))
+#align rbnode.color.decidable_eq Std.RBColor.decidableEq
 
-def depth (f : Nat → Nat → Nat) : Rbnode α → Nat
+#print Std.RBNode.depth /-
+def Std.RBNode.depth (f : Nat → Nat → Nat) : Std.RBNode α → Nat
   | leaf => 0
   | red_node l _ r => succ (f (depth l) (depth r))
   | black_node l _ r => succ (f (depth l) (depth r))
-#align rbnode.depth Rbnode.depth
+#align rbnode.depth Std.RBNode.depth
+-/
 
-protected def min : Rbnode α → Option α
+#print Std.RBNode.min /-
+protected def Std.RBNode.min : Std.RBNode α → Option α
   | leaf => none
   | red_node leaf v _ => some v
   | black_node leaf v _ => some v
   | red_node l v _ => min l
   | black_node l v _ => min l
-#align rbnode.min Rbnode.min
+#align rbnode.min Std.RBNode.min
+-/
 
-protected def max : Rbnode α → Option α
+#print Std.RBNode.max /-
+protected def Std.RBNode.max : Std.RBNode α → Option α
   | leaf => none
   | red_node _ v leaf => some v
   | black_node _ v leaf => some v
   | red_node _ v r => max r
   | black_node _ v r => max r
-#align rbnode.max Rbnode.max
+#align rbnode.max Std.RBNode.max
+-/
 
-def fold (f : α → β → β) : Rbnode α → β → β
+#print Std.RBNode.fold /-
+def Std.RBNode.fold (f : α → β → β) : Std.RBNode α → β → β
   | leaf, b => b
   | red_node l v r, b => fold r (f v (fold l b))
   | black_node l v r, b => fold r (f v (fold l b))
-#align rbnode.fold Rbnode.fold
+#align rbnode.fold Std.RBNode.fold
+-/
 
-def revFold (f : α → β → β) : Rbnode α → β → β
+def Std.RBNode.revFold (f : α → β → β) : Std.RBNode α → β → β
   | leaf, b => b
   | red_node l v r, b => rev_fold l (f v (rev_fold r b))
   | black_node l v r, b => rev_fold l (f v (rev_fold r b))
-#align rbnode.rev_fold Rbnode.revFold
+#align rbnode.rev_fold Std.RBNode.revFold
 
-def balance1 : Rbnode α → α → Rbnode α → α → Rbnode α → Rbnode α
-  | red_node l x r₁, y, r₂, v, t => red_node (black_node l x r₁) y (black_node r₂ v t)
-  | l₁, y, red_node l₂ x r, v, t => red_node (black_node l₁ y l₂) x (black_node r v t)
-  | l, y, r, v, t => black_node (red_node l y r) v t
-#align rbnode.balance1 Rbnode.balance1
+#print Std.RBNode.balance1 /-
+def Std.RBNode.balance1 : Std.RBNode α → α → Std.RBNode α → α → Std.RBNode α → Std.RBNode α
+  | red_node l x r₁, y, r₂, v, t => Std.RBNode.node (black_node l x r₁) y (black_node r₂ v t)
+  | l₁, y, red_node l₂ x r, v, t => Std.RBNode.node (black_node l₁ y l₂) x (black_node r v t)
+  | l, y, r, v, t => black_node (Std.RBNode.node l y r) v t
+#align rbnode.balance1 Std.RBNode.balance1
+-/
 
-def balance1Node : Rbnode α → α → Rbnode α → Rbnode α
-  | red_node l x r, v, t => balance1 l x r v t
-  | black_node l x r, v, t => balance1 l x r v t
+def Std.RBNode.balance1Node : Std.RBNode α → α → Std.RBNode α → Std.RBNode α
+  | red_node l x r, v, t => Std.RBNode.balance1 l x r v t
+  | black_node l x r, v, t => Std.RBNode.balance1 l x r v t
   | leaf, v, t => t
-#align rbnode.balance1_node Rbnode.balance1Node
+#align rbnode.balance1_node Std.RBNode.balance1Node
 
+#print Std.RBNode.balance2 /-
 -- dummy value
-def balance2 : Rbnode α → α → Rbnode α → α → Rbnode α → Rbnode α
-  | red_node l x₁ r₁, y, r₂, v, t => red_node (black_node t v l) x₁ (black_node r₁ y r₂)
-  | l₁, y, red_node l₂ x₂ r₂, v, t => red_node (black_node t v l₁) y (black_node l₂ x₂ r₂)
-  | l, y, r, v, t => black_node t v (red_node l y r)
-#align rbnode.balance2 Rbnode.balance2
+def Std.RBNode.balance2 : Std.RBNode α → α → Std.RBNode α → α → Std.RBNode α → Std.RBNode α
+  | red_node l x₁ r₁, y, r₂, v, t => Std.RBNode.node (black_node t v l) x₁ (black_node r₁ y r₂)
+  | l₁, y, red_node l₂ x₂ r₂, v, t => Std.RBNode.node (black_node t v l₁) y (black_node l₂ x₂ r₂)
+  | l, y, r, v, t => black_node t v (Std.RBNode.node l y r)
+#align rbnode.balance2 Std.RBNode.balance2
+-/
 
-def balance2Node : Rbnode α → α → Rbnode α → Rbnode α
-  | red_node l x r, v, t => balance2 l x r v t
-  | black_node l x r, v, t => balance2 l x r v t
+def Std.RBNode.balance2Node : Std.RBNode α → α → Std.RBNode α → Std.RBNode α
+  | red_node l x r, v, t => Std.RBNode.balance2 l x r v t
+  | black_node l x r, v, t => Std.RBNode.balance2 l x r v t
   | leaf, v, t => t
-#align rbnode.balance2_node Rbnode.balance2Node
+#align rbnode.balance2_node Std.RBNode.balance2Node
 
 -- dummy
-def getColor : Rbnode α → Color
+def Std.RBNode.getColor : Std.RBNode α → RBColor
   | red_node _ _ _ => red
   | _ => black
-#align rbnode.get_color Rbnode.getColor
+#align rbnode.get_color Std.RBNode.getColor
 
 section Insert
 
 variable (lt : α → α → Prop) [DecidableRel lt]
 
-def ins : Rbnode α → α → Rbnode α
-  | leaf, x => red_node leaf x leaf
+#print Std.RBNode.ins /-
+def Std.RBNode.ins : Std.RBNode α → α → Std.RBNode α
+  | leaf, x => Std.RBNode.node Std.RBNode.nil x Std.RBNode.nil
   | red_node a y b, x =>
     match cmpUsing lt x y with
-    | Ordering.lt => red_node (ins a x) y b
-    | Ordering.eq => red_node a x b
-    | Ordering.gt => red_node a y (ins b x)
+    | Ordering.lt => Std.RBNode.node (ins a x) y b
+    | Ordering.eq => Std.RBNode.node a x b
+    | Ordering.gt => Std.RBNode.node a y (ins b x)
   | black_node a y b, x =>
     match cmpUsing lt x y with
     | Ordering.lt =>
-      if a.getColor = red then balance1Node (ins a x) y b else black_node (ins a x) y b
+      if a.getColor = red then Std.RBNode.balance1Node (ins a x) y b else black_node (ins a x) y b
     | Ordering.eq => black_node a x b
     | Ordering.gt =>
-      if b.getColor = red then balance2Node (ins b x) y a else black_node a y (ins b x)
-#align rbnode.ins Rbnode.ins
+      if b.getColor = red then Std.RBNode.balance2Node (ins b x) y a else black_node a y (ins b x)
+#align rbnode.ins Std.RBNode.ins
+-/
 
-def mkInsertResult : Color → Rbnode α → Rbnode α
+def Std.RBNode.mkInsertResult : RBColor → Std.RBNode α → Std.RBNode α
   | red, red_node l v r => black_node l v r
   | _, t => t
-#align rbnode.mk_insert_result Rbnode.mkInsertResult
+#align rbnode.mk_insert_result Std.RBNode.mkInsertResult
 
-def insert (t : Rbnode α) (x : α) : Rbnode α :=
-  mkInsertResult (getColor t) (ins lt t x)
-#align rbnode.insert Rbnode.insert
+#print Std.RBNode.insert /-
+def Std.RBNode.insert (t : Std.RBNode α) (x : α) : Std.RBNode α :=
+  Std.RBNode.mkInsertResult (Std.RBNode.getColor t) (Std.RBNode.ins lt t x)
+#align rbnode.insert Std.RBNode.insert
+-/
 
 end Insert
 
@@ -134,21 +154,24 @@ section Membership
 
 variable (lt : α → α → Prop)
 
-def Mem : α → Rbnode α → Prop
+#print Std.RBNode.Mem /-
+def Std.RBNode.Mem : α → Std.RBNode α → Prop
   | a, leaf => False
   | a, red_node l v r => mem a l ∨ ¬lt a v ∧ ¬lt v a ∨ mem a r
   | a, black_node l v r => mem a l ∨ ¬lt a v ∧ ¬lt v a ∨ mem a r
-#align rbnode.mem Rbnode.Mem
+#align rbnode.mem Std.RBNode.Mem
+-/
 
-def MemExact : α → Rbnode α → Prop
+def Std.RBNode.MemExact : α → Std.RBNode α → Prop
   | a, leaf => False
   | a, red_node l v r => mem_exact a l ∨ a = v ∨ mem_exact a r
   | a, black_node l v r => mem_exact a l ∨ a = v ∨ mem_exact a r
-#align rbnode.mem_exact Rbnode.MemExact
+#align rbnode.mem_exact Std.RBNode.MemExact
 
 variable [DecidableRel lt]
 
-def find : Rbnode α → α → Option α
+#print Std.RBNode.find? /-
+def Std.RBNode.find? : Std.RBNode α → α → Option α
   | leaf, x => none
   | red_node a y b, x =>
     match cmpUsing lt x y with
@@ -160,120 +183,147 @@ def find : Rbnode α → α → Option α
     | Ordering.lt => find a x
     | Ordering.eq => some y
     | Ordering.gt => find b x
-#align rbnode.find Rbnode.find
+#align rbnode.find Std.RBNode.find?
+-/
 
 end Membership
 
-inductive WellFormed (lt : α → α → Prop) : Rbnode α → Prop
-  | leaf_wff : well_formed leaf
+#print Std.RBNode.WF /-
+inductive Std.RBNode.WF (lt : α → α → Prop) : Std.RBNode α → Prop
+  | leaf_wff : well_formed Std.RBNode.nil
   |
-  insert_wff {n n' : Rbnode α} {x : α} [DecidableRel lt] :
-    well_formed n → n' = insert lt n x → well_formed n'
-#align rbnode.well_formed Rbnode.WellFormed
+  insert_wff {n n' : Std.RBNode α} {x : α} [DecidableRel lt] :
+    well_formed n → n' = Std.RBNode.insert lt n x → well_formed n'
+#align rbnode.well_formed Std.RBNode.WF
+-/
 
-end Rbnode
+end Std.RBNode
 
-open Rbnode
+open Std.RBNode
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:334:40: warning: unsupported option auto_param.check_exists -/
 set_option auto_param.check_exists false
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic rbtree.default_lt -/
-def Rbtree (α : Type u)
+#print Std.RBSet /-
+def Std.RBSet (α : Type u)
     (lt : α → α → Prop := by
       run_tac
         rbtree.default_lt) :
     Type u :=
-  { t : Rbnode α // t.WellFormed lt }
-#align rbtree Rbtree
+  { t : Std.RBNode α // t.WF lt }
+#align rbtree Std.RBSet
+-/
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic rbtree.default_lt -/
-def mkRbtree (α : Type u)
+#print Std.mkRBSet /-
+def Std.mkRBSet (α : Type u)
     (lt : α → α → Prop := by
       run_tac
         rbtree.default_lt) :
-    Rbtree α lt :=
-  ⟨leaf, WellFormed.leaf_wff⟩
-#align mk_rbtree mkRbtree
+    Std.RBSet α lt :=
+  ⟨Std.RBNode.nil, Std.RBNode.WF.mk⟩
+#align mk_rbtree Std.mkRBSet
+-/
 
-namespace Rbtree
+namespace Std.RBSet
 
 variable {α : Type u} {β : Type v} {lt : α → α → Prop}
 
-protected def Mem (a : α) (t : Rbtree α lt) : Prop :=
-  Rbnode.Mem lt a t.val
-#align rbtree.mem Rbtree.Mem
+#print Std.RBSet.Mem /-
+protected def Std.RBSet.Mem (a : α) (t : Std.RBSet α lt) : Prop :=
+  Std.RBNode.Mem lt a t.val
+#align rbtree.mem Std.RBSet.Mem
+-/
 
-instance : Membership α (Rbtree α lt) :=
-  ⟨Rbtree.Mem⟩
+instance : Membership α (Std.RBSet α lt) :=
+  ⟨Std.RBSet.Mem⟩
 
-def MemExact (a : α) (t : Rbtree α lt) : Prop :=
-  Rbnode.MemExact a t.val
-#align rbtree.mem_exact Rbtree.MemExact
+def Std.RBSet.MemExact (a : α) (t : Std.RBSet α lt) : Prop :=
+  Std.RBNode.MemExact a t.val
+#align rbtree.mem_exact Std.RBSet.MemExact
 
-def depth (f : Nat → Nat → Nat) (t : Rbtree α lt) : Nat :=
+def Std.RBSet.depth (f : Nat → Nat → Nat) (t : Std.RBSet α lt) : Nat :=
   t.val.depth f
-#align rbtree.depth Rbtree.depth
+#align rbtree.depth Std.RBSet.depth
 
-def fold (f : α → β → β) : Rbtree α lt → β → β
+#print Std.RBSet.foldl /-
+def Std.RBSet.foldl (f : α → β → β) : Std.RBSet α lt → β → β
   | ⟨t, _⟩, b => t.fold f b
-#align rbtree.fold Rbtree.fold
+#align rbtree.fold Std.RBSet.foldl
+-/
 
-def revFold (f : α → β → β) : Rbtree α lt → β → β
+def Std.RBSet.revFold (f : α → β → β) : Std.RBSet α lt → β → β
   | ⟨t, _⟩, b => t.revFold f b
-#align rbtree.rev_fold Rbtree.revFold
+#align rbtree.rev_fold Std.RBSet.revFold
 
-def empty : Rbtree α lt → Bool
+#print Std.RBSet.empty /-
+def Std.RBSet.empty : Std.RBSet α lt → Bool
   | ⟨leaf, _⟩ => true
   | _ => false
-#align rbtree.empty Rbtree.empty
+#align rbtree.empty Std.RBSet.empty
+-/
 
-def toList : Rbtree α lt → List α
+#print Std.RBSet.toList /-
+def Std.RBSet.toList : Std.RBSet α lt → List α
   | ⟨t, _⟩ => t.revFold (· :: ·) []
-#align rbtree.to_list Rbtree.toList
+#align rbtree.to_list Std.RBSet.toList
+-/
 
-protected def min : Rbtree α lt → Option α
+#print Std.RBSet.min /-
+protected def Std.RBSet.min : Std.RBSet α lt → Option α
   | ⟨t, _⟩ => t.min
-#align rbtree.min Rbtree.min
+#align rbtree.min Std.RBSet.min
+-/
 
-protected def max : Rbtree α lt → Option α
+#print Std.RBSet.max /-
+protected def Std.RBSet.max : Std.RBSet α lt → Option α
   | ⟨t, _⟩ => t.max
-#align rbtree.max Rbtree.max
+#align rbtree.max Std.RBSet.max
+-/
 
-instance [Repr α] : Repr (Rbtree α lt) :=
+instance [Repr α] : Repr (Std.RBSet α lt) :=
   ⟨fun t => "rbtree_of " ++ repr t.toList⟩
 
 variable [DecidableRel lt]
 
-def insert : Rbtree α lt → α → Rbtree α lt
-  | ⟨t, w⟩, x => ⟨t.insert lt x, WellFormed.insert_wff w rfl⟩
-#align rbtree.insert Rbtree.insert
+#print Std.RBSet.insert /-
+def Std.RBSet.insert : Std.RBSet α lt → α → Std.RBSet α lt
+  | ⟨t, w⟩, x => ⟨t.insert lt x, Std.RBNode.WF.insert w rfl⟩
+#align rbtree.insert Std.RBSet.insert
+-/
 
-def find : Rbtree α lt → α → Option α
+#print Std.RBSet.find? /-
+def Std.RBSet.find? : Std.RBSet α lt → α → Option α
   | ⟨t, _⟩, x => t.find lt x
-#align rbtree.find Rbtree.find
+#align rbtree.find Std.RBSet.find?
+-/
 
-def contains (t : Rbtree α lt) (a : α) : Bool :=
+#print Std.RBSet.contains /-
+def Std.RBSet.contains (t : Std.RBSet α lt) (a : α) : Bool :=
   (t.find a).isSome
-#align rbtree.contains Rbtree.contains
+#align rbtree.contains Std.RBSet.contains
+-/
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic rbtree.default_lt -/
-def fromList (l : List α)
+#print Std.RBSet.ofList /-
+def Std.RBSet.ofList (l : List α)
     (lt : α → α → Prop := by
       run_tac
         rbtree.default_lt)
-    [DecidableRel lt] : Rbtree α lt :=
-  l.foldl insert (mkRbtree α lt)
-#align rbtree.from_list Rbtree.fromList
+    [DecidableRel lt] : Std.RBSet α lt :=
+  l.foldl Std.RBSet.insert (Std.mkRBSet α lt)
+#align rbtree.from_list Std.RBSet.ofList
+-/
 
-end Rbtree
+end Std.RBSet
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic rbtree.default_lt -/
 def rbtreeOf {α : Type u} (l : List α)
     (lt : α → α → Prop := by
       run_tac
         rbtree.default_lt)
-    [DecidableRel lt] : Rbtree α lt :=
-  Rbtree.fromList l lt
+    [DecidableRel lt] : Std.RBSet α lt :=
+  Std.RBSet.ofList l lt
 #align rbtree_of rbtreeOf
 

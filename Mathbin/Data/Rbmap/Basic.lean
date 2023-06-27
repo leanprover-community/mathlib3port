@@ -25,7 +25,7 @@ def Rbmap (α : Type u) (β : Type v)
       run_tac
         rbtree.default_lt) :
     Type max u v :=
-  Rbtree (α × β) (RbmapLt lt)
+  Std.RBSet (α × β) (RbmapLt lt)
 #align rbmap Rbmap
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic rbtree.default_lt -/
@@ -34,7 +34,7 @@ def mkRbmap (α : Type u) (β : Type v)
       run_tac
         rbtree.default_lt) :
     Rbmap α β lt :=
-  mkRbtree (α × β) (RbmapLt lt)
+  Std.mkRBSet (α × β) (RbmapLt lt)
 #align mk_rbmap mkRbmap
 
 namespace Rbmap
@@ -73,9 +73,9 @@ definition: (k, default) ∈ m
 -/
 protected def Mem (k : α) (m : Rbmap α β lt) : Prop :=
   match m.val with
-  | Rbnode.leaf => False
-  | Rbnode.red_node _ e _ => Rbtree.Mem (k, e.2) m
-  | Rbnode.black_node _ e _ => Rbtree.Mem (k, e.2) m
+  | Std.RBNode.nil => False
+  | Std.RBNode.node _ e _ => Std.RBSet.Mem (k, e.2) m
+  | rbnode.black_node _ e _ => Std.RBSet.Mem (k, e.2) m
 #align rbmap.mem Rbmap.Mem
 
 instance : Membership α (Rbmap α β lt) :=
@@ -90,14 +90,14 @@ def rbmapLtDec [h : DecidableRel lt] : DecidableRel (@RbmapLt α β lt) := fun a
 variable [DecidableRel lt]
 
 def insert (m : Rbmap α β lt) (k : α) (v : β) : Rbmap α β lt :=
-  @Rbtree.insert _ _ rbmapLtDec m (k, v)
+  @Std.RBSet.insert _ _ rbmapLtDec m (k, v)
 #align rbmap.insert Rbmap.insert
 
 def findEntry (m : Rbmap α β lt) (k : α) : Option (α × β) :=
   match m.val with
-  | Rbnode.leaf => none
-  | Rbnode.red_node _ e _ => @Rbtree.find _ _ rbmapLtDec m (k, e.2)
-  | Rbnode.black_node _ e _ => @Rbtree.find _ _ rbmapLtDec m (k, e.2)
+  | Std.RBNode.nil => none
+  | Std.RBNode.node _ e _ => @Std.RBSet.find? _ _ rbmapLtDec m (k, e.2)
+  | rbnode.black_node _ e _ => @Std.RBSet.find? _ _ rbmapLtDec m (k, e.2)
 #align rbmap.find_entry Rbmap.findEntry
 
 def toValue : Option (α × β) → Option β

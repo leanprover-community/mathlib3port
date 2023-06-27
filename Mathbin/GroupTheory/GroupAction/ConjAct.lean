@@ -350,14 +350,18 @@ theorem fixedPoints_eq_center : fixedPoints (ConjAct G) G = center G :=
 #align conj_act.fixed_points_eq_center ConjAct.fixedPoints_eq_center
 -/
 
+#print ConjAct.mem_orbit_conjAct /-
 @[simp]
 theorem mem_orbit_conjAct {g h : G} : g ∈ orbit (ConjAct G) h ↔ IsConj g h := by
   rw [isConj_comm, isConj_iff, mem_orbit_iff]; rfl
 #align conj_act.mem_orbit_conj_act ConjAct.mem_orbit_conjAct
+-/
 
+#print ConjAct.orbitRel_conjAct /-
 theorem orbitRel_conjAct : (orbitRel (ConjAct G) G).Rel = IsConj :=
   funext₂ fun g h => by rw [orbit_rel_apply, mem_orbit_conj_act]
 #align conj_act.orbit_rel_conj_act ConjAct.orbitRel_conjAct
+-/
 
 #print ConjAct.stabilizer_eq_centralizer /-
 theorem stabilizer_eq_centralizer (g : G) : stabilizer (ConjAct G) g = (zpowers g).centralizer :=

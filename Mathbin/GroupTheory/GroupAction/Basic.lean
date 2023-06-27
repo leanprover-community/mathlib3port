@@ -338,11 +338,13 @@ attribute [local instance] orbit_rel
 
 variable {α} {β}
 
+#print MulAction.orbitRel_apply /-
 @[to_additive]
 theorem orbitRel_apply {x y : β} : (orbitRel α β).Rel x y ↔ x ∈ orbit α y :=
   Iff.rfl
 #align mul_action.orbit_rel_apply MulAction.orbitRel_apply
 #align add_action.orbit_rel_apply AddAction.orbitRel_apply
+-/
 
 #print MulAction.quotient_preimage_image_eq_union_mul /-
 /-- When you take a set `U` in `β`, push it down to the quotient, and pull back, you get the union

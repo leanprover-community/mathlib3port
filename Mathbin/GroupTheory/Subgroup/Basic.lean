@@ -4461,13 +4461,17 @@ theorem normalClosure_eq_top_of {N : Subgroup G} [hn : N.Normal] {g g' : G} {hg 
 
 variable {M : Type _} [Monoid M]
 
+#print IsConj.eq_of_left_mem_center /-
 theorem eq_of_left_mem_center {g h : M} (H : IsConj g h) (Hg : g ∈ Set.center M) : g = h := by
   rcases H with ⟨u, hu⟩; rwa [← u.mul_left_inj, ← Hg u]
 #align is_conj.eq_of_left_mem_center IsConj.eq_of_left_mem_center
+-/
 
+#print IsConj.eq_of_right_mem_center /-
 theorem eq_of_right_mem_center {g h : M} (H : IsConj g h) (Hh : h ∈ Set.center M) : g = h :=
   (H.symm.eq_of_left_mem_center Hh).symm
 #align is_conj.eq_of_right_mem_center IsConj.eq_of_right_mem_center
+-/
 
 end IsConj
 

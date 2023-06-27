@@ -57,7 +57,7 @@ deriving instance Inhabited for VmDeclKind, VmObjKind, Tactic.NewGoals, Tactic.T
   Tactic.DunfoldConfig, Tactic.DsimpConfig, Tactic.UnfoldProjConfig, Tactic.SimpIntrosConfig,
   Tactic.DeltaConfig, Tactic.SimpConfig, Tactic.RewriteCfg, Interactive.Loc, Tactic.UnfoldConfig,
   ParamInfo, SubsingletonInfo, FunInfo, Format.Color, Pos, Environment.ProjectionInfo,
-  ReducibilityHints, CongrArgKind, ULift, PLift, StringImp, String.IteratorImp, Rbnode.Color,
+  ReducibilityHints, CongrArgKind, ULift, PLift, StringImp, String.IteratorImp, Std.RBColor,
   Ordering, UnificationConstraint, PProd, UnificationHint, DocCategory, TacticDocEntry
 
 instance {α} : Inhabited (BinTree α) :=
@@ -69,11 +69,11 @@ instance : Inhabited Unsigned :=
 instance : Inhabited String.Iterator :=
   String.IteratorImp.inhabited
 
-instance {α} : Inhabited (Rbnode α) :=
-  ⟨Rbnode.leaf⟩
+instance {α} : Inhabited (Std.RBNode α) :=
+  ⟨Std.RBNode.nil⟩
 
-instance {α lt} : Inhabited (Rbtree α lt) :=
-  ⟨mkRbtree _ _⟩
+instance {α lt} : Inhabited (Std.RBSet α lt) :=
+  ⟨Std.mkRBSet _ _⟩
 
 instance {α β lt} : Inhabited (Rbmap α β lt) :=
   ⟨mkRbmap _ _ _⟩
