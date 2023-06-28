@@ -64,6 +64,7 @@ theorem pi_lift_π_apply {β : Type v} (f : β → Type max v u) {P : Type max v
 #align category_theory.limits.types.pi_lift_π_apply CategoryTheory.Limits.Types.pi_lift_π_apply
 -/
 
+#print CategoryTheory.Limits.Types.pi_lift_π_apply' /-
 /-- A restatement of `types.lift_π_apply` that uses `pi.π` and `pi.lift`,
 with specialized universes. -/
 @[simp]
@@ -71,6 +72,7 @@ theorem pi_lift_π_apply' {β : Type v} (f : β → Type v) {P : Type v} (s : �
     (x : P) : (Pi.π f b : (∏ f) → f b) (@Pi.lift β _ _ f _ P s x) = s b x :=
   congr_fun (limit.lift_π (Fan.mk P s) ⟨b⟩) x
 #align category_theory.limits.types.pi_lift_π_apply' CategoryTheory.Limits.Types.pi_lift_π_apply'
+-/
 
 #print CategoryTheory.Limits.Types.pi_map_π_apply /-
 /-- A restatement of `types.map_π_apply` that uses `pi.π` and `pi.map`. -/
@@ -81,6 +83,7 @@ theorem pi_map_π_apply {β : Type v} {f g : β → Type max v u} (α : ∀ j, f
 #align category_theory.limits.types.pi_map_π_apply CategoryTheory.Limits.Types.pi_map_π_apply
 -/
 
+#print CategoryTheory.Limits.Types.pi_map_π_apply' /-
 /-- A restatement of `types.map_π_apply` that uses `pi.π` and `pi.map`,
 with specialized universes. -/
 @[simp]
@@ -88,6 +91,7 @@ theorem pi_map_π_apply' {β : Type v} {f g : β → Type v} (α : ∀ j, f j �
     (Pi.π g b : (∏ g) → g b) (Pi.map α x) = α b ((Pi.π f b : (∏ f) → f b) x) :=
   Limit.map_π_apply _ _ _
 #align category_theory.limits.types.pi_map_π_apply' CategoryTheory.Limits.Types.pi_map_π_apply'
+-/
 
 #print CategoryTheory.Limits.Types.terminalLimitCone /-
 /-- The category of types has `punit` as a terminal object. -/

@@ -54,6 +54,7 @@ local notation "𝕎" => WittVector p
 -/
 
 
+#print WittVector.shift /-
 -- type as `\bbW`
 /--
 `witt_vector.verschiebung` translates the entries of a Witt vector upward, inserting 0s in the gaps.
@@ -63,13 +64,17 @@ This is mainly useful as an auxiliary construction for `witt_vector.verschiebung
 def shift (x : 𝕎 R) (n : ℕ) : 𝕎 R :=
   mk' p fun i => x.coeff (n + i)
 #align witt_vector.shift WittVector.shift
+-/
 
+#print WittVector.shift_coeff /-
 theorem shift_coeff (x : 𝕎 R) (n k : ℕ) : (x.shift n).coeff k = x.coeff (n + k) :=
   rfl
 #align witt_vector.shift_coeff WittVector.shift_coeff
+-/
 
 variable [hp : Fact p.Prime] [CommRing R]
 
+#print WittVector.verschiebung_shift /-
 theorem verschiebung_shift (x : 𝕎 R) (k : ℕ) (h : ∀ i < k + 1, x.coeff i = 0) :
     verschiebung (x.shift k.succ) = x.shift k :=
   by
@@ -80,7 +85,9 @@ theorem verschiebung_shift (x : 𝕎 R) (k : ℕ) (h : ∀ i < k + 1, x.coeff i 
     congr 1
     rw [Nat.add_succ, add_comm, Nat.add_succ, add_comm]
 #align witt_vector.verschiebung_shift WittVector.verschiebung_shift
+-/
 
+#print WittVector.eq_iterate_verschiebung /-
 theorem eq_iterate_verschiebung {x : 𝕎 R} {n : ℕ} (h : ∀ i < n, x.coeff i = 0) :
     x = (verschiebung^[n]) (x.shift n) :=
   by
@@ -90,7 +97,9 @@ theorem eq_iterate_verschiebung {x : 𝕎 R} {n : ℕ} (h : ∀ i < n, x.coeff i
     · exact ih fun i hi => h _ (hi.trans (Nat.lt_succ_self _))
     · exact h
 #align witt_vector.eq_iterate_verschiebung WittVector.eq_iterate_verschiebung
+-/
 
+#print WittVector.verschiebung_nonzero /-
 theorem verschiebung_nonzero {x : 𝕎 R} (hx : x ≠ 0) :
     ∃ n : ℕ, ∃ x' : 𝕎 R, x'.coeff 0 ≠ 0 ∧ x = (verschiebung^[n]) x' :=
   by
@@ -104,6 +113,7 @@ theorem verschiebung_nonzero {x : 𝕎 R} (hx : x ≠ 0) :
   refine' ⟨Nat.find_spec hex, eq_iterate_verschiebung fun i hi => not_not.mp _⟩
   exact Nat.find_min hex hi
 #align witt_vector.verschiebung_nonzero WittVector.verschiebung_nonzero
+-/
 
 /-!
 ## Witt vectors over a domain
