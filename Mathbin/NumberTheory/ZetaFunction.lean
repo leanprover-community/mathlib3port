@@ -192,7 +192,7 @@ theorem zetaKernel₂_one_div {t : ℝ} (ht : 0 < t) : zetaKernel₂ (1 / t) = s
       one_div_one_div, mul_sub, mul_one]
     congr 2
     let τ : UpperHalfPlane := ⟨u * I, (mul_I_im u).symm ▸ zero_lt_one.trans hu⟩
-    convert jacobiTheta_s_smul τ using 2
+    convert jacobiTheta_S_smul τ using 2
     ·
       rw [UpperHalfPlane.modular_S_smul, UpperHalfPlane.coe_mk, Subtype.coe_mk, ← neg_inv, mul_inv,
         inv_I, mul_neg, neg_neg, one_div, of_real_inv]

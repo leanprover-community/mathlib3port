@@ -63,6 +63,7 @@ section InnerProductSpace
 variable [NormedAddCommGroup V] [MeasurableSpace V] [BorelSpace V] [InnerProductSpace ℝ V]
   [FiniteDimensional ℝ V]
 
+#print fourier_integrand_integrable /-
 /-- The integrand in the Riemann-Lebesgue lemma for `f` is integrable iff `f` is. -/
 theorem fourier_integrand_integrable (w : V) :
     Integrable f ↔ Integrable fun v : V => e[-⟪v, w⟫] • f v :=
@@ -72,11 +73,13 @@ theorem fourier_integrand_integrable (w : V) :
   · simp only [BilinForm.toLin_apply, bilinFormOfRealInner_apply]
   · infer_instance
 #align fourier_integrand_integrable fourier_integrand_integrable
+-/
 
 variable [CompleteSpace E]
 
 local notation "i" => fun w => (1 / (2 * ‖w‖ ^ 2)) • w
 
+#print fourier_integral_half_period_translate /-
 /-- Shifting `f` by `(1 / (2 * ‖w‖ ^ 2)) • w` negates the integral in the Riemann-Lebesgue lemma. -/
 theorem fourier_integral_half_period_translate {w : V} (hw : w ≠ 0) :
     ∫ v : V, e[-⟪v, w⟫] • f (v + i w) = -∫ v : V, e[-⟪v, w⟫] • f v :=
@@ -98,7 +101,9 @@ theorem fourier_integral_half_period_translate {w : V} (hw : w ≠ 0) :
   rw [this, integral_add_right_eq_self]
   simp only [neg_smul, integral_neg]
 #align fourier_integral_half_period_translate fourier_integral_half_period_translate
+-/
 
+#print fourier_integral_eq_half_sub_half_period_translate /-
 /-- Rewrite the Fourier integral in a form that allows us to use uniform continuity. -/
 theorem fourier_integral_eq_half_sub_half_period_translate {w : V} (hw : w ≠ 0)
     (hf : Integrable f) :
@@ -111,7 +116,9 @@ theorem fourier_integral_eq_half_sub_half_period_translate {w : V} (hw : w ≠ 0
   exacts [(fourier_integrand_integrable w).mp hf,
     (fourier_integrand_integrable w).mp (hf.comp_add_right _)]
 #align fourier_integral_eq_half_sub_half_period_translate fourier_integral_eq_half_sub_half_period_translate
+-/
 
+#print tendsto_integral_exp_inner_smul_cocompact_of_continuous_compact_support /-
 /-- Riemann-Lebesgue Lemma for continuous and compactly-supported functions: the integral
 `∫ v, exp (-2 * π * ⟪w, v⟫ * I) • f v` tends to 0 wrt `cocompact V`. Note that this is primarily
 of interest as a preparatory step for the more general result
@@ -210,9 +217,11 @@ theorem tendsto_integral_exp_inner_smul_cocompact_of_continuous_compact_support 
     exact lt_add_of_pos_left _ hB_pos
   exacts [(hB_vol.trans_lt ENNReal.coe_lt_top).Ne, ennreal.coe_lt_top.ne]
 #align tendsto_integral_exp_inner_smul_cocompact_of_continuous_compact_support tendsto_integral_exp_inner_smul_cocompact_of_continuous_compact_support
+-/
 
 variable (f)
 
+#print tendsto_integral_exp_inner_smul_cocompact /-
 /-- Riemann-Lebesgue lemma for functions on a real inner-product space: the integral
 `∫ v, exp (-2 * π * ⟪w, v⟫ * I) • f v` tends to 0 as `w → ∞`. -/
 theorem tendsto_integral_exp_inner_smul_cocompact :
@@ -248,18 +257,24 @@ theorem tendsto_integral_exp_inner_smul_cocompact :
   refine' ((le_of_eq _).trans (norm_add_le _ _)).trans_lt this
   simp only [sub_zero, sub_add_cancel]
 #align tendsto_integral_exp_inner_smul_cocompact tendsto_integral_exp_inner_smul_cocompact
+-/
 
+#print Real.tendsto_integral_exp_smul_cocompact /-
 /-- The Riemann-Lebesgue lemma for functions on `ℝ`. -/
 theorem Real.tendsto_integral_exp_smul_cocompact (f : ℝ → E) :
     Tendsto (fun w : ℝ => ∫ v : ℝ, e[-(v * w)] • f v) (cocompact ℝ) (𝓝 0) :=
   tendsto_integral_exp_inner_smul_cocompact f
 #align real.tendsto_integral_exp_smul_cocompact Real.tendsto_integral_exp_smul_cocompact
+-/
 
+#print Real.zero_at_infty_fourierIntegral /-
 /-- The Riemann-Lebesgue lemma for functions on `ℝ`, formulated via `real.fourier_integral`. -/
 theorem Real.zero_at_infty_fourierIntegral (f : ℝ → E) : Tendsto (𝓕 f) (cocompact ℝ) (𝓝 0) :=
   tendsto_integral_exp_inner_smul_cocompact f
 #align real.zero_at_infty_fourier_integral Real.zero_at_infty_fourierIntegral
+-/
 
+#print tendsto_integral_exp_smul_cocompact_of_inner_product /-
 /-- Riemann-Lebesgue lemma for functions on a finite-dimensional inner-product space, formulated
 via dual space. **Do not use** -- it is only a stepping stone to
 `tendsto_integral_exp_smul_cocompact` where the inner-product-space structure isn't required. -/
@@ -283,6 +298,7 @@ theorem tendsto_integral_exp_smul_cocompact_of_inner_product (μ : Measure V) [�
     (tendsto_integral_exp_inner_smul_cocompact f).comp
       A.to_homeomorph.to_cocompact_map.cocompact_tendsto'
 #align tendsto_integral_exp_smul_cocompact_of_inner_product tendsto_integral_exp_smul_cocompact_of_inner_product
+-/
 
 end InnerProductSpace
 
@@ -292,6 +308,7 @@ variable (f) [AddCommGroup V] [TopologicalSpace V] [TopologicalAddGroup V] [T2Sp
   [MeasurableSpace V] [BorelSpace V] [Module ℝ V] [ContinuousSMul ℝ V] [FiniteDimensional ℝ V]
   [CompleteSpace E]
 
+#print tendsto_integral_exp_smul_cocompact /-
 /-- Riemann-Lebesgue lemma for functions on a finite-dimensional real vector space, formulated via
 dual space. -/
 theorem tendsto_integral_exp_smul_cocompact (μ : Measure V) [μ.IsAddHaarMeasure] :
@@ -337,7 +354,9 @@ theorem tendsto_integral_exp_smul_cocompact (μ : Measure V) [μ.IsAddHaarMeasur
   congr 1 with v : 1
   congr <;> exact (ContinuousLinearEquiv.symm_apply_apply A v).symm
 #align tendsto_integral_exp_smul_cocompact tendsto_integral_exp_smul_cocompact
+-/
 
+#print Real.zero_at_infty_vector_fourierIntegral /-
 /-- The Riemann-Lebesgue lemma, formulated in terms of `vector_fourier.fourier_integral` (with the
 pairing in the definition of `fourier_integral` taken to be the canonical pairing between `V` and
 its dual space). -/
@@ -346,6 +365,7 @@ theorem Real.zero_at_infty_vector_fourierIntegral (μ : Measure V) [μ.IsAddHaar
       (𝓝 0) :=
   tendsto_integral_exp_smul_cocompact f μ
 #align real.zero_at_infty_vector_fourier_integral Real.zero_at_infty_vector_fourierIntegral
+-/
 
 end NoInnerProduct
 
