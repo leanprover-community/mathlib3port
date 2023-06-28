@@ -458,7 +458,7 @@ theorem not_collinear_QPA₂ : ¬Collinear ℝ ({cfg.q, cfg.P, cfg.a₂} : Set P
   have h : cospherical ({cfg.B, cfg.A, cfg.A₂} : Set Pt) :=
     by
     refine' cfg.triangle_ABC.circumsphere.cospherical.subset _
-    simp [Set.insert_subset, cfg.A_mem_circumsphere, cfg.B_mem_circumsphere,
+    simp [Set.insert_subset_iff, cfg.A_mem_circumsphere, cfg.B_mem_circumsphere,
       cfg.A₂_mem_circumsphere]
   exact h.affine_independent_of_ne cfg.A_ne_B.symm cfg.A₂_ne_B.symm cfg.A₂_ne_A.symm
 #align imo2019_q2.imo2019q2_cfg.not_collinear_QPA₂ Imo2019Q2.Imo2019q2Cfg.not_collinear_QPA₂
@@ -656,7 +656,7 @@ theorem result : Concyclic ({cfg.P, cfg.q, cfg.p₁, cfg.q₁} : Set Pt) :=
   refine' ⟨_, coplanar_of_fact_finrank_eq_two _⟩
   rw [cospherical_iff_exists_sphere]
   refine' ⟨cfg.ω, _⟩
-  simp only [Set.insert_subset, Set.singleton_subset_iff]
+  simp only [Set.insert_subset_iff, Set.singleton_subset_iff]
   exact ⟨cfg.P_mem_ω, cfg.Q_mem_ω, cfg.P₁_mem_ω, cfg.Q₁_mem_ω⟩
 #align imo2019_q2.imo2019q2_cfg.result Imo2019Q2.Imo2019q2Cfg.result
 

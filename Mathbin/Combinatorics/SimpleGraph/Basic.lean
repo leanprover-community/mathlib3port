@@ -1960,7 +1960,7 @@ theorem Adj.card_commonNeighbors_lt_degree {G : SimpleGraph V} [DecidableRel G.A
   constructor
   · rw [Set.mem_toFinset]
     apply not_mem_common_neighbors_right
-  · rw [Finset.insert_subset]
+  · rw [Finset.insert_subset_iff]
     constructor
     · simpa
     · rw [neighbor_finset, Set.toFinset_subset_toFinset]

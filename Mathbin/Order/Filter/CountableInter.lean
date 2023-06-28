@@ -172,7 +172,7 @@ def Filter.ofCountableInter (l : Set (Set α))
   sets_of_superset := h_mono
   inter_sets s t hs ht :=
     sInter_pair s t ▸
-      hp _ ((countable_singleton _).insert _) (insert_subset.2 ⟨hs, singleton_subset_iff.2 ht⟩)
+      hp _ ((countable_singleton _).insert _) (insert_subset_iff.2 ⟨hs, singleton_subset_iff.2 ht⟩)
 #align filter.of_countable_Inter Filter.ofCountableInter
 -/
 

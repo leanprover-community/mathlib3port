@@ -569,7 +569,7 @@ theorem affineSpan_orthocenter_point_le_altitude (t : Triangle ℝ P) (i : Fin 3
     line[ℝ, t.orthocenter, t.points i] ≤ t.altitude i :=
   by
   refine' span_points_subset_coe_of_subset_coe _
-  rw [Set.insert_subset, Set.singleton_subset_iff]
+  rw [Set.insert_subset_iff, Set.singleton_subset_iff]
   exact ⟨t.orthocenter_mem_altitude, t.mem_altitude i⟩
 #align affine.triangle.affine_span_orthocenter_point_le_altitude Affine.Triangle.affineSpan_orthocenter_point_le_altitude
 
@@ -596,7 +596,7 @@ theorem altitude_replace_orthocenter_eq_affineSpan {t₁ t₂ : Triangle ℝ P}
     · have hu : (Finset.univ : Finset (Fin 3)) = {j₁, j₂, j₃} := by clear h₁ h₂ h₃; decide!
       rw [← Set.image_univ, ← Finset.coe_univ, hu, Finset.coe_insert, Finset.coe_insert,
         Finset.coe_singleton, Set.image_insert_eq, Set.image_insert_eq, Set.image_singleton, h₁, h₂,
-        h₃, Set.insert_subset, Set.insert_subset, Set.singleton_subset_iff]
+        h₃, Set.insert_subset_iff, Set.insert_subset_iff, Set.singleton_subset_iff]
       exact
         ⟨t₁.orthocenter_mem_affine_span, mem_affineSpan ℝ (Set.mem_range_self _),
           mem_affineSpan ℝ (Set.mem_range_self _)⟩

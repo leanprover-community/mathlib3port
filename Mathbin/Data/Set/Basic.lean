@@ -1556,10 +1556,10 @@ theorem insert_ne_self : insert a s ≠ s ↔ a ∉ s :=
 #align set.insert_ne_self Set.insert_ne_self
 -/
 
-#print Set.insert_subset /-
-theorem insert_subset : insert a s ⊆ t ↔ a ∈ t ∧ s ⊆ t := by
+#print Set.insert_subset_iff /-
+theorem insert_subset_iff : insert a s ⊆ t ↔ a ∈ t ∧ s ⊆ t := by
   simp only [subset_def, or_imp, forall_and, forall_eq, mem_insert_iff]
-#align set.insert_subset Set.insert_subset
+#align set.insert_subset Set.insert_subset_iff
 -/
 
 #print Set.insert_subset_insert /-
@@ -1883,8 +1883,8 @@ theorem pair_comm (a b : α) : ({a, b} : Set α) = {b, a} :=
 theorem pair_eq_pair_iff {x y z w : α} :
     ({x, y} : Set α) = {z, w} ↔ x = z ∧ y = w ∨ x = w ∧ y = z :=
   by
-  simp only [Set.Subset.antisymm_iff, Set.insert_subset, Set.mem_insert_iff, Set.mem_singleton_iff,
-    Set.singleton_subset_iff]
+  simp only [Set.Subset.antisymm_iff, Set.insert_subset_iff, Set.mem_insert_iff,
+    Set.mem_singleton_iff, Set.singleton_subset_iff]
   constructor
   · tauto
   · rintro (⟨rfl, rfl⟩ | ⟨rfl, rfl⟩) <;> simp
@@ -3432,7 +3432,7 @@ theorem nontrivial_of_pair_subset {x y} (hxy : x ≠ y) (h : {x, y} ⊆ s) : s.N
 #print Set.Nontrivial.pair_subset /-
 theorem Nontrivial.pair_subset (hs : s.Nontrivial) : ∃ (x y : _) (hab : x ≠ y), {x, y} ⊆ s :=
   let ⟨x, hx, y, hy, hxy⟩ := hs
-  ⟨x, y, hxy, insert_subset.2 ⟨hx, singleton_subset_iff.2 hy⟩⟩
+  ⟨x, y, hxy, insert_subset_iff.2 ⟨hx, singleton_subset_iff.2 hy⟩⟩
 #align set.nontrivial.pair_subset Set.Nontrivial.pair_subset
 -/
 

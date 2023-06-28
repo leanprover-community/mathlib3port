@@ -154,7 +154,7 @@ theorem real_roots_Phi_ge (hab : b < a) : 2 ≤ Fintype.card ((Φ ℚ a b).rootS
   have q_ne_zero : Φ ℚ a b ≠ 0 := (monic_Phi a b).NeZero
   obtain ⟨x, y, hxy, hx, hy⟩ := real_roots_Phi_ge_aux a b hab
   have key : ↑({x, y} : Finset ℝ) ⊆ (Φ ℚ a b).rootSet ℝ := by
-    simp [Set.insert_subset, mem_root_set_of_ne q_ne_zero, hx, hy]
+    simp [Set.insert_subset_iff, mem_root_set_of_ne q_ne_zero, hx, hy]
   convert Fintype.card_le_of_embedding (Set.embeddingOfSubset _ _ key)
   simp only [Finset.coe_sort_coe, Fintype.card_coe, Finset.card_singleton,
     Finset.card_insert_of_not_mem (mt finset.mem_singleton.mp hxy)]

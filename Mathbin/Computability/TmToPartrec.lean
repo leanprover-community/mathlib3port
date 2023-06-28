@@ -2037,7 +2037,7 @@ theorem trStmts₁_supports {S q} (H₁ : (q : Λ').Supports S) (HS₁ : trStmts
   have W := fun {q} => tr_stmts₁_self q
   induction q <;> simp [tr_stmts₁] at HS₁ ⊢
   any_goals
-    cases' Finset.insert_subset.1 HS₁ with h₁ h₂
+    cases' Finset.insert_subset_iff.1 HS₁ with h₁ h₂
     first
     | have h₃ := h₂ W
     | try simp [Finset.subset_iff] at h₂ 
@@ -2131,7 +2131,7 @@ theorem codeSupp'_supports {S c k} (H : codeSupp c k ⊆ S) : Supports (codeSupp
     refine' supports_union.2 ⟨IHf H'.2, _⟩
     refine' tr_stmts₁_supports' (tr_normal_supports _) (Finset.union_subset_right h) fun h => _
     · simp only [code_supp', code_supp, Finset.union_subset_iff, cont_supp, tr_stmts₁,
-        Finset.insert_subset] at h H ⊢
+        Finset.insert_subset_iff] at h H ⊢
       exact ⟨h.1, ⟨H.1.1, h⟩, H.2⟩
     exact supports_singleton.2 (ret_supports <| Finset.union_subset_right H)
 #align turing.partrec_to_TM2.code_supp'_supports Turing.PartrecToTM2.codeSupp'_supports

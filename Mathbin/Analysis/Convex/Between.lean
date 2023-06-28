@@ -782,7 +782,7 @@ theorem sbtw_of_sbtw_of_sbtw_of_mem_affineSpan_pair [NoZeroSMulDivisors R V]
       by
       refine' affineSpan_pair_le_of_mem_of_mem (mem_affineSpan _ (Set.mem_range_self _)) _
       have hle : line[R, t.points i₂, t.points i₃] ≤ affineSpan R (Set.range t.points) := by
-        refine' affineSpan_mono _ _; simp [Set.insert_subset]
+        refine' affineSpan_mono _ _; simp [Set.insert_subset_iff]
       rw [AffineSubspace.le_def'] at hle 
       exact hle _ h₁.wbtw.mem_affine_span
     rw [AffineSubspace.le_def'] at hle 
