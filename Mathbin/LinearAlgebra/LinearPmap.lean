@@ -644,10 +644,12 @@ theorem toPMap_apply (f : E →ₗ[R] F) (p : Submodule R E) (x : p) : f.toPMap 
 #align linear_map.to_pmap_apply LinearMap.toPMap_apply
 -/
 
+#print LinearMap.toPMap_domain /-
 @[simp]
 theorem toPMap_domain (f : E →ₗ[R] F) (p : Submodule R E) : (f.toPMap p).domain = p :=
   rfl
 #align linear_map.to_pmap_domain LinearMap.toPMap_domain
+-/
 
 #print LinearMap.compPMap /-
 /-- Compose a linear map with a `linear_pmap` -/

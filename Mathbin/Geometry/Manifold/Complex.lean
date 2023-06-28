@@ -55,6 +55,7 @@ variable {F : Type _} [NormedAddCommGroup F] [NormedSpace ℂ F] [StrictConvexSp
 variable {M : Type _} [TopologicalSpace M] [CompactSpace M] [ChartedSpace E M]
   [SmoothManifoldWithCorners 𝓘(ℂ, E) M]
 
+#print MDifferentiable.isLocallyConstant /-
 /-- A holomorphic function on a compact complex manifold is locally constant. -/
 protected theorem isLocallyConstant {f : M → F} (hf : MDifferentiable 𝓘(ℂ, E) 𝓘(ℂ, F) f) :
     IsLocallyConstant f :=
@@ -110,19 +111,24 @@ protected theorem isLocallyConstant {f : M → F} (hf : MDifferentiable 𝓘(ℂ
   refine' ⟨_, hqs⟩
   simpa [LocalHomeomorph.left_inv _ hq', hp, -norm_eq_abs] using hUf (chart_at E p q) hq
 #align mdifferentiable.is_locally_constant MDifferentiable.isLocallyConstant
+-/
 
+#print MDifferentiable.apply_eq_of_compactSpace /-
 /-- A holomorphic function on a compact connected complex manifold is constant. -/
 theorem apply_eq_of_compactSpace [PreconnectedSpace M] {f : M → F}
     (hf : MDifferentiable 𝓘(ℂ, E) 𝓘(ℂ, F) f) (a b : M) : f a = f b :=
   hf.IsLocallyConstant.apply_eq_of_preconnectedSpace _ _
 #align mdifferentiable.apply_eq_of_compact_space MDifferentiable.apply_eq_of_compactSpace
+-/
 
+#print MDifferentiable.exists_eq_const_of_compactSpace /-
 /-- A holomorphic function on a compact connected complex manifold is the constant function `f ≡ v`,
 for some value `v`. -/
 theorem exists_eq_const_of_compactSpace [PreconnectedSpace M] {f : M → F}
     (hf : MDifferentiable 𝓘(ℂ, E) 𝓘(ℂ, F) f) : ∃ v : F, f = Function.const M v :=
   hf.IsLocallyConstant.exists_eq_const
 #align mdifferentiable.exists_eq_const_of_compact_space MDifferentiable.exists_eq_const_of_compactSpace
+-/
 
 end MDifferentiable
 

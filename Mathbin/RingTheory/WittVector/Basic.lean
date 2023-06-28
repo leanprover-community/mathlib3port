@@ -234,12 +234,12 @@ theorem matrix_vecEmpty_coeff {R} (i j) :
 #align witt_vector.matrix_vec_empty_coeff WittVector.matrix_vecEmpty_coeff
 -/
 
-private theorem ghost_fun_zero : ghostFun (0 : 𝕎 R) = 0 := by ghost_fun_tac 0, ![]
+private theorem ghost_fun_zero : ghostFun (0 : 𝕎 R) = 0 := by ghost_fun_tac 0,![]
 
-private theorem ghost_fun_one : ghostFun (1 : 𝕎 R) = 1 := by ghost_fun_tac 1, ![]
+private theorem ghost_fun_one : ghostFun (1 : 𝕎 R) = 1 := by ghost_fun_tac 1,![]
 
 private theorem ghost_fun_add : ghostFun (x + y) = ghostFun x + ghostFun y := by
-  ghost_fun_tac X 0 + X 1, ![x.coeff, y.coeff]
+  ghost_fun_tac X 0 + X 1,![x.coeff, y.coeff]
 
 private theorem ghost_fun_nat_cast (i : ℕ) : ghostFun (i : 𝕎 R) = i :=
   show ghostFun i.unaryCast = _ by
@@ -247,25 +247,25 @@ private theorem ghost_fun_nat_cast (i : ℕ) : ghostFun (i : 𝕎 R) = i :=
       simp [*, Nat.unaryCast, ghost_fun_zero, ghost_fun_one, ghost_fun_add, -Pi.coe_nat]
 
 private theorem ghost_fun_sub : ghostFun (x - y) = ghostFun x - ghostFun y := by
-  ghost_fun_tac X 0 - X 1, ![x.coeff, y.coeff]
+  ghost_fun_tac X 0 - X 1,![x.coeff, y.coeff]
 
 private theorem ghost_fun_mul : ghostFun (x * y) = ghostFun x * ghostFun y := by
-  ghost_fun_tac X 0 * X 1, ![x.coeff, y.coeff]
+  ghost_fun_tac X 0 * X 1,![x.coeff, y.coeff]
 
-private theorem ghost_fun_neg : ghostFun (-x) = -ghostFun x := by ghost_fun_tac -X 0, ![x.coeff]
+private theorem ghost_fun_neg : ghostFun (-x) = -ghostFun x := by ghost_fun_tac-X 0,![x.coeff]
 
 private theorem ghost_fun_int_cast (i : ℤ) : ghostFun (i : 𝕎 R) = i :=
   show ghostFun i.castDef = _ by
     cases i <;> simp [*, Int.castDef, ghost_fun_nat_cast, ghost_fun_neg, -Pi.coe_nat, -Pi.coe_int]
 
 private theorem ghost_fun_nsmul (m : ℕ) : ghostFun (m • x) = m • ghostFun x := by
-  ghost_fun_tac m • X 0, ![x.coeff]
+  ghost_fun_tac m • X 0,![x.coeff]
 
 private theorem ghost_fun_zsmul (m : ℤ) : ghostFun (m • x) = m • ghostFun x := by
-  ghost_fun_tac m • X 0, ![x.coeff]
+  ghost_fun_tac m • X 0,![x.coeff]
 
 private theorem ghost_fun_pow (m : ℕ) : ghostFun (x ^ m) = ghostFun x ^ m := by
-  ghost_fun_tac X 0 ^ m, ![x.coeff]
+  ghost_fun_tac X 0 ^ m,![x.coeff]
 
 end GhostFun
 

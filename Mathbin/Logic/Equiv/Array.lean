@@ -54,13 +54,17 @@ instance : IsLawfulTraversable (Array' n) :=
 
 end Array'
 
+#print Array.encodable /-
 /-- If `α` is encodable, then so is `array n α`. -/
-instance Array'.encodable {α} [Encodable α] {n} : Encodable (Array' n α) :=
+instance Array.encodable {α} [Encodable α] {n} : Encodable (Array' n α) :=
   Encodable.ofEquiv _ (Equiv.arrayEquivFin _ _)
-#align array.encodable Array'.encodable
+#align array.encodable Array.encodable
+-/
 
+#print Array.countable /-
 /-- If `α` is countable, then so is `array n α`. -/
-instance Array'.countable {α} [Countable α] {n} : Countable (Array' n α) :=
+instance Array.countable {α} [Countable α] {n} : Countable (Array' n α) :=
   Countable.of_equiv _ (Equiv.vectorEquivArray _ _)
-#align array.countable Array'.countable
+#align array.countable Array.countable
+-/
 

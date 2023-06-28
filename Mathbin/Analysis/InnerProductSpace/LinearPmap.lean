@@ -68,21 +68,26 @@ local notation "⟪" x ", " y "⟫" => @inner 𝕜 _ _ x y
 
 namespace LinearPMap
 
+#print LinearPMap.IsFormalAdjoint /-
 /-- An operator `T` is a formal adjoint of `S` if for all `x` in the domain of `T` and `y` in the
 domain of `S`, we have that `⟪T x, y⟫ = ⟪x, S y⟫`. -/
 def IsFormalAdjoint (T : E →ₗ.[𝕜] F) (S : F →ₗ.[𝕜] E) : Prop :=
   ∀ (x : T.domain) (y : S.domain), ⟪T x, y⟫ = ⟪(x : E), S y⟫
 #align linear_pmap.is_formal_adjoint LinearPMap.IsFormalAdjoint
+-/
 
 variable {T : E →ₗ.[𝕜] F} {S : F →ₗ.[𝕜] E}
 
+#print LinearPMap.IsFormalAdjoint.symm /-
 @[protected]
 theorem IsFormalAdjoint.symm (h : T.IsFormalAdjoint S) : S.IsFormalAdjoint T := fun y _ => by
   rw [← inner_conj_symm, ← inner_conj_symm (y : F), h]
 #align linear_pmap.is_formal_adjoint.symm LinearPMap.IsFormalAdjoint.symm
+-/
 
 variable (T)
 
+#print LinearPMap.adjointDomain /-
 /-- The domain of the adjoint operator.
 
 This definition is needed to construct the adjoint operator and the preferred version to use is
@@ -98,36 +103,46 @@ def adjointDomain : Submodule 𝕜 F
     rw [Set.mem_setOf_eq, LinearMap.map_smulₛₗ] at *
     exact hx.const_smul (conj a)
 #align linear_pmap.adjoint_domain LinearPMap.adjointDomain
+-/
 
+#print LinearPMap.adjointDomainMkClm /-
 /-- The operator `λ x, ⟪y, T x⟫` considered as a continuous linear operator from `T.adjoint_domain`
 to `𝕜`. -/
 def adjointDomainMkClm (y : T.adjointDomain) : T.domain →L[𝕜] 𝕜 :=
   ⟨(innerₛₗ 𝕜 (y : F)).comp T.toFun, y.Prop⟩
 #align linear_pmap.adjoint_domain_mk_clm LinearPMap.adjointDomainMkClm
+-/
 
+#print LinearPMap.adjointDomainMkClm_apply /-
 theorem adjointDomainMkClm_apply (y : T.adjointDomain) (x : T.domain) :
     adjointDomainMkClm T y x = ⟪(y : F), T x⟫ :=
   rfl
 #align linear_pmap.adjoint_domain_mk_clm_apply LinearPMap.adjointDomainMkClm_apply
+-/
 
 variable {T}
 
 variable (hT : Dense (T.domain : Set E))
 
+#print LinearPMap.adjointDomainMkClmExtend /-
 /-- The unique continuous extension of the operator `adjoint_domain_mk_clm` to `E`. -/
 def adjointDomainMkClmExtend (y : T.adjointDomain) : E →L[𝕜] 𝕜 :=
   (T.adjointDomainMkClm y).extend (Submodule.subtypeL T.domain) hT.denseRange_val
     uniformEmbedding_subtype_val.to_uniformInducing
 #align linear_pmap.adjoint_domain_mk_clm_extend LinearPMap.adjointDomainMkClmExtend
+-/
 
+#print LinearPMap.adjointDomainMkClmExtend_apply /-
 @[simp]
 theorem adjointDomainMkClmExtend_apply (y : T.adjointDomain) (x : T.domain) :
     adjointDomainMkClmExtend hT y (x : E) = ⟪(y : F), T x⟫ :=
   ContinuousLinearMap.extend_eq _ _ _ _ _
 #align linear_pmap.adjoint_domain_mk_clm_extend_apply LinearPMap.adjointDomainMkClmExtend_apply
+-/
 
 variable [CompleteSpace E]
 
+#print LinearPMap.adjointAux /-
 /-- The adjoint as a linear map from its domain to `E`.
 
 This is an auxiliary definition needed to define the adjoint operator as a `linear_pmap` without
@@ -144,34 +159,44 @@ def adjointAux : T.adjointDomain →ₗ[𝕜] E
       simp only [inner_smul_left, Submodule.coe_smul_of_tower, RingHom.id_apply,
         InnerProductSpace.toDual_symm_apply, adjoint_domain_mk_clm_extend_apply]
 #align linear_pmap.adjoint_aux LinearPMap.adjointAux
+-/
 
+#print LinearPMap.adjointAux_inner /-
 theorem adjointAux_inner (y : T.adjointDomain) (x : T.domain) :
     ⟪adjointAux hT y, x⟫ = ⟪(y : F), T x⟫ := by
   simp only [adjoint_aux, LinearMap.coe_mk, InnerProductSpace.toDual_symm_apply,
     adjoint_domain_mk_clm_extend_apply]
 #align linear_pmap.adjoint_aux_inner LinearPMap.adjointAux_inner
+-/
 
+#print LinearPMap.adjointAux_unique /-
 theorem adjointAux_unique (y : T.adjointDomain) {x₀ : E}
     (hx₀ : ∀ x : T.domain, ⟪x₀, x⟫ = ⟪(y : F), T x⟫) : adjointAux hT y = x₀ :=
   hT.eq_of_inner_left fun v => (adjointAux_inner hT _ _).trans (hx₀ v).symm
 #align linear_pmap.adjoint_aux_unique LinearPMap.adjointAux_unique
+-/
 
 variable (T)
 
+#print LinearPMap.adjoint /-
 /-- The adjoint operator as a partially defined linear operator. -/
 def adjoint : F →ₗ.[𝕜] E where
   domain := T.adjointDomain
   toFun := if hT : Dense (T.domain : Set E) then adjointAux hT else 0
 #align linear_pmap.adjoint LinearPMap.adjoint
+-/
 
 scoped postfix:1024 "†" => LinearPMap.adjoint
 
+#print LinearPMap.mem_adjoint_domain_iff /-
 theorem mem_adjoint_domain_iff (y : F) : y ∈ T†.domain ↔ Continuous ((innerₛₗ 𝕜 y).comp T.toFun) :=
   Iff.rfl
 #align linear_pmap.mem_adjoint_domain_iff LinearPMap.mem_adjoint_domain_iff
+-/
 
 variable {T}
 
+#print LinearPMap.mem_adjoint_domain_of_exists /-
 theorem mem_adjoint_domain_of_exists (y : F) (h : ∃ w : E, ∀ x : T.domain, ⟪w, x⟫ = ⟪y, T x⟫) :
     y ∈ T†.domain := by
   cases' h with w hw
@@ -180,29 +205,39 @@ theorem mem_adjoint_domain_of_exists (y : F) (h : ∃ w : E, ∀ x : T.domain, �
   convert this using 1
   exact funext fun x => (hw x).symm
 #align linear_pmap.mem_adjoint_domain_of_exists LinearPMap.mem_adjoint_domain_of_exists
+-/
 
+#print LinearPMap.adjoint_apply_of_not_dense /-
 theorem adjoint_apply_of_not_dense (hT : ¬Dense (T.domain : Set E)) (y : T†.domain) : T† y = 0 :=
   by
   change (if hT : Dense (T.domain : Set E) then adjoint_aux hT else 0) y = _
   simp only [hT, not_false_iff, dif_neg, LinearMap.zero_apply]
 #align linear_pmap.adjoint_apply_of_not_dense LinearPMap.adjoint_apply_of_not_dense
+-/
 
+#print LinearPMap.adjoint_apply_of_dense /-
 theorem adjoint_apply_of_dense (y : T†.domain) : T† y = adjointAux hT y :=
   by
   change (if hT : Dense (T.domain : Set E) then adjoint_aux hT else 0) y = _
   simp only [hT, dif_pos, LinearMap.coe_mk]
 #align linear_pmap.adjoint_apply_of_dense LinearPMap.adjoint_apply_of_dense
+-/
 
+#print LinearPMap.adjoint_apply_eq /-
 theorem adjoint_apply_eq (y : T†.domain) {x₀ : E} (hx₀ : ∀ x : T.domain, ⟪x₀, x⟫ = ⟪(y : F), T x⟫) :
     T† y = x₀ :=
   (adjoint_apply_of_dense hT y).symm ▸ adjointAux_unique hT _ hx₀
 #align linear_pmap.adjoint_apply_eq LinearPMap.adjoint_apply_eq
+-/
 
+#print LinearPMap.adjoint_isFormalAdjoint /-
 /-- The fundamental property of the adjoint. -/
 theorem adjoint_isFormalAdjoint : T†.IsFormalAdjoint T := fun x =>
   (adjoint_apply_of_dense hT x).symm ▸ adjointAux_inner hT x
 #align linear_pmap.adjoint_is_formal_adjoint LinearPMap.adjoint_isFormalAdjoint
+-/
 
+#print LinearPMap.IsFormalAdjoint.le_adjoint /-
 /-- The adjoint is maximal in the sense that it contains every formal adjoint. -/
 theorem IsFormalAdjoint.le_adjoint (h : T.IsFormalAdjoint S) : S ≤ T† :=
   ⟨-- Trivially, every `x : S.domain` is in `T.adjoint.domain`
@@ -212,6 +247,7 @@ theorem IsFormalAdjoint.le_adjoint (h : T.IsFormalAdjoint S) : S ≤ T† :=
   -- `⟪v, S x⟫ = ⟪v, T.adjoint y⟫` for all `v : T.domain`:
   fun _ _ hxy => (adjoint_apply_eq hT _ fun _ => by rw [h.symm, hxy]).symm⟩
 #align linear_pmap.is_formal_adjoint.le_adjoint LinearPMap.IsFormalAdjoint.le_adjoint
+-/
 
 end LinearPMap
 
@@ -221,6 +257,7 @@ variable [CompleteSpace E] [CompleteSpace F]
 
 variable (A : E →L[𝕜] F) {p : Submodule 𝕜 E}
 
+#print ContinuousLinearMap.toPMap_adjoint_eq_adjoint_toPMap_of_dense /-
 /-- Restricting `A` to a dense submodule and taking the `linear_pmap.adjoint` is the same
 as taking the `continuous_linear_map.adjoint` interpreted as a `linear_pmap`. -/
 theorem toPMap_adjoint_eq_adjoint_toPMap_of_dense (hp : Dense (p : Set E)) :
@@ -234,6 +271,7 @@ theorem toPMap_adjoint_eq_adjoint_toPMap_of_dense (hp : Dense (p : Set E)) :
   refine' LinearPMap.adjoint_apply_eq hp _ fun v => _
   simp only [adjoint_inner_left, hxy, LinearMap.toPMap_apply, to_linear_map_eq_coe, coe_coe]
 #align continuous_linear_map.to_pmap_adjoint_eq_adjoint_to_pmap_of_dense ContinuousLinearMap.toPMap_adjoint_eq_adjoint_toPMap_of_dense
+-/
 
 end ContinuousLinearMap
 

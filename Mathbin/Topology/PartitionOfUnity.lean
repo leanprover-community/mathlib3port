@@ -436,7 +436,7 @@ theorem ind_apply (x : X) (hx : x ∈ s) : f (f.ind x hx) x = 1 :=
 #align bump_covering.ind_apply BumpCovering.ind_apply
 -/
 
-#print BumpCovering.toPouFun /-
+#print BumpCovering.toPOUFun /-
 /-- Partition of unity defined by a `bump_covering`. We use this auxiliary definition to prove some
 properties of the new family of functions before bundling it into a `partition_of_unity`. Do not use
 this definition, use `bump_function.to_partition_of_unity` instead.
@@ -447,37 +447,37 @@ words, `g i x = ∏ᶠ j < i, (1 - f j x) - ∏ᶠ j ≤ i, (1 - f j x)`, so
 of `1 - f j x` vanishes, and `∑ᶠ i, g i x = 1`.
 
 In order to avoid an assumption `linear_order ι`, we use `well_ordering_rel` instead of `(<)`. -/
-def toPouFun (i : ι) (x : X) : ℝ :=
+def toPOUFun (i : ι) (x : X) : ℝ :=
   f i x * ∏ᶠ (j) (hj : WellOrderingRel j i), (1 - f j x)
-#align bump_covering.to_pou_fun BumpCovering.toPouFun
+#align bump_covering.to_pou_fun BumpCovering.toPOUFun
 -/
 
-#print BumpCovering.toPouFun_zero_of_zero /-
-theorem toPouFun_zero_of_zero {i : ι} {x : X} (h : f i x = 0) : f.toPouFun i x = 0 := by
+#print BumpCovering.toPOUFun_zero_of_zero /-
+theorem toPOUFun_zero_of_zero {i : ι} {x : X} (h : f i x = 0) : f.toPOUFun i x = 0 := by
   rw [to_pou_fun, h, MulZeroClass.zero_mul]
-#align bump_covering.to_pou_fun_zero_of_zero BumpCovering.toPouFun_zero_of_zero
+#align bump_covering.to_pou_fun_zero_of_zero BumpCovering.toPOUFun_zero_of_zero
 -/
 
-#print BumpCovering.support_toPouFun_subset /-
-theorem support_toPouFun_subset (i : ι) : support (f.toPouFun i) ⊆ support (f i) := fun x =>
-  mt <| f.toPouFun_zero_of_zero
-#align bump_covering.support_to_pou_fun_subset BumpCovering.support_toPouFun_subset
+#print BumpCovering.support_toPOUFun_subset /-
+theorem support_toPOUFun_subset (i : ι) : support (f.toPOUFun i) ⊆ support (f i) := fun x =>
+  mt <| f.toPOUFun_zero_of_zero
+#align bump_covering.support_to_pou_fun_subset BumpCovering.support_toPOUFun_subset
 -/
 
-#print BumpCovering.toPouFun_eq_mul_prod /-
-theorem toPouFun_eq_mul_prod (i : ι) (x : X) (t : Finset ι)
+#print BumpCovering.toPOUFun_eq_mul_prod /-
+theorem toPOUFun_eq_mul_prod (i : ι) (x : X) (t : Finset ι)
     (ht : ∀ j, WellOrderingRel j i → f j x ≠ 0 → j ∈ t) :
-    f.toPouFun i x = f i x * ∏ j in t.filterₓ fun j => WellOrderingRel j i, (1 - f j x) :=
+    f.toPOUFun i x = f i x * ∏ j in t.filterₓ fun j => WellOrderingRel j i, (1 - f j x) :=
   by
   refine' congr_arg _ (finprod_cond_eq_prod_of_cond_iff _ fun j hj => _)
   rw [Ne.def, sub_eq_self] at hj 
   rw [Finset.mem_filter, Iff.comm, and_iff_right_iff_imp]
   exact flip (ht j) hj
-#align bump_covering.to_pou_fun_eq_mul_prod BumpCovering.toPouFun_eq_mul_prod
+#align bump_covering.to_pou_fun_eq_mul_prod BumpCovering.toPOUFun_eq_mul_prod
 -/
 
-#print BumpCovering.sum_toPouFun_eq /-
-theorem sum_toPouFun_eq (x : X) : ∑ᶠ i, f.toPouFun i x = 1 - ∏ᶠ i, (1 - f i x) :=
+#print BumpCovering.sum_toPOUFun_eq /-
+theorem sum_toPOUFun_eq (x : X) : ∑ᶠ i, f.toPOUFun i x = 1 - ∏ᶠ i, (1 - f i x) :=
   by
   set s := (f.point_finite x).toFinset
   have hs : (s : Set ι) = {i | f i x ≠ 0} := finite.coe_to_finset _
@@ -493,13 +493,13 @@ theorem sum_toPouFun_eq (x : X) : ∑ᶠ i, f.toPouFun i x = 1 - ∏ᶠ i, (1 - 
   refine' Finset.sum_congr rfl fun i hi => _
   convert f.to_pou_fun_eq_mul_prod _ _ _ fun j hji hj => _
   rwa [finite.mem_to_finset]
-#align bump_covering.sum_to_pou_fun_eq BumpCovering.sum_toPouFun_eq
+#align bump_covering.sum_to_pou_fun_eq BumpCovering.sum_toPOUFun_eq
 -/
 
-#print BumpCovering.exists_finset_toPouFun_eventuallyEq /-
-theorem exists_finset_toPouFun_eventuallyEq (i : ι) (x : X) :
+#print BumpCovering.exists_finset_toPOUFun_eventuallyEq /-
+theorem exists_finset_toPOUFun_eventuallyEq (i : ι) (x : X) :
     ∃ t : Finset ι,
-      f.toPouFun i =ᶠ[𝓝 x] f i * ∏ j in t.filterₓ fun j => WellOrderingRel j i, (1 - f j) :=
+      f.toPOUFun i =ᶠ[𝓝 x] f i * ∏ j in t.filterₓ fun j => WellOrderingRel j i, (1 - f j) :=
   by
   rcases f.locally_finite x with ⟨U, hU, hf⟩
   use hf.to_finset
@@ -508,18 +508,18 @@ theorem exists_finset_toPouFun_eventuallyEq (i : ι) (x : X) :
   apply to_pou_fun_eq_mul_prod
   intro j hji hj
   exact hf.mem_to_finset.2 ⟨y, ⟨hj, hyU⟩⟩
-#align bump_covering.exists_finset_to_pou_fun_eventually_eq BumpCovering.exists_finset_toPouFun_eventuallyEq
+#align bump_covering.exists_finset_to_pou_fun_eventually_eq BumpCovering.exists_finset_toPOUFun_eventuallyEq
 -/
 
-#print BumpCovering.continuous_toPouFun /-
-theorem continuous_toPouFun (i : ι) : Continuous (f.toPouFun i) :=
+#print BumpCovering.continuous_toPOUFun /-
+theorem continuous_toPOUFun (i : ι) : Continuous (f.toPOUFun i) :=
   by
   refine'
     (f i).Continuous.mul <|
       continuous_finprod_cond (fun j _ => continuous_const.sub (f j).Continuous) _
   simp only [mul_support_one_sub]
   exact f.locally_finite
-#align bump_covering.continuous_to_pou_fun BumpCovering.continuous_toPouFun
+#align bump_covering.continuous_to_pou_fun BumpCovering.continuous_toPOUFun
 -/
 
 #print BumpCovering.toPartitionOfUnity /-
@@ -533,8 +533,8 @@ of `1 - f j x` vanishes, and `∑ᶠ i, g i x = 1`.
 In order to avoid an assumption `linear_order ι`, we use `well_ordering_rel` instead of `(<)`. -/
 def toPartitionOfUnity : PartitionOfUnity ι X s
     where
-  toFun i := ⟨f.toPouFun i, f.continuous_toPouFun i⟩
-  locally_finite' := f.LocallyFinite.Subset f.support_toPouFun_subset
+  toFun i := ⟨f.toPOUFun i, f.continuous_toPOUFun i⟩
+  locally_finite' := f.LocallyFinite.Subset f.support_toPOUFun_subset
   nonneg' i x :=
     mul_nonneg (f.NonNeg i x) (finprod_cond_nonneg fun j hj => sub_nonneg.2 <| f.le_one j x)
   sum_eq_one' x hx :=
@@ -561,7 +561,7 @@ theorem toPartitionOfUnity_apply (i : ι) (x : X) :
 theorem toPartitionOfUnity_eq_mul_prod (i : ι) (x : X) (t : Finset ι)
     (ht : ∀ j, WellOrderingRel j i → f j x ≠ 0 → j ∈ t) :
     f.toPartitionOfUnity i x = f i x * ∏ j in t.filterₓ fun j => WellOrderingRel j i, (1 - f j x) :=
-  f.toPouFun_eq_mul_prod i x t ht
+  f.toPOUFun_eq_mul_prod i x t ht
 #align bump_covering.to_partition_of_unity_eq_mul_prod BumpCovering.toPartitionOfUnity_eq_mul_prod
 -/
 
@@ -570,28 +570,28 @@ theorem exists_finset_toPartitionOfUnity_eventuallyEq (i : ι) (x : X) :
     ∃ t : Finset ι,
       f.toPartitionOfUnity i =ᶠ[𝓝 x]
         f i * ∏ j in t.filterₓ fun j => WellOrderingRel j i, (1 - f j) :=
-  f.exists_finset_toPouFun_eventuallyEq i x
+  f.exists_finset_toPOUFun_eventuallyEq i x
 #align bump_covering.exists_finset_to_partition_of_unity_eventually_eq BumpCovering.exists_finset_toPartitionOfUnity_eventuallyEq
 -/
 
 #print BumpCovering.toPartitionOfUnity_zero_of_zero /-
 theorem toPartitionOfUnity_zero_of_zero {i : ι} {x : X} (h : f i x = 0) :
     f.toPartitionOfUnity i x = 0 :=
-  f.toPouFun_zero_of_zero h
+  f.toPOUFun_zero_of_zero h
 #align bump_covering.to_partition_of_unity_zero_of_zero BumpCovering.toPartitionOfUnity_zero_of_zero
 -/
 
 #print BumpCovering.support_toPartitionOfUnity_subset /-
 theorem support_toPartitionOfUnity_subset (i : ι) :
     support (f.toPartitionOfUnity i) ⊆ support (f i) :=
-  f.support_toPouFun_subset i
+  f.support_toPOUFun_subset i
 #align bump_covering.support_to_partition_of_unity_subset BumpCovering.support_toPartitionOfUnity_subset
 -/
 
 #print BumpCovering.sum_toPartitionOfUnity_eq /-
 theorem sum_toPartitionOfUnity_eq (x : X) :
     ∑ᶠ i, f.toPartitionOfUnity i x = 1 - ∏ᶠ i, (1 - f i x) :=
-  f.sum_toPouFun_eq x
+  f.sum_toPOUFun_eq x
 #align bump_covering.sum_to_partition_of_unity_eq BumpCovering.sum_toPartitionOfUnity_eq
 -/
 

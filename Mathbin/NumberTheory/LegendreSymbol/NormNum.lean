@@ -94,7 +94,7 @@ theorem jacobiSymNat.one_left_odd (b : ℕ) : jacobiSymNat 1 (bit1 b) = 1 := by
 
 /-- Turn a Legendre symbol into a Jacobi symbol. -/
 theorem LegendreSym.to_jacobiSym (p : ℕ) (pp : Fact p.Prime) (a r : ℤ) (hr : jacobiSym a p = r) :
-    legendreSym p a = r := by rwa [@legendreSym.to_jacobiSym p pp a]
+    legendreSym p a = r := by rwa [@jacobiSym.legendreSym.to_jacobiSym p pp a]
 #align norm_num.legendre_sym.to_jacobi_sym NormNum.LegendreSym.to_jacobiSym
 
 /-- The value depends only on the residue class of `a` mod `b`. -/
