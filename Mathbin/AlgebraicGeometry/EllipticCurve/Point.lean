@@ -154,7 +154,7 @@ noncomputable def linePolynomial : R[X] :=
 #align weierstrass_curve.line_polynomial WeierstrassCurve.linePolynomial
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.1008755739.C_simp -/
-theorem xYIdeal_eq₁ : xYIdeal W x₁ (C y₁) = xYIdeal W x₁ (linePolynomial x₁ y₁ L) :=
+theorem xYIdeal_eq₁ : XYIdeal W x₁ (C y₁) = XYIdeal W x₁ (linePolynomial x₁ y₁ L) :=
   by
   simp only [XY_ideal, X_class, Y_class, line_polynomial]
   rw [← span_pair_add_mul_right <| AdjoinRoot.mk _ <| C <| C <| -L, ← _root_.map_mul, ← map_add]
@@ -289,9 +289,9 @@ theorem baseChange_addY_of_baseChange (x₁ x₂ y₁ L : A) :
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.1008755739.C_simp -/
 theorem xYIdeal_add_eq :
-    xYIdeal W (W.addX x₁ x₂ L) (C (W.addY x₁ x₂ y₁ L)) =
+    XYIdeal W (W.addX x₁ x₂ L) (C (W.addY x₁ x₂ y₁ L)) =
       span {AdjoinRoot.mk W.Polynomial <| W.negPolynomial - C (linePolynomial x₁ y₁ L)} ⊔
-        xIdeal W (W.addX x₁ x₂ L) :=
+        XIdeal W (W.addX x₁ x₂ L) :=
   by
   simp only [XY_ideal, X_ideal, X_class, Y_class, add_Y, add_Y', neg_Y, neg_polynomial,
     line_polynomial]
@@ -306,7 +306,7 @@ theorem xYIdeal_add_eq :
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.2062814307.eval_simp -/
 theorem equation_add_iff :
-    W.Equation (W.addX x₁ x₂ L) (W.addY' x₁ x₂ y₁ L) ↔
+    W.equation (W.addX x₁ x₂ L) (W.addY' x₁ x₂ y₁ L) ↔
       (W.addPolynomial x₁ y₁ L).eval (W.addX x₁ x₂ L) = 0 :=
   by
   rw [equation, add_Y', add_polynomial, line_polynomial, WeierstrassCurve.polynomial]
@@ -319,9 +319,9 @@ theorem equation_add_iff :
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.1686593491.derivative_simp -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.2062814307.eval_simp -/
 theorem nonsingular_add_of_eval_derivative_ne_zero
-    (hx' : W.Equation (W.addX x₁ x₂ L) (W.addY' x₁ x₂ y₁ L))
+    (hx' : W.equation (W.addX x₁ x₂ L) (W.addY' x₁ x₂ y₁ L))
     (hx : (derivative <| W.addPolynomial x₁ y₁ L).eval (W.addX x₁ x₂ L) ≠ 0) :
-    W.Nonsingular (W.addX x₁ x₂ L) (W.addY' x₁ x₂ y₁ L) :=
+    W.nonsingular (W.addX x₁ x₂ L) (W.addY' x₁ x₂ y₁ L) :=
   by
   rw [nonsingular, and_iff_right hx', add_Y', polynomial_X, polynomial_Y]
   run_tac
@@ -347,7 +347,7 @@ satisfying the equation $y^2 + a_1xy + a_3y = x^3 + a_2x^2 + a_4x + a_6$ of `W`.
 extension `S` of `R`, the type of nonsingular `S`-rational points on `W` is denoted `W⟮S⟯`. -/
 inductive Point
   | zero
-  | some {x y : R} (h : W.Nonsingular x y)
+  | some {x y : R} (h : W.nonsingular x y)
 #align weierstrass_curve.point WeierstrassCurve.Point
 
 scoped notation W "⟮" S "⟯" => (W.base_change S).Point
@@ -369,20 +369,20 @@ end Point
 
 variable {W x₁ y₁}
 
-theorem equation_neg_iff : W.Equation x₁ (W.negY x₁ y₁) ↔ W.Equation x₁ y₁ := by
+theorem equation_neg_iff : W.equation x₁ (W.negY x₁ y₁) ↔ W.equation x₁ y₁ := by
   rw [equation_iff, equation_iff, neg_Y]; congr 2; ring1
 #align weierstrass_curve.equation_neg_iff WeierstrassCurve.equation_neg_iff
 
-theorem equation_neg_of (h : W.Equation x₁ <| W.negY x₁ y₁) : W.Equation x₁ y₁ :=
+theorem equation_neg_of (h : W.equation x₁ <| W.negY x₁ y₁) : W.equation x₁ y₁ :=
   equation_neg_iff.mp h
 #align weierstrass_curve.equation_neg_of WeierstrassCurve.equation_neg_of
 
 /-- The negation of an affine point in `W` lies in `W`. -/
-theorem equation_neg (h : W.Equation x₁ y₁) : W.Equation x₁ <| W.negY x₁ y₁ :=
+theorem equation_neg (h : W.equation x₁ y₁) : W.equation x₁ <| W.negY x₁ y₁ :=
   equation_neg_iff.mpr h
 #align weierstrass_curve.equation_neg WeierstrassCurve.equation_neg
 
-theorem nonsingular_neg_iff : W.Nonsingular x₁ (W.negY x₁ y₁) ↔ W.Nonsingular x₁ y₁ :=
+theorem nonsingular_neg_iff : W.nonsingular x₁ (W.negY x₁ y₁) ↔ W.nonsingular x₁ y₁ :=
   by
   rw [nonsingular_iff, equation_neg_iff, ← neg_Y, neg_Y_neg_Y, ← @ne_comm _ y₁, nonsingular_iff]
   exact
@@ -391,12 +391,12 @@ theorem nonsingular_neg_iff : W.Nonsingular x₁ (W.negY x₁ y₁) ↔ W.Nonsin
         not_congr <| and_congr_left fun h => by rw [← h])
 #align weierstrass_curve.nonsingular_neg_iff WeierstrassCurve.nonsingular_neg_iff
 
-theorem nonsingular_neg_of (h : W.Nonsingular x₁ <| W.negY x₁ y₁) : W.Nonsingular x₁ y₁ :=
+theorem nonsingular_neg_of (h : W.nonsingular x₁ <| W.negY x₁ y₁) : W.nonsingular x₁ y₁ :=
   nonsingular_neg_iff.mp h
 #align weierstrass_curve.nonsingular_neg_of WeierstrassCurve.nonsingular_neg_of
 
 /-- The negation of a nonsingular affine point in `W` is nonsingular. -/
-theorem nonsingular_neg (h : W.Nonsingular x₁ y₁) : W.Nonsingular x₁ <| W.negY x₁ y₁ :=
+theorem nonsingular_neg (h : W.nonsingular x₁ y₁) : W.nonsingular x₁ <| W.negY x₁ y₁ :=
   nonsingular_neg_iff.mpr h
 #align weierstrass_curve.nonsingular_neg WeierstrassCurve.nonsingular_neg
 
@@ -424,7 +424,7 @@ theorem neg_zero : (-0 : W.Point) = 0 :=
 #align weierstrass_curve.point.neg_zero WeierstrassCurve.Point.neg_zero
 
 @[simp]
-theorem neg_some (h : W.Nonsingular x₁ y₁) : -some h = some (nonsingular_neg h) :=
+theorem neg_some (h : W.nonsingular x₁ y₁) : -some h = some (nonsingular_neg h) :=
   rfl
 #align weierstrass_curve.point.neg_some WeierstrassCurve.Point.neg_some
 
@@ -460,8 +460,8 @@ noncomputable def slope : F :=
   else (y₁ - y₂) / (x₁ - x₂)
 #align weierstrass_curve.slope WeierstrassCurve.slope
 
-variable {W x₁ x₂ y₁ y₂} (h₁ : W.Nonsingular x₁ y₁) (h₂ : W.Nonsingular x₂ y₂)
-  (h₁' : W.Equation x₁ y₁) (h₂' : W.Equation x₂ y₂)
+variable {W x₁ x₂ y₁ y₂} (h₁ : W.nonsingular x₁ y₁) (h₂ : W.nonsingular x₂ y₂)
+  (h₁' : W.equation x₁ y₁) (h₂' : W.equation x₂ y₂)
 
 @[simp]
 theorem slope_of_Y_eq (hx : x₁ = x₂) (hy : y₁ = W.negY x₂ y₂) : W.slope x₁ x₂ y₁ y₂ = 0 := by
@@ -536,7 +536,7 @@ theorem Y_eq_of_Y_ne (hx : x₁ = x₂) (hy : y₁ ≠ W.negY x₂ y₂) : y₁ 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.2062814307.eval_simp -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.1008755739.C_simp -/
 theorem xYIdeal_eq₂ (hxy : x₁ = x₂ → y₁ ≠ W.negY x₂ y₂) :
-    xYIdeal W x₂ (C y₂) = xYIdeal W x₂ (linePolynomial x₁ y₁ <| W.slope x₁ x₂ y₁ y₂) :=
+    XYIdeal W x₂ (C y₂) = XYIdeal W x₂ (linePolynomial x₁ y₁ <| W.slope x₁ x₂ y₁ y₂) :=
   by
   have hy₂ : y₂ = (line_polynomial x₁ y₁ <| W.slope x₁ x₂ y₁ y₂).eval x₂ :=
     by
@@ -589,7 +589,7 @@ theorem addPolynomial_slope (hxy : x₁ = x₂ → y₁ ≠ W.negY x₂ y₂) :
 
 theorem CoordinateRing.c_addPolynomial_slope (hxy : x₁ = x₂ → y₁ ≠ W.negY x₂ y₂) :
     AdjoinRoot.mk W.Polynomial (C <| W.addPolynomial x₁ y₁ <| W.slope x₁ x₂ y₁ y₂) =
-      -(xClass W x₁ * xClass W x₂ * xClass W (W.addX x₁ x₂ <| W.slope x₁ x₂ y₁ y₂)) :=
+      -(XClass W x₁ * XClass W x₂ * XClass W (W.addX x₁ x₂ <| W.slope x₁ x₂ y₁ y₂)) :=
   by simpa only [add_polynomial_slope h₁' h₂' hxy, map_neg, neg_inj, _root_.map_mul]
 #align weierstrass_curve.coordinate_ring.C_add_polynomial_slope WeierstrassCurve.CoordinateRing.c_addPolynomial_slope
 
@@ -611,7 +611,7 @@ theorem derivative_addPolynomial_slope (hxy : x₁ = x₂ → y₁ ≠ W.negY x�
 /-- The addition of two affine points in `W` on a sloped line,
 before applying the final negation that maps $Y$ to $-Y - a_1X - a_3$, lies in `W`. -/
 theorem equation_add' (hxy : x₁ = x₂ → y₁ ≠ W.negY x₂ y₂) :
-    W.Equation (W.addX x₁ x₂ <| W.slope x₁ x₂ y₁ y₂) (W.addY' x₁ x₂ y₁ <| W.slope x₁ x₂ y₁ y₂) :=
+    W.equation (W.addX x₁ x₂ <| W.slope x₁ x₂ y₁ y₂) (W.addY' x₁ x₂ y₁ <| W.slope x₁ x₂ y₁ y₂) :=
   by
   rw [equation_add_iff, add_polynomial_slope h₁' h₂' hxy];
   run_tac
@@ -621,7 +621,7 @@ theorem equation_add' (hxy : x₁ = x₂ → y₁ ≠ W.negY x₂ y₂) :
 
 /-- The addition of two affine points in `W` on a sloped line lies in `W`. -/
 theorem equation_add (hxy : x₁ = x₂ → y₁ ≠ W.negY x₂ y₂) :
-    W.Equation (W.addX x₁ x₂ <| W.slope x₁ x₂ y₁ y₂) (W.addY x₁ x₂ y₁ <| W.slope x₁ x₂ y₁ y₂) :=
+    W.equation (W.addX x₁ x₂ <| W.slope x₁ x₂ y₁ y₂) (W.addY x₁ x₂ y₁ <| W.slope x₁ x₂ y₁ y₂) :=
   equation_neg <| equation_add' h₁' h₂' hxy
 #align weierstrass_curve.equation_add WeierstrassCurve.equation_add
 
@@ -629,7 +629,7 @@ theorem equation_add (hxy : x₁ = x₂ → y₁ ≠ W.negY x₂ y₂) :
 /-- The addition of two nonsingular affine points in `W` on a sloped line,
 before applying the final negation that maps $Y$ to $-Y - a_1X - a_3$, is nonsingular. -/
 theorem nonsingular_add' (hxy : x₁ = x₂ → y₁ ≠ W.negY x₂ y₂) :
-    W.Nonsingular (W.addX x₁ x₂ <| W.slope x₁ x₂ y₁ y₂) (W.addY' x₁ x₂ y₁ <| W.slope x₁ x₂ y₁ y₂) :=
+    W.nonsingular (W.addX x₁ x₂ <| W.slope x₁ x₂ y₁ y₂) (W.addY' x₁ x₂ y₁ <| W.slope x₁ x₂ y₁ y₂) :=
   by
   by_cases hx₁ : W.add_X x₁ x₂ (W.slope x₁ x₂ y₁ y₂) = x₁
   · rwa [add_Y', hx₁, sub_self, MulZeroClass.mul_zero, zero_add]
@@ -650,7 +650,7 @@ theorem nonsingular_add' (hxy : x₁ = x₂ → y₁ ≠ W.negY x₂ y₂) :
 
 /-- The addition of two nonsingular affine points in `W` on a sloped line is nonsingular. -/
 theorem nonsingular_add (hxy : x₁ = x₂ → y₁ ≠ W.negY x₂ y₂) :
-    W.Nonsingular (W.addX x₁ x₂ <| W.slope x₁ x₂ y₁ y₂) (W.addY x₁ x₂ y₁ <| W.slope x₁ x₂ y₁ y₂) :=
+    W.nonsingular (W.addX x₁ x₂ <| W.slope x₁ x₂ y₁ y₂) (W.addY x₁ x₂ y₁ <| W.slope x₁ x₂ y₁ y₂) :=
   nonsingular_neg <| nonsingular_add' h₁ h₂ hxy
 #align weierstrass_curve.nonsingular_add WeierstrassCurve.nonsingular_add
 
@@ -734,13 +734,13 @@ section Group
 
 
 variable {F : Type u} [Field F] {W : WeierstrassCurve F} {x₁ x₂ y₁ y₂ : F}
-  (h₁ : W.Nonsingular x₁ y₁) (h₂ : W.Nonsingular x₂ y₂) (h₁' : W.Equation x₁ y₁)
-  (h₂' : W.Equation x₂ y₂)
+  (h₁ : W.nonsingular x₁ y₁) (h₂ : W.nonsingular x₂ y₂) (h₁' : W.equation x₁ y₁)
+  (h₂' : W.equation x₂ y₂)
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.1008755739.C_simp -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.1008755739.C_simp -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.1008755739.C_simp -/
-theorem xYIdeal_neg_mul : xYIdeal W x₁ (C <| W.negY x₁ y₁) * xYIdeal W x₁ (C y₁) = xIdeal W x₁ :=
+theorem xYIdeal_neg_mul : XYIdeal W x₁ (C <| W.negY x₁ y₁) * XYIdeal W x₁ (C y₁) = XIdeal W x₁ :=
   by
   have Y_rw :
     (Y - C (C y₁)) * (Y - C (C (W.neg_Y x₁ y₁))) -
@@ -781,8 +781,8 @@ theorem xYIdeal_neg_mul : xYIdeal W x₁ (C <| W.negY x₁ y₁) * xYIdeal W x�
 #align weierstrass_curve.XY_ideal_neg_mul WeierstrassCurve.xYIdeal_neg_mul
 
 private theorem XY_ideal'_mul_inv :
-    (xYIdeal W x₁ (C y₁) : FractionalIdeal W.CoordinateRing⁰ W.FunctionField) *
-        (xYIdeal W x₁ (C <| W.negY x₁ y₁) * (xIdeal W x₁)⁻¹) =
+    (XYIdeal W x₁ (C y₁) : FractionalIdeal W.CoordinateRing⁰ W.FunctionField) *
+        (XYIdeal W x₁ (C <| W.negY x₁ y₁) * (XIdeal W x₁)⁻¹) =
       1 :=
   by
   rw [← mul_assoc, ← FractionalIdeal.coeIdeal_mul, mul_comm <| XY_ideal W _ _, XY_ideal_neg_mul h₁,
@@ -792,9 +792,9 @@ private theorem XY_ideal'_mul_inv :
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.1008755739.C_simp -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.1008755739.C_simp -/
 theorem xYIdeal_mul_xYIdeal (hxy : x₁ = x₂ → y₁ ≠ W.negY x₂ y₂) :
-    xIdeal W (W.addX x₁ x₂ <| W.slope x₁ x₂ y₁ y₂) * (xYIdeal W x₁ (C y₁) * xYIdeal W x₂ (C y₂)) =
-      yIdeal W (linePolynomial x₁ y₁ <| W.slope x₁ x₂ y₁ y₂) *
-        xYIdeal W (W.addX x₁ x₂ <| W.slope x₁ x₂ y₁ y₂)
+    XIdeal W (W.addX x₁ x₂ <| W.slope x₁ x₂ y₁ y₂) * (XYIdeal W x₁ (C y₁) * XYIdeal W x₂ (C y₂)) =
+      YIdeal W (linePolynomial x₁ y₁ <| W.slope x₁ x₂ y₁ y₂) *
+        XYIdeal W (W.addX x₁ x₂ <| W.slope x₁ x₂ y₁ y₂)
           (C <| W.addY x₁ x₂ y₁ <| W.slope x₁ x₂ y₁ y₂) :=
   by
   have sup_rw : ∀ a b c d : Ideal W.coordinate_ring, a ⊔ (b ⊔ (c ⊔ d)) = a ⊔ d ⊔ b ⊔ c :=
@@ -849,7 +849,7 @@ noncomputable def xYIdeal' : (FractionalIdeal W.CoordinateRing⁰ W.FunctionFiel
 #align weierstrass_curve.XY_ideal' WeierstrassCurve.xYIdeal'
 
 theorem xYIdeal'_eq :
-    (xYIdeal' h₁ : FractionalIdeal W.CoordinateRing⁰ W.FunctionField) = xYIdeal W x₁ (C y₁) :=
+    (xYIdeal' h₁ : FractionalIdeal W.CoordinateRing⁰ W.FunctionField) = XYIdeal W x₁ (C y₁) :=
   rfl
 #align weierstrass_curve.XY_ideal'_eq WeierstrassCurve.xYIdeal'_eq
 
@@ -1063,8 +1063,8 @@ namespace Point
 variable {R : Type} [Nontrivial R] [CommRing R] (E : EllipticCurve R)
 
 /-- An affine point on an elliptic curve `E` over `R`. -/
-def mk {x y : R} (h : E.Equation x y) : E.Point :=
-  WeierstrassCurve.Point.some <| E.Nonsingular h
+def mk {x y : R} (h : E.equation x y) : E.Point :=
+  WeierstrassCurve.Point.some <| E.nonsingular h
 #align elliptic_curve.point.mk EllipticCurve.Point.mk
 
 end Point
