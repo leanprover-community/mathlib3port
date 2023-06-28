@@ -34,25 +34,35 @@ namespace UpperHalfPlane
 instance : TopologicalSpace ℍ :=
   Subtype.topologicalSpace
 
+#print UpperHalfPlane.openEmbedding_coe /-
 theorem openEmbedding_coe : OpenEmbedding (coe : ℍ → ℂ) :=
   IsOpen.openEmbedding_subtype_val <| isOpen_lt continuous_const Complex.continuous_im
 #align upper_half_plane.open_embedding_coe UpperHalfPlane.openEmbedding_coe
+-/
 
+#print UpperHalfPlane.embedding_coe /-
 theorem embedding_coe : Embedding (coe : ℍ → ℂ) :=
   embedding_subtype_val
 #align upper_half_plane.embedding_coe UpperHalfPlane.embedding_coe
+-/
 
+#print UpperHalfPlane.continuous_coe /-
 theorem continuous_coe : Continuous (coe : ℍ → ℂ) :=
   embedding_coe.Continuous
 #align upper_half_plane.continuous_coe UpperHalfPlane.continuous_coe
+-/
 
+#print UpperHalfPlane.continuous_re /-
 theorem continuous_re : Continuous re :=
   Complex.continuous_re.comp continuous_coe
 #align upper_half_plane.continuous_re UpperHalfPlane.continuous_re
+-/
 
+#print UpperHalfPlane.continuous_im /-
 theorem continuous_im : Continuous im :=
   Complex.continuous_im.comp continuous_coe
 #align upper_half_plane.continuous_im UpperHalfPlane.continuous_im
+-/
 
 instance : TopologicalSpace.SecondCountableTopology ℍ :=
   TopologicalSpace.Subtype.secondCountableTopology _ _
