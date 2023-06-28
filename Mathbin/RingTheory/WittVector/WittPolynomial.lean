@@ -89,15 +89,15 @@ noncomputable def wittPolynomial (n : ℕ) : MvPolynomial ℕ R :=
 #align witt_polynomial wittPolynomial
 -/
 
-#print wittPolynomial_eq_sum_c_mul_x_pow /-
-theorem wittPolynomial_eq_sum_c_mul_x_pow (n : ℕ) :
+#print wittPolynomial_eq_sum_C_mul_X_pow /-
+theorem wittPolynomial_eq_sum_C_mul_X_pow (n : ℕ) :
     wittPolynomial p R n = ∑ i in range (n + 1), C (p ^ i : R) * X i ^ p ^ (n - i) :=
   by
   apply sum_congr rfl
   rintro i -
   rw [monomial_eq, Finsupp.prod_single_index]
   rw [pow_zero]
-#align witt_polynomial_eq_sum_C_mul_X_pow wittPolynomial_eq_sum_c_mul_x_pow
+#align witt_polynomial_eq_sum_C_mul_X_pow wittPolynomial_eq_sum_C_mul_X_pow
 -/
 
 /-! We set up notation locally to this file, to keep statements short and comprehensible.
@@ -157,7 +157,7 @@ theorem wittPolynomial_zero : wittPolynomial p R 0 = X 0 := by
 #print wittPolynomial_one /-
 @[simp]
 theorem wittPolynomial_one : wittPolynomial p R 1 = C ↑p * X 1 + X 0 ^ p := by
-  simp only [wittPolynomial_eq_sum_c_mul_x_pow, sum_range_succ_comm, range_one, sum_singleton,
+  simp only [wittPolynomial_eq_sum_C_mul_X_pow, sum_range_succ_comm, range_one, sum_singleton,
     one_mul, pow_one, C_1, pow_zero]
 #align witt_polynomial_one wittPolynomial_one
 -/
@@ -177,7 +177,7 @@ by expanding the `n`th Witt polynomial by `p`.
 theorem wittPolynomial_zMod_self (n : ℕ) :
     W_ (ZMod (p ^ (n + 1))) (n + 1) = expand p (W_ (ZMod (p ^ (n + 1))) n) :=
   by
-  simp only [wittPolynomial_eq_sum_c_mul_x_pow]
+  simp only [wittPolynomial_eq_sum_C_mul_X_pow]
   rw [sum_range_succ, ← Nat.cast_pow, CharP.cast_eq_zero (ZMod (p ^ (n + 1))) (p ^ (n + 1)), C_0,
     MulZeroClass.zero_mul, add_zero, AlgHom.map_sum, sum_congr rfl]
   intro k hk
@@ -335,7 +335,7 @@ theorem xInTermsOfW_aux [Invertible (p : R)] (n : ℕ) :
 theorem bind₁_xInTermsOfW_wittPolynomial [Invertible (p : R)] (k : ℕ) :
     bind₁ (xInTermsOfW p R) (W_ R k) = X k :=
   by
-  rw [wittPolynomial_eq_sum_c_mul_x_pow, AlgHom.map_sum]
+  rw [wittPolynomial_eq_sum_C_mul_X_pow, AlgHom.map_sum]
   simp only [AlgHom.map_pow, C_pow, AlgHom.map_mul, alg_hom_C]
   rw [sum_range_succ_comm, tsub_self, pow_zero, pow_one, bind₁_X_right, mul_comm, ← C_pow,
     xInTermsOfW_aux]
@@ -352,7 +352,7 @@ theorem bind₁_wittPolynomial_xInTermsOfW [Invertible (p : R)] (n : ℕ) :
   clear n; intro n H
   rw [xInTermsOfW_eq, AlgHom.map_mul, AlgHom.map_sub, bind₁_X_right, alg_hom_C, AlgHom.map_sum]
   have : W_ R n - ∑ i in range n, C (p ^ i : R) * X i ^ p ^ (n - i) = C (p ^ n : R) * X n := by
-    simp only [wittPolynomial_eq_sum_c_mul_x_pow, tsub_self, sum_range_succ_comm, pow_one,
+    simp only [wittPolynomial_eq_sum_C_mul_X_pow, tsub_self, sum_range_succ_comm, pow_one,
       add_sub_cancel, pow_zero]
   rw [sum_congr rfl, this]
   ·-- this is really slow for some reason

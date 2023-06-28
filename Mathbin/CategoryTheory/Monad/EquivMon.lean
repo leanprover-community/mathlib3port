@@ -41,6 +41,7 @@ namespace Monad
 
 attribute [local instance, local reducible] endofunctor_monoidal_category
 
+#print CategoryTheory.Monad.toMon /-
 /-- To every `Monad C` we associated a monoid object in `C ⥤ C`.-/
 @[simps]
 def toMon : Monad C → Mon_ (C ⥤ C) := fun M =>
@@ -53,9 +54,11 @@ def toMon : Monad C → Mon_ (C ⥤ C) := fun M =>
     -- `obviously` provides this, but slowly
     mul_assoc' := by ext; dsimp; simp [M.assoc] }
 #align category_theory.Monad.to_Mon CategoryTheory.Monad.toMon
+-/
 
 variable (C)
 
+#print CategoryTheory.Monad.monadToMon /-
 /-- Passing from `Monad C` to `Mon_ (C ⥤ C)` is functorial. -/
 @[simps]
 def monadToMon : Monad C ⥤ Mon_ (C ⥤ C) where
@@ -65,9 +68,11 @@ def monadToMon : Monad C ⥤ Mon_ (C ⥤ C) where
   -- `obviously` provides this, but slowly
   map_comp' := by intro X Y Z f g; rfl
 #align category_theory.Monad.Monad_to_Mon CategoryTheory.Monad.monadToMon
+-/
 
 variable {C}
 
+#print CategoryTheory.Monad.ofMon /-
 /-- To every monoid object in `C ⥤ C` we associate a `Monad C`. -/
 @[simps]
 def ofMon : Mon_ (C ⥤ C) → Monad C := fun M =>
@@ -78,9 +83,11 @@ def ofMon : Mon_ (C ⥤ C) → Monad C := fun M =>
     right_unit' := fun X => by rw [← M.one.hcomp_id_app, ← nat_trans.comp_app, M.one_mul]; rfl
     assoc' := fun X => by rw [← nat_trans.hcomp_id_app, ← nat_trans.comp_app]; simp }
 #align category_theory.Monad.of_Mon CategoryTheory.Monad.ofMon
+-/
 
 variable (C)
 
+#print CategoryTheory.Monad.monToMonad /-
 /-- Passing from `Mon_ (C ⥤ C)` to `Monad C` is functorial. -/
 @[simps]
 def monToMonad : Mon_ (C ⥤ C) ⥤ Monad C where
@@ -98,6 +105,7 @@ def monToMonad : Mon_ (C ⥤ C) ⥤ Monad C where
         simpa only [nat_trans.naturality, nat_trans.hcomp_app, assoc, nat_trans.comp_app,
           of_Mon_μ] }
 #align category_theory.Monad.Mon_to_Monad CategoryTheory.Monad.monToMonad
+-/
 
 namespace MonadMonEquiv
 
@@ -112,17 +120,17 @@ def counitIso : monToMonad C ⋙ monadToMon C ≅ 𝟭 _
   hom_inv_id' := by ext; simp
   -- `obviously` provides these, but slowly
   inv_hom_id' := by ext; simp
-#align category_theory.Monad.Monad_Mon_equiv.counit_iso CategoryTheory.Monad.MonadMonEquiv.counitIso
+#align category_theory.Monad.Monad_Mon_equiv.counit_iso CategoryTheory.Monad.monadMonEquiv.counitIso
 
 /-- Auxiliary definition for `Monad_Mon_equiv` -/
 @[simps]
 def unitIsoHom : 𝟭 _ ⟶ monadToMon C ⋙ monToMonad C where app _ := { app := fun _ => 𝟙 _ }
-#align category_theory.Monad.Monad_Mon_equiv.unit_iso_hom CategoryTheory.Monad.MonadMonEquiv.unitIsoHom
+#align category_theory.Monad.Monad_Mon_equiv.unit_iso_hom CategoryTheory.Monad.monadMonEquiv.unitIsoHom
 
 /-- Auxiliary definition for `Monad_Mon_equiv` -/
 @[simps]
 def unitIsoInv : monadToMon C ⋙ monToMonad C ⟶ 𝟭 _ where app _ := { app := fun _ => 𝟙 _ }
-#align category_theory.Monad.Monad_Mon_equiv.unit_iso_inv CategoryTheory.Monad.MonadMonEquiv.unitIsoInv
+#align category_theory.Monad.Monad_Mon_equiv.unit_iso_inv CategoryTheory.Monad.monadMonEquiv.unitIsoInv
 
 /-- Isomorphism of functors used in `Monad_Mon_equiv` -/
 @[simps]
@@ -133,12 +141,13 @@ def unitIso : 𝟭 _ ≅ monadToMon C ⋙ monToMonad C
   hom_inv_id' := by ext; simp
   -- `obviously` provides these, but slowly
   inv_hom_id' := by ext; simp
-#align category_theory.Monad.Monad_Mon_equiv.unit_iso CategoryTheory.Monad.MonadMonEquiv.unitIso
+#align category_theory.Monad.Monad_Mon_equiv.unit_iso CategoryTheory.Monad.monadMonEquiv.unitIso
 
 end MonadMonEquiv
 
 open MonadMonEquiv
 
+#print CategoryTheory.Monad.monadMonEquiv /-
 /-- Oh, monads are just monoids in the category of endofunctors (equivalence of categories). -/
 @[simps]
 def monadMonEquiv : Monad C ≌ Mon_ (C ⥤ C)
@@ -149,6 +158,7 @@ def monadMonEquiv : Monad C ≌ Mon_ (C ⥤ C)
   counitIso := counitIso
   functor_unitIso_comp' := by intro X; ext; dsimp; simp
 #align category_theory.Monad.Monad_Mon_equiv CategoryTheory.Monad.monadMonEquiv
+-/
 
 -- `obviously`, slowly
 -- Sanity check

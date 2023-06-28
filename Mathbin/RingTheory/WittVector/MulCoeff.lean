@@ -45,6 +45,7 @@ open Finset MvPolynomial
 
 open scoped BigOperators
 
+#print WittVector.wittPolyProd /-
 /-- ```
 (∑ i in range n, (y.coeff i)^(p^(n-i)) * p^i.val) *
   (∑ i in range n, (y.coeff i)^(p^(n-i)) * p^i.val)
@@ -54,8 +55,10 @@ def wittPolyProd (n : ℕ) : MvPolynomial (Fin 2 × ℕ) ℤ :=
   rename (Prod.mk (0 : Fin 2)) (wittPolynomial p ℤ n) *
     rename (Prod.mk (1 : Fin 2)) (wittPolynomial p ℤ n)
 #align witt_vector.witt_poly_prod WittVector.wittPolyProd
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print WittVector.wittPolyProd_vars /-
 theorem wittPolyProd_vars (n : ℕ) : (wittPolyProd p n).vars ⊆ univ ×ˢ range (n + 1) :=
   by
   rw [witt_poly_prod]
@@ -64,13 +67,17 @@ theorem wittPolyProd_vars (n : ℕ) : (wittPolyProd p n).vars ⊆ univ ×ˢ rang
     · refine' subset.trans (vars_rename _ _) _
       simp [wittPolynomial_vars, image_subset_iff]
 #align witt_vector.witt_poly_prod_vars WittVector.wittPolyProd_vars
+-/
 
+#print WittVector.wittPolyProdRemainder /-
 /-- The "remainder term" of `witt_vector.witt_poly_prod`. See `mul_poly_of_interest_aux2`. -/
 def wittPolyProdRemainder (n : ℕ) : MvPolynomial (Fin 2 × ℕ) ℤ :=
   ∑ i in range n, p ^ i * wittMul p i ^ p ^ (n - i)
 #align witt_vector.witt_poly_prod_remainder WittVector.wittPolyProdRemainder
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print WittVector.wittPolyProdRemainder_vars /-
 theorem wittPolyProdRemainder_vars (n : ℕ) : (wittPolyProdRemainder p n).vars ⊆ univ ×ˢ range n :=
   by
   rw [witt_poly_prod_remainder]
@@ -89,7 +96,9 @@ theorem wittPolyProdRemainder_vars (n : ℕ) : (wittPolyProdRemainder p n).vars 
     simp only [mem_range, range_subset] at hx ⊢
     exact hx
 #align witt_vector.witt_poly_prod_remainder_vars WittVector.wittPolyProdRemainder_vars
+-/
 
+#print WittVector.remainder /-
 /-- `remainder p n` represents the remainder term from `mul_poly_of_interest_aux3`.
 `witt_poly_prod p (n+1)` will have variables up to `n+1`,
 but `remainder` will only have variables up to `n`.
@@ -100,8 +109,10 @@ def remainder (n : ℕ) : MvPolynomial (Fin 2 × ℕ) ℤ :=
     ∑ x : ℕ in range (n + 1),
       (rename (Prod.mk 1)) ((monomial (Finsupp.single x (p ^ (n + 1 - x)))) (↑p ^ x))
 #align witt_vector.remainder WittVector.remainder
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print WittVector.remainder_vars /-
 theorem remainder_vars (n : ℕ) : (remainder p n).vars ⊆ univ ×ˢ range (n + 1) :=
   by
   rw [remainder]
@@ -116,15 +127,19 @@ theorem remainder_vars (n : ℕ) : (remainder p n).vars ⊆ univ ×ˢ range (n +
       · apply pow_ne_zero
         exact_mod_cast hp.out.ne_zero
 #align witt_vector.remainder_vars WittVector.remainder_vars
+-/
 
+#print WittVector.polyOfInterest /-
 /-- This is the polynomial whose degree we want to get a handle on. -/
 def polyOfInterest (n : ℕ) : MvPolynomial (Fin 2 × ℕ) ℤ :=
   wittMul p (n + 1) + p ^ (n + 1) * X (0, n + 1) * X (1, n + 1) -
       X (0, n + 1) * rename (Prod.mk (1 : Fin 2)) (wittPolynomial p ℤ (n + 1)) -
     X (1, n + 1) * rename (Prod.mk (0 : Fin 2)) (wittPolynomial p ℤ (n + 1))
 #align witt_vector.poly_of_interest WittVector.polyOfInterest
+-/
 
-theorem mul_poly_of_interest_aux1 (n : ℕ) :
+#print WittVector.mul_polyOfInterest_aux1 /-
+theorem mul_polyOfInterest_aux1 (n : ℕ) :
     (∑ i in range (n + 1), p ^ i * wittMul p i ^ p ^ (n - i) : MvPolynomial (Fin 2 × ℕ) ℤ) =
       wittPolyProd p n :=
   by
@@ -142,18 +157,22 @@ theorem mul_poly_of_interest_aux1 (n : ℕ) :
     simp only [bind₁_monomial, hsupp, Int.cast_ofNat, prod_singleton, eq_intCast,
       Finsupp.single_eq_same, C_pow, mul_eq_mul_left_iff, true_or_iff, eq_self_iff_true]
   · simp only [map_mul, bind₁_X_right]
-#align witt_vector.mul_poly_of_interest_aux1 WittVector.mul_poly_of_interest_aux1
+#align witt_vector.mul_poly_of_interest_aux1 WittVector.mul_polyOfInterest_aux1
+-/
 
-theorem mul_poly_of_interest_aux2 (n : ℕ) :
+#print WittVector.mul_polyOfInterest_aux2 /-
+theorem mul_polyOfInterest_aux2 (n : ℕ) :
     (p ^ n * wittMul p n : MvPolynomial (Fin 2 × ℕ) ℤ) + wittPolyProdRemainder p n =
       wittPolyProd p n :=
   by
   convert mul_poly_of_interest_aux1 p n
   rw [sum_range_succ, add_comm, Nat.sub_self, pow_zero, pow_one]
   rfl
-#align witt_vector.mul_poly_of_interest_aux2 WittVector.mul_poly_of_interest_aux2
+#align witt_vector.mul_poly_of_interest_aux2 WittVector.mul_polyOfInterest_aux2
+-/
 
-theorem mul_poly_of_interest_aux3 (n : ℕ) :
+#print WittVector.mul_polyOfInterest_aux3 /-
+theorem mul_polyOfInterest_aux3 (n : ℕ) :
     wittPolyProd p (n + 1) =
       -(p ^ (n + 1) * X (0, n + 1)) * (p ^ (n + 1) * X (1, n + 1)) +
             p ^ (n + 1) * X (0, n + 1) * rename (Prod.mk (1 : Fin 2)) (wittPolynomial p ℤ (n + 1)) +
@@ -180,9 +199,11 @@ theorem mul_poly_of_interest_aux3 (n : ℕ) :
   simp only [rename_monomial, ← C_mul_X_pow_eq_monomial, map_mul, rename_C, pow_one, rename_X]
   simp only [mvpz, Int.cast_ofNat, map_pow, eq_intCast, rename_X, pow_one, tsub_self, pow_zero]
   ring1
-#align witt_vector.mul_poly_of_interest_aux3 WittVector.mul_poly_of_interest_aux3
+#align witt_vector.mul_poly_of_interest_aux3 WittVector.mul_polyOfInterest_aux3
+-/
 
-theorem mul_poly_of_interest_aux4 (n : ℕ) :
+#print WittVector.mul_polyOfInterest_aux4 /-
+theorem mul_polyOfInterest_aux4 (n : ℕ) :
     (p ^ (n + 1) * wittMul p (n + 1) : MvPolynomial (Fin 2 × ℕ) ℤ) =
       -(p ^ (n + 1) * X (0, n + 1)) * (p ^ (n + 1) * X (1, n + 1)) +
             p ^ (n + 1) * X (0, n + 1) * rename (Prod.mk (1 : Fin 2)) (wittPolynomial p ℤ (n + 1)) +
@@ -191,8 +212,10 @@ theorem mul_poly_of_interest_aux4 (n : ℕ) :
   by
   rw [← add_sub_assoc, eq_sub_iff_add_eq, mul_poly_of_interest_aux2]
   exact mul_poly_of_interest_aux3 _ _
-#align witt_vector.mul_poly_of_interest_aux4 WittVector.mul_poly_of_interest_aux4
+#align witt_vector.mul_poly_of_interest_aux4 WittVector.mul_polyOfInterest_aux4
+-/
 
+#print WittVector.mul_polyOfInterest_aux5 /-
 theorem mul_polyOfInterest_aux5 (n : ℕ) :
     (p ^ (n + 1) : MvPolynomial (Fin 2 × ℕ) ℤ) * polyOfInterest p n =
       remainder p n - wittPolyProdRemainder p (n + 1) :=
@@ -201,8 +224,10 @@ theorem mul_polyOfInterest_aux5 (n : ℕ) :
   rw [mul_poly_of_interest_aux4 p n]
   ring
 #align witt_vector.mul_poly_of_interest_aux5 WittVector.mul_polyOfInterest_aux5
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print WittVector.mul_polyOfInterest_vars /-
 theorem mul_polyOfInterest_vars (n : ℕ) :
     ((p ^ (n + 1) : MvPolynomial (Fin 2 × ℕ) ℤ) * polyOfInterest p n).vars ⊆
       univ ×ˢ range (n + 1) :=
@@ -213,7 +238,9 @@ theorem mul_polyOfInterest_vars (n : ℕ) :
   · apply remainder_vars
   · apply witt_poly_prod_remainder_vars
 #align witt_vector.mul_poly_of_interest_vars WittVector.mul_polyOfInterest_vars
+-/
 
+#print WittVector.polyOfInterest_vars_eq /-
 theorem polyOfInterest_vars_eq (n : ℕ) :
     (polyOfInterest p n).vars =
       ((p ^ (n + 1) : MvPolynomial (Fin 2 × ℕ) ℤ) *
@@ -227,12 +254,16 @@ theorem polyOfInterest_vars_eq (n : ℕ) :
   apply pow_ne_zero
   exact_mod_cast hp.out.ne_zero
 #align witt_vector.poly_of_interest_vars_eq WittVector.polyOfInterest_vars_eq
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print WittVector.polyOfInterest_vars /-
 theorem polyOfInterest_vars (n : ℕ) : (polyOfInterest p n).vars ⊆ univ ×ˢ range (n + 1) := by
   rw [poly_of_interest_vars_eq] <;> apply mul_poly_of_interest_vars
 #align witt_vector.poly_of_interest_vars WittVector.polyOfInterest_vars
+-/
 
+#print WittVector.peval_polyOfInterest /-
 theorem peval_polyOfInterest (n : ℕ) (x y : 𝕎 k) :
     peval (polyOfInterest p n) ![fun i => x.coeff i, fun i => y.coeff i] =
       (x * y).coeff (n + 1) + p ^ (n + 1) * x.coeff (n + 1) * y.coeff (n + 1) -
@@ -246,14 +277,16 @@ theorem peval_polyOfInterest (n : ℕ) (x y : 𝕎 k) :
   have mvpz : (p : MvPolynomial ℕ ℤ) = MvPolynomial.C ↑p := by rw [eq_intCast, Int.cast_ofNat]
   have : ∀ (f : ℤ →+* k) (g : ℕ → k), eval₂ f g p = f p := by intros;
     rw [mvpz, MvPolynomial.eval₂_C]
-  simp [wittPolynomial_eq_sum_c_mul_x_pow, aeval, eval₂_rename, this, mul_coeff, peval, map_natCast,
+  simp [wittPolynomial_eq_sum_C_mul_X_pow, aeval, eval₂_rename, this, mul_coeff, peval, map_natCast,
     map_add, map_pow, map_mul]
 #align witt_vector.peval_poly_of_interest WittVector.peval_polyOfInterest
+-/
 
 variable [CharP k p]
 
+#print WittVector.peval_polyOfInterest' /-
 /-- The characteristic `p` version of `peval_poly_of_interest` -/
-theorem peval_poly_of_interest' (n : ℕ) (x y : 𝕎 k) :
+theorem peval_polyOfInterest' (n : ℕ) (x y : 𝕎 k) :
     peval (polyOfInterest p n) ![fun i => x.coeff i, fun i => y.coeff i] =
       (x * y).coeff (n + 1) - y.coeff (n + 1) * x.coeff 0 ^ p ^ (n + 1) -
         x.coeff (n + 1) * y.coeff 0 ^ p ^ (n + 1) :=
@@ -273,10 +306,12 @@ theorem peval_poly_of_interest' (n : ℕ) (x y : 𝕎 k) :
     · intro j _ hj
       simp [zero_pow (zero_lt_iff.mpr hj)]
   congr <;> apply sum_zero_pow_mul_pow_p
-#align witt_vector.peval_poly_of_interest' WittVector.peval_poly_of_interest'
+#align witt_vector.peval_poly_of_interest' WittVector.peval_polyOfInterest'
+-/
 
 variable (k)
 
+#print WittVector.nth_mul_coeff' /-
 theorem nth_mul_coeff' (n : ℕ) :
     ∃ f : TruncatedWittVector p (n + 1) k → TruncatedWittVector p (n + 1) k → k,
       ∀ x y : 𝕎 k,
@@ -311,7 +346,9 @@ theorem nth_mul_coeff' (n : ℕ) :
   fin_cases i <;>-- surely this case split is not necessary
     · simpa only using x.coeff_truncate_fun ⟨m, ha'⟩
 #align witt_vector.nth_mul_coeff' WittVector.nth_mul_coeff'
+-/
 
+#print WittVector.nth_mul_coeff /-
 theorem nth_mul_coeff (n : ℕ) :
     ∃ f : TruncatedWittVector p (n + 1) k → TruncatedWittVector p (n + 1) k → k,
       ∀ x y : 𝕎 k,
@@ -325,22 +362,27 @@ theorem nth_mul_coeff (n : ℕ) :
   rw [hf x y]
   ring
 #align witt_vector.nth_mul_coeff WittVector.nth_mul_coeff
+-/
 
 variable {k}
 
+#print WittVector.nthRemainder /-
 /--
 Produces the "remainder function" of the `n+1`st coefficient, which does not depend on the `n+1`st
 coefficients of the inputs. -/
 def nthRemainder (n : ℕ) : (Fin (n + 1) → k) → (Fin (n + 1) → k) → k :=
   Classical.choose (nth_mul_coeff p k n)
 #align witt_vector.nth_remainder WittVector.nthRemainder
+-/
 
+#print WittVector.nthRemainder_spec /-
 theorem nthRemainder_spec (n : ℕ) (x y : 𝕎 k) :
     (x * y).coeff (n + 1) =
       x.coeff (n + 1) * y.coeff 0 ^ p ^ (n + 1) + y.coeff (n + 1) * x.coeff 0 ^ p ^ (n + 1) +
         nthRemainder p n (truncateFun (n + 1) x) (truncateFun (n + 1) y) :=
   Classical.choose_spec (nth_mul_coeff p k n) _ _
 #align witt_vector.nth_remainder_spec WittVector.nthRemainder_spec
+-/
 
 end WittVector
 
