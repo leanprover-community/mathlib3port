@@ -36,6 +36,7 @@ local infixl:0 " ≈ " => PGame.Equiv
 
 namespace PGame
 
+#print PGame.powHalf /-
 /-- For a natural number `n`, the pre-game `pow_half (n + 1)` is recursively defined as
 `{0 | pow_half n}`. These are the explicit expressions of powers of `1 / 2`. By definition, we have
 `pow_half 0 = 1` and `pow_half 1 ≈ 1 / 2` and we prove later on that
@@ -44,49 +45,71 @@ def powHalf : ℕ → PGame
   | 0 => 1
   | n + 1 => ⟨PUnit, PUnit, 0, fun _ => pow_half n⟩
 #align pgame.pow_half PGame.powHalf
+-/
 
+#print PGame.powHalf_zero /-
 @[simp]
 theorem powHalf_zero : powHalf 0 = 1 :=
   rfl
 #align pgame.pow_half_zero PGame.powHalf_zero
+-/
 
+#print PGame.powHalf_leftMoves /-
 theorem powHalf_leftMoves (n) : (powHalf n).LeftMoves = PUnit := by cases n <;> rfl
 #align pgame.pow_half_left_moves PGame.powHalf_leftMoves
+-/
 
+#print PGame.powHalf_zero_rightMoves /-
 theorem powHalf_zero_rightMoves : (powHalf 0).RightMoves = PEmpty :=
   rfl
 #align pgame.pow_half_zero_right_moves PGame.powHalf_zero_rightMoves
+-/
 
+#print PGame.powHalf_succ_rightMoves /-
 theorem powHalf_succ_rightMoves (n) : (powHalf (n + 1)).RightMoves = PUnit :=
   rfl
 #align pgame.pow_half_succ_right_moves PGame.powHalf_succ_rightMoves
+-/
 
+#print PGame.powHalf_moveLeft /-
 @[simp]
 theorem powHalf_moveLeft (n i) : (powHalf n).moveLeft i = 0 := by cases n <;> cases i <;> rfl
 #align pgame.pow_half_move_left PGame.powHalf_moveLeft
+-/
 
+#print PGame.powHalf_succ_moveRight /-
 @[simp]
 theorem powHalf_succ_moveRight (n i) : (powHalf (n + 1)).moveRight i = powHalf n :=
   rfl
 #align pgame.pow_half_succ_move_right PGame.powHalf_succ_moveRight
+-/
 
+#print PGame.uniquePowHalfLeftMoves /-
 instance uniquePowHalfLeftMoves (n) : Unique (powHalf n).LeftMoves := by
   cases n <;> exact PUnit.unique
 #align pgame.unique_pow_half_left_moves PGame.uniquePowHalfLeftMoves
+-/
 
+#print PGame.isEmpty_powHalf_zero_rightMoves /-
 instance isEmpty_powHalf_zero_rightMoves : IsEmpty (powHalf 0).RightMoves :=
   PEmpty.isEmpty
 #align pgame.is_empty_pow_half_zero_right_moves PGame.isEmpty_powHalf_zero_rightMoves
+-/
 
+#print PGame.uniquePowHalfSuccRightMoves /-
 instance uniquePowHalfSuccRightMoves (n) : Unique (powHalf (n + 1)).RightMoves :=
   PUnit.unique
 #align pgame.unique_pow_half_succ_right_moves PGame.uniquePowHalfSuccRightMoves
+-/
 
+#print PGame.birthday_half /-
 @[simp]
 theorem birthday_half : birthday (powHalf 1) = 2 := by rw [birthday_def]; dsimp;
   simpa using Order.le_succ (1 : Ordinal)
 #align pgame.birthday_half PGame.birthday_half
+-/
 
+#print PGame.numeric_powHalf /-
 /-- For all natural numbers `n`, the pre-games `pow_half n` are numeric. -/
 theorem numeric_powHalf (n) : (powHalf n).Numeric :=
   by
@@ -96,34 +119,48 @@ theorem numeric_powHalf (n) : (powHalf n).Numeric :=
     · simpa using hn.move_left_lt default
     · exact ⟨fun _ => numeric_zero, fun _ => hn⟩
 #align pgame.numeric_pow_half PGame.numeric_powHalf
+-/
 
+#print PGame.powHalf_succ_lt_powHalf /-
 theorem powHalf_succ_lt_powHalf (n : ℕ) : powHalf (n + 1) < powHalf n :=
   (numeric_powHalf (n + 1)).lt_moveRight default
 #align pgame.pow_half_succ_lt_pow_half PGame.powHalf_succ_lt_powHalf
+-/
 
+#print PGame.powHalf_succ_le_powHalf /-
 theorem powHalf_succ_le_powHalf (n : ℕ) : powHalf (n + 1) ≤ powHalf n :=
   (powHalf_succ_lt_powHalf n).le
 #align pgame.pow_half_succ_le_pow_half PGame.powHalf_succ_le_powHalf
+-/
 
+#print PGame.powHalf_le_one /-
 theorem powHalf_le_one (n : ℕ) : powHalf n ≤ 1 :=
   by
   induction' n with n hn
   · exact le_rfl
   · exact (pow_half_succ_le_pow_half n).trans hn
 #align pgame.pow_half_le_one PGame.powHalf_le_one
+-/
 
+#print PGame.powHalf_succ_lt_one /-
 theorem powHalf_succ_lt_one (n : ℕ) : powHalf (n + 1) < 1 :=
   (powHalf_succ_lt_powHalf n).trans_le <| powHalf_le_one n
 #align pgame.pow_half_succ_lt_one PGame.powHalf_succ_lt_one
+-/
 
+#print PGame.powHalf_pos /-
 theorem powHalf_pos (n : ℕ) : 0 < powHalf n := by
   rw [← lf_iff_lt numeric_zero (numeric_pow_half n), zero_lf_le]; simp
 #align pgame.pow_half_pos PGame.powHalf_pos
+-/
 
+#print PGame.zero_le_powHalf /-
 theorem zero_le_powHalf (n : ℕ) : 0 ≤ powHalf n :=
   (powHalf_pos n).le
 #align pgame.zero_le_pow_half PGame.zero_le_powHalf
+-/
 
+#print PGame.add_powHalf_succ_self_eq_powHalf /-
 theorem add_powHalf_succ_self_eq_powHalf (n) : powHalf (n + 1) + powHalf (n + 1) ≈ powHalf n :=
   by
   induction' n using Nat.strong_induction_on with n hn
@@ -161,10 +198,13 @@ theorem add_powHalf_succ_self_eq_powHalf (n) : powHalf (n + 1) + powHalf (n + 1)
           pow_half n ≈ 0 + pow_half n := (zero_add_equiv _).symm
           _ < pow_half n.succ + pow_half n := add_lt_add_right (pow_half_pos _) _
 #align pgame.add_pow_half_succ_self_eq_pow_half PGame.add_powHalf_succ_self_eq_powHalf
+-/
 
+#print PGame.half_add_half_equiv_one /-
 theorem half_add_half_equiv_one : powHalf 1 + powHalf 1 ≈ 1 :=
   add_powHalf_succ_self_eq_powHalf 0
 #align pgame.half_add_half_equiv_one PGame.half_add_half_equiv_one
+-/
 
 end PGame
 
@@ -172,21 +212,28 @@ namespace Surreal
 
 open PGame
 
+#print Surreal.powHalf /-
 /-- Powers of the surreal number `half`. -/
 def powHalf (n : ℕ) : Surreal :=
   ⟦⟨PGame.powHalf n, PGame.numeric_powHalf n⟩⟧
 #align surreal.pow_half Surreal.powHalf
+-/
 
+#print Surreal.powHalf_zero /-
 @[simp]
 theorem powHalf_zero : powHalf 0 = 1 :=
   rfl
 #align surreal.pow_half_zero Surreal.powHalf_zero
+-/
 
+#print Surreal.double_powHalf_succ_eq_powHalf /-
 @[simp]
 theorem double_powHalf_succ_eq_powHalf (n : ℕ) : 2 • powHalf n.succ = powHalf n := by
   rw [two_nsmul]; exact Quotient.sound (PGame.add_powHalf_succ_self_eq_powHalf n)
 #align surreal.double_pow_half_succ_eq_pow_half Surreal.double_powHalf_succ_eq_powHalf
+-/
 
+#print Surreal.nsmul_pow_two_powHalf /-
 @[simp]
 theorem nsmul_pow_two_powHalf (n : ℕ) : 2 ^ n • powHalf n = 1 :=
   by
@@ -196,9 +243,11 @@ theorem nsmul_pow_two_powHalf (n : ℕ) : 2 ^ n • powHalf n = 1 :=
     rw [← hn, ← double_pow_half_succ_eq_pow_half n, smul_smul (2 ^ n) 2 (pow_half n.succ), mul_comm,
       pow_succ]
 #align surreal.nsmul_pow_two_pow_half Surreal.nsmul_pow_two_powHalf
+-/
 
+#print Surreal.nsmul_pow_two_powHalf' /-
 @[simp]
-theorem nsmul_pow_two_pow_half' (n k : ℕ) : 2 ^ n • powHalf (n + k) = powHalf k :=
+theorem nsmul_pow_two_powHalf' (n k : ℕ) : 2 ^ n • powHalf (n + k) = powHalf k :=
   by
   induction' k with k hk
   ·
@@ -207,8 +256,10 @@ theorem nsmul_pow_two_pow_half' (n k : ℕ) : 2 ^ n • powHalf (n + k) = powHal
   · rw [← double_pow_half_succ_eq_pow_half (n + k), ← double_pow_half_succ_eq_pow_half k,
       smul_algebra_smul_comm] at hk 
     rwa [← zsmul_eq_zsmul_iff' two_ne_zero]
-#align surreal.nsmul_pow_two_pow_half' Surreal.nsmul_pow_two_pow_half'
+#align surreal.nsmul_pow_two_pow_half' Surreal.nsmul_pow_two_powHalf'
+-/
 
+#print Surreal.zsmul_pow_two_powHalf /-
 theorem zsmul_pow_two_powHalf (m : ℤ) (n k : ℕ) : (m * 2 ^ n) • powHalf (n + k) = m • powHalf k :=
   by
   rw [mul_zsmul]
@@ -216,7 +267,9 @@ theorem zsmul_pow_two_powHalf (m : ℤ) (n k : ℕ) : (m * 2 ^ n) • powHalf (n
   norm_cast
   exact nsmul_pow_two_pow_half' n k
 #align surreal.zsmul_pow_two_pow_half Surreal.zsmul_pow_two_powHalf
+-/
 
+#print Surreal.dyadic_aux /-
 theorem dyadic_aux {m₁ m₂ : ℤ} {y₁ y₂ : ℕ} (h₂ : m₁ * 2 ^ y₁ = m₂ * 2 ^ y₂) :
     m₁ • powHalf y₂ = m₂ • powHalf y₁ := by
   revert m₁ m₂
@@ -230,7 +283,9 @@ theorem dyadic_aux {m₁ m₂ : ℤ} {y₁ y₂ : ℕ} (h₂ : m₁ * 2 ^ y₁ =
   · have := Nat.one_le_pow y₁ 2 Nat.succ_pos'
     norm_cast at h₂ ; linarith
 #align surreal.dyadic_aux Surreal.dyadic_aux
+-/
 
+#print Surreal.dyadicMap /-
 /-- The additive monoid morphism `dyadic_map` sends ⟦⟨m, 2^n⟩⟧ to m • half ^ n. -/
 def dyadicMap : Localization.Away (2 : ℤ) →+ Surreal
     where
@@ -269,25 +324,32 @@ def dyadicMap : Localization.Away (2 : ℤ) →+ Surreal
         _ = c • pow_half d' + a • pow_half b' := by simp only [zsmul_pow_two_pow_half]
         _ = a • pow_half b' + c • pow_half d' := add_comm _ _
 #align surreal.dyadic_map Surreal.dyadicMap
+-/
 
+#print Surreal.dyadicMap_apply /-
 @[simp]
 theorem dyadicMap_apply (m : ℤ) (p : Submonoid.powers (2 : ℤ)) :
     dyadicMap (IsLocalization.mk' (Localization (Submonoid.powers 2)) m p) =
       m • powHalf (Submonoid.log p) :=
   by rw [← Localization.mk_eq_mk']; rfl
 #align surreal.dyadic_map_apply Surreal.dyadicMap_apply
+-/
 
+#print Surreal.dyadicMap_apply_pow /-
 @[simp]
 theorem dyadicMap_apply_pow (m : ℤ) (n : ℕ) :
     dyadicMap (IsLocalization.mk' (Localization (Submonoid.powers 2)) m (Submonoid.pow 2 n)) =
       m • powHalf n :=
   by rw [dyadic_map_apply, @Submonoid.log_pow_int_eq_self 2 one_lt_two]
 #align surreal.dyadic_map_apply_pow Surreal.dyadicMap_apply_pow
+-/
 
+#print Surreal.dyadic /-
 /-- We define dyadic surreals as the range of the map `dyadic_map`. -/
 def dyadic : Set Surreal :=
   Set.range dyadicMap
 #align surreal.dyadic Surreal.dyadic
+-/
 
 -- We conclude with some ideas for further work on surreals; these would make fun projects.
 -- TODO show that the map from dyadic rationals to surreals is injective
