@@ -117,10 +117,10 @@ noncomputable def specPunitIsInitial : IsInitial (Scheme.Spec.obj (op <| CommRin
   emptyIsInitial.of_iso (asIso <| emptyIsInitial.to _)
 #align algebraic_geometry.Spec_punit_is_initial AlgebraicGeometry.specPunitIsInitial
 
-instance (priority := 100) isAffineOfIsEmpty {X : Scheme} [IsEmpty X.carrier] : IsAffine X :=
+instance (priority := 100) isAffine_of_isEmpty {X : Scheme} [IsEmpty X.carrier] : IsAffine X :=
   isAffineOfIso
     (inv (emptyIsInitial.to X) ≫ emptyIsInitial.to (Scheme.Spec.obj (op <| CommRingCat.of PUnit)))
-#align algebraic_geometry.is_affine_of_is_empty AlgebraicGeometry.isAffineOfIsEmpty
+#align algebraic_geometry.is_affine_of_is_empty AlgebraicGeometry.isAffine_of_isEmpty
 
 instance : HasInitial Scheme :=
   hasInitial_of_unique Scheme.empty
@@ -129,12 +129,12 @@ instance initial_isEmpty : IsEmpty (⊥_ Scheme).carrier :=
   ⟨fun x => ((initial.to Scheme.empty : _).1.base x).elim⟩
 #align algebraic_geometry.initial_is_empty AlgebraicGeometry.initial_isEmpty
 
-theorem botIsAffineOpen (X : Scheme) : IsAffineOpen (⊥ : Opens X.carrier) :=
+theorem bot_isAffineOpen (X : Scheme) : IsAffineOpen (⊥ : Opens X.carrier) :=
   by
   convert range_is_affine_open_of_open_immersion (initial.to X)
   ext
   exact (false_iff_iff _).mpr fun x => isEmptyElim (show (⊥_ Scheme).carrier from x.some)
-#align algebraic_geometry.bot_is_affine_open AlgebraicGeometry.botIsAffineOpen
+#align algebraic_geometry.bot_is_affine_open AlgebraicGeometry.bot_isAffineOpen
 
 instance : HasStrictInitialObjects Scheme :=
   hasStrictInitialObjects_of_initial_is_strict fun A f => by infer_instance
