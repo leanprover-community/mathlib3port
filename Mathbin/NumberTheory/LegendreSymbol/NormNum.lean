@@ -54,10 +54,12 @@ section Lemmas
 
 namespace NormNum
 
+#print Mathlib.Meta.NormNum.jacobiSymNat /-
 /-- The Jacobi symbol restricted to natural numbers in both arguments. -/
-def jacobiSymNat (a b : ℕ) : ℤ :=
+def Mathlib.Meta.NormNum.jacobiSymNat (a b : ℕ) : ℤ :=
   jacobiSym a b
-#align norm_num.jacobi_sym_nat NormNum.jacobiSymNat
+#align norm_num.jacobi_sym_nat Mathlib.Meta.NormNum.jacobiSymNat
+-/
 
 /-!
 ### API Lemmas
@@ -67,60 +69,93 @@ arguments, in a form that is suitable for constructing proofs in `norm_num`.
 -/
 
 
+#print Mathlib.Meta.NormNum.jacobiSymNat.zero_right /-
 /-- Base cases: `b = 0`, `b = 1`, `a = 0`, `a = 1`. -/
-theorem jacobiSymNat.zero_right (a : ℕ) : jacobiSymNat a 0 = 1 := by
-  rwa [jacobi_sym_nat, jacobiSym.zero_right]
-#align norm_num.jacobi_sym_nat.zero_right NormNum.jacobiSymNat.zero_right
+theorem Mathlib.Meta.NormNum.jacobiSymNat.zero_right (a : ℕ) :
+    Mathlib.Meta.NormNum.jacobiSymNat a 0 = 1 := by rwa [jacobi_sym_nat, jacobiSym.zero_right]
+#align norm_num.jacobi_sym_nat.zero_right Mathlib.Meta.NormNum.jacobiSymNat.zero_right
+-/
 
-theorem jacobiSymNat.one_right (a : ℕ) : jacobiSymNat a 1 = 1 := by
-  rwa [jacobi_sym_nat, jacobiSym.one_right]
-#align norm_num.jacobi_sym_nat.one_right NormNum.jacobiSymNat.one_right
+#print Mathlib.Meta.NormNum.jacobiSymNat.one_right /-
+theorem Mathlib.Meta.NormNum.jacobiSymNat.one_right (a : ℕ) :
+    Mathlib.Meta.NormNum.jacobiSymNat a 1 = 1 := by rwa [jacobi_sym_nat, jacobiSym.one_right]
+#align norm_num.jacobi_sym_nat.one_right Mathlib.Meta.NormNum.jacobiSymNat.one_right
+-/
 
-theorem jacobiSymNat.zero_left_even (b : ℕ) (hb : b ≠ 0) : jacobiSymNat 0 (bit0 b) = 0 := by
+#print Mathlib.Meta.NormNum.jacobiSymNat.zero_left /-
+theorem Mathlib.Meta.NormNum.jacobiSymNat.zero_left (b : ℕ) (hb : b ≠ 0) :
+    Mathlib.Meta.NormNum.jacobiSymNat 0 (bit0 b) = 0 := by
   rw [jacobi_sym_nat, Nat.cast_zero, jacobiSym.zero_left (Nat.one_lt_bit0 hb)]
-#align norm_num.jacobi_sym_nat.zero_left_even NormNum.jacobiSymNat.zero_left_even
+#align norm_num.jacobi_sym_nat.zero_left_even Mathlib.Meta.NormNum.jacobiSymNat.zero_left
+-/
 
-theorem jacobiSymNat.zero_left_odd (b : ℕ) (hb : b ≠ 0) : jacobiSymNat 0 (bit1 b) = 0 := by
+/- warning: norm_num.jacobi_sym_nat.zero_left_odd clashes with norm_num.jacobi_sym_nat.zero_left_even -> Mathlib.Meta.NormNum.jacobiSymNat.zero_left
+Case conversion may be inaccurate. Consider using '#align norm_num.jacobi_sym_nat.zero_left_odd Mathlib.Meta.NormNum.jacobiSymNat.zero_leftₓ'. -/
+#print Mathlib.Meta.NormNum.jacobiSymNat.zero_left /-
+theorem Mathlib.Meta.NormNum.jacobiSymNat.zero_left (b : ℕ) (hb : b ≠ 0) :
+    Mathlib.Meta.NormNum.jacobiSymNat 0 (bit1 b) = 0 := by
   rw [jacobi_sym_nat, Nat.cast_zero, jacobiSym.zero_left (Nat.one_lt_bit1 hb)]
-#align norm_num.jacobi_sym_nat.zero_left_odd NormNum.jacobiSymNat.zero_left_odd
+#align norm_num.jacobi_sym_nat.zero_left_odd Mathlib.Meta.NormNum.jacobiSymNat.zero_left
+-/
 
-theorem jacobiSymNat.one_left_even (b : ℕ) : jacobiSymNat 1 (bit0 b) = 1 := by
+#print Mathlib.Meta.NormNum.jacobiSymNat.one_left /-
+theorem Mathlib.Meta.NormNum.jacobiSymNat.one_left (b : ℕ) :
+    Mathlib.Meta.NormNum.jacobiSymNat 1 (bit0 b) = 1 := by
   rw [jacobi_sym_nat, Nat.cast_one, jacobiSym.one_left]
-#align norm_num.jacobi_sym_nat.one_left_even NormNum.jacobiSymNat.one_left_even
+#align norm_num.jacobi_sym_nat.one_left_even Mathlib.Meta.NormNum.jacobiSymNat.one_left
+-/
 
-theorem jacobiSymNat.one_left_odd (b : ℕ) : jacobiSymNat 1 (bit1 b) = 1 := by
+/- warning: norm_num.jacobi_sym_nat.one_left_odd clashes with norm_num.jacobi_sym_nat.one_left_even -> Mathlib.Meta.NormNum.jacobiSymNat.one_left
+Case conversion may be inaccurate. Consider using '#align norm_num.jacobi_sym_nat.one_left_odd Mathlib.Meta.NormNum.jacobiSymNat.one_leftₓ'. -/
+#print Mathlib.Meta.NormNum.jacobiSymNat.one_left /-
+theorem Mathlib.Meta.NormNum.jacobiSymNat.one_left (b : ℕ) :
+    Mathlib.Meta.NormNum.jacobiSymNat 1 (bit1 b) = 1 := by
   rw [jacobi_sym_nat, Nat.cast_one, jacobiSym.one_left]
-#align norm_num.jacobi_sym_nat.one_left_odd NormNum.jacobiSymNat.one_left_odd
+#align norm_num.jacobi_sym_nat.one_left_odd Mathlib.Meta.NormNum.jacobiSymNat.one_left
+-/
 
+#print Mathlib.Meta.NormNum.LegendreSym.to_jacobiSym /-
 /-- Turn a Legendre symbol into a Jacobi symbol. -/
-theorem LegendreSym.to_jacobiSym (p : ℕ) (pp : Fact p.Prime) (a r : ℤ) (hr : jacobiSym a p = r) :
-    legendreSym p a = r := by rwa [@jacobiSym.legendreSym.to_jacobiSym p pp a]
-#align norm_num.legendre_sym.to_jacobi_sym NormNum.LegendreSym.to_jacobiSym
+theorem Mathlib.Meta.NormNum.LegendreSym.to_jacobiSym (p : ℕ) (pp : Fact p.Prime) (a r : ℤ)
+    (hr : jacobiSym a p = r) : legendreSym p a = r := by
+  rwa [@jacobiSym.legendreSym.to_jacobiSym p pp a]
+#align norm_num.legendre_sym.to_jacobi_sym Mathlib.Meta.NormNum.LegendreSym.to_jacobiSym
+-/
 
+#print Mathlib.Meta.NormNum.JacobiSym.mod_left /-
 /-- The value depends only on the residue class of `a` mod `b`. -/
-theorem JacobiSym.mod_left (a : ℤ) (b ab' : ℕ) (ab r b' : ℤ) (hb' : (b : ℤ) = b')
-    (hab : a % b' = ab) (h : (ab' : ℤ) = ab) (hr : jacobiSymNat ab' b = r) : jacobiSym a b = r := by
+theorem Mathlib.Meta.NormNum.JacobiSym.mod_left (a : ℤ) (b ab' : ℕ) (ab r b' : ℤ)
+    (hb' : (b : ℤ) = b') (hab : a % b' = ab) (h : (ab' : ℤ) = ab)
+    (hr : Mathlib.Meta.NormNum.jacobiSymNat ab' b = r) : jacobiSym a b = r := by
   rw [← hr, jacobi_sym_nat, jacobiSym.mod_left, hb', hab, ← h]
-#align norm_num.jacobi_sym.mod_left NormNum.JacobiSym.mod_left
+#align norm_num.jacobi_sym.mod_left Mathlib.Meta.NormNum.JacobiSym.mod_left
+-/
 
-theorem jacobiSymNat.mod_left (a b ab : ℕ) (r : ℤ) (hab : a % b = ab) (hr : jacobiSymNat ab b = r) :
-    jacobiSymNat a b = r := by
-  rw [← hr, jacobi_sym_nat, jacobi_sym_nat, _root_.jacobi_sym.mod_left a b, ← hab]; rfl
-#align norm_num.jacobi_sym_nat.mod_left NormNum.jacobiSymNat.mod_left
+#print Mathlib.Meta.NormNum.jacobiSymNat.mod_left /-
+theorem Mathlib.Meta.NormNum.jacobiSymNat.mod_left (a b ab : ℕ) (r : ℤ) (hab : a % b = ab)
+    (hr : Mathlib.Meta.NormNum.jacobiSymNat ab b = r) : Mathlib.Meta.NormNum.jacobiSymNat a b = r :=
+  by rw [← hr, jacobi_sym_nat, jacobi_sym_nat, _root_.jacobi_sym.mod_left a b, ← hab]; rfl
+#align norm_num.jacobi_sym_nat.mod_left Mathlib.Meta.NormNum.jacobiSymNat.mod_left
+-/
 
+#print Mathlib.Meta.NormNum.jacobiSymNat.even_even /-
 /-- The symbol vanishes when both entries are even (and `b ≠ 0`). -/
-theorem jacobiSymNat.even_even (a b : ℕ) (hb₀ : b ≠ 0) : jacobiSymNat (bit0 a) (bit0 b) = 0 :=
+theorem Mathlib.Meta.NormNum.jacobiSymNat.even_even (a b : ℕ) (hb₀ : b ≠ 0) :
+    Mathlib.Meta.NormNum.jacobiSymNat (bit0 a) (bit0 b) = 0 :=
   by
   refine' jacobi_sym.eq_zero_iff.mpr ⟨Nat.bit0_ne_zero hb₀, fun hf => _⟩
   have h : 2 ∣ (bit0 a).gcd (bit0 b) := Nat.dvd_gcd two_dvd_bit0 two_dvd_bit0
   change 2 ∣ (bit0 a : ℤ).gcd (bit0 b) at h 
   rw [← Nat.cast_bit0, ← Nat.cast_bit0, hf, ← even_iff_two_dvd] at h 
   exact Nat.not_even_one h
-#align norm_num.jacobi_sym_nat.even_even NormNum.jacobiSymNat.even_even
+#align norm_num.jacobi_sym_nat.even_even Mathlib.Meta.NormNum.jacobiSymNat.even_even
+-/
 
+#print Mathlib.Meta.NormNum.jacobiSymNat.odd_even /-
 /-- When `a` is odd and `b` is even, we can replace `b` by `b / 2`. -/
-theorem jacobiSymNat.odd_even (a b : ℕ) (r : ℤ) (hr : jacobiSymNat (bit1 a) b = r) :
-    jacobiSymNat (bit1 a) (bit0 b) = r :=
+theorem Mathlib.Meta.NormNum.jacobiSymNat.odd_even (a b : ℕ) (r : ℤ)
+    (hr : Mathlib.Meta.NormNum.jacobiSymNat (bit1 a) b = r) :
+    Mathlib.Meta.NormNum.jacobiSymNat (bit1 a) (bit0 b) = r :=
   by
   have ha : legendreSym 2 (bit1 a) = 1 := by
     simp only [legendreSym, quadraticChar_apply, quadraticCharFun_one, Int.cast_bit1,
@@ -131,24 +166,30 @@ theorem jacobiSymNat.odd_even (a b : ℕ) (r : ℤ) (hr : jacobiSymNat (bit1 a) 
     -- for `jacobi_sym.mul_right`
     rwa [bit0_eq_two_mul b, jacobi_sym_nat, jacobiSym.mul_right, ←
       _root_.legendre_sym.to_jacobi_sym, Nat.cast_bit1, ha, one_mul]
-#align norm_num.jacobi_sym_nat.odd_even NormNum.jacobiSymNat.odd_even
+#align norm_num.jacobi_sym_nat.odd_even Mathlib.Meta.NormNum.jacobiSymNat.odd_even
+-/
 
+#print Mathlib.Meta.NormNum.jacobiSymNat.double_even /-
 /-- If `a` is divisible by `4` and `b` is odd, then we can remove the factor `4` from `a`. -/
-theorem jacobiSymNat.double_even (a b : ℕ) (r : ℤ) (hr : jacobiSymNat a (bit1 b) = r) :
-    jacobiSymNat (bit0 (bit0 a)) (bit1 b) = r :=
+theorem Mathlib.Meta.NormNum.jacobiSymNat.double_even (a b : ℕ) (r : ℤ)
+    (hr : Mathlib.Meta.NormNum.jacobiSymNat a (bit1 b) = r) :
+    Mathlib.Meta.NormNum.jacobiSymNat (bit0 (bit0 a)) (bit1 b) = r :=
   by
   have : ((2 : ℕ) : ℤ).gcd (bit1 b : ℕ) = 1 := by
     rw [Int.coe_nat_gcd, Nat.bit1_eq_succ_bit0, bit0_eq_two_mul b, Nat.succ_eq_add_one,
       Nat.gcd_mul_left_add_right, Nat.gcd_one_right]
   rwa [bit0_eq_two_mul a, bit0_eq_two_mul (2 * a), ← mul_assoc, ← pow_two, jacobi_sym_nat,
     Nat.cast_mul, Nat.cast_pow, jacobiSym.mul_left, jacobiSym.sq_one' this, one_mul]
-#align norm_num.jacobi_sym_nat.double_even NormNum.jacobiSymNat.double_even
+#align norm_num.jacobi_sym_nat.double_even Mathlib.Meta.NormNum.jacobiSymNat.double_even
+-/
 
+#print Mathlib.Meta.NormNum.jacobiSymNat.even_odd₁ /-
 /-- If `a` is even and `b` is odd, then we can remove a factor `2` from `a`,
 but we may have to change the sign, depending on `b % 8`.
 We give one version for each of the four odd residue classes mod `8`. -/
-theorem jacobiSymNat.even_odd₁ (a b : ℕ) (r : ℤ) (hr : jacobiSymNat a (bit1 (bit0 (bit0 b))) = r) :
-    jacobiSymNat (bit0 a) (bit1 (bit0 (bit0 b))) = r :=
+theorem Mathlib.Meta.NormNum.jacobiSymNat.even_odd₁ (a b : ℕ) (r : ℤ)
+    (hr : Mathlib.Meta.NormNum.jacobiSymNat a (bit1 (bit0 (bit0 b))) = r) :
+    Mathlib.Meta.NormNum.jacobiSymNat (bit0 a) (bit1 (bit0 (bit0 b))) = r :=
   by
   have hb : bit1 (bit0 (bit0 b)) % 8 = 1 := by
     rw [Nat.bit1_mod_bit0, Nat.bit0_mod_bit0, Nat.bit0_mod_two]
@@ -156,10 +197,13 @@ theorem jacobiSymNat.even_odd₁ (a b : ℕ) (r : ℤ) (hr : jacobiSymNat a (bit
     jacobiSym.at_two (odd_bit1 _), ZMod.χ₈_nat_mod_eight, hb]
   norm_num
   exact hr
-#align norm_num.jacobi_sym_nat.even_odd₁ NormNum.jacobiSymNat.even_odd₁
+#align norm_num.jacobi_sym_nat.even_odd₁ Mathlib.Meta.NormNum.jacobiSymNat.even_odd₁
+-/
 
-theorem jacobiSymNat.even_odd₇ (a b : ℕ) (r : ℤ) (hr : jacobiSymNat a (bit1 (bit1 (bit1 b))) = r) :
-    jacobiSymNat (bit0 a) (bit1 (bit1 (bit1 b))) = r :=
+#print Mathlib.Meta.NormNum.jacobiSymNat.even_odd₇ /-
+theorem Mathlib.Meta.NormNum.jacobiSymNat.even_odd₇ (a b : ℕ) (r : ℤ)
+    (hr : Mathlib.Meta.NormNum.jacobiSymNat a (bit1 (bit1 (bit1 b))) = r) :
+    Mathlib.Meta.NormNum.jacobiSymNat (bit0 a) (bit1 (bit1 (bit1 b))) = r :=
   by
   have hb : bit1 (bit1 (bit1 b)) % 8 = 7 := by
     rw [Nat.bit1_mod_bit0, Nat.bit1_mod_bit0, Nat.bit1_mod_two]
@@ -167,10 +211,13 @@ theorem jacobiSymNat.even_odd₇ (a b : ℕ) (r : ℤ) (hr : jacobiSymNat a (bit
     jacobiSym.at_two (odd_bit1 _), ZMod.χ₈_nat_mod_eight, hb]
   norm_num
   exact hr
-#align norm_num.jacobi_sym_nat.even_odd₇ NormNum.jacobiSymNat.even_odd₇
+#align norm_num.jacobi_sym_nat.even_odd₇ Mathlib.Meta.NormNum.jacobiSymNat.even_odd₇
+-/
 
-theorem jacobiSymNat.even_odd₃ (a b : ℕ) (r : ℤ) (hr : jacobiSymNat a (bit1 (bit1 (bit0 b))) = r) :
-    jacobiSymNat (bit0 a) (bit1 (bit1 (bit0 b))) = -r :=
+#print Mathlib.Meta.NormNum.jacobiSymNat.even_odd₃ /-
+theorem Mathlib.Meta.NormNum.jacobiSymNat.even_odd₃ (a b : ℕ) (r : ℤ)
+    (hr : Mathlib.Meta.NormNum.jacobiSymNat a (bit1 (bit1 (bit0 b))) = r) :
+    Mathlib.Meta.NormNum.jacobiSymNat (bit0 a) (bit1 (bit1 (bit0 b))) = -r :=
   by
   have hb : bit1 (bit1 (bit0 b)) % 8 = 3 := by
     rw [Nat.bit1_mod_bit0, Nat.bit1_mod_bit0, Nat.bit0_mod_two]
@@ -178,10 +225,13 @@ theorem jacobiSymNat.even_odd₃ (a b : ℕ) (r : ℤ) (hr : jacobiSymNat a (bit
     jacobiSym.at_two (odd_bit1 _), ZMod.χ₈_nat_mod_eight, hb]
   norm_num
   exact hr
-#align norm_num.jacobi_sym_nat.even_odd₃ NormNum.jacobiSymNat.even_odd₃
+#align norm_num.jacobi_sym_nat.even_odd₃ Mathlib.Meta.NormNum.jacobiSymNat.even_odd₃
+-/
 
-theorem jacobiSymNat.even_odd₅ (a b : ℕ) (r : ℤ) (hr : jacobiSymNat a (bit1 (bit0 (bit1 b))) = r) :
-    jacobiSymNat (bit0 a) (bit1 (bit0 (bit1 b))) = -r :=
+#print Mathlib.Meta.NormNum.jacobiSymNat.even_odd₅ /-
+theorem Mathlib.Meta.NormNum.jacobiSymNat.even_odd₅ (a b : ℕ) (r : ℤ)
+    (hr : Mathlib.Meta.NormNum.jacobiSymNat a (bit1 (bit0 (bit1 b))) = r) :
+    Mathlib.Meta.NormNum.jacobiSymNat (bit0 a) (bit1 (bit0 (bit1 b))) = -r :=
   by
   have hb : bit1 (bit0 (bit1 b)) % 8 = 5 := by
     rw [Nat.bit1_mod_bit0, Nat.bit0_mod_bit0, Nat.bit1_mod_two]
@@ -189,48 +239,71 @@ theorem jacobiSymNat.even_odd₅ (a b : ℕ) (r : ℤ) (hr : jacobiSymNat a (bit
     jacobiSym.at_two (odd_bit1 _), ZMod.χ₈_nat_mod_eight, hb]
   norm_num
   exact hr
-#align norm_num.jacobi_sym_nat.even_odd₅ NormNum.jacobiSymNat.even_odd₅
+#align norm_num.jacobi_sym_nat.even_odd₅ Mathlib.Meta.NormNum.jacobiSymNat.even_odd₅
+-/
 
+#print Mathlib.Meta.NormNum.jacobiSymNat.qr₁ /-
 /-- Use quadratic reciproity to reduce to smaller `b`. -/
-theorem jacobiSymNat.qr₁ (a b : ℕ) (r : ℤ) (hr : jacobiSymNat (bit1 b) (bit1 (bit0 a)) = r) :
-    jacobiSymNat (bit1 (bit0 a)) (bit1 b) = r :=
+theorem Mathlib.Meta.NormNum.jacobiSymNat.qr₁ (a b : ℕ) (r : ℤ)
+    (hr : Mathlib.Meta.NormNum.jacobiSymNat (bit1 b) (bit1 (bit0 a)) = r) :
+    Mathlib.Meta.NormNum.jacobiSymNat (bit1 (bit0 a)) (bit1 b) = r :=
   by
   have ha : bit1 (bit0 a) % 4 = 1 := by rw [Nat.bit1_mod_bit0, Nat.bit0_mod_two]
   have hb := Nat.bit1_mod_two
   rwa [jacobi_sym_nat, jacobiSym.quadratic_reciprocity_one_mod_four ha (nat.odd_iff.mpr hb)]
-#align norm_num.jacobi_sym_nat.qr₁ NormNum.jacobiSymNat.qr₁
+#align norm_num.jacobi_sym_nat.qr₁ Mathlib.Meta.NormNum.jacobiSymNat.qr₁
+-/
 
-theorem jacobiSymNat.qr₁_mod (a b ab : ℕ) (r : ℤ) (hab : bit1 b % bit1 (bit0 a) = ab)
-    (hr : jacobiSymNat ab (bit1 (bit0 a)) = r) : jacobiSymNat (bit1 (bit0 a)) (bit1 b) = r :=
-  jacobiSymNat.qr₁ _ _ _ <| jacobiSymNat.mod_left _ _ ab r hab hr
-#align norm_num.jacobi_sym_nat.qr₁_mod NormNum.jacobiSymNat.qr₁_mod
+#print Mathlib.Meta.NormNum.jacobiSymNat.qr₁_mod /-
+theorem Mathlib.Meta.NormNum.jacobiSymNat.qr₁_mod (a b ab : ℕ) (r : ℤ)
+    (hab : bit1 b % bit1 (bit0 a) = ab)
+    (hr : Mathlib.Meta.NormNum.jacobiSymNat ab (bit1 (bit0 a)) = r) :
+    Mathlib.Meta.NormNum.jacobiSymNat (bit1 (bit0 a)) (bit1 b) = r :=
+  Mathlib.Meta.NormNum.jacobiSymNat.qr₁ _ _ _ <|
+    Mathlib.Meta.NormNum.jacobiSymNat.mod_left _ _ ab r hab hr
+#align norm_num.jacobi_sym_nat.qr₁_mod Mathlib.Meta.NormNum.jacobiSymNat.qr₁_mod
+-/
 
-theorem jacobiSymNat.qr₁' (a b : ℕ) (r : ℤ) (hr : jacobiSymNat (bit1 (bit0 b)) (bit1 a) = r) :
-    jacobiSymNat (bit1 a) (bit1 (bit0 b)) = r :=
+#print Mathlib.Meta.NormNum.jacobiSymNat.qr₁' /-
+theorem Mathlib.Meta.NormNum.jacobiSymNat.qr₁' (a b : ℕ) (r : ℤ)
+    (hr : Mathlib.Meta.NormNum.jacobiSymNat (bit1 (bit0 b)) (bit1 a) = r) :
+    Mathlib.Meta.NormNum.jacobiSymNat (bit1 a) (bit1 (bit0 b)) = r :=
   by
   have hb : bit1 (bit0 b) % 4 = 1 := by rw [Nat.bit1_mod_bit0, Nat.bit0_mod_two]
   have ha := Nat.bit1_mod_two
   rwa [jacobi_sym_nat, ← jacobiSym.quadratic_reciprocity_one_mod_four hb (nat.odd_iff.mpr ha)]
-#align norm_num.jacobi_sym_nat.qr₁' NormNum.jacobiSymNat.qr₁'
+#align norm_num.jacobi_sym_nat.qr₁' Mathlib.Meta.NormNum.jacobiSymNat.qr₁'
+-/
 
-theorem jacobiSymNat.qr₁'_mod (a b ab : ℕ) (r : ℤ) (hab : bit1 (bit0 b) % bit1 a = ab)
-    (hr : jacobiSymNat ab (bit1 a) = r) : jacobiSymNat (bit1 a) (bit1 (bit0 b)) = r :=
-  jacobiSymNat.qr₁' _ _ _ <| jacobiSymNat.mod_left _ _ ab r hab hr
-#align norm_num.jacobi_sym_nat.qr₁'_mod NormNum.jacobiSymNat.qr₁'_mod
+#print Mathlib.Meta.NormNum.jacobiSymNat.qr₁'_mod /-
+theorem Mathlib.Meta.NormNum.jacobiSymNat.qr₁'_mod (a b ab : ℕ) (r : ℤ)
+    (hab : bit1 (bit0 b) % bit1 a = ab) (hr : Mathlib.Meta.NormNum.jacobiSymNat ab (bit1 a) = r) :
+    Mathlib.Meta.NormNum.jacobiSymNat (bit1 a) (bit1 (bit0 b)) = r :=
+  Mathlib.Meta.NormNum.jacobiSymNat.qr₁' _ _ _ <|
+    Mathlib.Meta.NormNum.jacobiSymNat.mod_left _ _ ab r hab hr
+#align norm_num.jacobi_sym_nat.qr₁'_mod Mathlib.Meta.NormNum.jacobiSymNat.qr₁'_mod
+-/
 
-theorem jacobiSymNat.qr₃ (a b : ℕ) (r : ℤ) (hr : jacobiSymNat (bit1 (bit1 b)) (bit1 (bit1 a)) = r) :
-    jacobiSymNat (bit1 (bit1 a)) (bit1 (bit1 b)) = -r :=
+#print Mathlib.Meta.NormNum.jacobiSymNat.qr₃ /-
+theorem Mathlib.Meta.NormNum.jacobiSymNat.qr₃ (a b : ℕ) (r : ℤ)
+    (hr : Mathlib.Meta.NormNum.jacobiSymNat (bit1 (bit1 b)) (bit1 (bit1 a)) = r) :
+    Mathlib.Meta.NormNum.jacobiSymNat (bit1 (bit1 a)) (bit1 (bit1 b)) = -r :=
   by
   have hb : bit1 (bit1 b) % 4 = 3 := by rw [Nat.bit1_mod_bit0, Nat.bit1_mod_two]
   have ha : bit1 (bit1 a) % 4 = 3 := by rw [Nat.bit1_mod_bit0, Nat.bit1_mod_two]
   rwa [jacobi_sym_nat, jacobiSym.quadratic_reciprocity_three_mod_four ha hb, neg_inj]
-#align norm_num.jacobi_sym_nat.qr₃ NormNum.jacobiSymNat.qr₃
+#align norm_num.jacobi_sym_nat.qr₃ Mathlib.Meta.NormNum.jacobiSymNat.qr₃
+-/
 
-theorem jacobiSymNat.qr₃_mod (a b ab : ℕ) (r : ℤ) (hab : bit1 (bit1 b) % bit1 (bit1 a) = ab)
-    (hr : jacobiSymNat ab (bit1 (bit1 a)) = r) :
-    jacobiSymNat (bit1 (bit1 a)) (bit1 (bit1 b)) = -r :=
-  jacobiSymNat.qr₃ _ _ _ <| jacobiSymNat.mod_left _ _ ab r hab hr
-#align norm_num.jacobi_sym_nat.qr₃_mod NormNum.jacobiSymNat.qr₃_mod
+#print Mathlib.Meta.NormNum.jacobiSymNat.qr₃_mod /-
+theorem Mathlib.Meta.NormNum.jacobiSymNat.qr₃_mod (a b ab : ℕ) (r : ℤ)
+    (hab : bit1 (bit1 b) % bit1 (bit1 a) = ab)
+    (hr : Mathlib.Meta.NormNum.jacobiSymNat ab (bit1 (bit1 a)) = r) :
+    Mathlib.Meta.NormNum.jacobiSymNat (bit1 (bit1 a)) (bit1 (bit1 b)) = -r :=
+  Mathlib.Meta.NormNum.jacobiSymNat.qr₃ _ _ _ <|
+    Mathlib.Meta.NormNum.jacobiSymNat.mod_left _ _ ab r hab hr
+#align norm_num.jacobi_sym_nat.qr₃_mod Mathlib.Meta.NormNum.jacobiSymNat.qr₃_mod
+-/
 
 end NormNum
 
@@ -250,9 +323,10 @@ namespace NormNum
 
 open Tactic
 
+#print Mathlib.Meta.NormNum.proveJacobiSymOdd /-
 /-- This evaluates `r := jacobi_sym_nat a b` recursively using quadratic reciprocity
 and produces a proof term for the equality, assuming that `a < b` and `b` is odd. -/
-unsafe def prove_jacobi_sym_odd :
+unsafe def Mathlib.Meta.NormNum.proveJacobiSymOdd :
     instance_cache →
       instance_cache → expr → expr → tactic (instance_cache × instance_cache × expr × expr)
   | zc, nc, ea, eb => do
@@ -260,7 +334,7 @@ unsafe def prove_jacobi_sym_odd :
       |
       match_numeral_result.one =>-- `b = 1`, result is `1`
           pure
-          (zc, nc, q((1 : ℤ)), q(jacobiSymNat.one_right).mk_app [ea])
+          (zc, nc, q((1 : ℤ)), q(Mathlib.Meta.NormNum.jacobiSymNat.one_right).mk_app [ea])
       | match_numeral_result.bit1 eb₁ => do
         -- `b > 1` (recall that `b` is odd)
           match match_numeral ea with
@@ -271,11 +345,12 @@ unsafe def prove_jacobi_sym_odd :
             let (nc, phb₀) ← prove_ne nc eb₁ q((0 : ℕ)) b 0
             -- proof of `b ≠ 0`
                 pure
-                (zc, nc, q((0 : ℤ)), q(jacobiSymNat.zero_left_odd).mk_app [eb₁, phb₀])
+                (zc, nc, q((0 : ℤ)),
+                  q(Mathlib.Meta.NormNum.jacobiSymNat.zero_left).mk_app [eb₁, phb₀])
           | match_numeral_result.one => do
             -- `a = 1`, result is `1`
                 pure
-                (zc, nc, q((1 : ℤ)), q(jacobiSymNat.one_left_odd).mk_app [eb₁])
+                (zc, nc, q((1 : ℤ)), q(Mathlib.Meta.NormNum.jacobiSymNat.one_left).mk_app [eb₁])
           | match_numeral_result.bit0 ea₁ => do
             -- `a` is even; check if divisible by `4`
               match match_numeral ea₁ with
@@ -283,7 +358,8 @@ unsafe def prove_jacobi_sym_odd :
                 let (zc, nc, er, p) ← prove_jacobi_sym_odd zc nc ea₂ eb
                 -- compute `jacobi_sym_nat (a / 4) b`
                     pure
-                    (zc, nc, er, q(jacobiSymNat.double_even).mk_app [ea₂, eb₁, er, p])
+                    (zc, nc, er,
+                      q(Mathlib.Meta.NormNum.jacobiSymNat.double_even).mk_app [ea₂, eb₁, er, p])
               | _ => do
                 let-- reduce to `a / 2`; need to consider `b % 8`
                   (zc, nc, er, p)
@@ -297,7 +373,10 @@ unsafe def prove_jacobi_sym_odd :
                       ←-- `b = 3`
                         er
                     let (zc, er') ← zc (-r)
-                    pure (zc, nc, er', q(jacobiSymNat.even_odd₃).mk_app [ea₁, q((0 : ℕ)), er, p])
+                    pure
+                        (zc, nc, er',
+                          q(Mathlib.Meta.NormNum.jacobiSymNat.even_odd₃).mk_app
+                            [ea₁, q((0 : ℕ)), er, p])
                   | match_numeral_result.bit0 eb₂ => do
                     -- `b % 4 = 1`
                       match match_numeral eb₂ with
@@ -309,17 +388,24 @@ unsafe def prove_jacobi_sym_odd :
                             er
                         let (zc, er') ← zc (-r)
                         pure
-                            (zc, nc, er', q(jacobiSymNat.even_odd₅).mk_app [ea₁, q((0 : ℕ)), er, p])
+                            (zc, nc, er',
+                              q(Mathlib.Meta.NormNum.jacobiSymNat.even_odd₅).mk_app
+                                [ea₁, q((0 : ℕ)), er, p])
                       | match_numeral_result.bit0 eb₃ => do
                         -- `b % 8 = 1`
                             pure
-                            (zc, nc, er, q(jacobiSymNat.even_odd₁).mk_app [ea₁, eb₃, er, p])
+                            (zc, nc, er,
+                              q(Mathlib.Meta.NormNum.jacobiSymNat.even_odd₁).mk_app
+                                [ea₁, eb₃, er, p])
                       | match_numeral_result.bit1 eb₃ => do
                         let r
                           ←-- `b % 8 = 5`
                             er
                         let (zc, er') ← zc (-r)
-                        pure (zc, nc, er', q(jacobiSymNat.even_odd₅).mk_app [ea₁, eb₃, er, p])
+                        pure
+                            (zc, nc, er',
+                              q(Mathlib.Meta.NormNum.jacobiSymNat.even_odd₅).mk_app
+                                [ea₁, eb₃, er, p])
                       | _ => failed
                   | match_numeral_result.bit1 eb₂ => do
                     -- `b % 4 = 3`
@@ -329,17 +415,24 @@ unsafe def prove_jacobi_sym_odd :
                         do
                         -- `b = 7`
                             pure
-                            (zc, nc, er, q(jacobiSymNat.even_odd₇).mk_app [ea₁, q((0 : ℕ)), er, p])
+                            (zc, nc, er,
+                              q(Mathlib.Meta.NormNum.jacobiSymNat.even_odd₇).mk_app
+                                [ea₁, q((0 : ℕ)), er, p])
                       | match_numeral_result.bit0 eb₃ => do
                         let r
                           ←-- `b % 8 = 3`
                             er
                         let (zc, er') ← zc (-r)
-                        pure (zc, nc, er', q(jacobiSymNat.even_odd₃).mk_app [ea₁, eb₃, er, p])
+                        pure
+                            (zc, nc, er',
+                              q(Mathlib.Meta.NormNum.jacobiSymNat.even_odd₃).mk_app
+                                [ea₁, eb₃, er, p])
                       | match_numeral_result.bit1 eb₃ => do
                         -- `b % 8 = 7`
                             pure
-                            (zc, nc, er, q(jacobiSymNat.even_odd₇).mk_app [ea₁, eb₃, er, p])
+                            (zc, nc, er,
+                              q(Mathlib.Meta.NormNum.jacobiSymNat.even_odd₇).mk_app
+                                [ea₁, eb₃, er, p])
                       | _ => failed
                   | _ => failed
           | match_numeral_result.bit1 ea₁ => do
@@ -364,7 +457,9 @@ unsafe def prove_jacobi_sym_odd :
                     do
                     -- `b % 4 = 1`
                         pure
-                        (zc, nc, er, q(jacobiSymNat.qr₁'_mod).mk_app [ea₁, eb₂, bma, er, phab, p])
+                        (zc, nc, er,
+                          q(Mathlib.Meta.NormNum.jacobiSymNat.qr₁'_mod).mk_app
+                            [ea₁, eb₂, bma, er, phab, p])
                   | match_numeral_result.bit1 eb₂ => do
                     let r
                       ←-- `b % 4 = 3`
@@ -372,12 +467,15 @@ unsafe def prove_jacobi_sym_odd :
                     let (zc, er') ← zc (-r)
                     pure
                         (zc, nc, er',
-                          q(jacobiSymNat.qr₃_mod).mk_app [q((0 : ℕ)), eb₂, bma, er, phab, p])
+                          q(Mathlib.Meta.NormNum.jacobiSymNat.qr₃_mod).mk_app
+                            [q((0 : ℕ)), eb₂, bma, er, phab, p])
                   | _ => failed
               | match_numeral_result.bit0 ea₂ => do
                 -- `a % 4 = 1`
                     pure
-                    (zc, nc, er, q(jacobiSymNat.qr₁_mod).mk_app [ea₂, eb₁, bma, er, phab, p])
+                    (zc, nc, er,
+                      q(Mathlib.Meta.NormNum.jacobiSymNat.qr₁_mod).mk_app
+                        [ea₂, eb₁, bma, er, phab, p])
               | match_numeral_result.bit1 ea₂ => do
                 -- `a % 4 = 3`; need to consider `b`
                   match match_numeral eb₁ with
@@ -388,22 +486,29 @@ unsafe def prove_jacobi_sym_odd :
                     do
                     -- `b % 4 = 1`
                         pure
-                        (zc, nc, er, q(jacobiSymNat.qr₁'_mod).mk_app [ea₁, eb₂, bma, er, phab, p])
+                        (zc, nc, er,
+                          q(Mathlib.Meta.NormNum.jacobiSymNat.qr₁'_mod).mk_app
+                            [ea₁, eb₂, bma, er, phab, p])
                   | match_numeral_result.bit1 eb₂ => do
                     let r
                       ←-- `b % 4 = 3`
                         er
                     let (zc, er') ← zc (-r)
-                    pure (zc, nc, er', q(jacobiSymNat.qr₃_mod).mk_app [ea₂, eb₂, bma, er, phab, p])
+                    pure
+                        (zc, nc, er',
+                          q(Mathlib.Meta.NormNum.jacobiSymNat.qr₃_mod).mk_app
+                            [ea₂, eb₂, bma, er, phab, p])
                   | _ => failed
               | _ => failed
           | _ => failed
       | _ => failed
-#align norm_num.prove_jacobi_sym_odd norm_num.prove_jacobi_sym_odd
+#align norm_num.prove_jacobi_sym_odd Mathlib.Meta.NormNum.proveJacobiSymOdd
+-/
 
+#print Mathlib.Meta.NormNum.proveJacobiSymNat /-
 /-- This evaluates `r := jacobi_sym_nat a b` and produces a proof term for the equality
 by removing powers of `2` from `b` and then calling `prove_jacobi_sym_odd`. -/
-unsafe def prove_jacobi_sym_nat :
+unsafe def Mathlib.Meta.NormNum.proveJacobiSymNat :
     instance_cache →
       instance_cache → expr → expr → tactic (instance_cache × instance_cache × expr × expr)
   | zc, nc, ea, eb => do
@@ -411,11 +516,11 @@ unsafe def prove_jacobi_sym_nat :
       |
       match_numeral_result.zero =>-- `b = 0`, result is `1`
           pure
-          (zc, nc, q((1 : ℤ)), q(jacobiSymNat.zero_right).mk_app [ea])
+          (zc, nc, q((1 : ℤ)), q(Mathlib.Meta.NormNum.jacobiSymNat.zero_right).mk_app [ea])
       |
       match_numeral_result.one =>-- `b = 1`, result is `1`
           pure
-          (zc, nc, q((1 : ℤ)), q(jacobiSymNat.one_right).mk_app [ea])
+          (zc, nc, q((1 : ℤ)), q(Mathlib.Meta.NormNum.jacobiSymNat.one_right).mk_app [ea])
       |
       match_numeral_result.bit0 eb₁ =>-- `b` is even and nonzero
         match match_numeral ea with
@@ -426,11 +531,12 @@ unsafe def prove_jacobi_sym_nat :
           let (nc, phb₀) ← prove_ne nc eb₁ q((0 : ℕ)) b 0
           -- proof of `b ≠ 0`
               pure
-              (zc, nc, q((0 : ℤ)), q(jacobiSymNat.zero_left_even).mk_app [eb₁, phb₀])
+              (zc, nc, q((0 : ℤ)),
+                q(Mathlib.Meta.NormNum.jacobiSymNat.zero_left).mk_app [eb₁, phb₀])
         | match_numeral_result.one => do
           -- `a = 1`, result is `1`
               pure
-              (zc, nc, q((1 : ℤ)), q(jacobiSymNat.one_left_even).mk_app [eb₁])
+              (zc, nc, q((1 : ℤ)), q(Mathlib.Meta.NormNum.jacobiSymNat.one_left).mk_app [eb₁])
         | match_numeral_result.bit0 ea₁ => do
           let b
             ←-- `a` is even, result is `0`
@@ -438,12 +544,12 @@ unsafe def prove_jacobi_sym_nat :
           let (nc, phb₀) ← prove_ne nc eb₁ q((0 : ℕ)) b 0
           let-- proof of `b ≠ 0`
           er : expr := q((0 : ℤ))
-          pure (zc, nc, er, q(jacobiSymNat.even_even).mk_app [ea₁, eb₁, phb₀])
+          pure (zc, nc, er, q(Mathlib.Meta.NormNum.jacobiSymNat.even_even).mk_app [ea₁, eb₁, phb₀])
         | match_numeral_result.bit1 ea₁ => do
           let-- `a` is odd, reduce to `b / 2`
             (zc, nc, er, p)
             ← prove_jacobi_sym_nat zc nc ea eb₁
-          pure (zc, nc, er, q(jacobiSymNat.odd_even).mk_app [ea₁, eb₁, er, p])
+          pure (zc, nc, er, q(Mathlib.Meta.NormNum.jacobiSymNat.odd_even).mk_app [ea₁, eb₁, er, p])
         | _ => failed
       | match_numeral_result.bit1 eb₁ => do
         let a
@@ -459,14 +565,17 @@ unsafe def prove_jacobi_sym_nat :
               ← prove_jacobi_sym_odd zc nc amb eb
             -- compute `jacobi_sym_nat (a % b) b`
                 pure
-                (zc, nc, er, q(jacobiSymNat.mod_left).mk_app [ea, eb, amb, er, phab, p])
+                (zc, nc, er,
+                  q(Mathlib.Meta.NormNum.jacobiSymNat.mod_left).mk_app [ea, eb, amb, er, phab, p])
           else prove_jacobi_sym_odd zc nc ea eb
       | _ => failed
-#align norm_num.prove_jacobi_sym_nat norm_num.prove_jacobi_sym_nat
+#align norm_num.prove_jacobi_sym_nat Mathlib.Meta.NormNum.proveJacobiSymNat
+-/
 
+#print Mathlib.Meta.NormNum.proveJacobiSym /-
 /-- This evaluates `r := jacobi_sym a b` and produces a proof term for the equality.
 This is done by reducing to `r := jacobi_sym_nat (a % b) b`. -/
-unsafe def prove_jacobi_sym :
+unsafe def Mathlib.Meta.NormNum.proveJacobiSym :
     instance_cache →
       instance_cache → expr → expr → tactic (instance_cache × instance_cache × expr × expr)
   | zc, nc, ea, eb => do
@@ -494,8 +603,10 @@ unsafe def prove_jacobi_sym :
         -- compute `jacobi_sym_nat (a % b) b`
             pure
             (zc, nc, er,
-              q(JacobiSym.mod_left).mk_app [ea, eb₁, amb', amb, er, eb', pb', phab, phab', p])
-#align norm_num.prove_jacobi_sym norm_num.prove_jacobi_sym
+              q(Mathlib.Meta.NormNum.JacobiSym.mod_left).mk_app
+                [ea, eb₁, amb', amb, er, eb', pb', phab, phab', p])
+#align norm_num.prove_jacobi_sym Mathlib.Meta.NormNum.proveJacobiSym
+-/
 
 end NormNum
 
@@ -512,33 +623,35 @@ namespace Tactic
 
 namespace NormNum
 
+#print Tactic.NormNum.evalJacobiSym /-
 /-- This is the `norm_num` plug-in that evaluates Jacobi and Legendre symbols. -/
 @[norm_num]
-unsafe def eval_jacobi_sym : expr → tactic (expr × expr)
+unsafe def evalJacobiSym : expr → tactic (expr × expr)
   | q(jacobiSym $(ea) $(eb)) => do
     let zc
       ←-- Jacobi symbol
           mk_instance_cache
           q(ℤ)
     let nc ← mk_instance_cache q(ℕ)
-    (Prod.snd ∘ Prod.snd) <$> norm_num.prove_jacobi_sym zc nc ea eb
-  | q(NormNum.jacobiSymNat $(ea) $(eb)) => do
+    (Prod.snd ∘ Prod.snd) <$> Mathlib.Meta.NormNum.proveJacobiSym zc nc ea eb
+  | q(Mathlib.Meta.NormNum.jacobiSymNat $(ea) $(eb)) => do
     let zc
       ←-- Jacobi symbol on natural numbers
           mk_instance_cache
           q(ℤ)
     let nc ← mk_instance_cache q(ℕ)
-    (Prod.snd ∘ Prod.snd) <$> norm_num.prove_jacobi_sym_nat zc nc ea eb
+    (Prod.snd ∘ Prod.snd) <$> Mathlib.Meta.NormNum.proveJacobiSymNat zc nc ea eb
   | q(@legendreSym $(ep) $(inst) $(ea)) => do
     let zc
       ←-- Legendre symbol
           mk_instance_cache
           q(ℤ)
     let nc ← mk_instance_cache q(ℕ)
-    let (zc, nc, er, pf) ← norm_num.prove_jacobi_sym zc nc ea ep
-    pure (er, q(NormNum.LegendreSym.to_jacobiSym).mk_app [ep, inst, ea, er, pf])
+    let (zc, nc, er, pf) ← Mathlib.Meta.NormNum.proveJacobiSym zc nc ea ep
+    pure (er, q(Mathlib.Meta.NormNum.LegendreSym.to_jacobiSym).mk_app [ep, inst, ea, er, pf])
   | _ => failed
-#align tactic.norm_num.eval_jacobi_sym tactic.norm_num.eval_jacobi_sym
+#align tactic.norm_num.eval_jacobi_sym Tactic.NormNum.evalJacobiSym
+-/
 
 end NormNum
 

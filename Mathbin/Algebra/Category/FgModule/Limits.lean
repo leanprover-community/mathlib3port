@@ -60,6 +60,7 @@ instance (F : J ⥤ FGModuleCat k) :
     (limit_subobject_product (F ⋙ forget₂ (FGModuleCat k) (ModuleCat.{v} k)))
     ((ModuleCat.mono_iff_injective _).1 (by infer_instance))
 
+#print FGModuleCat.forget₂CreatesLimit /-
 /-- The forgetful functor from `fgModule k` to `Module k` creates all finite limits. -/
 def forget₂CreatesLimit (F : J ⥤ FGModuleCat k) :
     CreatesLimit F (forget₂ (FGModuleCat k) (ModuleCat.{v} k)) :=
@@ -67,6 +68,7 @@ def forget₂CreatesLimit (F : J ⥤ FGModuleCat k) :
     ⟨(limit (F ⋙ forget₂ (FGModuleCat k) (ModuleCat.{v} k)) : ModuleCat.{v} k), by infer_instance⟩
     (Iso.refl _)
 #align fgModule.forget₂_creates_limit FGModuleCat.forget₂CreatesLimit
+-/
 
 instance : CreatesLimitsOfShape J (forget₂ (FGModuleCat k) (ModuleCat.{v} k))
     where CreatesLimit F := forget₂CreatesLimit F
