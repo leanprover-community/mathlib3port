@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin
 
 ! This file was ported from Lean 3 source module ring_theory.witt_vector.frobenius
-! leanprover-community/mathlib commit 0723536a0522d24fc2f159a096fb3304bef77472
+! leanprover-community/mathlib commit 9240e8be927a0955b9a82c6c85ef499ee3a626b8
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -16,6 +16,9 @@ import Mathbin.FieldTheory.PerfectClosure
 
 /-!
 ## The Frobenius operator
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 If `R` has characteristic `p`, then there is a ring endomorphism `frobenius R p`
 that raises `r : R` to the power `p`.

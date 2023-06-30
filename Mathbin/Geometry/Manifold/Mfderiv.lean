@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Floris van Doorn
 
 ! This file was ported from Lean 3 source module geometry.manifold.mfderiv
-! leanprover-community/mathlib commit e354e865255654389cc46e6032160238df2e0f40
+! leanprover-community/mathlib commit 08b63ab58a6ec1157ebeafcbbe6c7a3fb3c9f6d5
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.Geometry.Manifold.VectorBundle.Tangent
 
 /-!
 # The derivative of functions between smooth manifolds
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 Let `M` and `M'` be two smooth manifolds with corners over a field `𝕜` (with respective models with
 corners `I` on `(E, H)` and `I'` on `(E', H')`), and let `f : M → M'`. We define the

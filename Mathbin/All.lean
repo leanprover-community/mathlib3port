@@ -939,8 +939,8 @@ import Mathbin.CategoryTheory.Limits.Constructions.Equalizers
 import Mathbin.CategoryTheory.Limits.Constructions.Filtered
 import Mathbin.CategoryTheory.Limits.Constructions.FiniteProductsOfBinaryProducts
 import Mathbin.CategoryTheory.Limits.Constructions.LimitsOfProductsAndEqualizers
+import Mathbin.CategoryTheory.Limits.Constructions.Over.Basic
 import Mathbin.CategoryTheory.Limits.Constructions.Over.Connected
-import Mathbin.CategoryTheory.Limits.Constructions.Over.Default
 import Mathbin.CategoryTheory.Limits.Constructions.Over.Products
 import Mathbin.CategoryTheory.Limits.Constructions.Pullbacks
 import Mathbin.CategoryTheory.Limits.Constructions.WeaklyInitial

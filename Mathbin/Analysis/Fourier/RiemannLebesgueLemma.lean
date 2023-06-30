@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Loeffler
 
 ! This file was ported from Lean 3 source module analysis.fourier.riemann_lebesgue_lemma
-! leanprover-community/mathlib commit fd5edc43dc4f10b85abfe544b88f82cf13c5f844
+! leanprover-community/mathlib commit 9240e8be927a0955b9a82c6c85ef499ee3a626b8
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -19,6 +19,9 @@ import Mathbin.Topology.MetricSpace.EmetricParacompact
 
 /-!
 # The Riemann-Lebesgue Lemma
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 In this file we prove the Riemann-Lebesgue lemma, for functions on finite-dimensional real vector
 spaces `V`: if `f` is a function on `V` (valued in a complete normed space `E`), then the

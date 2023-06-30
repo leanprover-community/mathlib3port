@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers
 
 ! This file was ported from Lean 3 source module geometry.euclidean.monge_point
-! leanprover-community/mathlib commit 1a4df69ca1a9a0e5e26bfe12e2b92814216016d0
+! leanprover-community/mathlib commit 9240e8be927a0955b9a82c6c85ef499ee3a626b8
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.Geometry.Euclidean.Circumcenter
 
 /-!
 # Monge point and orthocenter
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file defines the orthocenter of a triangle, via its n-dimensional
 generalization, the Monge point of a simplex.

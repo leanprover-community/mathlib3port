@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael Stoll
 
 ! This file was ported from Lean 3 source module number_theory.legendre_symbol.jacobi_symbol
-! leanprover-community/mathlib commit 74a27133cf29446a0983779e37c8f829a85368f3
+! leanprover-community/mathlib commit 9240e8be927a0955b9a82c6c85ef499ee3a626b8
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.NumberTheory.LegendreSymbol.QuadraticReciprocity
 
 /-!
 # The Jacobi Symbol
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 We define the Jacobi symbol and prove its main properties.
 

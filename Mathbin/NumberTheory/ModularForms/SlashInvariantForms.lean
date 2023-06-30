@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 
 ! This file was ported from Lean 3 source module number_theory.modular_forms.slash_invariant_forms
-! leanprover-community/mathlib commit 738054fa93d43512da144ec45ce799d18fd44248
+! leanprover-community/mathlib commit 9240e8be927a0955b9a82c6c85ef499ee3a626b8
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.NumberTheory.ModularForms.SlashActions
 
 /-!
 # Slash invariant forms
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file defines functions that are invariant under a `slash_action` which forms the basis for
 defining `modular_form` and `cusp_form`. We prove several instances for such spaces, in particular

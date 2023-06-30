@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury G. Kudryashov
 
 ! This file was ported from Lean 3 source module analysis.complex.upper_half_plane.topology
-! leanprover-community/mathlib commit 57f9349f2fe19d2de7207e99b0341808d977cdcf
+! leanprover-community/mathlib commit 9240e8be927a0955b9a82c6c85ef499ee3a626b8
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -17,6 +17,9 @@ import Mathbin.Topology.Homotopy.Contractible
 
 /-!
 # Topology on the upper half plane
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 In this file we introduce a `topological_space` structure on the upper half plane and provide
 various instances.

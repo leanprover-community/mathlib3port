@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Violeta Hernández Palacios
 
 ! This file was ported from Lean 3 source module set_theory.game.birthday
-! leanprover-community/mathlib commit a347076985674932c0e91da09b9961ed0a79508c
+! leanprover-community/mathlib commit 9240e8be927a0955b9a82c6c85ef499ee3a626b8
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.SetTheory.Ordinal.NaturalOps
 
 /-!
 # Birthdays of games
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 The birthday of a game is an ordinal that represents at which "step" the game was constructed. We
 define it recursively as the least ordinal larger than the birthdays of its left and right games. We

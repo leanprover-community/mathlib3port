@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module logic.equiv.array
-! leanprover-community/mathlib commit 78314d08d707a6338079f00094bbdb90bf11fc41
+! leanprover-community/mathlib commit 9240e8be927a0955b9a82c6c85ef499ee3a626b8
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.Control.Traversable.Equiv
 
 /-!
 # Equivalences involving `array`
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 We keep this separate from the file containing `list`-like equivalences as those have no future
 in mathlib4.

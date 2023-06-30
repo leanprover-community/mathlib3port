@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis
 
 ! This file was ported from Lean 3 source module ring_theory.witt_vector.domain
-! leanprover-community/mathlib commit b1d911acd60ab198808e853292106ee352b648ea
+! leanprover-community/mathlib commit 9240e8be927a0955b9a82c6c85ef499ee3a626b8
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.RingTheory.WittVector.Identities
 /-!
 
 # Witt vectors over a domain
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file builds to the proof `witt_vector.is_domain`,
 an instance that says if `R` is an integral domain, then so is `𝕎 R`.

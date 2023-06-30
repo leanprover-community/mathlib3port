@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Robert Y. Lewis
 
 ! This file was ported from Lean 3 source module ring_theory.witt_vector.truncated
-! leanprover-community/mathlib commit acbe099ced8be9c9754d62860110295cde0d7181
+! leanprover-community/mathlib commit 9240e8be927a0955b9a82c6c85ef499ee3a626b8
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.RingTheory.WittVector.InitTail
 /-!
 
 # Truncated Witt vectors
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 The ring of truncated Witt vectors (of length `n`) is a quotient of the ring of Witt vectors.
 It retains the first `n` coefficients of each Witt vector.

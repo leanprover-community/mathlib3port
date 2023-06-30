@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Kurniadi Angdinata
 
 ! This file was ported from Lean 3 source module ring_theory.dedekind_domain.selmer_group
-! leanprover-community/mathlib commit 2032a878972d5672e7c27c957e7a6e297b044973
+! leanprover-community/mathlib commit 08b63ab58a6ec1157ebeafcbbe6c7a3fb3c9f6d5
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -15,6 +15,9 @@ import Mathbin.RingTheory.Norm
 
 /-!
 # Selmer groups of fraction fields of Dedekind domains
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 Let $K$ be the field of fractions of a Dedekind domain $R$. For any set $S$ of prime ideals in the
 height one spectrum of $R$, and for any natural number $n$, the Selmer group $K(S, n)$ is defined to

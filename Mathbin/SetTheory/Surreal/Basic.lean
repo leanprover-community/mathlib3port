@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Scott Morrison
 
 ! This file was ported from Lean 3 source module set_theory.surreal.basic
-! leanprover-community/mathlib commit ee02a30e209a2a77b93eac1254e8c66e76192f54
+! leanprover-community/mathlib commit 9240e8be927a0955b9a82c6c85ef499ee3a626b8
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.SetTheory.Game.Ordinal
 
 /-!
 # Surreal numbers
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 The basic theory of surreal numbers, built on top of the theory of combinatorial (pre-)games.
 

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Violeta Hernández Palacios
 
 ! This file was ported from Lean 3 source module set_theory.game.ordinal
-! leanprover-community/mathlib commit b90e72c7eebbe8de7c8293a80208ea2ba135c834
+! leanprover-community/mathlib commit 08b63ab58a6ec1157ebeafcbbe6c7a3fb3c9f6d5
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.SetTheory.Ordinal.NaturalOps
 
 /-!
 # Ordinals as games
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 We define the canonical map `ordinal → pgame`, where every ordinal is mapped to the game whose left
 set consists of all previous ordinals.

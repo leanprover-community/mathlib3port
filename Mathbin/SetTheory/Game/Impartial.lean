@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Fox Thomson
 
 ! This file was ported from Lean 3 source module set_theory.game.impartial
-! leanprover-community/mathlib commit 2e0975f6a25dd3fbfb9e41556a77f075f6269748
+! leanprover-community/mathlib commit 9240e8be927a0955b9a82c6c85ef499ee3a626b8
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Tactic.NthRewrite.Default
 
 /-!
 # Basic definitions about impartial (pre-)games
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 We will define an impartial game, one in which left and right can make exactly the same moves.
 Our definition differs slightly by saying that the game is always equivalent to its negative,

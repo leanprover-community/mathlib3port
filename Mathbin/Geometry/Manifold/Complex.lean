@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth
 
 ! This file was ported from Lean 3 source module geometry.manifold.complex
-! leanprover-community/mathlib commit f2ce6086713c78a7f880485f7917ea547a215982
+! leanprover-community/mathlib commit 9240e8be927a0955b9a82c6c85ef499ee3a626b8
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.Geometry.Manifold.Mfderiv
 import Mathbin.Topology.LocallyConstant.Basic
 
 /-! # Holomorphic functions on complex manifolds
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 Thanks to the rigidity of complex-differentiability compared to real-differentiability, there are
 many results about complex manifolds with no analogue for manifolds over a general normed field. For

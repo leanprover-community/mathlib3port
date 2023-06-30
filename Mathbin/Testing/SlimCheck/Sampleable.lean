@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 
 ! This file was ported from Lean 3 source module testing.slim_check.sampleable
-! leanprover-community/mathlib commit e1bccd6e40ae78370f01659715d3c948716e3b7e
+! leanprover-community/mathlib commit 9240e8be927a0955b9a82c6c85ef499ee3a626b8
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -18,6 +18,9 @@ import Mathbin.Tactic.Linarith.Default
 
 /-!
 # `sampleable` Class
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This class permits the creation samples of a given type
 controlling the size of those values using the `gen` monad`. It also

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes
 
 ! This file was ported from Lean 3 source module number_theory.legendre_symbol.gauss_eisenstein_lemmas
-! leanprover-community/mathlib commit c471da714c044131b90c133701e51b877c246677
+! leanprover-community/mathlib commit 08b63ab58a6ec1157ebeafcbbe6c7a3fb3c9f6d5
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.NumberTheory.LegendreSymbol.QuadraticReciprocity
 
 /-!
 # Lemmas of Gauss and Eisenstein
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file contains the Lemmas of Gauss and Eisenstein on the Legendre symbol.
 The main results are `zmod.gauss_lemma` and `zmod.eisenstein_lemma`.

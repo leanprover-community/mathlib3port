@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck
 
 ! This file was ported from Lean 3 source module number_theory.modular_forms.slash_actions
-! leanprover-community/mathlib commit 738054fa93d43512da144ec45ce799d18fd44248
+! leanprover-community/mathlib commit 9240e8be927a0955b9a82c6c85ef499ee3a626b8
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.LinearAlgebra.Matrix.SpecialLinearGroup
 
 /-!
 # Slash actions
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file defines a class of slash actions, which are families of right actions of a given group
 parametrized by some Type. This is modeled on the slash action of `GL_pos (fin 2) ℝ` on the space

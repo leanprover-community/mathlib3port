@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis, Heather Macbeth
 
 ! This file was ported from Lean 3 source module ring_theory.witt_vector.mul_coeff
-! leanprover-community/mathlib commit 2f5b500a507264de86d666a5f87ddb976e2d8de4
+! leanprover-community/mathlib commit 9240e8be927a0955b9a82c6c85ef499ee3a626b8
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Data.MvPolynomial.Supported
 
 /-!
 # Leading terms of Witt vector multiplication
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 The goal of this file is to study the leading terms of the formula for the `n+1`st coefficient
 of a product of Witt vectors `x` and `y` over a ring of characteristic `p`.

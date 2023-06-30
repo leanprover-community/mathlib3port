@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis, Heather Macbeth, Johan Commelin
 
 ! This file was ported from Lean 3 source module ring_theory.witt_vector.discrete_valuation_ring
-! leanprover-community/mathlib commit c163ec99dfc664628ca15d215fce0a5b9c265b68
+! leanprover-community/mathlib commit 9240e8be927a0955b9a82c6c85ef499ee3a626b8
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -16,6 +16,9 @@ import Mathbin.Tactic.LinearCombination
 /-!
 
 # Witt vectors over a perfect ring
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file establishes that Witt vectors over a perfect field are a discrete valuation ring.
 When `k` is a perfect ring, a nonzero `a : 𝕎 k` can be written as `p^m * b` for some `m : ℕ` and

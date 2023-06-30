@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Birkbeck, David Loeffler
 
 ! This file was ported from Lean 3 source module analysis.complex.upper_half_plane.functions_bounded_at_infty
-! leanprover-community/mathlib commit f2ce6086713c78a7f880485f7917ea547a215982
+! leanprover-community/mathlib commit 9240e8be927a0955b9a82c6c85ef499ee3a626b8
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.Order.Filter.ZeroAndBoundedAtFilter
 
 /-!
 # Bounded at infinity
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 For complex valued functions on the upper half plane, this file defines the filter `at_im_infty`
 required for defining when functions are bounded at infinity and zero at infinity.

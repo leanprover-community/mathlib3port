@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Loeffler
 
 ! This file was ported from Lean 3 source module analysis.special_functions.gamma.beta
-! leanprover-community/mathlib commit a3209ddf94136d36e5e5c624b10b2a347cc9d090
+! leanprover-community/mathlib commit 9240e8be927a0955b9a82c6c85ef499ee3a626b8
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -15,6 +15,9 @@ import Mathbin.Analysis.Analytic.IsolatedZeros
 
 /-!
 # The Beta function, and further properties of the Gamma function
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 In this file we define the Beta integral, relate Beta and Gamma functions, and prove some
 refined properties of the Gamma function using these relations.

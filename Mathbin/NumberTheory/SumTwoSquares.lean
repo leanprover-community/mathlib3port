@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Chris Hughes, Michael Stoll
 
 ! This file was ported from Lean 3 source module number_theory.sum_two_squares
-! leanprover-community/mathlib commit 5b2fe80501ff327b9109fb09b7cc8c325cd0d7d9
+! leanprover-community/mathlib commit 08b63ab58a6ec1157ebeafcbbe6c7a3fb3c9f6d5
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Tactic.LinearCombination
 
 /-!
 # Sums of two squares
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 Fermat's theorem on the sum of two squares. Every prime `p` congruent to 1 mod 4 is the
 sum of two squares; see `nat.prime.sq_add_sq` (which has the weaker assumption `p % 4 ≠ 3`).
