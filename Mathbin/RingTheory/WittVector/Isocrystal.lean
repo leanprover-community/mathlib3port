@@ -75,25 +75,33 @@ variable [IsDomain k] [CharP k p] [PerfectRing k p]
 /-! ### Frobenius-linear maps -/
 
 
+#print WittVector.FractionRing.frobenius /-
 /-- The Frobenius automorphism of `k` induces an automorphism of `K`. -/
 def FractionRing.frobenius : K(p, k) ≃+* K(p, k) :=
   IsFractionRing.fieldEquivOfRingEquiv (frobeniusEquiv p k)
 #align witt_vector.fraction_ring.frobenius WittVector.FractionRing.frobenius
+-/
 
+#print WittVector.FractionRing.frobeniusRingHom /-
 /-- The Frobenius automorphism of `k` induces an endomorphism of `K`. For notation purposes. -/
 def FractionRing.frobeniusRingHom : K(p, k) →+* K(p, k) :=
   FractionRing.frobenius p k
 #align witt_vector.fraction_ring.frobenius_ring_hom WittVector.FractionRing.frobeniusRingHom
+-/
 
 scoped[Isocrystal] notation "φ(" p ", " k ")" => WittVector.FractionRing.frobeniusRingHom p k
 
+#print WittVector.inv_pair₁ /-
 instance inv_pair₁ : RingHomInvPair φ(p, k) _ :=
   RingHomInvPair.of_ringEquiv (FractionRing.frobenius p k)
 #align witt_vector.inv_pair₁ WittVector.inv_pair₁
+-/
 
+#print WittVector.inv_pair₂ /-
 instance inv_pair₂ : RingHomInvPair ((FractionRing.frobenius p k).symm : K(p, k) →+* K(p, k)) _ :=
   RingHomInvPair.of_ringEquiv (FractionRing.frobenius p k).symm
 #align witt_vector.inv_pair₂ WittVector.inv_pair₂
+-/
 
 scoped[Isocrystal]
   notation:50 M " →ᶠˡ[" p ", " k "] " M₂ =>
@@ -106,12 +114,14 @@ scoped[Isocrystal]
 /-! ### Isocrystals -/
 
 
+#print WittVector.Isocrystal /-
 /-- An isocrystal is a vector space over the field `K(p, k)` additionally equipped with a
 Frobenius-linear automorphism.
 -/
 class Isocrystal (V : Type _) [AddCommGroup V] extends Module K(p, k) V where
   frob : V ≃ᶠˡ[p, k] V
 #align witt_vector.isocrystal WittVector.Isocrystal
+-/
 
 variable (V : Type _) [AddCommGroup V] [Isocrystal p k V]
 
@@ -119,28 +129,34 @@ variable (V₂ : Type _) [AddCommGroup V₂] [Isocrystal p k V₂]
 
 variable {V}
 
+#print WittVector.Isocrystal.frobenius /-
 /--
 Project the Frobenius automorphism from an isocrystal. Denoted by `Φ(p, k)` when V can be inferred.
 -/
 def Isocrystal.frobenius : V ≃ᶠˡ[p, k] V :=
   @Isocrystal.frob p _ k _ _ _ _ _ _ _
 #align witt_vector.isocrystal.frobenius WittVector.Isocrystal.frobenius
+-/
 
 variable (V)
 
 scoped[Isocrystal] notation "Φ(" p ", " k ")" => WittVector.Isocrystal.frobenius p k
 
+#print WittVector.IsocrystalHom /-
 /-- A homomorphism between isocrystals respects the Frobenius map. -/
 @[nolint has_nonempty_instance]
 structure IsocrystalHom extends V →ₗ[K(p, k)] V₂ where
   frob_equivariant : ∀ x : V, Φ(p, k) (to_linear_map x) = to_linear_map (Φ(p, k) x)
 #align witt_vector.isocrystal_hom WittVector.IsocrystalHom
+-/
 
+#print WittVector.IsocrystalEquiv /-
 /-- An isomorphism between isocrystals respects the Frobenius map. -/
 @[nolint has_nonempty_instance]
 structure IsocrystalEquiv extends V ≃ₗ[K(p, k)] V₂ where
   frob_equivariant : ∀ x : V, Φ(p, k) (to_linear_equiv x) = to_linear_equiv (Φ(p, k) x)
 #align witt_vector.isocrystal_equiv WittVector.IsocrystalEquiv
+-/
 
 scoped[Isocrystal] notation:50 M " →ᶠⁱ[" p ", " k "] " M₂ => WittVector.IsocrystalHom p k M M₂
 
@@ -153,13 +169,16 @@ open scoped Isocrystal
 /-! ### Classification of isocrystals in dimension 1 -/
 
 
+#print WittVector.FractionRing.module /-
 /-- A helper instance for type class inference. -/
 @[local instance]
 def FractionRing.module : Module K(p, k) K(p, k) :=
   Semiring.toModule
 #align witt_vector.fraction_ring.module WittVector.FractionRing.module
+-/
 
 /- ./././Mathport/Syntax/Translate/Command.lean:43:9: unsupported derive handler module[module] witt_vector.fraction_ring(p, k) -/
+#print WittVector.StandardOneDimIsocrystal /-
 /-- Type synonym for `K(p, k)` to carry the standard 1-dimensional isocrystal structure
 of slope `m : ℤ`.
 -/
@@ -169,6 +188,7 @@ def StandardOneDimIsocrystal (m : ℤ) : Type _ :=
 deriving AddCommGroup,
   «./././Mathport/Syntax/Translate/Command.lean:43:9: unsupported derive handler module[module] witt_vector.fraction_ring(p, k)»
 #align witt_vector.standard_one_dim_isocrystal WittVector.StandardOneDimIsocrystal
+-/
 
 section PerfectRing
 
@@ -180,14 +200,17 @@ instance (m : ℤ) : Isocrystal p k (StandardOneDimIsocrystal p k m)
     (FractionRing.frobenius p k).toSemilinearEquiv.trans
       (LinearEquiv.smulOfNeZero _ _ _ (zpow_ne_zero m (WittVector.FractionRing.p_nonzero p k)))
 
+#print WittVector.StandardOneDimIsocrystal.frobenius_apply /-
 @[simp]
 theorem StandardOneDimIsocrystal.frobenius_apply (m : ℤ) (x : StandardOneDimIsocrystal p k m) :
     Φ(p, k) x = (p : K(p, k)) ^ m • φ(p, k) x :=
   rfl
 #align witt_vector.standard_one_dim_isocrystal.frobenius_apply WittVector.StandardOneDimIsocrystal.frobenius_apply
+-/
 
 end PerfectRing
 
+#print WittVector.isocrystal_classification /-
 /-- A one-dimensional isocrystal over an algebraically closed field
 admits an isomorphism to one of the standard (indexed by `m : ℤ`) one-dimensional isocrystals. -/
 theorem isocrystal_classification (k : Type _) [Field k] [IsAlgClosed k] [CharP k p] (V : Type _)
@@ -227,6 +250,7 @@ theorem isocrystal_classification (k : Type _) [Field k] [IsAlgClosed k] [CharP 
   congr 1
   linear_combination φ(p, k) c * hmb
 #align witt_vector.isocrystal_classification WittVector.isocrystal_classification
+-/
 
 end WittVector
 
