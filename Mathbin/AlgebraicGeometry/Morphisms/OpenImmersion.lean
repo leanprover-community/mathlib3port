@@ -53,7 +53,7 @@ theorem isOpenImmersionCat_respectsIso : MorphismProperty.RespectsIso @IsOpenImm
   intro _ _ _; infer_instance
 #align algebraic_geometry.is_open_immersion_respects_iso AlgebraicGeometry.isOpenImmersionCat_respectsIso
 
-theorem isOpenImmersionIsLocalAtTarget : PropertyIsLocalAtTarget @IsOpenImmersionCat :=
+theorem isOpenImmersionCat_is_local_at_target : PropertyIsLocalAtTarget @IsOpenImmersionCat :=
   by
   constructor
   · exact is_open_immersion_respects_iso
@@ -79,7 +79,7 @@ theorem isOpenImmersionIsLocalAtTarget : PropertyIsLocalAtTarget @IsOpenImmersio
               (morphism_restrict_opens_range f (𝒰.map _))).mpr
           (H _)
       infer_instance
-#align algebraic_geometry.is_open_immersion_is_local_at_target AlgebraicGeometry.isOpenImmersionIsLocalAtTarget
+#align algebraic_geometry.is_open_immersion_is_local_at_target AlgebraicGeometry.isOpenImmersionCat_is_local_at_target
 
 theorem IsOpenImmersionCat.openCover_tFAE {X Y : Scheme.{u}} (f : X ⟶ Y) :
     TFAE
@@ -93,13 +93,13 @@ theorem IsOpenImmersionCat.openCover_tFAE {X Y : Scheme.{u}} (f : X ⟶ Y) :
           IsOpenImmersionCat (pullback.snd : pullback f g ⟶ _),
         ∃ (ι : Type u) (U : ι → Opens Y.carrier) (hU : iSup U = ⊤),
           ∀ i, IsOpenImmersionCat (f ∣_ U i)] :=
-  isOpenImmersionIsLocalAtTarget.openCover_tFAE f
+  isOpenImmersionCat_is_local_at_target.openCover_TFAE f
 #align algebraic_geometry.is_open_immersion.open_cover_tfae AlgebraicGeometry.IsOpenImmersionCat.openCover_tFAE
 
 theorem IsOpenImmersionCat.openCover_iff {X Y : Scheme.{u}} (𝒰 : Scheme.OpenCover.{u} Y)
     (f : X ⟶ Y) :
     IsOpenImmersionCat f ↔ ∀ i, IsOpenImmersionCat (pullback.snd : pullback f (𝒰.map i) ⟶ _) :=
-  isOpenImmersionIsLocalAtTarget.openCover_iff f 𝒰
+  isOpenImmersionCat_is_local_at_target.openCover_iff f 𝒰
 #align algebraic_geometry.is_open_immersion.open_cover_iff AlgebraicGeometry.IsOpenImmersionCat.openCover_iff
 
 theorem isOpenImmersionCat_stableUnderBaseChange :

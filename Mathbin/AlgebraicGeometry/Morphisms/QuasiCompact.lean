@@ -158,7 +158,7 @@ theorem isCompact_basicOpen (X : Scheme) {U : Opens X.carrier} (hU : IsCompact (
     exact Set.Subset.rfl
 #align algebraic_geometry.is_compact_basic_open AlgebraicGeometry.isCompact_basicOpen
 
-theorem QuasiCompact.affinePropertyIsLocal : (QuasiCompact.affineProperty : _).IsLocal :=
+theorem QuasiCompact.affineProperty_isLocal : (QuasiCompact.affineProperty : _).IsLocal :=
   by
   constructor
   · apply affine_target_morphism_property.respects_iso_mk <;> rintro X Y Z _ _ _ H
@@ -181,7 +181,7 @@ theorem QuasiCompact.affinePropertyIsLocal : (QuasiCompact.affineProperty : _).I
     simp only [opens.coe_supr, Set.preimage_iUnion, Subtype.val_eq_coe]
     exacts [isCompact_iUnion fun i => is_compact_iff_compact_space.mpr (hS' i),
       top_is_affine_open _]
-#align algebraic_geometry.quasi_compact.affine_property_is_local AlgebraicGeometry.QuasiCompact.affinePropertyIsLocal
+#align algebraic_geometry.quasi_compact.affine_property_is_local AlgebraicGeometry.QuasiCompact.affineProperty_isLocal
 
 theorem QuasiCompact.affine_openCover_tFAE {X Y : Scheme.{u}} (f : X ⟶ Y) :
     TFAE
@@ -194,13 +194,13 @@ theorem QuasiCompact.affine_openCover_tFAE {X Y : Scheme.{u}} (f : X ⟶ Y) :
           CompactSpace (pullback f g).carrier,
         ∃ (ι : Type u) (U : ι → Opens Y.carrier) (hU : iSup U = ⊤) (hU' : ∀ i, IsAffineOpen (U i)),
           ∀ i, CompactSpace (f.1.base ⁻¹' (U i).1)] :=
-  quasiCompact_eq_affineProperty.symm ▸ QuasiCompact.affinePropertyIsLocal.affine_openCover_tFAE f
+  quasiCompact_eq_affineProperty.symm ▸ QuasiCompact.affineProperty_isLocal.affine_openCover_TFAE f
 #align algebraic_geometry.quasi_compact.affine_open_cover_tfae AlgebraicGeometry.QuasiCompact.affine_openCover_tFAE
 
-theorem QuasiCompact.isLocalAtTarget : PropertyIsLocalAtTarget @QuasiCompact :=
+theorem QuasiCompact.is_local_at_target : PropertyIsLocalAtTarget @QuasiCompact :=
   quasiCompact_eq_affineProperty.symm ▸
-    QuasiCompact.affinePropertyIsLocal.targetAffineLocallyIsLocal
-#align algebraic_geometry.quasi_compact.is_local_at_target AlgebraicGeometry.QuasiCompact.isLocalAtTarget
+    QuasiCompact.affineProperty_isLocal.targetAffineLocallyIsLocal
+#align algebraic_geometry.quasi_compact.is_local_at_target AlgebraicGeometry.QuasiCompact.is_local_at_target
 
 theorem QuasiCompact.openCover_tFAE {X Y : Scheme.{u}} (f : X ⟶ Y) :
     TFAE
@@ -214,12 +214,12 @@ theorem QuasiCompact.openCover_tFAE {X Y : Scheme.{u}} (f : X ⟶ Y) :
           QuasiCompact (pullback.snd : pullback f g ⟶ _),
         ∃ (ι : Type u) (U : ι → Opens Y.carrier) (hU : iSup U = ⊤), ∀ i, QuasiCompact (f ∣_ U i)] :=
   quasiCompact_eq_affineProperty.symm ▸
-    QuasiCompact.affinePropertyIsLocal.targetAffineLocallyIsLocal.openCover_tFAE f
+    QuasiCompact.affineProperty_isLocal.targetAffineLocallyIsLocal.openCover_TFAE f
 #align algebraic_geometry.quasi_compact.open_cover_tfae AlgebraicGeometry.QuasiCompact.openCover_tFAE
 
 theorem quasiCompact_over_affine_iff {X Y : Scheme} (f : X ⟶ Y) [IsAffine Y] :
     QuasiCompact f ↔ CompactSpace X.carrier :=
-  quasiCompact_eq_affineProperty.symm ▸ QuasiCompact.affinePropertyIsLocal.affine_target_iff f
+  quasiCompact_eq_affineProperty.symm ▸ QuasiCompact.affineProperty_isLocal.affine_target_iff f
 #align algebraic_geometry.quasi_compact_over_affine_iff AlgebraicGeometry.quasiCompact_over_affine_iff
 
 theorem compactSpace_iff_quasiCompact (X : Scheme) :
@@ -230,18 +230,18 @@ theorem compactSpace_iff_quasiCompact (X : Scheme) :
 theorem QuasiCompact.affine_openCover_iff {X Y : Scheme.{u}} (𝒰 : Scheme.OpenCover.{u} Y)
     [∀ i, IsAffine (𝒰.obj i)] (f : X ⟶ Y) :
     QuasiCompact f ↔ ∀ i, CompactSpace (pullback f (𝒰.map i)).carrier :=
-  quasiCompact_eq_affineProperty.symm ▸ QuasiCompact.affinePropertyIsLocal.affine_openCover_iff f 𝒰
+  quasiCompact_eq_affineProperty.symm ▸ QuasiCompact.affineProperty_isLocal.affine_openCover_iff f 𝒰
 #align algebraic_geometry.quasi_compact.affine_open_cover_iff AlgebraicGeometry.QuasiCompact.affine_openCover_iff
 
 theorem QuasiCompact.openCover_iff {X Y : Scheme.{u}} (𝒰 : Scheme.OpenCover.{u} Y) (f : X ⟶ Y) :
     QuasiCompact f ↔ ∀ i, QuasiCompact (pullback.snd : pullback f (𝒰.map i) ⟶ _) :=
   quasiCompact_eq_affineProperty.symm ▸
-    QuasiCompact.affinePropertyIsLocal.targetAffineLocallyIsLocal.openCover_iff f 𝒰
+    QuasiCompact.affineProperty_isLocal.targetAffineLocallyIsLocal.openCover_iff f 𝒰
 #align algebraic_geometry.quasi_compact.open_cover_iff AlgebraicGeometry.QuasiCompact.openCover_iff
 
 theorem quasiCompact_respectsIso : MorphismProperty.RespectsIso @QuasiCompact :=
   quasiCompact_eq_affineProperty.symm ▸
-    targetAffineLocally_respectsIso QuasiCompact.affinePropertyIsLocal.1
+    targetAffineLocally_respectsIso QuasiCompact.affineProperty_isLocal.1
 #align algebraic_geometry.quasi_compact_respects_iso AlgebraicGeometry.quasiCompact_respectsIso
 
 theorem quasiCompact_stableUnderComposition :
@@ -264,7 +264,7 @@ theorem QuasiCompact.affineProperty_stableUnderBaseChange :
 
 theorem quasiCompact_stableUnderBaseChange : MorphismProperty.StableUnderBaseChange @QuasiCompact :=
   quasiCompact_eq_affineProperty.symm ▸
-    QuasiCompact.affinePropertyIsLocal.StableUnderBaseChange
+    QuasiCompact.affineProperty_isLocal.StableUnderBaseChange
       QuasiCompact.affineProperty_stableUnderBaseChange
 #align algebraic_geometry.quasi_compact_stable_under_base_change AlgebraicGeometry.quasiCompact_stableUnderBaseChange
 
