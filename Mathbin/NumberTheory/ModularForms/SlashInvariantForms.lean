@@ -145,13 +145,13 @@ theorem SlashInvariantFormClass.coe_coe [SlashInvariantFormClass F Γ k] (f : F)
 #align slash_invariant_form.slash_invariant_form_class.coe_coe SlashInvariantForm.SlashInvariantFormClass.coe_coe
 -/
 
-#print SlashInvariantForm.hasAdd /-
-instance hasAdd : Add (SlashInvariantForm Γ k) :=
+#print SlashInvariantForm.instAdd /-
+instance instAdd : Add (SlashInvariantForm Γ k) :=
   ⟨fun f g =>
     { toFun := f + g
       slash_action_eq' := fun γ => by
         rw [SlashAction.add_slash, slash_action_eqn, slash_action_eqn] }⟩
-#align slash_invariant_form.has_add SlashInvariantForm.hasAdd
+#align slash_invariant_form.has_add SlashInvariantForm.instAdd
 -/
 
 #print SlashInvariantForm.coe_add /-
@@ -168,11 +168,11 @@ theorem add_apply (f g : SlashInvariantForm Γ k) (z : ℍ) : (f + g) z = f z + 
 #align slash_invariant_form.add_apply SlashInvariantForm.add_apply
 -/
 
-#print SlashInvariantForm.hasZero /-
-instance hasZero : Zero (SlashInvariantForm Γ k) :=
+#print SlashInvariantForm.instZero /-
+instance instZero : Zero (SlashInvariantForm Γ k) :=
   ⟨{  toFun := 0
       slash_action_eq' := SlashAction.zero_slash _ }⟩
-#align slash_invariant_form.has_zero SlashInvariantForm.hasZero
+#align slash_invariant_form.has_zero SlashInvariantForm.instZero
 -/
 
 #print SlashInvariantForm.coe_zero /-
@@ -186,12 +186,12 @@ section
 
 variable {α : Type _} [SMul α ℂ] [IsScalarTower α ℂ ℂ]
 
-#print SlashInvariantForm.hasSmul /-
-instance hasSmul : SMul α (SlashInvariantForm Γ k) :=
+#print SlashInvariantForm.instSMul /-
+instance instSMul : SMul α (SlashInvariantForm Γ k) :=
   ⟨fun c f =>
     { toFun := c • f
       slash_action_eq' := fun γ => by rw [SlashAction.smul_slash_of_tower, slash_action_eqn] }⟩
-#align slash_invariant_form.has_smul SlashInvariantForm.hasSmul
+#align slash_invariant_form.has_smul SlashInvariantForm.instSMul
 -/
 
 #print SlashInvariantForm.coe_smul /-
@@ -210,12 +210,12 @@ theorem smul_apply (f : SlashInvariantForm Γ k) (n : α) (z : ℍ) : (n • f) 
 
 end
 
-#print SlashInvariantForm.hasNeg /-
-instance hasNeg : Neg (SlashInvariantForm Γ k) :=
+#print SlashInvariantForm.instNeg /-
+instance instNeg : Neg (SlashInvariantForm Γ k) :=
   ⟨fun f =>
     { toFun := -f
       slash_action_eq' := fun γ => by rw [SlashAction.neg_slash, slash_action_eqn] }⟩
-#align slash_invariant_form.has_neg SlashInvariantForm.hasNeg
+#align slash_invariant_form.has_neg SlashInvariantForm.instNeg
 -/
 
 #print SlashInvariantForm.coe_neg /-
@@ -232,10 +232,10 @@ theorem neg_apply (f : SlashInvariantForm Γ k) (z : ℍ) : (-f) z = -f z :=
 #align slash_invariant_form.neg_apply SlashInvariantForm.neg_apply
 -/
 
-#print SlashInvariantForm.hasSub /-
-instance hasSub : Sub (SlashInvariantForm Γ k) :=
+#print SlashInvariantForm.instSub /-
+instance instSub : Sub (SlashInvariantForm Γ k) :=
   ⟨fun f g => f + -g⟩
-#align slash_invariant_form.has_sub SlashInvariantForm.hasSub
+#align slash_invariant_form.has_sub SlashInvariantForm.instSub
 -/
 
 #print SlashInvariantForm.coe_sub /-

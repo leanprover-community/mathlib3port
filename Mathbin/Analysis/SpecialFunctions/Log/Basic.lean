@@ -335,9 +335,11 @@ theorem log_eq_zero {x : ℝ} : log x = 0 ↔ x = 0 ∨ x = 1 ∨ x = -1 :=
 #align real.log_eq_zero Real.log_eq_zero
 -/
 
+#print Real.log_ne_zero /-
 theorem log_ne_zero {x : ℝ} : log x ≠ 0 ↔ x ≠ 0 ∧ x ≠ 1 ∧ x ≠ -1 := by
   simpa only [not_or] using log_eq_zero.not
 #align real.log_ne_zero Real.log_ne_zero
+-/
 
 #print Real.log_pow /-
 @[simp]

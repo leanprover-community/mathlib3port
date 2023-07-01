@@ -94,14 +94,14 @@ theorem emptyIsInitial_to : emptyIsInitial.to = Scheme.emptyTo :=
 instance : IsEmpty Scheme.empty.carrier :=
   show IsEmpty PEmpty by infer_instance
 
-#print AlgebraicGeometry.spec_pUnit_isEmpty /-
-instance spec_pUnit_isEmpty : IsEmpty (Scheme.Spec.obj (op <| CommRingCat.of PUnit)).carrier :=
+#print AlgebraicGeometry.spec_punit_isEmpty /-
+instance spec_punit_isEmpty : IsEmpty (Scheme.Spec.obj (op <| CommRingCat.of PUnit)).carrier :=
   ⟨PrimeSpectrum.pUnit⟩
-#align algebraic_geometry.Spec_punit_is_empty AlgebraicGeometry.spec_pUnit_isEmpty
+#align algebraic_geometry.Spec_punit_is_empty AlgebraicGeometry.spec_punit_isEmpty
 -/
 
-#print AlgebraicGeometry.isOpenImmersionCat_of_isEmpty /-
-instance (priority := 100) isOpenImmersionCat_of_isEmpty {X Y : Scheme} (f : X ⟶ Y)
+#print AlgebraicGeometry.isOpenImmersion_of_isEmpty /-
+instance (priority := 100) isOpenImmersion_of_isEmpty {X Y : Scheme} (f : X ⟶ Y)
     [IsEmpty X.carrier] : IsOpenImmersionCat f :=
   by
   apply (config := { instances := false }) is_open_immersion.of_stalk_iso
@@ -111,7 +111,7 @@ instance (priority := 100) isOpenImmersionCat_of_isEmpty {X Y : Scheme} (f : X �
     · intro U hU; convert isOpen_empty; ext; apply (iff_false_iff _).mpr
       exact fun x => isEmptyElim (show X.carrier from x.some)
   · rintro (i : X.carrier); exact isEmptyElim i
-#align algebraic_geometry.is_open_immersion_of_is_empty AlgebraicGeometry.isOpenImmersionCat_of_isEmpty
+#align algebraic_geometry.is_open_immersion_of_is_empty AlgebraicGeometry.isOpenImmersion_of_isEmpty
 -/
 
 #print AlgebraicGeometry.isIso_of_isEmpty /-

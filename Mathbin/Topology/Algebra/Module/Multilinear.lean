@@ -323,12 +323,14 @@ theorem pi_apply {ι' : Type _} {M' : ι' → Type _} [∀ i, AddCommMonoid (M' 
 #align continuous_multilinear_map.pi_apply ContinuousMultilinearMap.pi_apply
 -/
 
+#print ContinuousMultilinearMap.codRestrict /-
 /-- Restrict the codomain of a continuous multilinear map to a submodule. -/
 @[simps toMultilinearMap apply_coe]
 def codRestrict (f : ContinuousMultilinearMap R M₁ M₂) (p : Submodule R M₂) (h : ∀ v, f v ∈ p) :
     ContinuousMultilinearMap R M₁ p :=
   ⟨f.1.codRestrict p h, f.cont.subtype_mk _⟩
 #align continuous_multilinear_map.cod_restrict ContinuousMultilinearMap.codRestrict
+-/
 
 section
 
@@ -424,6 +426,7 @@ def domDomCongr {ι' : Type _} (e : ι ≃ ι') (f : ContinuousMultilinearMap R 
 #align continuous_multilinear_map.dom_dom_congr ContinuousMultilinearMap.domDomCongr
 -/
 
+#print ContinuousMultilinearMap.domDomCongrEquiv /-
 /-- An equivalence of the index set defines an equivalence between the spaces of continuous
 multilinear maps. In case of normed spaces, this is a linear isometric equivalence, see
 `continuous.multilinear_map.dom_dom_congrₗᵢ`. -/
@@ -437,6 +440,7 @@ def domDomCongrEquiv {ι' : Type _} (e : ι ≃ ι') :
   left_inv _ := ext fun _ => by simp
   right_inv _ := ext fun _ => by simp
 #align continuous_multilinear_map.dom_dom_congr_equiv ContinuousMultilinearMap.domDomCongrEquiv
+-/
 
 #print ContinuousMultilinearMap.cons_add /-
 /-- In the specific case of continuous multilinear maps on spaces indexed by `fin (n+1)`, where one

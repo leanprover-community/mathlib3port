@@ -578,10 +578,12 @@ section
 
 variable (𝕜 G)
 
+#print ContinuousMultilinearMap.norm_ofSubsingleton_le /-
 theorem norm_ofSubsingleton_le [Subsingleton ι] (i' : ι) : ‖ofSubsingleton 𝕜 G i'‖ ≤ 1 :=
   op_norm_le_bound _ zero_le_one fun m => by
     rw [Fintype.prod_subsingleton _ i', one_mul, of_subsingleton_apply]
 #align continuous_multilinear_map.norm_of_subsingleton_le ContinuousMultilinearMap.norm_ofSubsingleton_le
+-/
 
 #print ContinuousMultilinearMap.norm_ofSubsingleton /-
 @[simp]
@@ -596,9 +598,11 @@ theorem norm_ofSubsingleton [Subsingleton ι] [Nontrivial G] (i' : ι) :
 #align continuous_multilinear_map.norm_of_subsingleton ContinuousMultilinearMap.norm_ofSubsingleton
 -/
 
+#print ContinuousMultilinearMap.nnnorm_ofSubsingleton_le /-
 theorem nnnorm_ofSubsingleton_le [Subsingleton ι] (i' : ι) : ‖ofSubsingleton 𝕜 G i'‖₊ ≤ 1 :=
   norm_ofSubsingleton_le _ _ _
 #align continuous_multilinear_map.nnnorm_of_subsingleton_le ContinuousMultilinearMap.nnnorm_ofSubsingleton_le
+-/
 
 #print ContinuousMultilinearMap.nnnorm_ofSubsingleton /-
 @[simp]
@@ -690,6 +694,7 @@ theorem norm_restrictScalars : ‖f.restrictScalars 𝕜'‖ = ‖f‖ :=
 
 variable (𝕜')
 
+#print ContinuousMultilinearMap.restrictScalarsₗᵢ /-
 /-- `continuous_multilinear_map.restrict_scalars` as a `linear_isometry`. -/
 def restrictScalarsₗᵢ : ContinuousMultilinearMap 𝕜 E G →ₗᵢ[𝕜'] ContinuousMultilinearMap 𝕜' E G
     where
@@ -698,6 +703,7 @@ def restrictScalarsₗᵢ : ContinuousMultilinearMap 𝕜 E G →ₗᵢ[𝕜'] C
   map_smul' c m := rfl
   norm_map' f := rfl
 #align continuous_multilinear_map.restrict_scalarsₗᵢ ContinuousMultilinearMap.restrictScalarsₗᵢ
+-/
 
 #print ContinuousMultilinearMap.restrictScalarsLinear /-
 /-- `continuous_multilinear_map.restrict_scalars` as a `continuous_linear_map`. -/
@@ -2001,6 +2007,7 @@ namespace ContinuousMultilinearMap
 
 variable (𝕜 G G')
 
+#print ContinuousMultilinearMap.norm_domDomCongr /-
 -- fails to unify without `@`; TODO: try again in Lean 4
 @[simp]
 theorem norm_domDomCongr (σ : ι ≃ ι') (f : ContinuousMultilinearMap 𝕜 (fun _ : ι => G) G') :
@@ -2009,7 +2016,9 @@ theorem norm_domDomCongr (σ : ι ≃ ι') (f : ContinuousMultilinearMap 𝕜 (f
     (σ.arrow_congr (Equiv.refl G)).Surjective.forall, dom_dom_congr_apply, Equiv.arrowCongr_apply,
     Equiv.coe_refl, comp.left_id, comp_app, Equiv.symm_apply_apply, id]
 #align continuous_multilinear_map.norm_dom_dom_congr ContinuousMultilinearMap.norm_domDomCongr
+-/
 
+#print ContinuousMultilinearMap.domDomCongrₗᵢ /-
 /-- An equivalence of the index set defines a linear isometric equivalence between the spaces
 of multilinear maps. -/
 def domDomCongrₗᵢ (σ : ι ≃ ι') :
@@ -2020,6 +2029,7 @@ def domDomCongrₗᵢ (σ : ι ≃ ι') :
     map_smul' := fun _ _ => rfl
     norm_map' := norm_domDomCongr 𝕜 G G' σ }
 #align continuous_multilinear_map.dom_dom_congrₗᵢ ContinuousMultilinearMap.domDomCongrₗᵢ
+-/
 
 variable {𝕜 G G'}
 
