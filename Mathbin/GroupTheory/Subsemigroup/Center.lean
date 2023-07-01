@@ -96,12 +96,10 @@ theorem add_mem_center [Distrib M] {a b : M} (ha : a ∈ Set.center M) (hb : b �
 #align set.add_mem_center Set.add_mem_center
 -/
 
-#print Set.neg_mem_center /-
 @[simp]
 theorem neg_mem_center [Ring M] {a : M} (ha : a ∈ Set.center M) : -a ∈ Set.center M := fun c => by
   rw [← neg_mul_comm, ha (-c), neg_mul_comm]
-#align set.neg_mem_center Set.neg_mem_center
--/
+#align set.neg_mem_center Set.neg_mem_centerₓ
 
 #print Set.subset_center_units /-
 @[to_additive subset_add_center_add_units]

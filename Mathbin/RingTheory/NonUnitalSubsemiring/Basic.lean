@@ -1120,13 +1120,11 @@ variable {F : Type _} [NonUnitalNonAssocSemiring T] [NonUnitalRingHomClass F R S
 
 open NonUnitalSubsemiringClass NonUnitalSubsemiring
 
-#print NonUnitalRingHom.codRestrict /-
 /-- Restriction of a non-unital ring homomorphism to a non-unital subsemiring of the codomain. -/
 def codRestrict (f : F) (s : NonUnitalSubsemiring S) (h : ∀ x, f x ∈ s) : R →ₙ+* s :=
   { (f : R →ₙ* S).codRestrict s.toSubsemigroup h, (f : R →+ S).codRestrict s.toAddSubmonoid h with
     toFun := fun n => ⟨f n, h n⟩ }
-#align non_unital_ring_hom.cod_restrict NonUnitalRingHom.codRestrict
--/
+#align non_unital_ring_hom.cod_restrict NonUnitalRingHom.codRestrictₓ
 
 #print NonUnitalRingHom.srangeRestrict /-
 /-- Restriction of a non-unital ring homomorphism to its range interpreted as a

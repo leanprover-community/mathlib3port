@@ -52,7 +52,7 @@ namespace CategoryTheory
 
 namespace Groupoid
 
-namespace Free
+namespace free
 
 universe u v u' v' u'' v''
 
@@ -257,7 +257,7 @@ theorem freeGroupoidFunctor_comp (φ : V ⥤q V') (φ' : V' ⥤q V'') :
 
 end Functoriality
 
-end Free
+end free
 
 end Groupoid
 

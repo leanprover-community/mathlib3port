@@ -72,7 +72,7 @@ instance : IsRightAdjoint (forget (ModuleCat.{u} R)) :=
 
 end
 
-namespace Free
+namespace free
 
 variable [CommRing R]
 
@@ -180,7 +180,7 @@ instance : LaxMonoidal.{u} (free R).obj
 instance : IsIso (LaxMonoidal.ε (free R).obj) :=
   ⟨⟨Finsupp.lapply PUnit.unit, ⟨by ext; simp, by ext ⟨⟩ ⟨⟩; simp⟩⟩⟩
 
-end Free
+end free
 
 variable [CommRing R]
 

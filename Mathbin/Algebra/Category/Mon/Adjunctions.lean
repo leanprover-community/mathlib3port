@@ -30,6 +30,7 @@ universe u
 
 open CategoryTheory
 
+#print adjoinOne /-
 /-- The functor of adjoining a neutral element `one` to a semigroup.
  -/
 @[to_additive "The functor of adjoining a neutral element `zero` to a semigroup", simps]
@@ -41,7 +42,9 @@ def adjoinOne : SemigroupCat.{u} ⥤ MonCat.{u}
   map_comp' X Y Z := WithOne.map_comp
 #align adjoin_one adjoinOne
 #align adjoin_zero adjoinZero
+-/
 
+#print hasForgetToSemigroup /-
 @[to_additive hasForgetToAddSemigroup]
 instance hasForgetToSemigroup : HasForget₂ MonCat SemigroupCat
     where forget₂ :=
@@ -49,7 +52,9 @@ instance hasForgetToSemigroup : HasForget₂ MonCat SemigroupCat
       map := fun M N => MonoidHom.toMulHom }
 #align has_forget_to_Semigroup hasForgetToSemigroup
 #align has_forget_to_AddSemigroup hasForgetToAddSemigroup
+-/
 
+#print adjoinOneAdj /-
 /-- The adjoin_one-forgetful adjunction from `Semigroup` to `Mon`.-/
 @[to_additive "The adjoin_one-forgetful adjunction from `AddSemigroup` to `AddMon`"]
 def adjoinOneAdj : adjoinOne ⊣ forget₂ MonCat.{u} SemigroupCat.{u} :=
@@ -65,7 +70,9 @@ def adjoinOneAdj : adjoinOne ⊣ forget₂ MonCat.{u} SemigroupCat.{u} :=
         · simp }
 #align adjoin_one_adj adjoinOneAdj
 #align adjoin_zero_adj adjoinZeroAdj
+-/
 
+#print free /-
 /-- The free functor `Type u ⥤ Mon` sending a type `X` to the free monoid on `X`. -/
 def free : Type u ⥤ MonCat.{u}
     where
@@ -74,13 +81,16 @@ def free : Type u ⥤ MonCat.{u}
   map_id' := by intros; ext1; rfl
   map_comp' := by intros; ext1; rfl
 #align free free
+-/
 
+#print adj /-
 /-- The free-forgetful adjunction for monoids. -/
 def adj : free ⊣ forget MonCat.{u} :=
   Adjunction.mkOfHomEquiv
     { homEquiv := fun X G => FreeMonoid.lift.symm
       homEquiv_naturality_left_symm := fun X Y G f g => by ext1; rfl }
 #align adj adj
+-/
 
 instance : IsRightAdjoint (forget MonCat.{u}) :=
   ⟨_, adj⟩
