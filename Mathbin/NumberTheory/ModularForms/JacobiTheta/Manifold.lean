@@ -25,7 +25,9 @@ Prove smoothness (in terms of `smooth`).
 
 open scoped UpperHalfPlane Manifold
 
-theorem mDifferentiable_jacobiTheta : MDifferentiable 𝓘(ℂ) 𝓘(ℂ) (jacobiTheta ∘ coe : ℍ → ℂ) :=
+#print mdifferentiable_jacobiTheta /-
+theorem mdifferentiable_jacobiTheta : MDifferentiable 𝓘(ℂ) 𝓘(ℂ) (jacobiTheta ∘ coe : ℍ → ℂ) :=
   fun τ => (differentiableAt_jacobiTheta τ.2).MDifferentiableAt.comp τ τ.mdifferentiable_coe
-#align mdifferentiable_jacobi_theta mDifferentiable_jacobiTheta
+#align mdifferentiable_jacobi_theta mdifferentiable_jacobiTheta
+-/
 
