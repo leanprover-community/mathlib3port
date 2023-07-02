@@ -1508,7 +1508,7 @@ theorem cos_neg : cos (-x) = cos x := by simp [cos, exp_neg]
 
 #print Real.cos_abs /-
 @[simp]
-theorem cos_abs : cos (|x|) = cos x := by
+theorem cos_abs : cos |x| = cos x := by
   cases le_total x 0 <;> simp only [*, _root_.abs_of_nonneg, abs_of_nonpos, cos_neg]
 #align real.cos_abs Real.cos_abs
 -/
@@ -1784,7 +1784,7 @@ theorem cosh_neg : cosh (-x) = cosh x :=
 
 #print Real.cosh_abs /-
 @[simp]
-theorem cosh_abs : cosh (|x|) = cosh x := by
+theorem cosh_abs : cosh |x| = cosh x := by
   cases le_total x 0 <;> simp [*, _root_.abs_of_nonneg, abs_of_nonpos]
 #align real.cosh_abs Real.cosh_abs
 -/

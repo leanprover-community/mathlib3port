@@ -1395,7 +1395,7 @@ a real `x` to `|x|`. -/
 protected def abs : EReal → ℝ≥0∞
   | ⊥ => ⊤
   | ⊤ => ⊤
-  | (x : ℝ) => ENNReal.ofReal (|x|)
+  | (x : ℝ) => ENNReal.ofReal |x|
 #align ereal.abs EReal.abs
 -/
 
@@ -1414,7 +1414,7 @@ theorem abs_bot : (⊥ : EReal).abs = ⊤ :=
 -/
 
 #print EReal.abs_def /-
-theorem abs_def (x : ℝ) : (x : EReal).abs = ENNReal.ofReal (|x|) :=
+theorem abs_def (x : ℝ) : (x : EReal).abs = ENNReal.ofReal |x| :=
   rfl
 #align ereal.abs_def EReal.abs_def
 -/

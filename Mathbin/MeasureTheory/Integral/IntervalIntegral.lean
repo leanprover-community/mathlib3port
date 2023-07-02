@@ -379,7 +379,7 @@ theorem comp_mul_left (hf : IntervalIntegrable f volume a b) (c : ℝ) :
   have A : MeasurableEmbedding fun x => x * c⁻¹ :=
     (Homeomorph.mulRight₀ _ (inv_ne_zero hc)).ClosedEmbedding.MeasurableEmbedding
   rw [← Real.smul_map_volume_mul_right (inv_ne_zero hc), integrable_on, measure.restrict_smul,
-    integrable_smul_measure (by simpa : ENNReal.ofReal (|c⁻¹|) ≠ 0) ENNReal.ofReal_ne_top, ←
+    integrable_smul_measure (by simpa : ENNReal.ofReal |c⁻¹| ≠ 0) ENNReal.ofReal_ne_top, ←
     integrable_on, MeasurableEmbedding.integrableOn_map_iff A]
   convert hf using 1
   · ext; simp only [comp_app]; congr 1; field_simp; ring

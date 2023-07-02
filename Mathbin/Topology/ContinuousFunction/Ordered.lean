@@ -43,7 +43,7 @@ instance (priority := 100) : Abs C(α, β) :=
 
 #print ContinuousMap.abs_apply /-
 @[simp]
-theorem abs_apply (f : C(α, β)) (x : α) : (|f|) x = |f x| :=
+theorem abs_apply (f : C(α, β)) (x : α) : |f| x = |f x| :=
   rfl
 #align continuous_map.abs_apply ContinuousMap.abs_apply
 -/

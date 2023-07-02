@@ -78,13 +78,13 @@ theorem coe_natAbs (n : ℤ) : (n.natAbs : ℤ) = |n| :=
 -/
 
 #print Nat.cast_natAbs /-
-theorem Nat.cast_natAbs {α : Type _} [AddGroupWithOne α] (n : ℤ) : (n.natAbs : α) = ↑(|n|) := by
+theorem Nat.cast_natAbs {α : Type _} [AddGroupWithOne α] (n : ℤ) : (n.natAbs : α) = ↑|n| := by
   rw [← Int.coe_natAbs, Int.cast_ofNat]
 #align nat.cast_nat_abs Nat.cast_natAbs
 -/
 
 #print Int.natAbs_abs /-
-theorem natAbs_abs (a : ℤ) : natAbs (|a|) = natAbs a := by rw [abs_eq_nat_abs] <;> rfl
+theorem natAbs_abs (a : ℤ) : natAbs |a| = natAbs a := by rw [abs_eq_nat_abs] <;> rfl
 #align int.nat_abs_abs Int.natAbs_abs
 -/
 

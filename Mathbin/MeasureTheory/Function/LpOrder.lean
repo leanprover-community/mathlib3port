@@ -89,7 +89,7 @@ theorem MeasureTheory.Memℒp.inf {f g : α → E} (hf : Memℒp f p μ) (hg : M
 -/
 
 #print MeasureTheory.Memℒp.abs /-
-theorem MeasureTheory.Memℒp.abs {f : α → E} (hf : Memℒp f p μ) : Memℒp (|f|) p μ :=
+theorem MeasureTheory.Memℒp.abs {f : α → E} (hf : Memℒp f p μ) : Memℒp |f| p μ :=
   hf.sup hf.neg
 #align measure_theory.mem_ℒp.abs MeasureTheory.Memℒp.abs
 -/
@@ -116,7 +116,7 @@ theorem coeFn_inf (f g : Lp E p μ) : ⇑(f ⊓ g) =ᵐ[μ] ⇑f ⊓ ⇑g :=
 -/
 
 #print MeasureTheory.Lp.coeFn_abs /-
-theorem coeFn_abs (f : Lp E p μ) : ⇑(|f|) =ᵐ[μ] fun x => |f x| :=
+theorem coeFn_abs (f : Lp E p μ) : ⇑|f| =ᵐ[μ] fun x => |f x| :=
   AEEqFun.coeFn_abs _
 #align measure_theory.Lp.coe_fn_abs MeasureTheory.Lp.coeFn_abs
 -/

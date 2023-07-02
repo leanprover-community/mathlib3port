@@ -157,14 +157,14 @@ This is the main lemma in the proof of `complex.is_exp_cmp_filter.is_o_cpow_exp`
 theorem isLittleO_log_abs_re (hl : IsExpCmpFilter l) : (fun z => Real.log (abs z)) =o[l] re :=
   calc
     (fun z => Real.log (abs z)) =O[l] fun z =>
-        Real.log (Real.sqrt 2) + Real.log (max z.re (|z.im|)) :=
+        Real.log (Real.sqrt 2) + Real.log (max z.re |z.im|) :=
       IsBigO.of_bound 1 <|
         (hl.tendsto_re.eventually_ge_atTop 1).mono fun z hz =>
           by
           have h2 : 0 < Real.sqrt 2 := by simp
           have hz' : 1 ≤ abs z := hz.trans (re_le_abs z)
           have hz₀ : 0 < abs z := one_pos.trans_le hz'
-          have hm₀ : 0 < max z.re (|z.im|) := lt_max_iff.2 (Or.inl <| one_pos.trans_le hz)
+          have hm₀ : 0 < max z.re |z.im| := lt_max_iff.2 (Or.inl <| one_pos.trans_le hz)
           rw [one_mul, Real.norm_eq_abs, _root_.abs_of_nonneg (Real.log_nonneg hz')]
           refine' le_trans _ (le_abs_self _)
           rw [← Real.log_mul, Real.log_le_log, ← _root_.abs_of_nonneg (le_trans zero_le_one hz)]
@@ -176,7 +176,7 @@ theorem isLittleO_log_abs_re (hl : IsExpCmpFilter l) : (fun z => Real.log (abs z
           filter_upwards [is_o_iff_nat_mul_le.1 hl.is_o_log_re_re n,
             hl.abs_im_pow_eventually_le_exp_re n, hl.tendsto_re.eventually_gt_at_top 1] with z hre
             him h₁
-          cases' le_total (|z.im|) z.re with hle hle
+          cases' le_total |z.im| z.re with hle hle
           · rwa [max_eq_left hle]
           · have H : 1 < |z.im| := h₁.trans_le hle
             rwa [max_eq_right hle, Real.norm_eq_abs, Real.norm_eq_abs, abs_of_pos (Real.log_pos H),

@@ -1911,7 +1911,7 @@ theorem coeFn_sup (f g : α →ᵇ β) : ⇑(f ⊔ g) = f ⊔ g :=
 
 #print BoundedContinuousFunction.coeFn_abs /-
 @[simp]
-theorem coeFn_abs (f : α →ᵇ β) : ⇑(|f|) = |f| :=
+theorem coeFn_abs (f : α →ᵇ β) : ⇑|f| = |f| :=
   rfl
 #align bounded_continuous_function.coe_fn_abs BoundedContinuousFunction.coeFn_abs
 -/

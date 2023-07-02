@@ -991,7 +991,7 @@ theorem sinh_nonneg_iff : 0 ≤ sinh x ↔ 0 ≤ x := by simpa only [sinh_zero] 
 -/
 
 #print Real.abs_sinh /-
-theorem abs_sinh (x : ℝ) : |sinh x| = sinh (|x|) := by
+theorem abs_sinh (x : ℝ) : |sinh x| = sinh |x| := by
   cases le_total x 0 <;> simp [abs_of_nonneg, abs_of_nonpos, *]
 #align real.abs_sinh Real.abs_sinh
 -/

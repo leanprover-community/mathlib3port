@@ -392,7 +392,7 @@ instance (priority := 100) LinearOrderedField.toTopologicalDivisionRing : Topolo
     have aux : 0 < 2 / t ^ 2 := by positivity
     rw [Set.mem_Ioo, ← sub_lt_iff_lt_add', sub_lt_comm, ← abs_sub_lt_iff] at h ⊢
     rw [inv_sub_inv ht.ne' hx'.ne', abs_div, div_eq_mul_inv]
-    suffices (|t * x|)⁻¹ < 2 / t ^ 2 by
+    suffices |t * x|⁻¹ < 2 / t ^ 2 by
       rw [← abs_neg, neg_sub]
       refine' (mul_lt_mul'' h this (by positivity) (by positivity)).trans_le _
       rw [mul_comm, mul_min_of_nonneg _ _ aux.le]

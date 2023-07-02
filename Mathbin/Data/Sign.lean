@@ -582,7 +582,7 @@ private theorem exists_signed_sum_aux [DecidableEq α] (s : Finset α) (f : α �
       SignType.sign (f a.1), fun a => a.1, fun a => a.1.Prop, _, _⟩
   · simp [@sum_attach _ _ _ _ fun a => (f a).natAbs]
   · intro x hx
-    simp [sum_sigma, hx, ← Int.sign_eq_sign, Int.sign_mul_abs, mul_comm (|f _|),
+    simp [sum_sigma, hx, ← Int.sign_eq_sign, Int.sign_mul_abs, mul_comm |f _|,
       @sum_attach _ _ _ _ fun a => ∑ j in range (f a).natAbs, if a = x then (f a).sign else 0]
 
 #print exists_signed_sum /-

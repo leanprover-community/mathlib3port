@@ -314,7 +314,7 @@ theorem abs_log_sub_add_sum_range_le {x : ℝ} (h : |x| < 1) (n : ℕ) :
       sub_ne_zero_of_ne (ne_of_lt hy.2)]
     ring
   -- second step: show that the derivative of `F` is small
-  have B : ∀ y ∈ Icc (-|x|) (|x|), |deriv F y| ≤ |x| ^ n / (1 - |x|) :=
+  have B : ∀ y ∈ Icc (-|x|) |x|, |deriv F y| ≤ |x| ^ n / (1 - |x|) :=
     by
     intro y hy
     have : y ∈ Ioo (-(1 : ℝ)) 1 := ⟨lt_of_lt_of_le (neg_lt_neg h) hy.1, lt_of_le_of_lt hy.2 h⟩
@@ -329,7 +329,7 @@ theorem abs_log_sub_add_sum_range_le {x : ℝ} (h : |x| < 1) (n : ℕ) :
   -- third step: apply the mean value inequality
   have C : ‖F x - F 0‖ ≤ |x| ^ n / (1 - |x|) * ‖x - 0‖ :=
     by
-    have : ∀ y ∈ Icc (-|x|) (|x|), DifferentiableAt ℝ F y :=
+    have : ∀ y ∈ Icc (-|x|) |x|, DifferentiableAt ℝ F y :=
       by
       intro y hy
       have : 1 - y ≠ 0 := sub_ne_zero_of_ne (ne_of_gt (lt_of_le_of_lt hy.2 h))

@@ -135,8 +135,8 @@ instance Real.hasLipschitzAdd : LipschitzAdd ℝ
         NNReal.coe_bit0]
       convert le_trans (abs_add (p.1 - q.1) (p.2 - q.2)) _ using 2
       · abel
-      have := le_max_left (|p.1 - q.1|) (|p.2 - q.2|)
-      have := le_max_right (|p.1 - q.1|) (|p.2 - q.2|)
+      have := le_max_left |p.1 - q.1| |p.2 - q.2|
+      have := le_max_right |p.1 - q.1| |p.2 - q.2|
       linarith⟩
 #align real.has_lipschitz_add Real.hasLipschitzAdd
 -/

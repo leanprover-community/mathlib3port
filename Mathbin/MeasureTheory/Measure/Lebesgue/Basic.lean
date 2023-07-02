@@ -172,7 +172,7 @@ instance noAtoms_volume : NoAtoms (volume : Measure ℝ) :=
 
 #print Real.volume_interval /-
 @[simp]
-theorem volume_interval {a b : ℝ} : volume (uIcc a b) = ofReal (|b - a|) := by
+theorem volume_interval {a b : ℝ} : volume (uIcc a b) = ofReal |b - a| := by
   rw [← Icc_min_max, volume_Icc, max_sub_min_eq_abs]
 #align real.volume_interval Real.volume_interval
 -/
@@ -381,7 +381,7 @@ theorem volume_pi_le_diam_pow (s : Set (ι → ℝ)) : volume s ≤ EMetric.diam
 
 #print Real.smul_map_volume_mul_left /-
 theorem smul_map_volume_mul_left {a : ℝ} (h : a ≠ 0) :
-    ENNReal.ofReal (|a|) • Measure.map ((· * ·) a) volume = volume :=
+    ENNReal.ofReal |a| • Measure.map ((· * ·) a) volume = volume :=
   by
   refine' (Real.measure_ext_Ioo_rat fun p q => _).symm
   cases' lt_or_gt_of_ne h with h h
@@ -399,7 +399,7 @@ theorem smul_map_volume_mul_left {a : ℝ} (h : a ≠ 0) :
 
 #print Real.map_volume_mul_left /-
 theorem map_volume_mul_left {a : ℝ} (h : a ≠ 0) :
-    Measure.map ((· * ·) a) volume = ENNReal.ofReal (|a⁻¹|) • volume := by
+    Measure.map ((· * ·) a) volume = ENNReal.ofReal |a⁻¹| • volume := by
   conv_rhs =>
     rw [← Real.smul_map_volume_mul_left h, smul_smul, ← ENNReal.ofReal_mul (abs_nonneg _), ←
       abs_mul, inv_mul_cancel h, abs_one, ENNReal.ofReal_one, one_smul]
@@ -419,14 +419,14 @@ theorem volume_preimage_mul_left {a : ℝ} (h : a ≠ 0) (s : Set ℝ) :
 
 #print Real.smul_map_volume_mul_right /-
 theorem smul_map_volume_mul_right {a : ℝ} (h : a ≠ 0) :
-    ENNReal.ofReal (|a|) • Measure.map (· * a) volume = volume := by
+    ENNReal.ofReal |a| • Measure.map (· * a) volume = volume := by
   simpa only [mul_comm] using Real.smul_map_volume_mul_left h
 #align real.smul_map_volume_mul_right Real.smul_map_volume_mul_right
 -/
 
 #print Real.map_volume_mul_right /-
 theorem map_volume_mul_right {a : ℝ} (h : a ≠ 0) :
-    Measure.map (· * a) volume = ENNReal.ofReal (|a⁻¹|) • volume := by
+    Measure.map (· * a) volume = ENNReal.ofReal |a⁻¹| • volume := by
   simpa only [mul_comm] using Real.map_volume_mul_left h
 #align real.map_volume_mul_right Real.map_volume_mul_right
 -/

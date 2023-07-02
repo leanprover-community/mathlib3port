@@ -668,7 +668,7 @@ variable {ι G : Type _} [Fintype ι] [DecidableEq ι] [NormedAddCommGroup G] [N
 
 #print MeasureTheory.Measure.addHaar_parallelepiped /-
 theorem addHaar_parallelepiped (b : Basis ι ℝ G) (v : ι → G) :
-    b.addHaar (parallelepiped v) = ENNReal.ofReal (|b.det v|) :=
+    b.addHaar (parallelepiped v) = ENNReal.ofReal |b.det v| :=
   by
   have : FiniteDimensional ℝ G := FiniteDimensional.of_fintype_basis b
   have A : parallelepiped v = b.constr ℕ v '' parallelepiped b :=
@@ -696,7 +696,7 @@ noncomputable irreducible_def AlternatingMap.measure (ω : AlternatingMap ℝ G 
 
 #print AlternatingMap.measure_parallelepiped /-
 theorem AlternatingMap.measure_parallelepiped (ω : AlternatingMap ℝ G ℝ (Fin n)) (v : Fin n → G) :
-    ω.Measure (parallelepiped v) = ENNReal.ofReal (|ω v|) :=
+    ω.Measure (parallelepiped v) = ENNReal.ofReal |ω v| :=
   by
   conv_rhs => rw [ω.eq_smul_basis_det (fin_basis_of_finrank_eq ℝ G _i.out)]
   simp only [add_haar_parallelepiped, AlternatingMap.measure, coe_nnreal_smul_apply,

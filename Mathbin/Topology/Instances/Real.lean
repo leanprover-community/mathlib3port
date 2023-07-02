@@ -175,7 +175,7 @@ protected theorem Real.continuous_mul : Continuous fun p : ℝ × ℝ => p.1 * p
       (IsOpen.mem_nhds
         (((isOpen_gt' (|a₁| + 1)).Preimage continuous_abs).Prod
           ((isOpen_gt' (|a₂| + 1)).Preimage continuous_abs))
-        ⟨lt_add_one (|a₁|), lt_add_one (|a₂|)⟩)
+        ⟨lt_add_one |a₁|, lt_add_one |a₂|⟩)
 #align real.continuous_mul Real.continuous_mul
 -/
 

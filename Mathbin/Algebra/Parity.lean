@@ -219,7 +219,7 @@ theorem Even.neg_one_zpow (h : Even n) : (-1 : α) ^ n = 1 := by rw [h.neg_zpow,
 end DivisionMonoid
 
 #print even_abs /-
-theorem even_abs [SubtractionMonoid α] [LinearOrder α] {a : α} : Even (|a|) ↔ Even a := by
+theorem even_abs [SubtractionMonoid α] [LinearOrder α] {a : α} : Even |a| ↔ Even a := by
   cases abs_choice a <;> simp only [h, even_neg]
 #align even_abs even_abs
 -/

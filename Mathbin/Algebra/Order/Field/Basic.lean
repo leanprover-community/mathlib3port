@@ -1353,7 +1353,7 @@ theorem max_div_div_right_of_nonpos (hc : c ≤ 0) (a b : α) : max (a / c) (b /
 -/
 
 #print abs_inv /-
-theorem abs_inv (a : α) : |a⁻¹| = (|a|)⁻¹ :=
+theorem abs_inv (a : α) : |a⁻¹| = |a|⁻¹ :=
   map_inv₀ (absHom : α →*₀ α) a
 #align abs_inv abs_inv
 -/

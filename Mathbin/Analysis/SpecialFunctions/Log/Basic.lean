@@ -128,7 +128,7 @@ theorem log_one : log 1 = 0 :=
 
 #print Real.log_abs /-
 @[simp]
-theorem log_abs (x : ℝ) : log (|x|) = log x :=
+theorem log_abs (x : ℝ) : log |x| = log x :=
   by
   by_cases h : x = 0
   · simp [h]

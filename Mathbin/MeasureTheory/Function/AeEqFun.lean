@@ -1008,7 +1008,7 @@ section Abs
 
 #print MeasureTheory.AEEqFun.coeFn_abs /-
 theorem coeFn_abs {β} [TopologicalSpace β] [Lattice β] [TopologicalLattice β] [AddGroup β]
-    [TopologicalAddGroup β] (f : α →ₘ[μ] β) : ⇑(|f|) =ᵐ[μ] fun x => |f x| :=
+    [TopologicalAddGroup β] (f : α →ₘ[μ] β) : ⇑|f| =ᵐ[μ] fun x => |f x| :=
   by
   simp_rw [abs_eq_sup_neg]
   filter_upwards [ae_eq_fun.coe_fn_sup f (-f), ae_eq_fun.coe_fn_neg f] with x hx_sup hx_neg
