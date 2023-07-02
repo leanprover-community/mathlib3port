@@ -31,68 +31,91 @@ namespace Domineering
 
 open Function
 
+#print PGame.Domineering.shiftUp /-
 /-- The equivalence `(x, y) ↦ (x, y+1)`. -/
 @[simps]
 def shiftUp : ℤ × ℤ ≃ ℤ × ℤ :=
   (Equiv.refl ℤ).prodCongr (Equiv.addRight (1 : ℤ))
 #align pgame.domineering.shift_up PGame.Domineering.shiftUp
+-/
 
+#print PGame.Domineering.shiftRight /-
 /-- The equivalence `(x, y) ↦ (x+1, y)`. -/
 @[simps]
 def shiftRight : ℤ × ℤ ≃ ℤ × ℤ :=
   (Equiv.addRight (1 : ℤ)).prodCongr (Equiv.refl ℤ)
 #align pgame.domineering.shift_right PGame.Domineering.shiftRight
+-/
 
+#print PGame.Domineering.Board /-
 /-- A Domineering board is an arbitrary finite subset of `ℤ × ℤ`. -/
 def Board :=
   Finset (ℤ × ℤ)
 deriving Inhabited
 #align pgame.domineering.board PGame.Domineering.Board
+-/
 
 attribute [local reducible] board
 
+#print PGame.Domineering.left /-
 /-- Left can play anywhere that a square and the square below it are open. -/
 def left (b : Board) : Finset (ℤ × ℤ) :=
   b ∩ b.map shiftUp
 #align pgame.domineering.left PGame.Domineering.left
+-/
 
+#print PGame.Domineering.right /-
 /-- Right can play anywhere that a square and the square to the left are open. -/
 def right (b : Board) : Finset (ℤ × ℤ) :=
   b ∩ b.map shiftRight
 #align pgame.domineering.right PGame.Domineering.right
+-/
 
+#print PGame.Domineering.mem_left /-
 theorem mem_left {b : Board} (x : ℤ × ℤ) : x ∈ left b ↔ x ∈ b ∧ (x.1, x.2 - 1) ∈ b :=
   Finset.mem_inter.trans (and_congr Iff.rfl Finset.mem_map_equiv)
 #align pgame.domineering.mem_left PGame.Domineering.mem_left
+-/
 
+#print PGame.Domineering.mem_right /-
 theorem mem_right {b : Board} (x : ℤ × ℤ) : x ∈ right b ↔ x ∈ b ∧ (x.1 - 1, x.2) ∈ b :=
   Finset.mem_inter.trans (and_congr Iff.rfl Finset.mem_map_equiv)
 #align pgame.domineering.mem_right PGame.Domineering.mem_right
+-/
 
+#print PGame.Domineering.moveLeft /-
 /-- After Left moves, two vertically adjacent squares are removed from the board. -/
 def moveLeft (b : Board) (m : ℤ × ℤ) : Board :=
   (b.eraseₓ m).eraseₓ (m.1, m.2 - 1)
 #align pgame.domineering.move_left PGame.Domineering.moveLeft
+-/
 
+#print PGame.Domineering.moveRight /-
 /-- After Left moves, two horizontally adjacent squares are removed from the board. -/
 def moveRight (b : Board) (m : ℤ × ℤ) : Board :=
   (b.eraseₓ m).eraseₓ (m.1 - 1, m.2)
 #align pgame.domineering.move_right PGame.Domineering.moveRight
+-/
 
+#print PGame.Domineering.fst_pred_mem_erase_of_mem_right /-
 theorem fst_pred_mem_erase_of_mem_right {b : Board} {m : ℤ × ℤ} (h : m ∈ right b) :
     (m.1 - 1, m.2) ∈ b.eraseₓ m := by
   rw [mem_right] at h 
   apply Finset.mem_erase_of_ne_of_mem _ h.2
   exact ne_of_apply_ne Prod.fst (pred_ne_self m.1)
 #align pgame.domineering.fst_pred_mem_erase_of_mem_right PGame.Domineering.fst_pred_mem_erase_of_mem_right
+-/
 
+#print PGame.Domineering.snd_pred_mem_erase_of_mem_left /-
 theorem snd_pred_mem_erase_of_mem_left {b : Board} {m : ℤ × ℤ} (h : m ∈ left b) :
     (m.1, m.2 - 1) ∈ b.eraseₓ m := by
   rw [mem_left] at h 
   apply Finset.mem_erase_of_ne_of_mem _ h.2
   exact ne_of_apply_ne Prod.snd (pred_ne_self m.2)
 #align pgame.domineering.snd_pred_mem_erase_of_mem_left PGame.Domineering.snd_pred_mem_erase_of_mem_left
+-/
 
+#print PGame.Domineering.card_of_mem_left /-
 theorem card_of_mem_left {b : Board} {m : ℤ × ℤ} (h : m ∈ left b) : 2 ≤ Finset.card b :=
   by
   have w₁ : m ∈ b := (Finset.mem_inter.1 h).1
@@ -101,7 +124,9 @@ theorem card_of_mem_left {b : Board} {m : ℤ × ℤ} (h : m ∈ left b) : 2 ≤
   have i₂ := Nat.lt_of_le_of_lt (Nat.zero_le _) (Finset.card_erase_lt_of_mem w₂)
   exact Nat.lt_of_le_of_lt i₂ i₁
 #align pgame.domineering.card_of_mem_left PGame.Domineering.card_of_mem_left
+-/
 
+#print PGame.Domineering.card_of_mem_right /-
 theorem card_of_mem_right {b : Board} {m : ℤ × ℤ} (h : m ∈ right b) : 2 ≤ Finset.card b :=
   by
   have w₁ : m ∈ b := (Finset.mem_inter.1 h).1
@@ -110,7 +135,9 @@ theorem card_of_mem_right {b : Board} {m : ℤ × ℤ} (h : m ∈ right b) : 2 �
   have i₂ := Nat.lt_of_le_of_lt (Nat.zero_le _) (Finset.card_erase_lt_of_mem w₂)
   exact Nat.lt_of_le_of_lt i₂ i₁
 #align pgame.domineering.card_of_mem_right PGame.Domineering.card_of_mem_right
+-/
 
+#print PGame.Domineering.moveLeft_card /-
 theorem moveLeft_card {b : Board} {m : ℤ × ℤ} (h : m ∈ left b) :
     Finset.card (moveLeft b m) + 2 = Finset.card b :=
   by
@@ -119,7 +146,9 @@ theorem moveLeft_card {b : Board} {m : ℤ × ℤ} (h : m ∈ left b) :
   rw [Finset.card_erase_of_mem (Finset.mem_of_mem_inter_left h)]
   exact tsub_add_cancel_of_le (card_of_mem_left h)
 #align pgame.domineering.move_left_card PGame.Domineering.moveLeft_card
+-/
 
+#print PGame.Domineering.moveRight_card /-
 theorem moveRight_card {b : Board} {m : ℤ × ℤ} (h : m ∈ right b) :
     Finset.card (moveRight b m) + 2 = Finset.card b :=
   by
@@ -128,15 +157,21 @@ theorem moveRight_card {b : Board} {m : ℤ × ℤ} (h : m ∈ right b) :
   rw [Finset.card_erase_of_mem (Finset.mem_of_mem_inter_left h)]
   exact tsub_add_cancel_of_le (card_of_mem_right h)
 #align pgame.domineering.move_right_card PGame.Domineering.moveRight_card
+-/
 
+#print PGame.Domineering.moveLeft_smaller /-
 theorem moveLeft_smaller {b : Board} {m : ℤ × ℤ} (h : m ∈ left b) :
     Finset.card (moveLeft b m) / 2 < Finset.card b / 2 := by simp [← move_left_card h, lt_add_one]
 #align pgame.domineering.move_left_smaller PGame.Domineering.moveLeft_smaller
+-/
 
+#print PGame.Domineering.moveRight_smaller /-
 theorem moveRight_smaller {b : Board} {m : ℤ × ℤ} (h : m ∈ right b) :
     Finset.card (moveRight b m) / 2 < Finset.card b / 2 := by simp [← move_right_card h, lt_add_one]
 #align pgame.domineering.move_right_smaller PGame.Domineering.moveRight_smaller
+-/
 
+#print PGame.Domineering.state /-
 /-- The instance describing allowed moves on a Domineering board. -/
 instance state : State Board where
   turnBound s := s.card / 2
@@ -151,34 +186,47 @@ instance state : State Board where
     rcases m with ⟨_, _, ⟨h, rfl⟩⟩
     exact move_right_smaller h
 #align pgame.domineering.state PGame.Domineering.state
+-/
 
 end Domineering
 
+#print PGame.domineering /-
 /-- Construct a pre-game from a Domineering board. -/
 def domineering (b : Domineering.Board) : PGame :=
   PGame.ofState b
 #align pgame.domineering PGame.domineering
+-/
 
+#print PGame.shortDomineering /-
 /-- All games of Domineering are short, because each move removes two squares. -/
 instance shortDomineering (b : Domineering.Board) : Short (domineering b) := by dsimp [domineering];
   infer_instance
 #align pgame.short_domineering PGame.shortDomineering
+-/
 
+#print PGame.domineering.one /-
 /-- The Domineering board with two squares arranged vertically, in which Left has the only move. -/
 def domineering.one :=
   domineering [(0, 0), (0, 1)].toFinset
 #align pgame.domineering.one PGame.domineering.one
+-/
 
+#print PGame.domineering.L /-
 /-- The `L` shaped Domineering board, in which Left is exactly half a move ahead. -/
-def domineering.l :=
+def domineering.L :=
   domineering [(0, 2), (0, 1), (0, 0), (1, 0)].toFinset
-#align pgame.domineering.L PGame.domineering.l
+#align pgame.domineering.L PGame.domineering.L
+-/
 
+#print PGame.shortOne /-
 instance shortOne : Short domineering.one := by dsimp [domineering.one]; infer_instance
 #align pgame.short_one PGame.shortOne
+-/
 
-instance shortL : Short domineering.l := by dsimp [domineering.L]; infer_instance
+#print PGame.shortL /-
+instance shortL : Short domineering.L := by dsimp [domineering.L]; infer_instance
 #align pgame.short_L PGame.shortL
+-/
 
 -- The VM can play small games successfully:
 -- #eval to_bool (domineering.one ≈ 1)
