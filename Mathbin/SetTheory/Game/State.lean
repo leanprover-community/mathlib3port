@@ -31,6 +31,7 @@ universe u
 
 namespace PGame
 
+#print PGame.State /-
 /-- `pgame_state S` describes how to interpret `s : S` as a state of a combinatorial game.
 Use `pgame.of_state s` or `game.of_state s` to construct the game.
 
@@ -45,11 +46,13 @@ class State (S : Type u) where
   left_bound : ∀ {s t : S} (m : t ∈ L s), turn_bound t < turn_bound s
   right_bound : ∀ {s t : S} (m : t ∈ R s), turn_bound t < turn_bound s
 #align pgame.state PGame.State
+-/
 
 open StateM
 
 variable {S : Type u} [State S]
 
+#print PGame.turnBound_ne_zero_of_left_move /-
 theorem turnBound_ne_zero_of_left_move {s t : S} (m : t ∈ l s) : turnBound s ≠ 0 :=
   by
   intro h
@@ -57,7 +60,9 @@ theorem turnBound_ne_zero_of_left_move {s t : S} (m : t ∈ l s) : turnBound s �
   rw [h] at t 
   exact Nat.not_succ_le_zero _ t
 #align pgame.turn_bound_ne_zero_of_left_move PGame.turnBound_ne_zero_of_left_move
+-/
 
+#print PGame.turnBound_ne_zero_of_right_move /-
 theorem turnBound_ne_zero_of_right_move {s t : S} (m : t ∈ r s) : turnBound s ≠ 0 :=
   by
   intro h
@@ -65,17 +70,23 @@ theorem turnBound_ne_zero_of_right_move {s t : S} (m : t ∈ r s) : turnBound s 
   rw [h] at t 
   exact Nat.not_succ_le_zero _ t
 #align pgame.turn_bound_ne_zero_of_right_move PGame.turnBound_ne_zero_of_right_move
+-/
 
+#print PGame.turnBound_of_left /-
 theorem turnBound_of_left {s t : S} (m : t ∈ l s) (n : ℕ) (h : turnBound s ≤ n + 1) :
     turnBound t ≤ n :=
   Nat.le_of_lt_succ (Nat.lt_of_lt_of_le (left_bound m) h)
 #align pgame.turn_bound_of_left PGame.turnBound_of_left
+-/
 
+#print PGame.turnBound_of_right /-
 theorem turnBound_of_right {s t : S} (m : t ∈ r s) (n : ℕ) (h : turnBound s ≤ n + 1) :
     turnBound t ≤ n :=
   Nat.le_of_lt_succ (Nat.lt_of_lt_of_le (right_bound m) h)
 #align pgame.turn_bound_of_right PGame.turnBound_of_right
+-/
 
+#print PGame.ofStateAux /-
 /-- Construct a `pgame` from a state and a (not necessarily optimal) bound on the number of
 turns remaining.
 -/
@@ -89,7 +100,9 @@ def ofStateAux : ∀ (n : ℕ) (s : S) (h : turnBound s ≤ n), PGame
       (fun t => of_state_aux n t (turnBound_of_left t.2 n h)) fun t =>
       of_state_aux n t (turnBound_of_right t.2 n h)
 #align pgame.of_state_aux PGame.ofStateAux
+-/
 
+#print PGame.ofStateAuxRelabelling /-
 /-- Two different (valid) turn bounds give equivalent games. -/
 def ofStateAuxRelabelling :
     ∀ (s : S) (n m : ℕ) (hn : turnBound s ≤ n) (hm : turnBound s ≤ m),
@@ -123,35 +136,47 @@ def ofStateAuxRelabelling :
     · intro j
       apply of_state_aux_relabelling
 #align pgame.of_state_aux_relabelling PGame.ofStateAuxRelabelling
+-/
 
+#print PGame.ofState /-
 /-- Construct a combinatorial `pgame` from a state. -/
 def ofState (s : S) : PGame :=
   ofStateAux (turnBound s) s (refl _)
 #align pgame.of_state PGame.ofState
+-/
 
+#print PGame.leftMovesOfStateAux /-
 /-- The equivalence between `left_moves` for a `pgame` constructed using `of_state_aux _ s _`, and
 `L s`. -/
 def leftMovesOfStateAux (n : ℕ) {s : S} (h : turnBound s ≤ n) :
     LeftMoves (ofStateAux n s h) ≃ { t // t ∈ l s } := by induction n <;> rfl
 #align pgame.left_moves_of_state_aux PGame.leftMovesOfStateAux
+-/
 
+#print PGame.leftMovesOfState /-
 /-- The equivalence between `left_moves` for a `pgame` constructed using `of_state s`, and `L s`. -/
 def leftMovesOfState (s : S) : LeftMoves (ofState s) ≃ { t // t ∈ l s } :=
   leftMovesOfStateAux _ _
 #align pgame.left_moves_of_state PGame.leftMovesOfState
+-/
 
+#print PGame.rightMovesOfStateAux /-
 /-- The equivalence between `right_moves` for a `pgame` constructed using `of_state_aux _ s _`, and
 `R s`. -/
 def rightMovesOfStateAux (n : ℕ) {s : S} (h : turnBound s ≤ n) :
     RightMoves (ofStateAux n s h) ≃ { t // t ∈ r s } := by induction n <;> rfl
 #align pgame.right_moves_of_state_aux PGame.rightMovesOfStateAux
+-/
 
+#print PGame.rightMovesOfState /-
 /-- The equivalence between `right_moves` for a `pgame` constructed using `of_state s`, and
 `R s`. -/
 def rightMovesOfState (s : S) : RightMoves (ofState s) ≃ { t // t ∈ r s } :=
   rightMovesOfStateAux _ _
 #align pgame.right_moves_of_state PGame.rightMovesOfState
+-/
 
+#print PGame.relabellingMoveLeftAux /-
 /-- The relabelling showing `move_left` applied to a game constructed using `of_state_aux`
 has itself been constructed using `of_state_aux`.
 -/
@@ -166,7 +191,9 @@ def relabellingMoveLeftAux (n : ℕ) {s : S} (h : turnBound s ≤ n)
     exfalso; exact turn_bound_ne_zero_of_left_move t'.2 (nonpos_iff_eq_zero.mp h)
   · rfl
 #align pgame.relabelling_move_left_aux PGame.relabellingMoveLeftAux
+-/
 
+#print PGame.relabellingMoveLeft /-
 /-- The relabelling showing `move_left` applied to a game constructed using `of`
 has itself been constructed using `of`.
 -/
@@ -177,7 +204,9 @@ def relabellingMoveLeft (s : S) (t : LeftMoves (ofState s)) :
   apply relabelling_move_left_aux
   apply of_state_aux_relabelling
 #align pgame.relabelling_move_left PGame.relabellingMoveLeft
+-/
 
+#print PGame.relabellingMoveRightAux /-
 /-- The relabelling showing `move_right` applied to a game constructed using `of_state_aux`
 has itself been constructed using `of_state_aux`.
 -/
@@ -193,7 +222,9 @@ def relabellingMoveRightAux (n : ℕ) {s : S} (h : turnBound s ≤ n)
     exfalso; exact turn_bound_ne_zero_of_right_move t'.2 (nonpos_iff_eq_zero.mp h)
   · rfl
 #align pgame.relabelling_move_right_aux PGame.relabellingMoveRightAux
+-/
 
+#print PGame.relabellingMoveRight /-
 /-- The relabelling showing `move_right` applied to a game constructed using `of`
 has itself been constructed using `of`.
 -/
@@ -204,21 +235,27 @@ def relabellingMoveRight (s : S) (t : RightMoves (ofState s)) :
   apply relabelling_move_right_aux
   apply of_state_aux_relabelling
 #align pgame.relabelling_move_right PGame.relabellingMoveRight
+-/
 
+#print PGame.fintypeLeftMovesOfStateAux /-
 instance fintypeLeftMovesOfStateAux (n : ℕ) (s : S) (h : turnBound s ≤ n) :
     Fintype (LeftMoves (ofStateAux n s h)) :=
   by
   apply Fintype.ofEquiv _ (left_moves_of_state_aux _ _).symm
   infer_instance
 #align pgame.fintype_left_moves_of_state_aux PGame.fintypeLeftMovesOfStateAux
+-/
 
+#print PGame.fintypeRightMovesOfStateAux /-
 instance fintypeRightMovesOfStateAux (n : ℕ) (s : S) (h : turnBound s ≤ n) :
     Fintype (RightMoves (ofStateAux n s h)) :=
   by
   apply Fintype.ofEquiv _ (right_moves_of_state_aux _ _).symm
   infer_instance
 #align pgame.fintype_right_moves_of_state_aux PGame.fintypeRightMovesOfStateAux
+-/
 
+#print PGame.shortOfStateAux /-
 instance shortOfStateAux : ∀ (n : ℕ) {s : S} (h : turnBound s ≤ n), Short (ofStateAux n s h)
   | 0, s, h =>
     Short.mk'
@@ -237,21 +274,26 @@ instance shortOfStateAux : ∀ (n : ℕ) {s : S} (h : turnBound s ≤ n), Short 
       fun j =>
       shortOfRelabelling (relabellingMoveRightAux (n + 1) h j).symm (short_of_state_aux n _)
 #align pgame.short_of_state_aux PGame.shortOfStateAux
+-/
 
+#print PGame.shortOfState /-
 instance shortOfState (s : S) : Short (ofState s) :=
   by
   dsimp [PGame.ofState]
   infer_instance
 #align pgame.short_of_state PGame.shortOfState
+-/
 
 end PGame
 
 namespace Game
 
+#print Game.ofState /-
 /-- Construct a combinatorial `game` from a state. -/
 def ofState {S : Type u} [PGame.State S] (s : S) : Game :=
   ⟦PGame.ofState s⟧
 #align game.of_state Game.ofState
+-/
 
 end Game
 
