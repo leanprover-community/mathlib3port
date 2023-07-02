@@ -86,7 +86,6 @@ instance (priority := 100) toOrderedAddCommGroup [NonUnitalRing R] [PartialOrder
 #align star_ordered_ring.to_ordered_add_comm_group StarOrderedRing.toOrderedAddCommGroup
 -/
 
-#print StarOrderedRing.ofLeIff /-
 -- set note [reducible non-instances]
 /-- To construct a `star_ordered_ring` instance it suffices to show that `x ≤ y` if and only if
 `y = x + star s * s` for some `s : R`.
@@ -116,8 +115,7 @@ def ofLeIff [NonUnitalSemiring R] [PartialOrder R] [StarRing R]
         · rintro a b ha hb x y rfl
           nth_rw 1 [← add_zero x]
           refine' h_add ((ha 0 _ (zero_add a).symm).trans (hb a _ rfl)) x }
-#align star_ordered_ring.of_le_iff StarOrderedRing.ofLeIff
--/
+#align star_ordered_ring.of_le_iff StarOrderedRing.ofLeIffₓ
 
 #print StarOrderedRing.ofNonnegIff /-
 -- set note [reducible non-instances]
