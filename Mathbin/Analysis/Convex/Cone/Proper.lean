@@ -258,6 +258,7 @@ theorem mem_dual {K : ProperCone ℝ E} {y : E} : y ∈ dual K ↔ ∀ ⦃x⦄, 
 #align proper_cone.mem_dual ProperCone.mem_dual
 -/
 
+#print ProperCone.comap /-
 /-- The preimage of a proper cone under a continuous `ℝ`-linear map is a proper cone. -/
 noncomputable def comap (f : E →L[ℝ] F) (S : ProperCone ℝ F) : ProperCone ℝ E
     where
@@ -270,26 +271,35 @@ noncomputable def comap (f : E →L[ℝ] F) (S : ProperCone ℝ F) : ProperCone 
     simp only [ConvexCone.comap, ContinuousLinearMap.coe_coe]
     apply IsClosed.preimage f.2 S.is_closed
 #align proper_cone.comap ProperCone.comap
+-/
 
+#print ProperCone.coe_comap /-
 @[simp]
 theorem coe_comap (f : E →L[ℝ] F) (S : ProperCone ℝ F) : (S.comap f : Set E) = f ⁻¹' S :=
   rfl
 #align proper_cone.coe_comap ProperCone.coe_comap
+-/
 
+#print ProperCone.comap_id /-
 @[simp]
 theorem comap_id (S : ConvexCone ℝ E) : S.comap LinearMap.id = S :=
   SetLike.coe_injective preimage_id
 #align proper_cone.comap_id ProperCone.comap_id
+-/
 
+#print ProperCone.comap_comap /-
 theorem comap_comap (g : F →L[ℝ] G) (f : E →L[ℝ] F) (S : ProperCone ℝ G) :
     (S.comap g).comap f = S.comap (g.comp f) :=
   SetLike.coe_injective <| preimage_comp.symm
 #align proper_cone.comap_comap ProperCone.comap_comap
+-/
 
+#print ProperCone.mem_comap /-
 @[simp]
 theorem mem_comap {f : E →L[ℝ] F} {S : ProperCone ℝ F} {x : E} : x ∈ S.comap f ↔ f x ∈ S :=
   Iff.rfl
 #align proper_cone.mem_comap ProperCone.mem_comap
+-/
 
 end InnerProductSpace
 
@@ -308,6 +318,7 @@ theorem dual_dual (K : ProperCone ℝ E) : K.dual.dual = K :=
 #align proper_cone.dual_dual ProperCone.dual_dual
 -/
 
+#print ProperCone.hyperplane_separation /-
 /-- This is a relative version of
 `convex_cone.hyperplane_separation_of_nonempty_of_is_closed_of_nmem`, which we recover by setting
 `f` to be the identity map. This is a geometric interpretation of the Farkas' lemma
@@ -349,11 +360,14 @@ theorem hyperplane_separation (K : ProperCone ℝ E) {f : E →L[ℝ] F} {b : F}
       rw [SetLike.mem_coe, ConvexCone.mem_map]
       use ⟨x, hxK, rfl⟩)
 #align proper_cone.hyperplane_separation ProperCone.hyperplane_separation
+-/
 
+#print ProperCone.hyperplane_separation_of_nmem /-
 theorem hyperplane_separation_of_nmem (K : ProperCone ℝ E) {f : E →L[ℝ] F} {b : F}
     (disj : b ∉ K.map f) : ∃ y : F, adjoint f y ∈ K.dual ∧ ⟪y, b⟫_ℝ < 0 := by contrapose! disj;
   rwa [K.hyperplane_separation]
 #align proper_cone.hyperplane_separation_of_nmem ProperCone.hyperplane_separation_of_nmem
+-/
 
 end CompleteSpace
 
