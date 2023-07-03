@@ -514,7 +514,7 @@ def bits : SNum → ∀ n, Vector Bool n
 #print SNum.cAdd /-
 def cAdd : SNum → SNum → Bool → SNum :=
   rec' (fun a p c => czAdd c a p) fun a p IH =>
-    rec' (fun b c => czAdd c b (a::p)) fun b q _ c => Bitvec.xor3 a b c::IH q (Bitvec.carry a b c)
+    rec' (fun b c => czAdd c b (a::p)) fun b q _ c => Bool.xor3 a b c::IH q (Bool.carry a b c)
 #align snum.cadd SNum.cAdd
 -/
 
