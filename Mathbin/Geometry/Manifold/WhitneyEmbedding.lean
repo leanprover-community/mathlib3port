@@ -55,6 +55,7 @@ In this section we prove a version of the Whitney embedding theorem: for any com
 
 variable [T2Space M] [hi : Fintype ι] {s : Set M} (f : SmoothBumpCovering ι I M s)
 
+#print SmoothBumpCovering.embeddingPiTangent /-
 /-- Smooth embedding of `M` into `(E × ℝ) ^ ι`. -/
 def embeddingPiTangent : C^∞⟮I, M; 𝓘(ℝ, ι → E × ℝ), ι → E × ℝ⟯
     where
@@ -63,13 +64,17 @@ def embeddingPiTangent : C^∞⟮I, M; 𝓘(ℝ, ι → E × ℝ), ι → E × �
     contMDiff_pi_space.2 fun i =>
       ((f i).smooth_smul contMDiffOn_extChartAt).prod_mk_space (f i).Smooth
 #align smooth_bump_covering.embedding_pi_tangent SmoothBumpCovering.embeddingPiTangent
+-/
 
+#print SmoothBumpCovering.embeddingPiTangent_coe /-
 @[local simp]
 theorem embeddingPiTangent_coe :
     ⇑f.embeddingPiTangent = fun x i => (f i x • extChartAt I (f.c i) x, f i x) :=
   rfl
 #align smooth_bump_covering.embedding_pi_tangent_coe SmoothBumpCovering.embeddingPiTangent_coe
+-/
 
+#print SmoothBumpCovering.embeddingPiTangent_injOn /-
 theorem embeddingPiTangent_injOn : InjOn f.embeddingPiTangent s :=
   by
   intro x hx y hy h
@@ -80,12 +85,16 @@ theorem embeddingPiTangent_injOn : InjOn f.embeddingPiTangent s :=
   have := f.mem_ext_chart_at_source_of_eq_one h₂.symm
   exact (extChartAt I (f.c _)).InjOn (f.mem_ext_chart_at_ind_source x hx) this h₁
 #align smooth_bump_covering.embedding_pi_tangent_inj_on SmoothBumpCovering.embeddingPiTangent_injOn
+-/
 
+#print SmoothBumpCovering.embeddingPiTangent_injective /-
 theorem embeddingPiTangent_injective (f : SmoothBumpCovering ι I M) :
     Injective f.embeddingPiTangent :=
   injective_iff_injOn_univ.2 f.embeddingPiTangent_injOn
 #align smooth_bump_covering.embedding_pi_tangent_injective SmoothBumpCovering.embeddingPiTangent_injective
+-/
 
+#print SmoothBumpCovering.comp_embeddingPiTangent_mfderiv /-
 theorem comp_embeddingPiTangent_mfderiv (x : M) (hx : x ∈ s) :
     ((ContinuousLinearMap.fst ℝ E ℝ).comp
             (@ContinuousLinearMap.proj ℝ _ ι (fun _ => E × ℝ) _ _ (fun _ => inferInstance)
@@ -104,7 +113,9 @@ theorem comp_embeddingPiTangent_mfderiv (x : M) (hx : x ∈ s) :
     ContinuousLinearMap.coe_fst', ContinuousLinearMap.proj_apply]
   rw [hy, Pi.one_apply, one_smul]
 #align smooth_bump_covering.comp_embedding_pi_tangent_mfderiv SmoothBumpCovering.comp_embeddingPiTangent_mfderiv
+-/
 
+#print SmoothBumpCovering.embeddingPiTangent_ker_mfderiv /-
 theorem embeddingPiTangent_ker_mfderiv (x : M) (hx : x ∈ s) :
     LinearMap.ker (mfderiv I 𝓘(ℝ, ι → E × ℝ) f.embeddingPiTangent x) = ⊥ :=
   by
@@ -115,12 +126,16 @@ theorem embeddingPiTangent_ker_mfderiv (x : M) (hx : x ∈ s) :
     ← comp_embedding_pi_tangent_mfderiv]
   exact LinearMap.ker_le_ker_comp _ _
 #align smooth_bump_covering.embedding_pi_tangent_ker_mfderiv SmoothBumpCovering.embeddingPiTangent_ker_mfderiv
+-/
 
+#print SmoothBumpCovering.embeddingPiTangent_injective_mfderiv /-
 theorem embeddingPiTangent_injective_mfderiv (x : M) (hx : x ∈ s) :
     Injective (mfderiv I 𝓘(ℝ, ι → E × ℝ) f.embeddingPiTangent x) :=
   LinearMap.ker_eq_bot.1 (f.embeddingPiTangent_ker_mfderiv x hx)
 #align smooth_bump_covering.embedding_pi_tangent_injective_mfderiv SmoothBumpCovering.embeddingPiTangent_injective_mfderiv
+-/
 
+#print SmoothBumpCovering.exists_immersion_euclidean /-
 /-- Baby version of the **Whitney weak embedding theorem**: if `M` admits a finite covering by
 supports of bump functions, then for some `n` it can be immersed into the `n`-dimensional
 Euclidean space. -/
@@ -142,9 +157,11 @@ theorem exists_immersion_euclidean [Finite ι] (f : SmoothBumpCovering ι I M) :
     eEF.mfderiv_eq]
   exact eEF.injective.comp (f.embedding_pi_tangent_injective_mfderiv _ trivial)
 #align smooth_bump_covering.exists_immersion_euclidean SmoothBumpCovering.exists_immersion_euclidean
+-/
 
 end SmoothBumpCovering
 
+#print exists_embedding_euclidean_of_compact /-
 /-- Baby version of the Whitney weak embedding theorem: if `M` admits a finite covering by
 supports of bump functions, then for some `n` it can be embedded into the `n`-dimensional
 Euclidean space. -/
@@ -158,4 +175,5 @@ theorem exists_embedding_euclidean_of_compact [T2Space M] [CompactSpace M] :
   rcases f.exists_immersion_euclidean with ⟨n, e, hsmooth, hinj, hinj_mfderiv⟩
   exact ⟨n, e, hsmooth, hsmooth.continuous.closed_embedding hinj, hinj_mfderiv⟩
 #align exists_embedding_euclidean_of_compact exists_embedding_euclidean_of_compact
+-/
 
