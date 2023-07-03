@@ -76,18 +76,18 @@ variable {F Γ k}
 instance : CoeFun (SlashInvariantForm Γ k) fun _ => ℍ → ℂ :=
   FunLike.hasCoeToFun
 
-#print slashInvariantForm_toFun_eq_coe /-
+#print SlashInvariantForm.toFun_eq_coe /-
 @[simp]
-theorem slashInvariantForm_toFun_eq_coe {f : SlashInvariantForm Γ k} : f.toFun = (f : ℍ → ℂ) :=
+theorem SlashInvariantForm.toFun_eq_coe {f : SlashInvariantForm Γ k} : f.toFun = (f : ℍ → ℂ) :=
   rfl
-#align slash_invariant_form_to_fun_eq_coe slashInvariantForm_toFun_eq_coe
+#align slash_invariant_form_to_fun_eq_coe SlashInvariantForm.toFun_eq_coe
 -/
 
-#print slashInvariantForm_ext /-
+#print SlashInvariantForm.ext /-
 @[ext]
-theorem slashInvariantForm_ext {f g : SlashInvariantForm Γ k} (h : ∀ x, f x = g x) : f = g :=
+theorem SlashInvariantForm.ext {f g : SlashInvariantForm Γ k} (h : ∀ x, f x = g x) : f = g :=
   FunLike.ext f g h
-#align slash_invariant_form_ext slashInvariantForm_ext
+#align slash_invariant_form_ext SlashInvariantForm.ext
 -/
 
 #print SlashInvariantForm.copy /-
