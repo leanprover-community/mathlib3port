@@ -701,21 +701,21 @@ theorem integralClosure.isIntegral (x : integralClosure R A) : IsIntegral R x :=
 #align integral_closure.is_integral integralClosure.isIntegral
 -/
 
-#print RingHom.is_integral_of_is_integral_mul_unit /-
-theorem RingHom.is_integral_of_is_integral_mul_unit (x y : S) (r : R) (hr : f r * y = 1)
+#print RingHom.isIntegral_of_isIntegral_mul_unit /-
+theorem RingHom.isIntegral_of_isIntegral_mul_unit (x y : S) (r : R) (hr : f r * y = 1)
     (hx : f.IsIntegralElem (x * y)) : f.IsIntegralElem x :=
   by
   obtain ⟨p, ⟨p_monic, hp⟩⟩ := hx
   refine' ⟨scale_roots p r, ⟨(monic_scale_roots_iff r).2 p_monic, _⟩⟩
   convert scale_roots_eval₂_eq_zero f hp
   rw [mul_comm x y, ← mul_assoc, hr, one_mul]
-#align ring_hom.is_integral_of_is_integral_mul_unit RingHom.is_integral_of_is_integral_mul_unit
+#align ring_hom.is_integral_of_is_integral_mul_unit RingHom.isIntegral_of_isIntegral_mul_unit
 -/
 
 #print isIntegral_of_isIntegral_mul_unit /-
 theorem isIntegral_of_isIntegral_mul_unit {x y : A} {r : R} (hr : algebraMap R A r * y = 1)
     (hx : IsIntegral R (x * y)) : IsIntegral R x :=
-  (algebraMap R A).is_integral_of_is_integral_mul_unit x y r hr hx
+  (algebraMap R A).isIntegral_of_isIntegral_mul_unit x y r hr hx
 #align is_integral_of_is_integral_mul_unit isIntegral_of_isIntegral_mul_unit
 -/
 
@@ -728,11 +728,11 @@ theorem isIntegral_of_mem_closure' (G : Set A) (hG : ∀ x ∈ G, IsIntegral R x
 #align is_integral_of_mem_closure' isIntegral_of_mem_closure'
 -/
 
-#print is_integral_of_mem_closure'' /-
-theorem is_integral_of_mem_closure'' {S : Type _} [CommRing S] {f : R →+* S} (G : Set S)
+#print isIntegral_of_mem_closure'' /-
+theorem isIntegral_of_mem_closure'' {S : Type _} [CommRing S] {f : R →+* S} (G : Set S)
     (hG : ∀ x ∈ G, f.IsIntegralElem x) : ∀ x ∈ Subring.closure G, f.IsIntegralElem x := fun x hx =>
   @isIntegral_of_mem_closure' R S _ _ f.toAlgebra G hG x hx
-#align is_integral_of_mem_closure'' is_integral_of_mem_closure''
+#align is_integral_of_mem_closure'' isIntegral_of_mem_closure''
 -/
 
 #print IsIntegral.pow /-
