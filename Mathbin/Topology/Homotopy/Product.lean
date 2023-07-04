@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Praneeth Kolichala
 
 ! This file was ported from Lean 3 source module topology.homotopy.product
-! leanprover-community/mathlib commit 6a51706df6baee825ace37c94dc9f75b64d7f035
+! leanprover-community/mathlib commit 728ef9dbb281241906f25cbeb30f90d83e0bb451
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Topology.Homotopy.Path
 
 /-!
 # Product of homotopies
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 In this file, we introduce definitions for the product of
 homotopies. We show that the products of relative homotopies

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis, Heather Macbeth
 
 ! This file was ported from Lean 3 source module ring_theory.witt_vector.frobenius_fraction_field
-! leanprover-community/mathlib commit cead93130da7100f8a9fe22ee210f7636a91168f
+! leanprover-community/mathlib commit d0b1936853671209a866fa35b9e54949c81116e2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.RingTheory.WittVector.DiscreteValuationRing
 
 /-!
 # Solving equations about the Frobenius map on the field of fractions of `𝕎 k`
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 The goal of this file is to prove `witt_vector.exists_frobenius_solution_fraction_ring`,
 which says that for an algebraically closed field `k` of characteristic `p` and `a, b` in the

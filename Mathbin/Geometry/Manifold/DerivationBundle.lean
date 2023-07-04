@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicolò Cavalleri
 
 ! This file was ported from Lean 3 source module geometry.manifold.derivation_bundle
-! leanprover-community/mathlib commit 86c29aefdba50b3f33e86e52e3b2f51a0d8f0282
+! leanprover-community/mathlib commit 728ef9dbb281241906f25cbeb30f90d83e0bb451
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.RingTheory.Derivation.Basic
 /-!
 
 # Derivation bundle
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 In this file we define the derivations at a point of a manifold on the algebra of smooth fuctions.
 Moreover, we define the differential of a function in terms of derivations.

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth, Floris van Doorn
 
 ! This file was ported from Lean 3 source module geometry.manifold.vector_bundle.smooth_section
-! leanprover-community/mathlib commit f9ec187127cc5b381dfcf5f4a22dacca4c20b63d
+! leanprover-community/mathlib commit e473c3198bb41f68560cab68a0529c854b618833
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -22,7 +22,7 @@ sections of a smooth vector bundle over a manifold `M` and prove that it's a mod
 
 open Bundle Filter Function
 
-open scoped Manifold
+open scoped Bundle Manifold
 
 variable {𝕜 : Type _} [NontriviallyNormedField 𝕜] {E : Type _} [NormedAddCommGroup E]
   [NormedSpace 𝕜 E] {E' : Type _} [NormedAddCommGroup E'] [NormedSpace 𝕜 E'] {H : Type _}
@@ -35,7 +35,7 @@ variable {𝕜 : Type _} [NontriviallyNormedField 𝕜] {E : Type _} [NormedAddC
 variable (F : Type _) [NormedAddCommGroup F] [NormedSpace 𝕜 F]
   -- `F` model fiber
   (n : ℕ∞)
-  (V : M → Type _) [TopologicalSpace (TotalSpace V)]
+  (V : M → Type _) [TopologicalSpace (TotalSpace F V)]
   -- `V` vector bundle
   [∀ x, AddCommGroup (V x)]
   [∀ x, Module 𝕜 (V x)]
@@ -47,7 +47,7 @@ variable [∀ x : M, TopologicalSpace (V x)] [FiberBundle F V] [VectorBundle �
 @[protect_proj]
 structure ContMdiffSection where
   toFun : ∀ x, V x
-  contMDiff_toFun : ContMDiff I (I.Prod 𝓘(𝕜, F)) n fun x => totalSpaceMk x (to_fun x)
+  contMDiff_toFun : ContMDiff I (I.Prod 𝓘(𝕜, F)) n fun x => (total_space.mk' F) x (to_fun x)
 #align cont_mdiff_section ContMdiffSection
 
 /-- Bundled smooth sections of a vector bundle. -/
@@ -69,33 +69,33 @@ variable {s t : Cₛ^n⟮I; F, V⟯}
 
 @[simp]
 theorem coeFn_mk (s : ∀ x, V x)
-    (hs : ContMDiff I (I.Prod 𝓘(𝕜, F)) n fun x => totalSpaceMk x (s x)) :
+    (hs : ContMDiff I (I.Prod 𝓘(𝕜, F)) n fun x => TotalSpace.mk x (s x)) :
     (mk s hs : ∀ x, V x) = s :=
   rfl
 #align cont_mdiff_section.coe_fn_mk ContMdiffSection.coeFn_mk
 
 protected theorem contMDiff (s : Cₛ^n⟮I; F, V⟯) :
-    ContMDiff I (I.Prod 𝓘(𝕜, F)) n fun x => totalSpaceMk x (s x : V x) :=
+    ContMDiff I (I.Prod 𝓘(𝕜, F)) n fun x => (total_space.mk' F) x (s x : V x) :=
   s.contMDiff_toFun
 #align cont_mdiff_section.cont_mdiff ContMdiffSection.contMDiff
 
 protected theorem smooth (s : Cₛ^∞⟮I; F, V⟯) :
-    Smooth I (I.Prod 𝓘(𝕜, F)) fun x => totalSpaceMk x (s x : V x) :=
+    Smooth I (I.Prod 𝓘(𝕜, F)) fun x => (total_space.mk' F) x (s x : V x) :=
   s.contMDiff_toFun
 #align cont_mdiff_section.smooth ContMdiffSection.smooth
 
 protected theorem mdifferentiable' (s : Cₛ^n⟮I; F, V⟯) (hn : 1 ≤ n) :
-    MDifferentiable I (I.Prod 𝓘(𝕜, F)) fun x => totalSpaceMk x (s x : V x) :=
+    MDifferentiable I (I.Prod 𝓘(𝕜, F)) fun x => (total_space.mk' F) x (s x : V x) :=
   s.ContMDiff.MDifferentiable hn
 #align cont_mdiff_section.mdifferentiable' ContMdiffSection.mdifferentiable'
 
 protected theorem mDifferentiable (s : Cₛ^∞⟮I; F, V⟯) :
-    MDifferentiable I (I.Prod 𝓘(𝕜, F)) fun x => totalSpaceMk x (s x : V x) :=
+    MDifferentiable I (I.Prod 𝓘(𝕜, F)) fun x => (total_space.mk' F) x (s x : V x) :=
   s.ContMDiff.MDifferentiable le_top
 #align cont_mdiff_section.mdifferentiable ContMdiffSection.mDifferentiable
 
 protected theorem mDifferentiableAt (s : Cₛ^∞⟮I; F, V⟯) {x} :
-    MDifferentiableAt I (I.Prod 𝓘(𝕜, F)) (fun x => totalSpaceMk x (s x : V x)) x :=
+    MDifferentiableAt I (I.Prod 𝓘(𝕜, F)) (fun x => (total_space.mk' F) x (s x : V x)) x :=
   s.MDifferentiable x
 #align cont_mdiff_section.mdifferentiable_at ContMdiffSection.mDifferentiableAt
 

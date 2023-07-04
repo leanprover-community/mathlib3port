@@ -6,10 +6,11 @@ Authors: Johannes Hölzl
 Extends the theory on functors, applicatives and monads.
 
 ! This file was ported from Lean 3 source module control.basic
-! leanprover-community/mathlib commit abb3121f210743a930dea73cd766d988079bdf8b
+! leanprover-community/mathlib commit 48fb5b5280e7c81672afc9524185ae994553ebf4
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
+import Mathbin.Tactic.MkSimpAttribute
 
 universe u v w
 
@@ -20,12 +21,6 @@ notation:1 a " $< " f:1 => f a
 section Functor
 
 variable {f : Type u → Type v} [Functor f] [LawfulFunctor f]
-
-run_cmd
-  mk_simp_attr `functor_norm
-
-run_cmd
-  tactic.add_doc_string `simp_attr.functor_norm "Simp set for functor_norm"
 
 @[functor_norm]
 theorem Functor.map_map (m : α → β) (g : β → γ) (x : f α) : g <$> m <$> x = (g ∘ m) <$> x :=
@@ -123,6 +118,7 @@ theorem seq_bind_eq (x : m α) {g : β → m γ} {f : α → β} : f <$> x >>= g
 #align seq_bind_eq seq_bind_eq
 -/
 
+@[monad_norm]
 theorem seq_eq_bind_map {x : m α} {f : m (α → β)} : f <*> x = f >>= (· <$> x) :=
   (bind_map f x).symm
 #align seq_eq_bind_map seq_eq_bind_mapₓ

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Loeffler
 
 ! This file was ported from Lean 3 source module number_theory.modular_forms.jacobi_theta.manifold
-! leanprover-community/mathlib commit 57f9349f2fe19d2de7207e99b0341808d977cdcf
+! leanprover-community/mathlib commit 728ef9dbb281241906f25cbeb30f90d83e0bb451
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Analysis.Complex.UpperHalfPlane.Manifold
 
 /-!
 # Manifold differentiability of the Jacobi's theta function
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 In this file we reformulate differentiability of the Jacobi's theta function in terms of manifold
 differentiability.

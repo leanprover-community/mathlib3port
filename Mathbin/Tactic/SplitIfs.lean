@@ -6,7 +6,7 @@ Authors: Gabriel Ebner
 Tactic to split if-then-else-expressions.
 
 ! This file was ported from Lean 3 source module tactic.split_ifs
-! leanprover-community/mathlib commit b71077179fac7179e3a342ff319392ad8dcb773c
+! leanprover-community/mathlib commit 48fb5b5280e7c81672afc9524185ae994553ebf4
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -37,14 +37,6 @@ unsafe def find_if_cond_at (at_ : Loc) : tactic (Option expr) := do
   let es := if at_.include_goal then tgt :: lctx else lctx
   return <| find_if_cond <| es app default
 #align tactic.find_if_cond_at tactic.find_if_cond_at
-
-run_cmd
-  mk_simp_attr `split_if_reduction
-
-run_cmd
-  add_doc_string `simp_attr.split_if_reduction "Simp set for if-then-else statements"
-
-attribute [split_if_reduction] if_pos if_neg dif_pos dif_neg if_congr
 
 unsafe def reduce_ifs_at (at_ : Loc) : tactic Unit := do
   let sls ← get_user_simp_lemmas `split_if_reduction

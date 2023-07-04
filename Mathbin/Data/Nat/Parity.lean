@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Benjamin Davidson
 
 ! This file was ported from Lean 3 source module data.nat.parity
-! leanprover-community/mathlib commit a11f9106a169dd302a285019e5165f8ab32ff433
+! leanprover-community/mathlib commit 48fb5b5280e7c81672afc9524185ae994553ebf4
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -149,10 +149,6 @@ theorem succ_mod_two_add_mod_two (m : ℕ) : (m + 1) % 2 + m % 2 = 1 := by
   rw [add_comm, mod_two_add_succ_mod_two]
 #align nat.succ_mod_two_add_mod_two Nat.succ_mod_two_add_mod_two
 -/
-
--- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
--- failed to format: unknown constant 'Lean.Meta._root_.Lean.Parser.Command.registerSimpAttr'
-/-- Simp attribute for lemmas about `even` -/ register_simp_attr parity_simps
 
 #print Nat.not_even_one /-
 @[simp]

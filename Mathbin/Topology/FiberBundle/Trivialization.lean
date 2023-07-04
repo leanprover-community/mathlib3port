@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module topology.fiber_bundle.trivialization
-! leanprover-community/mathlib commit 69c6a5a12d8a2b159f20933e60115a4f2de62b58
+! leanprover-community/mathlib commit e473c3198bb41f68560cab68a0529c854b618833
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -260,9 +260,10 @@ theorem symm_trans_target_eq (e e' : Pretrivialization F proj) :
 #align pretrivialization.symm_trans_target_eq Pretrivialization.symm_trans_target_eq
 -/
 
-variable {B F} (e' : Pretrivialization F (π E)) {x' : TotalSpace E} {b : B} {y : E b}
+variable {B F} (e' : Pretrivialization F (π F E)) {x' : TotalSpace F E} {b : B} {y : E b}
 
 #print Pretrivialization.coe_mem_source /-
+@[simp]
 theorem coe_mem_source : ↑y ∈ e'.source ↔ b ∈ e'.baseSet :=
   e'.mem_source
 #align pretrivialization.coe_mem_source Pretrivialization.coe_mem_source
@@ -282,7 +283,7 @@ theorem mk_mem_target {x : B} {y : F} : (x, y) ∈ e'.target ↔ x ∈ e'.baseSe
 -/
 
 #print Pretrivialization.symm_coe_proj /-
-theorem symm_coe_proj {x : B} {y : F} (e' : Pretrivialization F (π E)) (h : x ∈ e'.baseSet) :
+theorem symm_coe_proj {x : B} {y : F} (e' : Pretrivialization F (π F E)) (h : x ∈ e'.baseSet) :
     (e'.toLocalEquiv.symm (x, y)).1 = x :=
   e'.proj_symm_apply' h
 #align pretrivialization.symm_coe_proj Pretrivialization.symm_coe_proj
@@ -294,8 +295,8 @@ variable [∀ x, Zero (E x)]
 
 #print Pretrivialization.symm /-
 /-- A fiberwise inverse to `e`. This is the function `F → E b` that induces a local inverse
-`B × F → total_space E` of `e` on `e.base_set`. It is defined to be `0` outside `e.base_set`. -/
-protected noncomputable def symm (e : Pretrivialization F (π E)) (b : B) (y : F) : E b :=
+`B × F → total_space F E` of `e` on `e.base_set`. It is defined to be `0` outside `e.base_set`. -/
+protected noncomputable def symm (e : Pretrivialization F (π F E)) (b : B) (y : F) : E b :=
   if hb : b ∈ e.baseSet then
     cast (congr_arg E (e.proj_symm_apply' hb)) (e.toLocalEquiv.symm (b, y)).2
   else 0
@@ -303,51 +304,50 @@ protected noncomputable def symm (e : Pretrivialization F (π E)) (b : B) (y : F
 -/
 
 #print Pretrivialization.symm_apply /-
-theorem symm_apply (e : Pretrivialization F (π E)) {b : B} (hb : b ∈ e.baseSet) (y : F) :
+theorem symm_apply (e : Pretrivialization F (π F E)) {b : B} (hb : b ∈ e.baseSet) (y : F) :
     e.symm b y = cast (congr_arg E (e.symm_coe_proj hb)) (e.toLocalEquiv.symm (b, y)).2 :=
   dif_pos hb
 #align pretrivialization.symm_apply Pretrivialization.symm_apply
 -/
 
 #print Pretrivialization.symm_apply_of_not_mem /-
-theorem symm_apply_of_not_mem (e : Pretrivialization F (π E)) {b : B} (hb : b ∉ e.baseSet) (y : F) :
-    e.symm b y = 0 :=
+theorem symm_apply_of_not_mem (e : Pretrivialization F (π F E)) {b : B} (hb : b ∉ e.baseSet)
+    (y : F) : e.symm b y = 0 :=
   dif_neg hb
 #align pretrivialization.symm_apply_of_not_mem Pretrivialization.symm_apply_of_not_mem
 -/
 
 #print Pretrivialization.coe_symm_of_not_mem /-
-theorem coe_symm_of_not_mem (e : Pretrivialization F (π E)) {b : B} (hb : b ∉ e.baseSet) :
+theorem coe_symm_of_not_mem (e : Pretrivialization F (π F E)) {b : B} (hb : b ∉ e.baseSet) :
     (e.symm b : F → E b) = 0 :=
   funext fun y => dif_neg hb
 #align pretrivialization.coe_symm_of_not_mem Pretrivialization.coe_symm_of_not_mem
 -/
 
 #print Pretrivialization.mk_symm /-
-theorem mk_symm (e : Pretrivialization F (π E)) {b : B} (hb : b ∈ e.baseSet) (y : F) :
-    totalSpaceMk b (e.symm b y) = e.toLocalEquiv.symm (b, y) := by
+theorem mk_symm (e : Pretrivialization F (π F E)) {b : B} (hb : b ∈ e.baseSet) (y : F) :
+    TotalSpace.mk b (e.symm b y) = e.toLocalEquiv.symm (b, y) := by
   rw [e.symm_apply hb, total_space.mk_cast, total_space.eta]
 #align pretrivialization.mk_symm Pretrivialization.mk_symm
 -/
 
 #print Pretrivialization.symm_proj_apply /-
-theorem symm_proj_apply (e : Pretrivialization F (π E)) (z : TotalSpace E)
+theorem symm_proj_apply (e : Pretrivialization F (π F E)) (z : TotalSpace F E)
     (hz : z.proj ∈ e.baseSet) : e.symm z.proj (e z).2 = z.2 := by
   rw [e.symm_apply hz, cast_eq_iff_heq, e.mk_proj_snd' hz, e.symm_apply_apply (e.mem_source.mpr hz)]
 #align pretrivialization.symm_proj_apply Pretrivialization.symm_proj_apply
 -/
 
 #print Pretrivialization.symm_apply_apply_mk /-
-theorem symm_apply_apply_mk (e : Pretrivialization F (π E)) {b : B} (hb : b ∈ e.baseSet) (y : E b) :
-    e.symm b (e (totalSpaceMk b y)).2 = y :=
-  e.symm_proj_apply (totalSpaceMk b y) hb
+theorem symm_apply_apply_mk (e : Pretrivialization F (π F E)) {b : B} (hb : b ∈ e.baseSet)
+    (y : E b) : e.symm b (e ⟨b, y⟩).2 = y :=
+  e.symm_proj_apply ⟨b, y⟩ hb
 #align pretrivialization.symm_apply_apply_mk Pretrivialization.symm_apply_apply_mk
 -/
 
 #print Pretrivialization.apply_mk_symm /-
-theorem apply_mk_symm (e : Pretrivialization F (π E)) {b : B} (hb : b ∈ e.baseSet) (y : F) :
-    e (totalSpaceMk b (e.symm b y)) = (b, y) := by
-  rw [e.mk_symm hb, e.apply_symm_apply (e.mk_mem_target.mpr hb)]
+theorem apply_mk_symm (e : Pretrivialization F (π F E)) {b : B} (hb : b ∈ e.baseSet) (y : F) :
+    e ⟨b, e.symm b y⟩ = (b, y) := by rw [e.mk_symm hb, e.apply_symm_apply (e.mk_mem_target.mpr hb)]
 #align pretrivialization.apply_mk_symm Pretrivialization.apply_mk_symm
 -/
 
@@ -355,7 +355,7 @@ end Zero
 
 end Pretrivialization
 
-variable [TopologicalSpace Z] [TopologicalSpace (TotalSpace E)]
+variable [TopologicalSpace Z] [TopologicalSpace (TotalSpace F E)]
 
 #print Trivialization /-
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -691,7 +691,7 @@ theorem continuousAt_of_comp_left {X : Type _} [TopologicalSpace X] {f : X → Z
 #align trivialization.continuous_at_of_comp_left Trivialization.continuousAt_of_comp_left
 -/
 
-variable {E} (e' : Trivialization F (π E)) {x' : TotalSpace E} {b : B} {y : E b}
+variable {E} (e' : Trivialization F (π F E)) {x' : TotalSpace F E} {b : B} {y : E b}
 
 #print Trivialization.continuousOn /-
 protected theorem continuousOn : ContinuousOn e' e'.source :=
@@ -725,7 +725,7 @@ theorem mk_mem_target {y : F} : (b, y) ∈ e'.target ↔ b ∈ e'.baseSet :=
 -/
 
 #print Trivialization.symm_apply_apply /-
-theorem symm_apply_apply {x : TotalSpace E} (hx : x ∈ e'.source) :
+theorem symm_apply_apply {x : TotalSpace F E} (hx : x ∈ e'.source) :
     e'.toLocalHomeomorph.symm (e' x) = x :=
   e'.toLocalEquiv.left_inv hx
 #align trivialization.symm_apply_apply Trivialization.symm_apply_apply
@@ -733,7 +733,7 @@ theorem symm_apply_apply {x : TotalSpace E} (hx : x ∈ e'.source) :
 
 #print Trivialization.symm_coe_proj /-
 @[simp, mfld_simps]
-theorem symm_coe_proj {x : B} {y : F} (e : Trivialization F (π E)) (h : x ∈ e.baseSet) :
+theorem symm_coe_proj {x : B} {y : F} (e : Trivialization F (π F E)) (h : x ∈ e.baseSet) :
     (e.toLocalHomeomorph.symm (x, y)).1 = x :=
   e.proj_symm_apply' h
 #align trivialization.symm_coe_proj Trivialization.symm_coe_proj
@@ -745,50 +745,51 @@ variable [∀ x, Zero (E x)]
 
 #print Trivialization.symm /-
 /-- A fiberwise inverse to `e'`. The function `F → E x` that induces a local inverse
-`B × F → total_space E` of `e'` on `e'.base_set`. It is defined to be `0` outside `e'.base_set`. -/
-protected noncomputable def symm (e : Trivialization F (π E)) (b : B) (y : F) : E b :=
+`B × F → total_space F E` of `e'` on `e'.base_set`. It is defined to be `0` outside
+`e'.base_set`. -/
+protected noncomputable def symm (e : Trivialization F (π F E)) (b : B) (y : F) : E b :=
   e.toPretrivialization.symm b y
 #align trivialization.symm Trivialization.symm
 -/
 
 #print Trivialization.symm_apply /-
-theorem symm_apply (e : Trivialization F (π E)) {b : B} (hb : b ∈ e.baseSet) (y : F) :
+theorem symm_apply (e : Trivialization F (π F E)) {b : B} (hb : b ∈ e.baseSet) (y : F) :
     e.symm b y = cast (congr_arg E (e.symm_coe_proj hb)) (e.toLocalHomeomorph.symm (b, y)).2 :=
   dif_pos hb
 #align trivialization.symm_apply Trivialization.symm_apply
 -/
 
 #print Trivialization.symm_apply_of_not_mem /-
-theorem symm_apply_of_not_mem (e : Trivialization F (π E)) {b : B} (hb : b ∉ e.baseSet) (y : F) :
+theorem symm_apply_of_not_mem (e : Trivialization F (π F E)) {b : B} (hb : b ∉ e.baseSet) (y : F) :
     e.symm b y = 0 :=
   dif_neg hb
 #align trivialization.symm_apply_of_not_mem Trivialization.symm_apply_of_not_mem
 -/
 
 #print Trivialization.mk_symm /-
-theorem mk_symm (e : Trivialization F (π E)) {b : B} (hb : b ∈ e.baseSet) (y : F) :
-    totalSpaceMk b (e.symm b y) = e.toLocalHomeomorph.symm (b, y) :=
+theorem mk_symm (e : Trivialization F (π F E)) {b : B} (hb : b ∈ e.baseSet) (y : F) :
+    TotalSpace.mk b (e.symm b y) = e.toLocalHomeomorph.symm (b, y) :=
   e.toPretrivialization.mk_symm hb y
 #align trivialization.mk_symm Trivialization.mk_symm
 -/
 
 #print Trivialization.symm_proj_apply /-
-theorem symm_proj_apply (e : Trivialization F (π E)) (z : TotalSpace E) (hz : z.proj ∈ e.baseSet) :
-    e.symm z.proj (e z).2 = z.2 :=
+theorem symm_proj_apply (e : Trivialization F (π F E)) (z : TotalSpace F E)
+    (hz : z.proj ∈ e.baseSet) : e.symm z.proj (e z).2 = z.2 :=
   e.toPretrivialization.symm_proj_apply z hz
 #align trivialization.symm_proj_apply Trivialization.symm_proj_apply
 -/
 
 #print Trivialization.symm_apply_apply_mk /-
-theorem symm_apply_apply_mk (e : Trivialization F (π E)) {b : B} (hb : b ∈ e.baseSet) (y : E b) :
-    e.symm b (e (totalSpaceMk b y)).2 = y :=
-  e.symm_proj_apply (totalSpaceMk b y) hb
+theorem symm_apply_apply_mk (e : Trivialization F (π F E)) {b : B} (hb : b ∈ e.baseSet) (y : E b) :
+    e.symm b (e ⟨b, y⟩).2 = y :=
+  e.symm_proj_apply ⟨b, y⟩ hb
 #align trivialization.symm_apply_apply_mk Trivialization.symm_apply_apply_mk
 -/
 
 #print Trivialization.apply_mk_symm /-
-theorem apply_mk_symm (e : Trivialization F (π E)) {b : B} (hb : b ∈ e.baseSet) (y : F) :
-    e (totalSpaceMk b (e.symm b y)) = (b, y) :=
+theorem apply_mk_symm (e : Trivialization F (π F E)) {b : B} (hb : b ∈ e.baseSet) (y : F) :
+    e ⟨b, e.symm b y⟩ = (b, y) :=
   e.toPretrivialization.apply_mk_symm hb y
 #align trivialization.apply_mk_symm Trivialization.apply_mk_symm
 -/
@@ -796,12 +797,12 @@ theorem apply_mk_symm (e : Trivialization F (π E)) {b : B} (hb : b ∈ e.baseSe
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Trivialization.continuousOn_symm /-
-theorem continuousOn_symm (e : Trivialization F (π E)) :
-    ContinuousOn (fun z : B × F => totalSpaceMk z.1 (e.symm z.1 z.2)) (e.baseSet ×ˢ univ) :=
+theorem continuousOn_symm (e : Trivialization F (π F E)) :
+    ContinuousOn (fun z : B × F => (total_space.mk' F) z.1 (e.symm z.1 z.2)) (e.baseSet ×ˢ univ) :=
   by
   have :
     ∀ (z : B × F) (hz : z ∈ e.base_set ×ˢ (univ : Set F)),
-      total_space_mk z.1 (e.symm z.1 z.2) = e.to_local_homeomorph.symm z :=
+      total_space.mk z.1 (e.symm z.1 z.2) = e.to_local_homeomorph.symm z :=
     by rintro x ⟨hx : x.1 ∈ e.base_set, _⟩; simp_rw [e.mk_symm hx, Prod.mk.eta]
   refine' ContinuousOn.congr _ this
   rw [← e.target_eq]

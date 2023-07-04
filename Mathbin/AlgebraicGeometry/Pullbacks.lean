@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module algebraic_geometry.pullbacks
-! leanprover-community/mathlib commit 7316286ff2942aa14e540add9058c6b0aa1c8070
+! leanprover-community/mathlib commit d0b1936853671209a866fa35b9e54949c81116e2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -15,6 +15,9 @@ import Mathbin.CategoryTheory.Limits.Shapes.Diagonal
 
 /-!
 # Fibred products of schemes
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 In this file we construct the fibred product of schemes via gluing.
 We roughly follow [har77] Theorem 3.3.

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module set_theory.game.state
-! leanprover-community/mathlib commit b134b2f5cf6dd25d4bbfd3c498b6e36c11a17225
+! leanprover-community/mathlib commit 728ef9dbb281241906f25cbeb30f90d83e0bb451
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.SetTheory.Game.Short
 
 /-!
 # Games described via "the state of the board".
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 We provide a simple mechanism for constructing combinatorial (pre-)games, by describing
 "the state of the board", and providing an upper bound on the number of turns remaining.

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Nicolò Cavalleri, Sébastien Gouëzel, Heather Macbeth, Floris van Doorn
 
 ! This file was ported from Lean 3 source module topology.vector_bundle.constructions
-! leanprover-community/mathlib commit 38df578a6450a8c5142b3727e3ae894c2300cae0
+! leanprover-community/mathlib commit e473c3198bb41f68560cab68a0529c854b618833
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -92,15 +92,15 @@ end Bundle.Trivial
 section
 
 variable (𝕜 : Type _) {B : Type _} [NontriviallyNormedField 𝕜] [TopologicalSpace B] (F₁ : Type _)
-  [NormedAddCommGroup F₁] [NormedSpace 𝕜 F₁] (E₁ : B → Type _) [TopologicalSpace (TotalSpace E₁)]
+  [NormedAddCommGroup F₁] [NormedSpace 𝕜 F₁] (E₁ : B → Type _) [TopologicalSpace (TotalSpace F₁ E₁)]
   (F₂ : Type _) [NormedAddCommGroup F₂] [NormedSpace 𝕜 F₂] (E₂ : B → Type _)
-  [TopologicalSpace (TotalSpace E₂)]
+  [TopologicalSpace (TotalSpace F₂ E₂)]
 
 namespace Trivialization
 
 variable {F₁ E₁ F₂ E₂} [∀ x, AddCommMonoid (E₁ x)] [∀ x, Module 𝕜 (E₁ x)]
-  [∀ x, AddCommMonoid (E₂ x)] [∀ x, Module 𝕜 (E₂ x)] (e₁ e₁' : Trivialization F₁ (π E₁))
-  (e₂ e₂' : Trivialization F₂ (π E₂))
+  [∀ x, AddCommMonoid (E₂ x)] [∀ x, Module 𝕜 (E₂ x)] (e₁ e₁' : Trivialization F₁ (π F₁ E₁))
+  (e₂ e₂' : Trivialization F₂ (π F₂ E₂))
 
 #print Trivialization.prod.isLinear /-
 instance prod.isLinear [e₁.isLinear 𝕜] [e₂.isLinear 𝕜] : (e₁.Prod e₂).isLinear 𝕜
@@ -178,9 +178,9 @@ instance VectorBundle.prod [VectorBundle 𝕜 F₁ E₁] [VectorBundle 𝕜 F₂
 variable {𝕜 F₁ E₁ F₂ E₂}
 
 @[simp]
-theorem Trivialization.continuousLinearEquivAt_prod {e₁ : Trivialization F₁ (π E₁)}
-    {e₂ : Trivialization F₂ (π E₂)} [e₁.isLinear 𝕜] [e₂.isLinear 𝕜] {x : B} (hx₁ : x ∈ e₁.baseSet)
-    (hx₂ : x ∈ e₂.baseSet) :
+theorem Trivialization.continuousLinearEquivAt_prod {e₁ : Trivialization F₁ (π F₁ E₁)}
+    {e₂ : Trivialization F₂ (π F₂ E₂)} [e₁.isLinear 𝕜] [e₂.isLinear 𝕜] {x : B}
+    (hx₁ : x ∈ e₁.baseSet) (hx₂ : x ∈ e₂.baseSet) :
     (e₁.Prod e₂).continuousLinearEquivAt 𝕜 x ⟨hx₁, hx₂⟩ =
       (e₁.continuousLinearEquivAt 𝕜 x hx₁).Prod (e₂.continuousLinearEquivAt 𝕜 x hx₂) :=
   by
@@ -206,12 +206,12 @@ instance [∀ x : B, AddCommMonoid (E x)] : ∀ x : B', AddCommMonoid ((f *ᵖ E
 instance [Semiring R] [∀ x : B, AddCommMonoid (E x)] [∀ x, Module R (E x)] :
     ∀ x : B', Module R ((f *ᵖ E) x) := by delta_instance bundle.pullback
 
-variable {E F} [TopologicalSpace B'] [TopologicalSpace (TotalSpace E)] [NontriviallyNormedField 𝕜]
+variable {E F} [TopologicalSpace B'] [TopologicalSpace (TotalSpace F E)] [NontriviallyNormedField 𝕜]
   [NormedAddCommGroup F] [NormedSpace 𝕜 F] [TopologicalSpace B] [∀ x, AddCommMonoid (E x)]
   [∀ x, Module 𝕜 (E x)] {K : Type _} [ContinuousMapClass K B' B]
 
 #print Trivialization.pullback_linear /-
-instance Trivialization.pullback_linear (e : Trivialization F (π E)) [e.isLinear 𝕜] (f : K) :
+instance Trivialization.pullback_linear (e : Trivialization F (π F E)) [e.isLinear 𝕜] (f : K) :
     (@Trivialization.pullback _ _ _ B' _ _ _ _ _ _ _ e f).isLinear 𝕜
     where linear x h := e.linear 𝕜 h
 #align trivialization.pullback_linear Trivialization.pullback_linear

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 
 ! This file was ported from Lean 3 source module order.category.omega_complete_partial_order
-! leanprover-community/mathlib commit 70fd9563a21e7b963887c9360bd29b2393e6225a
+! leanprover-community/mathlib commit d0b1936853671209a866fa35b9e54949c81116e2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -16,6 +16,9 @@ import Mathbin.CategoryTheory.ConcreteCategory.BundledHom
 
 /-!
 # Category of types with a omega complete partial order
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 In this file, we bundle the class `omega_complete_partial_order` into a
 concrete category and prove that continuous functions also form

@@ -2844,6 +2844,7 @@ import Mathbin.Tactic.Lint.TypeClasses
 import Mathbin.Tactic.LocalCache
 import Mathbin.Tactic.Localized
 import Mathbin.Tactic.MkIffOfInductiveProp
+import Mathbin.Tactic.MkSimpAttribute
 import Mathbin.Tactic.Monotonicity.Basic
 import Mathbin.Tactic.Monotonicity.Default
 import Mathbin.Tactic.Monotonicity.Interactive

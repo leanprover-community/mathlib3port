@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module logic.nontrivial
-! leanprover-community/mathlib commit 448144f7ae193a8990cb7473c9e9a01990f64ac7
+! leanprover-community/mathlib commit 48fb5b5280e7c81672afc9524185ae994553ebf4
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -264,17 +264,12 @@ instance Function.nontrivial [h : Nonempty α] [Nontrivial β] : Nontrivial (α 
 #align function.nontrivial Function.nontrivial
 -/
 
--- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
--- failed to format: unknown constant 'Lean.Meta._root_.Lean.Parser.Command.registerSimpAttr'
-/-- Simp lemmas for `nontriviality` tactic -/ register_simp_attr nontriviality
-
 #print Subsingleton.le /-
+@[nontriviality]
 protected theorem Subsingleton.le [Preorder α] [Subsingleton α] (x y : α) : x ≤ y :=
   le_of_eq (Subsingleton.elim x y)
 #align subsingleton.le Subsingleton.le
 -/
-
-attribute [nontriviality] eq_iff_true_of_subsingleton Subsingleton.le
 
 namespace Bool
 

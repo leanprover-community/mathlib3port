@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module algebraic_geometry.morphisms.universally_closed
-! leanprover-community/mathlib commit a8ae1b3f7979249a0af6bc7cf20c1f6bf656ca73
+! leanprover-community/mathlib commit 728ef9dbb281241906f25cbeb30f90d83e0bb451
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Topology.LocalAtTarget
 
 /-!
 # Universally closed morphism
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 A morphism of schemes `f : X ⟶ Y` is universally closed if `X ×[Y] Y' ⟶ Y'` is a closed map
 for all base change `Y' ⟶ Y`.

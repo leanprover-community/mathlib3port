@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module tactic.equiv_rw
-! leanprover-community/mathlib commit 9407b03373c8cd201df99d6bc5514fc2db44054f
+! leanprover-community/mathlib commit 48fb5b5280e7c81672afc9524185ae994553ebf4
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -201,16 +201,6 @@ unsafe def equiv_rw_type_core (eq : expr) (cfg : equiv_rw_cfg) : tactic Unit := 
                   f! "Could not construct an equivalence from { eqv_pp } of the form: { ty_pp } ≃ _"
           Prod.fst <$> new_eqv { failIfUnchanged := ff }
 #align tactic.equiv_rw_type tactic.equiv_rw_type
-
--- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
--- failed to format: unknown constant 'Lean.Meta._root_.Lean.Parser.Command.registerSimpAttr'
-/--
-    The simpset `equiv_rw_simp` is used by the tactic `equiv_rw` to
-    simplify applications of equivalences and their inverses. -/
-  register_simp_attr
-  equiv_rw_simp
-
-attribute [equiv_rw_simp] Equiv.symm_symm Equiv.apply_symm_apply Equiv.symm_apply_apply
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
 -- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.

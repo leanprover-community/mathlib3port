@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura, Simon Hudon, Mario Carneiro
 
 ! This file was ported from Lean 3 source module algebra.group.defs
-! leanprover-community/mathlib commit 448144f7ae193a8990cb7473c9e9a01990f64ac7
+! leanprover-community/mathlib commit 48fb5b5280e7c81672afc9524185ae994553ebf4
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -88,15 +88,26 @@ universe u
 
 variable {G : Type _}
 
--- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
--- failed to format: unknown constant 'Lean.Meta._root_.Lean.Parser.Command.registerSimpAttr'
-/--
-    The simpset `field_simps` is used by the tactic `field_simp` to
-    reduce an expression in a field to an expression of the form `n / d` where `n` and `d` are
-    division-free. -/
-  register_simp_attr
-  field_simps
+/- Additive "sister" structures.
+   Example, add_semigroup mirrors semigroup.
+   These structures exist just to help automation.
+   In an alternative design, we could have the binary operation as an
+   extra argument for semigroup, monoid, group, etc. However, the lemmas
+   would be hard to index since they would not contain any constant.
+   For example, mul_assoc would be
 
+   lemma mul_assoc {α : Type u} {op : α → α → α} [semigroup α op] :
+                   ∀ a b c : α, op (op a b) c = op a (op b c) :=
+    semigroup.mul_assoc
+
+   The simplifier cannot effectively use this lemma since the pattern for
+   the left-hand-side would be
+
+        ?op (?op ?a ?b) ?c
+
+   Remark: we use a tactic for transporting theorems from the multiplicative fragment
+   to the additive one.
+-/
 section Mul
 
 variable [Mul G]

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Floris van Doorn
 
 ! This file was ported from Lean 3 source module geometry.manifold.cont_mdiff_mfderiv
-! leanprover-community/mathlib commit e354e865255654389cc46e6032160238df2e0f40
+! leanprover-community/mathlib commit e473c3198bb41f68560cab68a0529c854b618833
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -315,7 +315,7 @@ space are model spaces in models with corners. The general fact is proved in
 `cont_mdiff_on.continuous_on_tangent_map_within`-/
 theorem ContMDiffOn.continuousOn_tangentMapWithin_aux {f : H → H'} {s : Set H}
     (hf : ContMDiffOn I I' n f s) (hn : 1 ≤ n) (hs : UniqueMDiffOn I s) :
-    ContinuousOn (tangentMapWithin I I' f s) (π (TangentSpace I) ⁻¹' s) :=
+    ContinuousOn (tangentMapWithin I I' f s) (π E (TangentSpace I) ⁻¹' s) :=
   by
   suffices h :
     ContinuousOn
@@ -332,7 +332,7 @@ theorem ContMDiffOn.continuousOn_tangentMapWithin_aux {f : H → H'} {s : Set H}
       ((tangentBundleModelSpaceHomeomorph H' I').symm.Continuous.comp_continuousOn h).comp' A
     have :
       univ ∩ ⇑(tangentBundleModelSpaceHomeomorph H I) ⁻¹' (Prod.fst ⁻¹' s) =
-        π (TangentSpace I) ⁻¹' s :=
+        π E (TangentSpace I) ⁻¹' s :=
       by ext ⟨x, v⟩; simp only [mfld_simps]
     rw [this] at B 
     apply B.congr
@@ -391,7 +391,7 @@ are model spaces in models with corners. The general fact is proved in
 `cont_mdiff_on.cont_mdiff_on_tangent_map_within` -/
 theorem ContMDiffOn.contMDiffOn_tangentMapWithin_aux {f : H → H'} {s : Set H}
     (hf : ContMDiffOn I I' n f s) (hmn : m + 1 ≤ n) (hs : UniqueMDiffOn I s) :
-    ContMDiffOn I.tangent I'.tangent m (tangentMapWithin I I' f s) (π (TangentSpace I) ⁻¹' s) :=
+    ContMDiffOn I.tangent I'.tangent m (tangentMapWithin I I' f s) (π E (TangentSpace I) ⁻¹' s) :=
   by
   have m_le_n : m ≤ n := by
     apply le_trans _ hmn
@@ -410,15 +410,15 @@ theorem ContMDiffOn.contMDiffOn_tangentMapWithin_aux {f : H → H'} {s : Set H}
   refine' ⟨hf.continuous_on_tangent_map_within_aux one_le_n hs, fun p q => _⟩
   have A :
     range I ×ˢ univ ∩
-        ((Equiv.sigmaEquivProd H E).symm ∘ fun p : E × E => (I.symm p.fst, p.snd)) ⁻¹'
-          (π (TangentSpace I) ⁻¹' s) =
+        ((total_space.to_prod H E).symm ∘ fun p : E × E => (I.symm p.fst, p.snd)) ⁻¹'
+          (π E (TangentSpace I) ⁻¹' s) =
       (range I ∩ I.symm ⁻¹' s) ×ˢ univ :=
     by ext ⟨x, v⟩; simp only [mfld_simps]
   suffices h :
     ContDiffOn 𝕜 m
-      (((fun p : H' × E' => (I' p.fst, p.snd)) ∘ Equiv.sigmaEquivProd H' E') ∘
+      (((fun p : H' × E' => (I' p.fst, p.snd)) ∘ total_space.to_prod H' E') ∘
         tangentMapWithin I I' f s ∘
-          (Equiv.sigmaEquivProd H E).symm ∘ fun p : E × E => (I.symm p.fst, p.snd))
+          (total_space.to_prod H E).symm ∘ fun p : E × E => (I.symm p.fst, p.snd))
       ((range ⇑I ∩ ⇑I.symm ⁻¹' s) ×ˢ univ)
   · simpa [A] using h
   change
@@ -456,7 +456,7 @@ theorem ContMDiffOn.contMDiffOn_tangentMapWithin_aux {f : H → H'} {s : Set H}
 is `C^m` when `m+1 ≤ n`. -/
 theorem ContMDiffOn.contMDiffOn_tangentMapWithin (hf : ContMDiffOn I I' n f s) (hmn : m + 1 ≤ n)
     (hs : UniqueMDiffOn I s) :
-    ContMDiffOn I.tangent I'.tangent m (tangentMapWithin I I' f s) (π (TangentSpace I) ⁻¹' s) :=
+    ContMDiffOn I.tangent I'.tangent m (tangentMapWithin I I' f s) (π E (TangentSpace I) ⁻¹' s) :=
   by
   /- The strategy of the proof is to avoid unfolding the definitions, and reduce by functoriality
     to the case of functions on the model spaces, where we have already proved the result.
@@ -494,20 +494,20 @@ theorem ContMDiffOn.contMDiffOn_tangentMapWithin (hf : ContMDiffOn I I' n f s) (
   let il := chart_at (ModelProd H E) (tangentMap I I l p)
   let ir := chart_at (ModelProd H' E') (tangentMap I I' (r ∘ f) p)
   let s' := f ⁻¹' r.source ∩ s ∩ l.source
-  let s'_lift := π (TangentSpace I) ⁻¹' s'
+  let s'_lift := π E (TangentSpace I) ⁻¹' s'
   let s'l := l.target ∩ l.symm ⁻¹' s'
-  let s'l_lift := π (TangentSpace I) ⁻¹' s'l
+  let s'l_lift := π E (TangentSpace I) ⁻¹' s'l
   rcases continuousOn_iff'.1 hf'.1 r.source r.open_source with ⟨o, o_open, ho⟩
   suffices h : ContMDiffOn I.tangent I'.tangent m (tangentMapWithin I I' f s) s'_lift
-  · refine' ⟨π (TangentSpace I) ⁻¹' (o ∩ l.source), _, _, _⟩
-    show IsOpen (π (TangentSpace I) ⁻¹' (o ∩ l.source));
+  · refine' ⟨π E (TangentSpace I) ⁻¹' (o ∩ l.source), _, _, _⟩
+    show IsOpen (π E (TangentSpace I) ⁻¹' (o ∩ l.source));
     exact (IsOpen.inter o_open l.open_source).Preimage (continuous_proj E _)
-    show p ∈ π (TangentSpace I) ⁻¹' (o ∩ l.source)
+    show p ∈ π E (TangentSpace I) ⁻¹' (o ∩ l.source)
     · simp
       have : p.proj ∈ f ⁻¹' r.source ∩ s := by simp [hp]
       rw [ho] at this 
       exact this.1
-    · have : π (TangentSpace I) ⁻¹' s ∩ π (TangentSpace I) ⁻¹' (o ∩ l.source) = s'_lift := by
+    · have : π E (TangentSpace I) ⁻¹' s ∩ π E (TangentSpace I) ⁻¹' (o ∩ l.source) = s'_lift := by
         dsimp only [s'_lift, s']; rw [ho]; mfld_set_tac
       rw [this]
       exact h
@@ -647,9 +647,9 @@ theorem ContMDiffOn.contMDiffOn_tangentMapWithin (hf : ContMDiffOn I I' n f s) (
 derivative is continuous there. -/
 theorem ContMDiffOn.continuousOn_tangentMapWithin (hf : ContMDiffOn I I' n f s) (hmn : 1 ≤ n)
     (hs : UniqueMDiffOn I s) :
-    ContinuousOn (tangentMapWithin I I' f s) (π (TangentSpace I) ⁻¹' s) :=
+    ContinuousOn (tangentMapWithin I I' f s) (π E (TangentSpace I) ⁻¹' s) :=
   haveI :
-    ContMDiffOn I.tangent I'.tangent 0 (tangentMapWithin I I' f s) (π (TangentSpace I) ⁻¹' s) :=
+    ContMDiffOn I.tangent I'.tangent 0 (tangentMapWithin I I' f s) (π E (TangentSpace I) ⁻¹' s) :=
     hf.cont_mdiff_on_tangent_map_within hmn hs
   this.continuous_on
 #align cont_mdiff_on.continuous_on_tangent_map_within ContMDiffOn.continuousOn_tangentMapWithin
@@ -696,7 +696,7 @@ may seem.
 
 TODO define splittings of vector bundles; state this result invariantly. -/
 theorem tangentMap_tangentBundle_pure (p : TangentBundle I M) :
-    tangentMap I I.tangent (zeroSection (TangentSpace I)) p = ⟨⟨p.proj, 0⟩, ⟨p.2, 0⟩⟩ :=
+    tangentMap I I.tangent (zeroSection E (TangentSpace I)) p = ⟨⟨p.proj, 0⟩, ⟨p.2, 0⟩⟩ :=
   by
   rcases p with ⟨x, v⟩
   have N : I.symm ⁻¹' (chart_at H x).target ∈ 𝓝 (I ((chart_at H x) x)) :=
@@ -704,8 +704,8 @@ theorem tangentMap_tangentBundle_pure (p : TangentBundle I M) :
     apply IsOpen.mem_nhds
     apply (LocalHomeomorph.open_target _).Preimage I.continuous_inv_fun
     simp only [mfld_simps]
-  have A : MDifferentiableAt I I.tangent (fun x => @total_space_mk M (TangentSpace I) x 0) x :=
-    haveI : Smooth I (I.prod 𝓘(𝕜, E)) (zero_section (TangentSpace I : M → Type _)) :=
+  have A : MDifferentiableAt I I.tangent (fun x => @total_space.mk M E (TangentSpace I) x 0) x :=
+    haveI : Smooth I (I.prod 𝓘(𝕜, E)) (zero_section E (TangentSpace I : M → Type _)) :=
       Bundle.smooth_zeroSection 𝕜 (TangentSpace I : M → Type _)
     this.mdifferentiable_at
   have B :
@@ -717,12 +717,12 @@ theorem tangentMap_tangentBundle_pure (p : TangentBundle I M) :
     · exact differentiableAt_const _
     · exact ModelWithCorners.unique_diff_at_image I
     · exact differentiable_at_id'.prod (differentiableAt_const _)
-  simp only [Bundle.zeroSection, tangentMap, mfderiv, total_space.proj_mk, A, if_pos, chart_at,
+  simp only [Bundle.zeroSection, tangentMap, mfderiv, A, if_pos, chart_at,
     FiberBundle.chartedSpace_chartAt, TangentBundle.trivializationAt_apply, tangentBundleCore,
     Function.comp, ContinuousLinearMap.map_zero, mfld_simps]
   rw [← fderivWithin_inter N] at B 
   rw [← fderivWithin_inter N, ← B]
-  congr 2
+  congr 1
   refine' fderivWithin_congr (fun y hy => _) _
   · simp only [mfld_simps] at hy 
     simp only [hy, Prod.mk.inj_iff, mfld_simps]

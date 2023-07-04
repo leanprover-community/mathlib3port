@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module set_theory.game.domineering
-! leanprover-community/mathlib commit b134b2f5cf6dd25d4bbfd3c498b6e36c11a17225
+! leanprover-community/mathlib commit 728ef9dbb281241906f25cbeb30f90d83e0bb451
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.SetTheory.Game.State
 
 /-!
 # Domineering as a combinatorial game.
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 We define the game of Domineering, played on a chessboard of arbitrary shape
 (possibly even disconnected).

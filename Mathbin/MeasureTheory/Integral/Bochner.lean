@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Zhouhang Zhou, Yury Kudryashov, Sébastien Gouëzel, Rémy Degenne
 
 ! This file was ported from Lean 3 source module measure_theory.integral.bochner
-! leanprover-community/mathlib commit 36938f775671ff28bea1c0310f1608e4afbb22e0
+! leanprover-community/mathlib commit 48fb5b5280e7c81672afc9524185ae994553ebf4
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -845,6 +845,7 @@ theorem integral_zero : integral (0 : α →₁[μ] E) = 0 :=
 variable {α E}
 
 #print MeasureTheory.L1.integral_add /-
+@[integral_simps]
 theorem integral_add (f g : α →₁[μ] E) : integral (f + g) = integral f + integral g :=
   by
   simp only [integral]
@@ -853,6 +854,7 @@ theorem integral_add (f g : α →₁[μ] E) : integral (f + g) = integral f + i
 -/
 
 #print MeasureTheory.L1.integral_neg /-
+@[integral_simps]
 theorem integral_neg (f : α →₁[μ] E) : integral (-f) = -integral f :=
   by
   simp only [integral]
@@ -861,6 +863,7 @@ theorem integral_neg (f : α →₁[μ] E) : integral (-f) = -integral f :=
 -/
 
 #print MeasureTheory.L1.integral_sub /-
+@[integral_simps]
 theorem integral_sub (f g : α →₁[μ] E) : integral (f - g) = integral f - integral g :=
   by
   simp only [integral]
@@ -869,6 +872,7 @@ theorem integral_sub (f g : α →₁[μ] E) : integral (f - g) = integral f - i
 -/
 
 #print MeasureTheory.L1.integral_smul /-
+@[integral_simps]
 theorem integral_smul (c : 𝕜) (f : α →₁[μ] E) : integral (c • f) = c • integral f :=
   by
   simp only [integral]
@@ -1063,6 +1067,7 @@ theorem integral_finset_sum {ι} (s : Finset ι) {f : ι → α → E} (hf : ∀
 -/
 
 #print MeasureTheory.integral_neg /-
+@[integral_simps]
 theorem integral_neg (f : α → E) : ∫ a, -f a ∂μ = -∫ a, f a ∂μ :=
   by
   simp only [integral, L1.integral]
@@ -1093,6 +1098,7 @@ theorem integral_sub' (hf : Integrable f μ) (hg : Integrable g μ) :
 -/
 
 #print MeasureTheory.integral_smul /-
+@[integral_simps]
 theorem integral_smul (c : 𝕜) (f : α → E) : ∫ a, c • f a ∂μ = c • ∫ a, f a ∂μ :=
   by
   simp only [integral, L1.integral]
@@ -2133,13 +2139,6 @@ theorem integral_mul_le_Lp_mul_Lq_of_nonneg {p q : ℝ} (hpq : p.IsConjugateExpo
 -/
 
 end Properties
-
--- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
--- failed to format: unknown constant 'Lean.Meta._root_.Lean.Parser.Command.registerSimpAttr'
-/-- Simp set for integral rules. -/ register_simp_attr integral_simps
-
-attribute [integral_simps] integral_neg integral_smul L1.integral_add L1.integral_sub
-  L1.integral_smul L1.integral_neg
 
 section IntegralTrim
 

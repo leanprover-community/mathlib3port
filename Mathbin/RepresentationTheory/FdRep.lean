@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module representation_theory.fdRep
-! leanprover-community/mathlib commit 19a70dceb9dff0994b92d2dd049de7d84d28112b
+! leanprover-community/mathlib commit 728ef9dbb281241906f25cbeb30f90d83e0bb451
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -15,6 +15,9 @@ import Mathbin.RepresentationTheory.Basic
 
 /-!
 # `fdRep k G` is the category of finite dimensional `k`-linear representations of `G`.
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 If `V : fdRep k G`, there is a coercion that allows you to treat `V` as a type,
 and this type comes equipped with `module k V` and `finite_dimensional k V` instances.

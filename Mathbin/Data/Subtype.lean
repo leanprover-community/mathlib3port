@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl
 
 ! This file was ported from Lean 3 source module data.subtype
-! leanprover-community/mathlib commit 448144f7ae193a8990cb7473c9e9a01990f64ac7
+! leanprover-community/mathlib commit 48fb5b5280e7c81672afc9524185ae994553ebf4
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -134,7 +134,7 @@ theorem coe_eta (a : { a // p a }) (h : p a) : mk (↑a) h = a :=
 -/
 
 #print Subtype.coe_mk /-
-@[simp]
+@[simp, mfld_simps]
 theorem coe_mk (a h) : (@mk α p a h : α) = a :=
   rfl
 #align subtype.coe_mk Subtype.coe_mk

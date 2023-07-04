@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Antoine Labelle
 
 ! This file was ported from Lean 3 source module representation_theory.invariants
-! leanprover-community/mathlib commit 55b3f8206b8596db8bb1804d8a92814a0b6670c9
+! leanprover-community/mathlib commit 728ef9dbb281241906f25cbeb30f90d83e0bb451
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.RepresentationTheory.FdRep
 
 /-!
 # Subspace of invariants a group representation
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file introduces the subspace of invariants of a group representation
 and proves basic results about it.

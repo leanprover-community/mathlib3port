@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Frédéric Dupuis
 
 ! This file was ported from Lean 3 source module data.is_R_or_C.basic
-! leanprover-community/mathlib commit 6cf5900728239efa287df7761ec2a1ac9cf39b29
+! leanprover-community/mathlib commit 48fb5b5280e7c81672afc9524185ae994553ebf4
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -80,10 +80,6 @@ class IsROrC (K : Type _) extends DenselyNormedField K, StarRing K, NormedAlgebr
 -/
 
 end
-
--- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
--- failed to format: unknown constant 'Lean.Meta._root_.Lean.Parser.Command.registerSimpAttr'
-/-- Simp attribute for lemmas about `is_R_or_C` -/ register_simp_attr is_R_or_C_simps
 
 variable {K E : Type _} [IsROrC K]
 

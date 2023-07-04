@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module algebraic_geometry.AffineScheme
-! leanprover-community/mathlib commit 88474d1b5af6d37c2ab728b757771bced7f5194c
+! leanprover-community/mathlib commit d0b1936853671209a866fa35b9e54949c81116e2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -15,6 +15,9 @@ import Mathbin.RingTheory.Localization.InvSubmonoid
 
 /-!
 # Affine schemes
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 We define the category of `AffineScheme`s as the essential image of `Spec`.
 We also define predicates about affine schemes and affine open sets.

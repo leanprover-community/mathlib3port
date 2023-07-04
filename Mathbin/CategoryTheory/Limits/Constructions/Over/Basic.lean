@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Reid Barton, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.limits.constructions.over.basic
-! leanprover-community/mathlib commit 15db1b4f26ba89c6eb0c78b0a44c7e779a788e29
+! leanprover-community/mathlib commit 728ef9dbb281241906f25cbeb30f90d83e0bb451
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -16,6 +16,9 @@ import Mathbin.CategoryTheory.Limits.Constructions.Equalizers
 
 /-!
 # Limits in the over category
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 Declare instances for limits in the over category: If `C` has finite wide pullbacks, `over B` has
 finite limits, and if `C` has arbitrary wide pullbacks then `over B` has limits.

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Johannes Hölzl, Patrick Massot
 
 ! This file was ported from Lean 3 source module data.set.prod
-! leanprover-community/mathlib commit c4c2ed622f43768eff32608d4a0f8a6cec1c047d
+! leanprover-community/mathlib commit 48fb5b5280e7c81672afc9524185ae994553ebf4
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -67,7 +67,7 @@ theorem mem_prod_eq {p : α × β} : (p ∈ s ×ˢ t) = (p.1 ∈ s ∧ p.2 ∈ t
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Set.mem_prod /-
-@[simp]
+@[simp, mfld_simps]
 theorem mem_prod {p : α × β} : p ∈ s ×ˢ t ↔ p.1 ∈ s ∧ p.2 ∈ t :=
   Iff.rfl
 #align set.mem_prod Set.mem_prod
@@ -75,7 +75,7 @@ theorem mem_prod {p : α × β} : p ∈ s ×ˢ t ↔ p.1 ∈ s ∧ p.2 ∈ t :=
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Set.prod_mk_mem_set_prod_eq /-
-@[simp]
+@[simp, mfld_simps]
 theorem prod_mk_mem_set_prod_eq : ((a, b) ∈ s ×ˢ t) = (a ∈ s ∧ b ∈ t) :=
   rfl
 #align set.prod_mk_mem_set_prod_eq Set.prod_mk_mem_set_prod_eq
@@ -174,7 +174,7 @@ theorem empty_prod : (∅ : Set α) ×ˢ t = ∅ := by ext; exact false_and_iff 
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Set.univ_prod_univ /-
-@[simp]
+@[simp, mfld_simps]
 theorem univ_prod_univ : @univ α ×ˢ @univ β = univ := by ext; exact true_and_iff _
 #align set.univ_prod_univ Set.univ_prod_univ
 -/
@@ -253,6 +253,7 @@ theorem prod_inter : s ×ˢ (t₁ ∩ t₂) = s ×ˢ t₁ ∩ s ×ˢ t₂ := by 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Set.prod_inter_prod /-
+@[mfld_simps]
 theorem prod_inter_prod : s₁ ×ˢ t₁ ∩ s₂ ×ˢ t₂ = (s₁ ∩ s₂) ×ˢ (t₁ ∩ t₂) := by ext ⟨x, y⟩;
   simp [and_assoc', and_left_comm]
 #align set.prod_inter_prod Set.prod_inter_prod
@@ -440,7 +441,7 @@ theorem prod_range_range_eq {m₁ : α → γ} {m₂ : β → δ} :
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print Set.range_prod_map /-
-@[simp]
+@[simp, mfld_simps]
 theorem range_prod_map {m₁ : α → γ} {m₂ : β → δ} : range (Prod.map m₁ m₂) = range m₁ ×ˢ range m₂ :=
   prod_range_range_eq.symm
 #align set.range_prod_map Set.range_prod_map

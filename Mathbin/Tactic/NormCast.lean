@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Paul-Nicolas Madelaine, Robert Y. Lewis
 
 ! This file was ported from Lean 3 source module tactic.norm_cast
-! leanprover-community/mathlib commit 32b08ef840dd25ca2e47e035c5da03ce16d2dc3c
+! leanprover-community/mathlib commit 48fb5b5280e7c81672afc9524185ae994553ebf4
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -66,14 +66,6 @@ unsafe def trace_norm_cast {α} [has_to_tactic_format α] (msg : String) (a : α
     let a ← pp a
     trace ("[norm_cast] " ++ msg ++ a : format)
 #align norm_cast.trace_norm_cast norm_cast.trace_norm_cast
-
--- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
--- failed to format: unknown constant 'Lean.Meta._root_.Lean.Parser.Command.registerSimpAttr'
-/--
-    The `push_cast` simp attribute uses `norm_cast` lemmas
-    to move casts toward the leaf nodes of the expression. -/
-  register_simp_attr
-  push_cast
 
 /-- `label` is a type used to classify `norm_cast` lemmas.
 * elim lemma:   LHS has 0 head coes and ≥ 1 internal coe

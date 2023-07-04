@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Apurva Nakade
 
 ! This file was ported from Lean 3 source module analysis.convex.cone.proper
-! leanprover-community/mathlib commit 147b294346843885f952c5171e9606616a8fd869
+! leanprover-community/mathlib commit 728ef9dbb281241906f25cbeb30f90d83e0bb451
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Analysis.InnerProductSpace.Adjoint
 
 /-!
 # Proper cones
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 We define a proper cone as a nonempty, closed, convex cone. Proper cones are used in defining conic
 programs which generalize linear programs. A linear program is a conic program for the positive

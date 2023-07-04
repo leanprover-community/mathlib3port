@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn, Heather Macbeth
 
 ! This file was ported from Lean 3 source module geometry.manifold.vector_bundle.tangent
-! leanprover-community/mathlib commit 30faa0c3618ce1472bf6305ae0e3fa56affa3f95
+! leanprover-community/mathlib commit e473c3198bb41f68560cab68a0529c854b618833
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -163,7 +163,7 @@ variable (M)
 `bundle.total_space` to be able to put a suitable topology on it. -/
 @[nolint has_nonempty_instance, reducible]
 def TangentBundle :=
-  Bundle.TotalSpace (TangentSpace I : M → Type _)
+  Bundle.TotalSpace E (TangentSpace I : M → Type _)
 #align tangent_bundle TangentBundle
 -/
 
@@ -227,7 +227,8 @@ theorem trivializationAt_eq_localTriv (x : M) :
 #print TangentBundle.trivializationAt_source /-
 @[simp, mfld_simps]
 theorem trivializationAt_source (x : M) :
-    (trivializationAt E (TangentSpace I) x).source = π _ ⁻¹' (chartAt H x).source :=
+    (trivializationAt E (TangentSpace I) x).source =
+      π E (TangentSpace I) ⁻¹' (chartAt H x).source :=
   rfl
 #align tangent_bundle.trivialization_at_source TangentBundle.trivializationAt_source
 -/
@@ -379,7 +380,7 @@ end TangentBundleInstances
 between a product type and a sigma type, a.k.a. `equiv.sigma_equiv_prod`. -/
 @[simp, mfld_simps]
 theorem tangentBundle_model_space_chartAt (p : TangentBundle I H) :
-    (chartAt (ModelProd H E) p).toLocalEquiv = (Equiv.sigmaEquivProd H E).toLocalEquiv :=
+    (chartAt (ModelProd H E) p).toLocalEquiv = (TotalSpace.toProd H E).toLocalEquiv :=
   by
   ext x : 1
   · ext; · rfl
@@ -395,7 +396,7 @@ theorem tangentBundle_model_space_chartAt (p : TangentBundle I H) :
 #print tangentBundle_model_space_coe_chartAt /-
 @[simp, mfld_simps]
 theorem tangentBundle_model_space_coe_chartAt (p : TangentBundle I H) :
-    ⇑(chartAt (ModelProd H E) p) = Equiv.sigmaEquivProd H E := by unfold_coes;
+    ⇑(chartAt (ModelProd H E) p) = TotalSpace.toProd H E := by unfold_coes;
   simp_rw [tangentBundle_model_space_chartAt]; rfl
 #align tangent_bundle_model_space_coe_chart_at tangentBundle_model_space_coe_chartAt
 -/
@@ -404,7 +405,7 @@ theorem tangentBundle_model_space_coe_chartAt (p : TangentBundle I H) :
 @[simp, mfld_simps]
 theorem tangentBundle_model_space_coe_chartAt_symm (p : TangentBundle I H) :
     ((chartAt (ModelProd H E) p).symm : ModelProd H E → TangentBundle I H) =
-      (Equiv.sigmaEquivProd H E).symm :=
+      (TotalSpace.toProd H E).symm :=
   by
   unfold_coes
   simp_rw [LocalHomeomorph.symm_toLocalEquiv, tangentBundle_model_space_chartAt]; rfl
@@ -425,7 +426,7 @@ variable (H)
 as a homeomorphism -/
 def tangentBundleModelSpaceHomeomorph : TangentBundle I H ≃ₜ ModelProd H E :=
   {
-    Equiv.sigmaEquivProd H
+    TotalSpace.toProd H
       E with
     continuous_toFun := by
       let p : TangentBundle I H := ⟨I.symm (0 : E), (0 : E)⟩
@@ -451,7 +452,7 @@ def tangentBundleModelSpaceHomeomorph : TangentBundle I H ≃ₜ ModelProd H E :
 @[simp, mfld_simps]
 theorem tangentBundleModelSpaceHomeomorph_coe :
     (tangentBundleModelSpaceHomeomorph H I : TangentBundle I H → ModelProd H E) =
-      Equiv.sigmaEquivProd H E :=
+      TotalSpace.toProd H E :=
   rfl
 #align tangent_bundle_model_space_homeomorph_coe tangentBundleModelSpaceHomeomorph_coe
 -/
@@ -460,7 +461,7 @@ theorem tangentBundleModelSpaceHomeomorph_coe :
 @[simp, mfld_simps]
 theorem tangentBundleModelSpaceHomeomorph_coe_symm :
     ((tangentBundleModelSpaceHomeomorph H I).symm : ModelProd H E → TangentBundle I H) =
-      (Equiv.sigmaEquivProd H E).symm :=
+      (TotalSpace.toProd H E).symm :=
   rfl
 #align tangent_bundle_model_space_homeomorph_coe_symm tangentBundleModelSpaceHomeomorph_coe_symm
 -/

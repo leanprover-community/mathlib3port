@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro, Simon Hudon, Scott Morrison, Keeley Hoek
 
 ! This file was ported from Lean 3 source module tactic.core
-! leanprover-community/mathlib commit 938f1f1b89b04dc15659cca28163f250d201d6a1
+! leanprover-community/mathlib commit 48fb5b5280e7c81672afc9524185ae994553ebf4
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -2693,39 +2693,6 @@ add_tactic_doc
     category := DocCategory.cmd
     declNames := [`tactic.import_private_cmd]
     tags := ["renaming"] }
-
-/--
-The command `mk_simp_attribute simp_name "description"` creates a simp set with name `simp_name`.
-Lemmas tagged with `@[simp_name]` will be included when `simp with simp_name` is called.
-`mk_simp_attribute simp_name none` will use a default description.
-
-Appending the command with `with attr1 attr2 ...` will include all declarations tagged with
-`attr1`, `attr2`, ... in the new simp set.
-
-This command is preferred to using ``run_cmd mk_simp_attr `simp_name`` since it adds a doc string
-to the attribute that is defined. If you need to create a simp set in a file where this command is
-not available, you should use
-```lean
-run_cmd mk_simp_attr `simp_name
-run_cmd add_doc_string `simp_attr.simp_name "Description of the simp set here"
-```
--/
-@[user_command]
-unsafe def mk_simp_attribute_cmd (_ : parse <| tk "mk_simp_attribute") : lean.parser Unit := do
-  let n ← ident
-  let d ← parser.pexpr
-  let d ← to_expr ``(($(d) : Option String))
-  let descr ← eval_expr (Option String) d
-  let with_list ← tk "with" *> many ident <|> return []
-  mk_simp_attr n with_list
-  add_doc_string (name.append `simp_attr n) <| descr <| "simp set for " ++ toString n
-#align tactic.mk_simp_attribute_cmd tactic.mk_simp_attribute_cmd
-
-add_tactic_doc
-  { Name := "mk_simp_attribute"
-    category := DocCategory.cmd
-    declNames := [`tactic.mk_simp_attribute_cmd]
-    tags := ["simplification"] }
 
 /-- Given a user attribute name `attr_name`, `get_user_attribute_name attr_name` returns
 the name of the declaration that defines this attribute.

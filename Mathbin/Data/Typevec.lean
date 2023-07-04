@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Mario Carneiro, Simon Hudon
 
 ! This file was ported from Lean 3 source module data.typevec
-! leanprover-community/mathlib commit 63f84d91dd847f50bae04a01071f3a5491934e36
+! leanprover-community/mathlib commit 48fb5b5280e7c81672afc9524185ae994553ebf4
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -401,12 +401,6 @@ instance subsingleton0 : Subsingleton (TypeVec 0) :=
   ⟨fun a b => funext fun a => Fin2.elim0 a⟩
 #align typevec.subsingleton0 TypeVec.subsingleton0
 -/
-
-run_cmd
-  do
-    mk_simp_attr `typevec
-    tactic.add_doc_string `simp_attr.typevec
-        "simp set for the manipulation of typevec and arrow expressions"
 
 local prefix:0 "♯" => cast (by try simp <;> congr 1 <;> try simp)
 

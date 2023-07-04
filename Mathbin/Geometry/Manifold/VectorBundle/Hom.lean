@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Floris van Doorn
 
 ! This file was ported from Lean 3 source module geometry.manifold.vector_bundle.hom
-! leanprover-community/mathlib commit f7ebde7ee0d1505dfccac8644ae12371aa3c1c9f
+! leanprover-community/mathlib commit e473c3198bb41f68560cab68a0529c854b618833
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -29,21 +29,21 @@ open scoped Manifold Bundle
 
 variable {𝕜 B F F₁ F₂ M M₁ M₂ : Type _} {E : B → Type _} {E₁ : B → Type _} {E₂ : B → Type _}
   [NontriviallyNormedField 𝕜] [∀ x, AddCommGroup (E x)] [∀ x, Module 𝕜 (E x)] [NormedAddCommGroup F]
-  [NormedSpace 𝕜 F] [TopologicalSpace (TotalSpace E)] [∀ x, TopologicalSpace (E x)]
+  [NormedSpace 𝕜 F] [TopologicalSpace (TotalSpace F E)] [∀ x, TopologicalSpace (E x)]
   [∀ x, AddCommGroup (E₁ x)] [∀ x, Module 𝕜 (E₁ x)] [NormedAddCommGroup F₁] [NormedSpace 𝕜 F₁]
-  [TopologicalSpace (TotalSpace E₁)] [∀ x, TopologicalSpace (E₁ x)] [∀ x, AddCommGroup (E₂ x)]
+  [TopologicalSpace (TotalSpace F₁ E₁)] [∀ x, TopologicalSpace (E₁ x)] [∀ x, AddCommGroup (E₂ x)]
   [∀ x, Module 𝕜 (E₂ x)] [NormedAddCommGroup F₂] [NormedSpace 𝕜 F₂]
-  [TopologicalSpace (TotalSpace E₂)] [∀ x, TopologicalSpace (E₂ x)]
+  [TopologicalSpace (TotalSpace F₂ E₂)] [∀ x, TopologicalSpace (E₂ x)]
   [_i₁ : ∀ x, TopologicalAddGroup (E₂ x)] [_i₂ : ∀ x, ContinuousSMul 𝕜 (E₂ x)] {EB : Type _}
   [NormedAddCommGroup EB] [NormedSpace 𝕜 EB] {HB : Type _} [TopologicalSpace HB]
   (IB : ModelWithCorners 𝕜 EB HB) [TopologicalSpace B] [ChartedSpace HB B] {EM : Type _}
   [NormedAddCommGroup EM] [NormedSpace 𝕜 EM] {HM : Type _} [TopologicalSpace HM]
   {IM : ModelWithCorners 𝕜 EM HM} [TopologicalSpace M] [ChartedSpace HM M]
   [Is : SmoothManifoldWithCorners IM M] {n : ℕ∞} [FiberBundle F₁ E₁] [VectorBundle 𝕜 F₁ E₁]
-  [FiberBundle F₂ E₂] [VectorBundle 𝕜 F₂ E₂] {e₁ e₁' : Trivialization F₁ (π E₁)}
-  {e₂ e₂' : Trivialization F₂ (π E₂)}
+  [FiberBundle F₂ E₂] [VectorBundle 𝕜 F₂ E₂] {e₁ e₁' : Trivialization F₁ (π F₁ E₁)}
+  {e₂ e₂' : Trivialization F₂ (π F₂ E₂)}
 
-local notation "LE₁E₂" => TotalSpace (Bundle.ContinuousLinearMap (RingHom.id 𝕜) F₁ E₁ F₂ E₂)
+local notation "LE₁E₂" => TotalSpace (F₁ →L[𝕜] F₂) (Bundle.ContinuousLinearMap (RingHom.id 𝕜) E₁ E₂)
 
 -- This proof is slow, especially the `simp only` and the elaboration of `h₂`.
 theorem smoothOn_continuousLinearMapCoordChange [SmoothManifoldWithCorners IB B]
@@ -110,7 +110,7 @@ instance Bundle.ContinuousLinearMap.vectorPrebundle.isSmooth :
 #align bundle.continuous_linear_map.vector_prebundle.is_smooth Bundle.ContinuousLinearMap.vectorPrebundle.isSmooth
 
 instance SmoothVectorBundle.continuousLinearMap :
-    SmoothVectorBundle (F₁ →L[𝕜] F₂) (Bundle.ContinuousLinearMap (RingHom.id 𝕜) F₁ E₁ F₂ E₂) IB :=
+    SmoothVectorBundle (F₁ →L[𝕜] F₂) (Bundle.ContinuousLinearMap (RingHom.id 𝕜) E₁ E₂) IB :=
   (Bundle.ContinuousLinearMap.vectorPrebundle (RingHom.id 𝕜) F₁ E₁ F₂ E₂).SmoothVectorBundle IB
 #align smooth_vector_bundle.continuous_linear_map SmoothVectorBundle.continuousLinearMap
 

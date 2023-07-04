@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 
 ! This file was ported from Lean 3 source module control.monad.basic
-! leanprover-community/mathlib commit 448144f7ae193a8990cb7473c9e9a01990f64ac7
+! leanprover-community/mathlib commit 48fb5b5280e7c81672afc9524185ae994553ebf4
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -44,21 +44,7 @@ functor, applicative, monad, simp
 -/
 
 
-/- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:61:9: unsupported: weird string -/
--- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
--- failed to format: unknown constant 'Lean.Meta._root_.Lean.Parser.Command.registerSimpAttr'
-/-- ./././Mathport/Syntax/Translate/Tactic/Mathlib/Core.lean:61:9: unsupported: weird string -/
-  register_simp_attr
-  monad_norm
-
-/- [mathport] port note: move this to another file, it won't work here -/
-attribute [monad_norm] functor_norm
-
 attribute [ext] ReaderT.ext StateT.ext ExceptT.ext OptionT.ext
-
-attribute [functor_norm] bind_assoc pure_bind bind_pure
-
-attribute [monad_norm] seq_eq_bind_map
 
 universe u v
 

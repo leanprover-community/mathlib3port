@@ -4,11 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura
 
 ! This file was ported from Lean 3 source module logic.basic
-! leanprover-community/mathlib commit d2d8742b0c21426362a9dacebc6005db895ca963
+! leanprover-community/mathlib commit 48fb5b5280e7c81672afc9524185ae994553ebf4
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
-import Mathbin.Tactic.DocCommands
+import Mathbin.Tactic.MkSimpAttribute
 import Mathbin.Tactic.ReservedNotation
 
 /-!
@@ -94,7 +94,7 @@ instance (priority := 10) decidableEq_of_subsingleton {α} [Subsingleton α] : D
 -/
 
 #print eq_iff_true_of_subsingleton /-
-@[simp]
+@[simp, nontriviality]
 theorem eq_iff_true_of_subsingleton {α : Sort _} [Subsingleton α] (x y : α) : x = y ↔ True := by cc
 #align eq_iff_true_of_subsingleton eq_iff_true_of_subsingleton
 -/
@@ -434,7 +434,7 @@ theorem imp_and {α} : α → b ∧ c ↔ (α → b) ∧ (α → c) :=
 -/
 
 #print and_imp /-
-@[simp]
+@[simp, mfld_simps]
 theorem and_imp : a ∧ b → c ↔ a → b → c :=
   Iff.intro (fun h ha hb => h ⟨ha, hb⟩) fun h ⟨ha, hb⟩ => h ha hb
 #align and_imp and_imp
@@ -1647,7 +1647,7 @@ section Equality
 variable {α : Sort _} {a b : α}
 
 #print heq_iff_eq /-
-@[simp]
+@[simp, mfld_simps]
 theorem heq_iff_eq : HEq a b ↔ a = b :=
   ⟨eq_of_hEq, hEq_of_eq⟩
 #align heq_iff_eq heq_iff_eq
@@ -1691,14 +1691,14 @@ theorem eq_equivalence : Equivalence (@Eq α) :=
 
 #print eq_rec_constant /-
 /-- Transport through trivial families is the identity. -/
-@[simp]
+@[simp, transport_simps]
 theorem eq_rec_constant {α : Sort _} {a a' : α} {β : Sort _} (y : β) (h : a = a') :
     @Eq.ndrec α a (fun a => β) y a' h = y := by cases h; rfl
 #align eq_rec_constant eq_rec_constant
 -/
 
 #print eq_mp_eq_cast /-
-@[simp]
+@[simp, transport_simps]
 theorem eq_mp_eq_cast {α β : Sort _} (h : α = β) : Eq.mp h = cast h :=
   rfl
 #align eq_mp_eq_cast eq_mp_eq_cast
@@ -2103,6 +2103,7 @@ theorem forall_imp_iff_exists_imp [ha : Nonempty α] : (∀ x, p x) → b ↔ �
 
 #print forall_true_iff /-
 -- TODO: duplicate of a lemma in core
+@[mfld_simps]
 theorem forall_true_iff : α → True ↔ True :=
   imp_true_iff α
 #align forall_true_iff forall_true_iff
@@ -2148,7 +2149,7 @@ theorem exists_unique_iff_exists {α : Sort _} [Subsingleton α] {p : α → Pro
 -/
 
 #print forall_const /-
-@[simp]
+@[simp, mfld_simps]
 theorem forall_const (α : Sort _) [i : Nonempty α] : α → b ↔ b :=
   ⟨i.elim, fun hb x => hb⟩
 #align forall_const forall_const

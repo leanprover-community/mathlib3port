@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module algebra.category.fgModule.limits
-! leanprover-community/mathlib commit 19a70dceb9dff0994b92d2dd049de7d84d28112b
+! leanprover-community/mathlib commit d0b1936853671209a866fa35b9e54949c81116e2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -18,6 +18,9 @@ import Mathbin.CategoryTheory.Limits.Constructions.LimitsOfProductsAndEqualizers
 
 /-!
 # `forget₂ (fgModule K) (Module K)` creates all finite limits.
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 And hence `fgModule K` has all finite limits.
 

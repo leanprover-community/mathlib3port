@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth
 
 ! This file was ported from Lean 3 source module ring_theory.witt_vector.isocrystal
-! leanprover-community/mathlib commit 6d584f1709bedbed9175bd9350df46599bdd7213
+! leanprover-community/mathlib commit 728ef9dbb281241906f25cbeb30f90d83e0bb451
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.RingTheory.WittVector.FrobeniusFractionField
 /-!
 
 ## F-isocrystals over a perfect field
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 When `k` is an integral domain, so is `𝕎 k`, and we can consider its field of fractions `K(p, k)`.
 The endomorphism `witt_vector.frobenius` lifts to `φ : K(p, k) → K(p, k)`; if `k` is perfect, `φ` is

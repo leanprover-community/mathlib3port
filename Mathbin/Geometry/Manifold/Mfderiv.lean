@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel, Floris van Doorn
 
 ! This file was ported from Lean 3 source module geometry.manifold.mfderiv
-! leanprover-community/mathlib commit 08b63ab58a6ec1157ebeafcbbe6c7a3fb3c9f6d5
+! leanprover-community/mathlib commit e473c3198bb41f68560cab68a0529c854b618833
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -855,25 +855,11 @@ theorem tangentMapWithin_proj {p : TangentBundle I M} :
 #align tangent_map_within_proj tangentMapWithin_proj
 -/
 
-#print tangentMapWithin_fst /-
-@[simp, mfld_simps]
-theorem tangentMapWithin_fst {p : TangentBundle I M} : (tangentMapWithin I I' f s p).1 = f p.1 :=
-  rfl
-#align tangent_map_within_fst tangentMapWithin_fst
--/
-
 #print tangentMap_proj /-
 @[simp, mfld_simps]
 theorem tangentMap_proj {p : TangentBundle I M} : (tangentMap I I' f p).proj = f p.proj :=
   rfl
 #align tangent_map_proj tangentMap_proj
--/
-
-#print tangentMap_fst /-
-@[simp, mfld_simps]
-theorem tangentMap_fst {p : TangentBundle I M} : (tangentMap I I' f p).1 = f p.1 :=
-  rfl
-#align tangent_map_fst tangentMap_fst
 -/
 
 #print MDifferentiableWithinAt.prod_mk /-
@@ -1062,8 +1048,7 @@ theorem tangentMapWithin_congr (h : ∀ x ∈ s, f x = f₁ x) (p : TangentBundl
     (hs : UniqueMDiffWithinAt I s p.1) :
     tangentMapWithin I I' f s p = tangentMapWithin I I' f₁ s p :=
   by
-  simp only [tangentMapWithin, h p.fst hp, true_and_iff, eq_self_iff_true, heq_iff_eq,
-    Sigma.mk.inj_iff]
+  simp only [tangentMapWithin, h p.1 hp, true_and_iff, eq_self_iff_true, heq_iff_eq]
   congr 1
   exact mfderivWithin_congr hs h (h _ hp)
 #align tangent_map_within_congr tangentMapWithin_congr
@@ -1762,19 +1747,19 @@ theorem mfderivWithin_fst {s : Set (M × M')} {x : M × M'}
 #print tangentMap_prod_fst /-
 @[simp, mfld_simps]
 theorem tangentMap_prod_fst {p : TangentBundle (I.Prod I') (M × M')} :
-    tangentMap (I.Prod I') I Prod.fst p = totalSpaceMk p.proj.1 p.2.1 := by simp [tangentMap]
+    tangentMap (I.Prod I') I Prod.fst p = ⟨p.proj.1, p.2.1⟩ := by simp [tangentMap]
 #align tangent_map_prod_fst tangentMap_prod_fst
 -/
 
 #print tangentMapWithin_prod_fst /-
 theorem tangentMapWithin_prod_fst {s : Set (M × M')} {p : TangentBundle (I.Prod I') (M × M')}
     (hs : UniqueMDiffWithinAt (I.Prod I') s p.proj) :
-    tangentMapWithin (I.Prod I') I Prod.fst s p = totalSpaceMk p.proj.1 p.2.1 :=
+    tangentMapWithin (I.Prod I') I Prod.fst s p = ⟨p.proj.1, p.2.1⟩ :=
   by
   simp only [tangentMapWithin]
-  rw [mfderivWithin_fst]
-  · rcases p with ⟨⟩; rfl
-  · exact hs
+  rw [mfderivWithin_fst _ _ hs]
+  rcases p with ⟨⟩
+  exact ⟨rfl, HEq.rfl⟩
 #align tangent_map_within_prod_fst tangentMapWithin_prod_fst
 -/
 
@@ -1849,18 +1834,18 @@ theorem mfderivWithin_snd {s : Set (M × M')} {x : M × M'}
 #print tangentMap_prod_snd /-
 @[simp, mfld_simps]
 theorem tangentMap_prod_snd {p : TangentBundle (I.Prod I') (M × M')} :
-    tangentMap (I.Prod I') I' Prod.snd p = totalSpaceMk p.proj.2 p.2.2 := by simp [tangentMap]
+    tangentMap (I.Prod I') I' Prod.snd p = ⟨p.proj.2, p.2.2⟩ := by simp [tangentMap]
 #align tangent_map_prod_snd tangentMap_prod_snd
 -/
 
 #print tangentMapWithin_prod_snd /-
 theorem tangentMapWithin_prod_snd {s : Set (M × M')} {p : TangentBundle (I.Prod I') (M × M')}
     (hs : UniqueMDiffWithinAt (I.Prod I') s p.proj) :
-    tangentMapWithin (I.Prod I') I' Prod.snd s p = totalSpaceMk p.proj.2 p.2.2 :=
+    tangentMapWithin (I.Prod I') I' Prod.snd s p = ⟨p.proj.2, p.2.2⟩ :=
   by
   simp only [tangentMapWithin]
   rw [mfderivWithin_snd]
-  · rcases p with ⟨⟩; rfl
+  · rcases p with ⟨⟩; constructor <;> rfl
   · exact hs
 #align tangent_map_within_prod_snd tangentMapWithin_prod_snd
 -/
@@ -2289,7 +2274,7 @@ theorem mdifferentiable_chart (x : M) : (chartAt H x).MDifferentiable I I :=
 the identification between the tangent bundle of the model space and the product space. -/
 theorem tangentMap_chart {p q : TangentBundle I M} (h : q.1 ∈ (chartAt H p.1).source) :
     tangentMap I I (chartAt H p.1) q =
-      (Equiv.sigmaEquivProd _ _).symm
+      (TotalSpace.toProd _ _).symm
         ((chartAt (ModelProd H E) p : TangentBundle I M → ModelProd H E) q) :=
   by
   dsimp [tangentMap]
@@ -2307,7 +2292,7 @@ theorem tangentMap_chart_symm {p : TangentBundle I M} {q : TangentBundle I H}
     (h : q.1 ∈ (chartAt H p.1).target) :
     tangentMap I I (chartAt H p.1).symm q =
       ((chartAt (ModelProd H E) p).symm : ModelProd H E → TangentBundle I M)
-        ((Equiv.sigmaEquivProd H E) q) :=
+        ((TotalSpace.toProd H E) q) :=
   by
   dsimp only [tangentMap]
   rw [MDifferentiableAt.mfderiv (mdifferentiableAt_atlas_symm _ (chart_mem_atlas _ _) h)]
@@ -2315,7 +2300,7 @@ theorem tangentMap_chart_symm {p : TangentBundle I M} {q : TangentBundle I H}
   rotate_left;
   · infer_instance
   simp only [ContinuousLinearMap.coe_coe, TangentBundle.chartAt, h, tangentBundleCore, chart_at,
-    Sigma.mk.inj_iff, mfld_simps]
+    total_space.to_prod_apply, mfld_simps]
 #align tangent_map_chart_symm tangentMap_chart_symm
 -/
 
@@ -2631,7 +2616,7 @@ theorem UniqueMDiffOn.uniqueDiffOn_inter_preimage (hs : UniqueMDiffOn I s) (x : 
 open Bundle
 
 variable {F : Type _} [NormedAddCommGroup F] [NormedSpace 𝕜 F] (Z : M → Type _)
-  [TopologicalSpace (TotalSpace Z)] [∀ b, TopologicalSpace (Z b)] [∀ b, AddCommMonoid (Z b)]
+  [TopologicalSpace (TotalSpace F Z)] [∀ b, TopologicalSpace (Z b)] [∀ b, AddCommMonoid (Z b)]
   [∀ b, Module 𝕜 (Z b)] [FiberBundle F Z] [VectorBundle 𝕜 F Z] [SmoothVectorBundle F Z I]
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -2640,18 +2625,18 @@ variable {F : Type _} [NormedAddCommGroup F] [NormedSpace 𝕜 F] (Z : M → Typ
 /-- In a smooth fiber bundle, the preimage under the projection of a set with
 unique differential in the basis also has unique differential. -/
 theorem UniqueMDiffOn.smooth_bundle_preimage (hs : UniqueMDiffOn I s) :
-    UniqueMDiffOn (I.Prod 𝓘(𝕜, F)) (π Z ⁻¹' s) :=
+    UniqueMDiffOn (I.Prod 𝓘(𝕜, F)) (π F Z ⁻¹' s) :=
   by
   /- Using a chart (and the fact that unique differentiability is invariant under charts), we
     reduce the situation to the model space, where we can use the fact that products respect
     unique differentiability. -/
   intro p hp
-  replace hp : p.fst ∈ s; · simpa only [mfld_simps] using hp
+  replace hp : p.1 ∈ s; · simpa only [mfld_simps] using hp
   let e₀ := chart_at H p.1
   let e := chart_at (ModelProd H F) p
   have h2s :
     ∀ x,
-      x ∈ e.target ∩ e.symm ⁻¹' (π Z ⁻¹' s) ↔
+      x ∈ e.target ∩ e.symm ⁻¹' (π F Z ⁻¹' s) ↔
         (x.1 ∈ e₀.target ∧ e₀.symm x.1 ∈ (trivialization_at F Z p.1).baseSet) ∧ e₀.symm x.1 ∈ s :=
     by
     intro x
@@ -2663,15 +2648,15 @@ theorem UniqueMDiffOn.smooth_bundle_preimage (hs : UniqueMDiffOn I s) :
     intro hx
     simp only [FiberBundle.chartedSpace_chartAt_symm_fst p x hx, mfld_simps]
   -- It suffices to prove unique differentiability in a chart
-  suffices h : UniqueMDiffOn (I.prod 𝓘(𝕜, F)) (e.target ∩ e.symm ⁻¹' (π Z ⁻¹' s))
+  suffices h : UniqueMDiffOn (I.prod 𝓘(𝕜, F)) (e.target ∩ e.symm ⁻¹' (π F Z ⁻¹' s))
   · have A :
       UniqueMDiffOn (I.prod 𝓘(𝕜, F))
-        (e.symm.target ∩ e.symm.symm ⁻¹' (e.target ∩ e.symm ⁻¹' (π Z ⁻¹' s))) :=
+        (e.symm.target ∩ e.symm.symm ⁻¹' (e.target ∩ e.symm ⁻¹' (π F Z ⁻¹' s))) :=
       by
       apply h.unique_mdiff_on_preimage
       exact (mdifferentiable_of_mem_atlas _ (chart_mem_atlas _ _)).symm
       infer_instance
-    have : p ∈ e.symm.target ∩ e.symm.symm ⁻¹' (e.target ∩ e.symm ⁻¹' (π Z ⁻¹' s)) := by
+    have : p ∈ e.symm.target ∩ e.symm.symm ⁻¹' (e.target ∩ e.symm ⁻¹' (π F Z ⁻¹' s)) := by
       simp only [e, hp, mfld_simps]
     apply (A _ this).mono
     intro q hq
@@ -2681,7 +2666,7 @@ theorem UniqueMDiffOn.smooth_bundle_preimage (hs : UniqueMDiffOn I s) :
   simp only [UniqueMDiffWithinAt, ModelWithCorners.prod, -preimage_inter, mfld_simps]
   have :
     𝓝[(I.symm ⁻¹' (e₀.target ∩ e₀.symm ⁻¹' s) ∩ range I) ×ˢ univ] (I q.1, q.2) ≤
-      𝓝[(fun p : E × F => (I.symm p.1, p.snd)) ⁻¹' (e.target ∩ e.symm ⁻¹' (π Z ⁻¹' s)) ∩
+      𝓝[(fun p : E × F => (I.symm p.1, p.snd)) ⁻¹' (e.target ∩ e.symm ⁻¹' (π F Z ⁻¹' s)) ∩
           range I ×ˢ univ]
         (I q.1, q.2) :=
     by
@@ -2714,7 +2699,7 @@ theorem UniqueMDiffOn.smooth_bundle_preimage (hs : UniqueMDiffOn I s) :
 
 #print UniqueMDiffOn.tangentBundle_proj_preimage /-
 theorem UniqueMDiffOn.tangentBundle_proj_preimage (hs : UniqueMDiffOn I s) :
-    UniqueMDiffOn I.tangent (π (TangentSpace I) ⁻¹' s) :=
+    UniqueMDiffOn I.tangent (π E (TangentSpace I) ⁻¹' s) :=
   hs.smooth_bundle_preimage _
 #align unique_mdiff_on.tangent_bundle_proj_preimage UniqueMDiffOn.tangentBundle_proj_preimage
 -/

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jeremy Avigad, Leonardo de Moura
 
 ! This file was ported from Lean 3 source module data.set.image
-! leanprover-community/mathlib commit 4550138052d0a416b700c27056d492e2ef53214e
+! leanprover-community/mathlib commit 48fb5b5280e7c81672afc9524185ae994553ebf4
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -69,7 +69,7 @@ theorem preimage_empty : f ⁻¹' ∅ = ∅ :=
 -/
 
 #print Set.mem_preimage /-
-@[simp]
+@[simp, mfld_simps]
 theorem mem_preimage {s : Set β} {a : α} : a ∈ f ⁻¹' s ↔ f a ∈ s :=
   Iff.rfl
 #align set.mem_preimage Set.mem_preimage
@@ -87,7 +87,7 @@ theorem preimage_mono {s t : Set β} (h : s ⊆ t) : f ⁻¹' s ⊆ f ⁻¹' t :
 -/
 
 #print Set.preimage_univ /-
-@[simp]
+@[simp, mfld_simps]
 theorem preimage_univ : f ⁻¹' univ = univ :=
   rfl
 #align set.preimage_univ Set.preimage_univ
@@ -100,7 +100,7 @@ theorem subset_preimage_univ {s : Set α} : s ⊆ f ⁻¹' univ :=
 -/
 
 #print Set.preimage_inter /-
-@[simp]
+@[simp, mfld_simps]
 theorem preimage_inter {s t : Set β} : f ⁻¹' (s ∩ t) = f ⁻¹' s ∩ f ⁻¹' t :=
   rfl
 #align set.preimage_inter Set.preimage_inter
@@ -150,6 +150,7 @@ theorem preimage_id_eq : preimage (id : α → α) = id :=
 -/
 
 #print Set.preimage_id /-
+@[mfld_simps]
 theorem preimage_id {s : Set α} : id ⁻¹' s = s :=
   rfl
 #align set.preimage_id Set.preimage_id
@@ -279,6 +280,7 @@ theorem image_eta (f : α → β) : f '' s = (fun x => f x) '' s :=
 -/
 
 #print Set.mem_image_of_mem /-
+@[mfld_simps]
 theorem mem_image_of_mem (f : α → β) {x : α} {a : Set α} (h : x ∈ a) : f x ∈ f '' a :=
   ⟨_, h, rfl⟩
 #align set.mem_image_of_mem Set.mem_image_of_mem
@@ -444,7 +446,7 @@ theorem Nonempty.image_const {s : Set α} (hs : s.Nonempty) (a : β) : (fun _ =>
 -/
 
 #print Set.image_eq_empty /-
-@[simp]
+@[simp, mfld_simps]
 theorem image_eq_empty {α β} {f : α → β} {s : Set α} : f '' s = ∅ ↔ s = ∅ :=
   by
   simp only [eq_empty_iff_forall_not_mem]
@@ -839,7 +841,7 @@ theorem mem_range {x : α} : x ∈ range f ↔ ∃ y, f y = x :=
 -/
 
 #print Set.mem_range_self /-
-@[simp]
+@[simp, mfld_simps]
 theorem mem_range_self (i : ι) : f i ∈ range f :=
   ⟨i, rfl⟩
 #align set.mem_range_self Set.mem_range_self
@@ -1082,7 +1084,7 @@ theorem preimage_image_preimage {f : α → β} {s : Set β} : f ⁻¹' (f '' (f
 -/
 
 #print Set.range_id /-
-@[simp]
+@[simp, mfld_simps]
 theorem range_id : range (@id α) = univ :=
   range_iff_surjective.2 surjective_id
 #align set.range_id Set.range_id

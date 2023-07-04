@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Michael Stoll
 
 ! This file was ported from Lean 3 source module number_theory.legendre_symbol.norm_num
-! leanprover-community/mathlib commit e2621d935895abe70071ab828a4ee6e26a52afe4
+! leanprover-community/mathlib commit d0b1936853671209a866fa35b9e54949c81116e2
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.NumberTheory.LegendreSymbol.JacobiSymbol
 
 /-!
 # A `norm_num` extension for Jacobi and Legendre symbols
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 We extend the `tactic.interactive.norm_num` tactic so that it can be used to provably compute
 the value of the Jacobi symbol `J(a | b)` or the Legendre symbol `legendre_sym p a` when

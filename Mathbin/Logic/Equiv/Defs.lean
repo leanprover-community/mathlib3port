@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura, Mario Carneiro
 
 ! This file was ported from Lean 3 source module logic.equiv.defs
-! leanprover-community/mathlib commit 448144f7ae193a8990cb7473c9e9a01990f64ac7
+! leanprover-community/mathlib commit 48fb5b5280e7c81672afc9524185ae994553ebf4
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -211,14 +211,14 @@ protected def trans (e₁ : α ≃ β) (e₂ : β ≃ γ) : α ≃ γ :=
 -/
 
 #print Equiv.toFun_as_coe /-
-@[simp]
+@[simp, transport_simps, mfld_simps]
 theorem toFun_as_coe (e : α ≃ β) : e.toFun = e :=
   rfl
 #align equiv.to_fun_as_coe Equiv.toFun_as_coe
 -/
 
 #print Equiv.invFun_as_coe /-
-@[simp]
+@[simp, mfld_simps]
 theorem invFun_as_coe (e : α ≃ β) : e.invFun = e.symm :=
   rfl
 #align equiv.inv_fun_as_coe Equiv.invFun_as_coe
@@ -366,14 +366,14 @@ theorem trans_apply (f : α ≃ β) (g : β ≃ γ) (a : α) : (f.trans g) a = g
 -/
 
 #print Equiv.apply_symm_apply /-
-@[simp]
+@[simp, equiv_rw_simp]
 theorem apply_symm_apply (e : α ≃ β) (x : β) : e (e.symm x) = x :=
   e.right_inv x
 #align equiv.apply_symm_apply Equiv.apply_symm_apply
 -/
 
 #print Equiv.symm_apply_apply /-
-@[simp]
+@[simp, equiv_rw_simp, transport_simps]
 theorem symm_apply_apply (e : α ≃ β) (x : α) : e.symm (e x) = x :=
   e.left_inv x
 #align equiv.symm_apply_apply Equiv.symm_apply_apply
@@ -416,6 +416,7 @@ theorem apply_eq_iff_eq (f : α ≃ β) {x y : α} : f x = f y ↔ x = y :=
 -/
 
 #print Equiv.apply_eq_iff_eq_symm_apply /-
+@[transport_simps]
 theorem apply_eq_iff_eq_symm_apply {α β : Sort _} (f : α ≃ β) {x : α} {y : β} :
     f x = y ↔ x = f.symm y := by
   conv_lhs => rw [← apply_symm_apply f y]
@@ -471,7 +472,7 @@ theorem eq_symm_apply {α β} (e : α ≃ β) {x y} : y = e.symm x ↔ e y = x :
 -/
 
 #print Equiv.symm_symm /-
-@[simp]
+@[simp, equiv_rw_simp]
 theorem symm_symm (e : α ≃ β) : e.symm.symm = e := by cases e; rfl
 #align equiv.symm_symm Equiv.symm_symm
 -/
@@ -809,7 +810,7 @@ theorem arrowCongr_symm {α₁ β₁ α₂ β₂ : Sort _} (e₁ : α₁ ≃ α�
 The `equiv_rw` tactic is not able to use the default `Sort` level `equiv.arrow_congr`,
 because Lean's universe rules will not unify `?l_1` with `imax (1 ?m_1)`.
 -/
-@[congr, simps apply]
+@[congr, simps (config := { attrs := [`simp, `transport_simps] }) apply]
 def arrowCongr' {α₁ β₁ α₂ β₂ : Type _} (hα : α₁ ≃ α₂) (hβ : β₁ ≃ β₂) : (α₁ → β₁) ≃ (α₂ → β₂) :=
   Equiv.arrowCongr hα hβ
 #align equiv.arrow_congr' Equiv.arrowCongr'
@@ -1179,7 +1180,7 @@ def sigmaCongr {α₁ α₂} {β₁ : α₁ → Sort _} {β₂ : α₂ → Sort 
 
 #print Equiv.sigmaEquivProd /-
 /-- `sigma` type with a constant fiber is equivalent to the product. -/
-@[simps apply symm_apply]
+@[simps (config := { attrs := [`simp, `mfld_simps] }) apply symm_apply]
 def sigmaEquivProd (α β : Type _) : (Σ _ : α, β) ≃ α × β :=
   ⟨fun a => ⟨a.1, a.2⟩, fun a => ⟨a.1, a.2⟩, fun ⟨a, b⟩ => rfl, fun ⟨a, b⟩ => rfl⟩
 #align equiv.sigma_equiv_prod Equiv.sigmaEquivProd

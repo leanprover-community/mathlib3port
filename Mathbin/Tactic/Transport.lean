@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gabriel Ebner, Simon Hudon, Scott Morrison
 
 ! This file was ported from Lean 3 source module tactic.transport
-! leanprover-community/mathlib commit 1f10390872a75359a9a42cd6d7644cc5e45660c2
+! leanprover-community/mathlib commit 48fb5b5280e7c81672afc9524185ae994553ebf4
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -25,19 +25,6 @@ to a `monoid β`, the new multiplication is definitionally `λ x y, e (e.symm a 
 namespace Tactic
 
 open Tactic.Interactive
-
--- PLEASE REPORT THIS TO MATHPORT DEVS, THIS SHOULD NOT HAPPEN.
--- failed to format: unknown constant 'Lean.Meta._root_.Lean.Parser.Command.registerSimpAttr'
-/--
-    The simpset `transport_simps` is used by the tactic `transport`
-    to simplify certain expressions involving application of equivalences,
-    and trivial `eq.rec` or `ep.mpr` conversions.
-    It's probably best not to adjust it without understanding the algorithm used by `transport`. -/
-  register_simp_attr
-  transport_simps
-
-attribute [transport_simps] eq_rec_constant eq_mp_eq_cast cast_eq Equiv.toFun_as_coe
-  Equiv.arrowCongr'_apply Equiv.symm_apply_apply Equiv.apply_eq_iff_eq_symm_apply
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
