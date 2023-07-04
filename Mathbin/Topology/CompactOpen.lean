@@ -212,19 +212,18 @@ theorem continuous_eval' [LocallyCompactSpace α] : Continuous fun p : C(α, β)
 #align continuous_map.continuous_eval' ContinuousMap.continuous_eval'
 -/
 
-#print ContinuousMap.continuous_eval_const' /-
+#print ContinuousMap.continuous_eval_const /-
 /-- See also `continuous_map.continuous_eval_const` -/
-theorem continuous_eval_const' [LocallyCompactSpace α] (a : α) :
-    Continuous fun f : C(α, β) => f a :=
+theorem continuous_eval_const [LocallyCompactSpace α] (a : α) : Continuous fun f : C(α, β) => f a :=
   continuous_eval'.comp (continuous_id.prod_mk continuous_const)
-#align continuous_map.continuous_eval_const' ContinuousMap.continuous_eval_const'
+#align continuous_map.continuous_eval_const' ContinuousMap.continuous_eval_const
 -/
 
-#print ContinuousMap.continuous_coe' /-
+#print ContinuousMap.continuous_coe /-
 /-- See also `continuous_map.continuous_coe` -/
-theorem continuous_coe' [LocallyCompactSpace α] : @Continuous C(α, β) (α → β) _ _ coeFn :=
-  continuous_pi continuous_eval_const'
-#align continuous_map.continuous_coe' ContinuousMap.continuous_coe'
+theorem continuous_coe [LocallyCompactSpace α] : @Continuous C(α, β) (α → β) _ _ coeFn :=
+  continuous_pi continuous_eval_const
+#align continuous_map.continuous_coe' ContinuousMap.continuous_coe
 -/
 
 instance [T2Space β] : T2Space C(α, β) :=

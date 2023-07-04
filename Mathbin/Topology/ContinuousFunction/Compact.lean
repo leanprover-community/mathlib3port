@@ -181,6 +181,8 @@ theorem continuous_eval : Continuous fun p : C(α, β) × α => p.1 p.2 :=
 #align continuous_map.continuous_eval ContinuousMap.continuous_eval
 -/
 
+/- warning: continuous_map.continuous_eval_const clashes with continuous_map.continuous_eval_const' -> ContinuousMap.continuous_eval_const
+Case conversion may be inaccurate. Consider using '#align continuous_map.continuous_eval_const ContinuousMap.continuous_eval_constₓ'. -/
 #print ContinuousMap.continuous_eval_const /-
 /-- See also `continuous_map.continuous_eval_const` -/
 @[continuity]
@@ -189,6 +191,8 @@ theorem continuous_eval_const (x : α) : Continuous fun f : C(α, β) => f x :=
 #align continuous_map.continuous_eval_const ContinuousMap.continuous_eval_const
 -/
 
+/- warning: continuous_map.continuous_coe clashes with continuous_map.continuous_coe' -> ContinuousMap.continuous_coe
+Case conversion may be inaccurate. Consider using '#align continuous_map.continuous_coe ContinuousMap.continuous_coeₓ'. -/
 #print ContinuousMap.continuous_coe /-
 /-- See also `continuous_map.continuous_coe'` -/
 theorem continuous_coe : @Continuous C(α, β) (α → β) _ _ coeFn :=

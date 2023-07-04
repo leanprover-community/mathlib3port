@@ -506,7 +506,7 @@ theorem hasSum_apply {γ : Type _} [LocallyCompactSpace α] [AddCommMonoid β] [
     {f : γ → C(α, β)} {g : C(α, β)} (hf : HasSum f g) (x : α) : HasSum (fun i : γ => f i x) (g x) :=
   by
   let evₓ : AddMonoidHom C(α, β) β := (Pi.evalAddMonoidHom _ x).comp coe_fn_add_monoid_hom
-  exact hf.map evₓ (ContinuousMap.continuous_eval_const' x)
+  exact hf.map evₓ (ContinuousMap.continuous_eval_const x)
 #align continuous_map.has_sum_apply ContinuousMap.hasSum_apply
 -/
 

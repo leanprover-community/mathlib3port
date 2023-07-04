@@ -493,7 +493,7 @@ def continuousMapEval : C(X, characterSpace 𝕜 C(X, 𝕜))
     ⟨{  toFun := fun f => f x
         map_add' := fun f g => rfl
         map_smul' := fun z f => rfl
-        cont := continuous_eval_const' x }, by rw [character_space.eq_set_map_one_map_mul];
+        cont := continuous_eval_const x }, by rw [character_space.eq_set_map_one_map_mul];
       exact ⟨rfl, fun f g => rfl⟩⟩
   continuous_toFun := Continuous.subtype_mk (continuous_of_continuous_eval map_continuous) _
 #align weak_dual.character_space.continuous_map_eval WeakDual.CharacterSpace.continuousMapEval
