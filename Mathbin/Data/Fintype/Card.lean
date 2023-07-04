@@ -188,7 +188,7 @@ See `fintype.equiv_fin_of_card_eq` for the noncomputable definition,
 and `fintype.trunc_equiv_fin` and `fintype.equiv_fin` for the bijection `α ≃ fin (card α)`.
 -/
 def truncEquivFinOfCardEq [DecidableEq α] {n : ℕ} (h : Fintype.card α = n) : Trunc (α ≃ Fin n) :=
-  (truncEquivFin α).map fun e => e.trans (Fin.cast h).toEquiv
+  (truncEquivFin α).map fun e => e.trans (Fin.castIso h).toEquiv
 #align fintype.trunc_equiv_fin_of_card_eq Fintype.truncEquivFinOfCardEq
 -/
 
@@ -376,8 +376,9 @@ theorem fin_injective : Function.Injective Fin := fun m n h =>
 
 #print Fin.cast_eq_cast' /-
 /-- A reversed version of `fin.cast_eq_cast` that is easier to rewrite with. -/
-theorem Fin.cast_eq_cast' {n m : ℕ} (h : Fin n = Fin m) : cast h = ⇑(Fin.cast <| fin_injective h) :=
-  (Fin.cast_eq_cast _).symm
+theorem Fin.cast_eq_cast' {n m : ℕ} (h : Fin n = Fin m) :
+    cast h = ⇑(Fin.castIso <| fin_injective h) :=
+  (Fin.castIso_eq_cast _).symm
 #align fin.cast_eq_cast' Fin.cast_eq_cast'
 -/
 

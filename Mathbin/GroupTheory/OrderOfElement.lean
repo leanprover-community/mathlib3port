@@ -946,7 +946,7 @@ theorem finEquivPowers_symm_apply [Finite G] (x : G) (n : ℕ) {hn : ∃ m : ℕ
       "The equivalence between `submonoid.multiples` of two elements `a, b` of the same additive order,\n  mapping `i • a` to `i • b`."]
 noncomputable def powersEquivPowers [Finite G] (h : orderOf x = orderOf y) :
     (Submonoid.powers x : Set G) ≃ (Submonoid.powers y : Set G) :=
-  (finEquivPowers x).symm.trans ((Fin.cast h).toEquiv.trans (finEquivPowers y))
+  (finEquivPowers x).symm.trans ((Fin.castIso h).toEquiv.trans (finEquivPowers y))
 #align powers_equiv_powers powersEquivPowers
 #align multiples_equiv_multiples multiplesEquivMultiples
 -/
@@ -1067,7 +1067,7 @@ theorem finEquivZpowers_symm_apply [Finite G] (x : G) (n : ℕ) {hn : ∃ m : �
       "The equivalence between `subgroup.zmultiples` of two elements `a, b` of the same additive order,\n  mapping `i • a` to `i • b`."]
 noncomputable def zpowersEquivZpowers [Finite G] (h : orderOf x = orderOf y) :
     (Subgroup.zpowers x : Set G) ≃ (Subgroup.zpowers y : Set G) :=
-  (finEquivZpowers x).symm.trans ((Fin.cast h).toEquiv.trans (finEquivZpowers y))
+  (finEquivZpowers x).symm.trans ((Fin.castIso h).toEquiv.trans (finEquivZpowers y))
 #align zpowers_equiv_zpowers zpowersEquivZpowers
 #align zmultiples_equiv_zmultiples zmultiplesEquivZmultiples
 -/

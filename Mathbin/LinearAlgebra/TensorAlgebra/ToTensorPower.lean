@@ -122,10 +122,11 @@ theorem mk_reindex_cast {n m : ℕ} (h : n = m) (x : (⨂[R]^n) M) :
 #align tensor_algebra.mk_reindex_cast TensorAlgebra.mk_reindex_cast
 
 @[simp]
-theorem mk_reindex_fin_cast {n m : ℕ} (h : n = m) (x : (⨂[R]^n) M) :
-    GradedMonoid.mk m (PiTensorProduct.reindex R M (Fin.cast h).toEquiv x) = GradedMonoid.mk n x :=
-  by rw [Fin.cast_to_equiv, mk_reindex_cast h]
-#align tensor_algebra.mk_reindex_fin_cast TensorAlgebra.mk_reindex_fin_cast
+theorem mk_reindex_fin_castIso {n m : ℕ} (h : n = m) (x : (⨂[R]^n) M) :
+    GradedMonoid.mk m (PiTensorProduct.reindex R M (Fin.castIso h).toEquiv x) =
+      GradedMonoid.mk n x :=
+  by rw [Fin.castIso_to_equiv, mk_reindex_cast h]
+#align tensor_algebra.mk_reindex_fin_cast TensorAlgebra.mk_reindex_fin_castIso
 
 /-- The product of tensor products made of a single vector is the same as a single product of
 all the vectors. -/
@@ -148,7 +149,7 @@ theorem TensorPower.list_prod_gradedMonoid_mk_single (n : ℕ) (x : Fin n → M)
     simp_rw [Fin.append_left_eq_cons, Function.comp]
     congr 1 with i
     congr 1
-    rw [Fin.cast_trans, Fin.cast_refl, OrderIso.refl_apply]
+    rw [Fin.castIso_trans, Fin.castIso_refl, OrderIso.refl_apply]
 #align tensor_power.list_prod_graded_monoid_mk_single TensorPower.list_prod_gradedMonoid_mk_single
 
 theorem toDirectSum_tensorPower_tprod {n} (x : Fin n → M) :

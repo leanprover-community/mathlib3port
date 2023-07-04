@@ -291,7 +291,7 @@ This turns out to be helpful when providing simp lemmas to reduce `![a, b, c] n`
 that `vec_append ho u v 0` is valid. `fin.append u v 0` is not valid in this case because there is
 no `has_zero (fin (m + n))` instance. -/
 def vecAppend {α : Type _} {o : ℕ} (ho : o = m + n) (u : Fin m → α) (v : Fin n → α) : Fin o → α :=
-  Fin.append u v ∘ Fin.cast ho
+  Fin.append u v ∘ Fin.castIso ho
 #align matrix.vec_append Matrix.vecAppend
 -/
 

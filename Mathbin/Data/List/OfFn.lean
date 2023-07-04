@@ -109,10 +109,10 @@ theorem array'_eq_ofFn {n} (a : Array' n α) : a.toList = ofFn a.read :=
 #print List.ofFn_congr /-
 @[congr]
 theorem ofFn_congr {m n : ℕ} (h : m = n) (f : Fin m → α) :
-    ofFn f = ofFn fun i : Fin n => f (Fin.cast h.symm i) :=
+    ofFn f = ofFn fun i : Fin n => f (Fin.castIso h.symm i) :=
   by
   subst h
-  simp_rw [Fin.cast_refl, OrderIso.refl_apply]
+  simp_rw [Fin.castIso_refl, OrderIso.refl_apply]
 #align list.of_fn_congr List.ofFn_congr
 -/
 
@@ -177,7 +177,7 @@ theorem ofFn_add {m n} (f : Fin (m + n) → α) :
       (List.ofFn fun i => f (Fin.castAdd n i)) ++ List.ofFn fun j => f (Fin.natAdd m j) :=
   by
   induction' n with n IH
-  · rw [of_fn_zero, append_nil, Fin.castAdd_zero, Fin.cast_refl]; rfl
+  · rw [of_fn_zero, append_nil, Fin.castAdd_zero, Fin.castIso_refl]; rfl
   · rw [of_fn_succ', of_fn_succ', IH, append_concat]; rfl
 #align list.of_fn_add List.ofFn_add
 -/
@@ -223,7 +223,7 @@ theorem ofFn_mul' {m n} (f : Fin (m * n) → α) :
                   m * i + j < m * (i + 1) :=
                     (add_lt_add_left j.Prop _).trans_eq (mul_add_one _ _).symm
                   _ ≤ _ := Nat.mul_le_mul_left _ i.Prop⟩) :=
-  by simp_rw [mul_comm m n, mul_comm m, of_fn_mul, Fin.cast_mk]
+  by simp_rw [mul_comm m n, mul_comm m, of_fn_mul, Fin.castIso_mk]
 #align list.of_fn_mul' List.ofFn_mul'
 -/
 
@@ -287,7 +287,7 @@ def equivSigmaTuple : List α ≃ Σ n, Fin n → α
   invFun f := List.ofFn f.2
   left_inv := List.ofFn_nthLe
   right_inv := fun ⟨n, f⟩ =>
-    Fin.sigma_eq_of_eq_comp_cast (length_ofFn _) <| funext fun i => nthLe_ofFn' f i.Prop
+    Fin.sigma_eq_of_eq_comp_castIso (length_ofFn _) <| funext fun i => nthLe_ofFn' f i.Prop
 #align list.equiv_sigma_tuple List.equivSigmaTuple
 -/
 

@@ -545,14 +545,14 @@ def ringEquivCongr {m n : ℕ} (h : m = n) : ZMod m ≃+* ZMod n :=
   ·
     exact
       {
-        Fin.cast
+        Fin.castIso
           h with
         map_mul' := fun a b => by
           rw [OrderIso.toFun_eq_coe]; ext
-          rw [Fin.coe_cast, Fin.coe_mul, Fin.coe_mul, Fin.coe_cast, Fin.coe_cast, ← h]
+          rw [Fin.coe_castIso, Fin.coe_mul, Fin.coe_mul, Fin.coe_castIso, Fin.coe_castIso, ← h]
         map_add' := fun a b => by
           rw [OrderIso.toFun_eq_coe]; ext
-          rw [Fin.coe_cast, Fin.val_add, Fin.val_add, Fin.coe_cast, Fin.coe_cast, ← h] }
+          rw [Fin.coe_castIso, Fin.val_add, Fin.val_add, Fin.coe_castIso, Fin.coe_castIso, ← h] }
 #align zmod.ring_equiv_congr ZMod.ringEquivCongr
 -/
 

@@ -1394,7 +1394,8 @@ def changeOriginIndexEquiv :
   invFun s :=
     ⟨s.1 - s.2.card, s.2.card,
       ⟨s.2.map
-          (Fin.cast <| (tsub_add_cancel_of_le <| card_finset_fin_le s.2).symm).toEquiv.toEmbedding,
+          (Fin.castIso <|
+                (tsub_add_cancel_of_le <| card_finset_fin_le s.2).symm).toEquiv.toEmbedding,
         Finset.card_map _⟩⟩
   left_inv := by
     rintro ⟨k, l, ⟨s : Finset (Fin <| k + l), hs : s.card = l⟩⟩
@@ -1406,16 +1407,16 @@ def changeOriginIndexEquiv :
         k' = k →
           l' = l →
             ∀ (hkl : k + l = k' + l') (hs'),
-              (⟨k', l', ⟨Finset.map (Fin.cast hkl).toEquiv.toEmbedding s, hs'⟩⟩ :
+              (⟨k', l', ⟨Finset.map (Fin.castIso hkl).toEquiv.toEmbedding s, hs'⟩⟩ :
                   Σ k l : ℕ, { s : Finset (Fin (k + l)) // s.card = l }) =
                 ⟨k, l, ⟨s, hs⟩⟩
       by apply this <;> simp only [hs, add_tsub_cancel_right]
     rintro _ _ rfl rfl hkl hs'
-    simp only [Equiv.refl_toEmbedding, Fin.cast_refl, Finset.map_refl, eq_self_iff_true,
+    simp only [Equiv.refl_toEmbedding, Fin.castIso_refl, Finset.map_refl, eq_self_iff_true,
       OrderIso.refl_toEquiv, and_self_iff, heq_iff_eq]
   right_inv := by
     rintro ⟨n, s⟩
-    simp [tsub_add_cancel_of_le (card_finset_fin_le s), Fin.cast_to_equiv]
+    simp [tsub_add_cancel_of_le (card_finset_fin_le s), Fin.castIso_to_equiv]
 #align formal_multilinear_series.change_origin_index_equiv FormalMultilinearSeries.changeOriginIndexEquiv
 -/
 
@@ -1574,7 +1575,7 @@ theorem changeOrigin_eval (h : (‖x‖₊ + ‖y‖₊ : ℝ≥0∞) < p.radius
   have :
     ∀ (m) (hm : n = m),
       p n (s.piecewise (fun _ => x) fun _ => y) =
-        p m ((s.map (Fin.cast hm).toEquiv.toEmbedding).piecewise (fun _ => x) fun _ => y) :=
+        p m ((s.map (Fin.castIso hm).toEquiv.toEmbedding).piecewise (fun _ => x) fun _ => y) :=
     by rintro m rfl; simp
   apply this
 #align formal_multilinear_series.change_origin_eval FormalMultilinearSeries.changeOrigin_eval

@@ -420,7 +420,7 @@ theorem realize_iff : (φ.Iff ψ).realize v xs ↔ (φ.realize v xs ↔ ψ.reali
 
 #print FirstOrder.Language.BoundedFormula.realize_castLe_of_eq /-
 theorem realize_castLe_of_eq {m n : ℕ} (h : m = n) {h' : m ≤ n} {φ : L.BoundedFormula α m}
-    {v : α → M} {xs : Fin n → M} : (φ.castLE h').realize v xs ↔ φ.realize v (xs ∘ Fin.cast h) :=
+    {v : α → M} {xs : Fin n → M} : (φ.castLE h').realize v xs ↔ φ.realize v (xs ∘ Fin.castIso h) :=
   by
   subst h
   simp only [cast_le_rfl, cast_refl, OrderIso.coe_refl, Function.comp.right_id]

@@ -116,13 +116,13 @@ theorem NormalizeFinLt.castLE {n m} {nm} {a : Fin m} {a' : ℕ} (h : NormalizeFi
     NormalizeFinLt n (Fin.castLE nm a) a' := by simpa [normalize_fin_lt] using h
 #align tactic.norm_fin.normalize_fin_lt.cast_le Tactic.NormFin.NormalizeFinLt.castLE
 
-theorem NormalizeFinLt.cast {n m} {nm} {a : Fin m} {a' : ℕ} (h : NormalizeFinLt m a a') :
-    NormalizeFinLt n (Fin.cast nm a) a' := by simpa [normalize_fin_lt] using h
-#align tactic.norm_fin.normalize_fin_lt.cast Tactic.NormFin.NormalizeFinLt.cast
+theorem NormalizeFinLt.castIso {n m} {nm} {a : Fin m} {a' : ℕ} (h : NormalizeFinLt m a a') :
+    NormalizeFinLt n (Fin.castIso nm a) a' := by simpa [normalize_fin_lt] using h
+#align tactic.norm_fin.normalize_fin_lt.cast Tactic.NormFin.NormalizeFinLt.castIso
 
-theorem NormalizeFin.cast {n m} {nm} {a : Fin m} {a' : ℕ} (h : NormalizeFin m a a') :
-    NormalizeFin n (Fin.cast nm a) a' := by convert ← normalize_fin_lt.cast h
-#align tactic.norm_fin.normalize_fin.cast Tactic.NormFin.NormalizeFin.cast
+theorem NormalizeFin.castIso {n m} {nm} {a : Fin m} {a' : ℕ} (h : NormalizeFin m a a') :
+    NormalizeFin n (Fin.castIso nm a) a' := by convert ← normalize_fin_lt.cast h
+#align tactic.norm_fin.normalize_fin.cast Tactic.NormFin.NormalizeFin.castIso
 
 theorem NormalizeFinLt.castAdd {n m} {a : Fin n} {a' : ℕ} (h : NormalizeFinLt n a a') :
     NormalizeFinLt (n + m) (Fin.castAdd m a) a' := by simpa [normalize_fin_lt] using h
@@ -277,7 +277,7 @@ functions are written this way: for example `cast_le : n ≤ m → fin n ↪o fi
 function but rather an order embedding with a coercion to a function. -/
 unsafe def match_fin_coe_fn (a : expr) : expr → Option match_fin_result
   | q(@Fin.castLE $(n) $(m) $(h)) => some (cast_le n m h a)
-  | q(@Fin.cast $(m) $(n) $(h)) => some (cast n m h a)
+  | q(@Fin.castIso $(m) $(n) $(h)) => some (cast n m h a)
   | q(@Fin.castAdd $(n) $(m)) => some (cast_add n m a)
   | q(@Fin.castSucc $(n)) => some (cast_succ n a)
   | q(@Fin.addNat $(n) $(m)) => some (add_nat n m a)
@@ -354,7 +354,7 @@ unsafe def eval_fin_lt' (eval_fin : expr → eval_fin_m (expr × expr)) :
         pure (a', q(@NormalizeFinLt.castLE).mk_app [n, m, nm, a, a', pa])
       | match_fin_result.cast m _ nm a => do
         let (a', pa) ← (eval_fin_lt' m a).reset
-        pure (a', q(@NormalizeFinLt.cast).mk_app [n, m, nm, a, a', pa])
+        pure (a', q(@NormalizeFinLt.castIso).mk_app [n, m, nm, a, a', pa])
       | match_fin_result.cast_add n m a => do
         let (a', pa) ← (eval_fin_lt' m a).reset
         pure (a', q(@NormalizeFinLt.castAdd).mk_app [n, m, a, a', pa])
@@ -411,7 +411,7 @@ unsafe def eval_fin : expr → eval_fin_m (expr × expr)
         pure (q(@bit1 ℕ _ _).mk_app [a'], q(@NormalizeFin.bit1).mk_app [n, n0, a, a', pa])
       | match_fin_result.cast m n nm a => do
         let (a', pa) ← (eval_fin a).reset
-        pure (a', q(@NormalizeFin.cast).mk_app [n, m, nm, a, a', pa])
+        pure (a', q(@NormalizeFin.castIso).mk_app [n, m, nm, a, a', pa])
       | _ => do
         let n ← get_fin_type a
         let (a', pa) ← eval_fin_lt' eval_fin n a

@@ -241,7 +241,7 @@ def toList (s : CompositionSeries X) : List X :=
 /-- Two `composition_series` are equal if they are the same length and
 have the same `i`th element for every `i` -/
 theorem ext_fun {s₁ s₂ : CompositionSeries X} (hl : s₁.length = s₂.length)
-    (h : ∀ i, s₁ i = s₂ (Fin.cast (congr_arg Nat.succ hl) i)) : s₁ = s₂ :=
+    (h : ∀ i, s₁ i = s₂ (Fin.castIso (congr_arg Nat.succ hl) i)) : s₁ = s₂ :=
   by
   cases s₁; cases s₂
   dsimp at *
@@ -270,7 +270,7 @@ theorem toList_injective : Function.Injective (@CompositionSeries.toList X _ _) 
   have h₁ : s₁.length = s₂.length :=
     Nat.succ_injective
       ((List.length_ofFn s₁).symm.trans <| (congr_arg List.length h).trans <| List.length_ofFn s₂)
-  have h₂ : ∀ i : Fin s₁.length.succ, s₁ i = s₂ (Fin.cast (congr_arg Nat.succ h₁) i) :=
+  have h₂ : ∀ i : Fin s₁.length.succ, s₁ i = s₂ (Fin.castIso (congr_arg Nat.succ h₁) i) :=
     by
     intro i
     rw [← List.nthLe_ofFn s₁ i, ← List.nthLe_ofFn s₂]
@@ -280,7 +280,7 @@ theorem toList_injective : Function.Injective (@CompositionSeries.toList X _ _) 
   dsimp at *
   subst h₁
   simp only [heq_iff_eq, eq_self_iff_true, true_and_iff]
-  simp only [Fin.cast_refl] at h₂ 
+  simp only [Fin.castIso_refl] at h₂ 
   exact funext h₂
 #align composition_series.to_list_injective CompositionSeries.toList_injective
 -/

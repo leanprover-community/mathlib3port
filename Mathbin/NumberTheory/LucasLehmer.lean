@@ -644,12 +644,10 @@ namespace LucasLehmer
 
 open Tactic
 
-#print LucasLehmer.sMod_succ /-
 theorem sMod_succ {p a i b c} (h1 : (2 ^ p - 1 : ℤ) = a) (h2 : sMod p i = b)
     (h3 : (b * b - 2) % a = c) : sMod p (i + 1) = c := by dsimp [s_mod, mersenne];
   rw [h1, h2, sq, h3]
 #align lucas_lehmer.s_mod_succ LucasLehmer.sMod_succ
--/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:336:4: warning: unsupported (TODO): `[tacs] -/
