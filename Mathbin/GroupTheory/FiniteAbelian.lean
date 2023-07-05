@@ -31,6 +31,7 @@ namespace Module
 
 variable (M : Type u)
 
+#print Module.finite_of_fg_torsion /-
 theorem finite_of_fg_torsion [AddCommGroup M] [Module ℤ M] [Module.Finite ℤ M]
     (hM : Module.IsTorsion ℤ M) : Finite M :=
   by
@@ -43,6 +44,7 @@ theorem finite_of_fg_torsion [AddCommGroup M] [Module ℤ M] [Module.Finite ℤ 
     Finite.of_equiv _ dfinsupp.equiv_fun_on_fintype.symm
   exact Finite.of_equiv _ l.symm.to_equiv
 #align module.finite_of_fg_torsion Module.finite_of_fg_torsion
+-/
 
 end Module
 
@@ -52,6 +54,7 @@ namespace AddCommGroup
 
 variable [AddCommGroup G]
 
+#print AddCommGroup.equiv_free_prod_directSum_zMod /-
 /-- **Structure theorem of finitely generated abelian groups** : Any finitely generated abelian
 group is the product of a power of `ℤ` and a direct sum of some `zmod (p i ^ e i)` for some
 prime powers `p i ^ e i`. -/
@@ -70,7 +73,9 @@ theorem equiv_free_prod_directSum_zMod [hG : AddGroup.FG G] :
           ((Int.quotientSpanEquivZMod _).trans <|
               ZMod.ringEquivCongr <| (p i).natAbs_pow _).toAddEquiv)
 #align add_comm_group.equiv_free_prod_direct_sum_zmod AddCommGroup.equiv_free_prod_directSum_zMod
+-/
 
+#print AddCommGroup.equiv_directSum_zMod_of_fintype /-
 /-- **Structure theorem of finite abelian groups** : Any finite abelian group is a direct sum of
 some `zmod (p i ^ e i)` for some prime powers `p i ^ e i`. -/
 theorem equiv_directSum_zMod_of_fintype [Finite G] :
@@ -86,19 +91,24 @@ theorem equiv_directSum_zMod_of_fintype [Finite G] :
       (Fintype.ofSurjective (fun f : Fin n.succ →₀ ℤ => f 0) fun a =>
             ⟨Finsupp.single 0 a, Finsupp.single_eq_same⟩).False.elim
 #align add_comm_group.equiv_direct_sum_zmod_of_fintype AddCommGroup.equiv_directSum_zMod_of_fintype
+-/
 
+#print AddCommGroup.finite_of_fG_torsion /-
 theorem finite_of_fG_torsion [hG' : AddGroup.FG G] (hG : AddMonoid.IsTorsion G) : Finite G :=
   @Module.finite_of_fg_torsion _ _ _ (Module.Finite.iff_addGroup_fg.mpr hG') <|
     AddMonoid.isTorsion_iff_isTorsion_int.mp hG
 #align add_comm_group.finite_of_fg_torsion AddCommGroup.finite_of_fG_torsion
+-/
 
 end AddCommGroup
 
 namespace CommGroup
 
+#print CommGroup.finite_of_fG_torsion /-
 theorem finite_of_fG_torsion [CommGroup G] [Group.FG G] (hG : Monoid.IsTorsion G) : Finite G :=
   @Finite.of_equiv _ _ (AddCommGroup.finite_of_fG_torsion (Additive G) hG) Multiplicative.ofAdd
 #align comm_group.finite_of_fg_torsion CommGroup.finite_of_fG_torsion
+-/
 
 end CommGroup
 
