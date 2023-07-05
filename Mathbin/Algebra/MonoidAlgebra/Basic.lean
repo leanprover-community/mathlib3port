@@ -602,11 +602,11 @@ instance isScalarTower_self [IsScalarTower R k k] :
 #align monoid_algebra.is_scalar_tower_self MonoidAlgebra.isScalarTower_self
 -/
 
-#print MonoidAlgebra.sMulCommClass_self /-
+#print MonoidAlgebra.smulCommClass_self /-
 /-- Note that if `k` is a `comm_semiring` then we have `smul_comm_class k k k` and so we can take
 `R = k` in the below. In other words, if the coefficients are commutative amongst themselves, they
 also commute with the algebra multiplication. -/
-instance sMulCommClass_self [SMulCommClass R k k] :
+instance smulCommClass_self [SMulCommClass R k k] :
     SMulCommClass R (MonoidAlgebra k G) (MonoidAlgebra k G) :=
   ⟨fun t a b => by
     classical
@@ -614,14 +614,14 @@ instance sMulCommClass_self [SMulCommClass R k k] :
     simp only [mul_apply, Finsupp.sum, Finset.smul_sum, smul_ite, mul_smul_comm, sum_smul_index',
       imp_true_iff, eq_self_iff_true, coe_smul, ite_eq_right_iff, smul_eq_mul, Pi.smul_apply,
       MulZeroClass.mul_zero, smul_zero]⟩
-#align monoid_algebra.smul_comm_class_self MonoidAlgebra.sMulCommClass_self
+#align monoid_algebra.smul_comm_class_self MonoidAlgebra.smulCommClass_self
 -/
 
-#print MonoidAlgebra.sMulCommClass_symm_self /-
-instance sMulCommClass_symm_self [SMulCommClass k R k] :
+#print MonoidAlgebra.smulCommClass_symm_self /-
+instance smulCommClass_symm_self [SMulCommClass k R k] :
     SMulCommClass (MonoidAlgebra k G) R (MonoidAlgebra k G) :=
   ⟨fun t a b => by haveI := SMulCommClass.symm k R k; rw [← smul_comm]⟩
-#align monoid_algebra.smul_comm_class_symm_self MonoidAlgebra.sMulCommClass_symm_self
+#align monoid_algebra.smul_comm_class_symm_self MonoidAlgebra.smulCommClass_symm_self
 -/
 
 variable {A : Type u₃} [NonUnitalNonAssocSemiring A]
@@ -1737,21 +1737,21 @@ instance isScalarTower_self [IsScalarTower R k k] :
 #align add_monoid_algebra.is_scalar_tower_self AddMonoidAlgebra.isScalarTower_self
 -/
 
-#print AddMonoidAlgebra.sMulCommClass_self /-
+#print AddMonoidAlgebra.smulCommClass_self /-
 /-- Note that if `k` is a `comm_semiring` then we have `smul_comm_class k k k` and so we can take
 `R = k` in the below. In other words, if the coefficients are commutative amongst themselves, they
 also commute with the algebra multiplication. -/
-instance sMulCommClass_self [SMulCommClass R k k] :
+instance smulCommClass_self [SMulCommClass R k k] :
     SMulCommClass R (AddMonoidAlgebra k G) (AddMonoidAlgebra k G) :=
-  @MonoidAlgebra.sMulCommClass_self k (Multiplicative G) R _ _ _ _
-#align add_monoid_algebra.smul_comm_class_self AddMonoidAlgebra.sMulCommClass_self
+  @MonoidAlgebra.smulCommClass_self k (Multiplicative G) R _ _ _ _
+#align add_monoid_algebra.smul_comm_class_self AddMonoidAlgebra.smulCommClass_self
 -/
 
-#print AddMonoidAlgebra.sMulCommClass_symm_self /-
-instance sMulCommClass_symm_self [SMulCommClass k R k] :
+#print AddMonoidAlgebra.smulCommClass_symm_self /-
+instance smulCommClass_symm_self [SMulCommClass k R k] :
     SMulCommClass (AddMonoidAlgebra k G) R (AddMonoidAlgebra k G) :=
-  @MonoidAlgebra.sMulCommClass_symm_self k (Multiplicative G) R _ _ _ _
-#align add_monoid_algebra.smul_comm_class_symm_self AddMonoidAlgebra.sMulCommClass_symm_self
+  @MonoidAlgebra.smulCommClass_symm_self k (Multiplicative G) R _ _ _ _
+#align add_monoid_algebra.smul_comm_class_symm_self AddMonoidAlgebra.smulCommClass_symm_self
 -/
 
 variable {A : Type u₃} [NonUnitalNonAssocSemiring A]

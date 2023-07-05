@@ -155,7 +155,7 @@ instance isScalarTower_right [CommSemiring S₁] [DistribSMul R S₁] [IsScalarT
 #print MvPolynomial.smulCommClass_right /-
 instance smulCommClass_right [CommSemiring S₁] [DistribSMul R S₁] [SMulCommClass R S₁ S₁] :
     SMulCommClass R (MvPolynomial σ S₁) (MvPolynomial σ S₁) :=
-  AddMonoidAlgebra.sMulCommClass_self _
+  AddMonoidAlgebra.smulCommClass_self _
 #align mv_polynomial.smul_comm_class_right MvPolynomial.smulCommClass_right
 -/
 

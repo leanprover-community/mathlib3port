@@ -46,52 +46,52 @@ section Instances
 
 variable (e : α ≃ β)
 
-#print Equiv.One /-
+#print Equiv.one /-
 /-- Transfer `has_one` across an `equiv` -/
 @[reducible, to_additive "Transfer `has_zero` across an `equiv`"]
-protected def One [One β] : One α :=
+protected def one [One β] : One α :=
   ⟨e.symm 1⟩
-#align equiv.has_one Equiv.One
-#align equiv.has_zero Equiv.Zero
+#align equiv.has_one Equiv.one
+#align equiv.has_zero Equiv.zero
 -/
 
 #print Equiv.one_def /-
 @[to_additive]
-theorem one_def [One β] : @One.one _ (Equiv.One e) = e.symm 1 :=
+theorem one_def [One β] : @One.one _ (Equiv.one e) = e.symm 1 :=
   rfl
 #align equiv.one_def Equiv.one_def
 #align equiv.zero_def Equiv.zero_def
 -/
 
-#print Equiv.Mul /-
+#print Equiv.mul /-
 /-- Transfer `has_mul` across an `equiv` -/
 @[reducible, to_additive "Transfer `has_add` across an `equiv`"]
-protected def Mul [Mul β] : Mul α :=
+protected def mul [Mul β] : Mul α :=
   ⟨fun x y => e.symm (e x * e y)⟩
-#align equiv.has_mul Equiv.Mul
-#align equiv.has_add Equiv.Add
+#align equiv.has_mul Equiv.mul
+#align equiv.has_add Equiv.add
 -/
 
 #print Equiv.mul_def /-
 @[to_additive]
-theorem mul_def [Mul β] (x y : α) : @Mul.mul _ (Equiv.Mul e) x y = e.symm (e x * e y) :=
+theorem mul_def [Mul β] (x y : α) : @Mul.mul _ (Equiv.mul e) x y = e.symm (e x * e y) :=
   rfl
 #align equiv.mul_def Equiv.mul_def
 #align equiv.add_def Equiv.add_def
 -/
 
-#print Equiv.Div /-
+#print Equiv.div /-
 /-- Transfer `has_div` across an `equiv` -/
 @[reducible, to_additive "Transfer `has_sub` across an `equiv`"]
-protected def Div [Div β] : Div α :=
+protected def div [Div β] : Div α :=
   ⟨fun x y => e.symm (e x / e y)⟩
-#align equiv.has_div Equiv.Div
-#align equiv.has_sub Equiv.Sub
+#align equiv.has_div Equiv.div
+#align equiv.has_sub Equiv.sub
 -/
 
 #print Equiv.div_def /-
 @[to_additive]
-theorem div_def [Div β] (x y : α) : @Div.div _ (Equiv.Div e) x y = e.symm (e x / e y) :=
+theorem div_def [Div β] (x y : α) : @Div.div _ (Equiv.div e) x y = e.symm (e x / e y) :=
   rfl
 #align equiv.div_def Equiv.div_def
 #align equiv.sub_def Equiv.sub_def
@@ -114,12 +114,12 @@ theorem inv_def [Inv β] (x : α) : @Inv.inv _ (Equiv.Inv e) x = e.symm (e x)⁻
 #align equiv.neg_def Equiv.neg_def
 -/
 
-#print Equiv.SMul /-
+#print Equiv.smul /-
 /-- Transfer `has_smul` across an `equiv` -/
 @[reducible]
-protected def SMul (R : Type _) [SMul R β] : SMul R α :=
+protected def smul (R : Type _) [SMul R β] : SMul R α :=
   ⟨fun r x => e.symm (r • e x)⟩
-#align equiv.has_smul Equiv.SMul
+#align equiv.has_smul Equiv.smul
 -/
 
 #print Equiv.smul_def /-
@@ -129,13 +129,13 @@ theorem smul_def {R : Type _} [SMul R β] (r : R) (x : α) :
 #align equiv.smul_def Equiv.smul_def
 -/
 
-#print Equiv.Pow /-
+#print Equiv.pow /-
 /-- Transfer `has_pow` across an `equiv` -/
 @[reducible, to_additive SMul]
-protected def Pow (N : Type _) [Pow β N] : Pow α N :=
+protected def pow (N : Type _) [Pow β N] : Pow α N :=
   ⟨fun x n => e.symm (e x ^ n)⟩
-#align equiv.has_pow Equiv.Pow
-#align equiv.has_smul Equiv.SMul
+#align equiv.has_pow Equiv.pow
+#align equiv.has_smul Equiv.smul
 -/
 
 #print Equiv.pow_def /-
@@ -153,7 +153,7 @@ the one obtained by transporting a multiplicative structure on `β` back along `
 @[to_additive
       "An equivalence `e : α ≃ β` gives a additive equivalence `α ≃+ β`\nwhere the additive structure on `α` is\nthe one obtained by transporting an additive structure on `β` back along `e`."]
 def mulEquiv (e : α ≃ β) [Mul β] :
-    letI := Equiv.Mul e
+    letI := Equiv.mul e
     α ≃* β :=
   by
   intros
@@ -173,7 +173,7 @@ theorem mulEquiv_apply (e : α ≃ β) [Mul β] (a : α) : (mulEquiv e) a = e a 
 #print Equiv.mulEquiv_symm_apply /-
 @[to_additive]
 theorem mulEquiv_symm_apply (e : α ≃ β) [Mul β] (b : β) :
-    letI := Equiv.Mul e
+    letI := Equiv.mul e
     (MulEquiv e).symm b = e.symm b :=
   by intros; rfl
 #align equiv.mul_equiv_symm_apply Equiv.mulEquiv_symm_apply
@@ -185,7 +185,7 @@ theorem mulEquiv_symm_apply (e : α ≃ β) [Mul β] (b : β) :
 where the ring structure on `α` is
 the one obtained by transporting a ring structure on `β` back along `e`.
 -/
-def ringEquiv (e : α ≃ β) [Add β] [Mul β] : by letI := Equiv.Add e; letI := Equiv.Mul e;
+def ringEquiv (e : α ≃ β) [Add β] [Mul β] : by letI := Equiv.add e; letI := Equiv.mul e;
     exact α ≃+* β := by
   intros
   exact
@@ -203,8 +203,8 @@ theorem ringEquiv_apply (e : α ≃ β) [Add β] [Mul β] (a : α) : (ringEquiv 
 -/
 
 #print Equiv.ringEquiv_symm_apply /-
-theorem ringEquiv_symm_apply (e : α ≃ β) [Add β] [Mul β] (b : β) : by letI := Equiv.Add e;
-    letI := Equiv.Mul e; exact (RingEquiv e).symm b = e.symm b := by intros; rfl
+theorem ringEquiv_symm_apply (e : α ≃ β) [Add β] [Mul β] (b : β) : by letI := Equiv.add e;
+    letI := Equiv.mul e; exact (RingEquiv e).symm b = e.symm b := by intros; rfl
 #align equiv.ring_equiv_symm_apply Equiv.ringEquiv_symm_apply
 -/
 
