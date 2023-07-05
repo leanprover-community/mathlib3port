@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module topology.sheaves.presheaf_of_functions
-! leanprover-community/mathlib commit 13361559d66b84f80b6d5a1c4a26aa5054766725
+! leanprover-community/mathlib commit 5dc6092d09e5e489106865241986f7f2ad28d4c8
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -34,7 +34,7 @@ We construct some simple examples of presheaves of functions on a topological sp
 -/
 
 
-universe v u w
+universe v u
 
 open CategoryTheory
 
@@ -50,7 +50,7 @@ variable (X : TopCat.{v})
 /-- The presheaf of dependently typed functions on `X`, with fibres given by a type family `T`.
 There is no requirement that the functions are continuous, here.
 -/
-def presheafToTypes (T : X → Type w) : X.Presheaf (Type max v w)
+def presheafToTypes (T : X → Type v) : X.Presheaf (Type v)
     where
   obj U := ∀ x : unop U, T x
   map U V i g := fun x : unop V => g (i.unop x)
@@ -85,7 +85,7 @@ theorem presheafToTypes_map {T : X → Type v} {U V : (Opens X)ᵒᵖ} {i : U �
 /-- The presheaf of functions on `X` with values in a type `T`.
 There is no requirement that the functions are continuous, here.
 -/
-def presheafToType (T : Type w) : X.Presheaf (Type max v w)
+def presheafToType (T : Type v) : X.Presheaf (Type v)
     where
   obj U := unop U → T
   map U V i g := g ∘ i.unop
@@ -111,8 +111,6 @@ theorem presheafToType_map {T : Type v} {U V : (Opens X)ᵒᵖ} {i : U ⟶ V} {f
 -/
 
 #print TopCat.presheafToTop /-
--- TODO it may prove useful to generalize the universes here,
--- but the definition would need to change.
 /-- The presheaf of continuous functions on `X` with values in fixed target topological space
 `T`. -/
 def presheafToTop (T : TopCat.{v}) : X.Presheaf (Type v) :=

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Scott Morrison
 
 ! This file was ported from Lean 3 source module topology.sheaves.sheaf_of_functions
-! leanprover-community/mathlib commit 13361559d66b84f80b6d5a1c4a26aa5054766725
+! leanprover-community/mathlib commit 5dc6092d09e5e489106865241986f7f2ad28d4c8
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -42,11 +42,11 @@ open TopologicalSpace
 
 open TopologicalSpace.Opens
 
-universe v u
+universe u
 
 noncomputable section
 
-variable (X : TopCat.{v})
+variable (X : TopCat.{u})
 
 open TopCat
 
@@ -113,7 +113,7 @@ namespace TopCat
 /-- The sheaf of not-necessarily-continuous functions on `X` with values in type family
 `T : X → Type u`.
 -/
-def sheafToTypes (T : X → Type u) : Sheaf (Type max v u) X :=
+def sheafToTypes (T : X → Type u) : Sheaf (Type u) X :=
   ⟨presheafToTypes X T, Presheaf.toTypes_isSheaf _ _⟩
 #align Top.sheaf_to_Types TopCat.sheafToTypes
 -/
@@ -123,7 +123,7 @@ Case conversion may be inaccurate. Consider using '#align Top.sheaf_to_Type TopC
 #print TopCat.sheafToType /-
 /-- The sheaf of not-necessarily-continuous functions on `X` with values in a type `T`.
 -/
-def sheafToType (T : Type u) : Sheaf (Type max v u) X :=
+def sheafToType (T : Type u) : Sheaf (Type u) X :=
   ⟨presheafToType X T, Presheaf.toType_isSheaf _ _⟩
 #align Top.sheaf_to_Type TopCat.sheafToType
 -/

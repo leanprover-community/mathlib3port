@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Justus Springer
 
 ! This file was ported from Lean 3 source module topology.sheaves.sheaf_condition.unique_gluing
-! leanprover-community/mathlib commit 13361559d66b84f80b6d5a1c4a26aa5054766725
+! leanprover-community/mathlib commit 5dc6092d09e5e489106865241986f7f2ad28d4c8
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -61,9 +61,9 @@ open TopologicalSpace.Opens
 
 open Opposite
 
-universe u v w
+universe u v
 
-variable {C : Type u} [Category.{max w v} C] [ConcreteCategory.{max w v} C]
+variable {C : Type u} [Category.{v} C] [ConcreteCategory.{v} C]
 
 namespace TopCat
 
@@ -73,7 +73,7 @@ section
 
 attribute [local instance] concrete_category.has_coe_to_sort concrete_category.has_coe_to_fun
 
-variable {X : TopCat.{w}} (F : Presheaf C X) {ι : Type w} (U : ι → Opens X)
+variable {X : TopCat.{v}} (F : Presheaf C X) {ι : Type v} (U : ι → Opens X)
 
 #print TopCat.Presheaf.IsCompatible /-
 /-- A family of sections `sf` is compatible, if the restrictions of `sf i` and `sf j` to `U i ⊓ U j`
@@ -103,7 +103,7 @@ We prove this to be equivalent to the usual one below in
 `is_sheaf_iff_is_sheaf_unique_gluing`
 -/
 def IsSheafUniqueGluing : Prop :=
-  ∀ ⦃ι : Type w⦄ (U : ι → Opens X) (sf : ∀ i : ι, F.obj (op (U i))),
+  ∀ ⦃ι : Type v⦄ (U : ι → Opens X) (sf : ∀ i : ι, F.obj (op (U i))),
     IsCompatible F U sf → ∃! s : F.obj (op (iSup U)), IsGluing F U sf s
 #align Top.presheaf.is_sheaf_unique_gluing TopCat.Presheaf.IsSheafUniqueGluing
 -/
@@ -112,7 +112,7 @@ end
 
 section TypeValued
 
-variable {X : TopCat.{w}} (F : Presheaf (Type max w v) X) {ι : Type w} (U : ι → Opens X)
+variable {X : TopCat.{v}} (F : Presheaf (Type v) X) {ι : Type v} (U : ι → Opens X)
 
 #print TopCat.Presheaf.piOpensIsoSectionsFamily /-
 /-- For presheaves of types, terms of `pi_opens F U` are just families of sections.
@@ -120,7 +120,7 @@ variable {X : TopCat.{w}} (F : Presheaf (Type max w v) X) {ι : Type w} (U : ι 
 def piOpensIsoSectionsFamily : piOpens F U ≅ ∀ i : ι, F.obj (op (U i)) :=
   Limits.IsLimit.conePointUniqueUpToIso
     (limit.isLimit (Discrete.functor fun i : ι => F.obj (op (U i))))
-    (Types.productLimitCone.{w, max w v} fun i : ι => F.obj (op (U i))).IsLimit
+    (Types.productLimitCone.{v, v} fun i : ι => F.obj (op (U i))).IsLimit
 #align Top.presheaf.pi_opens_iso_sections_family TopCat.Presheaf.piOpensIsoSectionsFamily
 -/
 
@@ -133,7 +133,7 @@ theorem compatible_iff_leftRes_eq_rightRes (sf : piOpens F U) :
   by
   constructor <;> intro h
   · ext ⟨i, j⟩
-    rw [left_res, types.limit.lift_π_apply, fan.mk_π_app, right_res, types.limit.lift_π_apply,
+    rw [left_res, types.limit.lift_π_apply', fan.mk_π_app, right_res, types.limit.lift_π_apply',
       fan.mk_π_app]
     exact h i j
   · intro i j
@@ -154,7 +154,7 @@ theorem isGluing_iff_eq_res (sf : piOpens F U) (s : F.obj (op (iSup U))) :
   by
   constructor <;> intro h
   · ext ⟨i⟩
-    rw [res, types.limit.lift_π_apply, fan.mk_π_app]
+    rw [res, types.limit.lift_π_apply', fan.mk_π_app]
     exact h i
   · intro i
     convert congr_arg (limits.pi.π (fun i : ι => F.obj (op (U i))) i) h
@@ -233,10 +233,9 @@ section
 
 attribute [local instance] concrete_category.has_coe_to_sort concrete_category.has_coe_to_fun
 
-variable [HasLimitsOfSize.{w, w} C] [ReflectsIsomorphisms (forget C)]
-  [PreservesLimitsOfSize.{w, w} (forget C)]
+variable [HasLimits C] [ReflectsIsomorphisms (forget C)] [PreservesLimits (forget C)]
 
-variable {X : TopCat.{w}} (F : Presheaf C X) {ι : Type w} (U : ι → Opens X)
+variable {X : TopCat.{v}} (F : Presheaf C X) {ι : Type v} (U : ι → Opens X)
 
 #print TopCat.Presheaf.isSheaf_iff_isSheafUniqueGluing /-
 /-- For presheaves valued in a concrete category, whose forgetful functor reflects isomorphisms and
@@ -263,11 +262,11 @@ section
 
 attribute [local instance] concrete_category.has_coe_to_sort concrete_category.has_coe_to_fun
 
-variable [HasLimitsOfSize.{w, w} C] [ReflectsIsomorphisms (ConcreteCategory.forget C)]
+variable [HasLimits C] [ReflectsIsomorphisms (ConcreteCategory.forget C)]
 
-variable [PreservesLimitsOfSize.{w, w} (ConcreteCategory.forget C)]
+variable [PreservesLimits (ConcreteCategory.forget C)]
 
-variable {X : TopCat.{w}} (F : Sheaf C X) {ι : Type w} (U : ι → Opens X)
+variable {X : TopCat.{v}} (F : Sheaf C X) {ι : Type v} (U : ι → Opens X)
 
 #print TopCat.Sheaf.existsUnique_gluing /-
 /-- A more convenient way of obtaining a unique gluing of sections for a sheaf.

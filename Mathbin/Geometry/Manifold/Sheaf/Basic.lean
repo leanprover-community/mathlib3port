@@ -96,7 +96,7 @@ a sheaf of types on `M` which, to each open set `U` in `M`, associates the type 
 functions from `U` to `M'` satisfying the lift of `P`. -/
 def StructureGroupoid.LocalInvariantProp.sheaf (hG : LocalInvariantProp G G' P) :
     TopCat.Sheaf (Type u) (TopCat.of M) :=
-  TopCat.subsheafToTypes (hG.LocalPredicateₓ M M')
+  TopCat.subsheafToTypes (hG.LocalPredicate M M')
 #align structure_groupoid.local_invariant_prop.sheaf StructureGroupoid.LocalInvariantProp.sheaf
 -/
 

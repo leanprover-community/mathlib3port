@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module algebraic_geometry.morphisms.quasi_separated
-! leanprover-community/mathlib commit 13361559d66b84f80b6d5a1c4a26aa5054766725
+! leanprover-community/mathlib commit 5dc6092d09e5e489106865241986f7f2ad28d4c8
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -420,7 +420,7 @@ theorem exists_eq_pow_mul_of_is_compact_of_quasi_separated_space_aux (X : Scheme
 -/
 
 #print AlgebraicGeometry.exists_eq_pow_mul_of_isCompact_of_isQuasiSeparated /-
-theorem exists_eq_pow_mul_of_isCompact_of_isQuasiSeparated (X : Scheme.{u}) (U : Opens X.carrier)
+theorem exists_eq_pow_mul_of_isCompact_of_isQuasiSeparated (X : Scheme) (U : Opens X.carrier)
     (hU : IsCompact U.1) (hU' : IsQuasiSeparated U.1) (f : X.Presheaf.obj (op U))
     (x : X.Presheaf.obj (op <| X.basicOpen f)) :
     ∃ (n : ℕ) (y : X.Presheaf.obj (op U)), y |_ X.basicOpen f = (f |_ X.basicOpen f) ^ n * x :=
@@ -487,7 +487,7 @@ theorem exists_eq_pow_mul_of_isCompact_of_isQuasiSeparated (X : Scheme.{u}) (U :
         X.presheaf.map (hom_of_le <| inf_le_right).op
           (X.presheaf.map (hom_of_le le_sup_right).op f ^ (finset.univ.sup n + n₁) * y₂) :=
       by
-      fapply TopCat.Sheaf.eq_of_locally_eq'.{u + 1, u} X.sheaf fun i : s => i.1.1
+      fapply X.sheaf.eq_of_locally_eq' fun i : s => i.1.1
       · refine' fun i => hom_of_le _; erw [hs]; exact le_iSup _ _
       · exact le_of_eq hs
       · intro i
@@ -511,7 +511,7 @@ theorem exists_eq_pow_mul_of_isCompact_of_isQuasiSeparated (X : Scheme.{u}) (U :
     -- the desired section on `S ∪ U`.
     use (X.sheaf.obj_sup_iso_prod_eq_locus S U.1).inv ⟨⟨_ * _, _ * _⟩, this⟩
     refine'
-      TopCat.Sheaf.eq_of_locally_eq₂.{u + 1, u} X.sheaf
+      X.sheaf.eq_of_locally_eq₂
         (hom_of_le (_ : X.basic_open (X.presheaf.map (hom_of_le le_sup_left).op f) ≤ _))
         (hom_of_le (_ : X.basic_open (X.presheaf.map (hom_of_le le_sup_right).op f) ≤ _)) _ _ _ _ _
     · rw [X.basic_open_res]; exact inf_le_right

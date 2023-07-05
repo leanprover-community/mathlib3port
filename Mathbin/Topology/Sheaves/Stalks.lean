@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison, Justus Springer
 
 ! This file was ported from Lean 3 source module topology.sheaves.stalks
-! leanprover-community/mathlib commit 13361559d66b84f80b6d5a1c4a26aa5054766725
+! leanprover-community/mathlib commit 5dc6092d09e5e489106865241986f7f2ad28d4c8
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -502,7 +502,7 @@ theorem section_ext (F : Sheaf C X) (U : Opens X) (s t : F.1.obj (op U))
   choose V m i₁ i₂ heq using fun x : U => F.presheaf.germ_eq x.1 x.2 x.2 s t (h x)
   -- Since `F` is a sheaf, we can prove the equality locally, if we can show that these
   -- neighborhoods form a cover of `U`.
-  apply TopCat.Sheaf.eq_of_locally_eq'.{u, v, v} F V U i₁
+  apply F.eq_of_locally_eq' V U i₁
   · intro x hxU
     rw [opens.mem_supr]
     exact ⟨⟨x, hxU⟩, m ⟨x, hxU⟩⟩
@@ -597,9 +597,9 @@ theorem app_surjective_of_injective_of_locally_surjective {F G : Sheaf C X} (f :
     rw [opens.mem_supr]
     exact ⟨⟨x, hxU⟩, mV ⟨x, hxU⟩⟩
   -- Since `F` is a sheaf, we can glue all the local preimages together to get a global preimage.
-  obtain ⟨s, s_spec, -⟩ := TopCat.Sheaf.existsUnique_gluing'.{u, v, v} F V U iVU V_cover sf _
+  obtain ⟨s, s_spec, -⟩ := F.exists_unique_gluing' V U iVU V_cover sf _
   · use s
-    apply TopCat.Sheaf.eq_of_locally_eq'.{u, v, v} G V U iVU V_cover
+    apply G.eq_of_locally_eq' V U iVU V_cover
     intro x
     rw [← comp_apply, ← f.1.naturality, comp_apply, s_spec, HEq]
   · intro x y

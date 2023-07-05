@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johan Commelin, Scott Morrison
 
 ! This file was ported from Lean 3 source module algebraic_geometry.structure_sheaf
-! leanprover-community/mathlib commit 13361559d66b84f80b6d5a1c4a26aa5054766725
+! leanprover-community/mathlib commit 5dc6092d09e5e489106865241986f7f2ad28d4c8
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -981,12 +981,12 @@ theorem toBasicOpen_surjective (f : R) : Function.Surjective (toBasicOpen R f) :
       (⟨f ^ (n + 1), n + 1, rfl⟩ : Submonoid.powers _)
   rw [to_basic_open_mk']
   -- Since the structure sheaf is a sheaf, we can show the desired equality locally.
-  -- Annoyingly, `sheaf.eq_of_locally_eq'` requires an open cover indexed by a *type*, so we need to
+  -- Annoyingly, `sheaf.eq_of_locally_eq` requires an open cover indexed by a *type*, so we need to
   -- coerce our finset `t` to a type first.
   let tt := ((t : Set (basic_open f)) : Type u)
   apply
-    TopCat.Sheaf.eq_of_locally_eq'.{u + 1, u} (structure_sheaf R) (fun i : tt => basic_open (h i))
-      (basic_open f) fun i : tt => iDh i
+    (structure_sheaf R).eq_of_locally_eq' (fun i : tt => basic_open (h i)) (basic_open f)
+      fun i : tt => iDh i
   · -- This feels a little redundant, since already have `ht_cover` as a hypothesis
     -- Unfortunately, `ht_cover` uses a bounded union over the set `t`, while here we have the
     -- Union indexed by the type `tt`, so we need some boilerplate to translate one to the other

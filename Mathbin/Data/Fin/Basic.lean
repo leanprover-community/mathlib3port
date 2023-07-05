@@ -517,71 +517,71 @@ theorem eq_succ_of_ne_zero {n : ℕ} {i : Fin (n + 1)} (hi : i ≠ 0) : ∃ j : 
 #align fin.eq_succ_of_ne_zero Fin.eq_succ_of_ne_zero
 -/
 
-#print Fin.rev /-
+#print Fin.revPerm /-
 /-- The antitone involution `fin n → fin n` given by `i ↦ n-(i+1)`. -/
-def rev : Equiv.Perm (Fin n) :=
+def revPerm : Equiv.Perm (Fin n) :=
   Involutive.toPerm (fun i => ⟨n - (i + 1), tsub_lt_self i.Pos (Nat.succ_pos _)⟩) fun i =>
     ext <| by
       rw [coe_mk, coe_mk, ← tsub_tsub, tsub_tsub_cancel_of_le (Nat.add_one_le_iff.2 i.is_lt),
         add_tsub_cancel_right]
-#align fin.rev Fin.rev
+#align fin.rev Fin.revPerm
 -/
 
-#print Fin.val_rev /-
+#print Fin.val_revPerm /-
 @[simp]
-theorem val_rev (i : Fin n) : (i.rev : ℕ) = n - (i + 1) :=
+theorem val_revPerm (i : Fin n) : (i.revPerm : ℕ) = n - (i + 1) :=
   rfl
-#align fin.coe_rev Fin.val_rev
+#align fin.coe_rev Fin.val_revPerm
 -/
 
-#print Fin.rev_involutive /-
-theorem rev_involutive : Involutive (@rev n) :=
+#print Fin.revPerm_involutive /-
+theorem revPerm_involutive : Involutive (@revPerm n) :=
   Involutive.toPerm_involutive _
-#align fin.rev_involutive Fin.rev_involutive
+#align fin.rev_involutive Fin.revPerm_involutive
 -/
 
-#print Fin.rev_injective /-
-theorem rev_injective : Injective (@rev n) :=
-  rev_involutive.Injective
-#align fin.rev_injective Fin.rev_injective
+#print Fin.revPerm_injective /-
+theorem revPerm_injective : Injective (@revPerm n) :=
+  revPerm_involutive.Injective
+#align fin.rev_injective Fin.revPerm_injective
 -/
 
-#print Fin.rev_surjective /-
-theorem rev_surjective : Surjective (@rev n) :=
-  rev_involutive.Surjective
-#align fin.rev_surjective Fin.rev_surjective
+#print Fin.revPerm_surjective /-
+theorem revPerm_surjective : Surjective (@revPerm n) :=
+  revPerm_involutive.Surjective
+#align fin.rev_surjective Fin.revPerm_surjective
 -/
 
-#print Fin.rev_bijective /-
-theorem rev_bijective : Bijective (@rev n) :=
-  rev_involutive.Bijective
-#align fin.rev_bijective Fin.rev_bijective
+#print Fin.revPerm_bijective /-
+theorem revPerm_bijective : Bijective (@revPerm n) :=
+  revPerm_involutive.Bijective
+#align fin.rev_bijective Fin.revPerm_bijective
 -/
 
-#print Fin.rev_inj /-
+#print Fin.revPerm_inj /-
 @[simp]
-theorem rev_inj {i j : Fin n} : i.rev = j.rev ↔ i = j :=
-  rev_injective.eq_iff
-#align fin.rev_inj Fin.rev_inj
+theorem revPerm_inj {i j : Fin n} : i.revPerm = j.revPerm ↔ i = j :=
+  revPerm_injective.eq_iff
+#align fin.rev_inj Fin.revPerm_inj
 -/
 
-#print Fin.rev_rev /-
+#print Fin.revPerm_revPerm /-
 @[simp]
-theorem rev_rev (i : Fin n) : i.rev.rev = i :=
-  rev_involutive _
-#align fin.rev_rev Fin.rev_rev
+theorem revPerm_revPerm (i : Fin n) : i.revPerm.revPerm = i :=
+  revPerm_involutive _
+#align fin.rev_rev Fin.revPerm_revPerm
 -/
 
-#print Fin.rev_symm /-
+#print Fin.revPerm_symm /-
 @[simp]
-theorem rev_symm : (@rev n).symm = rev :=
+theorem revPerm_symm : (@revPerm n).symm = revPerm :=
   rfl
-#align fin.rev_symm Fin.rev_symm
+#align fin.rev_symm Fin.revPerm_symm
 -/
 
-#print Fin.rev_eq /-
-theorem rev_eq {n a : ℕ} (i : Fin (n + 1)) (h : n = a + i) :
-    i.rev = ⟨a, Nat.lt_succ_iff.mpr (Nat.le.intro h.symm)⟩ :=
+#print Fin.revPerm_eq /-
+theorem revPerm_eq {n a : ℕ} (i : Fin (n + 1)) (h : n = a + i) :
+    i.revPerm = ⟨a, Nat.lt_succ_iff.mpr (Nat.le.intro h.symm)⟩ :=
   by
   ext
   dsimp
@@ -589,35 +589,35 @@ theorem rev_eq {n a : ℕ} (i : Fin (n + 1)) (h : n = a + i) :
     congr
     rw [h]
   rw [add_assoc, add_tsub_cancel_right]
-#align fin.rev_eq Fin.rev_eq
+#align fin.rev_eq Fin.revPerm_eq
 -/
 
-#print Fin.rev_le_rev /-
+#print Fin.revPerm_le_revPerm /-
 @[simp]
-theorem rev_le_rev {i j : Fin n} : i.rev ≤ j.rev ↔ j ≤ i := by
+theorem revPerm_le_revPerm {i j : Fin n} : i.revPerm ≤ j.revPerm ↔ j ≤ i := by
   simp only [le_iff_coe_le_coe, coe_rev, tsub_le_tsub_iff_left (Nat.add_one_le_iff.2 j.is_lt),
     add_le_add_iff_right]
-#align fin.rev_le_rev Fin.rev_le_rev
+#align fin.rev_le_rev Fin.revPerm_le_revPerm
 -/
 
-#print Fin.rev_lt_rev /-
+#print Fin.revPerm_lt_revPerm /-
 @[simp]
-theorem rev_lt_rev {i j : Fin n} : i.rev < j.rev ↔ j < i :=
-  lt_iff_lt_of_le_iff_le rev_le_rev
-#align fin.rev_lt_rev Fin.rev_lt_rev
+theorem revPerm_lt_revPerm {i j : Fin n} : i.revPerm < j.revPerm ↔ j < i :=
+  lt_iff_lt_of_le_iff_le revPerm_le_revPerm
+#align fin.rev_lt_rev Fin.revPerm_lt_revPerm
 -/
 
 #print Fin.revOrderIso /-
 /-- `fin.rev n` as an order-reversing isomorphism. -/
 @[simps apply toEquiv]
 def revOrderIso {n} : (Fin n)ᵒᵈ ≃o Fin n :=
-  ⟨OrderDual.ofDual.trans rev, fun i j => rev_le_rev⟩
+  ⟨OrderDual.ofDual.trans revPerm, fun i j => revPerm_le_revPerm⟩
 #align fin.rev_order_iso Fin.revOrderIso
 -/
 
 #print Fin.revOrderIso_symm_apply /-
 @[simp]
-theorem revOrderIso_symm_apply (i : Fin n) : revOrderIso.symm i = OrderDual.toDual i.rev :=
+theorem revOrderIso_symm_apply (i : Fin n) : revOrderIso.symm i = OrderDual.toDual i.revPerm :=
   rfl
 #align fin.rev_order_iso_symm_apply Fin.revOrderIso_symm_apply
 -/
@@ -2508,7 +2508,7 @@ theorem sub_one_lt_iff {n : ℕ} {k : Fin (n + 1)} : k - 1 < k ↔ 0 < k :=
 -/
 
 #print Fin.last_sub /-
-theorem last_sub (i : Fin (n + 1)) : last n - i = i.rev :=
+theorem last_sub (i : Fin (n + 1)) : last n - i = i.revPerm :=
   ext <| by rw [coe_sub_iff_le.2 i.le_last, coe_last, coe_rev, Nat.succ_sub_succ_eq_sub]
 #align fin.last_sub Fin.last_sub
 -/
