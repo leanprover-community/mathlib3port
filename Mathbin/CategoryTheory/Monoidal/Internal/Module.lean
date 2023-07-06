@@ -74,11 +74,14 @@ instance (A : Mon_ (ModuleCat.{u} R)) : Algebra R A.pt :=
       exact h₁.trans h₂.symm
     smul_def' := fun r a => (LinearMap.congr_fun A.one_mul (r ⊗ₜ a)).symm }
 
+#print ModuleCat.MonModuleEquivalenceAlgebra.algebraMap /-
 @[simp]
 theorem algebraMap (A : Mon_ (ModuleCat.{u} R)) (r : R) : algebraMap R A.pt r = A.one r :=
   rfl
 #align Module.Mon_Module_equivalence_Algebra.algebra_map ModuleCat.MonModuleEquivalenceAlgebra.algebraMap
+-/
 
+#print ModuleCat.MonModuleEquivalenceAlgebra.functor /-
 /-- Converting a monoid object in `Module R` to a bundled algebra.
 -/
 @[simps]
@@ -92,7 +95,9 @@ def functor : Mon_ (ModuleCat.{u} R) ⥤ AlgebraCat R
       map_mul' := fun x y => LinearMap.congr_fun f.MulHom (x ⊗ₜ y)
       commutes' := fun r => LinearMap.congr_fun f.OneHom r }
 #align Module.Mon_Module_equivalence_Algebra.functor ModuleCat.MonModuleEquivalenceAlgebra.functor
+-/
 
+#print ModuleCat.MonModuleEquivalenceAlgebra.inverseObj /-
 /-- Converting a bundled algebra to a monoid object in `Module R`.
 -/
 @[simps]
@@ -122,7 +127,9 @@ def inverseObj (A : AlgebraCat.{u} R) : Mon_ (ModuleCat.{u} R)
       monoidal_category.associator_hom_apply]
     simp only [LinearMap.mul'_apply, mul_assoc]
 #align Module.Mon_Module_equivalence_Algebra.inverse_obj ModuleCat.MonModuleEquivalenceAlgebra.inverseObj
+-/
 
+#print ModuleCat.MonModuleEquivalenceAlgebra.inverse /-
 /-- Converting a bundled algebra to a monoid object in `Module R`.
 -/
 @[simps]
@@ -134,11 +141,13 @@ def inverse : AlgebraCat.{u} R ⥤ Mon_ (ModuleCat.{u} R)
       one_hom' := LinearMap.ext f.commutes
       mul_hom' := TensorProduct.ext <| LinearMap.ext₂ <| map_mul f }
 #align Module.Mon_Module_equivalence_Algebra.inverse ModuleCat.MonModuleEquivalenceAlgebra.inverse
+-/
 
 end MonModuleEquivalenceAlgebra
 
 open MonModuleEquivalenceAlgebra
 
+#print ModuleCat.monModuleEquivalenceAlgebra /-
 /-- The category of internal monoid objects in `Module R`
 is equivalent to the category of "native" bundled `R`-algebras.
 -/
@@ -181,7 +190,9 @@ def monModuleEquivalenceAlgebra : Mon_ (ModuleCat.{u} R) ≌ AlgebraCat R
               commutes' := fun r => rfl } })
       (by intros; rfl)
 #align Module.Mon_Module_equivalence_Algebra ModuleCat.monModuleEquivalenceAlgebra
+-/
 
+#print ModuleCat.monModuleEquivalenceAlgebraForget /-
 /-- The equivalence `Mon_ (Module R) ≌ Algebra R`
 is naturally compatible with the forgetful functors to `Module R`.
 -/
@@ -200,6 +211,7 @@ def monModuleEquivalenceAlgebraForget :
             map_smul' := fun c x => rfl } })
     (by tidy)
 #align Module.Mon_Module_equivalence_Algebra_forget ModuleCat.monModuleEquivalenceAlgebraForget
+-/
 
 end ModuleCat
 
