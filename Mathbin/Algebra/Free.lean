@@ -360,7 +360,7 @@ theorem mul_map_seq (x y : FreeMagma α) :
 -/
 
 @[to_additive]
-instance : IsLawfulTraversable FreeMagma.{u} :=
+instance : LawfulTraversable FreeMagma.{u} :=
   {
     FreeMagma.lawfulMonad with
     id_traverse := fun α x =>
@@ -954,7 +954,7 @@ theorem mul_map_seq (x y : FreeSemigroup α) :
 -/
 
 @[to_additive]
-instance : IsLawfulTraversable FreeSemigroup.{u} :=
+instance : LawfulTraversable FreeSemigroup.{u} :=
   {
     FreeSemigroup.lawfulMonad with
     id_traverse := fun α x =>

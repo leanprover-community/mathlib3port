@@ -274,14 +274,14 @@ def sequence [Traversable t] : t (f α) → f (t α) :=
 
 end Functions
 
-#print IsLawfulTraversable /-
+#print LawfulTraversable /-
 /-- A traversable functor is lawful if its `traverse` satisfies a
 number of additional properties.  It must send `id.mk` to `id.mk`,
 send the composition of applicative functors to the composition of the
 `traverse` of each, send each function `f` to `λ x, f <$> x`, and
 satisfy a naturality condition with respect to applicative
 transformations. -/
-class IsLawfulTraversable (t : Type u → Type u) [Traversable t] extends LawfulFunctor t :
+class LawfulTraversable (t : Type u → Type u) [Traversable t] extends LawfulFunctor t :
     Type (u + 1) where
   id_traverse : ∀ {α} (x : t α), traverse id.mk x = x
   comp_traverse :
@@ -293,13 +293,13 @@ class IsLawfulTraversable (t : Type u → Type u) [Traversable t] extends Lawful
     ∀ {F G} [Applicative F] [Applicative G] [LawfulApplicative F] [LawfulApplicative G]
       (η : ApplicativeTransformation F G) {α β} (f : α → F β) (x : t α),
       η (traverse f x) = traverse (@η _ ∘ f) x
-#align is_lawful_traversable IsLawfulTraversable
+#align is_lawful_traversable LawfulTraversable
 -/
 
 instance : Traversable id :=
   ⟨fun _ _ _ _ => id⟩
 
-instance : IsLawfulTraversable id := by refine' { .. } <;> intros <;> rfl
+instance : LawfulTraversable id := by refine' { .. } <;> intros <;> rfl
 
 section
 

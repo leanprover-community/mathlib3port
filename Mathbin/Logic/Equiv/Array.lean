@@ -52,7 +52,7 @@ variable {n : ℕ}
 instance : Traversable (Array' n) :=
   @Equiv.traversable (flip Vector n) _ (fun α => Equiv.vectorEquivArray α n) _
 
-instance : IsLawfulTraversable (Array' n) :=
+instance : LawfulTraversable (Array' n) :=
   @Equiv.isLawfulTraversable (flip Vector n) _ (fun α => Equiv.vectorEquivArray α n) _ _
 
 end Array'

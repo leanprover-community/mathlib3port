@@ -42,7 +42,7 @@ def Std.DList.listEquivDList : List α ≃ Std.DList α := by
 instance : Traversable Std.DList :=
   Equiv.traversable Std.DList.listEquivDList
 
-instance : IsLawfulTraversable Std.DList :=
+instance : LawfulTraversable Std.DList :=
   Equiv.isLawfulTraversable Std.DList.listEquivDList
 
 instance {α} : Inhabited (Std.DList α) :=

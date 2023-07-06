@@ -237,7 +237,7 @@ def listEquivBuffer (α : Type _) : List α ≃ Buffer α := by
 instance : Traversable Buffer :=
   Equiv.traversable listEquivBuffer
 
-instance : IsLawfulTraversable Buffer :=
+instance : LawfulTraversable Buffer :=
   Equiv.isLawfulTraversable listEquivBuffer
 
 /-- A convenience wrapper around `read` that just fails if the index is out of bounds.

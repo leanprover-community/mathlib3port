@@ -395,7 +395,7 @@ unsafe def traversable_law_starter (rs : List simp_arg_type) := do
 #align tactic.interactive.traversable_law_starter tactic.interactive.traversable_law_starter
 
 unsafe def derive_lawful_traversable (pre : Option Name) : tactic Unit := do
-  let q(@IsLawfulTraversable $(f) $(d)) ← target
+  let q(@LawfulTraversable $(f) $(d)) ← target
   let n := f.get_app_fn.const_name
   let eqns ← get_equations_of (.str (with_prefix pre n) "traverse")
   let eqns' ← get_equations_of (.str (with_prefix pre n) "map")
@@ -414,7 +414,7 @@ unsafe def derive_lawful_traversable (pre : Option Name) : tactic Unit := do
             (refl <|> do
               let η ←
                 get_local `η <|> do
-                    let t ← mk_const `` IsLawfulTraversable.naturality >>= infer_type >>= pp
+                    let t ← mk_const `` LawfulTraversable.naturality >>= infer_type >>= pp
                     fail
                         f! "expecting an `applicative_transformation` called `η` in
                           naturality : {t}"
@@ -468,14 +468,14 @@ unsafe def lawful_functor_derive_handler : derive_handler :=
 #align tactic.interactive.lawful_functor_derive_handler tactic.interactive.lawful_functor_derive_handler
 
 unsafe def lawful_traversable_derive_handler' (nspace : Option Name := none) : derive_handler :=
-  higher_order_derive_handler `` IsLawfulTraversable (derive_lawful_traversable nspace)
+  higher_order_derive_handler `` LawfulTraversable (derive_lawful_traversable nspace)
     [traversable_derive_handler' nspace, lawful_functor_derive_handler' nspace] nspace fun n arg =>
     mk_mapp n [arg, none]
 #align tactic.interactive.lawful_traversable_derive_handler' tactic.interactive.lawful_traversable_derive_handler'
 
 @[derive_handler]
 unsafe def lawful_traversable_derive_handler : derive_handler :=
-  guard_class `` IsLawfulTraversable lawful_traversable_derive_handler'
+  guard_class `` LawfulTraversable lawful_traversable_derive_handler'
 #align tactic.interactive.lawful_traversable_derive_handler tactic.interactive.lawful_traversable_derive_handler
 
 end Tactic.Interactive

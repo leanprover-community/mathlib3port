@@ -864,7 +864,7 @@ instance : Traversable.{u} (flip Vector n)
   traverse := @Vector.traverse n
   map α β := @Vector.map.{u, u} α β n
 
-instance : IsLawfulTraversable.{u} (flip Vector n)
+instance : LawfulTraversable.{u} (flip Vector n)
     where
   id_traverse := @Vector.id_traverse n
   comp_traverse := @Vector.comp_traverse n

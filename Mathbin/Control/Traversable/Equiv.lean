@@ -137,7 +137,7 @@ parameter {t t' : Type u → Type u}
 
 parameter (eqv : ∀ α, t α ≃ t' α)
 
-variable [Traversable t] [IsLawfulTraversable t]
+variable [Traversable t] [LawfulTraversable t]
 
 variable {F G : Type u → Type u} [Applicative F] [Applicative G]
 
@@ -147,7 +147,7 @@ variable (η : ApplicativeTransformation F G)
 
 variable {α β γ : Type u}
 
-open IsLawfulTraversable Functor
+open LawfulTraversable Functor
 
 #print Equiv.id_traverse /-
 protected theorem id_traverse (x : t' α) : Equiv.traverse eqv id.mk x = x := by
@@ -181,7 +181,7 @@ protected theorem naturality (f : α → F β) (x : t' α) :
 /-- The fact that `t` is a lawful traversable functor carries over the
 equivalences to `t'`, with the traversable functor structure given by
 `equiv.traversable`. -/
-protected def isLawfulTraversable : @IsLawfulTraversable t' (Equiv.traversable eqv)
+protected def isLawfulTraversable : @LawfulTraversable t' (Equiv.traversable eqv)
     where
   to_lawfulFunctor := @Equiv.lawfulFunctor _ _ eqv _ _
   id_traverse := @Equiv.id_traverse _ _
@@ -203,7 +203,7 @@ protected def isLawfulTraversable' [_i : Traversable t']
     (h₂ :
       ∀ {F : Type u → Type u} [Applicative F],
         ∀ [LawfulApplicative F] {α β} (f : α → F β), traverse f = Equiv.traverse eqv f) :
-    IsLawfulTraversable t' :=
+    LawfulTraversable t' :=
   by
   -- we can't use the same approach as for `is_lawful_functor'` because
     -- h₂ needs a `is_lawful_applicative` assumption

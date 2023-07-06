@@ -122,7 +122,7 @@ instance (priority := 10) Bitraversable.traversable {α} : Traversable (t α)
 
 #print Bitraversable.isLawfulTraversable /-
 instance (priority := 10) Bitraversable.isLawfulTraversable [LawfulBitraversable t] {α} :
-    IsLawfulTraversable (t α) :=
+    LawfulTraversable (t α) :=
   by
   constructor <;> intros <;> simp [traverse, comp_tsnd, functor_norm]
   · rfl
@@ -133,7 +133,7 @@ instance (priority := 10) Bitraversable.isLawfulTraversable [LawfulBitraversable
 
 end
 
-open Bifunctor Traversable IsLawfulTraversable LawfulBitraversable
+open Bifunctor Traversable LawfulTraversable LawfulBitraversable
 
 open Function (bicompl bicompr)
 
@@ -151,7 +151,7 @@ def Bicompl.bitraverse {m} [Applicative m] {α β α' β'} (f : α → m β) (f'
 
 instance : Bitraversable (bicompl t F G) where bitraverse := @Bicompl.bitraverse t _ F G _ _
 
-instance [IsLawfulTraversable F] [IsLawfulTraversable G] [LawfulBitraversable t] :
+instance [LawfulTraversable F] [LawfulTraversable G] [LawfulBitraversable t] :
     LawfulBitraversable (bicompl t F G) :=
   by
   constructor <;> intros <;>
@@ -177,7 +177,7 @@ def Bicompr.bitraverse {m} [Applicative m] {α β α' β'} (f : α → m β) (f'
 
 instance : Bitraversable (bicompr F t) where bitraverse := @Bicompr.bitraverse t _ F _
 
-instance [IsLawfulTraversable F] [LawfulBitraversable t] : LawfulBitraversable (bicompr F t) :=
+instance [LawfulTraversable F] [LawfulBitraversable t] : LawfulBitraversable (bicompr F t) :=
   by
   constructor <;> intros <;> simp [bitraverse, Bicompr.bitraverse, bitraverse_id_id, functor_norm]
   · simp [bitraverse_eq_bimap_id', traverse_eq_map_id']; rfl

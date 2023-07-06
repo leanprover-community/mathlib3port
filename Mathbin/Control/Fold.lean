@@ -332,9 +332,9 @@ theorem foldl.unop_ofFreeMonoid (f : β → α → β) (xs : FreeMonoid α) (a :
 
 variable (m : Type u → Type u) [Monad m] [LawfulMonad m]
 
-variable {t : Type u → Type u} [Traversable t] [IsLawfulTraversable t]
+variable {t : Type u → Type u} [Traversable t] [LawfulTraversable t]
 
-open IsLawfulTraversable
+open LawfulTraversable
 
 #print Traversable.foldMap_hom /-
 theorem foldMap_hom [Monoid α] [Monoid β] (f : α →* β) (g : γ → α) (x : t γ) :
@@ -358,13 +358,13 @@ end ApplicativeTransformation
 
 section Equalities
 
-open IsLawfulTraversable
+open LawfulTraversable
 
 open List (cons)
 
 variable {α β γ : Type u}
 
-variable {t : Type u → Type u} [Traversable t] [IsLawfulTraversable t]
+variable {t : Type u → Type u} [Traversable t] [LawfulTraversable t]
 
 #print Traversable.foldl.ofFreeMonoid_comp_of /-
 @[simp]

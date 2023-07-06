@@ -66,7 +66,7 @@ theorem Option.naturality {α β} (f : α → F β) (x : Option α) :
 
 end Option
 
-instance : IsLawfulTraversable Option :=
+instance : LawfulTraversable Option :=
   { Option.lawfulMonad with
     id_traverse := @Option.id_traverse
     comp_traverse := @Option.comp_traverse
@@ -116,7 +116,7 @@ protected theorem naturality {α β} (f : α → F β) (x : List α) :
 
 open Nat
 
-instance : IsLawfulTraversable.{u} List :=
+instance : LawfulTraversable.{u} List :=
   { List.lawfulMonad with
     id_traverse := @List.id_traverse
     comp_traverse := @List.comp_traverse
@@ -232,7 +232,7 @@ protected theorem naturality {α β} (f : α → F β) (x : Sum σ α) :
 
 end Traverse
 
-instance {σ : Type u} : IsLawfulTraversable.{u} (Sum σ) :=
+instance {σ : Type u} : LawfulTraversable.{u} (Sum σ) :=
   { Sum.lawfulMonad with
     id_traverse := @Sum.id_traverse σ
     comp_traverse := @Sum.comp_traverse σ
