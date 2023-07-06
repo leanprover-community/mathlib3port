@@ -128,10 +128,10 @@ theorem NormalizeFinLt.castAdd {n m} {a : Fin n} {a' : ℕ} (h : NormalizeFinLt 
     NormalizeFinLt (n + m) (Fin.castAdd m a) a' := by simpa [normalize_fin_lt] using h
 #align tactic.norm_fin.normalize_fin_lt.cast_add Tactic.NormFin.NormalizeFinLt.castAdd
 
-theorem NormalizeFinLt.castSucc {n} {a : Fin n} {a' : ℕ} (h : NormalizeFinLt n a a') :
-    NormalizeFinLt (n + 1) (Fin.castSucc a) a' :=
+theorem NormalizeFinLt.castSuccEmb {n} {a : Fin n} {a' : ℕ} (h : NormalizeFinLt n a a') :
+    NormalizeFinLt (n + 1) (Fin.castSuccEmb a) a' :=
   NormalizeFinLt.castAdd h
-#align tactic.norm_fin.normalize_fin_lt.cast_succ Tactic.NormFin.NormalizeFinLt.castSucc
+#align tactic.norm_fin.normalize_fin_lt.cast_succ Tactic.NormFin.NormalizeFinLt.castSuccEmb
 
 theorem NormalizeFinLt.addNat {n m m'} (hm : m = m') {a : Fin n} {a' b : ℕ}
     (h : NormalizeFinLt n a a') (e : a' + m' = b) : NormalizeFinLt (n + m) (@Fin.addNat n m a) b :=
@@ -279,7 +279,7 @@ unsafe def match_fin_coe_fn (a : expr) : expr → Option match_fin_result
   | q(@Fin.castLE $(n) $(m) $(h)) => some (cast_le n m h a)
   | q(@Fin.castIso $(m) $(n) $(h)) => some (cast n m h a)
   | q(@Fin.castAdd $(n) $(m)) => some (cast_add n m a)
-  | q(@Fin.castSucc $(n)) => some (cast_succ n a)
+  | q(@Fin.castSuccEmb $(n)) => some (cast_succ n a)
   | q(@Fin.addNat $(n) $(m)) => some (add_nat n m a)
   | q(@Fin.natAdd $(n) $(m)) => some (nat_add n m a)
   | _ => none
@@ -360,7 +360,7 @@ unsafe def eval_fin_lt' (eval_fin : expr → eval_fin_m (expr × expr)) :
         pure (a', q(@NormalizeFinLt.castAdd).mk_app [n, m, a, a', pa])
       | match_fin_result.cast_succ n a => do
         let (a', pa) ← (eval_fin_lt' n a).reset
-        pure (a', q(@NormalizeFinLt.castSucc).mk_app [n, a, a', pa])
+        pure (a', q(@NormalizeFinLt.castSuccEmb).mk_app [n, a, a', pa])
       | match_fin_result.add_nat n m a => do
         let (a', pa) ← (eval_fin_lt' n a).reset
         let (m', pm) ← or_refl_conv norm_num.derive m

@@ -336,8 +336,8 @@ theorem succAbove_cycleRange {n : ℕ} (i j : Fin n) :
     · exact (Fin.succ_injective _).Ne hlt.ne
     · rw [Fin.lt_iff_val_lt_val]
       simpa [this] using hlt
-  · rw [HEq, Fin.cycleRange_self, Fin.succAbove_below, swap_apply_right, Fin.castSucc_zero]
-    · rw [Fin.castSucc_zero]; apply Fin.succ_pos
+  · rw [HEq, Fin.cycleRange_self, Fin.succAbove_below, swap_apply_right, Fin.castSuccEmb_zero]
+    · rw [Fin.castSuccEmb_zero]; apply Fin.succ_pos
   · rw [Fin.cycleRange_of_gt hgt, Fin.succAbove_above, swap_apply_of_ne_of_ne]
     · apply Fin.succ_ne_zero
     · apply (Fin.succ_injective _).Ne hgt.ne.symm

@@ -540,7 +540,7 @@ theorem init_def {n : ℕ} {α : Fin (n + 1) → Type _} {q : ∀ i, α i} :
 /-- Adding an element at the end of an `n`-tuple, to get an `n+1`-tuple. The name `snoc` comes from
 `cons` (i.e., adding an element to the left of a tuple) read in reverse order. -/
 def snoc (p : ∀ i : Fin n, α i.cast_succ) (x : α (last n)) (i : Fin (n + 1)) : α i :=
-  if h : i.val < n then cast (by rw [Fin.castSucc_castLT i h]) (p (castLT i h))
+  if h : i.val < n then cast (by rw [Fin.castSuccEmb_castLT i h]) (p (castLT i h))
   else cast (by rw [eq_last_of_not_lt h]) x
 #align fin.snoc Fin.snoc
 -/
@@ -549,29 +549,29 @@ def snoc (p : ∀ i : Fin n, α i.cast_succ) (x : α (last n)) (i : Fin (n + 1))
 @[simp]
 theorem init_snoc : init (snoc p x) = p := by
   ext i
-  have h' := Fin.castLT_castSucc i i.is_lt
+  have h' := Fin.castLT_castSuccEmb i i.is_lt
   simp [init, snoc, i.is_lt, h']
   convert cast_eq rfl (p i)
 #align fin.init_snoc Fin.init_snoc
 -/
 
-#print Fin.snoc_castSucc /-
+#print Fin.snoc_castSuccEmb /-
 @[simp]
-theorem snoc_castSucc : snoc p x i.cast_succ = p i :=
+theorem snoc_castSuccEmb : snoc p x i.cast_succ = p i :=
   by
   have : i.cast_succ.val < n := i.is_lt
-  have h' := Fin.castLT_castSucc i i.is_lt
+  have h' := Fin.castLT_castSuccEmb i i.is_lt
   simp [snoc, this, h']
   convert cast_eq rfl (p i)
-#align fin.snoc_cast_succ Fin.snoc_castSucc
+#align fin.snoc_cast_succ Fin.snoc_castSuccEmb
 -/
 
-#print Fin.snoc_comp_castSucc /-
+#print Fin.snoc_comp_castSuccEmb /-
 @[simp]
-theorem snoc_comp_castSucc {n : ℕ} {α : Sort _} {a : α} {f : Fin n → α} :
-    (snoc f a : Fin (n + 1) → α) ∘ castSucc = f :=
+theorem snoc_comp_castSuccEmb {n : ℕ} {α : Sort _} {a : α} {f : Fin n → α} :
+    (snoc f a : Fin (n + 1) → α) ∘ castSuccEmb = f :=
   funext fun i => by rw [Function.comp_apply, snoc_cast_succ]
-#align fin.snoc_comp_cast_succ Fin.snoc_comp_castSucc
+#align fin.snoc_comp_cast_succ Fin.snoc_comp_castSuccEmb
 -/
 
 #print Fin.snoc_last /-
@@ -596,7 +596,7 @@ theorem snoc_comp_nat_add {n m : ℕ} {α : Sort _} (f : Fin (m + n) → α) (a 
 
 #print Fin.snoc_cast_add /-
 @[simp]
-theorem snoc_cast_add {α : Fin (n + m + 1) → Type _} (f : ∀ i : Fin (n + m), α (castSucc i))
+theorem snoc_cast_add {α : Fin (n + m + 1) → Type _} (f : ∀ i : Fin (n + m), α (castSuccEmb i))
     (a : α (last (n + m))) (i : Fin n) : (snoc f a) (castAdd (m + 1) i) = f (castAdd m i) :=
   dif_pos _
 #align fin.snoc_cast_add Fin.snoc_cast_add
@@ -681,16 +681,16 @@ theorem init_update_last : init (update q (last n) z) = init q := by ext j;
 #align fin.init_update_last Fin.init_update_last
 -/
 
-#print Fin.init_update_castSucc /-
+#print Fin.init_update_castSuccEmb /-
 /-- Updating an element and taking the beginning commute. -/
 @[simp]
-theorem init_update_castSucc : init (update q i.cast_succ y) = update (init q) i y :=
+theorem init_update_castSuccEmb : init (update q i.cast_succ y) = update (init q) i y :=
   by
   ext j
   by_cases h : j = i
   · rw [h]; simp [init]
   · simp [init, h]
-#align fin.init_update_cast_succ Fin.init_update_castSucc
+#align fin.init_update_cast_succ Fin.init_update_castSuccEmb
 -/
 
 #print Fin.tail_init_eq_init_tail /-

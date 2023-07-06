@@ -106,7 +106,7 @@ instance fiberBundle : FiberBundle F (Bundle.Trivial B F)
   trivializationAt x := Bundle.Trivial.trivialization B F
   mem_baseSet_trivializationAt := mem_univ
   trivialization_mem_atlas x := mem_singleton _
-  totalSpaceₓ_mk_inducing b :=
+  totalSpace_mk_inducing b :=
     ⟨by
       have : (fun x : trivial B F b => x) = @id F := by ext x; rfl
       simp only [total_space.topological_space, induced_inf, induced_compose, Function.comp,
@@ -317,7 +317,7 @@ variable [∀ x, Zero (E₁ x)] [∀ x, Zero (E₂ x)] [∀ x : B, TopologicalSp
 /-- The product of two fiber bundles is a fiber bundle. -/
 noncomputable instance FiberBundle.prod : FiberBundle (F₁ × F₂) (E₁ ×ᵇ E₂)
     where
-  totalSpaceₓ_mk_inducing b :=
+  totalSpace_mk_inducing b :=
     by
     rw [(prod.inducing_diag F₁ E₁ F₂ E₂).inducing_iff]
     exact (total_space_mk_inducing F₁ E₁ b).prod_mk (total_space_mk_inducing F₂ E₂ b)
@@ -463,7 +463,7 @@ noncomputable def Trivialization.pullback (e : Trivialization F (π F E)) (f : K
 noncomputable instance FiberBundle.pullback [∀ x, TopologicalSpace (E x)] [FiberBundle F E]
     (f : K) : FiberBundle F ((f : B' → B) *ᵖ E)
     where
-  totalSpaceₓ_mk_inducing x :=
+  totalSpace_mk_inducing x :=
     inducing_of_inducing_compose (Pullback.continuous_totalSpaceMk F E)
       (Pullback.continuous_lift F E f) (totalSpace_mk_inducing F E (f x))
   trivializationAtlas :=

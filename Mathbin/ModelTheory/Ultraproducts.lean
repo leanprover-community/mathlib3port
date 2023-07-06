@@ -142,7 +142,7 @@ theorem boundedFormula_realize_cast {β : Type _} {n : ℕ} (φ : L.BoundedFormu
       by
       refine' fun m a => funext (Fin.reverseInduction _ fun i hi => _)
       · simp only [Fin.snoc_last]
-      · simp only [Fin.snoc_castSucc]
+      · simp only [Fin.snoc_castSuccEmb]
     simp only [← Fin.comp_snoc, ih, h']
     refine' ⟨fun h => _, fun h m => _⟩
     · contrapose! h

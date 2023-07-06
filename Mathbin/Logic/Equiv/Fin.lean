@@ -304,9 +304,9 @@ theorem finSuccEquiv'_last_apply {n : ℕ} {i : Fin (n + 1)} (h : i ≠ Fin.last
       Fin.castLT i (lt_of_le_of_ne (Fin.le_last _) (Fin.val_injective.ne_iff.2 h) : ↑i < n) :=
   by
   have h' : ↑i < n := lt_of_le_of_ne (Fin.le_last _) (fin.coe_injective.ne_iff.2 h)
-  conv_lhs => rw [← Fin.castSucc_castLT i h']
+  conv_lhs => rw [← Fin.castSuccEmb_castLT i h']
   convert finSuccEquiv'_below _
-  rw [Fin.castSucc_castLT i h']
+  rw [Fin.castSuccEmb_castLT i h']
   exact h'
 #align fin_succ_equiv'_last_apply finSuccEquiv'_last_apply
 -/
@@ -320,14 +320,14 @@ theorem finSuccEquiv'_ne_last_apply {i j : Fin (n + 1)} (hi : i ≠ Fin.last n) 
   rw [Fin.predAbove]
   have hi' : ↑i < n := lt_of_le_of_ne (Fin.le_last _) (fin.coe_injective.ne_iff.2 hi)
   rcases hj.lt_or_lt with (hij | hij)
-  · simp only [hij.not_lt, Fin.castSucc_castLT, not_false_iff, dif_neg]
+  · simp only [hij.not_lt, Fin.castSuccEmb_castLT, not_false_iff, dif_neg]
     convert finSuccEquiv'_below _
     · simp
     · exact hij
-  · simp only [hij, Fin.castSucc_castLT, dif_pos]
+  · simp only [hij, Fin.castSuccEmb_castLT, dif_pos]
     convert finSuccEquiv'_above _
     · simp
-    · simp [Fin.le_castSucc_iff, hij]
+    · simp [Fin.le_castSuccEmb_iff, hij]
 #align fin_succ_equiv'_ne_last_apply finSuccEquiv'_ne_last_apply
 -/
 
@@ -375,11 +375,11 @@ def finSuccEquivLast {n : ℕ} : Fin (n + 1) ≃ Option (Fin n) :=
 #align fin_succ_equiv_last finSuccEquivLast
 -/
 
-#print finSuccEquivLast_castSucc /-
+#print finSuccEquivLast_castSuccEmb /-
 @[simp]
-theorem finSuccEquivLast_castSucc {n : ℕ} (i : Fin n) : finSuccEquivLast i.cast_succ = some i :=
+theorem finSuccEquivLast_castSuccEmb {n : ℕ} (i : Fin n) : finSuccEquivLast i.cast_succ = some i :=
   finSuccEquiv'_below i.2
-#align fin_succ_equiv_last_cast_succ finSuccEquivLast_castSucc
+#align fin_succ_equiv_last_cast_succ finSuccEquivLast_castSuccEmb
 -/
 
 #print finSuccEquivLast_last /-

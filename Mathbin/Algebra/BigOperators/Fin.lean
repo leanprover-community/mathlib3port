@@ -103,16 +103,16 @@ theorem prod_univ_succ [CommMonoid β] {n : ℕ} (f : Fin (n + 1) → β) :
 #align fin.sum_univ_succ Fin.sum_univ_succ
 -/
 
-#print Fin.prod_univ_castSucc /-
+#print Fin.prod_univ_castSuccEmb /-
 /-- A product of a function `f : fin (n + 1) → β` over all `fin (n + 1)`
 is the product of `f (fin.last n)` plus the remaining product -/
 @[to_additive
       "A sum of a function `f : fin (n + 1) → β` over all `fin (n + 1)` is the sum of\n`f (fin.last n)` plus the remaining sum"]
-theorem prod_univ_castSucc [CommMonoid β] {n : ℕ} (f : Fin (n + 1) → β) :
+theorem prod_univ_castSuccEmb [CommMonoid β] {n : ℕ} (f : Fin (n + 1) → β) :
     ∏ i, f i = (∏ i : Fin n, f i.cast_succ) * f (last n) := by
   simpa [mul_comm] using prod_univ_succ_above f (last n)
-#align fin.prod_univ_cast_succ Fin.prod_univ_castSucc
-#align fin.sum_univ_cast_succ Fin.sum_univ_castSucc
+#align fin.prod_univ_cast_succ Fin.prod_univ_castSuccEmb
+#align fin.sum_univ_cast_succ Fin.sum_univ_castSuccEmb
 -/
 
 #print Fin.prod_cons /-
@@ -316,9 +316,9 @@ theorem partialProd_right_inv {G : Type _} [Group G] (f : Fin n → G) (i : Fin 
   induction' i with i hi generalizing hn
   · simp [-Fin.succ_mk, partial_prod_succ]
   · specialize hi (lt_trans (Nat.lt_succ_self i) hn)
-    simp only [Fin.coe_eq_castSucc, Fin.succ_mk, Fin.castSucc_mk] at hi ⊢
+    simp only [Fin.coe_eq_castSuccEmb, Fin.succ_mk, Fin.castSuccEmb_mk] at hi ⊢
     rw [← Fin.succ_mk _ _ (lt_trans (Nat.lt_succ_self _) hn), ← Fin.succ_mk]
-    simp only [partial_prod_succ, mul_inv_rev, Fin.castSucc_mk]
+    simp only [partial_prod_succ, mul_inv_rev, Fin.castSuccEmb_mk]
     assoc_rw [hi, inv_mul_cancel_left]
 #align fin.partial_prod_right_inv Fin.partialProd_right_inv
 #align fin.partial_sum_right_neg Fin.partialSum_right_neg
@@ -371,7 +371,7 @@ def finFunctionFinEquiv {m n : ℕ} : (Fin n → Fin m) ≃ Fin (m ^ n) :=
         · simp
         cases m
         · exact isEmptyElim (f <| Fin.last _)
-        simp_rw [Fin.sum_univ_castSucc, Fin.coe_castSucc, Fin.val_last]
+        simp_rw [Fin.sum_univ_castSuccEmb, Fin.coe_castSuccEmb, Fin.val_last]
         refine' (add_lt_add_of_lt_of_le (ih _) <| mul_le_mul_right' (Fin.is_le _) _).trans_eq _
         rw [← one_add_mul, add_comm, pow_succ]⟩)
     (fun a b =>
@@ -421,7 +421,7 @@ def finPiFinEquiv {m : ℕ} {n : Fin m → ℕ} : (∀ i : Fin m, Fin (n i)) ≃
         by
         induction' m with m ih generalizing f
         · simp
-        rw [Fin.prod_univ_castSucc, Fin.sum_univ_castSucc]
+        rw [Fin.prod_univ_castSuccEmb, Fin.sum_univ_castSuccEmb]
         suffices
           ∀ (n : Fin m → ℕ) (nn : ℕ) (f : ∀ i : Fin m, Fin (n i)) (fn : Fin nn),
             ∑ i : Fin m, ↑(f i) * ∏ j : Fin i, n (Fin.castLE i.prop.le j) + ↑fn * ∏ j, n j <
@@ -430,7 +430,7 @@ def finPiFinEquiv {m : ℕ} {n : Fin m → ℕ} : (∀ i : Fin m, Fin (n i)) ≃
           replace this := this (Fin.init n) (n (Fin.last _)) (Fin.init f) (f (Fin.last _))
           rw [← Fin.snoc_init_self f]
           simp (config := { singlePass := true }) only [← Fin.snoc_init_self n]
-          simp_rw [Fin.snoc_castSucc, Fin.init_snoc, Fin.snoc_last, Fin.snoc_init_self n]
+          simp_rw [Fin.snoc_castSuccEmb, Fin.init_snoc, Fin.snoc_last, Fin.snoc_init_self n]
           exact this
         intro n nn f fn
         cases nn

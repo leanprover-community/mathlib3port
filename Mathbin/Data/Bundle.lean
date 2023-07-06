@@ -50,6 +50,7 @@ namespace Bundle
 
 variable {B F : Type _} (E : B → Type _)
 
+#print Bundle.TotalSpace /-
 /-- `bundle.total_space E` is the total space of the bundle. It consists of pairs
 `(proj : B, snd : E proj)`.
 -/
@@ -57,7 +58,8 @@ variable {B F : Type _} (E : B → Type _)
 structure TotalSpace (F : Type _) (E : B → Type _) where
   proj : B
   snd : E proj
-#align bundle.total_space Bundle.TotalSpaceₓ
+#align bundle.total_space Bundle.TotalSpace
+-/
 
 instance [Inhabited B] [Inhabited (E default)] : Inhabited (TotalSpace F E) :=
   ⟨⟨default, default⟩⟩
@@ -86,16 +88,16 @@ instance {x : B} : CoeTC (E x) (TotalSpace F E) :=
 @[simp]
 theorem TotalSpace.coe_proj (x : B) (v : E x) : (v : TotalSpace F E).proj = x :=
   rfl
-#align bundle.total_space.coe_proj Bundle.TotalSpaceₓ.coe_proj
+#align bundle.total_space.coe_proj Bundle.TotalSpace.coe_proj
 
 @[simp]
 theorem TotalSpace.coe_snd {x : B} {y : E x} : (y : TotalSpace F E).snd = y :=
   rfl
-#align bundle.total_space.coe_snd Bundle.TotalSpaceₓ.coe_snd
+#align bundle.total_space.coe_snd Bundle.TotalSpace.coe_snd
 
 theorem TotalSpace.coe_eq_mk {x : B} (v : E x) : (v : TotalSpace F E) = TotalSpace.mk x v :=
   rfl
-#align bundle.total_space.coe_eq_mk Bundle.TotalSpaceₓ.coe_eq_mk
+#align bundle.total_space.coe_eq_mk Bundle.TotalSpace.coe_eq_mk
 
 #print Bundle.TotalSpace.eta /-
 theorem TotalSpace.eta (z : TotalSpace F E) : TotalSpace.mk z.proj z.2 = z := by cases z <;> rfl
@@ -112,11 +114,14 @@ def Trivial (B : Type _) (F : Type _) : B → Type _ := fun _ => F
 #align bundle.trivial Bundle.Trivial
 -/
 
+#print Bundle.TotalSpace.trivialSnd /-
 /-- The trivial bundle, unlike other bundles, has a canonical projection on the fiber. -/
 def TotalSpace.trivialSnd (B : Type _) (F : Type _) : TotalSpace F (Bundle.Trivial B F) → F :=
   TotalSpace.snd
-#align bundle.total_space.trivial_snd Bundle.TotalSpaceₓ.trivialSnd
+#align bundle.total_space.trivial_snd Bundle.TotalSpace.trivialSnd
+-/
 
+#print Bundle.TotalSpace.toProd /-
 /-- A trivial bundle is equivalent to the product `B × F`. -/
 @[simps (config := { attrs := [`simp, `mfld_simps] })]
 def TotalSpace.toProd (B F : Type _) : (TotalSpace F fun _ : B => F) ≃ B × F
@@ -125,7 +130,8 @@ def TotalSpace.toProd (B F : Type _) : (TotalSpace F fun _ : B => F) ≃ B × F
   invFun x := ⟨x.1, x.2⟩
   left_inv := fun ⟨_, _⟩ => rfl
   right_inv := fun ⟨_, _⟩ => rfl
-#align bundle.total_space.to_prod Bundle.TotalSpaceₓ.toProd
+#align bundle.total_space.to_prod Bundle.TotalSpace.toProd
+-/
 
 section Pullback
 
@@ -170,21 +176,17 @@ end Pullback
 
 section FiberStructures
 
-#print Bundle.coe_snd_map_apply /-
 @[simp]
 theorem coe_snd_map_apply [∀ x, Add (E x)] (x : B) (v w : E x) :
     (↑(v + w) : TotalSpace F E).snd = (v : TotalSpace F E).snd + (w : TotalSpace F E).snd :=
   rfl
 #align bundle.coe_snd_map_apply Bundle.coe_snd_map_apply
--/
 
-#print Bundle.coe_snd_map_smul /-
 @[simp]
 theorem coe_snd_map_smul {R} [∀ x, SMul R (E x)] (x : B) (r : R) (v : E x) :
     (↑(r • v) : TotalSpace F E).snd = r • (v : TotalSpace F E).snd :=
   rfl
 #align bundle.coe_snd_map_smul Bundle.coe_snd_map_smul
--/
 
 end FiberStructures
 

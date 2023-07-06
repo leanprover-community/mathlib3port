@@ -124,7 +124,7 @@ theorem actionDiagonalSucc_hom_apply {G : Type u} [Group G] {n : ℕ} (f : Fin (
         tensor_hom, Equiv.piFinSuccAboveEquiv_symm_apply, tensor_apply, types_id_apply, tensor_rho,
         MonoidHom.one_apply, End.one_def, hn fun j : Fin (n + 1) => f j.succ, Fin.insertNth_zero']
       refine' Fin.cases (Fin.cons_zero _ _) (fun i => _) x
-      · simp only [Fin.cons_succ, mul_left_inj, inv_inj, Fin.castSucc_fin_succ]
+      · simp only [Fin.cons_succ, mul_left_inj, inv_inj, Fin.castSuccEmb_fin_succ]
 #align group_cohomology.resolution.Action_diagonal_succ_hom_apply GroupCohomology.Resolution.actionDiagonalSucc_hom_apply
 -/
 

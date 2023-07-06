@@ -484,7 +484,7 @@ theorem top_eraseTop (s : CompositionSeries X) :
     congr_arg s
       (by
         ext
-        simp only [erase_top_length, Fin.val_last, Fin.coe_castSucc, Fin.coe_ofNat_eq_mod,
+        simp only [erase_top_length, Fin.val_last, Fin.coe_castSuccEmb, Fin.coe_ofNat_eq_mod,
           Fin.val_mk, coe_coe])
 #align composition_series.top_erase_top CompositionSeries.top_eraseTop
 -/
@@ -558,7 +558,7 @@ variable {α : Type _} {m n : ℕ} (a : Fin m.succ → α) (b : Fin n.succ → �
 
 #print CompositionSeries.append_castAdd_aux /-
 theorem append_castAdd_aux (i : Fin m) :
-    Matrix.vecAppend (Nat.add_succ _ _).symm (a ∘ Fin.castSucc) b (Fin.castAdd n i).cast_succ =
+    Matrix.vecAppend (Nat.add_succ _ _).symm (a ∘ Fin.castSuccEmb) b (Fin.castAdd n i).cast_succ =
       a i.cast_succ :=
   by cases i; simp [Matrix.vecAppend_eq_ite, *]
 #align composition_series.append_cast_add_aux CompositionSeries.append_castAdd_aux
@@ -566,11 +566,11 @@ theorem append_castAdd_aux (i : Fin m) :
 
 #print CompositionSeries.append_succ_castAdd_aux /-
 theorem append_succ_castAdd_aux (i : Fin m) (h : a (Fin.last _) = b 0) :
-    Matrix.vecAppend (Nat.add_succ _ _).symm (a ∘ Fin.castSucc) b (Fin.castAdd n i).succ =
+    Matrix.vecAppend (Nat.add_succ _ _).symm (a ∘ Fin.castSuccEmb) b (Fin.castAdd n i).succ =
       a i.succ :=
   by
   cases' i with i hi
-  simp only [Matrix.vecAppend_eq_ite, hi, Fin.succ_mk, Function.comp_apply, Fin.castSucc_mk,
+  simp only [Matrix.vecAppend_eq_ite, hi, Fin.succ_mk, Function.comp_apply, Fin.castSuccEmb_mk,
     Fin.val_mk, Fin.castAdd_mk]
   split_ifs
   · rfl
@@ -584,18 +584,18 @@ theorem append_succ_castAdd_aux (i : Fin m) (h : a (Fin.last _) = b 0) :
 
 #print CompositionSeries.append_natAdd_aux /-
 theorem append_natAdd_aux (i : Fin n) :
-    Matrix.vecAppend (Nat.add_succ _ _).symm (a ∘ Fin.castSucc) b (Fin.natAdd m i).cast_succ =
+    Matrix.vecAppend (Nat.add_succ _ _).symm (a ∘ Fin.castSuccEmb) b (Fin.natAdd m i).cast_succ =
       b i.cast_succ :=
   by
   cases i
   simp only [Matrix.vecAppend_eq_ite, Nat.not_lt_zero, Fin.natAdd_mk, add_lt_iff_neg_left,
-    add_tsub_cancel_left, dif_neg, Fin.castSucc_mk, not_false_iff, Fin.val_mk]
+    add_tsub_cancel_left, dif_neg, Fin.castSuccEmb_mk, not_false_iff, Fin.val_mk]
 #align composition_series.append_nat_add_aux CompositionSeries.append_natAdd_aux
 -/
 
 #print CompositionSeries.append_succ_natAdd_aux /-
 theorem append_succ_natAdd_aux (i : Fin n) :
-    Matrix.vecAppend (Nat.add_succ _ _).symm (a ∘ Fin.castSucc) b (Fin.natAdd m i).succ =
+    Matrix.vecAppend (Nat.add_succ _ _).symm (a ∘ Fin.castSuccEmb) b (Fin.natAdd m i).succ =
       b i.succ :=
   by
   cases' i with i hi
@@ -613,7 +613,7 @@ the least element of `s₁` is the maximum element of `s₂`. -/
 def append (s₁ s₂ : CompositionSeries X) (h : s₁.top = s₂.bot) : CompositionSeries X
     where
   length := s₁.length + s₂.length
-  series := Matrix.vecAppend (Nat.add_succ _ _).symm (s₁ ∘ Fin.castSucc) s₂
+  series := Matrix.vecAppend (Nat.add_succ _ _).symm (s₁ ∘ Fin.castSuccEmb) s₂
   step' i := by
     refine' Fin.addCases _ _ i
     · intro i
@@ -627,7 +627,7 @@ def append (s₁ s₂ : CompositionSeries X) (h : s₁.top = s₂.bot) : Composi
 
 #print CompositionSeries.coe_append /-
 theorem coe_append (s₁ s₂ : CompositionSeries X) (h) :
-    ⇑(s₁.append s₂ h) = Matrix.vecAppend (Nat.add_succ _ _).symm (s₁ ∘ Fin.castSucc) s₂ :=
+    ⇑(s₁.append s₂ h) = Matrix.vecAppend (Nat.add_succ _ _).symm (s₁ ∘ Fin.castSuccEmb) s₂ :=
   rfl
 #align composition_series.coe_append CompositionSeries.coe_append
 -/
@@ -673,9 +673,9 @@ def snoc (s : CompositionSeries X) (x : X) (hsat : IsMaximal s.top x) : Composit
   series := Fin.snoc s x
   step' i := by
     refine' Fin.lastCases _ _ i
-    · rwa [Fin.snoc_castSucc, Fin.succ_last, Fin.snoc_last, ← top]
+    · rwa [Fin.snoc_castSuccEmb, Fin.succ_last, Fin.snoc_last, ← top]
     · intro i
-      rw [Fin.snoc_castSucc, ← Fin.castSucc_fin_succ, Fin.snoc_castSucc]
+      rw [Fin.snoc_castSuccEmb, ← Fin.castSuccEmb_fin_succ, Fin.snoc_castSuccEmb]
       exact s.step _
 #align composition_series.snoc CompositionSeries.snoc
 -/
@@ -696,18 +696,18 @@ theorem snoc_last (s : CompositionSeries X) (x : X) (hsat : IsMaximal s.top x) :
 #align composition_series.snoc_last CompositionSeries.snoc_last
 -/
 
-#print CompositionSeries.snoc_castSucc /-
+#print CompositionSeries.snoc_castSuccEmb /-
 @[simp]
-theorem snoc_castSucc (s : CompositionSeries X) (x : X) (hsat : IsMaximal s.top x)
+theorem snoc_castSuccEmb (s : CompositionSeries X) (x : X) (hsat : IsMaximal s.top x)
     (i : Fin (s.length + 1)) : snoc s x hsat i.cast_succ = s i :=
-  Fin.snoc_castSucc _ _ _
-#align composition_series.snoc_cast_succ CompositionSeries.snoc_castSucc
+  Fin.snoc_castSuccEmb _ _ _
+#align composition_series.snoc_cast_succ CompositionSeries.snoc_castSuccEmb
 -/
 
 #print CompositionSeries.bot_snoc /-
 @[simp]
 theorem bot_snoc (s : CompositionSeries X) (x : X) (hsat : IsMaximal s.top x) :
-    (snoc s x hsat).bot = s.bot := by rw [bot, bot, ← snoc_cast_succ s _ _ 0, Fin.castSucc_zero]
+    (snoc s x hsat).bot = s.bot := by rw [bot, bot, ← snoc_cast_succ s _ _ 0, Fin.castSuccEmb_zero]
 #align composition_series.bot_snoc CompositionSeries.bot_snoc
 -/
 
@@ -818,7 +818,7 @@ protected theorem snoc {s₁ s₂ : CompositionSeries X} {x₁ x₂ : X} {hsat�
     refine' Fin.lastCases _ _ i
     · simpa [top] using htop
     · intro i
-      simpa [Fin.succ_castSucc] using hequiv.some_spec i⟩
+      simpa [Fin.succ_castSuccEmb] using hequiv.some_spec i⟩
 #align composition_series.equivalent.snoc CompositionSeries.Equivalent.snoc
 -/
 
@@ -835,26 +835,27 @@ theorem snoc_snoc_swap {s : CompositionSeries X} {x₁ x₂ y₁ y₂ : X} {hsat
     (hr₂ : Iso (x₁, y₁) (s.top, x₂)) :
     Equivalent (snoc (snoc s x₁ hsat₁) y₁ hsaty₁) (snoc (snoc s x₂ hsat₂) y₂ hsaty₂) :=
   let e : Fin (s.length + 1 + 1) ≃ Fin (s.length + 1 + 1) :=
-    Equiv.swap (Fin.last _) (Fin.castSucc (Fin.last _))
+    Equiv.swap (Fin.last _) (Fin.castSuccEmb (Fin.last _))
   have h1 : ∀ {i : Fin s.length}, i.cast_succ.cast_succ ≠ (Fin.last _).cast_succ := fun _ =>
-    ne_of_lt (by simp [Fin.castSucc_lt_last])
+    ne_of_lt (by simp [Fin.castSuccEmb_lt_last])
   have h2 : ∀ {i : Fin s.length}, i.cast_succ.cast_succ ≠ Fin.last _ := fun _ =>
-    ne_of_lt (by simp [Fin.castSucc_lt_last])
+    ne_of_lt (by simp [Fin.castSuccEmb_lt_last])
   ⟨e, by
     intro i
     dsimp only [e]
     refine' Fin.lastCases _ (fun i => _) i
     · erw [Equiv.swap_apply_left, snoc_cast_succ, snoc_last, Fin.succ_last, snoc_last,
-        snoc_cast_succ, snoc_cast_succ, Fin.succ_castSucc, snoc_cast_succ, Fin.succ_last, snoc_last]
+        snoc_cast_succ, snoc_cast_succ, Fin.succ_castSuccEmb, snoc_cast_succ, Fin.succ_last,
+        snoc_last]
       exact hr₂
     · refine' Fin.lastCases _ (fun i => _) i
       · erw [Equiv.swap_apply_right, snoc_cast_succ, snoc_cast_succ, snoc_cast_succ,
-          Fin.succ_castSucc, snoc_cast_succ, Fin.succ_last, snoc_last, snoc_last, Fin.succ_last,
+          Fin.succ_castSuccEmb, snoc_cast_succ, Fin.succ_last, snoc_last, snoc_last, Fin.succ_last,
           snoc_last]
         exact hr₁
       · erw [Equiv.swap_apply_of_ne_of_ne h2 h1, snoc_cast_succ, snoc_cast_succ, snoc_cast_succ,
-          snoc_cast_succ, Fin.succ_castSucc, snoc_cast_succ, Fin.succ_castSucc, snoc_cast_succ,
-          snoc_cast_succ, snoc_cast_succ]
+          snoc_cast_succ, Fin.succ_castSuccEmb, snoc_cast_succ, Fin.succ_castSuccEmb,
+          snoc_cast_succ, snoc_cast_succ, snoc_cast_succ]
         exact (s.step i).iso_refl⟩
 #align composition_series.equivalent.snoc_snoc_swap CompositionSeries.Equivalent.snoc_snoc_swap
 -/

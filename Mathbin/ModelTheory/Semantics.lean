@@ -504,7 +504,7 @@ theorem realize_liftAt {n n' m : ℕ} {φ : L.BoundedFormula α n} {v : α → M
       · rw [if_neg h]
         refine' (congr rfl (ext _)).trans (snoc_last _ _)
         simp
-    · simp only [Function.comp_apply, Fin.snoc_castSucc]
+    · simp only [Function.comp_apply, Fin.snoc_castSuccEmb]
       refine' (congr rfl (ext _)).trans (snoc_cast_succ _ _ _)
       simp only [cast_refl, coe_cast_succ, OrderIso.coe_refl, id.def]
       split_ifs <;> simp
@@ -515,7 +515,7 @@ theorem realize_liftAt {n n' m : ℕ} {φ : L.BoundedFormula α n} {v : α → M
 theorem realize_liftAt_one {n m : ℕ} {φ : L.BoundedFormula α n} {v : α → M} {xs : Fin (n + 1) → M}
     (hmn : m ≤ n) :
     (φ.liftAt 1 m).realize v xs ↔
-      φ.realize v (xs ∘ fun i => if ↑i < m then castSucc i else i.succ) :=
+      φ.realize v (xs ∘ fun i => if ↑i < m then castSuccEmb i else i.succ) :=
   by simp_rw [realize_lift_at (add_le_add_right hmn 1), cast_succ, add_nat_one]
 #align first_order.language.bounded_formula.realize_lift_at_one FirstOrder.Language.BoundedFormula.realize_liftAt_one
 -/
@@ -523,7 +523,7 @@ theorem realize_liftAt_one {n m : ℕ} {φ : L.BoundedFormula α n} {v : α → 
 #print FirstOrder.Language.BoundedFormula.realize_liftAt_one_self /-
 @[simp]
 theorem realize_liftAt_one_self {n : ℕ} {φ : L.BoundedFormula α n} {v : α → M}
-    {xs : Fin (n + 1) → M} : (φ.liftAt 1 n).realize v xs ↔ φ.realize v (xs ∘ castSucc) :=
+    {xs : Fin (n + 1) → M} : (φ.liftAt 1 n).realize v xs ↔ φ.realize v (xs ∘ castSuccEmb) :=
   by
   rw [realize_lift_at_one (refl n), iff_eq_eq]
   refine' congr rfl (congr rfl (funext fun i => _))

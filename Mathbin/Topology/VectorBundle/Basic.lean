@@ -809,7 +809,7 @@ theorem mem_trivChange_source (i j : ι) (p : B × F) :
 #print VectorBundleCore.toTopologicalSpace /-
 /-- Topological structure on the total space of a vector bundle created from core, designed so
 that all the local trivialization are continuous. -/
-instance toTopologicalSpace : TopologicalSpace Z.TotalSpaceₓ :=
+instance toTopologicalSpace : TopologicalSpace Z.TotalSpace :=
   Z.toFiberBundleCore.toTopologicalSpace
 #align vector_bundle_core.to_topological_space VectorBundleCore.toTopologicalSpace
 -/
@@ -847,7 +847,7 @@ variable (i j : ι)
 
 #print VectorBundleCore.mem_localTriv_source /-
 @[simp, mfld_simps]
-theorem mem_localTriv_source (p : Z.TotalSpaceₓ) : p ∈ (Z.localTriv i).source ↔ p.1 ∈ Z.baseSet i :=
+theorem mem_localTriv_source (p : Z.TotalSpace) : p ∈ (Z.localTriv i).source ↔ p.1 ∈ Z.baseSet i :=
   by dsimp [VectorBundleCore.Fiber] <;> exact Iff.rfl
 #align vector_bundle_core.mem_local_triv_source VectorBundleCore.mem_localTriv_source
 -/
@@ -861,7 +861,7 @@ theorem baseSet_at : Z.baseSet i = (Z.localTriv i).baseSet :=
 
 #print VectorBundleCore.localTriv_apply /-
 @[simp, mfld_simps]
-theorem localTriv_apply (p : Z.TotalSpaceₓ) :
+theorem localTriv_apply (p : Z.TotalSpace) :
     (Z.localTriv i) p = ⟨p.1, Z.coordChange (Z.indexAt p.1) i p.1 p.2⟩ :=
   rfl
 #align vector_bundle_core.local_triv_apply VectorBundleCore.localTriv_apply
@@ -918,14 +918,14 @@ theorem localTrivAt_def : Z.localTriv (Z.indexAt b) = Z.localTrivAt b :=
 
 #print VectorBundleCore.mem_source_at /-
 @[simp, mfld_simps]
-theorem mem_source_at : (⟨b, a⟩ : Z.TotalSpaceₓ) ∈ (Z.localTrivAt b).source := by
+theorem mem_source_at : (⟨b, a⟩ : Z.TotalSpace) ∈ (Z.localTrivAt b).source := by
   rw [local_triv_at, mem_local_triv_source]; exact Z.mem_base_set_at b
 #align vector_bundle_core.mem_source_at VectorBundleCore.mem_source_at
 -/
 
 #print VectorBundleCore.localTrivAt_apply /-
 @[simp, mfld_simps]
-theorem localTrivAt_apply (p : Z.TotalSpaceₓ) : (Z.localTrivAt p.1) p = ⟨p.1, p.2⟩ :=
+theorem localTrivAt_apply (p : Z.TotalSpace) : (Z.localTrivAt p.1) p = ⟨p.1, p.2⟩ :=
   FiberBundleCore.localTrivAt_apply Z p
 #align vector_bundle_core.local_triv_at_apply VectorBundleCore.localTrivAt_apply
 -/
@@ -1070,7 +1070,7 @@ structure VectorPrebundle where
       ∃ f : B → F →L[R] F,
         ContinuousOn f (e.baseSet ∩ e'.baseSet) ∧
           ∀ (b : B) (hb : b ∈ e.baseSet ∩ e'.baseSet) (v : F), f b v = (e' ⟨b, e.symm b v⟩).2
-  totalSpaceₓ_mk_inducing : ∀ b : B, Inducing (pretrivialization_at b ∘ TotalSpace.mk b)
+  totalSpace_mk_inducing : ∀ b : B, Inducing (pretrivialization_at b ∘ TotalSpace.mk b)
 #align vector_prebundle VectorPrebundle
 -/
 

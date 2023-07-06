@@ -255,7 +255,7 @@ def Bundle.ContinuousLinearMap.vectorPrebundle :
       ⟨continuous_linear_map_coord_change σ e₁ e₁' e₂ e₂',
         continuous_on_continuous_linear_map_coord_change,
         continuous_linear_map_coord_change_apply σ e₁ e₁' e₂ e₂'⟩
-  totalSpaceₓ_mk_inducing := by
+  totalSpace_mk_inducing := by
     intro b
     let L₁ : E₁ b ≃L[𝕜₁] F₁ :=
       (trivialization_at F₁ E₁ b).continuousLinearEquivAt 𝕜₁ b

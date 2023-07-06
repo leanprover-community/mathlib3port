@@ -500,9 +500,9 @@ theorem scanl_get (i : Fin n) :
     simpa only [scanl_singleton, i0, nth_zero]
   · rw [← cons_head_tail v, scanl_cons, nth_cons_succ]
     refine' Fin.cases _ _ i
-    · simp only [nth_zero, scanl_head, Fin.castSucc_zero, cons_head]
+    · simp only [nth_zero, scanl_head, Fin.castSuccEmb_zero, cons_head]
     · intro i'
-      simp only [hn, Fin.castSucc_fin_succ, nth_cons_succ]
+      simp only [hn, Fin.castSuccEmb_fin_succ, nth_cons_succ]
 #align vector.scanl_nth Vector.scanl_get
 -/
 
@@ -698,7 +698,7 @@ theorem insertNth_comm (a b : α) (i j : Fin (n + 1)) (h : i ≤ j) :
       (v.insertNth a i).insertNth b j.succ = (v.insertNth b j).insertNth a i.cast_succ
   | ⟨l, hl⟩ => by
     refine' Subtype.eq _
-    simp only [insert_nth_val, Fin.val_succ, Fin.castSucc, Fin.val_eq_coe, Fin.coe_castAdd]
+    simp only [insert_nth_val, Fin.val_succ, Fin.castSuccEmb, Fin.val_eq_coe, Fin.coe_castAdd]
     apply List.insertNth_comm
     · assumption
     · rw [hl]; exact Nat.le_of_succ_le_succ j.2

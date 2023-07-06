@@ -1045,11 +1045,12 @@ theorem Fin.image_succ_univ (n : ℕ) : (univ : Finset (Fin n)).image Fin.succ =
 #align fin.image_succ_univ Fin.image_succ_univ
 -/
 
-#print Fin.image_castSucc /-
+#print Fin.image_castSuccEmb /-
 @[simp]
-theorem Fin.image_castSucc (n : ℕ) : (univ : Finset (Fin n)).image Fin.castSucc = {Fin.last n}ᶜ :=
-  by rw [← Fin.succAbove_last, Fin.image_succAbove_univ]
-#align fin.image_cast_succ Fin.image_castSucc
+theorem Fin.image_castSuccEmb (n : ℕ) :
+    (univ : Finset (Fin n)).image Fin.castSuccEmb = {Fin.last n}ᶜ := by
+  rw [← Fin.succAbove_last, Fin.image_succAbove_univ]
+#align fin.image_cast_succ Fin.image_castSuccEmb
 -/
 
 #print Fin.univ_succ /-
@@ -1063,13 +1064,13 @@ theorem Fin.univ_succ (n : ℕ) :
 #align fin.univ_succ Fin.univ_succ
 -/
 
-#print Fin.univ_castSucc /-
+#print Fin.univ_castSuccEmb /-
 /-- Embed `fin n` into `fin (n + 1)` by appending a new `fin.last n` to the `univ` -/
-theorem Fin.univ_castSucc (n : ℕ) :
+theorem Fin.univ_castSuccEmb (n : ℕ) :
     (univ : Finset (Fin (n + 1))) =
-      cons (Fin.last n) (univ.map Fin.castSucc.toEmbedding) (by simp [map_eq_image]) :=
+      cons (Fin.last n) (univ.map Fin.castSuccEmb.toEmbedding) (by simp [map_eq_image]) :=
   by simp [map_eq_image]
-#align fin.univ_cast_succ Fin.univ_castSucc
+#align fin.univ_cast_succ Fin.univ_castSuccEmb
 -/
 
 #print Fin.univ_succAbove /-

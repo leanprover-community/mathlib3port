@@ -142,9 +142,9 @@ theorem ofFn_succ' {n} (f : Fin (succ n) → α) :
   by
   induction' n with n IH
   · rw [of_fn_zero, concat_nil, of_fn_succ, of_fn_zero]; rfl
-  · rw [of_fn_succ, IH, of_fn_succ, concat_cons, Fin.castSucc_zero]
+  · rw [of_fn_succ, IH, of_fn_succ, concat_cons, Fin.castSuccEmb_zero]
     congr 3
-    simp_rw [Fin.castSucc_fin_succ]
+    simp_rw [Fin.castSuccEmb_fin_succ]
 #align list.of_fn_succ' List.ofFn_succ'
 -/
 

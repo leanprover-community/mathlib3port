@@ -643,11 +643,11 @@ theorem det_eq_of_forall_row_eq_smul_add_pred_aux {n : ℕ} (k : Fin (n + 1)) :
     by_cases hi : i = k.succ
     · simp [hi, hM', hsucc, update_row_self]
     rw [update_row_ne hi, hM', update_row_ne hi]
-  have k_ne_succ : k.cast_succ ≠ k.succ := (Fin.castSucc_lt_succ k).Ne
+  have k_ne_succ : k.cast_succ ≠ k.succ := (Fin.castSuccEmb_lt_succ k).Ne
   have M_k : M k.cast_succ = M' k.cast_succ := (update_row_ne k_ne_succ).symm
   rw [hM, M_k, det_update_row_add_smul_self M' k_ne_succ.symm, ih (Function.update c k 0)]
   · intro i hi
-    rw [Fin.lt_iff_val_lt_val, Fin.coe_castSucc, Fin.val_succ, Nat.lt_succ_iff] at hi 
+    rw [Fin.lt_iff_val_lt_val, Fin.coe_castSuccEmb, Fin.val_succ, Nat.lt_succ_iff] at hi 
     rw [Function.update_apply]
     split_ifs with hik; · rfl
     exact hc _ (fin.succ_lt_succ_iff.mpr (lt_of_le_of_ne hi (Ne.symm hik)))
@@ -661,7 +661,7 @@ theorem det_eq_of_forall_row_eq_smul_add_pred_aux {n : ℕ} (k : Fin (n + 1)) :
   · simp [hc i (fin.succ_lt_succ_iff.mpr hik2)]
   rw [update_row_ne]
   apply ne_of_lt
-  rwa [Fin.lt_iff_val_lt_val, Fin.coe_castSucc, Fin.val_succ, Nat.lt_succ_iff, ← not_lt]
+  rwa [Fin.lt_iff_val_lt_val, Fin.coe_castSuccEmb, Fin.val_succ, Nat.lt_succ_iff, ← not_lt]
 #align matrix.det_eq_of_forall_row_eq_smul_add_pred_aux Matrix.det_eq_of_forall_row_eq_smul_add_pred_aux
 -/
 

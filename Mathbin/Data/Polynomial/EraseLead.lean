@@ -391,18 +391,19 @@ theorem card_support_eq {n : ℕ} :
       rintro ⟨i, hi⟩
       exact i.cast_succ_lt_last.Ne hi
     refine'
-      ⟨Function.extend Fin.castSucc k fun _ => f.nat_degree,
-        Function.extend Fin.castSucc x fun _ => f.leading_coeff, _, _, _⟩
+      ⟨Function.extend Fin.castSuccEmb k fun _ => f.nat_degree,
+        Function.extend Fin.castSuccEmb x fun _ => f.leading_coeff, _, _, _⟩
     · intro i j hij
-      have hi : i ∈ Set.range (Fin.castSucc : Fin n ↪o Fin (n + 1)) :=
+      have hi : i ∈ Set.range (Fin.castSuccEmb : Fin n ↪o Fin (n + 1)) :=
         by
-        rw [Fin.range_castSucc, Set.mem_def]
+        rw [Fin.range_castSuccEmb, Set.mem_def]
         exact lt_of_lt_of_le hij (nat.lt_succ_iff.mp j.2)
       obtain ⟨i, rfl⟩ := hi
       rw [fin.cast_succ.injective.extend_apply]
-      by_cases hj : ∃ j₀, Fin.castSucc j₀ = j
+      by_cases hj : ∃ j₀, Fin.castSuccEmb j₀ = j
       · obtain ⟨j, rfl⟩ := hj
-        rwa [fin.cast_succ.injective.extend_apply, hk.lt_iff_lt, ← Fin.castSucc_lt_castSucc_iff]
+        rwa [fin.cast_succ.injective.extend_apply, hk.lt_iff_lt, ←
+          Fin.castSuccEmb_lt_castSuccEmb_iff]
       · rw [Function.extend_apply' _ _ _ hj]
         apply lt_nat_degree_of_mem_erase_lead_support
         rw [mem_support_iff, hf, finset_sum_coeff]
@@ -412,13 +413,13 @@ theorem card_support_eq {n : ℕ} :
           rw [coeff_C_mul, coeff_X_pow, if_neg (hk.injective.ne hji.symm), MulZeroClass.mul_zero]
         · exact fun hi => (hi (mem_univ i)).elim
     · intro i
-      by_cases hi : ∃ i₀, Fin.castSucc i₀ = i
+      by_cases hi : ∃ i₀, Fin.castSuccEmb i₀ = i
       · obtain ⟨i, rfl⟩ := hi
         rw [fin.cast_succ.injective.extend_apply]
         exact hx i
       · rw [Function.extend_apply' _ _ _ hi, Ne, leading_coeff_eq_zero, ← card_support_eq_zero, h]
         exact n.succ_ne_zero
-    · rw [Fin.sum_univ_castSucc]
+    · rw [Fin.sum_univ_castSuccEmb]
       simp only [fin.cast_succ.injective.extend_apply]
       rw [← hf, Function.extend_apply', Function.extend_apply', erase_lead_add_C_mul_X_pow]
       all_goals exact H
@@ -446,7 +447,7 @@ theorem card_support_eq_two :
   refine' ⟨fun h => _, _⟩
   · obtain ⟨k, x, hk, hx, rfl⟩ := card_support_eq.mp h
     refine' ⟨k 0, k 1, hk Nat.zero_lt_one, x 0, x 1, hx 0, hx 1, _⟩
-    rw [Fin.sum_univ_castSucc, Fin.sum_univ_one]
+    rw [Fin.sum_univ_castSuccEmb, Fin.sum_univ_one]
     rfl
   · rintro ⟨k, m, hkm, x, y, hx, hy, rfl⟩
     exact card_support_binomial hkm.ne hx hy
@@ -464,7 +465,7 @@ theorem card_support_eq_three :
     refine'
       ⟨k 0, k 1, k 2, hk Nat.zero_lt_one, hk (Nat.lt_succ_self 1), x 0, x 1, x 2, hx 0, hx 1, hx 2,
         _⟩
-    rw [Fin.sum_univ_castSucc, Fin.sum_univ_castSucc, Fin.sum_univ_one]
+    rw [Fin.sum_univ_castSuccEmb, Fin.sum_univ_castSuccEmb, Fin.sum_univ_one]
     rfl
   · rintro ⟨k, m, n, hkm, hmn, x, y, z, hx, hy, hz, rfl⟩
     exact card_support_trinomial hkm hmn hx hy hz

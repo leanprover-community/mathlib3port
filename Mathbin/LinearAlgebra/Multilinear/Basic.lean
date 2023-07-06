@@ -1498,7 +1498,7 @@ theorem MultilinearMap.uncurryRight_apply
 a multilinear map in `n` variables taking values in linear maps from `M (last n)` to `M₂`, given by
 `m ↦ (x ↦ f (snoc m x))`. -/
 def MultilinearMap.curryRight (f : MultilinearMap R M M₂) :
-    MultilinearMap R (fun i : Fin n => M (Fin.castSucc i)) (M (last n) →ₗ[R] M₂)
+    MultilinearMap R (fun i : Fin n => M (Fin.castSuccEmb i)) (M (last n) →ₗ[R] M₂)
     where
   toFun m :=
     { toFun := fun x => f (snoc m x)
