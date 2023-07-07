@@ -238,9 +238,11 @@ theorem eqOn_empty (f₁ f₂ : α → β) : EqOn f₁ f₂ ∅ := fun x => Fals
 #align set.eq_on_empty Set.eqOn_empty
 -/
 
+#print Set.eqOn_singleton /-
 @[simp]
 theorem eqOn_singleton : EqOn f₁ f₂ {a} ↔ f₁ a = f₂ a := by simp [Set.EqOn]
 #align set.eq_on_singleton Set.eqOn_singleton
+-/
 
 #print Set.restrict_eq_restrict_iff /-
 @[simp]
