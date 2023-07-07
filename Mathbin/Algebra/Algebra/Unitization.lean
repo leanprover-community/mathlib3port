@@ -504,8 +504,8 @@ theorem inr_mul_inl [Semiring R] [NonUnitalNonAssocSemiring A] [DistribMulAction
 #align unitization.coe_mul_inl Unitization.inr_mul_inl
 -/
 
-#print Unitization.mulOneClass /-
-instance mulOneClass [Monoid R] [NonUnitalNonAssocSemiring A] [DistribMulAction R A] :
+#print Unitization.instMulOneClass /-
+instance instMulOneClass [Monoid R] [NonUnitalNonAssocSemiring A] [DistribMulAction R A] :
     MulOneClass (Unitization R A) :=
   { Unitization.hasOne,
     Unitization.hasMul with
@@ -517,12 +517,12 @@ instance mulOneClass [Monoid R] [NonUnitalNonAssocSemiring A] [DistribMulAction 
       ext (mul_one x.1) <|
         show (x.1 • 0 : A) + (1 : R) • x.2 + x.2 * 0 = x.2 by
           rw [smul_zero, zero_add, one_smul, MulZeroClass.mul_zero, add_zero] }
-#align unitization.mul_one_class Unitization.mulOneClass
+#align unitization.mul_one_class Unitization.instMulOneClass
 -/
 
 instance [Semiring R] [NonUnitalNonAssocSemiring A] [Module R A] :
     NonAssocSemiring (Unitization R A) :=
-  { Unitization.mulOneClass,
+  { Unitization.instMulOneClass,
     Unitization.addCommMonoid with
     zero_mul := fun x =>
       ext (MulZeroClass.zero_mul x.1) <|
@@ -547,7 +547,7 @@ instance [Semiring R] [NonUnitalNonAssocSemiring A] [Module R A] :
 
 instance [CommMonoid R] [NonUnitalSemiring A] [DistribMulAction R A] [IsScalarTower R A A]
     [SMulCommClass R A A] : Monoid (Unitization R A) :=
-  { Unitization.mulOneClass with
+  { Unitization.instMulOneClass with
     mul_assoc := fun x y z =>
       ext (mul_assoc x.1 y.1 z.1) <|
         show
@@ -661,8 +661,8 @@ variable (S R A : Type _) [CommSemiring S] [CommSemiring R] [NonUnitalSemiring A
   [IsScalarTower R A A] [SMulCommClass R A A] [Algebra S R] [DistribMulAction S A]
   [IsScalarTower S R A]
 
-#print Unitization.algebra /-
-instance algebra : Algebra S (Unitization R A) :=
+#print Unitization.instAlgebra /-
+instance instAlgebra : Algebra S (Unitization R A) :=
   {
     (Unitization.inlRingHom R A).comp
       (algebraMap S
@@ -677,7 +677,7 @@ instance algebra : Algebra S (Unitization R A) :=
       simp only [mul_add, smul_add, RingHom.toFun_eq_coe, RingHom.coe_comp, Function.comp_apply,
         inl_ring_hom_apply, Algebra.algebraMap_eq_smul_one]
       rw [inl_mul_inl, inl_mul_coe, smul_one_mul, inl_smul, coe_smul, smul_one_smul] }
-#align unitization.algebra Unitization.algebra
+#align unitization.algebra Unitization.instAlgebra
 -/
 
 #print Unitization.algebraMap_eq_inl_comp /-
