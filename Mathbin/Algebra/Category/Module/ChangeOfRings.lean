@@ -53,22 +53,27 @@ variable {R : Type u₁} {S : Type u₂} [Ring R] [Ring S] (f : R →+* S)
 
 variable (M : ModuleCat.{v} S)
 
+#print CategoryTheory.ModuleCat.RestrictScalars.obj' /-
 /-- Any `S`-module M is also an `R`-module via a ring homomorphism `f : R ⟶ S` by defining
     `r • m := f r • m` (`module.comp_hom`). This is called restriction of scalars. -/
 def obj' : ModuleCat R where
   carrier := M
   isModule := Module.compHom M f
-#align category_theory.Module.restrict_scalars.obj' CategoryTheory.Module.RestrictScalars.obj'
+#align category_theory.Module.restrict_scalars.obj' CategoryTheory.ModuleCat.RestrictScalars.obj'
+-/
 
+#print CategoryTheory.ModuleCat.RestrictScalars.map' /-
 /-- Given an `S`-linear map `g : M → M'` between `S`-modules, `g` is also `R`-linear between `M` and
 `M'` by means of restriction of scalars.
 -/
 def map' {M M' : ModuleCat.{v} S} (g : M ⟶ M') : obj' f M ⟶ obj' f M' :=
   { g with map_smul' := fun r => g.map_smul (f r) }
-#align category_theory.Module.restrict_scalars.map' CategoryTheory.Module.RestrictScalars.map'
+#align category_theory.Module.restrict_scalars.map' CategoryTheory.ModuleCat.RestrictScalars.map'
+-/
 
 end RestrictScalars
 
+#print CategoryTheory.ModuleCat.restrictScalars /-
 /-- The restriction of scalars operation is functorial. For any `f : R →+* S` a ring homomorphism,
 * an `S`-module `M` can be considered as `R`-module by `r • m = f r • m`
 * an `S`-linear map is also `R`-linear
@@ -80,35 +85,44 @@ def restrictScalars {R : Type u₁} {S : Type u₂} [Ring R] [Ring S] (f : R →
   map _ _ := RestrictScalars.map' f
   map_id' _ := LinearMap.ext fun m => rfl
   map_comp' _ _ _ g h := LinearMap.ext fun m => rfl
-#align category_theory.Module.restrict_scalars CategoryTheory.Module.restrictScalars
+#align category_theory.Module.restrict_scalars CategoryTheory.ModuleCat.restrictScalars
+-/
 
 instance {R : Type u₁} {S : Type u₂} [CommRing R] [CommRing S] (f : R →+* S) :
     CategoryTheory.Faithful (restrictScalars.{v} f)
     where map_injective' _ _ _ _ h :=
     LinearMap.ext fun x => by simpa only using FunLike.congr_fun h x
 
+#print CategoryTheory.ModuleCat.restrictScalars.map_apply /-
 @[simp]
 theorem restrictScalars.map_apply {R : Type u₁} {S : Type u₂} [Ring R] [Ring S] (f : R →+* S)
     {M M' : ModuleCat.{v} S} (g : M ⟶ M') (x) : (restrictScalars f).map g x = g x :=
   rfl
-#align category_theory.Module.restrict_scalars.map_apply CategoryTheory.Module.restrictScalars.map_apply
+#align category_theory.Module.restrict_scalars.map_apply CategoryTheory.ModuleCat.restrictScalars.map_apply
+-/
 
+#print CategoryTheory.ModuleCat.restrictScalars.smul_def /-
 @[simp]
 theorem restrictScalars.smul_def {R : Type u₁} {S : Type u₂} [Ring R] [Ring S] (f : R →+* S)
     {M : ModuleCat.{v} S} (r : R) (m : (restrictScalars f).obj M) : r • m = (f r • m : M) :=
   rfl
-#align category_theory.Module.restrict_scalars.smul_def CategoryTheory.Module.restrictScalars.smul_def
+#align category_theory.Module.restrict_scalars.smul_def CategoryTheory.ModuleCat.restrictScalars.smul_def
+-/
 
+#print CategoryTheory.ModuleCat.restrictScalars.smul_def' /-
 theorem restrictScalars.smul_def' {R : Type u₁} {S : Type u₂} [Ring R] [Ring S] (f : R →+* S)
     {M : ModuleCat.{v} S} (r : R) (m : M) : (r • m : (restrictScalars f).obj M) = (f r • m : M) :=
   rfl
-#align category_theory.Module.restrict_scalars.smul_def' CategoryTheory.Module.restrictScalars.smul_def'
+#align category_theory.Module.restrict_scalars.smul_def' CategoryTheory.ModuleCat.restrictScalars.smul_def'
+-/
 
+#print CategoryTheory.ModuleCat.sMulCommClass_mk /-
 instance (priority := 100) sMulCommClass_mk {R : Type u₁} {S : Type u₂} [Ring R] [CommRing S]
     (f : R →+* S) (M : Type v) [AddCommGroup M] [Module S M] :
     @SMulCommClass R S M (RestrictScalars.obj' f (ModuleCat.mk M)).isModule.toSMul _
     where smul_comm r s m := (by simp [← mul_smul, mul_comm] : f r • s • m = s • f r • m)
-#align category_theory.Module.smul_comm_class_mk CategoryTheory.Module.sMulCommClass_mk
+#align category_theory.Module.smul_comm_class_mk CategoryTheory.ModuleCat.sMulCommClass_mk
+-/
 
 namespace ExtendScalars
 
@@ -131,20 +145,25 @@ open scoped ChangeOfRings
 
 variable (M : ModuleCat.{v} R)
 
+#print CategoryTheory.ModuleCat.ExtendScalars.obj' /-
 /-- Extension of scalars turn an `R`-module into `S`-module by M ↦ S ⨂ M
 -/
 def obj' : ModuleCat S :=
   ⟨TensorProduct R ((restrictScalars f).obj ⟨S⟩) M⟩
-#align category_theory.Module.extend_scalars.obj' CategoryTheory.Module.ExtendScalars.obj'
+#align category_theory.Module.extend_scalars.obj' CategoryTheory.ModuleCat.ExtendScalars.obj'
+-/
 
+#print CategoryTheory.ModuleCat.ExtendScalars.map' /-
 /-- Extension of scalars is a functor where an `R`-module `M` is sent to `S ⊗ M` and
 `l : M1 ⟶ M2` is sent to `s ⊗ m ↦ s ⊗ l m`
 -/
 def map' {M1 M2 : ModuleCat.{v} R} (l : M1 ⟶ M2) : obj' f M1 ⟶ obj' f M2 :=
   by-- The "by apply" part makes this require 75% fewer heartbeats to process (#16371).
   apply @LinearMap.baseChange R S M1 M2 _ _ ((algebraMap S _).comp f).toAlgebra _ _ _ _ l
-#align category_theory.Module.extend_scalars.map' CategoryTheory.Module.ExtendScalars.map'
+#align category_theory.Module.extend_scalars.map' CategoryTheory.ModuleCat.ExtendScalars.map'
+-/
 
+#print CategoryTheory.ModuleCat.ExtendScalars.map'_id /-
 theorem map'_id {M : ModuleCat.{v} R} : map' f (𝟙 M) = 𝟙 _ :=
   LinearMap.ext fun x : obj' f M =>
     by
@@ -153,8 +172,10 @@ theorem map'_id {M : ModuleCat.{v} R} : map' f (𝟙 M) = 𝟙 _ :=
     · simp only [map_zero]
     · rw [LinearMap.baseChange_tmul, ModuleCat.id_apply]
     · rw [map_add, ihx, ihy]
-#align category_theory.Module.extend_scalars.map'_id CategoryTheory.Module.ExtendScalars.map'_id
+#align category_theory.Module.extend_scalars.map'_id CategoryTheory.ModuleCat.ExtendScalars.map'_id
+-/
 
+#print CategoryTheory.ModuleCat.ExtendScalars.map'_comp /-
 theorem map'_comp {M₁ M₂ M₃ : ModuleCat.{v} R} (l₁₂ : M₁ ⟶ M₂) (l₂₃ : M₂ ⟶ M₃) :
     map' f (l₁₂ ≫ l₂₃) = map' f l₁₂ ≫ map' f l₂₃ :=
   LinearMap.ext fun x : obj' f M₁ => by
@@ -163,10 +184,12 @@ theorem map'_comp {M₁ M₂ M₃ : ModuleCat.{v} R} (l₁₂ : M₁ ⟶ M₂) (
     · rfl
     · rfl
     · simp only [map_add, ihx, ihy]
-#align category_theory.Module.extend_scalars.map'_comp CategoryTheory.Module.ExtendScalars.map'_comp
+#align category_theory.Module.extend_scalars.map'_comp CategoryTheory.ModuleCat.ExtendScalars.map'_comp
+-/
 
 end ExtendScalars
 
+#print CategoryTheory.ModuleCat.extendScalars /-
 /-- Extension of scalars is a functor where an `R`-module `M` is sent to `S ⊗ M` and
 `l : M1 ⟶ M2` is sent to `s ⊗ m ↦ s ⊗ l m`
 -/
@@ -177,7 +200,8 @@ def extendScalars {R : Type u₁} {S : Type u₂} [CommRing R] [CommRing S] (f :
   map M1 M2 l := ExtendScalars.map' f l
   map_id' _ := ExtendScalars.map'_id f
   map_comp' _ _ _ := ExtendScalars.map'_comp f
-#align category_theory.Module.extend_scalars CategoryTheory.Module.extendScalars
+#align category_theory.Module.extend_scalars CategoryTheory.ModuleCat.extendScalars
+-/
 
 namespace ExtendScalars
 
@@ -185,17 +209,21 @@ open scoped ChangeOfRings
 
 variable {R : Type u₁} {S : Type u₂} [CommRing R] [CommRing S] (f : R →+* S)
 
+#print CategoryTheory.ModuleCat.ExtendScalars.smul_tmul /-
 @[simp]
 protected theorem smul_tmul {M : ModuleCat.{v} R} (s s' : S) (m : M) :
     s • (s'⊗ₜ[R,f]m : (extendScalars f).obj M) = (s * s')⊗ₜ[R,f]m :=
   rfl
-#align category_theory.Module.extend_scalars.smul_tmul CategoryTheory.Module.extendScalars.smul_tmul
+#align category_theory.Module.extend_scalars.smul_tmul CategoryTheory.ModuleCat.ExtendScalars.smul_tmul
+-/
 
+#print CategoryTheory.ModuleCat.ExtendScalars.map_tmul /-
 @[simp]
 theorem map_tmul {M M' : ModuleCat.{v} R} (g : M ⟶ M') (s : S) (m : M) :
     (extendScalars f).map g (s⊗ₜ[R,f]m) = s⊗ₜ[R,f]g m :=
   rfl
-#align category_theory.Module.extend_scalars.map_tmul CategoryTheory.Module.extendScalars.map_tmul
+#align category_theory.Module.extend_scalars.map_tmul CategoryTheory.ModuleCat.ExtendScalars.map_tmul
+-/
 
 end ExtendScalars
 
@@ -210,40 +238,49 @@ variable (M : Type v) [AddCommMonoid M] [Module R M]
 -- We use `S'` to denote `S` viewed as `R`-module, via the map `f`.
 local notation "S'" => (restrictScalars f).obj ⟨S⟩
 
+#print CategoryTheory.ModuleCat.CoextendScalars.hasSMul /-
 /-- Given an `R`-module M, consider Hom(S, M) -- the `R`-linear maps between S (as an `R`-module by
  means of restriction of scalars) and M. `S` acts on Hom(S, M) by `s • g = x ↦ g (x • s)`
  -/
-instance hasSmul : SMul S <| S' →ₗ[R] M
+instance hasSMul : SMul S <| S' →ₗ[R] M
     where smul s g :=
     { toFun := fun s' : S => g (s' * s : S)
       map_add' := fun x y : S => by simp [add_mul, map_add]
       map_smul' := fun r (t : S) => by
         rw [RingHom.id_apply, @RestrictScalars.smul_def _ _ _ _ f ⟨S⟩, ← LinearMap.map_smul,
           @RestrictScalars.smul_def _ _ _ _ f ⟨S⟩, smul_eq_mul, smul_eq_mul, mul_assoc] }
-#align category_theory.Module.coextend_scalars.has_smul CategoryTheory.Module.CoextendScalars.hasSmul
+#align category_theory.Module.coextend_scalars.has_smul CategoryTheory.ModuleCat.CoextendScalars.hasSMul
+-/
 
+#print CategoryTheory.ModuleCat.CoextendScalars.smul_apply' /-
 @[simp]
 theorem smul_apply' (s : S) (g : S' →ₗ[R] M) (s' : S) :
-    @SMul.smul _ _ (CoextendScalars.hasSmul f _) s g s' = g (s' * s : S) :=
+    @SMul.smul _ _ (CoextendScalars.hasSMul f _) s g s' = g (s' * s : S) :=
   rfl
-#align category_theory.Module.coextend_scalars.smul_apply' CategoryTheory.Module.CoextendScalars.smul_apply'
+#align category_theory.Module.coextend_scalars.smul_apply' CategoryTheory.ModuleCat.CoextendScalars.smul_apply'
+-/
 
+#print CategoryTheory.ModuleCat.CoextendScalars.mulAction /-
 instance mulAction : MulAction S <| S' →ₗ[R] M :=
   {
-    CoextendScalars.hasSmul f
+    CoextendScalars.hasSMul f
       _ with
     one_smul := fun g => LinearMap.ext fun s : S => by simp
     mul_smul := fun (s t : S) g => LinearMap.ext fun x : S => by simp [mul_assoc] }
-#align category_theory.Module.coextend_scalars.mul_action CategoryTheory.Module.CoextendScalars.mulAction
+#align category_theory.Module.coextend_scalars.mul_action CategoryTheory.ModuleCat.CoextendScalars.mulAction
+-/
 
+#print CategoryTheory.ModuleCat.CoextendScalars.distribMulAction /-
 instance distribMulAction : DistribMulAction S <| S' →ₗ[R] M :=
   {
     CoextendScalars.mulAction f
       _ with
     smul_add := fun s g h => LinearMap.ext fun t : S => by simp
     smul_zero := fun s => LinearMap.ext fun t : S => by simp }
-#align category_theory.Module.coextend_scalars.distrib_mul_action CategoryTheory.Module.CoextendScalars.distribMulAction
+#align category_theory.Module.coextend_scalars.distrib_mul_action CategoryTheory.ModuleCat.CoextendScalars.distribMulAction
+-/
 
+#print CategoryTheory.ModuleCat.CoextendScalars.isModule /-
 /-- `S` acts on Hom(S, M) by `s • g = x ↦ g (x • s)`, this action defines an `S`-module structure on
 Hom(S, M).
  -/
@@ -253,20 +290,24 @@ instance isModule : Module S <| S' →ₗ[R] M :=
       _ with
     add_smul := fun s1 s2 g => LinearMap.ext fun x : S => by simp [mul_add]
     zero_smul := fun g => LinearMap.ext fun x : S => by simp }
-#align category_theory.Module.coextend_scalars.is_module CategoryTheory.Module.CoextendScalars.isModule
+#align category_theory.Module.coextend_scalars.is_module CategoryTheory.ModuleCat.CoextendScalars.isModule
+-/
 
 end Unbundled
 
 variable (M : ModuleCat.{v} R)
 
+#print CategoryTheory.ModuleCat.CoextendScalars.obj' /-
 /-- If `M` is an `R`-module, then the set of `R`-linear maps `S →ₗ[R] M` is an `S`-module with
 scalar multiplication defined by `s • l := x ↦ l (x • s)`-/
 def obj' : ModuleCat S :=
   ⟨(restrictScalars f).obj ⟨S⟩ →ₗ[R] M⟩
-#align category_theory.Module.coextend_scalars.obj' CategoryTheory.Module.CoextendScalars.obj'
+#align category_theory.Module.coextend_scalars.obj' CategoryTheory.ModuleCat.CoextendScalars.obj'
+-/
 
 instance : CoeFun (obj' f M) fun g => S → M where coe g := g.toFun
 
+#print CategoryTheory.ModuleCat.CoextendScalars.map' /-
 /-- If `M, M'` are `R`-modules, then any `R`-linear map `g : M ⟶ M'` induces an `S`-linear map
 `(S →ₗ[R] M) ⟶ (S →ₗ[R] M')` defined by `h ↦ g ∘ h`-/
 @[simps]
@@ -275,10 +316,12 @@ def map' {M M' : ModuleCat R} (g : M ⟶ M') : obj' f M ⟶ obj' f M'
   toFun h := g.comp h
   map_add' _ _ := LinearMap.comp_add _ _ _
   map_smul' s h := LinearMap.ext fun t : S => by simpa only [smul_apply']
-#align category_theory.Module.coextend_scalars.map' CategoryTheory.Module.CoextendScalars.map'
+#align category_theory.Module.coextend_scalars.map' CategoryTheory.ModuleCat.CoextendScalars.map'
+-/
 
 end CoextendScalars
 
+#print CategoryTheory.ModuleCat.coextendScalars /-
 /--
 For any rings `R, S` and a ring homomorphism `f : R →+* S`, there is a functor from `R`-module to
 `S`-module defined by `M ↦ (S →ₗ[R] M)` where `S` is considered as an `R`-module via restriction of
@@ -290,7 +333,8 @@ def coextendScalars {R : Type u₁} {S : Type u₂} [Ring R] [Ring S] (f : R →
   map _ _ := CoextendScalars.map' f
   map_id' M := LinearMap.ext fun h => LinearMap.ext fun x => rfl
   map_comp' _ _ _ g h := LinearMap.ext fun h => LinearMap.ext fun x => rfl
-#align category_theory.Module.coextend_scalars CategoryTheory.Module.coextendScalars
+#align category_theory.Module.coextend_scalars CategoryTheory.ModuleCat.coextendScalars
+-/
 
 namespace CoextendScalars
 
@@ -299,16 +343,20 @@ variable {R : Type u₁} {S : Type u₂} [Ring R] [Ring S] (f : R →+* S)
 instance (M : ModuleCat R) : CoeFun ((coextendScalars f).obj M) fun g => S → M :=
   (inferInstance : CoeFun (CoextendScalars.obj' f M) _)
 
+#print CategoryTheory.ModuleCat.CoextendScalars.smul_apply /-
 theorem smul_apply (M : ModuleCat R) (g : (coextendScalars f).obj M) (s s' : S) :
     (s • g) s' = g (s' * s) :=
   rfl
-#align category_theory.Module.coextend_scalars.smul_apply CategoryTheory.Module.coextendScalars.smul_apply
+#align category_theory.Module.coextend_scalars.smul_apply CategoryTheory.ModuleCat.CoextendScalars.smul_apply
+-/
 
+#print CategoryTheory.ModuleCat.CoextendScalars.map_apply /-
 @[simp]
 theorem map_apply {M M' : ModuleCat R} (g : M ⟶ M') (x) (s : S) :
     (coextendScalars f).map g x s = g (x s) :=
   rfl
-#align category_theory.Module.coextend_scalars.map_apply CategoryTheory.Module.coextendScalars.map_apply
+#align category_theory.Module.coextend_scalars.map_apply CategoryTheory.ModuleCat.CoextendScalars.map_apply
+-/
 
 end CoextendScalars
 
@@ -316,6 +364,7 @@ namespace RestrictionCoextensionAdj
 
 variable {R : Type u₁} {S : Type u₂} [Ring R] [Ring S] (f : R →+* S)
 
+#print CategoryTheory.ModuleCat.RestrictionCoextensionAdj.HomEquiv.fromRestriction /-
 /-- Given `R`-module X and `S`-module Y, any `g : (restrict_of_scalars f).obj Y ⟶ X`
 corresponds to `Y ⟶ (coextend_scalars f).obj X` by sending `y ↦ (s ↦ g (s • y))`
 -/
@@ -334,8 +383,10 @@ def HomEquiv.fromRestriction {X Y} (g : (restrictScalars f).obj Y ⟶ X) :
       rw [LinearMap.add_apply, LinearMap.coe_mk, LinearMap.coe_mk, LinearMap.coe_mk, smul_add,
         map_add]
   map_smul' s y := LinearMap.ext fun t : S => by simp [mul_smul]
-#align category_theory.Module.restriction_coextension_adj.hom_equiv.from_restriction CategoryTheory.Module.RestrictionCoextensionAdj.HomEquiv.fromRestriction
+#align category_theory.Module.restriction_coextension_adj.hom_equiv.from_restriction CategoryTheory.ModuleCat.RestrictionCoextensionAdj.HomEquiv.fromRestriction
+-/
 
+#print CategoryTheory.ModuleCat.RestrictionCoextensionAdj.HomEquiv.toRestriction /-
 /-- Given `R`-module X and `S`-module Y, any `g : Y ⟶ (coextend_scalars f).obj X`
 corresponds to `(restrict_scalars f).obj Y ⟶ X` by `y ↦ g y 1`
 -/
@@ -348,8 +399,10 @@ def HomEquiv.toRestriction {X Y} (g : Y ⟶ (coextendScalars f).obj X) : (restri
     rw [LinearMap.toFun_eq_coe, LinearMap.toFun_eq_coe, RingHom.id_apply, ← LinearMap.map_smul,
       RestrictScalars.smul_def f r y, @RestrictScalars.smul_def _ _ _ _ f ⟨S⟩, smul_eq_mul, mul_one,
       LinearMap.map_smul, coextend_scalars.smul_apply, one_mul]
-#align category_theory.Module.restriction_coextension_adj.hom_equiv.to_restriction CategoryTheory.Module.RestrictionCoextensionAdj.HomEquiv.toRestriction
+#align category_theory.Module.restriction_coextension_adj.hom_equiv.to_restriction CategoryTheory.ModuleCat.RestrictionCoextensionAdj.HomEquiv.toRestriction
+-/
 
+#print CategoryTheory.ModuleCat.RestrictionCoextensionAdj.unit' /-
 /--
 The natural transformation from identity functor to the composition of restriction and coextension
 of scalars.
@@ -370,8 +423,10 @@ protected def unit' : 𝟭 (ModuleCat S) ⟶ restrictScalars f ⋙ coextendScala
       map_smul' := fun s (y : Y) => LinearMap.ext fun t : S => by simp [mul_smul] }
   naturality' Y Y' g :=
     LinearMap.ext fun y : Y => LinearMap.ext fun s : S => by simp [coextend_scalars.map_apply]
-#align category_theory.Module.restriction_coextension_adj.unit' CategoryTheory.Module.RestrictionCoextensionAdj.unit'
+#align category_theory.Module.restriction_coextension_adj.unit' CategoryTheory.ModuleCat.RestrictionCoextensionAdj.unit'
+-/
 
+#print CategoryTheory.ModuleCat.RestrictionCoextensionAdj.counit' /-
 /-- The natural transformation from the composition of coextension and restriction of scalars to
 identity functor.
 -/
@@ -387,10 +442,12 @@ protected def counit' : coextendScalars f ⋙ restrictScalars f ⟶ 𝟭 (Module
         rw [RestrictScalars.smul_def f, coextend_scalars.smul_apply, one_mul, ← LinearMap.map_smul,
           @RestrictScalars.smul_def _ _ _ _ f ⟨S⟩, smul_eq_mul, mul_one] }
   naturality' X X' g := LinearMap.ext fun h => by simp [coextend_scalars.map_apply]
-#align category_theory.Module.restriction_coextension_adj.counit' CategoryTheory.Module.RestrictionCoextensionAdj.counit'
+#align category_theory.Module.restriction_coextension_adj.counit' CategoryTheory.ModuleCat.RestrictionCoextensionAdj.counit'
+-/
 
 end RestrictionCoextensionAdj
 
+#print CategoryTheory.ModuleCat.restrictCoextendScalarsAdj /-
 /-- Restriction of scalars is left adjoint to coextension of scalars. -/
 @[simps]
 def restrictCoextendScalarsAdj {R : Type u₁} {S : Type u₂} [Ring R] [Ring S] (f : R →+* S) :
@@ -405,7 +462,8 @@ def restrictCoextendScalarsAdj {R : Type u₁} {S : Type u₂} [Ring R] [Ring S]
   counit := RestrictionCoextensionAdj.counit' f
   homEquiv_unit X Y g := LinearMap.ext fun y => rfl
   homEquiv_counit Y X g := LinearMap.ext fun y : Y => by simp
-#align category_theory.Module.restrict_coextend_scalars_adj CategoryTheory.Module.restrictCoextendScalarsAdj
+#align category_theory.Module.restrict_coextend_scalars_adj CategoryTheory.ModuleCat.restrictCoextendScalarsAdj
+-/
 
 instance {R : Type u₁} {S : Type u₂} [Ring R] [Ring S] (f : R →+* S) :
     CategoryTheory.IsLeftAdjoint (restrictScalars f) :=
@@ -423,6 +481,7 @@ open TensorProduct
 
 variable {R : Type u₁} {S : Type u₂} [CommRing R] [CommRing S] (f : R →+* S)
 
+#print CategoryTheory.ModuleCat.ExtendRestrictScalarsAdj.HomEquiv.toRestrictScalars /-
 /--
 Given `R`-module X and `S`-module Y and a map `g : (extend_scalars f).obj X ⟶ Y`, i.e. `S`-linear
 map `S ⨂ X → Y`, there is a `X ⟶ (restrict_scalars f).obj Y`, i.e. `R`-linear map `X ⟶ Y` by
@@ -439,8 +498,10 @@ def HomEquiv.toRestrictScalars {X Y} (g : (extendScalars f).obj X ⟶ Y) :
     letI : Module R Y := Module.compHom Y f
     rw [RingHom.id_apply, RestrictScalars.smul_def, ← LinearMap.map_smul, tmul_smul]
     congr
-#align category_theory.Module.extend_restrict_scalars_adj.hom_equiv.to_restrict_scalars CategoryTheory.Module.ExtendRestrictScalarsAdj.HomEquiv.toRestrictScalars
+#align category_theory.Module.extend_restrict_scalars_adj.hom_equiv.to_restrict_scalars CategoryTheory.ModuleCat.ExtendRestrictScalarsAdj.HomEquiv.toRestrictScalars
+-/
 
+#print CategoryTheory.ModuleCat.ExtendRestrictScalarsAdj.HomEquiv.fromExtendScalars /-
 /--
 Given `R`-module X and `S`-module Y and a map `X ⟶ (restrict_scalars f).obj Y`, i.e `R`-linear map
 `X ⟶ Y`, there is a map `(extend_scalars f).obj X ⟶ Y`, i.e  `S`-linear map `S ⨂ X → Y` by
@@ -467,8 +528,10 @@ def HomEquiv.fromExtendScalars {X Y} (g : X ⟶ (restrictScalars f).obj Y) :
     · simp only [smul_zero, map_zero]
     · simp only [LinearMap.coe_mk, extend_scalars.smul_tmul, lift.tmul, ← mul_smul]
     · rw [smul_add, map_add, ih1, ih2, map_add, smul_add]
-#align category_theory.Module.extend_restrict_scalars_adj.hom_equiv.from_extend_scalars CategoryTheory.Module.ExtendRestrictScalarsAdj.HomEquiv.fromExtendScalars
+#align category_theory.Module.extend_restrict_scalars_adj.hom_equiv.from_extend_scalars CategoryTheory.ModuleCat.ExtendRestrictScalarsAdj.HomEquiv.fromExtendScalars
+-/
 
+#print CategoryTheory.ModuleCat.ExtendRestrictScalarsAdj.homEquiv /-
 /-- Given `R`-module X and `S`-module Y, `S`-linear linear maps `(extend_scalars f).obj X ⟶ Y`
 bijectively correspond to `R`-linear maps `X ⟶ (restrict_scalars f).obj Y`.
 -/
@@ -491,8 +554,10 @@ def homEquiv {X Y} : ((extendScalars f).obj X ⟶ Y) ≃ (X ⟶ (restrictScalars
     rw [hom_equiv.to_restrict_scalars_apply, hom_equiv.from_extend_scalars_apply, lift.tmul,
       LinearMap.coe_mk, LinearMap.coe_mk]
     convert one_smul _ _
-#align category_theory.Module.extend_restrict_scalars_adj.hom_equiv CategoryTheory.Module.ExtendRestrictScalarsAdj.homEquiv
+#align category_theory.Module.extend_restrict_scalars_adj.hom_equiv CategoryTheory.ModuleCat.ExtendRestrictScalarsAdj.homEquiv
+-/
 
+#print CategoryTheory.ModuleCat.ExtendRestrictScalarsAdj.Unit.map /-
 /--
 For any `R`-module X, there is a natural `R`-linear map from `X` to `X ⨂ S` by sending `x ↦ x ⊗ 1`
 -/
@@ -502,8 +567,10 @@ def Unit.map {X} : X ⟶ (extendScalars f ⋙ restrictScalars f).obj X
   toFun x := (1 : S)⊗ₜ[R,f]x
   map_add' x x' := by rw [TensorProduct.tmul_add]
   map_smul' r x := by letI m1 : Module R S := Module.compHom S f; tidy
-#align category_theory.Module.extend_restrict_scalars_adj.unit.map CategoryTheory.Module.ExtendRestrictScalarsAdj.Unit.map
+#align category_theory.Module.extend_restrict_scalars_adj.unit.map CategoryTheory.ModuleCat.ExtendRestrictScalarsAdj.Unit.map
+-/
 
+#print CategoryTheory.ModuleCat.ExtendRestrictScalarsAdj.unit /-
 /--
 The natural transformation from identity functor on `R`-module to the composition of extension and
 restriction of scalars.
@@ -513,8 +580,10 @@ def unit : 𝟭 (ModuleCat R) ⟶ extendScalars f ⋙ restrictScalars f
     where
   app _ := Unit.map f
   naturality' X X' g := by tidy
-#align category_theory.Module.extend_restrict_scalars_adj.unit CategoryTheory.Module.ExtendRestrictScalarsAdj.unit
+#align category_theory.Module.extend_restrict_scalars_adj.unit CategoryTheory.ModuleCat.ExtendRestrictScalarsAdj.unit
+-/
 
+#print CategoryTheory.ModuleCat.ExtendRestrictScalarsAdj.Counit.map /-
 /-- For any `S`-module Y, there is a natural `R`-linear map from `S ⨂ Y` to `Y` by
 `s ⊗ y ↦ s • y`
 -/
@@ -538,8 +607,10 @@ def Counit.map {Y} : (restrictScalars f ⋙ extendScalars f).obj Y ⟶ Y :=
     · simp only [smul_zero, map_zero]
     · simp only [extend_scalars.smul_tmul, LinearMap.coe_mk, TensorProduct.lift.tmul, mul_smul]
     · rw [smul_add, map_add, map_add, ih1, ih2, smul_add]
-#align category_theory.Module.extend_restrict_scalars_adj.counit.map CategoryTheory.Module.ExtendRestrictScalarsAdj.Counit.map
+#align category_theory.Module.extend_restrict_scalars_adj.counit.map CategoryTheory.ModuleCat.ExtendRestrictScalarsAdj.Counit.map
+-/
 
+#print CategoryTheory.ModuleCat.ExtendRestrictScalarsAdj.counit /-
 /-- The natural transformation from the composition of restriction and extension of scalars to the
 identity functor on `S`-module.
 -/
@@ -555,10 +626,12 @@ def counit : restrictScalars f ⋙ extendScalars f ⟶ 𝟭 (ModuleCat S)
         extend_scalars.map_tmul, restrict_scalars.map_apply, counit.map_apply, lift.tmul,
         LinearMap.coe_mk, CategoryTheory.Functor.id_map, LinearMap.map_smulₛₗ, RingHom.id_apply]
     · simp only [map_add, *]
-#align category_theory.Module.extend_restrict_scalars_adj.counit CategoryTheory.Module.ExtendRestrictScalarsAdj.counit
+#align category_theory.Module.extend_restrict_scalars_adj.counit CategoryTheory.ModuleCat.ExtendRestrictScalarsAdj.counit
+-/
 
 end ExtendRestrictScalarsAdj
 
+#print CategoryTheory.ModuleCat.extendRestrictScalarsAdj /-
 /-- Given commutative rings `R, S` and a ring hom `f : R →+* S`, the extension and restriction of
 scalars by `f` are adjoint to each other.
 -/
@@ -580,7 +653,8 @@ def extendRestrictScalarsAdj {R : Type u₁} {S : Type u₂} [CommRing R] [CommR
           extend_restrict_scalars_adj.counit_app, ModuleCat.coe_comp, Function.comp_apply,
           extend_scalars.map_tmul, extend_restrict_scalars_adj.counit.map_apply]
       · simp only [map_add, *]
-#align category_theory.Module.extend_restrict_scalars_adj CategoryTheory.Module.extendRestrictScalarsAdj
+#align category_theory.Module.extend_restrict_scalars_adj CategoryTheory.ModuleCat.extendRestrictScalarsAdj
+-/
 
 instance {R : Type u₁} {S : Type u₂} [CommRing R] [CommRing S] (f : R →+* S) :
     CategoryTheory.IsLeftAdjoint (extendScalars f) :=
