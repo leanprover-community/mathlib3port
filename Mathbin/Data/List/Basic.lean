@@ -472,6 +472,8 @@ theorem doubleton_eq [DecidableEq α] {x y : α} (h : x ≠ y) : ({x, y} : List 
 /-! ### bounded quantifiers over lists -/
 
 
+/- warning: list.forall_mem_nil clashes with list.ball_nil -> List.forall_mem_nil
+Case conversion may be inaccurate. Consider using '#align list.forall_mem_nil List.forall_mem_nilₓ'. -/
 #print List.forall_mem_nil /-
 theorem forall_mem_nil (p : α → Prop) : ∀ x ∈ @nil α, p x :=
   fun.

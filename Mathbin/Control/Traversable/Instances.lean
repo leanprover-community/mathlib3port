@@ -117,7 +117,7 @@ protected theorem naturality {α β} (f : α → F β) (x : List α) :
 open Nat
 
 instance : LawfulTraversable.{u} List :=
-  { List.lawfulMonad with
+  { List.instLawfulMonad with
     id_traverse := @List.id_traverse
     comp_traverse := @List.comp_traverse
     traverse_eq_map_id := @List.traverse_eq_map_id

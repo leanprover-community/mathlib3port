@@ -190,18 +190,18 @@ theorem ext {F G : C ⥤ D} (h_obj : ∀ X, F.obj X = G.obj X)
 #align category_theory.functor.ext CategoryTheory.Functor.ext
 -/
 
-#print CategoryTheory.Functor.conj_eqToHom_iff_hEq /-
+#print CategoryTheory.Functor.conj_eqToHom_iff_heq /-
 /-- Two morphisms are conjugate via eq_to_hom if and only if they are heterogeneously equal. -/
-theorem conj_eqToHom_iff_hEq {W X Y Z : C} (f : W ⟶ X) (g : Y ⟶ Z) (h : W = Y) (h' : X = Z) :
+theorem conj_eqToHom_iff_heq {W X Y Z : C} (f : W ⟶ X) (g : Y ⟶ Z) (h : W = Y) (h' : X = Z) :
     f = eqToHom h ≫ g ≫ eqToHom h'.symm ↔ HEq f g := by cases h; cases h'; simp
-#align category_theory.functor.conj_eq_to_hom_iff_heq CategoryTheory.Functor.conj_eqToHom_iff_hEq
+#align category_theory.functor.conj_eq_to_hom_iff_heq CategoryTheory.Functor.conj_eqToHom_iff_heq
 -/
 
 #print CategoryTheory.Functor.hext /-
 /-- Proving equality between functors using heterogeneous equality. -/
 theorem hext {F G : C ⥤ D} (h_obj : ∀ X, F.obj X = G.obj X)
     (h_map : ∀ (X Y) (f : X ⟶ Y), HEq (F.map f) (G.map f)) : F = G :=
-  Functor.ext h_obj fun _ _ f => (conj_eqToHom_iff_hEq _ _ (h_obj _) (h_obj _)).2 <| h_map _ _ f
+  Functor.ext h_obj fun _ _ f => (conj_eqToHom_iff_heq _ _ (h_obj _) (h_obj _)).2 <| h_map _ _ f
 #align category_theory.functor.hext CategoryTheory.Functor.hext
 -/
 
@@ -238,38 +238,38 @@ section HEq
 -- Composition of functors and maps w.r.t. heq
 variable {E : Type u₃} [Category.{v₃} E] {F G : C ⥤ D} {X Y Z : C} {f : X ⟶ Y} {g : Y ⟶ Z}
 
-#print CategoryTheory.Functor.map_comp_hEq /-
-theorem map_comp_hEq (hx : F.obj X = G.obj X) (hy : F.obj Y = G.obj Y) (hz : F.obj Z = G.obj Z)
+#print CategoryTheory.Functor.map_comp_heq /-
+theorem map_comp_heq (hx : F.obj X = G.obj X) (hy : F.obj Y = G.obj Y) (hz : F.obj Z = G.obj Z)
     (hf : HEq (F.map f) (G.map f)) (hg : HEq (F.map g) (G.map g)) :
     HEq (F.map (f ≫ g)) (G.map (f ≫ g)) := by rw [F.map_comp, G.map_comp]; congr
-#align category_theory.functor.map_comp_heq CategoryTheory.Functor.map_comp_hEq
+#align category_theory.functor.map_comp_heq CategoryTheory.Functor.map_comp_heq
 -/
 
-#print CategoryTheory.Functor.map_comp_hEq' /-
-theorem map_comp_hEq' (hobj : ∀ X : C, F.obj X = G.obj X)
+#print CategoryTheory.Functor.map_comp_heq' /-
+theorem map_comp_heq' (hobj : ∀ X : C, F.obj X = G.obj X)
     (hmap : ∀ {X Y} (f : X ⟶ Y), HEq (F.map f) (G.map f)) : HEq (F.map (f ≫ g)) (G.map (f ≫ g)) :=
   by rw [functor.hext hobj fun _ _ => hmap]
-#align category_theory.functor.map_comp_heq' CategoryTheory.Functor.map_comp_hEq'
+#align category_theory.functor.map_comp_heq' CategoryTheory.Functor.map_comp_heq'
 -/
 
-#print CategoryTheory.Functor.precomp_map_hEq /-
-theorem precomp_map_hEq (H : E ⥤ C) (hmap : ∀ {X Y} (f : X ⟶ Y), HEq (F.map f) (G.map f)) {X Y : E}
+#print CategoryTheory.Functor.precomp_map_heq /-
+theorem precomp_map_heq (H : E ⥤ C) (hmap : ∀ {X Y} (f : X ⟶ Y), HEq (F.map f) (G.map f)) {X Y : E}
     (f : X ⟶ Y) : HEq ((H ⋙ F).map f) ((H ⋙ G).map f) :=
   hmap _
-#align category_theory.functor.precomp_map_heq CategoryTheory.Functor.precomp_map_hEq
+#align category_theory.functor.precomp_map_heq CategoryTheory.Functor.precomp_map_heq
 -/
 
-#print CategoryTheory.Functor.postcomp_map_hEq /-
-theorem postcomp_map_hEq (H : D ⥤ E) (hx : F.obj X = G.obj X) (hy : F.obj Y = G.obj Y)
+#print CategoryTheory.Functor.postcomp_map_heq /-
+theorem postcomp_map_heq (H : D ⥤ E) (hx : F.obj X = G.obj X) (hy : F.obj Y = G.obj Y)
     (hmap : HEq (F.map f) (G.map f)) : HEq ((F ⋙ H).map f) ((G ⋙ H).map f) := by dsimp; congr
-#align category_theory.functor.postcomp_map_heq CategoryTheory.Functor.postcomp_map_hEq
+#align category_theory.functor.postcomp_map_heq CategoryTheory.Functor.postcomp_map_heq
 -/
 
-#print CategoryTheory.Functor.postcomp_map_hEq' /-
-theorem postcomp_map_hEq' (H : D ⥤ E) (hobj : ∀ X : C, F.obj X = G.obj X)
+#print CategoryTheory.Functor.postcomp_map_heq' /-
+theorem postcomp_map_heq' (H : D ⥤ E) (hobj : ∀ X : C, F.obj X = G.obj X)
     (hmap : ∀ {X Y} (f : X ⟶ Y), HEq (F.map f) (G.map f)) : HEq ((F ⋙ H).map f) ((G ⋙ H).map f) :=
   by rw [functor.hext hobj fun _ _ => hmap]
-#align category_theory.functor.postcomp_map_heq' CategoryTheory.Functor.postcomp_map_hEq'
+#align category_theory.functor.postcomp_map_heq' CategoryTheory.Functor.postcomp_map_heq'
 -/
 
 #print CategoryTheory.Functor.hcongr_hom /-
