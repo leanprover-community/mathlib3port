@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Anatole Dedecker
 
 ! This file was ported from Lean 3 source module topology.algebra.module.strong_topology
-! leanprover-community/mathlib commit f7ebde7ee0d1505dfccac8644ae12371aa3c1c9f
+! leanprover-community/mathlib commit 8905e5ed90859939681a725b00f6063e65096d95
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -202,9 +202,10 @@ end General
 
 section BoundedSets
 
-variable {𝕜₁ 𝕜₂ : Type _} [NormedField 𝕜₁] [NormedField 𝕜₂] {σ : 𝕜₁ →+* 𝕜₂} {E E' F F' : Type _}
-  [AddCommGroup E] [Module 𝕜₁ E] [AddCommGroup E'] [Module ℝ E'] [AddCommGroup F] [Module 𝕜₂ F]
-  [AddCommGroup F'] [Module ℝ F'] [TopologicalSpace E]
+variable {𝕜₁ 𝕜₂ 𝕜₃ : Type _} [NormedField 𝕜₁] [NormedField 𝕜₂] [NormedField 𝕜₃] {σ : 𝕜₁ →+* 𝕜₂}
+  {τ : 𝕜₂ →+* 𝕜₃} {ρ : 𝕜₁ →+* 𝕜₃} [RingHomCompTriple σ τ ρ] {E E' F F' G : Type _} [AddCommGroup E]
+  [Module 𝕜₁ E] [AddCommGroup E'] [Module ℝ E'] [AddCommGroup F] [Module 𝕜₂ F] [AddCommGroup F']
+  [Module ℝ F'] [AddCommGroup G] [Module 𝕜₃ G] [TopologicalSpace E]
 
 /-- The topology of bounded convergence on `E →L[𝕜] F`. This coincides with the topology induced by
 the operator norm when `E` and `F` are normed spaces. -/
@@ -252,6 +253,51 @@ protected theorem hasBasis_nhds_zero [TopologicalSpace F] [TopologicalAddGroup F
 #align continuous_linear_map.has_basis_nhds_zero ContinuousLinearMap.hasBasis_nhds_zero
 -/
 
+variable (G) [TopologicalSpace F] [TopologicalSpace G]
+
+/-- Pre-composition by a *fixed* continuous linear map as a continuous linear map.
+Note that in non-normed space it is not always true that composition is continuous
+in both variables, so we have to fix one of them. -/
+@[simps]
+def precomp [TopologicalAddGroup G] [ContinuousConstSMul 𝕜₃ G] [RingHomSurjective σ]
+    [RingHomIsometric σ] (L : E →SL[σ] F) : (F →SL[τ] G) →L[𝕜₃] E →SL[ρ] G
+    where
+  toFun f := f.comp L
+  map_add' f g := add_comp f g L
+  map_smul' a f := smul_comp a f L
+  cont := by
+    letI : UniformSpace G := TopologicalAddGroup.toUniformSpace G
+    haveI : UniformAddGroup G := comm_topologicalAddGroup_is_uniform
+    rw [(strong_topology.embedding_coe_fn _ _ _).continuous_iff]
+    refine'
+      (UniformOnFun.precomp_uniformContinuous _).Continuous.comp
+        (strong_topology.embedding_coe_fn _ _ _).Continuous
+    exact fun S hS => hS.image L
+#align continuous_linear_map.precomp ContinuousLinearMap.precomp
+
+variable (E) {G}
+
+/-- Post-composition by a *fixed* continuous linear map as a continuous linear map.
+Note that in non-normed space it is not always true that composition is continuous
+in both variables, so we have to fix one of them. -/
+@[simps]
+def postcomp [TopologicalAddGroup F] [TopologicalAddGroup G] [ContinuousConstSMul 𝕜₃ G]
+    [ContinuousConstSMul 𝕜₂ F] (L : F →SL[τ] G) : (E →SL[σ] F) →SL[τ] E →SL[ρ] G
+    where
+  toFun f := L.comp f
+  map_add' := comp_add L
+  map_smul' := comp_smulₛₗ L
+  cont := by
+    letI : UniformSpace G := TopologicalAddGroup.toUniformSpace G
+    haveI : UniformAddGroup G := comm_topologicalAddGroup_is_uniform
+    letI : UniformSpace F := TopologicalAddGroup.toUniformSpace F
+    haveI : UniformAddGroup F := comm_topologicalAddGroup_is_uniform
+    rw [(strong_topology.embedding_coe_fn _ _ _).continuous_iff]
+    exact
+      (UniformOnFun.postcomp_uniformContinuous L.uniform_continuous).Continuous.comp
+        (strong_topology.embedding_coe_fn _ _ _).Continuous
+#align continuous_linear_map.postcomp ContinuousLinearMap.postcomp
+
 end BoundedSets
 
 end ContinuousLinearMap
@@ -272,13 +318,14 @@ variable {𝕜 : Type _} {𝕜₂ : Type _} {𝕜₃ : Type _} {𝕜₄ : Type _
   {σ₃₄ : 𝕜₃ →+* 𝕜₄} {σ₄₃ : 𝕜₄ →+* 𝕜₃} {σ₂₄ : 𝕜₂ →+* 𝕜₄} {σ₁₄ : 𝕜 →+* 𝕜₄} [RingHomInvPair σ₁₂ σ₂₁]
   [RingHomInvPair σ₂₁ σ₁₂] [RingHomInvPair σ₃₄ σ₄₃] [RingHomInvPair σ₄₃ σ₃₄]
   [RingHomCompTriple σ₂₁ σ₁₄ σ₂₄] [RingHomCompTriple σ₂₄ σ₄₃ σ₂₃] [RingHomCompTriple σ₁₂ σ₂₃ σ₁₃]
-  [RingHomCompTriple σ₁₃ σ₃₄ σ₁₄]
+  [RingHomCompTriple σ₁₃ σ₃₄ σ₁₄] [RingHomCompTriple σ₂₃ σ₃₄ σ₂₄] [RingHomCompTriple σ₁₂ σ₂₄ σ₁₄]
+  [RingHomIsometric σ₁₂] [RingHomIsometric σ₂₁]
 
-#print ContinuousLinearEquiv.arrowCongrₛₗ /-
+#print ContinuousLinearEquiv.arrowCongrSL /-
 /-- A pair of continuous (semi)linear equivalences generates a (semi)linear equivalence between the
 spaces of continuous (semi)linear maps. -/
 @[simps]
-def arrowCongrₛₗ (e₁₂ : E ≃SL[σ₁₂] F) (e₄₃ : H ≃SL[σ₄₃] G) : (E →SL[σ₁₄] H) ≃ₛₗ[σ₄₃] F →SL[σ₂₃] G :=
+def arrowCongrSL (e₁₂ : E ≃SL[σ₁₂] F) (e₄₃ : H ≃SL[σ₄₃] G) : (E →SL[σ₁₄] H) ≃SL[σ₄₃] F →SL[σ₂₃] G :=
   {-- given explicitly to help `simps`
         -- given explicitly to help `simps`
         e₁₂.arrowCongrEquiv
@@ -286,42 +333,13 @@ def arrowCongrₛₗ (e₁₂ : E ≃SL[σ₁₂] F) (e₄₃ : H ≃SL[σ₄₃
     toFun := fun L => (e₄₃ : H →SL[σ₄₃] G).comp (L.comp (e₁₂.symm : F →SL[σ₂₁] E))
     invFun := fun L => (e₄₃.symm : G →SL[σ₃₄] H).comp (L.comp (e₁₂ : E →SL[σ₁₂] F))
     map_add' := fun f g => by rw [add_comp, comp_add]
-    map_smul' := fun t f => by rw [smul_comp, comp_smulₛₗ] }
-#align continuous_linear_equiv.arrow_congrₛₗ ContinuousLinearEquiv.arrowCongrₛₗ
--/
-
-variable [RingHomIsometric σ₂₁]
-
-#print ContinuousLinearEquiv.arrowCongrₛₗ_continuous /-
-theorem arrowCongrₛₗ_continuous (e₁₂ : E ≃SL[σ₁₂] F) (e₄₃ : H ≃SL[σ₄₃] G) :
-    Continuous (id (e₁₂.arrowCongrₛₗ e₄₃ : (E →SL[σ₁₄] H) ≃ₛₗ[σ₄₃] F →SL[σ₂₃] G)) :=
-  by
-  apply continuous_of_continuousAt_zero
-  show Filter.Tendsto _ _ _
-  simp_rw [(e₁₂.arrow_congrₛₗ e₄₃).map_zero]
-  rw [continuous_linear_map.has_basis_nhds_zero.tendsto_iff ContinuousLinearMap.hasBasis_nhds_zero]
-  rintro ⟨sF, sG⟩ ⟨h1 : Bornology.IsVonNBounded 𝕜₂ sF, h2 : sG ∈ nhds (0 : G)⟩
-  dsimp
-  refine'
-    ⟨(e₁₂.symm '' sF, e₄₃ ⁻¹' sG), ⟨h1.image (e₁₂.symm : F →SL[σ₂₁] E), _⟩, fun _ h _ hx =>
-      h _ (Set.mem_image_of_mem _ hx)⟩
-  apply e₄₃.continuous.continuous_at
-  simpa using h2
-#align continuous_linear_equiv.arrow_congrₛₗ_continuous ContinuousLinearEquiv.arrowCongrₛₗ_continuous
--/
-
-variable [RingHomIsometric σ₁₂]
-
-#print ContinuousLinearEquiv.arrowCongrSL /-
-/-- A pair of continuous (semi)linear equivalences generates an continuous (semi)linear equivalence
-between the spaces of continuous (semi)linear maps. -/
-@[simps]
-def arrowCongrSL (e₁₂ : E ≃SL[σ₁₂] F) (e₄₃ : H ≃SL[σ₄₃] G) : (E →SL[σ₁₄] H) ≃SL[σ₄₃] F →SL[σ₂₃] G :=
-  {
-    e₁₂.arrowCongrₛₗ
-      e₄₃ with
-    continuous_toFun := e₁₂.arrowCongrₛₗ_continuous e₄₃
-    continuous_invFun := e₁₂.symm.arrowCongrₛₗ_continuous e₄₃.symm }
+    map_smul' := fun t f => by rw [smul_comp, comp_smulₛₗ]
+    continuous_toFun :=
+      ((postcomp F e₄₃.toContinuousLinearMap).comp
+          (precomp H e₁₂.symm.toContinuousLinearMap)).Continuous
+    continuous_invFun :=
+      ((precomp H e₁₂.toContinuousLinearMap).comp
+          (postcomp F e₄₃.symm.toContinuousLinearMap)).Continuous }
 #align continuous_linear_equiv.arrow_congrSL ContinuousLinearEquiv.arrowCongrSL
 -/
 

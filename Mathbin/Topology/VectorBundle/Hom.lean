@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth, Floris van Doorn
 
 ! This file was ported from Lean 3 source module topology.vector_bundle.hom
-! leanprover-community/mathlib commit e473c3198bb41f68560cab68a0529c854b618833
+! leanprover-community/mathlib commit 8905e5ed90859939681a725b00f6063e65096d95
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -120,7 +120,6 @@ theorem continuousOn_continuousLinearMapCoordChange [VectorBundle 𝕜₁ F₁ E
   · mfld_set_tac
   · intro b hb; ext L v
     simp only [continuous_linear_map_coord_change, ContinuousLinearEquiv.coe_coe,
-      ContinuousLinearEquiv.arrowCongrₛₗ_apply, LinearEquiv.toFun_eq_coe, coe_comp',
       ContinuousLinearEquiv.arrowCongrSL_apply, comp_apply, Function.comp, compSL_apply, flip_apply,
       ContinuousLinearEquiv.symm_symm]
 #align pretrivialization.continuous_on_continuous_linear_map_coord_change Pretrivialization.continuousOn_continuousLinearMapCoordChange
@@ -224,8 +223,7 @@ theorem continuousLinearMapCoordChange_apply (b : B)
   by
   ext v
   simp_rw [continuous_linear_map_coord_change, ContinuousLinearEquiv.coe_coe,
-    ContinuousLinearEquiv.arrowCongrSL_apply, LinearEquiv.toFun_eq_coe,
-    ContinuousLinearEquiv.arrowCongrₛₗ_apply, continuous_linear_map_apply,
+    ContinuousLinearEquiv.arrowCongrSL_apply, continuous_linear_map_apply,
     continuous_linear_map_symm_apply' σ e₁ e₂ hb.1, comp_apply, ContinuousLinearEquiv.coe_coe,
     ContinuousLinearEquiv.symm_symm, Trivialization.continuousLinearMapAt_apply,
     Trivialization.symmL_apply]
