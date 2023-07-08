@@ -142,6 +142,7 @@ open Ideal
 -- and we need this correspondence to be continuous in their Zariski topology.
 variable {𝒜} {f : A} {m : ℕ} (f_deg : f ∈ 𝒜 m) (x : Proj| pbo f)
 
+#print AlgebraicGeometry.ProjIsoSpecTopComponent.ToSpec.carrier /-
 /--
 For any `x` in `Proj| (pbo f)`, the corresponding ideal in `Spec A⁰_f`. This fact that this ideal
 is prime is proven in `Top_component.forward.to_fun`-/
@@ -149,12 +150,16 @@ def carrier : Ideal (A⁰_ f) :=
   Ideal.comap (algebraMap (A⁰_ f) (Away f))
     (Ideal.span <| algebraMap A (Away f) '' x.val.asHomogeneousIdeal)
 #align algebraic_geometry.Proj_iso_Spec_Top_component.to_Spec.carrier AlgebraicGeometry.ProjIsoSpecTopComponent.ToSpec.carrier
+-/
 
+#print AlgebraicGeometry.ProjIsoSpecTopComponent.ToSpec.mem_carrier_iff /-
 theorem mem_carrier_iff (z : A⁰_ f) :
     z ∈ carrier 𝒜 x ↔ z.val ∈ Ideal.span (algebraMap A (Away f) '' x.1.asHomogeneousIdeal) :=
   Iff.rfl
 #align algebraic_geometry.Proj_iso_Spec_Top_component.to_Spec.mem_carrier_iff AlgebraicGeometry.ProjIsoSpecTopComponent.ToSpec.mem_carrier_iff
+-/
 
+#print AlgebraicGeometry.ProjIsoSpecTopComponent.ToSpec.MemCarrier.clear_denominator' /-
 theorem MemCarrier.clear_denominator' [DecidableEq (Away f)] {z : Localization.Away f}
     (hz : z ∈ span (algebraMap A (Away f) '' x.val.asHomogeneousIdeal)) :
     ∃ (c : algebraMap A (Away f) '' x.1.asHomogeneousIdeal →₀ Away f) (N : ℕ) (acd :
@@ -177,7 +182,9 @@ theorem MemCarrier.clear_denominator' [DecidableEq (Away f)] {z : Localization.A
   rw [_root_.map_mul, hacd, (Classical.choose_spec i.1.2).2, smul_eq_mul, smul_mul_assoc]
   rfl
 #align algebraic_geometry.Proj_iso_Spec_Top_component.to_Spec.mem_carrier.clear_denominator' AlgebraicGeometry.ProjIsoSpecTopComponent.ToSpec.MemCarrier.clear_denominator'
+-/
 
+#print AlgebraicGeometry.ProjIsoSpecTopComponent.ToSpec.MemCarrier.clear_denominator /-
 theorem MemCarrier.clear_denominator [DecidableEq (Away f)] {z : A⁰_ f} (hz : z ∈ carrier 𝒜 x) :
     ∃ (c : algebraMap A (Away f) '' x.1.asHomogeneousIdeal →₀ Away f) (N : ℕ) (acd :
       ∀ y ∈ c.support.image c, A),
@@ -187,7 +194,9 @@ theorem MemCarrier.clear_denominator [DecidableEq (Away f)] {z : A⁰_ f} (hz : 
             acd (c i) (Finset.mem_image.mpr ⟨i, ⟨i.2, rfl⟩⟩) * i.1.2.some) :=
   MemCarrier.clear_denominator' x <| (mem_carrier_iff 𝒜 x z).mpr hz
 #align algebraic_geometry.Proj_iso_Spec_Top_component.to_Spec.mem_carrier.clear_denominator AlgebraicGeometry.ProjIsoSpecTopComponent.ToSpec.MemCarrier.clear_denominator
+-/
 
+#print AlgebraicGeometry.ProjIsoSpecTopComponent.ToSpec.disjoint /-
 theorem disjoint : Disjoint (x.1.asHomogeneousIdeal.toIdeal : Set A) (Submonoid.powers f : Set A) :=
   by
   by_contra rid
@@ -201,7 +210,9 @@ theorem disjoint : Disjoint (x.1.asHomogeneousIdeal.toIdeal : Set A) (Submonoid.
     apply x.1.IsPrime.1
     exact hg1
 #align algebraic_geometry.Proj_iso_Spec_Top_component.to_Spec.disjoint AlgebraicGeometry.ProjIsoSpecTopComponent.ToSpec.disjoint
+-/
 
+#print AlgebraicGeometry.ProjIsoSpecTopComponent.ToSpec.carrier_ne_top /-
 theorem carrier_ne_top : carrier 𝒜 x ≠ ⊤ :=
   by
   have eq_top := Disjoint x
@@ -221,9 +232,11 @@ theorem carrier_ne_top : carrier 𝒜 x ≠ ⊤ :=
   generalize_proofs h₁ h₂
   exact (Classical.choose_spec h₂).1
 #align algebraic_geometry.Proj_iso_Spec_Top_component.to_Spec.carrier_ne_top AlgebraicGeometry.ProjIsoSpecTopComponent.ToSpec.carrier_ne_top
+-/
 
 variable (f)
 
+#print AlgebraicGeometry.ProjIsoSpecTopComponent.ToSpec.toFun /-
 /-- The function between the basic open set `D(f)` in `Proj` to the corresponding basic open set in
 `Spec A⁰_f`. This is bundled into a continuous map in `Top_component.forward`.
 -/
@@ -264,7 +277,9 @@ def toFun (x : Proj.T| pbo f) : Spec.T A⁰_ f :=
       refine' mul_mem_left _ _ (mul_mem_left _ _ (sum_mem _ fun i hi => mul_mem_left _ _ _))
       generalize_proofs h₁ h₂; exact (Classical.choose_spec h₂).1⟩
 #align algebraic_geometry.Proj_iso_Spec_Top_component.to_Spec.to_fun AlgebraicGeometry.ProjIsoSpecTopComponent.ToSpec.toFun
+-/
 
+#print AlgebraicGeometry.ProjIsoSpecTopComponent.ToSpec.preimage_eq /-
 /-
 The preimage of basic open set `D(a/f^n)` in `Spec A⁰_f` under the forward map from `Proj A` to
 `Spec A⁰_f` is the basic open set `D(a) ∩ D(f)` in  `Proj A`. This lemma is used to prove that the
@@ -311,6 +326,7 @@ theorem preimage_eq (a b : A) (k : ℕ) (a_mem : a ∈ 𝒜 k) (b_mem1 : b ∈ �
       refine' mul_mem_left _ _ (mul_mem_left _ _ (sum_mem _ fun i hi => mul_mem_left _ _ _))
       generalize_proofs h₁ h₂; exact (Classical.choose_spec h₂).1
 #align algebraic_geometry.Proj_iso_Spec_Top_component.to_Spec.preimage_eq AlgebraicGeometry.ProjIsoSpecTopComponent.ToSpec.preimage_eq
+-/
 
 end ToSpec
 
@@ -318,6 +334,7 @@ section
 
 variable {𝒜}
 
+#print AlgebraicGeometry.ProjIsoSpecTopComponent.toSpec /-
 /-- The continuous function between the basic open set `D(f)` in `Proj` to the corresponding basic
 open set in `Spec A⁰_f`.
 -/
@@ -332,6 +349,7 @@ def toSpec {f : A} : (Proj.T| pbo f) ⟶ Spec.T A⁰_ f
     refine' is_open_induced_iff.mpr ⟨(pbo f).1 ⊓ (pbo a).1, IsOpen.inter (pbo f).2 (pbo a).2, _⟩
     ext z; constructor <;> intro hz <;> simpa [Set.mem_preimage]
 #align algebraic_geometry.Proj_iso_Spec_Top_component.to_Spec AlgebraicGeometry.ProjIsoSpecTopComponent.toSpec
+-/
 
 end
 
@@ -353,6 +371,7 @@ private unsafe def mem_tac : tactic Unit :=
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.1624094475.mem_tac -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.1624094475.mem_tac -/
+#print AlgebraicGeometry.ProjIsoSpecTopComponent.FromSpec.carrier /-
 /-- The function from `Spec A⁰_f` to `Proj|D(f)` is defined by `q ↦ {a | aᵢᵐ/fⁱ ∈ q}`, i.e. sending
 `q` a prime ideal in `A⁰_f` to the homogeneous prime relevant ideal containing only and all the
 elements `a : A` such that for every `i`, the degree 0 element formed by dividing the `m`-th power
@@ -381,9 +400,11 @@ def carrier (q : Spec.T A⁰_ f) : Set A :=
           A⁰_ f) ∈
         q.1}
 #align algebraic_geometry.Proj_iso_Spec_Top_component.from_Spec.carrier AlgebraicGeometry.ProjIsoSpecTopComponent.FromSpec.carrier
+-/
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.1624094475.mem_tac -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.1624094475.mem_tac -/
+#print AlgebraicGeometry.ProjIsoSpecTopComponent.FromSpec.mem_carrier_iff /-
 theorem mem_carrier_iff (q : Spec.T A⁰_ f) (a : A) :
     a ∈ carrier f_deg q ↔
       ∀ i,
@@ -401,7 +422,9 @@ theorem mem_carrier_iff (q : Spec.T A⁰_ f) (a : A) :
           q.1 :=
   Iff.rfl
 #align algebraic_geometry.Proj_iso_Spec_Top_component.from_Spec.mem_carrier_iff AlgebraicGeometry.ProjIsoSpecTopComponent.FromSpec.mem_carrier_iff
+-/
 
+#print AlgebraicGeometry.ProjIsoSpecTopComponent.FromSpec.mem_carrier_iff' /-
 theorem mem_carrier_iff' (q : Spec.T A⁰_ f) (a : A) :
     a ∈ carrier f_deg q ↔
       ∀ i,
@@ -414,6 +437,7 @@ theorem mem_carrier_iff' (q : Spec.T A⁰_ f) (a : A) :
       · rw [Set.mem_image] at h ; rcases h with ⟨x, h, hx⟩
         convert h; rw [ext_iff_val, val_mk']; dsimp only [Subtype.coe_mk]; rw [← hx]; rfl)
 #align algebraic_geometry.Proj_iso_Spec_Top_component.from_Spec.mem_carrier_iff' AlgebraicGeometry.ProjIsoSpecTopComponent.FromSpec.mem_carrier_iff'
+-/
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.1624094475.mem_tac -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.1624094475.mem_tac -/
@@ -423,6 +447,7 @@ theorem mem_carrier_iff' (q : Spec.T A⁰_ f) (a : A) :
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.1624094475.mem_tac -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.1624094475.mem_tac -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.1624094475.mem_tac -/
+#print AlgebraicGeometry.ProjIsoSpecTopComponent.FromSpec.carrier.add_mem /-
 theorem carrier.add_mem (q : Spec.T A⁰_ f) {a b : A} (ha : a ∈ carrier f_deg q)
     (hb : b ∈ carrier f_deg q) : a + b ∈ carrier f_deg q :=
   by
@@ -493,18 +518,22 @@ theorem carrier.add_mem (q : Spec.T A⁰_ f) {a b : A} (ha : a ∈ carrier f_deg
   · rw [mul_assoc, ← pow_add, add_comm (m - j), Nat.add_sub_assoc h1]; · simp_rw [pow_add]; rfl
   · rw [← mul_assoc, ← pow_add, Nat.add_sub_of_le (le_of_not_le h1)]; · simp_rw [pow_add]; rfl
 #align algebraic_geometry.Proj_iso_Spec_Top_component.from_Spec.carrier.add_mem AlgebraicGeometry.ProjIsoSpecTopComponent.FromSpec.carrier.add_mem
+-/
 
 variable (hm : 0 < m) (q : Spec.T A⁰_ f)
 
+#print AlgebraicGeometry.ProjIsoSpecTopComponent.FromSpec.carrier.zero_mem /-
 theorem carrier.zero_mem : (0 : A) ∈ carrier f_deg q := fun i =>
   by
   convert Submodule.zero_mem q.1 using 1
   rw [ext_iff_val, val_mk', zero_val]; simp_rw [map_zero, zero_pow hm]
   convert Localization.mk_zero _ using 1
 #align algebraic_geometry.Proj_iso_Spec_Top_component.from_Spec.carrier.zero_mem AlgebraicGeometry.ProjIsoSpecTopComponent.FromSpec.carrier.zero_mem
+-/
 
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.1624094475.mem_tac -/
 /- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.1624094475.mem_tac -/
+#print AlgebraicGeometry.ProjIsoSpecTopComponent.FromSpec.carrier.smul_mem /-
 theorem carrier.smul_mem (c x : A) (hx : x ∈ carrier f_deg q) : c • x ∈ carrier f_deg q :=
   by
   revert c
@@ -532,7 +561,9 @@ theorem carrier.smul_mem (c x : A) (hx : x ∈ carrier f_deg q) : c • x ∈ ca
     · simp_rw [zero_pow hm]; convert carrier.zero_mem f_deg hm q i; rw [map_zero, zero_pow hm]
   · simp_rw [add_smul]; exact fun _ _ => carrier.add_mem f_deg q
 #align algebraic_geometry.Proj_iso_Spec_Top_component.from_Spec.carrier.smul_mem AlgebraicGeometry.ProjIsoSpecTopComponent.FromSpec.carrier.smul_mem
+-/
 
+#print AlgebraicGeometry.ProjIsoSpecTopComponent.FromSpec.carrier.asIdeal /-
 /-- For a prime ideal `q` in `A⁰_f`, the set `{a | aᵢᵐ/fⁱ ∈ q}` as an ideal.
 -/
 def carrier.asIdeal : Ideal A where
@@ -541,7 +572,9 @@ def carrier.asIdeal : Ideal A where
   add_mem' a b := carrier.add_mem f_deg q
   smul_mem' := carrier.smul_mem f_deg hm q
 #align algebraic_geometry.Proj_iso_Spec_Top_component.from_Spec.carrier.as_ideal AlgebraicGeometry.ProjIsoSpecTopComponent.FromSpec.carrier.asIdeal
+-/
 
+#print AlgebraicGeometry.ProjIsoSpecTopComponent.FromSpec.carrier.asIdeal.homogeneous /-
 theorem carrier.asIdeal.homogeneous : (carrier.asIdeal f_deg hm q).Homogeneous 𝒜 := fun i a ha j =>
   (em (i = j)).elim (fun h => h ▸ by simpa only [proj_apply, decompose_coe, of_eq_same] using ha _)
     fun h =>
@@ -550,13 +583,17 @@ theorem carrier.asIdeal.homogeneous : (carrier.asIdeal f_deg hm q).Homogeneous �
       zero_pow hm]
     convert carrier.zero_mem f_deg hm q j; rw [map_zero, zero_pow hm]
 #align algebraic_geometry.Proj_iso_Spec_Top_component.from_Spec.carrier.as_ideal.homogeneous AlgebraicGeometry.ProjIsoSpecTopComponent.FromSpec.carrier.asIdeal.homogeneous
+-/
 
+#print AlgebraicGeometry.ProjIsoSpecTopComponent.FromSpec.carrier.asHomogeneousIdeal /-
 /-- For a prime ideal `q` in `A⁰_f`, the set `{a | aᵢᵐ/fⁱ ∈ q}` as a homogeneous ideal.
 -/
 def carrier.asHomogeneousIdeal : HomogeneousIdeal 𝒜 :=
   ⟨carrier.asIdeal f_deg hm q, carrier.asIdeal.homogeneous f_deg hm q⟩
 #align algebraic_geometry.Proj_iso_Spec_Top_component.from_Spec.carrier.as_homogeneous_ideal AlgebraicGeometry.ProjIsoSpecTopComponent.FromSpec.carrier.asHomogeneousIdeal
+-/
 
+#print AlgebraicGeometry.ProjIsoSpecTopComponent.FromSpec.carrier.denom_not_mem /-
 theorem carrier.denom_not_mem : f ∉ carrier.asIdeal f_deg hm q := fun rid =>
   q.IsPrime.ne_top <|
     (Ideal.eq_top_iff_one _).mpr
@@ -565,15 +602,21 @@ theorem carrier.denom_not_mem : f ∉ carrier.asIdeal f_deg hm q := fun rid =>
         simpa only [ext_iff_val, one_val, proj_apply, decompose_of_mem_same _ f_deg, val_mk'] using
           (mk_self (⟨_, m, rfl⟩ : Submonoid.powers f)).symm)
 #align algebraic_geometry.Proj_iso_Spec_Top_component.from_Spec.carrier.denom_not_mem AlgebraicGeometry.ProjIsoSpecTopComponent.FromSpec.carrier.denom_not_mem
+-/
 
+#print AlgebraicGeometry.ProjIsoSpecTopComponent.FromSpec.carrier.relevant /-
 theorem carrier.relevant : ¬HomogeneousIdeal.irrelevant 𝒜 ≤ carrier.asHomogeneousIdeal f_deg hm q :=
   fun rid => carrier.denom_not_mem f_deg hm q <| rid <| DirectSum.decompose_of_mem_ne 𝒜 f_deg hm.ne'
 #align algebraic_geometry.Proj_iso_Spec_Top_component.from_Spec.carrier.relevant AlgebraicGeometry.ProjIsoSpecTopComponent.FromSpec.carrier.relevant
+-/
 
+#print AlgebraicGeometry.ProjIsoSpecTopComponent.FromSpec.carrier.asIdeal.ne_top /-
 theorem carrier.asIdeal.ne_top : carrier.asIdeal f_deg hm q ≠ ⊤ := fun rid =>
   carrier.denom_not_mem f_deg hm q (rid.symm ▸ Submodule.mem_top)
 #align algebraic_geometry.Proj_iso_Spec_Top_component.from_Spec.carrier.as_ideal.ne_top AlgebraicGeometry.ProjIsoSpecTopComponent.FromSpec.carrier.asIdeal.ne_top
+-/
 
+#print AlgebraicGeometry.ProjIsoSpecTopComponent.FromSpec.carrier.asIdeal.prime /-
 theorem carrier.asIdeal.prime : (carrier.asIdeal f_deg hm q).IsPrime :=
   (carrier.asIdeal.homogeneous f_deg hm q).isPrime_of_homogeneous_mem_or_mem
     (carrier.asIdeal.ne_top f_deg hm q) fun x y ⟨nx, hnx⟩ ⟨ny, hny⟩ hxy =>
@@ -593,9 +636,11 @@ theorem carrier.asIdeal.prime : (carrier.asIdeal f_deg hm q).IsPrime :=
           | exact hnx
           | exact hny
 #align algebraic_geometry.Proj_iso_Spec_Top_component.from_Spec.carrier.as_ideal.prime AlgebraicGeometry.ProjIsoSpecTopComponent.FromSpec.carrier.asIdeal.prime
+-/
 
 variable (f_deg)
 
+#print AlgebraicGeometry.ProjIsoSpecTopComponent.FromSpec.toFun /-
 /-- The function `Spec A⁰_f → Proj|D(f)` by sending `q` to `{a | aᵢᵐ/fⁱ ∈ q}`.
 -/
 def toFun : (Spec.T A⁰_ f) → Proj.T| pbo f := fun q =>
@@ -603,6 +648,7 @@ def toFun : (Spec.T A⁰_ f) → Proj.T| pbo f := fun q =>
       carrier.relevant f_deg hm q⟩,
     (ProjectiveSpectrum.mem_basicOpen _ f _).mp <| carrier.denom_not_mem f_deg hm q⟩
 #align algebraic_geometry.Proj_iso_Spec_Top_component.from_Spec.to_fun AlgebraicGeometry.ProjIsoSpecTopComponent.FromSpec.toFun
+-/
 
 end FromSpec
 
