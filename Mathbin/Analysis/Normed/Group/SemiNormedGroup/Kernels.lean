@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca, Johan Commelin, Scott Morrison
 
 ! This file was ported from Lean 3 source module analysis.normed.group.SemiNormedGroup.kernels
-! leanprover-community/mathlib commit 17ef379e997badd73e5eabb4d38f11919ab3c4b3
+! leanprover-community/mathlib commit 1a51edf13debfcbe223fa06b1cb353b9ed9751cc
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.CategoryTheory.Limits.Shapes.Kernels
 
 /-!
 # Kernels and cokernels in SemiNormedGroup₁ and SemiNormedGroup
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 We show that `SemiNormedGroup₁` has cokernels
 (for which of course the `cokernel.π f` maps are norm non-increasing),

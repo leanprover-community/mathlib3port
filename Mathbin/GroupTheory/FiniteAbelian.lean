@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Pierre-Alexandre Bazin
 
 ! This file was ported from Lean 3 source module group_theory.finite_abelian
-! leanprover-community/mathlib commit 879155bff5af618b9062cbb2915347dafd749ad6
+! leanprover-community/mathlib commit 1a51edf13debfcbe223fa06b1cb353b9ed9751cc
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Data.Zmod.Quotient
 
 /-!
 # Structure of finite(ly generated) abelian groups
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 * `add_comm_group.equiv_free_prod_direct_sum_zmod` : Any finitely generated abelian group is the
   product of a power of `ℤ` and a direct sum of some `zmod (p i ^ e i)` for some prime powers

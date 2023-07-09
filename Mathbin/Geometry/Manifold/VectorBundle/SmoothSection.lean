@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth, Floris van Doorn
 
 ! This file was ported from Lean 3 source module geometry.manifold.vector_bundle.smooth_section
-! leanprover-community/mathlib commit e473c3198bb41f68560cab68a0529c854b618833
+! leanprover-community/mathlib commit 1a51edf13debfcbe223fa06b1cb353b9ed9751cc
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.Geometry.Manifold.Algebra.LieGroup
 
 /-!
 # Smooth sections
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 In this file we define the type `cont_mdiff_section` of `n` times continuously differentiable
 sections of a smooth vector bundle over a manifold `M` and prove that it's a module.

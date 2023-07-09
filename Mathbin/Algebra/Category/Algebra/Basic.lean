@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module algebra.category.Algebra.basic
-! leanprover-community/mathlib commit 79ffb5563b56fefdea3d60b5736dad168a9494ab
+! leanprover-community/mathlib commit 1a51edf13debfcbe223fa06b1cb353b9ed9751cc
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -15,6 +15,9 @@ import Mathbin.Algebra.Category.Module.Basic
 
 /-!
 # Category instance for algebras over a commutative ring
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 We introduce the bundled category `Algebra` of algebras over a fixed commutative ring `R ` along
 with the forgetful functors to `Ring` and `Module`. We furthermore show that the functor associating

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module linear_algebra.tensor_algebra.to_tensor_power
-! leanprover-community/mathlib commit d97a0c9f7a7efe6d76d652c5a6b7c9c634b70e0a
+! leanprover-community/mathlib commit 1a51edf13debfcbe223fa06b1cb353b9ed9751cc
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.LinearAlgebra.TensorPower
 
 /-!
 # Tensor algebras as direct sums of tensor powers
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 In this file we show that `tensor_algebra R M` is isomorphic to a direct sum of tensor powers, as
 `tensor_algebra.equiv_direct_sum`.

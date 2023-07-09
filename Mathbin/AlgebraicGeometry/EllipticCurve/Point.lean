@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: David Kurniadi Angdinata
 
 ! This file was ported from Lean 3 source module algebraic_geometry.elliptic_curve.point
-! leanprover-community/mathlib commit e2e7f2ac359e7514e4d40061d7c08bb69487ba4e
+! leanprover-community/mathlib commit 1a51edf13debfcbe223fa06b1cb353b9ed9751cc
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.RingTheory.ClassGroup
 
 /-!
 # Nonsingular rational points on Weierstrass curves
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file defines the type of nonsingular rational points on a Weierstrass curve over a field and
 proves that it forms an abelian group under a geometric secant-and-tangent process.
@@ -127,7 +130,7 @@ theorem negY_negY : W.negY x₁ (W.negY x₁ y₁) = y₁ := by simp only [neg_Y
 #align weierstrass_curve.neg_Y_neg_Y WeierstrassCurve.negY_negY
 -/
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.2652570801.map_simp -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.4021998751.map_simp -/
 #print WeierstrassCurve.baseChange_negY /-
 theorem baseChange_negY :
     (W.base_change A).negY (algebraMap R A x₁) (algebraMap R A y₁) =
@@ -147,7 +150,7 @@ theorem baseChange_negY_of_baseChange (x₁ y₁ : A) :
 #align weierstrass_curve.base_change_neg_Y_of_base_change WeierstrassCurve.baseChange_negY_of_baseChange
 -/
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.2062814307.eval_simp -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.806290513.eval_simp -/
 #print WeierstrassCurve.eval_negPolynomial /-
 @[simp]
 theorem eval_negPolynomial : (W.negPolynomial.eval <| C y₁).eval x₁ = W.negY x₁ y₁ := by
@@ -167,7 +170,7 @@ noncomputable def linePolynomial : R[X] :=
 #align weierstrass_curve.line_polynomial WeierstrassCurve.linePolynomial
 -/
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.1008755739.C_simp -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.3192910857.C_simp -/
 #print WeierstrassCurve.XYIdeal_eq₁ /-
 theorem XYIdeal_eq₁ : XYIdeal W x₁ (C y₁) = XYIdeal W x₁ (linePolynomial x₁ y₁ L) :=
   by
@@ -192,8 +195,8 @@ noncomputable def addPolynomial : R[X] :=
 #align weierstrass_curve.add_polynomial WeierstrassCurve.addPolynomial
 -/
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.2062814307.eval_simp -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.1008755739.C_simp -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.806290513.eval_simp -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.3192910857.C_simp -/
 #print WeierstrassCurve.C_addPolynomial /-
 theorem C_addPolynomial :
     C (W.addPolynomial x₁ y₁ L) =
@@ -218,8 +221,8 @@ theorem CoordinateRing.C_addPolynomial :
 #align weierstrass_curve.coordinate_ring.C_add_polynomial WeierstrassCurve.CoordinateRing.C_addPolynomial
 -/
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.2062814307.eval_simp -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.1008755739.C_simp -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.806290513.eval_simp -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.3192910857.C_simp -/
 #print WeierstrassCurve.addPolynomial_eq /-
 theorem addPolynomial_eq :
     W.addPolynomial x₁ y₁ L =
@@ -248,7 +251,7 @@ def addX : R :=
 #align weierstrass_curve.add_X WeierstrassCurve.addX
 -/
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.2652570801.map_simp -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.4021998751.map_simp -/
 #print WeierstrassCurve.baseChange_addX /-
 theorem baseChange_addX :
     (W.base_change A).addX (algebraMap R A x₁) (algebraMap R A x₂) (algebraMap R A L) =
@@ -279,7 +282,7 @@ def addY' : R :=
 #align weierstrass_curve.add_Y' WeierstrassCurve.addY'
 -/
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.2652570801.map_simp -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.4021998751.map_simp -/
 #print WeierstrassCurve.baseChange_addY' /-
 theorem baseChange_addY' :
     (W.base_change A).addY' (algebraMap R A x₁) (algebraMap R A x₂) (algebraMap R A y₁)
@@ -329,7 +332,7 @@ theorem baseChange_addY_of_baseChange (x₁ x₂ y₁ L : A) :
 #align weierstrass_curve.base_change_add_Y_of_base_change WeierstrassCurve.baseChange_addY_of_baseChange
 -/
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.1008755739.C_simp -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.3192910857.C_simp -/
 #print WeierstrassCurve.XYIdeal_add_eq /-
 theorem XYIdeal_add_eq :
     XYIdeal W (W.addX x₁ x₂ L) (C (W.addY x₁ x₂ y₁ L)) =
@@ -348,7 +351,7 @@ theorem XYIdeal_add_eq :
 #align weierstrass_curve.XY_ideal_add_eq WeierstrassCurve.XYIdeal_add_eq
 -/
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.2062814307.eval_simp -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.806290513.eval_simp -/
 #print WeierstrassCurve.equation_add_iff /-
 theorem equation_add_iff :
     W.equation (W.addX x₁ x₂ L) (W.addY' x₁ x₂ y₁ L) ↔
@@ -360,10 +363,10 @@ theorem equation_add_iff :
 #align weierstrass_curve.equation_add_iff WeierstrassCurve.equation_add_iff
 -/
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.2062814307.eval_simp -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.2062814307.eval_simp -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.1686593491.derivative_simp -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.2062814307.eval_simp -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.806290513.eval_simp -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.806290513.eval_simp -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.238258113.derivative_simp -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.806290513.eval_simp -/
 #print WeierstrassCurve.nonsingular_add_of_eval_derivative_ne_zero /-
 theorem nonsingular_add_of_eval_derivative_ne_zero
     (hx' : W.equation (W.addX x₁ x₂ L) (W.addY' x₁ x₂ y₁ L))
@@ -569,8 +572,8 @@ theorem slope_of_Y_ne_eq_eval (hx : x₁ = x₂) (hy : y₁ ≠ W.negY x₂ y₂
 #align weierstrass_curve.slope_of_Y_ne_eq_eval WeierstrassCurve.slope_of_Y_ne_eq_eval
 -/
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.2652570801.map_simp -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.2652570801.map_simp -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.4021998751.map_simp -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.4021998751.map_simp -/
 #print WeierstrassCurve.baseChange_slope /-
 theorem baseChange_slope :
     (W.base_change K).slope (algebraMap F K x₁) (algebraMap F K x₂) (algebraMap F K y₁)
@@ -623,8 +626,8 @@ theorem Y_eq_of_Y_ne (hx : x₁ = x₂) (hy : y₁ ≠ W.negY x₂ y₂) : y₁ 
 #align weierstrass_curve.Y_eq_of_Y_ne WeierstrassCurve.Y_eq_of_Y_ne
 -/
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.2062814307.eval_simp -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.1008755739.C_simp -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.806290513.eval_simp -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.3192910857.C_simp -/
 #print WeierstrassCurve.XYIdeal_eq₂ /-
 theorem XYIdeal_eq₂ (hxy : x₁ = x₂ → y₁ ≠ W.negY x₂ y₂) :
     XYIdeal W x₂ (C y₂) = XYIdeal W x₂ (linePolynomial x₁ y₁ <| W.slope x₁ x₂ y₁ y₂) :=
@@ -689,7 +692,7 @@ theorem CoordinateRing.C_addPolynomial_slope (hxy : x₁ = x₂ → y₁ ≠ W.n
 #align weierstrass_curve.coordinate_ring.C_add_polynomial_slope WeierstrassCurve.CoordinateRing.C_addPolynomial_slope
 -/
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.1686593491.derivative_simp -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.238258113.derivative_simp -/
 #print WeierstrassCurve.derivative_addPolynomial_slope /-
 theorem derivative_addPolynomial_slope (hxy : x₁ = x₂ → y₁ ≠ W.negY x₂ y₂) :
     derivative (W.addPolynomial x₁ y₁ <| W.slope x₁ x₂ y₁ y₂) =
@@ -705,7 +708,7 @@ theorem derivative_addPolynomial_slope (hxy : x₁ = x₂ → y₁ ≠ W.negY x�
 /-! ### The addition law on nonsingular rational points on a Weierstrass curve -/
 
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.2062814307.eval_simp -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.806290513.eval_simp -/
 #print WeierstrassCurve.equation_add' /-
 /-- The addition of two affine points in `W` on a sloped line,
 before applying the final negation that maps $Y$ to $-Y - a_1X - a_3$, lies in `W`. -/
@@ -727,7 +730,7 @@ theorem equation_add (hxy : x₁ = x₂ → y₁ ≠ W.negY x₂ y₂) :
 #align weierstrass_curve.equation_add WeierstrassCurve.equation_add
 -/
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.2062814307.eval_simp -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.806290513.eval_simp -/
 #print WeierstrassCurve.nonsingular_add' /-
 /-- The addition of two nonsingular affine points in `W` on a sloped line,
 before applying the final negation that maps $Y$ to $-Y - a_1X - a_3$, is nonsingular. -/
@@ -863,9 +866,9 @@ variable {F : Type u} [Field F] {W : WeierstrassCurve F} {x₁ x₂ y₁ y₂ : 
   (h₁ : W.nonsingular x₁ y₁) (h₂ : W.nonsingular x₂ y₂) (h₁' : W.equation x₁ y₁)
   (h₂' : W.equation x₂ y₂)
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.1008755739.C_simp -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.1008755739.C_simp -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.1008755739.C_simp -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.3192910857.C_simp -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.3192910857.C_simp -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.3192910857.C_simp -/
 #print WeierstrassCurve.XYIdeal_neg_mul /-
 theorem XYIdeal_neg_mul : XYIdeal W x₁ (C <| W.negY x₁ y₁) * XYIdeal W x₁ (C y₁) = XIdeal W x₁ :=
   by
@@ -917,8 +920,8 @@ private theorem XY_ideal'_mul_inv :
     X_ideal,
     FractionalIdeal.coe_ideal_span_singleton_mul_inv W.function_field <| X_class_ne_zero W x₁]
 
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.1008755739.C_simp -/
-/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.1008755739.C_simp -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.3192910857.C_simp -/
+/- ./././Mathport/Syntax/Translate/Tactic/Builtin.lean:69:18: unsupported non-interactive tactic _private.3192910857.C_simp -/
 #print WeierstrassCurve.XYIdeal_mul_XYIdeal /-
 theorem XYIdeal_mul_XYIdeal (hxy : x₁ = x₂ → y₁ ≠ W.negY x₂ y₂) :
     XIdeal W (W.addX x₁ x₂ <| W.slope x₁ x₂ y₁ y₂) * (XYIdeal W x₁ (C y₁) * XYIdeal W x₂ (C y₂)) =

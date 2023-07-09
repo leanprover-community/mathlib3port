@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Praneeth Kolichala
 
 ! This file was ported from Lean 3 source module algebraic_topology.fundamental_groupoid.product
-! leanprover-community/mathlib commit 178a32653e369dce2da68dc6b2694e385d484ef1
+! leanprover-community/mathlib commit 1a51edf13debfcbe223fa06b1cb353b9ed9751cc
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -15,6 +15,9 @@ import Mathbin.Topology.Homotopy.Product
 
 /-!
 # Fundamental groupoid preserves products
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 In this file, we give the following definitions/theorems:
 
   - `fundamental_groupoid_functor.pi_iso` An isomorphism between Π i, (π Xᵢ) and π (Πi, Xᵢ), whose

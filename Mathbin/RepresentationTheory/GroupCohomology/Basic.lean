@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Amelia Livingston
 
 ! This file was ported from Lean 3 source module representation_theory.group_cohomology.basic
-! leanprover-community/mathlib commit cc5dd6244981976cc9da7afc4eee5682b037a013
+! leanprover-community/mathlib commit 1a51edf13debfcbe223fa06b1cb353b9ed9751cc
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.RepresentationTheory.GroupCohomology.Resolution
 
 /-!
 # The group cohomology of a `k`-linear `G`-representation
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 Let `k` be a commutative ring and `G` a group. This file defines the group cohomology of
 `A : Rep k G` to be the cohomology of the complex

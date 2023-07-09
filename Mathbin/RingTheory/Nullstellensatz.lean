@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Devon Tuma
 
 ! This file was ported from Lean 3 source module ring_theory.nullstellensatz
-! leanprover-community/mathlib commit 9556784a5b84697562e9c6acb40500d4a82e675a
+! leanprover-community/mathlib commit 1a51edf13debfcbe223fa06b1cb353b9ed9751cc
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -15,6 +15,9 @@ import Mathbin.AlgebraicGeometry.PrimeSpectrum.Basic
 
 /-!
 # Nullstellensatz
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 This file establishes a version of Hilbert's classical Nullstellensatz for `mv_polynomial`s.
 The main statement of the theorem is `vanishing_ideal_zero_locus_eq_radical`.
 

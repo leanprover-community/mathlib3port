@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module linear_algebra.exterior_algebra.grading
-! leanprover-community/mathlib commit 34020e531ebc4e8aac6d449d9eecbcd1508ea8d0
+! leanprover-community/mathlib commit 1a51edf13debfcbe223fa06b1cb353b9ed9751cc
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.RingTheory.GradedAlgebra.Basic
 
 /-!
 # Results about the grading structure of the exterior algebra
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 Many of these results are copied with minimal modification from the tensor algebra.
 

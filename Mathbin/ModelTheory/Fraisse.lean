@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Aaron Anderson
 
 ! This file was ported from Lean 3 source module model_theory.fraisse
-! leanprover-community/mathlib commit 0602c59878ff3d5f71dea69c2d32ccf2e93e5398
+! leanprover-community/mathlib commit 1a51edf13debfcbe223fa06b1cb353b9ed9751cc
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.ModelTheory.Bundled
 
 /-!
 # Fraïssé Classes and Fraïssé Limits
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file pertains to the ages of countable first-order structures. The age of a structure is the
 class of all finitely-generated structures that embed into it.

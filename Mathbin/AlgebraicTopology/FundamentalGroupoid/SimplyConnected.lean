@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Praneeth Kolichala
 
 ! This file was ported from Lean 3 source module algebraic_topology.fundamental_groupoid.simply_connected
-! leanprover-community/mathlib commit 38341f11ded9e2bc1371eb42caad69ecacf8f541
+! leanprover-community/mathlib commit 1a51edf13debfcbe223fa06b1cb353b9ed9751cc
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -15,6 +15,9 @@ import Mathbin.AlgebraicTopology.FundamentalGroupoid.Punit
 
 /-!
 # Simply connected spaces
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 This file defines simply connected spaces.
 A topological space is simply connected if its fundamental groupoid is equivalent to `unit`.
 

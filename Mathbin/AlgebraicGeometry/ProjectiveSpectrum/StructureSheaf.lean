@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Jujian Zhang
 
 ! This file was ported from Lean 3 source module algebraic_geometry.projective_spectrum.structure_sheaf
-! leanprover-community/mathlib commit 486cb2f3bda4a67557c6285f5bd0c3348c1eea81
+! leanprover-community/mathlib commit 1a51edf13debfcbe223fa06b1cb353b9ed9751cc
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -15,6 +15,9 @@ import Mathbin.AlgebraicGeometry.LocallyRingedSpace
 
 /-!
 # The structure sheaf on `projective_spectrum 𝒜`.
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 In `src/algebraic_geometry/topology.lean`, we have given a topology on `projective_spectrum 𝒜`; in
 this file we will construct a sheaf on `projective_spectrum 𝒜`.

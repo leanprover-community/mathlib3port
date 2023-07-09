@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Sébastien Gouëzel
 
 ! This file was ported from Lean 3 source module topology.metric_space.gromov_hausdorff
-! leanprover-community/mathlib commit 0c1f285a9f6e608ae2bdffa3f993eafb01eba829
+! leanprover-community/mathlib commit 1a51edf13debfcbe223fa06b1cb353b9ed9751cc
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -16,6 +16,9 @@ import Mathbin.Topology.MetricSpace.Kuratowski
 
 /-!
 # Gromov-Hausdorff distance
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file defines the Gromov-Hausdorff distance on the space of nonempty compact metric spaces
 up to isometry.

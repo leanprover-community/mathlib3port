@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Antoine Labelle
 
 ! This file was ported from Lean 3 source module representation_theory.character
-! leanprover-community/mathlib commit 55b3f8206b8596db8bb1804d8a92814a0b6670c9
+! leanprover-community/mathlib commit 1a51edf13debfcbe223fa06b1cb353b9ed9751cc
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.RepresentationTheory.Invariants
 
 /-!
 # Characters of representations
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file introduces characters of representation and proves basic lemmas about how characters
 behave under various operations on representations.

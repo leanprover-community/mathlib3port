@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Devon Tuma
 
 ! This file was ported from Lean 3 source module ring_theory.jacobson
-! leanprover-community/mathlib commit a7c017d750512a352b623b1824d75da5998457d0
+! leanprover-community/mathlib commit 1a51edf13debfcbe223fa06b1cb353b9ed9751cc
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.RingTheory.JacobsonIdeal
 
 /-!
 # Jacobson Rings
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 The following conditions are equivalent for a ring `R`:
 1. Every radical ideal `I` is equal to its Jacobson radical
 2. Every radical ideal `I` can be written as an intersection of maximal ideals
