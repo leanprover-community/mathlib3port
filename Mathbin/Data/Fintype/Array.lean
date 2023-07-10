@@ -22,7 +22,7 @@ instance DArray.fintype {n : ℕ} {α : Fin n → Type _} [∀ n, Fintype (α n)
   Fintype.ofEquiv _ (Equiv.dArrayEquivFin _).symm
 #align d_array.fintype DArray.fintype
 
-instance Array'.fintype {n : ℕ} {α : Type _} [Fintype α] : Fintype (Array' n α) :=
+instance Vector.fintype {n : ℕ} {α : Type _} [Fintype α] : Fintype (Array' n α) :=
   DArray.fintype
-#align array.fintype Array'.fintype
+#align array.fintype Vector.fintypeₓ
 
