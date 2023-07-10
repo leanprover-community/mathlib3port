@@ -255,6 +255,7 @@ protected theorem hasBasis_nhds_zero [TopologicalSpace F] [TopologicalAddGroup F
 
 variable (G) [TopologicalSpace F] [TopologicalSpace G]
 
+#print ContinuousLinearMap.precomp /-
 /-- Pre-composition by a *fixed* continuous linear map as a continuous linear map.
 Note that in non-normed space it is not always true that composition is continuous
 in both variables, so we have to fix one of them. -/
@@ -274,9 +275,11 @@ def precomp [TopologicalAddGroup G] [ContinuousConstSMul 𝕜₃ G] [RingHomSurj
         (strong_topology.embedding_coe_fn _ _ _).Continuous
     exact fun S hS => hS.image L
 #align continuous_linear_map.precomp ContinuousLinearMap.precomp
+-/
 
 variable (E) {G}
 
+#print ContinuousLinearMap.postcomp /-
 /-- Post-composition by a *fixed* continuous linear map as a continuous linear map.
 Note that in non-normed space it is not always true that composition is continuous
 in both variables, so we have to fix one of them. -/
@@ -297,6 +300,7 @@ def postcomp [TopologicalAddGroup F] [TopologicalAddGroup G] [ContinuousConstSMu
       (UniformOnFun.postcomp_uniformContinuous L.uniform_continuous).Continuous.comp
         (strong_topology.embedding_coe_fn _ _ _).Continuous
 #align continuous_linear_map.postcomp ContinuousLinearMap.postcomp
+-/
 
 end BoundedSets
 
