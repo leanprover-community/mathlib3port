@@ -37,6 +37,7 @@ variable (A : Type u) [Semiring A] [Algebra R A]
 
 variable {B : Type u} [CommRing B] [Algebra R B] (I : Ideal B)
 
+#print Algebra.FormallyUnramified /-
 /-- An `R`-algebra `A` is formally unramified if for every `R`-algebra, every square-zero ideal
 `I : ideal B` and `f : A →ₐ[R] B ⧸ I`, there exists at most one lift `A →ₐ[R] B`. -/
 @[mk_iff]
@@ -46,7 +47,9 @@ class FormallyUnramified : Prop where
       ∀ [Algebra R B] (I : Ideal B) (hI : I ^ 2 = ⊥),
         Function.Injective ((Ideal.Quotient.mkₐ R I).comp : (A →ₐ[R] B) → A →ₐ[R] B ⧸ I)
 #align algebra.formally_unramified Algebra.FormallyUnramified
+-/
 
+#print Algebra.FormallySmooth /-
 /-- An `R` algebra `A` is formally smooth if for every `R`-algebra, every square-zero ideal
 `I : ideal B` and `f : A →ₐ[R] B ⧸ I`, there exists at least one lift `A →ₐ[R] B`. -/
 @[mk_iff]
@@ -56,7 +59,9 @@ class FormallySmooth : Prop where
       ∀ [Algebra R B] (I : Ideal B) (hI : I ^ 2 = ⊥),
         Function.Surjective ((Ideal.Quotient.mkₐ R I).comp : (A →ₐ[R] B) → A →ₐ[R] B ⧸ I)
 #align algebra.formally_smooth Algebra.FormallySmooth
+-/
 
+#print Algebra.FormallyEtale /-
 /-- An `R` algebra `A` is formally étale if for every `R`-algebra, every square-zero ideal
 `I : ideal B` and `f : A →ₐ[R] B ⧸ I`, there exists exactly one lift `A →ₐ[R] B`. -/
 @[mk_iff]
@@ -66,9 +71,11 @@ class FormallyEtale : Prop where
       ∀ [Algebra R B] (I : Ideal B) (hI : I ^ 2 = ⊥),
         Function.Bijective ((Ideal.Quotient.mkₐ R I).comp : (A →ₐ[R] B) → A →ₐ[R] B ⧸ I)
 #align algebra.formally_etale Algebra.FormallyEtale
+-/
 
 variable {R A}
 
+#print Algebra.FormallyEtale.iff_unramified_and_smooth /-
 theorem FormallyEtale.iff_unramified_and_smooth :
     FormallyEtale R A ↔ FormallyUnramified R A ∧ FormallySmooth R A :=
   by
@@ -76,21 +83,29 @@ theorem FormallyEtale.iff_unramified_and_smooth :
   simp_rw [← forall_and]
   rfl
 #align algebra.formally_etale.iff_unramified_and_smooth Algebra.FormallyEtale.iff_unramified_and_smooth
+-/
 
+#print Algebra.FormallyEtale.to_unramified /-
 instance (priority := 100) FormallyEtale.to_unramified [h : FormallyEtale R A] :
     FormallyUnramified R A :=
   (FormallyEtale.iff_unramified_and_smooth.mp h).1
 #align algebra.formally_etale.to_unramified Algebra.FormallyEtale.to_unramified
+-/
 
+#print Algebra.FormallyEtale.to_smooth /-
 instance (priority := 100) FormallyEtale.to_smooth [h : FormallyEtale R A] : FormallySmooth R A :=
   (FormallyEtale.iff_unramified_and_smooth.mp h).2
 #align algebra.formally_etale.to_smooth Algebra.FormallyEtale.to_smooth
+-/
 
+#print Algebra.FormallyEtale.of_unramified_and_smooth /-
 theorem FormallyEtale.of_unramified_and_smooth [h₁ : FormallyUnramified R A]
     [h₂ : FormallySmooth R A] : FormallyEtale R A :=
   FormallyEtale.iff_unramified_and_smooth.mpr ⟨h₁, h₂⟩
 #align algebra.formally_etale.of_unramified_and_smooth Algebra.FormallyEtale.of_unramified_and_smooth
+-/
 
+#print Algebra.FormallyUnramified.lift_unique /-
 theorem FormallyUnramified.lift_unique {B : Type u} [CommRing B] [_RB : Algebra R B]
     [FormallyUnramified R A] (I : Ideal B) (hI : IsNilpotent I) (g₁ g₂ : A →ₐ[R] B)
     (h : (Ideal.Quotient.mkₐ R I).comp g₁ = (Ideal.Quotient.mkₐ R I).comp g₂) : g₁ = g₂ :=
@@ -108,12 +123,16 @@ theorem FormallyUnramified.lift_unique {B : Type u} [CommRing B] [_RB : Algebra 
     dsimp only [AlgHom.comp_apply, Ideal.Quotient.mkₐ_eq_mk] at e ⊢
     rwa [Ideal.Quotient.eq, ← map_sub, Ideal.mem_quotient_iff_mem hIJ, ← Ideal.Quotient.eq]
 #align algebra.formally_unramified.lift_unique Algebra.FormallyUnramified.lift_unique
+-/
 
+#print Algebra.FormallyUnramified.ext /-
 theorem FormallyUnramified.ext [FormallyUnramified R A] (hI : IsNilpotent I) {g₁ g₂ : A →ₐ[R] B}
     (H : ∀ x, Ideal.Quotient.mk I (g₁ x) = Ideal.Quotient.mk I (g₂ x)) : g₁ = g₂ :=
   FormallyUnramified.lift_unique I hI g₁ g₂ (AlgHom.ext H)
 #align algebra.formally_unramified.ext Algebra.FormallyUnramified.ext
+-/
 
+#print Algebra.FormallyUnramified.lift_unique_of_ringHom /-
 theorem FormallyUnramified.lift_unique_of_ringHom [FormallyUnramified R A] {C : Type u} [CommRing C]
     (f : B →+* C) (hf : IsNilpotent f.ker) (g₁ g₂ : A →ₐ[R] B)
     (h : f.comp ↑g₁ = f.comp (g₂ : A →+* B)) : g₁ = g₂ :=
@@ -124,18 +143,24 @@ theorem FormallyUnramified.lift_unique_of_ringHom [FormallyUnramified R A] {C : 
       simpa only [Ideal.Quotient.eq, Function.comp_apply, AlgHom.coe_comp, Ideal.Quotient.mkₐ_eq_mk,
         RingHom.mem_ker, map_sub, sub_eq_zero])
 #align algebra.formally_unramified.lift_unique_of_ring_hom Algebra.FormallyUnramified.lift_unique_of_ringHom
+-/
 
+#print Algebra.FormallyUnramified.ext' /-
 theorem FormallyUnramified.ext' [FormallyUnramified R A] {C : Type u} [CommRing C] (f : B →+* C)
     (hf : IsNilpotent f.ker) (g₁ g₂ : A →ₐ[R] B) (h : ∀ x, f (g₁ x) = f (g₂ x)) : g₁ = g₂ :=
   FormallyUnramified.lift_unique_of_ringHom f hf g₁ g₂ (RingHom.ext h)
 #align algebra.formally_unramified.ext' Algebra.FormallyUnramified.ext'
+-/
 
+#print Algebra.FormallyUnramified.lift_unique' /-
 theorem FormallyUnramified.lift_unique' [FormallyUnramified R A] {C : Type u} [CommRing C]
     [Algebra R C] (f : B →ₐ[R] C) (hf : IsNilpotent (f : B →+* C).ker) (g₁ g₂ : A →ₐ[R] B)
     (h : f.comp g₁ = f.comp g₂) : g₁ = g₂ :=
   FormallyUnramified.ext' _ hf g₁ g₂ (AlgHom.congr_fun h)
 #align algebra.formally_unramified.lift_unique' Algebra.FormallyUnramified.lift_unique'
+-/
 
+#print Algebra.FormallySmooth.exists_lift /-
 theorem FormallySmooth.exists_lift {B : Type u} [CommRing B] [_RB : Algebra R B]
     [FormallySmooth R A] (I : Ideal B) (hI : IsNilpotent I) (g : A →ₐ[R] B ⧸ I) :
     ∃ f : A →ₐ[R] B, (Ideal.Quotient.mkₐ R I).comp f = g :=
@@ -159,28 +184,36 @@ theorem FormallySmooth.exists_lift {B : Type u} [CommRing B] [_RB : Algebra R B]
         AlgEquiv.comp_symm, AlgHom.id_comp]
     exact ⟨g', e⟩
 #align algebra.formally_smooth.exists_lift Algebra.FormallySmooth.exists_lift
+-/
 
+#print Algebra.FormallySmooth.lift /-
 /-- For a formally smooth `R`-algebra `A` and a map `f : A →ₐ[R] B ⧸ I` with `I` square-zero,
 this is an arbitrary lift `A →ₐ[R] B`. -/
 noncomputable def FormallySmooth.lift [FormallySmooth R A] (I : Ideal B) (hI : IsNilpotent I)
     (g : A →ₐ[R] B ⧸ I) : A →ₐ[R] B :=
   (FormallySmooth.exists_lift I hI g).some
 #align algebra.formally_smooth.lift Algebra.FormallySmooth.lift
+-/
 
+#print Algebra.FormallySmooth.comp_lift /-
 @[simp]
 theorem FormallySmooth.comp_lift [FormallySmooth R A] (I : Ideal B) (hI : IsNilpotent I)
     (g : A →ₐ[R] B ⧸ I) : (Ideal.Quotient.mkₐ R I).comp (FormallySmooth.lift I hI g) = g :=
   (FormallySmooth.exists_lift I hI g).choose_spec
 #align algebra.formally_smooth.comp_lift Algebra.FormallySmooth.comp_lift
+-/
 
+#print Algebra.FormallySmooth.mk_lift /-
 @[simp]
 theorem FormallySmooth.mk_lift [FormallySmooth R A] (I : Ideal B) (hI : IsNilpotent I)
     (g : A →ₐ[R] B ⧸ I) (x : A) : Ideal.Quotient.mk I (FormallySmooth.lift I hI g x) = g x :=
   AlgHom.congr_fun (FormallySmooth.comp_lift I hI g : _) x
 #align algebra.formally_smooth.mk_lift Algebra.FormallySmooth.mk_lift
+-/
 
 variable {C : Type u} [CommRing C] [Algebra R C]
 
+#print Algebra.FormallySmooth.liftOfSurjective /-
 /-- For a formally smooth `R`-algebra `A` and a map `f : A →ₐ[R] B ⧸ I` with `I` nilpotent,
 this is an arbitrary lift `A →ₐ[R] B`. -/
 noncomputable def FormallySmooth.liftOfSurjective [FormallySmooth R A] (f : A →ₐ[R] C)
@@ -188,7 +221,9 @@ noncomputable def FormallySmooth.liftOfSurjective [FormallySmooth R A] (f : A �
     A →ₐ[R] B :=
   FormallySmooth.lift _ hg' ((Ideal.quotientKerAlgEquivOfSurjective hg).symm.toAlgHom.comp f)
 #align algebra.formally_smooth.lift_of_surjective Algebra.FormallySmooth.liftOfSurjective
+-/
 
+#print Algebra.FormallySmooth.liftOfSurjective_apply /-
 @[simp]
 theorem FormallySmooth.liftOfSurjective_apply [FormallySmooth R A] (f : A →ₐ[R] C) (g : B →ₐ[R] C)
     (hg : Function.Surjective g) (hg' : IsNilpotent (g : B →+* C).ker) (x : A) :
@@ -203,13 +238,16 @@ theorem FormallySmooth.liftOfSurjective_apply [FormallySmooth R A] (f : A →ₐ
     Ideal.quotientKerAlgEquivOfRightInverse.apply]
   exact (Ideal.kerLiftAlg_mk _ _).symm
 #align algebra.formally_smooth.lift_of_surjective_apply Algebra.FormallySmooth.liftOfSurjective_apply
+-/
 
+#print Algebra.FormallySmooth.comp_liftOfSurjective /-
 @[simp]
 theorem FormallySmooth.comp_liftOfSurjective [FormallySmooth R A] (f : A →ₐ[R] C) (g : B →ₐ[R] C)
     (hg : Function.Surjective g) (hg' : IsNilpotent (g : B →+* C).ker) :
     g.comp (FormallySmooth.liftOfSurjective f g hg hg') = f :=
   AlgHom.ext (FormallySmooth.liftOfSurjective_apply f g hg hg')
 #align algebra.formally_smooth.comp_lift_of_surjective Algebra.FormallySmooth.comp_liftOfSurjective
+-/
 
 end
 
@@ -219,6 +257,7 @@ variable {R : Type u} [CommSemiring R]
 
 variable {A B : Type u} [Semiring A] [Algebra R A] [Semiring B] [Algebra R B]
 
+#print Algebra.FormallySmooth.of_equiv /-
 theorem FormallySmooth.of_equiv [FormallySmooth R A] (e : A ≃ₐ[R] B) : FormallySmooth R B :=
   by
   constructor
@@ -227,7 +266,9 @@ theorem FormallySmooth.of_equiv [FormallySmooth R A] (e : A ≃ₐ[R] B) : Forma
   rw [← AlgHom.comp_assoc, formally_smooth.comp_lift, AlgHom.comp_assoc, AlgEquiv.comp_symm,
     AlgHom.comp_id]
 #align algebra.formally_smooth.of_equiv Algebra.FormallySmooth.of_equiv
+-/
 
+#print Algebra.FormallyUnramified.of_equiv /-
 theorem FormallyUnramified.of_equiv [FormallyUnramified R A] (e : A ≃ₐ[R] B) :
     FormallyUnramified R B := by
   constructor
@@ -237,11 +278,14 @@ theorem FormallyUnramified.of_equiv [FormallyUnramified R A] (e : A ≃ₐ[R] B)
   refine' formally_unramified.comp_injective I hI _
   rw [← AlgHom.comp_assoc, e', AlgHom.comp_assoc]
 #align algebra.formally_unramified.of_equiv Algebra.FormallyUnramified.of_equiv
+-/
 
+#print Algebra.FormallyEtale.of_equiv /-
 theorem FormallyEtale.of_equiv [FormallyEtale R A] (e : A ≃ₐ[R] B) : FormallyEtale R B :=
   FormallyEtale.iff_unramified_and_smooth.mpr
     ⟨FormallyUnramified.of_equiv e, FormallySmooth.of_equiv e⟩
 #align algebra.formally_etale.of_equiv Algebra.FormallyEtale.of_equiv
+-/
 
 end OfEquiv
 
@@ -251,6 +295,7 @@ open scoped Polynomial
 
 variable (R : Type u) [CommSemiring R]
 
+#print Algebra.FormallySmooth.mvPolynomial /-
 instance FormallySmooth.mvPolynomial (σ : Type u) : FormallySmooth R (MvPolynomial σ R) :=
   by
   constructor
@@ -263,11 +308,14 @@ instance FormallySmooth.mvPolynomial (σ : Type u) : FormallySmooth R (MvPolynom
   rw [← hg, AlgHom.comp_apply, MvPolynomial.aeval_X]
   rfl
 #align algebra.formally_smooth.mv_polynomial Algebra.FormallySmooth.mvPolynomial
+-/
 
+#print Algebra.FormallySmooth.polynomial /-
 instance FormallySmooth.polynomial : FormallySmooth R R[X] :=
   @FormallySmooth.of_equiv _ _ _ _ _ (FormallySmooth.mvPolynomial R PUnit)
     (MvPolynomial.pUnitAlgEquiv R)
 #align algebra.formally_smooth.polynomial Algebra.FormallySmooth.polynomial
+-/
 
 end Polynomial
 
@@ -279,6 +327,7 @@ variable (A : Type u) [CommSemiring A] [Algebra R A]
 
 variable (B : Type u) [Semiring B] [Algebra R B] [Algebra A B] [IsScalarTower R A B]
 
+#print Algebra.FormallySmooth.comp /-
 theorem FormallySmooth.comp [FormallySmooth R A] [FormallySmooth A B] : FormallySmooth R B :=
   by
   constructor
@@ -290,7 +339,9 @@ theorem FormallySmooth.comp [FormallySmooth R A] [FormallySmooth A B] : Formally
   apply_fun AlgHom.restrictScalars R at e' 
   exact ⟨f''.restrict_scalars _, e'.trans (AlgHom.ext fun _ => rfl)⟩
 #align algebra.formally_smooth.comp Algebra.FormallySmooth.comp
+-/
 
+#print Algebra.FormallyUnramified.comp /-
 theorem FormallyUnramified.comp [FormallyUnramified R A] [FormallyUnramified A B] :
     FormallyUnramified R B := by
   constructor
@@ -306,7 +357,9 @@ theorem FormallyUnramified.comp [FormallyUnramified R A] [FormallyUnramified A B
   congr
   exact formally_unramified.ext I ⟨2, hI⟩ (AlgHom.congr_fun e)
 #align algebra.formally_unramified.comp Algebra.FormallyUnramified.comp
+-/
 
+#print Algebra.FormallyUnramified.of_comp /-
 theorem FormallyUnramified.of_comp [FormallyUnramified R B] : FormallyUnramified A B :=
   by
   constructor
@@ -318,11 +371,14 @@ theorem FormallyUnramified.of_comp [FormallyUnramified R B] : FormallyUnramified
   intro x
   exact AlgHom.congr_fun e' x
 #align algebra.formally_unramified.of_comp Algebra.FormallyUnramified.of_comp
+-/
 
+#print Algebra.FormallyEtale.comp /-
 theorem FormallyEtale.comp [FormallyEtale R A] [FormallyEtale A B] : FormallyEtale R B :=
   FormallyEtale.iff_unramified_and_smooth.mpr
     ⟨FormallyUnramified.comp R A B, FormallySmooth.comp R A B⟩
 #align algebra.formally_etale.comp Algebra.FormallyEtale.comp
+-/
 
 end Comp
 
@@ -334,6 +390,7 @@ variable {P A : Type u} [CommRing A] [Algebra R A] [CommRing P] [Algebra R P]
 
 variable (I : Ideal P) (f : P →ₐ[R] A) (hf : Function.Surjective f)
 
+#print Algebra.FormallySmooth.of_split /-
 theorem FormallySmooth.of_split [FormallySmooth R P] (g : A →ₐ[R] P ⧸ f.toRingHom.ker ^ 2)
     (hg : f.kerSquareLift.comp g = AlgHom.id R A) : FormallySmooth R A :=
   by
@@ -358,7 +415,9 @@ theorem FormallySmooth.of_split [FormallySmooth R P] (g : A →ₐ[R] P ⧸ f.to
     exact (formally_smooth.mk_lift I ⟨2, hI⟩ (i.comp f) x).symm
   exact ⟨l.comp g, by rw [← AlgHom.comp_assoc, ← this, AlgHom.comp_assoc, hg, AlgHom.comp_id]⟩
 #align algebra.formally_smooth.of_split Algebra.FormallySmooth.of_split
+-/
 
+#print Algebra.FormallySmooth.iff_split_surjection /-
 /-- Let `P →ₐ[R] A` be a surjection with kernel `J`, and `P` a formally smooth `R`-algebra,
 then `A` is formally smooth over `R` iff the surjection `P ⧸ J ^ 2 →ₐ[R] A` has a section.
 
@@ -372,7 +431,7 @@ theorem FormallySmooth.iff_split_surjection [FormallySmooth R P] :
     have surj : Function.Surjective f.ker_square_lift := fun x =>
       ⟨Submodule.Quotient.mk (hf x).some, (hf x).choose_spec⟩
     have sqz : RingHom.ker f.ker_square_lift.to_ring_hom ^ 2 = 0 := by
-      rw [AlgHom.ker_ker_sqare_lift, Ideal.cotangentIdeal_square, Ideal.zero_eq_bot]
+      rw [AlgHom.ker_kerSquareLift, Ideal.cotangentIdeal_square, Ideal.zero_eq_bot]
     refine'
       ⟨formally_smooth.lift _ ⟨2, sqz⟩ (Ideal.quotientKerAlgEquivOfSurjective surj).symm.toAlgHom,
         _⟩
@@ -393,6 +452,7 @@ theorem FormallySmooth.iff_split_surjection [FormallySmooth R P] :
     rfl
   · rintro ⟨g, hg⟩; exact formally_smooth.of_split f g hg
 #align algebra.formally_smooth.iff_split_surjection Algebra.FormallySmooth.iff_split_surjection
+-/
 
 end OfSurjective
 
@@ -402,6 +462,7 @@ open scoped TensorProduct
 
 variable {R S : Type u} [CommRing R] [CommRing S] [Algebra R S]
 
+#print Algebra.FormallyUnramified.subsingleton_kaehlerDifferential /-
 instance FormallyUnramified.subsingleton_kaehlerDifferential [FormallyUnramified R S] :
     Subsingleton (Ω[S⁄R]) := by
   rw [← not_nontrivial_iff_subsingleton]
@@ -410,10 +471,12 @@ instance FormallyUnramified.subsingleton_kaehlerDifferential [FormallyUnramified
   apply e
   ext1
   apply formally_unramified.lift_unique' _ _ _ _ (f₁.2.trans f₂.2.symm)
-  rw [← AlgHom.toRingHom_eq_coe, AlgHom.ker_ker_sqare_lift]
+  rw [← AlgHom.toRingHom_eq_coe, AlgHom.ker_kerSquareLift]
   exact ⟨_, Ideal.cotangentIdeal_square _⟩
 #align algebra.formally_unramified.subsingleton_kaehler_differential Algebra.FormallyUnramified.subsingleton_kaehlerDifferential
+-/
 
+#print Algebra.FormallyUnramified.iff_subsingleton_kaehlerDifferential /-
 theorem FormallyUnramified.iff_subsingleton_kaehlerDifferential :
     FormallyUnramified R S ↔ Subsingleton (Ω[S⁄R]) :=
   by
@@ -429,6 +492,7 @@ theorem FormallyUnramified.iff_subsingleton_kaehlerDifferential :
             (derivationToSquareZeroEquivLift I hI)).Surjective.Subsingleton
     exact subtype.ext_iff.mp (@Subsingleton.elim this ⟨f₁, rfl⟩ ⟨f₂, e.symm⟩)
 #align algebra.formally_unramified.iff_subsingleton_kaehler_differential Algebra.FormallyUnramified.iff_subsingleton_kaehlerDifferential
+-/
 
 end UnramifiedDerivation
 
@@ -442,6 +506,7 @@ variable {A : Type u} [Semiring A] [Algebra R A]
 
 variable (B : Type u) [CommSemiring B] [Algebra R B]
 
+#print Algebra.FormallyUnramified.base_change /-
 instance FormallyUnramified.base_change [FormallyUnramified R A] :
     FormallyUnramified B (B ⊗[R] A) := by
   constructor
@@ -463,7 +528,9 @@ instance FormallyUnramified.base_change [FormallyUnramified R A] :
   intro x
   exact AlgHom.congr_fun e (1 ⊗ₜ x)
 #align algebra.formally_unramified.base_change Algebra.FormallyUnramified.base_change
+-/
 
+#print Algebra.FormallySmooth.base_change /-
 instance FormallySmooth.base_change [FormallySmooth R A] : FormallySmooth B (B ⊗[R] A) :=
   by
   constructor
@@ -479,10 +546,13 @@ instance FormallySmooth.base_change [FormallySmooth R A] : FormallySmooth B (B �
     suffices algebraMap B _ b * f (1 ⊗ₜ[R] a) = f (b ⊗ₜ[R] a) by simpa [Algebra.ofId_apply]
     rw [← Algebra.smul_def, ← map_smul, TensorProduct.smul_tmul', smul_eq_mul, mul_one]
 #align algebra.formally_smooth.base_change Algebra.FormallySmooth.base_change
+-/
 
+#print Algebra.FormallyEtale.base_change /-
 instance FormallyEtale.base_change [FormallyEtale R A] : FormallyEtale B (B ⊗[R] A) :=
   FormallyEtale.iff_unramified_and_smooth.mpr ⟨inferInstance, inferInstance⟩
 #align algebra.formally_etale.base_change Algebra.FormallyEtale.base_change
+-/
 
 end BaseChange
 
@@ -500,6 +570,7 @@ variable [IsLocalization M Rₘ] [IsLocalization (M.map (algebraMap R S)) Sₘ]
 
 attribute [local elab_as_elim] Ideal.IsNilpotent.induction_on
 
+#print Algebra.FormallySmooth.of_isLocalization /-
 theorem FormallySmooth.of_isLocalization : FormallySmooth R Rₘ :=
   by
   constructor
@@ -517,7 +588,9 @@ theorem FormallySmooth.of_isLocalization : FormallySmooth R Rₘ :=
   ext
   simp
 #align algebra.formally_smooth.of_is_localization Algebra.FormallySmooth.of_isLocalization
+-/
 
+#print Algebra.FormallyUnramified.of_isLocalization /-
 /-- This holds in general for epimorphisms. -/
 theorem FormallyUnramified.of_isLocalization : FormallyUnramified R Rₘ :=
   by
@@ -528,12 +601,16 @@ theorem FormallyUnramified.of_isLocalization : FormallyUnramified R Rₘ :=
   ext
   simp
 #align algebra.formally_unramified.of_is_localization Algebra.FormallyUnramified.of_isLocalization
+-/
 
+#print Algebra.FormallyEtale.of_isLocalization /-
 theorem FormallyEtale.of_isLocalization : FormallyEtale R Rₘ :=
   FormallyEtale.iff_unramified_and_smooth.mpr
     ⟨FormallyUnramified.of_isLocalization M, FormallySmooth.of_isLocalization M⟩
 #align algebra.formally_etale.of_is_localization Algebra.FormallyEtale.of_isLocalization
+-/
 
+#print Algebra.FormallySmooth.localization_base /-
 theorem FormallySmooth.localization_base [FormallySmooth R Sₘ] : FormallySmooth Rₘ Sₘ :=
   by
   constructor
@@ -557,7 +634,9 @@ theorem FormallySmooth.localization_base [FormallySmooth R Sₘ] : FormallySmoot
   ext
   simp
 #align algebra.formally_smooth.localization_base Algebra.FormallySmooth.localization_base
+-/
 
+#print Algebra.FormallyUnramified.localization_base /-
 /-- This actually does not need the localization instance, and is stated here again for
 consistency. See `algebra.formally_unramified.of_comp` instead.
 
@@ -567,19 +646,25 @@ consistency. See `algebra.formally_unramified.of_comp` instead.
 theorem FormallyUnramified.localization_base [FormallyUnramified R Sₘ] : FormallyUnramified Rₘ Sₘ :=
   FormallyUnramified.of_comp R Rₘ Sₘ
 #align algebra.formally_unramified.localization_base Algebra.FormallyUnramified.localization_base
+-/
 
+#print Algebra.FormallyEtale.localization_base /-
 theorem FormallyEtale.localization_base [FormallyEtale R Sₘ] : FormallyEtale Rₘ Sₘ :=
   FormallyEtale.iff_unramified_and_smooth.mpr
     ⟨FormallyUnramified.localization_base M, FormallySmooth.localization_base M⟩
 #align algebra.formally_etale.localization_base Algebra.FormallyEtale.localization_base
+-/
 
+#print Algebra.FormallySmooth.localization_map /-
 theorem FormallySmooth.localization_map [FormallySmooth R S] : FormallySmooth Rₘ Sₘ :=
   by
   haveI : formally_smooth S Sₘ := formally_smooth.of_is_localization (M.map (algebraMap R S))
   haveI : formally_smooth R Sₘ := formally_smooth.comp R S Sₘ
   exact formally_smooth.localization_base M
 #align algebra.formally_smooth.localization_map Algebra.FormallySmooth.localization_map
+-/
 
+#print Algebra.FormallyUnramified.localization_map /-
 theorem FormallyUnramified.localization_map [FormallyUnramified R S] : FormallyUnramified Rₘ Sₘ :=
   by
   haveI : formally_unramified S Sₘ :=
@@ -587,13 +672,16 @@ theorem FormallyUnramified.localization_map [FormallyUnramified R S] : FormallyU
   haveI : formally_unramified R Sₘ := formally_unramified.comp R S Sₘ
   exact formally_unramified.localization_base M
 #align algebra.formally_unramified.localization_map Algebra.FormallyUnramified.localization_map
+-/
 
+#print Algebra.FormallyEtale.localization_map /-
 theorem FormallyEtale.localization_map [FormallyEtale R S] : FormallyEtale Rₘ Sₘ :=
   by
   haveI : formally_etale S Sₘ := formally_etale.of_is_localization (M.map (algebraMap R S))
   haveI : formally_etale R Sₘ := formally_etale.comp R S Sₘ
   exact formally_etale.localization_base M
 #align algebra.formally_etale.localization_map Algebra.FormallyEtale.localization_map
+-/
 
 end Localization
 

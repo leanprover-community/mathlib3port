@@ -243,14 +243,14 @@ def AlgHom.kerSquareLift (f : A →ₐ[R] B) : A ⧸ f.toRingHom.ker ^ 2 →ₐ[
 #align alg_hom.ker_square_lift AlgHom.kerSquareLift
 -/
 
-#print AlgHom.ker_ker_sqare_lift /-
-theorem AlgHom.ker_ker_sqare_lift (f : A →ₐ[R] B) :
+#print AlgHom.ker_kerSquareLift /-
+theorem AlgHom.ker_kerSquareLift (f : A →ₐ[R] B) :
     f.kerSquareLift.toRingHom.ker = f.toRingHom.ker.cotangentIdeal :=
   by
   apply le_antisymm
   · intro x hx; obtain ⟨x, rfl⟩ := Ideal.Quotient.mk_surjective x; exact ⟨x, hx, rfl⟩
   · rintro _ ⟨x, hx, rfl⟩; exact hx
-#align alg_hom.ker_ker_sqare_lift AlgHom.ker_ker_sqare_lift
+#align alg_hom.ker_ker_sqare_lift AlgHom.ker_kerSquareLift
 -/
 
 #print Ideal.quotCotangent /-
