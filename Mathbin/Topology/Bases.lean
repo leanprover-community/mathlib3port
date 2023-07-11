@@ -403,11 +403,11 @@ instance (priority := 100) Countable.to_separableSpace [Countable α] : Separabl
 #align topological_space.countable.to_separable_space TopologicalSpace.Countable.to_separableSpace
 -/
 
-#print TopologicalSpace.separableSpace_of_denseRange /-
-theorem separableSpace_of_denseRange {ι : Type _} [Countable ι] (u : ι → α) (hu : DenseRange u) :
-    SeparableSpace α :=
+#print TopologicalSpace.SeparableSpace.of_denseRange /-
+theorem TopologicalSpace.SeparableSpace.of_denseRange {ι : Type _} [Countable ι] (u : ι → α)
+    (hu : DenseRange u) : SeparableSpace α :=
   ⟨⟨range u, countable_range u, hu⟩⟩
-#align topological_space.separable_space_of_dense_range TopologicalSpace.separableSpace_of_denseRange
+#align topological_space.separable_space_of_dense_range TopologicalSpace.SeparableSpace.of_denseRange
 -/
 
 #print Set.PairwiseDisjoint.countable_of_isOpen /-
