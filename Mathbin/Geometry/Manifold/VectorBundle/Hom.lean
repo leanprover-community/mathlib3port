@@ -45,6 +45,7 @@ variable {𝕜 B F F₁ F₂ M M₁ M₂ : Type _} {E : B → Type _} {E₁ : B 
 
 local notation "LE₁E₂" => TotalSpace (F₁ →L[𝕜] F₂) (Bundle.ContinuousLinearMap (RingHom.id 𝕜) E₁ E₂)
 
+#print smoothOn_continuousLinearMapCoordChange /-
 -- This proof is slow, especially the `simp only` and the elaboration of `h₂`.
 theorem smoothOn_continuousLinearMapCoordChange [SmoothManifoldWithCorners IB B]
     [SmoothVectorBundle F₁ E₁ IB] [SmoothVectorBundle F₂ E₂ IB] [MemTrivializationAtlas e₁]
@@ -66,7 +67,9 @@ theorem smoothOn_continuousLinearMapCoordChange [SmoothManifoldWithCorners IB B]
       ContinuousLinearEquiv.arrowCongrSL_apply, comp_apply, Function.comp, compL_apply, flip_apply,
       ContinuousLinearEquiv.symm_symm, LinearEquiv.toFun_eq_coe, ContinuousLinearMap.coe_comp']
 #align smooth_on_continuous_linear_map_coord_change smoothOn_continuousLinearMapCoordChange
+-/
 
+#print hom_chart /-
 theorem hom_chart (y₀ y : LE₁E₂) :
     chartAt (ModelProd HB (F₁ →L[𝕜] F₂)) y₀ y =
       (chartAt HB y₀.1 y.1, inCoordinates F₁ E₁ F₂ E₂ y₀.1 y.1 y₀.1 y.1 y.2) :=
@@ -74,9 +77,11 @@ theorem hom_chart (y₀ y : LE₁E₂) :
   simp_rw [FiberBundle.chartedSpace_chartAt, trans_apply, LocalHomeomorph.prod_apply,
     Trivialization.coe_coe, LocalHomeomorph.refl_apply, Function.id_def, hom_trivializationAt_apply]
 #align hom_chart hom_chart
+-/
 
 variable {IB}
 
+#print contMDiffAt_hom_bundle /-
 theorem contMDiffAt_hom_bundle (f : M → LE₁E₂) {x₀ : M} {n : ℕ∞} :
     ContMDiffAt IM (IB.Prod 𝓘(𝕜, F₁ →L[𝕜] F₂)) n f x₀ ↔
       ContMDiffAt IM IB n (fun x => (f x).1) x₀ ∧
@@ -84,7 +89,9 @@ theorem contMDiffAt_hom_bundle (f : M → LE₁E₂) {x₀ : M} {n : ℕ∞} :
           (fun x => inCoordinates F₁ E₁ F₂ E₂ (f x₀).1 (f x).1 (f x₀).1 (f x).1 (f x).2) x₀ :=
   by apply cont_mdiff_at_total_space
 #align cont_mdiff_at_hom_bundle contMDiffAt_hom_bundle
+-/
 
+#print smoothAt_hom_bundle /-
 theorem smoothAt_hom_bundle (f : M → LE₁E₂) {x₀ : M} :
     SmoothAt IM (IB.Prod 𝓘(𝕜, F₁ →L[𝕜] F₂)) f x₀ ↔
       SmoothAt IM IB (fun x => (f x).1) x₀ ∧
@@ -92,10 +99,12 @@ theorem smoothAt_hom_bundle (f : M → LE₁E₂) {x₀ : M} :
           (fun x => inCoordinates F₁ E₁ F₂ E₂ (f x₀).1 (f x).1 (f x₀).1 (f x).1 (f x).2) x₀ :=
   contMDiffAt_hom_bundle f
 #align smooth_at_hom_bundle smoothAt_hom_bundle
+-/
 
 variable [SmoothManifoldWithCorners IB B] [SmoothVectorBundle F₁ E₁ IB]
   [SmoothVectorBundle F₂ E₂ IB]
 
+#print Bundle.ContinuousLinearMap.vectorPrebundle.isSmooth /-
 instance Bundle.ContinuousLinearMap.vectorPrebundle.isSmooth :
     (Bundle.ContinuousLinearMap.vectorPrebundle (RingHom.id 𝕜) F₁ E₁ F₂ E₂).IsSmooth IB
     where exists_smooth_coord_change :=
@@ -107,9 +116,12 @@ instance Bundle.ContinuousLinearMap.vectorPrebundle.isSmooth :
         smoothOn_continuousLinearMapCoordChange IB,
         continuous_linear_map_coord_change_apply (RingHom.id 𝕜) e₁ e₁' e₂ e₂'⟩
 #align bundle.continuous_linear_map.vector_prebundle.is_smooth Bundle.ContinuousLinearMap.vectorPrebundle.isSmooth
+-/
 
+#print SmoothVectorBundle.continuousLinearMap /-
 instance SmoothVectorBundle.continuousLinearMap :
     SmoothVectorBundle (F₁ →L[𝕜] F₂) (Bundle.ContinuousLinearMap (RingHom.id 𝕜) E₁ E₂) IB :=
   (Bundle.ContinuousLinearMap.vectorPrebundle (RingHom.id 𝕜) F₁ E₁ F₂ E₂).SmoothVectorBundle IB
 #align smooth_vector_bundle.continuous_linear_map SmoothVectorBundle.continuousLinearMap
+-/
 
