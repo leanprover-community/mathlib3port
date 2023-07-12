@@ -231,18 +231,18 @@ instance Finsupp.sampleableExt [Repr α] [Repr β] : SampleableExt (α →₀ β
 #align slim_check.total_function.finsupp.sampleable_ext SlimCheck.TotalFunction.Finsupp.sampleableExt
 -/
 
-#print SlimCheck.TotalFunction.Dfinsupp.sampleableExt /-
+#print SlimCheck.TotalFunction.DFinsupp.sampleableExt /-
 -- TODO: support a non-constant codomain type
-instance Dfinsupp.sampleableExt [Repr α] [Repr β] : SampleableExt (Π₀ a : α, β)
+instance DFinsupp.sampleableExt [Repr α] [Repr β] : SampleableExt (Π₀ a : α, β)
     where
   ProxyRepr := TotalFunction α β
-  interp := Finsupp.toDfinsupp ∘ TotalFunction.applyFinsupp
+  interp := Finsupp.toDFinsupp ∘ TotalFunction.applyFinsupp
   sample := do
     let xs ← (Sampleable.sample (List (α × β)) : Gen (List (α × β)))
     let ⟨x⟩ ← (ULiftable.up <| sample β : Gen (ULift.{max u v} β))
     pure <| total_function.with_default (list.to_finmap' xs) x
   shrink := TotalFunction.shrink
-#align slim_check.total_function.dfinsupp.sampleable_ext SlimCheck.TotalFunction.Dfinsupp.sampleableExt
+#align slim_check.total_function.dfinsupp.sampleable_ext SlimCheck.TotalFunction.DFinsupp.sampleableExt
 -/
 
 end Finsupp

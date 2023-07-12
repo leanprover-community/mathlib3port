@@ -77,7 +77,7 @@ instance : Algebra R (⨁ i, A i)
   map_mul' a b := by
     simp only [AddMonoidHom.comp_apply]
     rw [of_mul_of]
-    apply Dfinsupp.single_eq_of_sigma_eq (galgebra.map_mul a b)
+    apply DFinsupp.single_eq_of_sigma_eq (galgebra.map_mul a b)
   commutes' r x :=
     by
     change AddMonoidHom.mul (DirectSum.of _ _ _) x = add_monoid_hom.mul.flip (DirectSum.of _ _ _) x
@@ -85,7 +85,7 @@ instance : Algebra R (⨁ i, A i)
     ext i xi : 2
     dsimp only [AddMonoidHom.comp_apply, AddMonoidHom.mul_apply, AddMonoidHom.flip_apply]
     rw [of_mul_of, of_mul_of]
-    apply Dfinsupp.single_eq_of_sigma_eq (galgebra.commutes r ⟨i, xi⟩)
+    apply DFinsupp.single_eq_of_sigma_eq (galgebra.commutes r ⟨i, xi⟩)
   smul_def' r x :=
     by
     change DistribMulAction.toAddMonoidHom _ r x = AddMonoidHom.mul (DirectSum.of _ _ _) x
@@ -94,7 +94,7 @@ instance : Algebra R (⨁ i, A i)
     dsimp only [AddMonoidHom.comp_apply, DistribMulAction.toAddMonoidHom_apply,
       AddMonoidHom.mul_apply]
     rw [DirectSum.of_mul_of, ← of_smul]
-    apply Dfinsupp.single_eq_of_sigma_eq (galgebra.smul_def r ⟨i, xi⟩)
+    apply DFinsupp.single_eq_of_sigma_eq (galgebra.smul_def r ⟨i, xi⟩)
 
 #print DirectSum.algebraMap_apply /-
 theorem algebraMap_apply (r : R) :

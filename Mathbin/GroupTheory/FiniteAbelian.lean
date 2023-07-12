@@ -72,7 +72,7 @@ theorem equiv_free_prod_directSum_zMod [hG : AddGroup.FG G] :
   exact
     f.to_add_equiv.trans
       ((AddEquiv.refl _).prodCongr <|
-        Dfinsupp.mapRange.addEquiv fun i =>
+        DFinsupp.mapRange.addEquiv fun i =>
           ((Int.quotientSpanEquivZMod _).trans <|
               ZMod.ringEquivCongr <| (p i).natAbs_pow _).toAddEquiv)
 #align add_comm_group.equiv_free_prod_direct_sum_zmod AddCommGroup.equiv_free_prod_directSum_zMod

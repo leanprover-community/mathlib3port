@@ -220,7 +220,7 @@ instance (priority := 100) of_subsingleton' [Subsingleton R] : Module.Free R N :
 #print Module.Free.dfinsupp /-
 instance dfinsupp {ι : Type _} (M : ι → Type _) [∀ i : ι, AddCommMonoid (M i)]
     [∀ i : ι, Module R (M i)] [∀ i : ι, Module.Free R (M i)] : Module.Free R (Π₀ i, M i) :=
-  of_basis <| Dfinsupp.basis fun i => chooseBasis R (M i)
+  of_basis <| DFinsupp.basis fun i => chooseBasis R (M i)
 #align module.free.dfinsupp Module.Free.dfinsupp
 -/
 

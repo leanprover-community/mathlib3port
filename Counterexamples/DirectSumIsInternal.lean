@@ -94,8 +94,8 @@ theorem withSign.not_injective :
     intro h
     dsimp [z, DirectSum.lof_eq_of, DirectSum.of] at h 
     replace h := dfinsupp.ext_iff.mp h 1
-    rw [Dfinsupp.zero_apply, Dfinsupp.add_apply, Dfinsupp.single_eq_same,
-      Dfinsupp.single_eq_of_ne units_int.one_ne_neg_one.symm, add_zero, Subtype.ext_iff,
+    rw [DFinsupp.zero_apply, DFinsupp.add_apply, DFinsupp.single_eq_same,
+      DFinsupp.single_eq_of_ne units_int.one_ne_neg_one.symm, add_zero, Subtype.ext_iff,
       Submodule.coe_zero] at h 
     apply zero_ne_one h.symm
   apply hinj.ne this

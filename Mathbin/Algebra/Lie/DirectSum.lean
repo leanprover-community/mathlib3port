@@ -31,7 +31,7 @@ universe u v w w₁
 
 namespace DirectSum
 
-open Dfinsupp
+open DFinsupp
 
 open scoped DirectSum
 
@@ -164,7 +164,7 @@ def lieAlgebraComponent (j : ι) : (⨁ i, L i) →ₗ⁅R⁆ L j :=
 @[ext]
 theorem lieAlgebra_ext {x y : ⨁ i, L i}
     (h : ∀ i, lieAlgebraComponent R ι L i x = lieAlgebraComponent R ι L i y) : x = y :=
-  Dfinsupp.ext h
+  DFinsupp.ext h
 #align direct_sum.lie_algebra_ext DirectSum.lieAlgebra_ext
 -/
 

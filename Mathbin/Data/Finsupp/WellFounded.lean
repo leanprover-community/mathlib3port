@@ -45,8 +45,8 @@ theorem Lex.acc (x : α →₀ N) (h : ∀ a ∈ x.support, Acc (rᶜ ⊓ (· �
     Acc (Finsupp.Lex r s) x := by
   rw [lex_eq_inv_image_dfinsupp_lex]
   classical
-  refine' InvImage.accessible to_dfinsupp (Dfinsupp.Lex.acc (fun a => hbot) (fun a => hs) _ _)
-  simpa only [toDfinsupp_support] using h
+  refine' InvImage.accessible to_dfinsupp (DFinsupp.Lex.acc (fun a => hbot) (fun a => hs) _ _)
+  simpa only [toDFinsupp_support] using h
 #align finsupp.lex.acc Finsupp.Lex.acc
 -/
 
@@ -60,7 +60,7 @@ theorem Lex.wellFounded (hr : WellFounded <| rᶜ ⊓ (· ≠ ·)) : WellFounded
 theorem Lex.wellFounded' [IsTrichotomous α r] (hr : WellFounded r.symm) :
     WellFounded (Finsupp.Lex r s) :=
   (lex_eq_invImage_dfinsupp_lex r s).symm ▸
-    InvImage.wf _ (Dfinsupp.Lex.wellFounded' (fun a => hbot) (fun a => hs) hr)
+    InvImage.wf _ (DFinsupp.Lex.wellFounded' (fun a => hbot) (fun a => hs) hr)
 #align finsupp.lex.well_founded' Finsupp.Lex.wellFounded'
 -/
 
@@ -90,7 +90,7 @@ theorem Lex.wellFoundedLT_of_finite [LinearOrder α] [Finite α] [Zero N] [LT N]
 #print Finsupp.wellFoundedLT /-
 protected theorem wellFoundedLT [Zero N] [Preorder N] [WellFoundedLT N] (hbot : ∀ n : N, ¬n < 0) :
     WellFoundedLT (α →₀ N) :=
-  ⟨InvImage.wf toDfinsupp (Dfinsupp.wellFoundedLT fun i a => hbot a).wf⟩
+  ⟨InvImage.wf toDFinsupp (DFinsupp.wellFoundedLT fun i a => hbot a).wf⟩
 #align finsupp.well_founded_lt Finsupp.wellFoundedLT
 -/
 

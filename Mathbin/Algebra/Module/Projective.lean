@@ -155,17 +155,17 @@ instance [h : ∀ i : ι, Projective R (A i)] : Projective R (Π₀ i, A i) := b
   choose s hs using h
   letI : ∀ i : ι, AddCommMonoid (A i →₀ R) := fun i => by infer_instance
   letI : ∀ i : ι, Module R (A i →₀ R) := fun i => by infer_instance
-  letI : AddCommMonoid (Π₀ i : ι, A i →₀ R) := @Dfinsupp.addCommMonoid ι (fun i => A i →₀ R) _
-  letI : Module R (Π₀ i : ι, A i →₀ R) := @Dfinsupp.module ι R (fun i => A i →₀ R) _ _ _
-  let f i := lmap_domain R R (Dfinsupp.single i : A i → Π₀ i, A i)
-  use Dfinsupp.coprodMap f ∘ₗ Dfinsupp.mapRange.linearMap s
+  letI : AddCommMonoid (Π₀ i : ι, A i →₀ R) := @DFinsupp.addCommMonoid ι (fun i => A i →₀ R) _
+  letI : Module R (Π₀ i : ι, A i →₀ R) := @DFinsupp.module ι R (fun i => A i →₀ R) _ _ _
+  let f i := lmap_domain R R (DFinsupp.single i : A i → Π₀ i, A i)
+  use DFinsupp.coprodMap f ∘ₗ DFinsupp.mapRange.linearMap s
   ext i x j
-  simp only [Dfinsupp.coprodMap, DirectSum.lof, total_map_domain, coe_comp, coe_lsum, id_coe,
-    LinearEquiv.coe_toLinearMap, finsuppLequivDfinsupp_symm_apply, Function.comp_apply,
-    Dfinsupp.lsingle_apply, Dfinsupp.mapRange.linearMap_apply, Dfinsupp.mapRange_single,
-    lmap_domain_apply, Dfinsupp.toFinsupp_single, Finsupp.sum_single_index, id.def,
-    Function.comp.left_id, Dfinsupp.single_apply]
-  rw [← Dfinsupp.lapply_apply j, apply_total R]
+  simp only [DFinsupp.coprodMap, DirectSum.lof, total_map_domain, coe_comp, coe_lsum, id_coe,
+    LinearEquiv.coe_toLinearMap, finsuppLequivDFinsupp_symm_apply, Function.comp_apply,
+    DFinsupp.lsingle_apply, DFinsupp.mapRange.linearMap_apply, DFinsupp.mapRange_single,
+    lmap_domain_apply, DFinsupp.toFinsupp_single, Finsupp.sum_single_index, id.def,
+    Function.comp.left_id, DFinsupp.single_apply]
+  rw [← DFinsupp.lapply_apply j, apply_total R]
   obtain rfl | hij := eq_or_ne i j
   · convert (hs i) x
     · ext; simp

@@ -112,7 +112,7 @@ def directSumLeft : (⨁ i₁, M₁ i₁) ⊗[R] M₂' ≃ₗ[R] ⨁ i, M₁ i �
 /-- Tensor products distribute over a direct sum on the right. -/
 def directSumRight : (M₁' ⊗[R] ⨁ i, M₂ i) ≃ₗ[R] ⨁ i, M₁' ⊗[R] M₂ i :=
   TensorProduct.comm R _ _ ≪≫ₗ directSumLeft R M₂ M₁' ≪≫ₗ
-    Dfinsupp.mapRange.linearEquiv fun i => TensorProduct.comm R _ _
+    DFinsupp.mapRange.linearEquiv fun i => TensorProduct.comm R _ _
 #align tensor_product.direct_sum_right TensorProduct.directSumRight
 -/
 
@@ -154,7 +154,7 @@ theorem directSumRight_tmul_lof (x : M₁') (i : ι₂) (y : M₂ i) :
   by
   dsimp only [direct_sum_right, LinearEquiv.trans_apply, TensorProduct.comm_tmul]
   rw [direct_sum_left_tmul_lof]
-  exact Dfinsupp.mapRange_single
+  exact DFinsupp.mapRange_single
 #align tensor_product.direct_sum_right_tmul_lof TensorProduct.directSumRight_tmul_lof
 -/
 

@@ -198,7 +198,7 @@ theorem coe_mul_apply [AddMonoid ι] [SetLike.GradedMonoid A]
       ∑ ij in (r.support ×ˢ r'.support).filterₓ fun ij : ι × ι => ij.1 + ij.2 = n,
         r ij.1 * r' ij.2 :=
   by
-  rw [mul_eq_sum_support_ghas_mul, Dfinsupp.finset_sum_apply, AddSubmonoidClass.coe_finset_sum]
+  rw [mul_eq_sum_support_ghas_mul, DFinsupp.finset_sum_apply, AddSubmonoidClass.coe_finset_sum]
   simp_rw [coe_of_apply, ← Finset.sum_filter, SetLike.coe_gMul]
 #align direct_sum.coe_mul_apply DirectSum.coe_mul_apply
 -/
@@ -208,8 +208,8 @@ theorem coe_mul_apply_eq_dfinsupp_sum [AddMonoid ι] [SetLike.GradedMonoid A]
     [∀ (i : ι) (x : A i), Decidable (x ≠ 0)] (r r' : ⨁ i, A i) (n : ι) :
     ((r * r') n : R) = r.Sum fun i ri => r'.Sum fun j rj => if i + j = n then ri * rj else 0 :=
   by
-  simp only [mul_eq_dfinsupp_sum, Dfinsupp.sum_apply]
-  iterate 2 rw [Dfinsupp.sum, AddSubmonoidClass.coe_finset_sum]; congr; ext
+  simp only [mul_eq_dfinsupp_sum, DFinsupp.sum_apply]
+  iterate 2 rw [DFinsupp.sum, AddSubmonoidClass.coe_finset_sum]; congr; ext
   dsimp only; split_ifs
   · subst h; rw [of_eq_same]; rfl
   · rw [of_eq_of_ne _ _ _ _ h]; rfl
@@ -222,10 +222,10 @@ theorem coe_of_mul_apply_aux [AddMonoid ι] [SetLike.GradedMonoid A] {i : ι} (r
     ((of _ i r * r') n : R) = r * r' j := by
   classical
   rw [coe_mul_apply_eq_dfinsupp_sum]
-  apply (Dfinsupp.sum_single_index _).trans
+  apply (DFinsupp.sum_single_index _).trans
   swap
-  · simp_rw [ZeroMemClass.coe_zero, MulZeroClass.zero_mul, if_t_t]; exact Dfinsupp.sum_zero
-  simp_rw [Dfinsupp.sum, H, Finset.sum_ite_eq']
+  · simp_rw [ZeroMemClass.coe_zero, MulZeroClass.zero_mul, if_t_t]; exact DFinsupp.sum_zero
+  simp_rw [DFinsupp.sum, H, Finset.sum_ite_eq']
   split_ifs
   rfl
   rw [dfinsupp.not_mem_support_iff.mp h, ZeroMemClass.coe_zero, MulZeroClass.mul_zero]
@@ -236,11 +236,11 @@ theorem coe_of_mul_apply_aux [AddMonoid ι] [SetLike.GradedMonoid A] {i : ι} (r
 theorem coe_mul_of_apply_aux [AddMonoid ι] [SetLike.GradedMonoid A] (r : ⨁ i, A i) {i : ι}
     (r' : A i) {j n : ι} (H : ∀ x : ι, x + i = n ↔ x = j) : ((r * of _ i r') n : R) = r j * r' := by
   classical
-  rw [coe_mul_apply_eq_dfinsupp_sum, Dfinsupp.sum_comm]
-  apply (Dfinsupp.sum_single_index _).trans
+  rw [coe_mul_apply_eq_dfinsupp_sum, DFinsupp.sum_comm]
+  apply (DFinsupp.sum_single_index _).trans
   swap
-  · simp_rw [ZeroMemClass.coe_zero, MulZeroClass.mul_zero, if_t_t]; exact Dfinsupp.sum_zero
-  simp_rw [Dfinsupp.sum, H, Finset.sum_ite_eq']
+  · simp_rw [ZeroMemClass.coe_zero, MulZeroClass.mul_zero, if_t_t]; exact DFinsupp.sum_zero
+  simp_rw [DFinsupp.sum, H, Finset.sum_ite_eq']
   split_ifs
   rfl
   rw [dfinsupp.not_mem_support_iff.mp h, ZeroMemClass.coe_zero, MulZeroClass.zero_mul]
@@ -274,10 +274,10 @@ theorem coe_of_mul_apply_of_not_le {i : ι} (r : A i) (r' : ⨁ i, A i) (n : ι)
     ((of _ i r * r') n : R) = 0 := by
   classical
   rw [coe_mul_apply_eq_dfinsupp_sum]
-  apply (Dfinsupp.sum_single_index _).trans
+  apply (DFinsupp.sum_single_index _).trans
   swap
-  · simp_rw [ZeroMemClass.coe_zero, MulZeroClass.zero_mul, if_t_t]; exact Dfinsupp.sum_zero
-  · rw [Dfinsupp.sum, Finset.sum_ite_of_false _ _ fun x _ H => _, Finset.sum_const_zero]
+  · simp_rw [ZeroMemClass.coe_zero, MulZeroClass.zero_mul, if_t_t]; exact DFinsupp.sum_zero
+  · rw [DFinsupp.sum, Finset.sum_ite_of_false _ _ fun x _ H => _, Finset.sum_const_zero]
     exact h ((self_le_add_right i x).trans_eq H)
 #align direct_sum.coe_of_mul_apply_of_not_le DirectSum.coe_of_mul_apply_of_not_le
 -/
@@ -286,11 +286,11 @@ theorem coe_of_mul_apply_of_not_le {i : ι} (r : A i) (r' : ⨁ i, A i) (n : ι)
 theorem coe_mul_of_apply_of_not_le (r : ⨁ i, A i) {i : ι} (r' : A i) (n : ι) (h : ¬i ≤ n) :
     ((r * of _ i r') n : R) = 0 := by
   classical
-  rw [coe_mul_apply_eq_dfinsupp_sum, Dfinsupp.sum_comm]
-  apply (Dfinsupp.sum_single_index _).trans
+  rw [coe_mul_apply_eq_dfinsupp_sum, DFinsupp.sum_comm]
+  apply (DFinsupp.sum_single_index _).trans
   swap
-  · simp_rw [ZeroMemClass.coe_zero, MulZeroClass.mul_zero, if_t_t]; exact Dfinsupp.sum_zero
-  · rw [Dfinsupp.sum, Finset.sum_ite_of_false _ _ fun x _ H => _, Finset.sum_const_zero]
+  · simp_rw [ZeroMemClass.coe_zero, MulZeroClass.mul_zero, if_t_t]; exact DFinsupp.sum_zero
+  · rw [DFinsupp.sum, Finset.sum_ite_of_false _ _ fun x _ H => _, Finset.sum_const_zero]
     exact h ((self_le_add_left i x).trans_eq H)
 #align direct_sum.coe_mul_of_apply_of_not_le DirectSum.coe_mul_of_apply_of_not_le
 -/

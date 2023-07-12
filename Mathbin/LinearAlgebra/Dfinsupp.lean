@@ -45,39 +45,39 @@ variable {ι : Type _} {R : Type _} {S : Type _} {M : ι → Type _} {N : Type _
 
 variable [dec_ι : DecidableEq ι]
 
-namespace Dfinsupp
+namespace DFinsupp
 
 variable [Semiring R] [∀ i, AddCommMonoid (M i)] [∀ i, Module R (M i)]
 
 variable [AddCommMonoid N] [Module R N]
 
-#print Dfinsupp.lmk /-
+#print DFinsupp.lmk /-
 /-- `dfinsupp.mk` as a `linear_map`. -/
 def lmk (s : Finset ι) : (∀ i : (↑s : Set ι), M i) →ₗ[R] Π₀ i, M i
     where
   toFun := mk s
   map_add' _ _ := mk_add
   map_smul' c x := mk_smul c x
-#align dfinsupp.lmk Dfinsupp.lmk
+#align dfinsupp.lmk DFinsupp.lmk
 -/
 
-#print Dfinsupp.lsingle /-
+#print DFinsupp.lsingle /-
 /-- `dfinsupp.single` as a `linear_map` -/
 def lsingle (i) : M i →ₗ[R] Π₀ i, M i :=
-  { Dfinsupp.singleAddHom _ _ with
+  { DFinsupp.singleAddHom _ _ with
     toFun := single i
     map_smul' := single_smul }
-#align dfinsupp.lsingle Dfinsupp.lsingle
+#align dfinsupp.lsingle DFinsupp.lsingle
 -/
 
-#print Dfinsupp.lhom_ext /-
+#print DFinsupp.lhom_ext /-
 /-- Two `R`-linear maps from `Π₀ i, M i` which agree on each `single i x` agree everywhere. -/
 theorem lhom_ext ⦃φ ψ : (Π₀ i, M i) →ₗ[R] N⦄ (h : ∀ i x, φ (single i x) = ψ (single i x)) : φ = ψ :=
   LinearMap.toAddMonoidHom_injective <| addHom_ext h
-#align dfinsupp.lhom_ext Dfinsupp.lhom_ext
+#align dfinsupp.lhom_ext DFinsupp.lhom_ext
 -/
 
-#print Dfinsupp.lhom_ext' /-
+#print DFinsupp.lhom_ext' /-
 /-- Two `R`-linear maps from `Π₀ i, M i` which agree on each `single i x` agree everywhere.
 
 See note [partially-applied ext lemmas].
@@ -86,52 +86,52 @@ After apply this lemma, if `M = R` then it suffices to verify `φ (single a 1) =
 theorem lhom_ext' ⦃φ ψ : (Π₀ i, M i) →ₗ[R] N⦄ (h : ∀ i, φ.comp (lsingle i) = ψ.comp (lsingle i)) :
     φ = ψ :=
   lhom_ext fun i => LinearMap.congr_fun (h i)
-#align dfinsupp.lhom_ext' Dfinsupp.lhom_ext'
+#align dfinsupp.lhom_ext' DFinsupp.lhom_ext'
 -/
 
-#print Dfinsupp.lapply /-
+#print DFinsupp.lapply /-
 /-- Interpret `λ (f : Π₀ i, M i), f i` as a linear map. -/
 def lapply (i : ι) : (Π₀ i, M i) →ₗ[R] M i
     where
   toFun f := f i
   map_add' f g := add_apply f g i
   map_smul' c f := smul_apply c f i
-#align dfinsupp.lapply Dfinsupp.lapply
+#align dfinsupp.lapply DFinsupp.lapply
 -/
 
-#print Dfinsupp.lmk_apply /-
+#print DFinsupp.lmk_apply /-
 @[simp]
 theorem lmk_apply (s : Finset ι) (x) : (lmk s : _ →ₗ[R] Π₀ i, M i) x = mk s x :=
   rfl
-#align dfinsupp.lmk_apply Dfinsupp.lmk_apply
+#align dfinsupp.lmk_apply DFinsupp.lmk_apply
 -/
 
-#print Dfinsupp.lsingle_apply /-
+#print DFinsupp.lsingle_apply /-
 @[simp]
 theorem lsingle_apply (i : ι) (x : M i) : (lsingle i : _ →ₗ[R] _) x = single i x :=
   rfl
-#align dfinsupp.lsingle_apply Dfinsupp.lsingle_apply
+#align dfinsupp.lsingle_apply DFinsupp.lsingle_apply
 -/
 
-#print Dfinsupp.lapply_apply /-
+#print DFinsupp.lapply_apply /-
 @[simp]
 theorem lapply_apply (i : ι) (f : Π₀ i, M i) : (lapply i : _ →ₗ[R] _) f = f i :=
   rfl
-#align dfinsupp.lapply_apply Dfinsupp.lapply_apply
+#align dfinsupp.lapply_apply DFinsupp.lapply_apply
 -/
 
 section Lsum
 
-#print Dfinsupp.addCommMonoidOfLinearMap /-
+#print DFinsupp.addCommMonoidOfLinearMap /-
 /-- Typeclass inference can't find `dfinsupp.add_comm_monoid` without help for this case.
 This instance allows it to be found where it is needed on the LHS of the colon in
 `dfinsupp.module_of_linear_map`. -/
 instance addCommMonoidOfLinearMap : AddCommMonoid (Π₀ i : ι, M i →ₗ[R] N) :=
-  @Dfinsupp.addCommMonoid _ (fun i => M i →ₗ[R] N) _
-#align dfinsupp.add_comm_monoid_of_linear_map Dfinsupp.addCommMonoidOfLinearMap
+  @DFinsupp.addCommMonoid _ (fun i => M i →ₗ[R] N) _
+#align dfinsupp.add_comm_monoid_of_linear_map DFinsupp.addCommMonoidOfLinearMap
 -/
 
-#print Dfinsupp.moduleOfLinearMap /-
+#print DFinsupp.moduleOfLinearMap /-
 /-- Typeclass inference can't find `dfinsupp.module` without help for this case.
 This is needed to define `dfinsupp.lsum` below.
 
@@ -140,13 +140,13 @@ we have with the `Π i, has_zero (M i →ₗ[R] N)` instance which appears as a 
 `dfinsupp` type. -/
 instance moduleOfLinearMap [Semiring S] [Module S N] [SMulCommClass R S N] :
     Module S (Π₀ i : ι, M i →ₗ[R] N) :=
-  @Dfinsupp.module _ _ (fun i => M i →ₗ[R] N) _ _ _
-#align dfinsupp.module_of_linear_map Dfinsupp.moduleOfLinearMap
+  @DFinsupp.module _ _ (fun i => M i →ₗ[R] N) _ _ _
+#align dfinsupp.module_of_linear_map DFinsupp.moduleOfLinearMap
 -/
 
 variable (S)
 
-#print Dfinsupp.lsum /-
+#print DFinsupp.lsum /-
 /-- The `dfinsupp` version of `finsupp.lsum`.
 
 See note [bundled maps over different rings] for why separate `R` and `S` semirings are used. -/
@@ -159,7 +159,7 @@ def lsum [Semiring S] [Module S N] [SMulCommClass R S N] :
       map_add' := (liftAddHom fun i => (F i).toAddMonoidHom).map_add
       map_smul' := fun c f => by
         dsimp
-        apply Dfinsupp.induction f
+        apply DFinsupp.induction f
         · rw [smul_zero, AddMonoidHom.map_zero, smul_zero]
         · intro a b f ha hb hf
           rw [smul_add, AddMonoidHom.map_add, AddMonoidHom.map_add, smul_add, hf, ← single_smul,
@@ -170,16 +170,16 @@ def lsum [Semiring S] [Module S N] [SMulCommClass R S N] :
   right_inv F := by ext x y; simp
   map_add' F G := by ext x y; simp
   map_smul' c F := by ext; simp
-#align dfinsupp.lsum Dfinsupp.lsum
+#align dfinsupp.lsum DFinsupp.lsum
 -/
 
-#print Dfinsupp.lsum_single /-
+#print DFinsupp.lsum_single /-
 /-- While `simp` can prove this, it is often convenient to avoid unfolding `lsum` into `sum_add_hom`
 with `dfinsupp.lsum_apply_apply`. -/
 theorem lsum_single [Semiring S] [Module S N] [SMulCommClass R S N] (F : ∀ i, M i →ₗ[R] N) (i)
     (x : M i) : lsum S F (single i x) = F i x :=
   sumAddHom_single _ _ _
-#align dfinsupp.lsum_single Dfinsupp.lsum_single
+#align dfinsupp.lsum_single DFinsupp.lsum_single
 -/
 
 end Lsum
@@ -198,17 +198,17 @@ variable [∀ i, AddCommMonoid (β i)] [∀ i, AddCommMonoid (β₁ i)] [∀ i, 
 
 variable [∀ i, Module R (β i)] [∀ i, Module R (β₁ i)] [∀ i, Module R (β₂ i)]
 
-#print Dfinsupp.mapRange_smul /-
+#print DFinsupp.mapRange_smul /-
 theorem mapRange_smul (f : ∀ i, β₁ i → β₂ i) (hf : ∀ i, f i 0 = 0) (r : R)
     (hf' : ∀ i x, f i (r • x) = r • f i x) (g : Π₀ i, β₁ i) :
     mapRange f hf (r • g) = r • mapRange f hf g :=
   by
   ext
   simp only [map_range_apply f, coe_smul, Pi.smul_apply, hf']
-#align dfinsupp.map_range_smul Dfinsupp.mapRange_smul
+#align dfinsupp.map_range_smul DFinsupp.mapRange_smul
 -/
 
-#print Dfinsupp.mapRange.linearMap /-
+#print DFinsupp.mapRange.linearMap /-
 /-- `dfinsupp.map_range` as an `linear_map`. -/
 @[simps apply]
 def mapRange.linearMap (f : ∀ i, β₁ i →ₗ[R] β₂ i) : (Π₀ i, β₁ i) →ₗ[R] Π₀ i, β₂ i :=
@@ -217,37 +217,37 @@ def mapRange.linearMap (f : ∀ i, β₁ i →ₗ[R] β₂ i) : (Π₀ i, β₁ 
       (f i).toAddMonoidHom with
     toFun := mapRange (fun i x => f i x) fun i => (f i).map_zero
     map_smul' := fun r => mapRange_smul _ _ _ fun i => (f i).map_smul r }
-#align dfinsupp.map_range.linear_map Dfinsupp.mapRange.linearMap
+#align dfinsupp.map_range.linear_map DFinsupp.mapRange.linearMap
 -/
 
-#print Dfinsupp.mapRange.linearMap_id /-
+#print DFinsupp.mapRange.linearMap_id /-
 @[simp]
 theorem mapRange.linearMap_id :
     (mapRange.linearMap fun i => (LinearMap.id : β₂ i →ₗ[R] _)) = LinearMap.id :=
   LinearMap.ext mapRange_id
-#align dfinsupp.map_range.linear_map_id Dfinsupp.mapRange.linearMap_id
+#align dfinsupp.map_range.linear_map_id DFinsupp.mapRange.linearMap_id
 -/
 
-#print Dfinsupp.mapRange.linearMap_comp /-
+#print DFinsupp.mapRange.linearMap_comp /-
 theorem mapRange.linearMap_comp (f : ∀ i, β₁ i →ₗ[R] β₂ i) (f₂ : ∀ i, β i →ₗ[R] β₁ i) :
     (mapRange.linearMap fun i => (f i).comp (f₂ i)) =
       (mapRange.linearMap f).comp (mapRange.linearMap f₂) :=
   LinearMap.ext <| mapRange_comp (fun i x => f i x) (fun i x => f₂ i x) _ _ _
-#align dfinsupp.map_range.linear_map_comp Dfinsupp.mapRange.linearMap_comp
+#align dfinsupp.map_range.linear_map_comp DFinsupp.mapRange.linearMap_comp
 -/
 
-#print Dfinsupp.sum_mapRange_index.linearMap /-
+#print DFinsupp.sum_mapRange_index.linearMap /-
 theorem sum_mapRange_index.linearMap [∀ (i : ι) (x : β₁ i), Decidable (x ≠ 0)]
     [∀ (i : ι) (x : β₂ i), Decidable (x ≠ 0)] {f : ∀ i, β₁ i →ₗ[R] β₂ i} {h : ∀ i, β₂ i →ₗ[R] N}
     {l : Π₀ i, β₁ i} :
-    Dfinsupp.lsum ℕ h (mapRange.linearMap f l) = Dfinsupp.lsum ℕ (fun i => (h i).comp (f i)) l := by
-  simpa [Dfinsupp.sumAddHom_apply] using
+    DFinsupp.lsum ℕ h (mapRange.linearMap f l) = DFinsupp.lsum ℕ (fun i => (h i).comp (f i)) l := by
+  simpa [DFinsupp.sumAddHom_apply] using
     @sum_map_range_index ι N _ _ _ _ _ _ _ _ (fun i => f i) (fun i => by simp) l (fun i => h i)
       fun i => by simp
-#align dfinsupp.sum_map_range_index.linear_map Dfinsupp.sum_mapRange_index.linearMap
+#align dfinsupp.sum_map_range_index.linear_map DFinsupp.sum_mapRange_index.linearMap
 -/
 
-#print Dfinsupp.mapRange.linearEquiv /-
+#print DFinsupp.mapRange.linearEquiv /-
 /-- `dfinsupp.map_range.linear_map` as an `linear_equiv`. -/
 @[simps apply]
 def mapRange.linearEquiv (e : ∀ i, β₁ i ≃ₗ[R] β₂ i) : (Π₀ i, β₁ i) ≃ₗ[R] Π₀ i, β₂ i :=
@@ -256,31 +256,31 @@ def mapRange.linearEquiv (e : ∀ i, β₁ i ≃ₗ[R] β₂ i) : (Π₀ i, β�
       (e i).toLinearMap with
     toFun := mapRange (fun i x => e i x) fun i => (e i).map_zero
     invFun := mapRange (fun i x => (e i).symm x) fun i => (e i).symm.map_zero }
-#align dfinsupp.map_range.linear_equiv Dfinsupp.mapRange.linearEquiv
+#align dfinsupp.map_range.linear_equiv DFinsupp.mapRange.linearEquiv
 -/
 
-#print Dfinsupp.mapRange.linearEquiv_refl /-
+#print DFinsupp.mapRange.linearEquiv_refl /-
 @[simp]
 theorem mapRange.linearEquiv_refl :
     (mapRange.linearEquiv fun i => LinearEquiv.refl R (β₁ i)) = LinearEquiv.refl _ _ :=
   LinearEquiv.ext mapRange_id
-#align dfinsupp.map_range.linear_equiv_refl Dfinsupp.mapRange.linearEquiv_refl
+#align dfinsupp.map_range.linear_equiv_refl DFinsupp.mapRange.linearEquiv_refl
 -/
 
-#print Dfinsupp.mapRange.linearEquiv_trans /-
+#print DFinsupp.mapRange.linearEquiv_trans /-
 theorem mapRange.linearEquiv_trans (f : ∀ i, β i ≃ₗ[R] β₁ i) (f₂ : ∀ i, β₁ i ≃ₗ[R] β₂ i) :
     (mapRange.linearEquiv fun i => (f i).trans (f₂ i)) =
       (mapRange.linearEquiv f).trans (mapRange.linearEquiv f₂) :=
   LinearEquiv.ext <| mapRange_comp (fun i x => f₂ i x) (fun i x => f i x) _ _ _
-#align dfinsupp.map_range.linear_equiv_trans Dfinsupp.mapRange.linearEquiv_trans
+#align dfinsupp.map_range.linear_equiv_trans DFinsupp.mapRange.linearEquiv_trans
 -/
 
-#print Dfinsupp.mapRange.linearEquiv_symm /-
+#print DFinsupp.mapRange.linearEquiv_symm /-
 @[simp]
 theorem mapRange.linearEquiv_symm (e : ∀ i, β₁ i ≃ₗ[R] β₂ i) :
     (mapRange.linearEquiv e).symm = mapRange.linearEquiv fun i => (e i).symm :=
   rfl
-#align dfinsupp.map_range.linear_equiv_symm Dfinsupp.mapRange.linearEquiv_symm
+#align dfinsupp.map_range.linear_equiv_symm DFinsupp.mapRange.linearEquiv_symm
 -/
 
 end MapRange
@@ -289,50 +289,50 @@ section CoprodMap
 
 variable [DecidableEq ι] [∀ x : N, Decidable (x ≠ 0)]
 
-#print Dfinsupp.coprodMap /-
+#print DFinsupp.coprodMap /-
 /-- Given a family of linear maps `f i : M i  →ₗ[R] N`, we can form a linear map
 `(Π₀ i, M i) →ₗ[R] N` which sends `x : Π₀ i, M i` to the sum over `i` of `f i` applied to `x i`.
 This is the map coming from the universal property of `Π₀ i, M i` as the coproduct of the `M i`.
 See also `linear_map.coprod` for the binary product version. -/
 noncomputable def coprodMap (f : ∀ i : ι, M i →ₗ[R] N) : (Π₀ i, M i) →ₗ[R] N :=
   (Finsupp.lsum ℕ fun i : ι => LinearMap.id) ∘ₗ
-    (@finsuppLequivDfinsupp ι R N _ _ _ _ _).symm.toLinearMap ∘ₗ Dfinsupp.mapRange.linearMap f
-#align dfinsupp.coprod_map Dfinsupp.coprodMap
+    (@finsuppLequivDFinsupp ι R N _ _ _ _ _).symm.toLinearMap ∘ₗ DFinsupp.mapRange.linearMap f
+#align dfinsupp.coprod_map DFinsupp.coprodMap
 -/
 
-#print Dfinsupp.coprodMap_apply /-
+#print DFinsupp.coprodMap_apply /-
 theorem coprodMap_apply (f : ∀ i : ι, M i →ₗ[R] N) (x : Π₀ i, M i) :
     coprodMap f x =
       Finsupp.sum (mapRange (fun i => f i) (fun i => LinearMap.map_zero _) x).toFinsupp fun i =>
         id :=
   rfl
-#align dfinsupp.coprod_map_apply Dfinsupp.coprodMap_apply
+#align dfinsupp.coprod_map_apply DFinsupp.coprodMap_apply
 -/
 
 end CoprodMap
 
 section Basis
 
-#print Dfinsupp.basis /-
+#print DFinsupp.basis /-
 /-- The direct sum of free modules is free.
 
 Note that while this is stated for `dfinsupp` not `direct_sum`, the types are defeq. -/
 noncomputable def basis {η : ι → Type _} (b : ∀ i, Basis (η i) R (M i)) :
     Basis (Σ i, η i) R (Π₀ i, M i) :=
   Basis.ofRepr
-    ((mapRange.linearEquiv fun i => (b i).repr).trans (sigmaFinsuppLequivDfinsupp R).symm)
-#align dfinsupp.basis Dfinsupp.basis
+    ((mapRange.linearEquiv fun i => (b i).repr).trans (sigmaFinsuppLequivDFinsupp R).symm)
+#align dfinsupp.basis DFinsupp.basis
 -/
 
 end Basis
 
-end Dfinsupp
+end DFinsupp
 
 namespace Submodule
 
 variable [Semiring R] [AddCommMonoid N] [Module R N]
 
-open Dfinsupp
+open DFinsupp
 
 #print Submodule.dfinsupp_sum_mem /-
 theorem dfinsupp_sum_mem {β : ι → Type _} [∀ i, Zero (β i)] [∀ (i) (x : β i), Decidable (x ≠ 0)]
@@ -345,7 +345,7 @@ theorem dfinsupp_sum_mem {β : ι → Type _} [∀ i, Zero (β i)] [∀ (i) (x :
 #print Submodule.dfinsupp_sumAddHom_mem /-
 theorem dfinsupp_sumAddHom_mem {β : ι → Type _} [∀ i, AddZeroClass (β i)] (S : Submodule R N)
     (f : Π₀ i, β i) (g : ∀ i, β i →+ N) (h : ∀ c, f c ≠ 0 → g c (f c) ∈ S) :
-    Dfinsupp.sumAddHom g f ∈ S :=
+    DFinsupp.sumAddHom g f ∈ S :=
   dfinsupp_sumAddHom_mem S f g h
 #align submodule.dfinsupp_sum_add_hom_mem Submodule.dfinsupp_sumAddHom_mem
 -/
@@ -355,12 +355,12 @@ theorem dfinsupp_sumAddHom_mem {β : ι → Type _} [∀ i, AddZeroClass (β i)]
 every element in the `supr` can be produced from taking a finite number of non-zero elements
 of `p i`, coercing them to `N`, and summing them. -/
 theorem iSup_eq_range_dfinsupp_lsum (p : ι → Submodule R N) :
-    iSup p = (Dfinsupp.lsum ℕ fun i => (p i).Subtype).range :=
+    iSup p = (DFinsupp.lsum ℕ fun i => (p i).Subtype).range :=
   by
   apply le_antisymm
   · apply iSup_le _
     intro i y hy
-    exact ⟨Dfinsupp.single i ⟨y, hy⟩, Dfinsupp.sumAddHom_single _ _ _⟩
+    exact ⟨DFinsupp.single i ⟨y, hy⟩, DFinsupp.sumAddHom_single _ _ _⟩
   · rintro x ⟨v, rfl⟩
     exact dfinsupp_sumAddHom_mem _ v _ fun i _ => (le_iSup p i : p i ≤ _) (v i).Prop
 #align submodule.supr_eq_range_dfinsupp_lsum Submodule.iSup_eq_range_dfinsupp_lsum
@@ -373,12 +373,12 @@ bounded `supr` can be produced from taking a finite number of non-zero elements 
 satisfy `p i`, coercing them to `γ`, and summing them. -/
 theorem biSup_eq_range_dfinsupp_lsum (p : ι → Prop) [DecidablePred p] (S : ι → Submodule R N) :
     (⨆ (i) (h : p i), S i) =
-      ((Dfinsupp.lsum ℕ fun i => (S i).Subtype).comp (Dfinsupp.filterLinearMap R _ p)).range :=
+      ((DFinsupp.lsum ℕ fun i => (S i).Subtype).comp (DFinsupp.filterLinearMap R _ p)).range :=
   by
   apply le_antisymm
-  · refine' iSup₂_le fun i hi y hy => ⟨Dfinsupp.single i ⟨y, hy⟩, _⟩
+  · refine' iSup₂_le fun i hi y hy => ⟨DFinsupp.single i ⟨y, hy⟩, _⟩
     rw [LinearMap.comp_apply, filter_linear_map_apply, filter_single_pos _ _ hi]
-    exact Dfinsupp.sumAddHom_single _ _ _
+    exact DFinsupp.sumAddHom_single _ _ _
   · rintro x ⟨v, rfl⟩
     refine' dfinsupp_sumAddHom_mem _ _ _ fun i hi => _
     refine' mem_supr_of_mem i _
@@ -390,7 +390,7 @@ theorem biSup_eq_range_dfinsupp_lsum (p : ι → Prop) [DecidablePred p] (S : ι
 
 #print Submodule.mem_iSup_iff_exists_dfinsupp /-
 theorem mem_iSup_iff_exists_dfinsupp (p : ι → Submodule R N) (x : N) :
-    x ∈ iSup p ↔ ∃ f : Π₀ i, p i, Dfinsupp.lsum ℕ (fun i => (p i).Subtype) f = x :=
+    x ∈ iSup p ↔ ∃ f : Π₀ i, p i, DFinsupp.lsum ℕ (fun i => (p i).Subtype) f = x :=
   SetLike.ext_iff.mp (iSup_eq_range_dfinsupp_lsum p) x
 #align submodule.mem_supr_iff_exists_dfinsupp Submodule.mem_iSup_iff_exists_dfinsupp
 -/
@@ -401,7 +401,7 @@ theorem mem_iSup_iff_exists_dfinsupp' (p : ι → Submodule R N) [∀ (i) (x : p
     (x : N) : x ∈ iSup p ↔ ∃ f : Π₀ i, p i, (f.Sum fun i xi => ↑xi) = x :=
   by
   rw [mem_supr_iff_exists_dfinsupp]
-  simp_rw [Dfinsupp.lsum_apply_apply, Dfinsupp.sumAddHom_apply]
+  simp_rw [DFinsupp.lsum_apply_apply, DFinsupp.sumAddHom_apply]
   congr
 #align submodule.mem_supr_iff_exists_dfinsupp' Submodule.mem_iSup_iff_exists_dfinsupp'
 -/
@@ -410,7 +410,7 @@ theorem mem_iSup_iff_exists_dfinsupp' (p : ι → Submodule R N) [∀ (i) (x : p
 theorem mem_biSup_iff_exists_dfinsupp (p : ι → Prop) [DecidablePred p] (S : ι → Submodule R N)
     (x : N) :
     (x ∈ ⨆ (i) (h : p i), S i) ↔
-      ∃ f : Π₀ i, S i, Dfinsupp.lsum ℕ (fun i => (S i).Subtype) (f.filterₓ p) = x :=
+      ∃ f : Π₀ i, S i, DFinsupp.lsum ℕ (fun i => (S i).Subtype) (f.filterₓ p) = x :=
   SetLike.ext_iff.mp (biSup_eq_range_dfinsupp_lsum p S) x
 #align submodule.mem_bsupr_iff_exists_dfinsupp Submodule.mem_biSup_iff_exists_dfinsupp
 -/
@@ -430,10 +430,10 @@ theorem mem_iSup_finset_iff_exists_sum {s : Finset ι} (p : ι → Submodule R N
       ext; rw [coe_zero, ← mem_bot R]; convert coe_mem (μ x)
       symm; exact iSup_neg hx
     · intro x _ hx; rw [mem_support_iff, not_ne_iff] at hx ; rw [hx]; rfl
-  · refine' ⟨Dfinsupp.mk s _, _⟩
+  · refine' ⟨DFinsupp.mk s _, _⟩
     · rintro ⟨i, hi⟩; refine' ⟨μ i, _⟩
       rw [iSup_pos]; · exact coe_mem _; · exact hi
-    simp only [Dfinsupp.sum]
+    simp only [DFinsupp.sum]
     rw [Finset.sum_subset support_mk_subset, ← hμ]
     exact Finset.sum_congr rfl fun x hx => congr_arg coe <| mk_of_mem hx
     · intro x _ hx; rw [mem_support_iff, not_ne_iff] at hx ; rw [hx]; rfl
@@ -444,7 +444,7 @@ end Submodule
 
 namespace CompleteLattice
 
-open Dfinsupp
+open DFinsupp
 
 section Semiring
 
@@ -504,7 +504,7 @@ theorem lsum_comp_mapRange_toSpanSingleton [∀ m : R, Decidable (m ≠ 0)] (p :
     ((lsum ℕ) fun i => (p i).Subtype : _ →ₗ[R] _).comp
         ((mapRange.linearMap fun i => LinearMap.toSpanSingleton R (↥(p i)) ⟨v i, hv i⟩ :
               _ →ₗ[R] _).comp
-          (finsuppLequivDfinsupp R : (ι →₀ R) ≃ₗ[R] _).toLinearMap) =
+          (finsuppLequivDFinsupp R : (ι →₀ R) ≃ₗ[R] _).toLinearMap) =
       Finsupp.total ι N R v :=
   by ext; simp
 #align complete_lattice.lsum_comp_map_range_to_span_singleton CompleteLattice.lsum_comp_mapRange_toSpanSingleton
@@ -543,13 +543,13 @@ theorem Independent.dfinsupp_lsum_injective {p : ι → Submodule R N} (h : Inde
   suffices (lsum ℕ fun i => (p i).Subtype).ker = ⊥
     by
     -- Lean can't find this without our help
-    letI : AddCommGroup (Π₀ i, p i) := @Dfinsupp.addCommGroup _ (fun i => p i) _
+    letI : AddCommGroup (Π₀ i, p i) := @DFinsupp.addCommGroup _ (fun i => p i) _
     rw [LinearMap.ker_eq_bot] at this ; exact this
   rw [LinearMap.ker_eq_bot']
   intro m hm
   ext i : 1
   -- split `m` into the piece at `i` and the pieces elsewhere, to match `h`
-  rw [Dfinsupp.zero_apply, ← neg_eq_zero]
+  rw [DFinsupp.zero_apply, ← neg_eq_zero]
   refine' h i (-m i) m _
   rwa [← erase_add_single i m, LinearMap.map_add, lsum_single, Submodule.subtype_apply,
     add_eq_zero_iff_eq_neg, ← Submodule.coe_neg] at hm 
@@ -600,7 +600,7 @@ theorem Independent.linearIndependent [NoZeroSMulDivisors R N] (p : ι → Submo
   rw [linearIndependent_iff]
   intro l hl
   let a :=
-    Dfinsupp.mapRange.linearMap (fun i => LinearMap.toSpanSingleton R (p i) ⟨v i, hv i⟩)
+    DFinsupp.mapRange.linearMap (fun i => LinearMap.toSpanSingleton R (p i) ⟨v i, hv i⟩)
       l.to_dfinsupp
   have ha : a = 0 := by
     apply hp.dfinsupp_lsum_injective

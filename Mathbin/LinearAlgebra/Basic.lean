@@ -1395,9 +1395,9 @@ theorem finsupp_sum_apply (t : ι →₀ γ) (g : ι → γ → M →ₛₗ[σ�
 
 end Finsupp
 
-section Dfinsupp
+section DFinsupp
 
-open Dfinsupp
+open DFinsupp
 
 variable {γ : ι → Type _} [DecidableEq ι]
 
@@ -1444,7 +1444,7 @@ theorem map_dfinsupp_sumAddHom (f : M →ₛₗ[σ₁₂] M₂) {t : Π₀ i, γ
 
 end SumAddHom
 
-end Dfinsupp
+end DFinsupp
 
 variable {σ₂₁ : R₂ →+* R} {τ₁₂ : R →+* R₂} {τ₂₃ : R₂ →+* R₃} {τ₁₃ : R →+* R₃}
 
@@ -2389,9 +2389,9 @@ theorem map_finsupp_sum (f : M ≃ₛₗ[τ₁₂] M₂) {t : ι →₀ γ} {g :
 
 end Finsupp
 
-section Dfinsupp
+section DFinsupp
 
-open Dfinsupp
+open DFinsupp
 
 variable [Semiring R] [Semiring R₂]
 
@@ -2422,7 +2422,7 @@ theorem map_dfinsupp_sumAddHom [∀ i, AddZeroClass (γ i)] (f : M ≃ₛₗ[τ�
 #align linear_equiv.map_dfinsupp_sum_add_hom LinearEquiv.map_dfinsupp_sumAddHom
 -/
 
-end Dfinsupp
+end DFinsupp
 
 section Uncurry
 

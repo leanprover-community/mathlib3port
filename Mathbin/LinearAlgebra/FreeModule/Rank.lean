@@ -79,7 +79,7 @@ theorem rank_directSum {ι : Type v} (M : ι → Type w) [∀ i : ι, AddCommGro
     Module.rank R (⨁ i, M i) = Cardinal.sum fun i => Module.rank R (M i) :=
   by
   let B i := choose_basis R (M i)
-  let b : Basis _ R (⨁ i, M i) := Dfinsupp.basis fun i => B i
+  let b : Basis _ R (⨁ i, M i) := DFinsupp.basis fun i => B i
   simp [← b.mk_eq_rank'', fun i => (B i).mk_eq_rank'']
 #align rank_direct_sum rank_directSum
 -/

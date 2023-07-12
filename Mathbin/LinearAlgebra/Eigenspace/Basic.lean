@@ -172,9 +172,9 @@ theorem eigenspaces_independent (f : End K V) : CompleteLattice.Independent f.ei
   -- choices of an eigenvector from each eigenspace, to `V`, by sending a collection to its sum.
   let S :
     @LinearMap K K _ _ (RingHom.id K) (Π₀ μ : K, f.eigenspace μ) V
-      (@Dfinsupp.addCommMonoid K (fun μ => f.eigenspace μ) _) _
-      (@Dfinsupp.module K _ (fun μ => f.eigenspace μ) _ _ _) _ :=
-    @Dfinsupp.lsum K K ℕ _ V _ _ _ _ _ _ _ _ _ fun μ => (f.eigenspace μ).Subtype
+      (@DFinsupp.addCommMonoid K (fun μ => f.eigenspace μ) _) _
+      (@DFinsupp.module K _ (fun μ => f.eigenspace μ) _ _ _) _ :=
+    @DFinsupp.lsum K K ℕ _ V _ _ _ _ _ _ _ _ _ fun μ => (f.eigenspace μ).Subtype
   -- We need to show that if a finitely-supported collection `l` of representatives of the
   -- eigenspaces has sum `0`, then it itself is zero.
   suffices ∀ l : Π₀ μ, f.eigenspace μ, S l = 0 → l = 0
@@ -183,7 +183,7 @@ theorem eigenspaces_independent (f : End K V) : CompleteLattice.Independent f.ei
     change Function.Injective S
     rw [←
       @LinearMap.ker_eq_bot K K (Π₀ μ, f.eigenspace μ) V _ _
-        (@Dfinsupp.addCommGroup K (fun μ => f.eigenspace μ) _)]
+        (@DFinsupp.addCommGroup K (fun μ => f.eigenspace μ) _)]
     rw [eq_bot_iff]
     exact this
   intro l hl
@@ -191,48 +191,48 @@ theorem eigenspaces_independent (f : End K V) : CompleteLattice.Independent f.ei
   -- eigenvector, i.e. on the support of `l`.
   induction' h_l_support : l.support using Finset.induction with μ₀ l_support' hμ₀ ih generalizing l
   -- If the support is empty, all coefficients are zero and we are done.
-  · exact Dfinsupp.support_eq_empty.1 h_l_support
+  · exact DFinsupp.support_eq_empty.1 h_l_support
   -- Now assume that the support of `l` contains at least one eigenvalue `μ₀`. We define a new
   -- collection of representatives `l'` to apply the induction hypothesis on later. The collection
   -- of representatives `l'` is derived from `l` by multiplying the coefficient of the eigenvector
   -- with eigenvalue `μ` by `μ - μ₀`.
   · let l' :=
-      Dfinsupp.mapRange.linearMap (fun μ => (μ - μ₀) • @LinearMap.id K (f.eigenspace μ) _ _ _) l
+      DFinsupp.mapRange.linearMap (fun μ => (μ - μ₀) • @LinearMap.id K (f.eigenspace μ) _ _ _) l
     -- The support of `l'` is the support of `l` without `μ₀`.
     have h_l_support' : l'.support = l_support' :=
       by
       rw [← Finset.erase_insert hμ₀, ← h_l_support]
       ext a
       have : ¬(a = μ₀ ∨ l a = 0) ↔ ¬a = μ₀ ∧ ¬l a = 0 := not_or
-      simp only [l', Dfinsupp.mapRange.linearMap_apply, Dfinsupp.mapRange_apply,
-        Dfinsupp.mem_support_iff, Finset.mem_erase, id.def, LinearMap.id_coe, LinearMap.smul_apply,
+      simp only [l', DFinsupp.mapRange.linearMap_apply, DFinsupp.mapRange_apply,
+        DFinsupp.mem_support_iff, Finset.mem_erase, id.def, LinearMap.id_coe, LinearMap.smul_apply,
         Ne.def, smul_eq_zero, sub_eq_zero, this]
     -- The entries of `l'` add up to `0`.
     have total_l' : S l' = 0 := by
       let g := f - algebraMap K (End K V) μ₀
-      let a : Π₀ μ : K, V := Dfinsupp.mapRange.linearMap (fun μ => (f.eigenspace μ).Subtype) l
+      let a : Π₀ μ : K, V := DFinsupp.mapRange.linearMap (fun μ => (f.eigenspace μ).Subtype) l
       calc
         S l' =
-            Dfinsupp.lsum ℕ (fun μ => (f.eigenspace μ).Subtype.comp ((μ - μ₀) • LinearMap.id)) l :=
+            DFinsupp.lsum ℕ (fun μ => (f.eigenspace μ).Subtype.comp ((μ - μ₀) • LinearMap.id)) l :=
           _
-        _ = Dfinsupp.lsum ℕ (fun μ => g.comp (f.eigenspace μ).Subtype) l := _
-        _ = Dfinsupp.lsum ℕ (fun μ => g) a := _
-        _ = g (Dfinsupp.lsum ℕ (fun μ => (LinearMap.id : V →ₗ[K] V)) a) := _
+        _ = DFinsupp.lsum ℕ (fun μ => g.comp (f.eigenspace μ).Subtype) l := _
+        _ = DFinsupp.lsum ℕ (fun μ => g) a := _
+        _ = g (DFinsupp.lsum ℕ (fun μ => (LinearMap.id : V →ₗ[K] V)) a) := _
         _ = g (S l) := _
         _ = 0 := by rw [hl, g.map_zero]
-      · exact Dfinsupp.sum_mapRange_index.linearMap
+      · exact DFinsupp.sum_mapRange_index.linearMap
       · congr
         ext μ v
         simp only [g, eq_self_iff_true, Function.comp_apply, id.def, LinearMap.coe_comp,
           LinearMap.id_coe, LinearMap.smul_apply, LinearMap.sub_apply, Module.algebraMap_end_apply,
           sub_left_inj, sub_smul, Submodule.coe_smul_of_tower, Submodule.coe_sub,
           Submodule.subtype_apply, mem_eigenspace_iff.1 v.prop]
-      · rw [Dfinsupp.sum_mapRange_index.linearMap]
+      · rw [DFinsupp.sum_mapRange_index.linearMap]
       ·
-        simp only [Dfinsupp.sumAddHom_apply, LinearMap.id_coe, LinearMap.map_dfinsupp_sum, id.def,
-          LinearMap.toAddMonoidHom_coe, Dfinsupp.lsum_apply_apply]
+        simp only [DFinsupp.sumAddHom_apply, LinearMap.id_coe, LinearMap.map_dfinsupp_sum, id.def,
+          LinearMap.toAddMonoidHom_coe, DFinsupp.lsum_apply_apply]
       · congr
-        simp only [S, a, Dfinsupp.sum_mapRange_index.linearMap, LinearMap.id_comp]
+        simp only [S, a, DFinsupp.sum_mapRange_index.linearMap, LinearMap.id_comp]
     -- Therefore, by the induction hypothesis, all entries of `l'` are zero.
     have l'_eq_0 := ih l' total_l' h_l_support'
     -- By the definition of `l'`, this means that `(μ - μ₀) • l μ = 0` for all `μ`.
@@ -241,8 +241,8 @@ theorem eigenspaces_independent (f : End K V) : CompleteLattice.Independent f.ei
       intro μ
       calc
         (μ - μ₀) • l μ = l' μ := by
-          simp only [l', LinearMap.id_coe, id.def, LinearMap.smul_apply, Dfinsupp.mapRange_apply,
-            Dfinsupp.mapRange.linearMap_apply]
+          simp only [l', LinearMap.id_coe, id.def, LinearMap.smul_apply, DFinsupp.mapRange_apply,
+            DFinsupp.mapRange.linearMap_apply]
         _ = 0 := by rw [l'_eq_0]; rfl
     -- Thus, the eigenspace-representatives in `l` for all `μ ≠ μ₀` are `0`.
     have h_lμ_eq_0 : ∀ μ : K, μ ≠ μ₀ → l μ = 0 :=
@@ -263,15 +263,15 @@ theorem eigenspaces_independent (f : End K V) : CompleteLattice.Independent f.ei
     -- `μ₀`. But since the overall sum is `0` by assumption, this representative must also be `0`.
     have : l μ₀ = 0 :=
       by
-      simp only [S, Dfinsupp.lsum_apply_apply, Dfinsupp.sumAddHom_apply,
-        LinearMap.toAddMonoidHom_coe, Dfinsupp.sum, h_l_support, Submodule.subtype_apply,
+      simp only [S, DFinsupp.lsum_apply_apply, DFinsupp.sumAddHom_apply,
+        LinearMap.toAddMonoidHom_coe, DFinsupp.sum, h_l_support, Submodule.subtype_apply,
         Submodule.coe_eq_zero, Finset.sum_insert hμ₀, h_sum_l_support'_eq_0, add_zero] at hl 
       exact hl
     -- Thus, all coefficients in `l` are `0`.
     show l = 0
     · ext μ
       by_cases h_cases : μ = μ₀
-      · rwa [h_cases, SetLike.coe_eq_coe, Dfinsupp.coe_zero, Pi.zero_apply]
+      · rwa [h_cases, SetLike.coe_eq_coe, DFinsupp.coe_zero, Pi.zero_apply]
       exact congr_arg (coe : _ → V) (h_lμ_eq_0 μ h_cases)
 #align module.End.eigenspaces_independent Module.End.eigenspaces_independent
 -/

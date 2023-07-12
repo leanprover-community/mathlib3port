@@ -41,7 +41,7 @@ variable (R M) (ι : Type _) [DecidableEq ι]
 copies of M indexed by ι. -/
 def finsuppLEquivDirectSum : (ι →₀ M) ≃ₗ[R] ⨁ i : ι, M :=
   haveI : ∀ m : M, Decidable (m ≠ 0) := Classical.decPred _
-  finsuppLequivDfinsupp R
+  finsuppLequivDFinsupp R
 #align finsupp_lequiv_direct_sum finsuppLEquivDirectSum
 -/
 
@@ -49,7 +49,7 @@ def finsuppLEquivDirectSum : (ι →₀ M) ≃ₗ[R] ⨁ i : ι, M :=
 @[simp]
 theorem finsuppLEquivDirectSum_single (i : ι) (m : M) :
     finsuppLEquivDirectSum R M ι (Finsupp.single i m) = DirectSum.lof R ι _ i m :=
-  Finsupp.toDfinsupp_single i m
+  Finsupp.toDFinsupp_single i m
 #align finsupp_lequiv_direct_sum_single finsuppLEquivDirectSum_single
 -/
 
@@ -58,7 +58,7 @@ theorem finsuppLEquivDirectSum_single (i : ι) (m : M) :
 theorem finsuppLEquivDirectSum_symm_lof (i : ι) (m : M) :
     (finsuppLEquivDirectSum R M ι).symm (DirectSum.lof R ι _ i m) = Finsupp.single i m :=
   letI : ∀ m : M, Decidable (m ≠ 0) := Classical.decPred _
-  Dfinsupp.toFinsupp_single i m
+  DFinsupp.toFinsupp_single i m
 #align finsupp_lequiv_direct_sum_symm_lof finsuppLEquivDirectSum_symm_lof
 -/
 

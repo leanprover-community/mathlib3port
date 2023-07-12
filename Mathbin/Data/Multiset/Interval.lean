@@ -32,7 +32,7 @@ multisets are typically used computationally.
 -/
 
 
-open Finset Dfinsupp Function
+open Finset DFinsupp Function
 
 open scoped BigOperators Pointwise
 
@@ -45,13 +45,13 @@ variable [DecidableEq α] (f g : Multiset α)
 instance : LocallyFiniteOrder (Multiset α) :=
   LocallyFiniteOrder.ofIcc (Multiset α)
     (fun f g =>
-      (Finset.Icc f.toDfinsupp g.toDfinsupp).map Multiset.equivDfinsupp.toEquiv.symm.toEmbedding)
+      (Finset.Icc f.toDFinsupp g.toDFinsupp).map Multiset.equivDFinsupp.toEquiv.symm.toEmbedding)
     fun f g x => by simp
 
 #print Multiset.Icc_eq /-
 theorem Icc_eq :
     Finset.Icc f g =
-      (Finset.Icc f.toDfinsupp g.toDfinsupp).map Multiset.equivDfinsupp.toEquiv.symm.toEmbedding :=
+      (Finset.Icc f.toDFinsupp g.toDFinsupp).map Multiset.equivDFinsupp.toEquiv.symm.toEmbedding :=
   rfl
 #align multiset.Icc_eq Multiset.Icc_eq
 -/
@@ -59,8 +59,8 @@ theorem Icc_eq :
 #print Multiset.card_Icc /-
 theorem card_Icc :
     (Finset.Icc f g).card = ∏ i in f.toFinset ∪ g.toFinset, (g.count i + 1 - f.count i) := by
-  simp_rw [Icc_eq, Finset.card_map, Dfinsupp.card_Icc, Nat.card_Icc, Multiset.toDfinsupp_apply,
-    toDfinsupp_support]
+  simp_rw [Icc_eq, Finset.card_map, DFinsupp.card_Icc, Nat.card_Icc, Multiset.toDFinsupp_apply,
+    toDFinsupp_support]
 #align multiset.card_Icc Multiset.card_Icc
 -/
 

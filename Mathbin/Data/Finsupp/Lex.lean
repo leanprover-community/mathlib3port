@@ -57,7 +57,7 @@ theorem lex_def {r : α → α → Prop} {s : N → N → Prop} {a b : α →₀
 
 #print Finsupp.lex_eq_invImage_dfinsupp_lex /-
 theorem lex_eq_invImage_dfinsupp_lex (r : α → α → Prop) (s : N → N → Prop) :
-    Finsupp.Lex r s = InvImage (Dfinsupp.Lex r fun a => s) toDfinsupp :=
+    Finsupp.Lex r s = InvImage (DFinsupp.Lex r fun a => s) toDFinsupp :=
   rfl
 #align finsupp.lex_eq_inv_image_dfinsupp_lex Finsupp.lex_eq_invImage_dfinsupp_lex
 -/
@@ -68,14 +68,14 @@ instance [LT α] [LT N] : LT (Lex (α →₀ N)) :=
 #print Finsupp.lex_lt_of_lt_of_preorder /-
 theorem lex_lt_of_lt_of_preorder [Preorder N] (r) [IsStrictOrder α r] {x y : α →₀ N} (hlt : x < y) :
     ∃ i, (∀ j, r j i → x j ≤ y j ∧ y j ≤ x j) ∧ x i < y i :=
-  Dfinsupp.lex_lt_of_lt_of_preorder r (id hlt : x.toDfinsupp < y.toDfinsupp)
+  DFinsupp.lex_lt_of_lt_of_preorder r (id hlt : x.toDFinsupp < y.toDFinsupp)
 #align finsupp.lex_lt_of_lt_of_preorder Finsupp.lex_lt_of_lt_of_preorder
 -/
 
 #print Finsupp.lex_lt_of_lt /-
 theorem lex_lt_of_lt [PartialOrder N] (r) [IsStrictOrder α r] {x y : α →₀ N} (hlt : x < y) :
     Pi.Lex r (fun i => (· < ·)) x y :=
-  Dfinsupp.lex_lt_of_lt r (id hlt : x.toDfinsupp < y.toDfinsupp)
+  DFinsupp.lex_lt_of_lt r (id hlt : x.toDFinsupp < y.toDFinsupp)
 #align finsupp.lex_lt_of_lt Finsupp.lex_lt_of_lt
 -/
 
@@ -103,7 +103,7 @@ instance Lex.partialOrder [PartialOrder N] : PartialOrder (Lex (α →₀ N)) :=
 /-- The linear order on `finsupp`s obtained by the lexicographic ordering. -/
 instance Lex.linearOrder [LinearOrder N] : LinearOrder (Lex (α →₀ N)) :=
   { Lex.partialOrder,
-    LinearOrder.lift' (toLex ∘ toDfinsupp ∘ ofLex) finsuppEquivDfinsupp.Injective with }
+    LinearOrder.lift' (toLex ∘ toDFinsupp ∘ ofLex) finsuppEquivDFinsupp.Injective with }
 #align finsupp.lex.linear_order Finsupp.Lex.linearOrder
 -/
 
@@ -111,7 +111,7 @@ variable [PartialOrder N]
 
 #print Finsupp.toLex_monotone /-
 theorem toLex_monotone : Monotone (@toLex (α →₀ N)) := fun a b h =>
-  Dfinsupp.toLex_monotone (id h : ∀ i, ofLex (toDfinsupp a) i ≤ ofLex (toDfinsupp b) i)
+  DFinsupp.toLex_monotone (id h : ∀ i, ofLex (toDFinsupp a) i ≤ ofLex (toDFinsupp b) i)
 #align finsupp.to_lex_monotone Finsupp.toLex_monotone
 -/
 
