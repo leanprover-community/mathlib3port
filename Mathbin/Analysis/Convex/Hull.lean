@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yury Kudriashov, Yaël Dillies
 
 ! This file was ported from Lean 3 source module analysis.convex.hull
-! leanprover-community/mathlib commit 31ca6f9cf5f90a6206092cd7f84b359dcb6d52e0
+! leanprover-community/mathlib commit 92bd7b1ffeb306a89f450bee126ddd8a284c259d
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -161,6 +161,11 @@ theorem convexHull_singleton (x : E) : convexHull 𝕜 ({x} : Set E) = {x} :=
   (convex_singleton x).convexHull_eq
 #align convex_hull_singleton convexHull_singleton
 -/
+
+@[simp]
+theorem convexHull_zero : convexHull 𝕜 (0 : Set E) = 0 :=
+  convexHull_singleton 0
+#align convex_hull_zero convexHull_zero
 
 #print convexHull_pair /-
 @[simp]

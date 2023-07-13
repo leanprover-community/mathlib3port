@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Rodriguez
 
 ! This file was ported from Lean 3 source module data.zmod.defs
-! leanprover-community/mathlib commit 63f84d91dd847f50bae04a01071f3a5491934e36
+! leanprover-community/mathlib commit 3a2b5524a138b5d0b818b858b516d4ac8a484b03
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -68,15 +68,26 @@ private theorem left_distrib_aux (n : ℕ) : ∀ a b c : Fin n, a * (b + c) = a 
       _ ≡ a * b + a * c [MOD n] := by rw [mul_add]
       _ ≡ a * b % n + a * c % n [MOD n] := (Nat.mod_modEq _ _).symm.add (Nat.mod_modEq _ _).symm)
 
-/-- Commutative ring structure on `fin n`. -/
-instance (n : ℕ) [NeZero n] : CommRing (Fin n) :=
-  { Fin.addMonoidWithOne, Fin.addCommGroup n,
+instance (n : ℕ) : Distrib (Fin n) :=
+  { Fin.addCommSemigroup n,
     Fin.commSemigroup n with
-    one_mul := Fin.one_mul
-    mul_one := Fin.mul_one
     left_distrib := left_distrib_aux n
     right_distrib := fun a b c => by
       rw [mul_comm, left_distrib_aux, mul_comm _ b, mul_comm] <;> rfl }
+
+/-- Commutative ring structure on `fin n`. -/
+instance (n : ℕ) [NeZero n] : CommRing (Fin n) :=
+  { Fin.addMonoidWithOne, Fin.addCommGroup n, Fin.commSemigroup n,
+    Fin.distrib n with
+    one_mul := Fin.one_mul
+    mul_one := Fin.mul_one }
+
+/-- Note this is more general than `fin.comm_ring` as it applies (vacuously) to `fin 0` too. -/
+instance (n : ℕ) : HasDistribNeg (Fin n) :=
+  { Fin.hasInvolutiveNeg n with
+    neg := Neg.neg
+    mul_neg := Nat.casesOn n finZeroElim fun i => mul_neg
+    neg_mul := Nat.casesOn n finZeroElim fun i => neg_mul }
 
 end Fin
 

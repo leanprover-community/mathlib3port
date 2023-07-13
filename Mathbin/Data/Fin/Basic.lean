@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis, Keeley Hoek
 
 ! This file was ported from Lean 3 source module data.fin.basic
-! leanprover-community/mathlib commit f2f413b9d4be3a02840d0663dace76e8fe3da053
+! leanprover-community/mathlib commit 3a2b5524a138b5d0b818b858b516d4ac8a484b03
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -807,6 +807,13 @@ theorem subsingleton_iff_le_one : Subsingleton (Fin n) ↔ n ≤ 1 := by
 
 section Monoid
 
+instance addCommSemigroup (n : ℕ) : AddCommSemigroup (Fin n)
+    where
+  add := (· + ·)
+  add_assoc := by simp [eq_iff_veq, add_def, add_assoc]
+  add_comm := by simp [eq_iff_veq, add_def, add_comm]
+#align fin.add_comm_semigroup Fin.addCommSemigroup
+
 #print Fin.add_zero /-
 @[simp]
 protected theorem add_zero [NeZero n] (k : Fin n) : k + 0 = k := by
@@ -822,14 +829,12 @@ protected theorem zero_add [NeZero n] (k : Fin n) : (0 : Fin n) + k = k := by
 -/
 
 #print Fin.addCommMonoid /-
-instance addCommMonoid (n : ℕ) [NeZero n] : AddCommMonoid (Fin n)
-    where
-  add := (· + ·)
-  add_assoc := by simp [eq_iff_veq, add_def, add_assoc]
-  zero := 0
-  zero_add := Fin.zero_add
-  add_zero := Fin.add_zero
-  add_comm := by simp [eq_iff_veq, add_def, add_comm]
+instance addCommMonoid (n : ℕ) [NeZero n] : AddCommMonoid (Fin n) :=
+  { Fin.addCommSemigroup n with
+    add := (· + ·)
+    zero := 0
+    zero_add := Fin.zero_add
+    add_zero := Fin.add_zero }
 #align fin.add_comm_monoid Fin.addCommMonoid
 -/
 
@@ -2406,6 +2411,26 @@ instance (n : ℕ) [NeZero n] : AddCommGroup (Fin n) :=
     sub_eq_add_neg := fun ⟨a, ha⟩ ⟨b, hb⟩ =>
       Fin.ext <| show (a + (n - b)) % n = (a + (n - b) % n) % n by simp
     sub := Fin.sub }
+
+/-- Note this is more general than `fin.add_comm_group` as it applies (vacuously) to `fin 0` too. -/
+instance (n : ℕ) : InvolutiveNeg (Fin n)
+    where
+  neg := Neg.neg
+  neg_neg := Nat.casesOn n finZeroElim fun i => neg_neg
+
+/-- Note this is more general than `fin.add_comm_group` as it applies (vacuously) to `fin 0` too. -/
+instance (n : ℕ) : IsCancelAdd (Fin n)
+    where
+  add_left_cancel := Nat.casesOn n finZeroElim fun i _ _ _ => add_left_cancel
+  add_right_cancel := Nat.casesOn n finZeroElim fun i _ _ _ => add_right_cancel
+
+/-- Note this is more general than `fin.add_comm_group` as it applies (vacuously) to `fin 0` too. -/
+instance (n : ℕ) : AddLeftCancelSemigroup (Fin n) :=
+  { Fin.addCommSemigroup n, Fin.isCancelAdd n with }
+
+/-- Note this is more general than `fin.add_comm_group` as it applies (vacuously) to `fin 0` too. -/
+instance (n : ℕ) : AddRightCancelSemigroup (Fin n) :=
+  { Fin.addCommSemigroup n, Fin.isCancelAdd n with }
 
 #print Fin.coe_neg /-
 protected theorem coe_neg (a : Fin n) : ((-a : Fin n) : ℕ) = (n - a) % n :=

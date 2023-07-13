@@ -6,7 +6,7 @@ Authors: Simon Hudon
 Automation to construct `traversable` instances
 
 ! This file was ported from Lean 3 source module control.traversable.derive
-! leanprover-community/mathlib commit 70fd9563a21e7b963887c9360bd29b2393e6225a
+! leanprover-community/mathlib commit b01d6eb9d0a308807af54319b264d0994b91774b
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -56,8 +56,7 @@ unsafe def map_constructor (c n : Name) (f α β : expr) (args₀ : List expr)
   let (_, args') ←
     mapAccumLM
         (fun (x : List expr) (y : Bool × expr) =>
-          if y.1 then pure (x.tail, x.headI)
-          else Prod.mk rec_call <$> map_field n g.app_fn f α β y.2)
+          if y.1 then pure (x.tail, x.headI) else Prod.mk x <$> map_field n g.app_fn f α β y.2)
         rec_call args₁
   let constr ← mk_const c
   let r := constr.mk_app (args₀ ++ args')

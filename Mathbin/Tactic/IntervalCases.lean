@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module tactic.interval_cases
-! leanprover-community/mathlib commit f7707875544ef1f81b32cb68c79e0e24e45a0e76
+! leanprover-community/mathlib commit d3b54a9f9613af6ae818c7fee31872db11c4d928
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -64,7 +64,7 @@ namespace IntervalCases
     ( n e : expr ) : tactic expr
     :=
       do
-        let t ← infer_type e
+        let t ← infer_type e >>= instantiate_mvars
           match
             t
             with
@@ -76,7 +76,7 @@ namespace IntervalCases
                 do
                   guard ( n = n' )
                     let b ← b
-                    let tn ← infer_type n
+                    let tn ← infer_type n >>= instantiate_mvars
                     match
                       tn
                       with
@@ -90,7 +90,7 @@ namespace IntervalCases
                 do
                   guard ( n = n' )
                     let b ← b
-                    let tn ← infer_type n
+                    let tn ← infer_type n >>= instantiate_mvars
                     match
                       tn
                       with
@@ -114,7 +114,7 @@ namespace IntervalCases
     ( n e : expr ) : tactic expr
     :=
       do
-        let t ← infer_type e
+        let t ← infer_type e >>= instantiate_mvars
           match
             t
             with
@@ -126,7 +126,7 @@ namespace IntervalCases
                 do
                   guard ( n = n' )
                     let b ← b
-                    let tn ← infer_type n
+                    let tn ← infer_type n >>= instantiate_mvars
                     match
                       tn
                       with
@@ -140,7 +140,7 @@ namespace IntervalCases
                 do
                   guard ( n = n' )
                     let b ← b
-                    let tn ← infer_type n
+                    let tn ← infer_type n >>= instantiate_mvars
                     match
                       tn
                       with
