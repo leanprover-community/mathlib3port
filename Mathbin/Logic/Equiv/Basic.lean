@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Leonardo de Moura, Mario Carneiro
 
 ! This file was ported from Lean 3 source module logic.equiv.basic
-! leanprover-community/mathlib commit d2d8742b0c21426362a9dacebc6005db895ca963
+! leanprover-community/mathlib commit cd391184c85986113f8c00844cfe6dda1d34be3d
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -159,6 +159,22 @@ def prodAssoc (α β γ : Sort _) : (α × β) × γ ≃ α × β × γ :=
     fun ⟨a, ⟨b, c⟩⟩ => rfl⟩
 #align equiv.prod_assoc Equiv.prodAssoc
 -/
+
+/-- Four-way commutativity of `prod`. The name matches `mul_mul_mul_comm`. -/
+@[simps apply]
+def prodProdProdComm (α β γ δ : Type _) : (α × β) × γ × δ ≃ (α × γ) × β × δ
+    where
+  toFun abcd := ((abcd.1.1, abcd.2.1), (abcd.1.2, abcd.2.2))
+  invFun acbd := ((acbd.1.1, acbd.2.1), (acbd.1.2, acbd.2.2))
+  left_inv := fun ⟨⟨a, b⟩, ⟨c, d⟩⟩ => rfl
+  right_inv := fun ⟨⟨a, c⟩, ⟨b, d⟩⟩ => rfl
+#align equiv.prod_prod_prod_comm Equiv.prodProdProdComm
+
+@[simp]
+theorem prodProdProdComm_symm (α β γ δ : Type _) :
+    (prodProdProdComm α β γ δ).symm = prodProdProdComm α γ β δ :=
+  rfl
+#align equiv.prod_prod_prod_comm_symm Equiv.prodProdProdComm_symm
 
 #print Equiv.curry /-
 /-- Functions on `α × β` are equivalent to functions `α → β → γ`. -/

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Frédéric Dupuis
 
 ! This file was ported from Lean 3 source module data.is_R_or_C.basic
-! leanprover-community/mathlib commit 48fb5b5280e7c81672afc9524185ae994553ebf4
+! leanprover-community/mathlib commit baa88307f3e699fa7054ef04ec79fa4f056169cb
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -972,6 +972,11 @@ theorem abs_im_div_norm_le_one (z : K) : |im z / ‖z‖| ≤ 1 :=
   exact div_le_one_of_le (abs_im_le_norm _) (norm_nonneg _)
 #align is_R_or_C.abs_im_div_norm_le_one IsROrC.abs_im_div_norm_le_one
 -/
+
+theorem norm_i_of_ne_zero (hI : (i : K) ≠ 0) : ‖(i : K)‖ = 1 := by
+  rw [← mul_self_inj_of_nonneg (norm_nonneg I) zero_le_one, one_mul, ← norm_mul,
+    I_mul_I_of_nonzero hI, norm_neg, norm_one]
+#align is_R_or_C.norm_I_of_ne_zero IsROrC.norm_i_of_ne_zero
 
 #print IsROrC.re_eq_norm_of_mul_conj /-
 theorem re_eq_norm_of_mul_conj (x : K) : re (x * conj x) = ‖x * conj x‖ := by

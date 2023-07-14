@@ -644,6 +644,7 @@ import Mathbin.Analysis.InnerProductSpace.GramSchmidtOrtho
 import Mathbin.Analysis.InnerProductSpace.L2Space
 import Mathbin.Analysis.InnerProductSpace.LaxMilgram
 import Mathbin.Analysis.InnerProductSpace.LinearPmap
+import Mathbin.Analysis.InnerProductSpace.OfNorm
 import Mathbin.Analysis.InnerProductSpace.Orientation
 import Mathbin.Analysis.InnerProductSpace.Orthogonal
 import Mathbin.Analysis.InnerProductSpace.PiL2

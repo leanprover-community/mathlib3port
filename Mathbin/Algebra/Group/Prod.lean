@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon, Patrick Massot, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module algebra.group.prod
-! leanprover-community/mathlib commit 448144f7ae193a8990cb7473c9e9a01990f64ac7
+! leanprover-community/mathlib commit cd391184c85986113f8c00844cfe6dda1d34be3d
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -832,6 +832,38 @@ theorem coe_prodComm_symm : ⇑(prodComm : M × N ≃* N × M).symm = Prod.swap 
 -/
 
 variable {M' N' : Type _} [MulOneClass M'] [MulOneClass N']
+
+section
+
+variable (M N M' N')
+
+/-- Four-way commutativity of `prod`. The name matches `mul_mul_mul_comm`. -/
+@[to_additive prod_prod_prod_comm
+      "Four-way commutativity of `prod`.\nThe name matches `mul_mul_mul_comm`",
+  simps apply]
+def prodProdProdComm : (M × N) × M' × N' ≃* (M × M') × N × N' :=
+  {
+    Equiv.prodProdProdComm M N M'
+      N' with
+    toFun := fun mnmn => ((mnmn.1.1, mnmn.2.1), (mnmn.1.2, mnmn.2.2))
+    invFun := fun mmnn => ((mmnn.1.1, mmnn.2.1), (mmnn.1.2, mmnn.2.2))
+    map_mul' := fun mnmn mnmn' => rfl }
+#align mul_equiv.prod_prod_prod_comm MulEquiv.prodProdProdComm
+#align add_equiv.prod_prod_prod_comm AddEquiv.prodProdProdComm
+
+@[simp, to_additive]
+theorem prodProdProdComm_toEquiv :
+    (prodProdProdComm M N M' N').toEquiv = Equiv.prodProdProdComm M N M' N' :=
+  rfl
+#align mul_equiv.prod_prod_prod_comm_to_equiv MulEquiv.prodProdProdComm_toEquiv
+#align add_equiv.sum_sum_sum_comm_to_equiv AddEquiv.sum_sum_sum_comm_toEquiv
+
+@[simp]
+theorem prodProdProdComm_symm : (prodProdProdComm M N M' N').symm = prodProdProdComm M M' N N' :=
+  rfl
+#align mul_equiv.prod_prod_prod_comm_symm MulEquiv.prodProdProdComm_symm
+
+end
 
 #print MulEquiv.prodCongr /-
 /-- Product of multiplicative isomorphisms; the maps come from `equiv.prod_congr`.-/

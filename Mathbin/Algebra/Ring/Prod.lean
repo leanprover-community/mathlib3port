@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Chris Hughes, Mario Carneiro, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module algebra.ring.prod
-! leanprover-community/mathlib commit c3291da49cfa65f0d43b094750541c0731edc932
+! leanprover-community/mathlib commit cd391184c85986113f8c00844cfe6dda1d34be3d
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -318,7 +318,11 @@ end RingHom
 
 namespace RingEquiv
 
-variable {R S} [NonAssocSemiring R] [NonAssocSemiring S]
+variable {R S R' S'}
+
+variable [NonAssocSemiring R] [NonAssocSemiring S]
+
+variable [NonAssocSemiring R'] [NonAssocSemiring S']
 
 #print RingEquiv.prodComm /-
 /-- Swapping components as an equivalence of (semi)rings. -/
@@ -356,6 +360,45 @@ theorem snd_comp_coe_prod_comm :
   RingHom.ext fun _ => rfl
 #align ring_equiv.snd_comp_coe_prod_comm RingEquiv.snd_comp_coe_prod_comm
 -/
+
+section
+
+variable (R R' S S')
+
+/-- Four-way commutativity of `prod`. The name matches `mul_mul_mul_comm`. -/
+@[simps apply]
+def prodProdProdComm : (R × R') × S × S' ≃+* (R × S) × R' × S' :=
+  { AddEquiv.prodProdProdComm R R' S S',
+    MulEquiv.prodProdProdComm R R' S
+      S' with
+    toFun := fun rrss => ((rrss.1.1, rrss.2.1), (rrss.1.2, rrss.2.2))
+    invFun := fun rsrs => ((rsrs.1.1, rsrs.2.1), (rsrs.1.2, rsrs.2.2)) }
+#align ring_equiv.prod_prod_prod_comm RingEquiv.prodProdProdComm
+
+@[simp]
+theorem prodProdProdComm_symm : (prodProdProdComm R R' S S').symm = prodProdProdComm R S R' S' :=
+  rfl
+#align ring_equiv.prod_prod_prod_comm_symm RingEquiv.prodProdProdComm_symm
+
+@[simp]
+theorem prodProdProdComm_toAddEquiv :
+    (prodProdProdComm R R' S S').toAddEquiv = AddEquiv.prodProdProdComm R R' S S' :=
+  rfl
+#align ring_equiv.prod_prod_prod_comm_to_add_equiv RingEquiv.prodProdProdComm_toAddEquiv
+
+@[simp]
+theorem prodProdProdComm_toMulEquiv :
+    (prodProdProdComm R R' S S').toMulEquiv = MulEquiv.prodProdProdComm R R' S S' :=
+  rfl
+#align ring_equiv.prod_prod_prod_comm_to_mul_equiv RingEquiv.prodProdProdComm_toMulEquiv
+
+@[simp]
+theorem prodProdProdComm_toEquiv :
+    (prodProdProdComm R R' S S').toEquiv = Equiv.prodProdProdComm R R' S S' :=
+  rfl
+#align ring_equiv.prod_prod_prod_comm_to_equiv RingEquiv.prodProdProdComm_toEquiv
+
+end
 
 variable (R S) [Subsingleton S]
 
