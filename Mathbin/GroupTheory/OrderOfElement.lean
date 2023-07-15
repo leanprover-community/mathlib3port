@@ -4,12 +4,13 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Johannes Hölzl, Julian Kuelshammer
 
 ! This file was ported from Lean 3 source module group_theory.order_of_element
-! leanprover-community/mathlib commit 3dadefa3f544b1db6214777fe47910739b54c66a
+! leanprover-community/mathlib commit d07245fd37786daa997af4f1a73a49fa3b748408
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
+import Mathbin.Algebra.GcdMonoid.Finset
 import Mathbin.Algebra.Hom.Iterate
-import Mathbin.Data.Nat.Modeq
+import Mathbin.Data.Int.Modeq
 import Mathbin.Data.Set.Pointwise.Basic
 import Mathbin.Data.Set.Intervals.Infinite
 import Mathbin.Dynamics.PeriodicPts
@@ -42,15 +43,11 @@ open Function Nat
 
 open scoped Pointwise
 
-universe u v
-
-variable {G : Type u} {A : Type v}
-
-variable {x y : G} {a b : A} {n m : ℕ}
+variable {G H A α β : Type _}
 
 section MonoidAddMonoid
 
-variable [Monoid G] [AddMonoid A]
+variable [Monoid G] [AddMonoid A] {x y : G} {a b : A} {n m : ℕ}
 
 section IsOfFinOrder
 
@@ -130,7 +127,7 @@ theorem isOfFinOrder_iff_coe (H : Submonoid G) (x : H) : IsOfFinOrder x ↔ IsOf
 /-- The image of an element of finite order has finite order. -/
 @[to_additive AddMonoidHom.isOfFinAddOrder
       "The image of an element of finite additive order has finite additive order."]
-theorem MonoidHom.isOfFinOrder {H : Type v} [Monoid H] (f : G →* H) {x : G} (h : IsOfFinOrder x) :
+theorem MonoidHom.isOfFinOrder [Monoid H] (f : G →* H) {x : G} (h : IsOfFinOrder x) :
     IsOfFinOrder <| f x :=
   (isOfFinOrder_iff_pow_eq_one _).mpr <|
     by
@@ -252,6 +249,12 @@ theorem orderOf_pos_iff : 0 < orderOf x ↔ IsOfFinOrder x := by
 #align order_of_pos_iff orderOf_pos_iff
 #align add_order_of_pos_iff addOrderOf_pos_iff
 -/
+
+@[to_additive IsOfFinAddOrder.mono]
+theorem IsOfFinOrder.mono [Monoid β] {y : β} (hx : IsOfFinOrder x) (h : orderOf y ∣ orderOf x) :
+    IsOfFinOrder y := by rw [← orderOf_pos_iff] at hx ⊢; exact Nat.pos_of_dvd_of_pos h hx
+#align is_of_fin_order.mono IsOfFinOrder.mono
+#align is_of_fin_add_order.mono IsOfFinAddOrder.mono
 
 #print pow_ne_one_of_lt_orderOf' /-
 @[to_additive nsmul_ne_zero_of_lt_addOrderOf']
@@ -459,13 +462,13 @@ theorem orderOf_mul_dvd_lcm : orderOf (x * y) ∣ Nat.lcm (orderOf x) (orderOf y
 theorem orderOf_dvd_lcm_mul : orderOf y ∣ Nat.lcm (orderOf x) (orderOf (x * y)) :=
   by
   by_cases h0 : orderOf x = 0
-  · rw [h0, lcm_zero_left]; apply dvd_zero
+  · rw [h0, Nat.lcm_zero_left]; apply dvd_zero
   conv_lhs =>
     rw [← one_mul y, ← pow_orderOf_eq_one x, ← succ_pred_eq_of_pos (Nat.pos_of_ne_zero h0),
       pow_succ', mul_assoc]
   exact
-    (((Commute.refl x).mul_right h).pow_leftₓ _).orderOf_mul_dvd_lcm.trans
-      (lcm_dvd_iff.2 ⟨trans (orderOf_pow_dvd _) (dvd_lcm_left _ _), dvd_lcm_right _ _⟩)
+    (((Commute.refl x).mulRight h).pow_leftₓ _).orderOf_mul_dvd_lcm.trans
+      (Nat.lcm_dvd_iff.2 ⟨trans (orderOf_pow_dvd _) (dvd_lcm_left _ _), dvd_lcm_right _ _⟩)
 #align commute.order_of_dvd_lcm_mul Commute.orderOf_dvd_lcm_mul
 #align add_commute.order_of_dvd_lcm_add AddCommute.addOrderOf_dvd_lcm_add
 -/
@@ -562,7 +565,7 @@ end MonoidAddMonoid
 
 section CancelMonoid
 
-variable [LeftCancelMonoid G] (x y)
+variable [LeftCancelMonoid G] (x y : G) {m n : ℕ}
 
 #print pow_injective_of_lt_orderOf /-
 @[to_additive nsmul_injective_of_lt_addOrderOf]
@@ -643,7 +646,7 @@ end CancelMonoid
 
 section Group
 
-variable [Group G] [AddGroup A] {x a} {i : ℤ}
+variable [Group G] {x y : G} {i : ℤ}
 
 #print IsOfFinOrder.inv /-
 /-- Inverses of elements of finite order have finite order. -/
@@ -793,7 +796,7 @@ end Group
 
 section CommMonoid
 
-variable [CommMonoid G]
+variable [CommMonoid G] {x y : G}
 
 #print IsOfFinOrder.mul /-
 /-- Elements of finite order are closed under multiplication. -/
@@ -808,7 +811,7 @@ end CommMonoid
 
 section FiniteMonoid
 
-variable [Monoid G]
+variable [Monoid G] {n : ℕ}
 
 open scoped BigOperators
 
@@ -843,7 +846,7 @@ end FiniteMonoid
 section FiniteCancelMonoid
 
 -- TODO: Of course everything also works for right_cancel_monoids.
-variable [LeftCancelMonoid G] [AddLeftCancelMonoid A]
+variable [LeftCancelMonoid G] {x y : G} {n : ℕ}
 
 #print exists_pow_eq_one /-
 -- TODO: Use this to show that a finite left cancellative monoid is a group.
@@ -976,7 +979,7 @@ end FiniteCancelMonoid
 
 section FiniteGroup
 
-variable [Group G] [AddGroup A]
+variable [Group G] {x y : G} {n : ℕ}
 
 #print exists_zpow_eq_one /-
 @[to_additive]
@@ -1020,6 +1023,30 @@ theorem mem_zpowers_iff_mem_range_orderOf [Finite G] [DecidableEq G] :
 #align mem_zpowers_iff_mem_range_order_of mem_zpowers_iff_mem_range_orderOf
 #align mem_zmultiples_iff_mem_range_add_order_of mem_zmultiples_iff_mem_range_addOrderOf
 -/
+
+@[to_additive]
+theorem zpow_eq_one_iff_modEq {n : ℤ} : x ^ n = 1 ↔ n ≡ 0 [ZMOD orderOf x] := by
+  rw [Int.modEq_zero_iff_dvd, orderOf_dvd_iff_zpow_eq_one]
+#align zpow_eq_one_iff_modeq zpow_eq_one_iff_modEq
+#align zsmul_eq_zero_iff_modeq zsmul_eq_zero_iff_modEq
+
+@[to_additive]
+theorem zpow_eq_zpow_iff_modEq {m n : ℤ} : x ^ m = x ^ n ↔ m ≡ n [ZMOD orderOf x] := by
+  rw [← mul_inv_eq_one, ← zpow_sub, zpow_eq_one_iff_modEq, Int.modEq_iff_dvd, Int.modEq_iff_dvd,
+    zero_sub, neg_sub]
+#align zpow_eq_zpow_iff_modeq zpow_eq_zpow_iff_modEq
+#align zsmul_eq_zsmul_iff_modeq zsmul_eq_zsmul_iff_modEq
+
+@[simp, to_additive]
+theorem injective_zpow_iff_not_isOfFinOrder : (Injective fun n : ℤ => x ^ n) ↔ ¬IsOfFinOrder x :=
+  by
+  refine' ⟨_, fun h n m hnm => _⟩
+  · simp_rw [isOfFinOrder_iff_pow_eq_one]
+    rintro h ⟨n, hn, hx⟩
+    exact Nat.cast_ne_zero.2 hn.ne' (h <| by simpa using hx)
+  rwa [zpow_eq_zpow_iff_modEq, orderOf_eq_zero_iff.2 h, Nat.cast_zero, Int.modEq_zero_iff] at hnm 
+#align injective_zpow_iff_not_is_of_fin_order injective_zpow_iff_not_isOfFinOrder
+#align injective_zsmul_iff_not_is_of_fin_order injective_zsmul_iff_not_isOfFinOrder
 
 #print decidableZpowers /-
 @[to_additive decidableZmultiples]
@@ -1087,8 +1114,8 @@ theorem zpowersEquivZpowers_apply [Finite G] (h : orderOf x = orderOf y) (n : �
 variable [Fintype G]
 
 #print orderOf_eq_card_zpowers /-
-/-- See also `order_eq_card_zpowers'`. -/
-@[to_additive addOrderOf_eq_card_zmultiples "See also `add_order_eq_card_zmultiples'`."]
+/-- See also `nat.card_zpowers'`. -/
+@[to_additive addOrderOf_eq_card_zmultiples "See also `nat.card_zmultiples`."]
 theorem orderOf_eq_card_zpowers : orderOf x = Fintype.card (zpowers x) :=
   (Fintype.card_fin (orderOf x)).symm.trans (Fintype.card_eq.2 ⟨finEquivZpowers x⟩)
 #align order_eq_card_zpowers orderOf_eq_card_zpowers
@@ -1224,8 +1251,6 @@ theorem inf_eq_bot_of_coprime {G : Type _} [Group G] {H K : Subgroup G} [Fintype
 #align add_inf_eq_bot_of_coprime add_inf_eq_bot_of_coprime
 -/
 
-variable (a)
-
 #print image_range_orderOf /-
 /-- TODO: Generalise to `submonoid.powers`.-/
 @[to_additive image_range_addOrderOf, nolint to_additive_doc]
@@ -1311,7 +1336,7 @@ end PowIsSubgroup
 
 section LinearOrderedRing
 
-variable [LinearOrderedRing G]
+variable [LinearOrderedRing G] {x : G}
 
 #print orderOf_abs_ne_one /-
 theorem orderOf_abs_ne_one (h : |x| ≠ 1) : orderOf x = 0 :=
@@ -1338,3 +1363,46 @@ theorem LinearOrderedRing.orderOf_le_two : orderOf x ≤ 2 :=
 
 end LinearOrderedRing
 
+section Prod
+
+variable [Monoid α] [Monoid β] {x : α × β} {a : α} {b : β}
+
+@[to_additive Prod.add_orderOf]
+protected theorem Prod.orderOf (x : α × β) : orderOf x = (orderOf x.1).lcm (orderOf x.2) :=
+  minimalPeriod_prod_map _ _ _
+#align prod.order_of Prod.orderOf
+#align prod.add_order_of Prod.add_orderOf
+
+@[to_additive add_orderOf_fst_dvd_add_orderOf]
+theorem orderOf_fst_dvd_orderOf : orderOf x.1 ∣ orderOf x :=
+  minimalPeriod_fst_dvd
+#align order_of_fst_dvd_order_of orderOf_fst_dvd_orderOf
+#align add_order_of_fst_dvd_add_order_of add_orderOf_fst_dvd_add_orderOf
+
+@[to_additive add_orderOf_snd_dvd_add_orderOf]
+theorem orderOf_snd_dvd_orderOf : orderOf x.2 ∣ orderOf x :=
+  minimalPeriod_snd_dvd
+#align order_of_snd_dvd_order_of orderOf_snd_dvd_orderOf
+#align add_order_of_snd_dvd_add_order_of add_orderOf_snd_dvd_add_orderOf
+
+@[to_additive IsOfFinAddOrder.fst]
+theorem IsOfFinOrder.fst {x : α × β} (hx : IsOfFinOrder x) : IsOfFinOrder x.1 :=
+  hx.mono orderOf_fst_dvd_orderOf
+#align is_of_fin_order.fst IsOfFinOrder.fst
+#align is_of_fin_add_order.fst IsOfFinAddOrder.fst
+
+@[to_additive IsOfFinAddOrder.snd]
+theorem IsOfFinOrder.snd {x : α × β} (hx : IsOfFinOrder x) : IsOfFinOrder x.2 :=
+  hx.mono orderOf_snd_dvd_orderOf
+#align is_of_fin_order.snd IsOfFinOrder.snd
+#align is_of_fin_add_order.snd IsOfFinAddOrder.snd
+
+@[to_additive IsOfFinAddOrder.prod_mk]
+theorem IsOfFinOrder.prod_mk : IsOfFinOrder a → IsOfFinOrder b → IsOfFinOrder (a, b) := by
+  simpa only [← orderOf_pos_iff, Prod.orderOf] using Nat.lcm_pos
+#align is_of_fin_order.prod_mk IsOfFinOrder.prod_mk
+#align is_of_fin_add_order.prod_mk IsOfFinAddOrder.prod_mk
+
+end Prod
+
+-- TODO: Corresponding `pi` lemmas. We cannot currently state them here because of import cycles
