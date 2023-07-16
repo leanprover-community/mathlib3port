@@ -85,7 +85,7 @@ is the product of `f x`, for some `x : fin (n + 1)` times the remaining product 
 @[to_additive
       "A sum of a function `f : fin (n + 1) → β` over all `fin (n + 1)` is the sum of `f x`,\nfor some `x : fin (n + 1)` plus the remaining product"]
 theorem prod_univ_succAbove [CommMonoid β] {n : ℕ} (f : Fin (n + 1) → β) (x : Fin (n + 1)) :
-    ∏ i, f i = f x * ∏ i : Fin n, f (x.succAbove i) := by
+    ∏ i, f i = f x * ∏ i : Fin n, f (x.succAboveEmb i) := by
   rw [univ_succ_above, prod_cons, Finset.prod_map, RelEmbedding.coe_toEmbedding]
 #align fin.prod_univ_succ_above Fin.prod_univ_succAbove
 #align fin.sum_univ_succ_above Fin.sum_univ_succAbove
@@ -103,16 +103,16 @@ theorem prod_univ_succ [CommMonoid β] {n : ℕ} (f : Fin (n + 1) → β) :
 #align fin.sum_univ_succ Fin.sum_univ_succ
 -/
 
-#print Fin.prod_univ_castSuccEmb /-
+#print Fin.prod_univ_castSucc /-
 /-- A product of a function `f : fin (n + 1) → β` over all `fin (n + 1)`
 is the product of `f (fin.last n)` plus the remaining product -/
 @[to_additive
       "A sum of a function `f : fin (n + 1) → β` over all `fin (n + 1)` is the sum of\n`f (fin.last n)` plus the remaining sum"]
-theorem prod_univ_castSuccEmb [CommMonoid β] {n : ℕ} (f : Fin (n + 1) → β) :
+theorem prod_univ_castSucc [CommMonoid β] {n : ℕ} (f : Fin (n + 1) → β) :
     ∏ i, f i = (∏ i : Fin n, f i.cast_succ) * f (last n) := by
   simpa [mul_comm] using prod_univ_succ_above f (last n)
-#align fin.prod_univ_cast_succ Fin.prod_univ_castSuccEmb
-#align fin.sum_univ_cast_succ Fin.sum_univ_castSuccEmb
+#align fin.prod_univ_cast_succ Fin.prod_univ_castSucc
+#align fin.sum_univ_cast_succ Fin.sum_univ_castSucc
 -/
 
 #print Fin.prod_cons /-
@@ -236,7 +236,7 @@ theorem prod_congr' {M : Type _} [CommMonoid M] {a b : ℕ} (f : Fin b → M) (h
 #print Fin.prod_univ_add /-
 @[to_additive]
 theorem prod_univ_add {M : Type _} [CommMonoid M] {a b : ℕ} (f : Fin (a + b) → M) :
-    ∏ i : Fin (a + b), f i = (∏ i : Fin a, f (castAdd b i)) * ∏ i : Fin b, f (natAdd a i) :=
+    ∏ i : Fin (a + b), f i = (∏ i : Fin a, f (castAddEmb b i)) * ∏ i : Fin b, f (natAddEmb a i) :=
   by
   rw [Fintype.prod_equiv fin_sum_fin_equiv.symm f fun i => f (fin_sum_fin_equiv.to_fun i)]; swap
   · intro x
@@ -249,8 +249,8 @@ theorem prod_univ_add {M : Type _} [CommMonoid M] {a b : ℕ} (f : Fin (a + b) �
 #print Fin.prod_trunc /-
 @[to_additive]
 theorem prod_trunc {M : Type _} [CommMonoid M] {a b : ℕ} (f : Fin (a + b) → M)
-    (hf : ∀ j : Fin b, f (natAdd a j) = 1) :
-    ∏ i : Fin (a + b), f i = ∏ i : Fin a, f (castLE (Nat.le.intro rfl) i) := by
+    (hf : ∀ j : Fin b, f (natAddEmb a j) = 1) :
+    ∏ i : Fin (a + b), f i = ∏ i : Fin a, f (castLEEmb (Nat.le.intro rfl) i) := by
   simpa only [prod_univ_add, Fintype.prod_eq_one _ hf, mul_one]
 #align fin.prod_trunc Fin.prod_trunc
 #align fin.sum_trunc Fin.sum_trunc
@@ -316,9 +316,9 @@ theorem partialProd_right_inv {G : Type _} [Group G] (f : Fin n → G) (i : Fin 
   induction' i with i hi generalizing hn
   · simp [-Fin.succ_mk, partial_prod_succ]
   · specialize hi (lt_trans (Nat.lt_succ_self i) hn)
-    simp only [Fin.coe_eq_castSuccEmb, Fin.succ_mk, Fin.castSuccEmb_mk] at hi ⊢
+    simp only [Fin.coe_eq_castSucc, Fin.succ_mk, Fin.castSucc_mk] at hi ⊢
     rw [← Fin.succ_mk _ _ (lt_trans (Nat.lt_succ_self _) hn), ← Fin.succ_mk]
-    simp only [partial_prod_succ, mul_inv_rev, Fin.castSuccEmb_mk]
+    simp only [partial_prod_succ, mul_inv_rev, Fin.castSucc_mk]
     assoc_rw [hi, inv_mul_cancel_left]
 #align fin.partial_prod_right_inv Fin.partialProd_right_inv
 #align fin.partial_sum_right_neg Fin.partialSum_right_neg
@@ -334,7 +334,7 @@ Useful for defining group cohomology. -/
       "Let `(g₀, g₁, ..., gₙ)` be a tuple of elements in `Gⁿ⁺¹`.\nThen if `k < j`, this says `-(g₀ + g₁ + ... + gₖ₋₁) + (g₀ + g₁ + ... + gₖ) = gₖ`.\nIf `k = j`, it says `-(g₀ + g₁ + ... + gₖ₋₁) + (g₀ + g₁ + ... + gₖ₊₁) = gₖ + gₖ₊₁`.\nIf `k > j`, it says `-(g₀ + g₁ + ... + gₖ) + (g₀ + g₁ + ... + gₖ₊₁) = gₖ₊₁.`\nUseful for defining group cohomology."]
 theorem inv_partialProd_mul_eq_contractNth {G : Type _} [Group G] (g : Fin (n + 1) → G)
     (j : Fin (n + 1)) (k : Fin n) :
-    (partialProd g (j.succ.succAbove k.cast_succ))⁻¹ * partialProd g (j.succAbove k).succ =
+    (partialProd g (j.succ.succAboveEmb k.cast_succ))⁻¹ * partialProd g (j.succAboveEmb k).succ =
       j.contractNth Mul.mul g k :=
   by
   rcases lt_trichotomy (k : ℕ) j with (h | h | h)
@@ -371,7 +371,7 @@ def finFunctionFinEquiv {m n : ℕ} : (Fin n → Fin m) ≃ Fin (m ^ n) :=
         · simp
         cases m
         · exact isEmptyElim (f <| Fin.last _)
-        simp_rw [Fin.sum_univ_castSuccEmb, Fin.coe_castSuccEmb, Fin.val_last]
+        simp_rw [Fin.sum_univ_castSucc, Fin.coe_castSucc, Fin.val_last]
         refine' (add_lt_add_of_lt_of_le (ih _) <| mul_le_mul_right' (Fin.is_le _) _).trans_eq _
         rw [← one_add_mul, add_comm, pow_succ]⟩)
     (fun a b =>
@@ -417,20 +417,20 @@ theorem finFunctionFinEquiv_single {m n : ℕ} [NeZero m] (i : Fin n) (j : Fin m
 def finPiFinEquiv {m : ℕ} {n : Fin m → ℕ} : (∀ i : Fin m, Fin (n i)) ≃ Fin (∏ i : Fin m, n i) :=
   Equiv.ofRightInverseOfCardLe (le_of_eq <| by simp_rw [Fintype.card_pi, Fintype.card_fin])
     (fun f =>
-      ⟨∑ i, f i * ∏ j, n (Fin.castLE i.is_lt.le j),
+      ⟨∑ i, f i * ∏ j, n (Fin.castLEEmb i.is_lt.le j),
         by
         induction' m with m ih generalizing f
         · simp
-        rw [Fin.prod_univ_castSuccEmb, Fin.sum_univ_castSuccEmb]
+        rw [Fin.prod_univ_castSucc, Fin.sum_univ_castSucc]
         suffices
           ∀ (n : Fin m → ℕ) (nn : ℕ) (f : ∀ i : Fin m, Fin (n i)) (fn : Fin nn),
-            ∑ i : Fin m, ↑(f i) * ∏ j : Fin i, n (Fin.castLE i.prop.le j) + ↑fn * ∏ j, n j <
+            ∑ i : Fin m, ↑(f i) * ∏ j : Fin i, n (Fin.castLEEmb i.prop.le j) + ↑fn * ∏ j, n j <
               (∏ i : Fin m, n i) * nn
           by
           replace this := this (Fin.init n) (n (Fin.last _)) (Fin.init f) (f (Fin.last _))
           rw [← Fin.snoc_init_self f]
           simp (config := { singlePass := true }) only [← Fin.snoc_init_self n]
-          simp_rw [Fin.snoc_castSuccEmb, Fin.init_snoc, Fin.snoc_last, Fin.snoc_init_self n]
+          simp_rw [Fin.snoc_castSucc, Fin.init_snoc, Fin.snoc_last, Fin.snoc_init_self n]
           exact this
         intro n nn f fn
         cases nn
@@ -438,7 +438,7 @@ def finPiFinEquiv {m : ℕ} {n : Fin m → ℕ} : (∀ i : Fin m, Fin (n i)) ≃
         refine' (add_lt_add_of_lt_of_le (ih _) <| mul_le_mul_right' (Fin.is_le _) _).trans_eq _
         rw [← one_add_mul, mul_comm, add_comm]⟩)
     (fun a b =>
-      ⟨(a / ∏ j : Fin b, n (Fin.castLE b.is_lt.le j)) % n b,
+      ⟨(a / ∏ j : Fin b, n (Fin.castLEEmb b.is_lt.le j)) % n b,
         by
         cases m
         · exact b.elim0
@@ -459,8 +459,8 @@ def finPiFinEquiv {m : ℕ} {n : Fin m → ℕ} : (∀ i : Fin m, Fin (n i)) ≃
         simp_rw [Fin.val_mk, Fin.sum_univ_succ, Fin.cons_succ]
         have := fun i : Fin n =>
           Fintype.prod_equiv (Fin.castIso <| Fin.val_succ i).toEquiv
-            (fun j => (Fin.cons x xs : _ → ℕ) (Fin.castLE (Fin.is_lt _).le j))
-            (fun j => (Fin.cons x xs : _ → ℕ) (Fin.castLE (Nat.succ_le_succ (Fin.is_lt _).le) j))
+            (fun j => (Fin.cons x xs : _ → ℕ) (Fin.castLEEmb (Fin.is_lt _).le j))
+            (fun j => (Fin.cons x xs : _ → ℕ) (Fin.castLEEmb (Nat.succ_le_succ (Fin.is_lt _).le) j))
             fun j => rfl
         simp_rw [this]; clear this
         dsimp only [Fin.val_zero]
@@ -481,7 +481,7 @@ def finPiFinEquiv {m : ℕ} {n : Fin m → ℕ} : (∀ i : Fin m, Fin (n i)) ≃
 
 #print finPiFinEquiv_apply /-
 theorem finPiFinEquiv_apply {m : ℕ} {n : Fin m → ℕ} (f : ∀ i : Fin m, Fin (n i)) :
-    (finPiFinEquiv f : ℕ) = ∑ i, f i * ∏ j, n (Fin.castLE i.is_lt.le j) :=
+    (finPiFinEquiv f : ℕ) = ∑ i, f i * ∏ j, n (Fin.castLEEmb i.is_lt.le j) :=
   rfl
 #align fin_pi_fin_equiv_apply finPiFinEquiv_apply
 -/
@@ -490,7 +490,7 @@ theorem finPiFinEquiv_apply {m : ℕ} {n : Fin m → ℕ} (f : ∀ i : Fin m, Fi
 theorem finPiFinEquiv_single {m : ℕ} {n : Fin m → ℕ} [∀ i, NeZero (n i)] (i : Fin m)
     (j : Fin (n i)) :
     (finPiFinEquiv (Pi.single i j : ∀ i : Fin m, Fin (n i)) : ℕ) =
-      j * ∏ j, n (Fin.castLE i.is_lt.le j) :=
+      j * ∏ j, n (Fin.castLEEmb i.is_lt.le j) :=
   by
   rw [finPiFinEquiv_apply, Fintype.sum_eq_single i, Pi.single_eq_same]
   rintro x hx

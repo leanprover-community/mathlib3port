@@ -500,9 +500,9 @@ theorem scanl_get (i : Fin n) :
     simpa only [scanl_singleton, i0, nth_zero]
   · rw [← cons_head_tail v, scanl_cons, nth_cons_succ]
     refine' Fin.cases _ _ i
-    · simp only [nth_zero, scanl_head, Fin.castSuccEmb_zero, cons_head]
+    · simp only [nth_zero, scanl_head, Fin.castSucc_zero, cons_head]
     · intro i'
-      simp only [hn, Fin.castSuccEmb_fin_succ, nth_cons_succ]
+      simp only [hn, Fin.castSucc_fin_succ, nth_cons_succ]
 #align vector.scanl_nth Vector.scanl_get
 -/
 
@@ -674,10 +674,10 @@ theorem removeNth_insertNth {v : Vector α n} {i : Fin (n + 1)} :
 #print Vector.removeNth_insertNth' /-
 theorem removeNth_insertNth' {v : Vector α (n + 1)} :
     ∀ {i : Fin (n + 1)} {j : Fin (n + 2)},
-      removeNth (j.succAbove i) (insertNth a j v) = insertNth a (i.predAbove j) (removeNth i v)
+      removeNth (j.succAboveEmb i) (insertNth a j v) = insertNth a (i.predAbove j) (removeNth i v)
   | ⟨i, hi⟩, ⟨j, hj⟩ =>
     by
-    dsimp [insert_nth, remove_nth, Fin.succAbove, Fin.predAbove]
+    dsimp [insert_nth, remove_nth, Fin.succAboveEmb, Fin.predAbove]
     simp only [Subtype.mk_eq_mk]
     split_ifs
     · convert (List.insertNth_removeNth_of_ge i (j - 1) _ _ _).symm

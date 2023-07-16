@@ -3087,7 +3087,7 @@ theorem submatrix_mul_transpose_submatrix [Fintype m] [Fintype n] [AddCommMonoid
 /-- The left `n × l` part of a `n × (l+r)` matrix. -/
 @[reducible]
 def subLeft {m l r : Nat} (A : Matrix (Fin m) (Fin (l + r)) α) : Matrix (Fin m) (Fin l) α :=
-  submatrix A id (Fin.castAdd r)
+  submatrix A id (Fin.castAddEmb r)
 #align matrix.sub_left Matrix.subLeft
 -/
 
@@ -3095,7 +3095,7 @@ def subLeft {m l r : Nat} (A : Matrix (Fin m) (Fin (l + r)) α) : Matrix (Fin m)
 /-- The right `n × r` part of a `n × (l+r)` matrix. -/
 @[reducible]
 def subRight {m l r : Nat} (A : Matrix (Fin m) (Fin (l + r)) α) : Matrix (Fin m) (Fin r) α :=
-  submatrix A id (Fin.natAdd l)
+  submatrix A id (Fin.natAddEmb l)
 #align matrix.sub_right Matrix.subRight
 -/
 
@@ -3103,7 +3103,7 @@ def subRight {m l r : Nat} (A : Matrix (Fin m) (Fin (l + r)) α) : Matrix (Fin m
 /-- The top `u × n` part of a `(u+d) × n` matrix. -/
 @[reducible]
 def subUp {d u n : Nat} (A : Matrix (Fin (u + d)) (Fin n) α) : Matrix (Fin u) (Fin n) α :=
-  submatrix A (Fin.castAdd d) id
+  submatrix A (Fin.castAddEmb d) id
 #align matrix.sub_up Matrix.subUp
 -/
 
@@ -3111,7 +3111,7 @@ def subUp {d u n : Nat} (A : Matrix (Fin (u + d)) (Fin n) α) : Matrix (Fin u) (
 /-- The bottom `d × n` part of a `(u+d) × n` matrix. -/
 @[reducible]
 def subDown {d u n : Nat} (A : Matrix (Fin (u + d)) (Fin n) α) : Matrix (Fin d) (Fin n) α :=
-  submatrix A (Fin.natAdd u) id
+  submatrix A (Fin.natAddEmb u) id
 #align matrix.sub_down Matrix.subDown
 -/
 

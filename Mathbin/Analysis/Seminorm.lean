@@ -1226,10 +1226,10 @@ protected theorem absorbent_closedBall (hpr : p x < r) : Absorbent 𝕜 (closedB
 #align seminorm.absorbent_closed_ball Seminorm.absorbent_closedBall
 -/
 
-#print Seminorm.symmetric_ball_zero /-
-theorem symmetric_ball_zero (r : ℝ) (hx : x ∈ ball p 0 r) : -x ∈ ball p 0 r :=
+#print Seminorm.neg_mem_ball_zero /-
+theorem neg_mem_ball_zero (r : ℝ) (hx : x ∈ ball p 0 r) : -x ∈ ball p 0 r :=
   balanced_ball_zero p r (-1) (by rw [norm_neg, norm_one]) ⟨x, hx, by rw [neg_smul, one_smul]⟩
-#align seminorm.symmetric_ball_zero Seminorm.symmetric_ball_zero
+#align seminorm.symmetric_ball_zero Seminorm.neg_mem_ball_zero
 -/
 
 #print Seminorm.neg_ball /-

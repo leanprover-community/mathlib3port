@@ -118,7 +118,7 @@ def applyComposition (p : FormalMultilinearSeries 𝕜 E F) {n : ℕ} (c : Compo
 #print FormalMultilinearSeries.applyComposition_ones /-
 theorem applyComposition_ones (p : FormalMultilinearSeries 𝕜 E F) (n : ℕ) :
     p.applyComposition (Composition.ones n) = fun v i =>
-      p 1 fun _ => v (Fin.castLE (Composition.length_le _) i) :=
+      p 1 fun _ => v (Fin.castLEEmb (Composition.length_le _) i) :=
   by
   funext v i
   apply p.congr (Composition.ones_blocksFun _ _)

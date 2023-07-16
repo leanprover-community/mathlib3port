@@ -229,8 +229,8 @@ theorem QuasiSeparated.is_local_at_target : PropertyIsLocalAtTarget @QuasiSepara
 #align algebraic_geometry.quasi_separated.is_local_at_target AlgebraicGeometry.QuasiSeparated.is_local_at_target
 -/
 
-#print AlgebraicGeometry.QuasiSeparated.openCover_tFAE /-
-theorem QuasiSeparated.openCover_tFAE {X Y : Scheme.{u}} (f : X ⟶ Y) :
+#print AlgebraicGeometry.QuasiSeparated.openCover_TFAE /-
+theorem QuasiSeparated.openCover_TFAE {X Y : Scheme.{u}} (f : X ⟶ Y) :
     TFAE
       [QuasiSeparated f,
         ∃ 𝒰 : Scheme.OpenCover.{u} Y,
@@ -243,7 +243,7 @@ theorem QuasiSeparated.openCover_tFAE {X Y : Scheme.{u}} (f : X ⟶ Y) :
         ∃ (ι : Type u) (U : ι → Opens Y.carrier) (hU : iSup U = ⊤),
           ∀ i, QuasiSeparated (f ∣_ U i)] :=
   QuasiSeparated.is_local_at_target.openCover_TFAE f
-#align algebraic_geometry.quasi_separated.open_cover_tfae AlgebraicGeometry.QuasiSeparated.openCover_tFAE
+#align algebraic_geometry.quasi_separated.open_cover_tfae AlgebraicGeometry.QuasiSeparated.openCover_TFAE
 -/
 
 #print AlgebraicGeometry.quasiSeparated_over_affine_iff /-

@@ -311,7 +311,7 @@ theorem orderEmbOfFin_eq_orderEmbOfFin_iff {k l : ℕ} {s : Finset α} {i : Fin 
 is an order embedding from `fin k` to `α` whose image is contained in `s`. Specifically, it maps
 `fin k` to an initial segment of `s`. -/
 def orderEmbOfCardLe (s : Finset α) {k : ℕ} (h : k ≤ s.card) : Fin k ↪o α :=
-  (Fin.castLE h).trans (s.orderEmbOfFin rfl)
+  (Fin.castLEEmb h).trans (s.orderEmbOfFin rfl)
 #align finset.order_emb_of_card_le Finset.orderEmbOfCardLe
 -/
 

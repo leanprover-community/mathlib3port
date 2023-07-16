@@ -22,31 +22,31 @@ namespace Expr
 
 /-- Produce a `has_one` instance for the type cached by `t`, such that `1 : expr` is the one of that
 type. -/
-unsafe def has_one (t : tactic.instance_cache) : tactic (tactic.instance_cache × One expr) := do
+unsafe def instOne (t : tactic.instance_cache) : tactic (tactic.instance_cache × One expr) := do
   let (t, one) ← t.mk_app `has_one.one []
   pure (t, { one })
-#align expr.has_one expr.has_one
+#align expr.has_one Expr.instOneₓ
 
 /-- Produce a `has_zero` instance for the type cached by `t`, such that `0 : expr` is the zero of
 that type. -/
-unsafe def has_zero (t : tactic.instance_cache) : tactic (tactic.instance_cache × Zero expr) := do
+unsafe def instZero (t : tactic.instance_cache) : tactic (tactic.instance_cache × Zero expr) := do
   let (t, zero) ← t.mk_app `has_zero.zero []
   pure (t, { zero })
-#align expr.has_zero expr.has_zero
+#align expr.has_zero Expr.instZeroₓ
 
 /-- Produce a `has_mul` instance for the type cached by `t`, such that `(*) : expr → expr → expr` is
 the multiplication of that type. -/
-unsafe def has_mul (t : tactic.instance_cache) : tactic (tactic.instance_cache × Mul expr) := do
+unsafe def instMul (t : tactic.instance_cache) : tactic (tactic.instance_cache × Mul expr) := do
   let (t, mul) ← t.mk_app `has_mul.mul []
   pure (t, { mul := fun a b => mul a b })
-#align expr.has_mul expr.has_mul
+#align expr.has_mul Expr.instMulₓ
 
 /-- Produce a `has_add` instance for the type cached by `t`, such that `(+) : expr → expr → expr` is
 the addition of that type. -/
-unsafe def has_add (t : tactic.instance_cache) : tactic (tactic.instance_cache × Add expr) := do
+unsafe def instAdd (t : tactic.instance_cache) : tactic (tactic.instance_cache × Add expr) := do
   let (t, add) ← t.mk_app `has_add.add []
   pure (t, { add := fun a b => add a b })
-#align expr.has_add expr.has_add
+#align expr.has_add Expr.instAddₓ
 
 end Expr
 

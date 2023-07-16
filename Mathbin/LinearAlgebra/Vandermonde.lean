@@ -110,7 +110,7 @@ theorem det_vandermonde {n : ℕ} (v : Fin n → R) :
           (of fun i j : Fin n =>
             Matrix.vecCons (v 0 ^ (j.succ : ℕ))
               (fun i : Fin n => v (Fin.succ i) ^ (j.succ : ℕ) - v 0 ^ (j.succ : ℕ))
-              (Fin.succAbove 0 i)) :=
+              (Fin.succAboveEmb 0 i)) :=
       by
       simp_rw [det_succ_column_zero, Fin.sum_univ_succ, of_apply, Matrix.cons_val_zero, submatrix,
         of_apply, Matrix.cons_val_succ, Fin.val_zero, pow_zero, one_mul, sub_self,
@@ -146,7 +146,7 @@ theorem det_vandermonde {n : ℕ} (v : Fin n → R) :
     · intro j
       simp
     · intro i j
-      simp only [smul_eq_mul, Pi.add_apply, Fin.val_succ, Fin.coe_castSuccEmb, Pi.smul_apply]
+      simp only [smul_eq_mul, Pi.add_apply, Fin.val_succ, Fin.coe_castSucc, Pi.smul_apply]
       rw [Finset.sum_range_succ, add_comm, tsub_self, pow_zero, mul_one, Finset.mul_sum]
       congr 1
       refine' Finset.sum_congr rfl fun i' hi' => _

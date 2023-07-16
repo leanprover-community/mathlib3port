@@ -1709,7 +1709,8 @@ theorem continuous_mulSingle [∀ i, One (π i)] [DecidableEq ι] (i : ι) :
 #print Filter.Tendsto.fin_insertNth /-
 theorem Filter.Tendsto.fin_insertNth {n} {π : Fin (n + 1) → Type _} [∀ i, TopologicalSpace (π i)]
     (i : Fin (n + 1)) {f : β → π i} {l : Filter β} {x : π i} (hf : Tendsto f l (𝓝 x))
-    {g : β → ∀ j : Fin n, π (i.succAbove j)} {y : ∀ j, π (i.succAbove j)} (hg : Tendsto g l (𝓝 y)) :
+    {g : β → ∀ j : Fin n, π (i.succAboveEmb j)} {y : ∀ j, π (i.succAboveEmb j)}
+    (hg : Tendsto g l (𝓝 y)) :
     Tendsto (fun a => i.insertNth (f a) (g a)) l (𝓝 <| i.insertNth x y) :=
   tendsto_pi_nhds.2 fun j => Fin.succAboveCases i (by simpa) (by simpa using tendsto_pi_nhds.1 hg) j
 #align filter.tendsto.fin_insert_nth Filter.Tendsto.fin_insertNth
@@ -1718,7 +1719,7 @@ theorem Filter.Tendsto.fin_insertNth {n} {π : Fin (n + 1) → Type _} [∀ i, T
 #print ContinuousAt.fin_insertNth /-
 theorem ContinuousAt.fin_insertNth {n} {π : Fin (n + 1) → Type _} [∀ i, TopologicalSpace (π i)]
     (i : Fin (n + 1)) {f : α → π i} {a : α} (hf : ContinuousAt f a)
-    {g : α → ∀ j : Fin n, π (i.succAbove j)} (hg : ContinuousAt g a) :
+    {g : α → ∀ j : Fin n, π (i.succAboveEmb j)} (hg : ContinuousAt g a) :
     ContinuousAt (fun a => i.insertNth (f a) (g a)) a :=
   hf.fin_insertNth i hg
 #align continuous_at.fin_insert_nth ContinuousAt.fin_insertNth
@@ -1726,7 +1727,7 @@ theorem ContinuousAt.fin_insertNth {n} {π : Fin (n + 1) → Type _} [∀ i, Top
 
 #print Continuous.fin_insertNth /-
 theorem Continuous.fin_insertNth {n} {π : Fin (n + 1) → Type _} [∀ i, TopologicalSpace (π i)]
-    (i : Fin (n + 1)) {f : α → π i} (hf : Continuous f) {g : α → ∀ j : Fin n, π (i.succAbove j)}
+    (i : Fin (n + 1)) {f : α → π i} (hf : Continuous f) {g : α → ∀ j : Fin n, π (i.succAboveEmb j)}
     (hg : Continuous g) : Continuous fun a => i.insertNth (f a) (g a) :=
   continuous_iff_continuousAt.2 fun a => hf.ContinuousAt.fin_insertNth i hg.ContinuousAt
 #align continuous.fin_insert_nth Continuous.fin_insertNth

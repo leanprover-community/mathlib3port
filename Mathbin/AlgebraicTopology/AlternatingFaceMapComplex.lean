@@ -115,13 +115,13 @@ theorem d_squared (n : ℕ) : objD X (n + 1) ≫ objD X n = 0 :=
       mul_one, Fin.coe_castLT, Fin.val_succ, pow_one, mul_neg, neg_neg]
     let jj : Fin (n + 2) := (φ (i, j) hij).1
     have ineq : jj ≤ i := by rw [← Fin.val_fin_le]; simpa using hij
-    rw [CategoryTheory.SimplicialObject.δ_comp_δ X ineq, Fin.castSuccEmb_castLT, mul_comm]
+    rw [CategoryTheory.SimplicialObject.δ_comp_δ X ineq, Fin.castSucc_castLT, mul_comm]
   · -- φ : S → Sᶜ is injective
     rintro ⟨i, j⟩ ⟨i', j'⟩ hij hij' h
     rw [Prod.mk.inj_iff]
     refine' ⟨by simpa using congr_arg Prod.snd h, _⟩
     have h1 := congr_arg Fin.castSuccEmb (congr_arg Prod.fst h)
-    simpa [Fin.castSuccEmb_castLT] using h1
+    simpa [Fin.castSucc_castLT] using h1
   · -- φ : S → Sᶜ is surjective
     rintro ⟨i', j'⟩ hij'
     simp only [true_and_iff, Finset.mem_univ, Finset.compl_filter, not_le, Finset.mem_filter] at
@@ -130,9 +130,9 @@ theorem d_squared (n : ℕ) : objD X (n + 1) ≫ objD X n = 0 :=
     · intro H
       simpa only [H, Nat.not_lt_zero, Fin.val_zero] using hij'
     ·
-      simpa only [true_and_iff, Finset.mem_univ, Fin.coe_castSuccEmb, Fin.coe_pred,
+      simpa only [true_and_iff, Finset.mem_univ, Fin.coe_castSucc, Fin.coe_pred,
         Finset.mem_filter] using Nat.le_pred_of_lt hij'
-    · simp only [Prod.mk.inj_iff, Fin.succ_pred, Fin.castLT_castSuccEmb]
+    · simp only [Prod.mk.inj_iff, Fin.succ_pred, Fin.castLT_castSucc]
       constructor <;> rfl
 #align algebraic_topology.alternating_face_map_complex.d_squared AlgebraicTopology.AlternatingFaceMapComplex.d_squared
 -/

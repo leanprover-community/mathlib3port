@@ -112,9 +112,9 @@ theorem NormalizeFinLt.castLT {n m} {a : Fin m} {ha} {a' : ℕ} (h : NormalizeFi
     NormalizeFinLt n (Fin.castLT a ha) a' := by simpa [normalize_fin_lt] using h
 #align tactic.norm_fin.normalize_fin_lt.cast_lt Tactic.NormFin.NormalizeFinLt.castLT
 
-theorem NormalizeFinLt.castLE {n m} {nm} {a : Fin m} {a' : ℕ} (h : NormalizeFinLt m a a') :
-    NormalizeFinLt n (Fin.castLE nm a) a' := by simpa [normalize_fin_lt] using h
-#align tactic.norm_fin.normalize_fin_lt.cast_le Tactic.NormFin.NormalizeFinLt.castLE
+theorem NormalizeFinLt.castLEEmb {n m} {nm} {a : Fin m} {a' : ℕ} (h : NormalizeFinLt m a a') :
+    NormalizeFinLt n (Fin.castLEEmb nm a) a' := by simpa [normalize_fin_lt] using h
+#align tactic.norm_fin.normalize_fin_lt.cast_le Tactic.NormFin.NormalizeFinLt.castLEEmb
 
 theorem NormalizeFinLt.castIso {n m} {nm} {a : Fin m} {a' : ℕ} (h : NormalizeFinLt m a a') :
     NormalizeFinLt n (Fin.castIso nm a) a' := by simpa [normalize_fin_lt] using h
@@ -124,24 +124,26 @@ theorem NormalizeFin.castIso {n m} {nm} {a : Fin m} {a' : ℕ} (h : NormalizeFin
     NormalizeFin n (Fin.castIso nm a) a' := by convert ← normalize_fin_lt.cast h
 #align tactic.norm_fin.normalize_fin.cast Tactic.NormFin.NormalizeFin.castIso
 
-theorem NormalizeFinLt.castAdd {n m} {a : Fin n} {a' : ℕ} (h : NormalizeFinLt n a a') :
-    NormalizeFinLt (n + m) (Fin.castAdd m a) a' := by simpa [normalize_fin_lt] using h
-#align tactic.norm_fin.normalize_fin_lt.cast_add Tactic.NormFin.NormalizeFinLt.castAdd
+theorem NormalizeFinLt.castAddEmb {n m} {a : Fin n} {a' : ℕ} (h : NormalizeFinLt n a a') :
+    NormalizeFinLt (n + m) (Fin.castAddEmb m a) a' := by simpa [normalize_fin_lt] using h
+#align tactic.norm_fin.normalize_fin_lt.cast_add Tactic.NormFin.NormalizeFinLt.castAddEmb
 
 theorem NormalizeFinLt.castSuccEmb {n} {a : Fin n} {a' : ℕ} (h : NormalizeFinLt n a a') :
     NormalizeFinLt (n + 1) (Fin.castSuccEmb a) a' :=
-  NormalizeFinLt.castAdd h
+  NormalizeFinLt.castAddEmb h
 #align tactic.norm_fin.normalize_fin_lt.cast_succ Tactic.NormFin.NormalizeFinLt.castSuccEmb
 
-theorem NormalizeFinLt.addNat {n m m'} (hm : m = m') {a : Fin n} {a' b : ℕ}
-    (h : NormalizeFinLt n a a') (e : a' + m' = b) : NormalizeFinLt (n + m) (@Fin.addNat n m a) b :=
-  by simpa [normalize_fin_lt, ← e, ← hm] using h
-#align tactic.norm_fin.normalize_fin_lt.add_nat Tactic.NormFin.NormalizeFinLt.addNat
+theorem NormalizeFinLt.addNatEmb {n m m'} (hm : m = m') {a : Fin n} {a' b : ℕ}
+    (h : NormalizeFinLt n a a') (e : a' + m' = b) :
+    NormalizeFinLt (n + m) (@Fin.addNatEmb n m a) b := by
+  simpa [normalize_fin_lt, ← e, ← hm] using h
+#align tactic.norm_fin.normalize_fin_lt.add_nat Tactic.NormFin.NormalizeFinLt.addNatEmb
 
-theorem NormalizeFinLt.natAdd {n m n'} (hn : n = n') {a : Fin m} {a' b : ℕ}
-    (h : NormalizeFinLt m a a') (e : n' + a' = b) : NormalizeFinLt (n + m) (@Fin.natAdd n m a) b :=
-  by simpa [normalize_fin_lt, ← e, ← hn] using h
-#align tactic.norm_fin.normalize_fin_lt.nat_add Tactic.NormFin.NormalizeFinLt.natAdd
+theorem NormalizeFinLt.natAddEmb {n m n'} (hn : n = n') {a : Fin m} {a' b : ℕ}
+    (h : NormalizeFinLt m a a') (e : n' + a' = b) :
+    NormalizeFinLt (n + m) (@Fin.natAddEmb n m a) b := by
+  simpa [normalize_fin_lt, ← e, ← hn] using h
+#align tactic.norm_fin.normalize_fin_lt.nat_add Tactic.NormFin.NormalizeFinLt.natAddEmb
 
 theorem NormalizeFin.reduce {n} {a : Fin n} {n' a' b k nk : ℕ} (hn : n = n')
     (h : NormalizeFin n a a') (e1 : n' * k = nk) (e2 : nk + b = a') : NormalizeFin n a b := by
@@ -276,12 +278,12 @@ open MatchFinResult
 functions are written this way: for example `cast_le : n ≤ m → fin n ↪o fin m` is not actually a
 function but rather an order embedding with a coercion to a function. -/
 unsafe def match_fin_coe_fn (a : expr) : expr → Option match_fin_result
-  | q(@Fin.castLE $(n) $(m) $(h)) => some (cast_le n m h a)
+  | q(@Fin.castLEEmb $(n) $(m) $(h)) => some (cast_le n m h a)
   | q(@Fin.castIso $(m) $(n) $(h)) => some (cast n m h a)
-  | q(@Fin.castAdd $(n) $(m)) => some (cast_add n m a)
+  | q(@Fin.castAddEmb $(n) $(m)) => some (cast_add n m a)
   | q(@Fin.castSuccEmb $(n)) => some (cast_succ n a)
-  | q(@Fin.addNat $(n) $(m)) => some (add_nat n m a)
-  | q(@Fin.natAdd $(n) $(m)) => some (nat_add n m a)
+  | q(@Fin.addNatEmb $(n) $(m)) => some (add_nat n m a)
+  | q(@Fin.natAddEmb $(n) $(m)) => some (nat_add n m a)
   | _ => none
 #align tactic.norm_fin.match_fin_coe_fn tactic.norm_fin.match_fin_coe_fn
 
@@ -351,13 +353,13 @@ unsafe def eval_fin_lt' (eval_fin : expr → eval_fin_m (expr × expr)) :
         pure (a', q(@NormalizeFinLt.castLT).mk_app [n, m, a, h, a', pa])
       | match_fin_result.cast_le _ m nm a => do
         let (a', pa) ← (eval_fin_lt' m a).reset
-        pure (a', q(@NormalizeFinLt.castLE).mk_app [n, m, nm, a, a', pa])
+        pure (a', q(@NormalizeFinLt.castLEEmb).mk_app [n, m, nm, a, a', pa])
       | match_fin_result.cast m _ nm a => do
         let (a', pa) ← (eval_fin_lt' m a).reset
         pure (a', q(@NormalizeFinLt.castIso).mk_app [n, m, nm, a, a', pa])
       | match_fin_result.cast_add n m a => do
         let (a', pa) ← (eval_fin_lt' m a).reset
-        pure (a', q(@NormalizeFinLt.castAdd).mk_app [n, m, a, a', pa])
+        pure (a', q(@NormalizeFinLt.castAddEmb).mk_app [n, m, a, a', pa])
       | match_fin_result.cast_succ n a => do
         let (a', pa) ← (eval_fin_lt' n a).reset
         pure (a', q(@NormalizeFinLt.castSuccEmb).mk_app [n, a, a', pa])
@@ -365,12 +367,12 @@ unsafe def eval_fin_lt' (eval_fin : expr → eval_fin_m (expr × expr)) :
         let (a', pa) ← (eval_fin_lt' n a).reset
         let (m', pm) ← or_refl_conv norm_num.derive m
         let (b, pb) ← eval_fin_m.lift_ic fun ic => prove_add_nat' ic a' m'
-        pure (b, q(@NormalizeFinLt.addNat).mk_app [n, m, m', pm, a, a', b, pa, pb])
+        pure (b, q(@NormalizeFinLt.addNatEmb).mk_app [n, m, m', pm, a, a', b, pa, pb])
       | match_fin_result.nat_add n m a => do
         let (a', pa) ← (eval_fin_lt' m a).reset
         let (n', pn) ← or_refl_conv norm_num.derive n
         let (b, pb) ← eval_fin_m.lift_ic fun ic => prove_add_nat' ic n' a'
-        pure (b, q(@NormalizeFinLt.natAdd).mk_app [n, m, n', pn, a, a', b, pa, pb])
+        pure (b, q(@NormalizeFinLt.natAddEmb).mk_app [n, m, n', pn, a, a', b, pa, pb])
       | _ => do
         let (_, n', pn) ← eval_fin_m.eval_n n
         let (a', pa) ← eval_fin a >>= reduce_fin' tt n a

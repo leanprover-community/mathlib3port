@@ -79,15 +79,14 @@ theorem Ioi_succ (i : Fin n) : Ioi i.succ = (Ioi i).map (Fin.succEmbedding _).to
 #align fin.Ioi_succ Fin.Ioi_succ
 -/
 
-#print Fin.Iio_castSuccEmb /-
+#print Fin.Iio_castSucc /-
 @[simp]
-theorem Iio_castSuccEmb (i : Fin n) :
-    Iio (castSuccEmb i) = (Iio i).map Fin.castSuccEmb.toEmbedding :=
+theorem Iio_castSucc (i : Fin n) : Iio (castSuccEmb i) = (Iio i).map Fin.castSuccEmb.toEmbedding :=
   by
   apply Finset.map_injective Fin.valEmbedding
   rw [Finset.map_map, Fin.map_valEmbedding_Iio]
   exact (Fin.map_valEmbedding_Iio i).symm
-#align fin.Iio_cast_succ Fin.Iio_castSuccEmb
+#align fin.Iio_cast_succ Fin.Iio_castSucc
 -/
 
 #print Fin.card_filter_univ_succ' /-

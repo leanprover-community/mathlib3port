@@ -142,6 +142,7 @@ theorem Smooth.mdifferentiableWithinAt (hf : Smooth I I' f) : MDifferentiableWit
 
 section mfderiv
 
+#print ContMDiffAt.mfderiv /-
 /-- The function that sends `x` to the `y`-derivative of `f(x,y)` at `g(x)` is `C^m` at `x₀`,
 where the derivative is taken as a continuous linear map.
 We have to assume that `f` is `C^n` at `(x₀, g(x₀))` for `n ≥ m + 1` and `g` is `C^m` at `x₀`.
@@ -270,7 +271,9 @@ theorem ContMDiffAt.mfderiv {x₀ : N} (f : N → M → M') (g : N → M)
   · rwa [extChartAt_source] at hx 
   · rwa [extChartAt_source] at h2x 
 #align cont_mdiff_at.mfderiv ContMDiffAt.mfderiv
+-/
 
+#print ContMDiffAt.mfderiv_const /-
 /-- The derivative `D_yf(y)` is `C^m` at `x₀`, where the derivative is taken as a continuous
 linear map. We have to assume that `f` is `C^n` at `x₀` for some `n ≥ m + 1`.
 We have to insert a coordinate change from `x₀` to `x` to make the derivative sensible.
@@ -284,7 +287,9 @@ theorem ContMDiffAt.mfderiv_const {x₀ : M} {f : M → M'} (hf : ContMDiffAt I 
     ContMDiffAt.comp (x₀, x₀) hf contMDiffAt_snd
   this.mfderiv (fun x => f) id contMDiffAt_id hmn
 #align cont_mdiff_at.mfderiv_const ContMDiffAt.mfderiv_const
+-/
 
+#print ContMDiffAt.mfderiv_apply /-
 /-- The function that sends `x` to the `y`-derivative of `f(x,y)` at `g(x)` applied to `g₂(x)` is
 `C^n` at `x₀`, where the derivative is taken as a continuous linear map.
 We have to assume that `f` is `C^(n+1)` at `(x₀, g(x₀))` and `g` is `C^n` at `x₀`.
@@ -304,6 +309,7 @@ theorem ContMDiffAt.mfderiv_apply {x₀ : N'} (f : N → M → M') (g : N → M)
       x₀ :=
   ((hf.mfderiv f g hg hmn).comp_of_eq hg₁ rfl).clm_apply hg₂
 #align cont_mdiff_at.mfderiv_apply ContMDiffAt.mfderiv_apply
+-/
 
 end mfderiv
 
@@ -312,6 +318,7 @@ end mfderiv
 
 section tangentMap
 
+#print ContMDiffOn.continuousOn_tangentMapWithin_aux /-
 /-- If a function is `C^n` with `1 ≤ n` on a domain with unique derivatives, then its bundled
 derivative is continuous. In this auxiliary lemma, we prove this fact when the source and target
 space are model spaces in models with corners. The general fact is proved in
@@ -381,6 +388,7 @@ theorem ContMDiffOn.continuousOn_tangentMapWithin_aux {f : H → H'} {s : Set H}
   convert hs.unique_diff_on_target_inter x using 1
   simp only [inter_comm, mfld_simps]
 #align cont_mdiff_on.continuous_on_tangent_map_within_aux ContMDiffOn.continuousOn_tangentMapWithin_aux
+-/
 
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
@@ -388,6 +396,7 @@ theorem ContMDiffOn.continuousOn_tangentMapWithin_aux {f : H → H'} {s : Set H}
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
+#print ContMDiffOn.contMDiffOn_tangentMapWithin_aux /-
 /-- If a function is `C^n` on a domain with unique derivatives, then its bundled derivative is
 `C^m` when `m+1 ≤ n`. In this auxiliary lemma, we prove this fact when the source and target space
 are model spaces in models with corners. The general fact is proved in
@@ -454,7 +463,9 @@ theorem ContMDiffOn.contMDiffOn_tangentMapWithin_aux {f : H → H'} {s : Set H}
   have := ContDiffOn.prod this cont_diff_snd.cont_diff_on
   exact is_bounded_bilinear_map_apply.cont_diff.comp_cont_diff_on this
 #align cont_mdiff_on.cont_mdiff_on_tangent_map_within_aux ContMDiffOn.contMDiffOn_tangentMapWithin_aux
+-/
 
+#print ContMDiffOn.contMDiffOn_tangentMapWithin /-
 /-- If a function is `C^n` on a domain with unique derivatives, then its bundled derivative
 is `C^m` when `m+1 ≤ n`. -/
 theorem ContMDiffOn.contMDiffOn_tangentMapWithin (hf : ContMDiffOn I I' n f s) (hmn : m + 1 ≤ n)
@@ -645,7 +656,9 @@ theorem ContMDiffOn.contMDiffOn_tangentMapWithin (hf : ContMDiffOn I I' n f s) (
     simp only [(· ∘ ·), A, B, C, D, E.symm]
   exact diff_DrirrflilDl.congr eq_comp
 #align cont_mdiff_on.cont_mdiff_on_tangent_map_within ContMDiffOn.contMDiffOn_tangentMapWithin
+-/
 
+#print ContMDiffOn.continuousOn_tangentMapWithin /-
 /-- If a function is `C^n` on a domain with unique derivatives, with `1 ≤ n`, then its bundled
 derivative is continuous there. -/
 theorem ContMDiffOn.continuousOn_tangentMapWithin (hf : ContMDiffOn I I' n f s) (hmn : 1 ≤ n)
@@ -656,7 +669,9 @@ theorem ContMDiffOn.continuousOn_tangentMapWithin (hf : ContMDiffOn I I' n f s) 
     hf.cont_mdiff_on_tangent_map_within hmn hs
   this.continuous_on
 #align cont_mdiff_on.continuous_on_tangent_map_within ContMDiffOn.continuousOn_tangentMapWithin
+-/
 
+#print ContMDiff.contMDiff_tangentMap /-
 /-- If a function is `C^n`, then its bundled derivative is `C^m` when `m+1 ≤ n`. -/
 theorem ContMDiff.contMDiff_tangentMap (hf : ContMDiff I I' n f) (hmn : m + 1 ≤ n) :
     ContMDiff I.tangent I'.tangent m (tangentMap I I' f) :=
@@ -665,7 +680,9 @@ theorem ContMDiff.contMDiff_tangentMap (hf : ContMDiff I I' n f) (hmn : m + 1 �
   convert hf.cont_mdiff_on_tangent_map_within hmn uniqueMDiffOn_univ
   rw [tangentMapWithin_univ]
 #align cont_mdiff.cont_mdiff_tangent_map ContMDiff.contMDiff_tangentMap
+-/
 
+#print ContMDiff.continuous_tangentMap /-
 /-- If a function is `C^n`, with `1 ≤ n`, then its bundled derivative is continuous. -/
 theorem ContMDiff.continuous_tangentMap (hf : ContMDiff I I' n f) (hmn : 1 ≤ n) :
     Continuous (tangentMap I I' f) :=
@@ -675,6 +692,7 @@ theorem ContMDiff.continuous_tangentMap (hf : ContMDiff I I' n f) (hmn : 1 ≤ n
   convert hf.continuous_on_tangent_map_within hmn uniqueMDiffOn_univ
   rw [tangentMapWithin_univ]
 #align cont_mdiff.continuous_tangent_map ContMDiff.continuous_tangentMap
+-/
 
 end tangentMap
 
@@ -684,6 +702,7 @@ variable (I M)
 
 open Bundle
 
+#print TangentBundle.tangentMap_tangentBundle_pure /-
 /-- The derivative of the zero section of the tangent bundle maps `⟨x, v⟩` to `⟨⟨x, 0⟩, ⟨v, 0⟩⟩`.
 
 Note that, as currently framed, this is a statement in coordinates, thus reliant on the choice
@@ -731,6 +750,7 @@ theorem tangentMap_tangentBundle_pure (p : TangentBundle I M) :
     simp only [hy, Prod.mk.inj_iff, mfld_simps]
   · simp only [Prod.mk.inj_iff, mfld_simps]
 #align tangent_bundle.tangent_map_tangent_bundle_pure TangentBundle.tangentMap_tangentBundle_pure
+-/
 
 end TangentBundle
 
@@ -742,17 +762,23 @@ namespace ContMDiffMap
 -- They could be moved to another file (perhaps a new file) if desired.
 open scoped Manifold
 
+#print ContMDiffMap.mdifferentiable' /-
 protected theorem mdifferentiable' (f : C^n⟮I, M; I', M'⟯) (hn : 1 ≤ n) : MDifferentiable I I' f :=
   f.ContMDiff.MDifferentiable hn
 #align cont_mdiff_map.mdifferentiable' ContMDiffMap.mdifferentiable'
+-/
 
-protected theorem mDifferentiable (f : C^∞⟮I, M; I', M'⟯) : MDifferentiable I I' f :=
+#print ContMDiffMap.mdifferentiable /-
+protected theorem mdifferentiable (f : C^∞⟮I, M; I', M'⟯) : MDifferentiable I I' f :=
   f.ContMDiff.MDifferentiable le_top
-#align cont_mdiff_map.mdifferentiable ContMDiffMap.mDifferentiable
+#align cont_mdiff_map.mdifferentiable ContMDiffMap.mdifferentiable
+-/
 
-protected theorem mDifferentiableAt (f : C^∞⟮I, M; I', M'⟯) {x} : MDifferentiableAt I I' f x :=
+#print ContMDiffMap.mdifferentiableAt /-
+protected theorem mdifferentiableAt (f : C^∞⟮I, M; I', M'⟯) {x} : MDifferentiableAt I I' f x :=
   f.MDifferentiable x
-#align cont_mdiff_map.mdifferentiable_at ContMDiffMap.mDifferentiableAt
+#align cont_mdiff_map.mdifferentiable_at ContMDiffMap.mdifferentiableAt
+-/
 
 end ContMDiffMap
 

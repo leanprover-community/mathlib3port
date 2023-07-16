@@ -63,18 +63,18 @@ theorem map_map [DirectedSystem G fun i j h => f i j h] {i j k} (hij hjk x) :
 
 variable {G' : ℕ → Type w} [∀ i, L.Structure (G' i)] (f' : ∀ n : ℕ, G' n ↪[L] G' (n + 1))
 
-#print FirstOrder.Language.DirectedSystem.natLeRec /-
+#print FirstOrder.Language.DirectedSystem.natLERec /-
 /-- Given a chain of embeddings of structures indexed by `ℕ`, defines a `directed_system` by
 composing them. -/
-def natLeRec (m n : ℕ) (h : m ≤ n) : G' m ↪[L] G' n :=
+def natLERec (m n : ℕ) (h : m ≤ n) : G' m ↪[L] G' n :=
   Nat.leRecOn h (fun k g => (f' k).comp g) (Embedding.refl L _)
-#align first_order.language.directed_system.nat_le_rec FirstOrder.Language.DirectedSystem.natLeRec
+#align first_order.language.directed_system.nat_le_rec FirstOrder.Language.DirectedSystem.natLERec
 -/
 
-#print FirstOrder.Language.DirectedSystem.coe_natLeRec /-
+#print FirstOrder.Language.DirectedSystem.coe_natLERec /-
 @[simp]
-theorem coe_natLeRec (m n : ℕ) (h : m ≤ n) :
-    (natLeRec f' m n h : G' m → G' n) = Nat.leRecOn h fun n => f' n :=
+theorem coe_natLERec (m n : ℕ) (h : m ≤ n) :
+    (natLERec f' m n h : G' m → G' n) = Nat.leRecOn h fun n => f' n :=
   by
   obtain ⟨k, rfl⟩ := Nat.exists_eq_add_of_le h
   ext x
@@ -83,14 +83,14 @@ theorem coe_natLeRec (m n : ℕ) (h : m ≤ n) :
   ·
     rw [Nat.leRecOn_succ le_self_add, nat_le_rec, Nat.leRecOn_succ le_self_add, ← nat_le_rec,
       embedding.comp_apply, ih]
-#align first_order.language.directed_system.coe_nat_le_rec FirstOrder.Language.DirectedSystem.coe_natLeRec
+#align first_order.language.directed_system.coe_nat_le_rec FirstOrder.Language.DirectedSystem.coe_natLERec
 -/
 
-#print FirstOrder.Language.DirectedSystem.natLeRec.directedSystem /-
-instance natLeRec.directedSystem : DirectedSystem G' fun i j h => natLeRec f' i j h :=
+#print FirstOrder.Language.DirectedSystem.natLERec.directedSystem /-
+instance natLERec.directedSystem : DirectedSystem G' fun i j h => natLERec f' i j h :=
   ⟨fun i x h => congr (congr rfl (Nat.leRecOn_self _)) rfl, fun i j k ij jk => by
     simp [Nat.leRecOn_trans ij jk]⟩
-#align first_order.language.directed_system.nat_le_rec.directed_system FirstOrder.Language.DirectedSystem.natLeRec.directedSystem
+#align first_order.language.directed_system.nat_le_rec.directed_system FirstOrder.Language.DirectedSystem.natLERec.directedSystem
 -/
 
 end DirectedSystem

@@ -850,15 +850,15 @@ theorem Submodule.sup_orthogonal_of_completeSpace [CompleteSpace K] : K ⊔ Kᗮ
 
 variable (K)
 
-#print Submodule.exists_sum_mem_mem_orthogonal /-
+#print Submodule.exists_add_mem_mem_orthogonal /-
 /-- If `K` is complete, any `v` in `E` can be expressed as a sum of elements of `K` and `Kᗮ`. -/
-theorem Submodule.exists_sum_mem_mem_orthogonal [CompleteSpace K] (v : E) :
+theorem Submodule.exists_add_mem_mem_orthogonal [CompleteSpace K] (v : E) :
     ∃ y ∈ K, ∃ z ∈ Kᗮ, v = y + z :=
   by
   have h_mem : v ∈ K ⊔ Kᗮ := by simp [Submodule.sup_orthogonal_of_completeSpace]
   obtain ⟨y, hy, z, hz, hyz⟩ := submodule.mem_sup.mp h_mem
   exact ⟨y, hy, z, hz, hyz.symm⟩
-#align submodule.exists_sum_mem_mem_orthogonal Submodule.exists_sum_mem_mem_orthogonal
+#align submodule.exists_sum_mem_mem_orthogonal Submodule.exists_add_mem_mem_orthogonal
 -/
 
 #print Submodule.orthogonal_orthogonal /-
@@ -1175,10 +1175,9 @@ theorem reflection_sub [CompleteSpace F] {v w : F} (h : ‖v‖ = ‖w‖) :
 
 variable (K)
 
-#print eq_sum_orthogonalProjection_self_orthogonalComplement /-
 /-- In a complete space `E`, a vector splits as the sum of its orthogonal projections onto a
 complete submodule `K` and onto the orthogonal complement of `K`.-/
-theorem eq_sum_orthogonalProjection_self_orthogonalComplement [CompleteSpace E] [CompleteSpace K]
+theorem orthogonalProjection_add_orthogonalProjection_orthogonal [CompleteSpace E] [CompleteSpace K]
     (w : E) : w = (orthogonalProjection K w : E) + (orthogonalProjection Kᗮ w : E) :=
   by
   obtain ⟨y, hy, z, hz, hwyz⟩ := K.exists_sum_mem_mem_orthogonal w
@@ -1187,8 +1186,7 @@ theorem eq_sum_orthogonalProjection_self_orthogonalComplement [CompleteSpace E] 
   · rw [add_comm] at hwyz 
     refine' eq_orthogonalProjection_of_mem_orthogonal' hz _ hwyz
     simp [hy]
-#align eq_sum_orthogonal_projection_self_orthogonal_complement eq_sum_orthogonalProjection_self_orthogonalComplement
--/
+#align eq_sum_orthogonal_projection_self_orthogonal_complement orthogonalProjection_add_orthogonalProjection_orthogonalₓ
 
 #print norm_sq_eq_add_norm_sq_projection /-
 /-- The Pythagorean theorem, for an orthogonal projection.-/
@@ -1198,7 +1196,7 @@ theorem norm_sq_eq_add_norm_sq_projection (x : E) (S : Submodule 𝕜 E) [Comple
   by
   let p1 := orthogonalProjection S
   let p2 := orthogonalProjection Sᗮ
-  have x_decomp : x = p1 x + p2 x := eq_sum_orthogonalProjection_self_orthogonalComplement S x
+  have x_decomp : x = p1 x + p2 x := orthogonalProjection_add_orthogonalProjection_orthogonal S x
   have x_orth : ⟪(p1 x : E), p2 x⟫ = 0 :=
     Submodule.inner_right_of_mem_orthogonal (SetLike.coe_mem (p1 x)) (SetLike.coe_mem (p2 x))
   nth_rw 1 [x_decomp]
@@ -1215,7 +1213,7 @@ theorem id_eq_sum_orthogonalProjection_self_orthogonalComplement [CompleteSpace 
     [CompleteSpace K] :
     ContinuousLinearMap.id 𝕜 E =
       K.subtypeL.comp (orthogonalProjection K) + Kᗮ.subtypeL.comp (orthogonalProjection Kᗮ) :=
-  by ext w; exact eq_sum_orthogonalProjection_self_orthogonalComplement K w
+  by ext w; exact orthogonalProjection_add_orthogonalProjection_orthogonal K w
 #align id_eq_sum_orthogonal_projection_self_orthogonal_complement id_eq_sum_orthogonalProjection_self_orthogonalComplement
 -/
 

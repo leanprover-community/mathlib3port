@@ -91,7 +91,7 @@ protected def e2 {n k : ℕ} : { s : Sym (Fin n.succ.succ) k // ↑0 ∉ s } ≃
     where
   toFun s := map (Fin.predAbove 0) s.1
   invFun s :=
-    ⟨map (Fin.succAbove 0) s,
+    ⟨map (Fin.succAboveEmb 0) s,
       (mt mem_map.1) (not_exists.2 fun t => not_and.2 fun _ => Fin.succAbove_ne _ t)⟩
   left_inv s := by
     obtain ⟨s, hs⟩ := s
@@ -103,7 +103,7 @@ protected def e2 {n k : ℕ} : { s : Sym (Fin n.succ.succ) k // ↑0 ∉ s } ≃
     simp only [Fin.zero_succAbove, map_map, comp_app]
     nth_rw_rhs 1 [← map_id' s]
     refine' Sym.map_congr fun v hv => _
-    rw [← Fin.zero_succAbove v, ← @Fin.castSuccEmb_zero n.succ, Fin.predAbove_succAbove 0 v]
+    rw [← Fin.zero_succAbove v, ← @Fin.castSucc_zero n.succ, Fin.predAbove_succAbove 0 v]
 #align sym.E2 Sym.e2
 -/
 

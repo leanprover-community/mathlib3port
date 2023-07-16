@@ -35,9 +35,9 @@ variable {E : Type _} [NormedAddCommGroup E] [NormedSpace ℝ E] [MeasurableSpac
 
 namespace Convex
 
-#print Convex.add_haar_frontier /-
+#print Convex.addHaar_frontier /-
 /-- Haar measure of the frontier of a convex set is zero. -/
-theorem add_haar_frontier (hs : Convex ℝ s) : μ (frontier s) = 0 :=
+theorem addHaar_frontier (hs : Convex ℝ s) : μ (frontier s) = 0 :=
   by
   /- If `s` is included in a hyperplane, then `frontier s ⊆ closure s` is included in the same
     hyperplane, hence it has measure zero. -/
@@ -95,14 +95,14 @@ theorem add_haar_frontier (hs : Convex ℝ s) : μ (frontier s) = 0 :=
           _ _ _).mono_left
       nhdsWithin_le_nhds
   simp
-#align convex.add_haar_frontier Convex.add_haar_frontier
+#align convex.add_haar_frontier Convex.addHaar_frontier
 -/
 
 #print Convex.nullMeasurableSet /-
 /-- A convex set in a finite dimensional real vector space is null measurable with respect to an
 additive Haar measure on this space. -/
 protected theorem nullMeasurableSet (hs : Convex ℝ s) : NullMeasurableSet s μ :=
-  nullMeasurableSet_of_null_frontier (hs.add_haar_frontier μ)
+  nullMeasurableSet_of_null_frontier (hs.addHaar_frontier μ)
 #align convex.null_measurable_set Convex.nullMeasurableSet
 -/
 

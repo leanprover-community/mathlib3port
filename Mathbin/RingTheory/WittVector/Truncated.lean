@@ -495,7 +495,7 @@ theorem truncate_surjective {m : ℕ} (hm : n ≤ m) : Surjective (@truncate p _
 #print TruncatedWittVector.coeff_truncate /-
 @[simp]
 theorem coeff_truncate {m : ℕ} (hm : n ≤ m) (i : Fin n) (x : TruncatedWittVector p m R) :
-    (truncate hm x).coeff i = x.coeff (Fin.castLE hm i) :=
+    (truncate hm x).coeff i = x.coeff (Fin.castLEEmb hm i) :=
   by
   obtain ⟨y, rfl⟩ := WittVector.truncate_surjective p _ _ x
   simp only [truncate_witt_vector_truncate, WittVector.coeff_truncate, Fin.coe_castLE]

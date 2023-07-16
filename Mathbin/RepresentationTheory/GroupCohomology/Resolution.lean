@@ -124,7 +124,7 @@ theorem actionDiagonalSucc_hom_apply {G : Type u} [Group G] {n : ℕ} (f : Fin (
         tensor_hom, Equiv.piFinSuccAboveEquiv_symm_apply, tensor_apply, types_id_apply, tensor_rho,
         MonoidHom.one_apply, End.one_def, hn fun j : Fin (n + 1) => f j.succ, Fin.insertNth_zero']
       refine' Fin.cases (Fin.cons_zero _ _) (fun i => _) x
-      · simp only [Fin.cons_succ, mul_left_inj, inv_inj, Fin.castSuccEmb_fin_succ]
+      · simp only [Fin.cons_succ, mul_left_inj, inv_inj, Fin.castSucc_fin_succ]
 #align group_cohomology.resolution.Action_diagonal_succ_hom_apply GroupCohomology.Resolution.actionDiagonalSucc_hom_apply
 -/
 
@@ -348,7 +348,8 @@ theorem diagonalHomEquiv_symm_apply (f : (Fin n → G) → A) (x : Fin (n + 1) �
 group cohomology. -/
 theorem diagonalHomEquiv_symm_partialProd_succ (f : (Fin n → G) → A) (g : Fin (n + 1) → G)
     (a : Fin (n + 1)) :
-    ((diagonalHomEquiv n A).symm f).hom (Finsupp.single (Fin.partialProd g ∘ a.succ.succAbove) 1) =
+    ((diagonalHomEquiv n A).symm f).hom
+        (Finsupp.single (Fin.partialProd g ∘ a.succ.succAboveEmb) 1) =
       f (Fin.contractNth a (· * ·) g) :=
   by
   simp only [diagonal_hom_equiv_symm_apply, Function.comp_apply, Fin.succ_succAbove_zero,
@@ -490,7 +491,7 @@ variable (k G) [Monoid G]
 def d (G : Type u) (n : ℕ) : ((Fin (n + 1) → G) →₀ k) →ₗ[k] (Fin n → G) →₀ k :=
   Finsupp.lift ((Fin n → G) →₀ k) k (Fin (n + 1) → G) fun g =>
     (@Finset.univ (Fin (n + 1)) _).Sum fun p =>
-      Finsupp.single (g ∘ p.succAbove) ((-1 : k) ^ (p : ℕ))
+      Finsupp.single (g ∘ p.succAboveEmb) ((-1 : k) ^ (p : ℕ))
 #align group_cohomology.resolution.d GroupCohomology.Resolution.d
 -/
 
@@ -501,7 +502,7 @@ variable {k G}
 theorem d_of {G : Type u} {n : ℕ} (c : Fin (n + 1) → G) :
     d k G n (Finsupp.single c 1) =
       Finset.univ.Sum fun p : Fin (n + 1) =>
-        Finsupp.single (c ∘ p.succAbove) ((-1 : k) ^ (p : ℕ)) :=
+        Finsupp.single (c ∘ p.succAboveEmb) ((-1 : k) ^ (p : ℕ)) :=
   by simp [d]
 #align group_cohomology.resolution.d_of GroupCohomology.Resolution.d_of
 -/

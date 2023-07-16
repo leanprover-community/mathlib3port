@@ -44,12 +44,10 @@ def isPrefixOf (x y : String) : Bool :=
 #align string.is_prefix_of String.isPrefixOf
 -/
 
-#print String.isSuffixOf /-
 /-- Tests whether the first string is a suffix of the second string. -/
 def isSuffixOf (x y : String) : Bool :=
   x.toList.isSuffixOfₓ y.toList
 #align string.is_suffix_of String.isSuffixOf
--/
 
 #print String.startsWith /-
 /-- `x.starts_with y` is true if `y` is a prefix of `x`, and is false otherwise. -/

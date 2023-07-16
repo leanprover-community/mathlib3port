@@ -232,11 +232,13 @@ def Basis.parallelepiped (b : Basis ι ℝ E) : PositiveCompacts E
 #align basis.parallelepiped Basis.parallelepiped
 -/
 
+#print Basis.coe_parallelepiped /-
 @[simp]
 theorem Basis.coe_parallelepiped (b : Basis ι ℝ E) :
     (b.parallelepiped : Set E) = parallelepiped b :=
   rfl
 #align basis.coe_parallelepiped Basis.coe_parallelepiped
+-/
 
 #print Basis.parallelepiped_reindex /-
 @[simp]

@@ -973,10 +973,12 @@ theorem abs_im_div_norm_le_one (z : K) : |im z / ‖z‖| ≤ 1 :=
 #align is_R_or_C.abs_im_div_norm_le_one IsROrC.abs_im_div_norm_le_one
 -/
 
-theorem norm_i_of_ne_zero (hI : (i : K) ≠ 0) : ‖(i : K)‖ = 1 := by
+#print IsROrC.norm_I_of_ne_zero /-
+theorem norm_I_of_ne_zero (hI : (i : K) ≠ 0) : ‖(i : K)‖ = 1 := by
   rw [← mul_self_inj_of_nonneg (norm_nonneg I) zero_le_one, one_mul, ← norm_mul,
     I_mul_I_of_nonzero hI, norm_neg, norm_one]
-#align is_R_or_C.norm_I_of_ne_zero IsROrC.norm_i_of_ne_zero
+#align is_R_or_C.norm_I_of_ne_zero IsROrC.norm_I_of_ne_zero
+-/
 
 #print IsROrC.re_eq_norm_of_mul_conj /-
 theorem re_eq_norm_of_mul_conj (x : K) : re (x * conj x) = ‖x * conj x‖ := by

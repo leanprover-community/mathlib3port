@@ -425,6 +425,7 @@ theorem lt_mul_self_iff : ∀ {n : ℕ}, n < n * n ↔ 1 < n
 #align nat.lt_mul_self_iff Nat.lt_mul_self_iff
 -/
 
+#print Nat.add_sub_one_le_mul /-
 theorem add_sub_one_le_mul (hm : m ≠ 0) (hn : n ≠ 0) : m + n - 1 ≤ m * n :=
   by
   cases m
@@ -432,6 +433,7 @@ theorem add_sub_one_le_mul (hm : m ≠ 0) (hn : n ≠ 0) : m + n - 1 ≤ m * n :
   · rw [succ_add, succ_sub_one, succ_mul]
     exact add_le_add_right (le_mul_of_one_le_right' <| pos_iff_ne_zero.2 hn) _
 #align nat.add_sub_one_le_mul Nat.add_sub_one_le_mul
+-/
 
 /-!
 ### Recursion and induction principles

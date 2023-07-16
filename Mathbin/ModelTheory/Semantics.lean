@@ -97,7 +97,8 @@ theorem realize_relabel {t : L.term α} {g : α → β} {v : β → M} :
 @[simp]
 theorem realize_liftAt {n n' m : ℕ} {t : L.term (Sum α (Fin n))} {v : Sum α (Fin (n + n')) → M} :
     (t.liftAt n' m).realize v =
-      t.realize (v ∘ Sum.map id fun i => if ↑i < m then Fin.castAdd n' i else Fin.addNat n' i) :=
+      t.realize
+        (v ∘ Sum.map id fun i => if ↑i < m then Fin.castAddEmb n' i else Fin.addNatEmb n' i) :=
   realize_relabel
 #align first_order.language.term.realize_lift_at FirstOrder.Language.Term.realize_liftAt
 -/
@@ -420,7 +421,8 @@ theorem realize_iff : (φ.Iff ψ).realize v xs ↔ (φ.realize v xs ↔ ψ.reali
 
 #print FirstOrder.Language.BoundedFormula.realize_castLe_of_eq /-
 theorem realize_castLe_of_eq {m n : ℕ} (h : m = n) {h' : m ≤ n} {φ : L.BoundedFormula α m}
-    {v : α → M} {xs : Fin n → M} : (φ.castLE h').realize v xs ↔ φ.realize v (xs ∘ Fin.castIso h) :=
+    {v : α → M} {xs : Fin n → M} :
+    (φ.castLEEmb h').realize v xs ↔ φ.realize v (xs ∘ Fin.castIso h) :=
   by
   subst h
   simp only [cast_le_rfl, cast_refl, OrderIso.coe_refl, Function.comp.right_id]
@@ -454,11 +456,11 @@ theorem realize_mapTermRel_add_castLe [L'.Structure M] {k : ℕ}
     (v : ∀ {n}, (Fin (k + n) → M) → α → M) {v' : β → M} (xs : Fin (k + n) → M)
     (h1 :
       ∀ (n) (t : L.term (Sum α (Fin n))) (xs' : Fin (k + n) → M),
-        (ft n t).realize (Sum.elim v' xs') = t.realize (Sum.elim (v xs') (xs' ∘ Fin.natAdd _)))
+        (ft n t).realize (Sum.elim v' xs') = t.realize (Sum.elim (v xs') (xs' ∘ Fin.natAddEmb _)))
     (h2 : ∀ (n) (R : L.Relations n) (x : Fin n → M), RelMap (fr n R) x = RelMap R x)
     (hv : ∀ (n) (xs : Fin (k + n) → M) (x : M), @v (n + 1) (snoc xs x : Fin _ → M) = v xs) :
     (φ.mapTermRel ft fr fun n => castLE (add_assoc _ _ _).symm.le).realize v' xs ↔
-      φ.realize (v xs) (xs ∘ Fin.natAdd _) :=
+      φ.realize (v xs) (xs ∘ Fin.natAddEmb _) :=
   by
   induction' φ with _ _ _ _ _ _ _ _ _ _ _ ih1 ih2 _ _ ih
   · rfl
@@ -473,7 +475,7 @@ theorem realize_mapTermRel_add_castLe [L'.Structure M] {k : ℕ}
 theorem realize_relabel {m n : ℕ} {φ : L.BoundedFormula α n} {g : α → Sum β (Fin m)} {v : β → M}
     {xs : Fin (m + n) → M} :
     (φ.relabel g).realize v xs ↔
-      φ.realize (Sum.elim v (xs ∘ Fin.castAdd n) ∘ g) (xs ∘ Fin.natAdd m) :=
+      φ.realize (Sum.elim v (xs ∘ Fin.castAddEmb n) ∘ g) (xs ∘ Fin.natAddEmb m) :=
   by rw [relabel, realize_map_term_rel_add_cast_le] <;> intros <;> simp
 #align first_order.language.bounded_formula.realize_relabel FirstOrder.Language.BoundedFormula.realize_relabel
 -/
@@ -482,7 +484,7 @@ theorem realize_relabel {m n : ℕ} {φ : L.BoundedFormula α n} {g : α → Sum
 theorem realize_liftAt {n n' m : ℕ} {φ : L.BoundedFormula α n} {v : α → M} {xs : Fin (n + n') → M}
     (hmn : m + n' ≤ n + 1) :
     (φ.liftAt n' m).realize v xs ↔
-      φ.realize v (xs ∘ fun i => if ↑i < m then Fin.castAdd n' i else Fin.addNat n' i) :=
+      φ.realize v (xs ∘ fun i => if ↑i < m then Fin.castAddEmb n' i else Fin.addNatEmb n' i) :=
   by
   rw [lift_at]
   induction' φ with _ _ _ _ _ _ _ _ _ _ _ ih1 ih2 k _ ih3
@@ -504,7 +506,7 @@ theorem realize_liftAt {n n' m : ℕ} {φ : L.BoundedFormula α n} {v : α → M
       · rw [if_neg h]
         refine' (congr rfl (ext _)).trans (snoc_last _ _)
         simp
-    · simp only [Function.comp_apply, Fin.snoc_castSuccEmb]
+    · simp only [Function.comp_apply, Fin.snoc_castSucc]
       refine' (congr rfl (ext _)).trans (snoc_cast_succ _ _ _)
       simp only [cast_refl, coe_cast_succ, OrderIso.coe_refl, id.def]
       split_ifs <;> simp

@@ -178,7 +178,7 @@ example [add_comm_monoid α] (a : fin 3 → α) : ∑ i, a i = a 0 + a 1 + a 2 :
 theorem sum_eq [AddCommMonoid α] : ∀ {m} (a : Fin m → α), sum a = ∑ i, a i
   | 0, a => rfl
   | 1, a => (Fintype.sum_unique a).symm
-  | n + 2, a => by rw [Fin.sum_univ_castSuccEmb, Sum, sum_eq]
+  | n + 2, a => by rw [Fin.sum_univ_castSucc, Sum, sum_eq]
 #align fin_vec.sum_eq FinVec.sum_eq
 -/
 

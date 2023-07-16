@@ -204,9 +204,9 @@ unsafe def of_mul_of_fin.prove (l m n : ℕ) : tactic (expr × expr) := do
     -- `matrix.mulᵣ` to build the expression we want to end up with. It doesn't matter which we pick,
     -- but the typeclasses are easier to create for the latter.
     (t, has_mul_αe)
-    ← expr.has_mul t
-  let (t, has_add_αe) ← expr.has_add t
-  let (t, has_zero_αe) ← expr.has_zero t
+    ← Expr.instMul t
+  let (t, has_add_αe) ← Expr.instAdd t
+  let (t, has_zero_αe) ← Expr.instZero t
   let ab := @Matrix.mulᵣ _ _ _ _ has_mul_αe has_add_αe has_zero_αe a b
   let AB := matrix.fin_to_pexpr (Matrix.map ab to_pexpr)
   let A_eq

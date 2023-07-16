@@ -93,37 +93,37 @@ theorem arity_succ (α : Type u) (n : ℕ) : Arity α n.succ = (α → Arity α 
 
 namespace Arity
 
-#print Arity.Const /-
+#print Arity.const /-
 /-- Constant `n`-ary function with value `a`. -/
-def Const {α : Type u} (a : α) : ∀ n, Arity α n
+def const {α : Type u} (a : α) : ∀ n, Arity α n
   | 0 => a
   | n + 1 => fun _ => const n
-#align arity.const Arity.Const
+#align arity.const Arity.const
 -/
 
 #print Arity.const_zero /-
 @[simp]
-theorem const_zero {α : Type u} (a : α) : Const a 0 = a :=
+theorem const_zero {α : Type u} (a : α) : const a 0 = a :=
   rfl
 #align arity.const_zero Arity.const_zero
 -/
 
 #print Arity.const_succ /-
 @[simp]
-theorem const_succ {α : Type u} (a : α) (n : ℕ) : Const a n.succ = fun _ => Const a n :=
+theorem const_succ {α : Type u} (a : α) (n : ℕ) : const a n.succ = fun _ => const a n :=
   rfl
 #align arity.const_succ Arity.const_succ
 -/
 
 #print Arity.const_succ_apply /-
-theorem const_succ_apply {α : Type u} (a : α) (n : ℕ) (x : α) : Const a n.succ x = Const a n :=
+theorem const_succ_apply {α : Type u} (a : α) (n : ℕ) (x : α) : const a n.succ x = const a n :=
   rfl
 #align arity.const_succ_apply Arity.const_succ_apply
 -/
 
 #print Arity.Arity.inhabited /-
 instance Arity.inhabited {α n} [Inhabited α] : Inhabited (Arity α n) :=
-  ⟨Const default _⟩
+  ⟨const default _⟩
 #align arity.arity.inhabited Arity.Arity.inhabited
 -/
 
@@ -670,7 +670,7 @@ def Arity.Equiv : ∀ {n}, Arity PSet.{u} n → Arity PSet.{u} n → Prop
 -/
 
 #print PSet.Arity.equiv_const /-
-theorem Arity.equiv_const {a : PSet.{u}} : ∀ n, Arity.Equiv (Arity.Const a n) (Arity.Const a n)
+theorem Arity.equiv_const {a : PSet.{u}} : ∀ n, Arity.Equiv (Arity.const a n) (Arity.const a n)
   | 0 => Equiv.rfl
   | n + 1 => fun x y h => arity.equiv_const _
 #align pSet.arity.equiv_const PSet.Arity.equiv_const
@@ -686,7 +686,7 @@ def Resp (n) :=
 
 #print PSet.Resp.inhabited /-
 instance Resp.inhabited {n} : Inhabited (Resp n) :=
-  ⟨⟨Arity.Const default _, Arity.equiv_const _⟩⟩
+  ⟨⟨Arity.const default _, Arity.equiv_const _⟩⟩
 #align pSet.resp.inhabited PSet.Resp.inhabited
 -/
 
@@ -753,9 +753,9 @@ namespace PSet
 
 namespace Resp
 
-#print PSet.Resp.EvalAux /-
+#print PSet.Resp.evalAux /-
 /-- Helper function for `pSet.eval`. -/
-def EvalAux :
+def evalAux :
     ∀ {n}, { f : Resp n → Arity ZFSet.{u} n // ∀ a b : Resp n, Resp.Equiv a b → f a = f b }
   | 0 => ⟨fun a => ⟦a.1⟧, fun a b h => Quotient.sound h⟩
   | n + 1 =>
@@ -766,13 +766,13 @@ def EvalAux :
       funext <|
         @Quotient.ind _ _ (fun q => F b q = F c q) fun z =>
           eval_aux.2 (Resp.f b z) (Resp.f c z) (h _ _ (PSet.Equiv.refl z))⟩
-#align pSet.resp.eval_aux PSet.Resp.EvalAux
+#align pSet.resp.eval_aux PSet.Resp.evalAux
 -/
 
 #print PSet.Resp.eval /-
 /-- An equivalence-respecting function yields an n-ary ZFC set function. -/
 def eval (n) : Resp n → Arity ZFSet.{u} n :=
-  EvalAux.1
+  evalAux.1
 #align pSet.resp.eval PSet.Resp.eval
 -/
 
@@ -822,9 +822,9 @@ namespace Classical
 
 open PSet
 
-#print Classical.AllDefinable /-
+#print Classical.allDefinable /-
 /-- All functions are classically definable. -/
-noncomputable def AllDefinable : ∀ {n} (F : Arity ZFSet.{u} n), Definable n F
+noncomputable def allDefinable : ∀ {n} (F : Arity ZFSet.{u} n), Definable n F
   | 0, F =>
     let p := @Quotient.exists_rep PSet _ F
     Definable.EqMk ⟨choose p, Equiv.rfl⟩ (choose_spec p)
@@ -839,7 +839,7 @@ noncomputable def AllDefinable : ∀ {n} (F : Arity ZFSet.{u} n), Definable n F
     refine' funext fun q => Quotient.inductionOn q fun x => _
     simp_rw [resp.eval_val, resp.f, Subtype.val_eq_coe, Subtype.coe_eta]
     exact @definable.eq _ (F ⟦x⟧) (I ⟦x⟧)
-#align classical.all_definable Classical.AllDefinable
+#align classical.all_definable Classical.allDefinable
 -/
 
 end Classical
@@ -1748,7 +1748,7 @@ theorem mem_funs {x y f : ZFSet.{u}} : f ∈ funs x y ↔ IsFunc x y f := by sim
 -- TODO(Mario): Prove this computably
 noncomputable instance mapDefinableAux (f : ZFSet → ZFSet) [H : Definable 1 f] :
     Definable 1 fun y => pair y (f y) :=
-  @Classical.AllDefinable 1 _
+  @Classical.allDefinable 1 _
 #align Set.map_definable_aux ZFSet.mapDefinableAux
 -/
 
@@ -2308,7 +2308,7 @@ variable (x : ZFSet.{u}) (h : ∅ ∉ x)
 #print ZFSet.choice /-
 /-- A choice function on the class of nonempty ZFC sets. -/
 noncomputable def choice : ZFSet :=
-  @map (fun y => Classical.epsilon fun z => z ∈ y) (Classical.AllDefinable _) x
+  @map (fun y => Classical.epsilon fun z => z ∈ y) (Classical.allDefinable _) x
 #align Set.choice ZFSet.choice
 -/
 
@@ -2323,7 +2323,7 @@ theorem choice_mem_aux (y : ZFSet.{u}) (yx : y ∈ x) :
 /- ./././Mathport/Syntax/Translate/Expr.lean:177:8: unsupported: ambiguous notation -/
 #print ZFSet.choice_isFunc /-
 theorem choice_isFunc : IsFunc x (⋃₀ x) (choice x) :=
-  (@map_isFunc _ (Classical.AllDefinable _) _ _).2 fun y yx =>
+  (@map_isFunc _ (Classical.allDefinable _) _ _).2 fun y yx =>
     mem_sUnion.2 ⟨y, yx, choice_mem_aux x h y yx⟩
 #align Set.choice_is_func ZFSet.choice_isFunc
 -/

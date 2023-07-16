@@ -1033,7 +1033,7 @@ theorem Fin.univ_def (n : ℕ) : (univ : Finset (Fin n)) = ⟨List.finRange n, L
 
 #print Fin.image_succAbove_univ /-
 @[simp]
-theorem Fin.image_succAbove_univ {n : ℕ} (i : Fin (n + 1)) : univ.image i.succAbove = {i}ᶜ := by
+theorem Fin.image_succAbove_univ {n : ℕ} (i : Fin (n + 1)) : univ.image i.succAboveEmb = {i}ᶜ := by
   ext m; simp
 #align fin.image_succ_above_univ Fin.image_succAbove_univ
 -/
@@ -1045,12 +1045,12 @@ theorem Fin.image_succ_univ (n : ℕ) : (univ : Finset (Fin n)).image Fin.succ =
 #align fin.image_succ_univ Fin.image_succ_univ
 -/
 
-#print Fin.image_castSuccEmb /-
+#print Fin.image_castSucc /-
 @[simp]
-theorem Fin.image_castSuccEmb (n : ℕ) :
+theorem Fin.image_castSucc (n : ℕ) :
     (univ : Finset (Fin n)).image Fin.castSuccEmb = {Fin.last n}ᶜ := by
   rw [← Fin.succAbove_last, Fin.image_succAbove_univ]
-#align fin.image_cast_succ Fin.image_castSuccEmb
+#align fin.image_cast_succ Fin.image_castSucc
 -/
 
 #print Fin.univ_succ /-
@@ -1077,7 +1077,8 @@ theorem Fin.univ_castSuccEmb (n : ℕ) :
 /-- Embed `fin n` into `fin (n + 1)` by inserting
 around a specified pivot `p : fin (n + 1)` into the `univ` -/
 theorem Fin.univ_succAbove (n : ℕ) (p : Fin (n + 1)) :
-    (univ : Finset (Fin (n + 1))) = cons p (univ.map <| (Fin.succAbove p).toEmbedding) (by simp) :=
+    (univ : Finset (Fin (n + 1))) =
+      cons p (univ.map <| (Fin.succAboveEmb p).toEmbedding) (by simp) :=
   by simp [map_eq_image]
 #align fin.univ_succ_above Fin.univ_succAbove
 -/

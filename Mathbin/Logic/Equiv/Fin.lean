@@ -167,7 +167,7 @@ mapping both `i.cast_succ` and `i.succ` to `i`. -/
 def finSuccEquiv' {n : ℕ} (i : Fin (n + 1)) : Fin (n + 1) ≃ Option (Fin n)
     where
   toFun := i.insertNth none some
-  invFun x := x.casesOn' i (Fin.succAbove i)
+  invFun x := x.casesOn' i (Fin.succAboveEmb i)
   left_inv x := Fin.succAboveCases i (by simp) (fun j => by simp) x
   right_inv x := by cases x <;> dsimp <;> simp
 #align fin_succ_equiv' finSuccEquiv'
@@ -183,7 +183,7 @@ theorem finSuccEquiv'_at {n : ℕ} (i : Fin (n + 1)) : (finSuccEquiv' i) i = non
 #print finSuccEquiv'_succAbove /-
 @[simp]
 theorem finSuccEquiv'_succAbove {n : ℕ} (i : Fin (n + 1)) (j : Fin n) :
-    finSuccEquiv' i (i.succAbove j) = some j :=
+    finSuccEquiv' i (i.succAboveEmb j) = some j :=
   @Fin.insertNth_apply_succAbove n (fun _ => Option (Fin n)) i _ _ _
 #align fin_succ_equiv'_succ_above finSuccEquiv'_succAbove
 -/
@@ -212,7 +212,7 @@ theorem finSuccEquiv'_symm_none {n : ℕ} (i : Fin (n + 1)) : (finSuccEquiv' i).
 #print finSuccEquiv'_symm_some /-
 @[simp]
 theorem finSuccEquiv'_symm_some {n : ℕ} (i : Fin (n + 1)) (j : Fin n) :
-    (finSuccEquiv' i).symm (some j) = i.succAbove j :=
+    (finSuccEquiv' i).symm (some j) = i.succAboveEmb j :=
   rfl
 #align fin_succ_equiv'_symm_some finSuccEquiv'_symm_some
 -/
@@ -304,9 +304,9 @@ theorem finSuccEquiv'_last_apply {n : ℕ} {i : Fin (n + 1)} (h : i ≠ Fin.last
       Fin.castLT i (lt_of_le_of_ne (Fin.le_last _) (Fin.val_injective.ne_iff.2 h) : ↑i < n) :=
   by
   have h' : ↑i < n := lt_of_le_of_ne (Fin.le_last _) (fin.coe_injective.ne_iff.2 h)
-  conv_lhs => rw [← Fin.castSuccEmb_castLT i h']
+  conv_lhs => rw [← Fin.castSucc_castLT i h']
   convert finSuccEquiv'_below _
-  rw [Fin.castSuccEmb_castLT i h']
+  rw [Fin.castSucc_castLT i h']
   exact h'
 #align fin_succ_equiv'_last_apply finSuccEquiv'_last_apply
 -/
@@ -320,14 +320,14 @@ theorem finSuccEquiv'_ne_last_apply {i j : Fin (n + 1)} (hi : i ≠ Fin.last n) 
   rw [Fin.predAbove]
   have hi' : ↑i < n := lt_of_le_of_ne (Fin.le_last _) (fin.coe_injective.ne_iff.2 hi)
   rcases hj.lt_or_lt with (hij | hij)
-  · simp only [hij.not_lt, Fin.castSuccEmb_castLT, not_false_iff, dif_neg]
+  · simp only [hij.not_lt, Fin.castSucc_castLT, not_false_iff, dif_neg]
     convert finSuccEquiv'_below _
     · simp
     · exact hij
-  · simp only [hij, Fin.castSuccEmb_castLT, dif_pos]
+  · simp only [hij, Fin.castSucc_castLT, dif_pos]
     convert finSuccEquiv'_above _
     · simp
-    · simp [Fin.le_castSuccEmb_iff, hij]
+    · simp [Fin.le_castSucc_iff, hij]
 #align fin_succ_equiv'_ne_last_apply finSuccEquiv'_ne_last_apply
 -/
 
@@ -335,13 +335,13 @@ theorem finSuccEquiv'_ne_last_apply {i j : Fin (n + 1)} (hi : i ≠ Fin.last n) 
 /-- `succ_above` as an order isomorphism between `fin n` and `{x : fin (n + 1) // x ≠ p}`. -/
 def finSuccAboveEquiv (p : Fin (n + 1)) : Fin n ≃o { x : Fin (n + 1) // x ≠ p } :=
   { Equiv.optionSubtype p ⟨(finSuccEquiv' p).symm, rfl⟩ with
-    map_rel_iff' := fun _ _ => p.succAbove.map_rel_iff' }
+    map_rel_iff' := fun _ _ => p.succAboveEmb.map_rel_iff' }
 #align fin_succ_above_equiv finSuccAboveEquiv
 -/
 
 #print finSuccAboveEquiv_apply /-
 theorem finSuccAboveEquiv_apply (p : Fin (n + 1)) (i : Fin n) :
-    finSuccAboveEquiv p i = ⟨p.succAbove i, p.succAbove_ne i⟩ :=
+    finSuccAboveEquiv p i = ⟨p.succAboveEmb i, p.succAbove_ne i⟩ :=
   rfl
 #align fin_succ_above_equiv_apply finSuccAboveEquiv_apply
 -/
@@ -375,11 +375,11 @@ def finSuccEquivLast {n : ℕ} : Fin (n + 1) ≃ Option (Fin n) :=
 #align fin_succ_equiv_last finSuccEquivLast
 -/
 
-#print finSuccEquivLast_castSuccEmb /-
+#print finSuccEquivLast_castSucc /-
 @[simp]
-theorem finSuccEquivLast_castSuccEmb {n : ℕ} (i : Fin n) : finSuccEquivLast i.cast_succ = some i :=
+theorem finSuccEquivLast_castSucc {n : ℕ} (i : Fin n) : finSuccEquivLast i.cast_succ = some i :=
   finSuccEquiv'_below i.2
-#align fin_succ_equiv_last_cast_succ finSuccEquivLast_castSuccEmb
+#align fin_succ_equiv_last_cast_succ finSuccEquivLast_castSucc
 -/
 
 #print finSuccEquivLast_last /-
@@ -417,9 +417,9 @@ theorem finSuccEquivLast_symm_none {n : ℕ} : finSuccEquivLast.symm none = Fin.
 /-- Equivalence between `Π j : fin (n + 1), α j` and `α i × Π j : fin n, α (fin.succ_above i j)`. -/
 @[simps (config := { fullyApplied := false })]
 def Equiv.piFinSuccAboveEquiv {n : ℕ} (α : Fin (n + 1) → Type u) (i : Fin (n + 1)) :
-    (∀ j, α j) ≃ α i × ∀ j, α (i.succAbove j)
+    (∀ j, α j) ≃ α i × ∀ j, α (i.succAboveEmb j)
     where
-  toFun f := (f i, fun j => f (i.succAbove j))
+  toFun f := (f i, fun j => f (i.succAboveEmb j))
   invFun f := i.insertNth f.1 f.2
   left_inv f := by simp [Fin.insertNth_eq_iff]
   right_inv f := by simp
@@ -430,7 +430,7 @@ def Equiv.piFinSuccAboveEquiv {n : ℕ} (α : Fin (n + 1) → Type u) (i : Fin (
 /-- Order isomorphism between `Π j : fin (n + 1), α j` and
 `α i × Π j : fin n, α (fin.succ_above i j)`. -/
 def OrderIso.piFinSuccAboveIso {n : ℕ} (α : Fin (n + 1) → Type u) [∀ i, LE (α i)]
-    (i : Fin (n + 1)) : (∀ j, α j) ≃o α i × ∀ j, α (i.succAbove j)
+    (i : Fin (n + 1)) : (∀ j, α j) ≃o α i × ∀ j, α (i.succAboveEmb j)
     where
   toEquiv := Equiv.piFinSuccAboveEquiv α i
   map_rel_iff' f g := i.forall_iff_succAbove.symm
@@ -449,7 +449,7 @@ def Equiv.piFinSucc (n : ℕ) (β : Type u) : (Fin (n + 1) → β) ≃ β × (Fi
 /-- Equivalence between `fin m ⊕ fin n` and `fin (m + n)` -/
 def finSumFinEquiv : Sum (Fin m) (Fin n) ≃ Fin (m + n)
     where
-  toFun := Sum.elim (Fin.castAdd n) (Fin.natAdd m)
+  toFun := Sum.elim (Fin.castAddEmb n) (Fin.natAddEmb m)
   invFun i := @Fin.addCases m n (fun _ => Sum (Fin m) (Fin n)) Sum.inl Sum.inr i
   left_inv x := by cases' x with y y <;> dsimp <;> simp
   right_inv x := by refine' Fin.addCases (fun i => _) (fun i => _) x <;> simp
@@ -459,7 +459,7 @@ def finSumFinEquiv : Sum (Fin m) (Fin n) ≃ Fin (m + n)
 #print finSumFinEquiv_apply_left /-
 @[simp]
 theorem finSumFinEquiv_apply_left (i : Fin m) :
-    (finSumFinEquiv (Sum.inl i) : Fin (m + n)) = Fin.castAdd n i :=
+    (finSumFinEquiv (Sum.inl i) : Fin (m + n)) = Fin.castAddEmb n i :=
   rfl
 #align fin_sum_fin_equiv_apply_left finSumFinEquiv_apply_left
 -/
@@ -467,7 +467,7 @@ theorem finSumFinEquiv_apply_left (i : Fin m) :
 #print finSumFinEquiv_apply_right /-
 @[simp]
 theorem finSumFinEquiv_apply_right (i : Fin n) :
-    (finSumFinEquiv (Sum.inr i) : Fin (m + n)) = Fin.natAdd m i :=
+    (finSumFinEquiv (Sum.inr i) : Fin (m + n)) = Fin.natAddEmb m i :=
   rfl
 #align fin_sum_fin_equiv_apply_right finSumFinEquiv_apply_right
 -/
@@ -475,7 +475,7 @@ theorem finSumFinEquiv_apply_right (i : Fin n) :
 #print finSumFinEquiv_symm_apply_castAdd /-
 @[simp]
 theorem finSumFinEquiv_symm_apply_castAdd (x : Fin m) :
-    finSumFinEquiv.symm (Fin.castAdd n x) = Sum.inl x :=
+    finSumFinEquiv.symm (Fin.castAddEmb n x) = Sum.inl x :=
   finSumFinEquiv.symm_apply_apply (Sum.inl x)
 #align fin_sum_fin_equiv_symm_apply_cast_add finSumFinEquiv_symm_apply_castAdd
 -/
@@ -483,7 +483,7 @@ theorem finSumFinEquiv_symm_apply_castAdd (x : Fin m) :
 #print finSumFinEquiv_symm_apply_natAdd /-
 @[simp]
 theorem finSumFinEquiv_symm_apply_natAdd (x : Fin n) :
-    finSumFinEquiv.symm (Fin.natAdd m x) = Sum.inr x :=
+    finSumFinEquiv.symm (Fin.natAddEmb m x) = Sum.inr x :=
   finSumFinEquiv.symm_apply_apply (Sum.inr x)
 #align fin_sum_fin_equiv_symm_apply_nat_add finSumFinEquiv_symm_apply_natAdd
 -/
@@ -505,14 +505,14 @@ def finAddFlip : Fin (m + n) ≃ Fin (n + m) :=
 #print finAddFlip_apply_castAdd /-
 @[simp]
 theorem finAddFlip_apply_castAdd (k : Fin m) (n : ℕ) :
-    finAddFlip (Fin.castAdd n k) = Fin.natAdd n k := by simp [finAddFlip]
+    finAddFlip (Fin.castAddEmb n k) = Fin.natAddEmb n k := by simp [finAddFlip]
 #align fin_add_flip_apply_cast_add finAddFlip_apply_castAdd
 -/
 
 #print finAddFlip_apply_natAdd /-
 @[simp]
 theorem finAddFlip_apply_natAdd (k : Fin n) (m : ℕ) :
-    finAddFlip (Fin.natAdd m k) = Fin.castAdd m k := by simp [finAddFlip]
+    finAddFlip (Fin.natAddEmb m k) = Fin.castAddEmb m k := by simp [finAddFlip]
 #align fin_add_flip_apply_nat_add finAddFlip_apply_natAdd
 -/
 
@@ -713,7 +713,7 @@ values are retained. This is the `order_iso` version of `fin.cast_le`. -/
 @[simps apply symm_apply]
 def Fin.castLEOrderIso {n m : ℕ} (h : n ≤ m) : Fin n ≃o { i : Fin m // (i : ℕ) < n }
     where
-  toFun i := ⟨Fin.castLE h i, by simp⟩
+  toFun i := ⟨Fin.castLEEmb h i, by simp⟩
   invFun i := ⟨i, i.Prop⟩
   left_inv _ := by simp
   right_inv _ := by simp

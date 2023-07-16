@@ -95,7 +95,7 @@ theorem σ_comp_P_eq_zero (X : SimplicialObject C) {n q : ℕ} (i : Fin (n + 1))
         erw [simplicial_object.δ_comp_σ_self, simplicial_object.δ_comp_σ_self_assoc,
           simplicial_object.δ_comp_σ_succ, comp_id,
           simplicial_object.δ_comp_σ_of_le X
-            (show (0 : Fin 2) ≤ Fin.castSuccEmb 0 by rw [Fin.castSuccEmb_zero]),
+            (show (0 : Fin 2) ≤ Fin.castSuccEmb 0 by rw [Fin.castSucc_zero]),
           simplicial_object.δ_comp_σ_self_assoc, simplicial_object.δ_comp_σ_succ_assoc]
         abel
       · rw [← id_comp (X.σ i), ← (P_add_Q_f q n.succ : _ = 𝟙 (X.obj _)), add_comp, add_comp]
@@ -113,7 +113,7 @@ theorem σ_comp_P_eq_zero (X : SimplicialObject C) {n q : ℕ} (i : Fin (n + 1))
           obtain ⟨k, hk⟩ := Nat.le.dest (nat.lt_succ_iff.mp (Fin.is_lt j))
           rw [add_comm] at hk 
           have hi'' : i = Fin.castSuccEmb ⟨i, by linarith⟩ := by ext;
-            simp only [Fin.castSuccEmb_mk, Fin.eta]
+            simp only [Fin.castSucc_mk, Fin.eta]
           have eq :=
             hq j.rev.succ
               (by

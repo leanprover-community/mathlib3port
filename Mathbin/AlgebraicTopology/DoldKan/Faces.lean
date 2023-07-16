@@ -136,10 +136,10 @@ theorem comp_Hσ_eq {Y : C} {n a q : ℕ} {φ : Y ⟶ X _[n + 1]} (v : HigherFac
   conv_lhs =>
     congr
     skip
-    rw [Fin.sum_univ_castSuccEmb, Fin.sum_univ_castSuccEmb]
-  rw [Fin.sum_univ_castSuccEmb]
+    rw [Fin.sum_univ_castSucc, Fin.sum_univ_castSucc]
+  rw [Fin.sum_univ_castSucc]
   simp only [Fin.last, Fin.castLE_mk, Fin.coe_castIso, Fin.castIso_mk, Fin.coe_castLE, Fin.val_mk,
-    Fin.castSuccEmb_mk, Fin.coe_castSuccEmb]
+    Fin.castSucc_mk, Fin.coe_castSucc]
   /- the purpose of the following `simplif` is to create three subgoals in order
       to finish the proof -/
   have simplif :
@@ -153,7 +153,7 @@ theorem comp_Hσ_eq {Y : C} {n a q : ℕ} {φ : Y ⟶ X _[n + 1]} (v : HigherFac
     use a
     linarith
   · -- d+e = 0
-    rw [assoc, assoc, X.δ_comp_σ_self' (Fin.castSuccEmb_mk _ _ _).symm,
+    rw [assoc, assoc, X.δ_comp_σ_self' (Fin.castSucc_mk _ _ _).symm,
       X.δ_comp_σ_succ' (Fin.succ_mk _ _ _).symm]
     simp only [comp_id, pow_add _ (a + 1) 1, pow_one, mul_neg, mul_one, neg_smul, add_right_neg]
   · -- c+a = 0
@@ -162,8 +162,8 @@ theorem comp_Hσ_eq {Y : C} {n a q : ℕ} {φ : Y ⟶ X _[n + 1]} (v : HigherFac
     rintro ⟨i, hi⟩ h₀
     have hia :
       (⟨i, by linarith⟩ : Fin (n + 2)) ≤ Fin.castSuccEmb (⟨a, by linarith⟩ : Fin (n + 1)) := by
-      simpa only [Fin.le_iff_val_le_val, Fin.val_mk, Fin.castSuccEmb_mk, ← lt_succ_iff] using hi
-    simp only [Fin.val_mk, Fin.castLE_mk, Fin.castSuccEmb_mk, Fin.succ_mk, assoc, Fin.castIso_mk, ←
+      simpa only [Fin.le_iff_val_le_val, Fin.val_mk, Fin.castSucc_mk, ← lt_succ_iff] using hi
+    simp only [Fin.val_mk, Fin.castLE_mk, Fin.castSucc_mk, Fin.succ_mk, assoc, Fin.castIso_mk, ←
       δ_comp_σ_of_le X hia, add_eq_zero_iff_eq_neg, ← neg_zsmul]
     congr
     ring
@@ -182,8 +182,8 @@ theorem comp_Hσ_eq_zero {Y : C} {n q : ℕ} {φ : Y ⟶ X _[n + 1]} (v : Higher
       Fin.mk_zero, one_zsmul, eq_to_hom_refl, comp_id, comp_sum,
       alternating_face_map_complex.obj_d_eq]
     rw [← Fin.sum_congr' _ (show 2 + (n + 1) = n + 1 + 2 by linarith), Fin.sum_trunc]
-    · simp only [Fin.sum_univ_castSuccEmb, Fin.sum_univ_zero, zero_add, Fin.last, Fin.castLE_mk,
-        Fin.castIso_mk, Fin.castSuccEmb_mk]
+    · simp only [Fin.sum_univ_castSucc, Fin.sum_univ_zero, zero_add, Fin.last, Fin.castLE_mk,
+        Fin.castIso_mk, Fin.castSucc_mk]
       simp only [Fin.mk_zero, Fin.val_zero, pow_zero, one_zsmul, Fin.mk_one, Fin.val_one, pow_one,
         neg_smul, comp_neg]
       erw [δ_comp_σ_self, δ_comp_σ_succ, add_right_neg]

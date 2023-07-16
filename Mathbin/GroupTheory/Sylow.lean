@@ -827,6 +827,7 @@ theorem card_eq_multiplicity [Fintype G] {p : ℕ} [hp : Fact p.Prime] (P : Sylo
 #align sylow.card_eq_multiplicity Sylow.card_eq_multiplicity
 -/
 
+#print Sylow.ofCard /-
 /-- A subgroup with cardinality `p ^ n` is a Sylow subgroup
  where `n` is the multiplicity of `p` in the group order. -/
 def ofCard [Fintype G] {p : ℕ} [hp : Fact p.Prime] (H : Subgroup G) [Fintype H]
@@ -841,12 +842,15 @@ def ofCard [Fintype G] {p : ℕ} [hp : Fact p.Prime] (H : Subgroup G) [Fintype H
           (Set.eq_of_subset_of_card_le hHP (P.card_eq_multiplicity.trans card_eq.symm).le).symm ▸
         fun _ => P.3
 #align sylow.of_card Sylow.ofCard
+-/
 
+#print Sylow.coe_ofCard /-
 @[simp, norm_cast]
 theorem coe_ofCard [Fintype G] {p : ℕ} [hp : Fact p.Prime] (H : Subgroup G) [Fintype H]
     (card_eq : card H = p ^ (card G).factorization p) : ↑(ofCard H card_eq) = H :=
   rfl
 #align sylow.coe_of_card Sylow.coe_ofCard
+-/
 
 #print Sylow.subsingleton_of_normal /-
 theorem subsingleton_of_normal {p : ℕ} [Fact p.Prime] [Finite (Sylow p G)] (P : Sylow p G)

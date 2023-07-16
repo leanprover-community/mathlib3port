@@ -455,6 +455,7 @@ theorem set_average_const {s : Set α} (hs₀ : μ s ≠ 0) (hs : μ s ≠ ∞) 
 #align measure_theory.set_average_const MeasureTheory.set_average_const
 -/
 
+#print MeasureTheory.integral_average /-
 @[simp]
 theorem integral_average (μ : Measure α) [IsFiniteMeasure μ] (f : α → E) :
     ∫ x, ⨍ a, f a ∂μ ∂μ = ∫ x, f x ∂μ :=
@@ -465,12 +466,16 @@ theorem integral_average (μ : Measure α) [IsFiniteMeasure μ] (f : α → E) :
     rw [integral_const, average_eq,
       smul_inv_smul₀ (to_real_ne_zero.2 ⟨measure_univ_ne_zero.2 hμ, measure_ne_top _ _⟩)]
 #align measure_theory.integral_average MeasureTheory.integral_average
+-/
 
-theorem set_integral_set_average (μ : Measure α) [IsFiniteMeasure μ] (f : α → E) (s : Set α) :
+#print MeasureTheory.setAverage_setAverage /-
+theorem setAverage_setAverage (μ : Measure α) [IsFiniteMeasure μ] (f : α → E) (s : Set α) :
     ∫ x in s, ⨍ a in s, f a ∂μ ∂μ = ∫ x in s, f x ∂μ :=
   integral_average _ _
-#align measure_theory.set_integral_set_average MeasureTheory.set_integral_set_average
+#align measure_theory.set_integral_set_average MeasureTheory.setAverage_setAverage
+-/
 
+#print MeasureTheory.integral_sub_average /-
 theorem integral_sub_average (μ : Measure α) [IsFiniteMeasure μ] (f : α → E) :
     ∫ x, f x - ⨍ a, f a ∂μ ∂μ = 0 :=
   by
@@ -480,26 +485,34 @@ theorem integral_sub_average (μ : Measure α) [IsFiniteMeasure μ] (f : α → 
   convert h.add (integrable_const _)
   exact (sub_add_cancel _ _).symm
 #align measure_theory.integral_sub_average MeasureTheory.integral_sub_average
+-/
 
-theorem set_integral_sub_set_average (hs : μ s ≠ ∞) (f : α → E) :
+#print MeasureTheory.setAverage_sub_setAverage /-
+theorem setAverage_sub_setAverage (hs : μ s ≠ ∞) (f : α → E) :
     ∫ x in s, f x - ⨍ a in s, f a ∂μ ∂μ = 0 :=
   haveI haveI : Fact (μ s < ∞) := ⟨lt_top_iff_ne_top.2 hs⟩
   integral_sub_average _ _
-#align measure_theory.set_integral_sub_set_average MeasureTheory.set_integral_sub_set_average
+#align measure_theory.set_integral_sub_set_average MeasureTheory.setAverage_sub_setAverage
+-/
 
+#print MeasureTheory.integral_average_sub /-
 theorem integral_average_sub [IsFiniteMeasure μ] (hf : Integrable f μ) :
     ∫ x, ⨍ a, f a ∂μ - f x ∂μ = 0 := by
   rw [integral_sub (integrable_const _) hf, integral_average, sub_self]
 #align measure_theory.integral_average_sub MeasureTheory.integral_average_sub
+-/
 
-theorem set_integral_set_average_sub (hs : μ s ≠ ∞) (hf : IntegrableOn f s μ) :
+#print MeasureTheory.setAverage_setAverage_sub /-
+theorem setAverage_setAverage_sub (hs : μ s ≠ ∞) (hf : IntegrableOn f s μ) :
     ∫ x in s, ⨍ a in s, f a ∂μ - f x ∂μ = 0 :=
   haveI haveI : Fact (μ s < ∞) := ⟨lt_top_iff_ne_top.2 hs⟩
   integral_average_sub hf
-#align measure_theory.set_integral_set_average_sub MeasureTheory.set_integral_set_average_sub
+#align measure_theory.set_integral_set_average_sub MeasureTheory.setAverage_setAverage_sub
+-/
 
 end NormedAddCommGroup
 
+#print MeasureTheory.ofReal_average /-
 theorem ofReal_average {f : α → ℝ} (hf : Integrable f μ) (hf₀ : 0 ≤ᵐ[μ] f) :
     ENNReal.ofReal (⨍ x, f x ∂μ) = (∫⁻ x, ENNReal.ofReal (f x) ∂μ) / μ univ :=
   by
@@ -510,11 +523,14 @@ theorem ofReal_average {f : α → ℝ} (hf : Integrable f μ) (hf₀ : 0 ≤ᵐ
       of_real_to_real (inv_ne_top.2 <| measure_univ_ne_zero.2 hμ),
       of_real_integral_eq_lintegral_of_real hf hf₀, ENNReal.div_eq_inv_mul]
 #align measure_theory.of_real_average MeasureTheory.ofReal_average
+-/
 
-theorem ofReal_set_average {f : α → ℝ} (hf : IntegrableOn f s μ) (hf₀ : 0 ≤ᵐ[μ.restrict s] f) :
+#print MeasureTheory.ofReal_setAverage /-
+theorem ofReal_setAverage {f : α → ℝ} (hf : IntegrableOn f s μ) (hf₀ : 0 ≤ᵐ[μ.restrict s] f) :
     ENNReal.ofReal (⨍ x in s, f x ∂μ) = (∫⁻ x in s, ENNReal.ofReal (f x) ∂μ) / μ s := by
   simpa using of_real_average hf hf₀
-#align measure_theory.of_real_set_average MeasureTheory.ofReal_set_average
+#align measure_theory.of_real_set_average MeasureTheory.ofReal_setAverage
+-/
 
 theorem toReal_laverage {f : α → ℝ≥0∞} (hf : AEMeasurable f μ) (hf' : ∀ᵐ x ∂μ, f x ≠ ∞) :
     (⨍⁻ x, f x ∂μ).toReal = ⨍ x, (f x).toReal ∂μ :=
@@ -539,9 +555,10 @@ section FirstMomentReal
 
 variable {N : Set α} {f : α → ℝ}
 
+#print MeasureTheory.measure_le_setAverage_pos /-
 /-- **First moment method**. An integrable function is smaller than its mean on a set of positive
 measure. -/
-theorem measure_le_set_average_pos (hμ : μ s ≠ 0) (hμ₁ : μ s ≠ ∞) (hf : IntegrableOn f s μ) :
+theorem measure_le_setAverage_pos (hμ : μ s ≠ 0) (hμ₁ : μ s ≠ ∞) (hf : IntegrableOn f s μ) :
     0 < μ ({x ∈ s | f x ≤ ⨍ a in s, f a ∂μ}) :=
   by
   refine' pos_iff_ne_zero.2 fun H => _
@@ -559,33 +576,41 @@ theorem measure_le_set_average_pos (hμ : μ s ≠ 0) (hμ₁ : μ s ≠ ∞) (h
   · rwa [pos_iff_ne_zero, inter_comm, ← diff_compl, ← diff_inter_self_eq_diff, measure_diff_null]
     refine' eq_bot_mono (measure_mono _) (measure_inter_eq_zero_of_restrict H)
     exact inter_subset_inter_left _ fun a ha => (sub_eq_zero.1 <| of_not_not ha).le
-#align measure_theory.measure_le_set_average_pos MeasureTheory.measure_le_set_average_pos
+#align measure_theory.measure_le_set_average_pos MeasureTheory.measure_le_setAverage_pos
+-/
 
+#print MeasureTheory.measure_setAverage_le_pos /-
 /-- **First moment method**. An integrable function is greater than its mean on a set of positive
 measure. -/
-theorem measure_set_average_le_pos (hμ : μ s ≠ 0) (hμ₁ : μ s ≠ ∞) (hf : IntegrableOn f s μ) :
+theorem measure_setAverage_le_pos (hμ : μ s ≠ 0) (hμ₁ : μ s ≠ ∞) (hf : IntegrableOn f s μ) :
     0 < μ ({x ∈ s | ⨍ a in s, f a ∂μ ≤ f x}) := by
   simpa [integral_neg, neg_div] using measure_le_set_average_pos hμ hμ₁ hf.neg
-#align measure_theory.measure_set_average_le_pos MeasureTheory.measure_set_average_le_pos
+#align measure_theory.measure_set_average_le_pos MeasureTheory.measure_setAverage_le_pos
+-/
 
+#print MeasureTheory.exists_le_setAverage /-
 /-- **First moment method**. The minimum of an integrable function is smaller than its mean. -/
-theorem exists_le_set_average (hμ : μ s ≠ 0) (hμ₁ : μ s ≠ ∞) (hf : IntegrableOn f s μ) :
+theorem exists_le_setAverage (hμ : μ s ≠ 0) (hμ₁ : μ s ≠ ∞) (hf : IntegrableOn f s μ) :
     ∃ x ∈ s, f x ≤ ⨍ a in s, f a ∂μ :=
-  let ⟨x, hx, h⟩ := nonempty_of_measure_ne_zero (measure_le_set_average_pos hμ hμ₁ hf).ne'
+  let ⟨x, hx, h⟩ := nonempty_of_measure_ne_zero (measure_le_setAverage_pos hμ hμ₁ hf).ne'
   ⟨x, hx, h⟩
-#align measure_theory.exists_le_set_average MeasureTheory.exists_le_set_average
+#align measure_theory.exists_le_set_average MeasureTheory.exists_le_setAverage
+-/
 
+#print MeasureTheory.exists_setAverage_le /-
 /-- **First moment method**. The maximum of an integrable function is greater than its mean. -/
-theorem exists_set_average_le (hμ : μ s ≠ 0) (hμ₁ : μ s ≠ ∞) (hf : IntegrableOn f s μ) :
+theorem exists_setAverage_le (hμ : μ s ≠ 0) (hμ₁ : μ s ≠ ∞) (hf : IntegrableOn f s μ) :
     ∃ x ∈ s, ⨍ a in s, f a ∂μ ≤ f x :=
-  let ⟨x, hx, h⟩ := nonempty_of_measure_ne_zero (measure_set_average_le_pos hμ hμ₁ hf).ne'
+  let ⟨x, hx, h⟩ := nonempty_of_measure_ne_zero (measure_setAverage_le_pos hμ hμ₁ hf).ne'
   ⟨x, hx, h⟩
-#align measure_theory.exists_set_average_le MeasureTheory.exists_set_average_le
+#align measure_theory.exists_set_average_le MeasureTheory.exists_setAverage_le
+-/
 
 section FiniteMeasure
 
 variable [IsFiniteMeasure μ]
 
+#print MeasureTheory.measure_le_average_pos /-
 /-- **First moment method**. An integrable function is smaller than its mean on a set of positive
 measure. -/
 theorem measure_le_average_pos (hμ : μ ≠ 0) (hf : Integrable f μ) : 0 < μ {x | f x ≤ ⨍ a, f a ∂μ} :=
@@ -594,7 +619,9 @@ theorem measure_le_average_pos (hμ : μ ≠ 0) (hf : Integrable f μ) : 0 < μ 
     measure_le_set_average_pos (measure.measure_univ_ne_zero.2 hμ) (measure_ne_top _ _)
       hf.integrable_on
 #align measure_theory.measure_le_average_pos MeasureTheory.measure_le_average_pos
+-/
 
+#print MeasureTheory.measure_average_le_pos /-
 /-- **First moment method**. An integrable function is greater than its mean on a set of positive
 measure. -/
 theorem measure_average_le_pos (hμ : μ ≠ 0) (hf : Integrable f μ) : 0 < μ {x | ⨍ a, f a ∂μ ≤ f x} :=
@@ -603,20 +630,26 @@ theorem measure_average_le_pos (hμ : μ ≠ 0) (hf : Integrable f μ) : 0 < μ 
     measure_set_average_le_pos (measure.measure_univ_ne_zero.2 hμ) (measure_ne_top _ _)
       hf.integrable_on
 #align measure_theory.measure_average_le_pos MeasureTheory.measure_average_le_pos
+-/
 
+#print MeasureTheory.exists_le_average /-
 /-- **First moment method**. The minimum of an integrable function is smaller than its mean. -/
 theorem exists_le_average (hμ : μ ≠ 0) (hf : Integrable f μ) : ∃ x, f x ≤ ⨍ a, f a ∂μ :=
   let ⟨x, hx⟩ := nonempty_of_measure_ne_zero (measure_le_average_pos hμ hf).ne'
   ⟨x, hx⟩
 #align measure_theory.exists_le_average MeasureTheory.exists_le_average
+-/
 
+#print MeasureTheory.exists_average_le /-
 /-- **First moment method**. The maximum of an integrable function is greater than its mean. -/
 theorem exists_average_le (hμ : μ ≠ 0) (hf : Integrable f μ) : ∃ x, ⨍ a, f a ∂μ ≤ f x :=
   let ⟨x, hx⟩ := nonempty_of_measure_ne_zero (measure_average_le_pos hμ hf).ne'
   ⟨x, hx⟩
 #align measure_theory.exists_average_le MeasureTheory.exists_average_le
+-/
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (x «expr ∉ » N) -/
+#print MeasureTheory.exists_not_mem_null_le_average /-
 /-- **First moment method**. The minimum of an integrable function is smaller than its mean, while
 avoiding a null set. -/
 theorem exists_not_mem_null_le_average (hμ : μ ≠ 0) (hf : Integrable f μ) (hN : μ N = 0) :
@@ -627,14 +660,17 @@ theorem exists_not_mem_null_le_average (hμ : μ ≠ 0) (hf : Integrable f μ) (
   obtain ⟨x, hx, hxN⟩ := nonempty_of_measure_ne_zero this.ne'
   exact ⟨x, hxN, hx⟩
 #align measure_theory.exists_not_mem_null_le_average MeasureTheory.exists_not_mem_null_le_average
+-/
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (x «expr ∉ » N) -/
+#print MeasureTheory.exists_not_mem_null_average_le /-
 /-- **First moment method**. The maximum of an integrable function is greater than its mean, while
 avoiding a null set. -/
 theorem exists_not_mem_null_average_le (hμ : μ ≠ 0) (hf : Integrable f μ) (hN : μ N = 0) :
     ∃ (x : _) (_ : x ∉ N), ⨍ a, f a ∂μ ≤ f x := by
   simpa [integral_neg, neg_div] using exists_not_mem_null_le_average hμ hf.neg hN
 #align measure_theory.exists_not_mem_null_average_le MeasureTheory.exists_not_mem_null_average_le
+-/
 
 end FiniteMeasure
 
@@ -642,31 +678,40 @@ section ProbabilityMeasure
 
 variable [IsProbabilityMeasure μ]
 
+#print MeasureTheory.measure_le_integral_pos /-
 /-- **First moment method**. An integrable function is smaller than its integral on a set of
 positive measure. -/
 theorem measure_le_integral_pos (hf : Integrable f μ) : 0 < μ {x | f x ≤ ∫ a, f a ∂μ} := by
   simpa only [average_eq_integral] using
     measure_le_average_pos (is_probability_measure.ne_zero μ) hf
 #align measure_theory.measure_le_integral_pos MeasureTheory.measure_le_integral_pos
+-/
 
+#print MeasureTheory.measure_integral_le_pos /-
 /-- **First moment method**. An integrable function is greater than its integral on a set of
 positive measure. -/
 theorem measure_integral_le_pos (hf : Integrable f μ) : 0 < μ {x | ∫ a, f a ∂μ ≤ f x} := by
   simpa only [average_eq_integral] using
     measure_average_le_pos (is_probability_measure.ne_zero μ) hf
 #align measure_theory.measure_integral_le_pos MeasureTheory.measure_integral_le_pos
+-/
 
+#print MeasureTheory.exists_le_integral /-
 /-- **First moment method**. The minimum of an integrable function is smaller than its integral. -/
 theorem exists_le_integral (hf : Integrable f μ) : ∃ x, f x ≤ ∫ a, f a ∂μ := by
   simpa only [average_eq_integral] using exists_le_average (is_probability_measure.ne_zero μ) hf
 #align measure_theory.exists_le_integral MeasureTheory.exists_le_integral
+-/
 
+#print MeasureTheory.exists_integral_le /-
 /-- **First moment method**. The maximum of an integrable function is greater than its integral. -/
 theorem exists_integral_le (hf : Integrable f μ) : ∃ x, ∫ a, f a ∂μ ≤ f x := by
   simpa only [average_eq_integral] using exists_average_le (is_probability_measure.ne_zero μ) hf
 #align measure_theory.exists_integral_le MeasureTheory.exists_integral_le
+-/
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (x «expr ∉ » N) -/
+#print MeasureTheory.exists_not_mem_null_le_integral /-
 /-- **First moment method**. The minimum of an integrable function is smaller than its integral,
 while avoiding a null set. -/
 theorem exists_not_mem_null_le_integral (hf : Integrable f μ) (hN : μ N = 0) :
@@ -674,8 +719,10 @@ theorem exists_not_mem_null_le_integral (hf : Integrable f μ) (hN : μ N = 0) :
   simpa only [average_eq_integral] using
     exists_not_mem_null_le_average (is_probability_measure.ne_zero μ) hf hN
 #align measure_theory.exists_not_mem_null_le_integral MeasureTheory.exists_not_mem_null_le_integral
+-/
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (x «expr ∉ » N) -/
+#print MeasureTheory.exists_not_mem_null_integral_le /-
 /-- **First moment method**. The maximum of an integrable function is greater than its integral,
 while avoiding a null set. -/
 theorem exists_not_mem_null_integral_le (hf : Integrable f μ) (hN : μ N = 0) :
@@ -683,6 +730,7 @@ theorem exists_not_mem_null_integral_le (hf : Integrable f μ) (hN : μ N = 0) :
   simpa only [average_eq_integral] using
     exists_not_mem_null_average_le (is_probability_measure.ne_zero μ) hf hN
 #align measure_theory.exists_not_mem_null_integral_le MeasureTheory.exists_not_mem_null_integral_le
+-/
 
 end ProbabilityMeasure
 

@@ -142,9 +142,9 @@ theorem ofFn_succ' {n} (f : Fin (succ n) → α) :
   by
   induction' n with n IH
   · rw [of_fn_zero, concat_nil, of_fn_succ, of_fn_zero]; rfl
-  · rw [of_fn_succ, IH, of_fn_succ, concat_cons, Fin.castSuccEmb_zero]
+  · rw [of_fn_succ, IH, of_fn_succ, concat_cons, Fin.castSucc_zero]
     congr 3
-    simp_rw [Fin.castSuccEmb_fin_succ]
+    simp_rw [Fin.castSucc_fin_succ]
 #align list.of_fn_succ' List.ofFn_succ'
 -/
 
@@ -174,7 +174,7 @@ theorem last_ofFn_succ {n : ℕ} (f : Fin n.succ → α)
 /-- Note this matches the convention of `list.of_fn_succ'`, putting the `fin m` elements first. -/
 theorem ofFn_add {m n} (f : Fin (m + n) → α) :
     List.ofFn f =
-      (List.ofFn fun i => f (Fin.castAdd n i)) ++ List.ofFn fun j => f (Fin.natAdd m j) :=
+      (List.ofFn fun i => f (Fin.castAddEmb n i)) ++ List.ofFn fun j => f (Fin.natAddEmb m j) :=
   by
   induction' n with n IH
   · rw [of_fn_zero, append_nil, Fin.castAdd_zero, Fin.castIso_refl]; rfl

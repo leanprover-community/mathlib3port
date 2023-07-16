@@ -513,7 +513,7 @@ theorem adjugate_fin_two_of (a b c d : α) : adjugate !![a, b; c, d] = !![d, -b;
 
 #print Matrix.adjugate_fin_succ_eq_det_submatrix /-
 theorem adjugate_fin_succ_eq_det_submatrix {n : ℕ} (A : Matrix (Fin n.succ) (Fin n.succ) α) (i j) :
-    adjugate A i j = (-1) ^ (j + i : ℕ) * det (A.submatrix j.succAbove i.succAbove) :=
+    adjugate A i j = (-1) ^ (j + i : ℕ) * det (A.submatrix j.succAboveEmb i.succAboveEmb) :=
   by
   simp_rw [adjugate_apply, det_succ_row _ j, update_row_self, submatrix_update_row_succ_above]
   rw [Fintype.sum_eq_single i fun h hjk => _, Pi.single_eq_same, mul_one]
