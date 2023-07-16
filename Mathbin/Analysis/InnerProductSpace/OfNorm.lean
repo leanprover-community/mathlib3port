@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth
 
 ! This file was ported from Lean 3 source module analysis.inner_product_space.of_norm
-! leanprover-community/mathlib commit baa88307f3e699fa7054ef04ec79fa4f056169cb
+! leanprover-community/mathlib commit 2fe465deb81bcd7ccafa065bb686888a82f15372
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Analysis.InnerProductSpace.Basic
 
 /-!
 # Inner product space derived from a norm
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file defines an `inner_product_space` instance from a norm that respects the
 parallellogram identity. The parallelogram identity is a way to express the inner product of `x` and

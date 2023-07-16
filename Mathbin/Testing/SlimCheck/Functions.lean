@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon
 
 ! This file was ported from Lean 3 source module testing.slim_check.functions
-! leanprover-community/mathlib commit f9c300047a57aeda7c2fe15a3ac2455eb05ec225
+! leanprover-community/mathlib commit 2fe465deb81bcd7ccafa065bb686888a82f15372
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -18,6 +18,9 @@ import Mathbin.Testing.SlimCheck.Testable
 
 /-!
 ## `slim_check`: generators for functions
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file defines `sampleable` instances for `α → β` functions and
 `ℤ → ℤ` injective functions.

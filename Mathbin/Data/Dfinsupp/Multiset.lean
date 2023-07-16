@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module data.dfinsupp.multiset
-! leanprover-community/mathlib commit 23aa88e32dcc9d2a24cca7bc23268567ed4cd7d6
+! leanprover-community/mathlib commit 1d29de43a5ba4662dd33b5cfeecfc2a27a5a8a29
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -22,6 +22,8 @@ with `multiset.to_dfinsupp` the reverse equivalence.
 Note that this provides a computable alternative to `finsupp.to_multiset`.
 -/
 
+
+open Function
 
 variable {α : Type _} {β : α → Type _}
 
@@ -55,7 +57,7 @@ end DFinsupp
 
 namespace Multiset
 
-variable [DecidableEq α]
+variable [DecidableEq α] {s t : Multiset α}
 
 #print Multiset.toDFinsupp /-
 /-- A computable version of `multiset.to_finsupp` -/
@@ -117,20 +119,80 @@ theorem toDFinsupp_toMultiset (s : Multiset α) : s.toDFinsupp.toMultiset = s :=
 #align multiset.to_dfinsupp_to_multiset Multiset.toDFinsupp_toMultiset
 -/
 
+theorem toDFinsupp_injective : Injective (toDFinsupp : Multiset α → Π₀ a, ℕ) :=
+  equivDFinsupp.Injective
+#align multiset.to_dfinsupp_injective Multiset.toDFinsupp_injective
+
+@[simp]
+theorem toDFinsupp_inj : toDFinsupp s = toDFinsupp t ↔ s = t :=
+  toDFinsupp_injective.eq_iff
+#align multiset.to_dfinsupp_inj Multiset.toDFinsupp_inj
+
 #print Multiset.toDFinsupp_le_toDFinsupp /-
 @[simp]
-theorem toDFinsupp_le_toDFinsupp (s t : Multiset α) : toDFinsupp s ≤ toDFinsupp t ↔ s ≤ t := by
+theorem toDFinsupp_le_toDFinsupp : toDFinsupp s ≤ toDFinsupp t ↔ s ≤ t := by
   simp [Multiset.le_iff_count, DFinsupp.le_def]
 #align multiset.to_dfinsupp_le_to_dfinsupp Multiset.toDFinsupp_le_toDFinsupp
 -/
 
+@[simp]
+theorem toDFinsupp_lt_toDFinsupp : toDFinsupp s < toDFinsupp t ↔ s < t :=
+  lt_iff_lt_of_le_iff_le' toDFinsupp_le_toDFinsupp toDFinsupp_le_toDFinsupp
+#align multiset.to_dfinsupp_lt_to_dfinsupp Multiset.toDFinsupp_lt_toDFinsupp
+
+@[simp]
+theorem toDFinsupp_inter (s t : Multiset α) : toDFinsupp (s ∩ t) = s.toDFinsupp ⊓ t.toDFinsupp := by
+  ext i; simp [inf_eq_min]
+#align multiset.to_dfinsupp_inter Multiset.toDFinsupp_inter
+
+@[simp]
+theorem toDFinsupp_union (s t : Multiset α) : toDFinsupp (s ∪ t) = s.toDFinsupp ⊔ t.toDFinsupp := by
+  ext i; simp [sup_eq_max]
+#align multiset.to_dfinsupp_union Multiset.toDFinsupp_union
+
 end Multiset
+
+namespace DFinsupp
+
+variable [DecidableEq α] {f g : Π₀ a : α, ℕ}
 
 #print DFinsupp.toMultiset_toDFinsupp /-
 @[simp]
-theorem DFinsupp.toMultiset_toDFinsupp [DecidableEq α] (f : Π₀ a : α, ℕ) :
-    f.toMultiset.toDFinsupp = f :=
+theorem toMultiset_toDFinsupp : f.toMultiset.toDFinsupp = f :=
   Multiset.equivDFinsupp.apply_symm_apply f
 #align dfinsupp.to_multiset_to_dfinsupp DFinsupp.toMultiset_toDFinsupp
 -/
+
+theorem toMultiset_injective : Injective (toMultiset : (Π₀ a, ℕ) → Multiset α) :=
+  Multiset.equivDFinsupp.symm.Injective
+#align dfinsupp.to_multiset_injective DFinsupp.toMultiset_injective
+
+@[simp]
+theorem toMultiset_inj : toMultiset f = toMultiset g ↔ f = g :=
+  toMultiset_injective.eq_iff
+#align dfinsupp.to_multiset_inj DFinsupp.toMultiset_inj
+
+@[simp]
+theorem toMultiset_le_toMultiset : toMultiset f ≤ toMultiset g ↔ f ≤ g := by
+  simp_rw [← Multiset.toDFinsupp_le_toDFinsupp, to_multiset_to_dfinsupp]
+#align dfinsupp.to_multiset_le_to_multiset DFinsupp.toMultiset_le_toMultiset
+
+@[simp]
+theorem toMultiset_lt_toMultiset : toMultiset f < toMultiset g ↔ f < g := by
+  simp_rw [← Multiset.toDFinsupp_lt_toDFinsupp, to_multiset_to_dfinsupp]
+#align dfinsupp.to_multiset_lt_to_multiset DFinsupp.toMultiset_lt_toMultiset
+
+variable (f g)
+
+@[simp]
+theorem toMultiset_inf : toMultiset (f ⊓ g) = f.toMultiset ∩ g.toMultiset :=
+  Multiset.toDFinsupp_injective <| by simp
+#align dfinsupp.to_multiset_inf DFinsupp.toMultiset_inf
+
+@[simp]
+theorem toMultiset_sup : toMultiset (f ⊔ g) = f.toMultiset ∪ g.toMultiset :=
+  Multiset.toDFinsupp_injective <| by simp
+#align dfinsupp.to_multiset_sup DFinsupp.toMultiset_sup
+
+end DFinsupp
 

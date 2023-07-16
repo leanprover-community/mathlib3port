@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module data.dfinsupp.order
-! leanprover-community/mathlib commit 50832daea47b195a48b5b33b1c8b2162c48c3afc
+! leanprover-community/mathlib commit 1d29de43a5ba4662dd33b5cfeecfc2a27a5a8a29
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -39,7 +39,7 @@ namespace DFinsupp
 
 section Zero
 
-variable (α) [∀ i, Zero (α i)]
+variable [∀ i, Zero (α i)]
 
 section LE
 
@@ -47,8 +47,6 @@ variable [∀ i, LE (α i)]
 
 instance : LE (Π₀ i, α i) :=
   ⟨fun f g => ∀ i, f i ≤ g i⟩
-
-variable {α}
 
 #print DFinsupp.le_def /-
 theorem le_def {f g : Π₀ i, α i} : f ≤ g ↔ ∀ i, f i ≤ g i :=
@@ -80,7 +78,7 @@ section Preorder
 variable [∀ i, Preorder (α i)]
 
 instance : Preorder (Π₀ i, α i) :=
-  { DFinsupp.hasLe α with
+  { DFinsupp.hasLe with
     le_refl := fun f i => le_rfl
     le_trans := fun f g h hfg hgh i => (hfg i).trans (hgh i) }
 
@@ -92,13 +90,11 @@ theorem coeFn_mono : Monotone (coeFn : (Π₀ i, α i) → ∀ i, α i) := fun f
 end Preorder
 
 instance [∀ i, PartialOrder (α i)] : PartialOrder (Π₀ i, α i) :=
-  { DFinsupp.preorder α with
-    le_antisymm := fun f g hfg hgf => ext fun i => (hfg i).antisymm (hgf i) }
+  { DFinsupp.preorder with le_antisymm := fun f g hfg hgf => ext fun i => (hfg i).antisymm (hgf i) }
 
 instance [∀ i, SemilatticeInf (α i)] : SemilatticeInf (Π₀ i, α i) :=
   {
-    DFinsupp.partialOrder
-      α with
+    DFinsupp.partialOrder with
     inf := zipWith (fun _ => (· ⊓ ·)) fun _ => inf_idem
     inf_le_left := fun f g i => by rw [zip_with_apply]; exact inf_le_left
     inf_le_right := fun f g i => by rw [zip_with_apply]; exact inf_le_right
@@ -113,8 +109,7 @@ theorem inf_apply [∀ i, SemilatticeInf (α i)] (f g : Π₀ i, α i) (i : ι) 
 
 instance [∀ i, SemilatticeSup (α i)] : SemilatticeSup (Π₀ i, α i) :=
   {
-    DFinsupp.partialOrder
-      α with
+    DFinsupp.partialOrder with
     sup := zipWith (fun _ => (· ⊔ ·)) fun _ => sup_idem
     le_sup_left := fun f g i => by rw [zip_with_apply]; exact le_sup_left
     le_sup_right := fun f g i => by rw [zip_with_apply]; exact le_sup_right
@@ -127,11 +122,27 @@ theorem sup_apply [∀ i, SemilatticeSup (α i)] (f g : Π₀ i, α i) (i : ι) 
 #align dfinsupp.sup_apply DFinsupp.sup_apply
 -/
 
+section Lattice
+
+variable [∀ i, Lattice (α i)] (f g : Π₀ i, α i)
+
 #print DFinsupp.lattice /-
-instance lattice [∀ i, Lattice (α i)] : Lattice (Π₀ i, α i) :=
-  { DFinsupp.semilatticeInf α, DFinsupp.semilatticeSup α with }
+instance lattice : Lattice (Π₀ i, α i) :=
+  { DFinsupp.semilatticeInf, DFinsupp.semilatticeSup with }
 #align dfinsupp.lattice DFinsupp.lattice
 -/
+
+variable [DecidableEq ι] [∀ (i) (x : α i), Decidable (x ≠ 0)]
+
+theorem support_inf_union_support_sup : (f ⊓ g).support ∪ (f ⊔ g).support = f.support ∪ g.support :=
+  coe_injective <| compl_injective <| by ext; simp [inf_eq_and_sup_eq_iff]
+#align dfinsupp.support_inf_union_support_sup DFinsupp.support_inf_union_support_sup
+
+theorem support_sup_union_support_inf : (f ⊔ g).support ∪ (f ⊓ g).support = f.support ∪ g.support :=
+  (union_comm _ _).trans <| support_inf_union_support_sup _ _
+#align dfinsupp.support_sup_union_support_inf DFinsupp.support_sup_union_support_inf
+
+end Lattice
 
 end Zero
 
@@ -139,7 +150,7 @@ end Zero
 
 
 instance (α : ι → Type _) [∀ i, OrderedAddCommMonoid (α i)] : OrderedAddCommMonoid (Π₀ i, α i) :=
-  { DFinsupp.addCommMonoid, DFinsupp.partialOrder α with
+  { DFinsupp.addCommMonoid, DFinsupp.partialOrder with
     add_le_add_left := fun a b h c i => by rw [add_apply, add_apply];
       exact add_le_add_left (h i) (c i) }
 

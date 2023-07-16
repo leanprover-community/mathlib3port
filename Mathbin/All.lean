@@ -198,6 +198,7 @@ import Mathbin.Algebra.DualQuaternion
 import Mathbin.Algebra.EuclideanDomain.Basic
 import Mathbin.Algebra.EuclideanDomain.Defs
 import Mathbin.Algebra.EuclideanDomain.Instances
+import Mathbin.Algebra.Expr
 import Mathbin.Algebra.Field.Basic
 import Mathbin.Algebra.Field.Defs
 import Mathbin.Algebra.Field.Opposite
@@ -1467,6 +1468,7 @@ import Mathbin.Data.List.Sublists
 import Mathbin.Data.List.Tfae
 import Mathbin.Data.List.ToFinsupp
 import Mathbin.Data.List.Zip
+import Mathbin.Data.Matrix.Auto
 import Mathbin.Data.Matrix.Basic
 import Mathbin.Data.Matrix.Basis
 import Mathbin.Data.Matrix.Block

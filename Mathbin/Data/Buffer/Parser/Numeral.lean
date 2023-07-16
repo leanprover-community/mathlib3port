@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yakov Pechersky
 
 ! This file was ported from Lean 3 source module data.buffer.parser.numeral
-! leanprover-community/mathlib commit 2220b0cbab795e73674b8191170b0cc68c6b54a8
+! leanprover-community/mathlib commit 2fe465deb81bcd7ccafa065bb686888a82f15372
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.Data.Buffer.Parser.Basic
 
 /-!
 # Numeral parsers
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file expands on the existing `nat : parser ℕ` to provide parsers into any type `α` that
 can be represented by a numeral, which relies on `α` having a 0, 1, and addition operation.

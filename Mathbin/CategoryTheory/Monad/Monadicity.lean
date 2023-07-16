@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 
 ! This file was ported from Lean 3 source module category_theory.monad.monadicity
-! leanprover-community/mathlib commit 4bd8c855d6ba8f0d5eefbf80c20fa00ee034dec9
+! leanprover-community/mathlib commit 2fe465deb81bcd7ccafa065bb686888a82f15372
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -15,6 +15,9 @@ import Mathbin.CategoryTheory.Monad.Limits
 
 /-!
 # Monadicity theorems
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 We prove monadicity theorems which can establish a given functor is monadic. In particular, we
 show three versions of Beck's monadicity theorem, and the reflexive (crude) monadicity theorem:

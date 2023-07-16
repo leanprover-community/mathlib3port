@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Simon Hudon, Mario Carneiro
 
 ! This file was ported from Lean 3 source module tactic.norm_num
-! leanprover-community/mathlib commit ec322deb9ba5aad978f862669053069b7957c31d
+! leanprover-community/mathlib commit c1acdccd694b692db2619fff903e0e40de428169
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -1783,12 +1783,15 @@ unsafe def tactic.norm_num1 (step : expr → tactic (expr × expr)) (loc : Inter
 use `get_step` to get the default `norm_num` set and `derive.step` for the basic builtin set of
 simplifications. -/
 unsafe def tactic.norm_num (step : expr → tactic (expr × expr)) (hs : List simp_arg_type)
-    (l : Interactive.Loc) : tactic Unit :=
+    (l : Interactive.Loc) : tactic Unit := do
+  -- Build and discard the simp lemma set, to validate it.
+      mk_simp_set_core
+      ff [] (simp_arg_type.except `` one_div :: hs) tt
   repeat1 <|
-    orelse' (tactic.norm_num1 step l) <|
-      interactive.simp_core { } (tactic.norm_num1 step (Interactive.Loc.ns [none])) false
-          (simp_arg_type.except `` one_div :: hs) [] l >>
-        skip
+      orelse' (tactic.norm_num1 step l) <|
+        interactive.simp_core { } (tactic.norm_num1 step (Interactive.Loc.ns [none])) ff
+            (simp_arg_type.except `` one_div :: hs) [] l >>
+          skip
 #align tactic.norm_num tactic.norm_num
 
 /-- Carry out similar operations as `tactic.norm_num` but on an `expr` rather than a location.

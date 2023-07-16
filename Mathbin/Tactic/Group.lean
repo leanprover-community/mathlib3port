@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Patrick Massot
 
 ! This file was ported from Lean 3 source module tactic.group
-! leanprover-community/mathlib commit 0ff989e5d31dd73bcea3c52be7b601c95d4e3930
+! leanprover-community/mathlib commit 2fe465deb81bcd7ccafa065bb686888a82f15372
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.Algebra.Group.Commutator
 
 /-!
 # `group`
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 Normalizes expressions in the language of groups. The basic idea is to use the simplifier
 to put everything into a product of group powers (`zpow` which takes a group element and an

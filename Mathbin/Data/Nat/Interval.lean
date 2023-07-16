@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module data.nat.interval
-! leanprover-community/mathlib commit a11f9106a169dd302a285019e5165f8ab32ff433
+! leanprover-community/mathlib commit 1d29de43a5ba4662dd33b5cfeecfc2a27a5a8a29
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -91,6 +91,11 @@ theorem Ioo_eq_range' : Ioo a b = ⟨List.range' (a + 1) (b - a - 1), List.nodup
 #align nat.Ioo_eq_range' Nat.Ioo_eq_range'
 -/
 
+theorem uIcc_eq_range' :
+    uIcc a b = ⟨List.range' (min a b) (max a b + 1 - min a b), List.nodup_range' _ _⟩ :=
+  rfl
+#align nat.uIcc_eq_range' Nat.uIcc_eq_range'
+
 #print Nat.Iio_eq_range /-
 theorem Iio_eq_range : Iio = range := by ext b x; rw [mem_Iio, mem_range]
 #align nat.Iio_eq_range Nat.Iio_eq_range
@@ -135,6 +140,18 @@ theorem card_Ioo : (Ioo a b).card = b - a - 1 :=
   List.length_range' _ _
 #align nat.card_Ioo Nat.card_Ioo
 -/
+
+@[simp]
+theorem card_uIcc : (uIcc a b).card = (b - a : ℤ).natAbs + 1 :=
+  by
+  refine' (card_Icc _ _).trans (Int.ofNat.inj _)
+  rw [sup_eq_max, inf_eq_min, Int.ofNat_sub]
+  · rw [add_comm, Int.ofNat_add, add_sub_assoc]
+    norm_cast
+    push_cast
+    rw [max_sub_min_eq_abs, add_comm]
+  · exact min_le_max.trans le_self_add
+#align nat.card_uIcc Nat.card_uIcc
 
 #print Nat.card_Iic /-
 @[simp]

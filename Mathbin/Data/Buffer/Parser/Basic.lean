@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yakov Pechersky
 
 ! This file was ported from Lean 3 source module data.buffer.parser.basic
-! leanprover-community/mathlib commit bb9d1c5085e0b7ea619806a68c5021927cecb2a6
+! leanprover-community/mathlib commit 2fe465deb81bcd7ccafa065bb686888a82f15372
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -15,6 +15,9 @@ import Leanbin.Data.Buffer.Parser
 
 /-!
 # Parsers
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 `parser α` is the type that describes a computation that can ingest a `char_buffer`
 and output, if successful, a term of type `α`.

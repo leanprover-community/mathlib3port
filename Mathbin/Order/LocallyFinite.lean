@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module order.locally_finite
-! leanprover-community/mathlib commit a11f9106a169dd302a285019e5165f8ab32ff433
+! leanprover-community/mathlib commit 1d29de43a5ba4662dd33b5cfeecfc2a27a5a8a29
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -740,25 +740,25 @@ variable [Preorder α] [LocallyFiniteOrder α] (a b : α)
 
 #print Set.fintypeIcc /-
 instance fintypeIcc : Fintype (Icc a b) :=
-  Fintype.ofFinset (Finset.Icc a b) fun x => by rw [Finset.mem_Icc, mem_Icc]
+  Fintype.ofFinset (Finset.Icc a b) fun x => Finset.mem_Icc
 #align set.fintype_Icc Set.fintypeIcc
 -/
 
 #print Set.fintypeIco /-
 instance fintypeIco : Fintype (Ico a b) :=
-  Fintype.ofFinset (Finset.Ico a b) fun x => by rw [Finset.mem_Ico, mem_Ico]
+  Fintype.ofFinset (Finset.Ico a b) fun x => Finset.mem_Ico
 #align set.fintype_Ico Set.fintypeIco
 -/
 
 #print Set.fintypeIoc /-
 instance fintypeIoc : Fintype (Ioc a b) :=
-  Fintype.ofFinset (Finset.Ioc a b) fun x => by rw [Finset.mem_Ioc, mem_Ioc]
+  Fintype.ofFinset (Finset.Ioc a b) fun x => Finset.mem_Ioc
 #align set.fintype_Ioc Set.fintypeIoc
 -/
 
 #print Set.fintypeIoo /-
 instance fintypeIoo : Fintype (Ioo a b) :=
-  Fintype.ofFinset (Finset.Ioo a b) fun x => by rw [Finset.mem_Ioo, mem_Ioo]
+  Fintype.ofFinset (Finset.Ioo a b) fun x => Finset.mem_Ioo
 #align set.fintype_Ioo Set.fintypeIoo
 -/
 
@@ -794,13 +794,13 @@ variable [Preorder α] [LocallyFiniteOrderTop α] (a : α)
 
 #print Set.fintypeIci /-
 instance fintypeIci : Fintype (Ici a) :=
-  Fintype.ofFinset (Finset.Ici a) fun x => by rw [Finset.mem_Ici, mem_Ici]
+  Fintype.ofFinset (Finset.Ici a) fun x => Finset.mem_Ici
 #align set.fintype_Ici Set.fintypeIci
 -/
 
 #print Set.fintypeIoi /-
 instance fintypeIoi : Fintype (Ioi a) :=
-  Fintype.ofFinset (Finset.Ioi a) fun x => by rw [Finset.mem_Ioi, mem_Ioi]
+  Fintype.ofFinset (Finset.Ioi a) fun x => Finset.mem_Ioi
 #align set.fintype_Ioi Set.fintypeIoi
 -/
 
@@ -824,13 +824,13 @@ variable [Preorder α] [LocallyFiniteOrderBot α] (b : α)
 
 #print Set.fintypeIic /-
 instance fintypeIic : Fintype (Iic b) :=
-  Fintype.ofFinset (Finset.Iic b) fun x => by rw [Finset.mem_Iic, mem_Iic]
+  Fintype.ofFinset (Finset.Iic b) fun x => Finset.mem_Iic
 #align set.fintype_Iic Set.fintypeIic
 -/
 
 #print Set.fintypeIio /-
 instance fintypeIio : Fintype (Iio b) :=
-  Fintype.ofFinset (Finset.Iio b) fun x => by rw [Finset.mem_Iio, mem_Iio]
+  Fintype.ofFinset (Finset.Iio b) fun x => Finset.mem_Iio
 #align set.fintype_Iio Set.fintypeIio
 -/
 
@@ -847,6 +847,21 @@ theorem finite_Iio : (Iio b).Finite :=
 -/
 
 end OrderBot
+
+section Lattice
+
+variable [Lattice α] [LocallyFiniteOrder α] (a b : α)
+
+instance fintypeUIcc : Fintype (uIcc a b) :=
+  Fintype.ofFinset (Finset.uIcc a b) fun x => Finset.mem_uIcc
+#align set.fintype_uIcc Set.fintypeUIcc
+
+@[simp]
+theorem finite_interval : (uIcc a b).Finite :=
+  (uIcc _ _).toFinite
+#align set.finite_interval Set.finite_interval
+
+end Lattice
 
 end Set
 

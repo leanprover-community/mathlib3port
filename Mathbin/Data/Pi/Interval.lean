@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module data.pi.interval
-! leanprover-community/mathlib commit ad0089aca372256fe53dde13ca0dfea569bf5ac7
+! leanprover-community/mathlib commit 1d29de43a5ba4662dd33b5cfeecfc2a27a5a8a29
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -26,14 +26,17 @@ open Finset Fintype
 
 open scoped BigOperators
 
-variable {ι : Type _} {α : ι → Type _}
+variable {ι : Type _} {α : ι → Type _} [Fintype ι] [DecidableEq ι] [∀ i, DecidableEq (α i)]
 
 namespace Pi
 
-section LocallyFinite
+section PartialOrder
 
-variable [DecidableEq ι] [Fintype ι] [∀ i, DecidableEq (α i)] [∀ i, PartialOrder (α i)]
-  [∀ i, LocallyFiniteOrder (α i)]
+variable [∀ i, PartialOrder (α i)]
+
+section LocallyFiniteOrder
+
+variable [∀ i, LocallyFiniteOrder (α i)]
 
 instance : LocallyFiniteOrder (∀ i, α i) :=
   LocallyFiniteOrder.ofIcc _ (fun a b => piFinset fun i => Icc (a i) (b i)) fun a b x => by
@@ -71,13 +74,9 @@ theorem card_Ioo : (Ioo a b).card = ∏ i, (Icc (a i) (b i)).card - 2 := by
 #align pi.card_Ioo Pi.card_Ioo
 -/
 
-end LocallyFinite
+end LocallyFiniteOrder
 
-section Bounded
-
-variable [DecidableEq ι] [Fintype ι] [∀ i, DecidableEq (α i)] [∀ i, PartialOrder (α i)]
-
-section Bot
+section LocallyFiniteOrderBot
 
 variable [∀ i, LocallyFiniteOrderBot (α i)] (b : ∀ i, α i)
 
@@ -97,9 +96,9 @@ theorem card_Iio : (Iio b).card = ∏ i, (Iic (b i)).card - 1 := by
 #align pi.card_Iio Pi.card_Iio
 -/
 
-end Bot
+end LocallyFiniteOrderBot
 
-section Top
+section LocallyFiniteOrderTop
 
 variable [∀ i, LocallyFiniteOrderTop (α i)] (a : ∀ i, α i)
 
@@ -119,9 +118,23 @@ theorem card_Ioi : (Ioi a).card = ∏ i, (Ici (a i)).card - 1 := by
 #align pi.card_Ioi Pi.card_Ioi
 -/
 
-end Top
+end LocallyFiniteOrderTop
 
-end Bounded
+end PartialOrder
+
+section Lattice
+
+variable [∀ i, Lattice (α i)] [∀ i, LocallyFiniteOrder (α i)] (a b : ∀ i, α i)
+
+theorem uIcc_eq : uIcc a b = piFinset fun i => uIcc (a i) (b i) :=
+  rfl
+#align pi.uIcc_eq Pi.uIcc_eq
+
+theorem card_uIcc : (uIcc a b).card = ∏ i, (uIcc (a i) (b i)).card :=
+  card_Icc _ _
+#align pi.card_uIcc Pi.card_uIcc
+
+end Lattice
 
 end Pi
 

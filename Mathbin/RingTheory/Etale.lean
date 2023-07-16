@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module ring_theory.etale
-! leanprover-community/mathlib commit 73f96237417835f148a1f7bc1ff55f67119b7166
+! leanprover-community/mathlib commit 2fe465deb81bcd7ccafa065bb686888a82f15372
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.RingTheory.Kaehler
 /-!
 
 # Formally étale morphisms
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 An `R`-algebra `A` is formally étale (resp. unramified, smooth) if for every `R`-algebra,
 every square-zero ideal `I : ideal B` and `f : A →ₐ[R] B ⧸ I`, there exists

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module data.pnat.interval
-! leanprover-community/mathlib commit 68d1483e8a718ec63219f0e227ca3f0140361086
+! leanprover-community/mathlib commit 1d29de43a5ba4662dd33b5cfeecfc2a27a5a8a29
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -22,7 +22,7 @@ intervals as finsets and fintypes.
 -/
 
 
-open Finset PNat
+open Finset Function PNat
 
 instance : LocallyFiniteOrder ℕ+ :=
   Subtype.locallyFiniteOrder _
@@ -55,29 +55,37 @@ theorem Ioo_eq_finset_subtype : Ioo a b = (Ioo (a : ℕ) b).Subtype fun n : ℕ 
 #align pnat.Ioo_eq_finset_subtype PNat.Ioo_eq_finset_subtype
 -/
 
+theorem uIcc_eq_finset_subtype : uIcc a b = (uIcc (a : ℕ) b).Subtype fun n : ℕ => 0 < n :=
+  rfl
+#align pnat.uIcc_eq_finset_subtype PNat.uIcc_eq_finset_subtype
+
 #print PNat.map_subtype_embedding_Icc /-
-theorem map_subtype_embedding_Icc : (Icc a b).map (Function.Embedding.subtype _) = Icc (a : ℕ) b :=
+theorem map_subtype_embedding_Icc : (Icc a b).map (Embedding.subtype _) = Icc a b :=
   map_subtype_embedding_Icc _ _ _ fun c _ x hx _ hc _ => hc.trans_le hx
 #align pnat.map_subtype_embedding_Icc PNat.map_subtype_embedding_Icc
 -/
 
 #print PNat.map_subtype_embedding_Ico /-
-theorem map_subtype_embedding_Ico : (Ico a b).map (Function.Embedding.subtype _) = Ico (a : ℕ) b :=
+theorem map_subtype_embedding_Ico : (Ico a b).map (Embedding.subtype _) = Ico a b :=
   map_subtype_embedding_Ico _ _ _ fun c _ x hx _ hc _ => hc.trans_le hx
 #align pnat.map_subtype_embedding_Ico PNat.map_subtype_embedding_Ico
 -/
 
 #print PNat.map_subtype_embedding_Ioc /-
-theorem map_subtype_embedding_Ioc : (Ioc a b).map (Function.Embedding.subtype _) = Ioc (a : ℕ) b :=
+theorem map_subtype_embedding_Ioc : (Ioc a b).map (Embedding.subtype _) = Ioc a b :=
   map_subtype_embedding_Ioc _ _ _ fun c _ x hx _ hc _ => hc.trans_le hx
 #align pnat.map_subtype_embedding_Ioc PNat.map_subtype_embedding_Ioc
 -/
 
 #print PNat.map_subtype_embedding_Ioo /-
-theorem map_subtype_embedding_Ioo : (Ioo a b).map (Function.Embedding.subtype _) = Ioo (a : ℕ) b :=
+theorem map_subtype_embedding_Ioo : (Ioo a b).map (Embedding.subtype _) = Ioo a b :=
   map_subtype_embedding_Ioo _ _ _ fun c _ x hx _ hc _ => hc.trans_le hx
 #align pnat.map_subtype_embedding_Ioo PNat.map_subtype_embedding_Ioo
 -/
+
+theorem map_subtype_embedding_uIcc : (uIcc a b).map (Embedding.subtype _) = uIcc a b :=
+  map_subtype_embedding_Icc _ _
+#align pnat.map_subtype_embedding_uIcc PNat.map_subtype_embedding_uIcc
 
 #print PNat.card_Icc /-
 @[simp]
@@ -107,6 +115,11 @@ theorem card_Ioo : (Ioo a b).card = b - a - 1 := by
 #align pnat.card_Ioo PNat.card_Ioo
 -/
 
+@[simp]
+theorem card_uIcc : (uIcc a b).card = (b - a : ℤ).natAbs + 1 := by
+  rw [coe_coe, coe_coe, ← Nat.card_uIcc, ← map_subtype_embedding_uIcc, card_map]
+#align pnat.card_uIcc PNat.card_uIcc
+
 #print PNat.card_fintype_Icc /-
 @[simp]
 theorem card_fintype_Icc : Fintype.card (Set.Icc a b) = b + 1 - a := by
@@ -134,6 +147,11 @@ theorem card_fintype_Ioo : Fintype.card (Set.Ioo a b) = b - a - 1 := by
   rw [← card_Ioo, Fintype.card_ofFinset]
 #align pnat.card_fintype_Ioo PNat.card_fintype_Ioo
 -/
+
+@[simp]
+theorem card_fintypeUIcc : Fintype.card (Set.uIcc a b) = (b - a : ℤ).natAbs + 1 := by
+  rw [← card_uIcc, Fintype.card_ofFinset]
+#align pnat.card_fintype_uIcc PNat.card_fintypeUIcc
 
 end PNat
 

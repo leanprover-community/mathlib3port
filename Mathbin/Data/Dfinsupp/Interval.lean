@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module data.dfinsupp.interval
-! leanprover-community/mathlib commit b6da1a0b3e7cd83b1f744c49ce48ef8c6307d2f6
+! leanprover-community/mathlib commit 1d29de43a5ba4662dd33b5cfeecfc2a27a5a8a29
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -204,7 +204,7 @@ theorem card_pi (f : Π₀ i, Finset (α i)) : f.pi.card = f.Prod fun i => (f i)
 
 end Pi
 
-section LocallyFinite
+section PartialOrder
 
 variable [DecidableEq ι] [∀ i, DecidableEq (α i)]
 
@@ -250,7 +250,18 @@ theorem card_Ioo : (Ioo f g).card = ∏ i in f.support ∪ g.support, (Icc (f i)
 #align dfinsupp.card_Ioo DFinsupp.card_Ioo
 -/
 
-end LocallyFinite
+end PartialOrder
+
+section Lattice
+
+variable [DecidableEq ι] [∀ i, DecidableEq (α i)] [∀ i, Lattice (α i)] [∀ i, Zero (α i)]
+  [∀ i, LocallyFiniteOrder (α i)] (f g : Π₀ i, α i)
+
+theorem card_uIcc : (uIcc f g).card = ∏ i in f.support ∪ g.support, (uIcc (f i) (g i)).card := by
+  rw [← support_inf_union_support_sup]; exact card_Icc _ _
+#align dfinsupp.card_uIcc DFinsupp.card_uIcc
+
+end Lattice
 
 section CanonicallyOrdered
 

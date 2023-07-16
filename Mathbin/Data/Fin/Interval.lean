@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 
 ! This file was ported from Lean 3 source module data.fin.interval
-! leanprover-community/mathlib commit a11f9106a169dd302a285019e5165f8ab32ff433
+! leanprover-community/mathlib commit 1d29de43a5ba4662dd33b5cfeecfc2a27a5a8a29
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -21,6 +21,32 @@ This file proves that `fin n` is a `locally_finite_order` and calculates the car
 intervals as finsets and fintypes.
 -/
 
+
+namespace Fin
+
+variable {n : ℕ} (a b : Fin n)
+
+@[simp, norm_cast]
+theorem coe_sup : (↑(a ⊔ b) : ℕ) = a ⊔ b :=
+  rfl
+#align fin.coe_sup Fin.coe_sup
+
+@[simp, norm_cast]
+theorem coe_inf : (↑(a ⊓ b) : ℕ) = a ⊓ b :=
+  rfl
+#align fin.coe_inf Fin.coe_inf
+
+@[simp, norm_cast]
+theorem coe_max : (↑(max a b) : ℕ) = max a b :=
+  rfl
+#align fin.coe_max Fin.coe_max
+
+@[simp, norm_cast]
+theorem coe_min : (↑(min a b) : ℕ) = min a b :=
+  rfl
+#align fin.coe_min Fin.coe_min
+
+end Fin
 
 open Finset Fin Function
 
@@ -66,6 +92,10 @@ theorem Ioo_eq_finset_subtype : Ioo a b = (Ioo (a : ℕ) b).Fin n :=
 #align fin.Ioo_eq_finset_subtype Fin.Ioo_eq_finset_subtype
 -/
 
+theorem uIcc_eq_finset_subtype : uIcc a b = (uIcc (a : ℕ) b).Fin n :=
+  rfl
+#align fin.uIcc_eq_finset_subtype Fin.uIcc_eq_finset_subtype
+
 #print Fin.map_valEmbedding_Icc /-
 @[simp]
 theorem map_valEmbedding_Icc : (Icc a b).map Fin.valEmbedding = Icc a b := by
@@ -93,6 +123,11 @@ theorem map_valEmbedding_Ioo : (Ioo a b).map Fin.valEmbedding = Ioo a b := by
   simp [Ioo_eq_finset_subtype, Finset.fin, Finset.map_map]
 #align fin.map_subtype_embedding_Ioo Fin.map_valEmbedding_Ioo
 -/
+
+@[simp]
+theorem map_subtype_embedding_uIcc : (uIcc a b).map valEmbedding = uIcc a b :=
+  map_valEmbedding_Icc _ _
+#align fin.map_subtype_embedding_uIcc Fin.map_subtype_embedding_uIcc
 
 #print Fin.card_Icc /-
 @[simp]
@@ -122,6 +157,11 @@ theorem card_Ioo : (Ioo a b).card = b - a - 1 := by
 #align fin.card_Ioo Fin.card_Ioo
 -/
 
+@[simp]
+theorem card_uIcc : (uIcc a b).card = (b - a : ℤ).natAbs + 1 := by
+  rw [coe_coe, coe_coe, ← Nat.card_uIcc, ← map_subtype_embedding_uIcc, card_map]
+#align fin.card_uIcc Fin.card_uIcc
+
 #print Fin.card_fintypeIcc /-
 @[simp]
 theorem card_fintypeIcc : Fintype.card (Set.Icc a b) = b + 1 - a := by
@@ -149,6 +189,11 @@ theorem card_fintypeIoo : Fintype.card (Set.Ioo a b) = b - a - 1 := by
   rw [← card_Ioo, Fintype.card_ofFinset]
 #align fin.card_fintype_Ioo Fin.card_fintypeIoo
 -/
+
+@[simp]
+theorem card_fintypeUIcc : Fintype.card (Set.uIcc a b) = (b - a : ℤ).natAbs + 1 := by
+  rw [← card_uIcc, Fintype.card_ofFinset]
+#align fin.card_fintype_uIcc Fin.card_fintypeUIcc
 
 #print Fin.Ici_eq_finset_subtype /-
 theorem Ici_eq_finset_subtype : Ici a = (Icc (a : ℕ) n).Fin n := by ext; simp
