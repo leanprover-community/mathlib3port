@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mario Carneiro
 
 ! This file was ported from Lean 3 source module girard
-! leanprover-community/mathlib commit 328375597f2c0dd00522d9c2e5a33b6a6128feeb
+! leanprover-community/mathlib commit 08b081ea92d80e3a41f899eea36ef6d56e0f1db0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.Logic.Basic
 
 /-!
 # Girard's paradox
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 Girard's paradox is a proof that `Type : Type` entails a contradiction. We can't say this directly
 in Lean because `Type : Type 1` and it's not possible to give `Type` a different type via an axiom,

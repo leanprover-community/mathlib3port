@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Lacker, Heather Macbeth
 
 ! This file was ported from Lean 3 source module imo.imo1962_q4
-! leanprover-community/mathlib commit 5f25c089cb34db4db112556f23c50d12da81b297
+! leanprover-community/mathlib commit 08b081ea92d80e3a41f899eea36ef6d56e0f1db0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.Analysis.SpecialFunctions.Trigonometric.Complex
 
 /-!
 # IMO 1962 Q4
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 Solve the equation `cos x ^ 2 + cos (2 * x) ^ 2 + cos (3 * x) ^ 2 = 1`.
 

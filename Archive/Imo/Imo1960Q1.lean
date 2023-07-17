@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Lacker
 
 ! This file was ported from Lean 3 source module imo.imo1960_q1
-! leanprover-community/mathlib commit 2d6f88c296da8df484d7f5b9ee1d10910ab473a2
+! leanprover-community/mathlib commit 08b081ea92d80e3a41f899eea36ef6d56e0f1db0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.Data.Nat.Digits
 
 /-!
 # IMO 1960 Q1
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 Determine all three-digit numbers $N$ having the property that $N$ is divisible by 11, and
 $\dfrac{N}{11}$ is equal to the sum of the squares of the digits of $N$.

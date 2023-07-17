@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies, Bhavik Mehta
 
 ! This file was ported from Lean 3 source module oxford_invariants.«2021summer».week3_p1
-! leanprover-community/mathlib commit 328375597f2c0dd00522d9c2e5a33b6a6128feeb
+! leanprover-community/mathlib commit 08b081ea92d80e3a41f899eea36ef6d56e0f1db0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -15,6 +15,9 @@ import Mathbin.Data.Rat.Cast
 
 /-!
 # The Oxford Invariants Puzzle Challenges - Summer 2021, Week 3, Problem 1
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 ## Original statement
 

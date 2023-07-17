@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis
 
 ! This file was ported from Lean 3 source module tactic.linarith.verification
-! leanprover-community/mathlib commit 9b2660e1b25419042c8da10bf411aa3c67f14383
+! leanprover-community/mathlib commit 016138c2e83fa76d338d5df7d32d0acb6c587792
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -103,12 +103,12 @@ unsafe def mk_lt_zero_pf : List (expr × ℕ) → tactic expr
 
 /-- If `prf` is a proof of `t R s`, `term_of_ineq_prf prf` returns `t`. -/
 unsafe def term_of_ineq_prf (prf : expr) : tactic expr :=
-  Prod.fst <$> (infer_type prf >>= get_rel_sides)
+  Prod.fst <$> (infer_type prf >>= instantiate_mvars >>= get_rel_sides)
 #align linarith.term_of_ineq_prf linarith.term_of_ineq_prf
 
 /-- If `prf` is a proof of `t R s`, `ineq_prf_tp prf` returns the type of `t`. -/
 unsafe def ineq_prf_tp (prf : expr) : tactic expr :=
-  term_of_ineq_prf prf >>= infer_type
+  term_of_ineq_prf prf >>= infer_type >>= instantiate_mvars
 #align linarith.ineq_prf_tp linarith.ineq_prf_tp
 
 /-- `mk_neg_one_lt_zero_pf tp` returns a proof of `-1 < 0`,
@@ -143,7 +143,7 @@ proof, it adds a proof of `-t = 0` to the list.
 unsafe def add_neg_eq_pfs : List expr → tactic (List expr)
   | [] => return []
   | h :: t => do
-    let some (iq, tp) ← parse_into_comp_and_expr <$> infer_type h
+    let some (iq, tp) ← parse_into_comp_and_expr <$> (infer_type h >>= instantiate_mvars)
     match iq with
       | ineq.eq => do
         let nep ← mk_neg_eq_zero_pf h

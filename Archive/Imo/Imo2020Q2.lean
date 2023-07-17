@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Joseph Myers, Yury Kudryashov
 
 ! This file was ported from Lean 3 source module imo.imo2020_q2
-! leanprover-community/mathlib commit 5f25c089cb34db4db112556f23c50d12da81b297
+! leanprover-community/mathlib commit 08b081ea92d80e3a41f899eea36ef6d56e0f1db0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.Analysis.MeanInequalities
 
 /-!
 # IMO 2020 Q2
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 The real numbers `a`, `b`, `c`, `d` are such that `a ≥ b ≥ c ≥ d > 0` and `a + b + c + d = 1`.
 Prove that `(a + 2b + 3c + 4d) a^a b^b c^c d^d < 1`.

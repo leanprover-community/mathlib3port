@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Ruben Van de Velde, Stanislas Polu
 
 ! This file was ported from Lean 3 source module imo.imo1972_q5
-! leanprover-community/mathlib commit 5f25c089cb34db4db112556f23c50d12da81b297
+! leanprover-community/mathlib commit 08b081ea92d80e3a41f899eea36ef6d56e0f1db0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Analysis.NormedSpace.Basic
 
 /-!
 # IMO 1972 Q5
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 Problem: `f` and `g` are real-valued functions defined on the real line. For all `x` and `y`,
 `f(x + y) + f(x - y) = 2f(x)g(y)`. `f` is not identically zero and `|f(x)| ≤ 1` for all `x`.

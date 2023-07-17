@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth
 
 ! This file was ported from Lean 3 source module geometry.manifold.instances.sphere
-! leanprover-community/mathlib commit 0dc4079202c28226b2841a51eb6d3cc2135bb80f
+! leanprover-community/mathlib commit 08b081ea92d80e3a41f899eea36ef6d56e0f1db0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -19,6 +19,9 @@ import Mathbin.Geometry.Manifold.ContMdiffMfderiv
 
 /-!
 # Manifold structure on the sphere
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file defines stereographic projection from the sphere in an inner product space `E`, and uses
 it to put a smooth manifold structure on the sphere.

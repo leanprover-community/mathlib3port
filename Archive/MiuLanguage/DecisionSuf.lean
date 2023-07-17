@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gihan Marasingha
 
 ! This file was ported from Lean 3 source module miu_language.decision_suf
-! leanprover-community/mathlib commit f694c7dead66f5d4c80f446c796a5aad14707f0e
+! leanprover-community/mathlib commit 08b081ea92d80e3a41f899eea36ef6d56e0f1db0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Tactic.Linarith.Default
 
 /-!
 # Decision procedure - sufficient condition and decidability
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 We give a sufficient condition for a string to be derivable in the MIU language. Together with the
 necessary condition, we use this to prove that `derivable` is an instance of `decidable_pred`.

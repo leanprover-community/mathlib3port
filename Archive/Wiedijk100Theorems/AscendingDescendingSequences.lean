@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Bhavik Mehta
 
 ! This file was ported from Lean 3 source module wiedijk_100_theorems.ascending_descending_sequences
-! leanprover-community/mathlib commit 554bb38de8ded0dafe93b7f18f0bfee6ef77dc5d
+! leanprover-community/mathlib commit 08b081ea92d80e3a41f899eea36ef6d56e0f1db0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.Data.Fintype.Powerset
 
 /-!
 # Erdős–Szekeres theorem
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file proves Theorem 73 from the [100 Theorems List](https://www.cs.ru.nl/~freek/100/), also
 known as the Erdős–Szekeres theorem: given a sequence of more than `r * s` distinct

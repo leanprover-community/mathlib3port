@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Tian Chen
 
 ! This file was ported from Lean 3 source module imo.imo2001_q2
-! leanprover-community/mathlib commit 308826471968962c6b59c7ff82a22757386603e3
+! leanprover-community/mathlib commit 08b081ea92d80e3a41f899eea36ef6d56e0f1db0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.Analysis.SpecialFunctions.Pow.Real
 
 /-!
 # IMO 2001 Q2
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 Let $a$, $b$, $c$ be positive reals. Prove that
 $$

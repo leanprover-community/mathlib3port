@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca
 
 ! This file was ported from Lean 3 source module pseudoelement
-! leanprover-community/mathlib commit 328375597f2c0dd00522d9c2e5a33b6a6128feeb
+! leanprover-community/mathlib commit 08b081ea92d80e3a41f899eea36ef6d56e0f1db0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Algebra.Category.Module.Biproducts
 
 /-!
 # Pseudoelements and pullbacks
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 Borceux claims in Proposition 1.9.5 that the pseudoelement constructed in
 `category_theory.abelian.pseudoelement.pseudo_pullback` is unique. We show here that this claim is
 false. This means in particular that we cannot have an extensionality principle for pullbacks in

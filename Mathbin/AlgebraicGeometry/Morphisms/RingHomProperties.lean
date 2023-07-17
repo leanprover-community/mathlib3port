@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Andrew Yang
 
 ! This file was ported from Lean 3 source module algebraic_geometry.morphisms.ring_hom_properties
-! leanprover-community/mathlib commit d39590fc8728fbf6743249802486f8c91ffe07bc
+! leanprover-community/mathlib commit 08b081ea92d80e3a41f899eea36ef6d56e0f1db0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.RingTheory.LocalProperties
 /-!
 
 # Properties of morphisms from properties of ring homs.
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 We provide the basic framework for talking about properties of morphisms that come from properties
 of ring homs. For `P` a property of ring homs, we have two ways of defining a property of scheme

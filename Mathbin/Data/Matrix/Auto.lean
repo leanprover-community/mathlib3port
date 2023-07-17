@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser
 
 ! This file was ported from Lean 3 source module data.matrix.auto
-! leanprover-community/mathlib commit 6b711d2ba5d470c040677ddda0c26b0d72283886
+! leanprover-community/mathlib commit 08b081ea92d80e3a41f899eea36ef6d56e0f1db0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.Algebra.Expr
 import Mathbin.Data.Matrix.Reflection
 
 /-! # Automatically generated lemmas for working with concrete matrices
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This file contains "magic" lemmas which autogenerate to the correct size of matrix. For instance,
 `matrix.of_mul_of_fin` can be used as:

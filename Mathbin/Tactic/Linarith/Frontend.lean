@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis
 
 ! This file was ported from Lean 3 source module tactic.linarith.frontend
-! leanprover-community/mathlib commit 2967fae827b2d5ca57d15c7b721fe486c7e4cc63
+! leanprover-community/mathlib commit 016138c2e83fa76d338d5df7d32d0acb6c587792
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -156,7 +156,7 @@ newly introduced local constant.
 Otherwise returns `none`.
 -/
 unsafe def apply_contr_lemma : tactic (Option (expr × expr)) := do
-  let t ← target
+  let t ← target >>= instantiate_mvars
   match get_contr_lemma_name_and_type t with
     | some (nm, tp) => do
       refine ((expr.const nm []) pexpr.mk_placeholder)
@@ -221,7 +221,7 @@ to only those that are comparisons over the type `restr_type`.
 -/
 unsafe def filter_hyps_to_type (restr_type : expr) (hyps : List expr) : tactic (List expr) :=
   hyps.filterM fun h => do
-    let ht ← infer_type h
+    let ht ← infer_type h >>= instantiate_mvars
     match get_contr_lemma_name_and_type ht with
       | some (_, htype) => succeeds <| unify htype restr_type
       | none => return ff
@@ -254,7 +254,7 @@ expressions.
 unsafe def tactic.linarith (reduce_semi : Bool) (only_on : Bool) (hyps : List pexpr)
     (cfg : linarith_config := { }) : tactic Unit :=
   focus1 do
-    let t ← target
+    let t ← target >>= instantiate_mvars
     -- if the target is an equality, we run `linarith` twice, to prove ≤ and ≥.
         if t then
         linarith_trace "target is an equality: splitting" >>

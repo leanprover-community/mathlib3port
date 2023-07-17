@@ -2468,6 +2468,7 @@ import Mathbin.Order.Hom.Set
 import Mathbin.Order.Ideal
 import Mathbin.Order.InitialSeg
 import Mathbin.Order.Interval
+import Mathbin.Order.Irreducible
 import Mathbin.Order.Iterate
 import Mathbin.Order.JordanHolder
 import Mathbin.Order.LatticeIntervals

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Violeta Hernández Palacios
 
 ! This file was ported from Lean 3 source module imo.imo2006_q5
-! leanprover-community/mathlib commit 308826471968962c6b59c7ff82a22757386603e3
+! leanprover-community/mathlib commit 08b081ea92d80e3a41f899eea36ef6d56e0f1db0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Dynamics.PeriodicPts
 
 /-!
 # IMO 2006 Q5
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 Let $P(x)$ be a polynomial of degree $n>1$ with integer coefficients, and let $k$ be a positive
 integer. Consider the polynomial $Q(x) = P(P(\ldots P(P(x))\ldots))$, where $P$ occurs $k$ times.

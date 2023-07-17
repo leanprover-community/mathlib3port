@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gihan Marasingha
 
 ! This file was ported from Lean 3 source module miu_language.basic
-! leanprover-community/mathlib commit 7e3fa4c114f6f12380cf3b181fd4bd03a2f05b79
+! leanprover-community/mathlib commit 08b081ea92d80e3a41f899eea36ef6d56e0f1db0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.Tactic.Linarith.Default
 
 /-!
 # An MIU Decision Procedure in Lean
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 The [MIU formal system](https://en.wikipedia.org/wiki/MU_puzzle) was introduced by Douglas
 Hofstadter in the first chapter of his 1979 book,

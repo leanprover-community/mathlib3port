@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Gihan Marasingha
 
 ! This file was ported from Lean 3 source module miu_language.decision_nec
-! leanprover-community/mathlib commit 3813d4ea1c6a34dbb472de66e73b8c6855b03964
+! leanprover-community/mathlib commit 08b081ea92d80e3a41f899eea36ef6d56e0f1db0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -15,6 +15,9 @@ import Mathbin.Tactic.Ring
 
 /-!
 # Decision procedure: necessary condition
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 We introduce a condition `decstr` and show that if a string `en` is `derivable`, then `decstr en`
 holds.

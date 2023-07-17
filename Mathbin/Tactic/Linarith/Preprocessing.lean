@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis
 
 ! This file was ported from Lean 3 source module tactic.linarith.preprocessing
-! leanprover-community/mathlib commit f9f64f37ca037f93a2272107d5e2d392a570f064
+! leanprover-community/mathlib commit 016138c2e83fa76d338d5df7d32d0acb6c587792
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -85,7 +85,7 @@ private unsafe
 and turns it into a proof of a comparison `_ R 0`, where `R ∈ {=, ≤, <}`.
  -/
 unsafe def rearr_comp (e : expr) : tactic expr :=
-  infer_type e >>= rearr_comp_aux e
+  infer_type e >>= instantiate_mvars >>= rearr_comp_aux e
 #align linarith.rearr_comp linarith.rearr_comp
 
 /-- If `e` is of the form `((n : ℕ) : ℤ)`, `is_nat_int_coe e` returns `n : ℕ`. -/
@@ -124,7 +124,7 @@ unsafe def mk_coe_nat_nonneg_prf (e : expr) : tactic expr :=
     ( pf : expr ) : tactic expr
     :=
       do
-        let tp ← infer_type pf
+        let tp ← infer_type pf >>= instantiate_mvars
           match
             tp
             with
@@ -176,7 +176,7 @@ unsafe def filter_comparisons : preprocessor
   Name := "filter terms that are not proofs of comparisons"
   transform h :=
     (do
-        let tp ← infer_type h
+        let tp ← infer_type h >>= instantiate_mvars
         is_prop tp >>= guardb
         guardb (filter_comparisons_aux tp)
         return [h]) <|>
@@ -190,7 +190,7 @@ unsafe def remove_negations : preprocessor
     where
   Name := "replace negations of comparisons"
   transform h := do
-    let tp ← infer_type h
+    let tp ← infer_type h >>= instantiate_mvars
     match tp with
       | q(¬$(p)) => singleton <$> rem_neg h p
       | _ => return [h]
@@ -209,11 +209,13 @@ unsafe def nat_to_int : global_preprocessor
   do
     let l ←
       lock_tactic_state <|
-          l.mapM fun h => (infer_type h >>= guardb ∘ is_nat_prop) >> zify_proof [] h <|> return h
+          l.mapM fun h =>
+            (infer_type h >>= instantiate_mvars >>= guardb ∘ is_nat_prop) >> zify_proof [] h <|>
+              return h
     let nonnegs ←
       l.foldlM
           (fun (es : expr_set) h => do
-            let (a, b) ← infer_type h >>= get_rel_sides
+            let (a, b) ← infer_type h >>= instantiate_mvars >>= get_rel_sides
             return <| (es (get_nat_comps a)).insert_list (get_nat_comps b))
           mk_rb_set
     (· ++ ·) l <$> nonnegs mk_coe_nat_nonneg_prf
@@ -225,7 +227,7 @@ unsafe def strengthen_strict_int : preprocessor
     where
   Name := "strengthen strict inequalities over int"
   transform h := do
-    let tp ← infer_type h
+    let tp ← infer_type h >>= instantiate_mvars
     guardb (is_strict_int_prop tp) >> singleton <$> mk_non_strict_int_pf_of_strict_int_pf h <|>
         return [h]
 #align linarith.strengthen_strict_int linarith.strengthen_strict_int
@@ -259,7 +261,7 @@ unsafe def cancel_denoms : preprocessor
   Name := "cancel denominators"
   transform pf :=
     (do
-        let some (_, lhs) ← parse_into_comp_and_expr <$> infer_type pf
+        let some (_, lhs) ← parse_into_comp_and_expr <$> (infer_type pf >>= instantiate_mvars)
         guardb <| lhs (· = `has_div.div)
         singleton <$> normalize_denominators_in_lhs pf lhs) <|>
       return [pf]
@@ -343,7 +345,7 @@ unsafe def remove_ne_aux : List expr → tactic (List branch) := fun hs =>
   (do
       let e ←
         hs.findM fun e : expr => do
-            let e ← infer_type e
+            let e ← infer_type e >>= instantiate_mvars
             guard <| e
       let [(_, ng1), (_, ng2)] ← to_expr ``(Or.elim (lt_or_gt_of_ne $(e))) >>= apply
       let do_goal : expr → tactic (List branch) := fun g => do

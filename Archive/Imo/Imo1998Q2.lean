@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Oliver Nash
 
 ! This file was ported from Lean 3 source module imo.imo1998_q2
-! leanprover-community/mathlib commit 308826471968962c6b59c7ff82a22757386603e3
+! leanprover-community/mathlib commit 08b081ea92d80e3a41f899eea36ef6d56e0f1db0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -16,6 +16,9 @@ import Mathbin.Tactic.NoncommRing
 
 /-!
 # IMO 1998 Q2
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 In a competition, there are `a` contestants and `b` judges, where `b ≥ 3` is an odd integer. Each
 judge rates each contestant as either "pass" or "fail". Suppose `k` is a number such that, for any
 two judges, their ratings coincide for at most `k` contestants. Prove that `k / a ≥ (b - 1) / (2b)`.

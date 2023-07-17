@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Kevin Lacker
 
 ! This file was ported from Lean 3 source module imo.imo1959_q1
-! leanprover-community/mathlib commit 5f25c089cb34db4db112556f23c50d12da81b297
+! leanprover-community/mathlib commit 08b081ea92d80e3a41f899eea36ef6d56e0f1db0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Data.Nat.Prime
 
 /-!
 # IMO 1959 Q1
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 Prove that the fraction `(21n+4)/(14n+3)` is irreducible for every natural number `n`.
 

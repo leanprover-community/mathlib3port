@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Eric Wieser, Kevin Buzzard
 
 ! This file was ported from Lean 3 source module direct_sum_is_internal
-! leanprover-community/mathlib commit 328375597f2c0dd00522d9c2e5a33b6a6128feeb
+! leanprover-community/mathlib commit 08b081ea92d80e3a41f899eea36ef6d56e0f1db0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -14,6 +14,9 @@ import Mathbin.Tactic.FinCases
 
 /-!
 # Not all complementary decompositions of a module over a semiring make up a direct sum
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 This shows that while `ℤ≤0` and `ℤ≥0` are complementary `ℕ`-submodules of `ℤ`, which in turn
 implies as a collection they are `complete_lattice.independent` and that they span all of `ℤ`, they

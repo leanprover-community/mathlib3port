@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Scott Morrison
 
 ! This file was ported from Lean 3 source module examples.mersenne_primes
-! leanprover-community/mathlib commit 58581d0fe523063f5651df0619be2bf65012a94a
+! leanprover-community/mathlib commit 08b081ea92d80e3a41f899eea36ef6d56e0f1db0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.NumberTheory.LucasLehmer
 
 /-!
 # Explicit Mersenne primes
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 We run some Lucas-Lehmer tests to prove some Mersenne primes are prime.
 

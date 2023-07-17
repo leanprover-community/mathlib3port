@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Heather Macbeth
 
 ! This file was ported from Lean 3 source module imo.imo2005_q4
-! leanprover-community/mathlib commit 308826471968962c6b59c7ff82a22757386603e3
+! leanprover-community/mathlib commit 08b081ea92d80e3a41f899eea36ef6d56e0f1db0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.FieldTheory.Finite.Basic
 
 /-!
 # IMO 2005 Q4
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 Problem: Determine all positive integers relatively prime to all the terms of the infinite sequence
 `a n = 2 ^ n + 3 ^ n + 6 ^ n - 1`, for `n ≥ 1`.

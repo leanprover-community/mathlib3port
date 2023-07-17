@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Riccardo Brasca
 
 ! This file was ported from Lean 3 source module cyclotomic_105
-! leanprover-community/mathlib commit 328375597f2c0dd00522d9c2e5a33b6a6128feeb
+! leanprover-community/mathlib commit 08b081ea92d80e3a41f899eea36ef6d56e0f1db0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -12,6 +12,9 @@ import Mathbin.RingTheory.Polynomial.Cyclotomic.Basic
 
 /-!
 # Not all coefficients of cyclotomic polynomials are -1, 0, or 1
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 We show that not all coefficients of cyclotomic polynomials are equal to `0`, `-1` or `1`, in the
 theorem `not_forall_coeff_cyclotomic_neg_one_zero_one`. We prove this with the counterexample

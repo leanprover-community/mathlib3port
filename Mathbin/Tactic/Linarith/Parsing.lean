@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis
 
 ! This file was ported from Lean 3 source module tactic.linarith.parsing
-! leanprover-community/mathlib commit 1f10390872a75359a9a42cd6d7644cc5e45660c2
+! leanprover-community/mathlib commit 016138c2e83fa76d338d5df7d32d0acb6c587792
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -234,7 +234,7 @@ It also returns the largest variable index that appears in comparisons in `c`.
 -/
 unsafe def linear_forms_and_max_var (red : Transparency) (pfs : List expr) :
     tactic (List Comp × ℕ) := do
-  let pftps ← pfs.mapM infer_type
+  let pftps ← pfs.mapM fun e => infer_type e >>= instantiate_mvars
   let (l, _, map) ← to_comp_fold red [] pftps mk_rb_map
   return (l, map - 1)
 #align linarith.linear_forms_and_max_var linarith.linear_forms_and_max_var

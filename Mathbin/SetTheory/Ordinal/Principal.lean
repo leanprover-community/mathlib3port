@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Violeta Hernández Palacios
 
 ! This file was ported from Lean 3 source module set_theory.ordinal.principal
-! leanprover-community/mathlib commit 3dadefa3f544b1db6214777fe47910739b54c66a
+! leanprover-community/mathlib commit 31b269b60935483943542d547a6dd83a66b37dc7
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -111,38 +111,23 @@ theorem nfp_le_of_principal {op : Ordinal → Ordinal → Ordinal} {a o : Ordina
 /-! ### Principal ordinals are unbounded -/
 
 
-#print Ordinal.blsub₂ /-
-/-- The least strict upper bound of `op` applied to all pairs of ordinals less than `o`. This is
-essentially a two-argument version of `ordinal.blsub`. -/
-def blsub₂ (op : Ordinal → Ordinal → Ordinal) (o : Ordinal) : Ordinal :=
-  lsub fun x : o.out.α × o.out.α => op (typein (· < ·) x.1) (typein (· < ·) x.2)
-#align ordinal.blsub₂ Ordinal.blsub₂
--/
-
-#print Ordinal.lt_blsub₂ /-
-theorem lt_blsub₂ (op : Ordinal → Ordinal → Ordinal) {o : Ordinal} {a b : Ordinal} (ha : a < o)
-    (hb : b < o) : op a b < blsub₂ op o :=
-  by
-  convert
-    lt_lsub _ (Prod.mk (enum (· < ·) a (by rwa [type_lt])) (enum (· < ·) b (by rwa [type_lt])))
-  simp only [typein_enum]
-#align ordinal.lt_blsub₂ Ordinal.lt_blsub₂
--/
-
 #print Ordinal.principal_nfp_blsub₂ /-
 theorem principal_nfp_blsub₂ (op : Ordinal → Ordinal → Ordinal) (o : Ordinal) :
-    Principal op (nfp (blsub₂.{u, u} op) o) := fun a b ha hb =>
-  by
+    Principal op (nfp (fun o' => blsub₂.{u, u, u} o' o' fun a _ b _ => op a b) o) :=
+  fun a b ha hb => by
   rw [lt_nfp] at *
   cases' ha with m hm
   cases' hb with n hn
-  cases' le_total ((blsub₂.{u, u} op^[m]) o) ((blsub₂.{u, u} op^[n]) o) with h h
+  cases'
+    le_total (((fun o' => blsub₂.{u, u, u} o' o' fun a _ b _ => op a b)^[m]) o)
+      (((fun o' => blsub₂.{u, u, u} o' o' fun a _ b _ => op a b)^[n]) o) with
+    h h
   · use n + 1
     rw [Function.iterate_succ']
-    exact lt_blsub₂ op (hm.trans_le h) hn
+    exact lt_blsub₂ _ (hm.trans_le h) hn
   · use m + 1
     rw [Function.iterate_succ']
-    exact lt_blsub₂ op hm (hn.trans_le h)
+    exact lt_blsub₂ _ hm (hn.trans_le h)
 #align ordinal.principal_nfp_blsub₂ Ordinal.principal_nfp_blsub₂
 -/
 

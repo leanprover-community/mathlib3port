@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Manuel Candales
 
 ! This file was ported from Lean 3 source module imo.imo2008_q4
-! leanprover-community/mathlib commit 308826471968962c6b59c7ff82a22757386603e3
+! leanprover-community/mathlib commit 08b081ea92d80e3a41f899eea36ef6d56e0f1db0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -15,6 +15,9 @@ import Mathbin.Tactic.LinearCombination
 
 /-!
 # IMO 2008 Q4
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 Find all functions `f : (0,∞) → (0,∞)` (so, `f` is a function from the positive real
 numbers to the positive real numbers) such that
       ```

@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Robert Y. Lewis
 
 ! This file was ported from Lean 3 source module tactic.linarith.datatypes
-! leanprover-community/mathlib commit 2558b3b31d33969bb3ef330982ff131533eebfdd
+! leanprover-community/mathlib commit 016138c2e83fa76d338d5df7d32d0acb6c587792
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -458,7 +458,7 @@ open Tactic
     ( c : ℕ ) ( h : expr ) : tactic ( Ineq × expr )
     :=
       do
-        let tp ← infer_type h
+        let tp ← infer_type h >>= instantiate_mvars
           let some ( iq , e ) ← return <| parse_into_comp_and_expr tp
           if
             c = 0
@@ -471,7 +471,12 @@ open Tactic
               return ( iq , h )
               else
               do
-                let tp ← Prod.snd <$> ( infer_type h >>= get_rel_sides ) >>= infer_type
+                let
+                    tp
+                      ←
+                      Prod.snd <$> ( infer_type h >>= instantiate_mvars >>= get_rel_sides )
+                        >>=
+                        infer_type
                   let c ← tp c
                   let cpos ← to_expr ` `( $ ( c ) > 0 )
                   let ( _ , ex ) ← solve_aux cpos sorry

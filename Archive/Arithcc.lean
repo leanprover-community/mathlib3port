@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Xi Wang
 
 ! This file was ported from Lean 3 source module arithcc
-! leanprover-community/mathlib commit eb3595ed8610db8107b75b75ab64ab6390684155
+! leanprover-community/mathlib commit 08b081ea92d80e3a41f899eea36ef6d56e0f1db0
 ! Please do not edit these lines, except to modify the commit id
 ! if you have ported upstream changes.
 -/
@@ -13,6 +13,9 @@ import Mathbin.Tactic.Basic
 
 /-!
 # A compiler for arithmetic expressions
+
+> THIS FILE IS SYNCHRONIZED WITH MATHLIB4.
+> Any changes to this file require a corresponding PR to mathlib4.
 
 A formalization of the correctness of a compiler from arithmetic expressions to machine language
 described by McCarthy and Painter, which is considered the first proof of compiler correctness.
