@@ -1407,12 +1407,12 @@ protected theorem uniformContinuous [UniformSpace E] [UniformAddGroup E] [Contin
 #align seminorm.uniform_continuous Seminorm.uniformContinuous
 -/
 
-#print Seminorm.uniform_continuous' /-
-protected theorem uniform_continuous' [UniformSpace E] [UniformAddGroup E] [ContinuousConstSMul 𝕜 E]
+#print Seminorm.uniformContinuous' /-
+protected theorem uniformContinuous' [UniformSpace E] [UniformAddGroup E] [ContinuousConstSMul 𝕜 E]
     {p : Seminorm 𝕜 E} {r : ℝ} (hr : 0 < r) (hp : p.closedBall 0 r ∈ (𝓝 0 : Filter E)) :
     UniformContinuous p :=
   Seminorm.uniformContinuous_of_continuousAt_zero (continuousAt_zero' hr hp)
-#align seminorm.uniform_continuous' Seminorm.uniform_continuous'
+#align seminorm.uniform_continuous' Seminorm.uniformContinuous'
 -/
 
 #print Seminorm.continuous /-

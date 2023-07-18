@@ -250,11 +250,13 @@ theorem orderOf_pos_iff : 0 < orderOf x ↔ IsOfFinOrder x := by
 #align add_order_of_pos_iff addOrderOf_pos_iff
 -/
 
+#print IsOfFinOrder.mono /-
 @[to_additive IsOfFinAddOrder.mono]
 theorem IsOfFinOrder.mono [Monoid β] {y : β} (hx : IsOfFinOrder x) (h : orderOf y ∣ orderOf x) :
     IsOfFinOrder y := by rw [← orderOf_pos_iff] at hx ⊢; exact Nat.pos_of_dvd_of_pos h hx
 #align is_of_fin_order.mono IsOfFinOrder.mono
 #align is_of_fin_add_order.mono IsOfFinAddOrder.mono
+-/
 
 #print pow_ne_one_of_lt_orderOf' /-
 @[to_additive nsmul_ne_zero_of_lt_addOrderOf']
@@ -1024,19 +1026,24 @@ theorem mem_zpowers_iff_mem_range_orderOf [Finite G] [DecidableEq G] :
 #align mem_zmultiples_iff_mem_range_add_order_of mem_zmultiples_iff_mem_range_addOrderOf
 -/
 
+#print zpow_eq_one_iff_modEq /-
 @[to_additive]
 theorem zpow_eq_one_iff_modEq {n : ℤ} : x ^ n = 1 ↔ n ≡ 0 [ZMOD orderOf x] := by
   rw [Int.modEq_zero_iff_dvd, orderOf_dvd_iff_zpow_eq_one]
 #align zpow_eq_one_iff_modeq zpow_eq_one_iff_modEq
 #align zsmul_eq_zero_iff_modeq zsmul_eq_zero_iff_modEq
+-/
 
+#print zpow_eq_zpow_iff_modEq /-
 @[to_additive]
 theorem zpow_eq_zpow_iff_modEq {m n : ℤ} : x ^ m = x ^ n ↔ m ≡ n [ZMOD orderOf x] := by
   rw [← mul_inv_eq_one, ← zpow_sub, zpow_eq_one_iff_modEq, Int.modEq_iff_dvd, Int.modEq_iff_dvd,
     zero_sub, neg_sub]
 #align zpow_eq_zpow_iff_modeq zpow_eq_zpow_iff_modEq
 #align zsmul_eq_zsmul_iff_modeq zsmul_eq_zsmul_iff_modEq
+-/
 
+#print injective_zpow_iff_not_isOfFinOrder /-
 @[simp, to_additive]
 theorem injective_zpow_iff_not_isOfFinOrder : (Injective fun n : ℤ => x ^ n) ↔ ¬IsOfFinOrder x :=
   by
@@ -1046,7 +1053,8 @@ theorem injective_zpow_iff_not_isOfFinOrder : (Injective fun n : ℤ => x ^ n) �
     exact Nat.cast_ne_zero.2 hn.ne' (h <| by simpa using hx)
   rwa [zpow_eq_zpow_iff_modEq, orderOf_eq_zero_iff.2 h, Nat.cast_zero, Int.modEq_zero_iff] at hnm 
 #align injective_zpow_iff_not_is_of_fin_order injective_zpow_iff_not_isOfFinOrder
-#align injective_zsmul_iff_not_is_of_fin_order injective_zsmul_iff_not_isOfFinOrder
+#align injective_zsmul_iff_not_is_of_fin_order injective_zsmul_iff_not_isOfFinAddOrder
+-/
 
 #print decidableZpowers /-
 @[to_additive decidableZmultiples]
@@ -1367,41 +1375,53 @@ section Prod
 
 variable [Monoid α] [Monoid β] {x : α × β} {a : α} {b : β}
 
+#print Prod.orderOf /-
 @[to_additive Prod.add_orderOf]
 protected theorem Prod.orderOf (x : α × β) : orderOf x = (orderOf x.1).lcm (orderOf x.2) :=
   minimalPeriod_prod_map _ _ _
 #align prod.order_of Prod.orderOf
 #align prod.add_order_of Prod.add_orderOf
+-/
 
+#print orderOf_fst_dvd_orderOf /-
 @[to_additive add_orderOf_fst_dvd_add_orderOf]
 theorem orderOf_fst_dvd_orderOf : orderOf x.1 ∣ orderOf x :=
   minimalPeriod_fst_dvd
 #align order_of_fst_dvd_order_of orderOf_fst_dvd_orderOf
 #align add_order_of_fst_dvd_add_order_of add_orderOf_fst_dvd_add_orderOf
+-/
 
+#print orderOf_snd_dvd_orderOf /-
 @[to_additive add_orderOf_snd_dvd_add_orderOf]
 theorem orderOf_snd_dvd_orderOf : orderOf x.2 ∣ orderOf x :=
   minimalPeriod_snd_dvd
 #align order_of_snd_dvd_order_of orderOf_snd_dvd_orderOf
 #align add_order_of_snd_dvd_add_order_of add_orderOf_snd_dvd_add_orderOf
+-/
 
+#print IsOfFinOrder.fst /-
 @[to_additive IsOfFinAddOrder.fst]
 theorem IsOfFinOrder.fst {x : α × β} (hx : IsOfFinOrder x) : IsOfFinOrder x.1 :=
   hx.mono orderOf_fst_dvd_orderOf
 #align is_of_fin_order.fst IsOfFinOrder.fst
 #align is_of_fin_add_order.fst IsOfFinAddOrder.fst
+-/
 
+#print IsOfFinOrder.snd /-
 @[to_additive IsOfFinAddOrder.snd]
 theorem IsOfFinOrder.snd {x : α × β} (hx : IsOfFinOrder x) : IsOfFinOrder x.2 :=
   hx.mono orderOf_snd_dvd_orderOf
 #align is_of_fin_order.snd IsOfFinOrder.snd
 #align is_of_fin_add_order.snd IsOfFinAddOrder.snd
+-/
 
+#print IsOfFinOrder.prod_mk /-
 @[to_additive IsOfFinAddOrder.prod_mk]
 theorem IsOfFinOrder.prod_mk : IsOfFinOrder a → IsOfFinOrder b → IsOfFinOrder (a, b) := by
   simpa only [← orderOf_pos_iff, Prod.orderOf] using Nat.lcm_pos
 #align is_of_fin_order.prod_mk IsOfFinOrder.prod_mk
 #align is_of_fin_add_order.prod_mk IsOfFinAddOrder.prod_mk
+-/
 
 end Prod
 

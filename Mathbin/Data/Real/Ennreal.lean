@@ -2066,13 +2066,17 @@ protected theorem mul_div_cancel' (h0 : a ≠ 0) (hI : a ≠ ∞) : a * (b / a) 
 #align ennreal.mul_div_cancel' ENNReal.mul_div_cancel'
 -/
 
+#print ENNReal.mul_comm_div /-
 protected theorem mul_comm_div : a / b * c = a * (c / b) := by
   simp only [div_eq_mul_inv, mul_comm, mul_assoc]
 #align ennreal.mul_comm_div ENNReal.mul_comm_div
+-/
 
+#print ENNReal.mul_div_right_comm /-
 protected theorem mul_div_right_comm : a * b / c = a / c * b := by
   simp only [div_eq_mul_inv, mul_comm, mul_assoc]
 #align ennreal.mul_div_right_comm ENNReal.mul_div_right_comm
+-/
 
 instance : InvolutiveInv ℝ≥0∞ where
   inv := Inv.inv
@@ -2116,9 +2120,11 @@ protected theorem inv_ne_zero : a⁻¹ ≠ 0 ↔ a ≠ ∞ := by simp
 #align ennreal.inv_ne_zero ENNReal.inv_ne_zero
 -/
 
+#print ENNReal.div_pos /-
 protected theorem div_pos (ha : a ≠ 0) (hb : b ≠ ∞) : 0 < a / b :=
   ENNReal.mul_pos ha <| ENNReal.inv_ne_zero.2 hb
 #align ennreal.div_pos ENNReal.div_pos
+-/
 
 #print ENNReal.mul_inv /-
 protected theorem mul_inv {a b : ℝ≥0∞} (ha : a ≠ 0 ∨ b ≠ ∞) (hb : a ≠ ∞ ∨ b ≠ 0) :

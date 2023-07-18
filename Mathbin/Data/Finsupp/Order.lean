@@ -130,13 +130,17 @@ section Lattice
 
 variable [DecidableEq ι] [Lattice α] (f g : ι →₀ α)
 
+#print Finsupp.support_inf_union_support_sup /-
 theorem support_inf_union_support_sup : (f ⊓ g).support ∪ (f ⊔ g).support = f.support ∪ g.support :=
   coe_injective <| compl_injective <| by ext; simp [inf_eq_and_sup_eq_iff]
 #align finsupp.support_inf_union_support_sup Finsupp.support_inf_union_support_sup
+-/
 
+#print Finsupp.support_sup_union_support_inf /-
 theorem support_sup_union_support_inf : (f ⊔ g).support ∪ (f ⊓ g).support = f.support ∪ g.support :=
   (union_comm _ _).trans <| support_inf_union_support_sup _ _
 #align finsupp.support_sup_union_support_inf Finsupp.support_sup_union_support_inf
+-/
 
 end Lattice
 

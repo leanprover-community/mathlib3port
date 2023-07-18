@@ -761,35 +761,47 @@ namespace Function
 
 variable {α β : Type _} {f : α → α} {g : β → β} {x : α × β} {a : α} {b : β} {m n : ℕ}
 
+#print Function.iterate_prod_map /-
 @[simp]
 theorem iterate_prod_map (f : α → α) (g : β → β) (n : ℕ) :
     Prod.map f g^[n] = Prod.map (f^[n]) (g^[n]) := by induction n <;> simp [*, Prod.map_comp_map]
 #align function.iterate_prod_map Function.iterate_prod_map
+-/
 
+#print Function.isFixedPt_prod_map /-
 @[simp]
 theorem isFixedPt_prod_map (x : α × β) :
     IsFixedPt (Prod.map f g) x ↔ IsFixedPt f x.1 ∧ IsFixedPt g x.2 :=
   Prod.ext_iff
 #align function.is_fixed_pt_prod_map Function.isFixedPt_prod_map
+-/
 
+#print Function.isPeriodicPt_prod_map /-
 @[simp]
 theorem isPeriodicPt_prod_map (x : α × β) :
     IsPeriodicPt (Prod.map f g) n x ↔ IsPeriodicPt f n x.1 ∧ IsPeriodicPt g n x.2 := by
   simp [is_periodic_pt]
 #align function.is_periodic_pt_prod_map Function.isPeriodicPt_prod_map
+-/
 
+#print Function.minimalPeriod_prod_map /-
 theorem minimalPeriod_prod_map (f : α → α) (g : β → β) (x : α × β) :
     minimalPeriod (Prod.map f g) x = (minimalPeriod f x.1).lcm (minimalPeriod g x.2) :=
   eq_of_forall_dvd <| by cases x <;> simp [← is_periodic_pt_iff_minimal_period_dvd, Nat.lcm_dvd_iff]
 #align function.minimal_period_prod_map Function.minimalPeriod_prod_map
+-/
 
+#print Function.minimalPeriod_fst_dvd /-
 theorem minimalPeriod_fst_dvd : minimalPeriod f x.1 ∣ minimalPeriod (Prod.map f g) x := by
   rw [minimal_period_prod_map]; exact Nat.dvd_lcm_left _ _
 #align function.minimal_period_fst_dvd Function.minimalPeriod_fst_dvd
+-/
 
+#print Function.minimalPeriod_snd_dvd /-
 theorem minimalPeriod_snd_dvd : minimalPeriod g x.2 ∣ minimalPeriod (Prod.map f g) x := by
   rw [minimal_period_prod_map]; exact Nat.dvd_lcm_right _ _
 #align function.minimal_period_snd_dvd Function.minimalPeriod_snd_dvd
+-/
 
 end Function
 

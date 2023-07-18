@@ -519,6 +519,7 @@ theorem convexHull_add (s t : Set E) : convexHull R (s + t) = convexHull R s + c
 
 variable (R E)
 
+#print convexHullAddMonoidHom /-
 /-- `convex_hull` is an additive monoid morphism under pointwise addition. -/
 @[simps]
 def convexHullAddMonoidHom : Set E →+ Set E
@@ -527,6 +528,7 @@ def convexHullAddMonoidHom : Set E →+ Set E
   map_add' := convexHull_add
   map_zero' := convexHull_zero
 #align convex_hull_add_monoid_hom convexHullAddMonoidHom
+-/
 
 variable {R E}
 
@@ -536,19 +538,25 @@ theorem convexHull_sub (s t : Set E) : convexHull R (s - t) = convexHull R s - c
 #align convex_hull_sub convexHull_sub
 -/
 
+#print convexHull_list_sum /-
 theorem convexHull_list_sum (l : List (Set E)) : convexHull R l.Sum = (l.map <| convexHull R).Sum :=
   map_list_sum (convexHullAddMonoidHom R E) l
 #align convex_hull_list_sum convexHull_list_sum
+-/
 
+#print convexHull_multiset_sum /-
 theorem convexHull_multiset_sum (s : Multiset (Set E)) :
     convexHull R s.Sum = (s.map <| convexHull R).Sum :=
   map_multiset_sum (convexHullAddMonoidHom R E) s
 #align convex_hull_multiset_sum convexHull_multiset_sum
+-/
 
+#print convexHull_sum /-
 theorem convexHull_sum {ι} (s : Finset ι) (t : ι → Set E) :
     convexHull R (∑ i in s, t i) = ∑ i in s, convexHull R (t i) :=
   map_sum (convexHullAddMonoidHom R E) _ _
 #align convex_hull_sum convexHull_sum
+-/
 
 /-! ### `std_simplex` -/
 

@@ -118,10 +118,10 @@ instance : LocallyFiniteOrder (ι →₀ α) := by
         simp_rw [mem_range_Icc_apply_iff]
         exact forall_and
 
-#print Finsupp.icc_eq /-
-theorem icc_eq [DecidableEq ι] : Icc f g = (f.support ∪ g.support).Finsupp (f.rangeIcc g) := by
+#print Finsupp.Icc_eq /-
+theorem Icc_eq [DecidableEq ι] : Icc f g = (f.support ∪ g.support).Finsupp (f.rangeIcc g) := by
   convert rfl
-#align finsupp.Icc_eq Finsupp.icc_eq
+#align finsupp.Icc_eq Finsupp.Icc_eq
 -/
 
 #print Finsupp.card_Icc /-
@@ -158,10 +158,12 @@ section Lattice
 
 variable [Lattice α] [Zero α] [LocallyFiniteOrder α] (f g : ι →₀ α)
 
+#print Finsupp.card_uIcc /-
 theorem card_uIcc [DecidableEq ι] :
     (uIcc f g).card = ∏ i in f.support ∪ g.support, (uIcc (f i) (g i)).card := by
   rw [← support_inf_union_support_sup]; exact card_Icc _ _
 #align finsupp.card_uIcc Finsupp.card_uIcc
+-/
 
 end Lattice
 

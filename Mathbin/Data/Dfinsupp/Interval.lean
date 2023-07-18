@@ -257,9 +257,11 @@ section Lattice
 variable [DecidableEq ι] [∀ i, DecidableEq (α i)] [∀ i, Lattice (α i)] [∀ i, Zero (α i)]
   [∀ i, LocallyFiniteOrder (α i)] (f g : Π₀ i, α i)
 
+#print DFinsupp.card_uIcc /-
 theorem card_uIcc : (uIcc f g).card = ∏ i in f.support ∪ g.support, (uIcc (f i) (g i)).card := by
   rw [← support_inf_union_support_sup]; exact card_Icc _ _
 #align dfinsupp.card_uIcc DFinsupp.card_uIcc
+-/
 
 end Lattice
 

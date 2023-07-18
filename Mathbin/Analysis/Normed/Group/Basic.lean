@@ -614,11 +614,13 @@ theorem norm_div_le_of_le {r₁ r₂ : ℝ} (H₁ : ‖a₁‖ ≤ r₁) (H₂ :
 #align norm_sub_le_of_le norm_sub_le_of_le
 -/
 
+#print dist_le_norm_add_norm' /-
 @[to_additive dist_le_norm_add_norm]
 theorem dist_le_norm_add_norm' (a b : E) : dist a b ≤ ‖a‖ + ‖b‖ := by rw [dist_eq_norm_div];
   apply norm_div_le
 #align dist_le_norm_add_norm' dist_le_norm_add_norm'
 #align dist_le_norm_add_norm dist_le_norm_add_norm
+-/
 
 #print abs_norm_sub_norm_le' /-
 @[to_additive abs_norm_sub_norm_le]
@@ -1191,39 +1193,49 @@ theorem MonoidHomClass.antilipschitz_of_bound [MonoidHomClass 𝓕 E F] (f : �
 #align add_monoid_hom_class.antilipschitz_of_bound AddMonoidHomClass.antilipschitz_of_bound
 -/
 
+#print LipschitzWith.norm_le_mul' /-
 @[to_additive LipschitzWith.norm_le_mul]
 theorem LipschitzWith.norm_le_mul' {f : E → F} {K : ℝ≥0} (h : LipschitzWith K f) (hf : f 1 = 1)
     (x) : ‖f x‖ ≤ K * ‖x‖ := by simpa only [dist_one_right, hf] using h.dist_le_mul x 1
 #align lipschitz_with.norm_le_mul' LipschitzWith.norm_le_mul'
 #align lipschitz_with.norm_le_mul LipschitzWith.norm_le_mul
+-/
 
+#print LipschitzWith.nnorm_le_mul' /-
 @[to_additive LipschitzWith.nnorm_le_mul]
 theorem LipschitzWith.nnorm_le_mul' {f : E → F} {K : ℝ≥0} (h : LipschitzWith K f) (hf : f 1 = 1)
     (x) : ‖f x‖₊ ≤ K * ‖x‖₊ :=
   h.norm_le_mul' hf x
 #align lipschitz_with.nnorm_le_mul' LipschitzWith.nnorm_le_mul'
 #align lipschitz_with.nnorm_le_mul LipschitzWith.nnorm_le_mul
+-/
 
+#print AntilipschitzWith.le_mul_norm' /-
 @[to_additive AntilipschitzWith.le_mul_norm]
 theorem AntilipschitzWith.le_mul_norm' {f : E → F} {K : ℝ≥0} (h : AntilipschitzWith K f)
     (hf : f 1 = 1) (x) : ‖x‖ ≤ K * ‖f x‖ := by
   simpa only [dist_one_right, hf] using h.le_mul_dist x 1
 #align antilipschitz_with.le_mul_norm' AntilipschitzWith.le_mul_norm'
 #align antilipschitz_with.le_mul_norm AntilipschitzWith.le_mul_norm
+-/
 
+#print AntilipschitzWith.le_mul_nnnorm' /-
 @[to_additive AntilipschitzWith.le_mul_nnnorm]
 theorem AntilipschitzWith.le_mul_nnnorm' {f : E → F} {K : ℝ≥0} (h : AntilipschitzWith K f)
     (hf : f 1 = 1) (x) : ‖x‖₊ ≤ K * ‖f x‖₊ :=
   h.le_mul_norm' hf x
 #align antilipschitz_with.le_mul_nnnorm' AntilipschitzWith.le_mul_nnnorm'
 #align antilipschitz_with.le_mul_nnnorm AntilipschitzWith.le_mul_nnnorm
+-/
 
+#print OneHomClass.bound_of_antilipschitz /-
 @[to_additive]
 theorem OneHomClass.bound_of_antilipschitz [OneHomClass 𝓕 E F] (f : 𝓕) {K : ℝ≥0}
     (h : AntilipschitzWith K f) (x) : ‖x‖ ≤ K * ‖f x‖ :=
   h.le_mul_nnnorm' (map_one f) x
 #align one_hom_class.bound_of_antilipschitz OneHomClass.bound_of_antilipschitz
 #align zero_hom_class.bound_of_antilipschitz ZeroHomClass.bound_of_antilipschitz
+-/
 
 end Nnnorm
 
@@ -2318,7 +2330,7 @@ theorem mul_div_lipschitzWith (hf : AntilipschitzWith Kf f) (hg : LipschitzWith 
 theorem le_mul_norm_div {f : E → F} (hf : AntilipschitzWith K f) (x y : E) :
     ‖x / y‖ ≤ K * ‖f x / f y‖ := by simp [← dist_eq_norm_div, hf.le_mul_dist x y]
 #align antilipschitz_with.le_mul_norm_div AntilipschitzWith.le_mul_norm_div
-#align antilipschitz_with.le_add_norm_sub AntilipschitzWith.le_add_norm_sub
+#align antilipschitz_with.le_mul_norm_sub AntilipschitzWith.le_mul_norm_sub
 -/
 
 end AntilipschitzWith

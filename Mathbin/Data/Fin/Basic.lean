@@ -807,12 +807,14 @@ theorem subsingleton_iff_le_one : Subsingleton (Fin n) ↔ n ≤ 1 := by
 
 section Monoid
 
+#print Fin.addCommSemigroup /-
 instance addCommSemigroup (n : ℕ) : AddCommSemigroup (Fin n)
     where
   add := (· + ·)
   add_assoc := by simp [eq_iff_veq, add_def, add_assoc]
   add_comm := by simp [eq_iff_veq, add_def, add_comm]
 #align fin.add_comm_semigroup Fin.addCommSemigroup
+-/
 
 #print Fin.add_zero /-
 @[simp]
@@ -2426,11 +2428,11 @@ instance (n : ℕ) : IsCancelAdd (Fin n)
 
 /-- Note this is more general than `fin.add_comm_group` as it applies (vacuously) to `fin 0` too. -/
 instance (n : ℕ) : AddLeftCancelSemigroup (Fin n) :=
-  { Fin.addCommSemigroup n, Fin.isCancelAdd n with }
+  { Fin.addCommSemigroup n, Fin.instIsCancelAdd n with }
 
 /-- Note this is more general than `fin.add_comm_group` as it applies (vacuously) to `fin 0` too. -/
 instance (n : ℕ) : AddRightCancelSemigroup (Fin n) :=
-  { Fin.addCommSemigroup n, Fin.isCancelAdd n with }
+  { Fin.addCommSemigroup n, Fin.instIsCancelAdd n with }
 
 #print Fin.coe_neg /-
 protected theorem coe_neg (a : Fin n) : ((-a : Fin n) : ℕ) = (n - a) % n :=

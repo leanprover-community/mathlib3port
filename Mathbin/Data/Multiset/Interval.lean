@@ -56,11 +56,13 @@ theorem Icc_eq :
 #align multiset.Icc_eq Multiset.Icc_eq
 -/
 
+#print Multiset.uIcc_eq /-
 theorem uIcc_eq :
     uIcc s t =
       (uIcc s.toDFinsupp t.toDFinsupp).map Multiset.equivDFinsupp.toEquiv.symm.toEmbedding :=
   (Icc_eq _ _).trans <| by simp [uIcc]
 #align multiset.uIcc_eq Multiset.uIcc_eq
+-/
 
 #print Multiset.card_Icc /-
 theorem card_Icc :
@@ -91,11 +93,13 @@ theorem card_Ioo :
 #align multiset.card_Ioo Multiset.card_Ioo
 -/
 
+#print Multiset.card_uIcc /-
 theorem card_uIcc :
     (uIcc s t).card = ∏ i in s.toFinset ∪ t.toFinset, ((t.count i - s.count i : ℤ).natAbs + 1) := by
   simp_rw [uIcc_eq, Finset.card_map, DFinsupp.card_uIcc, Nat.card_uIcc, Multiset.toDFinsupp_apply,
     toDFinsupp_support]
 #align multiset.card_uIcc Multiset.card_uIcc
+-/
 
 #print Multiset.card_Iic /-
 theorem card_Iic : (Finset.Iic s).card = ∏ i in s.toFinset, (s.count i + 1) := by

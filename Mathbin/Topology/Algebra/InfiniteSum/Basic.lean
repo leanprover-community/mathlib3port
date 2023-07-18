@@ -590,8 +590,10 @@ theorem tsum_congr_subtype (f : β → α) {s t : Set β} (h : s = t) : ∑' x :
 #align tsum_congr_subtype tsum_congr_subtype
 -/
 
-#print tsum_zero' /-
-theorem tsum_zero' (hz : IsClosed ({0} : Set α)) : ∑' b : β, (0 : α) = 0 := by
+/- warning: tsum_zero' clashes with tsum_zero -> tsum_zero
+Case conversion may be inaccurate. Consider using '#align tsum_zero' tsum_zeroₓ'. -/
+#print tsum_zero /-
+theorem tsum_zero (hz : IsClosed ({0} : Set α)) : ∑' b : β, (0 : α) = 0 := by
   classical
   rw [tsum, dif_pos summable_zero]
   suffices ∀ x : α, HasSum (fun b : β => (0 : α)) x → x = 0 by
@@ -603,13 +605,13 @@ theorem tsum_zero' (hz : IsClosed ({0} : Set α)) : ∑' b : β, (0 : α) = 0 :=
   refine' ⟨{0}ᶜ, ⟨is_open_compl_iff.mpr hz, _⟩, fun y => ⟨⟨y, subset_refl _⟩, _⟩⟩
   · simpa using hx
   · simp
-#align tsum_zero' tsum_zero'
+#align tsum_zero' tsum_zero
 -/
 
 #print tsum_zero /-
 @[simp]
 theorem tsum_zero [T1Space α] : ∑' b : β, (0 : α) = 0 :=
-  tsum_zero' isClosed_singleton
+  tsum_zero isClosed_singleton
 #align tsum_zero tsum_zero
 -/
 

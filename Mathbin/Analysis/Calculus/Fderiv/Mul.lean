@@ -691,14 +691,18 @@ theorem differentiableAt_inverse {x : R} (hx : IsUnit x) :
 #align differentiable_at_inverse differentiableAt_inverse
 -/
 
+#print differentiableWithinAt_inverse /-
 theorem differentiableWithinAt_inverse {x : R} (hx : IsUnit x) (s : Set R) :
     DifferentiableWithinAt 𝕜 (@Ring.inverse R _) s x :=
   (differentiableAt_inverse hx).DifferentiableWithinAt
 #align differentiable_within_at_inverse differentiableWithinAt_inverse
+-/
 
+#print differentiableOn_inverse /-
 theorem differentiableOn_inverse : DifferentiableOn 𝕜 (@Ring.inverse R _) {x | IsUnit x} :=
   fun x hx => differentiableWithinAt_inverse hx _
 #align differentiable_on_inverse differentiableOn_inverse
+-/
 
 #print fderiv_inverse /-
 theorem fderiv_inverse (x : Rˣ) : fderiv 𝕜 (@Ring.inverse R _) x = -mulLeftRight 𝕜 R ↑x⁻¹ ↑x⁻¹ :=
@@ -708,25 +712,33 @@ theorem fderiv_inverse (x : Rˣ) : fderiv 𝕜 (@Ring.inverse R _) x = -mulLeftR
 
 variable {h : E → R} {z : E} {S : Set E}
 
+#print DifferentiableWithinAt.inverse /-
 theorem DifferentiableWithinAt.inverse (hf : DifferentiableWithinAt 𝕜 h S z) (hz : IsUnit (h z)) :
     DifferentiableWithinAt 𝕜 (fun x => Ring.inverse (h x)) S z :=
   (differentiableAt_inverse hz).comp_differentiableWithinAt z hf
 #align differentiable_within_at.inverse DifferentiableWithinAt.inverse
+-/
 
+#print DifferentiableAt.inverse /-
 @[simp]
 theorem DifferentiableAt.inverse (hf : DifferentiableAt 𝕜 h z) (hz : IsUnit (h z)) :
     DifferentiableAt 𝕜 (fun x => Ring.inverse (h x)) z :=
   (differentiableAt_inverse hz).comp z hf
 #align differentiable_at.inverse DifferentiableAt.inverse
+-/
 
+#print DifferentiableOn.inverse /-
 theorem DifferentiableOn.inverse (hf : DifferentiableOn 𝕜 h S) (hz : ∀ x ∈ S, IsUnit (h x)) :
     DifferentiableOn 𝕜 (fun x => Ring.inverse (h x)) S := fun x h => (hf x h).inverse (hz x h)
 #align differentiable_on.inverse DifferentiableOn.inverse
+-/
 
+#print Differentiable.inverse /-
 @[simp]
 theorem Differentiable.inverse (hf : Differentiable 𝕜 h) (hz : ∀ x, IsUnit (h x)) :
     Differentiable 𝕜 fun x => Ring.inverse (h x) := fun x => (hf x).inverse (hz x)
 #align differentiable.inverse Differentiable.inverse
+-/
 
 end AlgebraInverse
 
@@ -743,30 +755,41 @@ variable {R : Type _} [NormedDivisionRing R] [NormedAlgebra 𝕜 R] [CompleteSpa
 
 open NormedRing ContinuousLinearMap Ring
 
+#print hasFDerivAt_inv' /-
 /-- At an invertible element `x` of a normed division algebra `R`, the Fréchet derivative of the
 inversion operation is the linear map `λ t, - x⁻¹ * t * x⁻¹`. -/
 theorem hasFDerivAt_inv' {x : R} (hx : x ≠ 0) : HasFDerivAt Inv.inv (-mulLeftRight 𝕜 R x⁻¹ x⁻¹) x :=
   by simpa using hasFDerivAt_ring_inverse (Units.mk0 _ hx)
 #align has_fderiv_at_inv' hasFDerivAt_inv'
+-/
 
+#print differentiableAt_inv' /-
 theorem differentiableAt_inv' {x : R} (hx : x ≠ 0) : DifferentiableAt 𝕜 Inv.inv x :=
   (hasFDerivAt_inv' hx).DifferentiableAt
 #align differentiable_at_inv' differentiableAt_inv'
+-/
 
+#print differentiableWithinAt_inv' /-
 theorem differentiableWithinAt_inv' {x : R} (hx : x ≠ 0) (s : Set R) :
     DifferentiableWithinAt 𝕜 (fun x => x⁻¹) s x :=
   (differentiableAt_inv' hx).DifferentiableWithinAt
 #align differentiable_within_at_inv' differentiableWithinAt_inv'
+-/
 
+#print differentiableOn_inv' /-
 theorem differentiableOn_inv' : DifferentiableOn 𝕜 (fun x : R => x⁻¹) {x | x ≠ 0} := fun x hx =>
   differentiableWithinAt_inv' hx _
 #align differentiable_on_inv' differentiableOn_inv'
+-/
 
+#print fderiv_inv' /-
 /-- Non-commutative version of `fderiv_inv` -/
 theorem fderiv_inv' {x : R} (hx : x ≠ 0) : fderiv 𝕜 Inv.inv x = -mulLeftRight 𝕜 R x⁻¹ x⁻¹ :=
   (hasFDerivAt_inv' hx).fderiv
 #align fderiv_inv' fderiv_inv'
+-/
 
+#print fderivWithin_inv' /-
 /-- Non-commutative version of `fderiv_within_inv` -/
 theorem fderivWithin_inv' {s : Set R} {x : R} (hx : x ≠ 0) (hxs : UniqueDiffWithinAt 𝕜 s x) :
     fderivWithin 𝕜 (fun x => x⁻¹) s x = -mulLeftRight 𝕜 R x⁻¹ x⁻¹ :=
@@ -774,28 +797,37 @@ theorem fderivWithin_inv' {s : Set R} {x : R} (hx : x ≠ 0) (hxs : UniqueDiffWi
   rw [DifferentiableAt.fderivWithin (differentiableAt_inv' hx) hxs]
   exact fderiv_inv' hx
 #align fderiv_within_inv' fderivWithin_inv'
+-/
 
 variable {h : E → R} {z : E} {S : Set E}
 
+#print DifferentiableWithinAt.inv' /-
 theorem DifferentiableWithinAt.inv' (hf : DifferentiableWithinAt 𝕜 h S z) (hz : h z ≠ 0) :
     DifferentiableWithinAt 𝕜 (fun x => (h x)⁻¹) S z :=
   (differentiableAt_inv' hz).comp_differentiableWithinAt z hf
 #align differentiable_within_at.inv' DifferentiableWithinAt.inv'
+-/
 
+#print DifferentiableAt.inv' /-
 @[simp]
 theorem DifferentiableAt.inv' (hf : DifferentiableAt 𝕜 h z) (hz : h z ≠ 0) :
     DifferentiableAt 𝕜 (fun x => (h x)⁻¹) z :=
   (differentiableAt_inv' hz).comp z hf
 #align differentiable_at.inv' DifferentiableAt.inv'
+-/
 
+#print DifferentiableOn.inv' /-
 theorem DifferentiableOn.inv' (hf : DifferentiableOn 𝕜 h S) (hz : ∀ x ∈ S, h x ≠ 0) :
     DifferentiableOn 𝕜 (fun x => (h x)⁻¹) S := fun x h => (hf x h).inv' (hz x h)
 #align differentiable_on.inv' DifferentiableOn.inv'
+-/
 
+#print Differentiable.inv' /-
 @[simp]
 theorem Differentiable.inv' (hf : Differentiable 𝕜 h) (hz : ∀ x, h x ≠ 0) :
     Differentiable 𝕜 fun x => (h x)⁻¹ := fun x => (hf x).inv' (hz x)
 #align differentiable.inv' Differentiable.inv'
+-/
 
 end DivisionRingInverse
 

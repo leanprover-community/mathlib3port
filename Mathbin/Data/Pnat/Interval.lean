@@ -55,9 +55,11 @@ theorem Ioo_eq_finset_subtype : Ioo a b = (Ioo (a : ℕ) b).Subtype fun n : ℕ 
 #align pnat.Ioo_eq_finset_subtype PNat.Ioo_eq_finset_subtype
 -/
 
+#print PNat.uIcc_eq_finset_subtype /-
 theorem uIcc_eq_finset_subtype : uIcc a b = (uIcc (a : ℕ) b).Subtype fun n : ℕ => 0 < n :=
   rfl
 #align pnat.uIcc_eq_finset_subtype PNat.uIcc_eq_finset_subtype
+-/
 
 #print PNat.map_subtype_embedding_Icc /-
 theorem map_subtype_embedding_Icc : (Icc a b).map (Embedding.subtype _) = Icc a b :=
@@ -83,9 +85,11 @@ theorem map_subtype_embedding_Ioo : (Ioo a b).map (Embedding.subtype _) = Ioo a 
 #align pnat.map_subtype_embedding_Ioo PNat.map_subtype_embedding_Ioo
 -/
 
+#print PNat.map_subtype_embedding_uIcc /-
 theorem map_subtype_embedding_uIcc : (uIcc a b).map (Embedding.subtype _) = uIcc a b :=
   map_subtype_embedding_Icc _ _
 #align pnat.map_subtype_embedding_uIcc PNat.map_subtype_embedding_uIcc
+-/
 
 #print PNat.card_Icc /-
 @[simp]
@@ -115,10 +119,12 @@ theorem card_Ioo : (Ioo a b).card = b - a - 1 := by
 #align pnat.card_Ioo PNat.card_Ioo
 -/
 
+#print PNat.card_uIcc /-
 @[simp]
 theorem card_uIcc : (uIcc a b).card = (b - a : ℤ).natAbs + 1 := by
   rw [coe_coe, coe_coe, ← Nat.card_uIcc, ← map_subtype_embedding_uIcc, card_map]
 #align pnat.card_uIcc PNat.card_uIcc
+-/
 
 #print PNat.card_fintype_Icc /-
 @[simp]
@@ -148,10 +154,12 @@ theorem card_fintype_Ioo : Fintype.card (Set.Ioo a b) = b - a - 1 := by
 #align pnat.card_fintype_Ioo PNat.card_fintype_Ioo
 -/
 
+#print PNat.card_fintype_uIcc /-
 @[simp]
-theorem card_fintypeUIcc : Fintype.card (Set.uIcc a b) = (b - a : ℤ).natAbs + 1 := by
+theorem card_fintype_uIcc : Fintype.card (Set.uIcc a b) = (b - a : ℤ).natAbs + 1 := by
   rw [← card_uIcc, Fintype.card_ofFinset]
-#align pnat.card_fintype_uIcc PNat.card_fintypeUIcc
+#align pnat.card_fintype_uIcc PNat.card_fintype_uIcc
+-/
 
 end PNat
 

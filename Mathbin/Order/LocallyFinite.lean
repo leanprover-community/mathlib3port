@@ -852,14 +852,18 @@ section Lattice
 
 variable [Lattice α] [LocallyFiniteOrder α] (a b : α)
 
+#print Set.fintypeUIcc /-
 instance fintypeUIcc : Fintype (uIcc a b) :=
   Fintype.ofFinset (Finset.uIcc a b) fun x => Finset.mem_uIcc
 #align set.fintype_uIcc Set.fintypeUIcc
+-/
 
+#print Set.finite_interval /-
 @[simp]
 theorem finite_interval : (uIcc a b).Finite :=
   (uIcc _ _).toFinite
 #align set.finite_interval Set.finite_interval
+-/
 
 end Lattice
 

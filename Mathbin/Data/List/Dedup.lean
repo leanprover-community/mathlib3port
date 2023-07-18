@@ -99,19 +99,23 @@ theorem nodup_dedup : ∀ l : List α, Nodup (dedup l) :=
 #align list.nodup_dedup List.nodup_dedup
 -/
 
+#print List.headI_dedup /-
 theorem headI_dedup [Inhabited α] (l : List α) :
     l.dedup.headI = if l.headI ∈ l.tail then l.tail.dedup.headI else l.headI :=
   match l with
   | [] => rfl
   | a :: l => by by_cases ha : a ∈ l <;> simp [ha, List.dedup_cons_of_mem]
 #align list.head_dedup List.headI_dedup
+-/
 
+#print List.tail_dedup /-
 theorem tail_dedup [Inhabited α] (l : List α) :
     l.dedup.tail = if l.headI ∈ l.tail then l.tail.dedup.tail else l.tail.dedup :=
   match l with
   | [] => rfl
   | a :: l => by by_cases ha : a ∈ l <;> simp [ha, List.dedup_cons_of_mem]
 #align list.tail_dedup List.tail_dedup
+-/
 
 #print List.dedup_eq_self /-
 theorem dedup_eq_self {l : List α} : dedup l = l ↔ Nodup l :=
@@ -119,6 +123,7 @@ theorem dedup_eq_self {l : List α} : dedup l = l ↔ Nodup l :=
 #align list.dedup_eq_self List.dedup_eq_self
 -/
 
+#print List.dedup_eq_cons /-
 theorem dedup_eq_cons (l : List α) (a : α) (l' : List α) :
     l.dedup = a :: l' ↔ a ∈ l ∧ a ∉ l' ∧ l.dedup.tail = l' :=
   by
@@ -132,7 +137,9 @@ theorem dedup_eq_cons (l : List α) (a : α) (l' : List α) :
     rw [← this, mem_cons_iff, or_iff_not_imp_right] at hal 
     exact this ▸ h.2.2.symm ▸ cons_eq_cons.2 ⟨(hal (h.2.2.symm ▸ h.2.1)).symm, rfl⟩
 #align list.dedup_eq_cons List.dedup_eq_cons
+-/
 
+#print List.dedup_eq_nil /-
 @[simp]
 theorem dedup_eq_nil (l : List α) : l.dedup = [] ↔ l = [] :=
   by
@@ -142,6 +149,7 @@ theorem dedup_eq_nil (l : List α) : l.dedup = [] ↔ l = [] :=
     · simp only [List.dedup_cons_of_mem h, hl, List.ne_nil_of_mem h]
     · simp only [List.dedup_cons_of_not_mem h, List.cons_ne_nil]
 #align list.dedup_eq_nil List.dedup_eq_nil
+-/
 
 #print List.Nodup.dedup /-
 protected theorem Nodup.dedup {l : List α} (h : l.Nodup) : l.dedup = l :=

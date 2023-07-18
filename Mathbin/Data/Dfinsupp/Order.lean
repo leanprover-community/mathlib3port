@@ -134,13 +134,17 @@ instance lattice : Lattice (Π₀ i, α i) :=
 
 variable [DecidableEq ι] [∀ (i) (x : α i), Decidable (x ≠ 0)]
 
+#print DFinsupp.support_inf_union_support_sup /-
 theorem support_inf_union_support_sup : (f ⊓ g).support ∪ (f ⊔ g).support = f.support ∪ g.support :=
   coe_injective <| compl_injective <| by ext; simp [inf_eq_and_sup_eq_iff]
 #align dfinsupp.support_inf_union_support_sup DFinsupp.support_inf_union_support_sup
+-/
 
+#print DFinsupp.support_sup_union_support_inf /-
 theorem support_sup_union_support_inf : (f ⊔ g).support ∪ (f ⊓ g).support = f.support ∪ g.support :=
   (union_comm _ _).trans <| support_inf_union_support_sup _ _
 #align dfinsupp.support_sup_union_support_inf DFinsupp.support_sup_union_support_inf
+-/
 
 end Lattice
 

@@ -126,13 +126,17 @@ section Lattice
 
 variable [∀ i, Lattice (α i)] [∀ i, LocallyFiniteOrder (α i)] (a b : ∀ i, α i)
 
+#print Pi.uIcc_eq /-
 theorem uIcc_eq : uIcc a b = piFinset fun i => uIcc (a i) (b i) :=
   rfl
 #align pi.uIcc_eq Pi.uIcc_eq
+-/
 
+#print Pi.card_uIcc /-
 theorem card_uIcc : (uIcc a b).card = ∏ i, (uIcc (a i) (b i)).card :=
   card_Icc _ _
 #align pi.card_uIcc Pi.card_uIcc
+-/
 
 end Lattice
 

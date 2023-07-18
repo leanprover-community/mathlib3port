@@ -417,7 +417,7 @@ theorem hasPDF {m : MeasurableSpace Ω} {X : Ω → E} {ℙ : Measure Ω} {μ : 
           simp [hnt]
         rw [HEq, Set.inter_univ] at this 
         exact hns this
-      exact MeasureTheory.Set.indicator_ae_eq_zero.1 hu.symm)
+      exact Set.indicator_ae_eq_zero.1 hu.symm)
 #align measure_theory.pdf.is_uniform.has_pdf MeasureTheory.pdf.IsUniform.hasPDF
 -/
 

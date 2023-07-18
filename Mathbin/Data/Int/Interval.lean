@@ -118,12 +118,14 @@ theorem Ioo_eq_finset_map :
 #align int.Ioo_eq_finset_map Int.Ioo_eq_finset_map
 -/
 
+#print Int.uIcc_eq_finset_map /-
 theorem uIcc_eq_finset_map :
     uIcc a b =
       (range (max a b + 1 - min a b).toNat).map
         (Nat.castEmbedding.trans <| addLeftEmbedding <| min a b) :=
   rfl
 #align int.uIcc_eq_finset_map Int.uIcc_eq_finset_map
+-/
 
 #print Int.card_Icc /-
 @[simp]
@@ -153,6 +155,7 @@ theorem card_Ioo : (Ioo a b).card = (b - a - 1).toNat :=
 #align int.card_Ioo Int.card_Ioo
 -/
 
+#print Int.card_uIcc /-
 @[simp]
 theorem card_uIcc : (uIcc a b).card = (b - a).natAbs + 1 :=
   (card_map _).trans <|
@@ -161,6 +164,7 @@ theorem card_uIcc : (uIcc a b).card = (b - a).natAbs + 1 :=
         Int.toNat_of_nonneg (sub_nonneg_of_le <| le_add_one min_le_max), Int.ofNat_add,
         Int.coe_natAbs, add_comm, add_sub_assoc, max_sub_min_eq_abs, add_comm, Int.ofNat_one]
 #align int.card_uIcc Int.card_uIcc
+-/
 
 #print Int.card_Icc_of_le /-
 theorem card_Icc_of_le (h : a ≤ b + 1) : ((Icc a b).card : ℤ) = b + 1 - a := by
@@ -214,10 +218,12 @@ theorem card_fintype_Ioo : Fintype.card (Set.Ioo a b) = (b - a - 1).toNat := by
 #align int.card_fintype_Ioo Int.card_fintype_Ioo
 -/
 
+#print Int.card_fintype_uIcc /-
 @[simp]
-theorem card_fintypeUIcc : Fintype.card (Set.uIcc a b) = (b - a).natAbs + 1 := by
+theorem card_fintype_uIcc : Fintype.card (Set.uIcc a b) = (b - a).natAbs + 1 := by
   rw [← card_uIcc, Fintype.card_ofFinset]
-#align int.card_fintype_uIcc Int.card_fintypeUIcc
+#align int.card_fintype_uIcc Int.card_fintype_uIcc
+-/
 
 #print Int.card_fintype_Icc_of_le /-
 theorem card_fintype_Icc_of_le (h : a ≤ b + 1) : (Fintype.card (Set.Icc a b) : ℤ) = b + 1 - a := by

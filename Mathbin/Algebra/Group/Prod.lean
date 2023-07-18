@@ -837,6 +837,7 @@ section
 
 variable (M N M' N')
 
+#print MulEquiv.prodProdProdComm /-
 /-- Four-way commutativity of `prod`. The name matches `mul_mul_mul_comm`. -/
 @[to_additive prod_prod_prod_comm
       "Four-way commutativity of `prod`.\nThe name matches `mul_mul_mul_comm`",
@@ -850,18 +851,23 @@ def prodProdProdComm : (M × N) × M' × N' ≃* (M × M') × N × N' :=
     map_mul' := fun mnmn mnmn' => rfl }
 #align mul_equiv.prod_prod_prod_comm MulEquiv.prodProdProdComm
 #align add_equiv.prod_prod_prod_comm AddEquiv.prodProdProdComm
+-/
 
+#print MulEquiv.prodProdProdComm_toEquiv /-
 @[simp, to_additive]
 theorem prodProdProdComm_toEquiv :
     (prodProdProdComm M N M' N').toEquiv = Equiv.prodProdProdComm M N M' N' :=
   rfl
 #align mul_equiv.prod_prod_prod_comm_to_equiv MulEquiv.prodProdProdComm_toEquiv
-#align add_equiv.sum_sum_sum_comm_to_equiv AddEquiv.sum_sum_sum_comm_toEquiv
+#align add_equiv.sum_sum_sum_comm_to_equiv AddEquiv.prodProdProdComm_toEquiv
+-/
 
+#print MulEquiv.prodProdProdComm_symm /-
 @[simp]
 theorem prodProdProdComm_symm : (prodProdProdComm M N M' N').symm = prodProdProdComm M M' N N' :=
   rfl
 #align mul_equiv.prod_prod_prod_comm_symm MulEquiv.prodProdProdComm_symm
+-/
 
 end
 

@@ -51,14 +51,18 @@ instance [WellFoundedRelation α] : IsAsymm α WellFoundedRelation.R :=
 instance [WellFoundedRelation α] : IsIrrefl α WellFoundedRelation.R :=
   IsAsymm.isIrrefl
 
+#print WellFounded.mono /-
 theorem mono (hr : WellFounded r) (h : ∀ a b, r' a b → r a b) : WellFounded r' :=
   Subrelation.wf h hr
 #align well_founded.mono WellFounded.mono
+-/
 
+#print WellFounded.onFun /-
 theorem onFun {α β : Sort _} {r : β → β → Prop} {f : α → β} :
     WellFounded r → WellFounded (r on f) :=
   InvImage.wf _
 #align well_founded.on_fun WellFounded.onFun
+-/
 
 #print WellFounded.has_min /-
 /-- If `r` is a well-founded relation, then any nonempty set has a minimal element

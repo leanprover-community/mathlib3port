@@ -26,25 +26,33 @@ namespace Fin
 
 variable {n : ℕ} (a b : Fin n)
 
+#print Fin.coe_sup /-
 @[simp, norm_cast]
 theorem coe_sup : (↑(a ⊔ b) : ℕ) = a ⊔ b :=
   rfl
 #align fin.coe_sup Fin.coe_sup
+-/
 
+#print Fin.coe_inf /-
 @[simp, norm_cast]
 theorem coe_inf : (↑(a ⊓ b) : ℕ) = a ⊓ b :=
   rfl
 #align fin.coe_inf Fin.coe_inf
+-/
 
+#print Fin.coe_max /-
 @[simp, norm_cast]
 theorem coe_max : (↑(max a b) : ℕ) = max a b :=
   rfl
 #align fin.coe_max Fin.coe_max
+-/
 
+#print Fin.coe_min /-
 @[simp, norm_cast]
 theorem coe_min : (↑(min a b) : ℕ) = min a b :=
   rfl
 #align fin.coe_min Fin.coe_min
+-/
 
 end Fin
 
@@ -92,9 +100,11 @@ theorem Ioo_eq_finset_subtype : Ioo a b = (Ioo (a : ℕ) b).Fin n :=
 #align fin.Ioo_eq_finset_subtype Fin.Ioo_eq_finset_subtype
 -/
 
+#print Fin.uIcc_eq_finset_subtype /-
 theorem uIcc_eq_finset_subtype : uIcc a b = (uIcc (a : ℕ) b).Fin n :=
   rfl
 #align fin.uIcc_eq_finset_subtype Fin.uIcc_eq_finset_subtype
+-/
 
 #print Fin.map_valEmbedding_Icc /-
 @[simp]
@@ -124,10 +134,12 @@ theorem map_valEmbedding_Ioo : (Ioo a b).map Fin.valEmbedding = Ioo a b := by
 #align fin.map_subtype_embedding_Ioo Fin.map_valEmbedding_Ioo
 -/
 
+#print Fin.map_subtype_embedding_uIcc /-
 @[simp]
 theorem map_subtype_embedding_uIcc : (uIcc a b).map valEmbedding = uIcc a b :=
   map_valEmbedding_Icc _ _
 #align fin.map_subtype_embedding_uIcc Fin.map_subtype_embedding_uIcc
+-/
 
 #print Fin.card_Icc /-
 @[simp]
@@ -157,10 +169,12 @@ theorem card_Ioo : (Ioo a b).card = b - a - 1 := by
 #align fin.card_Ioo Fin.card_Ioo
 -/
 
+#print Fin.card_uIcc /-
 @[simp]
 theorem card_uIcc : (uIcc a b).card = (b - a : ℤ).natAbs + 1 := by
   rw [coe_coe, coe_coe, ← Nat.card_uIcc, ← map_subtype_embedding_uIcc, card_map]
 #align fin.card_uIcc Fin.card_uIcc
+-/
 
 #print Fin.card_fintypeIcc /-
 @[simp]
@@ -190,10 +204,12 @@ theorem card_fintypeIoo : Fintype.card (Set.Ioo a b) = b - a - 1 := by
 #align fin.card_fintype_Ioo Fin.card_fintypeIoo
 -/
 
+#print Fin.card_fintype_uIcc /-
 @[simp]
-theorem card_fintypeUIcc : Fintype.card (Set.uIcc a b) = (b - a : ℤ).natAbs + 1 := by
+theorem card_fintype_uIcc : Fintype.card (Set.uIcc a b) = (b - a : ℤ).natAbs + 1 := by
   rw [← card_uIcc, Fintype.card_ofFinset]
-#align fin.card_fintype_uIcc Fin.card_fintypeUIcc
+#align fin.card_fintype_uIcc Fin.card_fintype_uIcc
+-/
 
 #print Fin.Ici_eq_finset_subtype /-
 theorem Ici_eq_finset_subtype : Ici a = (Icc (a : ℕ) n).Fin n := by ext; simp

@@ -4253,10 +4253,12 @@ theorem toFinset_eq_empty {m : Multiset α} : m.toFinset = ∅ ↔ m = 0 :=
 #align multiset.to_finset_eq_empty Multiset.toFinset_eq_empty
 -/
 
+#print Multiset.toFinset_nonempty /-
 @[simp]
 theorem toFinset_nonempty : s.toFinset.Nonempty ↔ s ≠ 0 := by
   simp only [to_finset_eq_empty, Ne.def, Finset.nonempty_iff_ne_empty]
 #align multiset.to_finset_nonempty Multiset.toFinset_nonempty
+-/
 
 #print Multiset.toFinset_subset /-
 @[simp]
@@ -4457,10 +4459,12 @@ theorem toFinset_eq_empty_iff (l : List α) : l.toFinset = ∅ ↔ l = nil := by
 #align list.to_finset_eq_empty_iff List.toFinset_eq_empty_iff
 -/
 
+#print List.toFinset_nonempty_iff /-
 @[simp]
 theorem toFinset_nonempty_iff (l : List α) : l.toFinset.Nonempty ↔ l ≠ [] := by
   simp [Finset.nonempty_iff_ne_empty]
 #align list.to_finset_nonempty_iff List.toFinset_nonempty_iff
+-/
 
 end List
 

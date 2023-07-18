@@ -55,11 +55,11 @@ theorem xgcd_zero_left {s t r' s' t'} : xgcdAux 0 s t r' s' t' = (r', s', t') :=
 #align nat.xgcd_zero_left Nat.xgcd_zero_left
 -/
 
-#print Nat.xgcd_aux_rec /-
-theorem xgcd_aux_rec {r s t r' s' t'} (h : 0 < r) :
+#print Nat.xgcdAux_rec /-
+theorem xgcdAux_rec {r s t r' s' t'} (h : 0 < r) :
     xgcdAux r s t r' s' t' = xgcdAux (r' % r) (s' - r' / r * s) (t' - r' / r * t) r s t := by
   cases r <;> [exact absurd h (lt_irrefl _); · simp only [xgcd_aux]; rfl]
-#align nat.xgcd_aux_rec Nat.xgcd_aux_rec
+#align nat.xgcd_aux_rec Nat.xgcdAux_rec
 -/
 
 #print Nat.xgcd /-
@@ -118,18 +118,18 @@ theorem gcdB_zero_right {s : ℕ} (h : s ≠ 0) : gcdB s 0 = 0 :=
 #align nat.gcd_b_zero_right Nat.gcdB_zero_right
 -/
 
-#print Nat.xgcd_aux_fst /-
+#print Nat.xgcdAux_fst /-
 @[simp]
-theorem xgcd_aux_fst (x y) : ∀ s t s' t', (xgcdAux x s t y s' t').1 = gcd x y :=
+theorem xgcdAux_fst (x y) : ∀ s t s' t', (xgcdAux x s t y s' t').1 = gcd x y :=
   gcd.induction x y (by simp) fun x y h IH s t s' t' => by
     simp [xgcd_aux_rec, h, IH] <;> rw [← gcd_rec]
-#align nat.xgcd_aux_fst Nat.xgcd_aux_fst
+#align nat.xgcd_aux_fst Nat.xgcdAux_fst
 -/
 
-#print Nat.xgcd_aux_val /-
-theorem xgcd_aux_val (x y) : xgcdAux x 1 0 y 0 1 = (gcd x y, xgcd x y) := by
+#print Nat.xgcdAux_val /-
+theorem xgcdAux_val (x y) : xgcdAux x 1 0 y 0 1 = (gcd x y, xgcd x y) := by
   rw [xgcd, ← xgcd_aux_fst x y 1 0 0 1] <;> cases xgcd_aux x 1 0 y 0 1 <;> rfl
-#align nat.xgcd_aux_val Nat.xgcd_aux_val
+#align nat.xgcd_aux_val Nat.xgcdAux_val
 -/
 
 #print Nat.xgcd_val /-
@@ -145,8 +145,8 @@ parameter (x y : ℕ)
 private def P : ℕ × ℤ × ℤ → Prop
   | (r, s, t) => (r : ℤ) = x * s + y * t
 
-#print Nat.xgcd_aux_P /-
-theorem xgcd_aux_P {r r'} :
+#print Nat.xgcdAux_P /-
+theorem xgcdAux_P {r r'} :
     ∀ {s t s' t'}, P (r, s, t) → P (r', s', t') → P (xgcdAux r s t r' s' t') :=
   gcd.induction r r' (by simp) fun a b h IH s t s' t' p p' =>
     by
@@ -154,7 +154,7 @@ theorem xgcd_aux_P {r r'} :
     rw [Int.mod_def]; generalize (b / a : ℤ) = k
     rw [p, p']
     simp [mul_add, mul_comm, mul_left_comm, add_comm, add_left_comm, sub_eq_neg_add, mul_assoc]
-#align nat.xgcd_aux_P Nat.xgcd_aux_P
+#align nat.xgcd_aux_P Nat.xgcdAux_P
 -/
 
 #print Nat.gcd_eq_gcd_ab /-

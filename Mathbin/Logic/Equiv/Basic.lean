@@ -160,6 +160,7 @@ def prodAssoc (α β γ : Sort _) : (α × β) × γ ≃ α × β × γ :=
 #align equiv.prod_assoc Equiv.prodAssoc
 -/
 
+#print Equiv.prodProdProdComm /-
 /-- Four-way commutativity of `prod`. The name matches `mul_mul_mul_comm`. -/
 @[simps apply]
 def prodProdProdComm (α β γ δ : Type _) : (α × β) × γ × δ ≃ (α × γ) × β × δ
@@ -169,12 +170,15 @@ def prodProdProdComm (α β γ δ : Type _) : (α × β) × γ × δ ≃ (α × 
   left_inv := fun ⟨⟨a, b⟩, ⟨c, d⟩⟩ => rfl
   right_inv := fun ⟨⟨a, c⟩, ⟨b, d⟩⟩ => rfl
 #align equiv.prod_prod_prod_comm Equiv.prodProdProdComm
+-/
 
+#print Equiv.prodProdProdComm_symm /-
 @[simp]
 theorem prodProdProdComm_symm (α β γ δ : Type _) :
     (prodProdProdComm α β γ δ).symm = prodProdProdComm α γ β δ :=
   rfl
 #align equiv.prod_prod_prod_comm_symm Equiv.prodProdProdComm_symm
+-/
 
 #print Equiv.curry /-
 /-- Functions on `α × β` are equivalent to functions `α → β → γ`. -/

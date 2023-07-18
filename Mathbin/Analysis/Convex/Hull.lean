@@ -162,10 +162,12 @@ theorem convexHull_singleton (x : E) : convexHull 𝕜 ({x} : Set E) = {x} :=
 #align convex_hull_singleton convexHull_singleton
 -/
 
+#print convexHull_zero /-
 @[simp]
 theorem convexHull_zero : convexHull 𝕜 (0 : Set E) = 0 :=
   convexHull_singleton 0
 #align convex_hull_zero convexHull_zero
+-/
 
 #print convexHull_pair /-
 @[simp]

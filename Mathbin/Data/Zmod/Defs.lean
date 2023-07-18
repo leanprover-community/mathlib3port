@@ -70,15 +70,15 @@ private theorem left_distrib_aux (n : ℕ) : ∀ a b c : Fin n, a * (b + c) = a 
 
 instance (n : ℕ) : Distrib (Fin n) :=
   { Fin.addCommSemigroup n,
-    Fin.commSemigroup n with
+    Fin.instCommSemigroup n with
     left_distrib := left_distrib_aux n
     right_distrib := fun a b c => by
       rw [mul_comm, left_distrib_aux, mul_comm _ b, mul_comm] <;> rfl }
 
 /-- Commutative ring structure on `fin n`. -/
 instance (n : ℕ) [NeZero n] : CommRing (Fin n) :=
-  { Fin.addMonoidWithOne, Fin.addCommGroup n, Fin.commSemigroup n,
-    Fin.distrib n with
+  { Fin.instAddMonoidWithOne, Fin.addCommGroup n, Fin.instCommSemigroup n,
+    Fin.instDistrib n with
     one_mul := Fin.one_mul
     mul_one := Fin.mul_one }
 

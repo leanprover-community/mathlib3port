@@ -365,6 +365,7 @@ section
 
 variable (R R' S S')
 
+#print RingEquiv.prodProdProdComm /-
 /-- Four-way commutativity of `prod`. The name matches `mul_mul_mul_comm`. -/
 @[simps apply]
 def prodProdProdComm : (R × R') × S × S' ≃+* (R × S) × R' × S' :=
@@ -374,29 +375,38 @@ def prodProdProdComm : (R × R') × S × S' ≃+* (R × S) × R' × S' :=
     toFun := fun rrss => ((rrss.1.1, rrss.2.1), (rrss.1.2, rrss.2.2))
     invFun := fun rsrs => ((rsrs.1.1, rsrs.2.1), (rsrs.1.2, rsrs.2.2)) }
 #align ring_equiv.prod_prod_prod_comm RingEquiv.prodProdProdComm
+-/
 
+#print RingEquiv.prodProdProdComm_symm /-
 @[simp]
 theorem prodProdProdComm_symm : (prodProdProdComm R R' S S').symm = prodProdProdComm R S R' S' :=
   rfl
 #align ring_equiv.prod_prod_prod_comm_symm RingEquiv.prodProdProdComm_symm
+-/
 
+#print RingEquiv.prodProdProdComm_toAddEquiv /-
 @[simp]
 theorem prodProdProdComm_toAddEquiv :
     (prodProdProdComm R R' S S').toAddEquiv = AddEquiv.prodProdProdComm R R' S S' :=
   rfl
 #align ring_equiv.prod_prod_prod_comm_to_add_equiv RingEquiv.prodProdProdComm_toAddEquiv
+-/
 
+#print RingEquiv.prodProdProdComm_toMulEquiv /-
 @[simp]
 theorem prodProdProdComm_toMulEquiv :
     (prodProdProdComm R R' S S').toMulEquiv = MulEquiv.prodProdProdComm R R' S S' :=
   rfl
 #align ring_equiv.prod_prod_prod_comm_to_mul_equiv RingEquiv.prodProdProdComm_toMulEquiv
+-/
 
+#print RingEquiv.prodProdProdComm_toEquiv /-
 @[simp]
 theorem prodProdProdComm_toEquiv :
     (prodProdProdComm R R' S S').toEquiv = Equiv.prodProdProdComm R R' S S' :=
   rfl
 #align ring_equiv.prod_prod_prod_comm_to_equiv RingEquiv.prodProdProdComm_toEquiv
+-/
 
 end
 

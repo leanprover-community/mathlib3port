@@ -704,13 +704,13 @@ theorem inter_ae_eq_empty_of_ae_eq_empty_right (h : t =ᵐ[μ] (∅ : Set α)) :
 #align measure_theory.inter_ae_eq_empty_of_ae_eq_empty_right MeasureTheory.inter_ae_eq_empty_of_ae_eq_empty_right
 -/
 
-#print MeasureTheory.Set.mulIndicator_ae_eq_one /-
+#print Set.mulIndicator_ae_eq_one /-
 @[to_additive]
-theorem MeasureTheory.Set.mulIndicator_ae_eq_one {M : Type _} [One M] {f : α → M} {s : Set α} :
+theorem Set.mulIndicator_ae_eq_one {M : Type _} [One M] {f : α → M} {s : Set α} :
     s.mulIndicator f =ᵐ[μ] 1 ↔ μ (s ∩ f.mulSupport) = 0 := by
   simpa [eventually_eq, eventually_iff, measure.ae, compl_set_of]
-#align set.mul_indicator_ae_eq_one MeasureTheory.Set.mulIndicator_ae_eq_one
-#align set.indicator_ae_eq_zero MeasureTheory.Set.indicator_ae_eq_zero
+#align set.mul_indicator_ae_eq_one Set.mulIndicator_ae_eq_one
+#align set.indicator_ae_eq_zero Set.indicator_ae_eq_zero
 -/
 
 #print MeasureTheory.measure_mono_ae /-

@@ -91,10 +91,12 @@ theorem Ioo_eq_range' : Ioo a b = ⟨List.range' (a + 1) (b - a - 1), List.nodup
 #align nat.Ioo_eq_range' Nat.Ioo_eq_range'
 -/
 
+#print Nat.uIcc_eq_range' /-
 theorem uIcc_eq_range' :
     uIcc a b = ⟨List.range' (min a b) (max a b + 1 - min a b), List.nodup_range' _ _⟩ :=
   rfl
 #align nat.uIcc_eq_range' Nat.uIcc_eq_range'
+-/
 
 #print Nat.Iio_eq_range /-
 theorem Iio_eq_range : Iio = range := by ext b x; rw [mem_Iio, mem_range]
@@ -141,6 +143,7 @@ theorem card_Ioo : (Ioo a b).card = b - a - 1 :=
 #align nat.card_Ioo Nat.card_Ioo
 -/
 
+#print Nat.card_uIcc /-
 @[simp]
 theorem card_uIcc : (uIcc a b).card = (b - a : ℤ).natAbs + 1 :=
   by
@@ -152,6 +155,7 @@ theorem card_uIcc : (uIcc a b).card = (b - a : ℤ).natAbs + 1 :=
     rw [max_sub_min_eq_abs, add_comm]
   · exact min_le_max.trans le_self_add
 #align nat.card_uIcc Nat.card_uIcc
+-/
 
 #print Nat.card_Iic /-
 @[simp]

@@ -918,6 +918,7 @@ variable [AddCommMonoid M] [AddCommMonoid M₂] [AddCommMonoid M₃] [AddCommMon
 
 variable [Module R M] [Module R M₂] [Module R M₃] [Module R M₄]
 
+#print LinearEquiv.prodProdProdComm /-
 /-- Four-way commutativity of `prod`. The name matches `mul_mul_mul_comm`. -/
 @[simps apply]
 def prodProdProdComm : ((M × M₂) × M₃ × M₄) ≃ₗ[R] (M × M₃) × M₂ × M₄ :=
@@ -928,18 +929,23 @@ def prodProdProdComm : ((M × M₂) × M₃ × M₄) ≃ₗ[R] (M × M₃) × M�
     invFun := fun mmnn => ((mmnn.1.1, mmnn.2.1), (mmnn.1.2, mmnn.2.2))
     map_smul' := fun c mnmn => rfl }
 #align linear_equiv.prod_prod_prod_comm LinearEquiv.prodProdProdComm
+-/
 
+#print LinearEquiv.prodProdProdComm_symm /-
 @[simp]
 theorem prodProdProdComm_symm :
     (prodProdProdComm R M M₂ M₃ M₄).symm = prodProdProdComm R M M₃ M₂ M₄ :=
   rfl
 #align linear_equiv.prod_prod_prod_comm_symm LinearEquiv.prodProdProdComm_symm
+-/
 
+#print LinearEquiv.prodProdProdComm_toAddEquiv /-
 @[simp]
 theorem prodProdProdComm_toAddEquiv :
     (prodProdProdComm R M M₂ M₃ M₄).toAddEquiv = AddEquiv.prodProdProdComm M M₂ M₃ M₄ :=
   rfl
 #align linear_equiv.prod_prod_prod_comm_to_add_equiv LinearEquiv.prodProdProdComm_toAddEquiv
+-/
 
 end
 

@@ -98,15 +98,20 @@ theorem wellFoundedOn_iff : s.WellFoundedOn r ↔ WellFounded fun a b : α => r 
 #align set.well_founded_on_iff Set.wellFoundedOn_iff
 -/
 
+#print Set.wellFoundedOn_univ /-
 @[simp]
 theorem wellFoundedOn_univ : (univ : Set α).WellFoundedOn r ↔ WellFounded r := by
   simp [well_founded_on_iff]
 #align set.well_founded_on_univ Set.wellFoundedOn_univ
+-/
 
+#print WellFounded.wellFoundedOn /-
 theorem WellFounded.wellFoundedOn : WellFounded r → s.WellFoundedOn r :=
   InvImage.wf _
 #align well_founded.well_founded_on WellFounded.wellFoundedOn
+-/
 
+#print Set.wellFoundedOn_range /-
 @[simp]
 theorem wellFoundedOn_range : (range f).WellFoundedOn r ↔ WellFounded (r on f) :=
   by
@@ -118,11 +123,14 @@ theorem wellFoundedOn_range : (range f).WellFoundedOn r ↔ WellFounded (r on f)
     exact ⟨c', rfl⟩
   · exact h.apply _
 #align set.well_founded_on_range Set.wellFoundedOn_range
+-/
 
+#print Set.wellFoundedOn_image /-
 @[simp]
 theorem wellFoundedOn_image {s : Set β} : (f '' s).WellFoundedOn r ↔ s.WellFoundedOn (r on f) := by
   rw [image_eq_range]; exact well_founded_on_range
 #align set.well_founded_on_image Set.wellFoundedOn_image
+-/
 
 namespace WellFoundedOn
 
@@ -147,10 +155,12 @@ protected theorem mono (h : t.WellFoundedOn r') (hle : r ≤ r') (hst : s ⊆ t)
 -/
 
 /- ./././Mathport/Syntax/Translate/Basic.lean:638:2: warning: expanding binder collection (a b «expr ∈ » s) -/
+#print Set.WellFoundedOn.mono' /-
 theorem mono' (h : ∀ (a) (_ : a ∈ s) (b) (_ : b ∈ s), r' a b → r a b) :
     s.WellFoundedOn r → s.WellFoundedOn r' :=
   Subrelation.wf fun a b => h _ a.2 _ b.2
 #align set.well_founded_on.mono' Set.WellFoundedOn.mono'
+-/
 
 #print Set.WellFoundedOn.subset /-
 theorem subset (h : t.WellFoundedOn r) (hst : s ⊆ t) : s.WellFoundedOn r :=
@@ -1099,6 +1109,7 @@ section ProdLex
 
 variable {rα : α → α → Prop} {rβ : β → β → Prop} {f : γ → α} {g : γ → β} {s : Set γ}
 
+#print WellFounded.prod_lex_of_wellFoundedOn_fiber /-
 /-- Stronger version of `prod.lex_wf`. Instead of requiring `rβ on g` to be well-founded, we only
 require it to be well-founded on fibers of `f`.-/
 theorem WellFounded.prod_lex_of_wellFoundedOn_fiber (hα : WellFounded (rα on f))
@@ -1113,7 +1124,9 @@ theorem WellFounded.prod_lex_of_wellFoundedOn_fiber (hα : WellFounded (rα on f
     convert PSigma.Lex.right (⟨_, c', rfl⟩ : range f) _ using 1; swap
     exacts [⟨c, h'.1⟩, PSigma.subtype_ext (Subtype.ext h'.1) rfl, h'.2]
 #align well_founded.prod_lex_of_well_founded_on_fiber WellFounded.prod_lex_of_wellFoundedOn_fiber
+-/
 
+#print Set.WellFoundedOn.prod_lex_of_wellFoundedOn_fiber /-
 theorem Set.WellFoundedOn.prod_lex_of_wellFoundedOn_fiber (hα : s.WellFoundedOn (rα on f))
     (hβ : ∀ a, (s ∩ f ⁻¹' {a}).WellFoundedOn (rβ on g)) :
     s.WellFoundedOn (Prod.Lex rα rβ on fun c => (f c, g c)) :=
@@ -1124,6 +1137,7 @@ theorem Set.WellFoundedOn.prod_lex_of_wellFoundedOn_fiber (hα : s.WellFoundedOn
   exact fun x => ⟨x, x.1.2, x.2⟩
   assumption
 #align set.well_founded_on.prod_lex_of_well_founded_on_fiber Set.WellFoundedOn.prod_lex_of_wellFoundedOn_fiber
+-/
 
 end ProdLex
 
@@ -1131,6 +1145,7 @@ section SigmaLex
 
 variable {rι : ι → ι → Prop} {rπ : ∀ i, π i → π i → Prop} {f : γ → ι} {g : ∀ i, γ → π i} {s : Set γ}
 
+#print WellFounded.sigma_lex_of_wellFoundedOn_fiber /-
 /-- Stronger version of `psigma.lex_wf`. Instead of requiring `rπ on g` to be well-founded, we only
 require it to be well-founded on fibers of `f`.-/
 theorem WellFounded.sigma_lex_of_wellFoundedOn_fiber (hι : WellFounded (rι on f))
@@ -1151,7 +1166,9 @@ theorem WellFounded.sigma_lex_of_wellFoundedOn_fiber (hι : WellFounded (rι on 
       rintro rfl _
       exact h''
 #align well_founded.sigma_lex_of_well_founded_on_fiber WellFounded.sigma_lex_of_wellFoundedOn_fiber
+-/
 
+#print Set.WellFoundedOn.sigma_lex_of_wellFoundedOn_fiber /-
 theorem Set.WellFoundedOn.sigma_lex_of_wellFoundedOn_fiber (hι : s.WellFoundedOn (rι on f))
     (hπ : ∀ i, (s ∩ f ⁻¹' {i}).WellFoundedOn (rπ i on g i)) :
     s.WellFoundedOn (Sigma.Lex rι rπ on fun c => ⟨f c, g (f c) c⟩) :=
@@ -1163,6 +1180,7 @@ theorem Set.WellFoundedOn.sigma_lex_of_wellFoundedOn_fiber (hι : s.WellFoundedO
   exact fun x => ⟨x, x.1.2, x.2⟩
   assumption
 #align set.well_founded_on.sigma_lex_of_well_founded_on_fiber Set.WellFoundedOn.sigma_lex_of_wellFoundedOn_fiber
+-/
 
 end SigmaLex
 
