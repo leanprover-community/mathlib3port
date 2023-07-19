@@ -1130,15 +1130,19 @@ theorem wellFounded_of_trans_of_irrefl (r : α → α → Prop) [IsTrans α r] [
 #align finite.well_founded_of_trans_of_irrefl Finite.wellFounded_of_trans_of_irrefl
 -/
 
+#print Finite.to_wellFoundedLT /-
 -- See note [lower instance priority]
 instance (priority := 100) Finite.to_wellFoundedLT [Preorder α] : WellFoundedLT α :=
   ⟨wellFounded_of_trans_of_irrefl _⟩
-#align finite.finite.to_well_founded_lt Finite.Finite.to_wellFoundedLT
+#align finite.finite.to_well_founded_lt Finite.to_wellFoundedLT
+-/
 
+#print Finite.to_wellFoundedGT /-
 -- See note [lower instance priority]
 instance (priority := 100) Finite.to_wellFoundedGT [Preorder α] : WellFoundedGT α :=
   ⟨wellFounded_of_trans_of_irrefl _⟩
-#align finite.finite.to_well_founded_gt Finite.Finite.to_wellFoundedGT
+#align finite.finite.to_well_founded_gt Finite.to_wellFoundedGT
+-/
 
 #print Finite.LinearOrder.isWellOrder_lt /-
 instance (priority := 10) LinearOrder.isWellOrder_lt [LinearOrder α] : IsWellOrder α (· < ·) where

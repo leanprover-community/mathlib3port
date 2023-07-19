@@ -257,11 +257,11 @@ protected theorem DFinsupp.wellFoundedLT [∀ i, Zero (α i)] [∀ i, Preorder (
 #align dfinsupp.well_founded_lt DFinsupp.wellFoundedLT
 -/
 
-#print DFinsupp.well_founded_lt' /-
-instance DFinsupp.well_founded_lt' [∀ i, CanonicallyOrderedAddMonoid (α i)]
+#print DFinsupp.wellFoundedLT' /-
+instance DFinsupp.wellFoundedLT' [∀ i, CanonicallyOrderedAddMonoid (α i)]
     [∀ i, WellFoundedLT (α i)] : WellFoundedLT (Π₀ i, α i) :=
   DFinsupp.wellFoundedLT fun i a => (zero_le a).not_lt
-#align dfinsupp.well_founded_lt' DFinsupp.well_founded_lt'
+#align dfinsupp.well_founded_lt' DFinsupp.wellFoundedLT'
 -/
 
 #print Pi.wellFoundedLT /-
